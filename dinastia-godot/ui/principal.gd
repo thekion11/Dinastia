@@ -412,6 +412,10 @@ func _avanzar_dia() -> void:
 		_avanzar_semana()
 		return
 	_dia_semana += 1
+	## LA PORTADA DEL DÍA SIGUIENTE (B5): la frase de la rueda, citada.
+	if mundo.prensa != null and not mundo.prensa.titular_pendiente.is_empty():
+		var tit := mundo.prensa.publicar_titular_pendiente()
+		Aviso.mostrar(self, "prensa", "🗞️", "La portada de hoy", tit)
 	_refrescar()
 var _ficha: VBoxContainer
 var _registro: RichTextLabel
@@ -2424,6 +2428,20 @@ func _dirigir() -> void:
 ## él, la jornada se volvería a simular por dentro y en la tabla aparecería un
 ## marcador distinto del que se acaba de ver. Lo usan todos los modos.
 func _cerrar_partido_dirigido(p: Partido) -> void:
+	## A PIE DE CAMPO (B5): antes de volver al despacho, una pregunta con el
+	## partido todavía caliente. No en "instantáneo": quien lo eligió quiere el
+	## resultado y nada más.
+	if mundo.prensa != null and _modo_simulacion(_competicion_de_la_semana()) != "instantaneo":
+		var mio := mundo.mi_club()
+		var local := p.local == mio
+		var gf := p.goles_local if local else p.goles_visita
+		var gc := p.goles_visita if local else p.goles_local
+		var pie := PieDeCampo.mostrar(self, mundo.prensa, gf > gc, gf == gc, gf, gc)
+		pie.cerrado.connect(func() -> void: _seguir_tras_partido(p))
+		return
+	_seguir_tras_partido(p)
+
+func _seguir_tras_partido(p: Partido) -> void:
 	mundo.avanzar_semana(p)
 	_escribir("[color=#3fa06a]J%d  %s %d-%d %s[/color]" % [
 		mundo.liga_de(mundo.mi_club()).jornada_actual,
@@ -5369,6 +5387,12 @@ var _aviso_abierto: int = 0
 ## La cinemática de pantalla completa de la rueda de prensa, o null si no hay
 ## ninguna abierta. Ver `_abrir_rueda_pantalla_completa()`.
 var _rueda_pop: Control = null
+## Lo que la repregunta cambia sin rehacer el plató (B5).
+var _rueda_quien: Label
+var _rueda_pregunta: Label
+var _rueda_opciones: VBoxContainer
+var _rueda_reloj: ProgressBar
+var _rueda_desde := 0
 
 func _pintar_despacho() -> void:
 	_limpiar(_despacho)
@@ -5755,15 +5779,76 @@ func _abrir_rueda_pantalla_completa(e: Dictionary) -> void:
 	col_subt.add_theme_constant_override("separation", 3)
 	subt.add_child(col_subt)
 	var quien := _texto(11, COL_ACENTO)
-	quien.text = "🎙️ PERIODISTA"
 	col_subt.add_child(quien)
 	var q := _texto(15, COL_TEXTO)
-	q.text = String(e.get("pregunta", ""))
 	q.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	col_subt.add_child(q)
+	_rueda_quien = quien
+	_rueda_pregunta = q
 
 	raiz.add_child(_fila_posturas())
-	raiz.add_child(_fila_opciones_rueda(e))
+	_rueda_opciones = _fila_opciones_rueda(e)
+	raiz.add_child(_rueda_opciones)
+	raiz.add_child(_fila_texto_libre())
+	## EL RELOJ DE LA SALA (B5, "lenguaje corporal"): una barra que se llena en
+	## `Prensa.TITUBEO_SEG` segundos. Cuando se llena, contestar ya cuenta como
+	## titubeo. Se ve para que no sea una trampa.
+	var reloj := ProgressBar.new()
+	reloj.show_percentage = false
+	reloj.custom_minimum_size = Vector2(0, 6)
+	reloj.max_value = Prensa.TITUBEO_SEG
+	raiz.add_child(reloj)
+	_rueda_reloj = reloj
+	_pintar_pregunta_rueda(e)
+
+## La pregunta en pantalla y el reloj a cero. La usa también la repregunta,
+## que cambia el texto sin rehacer el plató 3D.
+func _pintar_pregunta_rueda(e: Dictionary) -> void:
+	var quien_txt := String(e.get("quien", "Periodista"))
+	var per := String(e.get("periodista", ""))
+	if per != "":
+		var rel := mundo.prensa.relacion_con(per)
+		var trato := "te aprecia" if rel >= 65 else ("no te quiere" if rel <= 35 else "sin bando")
+		quien_txt += "  ·  %s, %s" % [String(e.get("perfil", "")), trato]
+	if bool(e.get("memoria", false)):
+		quien_txt += "  ·  🧠 recuerda lo que dijiste"
+	_rueda_quien.text = "🎙️ " + quien_txt.to_upper()
+	_rueda_pregunta.text = String(e.get("pregunta", ""))
+	_rueda_desde = Time.get_ticks_msec()
+	if is_instance_valid(_rueda_reloj):
+		_rueda_reloj.value = 0.0
+		_rueda_reloj.modulate = Color.WHITE
+		var tw := _rueda_reloj.create_tween()
+		tw.tween_property(_rueda_reloj, "value", Prensa.TITUBEO_SEG, Prensa.TITUBEO_SEG)
+		tw.tween_callback(func() -> void:
+			if is_instance_valid(_rueda_reloj):
+				_rueda_reloj.modulate = Tema.MAL)
+		_rueda_reloj.set_meta("tween", tw)
+
+func _segundos_rueda() -> float:
+	return float(Time.get_ticks_msec() - _rueda_desde) / 1000.0
+
+## Responder con tus palabras. El tono lo decide `Prensa.clasificar_respuesta()`
+## por palabras clave, en local: nada sale del ordenador.
+func _fila_texto_libre() -> HBoxContainer:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 6)
+	var campo := LineEdit.new()
+	campo.placeholder_text = "…o responde con tus propias palabras"
+	campo.max_length = 120
+	campo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fila.add_child(campo)
+	var b := Button.new()
+	b.text = "Responder"
+	fila.add_child(b)
+	var enviar := func(_t: String = "") -> void:
+		if campo.text.strip_edges() != "":
+			var dicho := campo.text
+			campo.clear()   ## si llega la repregunta, el campo vuelve vacío
+			_tras_responder(mundo.prensa.responder_texto(dicho, _segundos_rueda()))
+	b.pressed.connect(func() -> void: enviar.call())
+	campo.text_submitted.connect(enviar)
+	return fila
 
 ## "Cómo lo dices". Vive aparte de `_abrir_rueda_pantalla_completa()` porque
 ## se repinta sola al tocar una postura -sin cerrar ni reabrir el plató 3D
@@ -5828,13 +5913,27 @@ func _fila_opciones_rueda(e: Dictionary) -> VBoxContainer:
 	return col
 
 func _responder(i: int) -> void:
-	var r := mundo.prensa.responder(i)
+	_tras_responder(mundo.prensa.responder(i, _segundos_rueda()))
+
+func _tras_responder(r: Dictionary) -> void:
+	if r.is_empty():
+		return
+	## La frase y el "cómo" ya los escribe `Prensa.noticia`; aquí solo lo que
+	## movió, que es lo que no dice la noticia.
 	var col := "#4caf6d" if int(r.get("confianza", 0)) >= 0 else "#e05555"
-	_escribir("[color=%s]%s[/color]  [color=#8ea595](moral %+d · confianza %+d · socios %+d)[/color]" % [
-		col, String(r.get("titular", "")), int(r.get("moral", 0)),
-		int(r.get("confianza", 0)), int(r.get("socios", 0))])
-	if String(r.get("extra", "")) != "":
-		_escribir("[color=#8ea595]%s[/color]" % String(r["extra"]))
+	_escribir("[color=%s]🎙 moral %+d · confianza %+d · socios %+d[/color]" % [
+		col, int(r.get("moral", 0)), int(r.get("confianza", 0)), int(r.get("socios", 0))])
+	## LA REPREGUNTA: el mismo plató, otra pregunta y otras opciones.
+	if bool(r.get("sigue", false)) and _rueda_pop != null and mundo.prensa.hay_rueda():
+		var e := mundo.prensa.entrevista
+		var viejas := _rueda_opciones
+		_rueda_opciones = _fila_opciones_rueda(e)
+		viejas.add_sibling(_rueda_opciones)
+		viejas.queue_free()
+		_pintar_pregunta_rueda(e)
+		Animar.aparecer(_rueda_opciones)
+		Sonido.toca("cambio", Sonido.Bus.INTERFAZ)
+		return
 	## Se cierra la cinemática -ya respondiste, no hay nada más que ver- y se
 	## vuelve al juego normal.
 	if _rueda_pop != null:

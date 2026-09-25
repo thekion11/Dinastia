@@ -41,6 +41,7 @@ const TIPOS := {
 	"mercado":  {"et": "MERCADO",            "col": Color("c9a227"), "sfx": "fichaje"},
 	"alerta":   {"et": "AVISO",              "col": Color("e05555"), "sfx": "cambio"},
 	"contrato": {"et": "CONTRATOS",          "col": Color("c9a227"), "sfx": "cambio"},
+	"prensa":   {"et": "PRENSA",             "col": Color("8ea595"), "sfx": "cambio"},
 	"titulo":   {"et": "¡CAMPEÓN!",          "col": Color("c9a227"), "sfx": "trofeo"},
 }
 
