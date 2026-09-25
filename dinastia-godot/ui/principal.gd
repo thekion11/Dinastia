@@ -63,6 +63,9 @@ static var mundo_a_cargar: Mundo = null
 ## `principal.tscn` directo -como sigue haciendo el banco de capturas- no
 ## dependa de haber pasado por esa pantalla.
 static var modo_elegido: String = ""
+## La tarjeta "Tutorial" del menú: la próxima carrera arranca con el recorrido
+## guiado aunque ya se haya visto (ver `ui/componentes/tutorial.gd`).
+static var tutorial_pedido: bool = false
 static var dt_nombre_elegido: String = "Míster"
 static var dificultad_elegida: String = "normal"
 ## Del asistente completo (`ui/eleccion_club.gd`): el mundo YA generado -las 24
@@ -420,7 +423,9 @@ func _ready() -> void:
 	elif Principal.mundo_pregenerado != null:
 		var m := Principal.mundo_pregenerado
 		Principal.mundo_pregenerado = null
+		var modo := Principal.modo_elegido if Principal.modo_elegido != "" else "dt"
 		_arrancar_con(m)
+		_quizas_tutorial(modo)
 	else:
 		_nuevo_mundo()
 
@@ -566,6 +571,8 @@ func _construir() -> void:
 	b_dia.custom_minimum_size = Vector2(84, 32)
 	b_dia.pressed.connect(_avanzar_dia)
 	_botones.add_child(b_dia)
+	_tut_nodos["un_dia"] = b_dia
+	_tut_nodos["calendario"] = menu_calendario
 	## Las otras dos puertas contextuales, como iconos: el partido de esta
 	## semana y la plata. Van aquí y no en la cabecera porque la cabecera es
 	## un solo Label y partirla en zonas clicables habría costado más de lo
@@ -576,13 +583,15 @@ func _construir() -> void:
 	b_hub_partido.custom_minimum_size = Vector2(34, 32)
 	b_hub_partido.pressed.connect(func() -> void: _abrir_hub("partido"))
 	_botones.add_child(b_hub_partido)
+	_tut_nodos["partido"] = b_hub_partido
 	var b_hub_dinero := Button.new()
 	b_hub_dinero.text = "💰"
 	b_hub_dinero.tooltip_text = "Finanzas, mercado y agentes libres"
 	b_hub_dinero.custom_minimum_size = Vector2(34, 32)
 	b_hub_dinero.pressed.connect(func() -> void: _abrir_hub("dinero"))
 	_botones.add_child(b_hub_dinero)
-	_boton("Guardar", _guardar)
+	_tut_nodos["dinero"] = b_hub_dinero
+	_tut_nodos["guardar"] = _boton("Guardar", _guardar)
 	_boton("Cargar", _cargar)
 	_boton("Otro mundo", _nuevo_mundo)
 	## El buscador va en la fila de acciones, no en la cabecera: ahí arriba lo
@@ -767,6 +776,7 @@ func _construir() -> void:
 	b_plantel.add_theme_color_override("font_color", _color_de_paleta(COL_ACENTO))
 	b_plantel.pressed.connect(func() -> void: _abrir_hub("plantel"))
 	_ultima_caja_columna.add_child(b_plantel)
+	_tut_nodos["plantel"] = b_plantel
 	var caja_reg := _bloque(der, "LO QUE VA PASANDO", 1.0)
 	_registro = RichTextLabel.new()
 	_registro.bbcode_enabled = true
@@ -982,6 +992,62 @@ func _bloque_vecino(paso: int) -> void:
 	var i := _indice_grupo(_grupo_actual)
 	var siguiente := (i + paso + GRUPOS.size()) % GRUPOS.size()
 	_elegir_grupo(String(GRUPOS[siguiente]["id"]))
+
+# --- tutorial guiado (ui/componentes/tutorial.gd) ---------------------------
+
+## Los controles que el tutorial señala, por clave. Se guardan al construir la
+## pantalla; los que ya tenían variable propia se resuelven en el momento.
+var _tut_nodos: Dictionary = {}
+var _tutorial: Tutorial = null
+
+## Arranca el recorrido la primera vez que alguien empieza una carrera, o
+## siempre si se pidió desde la tarjeta "Tutorial" del menú.
+func _quizas_tutorial(modo: String) -> void:
+	if not Principal.tutorial_pedido and Tutorial.visto():
+		return
+	Principal.tutorial_pedido = false
+	abrir_tutorial(modo)
+
+func abrir_tutorial(modo: String = "") -> void:
+	if is_instance_valid(_tutorial):
+		_tutorial.queue_free()
+	if modo == "":
+		modo = mundo.roles.modo_actual() if mundo != null and mundo.roles != null else "dt"
+	_tutorial = Tutorial.new()
+	add_child(_tutorial)
+	_tutorial.iniciar(self, modo, mundo.mi_club().nombre if mundo != null and mundo.mi_club() != null else "tu club")
+	_tutorial.terminado.connect(func(_completo: bool) -> void:
+		Tutorial.marcar_visto()
+		_tutorial = null)
+
+func tutorial_objetivo(clave: String) -> Control:
+	match clave:
+		"estado": return _sub
+		"grupos": return _fila_grupos
+		"chips": return _fila_sub.get_parent() as Control
+		"ficha": return _ficha
+		"tabla": return _lista_tabla
+		"registro": return _registro
+	return _tut_nodos.get(clave) as Control
+
+## Lo que completa un paso sin pulsar "Siguiente": que el jugador haya hecho
+## eso mismo que la tarjeta le pedía.
+func tutorial_hecho(clave: String) -> bool:
+	var titulo := _pestanas.get_tab_title(_pestanas.current_tab) if _pestanas.get_tab_count() > 0 else ""
+	match clave:
+		"grupo": return _grupo_actual != "central"
+		"plantel": return (HUBS["plantel"]["tabs"] as Array).has(titulo)
+		"dinero": return (HUBS["dinero"]["tabs"] as Array).has(titulo)
+		"partido": return (HUBS["partido"]["tabs"] as Array).has(titulo)
+	return false
+
+## "Muéstramelo": hace por el jugador lo que pide el paso.
+func tutorial_accion(clave: String) -> void:
+	match clave:
+		"grupo_club": _elegir_grupo("club")
+		"plantel": _ir_a_pestana("Mi plantel")
+		"dinero": _ir_a_pestana("Finanzas")
+		"partido": _ir_a_pestana("Partido")
 
 ## Cambia de bloque maestro: entra siempre por su primer chip -índice 0-, que
 ## es lo que pidió el usuario ("al cambiar de pestaña madre, el nivel 2 se
@@ -11996,6 +12062,14 @@ func _pintar_ajustes() -> void:
 			_pintar_mezclador()
 			_pintar_musica()
 		"aspecto":
+			## El tutorial se repite desde aquí: la última tarjeta del propio
+			## recorrido lo promete ("AJUSTES → Interfaz").
+			var tut := Button.new()
+			tut.text = "📖 Repetir el tutorial"
+			tut.custom_minimum_size = Vector2(0, 32)
+			tut.pressed.connect(func() -> void: abrir_tutorial())
+			_lista_ajustes.add_child(tut)
+			_lista_ajustes.add_child(HSeparator.new())
 			_pintar_fondos_ajustes()
 			_pintar_clima()
 			_lista_ajustes.add_child(HSeparator.new())

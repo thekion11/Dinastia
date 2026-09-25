@@ -43,7 +43,9 @@ const COLOR_CLAIM := {
 ## y "proximo" en el HTML, más la tarjeta "Crear tu Club" (`crear:true`)-. Se
 ## SIGUEN mostrando, como en el HTML: enseñarlas apagadas es honesto, esconderlas
 ## habría sido fingir que el menú tiene menos modos de los que en verdad tiene.
-const CATS_SIN_JUGAR := ["retos", "tutorial", "proximo"]
+## "tutorial" dejó la lista el 25-9-2026: lleva a una carrera de entrenador con
+## el recorrido guiado encendido (`ui/componentes/tutorial.gd`).
+const CATS_SIN_JUGAR := ["retos", "proximo"]
 
 const CONFIG_RUTA := "user://ajustes.cfg"
 
@@ -636,8 +638,11 @@ func _al_pulsar_modo(m: Dictionary) -> void:
 			_avisar("🚧 Los retos con guion propio todavía no son su propia pantalla en esta versión de Godot.")
 			return
 		"tutorial":
-			_avisar("📖 El tutorial todavía no está en esta versión de Godot.")
-			return
+			## Una carrera de entrenador de verdad, con el recorrido encendido:
+			## se aprende jugando la propia partida, no una de mentira que
+			## luego hay que tirar. Se elige el club como siempre.
+			Principal.tutorial_pedido = true
+			m = {"id": "dt"}
 		"proximo":
 			_avisar("🚧 %s todavía no se puede jugar. Está en la lista para cuando esté listo." % titulo)
 			return
