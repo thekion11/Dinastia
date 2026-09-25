@@ -360,6 +360,17 @@ func _media_linea(once: Array[Jugador], grupo: String) -> float:
 func simular_minuto() -> void:
 	if terminado_ya:
 		return
+	## LA INVASIÓN, DENTRO DEL MINUTO (25-9-2026, plan maestro B2). Antes solo
+	## la miraba `PartidoVivo` desde su reloj: jugado en 3D o simulado, esa
+	## tirada de `Azar` no ocurría y el mismo partido podía terminar distinto
+	## según cómo se mirara. Ahora es parte del minuto para cualquier vista; cada
+	## una solo decide cómo contarla (`invasion_de_campo`).
+	if _hinchada_club != null and not invasion_ya:
+		var soy_local := local == _hinchada_club
+		var mis_goles: int = goles_local if soy_local else goles_visita
+		var sus_goles: int = goles_visita if soy_local else goles_local
+		if chequear_invasion(_hinchada_animo, soy_local, mis_goles < sus_goles):
+			invasion_de_campo.emit(minuto)
 	minuto += 1
 	## LOS PLANES SEGÚN EL MARCADOR. A partir del minuto 60 el entrenador aplica
 	## lo que dejó preparado: ir a por el partido si va perdiendo, cerrarlo si va
@@ -839,6 +850,18 @@ func es_ex_de(j: Jugador, rival: Club) -> bool:
 ## Cuándo se harta la grada. Minuto 70, perdiendo en casa y con el ánimo por los
 ## suelos: los tres a la vez, porque una invasión de campo que salta cada dos
 ## partidos deja de ser una noticia y se vuelve una molestia.
+signal invasion_de_campo(minuto: int)
+
+## El club cuya hinchada puede saltar al campo y su ánimo de hoy. Lo fija quien
+## juega el partido del usuario (`fijar_hinchada()`); en los partidos del resto
+## del mundo queda vacío y nunca hay invasión, igual que antes.
+var _hinchada_club: Club = null
+var _hinchada_animo := 60
+
+func fijar_hinchada(club: Club, animo: int) -> void:
+	_hinchada_club = club
+	_hinchada_animo = animo
+
 const MINUTO_INVASION := 70
 const ANIMO_PARA_INVASION := 30
 

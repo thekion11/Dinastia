@@ -47,6 +47,15 @@ var _balon: Node3D
 var _control: ControlPartido
 var _radar: RadarPartido
 var _btn_modo: Button
+## 3D DESTACADOS (25-9-2026, plan maestro B2): el partido corre a x4 y frena a
+## velocidad normal en cada ocasión -remate o gol- durante `SEG_DESTACADO`
+## segundos reales, para ver la jugada. La simulación es la misma: solo cambia
+## a qué velocidad se mira.
+var modo_destacados := false
+const VEL_DESTACADOS_RAPIDO := 4
+const VEL_DESTACADOS_JUGADA := 2
+const SEG_DESTACADO := 6.0
+var _destacado_hasta_ms := -1
 var _btn_camara: Button
 var _cajon: CajonAjustes
 var _vineta: ColorRect
@@ -484,6 +493,14 @@ func _arrancar_partido() -> void:
 	if _btn_velocidad != null:
 		_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 	partido.gol.connect(_al_gol)
+	partido.gol.connect(func(_c: Club, _a: Jugador, _m: int, _as: Jugador) -> void: _frenar_destacado())
+	partido.remate.connect(func(_c: Club, _a: Jugador, _t: String, _m: int) -> void: _frenar_destacado())
+	partido.invasion_de_campo.connect(func(_m: int) -> void:
+		_mostrar_banner_gol("🚨 INVASIÓN DE CAMPO", false))
+	if modo_destacados:
+		_juego.vel_idx = VEL_DESTACADOS_RAPIDO
+		if _btn_velocidad != null:
+			_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 	partido.tarjeta.connect(_a_la_tarjeta)
 	partido.cambio_hecho.connect(_al_cambio)
 	partido.remate.connect(_al_remate)
@@ -615,10 +632,24 @@ func _tocar_ambiente() -> void:
 	else:
 		Sonido.toca("abucheo", Sonido.Bus.AMBIENTE)
 
+func _frenar_destacado() -> void:
+	if not modo_destacados or _juego == null or _juego.vel_idx == 0:
+		return
+	_juego.vel_idx = VEL_DESTACADOS_JUGADA
+	_destacado_hasta_ms = Time.get_ticks_msec() + int(SEG_DESTACADO * 1000.0)
+	if _btn_velocidad != null:
+		_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
+
 func _process(delta: float) -> void:
 	_escalar_rotulos()
 	if _juego == null or partido == null:
 		return
+	if _destacado_hasta_ms > 0 and Time.get_ticks_msec() >= _destacado_hasta_ms:
+		_destacado_hasta_ms = -1
+		if _juego.vel_idx == VEL_DESTACADOS_JUGADA:
+			_juego.vel_idx = VEL_DESTACADOS_RAPIDO
+			if _btn_velocidad != null:
+				_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 	_juego.tick(delta)
 	## El reloj de la reproducción manda: cuando cruza un minuto, se le pide otro
 	## minuto al partido. Nunca al revés, y nunca los dos a la vez.
