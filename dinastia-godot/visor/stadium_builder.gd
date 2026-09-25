@@ -2047,6 +2047,12 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var mi := MultiMeshInstance3D.new()
 	mi.multimesh = mm
 	mi.material_override = mat
+	## SIN SOMBRA PROPIA (25-9-2026, `pruebas/medir_partido.gd`). Miles de
+	## butacas y de hinchas proyectando sombra se dibujaban otra vez en CADA
+	## cascada del sol -cuatro en calidad ALTO-: eran el grueso de los ~2
+	## millones de triángulos por fotograma. Bajo el techo de la grada esa
+	## sombra no se ve; la de la grada entera (el `deck`) sigue estando.
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mi)
 
 	if hinchas_xf.is_empty():
@@ -2070,6 +2076,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	mih.multimesh = mmh
 	mih.material_override = mat_h
 	mih.name = "Hinchada"
+	mih.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mih)
 
 static func _primera_malla(n: Node) -> Mesh:
