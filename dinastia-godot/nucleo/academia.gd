@@ -127,8 +127,9 @@ func _nuevo_chico(edad: int) -> Dictionary:
 	var desvio := Azar.ent(-error + 2, error - 2)
 	return {
 		"id": "a%d" % _seq,
-		"nombre": m._nombre_al_azar(pais) if m != null else "Chico %d" % _seq,
+		"nombre": m._nombre_al_azar(pais, Regiones.region_para(pais, "a%d" % _seq, c)) if m != null else "Chico %d" % _seq,
 		"pais": pais,
+		"region": Regiones.region_para(pais, "a%d" % _seq, c),
 		"edad": edad,
 		"pos": grupo,
 		"pos_e": m.cantera.demarcacion_de(grupo) if m != null and m.cantera != null else grupo,
@@ -363,6 +364,7 @@ func _entregar(ch: Dictionary, forzar: bool) -> Jugador:
 	var j := m.crear_jugador(c, String(ch["pos"]), String(ch["pos_e"]), int(ch["edad"]), ovr)
 	j.nombre = String(ch["nombre"])
 	j.pais = String(ch["pais"])
+	j.region = String(ch.get("region", j.region))
 	j.pot = clampi(techo_al_entregar(ch), j.ovr, 97)
 	var dominante := rasgo_dominante(ch)
 	if dominante != "":

@@ -1206,12 +1206,15 @@ func _nombre_de_pila(pais: String = "") -> String:
 	return "Juan"
 
 ## Nunca devuelve el nombre de un futbolista real (`Nombres.vetado()`).
-func _nombre_al_azar(pais: String = "") -> String:
-	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais))
+func _nombre_al_azar(pais: String = "", region: String = "") -> String:
+	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais, region))
 
-func _sortear_nombre(pais: String) -> String:
+func _sortear_nombre(pais: String, region: String = "") -> String:
 	var a: Array = Datos.tabla("APELLIDOS")
 	var pools: Variant = Datos.tabla("POOLS_EU")
+	var propias := Regiones.bolsas(pais, region)
+	if not propias.is_empty():
+		return "%s %s" % [String(Azar.uno(propias[0])), String(Azar.uno(propias[1]))]
 	if pools is Dictionary and (pools as Dictionary).has(pais):
 		var par: Array = (pools as Dictionary)[pais]
 		if par.size() >= 2 and not (par[1] as Array).is_empty():
