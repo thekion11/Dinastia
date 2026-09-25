@@ -304,7 +304,21 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	gmat.normal_scale = 1.15
 	gmat.uv1_triplanar = false
 	gmat.roughness = 0.99
-	gmat.roughness_texture = Texturas._tex_ruido(0.03, 97, false, 4)
+	## LA COLUMNA MISTERIOSA (18-9 → 25-9-2026): ERA ESTO. El ruido de rugosidad
+	## iba de 0 a 1 en manchas grandes (frecuencia 0,03), así que había charcos
+	## de césped con rugosidad ~0 -un espejo- y, con el relieve de brizna
+	## (`bump_strength` 5), cada charco devolvía brillos redondos con volumen.
+	## De día el sol va inclinado y el reflejo cae fuera; de noche `Ambience`
+	## suma una luz de relleno casi vertical y el reflejo cae en el centro del
+	## campo: "burbujas translúcidas quietas cerca del círculo central, solo de
+	## noche". Reproducido con `pruebas/captura_columna_noche.gd`. El césped
+	## nunca es un espejo: la rampa deja la rugosidad entre 0,78 y 1.
+	var rugosidad := Texturas._tex_ruido(0.03, 97, false, 4)
+	var rampa := Gradient.new()
+	rampa.set_color(0, Color(0.78, 0.78, 0.78))
+	rampa.set_color(1, Color(1, 1, 1))
+	rugosidad.color_ramp = rampa
+	gmat.roughness_texture = rugosidad
 	gmat.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
 	gmat.metallic = 0.0
 	gmat.metallic_specular = 0.18
