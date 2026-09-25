@@ -82,6 +82,7 @@ func _ready() -> void:
 	_probar_ideas_del_documento()
 	_probar_aspecto_y_audio()
 	_probar_marca()
+	_probar_tutorial()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -4977,3 +4978,32 @@ func _probar_aspecto_y_audio() -> void:
 	## LAS FORMAS Y MARCAS DE TARJETA.
 	_comprobar(MarcaPanel.ESTILOS.size() == 7, "hay 7 marcas de tarjeta (%d)" % MarcaPanel.ESTILOS.size())
 	_comprobar(MarcaPanel.ESTILOS.has("ninguno"), "y se pueden quitar")
+
+## EL GUION DEL TUTORIAL (25-9-2026). La interfaz la recorre
+## `pruebas/captura_tutorial.gd`; aquí solo el guion de cada modo, que no
+## necesita pantalla: todos terminan en "A jugar", cada modo trae su paso
+## propio y ningún paso apunta a un control que `Principal` no sepa encontrar.
+func _probar_tutorial() -> void:
+	_titulo("TUTORIAL GUIADO")
+	const OBJETIVOS := ["estado", "grupos", "chips", "plantel", "ficha", "dinero", "partido",
+		"tabla", "registro", "calendario", "un_dia", "guardar"]
+	const HECHOS := ["grupo", "plantel", "dinero", "partido"]
+	const ACCIONES := ["grupo_club", "plantel", "dinero", "partido"]
+	var titulos_de_modo := {}
+	var malos: Array[String] = []
+	for modo in ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "creador"]:
+		var pasos := Tutorial.pasos_para(modo, "Club de prueba")
+		if pasos.size() < 10 or not String(pasos[pasos.size() - 1]["titulo"]).contains("A jugar"):
+			malos.append("%s: %d pasos" % [modo, pasos.size()])
+		for p: Dictionary in pasos:
+			if p.has("objetivo") and not OBJETIVOS.has(String(p["objetivo"])):
+				malos.append("%s: objetivo %s" % [modo, p["objetivo"]])
+			if p.has("hecho") and not HECHOS.has(String(p["hecho"])):
+				malos.append("%s: hecho %s" % [modo, p["hecho"]])
+			if p.has("mostrar") and not ACCIONES.has(String(p["mostrar"])):
+				malos.append("%s: mostrar %s" % [modo, p["mostrar"]])
+		titulos_de_modo[String(pasos[pasos.size() - 2]["titulo"])] = true
+	_comprobar(malos.is_empty(), "el guion de los 8 modos es coherente %s" % str(malos))
+	_comprobar(titulos_de_modo.size() == 8, "cada modo trae su propio paso (%d distintos)" % titulos_de_modo.size())
+	_comprobar(Tutorial.pasos_para("dt", "Lautaro FC")[0]["texto"].contains("Lautaro FC"),
+		"la bienvenida nombra al club")
