@@ -438,7 +438,7 @@ const _CAMPOS_PRENSA := [
 	"rep_entrenador", "clausulas", "cesiones", "arbitro_polemico",
 	"oferta_forzada", "abogado_en_directorio", "posts", "seguidores",
 	"relaciones", "medios", "vocero", "tv_individual", "portadas",
-	"impuesto_pid", "impuesto_hasta", "efectos", "memoria", "titular_pendiente",
+	"impuesto_pid", "impuesto_hasta", "efectos", "memoria", "titular_pendiente", "identidad", "cambio_identidad",
 ]
 
 static func _prensa_a_dic(p: Prensa) -> Dictionary:
