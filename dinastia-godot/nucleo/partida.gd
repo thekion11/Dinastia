@@ -97,6 +97,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"campana": m.campana.duplicate(),
 		"selecciones": m.selecciones.a_dic() if m.selecciones != null else {},
 		"cantera": m.cantera.a_dic() if m.cantera != null else {},
+		"academia": m.academia.a_dic() if m.academia != null else {},
 		"ojeadores": m.ojeadores.a_dic() if m.ojeadores != null else {},
 		"cesiones_datos": m.cesiones.a_dic() if m.cesiones != null else {},
 		"mercado": m.mercado.a_dic() if m.mercado != null else {},
@@ -549,6 +550,8 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.selecciones.desde_dic(datos.get("selecciones", {}))
 	if m.cantera != null:
 		m.cantera.desde_dic(datos.get("cantera", {}))
+	if m.academia != null:
+		m.academia.desde_dic(datos.get("academia", {}))
 	if m.ojeadores != null:
 		m.ojeadores.desde_dic(datos.get("ojeadores", {}))
 	if m.cesiones != null:
