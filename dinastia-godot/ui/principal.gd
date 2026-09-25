@@ -331,6 +331,11 @@ const ROTAR_FONDO := "*rotar*"
 #  exactamente el tipo de cambio que este proyecto no puede permitirse-.
 var _fila_dias: HBoxContainer
 const DIAS_CORTOS := ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"]
+## La tira de días usa el nombre entero y el número (pedido del usuario,
+## 25-9-2026: "los nombres de los días están recortados").
+const DIAS_LARGOS := ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+const MESES_LARGOS := ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+	"julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
 const MESES_CORTOS := ["ene", "feb", "mar", "abr", "may", "jun",
 	"jul", "ago", "sep", "oct", "nov", "dic"]
 ## La temporada arranca el 1 de febrero, como el calendario chileno.
@@ -339,6 +344,10 @@ var _dia_semana: int = 0
 
 ## La fecha de hoy, derivada: inicio de temporada + semanas corridas + días.
 func fecha_de_hoy() -> Dictionary:
+	return fecha_del_dia(_dia_semana)
+
+## La fecha de cualquier día (0 = lunes) de la semana en curso.
+func fecha_del_dia(dia: int) -> Dictionary:
 	var base := Time.get_unix_time_from_datetime_dict({
 		"year": mundo.anio if mundo != null else 2026,
 		"month": DIA_INICIO_TEMPORADA["mes"], "day": DIA_INICIO_TEMPORADA["dia"],
@@ -350,15 +359,16 @@ func fecha_de_hoy() -> Dictionary:
 	var dow_base := int(Time.get_datetime_dict_from_unix_time(int(base)).get("weekday", 1))
 	base -= float(((dow_base + 6) % 7) * 86400)
 	var semanas := maxi(0, (mundo.semana if mundo != null else 1) - 1)
-	return Time.get_datetime_dict_from_unix_time(int(base) + (semanas * 7 + _dia_semana) * 86400)
+	return Time.get_datetime_dict_from_unix_time(int(base) + (semanas * 7 + dia) * 86400)
 
 func fecha_larga() -> String:
 	var f := fecha_de_hoy()
 	var dow := int(f.get("weekday", 1))
 	## `weekday` de Godot es 0=domingo; aquí la semana empieza en lunes.
 	var idx := (dow + 6) % 7
-	return "%s %d %s %d" % [DIAS_CORTOS[idx], int(f["day"]),
-		MESES_CORTOS[int(f["month"]) - 1], int(f["year"])]
+	## Entera y sin abreviar: "lunes 26 de enero de 2026".
+	return "%s %d de %s de %d" % [String(DIAS_LARGOS[idx]).to_lower(), int(f["day"]),
+		MESES_LARGOS[int(f["month"]) - 1], int(f["year"])]
 
 ## Los siete días con el de hoy encendido. El sábado lleva el balón porque es
 ## cuando cae la jornada: sin esa marca, la tira sería un adorno.
@@ -371,7 +381,7 @@ func _pintar_dias() -> void:
 	for i in DIAS_CORTOS.size():
 		var es_hoy := i == _dia_semana
 		var dia_de_partido := i == 5 and hay_partido
-		var b := _pildora("%s%s" % [DIAS_CORTOS[i], "  ⚽" if dia_de_partido else ""], 11, 26)
+		var b := _pildora("%s %d%s" % [DIAS_LARGOS[i], int(fecha_del_dia(i).get("day", 1)), "  ⚽" if dia_de_partido else ""], 11, 26)
 		b.button_pressed = es_hoy
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if dia_de_partido and not es_hoy:
