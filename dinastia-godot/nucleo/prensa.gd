@@ -40,6 +40,9 @@ signal evento_resuelto(id: String, opcion: String, titulo: String, cuerpo: Strin
 signal rueda_abierta(pregunta: String, opciones: Array)
 signal rueda_respondida(titular: String, d_moral: int, d_confianza: int, d_socios: int)
 signal humor_hinchada(animo: int, funa: int)
+## El mentor comenta lo que pasa (plan maestro C1): un cambio de escudo, un
+## partido con temporal... Lo pinta la pantalla con su cara.
+signal mentor_dice(titulo: String, texto: String)
 
 ## --- LENGUAJE CORPORAL ------------------------------------------------------
 ## No importa solo lo que dices, sino cómo lo dices: si titubeas, los periodistas
@@ -925,6 +928,15 @@ func abrir_rueda(gane: bool, empate: bool) -> Dictionary:
 	var guion: Array = _GANE if gane else (_EMPATE if empate else _PERDI)
 	entrevista = (Azar.uno(guion) as Dictionary).duplicate(true)
 	cuerpo = CUERPO_POR_DEFECTO
+	## LO QUE ES NOTICIA MANDA sobre la pregunta de siempre (C1): si cambiaste
+	## el escudo o la camiseta, te preguntan por eso; si se jugó con temporal,
+	## calor o altura, por el tiempo. El sorteo de arriba se hace igual, así
+	## que el consumo de `Azar` no cambia.
+	if cambio_identidad != "":
+		entrevista = _pregunta_identidad(cambio_identidad)
+		cambio_identidad = ""
+	elif Clima.es_extremo(clima_ultimo) and _hash_de(str(_fecha()) + "clima") % 2 == 0:
+		entrevista = _pregunta_clima(clima_ultimo, gane, empate)
 	_poner_periodista(gane, empate)
 	rueda_abierta.emit(String(entrevista["pregunta"]), entrevista["opciones"])
 	return entrevista
@@ -1239,6 +1251,74 @@ func _preparar_titular(clave: String, frase: String, tono: String) -> void:
 
 ## Sale al día siguiente de la rueda (la llama `semana()` y, si la hay, la
 ## pantalla al pasar el día). Devuelve el titular, o vacío si no había.
+# --- el escudo, la camiseta y el tiempo (C1) ----------------------------------
+## La última identidad conocida del club: {esc, kit, col}. Vacía = aún no se
+## tomó la foto (la primera semana solo la toma, no da noticia).
+var identidad: Dictionary = {}
+## "escudo", "camiseta" o "escudo y camiseta" hasta que la rueda lo pregunte.
+var cambio_identidad: String = ""
+## El tiempo de tu último partido, para la rueda. Lo escribe `Mundo`.
+var clima_ultimo: Dictionary = {}
+## De qué competición es la rueda abierta ("liga" por defecto) y sus clubes,
+## para que la pared de la sala muestre los escudos que tocan. No se guardan:
+## la rueda se contesta en la misma sesión.
+var competicion_rueda: String = "liga"
+var clubes_rueda: Array = []
+
+static func firma_identidad(c: Club) -> Dictionary:
+	return {
+		"esc": "|".join([c.esc_color1, c.esc_color2, c.esc_forma, c.esc_patron, c.esc_simbolo, c.esc_especial]),
+		"kit": "|".join([c.kit_color1, c.kit_color2, c.kit_estilo]),
+		"col": "|".join([c.color1, c.color2]),
+	}
+
+## Cambiar el escudo o la camiseta es de las decisiones más sensibles de un
+## club: la gente se lo toma como algo suyo. Se revisa una vez por semana;
+## devuelve lo que cambió ("" si nada).
+func revisar_identidad(c: Club) -> String:
+	if c == null:
+		return ""
+	var ahora := firma_identidad(c)
+	if identidad.is_empty():
+		identidad = ahora
+		return ""
+	var escudo: bool = ahora["esc"] != identidad["esc"] or ahora["col"] != identidad["col"]
+	var camiseta: bool = ahora["kit"] != identidad["kit"] or ahora["col"] != identidad["col"]
+	identidad = ahora
+	if not escudo and not camiseta:
+		return ""
+	var que := "escudo y camiseta" if escudo and camiseta else ("escudo" if escudo else "camiseta")
+	cambio_identidad = que
+	## La afición se divide; cuánto, depende del día: un hash, no `Azar`.
+	var h := _hash_de("%s|%d|%s" % [c.id, _fecha(), que])
+	var d := (h % 11) - 6            ## de -6 a +4: tocar la identidad suele doler
+	mover_animo(d)
+	var reaccion := "La hinchada lo celebra en redes." if d > 0 else ("Hay división en la grada." if d > -3 else "Buena parte de la hinchada lo rechaza: «con la historia no se juega».")
+	var tit := "El club cambia su %s" % que
+	guardar_portada(tit.to_upper(), reaccion, "bien" if d > 0 else "mal")
+	noticia.emit("🗞️ " + tit, reaccion)
+	mentor_dice.emit("Sobre el nuevo %s" % que,
+		"Esto se va a comentar toda la semana. Prepárate: en la próxima rueda de prensa te van a preguntar por el %s, y lo que digas pesa tanto como el cambio." % que)
+	return que
+
+func _pregunta_identidad(que: String) -> Dictionary:
+	return {"pregunta": "Prensa: 'El club estrena %s. Hay hinchas molestos: ¿por qué tocar algo tan sagrado?'" % que, "opciones": [
+		{"txt": "Respetamos la historia; esto la pone al día", "moral": 0, "confianza": 1, "socios": 1, "tono": "calma"},
+		{"txt": "El que no lo entienda, ya lo entenderá", "moral": 0, "confianza": 1, "socios": -2, "tono": "soberbia"},
+		{"txt": "Eso es cosa del departamento de marketing", "moral": 0, "confianza": -1, "socios": -1, "tono": "evasiva"},
+	]}
+
+func _pregunta_clima(info: Dictionary, gane: bool, empate: bool) -> Dictionary:
+	var que := String(info.get("texto", "el tiempo")).to_lower()
+	var q := "Prensa: '¿Cuánto influyó el tiempo (%s) en el resultado?'" % que
+	if gane:
+		q = "Prensa: 'Con %s, ¿fue un triunfo de carácter más que de fútbol?'" % que
+	return {"pregunta": q, "opciones": [
+		{"txt": "Es igual para los dos: no es excusa", "moral": 1, "confianza": 1, "socios": 0, "tono": "calma"},
+		{"txt": "Así no se puede jugar al fútbol", "moral": -1 if not gane else 0, "confianza": -1, "socios": 0, "tono": "soberbia"},
+		{"txt": "Prefiero hablar del partido", "moral": 0, "confianza": 0, "socios": -1, "tono": "evasiva"},
+	]}
+
 func publicar_titular_pendiente() -> String:
 	if titular_pendiente.is_empty():
 		return ""
@@ -1429,6 +1509,7 @@ func semana() -> void:
 	if mio != null and not efectos.is_empty():
 		_aplicar_efectos(mio)
 	publicar_titular_pendiente()
+	revisar_identidad(mio)
 	if semanas_documental > 0:
 		semanas_documental -= 1
 		if mio != null:
