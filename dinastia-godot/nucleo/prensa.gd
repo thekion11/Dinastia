@@ -1111,20 +1111,7 @@ func _ceder(m: Mundo, mio: Club, j: Jugador) -> bool:
 ## precio y le cobraban otro. Aquí se imprime lo que se cobra. No cambia ninguna
 ## fórmula: cambia que el número de la pantalla sea verdad.
 func _dinero(n: int) -> String:
-	var e := int(round(float(n) * Eco.ECO))
-	var negativo := e < 0
-	e = absi(e)
-	var s := ""
-	if e >= 1000000000:
-		s = ("%.2f" % (float(e) / 1000000000.0)).replace(".", ",") + "MM"
-	elif e >= 1000000:
-		var m := float(e) / 1000000.0
-		s = (("%.0f" % m) if e >= 10000000 else ("%.1f" % m).replace(".", ",")) + "M"
-	elif e >= 1000:
-		s = "%dk" % int(round(float(e) / 1000.0))
-	else:
-		s = str(e)
-	return ("-€" if negativo else "€") + s
+	return Eco.dinero(n)
 
 # ---------------------------------------------------------------------------
 #  LAS REDES (`vSocial()`)
