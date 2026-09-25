@@ -8564,50 +8564,11 @@ func _pintar_informe() -> void:
 func _pintar_inicio(c: Club) -> void:
 	_limpiar(_lista_inicio)
 	var liga := _liga_de(c)
-	_pintar_informe()
-
-	var t := _texto(11, COL_SUAVE)
-	t.text = "PRÓXIMO COMPROMISO"
-	_lista_inicio.add_child(t)
-	var prox := _texto(14, COL_ORO)
-	prox.text = _texto_proximo_compromiso(c)
-	prox.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_lista_inicio.add_child(prox)
+	## EL TABLERO (25-9-2026): próximo partido con los dos escudos, anillos de
+	## valoración, la cara de la estrella y la racha. Ver `TableroInicio`.
+	TableroInicio.pintar(_lista_inicio, c, mundo, liga, _ir_a_pestana, _ver_ficha)
 	_lista_inicio.add_child(HSeparator.new())
-
-	## LOS CUATRO RECUADROS. Son las cuatro preguntas que uno se hace al abrir el
-	## juego: dónde voy, cuánto tengo, cómo me miran arriba y a quién no puedo
-	## alinear.
-	var lesionados := 0
-	var sancionados := 0
-	for j in c.plantilla:
-		if j.lesion > 0:
-			lesionados += 1
-		if j.suspension > 0:
-			sancionados += 1
-	var puesto := 0
-	var pts := 0
-	var n := 0
-	for f: Dictionary in liga.tabla():
-		n += 1
-		if f["club"] == c:
-			puesto = n
-			pts = int(f["pts"])
-	var g := GridContainer.new()
-	g.columns = 2
-	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 10)
-	g.add_theme_constant_override("v_separation", 6)
-	_lista_inicio.add_child(g)
-	var confianza := mundo.directiva.confianza if mundo.directiva != null else 50
-	_tarjeta_inicio(g, "POSICIÓN", "%d°" % puesto, "%d puntos" % pts, COL_ORO, "Clubes")
-	_tarjeta_inicio(g, "CAJA", _dinero(c.saldo), "toca para el detalle",
-		COL_VERDE if c.saldo >= 0 else COL_ROJO, "Finanzas")
-	_tarjeta_inicio(g, "DIRECTORIO", "%d/100" % confianza,
-		mundo.directiva.objetivo if mundo.directiva != null else "",
-		COL_VERDE if confianza >= 55 else (COL_ROJO if confianza < 30 else COL_ORO), "Club")
-	_tarjeta_inicio(g, "PLANTEL", "%d 🩹   %d 🚫" % [lesionados, sancionados],
-		"lesionados · sancionados", COL_ROJO if lesionados + sancionados > 0 else COL_SUAVE, "Mi plantel")
+	_pintar_informe()
 	_lista_inicio.add_child(HSeparator.new())
 
 	## LOS ACCESOS RÁPIDOS. Se marcan en Ajustes y salen aquí, que es donde se
@@ -8679,36 +8640,6 @@ func _pintar_inicio(c: Club) -> void:
 			b.add_theme_color_override("font_color", _color_de_paleta(COL_TEXTO if not bool(m.get("leida", false)) else COL_SUAVE))
 			b.pressed.connect(func() -> void: _ir_a_pestana("Correo"))
 			_lista_inicio.add_child(b)
-
-## Un recuadro de la portada: etiqueta, cifra grande, pie, y un salto a la
-## pestaña donde se actúa sobre eso.
-func _tarjeta_inicio(g: GridContainer, etiqueta: String, cifra: String, pie: String,
-		color: Color, destino: String) -> void:
-	var b := Button.new()
-	b.flat = true
-	b.custom_minimum_size = Vector2(0, 62)
-	## EXPAND_FILL o las dos tarjetas de la fila se encogen a ancho cero y se
-	## dibujan una encima de otra: en la primera captura se leía "4°497.4M EUR"
-	## porque POSICIÓN y CAJA estaban superpuestas.
-	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_child(b)
-	var v := VBoxContainer.new()
-	v.set_anchors_preset(Control.PRESET_FULL_RECT)
-	v.offset_left = 8; v.offset_top = 5; v.offset_right = -8; v.offset_bottom = -5
-	## IGNORE en el contenido: si las etiquetas atrapasen el ratón, el botón de
-	## debajo no recibiría el clic y la tarjeta entera dejaría de ser un atajo.
-	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	b.add_child(v)
-	var et := _texto(10, COL_SUAVE)
-	et.text = etiqueta
-	v.add_child(et)
-	var ci := _texto(20, color)
-	ci.text = cifra
-	v.add_child(ci)
-	var pi := _texto(10, COL_SUAVE)
-	pi.text = pie
-	pi.clip_text = true
-	v.add_child(pi)
 
 ## La frase de "qué toca esta semana". Sale del mismo sitio que decide qué se
 ## juega al pulsar «Dirigir el partido», para que las dos no puedan discrepar.
