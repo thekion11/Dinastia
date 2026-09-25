@@ -28,6 +28,7 @@ Versiones (ver `herramientas/empaquetar.ps1`):
 | Huellas de nombres reales (md5, 12 hex) para que el generador no invente "Mohamed Salah" | `datos/tablas.json` → `NOMBRES_VETADOS` | 🟢 no contiene ningún nombre legible |
 | Listado de futbolistas reales (entrada de la búsqueda de fotos) | `datos/reales_lista.json` | 🔴 excluido |
 | Informe de fotos reales (Wikidata/Commons) | `datos/caras_reales_reporte.json` | 🔴 excluido |
+| Índice de retratos y créditos de las fotos | `datos/caras_reales_recortes.json`, `datos/creditos_fotos.txt` | 🔴 excluido de las versiones públicas (van con las fotos) |
 | Copia vieja de las tablas con todo lo real | `datos/tablas.json.bak` | 🔴 excluido |
 
 **Cómo funciona.** `Datos` carga la base ficticia y, si encuentra un `pack_real.json` (en
@@ -45,7 +46,9 @@ nombre registrado ni el apodo comercial. Se evitaron también nombres de clubes 
 
 | Qué | Dónde | Estado |
 |---|---|---|
-| 1.547 fotos de caras de futbolistas reales (Wikidata/Commons; muchas son CC-BY-SA con atribución, algunas no libres, y todas tienen derechos de imagen de la persona) | `recursos/caras_reales/` | 🔴 excluido. Además, `Cara.foto_real()` no enseña ninguna foto con la base ficticia |
+| 1.219 fotos de caras de futbolistas reales, bajadas de Wikimedia Commons solo si su licencia es libre (revisado 25-9-2026 sobre el informe: 636 CC BY-SA 4.0, 151 CC BY-SA 3.0, 123 CC0, 71 CC BY-SA 2.0, 70 CC BY 3.0, 66 CC BY 4.0, 56 CC BY 2.0, 33 dominio público, 13 otras CC). Originales en `recursos/caras_reales/`, retratos recortados por la cara en `recursos/caras_reales_256/` | ver las dos filas de abajo | 🔴 excluidas de las versiones públicas; la versión **completo** lleva solo los retratos de 256 px |
+| **Derechos de autor de la foto**: libres con condiciones. CC BY y CC BY-SA exigen nombrar autor y licencia y avisar de que se modificó (se recortó): la ficha del jugador lo pone bajo el retrato (`Cara.credito_foto()`) y la lista completa está en `datos/creditos_fotos.txt`. BY-SA pide además que los retratos recortados se compartan con la misma licencia | `datos/caras_reales_recortes.json`, `datos/creditos_fotos.txt` | 🟢 cumplido en el juego (crédito visible) |
+| **Derechos de imagen de la persona**: aparte de la licencia de la foto. Commons avisa de que una foto libre no autoriza a usar la cara de alguien en un producto comercial; los juegos con licencia la consiguen de FIFPro o de cada liga | — | 🔴 por eso siguen fuera de lo que se publica. Con la base ficticia `Cara.foto_real()` no enseña ninguna foto |
 | 1.102 fotos de camisetas reales (escudo y patrocinadores de marca) | `../recursos/equipaciones/` (fuera del proyecto) | 🔴 solo se copian junto al `.exe` en la versión **completo**. Con la base ficticia `EQUIP_REAL` está vacía y nunca se usan |
 | Modelo `futbolista_cr7.glb` y sus texturas (camiseta real del Al-Nassr, sin licencia conocida) | — | ✅ **borrado del proyecto** (25-9-2026), junto con su código (`Futbolista`, `AnimMixamo`, `Vestidor`). Los partidos y el presentador del sorteo usan el modelo Quaternius |
 

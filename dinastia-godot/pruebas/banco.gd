@@ -503,6 +503,9 @@ func _probar_reales() -> void:
 		if foto != null:
 			_comprobar(foto.get_width() == foto.get_height(), "la foto queda recortada a cuadrado (%dx%d)" % [foto.get_width(), foto.get_height()])
 			_comprobar(Cara.textura(vidal, "#000000", "#ffffff", 64) == foto, "textura() prefiere la foto real sobre el dibujo procedural")
+			_comprobar(foto.get_width() == 256, "usa el retrato recortado por la cara (256 px), no la foto de prensa entera (%d px)" % foto.get_width())
+			var cred := Cara.credito_foto(vidal)
+			_comprobar(cred.contains("Wikimedia Commons") and cred.contains("CC"), "la ficha puede citar autor y licencia de la foto: " + cred)
 	var generado_cualquiera: Jugador = null
 	for j: Jugador in colo.plantilla:
 		if not j.real:
