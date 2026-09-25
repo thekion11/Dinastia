@@ -231,7 +231,7 @@ const _ASIENTOS := ["franjas", "liso", "moteado", "degradado"]
 
 func perfil_estadio() -> Dictionary:
 	var h := _hash_id()
-	return {
+	var p := {
 		"personalizado": false,
 		"forma": _FORMAS[h % _FORMAS.size()],
 		"niveles": 3 if rep >= 80 else (2 if rep >= 62 else 1),
@@ -243,6 +243,32 @@ func perfil_estadio() -> Dictionary:
 		"vallas": rep < 78,
 		"aforo": estadio_aforo,
 	}
+	## MÁS VARIANTES DE ESTADIO PARA LOS RIVALES (25-9-2026). Hasta hoy todos
+	## los rivales compartían techo, focos, banderas, tono de césped, banquillo
+	## y red: solo cambiaban la forma y los asientos. Ahora cada club toma uno
+	## de los estilos completos (`EST_PRESETS`: la caldera, la catedral, la
+	## nave futurista, el estadio de montaña...), siempre el mismo para el mismo
+	## club, y su REPUTACIÓN lo recorta: un club chico no tiene techo total ni
+	## anillo de pantallas. El clima no se toca -lo pone la hora del partido- y
+	## el túnel tampoco.
+	var presets: Variant = Datos.tabla("EST_PRESETS")
+	if presets is Array and not (presets as Array).is_empty():
+		## Hash aparte y bien mezclado: con `h >> 7` los ids seguidos (c1, c2...)
+		## caían casi todos en el mismo estilo (se vio: dos formas en todo el mundo).
+		var he := absi(("estilo_estadio:" + id).hash())
+		var fila: Array = (presets as Array)[he % (presets as Array).size()]
+		var e: Dictionary = fila[3] if fila.size() > 3 and fila[3] is Dictionary else {}
+		for k in ["forma", "asientoP", "cespedTono", "banderas", "corner", "redTipo", "banquillo"]:
+			if e.has(k):
+				p[k] = e[k]
+		if rep >= 70:
+			for k in ["techo", "focos", "pantalla", "cesped"]:
+				if e.has(k):
+					p[k] = e[k]
+			p["niveles"] = mini(int(p["niveles"]) + 1, maxi(1, int(e.get("niveles", p["niveles"]))))
+		elif rep >= 60 and String(e.get("techo", "sin")) in ["sin", "parcial", "visera"]:
+			p["techo"] = e["techo"]
+	return p
 
 ## djb2, el mismo que usa el HTML para que un club dé siempre el mismo recinto.
 func _hash_id() -> int:
