@@ -452,6 +452,7 @@ func _arrancar_partido() -> void:
 	var fv: float = partido.fuerza(partido.once_visita, partido.visita)["ata"]
 	var pos := 100.0 * fl / maxf(fl + fv, 0.001)
 	_juego.setup([], _en_campo, Partido.MINUTOS, pos, _balon, club.tactica, visitante.tactica)
+	_juego.jugada_ambiente.connect(_al_jugada_ambiente)
 	if _btn_velocidad != null:
 		_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 	partido.gol.connect(_al_gol)
@@ -514,6 +515,49 @@ func _arrancar_partido() -> void:
 	_refrescar_marcador()
 
 	_crear_banner_gol()
+	_crear_rotulo_jugada()
+
+## EL RÓTULO DE LA JUGADA (25-9-2026): como en la tele, cuando un equipo
+## construye una jugada del catálogo aparece su nombre debajo del marcador
+## ("▸ PARED FRONTAL 1-2"), con el color del equipo, y se va solo.
+var _rotulo_jugada: PanelContainer
+var _lbl_jugada: Label
+var _tween_jugada: Tween
+
+func _crear_rotulo_jugada() -> void:
+	_rotulo_jugada = PanelContainer.new()
+	var e := StyleBoxFlat.new()
+	e.bg_color = Color(0, 0, 0, 0.62)
+	e.border_width_left = 4
+	e.border_color = Color("c9a227")
+	e.set_corner_radius_all(4)
+	e.content_margin_left = 12; e.content_margin_right = 14
+	e.content_margin_top = 4; e.content_margin_bottom = 4
+	_rotulo_jugada.add_theme_stylebox_override("panel", e)
+	_rotulo_jugada.anchor_left = 0.0
+	_rotulo_jugada.anchor_right = 0.0
+	_rotulo_jugada.offset_left = 18
+	_rotulo_jugada.offset_top = 60
+	_rotulo_jugada.modulate.a = 0.0
+	_rotulo_jugada.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_rotulo_jugada)
+	_lbl_jugada = Label.new()
+	_lbl_jugada.add_theme_font_size_override("font_size", 14)
+	_lbl_jugada.add_theme_color_override("font_color", Color("e9eeea"))
+	_rotulo_jugada.add_child(_lbl_jugada)
+
+func _al_jugada_ambiente(nombre: String, es_local: bool) -> void:
+	if _rotulo_jugada == null:
+		return
+	var equipo: Club = club if es_local else visitante
+	(_rotulo_jugada.get_theme_stylebox("panel") as StyleBoxFlat).border_color = Color(equipo.color1) if equipo != null else Color("c9a227")
+	_lbl_jugada.text = "▸ %s  ·  %s" % [nombre.to_upper(), equipo.nombre if equipo != null else ""]
+	if _tween_jugada != null and _tween_jugada.is_valid():
+		_tween_jugada.kill()
+	_tween_jugada = create_tween()
+	_tween_jugada.tween_property(_rotulo_jugada, "modulate:a", 1.0, 0.25)
+	_tween_jugada.tween_interval(3.2)
+	_tween_jugada.tween_property(_rotulo_jugada, "modulate:a", 0.0, 0.6)
 
 ## Sonidos de grada sin evento puntual detras -el "ruido de fondo con vida"
 ## que faltaba-. Uno por bloque para no repetir siempre el mismo: percusion,
