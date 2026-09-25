@@ -782,6 +782,14 @@ func origen_de(j: Jugador) -> Dictionary:
 func linaje_de(j: Jugador) -> Dictionary:
 	return _fichas.get(j.id, {}).get("linaje", {}) if j != null else {}
 
+## Un chico que llega de la Academia (10-16 años, `Academia`) es tan canterano
+## como uno de la camada: se anota igual, con su año, para el linaje, las
+## etiquetas y la cuenta de debutantes del modo director de cantera.
+func registrar_de_academia(j: Jugador, anio: int) -> void:
+	var f := _ficha(j.id)
+	f["camada"] = anio
+	f["origen"] = "academia"
+
 func es_canterano(j: Jugador) -> bool:
 	return j != null and _fichas.get(j.id, {}).has("camada")
 
