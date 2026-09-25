@@ -103,6 +103,10 @@ const PRECIO := {
 	## debajo de una obra real (no se levanta ni un ladrillo, solo cambia la
 	## textura de la grada).
 	"personalizacion_tramos": 130000.0,
+	## B6: revestir la fachada entera es obra de verdad; cambiar la
+	## superficie del campo es levantar el césped y poner otro.
+	"fachada": 420000.0,
+	"superficie": 260000.0,
 }
 
 ## A qué capítulo de obra pertenece cada opción del diseñador. Lo que no esté
@@ -132,6 +136,13 @@ const CAPITULO := {
 	"tramo_norte_1": "butacas", "tramo_norte_2": "butacas", "tramo_norte_3": "butacas",
 	"tramo_este_1": "butacas", "tramo_este_2": "butacas", "tramo_este_3": "butacas",
 	"tramo_oeste_1": "butacas", "tramo_oeste_2": "butacas", "tramo_oeste_3": "butacas",
+	## B6. Los colores sueltos son pintura (gratis), salvo las butacas de una
+	## tribuna, que se cambian una a una.
+	"fachada": "fachada", "superficie": "superficie", "luzFocos": "focos",
+	"bandeja_sur_col1": "butacas", "bandeja_sur_col2": "butacas",
+	"bandeja_norte_col1": "butacas", "bandeja_norte_col2": "butacas",
+	"bandeja_este_col1": "butacas", "bandeja_este_col2": "butacas",
+	"bandeja_oeste_col1": "butacas", "bandeja_oeste_col2": "butacas",
 }
 
 ## De qué tabla salen las opciones válidas de cada campo. Sirve para dos cosas:
@@ -159,6 +170,93 @@ const CATALOGO_DE := {
 	"tramo_este_1": "EST_ASIENTOS", "tramo_este_2": "EST_ASIENTOS", "tramo_este_3": "EST_ASIENTOS",
 	"tramo_oeste_1": "EST_ASIENTOS", "tramo_oeste_2": "EST_ASIENTOS", "tramo_oeste_3": "EST_ASIENTOS",
 }
+
+## --- B6 (25-9-2026, plan maestro): EL ESTADIO POR SECCIONES ------------------
+## Pedido del usuario (ROADMAP 2-sexies): *"cambiar colores por sección, arco,
+## líneas, bandejas una por una, césped, pantalla, faros, luces nocturnas, LED,
+## bancas, gradas, asientos"*. Los catálogos nuevos viven AQUÍ y no en
+## `tablas.json` (que es la exportación del HTML y se regenera): así no se
+## pierden al volver a exportar. Tampoco entran en `aleatorio()`, que recorre
+## solo `CATALOGO_DE`: el botón "sorpréndeme" consume el mismo azar que antes.
+const PALETA := [
+	["", "Del club", "Hereda los colores de la camiseta."],
+	["#ffffff", "Blanco"], ["#d8d8d8", "Gris claro"], ["#5a5f66", "Grafito"],
+	["#1b1d22", "Negro"], ["#c9a227", "Dorado"], ["#b01e2d", "Rojo"],
+	["#1f4fa3", "Azul"], ["#7fdcff", "Celeste"], ["#2b6b45", "Verde"],
+	["#e8c21a", "Amarillo"], ["#e07b2a", "Naranja"], ["#6b2d8f", "Morado"],
+	["#8a4a2b", "Terracota"],
+]
+const TABLAS_B6 := {
+	"EST_FACHADAS": [
+		["hormigon", "Hormigón visto", "El de siempre: gris, sobrio y barato de mantener."],
+		["ladrillo", "Ladrillo", "Obra vista de estadio inglés de barrio."],
+		["vidrio", "Muro cortina de vidrio", "Estadio de ciudad moderna: de noche brilla por dentro."],
+		["membrana", "Membrana de lona", "Piel tensada sobre la estructura, como las arenas alemanas."],
+		["metal", "Chapa metálica", "Paneles de acero con juntas marcadas."],
+	],
+	"EST_LUCES": [
+		["neutra", "Blanca de televisión", "5.600 K: la de las transmisiones."],
+		["calida", "Cálida", "Amarillenta, de estadio de los noventa."],
+		["fria", "Fría", "Azulada, de LED moderno."],
+		["club", "Del color del club", "Los focos se tiñen con el primer color de la camiseta."],
+	],
+	"EST_SUPERFICIES": [
+		["natural", "Césped natural", "Lo clásico. Sufre con los conciertos y el mal tiempo."],
+		["hibrido", "Césped híbrido", "Natural cosido con fibra: menos lesiones y aguanta el uso."],
+		["artificial", "Césped artificial", "No se estropea nunca, pero castiga las articulaciones: más lesiones."],
+	],
+	"EST_PALETA": PALETA,
+}
+## Las claves nuevas y su valor de fábrica. "" en un color = hereda.
+const DEF_B6 := {
+	"fachada": "hormigon", "fachadaCol": "", "techoCol": "", "luzFocos": "neutra",
+	"banquilloCol": "", "superficie": "natural",
+	"bandeja_sur_col1": "", "bandeja_sur_col2": "",
+	"bandeja_norte_col1": "", "bandeja_norte_col2": "",
+	"bandeja_este_col1": "", "bandeja_este_col2": "",
+	"bandeja_oeste_col1": "", "bandeja_oeste_col2": "",
+}
+const CATALOGO_B6 := {
+	"fachada": "EST_FACHADAS", "fachadaCol": "EST_PALETA", "techoCol": "EST_PALETA",
+	"luzFocos": "EST_LUCES", "banquilloCol": "EST_PALETA", "superficie": "EST_SUPERFICIES",
+	"bandeja_sur_col1": "EST_PALETA", "bandeja_sur_col2": "EST_PALETA",
+	"bandeja_norte_col1": "EST_PALETA", "bandeja_norte_col2": "EST_PALETA",
+	"bandeja_este_col1": "EST_PALETA", "bandeja_este_col2": "EST_PALETA",
+	"bandeja_oeste_col1": "EST_PALETA", "bandeja_oeste_col2": "EST_PALETA",
+}
+## Cuánto multiplica cada superficie la probabilidad de lesión en TU campo.
+const LESION_POR_SUPERFICIE := {"natural": 1.0, "hibrido": 0.85, "artificial": 1.3}
+## Y cuánto del desgaste del césped (conciertos, `Ciudad.penalizacion_cesped`)
+## llega al juego: el artificial no se estropea, el híbrido aguanta la mitad.
+const DESGASTE_POR_SUPERFICIE := {"natural": 1.0, "hibrido": 0.5, "artificial": 0.0}
+
+## LOS OCHO ESTILOS NUEVOS (B6.6): de 16 a 24. Mismo formato que `EST_PRESETS`.
+const PRESETS_B6 := [
+	["coliseo", "🏛️ Coliseo", "Óvalo de piedra clara, arcos en la fachada y anillo de luz cálida.",
+		{"forma": "oval", "niveles": 3, "techo": "anillo", "fachada": "hormigon", "fachadaCol": "#d8d8d8",
+		"luzFocos": "calida", "focos": "corona", "asientoP": "franjas", "cesped": "circular", "banderas": "club", "redTipo": "cuadrada", "escudoDonde": "fachada"}],
+	["caja_inglesa", "📦 Caja inglesa", "Cuatro tribunas de ladrillo pegadas a la raya, techo a dos aguas.",
+		{"forma": "rect", "niveles": 2, "techo": "parcial", "fachada": "ladrillo", "techoCol": "#1b1d22",
+		"luzFocos": "neutra", "focos": "torres", "asientoP": "mosaico", "cesped": "rayasH", "clima": "lluvia", "redTipo": "cuadrada", "escudoDonde": "fachada"}],
+	["ladera", "⛰️ Estadio de ladera", "Herradura abierta a la montaña, hormigón gris y viento de altura.",
+		{"forma": "herradura", "niveles": 2, "techo": "sin", "fachada": "hormigon", "fachadaCol": "#5a5f66",
+		"luzFocos": "fria", "focos": "torres", "cesped": "liso", "clima": "niebla", "redTipo": "rombo", "escudoDonde": "grada"}],
+	["flotante", "🌊 Estadio flotante", "Cuenco blanco de vidrio sobre el agua, focos azules y halo LED.",
+		{"forma": "cuenco", "niveles": 2, "techo": "visera", "fachada": "vidrio", "techoCol": "#d8d8d8",
+		"luzFocos": "fria", "focos": "halo", "superficie": "hibrido", "asientoP": "degrade", "redTipo": "cuadrada", "escudoDonde": "cancha"}],
+	["cupula", "🔘 Cúpula", "Cubierta total retráctil, membrana blanca y césped híbrido: aquí no llueve.",
+		{"forma": "cuenco", "niveles": 4, "techo": "retractil", "fachada": "membrana", "techoCol": "#ffffff",
+		"luzFocos": "neutra", "focos": "corona", "superficie": "hibrido", "redTipo": "cuadrada", "escudoDonde": "techo"}],
+	["desierto", "🏜️ Estadio del desierto", "Chapa dorada, luz cálida y césped artificial que no se quema.",
+		{"forma": "oval", "niveles": 3, "techo": "membrana", "fachada": "metal", "fachadaCol": "#c9a227",
+		"techoCol": "#d8d8d8", "luzFocos": "calida", "focos": "mixto", "superficie": "artificial", "clima": "dia", "redTipo": "cuadrada", "escudoDonde": "fachada"}],
+	["concreto", "🇦🇷 Hormigón sudamericano", "Caldera de hormigón crudo, paravalanchas y focos cálidos de los setenta.",
+		{"forma": "caldera", "niveles": 3, "techo": "sin", "fachada": "hormigon", "fachadaCol": "#5a5f66",
+		"luzFocos": "calida", "focos": "torres", "banderas": "tifo", "asientoP": "aros", "redTipo": "gruesa", "escudoDonde": "grada"}],
+	["nipon", "🗾 Japonés moderno", "Fachada de lona sobre madera clara, techo en visera y luz fría.",
+		{"forma": "oval", "niveles": 3, "techo": "visera", "fachada": "membrana", "fachadaCol": "#ffffff",
+		"techoCol": "#8a4a2b", "luzFocos": "fria", "focos": "halo", "cesped": "damGrande", "redTipo": "rombo", "escudoDonde": "cancha"}],
+]
 
 ## Las 4 tribunas, en el mismo orden e índices que `visor/stadium_builder.gd`
 ## comenta en su array `stands` (0=sur 1=norte 2=este 3=oeste) -mismo nombre a
@@ -193,6 +291,7 @@ func _sembrar() -> void:
 	var def: Variant = Datos.tabla("EST_DEF")
 	if def is Dictionary:
 		ajustes = (def as Dictionary).duplicate(true)
+		_sembrar_b6()
 	else:
 		ajustes = {
 			"forma": "cuenco", "niveles": 2, "techo": "anillo", "pista": false,
@@ -201,6 +300,12 @@ func _sembrar() -> void:
 			"arcoCol": "#ffffff", "redCol": "#ffffff", "focos": "torres",
 			"pantalla": "dos", "clima": "noche", "banderas": "club", "vallas": true,
 		}
+		_sembrar_b6()
+
+func _sembrar_b6() -> void:
+	for k: String in DEF_B6:
+		if not ajustes.has(k):
+			ajustes[k] = DEF_B6[k]
 
 # ============================================================================
 # EL CONTRATO CON EL VISOR
@@ -255,6 +360,16 @@ func perfil(mi: Club, obras: Instalaciones = null) -> Dictionary:
 		## propio sonaba siempre al "bombo" por defecto de `Sonido`. El usuario
 		## lo reporto como "el sonido es generico" viendo su propio estadio.
 		"sonidoGol": String(ajustes.get("sonidoGol", "bombo")),
+		## B6: las secciones. Los colores vacíos se resuelven aquí, no en el
+		## visor: el visor no sabe de camisetas.
+		"fachada": String(ajustes.get("fachada", "hormigon")),
+		"fachadaCol": String(ajustes.get("fachadaCol", "")),
+		"techoCol": String(ajustes.get("techoCol", "")),
+		"luzFocos": String(ajustes.get("luzFocos", "neutra")),
+		"luzClub": mi.color1,
+		"banquilloCol": String(ajustes.get("banquilloCol", "")),
+		"superficie": String(ajustes.get("superficie", "natural")),
+		"exterior": true,
 	}
 	## `bandejas` es la única clave que se AÑADE condicionalmente: con el
 	## interruptor apagado (el caso de siempre) `p` sale con exactamente las
@@ -280,6 +395,9 @@ func _bandejas_personalizadas() -> Dictionary:
 		salida[lado] = {
 			"asientoP": asientoP if asientoP != "" else String(ajustes.get("asientoP", "franjas")),
 			"techo": techo if techo != "" else String(ajustes.get("techo", "anillo")),
+			## B6: los colores de las butacas de ESTA tribuna ("" = los globales).
+			"col1": String(ajustes.get("bandeja_%s_col1" % lado, "")),
+			"col2": String(ajustes.get("bandeja_%s_col2" % lado, "")),
 		}
 	return salida
 
@@ -457,8 +575,9 @@ func reformar(mi: Club, cambios: Dictionary, obras: Instalaciones = null) -> Str
 func es_valido(campo: String, valor: Variant) -> bool:
 	if campo == "niveles":
 		return valor is int or valor is float
-	if CATALOGO_DE.has(campo):
-		for fila: Array in _tabla(String(CATALOGO_DE[campo])):
+	var cat := _catalogo(campo)
+	if cat != "":
+		for fila: Array in _tabla(cat):
 			if fila.size() > 0 and String(fila[0]) == String(valor):
 				return true
 		return false
@@ -472,9 +591,10 @@ func es_valido(campo: String, valor: Variant) -> bool:
 ## la descripción cuando el catálogo la trae.
 func opciones(campo: String) -> Array:
 	var salida: Array = []
-	if not CATALOGO_DE.has(campo):
+	var cat := _catalogo(campo)
+	if cat == "":
 		return salida
-	for fila: Array in _tabla(String(CATALOGO_DE[campo])):
+	for fila: Array in _tabla(cat):
 		if fila.is_empty():
 			continue
 		salida.append({
@@ -493,7 +613,7 @@ func opciones(campo: String) -> Array:
 ## paquete de cambios, así que se paga como cualquier reforma.
 func presets() -> Array:
 	var salida: Array = []
-	for p: Array in _tabla("EST_PRESETS"):
+	for p: Array in _tabla("EST_PRESETS") + PRESETS_B6:
 		if p.size() < 4:
 			continue
 		salida.append({
@@ -566,7 +686,22 @@ func desde_dic(d: Dictionary) -> void:
 # UTILIDADES
 # ============================================================================
 
+func _catalogo(campo: String) -> String:
+	if CATALOGO_DE.has(campo):
+		return String(CATALOGO_DE[campo])
+	return String(CATALOGO_B6.get(campo, ""))
+
+## Cuánto multiplica tu superficie la probabilidad de lesión en casa (B6.5).
+func factor_lesion() -> float:
+	return float(LESION_POR_SUPERFICIE.get(String(ajustes.get("superficie", "natural")), 1.0))
+
+## Qué parte del desgaste del césped llega al juego (B6.5).
+func factor_desgaste_cesped() -> float:
+	return float(DESGASTE_POR_SUPERFICIE.get(String(ajustes.get("superficie", "natural")), 1.0))
+
 func _tabla(nombre_tabla: String) -> Array:
+	if TABLAS_B6.has(nombre_tabla):
+		return TABLAS_B6[nombre_tabla]
 	var t: Variant = Datos.tabla(nombre_tabla)
 	return t if t is Array else []
 

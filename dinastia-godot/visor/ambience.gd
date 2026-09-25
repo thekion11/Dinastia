@@ -125,7 +125,8 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 		var fill := DirectionalLight3D.new()
 		fill.rotation_degrees = Vector3(-78, 130, 0)
 		fill.light_energy = 0.40 + oscuro * 0.35
-		fill.light_color = Color(1.0, 0.98, 0.92)
+		## B6.1: del color que se eligió para los focos.
+		fill.light_color = StadiumBuilder.color_luz(est)
 		fill.shadow_enabled = false
 		## Sin brillo especular: es una luz de RELLENO. Casi vertical, su
 		## reflejo caía en el centro del campo y era media causa de la

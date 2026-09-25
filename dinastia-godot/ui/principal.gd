@@ -7625,10 +7625,10 @@ func _pintar_estadio(c: Club) -> void:
 	## Se agrupan por bloques porque diecisiete desplegables seguidos son una
 	## lista de la compra: así se lee como lo que es, un estadio por partes.
 	for bloque: Array in [
-			["LA ESTRUCTURA", ["forma", "techo", "focos", "pantalla"]],
-			["EL CAMPO", ["cesped", "cespedTono", "lineaCol", "arcoCol", "redCol", "redTipo"]],
+			["LA ESTRUCTURA", ["forma", "fachada", "fachadaCol", "techo", "techoCol", "focos", "luzFocos", "pantalla"]],
+			["EL CAMPO", ["superficie", "cesped", "cespedTono", "lineaCol", "arcoCol", "redCol", "redTipo"]],
 			["LA GRADA", ["asientoP", "banderas", "escudoDonde", "corner"]],
-			["LOS DETALLES", ["banquillo", "tunel", "clima", "sonidoGol"]],
+			["LOS DETALLES", ["banquillo", "banquilloCol", "tunel", "clima", "sonidoGol"]],
 		]:
 		var tb := _texto(11, COL_ACENTO)
 		tb.text = String(bloque[0])
@@ -7645,7 +7645,7 @@ func _pintar_estadio(c: Club) -> void:
 	tt.text = "LAS TRIBUNAS"
 	_lista_estadio.add_child(tt)
 	_fila_interruptor_estadio(e.ajustes, "personalizar_bandejas", "Personalizar cada tribuna",
-		"Cada una de las 4 tribunas con su propio patrón de butacas y techo, en vez de un solo estilo para todo el recinto.")
+		"Cada una de las 4 tribunas con su propio patrón, colores de butaca y techo, en vez de un solo estilo para todo el recinto.")
 	if bool(e.ajustes.get("personalizar_bandejas", false)):
 		var fila_lado := HBoxContainer.new()
 		fila_lado.add_theme_constant_override("separation", 6)
@@ -7670,6 +7670,8 @@ func _pintar_estadio(c: Club) -> void:
 		fila_lado.add_child(sel_lado)
 		_fila_diseno_estadio(e, p, "bandeja_%s_asientoP" % _bandeja_actual)
 		_fila_diseno_estadio(e, p, "bandeja_%s_techo" % _bandeja_actual)
+		_fila_diseno_estadio(e, p, "bandeja_%s_col1" % _bandeja_actual)
+		_fila_diseno_estadio(e, p, "bandeja_%s_col2" % _bandeja_actual)
 
 	## LOS TERCIOS: estilos mixtos DENTRO de una misma tribuna (18/22-9-2026,
 	## Fase 3 de "el estadio por MÓDULOS", la última de las tres). El spike del
@@ -7731,6 +7733,12 @@ const ETIQUETAS_ESTADIO := {
 	"asientoP": "Butacas", "banderas": "Banderas", "escudoDonde": "Dónde va el escudo",
 	"corner": "Banderines de córner", "banquillo": "Banquillos", "tunel": "Túnel",
 	"clima": "Clima", "sonidoGol": "Sonido del gol",
+	"fachada": "Fachada", "fachadaCol": "Color de la fachada", "techoCol": "Color del techo",
+	"luzFocos": "Luz de los focos", "superficie": "Superficie", "banquilloCol": "Color de los banquillos",
+	"bandeja_sur_col1": "Color 1 — Tribuna Sur", "bandeja_sur_col2": "Color 2 — Tribuna Sur",
+	"bandeja_norte_col1": "Color 1 — Tribuna Norte", "bandeja_norte_col2": "Color 2 — Tribuna Norte",
+	"bandeja_este_col1": "Color 1 — Tribuna Este", "bandeja_este_col2": "Color 2 — Tribuna Este",
+	"bandeja_oeste_col1": "Color 1 — Tribuna Oeste", "bandeja_oeste_col2": "Color 2 — Tribuna Oeste",
 	"bandeja_sur_asientoP": "Butacas — Tribuna Sur", "bandeja_sur_techo": "Techo — Tribuna Sur",
 	"bandeja_norte_asientoP": "Butacas — Tribuna Norte", "bandeja_norte_techo": "Techo — Tribuna Norte",
 	"bandeja_este_asientoP": "Butacas — Tribuna Este", "bandeja_este_techo": "Techo — Tribuna Este",
@@ -7784,6 +7792,9 @@ func _fila_diseno_estadio(e: EstadioPropio, p: Dictionary, campo: String) -> voi
 		var o: Dictionary = ops[i]
 		b.add_item(String(o["nombre"]))
 		b.set_item_metadata(i, String(o["clave"]))
+		## Los colores se eligen viéndolos (B6.1): una muestra junto al nombre.
+		if String(o["clave"]).begins_with("#"):
+			b.set_item_icon(i, _muestra_color(Color(String(o["clave"]))))
 		if String(o["clave"]) == String(e.ajustes.get(campo, p.get(campo, ""))):
 			b.select(i)
 	b.item_selected.connect(func(idx: int) -> void:
@@ -7802,6 +7813,16 @@ func _fila_diseno_estadio(e: EstadioPropio, p: Dictionary, campo: String) -> voi
 			pop.add_item(String((ops[i] as Dictionary)["nombre"]), i)
 		pop.id_pressed.connect(_probar_sonido_gol.bind(ops))
 		fila.add_child(escuchar)
+
+static var _muestras: Dictionary = {}
+func _muestra_color(c: Color) -> Texture2D:
+	var k := c.to_html(false)
+	if not _muestras.has(k):
+		var img := Image.create(14, 14, false, Image.FORMAT_RGBA8)
+		img.fill(Color(0, 0, 0, 0.6))
+		img.fill_rect(Rect2i(1, 1, 12, 12), c)
+		_muestras[k] = ImageTexture.create_from_image(img)
+	return _muestras[k]
 
 ## Con nombre propio y no como lambda: un `match` o varias líneas dentro de un
 ## lambda pasado como argumento ya rompió el parser de este archivo una vez.

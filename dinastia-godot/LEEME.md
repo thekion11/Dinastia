@@ -1,5 +1,36 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## PLAN MAESTRO, TANDA 3: EL ESTADIO POR SECCIONES (25-9-2026)
+
+- **B6 · El estadio por secciones** (`nucleo/estadio_propio.gd`, `visor/stadium_builder.gd`).
+  - **Fachada**: hormigón, ladrillo, vidrio, membrana o chapa, con su color. Revestirla es obra
+    (se cobra); pintarla es gratis.
+  - **Colores por sección**:
+    - color del techo, de los banquillos y de la luz de los focos (blanca de televisión,
+      cálida, fría o del color del club);
+    - con «Personalizar cada tribuna» activado, cada tribuna tiene sus dos colores de butaca;
+    - los colores se eligen con muestra en el desplegable.
+  - **Superficie** (efecto real en el juego):
+
+    | Superficie | Lesiones en tu campo | Desgaste del césped |
+    |---|---|---|
+    | Natural | igual (×1,0) | afecta completo |
+    | Híbrido | −15 % (×0,85) | afecta la mitad |
+    | Artificial | +30 % (×1,3) | no se estropea |
+
+    Las lesiones siguen usando una sola tirada de `Azar` por minuto. Con el techo retráctil no
+    llueve dentro.
+  - **Exterior**: taquillas con rótulo, tienda oficial con el nombre del club y un
+    estacionamiento con los coches Kenney (semilla local, no `Azar`).
+  - **24 estilos** (16 + 8): coliseo, caja inglesa, ladera, flotante, cúpula, desierto, hormigón
+    sudamericano y japonés moderno.
+  - Los catálogos nuevos viven en `estadio_propio.gd` y no en `tablas.json` (que es la
+    exportación del HTML). Tampoco entran en «sorpréndeme», que consume el mismo azar que antes.
+  - Pruebas:
+    - `_probar_estadio_b6` en el banco;
+    - capturas `captura_estilos_b6` (hoja 4×2), `captura_exterior_estadio` y
+      `captura_disenador_b6`.
+
 ## PLAN MAESTRO, TANDA 2: CINEMÁTICAS, EVENTOS Y ENTREVISTAS (25-9-2026)
 
 - **B3 · Cinemáticas del partido.**
