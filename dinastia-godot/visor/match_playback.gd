@@ -336,7 +336,31 @@ func _recalcular_fase(ev) -> void:
 				"altura": altura, "es_gol": es_gol, "restante": CONTACTO_PATADA,
 			}
 		else:
+			## EL PASE TIENE GESTO: quien está pegado al balón le pega con el
+			## interior del pie. Antes el balón salía solo, sin que nadie lo tocara.
+			var pasador := _mas_cercano_a(origen, 2.6)
+			if not pasador.is_empty():
+				_ejecutar_accion(pasador, "pase", 0.8)
+				var np: Node3D = pasador.get("node")
+				if is_instance_valid(np):
+					np.look_at(Vector3(ball_target.x, np.position.y, ball_target.z), Vector3.UP)
 			(ball as Balon3D).enviar(ball_target, duracion, altura, es_gol)
+
+## El jugador de campo más cercano a un punto, si está a menos de `radio`.
+func _mas_cercano_a(punto: Vector3, radio: float) -> Dictionary:
+	var mejor: Dictionary = {}
+	var d_mejor := radio
+	for p in players:
+		if bool(p.get("arbitro", false)) or bool(p.get("banca", false)):
+			continue
+		var n: Node3D = p.get("node")
+		if not is_instance_valid(n):
+			continue
+		var d := Vector2(n.position.x - punto.x, n.position.z - punto.z).length()
+		if d < d_mejor:
+			d_mejor = d
+			mejor = p
+	return mejor
 
 func _buscar_portero(es_local: bool) -> Dictionary:
 	for p in players:
@@ -368,6 +392,11 @@ func _disparar(ev: Dictionary) -> void:
 
 	var t_ev: String = str(ev.get("t", ""))
 	var tipo_ev: String = str(ev.get("tipo", ""))
+	## El lesionado se duele, agachado y con las manos en la rodilla.
+	if t_ev == "lesion":
+		var lesionado = players_by_id.get(ev.get("jugadorId"))
+		if lesionado != null:
+			_ejecutar_accion(lesionado, "dolor", 3.0)
 	var es_gol: bool = t_ev == "golMi" or t_ev == "golR"
 	## Mismo arreglo que en `_recalcular_fase()`: el remate real llega como
 	## `"t": "disparo"`, no como `"t": "atajada"/"poste"/"fallo"` directo.
@@ -392,7 +421,10 @@ func _disparar(ev: Dictionary) -> void:
 		if tipo_ev == "atajada" or (es_gol and _rng.randf() < 0.75) or tipo_ev == "poste":
 			var lado_der := ball_target.x > 0 if not es_local_atacando else ball_target.x < 0
 			var anim_atajada := "atajar_der" if lado_der else "atajar_izq"
-			_ejecutar_accion(por_defensor, anim_atajada, 1.15)
+			## Balón a ras de suelo y centrado: el portero se agacha, no vuela.
+			if ball_target.y < 0.6 and absf(ball_target.x) < 1.6:
+				anim_atajada = "atajar_bajo"
+			_ejecutar_accion(por_defensor, anim_atajada, 1.9)
 
 	## JUGADAS PREHECHAS, segunda pieza (21-9-2026): un remate desviado
 	## ("fallo") es, en la realidad, a menudo un balon que sale por el fondo
@@ -425,7 +457,10 @@ func _disparar(ev: Dictionary) -> void:
 			_ejecutar_accion(p_remate, "falta_barrida" if _rng.randf() > 0.35 else "falta_empujon", 1.2)
 		var arb = players_by_id.get("arbitro")
 		if arb != null:
-			_ejecutar_accion(arb, "mostrar_tarjeta" if t_ev == "warn" else "senalar_falta", 1.8)
+			var gesto := "senalar_falta"
+			if t_ev == "warn":
+				gesto = "mostrar_roja" if bool(ev.get("roja", false)) else "mostrar_tarjeta"
+			_ejecutar_accion(arb, gesto, 2.4 if gesto == "mostrar_roja" else 1.8)
 
 		## JUGADAS PREHECHAS, tercera pieza (21-9-2026): el tiro libre. Mismo
 		## principio que el corner -no redecide nada, `ev` sigue siendo un
@@ -636,7 +671,8 @@ func _jugada_tiro_libre(atacante_es_local: bool, z_arco_propio: float) -> void:
 	}
 
 func _celebrar(p: Dictionary, asistidor) -> void:
-	var anim_celeb: String = "celebrar_rodillas" if _rng.randf() > 0.45 else "celebrar"
+	var r_celeb := _rng.randf()
+	var anim_celeb: String = "celebrar_rodillas" if r_celeb > 0.6 else ("celebrar_carrera" if r_celeb > 0.3 else "celebrar")
 	_ejecutar_accion(p, anim_celeb, 3.8)
 	_celebrando.append({"p": p, "hasta": elapsed + 4.2})
 	if asistidor != null and players_by_id.has(asistidor):
