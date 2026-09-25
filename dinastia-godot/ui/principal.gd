@@ -2109,6 +2109,11 @@ func _conectar_noticias() -> void:
 		mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
 			call_deferred("_portada_nueva")
 			call_deferred("_al_paso_nuevo"))
+		if mundo.licencia != null:
+			mundo.licencia.noticia.connect(func(titulo: String, cuerpo: String) -> void:
+				_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
+				_anotar(titulo, cuerpo)
+				Aviso.mostrar(self, "nivel", "🎓", titulo, cuerpo))
 		if mundo.charlas != null:
 			mundo.charlas.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 				_escribir("[color=#4caf6d][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -9068,6 +9073,20 @@ func _pintar_legado() -> void:
 	tc.text = "📈 CARRERA PROFESIONAL"
 	_lista_legado.add_child(tc)
 	_dato("Rol actual", r.nombre_del_cargo().capitalize(), COL_TEXTO, _lista_legado)
+	## LA LICENCIA Y EL MINIJUEGO (C7).
+	if mundo.licencia != null:
+		var lic := _texto(12, COL_TEXTO)
+		lic.text = "🎓 %s" % mundo.licencia.nombre()
+		_lista_club.add_child(lic)
+		var motivo := mundo.licencia.puede_presentarse(mundo.anio, mundo.semana)
+		if motivo == "":
+			_boton("Presentarse al examen de %s" % Licencia.NIVELES[mundo.licencia.nivel + 1], _abrir_examen, _lista_club)
+		else:
+			var m2 := _texto(11, COL_SUAVE)
+			m2.text = motivo
+			_lista_club.add_child(m2)
+		_boton("🎯 Minijuego: tanda de penales en el entrenamiento", _abrir_penales, _lista_club)
+
 	var escalon := r.siguiente_escalon()
 	if escalon != "":
 		var e := _texto(11, COL_SUAVE)
@@ -14603,6 +14622,13 @@ func _pintar_rol() -> void:
 ## trae cada peldaño: un entrenador empleado que puedes cambiar, o -siendo
 ## dueño- meter capital propio y vender el club. Toda esta lógica ya estaba
 ## escrita y probada en `Roles`; no había ninguna pantalla que la mostrara.
+
+func _abrir_examen() -> void:
+	var ex := ExamenLicencia.mostrar(self, mundo)
+	ex.cerrado.connect(_refrescar)
+
+func _abrir_penales() -> void:
+	MinijuegoPenales.mostrar(self, mundo)
 
 func _pintar_carrera(r: Roles) -> void:
 	PanelAspectoDT.pintar(_lista_club, r, _texto, {"suave": COL_SUAVE, "acento": COL_ACENTO}, _refrescar)
