@@ -1482,11 +1482,38 @@ static func _banderas(root: Node3D, est: Dictionary, dx: float, dz: float,
 				m.material_override = asta
 				m.position = p + Vector3(0, h / 2.0, 0)
 				root.add_child(m)
-				var tela := Texturas.tela(colores[i % colores.size()])
-				var b := _box(root, p + Vector3(0, h * 0.82, 0),
-					Vector3(1.3, 0.85, 0.03) if tipo != "banderines" else Vector3(0.6, 0.45, 0.03),
-					tela)
-				b.rotation.y = a
+				## Tela que ondea (25-9-2026): un plano subdividido con el
+				## shader `bandera.gdshader`, sujeto al asta por un lado. Antes
+				## era una caja rígida, como una chapa.
+				var tam := Vector2(1.3, 0.85) if tipo != "banderines" else Vector2(0.6, 0.45)
+				_bandera_ondeante(root, p + Vector3(0, h * 0.82, 0), tam, colores[i % colores.size()], a, float(i) * 1.7)
+
+const SHADER_BANDERA := preload("res://visor/bandera.gdshader")
+
+## Una bandera de tela que ondea, con el borde izquierdo en `pos` (el asta).
+static func _bandera_ondeante(root: Node3D, pos: Vector3, tam: Vector2, color: Color, giro: float, fase: float) -> MeshInstance3D:
+	var qm := QuadMesh.new()
+	qm.size = tam
+	qm.subdivide_width = 10
+	qm.subdivide_depth = 4
+	## El quad se centra en su origen: se corre medio ancho para que el borde
+	## x=0 (UV 0, quieto) quede pegado al asta.
+	qm.center_offset = Vector3(tam.x * 0.5, 0, 0)
+	var m := MeshInstance3D.new()
+	m.name = "Bandera"
+	m.mesh = qm
+	var mat := ShaderMaterial.new()
+	mat.shader = SHADER_BANDERA
+	mat.set_shader_parameter("color", color)
+	## La misma trama de `Texturas.tela()`, para que se lea como tejido.
+	mat.set_shader_parameter("tela", Texturas.tela(Color.WHITE).detail_albedo)
+	mat.set_shader_parameter("ancho", tam.x)
+	mat.set_shader_parameter("fase", fase)
+	m.material_override = mat
+	m.position = pos
+	m.rotation.y = giro
+	root.add_child(m)
+	return m
 
 static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float) -> void:
 	if tipo == "sin":

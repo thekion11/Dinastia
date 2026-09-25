@@ -107,6 +107,7 @@ var _fin_partida_avisado := false
 
 var _cabecera: Label
 var _lbl_caja: Label
+var _saldo_mostrado := -1
 var _lbl_fecha: Label
 var _escudo_cabecera: Control
 var _sub: Label
@@ -341,6 +342,7 @@ const MESES_CORTOS := ["ene", "feb", "mar", "abr", "may", "jun",
 ## La temporada arranca el 1 de febrero, como el calendario chileno.
 const DIA_INICIO_TEMPORADA := {"mes": 2, "dia": 1}
 var _dia_semana: int = 0
+var _dia_pintado: int = -1
 
 ## La fecha de hoy, derivada: inicio de temporada + semanas corridas + días.
 func fecha_de_hoy() -> Dictionary:
@@ -384,6 +386,9 @@ func _pintar_dias() -> void:
 		var b := _pildora("%s %d%s" % [DIAS_LARGOS[i], int(fecha_del_dia(i).get("day", 1)), "  ⚽" if dia_de_partido else ""], 11, 26)
 		b.button_pressed = es_hoy
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if es_hoy and _dia_pintado != _dia_semana:
+			_dia_pintado = _dia_semana
+			(func() -> void: Animar.pulso(b, 1.1)).call_deferred()
 		if dia_de_partido and not es_hoy:
 			b.add_theme_color_override("font_color", _color_de_paleta(COL_ORO))
 		## Tocar un día futuro avanza hasta ahí; uno pasado no hace nada -el
@@ -1293,6 +1298,19 @@ func _al_cambiar_pestana(_idx: int) -> void:
 		_grupo_actual = gid
 		_actualizar_fila_grupos()
 	_reconstruir_fila_sub()
+	## El contenido de la pestaña entra escalonado (plan maestro B11).
+	_animar_pestana.call_deferred()
+
+func _animar_pestana() -> void:
+	var pag := _pestanas.get_current_tab_control()
+	if pag == null:
+		return
+	## Cada hoja es VBox > ScrollContainer > VBox (la lista): se anima la lista.
+	for h in pag.get_children():
+		if h is ScrollContainer and h.get_child_count() > 0:
+			Animar.escalonar(h.get_child(0))
+			return
+	Animar.escalonar(pag)
 
 ## TODA la interfaz pasa por aqui, y por eso los dos ajustes de accesibilidad
 ## -el tamano del texto y la paleta para daltonismo- se aplican en este punto y
@@ -2747,7 +2765,14 @@ func _refrescar() -> void:
 		dir_txt = "  ·  %s  ·  confianza %d" % [mundo.directiva.objetivo, mundo.directiva.confianza]
 	## La plata y la fecha ya no van en el texto corrido: viven arriba a la
 	## derecha, en grande. Aquí queda lo que de verdad es contexto.
-	_lbl_caja.text = _dinero(c.saldo)
+	## La caja CUENTA hasta su nuevo valor (plan maestro B11): un cobro o un
+	## pago se ve moverse, y late una vez.
+	if _saldo_mostrado != -1 and _saldo_mostrado != c.saldo and _lbl_caja.is_inside_tree():
+		Animar.contar(_lbl_caja, float(_saldo_mostrado), float(c.saldo), func(v: float) -> String: return _dinero(int(v)))
+		Animar.pulso(_lbl_caja, 1.06)
+	else:
+		_lbl_caja.text = _dinero(c.saldo)
+	_saldo_mostrado = c.saldo
 	_lbl_fecha.text = "%s  ·  semana %d" % [fecha_larga(), mundo.semana]
 	_sub.text = "%s  ·  Jornada %d de %d  ·  Sueldos %s/sem  ·  Media %.1f%s" % [
 		liga.nombre, liga.jornada_actual, liga.jornadas(),
@@ -11017,6 +11042,23 @@ func _pintar_qol() -> void:
 		ex.text = "Con el modo experto encendido desaparecen las notas explicativas como esta."
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_ajustes.add_child(ex)
+
+	## ANIMACIONES REDUCIDAS (plan maestro B11): apaga las mini animaciones de
+	## la interfaz (entradas escalonadas, cifras que cuentan, latidos).
+	var fila_an := HBoxContainer.new()
+	fila_an.add_theme_constant_override("separation", 8)
+	_lista_ajustes.add_child(fila_an)
+	var et_an := _texto(12, COL_TEXTO)
+	et_an.text = "Animaciones reducidas"
+	et_an.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	et_an.tooltip_text = "Sin entradas escalonadas, cifras que cuentan ni latidos: todo aparece al instante."
+	fila_an.add_child(et_an)
+	var b_an := Button.new()
+	b_an.text = "SÍ" if Animar.reducidas() else "NO"
+	b_an.pressed.connect(func() -> void:
+		Animar.fijar_reducidas(not Animar.reducidas())
+		_refrescar())
+	fila_an.add_child(b_an)
 
 	## LA VISTA COMPACTA. Aprieta las filas de todas las pantallas a la vez: en
 	## una tabla de veinte jugadores es la diferencia entre ver media plantilla y
