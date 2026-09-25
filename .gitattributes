@@ -22,3 +22,5 @@
 # El escaneo de la persona realista va como archivo normal (25 MB): desde las
 # sesiones en la nube no se puede subir a LFS.
 dinastia-godot/assets/personas/*.glb -filter -diff -merge binary
+# Los peinados de los jugadores (glTF de texto + .bin chicos, <1 MB en total): archivos normales.
+dinastia-godot/assets/characters/quaternius/pelo/*.gltf -filter -diff -merge

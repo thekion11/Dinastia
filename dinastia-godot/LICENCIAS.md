@@ -44,6 +44,9 @@ nombre registrado ni el apodo comercial. Se evitaron también nombres de clubes 
 
 ## 2. Imágenes de personas y equipaciones
 
+Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quaternius, CC0
+(`assets/characters/quaternius/pelo/License.txt`). 🟢
+
 | Qué | Dónde | Estado |
 |---|---|---|
 | 1.219 fotos de caras de futbolistas reales, bajadas de Wikimedia Commons solo si su licencia es libre (revisado 25-9-2026 sobre el informe: 636 CC BY-SA 4.0, 151 CC BY-SA 3.0, 123 CC0, 71 CC BY-SA 2.0, 70 CC BY 3.0, 66 CC BY 4.0, 56 CC BY 2.0, 33 dominio público, 13 otras CC). Originales en `recursos/caras_reales/`, retratos recortados por la cara en `recursos/caras_reales_256/` | ver las dos filas de abajo | 🔴 excluidas de las versiones públicas; la versión **completo** lleva solo los retratos de 256 px |
