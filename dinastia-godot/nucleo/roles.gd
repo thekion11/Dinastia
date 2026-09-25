@@ -388,6 +388,19 @@ func arrancar(modo_id: String, dt_nombre: String = "Míster") -> void:
 		_arrancar_sandbox()
 	rol_cambiado.emit("", rol)
 
+## El modo de menú que corresponde al rol de ahora -el camino inverso de
+## `rol_de_modo()`-. Lo usa el tutorial al repetirse desde Ajustes, cuando el
+## modo con el que se empezó la carrera ya no está en ninguna parte.
+func modo_actual() -> String:
+	if en_interinato():
+		return MODO_INTERINO
+	match rol:
+		DIR: return "dir"
+		AYUDANTE: return "ayudante"
+		CANTERA: return "cantera"
+		DUENO: return "jeque" if sandbox else "imperio"
+	return "dt"
+
 static func _modo(modo_id: String) -> Dictionary:
 	var t: Variant = Datos.tabla("MODOS_JUEGO")
 	if t == null:
