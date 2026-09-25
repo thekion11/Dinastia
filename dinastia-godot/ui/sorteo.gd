@@ -18,8 +18,8 @@ extends Control
 
 signal terminado
 
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
 
 ## El color de cada competición, que es lo que hace que un sorteo de Libertadores
 ## no se vea igual que uno de Champions. `fondo` pinta la sala, `acento` los

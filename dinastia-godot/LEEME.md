@@ -1,5 +1,46 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## PLAN MAESTRO, TANDA 1: AJUSTES, MODOS DE PARTIDO, ANIMACIONES, DISEÑO Y PELO (25-9-2026)
+
+- **B1 · Cajón de ajustes** (`ui/componentes/cajon_ajustes.gd`).
+  - Qué hace: un ⚙ que despliega un panel lateral animado. Se cierra solo a los 6 s, con Esc o con
+    el ⚙, y recuerda su estado (`user://ajustes.cfg`, sección `hud`).
+  - Dónde: en la transmisión 3D y en el partido en vivo.
+  - Prueba: `captura_cajon_ajustes`.
+- **B2 · Cinco modos de ver un partido**: Instantáneo, Resumen, En vivo, 3D destacados y 3D
+  completo, con un selector por competición en Partido y Calendario.
+  - Nuevo componente `ResumenPartido`.
+  - El mismo partido da el mismo resultado en cualquier vista (prueba "MODOS DE SIMULACIÓN",
+    40/40 semillas). Para eso se corrigieron dos fallos:
+    - la invasión de campo pasó a `Partido.simular_minuto()`;
+    - la crónica en vivo elegía frases con `Azar`.
+  - Arreglado de paso: la ficha del jugador sin scroll estiraba la pantalla principal a 1.330 px
+    en una ventana de 720, y lo de abajo quedaba inalcanzable.
+- **B11 · Animaciones.**
+  - Clima visible en el estadio (`visor/precipitacion.gd`): lluvia, nieve y tormenta con
+    relámpagos, en dos capas (todo el campo y pegada a la cámara).
+  - Banderas de tela que ondean (`visor/bandera.gdshader`).
+  - `Animar` en la interfaz: entradas escalonadas, la caja cuenta hasta su valor, el día actual
+    late, y hay opción "Animaciones reducidas".
+- **B13 · Diseño y texto.**
+  - `ui/tema.gd` es la única fuente de colores, letra, radios y espaciados; 61 constantes de 12
+    pantallas apuntan ahí.
+  - Repaso ortográfico: invasión, césped, policía, túnel, camarín, táctica, médico, países,
+    también, detrás, así, inversión, cámara y "Primera División".
+  - Días y fecha con el nombre completo ("Lunes 26", "lunes 26 de enero de 2026").
+  - El banco vigila que ninguna pantalla vuelva a copiar la paleta y que esas palabras no pierdan
+    la tilde.
+- **Pelo de los jugadores 3D** (`visor/pelo_q.gd`).
+  - Los peinados CC0 de *Universal Base Characters* estaban en un zip sin abrir y los 22 del
+    campo eran calvos. Ahora llevan el corte de su retrato, teñido, con barba y cejas.
+  - El pelo largo y el moño venían para el cuerpo femenino, y el moño además en centímetros:
+    ambos corregidos.
+  - Los `.gltf` del pelo van fuera de LFS (`.gitattributes`).
+- **Fallo grave corregido: exportaciones.** `export_presets.cfg` tenía comentarios con `##`, que
+  en un `.cfg` no son comentarios (van con `;`). El archivo no se leía, así que los filtros que
+  dejan fuera el pack real y las fotos no se aplicaban. Ya se lee, y hay prueba en el banco.
+- **Inventario de modelos 3D sin usar**: en `ROADMAP.md`, con el bloque donde encaja cada uno.
+
 ## CUARTA RONDA: MOVIMIENTOS CON ANATOMÍA HUMANA, REGATES, DOMINADAS Y CARAS REALES (25-9-2026)
 
 Pedido: *"comprueba que los movimientos tengan realismo biológico humano... había movimientos

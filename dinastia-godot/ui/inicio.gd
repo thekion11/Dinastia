@@ -14,15 +14,15 @@ extends Control
 ## guardado. Aquí no hay lógica de juego nueva, solo el primer clic.
 
 ## La misma paleta que css/estilo.css (`:root`), no una propia de Godot.
-const COL_FONDO := Color("0c1510")
-const COL_PANEL := Color("141c16")
-const COL_BORDE := Color("ffffff12")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
+const COL_FONDO := Tema.FONDO
+const COL_PANEL := Tema.PANEL
+const COL_BORDE := Tema.BORDE
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
 ## El verde de siempre. En el club ya elegido el acento es SU color -ver
 ## principal.gd- pero aquí todavía no hay ningún club escogido.
-const COL_ACENTO := Color("3fa06a")
-const COL_ORO := Color("c9a227")
+const COL_ACENTO := Tema.ACENTO
+const COL_ORO := Tema.ORO
 
 ## Los títulos de cada portada llevan su propio color en el HTML (`.pTretro`,
 ## `.pTneon`…): un blanco por defecto se perdía sobre el sol naranja del retro

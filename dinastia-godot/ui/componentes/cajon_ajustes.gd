@@ -65,8 +65,8 @@ func _montar() -> void:
 	st.bg_color = Color(0.05, 0.08, 0.07, 0.97)
 	st.border_color = Color(1, 1, 1, 0.10)
 	st.border_width_left = 1
-	st.corner_radius_top_left = 12
-	st.corner_radius_bottom_left = 12
+	st.corner_radius_top_left = Tema.RADIO_GRANDE
+	st.corner_radius_bottom_left = Tema.RADIO_GRANDE
 	st.content_margin_left = 16
 	st.content_margin_right = 14
 	st.content_margin_top = 14
@@ -104,8 +104,8 @@ func _montar() -> void:
 func seccion(titulo: String) -> Label:
 	var l := Label.new()
 	l.text = titulo.to_upper()
-	l.add_theme_font_size_override("font_size", 11)
-	l.add_theme_color_override("font_color", Color("8fa99a"))
+	l.add_theme_font_size_override("font_size", Tema.TAM_ROTULO)
+	l.add_theme_color_override("font_color", Tema.SUAVE)
 	if _lista.get_child_count() > 0:
 		var sep := Control.new()
 		sep.custom_minimum_size = Vector2(0, 6)

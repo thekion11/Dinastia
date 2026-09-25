@@ -1190,10 +1190,10 @@ func tono_de_texto(texto: String) -> String:
 	if _tiene(t, ["!!", "carajo", "mierda", "puta", "ya basta", "dejen de"]):
 		return "furia"
 	if _tiene(t, ["vergüenza", "verguenza", "inaceptable", "basta", "despierten",
-			"jugando mal", "así no", "asi no", "ridícul", "ridicul", "desastre", "regalan"]):
+			"jugando mal", "así no", "así no", "ridícul", "ridicul", "desastre", "regalan"]):
 		return "exigir"
 	if _tiene(t, ["tranquil", "calma", "confi", "confío", "confio", "bien",
-			"sigan", "paciencia", "así se juega", "asi se juega", "orgullo"]):
+			"sigan", "paciencia", "así se juega", "así se juega", "orgullo"]):
 		return "animar"
 	if _tiene(t, ["línea", "linea", "presi", "banda", "pelota", "espacio",
 			"marca", "orden", "salida", "bloque", "contra"]):

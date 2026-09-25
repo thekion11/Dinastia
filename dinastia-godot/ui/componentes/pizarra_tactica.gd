@@ -12,7 +12,7 @@ extends RefCounted
 ## con las que el motor arma el once.
 
 const ALTO := 380
-const COL_POS := {"POR": Color("d9a400"), "DEF": Color("2f7fd0"), "MED": Color("2f9a5e"), "DEL": Color("e07b2a")}
+const COL_POS := Tema.POS
 ## El rojo queda reservado para "fuera de su puesto": los delanteros van en
 ## naranja para que no se confundan.
 

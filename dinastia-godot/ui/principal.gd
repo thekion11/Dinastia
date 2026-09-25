@@ -14,15 +14,15 @@ extends Control
 ## para Godot: la mudanza tiene que dejar el juego IGUAL de verlo, y mejorar
 ## solo por dentro (clases de verdad, nativo en vez de DOM). `--bg`, `--panel`,
 ## `--line`, `--tx`, `--mut`, `--verde`, `--rojo`, `--oro` calcados tal cual.
-const COL_FONDO := Color("0c1510")
+const COL_FONDO := Tema.FONDO
 ## Los paneles son casi opacos, no translúcidos: el fondo se intuye por los
 ## bordes y entre columnas, pero la tabla, el registro y la ficha se leen igual
 ## de bien con cualquiera de los catorce fondos detrás. Un 0,94 deja pasar lo
 ## justo para que se note que hay algo, sin que compita con el texto.
 const COL_PANEL := Color("141c16", 0.94)
-const COL_BORDE := Color("ffffff12")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
+const COL_BORDE := Tema.BORDE
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
 ## El acento de la interfaz sale del color del club que diriges: es lo que hace
 ## que dirigir a Colo-Colo y dirigir a la U no se vean igual. Con el negro se
 ## hace una excepcion, como en el HTML: sobre fondo oscuro un acento negro no se
@@ -43,9 +43,9 @@ func _acento_de(c: Club) -> Color:
 	if col.s < 0.25:
 		col.s = 0.45
 	return col.lightened(0.15) if col.get_luminance() < 0.35 else col
-const COL_VERDE := Color("4caf6d")
-const COL_ROJO := Color("e05555")
-const COL_ORO := Color("c9a227")
+const COL_VERDE := Tema.BIEN
+const COL_ROJO := Tema.MAL
+const COL_ORO := Tema.ORO
 
 ## Los nombres largos de cada atributo -`AT_LARGO` en vistas.js-, compartidos
 ## entre la ficha y el comparador para no mantener la misma tabla dos veces.
@@ -578,7 +578,7 @@ func _construir() -> void:
 	## que ya conoces, que es para lo unico que servia.
 	var b_mapa := Button.new()
 	b_mapa.text = "🌎"
-	b_mapa.tooltip_text = "Elegir club con el mapa: paises, escudos y datos de cada equipo"
+	b_mapa.tooltip_text = "Elegir club con el mapa: países, escudos y datos de cada equipo"
 	b_mapa.custom_minimum_size = Vector2(34, 34)
 	b_mapa.pressed.connect(_abrir_elegir_club)
 	_botones.add_child(b_mapa)

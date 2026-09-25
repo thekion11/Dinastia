@@ -335,7 +335,7 @@ func resolver(op: String) -> Dictionary:
 				if m != null and m.cesiones != null:
 					m.cesiones.rechazar_presion(j)
 				salida = {"titulo": "No se vende",
-					"cuerpo": "Le dices al fondo que %s se queda. Tomaron nota, y el jugador tambien." % j.nombre}
+					"cuerpo": "Le dices al fondo que %s se queda. Tomaron nota, y el jugador también." % j.nombre}
 
 		"retiro_joven":
 			## No se compra la decisión: lo único que se puede negociar es CUÁNDO.
