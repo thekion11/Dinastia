@@ -36,6 +36,8 @@ var cesiones: Cesiones
 var vestuario: Vestuario
 var selecciones: Selecciones
 var cantera: Cantera
+## Los chicos de 10 a 16 años de tu club, antes de ser jugadores (`Academia`).
+var academia: Academia
 var ojeadores: Ojeadores
 
 ## `G.libro` del HTML: el registro de movimientos de caja de tu club. Siete
@@ -1121,6 +1123,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		if cantera != null:
 			cantera.procesar_semana()
 			cantera.sortear_guerra_agentes()
+		## La academia de 10 a 16: crecimiento, colegio, comida y la familia.
+		if academia != null:
+			academia.procesar_semana()
 		## Y se recalculan los bonificadores: si no, el factor del camarin se queda
 		## congelado en el de la semana en que tomaste el mando.
 		aplicar_bonificadores()
@@ -1454,6 +1459,10 @@ func nueva_temporada() -> Dictionary:
 	if cantera != null:
 		cantera.camada_anual()
 		cantera.chequeo_promesas()
+	## Los de la academia que cumplen 16 suben DESPUÉS de la camada: son los
+	## tuyos de verdad, y si no hay ficha se quedan un año más (ver `Academia`).
+	if academia != null:
+		academia.fin_de_temporada()
 	## LAS JOYAS DE LAS ACADEMIAS, una por sede. Van DESPUES de la camada porque
 	## comparten el tope de plantilla: la joya que se paga todo el ano no puede
 	## quedarse fuera por un canterano de relleno que subio antes.
@@ -1688,6 +1697,8 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	vestuario.armar()
 	selecciones = Selecciones.new(self)
 	cantera = Cantera.new(self)
+	academia = Academia.new(self)
+	academia.sembrar()
 	ojeadores = Ojeadores.new(self)
 	## Sembradas al tomar el mando y no en generar(): antes de elegir club no hay
 	## "tu" cantera todavía, y `sembrar_leyendas()` reparte las leyendas entre

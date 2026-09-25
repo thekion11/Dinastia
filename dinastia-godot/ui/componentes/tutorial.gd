@@ -109,7 +109,7 @@ static func _pasos_del_modo(modo: String) -> Array[Dictionary]:
 				"texto": "Te contratan como bombero: [b]cinco fechas[/b] para salvar a un club hundido. Sin fichajes ni proyecto, solo motivación y táctica.\n\nEl directorio no te puede echar: tu contrato ya trae fecha de término."}]
 		"cantera":
 			return [{"titulo": "🌱 Director de Cantera", "objetivo": "plantel",
-				"texto": "No diriges al primer equipo. Tu trabajo es [b]captar chicos, elegir su plan de trabajo, cuidarles la cabeza y decidir cuándo están listos[/b] (Plantel → Cantera).\n\nEl club te pide un número de debutantes por temporada y te da un presupuesto de academia, no el de un plantel profesional."}]
+				"texto": "No diriges al primer equipo. Lo tuyo es la [b]Academia[/b] (Plantel → Cantera): chicos de 10 a 16 años a los que les eliges el entrenamiento, la comida, cuánto estudian y el carácter que forjan. A los 16 pasan al plantel tal como los formaste.\n\nEl club te pide un número de debutantes por temporada y te da un presupuesto de academia, no el de un plantel profesional."}]
 		"imperio":
 			return [{"titulo": "🏛️ Dueño de Club", "objetivo": "dinero",
 				"texto": "El club es tuyo: [b]nadie te puede echar[/b]. Puedes meter capital propio (dos veces por temporada) y un entrenador empleado dirige los partidos.\n\nSin directorio que te frene, lo que salga mal es cosa tuya."}]

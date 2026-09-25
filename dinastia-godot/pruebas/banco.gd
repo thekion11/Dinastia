@@ -84,6 +84,7 @@ func _ready() -> void:
 	_probar_marca()
 	_probar_tutorial()
 	_probar_moneda()
+	_probar_academia()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5041,3 +5042,118 @@ func _probar_moneda() -> void:
 				todas_eco = false
 	_comprobar(todas_eco, "ninguna pantalla escribe \"EUR\" ni \"$\" a mano")
 	Eco.moneda = antes
+
+## LA ACADEMIA DE 10 A 16 AÑOS (25-9-2026). Cada regla de `Academia` con un
+## número: formar bien se nota, comer mal se nota, el colegio se nota, y lo que
+## llega al primer equipo a los 16 es consecuencia de todo eso.
+func _probar_academia() -> void:
+	_titulo("ACADEMIA: LOS CHICOS DE 10 A 16")
+	Azar.sembrar(1016)
+	var m := Mundo.new()
+	m.generar(["CHI"], 1016)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var a := m.academia
+	_comprobar(a != null and a.chicos.size() == 6, "la academia arranca con seis chicos (%d)" % (a.chicos.size() if a != null else 0))
+	if a == null:
+		return
+	var edades := {}
+	for ch in a.chicos:
+		edades[int(ch["edad"])] = true
+	_comprobar(edades.size() == 6 and edades.has(10) and edades.has(15), "de 10 a 15 años, uno por edad")
+	_comprobar(a.candidatos.size() == Academia.CANDIDATOS_POR_TEMPORADA, "y %d candidatos para captar" % a.candidatos.size())
+
+	## Dos gemelos de laboratorio: mismo chico, dos formaciones opuestas.
+	var base: Dictionary = a.chicos[0].duplicate(true)
+	base["nivel"] = 30.0; base["techo"] = 80; base["fisico"] = 45.0; base["nota"] = 5.0; base["animo"] = 70.0
+	base["personalidad"] = {"disciplina": 50.0, "liderazgo": 40.0, "temple": 40.0, "ambicion": 40.0}
+	var bien: Dictionary = base.duplicate(true)
+	bien.merge({"plan": "tecnico", "dieta": "deportiva", "estudios": "futbol", "molde": "disciplina"}, true)
+	var mal: Dictionary = base.duplicate(true)
+	mal.merge({"plan": "descanso", "dieta": "libre", "estudios": "estudios", "molde": "liderazgo"}, true)
+	for sem in 76:
+		bien["lesion"] = 0
+		mal["lesion"] = 0
+		a._semana_de(bien)
+		a._semana_de(mal)
+	_linea("  dos temporadas: bien formado nivel %.1f / físico %.0f / nota %.1f   |   mal formado nivel %.1f / físico %.0f / nota %.1f" % [
+		float(bien["nivel"]), float(bien["fisico"]), float(bien["nota"]),
+		float(mal["nivel"]), float(mal["fisico"]), float(mal["nota"])])
+	_comprobar(float(bien["nivel"]) > float(mal["nivel"]) + 3.0, "entrenar técnico, comer bien y priorizar el fútbol hace crecer más")
+	_comprobar(float(bien["fisico"]) > float(mal["fisico"]) + 10.0, "el plan de nutricionista desarrolla el cuerpo más que el comedor libre")
+	_comprobar(float(bien["nota"]) < float(mal["nota"]), "pero priorizar el fútbol hunde las notas y priorizar el colegio las sube")
+	_comprobar(float(bien["nivel"]) < 80.0, "y nadie supera su techo (%.1f < 80)" % float(bien["nivel"]))
+	_comprobar(float(mal["personalidad"]["liderazgo"]) > 70.0, "el molde forja carácter: liderazgo de 40 a %.0f" % float(mal["personalidad"]["liderazgo"]))
+	_comprobar(a.rasgo_dominante(mal) == "liderazgo", "y ese carácter domina")
+	_comprobar(a.techo_al_entregar(bien) > a.techo_al_entregar(mal), "la formación sube el techo con el que llega (%d contra %d)" % [
+		a.techo_al_entregar(bien), a.techo_al_entregar(mal)])
+
+	## La familia: con notas hundidas, primero avisa el colegio y luego se lo llevan.
+	var flojo: Dictionary = base.duplicate(true)
+	flojo.merge({"id": "flojo", "nota": 3.0, "estudios": "futbol", "aviso_notas": false}, true)
+	a.chicos.append(flojo)
+	var hubo_aviso := false
+	var se_fue := false
+	for sem in 150:
+		for s2 in a.procesar_semana():
+			if String(s2["id"]) == "flojo":
+				hubo_aviso = hubo_aviso or String(s2["tipo"]) == "aviso"
+				se_fue = se_fue or String(s2["tipo"]) == "abandono"
+		if se_fue:
+			break
+	_comprobar(hubo_aviso and se_fue, "con notas hundidas avisa el colegio y la familia acaba sacándolo")
+	_comprobar(a.chico("flojo").is_empty(), "y deja de estar en la academia")
+
+	## La residencia cuesta: la semana descuenta la caja.
+	var c := m.mi_club()
+	var antes := c.saldo
+	a.procesar_semana()
+	_comprobar(c.saldo < antes, "la residencia se paga cada semana (%s)" % Eco.dinero(antes - c.saldo))
+
+	## Captar: cuesta, ocupa plaza y respeta el cupo.
+	var n_antes := a.chicos.size()
+	var err := a.captar(0)
+	_comprobar(err == "" and a.chicos.size() == n_antes + 1, "captar a un candidato lo trae a la residencia %s" % err)
+	while a.chicos.size() < Academia.CUPO:
+		a.chicos.append(a._nuevo_chico(10))
+	_comprobar(a.captar(0) != "", "con la residencia llena no se capta a nadie más")
+
+	## Entrega: a los 16 pasa al plantel como Jugador de verdad.
+	var chico15: Dictionary = {}
+	for ch in a.chicos:
+		if int(ch["edad"]) == 15:
+			chico15 = ch
+	if chico15.is_empty():
+		chico15 = a.chicos[0]
+		chico15["edad"] = 15
+	chico15["personalidad"]["liderazgo"] = 92.0
+	var nombre15 := String(chico15["nombre"])
+	var de14: Dictionary = a._nuevo_chico(14)
+	a.chicos.append(de14)
+	_comprobar(a.entregar(String(de14["id"])) != "", "no se puede entregar a uno de 14")
+	while c.plantilla.size() >= Cantera.TOPE_PLANTEL:
+		c.plantilla.pop_back()
+	var entregados := a.fin_de_temporada()
+	var nuevo: Jugador = null
+	for j in entregados:
+		if j.nombre == nombre15:
+			nuevo = j
+	_comprobar(nuevo != null, "al cumplir 16 pasa al primer equipo")
+	if nuevo != null:
+		_comprobar(c.plantilla.has(nuevo) and nuevo.edad == 16, "con 16 años y dentro de la plantilla")
+		_comprobar(nuevo.pot >= nuevo.ovr and nuevo.ovr >= 40, "media %d, proyección %d" % [nuevo.ovr, nuevo.pot])
+		_comprobar(nuevo.rasgo == "lider", "el carácter que forjaste es su rasgo (%s)" % nuevo.rasgo)
+		_comprobar(m.cantera.es_canterano(nuevo), "y cuenta como canterano de la casa")
+		_comprobar(a.chico(String(chico15["id"])).is_empty(), "y deja la academia")
+	_comprobar(a.candidatos.size() == Academia.CANDIDATOS_POR_TEMPORADA, "la temporada nueva trae otra tanda de candidatos")
+
+	## El guardado se la lleva entera.
+	var ids: Array[String] = []
+	for ch in a.chicos:
+		ids.append(String(ch["id"]))
+	var foto := Partida.instantanea(m)
+	var m2 := Partida.desde_instantanea(foto)
+	var ids2: Array[String] = []
+	if m2 != null and m2.academia != null:
+		for ch in m2.academia.chicos:
+			ids2.append(String(ch["id"]))
+	_comprobar(ids2 == ids, "guardar y cargar conserva a los %d chicos" % ids.size())
