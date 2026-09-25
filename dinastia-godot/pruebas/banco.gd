@@ -87,6 +87,7 @@ func _ready() -> void:
 	_probar_moneda()
 	_probar_academia()
 	_probar_modos_simulacion()
+	_probar_presets_exportacion()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5340,3 +5341,27 @@ func _probar_modos_simulacion() -> void:
 			print("    distinto en la semilla %d: %s" % [9000 + k, str(huellas)])
 	_comprobar(iguales == semillas, "Instantáneo, Resumen y En vivo dan el mismo partido en %d de %d semillas" % [iguales, semillas])
 	_comprobar(invasiones > 0, "la invasión de campo sigue pudiendo ocurrir, ahora en cualquier modo (%d de %d)" % [invasiones, semillas])
+
+
+## LAS EXPORTACIONES SE LEEN (25-9-2026). `export_presets.cfg` llevaba
+## comentarios con `##`, que en un .cfg de Godot NO son comentarios (van con
+## `;`): el archivo no se podía leer y los filtros que dejan fuera el pack real
+## y las fotos de personas reales no se aplicaban. Ahora se comprueba que carga
+## y que cada versión publicable excluye todo lo que tiene que excluir.
+func _probar_presets_exportacion() -> void:
+	_titulo("EXPORTACIONES: EL ARCHIVO SE LEE Y LO PRIVADO QUEDA FUERA")
+	var c := ConfigFile.new()
+	_comprobar(c.load("res://export_presets.cfg") == OK, "export_presets.cfg se puede leer")
+	var privados := ["datos/pack_real.json", "recursos/caras_reales/", "recursos/caras_reales_256/", "datos/creditos_fotos.txt"]
+	for i in 4:
+		var sec := "preset.%d" % i
+		var nombre := String(c.get_value(sec, "name", ""))
+		var excl := String(c.get_value(sec, "exclude_filter", ""))
+		if nombre == "Windows":
+			_comprobar(excl.contains("recursos/caras_reales/"), "la versión completa no lleva las fotos originales (solo los retratos)")
+			continue
+		var faltan: Array[String] = []
+		for p: String in privados:
+			if not excl.contains(p):
+				faltan.append(p)
+		_comprobar(faltan.is_empty(), "%s excluye el pack real y las fotos reales %s" % [nombre, str(faltan) if not faltan.is_empty() else ""])

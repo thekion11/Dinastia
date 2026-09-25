@@ -322,6 +322,31 @@ proyecto "estaba pendiente" resultó "ya estaba hecho" muchas veces.
 - **Probar en un Android y en un PC modesto reales**: esta sesión no tiene esos dispositivos.
 - **Caras por morphs sin un modelo nuevo**: ver B8.
 
+### INVENTARIO DE MODELOS 3D SIN USAR (25-9-2026, a pedido del usuario)
+Cruzado con el código (cada archivo buscado por nombre en `.gd`, `.tscn` y `.json`).
+
+**Ya integrado hoy:** los peinados, la barba y las cejas de *Universal Base Characters* (CC0). Los
+jugadores eran calvos; ahora llevan el corte de su retrato 2D (`visor/pelo_q.gd`).
+
+**Sin usar**, cada uno con el bloque del plan donde encaja:
+
+| Modelo | Dónde está | Licencia | Para |
+|---|---|---|---|
+| *Downtown City MegaKit* (153 piezas modulares: fachadas de ladrillo, cornisas, techos, calles, veredas, puertas) | `recursos/…MegaKit[Standard].zip` | CC0 (Quaternius) | B7 ciudad 3D: barrios de verdad alrededor del complejo |
+| *Kenney Car Kit* (45 autos) | `recursos/modelos3d/cc0_web/kenney_car-kit` | CC0 | B7 tráfico y estacionamientos |
+| 6 edificios de *Kenney City Kit Commercial* (building-b/d/f/h/j/l) | `assets/ciudad/kenney_comercial` | CC0 | B7 (ya importados, sin colocar) |
+| `entrada-jugadores/model.glb` (entrada de jugadores) | `recursos/modelos3d/` | 🟡 confirmar fuente | B6 y B3: túnel y salida al campo |
+| `soccer_field/Soccer Field.fbx` | `recursos/modelos3d/cc0_web` | CC0 | B16 como referencia de estadio pequeño o amateur |
+| `staircase-modular-frame-steel` | `recursos/modelos3d/*.zip` | 🟡 confirmar | B6 escaleras y accesos exteriores |
+| `movil-s26` (teléfono) | `recursos/modelos3d/` | 🟡 confirmar | B3 y B4: cinemática del DT leyendo redes, eventos virales |
+| `oficina_dt` / `interior-15-minimalist` (interior) | `recursos/modelos3d/` | 🟡 confirmar | B3 despacho del DT: firmas, despidos, reuniones |
+| `ciudad_complejo` / `3.zip` (complejo residencial) | `recursos/modelos3d/` | 🟡 confirmar | ya existe una versión en `assets/ciudad/complejo_residencial.glb` |
+| `gt-racing-2-montreal` (circuito) | `recursos/modelos3d/*.zip` | 🟡 confirmar | sin uso claro: podría ser un evento de ciudad |
+| *Modular Character Outfits – Fantasy* (Peasant, Ranger) | `recursos/…Fantasy[Standard].zip` | CC0 | B9 solo como base de capucha o abrigo; es ropa medieval |
+
+Los 🟡 vienen de sitios de modelos (Sketchfab o similares) sin licencia anotada. Antes de publicar,
+hay que confirmarla, igual que las demás filas 🟡 de `LICENCIAS.md`.
+
 ### ORDEN SUGERIDO
 Primero lo que más se nota con menos riesgo, después lo que necesita assets externos.
 1. **Tanda 1**: B1 (ajustes desplegables), B2 (tipos de simulación), B11 (mini animaciones de
