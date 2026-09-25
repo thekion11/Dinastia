@@ -14,15 +14,15 @@ extends Control
 
 signal cerrado
 
-const COL_FONDO := Color("0c1510")
-const COL_PANEL := Color("141c16")
-const COL_BORDE := Color("ffffff12")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
-const COL_ACENTO := Color("3fa06a")
-const COL_VERDE := Color("4caf6d")
-const COL_ROJO := Color("e05555")
-const COL_ORO := Color("c9a227")
+const COL_FONDO := Tema.FONDO
+const COL_PANEL := Tema.PANEL
+const COL_BORDE := Tema.BORDE
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
+const COL_ACENTO := Tema.ACENTO
+const COL_VERDE := Tema.BIEN
+const COL_ROJO := Tema.MAL
+const COL_ORO := Tema.ORO
 
 var mundo: Mundo
 var _liga: Liga

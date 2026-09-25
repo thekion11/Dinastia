@@ -15,12 +15,12 @@ extends Control
 signal cerrado
 
 const DURACION_RESUMEN := 20.0
-const COL_FONDO := Color("0b1410")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
-const COL_ORO := Color("c9a227")
-const COL_BIEN := Color("4caf6d")
-const COL_MAL := Color("e05555")
+const COL_FONDO := Tema.FONDO
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
+const COL_ORO := Tema.ORO
+const COL_BIEN := Tema.BIEN
+const COL_MAL := Tema.MAL
 
 var partido: Partido
 var mi_club: Club

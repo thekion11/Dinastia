@@ -91,7 +91,7 @@ func build_for(dx: float, dz: float, alto: float) -> void:
 	_add("A ras de campo", Vector3(36.0, 1.75, 2.0), Vector3(0, 1.3, 6.0), 60)
 
 	# 8. Cenital táctica (90° vertical)
-	_add("Cenital tactica", Vector3(0, 88.0, 0.5), Vector3(0, 0, 0), 46)
+	_add("Cenital táctica", Vector3(0, 88.0, 0.5), Vector3(0, 0, 0), 46)
 
 	# 9. Dron orbital
 	_add("Dron orbital", Vector3(0, alto + 28.0, 60.0), Vector3(0, 0, 0), 48)

@@ -16,15 +16,15 @@ extends Control
 signal cerrado
 
 ## La misma paleta que css/estilo.css (`:root`), no una propia de Godot.
-const COL_FONDO := Color("0c1510")
-const COL_PANEL := Color("141c16")
-const COL_BORDE := Color("ffffff12")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
-const COL_ACENTO := Color("3fa06a")
-const COL_VERDE := Color("4caf6d")
-const COL_ROJO := Color("e05555")
-const COL_ORO := Color("c9a227")
+const COL_FONDO := Tema.FONDO
+const COL_PANEL := Tema.PANEL
+const COL_BORDE := Tema.BORDE
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
+const COL_ACENTO := Tema.ACENTO
+const COL_VERDE := Tema.BIEN
+const COL_ROJO := Tema.MAL
+const COL_ORO := Tema.ORO
 
 ## Milisegundos por minuto de juego en cada velocidad. La pausa es la primera
 ## porque es la que más se usa: es cuando se piensa el cambio.
@@ -184,7 +184,7 @@ func _a_la_invasion(_minuto: int) -> void:
 	_entretiempo = true
 	_acumulado = 0.0
 	Sonido.toca("silbato")
-	_escribir("[color=#e05555][b]🚨 INVASION DE CAMPO.[/b][/color] La barra salta al cesped y lanza bengalas. El partido se para: la policia desaloja y los dos equipos se meten al tunel. Vuelve a abrirse el camarin, con otro clima.")
+	_escribir("[color=#e05555][b]🚨 INVASIÓN DE CAMPO.[/b][/color] La barra salta al césped y lanza bengalas. El partido se para: la policía desaloja y los dos equipos se meten al túnel. Vuelve a abrirse el camarín, con otro clima.")
 	_refrescar()
 
 # --- construcción -----------------------------------------------------------

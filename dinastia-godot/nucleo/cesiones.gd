@@ -554,7 +554,7 @@ func vender(j: Jugador, comprador: Club, monto: int, pct_futuro: int = 0) -> Dic
 		var del_fondo := int(round(float(neto) * float(pct_fondo) / 100.0))
 		if del_fondo > 0:
 			vendedor.mover_saldo(-del_fondo)
-			movimiento.emit("Al fondo de inversion por %s (%d%%)" % [j.nombre, pct_fondo], -del_fondo)
+			movimiento.emit("Al fondo de inversión por %s (%d%%)" % [j.nombre, pct_fondo], -del_fondo)
 			noticia.emit("El fondo cobra su parte",
 				"De los %s de la venta de %s, %s se van al fondo que compro el %d%% de sus derechos." % [
 					Cesiones.dinero(neto), j.nombre, Cesiones.dinero(del_fondo), pct_fondo])

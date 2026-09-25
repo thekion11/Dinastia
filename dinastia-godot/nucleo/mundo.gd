@@ -414,7 +414,7 @@ func _fuentes_de_liga(paises: Array[String]) -> Array:
 		var p1: Array = Datos.tabla("DATA_P1")
 		var p2: Array = Datos.tabla("DATA_P2")
 		if p1 != null:
-			salida.append({"nombre": "Primera Division", "pais": "CHI", "clubes": p1})
+			salida.append({"nombre": "Primera División", "pais": "CHI", "clubes": p1})
 		if p2 != null:
 			salida.append({"nombre": "Primera B", "pais": "CHI", "clubes": p2, "division": 2})
 	var pl: Dictionary = Datos.tabla("PAISES_LIGAS")

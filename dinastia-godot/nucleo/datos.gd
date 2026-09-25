@@ -79,7 +79,7 @@ func _leer_json(ruta: String) -> Variant:
 	var j := JSON.new()
 	var err := j.parse(crudo)
 	if err != OK:
-		push_error("Datos: JSON invalido en %s, linea %d: %s" % [ruta, j.get_error_line(), j.get_error_message()])
+		push_error("Datos: JSON inválido en %s, línea %d: %s" % [ruta, j.get_error_line(), j.get_error_message()])
 		return null
 	return j.data
 
