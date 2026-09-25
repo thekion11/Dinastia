@@ -722,6 +722,14 @@ func _mover(delta: float) -> void:
 	_celebrando = vivas
 
 	var bola: Vector3 = ball.position if is_instance_valid(ball) else Vector3.ZERO
+	_portador = _buscar_portador(bola)
+	_presionador = {}
+	if fase == "ataqueLocal" or fase == "ataqueVisita":
+		## Defiende el que no ataca; su jugador de campo más cercano al balón
+		## sale a presionarlo.
+		var r: Variant = _companero_mas_cercano_al_balon(fase == "ataqueVisita", bola)
+		if r != null and (r["node"] as Node3D).position.distance_to(bola) < RADIO_IR_A_PRESIONAR:
+			_presionador = r
 
 	for p in players:
 		var node: Node3D = p["node"]
@@ -771,6 +779,17 @@ func _mover(delta: float) -> void:
 			objetivo = _objetivo_portero(base, bola, es_local)
 		else:
 			objetivo = _objetivo_jugador(base, bola, es_local, p, delta)
+			## LA PRESIÓN (25-9-2026): el jugador del equipo que defiende más
+			## cercano al balón sale a presionarlo y se planta entre el balón y
+			## su propio arco, a un par de metros -no encima, que sería falta-.
+			## Sin esto nadie se acercaba nunca a menos de 4 m del que llevaba
+			## la pelota (medido en `pruebas/prueba_regates.gd`: mediana 7 m):
+			## el partido era un rondo sin oposición y el regate no tenía a
+			## quién regatear.
+			if not _presionador.is_empty() and p.get("id") == _presionador.get("id"):
+				var z_arco_propio: float = 52.5 if es_local else -52.5
+				var hacia_arco := Vector3(0.0, 0.0, signf(z_arco_propio - bola.z))
+				objetivo = objetivo.lerp(Vector3(bola.x, 0.0, bola.z) + hacia_arco * 2.0, 0.8)
 			## RONDA 3 (17-9-2026): SEPARACION entre companeros. La formula de
 			## `_objetivo_jugador()` atrae a TODOS los de un lado hacia la
 			## misma zona de la pelota -sin nada que los separe, dos o tres
@@ -858,6 +877,8 @@ func _mover(delta: float) -> void:
 		node.position += vel_actual * delta
 
 		var vel := vel_actual.length()
+		if not _portador.is_empty() and p.get("id") == _portador.get("id"):
+			_decidir_regate(p, vel)
 		_animar(p, ap, vel, _esta_celebrando(p))
 		if vel > 0.35:
 			var ang_deseado := atan2(vel_actual.x, vel_actual.z)
@@ -1087,7 +1108,73 @@ func _objetivo_portero(base: Vector3, bola: Vector3, es_local: bool) -> Vector3:
 	z += (-6.0 if es_local else 6.0) * lejania
 	return Vector3(x, 0, z)
 
-const VEL_CICLO := {"correr": 6.2, "trotar": 3.05, "caminar": 1.35}
+## `conducir`: el Dribble_03 del mocap avanza ~1,15 m/s llevando el balón.
+const VEL_CICLO := {"correr": 6.2, "trotar": 3.05, "caminar": 1.35, "conducir": 1.15}
+
+## EL QUE LLEVA EL BALÓN (25-9-2026). Hasta hoy nadie "tenía" la pelota: el
+## más cercano corría igual que los demás y el balón iba pegado a sus pies
+## sin que las piernas hicieran nada con él. Ahora, cada fotograma, el jugador
+## de campo que está encima del balón (a menos de `RADIO_PORTADOR`, balón a ras
+## de césped) lo conduce con el mocap de regate; si un rival se le echa encima,
+## amaga (`regate_finta`); si su equipo ataca y él está parado, lo pisa y
+## protege (`regate_pausa`). Los tres son clips de captura real del mismo pack
+## de fútbol, sin desplazamiento propio: el partido sigue moviendo al jugador.
+const RADIO_PORTADOR := 1.4
+## Distancia del rival a la que el portador amaga. Medido en un partido real
+## (`pruebas/prueba_regates.gd`): el balón cambia de pies cada 1-2 s, así que
+## el rival que sale a presionar rara vez llega a menos de 4 m; a 6 m ya viene
+## encima y el amague se lee como respuesta a él.
+const RADIO_PRESION := 6.0
+const RADIO_IR_A_PRESIONAR := 16.0
+var _presionador: Dictionary = {}
+const PAUSA_ENTRE_REGATES := 5.0
+var _portador: Dictionary = {}
+var _proximo_regate: Dictionary = {}   ## id -> elapsed a partir del cual puede volver a amagar
+var regates_hechos := 0                ## para las pruebas
+
+func _buscar_portador(bola: Vector3) -> Dictionary:
+	if not is_instance_valid(ball) or bola.y > 0.4:
+		return {}
+	var mejor: Dictionary = {}
+	var mejor_d := RADIO_PORTADOR * RADIO_PORTADOR
+	for p in players:
+		if bool(p.get("arbitro", false)) or str(p.get("slot_code", "")) == "POR":
+			continue
+		var n: Node3D = p.get("node")
+		if not is_instance_valid(n):
+			continue
+		var d := Vector2(n.position.x - bola.x, n.position.z - bola.z).length_squared()
+		if d < mejor_d:
+			mejor_d = d
+			mejor = p
+	return mejor
+
+func _decidir_regate(p: Dictionary, vel: float) -> void:
+	var pid = p.get("id")
+	if pid == null or _acciones_activas.has(pid) or _esta_celebrando(p):
+		return
+	if elapsed < float(_proximo_regate.get(pid, 0.0)):
+		return
+	var ap: AnimationPlayer = p.get("anim")
+	if not is_instance_valid(ap):
+		return
+	var es_local: bool = p["es_local"]
+	var rival: Variant = _rival_mas_cercano(p, es_local)
+	var n: Node3D = p["node"]
+	if rival != null and (rival["node"] as Node3D).position.distance_to(n.position) < RADIO_PRESION \
+			and ap.has_animation("regate_finta"):
+		_ejecutar_accion(p, "regate_finta", 1.3)
+		_proximo_regate[pid] = elapsed + PAUSA_ENTRE_REGATES
+		regates_hechos += 1
+		Sonido.toca("regate")
+		return
+	var ataca := (fase == "ataqueLocal" and es_local) or (fase == "ataqueVisita" and not es_local)
+	if ataca and vel < 0.35 and ap.has_animation("regate_pausa") and _rng.randf() < 0.35:
+		_ejecutar_accion(p, "regate_pausa", 2.0)
+		_proximo_regate[pid] = elapsed + PAUSA_ENTRE_REGATES
+		return
+	## Tampoco se reintenta cada fotograma: una decisión cada medio segundo.
+	_proximo_regate[pid] = elapsed + 0.5
 
 func _animar(p: Dictionary, ap: AnimationPlayer, vel: float, celebrando: bool) -> void:
 	if not is_instance_valid(ap):
@@ -1109,6 +1196,9 @@ func _animar(p: Dictionary, ap: AnimationPlayer, vel: float, celebrando: bool) -
 	var quiere: String
 	if celebrando:
 		quiere = "celebrar" if realista else "jump"
+	elif realista and vel > 0.9 and vel < 2.0 and not _portador.is_empty() and p.get("id") == _portador.get("id") \
+			and ap.has_animation("conducir"):
+		quiere = "conducir"
 	elif vel > 2.6:
 		quiere = "correr" if realista else "run"
 	elif vel > 1.1:

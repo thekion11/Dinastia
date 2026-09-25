@@ -264,8 +264,11 @@ static func _fases_de(id: String, familia: String, n: int) -> Array:
 			]
 		"ATQ-14":
 			return [
-				_f(1.3, {"ED": Vector3(17, 0, -40)}),
-				_f(0.9, {"ED": Vector3(14, 0, -43)}),
+				## El balón va pegado al pie (`balon_a` a ras, justo delante del
+				## extremo): así el que lo lleva es el portador y lo CONDUCE con
+				## el mocap de regate; en la segunda fase amaga antes del tiro.
+				_f(1.3, {"ED": Vector3(17, 0, -40)}, {"balon_a": Vector3(16.6, 0, -40.8), "altura": 0.05}),
+				_f(0.9, {"ED": Vector3(14, 0, -43)}, {"balon_a": Vector3(13.6, 0, -43.8), "altura": 0.05, "accion": {"ED": "regate_finta"}}),
 				_f(0.8, {}, {"remate": true}),
 			]
 		"ATQ-15":
