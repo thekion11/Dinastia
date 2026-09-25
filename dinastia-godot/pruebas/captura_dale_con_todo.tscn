@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://pruebas/captura_dale_con_todo.gd" id="1"]
+
+[node name="CapturaDaleConTodo" type="Node"]
+script = ExtResource("1")

@@ -1,0 +1,16 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dinastia-web",
+      "runtimeExecutable": "powershell.exe",
+      "runtimeArgs": [
+        "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+        "C:\\Users\\Alumno\\Desktop\\Proyecto x\\herramientas\\server.ps1",
+        "-Root", "C:\\Users\\Alumno\\Desktop\\Proyecto x\\entregas\\web",
+        "-Port", "5500"
+      ],
+      "port": 5500
+    }
+  ]
+}

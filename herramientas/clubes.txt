@@ -1,0 +1,384 @@
+Colo-Colo	CHI	1
+U. de Chile	CHI	1
+U. Católica	CHI	1
+Coquimbo Unido	CHI	1
+Cobresal	CHI	1
+Palestino	CHI	1
+Unión Española	CHI	1
+Audax Italiano	CHI	1
+Huachipato	CHI	1
+Ñublense	CHI	1
+O'Higgins	CHI	1
+Everton	CHI	1
+D. Iquique	CHI	1
+U. La Calera	CHI	1
+La Serena	CHI	1
+D. Limache	CHI	1
+Cobreloa	CHI	2
+S. Wanderers	CHI	2
+U. de Concepción	CHI	2
+Rangers	CHI	2
+Magallanes	CHI	2
+Curicó Unido	CHI	2
+Antofagasta	CHI	2
+D. Concepción	CHI	2
+Stgo. Morning	CHI	2
+San Luis	CHI	2
+D. Temuco	CHI	2
+D. Copiapó	CHI	2
+San Marcos	CHI	2
+Recoleta	CHI	2
+Santa Cruz	CHI	2
+Pto. Montt	CHI	2
+Boca Juniors	ARG	1
+River Plate	ARG	1
+Racing Club	ARG	1
+San Lorenzo	ARG	1
+Independiente	ARG	1
+Estudiantes	ARG	1
+Vélez	ARG	1
+Huracan	ARG	1
+Rosario Central	ARG	1
+Newell's	ARG	1
+Lanús	ARG	1
+Talleres	ARG	1
+Banfield	ARG	1
+Godoy Cruz	ARG	1
+Colón	ARG	1
+Unión SF	ARG	1
+Flamengo	BRA	1
+Palmeiras	BRA	1
+Sao Paulo	BRA	1
+Gremio	BRA	1
+Corinthians	BRA	1
+Santos	BRA	1
+Fluminense	BRA	1
+Botafogo	BRA	1
+Cruzeiro	BRA	1
+Atl. Mineiro	BRA	1
+Internacional	BRA	1
+Vasco	BRA	1
+Bahia	BRA	1
+Fortaleza	BRA	1
+Athletico PR	BRA	1
+Goiás	BRA	1
+Peñarol	URU	1
+Nacional	URU	1
+Defensor	URU	1
+Danubio	URU	1
+Wanderers	URU	1
+Liverpool M.	URU	1
+River (U)	URU	1
+Cerro (U)	URU	1
+Boston River	URU	1
+Racing (U)	URU	1
+Progreso	URU	1
+Fénix	URU	1
+Plaza Colonia	URU	1
+Montevideo C.	URU	1
+Juventud	URU	1
+Rentistas	URU	1
+Olimpia	PAR	1
+Cerro Porteño	PAR	1
+Libertad	PAR	1
+Guarani	PAR	1
+Nacional (P)	PAR	1
+Sol de América	PAR	1
+Luqueño	PAR	1
+Doce de Octubre	PAR	1
+Tacuari	PAR	1
+Gral. Caballero	PAR	1
+Ameliano	PAR	1
+Trinidense	PAR	1
+2 de Mayo	PAR	1
+Rubio Ñu	PAR	1
+Fernando Mora	PAR	1
+Resistencia	PAR	1
+Atl. Nacional	COL	1
+Millonarios	COL	1
+America de Cali	COL	1
+Junior	COL	1
+Santa Fe	COL	1
+Dep. Cali	COL	1
+Tolima	COL	1
+DIM Medellin	COL	1
+Once Caldas	COL	1
+Bucaramanga	COL	1
+Pereira	COL	1
+La Equidad	COL	1
+Envigado	COL	1
+Alianza FC	COL	1
+Fortaleza C.	COL	1
+Boyacá Chicó	COL	1
+Universitario	PER	1
+Alianza Lima	PER	1
+Sporting Cristal	PER	1
+Melgar	PER	1
+Cienciano	PER	1
+Sport Boys	PER	1
+Municipal	PER	1
+Cusco FC	PER	1
+C. Vallejo	PER	1
+Atl. Grau	PER	1
+Garcilaso	PER	1
+AD Tarma	PER	1
+UTC Cajamarca	PER	1
+Binacional	PER	1
+Ayacucho	PER	1
+Chankas	PER	1
+LDU Quito	ECU	1
+Barcelona SC	ECU	1
+Emelec	ECU	1
+I. del Valle	ECU	1
+Aucas	ECU	1
+El Nacional	ECU	1
+Delfin	ECU	1
+U. Católica (E)	ECU	1
+Orense	ECU	1
+Técnico U.	ECU	1
+Mushuc Runa	ECU	1
+Macara	ECU	1
+Guayaquil C.	ECU	1
+Cumbaya	ECU	1
+Imbabura	ECU	1
+9 de Octubre	ECU	1
+Real Madrid	ESP	1
+Barcelona	ESP	1
+Atlético Madrid	ESP	1
+Sevilla	ESP	1
+Valencia	ESP	1
+Villarreal	ESP	1
+Ath. Bilbao	ESP	1
+Real Sociedad	ESP	1
+Betis	ESP	1
+Celta Vigo	ESP	1
+Getafe	ESP	1
+Osasuna	ESP	1
+Girona	ESP	1
+Mallorca	ESP	1
+Espanyol	ESP	1
+Rayo Vallecano	ESP	1
+Manchester Utd	ENG	1
+City de Manch.	ENG	1
+Liverpool	ENG	1
+Arsenal	ENG	1
+Chelsea	ENG	1
+Tottenham	ENG	1
+Newcastle	ENG	1
+Aston Villa	ENG	1
+West Ham	ENG	1
+Everton FC	ENG	1
+Brighton	ENG	1
+Wolves	ENG	1
+Cristal Palace	ENG	1
+Fulham	ENG	1
+Brentford	ENG	1
+Nottingham F.	ENG	1
+Juventus	ITA	1
+Milan	ITA	1
+Inter	ITA	1
+Napoli	ITA	1
+Roma	ITA	1
+Lazio	ITA	1
+Atalanta	ITA	1
+Fiorentina	ITA	1
+Torino	ITA	1
+Bologna	ITA	1
+Udinese	ITA	1
+Sampdoria	ITA	1
+Genoa	ITA	1
+Sassuolo	ITA	1
+Monza	ITA	1
+Lecce	ITA	1
+Bayern Múnich	GER	1
+Dortmund	GER	1
+Leipzig	GER	1
+Leverkusen	GER	1
+Frankfurt	GER	1
+Wolfsburgo	GER	1
+Gladbach	GER	1
+Friburgo	GER	1
+Stuttgart	GER	1
+Hoffenheim	GER	1
+Unión Berlín	GER	1
+Mainz	GER	1
+Colonia	GER	1
+Bremen	GER	1
+Bochum	GER	1
+Augsburgo	GER	1
+Paris SG	FRA	1
+Marsella	FRA	1
+Lyon	FRA	1
+Monaco	FRA	1
+Lille	FRA	1
+Niza	FRA	1
+Rennes	FRA	1
+Lens	FRA	1
+Nantes	FRA	1
+Estrasburgo	FRA	1
+Toulouse	FRA	1
+Montpellier	FRA	1
+Brest	FRA	1
+Reims	FRA	1
+Lorient	FRA	1
+Auxerre	FRA	1
+Bolivar	BOL	1
+The Strongest	BOL	1
+Always Ready	BOL	1
+Blooming	BOL	1
+Oriente P.	BOL	1
+Wilstermann	BOL	1
+San José	BOL	1
+Guabira	BOL	1
+Tomayapo	BOL	1
+Nac. Potosí	BOL	1
+Aurora	BOL	1
+Indep. Petrolero	BOL	1
+R. Santa Cruz	BOL	1
+Palmaflor	BOL	1
+Vaca Diez	BOL	1
+Univ. de Vinto	BOL	1
+Kawasaki F.	JPN	1
+Yokohama FM	JPN	1
+Kashima A.	JPN	1
+Urawa Reds	JPN	1
+Vissel Kobe	JPN	1
+Gamba Osaka	JPN	1
+FC Tokio	JPN	1
+Sanfrecce H.	JPN	1
+Cerezo Osaka	JPN	1
+Nagoya G.	JPN	1
+Konsadole S.	JPN	1
+Avispa F.	JPN	1
+Shimonoseki	JPN	1
+Kyoto S.	JPN	1
+Albirex N.	JPN	1
+Shonan B.	JPN	1
+Ulsan HD	KOR	1
+Jeonbuk M.	KOR	1
+Pohang S.	KOR	1
+FC Seoul	KOR	1
+Incheon Utd	KOR	1
+Daejeon H.	KOR	1
+Gangwon FC	KOR	1
+Suon FC	KOR	1
+Gwangju FC	KOR	1
+Jeju United	KOR	1
+Daegu FC	KOR	1
+Gimcheon	KOR	1
+Seongnam	KOR	1
+Busan IPark	KOR	1
+Ansan G.	KOR	1
+Ch. Citizen	KOR	1
+Al-Hilal	KSA	1
+Al-Nassr	KSA	1
+Al-ittihad	KSA	1
+Al-ahli SA	KSA	1
+Al-Shabab	KSA	1
+Al-Ettifaq	KSA	1
+Al-Taawoun	KSA	1
+Al-Faiha	KSA	1
+Al-Raed	KSA	1
+Al-Fateh	KSA	1
+Dammac	KSA	1
+Al-Khaleej	KSA	1
+Al-Wehda	KSA	1
+Al-Okgdood	KSA	1
+Al-Riyadh	KSA	1
+Al-Hazem	KSA	1
+Al Ahly	EGY	1
+Zamalek	EGY	1
+Pyramids	EGY	1
+Ismaiiy	EGY	1
+Al Masry	EGY	1
+Ceramica C.	EGY	1
+Fut. Rise	EGY	1
+National Bank	EGY	1
+ENPPi	EGY	1
+Pharco	EGY	1
+Smouha	EGY	1
+El Gouna	EGY	1
+Baladiyat	EGY	1
+Talaea	EGY	1
+Al Mokawloon	EGY	1
+ZED FC	EGY	1
+W. Casablanca	MAR	1
+Raja C.	MAR	1
+AS FAR	MAR	1
+RS Berkane	MAR	1
+Maghreb Fès	MAR	1
+MC Oujda	MAR	1
+FUS Rabat	MAR	1
+Hassania A.	MAR	1
+Olympic Safi	MAR	1
+Chabab MA	MAR	1
+Jeunesse S.	MAR	1
+SCC Mohammédia	MAR	1
+Ittihad Tanger	MAR	1
+Renaissance Z.	MAR	1
+Unión Touarga	MAR	1
+COD Meknès	MAR	1
+Mamelodi S.	RSA	1
+Orlando Pirates	RSA	1
+Kaizer Chiefs	RSA	1
+Stelleribosch	RSA	1
+Sekhukhune	RSA	1
+Cape Town City	RSA	1
+Supersport Utd	RSA	1
+Richards Bay	RSA	1
+Golden Arrows	RSA	1
+Polokwane	RSA	1
+Chippa Utd	RSA	1
+AmaZalu	RSA	1
+Ts. Galaxie	RSA	1
+Maritzburg	RSA	1
+Casric Stars	RSA	1
+Magesi FC	RSA	1
+Melbourne City	AUS	1
+Sidney FC	AUS	1
+Melbourne V.	AUS	1
+C. Coast M.	AUS	1
+W. Sidney W.	AUS	1
+Adelaide Utd	AUS	1
+Brisbane R.	AUS	1
+Wellington P.	AUS	1
+Macarthur FC	AUS	1
+Newcastle J.	AUS	1
+Perth Glory	AUS	1
+W. United	AUS	1
+Auckland FC	AUS	1
+Canberra Utd	AUS	1
+Geelong FC	AUS	1
+Darwin City	AUS	1
+America	MEX	1
+Tigres UANL	MEX	1
+Monterrey	MEX	1
+Guadalajara	MEX	1
+Cruz Azul	MEX	1
+Pachuca	MEX	1
+Toluca	MEX	1
+Santos Laguna	MEX	1
+Pumas UNAM	MEX	1
+Leon	MEX	1
+Atlas	MEX	1
+Necaxa	MEX	1
+Puebla	MEX	1
+Tijuana	MEX	1
+Queretaro	MEX	1
+Mazatlán	MEX	1
+Inter Miami	USA	1
+LAFC	USA	1
+Seattle S.	USA	1
+Columbus Crew	USA	1
+Philadelphia U.	USA	1
+Atlanta Utd	USA	1
+LA Galaxy	USA	1
+NY City FC	USA	1
+N. England R.	USA	1
+Austin FC	USA	1
+Portland T.	USA	1
+Orlando City	USA	1
+FC Cincinnati	USA	1
+Nashville SC	USA	1
+St. Louis City	USA	1
+Charlotte FC	USA	1

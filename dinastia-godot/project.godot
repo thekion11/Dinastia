@@ -1,0 +1,85 @@
+config_version=5
+
+[application]
+
+config/name="DINASTIA"
+config/description="Manager de futbol. Nucleo portado del HTML, no reescrito."
+run/main_scene="res://escenas/inicio.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+; El icono de la app. Sale de la marca del proyecto -el mismo que llevaba el
+; APK viejo de la WebView-: Android se niega a exportar sin uno.
+config/icon="res://icono.png"
+
+[editor]
+
+; CALIDAD DEL VIDEO QUE GRABA `--write-movie`. Godot escribe AVI con MJPEG:
+; cada fotograma es un JPEG entero, sin compresion entre fotogramas, asi que
+; un video de 20 s a 960x540 se iba a 38 MB con la calidad por defecto (0.75)
+; y no pasaba el limite de 30 MB para mandarselo al usuario. Bajar la calidad
+; pesa MUCHO mas que bajar la resolucion -se probaron las dos: de 960x540 a
+; 800x450 solo quito un 3%-. A 0.55 el video se ve igual de bien para evaluar
+; y ocupa la mitad.
+movie_writer/mjpeg_quality=0.55
+
+[autoload]
+
+Datos="*res://nucleo/datos.gd"
+Azar="*res://nucleo/azar.gd"
+Eco="*res://nucleo/economia.gd"
+Sonido="*res://nucleo/sonido.gd"
+Musica="*res://nucleo/musica.gd"
+Idiomas="*res://nucleo/idiomas.gd"
+
+[input_devices]
+
+; TACTIL. Sin esto, en un movil o en una pantalla tactil los botones no
+; responden: Godot no convierte el toque en clic por defecto, y la interfaz
+; entera de este juego son botones.
+pointing/emulate_mouse_from_touch=true
+
+[rendering]
+
+
+; Forward+ (Vulkan). El metodo de render es de PROYECTO, no de escena, asi que
+; habia que elegir uno para la interfaz y para el estadio 3D a la vez.
+;
+; Se probo la interfaz en Compatibility y en Forward+ y sale IDENTICA, asi que
+; el cambio no cuesta nada donde no hace falta. Y lo da todo donde si: la
+; oclusion ambiental, los reflejos, la niebla volumetrica y SDFGI solo existen
+; en Forward+. En Compatibility el estadio se ve plano por mucho que se pidan.
+;
+; Esta maquina lo mueve: Vulkan 1.3.237 sobre Intel UHD Graphics.
+renderer/rendering_method="forward_plus"
+renderer/rendering_method.mobile="gl_compatibility"
+; Y el navegador tambien: WebGL no tiene Vulkan. Sin esta linea la exportacion
+; web arranca en negro y no dice por que.
+renderer/rendering_method.web="gl_compatibility"
+textures/canvas_textures/default_texture_filter=1
+; Android exige texturas ETC2/ASTC: es el formato que entienden las GPU de
+; movil, y sin esto la exportacion se niega a empezar. Reimportar con esto
+; encendido tarda mas la primera vez y no cambia nada en PC.
+textures/vram_compression/import_etc2_astc=true
+; CUANTAS LUCES PUEDE RECIBIR UN OBJETO en el render de Compatibility -el del
+; movil, y el que usan las capturas de prueba-. Por defecto son 8, y la ciudad
+; 3D tiene 54 farolas: de noche el suelo se quedaba casi a oscuras porque cada
+; baldosa de terreno solo podia coger ocho de todas las que tiene alrededor.
+; OJO: tiene que ir en ESTA seccion. Al ponerlo en un segundo bloque
+; [rendering] al principio del fichero, Godot se quedo con uno de los dos y el
+; ajuste no hizo nada -sin avisar de nada, que es lo peor-.
+limits/opengl/max_lights_per_object=24
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+; QUE SE ADAPTE A CUALQUIER PANTALLA, que es lo que pide el documento: del
+; portatil a la tele por HDMI, y del monitor al movil. `canvas_items` + `expand`
+; escala la interfaz y aprovecha el ancho que haya en vez de dejar bandas
+; negras, que es justo lo que hace falta cuando la relacion de aspecto cambia.
+window/handheld/orientation=0
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
