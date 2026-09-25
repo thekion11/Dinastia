@@ -325,15 +325,7 @@ func spawn_sentados(root: Node3D, jugadores: Array, es_local: bool, kit: Diction
 	var z0: float = lado * 14.0 + lado * (3.0 * 1.6 + 1.6)
 	var paso_sentado := 1.1
 	var largo_banco: float = float(cuantos) * paso_sentado + 0.4
-	var banco := BoxMesh.new()
-	banco.size = Vector3(0.9, 0.1, largo_banco)
-	var mi := MeshInstance3D.new()
-	mi.mesh = banco
-	mi.position = Vector3(x_banda, 0.45, z0 + lado * largo_banco * 0.5)
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.30, 0.20, 0.12)
-	mi.material_override = mat
-	root.add_child(mi)
+	_banco_de_suplentes(root, x_banda, z0, lado, cuantos, paso_sentado, largo_banco, c1)
 
 	for i in cuantos:
 		var j: Jugador = jugadores[i]
@@ -371,6 +363,52 @@ func spawn_sentados(root: Node3D, jugadores: Array, es_local: bool, kit: Diction
 			"base_pos": n.position, "slot_code": j.pos_e, "es_local": es_local,
 			"realista": nodo["realista"], "banca": true, "sentado": true})
 	return out
+
+## EL BANCO DE LOS SUPLENTES, DE VERDAD (26-9-2026, plan maestro C2). Era una
+## tabla marrón a 0,45 m y nada más. Ahora es lo que hay en un estadio: una
+## base, una butaca por jugador -asiento y respaldo del color del club-, la
+## pared de atrás y un techo con frente de metacrilato. Las butacas van justo
+## donde se sienta cada uno (mismo `paso`), así que la pose no cambia.
+static func _banco_de_suplentes(root: Node3D, x: float, z0: float, lado: float, cuantos: int,
+		paso: float, largo: float, color: Color) -> void:
+	var zc := z0 + lado * largo * 0.5
+	var base_mat := StandardMaterial3D.new()
+	base_mat.albedo_color = Color(0.22, 0.23, 0.25)
+	base_mat.roughness = 0.7
+	var butaca := StandardMaterial3D.new()
+	butaca.albedo_color = color.lerp(Color(0.12, 0.12, 0.14), 0.25)
+	butaca.roughness = 0.45
+	var metal := StandardMaterial3D.new()
+	metal.albedo_color = Color(0.72, 0.74, 0.77)
+	metal.metallic = 0.6
+	metal.roughness = 0.35
+	var vidrio := StandardMaterial3D.new()
+	vidrio.albedo_color = Color(0.6, 0.7, 0.78, 0.25)
+	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	vidrio.cull_mode = BaseMaterial3D.CULL_DISABLED
+	vidrio.roughness = 0.05
+	var caja := func(pos: Vector3, tam: Vector3, mat: Material) -> void:
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = tam
+		mi.mesh = bm
+		mi.material_override = mat
+		mi.position = pos
+		root.add_child(mi)
+	## Plataforma y pared trasera.
+	caja.call(Vector3(x + 0.15, 0.04, zc), Vector3(1.6, 0.08, largo + 0.6), base_mat)
+	caja.call(Vector3(x + 0.85, 1.05, zc), Vector3(0.1, 2.0, largo + 0.6), base_mat)
+	## Una butaca por jugador: asiento, respaldo y el pie metálico.
+	for i in cuantos:
+		var z := z0 + lado * (float(i) + 0.5) * paso
+		caja.call(Vector3(x + 0.05, 0.45, z), Vector3(0.5, 0.08, 0.5), butaca)
+		caja.call(Vector3(x + 0.33, 0.78, z), Vector3(0.08, 0.62, 0.5), butaca)
+		caja.call(Vector3(x + 0.1, 0.23, z), Vector3(0.08, 0.38, 0.08), metal)
+	## Techo con frente de metacrilato (el del banquillo de un estadio de hoy).
+	caja.call(Vector3(x + 0.2, 2.08, zc), Vector3(1.5, 0.08, largo + 0.6), metal)
+	caja.call(Vector3(x - 0.55, 1.75, zc), Vector3(0.03, 0.65, largo + 0.6), vidrio)
+	for extremo in [-1.0, 1.0]:
+		caja.call(Vector3(x + 0.15, 1.05, zc + extremo * (largo + 0.6) * 0.5), Vector3(1.5, 2.0, 0.04), vidrio)
 
 ## Modelo Quaternius en partidos reales (21-9-2026), a pedido explicito del
 ## usuario -"conectalo igual, desnudo por ahora"-. El cuerpo mocap real ya esta
