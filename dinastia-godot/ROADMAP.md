@@ -1,5 +1,26 @@
 # RUTA DE DESARROLLO — DINASTÍA
 
+## ANÁLISIS EXTERNO DEL 25-9-2026 (62/100): lo hecho y lo que queda
+Detalle completo en `LEEME.md`, arriba de todo.
+- [x] Contraseña del keystore fuera del repositorio (`export_credentials.cfg`, no se sube).
+  - [ ] **Dueño**: cambiar la contraseña, porque la vieja sigue en el historial de git.
+- [x] Clubes, ligas, copas, árbitros y nombres ficticios por defecto; lo real va aparte en
+  `datos/pack_real.json`, que los presets publicables excluyen.
+- [x] Auditoría de licencias (`LICENCIAS.md`); todo lo 🔴 se excluyó de la exportación.
+  - [ ] **Dueño**: confirmar la fuente de los 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva,
+    texturas de la Tierra) o reemplazarlos. Lista en `LICENCIAS.md`.
+- [x] Equipación pintada por shader, nombres sobre los jugadores y la columna misteriosa resuelta.
+  - [ ] Pendiente: la grada con textura estirada. Mejoró al quitarle las sombras, pero no se rehízo
+    su textura.
+- [x] Tutorial guiado por modo.
+- [x] Moneda seleccionable, academia de 10 a 16 años, contraste de la previa y buscador.
+- [x] Rendimiento: arranque 12,3 s → 0,9 s, estadio 25,6 s → 2,9 s, triángulos -75 %, y calidad
+  adaptativa por debajo de 40 FPS.
+  - [ ] Medir los FPS en el PC modesto de verdad (Intel UHD); aquí solo hay render por software.
+- [x] `principal.gd`: dos paneles más a componentes (`PanelAspectoDT`, `PanelClubDentro`), 14.395 líneas.
+  **No** sacar de `Principal` lambdas conectadas a señales de `mundo` (el juego se cae al salir; ver
+  `LEEME.md`).
+
 ## MODULARIZACIÓN DE `principal.gd` — CERRADA (25/26-9-2026): 15.589 → 14.640 líneas
 Pedido explícito del usuario: reducir la fragilidad de un archivo monolítico del que depende todo
 el juego -"15 mil líneas todas juntas una dependiente de otra es un gran riesgo". Cinco tandas,

@@ -1,5 +1,103 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## EL ANÁLISIS EXTERNO (62/100), PUNTO POR PUNTO (25-9-2026)
+
+El usuario pasó un PDF con un análisis externo del juego y pidió resolverlo entero sin ayuda. Cada
+punto se comprobó antes contra el código: no se corrigió nada solo porque el PDF lo dijera. Hay un
+commit por tema en la rama `claude/sweet-turing-tysv99`, y el banco quedó en 0 fallos después de cada
+uno.
+
+### 0. La contraseña del keystore de Android ya no está en el repositorio
+`export_presets.cfg` la tenía escrita. Ahora las credenciales viven en `export_credentials.cfg`, que
+no se sube (`.gitignore`); `export_credentials.cfg.ejemplo` explica qué poner. **El historial de git
+todavía guarda la contraseña vieja.** El repositorio es privado, pero lo seguro es cambiarla: sacar
+un keystore nuevo o cambiarle la contraseña con `keytool -storepasswd`.
+
+### 1. Legal: base ficticia por defecto y pack real aparte
+- `herramientas/base_ficticia.py` (se puede volver a correr sin romper nada) cambia los 384 clubes
+  reales por nombres inventados. Hace lo mismo con ligas, confederaciones, copas, árbitros y marcas
+  de ropa. También reemplaza las listas de nombres: salían de plantillas de selecciones reales, y
+  110 de los nombres generados coincidían con futbolistas reales.
+- `datos/tablas.json` ahora es la base FICTICIA. Todo lo real se mudó a `datos/pack_real.json`.
+- `Datos.usar_base_real()` activa el pack si existe, en este orden:
+  1. `user://pack_real.json`;
+  2. el `pack_real.json` junto al `.exe`;
+  3. `res://datos/pack_real.json`.
+- En Inicio se elige la base ("Ficticia / Real (pack)"). La partida guardada recuerda cuál usaba.
+- `Nombres.sin_vetar()`: ningún nombre generado (mundo, cantera, ojeadores, academia) puede coincidir
+  con uno de los 2.125 futbolistas reales. La lista de vetados guarda solo huellas md5, no los nombres.
+- Con la base ficticia no sale ninguna foto real (`Cara.foto_real()` devuelve null) ni ninguna
+  camiseta real.
+- Se quitaron el módulo `ficcion/` y las menciones a "FIFA".
+
+### 2. Licencias
+`LICENCIAS.md` es nuevo y va con un semáforo. Todo lo 🔴 queda fuera de los presets publicables
+(WindowsLigero, Web, Android): el pack real, las caras reales, el modelo `futbolista_cr7` y los coches
+sacados de un juego comercial. El preset **Windows** ("completo") es el privado y lo lleva todo. Los
+🟡 son pendientes del dueño: hay que confirmar la fuente y no se pueden resolver desde el código.
+
+### 3. Partido 3D: equipación, jugadores lejanos y la "columna misteriosa"
+- La equipación se pinta en el shader (`visor/equipacion_q.gdshader`) sobre una máscara UV del modelo
+  Quaternius (`herramientas/mascara_equipacion.py`): 12 estilos, pantalón y medias propios, manga larga
+  opcional y un rim light para que no se vean oscuros. Antes se teñía la textura en la CPU y quedaba
+  rota. `VestidorQ.vestir_equipacion()` guarda los materiales en caché.
+- Encima de cada jugador flota su nombre (`Label3D` de tamaño fijo, escalado según el FOV), y se
+  puede apagar con el botón "🏷 Nombres".
+- Se reordenó la interfaz: el marcador arriba a la izquierda y los botones arriba a la derecha.
+- La **columna misteriosa** se reprodujo: aparece de noche, con el renderer Compatibility, y es un
+  reflejo especular de los focos sobre un césped demasiado brillante. Se arregló de dos maneras: la
+  rugosidad del césped ahora va de 0,78 a 1, y la luz de relleno ya no da brillo especular. Con capturas
+  de antes y después.
+
+### 4. Tutorial
+`ui/componentes/tutorial.gd` muestra una guía sobre la interfaz real en 15 pasos, uno de ellos propio
+de cada modo (`Roles.modo_actual()`). Arranca solo la primera vez y también se abre desde la tarjeta
+"Tutorial" de Inicio. En Ajustes → aspecto hay un botón para verlo de nuevo.
+
+### 5. Pendientes del PDF
+- **Moneda**: se puede elegir EUR, USD, GBP, CLP, ARS, BRL, MXN, COP, PEN o JPY en Ajustes → juego.
+  Todo pasa por `Eco.dinero()`, y las 8 copias de `_dinero` quedaron en una sola.
+- **Academia de 10 a 16 años** (`nucleo/academia.gd` y `ui/componentes/panel_academia.gd`, arriba de
+  Plantel → Cantera): se decide el plan de trabajo, la comida, los estudios y el molde de personalidad
+  de cada chico, se capta cada temporada y se lo entrega al DT a partir de los 15. La proyección se
+  muestra como horquilla porque el techo real está oculto. Se guarda con la partida.
+- **Contraste** de la cabecera de la previa: se añadió un velo degradado y se aclararon los textos
+  secundarios. El **buscador** ya no sale cortado.
+
+### 6. Rendimiento (medido, no estimado)
+| | antes | después |
+|---|---|---|
+| Arranque | 12,3 s | 0,9 s |
+| Abrir el estadio | 25,6 s | 2,9 s |
+| Triángulos por fotograma | 2,63 M | 0,66 M |
+| Llamadas de dibujo | 768 | 520 |
+| Fotograma (render por software) | 641 ms | 386 ms |
+
+Cambios:
+- Sonidos y música se componen en un hilo aparte.
+- La pantalla gigante se redibuja cada 0,25 s en vez de en cada fotograma.
+- Butacas y público ya no proyectan sombra.
+- `RendimientoAdaptativo` baja la calidad en cuatro escalones si la media cae por debajo de 40 FPS;
+  se puede apagar en Ajustes.
+
+Los FPS reales dependen de la gráfica. `pruebas/medir_partido.gd` mide lo que el juego le pide a la
+máquina, y eso sí se puede comparar entre versiones.
+
+### 7. `principal.gd`
+Dos paneles más pasaron a componentes: `PanelAspectoDT` y `PanelClubDentro`. Cada uno tiene una
+prueba que pulsa sus botones de verdad (`pruebas/captura_*_panel.gd`). Con esto el archivo quedó en
+14.395 líneas y 644 KB.
+
+**Lección que costó tiempo:** las lambdas conectadas a señales de `mundo` que viven toda la partida
+NO se pueden sacar de `Principal`. Se intentó con `NoticiasMundo`, primero como componente estático y
+después como nodo hijo, y el juego se cae al salir con `malloc_consolidate(): invalid chunk size`.
+Desconectarlas en `_exit_tree` lo cuelga. Se revirtió entero. Solo se pueden extraer los paneles cuyos
+callbacks mueren con sus botones.
+
+### 8. Un bug encontrado de paso
+La multa del vestuario (`nucleo/vestuario.gd`) era fija, y salía en 14,6 M… que además los cobraba
+el club. Ahora son dos semanas del sueldo del jugador (`MULTA_SEMANAS`).
+
 ## LOBBY INSTITUCIONAL CON ÁRBITROS: CERRADO (26-9-2026)
 
 Punto de la Fase 3 del `ROADMAP.md`, confirmado como hueco real desde el 14-9 ("Lobby institucional
