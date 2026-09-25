@@ -1,5 +1,39 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## SEXTA RONDA, TANDA B: INSTITUCIONES, MEDIOS, CHARLAS, MINIJUEGO, LICENCIA (26-9-2026)
+
+- **Presidente de la federación** (`Federacion.presidente`):
+  - nombre y corriente (modernizador, comercial, proteccionista o igualitario);
+  - mandato de 4 años con elecciones;
+  - sus mociones salen antes en la asamblea y suma 12 puntos a favor en el voto de la IA;
+  - se ve en Federación.
+- **Junta del club** (`nucleo/junta.gd`):
+  - presidente con estilo y tres accionistas con su porcentaje y su exigencia (dividendos,
+    títulos, cantera o estadio);
+  - junta cada 13 semanas en el despacho, con dos salidas;
+  - un accionista harto presenta moción de censura (−10 de confianza).
+- **Lesiones absurdas** (`nucleo/lesiones_absurdas.gd`): la ducha, el perro, la consola…
+  - una cada ~14 semanas, sin `Azar`;
+  - salen en portada;
+  - el toque de queda evita las de noche.
+- **Entrevistas al paso** (`Prensa.revisar_al_paso`): streamers, podcasts y canales de hinchas,
+  con preguntas inesperadas que mueven seguidores.
+- **Charlas uno a uno** (`nucleo/charlas.gd`), desde la ficha:
+  - cinco temas;
+  - la respuesta depende del rasgo;
+  - repetir el tema enseguida vale la mitad;
+  - la promesa de minutos se cobra a las 4 semanas.
+- **Presentación de fichajes** (`ui/componentes/presentacion_fichaje.gd`): en el estadio o en la
+  sala de prensa.
+- **Minijuego de penales** (`ui/componentes/minijuego_penales.gd`): el portero aprende si repites
+  esquina.
+- **Licencia de entrenador** (`nucleo/licencia.gd`):
+  - niveles C, B, A y Pro;
+  - examen de 8 preguntas sobre las Reglas de Juego vigentes y táctica; se aprueba con 6;
+  - suspender obliga a esperar 4 semanas.
+- Pruebas: `_probar_instituciones_c5_c8`, `_probar_charlas_c6_c7`, `_probar_licencia_c7`;
+  capturas `captura_junta`, `captura_charlas` y `captura_examen_penales`.
+
 ## SEXTA RONDA, TANDA A: COHERENCIA, PERIÓDICO (26-9-2026)
 
 - **Pantalla del estadio**:

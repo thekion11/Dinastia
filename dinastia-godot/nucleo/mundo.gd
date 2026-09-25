@@ -93,6 +93,8 @@ var club_dentro: ClubDentro
 var junta: Junta
 ## Las charlas uno a uno con cada jugador y las promesas hechas (C7).
 var charlas: Charlas
+## La licencia de entrenador y sus exámenes (C7).
+var licencia: Licencia
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
 var banco: Banco
 ## La marca del pecho: ofertas, firma y exigencia contractual.
@@ -1749,6 +1751,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	junta = Junta.new()
 	junta.formar(mi_club())
 	charlas = Charlas.new()
+	licencia = Licencia.new()
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)

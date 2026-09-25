@@ -98,6 +98,7 @@ func _ready() -> void:
 	_probar_cantera_c3()
 	_probar_instituciones_c5_c8()
 	_probar_charlas_c6_c7()
+	_probar_licencia_c7()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5883,3 +5884,52 @@ func _probar_charlas_c6_c7() -> void:
 	var ch2 := Charlas.new()
 	ch2.desde_dic(m.charlas.a_dic())
 	_comprobar(ch2.ultima.has(j.id), "la memoria de las charlas se guarda")
+
+## C7: la licencia de entrenador (niveles, examen de 8, aprobar con 6, espera al
+## suspender, premio de prestigio) y el portero del minijuego que aprende.
+func _probar_licencia_c7() -> void:
+	_titulo("C7 LICENCIA DE ENTRENADOR Y MINIJUEGO DE PENALES")
+	var m := Mundo.new()
+	m.generar(["CHI"], 99)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var lic := m.licencia
+	var qs := lic.examen()
+	_comprobar(qs.size() == Licencia.PREGUNTAS_POR_EXAMEN, "el examen tiene %d preguntas" % qs.size())
+	var todas_ok := true
+	for q: Array in Licencia.BANCO:
+		todas_ok = todas_ok and int(q[2]) >= 0 and int(q[2]) < (q[1] as Array).size()
+	_comprobar(todas_ok, "toda pregunta del banco tiene una respuesta válida")
+	for n in range(1, 5):
+		var cuantas := 0
+		for q: Array in Licencia.BANCO:
+			if int(q[3]) <= n and int(q[3]) >= maxi(1, n - 1):
+				cuantas += 1
+		_comprobar(cuantas >= Licencia.PREGUNTAS_POR_EXAMEN, "hay preguntas de sobra para el nivel %d (%d)" % [n, cuantas])
+	## Suspender: todas mal.
+	var malas: Array = []
+	for q: Array in qs:
+		malas.append((int(q[2]) + 1) % (q[1] as Array).size())
+	var r := lic.corregir(qs, malas, 2026, 5, m.roles, m.prensa)
+	_comprobar(not bool(r["aprobado"]) and lic.puede_presentarse(2026, 6) != "", "suspender obliga a esperar")
+	_comprobar(lic.puede_presentarse(2026, 5 + Licencia.ESPERA_SEMANAS) == "", "pasada la espera, se puede repetir")
+	## Aprobar: todas bien.
+	qs = lic.examen()
+	var buenas: Array = []
+	for q: Array in qs:
+		buenas.append(int(q[2]))
+	var prest0 := m.roles.prestigio
+	r = lic.corregir(qs, buenas, 2026, 20, m.roles, m.prensa)
+	_comprobar(bool(r["aprobado"]) and lic.nivel == 1 and m.roles.prestigio >= prest0, "aprobar sube de nivel y de prestigio")
+	var l2 := Licencia.new()
+	l2.desde_dic(lic.a_dic())
+	_comprobar(l2.nivel == 1, "la licencia se guarda")
+	## El portero aprende.
+	var mj := MinijuegoPenales.new()
+	mj._rng.seed = 5
+	mj._historial = [2, 2]
+	var a_la_2 := 0
+	for k in 100:
+		if mj.eleccion_portero() == 2:
+			a_la_2 += 1
+	_comprobar(a_la_2 > 60, "si repites esquina, el portero se tira ahí (%d de 100)" % a_la_2)
+	mj.free()

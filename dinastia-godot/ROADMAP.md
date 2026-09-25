@@ -67,7 +67,12 @@ suelo y no atraviesen nada.
 - 🟡 Los datos reales se cargan en el pack real, no en el juego público (misma regla legal que
   los nombres).
 
-### C5. Instituciones con poder ✅
+### C5. Instituciones con poder ✅ — HECHO (26-9)
+- Presidente de la federación con nombre, corriente y mandato de 4 años, con elecciones y
+  noticia. Sus mociones salen antes y hace campaña por ellas.
+- Club: presidente, tres accionistas con su porcentaje y su exigencia, y junta trimestral en el
+  despacho. Un accionista harto presenta moción de censura.
+- Queda: presidente de la confederación continental y cambios de formato de competición.
 - **Presidentes de federación y confederación** con nombre y agenda:
   - proponen y cambian reglas (cupos de extranjeros, VAR, formato de copa, calendario, límite
     salarial);
@@ -75,12 +80,19 @@ suelo y no atraviesen nada.
 - **Presidente de tu club, accionistas y reuniones con la directiva**: juntas trimestrales,
   votos y exigencias.
 
-### C6. Medios nuevos y entrevistas más naturales ✅
+### C6. Medios nuevos y entrevistas más naturales ✅ — HECHO (26-9)
+- Entrevistas «al paso» de streamers, podcasts y canales de hinchas: preguntas inesperadas que
+  mueven seguidores.
 - Streamers, podcasts y entrevistas «al paso» (en el aeropuerto, a la salida del entrenamiento):
   cortas, sin preparar y con preguntas inesperadas.
 - Hoy ya existe la rueda formal (B5) y la de pie de campo.
 
-### C7. Hablar con jugadores, presentaciones, minijuegos y exámenes ✅
+### C7. Hablar con jugadores, presentaciones, minijuegos y exámenes ✅ — HECHO (26-9)
+- **Charlas uno a uno** con memoria y promesas que se cobran.
+- **Presentación de fichajes**, en el estadio o en la sala de prensa.
+- **Minijuego de penales** con un portero que aprende.
+- **Licencia C/B/A/Pro** con examen de reglamento vigente y táctica.
+- Queda: el minijuego de tiro libre y la trivia del club.
 - **Conversación individual con cualquier jugador**: moral, minutos, contrato, vida personal.
   Con tono y memoria, como la rueda de prensa.
 - **Presentación de fichajes**: foto con la camiseta y rueda breve; cinemática pendiente de B3.
@@ -88,7 +100,9 @@ suelo y no atraviesen nada.
 - **Exámenes**: licencia de entrenador (UEFA C → Pro) con preguntas; al aprobar se desbloquean
   ventajas.
 
-### C8. Lesiones absurdas fuera del campo ✅
+### C8. Lesiones absurdas fuera del campo ✅ — HECHO (26-9)
+- 14 casos, una cada ~14 semanas, sin `Azar`.
+- El toque de queda evita las de noche.
 Resbalón en la ducha, mordedura del perro, videojuego, celebración familiar… Son poco
 frecuentes, tienen su noticia y se pueden prevenir con normas del vestuario.
 
