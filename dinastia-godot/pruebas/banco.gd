@@ -91,6 +91,7 @@ func _ready() -> void:
 	_probar_tema_y_ortografia()
 	_probar_eventos_nuevos()
 	_probar_entrevistas()
+	_probar_estadio_b6()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -1646,7 +1647,10 @@ func _probar_roles_y_federacion() -> void:
 	var claves_esperadas: Array = ["aforo", "arcoCol", "asiento1", "asiento2", "asiento3",
 		"asientoP", "banderas", "banquillo", "cesped", "cespedClaro", "cespedOscuro", "clima",
 		"corner", "escudoDonde", "focos", "forma", "lineaCol", "niveles", "pantalla",
-		"personalizado", "redCol", "redTipo", "sonidoGol", "techo", "tunel", "vallas"]
+		"personalizado", "redCol", "redTipo", "sonidoGol", "techo", "tunel", "vallas",
+		## B6 (25-9-2026): las secciones, también incondicionales.
+		"fachada", "fachadaCol", "techoCol", "luzFocos", "luzClub", "banquilloCol",
+		"superficie", "exterior"]
 	claves_esperadas.sort()
 	_comprobar(claves_antes == claves_esperadas,
 		"perfil() trae exactamente las claves de siempre, ni una de mas (dio: %s)" % [claves_antes])
@@ -1711,7 +1715,7 @@ func _probar_roles_y_federacion() -> void:
 	## escudoDonde. Los 8, no solo uno, para no dejar pasar un typo de catalogo
 	## en cualquiera de ellos -"redTipo": "gruesa" vale, "REDTIPO":"Gruesa" no.
 	var estilos := m.estadio.presets()
-	_comprobar(estilos.size() == 16, "los 16 estilos completos (8 de siempre + 8 del 25-9) (dio %d)" % estilos.size())
+	_comprobar(estilos.size() == 24, "los 24 estilos completos (8 de siempre + 8 del 25-9 + 8 de B6) (dio %d)" % estilos.size())
 	for est_p: Dictionary in estilos:
 		var cambios: Dictionary = est_p["cambios"]
 		_comprobar(cambios.has("redTipo") and m.estadio.es_valido("redTipo", cambios["redTipo"]),
@@ -5543,3 +5547,61 @@ func _probar_entrevistas() -> void:
 	## Se guarda y se carga.
 	var d := Partida._prensa_a_dic(pr)
 	_comprobar(d.has("memoria") and d.has("titular_pendiente"), "memoria y titular se guardan")
+
+## B6: el estadio por secciones -fachada, colores por tribuna, luz, superficie-,
+## los ocho estilos nuevos y el exterior.
+func _probar_estadio_b6() -> void:
+	_titulo("ESTADIO B6: FACHADA, COLORES POR SECCIÓN, LUZ, SUPERFICIE, EXTERIOR, 24 ESTILOS")
+	var m := Mundo.new()
+	m.generar(["CHI"], 909)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mio := m.mi_club()
+	mio.saldo = 500000000
+	var e := m.estadio
+	_comprobar(e.presets().size() == 24, "24 estilos (16 + 8): %d" % e.presets().size())
+	var todos_validos := true
+	for p: Array in EstadioPropio.PRESETS_B6:
+		for k: String in (p[3] as Dictionary):
+			if k == "niveles":
+				continue
+			if not e.ajustes.has(k) or not e.es_valido(k, p[3][k]):
+				todos_validos = false
+				print("    estilo %s: «%s»=%s no vale" % [p[0], k, p[3][k]])
+	_comprobar(todos_validos, "cada valor de los 8 estilos nuevos existe en su catálogo")
+	for k: String in EstadioPropio.DEF_B6:
+		if not e.ajustes.has(k):
+			_comprobar(false, "clave nueva sembrada: %s" % k)
+	var viejo := EstadioPropio.new()
+	viejo.desde_dic({"nombre": "", "ajustes": {"forma": "oval"}})
+	_comprobar(viejo.ajustes.has("fachada") and String(viejo.ajustes["forma"]) == "oval", "un guardado viejo carga con las claves nuevas")
+	_comprobar(e.opciones("fachadaCol").size() == EstadioPropio.PALETA.size() and e.opciones("fachada").size() == 5, "la interfaz ve los catálogos nuevos")
+	_comprobar(e.presupuesto(mio, {"fachada": "ladrillo"}) > 0, "revestir la fachada cuesta")
+	_comprobar(e.presupuesto(mio, {"fachadaCol": "#b01e2d", "techoCol": "#1b1d22"}) == 0, "pintar es gratis")
+	_comprobar(e.reformar(mio, {"fachada": "vidrio"}) == "" and String(e.perfil(mio)["fachada"]) == "vidrio", "la reforma llega al perfil")
+	_comprobar(e.reformar(mio, {"fachada": "marmol"}) != "", "una fachada inventada se rechaza")
+	## Colores por tribuna.
+	e.reformar(mio, {"personalizar_bandejas": true, "bandeja_norte_col1": "#e8c21a"})
+	var pf := e.perfil(mio)
+	_comprobar(String(pf["bandejas"]["norte"]["col1"]) == "#e8c21a" and String(pf["bandejas"]["sur"]["col1"]) == "", "cada tribuna lleva sus colores")
+	## Superficie: efecto real.
+	_comprobar(e.factor_lesion() == 1.0 and e.factor_desgaste_cesped() == 1.0, "natural: sin cambios")
+	e.reformar(mio, {"superficie": "artificial"})
+	_comprobar(e.factor_lesion() > 1.0 and e.factor_desgaste_cesped() == 0.0, "artificial: más lesiones, no se estropea")
+	e.reformar(mio, {"superficie": "hibrido"})
+	_comprobar(e.factor_lesion() < 1.0, "híbrido: menos lesiones")
+	m.avanzar_semana()
+	_comprobar(is_equal_approx(Partido.ctx_lesion_local, e.factor_lesion()), "la semana usa la superficie de tu estadio")
+	Partido.limpiar_contexto()
+	_comprobar(Partido.ctx_lesion_local == 1.0, "limpiar el contexto la devuelve a 1")
+	## La luz.
+	var luces := {}
+	for l: String in ["neutra", "calida", "fria", "club"]:
+		luces[StadiumBuilder.color_luz({"luzFocos": l, "luzClub": "#b01e2d"}).to_html()] = true
+	_comprobar(luces.size() == 4, "las cuatro luces se distinguen")
+	## El exterior se construye (sin pantalla: solo el árbol de nodos).
+	var raiz := Node3D.new()
+	add_child(raiz)
+	StadiumBuilder.build(raiz, e.perfil(mio), 40000, 0.8, 1, mio)
+	var ext := raiz.find_child("Exterior", false, false)
+	_comprobar(ext != null and ext.find_children("*", "Label3D", false, false).size() >= 2, "hay taquillas, tienda y rótulos fuera")
+	raiz.queue_free()

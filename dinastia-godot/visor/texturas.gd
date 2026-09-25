@@ -78,6 +78,44 @@ static func hormigon(tinte: Color, semilla: int = 11) -> StandardMaterial3D:
 	_cache[clave] = m
 	return m
 
+## Ladrillo visto (plan maestro B6.2, la fachada de estadio inglés). La
+## textura cubre 1 m x 1 m: cuatro hiladas de 25 cm con las juntas a matajunta.
+## Se pinta en gris y el tinte manda el color, como en `hormigon()`.
+static func ladrillo(tinte: Color, semilla: int = 17) -> StandardMaterial3D:
+	var clave := "ladr|%s|%d" % [tinte.to_html(false), semilla]
+	if _cache.has(clave):
+		return _cache[clave]
+	const T := 256
+	var img := Image.create(T, T, false, Image.FORMAT_RGB8)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = semilla
+	var hilada := T / 4
+	var junta := 5
+	for fila in 4:
+		var desfase := 0 if fila % 2 == 0 else T / 4
+		for n in 3:
+			var x0 := (n * T / 2 + desfase) % T
+			var tono := rng.randf_range(0.72, 1.0)
+			for y in range(fila * hilada, (fila + 1) * hilada):
+				for dx in T / 2:
+					var x := (x0 + dx) % T
+					var en_junta := y - fila * hilada < junta or dx < junta
+					var g := 1.35 if en_junta else tono * rng.randf_range(0.93, 1.0)
+					img.set_pixel(x, y, Color(g, g, g) if not en_junta else Color(0.95, 0.93, 0.88))
+	img.generate_mipmaps()
+	var m := StandardMaterial3D.new()
+	m.albedo_color = tinte
+	m.albedo_texture = ImageTexture.create_from_image(img)
+	m.normal_enabled = true
+	m.normal_texture = _tex_ruido(0.05, semilla + 3, true, 3)
+	m.normal_scale = 0.35
+	m.roughness = 0.9
+	m.uv1_scale = Vector3(1.0, 1.0, 1.0)
+	m.uv1_triplanar = true
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_cache[clave] = m
+	return m
+
 ## Asfalto: mas oscuro, mas grano y algo pulido por el paso de los coches.
 ## `tinte` (17-9-2026): esta funcion existia desde antes de esta sesion sin
 ## UN SOLO call site en todo el proyecto -escrita y nunca conectada, el mismo

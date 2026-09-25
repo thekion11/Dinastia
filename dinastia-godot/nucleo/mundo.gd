@@ -713,6 +713,11 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	## `ctx_club_id`: se calcula una vez por semana, no dentro del bucle de
 	## fuerzas.
 	Partido.ctx_cesped_local = ciudad.penalizacion_cesped() if ciudad != null else 1.0
+	## B6.5: la superficie decide cuánto de ese desgaste llega al campo y cuánto
+	## se lesiona la gente en él.
+	if estadio != null:
+		Partido.ctx_cesped_local = lerpf(1.0, Partido.ctx_cesped_local, estadio.factor_desgaste_cesped())
+		Partido.ctx_lesion_local = estadio.factor_lesion()
 	## La moda de la era, para todos los dibujos que existen. Se calcula una vez
 	## por semana y no dentro del bucle de fuerzas, que corre miles de veces.
 	Partido.ctx_analisis = consumir_analisis()

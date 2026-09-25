@@ -137,6 +137,14 @@ reales y commit + push.
   7. **Túnel navegable** (2-septies), cuando exista el modo caminar.
 - **Comprobar**: `captura_formas_estadio.gd` ampliada a todos los estilos, sin nada flotando ni
   atravesado (auditoría automática de mallas contra el césped y las gradas).
+- **Hecho (25-9-2026)**: 1 (colores por sección), 2 (fachada y exterior: taquillas, tienda,
+  estacionamiento), 5 (superficie con efecto en lesiones y desgaste; techo retráctil sin
+  lluvia dentro) y 6 (24 estilos). Queda:
+  - 3 (instalaciones internas visibles);
+  - 4 (obras con andamios y grúa);
+  - 7 (túnel navegable);
+  - la paleta de las vallas LED;
+  - las formas geométricas nuevas (hoy los estilos nuevos combinan las 6 formas existentes).
 
 ### B7. Ciudad 3D y su funcionamiento ✅
 - **Hoy**: `ui/ciudad_vista.gd` (340 líneas) muestra `CityBuilder` y `nucleo/ciudad.gd` lleva
