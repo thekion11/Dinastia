@@ -50,10 +50,13 @@ static var _mostrando := false
 ## Único punto de entrada. Se le pasa el padre porque el aviso tiene que colgar
 ## de algo vivo: colgado del árbol raíz, cambiar de escena lo dejaría huérfano
 ## a media animación.
-static func mostrar(padre: Node, tipo: String, icono: String, titulo: String, descripcion: String) -> void:
+## `sfx` (25-9-2026): un sonido propio para ESTE aviso, en vez del genérico
+## de su tipo -el despido no suena como cualquier alerta, ni el cierre del
+## mercado como cualquier fichaje-. Vacío, el del tipo.
+static func mostrar(padre: Node, tipo: String, icono: String, titulo: String, descripcion: String, sfx: String = "") -> void:
 	if _cola.size() >= MAX_EN_COLA:
 		return
-	_cola.append({"padre": padre, "tipo": tipo, "icono": icono, "titulo": titulo, "desc": descripcion})
+	_cola.append({"padre": padre, "tipo": tipo, "icono": icono, "titulo": titulo, "desc": descripcion, "sfx": sfx})
 	if not _mostrando:
 		_siguiente()
 
@@ -72,12 +75,14 @@ static func _siguiente() -> void:
 	aviso._icono = String(d["icono"])
 	aviso._titulo = String(d["titulo"])
 	aviso._desc = String(d["desc"])
+	aviso._sfx = String(d.get("sfx", ""))
 	padre.add_child(aviso)
 
 var _tipo := "logro"
 var _icono := "🏆"
 var _titulo := ""
 var _desc := ""
+var _sfx := ""
 
 func _ready() -> void:
 	var def: Dictionary = TIPOS.get(_tipo, TIPOS["logro"])
@@ -134,7 +139,7 @@ func _ready() -> void:
 	des.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(des)
 
-	Sonido.toca(String(def["sfx"]), Sonido.Bus.INTERFAZ)
+	Sonido.toca(_sfx if _sfx != "" and Sonido.NOMBRES.has(_sfx) else String(def["sfx"]), Sonido.Bus.INTERFAZ)
 	_animar()
 
 func _animar() -> void:
