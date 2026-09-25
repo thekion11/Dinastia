@@ -10,13 +10,13 @@ extends RefCounted
 ## vez por refresco, y lo que hace cada tarjeta al pulsarla le llega como
 ## `Callable` desde `principal.gd` (que sigue siendo quien navega).
 
-const COL_TARJETA := Color("16211a")
+const COL_TARJETA := Tema.TARJETA
 const COL_BORDE := Color("26352b")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
-const COL_ORO := Color("c9a227")
-const COL_VERDE := Color("3fa06a")
-const COL_ROJO := Color("d0463c")
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
+const COL_ORO := Tema.ORO
+const COL_VERDE := Tema.ACENTO
+const COL_ROJO := Tema.MAL
 
 ## `ir`: Callable(pestaña: String). `ficha`: Callable(j: Jugador).
 static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, liga: Liga, ir: Callable, ficha: Callable) -> void:

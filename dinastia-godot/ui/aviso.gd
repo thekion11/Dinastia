@@ -28,8 +28,8 @@ const SALIDA := 0.45
 const MAX_EN_COLA := 8   ## por si una temporada dispara veinte: se ven ocho
 
 const COL_PANEL := Color("1b2620")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
 
 ## etiqueta · color de acento · sonido
 const TIPOS := {
