@@ -65,6 +65,7 @@ var _cronica: RichTextLabel
 var _banquillo: VBoxContainer
 var _campo: VBoxContainer
 var _botones_vel: Array[Button] = []
+var _btn_vel_actual: Button
 var _saliendo: Jugador = null
 var _pie: Label
 var _btn_volver: Button
@@ -213,20 +214,19 @@ func _construir() -> void:
 	_momentum.custom_minimum_size = Vector2(0, 10)
 	raiz.add_child(_momentum)
 
-	## Velocidad del reloj.
+	## A LA VISTA SOLO LO QUE SE USA A CADA RATO (25-9-2026, plan maestro B1):
+	## la velocidad actual (un clic la pasa a la siguiente), "Ver en 3D" y "Al
+	## próximo gol". Las cinco velocidades sueltas, "Al final", qué paneles se
+	## ven, el tamaño de la crónica y el sonido van en el cajón del ⚙.
 	var barra := HBoxContainer.new()
 	barra.alignment = BoxContainer.ALIGNMENT_CENTER
 	barra.add_theme_constant_override("separation", 6)
 	raiz.add_child(barra)
-	for i in VELOCIDADES.size():
-		var b := Button.new()
-		b.text = String(VELOCIDADES[i]["txt"])
-		b.toggle_mode = true
-		b.button_pressed = (i == _velocidad)
-		b.custom_minimum_size = Vector2(86, 30)
-		b.pressed.connect(func() -> void: _poner_velocidad(i))
-		barra.add_child(b)
-		_botones_vel.append(b)
+	_btn_vel_actual = Button.new()
+	_btn_vel_actual.custom_minimum_size = Vector2(120, 30)
+	_btn_vel_actual.tooltip_text = "Pulsa para cambiar la velocidad"
+	_btn_vel_actual.pressed.connect(func() -> void: _poner_velocidad((_velocidad + 1) % VELOCIDADES.size()))
+	barra.add_child(_btn_vel_actual)
 	## El estadio en 3D del club que hace de local. Se abre encima del partido y
 	## el reloj se para solo mientras se mira.
 	var ver3d := Button.new()
@@ -235,18 +235,12 @@ func _construir() -> void:
 	ver3d.pressed.connect(_ver_estadio)
 	barra.add_child(ver3d)
 	## `saltarAlGol()` del HTML: avanza sin pausas hasta el próximo gol -de
-	## cualquiera de los dos-, o hasta el final si no llega ninguno. Antes solo
-	## existía el salto directo a "Al final".
+	## cualquiera de los dos-, o hasta el final si no llega ninguno.
 	var saltar_gol := Button.new()
 	saltar_gol.text = "Al próximo gol"
 	saltar_gol.custom_minimum_size = Vector2(100, 30)
 	saltar_gol.pressed.connect(_hasta_el_proximo_gol)
 	barra.add_child(saltar_gol)
-	var saltar := Button.new()
-	saltar.text = "Al final"
-	saltar.custom_minimum_size = Vector2(86, 30)
-	saltar.pressed.connect(_hasta_el_final)
-	barra.add_child(saltar)
 	## LA PUERTA DE SALIDA. Vivía después de un `return` dentro de `_informe()`
 	## -código muerto que nunca se ejecutaba, ni un error lo delataba- así que
 	## al terminar un partido en vivo NO había ninguna forma de volver al club:
@@ -289,6 +283,35 @@ func _construir() -> void:
 	_pie = _texto(12, COL_SUAVE)
 	_pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(_pie)
+	_montar_cajon()
+	_poner_velocidad(_velocidad)
+
+func _montar_cajon() -> void:
+	var cajon := CajonAjustes.crear(self, "partido_vivo")
+	cajon.seccion("Reloj")
+	for i in VELOCIDADES.size():
+		var b := cajon.boton(String(VELOCIDADES[i]["txt"]), func() -> void: _poner_velocidad(i))
+		b.toggle_mode = true
+		_botones_vel.append(b)
+	cajon.boton("⏭ Saltar al final", _hasta_el_final)
+	cajon.seccion("En pantalla")
+	cajon.interruptor("Barra de dominio", _momentum.visible, func(si: bool) -> void: _momentum.visible = si)
+	cajon.interruptor("Columna de estadísticas", true, func(si: bool) -> void:
+		## `_panel_stats` es la lista de dentro; se oculta su tarjeta entera.
+		var caja: Node = _panel_stats
+		while caja != null and not (caja is PanelContainer):
+			caja = caja.get_parent()
+		if caja != null:
+			(caja as Control).visible = si)
+	cajon.interruptor("Datos bajo el marcador", true, func(si: bool) -> void: _estadisticas.visible = si)
+	cajon.deslizador("Tamaño de la crónica", 0.3, func(v: float) -> void:
+		_cronica.add_theme_font_size_override("normal_font_size", int(lerpf(11.0, 20.0, v))))
+	cajon.seccion("Sonido")
+	cajon.deslizador("Efectos", float(Sonido.volumen.get(Sonido.Bus.EFECTOS, 0.8)), func(v: float) -> void:
+		Sonido.volumen[Sonido.Bus.EFECTOS] = v)
+	cajon.deslizador("Música", Musica.volumen, func(v: float) -> void:
+		Musica.volumen = v
+		Musica.aplicar_volumen())
 
 func _columna(padre: HBoxContainer, titulo: String, ratio: float, con_scroll: bool = true) -> VBoxContainer:
 	var caja := PanelContainer.new()
@@ -337,6 +360,8 @@ func _poner_velocidad(i: int) -> void:
 	_velocidad = i
 	for k in _botones_vel.size():
 		_botones_vel[k].button_pressed = (k == i)
+	if _btn_vel_actual != null:
+		_btn_vel_actual.text = "⏱ " + String(VELOCIDADES[i]["txt"])
 
 func _hasta_el_final() -> void:
 	while not partido.terminado_ya:
