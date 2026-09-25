@@ -1247,7 +1247,7 @@ func _preparar_titular(clave: String, frase: String, tono: String) -> void:
 		_:
 			t = "El DT: %s" % cita
 	var tipo: String = {"calma": "bien", "soberbia": "neutro", "evasiva": "mal"}.get(tono, "neutro")
-	titular_pendiente = {"t": t, "c": "Lo firma %s en %s." % [String(f[1]), String(f[2])], "tipo": tipo}
+	titular_pendiente = {"t": t, "c": "Lo firma %s en %s." % [String(f[1]), String(f[2])], "tipo": tipo, "medio": String(f[2])}
 
 ## Sale al día siguiente de la rueda (la llama `semana()` y, si la hay, la
 ## pantalla al pasar el día). Devuelve el titular, o vacío si no había.
@@ -1295,7 +1295,7 @@ func revisar_identidad(c: Club) -> String:
 	mover_animo(d)
 	var reaccion := "La hinchada lo celebra en redes." if d > 0 else ("Hay división en la grada." if d > -3 else "Buena parte de la hinchada lo rechaza: «con la historia no se juega».")
 	var tit := "El club cambia su %s" % que
-	guardar_portada(tit.to_upper(), reaccion, "bien" if d > 0 else "mal")
+	guardar_portada(tit.to_upper(), reaccion, "bien" if d > 0 else "mal", {"img": "escudo", "sub": reaccion, "nueva": true})
 	noticia.emit("🗞️ " + tit, reaccion)
 	mentor_dice.emit("Sobre el nuevo %s" % que,
 		"Esto se va a comentar toda la semana. Prepárate: en la próxima rueda de prensa te van a preguntar por el %s, y lo que digas pesa tanto como el cambio." % que)
@@ -1323,7 +1323,8 @@ func publicar_titular_pendiente() -> String:
 	if titular_pendiente.is_empty():
 		return ""
 	var t := String(titular_pendiente["t"])
-	guardar_portada(t, String(titular_pendiente["c"]), String(titular_pendiente["tipo"]))
+	guardar_portada(t, String(titular_pendiente["c"]), String(titular_pendiente["tipo"]),
+		{"img": "dt", "medio": String(titular_pendiente.get("medio", "")), "sub": String(titular_pendiente["c"])})
 	noticia.emit("🗞️ " + t, String(titular_pendiente["c"]))
 	titular_pendiente = {}
 	return t
@@ -2172,13 +2173,19 @@ func factor_tv() -> float:
 const PORTADAS_MAX := 60
 var portadas: Array = []                ## {t, c, tipo, anio, semana}, la más nueva primero
 
-func guardar_portada(titulo: String, cuerpo_texto: String, tipo: String) -> void:
+## `extra` (26-9-2026, plan maestro C20): lo que necesita la portada dibujada
+## como periódico -"img": "dt" | "escudo" | "pid:<id>" (quién sale en la foto),
+## "sub": la bajada, "medio": la cabecera-. Opcional: una portada vieja sin
+## estas claves se dibuja igual, con valores por defecto.
+func guardar_portada(titulo: String, cuerpo_texto: String, tipo: String, extra: Dictionary = {}) -> void:
 	var m := _mundo()
-	portadas.push_front({
+	var d := {
 		"t": titulo, "c": cuerpo_texto, "tipo": tipo,
 		"anio": m.anio if m != null else 0,
 		"semana": m.semana if m != null else 0,
-	})
+	}
+	d.merge(extra)
+	portadas.push_front(d)
 	while portadas.size() > PORTADAS_MAX:
 		portadas.pop_back()
 
@@ -2331,13 +2338,13 @@ func rueda_tras_resultado(gane: bool, empate: bool) -> Dictionary:
 	return abrir_rueda(gane, empate)
 
 ## La portada del lunes: la escribe el resultado y la archiva la hemeroteca.
-func portada_tras_resultado(gane: bool, empate: bool, clasico: bool, semilla: String) -> void:
+func portada_tras_resultado(gane: bool, empate: bool, clasico: bool, semilla: String, marcador: String = "") -> void:
 	var h := _hash_de(semilla + "|portada")
 	if h % PORTADA_DE_CADA >= PORTADAS_QUE_SALEN:
 		return
 	var t := titular_prensa(gane, empate, clasico, semilla)
 	var tipo := "bien" if gane else ("neutro" if empate else "mal")
-	guardar_portada(String(t["tit"]), String(t["cuerpo"]), tipo)
+	guardar_portada(String(t["tit"]), String(t["cuerpo"]), tipo, {"img": "dt", "sub": marcador, "nueva": true})
 	noticia.emit("🗞️ " + String(t["tit"]), String(t["cuerpo"]))
 
 # ---------------------------------------------------------------------------

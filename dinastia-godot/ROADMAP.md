@@ -17,12 +17,13 @@ primero cuidar las **situaciones ilógicas**.
     una mota al fondo);
   - enseña la competición que se juega: en copa los cruces, en el continental el grupo o los
     cruces (antes, siempre la liga del local).
-- **Escudos de la sala de prensa**: los de la competición del partido (no siempre la liga),
-  incluido el tuyo **con el escudo actual** si lo cambiaste.
-- **Cambiar escudo o camiseta es noticia grande**:
+- **Escudos de la sala de prensa** — **HECHO (26-9)**:
+  - ya mostraban el escudo actual;
+  - ahora también hay rueda tras copa y continental, con los escudos de esa competición.
+- **Cambiar escudo o camiseta es noticia grande** — **HECHO (26-9)**:
   - portada, pregunta en la próxima rueda de prensa y comentario del mentor;
   - la afición opina (a unos les gusta, a otros no).
-- **El clima del estadio es el de la ciudad**:
+- **El clima del estadio es el de la ciudad** — **HECHO (26-9)** (`nucleo/clima.gd`):
   - hoy el «clima» es una opción del diseñador del estadio, y eso es ilógico;
   - el clima de cada partido saldrá del país y la época del año;
   - afectará a los jugadores (calor, lluvia, nieve, altura) y se nombrará en la rueda de prensa.
@@ -141,6 +142,16 @@ ficha del país.
   el usuario puede añadir más capturas.
 - Se hará una tabla de «ellos / nosotros» por aspecto (cámara, HUD, jugadores, estadio,
   menús).
+
+### C20. La portada como periódico ✅ — HECHO (26-9)
+- Pedido con una imagen de referencia de otro juego: cabecera de color, franja, titular enorme,
+  bajada con la cara del protagonista, tabla de la liga y foto.
+- Seis cabeceras propias del juego: El Pelotazo, Diario La Banda, Tribuna Deportiva, ¡Golazo!,
+  La Pizarra y El Crack.
+- Contenido real de la partida.
+- Se abre desde el archivo de portadas y sola tras cada partido que sale en portada (se puede
+  desactivar).
+- Se guarda como imagen en `user://portadas/`.
 
 ### C19. Revisar pendientes del informe y auditoría final ✅
 - Al final de este gran plan: repaso del informe externo (62/100), del LEEME, de todos los

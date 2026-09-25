@@ -94,6 +94,7 @@ func _ready() -> void:
 	_probar_estadio_b6()
 	_probar_ciudad_b7()
 	_probar_coherencia_c1()
+	_probar_portadas_c20()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5700,3 +5701,23 @@ func _probar_coherencia_c1() -> void:
 		m._rueda_de_eliminatoria([{"local": mio, "visita": rival, "gl": 2, "gv": 1, "pasa": mio}], "copa", [mio, rival])
 		intentos += 1
 	_comprobar(pr.hay_rueda() and pr.competicion_rueda == "copa", "después de la copa también hay rueda de prensa")
+
+## C20: la portada guarda lo que necesita el periódico (foto, bajada, medio) y
+## cada medio tiene su cabecera; seis cabeceras distintas.
+func _probar_portadas_c20() -> void:
+	_titulo("C20 PORTADA DE PERIÓDICO: SEIS CABECERAS Y DATOS PARA DIBUJARLA")
+	var m := Mundo.new()
+	m.generar(["CHI"], 1357)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var pr := m.prensa
+	for k in 12:
+		pr.portada_tras_resultado(true, false, false, "semilla%d" % k, "A 2-0 B")
+	_comprobar(not pr.portadas.is_empty() and String(pr.portadas[0].get("sub", "")) == "A 2-0 B" and String(pr.portadas[0].get("img", "")) == "dt",
+		"la portada del partido lleva el marcador y la foto del DT")
+	var nombres := {}
+	for c: Array in PortadaPeriodico.CABECERAS:
+		nombres[String(c[1])] = true
+	_comprobar(nombres.size() == 6, "seis cabeceras distintas")
+	_comprobar(String(PortadaPeriodico.cabecera_de({"medio": "El Pelotazo"})[0]) == "pelotazo", "cada medio con su cabecera")
+	var a := PortadaPeriodico.cabecera_de({"t": "Algo", "semana": 3})
+	_comprobar(a == PortadaPeriodico.cabecera_de({"t": "Algo", "semana": 3}), "la misma portada, la misma cabecera")

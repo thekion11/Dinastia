@@ -1860,7 +1860,10 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 			var gano := gf > gc
 			var empato := gf == gc
 			var semilla := "%d|%d|%s|%d-%d" % [anio, semana, otro.id, gf, gc]
-			prensa.portada_tras_resultado(gano, empato, es_clasico(mio, otro), semilla)
+			var loc0: Club = r["local"]
+			var vis0: Club = r["visita"]
+			prensa.portada_tras_resultado(gano, empato, es_clasico(mio, otro), semilla,
+				"%s %d-%d %s" % [Nombres.visible(loc0.nombre), int(r["gl"]), int(r["gv"]), Nombres.visible(vis0.nombre)])
 			## El tiempo de ese partido, por si la rueda pregunta por él.
 			var loc: Club = r["local"]
 			var vis: Club = r["visita"]

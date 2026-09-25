@@ -2094,6 +2094,10 @@ func _conectar_noticias() -> void:
 		## pasar, fuera del tutorial.
 		mundo.prensa.mentor_dice.connect(func(titulo: String, texto: String) -> void:
 			MentorVoz.decir(self, mundo, titulo, texto))
+		## LA PORTADA DEL LUNES, COMO PERIÓDICO (C20): si la semana dejó una
+		## portada nueva, se abre sola (se puede desactivar en la propia hoja).
+		mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
+			call_deferred("_portada_nueva"))
 	if mundo.vestuario != null:
 		mundo.vestuario.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			_escribir("[color=#4caf6d][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -13683,6 +13687,16 @@ func _pintar_derechos_tv(p: Prensa) -> void:
 ## EL ARCHIVO DE PORTADAS. Se escribían después de cada partido grande y se
 ## perdían al cambiar de pantalla. Juntas se leen como la hemeroteca del ciclo:
 ## de un vistazo se ve si el año fue de titulares buenos o de titulares malos.
+func _portada_nueva() -> void:
+	if mundo == null or mundo.prensa == null or mundo.prensa.portadas.is_empty():
+		return
+	var d: Dictionary = mundo.prensa.portadas[0]
+	var nueva := bool(d.get("nueva", false))
+	for x: Dictionary in mundo.prensa.portadas:
+		x.erase("nueva")
+	if nueva and PortadaPeriodico.auto():
+		PortadaPeriodico.mostrar(self, mundo, d)
+
 func _pintar_portadas(p: Prensa) -> void:
 	_lista_redes.add_child(HSeparator.new())
 	var t := _texto(11, COL_SUAVE)
@@ -13697,9 +13711,16 @@ func _pintar_portadas(p: Prensa) -> void:
 	for i in mini(14, p.portadas.size()):
 		var d: Dictionary = p.portadas[i]
 		var tipo := String(d.get("tipo", "neutro"))
-		var tit := _texto(12, COL_VERDE if tipo == "bien" else (COL_ROJO if tipo == "mal" else COL_TEXTO))
-		tit.text = String(d.get("t", ""))
+		## Cada portada del archivo se abre como periódico (C20).
+		var tit := Button.new()
+		tit.flat = true
+		tit.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		tit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		tit.add_theme_font_size_override("font_size", 12)
+		tit.add_theme_color_override("font_color", COL_VERDE if tipo == "bien" else (COL_ROJO if tipo == "mal" else COL_TEXTO))
+		tit.text = "🗞 " + String(d.get("t", ""))
+		tit.tooltip_text = "Abrir la portada"
+		tit.pressed.connect(func() -> void: PortadaPeriodico.mostrar(self, mundo, d))
 		_lista_redes.add_child(tit)
 		var cu := _texto(10, COL_SUAVE)
 		cu.text = "%s   ·   S%d · %d" % [String(d.get("c", "")), int(d.get("semana", 0)), int(d.get("anio", 0))]
