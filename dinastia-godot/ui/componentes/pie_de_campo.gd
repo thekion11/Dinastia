@@ -20,6 +20,19 @@ static func mostrar(padre: Control, prensa: Prensa, gane: bool, empate: bool, gf
 	n._montar(prensa.pie_de_campo(gane, empate, gf, gc), gane, empate)
 	return n
 
+## La entrevista AL PASO de un medio nuevo (C6): misma tarjeta, otra cabecera.
+static func mostrar_al_paso(padre: Control, prensa: Prensa) -> PieDeCampo:
+	var e := prensa.abrir_al_paso()
+	if e.is_empty():
+		return null
+	var n := PieDeCampo.new()
+	n._prensa = prensa
+	n.set_anchors_preset(Control.PRESET_FULL_RECT)
+	n.mouse_filter = Control.MOUSE_FILTER_STOP
+	padre.add_child(n)
+	n._montar(e, false, true)
+	return n
+
 func _montar(e: Dictionary, gane: bool, empate: bool) -> void:
 	var velo := ColorRect.new()
 	velo.color = Color(0, 0, 0, 0.72)
@@ -29,6 +42,8 @@ func _montar(e: Dictionary, gane: bool, empate: bool) -> void:
 	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(centro)
 	var acento: Color = Tema.BIEN if gane else (Tema.NEUTRO if empate else Tema.MAL)
+	if e.has("rotulo"):
+		acento = Tema.ACENTO
 	var caja := PanelContainer.new()
 	caja.custom_minimum_size = Vector2(560, 0)
 	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, acento))
@@ -36,7 +51,7 @@ func _montar(e: Dictionary, gane: bool, empate: bool) -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", Tema.ESPACIO)
 	caja.add_child(v)
-	v.add_child(Tema.rotulo("🎤 A pie de campo"))
+	v.add_child(Tema.rotulo(String(e.get("rotulo", "🎤 A pie de campo"))))
 	v.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, String(e.get("quien", ""))))
 	var q := Tema.etiqueta(Tema.TAM_DESTACADO + 2, Tema.TEXTO, "«%s»" % String(e.get("pregunta", "")))
 	q.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -51,7 +66,7 @@ func _montar(e: Dictionary, gane: bool, empate: bool) -> void:
 		b.pressed.connect(_elegir.bind(i))
 		v.add_child(b)
 	var saltar := Button.new()
-	saltar.text = "Pasar de largo"
+	saltar.text = "Seguir caminando" if e.has("rotulo") else "Pasar de largo"
 	saltar.flat = true
 	saltar.add_theme_color_override("font_color", Tema.SUAVE)
 	saltar.pressed.connect(_elegir.bind(-1))
