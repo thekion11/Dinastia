@@ -3034,71 +3034,10 @@ func _pintar_libres(c: Club) -> void:
 ## posición de cada ranura en porcentaje del campo (`[puesto, x, y]`), así que
 ## el dibujo sale de los mismos datos que usa el motor para armar el once. Si un
 ## día cambia una formación, el pizarrón cambia con ella sin tocar nada aquí.
-const PIZARRON_ALTO := 260
-
 func _pintar_pizarron(c: Club) -> void:
-	var forms: Dictionary = Datos.tabla("FORMS")
-	if not forms.has(c.tactica.formacion):
-		return
-	var slots: Array = (forms[c.tactica.formacion] as Dictionary)["s"]
-	var once := c.once()
-	var campo := Control.new()
-	campo.custom_minimum_size = Vector2(0, PIZARRON_ALTO)
-	_lista_tactica.add_child(campo)
-	## El césped y las líneas, dibujados como paneles: no hace falta un SVG para
-	## un rectángulo con dos rayas.
-	var verde := ColorRect.new()
-	verde.color = Color("143423")
-	verde.set_anchors_preset(Control.PRESET_FULL_RECT)
-	verde.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	campo.add_child(verde)
-	for franja in 6:
-		if franja % 2 == 0:
-			continue
-		var f := ColorRect.new()
-		f.color = Color(1, 1, 1, 0.025)
-		f.set_anchors_preset(Control.PRESET_TOP_WIDE)
-		f.anchor_top = float(franja) / 6.0
-		f.anchor_bottom = float(franja + 1) / 6.0
-		f.offset_bottom = 0
-		f.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		campo.add_child(f)
-
-	## Cada ranura, colocada por porcentaje. `x` va de 0 a 100 de izquierda a
-	## derecha y `y` de 100 (tu portería) a 0 (la del rival), igual que el HTML.
-	for i in slots.size():
-		if i >= once.size():
-			break
-		var s: Array = slots[i]
-		var j: Jugador = once[i]
-		var caja := VBoxContainer.new()
-		caja.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		caja.anchor_left = float(s[1]) / 100.0
-		## La `y` de la tabla YA viene medida desde arriba: 94 es tu portería y 22
-		## el área rival. Invertirla ponía al portero arriba y a los delanteros
-		## abajo, o sea el equipo atacando hacia su propia meta.
-		caja.anchor_top = float(s[2]) / 100.0
-		caja.offset_left = -34
-		caja.offset_top = -18
-		caja.custom_minimum_size = Vector2(68, 36)
-		caja.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		campo.add_child(caja)
-		var dorsal := _texto(12, COL_ORO)
-		## Fuera de puesto en rojo: es el error que más se comete montando un
-		## once y el que menos se ve en una lista.
-		var natural := j.pos_e == String(s[0]) or j.pos_sec.has(String(s[0]))
-		dorsal.add_theme_color_override("font_color", _color_de_paleta(COL_ORO if natural else COL_ROJO))
-		dorsal.text = "%s %d" % [String(s[0]), j.ovr]
-		dorsal.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		caja.add_child(dorsal)
-		var nom := _texto(10, COL_TEXTO)
-		## Solo el apellido: el nombre completo no cabe en 68 píxeles y en un
-		## pizarrón nadie lee el nombre de pila.
-		var partes := j.nombre.split(" ")
-		nom.text = String(partes[partes.size() - 1])
-		nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		nom.clip_text = true
-		caja.add_child(nom)
+	## La pizarra con fichas de jugador (cara, anillo, puesto, apellido): ver
+	## `ui/componentes/pizarra_tactica.gd`.
+	PizarraTactica.pintar(_lista_tactica, c, _ver_ficha)
 
 	if not _modo_experto:
 		var ex := _texto(10, COL_SUAVE)
