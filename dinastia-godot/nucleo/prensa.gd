@@ -262,7 +262,7 @@ func _pool(m: Mundo, mio: Club) -> Array[Dictionary]:
 	var fuera := mio.plantilla.filter(func(x: Jugador) -> bool: return x.pais != mio.pais)
 	if fuera.size() >= 2:
 		pool.append({"id": "virus_fifa", "pid": "",
-			"txt": "✈️ Cierre de aeropuertos en plena fecha FIFA: %d de tus internacionales están atrapados fuera y el derbi es el domingo. Puedes reclamar el aplazamiento o jugarlo con lo que haya." % fuera.size(),
+			"txt": "✈️ Cierre de aeropuertos en plena fecha internacional: %d de tus internacionales están atrapados fuera y el derbi es el domingo. Puedes reclamar el aplazamiento o jugarlo con lo que haya." % fuera.size(),
 			"opcion_a": "Reclamar el aplazamiento", "opcion_b": "Se juega con juveniles"})
 
 	## LA VENGANZA DEL EXREPRESENTANTE. Filtra tus correos. No hay opción buena:

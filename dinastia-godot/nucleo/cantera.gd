@@ -1197,7 +1197,11 @@ func _nombre_de_pila(pais: String = "") -> String:
 		return String(Azar.uno(n))
 	return "Juan"
 
+## Nunca devuelve el nombre de un futbolista real (`Nombres.vetado()`).
 func _nombre_al_azar(pais: String = "") -> String:
+	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais))
+
+func _sortear_nombre(pais: String) -> String:
 	var a: Array = Datos.tabla("APELLIDOS")
 	var pools: Variant = Datos.tabla("POOLS_EU")
 	if pools is Dictionary and (pools as Dictionary).has(pais):
