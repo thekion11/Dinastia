@@ -127,4 +127,8 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 		fill.light_energy = 0.40 + oscuro * 0.35
 		fill.light_color = Color(1.0, 0.98, 0.92)
 		fill.shadow_enabled = false
+		## Sin brillo especular: es una luz de RELLENO. Casi vertical, su
+		## reflejo caía en el centro del campo y era media causa de la
+		## "columna misteriosa" (ver `StadiumBuilder.build_pitch()`).
+		fill.light_specular = 0.0
 		root.add_child(fill)
