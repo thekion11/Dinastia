@@ -96,6 +96,7 @@ func _ready() -> void:
 	_probar_coherencia_c1()
 	_probar_portadas_c20()
 	_probar_cantera_c3()
+	_probar_instituciones_c5_c8()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5783,3 +5784,49 @@ func _probar_cantera_c3() -> void:
 	## Guardado.
 	var d := Partida._jugador_a_dic(bilbao.plantilla[0])
 	_comprobar(Partida._dic_a_jugador(d).region == "EUS", "la región se guarda con la partida")
+
+## C5 y C8: el presidente de la federación con agenda y mandato, la junta de
+## accionistas del club, y las lesiones absurdas (raras, sin Azar, el toque de
+## queda evita las de noche).
+func _probar_instituciones_c5_c8() -> void:
+	_titulo("C5/C8 INSTITUCIONES: PRESIDENTE DE LA FEDERACIÓN, JUNTA DE ACCIONISTAS, LESIONES ABSURDAS")
+	var m := Mundo.new()
+	m.generar(["CHI"], 2024)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var f := m.federacion
+	_comprobar(f.revisar_presidencia(2026) and not f.presidente.is_empty(), "la federación elige presidente")
+	_comprobar(not f.revisar_presidencia(2027), "no hay elecciones a mitad de mandato")
+	_comprobar(f.revisar_presidencia(2026 + Federacion.MANDATO_ANIOS), "a los cuatro años, elecciones")
+	var ag: Array = Federacion.AGENDAS[String(f.presidente["agenda"])][1]
+	_comprobar(f.agenda_empuja(String(ag[0])), "el presidente empuja lo de su agenda")
+	var d := f.a_dic()
+	var f2 := Federacion.new()
+	f2.desde_dic(d)
+	_comprobar(f2.presidente == f.presidente, "el presidente se guarda")
+	## Junta.
+	var jt := m.junta
+	_comprobar(jt != null and jt.accionistas.size() == 3 and not jt.presidente.is_empty(), "el club tiene presidente y tres accionistas")
+	jt.semana(m.mi_club(), 2026, Junta.CADA)
+	_comprobar(not jt.pendiente.is_empty(), "cada trimestre hay junta")
+	var conf0 := m.directiva.confianza
+	var r := jt.resolver("a", m.mi_club(), m.directiva, m.prensa)
+	_comprobar(not r.is_empty() and jt.pendiente.is_empty(), "la junta se resuelve")
+	## Forzar la censura: todos hartos.
+	for a: Dictionary in jt.accionistas:
+		a["humor"] = 20
+	jt.pendiente = {"quien": String(jt.accionistas[0]["nombre"]), "exige": "cantera", "tema": "x", "a": "si", "b": "no", "monto": 0}
+	conf0 = m.directiva.confianza
+	r = jt.resolver("b", m.mi_club(), m.directiva, m.prensa)
+	_comprobar(bool(r["censura"]) and m.directiva.confianza < conf0, "un accionista harto presenta moción de censura")
+	## Lesiones absurdas.
+	var n := 0
+	var noche_con_queda := false
+	for sem in 400:
+		var la := LesionesAbsurdas.sortear(m.mi_club(), 2026, sem, true)
+		if not la.is_empty():
+			n += 1
+			if bool(la["noche"]):
+				noche_con_queda = true
+	_comprobar(n > 10 and n < 60, "son raras: %d en 400 semanas" % n)
+	_comprobar(not noche_con_queda, "con toque de queda no hay lesiones de noche")
+	_comprobar(LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false) == LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false), "no consume Azar: la misma semana, lo mismo")
