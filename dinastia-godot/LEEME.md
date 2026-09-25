@@ -1,6 +1,6 @@
 # DINASTÍA en Godot — estado de la mudanza
 
-## PLAN MAESTRO, TANDA 3: EL ESTADIO POR SECCIONES (25-9-2026)
+## PLAN MAESTRO, TANDA 3: EL ESTADIO POR SECCIONES Y LA CIUDAD QUE SE TOCA (25-9-2026)
 
 - **B6 · El estadio por secciones** (`nucleo/estadio_propio.gd`, `visor/stadium_builder.gd`).
   - **Fachada**: hormigón, ladrillo, vidrio, membrana o chapa, con su color. Revestirla es obra
@@ -30,6 +30,24 @@
     - `_probar_estadio_b6` en el banco;
     - capturas `captura_estilos_b6` (hoja 4×2), `captura_exterior_estadio` y
       `captura_disenador_b6`.
+- **B7 · La ciudad 3D se puede tocar** (`ui/ciudad_vista.gd`, `visor/city_builder.gd`).
+  - **Parcelas fijas y solares**: cada una de las 15 instalaciones tiene su parcela fija, y lo
+    que no existe se ve como solar con su cartel.
+  - **Ficha y construcción desde el mapa**: un clic en un edificio o solar abre su ficha (qué
+    hace, nivel, obra en curso, coste) y la cámara se acerca. Desde ahí se construye o se mejora
+    con la misma función que en Club → Infraestructura (`Principal._empezar_obra`): mismo cobro
+    y mismos permisos.
+  - **Obras visibles**: andamio que sube con el avance y grúa torre. Si se amplía el estadio,
+    también hay grúa junto a él.
+  - **Rótulos flotantes** de tamaño fijo en pantalla, con botón para ocultarlos. Sobre el barrio
+    se ve el humor de los vecinos.
+  - **Día de partido**: si esta semana juegas en casa, hay banderas del club en el anillo, 600
+    hinchas alrededor del estadio, grada llena y el rótulo «HOY HAY PARTIDO». Hay un botón para
+    verlo cualquier día.
+  - **Cámara libre**: clic derecho o WASD para desplazarse, además de girar y hacer zoom.
+  - Las filas de parcelas ahora van cada 43 m desde z=108: la cuarta caía encima de la calle
+    exterior.
+  - Prueba: `_probar_ciudad_b7`; captura `captura_ciudad_b7`.
 
 ## PLAN MAESTRO, TANDA 2: CINEMÁTICAS, EVENTOS Y ENTREVISTAS (25-9-2026)
 

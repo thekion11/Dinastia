@@ -82,9 +82,17 @@ const EDIFICIOS := [
 ## Va aparte de `EDIFICIOS` porque lo suyo no es una caja con ventanas: son
 ## bancales de cultivo y un invernadero, y crecen a lo ancho con el nivel.
 const HUERTO_EN := Vector3(-112.0, 0, 45.0)
+const FILA_0_Z := 108.0
+const FILA_PASO := 43.0
 
 var datos: Dictionary = {}
 var etiquetas: Array = []          ## [{pos:Vector3, texto:String, nivel:int}]
+## LO QUE SE PUEDE TOCAR EN EL MAPA (plan maestro B7): cada instalación, su
+## solar si todavía no existe, y el estadio. `VistaCiudad` proyecta `pos` a la
+## pantalla para saber qué se clicó (el mapa no tiene colisiones).
+## [{k, n, pos: Vector3, estado: "hecho"|"obra"|"solar"|"estadio"}]
+var puntos_clic: Array = []
+var _rotulos: Node3D
 
 ## LAS LUCES QUE DEPENDEN DE LA HORA. Se guardan al construir para poder
 ## encenderlas y apagarlas con el ciclo del sol sin recorrer el árbol entero
@@ -97,6 +105,9 @@ func build(d: Dictionary) -> void:
 	for c in get_children():
 		c.queue_free()
 	etiquetas.clear()
+	puntos_clic.clear()
+	_rotulos = Node3D.new()
+	_rotulos.name = "Rotulos"
 	_farolas_luz.clear()
 	_ventanas_mat.clear()
 	_luminarias.clear()
@@ -119,6 +130,11 @@ func build(d: Dictionary) -> void:
 	_arbolado()
 	_horizonte()
 	_trafico()
+	## B7: el día de partido, el ánimo del barrio y los rótulos flotantes.
+	if bool(datos.get("dia_partido", false)):
+		_dia_de_partido()
+	_rotulo_barrio()
+	add_child(_rotulos)
 
 ## `noche` va de 0 (pleno día) a 1 (noche cerrada). Lo llama el ciclo del sol
 ## de `VistaCiudad` en cada fotograma. Las farolas se encienden con la luz, y
@@ -585,7 +601,14 @@ func _estadio() -> void:
 		## con 0,06 la grada salía de un gris uniforme y desde el mapa el
 		## estadio se leía como una pista de hockey. Con 0,35 se distinguen las
 		## butacas del club, que es lo que lo hace reconocible desde arriba.
-		StadiumBuilder.build(nodo, perfil, aforo, 0.35, aforo)
+		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, aforo)
+		puntos_clic.append({"k": "estadio", "n": str(datos.get("club", {}).get("estadioNom", "Estadio")),
+			"pos": ESTADIO_EN + Vector3(0, 15, 0), "estado": "estadio"})
+		## Si se están ampliando las tribunas o mejorando el recinto, se nota.
+		for o in datos.get("obras", []):
+			if str(o.get("k", "")) in ["trib", "cal"]:
+				_grua(ESTADIO_EN + Vector3(95.0, 0, 20.0), 70.0)
+				break
 		etiquetas.append({
 			"pos": ESTADIO_EN + Vector3(0, 40, 0),
 			"texto": str(datos.get("club", {}).get("estadioNom", "Estadio")),
@@ -722,12 +745,15 @@ func _complejo() -> void:
 	for o in obras:
 		enObra[str(o.get("k", ""))] = int(o.get("semanas", 0))
 
-	var i := 0
+	## SITIO FIJO POR INSTALACIÓN (B7). Antes se compactaban solo las
+	## construidas y un edificio cambiaba de sitio al levantar otro; ahora cada
+	## una tiene su parcela, y la que no existe todavía se ve como SOLAR con su
+	## cartel: es lo que permite construir desde el mapa.
+	var i := -1
 	for e in EDIFICIOS:
+		i += 1
 		var niv := int(inst.get(e["k"], 0))
 		var obra: bool = enObra.has(e["k"])
-		if niv <= 0 and not obra:
-			continue
 		## Cuatro por fila y no cinco: con cinco la parrilla se salia de la valla por
 		## el lado, y un complejo con edificios fuera del recinto no se lee como un
 		## complejo, se lee como un error de colocacion.
@@ -737,9 +763,24 @@ func _complejo() -> void:
 		var fila := i / 4
 		var col := i % 4
 		var x := -111.0 + col * 74.0
-		var z := 118.0 + fila * 48.0
-		_edificio(e, niv, obra, Vector3(x, 0, z))
-		i += 1
+		## B7: filas cada 43 m desde z=108. Con 48 desde 118 la cuarta fila
+		## (que ahora siempre existe, como solares) caía encima de la calle
+		## exterior de z=262.
+		var z := FILA_0_Z + fila * FILA_PASO
+		var pos := Vector3(x, 0, z)
+		if niv <= 0 and not obra:
+			_solar_libre(e, pos)
+			continue
+		_edificio(e, niv, obra, pos)
+		if obra:
+			var total := float(Instalaciones.SEMANAS.get(String(e["k"]), Instalaciones.SEMANAS_POR_DEFECTO))
+			var faltan := float(enObra[e["k"]])
+			_obra_en_curso(pos, float(e["ancho"]), float(e["fondo"]), 6.0 * maxi(1, niv + 1), 1.0 - faltan / maxf(total, 1.0))
+		var texto_r: String = ("%s 🏗 %d sem" % [str(e["n"]), int(enObra[e["k"]])]) if obra else ("%s  N%d" % [str(e["n"]), niv])
+		_rotulo(pos + Vector3(0, 6.0 * maxi(1, niv) + 8.0, 0), texto_r,
+			Color(1.0, 0.85, 0.4) if obra else Color(1, 1, 1))
+		puntos_clic.append({"k": String(e["k"]), "n": str(e["n"]), "pos": pos + Vector3(0, 6.0 * maxi(1, niv) * 0.5, 0),
+			"estado": "obra" if obra else "hecho"})
 
 func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 	## La ALTURA sale del nivel: 4 metros por planta. Es la senal visual mas barata
@@ -2516,7 +2557,8 @@ func _perimetro() -> void:
 	## de cuatro son cuatro filas, y la ultima cae en z = 115 + 3*32 = 211. Poner la
 	## valla en 206 dejaba un edificio fuera del recinto.
 	var filas: int = int(ceil(float(EDIFICIOS.size()) / 4.0))
-	var zFondo: float = 118.0 + (filas - 1) * 48.0 + 34.0
+	## Justo antes de la calle exterior (z=262, 16 m de ancho).
+	var zFondo: float = FILA_0_Z + (filas - 1) * FILA_PASO + 14.0
 	## HASTA -280 Y NO -128 (12-9-2026): desde que el estadio es el de verdad
 	## y no una maqueta, ocupa de z=-260 a z=-120, así que con la valla vieja
 	## el estadio quedaba FUERA de su propio recinto.
@@ -2537,3 +2579,184 @@ func _perimetro() -> void:
 		m.material_override = mat
 		m.position = l["p"]
 		add_child(m)
+
+
+# ---------------------------------------------------------------------------
+#  B7 (25-9-2026, plan maestro): SOLARES, OBRAS, RÓTULOS Y DÍA DE PARTIDO
+# ---------------------------------------------------------------------------
+
+## La parcela de una instalación que todavía no existe: tierra, un borde de
+## bordillo y un cartel "Solar". Se clica para construirla.
+func _solar_libre(e: Dictionary, pos: Vector3) -> void:
+	var tierra := StandardMaterial3D.new()
+	tierra.albedo_color = Color(0.46, 0.38, 0.27)
+	tierra.roughness = 1.0
+	var mi := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(float(e["ancho"]), 0.3, float(e["fondo"]))
+	mi.mesh = bm
+	mi.material_override = tierra
+	mi.position = pos + Vector3(0, 0.15, 0)
+	add_child(mi)
+	_rotulo(pos + Vector3(0, 6.0, 0), "＋ %s" % str(e["n"]), Color(0.75, 0.85, 0.78, 0.8), 22)
+	puntos_clic.append({"k": String(e["k"]), "n": str(e["n"]), "pos": pos + Vector3(0, 1.0, 0), "estado": "solar"})
+
+## Una obra se VE: andamio alrededor, subiendo con el avance, y una grúa.
+func _obra_en_curso(pos: Vector3, ancho: float, fondo: float, alto_final: float, avance: float) -> void:
+	var tubo := StandardMaterial3D.new()
+	tubo.albedo_color = Color(0.85, 0.62, 0.18)
+	tubo.roughness = 0.6
+	var alto := maxf(3.0, alto_final * clampf(avance + 0.15, 0.15, 1.0))
+	var paso := 4.0
+	for lado in 4:
+		var largo: float = ancho if lado < 2 else fondo
+		var n := int(largo / paso) + 1
+		for k in n:
+			var t := -largo / 2.0 + float(k) * paso
+			var p: Vector3
+			match lado:
+				0: p = Vector3(t, 0, fondo / 2.0 + 1.2)
+				1: p = Vector3(t, 0, -fondo / 2.0 - 1.2)
+				2: p = Vector3(ancho / 2.0 + 1.2, 0, t)
+				_: p = Vector3(-ancho / 2.0 - 1.2, 0, t)
+			var poste := MeshInstance3D.new()
+			var bm := BoxMesh.new()
+			bm.size = Vector3(0.18, alto, 0.18)
+			poste.mesh = bm
+			poste.material_override = tubo
+			poste.position = pos + p + Vector3(0, alto / 2.0, 0)
+			add_child(poste)
+	## Pasarelas cada 3 m de altura.
+	var pisos := int(alto / 3.0)
+	for f in pisos:
+		var y := 3.0 * float(f + 1)
+		for z in [fondo / 2.0 + 1.2, -fondo / 2.0 - 1.2]:
+			var tabla := MeshInstance3D.new()
+			var tm := BoxMesh.new()
+			tm.size = Vector3(ancho + 2.4, 0.12, 0.9)
+			tabla.mesh = tm
+			tabla.material_override = tubo
+			tabla.position = pos + Vector3(0, y, z)
+			add_child(tabla)
+	_grua(pos + Vector3(ancho / 2.0 + 9.0, 0, -fondo / 2.0 - 6.0), alto_final + 22.0)
+
+## La grúa torre: mástil de celosía (en cajas), pluma y contrapluma.
+func _grua(pos: Vector3, alto: float) -> void:
+	var amarillo := StandardMaterial3D.new()
+	amarillo.albedo_color = Color(0.95, 0.72, 0.10)
+	amarillo.roughness = 0.5
+	var raiz := Node3D.new()
+	raiz.name = "Grua"
+	raiz.position = pos
+	add_child(raiz)
+	var mastil := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(1.6, alto, 1.6)
+	mastil.mesh = bm
+	mastil.material_override = amarillo
+	mastil.position = Vector3(0, alto / 2.0, 0)
+	raiz.add_child(mastil)
+	var pluma := MeshInstance3D.new()
+	var pm := BoxMesh.new()
+	pm.size = Vector3(1.0, 1.0, alto * 0.9)
+	pluma.mesh = pm
+	pluma.material_override = amarillo
+	pluma.position = Vector3(0, alto + 0.5, alto * 0.3)
+	raiz.add_child(pluma)
+	var contrapeso := MeshInstance3D.new()
+	var cm := BoxMesh.new()
+	cm.size = Vector3(2.2, 2.0, 3.0)
+	contrapeso.mesh = cm
+	var gris := StandardMaterial3D.new()
+	gris.albedo_color = Color(0.35, 0.36, 0.38)
+	contrapeso.material_override = gris
+	contrapeso.position = Vector3(0, alto - 0.2, -alto * 0.12)
+	raiz.add_child(contrapeso)
+	## El cable con su carga, colgando de la punta.
+	var cable := MeshInstance3D.new()
+	var cbm := BoxMesh.new()
+	cbm.size = Vector3(0.08, alto * 0.45, 0.08)
+	cable.mesh = cbm
+	cable.material_override = gris
+	cable.position = Vector3(0, alto - alto * 0.225, alto * 0.62)
+	raiz.add_child(cable)
+	raiz.rotation.y = float(int(pos.x * 7.0 + pos.z) % 360) * PI / 180.0
+
+## Un rótulo flotante: siempre del mismo tamaño en pantalla y mirando a cámara.
+func _rotulo(pos: Vector3, texto: String, color: Color, tam: int = 28) -> void:
+	var l := Label3D.new()
+	l.text = texto
+	l.font_size = tam
+	l.outline_size = 10
+	l.modulate = color
+	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	l.fixed_size = true
+	l.pixel_size = 0.0007
+	l.no_depth_test = true
+	l.position = pos
+	_rotulos.add_child(l)
+
+func mostrar_rotulos(si: bool) -> void:
+	if _rotulos != null:
+		_rotulos.visible = si
+
+## El humor del barrio sobre el barrio.
+func _rotulo_barrio() -> void:
+	if not datos.has("vecinos"):
+		return
+	var v := int(datos["vecinos"])
+	var cara := "🙂" if v >= 65 else ("😠" if v <= 35 else "😐")
+	var col := Color(0.55, 0.9, 0.6) if v >= 65 else (Color(1.0, 0.5, 0.45) if v <= 35 else Color(1.0, 0.85, 0.45))
+	_rotulo(BARRIO_EN + Vector3(0, 55.0, 0), "%s Vecinos %d/100" % [cara, v], col)
+
+## DÍA DE PARTIDO: banderas del club en las farolas del anillo y la hinchada
+## caminando hacia el estadio. La gente es un MultiMesh de cápsulas -600 en un
+## solo draw call- con los dos colores del club y ropa neutra.
+func _dia_de_partido() -> void:
+	var c1 := _color_club("c1", Color(0.2, 0.5, 0.3))
+	var c2 := _color_club("c2", Color(1, 1, 1))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 4242
+	## Banderas a lo largo del anillo.
+	for i in 28:
+		var t := float(i) / 28.0
+		var x := lerpf(-RING_X, RING_X, t)
+		for z in [RING_Z_NORTE + ANCHO_CALLE, RING_Z_SUR - ANCHO_CALLE]:
+			var mastil := MeshInstance3D.new()
+			var bm := BoxMesh.new()
+			bm.size = Vector3(0.2, 9.0, 0.2)
+			mastil.mesh = bm
+			var gris := StandardMaterial3D.new()
+			gris.albedo_color = Color(0.7, 0.7, 0.72)
+			mastil.material_override = gris
+			mastil.position = Vector3(x, 4.5, z)
+			add_child(mastil)
+			StadiumBuilder._bandera_ondeante(self, Vector3(x + 1.3, 7.6, z), Vector2(2.6, 1.6),
+				c1 if i % 2 == 0 else c2, 0.0, float(i) * 0.7)
+	## La marea de gente alrededor del estadio.
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.use_colors = true
+	var cap := CapsuleMesh.new()
+	cap.radius = 0.35
+	cap.height = 1.75
+	var mat := StandardMaterial3D.new()
+	mat.vertex_color_use_as_albedo = true
+	mat.roughness = 0.9
+	cap.material = mat
+	mm.mesh = cap
+	var n := 600
+	mm.instance_count = n
+	for k in n:
+		var ang := rng.randf() * TAU
+		var r := rng.randf_range(105.0, 150.0)
+		var p := ESTADIO_EN + Vector3(cos(ang) * r, 0.9, sin(ang) * r * 0.8)
+		mm.set_instance_transform(k, Transform3D(Basis(), p))
+		var tono := rng.randf()
+		var col: Color = c1 if tono < 0.45 else (c2 if tono < 0.7 else Color(0.2, 0.22, 0.25).lerp(Color(0.8, 0.8, 0.8), rng.randf()))
+		mm.set_instance_color(k, col)
+	var gente := MultiMeshInstance3D.new()
+	gente.name = "Hinchada"
+	gente.multimesh = mm
+	add_child(gente)
+	_rotulo(ESTADIO_EN + Vector3(0, 62.0, 0), "⚽ HOY HAY PARTIDO", Color(1.0, 0.85, 0.3))
