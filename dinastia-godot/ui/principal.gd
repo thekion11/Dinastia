@@ -2044,6 +2044,8 @@ func _conectar_noticias() -> void:
 			_anotar(titulo, texto)
 			Aviso.mostrar(self, "contrato", "🏙️", titulo, texto, "patrocinio_nuevo"))
 		mundo.ciudad.movimiento.connect(mundo._anotar_movimiento)
+	if mundo.junta != null and not mundo.junta.movimiento.is_connected(mundo._anotar_movimiento):
+		mundo.junta.movimiento.connect(mundo._anotar_movimiento)
 	if mundo.comercial != null:
 		mundo.comercial.noticia.connect(func(titulo: String, texto: String) -> void:
 			_escribir("[color=#c9a227][b]%s.[/b][/color] %s" % [titulo, texto])
@@ -2092,6 +2094,10 @@ func _conectar_noticias() -> void:
 			_anotar(titulo, cuerpo))
 		## EL MENTOR COMENTA (C1): su cara y dos frases sobre lo que acaba de
 		## pasar, fuera del tutorial.
+		if mundo.junta != null:
+			mundo.junta.noticia.connect(func(titulo: String, cuerpo: String) -> void:
+				_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
+				_anotar(titulo, cuerpo))
 		mundo.prensa.mentor_dice.connect(func(titulo: String, texto: String) -> void:
 			MentorVoz.decir(self, mundo, titulo, texto))
 		## LA PORTADA DEL LUNES, COMO PERIÓDICO (C20): si la semana dejó una
@@ -5468,6 +5474,8 @@ func _pintar_despacho() -> void:
 		asuntos.append({"et": "📌 Hay que decidir", "col": COL_ORO, "id": "decision"})
 	if mundo.vestuario != null and not mundo.vestuario.solicitud.is_empty():
 		asuntos.append({"et": "🗣️ Te busca un jugador", "col": COL_VERDE, "id": "solicitud"})
+	if mundo.junta != null and not mundo.junta.pendiente.is_empty():
+		asuntos.append({"et": "🏛️ Junta de accionistas", "col": COL_ORO, "id": "junta"})
 	if asuntos.is_empty():
 		return
 	_aviso_abierto = clampi(_aviso_abierto, 0, asuntos.size() - 1)
@@ -5492,6 +5500,43 @@ func _pintar_despacho() -> void:
 		"agente": _pintar_exigencia_agente(mundo.cantera.exigencia)
 		"decision": _pintar_decision(mundo.prensa.pendiente)
 		"solicitud": _pintar_solicitud_plantel()
+		"junta": _pintar_junta()
+
+## LA JUNTA DE ACCIONISTAS (plan maestro C5): quién habla, cuánto pesa, qué pide
+## y las dos salidas. Debajo, la mesa entera con el humor de cada uno.
+func _pintar_junta() -> void:
+	var jt := mundo.junta
+	var p := jt.pendiente
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.TARJETA, Tema.RADIO, Tema.ORO))
+	_despacho.add_child(caja)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
+	caja.add_child(v)
+	v.add_child(Tema.rotulo("Junta de accionistas · preside %s (%s)" % [String(jt.presidente.get("nombre", "")), String(jt.presidente.get("estilo", ""))]))
+	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, "%s %s" % [String(p["quien"]), String(p["tema"])])
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(t)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	v.add_child(fila)
+	for op: String in ["a", "b"]:
+		var b := Button.new()
+		b.text = String(p[op])
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.clip_text = true
+		b.pressed.connect(func() -> void:
+			var r := mundo.junta.resolver(op, mundo.mi_club(), mundo.directiva, mundo.prensa)
+			Aviso.mostrar(self, "contrato", "🏛️", String(r.get("titulo", "")), String(r.get("cuerpo", "")))
+			_refrescar())
+		fila.add_child(b)
+	var partes: PackedStringArray = []
+	for a: Dictionary in jt.accionistas:
+		var cara: String = "🙂" if int(a["humor"]) >= 60 else ("😠" if int(a["humor"]) < 35 else "😐")
+		partes.append("%s %s %d%% (%s)" % [cara, String(a["nombre"]), int(a["pct"]), String(Junta.EXIGENCIAS.get(String(a["exige"]), ""))])
+	var mesa := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "  ·  ".join(partes))
+	mesa.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(mesa)
 
 ## Los clubes que te quieren después de un despido. `ofertas_trabajo()` garantiza
 ## que SIEMPRE haya al menos uno -por hundido que esté tu prestigio-, así que
@@ -7220,6 +7265,17 @@ func _apelar_caso(id_caso: String) -> void:
 func _pintar_federacion(c: Club) -> void:
 	_limpiar(_lista_fed)
 	var f := mundo.federacion
+	## EL PRESIDENTE (C5): quién manda y qué empuja.
+	if not f.presidente.is_empty():
+		var ag: Array = Federacion.AGENDAS[String(f.presidente["agenda"])]
+		var tp := _texto(12, COL_ORO)
+		tp.text = "🏛️ Presidente: %s · corriente %s · mandato hasta %d" % [String(f.presidente["nombre"]), String(ag[0]).to_lower(), int(f.presidente["hasta"])]
+		tp.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_lista_fed.add_child(tp)
+		var lema := _texto(11, COL_SUAVE)
+		lema.text = String(ag[2]) + " Sus propuestas salen antes en la asamblea y hace campaña por ellas."
+		lema.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_lista_fed.add_child(lema)
 	_pintar_licencia_y_tribunal(c, f)
 	_pintar_historial_federacion(f)
 	var t := _texto(11, COL_SUAVE)
