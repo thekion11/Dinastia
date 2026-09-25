@@ -398,6 +398,11 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 			var pantalon := color_liso if puesto == "ARB" else Color(0, 0, 0, 0)
 			if not VestidorQ.vestir_equipacion(dq, c1, c2, estilo, piel, pelo, pantalon):
 				VestidorQ.vestir(dq, c1)
+			## Pelo, barba y cejas, con el mismo corte que su retrato 2D.
+			var look_j = jug.get("look")
+			var corte := String(look_j.get("pelo", "corto")) if typeof(look_j) == TYPE_DICTIONARY else "corto"
+			if puesto != "ARB" or corte != "":
+				PeloQ.poner(dq, corte, pelo, barba > 0)
 			var apq: AnimationPlayer = dq["anim"]
 			if apq.has_animation("parado"):
 				apq.play("parado")
