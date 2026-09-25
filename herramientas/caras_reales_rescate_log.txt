@@ -1,0 +1,37 @@
+16:08:45  A reintentar: 403
+16:08:54  OK Vicente Pizarro
+16:09:00  OK Gabriel Castellón
+16:09:06  OK Lucas Assadi
+16:09:33  error buscando 'Daniel González' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:09:48  error buscando 'Daniel González' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:10:35  error buscando 'Daniel Gonzalez' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:10:51  error buscando 'Daniel Gonzalez' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:11:40  error buscando 'Fernando Cornejo' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:11:55  error buscando 'Fernando Cornejo' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:12:16  OK Cristian Insaurralde
+16:12:36  error buscando 'Franco Troyansky' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:12:51  error buscando 'Alejandro Sánchez' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:13:38  error buscando 'Alejandro Sánchez' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:13:54  error buscando 'Alejandro Sanchez' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:14:32  error buscando 'Alejandro Sanchez' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:14:47  error buscando 'Ramón Fernández' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:15:33  error buscando 'Ramón Fernández' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:15:49  error buscando 'Ramon Fernandez' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:16:35  error buscando 'Ramon Fernandez' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:16:51  error buscando 'Ignacio Jara' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:17:14  A reintentar: 403
+16:17:28  OK Vicente Pizarro
+16:17:39  OK Gabriel Castellón
+16:17:49  OK Lucas Assadi
+16:18:51  error buscando 'Daniel González' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:19:52  error buscando 'Daniel Gonzalez' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:20:48  error buscando 'Fernando Cornejo' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:21:49  error buscando 'Marcos Villalobos' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:22:24  OK Cristian Insaurralde
+16:23:47  error buscando 'Alejandro Sánchez' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:24:49  error buscando 'Alejandro Sanchez' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:25:52  error buscando 'Ramón Fernández' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:26:45  error buscando 'Ramon Fernandez' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:27:49  error buscando 'Matías Cano' (es): Error en el servidor remoto: (429) Too Many Requests.
+16:28:50  error buscando 'Nicolás Zúñiga' (en): Error en el servidor remoto: (429) Too Many Requests.
+16:29:19  20 / 403. Nuevas caras: 4
