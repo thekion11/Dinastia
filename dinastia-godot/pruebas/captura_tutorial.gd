@@ -64,8 +64,15 @@ func _process(_d: float) -> void:
 				if p.has("objetivo") and _pantalla.call("tutorial_objetivo", String(p["objetivo"])) == null:
 					faltan.append(String(p["objetivo"]))
 			_comprobar(faltan.is_empty(), "todos los objetivos existen en pantalla %s" % str(faltan))
+		100:
+			## ✎: cambiarle la chaqueta al mentor la cambia y la recuerda.
+			(_tut.get("_panel_aspecto") as Control).visible = true
+			_tut.cambiar_aspecto("ropa", "burdeos")
+			_comprobar(String(Tutorial.aspecto_mentor("dt", _tut.guion_actual()["mentor"]).get("ropa")) == "burdeos",
+				"el aspecto elegido para el mentor se guarda")
 		110:
 			_foto("res://pruebas/tutorial_mentor.png")
+			(_tut.get("_panel_aspecto") as Control).visible = false
 			_tut.call("_mostrar", _i_plantel)
 		150:
 			## El jugador abre el plantel por su cuenta.
@@ -102,6 +109,8 @@ func _process(_d: float) -> void:
 				c.load(Tutorial.AJUSTES)
 				if c.has_section_key(Tutorial.SECCION, "general"):
 					c.erase_section_key(Tutorial.SECCION, "general")
+				if c.has_section_key(Tutorial.SECCION_ASPECTO, "dt"):
+					c.erase_section_key(Tutorial.SECCION_ASPECTO, "dt")
 				c.save(Tutorial.AJUSTES)
 			print("captura_tutorial: %d fallos" % _fallos)
 			get_tree().quit(1 if _fallos > 0 else 0)
