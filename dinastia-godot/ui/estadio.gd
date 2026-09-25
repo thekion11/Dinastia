@@ -746,6 +746,7 @@ func _a_la_tarjeta(j: Jugador, roja: bool, minuto: int) -> void:
 		"min": minuto, "t": "warn",
 		"equipo": "local" if j.club_id == club.id else "visita",
 		"tx": ("ROJA a " if roja else "Amarilla a ") + j.nombre,
+		"roja": roja,
 		"jugadorId": j.id,
 	})
 

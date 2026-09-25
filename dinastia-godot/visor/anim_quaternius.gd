@@ -405,11 +405,22 @@ static func _pista_pos(anim: Animation, esq: Skeleton3D, clave: String, claves: 
 	if i < 0:
 		return
 	var reposo := esq.get_bone_rest(i).origin
+	## BUG VIEJO CORREGIDO (25-9-2026): la pelvis cuelga de `root`, que viene
+	## girado -90° en X, así que en SU espacio la altura es Z y la Y es
+	## adelante-atrás. Los desplazamientos se escriben pensando en el mundo
+	## (Y = arriba) y se pasan aquí al espacio del padre: antes, el "salto" del
+	## cabezazo y del festejo movían la cadera hacia atrás en vez de hacia
+	## arriba. Medido con el reposo de la pelvis: (0; 0,043; 0,949) -de pie, la
+	## altura está en Z-.
+	var padre := esq.get_bone_parent(i)
+	var a_padre := Basis()
+	if padre >= 0:
+		a_padre = esq.get_bone_global_rest(padre).basis.orthonormalized().inverse()
 	var pista := anim.add_track(Animation.TYPE_POSITION_3D)
 	anim.track_set_path(pista, NodePath("%s:%s" % [prefijo, esq.get_bone_name(i)]))
 	anim.track_set_interpolation_type(pista, Animation.INTERPOLATION_CUBIC)
 	for k in claves:
-		anim.position_track_insert_key(pista, k[0], reposo + (k[1] as Vector3))
+		anim.position_track_insert_key(pista, k[0], reposo + a_padre * (k[1] as Vector3))
 
 static func _nueva(dur: float, bucle: bool) -> Animation:
 	var a := Animation.new()
@@ -441,6 +452,165 @@ const CLIP_FUTBOL_NUEVO := {
 	"atajar": "15_Goalkeeper_Save_01_ue5",
 	"penal": "10_Penalty_Kick_01_ue5",
 }
+
+## LOS MOVIMIENTOS QUE FALTABAN (25-9-2026). `match_playback.gd` pedía
+## animaciones que no existían -`atajar_der`/`atajar_izq`, `portero_listo`,
+## `celebrar_rodillas`, `lamento`, `rabia`, `falta_barrida`, `falta_empujon`,
+## `senalar_falta`- y `_animar()` las descartaba en silencio: el portero no se
+## tiraba nunca, nadie se lamentaba de un gol, las faltas no tenían gesto. Y de
+## los 21 clips del mocap de fútbol solo se usaban cinco.
+##
+## Ojo con los clips largos: la atajada real está al 70-80% de un clip de 4 a 9
+## segundos (antes hay segundos de guardia), y el partido la reproducía 1,15 s
+## desde el principio, así que el portero NUNCA se veía tirarse. Cada clip se
+## RECORTA a su momento: [archivo, desde, hasta (fracción), bucle, sin
+## desplazamiento]. "Sin desplazamiento" quita el avance horizontal de la
+## pelvis que trae el mocap (quien lo mueve por el campo es el partido, no la
+## animación); las estiradas del portero lo conservan, porque tirarse ES
+## desplazarse. Ventanas medidas con `pruebas/diagnostico_clips_restantes.gd`.
+static var _cache_recortes := {}
+
+const CLIP_RECORTES := {
+	"atajar_izq": ["15_Goalkeeper_Save_01_ue5", 0.62, 0.92, false, false],
+	"atajar_der": ["16_Goalkeeper_Save_02_ue5", 0.66, 1.0, false, false],
+	"atajar_bajo": ["17_Goalkeeper_Save_03_ue5", 0.68, 0.92, false, false],
+	"portero_listo": ["17_Goalkeeper_Save_03_ue5", 0.2, 0.5, true, true],
+	"celebrar_rodillas": ["12_Goal_Celebration_01_ue5", 0.0, 1.0, false, true],
+	"celebrar_carrera": ["14_Goal_Celebration_03_ue5", 0.0, 1.0, false, true],
+	"saque_banda": ["07_Throw_In_ue5", 0.42, 0.9, false, true],
+	"pase": ["08_Side_Foot_Kick_ue5", 0.2, 0.55, false, true],
+	"marcar": ["18_Defending_01_ue5", 0.1, 0.7, true, true],
+	"falta_empujon": ["19_Defending_02_ue5", 0.3, 0.6, false, true],
+	"mostrar_roja": ["21_Yellow_And_Red_Card_ue5", 0.3, 0.75, false, true],
+	"penal_2": ["11_Penalty_Kick_02_ue5", 0.0, 0.45, false, true],
+}
+
+## Una ventana de una animación, empezando en 0. `sin_xz` fija la X/Z de la
+## pelvis a la del primer fotograma de la ventana.
+static func recortar(base: Animation, desde_f: float, hasta_f: float, bucle: bool, sin_xz: bool) -> Animation:
+	var a := Animation.new()
+	var t0 := base.length * clampf(desde_f, 0.0, 1.0)
+	var t1 := base.length * clampf(hasta_f, 0.0, 1.0)
+	a.length = maxf(0.1, t1 - t0)
+	a.loop_mode = Animation.LOOP_LINEAR if bucle else Animation.LOOP_NONE
+	for i in base.get_track_count():
+		var tipo := base.track_get_type(i)
+		if tipo != Animation.TYPE_ROTATION_3D and tipo != Animation.TYPE_POSITION_3D and tipo != Animation.TYPE_SCALE_3D:
+			continue
+		var ruta := base.track_get_path(i)
+		var nueva := a.add_track(tipo)
+		a.track_set_path(nueva, ruta)
+		a.track_set_interpolation_type(nueva, base.track_get_interpolation_type(i))
+		var es_pelvis := tipo == Animation.TYPE_POSITION_3D and str(ruta).ends_with(":pelvis")
+		var primero: Variant = null
+		## El valor exacto en los dos bordes, interpolado: sin esto la ventana
+		## empezaba en el primer fotograma de clave que cayera dentro y el
+		## primer instante saltaba.
+		var tiempos: Array[float] = [t0]
+		for k in base.track_get_key_count(i):
+			var tk := base.track_get_key_time(i, k)
+			if tk > t0 and tk < t1:
+				tiempos.append(tk)
+		tiempos.append(t1)
+		for tk: float in tiempos:
+			var v: Variant
+			match tipo:
+				Animation.TYPE_ROTATION_3D: v = base.rotation_track_interpolate(i, tk)
+				Animation.TYPE_POSITION_3D: v = base.position_track_interpolate(i, tk)
+				_: v = base.scale_track_interpolate(i, tk)
+			if es_pelvis and sin_xz:
+				if primero == null:
+					primero = v
+				## La pelvis vive en el espacio de su padre (`root`), que viene
+				## girado: ahí la ALTURA es Z, no Y (medido: 0,95 en Z al estar de
+				## pie). Se busca el eje vertical por el valor -el de ~0,9 m- y se
+				## congelan los otros dos, que son el avance por el campo.
+				var p0 := primero as Vector3
+				var eje := 0
+				if absf(p0.y) > absf(p0[eje]):
+					eje = 1
+				if absf(p0.z) > absf(p0[eje]):
+					eje = 2
+				var fijo := p0
+				fijo[eje] = (v as Vector3)[eje]
+				v = fijo
+			match tipo:
+				Animation.TYPE_ROTATION_3D: a.rotation_track_insert_key(nueva, tk - t0, v)
+				Animation.TYPE_POSITION_3D: a.position_track_insert_key(nueva, tk - t0, v)
+				_: a.scale_track_insert_key(nueva, tk - t0, v)
+	return a
+
+## A MANO, lo que el mocap no trae. Mismo criterio que `patear()`: solo los
+## ejes ya medidos con la sonda (X de piernas, tronco y brazo adelante-atrás;
+## Z de brazo al costado, espejado entre lados).
+##
+## El lamento: manos a las rodillas, tronco caído, cabeza gacha -el defensa que
+## acaba de ver el gol en contra-.
+static func lamento(esq: Skeleton3D, prefijo: String) -> Animation:
+	var a := _nueva(2.4, false)
+	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.5, Vector3(0, -0.12, 0)], [2.0, Vector3(0, -0.13, 0)], [2.4, Vector3(0, -0.05, 0)]], prefijo)
+	_pista(a, esq, "espalda1", [[0.0, Vector3.ZERO], [0.5, Vector3(18, 0, 0)], [2.0, Vector3(20, 0, 0)], [2.4, Vector3(8, 0, 0)]], prefijo)
+	_pista(a, esq, "espalda2", [[0.0, Vector3.ZERO], [0.5, Vector3(16, 0, 0)], [2.4, Vector3(6, 0, 0)]], prefijo)
+	_pista(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.6, Vector3(28, 0, 0)], [1.4, Vector3(24, 8, 0)], [2.0, Vector3(28, -8, 0)], [2.4, Vector3(10, 0, 0)]], prefijo)
+	for lado: String in ["i", "d"]:
+		var z := 6.0 if lado == "i" else -6.0
+		_pista(a, esq, "muslo_" + lado, [[0.0, Vector3.ZERO], [0.5, Vector3(24, 0, 0)], [2.4, Vector3(8, 0, 0)]], prefijo)
+		_pista(a, esq, "pierna_" + lado, [[0.0, Vector3.ZERO], [0.5, Vector3(-30, 0, 0)], [2.4, Vector3(-10, 0, 0)]], prefijo)
+		_pista(a, esq, "brazo_" + lado, [[0.0, Vector3(0, 0, z)], [0.5, Vector3(38, 0, z)], [2.4, Vector3(14, 0, z)]], prefijo)
+		_pista(a, esq, "antebrazo_" + lado, [[0.0, Vector3.ZERO], [0.5, Vector3(12, 0, 0)], [2.4, Vector3.ZERO]], prefijo)
+	return a
+
+## La rabia: cabeza atrás mirando al cielo, brazos que caen de golpe y una
+## patada al aire.
+static func rabia(esq: Skeleton3D, prefijo: String) -> Animation:
+	var a := _nueva(1.8, false)
+	_pista(a, esq, "espalda2", [[0.0, Vector3.ZERO], [0.35, Vector3(-16, 0, 0)], [0.9, Vector3(10, 0, 0)], [1.8, Vector3.ZERO]], prefijo)
+	_pista(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.35, Vector3(-30, 0, 0)], [0.9, Vector3(20, 0, 0)], [1.8, Vector3(6, 0, 0)]], prefijo)
+	_pista(a, esq, "brazo_i", [[0.0, Vector3(0, 0, 6)], [0.35, Vector3(-30, 0, 40)], [0.7, Vector3(20, 0, 2)], [1.8, Vector3(0, 0, 6)]], prefijo)
+	_pista(a, esq, "brazo_d", [[0.0, Vector3(0, 0, -6)], [0.35, Vector3(-30, 0, -40)], [0.7, Vector3(20, 0, -2)], [1.8, Vector3(0, 0, -6)]], prefijo)
+	_pista(a, esq, "muslo_d", [[0.0, Vector3.ZERO], [0.8, Vector3(-10, 0, 0)], [1.05, Vector3(50, 0, 0)], [1.4, Vector3.ZERO]], prefijo)
+	_pista(a, esq, "pierna_d", [[0.0, Vector3.ZERO], [0.8, Vector3(-60, 0, 0)], [1.05, Vector3(-8, 0, 0)], [1.4, Vector3.ZERO]], prefijo)
+	return a
+
+## El árbitro señala la falta: brazo derecho extendido hacia el costado, a la
+## altura del hombro, y lo sostiene.
+static func senalar_falta(esq: Skeleton3D, prefijo: String) -> Animation:
+	var a := _nueva(1.8, false)
+	_pista(a, esq, "brazo_d", [[0.0, Vector3(0, 0, -6)], [0.3, Vector3(-6, 0, -80)], [1.5, Vector3(-6, 0, -82)], [1.8, Vector3(0, 0, -6)]], prefijo)
+	_pista(a, esq, "brazo_i", [[0.0, Vector3(0, 0, 6)], [1.8, Vector3(0, 0, 6)]], prefijo)
+	_pista(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.3, Vector3(0, -30, 0)], [1.5, Vector3(0, -30, 0)], [1.8, Vector3.ZERO]], prefijo)
+	return a
+
+## La barrida: la cadera baja casi al suelo, la pierna de delante estirada
+## hacia el balón y la de atrás recogida debajo; el tronco se echa atrás y un
+## brazo busca el suelo.
+static func falta_barrida(esq: Skeleton3D, prefijo: String) -> Animation:
+	var a := _nueva(1.2, false)
+	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.3, Vector3(0, -0.62, 0.15)], [0.85, Vector3(0, -0.64, 0.25)], [1.2, Vector3(0, -0.2, 0.2)]], prefijo)
+	_pista(a, esq, "espalda2", [[0.0, Vector3.ZERO], [0.3, Vector3(-28, 0, 0)], [0.85, Vector3(-24, 0, 0)], [1.2, Vector3(-6, 0, 0)]], prefijo)
+	_pista(a, esq, "muslo_d", [[0.0, Vector3.ZERO], [0.3, Vector3(78, 0, 0)], [0.85, Vector3(72, 0, 0)], [1.2, Vector3(20, 0, 0)]], prefijo)
+	_pista(a, esq, "pierna_d", [[0.0, Vector3.ZERO], [0.3, Vector3(-4, 0, 0)], [1.2, Vector3(-20, 0, 0)]], prefijo)
+	_pista(a, esq, "muslo_i", [[0.0, Vector3.ZERO], [0.3, Vector3(30, 0, 0)], [1.2, Vector3(10, 0, 0)]], prefijo)
+	_pista(a, esq, "pierna_i", [[0.0, Vector3.ZERO], [0.3, Vector3(-110, 0, 0)], [1.2, Vector3(-40, 0, 0)]], prefijo)
+	_pista(a, esq, "brazo_i", [[0.0, Vector3(0, 0, 6)], [0.3, Vector3(-40, 0, 30)], [1.2, Vector3(0, 0, 6)]], prefijo)
+	_pista(a, esq, "brazo_d", [[0.0, Vector3(0, 0, -6)], [0.3, Vector3(20, 0, -40)], [1.2, Vector3(0, 0, -6)]], prefijo)
+	return a
+
+## El dolor de una lesión: agachado, las manos a la rodilla, la cabeza baja.
+static func dolor(esq: Skeleton3D, prefijo: String) -> Animation:
+	var a := _nueva(3.0, false)
+	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.5, Vector3(0, -0.34, 0)], [3.0, Vector3(0, -0.36, 0)]], prefijo)
+	_pista(a, esq, "espalda1", [[0.0, Vector3.ZERO], [0.5, Vector3(34, 0, 0)], [3.0, Vector3(36, 0, 0)]], prefijo)
+	_pista(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.5, Vector3(30, 0, 0)], [1.5, Vector3(24, 10, 0)], [3.0, Vector3(30, 0, 0)]], prefijo)
+	_pista(a, esq, "muslo_d", [[0.0, Vector3.ZERO], [0.5, Vector3(70, 0, 0)]], prefijo)
+	_pista(a, esq, "pierna_d", [[0.0, Vector3.ZERO], [0.5, Vector3(-90, 0, 0)]], prefijo)
+	_pista(a, esq, "muslo_i", [[0.0, Vector3.ZERO], [0.5, Vector3(40, 0, 0)]], prefijo)
+	_pista(a, esq, "pierna_i", [[0.0, Vector3.ZERO], [0.5, Vector3(-40, 0, 0)]], prefijo)
+	_pista(a, esq, "brazo_i", [[0.0, Vector3(0, 0, 6)], [0.5, Vector3(52, 0, 10)]], prefijo)
+	_pista(a, esq, "brazo_d", [[0.0, Vector3(0, 0, -6)], [0.5, Vector3(52, 0, -10)]], prefijo)
+	_pista(a, esq, "antebrazo_i", [[0.0, Vector3.ZERO], [0.5, Vector3(30, 0, 0)]], prefijo)
+	_pista(a, esq, "antebrazo_d", [[0.0, Vector3.ZERO], [0.5, Vector3(30, 0, 0)]], prefijo)
+	return a
 
 ## Las acciones de futbol de este rig se mantuvieron opt-in mientras se
 ## terminaba su retarget. Las capturas de 20-9-2026 probaron que tanto la
@@ -483,6 +653,21 @@ static func construir(esq: Skeleton3D, ruta_esqueleto: String = "", acciones_exp
 			var real: Animation = cargar_futbol_global(CLIP_FUTBOL_NUEVO[clave], esq, prefijo)
 			if real != null:
 				lib.add_animation(clave, real)
+		for clave: String in CLIP_RECORTES:
+			## Los 22 jugadores comparten la ruta al esqueleto, así que el
+			## recorte se hace una vez por partida y se reutiliza.
+			var cc := "%s|%s" % [clave, prefijo]
+			if not _cache_recortes.has(cc):
+				var r: Array = CLIP_RECORTES[clave]
+				var entera: Animation = cargar_futbol_global(String(r[0]), esq, prefijo)
+				_cache_recortes[cc] = recortar(entera, float(r[1]), float(r[2]), bool(r[3]), bool(r[4])) if entera != null else null
+			if _cache_recortes[cc] != null:
+				lib.add_animation(clave, _cache_recortes[cc])
+		lib.add_animation("lamento", lamento(esq, prefijo))
+		lib.add_animation("rabia", rabia(esq, prefijo))
+		lib.add_animation("senalar_falta", senalar_falta(esq, prefijo))
+		lib.add_animation("falta_barrida", falta_barrida(esq, prefijo))
+		lib.add_animation("dolor", dolor(esq, prefijo))
 	return lib
 
 ## El remate. Mismo diseno de tres tiempos que `AnimMixamo.patear()` -armar,
