@@ -136,6 +136,9 @@ static var ctx_semana: int = 0
 ## no tienes -Ciudad se crea con el primer terreno, no desde el arranque-.
 ## Solo pega cuando juegas de LOCAL: el pasto que se destroza es el tuyo.
 static var ctx_cesped_local: float = 1.0
+## Cuánto multiplica la superficie de TU estadio las lesiones cuando juegas de
+## local (B6.5: el artificial castiga, el híbrido protege). 1.0 = natural.
+static var ctx_lesion_local: float = 1.0
 ## Lo que la moda tactica le hace a cada dibujo esta temporada. Lo pone `Mundo`
 ## junto al resto del contexto: `Liga` crea sus partidos por dentro y no conoce
 ## el mundo.
@@ -150,6 +153,7 @@ static func limpiar_contexto() -> void:
 	ctx_club_id = ""
 	ctx_anio = 0
 	ctx_semana = 0
+	ctx_lesion_local = 1.0
 
 ## Enciende a un jugador. Devuelve "" si se hizo, o el motivo por el que no.
 func arengar(j: Jugador) -> String:
@@ -653,7 +657,10 @@ func _incidencias() -> void:
 			if roja:
 				l.suspension = max(l.suspension, 1)
 			tarjeta.emit(l, roja, minuto)
-	if Azar.suerte(0.0024):
+	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas
+	## veces se consulta `Azar`.
+	var f_sup := ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0
+	if Azar.suerte(0.0024 * f_sup):
 		var h := _alguien(_todos)
 		if h != null:
 			## LA LESION LA DIAGNOSTICA `Medico`, no un numero suelto.
