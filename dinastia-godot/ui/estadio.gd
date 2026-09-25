@@ -47,6 +47,9 @@ var _balon: Node3D
 var _control: ControlPartido
 var _radar: RadarPartido
 var _btn_modo: Button
+var _btn_camara: Button
+var _cajon: CajonAjustes
+var _vineta: ColorRect
 var _perfil: Dictionary = {}
 var _banner: Label
 var _banner_caja: PanelContainer
@@ -196,56 +199,71 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## árbol para quedar DEBAJO de ellos (los Control últimos en añadirse se
 	## dibujan encima): la viñeta oscurece justo las esquinas donde vive el HUD,
 	## y si se dibujara arriba le restaría legibilidad al marcador y los botones.
-	var vineta := ColorRect.new()
-	vineta.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vineta.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vineta.material = ShaderMaterial.new()
-	vineta.material.shader = load("res://visor/vineta.gdshader")
-	add_child(vineta)
+	_vineta = ColorRect.new()
+	_vineta.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_vineta.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_vineta.material = ShaderMaterial.new()
+	_vineta.material.shader = load("res://visor/vineta.gdshader")
+	_vineta.visible = _pref("vineta", true)
+	add_child(_vineta)
 
 	# Radar táctico 2D en esquina inferior derecha
 	_radar = RadarPartido.new()
 	_radar.anchor_left = 1.0; _radar.anchor_right = 1.0; _radar.anchor_top = 1.0; _radar.anchor_bottom = 1.0
 	_radar.offset_left = -226; _radar.offset_right = -16; _radar.offset_top = -178; _radar.offset_bottom = -42
+	_radar.visible = _pref("radar", true)
 	add_child(_radar)
 
-	## Barra de control por encima del 3D, ARRIBA A LA DERECHA (25-9-2026): a la
-	## izquierda, con el marcador centrado, "Volver" quedaba debajo del marcador
-	## en cuanto la barra tenía los seis botones ("VolverLautaro FC" en captura).
-	## El marcador pasa a la esquina de arriba a la izquierda, como en una
-	## transmisión de TV.
-	var barra := HBoxContainer.new()
-	barra.add_theme_constant_override("separation", 8)
-	barra.anchor_left = 1.0
-	barra.anchor_right = 1.0
-	barra.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	barra.offset_right = -18
-	barra.offset_left = -18
-	barra.offset_top = 14
-	add_child(barra)
-	_boton(barra, "📷 Cámara", _rotar_camara)
-	_boton(barra, "🔍 +", func() -> void: if _rig: _rig.ajustar_zoom(-3.0))
-	_boton(barra, "🔍 -", func() -> void: if _rig: _rig.ajustar_zoom(3.0))
+	## AJUSTES EN UN CAJÓN (25-9-2026, plan maestro B1). Antes siete botones
+	## vivían encima de la transmisión (cámara, zoom ±, modo, velocidad, nombres,
+	## volver); el usuario pidió que no estuvieran todos a la vista. Ahora en
+	## pantalla quedan el marcador, "Volver" y el ⚙, y el resto entra desde la
+	## derecha al pulsarlo (`CajonAjustes`).
+	_cajon = CajonAjustes.crear(self, "partido3d")
+	var volver := Button.new()
+	volver.text = "Volver"
+	volver.focus_mode = Control.FOCUS_NONE
+	add_child(volver)
+	volver.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	volver.offset_left = -150
+	volver.offset_right = -66
+	volver.offset_top = 14
+	volver.offset_bottom = 54
+	volver.pressed.connect(func() -> void: cerrado.emit())
 
+	_cajon.seccion("Transmisión")
+	_btn_camara = _cajon.boton("📷 Cámara: " + (_rig.current_name() if _rig != null else "TV"), _rotar_camara)
+	_cajon.fila([["🔍 Acercar", func() -> void: if _rig: _rig.ajustar_zoom(-3.0)],
+		["🔍 Alejar", func() -> void: if _rig: _rig.ajustar_zoom(3.0)]])
 	if partido != null:
-		_btn_modo = Button.new()
-		_btn_modo.text = "🎮 Modo: Manager"
-		_btn_modo.custom_minimum_size = Vector2(0, 32)
-		_btn_modo.pressed.connect(_alternar_modo_control)
-		barra.add_child(_btn_modo)
-
-		_btn_velocidad = Button.new()
-		_btn_velocidad.custom_minimum_size = Vector2(0, 32)
-		_btn_velocidad.pressed.connect(_ciclar_velocidad)
-		barra.add_child(_btn_velocidad)
-	var bn := Button.new()
-	bn.text = "🏷 Nombres"
-	bn.toggle_mode = true
-	bn.button_pressed = PlayerSpawner.mostrar_nombres
-	bn.custom_minimum_size = Vector2(0, 32)
-	bn.toggled.connect(_mostrar_nombres)
-	barra.add_child(bn)
-	_boton(barra, "Volver", func() -> void: cerrado.emit())
+		_cajon.seccion("Partido")
+		_btn_modo = _cajon.boton("🎮 Modo: Manager", _alternar_modo_control)
+		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
+	_cajon.seccion("En pantalla")
+	_cajon.interruptor("🏷 Nombres de los jugadores", PlayerSpawner.mostrar_nombres, _mostrar_nombres)
+	_cajon.interruptor("🗺 Radar táctico", _radar.visible, func(si: bool) -> void:
+		_radar.visible = si
+		_guardar_pref("radar", si))
+	_cajon.interruptor("📺 Rótulos de las jugadas", _pref("rotulos", true), func(si: bool) -> void:
+		_guardar_pref("rotulos", si)
+		if _rotulo_jugada != null and not si:
+			_rotulo_jugada.modulate.a = 0.0)
+	_cajon.interruptor("🎞 Viñeta de transmisión", _vineta.visible, func(si: bool) -> void:
+		_vineta.visible = si
+		_guardar_pref("vineta", si))
+	_cajon.interruptor("ℹ Ficha del estadio abajo", _pref("pie", true), func(si: bool) -> void:
+		_pie.visible = si
+		_guardar_pref("pie", si))
+	_cajon.interruptor("⚡ Calidad automática", Calidad.adaptativa, func(si: bool) -> void:
+		Calidad.adaptativa = si)
+	_cajon.seccion("Sonido")
+	_cajon.deslizador("Grada y ambiente", float(Sonido.volumen.get(Sonido.Bus.AMBIENTE, 0.5)), func(v: float) -> void:
+		Sonido.volumen[Sonido.Bus.AMBIENTE] = v)
+	_cajon.deslizador("Efectos (balón, silbato)", float(Sonido.volumen.get(Sonido.Bus.EFECTOS, 0.8)), func(v: float) -> void:
+		Sonido.volumen[Sonido.Bus.EFECTOS] = v)
+	_cajon.deslizador("Música", Musica.volumen, func(v: float) -> void:
+		Musica.volumen = v
+		Musica.aplicar_volumen())
 
 	_pie = Label.new()
 	_pie.add_theme_font_size_override("font_size", 13)
@@ -254,6 +272,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_pie.offset_left = 18
 	_pie.offset_bottom = -14
 	_pie.offset_top = -34
+	_pie.visible = _pref("pie", true)
 	add_child(_pie)
 	_actualizar_pie(perfil, aforo, ocupacion)
 
@@ -284,13 +303,6 @@ func _mostrar_nombres(si: bool) -> void:
 		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO):
 			(n.get_node(PlayerSpawner.ROTULO) as Node3D).visible = si
 
-func _boton(padre: Node, texto: String, accion: Callable) -> void:
-	var b := Button.new()
-	b.text = texto
-	b.custom_minimum_size = Vector2(0, 32)
-	b.pressed.connect(accion)
-	padre.add_child(b)
-
 ## Cicla Pausa → Lento → Normal → Rápido → x4 → Pausa. `mas_rapido()` no
 ## envuelve -se queda en el último escalón-, así que al llegar a x4 hay que
 ## saltar a Pausa a mano; en cualquier otro escalón basta con acelerar un paso.
@@ -303,9 +315,25 @@ func _ciclar_velocidad() -> void:
 		_juego.mas_rapido()
 	_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 
+## Preferencias de lo que se ve sobre la transmisión, en el mismo archivo que
+## el resto de ajustes (`user://ajustes.cfg`, sección `hud`).
+func _pref(k: String, por_defecto: bool) -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.load(CajonAjustes.RUTA) != OK:
+		return por_defecto
+	return bool(cfg.get_value(CajonAjustes.SECCION, k, por_defecto))
+
+func _guardar_pref(k: String, v: bool) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, k, v)
+	cfg.save(CajonAjustes.RUTA)
+
 func _rotar_camara() -> void:
 	if _rig != null:
 		_rig.cycle()
+		if _btn_camara != null:
+			_btn_camara.text = "📷 Cámara: " + _rig.current_name()
 		if _pie != null:
 			_pie.text = _pie_base + "  ·  camara: " + _rig.current_name()
 
@@ -558,7 +586,7 @@ func _crear_rotulo_jugada() -> void:
 	_rotulo_jugada.add_child(_lbl_jugada)
 
 func _al_jugada_ambiente(nombre: String, es_local: bool) -> void:
-	if _rotulo_jugada == null:
+	if _rotulo_jugada == null or not _pref("rotulos", true):
 		return
 	var equipo: Club = club if es_local else visitante
 	(_rotulo_jugada.get_theme_stylebox("panel") as StyleBoxFlat).border_color = Color(equipo.color1) if equipo != null else Color("c9a227")
