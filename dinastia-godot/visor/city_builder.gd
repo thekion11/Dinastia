@@ -15,8 +15,6 @@ extends Node3D
 
 const RUTA_ESTADIO := "res://assets/ciudad/estadio.obj"
 const RUTA_FAROLA := "res://assets/ciudad/farola.obj"
-const RUTA_COCHE1 := "res://assets/ciudad/coche1.fbx"
-const RUTA_COCHE2 := "res://assets/ciudad/coche2.fbx"
 
 ## LOS DOS MODELOS QUE TRAJO EL USUARIO (12-9-2026), convertidos con
 ## `herramientas/fbx_a_glb.py` -texturas bajadas a 1024 px, malla decimada-.
@@ -1330,13 +1328,11 @@ func _aparcamiento() -> void:
 	## dos FBX ya estaban calibradas a 1.4-, y la de Kenney se ajustó aparte
 	## con `captura_ciudad.gd` porque su pack no viene a la misma escala que
 	## el resto de props de este proyecto.
+	##
+	## SOLO KENNEY DESDE EL 25-9-2026: `coche1.fbx`/`coche2.fbx` no tienen licencia
+	## verificada (ver `LICENCIAS.md`) y los 7 de Kenney son CC0. Las versiones
+	## publicables ni siquiera los llevan (`export_presets.cfg`).
 	var pool: Array = []
-	var c1 := load(RUTA_COCHE1)
-	if c1 != null:
-		pool.append({"esc": c1, "escala": 1.4})
-	var c2 := load(RUTA_COCHE2)
-	if c2 != null:
-		pool.append({"esc": c2, "escala": 1.4})
 	for ruta in RUTAS_COCHES_KENNEY:
 		var kc: PackedScene = load(ruta)
 		if kc != null:

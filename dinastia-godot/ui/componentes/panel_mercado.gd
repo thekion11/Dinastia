@@ -126,10 +126,9 @@ func _pintar_estado_ventana() -> void:
 func _pintar_mesa_negociacion(n: Negociacion) -> void:
 	var vendedor: Club = _mundo.clubes.get(n.club_vendedor_id)
 	var t := _lbl(11, COL_ORO)
-	# INTEGRACIÓN LEGAL: nombres pasan por Ficcion antes de mostrarse
 	t.text = "MESA DE NEGOCIACIÓN  ·  %s  (%s)  ·  ronda %d" % [
-		Ficcion.limpiar(n.jugador.nombre if n.jugador else "—"),
-		Ficcion.limpiar(vendedor.nombre if vendedor else "?"),
+		n.jugador.nombre if n.jugador else "—",
+		vendedor.nombre if vendedor else "?",
 		n.ronda
 	]
 	add_child(t)
@@ -180,8 +179,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 			flow_ic.add_child(vac)
 		for x: Jugador in candidatos.slice(0, 8):
 			var bi := Button.new()
-			# INTEGRACIÓN LEGAL
-			bi.text = "%s  (%s)" % [Ficcion.limpiar(x.nombre), _dinero(x.valor)]
+			bi.text = "%s  (%s)" % [x.nombre, _dinero(x.valor)]
 			bi.toggle_mode = true
 			bi.button_pressed = (n.intercambio == x)
 			bi.add_theme_font_size_override("font_size", 11)
@@ -287,10 +285,9 @@ func _pintar_ofertas_recibidas(mio: Club) -> void:
 		add_child(fila)
 
 		var l := _lbl(12, COL_TEXTO)
-		# INTEGRACIÓN LEGAL
 		l.text = "%s — %s ofrece %s%s" % [
-			Ficcion.limpiar(jo.nombre),
-			Ficcion.limpiar(co.nombre),
+			jo.nombre,
+			co.nombre,
 			_dinero(int(o["monto"])),
 			"  (cláusula: no se puede rechazar)" if es_clausula else ""
 		]
@@ -412,9 +409,8 @@ func _pintar_lista(mio: Club) -> void:
 		var col_g       := COL_VERDE if ganas > 0.6 else (COL_ORO if ganas > 0.35 else COL_ROJO)
 		var med         := _mundo.ojeadores.ovr_texto(j) if _mundo.ojeadores != null else str(j.ovr)
 
-		# ── INTEGRACIÓN LEGAL ─────────────────────────────────────────────
-		var nombre_j    := Ficcion.limpiar(j.nombre)
-		var nombre_club := Ficcion.limpiar(suyo.nombre if suyo else "?")
+		var nombre_j    := j.nombre
+		var nombre_club := suyo.nombre if suyo else "?"
 
 		var nom_l := _lbl(12, alcance)
 		nom_l.text = nombre_j

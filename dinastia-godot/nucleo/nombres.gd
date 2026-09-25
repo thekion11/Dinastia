@@ -80,3 +80,34 @@ static func censurar(nombre: String) -> String:
 		vistas += 1
 		salida += LEET[min_c] if vistas % CADA == 0 else c
 	return salida
+
+## NOMBRES VETADOS (25-9-2026). Un nombre generado al azar no puede ser el de
+## un futbolista real: con las bolsas chilenas sale "Claudio Bravo" o "Vicente
+## Pizarro" sin que nadie lo busque. La tabla `NOMBRES_VETADOS` trae la huella
+## de cada jugador real conocido -md5 del nombre en minúsculas, 12 hex, la
+## genera `herramientas/base_ficticia.py`-, así que la base publicada no lleva
+## ni un nombre real legible y aun así puede evitarlos.
+static var _vetados: Dictionary = {}
+static var _vetados_listos := false
+
+static func huella(nombre: String) -> String:
+	return nombre.strip_edges().to_lower().md5_text().substr(0, 12)
+
+static func vetado(nombre: String) -> bool:
+	if not _vetados_listos:
+		_vetados_listos = true
+		if Datos.tiene("NOMBRES_VETADOS"):
+			for h: Variant in Datos.tabla("NOMBRES_VETADOS"):
+				_vetados[String(h)] = true
+	return _vetados.has(huella(nombre))
+
+## Llama a `sortear` hasta que devuelva un nombre no vetado. Ocho intentos
+## sobran -la probabilidad de caer en uno real es del orden de 1 entre 70- y
+## el tope evita un bucle infinito si una bolsa diminuta solo diera reales.
+static func sin_vetar(sortear: Callable) -> String:
+	var nombre: String = sortear.call()
+	var intentos := 1
+	while vetado(nombre) and intentos < 8:
+		nombre = sortear.call()
+		intentos += 1
+	return nombre

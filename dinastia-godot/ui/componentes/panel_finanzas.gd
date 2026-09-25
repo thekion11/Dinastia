@@ -21,8 +21,8 @@ extends RefCounted
 ## `paleta`: los mismos colores ya resueltos -`_color_accesible()`/`_pal_*()`,
 ## con `escala`- que reciben los demás componentes de esta carpeta.
 ##
-## Sin `Ficcion.limpiar()`, igual que el resto de `principal.gd` fuera de
-## `PanelMercado` -decisión pendiente de confirmar, no un descuido.
+## Los nombres se pintan tal cual: lo legal se resuelve en los DATOS (base
+## ficticia por defecto, pack real opcional -ver `Datos`-), no en cada pantalla.
 
 ## BALANCE + FLUJO DE CAJA A 12 MESES. Puro: ni un botón, solo lee `c`,
 ## `mundo.banco` y la proyección que ya calculó `_pintar_finanzas()`.

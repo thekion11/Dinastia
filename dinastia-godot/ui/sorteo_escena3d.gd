@@ -563,7 +563,31 @@ func _montar_presentador() -> void:
 		return
 	_montar_presentador_siluetas()
 
+## EL PRESENTADOR ES EL MODELO QUATERNIUS (CC0), no `futbolista_cr7.glb`
+## (25-9-2026). Aquel trae de fábrica la camiseta real del Al-Nassr -escudo y
+## patrocinador incluidos- y no tiene licencia conocida, así que no viaja en
+## ninguna versión publicada (ver `LICENCIAS.md`). Es el mismo cuerpo que ya
+## usan los 22 del campo, con "parado" y "mostrar_tarjeta" en su catálogo. El
+## modelo viejo queda solo como respaldo de desarrollo.
+func _montar_presentador_quaternius() -> bool:
+	var d := FutbolistaQ.crear(1.78, "male")
+	if d.is_empty():
+		return false
+	var raiz: Node3D = d["nodo"]
+	raiz.position = Vector3(1.15, 0.42, -0.35)
+	raiz.rotation.y = deg_to_rad(-32.0)
+	add_child(raiz)
+	FutbolistaQ.terminar(d, true)
+	## Traje azul marino oscuro: mismo tono que la silueta de respaldo.
+	VestidorQ.vestir(d, Color(0.12, 0.13, 0.19))
+	_anim_presentador = d["anim"]
+	if _anim_presentador != null and _anim_presentador.has_animation("parado"):
+		_anim_presentador.play("parado")
+	return true
+
 func _montar_presentador_modelo() -> bool:
+	if _montar_presentador_quaternius():
+		return true
 	var d := Futbolista.crear(1.78)
 	if d.is_empty():
 		return false

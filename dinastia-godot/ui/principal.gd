@@ -14644,10 +14644,10 @@ func _responder_oferta_mercado(indice: int, aceptar: bool) -> void:
 	if aceptar:
 		mundo.mercado.aceptar_oferta(indice)
 		_escribir("[color=#4caf6d]Venta cerrada:[/color] %s a %s por %s." % [
-			Ficcion.limpiar(j.nombre),
-			Ficcion.limpiar(co.nombre if co else "?"),
+			j.nombre,
+			co.nombre if co else "?",
 			_dinero(int(o["monto"]))])
 	else:
 		mundo.mercado.rechazar_oferta(indice)
-		_escribir("Oferta por %s rechazada." % Ficcion.limpiar(j.nombre))
+		_escribir("Oferta por %s rechazada." % j.nombre)
 	_refrescar()

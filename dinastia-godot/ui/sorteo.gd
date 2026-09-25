@@ -25,10 +25,10 @@ const COL_SUAVE := Color("8ea595")
 ## no se vea igual que uno de Champions. `fondo` pinta la sala, `acento` los
 ## rótulos y las líneas del cuadro.
 const COLORES := {
-	"ucl": {"fondo": "#1b1464", "acento": "#4fc3f7", "nombre": "CHAMPIONS LEAGUE"},
-	"uel": {"fondo": "#2b1a08", "acento": "#ff8f00", "nombre": "EUROPA LEAGUE"},
-	"lib": {"fondo": "#0d2818", "acento": "#f5c518", "nombre": "COPA LIBERTADORES"},
-	"sud": {"fondo": "#1a1006", "acento": "#ff7043", "nombre": "COPA SUDAMERICANA"},
+	"ucl": {"fondo": "#1b1464", "acento": "#4fc3f7", "nombre": "COPA CONTINENTAL"},
+	"uel": {"fondo": "#2b1a08", "acento": "#ff8f00", "nombre": "COPA CONTINENTAL"},
+	"lib": {"fondo": "#0d2818", "acento": "#f5c518", "nombre": "COPA CONTINENTAL"},
+	"sud": {"fondo": "#1a1006", "acento": "#ff7043", "nombre": "COPA CONTINENTAL"},
 	"copa": {"fondo": "#14202b", "acento": "#4caf6d", "nombre": "COPA NACIONAL"},
 }
 
@@ -78,8 +78,16 @@ func abrir_eliminatoria(clave: String, ronda: String, parejas: Array, mio: Club)
 	_construir()
 	_correr()
 
+## El rótulo NO se escribe aquí: sale de `CONFED`, igual que el nombre que ve el
+## jugador en el resto del juego. Antes iban "CHAMPIONS LEAGUE" y "COPA
+## LIBERTADORES" escritos a fuego, y se veían aunque la partida usara la base
+## ficticia (ver `Datos`).
 func _paleta() -> Dictionary:
-	return COLORES.get(_clave, COLORES["copa"])
+	var p: Dictionary = (COLORES.get(_clave, COLORES["copa"]) as Dictionary).duplicate()
+	var confed: Variant = Datos.tabla("CONFED")
+	if confed is Dictionary and (confed as Dictionary).has(_clave):
+		p["nombre"] = Nombres.limpiar(String(((confed as Dictionary)[_clave] as Dictionary).get("n", p["nombre"]))).to_upper()
+	return p
 
 # ---------------------------------------------------------------------------
 #  CONSTRUCCIÓN
