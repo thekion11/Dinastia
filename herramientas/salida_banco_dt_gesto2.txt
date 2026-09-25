@@ -1,0 +1,1093 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+===== BANCO DE PRUEBAS DEL NUCLEO =====
+
+===== DATOS EXPORTADOS DEL HTML =====
+  ok    el JSON de tablas carga
+  212 tablas disponibles
+  ok    esta la tabla DATA_P1
+  ok    esta la tabla DATA_P2
+  ok    esta la tabla PAISES_LIGAS
+  ok    esta la tabla POSD
+  ok    esta la tabla FORMS
+  ok    esta la tabla NOMBRES
+  ok    esta la tabla APELLIDOS
+  ok    esta la tabla RASGOS
+  ok    NOMBRES trae una lista larga (60)
+  ok    NOMBRES trae nombres de pila, no constantes en mayusculas (Matías)
+  ok    APELLIDOS trae una lista larga (80)
+  ok    DATA_P1 trae filas de club completas
+  ok    las filas de club traen reputacion y aforo
+  ok    descensurar: C0lo-C0lo -> Colo-Colo
+  ok    descensurar: B0ca Juni0rs -> Boca Juniors
+  ok    descensurar NO toca los anos sueltos
+
+===== REPETIBILIDAD (lo que el HTML no puede hacer) =====
+  ok    misma semilla, mismo numero de jugadores
+  ok    misma semilla, mismos jugadores uno a uno
+  ok    otra semilla, otro mundo
+
+===== GENERACION DEL MUNDO =====
+  384 clubes, 9600 jugadores, 24 ligas
+  ok    se generan mas de 300 clubes
+  ok    se generan al menos 20 ligas
+  ok    ningun club se queda sin plantilla (0)
+  ok    todos los clubes tienen portero (0 sin)
+  ok    ninguna media fuera de [40,96] (0)
+  ok    sale un once de 11 aunque esten todos lesionados (11)
+  media de los menores de 20: 57.2   |   de los 25-29: 66.1
+  ok    los chicos son peores que los de su mejor edad
+  ok    no hay ninos de 19 con media 90+ (0)
+  ok    todos los clubes tienen las cuatro lineas (0 sin)
+
+===== PLANTILLAS REALES: NOMBRES DE VERDAD SOBRE EL MUNDO GENERADO =====
+  ok    Colo-Colo esta entre los clubes generados
+  ok    Colo-Colo trae su plantel real completo (14 reales)
+  ok    Arturo Vidal aparece en el plantel real de Colo-Colo
+  ok    y queda marcado como real
+  ok    en su demarcacion real (MC)
+  ok    con atributos generados para su nueva media
+  ok    ningun nombre real se repite dentro del mismo club
+  ok    ningun generado supera el techo del fondo de plantel real (70)
+  ok    un pais sin datos reales genera su mundo igual
+  ok    Arturo Vidal (real y con foto ya encontrada) tiene foto de verdad
+  ok    la foto queda recortada a cuadrado (256x256)
+  ok    textura() prefiere la foto real sobre el dibujo procedural
+  ok    un jugador generado -no real- nunca tiene foto de verdad
+
+===== CALENDARIO =====
+  Primera Division: 16 clubes, 30 jornadas
+  ok    jornadas = 30 (esperadas 30)
+  ok    nadie juega dos veces en una jornada (0 casos)
+  ok    cada cruce local-visita aparece una sola vez (0 mal)
+
+===== PARTIDOS: LA CURVA DE GOLES =====
+  378 partidos, 2.40 goles por partido
+  local 36%  empate 30%  visita 32%
+  ok    goles por partido dentro de lo creible (2.40)
+  ok    el local gana mas que el visitante (138 vs 123)
+  ok    la senal de gol se emite una vez por gol
+  ok    la senal de fin de partido se emite una vez
+  322 remates: 98 goles, 88 atajadas, 23 postes, 113 fallos (1 goles de penal arbitral, aparte)
+  ok    cada remate termina en gol o en una senal de remate, sin contar los penales del arbitro (322 = 322)
+  ok    atajada ronda su proporcion del HTML (39%)
+  ok    poste ronda su proporcion del HTML (10%)
+  por partido: 17.4 corners, 30.1 faltas, 9.5 fueras de juego, 1.67 xG
+  ok    nunca hay mas tiros a puerta que remates (0 mal)
+  ok    nunca hay mas goles que tiros a puerta (0 mal)
+  ok    la posesion se queda entre 22 y 78 (0 fuera)
+  ok    los corners por partido son creibles (17.4)
+  ok    las faltas por partido son creibles (30.1)
+  ok    los fueras de juego por partido son creibles (9.5)
+  ok    el xG se acumula de verdad (66.6 en 40 partidos)
+
+===== LA PREVIA: ARBITRO, DT RIVAL Y CUOTAS =====
+  fuerte: Colo-Colo (rep 88)   flojo: D. Limache (rep 67)
+  ok    el arbitro es el mismo toda la semana (E. Rojas)
+  ok    el arbitro trae su descripcion (le encanta ser protagonista)
+  ok    no pita siempre el mismo en toda la temporada (12 arbitros en 29 fechas)
+  ok    el DT rival es parte de la identidad del club, no cambia (W. Chalá)
+  ok    dos clubes distintos no comparten DT
+  ok    el DT rival trae su estilo (pizarron)
+  fuerzas reales -> Colo-Colo ata=66.2 def=65.2   |   D. Limache ata=55.1 def=58.1
+  el fuerte de local: gana 47%  empata 27%  pierde 26%   (cuotas 2.26 / 4.00 / 4.15)
+  ok    las tres probabilidades suman 1 (1.0000)
+  ok    ninguna cuota baja de 1.03 (2.26)
+  controlado -> bueno en casa gana 63%   malo en casa gana 20%
+  ok    el mejor es favorito
+  ok    al favorito se le paga menos
+  ok    a igualdad de campo, el mejor tiene mas opciones (63% vs 20%)
+  ok    jugar en casa sube tus opciones (63% vs 54%)
+  ok    los goles esperados estan en escala de goles, no de llegadas (1.19)
+  ok    un club de rep 88 ataca mas que uno de rep 67 (66.2 vs 55.1)
+  ok    y la diferencia se nota de verdad, no por decimas (11.1 puntos)
+
+===== EL ÁRBITRO EN EL PROPIO PARTIDO =====
+  ok    el que pita en el partido es el mismo que anuncia la previa (N. Gamboa)
+  ok    el arbitro narra al menos una decision en 500 partidos (18)
+  500 partidos: 18 decisiones arbitrales narradas, 1356 tarjetas repartidas (arbitrales + normales)
+  ok    el motor sigue anotando goles con el arbitro metido en el medio (1194)
+  ok    se encuentra alguna semana con arbitro casero/figura para probar el aviso
+  ok    no hay reclamo pendiente antes de perder
+  ok    perder con un arbitro casero/figura deja listo el reclamo formal (B. Saavedra)
+
+===== EL PIE HÁBIL: LOS LATERALES SÍ LO NOTAN =====
+  ok    se encuentran ids de sobra para un diestro y un zurdo
+  LD con pie D: 64.29   ·   LD con pie I: 60.43
+  ok    un lateral del pie contrario a su banda rinde menos (60.43 < 64.29)
+  ok    la penalizacion es exactamente la del HTML, 0.94 (0.9400)
+  ok    un central no pierde nada por ser zurdo (64.29 vs 64.29)
+  1600 futbolistas: 77% diestros
+  ok    la proporcion diestro/zurdo ronda el 76% del HTML (77%)
+
+===== BANQUILLO: ONCE, CAMBIOS Y PENALES =====
+  ok    el once elegido a mano es el que sale al campo
+  ok    con un titular lesionado sigue saliendo un once de 11
+  ok    se puede hacer un cambio
+  ok    el suplente entra y el titular sale
+  ok    no se puede sacar a quien ya no esta en el campo
+  ok    cambiar a alguien cambia la fuerza del equipo
+  ok    no se pueden hacer mas de 5 cambios (van 5)
+  ok    una tanda de penales nunca acaba empatada (0 de 200)
+  ok    hay partido esta jornada
+  ok    el resultado del partido dirigido es el que va a la tabla (7-3)
+
+===== FINANZAS =====
+  Colo-Colo: aforo 47000, 20187 socios, entrada 6.0
+  asistencia con entrada a 6: 36189 (77% del aforo)
+  a 14 entran 17389, a 2 entran 45589
+  ok    el precio de la entrada mueve la asistencia en el sentido correcto
+  ok    nunca baja del 12% del aforo
+  ok    ni con la entrada a 99 se vacia del todo
+  semana en casa: 868k EUR   |   semana fuera: 0k EUR
+  ok    jugar en casa deja mas dinero que jugar fuera
+  cierre de mes: entran 38.3M EUR, salen 16.7M EUR, neto 21.6M EUR
+  ok    el mes tiene ingresos y gastos
+  Colo-Colo              79.2M EUR -> 171.5M EUR  (x2.2)
+  Huachipato             12.0M EUR -> 8.2M EUR  (x0.7)
+  Cobreloa               8.2M EUR -> 13.5M EUR  (x1.6)
+  ok    ningun club quiebra en tres temporadas (0)
+  ok    ningun club multiplica su caja por doce sin hacer nada (0)
+
+===== MERCADO DE FICHAJES =====
+  club grande: Boca Juniors (rep 90)   club chico: Recoleta (rep 60)
+  joya de 20 (75/90): valor 22.3M EUR, piden 27.1M EUR
+  jugador de 27 (75/75): valor 11.8M EUR, piden 10.7M EUR
+  ok    por la joya piden mas que por el hecho
+  ok    el club pide por encima del valor de tasacion
+  del grande al chico: 7% de ganas   |   del chico al grande: 85%
+  ok    se quiere subir de club, no bajar
+  ok    la negativa viene con motivos que se le pueden ensenar al jugador
+  ficha que pide: al chico 86k EUR, al grande 52k EUR
+  ok    al club que no le seduce le pide mas ficha
+  ok    acepta lo que pide
+  ok    no acepta la mitad
+  21 traspasos entre clubes de la IA en 20 semanas
+  ok    el mercado de la IA mueve jugadores
+  ok    no se pierde ni se duplica ningun jugador (1200)
+  ok    ningun club se queda corto de plantilla por vender (0)
+  ok    cada jugador apunta al club en el que esta (0 descuadrados)
+  ok    jugador_por_id encuentra al jugador correcto
+  ok    jugador_por_id no encuentra lo que no existe
+
+===== NOTAS POR PARTIDO =====
+  Colo-Colo 1-0 O'Higgins
+  ok    los 22 salen con nota (22)
+  ok    todas las notas caen entre 3 y 10 (0 fuera)
+  Vicente Muñoz marco y saco 7.9; la media de su equipo fue 7.0
+  ok    el que marca puntua por encima de su equipo
+  nota media ganando 6.84, perdiendo 5.48
+  ok    ganar puntua mejor que perder
+  ok    se guardan solo las ocho ultimas notas (8)
+  ok    sin partidos, la media de notas es cero, no un 6 regalado
+  ok    la forma se queda en su rango tras jugar (40)
+
+===== LA DIRECTIVA: OBJETIVO, CONFIANZA Y DESPIDO =====
+  a Colo-Colo (rep 88) le piden: Salir campeón
+  a D. Limache (rep 67) le piden: Evitar el descenso
+  ok    al grande le exigen mas que al chico (1 vs 14)
+  ganar al chico suma 1, ganar a uno grande suma 3
+  ok    ganarle a uno grande vale mas
+  ok    perder baja la confianza
+  ok    una racha de derrotas acaba en despido (confianza 10)
+  ok    queda marcado como despedido
+  ok    despues del despido ya no se mueve nada
+  campeon cumpliendo: confianza 98 (+43)
+  ok    cumplir y ganar la liga sube la confianza
+  decimocuarto fallando: confianza 6 (-49)
+  ok    fallar el objetivo baja la confianza
+  ok    el humor de la directiva se lee distinto en cada caso
+
+===== EL BANCO: CUOTA FRANCESA, MORA Y LIQUIDACION =====
+  ok    interes cero reparte a partes iguales (100000)
+  ok    la cuota francesa calcula lo que calcula la formula (88849, se esperaban 88849)
+  ok    pedir un credito de una linea valida no da error ()
+  ok    el monto del credito entra a la caja (500000 -> 5382733)
+  ok    queda un prestamo anotado
+  ok    la cuota guardada coincide con la formula sobre el monto y plazo de verdad
+  ok    se puede pedir una segunda linea
+  ok    la tercera linea se niega: tope de dos
+  ok    con una linea abierta todavia cabe el bono social
+  ok    no se puede emitir un segundo bono social a la vez
+  ok    prepagar con menos caja de la que debes se niega
+  ok    con caja de sobra, prepagar se hace
+  ok    el credito prepagado desaparece de la lista
+  ok    prepagar cobra exactamente la deuda pendiente
+  ok    renegociar baja la cuota (254188 -> 209622)
+  ok    queda marcado como renegociado
+  ok    no se puede renegociar el mismo credito dos veces
+  ok    la semana cobra la cuota de verdad (7239041 -> 7140816)
+  ok    la deuda baja cada semana
+  ok    pagando todas las cuotas el credito se cierra solo
+  ok    el sobregiro cobra intereses sobre la caja en rojo
+  ok    una semana en rojo cuenta como una
+  ok    sanear la caja pone el contador de semanas en rojo a cero
+  ok    entra en mora exactamente a la cuarta semana en rojo (semana 4)
+  ok    el veedor llega exactamente a la octava semana en rojo (semana 8)
+  ok    doce semanas seguidas en rojo liquidan el club
+  ok    la senal 'liquidado' se dispara de verdad
+  ok    se avisa en cada escalon, no solo al final (3 avisos)
+  ok    el club de la prueba esta de verdad en mora
+  ok    en mora, ningun banco abre una linea nueva
+  ok    el bono social SI se puede emitir incluso en mora
+  ok    caja en azul es 'AL DÍA'
+  ok    caja en rojo bajo mora es 'SOBREGIRO'
+  ok    en mora el estado dice 'EN MORA'
+  ok    con veedor el estado lo dice
+  ok    vuelven los mismos prestamos (2)
+  ok    la deuda de cada prestamo vuelve exacta
+  ok    las semanas en rojo vuelven exactas
+
+===== CUERPO TECNICO =====
+  ok    sin staff, los bonificadores estan a uno
+  ok    se contrata al ayudante de campo
+  ayudante nivel 1 cuesta 2.6M EUR
+  ok    el fichaje del staff sale de la caja
+  ok    contratar al ayudante sube el ataque del equipo (1.015)
+  subir de 1 a 2 cuesta 10.5M EUR; de 2 a 3, 23.7M EUR
+  ok    cada nivel cuesta mas que el anterior
+  ok    el jefe medico acorta las lesiones (8 -> 5)
+  ok    pero nunca las cura por decreto
+  ok    el ojeador trae informes
+  ok    el preparador fisico da aguante
+  ok    el cuerpo tecnico cobra todas las semanas
+  ok    aplicar el staff dos veces no duplica el efecto
+
+===== INSTALACIONES =====
+  19 obras en el catalogo
+  ok    estan las 19 instalaciones del HTML
+  ok    se puede empezar una obra
+  ok    la obra se paga por adelantado
+  ok    la obra NO sube el nivel al momento
+  ok    queda constancia de que hay obra en marcha
+  ok    no se puede empezar dos veces la misma obra
+  ok    la obra termina en su plazo (4 semanas)
+  ok    y deja de estar en marcha
+  calidad del estadio nivel 1: entran 37599 en vez de 36189
+  ok    la calidad del estadio llena mas el estadio
+  aforo: 47000 de fabrica, 61100 con dos tribunas
+  ok    construir tribunas amplia el aforo
+  ok    aplicarlo tres veces no multiplica el aforo
+  Tienda y museo: 290k EUR al mes
+  Museo y turismo deportivo: 218k EUR al mes
+  Estacionamientos: 64k EUR al mes
+  ok    la tienda, el museo y los estacionamientos dan ingresos
+  ok    y suman de verdad (573k EUR)
+  ok    el centro medico y la rehabilitacion acortan lesiones (3)
+  ok    comedor y piscina dan aguante (2)
+  ok    el centro de entrenamiento acelera el progreso (1.36)
+  ok    academia y residencia suben el techo de la cantera (3)
+  ok    el huerto abarata la operacion
+  gimnasio: nivel 1 cuesta 11.7M EUR, nivel 4 cuesta 187.5M EUR
+  ok    el cuarto nivel cuesta mucho mas que el primero
+
+===== ROLES, ENTRENAMIENTO, FEDERACION Y ESTADIO =====
+  ok    el rol arranca al tomar el mando
+  cargo: entrenador   manda=false   puede fichar=true
+  ok    el DT clasico puede fichar
+  de ayudante: ayudante de campo   mercado bloqueado=true
+  ok    se puede empezar de ayudante de campo
+  ok    el ayudante NO puede fichar
+  ok    se puede entrar de interino
+  ok    el interino tiene el mercado cerrado
+  ok    el entrenamiento arranca con el mando
+  carga: baja 3.6, normal 6.0, alta 9.0
+  ok    entrenar fuerte carga mas las piernas que entrenar suave
+  ok    el arbol del DT no penaliza al equipo (1.00)
+  sin playoffs: lider Palestino, campeon Palestino
+  ok    sin playoffs votados, campeon = lider de la tabla
+  con playoffs: de 30 finales, el lider perdio el titulo 23 veces
+  ok    con playoffs el lider puede perder el titulo
+  perfil de tu estadio: cuenco de 1 niveles, techo anillo, 51700 butacas
+  ok    el perfil trae las 9 claves del visor 3D (faltan: [])
+  ok    el rival tambien tiene perfil de estadio
+  ok    y es siempre el mismo
+
+===== PERFIL DE ESTADIO (lo que ve el visor 3D) =====
+  Colo-Colo: cuenco de 3 niveles, techo anillo, 47000 butacas
+  ok    el mismo club da siempre el mismo estadio
+  ok    el estadio no depende de la semilla de la partida
+  formas distintas en el mundo: 5
+  ok    no todos los clubes tienen el mismo estadio (5 formas)
+  ok    los niveles y el aforo son coherentes con el club (0 raros)
+
+===== PUENTE AL 3D (los 22 al campo) =====
+  Colo-Colo viste #000000 / #ffffff   |   U. de Chile viste #003da5 / #d50032
+  ok    el club conserva su color de camiseta
+  ok    el once que va al 3D tiene 11 (11)
+  ok    hay una ficha por jugador
+  ok    la ficha trae dorsal, aspecto y altura
+  altura: central 1.87 m, lateral 1.75 m, portero 1.90 m
+  ok    el central es mas alto que el lateral
+  ok    el mismo jugador tiene siempre el mismo aspecto
+  Colo-Colo de campo #000000, portero #2fa06a
+  ok    la camiseta del portero contrasta con la del equipo (1.23)
+  ok    la formacion 4-3-3 trae 11 ranuras
+
+===== COPA: ELIMINACION DIRECTA =====
+  32 clubes inscritos -> 32 en el cuadro (Dieciseisavos)
+  ok    el cuadro es una potencia de dos (32)
+  ok    no se inventan participantes
+  rondas: Dieciseisavos, Octavos de final, Cuartos de final, Semifinales, Final
+  ok    la copa tiene campeon: U. de Chile
+  ok    se juegan las rondas justas (5 para 32 clubes)
+  ok    las rondas se llaman por su nombre
+  ok    el campeon estaba inscrito
+  premio de copa: 2.6M EUR (fijo, no escalado al tamano del club)
+  ok    jugar_hasta_el_final devuelve campeon
+  el local: 1.35 goles y 4.44 remates en casa | 1.21 goles y 4.11 remates en neutral
+  ok    en cancha neutral se pierde la ventaja de local (4.44 remates vs 4.11)
+
+===== COPAS CONTINENTALES =====
+  torneos sorteados: ["lib", "sud", "ucl", "uel", "asia", "afr", "oce", "conc"]
+  ok    se sortean al menos dos torneos continentales
+  lib   Copa Libertadores            16 inscritos,  0 vivos, Grupos · Fecha 1
+  sud   Copa Sudamericana            16 inscritos,  0 vivos, Grupos · Fecha 1
+  ucl   Champions League             16 inscritos,  0 vivos, Grupos · Fecha 1
+  uel   Europa League                16 inscritos,  0 vivos, Grupos · Fecha 1
+  asia  Champions de Asia            16 inscritos,  0 vivos, Grupos · Fecha 1
+  afr   Copa África de Clubes        16 inscritos,  0 vivos, Grupos · Fecha 1
+  oce   Liga de Oceanía              16 inscritos,  0 vivos, Grupos · Fecha 1
+  conc  Concachampions               16 inscritos,  0 vivos, Grupos · Fecha 1
+  ok    ningun torneo se sortea vacio (0 vacios)
+  ok    ningun club juega dos copas de su misma confederacion (0)
+  ok    tu club juega una copa continental
+  la tuya: Copa Libertadores con 16 inscritos
+  campeon de Copa Libertadores: Colo-Colo
+  campeon de Copa Sudamericana: Coquimbo Unido
+  campeon de Champions League: Juventus
+  campeon de Europa League: Ath. Bilbao
+  campeon de Champions de Asia: Al-Hilal
+  campeon de Copa África de Clubes: Ceramica C.
+  campeon de Liga de Oceanía: Perth Glory
+  campeon de Concachampions: LA Galaxy
+  ok    todos los torneos llegan a tener campeon (8 de 8)
+  ok    ganar un continental de clubes celebra el titulo (vitrina 0 -> 1)
+
+===== SELECCIÓN NACIONAL Y MUNDIAL DE CLUBES =====
+  ok    tomar el mando crea la selección
+  ok    la selección que sigues es la de tu club, no Chile a fuego (CHI)
+  ok    las seis grandes valen 88
+  ok    se publica al menos una prenómina en tres temporadas
+  ok    se cierra al menos una convocatoria en tres temporadas
+  ok    la nómina final no pasa de 18 (18)
+  ok    quedan resultados de la selección anotados
+  ok    nueva_temporada() devuelve el resumen de selecciones
+  ok    la Copa del Mundo se jugó al llegar a 2028 (Argentina)
+  ok    los continentales se re-sortean cada temporada con el mismo número de torneos (3)
+  ok    una partida con selección se guarda
+  ok    esa partida se recarga
+  ok    la selección vuelve al cargar
+  ok    vuelve el mismo campeón del mundo (Argentina)
+  ok    vuelven los mismos resultados anotados (10)
+
+===== ROLES: EL PULSO DE LA CARRERA ENGANCHADO A MUNDO =====
+  ok    arranca de interino
+  ok    tras_jornada() corre solo desde avanzar_semana(): las fechas de interinato bajan (5 -> resuelto)
+  ok    a las ocho semanas el interinato ya se resolvio solo (cinco fechas)
+  prestigio semana a semana: 50, 50, 49, 50, 51, 50, 49, 50, 50, 51, 51
+  ok    diez jornadas mueven el prestigio del entrenador en algun momento (50 -> 51)
+  ok    nueva_temporada() trae el resumen de roles (prestigio 49)
+  ok    de entrenador normal, la directiva SI te puede echar
+  ok    y con la confianza hundida queda despedido de verdad
+  ok    al dueño la directiva NO lo puede echar
+  ok    la confianza baja igual -sigue midiendo el apoyo del entorno-
+  ok    pero no lo despide: es el dueño
+  ok    se guarda una partida en modo dueño
+  ok    al recargar, la directiva sigue sin poder despedir al dueño
+
+===== CANTERA: CAMADA, BECAS Y LINAJE =====
+  ok    tomar el mando crea la cantera
+  ok    se siembran leyendas al empezar (44)
+  ok    al menos una temporada trae camada nueva
+  ok    quedan canteranos identificables en el mundo (48)
+  ok    becar a un juvenil lo marca becado
+  ok    la beca se cobra
+  ok    una partida con cantera se guarda
+  ok    esa partida se recarga
+  ok    la cantera vuelve al cargar
+  ok    vuelven las mismas leyendas (19)
+  ok    la beca sobrevive al guardado
+
+===== CESIONES Y CLÁUSULAS: LA LETRA PEQUEÑA =====
+  ok    tomar el mando crea las cesiones
+  ok    se puede ceder a un canterano ()
+  ok    queda marcado como cedido
+  ok    sale de la plantilla mientras esta cedido
+  ok    al cerrar la temporada, la cesion se resuelve sola
+  ok    el canterano cedido vuelve a casa
+  ok    vuelve con la misma media o mejor (66 -> 72)
+  ok    pactar cláusula queda fijado (5100k)
+  ok    blindar sube la cláusula sobre la pactada (5100k -> 6960k)
+  ok    se puede pagar la clausula de un jugador rival ()
+  ok    el jugador pasa a ser tuyo tras el clausulazo
+  ok    el club vendido cobra la clausula
+  ok    una partida con cesiones y clausulas se guarda
+  ok    la clausula blindada sobrevive al guardado (6960k)
+  ok    pide mas de lo que cobra para renovar (59375 sobre 50000)
+  ok    se puede renovar a uno tuyo
+  ok    renovar le deja el sueldo que pedia (59375)
+  ok    firma entre dos y cuatro temporadas (4)
+  ok    con clausula de salida cobra menos que lo que pedia (60750 < 67500)
+  ok    y le queda una clausula puesta (200000)
+  ok    no se puede renovar a un jugador que no es tuyo
+
+===== DESAFÍOS: LOS OCHO DEL ASISTENTE =====
+  ok    'pobreza' deja la caja en el 4% de la referencia (263888, esperados 263888)
+  ok    'local' deja el plantel sin extranjeros (0)
+  ok    y repone hasta al menos 20 fichas (20)
+  ok    un empate no activa 'invicto'
+  ok    la primera derrota sí activa 'invicto' (fin_partida)
+  ok    es_clasico() reconoce al menos un clásico chileno en la Primera
+  ok    'derbis' parte la confianza a la mitad al perder el clásico (55 -> 28)
+  ok    trotamundos no actua a la primera temporada
+  ok    trotamundos obliga a cambiar de club a la segunda
+  ok    una partida con desafíos se guarda
+  ok    vuelven los mismos desafíos al cargar (["pobreza", "invicto"])
+
+===== CREAR TU CLUB: FUNDAR DE CERO =====
+  ok    el mundo trae la Primera B de Chile
+  ok    fundar_club() devuelve el club fundado
+  ok    el club queda con el nombre elegido
+  ok    la reputación de fundación es 58 (58)
+  ok    los colores son los del escudo del juego
+  ok    sigue en Ascenso -se refunda el club, no se lo asciende
+  ok    el plantel se rehizo entero (25 fichas)
+  ok    fundar toma al colista real de Ascenso, no cualquiera
+  ok    tomar_el_mando() ya se hizo solo: no hace falta un paso más
+  ok    el club fundado sigue en el calendario de su liga -mismo objeto, no uno nuevo
+  ok    fuera de Chile toma el más flojo de su única división
+  ok    una partida con un club fundado se guarda
+  ok    el club fundado vuelve igual al cargar
+
+===== LOGROS: MEMORIA DEL CLUB Y GALA DE FIN DE AÑO =====
+  ok    tomar el mando crea la memoria del club
+  ok    el partido dirigido queda en el cara a cara (1 jugado)
+  ok    nueva_temporada() trae la gala de fin de año (equipo ideal, mejor joven...)
+  ok    con seis temporadas del club mas fuerte de su liga, algo se desbloquea o se gana un título
+  ok    una partida con memoria de club se guarda
+  ok    vuelven los mismos logros conseguidos (1)
+  ok    vuelve el mismo muro de títulos (0)
+
+===== ASCENSOS, DESCENSOS Y PREMIOS =====
+  ok    las dos divisiones estan marcadas
+  campeon: D. Iquique   suben: Recoleta, Rangers   bajan: O'Higgins, Unión Española
+  ok    el campeon cobra el premio
+  ok    ganar la liga sube la reputacion del club
+  ok    los dos ultimos estan ahora en segunda
+  ok    los dos primeros de segunda estan ahora en primera
+  ok    el descendido ya no esta en primera
+  ok    la division del club acompana al cambio de liga
+  ok    las dos ligas conservan su tamano (16 y 16)
+  television: el descendido cobra 861k EUR, el ascendido 1.4M EUR
+  ok    bajar de division cuesta dinero de television
+  ok    el ascendido tiene partido en el calendario nuevo
+
+===== VENDER: TRANSFERIBLES, OFERTAS ENTRANTES Y RESCISIÓN =====
+  ok    listar transferible marca al jugador
+  ok    listar transferible castiga la moral
+  ok    listar dos veces no castiga dos veces
+  ok    cae al menos una oferta en 100 semanas (1 intentos)
+  ok    la oferta es por un jugador que sigue siendo tuyo
+  ok    el comprador nunca eres tu mismo
+  ok    rechazar quita la oferta de la lista
+  ok    rechazar no mueve al jugador
+  ok    aceptar mueve al jugador al comprador
+  ok    el vendido sale de tu plantilla
+  ok    el dinero de la venta entra a tu caja
+  ok    el dinero sale de la caja del comprador
+  ok    vendido, ya no queda transferible
+  ok    rescindir saca al jugador de la plantilla (24 -> 23)
+  ok    rescindir paga el finiquito y la comision (2.8M EUR)
+  ok    el rescindido no aparece dos veces ni queda huerfano en la lista
+  ok    vuelven las mismas ofertas pendientes al cargar (1)
+  ok    la oferta cargada resuelve jugador y club como objetos reales
+
+===== RED DE OJEADORES CON NOMBRE Y SESGO =====
+  ok    sin jefe de ojeadores, la red cubre 0 paises
+  ok    no se puede cubrir un pais sin jefe de ojeadores (Primero contrata un jefe de ojeadores)
+  ok    el jefe de ojeadores llega al nivel maximo (5)
+  ok    el tope de paises sigue la tabla del nivel, recortada a 3 (6)
+  ok    se contrata un ojeador en ARG
+  ok    se contrata un ojeador en ESP
+  ok    las dos coberturas quedan activas
+  ok    el ojeador de ARG tiene nombre
+  ok    el sesgo del ojeador de ARG es uno de los cuatro conocidos
+  ok    se puede retirar una cobertura
+  ok    al retirar ESP no queda ni la red ni el ojeador
+  ok    un jugador propio se conoce del todo
+  ok    un pais cubierto da nivel*0.9 (4.5)
+  ok    tu propio pais sin cobertura extra da 1.5 (1.5)
+  ok    un pais ajeno y sin cubrir da 0 (0.0)
+  ok    sin conocerlo la media sale en rango, no exacta (87-96)
+  ok    el rango es estable: no cambia entre llamadas para el mismo jugador
+  ok    en modo ciego se ve una palabra, no un rango (Generacional)
+  ok    la palabra es una de las siete de ESCALA_CIEGA (Generacional)
+  ok    la palabra tambien es estable entre llamadas
+  ok    en modo ciego, un jugador propio sigue mostrando su numero real
+  ok    ojear a un rival funciona ()
+  ok    el jugador ojeado queda marcado en mundo.ojeados
+  ok    ojeado, se conoce del todo
+  ok    ojeado, la media sale exacta
+  ok    ojear gasta de verdad, del presupuesto de ojeo o de la caja
+  ok    no se puede ojear dos veces al mismo jugador
+  ok    el ojeador de ARG suma un informe mas (0 -> 1)
+  ok    un ojeador ignorado sistematicamente renuncia y se pierde la cobertura
+  ok    una partida con red de ojeadores se guarda
+  ok    esa partida se recarga
+  ok    vuelve el mismo presupuesto de ojeo
+  ok    vuelve la misma cobertura de paises
+  ok    vuelven los jugadores ya ojeados
+
+===== LA MESA DE NEGOCIACIÓN =====
+  ok    hay un objetivo para negociar
+  ok    se abre la mesa ()
+  ok    queda una mesa abierta
+  ok    el pedido inicial coincide con valor_pedido()
+  ok    la oferta fija de salida es el 70% del pedido
+  ok    ajustar pct sube de 5 en 5 (0 -> 5)
+  ok    pct no baja de 0 (0)
+  ok    ajustar fijo al alza sube el fijo
+  ok    ajustar anios suma de a uno
+  ok    una oferta muy baja no cierra (club_pide_mas)
+  ok    la ronda avanza o la mesa se corta
+  ok    cerrar_negociacion vacía la mesa
+  ok    el fichado pasa a ser tuyo
+  ok    aparece en tu plantilla
+  ok    el rol pactado queda escrito en Vestuario
+  ok    los anios pactados quedan escritos
+  ok    una oferta generosa termina cerrando un fichaje en un numero razonable de intentos
+  ok    las cuotas pactadas quedan registradas en Cesiones
+  ok    el bono pactado queda registrado en Cesiones
+  ok    la clausula pactada queda registrada en Cesiones
+  ok    el 20%% de venta futura queda pactado en Cesiones
+  ok    los pagos de la mesa quedan anotados en el libro financiero (4)
+
+===== CONSEJEROS DEL DIRECTORIO =====
+  ok    sin caja no se contrata un consejero (No hay caja para contratarlo: hacen falta 600000.)
+  ok    se contrata al consejero deportivo
+  ok    queda contratado
+  ok    el honorario semanal cuenta un asiento (15000)
+  ok    se contrata al consejero de marketing
+  ok    hay dos consejeros a la vez
+  ok    no cabe un tercer consejero (El directorio solo tiene sitio para 2 consejeros a la vez.)
+  ok    el honorario cuenta los dos asientos
+  ok    el consejero deportivo suma 0.4 al nivel de ojeo en cualquier pais (0.40 vs 0.00)
+  ok    el consejero de marketing sube el patrocinio un 10% (1100780 vs 1210858)
+  ok    se cesa al consejero de marketing
+  ok    el asiento queda libre
+  ok    el honorario baja a un solo asiento
+  ok    hay leyendas sembradas para elegir embajador
+  ok    candidatas_embajador() devuelve al menos una terna (3)
+  ok    las candidatas son deterministas para el mismo año
+  ok    sin caja no se puede fichar al embajador
+  ok    se ficha al embajador
+  ok    queda registrado con su nombre
+  ok    el fichaje cobra el costo exacto, nivel incluido (1032000)
+  ok    el embajador suma socios cada semana (20187 -> 20212)
+  ok    se cesa al embajador -hay caja para el finiquito-
+  ok    el puesto queda vacante
+  ok    de entrenador (dt) todavia no hay a quien pagarle
+  ok    el sueldo mensual del entrenador empleado es el correcto (-100000)
+  ok    siendo director, el entrenador empleado cobra su sueldo al cierre de mes
+
+===== GUARDAR Y CARGAR =====
+  ok    sin lineas lanzadas la tienda no da nada (0)
+  ok    se lanza una linea de tienda ()
+  ok    y ya rinde todos los meses (16064)
+  ok    se crea una mentoria
+  ok    al pupilo le sube la moral al ser apadrinado (79 -> 87)
+  ok    queda registrada
+  ok    y ya no se le puede apadrinar dos veces
+  ok    sin cuerpo tecnico no hay bono que repartir
+  ok    con cuerpo tecnico se reparte el bono
+  ok    yendo primero sube 5 de moral (5)
+  ok    y la moral del plantel sube de verdad
+  ok    no se puede repartir dos veces el mismo ano
+  ok    los ingresos del ejercicio suman el total (11615310)
+  ok    el resultado es ingresos menos gastos
+  ejercicio: entran 11615310, salen 9483680, resultado 2131630, masa salarial 51%
+  ok    la masa salarial sobre ingresos sale en un rango creible (51%)
+  ok    tomar el mando crea la hinchada
+  ok    hay cinco segmentos de aficion (5)
+  abonos: popular 9249 socios / 81391 | premium 7984 socios / 242714
+  ok    el abono popular llena mas que el premium
+  ok    pero el premium recauda mas
+  ok    con el animo alto la barra no empeora (55 -> 76)
+  ok    y con el animo por el suelo se enfada (36)
+  ok    la directriz queda puesta
+  ok    pedirle algo le desgasta la sintonia (60 -> 58)
+  te hace caso: 100% con sintonia 100, 31% con sintonia 0
+  ok    cuanta mas sintonia, mas caso te hace
+  roles: once ofensivo ata x1.049 def x0.978 | once defensivo ata x0.980 def x1.049
+  ok    un once de llegadores ataca mas que uno de pivotes
+  ok    y defiende menos: pedir roles ofensivos REGALA la espalda
+  ok    el factor de ataque del club recoge el efecto de los roles
+  Carlos Navarro como central marcador 0.89, como central de salida 0.84
+  ok    el mismo central no vale lo mismo para marcar que para salir jugando
+  arenga: ataque 52.22 -> 52.77
+  ok    arengar sube la fuerza de ataque de verdad
+  ok    y el jugador queda encendido
+  ok    no se puede arengar dos veces seguidas al mismo
+  ok    una jugada sin especialistas rinde por debajo de 1 (0.82)
+  ok    sin once no se inventa un factor: devuelve 1
+  ok    yendo perdiendo el plan sale a por el partido
+  ok    yendo ganando el plan cierra el partido
+  ok    empatando no se toca nada
+  credito de 1.000.000 a 26 cuotas: 43869 por cuota, 1140594 en total
+  ok    la cuota francesa cubre deuda mas intereses
+  ok    sin intereses la cuota es la division exacta
+  ok    se puede pedir un credito
+  ok    el credito entra en caja
+  ok    el credito queda vigente
+  ok    no se pueden abrir mas de dos lineas de deuda
+  ok    doce semanas en rojo liquidan el club (12 semanas)
+  ok    y por el camino se pasa por la mora
+  taquilla: tarde de sabado 25940, lunes por la noche 17640
+  ok    jugar el lunes por la noche llena menos el estadio
+  ok    hay cuatro horarios para elegir
+  ok    el horario elegido manda en el factor de publico
+  ok    y el lunes paga mas derechos de television
+  ok    el clima de una semana es estable (lluvia)
+  ok    el informe del rival se puede usar una vez
+  ok    y solo una: lo que pagaste ya lo gastaste
+  ok    la promesa de la rueda de prensa se cobra
+  ok    y no se cobra dos veces
+  ok    cumplir la promesa sube el animo (60 -> 66)
+  ok    y fallarla lo hunde (66 -> 58)
+  charla: calmar +17.6 de moral total, sacudir -6.9
+  ok    los tonos no dan lo mismo: elegir importa
+  ok    un grito con palabrota se lee como furia
+  ok    un reproche seco se lee como exigencia
+  ok    un mensaje de confianza se lee como elogio
+  ok    una indicacion de pizarra se lee como tactica
+  ok    el psicologo deportivo existe como puesto contratable
+  ok    estado_mental trae txt y color
+  ok    satisfaccion desglosa 'min'
+  ok    satisfaccion desglosa 'rend'
+  ok    satisfaccion desglosa 'tact'
+  ok    satisfaccion desglosa 'inst'
+  ok    satisfaccion desglosa 'total'
+  ok    def_rol trae nombre y minutos exigidos (6 campos)
+  ok    el historial medico guarda 'n'
+  ok    el historial medico guarda 'sem'
+  ok    el historial medico guarda 'anio'
+  ok    el mejor del plantel no acepta ser prescindible
+  ok    al ultimo del plantel no le puedes prometer ser intocable
+  rol: Luciano Cabral de intocable a titular -> Se lo tomó mal: -5 de moral (moral 71 -> 66)
+  ok    rebajarle el papel a un crack le cuesta moral
+  ok    y el papel nuevo queda escrito
+  ok    el arbol del DT tiene ramas (5)
+  ok    sin el nodo padre no se puede abrir el hijo aunque sobren puntos
+  ok    y el motivo lo dice: antes: Negociador
+  ok    con el padre puesto y los puntos justos, se abre
+  ok    y el coste se cobra (2 puntos gastados)
+  arbol DT: sin nodos x1.000, con genio x1.060
+  ok    abrir el nodo del banquillo mejora al equipo de verdad
+  ok    al salon entran los dos que dejaron huella (2)
+  ok    dos titulos y 200 partidos pesan mas que 30 goles (manda Capitan)
+  ok    y el motivo lo dice: 4 goles · 200 partidos · 2 títulos
+  ok    la partida se guarda
+  1200 jugadores -> 75 KB comprimidos, 75 ms
+  ok    el fichero es manejable (75 KB)
+  cargado en 77 ms
+  ok    la partida se carga
+  ok    vuelve el almanaque (2026, semana 11)
+  ok    vuelve tu club
+  ok    vuelven los 1200 jugadores
+  ok    vuelve la caja exacta
+  ok    vuelven las ligas
+  ok    vuelve la jornada (10)
+  ok    vuelve el consejero deportivo contratado
+  ok    vuelve el embajador contratado
+  ok    vuelve el modo ciego activado
+  ok    vuelve la tabla completa, en el mismo orden y con los mismos puntos
+  ok    vuelven los cuatro interruptores tacticos, los puestos y los no puestos
+  ok    vuelve el once elegido a mano (11)
+  ok    y son exactamente los mismos once, en el mismo orden
+  ok    vuelve la linea de tienda lanzada
+  ok    vuelve la division de cada liga
+  ok    vuelve la copa
+  ok    vuelve el cuadro de la copa (8 vivos, ronda 2)
+  ok    los clubes vivos son los mismos y en el mismo orden
+  ok    vuelve la directiva
+  ok    vuelve la confianza y el objetivo (46, Clasificar a copa internacional (top 4))
+  ok    vuelven los niveles del cuerpo tecnico
+  ok    el staff cargado vuelve a mover el bonificador del motor (0.989)
+  ok    vuelven prensa, parte medico y logros
+  ok    vuelve el humor de la hinchada (animo 46)
+  ok    vuelven los 2 torneos continentales
+  ok    vuelve el cuadro de lib (0 vivos, ronda 2)
+  ok    un jugador vuelve identico (Diego Sánchez, 71, dorsal 20)
+  ok    se puede seguir jugando tras cargar
+  ok    el guardado aparece en la lista (2)
+
+===== TEMPORADAS COMPLETAS =====
+  2026: campeon D. Iquique con 51 puntos (15-6-9), 1600 jugadores en el mundo
+  ok    los goles a favor igualan a los goles en contra (568/568)
+  2027: campeon Colo-Colo con 53 puntos (15-8-7), 1561 jugadores en el mundo
+  ok    los goles a favor igualan a los goles en contra (595/595)
+  2028: campeon Coquimbo Unido con 61 puntos (18-7-5), 1546 jugadores en el mundo
+  ok    los goles a favor igualan a los goles en contra (603/603)
+  tres temporadas en 12679 ms
+  ok    nadie sigue jugando pasados los 40 (0)
+  ok    ninguna plantilla se vacia con los anos (0)
+  el club con mas porteros tiene 4
+  ok    ninguna plantilla se deforma tras tres temporadas (0)
+
+===== ECONOMIA (las curvas del HTML, sin retocar) =====
+  media 60 -> valor 1.8M EUR, sueldo 42k EUR
+  media 70 -> valor 6.3M EUR, sueldo 97k EUR
+  media 80 -> valor 22.3M EUR, sueldo 224k EUR
+  media 90 -> valor 79.1M EUR, sueldo 517k EUR
+  ok    de 60 a 70 el valor mas que se duplica
+  ok    de 70 a 80 el valor mas que se duplica
+  ok    de 80 a 90 el valor mas que se duplica
+  mismo 78: a los 19 vale 31.0M EUR, a los 34 vale 2.3M EUR
+  ok    la joya de 19 vale mucho mas que el veterano de 34
+  caja de referencia: rep 60 -> 2.3M EUR | rep 70 -> 8.2M EUR | rep 88 -> 79.2M EUR
+  ok    un grande maneja mucha mas caja que uno medio
+
+===== SALA DE PRENSA (portavoz, television, portadas y el ano contado) =====
+  ok    mirar la proyeccion anual cinco veces no mueve un peso de la caja (6597191 -> 6597191)
+  ok    en bloque la television no lleva multiplicador
+  rep 88 -> vender solo multiplica x1.35
+  ok    negociar por tu cuenta con rep 88 da x1.35
+  ok    y la television paga el multiplicador de verdad (2773543 sobre 2054476)
+  ok    volver al bloque quita el multiplicador
+  ok    de entrada das tu la cara
+  ok    se puede nombrar portavoz a un capitan
+  ok    la rueda se abre
+  ok    y se le puede quitar
+  misma respuesta: con portavoz +2 de moral, sin portavoz +3
+  ok    con portavoz la rueda mueve menos
+  ok    el archivo empieza vacio
+  de 40 partidos se archivaron 18 portadas
+  ok    no sale portada de cada partido, pero si de bastantes
+  ok    la portada mas nueva va primera y tiene titular
+  ok    el mismo partido escribe siempre el mismo titular (no toca el azar)
+  relato: La temporada 2026 de Colo-Colo terminó en el puesto 1. Sin títulos esta vez. La prensa mantuvo la distancia.
+  ok    el narrador cuenta la temporada en un parrafo
+  ok    y nombra a tu club
+
+===== AUSPICIO (la marca del pecho) =====
+  ok    el club tiene mercado de auspicios desde el primer dia
+  ok    hay 3 marcas sobre la mesa (3)
+  ok    y todavia ninguna firmada
+  ok    sin firmar no entra un peso
+  Cerveza Andina pide top 10 por 161.2M EUR
+  Cripto Winner pide top 10 por 148.7M EUR
+  Cementos Roca pide top 10 por 117.2M EUR
+  ok    los nombres de las marcas llegan legibles, sin ceros ni cuatros
+  ok    se puede firmar la primera oferta
+  ok    y las otras marcas se retiran
+  ok    no se puede firmar dos veces en la misma temporada
+  ok    el aporte gotea en 42 semanas (3.8M EUR a la semana)
+  ok    y la semana lo ingresa de verdad en la caja
+  ok    terminar por debajo del top pactado deja molesta a la marca
+  ok    y el contrato se acaba con la temporada
+  ofertas tras fallar: 341.4M EUR   ·   tras cumplir: 411.4M EUR
+  ok    y al ano siguiente las ofertas llegan mas flacas
+  base de Colo-Colo (rep 88): 128.8M EUR   ·   base de D. Limache (rep 67): 12.0M EUR
+  ok    un grande cobra mas por la camiseta que un chico
+
+===== EPOCAS DORADAS Y PRECIOS DINAMICOS =====
+  ok    el mundo tiene mapa del talento
+  ok    sin epoca marcada, el pais no lleva bono
+  ok    en epoca dorada las camadas suben un 13%
+  ok    y el pais de al lado sigue igual
+  ok    la epoca caduca sola cuando pasa su ultimo ano
+  ok    en decadencia las camadas bajan un 10%
+  ok    el mapa del talento enseña los dos paises marcados (2)
+  CHI: dorada hasta 2031 (sus camadas salen un 13% por encima de lo normal)
+  ARG: decadencia hasta 2030 (sus camadas salen un 10% por debajo de lo normal)
+  proyeccion media de la camada: con epoca dorada 73.5, sin ella 63.7
+  ok    la epoca dorada se nota de verdad en la camada
+  ok    de entrada el precio es fijo
+  ok    y con precio fijo da igual contra quien juegues
+  ok    el interruptor enciende los precios dinamicos
+  entrada de 8: contra un rep 90 se cobra 13, contra un rep 45 se cobra 6
+  ok    contra un grande la entrada sube
+  ok    contra un chico la entrada baja
+  ok    con techo: nunca pasa de 20
+  ok    y con suelo: nunca baja de 3
+  ok    subirla se paga en animo
+  ok    bajarla no molesta a nadie
+  ok    la pared empieza en blanco
+  ok    la frase se guarda limpia de espacios
+  ok    y recortada a 60 caracteres (60)
+  ok    sin elegir color, el cuerpo tecnico viste de los colores del club
+  ok    y si eliges uno, manda el tuyo
+  ok    cambiar de prenda borra los colores a mano: el abrigo no hereda el verde del chandal
+
+===== DEPARTAMENTO DE DATOS Y ACADEMIAS INTERNACIONALES =====
+  ok    el departamento empieza sin montar
+  ok    se puede montar el departamento
+  ok    y se paga de la caja
+  ok    queda en nivel 1
+  ampliar de 1 a 2 cuesta 17.6M EUR; de 2 a 3, 26.4M EUR
+  ok    cada nivel cuesta mas que el anterior
+  ok    se llega al tope
+  ok    y del tope no se pasa
+  en 60 semanas el modelo senalo 8 nombres
+  ok    el modelo acaba senalando a alguien
+  ok    y guarda como mucho ocho (8)
+  ok    con un jefe de ojeadores de la vieja escuela, la tension sube
+  ok    Maximiliano Silva: joven (17) y con recorrido (+20)
+  ok    y se pueden leer resueltos para la pantalla
+  ok    no hay sedes internacionales de entrada
+  ok    se puede abrir una sede
+  ok    y queda abierta
+  ok    que cuesta todas las semanas
+  ok    caben 3 sedes (3)
+  ok    y no una mas
+  llegan 3 joyas: Héctor Zamora (CHI, proy 94), Leandro Caicedo (BRA, proy 95), Ángel Muñoz (CHI, proy 93)
+  ok    llega una joya por sede
+  ok    Héctor Zamora viene con recorrido de verdad (+25)
+  ok    y `joyas_de_academia` NO las mete sola en el plantel: eso lo hace el mundo, y solo en pretemporada
+  ok    cerrar una sede la vende y devuelve caja
+
+===== HABILIDADES ESPECIALES: NACIMIENTO Y BONO DE VALOR =====
+  400 futbolistas, 216 nacieron con alguna habilidad especial
+  ok    al menos alguien nace con una habilidad
+  ok    una clave que no esta en HABS no se agrega
+  ok    dar_habilidad devuelve si de verdad se agrego (true)
+  ok    la habilidad queda anotada
+  ok    pedirla otra vez no la duplica
+  ok    tres habilidades o mas suben el valor (1858800 -> 1951700)
+  ok    la subida ronda el 5% del HTML (5.0%)
+
+===== LA CARRERA POR DENTRO (rival, leyenda viva, filiales y sucesion) =====
+  ok    de entrada no hay rival personal
+  ok    y sin rivalidad calentada tampoco aparece
+  rivalidad con U. de Chile: 100 de calor
+  ok    hay rival personal con nombre y apellido
+  ok    un duelo perdido se apunta
+  ok    y calienta la cosa (50 -> 60)
+  ok    un partido contra cualquier otro no cuenta como duelo
+  ok    no hay leyenda viva de entrada
+  ok    se puede nombrar a un veterano
+  ok    y queda ligado al club
+  ok    no caben dos leyendas vivas a la vez
+  tras seis semanas, la moral de los juveniles se movio
+  ok    y sus visitas se cuentan
+  ok    sin la habilidad Magnate no se compra ningun club
+  ok    y con la habilidad pero sin patrimonio, tampoco
+  ok    con Magnate y con dinero, se compra
+  ok    y sale de TU bolsillo, no de la caja del club
+  ok    el club queda como filial
+  ok    no se compra dos veces
+  ok    ni se compra el club que diriges
+  dividendo de U. de Chile: 3.6M EUR
+  ok    y reparten dividendos cada 12 semanas
+  ok    pero no todas las semanas
+  candidatos a sucederte: Raúl Valenzuela, Ángel Soto, Christian Benítez
+  ok    hay al menos dos candidatos (3)
+  ok    y ninguno elegido todavia
+  ok    se puede elegir uno
+  ok    y queda apuntado quien se queda el banquillo
+  ok    un candidato que no existe no se elige
+
+===== EL EDITOR Y EL IMPORTADOR DE CSV =====
+  ok    un nombre de una letra no se acepta
+  ok    se renombra un club
+  ok    y llega limpio de espacios (Deportivo Prueba)
+  ok    la reputacion se mueve (78 -> 82)
+  ok    y tiene techo (95)
+  ok    el aforo tiene suelo (2000 desde 18000)
+  ok    no se regenera el plantel del club que diriges
+  ok    el de otro club si
+  ok    y queda con plantilla (25, antes 25)
+  ok    se renombra a un jugador
+  ok    y se guarda
+  ok    subir la media sube el techo si hacia falta (91/91)
+  ok    y los atributos cuadran con la media pedida (91)
+  ok    la edad tiene tope (45)
+  par: 83 -> 91, y la media 91 -> 93
+  ok    el atributo sube
+  ok    y la media se recalcula sola
+  ok    el corte de pelo se puede fijar a mano
+  ok    y no toca el resto de la cara
+  ok    solo se guarda lo cambiado (1 clave)
+  importadas 2 fichas en 1 club(es), 1 problema(s)
+  ok    se leen las dos filas buenas (2)
+  ok    y se avisa del club que no existe
+  ok    con menos de 15 filas se AÑADEN, no se reemplaza (25 -> 27)
+  ok    y con su pais, su techo y su edad (URU, 80, 39)
+  ok    el futbolista importado esta en el plantel
+  ok    con 15 filas o mas se reemplaza el plantel entero (18)
+  censura: «Arturo Vidal» -> «Arturo V1dal» -> «Arturo Vidal»
+  ok    censurar cambia el nombre
+  ok    y `limpiar()` lo deshace exactamente: el camino de ida y vuelta cierra
+
+===== LA CIUDAD (terrenos, negocios, vecinos, permisos y seguridad) =====
+  ok    no hay terrenos de entrada
+  ok    sin el solar del centro no se puede levantar el centro comercial
+  ok    se compra el solar del centro
+  ok    y no dos veces
+  ok    y ahora si se levanta el centro comercial
+  ok    queda operando
+  el centro comercial renta 9.0M EUR por semana
+  ok    y renta todas las semanas
+  ok    la escuela no necesita terreno
+  ok    y trae socios de verdad (20187 -> 20772)
+  ok    la clinica sube un nivel de rehabilitacion gratis (0 -> 1)
+  ok    el cesped empieza impecable
+  tras el concierto: caja +2.8M EUR, cesped 72, vecinos 50
+  ok    el concierto llena la caja
+  ok    y destroza el campo
+  ok    se cuenta
+  ok    con el cesped a 40 los jugadores pierden precision (x0.920)
+  ok    y no se puede arrendar con el campo asi
+  ok    se puede resembrar
+  ok    y queda como nuevo
+  ok    sin penalizacion
+  ok    se puede hacer una gestion vecinal
+  ok    repartir entradas mejora la relacion (50 -> 56)
+  ok    y solo cabe una gestion al mes
+  ok    al mes siguiente vuelve a haber cupo
+  ok    no hay permiso municipal de entrada
+  ok    se puede solicitar
+  ok    y no dos veces a la vez
+  permiso en tramite: 5 semanas, 69% de probabilidad
+  ok    a las diez semanas la solicitud ya se resolvio
+  riesgo de incidente: 11.7% -> 9.1% tras invertir en seguridad
+  ok    pagar seguridad baja el riesgo de incidente
+  ok    y el mal ambiente con funa lo sube
+  ok    sin sancion, el aforo es el normal
+  ok    a puertas cerradas no entra un peso de taquilla
+  ok    y con aforo reducido entra el 40%
+  ok    la sancion caduca sola
+  ok    no se certifica sin cubierta solar
+  ok    los paneles ahorran de verdad cada semana
+  ok    con dos niveles de paneles ya se puede certificar
+  subvencion municipal estimada: 4.4M EUR (vecinos 65, negocios 3)
+  ok    y el municipio paga por el deporte de base
+  ok    la subvencion entra en la caja al cerrar el año
+
+===== LO QUE PEDIA EL DOCUMENTO (ventana, FPF, desgaste, staff, fondos) =====
+  ok    en la semana 1 el mercado esta abierto
+  ok    la ultima semana de la ventana de verano avisa de que queda una
+  ok    y a la siguiente ya esta cerrado
+  ok    y dice cuanto falta para la siguiente (11 semanas)
+  ok    la ventana de invierno vuelve a abrir
+  ok    y cierra a su hora
+  Mercado cerrado. Vuelve a abrir en 36 semanas.
+  ok    el fair play financiero no esta en vigor de entrada
+  ok    y sin estar en vigor no juzga a nadie
+  ok    la primera temporada por encima es un aviso
+  ok    la segunda es sancion
+  ok    con multa de verdad (18.6M EUR)
+  ok    y con el mercado de pago cerrado
+  ok    cuadrar las cuentas cierra el expediente
+  ok    se empieza entero
+  cuarenta semanas perdiendo y con funa: desgaste 100
+  ok    cuarenta semanas malas queman al entrenador
+  ok    y quemado, lo que dices en rueda vale menos
+  treinta semanas ganando: desgaste 40
+  ok    ganando se recupera
+  ok    hay un capitulo abierto en tu club actual
+  ok    cambiar de club abre un capitulo nuevo (2)
+  ok    y cierra el anterior con su año de salida
+  curriculum: Colo-Colo 2026-2026, Cobreloa 2026-hoy
+  ok    existe el puesto «arqueros»
+  ok    existe el puesto «nutri»
+  ok    existe el puesto «seg»
+  ok    existe el puesto «traductor»
+  ok    existe el puesto «cm»
+  ok    existe el puesto «utilero»
+  ok    el entrenador de arqueros suma a la defensa
+  ok    el nutricionista acelera la recuperacion
+  ok    el jefe de seguridad baja el riesgo de incidente
+  ok    el traductor amortigua la adaptacion
+  ok    el community manager suma seguidores
+  ok    y cada puesto nuevo pesa en la nomina (318k EUR -> 354k EUR)
+  ok    de entrada nadie tiene derechos de tus canteranos
+  ok    se puede vender el 25% de un futuro traspaso
+  ok    y entra dinero hoy (195k EUR)
+  ok    queda apuntado el 25%
+  ok    y no se puede pasar del 50% de un mismo jugador
+  ok    al venderlo, el club se queda el 75% (750 de 1000)
+  ok    los fondos no compran derechos de veteranos
+  ok    aceptar la ocupacion hostil impone al fichaje franquicia
+  ok    y no tiene fecha de vencimiento
+  ok    el dueño respalda: sube la confianza (55 -> 69)
+  ok    y purga algo del cuerpo tecnico (nivel 1 -> 0)
+  ok    dejarlo en la reserva cuesta plata (1.7M EUR)
+  ok    y alinearlo no cuesta nada
+  ok    el trato comercial se cae solo al cerrar la temporada pactada
+  ok    el fichaje comercial impone al mismo jugador solo por esta temporada
+  ok    y entra plata de patrocinio (2.6M EUR)
+  ok    rechazar el trato comercial baja la confianza
+  ok    y descuenta el bono comercial en el acto
+  ok    se puede ver cuanto crecio un jugador esta temporada (+4)
+  Inglaterra juega: FA Cup, Copa de la Liga
+  ok    Inglaterra tiene FA Cup y copa de liga
+  ok    y España la Copa del Rey
+  ok    un pais sin copa propia juega una generica y no se queda sin copa
+  ok    hay silueta para los paises con liga
+  ok    y se puede pintar al tamaño que haga falta
+
+===== ASPECTO Y AUDIO (fondos, clima, sonidos, musica, idiomas) =====
+  ok    hay 24 fondos (24)
+  ok    todos los fondos tienen nombre en el menu
+  ok    y todos dibujan algo (ninguno vacio)
+  ok    un fondo nuevo rasteriza a imagen de verdad
+  ok    hay 10 climas (10)
+  ok    y se puede apagar el movimiento
+  ok    hay al menos 60 efectos (70)
+  ok    y ninguno sale en silencio (todos suenan)
+  ok    y ninguno se pasa de 6 s (ninguno)
+  ok    existe el sonido propio de «clausula» que pedia el LEEME
+  ok    existe el sonido propio de «lesion_grave» que pedia el LEEME
+  ok    existe el sonido propio de «oferta» que pedia el LEEME
+  ok    existe el sonido propio de «contrato_vence» que pedia el LEEME
+  ok    existe el sonido propio de «obra» que pedia el LEEME
+  ok    existe el sonido propio de «venta» que pedia el LEEME
+  ok    existe el sonido propio de «ronda_superada» que pedia el LEEME
+  ok    el azar sigue siendo reproducible tras sembrar
+  ok      (referencia 473247)
+  ok    hay 6 piezas de musica (6)
+  ok    «oficina» suena (pico 12475)
+  ok      y esta en bucle
+  ok      y dura lo suyo (26.7 s)
+  ok    «vestuario» suena (pico 8526)
+  ok      y esta en bucle
+  ok      y dura lo suyo (22.9 s)
+  ok    «tension» suena (pico 10043)
+  ok      y esta en bucle
+  ok      y dura lo suyo (18.5 s)
+  ok    «gloria» suena (pico 10335)
+  ok      y esta en bucle
+  ok      y dura lo suyo (16.3 s)
+  ok    «barra» suena (pico 10856)
+  ok      y esta en bucle
+  ok      y dura lo suyo (20.0 s)
+  ok    «invierno» suena (pico 15466)
+  ok      y esta en bucle
+  ok      y dura lo suyo (32.0 s)
+  ok    hay 6 idiomas ademas del castellano (6)
+  ok    y ninguna fila se queda corta (todas completas)
+  ok    «en» tiene las 309 frases
+  ok    «pt» tiene las 309 frases
+  ok    «fr» tiene las 309 frases
+  ok    «it» tiene las 309 frases
+  ok    «de» tiene las 309 frases
+  ok    «ca» tiene las 309 frases
+  ok    traducir funciona (Guardar -> Save)
+  ok    y lo que no esta traducido se queda en castellano en vez de salir en blanco
+  ok    y volver al castellano no deja nada traducido
+  ok    hay 7 marcas de tarjeta (7)
+  ok    y se pueden quitar
+
+===== EL LOGO DEL SPONSOR (Marca) =====
+  ok    hay al menos 30 marcas en la tabla (36)
+  ok    todas rasterizan de verdad (ninguna vacia)
+  ok    las marcas se reparten en varias formas, no todas la misma (4 de 4)
+  ok    y en varios patrones (6 de 6)
+  ok    la forma y el patron de una marca no cambian entre llamadas
+  ok    las iniciales nunca salen vacias ("Cerveza Andin4" -> "CA")
+  ok    no todas las marcas caen en la misma combinacion forma+patron (20 combinaciones)
+
+===== FIN. 0 fallos =====

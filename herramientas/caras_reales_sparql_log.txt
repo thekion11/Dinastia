@@ -1,0 +1,625 @@
+16:30:24  Sin foto: 1073
+16:30:29  ECU : 376 futbolistas con foto en Wikidata
+16:30:34  OK Félix Torres
+16:30:36  OK Carlos Garcés
+16:30:39  OK Gonzalo Valle
+16:30:42  OK Michael Estrada
+16:30:44  error bajando Xavier Arreaga: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:30:47  OK Pedro Ortiz
+16:30:50  error bajando Jaime Ayoví: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:30:51  error bajando Alexander Domínguez: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:30:54  OK Erick Castillo
+16:30:55  error bajando Jefferson Intriago: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:31:01  CRC : 287 futbolistas con foto en Wikidata
+16:31:03  error bajando Juan Pablo Vargas: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:31:36  TUR : 1398 futbolistas con foto en Wikidata
+16:31:40  OK Ozan Kabak
+16:31:43  pais sin mapear: ANG
+16:31:45  SVN : 238 futbolistas con foto en Wikidata
+16:31:47  error bajando Zan Kolmanic: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:31:51  BOL : 119 futbolistas con foto en Wikidata
+16:31:52  error bajando Diego Bejarano: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:31:55  OK Leonel Justiniano
+16:31:57  error bajando Adrián Jusino: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:31:59  OK Fernando Saucedo
+16:32:01  error bajando Jeyson Chura: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:32:03  OK Diego Medina
+16:33:13  ENG : 6490 futbolistas con foto en Wikidata
+16:33:16  OK Declan Rice
+16:33:19  OK Jacob Murphy
+16:33:22  OK Danny Welbeck
+16:33:23  error bajando Rico Henry: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:33:26  OK James Garner
+16:33:28  OK Mason Greenwood
+16:33:31  OK Charlie Cresswell
+16:33:34  pais sin mapear: ZIM
+16:33:34  pais sin mapear: JAM
+16:33:39  BEL : 865 futbolistas con foto en Wikidata
+16:33:46  OK Youri Tielemans
+16:33:50  OK Romelu Lukaku
+16:33:55  OK Charles De Ketelaere
+16:33:56  error bajando Senne Lynen: Error en el servidor remoto: (429) Too Many Requests.
+16:33:57  error bajando Thomas Foket: Error en el servidor remoto: (429) Too Many Requests.
+16:34:00  pais sin mapear: SLV
+16:34:00  pais sin mapear: ISR
+16:34:03  MAR : 493 futbolistas con foto en Wikidata
+16:34:07  OK Amir Richardson
+16:34:10  pais sin mapear: MKD
+16:34:10  pais sin mapear: PHI
+16:34:10  pais sin mapear: GUI
+16:34:11  SCO : 0 futbolistas con foto en Wikidata
+16:34:20  POL : 1010 futbolistas con foto en Wikidata
+16:34:23  OK Robert Lewandowski
+16:34:26  pais sin mapear: TOG
+16:34:33  JPN : 718 futbolistas con foto en Wikidata
+16:34:37  OK Takefusa Kubo
+16:34:42  OK Maya Yoshida
+16:34:46  OK Ko Itakura
+16:34:49  pais sin mapear: TUN
+16:35:00  SWE : 1616 futbolistas con foto en Wikidata
+16:35:04  error bajando Williot Swedberg: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:35:07  OK Dejan Kulusevski
+16:35:10  pais sin mapear: PAL
+16:35:10  SPARQL POR intento 1: Error en el servidor remoto: (502) Puerta de enlace no válida.
+16:35:27  POR : 769 futbolistas con foto en Wikidata
+16:35:30  OK Thierry Correia
+16:35:32  OK Gonçalo Ramos
+16:35:35  OK Diogo Leite
+16:35:43  NGA : 469 futbolistas con foto en Wikidata
+16:35:45  error bajando Moses Simon: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:35:53  GHA : 341 futbolistas con foto en Wikidata
+16:35:55  OK Joseph Paintsil
+16:35:58  OK Gideon Mensah
+16:36:01  pais sin mapear: MLI
+16:36:01  pais sin mapear: RUS
+16:36:01  pais sin mapear: HAI
+16:36:20  CAN : 624 futbolistas con foto en Wikidata
+16:36:23  OK James Pantemis
+16:36:24  error bajando Kyle Hiebert: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:36:40  ITA : 2887 futbolistas con foto en Wikidata
+16:36:42  OK Federico Dimarco
+16:36:44  OK Giovanni Di Lorenzo
+16:36:47  OK Federico Gatti
+16:36:49  OK Mattia Zaccagni
+16:36:51  error bajando Andrea Consigli: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:36:53  OK Federico Baschirotto
+16:36:58  PER : 313 futbolistas con foto en Wikidata
+16:36:59  error bajando Edison Flores: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:37:03  OK Alex Valera
+16:37:05  OK José Rivera
+16:37:08  error bajando Andy Polo: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:37:11  error bajando Miguel Trauco: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:37:15  OK Luis Abram
+16:37:20  error bajando Carlos Cáceda: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:37:23  OK Luis Iberico
+16:37:24  error bajando Juan Diego Gutiérrez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:37:26  error bajando Jean Deza: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:37:28  OK Álex Valera
+16:37:31  pais sin mapear: SYR
+16:37:59  USA : 2677 futbolistas con foto en Wikidata
+16:38:01  OK Weston McKennie
+16:38:04  OK Tanner Tessmann
+16:38:08  OK Brooks Lennon
+16:38:10  OK John Nelson
+16:38:13  OK Tayvon Gray
+16:38:16  OK Walker Zimmerman
+16:38:18  OK Alex Muyl
+16:38:20  error bajando Simon Becher: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:38:44  GER : 3840 futbolistas con foto en Wikidata
+16:38:46  OK Bernd Leno
+16:38:49  OK Serge Gnabry
+16:38:49  error bajando Pascal Groß: Error en el servidor remoto: (429) Too Many Requests.
+16:38:49  error bajando Deniz Undav: Error en el servidor remoto: (429) Too Many Requests.
+16:38:50  error bajando Cedric Teuchert: Error en el servidor remoto: (429) Too Many Requests.
+16:38:50  error bajando Ridle Baku: Error en el servidor remoto: (429) Too Many Requests.
+16:38:50  error bajando Tim Kleindienst: Error en el servidor remoto: (429) Too Many Requests.
+16:38:51  error bajando Maximilian Eggestein: Error en el servidor remoto: (429) Too Many Requests.
+16:38:51  error bajando Tim Skarke: Error en el servidor remoto: (429) Too Many Requests.
+16:38:51  error bajando Nadiem Amiri: Error en el servidor remoto: (429) Too Many Requests.
+16:38:52  error bajando Benno Schmitz: Error en el servidor remoto: (429) Too Many Requests.
+16:38:52  error bajando Philipp Hofmann: Error en el servidor remoto: (429) Too Many Requests.
+16:38:55  pais sin mapear: ALB
+16:38:55  DEN : 0 futbolistas con foto en Wikidata
+16:39:07  VEN : 180 futbolistas con foto en Wikidata
+16:39:11  PAR : 262 futbolistas con foto en Wikidata
+16:39:13  error bajando Gustavo Gómez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:39:15  OK Junior Alonso
+16:39:17  error bajando Marcos Gómez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:39:19  OK Néstor Camacho
+16:39:22  pais sin mapear: HUN
+16:39:24  SEN : 284 futbolistas con foto en Wikidata
+16:39:27  OK Abdallah Sima
+16:39:34  ARG : 2683 futbolistas con foto en Wikidata
+16:39:38  OK Alejandro Camargo
+16:39:42  OK Maximiliano Salas
+16:39:44  error bajando Cristian Menéndez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:39:46  OK Emiliano Martínez
+16:39:49  OK Matías Soulé
+16:39:50  error bajando Agustín Marchesín: Error en el servidor remoto: (429) Too Many Requests.
+16:39:50  error bajando Leandro Paredes: Error en el servidor remoto: (429) Too Many Requests.
+16:39:50  error bajando Germán Pezzella: Error en el servidor remoto: (429) Too Many Requests.
+16:39:51  error bajando Gonzalo Montiel: Error en el servidor remoto: (429) Too Many Requests.
+16:39:51  error bajando Facundo Cambeses: Error en el servidor remoto: (429) Too Many Requests.
+16:39:51  error bajando Marco Di Cesare: Error en el servidor remoto: (429) Too Many Requests.
+16:39:52  error bajando Adrián Martínez: Error en el servidor remoto: (429) Too Many Requests.
+16:39:52  error bajando Kevin Lomónaco: Error en el servidor remoto: (429) Too Many Requests.
+16:39:52  error bajando Iván Marcone: Error en el servidor remoto: (429) Too Many Requests.
+16:39:53  error bajando Braian Romero: Error en el servidor remoto: (429) Too Many Requests.
+16:39:53  error bajando Alejo Veliz: Error en el servidor remoto: (429) Too Many Requests.
+16:39:53  error bajando Federico Carrizo: Error en el servidor remoto: (429) Too Many Requests.
+16:39:54  error bajando Hernán Barcos: Error en el servidor remoto: (429) Too Many Requests.
+16:39:54  error bajando Danilo Carando: Error en el servidor remoto: (429) Too Many Requests.
+16:39:54  error bajando Marcelo Pontiroli: Error en el servidor remoto: (429) Too Many Requests.
+16:39:55  error bajando Guido Pizarro: Error en el servidor remoto: (429) Too Many Requests.
+16:39:55  error bajando Juan Brunetta: Error en el servidor remoto: (429) Too Many Requests.
+16:39:55  error bajando Germán Berterame: Error en el servidor remoto: (429) Too Many Requests.
+16:39:56  error bajando Luka Romero: Error en el servidor remoto: (429) Too Many Requests.
+16:39:56  error bajando Nicolás Castro: Error en el servidor remoto: (429) Too Many Requests.
+16:39:57  error bajando Ezequiel Unsain: Error en el servidor remoto: (429) Too Many Requests.
+16:39:57  error bajando Agustín Palavecino: Error en el servidor remoto: (429) Too Many Requests.
+16:39:58  error bajando Tomás Badaloni: Error en el servidor remoto: (429) Too Many Requests.
+16:39:58  error bajando Luca Langoni: Error en el servidor remoto: (429) Too Many Requests.
+16:39:59  error bajando Rodrigo Schlegel: Error en el servidor remoto: (429) Too Many Requests.
+16:39:59  error bajando Martín Ojeda: Error en el servidor remoto: (429) Too Many Requests.
+16:40:00  error bajando Darío Benedetto: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:40:02  error bajando Juan Manuel García: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:40:04  error bajando Carlos Izquierdoz: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:40:06  OK Walter Bou
+16:40:08  error bajando Guido Herrera: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:40:09  error bajando Ramiro Enrique: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:40:12  OK Pol Fernández
+16:40:14  OK Juan Martín Lucero
+16:40:22  AUT : 1540 futbolistas con foto en Wikidata
+16:40:25  OK Konrad Laimer
+16:40:27  OK Hannes Wolf
+16:40:33  SUI : 586 futbolistas con foto en Wikidata
+16:40:34  error bajando Becir Omeragic: Error en el servidor remoto: (429) Too Many Requests.
+16:40:37  pais sin mapear: EGY
+16:40:48  SPARQL FRA intento 1: Error en el servidor remoto: (502) Puerta de enlace no válida.
+16:41:17  FRA : 3654 futbolistas con foto en Wikidata
+16:41:20  OK Ferland Mendy
+16:41:22  OK Lucien Agoumé
+16:41:25  OK Hugo Ekitiké
+16:41:27  OK Maxence Lacroix
+16:41:29  error bajando Malang Sarr: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:41:31  OK Adrien Thomasson
+16:41:34  OK Hugo Lloris
+16:41:37  OK Tristan Muyumba
+16:41:40  OK Alassane Pléa
+16:41:42  OK Jerome Roussillon
+16:41:43  error bajando Morgan Sanson: Error en el servidor remoto: (429) Too Many Requests.
+16:41:44  error bajando Brice Samba: Error en el servidor remoto: (429) Too Many Requests.
+16:41:45  error bajando Lorenz Assignon: Error en el servidor remoto: (429) Too Many Requests.
+16:41:45  error bajando Arnaud Kalimuendo: Error en el servidor remoto: (429) Too Many Requests.
+16:41:45  error bajando Dilane Bakwa: Error en el servidor remoto: (429) Too Many Requests.
+16:41:46  error bajando Modibo Sagnan: Error en el servidor remoto: (429) Too Many Requests.
+16:41:46  error bajando Joris Chotard: Error en el servidor remoto: (429) Too Many Requests.
+16:41:46  error bajando Mahdi Camara: Error en el servidor remoto: (429) Too Many Requests.
+16:41:55  BRA : 3377 futbolistas con foto en Wikidata
+16:41:55  error bajando Rodrygo: Error en el servidor remoto: (429) Too Many Requests.
+16:41:55  error bajando Marcão: Error en el servidor remoto: (429) Too Many Requests.
+16:41:56  error bajando Luiz Júnior: Error en el servidor remoto: (429) Too Many Requests.
+16:41:56  error bajando Matheus Cunha: Error en el servidor remoto: (429) Too Many Requests.
+16:41:56  error bajando Lucas Paquetá: Error en el servidor remoto: (429) Too Many Requests.
+16:41:57  error bajando Raphael Veiga: Error en el servidor remoto: (429) Too Many Requests.
+16:41:57  error bajando Estêvão: Error en el servidor remoto: (429) Too Many Requests.
+16:41:57  error bajando Wendell: Error en el servidor remoto: (429) Too Many Requests.
+16:41:58  error bajando Fábio: Error en el servidor remoto: (429) Too Many Requests.
+16:41:58  error bajando John: Error en el servidor remoto: (429) Too Many Requests.
+16:41:58  error bajando Alex Telles: Error en el servidor remoto: (429) Too Many Requests.
+16:41:59  error bajando Marlon Freitas: Error en el servidor remoto: (429) Too Many Requests.
+16:42:01  OK Igor Jesus
+16:42:03  OK Everson
+16:42:06  OK Lyanco
+16:42:07  error bajando Guilherme Arana: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:42:09  error bajando Bernard: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:42:10  error bajando Jemerson: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:42:13  OK Marlon
+16:42:15  OK Kaiki
+16:42:18  OK Wanderson
+16:42:20  OK Kenedy
+16:42:21  error bajando Rogério: Error en el servidor remoto: (429) Too Many Requests.
+16:42:21  error bajando Dante: Error en el servidor remoto: (429) Too Many Requests.
+16:42:21  error bajando Douglas Augusto: Error en el servidor remoto: (429) Too Many Requests.
+16:42:22  error bajando Rick: Error en el servidor remoto: (429) Too Many Requests.
+16:42:22  error bajando Luan Peres: Error en el servidor remoto: (429) Too Many Requests.
+16:42:22  error bajando Neymar: Error en el servidor remoto: (429) Too Many Requests.
+16:42:23  error bajando João Victor: Error en el servidor remoto: (429) Too Many Requests.
+16:42:23  error bajando Paulo Henrique: Error en el servidor remoto: (429) Too Many Requests.
+16:42:23  error bajando Lucas Piton: Error en el servidor remoto: (429) Too Many Requests.
+16:42:24  error bajando Rayan: Error en el servidor remoto: (429) Too Many Requests.
+16:42:24  error bajando Gabriel Xavier: Error en el servidor remoto: (429) Too Many Requests.
+16:42:24  error bajando Everton Ribeiro: Error en el servidor remoto: (429) Too Many Requests.
+16:42:25  error bajando Willian José: Error en el servidor remoto: (429) Too Many Requests.
+16:42:25  error bajando Tinga: Error en el servidor remoto: (429) Too Many Requests.
+16:42:25  error bajando Bruno Pacheco: Error en el servidor remoto: (429) Too Many Requests.
+16:42:26  error bajando Yago Pikachu: Error en el servidor remoto: (429) Too Many Requests.
+16:42:26  error bajando Breno Lopes: Error en el servidor remoto: (429) Too Many Requests.
+16:42:26  error bajando Felipinho: Error en el servidor remoto: (429) Too Many Requests.
+16:42:27  error bajando Fernandinho: Error en el servidor remoto: (429) Too Many Requests.
+16:42:27  error bajando Fernando: Error en el servidor remoto: (429) Too Many Requests.
+16:42:32  COL : 550 futbolistas con foto en Wikidata
+16:42:32  error bajando Yerson Mosquera: Error en el servidor remoto: (429) Too Many Requests.
+16:42:32  error bajando William Tesillo: Error en el servidor remoto: (429) Too Many Requests.
+16:42:33  error bajando Dairon Asprilla: Error en el servidor remoto: (429) Too Many Requests.
+16:42:33  error bajando Álvaro Montero: Error en el servidor remoto: (429) Too Many Requests.
+16:42:34  error bajando David Mackalister Silva: Error en el servidor remoto: (429) Too Many Requests.
+16:42:34  error bajando Kevin Andrade: Error en el servidor remoto: (429) Too Many Requests.
+16:42:34  error bajando Éder Álvarez Balanta: Error en el servidor remoto: (429) Too Many Requests.
+16:42:35  error bajando Didier Moreno: Error en el servidor remoto: (429) Too Many Requests.
+16:42:35  error bajando Teófilo Gutiérrez: Error en el servidor remoto: (429) Too Many Requests.
+16:42:36  error bajando Juan Fernando Caicedo: Error en el servidor remoto: (429) Too Many Requests.
+16:42:36  error bajando Éder Chaux: Error en el servidor remoto: (429) Too Many Requests.
+16:42:37  error bajando Andrés Cadavid: Error en el servidor remoto: (429) Too Many Requests.
+16:42:38  error bajando Dayro Moreno: Error en el servidor remoto: (429) Too Many Requests.
+16:42:39  error bajando Jhon Duque: Error en el servidor remoto: (429) Too Many Requests.
+16:42:41  error bajando Jesús Murillo: Error en el servidor remoto: (429) Too Many Requests.
+16:42:42  error bajando Jader Valencia: Error en el servidor remoto: (429) Too Many Requests.
+16:42:42  error bajando Cristian Marrugo: Error en el servidor remoto: (429) Too Many Requests.
+16:42:43  error bajando Carlos Rivas: Error en el servidor remoto: (429) Too Many Requests.
+16:42:43  error bajando Óscar Rodas: Error en el servidor remoto: (429) Too Many Requests.
+16:42:44  error bajando Álvaro Angulo: Error en el servidor remoto: (429) Too Many Requests.
+16:42:45  error bajando Camilo Vargas: Error en el servidor remoto: (429) Too Many Requests.
+16:42:45  error bajando Diber Cambindo: Error en el servidor remoto: (429) Too Many Requests.
+16:42:45  error bajando Kevin Balanta: Error en el servidor remoto: (429) Too Many Requests.
+16:42:46  error bajando Nicolás Benedetti: Error en el servidor remoto: (429) Too Many Requests.
+16:42:46  error bajando Yeimar Gómez: Error en el servidor remoto: (429) Too Many Requests.
+16:42:46  error bajando Iván Angulo: Error en el servidor remoto: (429) Too Many Requests.
+16:42:47  error bajando Duván Zapata: Error en el servidor remoto: (429) Too Many Requests.
+16:42:51  SVK : 298 futbolistas con foto en Wikidata
+16:42:51  error bajando David Hancko: Error en el servidor remoto: (429) Too Many Requests.
+16:42:52  error bajando Albert Rusnák: Error en el servidor remoto: (429) Too Many Requests.
+16:42:56  COD : 237 futbolistas con foto en Wikidata
+16:43:01  CIV : 323 futbolistas con foto en Wikidata
+16:43:03  OK Wilfried Zaha
+16:43:06  pais sin mapear: BIH
+16:43:06  pais sin mapear: CZE
+16:43:06  pais sin mapear: KOS
+16:43:06  pais sin mapear: KVX
+16:43:31  CHI : 884 futbolistas con foto en Wikidata
+16:43:38  OK Diego Sánchez
+16:43:40  error bajando Junior Fernandes: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:43:43  OK Patricio Rubio
+16:43:45  error bajando Ignacio Jara: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:43:46  error bajando Edson Puch: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:43:49  OK Diego Vallejos
+16:43:54  OK Diego Torres
+16:43:57  OK Carlos Palacios
+16:43:58  error bajando Paulo Díaz: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:43:59  error bajando Igor Lichnovsky: Error en el servidor remoto: (429) Too Many Requests.
+16:44:02  OK Diego Valdés
+16:44:05  OK Felipe Mora
+16:44:07  OK Benjamín Kuscevic
+16:44:10  pais sin mapear: JOR
+16:44:11  NED : 0 futbolistas con foto en Wikidata
+16:44:14  pais sin mapear: GRE
+16:44:14  pais sin mapear: CMR
+16:44:24  URU : 667 futbolistas con foto en Wikidata
+16:44:27  error bajando José María Giménez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:44:30  error bajando Cristhian Stuani: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:44:31  error bajando Miguel Merentiel: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:44:34  OK Fernando Muslera
+16:44:35  error bajando Martín Silva: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:44:42  error bajando Rodrigo Amaral: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:44:45  OK Emanuel Gularte
+16:44:45  error bajando Ignacio Sosa: Error en el servidor remoto: (429) Too Many Requests.
+16:44:45  error bajando Maximiliano Silvera: Error en el servidor remoto: (429) Too Many Requests.
+16:44:46  error bajando Juan Cruz de los Santos: Error en el servidor remoto: (429) Too Many Requests.
+16:44:46  error bajando Gonzalo Carneiro: Error en el servidor remoto: (429) Too Many Requests.
+16:44:47  error bajando Juan Manuel Olivera: Error en el servidor remoto: (429) Too Many Requests.
+16:44:47  error bajando Ignacio Ithurralde: Error en el servidor remoto: (429) Too Many Requests.
+16:44:48  error bajando Guillermo Cotugno: Error en el servidor remoto: (429) Too Many Requests.
+16:44:48  error bajando Sebastián Fernández: Error en el servidor remoto: (429) Too Many Requests.
+16:44:49  error bajando Matías Cabrera: Error en el servidor remoto: (429) Too Many Requests.
+16:44:49  error bajando Brian Rodríguez: Error en el servidor remoto: (429) Too Many Requests.
+16:44:50  error bajando Diego Fagúndez: Error en el servidor remoto: (429) Too Many Requests.
+16:44:53  pais sin mapear: GNB
+16:44:58  CRO : 491 futbolistas con foto en Wikidata
+16:44:59  error bajando Milan Badelj: Error en el servidor remoto: (429) Too Many Requests.
+16:45:41  ESP : 3050 futbolistas con foto en Wikidata
+16:45:44  error bajando Robin Le Normand: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:45:47  OK Yuri Berchiche
+16:45:53  OK Álex Remiro
+16:45:57  OK Santi Comesaña
+16:46:01  OK Bryan Gil
+16:46:05  OK Aimar Oroz
+16:46:08  OK Sergi Darder
+16:46:14  OK David Soria
+16:46:18  OK Luis Milla
+16:46:21  OK Rodri
+16:46:26  OK Robert Sánchez
+16:46:28  OK Pedro Porro
+16:46:31  OK Angeliño
+16:46:33  error bajando Ruben Duarte: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:46:36  OK Sergio Busquets
+16:46:37  error bajando Sergi Palencia: Error en el servidor remoto: (429) Too Many Requests.
+16:46:39  error bajando Oier Zarraga: Error en el servidor remoto: (429) Too Many Requests.
+16:47:02  MEX : 710 futbolistas con foto en Wikidata
+16:47:05  error bajando Raúl Jiménez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:47:08  OK Jonathan dos Santos
+16:47:10  error bajando Alejandro Zendejas: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:47:12  error bajando Javier Aquino: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:47:15  OK Érick Gutiérrez
+16:47:22  OK Roberto Alvarado
+16:47:25  OK Armando González
+16:47:29  OK Carlos Moreno
+16:47:34  OK Alan Cervantes
+16:47:36  OK Marcel Ruiz
+16:47:37  error bajando Alexis Vega: Error en el servidor remoto: (429) Too Many Requests.
+16:47:37  error bajando Carlos Acevedo: Error en el servidor remoto: (429) Too Many Requests.
+16:47:38  error bajando Adrián Aldrete: Error en el servidor remoto: (429) Too Many Requests.
+16:47:38  error bajando Rodrigo López: Error en el servidor remoto: (429) Too Many Requests.
+16:47:39  error bajando Óscar Jiménez: Error en el servidor remoto: (429) Too Many Requests.
+16:47:39  error bajando Jeremy Márquez: Error en el servidor remoto: (429) Too Many Requests.
+16:47:39  error bajando Jesús Zavala: Error en el servidor remoto: (429) Too Many Requests.
+16:47:40  error bajando Diego de Buen: Error en el servidor remoto: (429) Too Many Requests.
+16:47:40  error bajando Israel Reyes: Error en el servidor remoto: (429) Too Many Requests.
+16:47:41  error bajando Gilberto Mora: Error en el servidor remoto: (429) Too Many Requests.
+16:47:44  error bajando Kevin Escamilla: Error en el servidor remoto: (429) Too Many Requests.
+16:47:44  error bajando Ricardo Gutiérrez: Error en el servidor remoto: (429) Too Many Requests.
+16:47:47  pais sin mapear: UKR
+16:47:47  pais sin mapear: SRB
+16:47:47  pais sin mapear: ALG
+16:47:48  TERMINADO. 109 caras nuevas.
+16:54:56  Sin foto: 964
+16:55:03  ISR : 649 futbolistas con foto en Wikidata
+16:55:07  OK Tai Baribo
+16:55:12  PHI : 83 futbolistas con foto en Wikidata
+16:55:24  TUR : 1398 futbolistas con foto en Wikidata
+16:55:38  BRA : 3377 futbolistas con foto en Wikidata
+16:55:41  OK Rodrygo
+16:55:44  OK Marcão
+16:55:49  OK Luiz Júnior
+16:55:51  OK Matheus Cunha
+16:55:53  error bajando Lucas Paquetá: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:55:57  OK Raphael Veiga
+16:55:59  OK Estêvão
+16:56:02  OK Wendell
+16:56:05  OK Fábio
+16:56:07  OK John
+16:56:10  OK Alex Telles
+16:56:12  OK Marlon Freitas
+16:56:14  error bajando Guilherme Arana: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:56:16  error bajando Bernard: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:56:17  error bajando Jemerson: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:56:19  error bajando Rogério: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:56:22  OK Dante
+16:56:22  error bajando Douglas Augusto: Error en el servidor remoto: (429) Too Many Requests.
+16:56:23  error bajando Rick: Error en el servidor remoto: (429) Too Many Requests.
+16:56:23  error bajando Luan Peres: Error en el servidor remoto: (429) Too Many Requests.
+16:56:24  error bajando Neymar: Error en el servidor remoto: (429) Too Many Requests.
+16:56:24  error bajando João Victor: Error en el servidor remoto: (429) Too Many Requests.
+16:56:25  error bajando Paulo Henrique: Error en el servidor remoto: (429) Too Many Requests.
+16:56:25  error bajando Lucas Piton: Error en el servidor remoto: (429) Too Many Requests.
+16:56:26  error bajando Rayan: Error en el servidor remoto: (429) Too Many Requests.
+16:56:26  error bajando Gabriel Xavier: Error en el servidor remoto: (429) Too Many Requests.
+16:56:26  error bajando Everton Ribeiro: Error en el servidor remoto: (429) Too Many Requests.
+16:56:27  error bajando Willian José: Error en el servidor remoto: (429) Too Many Requests.
+16:56:27  error bajando Tinga: Error en el servidor remoto: (429) Too Many Requests.
+16:56:27  error bajando Bruno Pacheco: Error en el servidor remoto: (429) Too Many Requests.
+16:56:28  error bajando Yago Pikachu: Error en el servidor remoto: (429) Too Many Requests.
+16:56:28  error bajando Breno Lopes: Error en el servidor remoto: (429) Too Many Requests.
+16:56:28  error bajando Felipinho: Error en el servidor remoto: (429) Too Many Requests.
+16:56:29  error bajando Fernandinho: Error en el servidor remoto: (429) Too Many Requests.
+16:56:29  error bajando Fernando: Error en el servidor remoto: (429) Too Many Requests.
+16:56:38  SUI : 586 futbolistas con foto en Wikidata
+16:56:38  error bajando Becir Omeragic: Error en el servidor remoto: (429) Too Many Requests.
+16:56:43  ECU : 376 futbolistas con foto en Wikidata
+16:56:43  error bajando Xavier Arreaga: Error en el servidor remoto: (429) Too Many Requests.
+16:56:43  error bajando Jaime Ayoví: Error en el servidor remoto: (429) Too Many Requests.
+16:56:44  error bajando Alexander Domínguez: Error en el servidor remoto: (429) Too Many Requests.
+16:56:44  error bajando Jefferson Intriago: Error en el servidor remoto: (429) Too Many Requests.
+16:56:49  JOR : 33 futbolistas con foto en Wikidata
+16:56:54  COD : 237 futbolistas con foto en Wikidata
+16:56:58  ZIM : 43 futbolistas con foto en Wikidata
+16:56:58  error bajando Marshall Munetsi: Error en el servidor remoto: (429) Too Many Requests.
+16:57:09  SWE : 1616 futbolistas con foto en Wikidata
+16:57:11  error bajando Williot Swedberg: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:57:15  BOL : 119 futbolistas con foto en Wikidata
+16:57:17  error bajando Diego Bejarano: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:57:18  error bajando Adrián Jusino: Error en el servidor remoto: (429) Too many requests. Please contact bot-traffic@wikimedia.org (fceb99d).
+16:57:20  error bajando Jeyson Chura: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:57:24  GRE : 435 futbolistas con foto en Wikidata
+16:57:26  error bajando Georgios Kyriakopoulos: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:57:31  KVX : 65 futbolistas con foto en Wikidata
+16:57:44  ITA : 2886 futbolistas con foto en Wikidata
+16:57:46  error bajando Andrea Consigli: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:58:08  USA : 2677 futbolistas con foto en Wikidata
+16:58:09  error bajando Simon Becher: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:58:14  GNB : 39 futbolistas con foto en Wikidata
+16:58:18  OK Formose Mendy
+16:58:22  JAM : 143 futbolistas con foto en Wikidata
+16:58:26  CIV : 323 futbolistas con foto en Wikidata
+16:58:31  ALB : 201 futbolistas con foto en Wikidata
+16:58:37  SVK : 298 futbolistas con foto en Wikidata
+16:58:44  OK David Hancko
+16:58:47  OK Albert Rusnák
+16:58:51  TUN : 291 futbolistas con foto en Wikidata
+16:58:53  OK Montassar Talbi
+16:58:57  VEN : 180 futbolistas con foto en Wikidata
+16:59:04  HUN : 1167 futbolistas con foto en Wikidata
+16:59:07  OK Willi Orbán
+16:59:13  CHI : 884 futbolistas con foto en Wikidata
+16:59:14  error bajando Junior Fernandes: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:59:16  error bajando Ignacio Jara: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:59:17  error bajando Edson Puch: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:59:19  error bajando Paulo Díaz: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:59:22  OK Igor Lichnovsky
+16:59:32  CAN : 624 futbolistas con foto en Wikidata
+16:59:38  error bajando Kyle Hiebert: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+16:59:45  UKR : 1765 futbolistas con foto en Wikidata
+16:59:54  OK Ivan Ordets
+17:00:01  PAL : 21 futbolistas con foto en Wikidata
+17:00:13  HAI : 68 futbolistas con foto en Wikidata
+17:00:34  FRA : 3654 futbolistas con foto en Wikidata
+17:00:39  error bajando Malang Sarr: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:00:46  OK Morgan Sanson
+17:00:53  OK Brice Samba
+17:01:01  OK Lorenz Assignon
+17:01:10  OK Arnaud Kalimuendo
+17:01:17  OK Dilane Bakwa
+17:01:25  OK Modibo Sagnan
+17:01:29  error bajando Joris Chotard: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:01:34  OK Mahdi Camara
+17:01:41  PAR : 262 futbolistas con foto en Wikidata
+17:01:50  error bajando Gustavo Gómez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:02:03  error bajando Marcos Gómez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:02:18  NGA : 469 futbolistas con foto en Wikidata
+17:02:24  error bajando Moses Simon: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:02:32  SYR : 57 futbolistas con foto en Wikidata
+17:02:50  SRB : 667 futbolistas con foto en Wikidata
+17:03:00  error bajando Nemanja Gudelj: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:03:38  OK Nikola Milenkovic
+17:03:43  OK Vanja Milinkovic-Savic
+17:03:48  MLI : 174 futbolistas con foto en Wikidata
+17:03:56  OK Mamadou Fofana
+17:04:03  URU : 667 futbolistas con foto en Wikidata
+17:04:07  error bajando José María Giménez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:04:11  error bajando Cristhian Stuani: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:04:17  error bajando Miguel Merentiel: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:04:20  error bajando Martín Silva: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:04:23  error bajando Rodrigo Amaral: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:04:30  error bajando Ignacio Sosa: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:04:39  OK Maximiliano Silvera
+17:04:41  error bajando Juan Cruz de los Santos: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:04:43  error bajando Gonzalo Carneiro: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:04:47  OK Juan Manuel Olivera
+17:04:47  error bajando Ignacio Ithurralde: Error en el servidor remoto: (429) Too Many Requests.
+17:04:48  error bajando Guillermo Cotugno: Error en el servidor remoto: (429) Too Many Requests.
+17:04:48  error bajando Sebastián Fernández: Error en el servidor remoto: (429) Too Many Requests.
+17:04:49  error bajando Matías Cabrera: Error en el servidor remoto: (429) Too Many Requests.
+17:04:49  error bajando Brian Rodríguez: Error en el servidor remoto: (429) Too Many Requests.
+17:04:49  error bajando Diego Fagúndez: Error en el servidor remoto: (429) Too Many Requests.
+17:05:06  CZE : 598 futbolistas con foto en Wikidata
+17:05:08  OK Patrik Schick
+17:05:10  error bajando Pavel Kaderábek: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:05:14  TOG : 48 futbolistas con foto en Wikidata
+17:05:47  SCO : 6490 futbolistas con foto en Wikidata
+17:05:53  CRC : 287 futbolistas con foto en Wikidata
+17:05:54  error bajando Juan Pablo Vargas: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:05:58  SPARQL BIH intento 1: Error en el servidor remoto: (502) Puerta de enlace no válida.
+17:06:09  BIH : 275 futbolistas con foto en Wikidata
+17:06:15  PER : 313 futbolistas con foto en Wikidata
+17:06:17  error bajando Edison Flores: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:06:18  error bajando Andy Polo: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:06:20  error bajando Miguel Trauco: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:06:21  error bajando Carlos Cáceda: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:06:23  error bajando Juan Diego Gutiérrez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:06:25  error bajando Jean Deza: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:06:31  EGY : 243 futbolistas con foto en Wikidata
+17:06:35  OK Omar Marmoush
+17:06:42  CRO : 491 futbolistas con foto en Wikidata
+17:06:44  error bajando Milan Badelj: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:06:50  SVN : 238 futbolistas con foto en Wikidata
+17:06:51  error bajando Zan Kolmanic: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:06:59  POR : 769 futbolistas con foto en Wikidata
+17:07:02  DEN : 0 futbolistas con foto en Wikidata
+17:07:11  ENG : 6490 futbolistas con foto en Wikidata
+17:07:13  error bajando Rico Henry: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:07:21  MEX : 710 futbolistas con foto en Wikidata
+17:07:22  error bajando Raúl Jiménez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:07:24  error bajando Alejandro Zendejas: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:07:25  error bajando Javier Aquino: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:07:28  OK Alexis Vega
+17:07:31  OK Carlos Acevedo
+17:07:33  error bajando Ismael Govea: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:07:34  error bajando Adrián Aldrete: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:07:37  OK Rodrigo López
+17:07:39  OK Óscar Jiménez
+17:07:40  error bajando Jeremy Márquez: Error en el servidor remoto: (429) Too Many Requests.
+17:07:40  error bajando Jesús Zavala: Error en el servidor remoto: (429) Too Many Requests.
+17:07:40  error bajando Diego de Buen: Error en el servidor remoto: (429) Too Many Requests.
+17:07:41  error bajando Israel Reyes: Error en el servidor remoto: (429) Too Many Requests.
+17:07:41  error bajando Gilberto Mora: Error en el servidor remoto: (429) Too Many Requests.
+17:07:41  error bajando Kevin Escamilla: Error en el servidor remoto: (429) Too Many Requests.
+17:07:42  error bajando Ricardo Gutiérrez: Error en el servidor remoto: (429) Too Many Requests.
+17:08:10  RUS : 2301 futbolistas con foto en Wikidata
+17:08:23  ARG : 2683 futbolistas con foto en Wikidata
+17:08:24  error bajando Cristian Menéndez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:08:27  OK Agustín Marchesín
+17:08:29  OK Leandro Paredes
+17:08:31  error bajando Germán Pezzella: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:08:33  OK Gonzalo Montiel
+17:08:36  OK Facundo Cambeses
+17:08:38  OK Marco Di Cesare
+17:08:41  OK Adrián Martínez
+17:08:45  OK Kevin Lomónaco
+17:08:46  error bajando Iván Marcone: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:08:47  error bajando Braian Romero: Error en el servidor remoto: (429) Too Many Requests.
+17:08:47  error bajando Alejo Veliz: Error en el servidor remoto: (429) Too Many Requests.
+17:08:48  error bajando Federico Carrizo: Error en el servidor remoto: (429) Too Many Requests.
+17:08:48  error bajando Hernán Barcos: Error en el servidor remoto: (429) Too Many Requests.
+17:08:48  error bajando Danilo Carando: Error en el servidor remoto: (429) Too Many Requests.
+17:08:49  error bajando Marcelo Pontiroli: Error en el servidor remoto: (429) Too Many Requests.
+17:08:49  error bajando Guido Pizarro: Error en el servidor remoto: (429) Too Many Requests.
+17:08:50  error bajando Juan Brunetta: Error en el servidor remoto: (429) Too Many Requests.
+17:08:50  error bajando Germán Berterame: Error en el servidor remoto: (429) Too Many Requests.
+17:08:51  error bajando Luka Romero: Error en el servidor remoto: (429) Too Many Requests.
+17:08:51  error bajando Nicolás Castro: Error en el servidor remoto: (429) Too Many Requests.
+17:08:52  error bajando Ezequiel Unsain: Error en el servidor remoto: (429) Too Many Requests.
+17:08:52  error bajando Agustín Palavecino: Error en el servidor remoto: (429) Too Many Requests.
+17:08:52  error bajando Tomás Badaloni: Error en el servidor remoto: (429) Too Many Requests.
+17:08:53  error bajando Luca Langoni: Error en el servidor remoto: (429) Too Many Requests.
+17:08:53  error bajando Rodrigo Schlegel: Error en el servidor remoto: (429) Too Many Requests.
+17:08:53  error bajando Martín Ojeda: Error en el servidor remoto: (429) Too Many Requests.
+17:08:54  error bajando Darío Benedetto: Error en el servidor remoto: (429) Too Many Requests.
+17:08:54  error bajando Juan Manuel García: Error en el servidor remoto: (429) Too Many Requests.
+17:08:54  error bajando Carlos Izquierdoz: Error en el servidor remoto: (429) Too Many Requests.
+17:08:55  error bajando Guido Herrera: Error en el servidor remoto: (429) Too Many Requests.
+17:08:55  error bajando Ramiro Enrique: Error en el servidor remoto: (429) Too Many Requests.
+17:08:59  CMR : 319 futbolistas con foto en Wikidata
+17:09:03  KOS : 65 futbolistas con foto en Wikidata
+17:09:12  ESP : 3050 futbolistas con foto en Wikidata
+17:09:15  error bajando Robin Le Normand: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:09:17  error bajando Ruben Duarte: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:09:20  error bajando Sergi Palencia: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:09:22  error bajando Oier Zarraga: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:09:26  ANG : 75 futbolistas con foto en Wikidata
+17:09:49  GUI : 108 futbolistas con foto en Wikidata
+17:09:53  NED : 0 futbolistas con foto en Wikidata
+17:10:09  GER : 3840 futbolistas con foto en Wikidata
+17:10:11  OK Pascal Groß
+17:10:15  OK Deniz Undav
+17:10:19  OK Ridle Baku
+17:10:22  OK Tim Kleindienst
+17:10:24  OK Maximilian Eggestein
+17:10:27  OK Tim Skarke
+17:10:29  OK Nadiem Amiri
+17:10:31  OK Benno Schmitz
+17:10:33  error bajando Philipp Hofmann: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:10:44  BEL : 865 futbolistas con foto en Wikidata
+17:10:45  error bajando Senne Lynen: Error en el servidor remoto: (429) Too Many Requests.
+17:10:45  error bajando Thomas Foket: Error en el servidor remoto: (429) Too Many Requests.
+17:10:50  ALG : 301 futbolistas con foto en Wikidata
+17:10:51  error bajando Aïssa Mandi: Error en el servidor remoto: (429) Too Many Requests.
+17:10:55  MKD : 131 futbolistas con foto en Wikidata
+17:11:10  COL : 550 futbolistas con foto en Wikidata
+17:11:14  OK Yerson Mosquera
+17:11:17  error bajando William Tesillo: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:11:18  error bajando Dairon Asprilla: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:11:21  OK Álvaro Montero
+17:11:22  error bajando David Mackalister Silva: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:11:24  error bajando Kevin Andrade: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:11:26  error bajando Éder Álvarez Balanta: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:11:27  error bajando Didier Moreno: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:11:29  error bajando Teófilo Gutiérrez: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:11:30  error bajando Juan Fernando Caicedo: Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:11:30  error bajando Éder Chaux: Error en el servidor remoto: (429) Too Many Requests.
+17:11:31  error bajando Andrés Cadavid: Error en el servidor remoto: (429) Too Many Requests.
+17:11:31  error bajando Dayro Moreno: Error en el servidor remoto: (429) Too Many Requests.
+17:11:31  error bajando Jhon Duque: Error en el servidor remoto: (429) Too Many Requests.
+17:11:32  error bajando Jesús Murillo: Error en el servidor remoto: (429) Too Many Requests.
+17:11:32  error bajando Jader Valencia: Error en el servidor remoto: (429) Too Many Requests.
+17:11:32  error bajando Cristian Marrugo: Error en el servidor remoto: (429) Too Many Requests.
+17:11:33  error bajando Carlos Rivas: Error en el servidor remoto: (429) Too Many Requests.
+17:11:33  error bajando Óscar Rodas: Error en el servidor remoto: (429) Too Many Requests.
+17:11:33  error bajando Álvaro Angulo: Error en el servidor remoto: (429) Too Many Requests.
+17:11:34  error bajando Camilo Vargas: Error en el servidor remoto: (429) Too Many Requests.
+17:11:34  error bajando Diber Cambindo: Error en el servidor remoto: (429) Too Many Requests.
+17:11:34  error bajando Kevin Balanta: Error en el servidor remoto: (429) Too Many Requests.
+17:11:35  error bajando Nicolás Benedetti: Error en el servidor remoto: (429) Too Many Requests.
+17:11:35  error bajando Yeimar Gómez: Error en el servidor remoto: (429) Too Many Requests.
+17:11:35  error bajando Iván Angulo: Error en el servidor remoto: (429) Too Many Requests.
+17:11:36  error bajando Duván Zapata: Error en el servidor remoto: (429) Too Many Requests.
+17:11:41  SLV : 53 futbolistas con foto en Wikidata
+17:11:44  TERMINADO. 55 caras nuevas.
