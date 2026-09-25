@@ -196,10 +196,18 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_radar.offset_left = -226; _radar.offset_right = -16; _radar.offset_top = -178; _radar.offset_bottom = -42
 	add_child(_radar)
 
-	## Barra de control por encima del 3D.
+	## Barra de control por encima del 3D, ARRIBA A LA DERECHA (25-9-2026): a la
+	## izquierda, con el marcador centrado, "Volver" quedaba debajo del marcador
+	## en cuanto la barra tenía los seis botones ("VolverLautaro FC" en captura).
+	## El marcador pasa a la esquina de arriba a la izquierda, como en una
+	## transmisión de TV.
 	var barra := HBoxContainer.new()
 	barra.add_theme_constant_override("separation", 8)
-	barra.offset_left = 18
+	barra.anchor_left = 1.0
+	barra.anchor_right = 1.0
+	barra.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	barra.offset_right = -18
+	barra.offset_left = -18
 	barra.offset_top = 14
 	add_child(barra)
 	_boton(barra, "📷 Cámara", _rotar_camara)
@@ -217,6 +225,13 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_btn_velocidad.custom_minimum_size = Vector2(0, 32)
 		_btn_velocidad.pressed.connect(_ciclar_velocidad)
 		barra.add_child(_btn_velocidad)
+	var bn := Button.new()
+	bn.text = "🏷 Nombres"
+	bn.toggle_mode = true
+	bn.button_pressed = PlayerSpawner.mostrar_nombres
+	bn.custom_minimum_size = Vector2(0, 32)
+	bn.toggled.connect(_mostrar_nombres)
+	barra.add_child(bn)
 	_boton(barra, "Volver", func() -> void: cerrado.emit())
 
 	_pie = Label.new()
@@ -228,6 +243,33 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_pie.offset_top = -34
 	add_child(_pie)
 	_actualizar_pie(perfil, aforo, ocupacion)
+
+## `fixed_size` compensa la DISTANCIA, no el zoom: con "Tele Dinámica" (campo
+## de visión estrecho) los nombres salían tres veces más grandes que con la de
+## TV. Se reescalan con la tangente del campo de visión de la cámara activa,
+## tomando la de TV (46°) como referencia. Solo cuando cambia el campo de visión.
+var _fov_rotulos := -1.0
+
+func _escalar_rotulos() -> void:
+	if not PlayerSpawner.mostrar_nombres:
+		return
+	var cam := get_viewport().get_camera_3d()
+	if cam == null or is_equal_approx(cam.fov, _fov_rotulos):
+		return
+	_fov_rotulos = cam.fov
+	var tam := PlayerSpawner.TAM_ROTULO * tan(deg_to_rad(cam.fov) * 0.5) / tan(deg_to_rad(46.0) * 0.5)
+	for f: Dictionary in _en_campo:
+		var n: Node3D = f.get("node")
+		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO):
+			(n.get_node(PlayerSpawner.ROTULO) as Label3D).pixel_size = tam
+
+func _mostrar_nombres(si: bool) -> void:
+	PlayerSpawner.mostrar_nombres = si
+	_fov_rotulos = -1.0
+	for f: Dictionary in _en_campo:
+		var n: Node3D = f.get("node")
+		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO):
+			(n.get_node(PlayerSpawner.ROTULO) as Node3D).visible = si
 
 func _boton(padre: Node, texto: String, accion: Callable) -> void:
 	var b := Button.new()
@@ -435,14 +477,14 @@ func _arrancar_partido() -> void:
 	## `set_anchors_preset(..., keep_offsets)` tampoco: ese `keep_offsets`
 	## RECALCULA los offsets para conservar el rectángulo actual, así que pisa lo
 	## que se le ponga justo después. Puestas las cuatro anclas y los cuatro
-	## offsets a mano no hay ambigüedad: 0.5 en horizontal es el centro, y los
-	## offsets son metros a cada lado de ese centro.
-	caja.anchor_left = 0.5
-	caja.anchor_right = 0.5
+	## offsets a mano no hay ambigüedad. Desde el 25-9 va arriba a la izquierda
+	## (la barra de botones pasó a la derecha), con 380 px de ancho.
+	caja.anchor_left = 0.0
+	caja.anchor_right = 0.0
 	caja.anchor_top = 0.0
 	caja.anchor_bottom = 0.0
-	caja.offset_left = -190
-	caja.offset_right = 190
+	caja.offset_left = 18
+	caja.offset_right = 398
 	caja.offset_top = 12
 	caja.offset_bottom = 54
 	add_child(caja)
@@ -478,6 +520,7 @@ func _tocar_ambiente() -> void:
 		Sonido.toca("abucheo", Sonido.Bus.AMBIENTE)
 
 func _process(delta: float) -> void:
+	_escalar_rotulos()
 	if _juego == null or partido == null:
 		return
 	_juego.tick(delta)
@@ -738,6 +781,7 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 		nf["slot_code"] = f["slot_code"]
 		nf["es_local"] = es_local
 		_en_campo[i] = nf
+		_fov_rotulos = -1.0
 		_juego.players = _en_campo
 		_juego.players_by_id[entra.id] = nf
 		_juego.players_by_id.erase(sale.id)

@@ -82,6 +82,47 @@ static func slot_to_position(slot: Array, es_local: bool) -> Vector3:
 	var x: float = -34.0 + (width_coord / 100.0) * 68.0
 	return Vector3(x, 0, z)
 
+## NOMBRE Y DORSAL FLOTANDO SOBRE CADA JUGADOR (25-9-2026, ROADMAP Fase 3:
+## "nombre del jugador flotando sobre cada futbolista", y el análisis externo:
+## "a distancia de juego los jugadores son siluetas minúsculas"). `fixed_size`:
+## el rótulo mide lo mismo en pantalla esté cerca o en la otra punta del campo,
+## que es justo cuando hace falta. Se enciende y apaga para todos a la vez desde
+## el botón "Nombres" de `VistaEstadio`.
+static var mostrar_nombres := true
+const ROTULO := "Rotulo"
+## Tamaño del rótulo con la cámara de TV; `VistaEstadio._escalar_rotulos()` lo
+## corrige para las cámaras con más o menos zoom.
+const TAM_ROTULO := 0.00055
+
+##
+## Los del visitante van medio metro más arriba: el caso más común de dos
+## jugadores pegados es un defensor marcando a un delantero RIVAL, y con los
+## rótulos a la misma altura se pisaban ("5 QuiFigueroa" en captura).
+static func poner_rotulo(n: Node3D, jug: Dictionary, es_local: bool = true) -> void:
+	var nombre := String(jug.get("nombre", ""))
+	if nombre == "":
+		return
+	var partes := nombre.split(" ", false)
+	var apellido := partes[partes.size() - 1] if partes.size() > 0 else nombre
+	var dorsal := int(jug.get("dorsal", 0))
+	var r := Label3D.new()
+	r.name = ROTULO
+	r.text = ("%d  %s" % [dorsal, apellido]) if dorsal > 0 else apellido
+	r.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	r.fixed_size = true
+	r.pixel_size = TAM_ROTULO
+	r.font_size = 30
+	r.outline_size = 10
+	r.modulate = Color(1, 1, 1, 0.95)
+	r.outline_modulate = Color(0, 0, 0, 0.85)
+	## Por encima de todo: si la cabeza de otro lo tapara, se perdería el
+	## nombre justo en las jugadas con más gente.
+	r.no_depth_test = true
+	r.render_priority = 2
+	r.position = Vector3(0, 2.25 if es_local else 2.8, 0)
+	r.visible = mostrar_nombres
+	n.add_child(r)
+
 func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dictionary,
 		es_local: bool, kit: Dictionary, kit_portero: Dictionary = {}) -> Array:
 	var slots: Array = formacion.get("s", [])
@@ -129,6 +170,7 @@ func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dicti
 		n.position = base_pos
 		if not es_local:
 			n.rotation.y = PI
+		poner_rotulo(n, jug, es_local)
 
 		out.append({"node": n, "anim": nodo["anim"], "id": jid, "jugador": jug,
 			"base_pos": base_pos, "slot_code": slot[0], "es_local": es_local,
@@ -339,7 +381,12 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 		if not dq.is_empty():
 			root.add_child(dq["nodo"])
 			FutbolistaQ.terminar(dq, true)
-			VestidorQ.vestir(dq, c1)
+			## Equipación pintada sobre el cuerpo (camiseta con su estilo,
+			## pantalón, medias, botines); la ropa teñida de antes queda solo
+			## como respaldo si faltara la máscara.
+			var pantalon := color_liso if puesto == "ARB" else Color(0, 0, 0, 0)
+			if not VestidorQ.vestir_equipacion(dq, c1, c2, estilo, piel, pelo, pantalon):
+				VestidorQ.vestir(dq, c1)
 			var apq: AnimationPlayer = dq["anim"]
 			if apq.has_animation("parado"):
 				apq.play("parado")
