@@ -92,6 +92,7 @@ func _ready() -> void:
 	_probar_eventos_nuevos()
 	_probar_entrevistas()
 	_probar_estadio_b6()
+	_probar_ciudad_b7()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5605,3 +5606,46 @@ func _probar_estadio_b6() -> void:
 	var ext := raiz.find_child("Exterior", false, false)
 	_comprobar(ext != null and ext.find_children("*", "Label3D", false, false).size() >= 2, "hay taquillas, tienda y rótulos fuera")
 	raiz.queue_free()
+
+## B7: la ciudad se puede tocar -cada instalación tiene su punto, lo que no
+## existe es un solar-, las obras se ven con su grúa, y el día de partido trae
+## gente y banderas. Construir desde el mapa cobra lo mismo que dice la ficha.
+func _probar_ciudad_b7() -> void:
+	_titulo("CIUDAD B7: SOLARES, OBRAS CON GRÚA, DÍA DE PARTIDO, FICHA Y CONSTRUIR")
+	var m := Mundo.new()
+	m.generar(["CHI"], 313)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	c.saldo = 900000000
+	m.obras.niveles["gim"] = 2
+	var antes := c.saldo
+	var coste := m.obras.coste("piscina", c.rep)
+	_comprobar(m.obras.iniciar("piscina", c) == "" and antes - c.saldo == coste, "construir cobra lo que anuncia la ficha (%d)" % coste)
+	var datos := {
+		"club": {"nombre": c.nombre, "c1": c.color1, "c2": c.color2, "cap": 30000, "rep": c.rep, "socios": c.socios, "estadioNom": "Estadio"},
+		"inst": m.obras.niveles.duplicate(),
+		"obras": [{"k": "piscina", "semanas": 4}],
+		"terrenos": [], "negocios": {}, "perfil_estadio": {},
+		"dia_partido": true, "vecinos": 30,
+	}
+	var cb := CityBuilder.new()
+	add_child(cb)
+	cb.build(datos)
+	var por_k := {}
+	for p: Dictionary in cb.puntos_clic:
+		por_k[String(p["k"])] = String(p["estado"])
+	_comprobar(por_k.size() >= CityBuilder.EDIFICIOS.size(), "cada instalación tiene su punto en el mapa (%d)" % por_k.size())
+	_comprobar(por_k.get("gim", "") == "hecho" and por_k.get("piscina", "") == "obra" and por_k.get("video", "") == "solar",
+		"hecho, en obra y solar se distinguen")
+	_comprobar(cb.find_children("Grua", "Node3D", false, false).size() >= 1, "la obra tiene su grúa")
+	_comprobar(cb.find_child("Hinchada", false, false) != null, "el día de partido hay gente")
+	var rot: Node = cb.find_child("Rotulos", false, false)
+	_comprobar(rot != null and rot.get_child_count() >= CityBuilder.EDIFICIOS.size(), "rótulos flotantes sobre cada parcela")
+	var dentro := true
+	for p: Dictionary in cb.puntos_clic:
+		if String(p["estado"]) in ["hecho", "obra", "solar"] and (p["pos"] as Vector3).z > 250.0:
+			dentro = false
+	_comprobar(dentro, "ninguna parcela cae en la calle exterior (z=262)")
+	cb.mostrar_rotulos(false)
+	_comprobar(not rot.visible, "los rótulos se pueden ocultar")
+	cb.queue_free()
