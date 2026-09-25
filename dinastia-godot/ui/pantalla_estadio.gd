@@ -53,7 +53,9 @@ const COL_ROJO := Color(0.85, 0.24, 0.24)
 ## Los seis diseños. `BIENVENIDA` es el único que se usa SIN partido -el visor
 ## del propio estadio desde Club → Estadio-, y `GOL` no entra en la rotación:
 ## lo fuerza `al_gol()` y se va solo.
-enum Pagina {MARCADOR, ESTADISTICAS, GOLES, TABLA, PICHICHI, BIENVENIDA, GOL}
+## `CRUCES` (26-9-2026): los cruces de la ronda en una copa o en la fase de
+## eliminación continental, donde no hay tabla que enseñar.
+enum Pagina {MARCADOR, ESTADISTICAS, GOLES, TABLA, PICHICHI, BIENVENIDA, GOL, CRUCES}
 
 var partido: Partido
 ## El club dueño del recinto (el local en un partido normal). Manda en los
@@ -140,6 +142,7 @@ func _construir() -> void:
 	_paneles[Pagina.PICHICHI] = _panel_pichichi()
 	_paneles[Pagina.BIENVENIDA] = _panel_bienvenida()
 	_paneles[Pagina.GOL] = _panel_gol()
+	_paneles[Pagina.CRUCES] = _panel_cruces()
 	for k: int in _paneles:
 		var c: Control = _paneles[k]
 		if c == null:
@@ -170,6 +173,8 @@ func _rehacer_orden() -> void:
 		_orden.append(Pagina.BIENVENIDA)
 	if not (datos.get("tabla", []) as Array).is_empty():
 		_orden.append(Pagina.TABLA)
+	if not (datos.get("cruces", []) as Array).is_empty():
+		_orden.append(Pagina.CRUCES)
 	if not (datos.get("goleadores", []) as Array).is_empty():
 		_orden.append(Pagina.PICHICHI)
 
@@ -514,7 +519,7 @@ func _panel_tabla() -> Control:
 	var filas: Array = datos.get("tabla", [])
 	if filas.is_empty():
 		return null
-	var titulo := "TABLA DE POSICIONES"
+	var titulo := String(datos.get("titulo_tabla", "TABLA DE POSICIONES"))
 	var liga := String(datos.get("liga", ""))
 	if liga != "":
 		titulo += "  ·  " + liga.to_upper()
@@ -585,6 +590,27 @@ func _panel_pichichi() -> Control:
 		fila.size = Vector2(ANCHO - 96, 44)
 		c.add_child(fila)
 		y += 50.0
+	_pie(c)
+	return c
+
+## LOS CRUCES DE LA RONDA (26-9-2026): en una copa no hay tabla, y enseñar la
+## de la liga en un partido de copa era mentirle al estadio. Hasta seis cruces;
+## el de los dos que están jugando, resaltado.
+func _panel_cruces() -> Control:
+	var filas: Array = datos.get("cruces", [])
+	if filas.is_empty():
+		return null
+	var c := _base("CRUCES  ·  " + String(datos.get("liga", "")).to_upper())
+	var y := 96.0
+	for i in mini(6, filas.size()):
+		var par: Array = filas[i]
+		var txt := "%s   vs   %s" % [String(par[0]), String(par[1])]
+		var es_este := casa != null and (String(par[0]) == casa.nombre or String(par[1]) == casa.nombre)
+		var fila := _fila_tabla("", txt, "", "", _color_casa() if es_este else COL_TINTA, 28)
+		fila.position = Vector2(48, y)
+		fila.size = Vector2(ANCHO - 96, 44)
+		c.add_child(fila)
+		y += 52.0
 	_pie(c)
 	return c
 

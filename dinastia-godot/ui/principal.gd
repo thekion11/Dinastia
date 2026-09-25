@@ -2416,7 +2416,7 @@ func _dirigir() -> void:
 	## el rival no tiene uno propio en este juego-.
 	## Lo de la PANTALLA GIGANTE va antes de `abrir()`: `PartidoVivo` abre el
 	## visor 3D de entrada, así que asignarlo después llegaría tarde.
-	vivo.datos_pantalla = _datos_pantalla_estadio(p.local)
+	vivo.datos_pantalla = _datos_pantalla_estadio(p.local, "copa" if es_copa else ("conti" if conti != null else "liga"))
 	vivo.abrir(p, mundo.mi_club(), mundo.vestuario, es_eliminatoria, mundo.roles,
 		_velocidad_partido, mundo.perfil_estadio_de(p.local),
 		Comercial.color_balon(mundo.comercial.balon, mundo.mi_club()))
@@ -2706,9 +2706,12 @@ func _liga_de(c: Club) -> Liga:
 ## `local` es el dueño del recinto: la tabla que se enseña es la de SU liga
 ## -un partido de copa entre divisiones distintas enseña la del anfitrión-,
 ## no la del club del usuario.
-func _datos_pantalla_estadio(local: Club) -> Dictionary:
+## `comp` (26-9-2026): "liga", "copa" o "conti". Antes la pantalla enseñaba
+## SIEMPRE la liga del local, también en un partido de copa o de la copa
+## continental; ahora enseña la competición que se está jugando.
+func _datos_pantalla_estadio(local: Club, comp: String = "liga") -> Dictionary:
 	var d: Dictionary = {
-		"tabla": [], "goleadores": [], "liga": "", "jornada": 0, "recinto": "",
+		"tabla": [], "goleadores": [], "liga": "", "jornada": 0, "recinto": "", "cruces": [],
 	}
 	if local == null or mundo == null:
 		return d
@@ -2721,6 +2724,28 @@ func _datos_pantalla_estadio(local: Club) -> Dictionary:
 		d["recinto"] = mundo.estadio.nombre_de(local)
 	else:
 		d["recinto"] = "Estadio " + Nombres.visible(local.nombre)
+	if comp == "copa" and mundo.copa != null:
+		d["liga"] = "%s · %s" % [mundo.copa.nombre, mundo.copa.nombre_de_ronda()]
+		for par: Array in mundo.copa.cruces():
+			d["cruces"].append([Nombres.visible((par[0] as Club).nombre), Nombres.visible((par[1] as Club).nombre)])
+		d["goleadores"] = _goleadores_de(mundo.copa.vivos)
+		return d
+	var conti := mundo.mi_continental()
+	if comp == "conti" and conti != null:
+		d["liga"] = "%s · %s" % [Continental.nombre_conti(conti.clave), conti.nombre_de_ronda()]
+		if conti.en_fase_de_grupos():
+			for gi in conti.grupos.size():
+				if (conti.grupos[gi] as Array).has(local) or (conti.grupos[gi] as Array).has(mundo.mi_club()):
+					d["titulo_tabla"] = "GRUPO " + conti.nombre_de_grupo(gi).to_upper()
+					for f: Dictionary in conti.tabla_de_grupo(gi):
+						var cg: Club = f["club"]
+						d["tabla"].append({"id": cg.id, "nombre": cg.nombre, "pts": int(f["pts"]), "pj": int(f["pj"]), "dif": int(f["dif"])})
+					break
+		else:
+			for par2: Array in conti.cruces():
+				d["cruces"].append([Nombres.visible((par2[0] as Club).nombre), Nombres.visible((par2[1] as Club).nombre)])
+		d["goleadores"] = _goleadores_de(conti.vivos)
+		return d
 	var l: Liga = mundo.liga_de(local)
 	if l == null:
 		return d
@@ -2737,15 +2762,18 @@ func _datos_pantalla_estadio(local: Club) -> Dictionary:
 	## Los goleadores de ESA liga, no del mundo entero: es la pantalla de ese
 	## estadio, no un ranking global. Sin goles todavía (jornada 1) la lista
 	## sale vacía y la pantalla simplemente no rota a ese panel.
+	d["goleadores"] = _goleadores_de(l.clubes)
+	return d
+
+func _goleadores_de(clubes: Array) -> Array:
 	var tiradores: Array = []
-	for c: Club in l.clubes:
+	for c: Club in clubes:
 		for j: Jugador in c.plantilla:
 			if j.goles > 0:
 				tiradores.append({"nombre": j.nombre, "club": c.nombre, "goles": j.goles})
 	tiradores.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return int(a["goles"]) > int(b["goles"]))
-	d["goleadores"] = tiradores.slice(0, 8)
-	return d
+	return tiradores.slice(0, 8)
 
 func _escribir(bbcode: String) -> void:
 	_registro.append_text(_bbcode_accesible(bbcode) + "\n")

@@ -15,6 +15,7 @@ extends Control
 
 signal cerrado
 
+var _mini_pantalla: TextureRect
 var club: Club
 var visitante: Club
 var _raiz3d: Node3D
@@ -228,6 +229,24 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_radar.visible = _pref("radar", true)
 	add_child(_radar)
 
+	## LA PANTALLA GIGANTE, EN LA ESQUINA (26-9-2026). La del estadio rota
+	## marcador, tabla y goleadores, pero desde la cámara de transmisión es una
+	## mota al fondo del estadio: nadie la leía. Aquí se ve la MISMA textura,
+	## en vivo, arriba a la derecha. Se apaga desde el cajón.
+	_mini_pantalla = TextureRect.new()
+	_mini_pantalla.anchor_left = 1.0; _mini_pantalla.anchor_right = 1.0
+	_mini_pantalla.offset_left = -348; _mini_pantalla.offset_right = -16
+	_mini_pantalla.offset_top = 64; _mini_pantalla.offset_bottom = 64 + 177
+	_mini_pantalla.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_mini_pantalla.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_mini_pantalla.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_mini_pantalla.visible = false
+	add_child(_mini_pantalla)
+	## La pantalla se monta antes que el HUD: aquí ya puede existir.
+	if _pantalla != null:
+		_mini_pantalla.texture = _pantalla.get_texture()
+		_mini_pantalla.visible = _pref("pantalla_esquina", true)
+
 	## AJUSTES EN UN CAJÓN (25-9-2026, plan maestro B1). Antes siete botones
 	## vivían encima de la transmisión (cámara, zoom ±, modo, velocidad, nombres,
 	## volver); el usuario pidió que no estuvieran todos a la vista. Ahora en
@@ -255,6 +274,9 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
 	_cajon.seccion("En pantalla")
 	_cajon.interruptor("🏷 Nombres de los jugadores", PlayerSpawner.mostrar_nombres, _mostrar_nombres)
+	_cajon.interruptor("📺 Pantalla del estadio en la esquina", _pref("pantalla_esquina", true), func(si: bool) -> void:
+		_guardar_pref("pantalla_esquina", si)
+		_mini_pantalla.visible = si and _mini_pantalla.texture != null)
 	_cajon.interruptor("🗺 Radar táctico", _radar.visible, func(si: bool) -> void:
 		_radar.visible = si
 		_guardar_pref("radar", si))
@@ -464,6 +486,9 @@ func _montar_pantalla() -> void:
 	_pantalla.montar(club, visitante, partido, datos_pantalla, recinto)
 
 	var tex := _pantalla.get_texture()
+	if _mini_pantalla != null:
+		_mini_pantalla.texture = tex
+		_mini_pantalla.visible = _pref("pantalla_esquina", true)
 	for p: MeshInstance3D in pantallas:
 		var mat := StandardMaterial3D.new()
 		mat.albedo_texture = tex
