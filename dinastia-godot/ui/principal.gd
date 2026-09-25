@@ -1786,7 +1786,11 @@ func _conectar_noticias() -> void:
 		## silencio. Los tuyos no pasan por aquí: `_intentar_fichar()` y
 		## `responder_oferta()` ya escriben su propio aviso.
 		mundo.mercado.traspaso.connect(func(j: Jugador, de: Club, a: Club, _monto: int) -> void:
-			if de == mundo.mi_club() or a == mundo.mi_club():
+			## TU FICHAJE SE PRESENTA (C7): la tarjeta con su cara y tu camiseta.
+			if a == mundo.mi_club():
+				PresentacionFichaje.mostrar.call_deferred(self, mundo, j, de)
+				return
+			if de == mundo.mi_club():
 				return
 			_escribir("[color=#8ea595]🔁 %s pasa de %s a %s.[/color]" % [
 				j.nombre, de.nombre if de else "?", a.nombre]))
@@ -2103,7 +2107,12 @@ func _conectar_noticias() -> void:
 		## LA PORTADA DEL LUNES, COMO PERIÓDICO (C20): si la semana dejó una
 		## portada nueva, se abre sola (se puede desactivar en la propia hoja).
 		mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
-			call_deferred("_portada_nueva"))
+			call_deferred("_portada_nueva")
+			call_deferred("_al_paso_nuevo"))
+		if mundo.charlas != null:
+			mundo.charlas.noticia.connect(func(titulo: String, cuerpo: String) -> void:
+				_escribir("[color=#4caf6d][b]%s[/b][/color] %s" % [titulo, cuerpo])
+				_anotar(titulo, cuerpo))
 	if mundo.vestuario != null:
 		mundo.vestuario.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			_escribir("[color=#4caf6d][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -4625,6 +4634,7 @@ func _ver_ficha(j: Jugador) -> void:
 				_escribir("[color=#e05555]%s[/color]" % problema)
 			_refrescar()
 			_ver_ficha(j))
+		FichaJugadorAcciones.pintar_charla(_ficha, j, mundo, pal)
 		FichaJugadorInfo.pintar_vida_personal(_ficha, j, mundo, pal)
 		FichaJugadorInfo.pintar_historial(_ficha, j, pal)
 		FichaJugadorAcciones.pintar_venta(_ficha, j, mio, mundo, pal, _confirmar_rescision_id,
@@ -13743,6 +13753,14 @@ func _pintar_derechos_tv(p: Prensa) -> void:
 ## EL ARCHIVO DE PORTADAS. Se escribían después de cada partido grande y se
 ## perdían al cambiar de pantalla. Juntas se leen como la hemeroteca del ciclo:
 ## de un vistazo se ve si el año fue de titulares buenos o de titulares malos.
+## LA ENTREVISTA AL PASO (C6): si esta semana te paró un medio nuevo.
+func _al_paso_nuevo() -> void:
+	if mundo == null or mundo.prensa == null or mundo.prensa.al_paso.is_empty():
+		return
+	var n := PieDeCampo.mostrar_al_paso(self, mundo.prensa)
+	if n != null:
+		n.cerrado.connect(_refrescar)
+
 func _portada_nueva() -> void:
 	if mundo == null or mundo.prensa == null or mundo.prensa.portadas.is_empty():
 		return
