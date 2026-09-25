@@ -21,6 +21,9 @@ signal cambio_media(antes: int, ahora: int)
 var id: String = ""
 var nombre: String = ""
 var pais: String = "CHI"
+## Región de origen dentro del país ("EUS" = Euskal Herria), o vacío. Solo
+## importa para los clubes con filosofía de cantera (`Regiones`, C3).
+var region: String = ""
 var club_id: String = ""
 var club_formacion: String = ""
 

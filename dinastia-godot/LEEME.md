@@ -22,6 +22,12 @@
 - **Rueda de prensa tras copa y continental**, con los escudos de esa competición.
 - **`MentorVoz`**: el mentor comenta fuera del tutorial, con su cara.
 - **Periódico** (`ui/componentes/portada_periodico.gd`): 6 cabeceras propias; ver ROADMAP C20.
+- **Banquillo**: butacas con respaldo, techo y metacrilato. Los suplentes llevan botines y ponen
+  las manos sobre las rodillas.
+- **Filosofía de cantera** (`nucleo/regiones.gd`):
+  - región de origen de cada jugador;
+  - el Athletic solo ficha a jugadores de Euskal Herria por origen, no por pasaporte;
+  - los españoles tienen apellidos españoles, y solo un ~9 % son vascos.
 - Pruebas: `_probar_coherencia_c1`, `_probar_portadas_c20`; capturas `captura_mentor_voz` y
   `captura_portadas`.
 

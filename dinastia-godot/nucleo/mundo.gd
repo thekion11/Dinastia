@@ -508,7 +508,8 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 	j.pos = grupo
 	j.pos_e = demarcacion
 	j.pais = c.pais
-	j.nombre = _nombre_al_azar(c.pais)
+	j.region = Regiones.region_para(c.pais, j.id, c)
+	j.nombre = _nombre_al_azar(c.pais, j.region)
 	j.edad = edad if edad > 0 else Azar.ent(17, 35)
 	j.ovr = clampi(ovr if ovr > 0 else c.rep - 9 + Azar.ent(-7, 7), 40, 96)
 	## El techo: los muy jovenes pueden crecer mucho, a partir de los 25 lo que
@@ -551,14 +552,19 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 ## a pedido del usuario, mencionando el Athletic Club de Bilbao).
 ##
 ## Nunca devuelve el nombre de un futbolista real (`Nombres.vetado()`).
-func _nombre_al_azar(pais: String = "") -> String:
-	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais))
+func _nombre_al_azar(pais: String = "", region: String = "") -> String:
+	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais, region))
 
-func _sortear_nombre(pais: String) -> String:
+func _sortear_nombre(pais: String, region: String = "") -> String:
 	var n: Array = Datos.tabla("NOMBRES")
 	var a: Array = Datos.tabla("APELLIDOS")
 	var pools: Variant = Datos.tabla("POOLS_EU")
-	if pools is Dictionary and (pools as Dictionary).has(pais):
+	## España con su región (C3): bolsa general o vasca, ya no todos vascos.
+	var propias := Regiones.bolsas(pais, region)
+	if not propias.is_empty():
+		n = propias[0]
+		a = propias[1]
+	elif pools is Dictionary and (pools as Dictionary).has(pais):
 		var par: Array = (pools as Dictionary)[pais]
 		if par.size() >= 2 and not (par[0] as Array).is_empty() and not (par[1] as Array).is_empty():
 			n = par[0]
@@ -641,6 +647,8 @@ func fichar_libre(idx: int, c: Club) -> Dictionary:
 	if idx < 0 or idx >= libres.size():
 		return {"error": "ese jugador ya no está libre"}
 	var j := libres[idx]
+	if not Regiones.admite(c, j):
+		return {"error": Regiones.motivo(c)}
 	var factor_agente := 1.0
 	if prensa != null:
 		factor_agente = float(prensa.agente_de(j).get("f", 1.0))
@@ -1627,7 +1635,14 @@ func _subir_de_cantera(c: Club) -> void:
 		## El canterano entra flojo y con techo: media baja, potencial alto. Es
 		## lo que hace que la cantera sea una apuesta y no una fuente de cracks.
 		var ovr := c.rep - 20 + Azar.ent(0, 8)
-		c.plantilla.append(crear_jugador(c, Datos.grupo(demarcacion), demarcacion, edad, ovr))
+		var nuevo := crear_jugador(c, Datos.grupo(demarcacion), demarcacion, edad, ovr)
+		## EL CLUB QUE VIVE DE SU CANTERA (C3) la cuida más: sus chicos
+		## suben con más techo. Sin `Azar` extra: es un ajuste fijo.
+		if not Regiones.filosofia(c).is_empty():
+			nuevo.ovr = mini(nuevo.ovr + 4, 90)
+			nuevo.pot = clampi(nuevo.pot + 6, nuevo.ovr, 97)
+			nuevo.tasar()
+		c.plantilla.append(nuevo)
 
 ## --- LO QUE APORTA EL CUERPO TECNICO ---------------------------------------
 

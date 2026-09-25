@@ -227,28 +227,12 @@ func mover(compradores_por_semana: int = 6) -> Array[Dictionary]:
 ## Busca a quién ficharía este club: alguien mejor que su plantilla actual, de
 ## otro club, y de un tamaño parecido. Se mira una muestra al azar en vez de los
 ## 8.000 jugadores del mundo, que es lo que permite que esto corra cada semana.
-## CLUBES QUE SOLO FICHAN DE SU PROPIO PAÍS (22-9-2026, pedido directo del
-## usuario: "el Atlético Club de Bilbao solo ficha jugadores de la ciudad de
-## Bilbao... eso debe integrarse en el mercado"). El Athletic Club de Bilbao
-## SÍ existe en el juego (`Ath. Bilbao` en `PAISES_LIGAS.ESP` -en leetspeak
-## en la tabla, "B1lbao", por eso una búsqueda literal de "Bilbao" no lo
-## encontraba la primera vez-). La regla real (cantera vasca, jugadores
-## formados en el País Vasco) no se puede portar literal: `Jugador` solo
-## trackea `pais` (código de 3 letras), nunca ciudad ni región -aproximar
-## por "mismo país" (ESP) es lo más cerca que da el modelo de datos actual,
-## no una promesa de fidelidad perfecta a la regla real-. Lista aparte y no
-## un campo en `Club`: son pocos clubes con esta identidad en el mundo real
-## (Athletic es el caso de libro, hay más candidatos si el usuario los pide),
-## y así no hace falta tocar el guardado de cada club por uno solo.
-const CLUBES_SOLO_MISMO_PAIS := ["Ath. Bilbao"]
-
-func _solo_mismo_pais(c: Club) -> bool:
-	return CLUBES_SOLO_MISMO_PAIS.has(Nombres.limpiar(c.nombre))
-
+## CLUBES QUE SOLO FICHAN DE SU TIERRA: ver `Regiones` (26-9-2026, plan
+## maestro C3). Aquí había una aproximación por "mismo país" porque `Jugador` no
+## tenía región; ya la tiene, y la regla es la real (Euskal Herria).
 func _buscar_objetivo(comprador: Club) -> Jugador:
 	var lista: Array = _mundo().clubes.values()
 	var media := comprador.media()
-	var solo_local := _solo_mismo_pais(comprador)
 	var mejor: Jugador = null
 	var mejor_v := media + 1.0
 	for intento in 12:
@@ -260,7 +244,8 @@ func _buscar_objetivo(comprador: Club) -> Jugador:
 		var j: Jugador = otro.plantilla[Azar.ent(0, otro.plantilla.size() - 1)]
 		if j.edad > 33:
 			continue
-		if solo_local and j.pais != comprador.pais:
+		## Filosofía de cantera (C3): el Athletic solo mira a los de su tierra.
+		if not Regiones.admite(comprador, j):
 			continue
 		if float(j.ovr) > mejor_v:
 			mejor_v = float(j.ovr)
@@ -432,6 +417,10 @@ func abrir_negociacion(j: Jugador) -> String:
 	if j.no_negociar_hasta > 0 and m.semana < j.no_negociar_hasta:
 		return "%s no se sienta a hablar de él hasta la semana %d" % [
 			(m.clubes.get(j.club_id) as Club).nombre if m.clubes.has(j.club_id) else "Su club", j.no_negociar_hasta]
+	## Si diriges un club con filosofía de cantera, la respetas tú también.
+	if not Regiones.admite(mio, j):
+		var mot := Regiones.motivo(mio)
+		return mot[0].to_upper() + mot.substr(1)
 	if m.federacion != null:
 		var motivo_ext := m.federacion.puede_fichar_extranjero(mio, j)
 		if motivo_ext != "":

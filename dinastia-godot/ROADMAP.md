@@ -30,11 +30,23 @@ primero cuidar las **situaciones ilógicas**.
 - **Auditoría de otras ilógicas**: recorrido por pantallas y sistemas buscando contradicciones.
   Cada una encontrada se anota aquí.
 
-### C2. El banquillo ✅
+### C2. El banquillo ✅ — HECHO (26-9)
+- Plataforma, butaca con respaldo del color del club por jugador, pared, techo y frente de
+  metacrilato.
+- Botín completo con el tobillo del color secundario, y media hasta la rodilla: ya no se ven
+  descalzos.
+- Manos sobre las rodillas en la pose sentada.
 Mejorar el banquillo (estructura, asientos, techo) y los pies de los suplentes: que apoyen en el
 suelo y no atraviesen nada.
 
-### C3. Clubes de cantera con filosofía propia (ej.: Athletic Club) ✅
+### C3. Clubes de cantera con filosofía propia (ej.: Athletic Club) ✅ — HECHO (26-9)
+- `nucleo/regiones.gd`.
+- `Jugador.region` existe y se guarda.
+- Los españoles ya no son todos vascos: bolsa general y bolsa vasca, con un ~9 % de vascos.
+- El Athletic («Abando AC» en la base ficticia) solo admite a jugadores de Euskal Herria **por
+  origen, no por pasaporte**: un nacido en Bilbao que juega con otra selección entra. La regla
+  vale para la IA, para ti, en el mercado y con los agentes libres.
+- Su cantera sube con más media y más techo.
 - **Corrección de un dato**: el Athletic no ficha solo a jugadores de la ciudad de Bilbao. Su
   política es fichar a jugadores **nacidos o formados en Euskal Herria**:
   - País Vasco;

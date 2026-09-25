@@ -274,7 +274,7 @@ static func _dic_a_club(d: Dictionary) -> Club:
 ## en vez de "at" son 60 KB de más en cada guardado sin que nadie lo lea nunca.
 static func _jugador_a_dic(j: Jugador) -> Dictionary:
 	return {
-		"i": j.id, "n": j.nombre, "p": j.pais, "c": j.club_id, "cf": j.club_formacion,
+		"i": j.id, "n": j.nombre, "p": j.pais, "rg": j.region, "c": j.club_id, "cf": j.club_formacion,
 		"g": j.pos, "pe": j.pos_e, "e": j.edad, "o": j.ovr, "t": j.pot,
 		"at": j.atributos, "r": j.rasgo,
 		"f": j.forma, "m": j.moral, "fi": j.fisico,
@@ -293,6 +293,7 @@ static func _jugador_a_dic(j: Jugador) -> Dictionary:
 static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	var j := Jugador.new()
 	j.id = String(d["i"]); j.nombre = String(d["n"]); j.pais = String(d["p"])
+	j.region = String(d.get("rg", ""))
 	j.club_id = String(d["c"]); j.club_formacion = String(d["cf"])
 	j.pos = String(d["g"]); j.pos_e = String(d["pe"])
 	j.edad = int(d["e"]); j.ovr = int(d["o"]); j.pot = int(d["t"])
