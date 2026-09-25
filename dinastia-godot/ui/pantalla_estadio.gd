@@ -103,7 +103,12 @@ func montar(club_casa: Club, club_rival: Club, p: Partido, d: Dictionary,
 	datos = d
 	nombre_recinto = recinto
 	size = Vector2i(ANCHO, ALTO)
-	render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	## A RITMO DE MARCADOR, NO DE FOTOGRAMA (25-9-2026). Con `UPDATE_ALWAYS`
+	## la pantalla entera se volvía a dibujar 60 veces por segundo para
+	## enseñar un minuto que cambia cada segundo y un panel que rota cada
+	## siete. Ahora se dibuja al cambiar de panel y cuatro veces por segundo
+	## (`_process()`), que es de sobra para el reloj.
+	render_target_update_mode = SubViewport.UPDATE_ONCE
 	transparent_bg = false
 	## Aquí dentro solo hay `Control`s. Sin esto el viewport arrastra toda la
 	## maquinaria 3D en cada repintado -y se repinta en cada frame- para no
@@ -185,7 +190,14 @@ func _color_casa() -> Color:
 
 # --- rotación y reloj -------------------------------------------------------
 
+const SEG_REDIBUJO := 0.25
+var _t_redibujo := 0.0
+
 func _process(delta: float) -> void:
+	_t_redibujo += delta
+	if _t_redibujo >= SEG_REDIBUJO:
+		_t_redibujo = 0.0
+		render_target_update_mode = SubViewport.UPDATE_ONCE
 	## BUG REAL, ENCONTRADO CON LA PRUEBA DE CAPTURA (23-9-2026): este
 	## `refrescar()` estaba DESPUÉS del `return` del corte de gol, así que
 	## durante los 6,5 s del "¡GOOOL!" el marcador de debajo no se enteraba del
@@ -218,6 +230,7 @@ func mostrar(p: int) -> void:
 		if c != null:
 			c.visible = (k == p)
 	pagina_visible = p
+	render_target_update_mode = SubViewport.UPDATE_ONCE
 
 ## Repinta solo lo que cambia con el partido. Barato a propósito: se llama en
 ## cada frame y no crea ni destruye nada, solo reescribe texto.

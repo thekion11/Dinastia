@@ -31,6 +31,9 @@ enum { MEDIO, ALTO, ULTRA }
 ## x4 -> x2 -ver `sol()`/`aplicar_viewport()` mas abajo-) en vez de bajar de
 ## nivel. Medido con `pruebas/medir_rendimiento.gd` antes/despues, ver LEEME.md.
 static var elegida: int = ALTO
+## Bajar efectos durante el partido si los FPS caen de 40 (ver
+## `RendimientoAdaptativo`). Encendido por defecto; se apaga en Ajustes.
+static var adaptativa: bool = true
 
 ## Hora del dia. El atardecer es el que mejor sienta a un complejo deportivo:
 ## luz rasante, sombras largas y contraste, que es lo que hace que un render

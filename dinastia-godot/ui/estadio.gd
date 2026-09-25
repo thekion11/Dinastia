@@ -143,6 +143,19 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## `build_pitch`, que es una función aparte.
 	Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	Ambience.apply(_raiz3d, perfil, null, Calidad.elegida)
+	## Si la máquina no llega a 40 FPS, se bajan efectos por escalones durante
+	## el partido (ver `RendimientoAdaptativo`). En un renderizador por software
+	## -los servidores de pruebas- no tiene sentido: ahí nunca se llegaría y las
+	## capturas saldrían con la calidad rebajada.
+	var adaptador := RenderingServer.get_video_adapter_name().to_lower()
+	if Calidad.adaptativa and not adaptador.contains("llvmpipe") and not adaptador.contains("swiftshader"):
+		var ra := RendimientoAdaptativo.new()
+		ra.raiz3d = _raiz3d
+		add_child(ra)
+		ra.escalon_aplicado.connect(func(_e: int, que: String) -> void:
+			if _pie != null:
+				_pie_base += "  ·  calidad ajustada: %s" % que
+				_pie.text = _pie_base)
 	StadiumBuilder.build_pitch(_raiz3d, perfil, club)
 	## La semilla sale del id del club: el mismo recinto siempre.
 	StadiumBuilder.build(_raiz3d, perfil, aforo, ocupacion, club._hash_id(), club)

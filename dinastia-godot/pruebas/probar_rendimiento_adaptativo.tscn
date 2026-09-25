@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://pruebas/probar_rendimiento_adaptativo.gd" id="1"]
+
+[node name="ProbarRendimientoAdaptativo" type="Node"]
+script = ExtResource("1")

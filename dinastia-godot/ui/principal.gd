@@ -10940,6 +10940,13 @@ func _pintar_dispositivo() -> void:
 			Calidad.elegida = clave
 			_refrescar())
 		fila_c.add_child(b_c)
+	var ad := CheckButton.new()
+	ad.text = "Ajustar sola para mantener 40 FPS en el partido"
+	ad.tooltip_text = "Si tu equipo no llega a 40 FPS, el partido apaga por escalones la oclusión ambiental, acorta las sombras y baja la resolución del 3D."
+	ad.button_pressed = Calidad.adaptativa
+	ad.add_theme_font_size_override("font_size", 11)
+	ad.toggled.connect(func(si: bool) -> void: Calidad.adaptativa = si)
+	_lista_ajustes.add_child(ad)
 	if not _modo_experto:
 		var ec := _texto(10, COL_SUAVE)
 		ec.text = "Si el estadio en 3D se siente lento, baja la calidad. La interfaz no cambia: son etiquetas y no cuestan nada."
