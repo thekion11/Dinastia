@@ -1,5 +1,30 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## SEXTA RONDA, TANDA A: COHERENCIA, PERIÓDICO (26-9-2026)
+
+- **Pantalla del estadio**:
+  - su misma textura se ve en vivo en una esquina de la transmisión (antes era una mota
+    ilegible), y se apaga desde el cajón;
+  - enseña la competición que se juega: cruces de copa, grupo o cruces continentales.
+- **Clima de la ciudad** (`nucleo/clima.gd`):
+  - el tiempo de cada partido sale del país del local (latitud de `GLOBO_PAIS`) y de la época
+    del año, sin consumir `Azar`;
+  - hemisferios opuestos, trópico sin invierno, nieve solo en países fríos, desierto seco, y
+    altura en Bolivia, Ecuador, Colombia y México;
+  - `Partido.clima` (que existía y valía siempre 1,0) traba el partido con lluvia, nieve,
+    tormenta, niebla o calor;
+  - el visitante no adaptado sufre;
+  - se ve en el 3D, en la tarjeta del próximo partido y en la rueda de prensa, y el mentor da un
+    consejo;
+  - el diseñador del estadio ya no elige el clima.
+- **Escudo o camiseta nuevos**: portada, reacción de la hinchada, pregunta en la próxima rueda y
+  comentario del mentor.
+- **Rueda de prensa tras copa y continental**, con los escudos de esa competición.
+- **`MentorVoz`**: el mentor comenta fuera del tutorial, con su cara.
+- **Periódico** (`ui/componentes/portada_periodico.gd`): 6 cabeceras propias; ver ROADMAP C20.
+- Pruebas: `_probar_coherencia_c1`, `_probar_portadas_c20`; capturas `captura_mentor_voz` y
+  `captura_portadas`.
+
 ## PLAN MAESTRO, TANDA 3: EL ESTADIO POR SECCIONES Y LA CIUDAD QUE SE TOCA (25-9-2026)
 
 - **B6 · El estadio por secciones** (`nucleo/estadio_propio.gd`, `visor/stadium_builder.gd`).
