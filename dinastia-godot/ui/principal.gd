@@ -1633,7 +1633,7 @@ func _conectar_noticias() -> void:
 			## El momento más definitivo del juego: si algo merece interrumpir,
 			## es que te acaben de echar.
 			Aviso.mostrar(self, "alerta", "🚪", "ESTÁS DESPEDIDO",
-				"La directiva te destituye tras la %s. Elige tu próximo club entre las ofertas de abajo." % motivo)
+				"La directiva te destituye tras la %s. Elige tu próximo club entre las ofertas de abajo." % motivo, "despido")
 			## `Roles.gd` lo deja escrito en su propio comentario -"lo llama quien
 			## atienda `Directiva.despedido`, DESPUÉS de comprobar
 			## `le_pueden_echar()`"- y nadie lo llamaba NUNCA, ni siquiera al
@@ -1657,7 +1657,7 @@ func _conectar_noticias() -> void:
 			_escribir("[color=#e05555][b]EL CLUB SE LIQUIDA.[/b][/color] La deuda pudo más: la asociación toma el control y tu etapa aquí se acaba. Elige tu próximo club entre las ofertas de abajo.")
 			_anotar("EL CLUB SE LIQUIDA.", "La deuda pudo más: la asociación liquida el club y tu etapa aquí se acaba.")
 			Aviso.mostrar(self, "alerta", "💀", "EL CLUB SE LIQUIDA",
-				"La deuda pudo más: la asociación toma el control y tu etapa aquí se acaba. Elige tu próximo club entre las ofertas de abajo.")
+				"La deuda pudo más: la asociación toma el control y tu etapa aquí se acaba. Elige tu próximo club entre las ofertas de abajo.", "descenso_administrativo")
 			mundo.roles.quedar_sin_banco())
 	if mundo.selecciones != null:
 		mundo.selecciones.noticia.connect(func(titulo: String, cuerpo: String) -> void:
@@ -1740,7 +1740,7 @@ func _conectar_noticias() -> void:
 				j.nombre, c.nombre, _dinero(monto)])
 			_anotar("📨 Oferta por %s." % j.nombre, "%s ofrece %s. Respóndela en Mercado." % [c.nombre, _dinero(monto)])
 			Aviso.mostrar(self, "mercado", "📨", "Oferta por %s" % j.nombre,
-				"%s ofrece %s. Tienes que responder." % [c.nombre, _dinero(monto)]))
+				"%s ofrece %s. Tienes que responder." % [c.nombre, _dinero(monto)], "oferta"))
 		## Los traspasos entre dos clubes de la IA -`_buscar_objetivo()` nunca
 		## elige al tuyo como comprador ni como vendedor-: la señal existía desde
 		## siempre pero no la escuchaba nadie, así que el mercado se movía en
@@ -1788,7 +1788,7 @@ func _conectar_noticias() -> void:
 				var gano: Club = r.get("pasa")
 				if gano == mundo.mi_club():
 					Aviso.mostrar(self, "dinero", "🎟️", "Pasas de ronda",
-						"%s superada. Cada eliminatoria que se gana es taquilla y premio." % nombre_ronda)
+						"%s superada. Cada eliminatoria que se gana es taquilla y premio." % nombre_ronda, "ronda_superada")
 					return)
 	## Lo mismo para Champions/Libertadores -mismo bug, sin arreglar hasta hoy
 	## (14-9-2026): ver `_conectar_mi_continental()`, llamada desde
@@ -1812,7 +1812,7 @@ func _conectar_noticias() -> void:
 			_anotar("🏗️ Obra terminada:", cuerpo_obra)
 			## Una obra son semanas de espera y millones: cuando por fin termina, se
 			## avisa. Es de lo poco que el jugador PIDIÓ que pasara y luego olvidó.
-			Aviso.mostrar(self, "dinero", "🏗️", "Obra terminada", cuerpo_obra))
+			Aviso.mostrar(self, "dinero", "🏗️", "Obra terminada", cuerpo_obra, "inauguracion_obra"))
 	## `procesoLibres()` del HTML: rarísima vez (4%) aparece un agente libre de
 	## calidad. Es lo bastante especial para tener su propio aviso -no el
 	## genérico de "hay agentes libres nuevos", que sería ruido cada semana-.
@@ -1841,7 +1841,7 @@ func _conectar_noticias() -> void:
 				## y es justo lo que se pasa por alto leyendo el registro.
 				if semanas >= 6:
 					Aviso.mostrar(self, "alerta", "🚑", "Lesión grave: %s" % j.nombre,
-						"%s. Se pierde %d semanas." % [tipo, semanas])
+						"%s. Se pierde %d semanas." % [tipo, semanas], "medico_parte")
 				## LA VENTANA DE EMERGENCIA. `Roles.gd` lo deja escrito en su propio
 				## comentario -"quien lleve las lesiones la abre llamando a
 				## abrir_emergencia()"- y nadie la llamaba: perder a un titular 12+
@@ -1931,12 +1931,12 @@ func _conectar_noticias() -> void:
 					"%s se va a %s por %s. No hubo nada que negociar." % [j.nombre, a.nombre, _dinero(monto)])
 			elif a == mundo.mi_club():
 				Aviso.mostrar(self, "mercado", "✍️", "Clausulazo",
-					"%s es tuyo: pagaste su cláusula de %s." % [j.nombre, _dinero(monto)]))
+					"%s es tuyo: pagaste su cláusula de %s." % [j.nombre, _dinero(monto)], "oferta_aceptada"))
 		## Y las plusvalías: dinero que entra sin hacer nada, porque te guardaste
 		## un porcentaje al vender. Es la recompensa de una decisión vieja.
 		mundo.cesiones.vendido.connect(func(j: Jugador, comprador: Club, neto: int) -> void:
 			Aviso.mostrar(self, "dinero", "💰", "Venta cerrada",
-				"%s se va a %s. Entran %s." % [j.nombre, comprador.nombre, _dinero(neto)]))
+				"%s se va a %s. Entran %s." % [j.nombre, comprador.nombre, _dinero(neto)], "venta"))
 	## `estadio` -como `federacion` y `cesiones`- vive desde que se crea el Mundo,
 	## no se recrea al cambiar de club: mismo candado por el mismo motivo.
 	## `reforma_hecha` (14-9-2026): `reformar()` siempre devuelve "" en éxito, así
@@ -2003,7 +2003,7 @@ func _conectar_noticias() -> void:
 		mundo.ciudad.noticia.connect(func(titulo: String, texto: String) -> void:
 			_escribir("[color=#c9a227][b]%s.[/b][/color] %s" % [titulo, texto])
 			_anotar(titulo, texto)
-			Aviso.mostrar(self, "contrato", "🏙️", titulo, texto))
+			Aviso.mostrar(self, "contrato", "🏙️", titulo, texto, "patrocinio_nuevo"))
 		mundo.ciudad.movimiento.connect(mundo._anotar_movimiento)
 	if mundo.comercial != null:
 		mundo.comercial.noticia.connect(func(titulo: String, texto: String) -> void:
@@ -2023,7 +2023,7 @@ func _conectar_noticias() -> void:
 		mundo.auspicio.noticia.connect(func(titulo: String, texto: String) -> void:
 			_escribir("[color=#e0a832][b]%s.[/b][/color] %s" % [titulo, texto])
 			_anotar(titulo, texto)
-			Aviso.mostrar(self, "contrato", "👕", titulo, texto))
+			Aviso.mostrar(self, "contrato", "👕", titulo, texto, "patrocinio_nuevo"))
 	if mundo.entrenamiento != null:
 		mundo.entrenamiento.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			_escribir("[color=#3fa06a][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -2397,7 +2397,7 @@ func _avanzar_semana() -> void:
 		var q := mundo.semanas_de_mercado()
 		Aviso.mostrar(self, "mercado", "⏳", "El mercado cierra",
 			"Queda%s %d semana%s para el cierre. Lo que no fiches ahora, no lo fichas hasta la próxima ventana." % [
-				"" if q == 1 else "n", q, "" if q == 1 else "s"])
+				"" if q == 1 else "n", q, "" if q == 1 else "s"], "mercado_cierra")
 	## Se escucha esta jornada para contar lo que le pasó a TU club, que es lo
 	## único que interesa de las 190 jornadas que se juegan en el mundo.
 	var visto := {"txt": ""}
@@ -2509,7 +2509,7 @@ func _nueva_temporada() -> void:
 		var cuerpo_c := "%s%s. Renuévalos en Contratos o los pierdes gratis." % [
 			acaban[0].nombre,
 			" y %d más" % (acaban.size() - 1) if acaban.size() > 1 else ""]
-		Aviso.mostrar(self, "contrato", "📄", "Terminan contrato: %d" % acaban.size(), cuerpo_c)
+		Aviso.mostrar(self, "contrato", "📄", "Terminan contrato: %d" % acaban.size(), cuerpo_c, "contrato_vence")
 		_escribir("[color=#c9a227][b]📄 Terminan contrato %d jugador(es):[/b][/color] %s." % [
 			acaban.size(), _nombres_jugadores(acaban)])
 		_anotar("📄 Terminan contrato: %d" % acaban.size(), cuerpo_c)
@@ -2841,12 +2841,12 @@ func _conectar_mi_continental() -> void:
 		for r: Dictionary in resultados:
 			if r.get("pasa") == mundo.mi_club():
 				Aviso.mostrar(self, "dinero", "🎟️", "Pasas de ronda en %s" % c.nombre,
-					"%s superada. Cada eliminatoria continental que se gana es premio." % nombre_ronda)
+					"%s superada. Cada eliminatoria continental que se gana es premio." % nombre_ronda, "ronda_superada")
 				return)
 	c.grupos_terminados.connect(func(clasificados: Array) -> void:
 		if clasificados.has(mundo.mi_club()):
 			Aviso.mostrar(self, "dinero", "🎟️", "Clasificas a cuartos de %s" % c.nombre,
-				"Terminas entre los ocho de la fase de grupos: cobras el premio de clasificación."))
+				"Terminas entre los ocho de la fase de grupos: cobras el premio de clasificación.", "ronda_superada"))
 
 func _encolar_sorteo(d: Dictionary) -> void:
 	if not _sorteo_me_toca(d):
