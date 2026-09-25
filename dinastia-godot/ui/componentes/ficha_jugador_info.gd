@@ -25,9 +25,8 @@ extends RefCounted
 ## Ajustes-, para no repetir el hueco de coherencia visual del mercado.
 ##   {"suave", "texto", "acento", "verde", "rojo", "oro", "escala"}
 ##
-## Sin `Ficcion.limpiar()`, igual que el resto de `principal.gd` fuera de
-## `PanelMercado`: el renombrado legal es una decisión pendiente de confirmar,
-## no un descuido de esta extracción.
+## Los nombres se pintan tal cual: lo legal se resuelve en los DATOS (base
+## ficticia por defecto, pack real opcional -ver `Datos`-), no en cada pantalla.
 
 ## `fichaCiega()` del HTML: lo que ve el jugador cuando `Ojeadores.modo_ciego`
 ## está activo y no conoce a este rival -en vez de la grilla de atributos

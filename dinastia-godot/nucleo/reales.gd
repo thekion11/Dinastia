@@ -25,6 +25,12 @@ extends RefCounted
 static var _indice: Dictionary = {}
 static var _indice_listo := false
 
+## `Datos.usar_base_real()` la llama al cambiar de base: el índice se arma con
+## la tabla `REALES`, que está vacía en la base ficticia y llena con el pack.
+static func invalidar() -> void:
+	_indice = {}
+	_indice_listo = false
+
 static func _indice_de() -> Dictionary:
 	if not _indice_listo:
 		_indice = {}

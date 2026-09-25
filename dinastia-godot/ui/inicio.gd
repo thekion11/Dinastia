@@ -59,6 +59,8 @@ var _clave := "clasica"
 var _campo_nombre: LineEdit
 var _fila_dificultad: HBoxContainer
 var _dificultad := "normal"
+var _fila_base: HBoxContainer
+var _lbl_base: Label
 var _lbl_estado: Label
 
 var _panel_continuar: VBoxContainer
@@ -256,6 +258,52 @@ func _construir_datos_dt(raiz: VBoxContainer) -> void:
 		b.custom_minimum_size = Vector2(90, 28)
 		b.pressed.connect(func() -> void: _elegir_dificultad(k))
 		_fila_dificultad.add_child(b)
+	_construir_selector_base(raiz)
+
+## "BASE DE DATOS": ficticia (la que se publica, por defecto) o el pack real
+## si esta instalación lo tiene. Ver `Datos` para el formato y dónde se busca.
+## Se aplica AL MOMENTO -`eleccion_club.gd` genera el mundo con lo que haya
+## activo- y se recuerda para la próxima vez.
+func _construir_selector_base(raiz: VBoxContainer) -> void:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	raiz.add_child(fila)
+	var lb := _texto(12, COL_SUAVE)
+	lb.text = "Base de datos"
+	lb.custom_minimum_size = Vector2(90, 0)
+	lb.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	fila.add_child(lb)
+	_fila_base = HBoxContainer.new()
+	_fila_base.add_theme_constant_override("separation", 6)
+	fila.add_child(_fila_base)
+	for real: bool in [false, true]:
+		var b := Button.new()
+		b.text = "Ficticia" if not real else "Real (pack)"
+		b.toggle_mode = true
+		b.custom_minimum_size = Vector2(110, 28)
+		if real and not Datos.hay_pack_real():
+			b.disabled = true
+			b.tooltip_text = "No hay ningún pack real instalado. Copia un archivo pack_real.json en:\n%s" \
+				% ProjectSettings.globalize_path("user://")
+		b.pressed.connect(func() -> void: _elegir_base(real))
+		_fila_base.add_child(b)
+	_lbl_base = _texto(11, COL_SUAVE)
+	_lbl_base.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	raiz.add_child(_lbl_base)
+	_pintar_base()
+
+func _elegir_base(real: bool) -> void:
+	Datos.usar_base_real(real)
+	Datos.guardar_preferencia_base_real(Datos.base_real)
+	_pintar_base()
+
+func _pintar_base() -> void:
+	for i in _fila_base.get_child_count():
+		(_fila_base.get_child(i) as Button).button_pressed = (i == 1) == Datos.base_real
+	if Datos.base_real:
+		_lbl_base.text = "Clubes, ligas y jugadores reales de «%s». Solo para uso privado." % Datos.nombre_pack()
+	else:
+		_lbl_base.text = "384 clubes y 24 ligas inventados, con jugadores generados. Es la base de la versión publicada."
 
 ## Una tarjeta del menú de modos -`tarjetaModo()`/`dibujarPortadaModo()` del
 ## HTML-: la carátula con degradado, el título y el subtítulo. Las que hoy no

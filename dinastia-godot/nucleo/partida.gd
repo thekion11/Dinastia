@@ -64,6 +64,10 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"semana": m.semana,
 		"horario": m.horario,
 		"mi_club": m.mi_club_id,
+		## Con qué base se creó el mundo: la ficticia o el pack real. Al cargar
+		## se vuelve a poner la misma, para que lo que se busca por nombre de
+		## club (equipaciones reales, plantillas) siga cuadrando.
+		"base_real": Datos.base_real,
 		"desafios": m.desafios,
 		"clubes": [],
 		"ligas": [],
@@ -141,6 +145,12 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		push_error("Partida: el guardado es de una versión más nueva (%d) que el juego (%d)" % [
 			int(datos["version"]), VERSION])
 		return null
+
+	## Un guardado anterior a la base ficticia (sin la clave) se jugó siempre
+	## con los datos reales. Si esta instalación no tiene el pack, se queda en
+	## la ficticia: los nombres del propio guardado se ven igual, solo se
+	## pierden las equipaciones reales.
+	Datos.usar_base_real(bool(datos.get("base_real", true)))
 
 	var m := Mundo.new()
 	## Se siembra con la semilla guardada para que lo que pase a partir de aquí

@@ -24,8 +24,8 @@ extends RefCounted
 ## `paleta`: los mismos colores ya resueltos que reciben `TablaCompeticion` y
 ## `FichaJugadorInfo` -`_color_accesible()`/`_pal_*()`, con `escala`-.
 ##
-## Sin `Ficcion.limpiar()`, igual que el resto de `principal.gd` fuera de
-## `PanelMercado` -decisión pendiente de confirmar, no un descuido-.
+## Los nombres se pintan tal cual: lo legal se resuelve en los DATOS (base
+## ficticia por defecto, pack real opcional -ver `Datos`-), no en cada pantalla.
 
 ## Desarrollo prioritario -togglePrioridad() del HTML-: menores de 24. El
 ## único botón de este bloque, así que un solo `Callable` sin argumentos.

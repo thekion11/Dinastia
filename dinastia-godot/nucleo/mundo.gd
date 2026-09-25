@@ -545,9 +545,14 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 ## `APELLIDOS_EXT` (para el DT "genérico" sin nacionalidad reconocida): un
 ## jugador peruano se lee mejor con un apellido hispano real que con uno
 ## inventado sin origen ninguno-. `ESP` se sumó a `POOLS_EU` en esta misma
-## ronda (con sabor vasco a propósito -Etxeberria, Aduriz, Zubizarreta...-,
+## ronda (con sabor vasco a propósito -Etxeberria, Agirre, Garmendia...-,
 ## a pedido del usuario, mencionando el Athletic Club de Bilbao).
+##
+## Nunca devuelve el nombre de un futbolista real (`Nombres.vetado()`).
 func _nombre_al_azar(pais: String = "") -> String:
+	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais))
+
+func _sortear_nombre(pais: String) -> String:
 	var n: Array = Datos.tabla("NOMBRES")
 	var a: Array = Datos.tabla("APELLIDOS")
 	var pools: Variant = Datos.tabla("POOLS_EU")
