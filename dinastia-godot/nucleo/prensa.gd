@@ -298,7 +298,115 @@ func _pool(m: Mundo, mio: Club) -> Array[Dictionary]:
 	## sobre el mismo nombre. Se revisó ANTES de escribir código -la lección de
 	## habs/pie de esta misma sesión-, no después.
 
+	_eventos_nuevos(pool, m, mio, fig, rival, rep)
 	return pool
+
+## LOS NUEVE EVENTOS DEL PLAN MAESTRO (25-9-2026, bloque B4). Sacados de
+## `instruciones profundas/instrucciones_extras.txt` y del plan, y revisados
+## contra el código antes de escribirlos: ninguno existía. Todos tienen dos
+## salidas que mueven algo, y varios dejan un efecto que dura semanas
+## (`efectos`, se descuenta en `semana()`).
+func _eventos_nuevos(pool: Array[Dictionary], m: Mundo, mio: Club, fig: Jugador, rival: Club, rep: float) -> void:
+	## Juegos mentales en el túnel: solo si hay partido esta semana.
+	if rival != null:
+		pool.append({"id": "tunel", "pid": "",
+			"txt": "🚇 En el túnel, antes de salir, te cruzas con el DT de %s y con el árbitro, que tiene fama de localista. Tienes diez segundos." % rival.nombre,
+			"opcion_a": "Susurrarle una provocación al DT", "opcion_b": "Dejarle caer algo al árbitro"})
+	## El video viral de la noche anterior.
+	var fiesteros := mio.plantilla.filter(func(x: Jugador) -> bool: return x.edad <= 27)
+	if not fiesteros.is_empty():
+		var q: Jugador = fiesteros[Azar.ent(0, fiesteros.size() - 1)]
+		pool.append({"id": "viral", "pid": q.id,
+			"txt": "📱 Circula un video de %s bailando en una discoteca a las 4 de la mañana, dos días antes del partido. Ya lo vio medio país." % q.nombre,
+			"opcion_a": "Sanción ejemplar", "opcion_b": "Defenderlo en público"})
+	## El capitán pide hablar en nombre del grupo.
+	var capi: Jugador = null
+	for x: Jugador in mio.plantilla:
+		if x.capitan:
+			capi = x
+	if capi != null:
+		pool.append({"id": "capitan", "pid": capi.id,
+			"txt": "🗣️ %s, el capitán, pide hablar a solas: el vestuario siente que los entrenamientos son demasiado duros y que no se les escucha." % capi.nombre,
+			"opcion_a": "Escuchar y aflojar la carga", "opcion_b": "\"Aquí mando yo\""})
+	## El minuto de silencio.
+	pool.append({"id": "silencio", "pid": "",
+		"txt": "🕯️ Murió un hincha histórico del club, socio desde hace 60 años. La barra pide un homenaje antes del próximo partido en casa.",
+		"opcion_a": "Homenaje con camiseta conmemorativa", "opcion_b": "Minuto de silencio y nada más"})
+	## Un jugador pide cambiar de posición.
+	var inquietos := mio.plantilla.filter(func(x: Jugador) -> bool: return x.pos != "POR" and x.edad <= 29)
+	if not inquietos.is_empty():
+		var q2: Jugador = inquietos[Azar.ent(0, inquietos.size() - 1)]
+		var nueva := String(_POSICION_DESEADA.get(q2.pos_e, "MC"))
+		pool.append({"id": "cambio_posicion", "pid": q2.id, "dato": nueva,
+			"txt": "🔄 %s (%s) te pide jugar de %s. Dice que ahí rinde más y que en su puesto actual se aburre." % [q2.nombre, q2.pos_e, nueva],
+			"opcion_a": "Probarlo de %s" % nueva, "opcion_b": "Su sitio es el de siempre"})
+	## El patrocinador que exige aparecer en la rueda de prensa.
+	pool.append({"id": "sponsor_rueda", "pid": "",
+		"txt": "🥤 El patrocinador principal exige que menciones su bebida energética en la próxima rueda de prensa. Pagan %s por la frase." % _dinero(Eco.escalar(120000.0, rep)),
+		"opcion_a": "Decir la frase", "opcion_b": "Yo hablo de fútbol"})
+	## Apuestas ilegales.
+	var sospechoso: Jugador = mio.plantilla[Azar.ent(0, mio.plantilla.size() - 1)]
+	pool.append({"id": "apuestas", "pid": sospechoso.id,
+		"txt": "🎲 La fiscalía investiga apuestas ilegales en tu liga y el nombre de %s aparece en unos mensajes. Todavía no hay cargos." % sospechoso.nombre,
+		"opcion_a": "Apartarlo mientras se investiga", "opcion_b": "Presunción de inocencia"})
+	## La huelga por sueldos impagos: solo con la caja en rojo.
+	if mio.saldo < 0:
+		pool.append({"id": "huelga_impagos", "pid": "",
+			"txt": "✊ Con la caja en rojo, el plantel anuncia que no entrena hasta cobrar los atrasos. El sindicato ya habló con la prensa.",
+			"opcion_a": "Pagar los atrasos ya", "opcion_b": "Negociar un calendario de pagos"})
+	## El derbi con amenaza de seguridad.
+	if rival != null and m != null and m.es_clasico(mio, rival):
+		pool.append({"id": "derbi_amenaza", "pid": "",
+			"txt": "🚨 La policía avisa de una amenaza creíble de enfrentamientos en el clásico contra %s. Recomienda reforzar el operativo." % rival.nombre,
+			"opcion_a": "Reforzar la seguridad (%s)" % _dinero(Eco.escalar(90000.0, rep)), "opcion_b": "Operativo normal"})
+
+## Hacia dónde quiere moverse cada demarcación (la vecina más ofensiva o la
+## más natural para su perfil).
+const _POSICION_DESEADA := {"DFC": "MCD", "LD": "CAD", "LI": "CAI", "CAD": "MD", "CAI": "MI",
+	"MCD": "MC", "MC": "MCO", "MCO": "SD", "MD": "ED", "MI": "EI", "ED": "DC", "EI": "DC",
+	"SD": "DC", "DC": "SD"}
+
+## EFECTOS QUE DURAN (plan maestro B4). Cada uno: {id, semanas, pid}. Se aplican
+## y descuentan en `semana()` y se guardan con la partida.
+var efectos: Array = []
+
+func _efecto(id: String, semanas: int, pid: String = "") -> void:
+	efectos.append({"id": id, "semanas": semanas, "pid": pid})
+
+func _aplicar_efectos(mio: Club) -> void:
+	var siguen: Array = []
+	for e: Dictionary in efectos:
+		var j := _jugador(mio, String(e.get("pid", "")))
+		match String(e["id"]):
+			"vestuario_tenso":
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral - 1, 10, 99)
+			"eco_viral":
+				mover_animo(-1)
+			"posicion_nueva":
+				## Mientras se adapta, rinde un poco menos; al final, contento.
+				if j != null:
+					j.forma = clampi(j.forma - 1, 10, 99)
+			"calendario_pagos":
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral - 2, 10, 99)
+		e["semanas"] = int(e["semanas"]) - 1
+		if int(e["semanas"]) > 0:
+			siguen.append(e)
+		else:
+			_fin_de_efecto(String(e["id"]), j)
+	efectos = siguen
+
+func _fin_de_efecto(id: String, j: Jugador) -> void:
+	match id:
+		"vestuario_tenso":
+			noticia.emit("El vestuario se calma", "Pasaron las semanas de tensión con el capitán. El grupo vuelve a remar.")
+		"posicion_nueva":
+			if j != null:
+				j.moral = clampi(j.moral + 5, 10, 99)
+				noticia.emit("%s ya es de su nueva posición" % j.nombre, "Terminó de adaptarse y está feliz con el cambio.")
+		"calendario_pagos":
+			noticia.emit("Atrasos saldados", "Se cumplió el calendario de pagos. El plantel vuelve a entrenar sin carteles.")
 
 func hay_evento() -> bool:
 	return not pendiente.is_empty()
@@ -550,6 +658,150 @@ func resolver(op: String) -> Dictionary:
 					x.moral = clampi(x.moral - 3, 10, 99)
 				salida = {"titulo": "Sin bonos",
 					"cuerpo": "\"El sueldo ya es el bono\". Caras largas en la práctica."}
+
+		"tunel":
+			if si:
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral + 3, 10, 99)
+				if Azar.suerte(0.3):
+					_mover_funa(6)
+					salida = {"titulo": "La provocación se filtra",
+						"cuerpo": "Tu frase en el túnel la captó un micrófono de ambiente. El equipo salió encendido, pero la prensa ya tiene titular."}
+				else:
+					salida = {"titulo": "Guerra psicológica",
+						"cuerpo": "El DT rival se quedó blanco. Tus jugadores lo vieron y salieron a la cancha dos metros más arriba."}
+			else:
+				if m != null and m.federacion != null:
+					m.federacion.enojo_arbitral += 1
+				if Azar.suerte(0.35):
+					_pagar(mio, -Eco.escalar(40000.0, rep), "Multa por presionar al árbitro")
+					salida = {"titulo": "El árbitro lo pone en el acta",
+						"cuerpo": "Tu comentario terminó en el informe arbitral. Multa, y el tribunal ya te mira con lupa."}
+				else:
+					salida = {"titulo": "Recado entregado",
+						"cuerpo": "El árbitro no dijo nada, pero lo escuchó. El tribunal, si se entera, no lo va a olvidar."}
+
+		"viral":
+			if si:
+				if j != null:
+					j.moral = clampi(j.moral - 6, 10, 99)
+					j.suspension = maxi(j.suspension, 1)
+				_mover_funa(-5)
+				if m != null and m.directiva != null:
+					m.directiva.mover_confianza(2, "la sanción ejemplar")
+				salida = {"titulo": "Sanción ejemplar",
+					"cuerpo": "Un partido fuera y multa interna. La directiva aplaude; el jugador, no."}
+			else:
+				if j != null:
+					j.moral = clampi(j.moral + 4, 10, 99)
+				_mover_funa(10)
+				_efecto("eco_viral", 2)
+				salida = {"titulo": "Lo defiendes",
+					"cuerpo": "\"Tiene derecho a una vida\". El vestuario lo agradece; las redes llevan dos semanas con el video."}
+
+		"capitan":
+			if si:
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral + 3, 10, 99)
+				rep_entrenador = clampi(rep_entrenador - 2, 0, 100)
+				salida = {"titulo": "Carga más liviana",
+					"cuerpo": "Aflojas los entrenamientos una semana. El grupo sonríe; algún periodista dice que el capitán manda más que tú."}
+			else:
+				if j != null:
+					j.moral = clampi(j.moral - 8, 10, 99)
+				rep_entrenador = clampi(rep_entrenador + 3, 0, 100)
+				_efecto("vestuario_tenso", 3)
+				salida = {"titulo": "\"Aquí mando yo\"",
+					"cuerpo": "Dejas claro quién decide. Autoridad ganada, pero el vestuario va a estar tenso unas semanas."}
+
+		"silencio":
+			if si:
+				_pagar(mio, -Eco.escalar(50000.0, rep), "Homenaje y camiseta conmemorativa")
+				mover_animo(6)
+				mio.socios += 200
+				salida = {"titulo": "Un homenaje a la altura",
+					"cuerpo": "Minuto de silencio, su nombre en la camiseta y la barra cantando su canción. Nadie en el estadio lo va a olvidar."}
+			else:
+				mover_animo(2)
+				salida = {"titulo": "Minuto de silencio",
+					"cuerpo": "Respeto total en el estadio. Sencillo y digno."}
+
+		"cambio_posicion":
+			var nueva := String(e.get("dato", "MC"))
+			if si and j != null:
+				if not j.pos_sec.has(nueva):
+					j.pos_sec.append(nueva)
+				j.moral = clampi(j.moral + 6, 10, 99)
+				_efecto("posicion_nueva", 3, j.id)
+				salida = {"titulo": "%s, de %s" % [j.nombre, nueva],
+					"cuerpo": "Ya figura como %s en su ficha. Unas semanas de adaptación y veremos si tenía razón." % nueva}
+			else:
+				if j != null:
+					j.moral = clampi(j.moral - 6, 10, 99)
+				salida = {"titulo": "Cada uno en su sitio",
+					"cuerpo": "Le dices que no. Lo entiende, pero se le nota en la cara."}
+
+		"sponsor_rueda":
+			if si:
+				_pagar(mio, Eco.escalar(120000.0, rep), "Mención del patrocinador")
+				rep_entrenador = clampi(rep_entrenador - 3, 0, 100)
+				_mover_funa(3)
+				salida = {"titulo": "La frase más cara",
+					"cuerpo": "Nombraste la bebida entre táctica y táctica. Cobrado; los memes, gratis."}
+			else:
+				if m != null and m.directiva != null:
+					m.directiva.mover_confianza(-3, "el desplante al patrocinador")
+				salida = {"titulo": "Yo hablo de fútbol",
+					"cuerpo": "El patrocinador llamó al presidente. El presidente te llamó a ti."}
+
+		"apuestas":
+			if si:
+				if j != null:
+					j.suspension = maxi(j.suspension, 3)
+					j.moral = clampi(j.moral - 8, 10, 99)
+				salida = {"titulo": "Apartado mientras se investiga",
+					"cuerpo": "Tres partidos fuera por decisión del club. Si sale limpio, habrá que pedirle perdón."}
+			else:
+				_mover_funa(12)
+				if Azar.suerte(0.4):
+					_pagar(mio, -Eco.escalar(150000.0, rep), "Multa de la federación (apuestas)")
+					if j != null:
+						j.suspension = maxi(j.suspension, 4)
+					salida = {"titulo": "La federación actúa",
+						"cuerpo": "Aparecieron más mensajes. Multa para el club y cuatro partidos de sanción. Defenderlo en público salió caro."}
+				else:
+					salida = {"titulo": "Se archiva",
+						"cuerpo": "La fiscalía no encuentra nada. Tu respaldo fue polémico, pero el jugador no lo va a olvidar."}
+					if j != null:
+						j.moral = clampi(j.moral + 6, 10, 99)
+
+		"huelga_impagos":
+			if si:
+				_pagar(mio, -mio.masa_salarial() * 2, "Atrasos al plantel")
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral + 2, 10, 99)
+				salida = {"titulo": "Atrasos pagados",
+					"cuerpo": "Dos semanas de sueldo sobre la mesa. Se vuelve a entrenar mañana."}
+			else:
+				_efecto("calendario_pagos", 2)
+				salida = {"titulo": "Calendario de pagos",
+					"cuerpo": "Firman un acuerdo a dos semanas. Entrenan, pero con carteles en la valla."}
+
+		"derbi_amenaza":
+			if si:
+				_pagar(mio, -Eco.escalar(90000.0, rep), "Operativo de seguridad del clásico")
+				salida = {"titulo": "Clásico en paz",
+					"cuerpo": "Más efectivos, controles en los accesos y ningún incidente. Nadie lo nota, que es la idea."}
+			elif Azar.suerte(0.35):
+				_pagar(mio, -Eco.escalar(200000.0, rep), "Multa por incidentes en el clásico")
+				mover_animo(-5)
+				salida = {"titulo": "Incidentes en el clásico",
+					"cuerpo": "Hubo enfrentamientos a la salida. Multa de la federación y una semana de portadas que nadie quería."}
+			else:
+				## Sin vallas extra ni cacheos eternos, la grada lo vive más cerca.
+				mover_animo(2)
+				salida = {"titulo": "Sin incidentes",
+					"cuerpo": "Esta vez no pasó nada, y la grada vivió el clásico sin vallas de más. Esta vez."}
 
 		"reclamo":
 			var arb := arbitro_polemico if arbitro_polemico != "" else "el árbitro"
@@ -862,6 +1114,8 @@ func semana() -> void:
 	## nadie: aceptabas el documental, cobrabas, y las cámaras no hacían nada.
 	## Ahora sí: al plantel le incomoda que lo graben, y ese es el precio de la
 	## plata. Es poco por semana, pero seis semanas seguidas se notan.
+	if mio != null and not efectos.is_empty():
+		_aplicar_efectos(mio)
 	if semanas_documental > 0:
 		semanas_documental -= 1
 		if mio != null:

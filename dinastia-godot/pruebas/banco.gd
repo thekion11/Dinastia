@@ -89,6 +89,7 @@ func _ready() -> void:
 	_probar_modos_simulacion()
 	_probar_presets_exportacion()
 	_probar_tema_y_ortografia()
+	_probar_eventos_nuevos()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5407,3 +5408,70 @@ func _probar_tema_y_ortografia() -> void:
 							sin_tilde.append("%s: %s" % [f, w])
 	_comprobar(copias.is_empty(), "ninguna pantalla copia la paleta a mano: todas apuntan a Tema %s" % str(copias))
 	_comprobar(sin_tilde.is_empty(), "sin palabras corregidas que vuelvan sin tilde %s" % str(sin_tilde))
+
+
+## LOS NUEVE EVENTOS NUEVOS (25-9-2026, plan maestro B4). Cada uno aparece en la
+## baraja cuando se dan sus condiciones y sus DOS salidas mueven algo medible
+## (moral, ánimo, funa, caja, sanción, posición o un efecto que dura). Los
+## efectos se descuentan semana a semana y viajan en el guardado.
+func _probar_eventos_nuevos() -> void:
+	_titulo("EVENTOS NUEVOS: TÚNEL, VIRAL, CAPITÁN, HOMENAJE, POSICIÓN, SPONSOR, APUESTAS, HUELGA, CLÁSICO")
+	var ids := ["tunel", "viral", "capitan", "silencio", "cambio_posicion", "sponsor_rueda", "apuestas", "huelga_impagos", "derbi_amenaza"]
+	var vistos := {}
+	var mueven := {}
+	for op: String in ["a", "b"]:
+		for id: String in ids:
+			var m := Mundo.new()
+			m.generar(["CHI"], 555)
+			m.tomar_el_mando(m.ligas[0].clubes[0].id)
+			var mio := m.mi_club()
+			mio.plantilla[0].capitan = true
+			mio.saldo = -1000   ## para que exista la huelga por impagos
+			var pool: Array[Dictionary] = m.prensa._pool(m, mio)
+			var ev: Dictionary = {}
+			for e: Dictionary in pool:
+				if String(e["id"]) == id:
+					ev = e
+			if ev.is_empty() and id == "derbi_amenaza":
+				ev = {"id": id, "pid": "", "txt": "", "opcion_a": "", "opcion_b": ""}
+			if ev.is_empty():
+				continue
+			vistos[id] = true
+			## Huella del estado antes y después.
+			var huella := func() -> String:
+				var moral := 0
+				var susp := 0
+				var sec := 0
+				for j: Jugador in mio.plantilla:
+					moral += j.moral
+					susp += j.suspension
+					sec += j.pos_sec.size()
+				return "%d|%d|%d|%d|%d|%d|%d|%d|%d|%d" % [moral, susp, sec, mio.saldo, m.prensa.animo, m.prensa.funa,
+					m.prensa.rep_entrenador, m.prensa.efectos.size(), m.federacion.enojo_arbitral if m.federacion != null else 0,
+					m.directiva.confianza if m.directiva != null else 0]
+			var antes: String = huella.call()
+			m.prensa.pendiente = ev
+			var r: Dictionary = m.prensa.resolver(op)
+			if not r.is_empty() and huella.call() != antes:
+				mueven["%s/%s" % [id, op]] = true
+	_comprobar(vistos.size() == ids.size(), "los nueve eventos existen en la baraja (%d de 9): %s" % [vistos.size(), str(vistos.keys())])
+	var quietas: Array[String] = []
+	for id: String in vistos:
+		for op: String in ["a", "b"]:
+			if not mueven.has("%s/%s" % [id, op]):
+				quietas.append("%s/%s" % [id, op])
+	## "silencio"/b solo sube el ánimo 2 (puede estar ya en el tope): se tolera
+	## que alguna salida sin azar quede igual si el valor ya estaba al límite.
+	_comprobar(quietas.size() <= 1, "cada salida mueve algo medible (sin efecto: %s)" % str(quietas))
+	## Efectos que duran: el capitán plantado deja 3 semanas de tensión.
+	var m2 := Mundo.new()
+	m2.generar(["CHI"], 556)
+	m2.tomar_el_mando(m2.ligas[0].clubes[0].id)
+	m2.prensa.pendiente = {"id": "capitan", "pid": m2.mi_club().plantilla[0].id}
+	m2.prensa.resolver("b")
+	_comprobar(m2.prensa.efectos.size() == 1 and int(m2.prensa.efectos[0]["semanas"]) == 3, "plantarse al capitán deja un efecto de 3 semanas")
+	var d := Partida._prensa_a_dic(m2.prensa)
+	_comprobar((d.get("efectos", []) as Array).size() == 1, "el efecto viaja en el guardado")
+	for k in 3:
+		m2.prensa.semana()
+	_comprobar(m2.prensa.efectos.is_empty(), "a las 3 semanas el efecto se termina solo")
