@@ -76,6 +76,61 @@ const VOTO_IA := {
 }
 const PROB_NEUTRA := 0.5           ## moción desconocida: la asamblea se parte
 
+## --- EL PRESIDENTE DE LA FEDERACIÓN (26-9-2026, plan maestro C5) -----------
+## Pedido: *"los presidentes de las competencias deben ser importantes, en la
+## vida real los presidentes de las instituciones del fútbol hacen reglas o
+## cambian formas"*. Hasta hoy la asamblea convocaba mociones al azar, sin nadie
+## detrás. Ahora hay un presidente con NOMBRE y AGENDA, elegido cada cuatro
+## años: las mociones de su agenda salen antes, y presiona a los clubes para
+## que las aprueben (+12 puntos a favor en el voto de la IA). Nombre y agenda
+## salen de un hash del año -ficticios: ni personas ni programas reales-.
+const MANDATO_ANIOS := 4
+## agenda -> [nombre de la corriente, mociones que empuja, frase de campaña]
+const AGENDAS := {
+	"modernizador": ["Modernizador", ["var", "fpf"], "«Tecnología y cuentas claras: el fútbol del siglo XXI.»"],
+	"comercial": ["Comercial", ["playoffs", "superliga"], "«Más espectáculo, más televisión, más dinero para todos.»"],
+	"proteccionista": ["Proteccionista", ["extranjeros", "juveniles"], "«Primero lo nuestro: la cantera y el jugador del país.»"],
+	"igualitario": ["Igualitario", ["tvigual", "fpf"], "«Que el chico pueda soñar: reparto justo y cuentas limpias.»"],
+}
+const EMPUJE_PRESIDENTE := 0.12
+const _PRES_NOMBRES := ["Armando", "Rodolfo", "Esteban", "Gustavo", "Horacio", "Ignacio", "Lisandro",
+	"Marcelo", "Norberto", "Osvaldo", "Patricio", "Reinaldo", "Susana", "Verónica", "Graciela", "Mónica"]
+const _PRES_APELLIDOS := ["Achával", "Berríos", "Cienfuegos", "Dalmasso", "Echazarreta", "Figueroa",
+	"Goycolea", "Hurtado", "Irarrázaval", "Lagos", "Maturana", "Ossandón", "Pradenas", "Quezada"]
+## {nombre, agenda, hasta (año en que acaba el mandato)}
+var presidente: Dictionary = {}
+
+## Elige presidente si no hay o si acabó el mandato. Devuelve true si hubo
+## elecciones.
+func revisar_presidencia(anio: int) -> bool:
+	if not presidente.is_empty() and anio < int(presidente.get("hasta", 0)):
+		return false
+	var h := absi(("presidencia|%d" % anio).hash())
+	var claves := AGENDAS.keys()
+	var agenda: String = claves[h % claves.size()]
+	var nombre := "%s %s" % [_PRES_NOMBRES[(h / 7) % _PRES_NOMBRES.size()], _PRES_APELLIDOS[(h / 131) % _PRES_APELLIDOS.size()]]
+	var reelegido := not presidente.is_empty() and String(presidente.get("agenda", "")) == agenda
+	if reelegido:
+		nombre = String(presidente["nombre"])
+	presidente = {"nombre": nombre, "agenda": agenda, "hasta": anio + MANDATO_ANIOS}
+	var a: Array = AGENDAS[agenda]
+	noticia.emit("🏛️ Elecciones en la federación",
+		"%s %s la presidencia (corriente %s) hasta %d. %s Empujará: %s." % [
+			nombre, "renueva" if reelegido else "gana", String(a[0]).to_lower(), anio + MANDATO_ANIOS,
+			String(a[2]), ", ".join(PackedStringArray((a[1] as Array).map(func(x: String) -> String: return _titulo_mocion(x))))])
+	return true
+
+func agenda_empuja(id_mocion: String) -> bool:
+	if presidente.is_empty():
+		return false
+	return (AGENDAS[String(presidente["agenda"])][1] as Array).has(id_mocion)
+
+func _titulo_mocion(id: String) -> String:
+	for v: Dictionary in catalogo():
+		if String(v.get("id", "")) == id:
+			return String(v.get("t", id))
+	return id
+
 ## --- EL REGLAMENTO EN VIGOR ------------------------------------------------
 ## Multiplicador de tus derechos de televisión. Lo aplica quien los cobra
 ## (`Finanzas.derechos_tv()`); aquí solo se decide cuánto vale.
@@ -130,6 +185,7 @@ func semana(mi: Club, anio: int, semana_n: int) -> void:
 		semanas_en_rojo += 1
 	else:
 		semanas_en_rojo = 0
+	revisar_presidencia(anio)
 	abrir_votacion()
 	control_antidopaje(mi, anio, semana_n)
 
@@ -153,14 +209,24 @@ func abrir_votacion() -> Dictionary:
 			libres.append(v)
 	if libres.is_empty():
 		return {}
+	## Lo que empuja el presidente sale antes (7 de cada 10 veces, por hash: la
+	## tirada de `Azar` es una sola, como siempre).
+	var suyas: Array = libres.filter(func(v: Dictionary) -> bool: return agenda_empuja(String(v.get("id", ""))))
+	if not suyas.is_empty() and absi(("agenda|%d" % votos.size()).hash()) % 10 < 7:
+		libres = suyas
 	voto_pendiente = Azar.uno(libres)
+	if agenda_empuja(String(voto_pendiente.get("id", ""))):
+		voto_pendiente["del_presidente"] = String(presidente.get("nombre", ""))
 	votacion_abierta.emit(voto_pendiente)
 	## Hasta el 14-9-2026 esto era la única de las nueve señales de la clase sin
 	## `noticia.emit()`: la asamblea convocaba de verdad y el jugador solo se
 	## enteraba si entraba a la pestaña Federación por su cuenta. Con solo seis
 	## mociones en toda la carrera, era fácil perderse una entera.
+	var quien := ""
+	if voto_pendiente.has("del_presidente"):
+		quien = "Propuesta del presidente %s. " % String(voto_pendiente["del_presidente"])
 	noticia.emit("Nueva votación en la asamblea",
-		"La federación convoca sobre: %s. %s Puedes votar desde Federación." % [
+		"%sLa federación convoca sobre: %s. %s Puedes votar desde Federación." % [quien,
 			String(voto_pendiente.get("t", "")), String(voto_pendiente.get("desc", ""))])
 	return voto_pendiente
 
@@ -185,6 +251,9 @@ func votar(opcion: String, mi: Club, asamblea: Array) -> Dictionary:
 		var p := PROB_NEUTRA
 		if not reglas.is_empty():
 			p = float(reglas["grande"]) if x.rep >= int(reglas["umbral"]) else float(reglas["chico"])
+		## El presidente hace campaña por lo suyo.
+		if agenda_empuja(id):
+			p = minf(p + EMPUJE_PRESIDENTE, 0.95)
 		if Azar.suerte(p):
 			a_favor += 1
 	if opcion == "a":
@@ -678,6 +747,7 @@ func a_dic() -> Dictionary:
 		"casos": casos, "controles": controles,
 		"semanas_en_rojo": semanas_en_rojo, "enojo_arbitral": enojo_arbitral,
 		"playoffs_ultimo": playoffs_ultimo, "sec": _sec,
+		"presidente": presidente,
 	}
 
 func desde_dic(d: Dictionary) -> void:
@@ -691,6 +761,7 @@ func desde_dic(d: Dictionary) -> void:
 	fpf_avisos = int(d.get("fpf_avisos", 0))
 	fpf_sancionado = bool(d.get("fpf_sancion", false))
 	aliados = int(d.get("aliados", 0))
+	presidente = (d.get("presidente", {}) as Dictionary).duplicate()
 	votos = (d.get("votos", []) as Array).duplicate()
 	voto_pendiente = (d.get("voto_pendiente", {}) as Dictionary).duplicate()
 	licencia = String(d.get("licencia", "vigente"))

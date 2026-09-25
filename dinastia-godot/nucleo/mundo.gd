@@ -89,6 +89,8 @@ var hinchada: Hinchada
 var gente: Gente
 ## `vClubIn()`: vestuario, sala de prensa, palco y lo digital.
 var club_dentro: ClubDentro
+## El presidente del club, los accionistas y la junta trimestral (C5).
+var junta: Junta
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
 var banco: Banco
 ## La marca del pecho: ofertas, firma y exigencia contractual.
@@ -938,6 +940,21 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		if mio_normas != null:
 			for j in mio_normas.plantilla:
 				j.moral = clampi(j.moral - 1, 10, 99)
+	## LESIONES ABSURDAS FUERA DE LA CANCHA (C8): raras, cortas y noticia. El
+	## toque de queda evita las de noche. Sin `Azar`.
+	var absurda := LesionesAbsurdas.sortear(mi_club(), anio, semana, bool(normas.get("queda", false)))
+	if not absurda.is_empty():
+		var ja: Jugador = absurda["jugador"]
+		ja.lesionar(int(absurda["semanas"]))
+		if prensa != null:
+			var txt := "%s. Estará %d semana%s de baja." % [String(absurda["texto"]), int(absurda["semanas"]),
+				"" if int(absurda["semanas"]) == 1 else "s"]
+			prensa.noticia.emit("🤕 Lesión insólita", txt)
+			prensa.guardar_portada("¡INSÓLITO! " + String(absurda["texto"]).to_upper(), txt, "mal",
+				{"img": "pid:" + ja.id, "sub": txt, "medio": "Canal Deportes", "nueva": true})
+			if bool(absurda["noche"]):
+				prensa.mentor_dice.emit("Lo de %s" % ja.nombre,
+					"Esto pasó de noche. Un toque de queda en las normas del vestuario habría evitado el disgusto.")
 
 	## Las obras avanzan una semana. Se hace antes de la prensa para que la
 	## noticia de "obra terminada" salga la misma semana en que termina.
@@ -1035,6 +1052,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		roles.semana_filiales()
 	if club_dentro != null and mi_club() != null:
 		club_dentro.semana(mi_club(), prensa)
+	if junta != null and mi_club() != null:
+		junta.semana(mi_club(), anio, semana)
 		## La app y la web CRECEN cada semana -"procesoClubIn()" del HTML corre
 		## en el mismo proceso semanal que la prensa o la cantera, no en el
 		## cierre de mes-, y crecen más rápido si vienes ganando en liga.
@@ -1723,6 +1742,8 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	hinchada = Hinchada.new(self)
 	gente = Gente.new(self)
 	club_dentro = ClubDentro.new()
+	junta = Junta.new()
+	junta.formar(mi_club())
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)
