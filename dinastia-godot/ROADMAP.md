@@ -12,7 +12,9 @@ Detalle completo en `LEEME.md`, arriba de todo.
 - [x] Equipación pintada por shader, nombres sobre los jugadores y la columna misteriosa resuelta.
   - [ ] Pendiente: la grada con textura estirada. Mejoró al quitarle las sombras, pero no se rehízo
     su textura.
-- [x] Tutorial guiado por modo.
+- [x] Tutorial guiado por modo, rehecho como tutorial inmersivo: prólogo, mentor con datos de tu partida y misiones por modo.
+- [x] Modelo Ronaldo (`futbolista_cr7`) borrado del proyecto, con sus fuentes y su código.
+- [x] Cubierta de los nombres reales activa con el pack real ("C0lo-C0lo"); las caras reales se mantienen.
 - [x] Moneda seleccionable, academia de 10 a 16 años, contraste de la previa y buscador.
 - [x] Rendimiento: arranque 12,3 s → 0,9 s, estadio 25,6 s → 2,9 s, triángulos -75 %, y calidad
   adaptativa por debajo de 40 FPS.

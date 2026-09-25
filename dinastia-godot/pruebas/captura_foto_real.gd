@@ -15,14 +15,14 @@ func _process(_d: float) -> void:
 		var mundo: Mundo = _pantalla.get("mundo")
 		if mundo.mi_club().nombre != "Colo-Colo":
 			for c: Club in mundo.clubes.values():
-				if c.nombre == "Colo-Colo":
+				if Nombres.limpiar(c.nombre) == "Colo-Colo":
 					mundo.tomar_el_mando(c.id)
 					break
 		_pantalla.call("_refrescar")
 		var mio := mundo.mi_club()
 		var vidal: Jugador = null
 		for j: Jugador in mio.plantilla:
-			if j.nombre == "Arturo Vidal":
+			if Nombres.limpiar(j.nombre) == "Arturo Vidal":
 				vidal = j
 				break
 		if vidal != null:

@@ -254,7 +254,7 @@ func agente_de(j: Jugador) -> String:
 	for i in j.id.length():
 		h = (h * 17 + j.id.unicode_at(i)) & 0xFFFFFFFF
 	var fila: Array = lista[h % lista.size()]
-	return Nombres.limpiar(String(fila[0]))
+	return Nombres.de_tabla(String(fila[0]))
 
 func clan_de(j: Jugador) -> Dictionary:
 	var cid: String = String(_clan_de.get(j.id, ""))
