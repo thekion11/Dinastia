@@ -5516,25 +5516,64 @@ func _marco_aviso(color: Color) -> VBoxContainer:
 	tw.tween_property(caja, "modulate:a", 1.0, 0.22).set_trans(Tween.TRANS_SINE)
 	return v
 
+## LA DECISIÓN, CONTADA COMO UN ACONTECIMIENTO (25-9-2026, plan maestro B4).
+## A la izquierda, la cara de quien está en el lío -o el icono grande del tema
+## si no hay un jugador-; suena y late la primera vez que aparece; y al firmar,
+## la consecuencia sale en un aviso además del registro.
+var _decision_mostrada := ""
+
 func _pintar_decision(e: Dictionary) -> void:
 	var v := _marco_aviso(COL_ORO)
 	var t := _texto(11, COL_ORO)
 	t.text = "HAY QUE DECIDIR"
 	v.add_child(t)
+	var fila_cuerpo := HBoxContainer.new()
+	fila_cuerpo.add_theme_constant_override("separation", 12)
+	v.add_child(fila_cuerpo)
+	var txt_evento := String(e.get("txt", ""))
+	var j: Jugador = null
+	var pid := String(e.get("pid", ""))
+	if pid != "" and mundo.mi_club() != null:
+		for x: Jugador in mundo.mi_club().plantilla:
+			if x.id == pid:
+				j = x
+	if j != null:
+		fila_cuerpo.add_child(_retrato(j, 56))
+	else:
+		## El primer carácter del texto es el emoji del tema (🎙️, 🕯️, 🚨...).
+		var icono := Label.new()
+		icono.text = txt_evento.substr(0, 2).strip_edges() if txt_evento != "" else "❗"
+		icono.add_theme_font_size_override("font_size", 34)
+		icono.custom_minimum_size = Vector2(56, 56)
+		icono.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		icono.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		fila_cuerpo.add_child(icono)
 	var txt := _texto(13, COL_TEXTO)
-	txt.text = String(e.get("txt", ""))
+	txt.text = txt_evento
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	v.add_child(txt)
+	txt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fila_cuerpo.add_child(txt)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	v.add_child(fila)
 	_boton(String(e.get("opcion_a", "Sí")), func() -> void: _resolver("a"), fila)
 	_boton(String(e.get("opcion_b", "No")), func() -> void: _resolver("b"), fila)
+	var clave := "%s|%s" % [String(e.get("id", "")), pid]
+	if clave != _decision_mostrada:
+		_decision_mostrada = clave
+		Sonido.toca("notificacion" if Sonido.NOMBRES.has("notificacion") else "cambio", Sonido.Bus.INTERFAZ)
+		var caja := v.get_parent() as Control
+		if caja != null:
+			(func() -> void: Animar.pulso(caja, 1.03)).call_deferred()
 
 func _resolver(op: String) -> void:
 	var r := mundo.prensa.resolver(op)
-	_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [
-		String(r.get("titulo", "Decisión tomada")), String(r.get("cuerpo", ""))])
+	var titulo := String(r.get("titulo", "Decisión tomada"))
+	var cuerpo := String(r.get("cuerpo", ""))
+	## Al registro ya lo escribe `Prensa.noticia` (ver `_conectar_noticias()`):
+	## escribirlo aquí también lo duplicaba. Aquí solo el aviso destacado.
+	if not r.is_empty():
+		Aviso.mostrar(self, "contrato", "📰", titulo, cuerpo)
 	_refrescar()
 
 ## `SOLICITUDES` del HTML: un jugador te viene a pedir algo -más minutos, un
