@@ -266,6 +266,10 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_cajon.interruptor("ℹ Ficha del estadio abajo", _pref("pie", true), func(si: bool) -> void:
 		_pie.visible = si
 		_guardar_pref("pie", si))
+	_cajon.interruptor("🎬 Presentación antes del partido", _pref("intro", true), func(si: bool) -> void:
+		_guardar_pref("intro", si))
+	_cajon.interruptor("🔁 Repetición de los goles", _pref("repeticiones", true), func(si: bool) -> void:
+		_guardar_pref("repeticiones", si))
 	_cajon.interruptor("⚡ Calidad automática", Calidad.adaptativa, func(si: bool) -> void:
 		Calidad.adaptativa = si)
 	_cajon.seccion("Sonido")
@@ -326,6 +330,15 @@ func _ciclar_velocidad() -> void:
 	else:
 		_juego.mas_rapido()
 	_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
+
+## 47000 -> "47.000", como se escribe en español.
+func _miles(n: int) -> String:
+	var t := str(n)
+	var out := ""
+	while t.length() > 3:
+		out = "." + t.substr(t.length() - 3) + out
+		t = t.substr(0, t.length() - 3)
+	return t + out
 
 ## Preferencias de lo que se ve sobre la transmisión, en el mismo archivo que
 ## el resto de ajustes (`user://ajustes.cfg`, sección `hud`).
@@ -492,6 +505,14 @@ func _arrancar_partido() -> void:
 	var fv: float = partido.fuerza(partido.once_visita, partido.visita)["ata"]
 	var pos := 100.0 * fl / maxf(fl + fv, 0.001)
 	_juego.setup([], _en_campo, Partido.MINUTOS, pos, _balon, club.tactica, visitante.tactica)
+	## La repetición del gol (plan maestro B3): graba siempre los últimos
+	## segundos de los 22 y del balón.
+	_repe = Repeticion.new()
+	add_child(_repe)
+	_repe.setup(_en_campo, _balon)
+	_repe.terminada.connect(func() -> void:
+		if _rotulo_repe != null:
+			_rotulo_repe.visible = false)
 	_juego.jugada_ambiente.connect(_al_jugada_ambiente)
 	if _btn_velocidad != null:
 		_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
@@ -519,6 +540,13 @@ func _arrancar_partido() -> void:
 	## salida del túnel, el ambiente según el clima del estadio, los tiempos
 	## del reloj y los goles especiales.
 	Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
+	## La presentación: vuelo de cámara con el rótulo del partido (B3).
+	if _pref("intro", true):
+		var gi := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+		var nombre_est := club.estadio_nombre if club.estadio_nombre != "" else "Estadio de %s" % club.nombre
+		_intro = IntroPartido.iniciar(self, float(gi["dx"]), float(gi["dz"]), 20.0,
+			"%s  vs  %s" % [club.nombre, visitante.nombre],
+			"%s  ·  %s butacas" % [nombre_est, _miles(club.estadio_aforo)])
 	var clima := String(_perfil.get("clima", "noche"))
 	var por_clima := {"lluvia": "lluvia_ambiente", "tormenta": "trueno", "niebla": "niebla_ambiente",
 		"nieve": "frio_extremo", "noche": "noche_estadio", "dia": "dia_soleado", "tarde": "eco_estadio"}
@@ -647,6 +675,12 @@ func _process(delta: float) -> void:
 	_escalar_rotulos()
 	if _juego == null or partido == null:
 		return
+	## Durante la repetición y la presentación el partido está CONGELADO: ni
+	## reloj ni minutos.
+	if _repe != null and _repe.reproduciendo:
+		return
+	if _intro != null and _intro.activa:
+		return
 	if _destacado_hasta_ms > 0 and Time.get_ticks_msec() >= _destacado_hasta_ms:
 		_destacado_hasta_ms = -1
 		if _juego.vel_idx == VEL_DESTACADOS_JUGADA:
@@ -754,8 +788,33 @@ func _corto(n: String) -> String:
 			return parte
 	return n.substr(0, 14)
 
+## Cuánto se espera tras el gol antes de repetirlo: el remate, el balón en la
+## red y el primer festejo se ven en vivo; después, la repetición.
+const SEG_ANTES_REPETICION := 6.0
+var _repe: Repeticion
+var _intro: IntroPartido
+var _rotulo_repe: PanelContainer
+
+func _repetir_gol() -> void:
+	if _repe == null or not _pref("repeticiones", true) or partido == null or partido.terminado_ya:
+		return
+	if _repe.reproducir(9.0):
+		if _rotulo_repe == null:
+			_rotulo_repe = PanelContainer.new()
+			var st := Tema.caja(Color(0.55, 0.08, 0.08, 0.9), Tema.RADIO_CHICO, Color(1, 1, 1, 0.2))
+			_rotulo_repe.add_theme_stylebox_override("panel", st)
+			var l := Tema.etiqueta(16, Color.WHITE, "⟲  REPETICIÓN")
+			_rotulo_repe.add_child(l)
+			add_child(_rotulo_repe)
+			_rotulo_repe.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+			_rotulo_repe.offset_top = 70
+			_rotulo_repe.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		_rotulo_repe.visible = true
+		Animar.aparecer(_rotulo_repe)
+
 func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) -> void:
 	var a_favor := c == club
+	get_tree().create_timer(SEG_ANTES_REPETICION).timeout.connect(_repetir_gol)
 	_juego.suceso({
 		"min": minuto, "t": "golMi" if a_favor else "golR",
 		"equipo": "local" if a_favor else "visita",
