@@ -37,12 +37,11 @@ static func jugador(j: Jugador) -> Dictionary:
 		"pos": j.pos,
 		"posE": j.pos_e,
 		"alt": ALTURA.get(j.pos_e, 1.80),
-		"look": {
-			"piel": PIELES[h % PIELES.size()],
-			"pelo": (h >> 4) % 23,
-			"peloC": PELOS[(h >> 8) % PELOS.size()],
-			"barba": (h >> 12) % 8,
-		},
+		## EL MISMO ASPECTO QUE SU RETRATO (25-9-2026). Antes el 3D sorteaba su
+		## propio pelo, piel y barba a partir del id, así que el jugador del
+		## campo no se parecía al de la ficha. Ahora sale de `Cara.look_de()`,
+		## que además respeta lo que el editor haya cambiado a mano.
+		"look": Cara.look_de(j),
 	}
 
 ## El once entero: los ids en orden y el diccionario que los describe. El

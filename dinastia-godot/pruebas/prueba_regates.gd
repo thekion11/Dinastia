@@ -31,6 +31,13 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_frame += 1
 	var juego: MatchPlayback = _vista.get("_juego")
+	## Solo cuenta mientras se juega: la presentación y las repeticiones
+	## congelan el partido a propósito.
+	var intro: IntroPartido = _vista.get("_intro")
+	var repe: Repeticion = _vista.get("_repe")
+	if (intro != null and intro.activa) or (repe != null and repe.reproduciendo):
+		_frame -= 1
+		return
 	for p: Dictionary in juego.players:
 		var ap: AnimationPlayer = p.get("anim")
 		if is_instance_valid(ap) and ap.current_animation == "conducir":
