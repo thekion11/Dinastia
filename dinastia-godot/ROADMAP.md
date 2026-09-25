@@ -1,5 +1,340 @@
 # RUTA DE DESARROLLO — DINASTÍA
 
+## PLAN MAESTRO, QUINTA RONDA (pedido del 25-9-2026)
+
+Pedido completo del usuario:
+*"infraestructura del estadio, cinemáticas en las acciones, mejoras visuales y de texto, ciudad 3D y
+su funcionamiento, optimización, menú propio estilo Los Sims para personalizar al personaje, mayor
+realismo, ropa y accesorios, mascotas 3D en el campo, eventos con mejor animación, mini animaciones
+para que el juego se sienta vivo, música libre en español, tipos de simulación de partido, ajustes
+en una barra desplegable, integración visual, más estadios, entrevistas, nuevos eventos, y revisar
+lo que falta del LEEME y de los archivos profundos"*.
+
+**Cómo leer este plan.** Cada bloque dice:
+- qué hay HOY, verificado contra el código el 25-9 y no de memoria;
+- qué se hará, en pasos;
+- cómo se comprueba que quedó bien;
+- si es viable ahora:
+  - ✅ viable con lo que hay;
+  - 🟡 viable pero depende de algo externo (un asset, una licencia, una prueba en un PC real);
+  - ⛔ no viable hoy, con el motivo.
+
+Orden sugerido al final. Regla de siempre: cada bloque se cierra con el banco en 0 fallos, capturas
+reales y commit + push.
+
+### B1. Ajustes del partido en una barra desplegable ✅ (pequeño, primero)
+- **Hoy**: `ui/estadio.gd` pinta sueltos sobre la transmisión el modo Manager/Jugador, Nombres,
+  Velocidad y las cámaras.
+- **Hacer**:
+  - un botón ⚙ que despliega un cajón lateral animado con modo, nombres, velocidad, cámara, calidad
+    gráfica, volumen de grada y de música, y los rótulos de jugada;
+  - en pantalla solo quedan el marcador, el reloj y el ⚙.
+  - El cajón recuerda su estado (`user://ajustes.cfg`) y se cierra solo a los 6 s sin tocarlo.
+  - Mismo patrón en `ui/partido_vivo.gd` (velocidades, "Ver en 3D", "Al próximo gol", "Al final").
+- **Comprobar**: captura con el cajón cerrado y abierto, y cada ajuste cambia algo de verdad (banco).
+
+### B2. Tipos de simulación de partido ✅
+- **Hoy** existen cuatro formas de jugar un partido:
+  - "Simular sin dirigir" y "Simular toda la temporada" (resultado directo);
+  - el partido en vivo de texto (`PartidoVivo`);
+  - la transmisión 3D (`estadio.gd`);
+  - el modo Jugador (FC).
+
+  Están repartidas en botones distintos y sin nombre común.
+- **Hacer**:
+  - Un selector único antes de cada partido, con cinco modos:
+    1. **Instantáneo**: solo el resultado.
+    2. **Resumen**: texto con los momentos clave, 30 s.
+    3. **Radar 2D**: la pizarra táctica en vivo (ya existe `radar_partido.gd`).
+    4. **3D destacados**: la simulación corre y la cámara solo muestra las jugadas de peligro, con
+       repetición.
+    5. **3D completo**.
+  - Más el modo Jugador (FC) aparte.
+  - Preferencia por competición (por ejemplo, la copa en 3D y la liga en resumen).
+- **Comprobar**: los cinco modos dan el MISMO resultado con la misma semilla (la simulación no
+  depende de cómo se mira); ya hay precedente en el banco.
+
+### B3. Cinemáticas en las acciones ✅
+- **Hoy** hay escenas cinemáticas solo en el sorteo (`sorteo_escena3d.gd`), la rueda de prensa
+  (`rueda_prensa_escena3d.gd`) y la salida del túnel (sonido y cámara).
+- **Hacer**: un director de cinemáticas común (`visor/cinematica.gd`) con planos definidos como
+  datos (cámara, objetivo, duración, curva y corte) y saltables con un clic. Momentos:
+  - Partido:
+    - salida del túnel con los dos equipos en fila;
+    - himno y saludo;
+    - gol, con repetición desde dos ángulos (ya se graba la jugada, falta la cámara);
+    - roja con el jugador saliendo;
+    - lesión con camilla;
+    - final con festejo o lamento.
+  - Fuera del partido:
+    - presentación de un fichaje (estadio con el jugador y la camiseta);
+    - firma de contrato;
+    - campeón con levantamiento de copa;
+    - ascenso y descenso;
+    - despido del DT;
+    - inauguración de obra (la ciudad 3D con la grúa que se retira).
+- **Comprobar**: una prueba recorre cada cinemática y captura el primer, el medio y el último
+  plano; ninguna deja la cámara dentro de una malla (se comprueba la distancia a la geometría).
+
+### B4. Eventos: más, y mejor contados ✅
+- **Hoy** hay 16 eventos de prensa (`nucleo/prensa.gd`: agente, espía, filtración, hostil, lobby
+  arbitral, provocación, retiro joven, virus FIFA…) más los de vestuario y directiva. Se resuelven
+  con una tarjeta de texto (`_pintar_decision`).
+- **Hacer**:
+  - Presentar cada evento con ilustración o escena 3D corta (el personaje implicado con
+    `PersonaRealista`), sonido propio y consecuencias visibles después (titular, cambio de moral
+    con animación).
+  - **Eventos nuevos** (de `instruciones profundas/instrucciones_extras.txt`, no encontrados en el
+    código):
+    - juegos mentales en el túnel: provocar al DT rival o presionar al árbitro localista;
+    - escándalo en redes con un video viral;
+    - capitán que pide hablar;
+    - hincha fallecido y minuto de silencio;
+    - jugador que pide cambio de posición;
+    - patrocinador que exige aparecer en una rueda de prensa;
+    - apuestas ilegales investigadas;
+    - huelga de jugadores por sueldos impagos;
+    - derbi con amenaza de seguridad.
+
+    Cada uno con al menos dos salidas y un efecto que dure semanas.
+- **Comprobar**: el banco sortea cada evento con semilla fija y aplica cada salida, sin cuelgues y
+  con el efecto medible.
+
+### B5. Entrevistas ✅ / IA conversacional ⛔
+- **Hoy** la rueda de prensa tiene sala 3D, planos de cámara y preguntas de opción múltiple.
+- **Hacer**:
+  - periodistas con personalidad (sensacionalista, técnico, local, extranjero) y memoria de tus
+    respuestas anteriores;
+  - repreguntas;
+  - **lenguaje corporal**: un temporizador. Si tardas en responder, los periodistas "huelen sangre"
+    y la siguiente pregunta aprieta más (está en los archivos profundos);
+  - tono de respuesta (calma, soberbia, evasiva) con efecto en árbitros, directiva y vestuario;
+  - titulares del día siguiente citando tu frase;
+  - entrevista de pie a pie de campo al terminar el partido, más corta.
+- ⛔ **"Charla con IA que evalúa tu tono libre"**: necesita un modelo de lenguaje en línea, con
+  coste por uso y sin funcionar sin conexión. Alternativa viable ✅: texto libre con un
+  clasificador local de palabras clave y tono (ya existe `_charla_libre()` en el camarín, se
+  amplía).
+
+### B6. Infraestructura del estadio, a fondo ✅
+- **Hoy**:
+  - 16 estilos, 6 formas y hasta 5 bandejas (150.000 personas);
+  - tramos por tribuna, componentes, pista de atletismo, banderas, pantallas en rotación y vallas
+    LED.
+- **Hacer**:
+  1. **Colores por sección** (pedido del usuario, sin empezar, ver 2-sexies): cada bandeja, arcos,
+     red, líneas, focos, LED, banquillos y butacas por separado.
+  2. **Exterior del estadio**: fachada (ladrillo, vidrio, membrana, hormigón), accesos, taquillas,
+     tienda, estacionamiento y entorno.
+  3. **Instalaciones internas visibles**: palcos VIP, zona de prensa, sala de trofeos y museo,
+     vestuarios. Cada una con su coste, mantenimiento e ingreso en `nucleo/estadio_propio.gd`.
+  4. **Obras por etapas**: andamios y grúa en 3D mientras se construye, con plazo real y aforo
+     reducido durante la obra.
+  5. **Techo retráctil y césped híbrido o artificial**, con efecto en lesiones y en el clima.
+  6. **Más estilos**: 16 → 24 (coliseo, estadio-caja inglés, estadio de montaña con ladera,
+     flotante, cúpula, estadio del desierto, sudamericano de hormigón, japonés moderno) y
+     capacidad sin tope artificial, como Dream League (hoy 150.000).
+  7. **Túnel navegable** (2-septies), cuando exista el modo caminar.
+- **Comprobar**: `captura_formas_estadio.gd` ampliada a todos los estilos, sin nada flotando ni
+  atravesado (auditoría automática de mallas contra el césped y las gradas).
+
+### B7. Ciudad 3D y su funcionamiento ✅
+- **Hoy**: `ui/ciudad_vista.gd` (340 líneas) muestra `CityBuilder` y `nucleo/ciudad.gd` lleva
+  terrenos, negocios, vecinos, permisos y seguridad; hay coches importados que no se usan.
+- **Hacer**:
+  - clic en cada edificio para abrir su ficha y construir o mejorar desde el 3D;
+  - obra con etapas visibles;
+  - día/noche según la hora del juego;
+  - tráfico con los coches ya importados y peatones de `PersonaRealista` en baja resolución;
+  - días de partido con la ciudad llena y banderas en las calles;
+  - indicadores flotantes (ingreso semanal, humor del barrio);
+  - eventos de ciudad (protesta vecinal, festival, obra pública que corta un acceso);
+  - cámara libre con órbita y zoom.
+- **Comprobar**: construir desde el 3D mueve el dinero igual que desde el panel (banco), y hay
+  capturas de día, noche y día de partido.
+
+### B8. Personaje propio: creador estilo Los Sims ✅ / 🟡
+- **Hoy**: `PanelAspectoDT` es un retrato 2D (`CaraDT`: corte, volumen, traje) y el mentor usa
+  `PersonaRealista` recoloreable, sin esqueleto.
+- **Hacer**:
+  - **Pantalla propia a pantalla completa**: el personaje 3D girando en un estudio con luz de 3
+    puntos y pestañas a los lados (Cuerpo · Cara · Pelo · Ropa · Accesorios · Guardarropa), con
+    deshacer, aleatorio y guardado de conjuntos.
+  - **Cuerpo** ✅: estatura, complexión, hombros y barriga, con escalas de huesos sobre el modelo
+    Quaternius con esqueleto.
+  - **Cara** 🟡: forma de cara, nariz, ojos, mandíbula y barba. Requiere un modelo con blendshapes;
+    el candidato es MakeHuman (CC0), exportado por Blender con `herramientas/blender_a_glb.py` en
+    el PC del usuario, porque en la nube no hay Blender.
+  - **Pelo** ✅: mallas de pelo intercambiables con color.
+- **Comprobar**: el personaje creado aparece igual en la rueda de prensa, en la banda y en las
+  cinemáticas (el mismo `aspecto` guardado en la partida).
+
+### B9. Ropa y accesorios ✅
+- **Hacer**:
+  - un catálogo de prendas: traje, chándal, abrigo largo, polo, camisa, bufanda, gorra, gafas,
+    reloj, auriculares, anillo de campeón;
+  - cada prenda es una malla sujeta a un hueso (`BoneAttachment3D`) o una capa del shader, con
+    color y patrón (se reutilizan los 26 patrones del shader de equipación);
+  - una tienda que se desbloquea con logros y dinero del DT (conecta con "invertir el salario" de
+    los archivos profundos);
+  - ropa según el clima (abrigo en invierno).
+- **Assets** 🟡: prendas CC0 (Quaternius "Modular Character Outfits", ya usado; Kenney) o hechas en
+  Blender.
+
+### B10. Mascotas 3D en el campo ✅ / 🟡
+- **Hoy** no existe sistema de mascota (`mundo.gd` lo documenta; el "peluche de la mascota" del
+  HTML quedó fuera).
+- **Hacer**:
+  - Una mascota por club, elegida o generada: un animal ligado al escudo (león, águila, lobo, toro,
+    perro) o una persona disfrazada.
+  - En el campo:
+    - sale con los equipos;
+    - baila en la banda en el entretiempo;
+    - festeja los goles del local;
+    - se desanima con los goles en contra.
+  - Además, peluche en la tienda con ingreso comercial, nivel de popularidad y evento "la mascota
+    se hace viral".
+- **Assets** 🟡: animales animados CC0 de Quaternius (Ultimate Animated Animals); la persona
+  disfrazada con `PersonaRealista` y una cabeza grande.
+
+### B11. Mini animaciones y "juego vivo" ✅
+- **Interfaz**:
+  - transiciones entre pestañas;
+  - cifras que cuentan hacia arriba (dinero, media);
+  - tarjetas que aparecen escalonadas y botones con rebote;
+  - aviso de gol que late;
+  - reloj de la semana animado.
+- **Mundo**:
+  - banderas del estadio con viento (shader);
+  - público con olas en los goles;
+  - clima con partículas (lluvia, nieve, niebla; hoy solo se oye);
+  - pájaros en el menú;
+  - fondo del menú con el estadio de tu club de noche.
+- **Personas**: el DT en la banda reacciona (brazos, se agacha, patea una botella; está en los
+  archivos profundos) y los suplentes calientan (dominadas y trote, ya empezado).
+- **Comprobar**: el coste en FPS de cada una medido en `diagnostico_fps_partido`, con una opción
+  "animaciones reducidas" en Ajustes.
+
+### B12. Música libre en español 🟡
+- **Hoy**: `nucleo/musica.gd` compone 6 piezas en el momento, sin archivos, y suben o bajan con la
+  partida.
+- **Hacer**:
+  - sumar una radio del club con canciones de licencia libre: CC BY o CC BY-SA, **nunca NC** si el
+    juego se va a vender;
+  - buscar en español en Jamendo, Free Music Archive y ccMixter (cumbia, rock latino, pop, himnos
+    de hinchada);
+  - cada pista con su crédito en una pantalla de créditos musicales;
+  - la música procedural se queda para los momentos que cambian (partido, tensión).
+- 🟡 Las canciones con voz en español y licencia libre son pocas: hay que elegirlas a mano, y el
+  usuario debe aprobar cada una.
+- 🟡 `*.ogg` va por LFS en `.gitattributes` y desde la nube no se puede subir a LFS: hay que hacer
+  una excepción como con `assets/personas/*.glb`, o que el usuario las suba desde su PC.
+
+### B13. Mejoras visuales, de texto e integración visual ✅
+- **Visual**:
+  - un sistema de diseño único (`ui/tema.gd`: colores, tipografías, radios, sombras, espaciados)
+    aplicado a todas las pantallas; hoy hay estilos repartidos en `principal.gd`;
+  - llevar a todas las pantallas el patrón de tarjeta con anillo de `TableroInicio`;
+  - iconos propios en vez de emojis;
+  - la grada con textura estirada (pendiente del análisis externo).
+- **Texto**:
+  - revisión completa de ortografía, tono y coherencia (tú/usted, términos de fútbol del mismo
+    país);
+  - textos de eventos y noticias más largos y con variantes;
+  - un glosario ampliado.
+- **Integración**: que el 3D y el 2D compartan colores y tipografía (los rótulos del partido 3D con
+  la misma fuente de la interfaz).
+
+### B14. Optimización y velocidad ✅
+- **Hoy**:
+  - arranque 0,9 s;
+  - estadio 2,9 s;
+  - `principal.gd` con 14.300 líneas;
+  - el retrato real ya no decodifica fotos grandes.
+- **Hacer**:
+  1. **Medir antes de tocar**: el perfilador de Godot sobre avanzar una semana, avanzar una
+     temporada, abrir el plantel y abrir el estadio.
+  2. Simular en segundo plano (hilo) las ligas que no son la tuya.
+  3. Caché de pantallas que no cambian.
+  4. Compilar los shaders de antemano (evita tirones la primera vez).
+  5. Nivel de detalle de jugadores y público por distancia.
+  6. Seguir partiendo `principal.gd` (plantel, mercado, club).
+  7. Guardado incremental.
+- **Comprobar**: una tabla de tiempos antes/después en el LEEME, cada número medido 3 veces.
+- 🟡 Medir en el PC modesto real (Intel UHD): aquí solo hay render por software.
+
+### B15. Mayor realismo ✅
+- **Hoy**: lo pedido en los archivos profundos está hecho en buena parte:
+  - vestuario con clanes y salud mental;
+  - representantes y redes ("funas");
+  - árbitros con perfil tarjetero;
+  - interinato, academia 10-16 y ocupación hostil;
+  - espionaje y lobby arbitral.
+- **Hacer**:
+  - **Calibrar la simulación contra datos reales**: goles por partido, % de local, tarjetas,
+    lesiones por temporada y distribución de resultados, con una prueba que juegue 10 temporadas y
+    compare contra rangos reales.
+  - Presupuestos y edades a escala FC en el pack real (pedido en los archivos profundos).
+  - Crecimiento de media por temporada visible por jugador.
+  - Exigencias de los jugadores (minutos, instalaciones, cómodo con la táctica).
+- ⛔ "Estadísticas iguales a FC 26 y dorsales reales": datos con licencia de EA; solo vale en el
+  pack privado del usuario, nunca en lo publicable.
+
+### B16. Más variantes de estadio ✅
+Ver B6.6. Además:
+- estadios de los rivales con más forma y color propio (hoy 6 formas);
+- estadios históricos o legendarios desbloqueables por logros;
+- editor de fachada.
+
+### B17. Revisión de faltantes: LEEME y archivos profundos
+Cruzado contra el código el 25-9-2026 (`grep` por concepto), no de memoria.
+
+**Ya hechos**, aunque el ROADMAP o las notas los daban por pendientes:
+- el Modo Director de Cantera 10-16 (Fase 3.5, cerrado en la ronda del análisis externo);
+- el selector de escudos especiales (`principal.gd`, `Escudo.especiales_desbloqueados()`);
+- los eventos de ocupación hostil, virus FIFA, retiro joven, espía, filtración del agente,
+  provocación y lobby arbitral;
+- clanes, salud mental, representantes y funas;
+- la tabla y los goleadores en la pantalla del estadio.
+
+**Pendientes reales**, repartidos en los bloques de arriba:
+- juegos mentales en el túnel → B4;
+- charla con tono libre → B5;
+- colores por sección → B6;
+- mascota → B10;
+- lenguaje corporal del DT en la banda → B11;
+- invertir el salario del DT (licencias, acciones de clubes, agente propio) → B9 y un bloque de
+  economía personal;
+- "escuela táctica" que bautiza tu estilo;
+- fondos buitre sobre juveniles (hay 3 archivos que lo mencionan, falta confirmar que tenga efecto);
+- el mercado "a ciegas" sin atributos numéricos, como opción de dificultad;
+- el Mundial y las copas de Asia, Oceanía y África (existen selecciones; falta revisar el torneo);
+- los 5 bloques de la Fase 4 (mercado gris, insolvencia, reglamento, selecciones, meta).
+
+**Nota**: el listado de 750 + 300 ideas se re-cruza por bloques antes de cada fase, porque en este
+proyecto "estaba pendiente" resultó "ya estaba hecho" muchas veces.
+
+**No viables hoy** ⛔, con su motivo:
+- **IA conversacional en línea**: coste por uso, necesita conexión y es incierta en Android.
+- **"Jugar 10 temporadas ×3 como humano"**: se reemplaza por pruebas automáticas de 10 temporadas
+  con 3 semillas, que sí se pueden correr.
+- **Estadísticas y dorsales de FC 26**: los datos tienen licencia.
+- **Probar en un Android y en un PC modesto reales**: esta sesión no tiene esos dispositivos.
+- **Caras por morphs sin un modelo nuevo**: ver B8.
+
+### ORDEN SUGERIDO
+Primero lo que más se nota con menos riesgo, después lo que necesita assets externos.
+1. **Tanda 1**: B1 (ajustes desplegables), B2 (tipos de simulación), B11 (mini animaciones de
+   interfaz), B13 (sistema de diseño y texto).
+2. **Tanda 2**: B3 (cinemáticas), B4 (eventos nuevos y presentación), B5 (entrevistas).
+3. **Tanda 3**: B6 y B16 (estadio a fondo y variantes), B7 (ciudad 3D).
+4. **Tanda 4**: B8 y B9 (creador estilo Sims, ropa y accesorios), B10 (mascotas).
+5. **Tanda 5**: B12 (música; necesita aprobación de las pistas), B14 (optimización medida) y B15
+   (calibración de realismo con 10 temporadas × 3 semillas).
+
+---
+
+
 ## ANÁLISIS EXTERNO DEL 25-9-2026 (62/100): lo hecho y lo que queda
 Detalle completo en `LEEME.md`, arriba de todo.
 - [x] Contraseña del keystore fuera del repositorio (`export_credentials.cfg`, no se sube).
@@ -403,10 +738,10 @@ nocturno, adaptación cultural-; el que de verdad falta es el que sigue en la li
    anota festeja con la animación real de gol (`ui/estadio.gd::_banca_celebra()`) y vuelve solo a la
    calma a los 3s. Detalle completo y verificación (datos + 3 capturas reales del ciclo antes/
    festejo/vuelta) en `LEEME.md`, sección "EL BANQUILLO YA NO ESTÁ VACÍO".
-5. [ ] **Modo Director de Cantera completo** (edades 10-16: alimentación, estudios) -hoy la cantera
-   arranca directo a los 16-18 años-. El más grande de esta fase, requiere motor nuevo real.
-6. [ ] **Juegos mentales en el túnel** antes de salir a la cancha -el más chico y menos definido, sin
-   diseñar.
+5. [x] **Modo Director de Cantera completo** (edades 10-16): CERRADO en la ronda del análisis
+   externo (25-9-2026), ver `LEEME.md`.
+6. [ ] **Juegos mentales en el túnel** antes de salir a la cancha: pasa al bloque B4 del plan
+   maestro (arriba).
 
 ---
 
