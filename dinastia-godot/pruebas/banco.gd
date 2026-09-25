@@ -86,6 +86,7 @@ func _ready() -> void:
 	_probar_tutorial()
 	_probar_moneda()
 	_probar_academia()
+	_probar_modos_simulacion()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5280,3 +5281,62 @@ func _probar_academia() -> void:
 		for ch in m2.academia.chicos:
 			ids2.append(String(ch["id"]))
 	_comprobar(ids2 == ids, "guardar y cargar conserva a los %d chicos" % ids.size())
+
+
+## LOS CINCO MODOS DE MIRAR UN PARTIDO (25-9-2026, plan maestro B2). Con la
+## misma semilla, el partido jugado de una vez (Instantáneo), el Resumen y el
+## partido en vivo tienen que dar EXACTAMENTE lo mismo: mirar no decide nada.
+## El 3D usa los mismos `simular_minuto()` a su propio ritmo. Se juega con la
+## grada al límite (ánimo 10) y a varias semillas para que la invasión de
+## campo -que antes solo tiraba el partido en vivo- entre en juego.
+func _probar_modos_simulacion() -> void:
+	_titulo("MODOS DE SIMULACIÓN: MISMO PARTIDO, DISTINTA VISTA")
+	## Un mundo por camino, idénticos (misma semilla): un partido le cambia a
+	## los jugadores el físico, las lesiones y las tarjetas, así que reusar los
+	## mismos clubes haría que el segundo camino jugara con otro plantel.
+	var mundos: Array[Mundo] = []
+	for via in 3:
+		var mv := Mundo.new()
+		mv.generar(["CHI"], 77)
+		mundos.append(mv)
+	var iguales := 0
+	var invasiones := 0
+	var semillas := 40
+	for k in semillas:
+		var huellas: Array[String] = []
+		for via in 3:
+			var l := mundos[via].ligas[0]
+			var a: Club = l.clubes[k % l.clubes.size()]
+			var b: Club = l.clubes[(k + 3) % l.clubes.size()]
+			Azar.sembrar(9000 + k)
+			var p := Partido.new(a, b)
+			match via:
+				0:
+					p.preparar()
+					p.fijar_hinchada(a, 10)
+					while not p.terminado_ya:
+						p.simular_minuto()
+				1:
+					p.preparar()
+					p.fijar_hinchada(a, 10)
+					var capa := Control.new()
+					var r := ResumenPartido.mostrar(capa, p, a, false, true)
+					r.free()
+					capa.free()
+				2:
+					## El partido en vivo sin 3D, saltado al final.
+					p.fijar_hinchada(a, 10)
+					var vivo := PartidoVivo.new()
+					vivo.con_3d = false
+					vivo.abrir(p, a)
+					vivo.call("_hasta_el_final")
+					vivo.free()
+			huellas.append("%d-%d|%d|%s" % [p.goles_local, p.goles_visita, p.cronica.size(), str(p.invasion_ya)])
+			if via == 0 and p.invasion_ya:
+				invasiones += 1
+		if huellas[0] == huellas[1] and huellas[1] == huellas[2]:
+			iguales += 1
+		elif iguales == k:
+			print("    distinto en la semilla %d: %s" % [9000 + k, str(huellas)])
+	_comprobar(iguales == semillas, "Instantáneo, Resumen y En vivo dan el mismo partido en %d de %d semillas" % [iguales, semillas])
+	_comprobar(invasiones > 0, "la invasión de campo sigue pudiendo ocurrir, ahora en cualquier modo (%d de %d)" % [invasiones, semillas])

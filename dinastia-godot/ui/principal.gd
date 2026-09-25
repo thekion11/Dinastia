@@ -577,11 +577,11 @@ func _construir() -> void:
 	menu_calendario.text = "📅 Calendario"
 	menu_calendario.custom_minimum_size = Vector2(0, 32)
 	menu_calendario.clip_text = true
-	menu_calendario.tooltip_text = "Dirigir el partido, avanzar semana, jugar la temporada o pasar a la siguiente"
+	menu_calendario.tooltip_text = "Jugar el partido, avanzar semana, jugar la temporada o pasar a la siguiente"
 	menu_calendario.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	menu_calendario.size_flags_stretch_ratio = 1.3
 	var pop_calendario := menu_calendario.get_popup()
-	pop_calendario.add_item("Dirigir el partido", 0)
+	pop_calendario.add_item("Jugar el partido", 0)
 	pop_calendario.add_item("Avanzar semana", 1)
 	pop_calendario.add_item("Jugar la temporada", 2)
 	pop_calendario.add_item("Temporada siguiente", 3)
@@ -793,6 +793,13 @@ func _construir() -> void:
 	der.add_theme_constant_override("separation", 12)
 	columnas.add_child(der)
 	_ficha = _bloque(der, "FICHA DEL JUGADOR", 2.0)
+	## CON SCROLL PROPIO (25-9-2026). La ficha completa -atributos, contrato,
+	## cabeza, habilidades, notas- pide unos 1.060 px de alto y la columna no
+	## tenía scroll: estiraba la fila entera y, con la ventana a 1280x720
+	## lógicos, todo lo de abajo de las tres columnas quedaba fuera de la
+	## pantalla sin forma de llegar (el botón "Jugar el partido", el final de la
+	## tabla). Medido con `pruebas/captura_modos_partido.gd`.
+	_ficha = _con_scroll(_ficha)
 	## LA PUERTA AL PLANTEL. Tocar la zona del jugador lleva al hub con todo
 	## lo que se hace con futbolistas -plantel, táctica, entrenar, enfermería,
 	## camarín, cantera, contratos-, en vez de tener siete pestañas más
@@ -2354,7 +2361,20 @@ func _dirigir() -> void:
 	## un 50% mas. En este motor eso es la arenga.
 	if mundo.entrenamiento != null:
 		p._factor_arenga = mundo.entrenamiento.factor_instrucciones()
+	## CÓMO SE MIRA (25-9-2026, plan maestro B2). Los cinco modos juegan el
+	## MISMO `Partido` con los mismos `simular_minuto()`: solo cambia la vista.
+	var modo := _modo_simulacion(_competicion_de_la_semana())
+	if modo == "instantaneo" or modo == "resumen":
+		p.preparar()
+		p.fijar_hinchada(mundo.mi_club(), mundo.prensa.animo if mundo.prensa != null else 60)
+		var res := ResumenPartido.mostrar(self, p, mundo.mi_club(), es_eliminatoria, modo == "resumen")
+		res.cerrado.connect(func() -> void:
+			res.queue_free()
+			_cerrar_partido_dirigido(p))
+		return
 	var vivo := PartidoVivo.new()
+	vivo.con_3d = modo != "vivo"
+	vivo.destacados = modo == "destacados"
 	vivo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(vivo)
 	## El perfil del ESTADIO LOCAL -que puede ser el tuyo o el del rival, según
@@ -2370,14 +2390,84 @@ func _dirigir() -> void:
 		Comercial.color_balon(mundo.comercial.balon, mundo.mi_club()))
 	vivo.cerrado.connect(func() -> void:
 		vivo.queue_free()
-		## Se avanza la semana con el partido ya jugado en la mano. Si se avanzara
-		## sin él, la jornada se volvería a simular por dentro y en la tabla
-		## aparecería un marcador distinto del que se acaba de ver.
-		mundo.avanzar_semana(p)
-		_escribir("[color=#3fa06a]J%d  %s %d-%d %s[/color]" % [
-			mundo.liga_de(mundo.mi_club()).jornada_actual,
-			p.local.nombre, p.goles_local, p.goles_visita, p.visita.nombre])
-		_refrescar())
+		_cerrar_partido_dirigido(p))
+
+## Se avanza la semana con el partido ya jugado en la mano. Si se avanzara sin
+## él, la jornada se volvería a simular por dentro y en la tabla aparecería un
+## marcador distinto del que se acaba de ver. Lo usan todos los modos.
+func _cerrar_partido_dirigido(p: Partido) -> void:
+	mundo.avanzar_semana(p)
+	_escribir("[color=#3fa06a]J%d  %s %d-%d %s[/color]" % [
+		mundo.liga_de(mundo.mi_club()).jornada_actual,
+		p.local.nombre, p.goles_local, p.goles_visita, p.visita.nombre])
+	_refrescar()
+
+## LOS CINCO MODOS DE MIRAR UN PARTIDO (plan maestro B2): [clave, rótulo, qué es].
+const MODOS_SIMULACION := [
+	["instantaneo", "⚡ Instantáneo", "Solo el resultado, al momento."],
+	["resumen", "📋 Resumen", "Las jugadas clave, una a una, en 20 segundos."],
+	["vivo", "📻 En vivo", "Crónica, cambios, arengas y charla, sin 3D."],
+	["destacados", "🎬 3D destacados", "El estadio a x4, frena en cada ocasión."],
+	["completo", "🏟 3D completo", "El partido entero en el estadio."],
+]
+const SECCION_SIMULACION := "simulacion"
+
+## La competición del partido de esta semana, con el mismo orden que
+## `_dirigir()`: copa, después continental, después liga.
+func _competicion_de_la_semana() -> String:
+	if not mundo.partido_de_copa().is_empty():
+		return "copa"
+	if mundo.mi_continental() != null and not mundo.partido_continental().is_empty():
+		return "conti"
+	return "liga"
+
+## El modo elegido para una competición (se guarda por separado: la copa en 3D
+## y la liga en resumen, por ejemplo). Por defecto, 3D completo, que es lo que
+## hacía "Dirigir" hasta hoy.
+func _modo_simulacion(comp: String) -> String:
+	var cfg := ConfigFile.new()
+	if cfg.load(CajonAjustes.RUTA) != OK:
+		return "completo"
+	return String(cfg.get_value(SECCION_SIMULACION, comp, "completo"))
+
+func _fijar_modo_simulacion(comp: String, modo: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(SECCION_SIMULACION, comp, modo)
+	cfg.save(CajonAjustes.RUTA)
+
+## El selector, encima del botón de jugar: cinco fichas y la explicación de la
+## elegida. Cambiarla la guarda para esa competición.
+func _selector_modo_partido(padre: Node) -> void:
+	var comp := _competicion_de_la_semana()
+	var nombre_comp: String = {"copa": "la copa", "conti": "el torneo continental", "liga": "la liga"}[comp]
+	var t := _texto(11, COL_SUAVE)
+	t.text = "CÓMO QUIERES VER LOS PARTIDOS DE %s" % nombre_comp.to_upper()
+	padre.add_child(t)
+	var fila := HFlowContainer.new()
+	fila.add_theme_constant_override("h_separation", 6)
+	fila.add_theme_constant_override("v_separation", 6)
+	padre.add_child(fila)
+	var actual := _modo_simulacion(comp)
+	var desc := _texto(11, COL_SUAVE)
+	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var grupo := ButtonGroup.new()
+	for m: Array in MODOS_SIMULACION:
+		var clave := String(m[0])
+		var b := Button.new()
+		b.text = String(m[1])
+		b.toggle_mode = true
+		b.button_group = grupo
+		b.button_pressed = clave == actual
+		b.tooltip_text = String(m[2])
+		b.custom_minimum_size = Vector2(0, 30)
+		b.pressed.connect(func() -> void:
+			_fijar_modo_simulacion(comp, clave)
+			desc.text = String(m[2]))
+		fila.add_child(b)
+		if clave == actual:
+			desc.text = String(m[2])
+	padre.add_child(desc)
 
 ## Para no repetir el aviso del cierre de mercado cada vez que se repinta.
 var _mercado_avisado: int = -1
@@ -3990,7 +4080,8 @@ func _pintar_partido(c: Club) -> void:
 			_celda(g, "", COL_SUAVE)
 
 	_lista_partido.add_child(HSeparator.new())
-	_boton("▶ Dirigir el partido", _dirigir, _lista_partido)
+	_selector_modo_partido(_lista_partido)
+	_boton("▶ Jugar el partido", _dirigir, _lista_partido)
 
 ## `vCalendario` -pantalla nueva, sin equivalente en el HTML-: el usuario la
 ## pidió después de ver una referencia de otro manager (grilla con los
@@ -4058,8 +4149,9 @@ func _pintar_calendario(c: Club) -> void:
 		var filab := HBoxContainer.new()
 		filab.add_theme_constant_override("separation", 6)
 		_lista_calendario.add_child(filab)
-		_boton("▶ Dirigir el partido", _dirigir, filab)
-		_boton("⏭ Simular sin dirigir", _avanzar_semana, filab)
+		_selector_modo_partido(_lista_calendario)
+		_lista_calendario.move_child(filab, _lista_calendario.get_child_count() - 1)
+		_boton("▶ Jugar el partido", _dirigir, filab)
 
 	_lista_calendario.add_child(HSeparator.new())
 	_boton("⏭⏭ Simular toda la temporada", _jugar_temporada, _lista_calendario)
