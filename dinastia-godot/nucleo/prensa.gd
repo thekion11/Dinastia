@@ -1413,6 +1413,74 @@ func pie_de_campo(gane: bool, empate: bool, gf: int, gc: int) -> Dictionary:
 	pie = {"pregunta": q, "opciones": ops, "quien": "%s · %s, a pie de campo" % [String(f[1]), String(f[2])]}
 	return pie
 
+# --- al paso: los medios nuevos (C6) -------------------------------------------
+## Pedido: *"entrevistas en medios de comunicación más nuevos y sin tanta
+## preparación, más naturales"*. Un streamer a la salida del entrenamiento, un
+## podcast en el aeropuerto, el canal de un hincha en la puerta del estadio: una
+## pregunta que no esperas, casi nunca de fútbol. Lo que dices mueve SEGUIDORES
+## (el alcance del club en redes) y un poco el ánimo; nada de confianza de la
+## directiva: nadie en el palco ve esos directos. Una vez cada ~8 semanas, por
+## hash (sin `Azar`).
+const MEDIOS_NUEVOS := [
+	["Kike en Directo", "streamer", "a la salida del entrenamiento"],
+	["El Vestuario Pod", "podcast", "en el aeropuerto"],
+	["Hincha TV", "canal de un hincha", "en la puerta del estadio"],
+	["Fútbol en 60 segundos", "vídeos cortos", "en el aparcamiento"],
+	["La Previa Live", "streaming", "en el supermercado"],
+]
+const PREGUNTAS_AL_PASO := [
+	["¿Qué música suena en el vestuario?", [
+		["Lo elige el capitán, y no siempre acierta", "calma", 900, 1],
+		["Silencio: aquí se viene a trabajar", "soberbia", -300, 0],
+		["Eso pregúntaselo al utilero", "evasiva", 400, 0]]],
+	["¿Quién es el peor bailarín del plantel?", [
+		["El portero, sin discusión", "calma", 1200, 1],
+		["Yo no bailo y ellos tampoco deberían", "soberbia", -200, 0],
+		["No voy a buscarme problemas", "evasiva", 300, 0]]],
+	["Te vimos haciendo la compra: ¿el entrenador cocina?", [
+		["Cocino fatal, pero lo intento", "calma", 1000, 1],
+		["Mi vida privada es privada", "soberbia", -400, -1],
+		["Solo compraba agua", "evasiva", 200, 0]]],
+	["¿Contestas los mensajes de los hinchas?", [
+		["Los leo todos, hasta los que me insultan", "calma", 1500, 2],
+		["No tengo tiempo para eso", "soberbia", -800, -2],
+		["A veces", "evasiva", 200, 0]]],
+	["¿A qué jugador del plantel te llevarías a una isla desierta?", [
+		["Al capitán: sabría organizarnos", "calma", 900, 1],
+		["A ninguno, me iría solo", "soberbia", -300, 0],
+		["A todos, que ninguno se enfade", "evasiva", 600, 0]]],
+	["Dicen que eres supersticioso: ¿cierto?", [
+		["La misma corbata desde hace diez partidos", "calma", 1300, 1],
+		["El fútbol es trabajo, no suerte", "soberbia", 0, 0],
+		["Sin comentarios", "evasiva", 100, 0]]],
+]
+## La entrevista al paso de esta semana, lista para enseñar, o vacío.
+var al_paso: Dictionary = {}
+
+func revisar_al_paso(anio: int, sem: int) -> Dictionary:
+	if not al_paso.is_empty() or not pie.is_empty():
+		return {}
+	var h := _hash_de("alpaso|%d|%d" % [anio, sem])
+	if h % 8 != 0:
+		return {}
+	var medio: Array = MEDIOS_NUEVOS[(h / 8) % MEDIOS_NUEVOS.size()]
+	var q: Array = PREGUNTAS_AL_PASO[(h / 64) % PREGUNTAS_AL_PASO.size()]
+	var ops: Array = []
+	for o: Array in q[1]:
+		ops.append({"txt": String(o[0]), "tono": String(o[1]), "seguidores": int(o[2]), "animo": int(o[3]), "moral": 0})
+	al_paso = {"pregunta": String(q[0]), "opciones": ops,
+		"quien": "%s · %s, %s" % [String(medio[0]), String(medio[1]), String(medio[2])], "rotulo": "📱 Al paso"}
+	return al_paso
+
+## Pasa la entrevista al paso a la "entrevista abierta" que contesta la
+## pantalla (la misma de pie de campo).
+func abrir_al_paso() -> Dictionary:
+	if al_paso.is_empty():
+		return {}
+	pie = al_paso
+	al_paso = {}
+	return pie
+
 ## `i` = -1: pasas de largo ante la cámara.
 func responder_pie(i: int) -> Dictionary:
 	if pie.is_empty():
@@ -1425,6 +1493,9 @@ func responder_pie(i: int) -> Dictionary:
 		return {"titular": "", "tono": "evasiva"}
 	var o: Dictionary = ops[i]
 	mover_animo(int(o.get("animo", 0)))
+	## Los medios nuevos mueven seguidores, no confianza (C6).
+	if o.has("seguidores"):
+		seguidores = maxi(0, seguidores + int(o["seguidores"]))
 	var dm := int(o.get("moral", 0))
 	var m := _mundo()
 	var mio: Club = m.mi_club() if m != null else null
@@ -1434,7 +1505,10 @@ func responder_pie(i: int) -> Dictionary:
 	if bool(o.get("arbitros", false)):
 		enojo_arbitral += 1
 	var frase := String(o["txt"])
-	noticia.emit("🎤 A pie de campo", "«%s»." % frase)
+	var donde := "🎤 A pie de campo"
+	if o.has("seguidores"):
+		donde = "📱 Al paso"
+	noticia.emit(donde, "«%s»." % frase + (" %+d seguidores." % int(o["seguidores"]) if o.has("seguidores") else ""))
 	return {"titular": frase, "tono": String(o["tono"])}
 
 
@@ -1511,6 +1585,8 @@ func semana() -> void:
 		_aplicar_efectos(mio)
 	publicar_titular_pendiente()
 	revisar_identidad(mio)
+	if m != null:
+		revisar_al_paso(m.anio, m.semana)
 	if semanas_documental > 0:
 		semanas_documental -= 1
 		if mio != null:

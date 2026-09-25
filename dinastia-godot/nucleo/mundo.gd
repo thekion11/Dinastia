@@ -91,6 +91,8 @@ var gente: Gente
 var club_dentro: ClubDentro
 ## El presidente del club, los accionistas y la junta trimestral (C5).
 var junta: Junta
+## Las charlas uno a uno con cada jugador y las promesas hechas (C7).
+var charlas: Charlas
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
 var banco: Banco
 ## La marca del pecho: ofertas, firma y exigencia contractual.
@@ -1054,6 +1056,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		club_dentro.semana(mi_club(), prensa)
 	if junta != null and mi_club() != null:
 		junta.semana(mi_club(), anio, semana)
+	if charlas != null and mi_club() != null:
+		charlas.semana(mi_club(), anio, semana)
 		## La app y la web CRECEN cada semana -"procesoClubIn()" del HTML corre
 		## en el mismo proceso semanal que la prensa o la cantera, no en el
 		## cierre de mes-, y crecen más rápido si vienes ganando en liga.
@@ -1744,6 +1748,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	club_dentro = ClubDentro.new()
 	junta = Junta.new()
 	junta.formar(mi_club())
+	charlas = Charlas.new()
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)
