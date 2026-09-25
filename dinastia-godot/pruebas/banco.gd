@@ -83,6 +83,7 @@ func _ready() -> void:
 	_probar_aspecto_y_audio()
 	_probar_marca()
 	_probar_tutorial()
+	_probar_moneda()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5007,3 +5008,36 @@ func _probar_tutorial() -> void:
 	_comprobar(titulos_de_modo.size() == 8, "cada modo trae su propio paso (%d distintos)" % titulos_de_modo.size())
 	_comprobar(Tutorial.pasos_para("dt", "Lautaro FC")[0]["texto"].contains("Lautaro FC"),
 		"la bienvenida nombra al club")
+
+## LA MONEDA (25-9-2026). Una sola función escribe el dinero en todo el juego,
+## con la moneda elegida. Se cambia `Eco.moneda` a mano, sin `elegir_moneda()`,
+## para no tocar la preferencia guardada del jugador.
+func _probar_moneda() -> void:
+	_titulo("MONEDA SELECCIONABLE")
+	var antes := Eco.moneda
+	Eco.moneda = "EUR"
+	## 1.000.008 y no 1.000.000: el millón no es múltiplo de `ECO` (12) y el
+	## redondeo daba 999.996, que se escribe -bien- "999k".
+	var un_millon := int(ceil(1000000.0 / Eco.ECO))
+	_comprobar(Eco.dinero(un_millon) == "1.0M EUR", "un millón interno se escribe en euros (%s)" % Eco.dinero(un_millon))
+	_comprobar(Eco.dinero(-un_millon).begins_with("-"), "y los negativos llevan signo (%s)" % Eco.dinero(-un_millon))
+	Eco.moneda = "USD"
+	_comprobar(Eco.dinero(un_millon) == "1.1M USD", "en dólares, al cambio fijo (%s)" % Eco.dinero(un_millon))
+	Eco.moneda = "CLP"
+	_comprobar(Eco.dinero(un_millon).ends_with("MM CLP"), "en pesos chilenos salta a miles de millones (%s)" % Eco.dinero(un_millon))
+	## Las ocho copias que había se escribían distinto; ahora todas pasan por Eco.
+	_comprobar(Cesiones.dinero(un_millon) == Eco.dinero(un_millon), "cesiones escribe igual que el resto")
+	var todas_eco := true
+	for ruta in ["res://ui/principal.gd", "res://ui/inicio.gd", "res://nucleo/prensa.gd",
+			"res://ui/componentes/panel_mercado.gd", "res://ui/componentes/panel_finanzas.gd",
+			"res://ui/componentes/panel_plantel.gd", "res://ui/componentes/ficha_jugador_acciones.gd"]:
+		var f := FileAccess.open(ruta, FileAccess.READ)
+		var texto := f.get_as_text()
+		f.close()
+		for linea in texto.split("\n"):
+			if linea.strip_edges().begins_with("#"):
+				continue
+			if linea.contains("M EUR\"") or linea.contains("\"$%d\""):
+				todas_eco = false
+	_comprobar(todas_eco, "ninguna pantalla escribe \"EUR\" ni \"$\" a mano")
+	Eco.moneda = antes

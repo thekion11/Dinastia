@@ -463,6 +463,29 @@ func _construir() -> void:
 		if _clima != null:
 			_clima.ajustar_area(size))
 	_aplicar_fondo()
+	## VELO DE LECTURA DE LA CABECERA (25-9-2026). El análisis externo: "el
+	## texto de cabecera sobre el fondo de focos se lee mal". La línea gris de
+	## la jornada, los sueldos y la confianza cae justo sobre los focos del
+	## fondo de estadio -puntos casi blancos-. Un degradado negro que se apaga
+	## hacia la mitad de la pantalla oscurece solo la franja de arriba, sirve
+	## para los 24 fondos elegibles y no tapa nada: ignora el ratón.
+	var velo := TextureRect.new()
+	var grad := Gradient.new()
+	grad.set_color(0, Color(0, 0, 0, 0.62))
+	grad.set_color(1, Color(0, 0, 0, 0.0))
+	var tex_velo := GradientTexture2D.new()
+	tex_velo.gradient = grad
+	tex_velo.fill_from = Vector2(0.5, 0.0)
+	tex_velo.fill_to = Vector2(0.5, 1.0)
+	tex_velo.width = 4
+	tex_velo.height = 64
+	velo.texture = tex_velo
+	velo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	velo.stretch_mode = TextureRect.STRETCH_SCALE
+	velo.anchor_right = 1.0
+	velo.anchor_bottom = 0.48
+	velo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(velo)
 
 	var raiz := VBoxContainer.new()
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -503,7 +526,9 @@ func _construir() -> void:
 	## pestaña porque su gracia es estar SIEMPRE a mano: son ~9.000 jugadores en
 	## 384 clubes, y buscar a uno por nombre yendo de pestaña en pestaña es
 	## imposible. Escribes, Enter, y se abre su ficha o la de su club.
-	_sub = _texto(13, COL_SUAVE)
+	## Un gris más claro que COL_SUAVE: es la línea que dice cómo vas -objetivo
+	## y confianza-, y sobre los fondos con focos no se leía.
+	_sub = _texto(13, COL_SUAVE.lightened(0.35))
 	raiz.add_child(_sub)
 	_despacho = VBoxContainer.new()
 	_despacho.add_theme_constant_override("separation", 4)
@@ -597,7 +622,10 @@ func _construir() -> void:
 	## El buscador va en la fila de acciones, no en la cabecera: ahí arriba lo
 	## tapaba el aviso de mercado, que flota en la esquina derecha.
 	_buscador = LineEdit.new()
-	_buscador.placeholder_text = "🔎 Buscar jugador o club…"
+	## "Buscar jugador o club…" no entraba en 150 px y se leía "Buscar jugador
+	## o clu" (lo notó el análisis externo). El texto largo va al tooltip.
+	_buscador.placeholder_text = "🔎 Buscar…"
+	_buscador.tooltip_text = "Buscar un jugador o un club por nombre (Enter para abrir su ficha)"
 	## 150 y no 210: cada píxel de esta fila sale del ancho de las tres columnas
 	## de abajo, y a 210 volvía a cortarse la ficha del jugador por el borde.
 	_buscador.custom_minimum_size = Vector2(150, 32)
@@ -4732,12 +4760,7 @@ func _pagar_clausula(j: Jugador) -> void:
 	_refrescar()
 
 func _dinero(n: int) -> String:
-	var euros := float(n) * Eco.ECO
-	if absf(euros) >= 1000000.0:
-		return "%.1fM EUR" % (euros / 1000000.0)
-	if absf(euros) >= 1000.0:
-		return "%dk EUR" % int(euros / 1000.0)
-	return "%d EUR" % int(euros)
+	return Eco.dinero(n)
 
 func _miles(n: int) -> String:
 	var s := str(n)
@@ -10452,6 +10475,35 @@ func _pintar_idioma() -> void:
 			_refrescar())
 		flow.add_child(b)
 
+## LA MONEDA (25-9-2026). Solo cambia cómo se escribe el dinero: el tipo de
+## cambio es fijo y el motor no se entera (ver `Eco.MONEDAS`).
+func _pintar_moneda() -> void:
+	_lista_ajustes.add_child(HSeparator.new())
+	var t := _texto(11, COL_SUAVE)
+	t.text = "MONEDA"
+	_lista_ajustes.add_child(t)
+	var ex := _texto(10, COL_SUAVE)
+	ex.text = "Cambia cómo se muestra el dinero en todo el juego. Es un tipo de cambio fijo: tu caja y el valor de tu plantel no suben ni bajan por elegir otra."
+	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_lista_ajustes.add_child(ex)
+	var flow := HFlowContainer.new()
+	flow.add_theme_constant_override("h_separation", 4)
+	flow.add_theme_constant_override("v_separation", 4)
+	_lista_ajustes.add_child(flow)
+	for k: String in Eco.MONEDAS:
+		var codigo := k
+		var b := Button.new()
+		b.text = "%s  %s" % [codigo, String(Eco.MONEDAS[codigo]["nombre"])]
+		b.add_theme_font_size_override("font_size", 11)
+		b.toggle_mode = true
+		b.button_pressed = Eco.moneda == codigo
+		b.clip_text = true
+		b.custom_minimum_size = Vector2(190, 26)
+		b.pressed.connect(func() -> void:
+			Eco.elegir_moneda(codigo)
+			_refrescar())
+		flow.add_child(b)
+
 func _pintar_musica() -> void:
 
 	_lista_ajustes.add_child(HSeparator.new())
@@ -12080,6 +12132,7 @@ func _pintar_ajustes() -> void:
 			_pintar_atajos()
 		"juego":
 			_pintar_idioma()
+			_pintar_moneda()
 			_pintar_velocidad_partido()
 			_pintar_qol()
 		"acceso":
@@ -13863,7 +13916,7 @@ func _pintar_finanzas(c: Club) -> void:
 	fila_p.add_theme_constant_override("separation", 8)
 	_lista_finanzas.add_child(fila_p)
 	var lp := _texto(16, COL_TEXTO)
-	lp.text = "%.0f EUR" % c.precio_entrada
+	lp.text = Eco.dinero_euros(c.precio_entrada)
 	lp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila_p.add_child(lp)
 	_boton("−1", func() -> void:

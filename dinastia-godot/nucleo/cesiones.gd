@@ -839,20 +839,7 @@ func _localizar(pid: String) -> Array:
 ## tiene ahora mismo una copia privada de esto, y el día que se unifiquen basta
 ## con que llame aquí.
 static func dinero(n: int) -> String:
-	var e := int(round(float(n) * Eco.ECO))
-	var negativo := e < 0
-	e = absi(e)
-	var s := ""
-	if e >= 1000000000:
-		s = ("%.2f" % (float(e) / 1000000000.0)).replace(".", ",") + "MM"
-	elif e >= 1000000:
-		var mi := float(e) / 1000000.0
-		s = (("%.0f" % mi) if e >= 10000000 else ("%.1f" % mi).replace(".", ",")) + "M"
-	elif e >= 1000:
-		s = "%dk" % int(round(float(e) / 1000.0))
-	else:
-		s = str(e)
-	return ("-€" if negativo else "€") + s
+	return Eco.dinero(n)
 
 
 # ===========================================================================

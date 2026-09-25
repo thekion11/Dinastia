@@ -28,6 +28,74 @@ const TIER_PAIS := {
 	"EGY": 0.34, "MAR": 0.3, "RSA": 0.32, "AUS": 0.4,
 }
 
+# ---------------------------------------------------------------------------
+#  LA MONEDA EN PANTALLA (25-9-2026)
+# ---------------------------------------------------------------------------
+## Hasta hoy todo el juego decía "EUR" fijo -anotado en el ROADMAP como
+## "divisas seleccionables"- y había OCHO copias de la función que da formato al
+## dinero, que no coincidían entre sí: la de la mesa de negociación del mercado
+## ni siquiera pasaba por `ECO` y pintaba "$" con una cifra doce veces menor que
+## la de la ficha del mismo jugador. Ahora hay una sola, aquí.
+##
+## La moneda es SOLO presentación: el motor sigue calculando en puntos internos
+## y en euros de pantalla, y el tipo de cambio es FIJO -un manager no es una
+## casa de cambio, y un tipo que se moviera cambiaría el valor de la plantilla
+## entre una semana y otra sin que nadie hiciera nada-. Se elige en Ajustes y se
+## guarda en `user://ajustes.cfg`.
+const MONEDAS := {
+	"EUR": {"nombre": "Euro", "por_euro": 1.0},
+	"USD": {"nombre": "Dólar estadounidense", "por_euro": 1.08},
+	"GBP": {"nombre": "Libra esterlina", "por_euro": 0.85},
+	"CLP": {"nombre": "Peso chileno", "por_euro": 1010.0},
+	"ARS": {"nombre": "Peso argentino", "por_euro": 1100.0},
+	"BRL": {"nombre": "Real brasileño", "por_euro": 5.9},
+	"MXN": {"nombre": "Peso mexicano", "por_euro": 20.0},
+	"COP": {"nombre": "Peso colombiano", "por_euro": 4400.0},
+	"PEN": {"nombre": "Sol peruano", "por_euro": 4.05},
+	"JPY": {"nombre": "Yen japonés", "por_euro": 162.0},
+}
+const AJUSTES_RUTA := "user://ajustes.cfg"
+var moneda: String = "EUR"
+
+func _ready() -> void:
+	var c := ConfigFile.new()
+	if c.load(AJUSTES_RUTA) == OK:
+		var m := String(c.get_value("moneda", "codigo", "EUR"))
+		if MONEDAS.has(m):
+			moneda = m
+
+func elegir_moneda(codigo: String) -> void:
+	if not MONEDAS.has(codigo):
+		return
+	moneda = codigo
+	var c := ConfigFile.new()
+	c.load(AJUSTES_RUTA)
+	c.set_value("moneda", "codigo", codigo)
+	c.save(AJUSTES_RUTA)
+
+## Un monto INTERNO (el que manejan clubes, sueldos y fichajes) en texto:
+## "79.2M EUR", "850k USD", "1.2MM CLP". Es la única función del juego que
+## debería escribir dinero.
+func dinero(interno: float) -> String:
+	return dinero_euros(interno * ECO)
+
+## Lo mismo para una cifra que ya viene en euros de pantalla (el precio de la
+## entrada, por ejemplo, que se fija directamente en euros).
+func dinero_euros(euros: float) -> String:
+	var v := euros * float(MONEDAS[moneda]["por_euro"])
+	var a := absf(v)
+	var signo := "-" if v < 0.0 else ""
+	var cifra := ""
+	if a >= 1000000000.0:
+		cifra = "%.1fMM" % (a / 1000000000.0)
+	elif a >= 1000000.0:
+		cifra = "%.1fM" % (a / 1000000.0)
+	elif a >= 1000.0:
+		cifra = "%dk" % int(a / 1000.0)
+	else:
+		cifra = "%d" % int(round(a))
+	return "%s%s %s" % [signo, cifra, moneda]
+
 func tier_pais(p: String) -> float:
 	return TIER_PAIS.get(p, 0.4)
 
