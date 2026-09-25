@@ -62,6 +62,18 @@ var local: Club
 var visita: Club
 var neutral: bool = false
 var clima: float = 1.0   ## 1.0 = seco; por debajo, partido mas trabado
+## El tiempo de ESTE partido (plan maestro C1, `Clima.del_partido()`): el de la
+## ciudad del local en esa época del año. Se fija en `preparar()` si nadie lo
+## fijó antes -la pantalla lo fija al abrir el partido dirigido para pintar el
+## mismo cielo que se juega-.
+var clima_info: Dictionary = {}
+## Lo que le cuesta al visitante no estar hecho a ese clima (1.0 = nada).
+var _f_clima_visita: float = 1.0
+
+func fijar_clima(info: Dictionary) -> void:
+	clima_info = info
+	clima = Clima.factor(info)
+	_f_clima_visita = 1.0 if neutral else Clima.factor_visita(info, visita.pais, local.pais)
 
 var goles_local: int = 0
 var goles_visita: int = 0
@@ -223,6 +235,8 @@ func _init(_local: Club, _visita: Club, _neutral: bool = false) -> void:
 	neutral = _neutral
 
 func preparar() -> void:
+	if clima_info.is_empty():
+		fijar_clima(Clima.del_partido(local.pais, ctx_semana, ctx_anio, local.id + visita.id))
 	once_local = local.once()
 	once_visita = visita.once()
 	## `Previa.arbitro_de(rival_id, semana)` -la MISMA que ya usa `vPrevia()`
@@ -392,7 +406,7 @@ func simular_minuto() -> void:
 	var bono_v := 1.0 if neutral else 0.94
 
 	var p_l := _probabilidad(fl["ata"], fv["def"]) * bono_l * clima
-	var p_v := _probabilidad(fv["ata"], fl["def"]) * bono_v * clima
+	var p_v := _probabilidad(fv["ata"], fl["def"]) * bono_v * clima * _f_clima_visita
 	## Las instrucciones efímeras solo pegan de TU lado: "riesgo" (todo al
 	## ataque) sube tu llegada un 18% y baja tu defensa un 16%; "tiempo"
 	## (cerrar el partido) hace justo lo contrario -0.72/1.12-, los mismos

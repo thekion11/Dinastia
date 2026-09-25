@@ -2090,6 +2090,10 @@ func _conectar_noticias() -> void:
 		mundo.prensa.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			_escribir("[color=#8ea595][b]%s[/b][/color] %s" % [titulo, cuerpo])
 			_anotar(titulo, cuerpo))
+		## EL MENTOR COMENTA (C1): su cara y dos frases sobre lo que acaba de
+		## pasar, fuera del tutorial.
+		mundo.prensa.mentor_dice.connect(func(titulo: String, texto: String) -> void:
+			MentorVoz.decir(self, mundo, titulo, texto))
 	if mundo.vestuario != null:
 		mundo.vestuario.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			_escribir("[color=#4caf6d][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -2389,6 +2393,14 @@ func _dirigir() -> void:
 	elif conti != null:
 		_escribir("[color=#c9a227]%s — %s.[/color]" % [Continental.nombre_conti(conti.clave), conti.nombre_de_ronda()])
 	var p := Partido.new(par[0], par[1])
+	## EL TIEMPO DE LA CIUDAD (plan maestro C1): el mismo que se juega y el
+	## mismo cielo que se ve. Sale del país del local y la época del año.
+	var info_clima := Clima.del_partido(p.local.pais, mundo.semana, mundo.anio, p.local.id + p.visita.id)
+	p.fijar_clima(info_clima)
+	_escribir("[color=#8ea595]%s Parte del tiempo: %s.[/color]" % [Clima.icono(info_clima), String(info_clima["texto"])])
+	var consejo := Clima.consejo(info_clima, p.local == mundo.mi_club())
+	if consejo != "":
+		MentorVoz.decir(self, mundo, "%s %s" % [Clima.icono(info_clima), String(info_clima["texto"])], consejo)
 	## El nodo «Bloque» del arbol hace que lo que dices desde el banquillo pegue
 	## un 50% mas. En este motor eso es la arenga.
 	if mundo.entrenamiento != null:
@@ -2418,11 +2430,19 @@ func _dirigir() -> void:
 	## visor 3D de entrada, así que asignarlo después llegaría tarde.
 	vivo.datos_pantalla = _datos_pantalla_estadio(p.local, "copa" if es_copa else ("conti" if conti != null else "liga"))
 	vivo.abrir(p, mundo.mi_club(), mundo.vestuario, es_eliminatoria, mundo.roles,
-		_velocidad_partido, mundo.perfil_estadio_de(p.local),
+		_velocidad_partido, _perfil_con_clima(p),
 		Comercial.color_balon(mundo.comercial.balon, mundo.mi_club()))
 	vivo.cerrado.connect(func() -> void:
 		vivo.queue_free()
 		_cerrar_partido_dirigido(p))
+
+## El estadio del local, con el cielo del día (no el que se eligió en el
+## diseñador: el clima lo pone la ciudad).
+func _perfil_con_clima(p: Partido) -> Dictionary:
+	var perfil := mundo.perfil_estadio_de(p.local).duplicate()
+	if not p.clima_info.is_empty():
+		perfil["clima"] = String(p.clima_info["clave"])
+	return perfil
 
 ## Se avanza la semana con el partido ya jugado en la mano. Si se avanzara sin
 ## él, la jornada se volvería a simular por dentro y en la tabla aparecería un
@@ -5750,7 +5770,10 @@ func _abrir_rueda_pantalla_completa(e: Dictionary) -> void:
 	## (`Mundo.rueda_tras_resultado()`, ver `nucleo/prensa.gd`), así que la
 	## competencia correspondiente es siempre tu propia liga.
 	var clubes_competencia: Array = []
-	if mio != null:
+	## Tras una copa o un continental (C1), los escudos de ESA competición.
+	if mundo.prensa != null and mundo.prensa.competicion_rueda != "liga" and not mundo.prensa.clubes_rueda.is_empty():
+		clubes_competencia = mundo.prensa.clubes_rueda
+	elif mio != null:
 		var liga := mundo.liga_de(mio)
 		if liga != null:
 			clubes_competencia = liga.clubes
@@ -7660,7 +7683,9 @@ func _pintar_estadio(c: Club) -> void:
 			["LA ESTRUCTURA", ["forma", "fachada", "fachadaCol", "techo", "techoCol", "focos", "luzFocos", "pantalla"]],
 			["EL CAMPO", ["superficie", "cesped", "cespedTono", "lineaCol", "arcoCol", "redCol", "redTipo"]],
 			["LA GRADA", ["asientoP", "banderas", "escudoDonde", "corner"]],
-			["LOS DETALLES", ["banquillo", "banquilloCol", "tunel", "clima", "sonidoGol"]],
+			## Sin "clima" (26-9-2026): el tiempo lo pone la ciudad, no el
+			## diseñador. Elegir "lluvia" como se elige un color era ilógico.
+			["LOS DETALLES", ["banquillo", "banquilloCol", "tunel", "sonidoGol"]],
 		]:
 		var tb := _texto(11, COL_ACENTO)
 		tb.text = String(bloque[0])

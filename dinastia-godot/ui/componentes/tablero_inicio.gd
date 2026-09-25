@@ -117,7 +117,10 @@ static func _tarjeta_partido(c: Club, mundo: Mundo, liga: Liga, ir: Callable) ->
 		return cc[0]
 	var local: Club = par[0]
 	var visita: Club = par[1]
-	_titulo(v, "PRÓXIMO PARTIDO  ·  %s  ·  %s" % [liga.nombre if liga != null else "", "EN CASA" if local == c else "FUERA"])
+	## El parte del tiempo del partido (C1): el de la ciudad del local.
+	var cl := Clima.del_partido(local.pais, mundo.semana, mundo.anio, local.id + visita.id)
+	_titulo(v, "PRÓXIMO PARTIDO  ·  %s  ·  %s  ·  %s %s" % [liga.nombre if liga != null else "", "EN CASA" if local == c else "FUERA",
+		Clima.icono(cl), String(cl["texto"])])
 	var h := HBoxContainer.new()
 	h.alignment = BoxContainer.ALIGNMENT_CENTER
 	h.add_theme_constant_override("separation", 18)

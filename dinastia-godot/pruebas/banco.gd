@@ -93,6 +93,7 @@ func _ready() -> void:
 	_probar_entrevistas()
 	_probar_estadio_b6()
 	_probar_ciudad_b7()
+	_probar_coherencia_c1()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5649,3 +5650,53 @@ func _probar_ciudad_b7() -> void:
 	cb.mostrar_rotulos(false)
 	_comprobar(not rot.visible, "los rótulos se pueden ocultar")
 	cb.queue_free()
+
+## C1: el clima sale de la ciudad y la época (hemisferios al revés, altura,
+## nieve solo donde hace frío), no consume Azar y pesa en el partido; cambiar
+## el escudo es noticia y pregunta de rueda; la copa también tiene rueda.
+func _probar_coherencia_c1() -> void:
+	_titulo("C1 COHERENCIA: CLIMA DE LA CIUDAD, ESCUDO COMO NOTICIA, RUEDA TRAS LA COPA")
+	## Julio (semana 24): invierno en Santiago, verano en Madrid.
+	_comprobar(Clima.estacion("CHI", 24) == "invierno" and Clima.estacion("ESP", 24) == "verano", "hemisferios opuestos")
+	_comprobar(Clima.estacion("COL", 24) == "tropical", "el trópico no tiene invierno")
+	var a := Clima.del_partido("ENG", 3, 2026, "x")
+	_comprobar(a == Clima.del_partido("ENG", 3, 2026, "x"), "el mismo partido tiene siempre el mismo tiempo")
+	var nieve_tropico := false
+	var nieve_frio := false
+	for k in 400:
+		if String(Clima.del_partido("BRA", 26, 2026, str(k))["clave"]) == "nieve":
+			nieve_tropico = true
+		if String(Clima.del_partido("GER", 2, 2026, str(k))["clave"]) == "nieve":
+			nieve_frio = true
+	_comprobar(not nieve_tropico and nieve_frio, "nieve solo donde y cuando hace frío")
+	var alt := Clima.del_partido("BOL", 10, 2026, "y")
+	_comprobar(Clima.factor_visita(alt, "ARG", "BOL") < 1.0 and Clima.factor_visita(alt, "ECU", "BOL") == 1.0, "la altura castiga al visitante del llano, no al de altura")
+	## El factor llega al partido.
+	var m := Mundo.new()
+	m.generar(["CHI"], 2468)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mio := m.mi_club()
+	var p := Partido.new(mio, m.ligas[0].clubes[1])
+	p.fijar_clima({"clave": "nieve", "calor": false, "altura": false, "texto": "Nieve"})
+	_comprobar(p.clima < 1.0, "la nieve traba el partido (factor %.2f)" % p.clima)
+	## Escudo nuevo = noticia + pregunta.
+	var pr := m.prensa
+	pr.revisar_identidad(mio)   ## la primera vez solo toma la foto
+	_comprobar(pr.cambio_identidad == "", "sin cambios no hay noticia")
+	var portadas_antes := pr.portadas.size()
+	mio.esc_forma = "redondo" if mio.esc_forma != "redondo" else "clasico"
+	var que := pr.revisar_identidad(mio)
+	_comprobar(que == "escudo" and pr.portadas.size() == portadas_antes + 1, "cambiar el escudo sale en portada")
+	pr.abrir_rueda(true, false)
+	_comprobar(String(pr.entrevista["pregunta"]).contains("escudo") and pr.cambio_identidad == "", "y te preguntan por él en la rueda")
+	pr.responder(0, 1.0)
+	if pr.hay_rueda():
+		pr.responder(0, 1.0)
+	## La copa también tiene rueda (con su competición).
+	var rival: Club = m.ligas[0].clubes[2]
+	pr.entrevista = {}
+	var intentos := 0
+	while not pr.hay_rueda() and intentos < 20:
+		m._rueda_de_eliminatoria([{"local": mio, "visita": rival, "gl": 2, "gv": 1, "pasa": mio}], "copa", [mio, rival])
+		intentos += 1
+	_comprobar(pr.hay_rueda() and pr.competicion_rueda == "copa", "después de la copa también hay rueda de prensa")
