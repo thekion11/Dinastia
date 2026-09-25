@@ -1145,7 +1145,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 				## queda anotado. Hasta esta tanda esto se llamaba en blanco
 				## SIEMPRE: `_dirigir()` no sabía llevarte a un continental,
 				## así que nunca hacía falta -ahora sí-.
-				t.jugar_ronda(ya_jugado if _continental_es_de(t, ya_jugado) else null)
+				var res_c: Array = t.jugar_ronda(ya_jugado if _continental_es_de(t, ya_jugado) else null)
+				_rueda_de_eliminatoria(res_c, "conti", t.participantes)
 				## El continental se corona a mitad de temporada, no al cierre:
 				## por eso esta celebración no puede esperar a cerrar_temporada()
 				## como la de liga y copa. `en_curso()` pasa a false en cuanto hay
@@ -1160,10 +1161,34 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	if copa == null:
 		_montar_copa()
 	if copa != null and copa.en_curso() and semana % 4 == 0:
-		copa.jugar_ronda(ya_jugado if _copa_es_de(ya_jugado) else null)
+		var res_copa: Array = copa.jugar_ronda(ya_jugado if _copa_es_de(ya_jugado) else null)
+		_rueda_de_eliminatoria(res_copa, "copa", copa.participantes)
 
 	semana += 1
 	semana_avanzada.emit(semana, anio)
+
+## LA RUEDA DE PRENSA TAMBIÉN DESPUÉS DE LA COPA (26-9-2026, plan maestro C1).
+## Hasta hoy solo se abría tras la liga. Con la misma tirada de siempre
+## (`rueda_tras_resultado`), y avisando a la sala de qué competición es para
+## que los escudos del fondo sean los de ESA competición.
+func _rueda_de_eliminatoria(resultados: Array, comp: String, clubes: Array) -> void:
+	var mio := mi_club()
+	if prensa == null or mio == null:
+		return
+	for r: Dictionary in resultados:
+		if r["local"] != mio and r["visita"] != mio:
+			continue
+		var soy_local: bool = r["local"] == mio
+		var gf: int = r["gl"] if soy_local else r["gv"]
+		var gc: int = r["gv"] if soy_local else r["gl"]
+		var paso: bool = r.get("pasa") == mio if r.has("pasa") else gf > gc
+		var loc: Club = r["local"]
+		var vis: Club = r["visita"]
+		prensa.clima_ultimo = Clima.del_partido(loc.pais, semana, anio, loc.id + vis.id)
+		prensa.competicion_rueda = comp
+		prensa.clubes_rueda = clubes.duplicate()
+		prensa.rueda_tras_resultado(paso or gf > gc, gf == gc and not r.has("pasa"))
+		return
 
 ## ¿El partido que se acaba de dirigir era de copa y no de liga? Hace falta para
 ## no anotar un resultado en la competición equivocada.
@@ -1836,6 +1861,12 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 			var empato := gf == gc
 			var semilla := "%d|%d|%s|%d-%d" % [anio, semana, otro.id, gf, gc]
 			prensa.portada_tras_resultado(gano, empato, es_clasico(mio, otro), semilla)
+			## El tiempo de ese partido, por si la rueda pregunta por él.
+			var loc: Club = r["local"]
+			var vis: Club = r["visita"]
+			prensa.clima_ultimo = Clima.del_partido(loc.pais, semana, anio, loc.id + vis.id)
+			prensa.competicion_rueda = "liga"
+			prensa.clubes_rueda = []
 			prensa.rueda_tras_resultado(gano, empato)
 		## LA PROMESA DE LA RUEDA DE PRENSA se cobra AQUÍ, que es el único sitio
 		## donde se sabe el resultado. `Prensa.presion_prometida` se encendía al
