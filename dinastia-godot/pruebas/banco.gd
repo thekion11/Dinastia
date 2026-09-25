@@ -1643,12 +1643,14 @@ func _probar_roles_y_federacion() -> void:
 	_comprobar(claves_antes == claves_esperadas,
 		"perfil() trae exactamente las claves de siempre, ni una de mas (dio: %s)" % [claves_antes])
 
-	## COMPONENTES (16-9-2026, Fase 2): las 5 claves ya llegan al visor, y un
-	## rival sigue sin ellas -las ramas nuevas de StadiumBuilder usan el mismo
-	## default que dibujaban siempre, asi que su estadio no cambia.
+	## COMPONENTES (16-9-2026, Fase 2): las 5 claves ya llegan al visor. Desde
+	## el 25-9 el rival trae red, córner y banquillo de su estilo (más variedad
+	## de estadios), pero sigue sin túnel ni escudo: esos solo los decide quien
+	## diseña su propio estadio.
 	for k in ["redTipo", "corner", "banquillo", "tunel", "escudoDonde"]:
 		_comprobar(p.has(k), "el perfil propio trae la clave nueva '%s'" % k)
-		_comprobar(not pr.has(k), "el rival NO trae la clave nueva '%s' (sigue sin disenador)" % k)
+	for k in ["tunel", "escudoDonde"]:
+		_comprobar(not pr.has(k), "el rival NO trae '%s' (sigue sin disenador)" % k)
 
 	## Con el interruptor prendido y una reforma de una sola tribuna, solo esa
 	## tribuna cambia -las otras tres siguen heredando el valor global.
@@ -1701,7 +1703,7 @@ func _probar_roles_y_federacion() -> void:
 	## escudoDonde. Los 8, no solo uno, para no dejar pasar un typo de catalogo
 	## en cualquiera de ellos -"redTipo": "gruesa" vale, "REDTIPO":"Gruesa" no.
 	var estilos := m.estadio.presets()
-	_comprobar(estilos.size() == 8, "siguen los 8 estilos completos (dio %d)" % estilos.size())
+	_comprobar(estilos.size() == 16, "los 16 estilos completos (8 de siempre + 8 del 25-9) (dio %d)" % estilos.size())
 	for est_p: Dictionary in estilos:
 		var cambios: Dictionary = est_p["cambios"]
 		_comprobar(cambios.has("redTipo") and m.estadio.es_valido("redTipo", cambios["redTipo"]),
@@ -1827,7 +1829,7 @@ func _probar_estadio() -> void:
 		if int(q["aforo"]) <= 0:
 			mal += 1
 	_linea("  formas distintas en el mundo: %d" % formas.size())
-	_comprobar(formas.size() >= 3, "no todos los clubes tienen el mismo estadio (%d formas)" % formas.size())
+	_comprobar(formas.size() >= 5, "no todos los clubes tienen el mismo estadio (%d formas)" % formas.size())
 	_comprobar(mal == 0, "los niveles y el aforo son coherentes con el club (%d raros)" % mal)
 	_probar_pantalla_y_vallas(m)
 
