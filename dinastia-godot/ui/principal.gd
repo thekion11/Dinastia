@@ -4298,6 +4298,12 @@ func _ver_ficha(j: Jugador) -> void:
 		j.pos_e, j.edad, suyo.nombre if suyo else "sin club",
 		Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, ["sin rasgo"])[0])) if j.rasgo != "" else "sin rasgo"]
 	_ficha.add_child(det)
+	var credito := Cara.credito_foto(j)
+	if credito != "":
+		var cr := _texto(9, COL_SUAVE)
+		cr.text = credito
+		cr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_ficha.add_child(cr)
 
 	## La proyección de un rival no se ve gratis: `vComparador()` en vistas.js
 	## la esconde con un "?" salvo que sea tuyo o ya lo hayas ojeado
