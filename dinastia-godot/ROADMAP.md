@@ -1,5 +1,162 @@
 # RUTA DE DESARROLLO — DINASTÍA
 
+## PLAN MAESTRO, SEXTA RONDA (pedido del 26-9-2026)
+
+La lista del usuario se ordena por bloques C1 a C19. Cada bloque dice qué hay hoy, qué hacer y su
+viabilidad:
+- ✅ se puede hacer con lo que hay;
+- 🟡 necesita datos o una decisión;
+- ⛔ no se hace, y se explica por qué.
+
+Va **antes** que las tandas 4 y 5 de la quinta ronda (B8–B10, B12, B14, B15): el usuario pidió
+primero cuidar las **situaciones ilógicas**.
+
+### C1. Coherencia: nada que contradiga la lógica ✅ (primero)
+- **Pantalla del estadio** — **HECHO (26-9)**:
+  - la tabla, los goleadores y el resultado se ven en una esquina de la transmisión (antes eran
+    una mota al fondo);
+  - enseña la competición que se juega: en copa los cruces, en el continental el grupo o los
+    cruces (antes, siempre la liga del local).
+- **Escudos de la sala de prensa**: los de la competición del partido (no siempre la liga),
+  incluido el tuyo **con el escudo actual** si lo cambiaste.
+- **Cambiar escudo o camiseta es noticia grande**:
+  - portada, pregunta en la próxima rueda de prensa y comentario del mentor;
+  - la afición opina (a unos les gusta, a otros no).
+- **El clima del estadio es el de la ciudad**:
+  - hoy el «clima» es una opción del diseñador del estadio, y eso es ilógico;
+  - el clima de cada partido saldrá del país y la época del año;
+  - afectará a los jugadores (calor, lluvia, nieve, altura) y se nombrará en la rueda de prensa.
+- **Auditoría de otras ilógicas**: recorrido por pantallas y sistemas buscando contradicciones.
+  Cada una encontrada se anota aquí.
+
+### C2. El banquillo ✅
+Mejorar el banquillo (estructura, asientos, techo) y los pies de los suplentes: que apoyen en el
+suelo y no atraviesen nada.
+
+### C3. Clubes de cantera con filosofía propia (ej.: Athletic Club) ✅
+- **Corrección de un dato**: el Athletic no ficha solo a jugadores de la ciudad de Bilbao. Su
+  política es fichar a jugadores **nacidos o formados en Euskal Herria**:
+  - País Vasco;
+  - Navarra;
+  - el País Vasco francés.
+- **Hacer**:
+  - una regla de club «solo cantera o región» que el mercado respete, para la IA y para ti si lo
+    diriges;
+  - más peso de la cantera en ese club;
+  - apellidos de los canteranos según su región y nacionalidad (vascos en el Athletic).
+- 🟡 Hace falta un dato de **región de origen** en los jugadores, que hoy solo tienen
+  nacionalidad. Se añade para los clubes que lo necesiten.
+
+### C4. Historia real de los clubes 🟡
+- Fundación, estadio, títulos, apodos, rivalidades y datos.
+- En la base ficticia (la de por defecto), historia generada coherente.
+- En el pack real separable, datos reales.
+- 🟡 Los datos reales se cargan en el pack real, no en el juego público (misma regla legal que
+  los nombres).
+
+### C5. Instituciones con poder ✅
+- **Presidentes de federación y confederación** con nombre y agenda:
+  - proponen y cambian reglas (cupos de extranjeros, VAR, formato de copa, calendario, límite
+    salarial);
+  - hoy ya existe una asamblea que vota el VAR: se amplía.
+- **Presidente de tu club, accionistas y reuniones con la directiva**: juntas trimestrales,
+  votos y exigencias.
+
+### C6. Medios nuevos y entrevistas más naturales ✅
+- Streamers, podcasts y entrevistas «al paso» (en el aeropuerto, a la salida del entrenamiento):
+  cortas, sin preparar y con preguntas inesperadas.
+- Hoy ya existe la rueda formal (B5) y la de pie de campo.
+
+### C7. Hablar con jugadores, presentaciones, minijuegos y exámenes ✅
+- **Conversación individual con cualquier jugador**: moral, minutos, contrato, vida personal.
+  Con tono y memoria, como la rueda de prensa.
+- **Presentación de fichajes**: foto con la camiseta y rueda breve; cinemática pendiente de B3.
+- **Minijuegos**: penales de práctica, tiro libre al travesaño, trivia del club.
+- **Exámenes**: licencia de entrenador (UEFA C → Pro) con preguntas; al aprobar se desbloquean
+  ventajas.
+
+### C8. Lesiones absurdas fuera del campo ✅
+Resbalón en la ducha, mordedura del perro, videojuego, celebración familiar… Son poco
+frecuentes, tienen su noticia y se pueden prevenir con normas del vestuario.
+
+### C9. Contratos y jornada laboral según la ley de cada país (2026) 🟡
+- Tipos de contrato (profesional, formativo, cesión) y jornada según la ley laboral vigente.
+- Ejemplo: en Chile la ley de 40 horas baja a 42 horas semanales en abril de 2026.
+- 🟡 Cada país necesita su dato verificado antes de ponerlo en el juego. Se hará por tandas de
+  países, con la fuente anotada.
+
+### C10. Instalaciones más profundas ✅
+- Más niveles (de 5 a 10) y más detalle visible en la ciudad.
+- **Trabajadores** con nombre y personalidad en cada instalación: médico jefe, cocinero,
+  utilero, jardinero…
+- **Eventos** propios de cada instalación: la caldera de la piscina se rompe, el cocinero
+  renuncia, una inspección sanitaria…
+
+### C11. Más cantera ✅
+Visitar entrenamientos de juveniles, eventos (torneo internacional sub-17, un chico que quiere
+dejarlo, padres exigentes) y promociones con ceremonia.
+
+### C12. Las otras ramas del club ✅
+Fútbol femenino, juveniles, futsal y otros deportes, con más peso: resultados propios,
+presupuesto, noticias e impacto en la reputación.
+
+### C13. Calendario real: días nacionales y fechas de memoria ✅
+- Independencias, día del trabajador (1 de mayo) y fechas nacionales de cada país.
+- **11 de septiembre** en Chile (1973) y en EE. UU. (2001) como jornada de memoria, con respeto:
+  minuto de silencio y sin festejos.
+- Eventos internacionales y nacionales reales (Mundial, Juegos Olímpicos, Copa América…).
+- El mentor explica cada fecha.
+
+### C14. Mejorar el globo terráqueo ✅
+Relieve, fronteras y capitales, países con datos (liga, clubes, ranking) y clic para ver la
+ficha del país.
+
+### C15. Política y Estado 🟡
+- **Elecciones según la estructura de cada país** (presidencial, parlamentaria, monarquía
+  parlamentaria…) y una conversación breve del mentor que explica cómo funciona ese Estado.
+- Gobiernos con distintas posturas que influyen en el fútbol y la ciudad: subvenciones,
+  seguridad en estadios, impuestos, obras públicas.
+- 🟡 **Regla**: partidos y políticos **ficticios** y posturas neutrales. Nada de partidos ni
+  personas reales: es terreno sensible y el juego se publica.
+
+### C16. Religión 🟡
+- **Sí**: festividades por país en el calendario (Navidad, Ramadán, Semana Santa, Diwali…) y su
+  efecto (partidos en fechas especiales, jugadores que ayunan).
+- ⛔ **No**: atribuir una religión real a jugadores que imitan a personas reales identificables.
+  Es un dato personal sensible.
+- Alternativa: un rasgo **ficticio y opcional** del jugador generado, nunca copiado de una
+  persona real.
+
+### C17. Ficha de los jugadores «simulados» ✅ / ⛔ en parte
+- **Sí**: pierna débil, número, estadísticas por temporada, historial de premios por año,
+  nacionalidad, edad, posición y club.
+- ⛔ **No**: la situación sentimental real de personas reales.
+- Alternativa: vida personal **generada** (pareja, hijos) para todos los jugadores, sin copiar a
+  nadie real.
+
+### C18. Comparar con los videos de referencia 🟡
+- En `marca/referencia/` están `ea_fc25_referencia.mp4` y `ejemplo-partido.mp4`, más
+  fotogramas ya extraídos.
+- En este entorno no hay `ffmpeg` para extraer más: se trabaja con los fotogramas existentes, y
+  el usuario puede añadir más capturas.
+- Se hará una tabla de «ellos / nosotros» por aspecto (cámara, HUD, jugadores, estadio,
+  menús).
+
+### C19. Revisar pendientes del informe y auditoría final ✅
+- Al final de este gran plan: repaso del informe externo (62/100), del LEEME, de todos los
+  «queda» de las rondas y una partida larga de prueba.
+- Informe final al usuario.
+
+### ORDEN
+1. **Tanda A**: C1 (coherencia), C2 (banquillo) y C3 (clubes de cantera).
+2. **Tanda B**: C5 (instituciones), C6 (medios nuevos), C7 (hablar con jugadores,
+   presentaciones, minijuegos, exámenes) y C8 (lesiones absurdas).
+3. **Tanda C**: C10 (instalaciones), C11 (cantera), C12 (ramas) y C17 (ficha del jugador).
+4. **Tanda D**: C13 (calendario), C14 (globo), C15 (política), C16 (religión), C4 (historia) y
+   C9 (contratos).
+5. **Después**: las tandas 4 y 5 de la quinta ronda. Al final, C18 y C19.
+
+
 ## PLAN MAESTRO, QUINTA RONDA (pedido del 25-9-2026)
 
 Pedido completo del usuario:
