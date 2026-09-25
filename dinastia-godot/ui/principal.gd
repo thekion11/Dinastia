@@ -1638,6 +1638,11 @@ func _conectar_noticias() -> void:
 		mundo.cantera.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			_escribir("[color=#4caf6d][b]%s[/b][/color] %s" % [titulo, cuerpo])
 			_anotar(titulo, cuerpo))
+	if mundo.academia != null:
+		mundo.academia.noticia.connect(func(titulo: String, cuerpo: String) -> void:
+			_escribir("[color=#4caf6d][b]%s[/b][/color] %s" % [titulo, cuerpo])
+			_anotar(titulo, cuerpo))
+		mundo.academia.movimiento.connect(mundo._anotar_movimiento)
 	if mundo.ojeadores != null:
 		## El modelo de datos y las academias hablan por su propia senal: son
 		## hallazgos y llegadas, no informes de ojeo, y se leen distinto.
@@ -7948,6 +7953,12 @@ func _pintar_cantera(c: Club) -> void:
 	var ct := mundo.cantera
 	if ct == null:
 		return
+	## LA ACADEMIA (10-16 años) va primero: es la cantera ANTES de la cantera,
+	## y la que decide cómo llegan los que aparecen más abajo.
+	PanelAcademia.pintar(_lista_cantera, mundo, _paleta_ficha(), func(error: String) -> void:
+		if error != "":
+			_escribir("[color=#e05555]%s.[/color]" % error.capitalize())
+		_refrescar())
 
 	## "LEYENDAS DEL CLUB" -su propia tarjeta en `vHistoria()` de vistas.js-:
 	## `Cantera.leyendas` alimenta de verdad la camada anual (`registrar_retiro()`
