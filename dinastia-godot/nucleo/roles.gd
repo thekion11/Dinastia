@@ -1691,7 +1691,7 @@ func nombrar_leyenda_viva(j: Jugador) -> String:
 		return "no hay a quién nombrar"
 	var m := _mundo()
 	leyenda_viva = {
-		"nombre": Nombres.limpiar(j.nombre), "pos": j.pos_e,
+		"nombre": Nombres.visible(j.nombre), "pos": j.pos_e,
 		"desde": m.anio if m != null else 0, "visitas": 0,
 	}
 	if m != null and m.prensa != null:

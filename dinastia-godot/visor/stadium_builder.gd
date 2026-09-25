@@ -2239,7 +2239,7 @@ static func _una_valla(led: VallasLed, pos: Vector3, largo: float, rot_y: float,
 static func _anuncios_de(est: Dictionary, mi: Club) -> Array:
 	var lista: Array = []
 	if mi != null:
-		lista.append(_anuncio(Nombres.limpiar(mi.nombre), _c(mi.color_escudo1(), "#1f5f3d")))
+		lista.append(_anuncio(Nombres.visible(mi.nombre), _c(mi.color_escudo1(), "#1f5f3d")))
 	lista.append(_anuncio("DINASTÍA", Color(0.06, 0.08, 0.12)))
 	if Datos.tiene("MARCAS"):
 		var t: Variant = Datos.tabla("MARCAS")
@@ -2252,7 +2252,7 @@ static func _anuncios_de(est: Dictionary, mi: Club) -> Array:
 					_c(m[1] if m.size() > 1 else "", "#e8b13a")))
 	## Un color de la casa para cerrar el ciclo, si hay club.
 	if mi != null:
-		lista.append(_anuncio("VAMOS " + Nombres.limpiar(mi.nombre),
+		lista.append(_anuncio("VAMOS " + Nombres.visible(mi.nombre),
 			_c(est.get("asiento1"), "#1f5f3d")))
 	return lista
 
