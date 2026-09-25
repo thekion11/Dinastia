@@ -155,6 +155,9 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## `build_pitch`, que es una función aparte.
 	Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	Ambience.apply(_raiz3d, perfil, null, Calidad.elegida)
+	## El clima también se VE, no solo se oye (plan maestro B11).
+	var gp := StadiumBuilder.geom_de_forma(String(perfil["forma"]))
+	Precipitacion.montar(_raiz3d, String(perfil.get("clima", "noche")), float(gp["dx"]), float(gp["dz"]), Calidad.elegida)
 	## Si la máquina no llega a 40 FPS, se bajan efectos por escalones durante
 	## el partido (ver `RendimientoAdaptativo`). En un renderizador por software
 	## -los servidores de pruebas- no tiene sentido: ahí nunca se llegaría y las
