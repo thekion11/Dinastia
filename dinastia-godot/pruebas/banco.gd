@@ -95,6 +95,7 @@ func _ready() -> void:
 	_probar_ciudad_b7()
 	_probar_coherencia_c1()
 	_probar_portadas_c20()
+	_probar_cantera_c3()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5721,3 +5722,64 @@ func _probar_portadas_c20() -> void:
 	_comprobar(String(PortadaPeriodico.cabecera_de({"medio": "El Pelotazo"})[0]) == "pelotazo", "cada medio con su cabecera")
 	var a := PortadaPeriodico.cabecera_de({"t": "Algo", "semana": 3})
 	_comprobar(a == PortadaPeriodico.cabecera_de({"t": "Algo", "semana": 3}), "la misma portada, la misma cabecera")
+
+## C3: la región de origen existe y se guarda; los españoles ya no son todos
+## vascos; el Athletic (o su equivalente ficticio) es todo de Euskal Herria, su
+## mercado lo respeta -la IA y tú- y sus canteranos llevan apellidos vascos.
+func _probar_cantera_c3() -> void:
+	_titulo("C3 FILOSOFÍA DE CANTERA: REGIÓN DE ORIGEN, MERCADO Y APELLIDOS")
+	var m := Mundo.new()
+	m.generar(["ESP"], 8642)
+	var bilbao: Club = null
+	var otro: Club = null
+	for c: Club in m.clubes.values():
+		if not Regiones.filosofia(c).is_empty():
+			bilbao = c
+		elif c.pais == "ESP" and otro == null:
+			otro = c
+	_comprobar(bilbao != null, "el club de cantera vasca existe (Athletic o su equivalente)")
+	if bilbao == null:
+		return
+	var todos_vascos := true
+	for j: Jugador in bilbao.plantilla:
+		todos_vascos = todos_vascos and j.region == "EUS"
+	## Nacido o formado allí, aunque juegue con otra selección: cuenta la
+	## región, no la nacionalidad.
+	_comprobar(todos_vascos, "toda la plantilla es de Euskal Herria (por origen, no por pasaporte)")
+	var espanoles := 0
+	var vascos := 0
+	for c: Club in m.clubes.values():
+		if c == bilbao:
+			continue
+		for j: Jugador in c.plantilla:
+			if j.pais == "ESP":
+				espanoles += 1
+				if j.region == "EUS":
+					vascos += 1
+	var pct := 100.0 * float(vascos) / float(maxi(1, espanoles))
+	_comprobar(pct > 3.0 and pct < 18.0, "los vascos son una parte de los españoles, no todos (%.1f %%)" % pct)
+	var apellido_vasco := false
+	for j: Jugador in bilbao.plantilla:
+		for ap: String in Regiones.APELLIDOS_EUS:
+			if j.nombre.ends_with(ap):
+				apellido_vasco = true
+	_comprobar(apellido_vasco, "apellidos vascos en el Athletic")
+	## El mercado: un español no vasco no entra; uno vasco sí.
+	var no_vasco: Jugador = null
+	var vasco: Jugador = null
+	for j: Jugador in otro.plantilla:
+		if j.region == "" and no_vasco == null:
+			no_vasco = j
+	for c: Club in m.clubes.values():
+		if c != bilbao:
+			for j: Jugador in c.plantilla:
+				if j.region == "EUS" and vasco == null:
+					vasco = j
+	_comprobar(not Regiones.admite(bilbao, no_vasco), "el Athletic no puede fichar a un no vasco")
+	_comprobar(vasco == null or Regiones.admite(bilbao, vasco), "sí a uno de Euskal Herria")
+	m.tomar_el_mando(bilbao.id)
+	var motivo := m.mercado.abrir_negociacion(no_vasco)
+	_comprobar(String(motivo).to_lower().contains("euskal herria"), "si diriges al Athletic, la regla vale para ti: «%s»" % motivo)
+	## Guardado.
+	var d := Partida._jugador_a_dic(bilbao.plantilla[0])
+	_comprobar(Partida._dic_a_jugador(d).region == "EUS", "la región se guarda con la partida")
