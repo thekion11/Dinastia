@@ -1327,7 +1327,13 @@ func desde_dic(d: Dictionary) -> void:
 # multa en toda una carrera. Y aquí se cobra el nodo «Duro» del árbol del
 # entrenador (`multas_dobles()`), que estaba escrito y tampoco se llamaba.
 
-const MULTA_BASE := 300000.0
+## LA MULTA SON DOS SEMANAS DE SUELDO DEL MULTADO (25-9-2026). Antes era una
+## base fija de 300.000 puntos INTERNOS escalada por la reputación: en un club
+## grande salían 14,6 millones de euros por una noche de fiesta -más que la
+## caja que entra en un mes-, y como la multa la COBRA el club, tener un
+## polémico en el plantel era una mina de oro. Dos semanas de sueldo es lo que
+## se ve en el fútbol de verdad, y escala solo con el jugador.
+const MULTA_SEMANAS := 2
 
 func suceso_semanal() -> Dictionary:
 	var m := _mundo()
@@ -1380,7 +1386,7 @@ func _suceso_lio(m: Mundo, mio: Club) -> Dictionary:
 	var extra := ""
 	var multa := 0
 	if bool(m.normas.get("multas", false)):
-		multa = Eco.escalar(MULTA_BASE, float(mio.rep))
+		multa = maxi(1, j.sueldo * MULTA_SEMANAS)
 		if m.entrenamiento != null and m.entrenamiento.multas_dobles():
 			multa *= 2
 			extra = " Con tu mano dura, la multa fue el doble de lo habitual: %s." % Cesiones.dinero(multa)
