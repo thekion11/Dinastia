@@ -37,6 +37,9 @@ const VELOCIDADES := [
 
 var partido: Partido
 var mi_club: Club
+## Cómo se mira este partido (plan maestro B2). Se fijan ANTES de `abrir()`.
+var con_3d := true
+var destacados := false
 ## El perfil de TU estadio -el que diseñaste en `EstadioPropio`-, calculado por
 ## quien te abrió esta pantalla (`mundo.perfil_estadio_de()`). Sin esto,
 ## `_ver_estadio()` caería en el genérico por hash y una reforma pagada nunca
@@ -108,6 +111,12 @@ func abrir(p: Partido, club: Club, vest: Vestuario = null, eliminatoria: bool = 
 	if velocidad_inicial >= 0 and velocidad_inicial < VELOCIDADES.size():
 		_velocidad = velocidad_inicial
 	partido.preparar()
+	if partido._hinchada_club == null and mi_club != null:
+		var animo_hoy := 60
+		if vestuario != null and vestuario._mundo() != null and vestuario._mundo().prensa != null:
+			animo_hoy = vestuario._mundo().prensa.animo
+		partido.fijar_hinchada(mi_club, animo_hoy)
+	partido.invasion_de_campo.connect(_a_la_invasion)
 	partido.gol.connect(_al_gol)
 	partido.remate.connect(_al_remate)
 	partido.tarjeta.connect(_a_la_tarjeta)
@@ -131,7 +140,10 @@ func abrir(p: Partido, club: Club, vest: Vestuario = null, eliminatoria: bool = 
 	## lo primero que se ve ya es el estadio, no un panel de texto con un
 	## botón escondido. Cerrar el 3D (✕/"Volver") te devuelve aquí para
 	## seguir con cambios, arengas y demás, exactamente como ya funcionaba.
-	_ver_estadio()
+	## `con_3d` (25-9-2026, plan maestro B2): el modo "En vivo (texto)" lo
+	## apaga; "3D destacados" lo abre con el reloj rápido.
+	if con_3d:
+		_ver_estadio()
 
 func _process(delta: float) -> void:
 	if partido == null or partido.terminado_ya:
@@ -154,26 +166,25 @@ func _process(delta: float) -> void:
 			return
 		if _entretiempo:
 			return
-		## LA INVASION DE CAMPO. Minuto 70, perdiendo en casa y con la grada
-		## harta: el partido se para veinte minutos con la policia desalojando, y
-		## el camarin se vuelve a abrir. Es la unica interrupcion del juego que no
-		## la provoca el jugador ni el reglamento: la provoca haberlo hecho mal.
-		if not partido.invasion_ya and mi_club != null:
-			var animo_hoy := 60
-			if vestuario != null and vestuario._mundo() != null and vestuario._mundo().prensa != null:
-				animo_hoy = vestuario._mundo().prensa.animo
-			var soy_local := partido.local == mi_club
-			var mis_goles: int = partido.goles_local if soy_local else partido.goles_visita
-			var sus_goles: int = partido.goles_visita if soy_local else partido.goles_local
-			if partido.chequear_invasion(animo_hoy, soy_local, mis_goles < sus_goles):
-				_entretiempo = true
-				_acumulado = 0.0
-				Sonido.toca("silbato")
-				_escribir("[color=#e05555][b]🚨 INVASION DE CAMPO.[/b][/color] La barra salta al cesped y lanza bengalas. El partido se para: la policia desaloja y los dos equipos se meten al tunel. Vuelve a abrirse el camarin, con otro clima.")
-				_refrescar()
-				return
 		_acumulado -= ms
 		partido.simular_minuto()
+		if _invasion_pendiente:
+			_invasion_pendiente = false
+			return
+	_refrescar()
+
+## LA INVASION DE CAMPO. Minuto 70, perdiendo en casa y con la grada harta: el
+## partido se para veinte minutos con la policia desalojando, y el camarin se
+## vuelve a abrir. La tirada la hace ahora `Partido.simular_minuto()` para
+## cualquier vista (ver `Partido.fijar_hinchada()`); aqui solo se cuenta.
+var _invasion_pendiente := false
+
+func _a_la_invasion(_minuto: int) -> void:
+	_invasion_pendiente = true
+	_entretiempo = true
+	_acumulado = 0.0
+	Sonido.toca("silbato")
+	_escribir("[color=#e05555][b]🚨 INVASION DE CAMPO.[/b][/color] La barra salta al cesped y lanza bengalas. El partido se para: la policia desaloja y los dos equipos se meten al tunel. Vuelve a abrirse el camarin, con otro clima.")
 	_refrescar()
 
 # --- construcción -----------------------------------------------------------
@@ -450,6 +461,16 @@ const _FRASES_FALLO := [
 	"🥅 Solo frente al arquero y la tira afuera",
 ]
 
+## LA FRASE DE LA CRÓNICA, SIN TOCAR `Azar` (25-9-2026). Antes salía de
+## `Azar.uno()`: narrar una atajada consumía el generador del partido, así que
+## el MISMO partido terminaba distinto mirado en texto que en 3D o simulado (lo
+## cazó la prueba "MODOS DE SIMULACIÓN" del banco). Contar no puede decidir
+## nada: la frase sale de un generador propio sembrado con quién y cuándo.
+func _frase(frases: Array, quien: String, minuto: int) -> String:
+	var r := RandomNumberGenerator.new()
+	r.seed = hash("%s|%d" % [quien, minuto])
+	return String(frases[r.randi_range(0, frases.size() - 1)])
+
 func _al_remate(club: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 	var mio := club == mi_club
 	var nombre := autor.nombre if autor else ""
@@ -457,13 +478,13 @@ func _al_remate(club: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 		"atajada":
 			if mio:
 				Sonido.toca("atajada")
-			_escribir("[color=#8ea595]%d'  %s%s[/color]" % [minuto, Azar.uno(_FRASES_ATAJADA), nombre])
+			_escribir("[color=#8ea595]%d'  %s%s[/color]" % [minuto, _frase(_FRASES_ATAJADA, nombre, minuto), nombre])
 		"poste":
 			if mio:
 				Sonido.toca("ocasion")
 			_escribir("[color=#8ea595]%d'  🪵 ¡Al palo! Increíble ocasión de %s[/color]" % [minuto, nombre])
 		_:
-			var frase: String = Azar.uno(_FRASES_FALLO)
+			var frase: String = _frase(_FRASES_FALLO, nombre, minuto)
 			if nombre != "":
 				frase += " — " + nombre
 			_escribir("[color=#8ea595]%d'  %s[/color]" % [minuto, frase])
@@ -1068,6 +1089,7 @@ func _ver_estadio() -> void:
 	## dentro de esa llamada, así que asignarlo después llegaría tarde y la
 	## pantalla se quedaría sin tabla ni goleadores.
 	vista.datos_pantalla = datos_pantalla
+	vista.modo_destacados = destacados
 	add_child(vista)
 	## La ocupación que se ve en las gradas es la de verdad: la que sale de la
 	## curva de la taquilla con el precio de entrada que has puesto tú. Un
