@@ -88,6 +88,7 @@ func _ready() -> void:
 	_probar_academia()
 	_probar_modos_simulacion()
 	_probar_presets_exportacion()
+	_probar_tema_y_ortografia()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -383,7 +384,7 @@ func _probar_base_ficticia() -> void:
 	_comprobar(con_equipacion == 0, "ningún club viste una equipación real (%d)" % con_equipacion)
 	var ligas_mal: Array[String] = []
 	for l: Liga in m.ligas:
-		if ligas_reales.has(l.nombre) and not ["Primera Division", "Primera B"].has(l.nombre):
+		if ligas_reales.has(l.nombre) and not ["Primera División", "Primera B"].has(l.nombre):
 			for marca in ["Premier", "Bundesliga", "Serie A", "Ligue 1", "La Liga", "Liga MX", "Brasileir", "Botola", "League", "J-Liga", "K-"]:
 				if l.nombre.contains(marca):
 					ligas_mal.append(l.nombre)
@@ -5365,3 +5366,44 @@ func _probar_presets_exportacion() -> void:
 			if not excl.contains(p):
 				faltan.append(p)
 		_comprobar(faltan.is_empty(), "%s excluye el pack real y las fotos reales %s" % [nombre, str(faltan) if not faltan.is_empty() else ""])
+
+
+## EL SISTEMA DE DISEÑO Y LA ORTOGRAFÍA (25-9-2026, plan maestro B13). Dos redes
+## contra la regresión: (1) ninguna pantalla vuelve a escribir a mano los
+## colores canónicos -apuntan a `Tema`-; (2) las palabras que se corrigieron no
+## vuelven a aparecer sin tilde en un texto que ve el jugador.
+func _probar_tema_y_ortografia() -> void:
+	_titulo("TEMA ÚNICO Y ORTOGRAFÍA DE LOS TEXTOS")
+	var canonicos := ["e9eeea", "8ea595", "c9a227", "0c1510", "3fa06a", "141c16", "16211a"]
+	var copias: Array[String] = []
+	var sin_tilde: Array[String] = []
+	var vetadas := ["cesped", "policia", "tunel", "camarin", "tactica", "paises", "tambien", "detras", "INVASION", "Division"]
+	var rx := RegEx.new()
+	rx.compile("\"((?:[^\"\\\\]|\\\\.)*)\"")
+	for carpeta: String in ["res://ui", "res://ui/componentes", "res://nucleo", "res://visor"]:
+		var dir := DirAccess.open(carpeta)
+		if dir == null:
+			continue
+		for f: String in dir.get_files():
+			if not f.ends_with(".gd") or f == "tema.gd" or f == "idiomas.gd" or f == "pantalla_estadio.gd":
+				continue
+			var texto := FileAccess.get_file_as_string(carpeta + "/" + f)
+			for linea: String in texto.split("\n"):
+				var t := linea.strip_edges()
+				if t.begins_with("#"):
+					continue
+				if t.begins_with("const COL_"):
+					for c: String in canonicos:
+						if t.contains('Color("%s")' % c):
+							copias.append(f)
+				for m in rx.search_all(linea):
+					var v := m.get_string(1)
+					if not v.contains(" "):
+						continue
+					for w: String in vetadas:
+						var r2 := RegEx.new()
+						r2.compile("\\b" + w + "\\b")
+						if r2.search(v) != null:
+							sin_tilde.append("%s: %s" % [f, w])
+	_comprobar(copias.is_empty(), "ninguna pantalla copia la paleta a mano: todas apuntan a Tema %s" % str(copias))
+	_comprobar(sin_tilde.is_empty(), "sin palabras corregidas que vuelvan sin tilde %s" % str(sin_tilde))

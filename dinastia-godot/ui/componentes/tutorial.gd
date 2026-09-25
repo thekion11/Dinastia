@@ -33,10 +33,10 @@ const AJUSTES := "user://ajustes.cfg"
 const SECCION := "tutorial"
 
 const COL_FONDO := Color("121a14")
-const COL_BORDE := Color("3fa06a")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
-const COL_ORO := Color("c9a227")
+const COL_BORDE := Tema.ACENTO
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
+const COL_ORO := Tema.ORO
 const COL_HECHO := Color("5fd08a")
 const ANCHO_TARJETA := 560.0
 ## Letras por segundo de la máquina de escribir.

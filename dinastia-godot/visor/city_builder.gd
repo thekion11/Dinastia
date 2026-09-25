@@ -59,7 +59,7 @@ const RUTAS_COCHES_KENNEY := [
 const EDIFICIOS := [
 	{"k": "ct",        "n": "Centro de entrenamiento", "col": Color(0.24, 0.52, 0.32), "ancho": 34.0, "fondo": 23.0},
 	{"k": "acad",      "n": "Academia juvenil",        "col": Color(0.30, 0.46, 0.62), "ancho": 30.0, "fondo": 21.0},
-	{"k": "med",       "n": "Centro medico",           "col": Color(0.78, 0.80, 0.82), "ancho": 24.0, "fondo": 19.0},
+	{"k": "med",       "n": "Centro médico",           "col": Color(0.78, 0.80, 0.82), "ancho": 24.0, "fondo": 19.0},
 	{"k": "gim",       "n": "Gimnasio",                "col": Color(0.52, 0.34, 0.28), "ancho": 26.0, "fondo": 19.0},
 	{"k": "resid",     "n": "Residencia",              "col": Color(0.62, 0.55, 0.40), "ancho": 28.0, "fondo": 21.0},
 	{"k": "rehab",     "n": "Rehabilitacion",          "col": Color(0.70, 0.74, 0.78), "ancho": 22.0, "fondo": 17.0},

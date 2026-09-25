@@ -347,7 +347,7 @@ func _rotar_camara() -> void:
 		if _btn_camara != null:
 			_btn_camara.text = "📷 Cámara: " + _rig.current_name()
 		if _pie != null:
-			_pie.text = _pie_base + "  ·  camara: " + _rig.current_name()
+			_pie.text = _pie_base + "  ·  cámara: " + _rig.current_name()
 
 func _actualizar_pie(perfil: Dictionary, aforo: int, ocupacion: float) -> void:
 	_pie_base = "%s  ·  %s de %d niveles  ·  techo %s  ·  %d butacas, %d%% de ocupación" % [
