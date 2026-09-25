@@ -160,6 +160,17 @@ reales y commit + push.
   - cámara libre con órbita y zoom.
 - **Comprobar**: construir desde el 3D mueve el dinero igual que desde el panel (banco), y hay
   capturas de día, noche y día de partido.
+- **Hecho (25-9-2026)**:
+  - clic con ficha y construcción desde el 3D;
+  - obra con andamio y grúa;
+  - rótulos flotantes y el humor del barrio;
+  - día de partido;
+  - cámara libre.
+
+  El día/noche y el tráfico ya existían. Queda:
+  - peatones de `PersonaRealista`;
+  - eventos de ciudad (protesta, festival, corte de acceso);
+  - que la hora del ciclo siga la del juego.
 
 ### B8. Personaje propio: creador estilo Los Sims ✅ / 🟡
 - **Hoy**: `PanelAspectoDT` es un retrato 2D (`CaraDT`: corte, volumen, traje) y el mentor usa

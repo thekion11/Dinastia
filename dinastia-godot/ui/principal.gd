@@ -6404,15 +6404,19 @@ func _pintar_obras(c: Club) -> void:
 		que.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_club.add_child(que)
 
-func _empezar_obra(clave: String) -> void:
+## Devuelve "" si arrancó o el motivo. La usan el panel y el mapa 3D (B7).
+func _empezar_obra(clave: String) -> String:
+	if mundo.roles != null and not mundo.roles.puede_construir():
+		return "tu cargo no puede autorizar obras"
 	var problema := mundo.obras.iniciar(clave, mundo.mi_club())
 	if problema != "":
 		_escribir("[color=#e05555]No se puede empezar la obra: %s.[/color]" % problema)
-		return
+		return problema
 	var datos: Array = Instalaciones.CATALOGO[clave]
 	_escribir("[color=#c9a227]Obra iniciada:[/color] %s, nivel %d. Estará lista en %d semanas." % [
 		String(datos[0]), mundo.obras.nivel(clave) + 1, mundo.obras.semanas_de(clave)])
 	_refrescar()
+	return ""
 
 ## Un escudo con sus iniciales encima, listo para meter en una fila.
 ##
@@ -9825,12 +9829,16 @@ func _ver_ciudad_propia() -> void:
 			ocultados.append(h)
 	var vista := VistaCiudad.new()
 	add_child(vista)
+	vista.construir = _empezar_obra
+	var prox := mundo.proximo_partido()
+	vista.dia_partido = not prox.is_empty() and prox[0] == c
 	vista.abrir(c, mundo.obras, mundo.ciudad, mundo.perfil_estadio_de(c))
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
 		for h in ocultados:
 			if is_instance_valid(h):
-				(h as Control).visible = true)
+				(h as Control).visible = true
+		_refrescar())
 	## Clic en el estadio, o el botón "Editar mi estadio": mismo cierre que
 	## "Volver" -devuelve la pestaña de Club, que quedaba oculta- y además
 	## salta directo a Estadio con el diseñador ya pintado, en vez de dejar al
