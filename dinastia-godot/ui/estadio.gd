@@ -466,6 +466,17 @@ func _arrancar_partido() -> void:
 	## juega- nunca reproducía.
 	Sonido.toca("saque_inicial")
 	Sonido.toca("murmullo", Sonido.Bus.AMBIENTE)
+	## SONIDOS QUE EXISTÍAN Y NUNCA SONABAN (25-9-2026): de los 205 del
+	## catálogo, 157 no tenían ningún disparador. Aquí los del partido: la
+	## salida del túnel, el ambiente según el clima del estadio, los tiempos
+	## del reloj y los goles especiales.
+	Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
+	var clima := String(_perfil.get("clima", "noche"))
+	var por_clima := {"lluvia": "lluvia_ambiente", "tormenta": "trueno", "niebla": "niebla_ambiente",
+		"nieve": "frio_extremo", "noche": "noche_estadio", "dia": "dia_soleado", "tarde": "eco_estadio"}
+	if por_clima.has(clima):
+		Sonido.toca(String(por_clima[clima]), Sonido.Bus.AMBIENTE)
+	partido.minuto_jugado.connect(_al_minuto_sonoro)
 	## Semilla fija por partido (mismo criterio que `_rng` en MatchPlayback):
 	## repetible si se reabre el mismo partido, pero sin tocar `Azar`.
 	_rng_ambiente.seed = hash("ambiente") + partido.local.id.hash() + partido.visita.id.hash()
@@ -698,7 +709,19 @@ func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) ->
 	## sí tenía sus propios `Sonido.toca()`, este visor no-. `a_favor` aquí
 	## significa "anotó el club dueño de ESTE estadio" -es la bocina de SU
 	## recinto, no una noción de "mi club" que este visor no conoce-.
+	## Goles con nombre propio: el doblete, el hat-trick, el tempranero y el
+	## agónico tienen su propio grito encima del de siempre.
+	if autor != null:
+		_goles_autor[autor.id] = int(_goles_autor.get(autor.id, 0)) + 1
+		match int(_goles_autor[autor.id]):
+			2: Sonido.toca("doblete", Sonido.Bus.AMBIENTE)
+			3: Sonido.toca("hat_trick", Sonido.Bus.AMBIENTE)
+	if minuto <= 3:
+		Sonido.toca("gol_rapido", Sonido.Bus.AMBIENTE)
+	elif minuto >= 86:
+		Sonido.toca("gol_agonico", Sonido.Bus.AMBIENTE)
 	if a_favor:
+		Sonido.toca("festejo_hinchada_extra", Sonido.Bus.AMBIENTE)
 		var estilo := String(_perfil.get("sonidoGol", "bombo"))
 		Sonido.toca("gol_" + estilo if Sonido.catalogo().has("gol_" + estilo) else "gol")
 	else:
@@ -866,8 +889,12 @@ func _al_remate(c: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 	## esa noción, y hasta hoy ninguna de las dos vivía aquí.
 	if c == club:
 		match tipo:
-			"atajada": Sonido.toca("atajada")
-			"poste": Sonido.toca("ocasion")
+			"atajada":
+				Sonido.toca("atajada")
+				Sonido.toca("alarido_atajada", Sonido.Bus.AMBIENTE)
+			"poste":
+				Sonido.toca("travesano" if minuto % 2 == 0 else "ocasion")
+				Sonido.toca("suspiro_grada", Sonido.Bus.AMBIENTE)
 			## BUG REAL ENCONTRADO Y CORREGIDO (21-9-2026): un remate desviado no
 			## sonaba NADA -la rama por defecto solo hacia `pass`- pese a que
 			## `Sonido` ya trae "remate_fuera" sintetizado y sin usar en ningun
@@ -885,11 +912,24 @@ func _al_remate(c: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 		"jugadorId": autor.id if autor else "",
 	})
 
+var _goles_autor := {}
+
+## Los tiempos del partido, a oído: el descanso, la vuelta, el último minuto,
+## el descuento, y la grada que se pone tensa en un final apretado.
+func _al_minuto_sonoro(minuto: int) -> void:
+	match minuto:
+		45: Sonido.toca("medio_tiempo")
+		46: Sonido.toca("reanudacion")
+		89: Sonido.toca("ultimo_minuto", Sonido.Bus.AMBIENTE)
+		90: Sonido.toca("descuento_anunciado")
+	if minuto >= 80 and minuto % 4 == 0 and absi(partido.goles_local - partido.goles_visita) <= 1:
+		Sonido.toca("tension_publico", Sonido.Bus.AMBIENTE)
+
 func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 	if _juego == null:
 		return
 	if j.club_id == club.id:
-		Sonido.toca("lesion")
+		Sonido.toca("lesion_grave" if semanas >= 6 else "lesion")
 	_juego.suceso({
 		"min": minuto,
 		"t": "lesion",

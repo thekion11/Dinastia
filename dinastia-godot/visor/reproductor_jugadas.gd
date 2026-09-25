@@ -127,6 +127,8 @@ func _empezar_fase(fase: Dictionary) -> void:
 		var p := _buscar_actor(rol)
 		if not p.is_empty():
 			_playback._ejecutar_accion(p, String(acciones[rol]), float(fase.get("duracion", 1.0)))
+			if String(acciones[rol]) in ["falta_barrida", "falta_empujon"]:
+				Sonido.toca("entrada_dura")
 	var dur := float(fase.get("duracion", 1.0))
 	var altura := float(fase.get("altura", 0.15))
 	if fase.has("pase_a"):
@@ -161,6 +163,10 @@ func _enviar_con_gesto(destino: Vector3, duracion: float, altura: float, gesto: 
 				n.look_at(Vector3(destino.x, n.position.y, destino.z), Vector3.UP)
 				espera = MatchPlayback.CONTACTO_PATADA if gesto != "saque_banda" else 0.9
 	_envio_pendiente = {"destino": destino, "duracion": maxf(0.3, duracion), "altura": altura, "restante": espera}
+	## El balón largo y el despeje se oyen; el pase corto de cada jugada, no
+	## (sería un tic constante).
+	if altura >= 3.0:
+		Sonido.toca("despeje" if gesto == "" else "pase_largo")
 
 func _espejo(v: Vector3) -> Vector3:
 	return v if _es_local else Vector3(-v.x, v.y, -v.z)
