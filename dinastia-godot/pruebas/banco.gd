@@ -90,6 +90,7 @@ func _ready() -> void:
 	_probar_presets_exportacion()
 	_probar_tema_y_ortografia()
 	_probar_eventos_nuevos()
+	_probar_entrevistas()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5475,3 +5476,70 @@ func _probar_eventos_nuevos() -> void:
 	for k in 3:
 		m2.prensa.semana()
 	_comprobar(m2.prensa.efectos.is_empty(), "a las 3 semanas el efecto se termina solo")
+
+## B5: la rueda con periodista, tono, memoria, repregunta, titubeo, titular,
+## texto libre y pie de campo. Y que nada de eso toque `Azar`.
+func _probar_entrevistas() -> void:
+	_titulo("ENTREVISTAS: PERIODISTA, TONO, MEMORIA, REPREGUNTA, TITULAR, TEXTO LIBRE, PIE DE CAMPO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 777)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var pr := m.prensa
+	pr.abrir_rueda(true, false)
+	var e := pr.entrevista
+	_comprobar(String(e.get("periodista", "")) != "", "pregunta un periodista con nombre")
+	_comprobar(not String(e["pregunta"]).begins_with("Prensa:"), "la pregunta ya no la firma «Prensa»")
+	var todas_con_tono := true
+	for g: Array in [Prensa._GANE, Prensa._EMPATE, Prensa._PERDI]:
+		for q: Dictionary in g:
+			for o: Dictionary in q["opciones"]:
+				todas_con_tono = todas_con_tono and String(o.get("tono", "")) in ["calma", "soberbia", "evasiva"]
+	_comprobar(todas_con_tono, "cada respuesta del guion tiene tono")
+	## Calma y a tiempo: se cierra, sin repregunta, y deja titular pendiente.
+	var r := pr.responder(0, 2.0)
+	_comprobar(not bool(r["sigue"]) and not pr.hay_rueda(), "respuesta en calma cierra la rueda")
+	_comprobar(not pr.titular_pendiente.is_empty(), "queda un titular para mañana")
+	var tit := pr.publicar_titular_pendiente()
+	_comprobar(tit != "" and String(pr.portadas[0]["t"]) == tit, "el titular sale en la hemeroteca")
+	_comprobar(pr.memoria.has(String(e["periodista"])), "el periodista recuerda la frase")
+	## Titubeo: repregunta el mismo periodista.
+	pr.abrir_rueda(false, true)
+	var per := String(pr.entrevista["periodista"])
+	var calma_i := 0
+	for i in (pr.entrevista["opciones"] as Array).size():
+		if String(pr.entrevista["opciones"][i]["tono"]) == "calma":
+			calma_i = i
+	var funa0 := pr.funa
+	r = pr.responder(calma_i, Prensa.TITUBEO_SEG + 1.0)
+	_comprobar(bool(r["titubeo"]) and bool(r["sigue"]), "tardar en contestar trae repregunta")
+	_comprobar(pr.hay_rueda() and String(pr.entrevista["periodista"]) == per and int(pr.entrevista["paso"]) == 1, "repregunta el mismo, una sola vez")
+	_comprobar(pr.funa > funa0 or funa0 >= 98, "el titubeo se nota en la calle")
+	r = pr.responder(1, 1.0)   ## evasiva, pero ya no hay tercera pregunta
+	_comprobar(not bool(r["sigue"]) and not pr.hay_rueda(), "tras la repregunta se cierra aunque evadas")
+	## Memoria: soberbia hoy, derrota la semana que viene -> te la devuelven.
+	pr.memoria.clear()
+	for f: Array in Prensa.PERIODISTAS:
+		pr.memoria[String(f[0])] = {"frase": "Que se preparen los de arriba", "tono": "soberbia", "fecha": pr._fecha() - 1}
+	pr.abrir_rueda(false, false)
+	_comprobar(bool(pr.entrevista.get("memoria", false)) and String(pr.entrevista["pregunta"]).contains("Que se preparen"), "la frase soberbia vuelve tras perder")
+	## Texto libre.
+	_comprobar(pr.clasificar_respuesta("Sin comentarios") == "evasiva", "texto: «sin comentarios» es evasiva")
+	_comprobar(pr.clasificar_respuesta("Somos los mejores y que se preparen") == "soberbia", "texto: soberbia")
+	_comprobar(pr.clasificar_respuesta("Confío en el grupo, trabajaremos toda la semana") == "calma", "texto: calma")
+	_comprobar(pr.clasificar_respuesta("ok") == "evasiva", "texto: dos letras no es respuesta")
+	var arb0 := pr.enojo_arbitral
+	r = pr.responder_texto("El árbitro nos robó, ustedes no saben nada", 1.0)
+	_comprobar(String(r["tono"]) == "soberbia" and pr.enojo_arbitral >= arb0 + 2, "hablar de árbitros con soberbia los enoja")
+	if pr.hay_rueda():
+		pr.responder(0, 1.0)
+	## Pie de campo.
+	var moral0 := m.mi_club().plantilla[0].moral
+	var pie := pr.pie_de_campo(true, false, 2, 0)
+	_comprobar((pie["opciones"] as Array).size() == 3 and String(pie["pregunta"]).contains("2-0"), "a pie de campo: pregunta con el marcador")
+	var rp := pr.responder_pie(0)
+	_comprobar(rp["tono"] == "calma" and pr.pie.is_empty() and m.mi_club().plantilla[0].moral >= moral0, "a pie de campo: responder mueve y cierra")
+	pr.pie_de_campo(false, false, 0, 1)
+	_comprobar(String(pr.responder_pie(-1)["tono"]) == "evasiva", "a pie de campo: pasar de largo")
+	## Se guarda y se carga.
+	var d := Partida._prensa_a_dic(pr)
+	_comprobar(d.has("memoria") and d.has("titular_pendiente"), "memoria y titular se guardan")

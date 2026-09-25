@@ -1,5 +1,40 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## PLAN MAESTRO, TANDA 2: CINEMÁTICAS, EVENTOS Y ENTREVISTAS (25-9-2026)
+
+- **B3 · Cinemáticas del partido.**
+  - `visor/repeticion.gd`: guarda 12 s de jugada a 20 Hz y repite el gol a media velocidad desde
+    dos cámaras (detrás del arco y a ras de césped); devuelve a todos a su sitio al terminar.
+  - `visor/intro_partido.gd`: 6 s de vuelo alrededor del estadio con el rótulo del partido; se
+    salta con un clic.
+  - Las dos se apagan en el cajón de ajustes. El reloj del partido se congela mientras duran.
+  - Pruebas: `prueba_repeticion`, `prueba_intro`.
+- **B4 · Nueve eventos nuevos con efectos que duran** (`nucleo/prensa.gd`, `_eventos_nuevos`):
+  - túnel, vídeo viral, capitán, minuto de silencio, cambio de posición, patrocinio en la rueda,
+    apuestas, huelga por impagos y amenaza antes del derbi;
+  - efectos por semanas (`efectos`, se guardan): vestuario tenso, eco viral, posición nueva,
+    calendario de pagos;
+  - la tarjeta de decisión muestra la cara del implicado y, al decidir, sale un aviso con la
+    consecuencia.
+  - Prueba: `_probar_eventos_nuevos` en el banco; captura `captura_evento`.
+- **B5 · Entrevistas.**
+  - Pregunta un periodista concreto de los cinco (crítico, aliado, neutral, sensacionalista,
+    táctico); la placa dice su perfil y cómo te trata.
+  - Cada respuesta tiene tono (calma, soberbia o evasiva). Mueve la relación con ese periodista,
+    la calle y los árbitros.
+  - **Memoria**: recuerda tu última frase. Si fue soberbia y hoy perdiste, te la devuelve.
+  - **Repregunta** si evades, si titubeas o si tu soberbia le da titular al crítico o al
+    sensacionalista. Solo una por rueda.
+  - **Reloj de la sala**: una barra de 10 s. Contestar después cuenta como titubeo.
+  - **Titular del día siguiente**: cita tu frase, escrita a la manera del periodista. Sale al
+    pasar el día y va a la hemeroteca.
+  - **Texto libre**: un clasificador local por palabras clave decide el tono. Hablar de la gente,
+    del grupo o de los árbitros matiza el efecto. No usa IA en línea.
+  - **A pie de campo** (`ui/componentes/pie_de_campo.gd`): una pregunta al terminar el partido
+    dirigido (salvo en modo instantáneo), con tres salidas o pasar de largo.
+  - Nada de esto consume `Azar`: quién pregunta sale del hash de la fecha.
+  - Prueba: `_probar_entrevistas` (21 comprobaciones); captura `captura_entrevista`.
+
 ## PLAN MAESTRO, TANDA 1: AJUSTES, MODOS DE PARTIDO, ANIMACIONES, DISEÑO Y PELO (25-9-2026)
 
 - **B1 · Cajón de ajustes** (`ui/componentes/cajon_ajustes.gd`).
