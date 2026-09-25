@@ -420,7 +420,9 @@ static func _indice_fotos_de() -> Dictionary:
 ## La foto real de un jugador, ya recortada a cuadrado, o null si no es real o
 ## si la búsqueda todavía no le encontró ninguna.
 static func foto_real(j: Jugador) -> Texture2D:
-	if not j.real:
+	## Con la base ficticia no se enseña ninguna foto de una persona real,
+	## aunque el guardado traiga jugadores marcados como reales.
+	if not j.real or not Datos.base_real:
 		return null
 	var ruta := String(_indice_fotos_de().get(j.nombre, ""))
 	if ruta == "":

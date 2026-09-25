@@ -418,7 +418,9 @@ static func textura(c: Club, alto_px: int = 26) -> Texture2D:
 	## LA CLAVE LLEVA LOS COLORES Y LA FORMA. Antes era solo el id y el tamaño,
 	## asi que cambiar el escudo en la pantalla de identidad no repintaba nada:
 	## la cache seguia devolviendo el escudo viejo hasta reiniciar el juego.
-	var clave := "%s_%d_%s_%s_%s_%s" % [c.id, alto_px,
+	## Y EL NOMBRE: las iniciales del escudo salen de él, y el mismo `c.id`
+	## tiene otro nombre según la partida use la base ficticia o el pack real.
+	var clave := "%s_%s_%d_%s_%s_%s_%s" % [c.id, c.nombre, alto_px,
 		c.color_escudo1(), c.color_escudo2(), forma_de(c), patron_de(c)]
 	if _cache.has(clave):
 		return _cache[clave]
