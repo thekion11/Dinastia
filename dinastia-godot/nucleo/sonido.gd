@@ -37,95 +37,154 @@ var _siguiente := 0
 ## el murmullo; con ocho, se solapan como en un estadio de verdad.
 const VOCES := 8
 
+var _mutex := Mutex.new()
+var _hilo: Thread = null
+var _parar := false
+
 func _ready() -> void:
 	for i in VOCES:
 		var p := AudioStreamPlayer.new()
 		add_child(p)
 		_voces.append(p)
-	_generar_todo()
+	_hilo = Thread.new()
+	_hilo.start(_generar_en_fondo, Thread.PRIORITY_LOW)
 
+## Los 205 sonidos del catálogo.
+const NOMBRES := ["silbato", "gol", "gol_rival", "roja", "amarilla",
+	"murmullo", "ovacion", "poste", "clic", "moneda", "pitido_final",
+	"ocasion", "atajada", "falta", "corner", "trofeo",
+	"lesion", "cambio", "fichaje", "ascenso", "descenso", "logro",
+	## La segunda tanda: la interfaz, el campo, la grada y la gestion.
+	"clic_suave", "abrir", "cerrar", "error", "aviso", "correo", "guardado",
+	"telefono", "saque_inicial", "penal", "penal_fallado", "travesano",
+	"remate_fuera", "var", "segunda_amarilla", "fuera_de_juego",
+	"tambor", "trompeta", "abucheo", "aplauso", "cantico", "bengala",
+	"lluvia_ambiente", "vestuario", "flashes", "contrato", "despido",
+	"dinero_entra", "dinero_sale", "sorteo", "cronometro", "himno",
+	"fin_temporada",
+	## Y los que pedia el LEEME: uno propio por evento.
+	"clausula", "lesion_grave", "oferta", "contrato_vence", "obra",
+	"venta", "ronda_superada",
+	## Los ocho sonidos de gol que se eligen en el diseño del estadio
+	## (`EST_SONIDOS`): mismas claves que guarda `EstadioPropio`.
+	"gol_bombo", "gol_sirena", "gol_campana", "gol_organo",
+	"gol_explosion", "gol_sintetico", "gol_tambores", "gol_silencio",
+	## TERCERA TANDA (21-9-2026), a pedido explícito del usuario: "que sean
+	## cerca de 200 sonidos" -de 65 a unos 200 situaciones distintas, no
+	## solo más variantes de las mismas-. Organizado en los mismos bloques
+	## que ya usaba el catálogo, cada uno nuevo con su propia receta, no
+	## una reetiquetada de otra.
+	## --- Más momentos de partido ---
+	"saque_banda", "saque_puerta", "fuera_de_banda", "rebote", "palo_doble",
+	"atajada_punos", "atajada_pies", "gol_cabeza", "gol_chilena", "gol_falta",
+	"gol_penal", "autogol", "mano_penal", "simulacion", "var_anulado",
+	"medio_tiempo", "reanudacion", "calentamiento", "salida_tunel",
+	"presentacion_alineaciones", "despeje", "entrada_dura",
+	"recuperacion_balon", "pase_largo", "control_balon",
+	## --- Más grada ---
+	"ola_mexicana", "silbido_agudo", "coro_rival", "pitos_arbitro",
+	"bocina_vuvuzela", "tambor_visitante", "suspiro_grada", "alarido_atajada",
+	"tension_publico", "silbidos_impaciencia", "ultimo_minuto",
+	"descuento_anunciado", "grada_de_pie", "bufanda_alzada",
+	"pancarta_desplegada", "humo_bengala", "cornetin", "campanas_iglesia",
+	"animador_grada", "eco_estadio", "lluvia_fuerte", "viento_fuerte",
+	"trueno", "multitud_entrando", "multitud_saliendo",
+	## --- Más gestión / carrera ---
+	"entrenamiento", "sesion_tactica", "rueda_prensa_pregunta",
+	"rueda_prensa_aplauso", "scouting_informe", "oferta_rechazada",
+	"oferta_aceptada", "renovacion", "prestamo", "veto_fichaje",
+	"mercado_cierra", "premio_individual", "capitania", "retiro_jugador",
+	"debut_juvenil", "ascenso_juvenil", "sancion_directiva",
+	"reunion_directiva", "patrocinio_nuevo", "inauguracion_obra",
+	"entrada_taquilla", "aumento_socios", "huelga_hinchas",
+	"elecciones_club", "votacion_ganada", "votacion_perdida", "premio_liga",
+	"descenso_administrativo", "multa", "cesion_jugador",
+	"renovacion_rechazada", "agente_llamada", "rumor_fichaje",
+	"medico_parte", "alta_medica", "baja_medica", "entrenamiento_lesion",
+	"objetivo_cumplido", "objetivo_fallado", "mejora_instalaciones",
+	## --- Más interfaz ---
+	"seleccionar", "deseleccionar", "arrastrar", "soltar", "desbloqueo",
+	"nivel_subido", "notificacion", "confirmar", "cancelar", "deslizar",
+	## --- Más festejos y momentos de gol ---
+	"celebracion_grupal", "celebracion_individual", "festejo_banco",
+	"festejo_hinchada_extra", "remontada", "gol_agonico", "hat_trick",
+	"doblete", "gol_rapido", "gol_confirmado_var",
+	## --- Clima y ambiente ---
+	"niebla_ambiente", "calor_extremo", "frio_extremo", "noche_estadio",
+	"dia_soleado",
+	## --- Más árbitro y disciplina ---
+	"tarjeta_banco", "protesta_jugador", "protesta_masiva",
+	"amonestacion_verbal", "tiempo_anadido", "ventaja", "libre_indirecto",
+	"mano_fuera_area", "fuera_terreno_juego", "calambre",
+	## --- Más estilo de juego ---
+	"pase_corto", "centro", "regate", "tiro_potente", "tiro_flojo",
+	"paso_atras", "presion_alta", "contragolpe", "posesion_larga",
+	"cambio_ritmo"]
+
+
+## Genera TODO de golpe, en el hilo que llama. Solo para pruebas y
+## herramientas: el juego usa el hilo de fondo de `_ready()`.
 func _generar_todo() -> void:
-	for nombre: String in ["silbato", "gol", "gol_rival", "roja", "amarilla",
-			"murmullo", "ovacion", "poste", "clic", "moneda", "pitido_final",
-			"ocasion", "atajada", "falta", "corner", "trofeo",
-			"lesion", "cambio", "fichaje", "ascenso", "descenso", "logro",
-			## La segunda tanda: la interfaz, el campo, la grada y la gestion.
-			"clic_suave", "abrir", "cerrar", "error", "aviso", "correo", "guardado",
-			"telefono", "saque_inicial", "penal", "penal_fallado", "travesano",
-			"remate_fuera", "var", "segunda_amarilla", "fuera_de_juego",
-			"tambor", "trompeta", "abucheo", "aplauso", "cantico", "bengala",
-			"lluvia_ambiente", "vestuario", "flashes", "contrato", "despido",
-			"dinero_entra", "dinero_sale", "sorteo", "cronometro", "himno",
-			"fin_temporada",
-			## Y los que pedia el LEEME: uno propio por evento.
-			"clausula", "lesion_grave", "oferta", "contrato_vence", "obra",
-			"venta", "ronda_superada",
-			## Los ocho sonidos de gol que se eligen en el diseño del estadio
-			## (`EST_SONIDOS`): mismas claves que guarda `EstadioPropio`.
-			"gol_bombo", "gol_sirena", "gol_campana", "gol_organo",
-			"gol_explosion", "gol_sintetico", "gol_tambores", "gol_silencio",
-			## TERCERA TANDA (21-9-2026), a pedido explícito del usuario: "que sean
-			## cerca de 200 sonidos" -de 65 a unos 200 situaciones distintas, no
-			## solo más variantes de las mismas-. Organizado en los mismos bloques
-			## que ya usaba el catálogo, cada uno nuevo con su propia receta, no
-			## una reetiquetada de otra.
-			## --- Más momentos de partido ---
-			"saque_banda", "saque_puerta", "fuera_de_banda", "rebote", "palo_doble",
-			"atajada_punos", "atajada_pies", "gol_cabeza", "gol_chilena", "gol_falta",
-			"gol_penal", "autogol", "mano_penal", "simulacion", "var_anulado",
-			"medio_tiempo", "reanudacion", "calentamiento", "salida_tunel",
-			"presentacion_alineaciones", "despeje", "entrada_dura",
-			"recuperacion_balon", "pase_largo", "control_balon",
-			## --- Más grada ---
-			"ola_mexicana", "silbido_agudo", "coro_rival", "pitos_arbitro",
-			"bocina_vuvuzela", "tambor_visitante", "suspiro_grada", "alarido_atajada",
-			"tension_publico", "silbidos_impaciencia", "ultimo_minuto",
-			"descuento_anunciado", "grada_de_pie", "bufanda_alzada",
-			"pancarta_desplegada", "humo_bengala", "cornetin", "campanas_iglesia",
-			"animador_grada", "eco_estadio", "lluvia_fuerte", "viento_fuerte",
-			"trueno", "multitud_entrando", "multitud_saliendo",
-			## --- Más gestión / carrera ---
-			"entrenamiento", "sesion_tactica", "rueda_prensa_pregunta",
-			"rueda_prensa_aplauso", "scouting_informe", "oferta_rechazada",
-			"oferta_aceptada", "renovacion", "prestamo", "veto_fichaje",
-			"mercado_cierra", "premio_individual", "capitania", "retiro_jugador",
-			"debut_juvenil", "ascenso_juvenil", "sancion_directiva",
-			"reunion_directiva", "patrocinio_nuevo", "inauguracion_obra",
-			"entrada_taquilla", "aumento_socios", "huelga_hinchas",
-			"elecciones_club", "votacion_ganada", "votacion_perdida", "premio_liga",
-			"descenso_administrativo", "multa", "cesion_jugador",
-			"renovacion_rechazada", "agente_llamada", "rumor_fichaje",
-			"medico_parte", "alta_medica", "baja_medica", "entrenamiento_lesion",
-			"objetivo_cumplido", "objetivo_fallado", "mejora_instalaciones",
-			## --- Más interfaz ---
-			"seleccionar", "deseleccionar", "arrastrar", "soltar", "desbloqueo",
-			"nivel_subido", "notificacion", "confirmar", "cancelar", "deslizar",
-			## --- Más festejos y momentos de gol ---
-			"celebracion_grupal", "celebracion_individual", "festejo_banco",
-			"festejo_hinchada_extra", "remontada", "gol_agonico", "hat_trick",
-			"doblete", "gol_rapido", "gol_confirmado_var",
-			## --- Clima y ambiente ---
-			"niebla_ambiente", "calor_extremo", "frio_extremo", "noche_estadio",
-			"dia_soleado",
-			## --- Más árbitro y disciplina ---
-			"tarjeta_banco", "protesta_jugador", "protesta_masiva",
-			"amonestacion_verbal", "tiempo_anadido", "ventaja", "libre_indirecto",
-			"mano_fuera_area", "fuera_terreno_juego", "calambre",
-			## --- Más estilo de juego ---
-			"pase_corto", "centro", "regate", "tiro_potente", "tiro_flojo",
-			"paso_atras", "presion_alta", "contragolpe", "posesion_larga",
-			"cambio_ritmo"]:
-		var banco: Array[AudioStreamWAV] = []
-		for v in VARIANTES:
-			banco.append(_sintetizar(nombre, float(v) / float(VARIANTES)))
-		_bancos[nombre] = banco
+	for nombre: String in NOMBRES:
+		banco(nombre)
+
+## EN SEGUNDO PLANO (25-9-2026). Antes `_ready()` sintetizaba los 820 sonidos
+## (205 × 4 variantes) en el hilo principal: medido, 12 segundos de pantalla
+## congelada al abrir el juego. Ahora un hilo los va haciendo mientras se juega,
+## y si alguien pide uno que todavía no está, `banco()` hace solo ese, al
+## momento -unos milisegundos-. La síntesis no toca `Azar` (cada receta usa su
+## propio generador), así que el hilo no altera ninguna partida.
+func _generar_en_fondo() -> void:
+	for nombre: String in NOMBRES:
+		if _parar:
+			return
+		_mutex.lock()
+		var ya := _bancos.has(nombre)
+		_mutex.unlock()
+		if ya:
+			continue
+		var b := _sintetizar_banco(nombre)
+		_mutex.lock()
+		if not _bancos.has(nombre):
+			_bancos[nombre] = b
+		_mutex.unlock()
+
+func _sintetizar_banco(nombre: String) -> Array[AudioStreamWAV]:
+	var b: Array[AudioStreamWAV] = []
+	for v in VARIANTES:
+		b.append(_sintetizar(nombre, float(v) / float(VARIANTES)))
+	return b
+
+## Las variantes de un sonido, generándolas si todavía no estaban.
+func banco(nombre: String) -> Array:
+	_mutex.lock()
+	var b: Variant = _bancos.get(nombre)
+	_mutex.unlock()
+	if b != null:
+		return b
+	if not NOMBRES.has(nombre):
+		return []
+	var nuevo := _sintetizar_banco(nombre)
+	_mutex.lock()
+	if not _bancos.has(nombre):
+		_bancos[nombre] = nuevo
+	var r: Array = _bancos[nombre]
+	_mutex.unlock()
+	return r
+
+func _exit_tree() -> void:
+	_parar = true
+	if _hilo != null and _hilo.is_started():
+		_hilo.wait_to_finish()
 
 ## Reproduce un efecto. Si no existe, no hace nada y no se queja: un sonido que
 ## falta no puede tumbar un partido.
 func toca(nombre: String, bus: Bus = Bus.EFECTOS) -> void:
-	if not encendido or not _bancos.has(nombre):
+	if not encendido:
 		return
-	var banco: Array = _bancos[nombre]
+	var variantes: Array = banco(nombre)
+	if variantes.is_empty():
+		return
 	var p := _voces[_siguiente % VOCES]
 	_siguiente += 1
 	## LA VARIANTE NO SE SORTEA CON `Azar`. `Azar` es el generador DETERMINISTA
@@ -134,7 +193,7 @@ func toca(nombre: String, bus: Bus = Bus.EFECTOS) -> void:
 	## resultados distintos en la liga. Es exactamente la trampa que ya se pago
 	## una vez en este proyecto con un feed cosmetico, y solo la caza el banco.
 	## Aqui basta con ir rotando: el oido no distingue una rueda de un sorteo.
-	p.stream = banco[_siguiente % banco.size()]
+	p.stream = variantes[_siguiente % variantes.size()]
 	p.volume_db = linear_to_db(maxf(0.001, float(volumen[bus])))
 	p.play()
 
@@ -1196,20 +1255,20 @@ func _a_wav(m: PackedFloat32Array) -> AudioStreamWAV:
 ## ondas de verdad. Un banco que "carga" pero suena a nada es peor que uno que
 ## falla: no hay error, y el juego se queda mudo sin que nadie sepa por que.
 func catalogo() -> Array:
-	var l := _bancos.keys()
+	var l := NOMBRES.duplicate()
 	l.sort()
 	return l
 
 func ficha(nombre: String) -> Dictionary:
-	if not _bancos.has(nombre):
+	var variantes: Array = banco(nombre)
+	if variantes.is_empty():
 		return {}
-	var banco: Array = _bancos[nombre]
-	var w: AudioStreamWAV = banco[0]
+	var w: AudioStreamWAV = variantes[0]
 	var pico := 0
 	for i in range(0, w.data.size() - 1, 64):
 		pico = maxi(pico, absi(w.data.decode_s16(i)))
 	return {
-		"variantes": banco.size(),
+		"variantes": variantes.size(),
 		"segundos": float(w.data.size() / 2) / float(FRECUENCIA),
 		"pico": pico,
 	}

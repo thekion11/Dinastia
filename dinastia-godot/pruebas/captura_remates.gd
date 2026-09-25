@@ -25,7 +25,7 @@ func _process(_d: float) -> void:
 		## sintetizar, se ve aqui antes de tocar ninguna pantalla.
 		for nombre in ["ocasion", "atajada", "falta", "corner", "trofeo",
 				"lesion", "cambio", "fichaje", "ascenso", "descenso"]:
-			var ok: bool = Sonido._bancos.has(nombre) and (Sonido._bancos[nombre] as Array).size() == Sonido.VARIANTES
+			var ok: bool = Sonido.banco(nombre).size() == Sonido.VARIANTES
 			print("sonido '%s': %s" % [nombre, "ok" if ok else "FALTA"])
 		var par := _mundo.proximo_partido()
 		var p := Partido.new(par[0], par[1])
