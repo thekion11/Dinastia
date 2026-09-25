@@ -15,10 +15,8 @@ extends RefCounted
 ## COLOR PLANO, NO FOTO REAL: se probo pegar una foto real de equipacion
 ## directo (`recursos/equipaciones/`) y con un diseño simple (Colo-Colo,
 ## blanco con franja) se veia razonable, pero el atlas UV de esta prenda es
-## complejo -no es una foto de frente simple como el modelo viejo (ver
-## `Vestidor.gd`, "EL GOLPE DE SUERTE")-, asi que no hay garantia de que
-## calce con diseños mas elaborados (rayas, logos). Camino confiable: la
-## misma tecnica de retinado que ya usa `Vestidor._retenir()` para la piel,
+## complejo, asi que no hay garantia de que calce con diseños mas elaborados
+## (rayas, logos). Camino confiable: retinado por luminancia,
 ## aplicada a la tela Y al cuero (antes solo la tela, el cuero quedaba cafe
 ## y se leia a disfraz -corregido a pedido del usuario, "aun se puede ver
 ## mejor").
@@ -67,7 +65,7 @@ static func _cargar_male() -> Array:
 				_packed_male.append(p)
 	return _packed_male
 
-## Retine la textura base hacia `color`, igual que `Vestidor._retenir()`:
+## Retine la textura base hacia `color`, por luminancia:
 ## la tela clara va al color pedido, el cuero oscuro va a una sombra del
 ## MISMO color -no queda cafe-. Cacheada por color exacto.
 static func _textura_recoloreada(color: Color) -> ImageTexture:

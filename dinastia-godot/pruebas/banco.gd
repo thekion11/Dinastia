@@ -36,6 +36,7 @@ func _ready() -> void:
 	_probar_mundo()
 	_probar_reales()
 	_probar_base_ficticia()
+	_probar_cubierta_nombres()
 	_probar_calendario()
 	_probar_partidos()
 	_probar_previa()
@@ -226,6 +227,72 @@ func _probar_mundo() -> void:
 ## que haber desaparecido de la base, y la base tiene que seguir teniendo la
 ## MISMA forma (mismos colores, reputación, aforo y orden), para que el mundo
 ## ficticio juegue exactamente igual que el real.
+## LA CUBIERTA DE LOS NOMBRES REALES (25-9-2026). Con el pack real, clubes,
+## copas, árbitros y futbolistas reales se enseñan cubiertos ("C0lo-C0lo"),
+## no en claro. Y todo lo que busca por nombre -plantillas reales, fotos,
+## camisetas- tiene que seguir encontrándolo a pesar de la cubierta.
+func _probar_cubierta_nombres() -> void:
+	_titulo("CUBIERTA DE LOS NOMBRES REALES")
+	if not Datos.hay_pack_real():
+		_comprobar(false, "hace falta el pack real para probar la cubierta")
+		return
+	Datos.usar_base_real(true)
+	_comprobar(Nombres.cubierta_activa(), "con el pack real la cubierta está activa")
+	var m := Mundo.new()
+	m.generar([], 7)
+	var reales_aplicados := 0
+	var clubes := 0
+	var clubes_cubiertos := 0
+	var jugadores := 0
+	var jugadores_cubiertos := 0
+	var con_foto := 0
+	var con_camiseta := 0
+	var ejemplo_club := ""
+	var ejemplo_jugador := ""
+	for c: Club in m.clubes.values():
+		clubes += 1
+		if Nombres.limpiar(c.nombre) != c.nombre:
+			clubes_cubiertos += 1
+			if ejemplo_club == "" or c.nombre.begins_with("C0lo"):
+				ejemplo_club = c.nombre
+		if Jersey.fichero_real(c) != "":
+			con_camiseta += 1
+		for j: Jugador in c.plantilla:
+			if not j.real:
+				continue
+			reales_aplicados += 1
+			jugadores += 1
+			if Nombres.limpiar(j.nombre) != j.nombre:
+				jugadores_cubiertos += 1
+				if ejemplo_jugador == "":
+					ejemplo_jugador = j.nombre
+			if con_foto < 3 and Cara.foto_real(j) != null:
+				con_foto += 1
+	_linea("  por ejemplo: %s, %s" % [ejemplo_club, ejemplo_jugador])
+	_comprobar(reales_aplicados > 500, "las plantillas reales se siguen encontrando con el club cubierto (%d jugadores)" % reales_aplicados)
+	_comprobar(clubes_cubiertos >= int(clubes * 0.95), "clubes cubiertos: %d de %d" % [clubes_cubiertos, clubes])
+	_comprobar(jugadores > 0 and jugadores_cubiertos >= int(jugadores * 0.95), "futbolistas reales cubiertos: %d de %d" % [jugadores_cubiertos, jugadores])
+	_comprobar(con_foto > 0, "las caras reales se siguen encontrando con el nombre cubierto")
+	_comprobar(con_camiseta > 0, "y las camisetas reales también (%d clubes)" % con_camiseta)
+	var arb := String(Previa.arbitro_de("c1", 3).get("nombre", ""))
+	_comprobar(arb != Nombres.limpiar(arb), "el árbitro va cubierto (%s)" % arb)
+	var copa := Continental.nombre_conti("ucl")
+	_comprobar(copa != Nombres.limpiar(copa), "la copa continental va cubierta (%s)" % copa)
+	_comprobar(Nombres.de_tabla("Colo-Colo") != "Colo-Colo" and Nombres.limpiar(Nombres.de_tabla("Colo-Colo")) == "Colo-Colo",
+		"un nombre en claro se cubre y se puede volver a limpiar")
+
+	## Con la base ficticia no hay nada que tapar: todo limpio, como antes.
+	Datos.usar_base_real(false)
+	_comprobar(not Nombres.cubierta_activa(), "con la base ficticia la cubierta se apaga")
+	var mf := Mundo.new()
+	mf.generar([], 7)
+	var con_numeros := 0
+	for c: Club in mf.clubes.values():
+		if Nombres.limpiar(c.nombre) != c.nombre:
+			con_numeros += 1
+	_comprobar(con_numeros == 0, "y los clubes ficticios se leen limpios (%d con números)" % con_numeros)
+	Datos.usar_base_real(true)
+
 func _probar_base_ficticia() -> void:
 	_titulo("BASE FICTICIA: LO QUE SE PUBLICA NO LLEVA NADA REAL")
 	_comprobar(Datos.hay_pack_real(), "el pack real del proyecto se encuentra (%s)" % Datos.ruta_pack())
@@ -356,7 +423,7 @@ func _probar_base_ficticia() -> void:
 	mr.generar(["CHI"], 7)
 	var hay_colo := false
 	for c: Club in mr.clubes.values():
-		if c.nombre == "Colo-Colo":
+		if Nombres.limpiar(c.nombre) == "Colo-Colo":
 			hay_colo = true
 	_comprobar(hay_colo, "con el pack puesto vuelve Colo-Colo")
 
@@ -368,7 +435,7 @@ func _probar_reales() -> void:
 	m.generar(["CHI"], 2323)
 	var colo: Club = null
 	for c: Club in m.ligas[0].clubes:
-		if c.nombre == "Colo-Colo":
+		if Nombres.limpiar(c.nombre) == "Colo-Colo":
 			colo = c
 			break
 	_comprobar(colo != null, "Colo-Colo esta entre los clubes generados")
@@ -383,7 +450,7 @@ func _probar_reales() -> void:
 
 	var vidal: Jugador = null
 	for j: Jugador in colo.plantilla:
-		if j.nombre == "Arturo Vidal":
+		if Nombres.limpiar(j.nombre) == "Arturo Vidal":
 			vidal = j
 			break
 	_comprobar(vidal != null, "Arturo Vidal aparece en el plantel real de Colo-Colo")
@@ -4441,9 +4508,18 @@ func _probar_editor() -> void:
 	## seria mentir en la misma pantalla.
 	## Se busca uno que NO este ya en el tope: subir un atributo que vale 99
 	## no sube nada, y la prueba fallaria sin que hubiera nada roto.
+	## Y que PESE en su puesto: subir la velocidad de un portero no mueve su
+	## media, y la prueba fallaba según qué jugador tocara ese mundo.
 	var clave := ""
 	for k: String in j.atributos:
-		if int(j.atributos[k]) < 90:
+		if int(j.atributos[k]) >= 90:
+			continue
+		var v0 := int(j.atributos[k])
+		var m0 := j.media_en(j.pos_e)
+		j.atributos[k] = v0 + 8
+		var pesa := j.media_en(j.pos_e) != m0
+		j.atributos[k] = v0
+		if pesa:
 			clave = k
 			break
 	if clave == "":
@@ -4482,7 +4558,7 @@ func _probar_editor() -> void:
 			Editor.FILAS_PARA_REEMPLAZAR, antes_mio, mio.plantilla.size()])
 	var encontrado := false
 	for p: Jugador in mio.plantilla:
-		if p.nombre == "Edinson Cavani":
+		if Nombres.limpiar(p.nombre) == "Edinson Cavani":
 			encontrado = true
 			_comprobar(p.pais == "URU" and p.pot == 80 and p.edad == 39,
 				"y con su pais, su techo y su edad (%s, %d, %d)" % [p.pais, p.pot, p.edad])
@@ -4986,29 +5062,71 @@ func _probar_aspecto_y_audio() -> void:
 ## necesita pantalla: todos terminan en "A jugar", cada modo trae su paso
 ## propio y ningún paso apunta a un control que `Principal` no sepa encontrar.
 func _probar_tutorial() -> void:
-	_titulo("TUTORIAL GUIADO")
+	_titulo("TUTORIAL INMERSIVO")
 	const OBJETIVOS := ["estado", "grupos", "chips", "plantel", "ficha", "dinero", "partido",
 		"tabla", "registro", "calendario", "un_dia", "guardar"]
-	const HECHOS := ["grupo", "plantel", "dinero", "partido"]
-	const ACCIONES := ["grupo_club", "plantel", "dinero", "partido"]
-	var titulos_de_modo := {}
+	const SIMPLES := ["grupo", "ficha", "grupo_club", "plantel", "dinero", "partido"]
+	var modos := ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "creador"]
+	## Con una partida de verdad: el mentor tiene que hablar de ELLA.
+	var m := Mundo.new()
+	m.generar(["CHI"], 5150)
+	m.tomar_el_mando(m.ligas[0].clubes[3].id)
+	var ctx := Tutorial.contexto(m)
 	var malos: Array[String] = []
-	for modo in ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "creador"]:
-		var pasos := Tutorial.pasos_para(modo, "Club de prueba")
-		if pasos.size() < 10 or not String(pasos[pasos.size() - 1]["titulo"]).contains("A jugar"):
-			malos.append("%s: %d pasos" % [modo, pasos.size()])
+	var prologos := {}
+	var mentores := {}
+	var misiones_por_modo := {}
+	for modo: String in modos:
+		var g := Tutorial.guion(modo, ctx)
+		var pasos: Array = g["pasos"]
+		prologos[String(g["prologo"])] = true
+		mentores[String(g["mentor"]["cargo"])] = true
+		if not String(g["prologo"]).contains(String(ctx["club"])) and modo != "interino":
+			if not String(g["prologo"]).contains(String(g["mentor"]["nombre"])):
+				malos.append("%s: el prólogo no nombra al club ni al mentor" % modo)
+		if pasos.size() < 8 or not bool((pasos[pasos.size() - 1] as Dictionary).get("final", false)):
+			malos.append("%s: %d pasos o sin epílogo" % [modo, pasos.size()])
+		var misiones := 0
 		for p: Dictionary in pasos:
+			if p.has("mision"):
+				misiones += 1
+				if not p.has("hecho"):
+					malos.append("%s: misión sin forma de cumplirse (%s)" % [modo, p["mision"]])
 			if p.has("objetivo") and not OBJETIVOS.has(String(p["objetivo"])):
 				malos.append("%s: objetivo %s" % [modo, p["objetivo"]])
-			if p.has("hecho") and not HECHOS.has(String(p["hecho"])):
-				malos.append("%s: hecho %s" % [modo, p["hecho"]])
-			if p.has("mostrar") and not ACCIONES.has(String(p["mostrar"])):
-				malos.append("%s: mostrar %s" % [modo, p["mostrar"]])
-		titulos_de_modo[String(pasos[pasos.size() - 2]["titulo"])] = true
+			for k in ["hecho", "mostrar"]:
+				if not p.has(k):
+					continue
+				var v := String(p[k])
+				var ok := SIMPLES.has(v)
+				if v.begins_with("tab:"):
+					ok = Tutorial.PESTANAS.has(v.substr(4))
+				elif v.begins_with("chip:"):
+					ok = Tutorial.CHIPS.has(v.substr(5))
+				elif v.begins_with("ficha:"):
+					ok = false
+					for j: Jugador in m.mi_club().plantilla:
+						if j.id == v.substr(6):
+							ok = true
+				if not ok:
+					malos.append("%s: %s %s" % [modo, k, v])
+		misiones_por_modo[modo] = misiones
+		if misiones < 4:
+			malos.append("%s: solo %d misiones" % [modo, misiones])
+	_linea("  misiones por modo: %s" % str(misiones_por_modo))
 	_comprobar(malos.is_empty(), "el guion de los 8 modos es coherente %s" % str(malos))
-	_comprobar(titulos_de_modo.size() == 8, "cada modo trae su propio paso (%d distintos)" % titulos_de_modo.size())
-	_comprobar(Tutorial.pasos_para("dt", "Lautaro FC")[0]["texto"].contains("Lautaro FC"),
-		"la bienvenida nombra al club")
+	_comprobar(prologos.size() == 8, "cada modo tiene su propio prólogo (%d distintos)" % prologos.size())
+	_comprobar(mentores.size() >= 6, "y su propio mentor (%d cargos distintos)" % mentores.size())
+	var todo_dt := ""
+	for p: Dictionary in Tutorial.guion("dt", ctx)["pasos"]:
+		todo_dt += String(p["texto"]) + " " + String(p.get("mision", ""))
+	_comprobar(String(ctx["rival"]) != "" and todo_dt.contains(String(ctx["rival"])), "el presidente habla del rival de verdad (%s)" % ctx["rival"])
+	_comprobar(todo_dt.contains(String(ctx["estrella"].get("nombre", "?"))), "y de tu mejor jugador por su nombre (%s)" % ctx["estrella"].get("nombre", "?"))
+	_comprobar(todo_dt.contains(String(ctx["objetivo"]).to_lower()), "y del objetivo del directorio (%s)" % ctx["objetivo"])
+	var m1 := Tutorial.mentor_de("dt", ctx)
+	_comprobar(m1["nombre"] == Tutorial.mentor_de("dt", ctx)["nombre"] and not Nombres.vetado(String(m1["nombre"])),
+		"el mentor es siempre el mismo para el mismo club, e inventado (%s)" % m1["nombre"])
+	_comprobar(Tutorial.pasos_para("dt", "Lautaro FC").size() >= 8, "sin partida también hay guion")
 
 ## LA MONEDA (25-9-2026). Una sola función escribe el dinero en todo el juego,
 ## con la moneda elegida. Se cambia `Eco.moneda` a mano, sin `elegir_moneda()`,

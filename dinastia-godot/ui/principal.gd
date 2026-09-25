@@ -1062,8 +1062,18 @@ func tutorial_objetivo(clave: String) -> Control:
 ## eso mismo que la tarjeta le pedía.
 func tutorial_hecho(clave: String) -> bool:
 	var titulo := _pestanas.get_tab_title(_pestanas.current_tab) if _pestanas.get_tab_count() > 0 else ""
+	## Las misiones del tutorial inmersivo: una pestaña concreta, una sección
+	## concreta de una pestaña, o la ficha de un jugador concreto.
+	if clave.begins_with("tab:"):
+		return titulo == clave.substr(4)
+	if clave.begins_with("chip:"):
+		var partes := clave.substr(5).split("|")
+		return titulo == partes[0] and _seccion_activa({"tab": partes[0], "secc": partes[1] if partes.size() > 1 else ""})
+	if clave.begins_with("ficha:"):
+		return _seleccionado != null and _seleccionado.id == clave.substr(6)
 	match clave:
 		"grupo": return _grupo_actual != "central"
+		"ficha": return _seleccionado != null
 		"plantel": return (HUBS["plantel"]["tabs"] as Array).has(titulo)
 		"dinero": return (HUBS["dinero"]["tabs"] as Array).has(titulo)
 		"partido": return (HUBS["partido"]["tabs"] as Array).has(titulo)
@@ -1071,7 +1081,24 @@ func tutorial_hecho(clave: String) -> bool:
 
 ## "Muéstramelo": hace por el jugador lo que pide el paso.
 func tutorial_accion(clave: String) -> void:
+	if clave.begins_with("tab:"):
+		_ir_a_pestana(clave.substr(4))
+		_refrescar()
+		return
+	if clave.begins_with("chip:"):
+		var partes := clave.substr(5).split("|")
+		_ir_a_chip({"tab": partes[0], "secc": partes[1] if partes.size() > 1 else ""})
+		return
+	if clave.begins_with("ficha:"):
+		var id := clave.substr(6)
+		for j: Jugador in mundo.mi_club().plantilla:
+			if j.id == id:
+				_ver_ficha(j)
+		return
 	match clave:
+		"ficha":
+			if not mundo.mi_club().plantilla.is_empty():
+				_ver_ficha(mundo.mi_club().plantilla[0])
 		"grupo_club": _elegir_grupo("club")
 		"plantel": _ir_a_pestana("Mi plantel")
 		"dinero": _ir_a_pestana("Finanzas")
@@ -1198,14 +1225,16 @@ func _abrir_hub(clave: String) -> void:
 var _buscador: LineEdit
 
 func _buscar_global(texto: String) -> void:
-	var q := texto.strip_edges().to_lower()
+	## Se compara limpio por los dos lados: con la cubierta activa "Fernand0"
+	## tiene que salir buscando "fernando" (y también buscando "fernand0").
+	var q := Nombres.limpiar(texto.strip_edges()).to_lower()
 	if q.length() < 2:
 		return
 	var mejor: Jugador = null
 	var mejor_empieza := false
 	for c: Club in mundo.clubes.values():
 		for j in c.plantilla:
-			var n := j.nombre.to_lower()
+			var n := Nombres.limpiar(j.nombre).to_lower()
 			if not n.contains(q):
 				continue
 			var empieza := n.begins_with(q)
@@ -1219,7 +1248,7 @@ func _buscar_global(texto: String) -> void:
 		_buscador.text = ""
 		return
 	for c2: Club in mundo.clubes.values():
-		if c2.nombre.to_lower().contains(q):
+		if Nombres.limpiar(c2.nombre).to_lower().contains(q):
 			_clubes_ficha = c2
 			_ir_a_pestana("Clubes")
 			_refrescar()
@@ -2555,7 +2584,7 @@ func _datos_pantalla_estadio(local: Club) -> Dictionary:
 	elif local == mundo.mi_club() and mundo.estadio != null:
 		d["recinto"] = mundo.estadio.nombre_de(local)
 	else:
-		d["recinto"] = "Estadio " + Nombres.limpiar(local.nombre)
+		d["recinto"] = "Estadio " + Nombres.visible(local.nombre)
 	var l: Liga = mundo.liga_de(local)
 	if l == null:
 		return d
@@ -7917,11 +7946,11 @@ func _pintar_linaje(c: Club) -> void:
 	for clave: String in mias:
 		var titulo := ""
 		if clave.begins_with("L:"):
-			titulo = "⭐ Estirpe de %s" % Nombres.limpiar(clave.substr(2))
+			titulo = "⭐ Estirpe de %s" % Nombres.visible(clave.substr(2))
 		else:
 			var primero: Jugador = (mias[clave] as Array)[0]
 			var partes := primero.nombre.split(" ")
-			titulo = "👨‍👦 Hermanos %s" % Nombres.limpiar(partes[partes.size() - 1])
+			titulo = "👨‍👦 Hermanos %s" % Nombres.visible(partes[partes.size() - 1])
 		var lt := _texto(12, COL_ORO)
 		lt.text = titulo
 		_lista_cantera.add_child(lt)

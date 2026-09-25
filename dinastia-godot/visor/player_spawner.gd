@@ -4,11 +4,10 @@ extends RefCounted
 ## Pone los 22 titulares sobre el cesped, cada uno en su sitio de la formacion,
 ## con la equipacion real de su club, su cara y su estatura.
 ##
-## Usa el modelo humano realista (`futbolista_cr7.glb`, esqueleto Mixamo) con las
-## animaciones generadas por AnimMixamo. El muneco low-poly de Kenney que habia
-## antes sigue en el proyecto como respaldo: si el modelo realista no carga —
-## porque falte el .glb o la maquina no dé para 22 cuerpos de 17.000 vertices—
-## se cae a el en vez de dejar la cancha vacia.
+## Usa el cuerpo Quaternius (CC0, `FutbolistaQ`) con la equipación pintada
+## encima (`VestidorQ.vestir_equipacion`). El muñeco low-poly de Kenney sigue
+## en el proyecto como respaldo: si el modelo no carga, se cae a él en vez de
+## dejar la cancha vacía.
 
 const MODELO_RESPALDO := "res://assets/characters/Model/characterMedium.fbx"
 const ANIM_RESPALDO := {"idle": "res://assets/characters/Animations/idle.fbx",
@@ -155,12 +154,8 @@ func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dicti
 			kestilo = str(kit_portero.get("estilo", "liso"))
 			kimg = ""
 
-		## OJO: en la rama del modelo realista, `Vestidor.vestir()` NO recibe c1/c2.
-		## Solo mira `kit_img` y `color_liso`. Con las dos vacías se queda la
-		## textura que trae el modelo de fábrica —el amarillo y azul del Al-Nassr—
-		## y los 22 jugadores salen vestidos igual, los dos equipos y el portero.
-		## Así que cuando no hay una equipación real que ponerle, se le pasa el
-		## color del club como color liso.
+		## Color liso: el pantalón del árbitro y, en el muñeco de respaldo, la
+		## equipación cuando no hay una imagen de camiseta que ponerle.
 		var liso := kc1 if kimg == "" else Color(0, 0, 0, 0)
 		var nodo := _crear_jugador(root, jid, str(slot[0]), kimg, kc1, kc2, kestilo,
 			int(jug.get("dorsal", 0)), piel, pelo, look[2], liso, jug)
@@ -393,19 +388,6 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 			return {"nodo": dq["nodo"], "anim": apq, "realista": true}
 		usando_respaldo = true
 		push_warning("PlayerSpawner: no cargo el modelo Quaternius, se usa el de respaldo")
-
-	if not usando_respaldo:
-		var d: Dictionary = Futbolista.crear(altura_de(jug, jid, puesto))
-		if not d.is_empty():
-			root.add_child(d["nodo"])
-			Futbolista.terminar(d)
-			Vestidor.vestir(d["modelo"], img_kit, piel, pelo, color_liso)
-			var ap: AnimationPlayer = d["anim"]
-			if ap.has_animation("parado"):
-				ap.play("parado")
-			return {"nodo": d["nodo"], "anim": ap, "realista": true}
-		usando_respaldo = true
-		push_warning("PlayerSpawner: no cargo el modelo realista, se usa el de respaldo")
 
 	if _packed_respaldo == null:
 		_packed_respaldo = load(MODELO_RESPALDO)

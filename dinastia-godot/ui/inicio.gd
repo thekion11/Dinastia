@@ -303,7 +303,7 @@ func _pintar_base() -> void:
 	for i in _fila_base.get_child_count():
 		(_fila_base.get_child(i) as Button).button_pressed = (i == 1) == Datos.base_real
 	if Datos.base_real:
-		_lbl_base.text = "Clubes, ligas y jugadores reales de «%s». Solo para uso privado." % Datos.nombre_pack()
+		_lbl_base.text = "Clubes, ligas y jugadores reales de «%s», con sus caras y con los nombres cubiertos (C0lo-C0lo). Solo para uso privado." % Datos.nombre_pack()
 	else:
 		_lbl_base.text = "384 clubes y 24 ligas inventados, con jugadores generados. Es la base de la versión publicada."
 

@@ -896,7 +896,7 @@ func semana() -> void:
 ## Lo llama quien simule el partido cuando el arbitraje fue un escándalo y
 ## perdiste. Mientras esté puesto, el directorio puede preguntarte si reclamas.
 func arbitro_dudoso(nombre: String) -> void:
-	arbitro_polemico = Nombres.limpiar(nombre)
+	arbitro_polemico = Nombres.visible(nombre)
 
 ## El parte médico robado sale UNA vez: es lo que compraste.
 func consumir_dato_del_rival() -> bool:
@@ -966,7 +966,7 @@ func agente_de(j: Jugador) -> Dictionary:
 	var perfil := String(fila[1])
 	var p: Dictionary = perfiles.get(perfil, {})
 	return {
-		"nombre": Nombres.limpiar(String(fila[0])),
+		"nombre": Nombres.de_tabla(String(fila[0])),
 		"perfil": perfil,
 		"etiqueta": String(p.get("d", perfil)),
 		"f": float(p.get("f", 1.0)),

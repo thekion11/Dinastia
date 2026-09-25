@@ -47,7 +47,7 @@ nombre registrado ni el apodo comercial. Se evitaron también nombres de clubes 
 |---|---|---|
 | 1.547 fotos de caras de futbolistas reales (Wikidata/Commons; muchas son CC-BY-SA con atribución, algunas no libres, y todas tienen derechos de imagen de la persona) | `recursos/caras_reales/` | 🔴 excluido. Además, `Cara.foto_real()` no enseña ninguna foto con la base ficticia |
 | 1.102 fotos de camisetas reales (escudo y patrocinadores de marca) | `../recursos/equipaciones/` (fuera del proyecto) | 🔴 solo se copian junto al `.exe` en la versión **completo**. Con la base ficticia `EQUIP_REAL` está vacía y nunca se usan |
-| Modelo `futbolista_cr7.glb` y sus texturas: trae la camiseta real del Al-Nassr (escudo + patrocinador "Shurfah") y no tiene licencia conocida | `assets/characters/futbolista_cr7*` | 🔴 excluido. Los partidos usan el modelo Quaternius; el presentador del sorteo también, desde esta tanda |
+| Modelo `futbolista_cr7.glb` y sus texturas (camiseta real del Al-Nassr, sin licencia conocida) | — | ✅ **borrado del proyecto** (25-9-2026), junto con su código (`Futbolista`, `AnimMixamo`, `Vestidor`). Los partidos y el presentador del sorteo usan el modelo Quaternius |
 
 ## 3. Modelos 3D y animaciones
 

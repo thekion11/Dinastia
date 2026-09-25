@@ -424,7 +424,7 @@ func _fuentes_de_liga(paises: Array[String]) -> Array:
 				continue
 			var d: Dictionary = pl[pais]
 			salida.append({
-				"nombre": Nombres.limpiar(String(d.get("liga", pais))),
+				"nombre": Nombres.de_tabla(String(d.get("liga", pais))),
 				"pais": pais,
 				"clubes": d.get("clubes", []),
 			})
@@ -433,7 +433,7 @@ func _fuentes_de_liga(paises: Array[String]) -> Array:
 ## Una fila de club es [nombre, color1, color2, reputacion, aforo].
 func _crear_club(fila: Array, pais: String) -> Club:
 	_seq_club += 1
-	var c := Club.new("c%d" % _seq_club, Nombres.limpiar(String(fila[0])))
+	var c := Club.new("c%d" % _seq_club, Nombres.de_tabla(String(fila[0])))
 	c.pais = pais
 	c.color1 = String(fila[1]) if fila.size() > 1 else "#2b6b45"
 	c.color2 = String(fila[2]) if fila.size() > 2 else "#ffffff"

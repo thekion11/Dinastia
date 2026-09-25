@@ -16,7 +16,7 @@ func _process(_d: float) -> void:
 		# Asegura que el club activo sea Colo-Colo si no lo es ya.
 		if mundo.mi_club().nombre != "Colo-Colo":
 			for c: Club in mundo.clubes.values():
-				if c.nombre == "Colo-Colo":
+				if Nombres.limpiar(c.nombre) == "Colo-Colo":
 					mundo.tomar_el_mando(c.id)
 					break
 		_pantalla.call("_refrescar")

@@ -13,9 +13,8 @@ extends RefCounted
 ## marca a quién se le tocó, y es la puerta para engancharle después una foto
 ## de verdad en vez de la cara procedural de `Cara.gd`.
 ##
-## `censurar()` es un passthrough en el HTML desde la v3.0 -los nombres van
-## siempre en texto claro-, así que aquí tampoco hay ninguna ofuscación que
-## portar: se copia el nombre tal cual trae la tabla.
+## Desde el 25-9-2026 el nombre pasa por `Nombres.de_tabla()`: con el pack real
+## activo se guarda cubierto ("Artur0 Vidal"), no en claro.
 
 ## Las claves de `REALES` están en leetspeak ("C0lo-C0lo") porque así quedaron
 ## escritas en el JSON exportado, igual que el resto de nombres de club; hay
@@ -53,7 +52,7 @@ static func aplicar(mundo: Mundo) -> int:
 		return 0
 	var total := 0
 	for club: Club in mundo.clubes.values():
-		var lista: Variant = idx.get(club.nombre)
+		var lista: Variant = idx.get(Nombres.limpiar(club.nombre))
 		if not (lista is Array) or (lista as Array).is_empty():
 			continue
 		total += _aplicar_en_club(club, lista as Array, posd as Dictionary)
@@ -66,7 +65,9 @@ static func _aplicar_en_club(club: Club, lista: Array, posd: Dictionary) -> int:
 		var partes := String(fila).split("|")
 		if partes.size() < 4:
 			continue
-		var nombre := partes[0]
+		## Con la cubierta activa el nombre se guarda ya cubierto (ver
+		## `Nombres.de_tabla`); las fotos lo buscan limpiándolo.
+		var nombre := Nombres.de_tabla(partes[0])
 		var pos_e := partes[1] if posd.has(partes[1]) else "MC"
 		var edad := int(partes[2]) if partes[2].is_valid_int() else 26
 		var media := int(partes[3]) if partes[3].is_valid_int() else 70

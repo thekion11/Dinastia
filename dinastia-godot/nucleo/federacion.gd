@@ -392,9 +392,9 @@ func jugar_playoffs(tabla: Array, anio: int, mi_id: String = "") -> Dictionary:
 		"semis": [String(s1["marcador"]), String(s2["marcador"])],
 		"final": String(fin["marcador"]),
 		"campeon": campeon.id,
-		"campeon_nombre": Nombres.limpiar(campeon.nombre),
+		"campeon_nombre": Nombres.visible(campeon.nombre),
 		"lider": cuatro[0].id,
-		"lider_nombre": Nombres.limpiar(cuatro[0].nombre),
+		"lider_nombre": Nombres.visible(cuatro[0].nombre),
 	}
 
 	var mio := false
@@ -409,10 +409,10 @@ func jugar_playoffs(tabla: Array, anio: int, mi_id: String = "") -> Dictionary:
 	noticia.emit("PLAYOFFS POR EL TÍTULO %d" % anio,
 		"La federación decidió que el campeón se juega. Semifinales: %s · %s. FINAL: %s. Campeón: %s.%s" % [
 			s1["marcador"], s2["marcador"], fin["marcador"],
-			Nombres.limpiar(campeon.nombre), cola])
+			Nombres.visible(campeon.nombre), cola])
 	if cuatro[0].id != campeon.id:
 		noticia.emit("El líder se quedó sin corona",
-			"%s terminó primero en la tabla pero perdió los playoffs. Con este formato, treinta fechas no garantizan nada." % Nombres.limpiar(cuatro[0].nombre))
+			"%s terminó primero en la tabla pero perdió los playoffs. Con este formato, treinta fechas no garantizan nada." % Nombres.visible(cuatro[0].nombre))
 	playoffs_jugados.emit(playoffs_ultimo)
 	return playoffs_ultimo
 
@@ -443,8 +443,8 @@ func _duelo(a: Club, b: Club, ventaja: float) -> Dictionary:
 	var gb := Azar.ent(0, maxi(0, ga - 1))
 	return {
 		"gana": gana, "pierde": pierde,
-		"marcador": "%s %d-%d %s" % [Nombres.limpiar(gana.nombre),
-			maxi(ga, gb + 1), mini(ga, gb), Nombres.limpiar(pierde.nombre)],
+		"marcador": "%s %d-%d %s" % [Nombres.visible(gana.nombre),
+			maxi(ga, gb + 1), mini(ga, gb), Nombres.visible(pierde.nombre)],
 	}
 
 ## Acepta una fila de `Liga.tabla()` o un Club suelto.
@@ -546,7 +546,7 @@ func abrir_caso(tipo: String, j: Jugador, fechas: int, motivo: String, anio: int
 	var caso := {
 		"id": "k%d" % _sec, "tipo": tipo,
 		"pid": j.id if j != null else "",
-		"nombre": Nombres.limpiar(j.nombre) if j != null else "el club",
+		"nombre": Nombres.visible(j.nombre) if j != null else "el club",
 		"fechas": fechas, "motivo": motivo, "estado": "firme",
 		"anio": anio, "semana": semana_n, "apelado": false,
 	}
@@ -638,7 +638,7 @@ func control_antidopaje(mi: Club, anio: int, semana_n: int) -> Dictionary:
 	if j == null:
 		return {}
 	var positivo := Azar.suerte(PROB_POSITIVO)
-	var registro := {"nombre": Nombres.limpiar(j.nombre), "anio": anio,
+	var registro := {"nombre": Nombres.visible(j.nombre), "anio": anio,
 		"semana": semana_n, "positivo": positivo}
 	controles.push_front(registro)
 	if controles.size() > MAX_CONTROLES:

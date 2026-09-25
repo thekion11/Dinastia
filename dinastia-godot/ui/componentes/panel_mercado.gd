@@ -437,11 +437,11 @@ func _pintar_lista(mio: Club) -> void:
 # ── FILTRADO ──────────────────────────────────────────────────────────────
 func _objetivos_filtrados(mio: Club) -> Array:
 	var salida: Array = []
-	var texto := _filtro_texto.strip_edges().to_lower()
+	var texto := Nombres.limpiar(_filtro_texto.strip_edges()).to_lower()
 	for j: Jugador in _objetivos(mio):
 		if _filtro_pos != "" and Datos.grupo(j.pos_e) != _filtro_pos:
 			continue
-		if texto != "" and not j.nombre.to_lower().contains(texto):
+		if texto != "" and not Nombres.limpiar(j.nombre).to_lower().contains(texto):
 			continue
 		if _filtro_pagables and _mundo.mercado.valor_pedido(j) > mio.saldo:
 			continue
