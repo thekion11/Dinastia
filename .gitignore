@@ -16,3 +16,6 @@ Thumbs.db
 desktop.ini
 .DS_Store
 *.tmp
+
+# Contrasenas de exportacion (keystore Android). Plantilla: dinastia-godot/export_credentials.cfg.ejemplo
+dinastia-godot/export_credentials.cfg
