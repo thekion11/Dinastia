@@ -925,6 +925,7 @@ func abrir_rueda(gane: bool, empate: bool) -> Dictionary:
 	var guion: Array = _GANE if gane else (_EMPATE if empate else _PERDI)
 	entrevista = (Azar.uno(guion) as Dictionary).duplicate(true)
 	cuerpo = CUERPO_POR_DEFECTO
+	_poner_periodista(gane, empate)
 	rueda_abierta.emit(String(entrevista["pregunta"]), entrevista["opciones"])
 	return entrevista
 
@@ -953,7 +954,15 @@ func cuerpos() -> Dictionary:
 ## redonda: la moral la cobra el plantel, la confianza la directiva y los socios
 ## la taquilla del mes que viene. Quedar bien con el vestuario puede costarte el
 ## despacho.
-func responder(i: int) -> Dictionary:
+##
+## `segundos` (B5): lo que tardaste en contestar, medido por la pantalla. Más de
+## `TITUBEO_SEG` y la sala lo nota -"los periodistas huelen sangre"-. Con -1 (las
+## pruebas, o quien no mida) no cuenta.
+##
+## Si la respuesta deja la puerta abierta -evasiva, titubeo, o soberbia ante
+## quien vive del titular-, el MISMO periodista repregunta: la rueda sigue
+## abierta con la repregunta en `entrevista` y el resultado trae "sigue": true.
+func responder(i: int, segundos: float = -1.0) -> Dictionary:
 	if entrevista.is_empty():
 		return {}
 	var opciones: Array = entrevista["opciones"]
@@ -970,6 +979,12 @@ func responder(i: int) -> Dictionary:
 	d_moral = int(extra["moral"])
 	d_conf = int(extra["confianza"])
 	d_socios = int(extra["socios"])
+	var tono := String(o.get("tono", "calma"))
+	var titubeo := segundos >= TITUBEO_SEG
+	var de_tono := _aplicar_tono(tono, titubeo)
+	d_moral += int(de_tono["moral"])
+	d_conf += int(de_tono["confianza"])
+	extra["texto"] = String(extra["texto"]) + String(de_tono["texto"])
 
 	## EL VOCERO AMORTIGUA. Si habla otro por ti, la rueda deja de ser tuya: ni
 	## te luces ni te hundes. Es la contrapartida que el HTML prometia en el
@@ -1002,12 +1017,21 @@ func responder(i: int) -> Dictionary:
 	var quien := "🎙 Rueda de prensa"
 	if not vocero.is_empty():
 		quien = "🎙 Rueda de prensa · habla %s" % String(vocero.get("nombre", ""))
-	entrevista = {}
-	cuerpo = CUERPO_POR_DEFECTO
+	var per := String(entrevista.get("periodista", ""))
+	var paso := int(entrevista.get("paso", 0))
+	_recordar(per, titular, tono)
+	var sigue := paso == 0 and _toca_repreguntar(per, tono, titubeo)
+	if sigue:
+		entrevista = _repregunta(per, titular, tono, titubeo)
+	else:
+		_preparar_titular(per, titular, tono)
+		entrevista = {}
+		cuerpo = CUERPO_POR_DEFECTO
 	noticia.emit(quien, "«%s».%s" % [titular, String(extra["texto"])])
 	rueda_respondida.emit(titular, d_moral, d_conf, d_socios)
 	return {"titular": titular, "moral": d_moral, "confianza": d_conf,
-		"socios": d_socios, "extra": String(extra["texto"])}
+		"socios": d_socios, "extra": String(extra["texto"]), "tono": tono,
+		"titubeo": titubeo, "sigue": sigue}
 
 ## Cómo lo dijiste, sumado a lo que dijiste.
 ##
@@ -1046,6 +1070,294 @@ func _aplicar_cuerpo(dm: int, dc: int, ds: int) -> Dictionary:
 
 
 # ===========================================================================
+#  LA RUEDA A FONDO (25-9-2026, plan maestro B5)
+# ===========================================================================
+## Pedido: *"mejoras en las entrevistas"*. Hasta hoy la rueda era UNA pregunta de
+## "Prensa" sin cara, tres botones y a casa. Ahora:
+##   - pregunta un PERIODISTA concreto de los cinco de `PERIODISTAS`, y cada uno
+##     trata distinto lo que dices (el crítico no te perdona la soberbia, el
+##     sensacionalista vive de ella);
+##   - cada respuesta tiene un TONO -calma, soberbia o evasiva- con su propio
+##     efecto, aparte de las cifras de la opción;
+##   - hay MEMORIA: el periodista recuerda tu última frase y, si fue soberbia y
+##     hoy perdiste, te la devuelve;
+##   - hay REPREGUNTA cuando dejas la puerta abierta;
+##   - cuenta el TIEMPO: si tardas más de `TITUBEO_SEG`, se nota;
+##   - al día siguiente sale el TITULAR citando tu frase, escrito a su manera;
+##   - se puede responder con TEXTO LIBRE: un clasificador local por palabras
+##     clave decide el tono (sin IA en línea: ver ROADMAP, B5);
+##   - y al terminar el partido dirigido, la entrevista corta A PIE DE CAMPO.
+## Nada de esto consume `Azar`: quién pregunta y cómo sale del hash de la fecha.
+
+const TITUBEO_SEG := 10.0
+
+## clave de periodista -> {frase, tono, fecha (anio*100+semana)}.
+var memoria: Dictionary = {}
+## La portada que saldrá con tu frase, o vacío. Claves: t, c, tipo.
+var titular_pendiente: Dictionary = {}
+## La entrevista a pie de campo abierta, o vacío (no se guarda: dura segundos).
+var pie: Dictionary = {}
+
+func periodista_de(clave: String) -> Array:
+	for f: Array in PERIODISTAS:
+		if String(f[0]) == clave:
+			return f
+	return PERIODISTAS[2]
+
+func _fecha() -> int:
+	var m := _mundo()
+	return (m.anio * 100 + m.semana) if m != null else 0
+
+## Quién pregunta hoy. Tras una derrota, uno de cada tres días le toca al
+## crítico, que es el que más ganas tiene.
+func _poner_periodista(gane: bool, empate: bool) -> void:
+	var h := _hash_de("%d|%s" % [_fecha(), String(entrevista.get("pregunta", ""))])
+	var f: Array = PERIODISTAS[h % PERIODISTAS.size()]
+	if not gane and not empate and h % 3 == 0:
+		f = periodista_de("ibarra")
+	var clave := String(f[0])
+	entrevista["periodista"] = clave
+	entrevista["quien"] = "%s · %s" % [String(f[1]), String(f[2])]
+	entrevista["perfil"] = String(f[3])
+	entrevista["paso"] = 0
+	## La pregunta ya no la hace "Prensa": la hace él.
+	var q := String(entrevista.get("pregunta", ""))
+	if q.begins_with("Prensa: "):
+		q = q.substr(8)
+	var mem: Dictionary = memoria.get(clave, {})
+	if not mem.is_empty() and _fecha() - int(mem.get("fecha", 0)) >= 1:
+		if String(mem.get("tono", "")) == "soberbia" and not gane:
+			## LA FRASE QUE VUELVE. Lo dijiste subido; hoy toca tragártelo.
+			q = "'Hace poco dijo «%s». Hoy no ganaron. ¿Se arrepiente de esa frase?'" % String(mem["frase"])
+			entrevista["opciones"] = [
+				{"txt": "Me equivoqué en el tono; el trabajo sigue", "moral": 1, "confianza": 1, "socios": 1, "tono": "calma"},
+				{"txt": "No vine a hablar del pasado", "moral": -1, "confianza": 0, "socios": -1, "tono": "evasiva"},
+				{"txt": "Lo sostengo: al final de la temporada hablamos", "moral": 1, "confianza": -1, "socios": 0, "tono": "soberbia"},
+			]
+			entrevista["memoria"] = true
+		elif String(mem.get("tono", "")) == "evasiva":
+			q = "'La última vez no me contestó; a ver hoy. %s" % q.trim_prefix("'")
+			entrevista["memoria"] = true
+	entrevista["pregunta"] = q
+
+## El tono, aparte de las cifras de la opción. Mueve la relación con quien
+## pregunta, y la soberbia la apunta el estamento arbitral.
+func _aplicar_tono(tono: String, titubeo: bool) -> Dictionary:
+	var per := String(entrevista.get("periodista", ""))
+	var perfil := String(entrevista.get("perfil", ""))
+	var dm := 0
+	var dc := 0
+	var texto := ""
+	match tono:
+		"calma":
+			_mover_relacion(per, 2)
+			funa = maxi(0, funa - 1)
+		"soberbia":
+			## El cuerpo "soberbio" ya lo apunta en `_aplicar_cuerpo`: dos veces
+			## por la misma frase sería cobrarla doble.
+			if cuerpo != "soberbio":
+				enojo_arbitral += 1
+			_mover_relacion(per, 3 if perfil == "sensacionalista" else -3)
+			dm += 1
+			texto = " La frase se va a repetir toda la semana."
+		"evasiva":
+			_mover_relacion(per, -2)
+			_mover_funa(1)
+			texto = " No contestaste, y eso también es una respuesta."
+	if titubeo:
+		dc -= 1
+		_mover_funa(2)
+		texto += " Tardaste en contestar: en la sala se notó."
+	return {"moral": dm, "confianza": dc, "texto": texto}
+
+func _mover_relacion(clave: String, d: int) -> void:
+	if clave == "":
+		return
+	relaciones[clave] = clampi(relacion_con(clave) + d, 0, 100)
+
+func _recordar(clave: String, frase: String, tono: String) -> void:
+	if clave == "":
+		return
+	memoria[clave] = {"frase": frase.substr(0, 90), "tono": tono, "fecha": _fecha()}
+
+## Repregunta si dejaste la puerta abierta. Con portavoz no: él cierra el tema.
+func _toca_repreguntar(clave: String, tono: String, titubeo: bool) -> bool:
+	if clave == "" or not vocero.is_empty():
+		return false
+	var perfil := String(periodista_de(clave)[3])
+	return titubeo or tono == "evasiva" or (tono == "soberbia" and perfil in ["crítico", "sensacionalista"])
+
+func _repregunta(clave: String, frase: String, tono: String, titubeo: bool) -> Dictionary:
+	var f := periodista_de(clave)
+	var q := ""
+	var ops: Array = []
+	if titubeo:
+		q = "'Se ha tomado su tiempo para contestar. ¿Duda usted de su propio proyecto?'"
+		ops = [
+			{"txt": "No dudo: hay un plan y el plantel lo conoce", "moral": 1, "confianza": 2, "socios": 0, "tono": "calma"},
+			{"txt": "No voy a entrar en eso", "moral": 0, "confianza": -2, "socios": -1, "tono": "evasiva"},
+			{"txt": "Dudar es cosa de ustedes", "moral": 1, "confianza": -1, "socios": 0, "tono": "soberbia"},
+		]
+	elif tono == "evasiva":
+		q = "'Con todo respeto, eso no es una respuesta. Se lo pregunto otra vez.'"
+		ops = [
+			{"txt": "Tiene razón: se lo digo claro, confío en este grupo", "moral": 1, "confianza": 1, "socios": 1, "tono": "calma"},
+			{"txt": "Ya respondí. Siguiente pregunta", "moral": -1, "confianza": -1, "socios": -1, "tono": "evasiva"},
+			{"txt": "Las respuestas las doy en la cancha", "moral": 2, "confianza": 0, "socios": 0, "tono": "soberbia"},
+		]
+	else:
+		q = "'«%s». ¿No teme que esa frase se le vuelva en contra?'" % frase
+		ops = [
+			{"txt": "Lo matizo: hablo de ambición, no de desprecio", "moral": 0, "confianza": 1, "socios": 1, "tono": "calma"},
+			{"txt": "No tengo nada más que añadir", "moral": 0, "confianza": -1, "socios": -1, "tono": "evasiva"},
+			{"txt": "Lo digo y lo sostengo", "moral": 2, "confianza": 0, "socios": 1, "tono": "soberbia"},
+		]
+	return {"pregunta": q, "opciones": ops, "periodista": clave, "perfil": String(f[3]),
+		"quien": "%s · %s (repregunta)" % [String(f[1]), String(f[2])], "paso": 1}
+
+## La portada de mañana, escrita a la manera de quien preguntó.
+func _preparar_titular(clave: String, frase: String, tono: String) -> void:
+	if clave == "":
+		return
+	var f := periodista_de(clave)
+	var perfil := String(f[3])
+	var cita := "«%s»" % frase.substr(0, 70)
+	var t := ""
+	match perfil:
+		"sensacionalista":
+			t = {"soberbia": "%s: el DT enciende la polémica" % cita, "evasiva": "El DT esquiva y la sala se queda con las ganas"}.get(tono, "%s, la frase del día" % cita)
+		"crítico":
+			t = {"soberbia": "Soberbia en la sala: %s" % cita, "evasiva": "Sin respuestas: el DT se escondió tras el micrófono"}.get(tono, "%s. Palabras; faltan hechos" % cita)
+		"aliado":
+			t = {"soberbia": "Un DT con carácter: %s" % cita, "evasiva": "El DT prefirió la prudencia"}.get(tono, "%s: el DT pone la cara" % cita)
+		"táctico":
+			t = "%s: lo que hay detrás de la idea del DT" % cita
+		_:
+			t = "El DT: %s" % cita
+	var tipo: String = {"calma": "bien", "soberbia": "neutro", "evasiva": "mal"}.get(tono, "neutro")
+	titular_pendiente = {"t": t, "c": "Lo firma %s en %s." % [String(f[1]), String(f[2])], "tipo": tipo}
+
+## Sale al día siguiente de la rueda (la llama `semana()` y, si la hay, la
+## pantalla al pasar el día). Devuelve el titular, o vacío si no había.
+func publicar_titular_pendiente() -> String:
+	if titular_pendiente.is_empty():
+		return ""
+	var t := String(titular_pendiente["t"])
+	guardar_portada(t, String(titular_pendiente["c"]), String(titular_pendiente["tipo"]))
+	noticia.emit("🗞️ " + t, String(titular_pendiente["c"]))
+	titular_pendiente = {}
+	return t
+
+# --- texto libre -------------------------------------------------------------
+## Lo que no es respuesta: cortar, derivar, "sin comentarios".
+const _EVASIVAS := ["sin comentarios", "no voy a", "siguiente", "no hablo", "no tengo nada",
+	"ya dije", "ya lo dije", "pregúntenle", "preguntenle", "pregunten a", "otro día", "no corresponde"]
+## Lo que suena subido.
+const _SOBERBIAS := ["somos los mejores", "que se preparen", "nadie nos", "ustedes no", "no saben",
+	"vamos a ganar", "ganaremos", "campeones", "obvio", "yo decido", "mi decisión", "ridícul",
+	"tendencios", "mentira", "no me importa", "lo sostengo", "cállense", "callense"]
+
+## El tono de una frase escrita. Menos de ocho letras tampoco es una respuesta.
+func clasificar_respuesta(texto: String) -> String:
+	var t := texto.strip_edges().to_lower()
+	if t.length() < 8:
+		return "evasiva"
+	for k: String in _SOBERBIAS:
+		if t.contains(k):
+			return "soberbia"
+	for k: String in _EVASIVAS:
+		if t.contains(k):
+			return "evasiva"
+	return "calma"
+
+## La opción que sale de un texto libre: el tono pone la base y lo que nombras
+## la matiza -hablar de la gente suma socios, del grupo suma moral, de los
+## árbitros los pone en tu contra-.
+func opcion_de_texto(texto: String) -> Dictionary:
+	var tono := clasificar_respuesta(texto)
+	var base: Dictionary = {"calma": [1, 1, 0], "soberbia": [2, 1, 1], "evasiva": [-1, 0, -1]}
+	var v: Array = base[tono]
+	var t := texto.to_lower()
+	var dm := int(v[0])
+	var dc := int(v[1])
+	var ds := int(v[2])
+	if t.contains("hinch") or t.contains("afici") or t.contains("la gente") or t.contains("cantera") or t.contains("juvenil"):
+		ds += 1
+	if t.contains("plantel") or t.contains("grupo") or t.contains("jugadores") or t.contains("equipo"):
+		dm += 1
+	if (t.contains("directiv") or t.contains("directorio") or t.contains("presidente")) and tono != "calma":
+		dc -= 1
+	return {"txt": texto.strip_edges().substr(0, 120), "moral": dm, "confianza": dc, "socios": ds,
+		"tono": tono, "arbitros": t.contains("árbitr") or t.contains("arbitr")}
+
+func responder_texto(texto: String, segundos: float = -1.0) -> Dictionary:
+	if entrevista.is_empty() or texto.strip_edges() == "":
+		return {}
+	var o := opcion_de_texto(texto)
+	## Hablar de los árbitros en una rueda nunca sale gratis.
+	if bool(o["arbitros"]):
+		enojo_arbitral += 1
+	(entrevista["opciones"] as Array).append(o)
+	return responder((entrevista["opciones"] as Array).size() - 1, segundos)
+
+# --- a pie de campo ------------------------------------------------------------
+## La entrevista corta al terminar el partido que dirigiste: una pregunta y
+## tres salidas. Mueve poco -ánimo de la hinchada y moral- porque es caliente y
+## todos lo saben; lo que cuenta es la frase, que va al registro.
+func pie_de_campo(gane: bool, empate: bool, gf: int, gc: int) -> Dictionary:
+	var f := periodista_de("navarrete")
+	var q := ""
+	var ops: Array = []
+	if gane:
+		q = "¡Victoria por %d-%d! ¿Qué le dice a la gente que vino hoy?" % [gf, gc]
+		ops = [
+			{"txt": "Gracias a ellos: este triunfo es de todos", "tono": "calma", "animo": 2, "moral": 1},
+			{"txt": "Que se vayan acostumbrando", "tono": "soberbia", "animo": 1, "moral": 1},
+			{"txt": "Ahora toca descansar", "tono": "evasiva", "animo": 0, "moral": 0},
+		]
+	elif empate:
+		q = "Empate %d-%d. ¿Sabe a poco?" % [gf, gc]
+		ops = [
+			{"txt": "Sumamos; el equipo dio la cara", "tono": "calma", "animo": 1, "moral": 1},
+			{"txt": "El árbitro nos quitó el partido", "tono": "soberbia", "animo": 1, "moral": 0, "arbitros": true},
+			{"txt": "Lo analizaremos en frío", "tono": "evasiva", "animo": 0, "moral": 0},
+		]
+	else:
+		q = "Derrota %d-%d, duro golpe. ¿Qué pasó hoy?" % [gf, gc]
+		ops = [
+			{"txt": "Lo asumo yo: hoy no estuvimos", "tono": "calma", "animo": 1, "moral": 1},
+			{"txt": "Los jugadores tendrán que dar explicaciones", "tono": "soberbia", "animo": 0, "moral": -2},
+			{"txt": "No es momento de hablar", "tono": "evasiva", "animo": -1, "moral": 0},
+		]
+	pie = {"pregunta": q, "opciones": ops, "quien": "%s · %s, a pie de campo" % [String(f[1]), String(f[2])]}
+	return pie
+
+## `i` = -1: pasas de largo ante la cámara.
+func responder_pie(i: int) -> Dictionary:
+	if pie.is_empty():
+		return {}
+	var ops: Array = pie["opciones"]
+	pie = {}
+	if i < 0 or i >= ops.size():
+		mover_animo(-1)
+		noticia.emit("🎤 A pie de campo", "Pasaste de largo ante la cámara. La imagen, sin palabras, se vio igual.")
+		return {"titular": "", "tono": "evasiva"}
+	var o: Dictionary = ops[i]
+	mover_animo(int(o.get("animo", 0)))
+	var dm := int(o.get("moral", 0))
+	var m := _mundo()
+	var mio: Club = m.mi_club() if m != null else null
+	if dm != 0 and mio != null:
+		for j in mio.plantilla:
+			j.moral = clampi(j.moral + dm, 10, 99)
+	if bool(o.get("arbitros", false)):
+		enojo_arbitral += 1
+	var frase := String(o["txt"])
+	noticia.emit("🎤 A pie de campo", "«%s»." % frase)
+	return {"titular": frase, "tono": String(o["tono"])}
+
+
+# ===========================================================================
 #  LOS GUIONES DE LA RUEDA
 # ===========================================================================
 ## Tres barajas según cómo acabó el partido. Las preguntas de la derrota son las
@@ -1058,40 +1370,40 @@ func _aplicar_cuerpo(dm: int, dc: int, ds: int) -> Dictionary:
 
 const _GANE := [
 	{"pregunta": "Prensa: '¿Es este el triunfo que confirma la levantada?'", "opciones": [
-		{"txt": "Paso a paso, con humildad", "moral": 2, "confianza": 1, "socios": 0},
-		{"txt": "Sí: que se preparen los de arriba", "moral": 4, "confianza": 2, "socios": 3},
-		{"txt": "Las conclusiones las saco en privado", "moral": -1, "confianza": 1, "socios": -1},
+		{"txt": "Paso a paso, con humildad", "moral": 2, "confianza": 1, "socios": 0, "tono": "calma"},
+		{"txt": "Sí: que se preparen los de arriba", "moral": 4, "confianza": 2, "socios": 3, "tono": "soberbia"},
+		{"txt": "Las conclusiones las saco en privado", "moral": -1, "confianza": 1, "socios": -1, "tono": "evasiva"},
 	]},
 	{"pregunta": "Prensa: 'La gente pide más minutos para los juveniles, ¿los verá?'", "opciones": [
-		{"txt": "Los chicos empujan fuerte, tendrán su chance", "moral": 3, "confianza": 0, "socios": 2},
-		{"txt": "Juega el que está mejor, sin regalos", "moral": 1, "confianza": 2, "socios": -1},
-		{"txt": "Esa decisión es solo mía", "moral": -2, "confianza": 1, "socios": -2},
+		{"txt": "Los chicos empujan fuerte, tendrán su chance", "moral": 3, "confianza": 0, "socios": 2, "tono": "calma"},
+		{"txt": "Juega el que está mejor, sin regalos", "moral": 1, "confianza": 2, "socios": -1, "tono": "calma"},
+		{"txt": "Esa decisión es solo mía", "moral": -2, "confianza": 1, "socios": -2, "tono": "soberbia"},
 	]},
 ]
 
 const _EMPATE := [
 	{"pregunta": "Prensa: '¿Sabe a poco este empate?'", "opciones": [
-		{"txt": "Sumar siempre sirve", "moral": 1, "confianza": 0, "socios": 0},
-		{"txt": "Sí, merecimos más y lo dije en el camarín", "moral": 2, "confianza": 1, "socios": 1},
-		{"txt": "Prefiero no evaluar en caliente", "moral": -1, "confianza": 0, "socios": -1},
+		{"txt": "Sumar siempre sirve", "moral": 1, "confianza": 0, "socios": 0, "tono": "calma"},
+		{"txt": "Sí, merecimos más y lo dije en el camarín", "moral": 2, "confianza": 1, "socios": 1, "tono": "calma"},
+		{"txt": "Prefiero no evaluar en caliente", "moral": -1, "confianza": 0, "socios": -1, "tono": "evasiva"},
 	]},
 	{"pregunta": "Prensa: '¿Le preocupa la falta de gol?'", "opciones": [
-		{"txt": "Las ocasiones están, el gol va a llegar", "moral": 2, "confianza": 0, "socios": 0},
-		{"txt": "Trabajaremos definición toda la semana", "moral": 1, "confianza": 1, "socios": 0},
-		{"txt": "Pregunta tendenciosa. Siguiente", "moral": -3, "confianza": 0, "socios": -2},
+		{"txt": "Las ocasiones están, el gol va a llegar", "moral": 2, "confianza": 0, "socios": 0, "tono": "calma"},
+		{"txt": "Trabajaremos definición toda la semana", "moral": 1, "confianza": 1, "socios": 0, "tono": "calma"},
+		{"txt": "Pregunta tendenciosa. Siguiente", "moral": -3, "confianza": 0, "socios": -2, "tono": "soberbia"},
 	]},
 ]
 
 const _PERDI := [
 	{"pregunta": "Prensa: '¿Está en riesgo su puesto tras esta derrota?'", "opciones": [
-		{"txt": "Respondo con trabajo, no con excusas", "moral": 1, "confianza": 2, "socios": 0},
-		{"txt": "El plantel está conmigo, saldremos juntos", "moral": 3, "confianza": 0, "socios": 1},
-		{"txt": "Eso pregúntenselo al directorio", "moral": -2, "confianza": -2, "socios": -1},
+		{"txt": "Respondo con trabajo, no con excusas", "moral": 1, "confianza": 2, "socios": 0, "tono": "calma"},
+		{"txt": "El plantel está conmigo, saldremos juntos", "moral": 3, "confianza": 0, "socios": 1, "tono": "calma"},
+		{"txt": "Eso pregúntenselo al directorio", "moral": -2, "confianza": -2, "socios": -1, "tono": "evasiva"},
 	]},
 	{"pregunta": "Prensa: 'Los hinchas silbaron al equipo, ¿los entiende?'", "opciones": [
-		{"txt": "Tienen razón: hoy no los representamos", "moral": 2, "confianza": 1, "socios": 2},
-		{"txt": "El apoyo se necesita en las malas", "moral": -1, "confianza": 0, "socios": -3},
-		{"txt": "No escuché silbidos", "moral": -3, "confianza": -1, "socios": -2},
+		{"txt": "Tienen razón: hoy no los representamos", "moral": 2, "confianza": 1, "socios": 2, "tono": "calma"},
+		{"txt": "El apoyo se necesita en las malas", "moral": -1, "confianza": 0, "socios": -3, "tono": "soberbia"},
+		{"txt": "No escuché silbidos", "moral": -3, "confianza": -1, "socios": -2, "tono": "evasiva"},
 	]},
 ]
 
@@ -1116,6 +1428,7 @@ func semana() -> void:
 	## plata. Es poco por semana, pero seis semanas seguidas se notan.
 	if mio != null and not efectos.is_empty():
 		_aplicar_efectos(mio)
+	publicar_titular_pendiente()
 	if semanas_documental > 0:
 		semanas_documental -= 1
 		if mio != null:

@@ -350,8 +350,10 @@ hay que confirmarla, igual que las demás filas 🟡 de `LICENCIAS.md`.
 ### ORDEN SUGERIDO
 Primero lo que más se nota con menos riesgo, después lo que necesita assets externos.
 1. **Tanda 1**: B1 (ajustes desplegables), B2 (tipos de simulación), B11 (mini animaciones de
-   interfaz), B13 (sistema de diseño y texto).
+   interfaz), B13 (sistema de diseño y texto). **Hecha (25-9-2026).**
 2. **Tanda 2**: B3 (cinemáticas), B4 (eventos nuevos y presentación), B5 (entrevistas).
+   **Hecha (25-9-2026)**; ver LEEME. Queda de B3: presentación de fichajes, trofeo, ascenso y
+   descenso, despido e inauguración de obras.
 3. **Tanda 3**: B6 y B16 (estadio a fondo y variantes), B7 (ciudad 3D).
 4. **Tanda 4**: B8 y B9 (creador estilo Sims, ropa y accesorios), B10 (mascotas).
 5. **Tanda 5**: B12 (música; necesita aprobación de las pistas), B14 (optimización medida) y B15
