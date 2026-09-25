@@ -917,7 +917,7 @@ func renovar(j: Jugador, con_clausula: bool = false) -> Dictionary:
 	var ag := agente_de(j)
 	if String(ag.get("perfil", "")) == "mediatico":
 		j.moral = clampi(j.moral + 3, 10, 99)
-	noticia.emit("Renovado: %s" % Nombres.limpiar(j.nombre),
+	noticia.emit("Renovado: %s" % Nombres.visible(j.nombre),
 		"Firma por %d temporadas a %d/sem%s. Negoció su agente %s (%s)." % [
 			j.anios_contrato, j.sueldo,
 			" con cláusula de salida" if con_clausula else "",
@@ -966,7 +966,7 @@ func ofrecer_fidelidad(j: Jugador, c: Club) -> String:
 	c.mover_saldo(-costo)
 	j.fidelidad_hasta = (m.anio if m != null else 0) + 3
 	j.moral = clampi(j.moral + 14, 10, 99)
-	noticia.emit("Prima de fidelidad: %s" % Nombres.limpiar(j.nombre),
+	noticia.emit("Prima de fidelidad: %s" % Nombres.visible(j.nombre),
 		"Firma su cláusula de fidelidad hasta %d: no pedirá salir mientras siga vigente." % j.fidelidad_hasta)
 	return ""
 

@@ -424,7 +424,7 @@ static func foto_real(j: Jugador) -> Texture2D:
 	## aunque el guardado traiga jugadores marcados como reales.
 	if not j.real or not Datos.base_real:
 		return null
-	var ruta := String(_indice_fotos_de().get(j.nombre, ""))
+	var ruta := String(_indice_fotos_de().get(Nombres.limpiar(j.nombre), ""))
 	if ruta == "":
 		return null
 	var clave := "foto_%s" % ruta

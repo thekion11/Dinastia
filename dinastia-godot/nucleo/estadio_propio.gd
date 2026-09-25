@@ -306,7 +306,7 @@ func _tramos_personalizados() -> Dictionary:
 func nombre_de(mi: Club) -> String:
 	if nombre != "":
 		return nombre
-	return "Estadio " + Nombres.limpiar(mi.nombre)
+	return "Estadio " + Nombres.visible(mi.nombre)
 
 func renombrar(nuevo: String) -> void:
 	nombre = nuevo.strip_edges()

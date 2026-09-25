@@ -518,44 +518,17 @@ func rotular(competicion: String, ronda: String) -> void:
 	_pantalla_nombre.text = ronda
 	_pantalla_escudo.texture = null
 
-## EL PRESENTADOR (reescrito 14-9-2026, pedido explícito: "estéticamente deja
-## qué desear el presentador y la animación"). Ya no es una silueta de cajas:
-## es el MISMO modelo humano realista que usan los 22 del campo
-## (`Futbolista`/`AnimMixamo`, `visor/player_spawner.gd`), vestido de traje
-## liso con `Vestidor` -el mismo mecanismo que ya viste al árbitro sin
-## equipación de club-, con una animación real de pie (`parado`, la que hace
-## que respire y reparta el peso) y el gesto de sacar la bola resuelto con
-## `mostrar_tarjeta` -la misma animación del árbitro levantando la tarjeta en
-## alto sirve tal cual para "levantar la bola y mostrarla"-.
+## EL PRESENTADOR: el mismo cuerpo Quaternius (CC0) que usan los 22 del
+## campo, con traje liso pintado por `VestidorQ`, respirando de pie (`parado`)
+## y con el gesto de sacar la bola resuelto con `mostrar_tarjeta`. Si el
+## modelo no cargara, queda la silueta de cajas de respaldo.
 var _brazo: Node3D
 var _mano: MeshInstance3D
 ## El AnimationPlayer del modelo real, si se pudo montar. Null -> se usa el
 ## brazo suelto de respaldo (silueta), que sigue funcionando igual que antes.
 var _anim_presentador: AnimationPlayer
 
-# ---------------------------------------------------------------------------
-#  EL TRAJE DEL PRESENTADOR
-# ---------------------------------------------------------------------------
-#
-# El usuario pidió "usar el vagabundo que tenemos en recursos y ponerle un
-# traje". El "Vagabond" de `sorpresa/` NO es una persona: es un VELERO —sus
-# grupos son casco, quilla, mástil, velas, timón y cabina—. El nombre engaña.
-#
-# El atlas `skaterMaleA.png` + `characterMedium.fbx` (repintar rectángulos de
-# torso/piernas/zapatos a mano) fue el primer intento y quedó descartado: el
-# humanoide real de 22-del-campo (`futbolista_cr7.glb` vía `Futbolista.gd`) ya
-# resuelve esto mejor -reusa el mismo esqueleto puesto en pose, la misma
-## escala medida y el mismo `Vestidor.vestir()` con `color_liso` que ya viste
-# a árbitros y jueces de línea sin equipación de club-.
-
-## SI SE USA EL HUMANOIDE REAL O LA SILUETA DE RESPALDO.
-##
-## `Futbolista.crear()`/`terminar()` -la MISMA fábrica que usa
-## `player_spawner.gd` para los 22 del campo- resuelve exactamente el problema
-## que dejó esto apagado hasta hoy: el modelo humano con esqueleto Mixamo
-## necesitaba enderezarse, escalarse y montar su `AnimationPlayer` a mano, y
-## ese trabajo YA está hecho y probado ahí -no hay que repetirlo aquí ni
-## instanciar el `.glb` a pelo-.
+## SI SE USA EL HUMANOIDE O LA SILUETA DE RESPALDO.
 const USAR_MODELO_HUMANO := true
 
 func _montar_presentador() -> void:
@@ -563,12 +536,8 @@ func _montar_presentador() -> void:
 		return
 	_montar_presentador_siluetas()
 
-## EL PRESENTADOR ES EL MODELO QUATERNIUS (CC0), no `futbolista_cr7.glb`
-## (25-9-2026). Aquel trae de fábrica la camiseta real del Al-Nassr -escudo y
-## patrocinador incluidos- y no tiene licencia conocida, así que no viaja en
-## ninguna versión publicada (ver `LICENCIAS.md`). Es el mismo cuerpo que ya
-## usan los 22 del campo, con "parado" y "mostrar_tarjeta" en su catálogo. El
-## modelo viejo queda solo como respaldo de desarrollo.
+## El presentador es el mismo cuerpo que usan los 22 del campo, con "parado"
+## y "mostrar_tarjeta" en su catálogo.
 func _montar_presentador_quaternius() -> bool:
 	var d := FutbolistaQ.crear(1.78, "male")
 	if d.is_empty():
@@ -590,38 +559,7 @@ func _montar_presentador_quaternius() -> bool:
 	return true
 
 func _montar_presentador_modelo() -> bool:
-	if _montar_presentador_quaternius():
-		return true
-	var d := Futbolista.crear(1.78)
-	if d.is_empty():
-		return false
-	var raiz: Node3D = d["nodo"]
-	## Misma posición y orientación que ya tenía calibradas la silueta: en el
-	## hueco entre valla y tribuna... no, aquí es la tarima (Y=0,42, la cara
-	## superior de `deck` en `_montar_sala()`), un paso detrás del bombo.
-	raiz.position = Vector3(1.15, 0.42, -0.35)
-	raiz.rotation.y = deg_to_rad(-32.0)
-	add_child(raiz)
-	## `terminar()` necesita el nodo YA dentro del árbol -endereza, escala a la
-	## altura pedida y monta el catálogo de animaciones Mixamo en el
-	## `AnimationPlayer`, todo medido, no adivinado (ver los comentarios de
-	## `Futbolista.gd`, trampas ya pagadas ahí).
-	Futbolista.terminar(d)
-	## TRAJE LISO, no equipación de club: mismo mecanismo que ya viste al
-	## árbitro y a los jueces de línea (`Vestidor.vestir()` con `color_liso`).
-	## Azul marino oscuro, el mismo tono que ya usaba la silueta -contra un
-	## plató oscuro un traje negro puro se come la figura-.
-	var modelo: Node3D = d["modelo"]
-	Vestidor.vestir(modelo, "", Color(0.52, 0.40, 0.33), Color(0.14, 0.11, 0.09),
-		Color(0.12, 0.13, 0.19, 1.0))
-	## DE PIE, RESPIRANDO: `parado()` es la animación base de todo el catálogo
-	## Mixamo -mece el peso, la cabeza y los brazos en un ciclo de 3,2 s-, la
-	## misma que usan los 22 del campo cuando no hay balón cerca. Sin esto el
-	## modelo real se quedaba tan tieso como la silueta que reemplaza.
-	_anim_presentador = d["anim"]
-	if _anim_presentador != null and _anim_presentador.has_animation("parado"):
-		_anim_presentador.play("parado")
-	return true
+	return _montar_presentador_quaternius()
 
 func _mallas_de(n: Node) -> Array[MeshInstance3D]:
 	var salida: Array[MeshInstance3D] = []
@@ -644,7 +582,7 @@ func _mallas_de(n: Node) -> Array[MeshInstance3D]:
 ## giro con el que se monte al presentador. Sin argumentos se mantiene el
 ## comportamiento antiguo -colgado de `self`, posición absoluta-: esta función
 ## ya solo la usa `_montar_presentador_siluetas()`, el respaldo para cuando
-## `Futbolista.crear()` no puede montar el modelo real (`d.is_empty()`).
+## `FutbolistaQ.crear()` no puede montar el modelo (`d.is_empty()`).
 func _montar_brazo_suelto(padre: Node3D = null, hombro: Vector3 = Vector3(0.93, 1.78, -0.33)) -> void:
 	var traje_mat := StandardMaterial3D.new()
 	traje_mat.albedo_color = Color(0.10, 0.11, 0.16)

@@ -86,7 +86,7 @@ func _paleta() -> Dictionary:
 	var p: Dictionary = (COLORES.get(_clave, COLORES["copa"]) as Dictionary).duplicate()
 	var confed: Variant = Datos.tabla("CONFED")
 	if confed is Dictionary and (confed as Dictionary).has(_clave):
-		p["nombre"] = Nombres.limpiar(String(((confed as Dictionary)[_clave] as Dictionary).get("n", p["nombre"]))).to_upper()
+		p["nombre"] = Nombres.de_tabla(String(((confed as Dictionary)[_clave] as Dictionary).get("n", p["nombre"]))).to_upper()
 	return p
 
 # ---------------------------------------------------------------------------

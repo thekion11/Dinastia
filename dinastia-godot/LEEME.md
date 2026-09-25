@@ -1,5 +1,93 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## SEGUNDA RONDA DEL USUARIO: SIN RONALDO, NOMBRES CUBIERTOS Y TUTORIAL INMERSIVO (25-9-2026)
+
+El usuario revisó la primera ronda y pidió tres cosas:
+- "Lo de las caras era bien, se necesita de nuevo esa cubierta en el nombre, ya que no está activa".
+- "El tutorial debe mejorarse, debe ser inmersivo según modo de juego".
+- "El modelo Ronaldo debe ser eliminado".
+
+### 1. El modelo Ronaldo, borrado del proyecto
+- **Recursos borrados**: `assets/characters/futbolista_cr7*` (el `.glb` y sus texturas del Al-Nassr) y las fuentes
+  `recursos/modelos3d/cr7/`, `recursos/modelos3d/futbolista/` (`NewRonaldoBase`) y
+  `recursos/modelos3d/el-futbolista.zip`. Se abrió el zip para comprobarlo: dentro solo hay `NewRonaldoBase.zip`.
+- **Código borrado**: todo lo que solo existía para ese modelo, es decir `visor/futbolista.gd`,
+  `visor/anim_mixamo.gd` y `visor/vestidor.gd`, más seis diagnósticos de `pruebas/` que lo cargaban.
+- **Respaldos**: si el modelo Quaternius no carga, los partidos caen al muñeco de Kenney y el
+  presentador del sorteo a la silueta de cajas. Ya no pasan por el modelo viejo.
+- **Verificación**:
+  - `captura_equipaciones` da 0 fallos.
+  - `medir_partido` da las mismas 520 llamadas de dibujo y 0,66 M de triángulos.
+  - `LICENCIAS.md` y los presets de exportación ya no lo mencionan.
+
+### 2. La cubierta de los nombres reales, activa otra vez
+- **Por qué no se veía**: las tablas del pack real traen clubes, copas, árbitros y agentes cubiertos
+  ("C0lo-C0lo", "Champi0ns Le4gue", "R. T0bar"). El juego los pasaba por `Nombres.limpiar()` al crear el
+  mundo, así que la cubierta nunca llegaba a la pantalla. Los futbolistas reales (`REALES`) venían
+  directamente en claro.
+- **Qué hace ahora**: `Nombres.de_tabla()` se aplica al crear el nombre del club, la liga, la copa, el
+  árbitro, el agente y el jugador real.
+  - Con el pack real activo, conserva la cubierta de la tabla y cubre con `censurar()` lo que viene en claro
+    ("Fernand0 de Paul", "D. Iquiqu3").
+  - Con la base ficticia no hay nada que tapar y todo sigue limpio.
+- **Los textos** (noticias, logros, federación, estadio...) usan `Nombres.visible()` en vez de `limpiar()`,
+  para no destaparlos.
+- **Las caras se quedan**, como pidió el usuario. Las búsquedas por nombre comparan limpio en los dos lados,
+  así que siguen funcionando:
+  - fotos (`Cara.foto_real`), plantillas reales (`Reales`) y camisetas reales (`Jersey`);
+  - el buscador global y el filtro del mercado ("fernando" encuentra a "Fernand0").
+- **Banco**: sección nueva "CUBIERTA DE LOS NOMBRES REALES". Resultados:
+  - 379 de 384 clubes y 2.773 de 2.844 futbolistas reales salen cubiertos;
+  - las caras y las camisetas se siguen encontrando;
+  - con la base ficticia todo sale limpio.
+
+### 3. El tutorial, ahora es tu primer día
+`ui/componentes/tutorial.gd` está reescrito. No es un manual de botones: es la llegada al cargo.
+- **Prólogo de cine**: franjas negras, el escudo del club, el lugar y la temporada, y una escena escrita a
+  máquina que cambia con cada modo.
+  - Al entrenador lo deja un taxi frente al estadio.
+  - Al interino lo despierta el teléfono a medianoche ("cinco fechas, solo cinco").
+  - Al ayudante lo reciben a las 6:30 entre conos.
+  - Al director de cantera, en el campo anexo un sábado.
+  - Al dueño, en la notaría; al jeque, en la pista del aeropuerto; al creador, en un campo alquilado.
+  - Cada escena tiene su sonido (silbato, teléfono, ovación...).
+- **Un mentor con cara, nombre y cargo** que habla en primera persona: el presidente, tu jefe (el primer
+  entrenador de verdad de tu partida), el coordinador de la academia, tu director general, el enviado del
+  fondo o tu socio fundador. El nombre sale del club, así que siempre es el mismo, y la cara usa el mismo
+  generador que los jugadores.
+- **Habla de TU partida**: el objetivo del directorio, la confianza, la caja, el rival del domingo, tu
+  estrella por su nombre y su media, la promesa de la plantilla, el entrenador empleado, la meta de
+  debutantes, el mejor chico de la academia. Todo sale de `Tutorial.contexto()`.
+- **Misiones que se cumplen haciéndolas**, entre 4 y 7 por modo, cada una propia de su cargo.
+  - El director deportivo revisa contratos, finanzas, mercado y el personal.
+  - El ayudante va al entrenamiento, el camarín y la cantera.
+  - El dueño mira finanzas, estadio, infraestructura y mercado.
+  - El creador empieza por la identidad visual y la equipación.
+  - Cómo se cumplen:
+    - Al hacer la acción en la pantalla real, la misión se marca con ✔, suena un logro y el mentor sigue solo.
+    - "Muéstramelo" la hace por ti.
+    - Una misión que ya estaba hecha al llegar no cuenta sola.
+- **Epílogo**: la despedida del mentor, las misiones cumplidas y, si diriges partidos, "Ir al partido".
+- **Ganchos nuevos** en `principal.gd`:
+  - `tutorial_hecho` y `tutorial_accion` aceptan `tab:<pestaña>`, `chip:<pestaña>|<sección>` y
+    `ficha:<id>`;
+  - la tarjeta vuelve a su tamaño mínimo en cada cuadro.
+- **Tropiezo encontrado con la captura**: el prólogo salía sin fondo, porque `set_anchors_preset()`
+  deja el tamaño en cero. Se cambió a `set_anchors_and_offsets_preset()`, y la franja de abajo crece
+  hacia arriba.
+- **Verificación**:
+  - El banco comprueba los 8 guiones: prólogos distintos, al menos 6 mentores distintos, que cada misión
+    se pueda cumplir y apunte a una pestaña que existe, y que el presidente nombre al rival, a la estrella
+    y al objetivo reales.
+  - `pruebas/captura_tutorial.gd` juega el primer día de verdad: la misión del plantel se cumple a mano
+    y la de la ficha con "Muéstramelo". Termina en 0 fallos y deja las fotos `pruebas/tutorial_*.png`.
+
+### De paso
+La prueba del editor que subía "el primer atributo menor de 90" fallaba según qué jugador tocara ese
+mundo: subir la velocidad de un portero no mueve su media. Ahora elige un atributo que pese en el puesto.
+
+Banco completo: 0 fallos.
+
 ## EL ANÁLISIS EXTERNO (62/100), PUNTO POR PUNTO (25-9-2026)
 
 El usuario pasó un PDF con un análisis externo del juego y pidió resolverlo entero sin ayuda. Cada
@@ -32,7 +120,7 @@ un keystore nuevo o cambiarle la contraseña con `keytool -storepasswd`.
 
 ### 2. Licencias
 `LICENCIAS.md` es nuevo y va con un semáforo. Todo lo 🔴 queda fuera de los presets publicables
-(WindowsLigero, Web, Android): el pack real, las caras reales, el modelo `futbolista_cr7` y los coches
+(WindowsLigero, Web, Android): el pack real, las caras reales y los coches
 sacados de un juego comercial. El preset **Windows** ("completo") es el privado y lo lleva todo. Los
 🟡 son pendientes del dueño: hay que confirmar la fuente y no se pueden resolver desde el código.
 
