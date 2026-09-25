@@ -1,0 +1,409 @@
+=== RESUMEN ===
+Auditoría con Grep/Read sobre "dinastia-futbol-manager base.html" (17.223 líneas hoy), sin editar nada. Confirma lo que ya marcaba dinastia-pendientes.md para los bloques 46 (selecciones) y 47 (competencias): hay una base sólida — SELECCIONES, fuerzaSeleccion(), convocatoria FIFA con cupos por posición, Mundial, Copa Nacional, Mundial de Clubes con sembrado real — pero faltan exactamente las piezas pedidas: lista preliminar, naturalización deportiva, conflicto club-selección con consecuencias reales, editor de la Copa, cabezas de serie en el sorteo doméstico, sede neutral de la final, y partidos de apertura/clausura simbólicos. Diseñé 3 parches completos con anclas EXACTAS de hoy, código listo y pasos de prueba en el navegador. No apliqué nada.
+
+=== HALLAZGOS (ya existe, no reinventar) ===
+
+H1. SELECCIONES ya existe: const SELECCIONES (~línea 7606), fuerzaSeleccion() (~7610), G.selRes/G.selUlt en nuevaPartida (línea 1552: "conti:null,clasifNext:null,selRes:[],selUlt:[]," ) y en migrar() (línea 3415: "G.selRes=G.selRes||[];G.selUlt=G.selUlt||[];"). La convocatoria vive en procesoSemanal(), bloque "const FIFA=[7,16,26,34];if(FIFA.includes(G.sem)){...}" (hoy ~líneas 2715-2733): arma 18 convocados con cupos POR:2/DEF:6/MED:6/DEL:4 tomando los chilenos de mayor media, sube caps, moral+6, baja físico -12 a los tuyos, y tiene 5% de lesión "jugando con su selección" — pero la frase "el club evalúa reclamar compensación" es solo narrativa: nunca se cobra nada. NO existe ninguna etapa previa (todo sale de una sola pasada, sin prenómina) y NO hay forma de que el club objete o pida descanso.
+
+H2. jugarMundial() (~7618) y copasMundo()/jugarMundialClubes() (~7656-7722) simulan el Mundial de selecciones y el Mundial de Clubes con premios, vitrina de mercado (sube OVR/valor) y riesgo de lesión post-torneo. jugarMundialClubes() YA IMPLEMENTA sembrado real: comentario "Siembra real: el cabeza de serie contra el más débil, no los dos mejores entre sí" (línea ~7674), ordena por c.rep y empareja i con length-1-i. Ese mismo patrón es el que reuso para la Copa Nacional doméstica, que hoy NO lo tiene.
+
+H3. Doble nacionalidad (segundaNac(j), línea ~16372) YA EXISTE como dato: 1 de cada 7 jugadores tiene un segundo pasaporte aleatorio, se muestra en la ficha (línea ~4010). Pero es puramente decorativo: nunca se usa como filtro de elegibilidad en la convocatoria (grep de "segundaNac(j)===" y "nac2==='CHI'" no encontró ningún uso). No hay ningún mecanismo de "naturalización deportiva" (jugador extranjero que se nacionaliza jugando años en el país) — grep de "naturaliz" solo encuentra la etiqueta "Doble nacionalidad" en dos comentarios, nada funcional.
+
+H4. Copa Nacional: iniciarCopa() (línea ~1620) ya incluye TODOS los clubes chilenos (Primera + Ascenso juntos — no hay que agregar un toggle "incluir Ascenso", ya está), pero el sorteo es 100% aleatorio (shuffle simple) y arma llaves fijas 16avos→FINAL sin ninguna semilla por reputación. armarJornadaCopa() (línea ~2402) decide local/visita solo por el orden del par (mi[0]===G.miClub), incluida la FINAL: no hay sede neutral en ningún lado. No existe ninguna pantalla de "editor de torneos": vEditor() (línea ~4814) edita clubes/jugadores/colores, cero opciones de formato de competencia.
+
+H5. supercopa() (línea ~8373) YA es, en esencia, un partido de apertura simbólico (duelo campeón de liga vs campeón de copa, con trofeo) — cubre buena parte de la idea, aunque se resuelve instantáneo (sin motor interactivo) al CIERRE de la temporada anterior, no como el primer partido jugable de la nueva. hermanamientos (línea ~16612) menciona "amistosos" en el texto de sabor pero jamás simula ningún partido: es solo una decisión Sí/No que toca ojeo y cantera. No existe ningún partido de clausura.
+
+=== HUECO 1 (selecciones): lista preliminar + naturalización deportiva + conflicto club-selección real ===
+Las tres ideas de mi bloque viven en el mismo bloque de procesoSemanal() y comparten estado nuevo, así que van en un solo parche con varias partes (cada una con su propia ancla, se aplican y prueban en orden).
+
+--- Parte A: estado nuevo en nuevaPartida() y migrar() ---
+ANCLA (nuevaPartida, línea ~1552, única en el archivo):
+  conti:null,clasifNext:null,selRes:[],selUlt:[],
+REEMPLAZAR POR:
+  conti:null,clasifNext:null,selRes:[],selUlt:[],selPre:[],
+
+ANCLA (migrar(), línea ~3415, única):
+  G.selRes=G.selRes||[];G.selUlt=G.selUlt||[];
+REEMPLAZAR POR:
+  G.selRes=G.selRes||[];G.selUlt=G.selUlt||[];G.selPre=G.selPre||[];
+
+PRUEBA: recargar una partida guardada vieja desde localStorage y confirmar en la consola que `G.selPre` es `[]` (no `undefined`).
+
+--- Parte B: reescribir el bloque de convocatoria FIFA en procesoSemanal() ---
+ANCLA EXACTA (bloque completo, único en el archivo — empieza en "const FIFA=[7,16,26,34];" dentro de procesoSemanal(), hoy ~líneas 2715-2733):
+
+  const FIFA=[7,16,26,34];
+  if(FIFA.includes(G.sem)){
+    const chi=Object.values(G.jug).filter(j=>j.pais==='CHI'&&j.lesion<=0).sort((a,b)=>b.ovr-a.ovr);
+    const conv=[];const cupos={POR:2,DEF:6,MED:6,DEL:4};
+    for(const j of chi){if(cupos[j.pos]>0){conv.push(j);cupos[j.pos]--;}if(conv.length>=18)break;}
+    G.selUlt=conv.map(j=>j.id);
+    const mios=[];
+    for(const j of conv){
+      j.caps=(j.caps||0)+1;j.moral=clamp(j.moral+6,10,99);
+      if(j.club===G.miClub){
+        j.fis=clamp(j.fis-12,10,100);mios.push(j.nombre);
+        if(RF()<0.05){const s=lesionar(j,RF()<0.15?1:0,'jugando con su selección');noticia("Lesionado en la selección","🩹 "+j.nombre+" vuelve tocado de la gira: "+(j.lesTipo||'molestia').toLowerCase()+" ("+s+" sem). El club evalúa reclamar compensación.");}
+      }
+    }
+    const rivalSel=descensurar(pick(["Arg3ntina","Bras1l","Urugu4y","P3rú","B0livia","Paragu4y","C0lombia","Ecuad0r","Venezu3la"]));
+    const g1=R(0,3),g2=R(0,3);
+    const res="Chile "+g1+" - "+g2+" "+rivalSel;
+    G.selRes.unshift(res);if(G.selRes.length>10)G.selRes.pop();
+    noticia("Fecha FIFA: "+res,(mios.length?"Convocados de tu club: "+mios.join(", ")+". Vuelven con "+(g1>=g2?"el ánimo arriba":"la mochila pesada")+" y algo de desgaste.":"Sin convocados de tu club en esta nómina."));
+  }
+
+REEMPLAZAR POR:
+
+  const PRE=[6,15,25,33];
+  if(PRE.includes(G.sem)){
+    const preChi=Object.values(G.jug).filter(j=>(j.pais==='CHI'||j.nacionalizado)&&j.lesion<=0).sort((a,b)=>b.ovr-a.ovr).slice(0,30);
+    G.selPre=preChi.map(j=>j.id);
+    const preMios=preChi.filter(j=>j.club===G.miClub).map(j=>j.nombre);
+    noticia("Prenómina de Ch1le","La selección publica una lista preliminar de 30 jugadores rumbo a la próxima fecha FIFA."+(preMios.length?" De tu club: "+preMios.join(", ")+".":" Sin jugadores de tu club en el corte inicial."));
+  }
+  const FIFA=[7,16,26,34];
+  if(FIFA.includes(G.sem)){
+    const chi=Object.values(G.jug).filter(j=>{
+      if((j.pais!=='CHI'&&!j.nacionalizado)||j.lesion>0)return false;
+      if(j.club===G.miClub&&j.pideDescansoSel){
+        const respeta=RF()<(j.ovr>=(G.clubes[G.miClub].rep+8)?0.25:0.7);
+        j.pideDescansoSel=false;
+        if(respeta){j.convStreak=0;noticia("La federación respeta el pedido","El cuerpo técnico de Ch1le decide no citar a "+j.nombre+" esta fecha FIFA, atendiendo el pedido de descanso del club.");return false;}
+      }
+      return true;
+    }).sort((a,b)=>b.ovr-a.ovr);
+    const conv=[];const cupos={POR:2,DEF:6,MED:6,DEL:4};
+    for(const j of chi){if(cupos[j.pos]>0){conv.push(j);cupos[j.pos]--;}if(conv.length>=18)break;}
+    G.selUlt=conv.map(j=>j.id);
+    const preCortados=(G.selPre||[]).map(id=>G.jug[id]).filter(j=>j&&j.club===G.miClub&&!conv.includes(j));
+    if(preCortados.length)noticia("Quedaron fuera de la nómina final","Estaban en la prenómina pero no llegaron a la lista definitiva: "+preCortados.map(j=>j.nombre).join(", ")+". El cuerpo técnico prefirió otras variantes.");
+    for(const j of chi)if(j.club===G.miClub&&!conv.includes(j))j.convStreak=0;
+    const mios=[];
+    for(const j of conv){
+      j.caps=(j.caps||0)+1;j.moral=clamp(j.moral+6,10,99);
+      if(j.club===G.miClub){
+        j.convStreak=(j.convStreak||0)+1;
+        const sobreuso=j.convStreak>=3;
+        j.fis=clamp(j.fis-12-(sobreuso?8:0),10,100);mios.push(j.nombre);
+        if(RF()<0.05+(sobreuso?0.07:0)){
+          const s=lesionar(j,RF()<0.15?1:0,'jugando con su selección');
+          const comp=esc$(Math.round(j.sueldo*(4+s)));
+          mov(comp,"Compensación FIFA por lesión en gira: "+j.nombre);
+          noticia((sobreuso?"⚠️ Sobrecarga en la selección: ":"Lesionado en la selección: ")+j.nombre,
+            j.nombre+" vuelve tocado de la gira: "+(j.lesTipo||'molestia').toLowerCase()+" ("+s+" sem)."+
+            (sobreuso?" Es su "+j.convStreak+"ª convocatoria seguida sin descanso: la selección lo exprime y el club paga las consecuencias.":"")+
+            " El club recibe "+fmt$(comp)+" del programa de protección de clubes de la FIFA.");
+        }
+      }
+    }
+    const rivalSel=descensurar(pick(["Arg3ntina","Bras1l","Urugu4y","P3rú","B0livia","Paragu4y","C0lombia","Ecuad0r","Venezu3la"]));
+    const g1=R(0,3),g2=R(0,3);
+    const res="Chile "+g1+" - "+g2+" "+rivalSel;
+    G.selRes.unshift(res);if(G.selRes.length>10)G.selRes.pop();
+    noticia("Fecha FIFA: "+res,(mios.length?"Convocados de tu club: "+mios.join(", ")+". Vuelven con "+(g1>=g2?"el ánimo arriba":"la mochila pesada")+" y algo de desgaste.":"Sin convocados de tu club en esta nómina."));
+  }
+
+PRUEBA (consola del navegador, con la partida cargada): `G.sem=6;procesoSemanal();G.sem=7;procesoSemanal();render();` — debe aparecer una noticia "Prenómina de Ch1le" y luego "Fecha FIFA: ...". Revisa `G.selPre` (18-30 ids) y `G.selUlt` (18 ids). Repite un par de veces y confirma que a un jugador tuyo convocado tres fechas seguidas le sale el aviso "⚠️ Sobrecarga en la selección" con más probabilidad de lesión, y que si se lesiona aparece un movimiento de caja "Compensación FIFA por lesión en gira" en Finanzas → Libro.
+
+--- Parte C: naturalización deportiva — nuevas funciones ---
+ANCLA (única, justo antes de jugarMundial(), después de fuerzaSeleccion()):
+function jugarMundial(){
+
+INSERTAR ANTES (nuevo bloque completo):
+/* ---------- 13a. NATURALIZACIÓN Y CONFLICTO CLUB-SELECCIÓN (idea 46) ----------
+   La convocatoria y la prenómina se resuelven en procesoSemanal(); acá solo
+   viven las acciones que dispara el usuario desde la ficha del jugador. */
+function costoNaturalizacion(j){return esc$(6000)+Math.round((j.sueldo||0)*10);}
+function naturalizar(pid){
+  const j=G.jug[pid];if(!j||j.club!==G.miClub)return;
+  if(j.pais==='CHI'||j.nacionalizado){toast("Ya puede jugar por Ch1le");return;}
+  if((j.tempExt||0)<4){toast("Necesita 4 temporadas jugando en Ch1le");return;}
+  const costo=costoNaturalizacion(j);
+  if(G.saldo<costo){toast("Caja insuficiente: "+fmt$(costo));return;}
+  mov(-costo,"Trámite de nacionalización: "+j.nombre);
+  j.nacionalizado=true;
+  noticia("Carta de nacionalización",j.nombre+" (nacido en "+(BANDERA[j.pais]||j.pais)+") obtiene la nacionalidad ch1lena tras "+j.tempExt+" temporadas en el país. Ya puede ser convocado a La Roja.");
+  render();guardarLS();
+}
+function pedirDescansoSel(pid){
+  const j=G.jug[pid];if(!j||j.club!==G.miClub)return;
+  if(j.pideDescansoSel){toast("Ya hay un pedido en curso");return;}
+  j.pideDescansoSel=true;
+  toast("Pedido enviado a la federación para la próxima fecha FIFA");
+  render();
+}
+
+PRUEBA: en consola, `naturalizar('idInventado')` no debe romper nada (retorna sin más). Se prueba de verdad desde la ficha (Parte E).
+
+--- Parte D: contar temporadas de residencia en finTemporada() ---
+ANCLA EXACTA (única, dentro de finTemporada(), justo antes de "evalTemporada();"):
+  for(const j of Object.values(G.jug)){
+    if(j.prestamo&&j.prestamo.vuelve<=G.año+1){
+      const de=j.prestamo.de;j.club=de;
+      if(j.edad<=22){j.ovr=clamp(j.ovr+R(1,4),40,j.pot);calcEco(j);}
+      if(de===G.miClub)noticia("Vuelve de préstamo",j.nombre+" regresa con más rodaje (media "+j.ovr+").");
+      j.prestamo=null;
+    }
+  }
+  evalTemporada();
+
+REEMPLAZAR POR:
+  for(const j of Object.values(G.jug)){
+    if(j.prestamo&&j.prestamo.vuelve<=G.año+1){
+      const de=j.prestamo.de;j.club=de;
+      if(j.edad<=22){j.ovr=clamp(j.ovr+R(1,4),40,j.pot);calcEco(j);}
+      if(de===G.miClub)noticia("Vuelve de préstamo",j.nombre+" regresa con más rodaje (media "+j.ovr+").");
+      j.prestamo=null;
+    }
+  }
+  for(const j of Object.values(G.jug)){
+    if(j.pais==='CHI'||j.nacionalizado)continue;
+    const cl=G.clubes[j.club];
+    if(cl&&cl.pais==='CHI'){
+      j.tempExt=(j.tempExt||0)+1;
+      if(j.tempExt===4&&j.club===G.miClub)noticia("Puede nacionalizarse: "+j.nombre,j.nombre+" cumple 4 temporadas jugando en Ch1le. El club puede tramitar su nacionalización deportiva desde su ficha para habilitarlo con la selección.");
+    }else if(j.tempExt)j.tempExt=0;
+  }
+  evalTemporada();
+
+PRUEBA: en consola, `const j=plantelDe(G.miClub).find(x=>x.pais!=='CHI');j.tempExt=3;finTemporada();` — debe subir a 4 y salir la noticia "Puede nacionalizarse". (finTemporada() hace más cosas — mejor probar cuando de todos modos vayas a cerrar la temporada jugando normal, o revisar solo el efecto con `j.tempExt=3;` y llamando directamente el bucle nuevo copiado a mano en consola si no quieres disparar todo el fin de temporada.)
+
+--- Parte E: UI en la ficha del jugador ---
+ANCLA EXACTA (única, dentro de la función de ficha de jugador, dos líneas seguidas):
+    ${j.pais==='CHI'?`<div class="row2"><span>Selección 🇨🇱</span><b>${j.caps||0} convocatorias</b></div>`:''}
+    ${segundaNac(j)?`<div class="row2"><span>Doble nacionalidad</span><b>${BANDERA[j.pais]||''} ${j.pais} · ${BANDERA[segundaNac(j)]||''} ${segundaNac(j)}</b></div>`:''}
+
+REEMPLAZAR POR:
+    ${(j.pais==='CHI'||j.nacionalizado)?`<div class="row2"><span>Selección 🇨🇱${j.nacionalizado?' (nacionalizado)':''}</span><b>${j.caps||0} convocatorias</b></div>`:''}
+    ${(mio&&(j.pais==='CHI'||j.nacionalizado)&&!j.lesion)?`<div class="row2"><span>Fecha FIFA<br><small class="mut">Pide que la selección no lo convoque la próxima fecha</small></span>
+      <button class="mini ${j.pideDescansoSel?'':'sec'}" onclick="pedirDescansoSel('${j.id}')">${j.pideDescansoSel?'PEDIDO ENVIADO':'Pedir descanso'}</button></div>`:''}
+    ${segundaNac(j)?`<div class="row2"><span>Doble nacionalidad</span><b>${BANDERA[j.pais]||''} ${j.pais} · ${BANDERA[segundaNac(j)]||''} ${segundaNac(j)}</b></div>`:''}
+    ${(mio&&j.pais!=='CHI'&&!j.nacionalizado)?`<div class="row2"><span>Nacionalización deportiva<br><small class="mut">${(j.tempExt||0)}/4 temporadas jugando en Ch1le</small></span>
+      ${(j.tempExt||0)>=4?`<button class="mini" onclick="naturalizar('${j.id}')">Tramitar (${fmt$(costoNaturalizacion(j))})</button>`:'<b class="mut">—</b>'}</div>`:''}
+
+PRUEBA: abre la ficha de un jugador chileno tuyo sin lesión → debe verse el botón "Pedir descanso". Abre la ficha de un extranjero tuyo → debe verse "Nacionalización deportiva 0/4" (o el conteo que tenga) y, si llega a 4, el botón "Tramitar" con el costo.
+
+--- Parte F: prenómina visible en Mundo → La Roja ---
+ANCLA EXACTA (función completa vSeleccion(), única, hasta donde termina el bloque de ÚLTIMA NÓMINA):
+function vSeleccion(){
+  const caps=Object.values(G.jug).filter(j=>(j.caps||0)>0).sort((a,b)=>b.caps-a.caps).slice(0,12);
+  const ult=G.selUlt.map(id=>G.jug[id]).filter(Boolean);
+  return `<div class="card hero"><small>🇨🇱 SELECCIÓN DE CH1LE</small>
+    <div class="heroIn">Fechas FIFA: semanas 7, 16, 26 y 34. Tus chilenos destacados pueden ser convocados: vuelven con moral… y con desgaste.</div></div>
+  <div class="card"><small>RESULTADOS DE LA ROJA</small>
+    ${G.selRes.map(r=>`<div class="row"><span>${esc(r)}</span></div>`).join('')||'<div class="mut">Aún sin partidos disputados.</div>'}</div>
+  <div class="card"><small>ÚLTIMA NÓMINA</small>
+    ${ult.map(j=>`<div class="row tap" onclick="abrirJug('${j.id}')"><span class="pos ${j.pos}">${j.pos}</span><span>${esc(j.nombre)}${j.club===G.miClub?' 🔸':''} <small>${esc(G.clubes[j.club]?G.clubes[j.club].nombre:'')}</small></span><b>${j.ovr}</b></div>`).join('')||'<div class="mut">La primera nómina sale en la semana 7.</div>'}
+    ${ult.length?'<p class="mut">🔸 jugador de tu club</p>':''}</div>
+
+REEMPLAZAR POR:
+function vSeleccion(){
+  const caps=Object.values(G.jug).filter(j=>(j.caps||0)>0).sort((a,b)=>b.caps-a.caps).slice(0,12);
+  const ult=G.selUlt.map(id=>G.jug[id]).filter(Boolean);
+  const pre=(G.selPre||[]).map(id=>G.jug[id]).filter(Boolean);
+  return `<div class="card hero"><small>🇨🇱 SELECCIÓN DE CH1LE</small>
+    <div class="heroIn">Fechas FIFA: semanas 7, 16, 26 y 34 (prenómina la semana previa). Tus chilenos destacados pueden ser convocados: vuelven con moral… y con desgaste.</div></div>
+  ${pre.length?`<div class="card"><small>PRENÓMINA (previa a la próxima fecha FIFA)</small>
+    ${pre.map(j=>`<div class="row tap" onclick="abrirJug('${j.id}')"><span class="pos ${j.pos}">${j.pos}</span><span>${esc(j.nombre)}${j.club===G.miClub?' 🔸':''} <small>${esc(G.clubes[j.club]?G.clubes[j.club].nombre:'')}</small></span><b>${j.ovr}</b></div>`).join('')}
+    <p class="mut">Lista preliminar de 30: la nómina final de 18 recorta desde acá.</p></div>`:''}
+  <div class="card"><small>RESULTADOS DE LA ROJA</small>
+    ${G.selRes.map(r=>`<div class="row"><span>${esc(r)}</span></div>`).join('')||'<div class="mut">Aún sin partidos disputados.</div>'}</div>
+  <div class="card"><small>ÚLTIMA NÓMINA</small>
+    ${ult.map(j=>`<div class="row tap" onclick="abrirJug('${j.id}')"><span class="pos ${j.pos}">${j.pos}</span><span>${esc(j.nombre)}${j.club===G.miClub?' 🔸':''} <small>${esc(G.clubes[j.club]?G.clubes[j.club].nombre:'')}</small></span><b>${j.ovr}</b></div>`).join('')||'<div class="mut">La primera nómina sale en la semana 7.</div>'}
+    ${ult.length?'<p class="mut">🔸 jugador de tu club</p>':''}</div>
+
+(el resto de la función, desde "<div class="card"><small>🏆 COPA DEL MUNDO</small>" en adelante, queda intacto — no lo toques)
+
+PRUEBA: tras correr la Parte B en consola (semana 6 y 7), entra a Mundo → La Roja y confirma que aparece la tarjeta "PRENÓMINA" con hasta 30 nombres antes que "RESULTADOS DE LA ROJA".
+
+=== HUECO 2 (competencias): editor simple de la Copa + cabezas de serie + sede neutral de la final ===
+
+--- Parte A: estado nuevo ---
+ANCLA (nuevaPartida, línea ~1552 — MISMA línea que Hueco 1 Parte A; si ya aplicaste esa, la línea ahora dice "...selUlt:[],selPre:[]," y agregas después):
+  conti:null,clasifNext:null,selRes:[],selUlt:[],selPre:[],
+REEMPLAZAR POR (o agregar copaCfg si ya tiene selPre):
+  conti:null,clasifNext:null,selRes:[],selUlt:[],selPre:[],copaCfg:{sembrado:false,sedeNeutral:false},
+
+ANCLA (migrar(), línea ~3415 — ajusta igual si ya aplicaste Hueco 1):
+  G.selRes=G.selRes||[];G.selUlt=G.selUlt||[];G.selPre=G.selPre||[];
+REEMPLAZAR POR:
+  G.selRes=G.selRes||[];G.selUlt=G.selUlt||[];G.selPre=G.selPre||[];
+  G.copaCfg=G.copaCfg||{sembrado:false,sedeNeutral:false};
+
+(si NO aplicaste Hueco 1 primero, usa como ancla la línea original sin selPre: "conti:null,clasifNext:null,selRes:[],selUlt:[]," / "G.selRes=G.selRes||[];G.selUlt=G.selUlt||[];" y agrega copaCfg de la misma forma)
+
+--- Parte B: iniciarCopa() con sembrado opcional ---
+ANCLA EXACTA (función completa, única):
+function iniciarCopa(){
+  const todos=Object.values(G.clubes).filter(c=>c.pais==='CHI').map(c=>c.id);
+  // barajar
+  for(let i=todos.length-1;i>0;i--){const j=Math.floor(RF()*(i+1));[todos[i],todos[j]]=[todos[j],todos[i]];}
+  const llaves=[];
+  for(let i=0;i<todos.length;i+=2)llaves.push([todos[i],todos[i+1]]);
+  G.copa={ronda:0,llaves,res:[],campeon:null,nombres:["16avos","Octavos","Cuartos","Semifinal","FINAL"]};
+}
+
+REEMPLAZAR POR:
+function iniciarCopa(){
+  let todos=Object.values(G.clubes).filter(c=>c.pais==='CHI').map(c=>c.id);
+  const cfg=G.copaCfg;
+  if(cfg&&cfg.sembrado){
+    /* Cabezas de serie: el mismo criterio que ya usa el Mundial de Clubes
+       (rep alta contra rep baja en la primera ronda), no dos candidatos
+       fuertes entre sí desde el arranque. */
+    todos.sort((a,b)=>G.clubes[b].rep-G.clubes[a].rep);
+    const sembrado=[];
+    for(let i=0,j=todos.length-1;i<=j;i++,j--){sembrado.push(todos[i]);if(i!==j)sembrado.push(todos[j]);}
+    todos=sembrado;
+  }else{
+    for(let i=todos.length-1;i>0;i--){const j=Math.floor(RF()*(i+1));[todos[i],todos[j]]=[todos[j],todos[i]];}
+  }
+  const llaves=[];
+  for(let i=0;i<todos.length;i+=2)llaves.push([todos[i],todos[i+1]]);
+  G.copa={ronda:0,llaves,res:[],campeon:null,nombres:["16avos","Octavos","Cuartos","Semifinal","FINAL"]};
+}
+
+PRUEBA: en consola, `G.copaCfg.sembrado=true;iniciarCopa();G.copa.llaves.slice(0,3).map(p=>[G.clubes[p[0]].rep,G.clubes[p[1]].rep]);` — el primer par debe mostrar la rep más alta contra la más baja del lote (ej. [88, 41]), no dos números parecidos.
+
+--- Parte C: final a sede neutral (armarJornadaCopa) ---
+ANCLA EXACTA (función completa, única):
+function armarJornadaCopa(){
+  const C=G.copa;
+  if(G.clubes[G.miClub].pais!=='CHI'){
+    for(const j of plantelDe(G.miClub))j.fis=clamp(j.fis+8,10,100);
+    cerrarJornada();return;
+  }
+  if(!C||C.campeon){cerrarJornada();return;}
+  const mi=C.llaves.find(p=>p&&(p[0]===G.miClub||p[1]===G.miClub));
+  if(mi){prepararPartido(mi[0]===G.miClub?mi[1]:mi[0],mi[0]===G.miClub,'copa',true);aplicarDTEmp();setTab('partido');render();}
+  else{cerrarJornada();}
+}
+
+REEMPLAZAR POR:
+function armarJornadaCopa(){
+  const C=G.copa;
+  if(G.clubes[G.miClub].pais!=='CHI'){
+    for(const j of plantelDe(G.miClub))j.fis=clamp(j.fis+8,10,100);
+    cerrarJornada();return;
+  }
+  if(!C||C.campeon){cerrarJornada();return;}
+  const mi=C.llaves.find(p=>p&&(p[0]===G.miClub||p[1]===G.miClub));
+  if(mi){
+    const final=C.llaves.length===1;
+    const neutral=final&&G.copaCfg&&G.copaCfg.sedeNeutral;
+    prepararPartido(mi[0]===G.miClub?mi[1]:mi[0],mi[0]===G.miClub,'copa',true);
+    if(neutral){G.pendMatch.neutral=true;noticia("Final a sede neutral","La final de la Copa Nacional se juega en el Estadio Nacional: ningún finalista hace de local.");}
+    aplicarDTEmp();setTab('partido');render();
+  }
+  else{cerrarJornada();}
+}
+
+--- Parte D: quitar la ventaja de local cuando el partido es neutral (simularMinuto) ---
+ANCLA EXACTA (única — son las primeras líneas de simularMinuto()):
+function simularMinuto(){
+  const M=G.matchLive,P=G.pendMatch;
+  const fMi=fuerzaEquipo(G.miClub,M.xiMi,G.tact);
+  const fR=fuerzaEquipo(P.rival,M.xiR,M.tR);
+  const local=P.local;
+  const bonoMi=local?1.08:0.94,bonoR=local?0.94:1.08;
+
+REEMPLAZAR POR:
+function simularMinuto(){
+  const M=G.matchLive,P=G.pendMatch;
+  const fMi=fuerzaEquipo(G.miClub,M.xiMi,G.tact);
+  const fR=fuerzaEquipo(P.rival,M.xiR,M.tR);
+  const local=P.local;
+  const bonoMi=P.neutral?1:(local?1.08:0.94),bonoR=P.neutral?1:(local?0.94:1.08);
+
+PRUEBA (Parte C+D juntas): activa G.copaCfg.sedeNeutral=true por consola, avanza hasta que tu Copa llegue a la final (o fuerza `G.copa.llaves=[[G.miClub,'c2']]` con un id de rival válido y llama `armarJornadaCopa()`), confirma que sale la noticia "Final a sede neutral" y que `G.pendMatch.neutral===true`. Sin la Parte D el flag no haría nada; con ella, revisa que durante el partido en vivo el marcador no favorezca sistemáticamente a nadie por localía (compara con un partido normal donde sí hay diferencia).
+
+--- Parte E: editor visible en Mundo → Copa ---
+ANCLA EXACTA (función completa vCopa(), única):
+function vCopa(){
+  const C=G.copa;
+  const filas=C.llaves.map(p=>{
+    const a=G.clubes[p[0]],b=G.clubes[p[1]];
+    return `<div class="row"><span>${escudo(a,18)} ${esc(a.nombre)}</span><small>vs</small><span>${esc(b.nombre)} ${escudo(b,18)}</span></div>`;
+  }).join('');
+  return `<div class="card"><small>COPA NACIONAL · ${C.campeon?'FINALIZADA':C.nombres[Math.min(C.ronda,4)]}</small>
+    ${C.campeon?`<div class="big center">🏆 ${esc(G.clubes[C.campeon].nombre)}</div>`:filas}
+  </div>`;
+}
+
+REEMPLAZAR POR:
+function vCopa(){
+  const C=G.copa;
+  const cfg=G.copaCfg||(G.copaCfg={sembrado:false,sedeNeutral:false});
+  const filas=C.llaves.map(p=>{
+    const a=G.clubes[p[0]],b=G.clubes[p[1]];
+    return `<div class="row"><span>${escudo(a,18)} ${esc(a.nombre)}</span><small>vs</small><span>${esc(b.nombre)} ${escudo(b,18)}</span></div>`;
+  }).join('');
+  return `<div class="card"><small>COPA NACIONAL · ${C.campeon?'FINALIZADA':C.nombres[Math.min(C.ronda,4)]}</small>
+    ${C.campeon?`<div class="big center">🏆 ${esc(G.clubes[C.campeon].nombre)}</div>`:filas}
+  </div>
+  <div class="card"><small>🛠️ EDITOR DE LA COPA</small>
+    <p class="mut">Se aplica al sorteo de la próxima edición (temporada siguiente).</p>
+    <div class="row2"><span><b>Cabezas de serie</b><br><small class="mut">Los de mayor reputación evitan cruzarse entre sí en la primera ronda</small></span>
+      <button class="mini ${cfg.sembrado?'':'sec'}" onclick="G.copaCfg.sembrado=!G.copaCfg.sembrado;render();guardarLS()">${cfg.sembrado?'SÍ':'NO'}</button></div>
+    <div class="row2"><span><b>Final en sede neutral</b><br><small class="mut">La final se juega en el Estadio Nacional: ningún finalista hace de local</small></span>
+      <button class="mini ${cfg.sedeNeutral?'':'sec'}" onclick="G.copaCfg.sedeNeutral=!G.copaCfg.sedeNeutral;render();guardarLS()">${cfg.sedeNeutral?'SÍ':'NO'}</button></div>
+  </div>`;
+}
+
+PRUEBA: entra a Mundo → Copa, debe aparecer la tarjeta "🛠️ EDITOR DE LA COPA" con dos botones SÍ/NO; tocarlos debe cambiar el texto y persistir tras recargar (guardarLS).
+
+=== HUECO 3 (competencias): partidos de apertura y clausura simbólicos ===
+Nota de auditoría: supercopa() (línea ~8373) ya cubre gran parte de "apertura simbólica" (duelo campeón liga vs campeón copa, con trofeo), pero se resuelve instantáneo al cierre de la temporada anterior, no como primer partido de la nueva, y no hay ningún equivalente de clausura. Este parche agrega dos amistosos narrados sin motor interactivo (mismo estilo que jugarMundial()/Copa América: resultado con R(0,3) y noticia()), sin trofeo ni puntos, para no interferir con nada calibrado. La taquilla de apertura usa esc$(20000) — trivial comparado con el premio de copa (220000) o de liga (500000).
+
+--- Parte A: Partido de Apertura (arranque de temporada) ---
+ANCLA EXACTA (única, dentro de finTemporada(), justo después de "iniciarConti();" y antes del comentario sobre G.sinConti):
+  iniciarCopa();
+  iniciarConti();
+  /* Sin licencia en regla no hay torneo internacional, por mucho que lo hayas ganado
+
+REEMPLAZAR POR:
+  iniciarCopa();
+  iniciarConti();
+  if(G.año>2026){
+    /* Partido de Apertura: amistoso simbólico que levanta el telón de la
+       temporada. No reparte puntos ni desgasta jugadores: solo ambiente
+       y una taquilla chica. */
+    const aliado=(G.alianzas&&G.alianzas.length)?G.clubes[pick(G.alianzas).cid]:null;
+    const rival=aliado||pick(Object.values(G.clubes).filter(c=>c.id!==G.miClub&&c.pais===G.clubes[G.miClub].pais));
+    if(rival){
+      const g1=R(0,3),g2=R(0,3);
+      const yo=G.clubes[G.miClub].nombre;
+      noticia("🎉 Partido de Apertura","Amistoso de pretemporada para levantar el telón: "+yo+" "+g1+" - "+g2+" "+rival.nombre+". No cuenta en las estadísticas, pero calienta motores y llena la boletería.");
+      mov(esc$(20000),"Taquilla del Partido de Apertura");
+      G.animo=clamp((G.animo||60)+2,0,100);
+    }
+  }
+  /* Sin licencia en regla no hay torneo internacional, por mucho que lo hayas ganado
+
+--- Parte B: Partido de Clausura (solo si hay club hermanado) ---
+ANCLA EXACTA (única, dentro de finTemporada(), justo antes de "archivarTemporada();" — nota: si ya aplicaste el Hueco 1 Parte D, el bucle del préstamo de esta ancla ya no es el que sigue inmediatamente a esta línea; igual el ancla de abajo sigue siendo única y válida):
+  /* Los que siguen en casa llevan un año más de camiseta */
+  for(const j of plantelDe(G.miClub))if(j.desde===undefined)j.desde=G.año;
+  /* Se archiva ANTES de vaciar las tablas: si no, la memoria del club
+     guardaba todas las temporadas con cero puntos. */
+  archivarTemporada();
+
+REEMPLAZAR POR:
+  /* Los que siguen en casa llevan un año más de camiseta */
+  for(const j of plantelDe(G.miClub))if(j.desde===undefined)j.desde=G.año;
+  {
+    /* Partido de Clausura: solo si hay un club hermanado — cierre de
+       temporada simbólico con quien ya firmaste el convenio. */
+    const aliado=(G.alianzas&&G.alianzas.length)?G.clubes[pick(G.alianzas).cid]:null;
+    if(aliado){
+      const g1=R(0,3),g2=R(0,3);
+      noticia("🤝 Partido de Clausura","Amistoso de cierre de temporada con el club hermanado: "+G.clubes[G.miClub].nombre+" "+g1+" - "+g2+" "+aliado.nombre+". Un gesto que la hinchada valora, aunque no reparta puntos.");
+      G.animo=clamp((G.animo||60)+2,0,100);
+    }
+  }
+  /* Se archiva ANTES de vaciar las tablas: si no, la memoria del club
+     guardaba todas las temporadas con cero puntos. */
+  archivarTemporada();
+
+PRUEBA: juega o fuerza el cierre de una temporada (`finTemporada()` en consola si tu partida ya está avanzada) con G.año>2026 — debe salir "🎉 Partido de Apertura" al iniciar la temporada siguiente. Para probar la clausura primero necesitas un hermanamiento firmado (espera a que salga el evento "propone un convenio de hermanamiento" y acéptalo, o en consola: `G.alianzas=[{cid:Object.keys(G.clubes).find(id=>id!==G.miClub),desde:G.año}];`), luego cierra la temporada y confirma que sale "🤝 Partido de Clausura" antes del resumen de fin de temporada.

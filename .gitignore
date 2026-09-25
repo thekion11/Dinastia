@@ -1,0 +1,18 @@
+# Herramientas de terceros (se re-descargan de sus sitios oficiales, no son código propio)
+herramientas/android/
+herramientas/ffmpeg/
+herramientas/godot/
+herramientas/rclone/
+herramientas/salida/
+
+# Backups manuales de snapshots completos del proyecto (git reemplaza esta función hacia adelante)
+respaldos/
+
+# Carpeta con un clon git propio ya existente (usamos su remoto, no su contenido anidado)
+/Dinastia/
+
+# Basura habitual de SO / editores
+Thumbs.db
+desktop.ini
+.DS_Store
+*.tmp

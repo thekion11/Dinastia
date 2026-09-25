@@ -1,0 +1,32 @@
+HERRAMIENTAS DE DINASTIA
+========================
+
+run_harness.ps1  -> Banco de pruebas automatico. Clic derecho > Ejecutar con
+                    PowerShell, o desde una consola:
+                        .\run_harness.ps1
+                    Abre el juego en Chrome sin ventana, juega 3 carreras de 3
+                    temporadas, recorre las 43 pantallas con cada rol y prueba
+                    portadas, menu, interinato, ayudante, retos, arbol de
+                    habilidades, perfil, federacion y visor 3D.
+                    Al final imprime "errores capturados: N". Debe ser 0.
+                    Tarda unos 6-7 minutos. Deja los volcados en .\salida\
+
+harness.js       -> El guion de pruebas que run_harness.ps1 inyecta en el juego.
+                    Si se anade una pantalla o un modo nuevo al juego, hay que
+                    anadirlo tambien aqui para que quede cubierto.
+
+server.ps1       -> Servidor web local en el puerto 5500, para abrir el juego
+                    por http:// en vez de file:// (algunas cosas del navegador
+                    no funcionan con file://).
+
+fix_censura.ps1  -> Historico. Corrigio los nombres que se mostraban con
+                    numeros en vez de letras ("Prem1er League"). Ya aplicado.
+
+audit_draft.txt  -> Notas de la auditoria que encontro las ocho promesas que el
+                    juego hacia y no cumplia.
+
+godot\           -> Godot 4.7.2 portable y los assets, para reconstruir el
+                    visor 3D sin descargar nada. Para reexportar:
+                        .\godot\Godot_v4.7.2-stable_win64_console.exe --headless ^
+                          --path "..\visor3d" --export-release "Windows Desktop" ^
+                          "..\visor3d\exports\windows\DinastiaVisor3D.exe"

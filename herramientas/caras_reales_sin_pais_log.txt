@@ -1,0 +1,17 @@
+17:12:41  Sin foto al empezar: 909
+17:12:45  lote 0-89 : 15 con foto
+17:12:48  error bajando Sebastián Pérez : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:12:50  error bajando Sebastián Cabrera : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:12:54  OK Jorge Espejo
+17:12:56  error bajando Ignacio Jara : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:12:57  error bajando Cristian Menéndez : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:12:59  error bajando Edson Puch : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:13:00  error bajando Matías Cano : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:13:03  OK Frenkie de Jong
+17:13:05  error bajando Robin Le Normand : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:13:07  error bajando José María Giménez : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:13:09  error bajando Nemanja Gudelj : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:13:11  error bajando Williot Swedberg : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:13:13  error bajando Cristhian Stuani : Error en el servidor remoto: (429) Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1).
+17:13:15  OK Sergio Herrera
+17:13:18  TERMINADO. 3 caras nuevas.

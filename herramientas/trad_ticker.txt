@@ -1,0 +1,105 @@
+/* Traducción de la cinta de titulares. Va aquí, pegada a las tablas que traduce,
+   y no dentro del TRAD grande: así al añadir un titular nuevo se ve de inmediato
+   que también hay que traducirlo. La clave es la frase española COMPLETA, con su
+   <b>ETIQUETA</b> incluida, porque es la cadena exacta que se pinta.
+   Las plantillas se traducen con sus {club}/{jug}/{pais} dentro: la sustitución
+   ocurre DESPUÉS de traducir, así que los marcadores tienen que sobrevivir. */
+Object.assign(TRAD,{
+ /* --- etiquetas de categoría --- */
+ 'MERCADO':['MARKET','MERCADO'],'FICHAJE':['SIGNING','CONTRATAÇÃO'],'RUMOR':['RUMOUR','RUMOR'],
+ 'CANTERA':['ACADEMY','BASE'],'LESIÓN':['INJURY','LESÃO'],'DIRECTIVA':['BOARD','DIRETORIA'],
+ 'ARBITRAJE':['REFEREEING','ARBITRAGEM'],'HINCHADA':['SUPPORTERS','TORCIDA'],'TV':['TV','TV'],
+ 'ESTADIO':['STADIUM','ESTÁDIO'],'SANCIÓN':['SANCTION','PUNIÇÃO'],'SELECCIÓN':['NATIONAL TEAM','SELEÇÃO'],
+ 'RÉCORD':['RECORD','RECORDE'],'AGENTE':['AGENT','EMPRESÁRIO'],'FEDERACIÓN':['FEDERATION','FEDERAÇÃO'],
+ 'DOPAJE':['DOPING','DOPING'],'BARRA':['ULTRAS','TORCIDA ORGANIZADA'],'MUNDIAL':['WORLD CUP','COPA DO MUNDO'],
+ 'SUPERLIGA':['SUPER LEAGUE','SUPERLIGA'],
+ /* --- titulares fijos --- */
+ '<b>MERCADO</b> Cierra la ventana de fichajes en Sudamérica: última hora frenética en todas las ligas':
+   ['<b>MARKET</b> The South American window shuts: frantic deadline day across every league',
+    '<b>MERCADO</b> Fecha a janela de transferências na América do Sul: última hora frenética em todas as ligas'],
+ '<b>LESIÓN</b> Rotura de ligamento cruzado de una figura: seis meses fuera y un club en obras':
+   ['<b>INJURY</b> Cruciate ligament tear for a star: six months out and a club left rebuilding',
+    '<b>LESÃO</b> Ruptura de ligamento cruzado de um craque: seis meses fora e um clube em obras'],
+ '<b>FICHAJE</b> Traspaso récord del continente: un club paga la cláusula completa':
+   ['<b>SIGNING</b> Continental transfer record: a club pays the release clause in full',
+    '<b>CONTRATAÇÃO</b> Transferência recorde do continente: um clube paga a multa rescisória inteira'],
+ '<b>CANTERA</b> Debuta a los 16 el hijo de una leyenda y el estadio se pone de pie':
+   ['<b>ACADEMY</b> A legend’s son debuts at 16 and the whole stadium rises',
+    '<b>BASE</b> O filho de uma lenda estreia aos 16 e o estádio inteiro se levanta'],
+ '<b>FEDERACIÓN</b> Auditoría anual de licencias: dos clubes quedan sin cupo internacional':
+   ['<b>FEDERATION</b> Annual licensing audit: two clubs lose their continental slot',
+    '<b>FEDERAÇÃO</b> Auditoria anual de licenças: dois clubes ficam sem vaga internacional'],
+ '<b>ARBITRAJE</b> Escándalo en el clásico: el tribunal abre expediente al colegiado':
+   ['<b>REFEREEING</b> Derby scandal: the tribunal opens a case against the official',
+    '<b>ARBITRAGEM</b> Escândalo no clássico: o tribunal abre processo contra o árbitro'],
+ '<b>TV</b> La asamblea vota el reparto de derechos: los grandes pierden peso':
+   ['<b>TV</b> The assembly votes on the rights split: the big clubs lose ground',
+    '<b>TV</b> A assembleia vota a divisão dos direitos: os grandes perdem peso'],
+ '<b>DOPAJE</b> Positivo en un control sorpresa: suspensión provisional y patrocinadores en fuga':
+   ['<b>DOPING</b> Positive in a surprise test: provisional ban and sponsors heading for the door',
+    '<b>DOPING</b> Positivo em um teste surpresa: suspensão provisória e patrocinadores em fuga'],
+ '<b>ESTADIO</b> Aprobada la ampliación tras dos años de pleito vecinal':
+   ['<b>STADIUM</b> Expansion approved after a two-year fight with the neighbourhood',
+    '<b>ESTÁDIO</b> Ampliação aprovada após dois anos de disputa com a vizinhança'],
+ '<b>BARRA</b> Sanción de puertas cerradas por los incidentes de la última fecha':
+   ['<b>ULTRAS</b> Closed-doors punishment after the trouble on the last matchday',
+    '<b>TORCIDA ORGANIZADA</b> Punição de portões fechados pelos incidentes da última rodada'],
+ '<b>MUNDIAL</b> Arranca la cuenta atrás para la próxima Copa del Mundo':
+   ['<b>WORLD CUP</b> The countdown to the next World Cup begins',
+    '<b>COPA DO MUNDO</b> Começa a contagem regressiva para a próxima Copa do Mundo'],
+ '<b>SUPERLIGA</b> Un grupo de clubes grandes tantea un torneo cerrado al margen de la federación':
+   ['<b>SUPER LEAGUE</b> A group of big clubs sounds out a closed tournament outside the federation',
+    '<b>SUPERLIGA</b> Um grupo de grandes clubes sonda um torneio fechado à revelia da federação'],
+ '<b>MERCADO</b> Un agente libre de élite queda sin contrato y medio continente lo llama':
+   ['<b>MARKET</b> An elite free agent is out of contract and half the continent is calling',
+    '<b>MERCADO</b> Um agente livre de elite fica sem contrato e meio continente liga'],
+ '<b>DIRECTIVA</b> Compra hostil: un magnate se hace con el control de un club histórico':
+   ['<b>BOARD</b> Hostile takeover: a tycoon seizes control of a historic club',
+    '<b>DIRETORIA</b> Compra hostil: um magnata assume o controle de um clube histórico'],
+ '<b>CANTERA</b> Un país pequeño produce un talento generacional y todos lo quieren':
+   ['<b>ACADEMY</b> A small country produces a generational talent and everyone wants him',
+    '<b>BASE</b> Um país pequeno revela um talento geracional e todos o querem'],
+ /* --- plantillas (los marcadores {club}/{jug}/{pais}/{edad}/{plata} se sustituyen DESPUÉS) --- */
+ '{club} tantea a {jug}: la operación rondaría los {plata}':
+   ['{club} sound out {jug}: the deal would be around {plata}',
+    '{club} sonda {jug}: a operação giraria em torno de {plata}'],
+ '{jug} pasa reconocimiento médico en {club} tras semanas de novela':
+   ['{jug} takes his medical at {club} after weeks of soap opera',
+    '{jug} faz exames médicos no {club} após semanas de novela'],
+ 'En {pais} dan por hecho que {jug} sale a final de temporada':
+   ['In {pais} they take it as read that {jug} leaves at the end of the season',
+    'No {pais} dão como certo que {jug} sai no fim da temporada'],
+ '{club} blinda a su promesa de {edad} años con cláusula millonaria':
+   ['{club} tie down their {edad}-year-old prospect with a huge release clause',
+    '{club} blinda sua promessa de {edad} anos com multa milionária'],
+ 'Parte médico en {club}: {jug} se pierde lo que queda de mes':
+   ['Medical report at {club}: {jug} misses the rest of the month',
+    'Boletim médico no {club}: {jug} desfalca o resto do mês'],
+ 'Tensión en {club}: el presidente se reúne de urgencia con el cuerpo técnico':
+   ['Tension at {club}: the president holds an emergency meeting with the coaching staff',
+    'Tensão no {club}: o presidente se reúne de urgência com a comissão técnica'],
+ 'El colegiado del clásico de {pais} queda apartado tras el informe':
+   ['The referee from the {pais} derby is stood down after the report',
+    'O árbitro do clássico do {pais} é afastado após o relatório'],
+ 'La barra de {club} cuelga un lienzo pidiendo refuerzos':
+   ['{club} ultras hang a banner demanding signings',
+    'A torcida do {club} pendura uma faixa pedindo reforços'],
+ '{club} negocia derechos por separado y enfada al resto de la liga':
+   ['{club} negotiate their rights separately and anger the rest of the league',
+    '{club} negocia direitos por conta própria e irrita o resto da liga'],
+ '{club} presenta el proyecto de ampliación de su estadio':
+   ['{club} unveil the expansion plans for their stadium',
+    '{club} apresenta o projeto de ampliação do seu estádio'],
+ 'Multa a {club} por el retraso en el pago de sueldos':
+   ['{club} fined over late wage payments',
+    'Multa ao {club} pelo atraso no pagamento de salários'],
+ '{jug} entra en la prelista de {pais} para la próxima fecha FIFA':
+   ['{jug} makes the {pais} provisional squad for the next international break',
+    '{jug} entra na pré-lista do {pais} para a próxima data FIFA'],
+ '{jug} encadena partidos marcando y la prensa de {pais} se rinde':
+   ['{jug} keeps scoring game after game and the {pais} press surrenders',
+    '{jug} emenda jogos marcando e a imprensa do {pais} se rende'],
+ 'El representante de {jug} aterriza en {pais}: nadie cree que sea de paseo':
+   ['{jug}’s agent lands in {pais}: nobody thinks it is a holiday',
+    'O empresário de {jug} desembarca no {pais}: ninguém acha que é passeio']
+});
