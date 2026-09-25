@@ -578,8 +578,12 @@ func _montar_presentador_quaternius() -> bool:
 	raiz.rotation.y = deg_to_rad(-32.0)
 	add_child(raiz)
 	FutbolistaQ.terminar(d, true)
-	## Traje azul marino oscuro: mismo tono que la silueta de respaldo.
-	VestidorQ.vestir(d, Color(0.12, 0.13, 0.19))
+	## Traje azul marino oscuro, de manga y pantalón largos: mismo tono que la
+	## silueta de respaldo. Solapa un poco más clara que el traje.
+	var traje := Color(0.12, 0.13, 0.19)
+	if not VestidorQ.vestir_equipacion(d, traje, Color(0.2, 0.22, 0.3), "liso",
+			Color(0.82, 0.63, 0.5), Color(0.14, 0.11, 0.09), traje, Color(0.05, 0.05, 0.06), true):
+		VestidorQ.vestir(d, traje)
 	_anim_presentador = d["anim"]
 	if _anim_presentador != null and _anim_presentador.has_animation("parado"):
 		_anim_presentador.play("parado")
