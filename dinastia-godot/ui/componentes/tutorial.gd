@@ -62,7 +62,11 @@ var _prologo: Control
 var _lbl_prologo: RichTextLabel
 var _btn_prologo: Button
 var _tarjeta: PanelContainer
-var _retrato: TextureRect
+var _marco_cara: PanelContainer
+var _panel_aspecto: VBoxContainer
+var _modo := "dt"
+var _aspecto: Dictionary = {}
+var _fondo_retrato := Color.BLACK
 var _lbl_nombre: Label
 var _lbl_cargo: Label
 var _lbl_progreso: Label
@@ -366,7 +370,9 @@ func iniciar(principal: Node, modo: String, club: String) -> void:
 	if principal != null and "mundo" in principal:
 		mundo = principal.get("mundo")
 	var ctx := contexto(mundo, club)
+	_modo = modo
 	_guion = guion(modo, ctx)
+	_aspecto = aspecto_mentor(modo, _guion["mentor"])
 	_pasos = _guion["pasos"]
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -444,11 +450,24 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	centro.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_prologo.add_child(centro)
+	## El mentor de cuerpo medio al lado de la escena: la persona que te está
+	## esperando, antes de que hable.
+	var fila_prologo := HBoxContainer.new()
+	fila_prologo.add_theme_constant_override("separation", 28)
+	fila_prologo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	centro.add_child(fila_prologo)
+	var ancho_texto := minf(720.0, get_viewport_rect().size.x - 48.0)
+	if PersonaRealista.disponible() and get_viewport_rect().size.x > 900.0:
+		var figura := PersonaRealista.retrato(_aspecto, Vector2i(250, 380), Color(0.03, 0.04, 0.04), "medio")
+		figura.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		fila_prologo.add_child(figura)
+		ancho_texto = minf(600.0, get_viewport_rect().size.x - 350.0)
 	var v := VBoxContainer.new()
-	v.custom_minimum_size = Vector2(minf(720.0, get_viewport_rect().size.x - 48.0), 0)
+	v.custom_minimum_size = Vector2(ancho_texto, 0)
 	v.add_theme_constant_override("separation", 16)
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	centro.add_child(v)
+	v.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	fila_prologo.add_child(v)
 	if mundo != null and mundo.mi_club() != null:
 		var esc := TextureRect.new()
 		esc.texture = Escudo.textura(mundo.mi_club(), 110)
@@ -536,22 +555,21 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 14)
 	_tarjeta.add_child(h)
-	## El retrato del mentor, con la misma cara procedural que los jugadores.
-	var marco_cara := PanelContainer.new()
+	## EL RETRATO DEL MENTOR: una persona realista en 3D, viva (respira, cambia
+	## el peso), con el aspecto que el jugador le haya elegido. Si el modelo no
+	## estuviera, la cara dibujada de siempre.
+	_marco_cara = PanelContainer.new()
 	var em := StyleBoxFlat.new()
-	em.bg_color = c1.darkened(0.35)
+	_fondo_retrato = c1.darkened(0.45)
+	em.bg_color = _fondo_retrato
 	em.border_color = COL_ORO
 	em.set_border_width_all(2)
-	em.set_corner_radius_all(44)
-	marco_cara.add_theme_stylebox_override("panel", em)
-	marco_cara.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	h.add_child(marco_cara)
-	_retrato = TextureRect.new()
-	_retrato.custom_minimum_size = Vector2(84, 84)
-	_retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_retrato.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_retrato.texture = _cara_mentor(_guion["mentor"], ctx)
-	marco_cara.add_child(_retrato)
+	em.set_corner_radius_all(14)
+	_marco_cara.add_theme_stylebox_override("panel", em)
+	_marco_cara.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	_marco_cara.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	h.add_child(_marco_cara)
+	_pintar_retrato(ctx)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 8)
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -572,11 +590,24 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	_lbl_cargo.add_theme_font_size_override("font_size", 12)
 	_lbl_cargo.add_theme_color_override("font_color", COL_SUAVE)
 	quien.add_child(_lbl_cargo)
+	if PersonaRealista.disponible():
+		var editar := Button.new()
+		editar.text = "✎"
+		editar.flat = true
+		editar.tooltip_text = "Cambiar el aspecto de %s" % _guion["mentor"]["nombre"]
+		editar.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		editar.pressed.connect(func() -> void: _panel_aspecto.visible = not _panel_aspecto.visible)
+		cab.add_child(editar)
 	_lbl_progreso = Label.new()
 	_lbl_progreso.add_theme_font_size_override("font_size", 12)
 	_lbl_progreso.add_theme_color_override("font_color", COL_SUAVE)
 	_lbl_progreso.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	cab.add_child(_lbl_progreso)
+	_panel_aspecto = VBoxContainer.new()
+	_panel_aspecto.visible = false
+	_panel_aspecto.add_theme_constant_override("separation", 4)
+	v.add_child(_panel_aspecto)
+	_pintar_panel_aspecto(ctx)
 	_lbl_texto = RichTextLabel.new()
 	_lbl_texto.bbcode_enabled = true
 	_lbl_texto.fit_content = true
@@ -638,6 +669,80 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	_btn_sig.custom_minimum_size = Vector2(110, 0)
 	_btn_sig.pressed.connect(pulsar_siguiente)
 	botones.add_child(_btn_sig)
+
+## EL ASPECTO DEL MENTOR, PERSONALIZABLE. Sale de su semilla (siempre el
+## mismo para el mismo club) y encima va lo que el jugador haya elegido con ✎,
+## guardado por modo en `user://ajustes.cfg`.
+const SECCION_ASPECTO := "mentor_aspecto"
+
+static func aspecto_mentor(modo: String, m: Dictionary) -> Dictionary:
+	var pedido := {"pelo": "canoso"} if bool(m.get("canas", false)) else {}
+	var c := ConfigFile.new()
+	if c.load(AJUSTES) == OK:
+		var guardado: Variant = c.get_value(SECCION_ASPECTO, modo, {})
+		if guardado is Dictionary:
+			for k: String in guardado:
+				pedido[k] = guardado[k]
+	return PersonaRealista.aspecto(String(m.get("semilla", modo)), pedido)
+
+static func guardar_aspecto_mentor(modo: String, asp: Dictionary) -> void:
+	var c := ConfigFile.new()
+	c.load(AJUSTES)
+	var guardar := {}
+	for k in ["ropa", "pelo", "piel", "pantalon"]:
+		if asp.has(k):
+			guardar[k] = asp[k]
+	c.set_value(SECCION_ASPECTO, modo, guardar)
+	c.save(AJUSTES)
+
+func aspecto_actual() -> Dictionary:
+	return _aspecto
+
+func _pintar_retrato(ctx: Dictionary) -> void:
+	for h in _marco_cara.get_children():
+		h.queue_free()
+	if PersonaRealista.disponible():
+		_marco_cara.add_child(PersonaRealista.retrato(_aspecto, Vector2i(100, 120), _fondo_retrato, "cara"))
+	else:
+		var r := TextureRect.new()
+		r.custom_minimum_size = Vector2(84, 84)
+		r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		r.texture = _cara_mentor(_guion["mentor"], ctx)
+		_marco_cara.add_child(r)
+
+## ✎: tres filas para elegir la chaqueta, el pelo y la piel del mentor.
+func _pintar_panel_aspecto(ctx: Dictionary) -> void:
+	for h in _panel_aspecto.get_children():
+		h.queue_free()
+	for fila: Array in [["ropa", "Chaqueta", PersonaRealista.ROPAS], ["pelo", "Pelo", PersonaRealista.PELOS],
+			["piel", "Piel", PersonaRealista.PIELES]]:
+		var clave := String(fila[0])
+		var opciones: Array = (fila[2] as Dictionary).keys()
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 6)
+		_panel_aspecto.add_child(h)
+		var l := Label.new()
+		l.text = String(fila[1])
+		l.custom_minimum_size = Vector2(70, 0)
+		l.add_theme_font_size_override("font_size", 12)
+		l.add_theme_color_override("font_color", COL_SUAVE)
+		h.add_child(l)
+		var actual := String(_aspecto.get(clave, opciones[0]))
+		for op: String in opciones:
+			var b := Button.new()
+			b.text = op
+			b.toggle_mode = true
+			b.button_pressed = op == actual
+			b.add_theme_font_size_override("font_size", 11)
+			b.pressed.connect(func() -> void: cambiar_aspecto(clave, op, ctx))
+			h.add_child(b)
+
+func cambiar_aspecto(clave: String, valor: String, ctx: Dictionary = {}) -> void:
+	_aspecto[clave] = valor
+	guardar_aspecto_mentor(_modo, _aspecto)
+	_pintar_retrato(ctx if not ctx.is_empty() else contexto(null))
+	_pintar_panel_aspecto(ctx)
 
 static func _cara_mentor(m: Dictionary, ctx: Dictionary) -> Texture2D:
 	var j := Jugador.new()

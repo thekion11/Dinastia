@@ -559,7 +559,30 @@ func _montar_presentador_quaternius() -> bool:
 	return true
 
 func _montar_presentador_modelo() -> bool:
-	return _montar_presentador_quaternius()
+	return _montar_presentador_realista() or _montar_presentador_quaternius()
+
+## EL PRESENTADOR REALISTA (25-9-2026): el modelo que el usuario dejó en su
+## Drive para esto ("un tipo" para el sorteo), `navy-jacket-portrait`, un
+## escaneo de una persona real -ver `PersonaRealista`-. Con chaqueta oscura,
+## camiseta negra y pantalón gris: de gala sin llegar a traje. No tiene
+## esqueleto, así que el gesto de sacar la bola se hace con el cuerpo entero:
+## se gira hacia el bombo y se inclina, mientras la bola sube.
+var _presentador_real: Node3D
+var _giro_presentador := 0.0
+
+func _montar_presentador_realista() -> bool:
+	if not PersonaRealista.disponible():
+		return false
+	var p := PersonaRealista.crear(PersonaRealista.aspecto("presentador_sorteo",
+		{"ropa": "negro", "pantalon": "gris", "pelo": "negro", "piel": "media", "alto": 1.82, "ancho": 1.0}))
+	if p == null:
+		return false
+	p.position = Vector3(1.15, 0.42, -0.35)
+	_giro_presentador = deg_to_rad(-32.0)
+	p.rotation.y = _giro_presentador
+	add_child(p)
+	_presentador_real = p
+	return true
 
 func _mallas_de(n: Node) -> Array[MeshInstance3D]:
 	var salida: Array[MeshInstance3D] = []
@@ -666,6 +689,14 @@ func _montar_presentador_siluetas() -> void:
 ## -levantar la mano en alto- y luego vuelve a "parado"; con la silueta de
 ## respaldo, sigue siendo el Tween del brazo suelto de siempre.
 func gesto_sacar() -> Tween:
+	if _presentador_real != null:
+		var tr := create_tween()
+		tr.tween_property(_presentador_real, "rotation", Vector3(deg_to_rad(6.0), _giro_presentador - deg_to_rad(22.0), 0), 0.5) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tr.tween_interval(0.35)
+		tr.tween_property(_presentador_real, "rotation", Vector3(0, _giro_presentador, 0), 0.55) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		return tr
 	if _anim_presentador != null and _anim_presentador.has_animation("mostrar_tarjeta"):
 		_anim_presentador.stop()
 		_anim_presentador.play("mostrar_tarjeta")
@@ -1012,6 +1043,9 @@ func _process(delta: float) -> void:
 		_cam_mira = _cam_mira.lerp(hacia, clampf(delta * 3.5, 0.0, 1.0))
 		_camara.position = _cam_pos
 		_camara.look_at(_cam_mira, Vector3.UP)
+	## El presentador respira: sin esqueleto, es lo que lo separa de una estatua.
+	if _presentador_real != null:
+		_presentador_real.scale = Vector3(1.0, 1.0 + sin(_t * 1.5) * 0.004, 1.0)
 	## Los focos barren despacio y desfasados entre sí: eso da vida al plató.
 	for i in _focos.size():
 		var f := _focos[i]

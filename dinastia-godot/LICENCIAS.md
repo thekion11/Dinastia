@@ -64,6 +64,7 @@ nombre registrado ni el apodo comercial. Se evitaron también nombres de clubes 
 | `complejo_residencial.glb` | `assets/ciudad/` | `recursos/modelos3d/3.zip` (Sketchfab, sin licencia en el zip). Varias texturas llevan nombre de foto de redes sociales | 🟡 confirmar en Sketchfab o reemplazar |
 | `oficina_dt.glb` | `assets/ciudad/` | `interior-15-minimalist-panoramic-viem.zip` (Sketchfab) | 🟡 confirmar. Hoy no se usa (ver `city_builder.gd`) |
 | `arco_entrada.glb` | `assets/ciudad/` | `recursos/modelos3d/entrada-jugadores/` (Sketchfab) | 🟡 confirmar |
+| `persona_realista.glb` (escaneo de una persona: presentador del sorteo y mentores) | `assets/personas/` | `recursos/modelos3d/navy-jacket-portrait.zip` ("Navy Jacket Portrait", formato de descarga de Sketchfab, sin licencia dentro del zip). Es el modelo que el usuario dejó para el presentador | 🟡 confirmar la licencia en Sketchfab. Además es una persona real escaneada: comprobar que la licencia permite su uso en un juego comercial |
 | `asientos_lod.glb` | `assets/ciudad/` | `normal_stadium_seats_v1...zip` | 🟡 confirmar |
 | `podio_prensa.glb` | `assets/props/generado_ia/` | Generado con Meshy | 🟡 en plan de pago es tuyo; en plan gratis Meshy lo publica bajo CC BY 4.0 y **hay que acreditar**. Confirmar con qué plan se generó |
 
