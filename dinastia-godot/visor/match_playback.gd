@@ -10,6 +10,10 @@ extends RefCounted
 ## posesion final del local y la linea de eventos con su minuto y su equipo.
 
 signal event_fired(text: String)
+## Una jugada del catálogo empieza a escenificarse (para el rótulo de la TV).
+signal jugada_ambiente(nombre: String, es_local: bool)
+const PROB_JUGADA_AMBIENTE := 0.4
+var _jugadas_ambiente := true
 
 const LARGO := 105.0
 const ANCHO := 68.0
@@ -156,7 +160,23 @@ func tick(delta_real: float) -> void:
 	var min_ahora := current_minute()
 	if min_ahora != _ultimo_min and not reproductor.en_reproduccion:
 		_ultimo_min = min_ahora
-		_recalcular_fase(null)
+		## LAS JUGADAS PREHECHAS, EN EL PARTIDO DE VERDAD (25-9-2026). Hasta hoy
+		## el catálogo solo corría en las pruebas: ningún partido lo usaba. En
+		## los minutos sin suceso, a veces, el equipo con el balón construye una
+		## jugada del catálogo -pase al pie, desmarque, cambio de orientación,
+		## saque del portero, repliegue- en vez de un balón a un punto al azar.
+		## Sin remate: el remate lo decide la simulación y llega como suceso.
+		if _jugadas_ambiente and _disparo_pendiente.is_empty() and _corner_pendiente.is_empty() \
+				and _tirolibre_pendiente.is_empty() and _rng.randf() < PROB_JUGADA_AMBIENTE:
+			var ids := CatalogoJugadas.ambientales()
+			var id: String = ids[_rng.randi() % ids.size()]
+			var es_local := _rng.randf() * 100.0 < posesion_local
+			if reproductor.iniciar(id, self, ball, es_local, true):
+				jugada_ambiente.emit(CatalogoJugadas.obtener_definicion(id)["nombre"], es_local)
+			else:
+				_recalcular_fase(null)
+		else:
+			_recalcular_fase(null)
 
 	if not _disparo_pendiente.is_empty():
 		_disparo_pendiente["restante"] -= delta
@@ -387,6 +407,9 @@ func _desolar_defensa(es_local_defensa: bool) -> void:
 				_ejecutar_accion(p, anim_lamento, 2.4)
 
 func _disparar(ev: Dictionary) -> void:
+	## Un suceso real manda sobre la jugada que se estuviera escenificando.
+	if reproductor.en_reproduccion and reproductor.ambiente:
+		reproductor.abortar()
 	event_fired.emit("%d'  %s" % [int(ev["min"]), ev["tx"]])
 	_recalcular_fase(ev)
 
