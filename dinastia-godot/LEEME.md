@@ -1,5 +1,88 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## CUARTA RONDA: MOVIMIENTOS CON ANATOMÍA HUMANA, REGATES, DOMINADAS Y CARAS REALES (25-9-2026)
+
+Pedido: *"comprueba que los movimientos tengan realismo biológico humano... había movimientos
+puramente de fútbol, de regates... usa las caras de Wikipedia"*.
+
+### 1. Auditoría biomecánica: medida, no a ojo
+`pruebas/auditoria_biomecanica.tscn` (headless) recorre las 34 animaciones cuadro a cuadro (30 fps).
+Mide todo por posiciones de los huesos, así no depende de cómo guarde cada clip sus giros:
+- **rodilla y codo**: flexión hasta 160° y nunca hacia atrás. El sentido de la bisagra se calibra
+  con la carrera mocap, que es captura de una persona real.
+- **cadera**: medida contra la pelvis, no contra el pecho.
+- **tobillo, muñeca, cuello y columna**: ángulo máximo de cada uno.
+- **pies bajo el césped**.
+- **velocidades imposibles**: más de 40 rad/s.
+
+`pruebas/captura_biomecanica.tscn` saca la hoja de perfil y de frente
+(`biomecanica_antes.png` / `biomecanica_despues.png`).
+
+Encontró cuatro errores de verdad (22 de 28 animaciones mal), todos corregidos en la raíz:
+1. **Las 6 poses de piernas hechas a mano doblaban cadera y rodilla al revés.** Afectaba a
+   sentado, lamento, rabia, dolor, barrida y cabezazo: el muslo iba hacia atrás y la rodilla doblaba
+   hacia delante. En el banquillo lo tapaba el propio banco.
+   - Medido con sonda: en este esqueleto la flexión de cadera es −X, la de rodilla +X y la flexión
+     plantar del tobillo +X.
+   - Ahora se escriben en grados anatómicos (`_pierna_anat`) y, cuando el pie está apoyado, con IK
+     de dos segmentos que lo deja plantado (`_pierna_apoyada`, muestreada a 20 Hz). El tobillo tiene
+     tope de 35° de dorsiflexión: pasado eso se levanta el talón.
+2. **El mocap estiraba los huesos.** El retarget global copiaba también la posición de cada hueso
+   del actor, que tiene otras proporciones: la rodilla quedaba hasta 14 cm fuera de la punta del
+   muslo. Ahora se hornea solo el giro (`_huesos_rigidos`); la pelvis conserva su desplazamiento.
+3. **El primer fotograma de los FBX es la pose en T.** Daba un salto de 49 rad/s al empezar los
+   festejos. Ahora se hornea desde el segundo fotograma.
+4. **Rodilla de 176° en el festejo de rodillas.** Ahora hay un tope anatómico de 150° de giro total.
+
+Resultado: **34/34 dentro de los rangos humanos**. Límites atléticos: el portero que se estira y el
+festejo con la rodilla al pecho, ambos capturas reales, llegan a 73° de abducción y 147° de flexión
+de cadera; están documentados en la cabecera de la auditoría.
+
+### 2. Regates y dominadas: los seis clips que estaban sin usar
+Del pack de mocap de fútbol (Dribble 1-3, Juggling 1-3), recortados y sin desplazamiento propio:
+- **`conducir`**: el jugador que está encima del balón lo lleva con el mocap de regate, en lugar de
+  correr como los demás.
+- **`regate_finta`**: amague cuando un rival se le acerca a menos de 6 m. Suena "regate".
+- **`regate_pausa`**: parado y atacando, pisa y protege el balón.
+- **Presión**: el jugador del equipo que defiende más cercano al balón sale a presionarlo, entre el
+  balón y su arco. Antes nadie se acercaba a menos de 4 m.
+- **La jugada ATQ-14** ("Desborde individual") ahora conduce y amaga antes del tiro.
+- **Dominadas con balón de verdad**: el suplente que calienta en la banda (uno por equipo) hace
+  dominadas. `visor/dominadas.gd` lee los toques del pie en el propio clip y entre toque y toque
+  la pelota hace la parábola que exige la gravedad. En los huecos largos cae al césped.
+
+Pruebas: `pruebas/prueba_dominadas.tscn` (la pelota está sobre el pie en cada toque y nunca
+atraviesa el césped; hoja `dominadas.png`) y `pruebas/prueba_regates.tscn` (partido real: hay
+conducción, amagues y un malabarista por equipo).
+
+### 3. Caras reales de Wikimedia Commons
+Ya estaban conectadas desde el 7-9 (1.219 fotos libres), pero solo con el pack real. Con la base
+ficticia no se enseña ninguna foto de una persona real, y eso se mantiene.
+
+Lo nuevo:
+- **Retratos recortados por la cara.** `herramientas/caras_reales_recortar.py` usa YuNet, el
+  detector neuronal de OpenCV (el modelo sale de opencv_zoo).
+  - Encontró cara en 1.211 de 1.219 fotos.
+  - Guarda cabeza y hombros a 256×256 en `recursos/caras_reales_256/`.
+  - Antes, en las fotos de cuerpo entero la cara quedaba del tamaño de un botón (hoja
+    `caras_reales_recorte.png`: arriba el recorte viejo, abajo el nuevo).
+  - El juego ya no decodifica fotos de 3.000 px en cada lista.
+  - La versión completo ya no lleva los 136 MB de originales, solo los 23 MB de retratos.
+- **Crédito de cada foto.** La ficha del jugador muestra, por ejemplo, "Foto: Rogan200 · CC BY-SA
+  4.0 · Wikimedia Commons, recortada". La lista completa está en `datos/creditos_fotos.txt`.
+- **Licencias.** Las fotos son libres, pero CC BY y CC BY-SA obligan a citar autor y licencia;
+  con esto se cumple.
+- **Derechos de imagen.** Son otra cosa: la cara de un futbolista en un juego comercial necesita
+  su permiso o el de FIFPro. Por eso las fotos siguen fuera de las versiones públicas (ver
+  `LICENCIAS.md`).
+
+Capturas: `caras_reales_inicio.png` y `caras_reales_ficha.png`.
+
+### Verificación
+Banco completo: **0 fallos**. Auditoría biomecánica: **0 animaciones con problemas**. Dominadas:
+**0 fallos**. Regates en partido real: **0 fallos**.
+
+
 ## TERCERA RONDA DEL USUARIO: PERSONAS REALISTAS, MOVIMIENTOS, JUGADAS, ESTADIOS Y ASPECTO (25-9-2026)
 
 Pedido: integrar los movimientos que faltaban, mejorar las jugadas prehechas, cerrar lo pendiente de

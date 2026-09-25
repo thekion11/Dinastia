@@ -396,14 +396,36 @@ static func textura(j: Jugador, k1: String, k2: String, alto_px: int = 40) -> Te
 ## cualquier real al que la búsqueda todavía no le haya encontrado nada- se
 ## queda con el retrato de siempre. Nunca al revés: un jugador que NO es real
 ## jamás hereda la foto de otra persona.
+##
+## RETRATOS (25-9-2026): `herramientas/caras_reales_recortar.py` busca la cara
+## en cada foto con un detector neuronal (YuNet, de OpenCV) y guarda cabeza y
+## hombros a 256x256 en `recursos/caras_reales_256/`, indexados en
+## `datos/caras_reales_recortes.json`. Antes se recortaba el cuadrado central
+## de la foto de prensa entera y, en las fotos de cuerpo completo, la cara
+## quedaba del tamaño de un botón; además se decodificaban fotos de 3.000 px
+## en cada lista. Si el índice de retratos no está, se usa el reporte viejo.
+const RUTA_RETRATOS := "res://datos/caras_reales_recortes.json"
 const RUTA_REPORTE_FOTOS := "res://datos/caras_reales_reporte.json"
 static var _indice_fotos: Dictionary = {}
+static var _creditos_fotos: Dictionary = {}   ## nombre -> "autor · licencia"
 static var _indice_fotos_listo := false
 
 static func _indice_fotos_de() -> Dictionary:
 	if not _indice_fotos_listo:
 		_indice_fotos = {}
-		if FileAccess.file_exists(RUTA_REPORTE_FOTOS):
+		_creditos_fotos = {}
+		if FileAccess.file_exists(RUTA_RETRATOS):
+			var fr := FileAccess.open(RUTA_RETRATOS, FileAccess.READ)
+			var jr := JSON.new()
+			if jr.parse(fr.get_as_text()) == OK and jr.data is Dictionary:
+				for nombre: String in (jr.data as Dictionary):
+					var fila: Variant = (jr.data as Dictionary)[nombre]
+					if fila is Dictionary and String((fila as Dictionary).get("archivo", "")) != "":
+						_indice_fotos[nombre] = "res://" + String((fila as Dictionary)["archivo"])
+						_creditos_fotos[nombre] = "%s · %s" % [String((fila as Dictionary).get("autor", "desconocido")),
+							String((fila as Dictionary).get("licencia", ""))]
+			fr.close()
+		if _indice_fotos.is_empty() and FileAccess.file_exists(RUTA_REPORTE_FOTOS):
 			var f := FileAccess.open(RUTA_REPORTE_FOTOS, FileAccess.READ)
 			var texto := f.get_as_text()
 			f.close()
@@ -473,6 +495,16 @@ static func foto_real(j: Jugador) -> Texture2D:
 	var t := ImageTexture.create_from_image(img)
 	_cache[clave] = t
 	return t
+
+## El crédito de la foto que se está enseñando, o "" si no hay foto real. Las
+## licencias de Commons (CC BY / BY-SA) exigen nombrar autor y licencia allí
+## donde se muestra la foto, y avisar de que se modificó: la ficha lo pone bajo
+## el retrato, y la lista completa va en `datos/creditos_fotos.txt`.
+static func credito_foto(j: Jugador) -> String:
+	if foto_real(j) == null:
+		return ""
+	var c := String(_creditos_fotos.get(Nombres.limpiar(j.nombre), ""))
+	return "Foto: %s · Wikimedia Commons, recortada" % c if c != "" else ""
 
 ## Cuántos reales tienen ya foto encontrada, para enseñarlo en algún sitio sin
 ## tener que releer el reporte entero cada vez.
