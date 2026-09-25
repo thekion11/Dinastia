@@ -957,10 +957,13 @@ static func sentado(esq: Skeleton3D, prefijo: String) -> Animation:
 		_pierna_anat(a, esq, lado, [[0.0, 90, 95, 90 - (95 - RODILLA_REPOSO)]], prefijo)
 	## Brazos apoyados hacia adelante, sobre las rodillas -antebrazo doblado,
 	## no colgando a los costados como de pie-.
-	_pista(a, esq, "brazo_i", [[0.0, Vector3(18, 0, 6)]], prefijo)
-	_pista(a, esq, "brazo_d", [[0.0, Vector3(18, 0, -6)]], prefijo)
-	_pista(a, esq, "antebrazo_i", [[0.0, Vector3(60, 0, 0)]], prefijo)
-	_pista(a, esq, "antebrazo_d", [[0.0, Vector3(60, 0, 0)]], prefijo)
+	## CORREGIDO 26-9-2026 (plan maestro C2): con 18°/60° las manos quedaban
+	## a la altura del muslo y se hundían en él. Más adelante y algo abiertos,
+	## las manos caen SOBRE las rodillas.
+	_pista(a, esq, "brazo_i", [[0.0, Vector3(34, 0, 12)]], prefijo)
+	_pista(a, esq, "brazo_d", [[0.0, Vector3(34, 0, -12)]], prefijo)
+	_pista(a, esq, "antebrazo_i", [[0.0, Vector3(48, 0, 0)]], prefijo)
+	_pista(a, esq, "antebrazo_d", [[0.0, Vector3(48, 0, 0)]], prefijo)
 	return a
 
 ## Ciclo de zancada, mismo diseno de 4 tiempos que `AnimMixamo.correr()`

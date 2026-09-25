@@ -99,11 +99,27 @@ void fragment() {
 		camiseta = manga ? color1.rgb : camiseta;
 	}
 
+	// LOS PIES CALZADOS (26-9-2026, plan maestro C2). La máscara dejaba un
+	// anillo de piel entre la media y el botín y parte del pie sin cubrir: de
+	// cerca -los suplentes sentados- se veían descalzos. Con la altura de
+	// reposo (y, en metros) se completa: todo lo que está por debajo del
+	// tobillo es botín y hasta debajo de la rodilla es media. Los brazos nunca
+	// bajan de 0,6 m, así que no hay riesgo de pintarle medias a una mano.
+	bool cubierta = c.r + c.g + c.b > 0.001;
+	if (cubierta && !manga && y < 0.115) {
+		m.a = 1.0;
+		m.b = 0.0;
+	} else if (cubierta && !manga && y < 0.50 && m.g < 0.5 && !largo) {
+		m.b = max(m.b, 1.0 - m.a);
+	}
+
 	vec3 albedo = piel * tinte_piel;
 	albedo = mix(albedo, camiseta * pliegue, m.r);
 	albedo = mix(albedo, color_pantalon.rgb * pliegue, m.g);
 	albedo = mix(albedo, color_medias.rgb * pliegue, m.b);
-	albedo = mix(albedo, color_botines.rgb, m.a);
+	// Botín oscuro con el tobillo del color secundario, como los de verdad.
+	vec3 botin = (y > 0.085 && y < 0.115) ? mix(color_botines.rgb, color2.rgb, 0.55) : color_botines.rgb;
+	albedo = mix(albedo, botin, m.a);
 	ALBEDO = albedo;
 
 	float tela = clamp(m.r + m.g + m.b, 0.0, 1.0);
