@@ -244,6 +244,11 @@ func spawn_banca(root: Node3D, jugadores: Array, es_local: bool, kit: Dictionary
 	var lado := -1.0 if es_local else 1.0
 	var x_banda := 34.0 + DISTANCIA_LINEA_BANDA
 	var cuantos: int = mini(jugadores.size(), 7)
+	## Quién calienta con dominadas: el último de la fila que no sea portero.
+	var calienta := -1
+	for i in cuantos:
+		if (jugadores[i] as Jugador).pos_e != "POR":
+			calienta = i
 	for i in cuantos:
 		var j: Jugador = jugadores[i]
 		var jug := Puente3D.jugador(j)
@@ -275,9 +280,20 @@ func spawn_banca(root: Node3D, jugadores: Array, es_local: bool, kit: Dictionary
 		## en vez de de frente" ya documentada para la camara de
 		## `spike_tramo.gd"- antes de dar esto por cerrado.
 		n.rotation.y = -PI * 0.5
-		out.append({"node": n, "anim": nodo["anim"], "id": j.id, "jugador": jug,
+		var entrada := {"node": n, "anim": nodo["anim"], "id": j.id, "jugador": jug,
 			"base_pos": n.position, "slot_code": j.pos_e, "es_local": es_local,
-			"realista": nodo["realista"], "banca": true})
+			"realista": nodo["realista"], "banca": true}
+		## El último de la fila (nunca un portero) calienta haciendo dominadas
+		## con balón -mocap real, ver `Dominadas`-, un poco apartado del resto.
+		if i == calienta and bool(nodo["realista"]):
+			var clip := "dominadas_%d" % (1 + absi(j.id.hash()) % 3)
+			n.position.z += lado * 1.4
+			entrada["base_pos"] = n.position
+			var ap_d: AnimationPlayer = nodo["anim"]
+			if Dominadas.montar(n, ap_d, clip) != null:
+				ap_d.play(clip)
+				entrada["reposo_anim"] = clip
+		out.append(entrada)
 	return out
 
 ## LOS QUE NO CABEN, SENTADOS (22-9-2026, pedido directo del usuario tras ver

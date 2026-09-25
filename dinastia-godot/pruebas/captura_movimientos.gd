@@ -12,7 +12,8 @@ extends Node3D
 const PEDIDAS := ["parado", "caminar", "trotar", "correr", "patear", "cabezazo", "celebrar",
 	"celebrar_rodillas", "celebrar_carrera", "atajar_izq", "atajar_der", "atajar_bajo", "portero_listo",
 	"lamento", "rabia", "falta_barrida", "falta_empujon", "senalar_falta", "mostrar_tarjeta",
-	"mostrar_roja", "pase", "saque_banda", "marcar", "dolor"]
+	"mostrar_roja", "pase", "saque_banda", "marcar", "dolor", "regate_finta", "regate_pausa", "conducir",
+	"dominadas_1", "dominadas_2", "dominadas_3"]
 const FOTOS := [["cabezazo", 0.5], ["celebrar", 0.25], ["atajar_izq", 0.75], ["atajar_der", 0.7], ["atajar_bajo", 0.75], ["portero_listo", 0.5],
 	["celebrar_rodillas", 0.5], ["celebrar_carrera", 0.5], ["lamento", 0.6], ["rabia", 0.25],
 	["falta_barrida", 0.5], ["falta_empujon", 0.5], ["senalar_falta", 0.5], ["mostrar_roja", 0.55],
