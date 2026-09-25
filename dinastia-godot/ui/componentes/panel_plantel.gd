@@ -112,9 +112,4 @@ static func _rejilla(lista: VBoxContainer) -> GridContainer:
 
 ## Calcado de `Principal._dinero()`, con el mismo factor `Eco.ECO`.
 static func _dinero(monto: int) -> String:
-	var euros := float(monto) * Eco.ECO
-	if absf(euros) >= 1000000.0:
-		return "%.1fM EUR" % (euros / 1000000.0)
-	if absf(euros) >= 1000.0:
-		return "%dk EUR" % int(euros / 1000.0)
-	return "%d EUR" % int(euros)
+	return Eco.dinero(monto)

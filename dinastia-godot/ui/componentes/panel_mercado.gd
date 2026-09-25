@@ -491,9 +491,7 @@ func _dato(etiqueta: String, valor: String, color: Color) -> void:
 	va.text = valor
 	f.add_child(va)
 
+## Antes: "$" y sin pasar por `ECO` -el mismo jugador valía doce veces menos
+## aquí que en su ficha-. Ahora la misma función que todo el juego.
 func _dinero(monto: int) -> String:
-	if monto >= 1_000_000:
-		return "%.1fM" % (float(monto) / 1_000_000.0)
-	if monto >= 1_000:
-		return "%dK" % (monto / 1_000)
-	return "$%d" % monto
+	return Eco.dinero(monto)

@@ -599,12 +599,7 @@ func _actualizar_continuar() -> void:
 	botones.add_child(bx)
 
 func _dinero(n: int) -> String:
-	var euros := float(n) * Eco.ECO
-	if absf(euros) >= 1000000.0:
-		return "%.1fM EUR" % (euros / 1000000.0)
-	if absf(euros) >= 1000.0:
-		return "%dk EUR" % int(euros / 1000.0)
-	return "%d EUR" % int(euros)
+	return Eco.dinero(n)
 
 func _borrar_partida() -> void:
 	Partida.borrar("partida")

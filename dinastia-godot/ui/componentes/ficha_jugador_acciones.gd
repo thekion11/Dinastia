@@ -248,9 +248,4 @@ static func _boton(padre: Node, texto: String, accion: Callable) -> void:
 ## que nada avisara: el código compila igual, el número solo está mal. Se
 ## corrigió calcándolo del original ANTES de correr una sola captura.
 static func _dinero(monto: int) -> String:
-	var euros := float(monto) * Eco.ECO
-	if absf(euros) >= 1000000.0:
-		return "%.1fM EUR" % (euros / 1000000.0)
-	if absf(euros) >= 1000.0:
-		return "%dk EUR" % int(euros / 1000.0)
-	return "%d EUR" % int(euros)
+	return Eco.dinero(monto)
