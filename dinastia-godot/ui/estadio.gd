@@ -803,9 +803,11 @@ func _banca_celebra(es_local: bool) -> void:
 			continue
 		if ap.has_animation("celebrar"):
 			ap.play("celebrar")
+		## Vuelve a lo suyo: "parado", o las dominadas si estaba calentando.
+		var reposo := String(f.get("reposo_anim", "parado"))
 		get_tree().create_timer(3.0).timeout.connect(func() -> void:
-			if is_instance_valid(ap) and ap.has_animation("parado"):
-				ap.play("parado"))
+			if is_instance_valid(ap) and ap.has_animation(reposo):
+				ap.play(reposo))
 
 func _a_la_tarjeta(j: Jugador, roja: bool, minuto: int) -> void:
 	Sonido.toca("roja" if roja else "amarilla")

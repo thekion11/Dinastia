@@ -344,18 +344,63 @@ static func _bakear_futbol_global(archivo: String, esq_referencia: Skeleton3D) -
 					pistas_rot[i] = pr
 					pistas_pos[i] = pp
 				ap_origen.play("clip")
-				var t := 0.0
+				## El primer fotograma de estos FBX es la pose de enlace (brazos
+				## en T, rodillas rectas), no el movimiento: la auditoría
+				## biomecánica lo vio como un salto de 49 rad/s en el primer
+				## 1/30 s de los festejos. Se hornea desde el segundo fotograma.
+				var t := PASO_HORNEADO
+				resultado.length = maxf(0.1, clip_origen.length - PASO_HORNEADO)
 				while t < clip_origen.length + PASO_HORNEADO * 0.5:
 					var tt := minf(t, clip_origen.length)
 					ap_origen.seek(tt, true)
 					retarget.aplicar()
+					_huesos_rigidos(esq_molde)
+					_limitar_rodillas(esq_molde)
 					for i in esq_molde.get_bone_count():
-						resultado.rotation_track_insert_key(pistas_rot[i], tt, esq_molde.get_bone_pose_rotation(i))
-						resultado.position_track_insert_key(pistas_pos[i], tt, esq_molde.get_bone_pose_position(i))
+						resultado.rotation_track_insert_key(pistas_rot[i], tt - PASO_HORNEADO, esq_molde.get_bone_pose_rotation(i))
+						resultado.position_track_insert_key(pistas_pos[i], tt - PASO_HORNEADO, esq_molde.get_bone_pose_position(i))
 					t += PASO_HORNEADO
 		raiz.free()
 	_cache_futbol_global[archivo] = resultado
 	return resultado
+
+## HUESOS RÍGIDOS (25-9-2026). El retarget global copia la pose GLOBAL de cada
+## hueso del actor, posición incluida, y el actor tiene otras proporciones: en
+## el festejo de rodillas la rodilla quedaba 14 cm fuera de la punta del muslo.
+## Es decir, en todo el mocap los miembros se estiraban y encogían, cosa que un
+## hueso de verdad no hace. Se devuelve cada hueso a su largo de reposo y solo
+## se conserva el GIRO; la pelvis (y la raíz) sí guardan su desplazamiento,
+## que es el que lleva el cuerpo por el campo y lo sube y baja.
+static func _huesos_rigidos(esq: Skeleton3D) -> void:
+	var pelvis := esq.find_bone("pelvis")
+	for i in esq.get_bone_count():
+		if i == pelvis or esq.get_bone_parent(i) < 0:
+			continue
+		esq.set_bone_pose_position(i, esq.get_bone_rest(i).origin)
+
+## TOPE ANATÓMICO DE LA RODILLA (25-9-2026). Una rodilla humana deja de
+## doblar hacia los 155-160°: el gemelo choca con el muslo. El actor del mocap
+## llega ahí al arrodillarse, pero nuestro modelo tiene otras proporciones y
+## el retarget lo empujaba a 176° (`celebrar_rodillas`, medido por
+## `pruebas/auditoria_biomecanica.gd`), una pierna plegada como una navaja. Se
+## limita el giro TOTAL de la pierna respecto a su reposo (limitar solo la
+## componente de bisagra no bastaba: el retarget le suma giro fuera del eje y
+## seguía midiendo 169°), conservando su dirección. El pie queda un par de
+## centímetros más lejos del glúteo; nada más cambia.
+const RODILLA_MAX := 150.0
+
+static func _limitar_rodillas(esq: Skeleton3D) -> void:
+	for n: String in ["calf_l", "calf_r"]:
+		var i := esq.find_bone(n)
+		if i < 0:
+			continue
+		var reposo := esq.get_bone_rest(i).basis.get_rotation_quaternion()
+		var rel := reposo.inverse() * esq.get_bone_pose_rotation(i)
+		if rel.w < 0.0:
+			rel = -rel
+		if rad_to_deg(rel.get_angle()) <= RODILLA_MAX:
+			continue
+		esq.set_bone_pose_rotation(i, reposo * Quaternion(rel.get_axis(), deg_to_rad(RODILLA_MAX)))
 
 ## Igual que `cargar_futbol()` pero via el retarget GLOBAL -ver el comentario
 ## largo encima de `_bakear_futbol_global()`-. Usar esta version, no la local,
@@ -400,7 +445,10 @@ static func _pista(anim: Animation, esq: Skeleton3D, clave: String, claves: Arra
 		var desvio := Quaternion.from_euler(Vector3(deg_to_rad(g.x), deg_to_rad(g.y), deg_to_rad(g.z)))
 		anim.rotation_track_insert_key(pista, t, reposo * desvio)
 
-static func _pista_pos(anim: Animation, esq: Skeleton3D, clave: String, claves: Array, prefijo: String) -> void:
+## `lineal`: para las caderas que acompañan a `_pierna_apoyada()`. Con
+## interpolación cúbica la cadera se pasaba de largo entre claves y los pies,
+## calculados para la cadera "de verdad", se hundían en el césped.
+static func _pista_pos(anim: Animation, esq: Skeleton3D, clave: String, claves: Array, prefijo: String, lineal: bool = false) -> void:
 	var i := _idx(esq, clave)
 	if i < 0:
 		return
@@ -418,9 +466,92 @@ static func _pista_pos(anim: Animation, esq: Skeleton3D, clave: String, claves: 
 		a_padre = esq.get_bone_global_rest(padre).basis.orthonormalized().inverse()
 	var pista := anim.add_track(Animation.TYPE_POSITION_3D)
 	anim.track_set_path(pista, NodePath("%s:%s" % [prefijo, esq.get_bone_name(i)]))
-	anim.track_set_interpolation_type(pista, Animation.INTERPOLATION_CUBIC)
+	anim.track_set_interpolation_type(pista, Animation.INTERPOLATION_LINEAR if lineal else Animation.INTERPOLATION_CUBIC)
 	for k in claves:
 		anim.position_track_insert_key(pista, k[0], reposo + a_padre * (k[1] as Vector3))
+
+## PIERNAS CON ANATOMÍA DE VERDAD (25-9-2026). La auditoría biomecánica
+## (`pruebas/auditoria_biomecanica.gd`) encontró que TODAS las poses de piernas
+## hechas a mano -sentado, lamento, rabia, dolor, barrida, cabezazo- tenían los
+## signos al revés: el muslo iba hacia ATRÁS y la rodilla doblaba hacia
+## DELANTE, el espejo exacto de una pierna humana. Desde la cámara de TV casi no
+## se notaba (en el banquillo, los muslos quedaban escondidos bajo el banco),
+## pero ninguna rodilla del mundo dobla así. Medido con sonda en este esqueleto
+## (+45° aislados en cada hueso):
+##   muslo  +X -> el muslo va hacia atrás   => flexión de cadera = -X
+##   pierna +X -> el talón va al glúteo     => flexión de rodilla = +X
+##   pie    +X -> la punta baja             => flexión plantar   = +X
+## La rodilla de reposo ya trae 6,4° doblados.
+## Estos dos helpers hablan en ANATOMÍA (grados de flexión, + = doblar como un
+## humano) y traducen a los ejes del hueso; así ya no hay signos que recordar.
+const RODILLA_REPOSO := 6.4
+
+static func _pierna_anat(a: Animation, esq: Skeleton3D, lado: String, claves: Array, prefijo: String) -> void:
+	## claves: [t, cadera, rodilla, tobillo] -cadera + = muslo adelante,
+	## rodilla + = doblada, tobillo + = punta abajo-.
+	var km: Array = []
+	var kr: Array = []
+	var kp: Array = []
+	for k: Array in claves:
+		km.append([k[0], Vector3(-float(k[1]), 0, 0)])
+		kr.append([k[0], Vector3(float(k[2]) - RODILLA_REPOSO, 0, 0)])
+		kp.append([k[0], Vector3(float(k[3]), 0, 0)])
+	_pista(a, esq, "muslo_" + lado, km, prefijo)
+	_pista(a, esq, "pierna_" + lado, kr, prefijo)
+	_pista(a, esq, "pie_" + lado, kp, prefijo)
+
+## Cinemática inversa de dos segmentos en el plano sagital: con la cadera
+## desplazada `(dy, dz)` y el tobillo en `(pie_z, pie_y)` -relativos a su
+## posición de reposo, 0 = en el suelo donde estaba-, devuelve [cadera,
+## rodilla, tobillo] en grados anatómicos, con la rodilla hacia delante y el pie
+## plano. Largos medidos del reposo del propio esqueleto.
+static func _ik_pierna(esq: Skeleton3D, lado: String, dy: float, dz: float, pie_z: float = 0.0, pie_y: float = 0.0) -> Array:
+	var s := "l" if lado == "i" else "r"
+	var cad := esq.get_bone_global_rest(esq.find_bone("thigh_" + s)).origin
+	var rod := esq.get_bone_global_rest(esq.find_bone("calf_" + s)).origin
+	var tob := esq.get_bone_global_rest(esq.find_bone("foot_" + s)).origin
+	var l1 := cad.distance_to(rod)
+	var l2 := rod.distance_to(tob)
+	var v := Vector2((tob.z + pie_z) - (cad.z + dz), (tob.y + pie_y) - (cad.y + dy))
+	var r := clampf(v.length(), absf(l1 - l2) + 0.01, l1 + l2 - 0.002)
+	var phi := atan2(v.x, -v.y)
+	var a1 := acos(clampf((l1 * l1 + r * r - l2 * l2) / (2.0 * l1 * r), -1.0, 1.0))
+	var cadera := rad_to_deg(phi + a1)
+	var rodilla := 180.0 - rad_to_deg(acos(clampf((l1 * l1 + l2 * l2 - r * r) / (2.0 * l1 * l2), -1.0, 1.0)))
+	## Pie plano: la suma de giros del muslo, la pierna y el pie vuelve a cero.
+	## Pero el tobillo solo dorsiflexiona unos 35° (tope del tendón de Aquiles):
+	## en una sentadilla profunda, pasado eso se levanta el talón, como en una
+	## persona de verdad.
+	var tobillo := clampf(cadera - (rodilla - RODILLA_REPOSO), -35.0, 50.0)
+	return [cadera, rodilla, tobillo]
+
+## Una pierna APOYADA: la cadera baja o se desplaza y el pie se queda plantado.
+## claves: [t, dy, dz, pie_z, pie_y] (metros, espacio del esqueleto). Es lo que
+## evita los pies atravesando el césped cuando el cuerpo se agacha.
+static func _pierna_apoyada(a: Animation, esq: Skeleton3D, lado: String, claves: Array, prefijo: String) -> void:
+	## Se resuelve cada 1/20 s interpolando los OBJETIVOS (cadera y pie), no
+	## solo en las claves: interpolar ángulos entre dos poses resueltas no
+	## mantiene el pie en su sitio, y a mitad de camino se hundía en el césped.
+	var anat: Array = []
+	var norm: Array = []
+	for k: Array in claves:
+		norm.append([float(k[0]), float(k[1]), float(k[2]), float(k[3]) if k.size() > 3 else 0.0, float(k[4]) if k.size() > 4 else 0.0])
+	for n in norm.size():
+		var k0: Array = norm[n]
+		var pasos := 1
+		if n + 1 < norm.size():
+			pasos = maxi(1, int(ceil((float(norm[n + 1][0]) - float(k0[0])) * 20.0)))
+		for p in pasos:
+			if n + 1 >= norm.size() and p > 0:
+				break
+			var f := float(p) / float(pasos)
+			var k1: Array = norm[mini(n + 1, norm.size() - 1)]
+			var v: Array = []
+			for c in 5:
+				v.append(lerpf(float(k0[c]), float(k1[c]), f))
+			var r := _ik_pierna(esq, lado, v[1], v[2], v[3], v[4])
+			anat.append([v[0], r[0], r[1], r[2]])
+	_pierna_anat(a, esq, lado, anat, prefijo)
 
 static func _nueva(dur: float, bucle: bool) -> Animation:
 	var a := Animation.new()
@@ -483,11 +614,29 @@ const CLIP_RECORTES := {
 	"falta_empujon": ["19_Defending_02_ue5", 0.3, 0.6, false, true],
 	"mostrar_roja": ["21_Yellow_And_Red_Card_ue5", 0.3, 0.75, false, true],
 	"penal_2": ["11_Penalty_Kick_02_ue5", 0.0, 0.45, false, true],
+	## LOS REGATES Y LAS DOMINADAS (25-9-2026). Seis clips del mismo pack de
+	## mocap de fútbol llevaban meses importados y sin usar. Van sin
+	## desplazamiento propio (el actor recorre metros; aquí el que mueve al
+	## jugador es el partido):
+	##  - `regate_finta`: el amague con salida lateral (Dribble_01).
+	##  - `regate_pausa`: pisar y proteger el balón, parado (Dribble_02).
+	##  - `conducir`: llevar el balón pegado al pie avanzando, en bucle
+	##    (Dribble_03, desde que arranca a avanzar).
+	##  - `dominadas_1..3`: el calentamiento con el balón en el aire.
+	"regate_finta": ["01_Dribble_01_ue5", 0.04, 0.42, false, true],
+	"regate_pausa": ["02_Dribble_02_ue5", 0.12, 0.42, false, true],
+	"conducir": ["03_Dribble_03_ue5", 0.38, 0.98, true, true],
+	"dominadas_1": ["04_Juggling_01_ue5", 0.02, 0.98, true, true],
+	"dominadas_2": ["05_Juggling_02_ue5", 0.02, 0.98, true, true],
+	"dominadas_3": ["06_Juggling_03_ue5", 0.02, 0.98, true, true],
 }
 
 ## Una ventana de una animación, empezando en 0. `sin_xz` fija la X/Z de la
 ## pelvis a la del primer fotograma de la ventana.
-static func recortar(base: Animation, desde_f: float, hasta_f: float, bucle: bool, sin_xz: bool) -> Animation:
+## `reposo_pelvis`: con `sin_xz`, la pelvis se clava en su posición de REPOSO en
+## horizontal -no en la del primer fotograma-: algunos clips arrancan con el
+## actor a 3,8 m de su origen, y el jugador se veía desplazado de su sitio.
+static func recortar(base: Animation, desde_f: float, hasta_f: float, bucle: bool, sin_xz: bool, reposo_pelvis: Variant = null) -> Animation:
 	var a := Animation.new()
 	var t0 := base.length * clampf(desde_f, 0.0, 1.0)
 	var t1 := base.length * clampf(hasta_f, 0.0, 1.0)
@@ -525,13 +674,16 @@ static func recortar(base: Animation, desde_f: float, hasta_f: float, bucle: boo
 				## girado: ahí la ALTURA es Z, no Y (medido: 0,95 en Z al estar de
 				## pie). Se busca el eje vertical por el valor -el de ~0,9 m- y se
 				## congelan los otros dos, que son el avance por el campo.
-				var p0 := primero as Vector3
+				## Con el reposo a mano, el eje vertical sale del reposo (de pie,
+				## ~0,95 m): un clip que arranca a 3,8 m del origen engañaba a la
+				## detección por el primer fotograma.
+				var p0: Vector3 = reposo_pelvis if reposo_pelvis is Vector3 else primero as Vector3
 				var eje := 0
 				if absf(p0.y) > absf(p0[eje]):
 					eje = 1
 				if absf(p0.z) > absf(p0[eje]):
 					eje = 2
-				var fijo := p0
+				var fijo: Vector3 = reposo_pelvis if reposo_pelvis is Vector3 else p0
 				fijo[eje] = (v as Vector3)[eje]
 				v = fijo
 			match tipo:
@@ -548,14 +700,21 @@ static func recortar(base: Animation, desde_f: float, hasta_f: float, bucle: boo
 ## acaba de ver el gol en contra-.
 static func lamento(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(2.4, false)
-	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.5, Vector3(0, -0.12, 0)], [2.0, Vector3(0, -0.13, 0)], [2.4, Vector3(0, -0.05, 0)]], prefijo)
+	## La cadera baja Y se va un poco atrás, como hace el cuerpo para no caerse
+	## hacia delante al doblar el tronco; los pies no se mueven del sitio.
+	var cad := [[0.0, 0.0, 0.0], [0.5, -0.12, -0.05], [2.0, -0.13, -0.06], [2.4, -0.05, -0.02]]
+	var kc: Array = []
+	var kp: Array = []
+	for c: Array in cad:
+		kc.append([c[0], Vector3(0, c[1], c[2])])
+		kp.append([c[0], c[1], c[2]])
+	_pista_pos(a, esq, "cadera", kc, prefijo, true)
 	_pista(a, esq, "espalda1", [[0.0, Vector3.ZERO], [0.5, Vector3(18, 0, 0)], [2.0, Vector3(20, 0, 0)], [2.4, Vector3(8, 0, 0)]], prefijo)
 	_pista(a, esq, "espalda2", [[0.0, Vector3.ZERO], [0.5, Vector3(16, 0, 0)], [2.4, Vector3(6, 0, 0)]], prefijo)
 	_pista(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.6, Vector3(28, 0, 0)], [1.4, Vector3(24, 8, 0)], [2.0, Vector3(28, -8, 0)], [2.4, Vector3(10, 0, 0)]], prefijo)
 	for lado: String in ["i", "d"]:
 		var z := 6.0 if lado == "i" else -6.0
-		_pista(a, esq, "muslo_" + lado, [[0.0, Vector3.ZERO], [0.5, Vector3(24, 0, 0)], [2.4, Vector3(8, 0, 0)]], prefijo)
-		_pista(a, esq, "pierna_" + lado, [[0.0, Vector3.ZERO], [0.5, Vector3(-30, 0, 0)], [2.4, Vector3(-10, 0, 0)]], prefijo)
+		_pierna_apoyada(a, esq, lado, kp, prefijo)
 		_pista(a, esq, "brazo_" + lado, [[0.0, Vector3(0, 0, z)], [0.5, Vector3(38, 0, z)], [2.4, Vector3(14, 0, z)]], prefijo)
 		_pista(a, esq, "antebrazo_" + lado, [[0.0, Vector3.ZERO], [0.5, Vector3(12, 0, 0)], [2.4, Vector3.ZERO]], prefijo)
 	return a
@@ -568,8 +727,12 @@ static func rabia(esq: Skeleton3D, prefijo: String) -> Animation:
 	_pista(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.35, Vector3(-30, 0, 0)], [0.9, Vector3(20, 0, 0)], [1.8, Vector3(6, 0, 0)]], prefijo)
 	_pista(a, esq, "brazo_i", [[0.0, Vector3(0, 0, 6)], [0.35, Vector3(-30, 0, 40)], [0.7, Vector3(20, 0, 2)], [1.8, Vector3(0, 0, 6)]], prefijo)
 	_pista(a, esq, "brazo_d", [[0.0, Vector3(0, 0, -6)], [0.35, Vector3(-30, 0, -40)], [0.7, Vector3(20, 0, -2)], [1.8, Vector3(0, 0, -6)]], prefijo)
-	_pista(a, esq, "muslo_d", [[0.0, Vector3.ZERO], [0.8, Vector3(-10, 0, 0)], [1.05, Vector3(50, 0, 0)], [1.4, Vector3.ZERO]], prefijo)
-	_pista(a, esq, "pierna_d", [[0.0, Vector3.ZERO], [0.8, Vector3(-60, 0, 0)], [1.05, Vector3(-8, 0, 0)], [1.4, Vector3.ZERO]], prefijo)
+	## La patada al aire: arma la pierna atrás con la rodilla doblada y la
+	## suelta adelante casi estirada, el tobillo en punta como al chutar. La
+	## pierna de apoyo cede un poco la rodilla para absorber el golpe.
+	_pierna_anat(a, esq, "d", [[0.0, 0, RODILLA_REPOSO, 0], [0.8, -15, 75, 20], [1.05, 55, 12, 25], [1.4, 0, RODILLA_REPOSO, 0], [1.8, 0, RODILLA_REPOSO, 0]], prefijo)
+	_pierna_apoyada(a, esq, "i", [[0.0, 0.0, 0.0], [0.8, -0.03, 0.0], [1.05, -0.04, 0.02], [1.4, 0.0, 0.0], [1.8, 0.0, 0.0]], prefijo)
+	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.8, Vector3(0, -0.03, 0)], [1.05, Vector3(0, -0.04, 0.02)], [1.4, Vector3.ZERO], [1.8, Vector3.ZERO]], prefijo, true)
 	return a
 
 ## El árbitro señala la falta: brazo derecho extendido hacia el costado, a la
@@ -586,12 +749,13 @@ static func senalar_falta(esq: Skeleton3D, prefijo: String) -> Animation:
 ## brazo busca el suelo.
 static func falta_barrida(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(1.2, false)
-	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.3, Vector3(0, -0.62, 0.15)], [0.85, Vector3(0, -0.64, 0.25)], [1.2, Vector3(0, -0.2, 0.2)]], prefijo)
+	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.3, Vector3(0, -0.56, 0.15)], [0.85, Vector3(0, -0.58, 0.25)], [1.2, Vector3(0, -0.2, 0.2)]], prefijo, true)
 	_pista(a, esq, "espalda2", [[0.0, Vector3.ZERO], [0.3, Vector3(-28, 0, 0)], [0.85, Vector3(-24, 0, 0)], [1.2, Vector3(-6, 0, 0)]], prefijo)
-	_pista(a, esq, "muslo_d", [[0.0, Vector3.ZERO], [0.3, Vector3(78, 0, 0)], [0.85, Vector3(72, 0, 0)], [1.2, Vector3(20, 0, 0)]], prefijo)
-	_pista(a, esq, "pierna_d", [[0.0, Vector3.ZERO], [0.3, Vector3(-4, 0, 0)], [1.2, Vector3(-20, 0, 0)]], prefijo)
-	_pista(a, esq, "muslo_i", [[0.0, Vector3.ZERO], [0.3, Vector3(30, 0, 0)], [1.2, Vector3(10, 0, 0)]], prefijo)
-	_pista(a, esq, "pierna_i", [[0.0, Vector3.ZERO], [0.3, Vector3(-110, 0, 0)], [1.2, Vector3(-40, 0, 0)]], prefijo)
+	## Pierna de delante estirada hacia el balón; la de atrás, doblada debajo.
+	## Las dos por IK siguiendo a la cadera: la de delante busca el balón a ras
+	## de césped, la de atrás deja el pie apoyado detrás.
+	_pierna_apoyada(a, esq, "d", [[0.0, 0.0, 0.0, 0.0, 0.0], [0.3, -0.56, 0.15, 1.0, 0.07], [0.85, -0.58, 0.25, 1.05, 0.06], [1.2, -0.2, 0.2, 0.45, 0.0]], prefijo)
+	_pierna_apoyada(a, esq, "i", [[0.0, 0.0, 0.0, 0.0, 0.0], [0.3, -0.56, 0.15, -0.28, 0.04], [0.85, -0.58, 0.25, -0.18, 0.04], [1.2, -0.2, 0.2, 0.0, 0.0]], prefijo)
 	_pista(a, esq, "brazo_i", [[0.0, Vector3(0, 0, 6)], [0.3, Vector3(-40, 0, 30)], [1.2, Vector3(0, 0, 6)]], prefijo)
 	_pista(a, esq, "brazo_d", [[0.0, Vector3(0, 0, -6)], [0.3, Vector3(20, 0, -40)], [1.2, Vector3(0, 0, -6)]], prefijo)
 	return a
@@ -599,13 +763,13 @@ static func falta_barrida(esq: Skeleton3D, prefijo: String) -> Animation:
 ## El dolor de una lesión: agachado, las manos a la rodilla, la cabeza baja.
 static func dolor(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(3.0, false)
-	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.5, Vector3(0, -0.34, 0)], [3.0, Vector3(0, -0.36, 0)]], prefijo)
+	## Agachado sobre la pierna sana; la lastimada, adelantada y sin cargar
+	## peso. La cadera se va atrás para equilibrar el tronco inclinado.
+	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.5, Vector3(0, -0.27, -0.10)], [3.0, Vector3(0, -0.29, -0.10)]], prefijo, true)
+	_pierna_apoyada(a, esq, "i", [[0.0, 0.0, 0.0], [0.5, -0.27, -0.10, -0.06], [3.0, -0.29, -0.10, -0.06]], prefijo)
+	_pierna_apoyada(a, esq, "d", [[0.0, 0.0, 0.0], [0.5, -0.27, -0.10, 0.20, 0.02], [3.0, -0.29, -0.10, 0.20, 0.02]], prefijo)
 	_pista(a, esq, "espalda1", [[0.0, Vector3.ZERO], [0.5, Vector3(34, 0, 0)], [3.0, Vector3(36, 0, 0)]], prefijo)
 	_pista(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.5, Vector3(30, 0, 0)], [1.5, Vector3(24, 10, 0)], [3.0, Vector3(30, 0, 0)]], prefijo)
-	_pista(a, esq, "muslo_d", [[0.0, Vector3.ZERO], [0.5, Vector3(70, 0, 0)]], prefijo)
-	_pista(a, esq, "pierna_d", [[0.0, Vector3.ZERO], [0.5, Vector3(-90, 0, 0)]], prefijo)
-	_pista(a, esq, "muslo_i", [[0.0, Vector3.ZERO], [0.5, Vector3(40, 0, 0)]], prefijo)
-	_pista(a, esq, "pierna_i", [[0.0, Vector3.ZERO], [0.5, Vector3(-40, 0, 0)]], prefijo)
 	_pista(a, esq, "brazo_i", [[0.0, Vector3(0, 0, 6)], [0.5, Vector3(52, 0, 10)]], prefijo)
 	_pista(a, esq, "brazo_d", [[0.0, Vector3(0, 0, -6)], [0.5, Vector3(52, 0, -10)]], prefijo)
 	_pista(a, esq, "antebrazo_i", [[0.0, Vector3.ZERO], [0.5, Vector3(30, 0, 0)]], prefijo)
@@ -660,7 +824,8 @@ static func construir(esq: Skeleton3D, ruta_esqueleto: String = "", acciones_exp
 			if not _cache_recortes.has(cc):
 				var r: Array = CLIP_RECORTES[clave]
 				var entera: Animation = cargar_futbol_global(String(r[0]), esq, prefijo)
-				_cache_recortes[cc] = recortar(entera, float(r[1]), float(r[2]), bool(r[3]), bool(r[4])) if entera != null else null
+				var rp := esq.get_bone_rest(esq.find_bone("pelvis")).origin
+				_cache_recortes[cc] = recortar(entera, float(r[1]), float(r[2]), bool(r[3]), bool(r[4]), rp) if entera != null else null
 			if _cache_recortes[cc] != null:
 				lib.add_animation(clave, _cache_recortes[cc])
 		lib.add_animation("lamento", lamento(esq, prefijo))
@@ -720,8 +885,10 @@ static func cabezazo(esq: Skeleton3D, prefijo: String) -> Animation:
 		[0.58, Vector3(-20, 0, 0)], [1.0, Vector3(0, 0, 0)]], prefijo)
 	_pista(a, esq, "brazo_i", [[0.0, Vector3(-40, 0, 14)], [0.4, Vector3(-40, 0, 58)], [1.0, Vector3(-40, 0, 14)]], prefijo)
 	_pista(a, esq, "brazo_d", [[0.0, Vector3(-40, 0, -14)], [0.4, Vector3(-40, 0, -58)], [1.0, Vector3(-40, 0, -14)]], prefijo)
-	_pista(a, esq, "muslo_i", [[0.0, Vector3(0, 0, 0)], [0.45, Vector3(38, 0, 0)], [1.0, Vector3(0, 0, 0)]], prefijo)
-	_pista(a, esq, "pierna_i", [[0.0, Vector3(-6, 0, 0)], [0.45, Vector3(-72, 0, 0)], [1.0, Vector3(-6, 0, 0)]], prefijo)
+	## En el aire: una rodilla sube (impulso) y la otra cuelga casi estirada
+	## con el pie en punta; al caer, las dos amortiguan.
+	_pierna_anat(a, esq, "i", [[0.0, 10, 25, 0], [0.45, 55, 80, 20], [0.8, 15, 30, 5], [1.0, 0, RODILLA_REPOSO, 0]], prefijo)
+	_pierna_anat(a, esq, "d", [[0.0, 10, 25, 0], [0.45, 5, 18, 25], [0.8, 12, 30, 5], [1.0, 0, RODILLA_REPOSO, 0]], prefijo)
 	return a
 
 ## El festejo de gol: correr con los brazos abiertos y saltar, en bucle -la
@@ -780,28 +947,14 @@ static func sentado(esq: Skeleton3D, prefijo: String) -> Animation:
 	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [1.7, Vector3(0, 0.01, 0)], [3.4, Vector3.ZERO]], prefijo)
 	_pista(a, esq, "espalda1", [[0.0, Vector3(-4, 0, 0)], [1.7, Vector3(-6, 0, 0)], [3.4, Vector3(-4, 0, 0)]], prefijo)
 	_pista(a, esq, "cabeza", [[0.0, Vector3(0, -3, 0)], [1.7, Vector3(0, 3, 0)], [3.4, Vector3(0, -3, 0)]], prefijo)
-	## Cadera: 90° adelante -el muslo pasa de colgar vertical a quedar
-	## horizontal, apoyado en el asiento-.
-	_pista(a, esq, "muslo_i", [[0.0, Vector3(90, 0, 0)]], prefijo)
-	_pista(a, esq, "muslo_d", [[0.0, Vector3(90, 0, 0)]], prefijo)
-	## Rodilla: -100°, NO +92 -CORREGIDO 22-9-2026 con una sonda real
-	## (`pruebas/sonda_rodilla_sentado.gd`, barrido de -150 a 90 con el muslo
-	## ya fijo en 90, una imagen por valor, el mismo metodo que ya usaba este
-	## proyecto para huesos nuevos sin calibrar). +92 -el primer numero, nunca
-	## verificado con una imagen aislada, solo "parecia razonable"- doblaba la
-	## pantorrilla hacia ARRIBA Y ATRAS, el pie casi contra el gluteo -el
-	## mismo signo que ya usa `_pierna()`/`patear()` para el retroceso de una
-	## zancada, que resulta ser la direccion CONTRARIA a la que hace falta
-	## cuando el muslo YA esta horizontal-. -100 deja la pantorrilla colgando
-	## hacia el piso, el pie cerca de donde estaria si la persona estuviera
-	## sentada de verdad -confirmado con la imagen de la sonda, no a ojo en
-	## el codigo-. -80 se queda corto (la pantorrilla todavia muy abierta),
-	## -120 se pasa (el pie se cruza detras de la rodilla).
-	_pista(a, esq, "pierna_i", [[0.0, Vector3(-100, 0, 0)]], prefijo)
-	_pista(a, esq, "pierna_d", [[0.0, Vector3(-100, 0, 0)]], prefijo)
-	## Pie: leve correccion para que quede plano en el piso, no en punta.
-	_pista(a, esq, "pie_i", [[0.0, Vector3(-6, 0, 0)]], prefijo)
-	_pista(a, esq, "pie_d", [[0.0, Vector3(-6, 0, 0)]], prefijo)
+	## Cadera 90° (muslo horizontal sobre el asiento) y rodilla 95° (la
+	## pantorrilla cae al piso, el pie algo por detrás de la rodilla), pie
+	## plano. CORREGIDO 25-9-2026: antes eran muslo +90 / pierna -100 en ejes
+	## crudos, que en este esqueleto es muslo hacia ATRÁS y rodilla doblada al
+	## revés -desde la cámara de TV lo tapaba el propio banco-. Ver
+	## `_pierna_anat()`.
+	for lado: String in ["i", "d"]:
+		_pierna_anat(a, esq, lado, [[0.0, 90, 95, 90 - (95 - RODILLA_REPOSO)]], prefijo)
 	## Brazos apoyados hacia adelante, sobre las rodillas -antebrazo doblado,
 	## no colgando a los costados como de pie-.
 	_pista(a, esq, "brazo_i", [[0.0, Vector3(18, 0, 6)]], prefijo)
