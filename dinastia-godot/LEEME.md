@@ -1,5 +1,107 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## TERCERA RONDA DEL USUARIO: PERSONAS REALISTAS, MOVIMIENTOS, JUGADAS, ESTADIOS Y ASPECTO (25-9-2026)
+
+Pedido: integrar los movimientos que faltaban, mejorar las jugadas prehechas, cerrar lo pendiente de
+este LEEME, un repaso visual general, un mentor realista y personalizable, más estadios, y el
+presentador del Drive. Se comparó contra `marca/referencia/ea_fc25_referencia.mp4` (FC) y
+`ejemplo-partido.mp4` (Soccer Manager 2026).
+
+### 1. Personas realistas: el presentador y el mentor
+- **El modelo del Drive**: `navy-jacket-portrait` es un escaneo de persona de cuerpo entero, de 1,90 m
+  y sin esqueleto. Queda como `assets/personas/persona_realista.glb`, guardado como blob normal de git
+  (excepción en `.gitattributes`, porque LFS devolvía 403 desde la sesión).
+- **`visor/persona_realista.gd`** (`PersonaRealista`) más su shader, que recolorea el escaneo por zonas
+  del cuerpo:
+  - pelo, piel, chaqueta, pantalón y zapatos;
+  - los labios, las cejas y el cuello de la camisa van protegidos.
+  - `aspecto(semilla, pedido)` da variedad determinista.
+  - `retrato(asp, tam, fondo, plano)` saca un retrato vivo (luz de 3 puntos, respiración) en tres
+    planos: cara, medio y entero.
+- **Sorteo**: el presentador ahora es esta persona, con gesto de sacar bola y respiración. El
+  fallback al futbolista de traje (Mixamo) se borró.
+- **Mentor del tutorial**: retrato realista en lugar del dibujo de antes, y un botón ✎ para cambiarle
+  piel, pelo, chaqueta y pantalón. El aspecto se guarda por modo en `user://ajustes.cfg`
+  (`[mentor_aspecto]`).
+- ⚠️ El escaneo no tiene esqueleto: los gestos son del cuerpo entero (girar, inclinarse, respirar),
+  no de brazos. La licencia en Sketchfab está 🟡 en `LICENCIAS.md` (confirmar, es una persona real).
+- ❌ **El modelo del gato** para el menú no apareció en el Drive. Sigue pendiente.
+
+### 2. Movimientos: 9 animaciones nuevas y un bug de pelvis
+`visor/anim_quaternius.gd` recorta clips de los packs de Quaternius (`CLIP_RECORTES`):
+- el portero, en tres estiradas (izquierda, derecha, abajo);
+- dos celebraciones nuevas (de rodillas, carrera);
+- saque de banda, pase con interior, marcaje y empujón;
+- el árbitro mostrando la roja.
+
+Hay además cinco hechas a mano: lamento, rabia, señalar falta, barrida y dolor.
+
+**Bug corregido**: los desplazamientos de pelvis de las animaciones hechas a mano se aplicaban en el
+espacio equivocado, así que el cabezazo y los saltos de festejo iban hacia atrás. Se arregló
+convirtiéndolos con la base global de reposo del hueso padre.
+
+`pruebas/captura_movimientos` comprueba que las 24 animaciones del partido existen.
+
+### 3. Jugadas prehechas
+- `nucleo/catalogo_jugadas.gd` ahora tiene fases escritas a mano para ATQ-01…15, DEF-01…15 y
+  POR-01…15. Cada fase define pases, altura del balón, remate o cabezazo, y la acción por rol. Las REG
+  siguen con la plantilla genérica.
+- **Jugadas de ambiente**: durante el partido, con un 40% de probabilidad por minuto sin eventos
+  pendientes, el equipo ensaya una jugada del catálogo sin rematar. Arriba aparece el rótulo tipo TV
+  con su nombre, como en FC. Si llega un evento real, la jugada se aborta.
+- El balón llega al punto de inicio con un pase, sin teletransportarse.
+
+### 4. Estadios: de 8 a 16 estilos
+- Estilos nuevos en `datos/tablas.json` (`EST_PRESETS`): montaña, retro, futurista, campus, oasis,
+  muralla, jardín y tormenta.
+- `Club.perfil_estadio()` elige el estilo con un hash propio del club, y la reputación recorta techo,
+  focos, pantalla, césped y niveles.
+- Los rivales ahora salen en 6 formas en lugar de 2.
+
+Captura: `pruebas/estadios_nuevos.png`.
+
+### 5. Aspecto de la interfaz, con Soccer Manager delante
+- **Inicio**: `ui/componentes/tablero_inicio.gd` es un tablero de tarjetas con estas piezas:
+  - próximo partido con los dos escudos;
+  - anillos de valoración del plantel y del directorio;
+  - mini tabla, caja y estadio;
+  - la estrella del equipo con su cara;
+  - las rachas.
+  
+  El anillo es un componente nuevo (`ui/componentes/anillo.gd`).
+- **Pizarrón táctico**: `ui/componentes/pizarra_tactica.gd` dibuja la cancha con líneas. Cada
+  jugador lleva su cara, un anillo de media y una etiqueta de posición con el color de su línea
+  (en rojo si juega fuera de posición).
+
+Capturas: `pruebas/inicio_tablero.png` y `pruebas/pizarra_tactica.png`.
+
+### 6. Sonidos: de 157 sin usar a los que tienen momento claro
+- **En el partido**:
+  - salida del túnel y ambiente según el clima (lluvia, trueno, niebla, frío, noche, sol);
+  - medio tiempo, reanudación, último minuto y descuento;
+  - tensión del público en partidos apretados;
+  - doblete, hat-trick, gol rápido (≤3') y gol agónico (≥86');
+  - alarido en las atajadas, travesaño o suspiro de la grada en los postes;
+  - lesión grave.
+- **En las jugadas**: pase largo, despeje y entrada dura.
+- **Avisos**: `Aviso.mostrar(..., sfx)` acepta un sonido propio. Lo usan 14 avisos:
+  - despido, liquidación, oferta, ronda superada, obra terminada, parte médico;
+  - venta, clausulazo, patrocinio, cierre de mercado, contratos que vencen.
+- Los `gol_*` que aparecían "sin usar" eran falsos positivos: se arman como `"gol_" + estilo`.
+
+### 7. Pendientes viejos de este LEEME que ya estaban cerrados
+Se revisaron uno por uno y ya estaban resueltos en sesiones posteriores a cuando se anotaron:
+- el túnel anclado a mano y los túneles "arco" y "foso";
+- los banquillos superpuestos;
+- la cámara "Tribuna alta" clavada en 12;
+- la tabla de posiciones y los goleadores en la pantalla gigante.
+
+Las notas de más abajo quedan como historia.
+
+### Verificación
+Banco completo en headless: **0 fallos**. Todas las capturas citadas se regeneraron en esta sesión.
+
+
 ## SEGUNDA RONDA DEL USUARIO: SIN RONALDO, NOMBRES CUBIERTOS Y TUTORIAL INMERSIVO (25-9-2026)
 
 El usuario revisó la primera ronda y pidió tres cosas:

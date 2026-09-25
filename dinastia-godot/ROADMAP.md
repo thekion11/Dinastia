@@ -228,7 +228,7 @@ alguien de afuera.
   independiente en cada mano. Detalle completo, con las dos vueltas que costó acertar la altura real
   del podio, en `LEEME.md`, sección "EL DT APOYA LAS MANOS EN EL PODIO". Verificado con captura real en
   los tres planos + banco (0 fallos).
-- [ ] **El presentador del sorteo: EN PAUSA a pedido del usuario (14-9-2026).** Se llegó a reemplazar
+- [x] **El presentador del sorteo: CERRADO (25-9-2026)** con el escaneo realista del Drive (`PersonaRealista`, ver LEEME, tercera ronda); el gato del menú no apareció en el Drive y sigue pendiente. Historia: **EN PAUSA a pedido del usuario (14-9-2026).** Se llegó a reemplazar
   la silueta de cajas por el humanoide real (`Futbolista`/`AnimMixamo`/`Vestidor`) y a corregir un
   ángulo de cámara que hacía ver el brazo "estirado" -detalle en `LEEME.md`, sección "EL PRESENTADOR
   DEL SORTEO"-, pero el usuario avisó que dejó un modelo 3D propio ("un tipo con tarjeta") en su Drive
@@ -391,7 +391,7 @@ nocturno, adaptación cultural-; el que de verdad falta es el que sigue en la li
      van sobre escalones), pero la rampa en sí sigue siendo demasiado empinada. El arreglo de
      verdad es partir la tribuna en 2-3 bandejas con su propio fondo y un pasillo entre ellas, que
      además es lo que se ve en `ea_fc25_referencia.mp4`. Es trabajo de geometría real, no un ajuste.
-   - [ ] **Modelos 3D para camarógrafos y guardias** (el usuario recordó que hay personajes 3D
+   - [ ] **Modelos 3D para camarógrafos y guardias** (candidato: `PersonaRealista`, que ya viste de traje; falta un uniforme) (el usuario recordó que hay personajes 3D
      disponibles): hoy son cajas. Son ~6 figuras, no miles, así que aquí sí cabe un modelo real
      -a diferencia del público, que tiene que seguir siendo `MultiMesh` sí o sí-.
    - [ ] **Nombre del jugador flotando sobre cada futbolista** con su barra de estado, como en
@@ -436,7 +436,7 @@ que dar esta lista por vigente sin re-verificar sería el mismo error de siempre
 
 Estas dos las pidió el usuario **dejar anotadas y no implementar**, no están a medio hacer:
 
-- [ ] **Divisas seleccionables** (hoy todo el juego dice "EUR" fijo).
+- [x] **Divisas seleccionables: CERRADO (25-9-2026)**, en la ronda del análisis externo.
 - [ ] **La cara real 2D moldeada sobre el modelo 3D del jugador en el campo** (hoy son dos sistemas
   separados: retrato 2D y textura de cabeza del atlas 3D). Ya hay un plan técnico completo escrito en
   `LEEME.md` ("PEDIDO POR EL USUARIO, SIN HACER TODAVÍA", punto 3) para cuando se autorice.
