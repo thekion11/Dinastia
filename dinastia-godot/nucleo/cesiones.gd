@@ -409,7 +409,7 @@ func pagar_clausula(j: Jugador, comprador: Club) -> Dictionary:
 	comprador.fichar(j)
 	quitar_clausula(j.id)
 	j.sueldo = int(round(float(j.sueldo) * 1.15))
-	j.anios_contrato = Azar.ent(2, 4)
+	j.anios_contrato = Contratos.ajustar_anios(j, Azar.ent(2, 4))
 	j.moral = clampi(j.moral + 6, 10, 99)
 	j.pide_salir = false
 	noticia.emit("¡Clausulazo!",
