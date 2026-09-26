@@ -3832,10 +3832,22 @@ func _pintar_rivalidades() -> void:
 		val.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		fila.add_child(val)
 
+## C4: la historia del club (generada en la base ficticia, real con el pack).
+func _historia_de(club: Club) -> Dictionary:
+	var del_pais: Array = []
+	for o: Club in mundo.clubes.values():
+		if o.pais == club.pais:
+			del_pais.append(o)
+	return HistoriaClub.de(club, del_pais)
+
 func _pintar_ficha_club(club: Club) -> void:
 	var t := _texto(13, COL_ORO)
 	t.text = "%s  ·  reputación %d  ·  aforo %s" % [club.nombre, club.rep, _miles(club.estadio_aforo)]
 	_lista_clubes.add_child(t)
+	var hist := _texto(11, COL_TEXTO)
+	hist.text = "📜 " + HistoriaClub.resumen(_historia_de(club))
+	hist.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_lista_clubes.add_child(hist)
 	var sub := _texto(11, COL_SUAVE)
 	sub.text = "%d jugadores  ·  media %.1f  ·  masa salarial %s/sem" % [
 		club.plantilla.size(), club.media(), _dinero(club.masa_salarial())]
@@ -9121,6 +9133,18 @@ func _pintar_legado() -> void:
 	if r == null:
 		return
 	var p: Dictionary = mundo.puntaje_carrera()
+
+	## C4: LA HISTORIA DEL CLUB, antes que la tuya.
+	var hi := _historia_de(mundo.mi_club())
+	var th := _texto(11, COL_SUAVE)
+	th.text = "HISTORIA DEL CLUB"
+	_lista_legado.add_child(th)
+	for linea: String in [HistoriaClub.resumen(hi), String(hi["origen"]), String(hi["epoca"])]:
+		var lh := _texto(12, COL_TEXTO)
+		lh.text = linea
+		lh.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_lista_legado.add_child(lh)
+	_lista_legado.add_child(HSeparator.new())
 
 	var t := _texto(11, COL_SUAVE)
 	t.text = "TU LEGADO"
