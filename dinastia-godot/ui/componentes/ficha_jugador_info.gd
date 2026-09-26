@@ -95,6 +95,23 @@ static func pintar_estadisticas(lista: VBoxContainer, j: Jugador, paleta: Dictio
 		_dato(lista, "🟨 Amarillas", str(j.amarillas), paleta["oro"], paleta)
 
 ## La cabeza. `Vestuario` lleva ansiedad y confianza por jugador.
+## LO QUE FALTABA EN LA FICHA (C17): el pie, la pierna débil y el palmarés
+## individual temporada a temporada.
+static func pintar_perfil_y_premios(lista: VBoxContainer, j: Jugador, paleta: Dictionary) -> void:
+	lista.add_child(HSeparator.new())
+	var t := _texto(11, paleta["suave"], paleta)
+	t.text = "🦶 PERFIL"
+	lista.add_child(t)
+	var pd := j.pierna_debil()
+	_dato(lista, "Pie hábil", "Derecho" if j.pie() == "D" else "Izquierdo", paleta["texto"], paleta)
+	_dato(lista, "Pierna débil", "★".repeat(pd) + "☆".repeat(5 - pd), paleta["texto"], paleta)
+	if not j.premios.is_empty():
+		var tp := _texto(11, paleta["suave"], paleta)
+		tp.text = "🏆 PREMIOS"
+		lista.add_child(tp)
+		for p: Dictionary in j.premios:
+			_dato(lista, str(int(p.get("anio", 0))), String(p.get("premio", "")), Color("c9a227"), paleta)
+
 static func pintar_cabeza(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta: Dictionary) -> void:
 	var v := mundo.vestuario
 	if v == null:
@@ -240,7 +257,7 @@ static func pintar_historial(lista: VBoxContainer, j: Jugador, paleta: Dictionar
 		izq.clip_text = true
 		fila.add_child(izq)
 		var medio := _texto(11, paleta["texto"], paleta)
-		medio.text = "%d PJ · %d goles" % [int(h["pj"]), int(h["goles"])]
+		medio.text = "%d PJ · %d goles · %d asist." % [int(h["pj"]), int(h["goles"]), int(h.get("as", 0))]
 		medio.custom_minimum_size = Vector2(110, 0)
 		fila.add_child(medio)
 		var color_ovr: Color = paleta["texto"]

@@ -89,6 +89,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"junta": m.junta.a_dic() if m.junta != null else {},
 		"charlas": m.charlas.a_dic() if m.charlas != null else {},
 		"licencia": m.licencia.a_dic() if m.licencia != null else {},
+		"eventos_cantera": m.eventos_cantera.a_dic() if m.eventos_cantera != null else {},
 		"banco": m.banco.a_dic() if m.banco != null else {},
 		"auspicio": m.auspicio.a_dic() if m.auspicio != null else {},
 		"eras": m.eras.a_dic() if m.eras != null else {},
@@ -290,7 +291,7 @@ static func _jugador_a_dic(j: Jugador) -> Dictionary:
 		## Solo lo que el editor haya tocado de su cara. Casi siempre esta vacio y
 		## no pesa nada: diez mil jugadores con quince rasgos cada uno serian dos
 		## megas de guardado para nada.
-		"lk": j.look, "oe": j.ovr_al_empezar, "hs": j.historial,
+		"lk": j.look, "oe": j.ovr_al_empezar, "hs": j.historial, "pr": j.premios,
 	}
 
 static func _dic_a_jugador(d: Dictionary) -> Jugador:
@@ -315,6 +316,7 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	j.ovr_al_empezar = int(d.get("oe", 0))
 	var hs: Variant = d.get("hs", [])
 	j.historial = (hs as Array).duplicate() if hs is Array else []
+	j.premios = (d.get("pr", []) as Array).duplicate(true)
 	return j
 
 static func _liga_a_dic(l: Liga) -> Dictionary:
@@ -539,6 +541,8 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.charlas.desde_dic(datos.get("charlas", {}))
 	if m.licencia != null:
 		m.licencia.desde_dic(datos.get("licencia", {}))
+	if m.eventos_cantera != null:
+		m.eventos_cantera.desde_dic(datos.get("eventos_cantera", {}))
 	if m.junta != null:
 		m.junta.desde_dic(datos.get("junta", {}))
 		m.junta.formar(m.mi_club())

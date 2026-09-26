@@ -95,6 +95,10 @@ var junta: Junta
 var charlas: Charlas
 ## La licencia de entrenador y sus exámenes (C7).
 var licencia: Licencia
+## Los trabajadores de las instalaciones y sus eventos (C10), y los asuntos de
+## la cantera (C11).
+var trabajadores: Trabajadores
+var eventos_cantera: EventosCantera
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
 var banco: Banco
 ## La marca del pecho: ofertas, firma y exigencia contractual.
@@ -1060,6 +1064,10 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		junta.semana(mi_club(), anio, semana)
 	if charlas != null and mi_club() != null:
 		charlas.semana(mi_club(), anio, semana)
+	if trabajadores != null and mi_club() != null:
+		trabajadores.semana(mi_club(), obras, anio, semana, prensa)
+	if eventos_cantera != null and mi_club() != null:
+		eventos_cantera.semana(academia, mi_club(), anio, semana)
 		## La app y la web CRECEN cada semana -"procesoClubIn()" del HTML corre
 		## en el mismo proceso semanal que la prensa o la cantera, no en el
 		## cierre de mes-, y crecen más rápido si vienes ganando en liga.
@@ -1314,6 +1322,15 @@ const PREMIO_LIGA := 500000
 ## algo las hubiera tocado en medio. Es la nota que dejó el propio HTML.
 func cerrar_temporada() -> Dictionary:
 	var resumen := {"campeones": [], "suben": [], "bajan": [], "directiva": {}}
+	## LAS RAMAS TERMINAN SU TEMPORADA (C12).
+	if hinchada != null and mi_club() != null and prensa != null:
+		for rr: Dictionary in hinchada.temporada_ramas(mi_club(), anio):
+			var p := int(rr["puesto"])
+			var txt := ("¡Campeón!" if p == 1 else ("%d.º: al podio." % p if p <= 3 else "%d.º puesto." % p))
+			prensa.noticia.emit("🏅 %s" % String(rr["rama"]), "Temporada terminada: %s" % txt)
+			if p == 1 and String(rr["clave"]) == "femenino":
+				prensa.guardar_portada("¡EL FEMENINO, CAMPEÓN!", "La rama femenina del club gana la liga.", "bien",
+					{"img": "escudo", "sub": "La rama femenina gana la liga y el club suma reputación y socios.", "nueva": true})
 	var tablas := {}
 	## El puesto de TU club, con la foto de antes de mover a nadie.
 	var mi_puesto := 0
@@ -1752,6 +1769,8 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	junta.formar(mi_club())
 	charlas = Charlas.new()
 	licencia = Licencia.new()
+	trabajadores = Trabajadores.new()
+	eventos_cantera = EventosCantera.new()
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)

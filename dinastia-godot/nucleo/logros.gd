@@ -719,6 +719,19 @@ func premios_temporada() -> Dictionary:
 	for j in ideal:
 		ideal_texto.append("%s (%s, %s)" % [Nombres.visible(j.nombre), j.pos_e, _nombre_club(j.club_id)])
 	acta["ideal"] = ideal_texto
+	## Cada premio queda en la ficha del jugador (C17).
+	for j in ideal:
+		j.premios.append({"anio": mundo.anio, "premio": "Equipo ideal de la temporada"})
+	## EL MÁXIMO GOLEADOR de tu liga, con su trofeo en la ficha.
+	var pichichi: Jugador = null
+	if liga != null:
+		for c: Club in liga.clubes:
+			for j2: Jugador in c.plantilla:
+				if pichichi == null or j2.goles > pichichi.goles:
+					pichichi = j2
+	if pichichi != null and pichichi.goles > 0:
+		pichichi.premios.append({"anio": mundo.anio, "premio": "Máximo goleador (%d goles)" % pichichi.goles})
+		acta["pichichi"] = "%s (%d goles, %s)" % [Nombres.visible(pichichi.nombre), pichichi.goles, _nombre_club(pichichi.club_id)]
 
 	## MEJOR JOVEN. Sub-21, y en caso de empate manda la media: entre dos chicos
 	## con los mismos números, el mejor jugador.
@@ -731,6 +744,8 @@ func premios_temporada() -> Dictionary:
 		if n > joven_nota or (is_equal_approx(n, joven_nota) and joven != null and j.ovr > joven.ovr):
 			joven_nota = n
 			joven = j
+	if joven != null:
+		joven.premios.append({"anio": mundo.anio, "premio": "Mejor jugador joven"})
 	acta["joven"] = "%s (%d años, %s)" % [
 		Nombres.visible(joven.nombre), joven.edad, _nombre_club(joven.club_id)] if joven != null else "—"
 

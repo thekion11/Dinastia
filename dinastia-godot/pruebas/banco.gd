@@ -99,6 +99,7 @@ func _ready() -> void:
 	_probar_instituciones_c5_c8()
 	_probar_charlas_c6_c7()
 	_probar_licencia_c7()
+	_probar_tanda_c()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5933,3 +5934,60 @@ func _probar_licencia_c7() -> void:
 			a_la_2 += 1
 	_comprobar(a_la_2 > 60, "si repites esquina, el portero se tira ahí (%d de 100)" % a_la_2)
 	mj.free()
+
+## TANDA C: instalaciones a 10 niveles (tribunas a 5, rendimiento a la mitad por
+## encima de 5), trabajadores con carácter y eventos, asuntos de la academia, las
+## ramas compiten, pierna débil y premios en la ficha.
+func _probar_tanda_c() -> void:
+	_titulo("TANDA C: INSTALACIONES, TRABAJADORES, CANTERA, RAMAS, FICHA")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5150)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	c.saldo = 2000000000
+	var o := m.obras
+	_comprobar(o.maximo("ct") == 10 and o.maximo("trib") == 5, "10 niveles, las tribunas se quedan en 5")
+	o.niveles["ct"] = 5
+	var r5 := o.ritmo_de_progreso()
+	o.niveles["ct"] = 10
+	var r10 := o.ritmo_de_progreso()
+	_comprobar(r10 > r5 and (r10 - r5) < (r5 - 1.0), "de 6 a 10 cada nivel rinde la mitad (%.2f → %.2f)" % [r5, r10])
+	_comprobar(o.coste("ct", c.rep) == -1, "al nivel 10 no se puede mejorar más")
+	o.niveles["trib"] = 5
+	_comprobar(o.iniciar("trib", c) != "", "las tribunas no pasan de 5")
+	## Trabajadores.
+	var t := Trabajadores.de(c, "cocina")
+	_comprobar(String(t["puesto"]) == "Chef del club" and Trabajadores.de(c, "cocina") == t, "cada instalación tiene su encargado, siempre el mismo")
+	for k: String in Instalaciones.CATALOGO:
+		o.niveles[k] = mini(3, o.maximo(k))
+	var eventos := 0
+	for sem in 104:
+		eventos += m.trabajadores.semana(c, o, 2026, sem, m.prensa).size()
+	_comprobar(eventos > 3 and eventos < 80, "en las instalaciones pasan cosas, pero no cada semana (%d en 2 años)" % eventos)
+	## Cantera.
+	var ec := m.eventos_cantera
+	var hubo := false
+	for sem in 60:
+		ec.semana(m.academia, c, 2026, sem)
+		if not ec.pendiente.is_empty():
+			hubo = true
+			break
+	_comprobar(hubo, "la academia trae asuntos para decidir")
+	if hubo:
+		var r := ec.resolver("a", m.academia, c)
+		_comprobar(not r.is_empty() and ec.pendiente.is_empty(), "el asunto de la academia se resuelve")
+	_comprobar(ec.visitar(m.academia, 2026, 70) == "" and ec.visitar(m.academia, 2026, 70) != "", "una visita a la academia por semana")
+	## Ramas.
+	m.hinchada.ramas["femenino"] = true
+	var res := m.hinchada.temporada_ramas(c, 2026)
+	_comprobar(res.size() == 1 and int(res[0]["puesto"]) >= 1 and int(res[0]["puesto"]) <= 12, "la rama femenina termina en un puesto (%d.º)" % int(res[0]["puesto"]))
+	_comprobar(int(m.hinchada.anios_rama["femenino"]) == 1, "la rama suma temporadas")
+	## Ficha.
+	var cuenta := {}
+	for j: Jugador in m.jugadores():
+		var pd := j.pierna_debil()
+		cuenta[pd] = int(cuenta.get(pd, 0)) + 1
+	_comprobar(cuenta.size() == 5 and int(cuenta.get(2, 0)) + int(cuenta.get(3, 0)) > int(cuenta.get(5, 0)) * 5, "pierna débil de 1 a 5, casi todos 2-3: %s" % str(cuenta))
+	var j0: Jugador = c.plantilla[0]
+	j0.premios.append({"anio": 2026, "premio": "Equipo ideal de la temporada"})
+	_comprobar(Partida._dic_a_jugador(Partida._jugador_a_dic(j0)).premios.size() == 1, "los premios se guardan")
