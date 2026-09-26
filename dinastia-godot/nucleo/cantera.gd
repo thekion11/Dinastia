@@ -264,6 +264,8 @@ func multiplicador_de_reputacion() -> float:
 	var rep := 50
 	if m != null and m.roles != null:
 		rep = m.roles.prestigio
+		## Y la fama de formador (26-9-2026, `Reputacion`).
+		return (1.0 + float(rep - 50) * 0.005) * m.roles.reputacion.mult_cantera()
 	return 1.0 + float(rep - 50) * 0.005
 
 
