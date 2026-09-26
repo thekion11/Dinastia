@@ -333,7 +333,21 @@ func _escalar_rotulos() -> void:
 	for f: Dictionary in _en_campo:
 		var n: Node3D = f.get("node")
 		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO):
-			(n.get_node(PlayerSpawner.ROTULO) as Label3D).pixel_size = tam
+			var rot := n.get_node(PlayerSpawner.ROTULO) as Label3D
+			rot.pixel_size = tam
+			if rot.has_node(PlayerSpawner.BARRA):
+				(rot.get_node(PlayerSpawner.BARRA) as Label3D).pixel_size = tam
+
+## La energía bajo cada nombre, una vez por minuto simulado.
+var _minuto_barras := -1
+
+func _actualizar_barras() -> void:
+	if not PlayerSpawner.mostrar_nombres:
+		return
+	for f: Dictionary in _en_campo:
+		var n: Node3D = f.get("node")
+		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO + "/" + PlayerSpawner.BARRA):
+			PlayerSpawner.actualizar_barra(n.get_node(PlayerSpawner.ROTULO + "/" + PlayerSpawner.BARRA) as Label3D, _minuto_barras)
 
 func _mostrar_nombres(si: bool) -> void:
 	PlayerSpawner.mostrar_nombres = si
@@ -423,6 +437,7 @@ func _sacar_los_22() -> void:
 		Puente3D.kit(visitante), Puente3D.kit_portero(visitante)))
 	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d))
 	_poner_banca(once_local, once_visita)
+	_poner_personal()
 	_purgar_nodos_fantasma()
 
 ## LA BANDA YA NO ESTÁ VACÍA (22-9-2026). Hasta hoy solo se veían los 22 +
@@ -454,6 +469,31 @@ func _poner_banca_de(c: Club, once_c: Array[Jugador], es_local: bool) -> void:
 ## EL ENTRENADOR EN LA BANDA (26-9-2026): tu personaje del creador en el
 ## área técnica de tu club, y un DT rival (siempre el mismo por club) en la
 ## otra. Delante de su fila de suplentes, del lado del centro del campo.
+## CAMARÓGRAFOS Y GUARDIAS DE VERDAD (26-9-2026). El constructor deja a cada
+## operador como un maniquí de cajas con su cámara; aquí se oculta el maniquí
+## y se pone una persona entera detrás de la cámara. Y seis guardias de
+## seguridad detrás de las vallas, de espaldas al juego, mirando a la grada.
+func _poner_personal() -> void:
+	if _raiz3d == null:
+		return
+	var i := 0
+	for cam in _raiz3d.find_children("Camarografo*", "Node3D", true, false):
+		var base := cam as Node3D
+		var d := PersonajeDT.personal_estadio(_raiz3d, "prensa", base.position - base.basis.z * 0.12, base.rotation.y, 700 + i)
+		if not d.is_empty():
+			for mi in base.find_children("*", "MeshInstance3D", false, false):
+				if mi.has_meta("cuerpo"):
+					(mi as Node3D).visible = false
+		i += 1
+	var puestos := [
+		[Vector3(-38.8, 0, -36.0), -PI * 0.5], [Vector3(-38.8, 0, -12.0), -PI * 0.5],
+		[Vector3(-38.8, 0, 12.0), -PI * 0.5], [Vector3(-38.8, 0, 36.0), -PI * 0.5],
+		[Vector3(0.0, 0, 57.0), 0.0], [Vector3(0.0, 0, -57.0), PI],
+	]
+	for k in puestos.size():
+		## El giro es hacia FUERA del campo: la persona mira a +Z sin girar.
+		PersonajeDT.personal_estadio(_raiz3d, "seguridad", puestos[k][0], puestos[k][1], 900 + k)
+
 func _poner_dt(c: Club, es_local: bool, cuantos: int) -> void:
 	var asp: Dictionary = PersonajeDT.del_usuario if c.id == PersonajeDT.club_usuario else PersonajeDT.de_rival(c.id)
 	var lado := -1.0 if es_local else 1.0
@@ -735,6 +775,9 @@ func _process(delta: float) -> void:
 	## minuto al partido. Nunca al revés, y nunca los dos a la vez.
 	while partido.minuto < _juego.current_minute() and not partido.terminado_ya:
 		partido.simular_minuto()
+	if partido.minuto != _minuto_barras:
+		_minuto_barras = partido.minuto
+		_actualizar_barras()
 	_refrescar_marcador()
 
 	if _juego.elapsed >= _prox_ambiente:
