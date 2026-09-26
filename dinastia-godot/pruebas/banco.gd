@@ -102,6 +102,7 @@ func _ready() -> void:
 	_probar_tanda_c()
 	_probar_calendario_c13()
 	_probar_politica_c15()
+	_probar_historia_c4()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -6100,3 +6101,27 @@ func _probar_politica_c15() -> void:
 	var p2 := Politica.new()
 	p2.desde_dic(d)
 	_comprobar(p2.gobierno("CHI", 2026)["partido"] == g2["partido"], "el gobierno se guarda")
+
+func _probar_historia_c4() -> void:
+	_titulo("C4: HISTORIA DE LOS CLUBES")
+	Datos.usar_base_real(false)
+	var m := Mundo.new()
+	m.generar(["CHI"], 5153)
+	var clubes: Array = m.ligas[0].clubes
+	var grande: Club = clubes[0]
+	var chico: Club = clubes[clubes.size() - 1]
+	var hg := HistoriaClub.de(grande, clubes)
+	var hc := HistoriaClub.de(chico, clubes)
+	_comprobar(not bool(hg["real"]), "con la base ficticia la historia es generada")
+	_comprobar(HistoriaClub.de(grande, clubes) == hg, "el mismo club tiene siempre la misma historia")
+	_comprobar(int(hg["titulos"]) > int(hc["titulos"]), "el grande tiene más títulos que el chico (%d y %d)" % [int(hg["titulos"]), int(hc["titulos"])])
+	_comprobar(int(hg["fundado"]) >= 1885 and int(hg["fundado"]) <= 2005, "fundado en un año razonable (%d)" % int(hg["fundado"]))
+	_comprobar(String(hg["rival"]) != "" and String(hg["rival"]) != grande.nombre, "tiene un rival que no es él mismo")
+	_comprobar(HistoriaClub.color_de("#ffffff") == "blanco" and HistoriaClub.color_de("#d50032") == "rojo" and HistoriaClub.color_de("#003da5") == "azul", "el apodo sale del color")
+	_comprobar(HistoriaClub.dato_real("C0lo-C0lo").is_empty(), "sin el pack real no hay datos reales")
+	## Con el pack real (si existe en este entorno).
+	if Datos.hay_pack_real():
+		Datos.usar_base_real(true)
+		var r := HistoriaClub.dato_real("C0lo-C0lo")
+		_comprobar(int(r.get("fundado", 0)) == 1925, "con el pack real, Colo-Colo se fundó en 1925")
+		Datos.usar_base_real(false)

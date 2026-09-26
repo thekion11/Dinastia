@@ -139,7 +139,9 @@ func es_clasico(a: Club, b: Club) -> bool:
 		return false
 	var n1 := _norm_nombre(a.nombre)
 	var n2 := _norm_nombre(b.nombre)
-	var grandes := ["colocolo", "udechile", "ucatolica"]
+	## Los tres grandes, con sus nombres reales y con los de la base ficticia
+	## (sin los segundos, en la versión publicada no había clásico chileno).
+	var grandes := ["colocolo", "udechile", "ucatolica", "lautarofc", "uandina", "precordillera"]
 	if a.pais == "CHI" and grandes.has(n1) and grandes.has(n2):
 		return true
 	if a.rep + b.rep >= 164:
