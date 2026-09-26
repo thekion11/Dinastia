@@ -28,6 +28,14 @@ var _pestanas: TabContainer
 var _colores: Array = []         ## los 5 ColorPickerButton de la camiseta
 var _refresco_3d := 0.0
 
+## PANTALLA PROPIA (26-9-2026, pedido: "debe tener su propio menú, que tenga
+## la totalidad de la pantalla, no encima del menú central"). No se cuelga del
+## menú: va en su propia capa sobre la raíz y el menú se OCULTA mientras está
+## abierto (no se ve detrás ni recibe clics). Al cerrar, el menú vuelve tal
+## cual estaba.
+var _capa: CanvasLayer = null
+var _menu: Control = null
+
 static func abrir(padre: Control, mundo: Mundo) -> DisenadorKit:
 	var n := DisenadorKit.new()
 	n._mundo = mundo
@@ -35,7 +43,16 @@ static func abrir(padre: Control, mundo: Mundo) -> DisenadorKit:
 	n._kit = DisenosKit.kit_de_club(n._club).duplicate(true)
 	n.set_anchors_preset(Control.PRESET_FULL_RECT)
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
-	padre.add_child(n)
+	if padre.is_inside_tree():
+		n._capa = CanvasLayer.new()
+		n._capa.layer = 60
+		n._capa.name = "PantallaEquipacion"
+		padre.get_tree().root.add_child(n._capa)
+		n._capa.add_child(n)
+		n._menu = padre
+		padre.visible = false
+	else:
+		padre.add_child(n)
 	n._montar()
 	return n
 
@@ -79,6 +96,7 @@ func _montar() -> void:
 	_pestanas.add_child(_tab_botines())
 	_pestanas.add_child(_tab_accesorios())
 	_pestanas.add_child(_tab_numeros())
+	_pestanas.add_child(_tab_sponsors())
 	_actualizar()
 	Animar.aparecer(marco)
 
@@ -234,7 +252,39 @@ func _tab_camiseta() -> Control:
 		_kit["trim"] = i
 		_color_cambiado())
 	fila2.add_child(ob)
+	## El corte del cuello (26-9-2026): pico, redondo, polo con tapeta o mao.
+	fila2.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "   Cuello:"))
+	var oc := OptionButton.new()
+	for i in DisenosKit.CUELLOS.size():
+		oc.add_item(String(DisenosKit.CUELLOS[i]), i)
+	oc.selected = int(_kit.get("cuello", 0))
+	oc.item_selected.connect(func(i: int) -> void:
+		_kit["cuello"] = i
+		_color_cambiado())
+	fila2.add_child(oc)
 	vb.add_child(Tema.rotulo("DISEÑOS (%d)" % DisenosKit.DISENOS.size()))
+	## Filtros de la galería: por colores, por estilo y por nombre.
+	var filtros := HBoxContainer.new()
+	filtros.add_theme_constant_override("separation", 8)
+	vb.add_child(filtros)
+	var of := OptionButton.new()
+	for f: Array in FILTROS:
+		of.add_item(String(f[0]))
+	of.selected = _filtro
+	filtros.add_child(of)
+	var busca := LineEdit.new()
+	busca.placeholder_text = "🔎 Buscar diseño…"
+	busca.custom_minimum_size = Vector2(240, 0)
+	busca.text = _busqueda
+	filtros.add_child(busca)
+	var cuenta := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "")
+	filtros.add_child(cuenta)
+	of.item_selected.connect(func(i: int) -> void:
+		_filtro = i
+		_filtrar(cuenta))
+	busca.text_changed.connect(func(t: String) -> void:
+		_busqueda = t
+		_filtrar(cuenta))
 	_galeria = GridContainer.new()
 	_galeria.columns = 8
 	_galeria.add_theme_constant_override("h_separation", 6)
@@ -262,7 +312,43 @@ func _tab_camiseta() -> Control:
 		_botones_diseno.append([b, clave, l])
 		_pendientes.append([b, clave])
 	_marcar_diseno()
+	_filtrar(cuenta)
 	return sc
+
+## [nombre, prueba(diseño) -> bool]
+const FILTROS := [
+	["Todos los diseños", ""], ["Un color", "c1"], ["Dos colores", "c2"], ["Tres colores", "c3"],
+	["Cuatro o cinco colores", "c45"], ["Clásicos", "clasico"], ["Modernos", "moderno"],
+	["Geométricos", "geo"], ["Rayas y franjas", "rayas"],
+]
+var _filtro := 0
+var _busqueda := ""
+
+func _pasa_filtro(d: Array) -> bool:
+	var n := int(d[7])
+	var f := int(d[2])
+	var nombre := String(d[1]).to_lower()
+	if _busqueda.strip_edges() != "" and not nombre.contains(_busqueda.strip_edges().to_lower()):
+		return false
+	match String(FILTROS[_filtro][1]):
+		"c1": return n == 1
+		"c2": return n == 2
+		"c3": return n == 3
+		"c45": return n >= 4
+		"clasico": return f >= 100 or f <= 14
+		"moderno": return f >= 30 and f < 100
+		"geo": return f in [8, 17, 18, 19, 27, 29, 33, 37, 38, 48, 49, 55, 59, 60, 61]
+		"rayas": return f in [1, 2, 14, 28, 39, 46, 50, 52, 53, 57, 101, 105, 108] or nombre.contains("franja")
+	return true
+
+func _filtrar(cuenta: Label) -> void:
+	var vis := 0
+	for par: Array in _botones_diseno:
+		var ok := _pasa_filtro(DisenosKit.diseno(String(par[1])))
+		((par[0] as Control).get_parent() as Control).visible = ok
+		if ok:
+			vis += 1
+	cuenta.text = "%d de %d" % [vis, _botones_diseno.size()]
 
 func _marcar_diseno() -> void:
 	var usa := int(DisenosKit.diseno(String(_kit["dis"]))[7])
@@ -425,6 +511,83 @@ func _tab_numeros() -> Control:
 		rapidos.add_child(b)
 	return vb
 
+## ------------------------------------------------------- PATROCINADORES
+
+## Los sponsors que lleva la camiseta: salen de los contratos (Finanzas ›
+## Patrocinio y Zonas); aquí se ven y se decide si se estampan o no.
+func _tab_sponsors() -> Control:
+	var sc := ScrollContainer.new()
+	sc.name = "Patrocinadores"
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var vb := VBoxContainer.new()
+	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_theme_constant_override("separation", 10)
+	sc.add_child(vb)
+	vb.add_child(Tema.rotulo("PATROCINADORES EN LA EQUIPACIÓN"))
+	var ayuda := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE,
+		"Salen de los contratos que firmas en Finanzas (el principal va al pecho; manga, espalda y pantalón son las zonas). Un contrato nuevo cambia la camiseta sola.")
+	ayuda.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	vb.add_child(ayuda)
+	var todos := SponsorKit.de_club(_club, _mundo)
+	var ocultos: Array = _kit.get("sp_ocultar", [])
+	var fondo := Color(String((_kit["cols"] as Array)[0]))
+	for z: Array in [["pecho", "Pecho (principal)"], ["manga", "Manga"], ["espalda", "Espalda"], ["short", "Pantalón"]]:
+		var zona := String(z[0])
+		var pc := PanelContainer.new()
+		pc.add_theme_stylebox_override("panel", Tema.caja(Tema.TARJETA, Tema.RADIO, Color(1, 1, 1, 0.08)))
+		vb.add_child(pc)
+		var fila := HBoxContainer.new()
+		fila.add_theme_constant_override("separation", 12)
+		pc.add_child(fila)
+		var nom := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(z[1]))
+		nom.custom_minimum_size = Vector2(170, 0)
+		fila.add_child(nom)
+		if not todos.has(zona):
+			var sin := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "Sin contrato: la zona va limpia.")
+			sin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			fila.add_child(sin)
+			continue
+		var info: Dictionary = todos[zona]
+		var hx := String(info.get("color", "#ffffff"))
+		var muestra := PanelContainer.new()
+		var sbm := StyleBoxFlat.new()
+		sbm.bg_color = fondo
+		sbm.set_corner_radius_all(6)
+		sbm.content_margin_left = 8
+		sbm.content_margin_right = 8
+		muestra.add_theme_stylebox_override("panel", sbm)
+		var tr := TextureRect.new()
+		tr.texture = ImageTexture.create_from_image(SponsorKit.imagen(String(info.get("marca", "")), hx, SponsorKit.color_letras(hx, fondo), zona == "manga" or zona == "short"))
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tr.custom_minimum_size = Vector2(220, 56)
+		muestra.add_child(tr)
+		fila.add_child(muestra)
+		var marca := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(info.get("marca", "")))
+		marca.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila.add_child(marca)
+		var cb := CheckBox.new()
+		cb.text = "Estampar"
+		cb.button_pressed = not ocultos.has(zona)
+		cb.toggled.connect(func(on: bool) -> void:
+			var lista: Array = _kit.get("sp_ocultar", []).duplicate()
+			if on:
+				lista.erase(zona)
+			elif not lista.has(zona):
+				lista.append(zona)
+			_kit["sp_ocultar"] = lista
+			_aplicar_sponsors()
+			_actualizar())
+		fila.add_child(cb)
+	return sc
+
+## Recalcula los sponsors del kit en edición respetando los que se ocultan.
+func _aplicar_sponsors() -> void:
+	var sp := SponsorKit.de_club(_club, _mundo)
+	for z: String in _kit.get("sp_ocultar", []):
+		sp.erase(z)
+	_kit["sp"] = sp
+
 ## ---------------------------------------------------------------- ACCIONES
 
 func _aleatorio() -> void:
@@ -464,19 +627,27 @@ func _rehacer() -> void:
 	_pestanas.add_child(_tab_botines())
 	_pestanas.add_child(_tab_accesorios())
 	_pestanas.add_child(_tab_numeros())
+	_pestanas.add_child(_tab_sponsors())
 	(func() -> void: _pestanas.current_tab = actual).call_deferred()
 	_actualizar()
 
 func _guardar() -> void:
 	_club.kit_x = _kit.duplicate(true)
+	## Los patrocinadores salen de los contratos cada vez: no se guardan.
+	_club.kit_x.erase("sp")
 	## Lo de siempre, coherente con lo nuevo (fichas, escudos, prensa).
 	var cols: Array = _kit["cols"]
 	_club.kit_color1 = "#" + String(cols[0]).trim_prefix("#")
 	_club.kit_color2 = "#" + String(cols[1]).trim_prefix("#")
 	_club.kit_estilo = String(_kit["dis"])
-	Aviso.mostrar(get_parent(), "logro", "🎽", "Equipación guardada", DisenosKit.diseno(String(_kit["dis"]))[1])
+	Aviso.mostrar(_menu if is_instance_valid(_menu) else get_parent() as Control, "logro", "🎽", "Equipación guardada", DisenosKit.diseno(String(_kit["dis"]))[1])
 	_cerrar()
 
 func _cerrar() -> void:
+	if is_instance_valid(_menu):
+		_menu.visible = true
 	cerrado.emit()
-	queue_free()
+	if _capa != null:
+		_capa.queue_free()
+	else:
+		queue_free()
