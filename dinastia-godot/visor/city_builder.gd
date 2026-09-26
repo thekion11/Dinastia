@@ -2232,6 +2232,31 @@ func _trafico() -> void:
 			t.agregar_vehiculo(nodo2, id2, rng.randf() * 600.0,
 				rng.randf_range(9.0, 15.0), 0.0, -PI * 0.5)
 
+	## 5) LOS PEATONES (26-9-2026, B7): por las aceras del anillo y de la
+	## avenida, en los dos sentidos, más cuanto más grande es el club.
+	var rng_p := RandomNumberGenerator.new()
+	rng_p.seed = 5150
+	for sentido_p: float in [1.0, -1.0]:
+		var acera: float = (CARRIL * 3.2) * sentido_p
+		var esq_p := PackedVector3Array([
+			Vector3(RING_X + acera, 0.3, RING_Z_NORTE - acera),
+			Vector3(RING_X + acera, 0.3, RING_Z_SUR + acera),
+			Vector3(-RING_X - acera, 0.3, RING_Z_SUR + acera),
+			Vector3(-RING_X - acera, 0.3, RING_Z_NORTE - acera),
+		])
+		if sentido_p < 0.0:
+			esq_p.reverse()
+		var id_p := t.agregar_ruta(_redondear(esq_p, 20.0))
+		for i in range(int(round(lerpf(10.0, 24.0, _empuje_club())))):
+			t.agregar_vehiculo(Peaton.crear(rng_p, 1.65), id_p, rng_p.randf() * 2400.0, rng_p.randf_range(1.9, 2.8), 0.0, 0.0)
+	var acera_av := PackedVector3Array([
+		Vector3(-CARRIL * 3.0, 0.3, -85.0), Vector3(-CARRIL * 3.0, 0.3, RING_Z_SUR - 10.0),
+		Vector3(CARRIL * 3.0, 0.3, RING_Z_SUR - 10.0), Vector3(CARRIL * 3.0, 0.3, -85.0),
+	])
+	var id_av := t.agregar_ruta(_redondear(acera_av, 5.0))
+	for i in range(int(round(lerpf(6.0, 16.0, _empuje_club())))):
+		t.agregar_vehiculo(Peaton.crear(rng_p, 1.65), id_av, rng_p.randf() * 900.0, rng_p.randf_range(1.9, 2.8), 0.0, 0.0)
+
 	## 4) EL VELERO. Mismo circuito estrecho, pero en el agua y muy lento: un
 	## velero a 22 m/s sería una lancha motora.
 	var barco := _hacer_velero()
