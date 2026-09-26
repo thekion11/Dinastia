@@ -11,6 +11,7 @@ const VISTAS := [
 	[Vector3(0, 0, 262), "cruce_avenida"],
 	[Vector3(-60, 0, 350), "cruce_barrio"],
 	[Vector3(-60, 0, 470), "finca_barrio"],
+	[Vector3(118, 0, 468), "karting"],
 ]
 
 func _ready() -> void:
@@ -38,5 +39,5 @@ func _process(_d: float) -> void:
 			return
 		var cam: Camera3D = _v.get("_camara")
 		var c: Vector3 = VISTAS[k][0]
-		cam.position = c + (Vector3(0, 70, 18) if k < 4 else Vector3(40, 45, -110))
+		cam.position = c + (Vector3(0, 70, 18) if k < 4 else (Vector3(40, 45, -110) if k == 4 else Vector3(0, 55, 75)))
 		cam.look_at(c, Vector3.UP)
