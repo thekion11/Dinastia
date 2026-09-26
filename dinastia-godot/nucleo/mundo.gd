@@ -102,6 +102,9 @@ var eventos_cantera: EventosCantera
 var calendario: Calendario
 var politica: Politica
 var contratos: Contratos
+var vida: VidaDT
+## El resultado de tu último partido de liga para `VidaDT`: 1, 0, -1, o 2 si no hubo.
+var _resultado_semana: int = 2
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
 var banco: Banco
 ## La marca del pecho: ofertas, firma y exigencia contractual.
@@ -138,6 +141,10 @@ var anios_en_club: int = 0
 func es_clasico(a: Club, b: Club) -> bool:
 	if a == null or b == null or a.pais != b.pais or a.id == b.id:
 		return false
+	## Los clásicos con nombre propio (Superclásico, Gran Derbi...) lo son
+	## siempre, en la base ficticia y con el pack real.
+	if HistoriaClub.nombre_clasico(a.nombre, b.nombre) != "":
+		return true
 	var n1 := _norm_nombre(a.nombre)
 	var n2 := _norm_nombre(b.nombre)
 	## Los tres grandes, con sus nombres reales y con los de la base ficticia
@@ -1089,6 +1096,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		politica.semana(mi_club(), anio, semana, prensa)
 	if contratos != null and mi_club() != null:
 		contratos.semana(mi_club(), anio, semana)
+	if vida != null and mi_club() != null and roles != null:
+		vida.semana(mi_club(), roles, anio, semana, _resultado_semana)
+		_resultado_semana = 2
 	if banco != null and mi_club() != null:
 		## Los dos consejeros que hasta hoy decían "sin efecto" en su propia
 		## descripción (`Directiva.CONSEJEROS`, `fin`/`leg`): era cierto
@@ -1790,6 +1800,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	calendario = Calendario.new()
 	politica = Politica.new()
 	contratos = Contratos.new()
+	vida = VidaDT.new()
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)
@@ -1884,6 +1895,7 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 		if prensa != null and mio != null:
 			prensa.revisar_impuesto(mio, mio.once(), anio)
 		_gano_la_ultima = gf > gc
+		_resultado_semana = 1 if gf > gc else (0 if gf == gc else -1)
 		## "G.clubes[miClub].forma.push(...)" del HTML: solo cuenta para esto lo
 		## que se juega de LIGA -este bloque nace de `_avisar_a_la_directiva`,
 		## que `avanzar_semana()` llama justo después de `l.jugar_jornada()`-.
@@ -1945,7 +1957,8 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 			var loc0: Club = r["local"]
 			var vis0: Club = r["visita"]
 			prensa.portada_tras_resultado(gano, empato, es_clasico(mio, otro), semilla,
-				"%s %d-%d %s" % [Nombres.visible(loc0.nombre), int(r["gl"]), int(r["gv"]), Nombres.visible(vis0.nombre)])
+				"%s %d-%d %s" % [Nombres.visible(loc0.nombre), int(r["gl"]), int(r["gv"]), Nombres.visible(vis0.nombre)],
+				HistoriaClub.nombre_clasico(mio.nombre, otro.nombre))
 			## El tiempo de ese partido, por si la rueda pregunta por él.
 			var loc: Club = r["local"]
 			var vis: Club = r["visita"]
@@ -2004,6 +2017,9 @@ func aplicar_bonificadores() -> void:
 	staff.aplicar(c)
 	if entrenamiento != null:
 		var dt := entrenamiento.bonus_dt()
+		## MI VIDA: trabajar más prepara mejor el partido (y de baja, peor).
+		if vida != null:
+			dt *= vida.factor_trabajo(anio, semana)
 		c.bonus_ataque *= dt
 		c.bonus_defensa *= dt
 	## Y el camarin: hermanos en el campo, roles cumplidos y ansiedad del once.

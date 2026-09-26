@@ -35,6 +35,7 @@ Reglas de los nombres ficticios (comprobadas al final, el script falla si no):
     usan su nombre registrado ni su apodo comercial.
 """
 import hashlib
+import historia_clubes
 import json
 import os
 import sys
@@ -48,9 +49,10 @@ PACK = os.path.join(DATOS, "pack_real.json")
 TABLAS_DEL_PACK = [
     "DATA_P1", "DATA_P2", "PAISES_LIGAS", "CONFED", "COPA_NOM",
     "ARBITROS", "REALES", "EQUIP_REAL", "PROVEEDORES",
-    # C4 (26-9-2026): fundacion, apodo, estadio y rival reales. En la base va
-    # vacia: la historia ficticia la genera `nucleo/historia_club.gd`.
-    "HISTORIA_REAL",
+    # Historia de cada club con guino al real y clasicos con nombre propio
+    # (`historia_clubes.py`): en la base con los nombres ficticios, en el pack
+    # con los reales.
+    "HISTORIA_CLUBES", "CLASICOS",
 ]
 
 # ---------------------------------------------------------------------------
@@ -651,7 +653,10 @@ def main():
         return salida
 
     fic = {}
-    fic["HISTORIA_REAL"] = {}
+    hist_base, hist_pack = historia_clubes.tablas(CLUBES, limpiar)
+    fic.update(hist_base)
+    real.update(hist_pack)
+    base.pop("HISTORIA_REAL", None)
     fic["DATA_P1"] = renombrar(real["DATA_P1"])
     fic["DATA_P2"] = renombrar(real["DATA_P2"])
     fic["PAISES_LIGAS"] = {}
