@@ -16,10 +16,19 @@ extends RefCounted
 ## se guarda directo en `Roles.look` -solo el rasgo tocado, el resto sigue
 ## saliendo de `CaraDT.look_por_defecto()`-.
 static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dictionary,
-		al_cambiar: Callable) -> void:
+		al_cambiar: Callable, abrir_creador: Callable = Callable()) -> void:
 	var t: Label = texto.call(11, colores["acento"])
 	t.text = "🧑‍💼 TU ASPECTO"
 	lista.add_child(t)
+	## EL PERSONAJE EN 3D (26-9-2026): el creador a pantalla completa. El
+	## retrato 2D de abajo sigue siendo el de las fichas y la prensa.
+	if abrir_creador.is_valid():
+		var b3 := Button.new()
+		b3.text = "🧍 Crear y vestir mi personaje 3D"
+		b3.custom_minimum_size = Vector2(0, 40)
+		b3.add_theme_font_size_override("font_size", 13)
+		b3.pressed.connect(func() -> void: abrir_creador.call())
+		lista.add_child(b3)
 
 	var l := r.look_efectivo()
 	var previa := HBoxContainer.new()

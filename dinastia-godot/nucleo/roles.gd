@@ -173,6 +173,32 @@ func look_efectivo() -> Dictionary:
 		base[k] = look[k]
 	return base
 
+## TU PERSONAJE EN 3D (26-9-2026, `CreadorPersonaje`): el aspecto guardado
+## (solo lo tocado; `PersonajeDT.aspecto()` rellena el resto). Si nunca se
+## tocó, sale del retrato 2D: mismo corte y color de pelo, para que el 3D y
+## la ficha no parezcan dos personas distintas.
+func aspecto_3d() -> Dictionary:
+	var guardado: Variant = look.get("p3d")
+	if guardado is Dictionary and not (guardado as Dictionary).is_empty():
+		return guardado
+	var l := look_efectivo()
+	var a := {}
+	var corte := String(l.get("pelo", ""))
+	if corte in PersonajeDT.CORTES:
+		a["pelo"] = corte
+	if l.get("pelo_c") != null:
+		a["color_pelo"] = String(l["pelo_c"]).trim_prefix("#")
+	if l.get("piel") != null:
+		a["piel"] = String(l["piel"]).trim_prefix("#")
+	a["barba"] = int(l.get("barba", 0)) > 0
+	var traje := String(l.get("traje", ""))
+	for r: Array in PersonajeDT.ROPAS:
+		if String(r[0]) == traje:
+			a["ropa"] = traje
+	if bool(l.get("gafas", false)):
+		a["gafas"] = "ver"
+	return a
+
 ## El prestigio del entrenador y su vitrina, que son de la CARRERA y no del club:
 ## `Directiva.trofeos` se queda en el club que abandonas, esto te sigue.
 var prestigio: int = PRESTIGIO_INICIAL
