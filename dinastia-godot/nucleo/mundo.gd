@@ -2055,7 +2055,13 @@ func aplicar_bonificadores() -> void:
 ## HTML: tu recinto lo construyes, el del rival te lo encuentras.
 func perfil_estadio_de(c: Club) -> Dictionary:
 	if c != null and c.id == mi_club_id and estadio != null:
-		return estadio.perfil(c, obras)
+		var p := estadio.perfil(c, obras)
+		## Lo que el 3D necesita de las instalaciones: obras en curso (andamios
+		## y grúa) y lo construido (palcos, prensa, museo, tienda).
+		if obras != null:
+			p["en_obra"] = obras.obras.keys()
+			p["inst"] = obras.niveles.duplicate()
+		return p
 	return c.perfil_estadio() if c != null else {}
 
 # ---------------------------------------------------------------------------
