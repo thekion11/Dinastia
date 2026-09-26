@@ -27,6 +27,7 @@ var _etiqueta_mult: Label
 ## nunca llegó a construirse. Arrastrarlo lo gira; elegir un país lo hace viajar
 ## hasta ahí solo, como `globoIr()` en el HTML.
 var _globo: Globo3D
+var _ficha_pais: Label
 
 func _ready() -> void:
 	Escudo.limpiar_cache()
@@ -60,12 +61,18 @@ func _construir() -> void:
 	## HTML. Va antes de los chips de país -que se quedan, son el atajo rápido
 	## y accesible- porque el globo es quien anima el viaje cuando se toca uno.
 	_globo = Globo3D.new()
-	_globo.custom_minimum_size = Vector2(0, 200)
+	_globo.custom_minimum_size = Vector2(0, 250)
 	raiz.add_child(_globo)
 	var pista := _texto(11, COL_SUAVE)
-	pista.text = "Arrastra el globo para girarlo, o toca un país."
+	pista.text = "Arrastra el globo para girarlo, o haz clic en el pin de un país."
 	pista.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(pista)
+	_globo.pais_tocado.connect(_elegir_pais)
+	## C14: la ficha del país elegido, con sus datos.
+	_ficha_pais = _texto(12, COL_TEXTO)
+	_ficha_pais.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_ficha_pais.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	raiz.add_child(_ficha_pais)
 
 	## Los países: uno por cada liga distinta que trajo el mundo, ordenados con
 	## Chile primero -es donde vive el juego- y el resto tal como los devuelve
@@ -237,6 +244,8 @@ func _elegir_pais(p: String) -> void:
 	var total_clubes := 0
 	for l: Liga in ligas_del_pais:
 		total_clubes += l.clubes.size()
+	if _ficha_pais != null:
+		_ficha_pais.text = ficha_pais(p, ligas_del_pais, total_clubes)
 	_titulo_liga.text = "%s  ·  %d clubes" % [
 		", ".join(ligas_del_pais.map(func(l: Liga) -> String: return l.nombre)), total_clubes]
 	_limpiar(_lista_clubes)
@@ -300,3 +309,31 @@ func _elegir_club(c: Club) -> void:
 	Principal.mundo_pregenerado = _mundo
 	Principal.desafios_elegidos = _desafios.duplicate()
 	get_tree().change_scene_to_file("res://escenas/principal.tscn")
+
+## C14: la ficha del país en una línea -capital, ligas, nivel del fútbol en el
+## ranking del juego, el mejor club, el tiempo de esta semana y la próxima
+## fecha señalada del calendario-.
+func ficha_pais(p: String, ligas_del_pais: Array[Liga], total_clubes: int) -> String:
+	var tiers: Variant = Datos.tabla("TIER_PAIS")
+	var ranking := 0
+	if tiers is Dictionary:
+		var orden: Array = (tiers as Dictionary).keys()
+		orden.sort_custom(func(a: String, b: String) -> bool: return float(tiers[a]) > float(tiers[b]))
+		ranking = orden.find(p) + 1
+	var mejor: Club = null
+	for l: Liga in ligas_del_pais:
+		for c: Club in l.clubes:
+			if mejor == null or c.rep > mejor.rep:
+				mejor = c
+	var clima := Clima.del_partido(p, _mundo.semana, _mundo.anio, "globo")
+	var prox := Calendario.proximas(p, _mundo.anio, _mundo.semana, 1)
+	var partes: Array[String] = ["📍 %s · capital %s" % [p, String(Globo3D.CAPITAL.get(p, "?"))],
+		"%d liga%s, %d clubes" % [ligas_del_pais.size(), "" if ligas_del_pais.size() == 1 else "s", total_clubes]]
+	if ranking > 0:
+		partes.append("n.º %d del ranking de ligas" % ranking)
+	if mejor != null:
+		partes.append("el grande: %s" % mejor.nombre)
+	partes.append("%s %s" % [Clima.icono(clima), String(clima.get("texto", ""))])
+	if not prox.is_empty():
+		partes.append("%s %s (%d/%d)" % [Calendario.icono(String(prox[0]["tipo"])), String(prox[0]["nombre"]), int(prox[0]["dia"]), int(prox[0]["mes"])])
+	return "  ·  ".join(partes)

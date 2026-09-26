@@ -1,5 +1,31 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## SEXTA RONDA, TANDA D (1): CALENDARIO, FESTIVIDADES Y GLOBO (26-9-2026)
+
+- **Calendario de cada país** (`nucleo/calendario.gd`): independencias y fiestas patrias de los
+  24 países, el 1 de mayo (o el Labor Day de EE. UU.) y las fechas de memoria.
+  - El **11 de septiembre** es jornada de memoria en Chile (1973) y en EE. UU. (2001): minuto de
+    silencio, brazalete negro y ningún bonus de fiesta.
+  - Una semana de fiesta nacional llena más el estadio (×1,12) y sube la moral (+1).
+  - El mentor explica cada fecha la primera vez que aparece; lo ya explicado se guarda.
+  - La tira de días muestra el icono de la fecha, y la pestaña Calendario lista las próximas
+    fechas y el gran torneo del año (Mundial, JJ. OO., Eurocopa, Copa América, con sede
+    cuando se conoce).
+- **Festividades (C16)**: Semana Santa (Pascua calculada), Ramadán y Eid (calendario islámico
+  tabular), Navidad, Día de Muertos, Obon, Thanksgiving.
+  - Solo el calendario del país: ningún jugador tiene religión asignada.
+- **Globo (C14)**:
+  - fronteras de Natural Earth (dominio público);
+  - relieve aproximado a partir de la textura;
+  - pines y nombres de los 24 países;
+  - clic en un pin para elegir el país, con su ficha (capital, ligas, ranking, el club grande,
+    el tiempo y la próxima fecha).
+  - **Dos errores antiguos arreglados**:
+    - el lado de día se veía negro, porque dependía de una luz de escena que venía de atrás;
+    - los pines estaban 90° corridos respecto de la textura (Australia caía en el océano
+      Índico).
+- Pruebas: `_probar_calendario_c13`; capturas `captura_calendario` y `captura_globo_c14`.
+
 ## SEXTA RONDA, TANDA C: INSTALACIONES, CANTERA, RAMAS, FICHA DEL JUGADOR (26-9-2026)
 
 - **Instalaciones a 10 niveles** (`Instalaciones.NIVEL_MAX`), salvo las tribunas (5).
