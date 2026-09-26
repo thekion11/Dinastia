@@ -2,8 +2,8 @@ extends Node3D
 ## LOS DISEÑOS NUEVOS EN 3D (26-9-2026): doce jugadores con diseños, cinco
 ## colores, pantalón, medias, botines, accesorios y dorsal. Frente y espalda.
 ##   godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/captura_disenos_3d.tscn
-const DISENOS := ["franjas_tricolor", "doble_banda", "chevron", "lunares_bicolor", "camuflaje", "arcoiris_v",
-	"tartan", "rombos_escoceses", "ondas", "pecho_ribete", "canesu_curvo", "franjas_cinco"]
+const DISENOS := ["puntos_degradados", "curvas_nivel", "marmol", "fragmentos", "mangas_canesu", "diagonal_partida",
+	"relampago", "cuadricula", "estrellas", "franjas_degradadas", "faja_rayas", "resplandor"]
 const PALETAS := [
 	["0b4ea2", "ffffff", "d0202a", "f2c230", "111111"], ["111111", "f2c230", "d0202a", "ffffff", "0b7a3b"],
 	["6a1b9a", "f2c230", "ffffff", "111111", "0b4ea2"], ["ffffff", "d0202a", "0b4ea2", "111111", "f2c230"],

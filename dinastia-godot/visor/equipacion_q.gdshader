@@ -64,10 +64,28 @@ uniform bool largo = false;
 
 // La pose de reposo exacta, escrita en la malla por `VestidorQ._con_reposo()`.
 uniform bool usa_reposo = false;
+// Cuánto se separa la tela del cuerpo, en metros (0 = pintada sobre la piel).
+uniform float holgura = 0.02;
 varying vec3 v_reposo;
 
 void vertex() {
 	v_reposo = vec3(UV2.x, UV2.y, COLOR.r);
+	// LA ROPA SUELTA (26-9-2026, pedido: "están muy pegadas al cuerpo"): los
+	// vértices de la camiseta y el pantalón se separan del cuerpo por su
+	// normal -la tela no se pega a cada músculo-, y la manga y el pantalón se
+	// abren hacia el borde como en una equipación de verdad.
+	if (usa_reposo) {
+		float ax = abs(v_reposo.x);
+		float y = v_reposo.y;
+		float brazo = smoothstep(0.2, 0.235, ax) * smoothstep(1.19, 1.24, y);
+		float torso = (1.0 - brazo) * smoothstep(0.96, 1.02, y) * (1.0 - smoothstep(1.47, 1.53, y));
+		float manga = brazo * (1.0 - smoothstep(0.41, 0.45, ax));
+		float pant = (1.0 - brazo) * smoothstep(0.58, 0.63, y) * (1.0 - smoothstep(1.0, 1.04, y));
+		float inflar = torso * holgura * (0.8 + 0.4 * smoothstep(1.35, 1.05, y))
+			+ manga * holgura * (0.5 + 1.1 * smoothstep(0.25, 0.43, ax))
+			+ pant * holgura * (0.75 + 0.85 * smoothstep(0.85, 0.63, y));
+		VERTEX += NORMAL * inflar;
+	}
 }
 
 // Deshace la normalización de `mascara_equipacion.py`.
@@ -162,6 +180,25 @@ vec3 disenio(float u, float v, float x, float y) {
 	if (f == 27) { float rx = (u + v) * a * 0.5; float ry = (u - v) * a * 0.5; return int(mod(floor(rx) + floor(ry), 2.0)) == 1 ? C(1) : C(0); }
 	if (f == 28) { return fract((u + 1.0) * 0.5 * a) < 0.1 + v * 0.7 ? C(1) : C(0); }
 	if (f == 29) { float hh = h21(vec2(floor((u + 1.0) * 0.5 * a), floor(v * a))); return hh < 0.3 ? C(1) : (hh < 0.45 ? C(2) : C(0)); }
+	if (f == 30) { float gx = (u + 1.0) * 0.5 * a; float gy = v * a * 1.2; float rr = b * clamp(1.0 - v, 0.0, 1.0);
+		return length(vec2(fract(gx) - 0.5, fract(gy) - 0.5)) < rr ? C(1) : C(0); }
+	if (f == 31) { return fract(ruido(vec2(u * a + 5.0, v * a + 5.0)) * b) < 0.14 ? C(1) : C(0); }
+	if (f == 32) { float vena = abs(sin((u + ruido(vec2(u * 2.0 + 1.0, v * 3.0)) * 1.6) * a));
+		return vena < 0.07 ? C(1) : mix(C(0), C(2), 0.35 * ruido(vec2(u * 3.0, v * 3.0 + 4.0))); }
+	if (f == 33) { float fx = (u + v * 0.6) * a; float fy = (v - u * 0.4) * a; float tri = fract(fx) > fract(fy) ? 1.0 : 0.0;
+		float hf = h21(vec2(floor(fx) + tri * 7.0, floor(fy))); return hf < 0.33 ? C(1) : (hf < 0.55 ? C(2) : C(0)); }
+	if (f == 34) { if (abs(u) > 1.01) return C(1); if (a > 0.5 && v > 0.86) return C(1); if (abs(v - 0.86) < 0.02 && a > 0.5) return C(2); return C(0); }
+	if (f == 35) { float e3 = u * a * 0.5 + (v - 0.5); if (abs(e3) < 0.025) return C(2); return e3 > 0.0 ? C(1) : C(0); }
+	if (f == 36) { return abs(v - 0.6 - (abs(fract(u * a) - 0.5) - 0.25) * b) < 0.05 ? C(1) : C(0); }
+	if (f == 37) { return (fract((u + 1.0) * 0.5 * a) < 0.06 || fract(v * a * 1.2) < 0.06) ? C(1) : C(0); }
+	if (f == 38) { vec2 dv2 = vec2(fract((u + 1.0) * 0.5 * a) - 0.5, fract(v * a * 1.2) - 0.5); float th = atan(dv2.y, dv2.x);
+		return length(dv2) < b * (0.55 + 0.45 * cos(5.0 * th)) ? C(1) : C(0); }
+	if (f == 39) { return fract((u + 1.0) * 0.5 * a) < b ? mix(C(1), C(2), v) : C(0); }
+	if (f == 40) { if (abs(v - a) < b) return fract((u + 1.0) * 6.0) < 0.15 ? C(2) : C(1); return C(0); }
+	if (f == 41) { return mix(C(0), C(1), smoothstep(0.1, 1.1, length(vec2(u, (v - 0.62) * 1.3)))); }
+	if (f == 42) { float hx = (u + 1.0) * 0.5 * a; float hy = v * a * 1.2;
+		float rd = b * clamp((u + 1.0) * 0.5 * 0.6 + (1.0 - v) * 0.6, 0.0, 1.0);
+		return length(vec2(fract(hx) - 0.5, fract(hy) - 0.5)) < rd ? C(1) : C(0); }
 	return C(0);
 }
 
@@ -230,7 +267,7 @@ void fragment() {
 		// REALISMO (26-9-2026): el dibujo se promedia en cuatro puntos del
 		// tamaño de un píxel, así los bordes de las franjas no salen en
 		// escalera (los estampados de verdad están sublimados, no recortados).
-		float uu = manga ? sign(x) : u;
+		float uu = manga ? sign(x) * 1.05 : u;
 		vec2 du = vec2(dFdx(uu), dFdy(uu)) * 0.5;
 		vec2 dv = vec2(dFdx(v), dFdy(v)) * 0.5;
 		float xx = manga ? sign(x) * 0.215 : x;

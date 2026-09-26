@@ -392,8 +392,12 @@ func _ejecutar_accion(p: Dictionary, anim_name: String, duracion: float) -> void
 	var pid = p.get("id")
 	if pid == null:
 		return
-	_acciones_activas[pid] = {"anim": anim_name, "hasta": elapsed + duracion}
 	var ap: AnimationPlayer = p.get("anim")
+	## EL PORTAFOLIO (26-9-2026): el zurdo patea con la zurda y los regates,
+	## festejos y lamentos se eligen entre muchas variantes.
+	if is_instance_valid(ap):
+		anim_name = AnimExtra.variante(ap, anim_name, str(pid), _rng)
+	_acciones_activas[pid] = {"anim": anim_name, "hasta": elapsed + duracion}
 	if is_instance_valid(ap) and ap.has_animation(anim_name):
 		ap.play(anim_name)
 		ap.speed_scale = 1.0
