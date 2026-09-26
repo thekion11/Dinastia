@@ -15023,6 +15023,8 @@ func _pintar_carrera(r: Roles) -> void:
 		func() -> void:
 			var cp := CreadorPersonaje.abrir(self, mundo)
 			cp.cerrado.connect(_refrescar))
+	## LA REPUTACIÓN (26-9-2026): nivel del club, tu fama y lo que la movió.
+	PanelReputacion.pintar(_lista_club, mundo)
 	_lista_club.add_child(HSeparator.new())
 	var t := _texto(11, COL_SUAVE); t.text = "TU CARRERA"
 	_lista_club.add_child(t)

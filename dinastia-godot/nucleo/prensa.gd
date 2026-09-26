@@ -429,6 +429,7 @@ func resolver(op: String) -> Dictionary:
 		return {}
 	var e := pendiente
 	var si := op == "a"
+	_reputacion_de_decision(m, String(e["id"]), si)
 	var j: Jugador = _jugador(mio, String(e.get("pid", "")))
 	var rep := float(mio.rep)
 	var salida := {"titulo": "", "cuerpo": ""}
@@ -2504,3 +2505,30 @@ func responder_influencer(invitar: bool, c: Club) -> String:
 	noticia.emit("Puertas abiertas",
 		"Invitaste a un creador a un entrenamiento. El club ganó %d seguidores y algo de cariño en redes." % ganados)
 	return "El club gana %d seguidores." % ganados
+
+
+## LO QUE DECIDES HACE TU FAMA (26-9-2026, `Reputacion`): cada decisión del
+## despacho que dice algo de ti queda anotada. [faceta, delta si "a", delta si "b", motivo]
+const REPUTACION_DE := {
+	"espia": [["honesto", -12, 6, "El parte médico filtrado del rival"]],
+	"benefico": [["social", 6, -2, "El amistoso benéfico"]],
+	"provoca": [["mediatico", 4, -1, "Respuesta al DT rival"], ["honesto", -2, 2, "Respuesta al DT rival"]],
+	"docu": [["mediatico", 5, -2, "El documental del vestuario"]],
+	"aumento": [["leal", 3, -2, "El aumento de tu figura"]],
+	"agente": [["negociador", 3, -1, "El agente que ofreció a tu figura"]],
+	"apuestas": [["honesto", 5, -3, "La investigación de apuestas"]],
+	"lobby_arbitral": [["honesto", -4, 3, "El encuentro con la comisión arbitral"]],
+	"huelga_impagos": [["leal", 2, -4, "Los sueldos impagos"]],
+	"aniversario": [["social", 4, -1, "El aniversario del club"]],
+	"silencio": [["mediatico", -3, 2, "El silencio ante la prensa"]],
+	"reclamo": [["honesto", 2, -1, "El reclamo formal"]],
+	"tv": [["mediatico", 4, -1, "La oferta de la televisión"]],
+	"viral": [["mediatico", 3, 0, "El vídeo viral"]],
+}
+
+func _reputacion_de_decision(m: Mundo, id: String, si: bool) -> void:
+	if m == null or m.roles == null or not REPUTACION_DE.has(id):
+		return
+	for r: Array in REPUTACION_DE[id]:
+		var d: int = int(r[1]) if si else int(r[2])
+		m.roles.anotar_reputacion(String(r[0]), d, String(r[3]))
