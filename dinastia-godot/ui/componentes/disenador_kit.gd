@@ -194,8 +194,12 @@ func _vestir_3d() -> void:
 	if _jugador.is_empty():
 		return
 	var cols := DisenosKit.colores(_kit)
+	## En el diseñador, siempre con la ropa aparte (se ve de cerca).
+	var antes := VestidorQ.ropa_aparte
+	VestidorQ.ropa_aparte = true
 	VestidorQ.vestir_equipacion(_jugador, cols[0], cols[1], "liso", Color("c68d68"), Color(0.15, 0.1, 0.07),
 		Color(0, 0, 0, 0), Color(0, 0, 0, 0), false, _kit, 10)
+	VestidorQ.ropa_aparte = antes
 
 ## Repinta la vista previa (el 3D, un instante después: si se arrastra un
 ## color no se rehace el material en cada paso).
