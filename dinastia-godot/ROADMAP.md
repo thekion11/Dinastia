@@ -9,8 +9,9 @@ tapa los músculos, instalaciones con rasgos propios y personal visible, trabaja
 en el despacho, y el sistema de reputación (niveles del club y fama por facetas).
 
 Siguiente, en este orden:
-1. **Estadios según el real de cada club** (E9): guiños por club + formas nuevas.
-2. **Modos de juego a medias** (E16): selecciones, leyenda, desafíos, carrera de jugador.
+1. ✅ **Estadios según el real de cada club** (E9).
+2. ✅ **Modos de juego a medias** (E16): Crear tu Club, Retos (5) y Fondo de Inversión jugables.
+   Queda **Carrera de Jugador** (grande: se juega como un futbolista, no como DT).
 3. **Pendientes visuales del estadio**: bandejas de verdad, grada, camarógrafos y guardias,
    nombre flotante con barra de estado.
 4. **Casa moderna y móvil 3D** en Mi Vida y cinemáticas (solo copia local si la licencia no se
