@@ -13,6 +13,9 @@ Católica-Colo el Clásico). La historia es para todos los clubes."*
 - **D2. MI VIDA (vida del DT)** ✅ HECHO (26-9): casa, transporte, familia, estrés, ocio y
   asuntos.
 - **D3. Árbol de habilidades como esquema** ✅ HECHO (26-9), también a pantalla completa.
+- **D7. Maestrías (15 categorías de 30 niveles)** ✅ HECHO (26-9).
+- **D8. Diseñador de equipación** ✅ HECHO (26-9): 70 diseños, 5 colores, pantalón, medias, 30
+  botines, accesorios, números y realismo de la ropa en 3D y 2D.
 - **D4. Caza de fallas visuales** ✅ primera pasada HECHA (26-9): recorrido automático de las 37
   pantallas del menú (`pruebas/captura_todo.gd`). Arreglado:
   - el menú encendía el grupo equivocado (CENTRAL al entrar por CLUB › Infraestructura);

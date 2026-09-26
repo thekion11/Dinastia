@@ -67,4 +67,12 @@ func _process(_d: float) -> void:
 				(h as Node3D).rotation.y = PI
 	elif _n == 45:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/disenos_3d_espalda.png")
+		for h in get_children():
+			if h is Node3D and not (h is Camera3D) and not (h is Label3D) and not (h is DirectionalLight3D) and not (h is WorldEnvironment):
+				(h as Node3D).rotation.y = 0.0
+			if h is Camera3D:
+				(h as Camera3D).position = Vector3(-1.1, 1.25, 1.9)
+				(h as Camera3D).fov = 45
+	elif _n == 60:
+		get_viewport().get_texture().get_image().save_png("res://pruebas/disenos_3d_cerca.png")
 		get_tree().quit()
