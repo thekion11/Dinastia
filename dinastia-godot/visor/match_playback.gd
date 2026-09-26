@@ -12,6 +12,8 @@ extends RefCounted
 signal event_fired(text: String)
 ## Una jugada del catálogo empieza a escenificarse (para el rótulo de la TV).
 signal jugada_ambiente(nombre: String, es_local: bool)
+## El árbitro pide revisar una jugada: la pantalla abre la sala VAR.
+signal revision_var(minuto: int, motivo: String)
 const PROB_JUGADA_AMBIENTE := 0.4
 var _jugadas_ambiente := true
 
@@ -157,7 +159,24 @@ func tick(delta_real: float) -> void:
 		_disparar(events[next_event_idx])
 		next_event_idx += 1
 
+	## Los gestos programados (el árbitro que primero pita y después saca la
+	## tarjeta, la revisión del VAR, el asistente que levanta la bandera...).
+	var i_g := 0
+	while i_g < _gestos_pendientes.size():
+		var g: Array = _gestos_pendientes[i_g]
+		if elapsed >= float(g[0]):
+			var pg = players_by_id.get(g[1])
+			if pg != null:
+				_ejecutar_accion(pg, String(g[2]), float(g[3]))
+			_gestos_pendientes.remove_at(i_g)
+		else:
+			i_g += 1
+
 	var min_ahora := current_minute()
+	## Llegando al 90, el cuarto árbitro no está: lo indica el principal.
+	if min_ahora >= 89 and not _anadido_mostrado:
+		_anadido_mostrado = true
+		_programar_gesto("arbitro", "arbitro_tiempo_anadido", 1.8, 0.0)
 	if min_ahora != _ultimo_min and not reproductor.en_reproduccion:
 		_ultimo_min = min_ahora
 		## LAS JUGADAS PREHECHAS, EN EL PARTIDO DE VERDAD (25-9-2026). Hasta hoy
@@ -258,6 +277,55 @@ func ejecutar_jugada_prehecha(codigo: String, es_local: bool = true) -> bool:
 
 ## Acciones temporales por jugador: pid -> {"anim": String, "hasta": float}
 var _acciones_activas: Dictionary = {}
+## Gestos que llegan un poco después del suceso: [cuándo (elapsed), id, animación, duración]
+var _gestos_pendientes: Array = []
+var _anadido_mostrado := false
+
+func _programar_gesto(id: String, anim: String, dur: float, retraso: float) -> void:
+	_gestos_pendientes.append([elapsed + retraso, id, anim, dur])
+
+## Lo que hace el árbitro (y los asistentes) con cada suceso, además de las
+## faltas: gol (silbato, a veces revisión del VAR, y al centro), balón que se
+## va (córner o saque de meta), fuera de juego con bandera, lesión (pide
+## calma y llama a las asistencias) y las decisiones arbitrales de la
+## simulación (revisión o calmar a los jugadores).
+func _trabajo_del_arbitro(t_ev: String, tipo_ev: String, ev: Dictionary, es_gol: bool) -> void:
+	if not players_by_id.has("arbitro"):
+		return
+	var minuto := int(ev.get("min", current_minute()))
+	if es_gol:
+		_programar_gesto("arbitro", "arbitro_silbato", 0.9, 0.4)
+		## Uno de cada seis goles se revisa en el VAR (se confirma: la
+		## simulación ya decidió que es gol; esto solo lo dramatiza).
+		if _rng.randf() < 0.17:
+			_programar_gesto("arbitro", "arbitro_var", 2.2, 2.2)
+			revision_var.emit(minuto, "Posible fuera de juego en el gol")
+		_programar_gesto("arbitro", "senalar_falta", 1.8, 4.8)
+	elif tipo_ev == "fallo":
+		if _rng.randf() < 0.14:
+			## Fuera de juego: el asistente levanta la bandera y la baja en
+			## horizontal; el árbitro pita.
+			var asist := "linea_a" if _rng.randf() < 0.5 else "linea_b"
+			_programar_gesto(asist, "asistente_bandera", 1.8, 0.2)
+			_programar_gesto(asist, "asistente_fuera_juego", 1.8, 2.0)
+			_programar_gesto("arbitro", "arbitro_silbato", 0.9, 0.6)
+		elif not _corner_pendiente.is_empty():
+			_programar_gesto("arbitro", "arbitro_corner", 1.6, 0.8)
+		else:
+			_programar_gesto("arbitro", "arbitro_saque_meta", 1.6, 0.8)
+	elif t_ev == "lesion":
+		_programar_gesto("arbitro", "arbitro_silbato", 0.9, 0.3)
+		_programar_gesto("arbitro", "arbitro_calma", 1.4, 1.4)
+	elif t_ev == "arbitro":
+		var tx := str(ev.get("tx", "")).to_lower()
+		if tx.contains("var") or tx.contains("revis"):
+			_programar_gesto("arbitro", "arbitro_var", 2.2, 0.4)
+			revision_var.emit(minuto, str(ev.get("tx", "Revisión")))
+		elif tx.contains("penal"):
+			_programar_gesto("arbitro", "arbitro_silbato", 0.9, 0.2)
+			_programar_gesto("arbitro", "arbitro_penal", 1.8, 1.1)
+		else:
+			_programar_gesto("arbitro", "arbitro_calma", 1.4, 0.3)
 
 ## Elige hacia donde va el juego este minuto. Si acaba de pasar algo (ev != null)
 ## manda el suceso: tras un remate la pelota esta en el area, no en el medio.
@@ -478,16 +546,29 @@ func _disparar(ev: Dictionary) -> void:
 	if tipo_ev == "fallo" and _corner_pendiente.is_empty() and _rng.randf() < 0.30:
 		_jugada_corner(es_local_atacando)
 
+	## EL ÁRBITRO HACE SU TRABAJO (26-9-2026): pita, señala, habla, revisa.
+	_trabajo_del_arbitro(t_ev, tipo_ev, ev, es_gol)
+
 	# Faltas y tarjetas
 	if t_ev in ["warn", "falta"]:
 		if p_remate != null:
 			_ejecutar_accion(p_remate, "falta_barrida" if _rng.randf() > 0.35 else "falta_empujon", 1.2)
 		var arb = players_by_id.get("arbitro")
 		if arb != null:
-			var gesto := "senalar_falta"
+			## Primero el silbato; en una falta sin tarjeta, a veces deja seguir
+			## (ventaja); con tarjeta, habla con el jugador y después la muestra.
+			_ejecutar_accion(arb, "arbitro_silbato", 0.9)
 			if t_ev == "warn":
-				gesto = "mostrar_roja" if bool(ev.get("roja", false)) else "mostrar_tarjeta"
-			_ejecutar_accion(arb, gesto, 2.4 if gesto == "mostrar_roja" else 1.8)
+				_programar_gesto("arbitro", "arbitro_amonestar_hablar", 1.6, 0.9)
+				var gesto := "mostrar_roja" if bool(ev.get("roja", false)) else "mostrar_tarjeta"
+				_programar_gesto("arbitro", gesto, 2.4 if gesto == "mostrar_roja" else 1.8, 2.5)
+				## Protestas y el árbitro que las aparta.
+				if p_remate != null:
+					_programar_gesto(str(p_remate.get("id")), "protestar", 1.6, 2.6)
+				_programar_gesto("arbitro", "arbitro_dispersar", 1.6, 4.3)
+			else:
+				var ventaja := _rng.randf() < 0.3
+				_programar_gesto("arbitro", "arbitro_ventaja" if ventaja else "senalar_falta", 1.6, 0.8)
 
 		## JUGADAS PREHECHAS, tercera pieza (21-9-2026): el tiro libre. Mismo
 		## principio que el corner -no redecide nada, `ev` sigue siendo un
