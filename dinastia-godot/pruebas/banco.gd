@@ -1668,7 +1668,9 @@ func _probar_roles_y_federacion() -> void:
 		"personalizado", "redCol", "redTipo", "sonidoGol", "techo", "tunel", "vallas",
 		## B6 (25-9-2026): las secciones, también incondicionales.
 		"fachada", "fachadaCol", "techoCol", "luzFocos", "luzClub", "banquilloCol",
-		"superficie", "exterior"]
+		"superficie", "exterior",
+		## 26-9-2026: obras en curso y lo construido, para el 3D (`EstadioExtras`).
+		"en_obra", "inst"]
 	claves_esperadas.sort()
 	_comprobar(claves_antes == claves_esperadas,
 		"perfil() trae exactamente las claves de siempre, ni una de mas (dio: %s)" % [claves_antes])
