@@ -48,6 +48,9 @@ PACK = os.path.join(DATOS, "pack_real.json")
 TABLAS_DEL_PACK = [
     "DATA_P1", "DATA_P2", "PAISES_LIGAS", "CONFED", "COPA_NOM",
     "ARBITROS", "REALES", "EQUIP_REAL", "PROVEEDORES",
+    # C4 (26-9-2026): fundacion, apodo, estadio y rival reales. En la base va
+    # vacia: la historia ficticia la genera `nucleo/historia_club.gd`.
+    "HISTORIA_REAL",
 ]
 
 # ---------------------------------------------------------------------------
@@ -648,6 +651,7 @@ def main():
         return salida
 
     fic = {}
+    fic["HISTORIA_REAL"] = {}
     fic["DATA_P1"] = renombrar(real["DATA_P1"])
     fic["DATA_P2"] = renombrar(real["DATA_P2"])
     fic["PAISES_LIGAS"] = {}
