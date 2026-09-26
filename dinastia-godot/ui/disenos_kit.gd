@@ -402,17 +402,33 @@ static func _mascara_camiseta(escala: float) -> Image:
 	return img
 
 ## La camiseta 2D de un diseño, con el cuello y los puños del color de trim.
+## REALISMO (26-9-2026, pedido: "se ven poco realistas"):
+##   - se dibuja al doble de tamaño y se reduce (bordes suaves, sin escalones);
+##   - volumen: el torso más oscuro hacia los costados, brillo en el pecho y los
+##     hombros, sombra bajo las mangas y arrugas suaves de tela;
+##   - confección: cuello en pico acanalado, puños acanalados, costuras de
+##     hombro y laterales, doble pespunte en el bajo;
+##   - escudo del club (izquierda del pecho) y marca de ropa (derecha);
+##   - la trama del tejido, un punto fino que se nota de cerca.
 static func textura_camiseta(clave: String, cols: Array[Color], trim: int = 1, ancho_px: int = 128) -> Texture2D:
 	var k := "%s|%s|%d|%d" % [clave, ",".join(cols.map(func(c: Color) -> String: return c.to_html(false))), trim, ancho_px]
 	if _cache.has(k):
 		return _cache[k]
-	var escala := float(ancho_px) / 64.0
+	var out := _imagen_camiseta(clave, cols, trim, ancho_px)
+	var t := ImageTexture.create_from_image(out)
+	_cache[k] = t
+	return t
+
+static func _imagen_camiseta(clave: String, cols: Array[Color], trim: int, ancho_px: int, espalda: bool = false) -> Image:
+	var ss := 2 if ancho_px <= 200 else 1
+	var escala := float(ancho_px * ss) / 64.0
 	var m := _mascara_camiseta(escala)
 	var w := m.get_width()
 	var h := m.get_height()
 	var out := Image.create(w, h, false, Image.FORMAT_RGBA8)
 	var d := diseno(clave)
 	var c_trim: Color = cols[clampi(trim, 0, 4)]
+	var detalle := ancho_px >= 96
 	for py in h:
 		for px in w:
 			var al := m.get_pixel(px, py).a
@@ -420,31 +436,75 @@ static func textura_camiseta(clave: String, cols: Array[Color], trim: int = 1, a
 				continue
 			var sx := float(px) / escala
 			var sy := float(py) / escala
-			var col: Color
 			var manga := sx < 18.0 or sx > 46.0
 			var u := clampf((sx - 32.0) / 14.0, -1.0, 1.0)
 			var v := clampf(1.0 - (sy - 6.0) / 40.0, 0.0, 1.0)
-			col = color_en(d, cols, u, v)
-			## Cuello y puños.
-			if (not manga and sy < 8.5 and absf(sx - 32.0) < 7.5) or (manga and (sx < 11.0 or sx > 53.0)):
-				col = c_trim
-			## Sombra suave hacia los bordes: que no parezca un recorte plano.
-			var sombra := 1.0 - 0.18 * clampf(absf(sx - 32.0) / 26.0, 0.0, 1.0) - (0.08 if manga else 0.0)
-			out.set_pixel(px, py, Color(col.r * sombra, col.g * sombra, col.b * sombra, al))
-	var t := ImageTexture.create_from_image(out)
-	_cache[k] = t
-	return t
+			var col := color_en(d, cols, u, v)
+			## Cuello en pico, acanalado.
+			## De espaldas el cuello es redondo y bajo.
+			var borde_cuello := (7.5 - (sy - 4.0) * 0.9) if not espalda else (6.0 - pow(maxf(sy - 4.0, 0.0), 1.4) * 0.9)
+			var cuello_v := absf(sx - 32.0) < borde_cuello and sy < (12.0 if not espalda else 7.0) and not manga
+			var ribete_cuello := not manga and sy < (12.5 if not espalda else 8.0) and absf(absf(sx - 32.0) - borde_cuello) < 1.2 and sy > 3.5
+			if ribete_cuello:
+				col = c_trim * (0.92 + 0.08 * float(int(sx * 2.0) % 2))
+			elif cuello_v and sy < (11.0 if not espalda else 6.5):
+				## Por dentro del pico se ve la tela de atrás, en sombra.
+				col = cols[0] * 0.55
+			## Puños acanalados.
+			var dist_puno := minf(absf(sx - 10.0 - (sy - 10.0) * 0.28), absf(sx - 54.0 + (sy - 10.0) * 0.28))
+			if manga and dist_puno < 1.6 and sy > 12.0:
+				col = c_trim * (0.9 + 0.1 * float(int(sy * 2.0) % 2))
+			var luz := 1.0
+			if not manga:
+				## Volumen del torso: cilindro con la luz arriba a la izquierda.
+				var cx := (sx - 32.0) / 14.0
+				luz = 0.78 + 0.28 * sqrt(maxf(0.0, 1.0 - cx * cx)) - 0.06 * cx
+				## Brillo del pecho y caída hacia el bajo.
+				luz += 0.07 * exp(-pow((sy - 16.0) / 6.0, 2.0)) - 0.05 * clampf((sy - 38.0) / 8.0, 0.0, 1.0)
+				## Arrugas suaves de tela (más en la cintura).
+				luz -= 0.045 * (_ruido(sx * 0.35, sy * 0.12) - 0.5) * (0.6 + clampf((sy - 30.0) / 16.0, 0.0, 1.0))
+				## Sombra bajo las mangas.
+				if absf(sx - 32.0) > 11.0 and sy > 12.0 and sy < 22.0:
+					luz -= 0.12 * (absf(sx - 32.0) - 11.0) / 3.0
+			else:
+				luz = 0.82 + 0.08 * (1.0 - clampf(absf(sy - 12.0) / 10.0, 0.0, 1.0))
+			## Costuras: hombros, laterales y doble pespunte del bajo.
+			if (absf(sx - 18.0) < 0.35 or absf(sx - 46.0) < 0.35) and sy > 9.0:
+				luz *= 0.8
+			if not manga and sy > 43.0 and (absf(sy - 43.8) < 0.25 or absf(sy - 44.8) < 0.25):
+				luz *= 0.82
+			if detalle and not manga and not espalda:
+				## Escudo: izquierda del pecho (derecha del dibujo).
+				var ex := (sx - 38.5) / 3.2
+				var ey := (sy - 15.5) / 3.8
+				var ancho_e := 1.0 if ey < 0.0 else sqrt(maxf(0.0, 1.0 - ey * ey))
+				if absf(ex) < ancho_e and ey > -1.0 and ey < 1.0:
+					col = cols[1] if absf(ex) < ancho_e - 0.25 and ey > -0.75 else c_trim
+					if absf(ex) < 0.3 and absf(ey) < 0.35:
+						col = c_trim
+				## Marca: un "ala" a la derecha del pecho (izquierda del dibujo).
+				var mx := (sx - 25.5) / 2.6
+				var my := (sy - 15.8) / 1.6
+				if absf(mx) < 1.0 and absf(my - (mx * mx * 0.6 - 0.25)) < 0.3 - mx * 0.1:
+					col = c_trim
+			## Trama del tejido.
+			var trama := 1.0 + 0.03 * (float((px + py) % 3 == 0) - 0.33)
+			luz *= trama
+			out.set_pixel(px, py, Color(clampf(col.r * luz, 0.0, 1.0), clampf(col.g * luz, 0.0, 1.0), clampf(col.b * luz, 0.0, 1.0), al))
+	if ss > 1:
+		out.resize(w / ss, h / ss, Image.INTERPOLATE_LANCZOS)
+	return out
 
 ## La equipación entera en 2D (camiseta, pantalón, medias y botines), de
 ## frente o de espaldas con el número.
 static func textura_completa(kit: Dictionary, espalda: bool = false, ancho_px: int = 160) -> Texture2D:
 	var cols := colores(kit)
-	var camiseta := textura_camiseta(String(kit.get("dis", "liso")), cols, int(kit.get("trim", 1)), ancho_px).get_image()
+	var ss := 2
+	var camiseta := _imagen_camiseta(String(kit.get("dis", "liso")), cols, int(kit.get("trim", 1)), ancho_px * ss, espalda)
 	var w := camiseta.get_width()
 	var escala := float(w) / 64.0
 	var h := int(escala * 112.0)
 	var out := Image.create(w, h, false, Image.FORMAT_RGBA8)
-	out.blend_rect(camiseta, Rect2i(0, 0, w, camiseta.get_height()), Vector2i(0, 0))
 	var pant: Dictionary = kit.get("pant", {})
 	var med: Dictionary = kit.get("med", {})
 	var bot: Dictionary = kit.get("bot", {})
@@ -458,41 +518,73 @@ static func textura_completa(kit: Dictionary, espalda: bool = false, ancho_px: i
 	var bc3 := _col(bot.get("c3", bm[5]))
 	var pdis := String(pant.get("dis", "liso"))
 	var mdis := String(med.get("dis", "lisas"))
-	for py in range(int(46.0 * escala), h):
+	for py in range(int(40.0 * escala), h):
 		var sy := float(py) / escala
 		for px in w:
 			var sx := float(px) / escala
 			var col := Color(0, 0, 0, 0)
-			## Pantalón: de 46 a 64, dos perneras.
-			if sy < 64.0 and sx > 18.5 and sx < 45.5 and not (sy > 57.0 and absf(sx - 32.0) < 1.5):
+			var luz := 1.0
+			## Pantalón: de 44 a 64, con la entrepierna y bajos acampanados.
+			var abre := (sy - 44.0) * 0.12
+			var entrepierna := sy > 54.0 and absf(sx - 32.0) < (sy - 54.0) * 0.3
+			if sy >= 44.0 and sy < 64.0 and sx > 18.5 - abre and sx < 45.5 + abre and not entrepierna:
 				var lado := sx < 32.0
-				var ex := absf(sx - 32.0) / 13.5
+				var ex := clampf(absf(sx - 32.0) / (13.5 + abre), 0.0, 1.0)
 				col = pc1
 				match pdis:
 					"lateral": col = pc2 if ex > 0.85 else pc1
 					"doble_lateral": col = pc2 if (ex > 0.78 and ex < 0.84) or ex > 0.9 else pc1
 					"ribete": col = pc2 if sy > 61.5 else pc1
 					"bicolor": col = pc2 if not lado else pc1
-					"degrade": col = pc1.lerp(pc2, clampf((sy - 46.0) / 18.0, 0.0, 1.0))
-			## Medias: de 66 a 96, dos piernas.
-			elif sy >= 66.0 and sy < 96.0 and ((sx > 21.0 and sx < 29.0) or (sx > 35.0 and sx < 43.0)):
-				var t := (sy - 66.0) / 30.0
-				col = mc1
-				match mdis:
-					"aros": col = mc2 if fposmod(t * 8.0, 1.0) < 0.4 else mc1
-					"franja": col = mc2 if t < 0.18 else mc1
-					"dos_franjas": col = mc2 if (t > 0.05 and t < 0.12) or (t > 0.17 and t < 0.24) else mc1
-					"bicolor": col = mc2 if t > 0.55 else mc1
-					"rombos": col = mc2 if absf(fposmod(t * 6.0, 1.0) - 0.5) + absf(fposmod((sx - 21.0) / 8.0, 1.0) - 0.5) < 0.35 else mc1
-			## Botines: de 96 a 104, con la punta hacia fuera.
-			elif sy >= 96.0 and sy < 104.0 and ((sx > 16.0 and sx < 30.0) or (sx > 34.0 and sx < 48.0)):
+					"degrade": col = pc1.lerp(pc2, clampf((sy - 44.0) / 20.0, 0.0, 1.0))
+				## Volumen de cada pernera, cintura elástica y pliegues.
+				var cpierna := (sx - (25.0 if lado else 39.0)) / 8.0
+				luz = 0.8 + 0.22 * sqrt(maxf(0.0, 1.0 - cpierna * cpierna * 0.8))
+				if sy < 46.0:
+					luz *= 0.88 + 0.06 * float(int(sy * 3.0) % 2)
+				luz -= 0.05 * (_ruido(sx * 0.4, sy * 0.2) - 0.5)
+			## Medias: de 66 a 96, con la pantorrilla más ancha.
+			elif sy >= 66.0 and sy < 96.0:
+				var anchom := 4.2 + 0.9 * sin(clampf((sy - 66.0) / 18.0, 0.0, 1.0) * PI)
+				var ci := 25.0
+				var cd := 39.0
+				if absf(sx - ci) < anchom or absf(sx - cd) < anchom:
+					var t := (sy - 66.0) / 30.0
+					col = mc1
+					match mdis:
+						"aros": col = mc2 if fposmod(t * 8.0, 1.0) < 0.4 else mc1
+						"franja": col = mc2 if t < 0.18 else mc1
+						"dos_franjas": col = mc2 if (t > 0.05 and t < 0.12) or (t > 0.17 and t < 0.24) else mc1
+						"bicolor": col = mc2 if t > 0.55 else mc1
+						"rombos": col = mc2 if absf(fposmod(t * 6.0, 1.0) - 0.5) + absf(fposmod((sx - 21.0) / 8.0, 1.0) - 0.5) < 0.35 else mc1
+					var cm := (sx - (ci if sx < 32.0 else cd)) / anchom
+					luz = 0.78 + 0.25 * sqrt(maxf(0.0, 1.0 - cm * cm))
+					## Canalé de la media y la vuelta de arriba.
+					luz *= 0.96 + 0.04 * float(int(sx * 2.5) % 2)
+					if t < 0.07:
+						luz *= 0.9
+			## Botines: de 96 a 105, con brillo, cordones y tacos.
+			if sy >= 95.5 and sy < 105.0:
 				var izq := sx < 32.0
 				var z := (30.0 - sx) / 14.0 if izq else (sx - 34.0) / 14.0
-				col = _color_botin(int(bm[2]), bc1, bc2, z, (104.0 - sy) / 8.0)
-				if sy > 102.5:
-					col = bc3
+				var alto := (104.0 - sy) / 8.5
+				var techo := 0.95 - smoothstep(0.35, 1.0, z) * 0.5
+				if z >= -0.05 and z <= 1.0 and alto >= 0.0 and alto <= techo:
+					col = _color_botin(int(bm[2]), bc1, bc2, z, alto)
+					luz = 0.85 + 0.35 * exp(-pow((alto - 0.62) / 0.15, 2.0)) * smoothstep(0.2, 0.7, z)
+					if alto < 0.14:
+						col = bc3
+						luz = 0.9
+					## Cordones.
+					if z > 0.45 and z < 0.8 and alto > techo - 0.16 and int(z * 20.0) % 2 == 0:
+						col = Color(0.95, 0.95, 0.95)
+				elif z >= 0.0 and z <= 0.95 and alto < 0.0 and alto > -0.1 and fposmod(z * 6.0, 1.0) < 0.35:
+					col = bc3 * 0.8
 			if col.a > 0.0:
-				out.set_pixel(px, py, col)
+				out.set_pixel(px, py, Color(clampf(col.r * luz, 0.0, 1.0), clampf(col.g * luz, 0.0, 1.0), clampf(col.b * luz, 0.0, 1.0), 1.0))
+	## La camiseta, encima del pantalón (el bajo cae por delante de la cintura).
+	out.blend_rect(camiseta, Rect2i(0, 0, w, camiseta.get_height()), Vector2i(0, 0))
+	out.resize(w / ss, h / ss, Image.INTERPOLATE_LANCZOS)
 	return ImageTexture.create_from_image(out)
 
 ## El color de un botín: `z` de 0 (talón) a 1 (punta), `alto` de 0 (suela) a 1.

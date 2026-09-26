@@ -1,5 +1,44 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## SÉPTIMA RONDA (2): MAESTRÍAS, DISEÑADOR DE EQUIPACIÓN Y REALISMO DE LA ROPA (26-9-2026)
+
+- **Maestrías** (`nucleo/maestria.gd`, `ui/componentes/panel_maestrias.gd`): 15 categorías
+  nuevas de 30 niveles (450 en total), debajo del árbol de habilidades.
+  - Las categorías son ataque, defensa, porteros, balón parado, análisis, física, cargas,
+    liderazgo, psicología, idiomas, formación, prensa, hinchada, finanzas y negociación.
+  - Se gana un punto por semana y otro por victoria. Cada nivel cuesta 1, 2 o 3 puntos según
+    la decena.
+  - Los hitos 10, 20 y 30 refuerzan el efecto y dan un punto de habilidad para el árbol.
+  - Todas tienen efecto real (el nivel 30 de Ataque son +6 % de ataque).
+- **Diseñador de equipación** (`ui/disenos_kit.gd`, `ui/componentes/disenador_kit.gd`), desde
+  Gente › Identidad:
+  - 70 diseños de camiseta (los 12 de siempre y 58 nuevos), con hasta 5 colores y color de
+    cuello y puños;
+  - 6 diseños de pantalón y 6 de medias, con dos colores cada uno;
+  - 30 modelos de botín con tres colores (base, detalle y suela);
+  - 7 accesorios (cintillo, manga térmica, guantes, muñequeras, brazalete, cuello térmico,
+    tobilleras);
+  - color de los números.
+  - Vista previa en 2D, de frente y de espaldas con el número, y un jugador 3D girando.
+  - El 3D (`visor/equipacion_q.gdshader`) y el 2D usan la misma fórmula; el dorsal se pinta en
+    la espalda en 3D.
+  - Se guarda en `Club.kit_x`.
+- **Realismo de la ropa** (pedido: «se ven poco realistas»):
+  - **3D**:
+    - la pose de reposo se escribe en la malla (UV2 y COLOR), así el dibujo y los cortes de
+      las prendas son exactos por píxel (antes, escalones de 7 mm por la textura de 8 bits);
+    - estampado suavizado;
+    - menos músculo marcado bajo la tela, arrugas, y sombra en axilas y cintura;
+    - tejido de punto con su brillo, botines brillantes;
+    - costuras, cuello y puños acanalados, escudo y marca en el pecho.
+  - **2D**:
+    - dibujado al doble y reducido, con volumen, brillo y arrugas;
+    - cuello en pico adelante y redondo atrás, puños acanalados, costuras, escudo, marca y
+      trama;
+    - pantalón con volumen, medias de canalé y botines con brillo, cordones y tacos.
+- Pruebas: `_probar_maestrias`, `_probar_disenos_kit`; capturas `captura_maestrias`,
+  `captura_disenos_3d` (frente, espalda y de cerca) y `captura_disenador`.
+
 ## SÉPTIMA RONDA (1): HISTORIA CON GUIÑO, CLÁSICOS, MI VIDA Y ÁRBOL DE HABILIDADES (26-9-2026)
 
 - **Historia con guiño para los 384 clubes** (`herramientas/historia_clubes.py` →

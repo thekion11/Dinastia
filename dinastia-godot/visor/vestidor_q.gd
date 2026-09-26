@@ -224,6 +224,11 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 					mi.set_surface_override_material(s, _material_liso(Color(0.12, 0.09, 0.07), 0.3))
 	if cuerpo == null:
 		return false
+	## REALISMO (26-9-2026): la posición de reposo de cada vértice, escrita en
+	## la malla (UV2 = x,y; COLOR.r = z). Con ella el dibujo y los cortes de
+	## las prendas se calculan exactos por píxel; con la textura de 8 bits de
+	## antes salían en escalones de 7 mm.
+	_con_reposo(cuerpo, superficie)
 	var estilos: Variant = Datos.tabla("KITS")
 	var i_estilo: int = maxi(0, (estilos as Array).find(estilo)) if estilos is Array else 0
 	if pantalon.a == 0.0:
@@ -262,12 +267,52 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("estilo", i_estilo)
 		mat.set_shader_parameter("tinte_piel", _tinte(piel))
 		mat.set_shader_parameter("largo", largo)
+		mat.set_shader_parameter("usa_reposo", (cuerpo.mesh as ArrayMesh) != null and cuerpo.mesh.has_meta("con_reposo"))
 		var un := DisenosKit.uniforms(kit, dorsal)
 		for k: String in un:
 			mat.set_shader_parameter(k, un[k])
 		_cache_equipacion[clave] = mat
 	cuerpo.set_surface_override_material(superficie, mat)
 	return true
+
+static var _mallas_reposo: Dictionary = {}
+
+## Cambia la malla del cuerpo por una copia con la pose de reposo en UV2 y
+## COLOR. Se hace una vez por malla original (todos los jugadores comparten la
+## misma copia).
+static func _con_reposo(mi: MeshInstance3D, superficie: int) -> void:
+	var original := mi.mesh as ArrayMesh
+	if original == null or original.has_meta("con_reposo"):
+		return
+	var id := original.get_instance_id()
+	if _mallas_reposo.has(id):
+		mi.mesh = _mallas_reposo[id]
+		return
+	var nueva := ArrayMesh.new()
+	nueva.blend_shape_mode = original.blend_shape_mode
+	for b in original.get_blend_shape_count():
+		nueva.add_blend_shape(original.get_blend_shape_name(b))
+	for s in original.get_surface_count():
+		var arr := original.surface_get_arrays(s)
+		if s == superficie:
+			var pos: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+			var uv2 := PackedVector2Array()
+			var col := PackedColorArray()
+			uv2.resize(pos.size())
+			col.resize(pos.size())
+			for i in pos.size():
+				var p: Vector3 = pos[i]
+				uv2[i] = Vector2(p.x, p.y)
+				col[i] = Color(clampf((p.z + 0.25) / 0.5, 0.0, 1.0), 0.0, 0.0, 1.0)
+			arr[Mesh.ARRAY_TEX_UV2] = uv2
+			arr[Mesh.ARRAY_COLOR] = col
+		var formas := original.surface_get_blend_shape_arrays(s)
+		nueva.add_surface_from_arrays(original.surface_get_primitive_type(s), arr, formas)
+		nueva.surface_set_material(s, original.surface_get_material(s))
+		nueva.surface_set_name(s, original.surface_get_name(s))
+	nueva.set_meta("con_reposo", true)
+	_mallas_reposo[id] = nueva
+	mi.mesh = nueva
 
 ## El tono del jugador sobre el de la textura, en espacio lineal (el shader
 ## multiplica ya en lineal). Acotado: un tono extremo no puede quemar la piel.
