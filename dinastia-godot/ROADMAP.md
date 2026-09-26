@@ -1,5 +1,26 @@
 # RUTA DE DESARROLLO — DINASTÍA
 
+## PLAN DE TRABAJO ACTUAL (26-9-2026)
+
+Hecho en esta ronda: calles conectadas, terreno, peatones 3D, frentes de edificios con el kit
+comercial completo, finca con enredadera, autos bien orientados, karting y resto del Car Kit,
+mascotas (17 animales), personaje modificable 3D (hombre o mujer, textos en femenino), la ropa
+tapa los músculos, instalaciones con rasgos propios y personal visible, trabajadores con asuntos
+en el despacho, y el sistema de reputación (niveles del club y fama por facetas).
+
+Siguiente, en este orden:
+1. **Estadios según el real de cada club** (E9): guiños por club + formas nuevas.
+2. **Modos de juego a medias** (E16): selecciones, leyenda, desafíos, carrera de jugador.
+3. **Pendientes visuales del estadio**: bandejas de verdad, grada, camarógrafos y guardias,
+   nombre flotante con barra de estado.
+4. **Casa moderna y móvil 3D** en Mi Vida y cinemáticas (solo copia local si la licencia no se
+   confirma).
+5. **Bloques 37-50 del plan maestro**: mercado avanzado, insolvencia, reglamento, selecciones,
+   competiciones, meta.
+
+Bloqueado por algo externo: cara por blendshapes (Blender en el PC), FPS en un PC real, música con
+licencia, confirmar licencias 🟡, cambiar la contraseña del keystore que sigue en el historial.
+
 ## PLAN MAESTRO, OCTAVA RONDA (pedido del 26-9-2026)
 
 Pedido: *"20 diseños de solo 3 colores y 20 de solo 2; sponsors según los patrocinadores; más
