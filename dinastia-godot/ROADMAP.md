@@ -66,8 +66,12 @@ Viabilidad: ✅ con lo que hay · 🟡 necesita datos, assets o una decisión ·
   estilo FC) que se une a `Mando`.
 - **E18. Ciudad navegable** ✅: caminar o conducir por la ciudad con cámara en tercera persona,
   entrar a los edificios del club, peatones y tráfico que reaccionan.
-- **E19. Personaje base del jugador, modificable** 🟡: el DT/jugador del usuario con cuerpo por
-  huesos (hecho a medias en B8), cara por blendshapes (necesita Blender), ropa de `RopaSeparada`.
+- **E19. Personaje base del jugador, modificable** ✅ (26-9): `CreadorPersonaje` a pantalla
+  completa (Cuerpo · Piel y pelo · Ropa · Accesorios · Conjuntos, con aleatorio y deshacer),
+  `PersonajeDT` (hombre o mujer, cuerpo por escalas de huesos, 14 peinados, barba, 6 estilos de
+  ropa, gafas, gorra, bufanda, auriculares, reloj) y el DT en la banda de cada partido (el rival,
+  generado). Con personaje mujer, `Genero` pasa la interfaz a femenino ("la entrenadora").
+  Pendiente: cara por blendshapes (necesita Blender en el PC del usuario).
 - **E20. Trofeos**: réplicas propias (no copias) de cada copa y animaciones al levantarlos, en la
   vitrina y al ganar ✅.
 - **E21. 300 animaciones en todo el juego** ✅ (hoy 333 por jugador; sumar interfaz, público,
@@ -540,7 +544,7 @@ reales y commit + push.
   - eventos de ciudad (protesta, festival, corte de acceso);
   - que la hora del ciclo siga la del juego.
 
-### B8. Personaje propio: creador estilo Los Sims ✅ / 🟡
+### B8. Personaje propio: creador estilo Los Sims ✅ (cara por blendshapes: 🟡)
 - **Hoy**: `PanelAspectoDT` es un retrato 2D (`CaraDT`: corte, volumen, traje) y el mentor usa
   `PersonaRealista` recoloreable, sin esqueleto.
 - **Hacer**:

@@ -446,9 +446,19 @@ func _poner_banca_de(c: Club, once_c: Array[Jugador], es_local: bool) -> void:
 	var kit := Puente3D.kit(c)
 	var kit_por := Puente3D.kit_portero(c)
 	_en_banca.append_array(_spawner.spawn_banca(_raiz3d, disponibles, es_local, kit, kit_por))
+	_poner_dt(c, es_local, mini(disponibles.size(), 7))
 	if disponibles.size() > 7:
 		_en_banca.append_array(_spawner.spawn_sentados(_raiz3d,
 			disponibles.slice(7, 12), es_local, kit, kit_por))
+
+## EL ENTRENADOR EN LA BANDA (26-9-2026): tu personaje del creador en el
+## área técnica de tu club, y un DT rival (siempre el mismo por club) en la
+## otra. Delante de su fila de suplentes, del lado del centro del campo.
+func _poner_dt(c: Club, es_local: bool, cuantos: int) -> void:
+	var asp: Dictionary = PersonajeDT.del_usuario if c.id == PersonajeDT.club_usuario else PersonajeDT.de_rival(c.id)
+	var lado := -1.0 if es_local else 1.0
+	var z := lado * 14.0 - lado * (float(maxi(cuantos, 1)) * 0.8 + 1.8)
+	PersonajeDT.poner_en_banda(_raiz3d, asp, Color(c.color1), Color(c.color2), Vector3(34.6, 0, z), -PI * 0.5)
 
 ## Mejores disponibles (sin lesión/sanción, no en el once) por media, para que
 ## la banca se vea como un banco de verdad y no como un sorteo cualquiera.
