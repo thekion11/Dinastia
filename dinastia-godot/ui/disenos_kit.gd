@@ -98,6 +98,29 @@ const DISENOS := [
 	["franjas_crecientes", "Franjas que crecen", 28, 8, 0, 0, 0, 2],
 	["pixel", "Píxeles", 29, 9, 0, 0, 0, 3],
 	["gajos", "Gajos", 4, 6, 0, 0, 0, 2],
+	## ESTILO MODERNO (26-9-2026, pedido: "replicar los estilos de los juegos
+	## actuales"): plantillas genéricas de las que usan las marcas hoy, sin
+	## copiar ninguna equipación concreta.
+	["puntos_degradados", "Puntos degradados", 30, 14, 0.45, 0, 0, 2],
+	["puntos_finos", "Puntos degradados finos", 30, 22, 0.42, 0, 0, 2],
+	["curvas_nivel", "Curvas de nivel", 31, 3, 6, 0, 0, 2],
+	["curvas_finas", "Curvas de nivel finas", 31, 5, 10, 0, 0, 2],
+	["marmol", "Mármol", 32, 6, 0, 0, 0, 3],
+	["marmol_fino", "Mármol fino", 32, 11, 0, 0, 0, 3],
+	["fragmentos", "Fragmentos", 33, 4, 0, 0, 0, 3],
+	["fragmentos_grandes", "Fragmentos grandes", 33, 2.5, 0, 0, 0, 3],
+	["mangas_contraste", "Mangas de contraste", 34, 0, 0, 0, 0, 3],
+	["mangas_canesu", "Mangas y canesú", 34, 1, 0, 0, 0, 3],
+	["diagonal_partida", "Diagonal partida", 35, 1, 0, 0, 0, 3],
+	["diagonal_partida_inv", "Diagonal partida inversa", 35, -1, 0, 0, 0, 3],
+	["relampago", "Relámpago", 36, 3, 0.5, 0, 0, 2],
+	["cuadricula", "Cuadrícula", 37, 10, 0, 0, 0, 2],
+	["cuadricula_fina", "Cuadrícula fina", 37, 18, 0, 0, 0, 2],
+	["estrellas", "Estrellas", 38, 6, 0.3, 0, 0, 2],
+	["franjas_degradadas", "Franjas degradadas", 39, 8, 0.5, 0, 0, 3],
+	["faja_rayas", "Faja con rayas", 40, 0.62, 0.11, 0, 0, 3],
+	["resplandor", "Resplandor", 41, 0, 0, 0, 0, 2],
+	["puntos_diagonal", "Puntos en diagonal", 42, 14, 0.5, 0, 0, 2],
 ]
 
 ## Pantalones: [clave, nombre]
@@ -371,6 +394,58 @@ static func color_en(d: Array, cols: Array[Color], u: float, v: float) -> Color:
 		29:
 			var hh := _h21(floorf((u + 1.0) * 0.5 * a), floorf(v * a))
 			return cols[1] if hh < 0.3 else (cols[2] if hh < 0.45 else cols[0])
+		30:
+			var gx := (u + 1.0) * 0.5 * a
+			var gy := v * a * 1.2
+			var rr := b * clampf(1.0 - v, 0.0, 1.0)
+			return cols[1] if Vector2(fposmod(gx, 1.0) - 0.5, fposmod(gy, 1.0) - 0.5).length() < rr else cols[0]
+		31:
+			return cols[1] if fposmod(_ruido(u * a + 5.0, v * a + 5.0) * b, 1.0) < 0.14 else cols[0]
+		32:
+			var vena := absf(sin((u + _ruido(u * 2.0 + 1.0, v * 3.0) * 1.6) * a))
+			return cols[1] if vena < 0.07 else cols[0].lerp(cols[2], 0.35 * _ruido(u * 3.0, v * 3.0 + 4.0))
+		33:
+			var fx := (u + v * 0.6) * a
+			var fy := (v - u * 0.4) * a
+			var tri := 1.0 if fposmod(fx, 1.0) > fposmod(fy, 1.0) else 0.0
+			var hf := _h21(floorf(fx) + tri * 7.0, floorf(fy))
+			return cols[1] if hf < 0.33 else (cols[2] if hf < 0.55 else cols[0])
+		34:
+			if absf(u) > 1.01:
+				return cols[1]
+			if a > 0.5 and v > 0.86:
+				return cols[1]
+			if absf(v - 0.86) < 0.02 and a > 0.5:
+				return cols[2]
+			return cols[0]
+		35:
+			var e3 := u * a * 0.5 + (v - 0.5)
+			if absf(e3) < 0.025:
+				return cols[2]
+			return cols[1] if e3 > 0.0 else cols[0]
+		36:
+			return cols[1] if absf(v - 0.6 - (absf(fposmod(u * a, 1.0) - 0.5) - 0.25) * b) < 0.05 else cols[0]
+		37:
+			return cols[1] if fposmod((u + 1.0) * 0.5 * a, 1.0) < 0.06 or fposmod(v * a * 1.2, 1.0) < 0.06 else cols[0]
+		38:
+			var sx2 := (u + 1.0) * 0.5 * a
+			var sy2 := v * a * 1.2
+			var dv2 := Vector2(fposmod(sx2, 1.0) - 0.5, fposmod(sy2, 1.0) - 0.5)
+			var th := atan2(dv2.y, dv2.x)
+			return cols[1] if dv2.length() < b * (0.55 + 0.45 * cos(5.0 * th)) else cols[0]
+		39:
+			return cols[1].lerp(cols[2], v) if fposmod((u + 1.0) * 0.5 * a, 1.0) < b else cols[0]
+		40:
+			if absf(v - a) < b:
+				return cols[2] if fposmod((u + 1.0) * 6.0, 1.0) < 0.15 else cols[1]
+			return cols[0]
+		41:
+			return cols[0].lerp(cols[1], smoothstep(0.1, 1.1, Vector2(u, (v - 0.62) * 1.3).length()))
+		42:
+			var hx := (u + 1.0) * 0.5 * a
+			var hy := v * a * 1.2
+			var rd := b * clampf((u + 1.0) * 0.5 * 0.6 + (1.0 - v) * 0.6, 0.0, 1.0)
+			return cols[1] if Vector2(fposmod(hx, 1.0) - 0.5, fposmod(hy, 1.0) - 0.5).length() < rd else cols[0]
 	return cols[0]
 
 ## La fórmula vieja de los 12 estilos (mismos números que el shader).
@@ -437,7 +512,8 @@ static func _imagen_camiseta(clave: String, cols: Array[Color], trim: int, ancho
 			var sx := float(px) / escala
 			var sy := float(py) / escala
 			var manga := sx < 18.0 or sx > 46.0
-			var u := clampf((sx - 32.0) / 14.0, -1.0, 1.0)
+			## La manga va con u = ±1,05 (fuera del torso), igual que en el 3D.
+			var u := clampf((sx - 32.0) / 14.0, -1.0, 1.0) if not manga else signf(sx - 32.0) * 1.05
 			var v := clampf(1.0 - (sy - 6.0) / 40.0, 0.0, 1.0)
 			var col := color_en(d, cols, u, v)
 			## Cuello en pico, acanalado.
