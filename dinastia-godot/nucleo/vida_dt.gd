@@ -70,6 +70,18 @@ var pendiente: Dictionary = {}   ## asunto de la vida abierto
 var perfil: Dictionary = {}      ## {pareja, hijos:[...], mascota}
 var historial: Array = []        ## [{anio, semana, texto}], lo más nuevo primero
 var bienvenida: bool = false
+## LOS PRECIOS SIGUEN AL SUELDO (recorrido D4): con precios fijos, casa y auto
+## costaban el 4% de lo que cobra un DT de club grande y no había decisión.
+## `escala` = sueldo semanal / 2.800 (un departamento y un auto usado son
+## entonces ~una cuarta parte del sueldo, en cualquier club).
+var escala: float = 1.0
+
+func actualizar_escala(roles: Roles) -> void:
+	if roles != null:
+		escala = clampf(float(roles.sueldo_semanal()) / 2800.0, 0.5, 40.0)
+
+func precio(base: int) -> int:
+	return int(round(float(base) * escala))
 
 static func _h(t: String) -> int:
 	return absi(t.hash())
@@ -92,7 +104,7 @@ func crear_perfil(semilla: String) -> void:
 	}
 
 func coste_semanal() -> int:
-	return int(VIVIENDAS[vivienda][1]) + int(TRANSPORTES[transporte][1])
+	return precio(int(VIVIENDAS[vivienda][1]) + int(TRANSPORTES[transporte][1]))
 
 ## El plus de preparación de los partidos por trabajar más (lo aplica `Mundo`
 ## en `aplicar_bonificadores`). Con el médico parándote, nada.
@@ -110,7 +122,7 @@ func cambiar_vivienda(clave: String, roles: Roles) -> String:
 	if clave == vivienda:
 		return "ya vives ahí"
 	## La mudanza cuesta cuatro semanas de la casa nueva de golpe.
-	var mudanza := int(VIVIENDAS[clave][1]) * 4
+	var mudanza := precio(int(VIVIENDAS[clave][1]) * 4)
 	if roles.patrimonio < mudanza:
 		return "la mudanza cuesta %s y no te alcanza" % Cesiones.dinero(mudanza)
 	roles.patrimonio -= mudanza
@@ -126,7 +138,7 @@ func cambiar_transporte(clave: String, roles: Roles) -> String:
 		return "eso no existe"
 	if clave == transporte:
 		return "ya lo tienes"
-	var entrada := int(TRANSPORTES[clave][1]) * 6
+	var entrada := precio(int(TRANSPORTES[clave][1]) * 6)
 	if roles.patrimonio < entrada:
 		return "el pie cuesta %s y no te alcanza" % Cesiones.dinero(entrada)
 	roles.patrimonio -= entrada
@@ -140,9 +152,9 @@ func hacer_ocio(clave: String, roles: Roles, anio: int, sem: int) -> String:
 	if ocio_semana == _abs(anio, sem):
 		return "esta semana ya te diste un respiro"
 	var o: Array = OCIO[clave]
-	if roles.patrimonio < int(o[1]):
+	if roles.patrimonio < precio(int(o[1])):
 		return "no te alcanza"
-	roles.patrimonio -= int(o[1])
+	roles.patrimonio -= precio(int(o[1]))
 	ocio_semana = _abs(anio, sem)
 	estres = clampi(estres + int(o[2]), 0, 100)
 	familia = clampi(familia + int(o[3]), 0, 100)
@@ -159,6 +171,7 @@ func semana(c: Club, roles: Roles, anio: int, sem: int, resultado: int) -> void:
 	if c == null or roles == null:
 		return
 	crear_perfil(c.id)
+	actualizar_escala(roles)
 	if not bienvenida:
 		bienvenida = true
 		mentor.emit("Tu vida fuera del club", "Entrenar no es solo el club: tienes casa, familia y cabeza. Si trabajas sin parar prepararás mejor los partidos, pero el estrés se paga. Lo tienes todo en MI VIDA.")
@@ -204,7 +217,7 @@ func semana(c: Club, roles: Roles, anio: int, sem: int, resultado: int) -> void:
 const _ASUNTOS := [
 	["cumple", "Es el cumpleaños de %s y cae el día del entrenamiento táctico.", "Ir al cumpleaños", "Quedarse en el entrenamiento"],
 	["colegio", "Te llaman del colegio de %s: quieren hablar contigo esta semana.", "Ir a la reunión", "Mandar un mensaje y seguir trabajando"],
-	["aniversario", "Es tu aniversario con %s.", "Cena romántica (400)", "Lo celebran otro día"],
+	["aniversario", "Es tu aniversario con %s.", "Cena romántica", "Lo celebran otro día"],
 	["tele", "Un programa de televisión te invita a hablar de fútbol el domingo por la noche.", "Ir al programa (+patrimonio)", "Rechazarlo y descansar"],
 	["vecino", "Tu vecino es hincha del rival de siempre y pone su bandera frente a tu casa.", "Tomárselo con humor", "Ir a reclamarle"],
 	["mascota", "%s se escapó de casa justo antes del partido.", "Salir a buscarla", "Que la busque la familia"],
@@ -252,8 +265,8 @@ func resolver(op: String, roles: Roles, c: Club, prensa: Prensa, anio: int, sem:
 				familia = clampi(familia - 10, 0, 100)
 				r = "Te quedaste trabajando. En casa no cayó bien."
 		"aniversario":
-			if a and roles.patrimonio >= 400:
-				roles.patrimonio -= 400
+			if a and roles.patrimonio >= precio(400):
+				roles.patrimonio -= precio(400)
 				familia = clampi(familia + 14, 0, 100)
 				estres = clampi(estres - 5, 0, 100)
 				r = "Una noche para recordar."
