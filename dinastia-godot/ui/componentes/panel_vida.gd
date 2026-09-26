@@ -17,6 +17,7 @@ static func pintar(lista: VBoxContainer, p: Control, mundo: Mundo, secc: String)
 		return
 	if mundo.mi_club() != null:
 		v.crear_perfil(mundo.mi_club().id)
+	v.actualizar_escala(r)
 	lista.add_child(_tablero(v, r, mundo))
 	match secc:
 		"hogar":
@@ -104,17 +105,19 @@ static func _tablero(v: VidaDT, r: Roles, mundo: Mundo) -> Control:
 static func _opciones(lista: VBoxContainer, p: Control, titulo: String, tabla: Dictionary, orden: Array,
 		actual: String, alcance: String, al_elegir: Callable) -> void:
 	lista.add_child(Tema.rotulo(titulo))
-	var grid := GridContainer.new()
-	grid.columns = 5
+	## Flujo y no rejilla fija: con las columnas laterales abiertas el panel
+	## central es angosto, y cinco tarjetas de 150 lo ensanchaban y empujaban
+	## la ficha del jugador fuera de la pantalla (recorrido D4).
+	var grid := HFlowContainer.new()
 	grid.add_theme_constant_override("h_separation", Tema.ESPACIO)
 	grid.add_theme_constant_override("v_separation", Tema.ESPACIO)
 	lista.add_child(grid)
+	var v: VidaDT = p.get("mundo").vida
 	for k: String in orden:
 		var d: Array = tabla[k]
 		var es := k == actual
 		var pc := _tarjeta(Color(Tema.ORO, 0.8) if es else Tema.BORDE)
-		pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		pc.custom_minimum_size = Vector2(150, 150)
+		pc.custom_minimum_size = Vector2(128, 140)
 		grid.add_child(pc)
 		var vb := VBoxContainer.new()
 		vb.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -126,7 +129,7 @@ static func _opciones(lista: VBoxContainer, p: Control, titulo: String, tabla: D
 		nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		vb.add_child(nom)
-		var coste := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "%s/sem · descanso %d" % [Cesiones.dinero(int(d[1])), int(d[2])])
+		var coste := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "%s/sem\ndescanso %d" % [Cesiones.dinero(v.precio(int(d[1]))), int(d[2])])
 		coste.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		vb.add_child(coste)
 		if es:
@@ -257,18 +260,16 @@ static func _bienestar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	## El ocio de la semana.
 	var ya := v.ocio_semana == VidaDT._abs(mundo.anio, mundo.semana)
 	lista.add_child(Tema.rotulo("🎾 UN RESPIRO ESTA SEMANA" + ("  ·  ya te lo diste" if ya else "")))
-	var grid := GridContainer.new()
-	grid.columns = 4
+	var grid := HFlowContainer.new()
 	grid.add_theme_constant_override("h_separation", Tema.ESPACIO)
 	grid.add_theme_constant_override("v_separation", Tema.ESPACIO)
 	lista.add_child(grid)
 	for k: String in VidaDT.OCIO:
 		var o: Array = VidaDT.OCIO[k]
 		var b := Button.new()
-		b.text = "%s  %s\n%s · estrés %d%s" % [String(o[4]), String(o[0]), Cesiones.dinero(int(o[1])) if int(o[1]) > 0 else "gratis",
+		b.text = "%s  %s\n%s · estrés %d%s" % [String(o[4]), String(o[0]), Cesiones.dinero(v.precio(int(o[1]))) if int(o[1]) > 0 else "gratis",
 			int(o[2]), (" · familia +%d" % int(o[3])) if int(o[3]) > 0 else ""]
-		b.custom_minimum_size = Vector2(200, 56)
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.custom_minimum_size = Vector2(168, 52)
 		b.disabled = ya
 		b.add_theme_font_size_override("font_size", 12)
 		var clave := k
