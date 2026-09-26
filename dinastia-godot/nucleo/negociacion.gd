@@ -80,7 +80,7 @@ func ajustar(campo: String, delta: int) -> void:
 		"sueldo":
 			sueldo = maxi(30, sueldo + delta * maxi(10, int(round(float(sueldo) * 0.05 / 10.0)) * 10))
 		"anios":
-			anios = clampi(anios + delta, 1, 5)
+			anios = Contratos.ajustar_anios(jugador, anios + delta)
 			sueldo = _pide_fichaje(_mundo(), jugador, rol, anios)
 		"firma":
 			firma = maxi(0, firma + delta * maxi(1000, int(round(float(sueldo) * 4.0 / 1000.0)) * 1000))
@@ -250,7 +250,7 @@ func _cerrar_fichaje(m: Mundo) -> Dictionary:
 	mio.fichar(jugador)
 	if m.vestuario != null:
 		m.vestuario.fijar_rol(jugador, rol)
-	jugador.anios_contrato = anios
+	jugador.anios_contrato = Contratos.ajustar_anios(jugador, anios)
 	jugador.sueldo = sueldo
 	jugador.pide_salir = false
 	jugador.transferible = false

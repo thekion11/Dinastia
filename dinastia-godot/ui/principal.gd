@@ -2111,7 +2111,7 @@ func _conectar_noticias() -> void:
 			if con_mentor != null:
 				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:
 					MentorVoz.decir(self, mundo, titulo, texto))
-		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica]:
+		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos]:
 			if fuente != null:
 				fuente.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 					_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -4614,6 +4614,8 @@ func _ver_ficha(j: Jugador) -> void:
 	_dato("Moral", str(j.moral), COL_VERDE if j.moral >= 60 else COL_ROJO)
 	_dato("Contrato", "%d año%s" % [j.anios_contrato, "" if j.anios_contrato == 1 else "s"],
 		COL_ROJO if j.anios_contrato <= 1 else COL_TEXTO)
+	## C9: el tipo de contrato y su límite legal (norma FIFA).
+	_dato("Tipo de contrato", Contratos.tipo(j, mundo.cesiones != null and mundo.cesiones.esta_cedido(j.id)), COL_SUAVE)
 	_dato("Valor de tasación", _dinero(j.valor), COL_TEXTO)
 	## LOS DERECHOS DE FORMACIÓN. `Cesiones.derechos_de_formacion()` se COBRA de
 	## verdad en cada traspaso, pero no se veía en ninguna pantalla: podías
@@ -5083,6 +5085,13 @@ func _club_staff(c: Club) -> void:
 	var t2 := _texto(11, COL_SUAVE)
 	t2.text = "CUERPO TÉCNICO  ·  nómina %s/semana" % _dinero(mundo.staff.sueldo_semanal(c.rep))
 	_lista_club.add_child(t2)
+	## C9: la jornada legal del personal del país, con su norma.
+	var jl := _texto(11, COL_SUAVE)
+	var fe := Contratos.factor_estructura(c.pais, mundo.anio, mundo.semana)
+	jl.text = "⚖️ Jornada legal del personal: %s%s" % [Contratos.texto_jornada(c.pais, mundo.anio, mundo.semana),
+		"" if is_equal_approx(fe, 1.0) else "  (la estructura cuesta un %+d%%)" % int(round((fe - 1.0) * 100.0))]
+	jl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_lista_club.add_child(jl)
 	## El bono de productividad: una vez por temporada, sube la moral de TODO el
 	## plantel, y sube más cuanto mejor vayas. Premiar a la gente yendo primero
 	## es una fiesta; hacerlo yendo último se agradece y poco más.

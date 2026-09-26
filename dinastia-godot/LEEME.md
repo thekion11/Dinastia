@@ -1,6 +1,6 @@
 # DINASTÍA en Godot — estado de la mudanza
 
-## SEXTA RONDA, TANDA D (1): CALENDARIO, FESTIVIDADES, GLOBO Y POLÍTICA (26-9-2026)
+## SEXTA RONDA, TANDA D: CALENDARIO, FESTIVIDADES, GLOBO, POLÍTICA, HISTORIA Y CONTRATOS (26-9-2026)
 
 - **Calendario de cada país** (`nucleo/calendario.gd`): independencias y fiestas patrias de los
   24 países, el 1 de mayo (o el Labor Day de EE. UU.) y las fechas de memoria.
@@ -41,7 +41,16 @@
   - Se ve en Historia y en la ficha de cada club.
   - Arreglado de paso: en la base ficticia el clásico chileno de los tres grandes nunca se
     detectaba, porque solo estaban los nombres reales.
-- Pruebas: `_probar_calendario_c13`, `_probar_politica_c15`, `_probar_historia_c4`; capturas `captura_calendario`,
+- **Contratos y jornada (C9)** (`nucleo/contratos.gd`):
+  - Norma FIFA en fichajes, renovaciones, cesiones y en el mundo generado: de 1 a 5 años, y
+    un menor de 18 no pasa de 3.
+  - La ficha muestra el tipo de contrato.
+  - Jornada legal del personal en los 24 países, con su norma. Chile baja de 44 a 42 horas el
+    26 de abril de 2026 y a 40 en 2028; Colombia baja a 42 el 15 de julio de 2026.
+  - Menos horas encarecen un poco la estructura (1 % por hora de diferencia con 44). Se ve en
+    Personal del Club y los cambios salen como noticia.
+  - México y Egipto quedan marcados para revisar antes de publicar.
+- Pruebas: `_probar_calendario_c13`, `_probar_politica_c15`, `_probar_historia_c4`, `_probar_contratos_c9`; capturas `captura_calendario`,
   `captura_globo_c14`, `captura_gobierno` y `captura_historia`.
 
 ## SEXTA RONDA, TANDA C: INSTALACIONES, CANTERA, RAMAS, FICHA DEL JUGADOR (26-9-2026)

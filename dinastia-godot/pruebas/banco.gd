@@ -103,6 +103,7 @@ func _ready() -> void:
 	_probar_calendario_c13()
 	_probar_politica_c15()
 	_probar_historia_c4()
+	_probar_contratos_c9()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -6125,3 +6126,35 @@ func _probar_historia_c4() -> void:
 		var r := HistoriaClub.dato_real("C0lo-C0lo")
 		_comprobar(int(r.get("fundado", 0)) == 1925, "con el pack real, Colo-Colo se fundó en 1925")
 		Datos.usar_base_real(false)
+
+func _probar_contratos_c9() -> void:
+	_titulo("C9: CONTRATOS Y JORNADA LABORAL")
+	_comprobar(Contratos.JORNADA.size() == 24, "los 24 países tienen su jornada legal")
+	## Chile: 44 horas hasta el 26 de abril de 2026, 42 después, 40 en 2028.
+	var sem_marzo := 8
+	var sem_junio := 20
+	_comprobar(Contratos.horas("CHI", 2026, sem_marzo) == 44 and Contratos.horas("CHI", 2026, sem_junio) == 42, "Chile pasa de 44 a 42 horas en abril de 2026")
+	_comprobar(Contratos.horas("CHI", 2028, sem_junio) == 40, "y llega a 40 en 2028")
+	_comprobar(Contratos.horas("COL", 2026, sem_junio) == 44 and Contratos.horas("COL", 2026, 30) == 42, "Colombia baja a 42 en julio de 2026")
+	_comprobar(Contratos.horas("FRA", 2026, 10) == 35 and Contratos.horas("MEX", 2026, 10) == 48, "Francia 35, México 48")
+	_comprobar(Contratos.factor_estructura("FRA", 2026, 10) > 1.0 and Contratos.factor_estructura("MEX", 2026, 10) < 1.0, "menos horas legales, estructura más cara")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5154)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var j := c.plantilla[0]
+	j.edad = 17
+	_comprobar(Contratos.ajustar_anios(j, 5) == 3, "un menor de 18 no firma por más de 3 años (FIFA)")
+	j.edad = 25
+	_comprobar(Contratos.ajustar_anios(j, 7) == 5 and Contratos.ajustar_anios(j, 0) == 1, "entre 1 y 5 años para el resto")
+	var noticias: Array = []
+	m.contratos.noticia.connect(func(t: String, _b: String) -> void: noticias.append(t))
+	for s in range(1, 30):
+		m.contratos.semana(c, 2026, s)
+	_comprobar(noticias.size() == 1, "el cambio de jornada de abril sale una vez en las noticias")
+	var jugadores_menores := 0
+	for cl: Club in m.clubes.values():
+		for x: Jugador in cl.plantilla:
+			if x.edad < 18 and x.anios_contrato > 3:
+				jugadores_menores += 1
+	_comprobar(jugadores_menores == 0, "ningún menor del mundo generado tiene más de 3 años de contrato")
