@@ -130,6 +130,11 @@ func iniciar(clave: String, c: Club) -> String:
 		return "ya está al máximo"
 	if en_obra(clave):
 		return "ya hay una obra en marcha ahí"
+	## DESBLOQUEO POR REPUTACIÓN (26-9-2026, idea 284): un club local no
+	## construye un centro de nivel mundial. El tope sube con el nivel del club.
+	var tope := Reputacion.tope_instalaciones(c.rep)
+	if nivel(clave) >= tope:
+		return "hace falta más reputación: un club %s llega hasta el nivel %d" % [Reputacion.nombre_nivel(c.rep).get_slice(" ", 1).to_lower(), tope]
 	var precio := coste(clave, c.rep)
 	if precio > c.saldo:
 		return "no hay caja: cuesta %d y tienes %d" % [precio, c.saldo]

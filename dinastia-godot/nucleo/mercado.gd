@@ -65,6 +65,11 @@ func valor_pedido(j: Jugador) -> int:
 		p *= 0.75
 	if j.edad <= 21 and j.pot >= j.ovr + 10:
 		p *= 1.35                                    ## joya: carísima
+	## JUEGO LIMPIO (26-9-2026, `Reputacion`): a quien tiene fama de honesto
+	## le piden menos; a quien no, más. Solo cuando compras tú.
+	var m := _mundo()
+	if m != null and m.roles != null and j.club_id != m.mi_club_id:
+		p *= m.roles.reputacion.mult_compras()
 	return int(max(1000.0, round(p / 1000.0) * 1000.0))
 
 ## Las ganas que tiene de ir a `destino`, de 0 a 1, con los motivos para poder
@@ -305,6 +310,9 @@ func buscar_oferta_por_mi_jugador() -> void:
 		return
 	var comprador: Club = candidatos[Azar.ent(0, candidatos.size() - 1)]
 	var monto := int(round(float(j.valor) * (0.85 + Azar.f() * 0.5)))
+	## Fama de negociador: te ofrecen más por tus jugadores.
+	if _mundo().roles != null:
+		monto = int(round(float(monto) * _mundo().roles.reputacion.mult_ventas()))
 	var es_clausula := false
 	var cesiones := _mundo().cesiones
 	if cesiones != null:
@@ -354,6 +362,14 @@ func responder_oferta(idx: int, acepta: bool) -> void:
 		j.moral = 70
 		j.transferible = false
 		j.pide_salir = false
+		## Operación rentable = fama de negociador (idea 608); malvender, lo
+		## contrario. Se compara con lo que vale el jugador.
+		var m2 := _mundo()
+		if m2 != null and m2.roles != null and j.valor > 0:
+			var razon := float(monto) / float(j.valor)
+			var d := clampi(int(round((razon - 1.0) * 20.0)), -5, 6)
+			if d != 0:
+				m2.roles.anotar_reputacion("negociador", d, "Venta de %s por el %d %% de su valor" % [j.nombre, int(razon * 100.0)])
 		traspaso.emit(j, vendedor, comprador, monto)
 	elif Azar.suerte(0.40):
 		j.moral = clampi(j.moral - 10, 10, 99)

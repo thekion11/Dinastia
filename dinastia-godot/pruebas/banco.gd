@@ -6012,6 +6012,24 @@ func _probar_tanda_c() -> void:
 	var tr2 := Trabajadores.new()
 	tr2.desde_dic(tr.a_dic())
 	_comprobar(tr2.equipos.size() == tr.equipos.size(), "el personal se guarda con la partida")
+	## REPUTACIÓN (26-9-2026): niveles del club y fama por facetas.
+	var rp := m.roles.reputacion
+	_comprobar(rp.valor("honesto") == 50, "la fama arranca neutra")
+	rp.registrar("honesto", 30, "prueba")
+	_comprobar(rp.mult_compras() < 1.0, "con fama de honesto te piden menos (%.2f)" % rp.mult_compras())
+	rp.registrar("mediatico", 40, "prueba")
+	_comprobar(rp.mult_marcas() > 1.0 and not rp.historial.is_empty(), "la fama mediática sube las marcas y queda anotada")
+	_comprobar(Reputacion.nombre_nivel(20).contains("Local") and Reputacion.nombre_nivel(95).contains("Leyenda"), "los niveles del club van de Local a Leyenda")
+	_comprobar(Reputacion.tope_instalaciones(20) < Reputacion.tope_instalaciones(90), "más reputación, instalaciones más altas")
+	var rep_antes := c.rep
+	c.rep = 20
+	o.niveles["museo"] = Reputacion.tope_instalaciones(20)
+	o.obras.erase("museo")
+	_comprobar(o.iniciar("museo", c).contains("reputación"), "un club local no pasa del tope de su nivel")
+	c.rep = rep_antes
+	var rp2 := Reputacion.new()
+	rp2.desde_dic(rp.a_dic())
+	_comprobar(rp2.valor("honesto") == rp.valor("honesto") and rp2.historial.size() == rp.historial.size(), "la reputación se guarda con la partida")
 	## Cantera.
 	var ec := m.eventos_cantera
 	var hubo := false
