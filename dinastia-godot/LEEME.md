@@ -32,7 +32,16 @@
   - Estados: aprendida, disponible (con latido) o bloqueada (con candado).
   - Ficha con el botón para aprender y botón «⛶ En grande» a pantalla completa.
   - Vive en MI VIDA › Habilidades; en Historia queda un acceso.
-- Pruebas: `_probar_historia_c4` (reescrita) y `_probar_vida_dt`; captura `captura_vida`.
+- **Recorrido visual de las 37 pantallas** (`pruebas/captura_todo.gd`, deja las capturas en
+  `pruebas/recorrido/`, que no se sube). Arreglado:
+  - el grupo del menú encendido al entrar por un chip;
+  - «Equipación» vacía;
+  - Memoria, Rivales y Vitrina en blanco;
+  - paneles de MI VIDA demasiado anchos;
+  - «Régimen» en la ficha;
+  - los precios de Mi vida escalan con el sueldo del DT.
+- Pruebas: `_probar_historia_c4` (reescrita) y `_probar_vida_dt`; capturas `captura_vida` y
+  `captura_todo`.
 
 ## SEXTA RONDA, TANDA D: CALENDARIO, FESTIVIDADES, GLOBO, POLÍTICA, HISTORIA Y CONTRATOS (26-9-2026)
 

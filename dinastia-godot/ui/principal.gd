@@ -995,7 +995,24 @@ func _grupo_por_id(gid: String) -> Dictionary:
 ## pestañas que NO pertenecen a ningún bloque -Táctica, Mercado, Copa...-: esas
 ## devuelven "" y la barra de arriba se queda como esté, sin saltar a otro
 ## bloque a la fuerza.
+## FALLA VISUAL ARREGLADA (26-9-2026, recorrido D4): varias pestañas viven en
+## más de un grupo -"Club" está en CENTRAL (Mi Carrera) y en CLUB
+## (Infraestructura, Directorio); "Estadio" en CLUB y en OPERACIONES-, y esto
+## devolvía siempre el PRIMER grupo: entrabas por CLUB › Infraestructura y el
+## menú encendía CENTRAL. Ahora manda, por orden: el grupo en el que ya estás si
+## tiene esa pestaña; si no, el grupo cuyo chip coincide con la sección abierta;
+## y solo al final, el primero que la tenga.
 func _grupo_de_pestana(titulo: String) -> String:
+	for g: Dictionary in GRUPOS:
+		if String(g["id"]) != _grupo_actual:
+			continue
+		for chip: Dictionary in (g["tabs"] as Array):
+			if String(chip["tab"]) == titulo and _seccion_activa(chip):
+				return String(g["id"])
+	for g: Dictionary in GRUPOS:
+		for chip: Dictionary in (g["tabs"] as Array):
+			if String(chip["tab"]) == titulo and chip.has("secc") and _seccion_activa(chip):
+				return String(g["id"])
 	for g: Dictionary in GRUPOS:
 		for chip: Dictionary in (g["tabs"] as Array):
 			if String(chip["tab"]) == titulo:
@@ -4645,7 +4662,7 @@ func _ver_ficha(j: Jugador) -> void:
 	_dato("Contrato", "%d año%s" % [j.anios_contrato, "" if j.anios_contrato == 1 else "s"],
 		COL_ROJO if j.anios_contrato <= 1 else COL_TEXTO)
 	## C9: el tipo de contrato y su límite legal (norma FIFA).
-	_dato("Tipo de contrato", Contratos.tipo(j, mundo.cesiones != null and mundo.cesiones.esta_cedido(j.id)), COL_SUAVE)
+	_dato("Régimen", Contratos.tipo(j, mundo.cesiones != null and mundo.cesiones.esta_cedido(j.id)), COL_SUAVE)
 	_dato("Valor de tasación", _dinero(j.valor), COL_TEXTO)
 	## LOS DERECHOS DE FORMACIÓN. `Cesiones.derechos_de_formacion()` se COBRA de
 	## verdad en cada traspaso, pero no se veía en ninguna pantalla: podías
@@ -9657,10 +9674,14 @@ func _pintar_habilidades() -> void:
 		return
 	var cab := HBoxContainer.new()
 	_lista_habilidades.add_child(cab)
-	var tit := Tema.etiqueta(Tema.TAM_TITULO, Tema.ORO, "🎓 TUS HABILIDADES DE ENTRENADOR")
+	## El título se recorta en vez de ensanchar el panel (recorrido D4): con
+	## las columnas laterales abiertas empujaba la ficha fuera de pantalla.
+	var tit := Tema.etiqueta(Tema.TAM_DESTACADO + 2, Tema.ORO, "🎓 HABILIDADES")
 	tit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tit.clip_text = true
+	tit.custom_minimum_size.x = 60
 	cab.add_child(tit)
-	var pts := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.ORO if e.dt_puntos > 0 else Tema.SUAVE,
+	var pts := Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO if e.dt_puntos > 0 else Tema.SUAVE,
 		"%d punto%s por gastar" % [e.dt_puntos, "" if e.dt_puntos == 1 else "s"])
 	cab.add_child(pts)
 	if e.dt_puntos > 0:
@@ -9909,6 +9930,26 @@ func _filtrar_records() -> void:
 			mostrando = visibles.has(l.text)
 		if n is CanvasItem:
 			(n as CanvasItem).visible = mostrando
+	## FALLA VISUAL (recorrido D4): al empezar una partida Memoria, Rivales y
+	## Vitrina salían en blanco -sus secciones solo se pintan cuando hay datos-.
+	## Una página en blanco parece un error; esto dice qué va a aparecer ahí.
+	var alguno := false
+	for n in _lista_records.get_children():
+		if n is CanvasItem and (n as CanvasItem).visible and not n.is_queued_for_deletion():
+			alguno = true
+			break
+	if not alguno:
+		var vacio := _texto(13, COL_SUAVE)
+		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		vacio.text = String(VACIO_RECORDS.get(_secc_records, "Todavía no hay nada que mostrar aquí: se llena al jugar."))
+		_lista_records.add_child(vacio)
+
+const VACIO_RECORDS := {
+	"memoria": "📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.",
+	"rivales": "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.",
+	"vitrina": "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.",
+	"records": "📈 Las rachas y las marcas del club se registran desde el primer partido.",
+}
 
 func _pintar_records() -> void:
 	_limpiar(_lista_records)
@@ -13693,7 +13734,7 @@ func _pintar_gente() -> void:
 		b.text = String(s[1])
 		b.add_theme_font_size_override("font_size", 11)
 		b.toggle_mode = true
-		b.button_pressed = _secc_gente == clave
+		b.button_pressed = _secc_gente == clave or (clave == "identidad" and _secc_gente == "kits")
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(150, 26)
 		b.pressed.connect(func() -> void:
@@ -13705,7 +13746,9 @@ func _pintar_gente() -> void:
 	match _secc_gente:
 		"personas":
 			_pintar_gente_personas()
-		"identidad":
+		## "Equipación" (chip del grupo GENTE) vive dentro de Identidad, junto
+		## al escudo: sin esta rama el chip abría una página vacía.
+		"identidad", "kits":
 			_pintar_identidad(c)
 		"comercial":
 			_pintar_comercial(c)

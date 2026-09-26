@@ -94,10 +94,10 @@ static func ajustar_anios(j: Jugador, anios: int) -> int:
 ## El tipo de contrato de un jugador, para la ficha.
 static func tipo(j: Jugador, cedido: bool) -> String:
 	if cedido:
-		return "Cedido (cesión temporal)"
+		return "Cedido"
 	if j.edad < 18:
-		return "Profesional de menor de edad (máx. %d años, norma FIFA)" % MAX_ANIOS_MENOR
-	return "Deportista profesional a plazo fijo (máx. %d años)" % MAX_ANIOS
+		return "Menor (máx. %d años)" % MAX_ANIOS_MENOR
+	return "Profesional (máx. %d)" % MAX_ANIOS
 
 static func texto_jornada(pais: String, anio: int, semana: int) -> String:
 	var j: Array = JORNADA.get(pais, [44, "", "", false])
