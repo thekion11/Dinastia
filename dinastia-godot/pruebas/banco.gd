@@ -100,6 +100,7 @@ func _ready() -> void:
 	_probar_charlas_c6_c7()
 	_probar_licencia_c7()
 	_probar_tanda_c()
+	_probar_calendario_c13()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5991,3 +5992,67 @@ func _probar_tanda_c() -> void:
 	var j0: Jugador = c.plantilla[0]
 	j0.premios.append({"anio": 2026, "premio": "Equipo ideal de la temporada"})
 	_comprobar(Partida._dic_a_jugador(Partida._jugador_a_dic(j0)).premios.size() == 1, "los premios se guardan")
+
+func _probar_calendario_c13() -> void:
+	_titulo("C13/C16: CALENDARIO, DÍAS NACIONALES, MEMORIA Y FESTIVIDADES")
+	## Las fechas: el lunes de la semana 1 de 2026 es el 26 de enero.
+	var d := Calendario.fecha(2026, 1, 0)
+	_comprobar(int(d["month"]) == 1 and int(d["day"]) == 26, "la semana 1 de 2026 empieza el lunes 26 de enero")
+	var p := Calendario.pascua(2026)
+	_comprobar(int(p[0]) == 4 and int(p[1]) == 5, "Pascua 2026 cae el 5 de abril")
+	var p2 := Calendario.pascua(2027)
+	_comprobar(int(p2[0]) == 3 and int(p2[1]) == 28, "Pascua 2027 cae el 28 de marzo")
+	var ram := Calendario.ramadan(2026)
+	_comprobar(ram.size() == 2 and int(ram[0][0]) == 2 and absi(int(ram[0][1]) - 18) <= 1, "el Ramadán 2026 empieza hacia el 18 de febrero")
+	## El 11 de septiembre, en Chile y en EE. UU., es de memoria.
+	var chi := Calendario.del_anio("CHI", 2026)
+	var once_chi := chi.filter(func(f: Dictionary) -> bool: return int(f["mes"]) == 9 and int(f["dia"]) == 11)
+	var once_usa := Calendario.del_anio("USA", 2026).filter(func(f: Dictionary) -> bool: return int(f["mes"]) == 9 and int(f["dia"]) == 11)
+	_comprobar(once_chi.size() == 1 and String(once_chi[0]["tipo"]) == "memoria" and once_usa.size() == 1 and String(once_usa[0]["tipo"]) == "memoria",
+		"el 11 de septiembre es fecha de memoria en Chile y en EE. UU.")
+	_comprobar(chi.any(func(f: Dictionary) -> bool: return int(f["mes"]) == 5 and int(f["dia"]) == 1), "el 1 de mayo está en Chile")
+	var usa := Calendario.del_anio("USA", 2026)
+	_comprobar(not usa.any(func(f: Dictionary) -> bool: return int(f["mes"]) == 5 and int(f["dia"]) == 1)
+		and usa.any(func(f: Dictionary) -> bool: return String(f["nombre"]) == "Labor Day" and int(f["dia"]) == 7),
+		"en EE. UU. no es el 1 de mayo sino el Labor Day (7 de septiembre de 2026)")
+	_comprobar(Calendario.del_anio("URU", 2026).any(func(f: Dictionary) -> bool: return String(f["nombre"]) == "Semana de Turismo"), "en Uruguay es la Semana de Turismo")
+	_comprobar(Calendario.del_anio("KSA", 2026).any(func(f: Dictionary) -> bool: return String(f["nombre"]).begins_with("Empieza el Ramadán")), "Arabia Saudí tiene el Ramadán en su calendario")
+	## Buscar la semana del 18 de septiembre en Chile (fiesta) y la del 11 (memoria).
+	var sem_fiesta := -1
+	var sem_memoria := -1
+	for s in range(1, 50):
+		for f: Dictionary in Calendario.de_la_semana("CHI", 2026, s):
+			if String(f["nombre"]) == "Fiestas Patrias":
+				sem_fiesta = s
+			if String(f["nombre"]) == "11 de septiembre":
+				sem_memoria = s
+	_comprobar(sem_fiesta > 0 and sem_memoria > 0 and sem_fiesta != sem_memoria, "Fiestas Patrias y el 11 caen en semanas distintas (%d y %d)" % [sem_fiesta, sem_memoria])
+	_comprobar(Calendario.factor_publico("CHI", 2026, sem_fiesta) > 1.0, "la semana de Fiestas Patrias llena más el estadio")
+	_comprobar(Calendario.factor_publico("CHI", 2026, sem_memoria) == 1.0 and Calendario.hay_memoria("CHI", 2026, sem_memoria), "la del 11 de septiembre no tiene bonus de fiesta")
+	## Los torneos.
+	_comprobar(Calendario.torneos(2026).any(func(t: Dictionary) -> bool: return String(t["nombre"]) == "Copa del Mundo"), "2026 es año de Mundial")
+	_comprobar(not Calendario.torneos(2027).any(func(t: Dictionary) -> bool: return String(t["nombre"]) == "Copa del Mundo"), "2027 no")
+	## En el mundo: la semana de memoria da noticia y el mentor la explica una vez.
+	var m := Mundo.new()
+	m.generar(["CHI"], 5151)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var noticias: Array = []
+	var mentor: Array = []
+	m.calendario.noticia.connect(func(t: String, _b: String) -> void: noticias.append(t))
+	m.calendario.mentor.connect(func(t: String, _b: String) -> void: mentor.append(t))
+	var moral0 := c.plantilla[0].moral
+	m.calendario.semana(c, 2026, sem_memoria)
+	_comprobar(noticias.any(func(t: String) -> bool: return t.contains("11 de septiembre")) and mentor.has("11 de septiembre"), "el 11 sale en las noticias y el mentor lo explica")
+	_comprobar(c.plantilla[0].moral == moral0, "la memoria no sube la moral como una fiesta")
+	m.calendario.semana(c, 2026, sem_fiesta)
+	_comprobar(c.plantilla[0].moral == mini(moral0 + 1, 99), "la semana de fiesta sube la moral")
+	var m2 := mentor.size()
+	m.calendario.ultima_semana = -1
+	m.calendario.semana(c, 2027, sem_fiesta + 1 if Calendario.de_la_semana("CHI", 2027, sem_fiesta).is_empty() else sem_fiesta)
+	_comprobar(not mentor.slice(m2).has("Fiestas Patrias"), "el mentor no repite la explicación al año siguiente")
+	var dic := m.calendario.a_dic()
+	var cal2 := Calendario.new()
+	cal2.desde_dic(dic)
+	_comprobar(cal2.explicadas.has("11 de septiembre"), "se guarda lo que el mentor ya explicó")
+	_comprobar(Calendario.proximas("CHI", 2026, 1, 5).size() == 5, "hay próximas fechas para el calendario")

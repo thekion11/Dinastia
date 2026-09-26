@@ -127,14 +127,14 @@ dejarlo, padres exigentes) y promociones con ceremonia.
 Fútbol femenino, juveniles, futsal y otros deportes, con más peso: resultados propios,
 presupuesto, noticias e impacto en la reputación.
 
-### C13. Calendario real: días nacionales y fechas de memoria ✅
+### C13. Calendario real: días nacionales y fechas de memoria ✅ — HECHO (26-9)
 - Independencias, día del trabajador (1 de mayo) y fechas nacionales de cada país.
 - **11 de septiembre** en Chile (1973) y en EE. UU. (2001) como jornada de memoria, con respeto:
   minuto de silencio y sin festejos.
 - Eventos internacionales y nacionales reales (Mundial, Juegos Olímpicos, Copa América…).
 - El mentor explica cada fecha.
 
-### C14. Mejorar el globo terráqueo ✅
+### C14. Mejorar el globo terráqueo ✅ — HECHO (26-9)
 Relieve, fronteras y capitales, países con datos (liga, clubes, ranking) y clic para ver la
 ficha del país.
 
@@ -146,7 +146,7 @@ ficha del país.
 - 🟡 **Regla**: partidos y políticos **ficticios** y posturas neutrales. Nada de partidos ni
   personas reales: es terreno sensible y el juego se publica.
 
-### C16. Religión 🟡
+### C16. Religión 🟡 — HECHO (26-9), solo festividades del país
 - **Sí**: festividades por país en el calendario (Navidad, Ramadán, Semana Santa, Diwali…) y su
   efecto (partidos en fechas especiales, jugadores que ayunan).
 - ⛔ **No**: atribuir una religión real a jugadores que imitan a personas reales identificables.

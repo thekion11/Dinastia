@@ -29,6 +29,23 @@ const GLOBO_PAIS := {
 	"AUS": Vector2(151.2, -33.9), "MEX": Vector2(-99.1, 19.4), "USA": Vector2(-77.0, 38.9),
 }
 
+## C14: la capital de cada país con liga (el pin se pone en sus coordenadas).
+const CAPITAL := {
+	"CHI": "Santiago", "ARG": "Buenos Aires", "URU": "Montevideo", "PAR": "Asunción",
+	"BRA": "Brasilia", "BOL": "La Paz", "PER": "Lima", "ECU": "Quito", "COL": "Bogotá",
+	"VEN": "Caracas", "ESP": "Madrid", "ENG": "Londres", "ITA": "Roma", "GER": "Berlín",
+	"FRA": "París", "JPN": "Tokio", "KOR": "Seúl", "KSA": "Riad", "EGY": "El Cairo",
+	"MAR": "Rabat", "RSA": "Pretoria", "AUS": "Sídney", "MEX": "Ciudad de México", "USA": "Washington",
+}
+
+## Se tocó un país en el globo (clic sin arrastrar sobre su pin).
+signal pais_tocado(pais: String)
+
+var _pines: Dictionary = {}      ## pais -> MeshInstance3D
+var _rotulos: Dictionary = {}    ## pais -> Label3D
+var _pulsado_en := Vector2.ZERO
+var _movido := 0.0
+
 ## El sol del HTML: MUY oblicuo a propósito (línea ~14670 de `juego.js`). Con la
 ## z alta el planeta entero quedaba iluminado y las luces de noche nunca se
 ## veían; a 0.28 el terminador siempre cruza el disco visible.
@@ -80,6 +97,9 @@ func _ready() -> void:
 	var dia := _cargar("res://recursos/tierra/tierra4k.jpg")
 	var noche := _cargar("res://recursos/tierra/luces4k.jpg")
 	var nubes_tex := _cargar("res://recursos/tierra/nubes2k.jpg")
+	## Fronteras de Natural Earth (dominio público), rasterizadas a 4096x2048
+	## con la misma proyección equirectangular que la textura del día.
+	var fronteras := _cargar("res://recursos/tierra/fronteras4k.png")
 
 	var esfera := MeshInstance3D.new()
 	var malla := SphereMesh.new()
@@ -92,7 +112,7 @@ func _ready() -> void:
 	mat_tierra.shader = _shader_tierra()
 	mat_tierra.set_shader_parameter("tex_dia", dia)
 	mat_tierra.set_shader_parameter("tex_noche", noche)
-	mat_tierra.set_shader_parameter("luz_dir", SOL)
+	mat_tierra.set_shader_parameter("tex_fronteras", fronteras)
 	esfera.material_override = mat_tierra
 	_pivote.add_child(esfera)
 
@@ -106,7 +126,6 @@ func _ready() -> void:
 	var mat_nubes := ShaderMaterial.new()
 	mat_nubes.shader = _shader_nubes()
 	mat_nubes.set_shader_parameter("tex_nubes", nubes_tex)
-	mat_nubes.set_shader_parameter("luz_dir", SOL)
 	_nubes.material_override = mat_nubes
 	_pivote.add_child(_nubes)
 
@@ -125,6 +144,7 @@ func _ready() -> void:
 
 	_marcador = _crear_marcador()
 	_pivote.add_child(_marcador)
+	_crear_pines()
 
 	set_process(true)
 
@@ -161,6 +181,62 @@ func _crear_marcador() -> Node3D:
 	n.visible = false
 	return n
 
+## C14: un pin blanco en la capital de cada país con liga, con su nombre al
+## lado (solo se ve cuando mira hacia la cámara). El elegido es el dorado.
+func _crear_pines() -> void:
+	var esf := SphereMesh.new()
+	esf.radius = 0.014
+	esf.height = 0.028
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(1, 1, 1)
+	mat.emission_enabled = true
+	mat.emission = Color(0.85, 0.9, 1.0)
+	mat.emission_energy_multiplier = 1.2
+	for p: String in GLOBO_PAIS:
+		var c: Vector2 = GLOBO_PAIS[p]
+		var pin := MeshInstance3D.new()
+		pin.mesh = esf
+		pin.material_override = mat
+		pin.position = _cartesiano(c.x, c.y) * 1.01
+		_pivote.add_child(pin)
+		_pines[p] = pin
+		var r := Label3D.new()
+		r.text = p
+		r.font_size = 30
+		r.pixel_size = 0.0022
+		r.outline_size = 8
+		r.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		r.no_depth_test = false
+		r.modulate = Color(1, 1, 1, 0.9)
+		r.position = _cartesiano(c.x, c.y) * 1.04 + Vector3(0, 0.035, 0)
+		## Buenos Aires y Montevideo están a 200 km: se separan los rótulos.
+		if p == "ARG":
+			r.offset = Vector2(-26, 0)
+		elif p == "URU":
+			r.offset = Vector2(26, -6)
+		_pivote.add_child(r)
+		_rotulos[p] = r
+
+## El país cuyo pin está más cerca de un punto de la pantalla (en píxeles del
+## control), o "" si no hay ninguno a menos de 22 px o está de espaldas.
+func pais_en(punto: Vector2) -> String:
+	if _cam == null or size.x <= 0.0:
+		return ""
+	var escala := Vector2(_viewport.size) / size
+	var mejor := ""
+	var dist := 22.0
+	for p: String in _pines:
+		var pin: MeshInstance3D = _pines[p]
+		var g := pin.global_position
+		if g.z < 0.15:
+			continue
+		var en_pantalla := _cam.unproject_position(g) / escala
+		var d := en_pantalla.distance_to(punto)
+		if d < dist:
+			dist = d
+			mejor = p
+	return mejor
+
 func _mat_atmosfera() -> ShaderMaterial:
 	var sh := Shader.new()
 	sh.code = """
@@ -180,26 +256,44 @@ func _shader_tierra() -> Shader:
 	var sh := Shader.new()
 	sh.code = """
 shader_type spatial;
-render_mode diffuse_burley, specular_schlick_ggx, cull_back;
+render_mode unshaded, cull_back;
 uniform sampler2D tex_dia : source_color;
 uniform sampler2D tex_noche : source_color;
-uniform vec3 luz_dir = vec3(-0.62, 0.44, 0.28);
-varying vec3 v_normal_mundo;
-void vertex(){
-	v_normal_mundo = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
+uniform sampler2D tex_fronteras : hint_default_transparent, filter_linear_mipmap;
+// C14: la luz va EN ESPACIO DE VISTA. Antes se calculaba con la normal "de
+// mundo" y el país elegido -que siempre queda de frente- caía del lado de la
+// noche (el globo se veía negro justo donde uno miraba). Con la luz fija
+// respecto de la cámara el país elegido está siempre de día y el terminador
+// cruza el borde derecho, que es lo que buscaba el HTML.
+uniform vec3 luz_vista = vec3(-0.62, 0.40, 0.68);
+// C14, EL RELIEVE: no hay mapa de alturas, así que se saca uno aproximado de
+// la propia foto -la tierra es más clara/parda que el mar y las montañas más
+// claras que los valles- y se inclina la normal según su pendiente. Es un
+// relieve suave, de lectura, no un modelo de terreno.
+float altura(vec2 uv){
+	vec3 c = texture(tex_dia, uv).rgb;
+	float tierra = smoothstep(0.02, 0.12, c.r + c.g * 0.5 - c.b * 0.9);
+	return tierra * (0.35 + dot(c, vec3(0.3, 0.5, 0.2)));
 }
 void fragment(){
-	vec3 n = normalize(v_normal_mundo);
-	float cara = dot(n, normalize(luz_dir));
+	vec3 n = normalize(NORMAL);
+	vec2 e = vec2(1.0 / 4096.0, 1.0 / 2048.0) * 2.0;
+	float dx = altura(UV + vec2(e.x, 0.0)) - altura(UV - vec2(e.x, 0.0));
+	float dy = altura(UV + vec2(0.0, e.y)) - altura(UV - vec2(0.0, e.y));
+	n = normalize(n - (normalize(TANGENT) * dx + normalize(BINORMAL) * dy) * 2.2);
+	float cara = dot(n, normalize(luz_vista));
 	// El mismo terminador difuso del HTML (smoothstep, no un corte duro): el
 	// amanecer es una franja de cientos de kilómetros, no una línea.
-	float t = smoothstep(-0.14, 0.30, cara);
+	float t_dia = smoothstep(-0.14, 0.30, cara);
 	vec3 dia = texture(tex_dia, UV).rgb;
 	vec3 noche = texture(tex_noche, UV).rgb;
-	ALBEDO = mix(noche * 0.55, dia, t);
-	EMISSION = noche * (1.0 - t) * 1.35;
-	ROUGHNESS = 0.92;
-	SPECULAR = 0.12;
+	float frontera = texture(tex_fronteras, UV).a;
+	dia = mix(dia, vec3(1.0, 0.93, 0.7), frontera * 0.55);
+	float t = t_dia;
+	// Sin luces de escena: el sombreado entero lo hace este shader. La luz de
+	// relleno de la escena venía de atrás y dejaba el lado de día en negro.
+	vec3 lado_dia = dia * (0.30 + 0.95 * max(cara, 0.0));
+	ALBEDO = mix(noche * 1.2 + vec3(0.01, 0.02, 0.05) + vec3(frontera * 0.10), lado_dia, t);
 }
 """
 	return sh
@@ -210,14 +304,10 @@ func _shader_nubes() -> Shader:
 shader_type spatial;
 render_mode diffuse_burley, cull_back, blend_mix;
 uniform sampler2D tex_nubes : hint_default_white;
-uniform vec3 luz_dir = vec3(-0.62, 0.44, 0.28);
-varying vec3 v_normal_mundo;
-void vertex(){
-	v_normal_mundo = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
-}
+uniform vec3 luz_vista = vec3(-0.62, 0.40, 0.68);
 void fragment(){
 	float nub = texture(tex_nubes, UV).r;
-	float dif = max(dot(normalize(v_normal_mundo), normalize(luz_dir)), 0.0);
+	float dif = max(dot(normalize(NORMAL), normalize(luz_vista)), 0.0);
 	ALBEDO = vec3(0.30 + 0.75 * dif);
 	ALPHA = nub * 0.75;
 	ROUGHNESS = 1.0;
@@ -230,6 +320,15 @@ func _gui_input(event: InputEvent) -> void:
 		var mb := event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT:
 			_arrastrando = mb.pressed
+			## Clic sin arrastrar = tocar un país.
+			if mb.pressed:
+				_pulsado_en = mb.position
+				_movido = 0.0
+			elif _movido < 6.0:
+				var p := pais_en(mb.position)
+				if p != "":
+					ir_a(p)
+					pais_tocado.emit(p)
 	elif event is InputEventScreenTouch:
 		var st := event as InputEventScreenTouch
 		_arrastrando = st.pressed
@@ -237,6 +336,7 @@ func _gui_input(event: InputEvent) -> void:
 		## Arrastra el globo con el dedo: mismo signo y escala aproximada que el
 		## HTML (rotación directa proporcional al desplazamiento).
 		var rel: Vector2 = event.relative if event is InputEventMouseMotion else (event as InputEventScreenDrag).relative
+		_movido += rel.length()
 		lon += rel.x * 0.35
 		lat = clampf(lat - rel.y * 0.35, -85.0, 85.0)
 		_lon_obj = lon
@@ -275,6 +375,11 @@ func _process(delta: float) -> void:
 			_lon_obj -= _giro_idle * delta
 			lon -= _giro_idle * delta
 	_orientar_pivote(lon, lat)
+	for p: String in _rotulos:
+		var r: Label3D = _rotulos[p]
+		var z := r.global_position.z
+		r.visible = z > 0.45
+		r.modulate = Color("ffd24d") if p == pais_actual else Color(1, 1, 1, clampf((z - 0.45) * 3.0, 0.0, 0.9))
 	if _marcador.visible and pais_actual != "":
 		var c: Vector2 = GLOBO_PAIS.get(pais_actual, Vector2.ZERO)
 		_marcador.position = _cartesiano(c.x, c.y) * 1.03
@@ -311,4 +416,10 @@ func _orientar_pivote(lon_g: float, lat_g: float) -> void:
 func _cartesiano(lon_g: float, lat_g: float) -> Vector3:
 	var theta := deg_to_rad(90.0 - lat_g)
 	var phi := deg_to_rad(lon_g + 180.0)
-	return Vector3(-cos(phi) * sin(theta), cos(theta), sin(phi) * sin(theta))
+	## C14 (26-9-2026): la fórmula de arriba suponía x=-cos(phi), z=sin(phi),
+	## pero con las UV del `SphereMesh` de Godot 4 el punto (lon, lat) de la
+	## textura cae en x=sin(phi), z=cos(phi): los pines quedaban 90° corridos
+	## (Australia en el océano Índico) y el país elegido no era el que se veía.
+	## Comprobado a ojo con las fronteras dibujadas: Sídney, Brasilia y las
+	## capitales andinas caen en su sitio.
+	return Vector3(sin(phi) * sin(theta), cos(theta), cos(phi) * sin(theta))
