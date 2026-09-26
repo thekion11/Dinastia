@@ -38,7 +38,14 @@ func maximo(clave: String) -> int:
 ## El nivel "efectivo": completo hasta 5, la mitad por encima.
 func _ef(clave: String) -> float:
 	var n := float(nivel(clave))
-	return n if n <= 5.0 else 5.0 + (n - 5.0) * 0.5
+	var base := n if n <= 5.0 else 5.0 + (n - 5.0) * 0.5
+	## EL PERSONAL CUENTA (26-9-2026): un equipo bueno y contento rinde más
+	## que la obra sola, uno flojo o quemado menos, y una avería resta hasta
+	## que se arregla (`Trabajadores.semana()` lo fija cada semana).
+	return base * float(factor_personal.get(clave, 1.0))
+
+## instalación -> multiplicador del personal (0,75-1,15). Vacío = 1.
+var factor_personal: Dictionary = {}
 
 ## Las seis de siempre y las trece que se añadieron después, en un solo
 ## catálogo: clave, nombre, qué hace y coste base. El coste base es del HTML.

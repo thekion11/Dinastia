@@ -835,7 +835,9 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 		## antes de sobreescribir esos tres valores: son las paredes mas
 		## repetidas del mapa -una entrada de cache por cada color de club que
 		## exista, compartida entre todos los edificios de ese club.
-		mat = Texturas.hormigon(e["col"]).duplicate()
+		## Fachada clara con el color de la instalación en tono suave (antes
+		## el color puro sobre el hormigón oscuro dejaba el complejo casi negro).
+		mat = Texturas.hormigon((e["col"] as Color).lerp(Color(0.92, 0.91, 0.88), 0.55)).duplicate()
 		mat.roughness = 0.62
 		mat.metallic = 0.04
 		mat.metallic_specular = 0.35
@@ -858,6 +860,9 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 	add_child(techo)
 
 	_detalle_edificio(pos, ancho, fondo, alto, e)
+	_rasgo_instalacion(String(e["k"]), pos, ancho, fondo, alto, niv)
+	if not enObra or niv > 0:
+		_personal_en(String(e["k"]), pos, fondo, niv)
 
 	etiquetas.append({
 		"pos": pos + Vector3(0, alto + 3.0, 0),
@@ -870,6 +875,246 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 ## del color del club sobre la puerta. Son cuatro piezas y cambian la lectura
 ## por completo -sin ellas, a media distancia todas las instalaciones son la
 ## misma caja pintada de otro color.
+## ============================================================================
+##  CADA INSTALACIÓN CON SU CARA (26-9-2026)
+## ============================================================================
+## "Que las instalaciones sean mejores": hasta hoy las quince eran la misma caja
+## con marquesina y tres bultos en el techo, solo cambiaba el color. Ahora cada
+## una lleva lo que la delata desde el mapa: la cruz roja y la ambulancia del
+## centro médico, la cristalera del gimnasio, las parabólicas de la sala de
+## prensa, el pórtico con la copa del museo, los toldos de la tienda, los
+## columpios de la guardería, el neón de la sala de juegos... Y más cuanto más
+## nivel: una instalación grande se nota también en lo que tiene alrededor.
+func _mat_simple(c: Color, rug := 0.6, emi := 0.0) -> StandardMaterial3D:
+	var m := StandardMaterial3D.new()
+	m.albedo_color = c
+	m.roughness = rug
+	if emi > 0.0:
+		m.emission_enabled = true
+		m.emission = c
+		m.emission_energy_multiplier = emi
+	return m
+
+func _caja_en(pos: Vector3, tam: Vector3, m: Material, giro := 0.0) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var b := BoxMesh.new()
+	b.size = tam
+	mi.mesh = b
+	mi.material_override = m
+	mi.position = pos
+	mi.rotation.y = giro
+	add_child(mi)
+	return mi
+
+func _cil_en(pos: Vector3, r: float, h: float, m: Material, r_arriba := -1.0) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var c := CylinderMesh.new()
+	c.top_radius = r if r_arriba < 0.0 else r_arriba
+	c.bottom_radius = r
+	c.height = h
+	mi.mesh = c
+	mi.material_override = m
+	mi.position = pos
+	add_child(mi)
+	return mi
+
+func _rasgo_instalacion(k: String, pos: Vector3, ancho: float, fondo: float, alto: float, niv: int) -> void:
+	var fz: float = fondo * 0.5
+	var blanco := _mat_simple(Color(0.95, 0.95, 0.94), 0.5)
+	var c1 := _color_club("c1", Color(0.2, 0.5, 0.3))
+	match k:
+		"med", "rehab":
+			## Cruz roja luminosa en la fachada y una ambulancia en la puerta.
+			var rojo := _mat_simple(Color(0.9, 0.1, 0.12), 0.4, 1.4)
+			var yc := minf(alto - 2.5, 9.0)
+			_caja_en(pos + Vector3(ancho * 0.3, yc, fz + 0.3), Vector3(3.6, 1.1, 0.3), rojo)
+			_caja_en(pos + Vector3(ancho * 0.3, yc, fz + 0.3), Vector3(1.1, 3.6, 0.3), rojo)
+			var amb: PackedScene = load("res://assets/ciudad/kenney_cars/ambulance.glb")
+			if amb != null:
+				var a: Node3D = amb.instantiate()
+				a.scale = Vector3.ONE * 1.65
+				a.position = pos + Vector3(-ancho * 0.32, 0, fz + 8.0)
+				a.rotation.y = PI * 0.5
+				add_child(a)
+		"gim":
+			## Cristalera a toda la fachada, con máquinas asomando detrás.
+			var vidrio := Texturas.cristal(true, false)
+			_caja_en(pos + Vector3(0, minf(alto, 6.0) * 0.5, fz + 0.15), Vector3(ancho * 0.8, minf(alto, 6.0) - 0.8, 0.2), vidrio)
+			var metal := _mat_simple(Color(0.2, 0.2, 0.22), 0.4)
+			for i in 5:
+				_caja_en(pos + Vector3(-ancho * 0.3 + i * ancho * 0.15, 0.8, fz - 1.6), Vector3(0.9, 1.6, 2.0), metal)
+		"acad", "resid":
+			## Tejado a dos aguas y arcos de fútbol pequeños delante.
+			var teja := _mat_simple(Color(0.62, 0.28, 0.18), 0.8)
+			for s in [-1.0, 1.0]:
+				var faldon := _caja_en(pos + Vector3(0, alto + 2.2, s * fondo * 0.25), Vector3(ancho + 1.0, 0.4, fondo * 0.56), teja)
+				faldon.rotation.x = -0.42 * s
+			if k == "acad":
+				for s2 in [-1.0, 1.0]:
+					_arquito(pos + Vector3(s2 * ancho * 0.3, 0, fz + 12.0), blanco)
+			else:
+				## Bicicletas de los chicos: soporte y ruedas del kit.
+				for i in 4:
+					_poner_extra("wheel-default", pos + Vector3(-ancho * 0.35 + i * 1.2, 0.5, fz + 3.0), 1.4, PI * 0.5)
+		"cocina":
+			## Terraza con parasoles y chimenea de cocina.
+			var paras: PackedScene = load("res://assets/ciudad/kenney_comercial/detail-parasol-a.glb")
+			for i in 3:
+				if paras != null:
+					var pa: Node3D = paras.instantiate()
+					pa.scale = Vector3.ONE * 5.0
+					pa.position = pos + Vector3(-ancho * 0.3 + i * ancho * 0.3, 0, fz + 9.0)
+					add_child(pa)
+			var acero := _mat_simple(Color(0.7, 0.7, 0.72), 0.3)
+			_cil_en(pos + Vector3(ancho * 0.35, alto + 2.5, -fondo * 0.3), 0.6, 5.0, acero)
+		"video", "pren":
+			## Parabólicas y antena en el techo; la sala de prensa, con el
+			## "photocall" de patrocinadores en la entrada.
+			var gris := _mat_simple(Color(0.88, 0.88, 0.9), 0.4)
+			for i in 2:
+				var plato := _cil_en(pos + Vector3(-ancho * 0.25 + i * 3.5, alto + 2.2, 0), 1.5, 0.3, gris, 0.4)
+				plato.rotation.x = -0.9
+			_cil_en(pos + Vector3(ancho * 0.3, alto + 4.0, -fondo * 0.2), 0.12, 8.0, gris)
+			if k == "pren":
+				var photocall := _caja_en(pos + Vector3(0, 1.6, fz + 6.0), Vector3(8.0, 3.2, 0.2), _mat_simple(c1, 0.6))
+				photocall.rotation.y = 0.0
+		"museo":
+			## Pórtico de columnas y la copa dorada sobre su pedestal.
+			var piedra := _mat_simple(Color(0.86, 0.83, 0.76), 0.7)
+			for i in 6:
+				_cil_en(pos + Vector3(-ancho * 0.35 + i * ancho * 0.14, 3.5, fz + 2.0), 0.55, 7.0, piedra)
+			_caja_en(pos + Vector3(0, 7.3, fz + 2.0), Vector3(ancho * 0.85, 0.8, 3.0), piedra)
+			var oro := _mat_simple(Color(0.95, 0.75, 0.2), 0.25)
+			oro.metallic = 0.9
+			_caja_en(pos + Vector3(0, 0.8, fz + 11.0), Vector3(2.0, 1.6, 2.0), piedra)
+			_cil_en(pos + Vector3(0, 2.4, fz + 11.0), 0.25, 1.6, oro, 0.25)
+			_cil_en(pos + Vector3(0, 3.8, fz + 11.0), 0.3, 1.4, oro, 1.1)
+		"com":
+			## Escaparates con toldos a rayas del club.
+			var toldo: PackedScene = load("res://assets/ciudad/kenney_comercial/detail-awning-wide.glb")
+			for i in 2:
+				if toldo != null:
+					var t: Node3D = toldo.instantiate()
+					t.scale = Vector3.ONE * 5.0
+					t.position = pos + Vector3(-ancho * 0.25 + i * ancho * 0.5, 2.5, fz + 0.4)
+					add_child(t)
+			_caja_en(pos + Vector3(0, 1.8, fz + 0.12), Vector3(ancho * 0.75, 2.6, 0.12), Texturas.cristal(true, true))
+		"guarderia":
+			## Parque infantil: tobogán, columpio y arenero de colores.
+			var col := [Color(0.95, 0.3, 0.3), Color(0.3, 0.6, 0.95), Color(0.98, 0.8, 0.2)]
+			var base_p := pos + Vector3(0, 0, fz + 10.0)
+			var tob := _caja_en(base_p + Vector3(-4, 1.2, 0), Vector3(1.2, 0.2, 5.0), _mat_simple(col[0]))
+			tob.rotation.x = 0.45
+			for s in [-1.0, 1.0]:
+				_cil_en(base_p + Vector3(3.0 + s * 1.5, 1.5, 0), 0.1, 3.0, _mat_simple(col[1]))
+			_caja_en(base_p + Vector3(3.0, 3.0, 0), Vector3(3.2, 0.15, 0.15), _mat_simple(col[1]))
+			_caja_en(base_p + Vector3(0, 0.1, 4.0), Vector3(4.0, 0.2, 3.0), _mat_simple(Color(0.9, 0.82, 0.6)))
+		"bienestar":
+			## Cúpula de cristal y jardín de piedras.
+			var dom := MeshInstance3D.new()
+			var sm := SphereMesh.new()
+			sm.radius = minf(ancho, fondo) * 0.22
+			sm.height = sm.radius
+			sm.is_hemisphere = true
+			dom.mesh = sm
+			dom.material_override = Texturas.cristal(true, false)
+			dom.position = pos + Vector3(0, alto + 0.3, 0)
+			add_child(dom)
+		"esports":
+			## Neón del color del club alrededor del techo y pantalla gigante.
+			var neon := _mat_simple(c1.lightened(0.3), 0.3, 3.0)
+			for s in [-1.0, 1.0]:
+				_caja_en(pos + Vector3(0, alto - 0.3, s * (fondo * 0.5 + 0.1)), Vector3(ancho, 0.25, 0.1), neon)
+				_caja_en(pos + Vector3(s * (ancho * 0.5 + 0.1), alto - 0.3, 0), Vector3(0.1, 0.25, fondo), neon)
+			_caja_en(pos + Vector3(0, minf(alto, 6.0) * 0.55, fz + 0.2), Vector3(ancho * 0.5, 2.6, 0.15), _mat_simple(Color(0.2, 0.5, 1.0), 0.3, 1.6))
+		"ct":
+			## Placas solares en el techo y una pizarra táctica gigante.
+			var panel := _mat_simple(Color(0.08, 0.12, 0.25), 0.2)
+			panel.metallic = 0.6
+			for i in 4:
+				var pl := _caja_en(pos + Vector3(-ancho * 0.3 + i * ancho * 0.2, alto + 1.0, fondo * 0.15), Vector3(ancho * 0.16, 0.1, 4.0), panel)
+				pl.rotation.x = -0.4
+			_caja_en(pos + Vector3(-ancho * 0.5 - 0.2, minf(alto, 6.0) * 0.5, 0), Vector3(0.2, 3.5, 7.0), _mat_simple(Color(0.1, 0.35, 0.18), 0.6))
+		"piscina":
+			## Trampolín y escalerilla junto a la entrada.
+			_caja_en(pos + Vector3(ancho * 0.3, 1.5, fz + 3.0), Vector3(0.8, 0.1, 3.5), blanco)
+			_cil_en(pos + Vector3(ancho * 0.3, 0.75, fz + 1.5), 0.15, 1.5, blanco)
+	## Con nivel alto, bandera del club y jardineras en la entrada.
+	if niv >= 4:
+		var mastil := _cil_en(pos + Vector3(-ancho * 0.5 - 3.0, 5.0, fz + 3.0), 0.1, 10.0, blanco)
+		mastil.name = "Mastil"
+		_caja_en(pos + Vector3(-ancho * 0.5 - 2.0, 9.2, fz + 3.0), Vector3(2.0, 1.2, 0.05), _mat_simple(c1, 0.8))
+		var verde := _mat_simple(Color(0.18, 0.4, 0.16), 0.9)
+		for s in [-1.0, 1.0]:
+			_caja_en(pos + Vector3(s * ancho * 0.35, 0.5, fz + 5.0), Vector3(3.0, 1.0, 1.2), _mat_simple(Color(0.5, 0.5, 0.48)))
+			_caja_en(pos + Vector3(s * ancho * 0.35, 1.2, fz + 5.0), Vector3(2.8, 0.6, 1.0), verde)
+
+func _arquito(p: Vector3, m: Material) -> void:
+	for s in [-1.0, 1.0]:
+		_cil_en(p + Vector3(s * 1.8, 0.9, 0), 0.07, 1.8, m)
+	var trav := _cil_en(p + Vector3(0, 1.8, 0), 0.07, 3.6, m)
+	trav.rotation.z = PI * 0.5
+
+## EL PERSONAL, A LA VISTA (26-9-2026, "que tengan trabajadores reales"): en la
+## puerta de cada instalación está su gente, con el uniforme de su oficio
+## (bata blanca en el médico, chaquetilla en el comedor, chándal del club en el
+## centro de entrenamiento...). Uno por instalación, dos desde nivel 4 y tres
+## desde nivel 7, como su plantilla de verdad (`Trabajadores`).
+const UNIFORMES := {
+	"med": ["f2f2f2", "cfe0f5"], "rehab": ["f2f2f2", "b3d4f0"], "cocina": ["ffffff", "222222"],
+	"gim": ["111111", "c62828"], "piscina": ["d32f2f", "ffeb3b"], "guarderia": ["f9a825", "2e7d32"],
+	"museo": ["2b2b33", "d4af37"], "com": ["club", "ffffff"], "ct": ["club", "club2"],
+	"acad": ["club", "club2"], "resid": ["455a64", "ffffff"], "video": ["263238", "90a4ae"],
+	"pren": ["1f2a44", "ffffff"], "bienestar": ["8d6e63", "d7ccc8"], "esports": ["6a1b9a", "00e5ff"],
+}
+
+func _personal_en(k: String, pos: Vector3, fondo: float, niv: int) -> void:
+	if not is_inside_tree():
+		_personal_pendiente.append([k, pos, fondo, niv])
+		return
+	var cuantos := 1 + (1 if niv >= 4 else 0) + (1 if niv >= 7 else 0)
+	var cols: Array = UNIFORMES.get(k, ["455a64", "ffffff"])
+	var c1 := _color_club("c1", Color(0.2, 0.5, 0.3))
+	var c2 := _color_club("c2", Color.WHITE)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(k + "|personal")
+	for i in cuantos:
+		var raiz := Node3D.new()
+		add_child(raiz)
+		var col_a: Color = c1 if cols[0] == "club" else Color(String(cols[0]))
+		var col_b: Color = c2 if cols[1] == "club2" else (c1 if cols[1] == "club" else Color(String(cols[1])))
+		var asp := {"cuerpo": "female" if rng.randf() < 0.45 else "male", "ropa": "polo",
+			"c_ropa": col_a.to_html(false), "c_ropa2": col_b.to_html(false),
+			"pelo": PersonajeDT.CORTES[rng.randi() % 10], "color_pelo": PersonajeDT.COLORES_PELO[rng.randi() % 6],
+			"piel": PersonajeDT.PIELES[rng.randi() % PersonajeDT.PIELES.size()], "reloj": false,
+			"altura": rng.randf_range(1.6, 1.88)}
+		if k in ["cocina", "med", "rehab"]:
+			## Bata o chaquetilla lisa, blanca de arriba abajo.
+			asp["c_ropa2"] = col_a.to_html(false)
+		var d := PersonajeDT.crear(raiz, asp, c1, c2)
+		if d.is_empty():
+			raiz.queue_free()
+			continue
+		raiz.position = pos + Vector3(-4.0 + i * 3.2, 0, fondo * 0.5 + 6.0 + rng.randf_range(-1.0, 1.0))
+		raiz.rotation.y = rng.randf_range(-0.6, 0.6)
+		var ap: AnimationPlayer = d["anim"]
+		for g: String in ["hablar", "brazos_jarra", "parado"]:
+			if ap.has_animation(g) and rng.randf() < 0.6:
+				ap.play(g)
+				ap.seek(rng.randf() * ap.current_animation_length, true)
+				break
+		for mi in raiz.find_children("*", "MeshInstance3D", true, false):
+			(mi as MeshInstance3D).visibility_range_end = 260.0
+
+var _personal_pendiente: Array = []
+
+func _notification(que: int) -> void:
+	if que == NOTIFICATION_ENTER_TREE and not _personal_pendiente.is_empty():
+		var lista := _personal_pendiente.duplicate()
+		_personal_pendiente.clear()
+		for p: Array in lista:
+			_personal_en(String(p[0]), p[1], float(p[2]), int(p[3]))
+
 func _detalle_edificio(pos: Vector3, ancho: float, fondo: float, alto: float, e: Dictionary) -> void:
 	## Se llamaba "hormigon" desde antes de esta sesion sin serlo -color plano
 	## puro. `Texturas.hormigon()` de verdad ahora (17-9-2026), duplicado para
