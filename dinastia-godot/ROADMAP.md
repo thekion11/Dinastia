@@ -1,5 +1,107 @@
 # RUTA DE DESARROLLO — DINASTÍA
 
+## PLAN MAESTRO, OCTAVA RONDA (pedido del 26-9-2026)
+
+Pedido: *"20 diseños de solo 3 colores y 20 de solo 2; sponsors según los patrocinadores; más
+diseño, con su propio menú a pantalla completa; otro modelo 3D con ropa aparte; unos 20 tiros,
+20 pases, 20 barridas, 6+ atajadas, 30 regates, movimientos expresivos y de lesión; animar al
+árbitro, POV del árbitro, ver el VAR por dentro; mejorar los estadios e implementar los modelos
+3D pendientes"*, y además **agregar al plan** la lista larga de abajo.
+
+### Hecho en esta ronda (26-9-2026) ✅
+- **E1. Equipación**: 40 diseños nuevos (20 de dos colores y 20 de tres, familias 43-62, 130 en
+  total); cuello en pico, redondo, polo o mao; filtros y buscador en la galería.
+- **E2. Patrocinadores en la camiseta** (`SponsorKit`): el contrato principal al pecho y las
+  zonas (manga, espalda, pantalón) de `Comercial`; los rivales con marcas propias por hash. En
+  2D y en el shader 3D. Pestaña «Patrocinadores» para elegir qué se estampa.
+- **E3. Diseñador en pantalla propia**: su propia capa a pantalla completa; el menú se oculta.
+  Se abre desde el chip «Equipación».
+- **E4. Ropa aparte** (`RopaSeparada`): camiseta, pantalón y medias como mallas con volumen
+  sobre el mismo esqueleto. Siempre en el diseñador; opción en Ajustes para el partido.
+- **E5. Portafolio de fútbol** (`AnimFutbol`): 23 tiros, 20 pases, 20 barridas y entradas, 13
+  atajadas, 31 regates, 16 expresivos, 8 de lesión y 13 del árbitro y los asistentes, con
+  espejos para zurdos: **333 movimientos por jugador**. Arreglados dos ejes del brazo (el
+  «adelante» del brazo derecho iba hacia atrás y el codo nunca se doblaba).
+- **E6. Árbitro**: silbato, ventaja, hablar y tarjeta, dispersar protestas, córner, saque de
+  meta, bandera de los asistentes, penal, tiempo añadido; cámara «Árbitro (POV)».
+- **E7. Sala VAR por dentro** (`SalaVAR`): sala 3D con cuatro monitores que muestran el partido
+  en vivo desde otras cámaras, operadores y decisión.
+- **E8. Modelos 3D pendientes** (`EstadioExtras`, `Peaton`): obras con andamio, red y grúa
+  torre; palcos VIP, cabina de prensa, museo y tienda según lo construido; la mascota del club
+  (B10); peatones en la ciudad (B7).
+
+### Lo que queda de la ronda
+- Paleta de las vallas LED y formas geométricas nuevas de estadio (B6).
+- Túnel navegable (espera al modo caminar).
+
+### La lista larga, agregada al plan
+Viabilidad: ✅ con lo que hay · 🟡 necesita datos, assets o una decisión · ⛔ no se hace.
+
+- **E9. Recrear los estadios de todos los clubes** 🟡: 384 perfiles con forma, bandejas, techo,
+  colores y detalles que guiñen al real (como la historia: la Ruca, el Monumental...), sin
+  copiar marcas. Se generan desde una tabla nueva `ESTADIOS_GUIÑO` (datos a revisar).
+- **E10. Más idiomas** ✅: hoy 6; sumar alemán completo, neerlandés, turco, árabe (RTL) y japonés
+  (fuente CJK). Revisar textos que no pasan por `Idiomas`.
+- **E11. Tipografías** ✅: una familia de titulares y otra de cuerpo por tema, con licencia OFL;
+  la tipografía de dorsales y la de la camiseta del club.
+- **E12. Diseño general** ✅: paletas nuevas, más fondos y colores, objetos decorativos; revisar
+  cada pantalla con el recorrido automático (`captura_todo.gd`).
+- **E13. Rendimiento: mínimo 40 % más rápido sin bajar calidad** ✅: medir antes y después
+  (arranque, carga del partido, fotogramas del 3D, avance de semana). Candidatos: librería de
+  animaciones compartida entre los 22 (hoy se arma por jugador), LOD de jugadores lejanos,
+  MultiMesh en gradas, cachés de texturas de camiseta, `Mundo.avanzar_semana` por lotes.
+- **E14. Mejorar todo lo visual y cazar errores** ✅: recorrido visual de cada ronda, pruebas de
+  «nada flotando ni atravesado» en estadio y ciudad.
+- **E15. Más escudos** ✅: formas, cargas heráldicas y patrones nuevos; editor de escudo por capas.
+- **E16. Terminar los modos de juego faltantes** 🟡: repasar los modos del menú de inicio y cerrar
+  los que estén a medias (selecciones, leyenda, desafíos, carrera de jugador).
+- **E17. Primera versión de la IA futura** ✅: conectar `MotorLibre` al visor 3D (los 22 se
+  mueven por decisión propia), calibrarlo con estadísticas reales y usar el portafolio de
+  animaciones por acción (`AccionesJuego.anim`). Ya existe `ControlPartido` (control manual
+  estilo FC) que se une a `Mando`.
+- **E18. Ciudad navegable** ✅: caminar o conducir por la ciudad con cámara en tercera persona,
+  entrar a los edificios del club, peatones y tráfico que reaccionan.
+- **E19. Personaje base del jugador, modificable** 🟡: el DT/jugador del usuario con cuerpo por
+  huesos (hecho a medias en B8), cara por blendshapes (necesita Blender), ropa de `RopaSeparada`.
+- **E20. Trofeos**: réplicas propias (no copias) de cada copa y animaciones al levantarlos, en la
+  vitrina y al ganar ✅.
+- **E21. 300 animaciones en todo el juego** ✅ (hoy 333 por jugador; sumar interfaz, público,
+  banquillo, cuerpo técnico y ciudad).
+- **E22. 300 sonidos más** ✅: síntesis como los 62 de hoy (`Sonido`) y bancos CC0 con crédito.
+- **E23. Eventos con foco**: al salir un evento, difuminar todo lo que no sea el evento ✅.
+- **E24. Mini fondos animados en los modos de juego**, que se muevan al seleccionarlos ✅.
+- **E25. Investigar foros de juegos de este estilo** ✅ (hecho, ver abajo) y repetirlo cada ronda.
+
+### Lo que piden las comunidades (investigación del 26-9-2026)
+Resumen de foros y reseñas de Football Manager 26, EA FC 26 (modo carrera), Soccer Manager 2026
+y Top Eleven, y qué haría DINASTÍA con cada cosa:
+- **Diseñar el estadio durante la obra**: puertas, precios por sector, comida y sponsors
+  ([FM Scout](https://www.fmscout.com/a-fm26-features-we-want-to-see.html)). Tenemos el
+  diseñador y ahora la obra en 3D; faltan **precios por sector y puestos de comida** → E26 ✅.
+- **Conversaciones con IA más listas y ruedas de prensa que importen** (moral, hinchas,
+  directiva) ([FIFPlay](https://www.fifplay.com/football-manager-2025-wishlist/)). Tenemos
+  entrevistas con memoria y tono; ⛔ un modelo de lenguaje en línea; ✅ más consecuencias.
+- **Modo leyendas y bases de datos retro** (empezar en temporadas antiguas) → E27 🟡 con
+  temporadas históricas ficticias.
+- **Guardar a mitad de temporada en cualquier momento** → revisar que el guardado cubra todo ✅.
+- **Mapas de calor, de pases y gráficos de atributos**, que FM26 enterró
+  ([FRVR](https://frvr.com/blog/everything-football-manager-2026-forgot-whats-actually-missing-from-fm26/))
+  → E28 ✅ con las posiciones del partido 3D y de `MotorLibre`.
+- **Once ideal de la temporada y del historial** (el «Best 11» que quitó FM26,
+  [Steam](https://steamcommunity.com/app/3551340/discussions/0/691996029262966536/)) → E29 ✅.
+- **Carrera sin límite de temporadas** ([EA Forums](https://forums.ea.com/discussions/fc-25-game-modes-en/eafc26-career-mode-wishlist/11915523))
+  → confirmar que DINASTÍA no corta ✅.
+- **Cámara de hincha en la grada y cenital** → ya hay 10 cámaras; sumar «Hincha» ✅.
+- **Rotación de la IA según la importancia del partido y renovaciones realistas**
+  ([EA](https://www.ea.com/en/games/ea-sports-fc/fc-26/features/fc-26-career-mode)) → revisar ✅.
+- **Selecciones nacionales** (FM26 las retrasó) → ya existen; pulir ✅.
+- **Reuniones de directiva con agenda dinámica** → ampliar `Directiva` ✅.
+- **Plan de desarrollo del juvenil** (cesiones, mentores, entrenamiento a medida) → ampliar
+  cantera ✅.
+- **Sin micropagos ni progreso que se reinicia cada temporada** (las quejas de Top Eleven y
+  Soccer Manager) → principio de diseño: nada de eso en DINASTÍA.
+- **Rendimiento y física del balón en el 3D** (la queja de FM26) → E13 y E17.
+
 ## PLAN MAESTRO, SÉPTIMA RONDA (pedido del 26-9-2026)
 
 Pedido: *"revisa que ninguna cosa falte en el plan, busca fallas visuales, agrega más detalles y
@@ -49,14 +151,14 @@ Católica-Colo el Clásico). La historia es para todos los clubes."*
     - **B8** creador de personaje estilo Sims (cuerpo con escalas de huesos; cara con
       blendshapes 🟡, necesita Blender en el PC);
     - **B9** ropa y accesorios;
-    - **B10** mascotas 3D en el campo;
+    - ~~B10 mascotas 3D en el campo~~ ✅ (26-9, `EstadioExtras.mascota`);
     - ~~B12 música libre~~ DESCARTADA por el usuario (26-9); queda la música procedural;
     - **B14** optimización y velocidad;
     - **B15** calibración de realismo.
   - Restos de bloques hechos:
-    - B6: instalaciones internas visibles, obras con andamios en el estadio, túnel navegable,
-      paleta de las vallas LED y formas nuevas;
-    - B7: peatones, eventos de ciudad y que la hora del ciclo siga la del juego;
+    - B6: ~~instalaciones internas visibles~~ y ~~obras con andamios~~ ✅ (26-9); quedan
+      túnel navegable, paleta de las vallas LED y formas nuevas;
+    - B7: ~~peatones~~ ✅ (26-9), eventos de ciudad y que la hora del ciclo siga la del juego;
     - B3: cinemáticas que falten;
     - C5: presidente de la confederación y cambios de formato de competición;
     - C7: minijuego de tiro libre y trivia del club.
