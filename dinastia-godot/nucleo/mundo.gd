@@ -1811,6 +1811,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	charlas = Charlas.new()
 	licencia = Licencia.new()
 	trabajadores = Trabajadores.new()
+	Trabajadores.actual = trabajadores
 	eventos_cantera = EventosCantera.new()
 	calendario = Calendario.new()
 	politica = Politica.new()

@@ -5987,6 +5987,31 @@ func _probar_tanda_c() -> void:
 	for sem in 104:
 		eventos += m.trabajadores.semana(c, o, 2026, sem, m.prensa).size()
 	_comprobar(eventos > 3 and eventos < 80, "en las instalaciones pasan cosas, pero no cada semana (%d en 2 años)" % eventos)
+	## El equipo de cada instalación (26-9-2026): gente con estado, efecto y
+	## asuntos con decisión.
+	var tr := m.trabajadores
+	_comprobar(tr.equipo(c, o, "cocina").size() == 2, "con nivel 3 la cocina tiene dos personas")
+	var f_ct: float = o.factor_personal.get("ct", 1.0)
+	_comprobar(f_ct >= 0.75 and f_ct <= 1.15, "el personal mueve el rendimiento de la instalación (%.2f)" % f_ct)
+	tr.equipos["ct"][0]["hab"] = 99
+	tr.equipos["ct"][0]["moral"] = 99
+	var f_bueno := tr.factor("ct")
+	tr.equipos["ct"][0]["hab"] = 30
+	tr.equipos["ct"][0]["moral"] = 20
+	_comprobar(f_bueno > tr.factor("ct"), "gente buena y contenta rinde más (%.2f > %.2f)" % [f_bueno, tr.factor("ct")])
+	var hubo_asunto := false
+	for sem2 in 400:
+		tr.semana(c, o, 2030, sem2, m.prensa)
+		if not tr.pendiente.is_empty():
+			hubo_asunto = true
+			break
+	_comprobar(hubo_asunto, "el personal trae asuntos para decidir")
+	if hubo_asunto:
+		var res_p := tr.resolver("b", c, o, m.prensa)
+		_comprobar(not res_p.is_empty() and tr.pendiente.is_empty(), "el asunto del personal se resuelve: %s" % String(res_p.get("titulo", "")))
+	var tr2 := Trabajadores.new()
+	tr2.desde_dic(tr.a_dic())
+	_comprobar(tr2.equipos.size() == tr.equipos.size(), "el personal se guarda con la partida")
 	## Cantera.
 	var ec := m.eventos_cantera
 	var hubo := false

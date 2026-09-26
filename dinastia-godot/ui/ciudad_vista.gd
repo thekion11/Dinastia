@@ -437,7 +437,8 @@ func abrir_ficha(k: String) -> void:
 	if _obras.en_obra(k):
 		estado = "🏗 En obra hacia el nivel %d: faltan %d semanas" % [nivel + 1, int(_obras.obras[k])]
 	if nivel > 0:
-		var trab := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "👤 " + Trabajadores.texto_de(club, k))
+		var txt_t := ("👥 " + Trabajadores.actual.texto_equipo(club, _obras, k).replace("\n", "\n👥 ")) if Trabajadores.actual != null else ("👤 " + Trabajadores.texto_de(club, k))
+		var trab := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, txt_t)
 		trab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		trab.custom_minimum_size = Vector2(300, 0)
 		v.add_child(trab)
