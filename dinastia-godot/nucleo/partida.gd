@@ -91,6 +91,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"licencia": m.licencia.a_dic() if m.licencia != null else {},
 		"eventos_cantera": m.eventos_cantera.a_dic() if m.eventos_cantera != null else {},
 		"calendario": m.calendario.a_dic() if m.calendario != null else {},
+		"politica": m.politica.a_dic() if m.politica != null else {},
 		"banco": m.banco.a_dic() if m.banco != null else {},
 		"auspicio": m.auspicio.a_dic() if m.auspicio != null else {},
 		"eras": m.eras.a_dic() if m.eras != null else {},
@@ -546,6 +547,8 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.eventos_cantera.desde_dic(datos.get("eventos_cantera", {}))
 	if m.calendario != null:
 		m.calendario.desde_dic(datos.get("calendario", {}))
+	if m.politica != null:
+		m.politica.desde_dic(datos.get("politica", {}))
 	if m.junta != null:
 		m.junta.desde_dic(datos.get("junta", {}))
 		m.junta.formar(m.mi_club())
