@@ -147,7 +147,7 @@ func fair_play(funa: int, animo: int) -> int:
 func a_dic() -> Dictionary:
 	return {"segmentos": segmentos, "abono": abono, "abonados": abonados, "encuesta": encuesta,
 		"dias_hincha": dias_hincha, "penas": penas.duplicate(true), "ramas": ramas.duplicate(),
-		"precio_dinamico": precio_dinamico}
+		"precio_dinamico": precio_dinamico, "anios_rama": anios_rama, "palmares_ramas": palmares_ramas}
 
 func desde_dic(d: Dictionary) -> void:
 	var s: Dictionary = d.get("segmentos", {})
@@ -161,6 +161,8 @@ func desde_dic(d: Dictionary) -> void:
 	penas = (d.get("penas", []) as Array).duplicate(true)
 	ramas = (d.get("ramas", {}) as Dictionary).duplicate()
 	precio_dinamico = bool(d.get("precio_dinamico", false))
+	anios_rama = (d.get("anios_rama", {}) as Dictionary).duplicate()
+	palmares_ramas = (d.get("palmares_ramas", []) as Array).duplicate(true)
 
 # ---------------------------------------------------------------------------
 #  EL DÍA DEL HINCHA
@@ -298,6 +300,39 @@ func cerrar_rama(clave: String, c: Club) -> String:
 	ramas.erase(clave)
 	c.rep = clampi(c.rep - int(d[5]), 1, 99)
 	return ""
+
+## LAS RAMAS COMPITEN (26-9-2026, plan maestro C12). Pedido: *"mayor importancia a
+## las ramas de equipos del club de otros deportes o de otro género"*. Hasta hoy
+## eran un gasto con reputación fija. Ahora cada rama abierta juega su
+## temporada y termina en un puesto: depende de la reputación del club y de los
+## años que lleva abierta (una rama nueva no gana nada el primer año). Un título
+## o un podio suma reputación, socios y noticia; el femenino campeón, portada.
+## Por hash de club, rama y año: sin `Azar`.
+var anios_rama: Dictionary = {}   ## clave -> temporadas completas abierta
+var palmares_ramas: Array = []    ## [{anio, rama, puesto}], lo más nuevo primero
+
+func temporada_ramas(c: Club, anio: int) -> Array:
+	var salida: Array = []
+	if c == null:
+		return salida
+	for f: Array in RAMAS:
+		var clave := String(f[0])
+		if not tiene_rama(clave):
+			continue
+		var anios := int(anios_rama.get(clave, 0))
+		anios_rama[clave] = anios + 1
+		var r := float(absi(("rama|%s|%s|%d" % [c.id, clave, anio]).hash()) % 1000) / 1000.0
+		var fuerza := float(c.rep) / 100.0 * 0.55 + minf(float(anios), 5.0) * 0.06 + r * 0.30
+		var puesto := clampi(1 + int((1.0 - fuerza) * 12.0), 1, 12)
+		var d := {"anio": anio, "rama": String(f[2]), "clave": clave, "puesto": puesto}
+		salida.append(d)
+		if puesto <= 3:
+			palmares_ramas.push_front(d)
+			c.rep = clampi(c.rep + (2 if puesto == 1 else 1), 1, 99)
+			c.socios += 300 if puesto == 1 else 120
+	while palmares_ramas.size() > 40:
+		palmares_ramas.pop_back()
+	return salida
 
 ## Lo que cuestan todas las ramas al mes.
 func coste_ramas(c: Club) -> int:
