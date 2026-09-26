@@ -103,6 +103,7 @@ var calendario: Calendario
 var politica: Politica
 var contratos: Contratos
 var vida: VidaDT
+var maestria: Maestria
 ## El resultado de tu último partido de liga para `VidaDT`: 1, 0, -1, o 2 si no hubo.
 var _resultado_semana: int = 2
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
@@ -848,6 +849,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		## memoria no: con duelo no hay fiesta).
 		if soy_yo:
 			f_publico *= Calendario.factor_publico(c.pais, anio, semana)
+			if maestria != null:
+				f_publico *= maestria.factor_publico()
 		f.semana(en_casa, false, f_publico)
 		## EL PLUS DE LA TELEVISION POR EL HORARIO. Un lunes por la noche no va
 		## nadie al estadio y paga mucho mas la television: sin este cobro, elegir
@@ -1096,6 +1099,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		politica.semana(mi_club(), anio, semana, prensa)
 	if contratos != null and mi_club() != null:
 		contratos.semana(mi_club(), anio, semana)
+	if maestria != null and mi_club() != null:
+		maestria.semana(mi_club(), prensa, academia, semana, _resultado_semana)
 	if vida != null and mi_club() != null and roles != null:
 		vida.semana(mi_club(), roles, anio, semana, _resultado_semana)
 		_resultado_semana = 2
@@ -1801,6 +1806,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	politica = Politica.new()
 	contratos = Contratos.new()
 	vida = VidaDT.new()
+	maestria = Maestria.new()
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)
@@ -2022,6 +2028,11 @@ func aplicar_bonificadores() -> void:
 			dt *= vida.factor_trabajo(anio, semana)
 		c.bonus_ataque *= dt
 		c.bonus_defensa *= dt
+	## LAS MAESTRÍAS (15 categorías de 30 niveles): ataque, defensa, porteros,
+	## balón parado y análisis de rivales.
+	if maestria != null:
+		c.bonus_ataque *= maestria.factor_ataque()
+		c.bonus_defensa *= maestria.factor_defensa()
 	## Y el camarin: hermanos en el campo, roles cumplidos y ansiedad del once.
 	if vestuario != null:
 		c.bonus_ataque *= vestuario.factor_ataque(c)
