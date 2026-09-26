@@ -1024,6 +1024,11 @@ func _grupo_de_pestana(titulo: String) -> String:
 ## pestaña se pintaría con la sección vieja y habría que repintar dos veces.
 func _ir_a_chip(chip: Dictionary) -> void:
 	var secc := String(chip.get("secc", ""))
+	## «Equipación» es su propia pantalla, entera: el diseñador.
+	if secc == "kits" and mundo != null and mundo.mi_club() != null:
+		var dz := DisenadorKit.abrir(self, mundo)
+		dz.cerrado.connect(_refrescar)
+		return
 	if secc != "":
 		match String(chip["tab"]):
 			"Club": _secc_club = secc

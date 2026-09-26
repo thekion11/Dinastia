@@ -10,6 +10,16 @@ extends RefCounted
 signal semana_avanzada(semana: int, anio: int)
 signal temporada_terminada(anio: int, campeon: Club)
 
+## El último mundo creado, para lo que se dibuja sin tener el mundo a mano (los
+## patrocinadores de la camiseta, `SponsorKit`). Débil: no lo mantiene vivo.
+static var _ultimo: WeakRef = null
+
+static func actual() -> Mundo:
+	return _ultimo.get_ref() as Mundo if _ultimo != null else null
+
+func _init() -> void:
+	_ultimo = weakref(self)
+
 var semilla: int = 0
 var anio: int = 2026
 var semana: int = 1
