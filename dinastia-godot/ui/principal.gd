@@ -2143,7 +2143,7 @@ func _conectar_noticias() -> void:
 			if con_mentor != null:
 				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:
 					MentorVoz.decir(self, mundo, titulo, texto))
-		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos, mundo.vida]:
+		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos, mundo.vida, mundo.maestria]:
 			if fuente != null:
 				fuente.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 					_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -9693,6 +9693,8 @@ func _pintar_habilidades() -> void:
 	var arbol := ArbolHabilidades.crear(e)
 	_lista_habilidades.add_child(arbol)
 	_lista_habilidades.add_child(arbol.ficha())
+	## Las 15 maestrías de 30 niveles, debajo del árbol.
+	PanelMaestrias.pintar(_lista_habilidades, mundo, self)
 	arbol.aprendida.connect(func(_k: String) -> void:
 		Aviso.mostrar(self, "nivel", "🎓", "Habilidad aprendida", e.dt_nombre(_k))
 		_refrescar())

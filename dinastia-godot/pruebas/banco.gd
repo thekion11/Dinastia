@@ -105,6 +105,7 @@ func _ready() -> void:
 	_probar_historia_c4()
 	_probar_contratos_c9()
 	_probar_vida_dt()
+	_probar_maestrias()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -6236,3 +6237,37 @@ func _probar_vida_dt() -> void:
 	var v2 := VidaDT.new()
 	v2.desde_dic(d)
 	_comprobar(v2.a_dic() == d, "Mi vida se guarda entera")
+
+func _probar_maestrias() -> void:
+	_titulo("MAESTRÍAS: 15 CATEGORÍAS DE 30 NIVELES")
+	_comprobar(Maestria.ORDEN.size() == 15 and Maestria.CATEGORIAS.size() == 15, "hay 15 categorías")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5157)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var ma := m.maestria
+	_comprobar(ma.subir("ataque") != "", "sin puntos no se sube")
+	ma.puntos = 1000
+	var pts0 := m.entrenamiento.dt_puntos
+	for i in 30:
+		ma.subir("ataque", m.entrenamiento)
+	_comprobar(ma.nivel("ataque") == 30 and ma.subir("ataque") != "", "30 niveles y ni uno más")
+	_comprobar(m.entrenamiento.dt_puntos == pts0 + 3, "los hitos 10, 20 y 30 dan un punto de habilidad cada uno")
+	_comprobar(absf(ma.factor_ataque() - 1.06) < 0.001, "el nivel 30 de Ataque son +6 %% de ataque (%.3f)" % ma.factor_ataque())
+	_comprobar(1000 - ma.puntos == 10 * 1 + 10 * 2 + 10 * 3, "los niveles se encarecen por decenas (costó %d)" % (1000 - ma.puntos))
+	var c := m.mi_club()
+	m.aplicar_bonificadores()
+	var a0 := c.bonus_ataque
+	ma.niveles["ataque"] = 0
+	m.aplicar_bonificadores()
+	_comprobar(c.bonus_ataque < a0, "la maestría de ataque llega al bono del equipo")
+	ma.puntos = 0
+	ma.semana(c, m.prensa, m.academia, 1, 1)
+	_comprobar(ma.puntos == 2, "semana ganada: dos puntos de maestría")
+	ma.niveles["finanzas"] = 15
+	var s0 := c.saldo
+	ma.semana(c, m.prensa, m.academia, 2, 2)
+	_comprobar(c.saldo > s0, "Finanzas da un ingreso semanal")
+	var d := ma.a_dic()
+	var m2 := Maestria.new()
+	m2.desde_dic(d)
+	_comprobar(m2.nivel("finanzas") == 15 and m2.puntos == ma.puntos, "las maestrías se guardan")
