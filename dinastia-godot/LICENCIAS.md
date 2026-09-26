@@ -82,6 +82,7 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | 40 insignias especiales desbloqueables | `assets/escudos_especiales/` | 🟡 generadas en Canva a partir de referencias de estilo (no calcadas, ver `LEEME.md` 22-9). Los términos de Canva no permiten usar su contenido como **marca** propia; como insignias dentro del juego deberían ser válidas, pero conviene confirmarlo. Si se quitan de la exportación, `Escudo.textura_especial()` cae solo al escudo procedural |
 | Referencias de Pinterest | `../Escudos especiales/` (fuera del proyecto) | 🔴 nunca entraron al juego. No usar |
 | Texturas de la Tierra (globo) | `recursos/tierra/` | 🟡 muy probablemente NASA Blue Marble / Black Marble (dominio público). Anotar la fuente |
+| Fronteras del globo (`fronteras4k.png`) | `recursos/tierra/` | ✅ Natural Earth, `ne_50m_admin_0_boundary_lines_land` (dominio público, naturalearthdata.com), rasterizadas por nosotros |
 | 205 efectos de sonido y 6 piezas de música | sintetizados por código (`nucleo/sonido.gd`, `nucleo/musica.gd`) | 🟢 propio |
 | Tipografía | fuente por defecto de Godot / fuentes del sistema | 🟢 |
 | Caras de jugadores y DT | dibujadas por código (`ui/cara.gd`, `ui/cara_dt.gd`) | 🟢 propio |
