@@ -433,9 +433,14 @@ func abrir_ficha(k: String) -> void:
 	que.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	que.custom_minimum_size = Vector2(300, 0)
 	v.add_child(que)
-	var estado := "Solar sin construir" if nivel == 0 else "Nivel %d de %d" % [nivel, Instalaciones.NIVEL_MAX]
+	var estado := "Solar sin construir" if nivel == 0 else "Nivel %d de %d" % [nivel, _obras.maximo(k)]
 	if _obras.en_obra(k):
 		estado = "🏗 En obra hacia el nivel %d: faltan %d semanas" % [nivel + 1, int(_obras.obras[k])]
+	if nivel > 0:
+		var trab := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "👤 " + Trabajadores.texto_de(club, k))
+		trab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		trab.custom_minimum_size = Vector2(300, 0)
+		v.add_child(trab)
 	var l_estado := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.ORO, estado)
 	l_estado.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l_estado.custom_minimum_size = Vector2(300, 0)
