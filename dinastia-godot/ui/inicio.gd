@@ -45,7 +45,7 @@ const COLOR_CLAIM := {
 ## habría sido fingir que el menú tiene menos modos de los que en verdad tiene.
 ## "tutorial" dejó la lista el 25-9-2026: lleva a una carrera de entrenador con
 ## el recorrido guiado encendido (`ui/componentes/tutorial.gd`).
-const CATS_SIN_JUGAR := ["retos", "proximo"]
+const CATS_SIN_JUGAR := ["proximo"]
 
 const CONFIG_RUTA := "user://ajustes.cfg"
 
@@ -313,7 +313,7 @@ func _pintar_base() -> void:
 ## etiqueta "EN DESARROLLO" que ya usa el HTML para "proximo".
 func _tarjeta(m: Dictionary) -> Control:
 	var cat := String(m.get("cat", ""))
-	var sin_jugar := CATS_SIN_JUGAR.has(cat) or bool(m.get("crear", false))
+	var sin_jugar := CATS_SIN_JUGAR.has(cat)
 
 	var caja := PanelContainer.new()
 	caja.custom_minimum_size = Vector2(300, 150)
@@ -626,11 +626,15 @@ func _al_pulsar_modo(m: Dictionary) -> void:
 	var cat := String(m.get("cat", ""))
 	var titulo := String(m.get("titulo", ""))
 	if bool(m.get("crear", false)):
-		_avisar("🛠️ \"%s\" (fundar un club de cero) todavía no está en esta versión de Godot." % titulo)
-		return
+		## CREAR TU CLUB (26-9-2026): la elección de club ya sabía fundar;
+		## ahora la tarjeta lleva ahí con el panel de fundar destacado.
+		Principal.fundar_pedido = true
+		m = {"id": "dt"}
 	match cat:
 		"retos":
-			_avisar("🚧 Los retos con guion propio todavía no son su propia pantalla en esta versión de Godot.")
+			## LOS RETOS (26-9-2026): se elige uno de los cinco y el club lo
+			## pone el propio reto.
+			_elegir_reto()
 			return
 		"tutorial":
 			## Una carrera de entrenador de verdad, con el recorrido encendido:
@@ -650,3 +654,45 @@ func _al_pulsar_modo(m: Dictionary) -> void:
 func _avisar(texto: String) -> void:
 	_lbl_estado.text = texto
 	_lbl_estado.visible = true
+
+
+## El selector de retos: los cinco, con su planteamiento y su meta.
+func _elegir_reto() -> void:
+	var capa := ColorRect.new()
+	capa.color = Color(0, 0, 0, 0.6)
+	capa.set_anchors_preset(Control.PRESET_FULL_RECT)
+	capa.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(capa)
+	var centro := CenterContainer.new()
+	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
+	capa.add_child(centro)
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.ORO))
+	caja.custom_minimum_size = Vector2(640, 0)
+	centro.add_child(caja)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 8)
+	caja.add_child(v)
+	v.add_child(Tema.etiqueta(Tema.TAM_TITULO, Tema.ORO, "🎯 RETOS"))
+	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.")
+	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(nota)
+	for r: Array in Retos.LISTA:
+		var b := Button.new()
+		b.text = "%s  %s\n%s\nMeta: %s" % [String(r[1]), String(r[2]), String(r[3]), String(r[4])]
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.custom_minimum_size = Vector2(0, 76)
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var id := String(r[0])
+		b.pressed.connect(func() -> void:
+			var nombre := _campo_nombre.text.strip_edges()
+			Principal.reto_pedido = id
+			Principal.modo_elegido = "dt"
+			Principal.dt_nombre_elegido = nombre if nombre != "" else "Míster"
+			Principal.dificultad_elegida = _dificultad
+			get_tree().change_scene_to_file("res://escenas/eleccion_club.tscn"))
+		v.add_child(b)
+	var cerrar := Button.new()
+	cerrar.text = "Volver"
+	cerrar.pressed.connect(capa.queue_free)
+	v.add_child(cerrar)
