@@ -5609,6 +5609,8 @@ func _pintar_despacho() -> void:
 		asuntos.append({"et": "🏛️ Junta de accionistas", "col": COL_ORO, "id": "junta"})
 	if mundo.eventos_cantera != null and not mundo.eventos_cantera.pendiente.is_empty():
 		asuntos.append({"et": "🌱 Asunto de la academia", "col": COL_VERDE, "id": "cantera"})
+	if mundo.trabajadores != null and not mundo.trabajadores.pendiente.is_empty():
+		asuntos.append({"et": "🏢 Asunto del personal", "col": COL_ORO, "id": "personal"})
 	if mundo.vida != null and not mundo.vida.pendiente.is_empty():
 		asuntos.append({"et": "🏠 Pasa en casa", "col": COL_ORO, "id": "vida"})
 	if asuntos.is_empty():
@@ -5637,6 +5639,7 @@ func _pintar_despacho() -> void:
 		"solicitud": _pintar_solicitud_plantel()
 		"junta": _pintar_junta()
 		"cantera": _pintar_asunto_cantera()
+		"personal": _pintar_asunto_personal()
 		"vida": _pintar_asunto_vida()
 
 ## MI VIDA: lo que pasa en casa, con sus dos salidas.
@@ -5666,6 +5669,40 @@ func _pintar_asunto_vida() -> void:
 func _resolver_vida(op: String) -> void:
 	var r := mundo.vida.resolver(op, mundo.roles, mundo.mi_club(), mundo.prensa, mundo.anio, mundo.semana)
 	Aviso.mostrar(self, "vida", "🏠", "Mi vida", r)
+	_refrescar()
+
+## UN ASUNTO DEL PERSONAL DE UNA INSTALACIÓN (26-9-2026): quién, qué pasa y
+## las dos salidas. Debajo, cómo está su equipo.
+func _pintar_asunto_personal() -> void:
+	var p := mundo.trabajadores.pendiente
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.TARJETA, Tema.RADIO, Tema.ORO))
+	_despacho.add_child(caja)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
+	caja.add_child(v)
+	var inst := String(Instalaciones.CATALOGO.get(String(p["inst"]), ["Instalación"])[0])
+	v.add_child(Tema.rotulo("%s · %s" % [inst, String(p["nombre"])]))
+	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(p["texto"]))
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(t)
+	var eq := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "👥 " + mundo.trabajadores.texto_equipo(mundo.mi_club(), mundo.obras, String(p["inst"])).replace("\n", "\n👥 "))
+	eq.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(eq)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	v.add_child(fila)
+	for op: String in ["a", "b"]:
+		var b := Button.new()
+		b.text = String(p[op])
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.clip_text = true
+		b.pressed.connect(_resolver_personal.bind(op))
+		fila.add_child(b)
+
+func _resolver_personal(op: String) -> void:
+	var r := mundo.trabajadores.resolver(op, mundo.mi_club(), mundo.obras, mundo.prensa)
+	Aviso.mostrar(self, "nivel", "🏢", String(r.get("titulo", "")), String(r.get("cuerpo", "")))
 	_refrescar()
 
 ## UN ASUNTO DE LA ACADEMIA (C11): el tema y las dos salidas.
@@ -6697,7 +6734,10 @@ func _pintar_obras(c: Club) -> void:
 			b.pressed.connect(func() -> void: _empezar_obra(clave))
 			fila.add_child(b)
 		var que := _texto(11, COL_SUAVE)
-		que.text = "    " + String(datos[1]) + (("  ·  👤 " + Trabajadores.texto_de(c, clave)) if n > 0 else "")
+		que.text = "    " + String(datos[1])
+		if n > 0 and mundo.trabajadores != null:
+			## El equipo entero, con habilidad y ánimo (26-9-2026).
+			que.text += "\n    👥 " + mundo.trabajadores.texto_equipo(c, mundo.obras, clave).replace("\n", "\n    👥 ")
 		que.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_club.add_child(que)
 
