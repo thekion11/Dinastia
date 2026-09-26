@@ -71,6 +71,8 @@ uniform int cuello = 1;
 // ROPA APARTE (`RopaSeparada`): esta malla ES una prenda (1 camiseta, 2
 // pantalón, 3 medias) y se pinta entera como tal. 0 = el cuerpo.
 uniform int prenda = 0;
+// ROPA DE CALLE (peatones, hinchas): sin escudo, marca, patrocinadores ni dorsal.
+uniform bool civil = false;
 uniform float sp_asp_espalda = 4.0;
 // Borde de luz: separa al jugador del césped desde la cámara alta.
 uniform float borde = 0.45;
@@ -372,7 +374,7 @@ void fragment() {
 	if (!manga && abs(abs(x) - 0.205) < 0.006 && y < 1.40) camiseta *= 0.8;
 	if (manga && abs(abs(x) - 0.222) < 0.005) camiseta *= 0.82;
 	if (!manga && y > 1.005 && y < 1.02) camiseta *= 0.85;
-	if (familia >= 0 && frente && !manga) {
+	if (familia >= 0 && frente && !manga && !civil) {
 		// Escudo: un escudete con borde del color de ribete.
 		vec2 e = vec2((x - 0.095) / 0.042, (y - 1.405) / 0.05);
 		// Escudete: arriba recto, abajo en punta redondeada.
@@ -388,7 +390,7 @@ void fragment() {
 	}
 	// PATROCINADORES. Pecho: entre el escudo y la cintura. Espalda: debajo
 	// del cuello, encima del número. Manga: el logo en la izquierda del jugador.
-	if (familia >= 0 && !manga) {
+	if (familia >= 0 && !manga && !civil) {
 		if (hay_sp_pecho && frente && abs(x) < 0.13 && y > 1.2 && y < 1.37) {
 			vec4 sp = sp_encajado(sp_pecho, vec2((x + 0.13) / 0.26, 1.0 - (y - 1.2) / 0.17), 0.26 / 0.17, sp_asp_pecho);
 			camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
@@ -403,7 +405,7 @@ void fragment() {
 		camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
 	}
 	// El dorsal, en la espalda (z < 0,5), entre los omóplatos y la cintura.
-	if (dorsal > 0 && !manga && z < 0.45 && y > 1.11 && y < 1.41 && abs(x) < 0.13) {
+	if (dorsal > 0 && !civil && !manga && z < 0.45 && y > 1.11 && y < 1.41 && abs(x) < 0.13) {
 		// Vista desde atrás: la x va al revés (si no, el 12 se lee 21 y en espejo).
 		float xn = -x;
 		float dy = (y - 1.11) / 0.30;
