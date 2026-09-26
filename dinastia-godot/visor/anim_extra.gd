@@ -79,7 +79,17 @@ static func extender(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) ->
 			var ex: Animation = inst.call(String(EXPRESIONES[k]), esq, prefijo)
 			_completar(ex, esq, prefijo)
 			lib.add_animation(k, ex)
-	for k: String in ESPEJABLES:
+	## EL PORTAFOLIO DE FÚTBOL (26-9-2026): tiros, pases, barridas, atajadas,
+	## regates, expresiones, lesiones y árbitro (`AnimFutbol`).
+	var nuevas := AnimFutbol.todas(esq, prefijo)
+	for k: String in nuevas:
+		if not lib.has_animation(k):
+			var an: Animation = nuevas[k]
+			_completar(an, esq, prefijo)
+			lib.add_animation(k, an)
+	var a_espejar: Array = ESPEJABLES.duplicate()
+	a_espejar.append_array(AnimFutbol.espejables())
+	for k: String in a_espejar:
 		var nombre := k + "_espejo"
 		if lib.has_animation(k) and not lib.has_animation(nombre):
 			var e := espejar(lib.get_animation(k), esq, prefijo, k)
@@ -89,10 +99,45 @@ static func extender(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) ->
 ## Las variantes de una acción que tiene este jugador.
 static func variantes(ap: AnimationPlayer, accion: String) -> Array:
 	var r: Array = []
-	for n: String in CATEGORIAS.get(accion, [accion]):
+	for n: String in categorias().get(accion, [accion]):
 		if ap.has_animation(n):
 			r.append(n)
 	return r
+
+static var _categorias: Dictionary = {}
+
+## `CATEGORIAS` más el portafolio de `AnimFutbol` (y los espejos de cada uno).
+static func categorias() -> Dictionary:
+	if not _categorias.is_empty():
+		return _categorias
+	var c := CATEGORIAS.duplicate(true)
+	var f := AnimFutbol.familias()
+	var con_espejo := func(lista: Array) -> Array:
+		var r2: Array = []
+		for n: String in lista:
+			r2.append(n)
+			r2.append(n + "_espejo")
+		return r2
+	c["tiro"] = ["patear"] + f["tiro"]
+	c["patear"] = (c["patear"] as Array) + f["tiro"]
+	c["pase"] = (c["pase"] as Array) + f["pase"]
+	c["barrida"] = ["falta_barrida"] + f["barrida"]
+	c["defender"] = (c["defender"] as Array) + con_espejo.call(f["barrida"])
+	c["regate"] = (c["regate"] as Array) + con_espejo.call(f["regate"])
+	c["atajada"] = f["atajada"]
+	## Las paradas que no dependen del lado (el balón viene al cuerpo).
+	c["atajar_bajo"] = ["atajar_bajo", "atajar_bajo_espejo", "blocaje_rasante", "achique", "blocaje_alto", "punos"]
+	c["celebrar"] = (c["celebrar"] as Array) + ["avion", "deslizar_rodillas", "rodillas_brazos_arriba", "puno_rabia",
+		"llamar_hinchada", "corazon_manos", "mano_oido", "silencio_dedo", "aplauso_arriba"]
+	c["lamento"] = (c["lamento"] as Array) + ["cuclillas_lamento", "patada_al_aire", "cruzar_brazos"]
+	c["protesta"] = (c["protesta"] as Array) + ["discutir_arbitro", "pedir_perdon"]
+	c["expresivo"] = f["expresivo"]
+	c["lesion"] = f["lesion"]
+	c["incidencia"] = (c["incidencia"] as Array) + f["lesion"]
+	c["arbitro"] = (c["arbitro"] as Array) + f["arbitro"]
+	c["publico"] = (c["publico"] as Array) + ["agradecer_palmas", "pulgar_arriba"]
+	_categorias = c
+	return c
 
 ## ¿Zurdo? El mismo hash que `Jugador.pie()`, para no tener que pasarle el
 ## jugador entero al partido 3D.
@@ -108,13 +153,23 @@ static func es_zurdo(id: String) -> bool:
 ##     no ver siempre el mismo gesto.
 const SE_SORTEAN := {"regate_finta": "regate", "regate_pausa": "regate", "celebrar": "celebrar",
 	"celebrar_rodillas": "celebrar", "celebrar_carrera": "celebrar", "lamento": "lamento", "rabia": "lamento",
-	"protestar": "protesta", "pedir_balon": "pedir_balon"}
+	"protestar": "protesta", "pedir_balon": "pedir_balon", "dolor": "lesion", "atajar_bajo": "atajar_bajo"}
 ## Estos solo cambian de lado (la dirección no importa); la estirada del
 ## portero NO, porque va hacia donde va el balón.
 const A_CUALQUIER_LADO := ["marcar", "falta_empujon", "conducir"]
 const DE_PIE := ["patear", "pase", "penal", "penal_2", "cabezazo", "falta_barrida"]
 
+## Los golpeos se sortean entre los de su familia (sin espejos) y DESPUÉS se
+## espeja si el jugador es zurdo: así un zurdo nunca patea con la derecha.
+const GOLPEOS := {"patear": "patear", "pase": "pase", "falta_barrida": "barrida"}
+
 static func variante(ap: AnimationPlayer, nombre: String, id_jugador: String, rng: RandomNumberGenerator) -> String:
+	if GOLPEOS.has(nombre):
+		var ops: Array = variantes(ap, String(GOLPEOS[nombre])).filter(func(n: String) -> bool: return not n.ends_with("_espejo"))
+		var elegido := String(ops[rng.randi() % ops.size()]) if not ops.is_empty() else nombre
+		if es_zurdo(id_jugador) and ap.has_animation(elegido + "_espejo"):
+			return elegido + "_espejo"
+		return elegido
 	if DE_PIE.has(nombre) and es_zurdo(id_jugador) and ap.has_animation(nombre + "_espejo"):
 		return nombre + "_espejo"
 	if SE_SORTEAN.has(nombre):
@@ -265,18 +320,25 @@ static func _p(a: Animation, esq: Skeleton3D, c: String, k: Array, pre: String) 
 ## brazo en su "cero" (colgando al costado):
 ##   - brazo Z: abre hacia el costado (82 = horizontal, 160 = arriba); el
 ##     derecho con el signo contrario;
-##   - brazo Y: adelante/atrás; los DOS van adelante con Y negativo (este eje
-##     no está espejado entre lados, como la X de las piernas);
-##   - antebrazo: el codo se dobla con Y negativo, en los dos lados;
-##     X solo lo gira sobre su eje.
+##   - brazo Y: adelante/atrás; el izquierdo va adelante con Y negativo y el
+##     derecho con Y positivo (espejado, igual que Z);
+##   - antebrazo: el codo se dobla con X positivo, en los dos lados; Y solo
+##     lo gira sobre su eje (medido de nuevo con `sonda_lados.gd`).
 ## `_adelante()` y `_codo()` traducen "cuánto adelante" y "cuánto dobla el
 ## codo" a esos signos, para no equivocarse de lado en cada expresión.
 static func _brazo(lado: String, adelante: float, costado: float) -> Vector3:
 	var s := 1.0 if lado == "i" else -1.0
-	return Vector3(0, -adelante, costado * s)
+	## CORREGIDO (26-9-2026, medido con `pruebas/sonda_lados.gd`): con el brazo
+	## colgando, el eje Y también está espejado entre lados. Con el mismo signo
+	## para los dos, la mano derecha acababa DETRÁS del cuerpo en cada gesto
+	## "adelante" (aplaudir con una mano delante y otra a la espalda).
+	return Vector3(0, -adelante * s, costado * s)
 
 static func _codo(lado: String, flex: float) -> Vector3:
-	return Vector3(0, -flex, 0)
+	## CORREGIDO (26-9-2026, `pruebas/sonda_lados.gd`): la Y del antebrazo solo
+	## lo gira sobre su eje -la mano no se movía un milímetro-; el codo se dobla
+	## con X positivo, igual en los dos lados.
+	return Vector3(flex, 0, 0)
 
 static func _brazos(a: Animation, esq: Skeleton3D, pre: String, lado: String, claves: Array) -> void:
 	## claves: [[t, adelante, costado, codo]]

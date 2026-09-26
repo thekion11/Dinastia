@@ -51,6 +51,11 @@ const PIEL_REF := Color(0.6456, 0.4475, 0.3127)
 ## Materiales ya montados por combinación de colores/estilo/piel: los once de
 ## un equipo comparten material y el motor los puede agrupar.
 static var _cache_equipacion := {}
+## LA ROPA APARTE (`RopaSeparada`, 26-9-2026): camiseta, pantalón y medias como
+## mallas propias con volumen, en vez de pintadas sobre la piel. Se enciende
+## en el diseñador y en Ajustes (en el partido cuesta tres mallas más por
+## jugador).
+static var ropa_aparte := false
 
 static var _packed_male: Array = []
 ## cache de texturas recoloreadas por color exacto, para no repetir el
@@ -272,6 +277,21 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		for k: String in un:
 			mat.set_shader_parameter(k, un[k])
 		_cache_equipacion[clave] = mat
+	if ropa_aparte and (cuerpo.mesh as ArrayMesh) != null and cuerpo.mesh.has_meta("con_reposo"):
+		## El cuerpo, sin inflar (las prendas ya tienen su volumen).
+		var k2 := clave + "|aparte"
+		var mat_c: ShaderMaterial = _cache_equipacion.get(k2)
+		if mat_c == null:
+			mat_c = mat.duplicate() as ShaderMaterial
+			mat_c.set_shader_parameter("holgura", 0.0)
+			_cache_equipacion[k2] = mat_c
+		cuerpo.set_surface_override_material(superficie, mat_c)
+		RopaSeparada.vestir(cuerpo, superficie, mat)
+		return true
+	elif cuerpo.get_parent() != null:
+		for h in cuerpo.get_parent().get_children():
+			if h.has_meta("prenda_aparte"):
+				h.queue_free()
 	cuerpo.set_surface_override_material(superficie, mat)
 	return true
 

@@ -108,6 +108,7 @@ func _ready() -> void:
 	_probar_maestrias()
 	_probar_habilidades_en_resultados()
 	_probar_motor_libre()
+	_probar_portafolio_futbol()
 	_probar_disenos_kit()
 	_cerrar()
 
@@ -6386,6 +6387,49 @@ func _probar_motor_libre() -> void:
 		if bt != "" and not Mando.MAPA.has(bt):
 			botones_catalogo.append(bt)
 	_comprobar(botones_catalogo.is_empty(), "cada botón del catálogo existe en el mapa del mando %s" % str(botones_catalogo))
+
+## EL PORTAFOLIO DE FÚTBOL (26-9-2026): cuántos de cada familia hay, que
+## existan en la librería de un jugador y que el partido los use.
+func _probar_portafolio_futbol() -> void:
+	_titulo("PORTAFOLIO: TIROS, PASES, BARRIDAS, ATAJADAS, REGATES, LESIONES Y ÁRBITRO")
+	var f := AnimFutbol.familias()
+	_comprobar((f["tiro"] as Array).size() >= 20, "%d tipos de tiro" % (f["tiro"] as Array).size())
+	_comprobar((f["pase"] as Array).size() >= 20, "%d tipos de pase" % (f["pase"] as Array).size())
+	_comprobar((f["barrida"] as Array).size() >= 20, "%d barridas y entradas" % (f["barrida"] as Array).size())
+	_comprobar((f["atajada"] as Array).size() >= 12, "%d atajadas nuevas" % (f["atajada"] as Array).size())
+	_comprobar((f["regate"] as Array).size() >= 30, "%d regates" % (f["regate"] as Array).size())
+	_comprobar((f["expresivo"] as Array).size() >= 12 and (f["lesion"] as Array).size() >= 6, "expresiones y lesiones")
+	_comprobar((f["arbitro"] as Array).size() >= 10, "%d gestos del árbitro y los asistentes" % (f["arbitro"] as Array).size())
+	var d := FutbolistaQ.crear(1.8, "male")
+	var raiz: Node3D = d["nodo"]
+	add_child(raiz)
+	FutbolistaQ.terminar(d, true)
+	var ap: AnimationPlayer = d["anim"]
+	var faltan: Array = []
+	for fam: String in f:
+		for n: String in f[fam]:
+			if not ap.has_animation(n):
+				faltan.append(n)
+	_comprobar(faltan.is_empty(), "todas están en la librería del jugador %s" % str(faltan.slice(0, 5)))
+	_comprobar(ap.has_animation("bicicleta_espejo") and ap.has_animation("tiro_empeine_espejo"), "con su espejo para zurdos y para el otro lado")
+	_comprobar(ap.get_animation_list().size() >= 300, "%d movimientos por jugador" % ap.get_animation_list().size())
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	var vistos := {}
+	for i in 60:
+		vistos[AnimExtra.variante(ap, "patear", "j1", rng)] = true
+	_comprobar(vistos.size() >= 8, "el partido sortea entre muchos tiros (%d distintos en 60)" % vistos.size())
+	var zurdo := ""
+	for i in 200:
+		if AnimExtra.es_zurdo("z%d" % i):
+			zurdo = "z%d" % i
+			break
+	var todos_espejo := true
+	for i in 20:
+		if not AnimExtra.variante(ap, "patear", zurdo, rng).ends_with("_espejo"):
+			todos_espejo = false
+	_comprobar(todos_espejo, "un zurdo patea siempre con la zurda")
+	raiz.queue_free()
 
 func _probar_disenos_kit() -> void:
 	_titulo("EQUIPACIÓN: DISEÑOS, COLORES, BOTINES Y ACCESORIOS")

@@ -68,6 +68,9 @@ uniform sampler2D sp_short : source_color, filter_linear_mipmap, repeat_disable;
 uniform float sp_asp_pecho = 4.0;
 // El corte del cuello: 0 pico, 1 redondo, 2 polo con tapeta, 3 mao (alto).
 uniform int cuello = 1;
+// ROPA APARTE (`RopaSeparada`): esta malla ES una prenda (1 camiseta, 2
+// pantalón, 3 medias) y se pinta entera como tal. 0 = el cuerpo.
+uniform int prenda = 0;
 uniform float sp_asp_espalda = 4.0;
 // Borde de luz: separa al jugador del césped desde la cámara alta.
 uniform float borde = 0.45;
@@ -305,6 +308,9 @@ void fragment() {
 		m.b = (1.0 - brazo) * smoothstep(0.085 - w, 0.085 + w, y) * (1.0 - smoothstep(0.47 - w, 0.47 + w, y));
 		m.a = (1.0 - brazo) * (1.0 - smoothstep(0.085 - w, 0.085 + w, y));
 	}
+	if (prenda == 1) { m = vec4(1.0, 0.0, 0.0, 0.0); cubierta = true; }
+	else if (prenda == 2) { m = vec4(0.0, 1.0, 0.0, 0.0); cubierta = true; }
+	else if (prenda == 3) { m = vec4(0.0, 0.0, 1.0, 0.0); cubierta = true; }
 
 	float lum = dot(piel, vec3(0.299, 0.587, 0.114));
 	float pliegue = clamp(0.78 + lum * 0.45, 0.8, 1.12);

@@ -11570,6 +11570,24 @@ func _pintar_dispositivo() -> void:
 		_refrescar())
 	fila_tv.add_child(b_tv)
 
+	## ROPA APARTE (26-9-2026): camiseta, pantalón y medias como mallas propias
+	## con volumen en el partido 3D (en el diseñador siempre).
+	var fila_ra := HBoxContainer.new()
+	fila_ra.add_theme_constant_override("separation", 8)
+	_lista_ajustes.add_child(fila_ra)
+	var et_ra := _texto(12, COL_TEXTO)
+	et_ra.text = "Ropa 3D en piezas separadas"
+	et_ra.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	et_ra.tooltip_text = "La equipación con volumen propio (más realista). Cuesta tres mallas más por jugador en el partido."
+	fila_ra.add_child(et_ra)
+	var b_ra := Button.new()
+	b_ra.text = "SÍ" if VestidorQ.ropa_aparte else "NO"
+	b_ra.pressed.connect(func() -> void:
+		VestidorQ.ropa_aparte = not VestidorQ.ropa_aparte
+		_guardar_preferencias()
+		_refrescar())
+	fila_ra.add_child(b_ra)
+
 	## CALIDAD GRÁFICA. Manda en el visor 3D del estadio, que es lo único del
 	## juego que puede ir lento: la interfaz son etiquetas y no cuesta nada.
 	## `Calidad` ya tenía los tres niveles montados desde el porte del visor.
@@ -13018,6 +13036,7 @@ func _guardar_preferencias() -> void:
 	cf.set_value("texto", "daltonico", _daltonico)
 	cf.set_value("pantalla", "zoom", _zoom_interfaz)
 	cf.set_value("pantalla", "modo_tv", _modo_tv)
+	cf.set_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte)
 	cf.set_value("pantalla", "fps", _fps_elegido)
 	cf.set_value("juego", "modo_experto", _modo_experto)
 	cf.set_value("sonido", "encendido", Sonido.encendido)
@@ -13071,6 +13090,7 @@ func _cargar_preferencias() -> void:
 	_daltonico = bool(cf.get_value("texto", "daltonico", _daltonico))
 	_zoom_interfaz = clampf(float(cf.get_value("pantalla", "zoom", _zoom_interfaz)), 0.7, 1.6)
 	_modo_tv = bool(cf.get_value("pantalla", "modo_tv", _modo_tv))
+	VestidorQ.ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte))
 	_fps_elegido = clampi(int(cf.get_value("pantalla", "fps", _fps_elegido)), 30, 240)
 	_modo_experto = bool(cf.get_value("juego", "modo_experto", _modo_experto))
 	Sonido.encendido = bool(cf.get_value("sonido", "encendido", Sonido.encendido))
