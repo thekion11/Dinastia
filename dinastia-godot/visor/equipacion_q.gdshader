@@ -62,6 +62,14 @@ uniform float borde = 0.45;
 // reposo, no de la máscara, que solo marca la equipación de juego.
 uniform bool largo = false;
 
+// La pose de reposo exacta, escrita en la malla por `VestidorQ._con_reposo()`.
+uniform bool usa_reposo = false;
+varying vec3 v_reposo;
+
+void vertex() {
+	v_reposo = vec3(UV2.x, UV2.y, COLOR.r);
+}
+
 // Deshace la normalización de `mascara_equipacion.py`.
 const float X_MIN = -0.95;
 const float X_MAX = 0.95;
@@ -182,9 +190,35 @@ void fragment() {
 	float y = c.g * Y_MAX;
 	float z = c.b; // 0 atrás, 1 adelante (normalizada de -0,25 a 0,25 m)
 	bool cubierta = c.r + c.g + c.b > 0.001;
+	if (usa_reposo) {
+		// Coordenadas exactas y cortes de prenda suaves (mismas zonas que
+		// `mascara_equipacion.py::zonas()`), con medio centímetro de borde.
+		x = v_reposo.x;
+		y = v_reposo.y;
+		z = v_reposo.z;
+		cubierta = true;
+		float ax = abs(x);
+		float w = 0.004;
+		float brazo = smoothstep(0.215 - w, 0.215 + w, ax) * smoothstep(1.22 - w, 1.22 + w, y);
+		float torso = smoothstep(1.0 - w, 1.0 + w, y) * (1.0 - smoothstep(1.535 - w, 1.535 + w, y));
+		m.r = max(brazo * (1.0 - smoothstep(0.43 - w, 0.43 + w, ax)), (1.0 - brazo) * torso);
+		m.g = (1.0 - brazo) * smoothstep(0.62 - w, 0.62 + w, y) * (1.0 - smoothstep(1.0 - w, 1.0 + w, y));
+		m.b = (1.0 - brazo) * smoothstep(0.085 - w, 0.085 + w, y) * (1.0 - smoothstep(0.47 - w, 0.47 + w, y));
+		m.a = (1.0 - brazo) * (1.0 - smoothstep(0.085 - w, 0.085 + w, y));
+	}
 
 	float lum = dot(piel, vec3(0.299, 0.587, 0.114));
 	float pliegue = clamp(0.78 + lum * 0.45, 0.8, 1.12);
+	if (usa_reposo) {
+		// La tela no se pega al músculo como la piel: menos relieve del cuerpo
+		// y, en cambio, arrugas suaves de tela (más en costados y cintura) y
+		// sombra bajo el brazo y en el borde del pantalón.
+		float arruga = ruido(vec2(x * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2(x * 34.0, y * 11.0 + 7.0)) * 0.4;
+		float lado_t = smoothstep(0.1, 0.2, abs(x)) * step(abs(x), 0.215);
+		pliegue = clamp(0.93 + lum * 0.12, 0.92, 1.05) * (1.0 - (arruga - 0.45) * (0.08 + lado_t * 0.1));
+		pliegue *= 1.0 - 0.18 * (1.0 - smoothstep(0.0, 0.05, abs(y - 1.26))) * smoothstep(0.17, 0.215, abs(x)) * step(abs(x), 0.25);
+		pliegue *= 1.0 - 0.12 * (1.0 - smoothstep(0.0, 0.025, abs(y - 1.0)));
+	}
 
 	bool manga = abs(x) > 0.215 && y > 1.22;
 	float u = clamp(x / 0.215, -1.0, 1.0);
@@ -193,7 +227,15 @@ void fragment() {
 	vec3 trim_col;
 	if (familia >= 0) {
 		// La manga sigue el dibujo desde el borde del torso.
-		camiseta = disenio(manga ? sign(x) : u, v, manga ? sign(x) * 0.215 : x, y);
+		// REALISMO (26-9-2026): el dibujo se promedia en cuatro puntos del
+		// tamaño de un píxel, así los bordes de las franjas no salen en
+		// escalera (los estampados de verdad están sublimados, no recortados).
+		float uu = manga ? sign(x) : u;
+		vec2 du = vec2(dFdx(uu), dFdy(uu)) * 0.5;
+		vec2 dv = vec2(dFdx(v), dFdy(v)) * 0.5;
+		float xx = manga ? sign(x) * 0.215 : x;
+		camiseta = (disenio(uu + du.x + du.y, v + dv.x + dv.y, xx, y) + disenio(uu - du.x - du.y, v - dv.x - dv.y, xx, y)
+			+ disenio(uu + du.x - du.y, v + dv.x - dv.y, xx, y) + disenio(uu - du.x + du.y, v - dv.x + dv.y, xx, y)) * 0.25;
 		trim_col = C(trim);
 	} else {
 		float p = manga ? ((estilo == 4 || (estilo == 3 && x > 0.0)) ? 1.0 : 0.0) : patron(x, y);
@@ -203,6 +245,30 @@ void fragment() {
 	// Cuello y puños del color de ribete.
 	if ((!manga && y > 1.505) || (manga && abs(x) > 0.405)) {
 		camiseta = trim_col;
+	}
+	// DETALLES DE CONFECCIÓN (realismo): cuello y puños acanalados, costuras
+	// laterales y de hombro un poco más oscuras, escudo del club (izquierda
+	// del pecho) y una marca de ropa inventada (derecha).
+	bool frente = z > 0.55;
+	if ((!manga && y > 1.505) || (manga && abs(x) > 0.405)) {
+		camiseta *= 0.9 + 0.1 * step(0.5, fract((manga ? abs(x) : y) * 180.0));
+	}
+	if (!manga && abs(abs(x) - 0.205) < 0.006 && y < 1.40) camiseta *= 0.8;
+	if (manga && abs(abs(x) - 0.222) < 0.005) camiseta *= 0.82;
+	if (!manga && y > 1.005 && y < 1.02) camiseta *= 0.85;
+	if (familia >= 0 && frente && !manga) {
+		// Escudo: un escudete con borde del color de ribete.
+		vec2 e = vec2((x - 0.095) / 0.042, (y - 1.405) / 0.05);
+		// Escudete: arriba recto, abajo en punta redondeada.
+		float ancho_e = e.y > 0.0 ? 1.0 : sqrt(max(0.0, 1.0 - e.y * e.y));
+		float cuerpo_e = (1.0 - smoothstep(ancho_e - 0.08, ancho_e, abs(e.x))) * step(-1.0, e.y) * (1.0 - smoothstep(0.92, 1.0, e.y));
+		float borde_e = cuerpo_e * smoothstep(ancho_e - 0.3, ancho_e - 0.2, abs(e.x) + max(0.0, e.y - 0.7) * 0.8);
+		camiseta = mix(camiseta, C(1), cuerpo_e);
+		camiseta = mix(camiseta, trim_col, borde_e);
+		// Marca: una curva tipo "ala" en el color de ribete.
+		vec2 mk = vec2((x + 0.095) / 0.045, (y - 1.41) / 0.03);
+		float ala = step(abs(mk.x), 1.0) * step(abs(mk.y - (mk.x * mk.x * 0.6 - 0.2)), 0.22 - mk.x * 0.08);
+		camiseta = mix(camiseta, trim_col, ala);
 	}
 	// El dorsal, en la espalda (z < 0,5), entre los omóplatos y la cintura.
 	if (dorsal > 0 && !manga && z < 0.45 && y > 1.11 && y < 1.41 && abs(x) < 0.13) {
@@ -288,12 +354,23 @@ void fragment() {
 	}
 	ALBEDO = albedo;
 
-	ROUGHNESS = mix(0.62, 0.82, tela);
-	SPECULAR = mix(0.45, 0.25, tela);
-	if (usa_normal) {
-		NORMAL_MAP = texture(normal_tex, UV).rgb;
-		NORMAL_MAP_DEPTH = mix(1.0, 0.35, tela);
-	}
+	// LA TELA: punto fino de poliéster (una malla de puntitos que se ve de
+	// cerca y hace brillar la camiseta como las de verdad), algo más mate en
+	// las medias y brillante en los botines.
+	float punto = sin(UV.x * 2600.0) * sin(UV.y * 2600.0);
+	float es_camiseta = m.r * (1.0 - m.g);
+	ALBEDO *= 1.0 + punto * 0.035 * tela;
+	float rugo = mix(0.62, 0.5, es_camiseta);
+	rugo = mix(rugo, 0.55, m.g);
+	rugo = mix(rugo, 0.88, m.b);
+	rugo = mix(rugo, 0.28, m.a);
+	ROUGHNESS = rugo + punto * 0.05 * tela;
+	SPECULAR = mix(0.45, 0.55, clamp(es_camiseta + m.g + m.a, 0.0, 1.0));
+	vec3 nm = usa_normal ? texture(normal_tex, UV).rgb : vec3(0.5, 0.5, 1.0);
+	// Micro relieve del tejido sobre el relieve del cuerpo.
+	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * 0.045 * tela;
+	NORMAL_MAP = nm;
+	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? 0.22 : 0.45, tela) : 0.6 * tela;
 	RIM = borde;
 	RIM_TINT = 0.35;
 }
