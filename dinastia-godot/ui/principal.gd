@@ -66,6 +66,11 @@ static var modo_elegido: String = ""
 ## La tarjeta "Tutorial" del menú: la próxima carrera arranca con el recorrido
 ## guiado aunque ya se haya visto (ver `ui/componentes/tutorial.gd`).
 static var tutorial_pedido: bool = false
+## "Crear tu Club" desde el menú: la elección de club abre con el panel de
+## fundar arriba y destacado (26-9-2026).
+static var fundar_pedido: bool = false
+## El reto elegido en el menú (`Retos`): la elección de club lo monta sola.
+static var reto_pedido: String = ""
 static var dt_nombre_elegido: String = "Míster"
 static var dificultad_elegida: String = "normal"
 ## Del asistente completo (`ui/eleccion_club.gd`): el mundo YA generado -las 24

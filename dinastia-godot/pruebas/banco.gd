@@ -6030,6 +6030,23 @@ func _probar_tanda_c() -> void:
 	var rp2 := Reputacion.new()
 	rp2.desde_dic(rp.a_dic())
 	_comprobar(rp2.valor("honesto") == rp.valor("honesto") and rp2.historial.size() == rp.historial.size(), "la reputación se guarda con la partida")
+	## MODOS (26-9-2026): los cinco retos se montan y se juzgan; fundar con colores.
+	for r: Array in Retos.LISTA:
+		var mr := Mundo.new()
+		mr.generar(["CHI"], 11)
+		var cr := Retos.montar(mr, String(r[0]))
+		_comprobar(cr != null and mr.mi_club_id == cr.id and String(mr.reto["id"]) == String(r[0]), "el reto «%s» elige y prepara su club" % String(r[2]))
+		if String(r[0]) == "deuda" and cr != null:
+			_comprobar(cr.saldo < 0, "el club en ruinas arranca con deuda")
+			var jr := Retos.juzgar(mr, 5, false, false)
+			_comprobar(not bool(jr["cumplido"]) and Retos.juzgar(mr, 5, false, false).is_empty(), "el reto se juzga una sola vez")
+		if String(r[0]) == "titulo" and cr != null:
+			var jt := Retos.juzgar(mr, 1, false, false)
+			_comprobar(bool(jt["cumplido"]), "salir campeón cumple «Obligados a ganar»")
+	var mf := Mundo.new()
+	mf.generar(["CHI"], 12)
+	var cf := mf.fundar_club("Club Nuevo", "CHI", "#112233", "#ddeeff", "La Cancha")
+	_comprobar(cf != null and cf.color1 == "#112233" and cf.estadio_nombre == "La Cancha", "fundar un club con sus colores y su estadio")
 	## Cantera.
 	var ec := m.eventos_cantera
 	var hubo := false
