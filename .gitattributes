@@ -26,3 +26,5 @@ dinastia-godot/assets/personas/*.glb -filter -diff -merge binary
 dinastia-godot/assets/characters/quaternius/pelo/*.gltf -filter -diff -merge
 # Los edificios del kit comercial de Kenney que faltaban (CC0, ~2 MB): archivos normales.
 dinastia-godot/assets/ciudad/kenney_comercial_extra/*.glb -filter -diff -merge binary
+# El resto del Car Kit de Kenney (CC0): archivos normales.
+dinastia-godot/assets/ciudad/kenney_cars_extra/*.glb -filter -diff -merge binary

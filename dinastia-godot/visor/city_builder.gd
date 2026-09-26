@@ -131,6 +131,7 @@ func build(d: Dictionary) -> void:
 	_parcelas()
 	_barrio_residencial()
 	_frentes_urbanos()
+	_karting()
 	_arbolado()
 	_horizonte()
 	_trafico()
@@ -1489,6 +1490,11 @@ func _aparcamiento() -> void:
 		## otros marcha atrás, como aparca la gente de verdad.
 		nodo.rotation.y = 0.0 if rng.randf() < 0.6 else PI
 		add_child(nodo)
+	## Las dos plazas VIP junto a la puerta: los deportivos del kit (el del
+	## presidente y el de la estrella del equipo).
+	for k in 2:
+		_poner_extra(["race", "race-future"][k], Vector3(141.0, 0, -62.0 + k * 8.0), 1.65, PI)
+	_rotulo(Vector3(141.0, 4.0, -58.0), "VIP", Color(1.0, 0.85, 0.4), 22)
 
 	_farolas()
 
@@ -1866,6 +1872,10 @@ const RUTAS_MOBILIARIO := [
 const RUTA_BUS := "res://assets/ciudad/kenney_cars/van.glb"
 
 const RUTAS_SERVICIO := [
+	## 26-9-2026: los que faltaban del kit (camiones y la patrulla rural).
+	"res://assets/ciudad/kenney_cars_extra/truck.glb",
+	"res://assets/ciudad/kenney_cars_extra/truck-flat.glb",
+	"res://assets/ciudad/kenney_cars_extra/tractor-police.glb",
 	"res://assets/ciudad/kenney_cars/ambulance.glb",
 	"res://assets/ciudad/kenney_cars/police.glb",
 	"res://assets/ciudad/kenney_cars/delivery.glb",
@@ -1916,6 +1926,11 @@ func _calles() -> void:
 	var fin_barrio: float = FINCA_PORTON_Z - BORDILLO - ACERA
 	_via(Vector3(BARRIO_EN.x, 0, (RING_Z_SUR + fin_barrio) * 0.5),
 		Vector2(ANCHO_CALLE, fin_barrio - RING_Z_SUR), asfalto, linea, false)
+
+	## El acceso al karting, que cuelga del anillo sur hasta sus boxes.
+	var fin_k: float = KARTING_EN.z - 22.0 - 16.0
+	_via(Vector3(KARTING_EN.x, 0, (RING_Z_SUR + fin_k) * 0.5),
+		Vector2(ANCHO_CALLE, fin_k - RING_Z_SUR), asfalto, linea, false)
 
 	## EL EJE EXTERIOR (12-9-2026): "integrar... un eje vial mejor conectado
 	## entre la zona industrial, el centro comercial y el estadio". Tenía
@@ -2412,6 +2427,7 @@ func _trafico() -> void:
 	var t := TraficoCiudad.new()
 	t.name = "Trafico"
 	add_child(t)
+	_karts_en_pista(t)
 
 	## La flota: los coches normales pesan mucho más que los de servicio -uno de
 	## cada cinco- porque si no el mapa parece una emergencia permanente.
@@ -2714,8 +2730,10 @@ func _zona_industrial() -> void:
 		var esc: PackedScene = load(ruta)
 		if esc != null:
 			naves.append(esc)
-	for i in range(naves.size()):
-		var nave: Node3D = (naves[i] as PackedScene).instantiate()
+	## Seis naves, repartidas entre los 16 modelos (con todos, la fila se
+	## salía del terreno por el fondo).
+	for i in range(mini(naves.size(), 6)):
+		var nave: Node3D = (naves[(i * 5 + 2) % naves.size()] as PackedScene).instantiate()
 		nave.scale = Vector3.ONE * 7.0
 		nave.position = base + Vector3(-32.0 + (i % 2) * 58.0, 0, -46.0 + (i / 2) * 56.0)
 		nave.rotation.y = PI * 0.5
@@ -2738,6 +2756,8 @@ func _zona_industrial() -> void:
 		nodo.rotation.y = 0.6
 		add_child(nodo)
 
+	## El desguace del fondo: piezas sueltas y pilas de ruedas del kit.
+	_desguace(base + Vector3(44.0, 0, 60.0), 5510)
 	var caja_esc: PackedScene = load("res://assets/ciudad/kenney_cars/box.glb")
 	if caja_esc != null:
 		var rng := RandomNumberGenerator.new()
@@ -2867,6 +2887,11 @@ func _en_frente_urbano(x: float, z: float) -> bool:
 	for r in _frentes:
 		if r.grow(4.0).has_point(Vector2(x, z)):
 			return true
+	## Ni sobre ninguna calle con sus aceras (ramales incluidos).
+	for v in _vias:
+		var rv := _rect_en(v, true)
+		if x > rv[0] - 8.0 and x < rv[1] + 8.0 and z > rv[2] - 8.0 and z < rv[3] + 8.0:
+			return true
 	return false
 
 func _frentes_urbanos() -> void:
@@ -2974,6 +2999,8 @@ func _hueco_urbano(eje: Vector3, afuera: Vector3, fondo: float) -> bool:
 	var lejos: Vector3 = eje + afuera * (fondo + 30.0)
 	if absf(eje.z - RING_Z_SUR) < 1.0 and absf(eje.x - BARRIO_EN.x) < 70.0:
 		return true
+	if absf(eje.z - RING_Z_SUR) < 1.0 and absf(eje.x - KARTING_EN.x) < ANCHO_CALLE + 6.0:
+		return true                   # el acceso al karting
 	## Los cruces con la circunvalación exterior (z = -282 y z = 262).
 	if absf(absf(eje.x) - RING_X) < 1.0 and (absf(eje.z - EX_N) < ANCHO_CALLE + 6.0 or absf(eje.z - EX_S) < ANCHO_CALLE + 6.0):
 		return true
@@ -3112,6 +3139,173 @@ func _finca_enredadera(centro: Vector3, tam: Vector2) -> void:
 		cp.position = pos + Vector3(0, h, 0)
 		add_child(cp)
 
+
+## ============================================================================
+##  LO QUE FALTABA DEL CAR KIT (26-9-2026)
+## ============================================================================
+## "Hay modelos 3D de los packs de ciudad que no se implementaron". Del Car Kit
+## CC0 de Kenney se usaban 17 de 50. Ahora: camiones y patrulla en el tráfico,
+## los dos deportivos en las plazas VIP del aparcamiento, los cinco karts en su
+## pista (dando vueltas de verdad), y las ruedas, conos y piezas sueltas en el
+## taller del karting y en el desguace de la zona industrial.
+const KARTS := ["kart-oobi", "kart-oodi", "kart-ooli", "kart-oopi", "kart-oozi"]
+const RUEDAS := ["wheel-default", "wheel-dark", "wheel-racing", "wheel-truck", "wheel-tractor-back", "wheel-tractor-front"]
+const PIEZAS := ["debris-bolt", "debris-bumper", "debris-door-window", "debris-door", "debris-drivetrain-axle",
+	"debris-drivetrain", "debris-nut", "debris-plate-a", "debris-plate-b", "debris-plate-small-a",
+	"debris-plate-small-b", "debris-spoiler-a", "debris-spoiler-b", "debris-tire"]
+const KARTING_EN := Vector3(118.0, 0, 468.0)
+
+static func _extra(nombre: String) -> PackedScene:
+	var r := "res://assets/ciudad/kenney_cars_extra/%s.glb" % nombre
+	return load(r) if ResourceLoader.exists(r) else null
+
+func _poner_extra(nombre: String, pos: Vector3, esc: float, giro: float) -> Node3D:
+	var e := _extra(nombre)
+	if e == null:
+		return null
+	var n: Node3D = e.instantiate()
+	n.scale = Vector3.ONE * esc
+	n.position = pos
+	n.rotation.y = giro
+	add_child(n)
+	return n
+
+## Pilas de ruedas y piezas sueltas alrededor de `centro`.
+func _desguace(centro: Vector3, semilla: int) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = semilla
+	for i in 6:
+		var p := centro + Vector3(rng.randf_range(-12.0, 12.0), 0, rng.randf_range(-8.0, 8.0))
+		var rueda: String = RUEDAS[rng.randi() % RUEDAS.size()]
+		for k in rng.randi_range(2, 5):
+			var r := _poner_extra(rueda, p + Vector3(0, k * 0.55, 0), 2.2, rng.randf() * TAU)
+			if r != null:
+				r.rotation.x = PI * 0.5
+	for i in 18:
+		_poner_extra(PIEZAS[rng.randi() % PIEZAS.size()],
+			centro + Vector3(rng.randf_range(-14.0, 14.0), 0, rng.randf_range(-10.0, 10.0)),
+			rng.randf_range(2.0, 2.8), rng.randf() * TAU)
+
+## La pista de karting, al sur del anillo: óvalo de asfalto con piano de
+## colores, barrera de neumáticos, conos, boxes con su taller, y los cinco
+## karts del kit dando vueltas (una ruta más de `TraficoCiudad`).
+func _karting() -> void:
+	if _extra(KARTS[0]) == null:
+		return
+	var c := KARTING_EN
+	var largo := 70.0
+	var radio := 22.0
+	var ancho_p := 9.0
+	var asf := Texturas.asfalto(Color(0.15, 0.15, 0.16), 77)
+	var cesp := StandardMaterial3D.new()
+	cesp.albedo_color = Color(0.2, 0.42, 0.16)
+	## El óvalo: tramo recto + dos curvas (discos), y dentro el césped.
+	for capa: Array in [[radio, asf, 0.05], [radio - ancho_p, cesp, 0.07]]:
+		var r: float = capa[0]
+		var bm := BoxMesh.new()
+		bm.size = Vector3(largo, 0.1, r * 2.0)
+		var caja := MeshInstance3D.new()
+		caja.mesh = bm
+		caja.material_override = capa[1]
+		caja.position = c + Vector3(0, capa[2], 0)
+		add_child(caja)
+		for s in [-1.0, 1.0]:
+			var cm := CylinderMesh.new()
+			cm.top_radius = r
+			cm.bottom_radius = r
+			cm.height = 0.1
+			cm.radial_segments = 40
+			var disco := MeshInstance3D.new()
+			disco.mesh = cm
+			disco.material_override = capa[1]
+			disco.position = c + Vector3(s * largo * 0.5, capa[2], 0)
+			add_child(disco)
+	## Piano rojo y blanco en el borde interior de las rectas.
+	var rojo := StandardMaterial3D.new()
+	rojo.albedo_color = Color(0.85, 0.12, 0.12)
+	var blanco := StandardMaterial3D.new()
+	blanco.albedo_color = Color(0.95, 0.95, 0.95)
+	for s in [-1.0, 1.0]:
+		for k in 14:
+			var pz := MeshInstance3D.new()
+			var pb := BoxMesh.new()
+			pb.size = Vector3(largo / 14.0, 0.06, 0.8)
+			pz.mesh = pb
+			pz.material_override = rojo if k % 2 == 0 else blanco
+			pz.position = c + Vector3(-largo * 0.5 + (k + 0.5) * largo / 14.0, 0.12, s * (radio - ancho_p - 0.4))
+			add_child(pz)
+	## Barrera de neumáticos por fuera, a lo largo de todo el contorno.
+	var n_bar := 64
+	for k in n_bar:
+		var t := float(k) / float(n_bar)
+		var p := _en_ovalo(c, largo, radio + 1.5, t)
+		_poner_extra("wheel-dark" if k % 3 != 0 else "wheel-default", p, 2.4, 0.0)
+		_poner_extra("wheel-dark", p + Vector3(0, 0.5, 0), 2.4, 0.4)
+	## Conos en las curvas.
+	for k in 10:
+		var t2 := 0.2 + 0.05 * k if k < 5 else 0.7 + 0.05 * (k - 5)
+		_poner_extra("cone-flat" if k % 2 == 0 else "cone-flat", _en_ovalo(c, largo, radio - ancho_p - 1.2, t2), 2.5, 0.0)
+	## Boxes: una nave baja con el taller de ruedas y piezas al lado.
+	var boxes := MeshInstance3D.new()
+	var bb := BoxMesh.new()
+	bb.size = Vector3(26.0, 5.0, 9.0)
+	boxes.mesh = bb
+	boxes.material_override = Texturas.hormigon(Color(0.7, 0.7, 0.72), 88)
+	boxes.position = c + Vector3(0, 2.5, -radio - 9.0)
+	add_child(boxes)
+	var techo := MeshInstance3D.new()
+	var tb := BoxMesh.new()
+	tb.size = Vector3(28.0, 0.4, 11.0)
+	techo.mesh = tb
+	techo.material_override = rojo
+	techo.position = c + Vector3(0, 5.2, -radio - 9.0)
+	add_child(techo)
+	_desguace(c + Vector3(largo * 0.5 + radio + 10.0, 0, -radio - 6.0), 9021)
+	_rotulo(c + Vector3(0, 10.0, -radio - 9.0), "🏎 Karting", Color(1, 1, 1), 26)
+	_frentes.append(Rect2(c.x - largo * 0.5 - radio - 18.0, c.z - radio - 16.0, largo + radio * 2.0 + 36.0, radio * 2.0 + 20.0))
+	## Los cinco karts en carrera.
+	var ruta := PackedVector3Array()
+	for k in 48:
+		ruta.append(_en_ovalo(c, largo, radio - ancho_p * 0.5, float(k) / 48.0) + Vector3(0, 0.12, 0))
+	_karts_pendientes = {"ruta": ruta}
+
+## Un punto del óvalo (rectas en X, curvas en los extremos), `t` de 0 a 1.
+static func _en_ovalo(c: Vector3, largo: float, r: float, t: float) -> Vector3:
+	var recta := largo
+	var curva := PI * r
+	var total := 2.0 * recta + 2.0 * curva
+	var d := fposmod(t, 1.0) * total
+	if d < recta:
+		return c + Vector3(-largo * 0.5 + d, 0, -r)
+	d -= recta
+	if d < curva:
+		var a := d / r
+		return c + Vector3(largo * 0.5 + sin(a) * r, 0, -cos(a) * r)
+	d -= curva
+	if d < recta:
+		return c + Vector3(largo * 0.5 - d, 0, r)
+	d -= recta
+	var a2 := d / r
+	return c + Vector3(-largo * 0.5 - sin(a2) * r, 0, cos(a2) * r)
+
+var _karts_pendientes: Dictionary = {}
+
+## Llamado desde `_trafico()`, cuando ya existe el tráfico.
+func _karts_en_pista(t: TraficoCiudad) -> void:
+	if _karts_pendientes.is_empty():
+		return
+	var id := t.agregar_ruta(_karts_pendientes["ruta"])
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 707
+	for i in KARTS.size():
+		var e := _extra(KARTS[i])
+		if e == null:
+			continue
+		var n: Node3D = e.instantiate()
+		n.scale = Vector3.ONE * 2.2
+		t.agregar_vehiculo(n, id, float(i) * 22.0, rng.randf_range(11.0, 15.0), 0.0, 0.0)
+	_karts_pendientes = {}
+
 # ---------------------------------------------------------------- perimetro
 
 func _perimetro() -> void:
@@ -3173,6 +3367,10 @@ func _solar_libre(e: Dictionary, pos: Vector3) -> void:
 
 ## Una obra se VE: andamio alrededor, subiendo con el avance, y una grúa.
 func _obra_en_curso(pos: Vector3, ancho: float, fondo: float, alto_final: float, avance: float) -> void:
+	## Conos de obra alrededor (del Car Kit, 26-9-2026).
+	for k in 12:
+		var a := TAU * float(k) / 12.0
+		_poner_extra("cone-flat", pos + Vector3(cos(a) * (ancho * 0.5 + 4.0), 0, sin(a) * (fondo * 0.5 + 4.0)), 2.4, a)
 	var tubo := StandardMaterial3D.new()
 	tubo.albedo_color = Color(0.85, 0.62, 0.18)
 	tubo.roughness = 0.6
