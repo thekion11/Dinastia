@@ -1,6 +1,6 @@
 # DINASTÍA en Godot — estado de la mudanza
 
-## SEXTA RONDA, TANDA D (1): CALENDARIO, FESTIVIDADES Y GLOBO (26-9-2026)
+## SEXTA RONDA, TANDA D (1): CALENDARIO, FESTIVIDADES, GLOBO Y POLÍTICA (26-9-2026)
 
 - **Calendario de cada país** (`nucleo/calendario.gd`): independencias y fiestas patrias de los
   24 países, el 1 de mayo (o el Labor Day de EE. UU.) y las fechas de memoria.
@@ -24,7 +24,16 @@
     - el lado de día se veía negro, porque dependía de una luz de escena que venía de atrás;
     - los pines estaban 90° corridos respecto de la textura (Australia caía en el océano
       Índico).
-- Pruebas: `_probar_calendario_c13`; capturas `captura_calendario` y `captura_globo_c14`.
+- **Política y Estado (C15)** (`nucleo/politica.gd`):
+  - Estructura real de cada país (presidencial, semipresidencial, monarquía parlamentaria,
+    república parlamentaria, monarquía absoluta) y años de mandato.
+  - Partidos y dirigentes **inventados**, con posturas neutras que solo tocan al club:
+    obras, seguridad en estadios, impuestos o deporte base. Cada cuatro semanas se notan en la
+    caja.
+  - Elecciones con campaña dos semanas antes y resultado; Arabia Saudí no vota.
+  - El mentor explica cómo se gobierna el país. Se ve en Federación.
+- Pruebas: `_probar_calendario_c13`, `_probar_politica_c15`; capturas `captura_calendario`,
+  `captura_globo_c14` y `captura_gobierno`.
 
 ## SEXTA RONDA, TANDA C: INSTALACIONES, CANTERA, RAMAS, FICHA DEL JUGADOR (26-9-2026)
 

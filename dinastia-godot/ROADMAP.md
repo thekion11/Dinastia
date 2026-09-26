@@ -138,7 +138,7 @@ presupuesto, noticias e impacto en la reputación.
 Relieve, fronteras y capitales, países con datos (liga, clubes, ranking) y clic para ver la
 ficha del país.
 
-### C15. Política y Estado 🟡
+### C15. Política y Estado 🟡 — HECHO (26-9), partidos y personas ficticios
 - **Elecciones según la estructura de cada país** (presidencial, parlamentaria, monarquía
   parlamentaria…) y una conversación breve del mentor que explica cómo funciona ese Estado.
 - Gobiernos con distintas posturas que influyen en el fútbol y la ciudad: subvenciones,
