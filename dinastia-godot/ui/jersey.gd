@@ -58,6 +58,10 @@ static var _cache_svg: Dictionary = {}
 ## que `Portada.textura()`: se pide el doble de resolución real y se deja que
 ## el control la encoja.
 static func textura_procedural(c1: String, c2: String, estilo: String, ancho_px: int = 128) -> Texture2D:
+	## Los diseños nuevos del diseñador (26-9-2026) los dibuja `DisenosKit`.
+	if not KITS.has(estilo) and DisenosKit.claves().has(estilo):
+		var cols: Array[Color] = [Color(c1), Color(c2), Color(c2).darkened(0.35), Color.WHITE, Color("111111")]
+		return DisenosKit.textura_camiseta(estilo, cols, 1, ancho_px)
 	var clave := "%s_%s_%s_%d" % [c1, c2, estilo, ancho_px]
 	if _cache_svg.has(clave):
 		return _cache_svg[clave]
@@ -126,5 +130,9 @@ static func textura(club: Club, cual: int = 0, ancho_px: int = 128, custom_kit: 
 	## del club: es toda la gracia de la pantalla de identidad -el uniforme no
 	## arrastra el color del escudo ni el del menu-.
 	var estilo := custom_kit if custom_kit != "" else club.kit_estilo
+	## Con la equipación del diseñador, sus cinco colores y su ribete.
+	if cual == 0 and custom_kit == "" and not club.kit_x.is_empty():
+		var kx := DisenosKit.kit_de_club(club)
+		return DisenosKit.textura_camiseta(String(kx["dis"]), DisenosKit.colores(kx), int(kx.get("trim", 1)), ancho_px)
 	return textura_procedural(club.color_kit1(), club.color_kit2(),
 		kit_de(club, estilo), ancho_px)

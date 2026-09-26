@@ -13072,6 +13072,16 @@ func _cargar_preferencias() -> void:
 
 func _pintar_identidad(c: Club) -> void:
 
+	## EL DISEÑADOR DE EQUIPACIÓN (26-9-2026): 70 diseños, 5 colores, pantalón,
+	## medias, 30 botines, accesorios y color de números, con vista 3D.
+	var bd := Button.new()
+	bd.text = "🎽  Abrir el diseñador de equipación"
+	bd.custom_minimum_size = Vector2(0, 44)
+	bd.add_theme_font_size_override("font_size", 16)
+	bd.pressed.connect(func() -> void:
+		var dz := DisenadorKit.abrir(self, mundo)
+		dz.cerrado.connect(_refrescar))
+	_lista_gente.add_child(bd)
 	_lista_gente.add_child(HSeparator.new())
 	var t := _texto(11, COL_SUAVE)
 	t.text = "🎨 IDENTIDAD VISUAL"
