@@ -37,6 +37,18 @@
 - **Modelos 3D pendientes**: `visor/estadio_extras.gd` (andamio con red y grúa torre durante las
   obras, palcos VIP, cabina de prensa, museo y tienda según lo construido, y la mascota del
   club) y `visor/peaton.gd` (peatones por las aceras de la ciudad).
+- **Jugadores fijos con guiño** (pedido: *"en cada partida los nombres de jugadores cambian;
+  deberían ser fijos y dar a entender a qué jugador representa, junto a sus medias"*):
+  - `herramientas/jugadores_guino.py` genera, para la base ficticia, las mismas plantillas que
+    el pack real (2.853 jugadores en 256 clubes: puesto, edad, media y país) con un nombre de
+    guiño: el nombre de pila se queda y el apellido cambia una consonante por otra de sonido
+    parecido y la primera vocal interior ("Arturo Bedal", "Lionel Misi"). Es determinista y
+    ningún guiño coincide con un nombre real (se comprueba contra la lista del pack);
+  - `base_ficticia.py` lo vuelca en `REALES` de `tablas.json`; `Reales.aplicar()` ya lo usa en
+    las dos bases;
+  - el potencial y los atributos de esos jugadores salen de su nombre (se siembra `Azar` y se
+    devuelve su estado): mismos nombres, medias y potenciales en cualquier partida;
+  - los 128 clubes sin plantilla en la lista siguen generando sus jugadores con la semilla.
 - **Plan**: octava ronda en el ROADMAP, con la lista larga del usuario (E9-E25) y lo que piden
   los foros de FM26, FC 26, Soccer Manager y Top Eleven.
 - **Pruebas nuevas en el banco**: diseños de 2 y 3 colores, patrocinadores, portafolio (conteos,

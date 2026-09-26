@@ -36,6 +36,7 @@ Reglas de los nombres ficticios (comprobadas al final, el script falla si no):
 """
 import hashlib
 import historia_clubes
+import jugadores_guino
 import json
 import os
 import sys
@@ -683,8 +684,11 @@ def main():
         if fila[0] in PROVEEDORES:
             nueva[1] = PROVEEDORES[fila[0]]
         fic["PROVEEDORES"].append(nueva)
-    # Sin jugadores reales ni fotos de equipaciones reales.
-    fic["REALES"] = {}
+    # Sin fotos de equipaciones reales. Las plantillas SÍ van, con nombres de
+    # guiño (26-9-2026, `jugadores_guino.py`): mismos puestos, edades, medias y
+    # países, así los jugadores son fijos de una partida a otra y se reconoce a
+    # quién representan sin llevar su nombre.
+    fic["REALES"] = jugadores_guino.tabla_base(real["REALES"], CLUBES, limpiar)
     fic["EQUIP_REAL"] = {}
 
     # Bolsas de nombres (viven solo en la base: no son datos reales).
@@ -712,6 +716,8 @@ def main():
           % (len(LIGAS), len(CONFED), len(COPAS), len(ARBITROS)))
     print("jugadores reales que pasan al pack: %d"
           % sum(len(v) for v in real["REALES"].values()))
+    print("jugadores con guiño en la base: %d en %d clubes"
+          % (sum(len(v) for v in fic["REALES"].values()), len(fic["REALES"])))
 
     if solo_comprobar:
         print("--comprobar: nada escrito")
