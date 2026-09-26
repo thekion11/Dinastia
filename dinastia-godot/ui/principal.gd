@@ -2882,6 +2882,12 @@ func _anotar(titulo: String, cuerpo: String) -> void:
 
 func _refrescar() -> void:
 	var c := mundo.mi_club()
+	## Tu personaje 3D, a mano para la banda de cualquier estadio (la vista
+	## del partido no tiene el mundo delante).
+	PersonajeDT.del_usuario = mundo.roles.aspecto_3d()
+	PersonajeDT.club_usuario = c.id if c != null else ""
+	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal.
+	Genero.fijar(String(PersonajeDT.aspecto(PersonajeDT.del_usuario)["cuerpo"]) == "female")
 	var liga := _liga_de(c)
 	var acento_antes := COL_ACENTO
 	COL_ACENTO = _acento_de(c)
@@ -14973,7 +14979,10 @@ func _abrir_penales() -> void:
 	MinijuegoPenales.mostrar(self, mundo)
 
 func _pintar_carrera(r: Roles) -> void:
-	PanelAspectoDT.pintar(_lista_club, r, _texto, {"suave": COL_SUAVE, "acento": COL_ACENTO}, _refrescar)
+	PanelAspectoDT.pintar(_lista_club, r, _texto, {"suave": COL_SUAVE, "acento": COL_ACENTO}, _refrescar,
+		func() -> void:
+			var cp := CreadorPersonaje.abrir(self, mundo)
+			cp.cerrado.connect(_refrescar))
 	_lista_club.add_child(HSeparator.new())
 	var t := _texto(11, COL_SUAVE); t.text = "TU CARRERA"
 	_lista_club.add_child(t)
