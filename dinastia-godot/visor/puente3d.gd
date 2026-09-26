@@ -42,6 +42,9 @@ static func jugador(j: Jugador) -> Dictionary:
 		## campo no se parecía al de la ficha. Ahora sale de `Cara.look_de()`,
 		## que además respeta lo que el editor haya cambiado a mano.
 		"look": Cara.look_de(j),
+		## Para la barra de energía sobre el nombre (26-9-2026).
+		"fisico": j.fisico,
+		"forma": j.forma,
 	}
 
 ## El once entero: los ids en orden y el diccionario que los describe. El

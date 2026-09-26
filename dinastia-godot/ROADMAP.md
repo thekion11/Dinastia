@@ -12,8 +12,9 @@ Siguiente, en este orden:
 1. ✅ **Estadios según el real de cada club** (E9).
 2. ✅ **Modos de juego a medias** (E16): Crear tu Club, Retos (5) y Fondo de Inversión jugables.
    Queda **Carrera de Jugador** (grande: se juega como un futbolista, no como DT).
-3. **Pendientes visuales del estadio**: bandejas de verdad, grada, camarógrafos y guardias,
-   nombre flotante con barra de estado.
+3. ✅ **Pendientes visuales del estadio**: camarógrafos como personas con polo de prensa, seis
+   guardias de seguridad de espaldas al campo y barra de energía bajo cada nombre (las bandejas
+   reales y la grada ya estaban).
 4. **Casa moderna y móvil 3D** en Mi Vida y cinemáticas (solo copia local si la licencia no se
    confirma).
 5. **Bloques 37-50 del plan maestro**: mercado avanzado, insolvencia, reglamento, selecciones,
@@ -785,8 +786,8 @@ Detalle completo en `LEEME.md`, arriba de todo.
   - [ ] **Dueño**: confirmar la fuente de los 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva,
     texturas de la Tierra) o reemplazarlos. Lista en `LICENCIAS.md`.
 - [x] Equipación pintada por shader, nombres sobre los jugadores y la columna misteriosa resuelta.
-  - [ ] Pendiente: la grada con textura estirada. Mejoró al quitarle las sombras, pero no se rehízo
-    su textura.
+  - [x] La grada con textura estirada: resuelto con las bandejas reales y las esquinas en diagonal
+    (comprobado en captura el 26-9-2026).
 - [x] Tutorial guiado por modo, rehecho como tutorial inmersivo: prólogo, mentor con datos de tu partida y misiones por modo.
 - [x] Modelo Ronaldo (`futbolista_cr7`) borrado del proyecto, con sus fuentes y su código.
 - [x] Cubierta de los nombres reales activa con el pack real ("C0lo-C0lo"); las caras reales se mantienen.

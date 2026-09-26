@@ -2497,6 +2497,10 @@ static func _camarografos(root: Node3D) -> void:
 
 static func _un_camarografo(root: Node3D, pos: Vector3, chaleco: Material, pantalon: Material, piel: Material, equipo: Material) -> void:
 	var base := Node3D.new()
+	## `VistaEstadio` busca este nombre para poner un operador de verdad en
+	## lugar del maniquí de cajas (26-9-2026); los trozos con meta "cuerpo" son
+	## los que se ocultan, la cámara y el monopié se quedan.
+	base.name = "Camarografo"
 	base.position = pos
 	## Siempre mirando al centro del campo: nadie graba de espaldas a la jugada.
 	var hacia := -pos
@@ -2517,6 +2521,8 @@ static func _un_camarografo(root: Node3D, pos: Vector3, chaleco: Material, panta
 			_box(base, Vector3(0, 1.15, 0.34), Vector3(0.30, 0.22, 0.55), equipo),
 		]:
 		m.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if m.material_override != equipo:
+			m.set_meta("cuerpo", true)
 	var cabeza := MeshInstance3D.new()
 	var sm := SphereMesh.new()
 	sm.radius = 0.14
@@ -2525,6 +2531,7 @@ static func _un_camarografo(root: Node3D, pos: Vector3, chaleco: Material, panta
 	cabeza.position = Vector3(0, 1.55, 0)
 	cabeza.material_override = piel
 	cabeza.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	cabeza.set_meta("cuerpo", true)
 	base.add_child(cabeza)
 
 ## Boca del tunel de vestuarios, con el arco de entrada que trajo el usuario si
