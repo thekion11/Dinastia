@@ -78,6 +78,8 @@ var federacion: Federacion = Federacion.new()
 var estadio: EstadioPropio = EstadioPropio.new()
 ## El reto elegido en el menú, si lo hay (`Retos`): {id, club, anio, juzgado, cumplido}.
 var reto: Dictionary = {}
+## El fondo de inversión (modo "fondo"); null en los demás modos.
+var fondo: FondoInversion = null
 var prensa: Prensa
 var medico: Medico
 ## Los desafíos activos de esta partida (claves de la tabla `DESAFIOS`), del
@@ -1107,6 +1109,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		charlas.semana(mi_club(), anio, semana)
 	if trabajadores != null and mi_club() != null:
 		trabajadores.semana(mi_club(), obras, anio, semana, prensa)
+	if fondo != null:
+		fondo.semana(self)
 	if eventos_cantera != null and mi_club() != null:
 		eventos_cantera.semana(academia, mi_club(), anio, semana)
 	if calendario != null and mi_club() != null:
