@@ -1194,6 +1194,9 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	_pantallas(root, str(est.get("pantalla", "dos")), dz, alto, est, mi, abierta)
 	if mi != null:
 		_escudo_tribuna(root, mi, str(est.get("escudoDonde", "sin")), dx, dz, alto)
+	## Obras con andamios y grúa, palcos, prensa, museo, tienda y la mascota
+	## (26-9-2026, `EstadioExtras`).
+	EstadioExtras.construir(root, est, dx, dz, alto, niveles, mi)
 
 ## LA ESQUINA, COMO GRADA DE VERDAD (23-9-2026).
 ##
