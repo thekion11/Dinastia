@@ -976,6 +976,10 @@ static func uniforms(kit: Dictionary, dorsal: int) -> Dictionary:
 		"dorsal": dorsal, "color_num": _col(kit.get("num", "ffffff")),
 		"cuello": int(kit.get("cuello", 0)),
 		"civil": bool(kit.get("civil", false)),
+		## La ropa de calle tapa casi todo el relieve; la camiseta de juego,
+		## ajustada, deja ver algo de forma (26-9-2026).
+		"alisar": 0.9 if bool(kit.get("civil", false)) else 0.55,
+		"holgura": 0.03 if bool(kit.get("civil", false)) else 0.02,
 	}
 	for a: Array in ACCESORIOS:
 		var k := String(a[0])

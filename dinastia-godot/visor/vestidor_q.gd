@@ -329,8 +329,15 @@ static func _con_reposo(mi: MeshInstance3D, superficie: int) -> void:
 				col[i] = Color(clampf((p.z + 0.25) / 0.5, 0.0, 1.0), 0.0, 0.0, 1.0)
 			arr[Mesh.ARRAY_TEX_UV2] = uv2
 			arr[Mesh.ARRAY_COLOR] = col
+			var liso := _alisado(pos, arr[Mesh.ARRAY_NORMAL], arr[Mesh.ARRAY_INDEX])
+			arr[Mesh.ARRAY_CUSTOM0] = liso[0]
+			arr[Mesh.ARRAY_CUSTOM1] = liso[1]
 		var formas := original.surface_get_blend_shape_arrays(s)
-		nueva.add_surface_from_arrays(original.surface_get_primitive_type(s), arr, formas)
+		var banderas := 0
+		if s == superficie:
+			banderas = (Mesh.ARRAY_CUSTOM_RGBA_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT) \
+				| (Mesh.ARRAY_CUSTOM_RGB_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM1_SHIFT)
+		nueva.add_surface_from_arrays(original.surface_get_primitive_type(s), arr, formas, {}, banderas)
 		## Sin pantalla (banco headless) el servidor falso no guarda superficies.
 		if nueva.get_surface_count() <= s:
 			return
@@ -339,6 +346,92 @@ static func _con_reposo(mi: MeshInstance3D, superficie: int) -> void:
 	nueva.set_meta("con_reposo", true)
 	_mallas_reposo[id] = nueva
 	mi.mesh = nueva
+
+## LA ROPA TAPA LOS MÚSCULOS (26-9-2026, pedido: "que la ropa le tape los
+## músculos"). El cuerpo del pack es de superhéroe: pectorales, abdominales y
+## bíceps marcados. Pintada encima, la camiseta parecía body-paint. Aquí se
+## calcula, UNA vez por malla, la misma superficie ALISADA (suavizado de
+## Taubin, que no encoge el volumen): para cada vértice, su normal alisada y
+## cuánto habría que sacarlo hacia fuera para tapar el hueco entre músculos.
+## El shader lo usa solo donde hay tela. Devuelve [CUSTOM0, CUSTOM1]:
+## CUSTOM0 = normal alisada (xyz) + relleno (w); CUSTOM1 = normal de reposo.
+static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Array:
+	var n := pos.size()
+	var c0 := PackedFloat32Array()
+	var c1 := PackedFloat32Array()
+	c0.resize(n * 4)
+	c1.resize(n * 3)
+	if not (nor is PackedVector3Array) or not (idx is PackedInt32Array) or n == 0:
+		return [c0, c1]
+	var normales: PackedVector3Array = nor
+	var indices: PackedInt32Array = idx
+	## Soldar los vértices duplicados en las costuras de UV (misma posición).
+	var id_de := {}
+	var soldado := PackedInt32Array()
+	soldado.resize(n)
+	var unicos := PackedVector3Array()
+	for i in n:
+		var k: Vector3i = Vector3i((pos[i] * 10000.0).round())
+		if not id_de.has(k):
+			id_de[k] = unicos.size()
+			unicos.append(pos[i])
+		soldado[i] = int(id_de[k])
+	var m := unicos.size()
+	var vecinos: Array[PackedInt32Array] = []
+	vecinos.resize(m)
+	for t in range(0, indices.size() - 2, 3):
+		var a := soldado[indices[t]]
+		var b := soldado[indices[t + 1]]
+		var c := soldado[indices[t + 2]]
+		for par: Array in [[a, b], [b, c], [c, a]]:
+			var u: int = par[0]
+			var w: int = par[1]
+			if not vecinos[u].has(w):
+				vecinos[u].append(w)
+			if not vecinos[w].has(u):
+				vecinos[w].append(u)
+	## Taubin: un paso que encoge (lambda) y otro que infla (mu).
+	var p := unicos.duplicate()
+	for it in 24:
+		var f: float = 0.55 if it % 2 == 0 else -0.58
+		var q := p.duplicate()
+		for i in m:
+			var vs: PackedInt32Array = vecinos[i]
+			if vs.is_empty():
+				continue
+			var media := Vector3.ZERO
+			for v in vs:
+				media += p[v]
+			media /= float(vs.size())
+			q[i] = p[i] + (media - p[i]) * f
+		p = q
+	## Normales de la superficie alisada.
+	var ns := PackedVector3Array()
+	ns.resize(m)
+	for t in range(0, indices.size() - 2, 3):
+		var a2 := soldado[indices[t]]
+		var b2 := soldado[indices[t + 1]]
+		var c2 := soldado[indices[t + 2]]
+		var fn := (p[b2] - p[a2]).cross(p[c2] - p[a2])
+		ns[a2] += fn
+		ns[b2] += fn
+		ns[c2] += fn
+	for i in n:
+		var w2 := soldado[i]
+		var nr: Vector3 = normales[i]
+		var sn := ns[w2].normalized()
+		## El orden de los triángulos decide el signo: que apunte como la real.
+		if sn.dot(nr) < 0.0:
+			sn = -sn
+		var relleno: float = (p[w2] - pos[i]).dot(nr)
+		c0[i * 4] = sn.x
+		c0[i * 4 + 1] = sn.y
+		c0[i * 4 + 2] = sn.z
+		c0[i * 4 + 3] = clampf(relleno, 0.0, 0.03)
+		c1[i * 3] = nr.x
+		c1[i * 3 + 1] = nr.y
+		c1[i * 3 + 2] = nr.z
+	return [c0, c1]
 
 ## El tono del jugador sobre el de la textura, en espacio lineal (el shader
 ## multiplica ya en lineal). Acotado: un tono extremo no puede quemar la piel.
