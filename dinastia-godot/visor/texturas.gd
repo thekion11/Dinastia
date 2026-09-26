@@ -219,6 +219,51 @@ static func baldosa(tinte: Color = Color(0.72, 0.71, 0.68), semilla: int = 51) -
 	_cache[clave] = m
 	return m
 
+## ENREDADERA (26-9-2026): hojas superpuestas de varios verdes sobre fondo
+## oscuro, con alguna flor. Para el muro que tapa la casa del barrio. 256 px =
+## 2 m, sin costuras (las hojas que se salen por un borde entran por el otro).
+static func enredadera(semilla: int = 71) -> StandardMaterial3D:
+	var clave := "enred|%d" % semilla
+	if _cache.has(clave):
+		return _cache[clave]
+	var n := 256
+	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
+	img.fill(Color(0.07, 0.15, 0.05))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = semilla
+	for k in 1400:
+		var cx := rng.randi() % n
+		var cy := rng.randi() % n
+		var r: int = rng.randi_range(3, 7)
+		var ang := rng.randf() * TAU
+		var tono := Color(rng.randf_range(0.08, 0.22), rng.randf_range(0.24, 0.46), rng.randf_range(0.06, 0.14))
+		if k > 1300:
+			tono = tono.lightened(0.25)
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				## Hoja: elipse girada, más clara hacia el centro.
+				var u := dx * cos(ang) + dy * sin(ang)
+				var w := -dx * sin(ang) + dy * cos(ang)
+				var q := (u * u) / float(r * r) + (w * w) / float(r * r) * 3.0
+				if q <= 1.0:
+					img.set_pixel(posmod(cx + dx, n), posmod(cy + dy, n), tono.lightened((1.0 - q) * 0.15))
+	for k in 40:
+		var fx := rng.randi() % n
+		var fy := rng.randi() % n
+		var flor := Color(0.95, 0.95, 0.9) if k % 3 != 0 else Color(0.7, 0.45, 0.85)
+		for d: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]:
+			img.set_pixel(posmod(fx + d.x, n), posmod(fy + d.y, n), flor)
+	img.generate_mipmaps()
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = ImageTexture.create_from_image(img)
+	m.roughness = 0.85
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = true
+	m.uv1_scale = Vector3(0.5, 0.5, 0.5)
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_cache[clave] = m
+	return m
+
 ## Cesped: verde con manchas grandes (zonas mas secas) y grano fino encima.
 ## `tinte` (17-9-2026): igual que `asfalto()`, esta funcion no tenia ni un
 ## call site en todo el proyecto -escrita y nunca conectada- hasta que se

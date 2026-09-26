@@ -21,7 +21,8 @@ const RUTA_FAROLA := "res://assets/ciudad/farola.obj"
 ## Ver `dinastia-modelos-3d-usuario.md`: "ДОМ скетч" (casa boceto) y "Жилой
 ## комплекс" (complejo residencial), ambos en `recursos/modelos3d/`.
 const RUTA_OFICINA_DT := "res://assets/ciudad/oficina_dt.glb"
-const RUTA_COMPLEJO_EXTRA := "res://assets/ciudad/complejo_residencial.glb"
+## `complejo_residencial.glb` ya no se usa (26-9-2026): en su solar va la finca
+## amurallada con enredadera (`_finca_enredadera`), a pedido del usuario.
 
 ## Los cinco rascacielos CC0 de Kenney (`recursos/modelos3d/cc0_web/LEEME.md`
 ## tiene la licencia completa: CC0, "City Kit Commercial" v2.1). Solo para el
@@ -110,6 +111,8 @@ func build(d: Dictionary) -> void:
 	_rotulos.name = "Rotulos"
 	_farolas_luz.clear()
 	_ventanas_mat.clear()
+	_vias.clear()
+	_frentes.clear()
 	_luminarias.clear()
 	_luz_color = _color_luces()
 
@@ -254,7 +257,9 @@ func _suelo() -> void:
 	## entre los campos. Es lo que ata el recinto al anillo de calles.
 	## 26-9-2026: la avenida de acceso es una calle completa como las demás
 	## (asfalto, marcas, bordillo y aceras), no un plano oscuro sin nada.
-	_via(Vector3(0, 0, 115), Vector2(14, 410), Texturas.asfalto(Color(0.17, 0.175, 0.185)), null, false)
+	## Llega hasta el anillo sur (antes se quedaba 22 m corta: una calle que
+	## no desembocaba en ninguna parte).
+	_via(Vector3(0, 0, (-90.0 + RING_Z_SUR) * 0.5), Vector2(14, RING_Z_SUR + 90.0), Texturas.asfalto(Color(0.17, 0.175, 0.185)), null, false)
 
 ## Arbolado alrededor del complejo. Es lo que mas hace por que la escena deje de
 ## parecer una maqueta: rompe la horizontal, da sombras y da ESCALA — sin nada
@@ -1378,6 +1383,63 @@ func _terminal_buses() -> void:
 
 # ---------------------------------------------------------------- aparcamiento
 
+## ============================================================================
+##  LOS COCHES (26-9-2026)
+## ============================================================================
+## "En nuestra ciudad están conduciendo mal": los del kit de Kenney tienen el
+## morro en +Z (medido: su lado largo es Z, y en una captura de perfil el capó
+## queda del lado +Z), pero el tráfico los giraba -90° creyendo que miraban a
+## X. Iban todos DE LADO, como cangrejos. Ahora cada coche se instancia ya
+## mirando a +Z y el tráfico no les suma ningún giro.
+##
+## Y "tenemos mejores": `coche1.fbx`/`coche2.fbx`, los realistas. Su licencia
+## no está verificada (ver `LICENCIAS.md`) y las versiones publicables no los
+## llevan (`export_presets.cfg`), así que entran SOLO si el archivo está: en la
+## copia de trabajo sí, en una versión exportada no, y ahí queda Kenney.
+## Vienen con Z hacia arriba y el morro en -X: se enderezan dentro de un nodo.
+const RUTA_COCHE_REAL_1 := "res://assets/ciudad/coche1.fbx"
+const RUTA_COCHE_REAL_2 := "res://assets/ciudad/coche2.fbx"
+
+static func flota_coches() -> Array:
+	var pool: Array = []
+	for par in [[RUTA_COCHE_REAL_1, "res://assets/ciudad/Car Texture 1.png"], [RUTA_COCHE_REAL_2, "res://assets/ciudad/Car Texture 2.png"]]:
+		if ResourceLoader.exists(par[0]):
+			var e: PackedScene = load(par[0])
+			if e != null:
+				var tex: Texture2D = load(par[1]) if ResourceLoader.exists(par[1]) else null
+				## Pesan como cuatro Kenney cada uno: son los que más se ven.
+				for _r in range(4):
+					pool.append({"esc": e, "escala": 1.1, "fbx": true, "tex": tex})
+	for ruta in RUTAS_COCHES_KENNEY:
+		var kc: PackedScene = load(ruta)
+		if kc != null:
+			pool.append({"esc": kc, "escala": 1.65, "fbx": false})
+	return pool
+
+## Un coche de la flota, ya con el morro hacia +Z y a su escala.
+static func instanciar_coche(par: Dictionary, rng: RandomNumberGenerator = null) -> Node3D:
+	var modelo: Node3D = (par["esc"] as PackedScene).instantiate()
+	if not bool(par.get("fbx", false)):
+		modelo.scale = Vector3.ONE * float(par["escala"])
+		return modelo
+	var raiz := Node3D.new()
+	raiz.add_child(modelo)
+	## Z arriba -> Y arriba (90° en X) y morro de -X a +Z (90° en Y).
+	modelo.basis = Basis(Vector3.UP, PI * 0.5) * Basis(Vector3.RIGHT, PI * 0.5)
+	raiz.scale = Vector3.ONE * float(par["escala"])
+	var mat := StandardMaterial3D.new()
+	if par.get("tex") != null:
+		mat.albedo_texture = par["tex"]
+	## Cada coche de un color: la textura lleva el detalle y el tinte la pintura.
+	var tintes := [Color.WHITE, Color(0.85, 0.2, 0.18), Color(0.2, 0.35, 0.75), Color(0.2, 0.2, 0.22), Color(0.75, 0.75, 0.78), Color(0.9, 0.75, 0.2), Color(0.25, 0.5, 0.3)]
+	if rng != null:
+		mat.albedo_color = tintes[rng.randi() % tintes.size()]
+	mat.roughness = 0.35
+	mat.metallic = 0.3
+	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
+		(mi as MeshInstance3D).material_override = mat
+	return raiz
+
 func _aparcamiento() -> void:
 	## Los coches salen del nivel de 'park': el jugador invierte en accesos y ve
 	## el aparcamiento llenarse. Sin nivel, un par de coches del personal.
@@ -1391,11 +1453,7 @@ func _aparcamiento() -> void:
 	## SOLO KENNEY DESDE EL 25-9-2026: `coche1.fbx`/`coche2.fbx` no tienen licencia
 	## verificada (ver `LICENCIAS.md`) y los 7 de Kenney son CC0. Las versiones
 	## publicables ni siquiera los llevan (`export_presets.cfg`).
-	var pool: Array = []
-	for ruta in RUTAS_COCHES_KENNEY:
-		var kc: PackedScene = load(ruta)
-		if kc != null:
-			pool.append({"esc": kc, "escala": 1.65})
+	var pool: Array = flota_coches()
 	if pool.is_empty():
 		return
 	var niv := int(datos.get("inst", {}).get("park", 0))
@@ -1421,15 +1479,15 @@ func _aparcamiento() -> void:
 			add_child(m)
 	for i in range(n):
 		var par: Dictionary = pool[rng.randi() % pool.size()]
-		var esc: PackedScene = par["esc"]
-		var nodo: Node3D = esc.instantiate()
+		var nodo: Node3D = instanciar_coche(par, rng)
 		## Al este del acceso, entre el estadio y los campos: es donde de verdad
 		## aparca la gente un día de partido, junto a la puerta.
 		var fila := i / 7
 		var col := i % 7
 		nodo.position = Vector3(97.0 + col * 5.5, 0, -62.0 + fila * 8.0)
-		nodo.rotation.y = PI * 0.5
-		nodo.scale = Vector3.ONE * float(par["escala"])
+		## A lo largo de la plaza pintada (que corre en Z), unos de frente y
+		## otros marcha atrás, como aparca la gente de verdad.
+		nodo.rotation.y = 0.0 if rng.randf() < 0.6 else PI
 		add_child(nodo)
 
 	_farolas()
@@ -1853,8 +1911,11 @@ func _calles() -> void:
 		_via(Vector3(medio, 0, pos.y), Vector2(largo, ANCHO_CALLE), asfalto, linea, true)
 
 	## Y el ramal al barrio residencial, que cuelga del tramo sur del anillo.
-	_via(Vector3(BARRIO_EN.x, 0, (RING_Z_SUR + BARRIO_EN.z) * 0.5),
-		Vector2(ANCHO_CALLE, BARRIO_EN.z - RING_Z_SUR + ANCHO_CALLE), asfalto, linea, false)
+	## Termina delante del portón de la finca (la acera del fondo de saco
+	## queda justo ante la verja).
+	var fin_barrio: float = FINCA_PORTON_Z - BORDILLO - ACERA
+	_via(Vector3(BARRIO_EN.x, 0, (RING_Z_SUR + fin_barrio) * 0.5),
+		Vector2(ANCHO_CALLE, fin_barrio - RING_Z_SUR), asfalto, linea, false)
 
 	## EL EJE EXTERIOR (12-9-2026): "integrar... un eje vial mejor conectado
 	## entre la zona industrial, el centro comercial y el estadio". Tenía
@@ -1885,6 +1946,7 @@ func _calles() -> void:
 		_cebra(Vector3(RING_X * signf(ppos.x), 0, ppos.y), true, cebra)
 	_cebra(Vector3(0, 0, RING_Z_SUR), false, cebra)
 	_cebra(Vector3(BARRIO_EN.x, 0, RING_Z_SUR), false, cebra)
+	_construir_vias()
 	_farolas_anillo()
 
 ## Farolas a lo largo del anillo, por el lado de fuera. Cumplen dos funciones y
@@ -1909,7 +1971,16 @@ func _farolas_anillo() -> void:
 		puestos.append({"p": Vector3(x, 0, RING_Z_SUR + 11.3), "a": PI})
 		x += paso
 	for d in puestos:
-		_una_farola(d["p"], float(d["a"]))
+		## Ni en mitad de la boca de un ramal que entra al anillo.
+		var p: Vector3 = d["p"]
+		var en_calle := false
+		for v in _vias:
+			var r := _rect_en(v, true)
+			if p.x > r[0] - 1.0 and p.x < r[1] + 1.0 and p.z > r[2] - 1.0 and p.z < r[3] + 1.0:
+				en_calle = true
+				break
+		if not en_calle:
+			_una_farola(p, float(d["a"]))
 
 ## Un paso de cebra: siete franjas a lo ancho de la calle. `cruza_x` dice si
 ## las franjas se pintan cruzando el eje X (para una calle que corre en Z) o
@@ -1938,7 +2009,61 @@ static var _mat_blanco: StandardMaterial3D = null
 static var _mat_bordillo: StandardMaterial3D = null
 static var _mat_tapa: StandardMaterial3D = null
 
+## RED DE CALLES, NO TRAMOS SUELTOS (26-9-2026, segunda pasada: "hay calles
+## que no cierran"). Cada tramo ponía su acera de punta a punta sin saber de
+## los demás: donde un ramal llegaba al anillo, la acera del anillo le cerraba
+## la boca (la calle "chocaba" con un bordillo), y los finales ciegos quedaban
+## con el asfalto cortado a pelo. Ahora `_via()` solo apunta el tramo y pone su
+## calzada; `_construir_vias()` arma aceras, bordillos y marcas cuando ya se
+## conocen TODOS: cada acera se abre donde entra otra calle, las esquinas las
+## pone uno solo de los dos tramos (el que se apuntó antes, sin solaparse), la
+## esquina exterior del anillo se completa, y un final sin salida se cierra con
+## su bordillo y su acera como un fondo de saco de verdad.
+var _vias: Array[Dictionary] = []
+
 func _via(centro: Vector3, tam: Vector2, mat_asfalto: Material, _mat_linea: Material, horizontal: bool) -> void:
+	var m := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(tam.x, 0.12, tam.y)
+	m.mesh = bm
+	m.material_override = mat_asfalto
+	## Un pelo más alta cada calzada: en los cruces dos cajas coplanarias
+	## parpadeaban peleándose por el mismo píxel.
+	m.position = centro + Vector3(0, 0.06 + _vias.size() * 0.0008, 0)
+	add_child(m)
+	_vias.append({"c": centro, "tam": tam, "h": horizontal})
+
+## El rectángulo de un tramo en las coordenadas (a lo largo, a lo ancho) de
+## otro tramo `h`: [a0, a1, l0, l1].
+static func _rect_en(w: Dictionary, h: bool) -> Array:
+	var c: Vector3 = w["c"]
+	var t: Vector2 = w["tam"]
+	var x0 := c.x - t.x * 0.5
+	var x1 := c.x + t.x * 0.5
+	var z0 := c.z - t.y * 0.5
+	var z1 := c.z + t.y * 0.5
+	return [x0, x1, z0, z1] if h else [z0, z1, x0, x1]
+
+## [lo, hi] menos los huecos: los trozos que quedan.
+static func _restar(lo: float, hi: float, huecos: Array) -> Array:
+	var trozos: Array = [[lo, hi]]
+	for g: Array in huecos:
+		var nuevos: Array = []
+		for t: Array in trozos:
+			if g[1] <= t[0] or g[0] >= t[1]:
+				nuevos.append(t)
+				continue
+			if g[0] > t[0]:
+				nuevos.append([t[0], g[0]])
+			if g[1] < t[1]:
+				nuevos.append([g[1], t[1]])
+		trozos = nuevos
+	return trozos.filter(func(t: Array) -> bool: return t[1] - t[0] > 0.15)
+
+static func _solapa(a0: float, a1: float, b0: float, b1: float) -> bool:
+	return minf(a1, b1) - maxf(a0, b0) > 0.01
+
+func _construir_vias() -> void:
 	if _mat_blanco == null:
 		_mat_blanco = StandardMaterial3D.new()
 		_mat_blanco.albedo_color = Color(0.9, 0.9, 0.87)
@@ -1948,58 +2073,121 @@ func _via(centro: Vector3, tam: Vector2, mat_asfalto: Material, _mat_linea: Mate
 		_mat_tapa.albedo_color = Color(0.16, 0.16, 0.17)
 		_mat_tapa.metallic = 0.6
 		_mat_tapa.roughness = 0.5
-	var m := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = Vector3(tam.x, 0.12, tam.y)
-	m.mesh = bm
-	m.material_override = mat_asfalto
-	m.position = centro + Vector3(0, 0.06, 0)
-	add_child(m)
-	var largo: float = tam.x if horizontal else tam.y
-	var ancho: float = tam.y if horizontal else tam.x
-	## Coloca algo a `d` metros a lo largo y `lat` metros de lado.
-	var en := func(d: float, lat: float, y: float) -> Vector3:
-		return centro + (Vector3(d, y, lat) if horizontal else Vector3(lat, y, d))
-	var caja := func(tam_largo: float, tam_lat: float, alto: float, pos: Vector3, mat: Material) -> void:
-		var mi := MeshInstance3D.new()
-		var b := BoxMesh.new()
-		b.size = Vector3(tam_largo, alto, tam_lat) if horizontal else Vector3(tam_lat, alto, tam_largo)
-		mi.mesh = b
-		mi.material_override = mat
-		mi.position = pos
-		add_child(mi)
-	## En cada extremo el tramo desemboca en otra calle (esquinas del anillo,
-	## ramales): aceras, bordillos y marcas se recortan ahí para no invadir la
-	## calzada del cruce, que queda libre como un cruce de verdad.
-	var rec: float = ANCHO_CALLE * 0.5 + BORDILLO + ACERA
-	var util: float = maxf(largo - 2.0 * rec, 1.0)
-	## Eje discontinuo (trazos de 4 m cada 10 m) y bordes continuos.
-	var n: int = int(util / 10.0)
-	for i in range(n):
-		caja.call(4.0, 0.15, 0.02, en.call(-util * 0.5 + 5.0 + i * 10.0, 0.0, 0.13), _mat_blanco)
-	for s_l: float in [-1.0, 1.0]:
-		caja.call(util, 0.15, 0.02, en.call(0.0, s_l * (ancho * 0.5 - 0.6), 0.13), _mat_blanco)
-		## Bordillo y acera, un poco más altos que la calzada.
-		caja.call(util, BORDILLO, 0.22, en.call(0.0, s_l * (ancho * 0.5 + BORDILLO * 0.5), 0.11), _mat_bordillo)
-		caja.call(util, ACERA, 0.18, en.call(0.0, s_l * (ancho * 0.5 + BORDILLO + ACERA * 0.5), 0.09), Texturas.baldosa())
-		## Sumideros junto al bordillo cada 40 m y tapas de registro en el
-		## carril cada 70 m.
-		var d := -util * 0.5 + 20.0
-		while d < util * 0.5 - 10.0:
-			caja.call(0.9, 0.45, 0.02, en.call(d, s_l * (ancho * 0.5 - 0.3), 0.125), _mat_tapa)
-			d += 40.0
-	var dt := -util * 0.5 + 35.0
-	while dt < util * 0.5 - 20.0:
-		var tapa := MeshInstance3D.new()
-		var cm := CylinderMesh.new()
-		cm.top_radius = 0.35
-		cm.bottom_radius = 0.35
-		cm.height = 0.02
-		tapa.mesh = cm
-		tapa.material_override = _mat_tapa
-		tapa.position = en.call(dt, ancho * 0.22, 0.125)
-		add_child(tapa)
-		dt += 70.0
+	var baldosa := Texturas.baldosa()
+	var borde_acera: float = BORDILLO + ACERA
+	for i in _vias.size():
+		var v: Dictionary = _vias[i]
+		var h: bool = v["h"]
+		var c: Vector3 = v["c"]
+		var t: Vector2 = v["tam"]
+		var ca: float = c.x if h else c.z
+		var cl: float = c.z if h else c.x
+		var largo: float = t.x if h else t.y
+		var ancho: float = t.y if h else t.x
+		var lo: float = ca - largo * 0.5
+		var hi: float = ca + largo * 0.5
+		## Pone una caja de `da` a lo largo por `dl` a lo ancho, centrada en
+		## (a, l) de este tramo.
+		var caja := func(a: float, l: float, da: float, dl: float, alto: float, y: float, mat: Material) -> void:
+			var mi := MeshInstance3D.new()
+			var b := BoxMesh.new()
+			b.size = Vector3(da, alto, dl) if h else Vector3(dl, alto, da)
+			mi.mesh = b
+			mi.material_override = mat
+			mi.position = Vector3(a, y, l) if h else Vector3(l, y, a)
+			add_child(mi)
+		var otros: Array = []
+		for j in _vias.size():
+			if j != i:
+				var r := _rect_en(_vias[j], h)
+				r.append(j)
+				otros.append(r)
+		## ¿Cada punta desemboca en otra calle?
+		var conecta := {}
+		for fin: float in [lo, hi]:
+			conecta[fin] = null
+			for r: Array in otros:
+				if fin >= r[0] - 1.0 and fin <= r[1] + 1.0 and cl >= r[2] - 1.0 and cl <= r[3] + 1.0:
+					conecta[fin] = r
+					break
+
+		for s_l: float in [-1.0, 1.0]:
+			var banda_b := [cl + s_l * ancho * 0.5, cl + s_l * (ancho * 0.5 + BORDILLO)]
+			var banda_a := [cl + s_l * (ancho * 0.5 + BORDILLO), cl + s_l * (ancho * 0.5 + borde_acera)]
+			banda_b.sort()
+			banda_a.sort()
+			var huecos: Array = []
+			for r: Array in otros:
+				if _solapa(banda_a[0], banda_a[1], r[2], r[3]) or _solapa(banda_b[0], banda_b[1], r[2], r[3]):
+					## La esquina la pone el tramo apuntado antes.
+					var extra: float = 0.0 if i < int(r[4]) else borde_acera
+					huecos.append([r[0] - extra, r[1] + extra])
+			var desde := lo
+			var hasta := hi
+			## Esquina exterior: la acera de fuera sigue hasta cerrar la vuelta.
+			for fin: float in [lo, hi]:
+				var r2: Variant = conecta[fin]
+				if r2 == null or i > int(r2[4]):
+					continue
+				if _solapa(banda_a[0], banda_a[1], r2[2], r2[3]):
+					continue
+				if fin == lo:
+					desde = float(r2[0]) - borde_acera
+				else:
+					hasta = float(r2[1]) + borde_acera
+			for tr: Array in _restar(desde, hasta, huecos):
+				var da: float = tr[1] - tr[0]
+				var am: float = (tr[0] + tr[1]) * 0.5
+				caja.call(am, (banda_b[0] + banda_b[1]) * 0.5, da, BORDILLO, 0.22, 0.11, _mat_bordillo)
+				caja.call(am, (banda_a[0] + banda_a[1]) * 0.5, da, ACERA, 0.18, 0.09, baldosa)
+			## Línea de borde y sumideros: se cortan justo en el asfalto ajeno.
+			var l_linea: float = cl + s_l * (ancho * 0.5 - 0.6)
+			var huecos_l: Array = []
+			for r: Array in otros:
+				if l_linea >= r[2] and l_linea <= r[3]:
+					huecos_l.append([r[0], r[1]])
+			for tr: Array in _restar(lo, hi, huecos_l):
+				caja.call((tr[0] + tr[1]) * 0.5, l_linea, tr[1] - tr[0], 0.15, 0.02, 0.13, _mat_blanco)
+				var d: float = tr[0] + 20.0
+				while d < tr[1] - 10.0:
+					caja.call(d, cl + s_l * (ancho * 0.5 - 0.3), 0.9, 0.45, 0.02, 0.125, _mat_tapa)
+					d += 40.0
+
+		## Eje discontinuo (trazos de 4 m cada 10 m) y tapas de registro, fuera
+		## de los cruces.
+		var dentro := func(a: float, l: float) -> bool:
+			for r: Array in otros:
+				if a >= r[0] - 2.0 and a <= r[1] + 2.0 and l >= r[2] and l <= r[3]:
+					return true
+			return false
+		var a_eje: float = lo + 5.0
+		while a_eje < hi - 2.0:
+			if not dentro.call(a_eje, cl):
+				caja.call(a_eje, cl, 4.0, 0.15, 0.02, 0.13, _mat_blanco)
+			a_eje += 10.0
+		var dt: float = lo + 35.0
+		while dt < hi - 20.0:
+			if not dentro.call(dt, cl + ancho * 0.22):
+				var tapa := MeshInstance3D.new()
+				var cm := CylinderMesh.new()
+				cm.top_radius = 0.35
+				cm.bottom_radius = 0.35
+				cm.height = 0.02
+				tapa.mesh = cm
+				tapa.material_override = _mat_tapa
+				tapa.position = Vector3(dt, 0.125, cl + ancho * 0.22) if h else Vector3(cl + ancho * 0.22, 0.125, dt)
+				add_child(tapa)
+			dt += 70.0
+
+		## FONDO DE SACO: la punta que no da a ninguna calle se cierra con
+		## bordillo y acera de lado a lado.
+		for fin: float in [lo, hi]:
+			if conecta[fin] != null:
+				continue
+			var hacia: float = -1.0 if fin == lo else 1.0
+			var total: float = ancho + 2.0 * borde_acera
+			caja.call(fin + hacia * BORDILLO * 0.5, cl, BORDILLO, ancho, 0.22, 0.11, _mat_bordillo)
+			caja.call(fin + hacia * (BORDILLO + ACERA * 0.5), cl, ACERA, total, 0.18, 0.09, baldosa)
 
 # ---------------------------------------------------------------- parcelas
 
@@ -2227,16 +2415,11 @@ func _trafico() -> void:
 
 	## La flota: los coches normales pesan mucho más que los de servicio -uno de
 	## cada cinco- porque si no el mapa parece una emergencia permanente.
-	var coches: Array = []
-	for ruta in RUTAS_COCHES_KENNEY:
-		var esc: PackedScene = load(ruta)
-		if esc != null:
-			for _r in range(4):
-				coches.append(esc)
+	var coches: Array = flota_coches()
 	for ruta in RUTAS_SERVICIO:
 		var esc2: PackedScene = load(ruta)
 		if esc2 != null:
-			coches.append(esc2)
+			coches.append({"esc": esc2, "escala": 1.65, "fbx": false})
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 8821
@@ -2264,13 +2447,10 @@ func _trafico() -> void:
 		## puede tener las calles igual de vacías que una de tercera.
 		var por_sentido: int = int(round(lerpf(4.0, 10.0, _empuje_club())))
 		for i in range(por_sentido):
-			var nodo: Node3D = (coches[rng.randi() % coches.size()] as PackedScene).instantiate()
-			nodo.scale = Vector3.ONE * 1.65
-			## -90° y no +90°: ver la nota del signo en `TraficoCiudad._colocar()`.
-			## Con +90° medimos alineación morro/marcha = -1,000 en los veinte
-			## vehículos, o sea la flota entera circulando marcha atrás.
+			var nodo: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
+			## Giro 0: `instanciar_coche` ya deja el morro en +Z (ver arriba).
 			t.agregar_vehiculo(nodo, id, rng.randf() * 1800.0,
-				rng.randf_range(13.0, 22.0), 0.0, -PI * 0.5)
+				rng.randf_range(13.0, 22.0), 0.0, 0.0)
 
 	## 1b) EL EJE EXTERIOR, con su propio tráfico -si la circunvalación estuviera
 	## vacía se notaría más que si no existiera-.
@@ -2288,10 +2468,9 @@ func _trafico() -> void:
 		if coches.is_empty():
 			continue
 		for i in range(int(round(lerpf(3.0, 7.0, _empuje_club())))):
-			var n_ex: Node3D = (coches[rng.randi() % coches.size()] as PackedScene).instantiate()
-			n_ex.scale = Vector3.ONE * 1.65
+			var n_ex: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(n_ex, id_ex, rng.randf() * 2200.0,
-				rng.randf_range(15.0, 24.0), 0.0, -PI * 0.5)
+				rng.randf_range(15.0, 24.0), 0.0, 0.0)
 		## Y dos autobuses por sentido, en la misma ruta -es el eje que pasa
 		## junto a las cuatro paradas y la terminal-, más grandes y más lentos
 		## que el tráfico normal.
@@ -2301,7 +2480,7 @@ func _trafico() -> void:
 				var bus: Node3D = bus_esc.instantiate()
 				bus.scale = Vector3.ONE * 3.1
 				t.agregar_vehiculo(bus, id_ex, rng.randf_range(200.0, 2000.0),
-					9.0, 0.0, -PI * 0.5)
+					9.0, 0.0, 0.0)
 
 	## 2) LA AVENIDA DE ACCESO y 3) LA CALLE DEL BARRIO: circuitos estrechos
 	## -se baja por un carril y se sube por el otro-, que es lo que hace que un
@@ -2309,7 +2488,7 @@ func _trafico() -> void:
 	## bruto delante de la cámara.
 	for tramo in [
 			{"x": 0.0, "z0": -85.0, "z1": RING_Z_SUR - 10.0, "n": 3},
-			{"x": BARRIO_EN.x, "z0": RING_Z_SUR + 10.0, "z1": BARRIO_EN.z - 30.0, "n": 2},
+			{"x": BARRIO_EN.x, "z0": RING_Z_SUR + 10.0, "z1": FINCA_PORTON_Z - 14.0, "n": 2},
 		]:
 		var x: float = tramo["x"]
 		var z0: float = tramo["z0"]
@@ -2322,10 +2501,9 @@ func _trafico() -> void:
 		if coches.is_empty():
 			continue
 		for i in range(int(tramo["n"])):
-			var nodo2: Node3D = (coches[rng.randi() % coches.size()] as PackedScene).instantiate()
-			nodo2.scale = Vector3.ONE * 1.65
+			var nodo2: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(nodo2, id2, rng.randf() * 600.0,
-				rng.randf_range(9.0, 15.0), 0.0, -PI * 0.5)
+				rng.randf_range(9.0, 15.0), 0.0, 0.0)
 
 	## 5) LOS PEATONES (26-9-2026, B7): por las aceras del anillo y de la
 	## avenida, en los dos sentidos, más cuanto más grande es el club.
@@ -2616,23 +2794,21 @@ func _clinica() -> void:
 ## una escena a pie de calle donde sí luzca.
 const BARRIO_EN := Vector3(-60.0, 0, 470.0)
 
+## La finca amurallada ocupa el solar de la casa; entre las dos hileras de
+## casas del barrio (a 42-52 m del eje) y con el portón mirando a la calle,
+## que termina justo delante.
+const FINCA_TAM := Vector2(64.0, 72.0)
+const FINCA_PORTON_Z := BARRIO_EN.z - FINCA_TAM.y * 0.5
+
 func _barrio_residencial() -> void:
-	var esc := load(RUTA_COMPLEJO_EXTRA)
-	if esc == null or not (esc is PackedScene):
-		return
-	var n: Node3D = (esc as PackedScene).instantiate()
-	var raiz := Node3D.new()
-	add_child(raiz)
-	raiz.add_child(n)
-	## Medido, no a ojo: el origen del modelo no está en su base, así que sin
-	## corregir la `y` quedaría medio enterrado.
-	var caja := _caja_de(n)
-	var alto: float = caja.size.y
-	var escala := (40.0 / alto) if alto > 0.001 else 1.0
-	raiz.scale = Vector3.ONE * escala
-	raiz.position = BARRIO_EN + Vector3(0, -caja.position.y * escala, 0)
-	raiz.rotation.y = PI
-	_cartel(BARRIO_EN + Vector3(0, 0, -62.0), "Barrio residencial", false)
+	## LA CASA YA NO SE VE (26-9-2026, pedido del usuario: "esa casa que es
+	## un modelo 3D debería ser cubierta por un muro de enredaderas, para que
+	## sea más lindo el paisaje sin verla"). Se mide para saber cuánto ocupaba
+	## -el barrio se sigue ordenando alrededor de ese solar- y en su lugar va
+	## una finca cerrada por un muro cubierto de hiedra, con su portón y
+	## árboles que asoman por encima.
+	_finca_enredadera(BARRIO_EN, FINCA_TAM)
+	_cartel(Vector3(BARRIO_EN.x + 14.0, 0, FINCA_PORTON_Z - 6.0), "Barrio residencial", false)
 
 	## UN BARRIO ES MÁS DE UNA CASA. Con el complejo solo, aquello era una
 	## mansión suelta en mitad del campo al final de una carretera; con una
@@ -2813,6 +2989,128 @@ func _hueco_urbano(eje: Vector3, afuera: Vector3, fondo: float) -> bool:
 	if lejos.x < RIO_X + 60.0 and lejos.x > RIO_X - 60.0:
 		return true
 	return false
+
+
+## La finca del barrio: muro de 5,5 m cubierto de enredadera, con la copa de
+## la hiedra desbordando por arriba (bultos irregulares, no una arista recta),
+## un portón de hierro hacia la calle y árboles dentro.
+func _finca_enredadera(centro: Vector3, tam: Vector2) -> void:
+	var hiedra := Texturas.enredadera()
+	var alto := 5.5
+	var grosor := 1.2
+	var portal := 9.0
+	var mitad := tam * 0.5
+	## Cuatro lados; el norte (hacia el ramal) con el hueco del portón.
+	var lados := [
+		{"c": Vector3(0, 0, mitad.y), "t": Vector3(tam.x, alto, grosor)},
+		{"c": Vector3(-mitad.x, 0, 0), "t": Vector3(grosor, alto, tam.y)},
+		{"c": Vector3(mitad.x, 0, 0), "t": Vector3(grosor, alto, tam.y)},
+		{"c": Vector3(-(tam.x + portal) * 0.25, 0, -mitad.y), "t": Vector3((tam.x - portal) * 0.5, alto, grosor)},
+		{"c": Vector3((tam.x + portal) * 0.25, 0, -mitad.y), "t": Vector3((tam.x - portal) * 0.5, alto, grosor)},
+	]
+	var bultos: Array[Transform3D] = []
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 4401
+	for l in lados:
+		var t: Vector3 = l["t"]
+		var p: Vector3 = centro + (l["c"] as Vector3)
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = t
+		mi.mesh = bm
+		mi.material_override = hiedra
+		mi.position = p + Vector3(0, alto * 0.5, 0)
+		add_child(mi)
+		## La hiedra que desborda: bultos cada ~2 m por arriba y algunos
+		## colgando por las caras.
+		var largo: float = maxf(t.x, t.z)
+		var eje := Vector3(1, 0, 0) if t.x > t.z else Vector3(0, 0, 1)
+		var d := -largo * 0.5 + 1.0
+		while d < largo * 0.5 - 0.5:
+			var r := rng.randf_range(0.9, 1.5)
+			var q := p + eje * d + Vector3(0, alto + rng.randf_range(-0.5, 0.1), 0)
+			bultos.append(Transform3D(Basis().scaled(Vector3(r * 1.3, r * 0.8, r * 1.1)), q))
+			if rng.randf() < 0.35:
+				var lado_c: float = -1.0 if rng.randf() < 0.5 else 1.0
+				var normal := Vector3(0, 0, 1) if t.x > t.z else Vector3(1, 0, 0)
+				var q2 := p + eje * d + normal * lado_c * grosor * 0.5 + Vector3(0, rng.randf_range(1.0, alto - 1.0), 0)
+				bultos.append(Transform3D(Basis().scaled(Vector3(0.9, 1.6, 0.9) * rng.randf_range(0.5, 0.8)), q2))
+			d += rng.randf_range(1.6, 2.4)
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	var esf := SphereMesh.new()
+	esf.radius = 1.0
+	esf.height = 2.0
+	esf.radial_segments = 10
+	esf.rings = 6
+	mm.mesh = esf
+	mm.instance_count = bultos.size()
+	for k in bultos.size():
+		mm.set_instance_transform(k, bultos[k])
+	var mmi := MultiMeshInstance3D.new()
+	mmi.multimesh = mm
+	mmi.material_override = hiedra
+	add_child(mmi)
+	## Pilares de piedra y portón de hierro.
+	var piedra := Texturas.hormigon(Color(0.62, 0.6, 0.56), 77)
+	var hierro := StandardMaterial3D.new()
+	hierro.albedo_color = Color(0.08, 0.08, 0.09)
+	hierro.metallic = 0.7
+	hierro.roughness = 0.4
+	for s in [-1.0, 1.0]:
+		var pil := MeshInstance3D.new()
+		var pb := BoxMesh.new()
+		pb.size = Vector3(1.6, alto + 0.8, 1.6)
+		pil.mesh = pb
+		pil.material_override = piedra
+		pil.position = centro + Vector3(s * portal * 0.5, (alto + 0.8) * 0.5, -mitad.y)
+		add_child(pil)
+	var barrotes := int(portal / 0.35)
+	for b in barrotes:
+		var bar := MeshInstance3D.new()
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.035
+		cm.bottom_radius = 0.035
+		cm.height = alto - 1.0
+		bar.mesh = cm
+		bar.material_override = hierro
+		bar.position = centro + Vector3(-portal * 0.5 + 0.9 + b * (portal - 1.8) / float(maxi(barrotes - 1, 1)), (alto - 1.0) * 0.5, -mitad.y)
+		add_child(bar)
+	for y in [0.6, alto - 1.2]:
+		var trav := MeshInstance3D.new()
+		var tb := BoxMesh.new()
+		tb.size = Vector3(portal - 1.6, 0.1, 0.08)
+		trav.mesh = tb
+		trav.material_override = hierro
+		trav.position = centro + Vector3(0, y, -mitad.y)
+		add_child(trav)
+	## Dentro, sobre el propio césped del terreno: árboles que asoman por
+	## encima del muro.
+	var tronco := StandardMaterial3D.new()
+	tronco.albedo_color = Color(0.3, 0.2, 0.12)
+	var copa := StandardMaterial3D.new()
+	copa.albedo_color = Color(0.13, 0.34, 0.12)
+	copa.roughness = 0.9
+	for k in 14:
+		var pos := centro + Vector3(rng.randf_range(-mitad.x + 5.0, mitad.x - 5.0), 0, rng.randf_range(-mitad.y + 8.0, mitad.y - 5.0))
+		var h := rng.randf_range(8.0, 12.0)
+		var tr := MeshInstance3D.new()
+		var tc := CylinderMesh.new()
+		tc.top_radius = 0.3
+		tc.bottom_radius = 0.45
+		tc.height = h
+		tr.mesh = tc
+		tr.material_override = tronco
+		tr.position = pos + Vector3(0, h * 0.5, 0)
+		add_child(tr)
+		var cp := MeshInstance3D.new()
+		var cs := SphereMesh.new()
+		cs.radius = rng.randf_range(3.2, 4.6)
+		cs.height = cs.radius * 1.8
+		cp.mesh = cs
+		cp.material_override = copa
+		cp.position = pos + Vector3(0, h, 0)
+		add_child(cp)
 
 # ---------------------------------------------------------------- perimetro
 
