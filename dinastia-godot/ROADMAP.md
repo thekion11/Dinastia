@@ -13,12 +13,39 @@ Católica-Colo el Clásico). La historia es para todos los clubes."*
 - **D2. MI VIDA (vida del DT)** ✅ HECHO (26-9): casa, transporte, familia, estrés, ocio y
   asuntos.
 - **D3. Árbol de habilidades como esquema** ✅ HECHO (26-9), también a pantalla completa.
-- **D4. Caza de fallas visuales**: recorrer todas las pantallas con capturas y arreglar lo que
-  se vea mal.
+- **D4. Caza de fallas visuales** ✅ primera pasada HECHA (26-9): recorrido automático de las 37
+  pantallas del menú (`pruebas/captura_todo.gd`). Arreglado:
+  - el menú encendía el grupo equivocado (CENTRAL al entrar por CLUB › Infraestructura);
+  - «Equipación» abría una página vacía;
+  - Memoria, Rivales y Vitrina salían en blanco al empezar (ahora explican qué aparecerá);
+  - MI VIDA y Habilidades ensanchaban el panel y empujaban la ficha fuera de la pantalla;
+  - «Tipo de contrato» se cortaba en la ficha (ahora «Régimen»);
+  - los precios de Mi vida no seguían al sueldo del DT.
 - **D5. Más vida y animación**: transiciones, contadores, latidos, pequeños detalles en el
   mundo 3D y en la interfaz.
-- **D6. Revisión de que nada falte en el plan**: cruzar cada pedido del usuario de todas las
-  rondas con el ROADMAP.
+- **D6. Revisión de que nada falte en el plan** ✅ HECHO (26-9). Resultado, **LO QUE QUEDA** de
+  todas las rondas:
+  - Quinta ronda:
+    - **B8** creador de personaje estilo Sims (cuerpo con escalas de huesos; cara con
+      blendshapes 🟡, necesita Blender en el PC);
+    - **B9** ropa y accesorios;
+    - **B10** mascotas 3D en el campo;
+    - **B12** música libre en español (🟡, necesita tu visto bueno sobre las pistas);
+    - **B14** optimización y velocidad;
+    - **B15** calibración de realismo.
+  - Restos de bloques hechos:
+    - B6: instalaciones internas visibles, obras con andamios en el estadio, túnel navegable,
+      paleta de las vallas LED y formas nuevas;
+    - B7: peatones, eventos de ciudad y que la hora del ciclo siga la del juego;
+    - B3: cinemáticas que falten;
+    - C5: presidente de la confederación y cambios de formato de competición;
+    - C7: minijuego de tiro libre y trivia del club.
+  - Sexta ronda:
+    - **C18** comparación con los videos de referencia;
+    - **C19** auditoría final e informe.
+  - Datos para revisar antes de publicar:
+    - jornada legal de México y Egipto;
+    - años de fundación de los clubes chicos en `herramientas/historia_clubes.py`.
 
 ## PLAN MAESTRO, SEXTA RONDA (pedido del 26-9-2026)
 
