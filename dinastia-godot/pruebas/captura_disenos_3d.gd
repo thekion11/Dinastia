@@ -2,8 +2,11 @@ extends Node3D
 ## LOS DISEÑOS NUEVOS EN 3D (26-9-2026): doce jugadores con diseños, cinco
 ## colores, pantalón, medias, botines, accesorios y dorsal. Frente y espalda.
 ##   godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/captura_disenos_3d.tscn
-const DISENOS := ["puntos_degradados", "curvas_nivel", "marmol", "fragmentos", "mangas_canesu", "diagonal_partida",
-	"relampago", "cuadricula", "estrellas", "franjas_degradadas", "faja_rayas", "resplandor"]
+## 26-9-2026 (2): los de dos y tres colores y con patrocinadores.
+const DISENOS := ["v_ancha", "panal_3", "llamas", "mosaico_3", "vichy", "estela_3",
+	"rombo_central", "cebra_3", "raglan_3", "circulo", "espiga_3", "doble_faja"]
+const MARCAS := [["Cerveza Andina", "#e8b13a"], ["Banco Austral", "#3a7bd5"], ["TecnoMovil", "#d5443a"],
+	["AeroCondor", "#4ab3d5"], ["Cementos Roca", "#9a9a9a"], ["Autos Kalpa", "#d5843a"]]
 const PALETAS := [
 	["0b4ea2", "ffffff", "d0202a", "f2c230", "111111"], ["111111", "f2c230", "d0202a", "ffffff", "0b7a3b"],
 	["6a1b9a", "f2c230", "ffffff", "111111", "0b4ea2"], ["ffffff", "d0202a", "0b4ea2", "111111", "f2c230"],
@@ -43,7 +46,11 @@ func _ready() -> void:
 			"pant": {"dis": ["lateral", "ribete", "bicolor", "degrade", "doble_lateral", "liso"][i % 6], "c1": pal[0], "c2": pal[1]},
 			"med": {"dis": ["aros", "franja", "dos_franjas", "bicolor", "rombos", "lisas"][i % 6], "c1": pal[1], "c2": pal[0]},
 			"bot": {"mod": String(DisenosKit.BOTINES[(i * 5) % 30][0])},
-			"acc": {}}
+			"acc": {},
+			"sp": {"pecho": {"marca": MARCAS[i % 6][0], "color": MARCAS[i % 6][1]},
+				"manga": {"marca": MARCAS[(i + 2) % 6][0], "color": MARCAS[(i + 2) % 6][1]},
+				"espalda": {"marca": MARCAS[(i + 3) % 6][0], "color": MARCAS[(i + 3) % 6][1]},
+				"short": {"marca": MARCAS[(i + 1) % 6][0], "color": MARCAS[(i + 1) % 6][1]}}}
 		var acc_k: Array = ["cintillo", "manguitos", "guantes", "munequeras", "brazalete", "cuello", "tobilleras"]
 		kit["acc"][acc_k[i % 7]] = pal[2]
 		VestidorQ.vestir_equipacion(d, Color(pal[0]), Color(pal[1]), "liso", Color("c68d68"), Color(0.15, 0.1, 0.07),

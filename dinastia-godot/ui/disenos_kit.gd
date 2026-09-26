@@ -121,6 +121,48 @@ const DISENOS := [
 	["faja_rayas", "Faja con rayas", 40, 0.62, 0.11, 0, 0, 3],
 	["resplandor", "Resplandor", 41, 0, 0, 0, 0, 2],
 	["puntos_diagonal", "Puntos en diagonal", 42, 14, 0.5, 0, 0, 2],
+	## 20 DE SOLO DOS COLORES Y 20 DE SOLO TRES (26-9-2026). Las mismas 20 familias
+	## (43-62): con d = 0 el acento es el color 1; con d = 1 es el color 2.
+	["v_ancha", "V ancha", 43, 0.55, 0.07, 0, 0, 2],
+	["raglan", "Raglán", 44, 0.6, 0, 0, 0, 2],
+	["doble_faja", "Doble faja", 45, 0.62, 0.06, 0, 0, 2],
+	["franjas_asim", "Franjas a un lado", 46, 6, 0, 0, 0, 2],
+	["pecho_zigzag", "Pecho en zigzag", 47, 0.6, 4, 0, 0, 2],
+	["panal", "Panal", 48, 6, 0, 0, 0, 2],
+	["triangulos", "Triángulos", 49, 5, 0, 0, 0, 2],
+	["olas_v", "Olas verticales", 50, 8, 9, 0, 0, 2],
+	["cebra", "Cebra", 51, 4, 6, 0, 0, 2],
+	["rayas_diag", "Rayas diagonales", 52, 1, 5, 0, 0, 2],
+	["espiga", "Espiga", 53, 8, 0, 0, 0, 2],
+	["codigo_barras", "Código de barras", 54, 0.55, 0, 0, 0, 2],
+	["circulo", "Círculo central", 55, 0.35, 0.05, 0, 0, 2],
+	["cuello_v", "Cuello en V rayado", 56, 0.5, 0.035, 0, 0, 2],
+	["costados_rayados", "Costados rayados", 57, 0.6, 14, 0, 0, 2],
+	["llamas", "Llamas", 58, 0.3, 18, 0, 0, 2],
+	["mosaico", "Mosaico", 59, 5, 0, 0, 0, 2],
+	["rombo_central", "Rombo central", 60, 0.35, 0, 0, 0, 2],
+	["vichy", "Vichy", 61, 7, 0, 0, 0, 2],
+	["estela", "Estela", 62, 1, 10, 0, 0, 2],
+	["v_ancha_3", "Banda en V tricolor", 43, 0.55, 0.07, 0, 1, 3],
+	["raglan_3", "Raglán con costura tricolor", 44, 0.6, 0, 0, 1, 3],
+	["doble_faja_3", "Fajas al pecho tricolor", 45, 0.62, 0.06, 0, 1, 3],
+	["franjas_asim_3", "Medio rayado tricolor", 46, 8, 0, 0, 1, 3],
+	["pecho_zigzag_3", "Pecho partido en sierra tricolor", 47, 0.6, 4, 0, 1, 3],
+	["panal_3", "Colmena tricolor", 48, 8, 0, 0, 1, 3],
+	["triangulos_3", "Pirámides tricolor", 49, 6, 0, 0, 1, 3],
+	["olas_v_3", "Franjas onduladas tricolor", 50, 10, 9, 0, 1, 3],
+	["cebra_3", "Rayas salvajes tricolor", 51, 5, 6, 0, 1, 3],
+	["rayas_diag_3", "Diagonales anchas tricolor", 52, 1, 5, 0, 1, 3],
+	["espiga_3", "Espiguilla tricolor", 53, 10, 0, 0, 1, 3],
+	["codigo_barras_3", "Barras al pecho tricolor", 54, 0.55, 0, 0, 1, 3],
+	["circulo_3", "Anillo al pecho tricolor", 55, 0.35, 0.05, 0, 1, 3],
+	["cuello_v_3", "V desde el cuello tricolor", 56, 0.5, 0.035, 0, 1, 3],
+	["costados_rayados_3", "Laterales a rayas tricolor", 57, 0.6, 14, 0, 1, 3],
+	["llamas_3", "Fuego desde abajo tricolor", 58, 0.3, 18, 0, 1, 3],
+	["mosaico_3", "Teselas tricolor", 59, 6, 0, 0, 1, 3],
+	["rombo_central_3", "Diamante al pecho tricolor", 60, 0.35, 0, 0, 1, 3],
+	["vichy_3", "Cuadros de mantel tricolor", 61, 9, 0, 0, 1, 3],
+	["estela_3", "Líneas de velocidad tricolor", 62, 1, 10, 0, 1, 3],
 ]
 
 ## Pantalones: [clave, nombre]
@@ -164,6 +206,8 @@ const BOTINES := [
 	["precision", "Precisión", 2, "eceff1", "e91e63", "37474f"],
 	["control", "Control", 1, "004d40", "ffffff", "004d40"],
 ]
+## Cortes de cuello (`kit.cuello`).
+const CUELLOS := ["En pico (V)", "Redondo", "Polo con tapeta", "Mao (alto)"]
 ## Accesorios: [clave, nombre, color por defecto]
 const ACCESORIOS := [
 	["cintillo", "Cintillo", "ffffff"],
@@ -210,9 +254,16 @@ static func kit_de_club(c: Club) -> Dictionary:
 		"med": {"dis": "lisas", "c1": c1, "c2": c2},
 		"bot": {"mod": "clasico", "c1": "111111", "c2": "ffffff", "c3": "222222"},
 		"acc": {},
+		"cuello": absi(hash(c.id)) % CUELLOS.size(),
 	}
 	for k: String in c.kit_x:
 		base[k] = c.kit_x[k]
+	## Los patrocinadores no se guardan en el kit: salen de los contratos (o del
+	## hash del club) cada vez, así un contrato nuevo cambia la camiseta sola.
+	var sp := SponsorKit.de_club(c, Mundo.actual())
+	for z: String in base.get("sp_ocultar", []):
+		sp.erase(z)
+	base["sp"] = sp
 	return base
 
 static func _col(hexa: Variant) -> Color:
@@ -262,6 +313,9 @@ static func color_en(d: Array, cols: Array[Color], u: float, v: float) -> Color:
 	var y := 1.0 + v * 0.52
 	if f >= 100:
 		return cols[0].lerp(cols[1], _legado(f - 100, x, y))
+	## El acento de las familias 43-62: el color 2 en los de tres colores y el 1
+	## en los de dos.
+	var acento := cols[2] if dd > 0.5 else cols[1]
 	match f:
 		1:
 			var s := (u + 1.0) * 0.5 * a
@@ -446,6 +500,136 @@ static func color_en(d: Array, cols: Array[Color], u: float, v: float) -> Color:
 			var hy := v * a * 1.2
 			var rd := b * clampf((u + 1.0) * 0.5 * 0.6 + (1.0 - v) * 0.6, 0.0, 1.0)
 			return cols[1] if Vector2(fposmod(hx, 1.0) - 0.5, fposmod(hy, 1.0) - 0.5).length() < rd else cols[0]
+		43:
+			var e43 := v - (0.98 - absf(u) * a)
+			if absf(e43) < b:
+				return cols[1]
+			return acento if absf(e43) < b + 0.035 else cols[0]
+		44:
+			var t44 := 0.5 + (1.0 - absf(u)) * a
+			if absf(v - t44) < 0.025:
+				return acento
+			return cols[1] if v > t44 else cols[0]
+		45:
+			if absf(v - a) < b:
+				return cols[1]
+			return acento if absf(v - a + 0.2) < b else cols[0]
+		46:
+			if absf(u) < 0.03:
+				return acento
+			if u < 0.0:
+				return cols[1] if fposmod((u + 1.0) * a, 1.0) < 0.5 else cols[0]
+			return cols[0]
+		47:
+			var z47 := a + (absf(fposmod(u * b, 1.0) - 0.5) - 0.25) * 0.12
+			if v > z47 + 0.02:
+				return cols[1]
+			return acento if v > z47 - 0.02 else cols[0]
+		48:
+			var p48 := Vector2(u * a, v * a * 1.15)
+			var r48 := Vector2(1.0, 1.732)
+			var a48 := Vector2(fposmod(p48.x, r48.x), fposmod(p48.y, r48.y)) - r48 * 0.5
+			var q48 := p48 - r48 * 0.5
+			var b48 := Vector2(fposmod(q48.x, r48.x), fposmod(q48.y, r48.y)) - r48 * 0.5
+			var g48 := a48 if a48.dot(a48) < b48.dot(b48) else b48
+			var dh := maxf(absf(g48.x), absf(g48.x) * 0.5 + absf(g48.y) * 0.866)
+			if dh > 0.45:
+				return cols[1]
+			var c48 := p48 - g48
+			return acento if _h21(floorf(c48.x * 2.0), floorf(c48.y * 2.0)) < 0.22 else cols[0]
+		49:
+			var tx := (u + 1.0) * 0.5 * a
+			var ty := v * a
+			var tri := fposmod(tx + fposmod(floorf(ty), 2.0) * 0.5, 1.0)
+			if fposmod(ty, 1.0) < 1.0 - absf(tri - 0.5) * 2.0:
+				return cols[1] if int(fposmod(floorf(tx + fposmod(floorf(ty), 2.0) * 0.5) + floorf(ty), 2.0)) == 0 else acento
+			return cols[0]
+		50:
+			var s50 := (u + sin(v * b) * 0.06) * a * 0.5
+			if fposmod(s50, 1.0) < 0.5:
+				return cols[1] if int(fposmod(floorf(s50), 2.0)) == 0 else acento
+			return cols[0]
+		51:
+			var z51 := sin(u * a * 3.0 + _ruido(u * 2.0 + 3.0, v * 2.5) * b + v * 2.0)
+			if z51 > 0.3:
+				return cols[1]
+			return acento if z51 > 0.1 and dd > 0.5 else cols[0]
+		52:
+			var s52 := fposmod((u + v * a) * b, 1.0)
+			if s52 < 0.35:
+				return cols[1]
+			return acento if s52 < 0.45 and dd > 0.5 else cols[0]
+		53:
+			var cx53 := (u + 1.0) * 0.5 * a
+			if fposmod(cx53, 1.0) < 0.06:
+				return acento if dd > 0.5 else cols[1]
+			var sg := 1.0 if int(fposmod(floorf(cx53), 2.0)) == 0 else -1.0
+			return cols[1] if fposmod(v * a * 1.2 + sg * fposmod(cx53, 1.0), 1.0) < 0.5 else cols[0]
+		54:
+			var dv54 := absf(v - a)
+			if absf(dv54 - 0.12) < 0.012:
+				return acento
+			if dv54 < 0.12:
+				return cols[1] if _h21(floorf((u + 1.0) * 40.0), 3.0) < 0.5 else cols[0]
+			return cols[0]
+		55:
+			var r55 := Vector2(u, (v - 0.6) * 1.2).length()
+			if absf(r55 - a) < b:
+				return cols[1]
+			return acento if absf(r55 - a - b * 2.2) < b * 0.5 else cols[0]
+		56:
+			var e56 := v - (0.72 + absf(u) * a)
+			if absf(e56) < b:
+				return cols[1]
+			return acento if absf(e56 + 0.1) < b * 0.6 else cols[0]
+		57:
+			if absf(u) > a:
+				if fposmod(v * b, 1.0) < 0.5:
+					return cols[1]
+				return cols[2] if dd > 0.5 else cols[0]
+			return cols[0]
+		58:
+			var fl := a + _ruido(u * 4.0, v * 2.0 + 7.0) * 0.25 + sin(u * b) * 0.05
+			if v < fl:
+				return cols[1]
+			return acento if v < fl + 0.05 else cols[0]
+		59:
+			var mx := (u + 1.0) * 0.5 * a
+			var my := v * a * 1.2
+			var md := 9.0
+			var mh := 0.0
+			for oy in range(-1, 2):
+				for ox in range(-1, 2):
+					var cxm := floorf(mx) + float(ox)
+					var cym := floorf(my) + float(oy)
+					var px := cxm + 0.5 + (_h21(cxm, cym) - 0.5) * 0.7
+					var py := cym + 0.5 + (_h21(cym + 3.1, cxm) - 0.5) * 0.7
+					var dm := Vector2(mx - px, my - py).length()
+					if dm < md:
+						md = dm
+						mh = _h21(cxm + 9.0, cym + 9.0)
+			if mh < 0.35:
+				return cols[1]
+			return acento if mh < 0.55 else cols[0]
+		60:
+			var d60 := absf(u) + absf(v - 0.58) * 1.3
+			if d60 < a:
+				return cols[1]
+			return acento if absf(d60 - a - 0.06) < 0.02 else cols[0]
+		61:
+			var sx61 := fposmod((u + 1.0) * 0.5 * a, 1.0) < 0.5
+			var sy61 := fposmod(v * a * 1.2, 1.0) < 0.5
+			if sx61 and sy61:
+				return cols[1]
+			if sx61 or sy61:
+				return cols[2] if dd > 0.5 else cols[0]
+			return cols[0]
+		62:
+			var w62 := fposmod((v - u * a * 0.3) * b, 1.0)
+			var an := 0.12 * (u + 1.0)
+			if w62 < an:
+				return cols[1]
+			return acento if w62 < an + 0.03 else cols[0]
 	return cols[0]
 
 ## La fórmula vieja de los 12 estilos (mismos números que el shader).
@@ -494,7 +678,7 @@ static func textura_camiseta(clave: String, cols: Array[Color], trim: int = 1, a
 	_cache[k] = t
 	return t
 
-static func _imagen_camiseta(clave: String, cols: Array[Color], trim: int, ancho_px: int, espalda: bool = false) -> Image:
+static func _imagen_camiseta(clave: String, cols: Array[Color], trim: int, ancho_px: int, espalda: bool = false, sp: Dictionary = {}, cuello: int = 0) -> Image:
 	var ss := 2 if ancho_px <= 200 else 1
 	var escala := float(ancho_px * ss) / 64.0
 	var m := _mascara_camiseta(escala)
@@ -518,14 +702,22 @@ static func _imagen_camiseta(clave: String, cols: Array[Color], trim: int, ancho
 			var col := color_en(d, cols, u, v)
 			## Cuello en pico, acanalado.
 			## De espaldas el cuello es redondo y bajo.
-			var borde_cuello := (7.5 - (sy - 4.0) * 0.9) if not espalda else (6.0 - pow(maxf(sy - 4.0, 0.0), 1.4) * 0.9)
-			var cuello_v := absf(sx - 32.0) < borde_cuello and sy < (12.0 if not espalda else 7.0) and not manga
-			var ribete_cuello := not manga and sy < (12.5 if not espalda else 8.0) and absf(absf(sx - 32.0) - borde_cuello) < 1.2 and sy > 3.5
+			## El corte: pico (0) delante; redondo, polo y mao, redondos.
+			var pico := cuello == 0 and not espalda
+			var borde_cuello := (7.5 - (sy - 4.0) * 0.9) if pico else (6.0 - pow(maxf(sy - 4.0, 0.0), 1.4) * 0.9)
+			var grosor := 2.4 if cuello == 3 else 1.2
+			var cuello_v := absf(sx - 32.0) < borde_cuello and sy < (12.0 if pico else 7.0) and not manga
+			var ribete_cuello := not manga and sy < (12.5 if pico else 8.0 + (1.2 if cuello == 3 else 0.0)) and absf(absf(sx - 32.0) - borde_cuello) < grosor and sy > 3.5
 			if ribete_cuello:
 				col = c_trim * (0.92 + 0.08 * float(int(sx * 2.0) % 2))
 			elif cuello_v and sy < (11.0 if not espalda else 6.5):
 				## Por dentro del pico se ve la tela de atrás, en sombra.
 				col = cols[0] * 0.55
+			## Polo: la tapeta con dos botones.
+			if cuello == 2 and not espalda and not manga and absf(sx - 32.0) < 1.1 and sy > 5.5 and sy < 13.5:
+				col = c_trim
+				if absf(sx - 32.0) < 0.45 and (absf(sy - 9.0) < 0.45 or absf(sy - 12.0) < 0.45):
+					col = cols[0].darkened(0.3)
 			## Puños acanalados.
 			var dist_puno := minf(absf(sx - 10.0 - (sy - 10.0) * 0.28), absf(sx - 54.0 + (sy - 10.0) * 0.28))
 			if manga and dist_puno < 1.6 and sy > 12.0:
@@ -567,16 +759,65 @@ static func _imagen_camiseta(clave: String, cols: Array[Color], trim: int, ancho
 			var trama := 1.0 + 0.03 * (float((px + py) % 3 == 0) - 0.33)
 			luz *= trama
 			out.set_pixel(px, py, Color(clampf(col.r * luz, 0.0, 1.0), clampf(col.g * luz, 0.0, 1.0), clampf(col.b * luz, 0.0, 1.0), al))
+	_estampar_sponsors(out, escala, cols[0], sp, espalda)
 	if ss > 1:
 		out.resize(w / ss, h / ss, Image.INTERPOLATE_LANCZOS)
 	return out
+
+## Los patrocinadores sobre la camiseta 2D: el del pecho entre el escudo y el
+## bajo, el de la manga en la manga izquierda del jugador y el de la espalda
+## debajo del número. Se estampan con la luz del tejido (se multiplican por la
+## luminosidad que ya tiene la tela) para que no parezcan pegatinas.
+static func _estampar_sponsors(out: Image, escala: float, fondo: Color, sp: Dictionary, espalda: bool) -> void:
+	var zonas: Array = []
+	if not espalda and sp.has("pecho"):
+		zonas.append(["pecho", Rect2(20.0, 20.0, 24.0, 9.5), false])
+	if not espalda and sp.has("manga"):
+		zonas.append(["manga", Rect2(47.5, 10.0, 5.5, 5.5), true])
+	if espalda and sp.has("espalda"):
+		zonas.append(["espalda", Rect2(23.0, 8.5, 18.0, 5.0), false])
+	for z: Array in zonas:
+		var info: Dictionary = sp[String(z[0])]
+		var letras := SponsorKit.color_letras(String(info.get("color", "#ffffff")), fondo)
+		var img := SponsorKit.imagen(String(info.get("marca", "")), String(info.get("color", "#ffffff")), letras, bool(z[2])).duplicate() as Image
+		var zona: Rect2 = z[1]
+		## Encajar sin deformar, centrado en la zona.
+		var asp := float(img.get_width()) / float(img.get_height())
+		var r := zona
+		if asp > zona.size.x / zona.size.y:
+			r.size.y = zona.size.x / asp
+		else:
+			r.size.x = zona.size.y * asp
+		r.position = zona.position + (zona.size - r.size) * 0.5
+		var rw := int(r.size.x * escala)
+		var rh := int(r.size.y * escala)
+		img.resize(maxi(rw, 1), maxi(rh, 1), Image.INTERPOLATE_LANCZOS)
+		var ox := int(r.position.x * escala)
+		var oy := int(r.position.y * escala)
+		for py in img.get_height():
+			for px in img.get_width():
+				var src := img.get_pixel(px, py)
+				if src.a <= 0.02:
+					continue
+				var tx := ox + px
+				var ty := oy + py
+				if tx < 0 or ty < 0 or tx >= out.get_width() or ty >= out.get_height():
+					continue
+				var dst := out.get_pixel(tx, ty)
+				if dst.a <= 0.01:
+					continue
+				## La luz de la tela en ese punto, respecto del color base.
+				var luz := clampf(dst.get_luminance() / maxf(fondo.get_luminance(), 0.05), 0.75, 1.15)
+				var c := dst.lerp(Color(src.r * luz, src.g * luz, src.b * luz), src.a * 0.96)
+				c.a = dst.a
+				out.set_pixel(tx, ty, c)
 
 ## La equipación entera en 2D (camiseta, pantalón, medias y botines), de
 ## frente o de espaldas con el número.
 static func textura_completa(kit: Dictionary, espalda: bool = false, ancho_px: int = 160) -> Texture2D:
 	var cols := colores(kit)
 	var ss := 2
-	var camiseta := _imagen_camiseta(String(kit.get("dis", "liso")), cols, int(kit.get("trim", 1)), ancho_px * ss, espalda)
+	var camiseta := _imagen_camiseta(String(kit.get("dis", "liso")), cols, int(kit.get("trim", 1)), ancho_px * ss, espalda, kit.get("sp", {}), int(kit.get("cuello", 0)))
 	var w := camiseta.get_width()
 	var escala := float(w) / 64.0
 	var h := int(escala * 112.0)
@@ -733,8 +974,22 @@ static func uniforms(kit: Dictionary, dorsal: int) -> Dictionary:
 		"color_botines": _col(bot.get("c1", bm[3])), "bot_c2": _col(bot.get("c2", bm[4])), "bot_c3": _col(bot.get("c3", bm[5])),
 		"bot_dis": int(bm[2]),
 		"dorsal": dorsal, "color_num": _col(kit.get("num", "ffffff")),
+		"cuello": int(kit.get("cuello", 0)),
 	}
 	for a: Array in ACCESORIOS:
 		var k := String(a[0])
 		u["acc_" + k] = _col(acc[k]) if acc.has(k) else Color(0, 0, 0, 0)
+	## Los patrocinadores (pecho, manga, espalda y pantalón).
+	var sp: Dictionary = kit.get("sp", {})
+	for z: String in ["pecho", "manga", "espalda", "short"]:
+		u["hay_sp_" + z] = sp.has(z)
+		if sp.has(z):
+			var info: Dictionary = sp[z]
+			var fondo: Color = cols[0]
+			if z == "short":
+				fondo = _col(pant.get("c1", "ffffff"))
+			var hx := String(info.get("color", "#ffffff"))
+			var solo := z == "manga" or z == "short"
+			u["sp_" + z] = SponsorKit.textura(String(info.get("marca", "")), hx, SponsorKit.color_letras(hx, fondo), solo)
+			u["sp_asp_" + z] = SponsorKit.aspecto(String(info.get("marca", "")), hx, SponsorKit.color_letras(hx, fondo), solo)
 	return u
