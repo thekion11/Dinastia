@@ -45,8 +45,8 @@ func _process(_d: float) -> void:
 		_cam.look_at(Vector3(-2.25, 1.45, 0), Vector3.UP)
 	if _n == 16:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/personaje_dt_cara.png")
-		_cam.position = Vector3(-0.45 + 0.9, 1.55, 1.0)
-		_cam.look_at(Vector3(-0.45, 1.35, 0), Vector3.UP)
+		_cam.position = Vector3(-2.25 + 0.6, 1.0, 1.9)
+		_cam.look_at(Vector3(-2.25, 0.85, 0), Vector3.UP)
 	if _n == 22:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/personaje_dt_abrigo.png")
 		get_tree().quit()

@@ -85,6 +85,9 @@ uniform bool largo = false;
 uniform bool usa_reposo = false;
 // Cuánto se separa la tela del cuerpo, en metros (0 = pintada sobre la piel).
 uniform float holgura = 0.02;
+// Cuánto tapa la tela los músculos (0 = pintada sobre la piel, 1 = superficie
+// alisada del todo). Ropa de calle más; camisetas de juego menos.
+uniform float alisar = 0.0;
 varying vec3 v_reposo;
 
 void vertex() {
@@ -103,7 +106,50 @@ void vertex() {
 		float inflar = torso * holgura * (0.8 + 0.4 * smoothstep(1.35, 1.05, y))
 			+ manga * holgura * (0.5 + 1.1 * smoothstep(0.25, 0.43, ax))
 			+ pant * holgura * (0.75 + 0.85 * smoothstep(0.85, 0.63, y));
-		VERTEX += NORMAL * inflar;
+		// Pantalón y manga largos (ropa de calle, cuerpo técnico): la tela
+		// cae suelta hasta el tobillo y la muñeca, no como unas calzas.
+		if (largo) {
+			float pierna_baja = (1.0 - brazo) * smoothstep(0.1, 0.16, y) * (1.0 - smoothstep(0.58, 0.63, y));
+			float antebrazo = brazo * smoothstep(0.41, 0.45, ax) * (1.0 - smoothstep(0.66, 0.7, ax));
+			inflar += pierna_baja * holgura * (1.2 + 0.4 * smoothstep(0.5, 0.2, y)) + antebrazo * holgura * 0.9;
+			// Pantalón de calle: la pierna se rellena hasta un tubo recto
+			// alrededor de su eje (la tela cuelga, no dibuja gemelo ni
+			// cuádriceps). Solo hacia fuera: nunca se mete dentro del cuerpo.
+			if (civil) {
+				vec2 rel = vec2(ax - 0.112, (v_reposo.z * 0.5 - 0.25) + 0.04);
+				float r = length(rel);
+				float objetivo = mix(0.085, 0.102, smoothstep(0.25, 0.85, y));
+				float pierna = (1.0 - brazo) * smoothstep(0.1, 0.16, y) * (1.0 - smoothstep(0.88, 0.94, y));
+				inflar += pierna * max(objetivo - r, 0.0);
+				// Y la manga, igual alrededor del brazo (eje a la altura del hombro).
+				vec2 rb = vec2(y - 1.455, (v_reposo.z * 0.5 - 0.25) + 0.068);
+				float manga_c = brazo * (1.0 - smoothstep(0.66, 0.7, ax));
+				inflar += manga_c * max(mix(0.058, 0.046, smoothstep(0.3, 0.66, ax)) - length(rb), 0.0);
+			}
+		}
+		// LA TELA TAPA LOS MÚSCULOS (26-9-2026): donde hay ropa, la superficie
+		// se acerca a la versión ALISADA del cuerpo (`VestidorQ._alisado`):
+		// se rellenan los surcos entre músculos y la luz cae como sobre tela,
+		// no como sobre abdominales pintados. La normal alisada está en la pose
+		// de reposo; se lleva a la pose actual con el mismo giro que llevó la
+		// normal de reposo a la animada.
+		if (alisar > 0.0 && dot(CUSTOM1.xyz, CUSTOM1.xyz) > 0.25) {
+			float largas = largo ? 1.0 : 0.0;
+			float manga_l = brazo * (1.0 - smoothstep(mix(0.41, 0.66, largas), mix(0.45, 0.70, largas), ax));
+			float pant_l = (1.0 - brazo) * smoothstep(mix(0.58, 0.12, largas), mix(0.63, 0.16, largas), y) * (1.0 - smoothstep(1.0, 1.04, y));
+			// Ropa de calle: el zapato tampoco marca los dedos del pie.
+			float zapato = (civil && largo) ? (1.0 - brazo) * (1.0 - smoothstep(0.1, 0.13, y)) : 0.0;
+			float ropa = max(max(torso, zapato), max(manga_l, pant_l)) * alisar;
+			VERTEX += NORMAL * zapato * 0.008;
+			vec3 a = normalize(CUSTOM1.xyz);
+			vec3 b = normalize(NORMAL);
+			vec3 v = cross(a, b);
+			float c = dot(a, b);
+			vec3 x = CUSTOM0.xyz;
+			vec3 xr = x * c + cross(v, x) + v * (dot(v, x) / (1.0 + c + 0.0001));
+			VERTEX += NORMAL * CUSTOM0.w * ropa;
+			NORMAL = normalize(mix(NORMAL, normalize(xr), ropa));
+		}
 	}
 }
 
@@ -512,7 +558,8 @@ void fragment() {
 	// Micro relieve del tejido sobre el relieve del cuerpo.
 	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * 0.045 * tela;
 	NORMAL_MAP = nm;
-	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? 0.22 : 0.45, tela) : 0.6 * tela;
+	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
+	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.06 : 0.22) : 0.45, tela) : 0.6 * tela;
 	RIM = borde;
 	RIM_TINT = 0.35;
 }
