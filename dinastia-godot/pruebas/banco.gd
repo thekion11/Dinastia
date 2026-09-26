@@ -106,6 +106,7 @@ func _ready() -> void:
 	_probar_contratos_c9()
 	_probar_vida_dt()
 	_probar_maestrias()
+	_probar_habilidades_en_resultados()
 	_probar_disenos_kit()
 	_cerrar()
 
@@ -6272,6 +6273,49 @@ func _probar_maestrias() -> void:
 	var m2 := Maestria.new()
 	m2.desde_dic(d)
 	_comprobar(m2.nivel("finanzas") == 15 and m2.puntos == ma.puntos, "las maestrías se guardan")
+
+## ¿DE VERDAD PESAN EN EL MARCADOR? (26-9-2026). El mismo club contra el mismo
+## rival, 300 partidos con la misma semilla: una vez sin nada y otra con las
+## maestrías de juego al 30 y "Genio táctico" en el árbol. Al ser los mismos
+## números aleatorios, cualquier diferencia es de las habilidades.
+func _probar_habilidades_en_resultados() -> void:
+	_titulo("HABILIDADES Y MAESTRÍAS: SE NOTAN EN LOS RESULTADOS")
+	var m := Mundo.new()
+	m.generar(["CHI"], 777)
+	var yo: Club = m.ligas[0].clubes[0]
+	var rival: Club = m.ligas[0].clubes[1]
+	m.tomar_el_mando(yo.id)
+	var serie := func() -> Dictionary:
+		m.aplicar_bonificadores()
+		var r := {"g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "bono": yo.bonus_ataque}
+		seed(4242)
+		for i in 300:
+			var pa := Partido.new(yo, rival, true)
+			var res: Dictionary = pa.simular()
+			r["gf"] += int(res["local"])
+			r["gc"] += int(res["visita"])
+			if res["local"] > res["visita"]:
+				r["g"] += 1
+			elif res["local"] == res["visita"]:
+				r["e"] += 1
+			else:
+				r["p"] += 1
+		return r
+	var base: Dictionary = serie.call()
+	for k: String in ["ataque", "defensa", "porteros", "balon_parado", "analisis"]:
+		m.maestria.niveles[k] = Maestria.NIVEL_MAX
+	m.entrenamiento.dt_nodos["pizarra"] = true
+	m.entrenamiento.dt_nodos["genio"] = true
+	var top: Dictionary = serie.call()
+	var pts := func(r: Dictionary) -> float: return (3.0 * r["g"] + r["e"]) / 300.0
+	print("   · ", "sin nada:  %d-%d-%d, %d:%d goles, %.2f pts/partido (bono ataque %.3f)" % [base["g"], base["e"], base["p"], base["gf"], base["gc"], pts.call(base), base["bono"]])
+	print("   · ", "al máximo: %d-%d-%d, %d:%d goles, %.2f pts/partido (bono ataque %.3f)" % [top["g"], top["e"], top["p"], top["gf"], top["gc"], pts.call(top), top["bono"]])
+	_comprobar(float(top["bono"]) > float(base["bono"]) * 1.15, "el bono llega al motor del partido")
+	_comprobar(int(top["gf"]) > int(base["gf"]) and int(top["gc"]) < int(base["gc"]), "más goles a favor y menos en contra")
+	_comprobar(pts.call(top) > pts.call(base) + 0.15, "se ganan más puntos por partido (%.2f → %.2f)" % [pts.call(base), pts.call(top)])
+	## Y no deciden solas: un club muy inferior con todo al máximo sigue sin
+	## ser favorito ante el mejor.
+	_comprobar(pts.call(top) < 3.0, "no ganan todos los partidos")
 
 func _probar_disenos_kit() -> void:
 	_titulo("EQUIPACIÓN: DISEÑOS, COLORES, BOTINES Y ACCESORIOS")
