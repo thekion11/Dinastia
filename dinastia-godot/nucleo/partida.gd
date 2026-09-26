@@ -70,6 +70,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"base_real": Datos.base_real,
 		"desafios": m.desafios,
 		"reto": m.reto,
+		"fondo": m.fondo.a_dic() if m.fondo != null else {},
 		"clubes": [],
 		"ligas": [],
 		"copa": _copa_a_dic(m.copa),
@@ -188,6 +189,10 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.mi_club_id = String(datos["mi_club"])
 	m.desafios.clear()
 	m.reto = (datos.get("reto", {}) as Dictionary).duplicate()
+	var df: Dictionary = datos.get("fondo", {})
+	if not df.is_empty():
+		m.fondo = FondoInversion.new()
+		m.fondo.desde_dic(df)
 	for k in datos.get("desafios", []):
 		m.desafios.append(String(k))
 

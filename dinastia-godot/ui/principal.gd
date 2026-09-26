@@ -1683,6 +1683,10 @@ func _arrancar_con(m: Mundo) -> void:
 	## los bancos de prueba y las capturas- se queda el DT clásico de siempre.
 	if Principal.modo_elegido != "":
 		mundo.roles.arrancar(Principal.modo_elegido, Principal.dt_nombre_elegido)
+		## FONDO DE INVERSIÓN (26-9-2026): el fondo arranca con su propia caja.
+		if Principal.modo_elegido == "fondo" and mundo.mi_club() != null:
+			mundo.fondo = FondoInversion.new()
+			mundo.fondo.caja = int(round(Eco.ref_caja(70.0) * 2.5))
 		Principal.modo_elegido = ""
 	_conectar_noticias()
 	_seleccionado = null
@@ -2153,7 +2157,7 @@ func _conectar_noticias() -> void:
 			if con_mentor != null:
 				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:
 					MentorVoz.decir(self, mundo, titulo, texto))
-		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos, mundo.vida, mundo.maestria]:
+		for fuente: Object in [mundo.fondo, mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos, mundo.vida, mundo.maestria]:
 			if fuente != null:
 				fuente.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 					_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -15030,6 +15034,8 @@ func _pintar_carrera(r: Roles) -> void:
 			cp.cerrado.connect(_refrescar))
 	## LA REPUTACIÓN (26-9-2026): nivel del club, tu fama y lo que la movió.
 	PanelReputacion.pintar(_lista_club, mundo)
+	if mundo.fondo != null:
+		PanelFondo.pintar(_lista_club, mundo, _refrescar)
 	_lista_club.add_child(HSeparator.new())
 	var t := _texto(11, COL_SUAVE); t.text = "TU CARRERA"
 	_lista_club.add_child(t)
