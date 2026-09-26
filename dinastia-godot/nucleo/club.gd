@@ -225,7 +225,7 @@ func _es_puesto_portero_str(puesto: String) -> bool:
 ##
 ## Y el tamaño manda sobre el gusto: un club de 8.000 butacas no puede tener tres
 ## bandejas por mucha reputación que tenga.
-const _FORMAS := ["cuenco", "ingles", "ovalo", "herradura", "cuadrado"]
+const _FORMAS := ["cuenco", "ingles", "oval", "herradura", "rect"]
 const _CESPED := ["rayas", "damero", "circulos", "liso"]
 const _ASIENTOS := ["franjas", "liso", "moteado", "degradado"]
 
@@ -268,6 +268,18 @@ func perfil_estadio() -> Dictionary:
 			p["niveles"] = mini(int(p["niveles"]) + 1, maxi(1, int(e.get("niveles", p["niveles"]))))
 		elif rep >= 60 and String(e.get("techo", "sin")) in ["sin", "parcial", "visera"]:
 			p["techo"] = e["techo"]
+	## SU ESTADIO DE VERDAD (26-9-2026, `herramientas/estadios_reales.py`): si
+	## el club representa a uno real, su estadio copia la arquitectura del real
+	## -forma, bandejas, techo, pista, focos y fachada-, gane o no reputación.
+	## La caldera de tres bandejas, el óvalo con pista, la herradura al cerro,
+	## el techo retráctil... Los demás siguen con los estilos genéricos.
+	var reales: Variant = Datos.tabla("ESTADIO_CLUB")
+	if reales is Dictionary and (reales as Dictionary).has(nombre):
+		var r: Dictionary = (reales as Dictionary)[nombre]
+		for k in ["forma", "niveles", "techo", "pista", "focos", "fachada", "rasgo"]:
+			if r.has(k):
+				p[k] = r[k]
+		p["real"] = true
 	return p
 
 ## djb2, el mismo que usa el HTML para que un club dé siempre el mismo recinto.
