@@ -668,10 +668,30 @@ func aleatorio(mi: Club, obras: Instalaciones = null) -> Dictionary:
 # ============================================================================
 
 func a_dic() -> Dictionary:
-	return {"nombre": nombre, "ajustes": ajustes}
+	return {"nombre": nombre, "ajustes": ajustes, "real_de": real_de}
+
+## EL ESTADIO REAL DE TU CLUB (26-9-2026): al tomar un club que representa a
+## uno real, tu estadio arranca con la arquitectura del real (forma, bandejas,
+## techo, pista, focos, fachada). Una sola vez por club: después es tuyo y lo
+## que reformes no se pisa.
+var real_de: String = ""
+
+func asegurar_real(c: Club) -> void:
+	if c == null or real_de == c.id:
+		return
+	real_de = c.id
+	var reales: Variant = Datos.tabla("ESTADIO_CLUB")
+	if not (reales is Dictionary) or not (reales as Dictionary).has(c.nombre):
+		return
+	var r: Dictionary = (reales as Dictionary)[c.nombre]
+	for k in ["forma", "niveles", "techo", "pista", "focos", "fachada"]:
+		if r.has(k):
+			ajustes[k] = r[k]
 
 func desde_dic(d: Dictionary) -> void:
 	nombre = String(d.get("nombre", ""))
+	## Guardados viejos: se marca como ya tomado para no pisar lo que hubiera.
+	real_de = String(d.get("real_de", "(guardado)"))
 	var guardado: Dictionary = d.get("ajustes", {})
 	## Se rellenan las claves que falten con las de fábrica, exactamente como
 	## hace `initEst()` en el HTML. Un guardado de una versión anterior no tiene

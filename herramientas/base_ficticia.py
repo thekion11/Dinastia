@@ -37,6 +37,7 @@ Reglas de los nombres ficticios (comprobadas al final, el script falla si no):
 import hashlib
 import historia_clubes
 import jugadores_guino
+import estadios_reales
 import json
 import os
 import sys
@@ -54,6 +55,9 @@ TABLAS_DEL_PACK = [
     # (`historia_clubes.py`): en la base con los nombres ficticios, en el pack
     # con los reales.
     "HISTORIA_CLUBES", "CLASICOS",
+    # La arquitectura del estadio de cada club real (`estadios_reales.py`):
+    # en la base con el nombre ficticio, en el pack con el real.
+    "ESTADIO_CLUB",
 ]
 
 # ---------------------------------------------------------------------------
@@ -690,6 +694,10 @@ def main():
     # quién representan sin llevar su nombre.
     fic["REALES"] = jugadores_guino.tabla_base(real["REALES"], CLUBES, limpiar)
     fic["EQUIP_REAL"] = {}
+    fic["ESTADIO_CLUB"] = {CLUBES[k]: v for k, v in estadios_reales.ESTADIOS.items() if k in CLUBES}
+    todos = [f[0] for f in real["DATA_P1"] + real["DATA_P2"]] + \
+        [f[0] for d in real["PAISES_LIGAS"].values() for f in d["clubes"]]
+    real["ESTADIO_CLUB"] = {n: estadios_reales.ESTADIOS[limpiar(n)] for n in todos if limpiar(n) in estadios_reales.ESTADIOS}
 
     # Bolsas de nombres (viven solo en la base: no son datos reales).
     pools = base["POOLS_EU"]
