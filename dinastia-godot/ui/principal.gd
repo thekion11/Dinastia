@@ -2107,10 +2107,11 @@ func _conectar_noticias() -> void:
 		mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
 			call_deferred("_portada_nueva")
 			call_deferred("_al_paso_nuevo"))
-		if mundo.calendario != null:
-			mundo.calendario.mentor.connect(func(titulo: String, texto: String) -> void:
-				MentorVoz.decir(self, mundo, titulo, texto))
-		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario]:
+		for con_mentor: Object in [mundo.calendario, mundo.politica]:
+			if con_mentor != null:
+				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:
+					MentorVoz.decir(self, mundo, titulo, texto))
+		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica]:
 			if fuente != null:
 				fuente.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 					_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -7347,6 +7348,30 @@ func _apelar_caso(id_caso: String) -> void:
 	_anotar("⚖️ Apelación.", r)
 	_refrescar()
 
+## C15: EL GOBIERNO DEL PAÍS. Partidos y personas inventados; la estructura
+## del Estado y los plazos, reales.
+func _pintar_gobierno(c: Club) -> void:
+	if mundo.politica == null:
+		return
+	var g := mundo.politica.gobierno(c.pais, mundo.anio)
+	var pos: Array = Politica.POSTURAS[String(g["postura"])]
+	var l := _texto(12, COL_TEXTO)
+	var prox := int(g["proxima"])
+	l.text = "🗳️ Gobierno de %s: %s (%s) · prioridad: %s%s" % [c.pais, String(g["lider"]), String(g["partido"]),
+		String(pos[0]).to_lower(), (" · elecciones en %d" % prox) if prox > 0 else " · sin elecciones nacionales"]
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.tooltip_text = String(pos[1])
+	l.mouse_filter = Control.MOUSE_FILTER_PASS
+	_lista_fed.add_child(l)
+	var b := Button.new()
+	b.text = "🧑‍🏫 ¿Cómo funciona el Estado aquí?"
+	b.add_theme_font_size_override("font_size", 13)
+	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	b.pressed.connect(func() -> void:
+		MentorVoz.decir(self, mundo, "Cómo se gobierna %s" % c.pais, Politica.explicacion(c.pais)))
+	_lista_fed.add_child(b)
+	_lista_fed.add_child(HSeparator.new())
+
 func _pintar_federacion(c: Club) -> void:
 	_limpiar(_lista_fed)
 	var f := mundo.federacion
@@ -7361,6 +7386,7 @@ func _pintar_federacion(c: Club) -> void:
 		lema.text = String(ag[2]) + " Sus propuestas salen antes en la asamblea y hace campaña por ellas."
 		lema.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_fed.add_child(lema)
+	_pintar_gobierno(c)
 	_pintar_licencia_y_tribunal(c, f)
 	_pintar_historial_federacion(f)
 	var t := _texto(11, COL_SUAVE)

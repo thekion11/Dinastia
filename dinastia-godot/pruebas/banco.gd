@@ -101,6 +101,7 @@ func _ready() -> void:
 	_probar_licencia_c7()
 	_probar_tanda_c()
 	_probar_calendario_c13()
+	_probar_politica_c15()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -6056,3 +6057,46 @@ func _probar_calendario_c13() -> void:
 	cal2.desde_dic(dic)
 	_comprobar(cal2.explicadas.has("11 de septiembre"), "se guarda lo que el mentor ya explicó")
 	_comprobar(Calendario.proximas("CHI", 2026, 1, 5).size() == 5, "hay próximas fechas para el calendario")
+
+func _probar_politica_c15() -> void:
+	_titulo("C15: POLÍTICA Y ESTADO (FICTICIA Y NEUTRAL)")
+	_comprobar(Politica.ESTRUCTURA.size() == 24, "los 24 países tienen su estructura de Estado")
+	_comprobar(Politica.sistema("CHI") == "presidencial" and Politica.mandato("CHI") == 4, "Chile: presidencial, cada 4 años")
+	_comprobar(Politica.sistema("ESP") == "monarquia_parlamentaria" and Politica.mandato("MEX") == 6, "España monarquía parlamentaria; México vota cada 6")
+	_comprobar(Politica.mandato("KSA") == 0, "Arabia Saudí no tiene elecciones nacionales")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5152)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var pol := m.politica
+	var g := pol.gobierno("CHI", 2026)
+	_comprobar(Politica.PARTIDOS.has(String(g["partido"])) and Politica.POSTURAS.has(String(g["postura"])), "el gobierno es de un partido inventado y con una postura neutra")
+	_comprobar(pol.gobierno("CHI", 2026) == g, "el gobierno no cambia al volver a pedirlo")
+	var noticias: Array = []
+	var mentor: Array = []
+	pol.noticia.connect(func(t: String, _b: String) -> void: noticias.append(t))
+	pol.mentor.connect(func(t: String, _b: String) -> void: mentor.append(t))
+	## Forzar elecciones este año y recorrer las semanas.
+	g["proxima"] = 2026
+	var saldo0 := c.saldo
+	for s in range(1, 45):
+		pol.semana(c, 2026, s, m.prensa)
+	_comprobar(mentor.size() == 1, "el mentor explica el Estado una sola vez")
+	_comprobar(noticias.has("🗳️ Campaña electoral") and noticias.has("🗳️ Elecciones en CHI"), "hay campaña y hay resultado")
+	var g2 := pol.gobierno("CHI", 2026)
+	_comprobar(int(g2["desde"]) == 2026 and int(g2["proxima"]) == 2030, "el nuevo gobierno dura 4 años")
+	_comprobar(c.saldo != saldo0, "la postura del gobierno se nota en la caja")
+	## Arabia Saudí: nunca vota.
+	var c2 := m.ligas[0].clubes[1]
+	c2.pais = "KSA"
+	var n0 := noticias.size()
+	for s in range(1, 45):
+		pol.semana(c2, 2026, s, m.prensa)
+	_comprobar(not noticias.slice(n0).any(func(t: String) -> bool: return t.begins_with("🗳️")), "en Arabia Saudí no hay elecciones")
+	_comprobar(Politica.explicacion("KSA").contains("No hay elecciones"), "y el mentor lo explica")
+	## Nombres ficticios y sin partidos reales.
+	_comprobar(not Politica.nombre_ficticio("CHI", "x").is_empty(), "los políticos tienen nombre inventado")
+	var d := pol.a_dic()
+	var p2 := Politica.new()
+	p2.desde_dic(d)
+	_comprobar(p2.gobierno("CHI", 2026)["partido"] == g2["partido"], "el gobierno se guarda")

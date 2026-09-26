@@ -100,6 +100,7 @@ var licencia: Licencia
 var trabajadores: Trabajadores
 var eventos_cantera: EventosCantera
 var calendario: Calendario
+var politica: Politica
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
 var banco: Banco
 ## La marca del pecho: ofertas, firma y exigencia contractual.
@@ -1080,6 +1081,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		eventos_cantera.semana(academia, mi_club(), anio, semana)
 	if calendario != null and mi_club() != null:
 		calendario.semana(mi_club(), anio, semana)
+	if politica != null and mi_club() != null:
+		politica.semana(mi_club(), anio, semana, prensa)
 	if banco != null and mi_club() != null:
 		## Los dos consejeros que hasta hoy decían "sin efecto" en su propia
 		## descripción (`Directiva.CONSEJEROS`, `fin`/`leg`): era cierto
@@ -1779,6 +1782,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	trabajadores = Trabajadores.new()
 	eventos_cantera = EventosCantera.new()
 	calendario = Calendario.new()
+	politica = Politica.new()
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)
