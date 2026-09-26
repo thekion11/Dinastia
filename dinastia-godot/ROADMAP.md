@@ -14,8 +14,25 @@ Católica-Colo el Clásico). La historia es para todos los clubes."*
   asuntos.
 - **D3. Árbol de habilidades como esquema** ✅ HECHO (26-9), también a pantalla completa.
 - **D7. Maestrías (15 categorías de 30 niveles)** ✅ HECHO (26-9).
-- **D8. Diseñador de equipación** ✅ HECHO (26-9): 70 diseños, 5 colores, pantalón, medias, 30
-  botines, accesorios, números y realismo de la ropa en 3D y 2D.
+- **D8. Diseñador de equipación** ✅ HECHO (26-9): 90 diseños (13 de corte moderno a la FC 26:
+  bandas en V, gradientes, geometría, cuello polo…), 5 colores, pantalón, medias, 30 botines,
+  accesorios, números. La ropa en 3D ya no va pegada al cuerpo: se infla desde la pose de reposo.
+- **D9. Portafolio de movimientos** ✅ HECHO (26-9): 95 animaciones por jugador (`AnimExtra`):
+  clips de la Universal Animation Library, 24 espejos para zurdos y ambos perfiles, y 14
+  expresiones procedurales (aplaudir, protestar, pedir el balón, manos a la cabeza, cansado…).
+  En el partido los zurdos golpean con la zurda y regates, festejos, lamentos y protestas se
+  sortean por categoría.
+- **D10. Habilidades que se notan** ✅ VERIFICADO (26-9): el mismo club con maestrías de juego al
+  30 y «Genio táctico» pasa de 1,40 a 1,73 puntos por partido (300 partidos, misma semilla).
+  Prueba en el banco.
+- **D11. Base de la IA que juega y del mando** ✅ BASE HECHA (26-9), el resto es futuro:
+  - `AccionesJuego`: 21 acciones (pases, tiros, regate, entradas, portero…) con atributos,
+    dificultad, alcance, pierna débil, botón y familia de animaciones; `prob_exito` y `xg`;
+  - `MotorLibre`: prototipo de partido SIN jugadas prehechas, 22 agentes con IA de utilidad,
+    marcaje, presión y un jugador controlable (`tomar_control`, `mover`, `ordenar`);
+  - `Mando`: mapa de mando y teclado en el InputMap (el mismo botón cambia con y sin balón);
+  - **Falta** (futuro): enchufar `MotorLibre` al visor 3D, calibrar con datos reales (hoy
+    ~1-2 goles y ~20 tiros entre iguales, pases ~65 %), y la pantalla de jugar con mando.
 - **D4. Caza de fallas visuales** ✅ primera pasada HECHA (26-9): recorrido automático de las 37
   pantallas del menú (`pruebas/captura_todo.gd`). Arreglado:
   - el menú encendía el grupo equivocado (CENTRAL al entrar por CLUB › Infraestructura);
@@ -33,7 +50,7 @@ Católica-Colo el Clásico). La historia es para todos los clubes."*
       blendshapes 🟡, necesita Blender en el PC);
     - **B9** ropa y accesorios;
     - **B10** mascotas 3D en el campo;
-    - **B12** música libre en español (🟡, necesita tu visto bueno sobre las pistas);
+    - ~~B12 música libre~~ DESCARTADA por el usuario (26-9); queda la música procedural;
     - **B14** optimización y velocidad;
     - **B15** calibración de realismo.
   - Restos de bloques hechos:
