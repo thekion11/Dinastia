@@ -532,6 +532,12 @@ func _arrancar_partido() -> void:
 	var fv: float = partido.fuerza(partido.once_visita, partido.visita)["ata"]
 	var pos := 100.0 * fl / maxf(fl + fv, 0.001)
 	_juego.setup([], _en_campo, Partido.MINUTOS, pos, _balon, club.tactica, visitante.tactica)
+	## La cámara del árbitro sigue su cabeza.
+	var arb: Variant = _juego.players_by_id.get("arbitro")
+	if arb is Dictionary and _rig != null:
+		_rig.arbitro_ref = (arb as Dictionary).get("node")
+	## La sala VAR, cuando el árbitro pide revisar.
+	_juego.revision_var.connect(_a_la_revision_var)
 	## La repetición del gol (plan maestro B3): graba siempre los últimos
 	## segundos de los 22 y del balón.
 	_repe = Repeticion.new()
@@ -1087,6 +1093,23 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 		"tx": "¡Lesión de %s! (%d sem)" % [j.nombre, semanas],
 		"jugadorId": j.id,
 	})
+
+## LA SALA VAR (26-9-2026): el partido se para, se ve la sala por dentro con
+## los monitores mostrando la jugada desde cuatro cámaras, y se sigue.
+var _sala_var: SalaVAR = null
+
+func _a_la_revision_var(minuto: int, motivo: String) -> void:
+	if _sala_var != null or _raiz3d == null:
+		return
+	var vel_antes := _juego.vel_idx if _juego != null else 2
+	if _juego != null:
+		_juego.vel_idx = 0
+	var foco := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
+	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo)
+	_sala_var.terminada.connect(func() -> void:
+		_sala_var = null
+		if _juego != null:
+			_juego.vel_idx = maxi(vel_antes, 1))
 
 func _a_la_decision_arbitral(texto: String, minuto: int) -> void:
 	if _juego == null:
