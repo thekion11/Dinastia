@@ -908,7 +908,7 @@ func renovar(j: Jugador, con_clausula: bool = false) -> Dictionary:
 		return {"error": "ese jugador no es tuyo"}
 	var pedido := pide_para_renovar(j)
 	j.sueldo = int(round(float(pedido) * 0.9)) if con_clausula else pedido
-	j.anios_contrato = Azar.ent(2, 4)
+	j.anios_contrato = Contratos.ajustar_anios(j, Azar.ent(2, 4))
 	var clausula := 0
 	if con_clausula and m.cesiones != null:
 		clausula = m.cesiones.pactar_clausula(j)

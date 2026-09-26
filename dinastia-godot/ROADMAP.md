@@ -106,7 +106,7 @@ suelo y no atraviesen nada.
 Resbalón en la ducha, mordedura del perro, videojuego, celebración familiar… Son poco
 frecuentes, tienen su noticia y se pueden prevenir con normas del vestuario.
 
-### C9. Contratos y jornada laboral según la ley de cada país (2026) 🟡
+### C9. Contratos y jornada laboral según la ley de cada país (2026) 🟡 — HECHO (26-9); México y Egipto marcados para revisar
 - Tipos de contrato (profesional, formativo, cesión) y jornada según la ley laboral vigente.
 - Ejemplo: en Chile la ley de 40 horas baja a 42 horas semanales en abril de 2026.
 - 🟡 Cada país necesita su dato verificado antes de ponerlo en el juego. Se hará por tandas de
