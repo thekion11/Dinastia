@@ -101,6 +101,7 @@ var trabajadores: Trabajadores
 var eventos_cantera: EventosCantera
 var calendario: Calendario
 var politica: Politica
+var contratos: Contratos
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
 var banco: Banco
 ## La marca del pecho: ofertas, firma y exigencia contractual.
@@ -534,7 +535,7 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 	j.rasgo = _rasgo_al_azar()
 	j.forma = Azar.ent(45, 70)
 	j.moral = Azar.ent(55, 80)
-	j.anios_contrato = Azar.ent(1, 4)
+	j.anios_contrato = Contratos.ajustar_anios(j, Azar.ent(1, 4))
 	j.generar_atributos()
 	j.tasar()
 	## LAS HABILIDADES DE NACIMIENTO. `Entrenamiento.sortear_habilidades()`
@@ -798,6 +799,7 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 			## ajuste de la directiva como correctivo, no esta partida suelta-.
 			f.aplica_operacion = true
 			f.factor_operacion = obras.abarata_operacion()
+			f.factor_estructura = Contratos.factor_estructura(c.pais, anio, semana)
 		var en_casa := jugaron_en_casa.has(c.id)
 		## LOS PRECIOS DINAMICOS. El mismo asiento no vale lo mismo contra el
 		## lider que contra el colista, y con el interruptor encendido se cobra
@@ -1085,6 +1087,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		calendario.semana(mi_club(), anio, semana)
 	if politica != null and mi_club() != null:
 		politica.semana(mi_club(), anio, semana, prensa)
+	if contratos != null and mi_club() != null:
+		contratos.semana(mi_club(), anio, semana)
 	if banco != null and mi_club() != null:
 		## Los dos consejeros que hasta hoy decían "sin efecto" en su propia
 		## descripción (`Directiva.CONSEJEROS`, `fin`/`leg`): era cierto
@@ -1785,6 +1789,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	eventos_cantera = EventosCantera.new()
 	calendario = Calendario.new()
 	politica = Politica.new()
+	contratos = Contratos.new()
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)

@@ -175,7 +175,7 @@ func fichar(j: Jugador, comprador: Club, monto: int, sueldo: int, anios: int) ->
 		vendedor.mover_saldo(monto)
 		vendedor.soltar(j)
 	j.sueldo = sueldo
-	j.anios_contrato = anios
+	j.anios_contrato = Contratos.ajustar_anios(j, anios)
 	j.pide_salir = false
 	comprador.fichar(j)
 	traspaso.emit(j, vendedor, comprador, monto)

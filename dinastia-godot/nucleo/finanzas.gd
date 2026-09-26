@@ -154,8 +154,12 @@ func cuotas_socios() -> int:
 
 ## Gastos de estructura: la parte del club que no son sueldos de futbolistas
 ## (cuerpo técnico, mantenimiento, viajes). Escala con el tamaño del club.
+## C9: la jornada legal del país (menos horas = más turnos). Solo lo pone
+## `Mundo` para tu club; el resto del mundo queda en 1.
+var factor_estructura: float = 1.0
+
 func estructura_base() -> int:
-	return Eco.escalar(48000.0, float(_club.rep)) * SEMANAS_DEL_MES \
+	return int(round(float(Eco.escalar(48000.0, float(_club.rep))) * factor_estructura)) * SEMANAS_DEL_MES \
 		+ honorarios_consejeros * SEMANAS_DEL_MES
 
 ## LA PROYECCION NO COBRA. Estas cuatro funciones `_base()` existen porque las
