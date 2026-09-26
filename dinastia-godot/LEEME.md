@@ -1,5 +1,35 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## SÉPTIMA RONDA (3): PORTAFOLIO DE MOVIMIENTOS, HABILIDADES QUE SE NOTAN Y BASE DE LA IA LIBRE (26-9-2026)
+
+- **Portafolio de movimientos** (`visor/anim_extra.gd`): 95 animaciones por jugador.
+  - 23 clips de la Universal Animation Library (saludos, aplausos, protestas, gestos…);
+  - 24 espejos (`<nombre>_espejo`) hechos por reflexión en el espacio del modelo, para zurdos
+    y para que un regate o un festejo no salga siempre hacia el mismo lado;
+  - 14 expresiones procedurales (aplaudir, protestar, pedir el balón, manos a la cabeza,
+    cansado, mirar al cielo, besar el escudo…); los brazos que no se animan se bajan solos.
+  - `AnimExtra.variante()` la usa el partido: los golpeos de un zurdo van espejados y los
+    regates, festejos, lamentos y protestas se sortean por categoría (`CATEGORIAS`).
+- **Las habilidades influyen en el resultado** (prueba en el banco): el mismo club contra el
+  mismo rival, 300 partidos con la misma semilla, pasa de 1,40 a 1,73 puntos por partido con
+  las maestrías de juego al 30 y «Genio táctico». La cadena es `Mundo.aplicar_bonificadores()`
+  → `Club.bonus_ataque/defensa` → `Partido.fuerza()`, que usan liga, copa y continental.
+- **Base de la IA que juega sin jugadas prehechas y del mando** (futuro, pero ya en el código):
+  - `nucleo/acciones_juego.gd`: 21 acciones con los atributos que mandan, dificultad,
+    alcance, pierna débil, botón y familia de animación; `prob_exito()` y `xg()`;
+  - `nucleo/motor_libre.gd`: 22 agentes en un campo de 105 × 68 que eligen con IA de
+    utilidad (tirar, pasar a cada compañero, conducir, regatear), con presión, marcaje y
+    entradas. Admite un jugador controlado (`tomar_control`, `mover`, `ordenar`,
+    `cambiar_jugador`) y `foto()` para dibujarlo. Entre iguales da ~1-2 goles y ~20 tiros;
+    el mejor gana y el bono del club genera más ocasiones. `pruebas/sonda_motor_libre.tscn`
+    imprime estadísticas para calibrar;
+  - `nucleo/mando.gd`: mando y teclado en el InputMap sin tocar project.godot; el mismo botón
+    pasa con balón y presiona sin él.
+  - Falta: enchufarlo al visor 3D y calibrarlo con datos reales.
+- **Equipación**: 13 familias modernas más (90 diseños) y la ropa ya no va pegada al cuerpo
+  (el shader la infla desde la pose de reposo: más en torso y mangas, poco en el pantalón).
+- **Música**: la pista libre en español (B12) queda descartada; sigue la música procedural.
+
 ## SÉPTIMA RONDA (2): MAESTRÍAS, DISEÑADOR DE EQUIPACIÓN Y REALISMO DE LA ROPA (26-9-2026)
 
 - **Maestrías** (`nucleo/maestria.gd`, `ui/componentes/panel_maestrias.gd`): 15 categorías

@@ -107,6 +107,7 @@ func _ready() -> void:
 	_probar_vida_dt()
 	_probar_maestrias()
 	_probar_habilidades_en_resultados()
+	_probar_motor_libre()
 	_probar_disenos_kit()
 	_cerrar()
 
@@ -6316,6 +6317,75 @@ func _probar_habilidades_en_resultados() -> void:
 	## Y no deciden solas: un club muy inferior con todo al máximo sigue sin
 	## ser favorito ante el mejor.
 	_comprobar(pts.call(top) < 3.0, "no ganan todos los partidos")
+
+## LA BASE DE LA IA QUE JUEGA Y DEL MANDO (26-9-2026).
+func _probar_motor_libre() -> void:
+	_titulo("IA LIBRE: ACCIONES, MOTOR SIN JUGADAS PREHECHAS Y MANDO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 777)
+	var cl: Array = m.ligas[0].clubes.duplicate()
+	cl.sort_custom(func(a: Club, b: Club) -> bool: return a.media() > b.media())
+	var fuerte: Club = cl[0]
+	var debil: Club = cl[cl.size() - 1]
+	var j: Jugador = fuerte.once()[10]
+	## El catálogo.
+	_comprobar(AccionesJuego.CATALOGO.size() >= 20, "%d acciones en el catálogo" % AccionesJuego.CATALOGO.size())
+	var sin_anim: Array = []
+	for k: String in AccionesJuego.CATALOGO:
+		var an := String(AccionesJuego.CATALOGO[k]["anim"])
+		if an != "" and not AnimExtra.CATEGORIAS.has(an):
+			sin_anim.append(k)
+	_comprobar(sin_anim.is_empty(), "cada acción tiene su familia de animaciones %s" % str(sin_anim))
+	var p_cerca := AccionesJuego.prob_exito(j, "pase_corto", {"dist": 8.0})
+	var p_lejos := AccionesJuego.prob_exito(j, "pase_corto", {"dist": 30.0, "presion": 1.0})
+	_comprobar(p_cerca > p_lejos, "un pase corto y libre sale más que uno largo y presionado (%.2f > %.2f)" % [p_cerca, p_lejos])
+	var jb: Jugador = debil.once()[10]
+	_comprobar(AccionesJuego.prob_exito(j, "tiro", {"dist": 16.0}) != AccionesJuego.prob_exito(jb, "tiro", {"dist": 16.0}), "los atributos mueven la probabilidad")
+	_comprobar(AccionesJuego.prob_exito(j, "tiro", {"dist": 16.0, "pie_malo": true}) <= AccionesJuego.prob_exito(j, "tiro", {"dist": 16.0}), "la pierna débil resta")
+	_comprobar(AccionesJuego.xg(Vector2(11, 0)) > AccionesJuego.xg(Vector2(25, 0)) and AccionesJuego.xg(Vector2(11, 0)) > AccionesJuego.xg(Vector2(8, 20)), "el xG baja con la distancia y el ángulo")
+	## El motor: dos iguales dan un partido creíble.
+	var ig := MotorLibre.new(fuerte.once(), fuerte.once(), 1.0, 1.0, 51).simular()
+	var tiros: Array = ig["tiros"]
+	var acierto := float(ig["pases_ok"][0] + ig["pases_ok"][1]) / maxf(1.0, float(ig["pases"][0] + ig["pases"][1]))
+	print("   · iguales: ", ig["goles"], " tiros ", tiros, " pases ", ig["pases"], " acierto %.0f %%" % (acierto * 100.0))
+	_comprobar(int(ig["goles"][0]) + int(ig["goles"][1]) <= 8, "marcador de fútbol, no de balonmano")
+	_comprobar(int(tiros[0]) + int(tiros[1]) >= 6 and int(tiros[0]) + int(tiros[1]) <= 100, "hay tiros, sin exagerar")
+	_comprobar(acierto > 0.5 and acierto < 0.95, "acierto de pase creíble")
+	var dec: Dictionary = ig["decisiones"]
+	_comprobar(dec.has("pase_corto") and dec.has("conducir") and dec.has("tiro"), "la IA elige entre pasar, conducir y tirar")
+	## El mejor gana, juegue de local o de visita.
+	var a := MotorLibre.new(fuerte.once(), debil.once(), 1.0, 1.0, 1).simular()
+	var b := MotorLibre.new(debil.once(), fuerte.once(), 1.0, 1.0, 2).simular()
+	var gf := int(a["goles"][0]) + int(b["goles"][1])
+	var gd := int(a["goles"][1]) + int(b["goles"][0])
+	_comprobar(gf > gd, "el equipo mejor gana sin guion (%d-%d en dos partidos)" % [gf, gd])
+	## Y las habilidades del club (el bono de maestrías y árbol) también aquí.
+	var c1 := MotorLibre.new(debil.once(), debil.once(), 1.2, 1.0, 3).simular()
+	var c2 := MotorLibre.new(debil.once(), debil.once(), 1.0, 1.2, 4).simular()
+	var xg_bono := float(c1["xg"][0]) + float(c2["xg"][1])
+	var xg_sin := float(c1["xg"][1]) + float(c2["xg"][0])
+	_comprobar(xg_bono > xg_sin, "con el bono del club se generan más ocasiones (xG %.1f vs %.1f)" % [xg_bono, xg_sin])
+	## El jugador controlado.
+	var ml := MotorLibre.new(fuerte.once(), debil.once(), 1.0, 1.0, 9)
+	ml.tomar_control(ml.poseedor)
+	var yo := ml.poseedor
+	ml.agentes[yo]["pos"] = Vector2(40.0, 0.0)
+	ml.mover(Vector2(1, 0))
+	ml.ordenar("tiro")
+	ml.paso()
+	_comprobar(int(ml.stats["tiros"][0]) == 1, "el jugador del mando tira cuando se le ordena")
+	ml.cambiar_jugador()
+	_comprobar(ml.controlado >= 0 and ml.agentes[ml.controlado]["eq"] == 0, "cambiar de jugador se queda en el propio equipo")
+	## El mapa de botones.
+	Mando.registrar()
+	_comprobar(Mando.MAPA.keys().all(func(k: String) -> bool: return InputMap.has_action(k)), "las acciones de juego están en el InputMap")
+	_comprobar(Mando.accion_de("jugar_pase", true) == "pase_corto" and Mando.accion_de("jugar_pase", false) == "presionar", "el mismo botón pasa con balón y presiona sin él")
+	var botones_catalogo: Array = []
+	for k: String in AccionesJuego.CATALOGO:
+		var bt := String(AccionesJuego.CATALOGO[k]["boton"])
+		if bt != "" and not Mando.MAPA.has(bt):
+			botones_catalogo.append(bt)
+	_comprobar(botones_catalogo.is_empty(), "cada botón del catálogo existe en el mapa del mando %s" % str(botones_catalogo))
 
 func _probar_disenos_kit() -> void:
 	_titulo("EQUIPACIÓN: DISEÑOS, COLORES, BOTINES Y ACCESORIOS")
