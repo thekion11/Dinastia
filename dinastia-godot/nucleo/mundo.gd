@@ -99,6 +99,7 @@ var licencia: Licencia
 ## la cantera (C11).
 var trabajadores: Trabajadores
 var eventos_cantera: EventosCantera
+var calendario: Calendario
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
 var banco: Banco
 ## La marca del pecho: ofertas, firma y exigencia contractual.
@@ -831,6 +832,10 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		## incidente en el estadio, y por eso vale la pena pagar seguridad.
 		if soy_yo and ciudad != null:
 			f_publico *= ciudad.factor_aforo()
+		## C13: una semana de fiesta nacional llena más el estadio (y una de
+		## memoria no: con duelo no hay fiesta).
+		if soy_yo:
+			f_publico *= Calendario.factor_publico(c.pais, anio, semana)
 		f.semana(en_casa, false, f_publico)
 		## EL PLUS DE LA TELEVISION POR EL HORARIO. Un lunes por la noche no va
 		## nadie al estadio y paga mucho mas la television: sin este cobro, elegir
@@ -1060,6 +1065,11 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		roles.semana_filiales()
 	if club_dentro != null and mi_club() != null:
 		club_dentro.semana(mi_club(), prensa)
+		## La app y la web CRECEN cada semana -"procesoClubIn()" del HTML corre
+		## en el mismo proceso semanal que la prensa o la cantera, no en el
+		## cierre de mes-, y crecen más rápido si vienes ganando en liga.
+		for mov: Dictionary in club_dentro.crecer_digital(mi_club(), prensa):
+			_anotar_movimiento(String(mov["concepto"]), int(mov["monto"]))
 	if junta != null and mi_club() != null:
 		junta.semana(mi_club(), anio, semana)
 	if charlas != null and mi_club() != null:
@@ -1068,11 +1078,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		trabajadores.semana(mi_club(), obras, anio, semana, prensa)
 	if eventos_cantera != null and mi_club() != null:
 		eventos_cantera.semana(academia, mi_club(), anio, semana)
-		## La app y la web CRECEN cada semana -"procesoClubIn()" del HTML corre
-		## en el mismo proceso semanal que la prensa o la cantera, no en el
-		## cierre de mes-, y crecen más rápido si vienes ganando en liga.
-		for mov: Dictionary in club_dentro.crecer_digital(mi_club(), prensa):
-			_anotar_movimiento(String(mov["concepto"]), int(mov["monto"]))
+	if calendario != null and mi_club() != null:
+		calendario.semana(mi_club(), anio, semana)
 	if banco != null and mi_club() != null:
 		## Los dos consejeros que hasta hoy decían "sin efecto" en su propia
 		## descripción (`Directiva.CONSEJEROS`, `fin`/`leg`): era cierto
@@ -1771,6 +1778,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	licencia = Licencia.new()
 	trabajadores = Trabajadores.new()
 	eventos_cantera = EventosCantera.new()
+	calendario = Calendario.new()
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)

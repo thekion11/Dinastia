@@ -350,18 +350,7 @@ func fecha_de_hoy() -> Dictionary:
 
 ## La fecha de cualquier día (0 = lunes) de la semana en curso.
 func fecha_del_dia(dia: int) -> Dictionary:
-	var base := Time.get_unix_time_from_datetime_dict({
-		"year": mundo.anio if mundo != null else 2026,
-		"month": DIA_INICIO_TEMPORADA["mes"], "day": DIA_INICIO_TEMPORADA["dia"],
-		"hour": 12, "minute": 0, "second": 0})
-	## El 1 de febrero no siempre cae lunes -en 2026 cae domingo-, y sin
-	## corregirlo el día 0 de la semana salía "dom" mientras la tira decía
-	## "lun". Se retrocede al lunes de esa semana para que el calendario y la
-	## tira digan lo mismo.
-	var dow_base := int(Time.get_datetime_dict_from_unix_time(int(base)).get("weekday", 1))
-	base -= float(((dow_base + 6) % 7) * 86400)
-	var semanas := maxi(0, (mundo.semana if mundo != null else 1) - 1)
-	return Time.get_datetime_dict_from_unix_time(int(base) + (semanas * 7 + dia) * 86400)
+	return Calendario.fecha(mundo.anio if mundo != null else 2026, mundo.semana if mundo != null else 1, dia)
 
 func fecha_larga() -> String:
 	var f := fecha_de_hoy()
@@ -383,7 +372,16 @@ func _pintar_dias() -> void:
 	for i in DIAS_CORTOS.size():
 		var es_hoy := i == _dia_semana
 		var dia_de_partido := i == 5 and hay_partido
-		var b := _pildora("%s %d%s" % [DIAS_LARGOS[i], int(fecha_del_dia(i).get("day", 1)), "  ⚽" if dia_de_partido else ""], 11, 26)
+		## C13: el día nacional, de memoria o festivo, con su icono y el nombre
+		## al pasar el ratón.
+		var fechas_dia := Calendario.del_dia(mundo.mi_club().pais if mundo != null and mundo.mi_club() != null else "CHI",
+			mundo.anio if mundo != null else 2026, mundo.semana if mundo != null else 1, i)
+		var marca := ""
+		for fd: Dictionary in fechas_dia:
+			marca += " " + Calendario.icono(String(fd["tipo"]))
+		var b := _pildora("%s %d%s%s" % [DIAS_LARGOS[i], int(fecha_del_dia(i).get("day", 1)), marca, "  ⚽" if dia_de_partido else ""], 11, 26)
+		if not fechas_dia.is_empty():
+			b.tooltip_text = "\n".join(fechas_dia.map(func(fd: Dictionary) -> String: return String(fd["nombre"])))
 		b.button_pressed = es_hoy
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if es_hoy and _dia_pintado != _dia_semana:
@@ -2109,12 +2107,16 @@ func _conectar_noticias() -> void:
 		mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
 			call_deferred("_portada_nueva")
 			call_deferred("_al_paso_nuevo"))
-		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera]:
+		if mundo.calendario != null:
+			mundo.calendario.mentor.connect(func(titulo: String, texto: String) -> void:
+				MentorVoz.decir(self, mundo, titulo, texto))
+		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario]:
 			if fuente != null:
 				fuente.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 					_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
 					_anotar(titulo, cuerpo))
-				fuente.movimiento.connect(mundo._anotar_movimiento)
+				if fuente.has_signal("movimiento"):
+					fuente.movimiento.connect(mundo._anotar_movimiento)
 		if mundo.licencia != null:
 			mundo.licencia.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 				_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -4220,6 +4222,32 @@ func _pintar_partido(c: Club) -> void:
 ## corrido o se salta el partido entero sin dirigirlo). En vez de inventar un
 ## sistema de fechas nuevo, lee el mismo `Liga.calendario` que ya arma la
 ## temporada entera desde el sorteo.
+## C13: lo que viene en el calendario del país (fiestas, memoria, festividades)
+## y el gran torneo del año, si lo hay.
+func _pintar_proximas_fechas(c: Club) -> void:
+	var t := _texto(11, COL_SUAVE)
+	t.text = "PRÓXIMAS FECHAS EN %s" % c.pais
+	_lista_calendario.add_child(t)
+	for f: Dictionary in Calendario.proximas(c.pais, mundo.anio, mundo.semana, 5):
+		var l := _texto(12, COL_ROJO if String(f["tipo"]) == "memoria" else COL_TEXTO)
+		var faltan := int(f["faltan"])
+		var cuando := "%d de %s" % [int(f["dia"]), MESES_LARGOS[int(f["mes"]) - 1]]
+		## "11 de septiembre" ya es la fecha: no repetirla.
+		var nom := String(f["nombre"])
+		l.text = "%s %s%s  (%s)" % [Calendario.icono(String(f["tipo"])), cuando,
+			"" if nom == cuando else " · " + nom, "esta semana" if faltan < 7 else "en %d días" % faltan]
+		l.tooltip_text = String(f["texto"])
+		l.mouse_filter = Control.MOUSE_FILTER_PASS
+		_lista_calendario.add_child(l)
+	for tor: Dictionary in Calendario.torneos(mundo.anio):
+		var sedes: Array = tor["sedes"]
+		var l2 := _texto(12, COL_ORO)
+		l2.text = "🌍 %s %d: del %d/%d al %d/%d%s" % [String(tor["nombre"]), mundo.anio,
+			int(tor["desde"][1]), int(tor["desde"][0]), int(tor["hasta"][1]), int(tor["hasta"][0]),
+			(" · sede: " + ", ".join(sedes)) if not sedes.is_empty() else ""]
+		_lista_calendario.add_child(l2)
+	_lista_calendario.add_child(HSeparator.new())
+
 func _pintar_calendario(c: Club) -> void:
 	_limpiar(_lista_calendario)
 	if not mundo.temporada_en_curso():
@@ -4228,6 +4256,7 @@ func _pintar_calendario(c: Club) -> void:
 		_lista_calendario.add_child(fin)
 		return
 
+	_pintar_proximas_fechas(c)
 	## PRÓXIMO PARTIDO, con el MISMO orden que usa `_dirigir()` -copa antes que
 	## liga-: mostrar aquí un partido distinto del que se juega al pulsar el
 	## botón sería peor que no mostrar nada.
