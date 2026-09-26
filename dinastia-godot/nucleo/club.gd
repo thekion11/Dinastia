@@ -293,6 +293,10 @@ func _to_string() -> String:
 var kit_color1: String = ""
 var kit_color2: String = ""
 var kit_estilo: String = ""
+## LA EQUIPACIÓN COMPLETA DEL DISEÑADOR (26-9-2026): diseño, 5 colores,
+## ribete, números, pantalón, medias, botines y accesorios. Vacío = la de
+## siempre (`DisenosKit.kit_de_club()` la arma con los colores del club).
+var kit_x: Dictionary = {}
 var esc_color1: String = ""
 var esc_color2: String = ""
 var esc_forma: String = ""
@@ -332,7 +336,7 @@ func igualar_identidad() -> void:
 
 func identidad_a_dic() -> Dictionary:
 	return {
-		"kit_c1": kit_color1, "kit_c2": kit_color2, "kit_est": kit_estilo,
+		"kit_c1": kit_color1, "kit_c2": kit_color2, "kit_est": kit_estilo, "kit_x": kit_x,
 		"esc_c1": esc_color1, "esc_c2": esc_color2,
 		"esc_f": esc_forma, "esc_p": esc_patron, "esc_s": esc_simbolo,
 		"esc_e": esc_especial,
@@ -343,6 +347,7 @@ func identidad_desde_dic(d: Dictionary) -> void:
 	kit_color1 = String(d.get("kit_c1", ""))
 	kit_color2 = String(d.get("kit_c2", ""))
 	kit_estilo = String(d.get("kit_est", ""))
+	kit_x = (d.get("kit_x", {}) as Dictionary).duplicate(true)
 	esc_color1 = String(d.get("esc_c1", ""))
 	esc_color2 = String(d.get("esc_c2", ""))
 	esc_forma = String(d.get("esc_f", ""))

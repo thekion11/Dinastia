@@ -197,7 +197,7 @@ static func vestir(d: Dictionary, color: Color) -> void:
 ## pantalón negro).
 static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: String,
 		piel: Color, pelo: Color, pantalon: Color = Color(0, 0, 0, 0),
-		medias: Color = Color(0, 0, 0, 0), largo: bool = false) -> bool:
+		medias: Color = Color(0, 0, 0, 0), largo: bool = false, kit_x: Dictionary = {}, dorsal: int = 0) -> bool:
 	var modelo: Node = d.get("modelo")
 	if modelo == null or not ResourceLoader.exists(SHADER_EQUIPACION) \
 			or not ResourceLoader.exists(MASCARA) or not ResourceLoader.exists(COORDS):
@@ -230,8 +230,19 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		pantalon = c2 if i_estilo == 0 else c1
 	if medias.a == 0.0:
 		medias = c1
-	var clave := "%s|%s|%d|%s|%s|%s|%s" % [c1.to_html(false), c2.to_html(false), i_estilo,
-		pantalon.to_html(false), medias.to_html(false), _piel_cuantizada(piel), largo]
+	## EL DISEÑADOR (26-9-2026): sin equipación completa, se arma una con lo de
+	## siempre (colores, estilo, pantalón y medias) para que TODO pase por el
+	## mismo camino del shader.
+	var kit := kit_x
+	if kit.is_empty():
+		kit = {"dis": estilo if DisenosKit.claves().has(estilo) else "liso",
+			"cols": [c1.to_html(false), c2.to_html(false), c2.darkened(0.35).to_html(false), "ffffff", "111111"],
+			"trim": 1, "num": "ffffff",
+			"pant": {"dis": "liso", "c1": pantalon.to_html(false), "c2": c1.to_html(false)},
+			"med": {"dis": "lisas", "c1": medias.to_html(false), "c2": c2.to_html(false)},
+			"bot": {"mod": "clasico"}, "acc": {}}
+	var clave := "%s|%s|%d|%s|%s|%s|%s|%d|%d" % [c1.to_html(false), c2.to_html(false), i_estilo,
+		pantalon.to_html(false), medias.to_html(false), _piel_cuantizada(piel), largo, hash(kit), dorsal]
 	var mat: ShaderMaterial = _cache_equipacion.get(clave)
 	if mat == null:
 		var original := cuerpo.get_active_material(superficie) as BaseMaterial3D
@@ -251,6 +262,9 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("estilo", i_estilo)
 		mat.set_shader_parameter("tinte_piel", _tinte(piel))
 		mat.set_shader_parameter("largo", largo)
+		var un := DisenosKit.uniforms(kit, dorsal)
+		for k: String in un:
+			mat.set_shader_parameter(k, un[k])
 		_cache_equipacion[clave] = mat
 	cuerpo.set_surface_override_material(superficie, mat)
 	return true

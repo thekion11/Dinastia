@@ -14,6 +14,8 @@ const ANIM_RESPALDO := {"idle": "res://assets/characters/Animations/idle.fbx",
 	"run": "res://assets/characters/Animations/run.fbx", "jump": "res://assets/characters/Animations/jump.fbx"}
 
 var kit_factory: KitTextureFactory = KitTextureFactory.new()
+## La equipación completa (`DisenosKit`) del equipo que se está creando.
+var _kit_x: Dictionary = {}
 var _shared_lib: AnimationLibrary
 var _packed_respaldo: PackedScene
 var usando_respaldo := false
@@ -128,6 +130,7 @@ func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dicti
 	var c1 := Color(kit.get("c1", "#2b6b45"))
 	var c2 := Color(kit.get("c2", "#ffffff"))
 	var estilo: String = kit.get("estilo", "liso")
+	_kit_x = kit.get("x", {})
 	var img_kit := str(kit.get("img", "")) if kit.get("img") != null else ""
 	var out: Array = []
 
@@ -225,6 +228,7 @@ func spawn_banca(root: Node3D, jugadores: Array, es_local: bool, kit: Dictionary
 	var c1 := Color(kit.get("c1", "#2b6b45"))
 	var c2 := Color(kit.get("c2", "#ffffff"))
 	var estilo: String = kit.get("estilo", "liso")
+	_kit_x = kit.get("x", {})
 	var img_kit := str(kit.get("img", "")) if kit.get("img") != null else ""
 	var out: Array = []
 	## Misma banda tecnica que usa `_banquillos_detalle()` para el mueble -X
@@ -311,6 +315,7 @@ func spawn_sentados(root: Node3D, jugadores: Array, es_local: bool, kit: Diction
 	var c1 := Color(kit.get("c1", "#2b6b45"))
 	var c2 := Color(kit.get("c2", "#ffffff"))
 	var estilo: String = kit.get("estilo", "liso")
+	_kit_x = kit.get("x", {})
 	var img_kit := str(kit.get("img", "")) if kit.get("img") != null else ""
 	var out: Array = []
 	if jugadores.is_empty():
@@ -434,7 +439,10 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 			## pantalón, medias, botines); la ropa teñida de antes queda solo
 			## como respaldo si faltara la máscara.
 			var pantalon := color_liso if puesto == "ARB" else Color(0, 0, 0, 0)
-			if not VestidorQ.vestir_equipacion(dq, c1, c2, estilo, piel, pelo, pantalon):
+			## La equipación completa del club (diseñador), salvo arquero y
+			## árbitro, que visten la suya.
+			var kx: Dictionary = {} if puesto in ["POR", "ARB"] else _kit_x
+			if not VestidorQ.vestir_equipacion(dq, c1, c2, estilo, piel, pelo, pantalon, Color(0, 0, 0, 0), false, kx, dorsal):
 				VestidorQ.vestir(dq, c1)
 			## Pelo, barba y cejas, con el mismo corte que su retrato 2D.
 			var look_j = jug.get("look")
