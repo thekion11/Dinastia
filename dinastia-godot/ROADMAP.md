@@ -1,5 +1,25 @@
 # RUTA DE DESARROLLO — DINASTÍA
 
+## PLAN MAESTRO, SÉPTIMA RONDA (pedido del 26-9-2026)
+
+Pedido: *"revisa que ninguna cosa falte en el plan, busca fallas visuales, agrega más detalles y
+más animación, que el juego se sienta vivo; crea un menú que vaya a otro apartado (la vida del
+jugador); mejora la rama de habilidades, que tenga su esquema, se ve en poca calidad. La gracia
+de la historia es dar un guiño para entender qué equipo es en la vida real (al estadio del
+Colo se le llama la Ruca; Colo-U es el Superclásico, U-Católica el Clásico Universitario,
+Católica-Colo el Clásico). La historia es para todos los clubes."*
+
+- **D1. Historia con guiño y clásicos con nombre** ✅ HECHO (26-9): 384 clubes y 66 clásicos.
+- **D2. MI VIDA (vida del DT)** ✅ HECHO (26-9): casa, transporte, familia, estrés, ocio y
+  asuntos.
+- **D3. Árbol de habilidades como esquema** ✅ HECHO (26-9), también a pantalla completa.
+- **D4. Caza de fallas visuales**: recorrer todas las pantallas con capturas y arreglar lo que
+  se vea mal.
+- **D5. Más vida y animación**: transiciones, contadores, latidos, pequeños detalles en el
+  mundo 3D y en la interfaz.
+- **D6. Revisión de que nada falte en el plan**: cruzar cada pedido del usuario de todas las
+  rondas con el ROADMAP.
+
 ## PLAN MAESTRO, SEXTA RONDA (pedido del 26-9-2026)
 
 La lista del usuario se ordena por bloques C1 a C19. Cada bloque dice qué hay hoy, qué hacer y su

@@ -43,6 +43,7 @@ const TIPOS := {
 	"contrato": {"et": "CONTRATOS",          "col": Color("c9a227"), "sfx": "cambio"},
 	"prensa":   {"et": "PRENSA",             "col": Color("8ea595"), "sfx": "cambio"},
 	"titulo":   {"et": "¡CAMPEÓN!",          "col": Color("c9a227"), "sfx": "trofeo"},
+	"vida":     {"et": "MI VIDA",            "col": Color("c9a227"), "sfx": "cambio"},
 }
 
 static var _cola: Array[Dictionary] = []
