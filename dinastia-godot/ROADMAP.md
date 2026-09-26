@@ -60,7 +60,7 @@ suelo y no atraviesen nada.
 - 🟡 Hace falta un dato de **región de origen** en los jugadores, que hoy solo tienen
   nacionalidad. Se añade para los clubes que lo necesiten.
 
-### C4. Historia real de los clubes 🟡
+### C4. Historia real de los clubes 🟡 — HECHO (26-9): generada en la base ficticia, real en el pack
 - Fundación, estadio, títulos, apodos, rivalidades y datos.
 - En la base ficticia (la de por defecto), historia generada coherente.
 - En el pack real separable, datos reales.

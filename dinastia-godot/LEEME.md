@@ -32,8 +32,17 @@
     caja.
   - Elecciones con campaña dos semanas antes y resultado; Arabia Saudí no vota.
   - El mentor explica cómo se gobierna el país. Se ve en Federación.
-- Pruebas: `_probar_calendario_c13`, `_probar_politica_c15`; capturas `captura_calendario`,
-  `captura_globo_c14` y `captura_gobierno`.
+- **Historia de cada club (C4)** (`nucleo/historia_club.gd`):
+  - En la base ficticia se genera coherente: fundación, apodo según los colores, estadio,
+    rival histórico, ligas y copas ganadas, origen y época dorada. Los grandes son más antiguos
+    y tienen más títulos.
+  - Con el pack real, la tabla `HISTORIA_REAL` (solo en `pack_real.json`) pone la fundación,
+    el apodo, el estadio y el rival reales de 36 clubes. Los títulos no, porque cambian cada año.
+  - Se ve en Historia y en la ficha de cada club.
+  - Arreglado de paso: en la base ficticia el clásico chileno de los tres grandes nunca se
+    detectaba, porque solo estaban los nombres reales.
+- Pruebas: `_probar_calendario_c13`, `_probar_politica_c15`, `_probar_historia_c4`; capturas `captura_calendario`,
+  `captura_globo_c14`, `captura_gobierno` y `captura_historia`.
 
 ## SEXTA RONDA, TANDA C: INSTALACIONES, CANTERA, RAMAS, FICHA DEL JUGADOR (26-9-2026)
 
