@@ -218,7 +218,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 			if m == null:
 				continue
 			match m.resource_name:
-				MATERIAL_CUERPO:
+				MATERIAL_CUERPO, "MI_Superhero_Female":
 					cuerpo = mi
 					superficie = s
 				MATERIAL_CEJAS:
@@ -292,6 +292,9 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		for h in cuerpo.get_parent().get_children():
 			if h.has_meta("prenda_aparte"):
 				h.queue_free()
+	## Sin pantalla (banco headless) la malla no trae superficies.
+	if superficie >= cuerpo.get_surface_override_material_count():
+		return false
 	cuerpo.set_surface_override_material(superficie, mat)
 	return true
 
@@ -328,6 +331,9 @@ static func _con_reposo(mi: MeshInstance3D, superficie: int) -> void:
 			arr[Mesh.ARRAY_COLOR] = col
 		var formas := original.surface_get_blend_shape_arrays(s)
 		nueva.add_surface_from_arrays(original.surface_get_primitive_type(s), arr, formas)
+		## Sin pantalla (banco headless) el servidor falso no guarda superficies.
+		if nueva.get_surface_count() <= s:
+			return
 		nueva.surface_set_material(s, original.surface_get_material(s))
 		nueva.surface_set_name(s, original.surface_get_name(s))
 	nueva.set_meta("con_reposo", true)

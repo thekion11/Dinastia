@@ -75,6 +75,7 @@ static func hormigon(tinte: Color, semilla: int = 11) -> StandardMaterial3D:
 	m.metallic_specular = 0.35
 	m.uv1_scale = Vector3(1.0 / METRO_POR_TILE, 1.0 / METRO_POR_TILE, 1.0)
 	m.uv1_triplanar = true
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	_cache[clave] = m
 	return m
 
@@ -123,19 +124,98 @@ static func ladrillo(tinte: Color, semilla: int = 17) -> StandardMaterial3D:
 ## se repite-. Se le agrega tinte parametrizable, mismo criterio que
 ## `hormigon()`, justo para poder conectarla por fin en `city_builder.gd`.
 static func asfalto(tinte: Color = Color(0.17, 0.175, 0.185), semilla: int = 23) -> StandardMaterial3D:
+	## REHECHO (26-9-2026, el usuario: "las calles se ven mal, no hagas eso de
+	## rayar zonas para ahorrar tiempo"). Antes era ruido suave pegado a la UV
+	## de la caja: en una calle de 800 m la textura entera se ESTIRABA a lo
+	## largo y se veían rayas. Ahora:
+	##   - una imagen de asfalto de verdad: árido claro y oscuro grano a grano,
+	##     manchas grandes de rodadura y aceite, y alguna grieta fina;
+	##   - se repite en coordenadas del MUNDO (triplanar), un mosaico cada 4 m,
+	##     da igual lo larga que sea la calle;
+	##   - filtrado anisótropo: en ángulo rasante no se emborrona.
 	var clave := "asf|%s|%d" % [tinte.to_html(false), semilla]
 	if _cache.has(clave):
 		return _cache[clave]
 	var m := StandardMaterial3D.new()
-	m.albedo_color = tinte
-	m.albedo_texture = _tex_ruido(0.06, semilla, false, 4)
+	m.albedo_color = Color(1, 1, 1)
+	m.albedo_texture = _imagen_asfalto(tinte, semilla)
 	m.normal_enabled = true
-	m.normal_texture = _tex_ruido(0.12, semilla + 5, true, 3)
-	m.normal_scale = 0.35
-	m.roughness = 0.62
-	m.roughness_texture = _tex_ruido(0.015, semilla + 9, false, 3)
-	m.metallic = 0.06
-	m.uv1_scale = Vector3(0.35, 0.35, 1.0)
+	m.normal_texture = _tex_ruido(0.35, semilla + 5, true, 2)
+	m.normal_scale = 0.45
+	m.roughness = 0.82
+	m.roughness_texture = _tex_ruido(0.03, semilla + 9, false, 3)
+	m.metallic = 0.0
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = true
+	m.uv1_scale = Vector3(0.25, 0.25, 0.25)
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_cache[clave] = m
+	return m
+
+## La imagen del asfalto (512 px = 4 m): se genera una vez y se repite sin
+## costuras (el ruido es "seamless").
+static func _imagen_asfalto(tinte: Color, semilla: int) -> ImageTexture:
+	var n := 512
+	var grande := _ruido(FastNoiseLite.TYPE_SIMPLEX_SMOOTH, 0.004, semilla, 3)
+	var medio := _ruido(FastNoiseLite.TYPE_SIMPLEX_SMOOTH, 0.03, semilla + 1, 3)
+	var grieta := _ruido(FastNoiseLite.TYPE_CELLULAR, 0.012, semilla + 2, 1)
+	grieta.cellular_return_type = FastNoiseLite.RETURN_DISTANCE2_SUB
+	var img_g := grande.get_seamless_image(n, n)
+	var img_m := medio.get_seamless_image(n, n)
+	var img_c := grieta.get_seamless_image(n, n)
+	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = semilla
+	for y in n:
+		for x in n:
+			var g := img_g.get_pixel(x, y).r
+			var md := img_m.get_pixel(x, y).r
+			var v := 0.82 + (g - 0.5) * 0.28 + (md - 0.5) * 0.12
+			## Árido: granos claros y oscuros sueltos.
+			var r := rng.randf()
+			if r < 0.05:
+				v += 0.35
+			elif r < 0.10:
+				v -= 0.22
+			else:
+				v += (rng.randf() - 0.5) * 0.1
+			## Grietas finas (los bordes de las celdas).
+			if img_c.get_pixel(x, y).r < 0.035:
+				v -= 0.28
+			var c := Color(tinte.r * v, tinte.g * v, tinte.b * v)
+			img.set_pixel(x, y, c)
+	img.generate_mipmaps()
+	return ImageTexture.create_from_image(img)
+
+## Acera de baldosa: losas de 40 cm con su junta, cada una de un tono un poco
+## distinto, y el mismo grano fino del hormigón. Triplanar en el mundo.
+static func baldosa(tinte: Color = Color(0.72, 0.71, 0.68), semilla: int = 51) -> StandardMaterial3D:
+	var clave := "bald|%s|%d" % [tinte.to_html(false), semilla]
+	if _cache.has(clave):
+		return _cache[clave]
+	var n := 256   ## 256 px = 0,8 m (2 x 2 losas)
+	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = semilla
+	var tonos: Array[float] = []
+	for i in 4:
+		tonos.append(rng.randf_range(0.9, 1.06))
+	for y in n:
+		for x in n:
+			var junta := (x % 128) < 3 or (y % 128) < 3
+			var losa := (x / 128) + 2 * (y / 128)
+			var v: float = tonos[losa] + (rng.randf() - 0.5) * 0.08
+			if junta:
+				v = 0.55
+			img.set_pixel(x, y, Color(tinte.r * v, tinte.g * v, tinte.b * v))
+	img.generate_mipmaps()
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = ImageTexture.create_from_image(img)
+	m.roughness = 0.88
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = true
+	m.uv1_scale = Vector3(1.25, 1.25, 1.25)
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	_cache[clave] = m
 	return m
 
@@ -157,7 +237,11 @@ static func cesped(tinte: Color = Color(0.30, 0.46, 0.24), semilla: int = 31) ->
 	m.normal_texture = _tex_ruido(0.2, semilla + 8, true, 3)
 	m.normal_scale = 0.7
 	m.roughness = 0.97
-	m.uv1_scale = Vector3(0.06, 0.06, 1.0)
+	## En el mundo, un mosaico cada 16 m: sin estirarse en parques grandes.
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = true
+	m.uv1_scale = Vector3(0.0625, 0.0625, 0.0625)
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	_cache[clave] = m
 	return m
 
