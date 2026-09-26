@@ -30,7 +30,12 @@ diseño, con su propio menú a pantalla completa; otro modelo 3D con ropa aparte
   torre; palcos VIP, cabina de prensa, museo y tienda según lo construido; la mascota del club
   (B10); peatones en la ciudad (B7).
 
+- **E0. Jugadores fijos con guiño** ✅: la base ficticia trae las plantillas (2.853 jugadores)
+  con nombres que se reconocen sin ser el real, y medias, edades y potenciales fijos en toda
+  partida (`herramientas/jugadores_guino.py`, `Reales`).
+
 ### Lo que queda de la ronda
+- Plantillas fijas para los 128 clubes que no están en la lista del pack.
 - Paleta de las vallas LED y formas geométricas nuevas de estadio (B6).
 - Túnel navegable (espera al modo caminar).
 
