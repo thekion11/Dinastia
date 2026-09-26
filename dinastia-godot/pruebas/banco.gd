@@ -104,6 +104,7 @@ func _ready() -> void:
 	_probar_politica_c15()
 	_probar_historia_c4()
 	_probar_contratos_c9()
+	_probar_vida_dt()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -6104,27 +6105,48 @@ func _probar_politica_c15() -> void:
 	_comprobar(p2.gobierno("CHI", 2026)["partido"] == g2["partido"], "el gobierno se guarda")
 
 func _probar_historia_c4() -> void:
-	_titulo("C4: HISTORIA DE LOS CLUBES")
+	_titulo("C4: HISTORIA DE LOS CLUBES, CON GUIÑO AL REAL")
 	Datos.usar_base_real(false)
 	var m := Mundo.new()
 	m.generar(["CHI"], 5153)
 	var clubes: Array = m.ligas[0].clubes
+	var por_nombre := {}
+	for c: Club in m.clubes.values():
+		por_nombre[c.nombre] = c
+	var lautaro: Club = por_nombre.get("Lautaro FC")
+	var andina: Club = por_nombre.get("U. Andina")
+	var precord: Club = por_nombre.get("Precordillera")
+	_comprobar(lautaro != null and andina != null and precord != null, "están los tres grandes de la base ficticia")
+	var hl := HistoriaClub.de(lautaro, clubes)
+	_comprobar(bool(hl["con_guino"]) and String(hl["estadio"]) == "la Ruca" and int(hl["fundado"]) == 1925, "Lautaro FC guiña a su original: fundado en 1925, juega en la Ruca")
+	_comprobar(HistoriaClub.nombre_clasico("Lautaro FC", "U. Andina") == "Superclásico", "Lautaro-Andina es el Superclásico")
+	_comprobar(HistoriaClub.nombre_clasico("U. Andina", "Precordillera") == "Clásico Universitario", "Andina-Precordillera es el Clásico Universitario")
+	_comprobar(HistoriaClub.nombre_clasico("Precordillera", "Lautaro FC") == "el Clásico", "Precordillera-Lautaro es el Clásico")
+	_comprobar(m.es_clasico(lautaro, andina), "y el juego lo trata como clásico")
+	## Todos los clubes del mundo tienen historia con guiño.
+	var m2 := Mundo.new()
+	m2.generar([], 5155)
+	var sin := 0
+	var faltan: Array = []
+	for c: Club in m2.clubes.values():
+		if HistoriaClub.dato(c.nombre).is_empty():
+			sin += 1
+			faltan.append(c.nombre)
+	if sin > 0:
+		print("    sin historia: ", faltan)
+	_comprobar(sin == 0, "los %d clubes tienen su fila de historia (%d sin ella)" % [m2.clubes.size(), sin])
 	var grande: Club = clubes[0]
 	var chico: Club = clubes[clubes.size() - 1]
-	var hg := HistoriaClub.de(grande, clubes)
-	var hc := HistoriaClub.de(chico, clubes)
-	_comprobar(not bool(hg["real"]), "con la base ficticia la historia es generada")
-	_comprobar(HistoriaClub.de(grande, clubes) == hg, "el mismo club tiene siempre la misma historia")
-	_comprobar(int(hg["titulos"]) > int(hc["titulos"]), "el grande tiene más títulos que el chico (%d y %d)" % [int(hg["titulos"]), int(hc["titulos"])])
-	_comprobar(int(hg["fundado"]) >= 1885 and int(hg["fundado"]) <= 2005, "fundado en un año razonable (%d)" % int(hg["fundado"]))
-	_comprobar(String(hg["rival"]) != "" and String(hg["rival"]) != grande.nombre, "tiene un rival que no es él mismo")
-	_comprobar(HistoriaClub.color_de("#ffffff") == "blanco" and HistoriaClub.color_de("#d50032") == "rojo" and HistoriaClub.color_de("#003da5") == "azul", "el apodo sale del color")
-	_comprobar(HistoriaClub.dato_real("C0lo-C0lo").is_empty(), "sin el pack real no hay datos reales")
-	## Con el pack real (si existe en este entorno).
+	_comprobar(int(HistoriaClub.de(grande, clubes)["titulos"]) > int(HistoriaClub.de(chico, clubes)["titulos"]), "el grande tiene más títulos que el chico")
+	_comprobar(HistoriaClub.de(grande, clubes) == HistoriaClub.de(grande, clubes), "el mismo club tiene siempre la misma historia")
+	_comprobar(HistoriaClub.color_de("#ffffff") == "blanco" and HistoriaClub.color_de("#d50032") == "rojo" and HistoriaClub.color_de("#003da5") == "azul", "el apodo generado sale del color")
+	m.tomar_el_mando(clubes[0].id)
+	var t := m.prensa.titular_prensa(true, false, true, "x", "Superclásico")
+	_comprobar(String(t["tit"]).begins_with("SUPERCLÁSICO: "), "la portada dice SUPERCLÁSICO")
+	## Con el pack real, los mismos datos con los nombres reales.
 	if Datos.hay_pack_real():
 		Datos.usar_base_real(true)
-		var r := HistoriaClub.dato_real("C0lo-C0lo")
-		_comprobar(int(r.get("fundado", 0)) == 1925, "con el pack real, Colo-Colo se fundó en 1925")
+		_comprobar(int(HistoriaClub.dato("C0lo-C0lo").get("fundado", 0)) == 1925 and HistoriaClub.nombre_clasico("C0lo-C0lo", "U. de Ch1le") == "Superclásico", "con el pack real: Colo-Colo 1925 y el Superclásico con la U")
 		Datos.usar_base_real(false)
 
 func _probar_contratos_c9() -> void:
@@ -6158,3 +6180,59 @@ func _probar_contratos_c9() -> void:
 			if x.edad < 18 and x.anios_contrato > 3:
 				jugadores_menores += 1
 	_comprobar(jugadores_menores == 0, "ningún menor del mundo generado tiene más de 3 años de contrato")
+
+func _probar_vida_dt() -> void:
+	_titulo("MI VIDA: LA VIDA DEL DT FUERA DEL CLUB")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5156)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var v := m.vida
+	var r := m.roles
+	v.crear_perfil(c.id)
+	var perfil0 := v.perfil.duplicate(true)
+	v.perfil = {}
+	v.crear_perfil(c.id)
+	_comprobar(v.perfil == perfil0, "la familia sale siempre igual para el mismo club")
+	r.patrimonio = 100000
+	var p0 := r.patrimonio
+	v.semana(c, r, 2026, 1, 2)
+	_comprobar(r.patrimonio == p0 - v.coste_semanal(), "casa y transporte se pagan del patrimonio")
+	## Trabajar al máximo: más preparación, más estrés.
+	v.balance = 100
+	v.estres = 40
+	_comprobar(v.factor_trabajo(2026, 2) > 1.02, "trabajando al 100% se prepara mejor el partido")
+	for s in range(2, 8):
+		v.semana(c, r, 2026, s, -1)
+	_comprobar(v.estres > 60, "perder y trabajar sin parar dispara el estrés (%d)" % v.estres)
+	## Tres semanas al límite: reposo.
+	v.estres = 95
+	v.semanas_estres_alto = 0
+	for s in range(8, 11):
+		v.estres = 95
+		v.semana(c, r, 2026, s, -1)
+	_comprobar(v.de_baja(2026, 10) or v.de_baja(2026, 11), "tres semanas al límite: el médico te para")
+	## Ocio: una vez por semana.
+	v.estres = 50
+	_comprobar(v.hacer_ocio("asado", r, 2026, 20) == "" and v.estres < 50, "un asado baja el estrés")
+	_comprobar(v.hacer_ocio("gimnasio", r, 2026, 20) != "", "solo un respiro por semana")
+	## Mudanza.
+	var pat := r.patrimonio
+	_comprobar(v.cambiar_vivienda("casa", r) == "" and v.vivienda == "casa" and r.patrimonio < pat, "te puedes mudar pagando la mudanza")
+	r.patrimonio = 0
+	_comprobar(v.cambiar_vivienda("mansion", r) != "", "sin plata no hay mansión")
+	## Sin plata para la casa, vuelves a lo barato.
+	v.vivienda = "mansion"
+	v.transporte = "chofer"
+	r.patrimonio = 10
+	v.semana(c, r, 2026, 30, 2)
+	_comprobar(v.transporte == "micro" and v.vivienda != "mansion", "sin plata para la casa, te ajustas el cinturón")
+	## Asunto de casa.
+	v.pendiente = {"tipo": "tele", "texto": "x", "a": "si", "b": "no"}
+	r.patrimonio = 0
+	var res := v.resolver("a", r, c, m.prensa, 2026, 31)
+	_comprobar(res != "" and r.patrimonio > 0 and v.pendiente.is_empty(), "el programa de tele paga")
+	var d := v.a_dic()
+	var v2 := VidaDT.new()
+	v2.desde_dic(d)
+	_comprobar(v2.a_dic() == d, "Mi vida se guarda entera")

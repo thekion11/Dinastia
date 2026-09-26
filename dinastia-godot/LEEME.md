@@ -1,5 +1,39 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## SÉPTIMA RONDA (1): HISTORIA CON GUIÑO, CLÁSICOS, MI VIDA Y ÁRBOL DE HABILIDADES (26-9-2026)
+
+- **Historia con guiño para los 384 clubes** (`herramientas/historia_clubes.py` →
+  `HISTORIA_CLUBES` y `CLASICOS`, en la base y en el pack):
+  - Cada club tiene su fundación, su apodo, el apodo de su estadio y una línea que deja
+    reconocer al club real. Ejemplo: Lautaro FC, fundado en 1925, «el Cacique», juega en la
+    Ruca.
+  - En la base van con los nombres ficticios y en el pack con los reales; `base_ficticia.py`
+    los regenera.
+  - Lo que falte (años de clubes chicos) se genera. Los años de los clubes menos conocidos
+    conviene revisarlos.
+- **66 clásicos con nombre propio**: Superclásico (Lautaro–Andina), Clásico Universitario
+  (Andina–Precordillera), el Clásico (Precordillera–Lautaro), Gran Derbi, Fla-Flu, Gre-Nal,
+  el Tráfico…
+  - Cuentan como clásico en el juego.
+  - Se nombran en la previa, en la ficha del rival y en la portada («SUPERCLÁSICO: …»).
+- **MI VIDA**, grupo nuevo del menú, con tu vida de DT (`nucleo/vida_dt.gd`,
+  `ui/componentes/panel_vida.gd`):
+  - Casa (de la pensión a la mansión) y transporte, pagados de tu patrimonio.
+  - Familia inventada: pareja, hijos y mascota.
+  - Equilibrio vida/trabajo: trabajar más da hasta +3 % de preparación, pero sube el estrés y
+    baja la familia.
+  - Estrés: con él alto, el vestuario te nota tenso; tres semanas al límite y el médico te para
+    una semana.
+  - Ocio semanal (asado, pádel, escapada…).
+  - Asuntos de casa en el despacho (cumpleaños, colegio, aniversario, televisión, publicidad…).
+- **Árbol de habilidades como esquema** (`ui/componentes/arbol_habilidades.gd`):
+  - Una columna por rama con su color, nodos redondos con icono, líneas de requisito y chispa
+    en la que se puede aprender.
+  - Estados: aprendida, disponible (con latido) o bloqueada (con candado).
+  - Ficha con el botón para aprender y botón «⛶ En grande» a pantalla completa.
+  - Vive en MI VIDA › Habilidades; en Historia queda un acceso.
+- Pruebas: `_probar_historia_c4` (reescrita) y `_probar_vida_dt`; captura `captura_vida`.
+
 ## SEXTA RONDA, TANDA D: CALENDARIO, FESTIVIDADES, GLOBO, POLÍTICA, HISTORIA Y CONTRATOS (26-9-2026)
 
 - **Calendario de cada país** (`nucleo/calendario.gd`): independencias y fiestas patrias de los
