@@ -647,6 +647,12 @@ func _guardar() -> void:
 	Aviso.mostrar(_menu if is_instance_valid(_menu) else get_parent() as Control, "logro", "🎽", "Equipación guardada", DisenosKit.diseno(String(_kit["dis"]))[1])
 	_cerrar()
 
+## Esc cierra sin guardar, como "Cancelar".
+func _unhandled_input(ev: InputEvent) -> void:
+	if ev is InputEventKey and (ev as InputEventKey).pressed and (ev as InputEventKey).keycode == KEY_ESCAPE:
+		get_viewport().set_input_as_handled()
+		_cerrar()
+
 func _cerrar() -> void:
 	if is_instance_valid(_menu):
 		_menu.visible = true

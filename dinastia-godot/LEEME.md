@@ -1,5 +1,49 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## OCTAVA RONDA: EQUIPACIÓN CON SPONSORS, ROPA APARTE, 238 MOVIMIENTOS NUEVOS, ÁRBITRO, VAR Y MODELOS 3D (26-9-2026)
+
+- **Equipación**:
+  - `ui/disenos_kit.gd`: familias 43-62, cada una en versión de dos colores (acento = color 1)
+    y de tres (acento = color 2), en 2D y en `visor/equipacion_q.gdshader`: 130 diseños;
+  - cuello en pico, redondo, polo con tapeta o mao (`kit.cuello`, `CUELLOS`);
+  - `ui/sponsor_kit.gd` (`SponsorKit`): patrocinadores por zona desde `Auspicio.contrato` y
+    `Comercial.zonas_firmadas`; los rivales, por hash (los grandes venden más zonas). La
+    palabra se escribe con una tipografía de bloques propia (el rasterizador SVG no pinta
+    texto), en una o dos líneas, junto al logo de `Marca`. La misma imagen va al 2D y al
+    shader (`sp_pecho`, `sp_manga`, `sp_espalda`, `sp_short`, encajada sin deformar);
+  - los sponsors no se guardan en `Club.kit_x` (salen de los contratos); `sp_ocultar` sí;
+  - el diseñador (`ui/componentes/disenador_kit.gd`) es una pantalla propia: su `CanvasLayer`
+    sobre la raíz y el menú oculto mientras está abierto; se abre con el chip «Equipación»;
+    filtros por colores y estilo, buscador, pestaña «Patrocinadores» y Esc para cerrar.
+- **Ropa aparte** (`visor/ropa_separada.gd`): camiseta, pantalón y medias extraídos de la malla
+  del cuerpo por zonas de la pose de reposo, separados por la normal (holgura propia, el bajo
+  que cae) y colgados del mismo esqueleto y piel (`skin`); el shader los pinta con `prenda`.
+  `VestidorQ.ropa_aparte`: siempre en el diseñador, opción en Ajustes › Dispositivo.
+- **Portafolio de fútbol** (`visor/anim_futbol.gd`): poses clave en lenguaje de cuerpo (cadera,
+  tronco, cuello, piernas con abducción y rotación, brazos) y generadores de golpeo, barrida
+  (con IK de pies en el césped) y estirada. 23 tiros, 20 pases, 20 barridas y entradas, 13
+  atajadas, 31 regates, 16 expresivos, 8 lesiones y 13 gestos arbitrales; se construyen una vez
+  por esqueleto y se espejan para zurdos: 333 movimientos por jugador, sin cargar más lento
+  (medido: 53 ms por jugador tras el primero, antes 62).
+  - **Dos ejes del brazo estaban mal** desde la ronda anterior y se corrigieron con
+    `pruebas/sonda_lados.gd`: el «adelante» del brazo derecho iba hacia atrás y el codo nunca
+    se doblaba (la Y del antebrazo solo lo gira; el codo es X+).
+  - El partido sortea tiros, pases y barridas por familia y después espeja al zurdo.
+- **Árbitro** (`visor/match_playback.gd`): cola de gestos programados y
+  `_trabajo_del_arbitro()`; la señal `revision_var` abre la sala VAR. Cámara «Árbitro (POV)»
+  en `visor/camera_rig.gd`.
+- **Sala VAR** (`ui/sala_var.gd`): sala 3D con cuatro monitores que son cámaras reales sobre el
+  mundo del partido, operadores con auriculares y la decisión; el partido se pausa.
+- **Modelos 3D pendientes**: `visor/estadio_extras.gd` (andamio con red y grúa torre durante las
+  obras, palcos VIP, cabina de prensa, museo y tienda según lo construido, y la mascota del
+  club) y `visor/peaton.gd` (peatones por las aceras de la ciudad).
+- **Plan**: octava ronda en el ROADMAP, con la lista larga del usuario (E9-E25) y lo que piden
+  los foros de FM26, FC 26, Soccer Manager y Top Eleven.
+- **Pruebas nuevas en el banco**: diseños de 2 y 3 colores, patrocinadores, portafolio (conteos,
+  espejos, zurdos), además de las capturas `captura_sponsors`, `captura_ropa_aparte`,
+  `captura_portafolio2`, `captura_sala_var`, `captura_arbitro`, `captura_extras_estadio` y
+  `captura_peatones`.
+
 ## SÉPTIMA RONDA (3): PORTAFOLIO DE MOVIMIENTOS, HABILIDADES QUE SE NOTAN Y BASE DE LA IA LIBRE (26-9-2026)
 
 - **Portafolio de movimientos** (`visor/anim_extra.gd`): 95 animaciones por jugador.

@@ -26,6 +26,13 @@ func _process(_d: float) -> void:
 			var par: Array = _cola[_i]
 			var nombre := "%02d_%s_%s" % [_i, String(par[0]), String((par[1] as Dictionary)["label"]).to_lower().replace(" ", "_")]
 			get_viewport().get_texture().get_image().save_png("res://pruebas/recorrido/%s.png" % nombre)
+			## Las pantallas propias (el diseñador de equipación) se cierran
+			## como lo haría el jugador, para no tapar las siguientes.
+			for capa in get_tree().root.get_children():
+				if capa is CanvasLayer and String(capa.name) == "PantallaEquipacion":
+					for h in capa.get_children():
+						if h.has_method("_cerrar"):
+							h.call("_cerrar")
 			_i += 1
 		return
 	if _i >= _cola.size():
