@@ -106,6 +106,7 @@ func _ready() -> void:
 	_probar_contratos_c9()
 	_probar_vida_dt()
 	_probar_maestrias()
+	_probar_disenos_kit()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -6271,3 +6272,38 @@ func _probar_maestrias() -> void:
 	var m2 := Maestria.new()
 	m2.desde_dic(d)
 	_comprobar(m2.nivel("finanzas") == 15 and m2.puntos == ma.puntos, "las maestrías se guardan")
+
+func _probar_disenos_kit() -> void:
+	_titulo("EQUIPACIÓN: DISEÑOS, COLORES, BOTINES Y ACCESORIOS")
+	var claves := DisenosKit.claves()
+	_comprobar(claves.size() >= 62, "hay al menos 50 diseños nuevos (%d en total)" % claves.size())
+	var unicas := {}
+	for k: String in claves:
+		unicas[k] = true
+	_comprobar(unicas.size() == claves.size(), "sin claves repetidas")
+	_comprobar(Jersey.KITS.all(func(k: String) -> bool: return claves.has(k)), "los 12 estilos de siempre siguen")
+	_comprobar(DisenosKit.BOTINES.size() == 30, "30 modelos de botín")
+	_comprobar(DisenosKit.ACCESORIOS.size() >= 6, "accesorios para los jugadores")
+	var cinco := DisenosKit.DISENOS.filter(func(d: Array) -> bool: return int(d[7]) == 5)
+	_comprobar(not cinco.is_empty(), "hay diseños que usan los 5 colores")
+	## La fórmula 2D da colores de la paleta.
+	var cols: Array[Color] = [Color.RED, Color.WHITE, Color.BLUE, Color.YELLOW, Color.BLACK]
+	var vistos := {}
+	var d := DisenosKit.diseno("franjas_cinco")
+	for i in 40:
+		vistos[DisenosKit.color_en(d, cols, -1.0 + float(i) / 20.0, 0.5).to_html()] = true
+	_comprobar(vistos.size() >= 4, "«Franjas de cinco colores» usa varios colores (%d)" % vistos.size())
+	## El kit de un club, guardado y leído.
+	var m := Mundo.new()
+	m.generar(["CHI"], 5158)
+	var c: Club = m.ligas[0].clubes[0]
+	var k := DisenosKit.kit_de_club(c)
+	_comprobar((k["cols"] as Array).size() == 5 and k.has("bot") and k.has("acc"), "la equipación completa tiene 5 colores, botines y accesorios")
+	c.kit_x = {"dis": "tartan", "bot": {"mod": "fuego"}, "acc": {"guantes": "111111"}}
+	var dic := c.identidad_a_dic()
+	var c2 := Club.new()
+	c2.identidad_desde_dic(dic)
+	_comprobar(String(DisenosKit.kit_de_club(c2)["dis"]) == "tartan", "el diseño elegido se guarda con el club")
+	var u := DisenosKit.uniforms(DisenosKit.kit_de_club(c2), 10)
+	_comprobar(int(u["familia"]) == 26 and (u["acc_guantes"] as Color).a > 0.5 and int(u["dorsal"]) == 10, "el shader recibe diseño, accesorios y dorsal")
+	_comprobar(DisenosKit.textura_camiseta("tartan", cols, 1, 64) != null, "la miniatura 2D se dibuja")
