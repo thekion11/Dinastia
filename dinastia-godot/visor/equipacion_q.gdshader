@@ -350,20 +350,23 @@ void fragment() {
 		trim_col = color2.rgb;
 	}
 	// Cuello y puños del color de ribete.
-	if ((!manga && y > 1.505) || (manga && abs(x) > 0.405)) {
+	// En ropa de calle (civil) no hay cuello acanalado de fútbol: la franja
+	// ancha sobre los hombros delataba una camiseta de juego.
+	if ((!manga && y > 1.505 && !civil) || (manga && abs(x) > 0.405)) {
 		camiseta = trim_col;
 	}
 	// DETALLES DE CONFECCIÓN (realismo): cuello y puños acanalados, costuras
 	// laterales y de hombro un poco más oscuras, escudo del club (izquierda
 	// del pecho) y una marca de ropa inventada (derecha).
 	bool frente = z > 0.55;
-	if ((!manga && y > 1.505) || (manga && abs(x) > 0.405)) {
+	if ((!manga && y > 1.505 && !civil) || (manga && abs(x) > 0.405)) {
 		camiseta *= 0.9 + 0.1 * step(0.5, fract((manga ? abs(x) : y) * 180.0));
 	}
 	if (familia >= 0 && !manga && frente) {
 		if (cuello == 0 && y > 1.44 && y < 1.51) {
 			float borde_v = (y - 1.44) * 0.77;
-			if (abs(x) < borde_v - 0.007) camiseta = C(0) * 0.55;
+			// Civil (traje): dentro de la V asoma la camisa (color 3).
+			if (abs(x) < borde_v - 0.007) camiseta = civil ? C(2) : C(0) * 0.55;
 			else if (abs(abs(x) - borde_v) < 0.007) camiseta = trim_col;
 		} else if (cuello == 2 && abs(x) < 0.011 && y > 1.43 && y < 1.51) {
 			camiseta = trim_col;
