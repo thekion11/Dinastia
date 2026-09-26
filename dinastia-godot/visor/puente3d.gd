@@ -65,7 +65,8 @@ static func once(jugadores: Array[Jugador]) -> Dictionary:
 static func kit(c: Club) -> Dictionary:
 	var estilo := Jersey.kit_de(c, c.kit_estilo)
 	var img := Jersey.fichero_real(c)
-	return {"c1": c.color_kit1(), "c2": c.color_kit2(), "estilo": estilo, "img": img}
+	## "x": la equipación completa del diseñador (26-9-2026).
+	return {"c1": c.color_kit1(), "c2": c.color_kit2(), "estilo": estilo, "img": img, "x": DisenosKit.kit_de_club(c)}
 
 ## La del portero. Tiene que CONTRASTAR con la de sus compañeros, o desde la
 ## cámara alta no se distingue al arquero de un defensa. Se elige el color que
