@@ -91,6 +91,7 @@ static func slot_to_position(slot: Array, es_local: bool) -> Vector3:
 ## el botón "Nombres" de `VistaEstadio`.
 static var mostrar_nombres := true
 const ROTULO := "Rotulo"
+const BARRA := "Barra"
 ## Tamaño del rótulo con la cámara de TV; `VistaEstadio._escalar_rotulos()` lo
 ## corrige para las cámaras con más o menos zoom.
 const TAM_ROTULO := 0.00055
@@ -123,6 +124,37 @@ static func poner_rotulo(n: Node3D, jug: Dictionary, es_local: bool = true) -> v
 	r.position = Vector3(0, 2.25 if es_local else 2.8, 0)
 	r.visible = mostrar_nombres
 	n.add_child(r)
+	## LA BARRA DE ESTADO (26-9-2026, pendiente del estadio): bajo el nombre,
+	## ocho segmentos con la energía que le queda. Va colgada del rótulo, así
+	## que se oculta y se escala con él; `offset` está en píxeles del propio
+	## rótulo, y con `fixed_size` queda siempre a la misma distancia del texto.
+	var b := Label3D.new()
+	b.name = BARRA
+	b.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	b.fixed_size = true
+	b.pixel_size = TAM_ROTULO
+	b.font_size = 22
+	b.outline_size = 8
+	b.outline_modulate = Color(0, 0, 0, 0.85)
+	b.no_depth_test = true
+	b.render_priority = 2
+	b.offset = Vector2(0, -34)
+	b.set_meta("fisico", float(jug.get("fisico", 100)))
+	b.set_meta("forma", float(jug.get("forma", 60)))
+	r.add_child(b)
+	actualizar_barra(b, 0)
+
+## La energía estimada al minuto `minuto`: arranca en su estado físico y baja
+## más rápido cuanto peor está de forma (60 de forma ≈ -25 a los 90').
+static func energia(fisico: float, forma: float, minuto: int) -> float:
+	var ritmo := 0.40 - clampf(forma, 0.0, 100.0) * 0.0025
+	return clampf(fisico - float(minuto) * ritmo, 0.0, 100.0)
+
+static func actualizar_barra(b: Label3D, minuto: int) -> void:
+	var e := energia(float(b.get_meta("fisico", 100.0)), float(b.get_meta("forma", 60.0)), minuto)
+	var llenos := clampi(int(ceil(e / 12.5)), 0, 8)
+	b.text = "▰".repeat(llenos) + "▱".repeat(8 - llenos)
+	b.modulate = Color("5fd35f") if e >= 65.0 else (Color("f0c040") if e >= 40.0 else Color("e5534b"))
 
 func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dictionary,
 		es_local: bool, kit: Dictionary, kit_portero: Dictionary = {}) -> Array:

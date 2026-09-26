@@ -65,6 +65,38 @@ static func poner_en_banda(padre: Node3D, asp: Dictionary, c1: Color, c2: Color,
 	n.add_child(g)
 	return d
 
+## EL PERSONAL DEL ESTADIO (26-9-2026, pendiente "camarógrafos y guardias con
+## uniforme"): una persona entera con el uniforme de su oficio.
+##   "prensa"    polo naranja de prensa con auriculares, junto a su cámara;
+##   "seguridad" polo amarillo flúor de alta visibilidad y gorra, de espaldas
+##               al campo mirando a la grada, como en cualquier estadio.
+static func personal_estadio(padre: Node3D, rol: String, pos: Vector3, giro: float, semilla: int) -> Dictionary:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = semilla
+	var asp := {"cuerpo": "female" if rng.randf() < 0.3 else "male", "altura": rng.randf_range(1.66, 1.90),
+		"complexion": rng.randf_range(-0.2, 0.5), "barriga": rng.randf_range(0.0, 0.4),
+		"piel": PIELES[rng.randi() % PIELES.size()], "pelo": CORTES[rng.randi() % 7],
+		"color_pelo": COLORES_PELO[rng.randi() % 6], "barba": rng.randf() < 0.3,
+		"corbata": false, "reloj": false, "gafas": ""}
+	if rol == "seguridad":
+		asp.merge({"ropa": "polo", "c_ropa": "d7f000", "c_ropa2": "1a1a1a", "gorra": true}, true)
+	else:
+		asp.merge({"ropa": "polo", "c_ropa": "e07b16", "c_ropa2": "23262b", "auriculares": true, "gorra": rng.randf() < 0.4}, true)
+	var d := crear(padre, asp)
+	if d.is_empty():
+		return d
+	var n: Node3D = d["nodo"]
+	n.position = pos
+	n.rotation.y = giro
+	var ap: AnimationPlayer = d["anim"]
+	var g := "brazos_jarra" if rol == "seguridad" and rng.randf() < 0.5 and ap.has_animation("brazos_jarra") else "parado"
+	if ap.has_animation(g):
+		ap.play(g)
+		ap.seek(rng.randf() * ap.current_animation_length, true)
+	for mi in n.find_children("*", "MeshInstance3D", true, false):
+		(mi as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return d
+
 class _GestosBanda extends Node:
 	const GESTOS := ["brazos_jarra", "aplaudir", "pedir_calma", "protestar", "manos_cabeza", "senalar", "llamar_hinchada"]
 	var ap: AnimationPlayer
