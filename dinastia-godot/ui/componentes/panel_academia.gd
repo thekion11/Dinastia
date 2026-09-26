@@ -26,6 +26,14 @@ static func pintar(lista: VBoxContainer, mundo: Mundo, paleta: Dictionary, al_ca
 		Academia.EDAD_ENTREGA, a.chicos.size(), Academia.CUPO, Eco.dinero(a.coste_semanal())]
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(ex)
+	## VISITAR EL ENTRENAMIENTO (C11): una vez por semana, los chicos lo notan.
+	if mundo.eventos_cantera != null:
+		var visita := Button.new()
+		visita.text = "👀 Visitar el entrenamiento de la academia (una vez por semana)"
+		visita.add_theme_font_size_override("font_size", 11)
+		visita.pressed.connect(func() -> void:
+			al_cambiar.call(mundo.eventos_cantera.visitar(a, mundo.anio, mundo.semana)))
+		lista.add_child(visita)
 
 	var ordenados := a.chicos.duplicate()
 	ordenados.sort_custom(func(x: Dictionary, y: Dictionary) -> bool: return int(x["edad"]) > int(y["edad"]))

@@ -2109,6 +2109,12 @@ func _conectar_noticias() -> void:
 		mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
 			call_deferred("_portada_nueva")
 			call_deferred("_al_paso_nuevo"))
+		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera]:
+			if fuente != null:
+				fuente.noticia.connect(func(titulo: String, cuerpo: String) -> void:
+					_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
+					_anotar(titulo, cuerpo))
+				fuente.movimiento.connect(mundo._anotar_movimiento)
 		if mundo.licencia != null:
 			mundo.licencia.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 				_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -4622,6 +4628,7 @@ func _ver_ficha(j: Jugador) -> void:
 	if propio:
 		var pal := _paleta_ficha()
 		FichaJugadorInfo.pintar_estadisticas(_ficha, j, pal)
+		FichaJugadorInfo.pintar_perfil_y_premios(_ficha, j, pal)
 		FichaJugadorInfo.pintar_cabeza(_ficha, j, mundo, pal)
 		FichaJugadorInfo.pintar_promesa(_ficha, j, mundo, pal)
 		FichaJugadorAcciones.pintar_desarrollo(_ficha, j, mundo, func() -> void:
@@ -5491,6 +5498,8 @@ func _pintar_despacho() -> void:
 		asuntos.append({"et": "🗣️ Te busca un jugador", "col": COL_VERDE, "id": "solicitud"})
 	if mundo.junta != null and not mundo.junta.pendiente.is_empty():
 		asuntos.append({"et": "🏛️ Junta de accionistas", "col": COL_ORO, "id": "junta"})
+	if mundo.eventos_cantera != null and not mundo.eventos_cantera.pendiente.is_empty():
+		asuntos.append({"et": "🌱 Asunto de la academia", "col": COL_VERDE, "id": "cantera"})
 	if asuntos.is_empty():
 		return
 	_aviso_abierto = clampi(_aviso_abierto, 0, asuntos.size() - 1)
@@ -5516,6 +5525,36 @@ func _pintar_despacho() -> void:
 		"decision": _pintar_decision(mundo.prensa.pendiente)
 		"solicitud": _pintar_solicitud_plantel()
 		"junta": _pintar_junta()
+		"cantera": _pintar_asunto_cantera()
+
+## UN ASUNTO DE LA ACADEMIA (C11): el tema y las dos salidas.
+func _pintar_asunto_cantera() -> void:
+	var p := mundo.eventos_cantera.pendiente
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.TARJETA, Tema.RADIO, Tema.BIEN))
+	_despacho.add_child(caja)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
+	caja.add_child(v)
+	v.add_child(Tema.rotulo("Academia · %s" % String(p["nombre"])))
+	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(p["tema"]))
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(t)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	v.add_child(fila)
+	for op: String in ["a", "b"]:
+		var b := Button.new()
+		b.text = String(p[op])
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.clip_text = true
+		b.pressed.connect(_resolver_cantera.bind(op))
+		fila.add_child(b)
+
+func _resolver_cantera(op: String) -> void:
+	var r := mundo.eventos_cantera.resolver(op, mundo.academia, mundo.mi_club())
+	Aviso.mostrar(self, "nivel", "🌱", String(r.get("titulo", "")), String(r.get("cuerpo", "")))
+	_refrescar()
 
 ## LA JUNTA DE ACCIONISTAS (plan maestro C5): quién habla, cuánto pesa, qué pide
 ## y las dos salidas. Debajo, la mesa entera con el humor de cada uno.
@@ -6495,14 +6534,16 @@ func _pintar_obras(c: Club) -> void:
 		fila.add_theme_constant_override("separation", 8)
 		_lista_club.add_child(fila)
 		var nom := _texto(12, COL_TEXTO)
-		nom.text = "%s  %s" % ["*".repeat(n) + ".".repeat(Instalaciones.NIVEL_MAX - n), String(datos[0])]
+		nom.text = "%s  %s" % ["*".repeat(n) + ".".repeat(mundo.obras.maximo(clave) - n), String(datos[0])]
+		if n > 0:
+			nom.tooltip_text = Trabajadores.texto_de(c, clave)
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila.add_child(nom)
 		if mundo.obras.en_obra(clave):
 			var enc := _texto(11, COL_ORO)
 			enc.text = "en obra"
 			fila.add_child(enc)
-		elif n >= Instalaciones.NIVEL_MAX:
+		elif n >= mundo.obras.maximo(clave):
 			var tope := _texto(11, COL_VERDE)
 			tope.text = "al máximo"
 			fila.add_child(tope)
@@ -6515,7 +6556,7 @@ func _pintar_obras(c: Club) -> void:
 			b.pressed.connect(func() -> void: _empezar_obra(clave))
 			fila.add_child(b)
 		var que := _texto(11, COL_SUAVE)
-		que.text = "    " + String(datos[1])
+		que.text = "    " + String(datos[1]) + (("  ·  👤 " + Trabajadores.texto_de(c, clave)) if n > 0 else "")
 		que.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_club.add_child(que)
 
@@ -11067,7 +11108,7 @@ func _pintar_penas_y_ramas(c: Club, h: Hinchada) -> void:
 		n.tooltip_text = String(f[7])
 		fila.add_child(n)
 		var rep := _texto(11, COL_ORO)
-		rep.text = "+%d rep" % int(f[5])
+		rep.text = ("%d temp." % int(h.anios_rama.get(clave, 0))) if abierta else "+%d rep" % int(f[5])
 		rep.custom_minimum_size = Vector2(58, 0)
 		fila.add_child(rep)
 		var mens := _texto(11, COL_SUAVE)
@@ -11088,6 +11129,19 @@ func _pintar_penas_y_ramas(c: Club, h: Hinchada) -> void:
 			d.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			d.clip_text = true
 			fila.add_child(d)
+	_pintar_palmares_ramas(h)
+
+## EL PALMARÉS DE LAS RAMAS (C12): títulos y podios de cada temporada.
+func _pintar_palmares_ramas(h: Hinchada) -> void:
+	if h.palmares_ramas.is_empty():
+		return
+	var t := _texto(11, COL_ORO)
+	t.text = "🏅 PALMARÉS DE LAS RAMAS"
+	_lista_estadio.add_child(t)
+	for d: Dictionary in h.palmares_ramas.slice(0, 8):
+		var l := _texto(11, COL_TEXTO)
+		l.text = "%d · %s · %s" % [int(d["anio"]), String(d["rama"]), "🏆 Campeón" if int(d["puesto"]) == 1 else "🥉 Podio (%d.º)" % int(d["puesto"])]
+		_lista_estadio.add_child(l)
 
 func _fundar_pena(c: Club) -> void:
 	var r := mundo.hinchada.fundar_pena(c)

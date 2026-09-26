@@ -112,18 +112,18 @@ frecuentes, tienen su noticia y se pueden prevenir con normas del vestuario.
 - 🟡 Cada país necesita su dato verificado antes de ponerlo en el juego. Se hará por tandas de
   países, con la fuente anotada.
 
-### C10. Instalaciones más profundas ✅
+### C10. Instalaciones más profundas ✅ — HECHO (26-9)
 - Más niveles (de 5 a 10) y más detalle visible en la ciudad.
 - **Trabajadores** con nombre y personalidad en cada instalación: médico jefe, cocinero,
   utilero, jardinero…
 - **Eventos** propios de cada instalación: la caldera de la piscina se rompe, el cocinero
   renuncia, una inspección sanitaria…
 
-### C11. Más cantera ✅
+### C11. Más cantera ✅ — HECHO (26-9)
 Visitar entrenamientos de juveniles, eventos (torneo internacional sub-17, un chico que quiere
 dejarlo, padres exigentes) y promociones con ceremonia.
 
-### C12. Las otras ramas del club ✅
+### C12. Las otras ramas del club ✅ — HECHO (26-9)
 Fútbol femenino, juveniles, futsal y otros deportes, con más peso: resultados propios,
 presupuesto, noticias e impacto en la reputación.
 
@@ -154,7 +154,7 @@ ficha del país.
 - Alternativa: un rasgo **ficticio y opcional** del jugador generado, nunca copiado de una
   persona real.
 
-### C17. Ficha de los jugadores «simulados» ✅ / ⛔ en parte
+### C17. Ficha de los jugadores «simulados» ✅ / ⛔ en parte — HECHO (26-9)
 - **Sí**: pierna débil, número, estadísticas por temporada, historial de premios por año,
   nacionalidad, edad, posición y club.
 - ⛔ **No**: la situación sentimental real de personas reales.

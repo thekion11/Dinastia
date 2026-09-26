@@ -1,5 +1,30 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## SEXTA RONDA, TANDA C: INSTALACIONES, CANTERA, RAMAS, FICHA DEL JUGADOR (26-9-2026)
+
+- **Instalaciones a 10 niveles** (`Instalaciones.NIVEL_MAX`), salvo las tribunas (5).
+  - Del 6 al 10, cada nivel vale la mitad.
+- **Trabajadores** (`nucleo/trabajadores.gd`): cada instalación construida tiene a alguien al
+  frente, con nombre y carácter.
+  - Los caracteres son perfeccionista, trabajador, despistado, carismático y conflictivo.
+  - Cada instalación tiene sus eventos (caldera rota, menú nuevo, campo inundado…).
+  - El despistado tiene el doble de averías.
+  - El carismático organiza asados y el conflictivo pide aumento.
+  - Se ven en Infraestructura y en la ciudad.
+- **Cantera viva** (`nucleo/eventos_cantera.gd`):
+  - Asuntos en el despacho: torneo sub-17, un chico que quiere dejarlo y padres que exigen que
+    suba.
+  - Convocatorias juveniles.
+  - Botón «Visitar el entrenamiento», una vez por semana.
+- **Ramas que compiten** (`Hinchada.temporada_ramas`): femenino, juveniles, futsal y otros
+  deportes juegan su temporada.
+  - Tienen posición y palmarés propios.
+  - Un título del femenino llega a portada.
+- **Ficha del jugador**: pierna débil (1 a 5 estrellas), premios por año (equipo ideal, mejor
+  joven, máximo goleador) y asistencias en el historial.
+  - Sin datos sentimentales ni religiosos de personas reales.
+- Pruebas: `_probar_tanda_c`; captura `captura_tanda_c`.
+
 ## SEXTA RONDA, TANDA B: INSTITUCIONES, MEDIOS, CHARLAS, MINIJUEGO, LICENCIA (26-9-2026)
 
 - **Presidente de la federación** (`Federacion.presidente`):

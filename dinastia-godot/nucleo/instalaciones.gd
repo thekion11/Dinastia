@@ -24,7 +24,21 @@ signal obra_terminada(clave: String, nivel: int)
 
 ## El nivel máximo de cada obra. Cinco es suficiente: con el coste creciendo al
 ## cuadrado, el quinto nivel de una tribuna ya es una decisión de club.
-const NIVEL_MAX := 5
+const NIVEL_MAX := 10
+## DE 5 A 10 NIVELES (26-9-2026, plan maestro C10). Las tribunas se quedan en 5:
+## cada nivel es +15 % de aforo y el estadio ya llega a sus cinco bandejas y
+## ~150.000 personas con eso. El resto sube a 10, pero de 6 a 10 cada nivel
+## rinde la MITAD (`_ef()`): la inversión se nota sin que el centro médico
+## acabe curando una rotura en una semana.
+const NIVEL_MAX_DE := {"trib": 5}
+
+func maximo(clave: String) -> int:
+	return int(NIVEL_MAX_DE.get(clave, NIVEL_MAX))
+
+## El nivel "efectivo": completo hasta 5, la mitad por encima.
+func _ef(clave: String) -> float:
+	var n := float(nivel(clave))
+	return n if n <= 5.0 else 5.0 + (n - 5.0) * 0.5
 
 ## Las seis de siempre y las trece que se añadieron después, en un solo
 ## catálogo: clave, nombre, qué hace y coste base. El coste base es del HTML.
@@ -79,7 +93,7 @@ func nivel(clave: String) -> int:
 ## que es el más largo del juego: son diecinueve obras a nivel cinco.
 func todo_al_maximo() -> bool:
 	for k: String in CATALOGO:
-		if nivel(k) < NIVEL_MAX:
+		if nivel(k) < maximo(k):
 			return false
 	return true
 
@@ -95,7 +109,7 @@ func coste(clave: String, rep_club: int) -> int:
 	if not CATALOGO.has(clave):
 		return -1
 	var n := nivel(clave)
-	if n >= NIVEL_MAX:
+	if n >= maximo(clave):
 		return -1
 	var base: float = float(CATALOGO[clave][2])
 	var mult: float = pow(Eco.factor_club(float(rep_club)), 0.62)
@@ -105,7 +119,7 @@ func coste(clave: String, rep_club: int) -> int:
 func iniciar(clave: String, c: Club) -> String:
 	if not CATALOGO.has(clave):
 		return "esa obra no existe"
-	if nivel(clave) >= NIVEL_MAX:
+	if nivel(clave) >= maximo(clave):
 		return "ya está al máximo"
 	if en_obra(clave):
 		return "ya hay una obra en marcha ahí"
@@ -164,7 +178,7 @@ func fijar_aforo_base(n: int) -> void:
 ## curva de `Finanzas.asistencia()`, y va aparte porque `finanzas.gd` no conoce
 ## las instalaciones.
 func aporte_ocupacion() -> float:
-	return 0.03 * float(nivel("cal"))
+	return 0.03 * _ef("cal")
 
 ## Ingresos del cierre de mes que no existen sin ladrillo.
 func ingresos_del_mes(c: Club) -> Array[Dictionary]:
@@ -183,35 +197,35 @@ func ingresos_del_mes(c: Club) -> Array[Dictionary]:
 ## Semanas que se le quitan a una lesión. Se suman el centro médico y el de
 ## rehabilitación, y el gimnasio ayuda a partir del nivel 3.
 func descuento_lesion() -> int:
-	return nivel("med") + nivel("rehab") + (1 if nivel("gim") >= 3 else 0)
+	return int(_ef("med") + _ef("rehab")) + (1 if nivel("gim") >= 3 else 0)
 
 ## Forma que se deja de perder cada semana: comedor y piscina.
 func aguante() -> int:
-	return int(floor(float(nivel("cocina") + nivel("piscina")) / 2.0))
+	return int(floor((_ef("cocina") + _ef("piscina")) / 2.0))
 
 ## Cuánto más rápido progresan tus jugadores con el centro de entrenamiento.
 func ritmo_de_progreso() -> float:
-	return 1.0 + 0.12 * float(nivel("ct"))
+	return 1.0 + 0.12 * _ef("ct")
 
 ## Techo extra de los canteranos: academia y residencia.
 func techo_cantera() -> int:
-	return nivel("acad") + int(floor(float(nivel("resid")) / 2.0))
+	return int(_ef("acad")) + int(floor(_ef("resid") / 2.0))
 
 ## Cuántos juveniles se quedan en vez de irse: residencia y sala de juegos.
 func retencion_juvenil() -> float:
-	return clampf(0.08 * float(nivel("resid") + nivel("esports")), 0.0, 0.6)
+	return clampf(0.08 * (_ef("resid") + _ef("esports")), 0.0, 0.6)
 
 ## Menos ansiedad en el vestuario: bienestar y guardería.
 func calma_del_vestuario() -> int:
-	return nivel("bienestar") + nivel("guarderia")
+	return int(_ef("bienestar") + _ef("guarderia"))
 
 ## Mejor lectura del rival en la previa: la sala de video.
 func lectura_del_rival() -> int:
-	return nivel("video")
+	return int(_ef("video"))
 
 ## Imagen ante los medios: sala de prensa.
 func imagen_en_prensa() -> int:
-	return nivel("pren")
+	return int(_ef("pren"))
 
 ## Certificación ecológica: el huerto abarata la operación un 12%, igual que el
 ## `G.ciudad.eco.cert` del HTML.
