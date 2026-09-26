@@ -6397,6 +6397,34 @@ func _probar_disenos_kit() -> void:
 	_comprobar(unicas.size() == claves.size(), "sin claves repetidas")
 	_comprobar(Jersey.KITS.all(func(k: String) -> bool: return claves.has(k)), "los 12 estilos de siempre siguen")
 	_comprobar(DisenosKit.BOTINES.size() == 30, "30 modelos de botín")
+	var de_dos := DisenosKit.DISENOS.filter(func(d: Array) -> bool: return int(d[2]) >= 43 and int(d[2]) <= 62 and int(d[7]) == 2)
+	var de_tres := DisenosKit.DISENOS.filter(func(d: Array) -> bool: return int(d[2]) >= 43 and int(d[2]) <= 62 and int(d[7]) == 3)
+	_comprobar(de_dos.size() == 20 and de_tres.size() == 20, "20 diseños nuevos de dos colores y 20 de tres")
+	var cols3: Array[Color] = [Color.RED, Color.WHITE, Color.BLUE, Color.BLACK, Color.GREEN]
+	var usados := {}
+	for d: Array in de_dos:
+		for i in 60:
+			usados[DisenosKit.color_en(d, cols3, float(i % 10) / 5.0 - 1.0, float(i / 10) / 6.0).to_html(false)] = true
+	_comprobar(not usados.has(Color.BLUE.to_html(false)) and not usados.has(Color.BLACK.to_html(false)), "los de dos colores no usan un tercero")
+	## Patrocinadores.
+	var ms := Mundo.new()
+	ms.generar(["CHI"], 31)
+	ms.tomar_el_mando(ms.ligas[0].clubes[0].id)
+	_comprobar(SponsorKit.de_club(ms.mi_club(), ms).is_empty(), "sin contrato, tu camiseta va limpia")
+	ms.auspicio.contrato = {"marca": "Cerveza Andin4", "color": "#e8b13a", "monto": 1, "exig_pos": 5, "anio": 2026}
+	var spk := DisenosKit.kit_de_club(ms.mi_club())
+	_comprobar((spk["sp"] as Dictionary).has("pecho") and String(spk["sp"]["pecho"]["marca"]) == "Cerveza Andina", "el contrato principal va al pecho (sin la cubierta)")
+	var ajenos := 0
+	for cc: Club in ms.ligas[0].clubes:
+		if cc != ms.mi_club() and not SponsorKit.de_club(cc, ms).is_empty():
+			ajenos += 1
+	_comprobar(ajenos > 0 and SponsorKit.de_club(ms.ligas[0].clubes[3], ms) == SponsorKit.de_club(ms.ligas[0].clubes[3], ms), "los rivales llevan sus sponsors, siempre los mismos")
+	var im := SponsorKit.imagen("Seguros Patagonia", "#8fa3b5", Color.WHITE)
+	_comprobar(im.get_width() > im.get_height() and SponsorKit.lineas_de("SEGUROS PATAGONIA").size() == 2, "los nombres largos van en dos líneas")
+	var un := DisenosKit.uniforms(spk, 9)
+	_comprobar(bool(un["hay_sp_pecho"]) and un["sp_pecho"] is Texture2D, "el sponsor llega al shader 3D")
+	ms.mi_club().kit_x = {"sp_ocultar": ["pecho"]}
+	_comprobar(not (DisenosKit.kit_de_club(ms.mi_club())["sp"] as Dictionary).has("pecho"), "se puede no estampar una zona")
 	_comprobar(DisenosKit.ACCESORIOS.size() >= 6, "accesorios para los jugadores")
 	var cinco := DisenosKit.DISENOS.filter(func(d: Array) -> bool: return int(d[7]) == 5)
 	_comprobar(not cinco.is_empty(), "hay diseños que usan los 5 colores")

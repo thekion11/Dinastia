@@ -55,6 +55,20 @@ uniform vec4 acc_cuello : source_color = vec4(0.0);
 uniform vec4 acc_tobilleras : source_color = vec4(0.0);
 // Tono de piel del jugador sobre el tono medio de la textura original.
 uniform vec3 tinte_piel = vec3(1.0);
+// Patrocinadores (`SponsorKit`): logo + palabra en el pecho y la espalda, solo
+// logo en la manga y el pantalón.
+uniform bool hay_sp_pecho = false;
+uniform sampler2D sp_pecho : source_color, filter_linear_mipmap, repeat_disable;
+uniform bool hay_sp_manga = false;
+uniform sampler2D sp_manga : source_color, filter_linear_mipmap, repeat_disable;
+uniform bool hay_sp_espalda = false;
+uniform sampler2D sp_espalda : source_color, filter_linear_mipmap, repeat_disable;
+uniform bool hay_sp_short = false;
+uniform sampler2D sp_short : source_color, filter_linear_mipmap, repeat_disable;
+uniform float sp_asp_pecho = 4.0;
+// El corte del cuello: 0 pico, 1 redondo, 2 polo con tapeta, 3 mao (alto).
+uniform int cuello = 1;
+uniform float sp_asp_espalda = 4.0;
 // Borde de luz: separa al jugador del césped desde la cámara alta.
 uniform float borde = 0.45;
 // Manga y pantalón largos (el presentador del sorteo, el cuerpo técnico): las
@@ -132,6 +146,15 @@ vec3 C(int i) { return cols[clamp(i, 0, 4)].rgb; }
 vec3 ciclo(float id, float k) { return C(int(mod(id, max(k, 1.0)))); }
 vec3 banda(float id, float k) { return C(1 + int(mod(id, max(k - 1.0, 1.0)))); }
 
+// Un sponsor encajado sin deformar en su zona: `st` de 0 a 1 (x a la derecha,
+// y hacia abajo), `zona` y `img` son las proporciones ancho/alto.
+vec4 sp_encajado(sampler2D t, vec2 st, float zona, float img) {
+	if (img > zona) { st.y = (st.y - 0.5) * img / zona + 0.5; }
+	else { st.x = (st.x - 0.5) * zona / img + 0.5; }
+	if (st.x < 0.0 || st.x > 1.0 || st.y < 0.0 || st.y > 1.0) return vec4(0.0);
+	return texture(t, st);
+}
+
 // Espejo de `DisenosKit.color_en()`: mismo número por familia.
 vec3 disenio(float u, float v, float x, float y) {
 	float a = prm.x; float b = prm.y; float c = prm.z; float d = prm.w;
@@ -199,6 +222,45 @@ vec3 disenio(float u, float v, float x, float y) {
 	if (f == 42) { float hx = (u + 1.0) * 0.5 * a; float hy = v * a * 1.2;
 		float rd = b * clamp((u + 1.0) * 0.5 * 0.6 + (1.0 - v) * 0.6, 0.0, 1.0);
 		return length(vec2(fract(hx) - 0.5, fract(hy) - 0.5)) < rd ? C(1) : C(0); }
+	vec3 A = d > 0.5 ? C(2) : C(1);
+	if (f == 43) { float e = v - (0.98 - abs(u) * a); if (abs(e) < b) return C(1); return abs(e) < b + 0.035 ? A : C(0); }
+	if (f == 44) { float t = 0.5 + (1.0 - abs(u)) * a; if (abs(v - t) < 0.025) return A; return v > t ? C(1) : C(0); }
+	if (f == 45) { if (abs(v - a) < b) return C(1); return abs(v - a + 0.2) < b ? A : C(0); }
+	if (f == 46) { if (abs(u) < 0.03) return A; if (u < 0.0) return fract((u + 1.0) * a) < 0.5 ? C(1) : C(0); return C(0); }
+	if (f == 47) { float z = a + (abs(fract(u * b) - 0.5) - 0.25) * 0.12; if (v > z + 0.02) return C(1); return v > z - 0.02 ? A : C(0); }
+	if (f == 48) { vec2 p = vec2(u * a, v * a * 1.15); vec2 r = vec2(1.0, 1.732);
+		vec2 aa = mod(p, r) - r * 0.5; vec2 bb = mod(p - r * 0.5, r) - r * 0.5;
+		vec2 g = dot(aa, aa) < dot(bb, bb) ? aa : bb;
+		float dh = max(abs(g.x), abs(g.x) * 0.5 + abs(g.y) * 0.866);
+		if (dh > 0.45) return C(1);
+		vec2 cc = p - g; return h21(vec2(floor(cc.x * 2.0), floor(cc.y * 2.0))) < 0.22 ? A : C(0); }
+	if (f == 49) { float tx = (u + 1.0) * 0.5 * a; float ty = v * a; float fil = mod(floor(ty), 2.0);
+		float tri = fract(tx + fil * 0.5);
+		if (fract(ty) < 1.0 - abs(tri - 0.5) * 2.0) return mod(floor(tx + fil * 0.5) + floor(ty), 2.0) < 0.5 ? C(1) : A;
+		return C(0); }
+	if (f == 50) { float s = (u + sin(v * b) * 0.06) * a * 0.5; if (fract(s) < 0.5) return mod(floor(s), 2.0) < 0.5 ? C(1) : A; return C(0); }
+	if (f == 51) { float z = sin(u * a * 3.0 + ruido(vec2(u * 2.0 + 3.0, v * 2.5)) * b + v * 2.0);
+		if (z > 0.3) return C(1); return (z > 0.1 && d > 0.5) ? A : C(0); }
+	if (f == 52) { float s = fract((u + v * a) * b); if (s < 0.35) return C(1); return (s < 0.45 && d > 0.5) ? A : C(0); }
+	if (f == 53) { float cx = (u + 1.0) * 0.5 * a; if (fract(cx) < 0.06) return d > 0.5 ? A : C(1);
+		float sg = mod(floor(cx), 2.0) < 0.5 ? 1.0 : -1.0;
+		return fract(v * a * 1.2 + sg * fract(cx)) < 0.5 ? C(1) : C(0); }
+	if (f == 54) { float dv = abs(v - a); if (abs(dv - 0.12) < 0.012) return A;
+		if (dv < 0.12) return h21(vec2(floor((u + 1.0) * 40.0), 3.0)) < 0.5 ? C(1) : C(0); return C(0); }
+	if (f == 55) { float r = length(vec2(u, (v - 0.6) * 1.2)); if (abs(r - a) < b) return C(1); return abs(r - a - b * 2.2) < b * 0.5 ? A : C(0); }
+	if (f == 56) { float e = v - (0.72 + abs(u) * a); if (abs(e) < b) return C(1); return abs(e + 0.1) < b * 0.6 ? A : C(0); }
+	if (f == 57) { if (abs(u) > a) { if (fract(v * b) < 0.5) return C(1); return d > 0.5 ? C(2) : C(0); } return C(0); }
+	if (f == 58) { float fl = a + ruido(vec2(u * 4.0, v * 2.0 + 7.0)) * 0.25 + sin(u * b) * 0.05; if (v < fl) return C(1); return v < fl + 0.05 ? A : C(0); }
+	if (f == 59) { float mx = (u + 1.0) * 0.5 * a; float my = v * a * 1.2; float md = 9.0; float mh = 0.0;
+		for (int oy = -1; oy <= 1; oy++) { for (int ox = -1; ox <= 1; ox++) {
+			float cx = floor(mx) + float(ox); float cy = floor(my) + float(oy);
+			float px = cx + 0.5 + (h21(vec2(cx, cy)) - 0.5) * 0.7; float py = cy + 0.5 + (h21(vec2(cy + 3.1, cx)) - 0.5) * 0.7;
+			float dm = length(vec2(mx - px, my - py)); if (dm < md) { md = dm; mh = h21(vec2(cx + 9.0, cy + 9.0)); } } }
+		if (mh < 0.35) return C(1); return mh < 0.55 ? A : C(0); }
+	if (f == 60) { float dd = abs(u) + abs(v - 0.58) * 1.3; if (dd < a) return C(1); return abs(dd - a - 0.06) < 0.02 ? A : C(0); }
+	if (f == 61) { bool sx = fract((u + 1.0) * 0.5 * a) < 0.5; bool sy = fract(v * a * 1.2) < 0.5;
+		if (sx && sy) return C(1); if (sx || sy) return d > 0.5 ? C(2) : C(0); return C(0); }
+	if (f == 62) { float w = fract((v - u * a * 0.3) * b); float an = 0.12 * (u + 1.0); if (w < an) return C(1); return w < an + 0.03 ? A : C(0); }
 	return C(0);
 }
 
@@ -290,6 +352,17 @@ void fragment() {
 	if ((!manga && y > 1.505) || (manga && abs(x) > 0.405)) {
 		camiseta *= 0.9 + 0.1 * step(0.5, fract((manga ? abs(x) : y) * 180.0));
 	}
+	if (familia >= 0 && !manga && frente) {
+		if (cuello == 0 && y > 1.44 && y < 1.51) {
+			float borde_v = (y - 1.44) * 0.77;
+			if (abs(x) < borde_v - 0.007) camiseta = C(0) * 0.55;
+			else if (abs(abs(x) - borde_v) < 0.007) camiseta = trim_col;
+		} else if (cuello == 2 && abs(x) < 0.011 && y > 1.43 && y < 1.51) {
+			camiseta = trim_col;
+			if (abs(x) < 0.004 && (abs(y - 1.46) < 0.004 || abs(y - 1.485) < 0.004)) camiseta = C(0) * 0.7;
+		}
+	}
+	if (familia >= 0 && !manga && cuello == 3 && y > 1.485) camiseta = trim_col;
 	if (!manga && abs(abs(x) - 0.205) < 0.006 && y < 1.40) camiseta *= 0.8;
 	if (manga && abs(abs(x) - 0.222) < 0.005) camiseta *= 0.82;
 	if (!manga && y > 1.005 && y < 1.02) camiseta *= 0.85;
@@ -306,6 +379,22 @@ void fragment() {
 		vec2 mk = vec2((x + 0.095) / 0.045, (y - 1.41) / 0.03);
 		float ala = step(abs(mk.x), 1.0) * step(abs(mk.y - (mk.x * mk.x * 0.6 - 0.2)), 0.22 - mk.x * 0.08);
 		camiseta = mix(camiseta, trim_col, ala);
+	}
+	// PATROCINADORES. Pecho: entre el escudo y la cintura. Espalda: debajo
+	// del cuello, encima del número. Manga: el logo en la izquierda del jugador.
+	if (familia >= 0 && !manga) {
+		if (hay_sp_pecho && frente && abs(x) < 0.13 && y > 1.2 && y < 1.37) {
+			vec4 sp = sp_encajado(sp_pecho, vec2((x + 0.13) / 0.26, 1.0 - (y - 1.2) / 0.17), 0.26 / 0.17, sp_asp_pecho);
+			camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
+		}
+		if (hay_sp_espalda && z < 0.45 && abs(x) < 0.12 && y > 1.415 && y < 1.48) {
+			vec4 sp = sp_encajado(sp_espalda, vec2((-x + 0.12) / 0.24, 1.0 - (y - 1.415) / 0.065), 0.24 / 0.065, sp_asp_espalda);
+			camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
+		}
+	}
+	if (familia >= 0 && manga && hay_sp_manga && x > 0.25 && x < 0.33 && y > 1.36 && z > 0.45) {
+		vec4 sp = texture(sp_manga, vec2((x - 0.25) / 0.08, 1.0 - clamp((y - 1.36) / 0.08, 0.0, 1.0)));
+		camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
 	}
 	// El dorsal, en la espalda (z < 0,5), entre los omóplatos y la cintura.
 	if (dorsal > 0 && !manga && z < 0.45 && y > 1.11 && y < 1.41 && abs(x) < 0.13) {
@@ -347,6 +436,11 @@ void fragment() {
 	else if (pant_dis == 3) pant = x > 0.0 ? pant_c2.rgb : pant;
 	else if (pant_dis == 4) pant = mix(pant, pant_c2.rgb, smoothstep(0.95, 0.65, y));
 	else if (pant_dis == 5) pant = ((ex > 0.74 && ex < 0.8) || ex > 0.88) ? pant_c2.rgb : pant;
+	// El logo del patrocinador del pantalón, en la pernera izquierda, delante.
+	if (hay_sp_short && z > 0.5 && x > 0.06 && x < 0.12 && y > 0.82 && y < 0.88) {
+		vec4 sp = texture(sp_short, vec2((x - 0.06) / 0.06, 1.0 - (y - 0.82) / 0.06));
+		pant = mix(pant, sp.rgb, sp.a * 0.96);
+	}
 	// Medias con su diseño (t de 0 arriba a 1 abajo).
 	vec3 med = color_medias.rgb;
 	float tm = clamp((0.47 - y) / 0.38, 0.0, 1.0);
