@@ -833,6 +833,9 @@ static func construir(esq: Skeleton3D, ruta_esqueleto: String = "", acciones_exp
 		lib.add_animation("senalar_falta", senalar_falta(esq, prefijo))
 		lib.add_animation("falta_barrida", falta_barrida(esq, prefijo))
 		lib.add_animation("dolor", dolor(esq, prefijo))
+		## EL PORTAFOLIO GRANDE (26-9-2026): clips de la UAL, espejos de cada
+		## movimiento de fútbol y expresiones a mano.
+		AnimExtra.extender(lib, esq, prefijo)
 	return lib
 
 ## El remate. Mismo diseno de tres tiempos que `AnimMixamo.patear()` -armar,
