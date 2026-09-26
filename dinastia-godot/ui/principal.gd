@@ -137,6 +137,9 @@ var _lista_legado: VBoxContainer
 var _lista_inicio: VBoxContainer
 ## `vSocial()`: el termómetro de lo que se dice de ti fuera del estadio.
 var _lista_redes: VBoxContainer
+var _lista_vida: VBoxContainer
+var _lista_habilidades: VBoxContainer
+var _secc_vida: String = "bienestar"
 ## `vGente()`: las diez personas que llevan aquí más años que tú.
 var _lista_gente: VBoxContainer
 ## La retirada no se puede deshacer, así que el boton pide confirmacion como el
@@ -243,6 +246,14 @@ const GRUPOS := [
 		{"tab": "Redes", "secc": "prensa", "label": "Sala de Prensa"},
 		{"tab": "Redes", "secc": "debate", "label": "El Ruido de Fuera"},
 		{"tab": "Comparar", "label": "Comparar"},
+	]},
+	## MI VIDA (26-9-2026): tu vida de entrenador fuera del club y tu árbol de
+	## habilidades, que es tuyo y no del club.
+	{"id": "vida", "icono": "🧑", "nombre": "MI VIDA", "tabs": [
+		{"tab": "Vida", "secc": "bienestar", "label": "Bienestar"},
+		{"tab": "Vida", "secc": "hogar", "label": "Casa y auto"},
+		{"tab": "Vida", "secc": "familia", "label": "Familia"},
+		{"tab": "Habilidades", "label": "Habilidades"},
 	]},
 	{"id": "ajustes", "icono": "⚙️", "nombre": "AJUSTES", "tabs": [
 		{"tab": "Ajustes", "secc": "pantalla", "label": "Dispositivo"},
@@ -781,6 +792,8 @@ func _construir() -> void:
 	_lista_ajustes = _hoja(_pestanas, "Ajustes")
 	_lista_correo = _hoja(_pestanas, "Correo")
 	_lista_redes = _hoja(_pestanas, "Redes")
+	_lista_vida = _hoja(_pestanas, "Vida")
+	_lista_habilidades = _hoja(_pestanas, "Habilidades")
 	_lista_libres = _hoja(_pestanas, "Libres")
 	_lista_premios = _hoja(_pestanas, "Premios")
 	_lista_clubes = _hoja(_pestanas, "Clubes")
@@ -1001,6 +1014,7 @@ func _ir_a_chip(chip: Dictionary) -> void:
 			"Ajustes": _secc_ajustes = secc
 			"Récords": _secc_records = secc
 			"Redes": _secc_redes = secc
+			"Vida": _secc_vida = secc
 	_ir_a_pestana(String(chip["tab"]))
 	## OJO: `_elegir_grupo("central")` corre dentro de `_construir()`, cuando
 	## `mundo` todavía es null -la escena se arma antes de que le pasen la
@@ -1182,6 +1196,7 @@ func _seccion_activa(chip: Dictionary) -> bool:
 		"Ajustes": return _secc_ajustes == secc
 		"Récords": return _secc_records == secc
 		"Redes": return _secc_redes == secc
+		"Vida": return _secc_vida == secc
 	return true
 
 ## UN HUB CONTEXTUAL. Se abre tocando la zona de la pantalla que ya habla de
@@ -2107,11 +2122,11 @@ func _conectar_noticias() -> void:
 		mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
 			call_deferred("_portada_nueva")
 			call_deferred("_al_paso_nuevo"))
-		for con_mentor: Object in [mundo.calendario, mundo.politica]:
+		for con_mentor: Object in [mundo.calendario, mundo.politica, mundo.vida]:
 			if con_mentor != null:
 				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:
 					MentorVoz.decir(self, mundo, titulo, texto))
-		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos]:
+		for fuente: Object in [mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos, mundo.vida]:
 			if fuente != null:
 				fuente.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 					_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -2950,6 +2965,8 @@ func _refrescar() -> void:
 	_pintar_correo()
 	_pintar_redes()
 	_filtrar_redes()
+	_pintar_vida()
+	_pintar_habilidades()
 	_pintar_libres(c)
 	_pintar_premios()
 	_pintar_clubes()
@@ -3832,6 +3849,13 @@ func _pintar_rivalidades() -> void:
 		val.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		fila.add_child(val)
 
+## "Es el Superclásico" / "Es el Clásico Universitario" / "Es un clásico tuyo".
+func _frase_clasico(a: Club, b: Club) -> String:
+	var n := HistoriaClub.nombre_clasico(a.nombre, b.nombre)
+	if n == "":
+		return "Es un clásico tuyo"
+	return "Es " + n if n.begins_with("el ") else "Es el " + n
+
 ## C4: la historia del club (generada en la base ficticia, real con el pack).
 func _historia_de(club: Club) -> Dictionary:
 	var del_pais: Array = []
@@ -3844,10 +3868,14 @@ func _pintar_ficha_club(club: Club) -> void:
 	var t := _texto(13, COL_ORO)
 	t.text = "%s  ·  reputación %d  ·  aforo %s" % [club.nombre, club.rep, _miles(club.estadio_aforo)]
 	_lista_clubes.add_child(t)
-	var hist := _texto(11, COL_TEXTO)
-	hist.text = "📜 " + HistoriaClub.resumen(_historia_de(club))
-	hist.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_lista_clubes.add_child(hist)
+	var hi_c := _historia_de(club)
+	for linea: String in ["📜 " + HistoriaClub.resumen(hi_c), HistoriaClub.texto_historia(hi_c), HistoriaClub.texto_clasicos(hi_c)]:
+		if linea.strip_edges() == "":
+			continue
+		var hist := _texto(11, COL_TEXTO)
+		hist.text = linea
+		hist.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_lista_clubes.add_child(hist)
 	var sub := _texto(11, COL_SUAVE)
 	sub.text = "%d jugadores  ·  media %.1f  ·  masa salarial %s/sem" % [
 		club.plantilla.size(), club.media(), _dinero(club.masa_salarial())]
@@ -3869,7 +3897,7 @@ func _pintar_ficha_club(club: Club) -> void:
 	## presión- y por eso tiene que verse aquí y no solo el día del choque.
 	if club != mundo.mi_club() and mundo.es_clasico(mundo.mi_club(), club):
 		var cl := _texto(12, COL_ORO)
-		cl.text = "⚔️  Es un clásico tuyo: estadio lleno, prensa encima y el doble de presión."
+		cl.text = "⚔️  %s: estadio lleno, prensa encima y el doble de presión." % _frase_clasico(mundo.mi_club(), club)
 		cl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_clubes.add_child(cl)
 	var g := GridContainer.new()
@@ -4119,7 +4147,8 @@ func _pintar_partido(c: Club) -> void:
 	_lista_partido.add_child(donde)
 	if mundo.es_clasico(c, rival):
 		var clasico := _texto(13, COL_ORO)
-		clasico.text = "🔥 ¡ES CLÁSICO!"
+		var nom_cl := HistoriaClub.nombre_clasico(c.nombre, rival.nombre)
+		clasico.text = "🔥 ¡%s!" % (nom_cl.to_upper() if nom_cl != "" else "ES CLÁSICO")
 		_lista_partido.add_child(clasico)
 	## LA FRASE DE LA PARED, justo antes de salir. Es lo que el HTML prometia
 	## en la pantalla del club por dentro -"se lee en el tunel antes de cada
@@ -4317,7 +4346,8 @@ func _pintar_calendario(c: Club) -> void:
 			info.add_child(av)
 		if mundo.es_clasico(c, rival):
 			var clasico := _texto(12, COL_ORO)
-			clasico.text = "🔥 ¡Es clásico!"
+			var nom_cl2 := HistoriaClub.nombre_clasico(c.nombre, rival.nombre)
+			clasico.text = "🔥 ¡%s!" % (nom_cl2 if nom_cl2 != "" else "Es clásico")
 			_lista_calendario.add_child(clasico)
 		var filab := HBoxContainer.new()
 		filab.add_theme_constant_override("separation", 6)
@@ -5551,6 +5581,8 @@ func _pintar_despacho() -> void:
 		asuntos.append({"et": "🏛️ Junta de accionistas", "col": COL_ORO, "id": "junta"})
 	if mundo.eventos_cantera != null and not mundo.eventos_cantera.pendiente.is_empty():
 		asuntos.append({"et": "🌱 Asunto de la academia", "col": COL_VERDE, "id": "cantera"})
+	if mundo.vida != null and not mundo.vida.pendiente.is_empty():
+		asuntos.append({"et": "🏠 Pasa en casa", "col": COL_ORO, "id": "vida"})
 	if asuntos.is_empty():
 		return
 	_aviso_abierto = clampi(_aviso_abierto, 0, asuntos.size() - 1)
@@ -5577,6 +5609,36 @@ func _pintar_despacho() -> void:
 		"solicitud": _pintar_solicitud_plantel()
 		"junta": _pintar_junta()
 		"cantera": _pintar_asunto_cantera()
+		"vida": _pintar_asunto_vida()
+
+## MI VIDA: lo que pasa en casa, con sus dos salidas.
+func _pintar_asunto_vida() -> void:
+	var p := mundo.vida.pendiente
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.TARJETA, Tema.RADIO, Tema.ORO))
+	_despacho.add_child(caja)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
+	caja.add_child(v)
+	v.add_child(Tema.rotulo("Mi vida"))
+	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(p["texto"]))
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(t)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	v.add_child(fila)
+	for op: String in ["a", "b"]:
+		var b := Button.new()
+		b.text = String(p[op])
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.clip_text = true
+		b.pressed.connect(_resolver_vida.bind(op))
+		fila.add_child(b)
+
+func _resolver_vida(op: String) -> void:
+	var r := mundo.vida.resolver(op, mundo.roles, mundo.mi_club(), mundo.prensa, mundo.anio, mundo.semana)
+	Aviso.mostrar(self, "vida", "🏠", "Mi vida", r)
+	_refrescar()
 
 ## UN ASUNTO DE LA ACADEMIA (C11): el tema y las dos salidas.
 func _pintar_asunto_cantera() -> void:
@@ -9148,7 +9210,9 @@ func _pintar_legado() -> void:
 	var th := _texto(11, COL_SUAVE)
 	th.text = "HISTORIA DEL CLUB"
 	_lista_legado.add_child(th)
-	for linea: String in [HistoriaClub.resumen(hi), String(hi["origen"]), String(hi["epoca"])]:
+	for linea: String in [HistoriaClub.resumen(hi), HistoriaClub.texto_historia(hi), HistoriaClub.texto_clasicos(hi), String(hi["epoca"])]:
+		if linea.strip_edges() == "":
+			continue
 		var lh := _texto(12, COL_TEXTO)
 		lh.text = linea
 		lh.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -9270,7 +9334,7 @@ func _pintar_legado() -> void:
 	_pintar_leyenda_viva(r)
 	_pintar_patrimonio_dt(r)
 	_pintar_filiales(r)
-	_pintar_arbol_dt()
+	_pintar_acceso_arbol()
 	_pintar_homenajes(r)
 	_pintar_sucesion(r)
 	_pintar_fin_de_carrera(r)
@@ -9576,6 +9640,62 @@ func _comprar_dt(clave: String) -> void:
 ##
 ## Va en Legado y no en el Club porque es de la CARRERA: como el prestigio y la
 ## vitrina, te sigue cuando cambias de banquillo.
+## MI VIDA (26-9-2026).
+func _pintar_vida() -> void:
+	if _lista_vida == null or not _lista_vida.is_visible_in_tree():
+		return
+	PanelVida.pintar(_lista_vida, self, mundo, _secc_vida)
+
+## EL ÁRBOL DE HABILIDADES, COMO ESQUEMA (26-9-2026): columnas por rama, nodos
+## y líneas de requisito, y la ficha de la elegida debajo.
+func _pintar_habilidades() -> void:
+	if _lista_habilidades == null or not _lista_habilidades.is_visible_in_tree():
+		return
+	_limpiar(_lista_habilidades)
+	var e := mundo.entrenamiento
+	if e == null:
+		return
+	var cab := HBoxContainer.new()
+	_lista_habilidades.add_child(cab)
+	var tit := Tema.etiqueta(Tema.TAM_TITULO, Tema.ORO, "🎓 TUS HABILIDADES DE ENTRENADOR")
+	tit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cab.add_child(tit)
+	var pts := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.ORO if e.dt_puntos > 0 else Tema.SUAVE,
+		"%d punto%s por gastar" % [e.dt_puntos, "" if e.dt_puntos == 1 else "s"])
+	cab.add_child(pts)
+	if e.dt_puntos > 0:
+		(func() -> void: Animar.pulso(pts, 1.15)).call_deferred()
+	var grande := Button.new()
+	grande.text = "⛶ En grande"
+	grande.pressed.connect(func() -> void: ArbolHabilidades.abrir_en_grande(self, e, _refrescar))
+	cab.add_child(grande)
+	var arbol := ArbolHabilidades.crear(e)
+	_lista_habilidades.add_child(arbol)
+	_lista_habilidades.add_child(arbol.ficha())
+	arbol.aprendida.connect(func(_k: String) -> void:
+		Aviso.mostrar(self, "nivel", "🎓", "Habilidad aprendida", e.dt_nombre(_k))
+		_refrescar())
+	Animar.aparecer(arbol)
+
+## En Legado queda un resumen con el acceso al árbol, que vive en MI VIDA.
+func _pintar_acceso_arbol() -> void:
+	var e := mundo.entrenamiento
+	if e == null:
+		return
+	var hb := HBoxContainer.new()
+	_lista_legado.add_child(hb)
+	var t := _texto(12, COL_ORO if e.dt_puntos > 0 else COL_SUAVE)
+	t.text = "🎓 Habilidades de entrenador · %d punto(s) por gastar" % e.dt_puntos
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hb.add_child(t)
+	var b := Button.new()
+	b.text = "Ver el árbol"
+	b.pressed.connect(func() -> void:
+		_elegir_grupo("vida")
+		_ir_a_chip({"tab": "Habilidades", "label": "Habilidades"}))
+	hb.add_child(b)
+	_lista_legado.add_child(HSeparator.new())
+
 func _pintar_arbol_dt() -> void:
 	var e := mundo.entrenamiento
 	if e == null:

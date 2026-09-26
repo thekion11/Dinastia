@@ -4,15 +4,18 @@ extends RefCounted
 ## real de los clubes"*: fundación, estadio, apodo, rival, títulos y alguna
 ## anécdota.
 ##
-## MISMA REGLA LEGAL QUE LOS NOMBRES:
-##   - con la base ficticia (la que se publica), la historia se GENERA, coherente
-##     con el club: los grandes son más antiguos y tienen más títulos, el apodo
-##     sale de sus colores y el rival es el grande más parecido de su país;
-##   - con el pack real instalado (`HISTORIA_REAL`, solo en `pack_real.json`, que
-##     no va en las versiones publicadas), los datos que haya -fundación, apodo,
-##     estadio, rival- son los reales y pisan a los generados.
-## Los títulos históricos del pack NO se ponen: cambian cada año y un número
-## viejo es peor que uno inventado a la vista.
+## CON GUIÑO (pedido del usuario, 26-9): cada club del juego refleja a uno
+## real, y su historia tiene que dejarlo reconocer. `HISTORIA_CLUBES` (escrita
+## por `herramientas/historia_clubes.py`) trae para los 384 clubes su año de
+## fundación, su apodo, el apodo de su estadio y una línea de historia; en la
+## base ficticia va con los nombres inventados y en el pack real con los
+## reales. `CLASICOS` da nombre a los partidos grandes: Superclásico, Clásico
+## Universitario, Gran Derbi...
+## Lo que no esté en la tabla (años de clubes chicos, por ejemplo) se GENERA,
+## coherente con el club: los grandes son más antiguos y tienen más títulos, el
+## apodo sale de sus colores y el rival es el club más parecido de su país.
+## Los títulos solo se inventan con la base ficticia: con el pack real un
+## número inventado confundiría.
 ## Todo por hash: el mismo club tiene siempre la misma historia, sin `Azar`.
 
 const APODO_COLOR := {
@@ -101,15 +104,23 @@ static func de(c: Club, rivales: Array) -> Dictionary:
 		"copas": copas,
 		"origen": ORIGEN[(h / 19) % ORIGEN.size()],
 		"epoca": ("Su época dorada fue en %s." % EPOCA[(h / 23) % EPOCA.size()]) if titulos > 2 else "Todavía espera su gran época.",
-		"real": false,
+		"guino": "",
+		"clasicos": clasicos_de(c.nombre),
+		"con_guino": false,
 	}
-	## Lo real, si el pack está instalado.
-	var real := dato_real(c.nombre)
-	if not real.is_empty():
-		for k: String in ["fundado", "apodo", "estadio", "rival", "origen"]:
-			if real.has(k):
-				r[k] = real[k]
-		r["real"] = true
+	## EL GUIÑO (pedido del usuario, 26-9): cada club del juego refleja a uno
+	## real, y su historia tiene que hacerlo reconocible -"al estadio del Colo
+	## se le llama la Ruca"-. `HISTORIA_CLUBES` trae fundación, apodo, apodo
+	## del estadio y una línea de historia; lo que falte queda generado.
+	var g := dato(c.nombre)
+	if not g.is_empty():
+		for k: String in ["fundado", "apodo", "estadio", "guino"]:
+			if g.has(k):
+				r[k] = g[k]
+		r["con_guino"] = true
+	## El rival histórico es el del clásico con nombre, si lo hay.
+	if not (r["clasicos"] as Array).is_empty():
+		r["rival"] = String((r["clasicos"] as Array)[0]["rival"])
 	return r
 
 ## Sin nombre de estadio guardado, uno que suene a ese club: "Estadio
@@ -120,25 +131,87 @@ static func nombre_estadio(c: Club) -> String:
 			return "Estadio " + w
 	return "Estadio Municipal"
 
-static func dato_real(nombre: String) -> Dictionary:
-	if not Datos.tiene("HISTORIA_REAL"):
+## La fila de `HISTORIA_CLUBES` de un club (por nombre normalizado: vale
+## igual con la base ficticia que con el pack real, cada uno trae la suya).
+static var _indice: Dictionary = {}
+static var _indice_de: Variant = null
+
+static func dato(nombre: String) -> Dictionary:
+	if not Datos.tiene("HISTORIA_CLUBES"):
 		return {}
-	var t: Variant = Datos.tabla("HISTORIA_REAL")
+	var t: Variant = Datos.tabla("HISTORIA_CLUBES")
 	if not (t is Dictionary):
 		return {}
-	var clave := Mundo._norm_nombre(nombre)
-	for k: String in (t as Dictionary):
-		if Mundo._norm_nombre(k) == clave:
-			return (t as Dictionary)[k]
-	return {}
+	## Índice por nombre normalizado; se rehace si cambia la tabla (base/pack).
+	if not is_same(_indice_de, t):
+		_indice = {}
+		for k: String in (t as Dictionary):
+			_indice[Mundo._norm_nombre(k)] = (t as Dictionary)[k]
+		_indice_de = t
+	return _indice.get(Mundo._norm_nombre(nombre), {})
+
+## Índice de clásicos: nombre normalizado -> [{rival, nombre}]. Se rehace si
+## cambia la tabla (base/pack). `es_clasico()` corre muchas veces por semana:
+## normalizar 132 nombres en cada llamada era demasiado.
+static var _clasicos: Dictionary = {}
+static var _clasicos_de_tabla: Variant = null
+
+static func _indice_clasicos() -> Dictionary:
+	if not Datos.tiene("CLASICOS"):
+		return {}
+	var t: Variant = Datos.tabla("CLASICOS")
+	if is_same(_clasicos_de_tabla, t):
+		return _clasicos
+	_clasicos = {}
+	for f: Variant in t:
+		var a := Mundo._norm_nombre(String(f[0]))
+		var b := Mundo._norm_nombre(String(f[1]))
+		if not _clasicos.has(a):
+			_clasicos[a] = []
+		if not _clasicos.has(b):
+			_clasicos[b] = []
+		(_clasicos[a] as Array).append({"rival": String(f[1]), "rival_n": b, "nombre": String(f[2])})
+		(_clasicos[b] as Array).append({"rival": String(f[0]), "rival_n": a, "nombre": String(f[2])})
+	_clasicos_de_tabla = t
+	return _clasicos
+
+## Los clásicos con nombre de un club: [{rival, nombre}].
+static func clasicos_de(nombre: String) -> Array:
+	return _indice_clasicos().get(Mundo._norm_nombre(nombre), [])
+
+## El nombre del partido entre dos clubes ("Superclásico"), o "".
+static func nombre_clasico(a: String, b: String) -> String:
+	var lista: Array = _indice_clasicos().get(Mundo._norm_nombre(a), [])
+	if lista.is_empty():
+		return ""
+	var nb := Mundo._norm_nombre(b)
+	for x: Dictionary in lista:
+		if String(x["rival_n"]) == nb:
+			return String(x["nombre"])
+	return ""
 
 ## El texto de una línea para las fichas.
 static func resumen(hi: Dictionary) -> String:
 	if hi.is_empty():
 		return ""
-	var partes: Array[String] = ["Fundado en %d" % int(hi["fundado"]), "«%s»" % String(hi["apodo"]), String(hi["estadio"])]
-	if String(hi["rival"]) != "":
-		partes.append("rival: %s" % Nombres.visible(String(hi["rival"])))
-	if not bool(hi.get("real", false)):
+	var partes: Array[String] = ["Fundado en %d" % int(hi["fundado"]), "«%s»" % String(hi["apodo"]),
+		"juega en %s" % String(hi["estadio"])]
+	if not Datos.base_real:
 		partes.append("%d ligas y %d copas" % [int(hi["titulos"]), int(hi["copas"])])
 	return " · ".join(partes)
+
+## Los clásicos en una línea: "Superclásico contra U. Andina · Clásico
+## Universitario contra..." o, sin clásico con nombre, el rival de siempre.
+static func texto_clasicos(hi: Dictionary) -> String:
+	var cl: Array = hi.get("clasicos", [])
+	if cl.is_empty():
+		return ("Rival de siempre: %s." % Nombres.visible(String(hi["rival"]))) if String(hi.get("rival", "")) != "" else ""
+	var partes: Array[String] = []
+	for x: Dictionary in cl:
+		partes.append("%s contra %s" % [String(x["nombre"]), Nombres.visible(String(x["rival"]))])
+	return "⚔️ " + " · ".join(partes)
+
+## La línea de historia: el guiño si lo hay; si no, el origen generado.
+static func texto_historia(hi: Dictionary) -> String:
+	var g := String(hi.get("guino", ""))
+	return g if g != "" else String(hi.get("origen", ""))

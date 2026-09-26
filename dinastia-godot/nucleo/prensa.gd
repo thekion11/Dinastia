@@ -2384,13 +2384,14 @@ func _hash_de(clave: String) -> int:
 	return h
 
 ## El titular y su cuerpo, firmados por uno de los periodistas de la casa.
-func titular_prensa(gane: bool, empate: bool, clasico: bool, semilla: String) -> Dictionary:
+func titular_prensa(gane: bool, empate: bool, clasico: bool, semilla: String, nombre_clasico: String = "") -> Dictionary:
 	var pool: Array = _TIT_GANE if gane else (_TIT_EMPATE if empate else _TIT_PERDI)
 	var h := _hash_de(semilla)
 	var t: Array = pool[h % pool.size()]
 	var p: Array = PERIODISTAS[(h / 7) % PERIODISTAS.size()]
 	return {
-		"tit": ("CLÁSICO: " if clasico else "") + String(t[0]),
+		## Con nombre propio si lo tiene: "SUPERCLÁSICO: ..." (C4).
+		"tit": ((nombre_clasico.trim_prefix("el ").to_upper() + ": ") if nombre_clasico != "" else ("CLÁSICO: " if clasico else "")) + String(t[0]),
 		"cuerpo": "%s — %s, %s." % [String(t[1]), String(p[1]), String(p[2])],
 	}
 
@@ -2414,11 +2415,11 @@ func rueda_tras_resultado(gane: bool, empate: bool) -> Dictionary:
 	return abrir_rueda(gane, empate)
 
 ## La portada del lunes: la escribe el resultado y la archiva la hemeroteca.
-func portada_tras_resultado(gane: bool, empate: bool, clasico: bool, semilla: String, marcador: String = "") -> void:
+func portada_tras_resultado(gane: bool, empate: bool, clasico: bool, semilla: String, marcador: String = "", nombre_clasico: String = "") -> void:
 	var h := _hash_de(semilla + "|portada")
 	if h % PORTADA_DE_CADA >= PORTADAS_QUE_SALEN:
 		return
-	var t := titular_prensa(gane, empate, clasico, semilla)
+	var t := titular_prensa(gane, empate, clasico, semilla, nombre_clasico)
 	var tipo := "bien" if gane else ("neutro" if empate else "mal")
 	guardar_portada(String(t["tit"]), String(t["cuerpo"]), tipo, {"img": "dt", "sub": marcador, "nueva": true})
 	noticia.emit("🗞️ " + String(t["tit"]), String(t["cuerpo"]))
