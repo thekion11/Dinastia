@@ -293,86 +293,12 @@ static func _edificio(root: Node3D, base: Vector3, tam: Vector3, col: Color, rot
 #  LA MASCOTA (B10)
 # -----------------------------------------------------------------------------
 
-## El animal de la mascota sale del hash del club: siempre el mismo.
-const ANIMALES := ["perro", "gato", "oso", "aguila", "leon", "toro", "zorro", "lobo"]
-
+## El animal de la mascota sale del hash del club: siempre el mismo. La
+## lista y el traje están en `MascotaQ` (26-9-2026: de 8 a 17 animales).
 static func animal_de(c: Club) -> String:
-	return String(ANIMALES[absi(hash(c.id + "|mascota")) % ANIMALES.size()])
+	var lista: Array = MascotaQ.ANIMALES.keys()
+	return String(lista[absi(hash(c.id + "|mascota")) % lista.size()])
 
-## Una persona con el traje del club y la cabeza gigante del animal, en la
-## banda, saludando a la hinchada.
+## La mascota del club en la banda, animando a la hinchada.
 static func mascota(root: Node3D, c: Club) -> Node3D:
-	## El esqueleto se mide dentro del árbol: sin él no se puede armar.
-	if not root.is_inside_tree():
-		return null
-	var d := FutbolistaQ.crear(1.9, "male")
-	if d.is_empty():
-		return null
-	var nodo: Node3D = d["nodo"]
-	nodo.name = "Mascota"
-	nodo.position = Vector3(-35.6, 0, -12.0)
-	nodo.rotation_degrees.y = 90.0
-	root.add_child(nodo)
-	FutbolistaQ.terminar(d, true)
-	var c1 := Color(c.color1)
-	var c2 := Color(c.color2)
-	VestidorQ.vestir_equipacion(d, c1, c2, "liso", c1.lightened(0.2), Color(0.1, 0.1, 0.1), c1, c1, true)
-	var ap: AnimationPlayer = d["anim"]
-	for n: String in ["saludar_publico", "llamar_hinchada", "parado"]:
-		if ap.has_animation(n):
-			ap.play(n)
-			break
-	## La cabeza: pegada al hueso de la cabeza para que se mueva con él.
-	var esq: Skeleton3D = d["esqueleto"]
-	var ba := BoneAttachment3D.new()
-	ba.bone_name = "Head"
-	esq.add_child(ba)
-	var cab := Node3D.new()
-	ba.add_child(cab)
-	## El esqueleto está escalado: se compensa para que la cabeza mida lo mismo.
-	var k := 1.0 / maxf((d["modelo"] as Node3D).scale.x, 0.01)
-	cab.scale = Vector3.ONE * k
-	cab.position = Vector3(0, 0.12 * k, 0.02 * k)
-	var animal := animal_de(c)
-	var piel := _mat(c1.lerp(Color(0.6, 0.45, 0.3), 0.3) if animal in ["oso", "leon", "zorro", "perro"] else c1, 0.9)
-	_esfera(cab, Vector3.ZERO, 0.34, piel)
-	_esfera(cab, Vector3(0, -0.08, 0.26), 0.16, _mat(c2, 0.8))                       ## hocico / cara clara
-	for s in [-1.0, 1.0]:
-		_esfera(cab, Vector3(0.13 * s, 0.1, 0.28), 0.075, _mat(Color.WHITE, 0.3))      ## ojos
-		_esfera(cab, Vector3(0.13 * s, 0.1, 0.345), 0.035, _mat(Color(0.05, 0.05, 0.05), 0.2))
-		match animal:
-			"gato", "zorro", "lobo":
-				_cono(cab, Vector3(0.2 * s, 0.33, 0), Vector3(0, 0, -20 * s), 0.1, 0.22, piel)
-			"oso", "perro", "leon":
-				_esfera(cab, Vector3(0.26 * s, 0.26, 0), 0.1, piel)
-			"toro":
-				_cono(cab, Vector3(0.3 * s, 0.24, 0), Vector3(0, 0, -75 * s), 0.05, 0.25, _mat(Color(0.95, 0.92, 0.85), 0.4))
-	if animal == "aguila":
-		_cono(cab, Vector3(0, -0.02, 0.36), Vector3(90, 0, 0), 0.07, 0.2, _mat(Color(1.0, 0.75, 0.1), 0.4))
-	if animal == "leon":
-		var melena := _mat(c2.darkened(0.3), 0.95)
-		_esfera(cab, Vector3(0, 0.02, -0.08), 0.4, melena)
-	_esfera(cab, Vector3(0, -0.14, 0.4), 0.04, _mat(Color(0.08, 0.05, 0.05), 0.3))    ## nariz
-	return nodo
-
-static func _esfera(root: Node3D, pos: Vector3, r: float, m: Material) -> void:
-	var mi := MeshInstance3D.new()
-	var sm := SphereMesh.new()
-	sm.radius = r
-	sm.height = r * 2.0
-	mi.mesh = sm
-	mi.material_override = m
-	mi.position = pos
-	root.add_child(mi)
-
-static func _cono(root: Node3D, pos: Vector3, giro: Vector3, r: float, h: float, m: Material) -> void:
-	var mi := MeshInstance3D.new()
-	var cm := CylinderMesh.new()
-	cm.top_radius = 0.0
-	cm.bottom_radius = r
-	cm.height = h
-	mi.mesh = cm
-	mi.material_override = m
-	mi.position = pos
-	mi.rotation_degrees = giro
-	root.add_child(mi)
+	return MascotaQ.crear(root, c, animal_de(c), Vector3(-35.6, 0, -12.0), 90.0)

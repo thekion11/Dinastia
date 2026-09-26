@@ -103,13 +103,10 @@ func _colocar(v: Dictionary) -> void:
 	## misma altura da un transform degenerado en cuanto la dirección se
 	## acerca a la vertical. Ver `dinastia-rotacion-euler-godot.md`.
 	##
-	## OJO CON EL SIGNO, que costó una ronda: `atan2(dir.x, dir.z)` alinea el
-	## eje +Z LOCAL del nodo con la dirección de marcha. Los coches de Kenney
-	## tienen el morro en su eje X (por eso el aparcamiento de siempre los gira
-	## 90°), así que hay que restar 90°, no sumarlos. Sumando, el coche viaja
-	## de culo: con +90° el morro apunta justo al revés que el movimiento, y a
-	## la altura de cámara del mapa se ve exactamente como lo que es -toda la
-	## flota circulando marcha atrás-.
+	## `atan2(dir.x, dir.z)` alinea el eje +Z LOCAL del nodo con la dirección
+	## de marcha, que es donde tienen el morro los coches (`CityBuilder.
+	## instanciar_coche`): su `giro` es 0. El -90° de antes suponía el morro en
+	## X y dejaba la flota entera circulando de lado.
 	nodo.rotation.y = atan2(dir.x, dir.z) + float(v["giro"])
 
 ## Comprobación de orientación para las pruebas: hacia dónde mira de verdad el
@@ -122,6 +119,8 @@ func diagnostico(i: int) -> Dictionary:
 	var nodo: Node3D = v["nodo"]
 	var r: Ruta = _rutas[int(v["ruta"])]
 	var dir: Vector3 = r.en(float(v["s"]))[1]
-	## El morro del modelo es su +X local (coches de Kenney).
-	var morro: Vector3 = nodo.global_transform.basis.x.normalized()
+	## El morro del modelo es su +Z local (medido el 26-9-2026: los coches de
+	## Kenney son largos en Z y el capó cae en +Z; antes se suponía X y la flota
+	## iba de lado aunque esta prueba diera 1).
+	var morro: Vector3 = nodo.global_transform.basis.z.normalized()
 	return {"alineacion": morro.dot(dir), "dir": dir, "morro": morro}
