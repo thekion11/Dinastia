@@ -76,6 +76,8 @@ func _rol_cambio_directiva(_antes: String, _ahora: String) -> void:
 var roles: Roles
 var federacion: Federacion = Federacion.new()
 var estadio: EstadioPropio = EstadioPropio.new()
+## El reto elegido en el menú, si lo hay (`Retos`): {id, club, anio, juzgado, cumplido}.
+var reto: Dictionary = {}
 var prensa: Prensa
 var medico: Medico
 ## Los desafíos activos de esta partida (claves de la tabla `DESAFIOS`), del
@@ -221,7 +223,7 @@ func aplicar_desafios() -> void:
 ## puede reventar el fundador.
 const REP_FUNDACION := 58
 
-func fundar_club(nombre_club: String, pais: String) -> Club:
+func fundar_club(nombre_club: String, pais: String, col1: String = "", col2: String = "", estadio: String = "") -> Club:
 	var candidatos: Array[Club] = []
 	for c: Club in clubes.values():
 		if c.pais != pais:
@@ -238,8 +240,12 @@ func fundar_club(nombre_club: String, pais: String) -> Club:
 	## no para tocar lo que alguien tecleó a mano.
 	c.nombre = nombre_club
 	c.rep = REP_FUNDACION
-	c.color1 = "#1e4030"
-	c.color2 = "#c9a227"
+	## Los colores y el estadio que eligió el fundador (26-9-2026, "Crear tu
+	## Club" desde el menú); sin elegir, los de siempre.
+	c.color1 = col1 if col1 != "" else "#1e4030"
+	c.color2 = col2 if col2 != "" else "#c9a227"
+	if estadio != "":
+		c.estadio_nombre = estadio
 	c.plantilla.clear()
 	_poblar(c)
 	tomar_el_mando(c.id)
@@ -1484,6 +1490,22 @@ func cerrar_temporada() -> Dictionary:
 	## cerrar la temporada), por temporada terminada.
 	if roles != null:
 		resumen["roles"] = roles.tras_temporada(resumen.get("directiva", {}))
+	## EL RETO (26-9-2026): se juzga al cerrar su temporada.
+	if not reto.is_empty() and mi_club() != null:
+		var yo := mi_club()
+		var subio := false
+		var bajo := false
+		for x: Variant in resumen["suben"]:
+			if (x is Club and x == yo) or (x is Dictionary and (x as Dictionary).get("club") == yo):
+				subio = true
+		for x2: Variant in resumen["bajan"]:
+			if (x2 is Club and x2 == yo) or (x2 is Dictionary and (x2 as Dictionary).get("club") == yo):
+				bajo = true
+		var rr := Retos.juzgar(self, mi_puesto, bajo, subio)
+		if not rr.is_empty():
+			resumen["reto"] = rr
+			if prensa != null:
+				prensa.noticia.emit(String(rr["titulo"]), String(rr["texto"]))
 	return resumen
 
 func _segunda_de(pais: String) -> Liga:
