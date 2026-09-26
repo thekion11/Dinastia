@@ -69,6 +69,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		## club (equipaciones reales, plantillas) siga cuadrando.
 		"base_real": Datos.base_real,
 		"desafios": m.desafios,
+		"reto": m.reto,
 		"clubes": [],
 		"ligas": [],
 		"copa": _copa_a_dic(m.copa),
@@ -186,6 +187,7 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.campana = (datos.get("campana", {}) as Dictionary).duplicate()
 	m.mi_club_id = String(datos["mi_club"])
 	m.desafios.clear()
+	m.reto = (datos.get("reto", {}) as Dictionary).duplicate()
 	for k in datos.get("desafios", []):
 		m.desafios.append(String(k))
 

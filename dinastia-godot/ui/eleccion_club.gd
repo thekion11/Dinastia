@@ -21,6 +21,9 @@ var _fila_paises: HBoxContainer
 var _lista_clubes: VBoxContainer
 var _titulo_liga: Label
 var _desafios: Array[String] = []
+var _col1: ColorPickerButton
+var _col2: ColorPickerButton
+var _campo_estadio: LineEdit
 var _fila_desafios: HFlowContainer
 var _etiqueta_mult: Label
 ## El globo interactivo de verdad, idea de Gemini: reemplaza el mapa plano que
@@ -34,6 +37,15 @@ func _ready() -> void:
 	Cara.limpiar_cache()
 	_mundo = Mundo.new()
 	_mundo.generar([], 0)
+	## UN RETO (26-9-2026): el club lo elige el propio reto, y a jugar.
+	if Principal.reto_pedido != "":
+		var id := Principal.reto_pedido
+		Principal.reto_pedido = ""
+		if Retos.montar(_mundo, id) != null:
+			Principal.mundo_pregenerado = _mundo
+			Principal.desafios_elegidos = []
+			get_tree().change_scene_to_file.call_deferred("res://escenas/principal.tscn")
+			return
 	_construir()
 	_elegir_pais("CHI")
 
@@ -145,6 +157,27 @@ func _construir_fundar(raiz: VBoxContainer) -> void:
 	_campo_nombre_club.placeholder_text = "Nombre de tu club"
 	_campo_nombre_club.custom_minimum_size = Vector2(220, 32)
 	fila.add_child(_campo_nombre_club)
+	## Colores y estadio del club nuevo (26-9-2026).
+	_col1 = ColorPickerButton.new()
+	_col1.color = Color("1e4030")
+	_col1.custom_minimum_size = Vector2(40, 32)
+	_col1.tooltip_text = "Color principal"
+	fila.add_child(_col1)
+	_col2 = ColorPickerButton.new()
+	_col2.color = Color("c9a227")
+	_col2.custom_minimum_size = Vector2(40, 32)
+	_col2.tooltip_text = "Color secundario"
+	fila.add_child(_col2)
+	_campo_estadio = LineEdit.new()
+	_campo_estadio.placeholder_text = "Nombre del estadio"
+	_campo_estadio.custom_minimum_size = Vector2(170, 32)
+	fila.add_child(_campo_estadio)
+	if Principal.fundar_pedido:
+		e.border_color = COL_ACENTO
+		e.set_border_width_all(2)
+		t.text = "🛠️ FUNDA TU CLUB"
+		t.add_theme_color_override("font_color", COL_ACENTO)
+		_campo_nombre_club.call_deferred("grab_focus")
 	var b := Button.new()
 	b.text = "Fundar en el país elegido"
 	b.custom_minimum_size = Vector2(0, 32)
@@ -160,7 +193,8 @@ func _fundar() -> void:
 	var nombre := _campo_nombre_club.text.strip_edges()
 	if nombre == "":
 		return
-	var club := _mundo.fundar_club(nombre, _pais_actual)
+	Principal.fundar_pedido = false
+	var club := _mundo.fundar_club(nombre, _pais_actual, "#" + _col1.color.to_html(false), "#" + _col2.color.to_html(false), _campo_estadio.text.strip_edges())
 	if club == null:
 		return
 	Principal.mundo_pregenerado = _mundo
