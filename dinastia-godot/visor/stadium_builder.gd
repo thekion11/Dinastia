@@ -837,7 +837,11 @@ static func _explanada_de_fondo(root: Node3D) -> void:
 	## de fondo (el propio comentario de arriba ya lo dice: "para no pelear en
 	## z-fighting", nunca se pensó como superficie protagonista).
 	var mat_explanada: StandardMaterial3D = Texturas.hormigon(Color(0.30, 0.31, 0.33), 41).duplicate()
-	mat_explanada.uv1_scale = Vector3(0.02, 0.02, 1.0)
+	## 26-9-2026: sin rayas en ángulo rasante. Se repite en el mundo (un
+	## mosaico cada 2 m, el tamaño de una losa de hormigón) y con filtrado
+	## anisótropo, en vez de estirar una textura sobre 400 m.
+	mat_explanada.uv1_world_triplanar = true
+	mat_explanada.uv1_scale = Vector3(0.5, 0.5, 0.5)
 	mat_explanada.normal_enabled = false
 	mi.material_override = mat_explanada
 	root.add_child(mi)
@@ -2736,7 +2740,7 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 	mat_asf.roughness_texture = null
 	mat_asf.normal_enabled = false
 	mat_asf.metallic_specular = 0.2
-	mat_asf.uv1_scale = mat_asf.uv1_scale * 3.0
+	## (26-9-2026) Ya se repite en coordenadas del mundo: sin reescalar.
 	asfalto.material_override = mat_asf
 	ext.add_child(asfalto)
 	var raya := StandardMaterial3D.new()

@@ -24,3 +24,5 @@
 dinastia-godot/assets/personas/*.glb -filter -diff -merge binary
 # Los peinados de los jugadores (glTF de texto + .bin chicos, <1 MB en total): archivos normales.
 dinastia-godot/assets/characters/quaternius/pelo/*.gltf -filter -diff -merge
+# Los edificios del kit comercial de Kenney que faltaban (CC0, ~2 MB): archivos normales.
+dinastia-godot/assets/ciudad/kenney_comercial_extra/*.glb -filter -diff -merge binary

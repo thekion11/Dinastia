@@ -975,6 +975,7 @@ static func uniforms(kit: Dictionary, dorsal: int) -> Dictionary:
 		"bot_dis": int(bm[2]),
 		"dorsal": dorsal, "color_num": _col(kit.get("num", "ffffff")),
 		"cuello": int(kit.get("cuello", 0)),
+		"civil": bool(kit.get("civil", false)),
 	}
 	for a: Array in ACCESORIOS:
 		var k := String(a[0])

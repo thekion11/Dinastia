@@ -41,14 +41,32 @@ uniform float nubes_sombra_velocidad = 0.006;
 
 #include "res://visor/ruido.gdshaderinc"
 
-void fragment() {
-	vec2 uv_mundo = VERTEX.xz / escala_cesped;
-	vec3 cesped = texture(textura_cesped, uv_mundo).rgb;
+// CORREGIDO (26-9-2026, "no hagas eso de difuminar o rayar zonas"): en
+// `fragment()` VERTEX y NORMAL están en espacio de CÁMARA, no del mundo. La
+// textura del césped y la mezcla de ladera se calculaban con ellos, así que
+// "nadaban" y cambiaban de tono al mover la cámara (el llano lavado y rayado
+// que se veía). Ahora se pasan del mundo desde `vertex()`.
+varying vec3 p_mundo;
+varying vec3 n_mundo;
 
-	float moteado = fbm3(VERTEX * 0.15);
+void vertex() {
+	p_mundo = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	n_mundo = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
+}
+
+void fragment() {
+	vec2 uv_mundo = p_mundo.xz / escala_cesped;
+	// Dos escalas de la misma textura y una variación grande de tono: de
+	// cerca se ve la hoja, de lejos manchas de pradera, nunca un papel pintado.
+	vec3 cesped = texture(textura_cesped, uv_mundo).rgb * 0.6 + texture(textura_cesped, uv_mundo * 0.23 + 0.37).rgb * 0.4;
+	float macro = fbm3(vec3(p_mundo.xz * 0.012, 3.0));
+	cesped *= mix(0.82, 1.12, macro);
+	cesped = mix(cesped, cesped * vec3(1.08, 1.02, 0.8), smoothstep(0.55, 0.8, fbm3(vec3(p_mundo.xz * 0.004, 9.0))) * 0.6);
+
+	float moteado = fbm3(p_mundo * 0.15);
 	vec3 roca = mix(roca_oscura.rgb, roca_clara.rgb, moteado);
 
-	float ladera = clamp(NORMAL.y, 0.0, 1.0);
+	float ladera = clamp(n_mundo.y, 0.0, 1.0);
 	// Dos tramos: roca->tierra hasta `umbral_roca`, tierra->césped hasta
 	// `umbral_cesped`. Con un solo smoothstep la tierra desaparecía -pasaba
 	// de roca a césped sin el tramo suelto de en medio, que es justo lo que
@@ -59,11 +77,11 @@ void fragment() {
 	base = mix(base, cesped, t2);
 
 	vec2 deriva = vec2(1.0, 0.35) * TIME * nubes_sombra_velocidad * 40.0;
-	float n_sombra = fbm3(vec3((VERTEX.xz + deriva) * nubes_sombra_escala, 0.0));
+	float n_sombra = fbm3(vec3((p_mundo.xz + deriva) * nubes_sombra_escala, 0.0));
 	float sombra = smoothstep(0.34, 0.60, n_sombra) * nubes_sombra_cantidad;
 	base *= (1.0 - sombra);
 
 	ALBEDO = base;
 	ROUGHNESS = mix(roughness_roca, roughness_cesped, t2);
-	SPECULAR = 0.3;
+	SPECULAR = 0.15;
 }
