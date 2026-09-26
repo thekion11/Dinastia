@@ -6047,6 +6047,23 @@ func _probar_tanda_c() -> void:
 	mf.generar(["CHI"], 12)
 	var cf := mf.fundar_club("Club Nuevo", "CHI", "#112233", "#ddeeff", "La Cancha")
 	_comprobar(cf != null and cf.color1 == "#112233" and cf.estadio_nombre == "La Cancha", "fundar un club con sus colores y su estadio")
+	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
+	var fi := FondoInversion.new()
+	fi.caja = 1000000000
+	var otros: Array = mf.clubes.values().filter(func(x: Club) -> bool: return x.id != mf.mi_club_id)
+	var obj: Club = otros[0]
+	_comprobar(fi.comprar(mf, obj, 0.25) == "" and is_equal_approx(float(fi.cartera[obj.id]), 0.25), "el fondo compra un 25 %")
+	fi.comprar(mf, obj, 0.4)
+	_comprobar(float(fi.cartera[obj.id]) <= FondoInversion.MAX_PCT + 0.0001 and fi.comprar(mf, obj, 0.1) != "", "nunca pasa del 49 % de un club")
+	_comprobar(fi.comprar(mf, mf.mi_club(), 0.1) != "", "no compra su propio club")
+	mf.semana = 4
+	var div := fi.semana(mf)
+	_comprobar(div >= 0 and fi.dividendos_totales == div and fi.historia.size() == 1, "cada cuatro semanas reparte dividendos (%s)" % _dinero(div))
+	var fi2 := FondoInversion.new()
+	fi2.desde_dic(fi.a_dic())
+	_comprobar(fi2.caja == fi.caja and fi2.cartera.size() == 1 and fi2.dividendos_totales == fi.dividendos_totales, "el fondo se guarda con la partida")
+	var caja_antes := fi.caja
+	_comprobar(fi.vender(mf, obj, 1.0) == "" and fi.cartera.is_empty() and fi.caja > caja_antes, "vender todo devuelve caja y vacía la cartera")
 	## Cantera.
 	var ec := m.eventos_cantera
 	var hubo := false
