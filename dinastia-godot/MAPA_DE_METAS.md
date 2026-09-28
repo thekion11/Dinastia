@@ -83,6 +83,37 @@ Estados:
 | Escena de la casa más natural: cielo con nubes que se mueven, 26.000 briznas con viento, árboles con copa de varias masas, agua con oleaje, pájaros | ✅ |
 | Escena interactiva: tomar un café, mirar el paisaje, cámara libre y pasar al atardecer con farolas | ✅ |
 
+## Lo que queda, en el orden en que se hace
+
+Junta tres fuentes:
+- los fallos concretos del informe que no entraban en las fases;
+- lo pendiente de la semana pasada en `ROADMAP.md`;
+- lo que salió al revisar la escena de tu casa.
+
+| # | Meta | De dónde viene | Estado |
+|---|---|---|---|
+| 1 | La gorra no flota sobre el pelo voluminoso (rizado, afro...) | Revisión de la escena | ⬜ |
+| 2 | Botón de "salir a la segunda parte" separado de las acciones del camarín | Informe, fallo 10 | ⬜ verificar |
+| 3 | Sin tirones en tablas con muchas caras (caché de retratos) | Informe, fallo 19 | ⬜ verificar |
+| 4 | Fin de contrato validado en todos los caminos | Informe, fallo 21 | ⬜ verificar |
+| 5 | Los jugadores también publican en Tribuna (y tú les respondes) | Redes | ⬜ |
+| 6 | Mercado avanzado: guerra de ofertas, derechos de formación, superagente, fichaje impuesto por el dueño (bloques 37-38) | Plan maestro | ⬜ |
+| 7 | Insolvencia: renegociar deuda, resta de puntos, administrador, tope salarial (bloques 39-40) | Plan maestro | ⬜ |
+| 8 | Reglamento fino: historial por árbitro, desempates, playoffs de descenso (bloques 44-45) | Plan maestro | ⬜ |
+| 9 | Selecciones: lista preliminar y conflicto club-selección (bloque 46) | Plan maestro | ⬜ |
+| 10 | Editor de competiciones y sede de final fija (bloque 47) | Plan maestro, informe | ⬜ |
+| 11 | Meta: cromos, museo global, mundo heredado (bloque 50) | Plan maestro, informe (logros) | ⬜ |
+| 12 | Colores del estadio por sección: cada bandeja, redes, focos, LED | Pedido de la semana pasada | ⬜ |
+| 13 | Presentación de fichajes como cinemática | Plan B3 | ⬜ |
+| 14 | Celebraciones de gol según el carácter del jugador | Informe | ⬜ |
+| 15 | Dividir `principal.gd` (15.189 líneas) en componentes | Informe | ⬜ |
+| 16 | Patada que luce como golpeo de balón | Informe, fallo 11 | ⬜ |
+| 17 | Traducción al inglés y portugués | Informe (ventas) | ⬜ |
+| 18 | Carrera de Jugador | Modos | ⬜ |
+| — | Túnel navegable | Pedido para cuando exista "caminar por el estadio" | En espera |
+| — | Cara 2D moldeada sobre el modelo 3D | El usuario pidió no tocarlo sin permiso | En espera |
+| — | Contraseña del keystore, licencias 🟡, FPS en un PC real, música, builds de `entregas/` | Dueño | 🔒 |
+
 ## Cómo se mide
 
 - **Cada meta cerrada tiene prueba en el banco** (`pruebas/banco.gd`, 0 fallos) y, si se ve, una captura en `pruebas/`.
