@@ -163,7 +163,10 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 	_cuerpo(d, a)
 	_vestir(d, a, c1, c2)
 	var corte := String(a["pelo"])
-	if bool(a["gorra"]) and corte in ["afro", "largo", "melena", "rastas", "samurai", "coleta"]:
+	## Con gorra, el pelo queda debajo: solo asoma lo corto. Antes se
+	## libraban el rizado, el ondulado o el tupé, que con su volumen asomaban
+	## por encima de la copa y dejaban la visera flotando (28-9-2026).
+	if bool(a["gorra"]) and not corte in ["corto", "fade", "rapado", "calvo"]:
 		corte = "corto"
 	PeloQ.poner(d, corte, Color(String(a["color_pelo"])), bool(a["barba"]) and String(a["cuerpo"]) == "male")
 	_accesorios(d, a, c1, c2)
@@ -369,11 +372,15 @@ static func _accesorios(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> v
 		_caja(cabeza, Vector3(0, ojo_y + 0.004, ojo_z + 0.002), Vector3(0.02, 0.004, 0.004), marco)
 	if bool(a["gorra"]):
 		var tela := _mat(c1, 0.8)
-		var copa := _esfera(cabeza, Vector3(0, cab_y + 0.04, -0.005), 0.108, tela)
-		copa.scale = Vector3(1.0, 0.72, 1.08)
-		var visera := _caja(cabeza, Vector3(0, cab_y + 0.03, 0.12), Vector3(0.17, 0.012, 0.1), _mat(c1.darkened(0.2), 0.7))
+		## La copa: más ancha que el pelo corto (no asoma por arriba) y con el
+		## borde a la altura de la frente, no de los ojos.
+		## `cab_y` es la altura de los OJOS: el borde de la copa va 4-5 cm más
+		## arriba (sobre la frente) y la visera sale de ahí.
+		var copa := _esfera(cabeza, Vector3(0, cab_y + 0.1, -0.012), 0.108, tela)
+		copa.scale = Vector3(1.0, 0.62, 1.1)
+		var visera := _caja(cabeza, Vector3(0, cab_y + 0.052, 0.118), Vector3(0.165, 0.01, 0.085), _mat(c1.darkened(0.2), 0.7))
 		visera.rotation_degrees.x = 10.0
-		_esfera(cabeza, Vector3(0, cab_y + 0.12, -0.005), 0.012, _mat(c2, 0.7))
+		_esfera(cabeza, Vector3(0, cab_y + 0.166, -0.012), 0.011, _mat(c2, 0.7))
 	if bool(a["auriculares"]):
 		var neg := _mat(Color(0.1, 0.1, 0.11), 0.4)
 		var arco := MeshInstance3D.new()

@@ -6142,6 +6142,19 @@ func _probar_tanda_c() -> void:
 			ce.acercar(100.0)
 			_comprobar(is_equal_approx(float(ce.get("_dist")), 14.0), "la cámara libre no se aleja más de la cuenta")
 		ce.free()
+	## LOS CONTRATOS VENCEN (28-9-2026, informe externo).
+	var mc := Mundo.new()
+	mc.generar(["CHI"], 21)
+	mc.mi_club_id = mc.ligas[0].clubes[0].id
+	var jc: Jugador = mc.mi_club().plantilla[0]
+	jc.anios_contrato = 1
+	var jr: Jugador = mc.mi_club().plantilla[1]
+	jr.anios_contrato = 3
+	var libres_antes := mc.libres.size()
+	mc.nueva_temporada()
+	_comprobar(not mc.mi_club().plantilla.has(jc) and mc.libres.has(jc) and jc.club_id == "", "el contrato que se acaba sin renovar deja al jugador libre")
+	_comprobar(mc.mi_club().plantilla.has(jr) and jr.anios_contrato == 2, "a los demás les queda un año menos")
+	_comprobar(mc.libres.size() > libres_antes, "la bolsa de libres se llena con los contratos vencidos (%d)" % (mc.libres.size() - libres_antes))
 	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
 	var fi := FondoInversion.new()
 	fi.caja = 1000000000
