@@ -6098,6 +6098,16 @@ func _probar_tanda_c() -> void:
 	var gustos := int(pub["likes"])
 	rd.me_gusta(int(pub["id"]))
 	_comprobar(int(rd.buscar(int(pub["id"]))["likes"]) == gustos + 1, "dar me gusta suma uno")
+	## Los jugadores publican y tú les comentas.
+	var n_pub := rd.publicaciones.size()
+	rd._publican_jugadores(mf)
+	var pj: Dictionary = rd.publicaciones[0]
+	_comprobar(rd.publicaciones.size() > n_pub and String(pj["cuenta"]) == "jugador" and String(pj["autor"]).begins_with("@"), "un jugador de tu plantel publica (%s)" % String(pj["autor"]))
+	var jpj := mf.jugador_por_id(String(pj["jugador_id"]))
+	var moral_antes := jpj.moral
+	var rc := rd.comentar_jugador(mf, int(pj["id"]), "apoyo")
+	_comprobar(jpj.moral > moral_antes or moral_antes == 100, "apoyarlo en redes le sube la moral (%s)" % rc)
+	_comprobar(rd.comentar_jugador(mf, int(pj["id"]), "cortante") == "ya le comentaste", "a cada publicación se le comenta una vez")
 	var rd2 := Redes.new()
 	rd2.desde_dic(rd.a_dic())
 	_comprobar(rd2.publicaciones.size() == rd.publicaciones.size() and rd2.pendientes() == rd.pendientes(), "las redes se guardan con la partida")
