@@ -6080,6 +6080,17 @@ func _probar_tanda_c() -> void:
 	mf.generar(["CHI"], 12)
 	var cf := mf.fundar_club("Club Nuevo", "CHI", "#112233", "#ddeeff", "La Cancha")
 	_comprobar(cf != null and cf.color1 == "#112233" and cf.estadio_nombre == "La Cancha", "fundar un club con sus colores y su estadio")
+	## TU CASA (28-9-2026): las noticias se vuelven publicaciones y la escena se
+	## monta con cada vivienda (casa, auto y DT con el móvil).
+	var posts := CasaEscena3D.publicaciones(mf, [{"titulo": "✅ Victoria", "cuerpo": "2-1"}, {"titulo": "❌ Eliminados", "cuerpo": "penales"}])
+	_comprobar(posts.size() == 2 and String(posts[0]["tono"]) == "bien" and String(posts[1]["tono"]) == "mal", "las noticias se vuelven publicaciones con su tono")
+	_comprobar(CasaEscena3D.publicaciones(mf, []).size() == 1, "sin noticias hay una publicación tranquila")
+	for viv: String in VidaDT.ORDEN_VIVIENDA:
+		var ce := CasaEscena3D.new()
+		ce.montar(viv, "deportivo", {}, Color.RED, Color.WHITE)
+		var mallas := ce.find_children("*", "MeshInstance3D", true, false).size()
+		_comprobar(mallas > 20, "la escena de «%s» se monta (%d mallas)" % [viv, mallas])
+		ce.free()
 	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
 	var fi := FondoInversion.new()
 	fi.caja = 1000000000

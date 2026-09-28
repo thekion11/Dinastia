@@ -146,6 +146,12 @@ static func _opciones(lista: VBoxContainer, p: Control, titulo: String, tabla: D
 
 static func _hogar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	var v := mundo.vida
+	## Tu casa en 3D, con tu DT en la terraza mirando las redes (28-9-2026).
+	var ver := Button.new()
+	ver.text = "🏡 Ver tu casa"
+	ver.custom_minimum_size = Vector2(0, 34)
+	ver.pressed.connect(func() -> void: CasaEscena3D.abrir(p, mundo, p.get("_bandeja")))
+	lista.add_child(ver)
 	_opciones(lista, p, "🏠 DÓNDE VIVES (la mudanza cuesta cuatro semanas de la casa nueva)", VidaDT.VIVIENDAS,
 		VidaDT.ORDEN_VIVIENDA, v.vivienda, "vives aquí", func(k: String) -> void:
 			_resultado(p, mundo.vida.cambiar_vivienda(k, mundo.roles), "Mudanza hecha."))
