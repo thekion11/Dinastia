@@ -45,6 +45,21 @@ const SEG_PLANO := 5.0
 
 var _cam: Camera3D
 var _funda: MeshInstance3D
+var _sol: DirectionalLight3D
+var _env: Environment
+var _cielo: ShaderMaterial
+var _farolas: Array[OmniLight3D] = []
+var _brazo: _BrazoMovil
+var _esq: Skeleton3D
+var _taza: Node3D
+var _taza_xf := Transform3D.IDENTITY
+var _mat_pantalla: StandardMaterial3D
+var _atardecer := false
+## La cámara libre: se arrastra para girar y la rueda acerca.
+var libre := false
+var _yaw := 0.6
+var _pitch := 0.25
+var _dist := 4.5
 var m_actual: Mundo
 var _t := 0.0
 var _plano := -1
@@ -71,6 +86,7 @@ func montar(vivienda: String, transporte: String, asp: Dictionary, c1: Color, c2
 		_piscina()
 	_auto(transporte)
 	_terraza()
+	_naturaleza(vivienda)
 	_dt(asp, c1, c2)
 	_cam = Camera3D.new()
 	add_child(_cam)
@@ -79,6 +95,16 @@ func montar(vivienda: String, transporte: String, asp: Dictionary, c1: Color, c2
 
 func _process(delta: float) -> void:
 	_t += delta
+	## La pantalla del móvil 3D pasa publicaciones a golpes, como con el pulgar.
+	if _mat_pantalla != null:
+		var paso: float = floor(_t / 1.3) + smoothstep(0.0, 0.25, fmod(_t, 1.3))
+		_mat_pantalla.uv1_offset = Vector3(fmod(paso * 0.12, 1.0), 0, 0)
+	if libre:
+		var obj := Vector3(0.0, 1.0, 0.1)
+		_cam.fov = 50.0
+		_cam.position = obj + Vector3(sin(_yaw) * cos(_pitch), sin(_pitch), cos(_yaw) * cos(_pitch)) * _dist
+		_cam.look_at(obj)
+		return
 	var i := int(_t / SEG_PLANO) % PLANOS.size()
 	if i != _plano:
 		_cortar(i)
@@ -87,6 +113,72 @@ func _process(delta: float) -> void:
 	var pl: Array = PLANOS[_plano]
 	_cam.position = (pl[0] as Vector3) + Vector3(0.35, 0.0, -0.25) * f
 	_cam.look_at(pl[1])
+
+# --- lo vivo: naturaleza e interacción -----------------------------------------------
+
+## El césped de briznas (sin crecer bajo la terraza, la casa, la piscina ni
+## el auto) y una bandada de pájaros.
+func _naturaleza(vivienda: String) -> void:
+	var evitar: Array = [Rect2(-6.2, -3.1, 9.4, 6.2), Rect2(-40.0, -60.0, 80.0, 52.5), Rect2(-12.8, -2.8, 6.4, 4.6)]
+	if vivienda == "mansion":
+		evitar.append(Rect2(-6.4, -7.2, 10.8, 4.2))
+	CasaNaturaleza.cesped(self, Vector2(-24.0, -8.0), Vector2(24.0, 22.0), 26000, evitar, 11)
+	CasaNaturaleza.pajaros(self, Vector3(0, 0, -12), 7, 3)
+
+## ☕ TOMAR UN CAFÉ: la mano izquierda coge la taza de la mesita, se la lleva
+## a la boca, bebe y la deja. Dura unos cuatro segundos.
+func tomar_cafe() -> void:
+	if _brazo != null and not _brazo.bebiendo():
+		_brazo.cafe_desde = Time.get_ticks_msec()
+
+## 🌅 MIRAR EL PAISAJE: deja el móvil a un lado un rato y levanta la vista.
+func mirar_paisaje() -> void:
+	if _brazo != null:
+		_brazo.mirar_hasta = Time.get_ticks_msec() + 6000
+
+## La taza sigue a la mano izquierda mientras bebe; si no, vuelve a la mesa.
+func _animar_taza() -> void:
+	if _taza == null or _esq == null or _brazo == null:
+		return
+	if _brazo.bebiendo():
+		var ih := _esq.find_bone("hand_l")
+		if ih >= 0:
+			var mano := _esq.global_transform * _esq.get_bone_global_pose(ih)
+			var im := _esq.find_bone("middle_01_l")
+			var nudillo := (_esq.global_transform * _esq.get_bone_global_pose(im)).origin if im >= 0 else mano.origin
+			## En el hueco de la mano, un poco hacia la palma, derecha.
+			_taza.global_transform = Transform3D(Basis.IDENTITY, mano.origin.lerp(nudillo, 0.7) + Vector3(0, 0.02, 0.03))
+			return
+	_taza.transform = _taza_xf
+
+## 🌙 / ☀️ Del día al atardecer y vuelta: el sol baja y se tiñe, el cielo se
+## vuelve naranja, baja la luz ambiente y se encienden las farolas.
+func alternar_hora() -> bool:
+	_atardecer = not _atardecer
+	var a := _atardecer
+	var tw := create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(_sol, "rotation_degrees:x", -7.0 if a else -28.0, 2.5)
+	tw.tween_property(_sol, "light_color", Color(1.0, 0.6, 0.35) if a else Color(1.0, 0.9, 0.78), 2.5)
+	tw.tween_property(_sol, "light_energy", 0.7 if a else 1.25, 2.5)
+	tw.tween_property(_env, "ambient_light_energy", 0.45 if a else 0.9, 2.5)
+	tw.tween_method(func(c: Color) -> void: _cielo.set_shader_parameter("arriba", c),
+		_cielo.get_shader_parameter("arriba") if _cielo.get_shader_parameter("arriba") != null else Color(0.3, 0.52, 0.84),
+		Color(0.2, 0.25, 0.48) if a else Color(0.3, 0.52, 0.84), 2.5)
+	tw.tween_method(func(c: Color) -> void: _cielo.set_shader_parameter("horizonte", c),
+		_cielo.get_shader_parameter("horizonte") if _cielo.get_shader_parameter("horizonte") != null else Color(0.86, 0.8, 0.72),
+		Color(0.98, 0.55, 0.3) if a else Color(0.86, 0.8, 0.72), 2.5)
+	for luz in _farolas:
+		tw.tween_property(luz, "light_energy", 2.2 if a else 0.0, 2.0)
+		tw.tween_property(luz.get_meta("globo"), "emission_energy_multiplier", 3.0 if a else 0.0, 2.0)
+	return a
+
+## Cámara libre: arrastrar gira alrededor del DT, la rueda acerca y aleja.
+func arrastrar(rel: Vector2) -> void:
+	_yaw -= rel.x * 0.008
+	_pitch = clampf(_pitch + rel.y * 0.006, 0.05, 1.2)
+
+func acercar(paso: float) -> void:
+	_dist = clampf(_dist + paso, 1.6, 14.0)
 
 func _cortar(i: int) -> void:
 	_plano = i
@@ -101,12 +193,10 @@ func _entorno() -> void:
 	var we := WorldEnvironment.new()
 	var e := Environment.new()
 	var cielo := Sky.new()
-	var sm := ProceduralSkyMaterial.new()
-	sm.sky_top_color = Color(0.32, 0.52, 0.82)
-	sm.sky_horizon_color = Color(0.86, 0.74, 0.62)
-	sm.sun_angle_max = 20.0
-	sm.ground_horizon_color = Color(0.55, 0.5, 0.45)
-	cielo.sky_material = sm
+	## El cielo con nubes que se mueven y el disco del sol (`CasaNaturaleza`).
+	_cielo = CasaNaturaleza.material_cielo()
+	cielo.sky_material = _cielo
+	_env = e
 	e.background_mode = Environment.BG_SKY
 	e.sky = cielo
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
@@ -131,6 +221,7 @@ func _entorno() -> void:
 	add_child(we)
 	## El sol bajo de la tarde, de lado: es la hora de mirar el móvil en casa.
 	var sol := DirectionalLight3D.new()
+	_sol = sol
 	sol.rotation_degrees = Vector3(-28.0, -55.0, 0.0)
 	sol.light_energy = 1.25
 	sol.light_color = Color(1.0, 0.9, 0.78)
@@ -300,18 +391,10 @@ func _casa_propia(jardin: bool) -> void:
 			for pz in [-3.4, -0.6]:
 				_caja(Vector3(px, 1.3, pz), Vector3(0.18, 2.6, 0.18), _mat(Color(0.45, 0.3, 0.2), 0.8))
 		_caja(Vector3(8.0, 0.55, -3.2), Vector3(1.6, 1.1, 0.6), _mat(Color(0.6, 0.35, 0.28), 0.9))
-	var tronco := _mat(Color(0.35, 0.25, 0.17), 0.9)
-	var copa := _mat(Color(0.22, 0.45, 0.2), 1.0)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
 	for a: Vector3 in arboles:
-		_caja(a + Vector3(0, 1.4, 0), Vector3(0.35, 2.8, 0.35), tronco)
-		var mi := MeshInstance3D.new()
-		var sm := SphereMesh.new()
-		sm.radius = 1.9
-		sm.height = 3.6
-		mi.mesh = sm
-		mi.material_override = copa
-		mi.position = a + Vector3(0, 3.9, 0)
-		add_child(mi)
+		CasaNaturaleza.arbol(self, a, rng.randf_range(5.5, 7.5), rng)
 
 func _auto(transporte: String) -> void:
 	var ruta := String(AUTOS.get(transporte, ""))
@@ -348,8 +431,22 @@ func _terraza() -> void:
 	_cilindro(mesa, Vector3(0, 0.5, 0), 0.28, 0.04, teca)
 	_cilindro(mesa, Vector3(0, 0.25, 0), 0.03, 0.5, metal)
 	_cilindro(mesa, Vector3(0, 0.01, 0), 0.18, 0.02, metal)
-	_cilindro(mesa, Vector3(0.06, 0.565, 0.03), 0.04, 0.09, _mat(Color(0.95, 0.95, 0.93), 0.3))
-	_cilindro(mesa, Vector3(0.06, 0.607, 0.03), 0.034, 0.005, _mat(Color(0.25, 0.14, 0.08), 0.2))
+	## La taza (se puede tomar: "☕ Tomar un café").
+	_taza = Node3D.new()
+	_taza.position = Vector3(0.06, 0.565, 0.03)
+	mesa.add_child(_taza)
+	_cilindro(_taza, Vector3.ZERO, 0.04, 0.09, _mat(Color(0.95, 0.95, 0.93), 0.3))
+	_cilindro(_taza, Vector3(0, 0.042, 0), 0.034, 0.005, _mat(Color(0.25, 0.14, 0.08), 0.2))
+	var asa := MeshInstance3D.new()
+	var tm := TorusMesh.new()
+	tm.inner_radius = 0.012
+	tm.outer_radius = 0.022
+	asa.mesh = tm
+	asa.material_override = _mat(Color(0.95, 0.95, 0.93), 0.3)
+	asa.rotation_degrees.x = 90.0
+	asa.position = Vector3(0.045, 0, 0)
+	_taza.add_child(asa)
+	_taza_xf = _taza.transform
 	## La maceta con su planta.
 	var maceta := _mat(Color(0.3, 0.3, 0.32), 0.6)
 	_cilindro(self, Vector3(2.2, 0.45, -2.2), 0.3, 0.6, maceta)
@@ -363,6 +460,30 @@ func _terraza() -> void:
 		mi.material_override = hojas
 		mi.position = Vector3(2.2 + cos(k * 1.3) * 0.22, 1.0 + k * 0.12, -2.2 + sin(k * 1.3) * 0.22)
 		add_child(mi)
+	## Dos farolas de jardín: apagadas de día, encendidas al atardecer.
+	for fx: Vector3 in [Vector3(-5.6, 0, 2.6), Vector3(2.6, 0, 2.6)]:
+		_caja(fx + Vector3(0, 0.75, 0), Vector3(0.07, 1.5, 0.07), metal)
+		var globo := MeshInstance3D.new()
+		var gs := SphereMesh.new()
+		gs.radius = 0.12
+		gs.height = 0.24
+		globo.mesh = gs
+		var gm := StandardMaterial3D.new()
+		gm.albedo_color = Color(1.0, 0.95, 0.85)
+		gm.emission_enabled = true
+		gm.emission = Color(1.0, 0.8, 0.5)
+		gm.emission_energy_multiplier = 0.0
+		globo.material_override = gm
+		globo.position = fx + Vector3(0, 1.58, 0)
+		add_child(globo)
+		var luz := OmniLight3D.new()
+		luz.position = fx + Vector3(0, 1.5, 0)
+		luz.light_color = Color(1.0, 0.8, 0.55)
+		luz.light_energy = 0.0
+		luz.omni_range = 7.0
+		luz.set_meta("globo", gm)
+		add_child(luz)
+		_farolas.append(luz)
 
 func _cilindro(padre: Node3D, pos: Vector3, r: float, alto: float, m: Material) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
@@ -434,12 +555,8 @@ func _sillon(pos: Vector3, giro: float) -> void:
 func _piscina() -> void:
 	var piedra := _mat(Color(0.82, 0.8, 0.76), 0.8)
 	_caja(Vector3(-1.0, 0.06, -5.2), Vector3(10.4, 0.12, 3.6), piedra)
-	var agua := StandardMaterial3D.new()
-	agua.albedo_color = Color(0.18, 0.55, 0.72, 0.85)
-	agua.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	agua.roughness = 0.05
-	agua.metallic = 0.3
-	_caja(Vector3(-1.0, 0.1, -5.2), Vector3(9.6, 0.06, 2.9), agua)
+	## El agua con oleaje y reflejo (`CasaNaturaleza.material_agua`).
+	_caja(Vector3(-1.0, 0.1, -5.2), Vector3(9.6, 0.06, 2.9), CasaNaturaleza.material_agua())
 
 ## Lejos: cerros bajos y una fila de árboles. La bruma los aclara.
 func _fondo_lejano() -> void:
@@ -457,22 +574,15 @@ func _fondo_lejano() -> void:
 		mi.position = Vector3(sin(ang) * 170.0 + rng.randf_range(-20, 20), -8.0, -cos(ang) * 170.0 - 40.0)
 		mi.scale = Vector3(rng.randf_range(60, 95), rng.randf_range(22, 38), rng.randf_range(40, 60))
 		add_child(mi)
-	var tronco := _mat(Color(0.33, 0.24, 0.16), 0.9)
-	var copa := _mat(Color(0.18, 0.36, 0.17), 1.0)
-	for i in 26:
-		var x := -60.0 + i * 4.8 + rng.randf_range(-1.5, 1.5)
-		var z := -34.0 - rng.randf_range(0.0, 10.0)
-		var alto := rng.randf_range(5.0, 9.0)
-		_caja(Vector3(x, alto * 0.3, z), Vector3(0.4, alto * 0.6, 0.4), tronco)
-		var mi := MeshInstance3D.new()
-		var cm := CylinderMesh.new()
-		cm.top_radius = 0.0
-		cm.bottom_radius = alto * 0.28
-		cm.height = alto * 0.75
-		mi.mesh = cm
-		mi.material_override = copa
-		mi.position = Vector3(x, alto * 0.55 + alto * 0.3, z)
-		add_child(mi)
+	## La arboleda del fondo, con árboles de copa de verdad y en dos filas
+	## irregulares (una fila recta delataba el decorado).
+	for i in 22:
+		var x := -58.0 + i * 5.4 + rng.randf_range(-2.0, 2.0)
+		var z := -30.0 - rng.randf_range(0.0, 14.0)
+		CasaNaturaleza.arbol(self, Vector3(x, 0, z), rng.randf_range(6.0, 11.0), rng)
+	## Y a los lados del jardín, más cerca.
+	for x in [-16.0, -20.0, 14.0, 19.0]:
+		CasaNaturaleza.arbol(self, Vector3(x, 0, rng.randf_range(-4.0, 10.0)), rng.randf_range(5.0, 8.0), rng)
 
 func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	var d := PersonajeDT.crear(self, asp, c1, c2)
@@ -493,6 +603,8 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	var esq := esqs[0] as Skeleton3D
 	var brazo := _BrazoMovil.new()
 	esq.add_child(brazo)
+	_brazo = brazo
+	_esq = esq
 	var i := esq.find_bone("hand_r")
 	if i < 0 or not ResourceLoader.exists(RUTA_MOVIL):
 		return
@@ -524,6 +636,7 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	q.size = Vector2(ab.size.x * 0.92, ab.size.z * 0.88)
 	pantalla.mesh = q
 	var mp := StandardMaterial3D.new()
+	_mat_pantalla = mp
 	mp.albedo_texture = _textura_feed()
 	mp.emission_enabled = true
 	mp.emission_texture = mp.albedo_texture
@@ -547,6 +660,9 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	sosten.brazo = brazo
 	add_child(sosten)
 	esq.skeleton_updated.connect(sosten.colocar)
+	## La taza también se coloca tras el esqueleto, no en `_process` (ahí la
+	## mano todavía está en la pose del fotograma anterior).
+	esq.skeleton_updated.connect(_animar_taza)
 
 ## Pone el móvil donde `_BrazoMovil` decidió (en la palma, en pose de
 ## lectura), cada vez que se actualiza el esqueleto.
@@ -594,6 +710,35 @@ class _BrazoMovil extends SkeletonModifier3D:
 	const SIGNO_PALMA := -1.0
 	## Dónde va el móvil, en el espacio del esqueleto (lo lee `_SostenMovil`).
 	var movil_xf := Transform3D.IDENTITY
+	## Las interacciones: cuándo empezó a beber (ms) y hasta cuándo mira el
+	## paisaje (ms).
+	var cafe_desde := -100000
+	var mirar_hasta := 0
+	const DURA_CAFE := 4200.0
+
+	func bebiendo() -> bool:
+		return float(Time.get_ticks_msec() - cafe_desde) < DURA_CAFE
+
+	## Cuánto está el brazo izquierdo arriba (0 → 1 → 0): sube, bebe, baja.
+	func _peso_cafe() -> float:
+		var t := float(Time.get_ticks_msec() - cafe_desde) / 1000.0
+		if t < 0.0 or t > DURA_CAFE / 1000.0:
+			return 0.0
+		return smoothstep(0.0, 0.9, t) * (1.0 - smoothstep(3.2, 4.2, t))
+
+	func _girar(esq: Skeleton3D, hueso: String, hijo: String, obj: Vector3, peso: float) -> void:
+		var h := esq.find_bone(hueso)
+		var hj := esq.find_bone(hijo)
+		if h < 0 or hj < 0 or peso <= 0.001:
+			return
+		var g := esq.get_bone_global_pose(h)
+		var dir := (esq.get_bone_global_pose(hj).origin - g.origin).normalized()
+		var o := obj.normalized()
+		if dir.length() < 0.5 or dir.is_equal_approx(o):
+			return
+		var q := Quaternion(dir, o)
+		q = Quaternion.IDENTITY.slerp(q, peso)
+		esq.set_bone_global_pose(h, Transform3D(Basis(q) * g.basis, g.origin))
 
 	## EL AGARRE (28-9-2026, "aún el teléfono no queda del todo bien en la
 	## mano"). Primero se decide el móvil: delante de la cara, con la pantalla
@@ -651,6 +796,10 @@ class _BrazoMovil extends SkeletonModifier3D:
 		var t := float(Time.get_ticks_msec() - _t0) / 1000.0
 		var c := fmod(t, 10.0)
 		var mira := smoothstep(6.8, 7.6, c) * (1.0 - smoothstep(9.2, 10.0, c))
+		## "Mirar el paisaje" la fuerza unos segundos, entrando y saliendo suave.
+		var falta := float(mirar_hasta - Time.get_ticks_msec()) / 1000.0
+		if falta > 0.0:
+			mira = maxf(mira, smoothstep(0.0, 0.8, 6.0 - falta) * smoothstep(0.0, 0.8, falta))
 		## El pulgar: un golpe corto cada 1,3 s, no una onda continua.
 		var fase := fmod(t, 1.3) / 1.3
 		var toque := (sin(fase * TAU) * 0.5 + 0.5) * (1.0 if fase < 0.35 else 0.0) * 0.06 * (1.0 - mira)
@@ -671,6 +820,11 @@ class _BrazoMovil extends SkeletonModifier3D:
 			var q := Quaternion(dir, obj)
 			esq.set_bone_global_pose(h, Transform3D(Basis(q) * g.basis, g.origin))
 		_agarre(esq)
+		## El brazo izquierdo con la taza: de la rodilla a la boca.
+		var pc := _peso_cafe()
+		if pc > 0.0:
+			_girar(esq, "upperarm_l", "lowerarm_l", Vector3(0.12, -0.72, 0.68), pc)
+			_girar(esq, "lowerarm_l", "hand_l", Vector3(-0.42, 0.8, 0.42), pc)
 		## Los dedos cerrados alrededor del móvil (la mano del reposo va
 		## abierta y parecía que lo ofrecía). El pulgar queda libre encima.
 		for dedo: String in ["index", "middle", "ring", "pinky"]:
@@ -684,7 +838,7 @@ class _BrazoMovil extends SkeletonModifier3D:
 		var cb := esq.find_bone("Head")
 		if cb >= 0:
 			var gc := esq.get_bone_global_pose(cb)
-			var cabeceo := lerpf(0.38, -0.05, mira)
+			var cabeceo := lerpf(0.38, -0.05, mira) - 0.3 * _peso_cafe()
 			var giro := lerpf(-0.2, 0.3, mira)
 			esq.set_bone_global_pose(cb, Transform3D(Basis(Vector3(1, 0, 0), cabeceo).rotated(Vector3.UP, giro) * gc.basis, gc.origin))
 
@@ -731,6 +885,53 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 	rot.offset_bottom = -30
 	pop.add_child(rot)
 
+	## LO QUE SE PUEDE HACER EN LA ESCENA (28-9-2026, "la escena debe ser
+	## animada y poder interactuar"). La zona del 3D recoge el arrastre y la
+	## rueda para la cámara libre.
+	var zona := Control.new()
+	zona.set_anchors_preset(Control.PRESET_FULL_RECT)
+	zona.mouse_filter = Control.MOUSE_FILTER_PASS
+	zona.gui_input.connect(func(ev: InputEvent) -> void:
+		if not escena.libre:
+			return
+		if ev is InputEventMouseMotion and ((ev as InputEventMouseMotion).button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+			escena.arrastrar((ev as InputEventMouseMotion).relative)
+		elif ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed:
+			var bi := (ev as InputEventMouseButton).button_index
+			if bi == MOUSE_BUTTON_WHEEL_UP:
+				escena.acercar(-0.4)
+			elif bi == MOUSE_BUTTON_WHEEL_DOWN:
+				escena.acercar(0.4)
+		elif ev is InputEventScreenDrag:
+			escena.arrastrar((ev as InputEventScreenDrag).relative))
+	pop.add_child(zona)
+	var acciones := HBoxContainer.new()
+	acciones.add_theme_constant_override("separation", 8)
+	acciones.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	acciones.offset_left = 36
+	acciones.offset_top = -124
+	acciones.offset_bottom = -84
+	pop.add_child(acciones)
+	var b_cafe := Button.new()
+	b_cafe.text = "☕ Tomar un café"
+	b_cafe.pressed.connect(escena.tomar_cafe)
+	acciones.add_child(b_cafe)
+	var b_mirar := Button.new()
+	b_mirar.text = "🌅 Mirar el paisaje"
+	b_mirar.pressed.connect(escena.mirar_paisaje)
+	acciones.add_child(b_mirar)
+	var b_cam := Button.new()
+	b_cam.text = "🎥 Cámara libre"
+	b_cam.toggle_mode = true
+	b_cam.toggled.connect(func(si: bool) -> void:
+		escena.libre = si
+		b_cam.text = "🎬 Planos de cine" if si else "🎥 Cámara libre")
+	acciones.add_child(b_cam)
+	var b_hora := Button.new()
+	b_hora.text = "🌙 Atardecer"
+	b_hora.pressed.connect(func() -> void:
+		b_hora.text = "☀️ De día" if escena.alternar_hora() else "🌙 Atardecer")
+	acciones.add_child(b_hora)
 	## El móvil de verdad: Tribuna, interactivo (publicar, responder, me gusta).
 	if m.redes != null:
 		var tel := Telefono.crear(m, p.get("_bandeja") if p.get("_bandeja") != null else [])
