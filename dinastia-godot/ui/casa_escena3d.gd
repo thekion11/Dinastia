@@ -477,7 +477,8 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	if esqs.is_empty():
 		return
 	var esq := esqs[0] as Skeleton3D
-	esq.add_child(_BrazoMovil.new())
+	var brazo := _BrazoMovil.new()
+	esq.add_child(brazo)
 	var i := esq.find_bone("hand_r")
 	if i < 0 or not ResourceLoader.exists(RUTA_MOVIL):
 		return
@@ -521,32 +522,20 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	var sosten := _SostenMovil.new()
 	sosten.esq = esq
 	sosten.pivote = pivote
+	sosten.brazo = brazo
 	add_child(sosten)
 	esq.skeleton_updated.connect(sosten.colocar)
 
-## Pone el móvil en la palma derecha mirando a la cabeza, después de que la
-## animación y `_BrazoMovil` hayan movido el esqueleto.
+## Pone el móvil donde `_BrazoMovil` decidió (en la palma, en pose de
+## lectura), cada vez que se actualiza el esqueleto.
 class _SostenMovil extends Node:
 	var esq: Skeleton3D
 	var pivote: Node3D
+	var brazo: _BrazoMovil
 	func colocar() -> void:
-		if esq == null or pivote == null:
+		if esq == null or pivote == null or brazo == null:
 			return
-		var im := esq.find_bone("hand_r")
-		var ic := esq.find_bone("Head")
-		if im < 0 or ic < 0:
-			return
-		var xf := esq.global_transform
-		var mano := xf * esq.get_bone_global_pose(im)
-		var cabeza := (xf * esq.get_bone_global_pose(ic)).origin + Vector3(0, 0.08, 0)
-		## La palma: un poco más allá de la muñeca, a lo largo de la mano.
-		var palma := mano.origin + mano.basis.y.normalized() * 0.08
-		var z := (cabeza - palma).normalized()
-		var arriba := (Vector3.UP - z * Vector3.UP.dot(z)).normalized()
-		## Inclinado un poco hacia atrás, como se sostiene para leer.
-		var x := arriba.cross(z).normalized()
-		var bas := Basis(x, arriba, z).rotated(x, -0.25)
-		pivote.global_transform = Transform3D(bas, palma + z * 0.02)
+		pivote.global_transform = esq.global_transform * brazo.movil_xf
 
 ## Una pantalla de redes dibujada a mano: fondo oscuro, barra de arriba y
 ## tarjetas claras con una "foto" de color, una debajo de otra.
@@ -577,7 +566,62 @@ class _BrazoMovil extends SkeletonModifier3D:
 	## poco el móvil, antes de volver a la pantalla.
 	var _t0 := Time.get_ticks_msec()
 	## Cuánto se dobla cada falange (radianes, en el eje X local del hueso).
-	const CURVA_DEDO := 0.75
+	const CURVA_DEDO := 0.55
+	## -1: en este modelo la palma en T mira hacia arriba (con +1 quedaba de
+	## espaldas al móvil, comprobado en `pruebas/captura_mano_movil.gd`).
+	const SIGNO_PALMA := -1.0
+	## Dónde va el móvil, en el espacio del esqueleto (lo lee `_SostenMovil`).
+	var movil_xf := Transform3D.IDENTITY
+
+	## EL AGARRE (28-9-2026, "aún el teléfono no queda del todo bien en la
+	## mano"). Primero se decide el móvil: delante de la cara, con la pantalla
+	## mirándola y algo inclinado hacia atrás. Después se gira la MUÑECA para
+	## que la palma quede contra su dorso y los dedos rodeen el borde hacia la
+	## izquierda y un poco hacia arriba, como se agarra con una mano. Los ejes
+	## de la mano salen de la geometría de reposo (ver abajo): suponer que el
+	## Y del hueso iba hacia los dedos dejaba la mano apuntando al suelo.
+	func _agarre(esq: Skeleton3D) -> void:
+		var im := esq.find_bone("hand_r")
+		if im < 0:
+			return
+		var mano := esq.get_bone_global_pose(im)
+		## LA POSE DE LECTURA, fija en el espacio del personaje (mira a +Z, su
+		## izquierda es +X): pantalla inclinada ~45° mirando arriba y hacia la
+		## cara, el largo del móvil hacia arriba y adelante. Sacarla de "la
+		## dirección a la cabeza" dejaba el móvil tumbado, porque la mano está
+		## casi debajo de la barbilla (medido: esa dirección salía vertical).
+		var n := Vector3(0.0, 0.72, -0.69).normalized()
+		var largo := Vector3(0.0, 0.69, 0.72).normalized()
+		var bm := Basis(largo.cross(n), largo, n)
+		## Los dedos rodean el canto izquierdo, un poco hacia arriba.
+		var dedos := (Vector3(1, 0, 0) * 0.92 + largo * 0.3).normalized()
+		var pn := (bm.z - dedos * bm.z.dot(dedos)).normalized()
+		## Los ejes de la mano, medidos en la pose de reposo y no supuestos:
+		## los dedos van de la muñeca al nudillo del medio y el lado de la
+		## mano del meñique al índice. En T la palma derecha mira abajo, así
+		## que su normal es -(dedos × lado).
+		var rest := esq.get_bone_global_rest(im)
+		var inv := rest.basis.orthonormalized().inverse()
+		var i_medio := esq.find_bone("middle_01_r")
+		var i_indice := esq.find_bone("index_01_r")
+		var i_menique := esq.find_bone("pinky_01_r")
+		if i_medio < 0 or i_indice < 0 or i_menique < 0:
+			return
+		var f_g := (esq.get_bone_global_rest(i_medio).origin - rest.origin).normalized()
+		var s_g := (esq.get_bone_global_rest(i_indice).origin - esq.get_bone_global_rest(i_menique).origin).normalized()
+		var n_g := -f_g.cross(s_g).normalized() * SIGNO_PALMA
+		var f_l := (inv * f_g).normalized()
+		var n_l := (inv * n_g)
+		n_l = (n_l - f_l * n_l.dot(f_l)).normalized()
+		var L := Basis(f_l, n_l, f_l.cross(n_l))
+		var W := Basis(dedos, pn, dedos.cross(pn))
+		var R := (W * L.inverse()).orthonormalized().scaled(mano.basis.get_scale())
+		esq.set_bone_global_pose(im, Transform3D(R, mano.origin))
+		## El centro de la palma medido DESPUÉS de girar la muñeca (entre ella y
+		## el nudillo del medio), y el móvil apoyado delante, hacia la cara.
+		var nudillo := esq.get_bone_global_pose(i_medio).origin
+		var palma := mano.origin.lerp(nudillo, 0.6)
+		movil_xf = Transform3D(bm, palma + bm.z * 0.022 + dedos * 0.01)
 	func _process_modification() -> void:
 		var esq := get_skeleton()
 		if esq == null:
@@ -589,8 +633,8 @@ class _BrazoMovil extends SkeletonModifier3D:
 		var fase := fmod(t, 1.3) / 1.3
 		var toque := (sin(fase * TAU) * 0.5 + 0.5) * (1.0 if fase < 0.35 else 0.0) * 0.06 * (1.0 - mira)
 		var objetivos := [
-			["upperarm_r", "lowerarm_r", Vector3(-0.18, -0.92, 0.3)],
-			["lowerarm_r", "hand_r", Vector3(0.42, 0.5 + toque - 0.3 * mira, 0.76)],
+			["upperarm_r", "lowerarm_r", Vector3(-0.16, -0.78, 0.6)],
+			["lowerarm_r", "hand_r", Vector3(0.36, 0.42 + toque - 0.3 * mira, 0.86)],
 		]
 		for o: Array in objetivos:
 			var h := esq.find_bone(String(o[0]))
@@ -604,6 +648,7 @@ class _BrazoMovil extends SkeletonModifier3D:
 				continue
 			var q := Quaternion(dir, obj)
 			esq.set_bone_global_pose(h, Transform3D(Basis(q) * g.basis, g.origin))
+		_agarre(esq)
 		## Los dedos cerrados alrededor del móvil (la mano del reposo va
 		## abierta y parecía que lo ofrecía). El pulgar queda libre encima.
 		for dedo: String in ["index", "middle", "ring", "pinky"]:
