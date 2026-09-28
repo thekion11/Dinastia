@@ -2157,7 +2157,7 @@ func _conectar_noticias() -> void:
 			if con_mentor != null:
 				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:
 					MentorVoz.decir(self, mundo, titulo, texto))
-		for fuente: Object in [mundo.fondo, mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos, mundo.vida, mundo.maestria]:
+		for fuente: Object in [mundo.fondo, mundo.redes, mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos, mundo.vida, mundo.maestria]:
 			if fuente != null:
 				fuente.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 					_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -2884,6 +2884,9 @@ func _escribir(bbcode: String) -> void:
 ## marcarla leída más tarde.
 func _anotar(titulo: String, cuerpo: String) -> void:
 	_bandeja.push_front({"titulo": titulo, "cuerpo": cuerpo, "semana": mundo.semana, "anio": mundo.anio, "leida": false})
+	## Lo que pasa también se comenta en Tribuna (las redes del móvil).
+	if mundo.redes != null:
+		mundo.redes.desde_noticia(mundo, titulo, cuerpo)
 	if _bandeja.size() > BANDEJA_MAX:
 		_bandeja.resize(BANDEJA_MAX)
 

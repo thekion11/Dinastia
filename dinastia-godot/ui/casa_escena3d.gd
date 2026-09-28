@@ -625,7 +625,7 @@ class _BrazoMovil extends SkeletonModifier3D:
 
 ## Abre la escena sobre `p` (principal), con las últimas noticias de la
 ## bandeja convertidas en publicaciones de redes.
-static func abrir(p: Control, m: Mundo, bandeja: Array) -> Control:
+static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 	var pop := Control.new()
 	pop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	pop.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -663,26 +663,15 @@ static func abrir(p: Control, m: Mundo, bandeja: Array) -> Control:
 	rot.offset_bottom = -30
 	pop.add_child(rot)
 
-	## Las redes, en un panel con forma de pantalla de móvil.
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", Tema.caja(Color(0.06, 0.07, 0.09, 0.9), 22, Color(0.3, 0.32, 0.36)))
-	panel.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
-	panel.offset_left = -400
-	panel.offset_right = -30
-	panel.offset_top = 80
-	panel.offset_bottom = -40
-	pop.add_child(panel)
-	var sc := ScrollContainer.new()
-	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	panel.add_child(sc)
-	var lista := VBoxContainer.new()
-	lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lista.add_theme_constant_override("separation", 10)
-	sc.add_child(lista)
-	lista.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.ORO, "📱 Lo que dicen de ti"))
-	for post: Dictionary in publicaciones(m, bandeja):
-		lista.add_child(_tarjeta_post(post))
-
+	## El móvil de verdad: Tribuna, interactivo (publicar, responder, me gusta).
+	if m.redes != null:
+		var tel := Telefono.crear(m)
+		tel.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
+		tel.offset_left = -Telefono.ANCHO - 30
+		tel.offset_right = -30
+		tel.offset_top = 76
+		tel.offset_bottom = -24
+		pop.add_child(tel)
 	var cerrar := Button.new()
 	cerrar.text = "✕ Volver"
 	cerrar.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
@@ -693,56 +682,3 @@ static func abrir(p: Control, m: Mundo, bandeja: Array) -> Control:
 	cerrar.pressed.connect(pop.queue_free)
 	pop.add_child(cerrar)
 	return pop
-
-## Usuarios inventados para las publicaciones (ninguno es real).
-const USUARIOS := ["@hinchadefierro", "@tactica_pura", "@la_grada_habla", "@cronista_del_ascenso",
-	"@datosyfutbol", "@elcorner_de_ana", "@puro_barrio_fc", "@mister_de_sofa", "@vozdelsocio",
-	"@periodistadeturno", "@abuela_futbolera", "@memesdelgol"]
-const REACCIONES_BIEN := ["Qué nivel, míster.", "Esto es lo que queríamos.", "Hay proyecto 🔥", "Me tapo la boca: tenía razón."]
-const REACCIONES_MAL := ["Así no, míster.", "Explícame esto 🙄", "Hay que dar explicaciones.", "Paciencia se llama la señora."]
-const REACCIONES_NEUTRAS := ["A ver en qué termina.", "Ojo con esto.", "Tema del día.", "Se viene debate."]
-
-## Las últimas noticias como publicaciones: [usuario, texto, reacción, me
-## gusta, compartidos]. Sin noticias, una publicación de bienvenida.
-static func publicaciones(m: Mundo, bandeja: Array) -> Array[Dictionary]:
-	var out: Array[Dictionary] = []
-	var rng := RandomNumberGenerator.new()
-	rng.seed = hash("%d|%d" % [m.anio, m.semana])
-	var fama := 1.0
-	var c := m.mi_club()
-	if c != null:
-		fama = 0.3 + float(c.rep) / 40.0
-	for i in mini(bandeja.size(), 8):
-		var n: Dictionary = bandeja[i]
-		var tit := String(n.get("titulo", ""))
-		var cuerpo := String(n.get("cuerpo", ""))
-		var bueno := tit.contains("✅") or tit.contains("🏆") or tit.contains("💼") or tit.to_lower().contains("gana") or tit.to_lower().contains("cumplido")
-		var malo := tit.contains("❌") or tit.contains("⚠") or tit.to_lower().contains("pierde") or tit.to_lower().contains("fallido") or tit.to_lower().contains("lesion")
-		var reacciones: Array = REACCIONES_BIEN if bueno else (REACCIONES_MAL if malo else REACCIONES_NEUTRAS)
-		out.append({"usuario": USUARIOS[rng.randi() % USUARIOS.size()],
-			"texto": "%s %s" % [tit, cuerpo.substr(0, 110) + ("…" if cuerpo.length() > 110 else "")],
-			"reaccion": String(reacciones[rng.randi() % reacciones.size()]),
-			"me_gusta": int(rng.randf_range(40.0, 900.0) * fama),
-			"compartidos": int(rng.randf_range(5.0, 160.0) * fama),
-			"tono": "bien" if bueno else ("mal" if malo else "")})
-	if out.is_empty():
-		out.append({"usuario": "@vozdelsocio", "texto": "Semana tranquila en %s." % (c.nombre if c != null else "el club"),
-			"reaccion": "Que siga así.", "me_gusta": 12, "compartidos": 1, "tono": ""})
-	return out
-
-static func _tarjeta_post(post: Dictionary) -> PanelContainer:
-	var pc := PanelContainer.new()
-	var borde := Tema.BIEN if String(post["tono"]) == "bien" else (Color("e5534b") if String(post["tono"]) == "mal" else Color(0.25, 0.27, 0.3))
-	pc.add_theme_stylebox_override("panel", Tema.caja(Color(0.1, 0.11, 0.14), 12, borde))
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 4)
-	pc.add_child(v)
-	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO, String(post["usuario"])))
-	var t := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(post["texto"]))
-	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	v.add_child(t)
-	var r := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "💬 " + String(post["reaccion"]))
-	r.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	v.add_child(r)
-	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "♥ %d   ⟳ %d" % [int(post["me_gusta"]), int(post["compartidos"])]))
-	return pc
