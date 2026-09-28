@@ -35,11 +35,11 @@ const AUTOS := {
 }
 ## Planos: [posición, a dónde mira, fov]. Corta cada pocos segundos.
 const PLANOS := [
-	[Vector3(-5.5, 2.4, 9.5), Vector3(0.0, 3.5, -8.0), 55.0],
-	[Vector3(1.1, 1.75, 2.6), Vector3(0.0, 1.45, 0.0), 38.0],
+	[Vector3(-5.5, 2.4, 9.5), Vector3(0.0, 3.0, -8.0), 55.0],
+	[Vector3(1.35, 1.45, 2.5), Vector3(0.0, 1.0, 0.0), 36.0],
 	## Por encima del hombro derecho (el DT mira a +Z girado 0,35 rad): se ve
-	## el móvil en su mano.
-	[Vector3(-1.05, 2.15, -1.4), Vector3(0.03, 1.25, 0.36), 40.0],
+	## el móvil encendido en su mano.
+	[Vector3(-0.95, 1.95, -1.15), Vector3(0.1, 0.95, 0.45), 40.0],
 ]
 const SEG_PLANO := 5.0
 
@@ -51,7 +51,10 @@ var _plano := -1
 func montar(vivienda: String, transporte: String, asp: Dictionary, c1: Color, c2: Color) -> void:
 	_entorno()
 	_suelo()
+	_fondo_lejano()
 	_casa(vivienda)
+	if vivienda == "mansion":
+		_piscina()
 	_auto(transporte)
 	_terraza()
 	_dt(asp, c1, c2)
@@ -87,6 +90,7 @@ func _entorno() -> void:
 	var sm := ProceduralSkyMaterial.new()
 	sm.sky_top_color = Color(0.32, 0.52, 0.82)
 	sm.sky_horizon_color = Color(0.86, 0.74, 0.62)
+	sm.sun_angle_max = 20.0
 	sm.ground_horizon_color = Color(0.55, 0.5, 0.45)
 	cielo.sky_material = sm
 	e.background_mode = Environment.BG_SKY
@@ -94,6 +98,21 @@ func _entorno() -> void:
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	e.ambient_light_energy = 0.9
 	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	## MÁS REALISMO (28-9-2026, "falta realismo al ambiente"): sombras de
+	## contacto (SSAO), un poco de resplandor en lo que brilla, y la bruma de
+	## la tarde que aclara y azula lo lejano -los cerros del fondo-.
+	e.ssao_enabled = true
+	e.ssao_radius = 1.2
+	e.ssao_intensity = 1.6
+	e.glow_enabled = true
+	e.glow_intensity = 0.35
+	e.fog_enabled = true
+	e.fog_light_color = Color(0.78, 0.8, 0.84)
+	e.fog_density = 0.0035
+	e.fog_aerial_perspective = 0.5
+	e.adjustment_enabled = true
+	e.adjustment_saturation = 1.08
+	e.adjustment_contrast = 1.05
 	we.environment = e
 	add_child(we)
 	## El sol bajo de la tarde, de lado: es la hora de mirar el móvil en casa.
@@ -102,6 +121,8 @@ func _entorno() -> void:
 	sol.light_energy = 1.25
 	sol.light_color = Color(1.0, 0.9, 0.78)
 	sol.shadow_enabled = true
+	sol.shadow_blur = 1.5
+	sol.directional_shadow_max_distance = 60.0
 	add_child(sol)
 
 func _mat(c: Color, rug: float = 0.85) -> StandardMaterial3D:
@@ -125,7 +146,23 @@ func _suelo() -> void:
 	var pm := PlaneMesh.new()
 	pm.size = Vector2(400, 400)
 	mi.mesh = pm
-	mi.material_override = _mat(Color(0.3, 0.46, 0.22), 1.0)
+	## El césped con manchas: ruido de dos verdes repetido, no un color plano.
+	var m := StandardMaterial3D.new()
+	var ruido := FastNoiseLite.new()
+	ruido.frequency = 0.03
+	var tex := NoiseTexture2D.new()
+	tex.noise = ruido
+	tex.seamless = true
+	tex.width = 256
+	tex.height = 256
+	var g := Gradient.new()
+	g.set_color(0, Color(0.22, 0.36, 0.15))
+	g.set_color(1, Color(0.4, 0.55, 0.26))
+	tex.color_ramp = g
+	m.albedo_texture = tex
+	m.uv1_scale = Vector3(40, 40, 1)
+	m.roughness = 1.0
+	mi.material_override = m
 	add_child(mi)
 
 ## Carga un modelo, lo escala a `alto` metros y lo apoya en el suelo con el
@@ -270,44 +307,172 @@ func _auto(transporte: String) -> void:
 	## izquierda de la terraza.
 	_modelo(ruta, 1.5, -9.5, -0.5, PI * 0.5)
 
-## La terraza de madera: tablones, una baranda baja, una tumbona y una
-## planta. Es lo que se ve en primer plano detrás del DT.
+## La terraza de madera: tablones con su veta (cada uno un tono), baranda de
+## metal, alfombra, el sillón de exterior donde se sienta el DT, una mesita
+## con su taza y una maceta.
 func _terraza() -> void:
-	var madera := _mat(Color(0.55, 0.38, 0.24), 0.7)
-	var madera2 := _mat(Color(0.47, 0.32, 0.2), 0.7)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7
 	for i in 14:
-		_caja(Vector3(-1.5, 0.12, -2.8 + i * 0.4), Vector3(9.0, 0.08, 0.38), madera if i % 2 == 0 else madera2)
+		var tono := Color(0.52, 0.36, 0.23).darkened(rng.randf_range(-0.08, 0.12))
+		_caja(Vector3(-1.5, 0.12, -2.8 + i * 0.4), Vector3(9.0, 0.08, 0.38), _mat(tono, 0.65))
 	var metal := _mat(Color(0.18, 0.19, 0.2), 0.4)
+	metal.metallic = 0.6
 	for x in [-5.9, 2.9]:
-		_caja(Vector3(x, 0.6, 0.0), Vector3(0.06, 0.9, 5.6), metal)
-		for z in [-2.6, -0.9, 0.9, 2.6]:
-			_caja(Vector3(x, 0.55, z), Vector3(0.08, 0.9, 0.08), metal)
-	## La tumbona.
-	var tela := _mat(Color(0.92, 0.9, 0.85), 0.95)
-	_caja(Vector3(-2.6, 0.38, -1.4), Vector3(0.7, 0.12, 1.7), tela)
-	var resp := _caja(Vector3(-2.6, 0.68, -2.3), Vector3(0.7, 0.1, 0.8), tela)
-	resp.rotation_degrees.x = -55.0
+		_caja(Vector3(x, 1.05, 0.0), Vector3(0.05, 0.05, 5.6), metal)
+		for z in [-2.6, -1.3, 0.0, 1.3, 2.6]:
+			_caja(Vector3(x, 0.6, z), Vector3(0.05, 0.9, 0.05), metal)
+	## La alfombra bajo el sillón.
+	_caja(Vector3(0.1, 0.165, 0.2), Vector3(2.4, 0.01, 1.8), _mat(Color(0.72, 0.45, 0.32), 1.0))
+	_caja(Vector3(0.1, 0.17, 0.2), Vector3(2.1, 0.01, 1.5), _mat(Color(0.86, 0.8, 0.68), 1.0))
+	_sillon(Vector3(0.0, 0.16, 0.0), 0.35)
+	## La mesita redonda a su izquierda, con la taza.
+	var mesa := Node3D.new()
+	mesa.position = Vector3(0.95, 0.16, 0.15)
+	add_child(mesa)
+	var teca := _mat(Color(0.42, 0.28, 0.17), 0.55)
+	_cilindro(mesa, Vector3(0, 0.5, 0), 0.28, 0.04, teca)
+	_cilindro(mesa, Vector3(0, 0.25, 0), 0.03, 0.5, metal)
+	_cilindro(mesa, Vector3(0, 0.01, 0), 0.18, 0.02, metal)
+	_cilindro(mesa, Vector3(0.06, 0.565, 0.03), 0.04, 0.09, _mat(Color(0.95, 0.95, 0.93), 0.3))
+	_cilindro(mesa, Vector3(0.06, 0.607, 0.03), 0.034, 0.005, _mat(Color(0.25, 0.14, 0.08), 0.2))
 	## La maceta con su planta.
-	_caja(Vector3(2.2, 0.45, -2.2), Vector3(0.55, 0.6, 0.55), _mat(Color(0.3, 0.3, 0.32), 0.6))
-	var hojas := MeshInstance3D.new()
-	var sm := SphereMesh.new()
-	sm.radius = 0.55
-	sm.height = 1.1
-	hojas.mesh = sm
-	hojas.material_override = _mat(Color(0.2, 0.42, 0.18), 1.0)
-	hojas.position = Vector3(2.2, 1.2, -2.2)
-	add_child(hojas)
+	var maceta := _mat(Color(0.3, 0.3, 0.32), 0.6)
+	_cilindro(self, Vector3(2.2, 0.45, -2.2), 0.3, 0.6, maceta)
+	var hojas := _mat(Color(0.2, 0.42, 0.18), 1.0)
+	for k in 5:
+		var mi := MeshInstance3D.new()
+		var sm := SphereMesh.new()
+		sm.radius = 0.35
+		sm.height = 0.7
+		mi.mesh = sm
+		mi.material_override = hojas
+		mi.position = Vector3(2.2 + cos(k * 1.3) * 0.22, 1.0 + k * 0.12, -2.2 + sin(k * 1.3) * 0.22)
+		add_child(mi)
+
+func _cilindro(padre: Node3D, pos: Vector3, r: float, alto: float, m: Material) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var cm := CylinderMesh.new()
+	cm.top_radius = r
+	cm.bottom_radius = r
+	cm.height = alto
+	mi.mesh = cm
+	mi.material_override = m
+	mi.position = pos
+	padre.add_child(mi)
+	return mi
+
+func _pieza(padre: Node3D, pos: Vector3, tam: Vector3, m: Material, giro_x: float = 0.0) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var b := BoxMesh.new()
+	b.size = tam
+	mi.mesh = b
+	mi.material_override = m
+	mi.position = pos
+	mi.rotation_degrees.x = giro_x
+	padre.add_child(mi)
+	return mi
+
+## EL SILLÓN DE EXTERIOR ("falta realismo en la silla"): estructura de teca
+## con patas, apoyabrazos y respaldo inclinado, y cojines gruesos de lona
+## (cápsulas aplastadas, que dan el canto redondeado que una caja no tiene).
+## El asiento queda a 0,45 m de la tarima, la altura que usa la pose
+## "sentado" (`AnimQuaternius.ALTO_ASIENTO_OFFSET`).
+func _sillon(pos: Vector3, giro: float) -> void:
+	var s := Node3D.new()
+	s.position = pos
+	s.rotation.y = giro
+	add_child(s)
+	var teca := _mat(Color(0.45, 0.3, 0.18), 0.55)
+	var lona := _mat(Color(0.9, 0.86, 0.77), 1.0)
+	for x in [-0.4, 0.4]:
+		for z in [-0.34, 0.34]:
+			_pieza(s, Vector3(x, 0.2, z), Vector3(0.06, 0.4, 0.06), teca)
+		## Apoyabrazos.
+		_pieza(s, Vector3(x, 0.62, 0.0), Vector3(0.1, 0.05, 0.82), teca)
+		_pieza(s, Vector3(x, 0.52, 0.34), Vector3(0.05, 0.2, 0.05), teca)
+	_pieza(s, Vector3(0, 0.3, 0), Vector3(0.86, 0.06, 0.74), teca)
+	## El respaldo, inclinado hacia atrás.
+	_pieza(s, Vector3(0, 0.62, -0.36), Vector3(0.74, 0.6, 0.05), teca, -12.0)
+	## Cojines: asiento y respaldo.
+	var asiento := MeshInstance3D.new()
+	var cap := CapsuleMesh.new()
+	cap.radius = 0.08
+	cap.height = 0.74
+	asiento.mesh = cap
+	asiento.material_override = lona
+	asiento.rotation_degrees.z = 90.0
+	asiento.scale = Vector3(0.9, 1.0, 4.2)
+	asiento.position = Vector3(0, 0.39, 0.02)
+	s.add_child(asiento)
+	var resp := MeshInstance3D.new()
+	var cap2 := CapsuleMesh.new()
+	cap2.radius = 0.07
+	cap2.height = 0.7
+	resp.mesh = cap2
+	resp.material_override = lona
+	resp.rotation_degrees = Vector3(-12.0, 0.0, 90.0)
+	resp.scale = Vector3(1.0, 1.0, 3.8)
+	resp.position = Vector3(0, 0.72, -0.28)
+	s.add_child(resp)
+
+## La piscina de la mansión: bordillo de piedra y agua que refleja el cielo.
+func _piscina() -> void:
+	var piedra := _mat(Color(0.82, 0.8, 0.76), 0.8)
+	_caja(Vector3(-1.0, 0.06, -5.2), Vector3(10.4, 0.12, 3.6), piedra)
+	var agua := StandardMaterial3D.new()
+	agua.albedo_color = Color(0.18, 0.55, 0.72, 0.85)
+	agua.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	agua.roughness = 0.05
+	agua.metallic = 0.3
+	_caja(Vector3(-1.0, 0.1, -5.2), Vector3(9.6, 0.06, 2.9), agua)
+
+## Lejos: cerros bajos y una fila de árboles. La bruma los aclara.
+func _fondo_lejano() -> void:
+	var cerro := _mat(Color(0.3, 0.42, 0.25), 1.0)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 21
+	for i in 7:
+		var mi := MeshInstance3D.new()
+		var sm := SphereMesh.new()
+		sm.radius = 1.0
+		sm.height = 2.0
+		mi.mesh = sm
+		mi.material_override = cerro
+		var ang := -PI * 0.5 + (float(i) - 3.0) * 0.35
+		mi.position = Vector3(sin(ang) * 170.0 + rng.randf_range(-20, 20), -8.0, -cos(ang) * 170.0 - 40.0)
+		mi.scale = Vector3(rng.randf_range(60, 95), rng.randf_range(22, 38), rng.randf_range(40, 60))
+		add_child(mi)
+	var tronco := _mat(Color(0.33, 0.24, 0.16), 0.9)
+	var copa := _mat(Color(0.18, 0.36, 0.17), 1.0)
+	for i in 26:
+		var x := -60.0 + i * 4.8 + rng.randf_range(-1.5, 1.5)
+		var z := -34.0 - rng.randf_range(0.0, 10.0)
+		var alto := rng.randf_range(5.0, 9.0)
+		_caja(Vector3(x, alto * 0.3, z), Vector3(0.4, alto * 0.6, 0.4), tronco)
+		var mi := MeshInstance3D.new()
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.0
+		cm.bottom_radius = alto * 0.28
+		cm.height = alto * 0.75
+		mi.mesh = cm
+		mi.material_override = copa
+		mi.position = Vector3(x, alto * 0.55 + alto * 0.3, z)
+		add_child(mi)
 
 func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	var d := PersonajeDT.crear(self, asp, c1, c2)
 	if d.is_empty():
 		return
 	var n: Node3D = d["nodo"]
-	n.position = Vector3(0.0, 0.16, 0.0)
+	## SENTADO EN EL SILLÓN ("debería estar en esa silla y haber una
+	## animación"): la pose "sentado" de los suplentes, con la raíz bajada lo
+	## que baja la cadera (`ALTO_ASIENTO_OFFSET`) sobre la tarima.
+	n.position = Vector3(0.0, 0.16 + AnimQuaternius.ALTO_ASIENTO_OFFSET, 0.05)
 	n.rotation.y = 0.35
 	var ap: AnimationPlayer = d["anim"]
-	if ap.has_animation("parado"):
-		ap.play("parado")
+	if ap.has_animation("sentado"):
+		ap.play("sentado")
 	var esqs := n.find_children("*", "Skeleton3D", true, false)
 	if esqs.is_empty():
 		return
@@ -328,21 +493,69 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	movil.scale = Vector3.ONE * (0.16 / 1.84)
 	soporte.rotation_degrees = Vector3(0.0, 0.0, 90.0)
 	soporte.position = Vector3(0.0, 0.09, 0.03)
+	## La pantalla encendida: un feed de tarjetas claras con su barra de
+	## arriba, que brilla un poco (se ve desde el plano por encima del hombro).
+	var pantalla := MeshInstance3D.new()
+	var q := QuadMesh.new()
+	q.size = Vector2(1.66, 0.78)
+	pantalla.mesh = q
+	var mp := StandardMaterial3D.new()
+	mp.albedo_texture = _textura_feed()
+	mp.emission_enabled = true
+	mp.emission_texture = mp.albedo_texture
+	mp.emission_energy_multiplier = 0.8
+	mp.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	pantalla.material_override = mp
+	## La cara -Y del modelo (en +Y está el bulto de la cámara trasera).
+	pantalla.rotation_degrees.x = 90.0
+	## El modelo no está centrado: su grosor va de y=-0,106 a y=0.
+	pantalla.position = Vector3(0.0, -0.109, 0.028)
+	## Se cuelga de la MALLA, no de la raíz del modelo: las medidas de arriba
+	## son las de la malla, que dentro del .glb lleva su propio giro.
+	var mallas := movil.find_children("*", "MeshInstance3D", true, false)
+	(mallas[0] as Node3D if not mallas.is_empty() else movil).add_child(pantalla)
+
+## Una pantalla de redes dibujada a mano: fondo oscuro, barra de arriba y
+## tarjetas claras con una "foto" de color. Horizontal (el largo del móvil
+## va en X), así que las tarjetas van en columnas.
+static func _textura_feed() -> ImageTexture:
+	var img := Image.create(128, 60, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0.07, 0.08, 0.1))
+	img.fill_rect(Rect2i(0, 0, 10, 60), Color(0.12, 0.14, 0.18))
+	var fotos := [Color(0.85, 0.45, 0.2), Color(0.25, 0.55, 0.85), Color(0.3, 0.7, 0.4)]
+	for k in 3:
+		var x := 14 + k * 38
+		img.fill_rect(Rect2i(x, 4, 34, 52), Color(0.93, 0.94, 0.96))
+		img.fill_rect(Rect2i(x + 3, 7, 28, 22), fotos[k])
+		for r in 3:
+			img.fill_rect(Rect2i(x + 3, 33 + r * 7, 28 - r * 6, 3), Color(0.55, 0.57, 0.62))
+	return ImageTexture.create_from_image(img)
 
 ## EL BRAZO CON EL MÓVIL. Corre después de la animación: dobla el brazo
 ## derecho hasta dejar la mano delante del pecho y baja la cabeza hacia ella.
 ## Trabaja en el espacio del esqueleto: el eje de cada hueso es su Y (va al
 ## hijo), así que se gira cada uno para que apunte a su dirección objetivo.
 class _BrazoMovil extends SkeletonModifier3D:
-	const OBJETIVOS := [
-		["upperarm_r", "lowerarm_r", Vector3(-0.18, -0.92, 0.3)],
-		["lowerarm_r", "hand_r", Vector3(0.42, 0.5, 0.76)],
-	]
+	## LA ANIMACIÓN (28-9-2026): en un ciclo de diez segundos, siete mira el
+	## móvil pasando publicaciones con el pulgar (la mano sube y baja un
+	## poco, a golpes) y tres levanta la cabeza a mirar el jardín, bajando un
+	## poco el móvil, antes de volver a la pantalla.
+	var _t0 := Time.get_ticks_msec()
 	func _process_modification() -> void:
 		var esq := get_skeleton()
 		if esq == null:
 			return
-		for o: Array in OBJETIVOS:
+		var t := float(Time.get_ticks_msec() - _t0) / 1000.0
+		var c := fmod(t, 10.0)
+		var mira := smoothstep(6.8, 7.6, c) * (1.0 - smoothstep(9.2, 10.0, c))
+		## El pulgar: un golpe corto cada 1,3 s, no una onda continua.
+		var fase := fmod(t, 1.3) / 1.3
+		var toque := (sin(fase * TAU) * 0.5 + 0.5) * (1.0 if fase < 0.35 else 0.0) * 0.06 * (1.0 - mira)
+		var objetivos := [
+			["upperarm_r", "lowerarm_r", Vector3(-0.18, -0.92, 0.3)],
+			["lowerarm_r", "hand_r", Vector3(0.42, 0.5 + toque - 0.3 * mira, 0.76)],
+		]
+		for o: Array in objetivos:
 			var h := esq.find_bone(String(o[0]))
 			var hijo := esq.find_bone(String(o[1]))
 			if h < 0 or hijo < 0:
@@ -354,11 +567,14 @@ class _BrazoMovil extends SkeletonModifier3D:
 				continue
 			var q := Quaternion(dir, obj)
 			esq.set_bone_global_pose(h, Transform3D(Basis(q) * g.basis, g.origin))
-		## La cabeza, mirando la pantalla.
-		var c := esq.find_bone("Head")
-		if c >= 0:
-			var gc := esq.get_bone_global_pose(c)
-			esq.set_bone_global_pose(c, Transform3D(Basis(Vector3(1, 0, 0), 0.38).rotated(Vector3.UP, -0.2) * gc.basis, gc.origin))
+		## La cabeza: hacia la pantalla, o arriba y a un lado cuando mira el
+		## jardín.
+		var cb := esq.find_bone("Head")
+		if cb >= 0:
+			var gc := esq.get_bone_global_pose(cb)
+			var cabeceo := lerpf(0.38, -0.05, mira)
+			var giro := lerpf(-0.2, 0.3, mira)
+			esq.set_bone_global_pose(cb, Transform3D(Basis(Vector3(1, 0, 0), cabeceo).rotated(Vector3.UP, giro) * gc.basis, gc.origin))
 
 # --- la pantalla completa -----------------------------------------------------
 
