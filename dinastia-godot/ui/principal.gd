@@ -2887,6 +2887,11 @@ func _anotar(titulo: String, cuerpo: String) -> void:
 	## Lo que pasa también se comenta en Tribuna (las redes del móvil).
 	if mundo.redes != null:
 		mundo.redes.desde_noticia(mundo, titulo, cuerpo)
+	## Y si es cosa de alguien (la directiva, la familia...), te escribe.
+	if mundo.movil != null:
+		var de := Movil.remitente_de(titulo, cuerpo)
+		if not de.is_empty():
+			mundo.movil.recibir(String(de[0]), String(de[1]), "%s %s" % [titulo, cuerpo], mundo.anio, mundo.semana)
 	if _bandeja.size() > BANDEJA_MAX:
 		_bandeja.resize(BANDEJA_MAX)
 

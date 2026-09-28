@@ -39,6 +39,22 @@ const RESPUESTAS := {
 	"explicar": ["🗒️", "Explicar", "Entiendo la bronca. Estamos trabajando para corregirlo.", "honesto", 1, 0.0],
 	"picante": ["🔥", "Contestar picante", "Opinar desde el sofá es fácil.", "mediatico", 1, 0.3],
 }
+## LA CUENTA OFICIAL DEL CLUB (28-9-2026, "debe existir la cuenta del club y
+## por un evento que te dé acceso"). Al principio no es tuya: la lleva el
+## community manager. A las pocas semanas en el club llega el evento -se va de
+## vacaciones y la directiva te confía la cuenta- y la clave te llega por
+## Mensajes. Desde entonces puedes cerrar tu sesión y entrar a la del club con
+## usuario y clave, y publicar como el club (una publicación oficial mueve
+## más a la grada y puede vender camisetas o socios).
+## [icono, nombre, texto, hashtags, ánimo de la grada, ingreso por "me gusta"]
+const TIPOS_CLUB := {
+	"previa": ["📣", "Anunciar el próximo partido", "¡Se viene partido! Todos al estadio, que se juega con doce.", ["#DíaDePartido"], 2, 0],
+	"camiseta": ["👕", "Mostrar la camiseta", "La nueva piel ya está en la tienda oficial.", ["#NuevaCamiseta"], 1, 40],
+	"socios": ["🎟️", "Campaña de socios", "Hazte socio y sé parte de la historia.", ["#HazteSocio"], 1, 25],
+	"historia": ["🏆", "Recordar un título", "Un día como hoy... la gloria. Nunca lo olvidaremos.", ["#Historia"], 3, 0],
+	"gracias": ["💙", "Agradecer a la hinchada", "Gracias por estar siempre, en las buenas y en las malas.", ["#Hinchada"], 2, 0],
+}
+const SEMANAS_PARA_ACCESO := 3
 const FANS := ["@hinchadefierro", "@tactica_pura", "@la_grada_habla", "@cronista_del_ascenso",
 	"@datosyfutbol", "@elcorner_de_ana", "@puro_barrio_fc", "@mister_de_sofa", "@vozdelsocio",
 	"@periodistadeturno", "@abuela_futbolera", "@memesdelgol", "@sub17_para_siempre", "@la_pizarra_rota"]
@@ -56,6 +72,12 @@ var _siguiente_id := 1
 var _propias_semana := 0
 var _semana_propias := -1
 var _rng := RandomNumberGenerator.new()
+var acceso_club := false
+var clave_club := ""
+var sesion := "dt"        ## "dt", "club" o "" (sin sesión)
+var _semanas_club := 0
+var _club_semana := 0
+var _semana_club_clave := -1
 
 ## Pone nombre a las dos cuentas según tu DT y tu club. Se puede volver a
 ## llamar (cambio de club): la cuenta del club pasa a ser la del nuevo.
@@ -69,6 +91,12 @@ func iniciar(m: Mundo) -> void:
 		cuentas["club"]["nombre"] = c.nombre
 		cuentas["club"]["usuario"] = "@" + usuario_de(c.nombre) + "_oficial"
 		cuentas["club"]["seguidores"] = seguidores_base_club(c)
+		## Club nuevo: la cuenta oficial vuelve a no ser tuya.
+		acceso_club = false
+		clave_club = ""
+		_semanas_club = 0
+		if sesion == "club":
+			sesion = "dt"
 
 static func usuario_de(nombre: String) -> String:
 	var s := nombre.to_lower().strip_edges()
@@ -95,8 +123,13 @@ func puede_publicar(m: Mundo) -> String:
 		return "ya publicaste %d veces esta semana: más sería llenar de ruido tu cuenta" % MAX_PROPIAS_SEMANA
 	return ""
 
-## Publica desde tu cuenta. Devuelve la publicación, o {"error": motivo}.
+## Publica desde la cuenta con la sesión abierta. Devuelve la publicación, o
+## {"error": motivo}.
 func publicar(m: Mundo, tipo: String, hashtags: Array) -> Dictionary:
+	if sesion == "club":
+		return _publicar_club(m, tipo, hashtags)
+	if sesion != "dt":
+		return {"error": "no hay ninguna sesión abierta"}
 	if not TIPOS.has(tipo):
 		return {"error": "no existe ese tipo de publicación"}
 	var no := puede_publicar(m)
@@ -133,6 +166,58 @@ func publicar(m: Mundo, tipo: String, hashtags: Array) -> Dictionary:
 			m.roles.anotar_reputacion("honesto", -2, "Polémica en redes")
 		noticia.emit("🌶️ Polémica en redes", "Tu publicación «%s» encendió la discusión: %d comentarios y la prensa ya habla del tema." % [String(t[2]).substr(0, 40), (p["comentarios"] as Array).size()])
 	return p
+
+func _publicar_club(m: Mundo, tipo: String, hashtags: Array) -> Dictionary:
+	if not acceso_club:
+		return {"error": "no tienes acceso a la cuenta del club"}
+	if not TIPOS_CLUB.has(tipo):
+		return {"error": "no existe ese tipo de publicación"}
+	var clave := m.anio * 100 + m.semana
+	if _semana_club_clave != clave:
+		_semana_club_clave = clave
+		_club_semana = 0
+	if _club_semana >= 3:
+		return {"error": "la cuenta del club ya publicó 3 veces esta semana"}
+	_club_semana += 1
+	var t: Array = TIPOS_CLUB[tipo]
+	var segs := int(cuentas["club"]["seguidores"])
+	var gancho := 1.25 if tendencia in hashtags else 1.0
+	var p := _nueva("club", String(t[2]), hashtags, tipo, m)
+	p["likes"] = int(round(float(segs) * _rng.randf_range(0.02, 0.05) * gancho))
+	p["compartidos"] = int(int(p["likes"]) * _rng.randf_range(0.05, 0.15))
+	p["tuya"] = true
+	cuentas["club"]["seguidores"] = segs + int(int(p["likes"]) * 0.03)
+	if m.prensa != null and int(t[4]) != 0:
+		m.prensa.animo = clampi(m.prensa.animo + int(t[4]), 0, 100)
+	var ingreso := int(p["likes"]) * int(t[5])
+	var c := m.mi_club()
+	if ingreso > 0 and c != null:
+		c.saldo += ingreso
+		p["ingreso"] = ingreso
+		if m.has_method("_anotar_movimiento"):
+			m._anotar_movimiento("Redes del club: %s" % String(t[1]).to_lower(), ingreso)
+	_comentar(p, _rng.randi_range(2, 4), "bien")
+	return p
+
+## CERRAR SESIÓN Y ENTRAR. Devuelve "" o el motivo.
+func cerrar_sesion() -> void:
+	sesion = ""
+
+func iniciar_sesion(usuario: String, clave: String) -> String:
+	var u := usuario.strip_edges().to_lower()
+	if not u.begins_with("@"):
+		u = "@" + u
+	if u == String(cuentas["dt"]["usuario"]):
+		sesion = "dt"
+		return ""
+	if u == String(cuentas["club"]["usuario"]):
+		if not acceso_club:
+			return "esa cuenta no es tuya: la lleva el community manager del club"
+		if clave != clave_club:
+			return "clave incorrecta"
+		sesion = "club"
+		return ""
+	return "no existe ese usuario"
 
 ## Responde un comentario de una publicación TUYA.
 func responder(m: Mundo, pub_id: int, idx: int, tono: String) -> String:
@@ -194,7 +279,7 @@ func de_cuenta(cuenta: String) -> Array[Dictionary]:
 func pendientes() -> int:
 	var n := 0
 	for p: Dictionary in publicaciones:
-		if String(p["cuenta"]) != "dt":
+		if String(p["cuenta"]) != "dt" and not bool(p.get("tuya", false)):
 			continue
 		for c: Dictionary in p["comentarios"]:
 			if String(c.get("respuesta", "")) == "":
@@ -228,9 +313,13 @@ func desde_noticia(m: Mundo, titulo: String, cuerpo: String) -> void:
 	f["compartidos"] = _rng.randi_range(0, 40)
 	_comentar(f, _rng.randi_range(0, 2), tono)
 
-## Cada semana: los seguidores se mueven y cambia la tendencia.
+## Cada semana: los seguidores se mueven, cambia la tendencia y, a las pocas
+## semanas en el club, llega el acceso a la cuenta oficial.
 func semana(m: Mundo) -> void:
 	var c := m.mi_club()
+	_semanas_club += 1
+	if not acceso_club and c != null and _semanas_club >= SEMANAS_PARA_ACCESO:
+		dar_acceso_club(m)
 	if c != null:
 		var obj := seguidores_base_club(c)
 		var segs := int(cuentas["club"]["seguidores"])
@@ -244,6 +333,16 @@ func semana(m: Mundo) -> void:
 	cuentas["dt"]["seguidores"] = maxi(100, dt + int(dt * (float(fama) - 45.0) / 4000.0) + _rng.randi_range(0, 12))
 	var tags := ["#DíaDePartido", "#Hinchada", "#Cantera", "#Trabajo", "#Familia", hashtag_club(c)]
 	tendencia = String(tags[(m.semana + m.anio) % tags.size()])
+
+## EL EVENTO: el community manager se va de vacaciones y la directiva te
+## pasa la cuenta. La clave llega por Mensajes.
+func dar_acceso_club(m: Mundo) -> void:
+	acceso_club = true
+	var palabras := ["Hinchada", "Estadio", "Camiseta", "Tribuna", "Clasico", "Gloria"]
+	clave_club = "%s%d!" % [palabras[_rng.randi() % palabras.size()], _rng.randi_range(10, 99)]
+	if m.movil != null:
+		m.movil.recibir("Community manager", "📱", "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!" % [String(cuentas["club"]["usuario"]), clave_club], m.anio, m.semana)
+	noticia.emit("🔑 La cuenta del club es tuya", "El community manager se va de vacaciones y la directiva te confía %s. La clave te llegó por Mensajes." % String(cuentas["club"]["usuario"]))
 
 func _nueva(cuenta: String, texto: String, hashtags: Array, tipo: String, m: Mundo) -> Dictionary:
 	var p := {"id": _siguiente_id, "cuenta": cuenta,
@@ -271,7 +370,8 @@ func _comentar(p: Dictionary, n: int, tono: String) -> void:
 
 func a_dic() -> Dictionary:
 	return {"cuentas": cuentas.duplicate(true), "pubs": publicaciones.duplicate(true), "tend": tendencia,
-		"sig": _siguiente_id, "ps": _propias_semana, "sp": _semana_propias}
+		"sig": _siguiente_id, "ps": _propias_semana, "sp": _semana_propias,
+		"acceso": acceso_club, "clave": clave_club, "sesion": sesion, "sem_club": _semanas_club}
 
 func desde_dic(d: Dictionary) -> void:
 	if d.is_empty():
@@ -284,3 +384,7 @@ func desde_dic(d: Dictionary) -> void:
 	_siguiente_id = int(d.get("sig", 1))
 	_propias_semana = int(d.get("ps", 0))
 	_semana_propias = int(d.get("sp", -1))
+	acceso_club = bool(d.get("acceso", false))
+	clave_club = String(d.get("clave", ""))
+	sesion = String(d.get("sesion", "dt"))
+	_semanas_club = int(d.get("sem_club", 0))

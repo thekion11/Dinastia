@@ -6101,10 +6101,32 @@ func _probar_tanda_c() -> void:
 	var rd2 := Redes.new()
 	rd2.desde_dic(rd.a_dic())
 	_comprobar(rd2.publicaciones.size() == rd.publicaciones.size() and rd2.pendientes() == rd.pendientes(), "las redes se guardan con la partida")
-	var tel := Telefono.crear(mf)
-	for pest: String in ["inicio", "perfil", "club", "publicar"]:
-		tel.ir(pest)
-	_comprobar(tel.get("_cuerpo") != null, "el móvil abre sus cuatro pestañas")
+	## EL MÓVIL (28-9-2026): acceso a la cuenta del club, sesiones, apps.
+	_comprobar(not rd.acceso_club and rd.iniciar_sesion(String(rd.cuentas["club"]["usuario"]), "x") != "", "al principio la cuenta del club no es tuya")
+	for _s in Redes.SEMANAS_PARA_ACCESO:
+		rd.semana(mf)
+	_comprobar(rd.acceso_club and rd.clave_club != "" and mf.movil.sin_leer() >= 1, "a las %d semanas te dan la cuenta del club y la clave llega por Mensajes" % Redes.SEMANAS_PARA_ACCESO)
+	rd.cerrar_sesion()
+	_comprobar(rd.publicar(mf, "entreno", []).has("error"), "sin sesión no se publica")
+	_comprobar(rd.iniciar_sesion(String(rd.cuentas["club"]["usuario"]), "mala") == "clave incorrecta", "con la clave mala no se entra")
+	_comprobar(rd.iniciar_sesion(String(rd.cuentas["club"]["usuario"]), rd.clave_club) == "" and rd.sesion == "club", "con la clave buena se entra a la cuenta del club")
+	var saldo_antes := mf.mi_club().saldo
+	var pc := rd.publicar(mf, "camiseta", ["#NuevaCamiseta"])
+	_comprobar(not pc.has("error") and String(pc["cuenta"]) == "club" and mf.mi_club().saldo > saldo_antes, "publicar la camiseta desde el club vende en la tienda (%s)" % _dinero(mf.mi_club().saldo - saldo_antes))
+	rd.iniciar_sesion(String(rd.cuentas["dt"]["usuario"]), "")
+	_comprobar(rd.sesion == "dt", "se vuelve a tu cuenta")
+	mf.movil.fondo = "atardecer"
+	mf.movil.funda = "c0392b"
+	var mv2 := Movil.new()
+	mv2.desde_dic(mf.movil.a_dic())
+	_comprobar(mv2.fondo == "atardecer" and mv2.funda == "c0392b" and mv2.mensajes.size() == mf.movil.mensajes.size(), "la personalización y los mensajes del móvil se guardan")
+	_comprobar(Movil.remitente_de("La directiva pierde la paciencia", "").size() == 2 and Movil.remitente_de("Gol", "").is_empty(), "las noticias de la directiva llegan como mensaje")
+	_comprobar(mf.movil.textura_perfil(mf) != null, "la foto de perfil es tu retrato por defecto")
+	var tel := Telefono.crear(mf, [{"titulo": "Prueba", "cuerpo": "x"}])
+	for app: Array in Telefono.APPS:
+		tel.abrir_app(String(app[0]))
+	tel.abrir_app("inicio")
+	_comprobar(tel.get("_cuerpo") != null, "el móvil abre sus %d apps" % Telefono.APPS.size())
 	tel.free()
 	for viv: String in VidaDT.ORDEN_VIVIENDA:
 		var ce := CasaEscena3D.new()

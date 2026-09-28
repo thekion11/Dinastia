@@ -44,8 +44,22 @@ const PLANOS := [
 const SEG_PLANO := 5.0
 
 var _cam: Camera3D
+var _funda: MeshInstance3D
+var m_actual: Mundo
 var _t := 0.0
 var _plano := -1
+
+## El color de la funda del móvil 3D, el mismo que el del móvil de la pantalla.
+func aplicar_funda(m: Mundo) -> void:
+	if _funda == null:
+		return
+	var col := Color("1a1a1a")
+	if m != null and m.movil != null:
+		col = m.movil.color_funda(m.mi_club())
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = col
+	mat.roughness = 0.45
+	_funda.material_override = mat
 
 ## Monta la escena. `vivienda` y `transporte` son las claves de `VidaDT`.
 func montar(vivienda: String, transporte: String, asp: Dictionary, c1: Color, c2: Color) -> void:
@@ -519,6 +533,14 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	pantalla.rotation_degrees.x = 90.0
 	pantalla.position = Vector3(ab.get_center().x, ab.position.y - 0.003, ab.get_center().z)
 	malla.add_child(pantalla)
+	## LA FUNDA (se elige en Ajustes del móvil): cubre el dorso y los cantos.
+	_funda = MeshInstance3D.new()
+	var bf := BoxMesh.new()
+	bf.size = Vector3(0.078, 0.156, 0.008)
+	_funda.mesh = bf
+	_funda.position = Vector3(0, 0, -0.006)
+	pivote.add_child(_funda)
+	aplicar_funda(m_actual)
 	var sosten := _SostenMovil.new()
 	sosten.esq = esq
 	sosten.pivote = pivote
@@ -694,6 +716,7 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 	var c := m.mi_club()
 	var viv := m.vida.vivienda if m.vida != null else "casa"
 	var tra := m.vida.transporte if m.vida != null else "micro"
+	escena.m_actual = m
 	escena.montar(viv, tra, m.roles.aspecto_3d() if m.roles != null else {},
 		Color(c.color1) if c != null else Color("1f5fa8"), Color(c.color2) if c != null else Color.WHITE)
 
@@ -710,7 +733,8 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 
 	## El móvil de verdad: Tribuna, interactivo (publicar, responder, me gusta).
 	if m.redes != null:
-		var tel := Telefono.crear(m)
+		var tel := Telefono.crear(m, p.get("_bandeja") if p.get("_bandeja") != null else [])
+		tel.estetica_cambiada.connect(escena.aplicar_funda.bind(m))
 		tel.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
 		tel.offset_left = -Telefono.ANCHO - 30
 		tel.offset_right = -30
