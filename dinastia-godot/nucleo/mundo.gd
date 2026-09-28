@@ -114,6 +114,8 @@ var licencia: Licencia
 var trabajadores: Trabajadores
 ## Las redes sociales (Tribuna): tu cuenta y la oficial del club (28-9-2026).
 var redes: Redes
+## Tu teléfono: personalización, foto de perfil y Mensajes (28-9-2026).
+var movil: Movil
 var eventos_cantera: EventosCantera
 var calendario: Calendario
 var politica: Politica
@@ -1843,6 +1845,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	licencia = Licencia.new()
 	trabajadores = Trabajadores.new()
 	Trabajadores.actual = trabajadores
+	movil = Movil.new()
 	redes = Redes.new()
 	redes.iniciar(self)
 	eventos_cantera = EventosCantera.new()
