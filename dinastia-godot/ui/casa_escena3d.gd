@@ -705,9 +705,11 @@ class _BrazoMovil extends SkeletonModifier3D:
 	var _t0 := Time.get_ticks_msec()
 	## Cuánto se dobla cada falange (radianes, en el eje X local del hueso).
 	const CURVA_DEDO := 0.55
-	## -1: en este modelo la palma en T mira hacia arriba (con +1 quedaba de
-	## espaldas al móvil, comprobado en `pruebas/captura_mano_movil.gd`).
-	const SIGNO_PALMA := -1.0
+	## +1: en reposo la palma derecha mira hacia ABAJO. Medido, no supuesto
+	## (28-9-2026): al cerrar los dedos (+X, `CURVA_DEDO`) la punta del medio
+	## se mueve hacia -Y. Con -1 el dorso quedaba contra el móvil ("la mano
+	## está al revés").
+	const SIGNO_PALMA := 1.0
 	## Dónde va el móvil, en el espacio del esqueleto (lo lee `_SostenMovil`).
 	var movil_xf := Transform3D.IDENTITY
 	## Las interacciones: cuándo empezó a beber (ms) y hasta cuándo mira el
