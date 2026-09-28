@@ -1550,6 +1550,34 @@ func _mover_de_liga(c: Club, desde: Liga, hasta: Liga) -> void:
 		hasta.tabla_puntos[c.id] = {"pts": 0, "pj": 0, "gf": 0, "gc": 0, "g": 0, "e": 0, "p": 0}
 
 ## Cierra la temporada: cumpleanos, retiros y un campeonato nuevo.
+## LOS CONTRATOS VENCEN (28-9-2026, informe externo: "sin validación de fin
+## de contrato"). `anios_contrato` no bajaba nunca: el aviso "sin renovar, se
+## van gratis" no se cumplía y nadie quedaba libre. Ahora cada temporada le
+## resta un año; al llegar a cero:
+##   - en un club de la máquina, casi siempre renueva (los veteranos menos);
+##   - en TU club, si no lo renovaste, se va a la bolsa de libres y es noticia.
+## La decisión sale de un hash (jugador + año), no de `Azar`: así no cambia
+## ninguna otra tirada de la simulación. Devuelve true si el jugador se va.
+func _vence_contrato(j: Jugador, c: Club) -> bool:
+	j.anios_contrato -= 1
+	if j.anios_contrato > 0:
+		return false
+	var h := absi(hash("%s|%d" % [j.id, anio]))
+	if c.id != mi_club_id:
+		var sigue := 0.5 if j.edad >= 33 else 0.88
+		if float(h % 1000) / 1000.0 < sigue:
+			j.anios_contrato = Contratos.ajustar_anios(j, 1 + (h / 1000) % 3)
+			return false
+	j.club_id = ""
+	j.motivo_libre = "Terminó su contrato con %s" % c.nombre
+	libres.append(j)
+	if libres.size() > 80:
+		libres.pop_front()
+	if c.id == mi_club_id and prensa != null:
+		prensa.noticia.emit("Se va libre: %s" % j.nombre,
+			"Se le acabó el contrato y no se renovó. Deja %s sin que el club cobre nada." % c.nombre)
+	return true
+
 func nueva_temporada() -> Dictionary:
 	## Primero se cierra la que acaba -premios, ascensos y descensos- y DESPUÉS
 	## envejece la gente. Al revés, los clubes se repartirían las divisiones con
@@ -1600,6 +1628,8 @@ func nueva_temporada() -> Dictionary:
 				if cantera != null:
 					cantera.registrar_retiro(j, c)
 				continue   ## se retira
+			if _vence_contrato(j, c):
+				continue   ## se va libre
 			siguen.append(j)
 		c.plantilla = siguen
 		_subir_de_cantera(c)
