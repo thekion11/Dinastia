@@ -6165,6 +6165,39 @@ func _probar_tanda_c() -> void:
 	_comprobar(not mc.mi_club().plantilla.has(jc) and mc.libres.has(jc) and jc.club_id == "", "el contrato que se acaba sin renovar deja al jugador libre")
 	_comprobar(mc.mi_club().plantilla.has(jr) and jr.anios_contrato == 2, "a los demás les queda un año menos")
 	_comprobar(mc.libres.size() > libres_antes, "la bolsa de libres se llena con los contratos vencidos (%d)" % (mc.libres.size() - libres_antes))
+	## MERCADO AVANZADO (bloques 37-38): guerra de ofertas y zonas grises.
+	var ma := MercadoAvanzado.new()
+	var estrella: Jugador = mf.mi_club().plantilla[0]
+	estrella.ovr = 80
+	var ofertante: Club = mf.ligas[0].clubes[1] if mf.ligas[0].clubes[1] != mf.mi_club() else mf.ligas[0].clubes[2]
+	mf.mercado.ofertas_recibidas.append({"jugador": estrella, "club": ofertante, "monto": 1000000, "semana": 1, "clausula": false})
+	for c_rico: Club in mf.clubes.values():
+		c_rico.saldo = maxi(c_rico.saldo, 50000000)
+	var hubo_puja := 0
+	for _k in 12:
+		hubo_puja += ma.guerra_de_ofertas(mf)
+	var max_oferta := 0
+	for o_ma: Dictionary in mf.mercado.ofertas_recibidas:
+		if o_ma["jugador"] == estrella:
+			max_oferta = maxi(max_oferta, int(o_ma["monto"]))
+	_comprobar(hubo_puja >= 1 and hubo_puja <= MercadoAvanzado.MAX_PUJAS and max_oferta > 1000000, "guerra de ofertas: otros clubes mejoran la oferta (%d pujas, hasta %s)" % [hubo_puja, _dinero(max_oferta)])
+	mf.mercado.ofertas_recibidas.clear()
+	for tipo_ma: String in ["superagente", "apuestas", "transparencia"]:
+		_comprobar(ma._montar(mf, tipo_ma) and not ma.pendiente.is_empty(), "zona gris «%s» se plantea" % tipo_ma)
+		var res_ma := ma.resolver(mf, "a")
+		_comprobar(res_ma.has("titulo") and ma.pendiente.is_empty(), "zona gris «%s» se resuelve: %s" % [tipo_ma, String(res_ma.get("titulo", ""))])
+	if mf.libres.is_empty():
+		mf.generar_libres()
+	for l_ma: Jugador in mf.libres:
+		l_ma.edad = maxi(l_ma.edad, 31)
+	var conf_antes := mf.directiva.confianza
+	_comprobar(ma._montar(mf, "impuesto"), "la directiva propone un fichaje")
+	ma.resolver(mf, "b")
+	_comprobar(mf.directiva.confianza < conf_antes, "negarte al fichaje impuesto baja la confianza (%d -> %d)" % [conf_antes, mf.directiva.confianza])
+	var ma2 := MercadoAvanzado.new()
+	ma._montar(mf, "transparencia")
+	ma2.desde_dic(ma.a_dic())
+	_comprobar(String(ma2.pendiente.get("id", "")) == "transparencia" and ma2.superagente == ma.superagente, "el mercado avanzado se guarda con la partida")
 	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
 	var fi := FondoInversion.new()
 	fi.caja = 1000000000

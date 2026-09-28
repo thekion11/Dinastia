@@ -1218,7 +1218,7 @@ repartidas en 6 bloques). **Antes de escribir nada de esta fase: volver a cruzar
 actual con un agente** -el patrón de "ya estaba hecho" se ha repetido tantas veces en este proyecto
 que dar esta lista por vigente sin re-verificar sería el mismo error de siempre.
 
-- [ ] **37/38 — Mercado avanzado y zonas grises**: guerra de ofertas, derechos de formación,
+- [x] **37/38 — Mercado avanzado y zonas grises (28-9-2026, `MercadoAvanzado`)**: guerra de ofertas, derechos de formación,
   superagente, fichaje impuesto por el dueño, apuestas, transparencia.
 - [ ] **39/40 — Insolvencia y política interna**: renegociar deuda, resta de puntos, administrador
   externo, bonos de hinchas, tope salarial, refundación, cláusula de salida del DT. (Ojo: parte de

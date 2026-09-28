@@ -116,6 +116,8 @@ var trabajadores: Trabajadores
 var redes: Redes
 ## Tu teléfono: personalización, foto de perfil y Mensajes (28-9-2026).
 var movil: Movil
+## Guerra de ofertas, superagente, fichaje impuesto, apuestas, transparencia.
+var mercado_av: MercadoAvanzado
 var eventos_cantera: EventosCantera
 var calendario: Calendario
 var politica: Politica
@@ -1116,6 +1118,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	if redes != null:
 		redes.iniciar(self)
 		redes.semana(self)
+	if mercado_av != null and mi_club() != null:
+		mercado_av.semana(self)
 	if fondo != null:
 		fondo.semana(self)
 	if eventos_cantera != null and mi_club() != null:
@@ -1876,6 +1880,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	trabajadores = Trabajadores.new()
 	Trabajadores.actual = trabajadores
 	movil = Movil.new()
+	mercado_av = MercadoAvanzado.new()
 	redes = Redes.new()
 	redes.iniciar(self)
 	eventos_cantera = EventosCantera.new()
