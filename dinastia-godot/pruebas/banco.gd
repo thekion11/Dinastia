@@ -5379,6 +5379,39 @@ func _probar_modos_simulacion() -> void:
 			print("    distinto en la semilla %d: %s" % [9000 + k, str(huellas)])
 	_comprobar(iguales == semillas, "Instantáneo, Resumen y En vivo dan el mismo partido en %d de %d semillas" % [iguales, semillas])
 	_comprobar(invasiones > 0, "la invasión de campo sigue pudiendo ocurrir, ahora en cualquier modo (%d de %d)" % [invasiones, semillas])
+	## EL DESCANSO NO BLOQUEA (28-9-2026, informe externo: "después de la charla
+	## del medio tiempo no deja continuar"). Se juega con el reloj real: se
+	## para en el 45, se da la charla, se sale y el partido termina.
+	var mh := mundos[0]
+	var lh := mh.ligas[0]
+	var ph := Partido.new(lh.clubes[0], lh.clubes[1])
+	var vh := PartidoVivo.new()
+	vh.con_3d = false
+	vh.abrir(ph, lh.clubes[0], mh.vestuario)
+	var vueltas := 0
+	## Una lesión propia para el reloj a propósito (hay que mover el banco):
+	## la prueba reanuda como lo haría el jugador.
+	var reanudar := func() -> void:
+		if int(vh.get("_velocidad")) == 0 and not bool(vh.get("_entretiempo")):
+			vh.call("_poner_velocidad", 2)
+	while ph.minuto < 45 and vueltas < 2000:
+		reanudar.call()
+		vh._process(1.0)
+		vueltas += 1
+	var parado := bool(vh.get("_entretiempo"))
+	var min_parado := ph.minuto
+	for _i in 20:
+		vh._process(1.0)
+	_comprobar(parado and ph.minuto == min_parado, "el reloj se para en el descanso (%d')" % min_parado)
+	vh.call("_dar_charla", String(Vestuario.TONOS.keys()[0]))
+	vh.call("_salir_segunda")
+	vueltas = 0
+	while not ph.terminado_ya and vueltas < 5000:
+		reanudar.call()
+		vh._process(1.0)
+		vueltas += 1
+	_comprobar(ph.terminado_ya, "tras la charla y salir a la segunda parte, el partido llega al final")
+	vh.free()
 
 
 ## LAS EXPORTACIONES SE LEEN (25-9-2026). `export_presets.cfg` llevaba

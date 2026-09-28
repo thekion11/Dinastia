@@ -15,6 +15,23 @@ Siguiente, en este orden:
 3. ✅ **Pendientes visuales del estadio**: camarógrafos como personas con polo de prensa, seis
    guardias de seguridad de espaldas al campo y barra de energía bajo cada nombre (las bandejas
    reales y la grada ya estaban).
+**Repaso del informe externo del 28-9-2026** (hecho sobre la versión del 25-9 y sobre la
+documentación, así que mucho ya estaba resuelto):
+- ✅ **Descanso que "no deja continuar"**: era real. El partido se ve en 3D por defecto, el 3D no
+  paraba en el 45 (no había camarín) y al reabrirlo el reloj volvía al 0' mientras el partido iba
+  en el 45': 45 minutos sin que pasara nada. Ahora el 3D se cierra en el descanso, el camarín
+  se abre, "Salir a la segunda parte" reabre el 3D en el 45', sin repetir la presentación.
+  Prueba en el banco y `pruebas/prueba_descanso_3d.gd`.
+- ✅ **Simular el partido entero**: botón "⏭ Simular hasta el final" también dentro del 3D.
+- Ya estaban: color del uniforme separado de la interfaz (4 capas), tutorial, árbol de
+  habilidades, camarillas, selecciones, copas de Asia/África/Oceanía/Concacaf, estadios de hasta
+  5 bandejas y 150.000 personas, pizarra táctica, reconversión de puesto.
+- `export_credentials.cfg` no está en el repo (solo el `.ejemplo`); la contraseña vieja sigue en
+  el historial (lo gestiona el dueño). Los ZIP de `entregas/` son punteros LFS y no se suben
+  binarios por LFS: lo gestiona el dueño.
+- Pendiente real que suma el informe: **dividir `principal.gd`** (15.189 líneas) en más
+  componentes, y **celebraciones de gol por jugador**.
+
 4. **Casa moderna y móvil 3D** en Mi Vida y cinemáticas (solo copia local si la licencia no se
    confirma).
 5. **Bloques 37-50 del plan maestro**: mercado avanzado, insolvencia, reglamento, selecciones,

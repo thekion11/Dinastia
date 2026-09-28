@@ -14,6 +14,9 @@ extends Control
 ## comporta exactamente igual (comprobado: Vulkan 1.3.237 sobre Intel UHD).
 
 signal cerrado
+## Lo pide el partido en vivo dirigido: al 45 se cierra para abrir el camarín.
+var parar_en_descanso := false
+var _descanso_hecho := false
 
 var _mini_pantalla: TextureRect
 var club: Club
@@ -272,6 +275,15 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_cajon.seccion("Partido")
 		_btn_modo = _cajon.boton("🎮 Modo: Manager", _alternar_modo_control)
 		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
+		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
+		## simular el partido entero"). Existía en la pantalla de texto, que
+		## queda oculta mientras se ve el 3D. Juega todos los minutos que
+		## faltan -descanso incluido- y vuelve al resumen.
+		_cajon.boton("⏭ Simular hasta el final", func() -> void:
+			_descanso_hecho = true
+			while not partido.terminado_ya:
+				partido.simular_minuto()
+			cerrado.emit())
 	_cajon.seccion("En pantalla")
 	_cajon.interruptor("🏷 Nombres de los jugadores", PlayerSpawner.mostrar_nombres, _mostrar_nombres)
 	_cajon.interruptor("📺 Pantalla del estadio en la esquina", _pref("pantalla_esquina", true), func(si: bool) -> void:
@@ -582,6 +594,13 @@ func _arrancar_partido() -> void:
 	var fv: float = partido.fuerza(partido.once_visita, partido.visita)["ata"]
 	var pos := 100.0 * fl / maxf(fl + fv, 0.001)
 	_juego.setup([], _en_campo, Partido.MINUTOS, pos, _balon, club.tactica, visitante.tactica)
+	## EL RELOJ EMPIEZA DONDE VA EL PARTIDO (28-9-2026). Al reabrir el 3D a
+	## mitad de partido -tras el descanso, o con "Volver" y "Ver en 3D"- la
+	## reproducción arrancaba en el 0' con el partido ya en el 45': durante
+	## 45 minutos de reloj no se simulaba nada y parecía colgado ("después de
+	## la charla del medio tiempo no deja continuar").
+	_juego.elapsed = float(partido.minuto) * _juego.seconds_per_minute
+	_descanso_hecho = partido.minuto >= 45
 	## La cámara del árbitro sigue su cabeza.
 	var arb: Variant = _juego.players_by_id.get("arbitro")
 	if arb is Dictionary and _rig != null:
@@ -622,9 +641,10 @@ func _arrancar_partido() -> void:
 	## catálogo, 157 no tenían ningún disparador. Aquí los del partido: la
 	## salida del túnel, el ambiente según el clima del estadio, los tiempos
 	## del reloj y los goles especiales.
-	Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
+	if partido.minuto == 0:
+		Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
 	## La presentación: vuelo de cámara con el rótulo del partido (B3).
-	if _pref("intro", true):
+	if _pref("intro", true) and partido.minuto == 0:
 		var gi := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
 		var nombre_est := club.estadio_nombre if club.estadio_nombre != "" else "Estadio de %s" % club.nombre
 		_intro = IntroPartido.iniciar(self, float(gi["dx"]), float(gi["dz"]), 20.0,
@@ -775,6 +795,12 @@ func _process(delta: float) -> void:
 	## minuto al partido. Nunca al revés, y nunca los dos a la vez.
 	while partido.minuto < _juego.current_minute() and not partido.terminado_ya:
 		partido.simular_minuto()
+		## EL DESCANSO TAMBIÉN EN 3D: al 45 se vuelve al camarín (charla,
+		## cambios, pizarra) y "Salir a la segunda parte" reabre el estadio.
+		if parar_en_descanso and not _descanso_hecho and partido.minuto >= 45:
+			_descanso_hecho = true
+			cerrado.emit()
+			return
 	if partido.minuto != _minuto_barras:
 		_minuto_barras = partido.minuto
 		_actualizar_barras()
