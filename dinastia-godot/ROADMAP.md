@@ -32,8 +32,10 @@ documentación, así que mucho ya estaba resuelto):
 - Pendiente real que suma el informe: **dividir `principal.gd`** (15.189 líneas) en más
   componentes, y **celebraciones de gol por jugador**.
 
-4. **Casa moderna y móvil 3D** en Mi Vida y cinemáticas (solo copia local si la licencia no se
-   confirma).
+4. ✅ **Casa moderna y móvil 3D**: MI VIDA → Casa y auto → "Ver tu casa". El DT sentado en un
+   sillón de exterior en su terraza, mirando el móvil (pantalla encendida con un feed) y
+   levantando la vista cada tanto; la casa según la vivienda (la moderna para la mansión, con
+   piscina), el auto según el transporte y las noticias como publicaciones de redes.
 5. **Bloques 37-50 del plan maestro**: mercado avanzado, insolvencia, reglamento, selecciones,
    competiciones, meta.
 
