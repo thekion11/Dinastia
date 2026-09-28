@@ -152,6 +152,12 @@ static func _hogar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	ver.custom_minimum_size = Vector2(0, 34)
 	ver.pressed.connect(func() -> void: CasaEscena3D.abrir(p, mundo, p.get("_bandeja")))
 	lista.add_child(ver)
+	var movil := Button.new()
+	var pend := mundo.redes.pendientes() if mundo.redes != null else 0
+	movil.text = "📱 Abrir el móvil (Tribuna)" + ("  · %d comentarios sin responder" % pend if pend > 0 else "")
+	movil.custom_minimum_size = Vector2(0, 34)
+	movil.pressed.connect(func() -> void: Telefono.abrir(p, mundo))
+	lista.add_child(movil)
 	_opciones(lista, p, "🏠 DÓNDE VIVES (la mudanza cuesta cuatro semanas de la casa nueva)", VidaDT.VIVIENDAS,
 		VidaDT.ORDEN_VIVIENDA, v.vivienda, "vives aquí", func(k: String) -> void:
 			_resultado(p, mundo.vida.cambiar_vivienda(k, mundo.roles), "Mudanza hecha."))
