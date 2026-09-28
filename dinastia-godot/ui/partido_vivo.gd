@@ -865,6 +865,9 @@ func _salir_segunda() -> void:
 	_entretiempo = false
 	_escribir("[color=#8ea595]▶️ Comienza la segunda parte.[/color]")
 	_refrescar()
+	## Si el partido se estaba viendo en 3D, la segunda parte también.
+	if con_3d and not partido.terminado_ya:
+		_ver_estadio()
 
 func _pintar_banquillo() -> void:
 	_limpiar(_banquillo)
@@ -1099,6 +1102,7 @@ func _ver_estadio() -> void:
 	## Y con el partido de verdad dentro: los 22 juegan, el marcador corre y lo que
 	## pase ahi es lo que va a la tabla. El reloj de esta pantalla queda parado
 	## mientras tanto — manda el de la vista 3D, para que no haya dos relojes.
+	vista.parar_en_descanso = not _entretiempo_hecho
 	vista.abrir(partido.local, clampf(gente, 0.05, 1.0), partido.visita, partido, perfil_estadio, colores_balon)
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
