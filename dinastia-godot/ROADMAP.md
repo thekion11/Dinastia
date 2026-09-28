@@ -1186,16 +1186,16 @@ nocturno, adaptación cultural-; el que de verdad falta es el que sigue en la li
    no una caja hueca) — anotado para cuando se diseñe el modo "caminar por el estadio", no antes.
 
    ### 2-quater. LO SIGUIENTE PARA EL ESTADIO, sin empezar
-   - [ ] **El graderío por bandejas de verdad.** El fondo de la tribuna es 11 m FIJOS en las tres
+   - [x] **(Hecho el 23-9: 2-quinquies)** **El graderío por bandejas de verdad.** El fondo de la tribuna es 11 m FIJOS en las tres
      alturas, así que con 3 niveles la rampa queda a **58,6°** -ninguna grada real pasa de ~35-.
      Hoy se disimula contrarrotando butacas y hinchas para que queden de pie (lo cual es correcto:
      van sobre escalones), pero la rampa en sí sigue siendo demasiado empinada. El arreglo de
      verdad es partir la tribuna en 2-3 bandejas con su propio fondo y un pasillo entre ellas, que
      además es lo que se ve en `ea_fc25_referencia.mp4`. Es trabajo de geometría real, no un ajuste.
-   - [ ] **Modelos 3D para camarógrafos y guardias** (candidato: `PersonaRealista`, que ya viste de traje; falta un uniforme) (el usuario recordó que hay personajes 3D
+   - [x] **(Hecho el 26-9: personas con uniforme de prensa y seguridad)** **Modelos 3D para camarógrafos y guardias** (candidato: `PersonaRealista`, que ya viste de traje; falta un uniforme) (el usuario recordó que hay personajes 3D
      disponibles): hoy son cajas. Son ~6 figuras, no miles, así que aquí sí cabe un modelo real
      -a diferencia del público, que tiene que seguir siendo `MultiMesh` sí o sí-.
-   - [ ] **Nombre del jugador flotando sobre cada futbolista** con su barra de estado, como en
+   - [x] **(Hecho el 26-9: barra de energía bajo el nombre)** **Nombre del jugador flotando sobre cada futbolista** con su barra de estado, como en
      `ejemplo-partido.mp4` (Soccer Manager). Es lo único grande de ese video que no se ha portado.
 4. [x] **Animaciones de lenguaje corporal en la banda / "efecto banquillo" visual: CERRADO
    (22-9-2026).** Hasta ahora la banda estaba vacía -ni un suplente en ningún partido-. Ahora hasta 7
