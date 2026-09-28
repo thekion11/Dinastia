@@ -16,7 +16,7 @@ Estados:
  FASE A — MÍNIMO JUGABLE        FASE B — EARLY ACCESS          FASE C — VERSIÓN 1.0
  (lo que bloquea jugar)         (lo que hace falta vender)     (lo que lo hace distinto)
  ────────────────────────       ────────────────────────       ────────────────────────
- ✅ Descanso sin bloqueo         ✅ 20+ uniformes               🔨 Drama humano: redes
+ ✅ Descanso sin bloqueo         ✅ 20+ uniformes               ✅ Drama humano: redes
  ✅ Simular hasta el final       ✅ Árbol de habilidades        ⬜ Charlas con IA real
  ✅ Tutorial inmersivo           ✅ Selecciones y Mundial       ⬜ Representantes (mini-juego)
  ✅ Uniforme ≠ color del menú    ✅ Copas de 8 confederaciones  ✅ Salud mental y camarillas
@@ -62,7 +62,7 @@ Estados:
 
 | Meta | Estado | Qué hay / qué falta |
 |---|---|---|
-| **Vida del personaje y redes sociales** | 🔨 | Casa 3D según tu vivienda y Tribuna, con tu cuenta y la del club, publicaciones, hashtags, "me gusta" y respuestas. Lo que se está haciendo ahora está en la sección siguiente. |
+| **Vida del personaje y redes sociales** | ✅ | Casa 3D interactiva, teléfono con 7 apps, Tribuna con tu cuenta y la del club. Falta que los jugadores también publiquen. |
 | Charlas con IA conversacional | ⬜ | Hoy la charla escrita deduce el tono de lo que escribes. Falta una IA real, opcional y con clave del jugador. |
 | Representantes con agencia propia | ⬜ | Mini-juego de negociación con agentes que tienen su propia cartera. |
 | Celebraciones de gol por jugador | ⬜ | Cada jugador con su festejo, según su carácter. |
@@ -71,16 +71,17 @@ Estados:
 | Logros e historial | ⬜ | Logros, récords y estadísticas históricas. |
 | Multijugador asíncrono | ⬜ | Ligas entre amigos. Opcional. |
 
-## Lo que se está haciendo ahora (pedido del 28-9)
+## Lo que se pidió el 28-9 (hecho)
 
 | Meta | Estado |
 |---|---|
 | Mapa de metas (este documento) | ✅ |
-| El móvil bien agarrado en la mano | 🔨 |
-| Teléfono con pantalla de inicio, más apps y personalización (fondo, funda, letra) | 🔨 |
-| Foto de perfil: la cara de tu personaje o una imagen de tu galería | 🔨 |
-| Acceso a la cuenta del club por un evento, con cierre de sesión y entrada con usuario y clave | 🔨 |
-| Escena de la casa más natural, animada e interactiva | 🔨 |
+| El móvil bien agarrado en la mano: muñeca orientada, palma contra el dorso, pose de lectura | ✅ |
+| Teléfono con pantalla de inicio, 7 apps (Tribuna, Mensajes, Noticias, Banco, Calendario, Fotos, Ajustes) y personalización (fondo, funda, letra) | ✅ |
+| Foto de perfil: la cara de tu personaje o una imagen de tu galería | ✅ |
+| Acceso a la cuenta del club por un evento, cierre de sesión animado y entrada con usuario y clave | ✅ |
+| Escena de la casa más natural: cielo con nubes que se mueven, 26.000 briznas con viento, árboles con copa de varias masas, agua con oleaje, pájaros | ✅ |
+| Escena interactiva: tomar un café, mirar el paisaje, cámara libre y pasar al atardecer con farolas | ✅ |
 
 ## Cómo se mide
 

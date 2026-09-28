@@ -16,15 +16,63 @@ func _ready() -> void:
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 
+## Después de las viviendas: las acciones de la escena, en tiempo real.
+var _fase_acc := 0
+var _reloj := 0.0
+var _esc_acc: CasaEscena3D
+
+func _acciones(d: float) -> void:
+	_reloj += d
+	var m: Mundo = _p.get("mundo")
+	match _fase_acc:
+		0:
+			m.vida.vivienda = "mansion"
+			var pop := CasaEscena3D.abrir(_p, m, _p.get("_bandeja"))
+			_pop = null
+			_esc_acc = pop.find_children("*", "CasaEscena3D", true, false)[0]
+			_esc_acc.set("_t", 5.5)
+			_reloj = 0.0
+			_fase_acc = 1
+		1:
+			_esc_acc.set("_t", 5.5)
+			if _reloj > 1.0:
+				_esc_acc.tomar_cafe()
+				_reloj = 0.0
+				_fase_acc = 2
+		2:
+			## En el pico del gesto (tras una carga pesada puede llegar un
+			## fotograma de varios segundos: esperar por reloj no sirve).
+			_esc_acc.set("_t", 5.5)
+			var brazo: Object = _esc_acc.get("_brazo")
+			if brazo != null and float(brazo.call("_peso_cafe")) > 0.95:
+				get_viewport().get_texture().get_image().save_png("res://pruebas/casa_cafe.png")
+				_esc_acc.alternar_hora()
+				_reloj = 0.0
+				_fase_acc = 3
+		3:
+			_esc_acc.set("_t", 0.5)
+			if _reloj > 3.2:
+				get_viewport().get_texture().get_image().save_png("res://pruebas/casa_atardecer.png")
+				_esc_acc.libre = true
+				_esc_acc.set("_yaw", 2.4)
+				_esc_acc.set("_pitch", 0.35)
+				_esc_acc.set("_dist", 6.0)
+				_reloj = 0.0
+				_fase_acc = 4
+		4:
+			if _reloj > 0.5:
+				get_viewport().get_texture().get_image().save_png("res://pruebas/casa_libre.png")
+				get_tree().quit()
+
 func _process(_d: float) -> void:
 	_n += 1
 	if _n < 10:
 		return
 	var m: Mundo = _p.get("mundo")
+	if _pop == null and _caso >= CASOS.size():
+		_acciones(_d)
+		return
 	if _pop == null:
-		if _caso >= CASOS.size():
-			get_tree().quit()
-			return
 		m.vida.vivienda = CASOS[_caso][0]
 		m.vida.transporte = CASOS[_caso][1]
 		if _caso == 0:
