@@ -219,6 +219,11 @@ func _avatar_de(cuenta: String, lado: float) -> Control:
 		return _avatar(m.movil.textura_perfil(m), lado, "🧑‍💼")
 	if cuenta == "club" and m.mi_club() != null:
 		return _avatar(Escudo.textura(m.mi_club(), int(lado * 2)), lado, "🏟️")
+	if cuenta.begins_with("jugador:"):
+		var j := m.jugador_por_id(cuenta.trim_prefix("jugador:"))
+		var c := m.mi_club()
+		if j != null:
+			return _avatar(Cara.textura(j, c.color1 if c != null else "#2b6b45", c.color2 if c != null else "#ffffff", int(lado * 2)), lado, "⚽")
 	return Tema.etiqueta(int(lado * 0.7), Tema.TEXTO, "🙂")
 
 # --- inicio -----------------------------------------------------------------------
@@ -515,8 +520,8 @@ func _tarjeta(p: Dictionary) -> PanelContainer:
 	var cuenta := String(p["cuenta"])
 	var cab := HBoxContainer.new()
 	cab.add_theme_constant_override("separation", 6)
-	cab.add_child(_avatar_de(cuenta, 26))
-	var autor := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(p["autor"]) + ("  ✔" if cuenta != "fan" else ""))
+	cab.add_child(_avatar_de(("jugador:" + String(p.get("jugador_id", ""))) if cuenta == "jugador" else cuenta, 26))
+	var autor := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(p["autor"]) + ("  ✔" if cuenta != "fan" else "") + ("  ⚽ tu plantel" if cuenta == "jugador" else ""))
 	autor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	autor.clip_text = true
 	cab.add_child(autor)
@@ -569,6 +574,21 @@ func _tarjeta(p: Dictionary) -> PanelContainer:
 		abrir_app("tribuna"))
 	acciones.add_child(ver)
 	acciones.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "⟳ %s" % cifra(int(p["compartidos"]))))
+	## A un jugador de tu plantel le puedes comentar (una vez).
+	if cuenta == "jugador" and not bool(p.get("comentado", false)):
+		var fila := HFlowContainer.new()
+		v.add_child(fila)
+		for tono: String in Redes.COMENTAR_JUGADOR:
+			var d: Array = Redes.COMENTAR_JUGADOR[tono]
+			var b := Button.new()
+			b.text = "%s %s" % [String(d[0]), String(d[1])]
+			b.add_theme_font_size_override("font_size", 11)
+			var k := tono
+			b.pressed.connect(func() -> void:
+				var res := m.redes.comentar_jugador(m, id, k)
+				abrir_app("tribuna")
+				_decir(res))
+			fila.add_child(b)
 	if bool(_abiertos.get(id, false)):
 		for i in cs.size():
 			v.add_child(_comentario(p, i, mia))
