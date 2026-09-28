@@ -35,8 +35,14 @@ documentación, así que mucho ya estaba resuelto):
 4. ✅ **Casa moderna y móvil 3D**: MI VIDA → Casa y auto → "Ver tu casa". El DT sentado en un
    sillón de exterior en su terraza, mirando el móvil (pantalla encendida con un feed) y
    levantando la vista cada tanto; la casa según la vivienda (la moderna para la mansión, con
-   piscina), el auto según el transporte y las noticias como publicaciones de redes.
-5. **Bloques 37-50 del plan maestro**: mercado avanzado, insolvencia, reglamento, selecciones,
+   piscina) y el auto según el transporte.
+5. ✅ **Redes sociales (Tribuna)**, pedidas el 28-9: tu cuenta y la oficial del club con
+   seguidores, publicaciones con foto, hashtags (la tendencia de la semana da más alcance), me
+   gusta, compartidos y comentarios de hinchas. Desde el móvil (MI VIDA → Casa y auto, o en tu
+   casa 3D) publicas seis tipos de cosas y respondes comentarios en cuatro tonos. Todo mueve tu
+   reputación por facetas y el ánimo de la grada; las indirectas pueden hacerse polémica. Las
+   noticias del juego las publica el club y las comentan los hinchas. Se guarda con la partida.
+6. **Bloques 37-50 del plan maestro**: mercado avanzado, insolvencia, reglamento, selecciones,
    competiciones, meta.
 
 Bloqueado por algo externo: cara por blendshapes (Blender en el PC), FPS en un PC real, música con
