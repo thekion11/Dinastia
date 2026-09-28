@@ -97,7 +97,7 @@ Junta tres fuentes:
 | 3 | Sin tirones en tablas con muchas caras (caché de retratos) | Informe, fallo 19 | ✅ ya estaba: `cara.gd` guarda cada retrato en caché |
 | 4 | Fin de contrato validado en todos los caminos | Informe, fallo 21 | ✅ era real: los contratos no vencían nunca; ahora vencen cada temporada |
 | 5 | Los jugadores también publican en Tribuna (y tú les respondes) | Redes | ✅ |
-| 6 | Mercado avanzado: guerra de ofertas, derechos de formación, superagente, fichaje impuesto por el dueño (bloques 37-38) | Plan maestro | ⬜ |
+| 6 | Mercado avanzado: guerra de ofertas, derechos de formación, superagente, fichaje impuesto por el dueño (bloques 37-38) | Plan maestro | ✅ (más apuestas y transparencia; los derechos de formación ya existían) |
 | 7 | Insolvencia: renegociar deuda, resta de puntos, administrador, tope salarial (bloques 39-40) | Plan maestro | ⬜ |
 | 8 | Reglamento fino: historial por árbitro, desempates, playoffs de descenso (bloques 44-45) | Plan maestro | ⬜ |
 | 9 | Selecciones: lista preliminar y conflicto club-selección (bloque 46) | Plan maestro | ⬜ |
