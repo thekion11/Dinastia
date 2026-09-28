@@ -55,6 +55,29 @@ const TIPOS_CLUB := {
 	"gracias": ["💙", "Agradecer a la hinchada", "Gracias por estar siempre, en las buenas y en las malas.", ["#Hinchada"], 2, 0],
 }
 const SEMANAS_PARA_ACCESO := 3
+
+## LOS JUGADORES TAMBIÉN PUBLICAN (28-9-2026). Cada semana uno o dos de tu
+## plantel suben algo según cómo están: el que está feliz, una foto del
+## entrenamiento o del festejo; el que no juega o quiere irse, una indirecta.
+## Tú puedes comentarles una vez por publicación y eso les mueve la moral.
+## [icono, texto, tipo de foto, tono]
+const PUBLICA_JUGADOR := {
+	"feliz": [["💪", "Buena semana de trabajo con el grupo. ¡Vamos por más!", "entreno", "bien"],
+		["🥳", "¡Qué lindo es ganar con esta camiseta!", "victoria", "bien"],
+		["🙏", "Gracias a la gente por el cariño de siempre.", "hinchada", "bien"]],
+	"normal": [["📸", "Día de entrenamiento. Paso a paso.", "entreno", ""],
+		["👨‍👩‍👧", "Descanso en familia antes del partido.", "familia", ""]],
+	"molesto": [["🤐", "Hay cosas que se hablan puertas adentro... pero la paciencia tiene un límite.", "indirecta", "mal"],
+		["😶", "Entreno como el que más. Los minutos no dependen de mí.", "indirecta", "mal"]],
+}
+## Tu comentario en la publicación de un jugador: [icono, nombre, texto,
+## moral si estaba bien, moral si estaba molesto].
+const COMENTAR_JUGADOR := {
+	"apoyo": ["💪", "Apoyarlo", "¡Así se hace! Orgulloso de vos.", 3, 5],
+	"broma": ["😄", "Con humor", "Jaja, ¡el mejor del grupo! (después de mí)", 2, 1],
+	"privado": ["🤝", "Hablarlo en privado", "Lo hablamos en persona, crack.", 1, 6],
+	"cortante": ["🧊", "Cortante", "Menos redes y más entrenamiento.", -4, -8],
+}
 const FANS := ["@hinchadefierro", "@tactica_pura", "@la_grada_habla", "@cronista_del_ascenso",
 	"@datosyfutbol", "@elcorner_de_ana", "@puro_barrio_fc", "@mister_de_sofa", "@vozdelsocio",
 	"@periodistadeturno", "@abuela_futbolera", "@memesdelgol", "@sub17_para_siempre", "@la_pizarra_rota"]
@@ -331,8 +354,48 @@ func semana(m: Mundo) -> void:
 		fama = m.roles.reputacion.valor("mediatico")
 	var dt := int(cuentas["dt"]["seguidores"])
 	cuentas["dt"]["seguidores"] = maxi(100, dt + int(dt * (float(fama) - 45.0) / 4000.0) + _rng.randi_range(0, 12))
+	_publican_jugadores(m)
 	var tags := ["#DíaDePartido", "#Hinchada", "#Cantera", "#Trabajo", "#Familia", hashtag_club(c)]
 	tendencia = String(tags[(m.semana + m.anio) % tags.size()])
+
+func _publican_jugadores(m: Mundo) -> void:
+	var c := m.mi_club()
+	if c == null or c.plantilla.is_empty():
+		return
+	for i in _rng.randi_range(1, 2):
+		var j: Jugador = c.plantilla[_rng.randi() % c.plantilla.size()]
+		var animo := "molesto" if (j.moral < 40 or j.pide_salir) else ("feliz" if j.moral >= 72 else "normal")
+		var opciones: Array = PUBLICA_JUGADOR[animo]
+		var d: Array = opciones[_rng.randi() % opciones.size()]
+		var p := _nueva("jugador", "%s %s" % [String(d[0]), String(d[1])], [hashtag_club(c)], String(d[2]), m)
+		p["autor"] = "@" + usuario_de(j.nombre)
+		p["jugador_id"] = j.id
+		p["animo"] = animo
+		p["likes"] = _rng.randi_range(80, 900) * (2 if j.ovr >= 75 else 1)
+		p["compartidos"] = int(int(p["likes"]) * _rng.randf_range(0.03, 0.1))
+		_comentar(p, _rng.randi_range(1, 3), String(d[3]))
+		if animo == "molesto":
+			p["polemica"] = true
+
+## Tu comentario en la publicación de un jugador de tu plantel (uno por
+## publicación). Mueve su moral según cómo estaba. Devuelve el mensaje.
+func comentar_jugador(m: Mundo, pub_id: int, tono: String) -> String:
+	var p := buscar(pub_id)
+	if p.is_empty() or String(p.get("cuenta", "")) != "jugador" or not COMENTAR_JUGADOR.has(tono):
+		return "no se puede comentar eso"
+	if bool(p.get("comentado", false)):
+		return "ya le comentaste"
+	var j := m.jugador_por_id(String(p.get("jugador_id", "")))
+	var d: Array = COMENTAR_JUGADOR[tono]
+	p["comentado"] = true
+	(p["comentarios"] as Array).push_front({"autor": String(cuentas["dt"]["usuario"]), "texto": String(d[2]), "tono": "tuyo", "respuesta": "-"})
+	var delta := int(d[4]) if String(p.get("animo", "")) == "molesto" else int(d[3])
+	if j != null:
+		j.moral = clampi(j.moral + delta, 0, 100)
+		if tono == "cortante" and m.prensa != null:
+			noticia.emit("🧊 Mensaje en público", "Le contestaste a %s en redes delante de todos. El vestuario lo comenta." % j.nombre)
+		return "%s %s (moral %+d)." % [String(d[0]), j.nombre, delta]
+	return "Comentado."
 
 ## EL EVENTO: el community manager se va de vacaciones y la directiva te
 ## pasa la cuenta. La clave llega por Mensajes.

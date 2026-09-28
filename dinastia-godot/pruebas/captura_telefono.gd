@@ -36,6 +36,7 @@ func _process(_d: float) -> void:
 		_p.call("_anotar", "La directiva confía en el proyecto", "El presidente habló con la prensa.")
 		_m.redes.publicar(_m, "hinchada", ["#Hinchada", _m.redes.tendencia])
 		_m.redes.dar_acceso_club(_m)
+		_m.redes._publican_jugadores(_m)
 		_m.movil.fondo = "atardecer"
 		_m.movil.funda = "club"
 		var pop := Telefono.abrir(_p, _m)
