@@ -6082,9 +6082,30 @@ func _probar_tanda_c() -> void:
 	_comprobar(cf != null and cf.color1 == "#112233" and cf.estadio_nombre == "La Cancha", "fundar un club con sus colores y su estadio")
 	## TU CASA (28-9-2026): las noticias se vuelven publicaciones y la escena se
 	## monta con cada vivienda (casa, auto y DT con el móvil).
-	var posts := CasaEscena3D.publicaciones(mf, [{"titulo": "✅ Victoria", "cuerpo": "2-1"}, {"titulo": "❌ Eliminados", "cuerpo": "penales"}])
-	_comprobar(posts.size() == 2 and String(posts[0]["tono"]) == "bien" and String(posts[1]["tono"]) == "mal", "las noticias se vuelven publicaciones con su tono")
-	_comprobar(CasaEscena3D.publicaciones(mf, []).size() == 1, "sin noticias hay una publicación tranquila")
+	## LAS REDES (Tribuna): cuentas, noticias, publicar, responder, guardar.
+	var rd := mf.redes
+	_comprobar(rd != null and String(rd.cuentas["club"]["usuario"]).ends_with("_oficial") and int(rd.cuentas["club"]["seguidores"]) > 0, "el club tiene su cuenta oficial (%s)" % String(rd.cuentas["club"]["usuario"]))
+	var n_antes := rd.publicaciones.size()
+	rd.desde_noticia(mf, "✅ Victoria de visita", "2-1 en el clásico")
+	_comprobar(rd.publicaciones.size() == n_antes + 2 and String(rd.publicaciones[1]["cuenta"]) == "club", "una victoria la publica el club y la comenta un hincha")
+	var pub := rd.publicar(mf, "hinchada", ["#Hinchada", rd.tendencia])
+	_comprobar(not pub.has("error") and int(pub["likes"]) > 0 and (pub["comentarios"] as Array).size() >= 3, "publicar un mensaje a la hinchada trae me gusta y comentarios (%d)" % int(pub.get("likes", 0)))
+	var pend_antes := rd.pendientes()
+	var resp := rd.responder(mf, int(pub["id"]), 0, "agradecer")
+	_comprobar(resp != "" and rd.pendientes() == pend_antes - 1 and rd.responder(mf, int(pub["id"]), 0, "broma") == "ya le respondiste", "responder un comentario, una sola vez")
+	rd.publicar(mf, "entreno", [])
+	_comprobar(rd.publicar(mf, "familia", []).has("error"), "no más de %d publicaciones por semana" % Redes.MAX_PROPIAS_SEMANA)
+	var gustos := int(pub["likes"])
+	rd.me_gusta(int(pub["id"]))
+	_comprobar(int(rd.buscar(int(pub["id"]))["likes"]) == gustos + 1, "dar me gusta suma uno")
+	var rd2 := Redes.new()
+	rd2.desde_dic(rd.a_dic())
+	_comprobar(rd2.publicaciones.size() == rd.publicaciones.size() and rd2.pendientes() == rd.pendientes(), "las redes se guardan con la partida")
+	var tel := Telefono.crear(mf)
+	for pest: String in ["inicio", "perfil", "club", "publicar"]:
+		tel.ir(pest)
+	_comprobar(tel.get("_cuerpo") != null, "el móvil abre sus cuatro pestañas")
+	tel.free()
 	for viv: String in VidaDT.ORDEN_VIVIENDA:
 		var ce := CasaEscena3D.new()
 		ce.montar(viv, "deportivo", {}, Color.RED, Color.WHITE)

@@ -112,6 +112,8 @@ var licencia: Licencia
 ## Los trabajadores de las instalaciones y sus eventos (C10), y los asuntos de
 ## la cantera (C11).
 var trabajadores: Trabajadores
+## Las redes sociales (Tribuna): tu cuenta y la oficial del club (28-9-2026).
+var redes: Redes
 var eventos_cantera: EventosCantera
 var calendario: Calendario
 var politica: Politica
@@ -1109,6 +1111,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		charlas.semana(mi_club(), anio, semana)
 	if trabajadores != null and mi_club() != null:
 		trabajadores.semana(mi_club(), obras, anio, semana, prensa)
+	if redes != null:
+		redes.iniciar(self)
+		redes.semana(self)
 	if fondo != null:
 		fondo.semana(self)
 	if eventos_cantera != null and mi_club() != null:
@@ -1838,6 +1843,8 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	licencia = Licencia.new()
 	trabajadores = Trabajadores.new()
 	Trabajadores.actual = trabajadores
+	redes = Redes.new()
+	redes.iniciar(self)
 	eventos_cantera = EventosCantera.new()
 	calendario = Calendario.new()
 	politica = Politica.new()
