@@ -6133,6 +6133,14 @@ func _probar_tanda_c() -> void:
 		ce.montar(viv, "deportivo", {}, Color.RED, Color.WHITE)
 		var mallas := ce.find_children("*", "MeshInstance3D", true, false).size()
 		_comprobar(mallas > 20, "la escena de «%s» se monta (%d mallas)" % [viv, mallas])
+		if viv == "jardin":
+			var hierba := ce.find_children("*", "MultiMeshInstance3D", true, false)
+			_comprobar(not hierba.is_empty() and (hierba[0] as MultiMeshInstance3D).multimesh.instance_count > 10000, "el jardín tiene césped de briznas (%d)" % ((hierba[0] as MultiMeshInstance3D).multimesh.instance_count if not hierba.is_empty() else 0))
+			var farolas: Array = ce.get("_farolas")
+			_comprobar(farolas.size() == 2, "hay dos farolas para el atardecer")
+			ce.libre = true
+			ce.acercar(100.0)
+			_comprobar(is_equal_approx(float(ce.get("_dist")), 14.0), "la cámara libre no se aleja más de la cuenta")
 		ce.free()
 	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
 	var fi := FondoInversion.new()
