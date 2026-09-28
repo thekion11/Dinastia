@@ -481,23 +481,32 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	var i := esq.find_bone("hand_r")
 	if i < 0 or not ResourceLoader.exists(RUTA_MOVIL):
 		return
-	var ba := BoneAttachment3D.new()
-	ba.bone_name = "hand_r"
-	esq.add_child(ba)
+	## EL MÓVIL EN LA MANO (28-9-2026, "ve el tema de la mano, no se ve bien,
+	## parece una tablet"). Colgado del hueso de la mano heredaba su giro y
+	## quedaba de canto, apaisado y enorme. Ahora vive en un pivote propio que
+	## cada vez que se actualiza el esqueleto se pone en la palma, en
+	## VERTICAL (el largo hacia arriba) y con la pantalla mirando a la cara.
 	var movil: Node3D = (load(RUTA_MOVIL) as PackedScene).instantiate()
-	var soporte := Node3D.new()
-	ba.add_child(soporte)
-	soporte.add_child(movil)
-	## El modelo mide 1,84 de largo: a 16 cm. Largo (X del modelo) a lo largo
-	## de la mano (Y del hueso) y la pantalla hacia la cara.
-	movil.scale = Vector3.ONE * (0.16 / 1.84)
-	soporte.rotation_degrees = Vector3(0.0, 0.0, 90.0)
-	soporte.position = Vector3(0.0, 0.09, 0.03)
-	## La pantalla encendida: un feed de tarjetas claras con su barra de
-	## arriba, que brilla un poco (se ve desde el plano por encima del hombro).
+	var mallas := movil.find_children("*", "MeshInstance3D", true, false)
+	if mallas.is_empty():
+		return
+	var malla := mallas[0] as MeshInstance3D
+	var pivote := Node3D.new()
+	add_child(pivote)
+	malla.get_parent().remove_child(malla)
+	movil.queue_free()
+	pivote.add_child(malla)
+	## Medido en la malla: largo en X (1,84), grosor en Y (-0,106..0, la
+	## pantalla en -Y; en +Y está el bulto de la cámara) y ancho en Z (0,89).
+	## Largo → Y del pivote, pantalla (-Y) → Z del pivote (hacia la cara).
+	var ab := malla.get_aabb()
+	var escala := 0.15 / maxf(ab.size.x, 0.001)
+	var b := Basis(Vector3(0, 1, 0), Vector3(0, 0, -1), Vector3(-1, 0, 0)).scaled(Vector3.ONE * escala)
+	malla.transform = Transform3D(b, -(b * ab.get_center()))
+	## La pantalla encendida, pegada a la cara -Y.
 	var pantalla := MeshInstance3D.new()
 	var q := QuadMesh.new()
-	q.size = Vector2(1.66, 0.78)
+	q.size = Vector2(ab.size.x * 0.92, ab.size.z * 0.88)
 	pantalla.mesh = q
 	var mp := StandardMaterial3D.new()
 	mp.albedo_texture = _textura_feed()
@@ -506,29 +515,55 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	mp.emission_energy_multiplier = 0.8
 	mp.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	pantalla.material_override = mp
-	## La cara -Y del modelo (en +Y está el bulto de la cámara trasera).
 	pantalla.rotation_degrees.x = 90.0
-	## El modelo no está centrado: su grosor va de y=-0,106 a y=0.
-	pantalla.position = Vector3(0.0, -0.109, 0.028)
-	## Se cuelga de la MALLA, no de la raíz del modelo: las medidas de arriba
-	## son las de la malla, que dentro del .glb lleva su propio giro.
-	var mallas := movil.find_children("*", "MeshInstance3D", true, false)
-	(mallas[0] as Node3D if not mallas.is_empty() else movil).add_child(pantalla)
+	pantalla.position = Vector3(ab.get_center().x, ab.position.y - 0.003, ab.get_center().z)
+	malla.add_child(pantalla)
+	var sosten := _SostenMovil.new()
+	sosten.esq = esq
+	sosten.pivote = pivote
+	add_child(sosten)
+	esq.skeleton_updated.connect(sosten.colocar)
+
+## Pone el móvil en la palma derecha mirando a la cabeza, después de que la
+## animación y `_BrazoMovil` hayan movido el esqueleto.
+class _SostenMovil extends Node:
+	var esq: Skeleton3D
+	var pivote: Node3D
+	func colocar() -> void:
+		if esq == null or pivote == null:
+			return
+		var im := esq.find_bone("hand_r")
+		var ic := esq.find_bone("Head")
+		if im < 0 or ic < 0:
+			return
+		var xf := esq.global_transform
+		var mano := xf * esq.get_bone_global_pose(im)
+		var cabeza := (xf * esq.get_bone_global_pose(ic)).origin + Vector3(0, 0.08, 0)
+		## La palma: un poco más allá de la muñeca, a lo largo de la mano.
+		var palma := mano.origin + mano.basis.y.normalized() * 0.08
+		var z := (cabeza - palma).normalized()
+		var arriba := (Vector3.UP - z * Vector3.UP.dot(z)).normalized()
+		## Inclinado un poco hacia atrás, como se sostiene para leer.
+		var x := arriba.cross(z).normalized()
+		var bas := Basis(x, arriba, z).rotated(x, -0.25)
+		pivote.global_transform = Transform3D(bas, palma + z * 0.02)
 
 ## Una pantalla de redes dibujada a mano: fondo oscuro, barra de arriba y
-## tarjetas claras con una "foto" de color. Horizontal (el largo del móvil
-## va en X), así que las tarjetas van en columnas.
+## tarjetas claras con una "foto" de color, una debajo de otra.
 static func _textura_feed() -> ImageTexture:
-	var img := Image.create(128, 60, false, Image.FORMAT_RGBA8)
+	## Se dibuja en vertical (60×128, como se lee un móvil) y se gira para
+	## que el largo de la imagen caiga en el largo del móvil (X de la malla).
+	var img := Image.create(60, 128, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0.07, 0.08, 0.1))
-	img.fill_rect(Rect2i(0, 0, 10, 60), Color(0.12, 0.14, 0.18))
+	img.fill_rect(Rect2i(0, 0, 60, 10), Color(0.12, 0.14, 0.18))
 	var fotos := [Color(0.85, 0.45, 0.2), Color(0.25, 0.55, 0.85), Color(0.3, 0.7, 0.4)]
 	for k in 3:
-		var x := 14 + k * 38
-		img.fill_rect(Rect2i(x, 4, 34, 52), Color(0.93, 0.94, 0.96))
-		img.fill_rect(Rect2i(x + 3, 7, 28, 22), fotos[k])
+		var y := 13 + k * 38
+		img.fill_rect(Rect2i(4, y, 52, 35), Color(0.93, 0.94, 0.96))
+		img.fill_rect(Rect2i(7, y + 3, 46, 18), fotos[k])
 		for r in 3:
-			img.fill_rect(Rect2i(x + 3, 33 + r * 7, 28 - r * 6, 3), Color(0.55, 0.57, 0.62))
+			img.fill_rect(Rect2i(7, y + 24 + r * 4, 40 - r * 10, 2), Color(0.55, 0.57, 0.62))
+	img.rotate_90(COUNTERCLOCKWISE)
 	return ImageTexture.create_from_image(img)
 
 ## EL BRAZO CON EL MÓVIL. Corre después de la animación: dobla el brazo
@@ -541,6 +576,8 @@ class _BrazoMovil extends SkeletonModifier3D:
 	## poco, a golpes) y tres levanta la cabeza a mirar el jardín, bajando un
 	## poco el móvil, antes de volver a la pantalla.
 	var _t0 := Time.get_ticks_msec()
+	## Cuánto se dobla cada falange (radianes, en el eje X local del hueso).
+	const CURVA_DEDO := 0.75
 	func _process_modification() -> void:
 		var esq := get_skeleton()
 		if esq == null:
@@ -567,6 +604,14 @@ class _BrazoMovil extends SkeletonModifier3D:
 				continue
 			var q := Quaternion(dir, obj)
 			esq.set_bone_global_pose(h, Transform3D(Basis(q) * g.basis, g.origin))
+		## Los dedos cerrados alrededor del móvil (la mano del reposo va
+		## abierta y parecía que lo ofrecía). El pulgar queda libre encima.
+		for dedo: String in ["index", "middle", "ring", "pinky"]:
+			for f in ["01", "02", "03"]:
+				var hd := esq.find_bone("%s_%s_r" % [dedo, f])
+				if hd >= 0:
+					var r := esq.get_bone_pose_rotation(hd)
+					esq.set_bone_pose_rotation(hd, r * Quaternion(Vector3(1, 0, 0), CURVA_DEDO))
 		## La cabeza: hacia la pantalla, o arriba y a un lado cuando mira el
 		## jardín.
 		var cb := esq.find_bone("Head")
