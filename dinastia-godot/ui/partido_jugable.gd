@@ -61,8 +61,11 @@ func _montar(duracion_mitad: float) -> void:
 	add_child(cont)
 	_vp = SubViewport.new()
 	_vp.own_world_3d = true
-	_vp.msaa_3d = Viewport.MSAA_4X
 	cont.add_child(_vp)
+	## Mismos acabados que el partido del modo entrenador (antialias, sombras,
+	## debanding): antes aquí solo había un MSAA suelto y la grada se veía
+	## rayada a la rasante.
+	Calidad.aplicar_viewport(_vp, Calidad.elegida)
 	_raiz = Node3D.new()
 	_vp.add_child(_raiz)
 	## El estadio del local, el que se juega.
@@ -70,6 +73,13 @@ func _montar(duracion_mitad: float) -> void:
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
 	StadiumBuilder.build_pitch(_raiz, perfil, local)
 	StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
+	## Lo que el modo entrenador ya tenía y aquí faltaba: la lluvia o la nieve,
+	## la pantalla gigante y camarógrafos/guardias de verdad en vez de maniquíes.
+	var gp := StadiumBuilder.geom_de_forma(String(perfil.get("forma", "oval")))
+	if String(perfil.get("techo", "")) != "retractil":
+		Precipitacion.montar(_raiz, String(perfil.get("clima", "noche")), float(gp["dx"]), float(gp["dz"]), Calidad.elegida)
+	_montar_pantalla(perfil)
+	VistaEstadio.poner_personal(_raiz)
 	## Los 22.
 	var yo := carrera.jugador(mundo) if carrera != null else null
 	_es_local_usuario = yo != null and yo.club_id == local.id
@@ -81,7 +91,13 @@ func _montar(duracion_mitad: float) -> void:
 	var lista: Array = []
 	lista.append_array(sp.spawn_team(_raiz, l["xi"], l["jugadores"], Puente3D.formacion(local.tactica.formacion), true, Puente3D.kit(local), Puente3D.kit_portero(local)))
 	lista.append_array(sp.spawn_team(_raiz, v["xi"], v["jugadores"], Puente3D.formacion(visita.tactica.formacion), false, Puente3D.kit_visita(local, visita), Puente3D.kit_portero(visita)))
+	## Árbitros, suplentes y los dos DT en la banda, como en el modo entrenador.
+	lista.append_array(sp.spawn_arbitros(_raiz))
+	VistaEstadio.poner_banca_de(_raiz, sp, local, once_l, true)
+	VistaEstadio.poner_banca_de(_raiz, sp, visita, once_v, false)
 	var cb := Comercial.color_balon(mundo.comercial.balon, local) if mundo != null and mundo.comercial != null else []
+	if String(perfil.get("clima", "")) == "nieve":
+		cb = [Color("#ff7a1a"), Color("#1a1a1a"), "moderno"]
 	var balon := StadiumBuilder.spawn_ball(_raiz, Vector3(0, 0.11, 0), cb)
 	motor = MotorJugable.new()
 	add_child(motor)
@@ -103,6 +119,24 @@ func _montar(duracion_mitad: float) -> void:
 	_raiz.add_child(_flecha)
 	_montar_hud()
 	Sonido.toca("silbato" if Sonido.NOMBRES.has("silbato") else "clic", Sonido.Bus.INTERFAZ)
+
+## La pantalla gigante del estadio, como en `VistaEstadio._montar_pantalla`
+## (sin `Partido`: rota bienvenida, tabla y goleadores).
+func _montar_pantalla(perfil: Dictionary) -> void:
+	var pantallas := _raiz.find_children("PantallaMarcador*", "MeshInstance3D", true, false)
+	if pantallas.is_empty():
+		return
+	var pe := PantallaEstadio.new()
+	add_child(pe)
+	pe.montar(local, visita, null, {}, String(perfil.get("nombre", local.estadio_nombre)))
+	var tex := pe.get_texture()
+	for m: MeshInstance3D in pantallas:
+		var mat := StandardMaterial3D.new()
+		mat.albedo_texture = tex
+		mat.emission_enabled = true
+		mat.emission_texture = tex
+		mat.emission_energy_multiplier = 1.1
+		m.material_override = mat
 
 func _crear_flecha() -> MeshInstance3D:
 	var m := MeshInstance3D.new()
@@ -269,16 +303,25 @@ func _actualizar_camara(delta: float) -> void:
 		foco = motor.pos(motor.usuario).lerp(motor.balon.position, 0.35)
 	else:
 		foco = motor.balon.position
-	var detras := Vector3(0, 10.5, -14.0 * d)
-	var mira := foco + Vector3(0, 0.5, 9.0 * d)
+	var detras := Vector3(0, 12.5, -15.0 * d)
+	var mira := foco + Vector3(0, 0.5, 10.0 * d)
 	if motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "penal":
 		detras = Vector3(0, 3.2, -7.0 * d)
 	elif motor.apuntando:
 		## Córner y falta: detrás del balón, mirando adonde apuntas.
 		var dir := motor.direccion_apunte()
-		detras = -dir * 9.0 + Vector3(0, 6.5, 0)
+		detras = -dir * 10.0 + Vector3(0, 8.5, 0)
 		mira = foco + dir * 18.0
 	var deseada := foco + detras
+	## LA CÁMARA NO SALE DEL CAMPO (29-9-2026). Pegada a la grada se veía el
+	## público de cerca -muñecos y textura estirada- y la tapaban las vallas.
+	## Si choca con el borde, en vez de atravesarlo sube: queda un plano
+	## picado, como la cámara de una transmisión en el fondo.
+	var lim := Vector3(33.0, 0, 51.0)
+	var fuera := maxf(absf(deseada.x) - lim.x, 0.0) + maxf(absf(deseada.z) - lim.z, 0.0)
+	deseada.x = clampf(deseada.x, -lim.x, lim.x)
+	deseada.z = clampf(deseada.z, -lim.z, lim.z)
+	deseada.y += fuera * 0.6
 	_cam.position = _cam.position.lerp(deseada, clampf(delta * 3.5, 0.0, 1.0)) if _cam.position.length() > 0.1 else deseada
 	_cam.look_at(mira, Vector3.UP)
 
