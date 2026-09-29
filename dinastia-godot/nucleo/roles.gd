@@ -895,6 +895,8 @@ func sumar_trofeo(titulo: String) -> void:
 	trofeos.append({"anio": m.anio if m != null else 0, "titulo": titulo})
 	_rep("ganador", 8, "Título: %s" % titulo)
 	sumar_prestigio(3)
+	## Al museo de todas tus carreras, y un sobre de cromos.
+	Meta.registrar_trofeo(m, titulo)
 
 # ---------------------------------------------------------------------------
 # AYUDANTE: ganarte el banco de tu jefe

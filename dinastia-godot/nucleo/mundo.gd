@@ -456,6 +456,11 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	## generado -Reales necesita ver TODOS los clubes creados para poder cruzar
 	## sus nombres contra la tabla, no uno a uno mientras se crean-.
 	Reales.aplicar(self)
+	## EL MUNDO HEREDADO (28-9-2026, `Meta`): si se pidió, los clubes arrancan
+	## con la reputación con la que quedaron en tu última partida.
+	if Meta.heredar_proximo:
+		Meta.heredar_proximo = false
+		Meta.aplicar_herencia(self)
 
 ## Saca la lista de ligas de DATA_P1/DATA_P2 (Chile, las dos divisiones) y de
 ## PAISES_LIGAS (el resto del mundo), que es donde las tiene el HTML.
@@ -1631,6 +1636,8 @@ func nueva_temporada() -> Dictionary:
 	## las plantillas del año siguiente y el descendido ya habría perdido a sus
 	## veteranos antes de saber que bajaba.
 	var resumen := cerrar_temporada()
+	## Lo que queda entre partidas: un sobre de cromos y la foto del mundo.
+	Meta.fin_de_temporada(self)
 	## La selección y el Mundial de Clubes leen los campeones continentales de
 	## ESTA temporada que se acaba, así que van antes de volver a sortear los
 	## continentales de la siguiente -si no, mirarían el cuadro vacío del año

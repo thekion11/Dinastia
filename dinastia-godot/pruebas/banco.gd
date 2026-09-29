@@ -20,6 +20,11 @@ var _fallos: Array[String] = []
 var _lineas: Array[String] = []
 
 func _ready() -> void:
+	## Lo que queda entre partidas (`Meta`) va a un archivo propio del banco:
+	## si no, cada corrida llenaría el álbum de verdad con sobres de prueba.
+	Meta.ruta = "user://meta_banco.json"
+	if FileAccess.file_exists(Meta.ruta):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(Meta.ruta))
 	_titulo("BANCO DE PRUEBAS DEL NUCLEO")
 	## El banco se escribió contra los datos REALES (Colo-Colo, Vidal, las
 	## equipaciones archivadas...) y así sigue: se corre con el pack real
@@ -6295,6 +6300,30 @@ func _probar_tanda_c() -> void:
 	ed_c.renombrar_copa("Copa Editada")
 	ed_c.fijar_sede_final(sede_c)
 	_comprobar(me.copa.nombre == "Copa Editada" and me.copa.sede_final_id == sede_c.id, "la copa se renombra y tiene sede fija")
+	## META (bloque 50): cromos, museo global, mundo heredado.
+	var sobres_antes := int(Meta.leer()["sobres"])
+	mf.roles.sumar_trofeo("Copa de Prueba")
+	var dm := Meta.leer()
+	_comprobar(int(dm["sobres"]) == sobres_antes + 1 and String((dm["museo"] as Array)[0]["titulo"]) == "Copa de Prueba", "un título va al museo global y da un sobre")
+	var rng_m := RandomNumberGenerator.new()
+	rng_m.seed = 5
+	var salen := Meta.abrir_sobre(mf, rng_m)
+	_comprobar(salen.size() == Meta.POR_SOBRE and int(Meta.leer()["sobres"]) == sobres_antes, "abrir un sobre da %d cromos y gasta el sobre" % Meta.POR_SOBRE)
+	_comprobar((Meta.leer()["cromos"] as Dictionary).size() >= 1, "los cromos quedan en el álbum")
+	var cm0: Club = mf.clubes.values()[0]
+	var rep_real := cm0.rep
+	cm0.rep = 97
+	Meta.fin_de_temporada(mf)
+	cm0.rep = rep_real
+	_comprobar(Meta.hay_legado(), "al cerrar la temporada se guarda el mundo para heredar")
+	var mh := Mundo.new()
+	Meta.heredar_proximo = true
+	mh.generar(["CHI"], 12)
+	var cm_h: Club = null
+	for c_h: Club in mh.clubes.values():
+		if c_h.nombre == cm0.nombre:
+			cm_h = c_h
+	_comprobar(cm_h != null and cm_h.rep == 97 and not Meta.heredar_proximo, "el mundo heredado arranca con la reputación de la última partida")
 	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
 	var fi := FondoInversion.new()
 	fi.caja = 1000000000
