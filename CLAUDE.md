@@ -57,7 +57,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - Hecho 29-9: VÍDEO PROMO (3:42) entregado en el chat (límite del chat: 30 MB).
   Guion: pruebas/video_promo.gd · montaje: herramientas/montar_promo.py.
 - El usuario dijo que con 9 idiomas «estamos bien»: no sumar más.
-- Siguiente: REPASO REAL y MEGAPLAN.
+- Hecho 29-9: REPASO y MEGAPLAN en `dinastia-godot/MEGAPLAN.md` (fases 1-6).
+- Siguiente: esperar al usuario o empezar MEGAPLAN fase 1 (pulido).
 - Carrera de Jugador: fuera de juego, más eventos, cambios, selección jugable.
 - Esperando al usuario: túnel, cara 2D→3D (necesita permiso).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
