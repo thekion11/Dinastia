@@ -1229,7 +1229,7 @@ que dar esta lista por vigente sin re-verificar sería el mismo error de siempre
   está hecho según `dinastia-pendientes` v3.1).
 - [x] **47 — Competencias (28-9-2026: editor en Ajustes → Editor)**: editor de campeonatos, sede de final fija. (Cabezas de serie y
   Apertura/Clausura ya existen.)
-- [ ] **50 — Meta**: cromos, museo global, mundo heredado. (Nivel de perfil del gestor ya existe.)
+- [x] **50 — Meta (28-9-2026, `Meta` en user://)**: cromos, museo global, mundo heredado. (Nivel de perfil del gestor ya existe.)
 
 ---
 
