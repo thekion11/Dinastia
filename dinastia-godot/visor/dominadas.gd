@@ -94,10 +94,11 @@ func _iniciar(ap: AnimationPlayer, esq: Skeleton3D, clip: String) -> bool:
 	esfera.radial_segments = 16
 	esfera.rings = 8
 	_balon.mesh = esfera
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.96, 0.96, 0.94)
-	mat.roughness = 0.55
-	_balon.material_override = mat
+	## El mismo balón del partido (o el clásico, si todavía no hay ninguno).
+	esfera.radial_segments = 32
+	esfera.rings = 16
+	_balon.material_override = Balon3D.material_actual if Balon3D.material_actual != null \
+		else Balon3D.material(Color("#f8faf6"), Color("#1a1a1a"), "clasico")
 	add_child(_balon)
 	_colocar(0.0)
 	return true

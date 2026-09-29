@@ -6310,6 +6310,20 @@ func _probar_tanda_c() -> void:
 	_comprobar(String(perf_an.get("focosCol", "")) == "#1f4fa3" and String(perf_an.get("vallaCol", "")) == "#1b1d22", "focos y vallas con color propio")
 	var est_limpio := EstadioPropio.new()
 	_comprobar(not est_limpio.perfil(mf.mi_club()).has("focosCol") and claves_antes.size() > 0, "sin elegir, el perfil no suma claves nuevas")
+	## LOS BALONES (mapa de metas 19): 8 pieles, 3 dibujos de paneles de verdad.
+	_comprobar(Comercial.balones().size() >= 8, "hay %d balones para elegir" % Comercial.balones().size())
+	var cb_club := Comercial.color_balon("club", mf.mi_club())
+	_comprobar(cb_club.size() == 3 and cb_club[0] == Color(mf.mi_club().color1) and String(cb_club[2]) == "moderno", "el balón del club lleva sus colores y su dibujo")
+	var img_cl := Balon3D.textura(Color.WHITE, Color.BLACK, "clasico").get_image()
+	var oscuros := 0
+	for yb in range(0, img_cl.get_height(), 2):
+		for xb in range(0, img_cl.get_width(), 2):
+			if img_cl.get_pixel(xb, yb).get_luminance() < 0.2:
+				oscuros += 1
+	var frac := float(oscuros) / float(img_cl.get_width() * img_cl.get_height() / 4)
+	_comprobar(frac > 0.08 and frac < 0.45, "el clásico tiene sus 12 pentágonos oscuros (%.0f %% del balón)" % (frac * 100.0))
+	var t_mod := Balon3D.textura(Color.WHITE, Color.BLACK, "moderno")
+	_comprobar(t_mod != Balon3D.textura(Color.WHITE, Color.BLACK, "clasico") and t_mod == Balon3D.textura(Color.WHITE, Color.BLACK, "moderno"), "cada dibujo es distinto y se guarda en caché")
 	## LAS BUTACAS DE LOS RIVALES, de los colores de su club (no el verde del visor).
 	var riv_b: Club = mf.ligas[0].clubes[1]
 	_comprobar(String(riv_b.perfil_estadio().get("asiento1", "")) == riv_b.color1, "las butacas de un rival llevan los colores de su club")
