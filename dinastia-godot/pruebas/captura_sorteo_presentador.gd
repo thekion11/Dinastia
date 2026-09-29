@@ -38,12 +38,12 @@ func _process(_d: float) -> void:
 			_escena.cortar_plano(2)
 	if _n == 30:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/sorteo_presentador_de_pie.png")
+		img.save_png("res://pruebas/capturas/sorteo_presentador_de_pie.png")
 		print("de pie capturado, presentador realista: ", _escena.get("_presentador_real") != null)
 		if _escena != null:
 			_escena.gesto_sacar()
 	if _n == 44:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/sorteo_presentador_gesto.png")
+		img2.save_png("res://pruebas/capturas/sorteo_presentador_gesto.png")
 		print("capturado el gesto")
 		get_tree().quit()

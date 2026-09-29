@@ -76,11 +76,11 @@ func _process(_delta: float) -> void:
 		_ap.seek(float(SECUENCIA[_i][2]), true)
 	if _frame_desde_clip == 5:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/futbol_global_%s_frente.png" % SECUENCIA[_i][1])
+		img.save_png("res://pruebas/capturas/futbol_global_%s_frente.png" % SECUENCIA[_i][1])
 		_cam_lado.current = true
 	if _frame_desde_clip == 8:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/futbol_global_%s_lado.png" % SECUENCIA[_i][1])
+		img2.save_png("res://pruebas/capturas/futbol_global_%s_lado.png" % SECUENCIA[_i][1])
 		print("capturado ", SECUENCIA[_i][1])
 		_cam_frente.current = true
 		_siguiente()

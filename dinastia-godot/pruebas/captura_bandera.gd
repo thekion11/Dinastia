@@ -42,5 +42,5 @@ func _process(_d: float) -> void:
 		var hoja := Image.create(480 * 3, 320, false, Image.FORMAT_RGBA8)
 		for k in 3:
 			hoja.blit_rect(_imgs[k], Rect2i(0, 0, 480, 320), Vector2i(k * 480, 0))
-		hoja.save_png("res://pruebas/bandera_ondea.png")
+		hoja.save_png("res://pruebas/capturas/bandera_ondea.png")
 		get_tree().quit()

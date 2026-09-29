@@ -10,5 +10,5 @@ func _process(_d: float) -> void:
 	if _n == 8:
 		_i.call("_elegir_reto")
 	if _n == 14:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/retos.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/retos.png")
 		get_tree().quit()

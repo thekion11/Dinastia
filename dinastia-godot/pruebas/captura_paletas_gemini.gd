@@ -23,5 +23,5 @@ func _process(_d: float) -> void:
 		print("pantalla de ajustes pintada sin reventar, con 'cibernetico' activa")
 	if _n == 25:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_paletas_gemini.png")
+		img.save_png("res://pruebas/capturas/pantalla_paletas_gemini.png")
 		get_tree().quit()

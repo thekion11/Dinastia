@@ -44,11 +44,11 @@ func _process(_d: float) -> void:
 			_comprobar(_tut != null and _tut.fase() == "prologo", "el tutorial arranca con el prólogo")
 		40:
 			_comprobar(_tut.escribiendo(), "el prólogo se va escribiendo a máquina")
-			_foto("res://pruebas/tutorial_prologo_escribiendo.png")
+			_foto("res://pruebas/capturas/tutorial_prologo_escribiendo.png")
 			_tut.pulsar_prologo()
 		45:
 			_comprobar(not _tut.escribiendo() and _tut.fase() == "prologo", "el primer clic termina de escribirlo, sin saltarlo")
-			_foto("res://pruebas/tutorial_prologo.png")
+			_foto("res://pruebas/capturas/tutorial_prologo.png")
 			_tut.pulsar_prologo()
 		50:
 			_comprobar(_tut.fase() == "dialogo", "\"Entrar\" pasa al mentor")
@@ -71,7 +71,7 @@ func _process(_d: float) -> void:
 			_comprobar(String(Tutorial.aspecto_mentor("dt", _tut.guion_actual()["mentor"]).get("ropa")) == "burdeos",
 				"el aspecto elegido para el mentor se guarda")
 		110:
-			_foto("res://pruebas/tutorial_mentor.png")
+			_foto("res://pruebas/capturas/tutorial_mentor.png")
 			(_tut.get("_panel_aspecto") as Control).visible = false
 			_tut.call("_mostrar", _i_plantel)
 		150:
@@ -79,7 +79,7 @@ func _process(_d: float) -> void:
 			_pantalla.call("_ir_a_pestana", "Mi plantel")
 		175:
 			_comprobar(_tut.misiones_cumplidas() == 1, "abrir el plantel a mano cumple la misión")
-			_foto("res://pruebas/tutorial_mision_cumplida.png")
+			_foto("res://pruebas/capturas/tutorial_mision_cumplida.png")
 		260:
 			_comprobar(_tut.indice() == _i_plantel + 1, "y el mentor sigue solo al paso siguiente (%d)" % _tut.indice())
 			_tut.call("_mostrar", _i_ficha)
@@ -87,12 +87,12 @@ func _process(_d: float) -> void:
 			_tut.call("_hacer_por_mi")
 		330:
 			_comprobar(_tut.misiones_cumplidas() == 2, "\"Muéstramelo\" abre la ficha de la estrella y cumple la misión")
-			_foto("res://pruebas/tutorial_ficha.png")
+			_foto("res://pruebas/capturas/tutorial_ficha.png")
 			var pasos: Array = _tut.guion_actual()["pasos"]
 			_tut.call("_mostrar", pasos.size() - 1)
 		420:
 			_comprobar(String(_tut.paso_actual().get("titulo", "")) == "¡A jugar!", "el último paso es el epílogo")
-			_foto("res://pruebas/tutorial_final.png")
+			_foto("res://pruebas/capturas/tutorial_final.png")
 			_tut.pulsar_siguiente()
 			_tut.pulsar_siguiente()
 		430:
@@ -101,7 +101,7 @@ func _process(_d: float) -> void:
 			_pantalla.call("abrir_tutorial", "interino")
 			_tut = _pantalla.get("_tutorial")
 		520:
-			_foto("res://pruebas/tutorial_prologo_interino.png")
+			_foto("res://pruebas/capturas/tutorial_prologo_interino.png")
 			_tut.call("_terminar", false)
 		525:
 			if not _visto_antes:

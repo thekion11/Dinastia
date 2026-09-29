@@ -34,7 +34,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_refrescar")
 		_pantalla.call("_ir_a_pestana", "Inicio")
 	if _n == ESPERA + 8:
-		_guardar("res://pruebas/caras_reales_inicio.png")
+		_guardar("res://pruebas/capturas/caras_reales_inicio.png")
 		var mio: Club = _pantalla.get("mundo").mi_club()
 		var estrella: Jugador = null
 		for j: Jugador in mio.plantilla:
@@ -43,7 +43,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_ir_a_pestana", "Club")
 		_pantalla.call("_ver_ficha", estrella)
 	if _n == ESPERA + 16:
-		_guardar("res://pruebas/caras_reales_ficha.png")
+		_guardar("res://pruebas/capturas/caras_reales_ficha.png")
 		Datos.usar_base_real(_base_antes)
 		get_tree().quit()
 

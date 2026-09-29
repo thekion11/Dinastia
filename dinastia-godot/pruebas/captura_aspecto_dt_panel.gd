@@ -54,6 +54,6 @@ func _process(_d: float) -> void:
 			var lista: Node = _p.get("_lista_club")
 			var b := _boton(lista, String(CaraDT.CORTES[3]))
 			_comprobar(b != null and b.button_pressed, "y tras repintar ese corte queda marcado")
-			get_viewport().get_texture().get_image().save_png("res://pruebas/aspecto_dt_panel.png")
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/aspecto_dt_panel.png")
 			print("captura_aspecto_dt_panel: %d fallos" % _fallos)
 			get_tree().quit(1 if _fallos > 0 else 0)

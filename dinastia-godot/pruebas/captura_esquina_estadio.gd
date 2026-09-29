@@ -35,7 +35,7 @@ func _process(_d: float) -> void:
 	_frame += 1
 	if _frame == 25:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_esquina_estadio.png")
+		img.save_png("res://pruebas/capturas/pantalla_esquina_estadio.png")
 		print("captura guardada: pantalla_esquina_estadio.png (%dx%d)" % [img.get_width(), img.get_height()])
 		print("FIN. 0 fallos")
 		get_tree().quit()

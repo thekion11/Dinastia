@@ -1,7 +1,7 @@
 extends Node
 ## LOS OCHO ESTILOS NUEVOS DE ESTADIO (25-9-2026), cada uno en su foto con la
 ## cámara general. `pruebas/estadio_<clave>.png` y una hoja con los ocho,
-## `pruebas/estadios_nuevos.png`.
+## `pruebas/capturas/estadios_nuevos.png`.
 ##
 ##   godot --path . --rendering-driver opengl3 --resolution 960x540 \
 ##         res://pruebas/captura_estadios_nuevos.tscn
@@ -42,7 +42,7 @@ func _process(_d: float) -> void:
 			rig.switch_to(maxi(0, rig.camera_names.find("Dron orbital")))
 	if _n == 18:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/estadio_%s.png" % CLAVES[_i])
+		img.save_png("res://pruebas/capturas/estadio_%s.png" % CLAVES[_i])
 		img.resize(480, 270)
 		_imgs.append(img)
 		_i += 1
@@ -50,7 +50,7 @@ func _process(_d: float) -> void:
 			var hoja := Image.create(480 * 4, 270 * 2, false, Image.FORMAT_RGBA8)
 			for k in _imgs.size():
 				hoja.blit_rect(_imgs[k], Rect2i(0, 0, 480, 270), Vector2i((k % 4) * 480, (k / 4) * 270))
-			hoja.save_png("res://pruebas/estadios_nuevos.png")
+			hoja.save_png("res://pruebas/capturas/estadios_nuevos.png")
 			get_tree().quit()
 			return
 		_abrir()

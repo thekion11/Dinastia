@@ -32,5 +32,5 @@ func _process(_delta: float) -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var img := get_viewport().get_texture().get_image()
-	img.save_png("res://pruebas/quaternius_desnudo.png")
+	img.save_png("res://pruebas/capturas/quaternius_desnudo.png")
 	get_tree().quit(0)

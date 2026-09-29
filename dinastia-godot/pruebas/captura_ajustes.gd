@@ -20,11 +20,11 @@ func _process(_d: float) -> void:
 	if _n == ESPERA:
 		_pantalla.call("_elegir_grupo", "ajustes")
 	if _n == ESPERA + 2:
-		_guardar("res://pruebas/pantalla_ajustes.png")
+		_guardar("res://pruebas/capturas/pantalla_ajustes.png")
 	if _n == ESPERA + 4:
 		_pantalla.call("_ir_a_pestana", "Glosario")
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_glosario.png")
+		_guardar("res://pruebas/capturas/pantalla_glosario.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

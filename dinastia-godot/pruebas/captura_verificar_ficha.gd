@@ -41,7 +41,7 @@ func _process(_d: float) -> void:
 		else:
 			print("OK: ficha propia con %d hijos pintados" % ficha.get_child_count())
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_ficha_propia.png")
+		img.save_png("res://pruebas/capturas/pantalla_ficha_propia.png")
 		print("captura: pantalla_ficha_propia.png")
 
 		## Ahora un jugador AJENO -ejercita la rama que llama a bio_de()
@@ -61,7 +61,7 @@ func _process(_d: float) -> void:
 		else:
 			print("OK: ficha ajena con %d hijos pintados" % ficha2.get_child_count())
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/pantalla_ficha_ajena.png")
+		img2.save_png("res://pruebas/capturas/pantalla_ficha_ajena.png")
 		print("captura: pantalla_ficha_ajena.png")
 		print("FIN. %d fallos" % _fallos)
 		get_tree().quit(_fallos)

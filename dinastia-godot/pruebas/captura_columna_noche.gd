@@ -32,7 +32,7 @@ func _process(_d: float) -> void:
 		if _n == 20 + k * 20:
 			rig.switch_to(CAMARAS[k])
 		elif _n == 30 + k * 20:
-			get_viewport().get_texture().get_image().save_png("res://pruebas/columna_noche_%d.png" % k)
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/columna_noche_%d.png" % k)
 			print("captura %d (%s)" % [k, rig.current_name()])
 	if _n == 30 + CAMARAS.size() * 20:
 		get_tree().quit()

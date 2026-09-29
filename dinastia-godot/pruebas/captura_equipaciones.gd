@@ -10,7 +10,7 @@ extends Node3D
 ## Además comprueba que los doce se vistieron por el camino nuevo (si alguno
 ## cayera al respaldo de la ropa vieja, lo dice y sale con código 1).
 
-const SALIDAS := ["res://pruebas/equipaciones_frente.png", "res://pruebas/equipaciones_espalda.png"]
+const SALIDAS := ["res://pruebas/capturas/equipaciones_frente.png", "res://pruebas/capturas/equipaciones_espalda.png"]
 const COLORES := [
 	["#ffffff", "#111111"], ["#1f4fa0", "#f2c230"], ["#ffffff", "#d0202a"], ["#0b7a3b", "#ffffff"],
 	["#d0202a", "#ffffff"], ["#111111", "#f2c230"], ["#6a1b9a", "#ffffff"], ["#d0202a", "#ffffff"],

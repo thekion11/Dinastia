@@ -41,7 +41,7 @@ func _process(_d: float) -> void:
 				print("MAL: el verde normal no es el esperado")
 				_fallos += 1
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_mercado_verificado.png")
+		img.save_png("res://pruebas/capturas/pantalla_mercado_verificado.png")
 		print("captura: pantalla_mercado_verificado.png")
 
 		## Ahora se activa el modo daltonico y se refresca, como haria el
@@ -58,7 +58,7 @@ func _process(_d: float) -> void:
 			print("MAL: PanelMercado sigue con el verde de siempre en modo daltonico (%s)" % verde_dalt)
 			_fallos += 1
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/pantalla_mercado_daltonico.png")
+		img2.save_png("res://pruebas/capturas/pantalla_mercado_daltonico.png")
 		print("captura: pantalla_mercado_daltonico.png")
 		print("FIN. %d fallos" % _fallos)
 		get_tree().quit(_fallos)

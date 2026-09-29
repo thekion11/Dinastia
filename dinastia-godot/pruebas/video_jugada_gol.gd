@@ -47,7 +47,7 @@ func _process(_d: float) -> void:
 	## del asistidor, el remate/festejo, y la camara ya siguiendo al goleador.
 	if _frame in [20, 60, 110, 200, 350]:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/jugada_gol_f%d.png" % _frame)
+		img.save_png("res://pruebas/capturas/jugada_gol_f%d.png" % _frame)
 	## Primer plano (18-9-2026): el usuario reporto jugadores "hundidos en el
 	## suelo" y postura corporal rara -invisible en la vista tactica de arriba,
 	## hay que acercarse a un jugador de verdad para verlo.
@@ -60,7 +60,7 @@ func _process(_d: float) -> void:
 			rig.ajustar_zoom(-40.0)
 	if _frame == 160:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/jugada_gol_closeup.png")
+		img2.save_png("res://pruebas/capturas/jugada_gol_closeup.png")
 	if _frame >= FRAMES_TOTAL:
 		print("FIN. 0 fallos")
 		get_tree().quit(0)

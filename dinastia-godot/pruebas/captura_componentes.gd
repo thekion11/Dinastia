@@ -47,7 +47,7 @@ func _process(_delta: float) -> void:
 	## Vista general primero -para el escudo en grada/techo y el corner LED-.
 	if _frame == 20:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_componentes_general.png")
+		img.save_png("res://pruebas/capturas/pantalla_componentes_general.png")
 		print("captura guardada: pantalla_componentes_general.png (%dx%d)" % [img.get_width(), img.get_height()])
 		## Cámara "Detrás del arco": de ahí se ve el túnel y la red de cerca.
 		var rig: CameraRig = _vista.get("_rig")
@@ -58,7 +58,7 @@ func _process(_delta: float) -> void:
 					break
 	if _frame == 40:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/pantalla_componentes_arco.png")
+		img2.save_png("res://pruebas/capturas/pantalla_componentes_arco.png")
 		print("captura guardada: pantalla_componentes_arco.png (%dx%d)" % [img2.get_width(), img2.get_height()])
 		print("FIN. 0 fallos")
 		get_tree().quit()

@@ -51,12 +51,12 @@ func _process(_d: float) -> void:
 			_volcar_pantallas(raiz)
 	if _frame == 25:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_estadio_contenido.png")
+		img.save_png("res://pruebas/capturas/pantalla_estadio_contenido.png")
 		print("captura guardada: pantalla_estadio_contenido.png (%dx%d)" % [img.get_width(), img.get_height()])
 		_cam2.current = true
 	if _frame == 27:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/pantalla_estadio_contenido_cerca.png")
+		img2.save_png("res://pruebas/capturas/pantalla_estadio_contenido_cerca.png")
 		print("captura guardada: pantalla_estadio_contenido_cerca.png (%dx%d)" % [img2.get_width(), img2.get_height()])
 		print("FIN. 0 fallos")
 		get_tree().quit()
@@ -70,7 +70,7 @@ func _volcar_pantallas(n: Node, n_encontradas: Array = [0]) -> void:
 			var img := t.get_image()
 			if img != null:
 				n_encontradas[0] += 1
-				var ruta := "res://pruebas/diag_pantalla_viva_%d.png" % n_encontradas[0]
+				var ruta := "res://pruebas/capturas/diag_pantalla_viva_%d.png" % n_encontradas[0]
 				img.save_png(ruta)
 				print("volcada textura real de '%s' -> %s (%s)  pos_global=%s" % [
 					n.name, ruta, img.get_size(), (n as MeshInstance3D).global_position])

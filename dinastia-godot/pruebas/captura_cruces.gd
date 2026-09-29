@@ -33,7 +33,7 @@ func _process(_d: float) -> void:
 	if _n >= 10 and (_n - 10) % 5 == 0:
 		var k: int = (_n - 10) / 5
 		if k > 0:
-			get_viewport().get_texture().get_image().save_png("res://pruebas/%s.png" % VISTAS[k - 1][1])
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % VISTAS[k - 1][1])
 		if k >= VISTAS.size():
 			get_tree().quit()
 			return

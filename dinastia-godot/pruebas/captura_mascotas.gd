@@ -50,13 +50,13 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 8:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/mascotas.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/mascotas.png")
 		_cam.position = Vector3(-3.2, 1.9, 2.4)
 		_cam.look_at(Vector3(-4.8, 1.6, 0.0), Vector3.UP)
 	if _n == 14:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/mascotas_cerca.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/mascotas_cerca.png")
 		_cam.position = Vector3(-2.0, 1.5, -2.2)
 		_cam.look_at(Vector3(-4.8, 1.1, 0.0), Vector3.UP)
 	if _n == 20:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/mascotas_espalda.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/mascotas_espalda.png")
 		get_tree().quit()

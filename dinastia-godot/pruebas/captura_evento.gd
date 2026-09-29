@@ -23,8 +23,8 @@ func _process(_d: float) -> void:
 		_pantalla.call("_refrescar")
 		_pantalla.call("_ir_a_pestana", "Inicio")
 	if _n == ESPERA + 8:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/evento_tarjeta.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/evento_tarjeta.png")
 		_pantalla.call("_resolver", "a")
 	if _n == ESPERA + 12:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/evento_resuelto.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/evento_resuelto.png")
 		get_tree().quit()

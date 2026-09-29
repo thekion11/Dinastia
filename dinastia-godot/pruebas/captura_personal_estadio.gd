@@ -36,4 +36,4 @@ func _process(_d: float) -> void:
 		_cam.look_at(TOMAS[i][1])
 		_cam.make_current()
 	elif t % 8 == 6:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/personal_estadio_%d.png" % (i + 1))
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/personal_estadio_%d.png" % (i + 1))

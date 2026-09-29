@@ -38,10 +38,10 @@ func _process(_d: float) -> void:
 		var c: CajonAjustes = _vivo.get_node("CajonAjustes")
 		c.cerrar(false)
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/cajon_vivo_cerrado.png")
+		_guardar("res://pruebas/capturas/cajon_vivo_cerrado.png")
 		(_vivo.get_node("CajonAjustes") as CajonAjustes).abrir(false)
 	if _n == ESPERA + 9:
-		_guardar("res://pruebas/cajon_vivo_abierto.png")
+		_guardar("res://pruebas/capturas/cajon_vivo_abierto.png")
 		var c2: CajonAjustes = _vivo.get_node("CajonAjustes")
 		c2._quieto = 0.0
 		c2._process(CajonAjustes.CIERRE_SOLO + 0.1)
@@ -54,10 +54,10 @@ func _process(_d: float) -> void:
 	if _n == ESPERA + 40:
 		(_vista.get_node("CajonAjustes") as CajonAjustes).cerrar(false)
 	if _n == ESPERA + 43:
-		_guardar("res://pruebas/cajon_3d_cerrado.png")
+		_guardar("res://pruebas/capturas/cajon_3d_cerrado.png")
 		(_vista.get_node("CajonAjustes") as CajonAjustes).abrir(false)
 	if _n == ESPERA + 46:
-		_guardar("res://pruebas/cajon_3d_abierto.png")
+		_guardar("res://pruebas/capturas/cajon_3d_abierto.png")
 		(_vista.get_node("CajonAjustes") as CajonAjustes).cerrar(false)
 		print("===== CAJÓN: %d fallos =====" % _fallos)
 		get_tree().quit()

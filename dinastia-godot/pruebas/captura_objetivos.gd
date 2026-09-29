@@ -26,5 +26,5 @@ func _process(_d: float) -> void:
 		po._al_arrastrar(ev)
 		print("OBJETIVOS movido a ", po.position)
 	if _n == 40:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/objetivos_borde.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/objetivos_borde.png")
 		get_tree().quit()

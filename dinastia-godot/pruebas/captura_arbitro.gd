@@ -29,17 +29,17 @@ func _process(_d: float) -> void:
 	if _n == 260:
 		rig.switch_to(rig.camera_names.find("Árbitro (POV)"))
 	if _n == 300:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/arbitro_pov.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/arbitro_pov.png")
 		rig.switch_to(rig.camera_names.find("A ras de campo"))
 		var arb = juego.players_by_id.get("arbitro")
 		if arb != null:
 			rig.objetivo_seguimiento = arb.get("node")
 			juego._ejecutar_accion(arb, "arbitro_ventaja", 3.0)
 	if _n == 320:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/arbitro_gesto.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/arbitro_gesto.png")
 		juego.suceso({"min": 55, "t": "arbitro", "tx": "El árbitro va a revisar la jugada en el VAR"})
 	if _n > 322 and _vista.get("_sala_var") != null and (_vista.get("_sala_var") as Node).get("_t") > 2.5:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/arbitro_var.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/arbitro_var.png")
 		get_tree().quit()
 	if _n > 1200:
 		get_tree().quit()

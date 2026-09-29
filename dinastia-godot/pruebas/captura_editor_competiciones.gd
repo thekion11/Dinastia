@@ -13,5 +13,5 @@ func _process(_d: float) -> void:
 		_p.call("_ir_a_chip", {"tab": "Editor", "label": "Editor"})
 		_p.call("_refrescar")
 	if _n == 24:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/editor_competiciones.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/editor_competiciones.png")
 		get_tree().quit()

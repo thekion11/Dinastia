@@ -20,11 +20,11 @@ func _process(_d: float) -> void:
 			elif String(f[1]) != "":
 				ml.abrir_menu(String(f[1]), -1)
 		if _n == int(f[0]):
-			get_viewport().get_texture().get_image().save_png("res://pruebas/%s.png" % String(f[2]))
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % String(f[2]))
 	if _n == 423:
 		ml.abrir_menu("historia", 1)
 	if _n == 440:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/menu_historia_detalle.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/menu_historia_detalle.png")
 	if _n == 441:
 		ml.desplegar()
 	if _n == 444:
@@ -40,5 +40,5 @@ func _process(_d: float) -> void:
 	if _n == 470:
 		var tabs: TabContainer = _p.get("_pestanas")
 		print("VUELTA: pestanas dentro de principal = %s, pestaña %s" % [_p.is_ancestor_of(tabs), tabs.get_tab_title(tabs.current_tab)])
-		get_viewport().get_texture().get_image().save_png("res://pruebas/menu_vuelta.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/menu_vuelta.png")
 		get_tree().quit()

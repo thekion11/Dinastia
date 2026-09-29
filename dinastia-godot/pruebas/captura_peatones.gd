@@ -38,16 +38,16 @@ func _process(_d: float) -> void:
 		cam.position = Vector3(RING_X_CAP + 20.0, 4.0, 30.0)
 		cam.look_at(Vector3(RING_X_CAP + 10.0, 1.2, 0.0), Vector3.UP)
 	if _n == 18:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/ciudad_peatones.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ciudad_peatones.png")
 		var cam2: Camera3D = _v.get("_camara")
 		cam2.position = Vector3(120.0, 70.0, 230.0)
 		cam2.look_at(Vector3(230.0, 0.0, 330.0), Vector3.UP)
 	if _n == 24:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/ciudad_calles.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ciudad_calles.png")
 		## Los frentes urbanos de la calle sur, a la altura de un segundo piso.
 		var cam3: Camera3D = _v.get("_camara")
 		cam3.position = Vector3(60.0, 9.0, 350.0)
 		cam3.look_at(Vector3(140.0, 6.0, 368.0), Vector3.UP)
 	if _n == 30:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/ciudad_frentes.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ciudad_frentes.png")
 		get_tree().quit()

@@ -81,9 +81,9 @@ func _process(_delta: float) -> void:
 		_cam.current = true
 	if sub == 8:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/sonda_%s.png" % String(PRUEBAS[paso][2]))
+		img.save_png("res://pruebas/capturas/sonda_%s.png" % String(PRUEBAS[paso][2]))
 		print("capturado ", PRUEBAS[paso][2])
 		_cam_lado.current = true
 	if sub == 12:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/sonda_%s_lado.png" % String(PRUEBAS[paso][2]))
+		img2.save_png("res://pruebas/capturas/sonda_%s_lado.png" % String(PRUEBAS[paso][2]))

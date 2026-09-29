@@ -49,7 +49,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 30:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/ropa_aparte_parado.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ropa_aparte_parado.png")
 		for d: Dictionary in _ds:
 			var ap: AnimationPlayer = d["anim"]
 			if ap.has_animation("correr"):
@@ -57,5 +57,5 @@ func _process(_d: float) -> void:
 				ap.seek(0.3, true)
 				ap.pause()
 	if _n == 40:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/ropa_aparte_corriendo.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ropa_aparte_corriendo.png")
 		get_tree().quit()

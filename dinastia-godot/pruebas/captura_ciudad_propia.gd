@@ -52,7 +52,7 @@ func _process(_d: float) -> void:
 		var hijos := _pantalla.get_children().filter(func(c): return c is VistaCiudad)
 		print("VistaCiudad abierta = %s" % (not hijos.is_empty()))
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_ciudad_3d.png")
+		img.save_png("res://pruebas/capturas/pantalla_ciudad_3d.png")
 		print("captura: pantalla_ciudad_3d.png")
 	if _n == ESPERA + 60:
 		var hijos := _pantalla.get_children().filter(func(c): return c is VistaCiudad)
@@ -62,7 +62,7 @@ func _process(_d: float) -> void:
 		var hijos := _pantalla.get_children().filter(func(c): return c is VistaCiudad)
 		print("VistaCiudad sigue abierta tras Volver = %s" % (not hijos.is_empty()))
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_ciudad_despues_de_volver.png")
+		img.save_png("res://pruebas/capturas/pantalla_ciudad_despues_de_volver.png")
 		get_tree().quit()
 
 func _buscar_boton(n: Node, texto: String) -> Button:

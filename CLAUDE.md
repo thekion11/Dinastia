@@ -47,8 +47,12 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   basada en las jugadas prehechas, el jugador tira córners, penales y faltas, y
   tiene una estética propia. «Ten muchísimo cuidado con ese modo».
 
+## Hecho el 29-9 (tarde)
+- Butacas 3D en toda la grada, mirando al campo (ambos modos).
+- 9 idiomas: es, en, pt, fr, it, de, ca + polaco y turco nuevos (1402 frases c/u).
+
 ## Pendientes
-- Más idiomas (hay columnas fr/it/de/ca en TABLA; completar diccionarios).
+- Siguiente en el plan: limpieza → comparar con informe → auditoría → vídeo.
 - Carrera de Jugador: fuera de juego, más eventos, cambios, selección jugable.
 - Esperando al usuario: túnel, cara 2D→3D (necesita permiso).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
