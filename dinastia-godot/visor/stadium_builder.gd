@@ -1073,9 +1073,26 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## Cada bandeja lleva SU COPIA del material: comparten la misma
 			## textura, pero un material compartido significaria que tocarle el
 			## `uv1_*` a una se lo toca a las cinco.
-			deck.material_override = deck_mat.duplicate()
+			## COLOR POR ANILLO (28-9-2026): si este anillo de esta tribuna
+			## tiene color propio, su textura y sus butacas salen con él.
+			var niveles_col: Array = estilo.get("niveles", [])
+			var col_b := String(niveles_col[b]) if b < niveles_col.size() else ""
+			var est_b: Dictionary = est_s
+			if col_b != "" and not es_tramo:
+				est_b = est_s.duplicate()
+				est_b["asiento1"] = col_b
+				var mat_b := StandardMaterial3D.new()
+				mat_b.albedo_texture = _make_stand_texture(asientoP_i, _c(col_b, "#2b6b45"),
+					_c(est_s.get("asiento2"), "#ffffff"), _c(est_s.get("asiento3"), "#20272a"), seed_val + b, clampf(ocupacion, 0.05, 0.98))
+				mat_b.roughness = 1.0
+				mat_b.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+				mat_b.uv1_scale = deck_mat.uv1_scale
+				mat_b.uv1_offset = deck_mat.uv1_offset
+				deck.material_override = mat_b
+			else:
+				deck.material_override = deck_mat.duplicate()
 			root.add_child(deck)
-			_butacas(deck, dm.size, lateral, est_s, ocupacion, alto, rake_firmado, b)
+			_butacas(deck, dm.size, lateral, est_b, ocupacion, alto, rake_firmado, b)
 			_telones(deck, dm.size, lateral, est_s, seed_val + int(s["i"]) * 31 + b * 7)
 			## El frente vertical bajo la bandeja: tapa el hueco que dejaria ver
 			## por debajo y es lo que le da al estadio su perfil escalonado. La
@@ -1191,7 +1208,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## visor había cuatro, y una de ellas es el capítulo MÁS CARO del diseñador.
 	_pista_atletismo(root, est, dx, dz)
 	_banderas(root, est, dx, dz, alto, niveles, mi)
-	_focos(root, str(est.get("focos", "torres")), dx, dz, alto, color_luz(est))
+	_focos(root, str(est.get("focos", "torres")), dx, dz, alto, color_luz(est), str(est.get("focosCol", "")))
 	## B6.2: lo que hay FUERA del recinto: taquillas, tienda y estacionamiento.
 	if bool(est.get("exterior", false)):
 		_exterior(root, est, dx, dz, niveles, mi)
@@ -1568,13 +1585,14 @@ static func color_luz(est: Dictionary) -> Color:
 			return Color(1, 1, 1).lerp(_c(est.get("luzClub", ""), "#ffffff"), 0.45)
 	return Color(1, 0.97, 0.85)
 
-static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float, luz: Color = Color(1, 0.97, 0.85)) -> void:
+static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float, luz: Color = Color(1, 0.97, 0.85), estructura := "") -> void:
 	if tipo == "sin":
 		return
 	## Torres de hasta `alto+12` metros -entre las estructuras mas altas y mas
 	## a la vista del estadio, recortadas contra el cielo- eran color plano
-	## puro (17-9-2026, ronda 5 de calidad visual).
-	var mat := Texturas.metal(Color(0.72, 0.73, 0.76), 0.4)
+	## puro (17-9-2026, ronda 5 de calidad visual). `estructura`: el color
+	## que eligió el club (28-9-2026, colores por sección).
+	var mat := Texturas.metal(Color(estructura) if estructura != "" else Color(0.72, 0.73, 0.76), 0.4)
 	var lampara := StandardMaterial3D.new()
 	lampara.albedo_color = luz
 	lampara.emission_enabled = true
@@ -2257,6 +2275,9 @@ static func _vallas_publicidad(root: Node3D, est: Dictionary, mi: Club = null) -
 	var led := VallasLed.new()
 	led.name = "VallasLed"
 	root.add_child(led)
+	## El marco de las vallas en el color que eligió el club (si eligió uno).
+	if str(est.get("vallaCol", "")) != "":
+		led.set_meta("marco", Color(str(est["vallaCol"])))
 	led.sembrar(_anuncios_de(est, mi))
 	var i := 0
 	for lado in [1.0, -1.0]:
@@ -2287,6 +2308,11 @@ static func _una_valla(led: VallasLed, pos: Vector3, largo: float, rot_y: float,
 	var tam := Vector3(0.25, 1.1, largo - 0.25) if lateral \
 		else Vector3(largo - 0.25, 1.1, 0.25)
 	var caja := _box(led, pos, tam, null)
+	if led.has_meta("marco"):
+		var mm := StandardMaterial3D.new()
+		mm.albedo_color = led.get_meta("marco")
+		mm.roughness = 0.5
+		caja.material_override = mm
 	var l := Label3D.new()
 	l.text = ""
 	l.font_size = 64

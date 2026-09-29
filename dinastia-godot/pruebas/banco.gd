@@ -6300,6 +6300,16 @@ func _probar_tanda_c() -> void:
 	ed_c.renombrar_copa("Copa Editada")
 	ed_c.fijar_sede_final(sede_c)
 	_comprobar(me.copa.nombre == "Copa Editada" and me.copa.sede_final_id == sede_c.id, "la copa se renombra y tiene sede fija")
+	## COLORES POR SECCIÓN: cada anillo de cada tribuna, vallas y focos.
+	var est_p := mf.estadio
+	var claves_antes: Array = est_p.perfil(mf.mi_club()).keys()
+	mf.mi_club().saldo = maxi(mf.mi_club().saldo, 100000000)
+	var err_an := est_p.reformar(mf.mi_club(), {"personalizar_bandejas": true, "anillo_sur_2": "#b01e2d", "focosCol": "#1f4fa3", "vallaCol": "#1b1d22"})
+	var perf_an: Dictionary = est_p.perfil(mf.mi_club())
+	_comprobar(err_an == "" and String(((perf_an["bandejas"] as Dictionary)["sur"] as Dictionary)["niveles"][1]) == "#b01e2d", "el anillo 2 de la tribuna sur tiene su color (%s)" % err_an)
+	_comprobar(String(perf_an.get("focosCol", "")) == "#1f4fa3" and String(perf_an.get("vallaCol", "")) == "#1b1d22", "focos y vallas con color propio")
+	var est_limpio := EstadioPropio.new()
+	_comprobar(not est_limpio.perfil(mf.mi_club()).has("focosCol") and claves_antes.size() > 0, "sin elegir, el perfil no suma claves nuevas")
 	## META (bloque 50): cromos, museo global, mundo heredado.
 	var sobres_antes := int(Meta.leer()["sobres"])
 	mf.roles.sumar_trofeo("Copa de Prueba")
