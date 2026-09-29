@@ -112,6 +112,9 @@ func _poner_jugador(j: Jugador, mio: Club) -> void:
 		VestidorQ.vestir(d, Color(String(kit["c1"])))
 	var lk: Dictionary = jd.get("look", {}) if jd.get("look") is Dictionary else {}
 	PeloQ.poner(d, String(lk.get("pelo", "corto")), look[1], int(look[2]) in [1, 4, 6])
+	## Su cara de la ficha, moldeada sobre la cabeza (plano cercano).
+	if not lk.is_empty():
+		VestidorQ.poner_cara(d, {"look": lk, "foto": String(jd.get("foto", ""))}, look[0])
 	## De frente a la cámara del plano final (que mira desde +X).
 	nodo.rotation.y = PI * 0.5
 	var ap: AnimationPlayer = d["anim"]

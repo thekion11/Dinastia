@@ -478,6 +478,10 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 				VestidorQ.vestir(dq, c1)
 			## Pelo, barba y cejas, con el mismo corte que su retrato 2D.
 			var look_j = jug.get("look")
+			## Y su cara: los rasgos del retrato (o la foto real) moldeados
+			## sobre la cabeza.
+			if typeof(look_j) == TYPE_DICTIONARY:
+				VestidorQ.poner_cara(dq, {"look": look_j, "foto": String(jug.get("foto", ""))}, piel)
 			var corte := "corto"
 			if typeof(look_j) == TYPE_DICTIONARY and look_j.get("pelo") is String:
 				corte = look_j["pelo"]
