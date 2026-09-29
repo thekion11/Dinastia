@@ -9834,6 +9834,12 @@ func _pintar_habilidades() -> void:
 
 ## En Legado queda un resumen con el acceso al árbol, que vive en MI VIDA.
 func _pintar_acceso_arbol() -> void:
+	## El álbum de cromos y el museo de todas tus carreras (`Meta`).
+	var sobres := int(Meta.leer()["sobres"])
+	var alb := Button.new()
+	alb.text = "📒 Álbum de cromos y museo de tus carreras" + ("  ·  🎁 %d sobre%s" % [sobres, "" if sobres == 1 else "s"] if sobres > 0 else "")
+	alb.pressed.connect(func() -> void: PanelMeta.abrir(self, mundo))
+	_lista_legado.add_child(alb)
 	var e := mundo.entrenamiento
 	if e == null:
 		return
