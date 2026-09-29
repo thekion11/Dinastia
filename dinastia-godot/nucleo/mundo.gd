@@ -118,6 +118,8 @@ var redes: Redes
 var movil: Movil
 ## Guerra de ofertas, superagente, fichaje impuesto, apuestas, transparencia.
 var mercado_av: MercadoAvanzado
+## Resta de puntos, administrador, tope salarial, cláusula del DT, refundación.
+var insolvencia: Insolvencia
 var eventos_cantera: EventosCantera
 var calendario: Calendario
 var politica: Politica
@@ -1148,6 +1150,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 			banco.descuento_sobregiro = 0.65 if directiva.tiene_consejero("fin") else 1.0
 			banco.gracia_liquidacion = 3 if directiva.tiene_consejero("leg") else 0
 		banco.semana(mi_club())
+		if insolvencia != null:
+			insolvencia.semana(self)
 	## EL AUSPICIO GOTEA TODAS LAS SEMANAS. No entra de golpe: es el `monto/42`
 	## del HTML, y por eso firmar tarde cuesta dinero de verdad.
 	if auspicio != null and mi_club() != null:
@@ -1881,6 +1885,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	Trabajadores.actual = trabajadores
 	movil = Movil.new()
 	mercado_av = MercadoAvanzado.new()
+	insolvencia = Insolvencia.new()
 	redes = Redes.new()
 	redes.iniciar(self)
 	eventos_cantera = EventosCantera.new()

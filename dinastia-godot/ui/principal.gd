@@ -2157,7 +2157,7 @@ func _conectar_noticias() -> void:
 			if con_mentor != null:
 				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:
 					MentorVoz.decir(self, mundo, titulo, texto))
-		for fuente: Object in [mundo.fondo, mundo.redes, mundo.mercado_av, mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos, mundo.vida, mundo.maestria]:
+		for fuente: Object in [mundo.fondo, mundo.redes, mundo.mercado_av, mundo.insolvencia, mundo.trabajadores, mundo.eventos_cantera, mundo.calendario, mundo.politica, mundo.contratos, mundo.vida, mundo.maestria]:
 			if fuente != null:
 				fuente.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 					_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -5630,6 +5630,8 @@ func _pintar_despacho() -> void:
 		asuntos.append({"et": "🏢 Asunto del personal", "col": COL_ORO, "id": "personal"})
 	if mundo.mercado_av != null and not mundo.mercado_av.pendiente.is_empty():
 		asuntos.append({"et": "🕶️ Zona gris", "col": COL_ORO, "id": "mercado_av"})
+	if mundo.insolvencia != null and not mundo.insolvencia.pendiente.is_empty():
+		asuntos.append({"et": "💸 Crisis económica", "col": COL_ROJO, "id": "insolvencia"})
 	if mundo.vida != null and not mundo.vida.pendiente.is_empty():
 		asuntos.append({"et": "🏠 Pasa en casa", "col": COL_ORO, "id": "vida"})
 	if asuntos.is_empty():
@@ -5660,6 +5662,7 @@ func _pintar_despacho() -> void:
 		"cantera": _pintar_asunto_cantera()
 		"personal": _pintar_asunto_personal()
 		"mercado_av": _pintar_asunto_mercado_av()
+		"insolvencia": _pintar_asunto_insolvencia()
 		"vida": _pintar_asunto_vida()
 
 ## MI VIDA: lo que pasa en casa, con sus dos salidas.
@@ -5751,6 +5754,34 @@ func _pintar_asunto_mercado_av() -> void:
 		b.pressed.connect(func() -> void:
 			var r := mundo.mercado_av.resolver(mundo, op)
 			Aviso.mostrar(self, "nivel", "🕶️", String(r.get("titulo", "")), String(r.get("cuerpo", "")))
+			_refrescar())
+		fila.add_child(b)
+
+## LA CRISIS ECONÓMICA (28-9-2026, `Insolvencia`): tu cláusula de salida o
+## la refundación del club.
+func _pintar_asunto_insolvencia() -> void:
+	var p := mundo.insolvencia.pendiente
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.TARJETA, Tema.RADIO, COL_ROJO))
+	_despacho.add_child(caja)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
+	caja.add_child(v)
+	v.add_child(Tema.rotulo("REFUNDACIÓN" if String(p["id"]) == "refundacion" else "TU CLÁUSULA DE SALIDA"))
+	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(p["texto"]))
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(t)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	v.add_child(fila)
+	for op: String in ["a", "b"]:
+		var b := Button.new()
+		b.text = String(p[op])
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.clip_text = true
+		b.pressed.connect(func() -> void:
+			var r := mundo.insolvencia.resolver(mundo, op)
+			Aviso.mostrar(self, "alerta", "💸", String(r.get("titulo", "")), String(r.get("cuerpo", "")))
 			_refrescar())
 		fila.add_child(b)
 
