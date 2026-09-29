@@ -88,7 +88,7 @@ func semana(m: Mundo) -> void:
 	var abs_sem := m.anio * 60 + m.semana
 	if abs_sem - ultima_semana_asunto < 4 or _rng.randf() > 0.3:
 		return
-	var tipos: Array[String] = ["superagente", "apuestas", "transparencia"]
+	var tipos: Array[String] = ["superagente", "apuestas", "transparencia", "corrupcion"]
 	if m.roles == null or m.roles.rol != Roles.DUENO:
 		tipos.append("impuesto")
 	var tipo := tipos[_rng.randi() % tipos.size()]
@@ -127,6 +127,11 @@ func _montar(m: Mundo, tipo: String) -> bool:
 			pendiente = {"id": "apuestas", "jugador": j2.id,
 				"texto": "Un periodista tiene capturas de %s apostando en partidos de otra liga. No hay amaño, pero el reglamento lo prohíbe." % j2.nombre,
 				"a": "Sancionarlo y comunicarlo", "b": "Taparlo dentro del club"}
+		"corrupcion":
+			var pres := String(m.federacion.presidente.get("nombre", "el presidente")) if m.federacion != null else "el presidente"
+			pendiente = {"id": "corrupcion", "coste": int(round(Eco.ref_caja(float(c.rep)) * 0.04)),
+				"texto": "Un intermediario que dice hablar por %s ofrece «arbitrajes amables» el resto de la temporada a cambio de %s en efectivo. Nadie firma nada." % [pres, Cesiones.dinero(int(round(Eco.ref_caja(float(c.rep)) * 0.04)))],
+				"a": "Pagar", "b": "Denunciarlo a la justicia deportiva"}
 		"transparencia":
 			pendiente = {"id": "transparencia",
 				"texto": "Un grupo de socios pide publicar las cuentas del club: sueldos, comisiones de agentes y deudas. La competencia vería tus números.",
@@ -192,6 +197,30 @@ func resolver(m: Mundo, op: String) -> Dictionary:
 				noticia.emit("📰 Salió a la luz", "Las apuestas de %s y que el club lo tapó. La federación lo suspende cinco partidos." % j.nombre)
 				return {"titulo": "📰 Se supo todo", "cuerpo": "Lo taparon y salió igual: peor para todos."}
 			return {"titulo": "🤫 Queda en casa", "cuerpo": "Por ahora nadie más lo sabe."}
+		"corrupcion":
+			var coste := int(p.get("coste", 0))
+			if op == "a":
+				c.mover_saldo(-coste)
+				movimiento.emit("Pago en negro a un intermediario", -coste)
+				if m.federacion != null:
+					m.federacion.enojo_arbitral = 0
+				if r != null:
+					r.anotar_reputacion("honesto", -6, "Pagaste por arbitrajes amables")
+				if _rng.randf() < 0.35:
+					for l in m.ligas:
+						if l.clubes.has(c) and l.tabla_puntos.has(c.id):
+							l.tabla_puntos[c.id]["pts"] = int(l.tabla_puntos[c.id]["pts"]) - 9
+					if m.prensa != null:
+						m.prensa.animo = clampi(m.prensa.animo - 10, 0, 100)
+					noticia.emit("💣 Escándalo de corrupción", "Se filtró el pago de %s a un intermediario de la federación: 9 puntos menos y la hinchada furiosa." % c.nombre)
+					return {"titulo": "💣 Se destapó", "cuerpo": "Pagaste y salió a la luz: 9 puntos menos."}
+				return {"titulo": "🤐 Pagado", "cuerpo": "Nadie habla. Los árbitros, de momento, te miran con otros ojos."}
+			if r != null:
+				r.anotar_reputacion("honesto", 4, "Denunciaste la corrupción federativa")
+			if m.federacion != null:
+				m.federacion.aliados = clampi(m.federacion.aliados - 3, -10, 10)
+			noticia.emit("⚖️ Denuncia de corrupción", "%s denuncia a un intermediario de la federación. La prensa aplaude; en la asamblea te miran mal." % c.nombre)
+			return {"titulo": "⚖️ Denunciado", "cuerpo": "Ganas en juego limpio y pierdes aliados en la asamblea."}
 		"transparencia":
 			if op == "a":
 				if r != null:

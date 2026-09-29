@@ -6232,6 +6232,44 @@ func _probar_tanda_c() -> void:
 	var ins2 := Insolvencia.new()
 	ins2.desde_dic(ins.a_dic())
 	_comprobar(ins2.refundado_anio == ins.refundado_anio and ins2.sancion_anio == ins.sancion_anio, "la insolvencia se guarda con la partida")
+	## REGLAMENTO FINO (bloques 44-45): desempate, promoción, árbitros, corrupción.
+	var mr2 := Mundo.new()
+	mr2.generar(["CHI"], 44)
+	mr2.tomar_el_mando(mr2.ligas[0].clubes[0].id)
+	var lr := mr2.ligas[0]
+	var ca: Club = lr.clubes[1]
+	var cb: Club = lr.clubes[2]
+	lr.tabla_puntos[ca.id]["pts"] = 30; lr.tabla_puntos[ca.id]["gf"] = 20; lr.tabla_puntos[ca.id]["gc"] = 20
+	lr.tabla_puntos[cb.id]["pts"] = 30; lr.tabla_puntos[cb.id]["gf"] = 30; lr.tabla_puntos[cb.id]["gc"] = 10
+	lr.h2h["%s|%s" % [ca.id, cb.id]] = 6
+	lr.h2h["%s|%s" % [cb.id, ca.id]] = 0
+	var pos := func(tb: Array, c0: Club) -> int:
+		for i_t in tb.size():
+			if tb[i_t]["club"] == c0:
+				return i_t
+		return -1
+	var t_dif: Array = lr.tabla()
+	_comprobar(pos.call(t_dif, cb) < pos.call(t_dif, ca), "sin la moción, a igualdad de puntos manda la diferencia de gol")
+	Liga.desempate_directo = true
+	var t_dir: Array = lr.tabla()
+	_comprobar(pos.call(t_dir, ca) < pos.call(t_dir, cb), "con la moción, manda el enfrentamiento directo")
+	Liga.desempate_directo = false
+	var fed := mr2.federacion
+	fed.anotar_arbitro("Árbitro X", "estricto", 2, 1)
+	fed.anotar_arbitro("Árbitro X", "estricto", 0, 0)
+	_comprobar(fed.texto_arbitro("Árbitro X") == "Con él: 2 PJ · 1G 1E 0P", "el historial por árbitro se lleva (%s)" % fed.texto_arbitro("Árbitro X"))
+	var prom := mr2.jugar_promocion(lr.clubes[3], lr.clubes[4])
+	_comprobar(prom["ganador"] == lr.clubes[3] or prom["ganador"] == lr.clubes[4], "la promoción se juega a ida y vuelta: %s" % String(prom["texto"]))
+	fed.promocion = true
+	var fed2 := Federacion.new()
+	fed2.desde_dic(fed.a_dic())
+	_comprobar(fed2.promocion and fed2.arbitros.has("Árbitro X"), "promoción e historial de árbitros se guardan")
+	Liga.desempate_directo = false
+	var mac := MercadoAvanzado.new()
+	_comprobar(mac._montar(mr2, "corrupcion") and String(mac.pendiente["id"]) == "corrupcion", "aparece la corrupción federativa")
+	var aliados_antes := fed.aliados
+	mac.resolver(mr2, "b")
+	_comprobar(fed.aliados < aliados_antes, "denunciarla te cuesta aliados en la asamblea")
 	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
 	var fi := FondoInversion.new()
 	fi.caja = 1000000000

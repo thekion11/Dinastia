@@ -4213,7 +4213,8 @@ func _pintar_partido(c: Club) -> void:
 	_pintar_juegos_mentales(rival)
 
 	var arb := Previa.arbitro_de(rival.id, mundo.semana)
-	_dato("👨‍⚖️ Árbitro", "%s — %s" % [String(arb["nombre"]), String(arb["descripcion"])], COL_SUAVE, _lista_partido)
+	var con_el := mundo.federacion.texto_arbitro(String(arb["nombre"])) if mundo.federacion != null else ""
+	_dato("👨‍⚖️ Árbitro", "%s — %s%s" % [String(arb["nombre"]), String(arb["descripcion"]), ("  ·  " + con_el) if con_el != "" else ""], COL_SUAVE, _lista_partido)
 	var dtr := Previa.dt_de(rival)
 	_dato("🎩 DT rival", "%s — %s" % [String(dtr["nombre"]), String(dtr["descripcion"])], COL_SUAVE, _lista_partido)
 	_lista_partido.add_child(HSeparator.new())
@@ -5738,7 +5739,7 @@ func _pintar_asunto_mercado_av() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
-	var titulos := {"superagente": "EL SUPERAGENTE", "impuesto": "UN FICHAJE QUE NO PEDISTE", "apuestas": "APUESTAS EN EL VESTUARIO", "transparencia": "TRANSPARENCIA"}
+	var titulos := {"superagente": "EL SUPERAGENTE", "impuesto": "UN FICHAJE QUE NO PEDISTE", "apuestas": "APUESTAS EN EL VESTUARIO", "transparencia": "TRANSPARENCIA", "corrupcion": "CORRUPCIÓN EN LA FEDERACIÓN"}
 	v.add_child(Tema.rotulo(String(titulos.get(String(p["id"]), "ZONA GRIS"))))
 	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(p["texto"]))
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

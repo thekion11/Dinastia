@@ -1471,6 +1471,16 @@ func cerrar_temporada() -> Dictionary:
 			continue
 		var bajan: Array[Club] = [t1[t1.size() - 1]["club"], t1[t1.size() - 2]["club"]]
 		var suben: Array[Club] = [t2[0]["club"], t2[1]["club"]]
+		## LA PROMOCIÓN (reglamento fino, si la asamblea la aprobó): el
+		## antepenúltimo de Primera contra el tercero de Ascenso, ida y vuelta.
+		if federacion != null and federacion.promocion and t1.size() >= 4 and t2.size() >= 4:
+			var arriba: Club = t1[t1.size() - 3]["club"]
+			var abajo: Club = t2[2]["club"]
+			var prom := jugar_promocion(arriba, abajo)
+			resumen["promocion"] = prom
+			if prom["ganador"] == abajo:
+				bajan.append(arriba)
+				suben.append(abajo)
 		for c in bajan:
 			_mover_de_liga(c, primera, segunda)
 		for c in suben:
@@ -1585,6 +1595,27 @@ func _vence_contrato(j: Jugador, c: Club) -> bool:
 		prensa.noticia.emit("Se va libre: %s" % j.nombre,
 			"Se le acabó el contrato y no se renovó. Deja %s sin que el club cobre nada." % c.nombre)
 	return true
+
+## La promoción: dos partidos (ida en casa del de Ascenso, vuelta en la del de
+## Primera). Gana el global; con empate, se queda el de Primera (la ventaja
+## de categoría, como en muchos reglamentos). Devuelve {ganador, ida, vuelta}.
+func jugar_promocion(de_primera: Club, de_ascenso: Club) -> Dictionary:
+	var ida := Partido.new(de_ascenso, de_primera)
+	ida.preparar()
+	while not ida.terminado_ya:
+		ida.simular_minuto()
+	var vuelta := Partido.new(de_primera, de_ascenso)
+	vuelta.preparar()
+	while not vuelta.terminado_ya:
+		vuelta.simular_minuto()
+	var g_primera := ida.goles_visita + vuelta.goles_local
+	var g_ascenso := ida.goles_local + vuelta.goles_visita
+	var ganador: Club = de_ascenso if g_ascenso > g_primera else de_primera
+	var txt := "%s %d-%d %s en el global (ida %d-%d, vuelta %d-%d)." % [de_primera.nombre, g_primera, g_ascenso, de_ascenso.nombre,
+		ida.goles_local, ida.goles_visita, vuelta.goles_local, vuelta.goles_visita]
+	if prensa != null:
+		prensa.noticia.emit("⚔️ Promoción: %s" % ("¡%s sube!" % de_ascenso.nombre if ganador == de_ascenso else "%s se salva" % de_primera.nombre), txt)
+	return {"ganador": ganador, "texto": txt}
 
 func nueva_temporada() -> Dictionary:
 	## Primero se cierra la que acaba -premios, ascensos y descensos- y DESPUÉS
@@ -2002,6 +2033,11 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 		## MISMO `Previa.arbitro_de()` que ya usa `vPrevia()` y que acaba de
 		## pitar el partido en `Partido.preparar()`: no una tercera copia del
 		## hash.
+		## El historial por árbitro (reglamento fino, 28-9-2026).
+		if federacion != null:
+			var rival_arb: Club = r["visita"] if soy_local else r["local"]
+			var arb_h := Previa.arbitro_de(rival_arb.id, semana)
+			federacion.anotar_arbitro(String(arb_h["nombre"]), String(arb_h["perfil"]), gf, gc)
 		if prensa != null and gf < gc:
 			var rival_perdido: Club = r["visita"] if soy_local else r["local"]
 			var arb_partido := Previa.arbitro_de(rival_perdido.id, semana)
