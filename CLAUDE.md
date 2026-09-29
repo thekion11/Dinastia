@@ -54,7 +54,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 ## Pendientes
 - Hecho 29-9: limpieza (capturas en pruebas/capturas), COMPARACION_INFORME.md (≈71/100),
   AUDITORIA.md (refresco 14x más rápido, fallo al cerrar arreglado).
-- Siguiente: VÍDEO PROMO (jugando de verdad, largo) → dejarlo en el chat → repaso y MEGAPLAN.
+- Hecho 29-9: VÍDEO PROMO (3:42) entregado en el chat (límite del chat: 30 MB).
+  Guion: pruebas/video_promo.gd · montaje: herramientas/montar_promo.py.
+- El usuario dijo que con 9 idiomas «estamos bien»: no sumar más.
+- Siguiente: REPASO REAL y MEGAPLAN.
 - Carrera de Jugador: fuera de juego, más eventos, cambios, selección jugable.
 - Esperando al usuario: túnel, cara 2D→3D (necesita permiso).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
