@@ -1,6 +1,6 @@
 extends Node
 ## LA INTERFAZ EN OTROS IDIOMAS (29-9-2026, mapa de metas 25): la pantalla
-## principal y un menú a pantalla completa en francés y en alemán.
+## principal y menús a pantalla completa en francés, alemán, polaco y turco.
 ##   godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/captura_idiomas.tscn
 var _n := 0
 var _p: Node
@@ -29,4 +29,14 @@ func _process(_d: float) -> void:
 		ml.abrir_menu("ajustes", -1)
 	if _n == 100:
 		_foto("idioma_de_ajustes")
+		ml.abrir_menu("ajustes", -1).cerrar()
+		Idiomas.idioma = "pl"
+		_p._refrescar()
+	if _n == 130:
+		_foto("idioma_pl_principal")
+		Idiomas.idioma = "tr"
+		_p._refrescar()
+		ml.abrir_menu("gente", -1)
+	if _n == 160:
+		_foto("idioma_tr_gente")
 		get_tree().quit()

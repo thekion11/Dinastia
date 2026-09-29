@@ -4910,6 +4910,17 @@ func _traducir_pantalla(n: Node) -> void:
 		if nuevo2 != actual2 and b.size_flags_stretch_ratio != 1.0:
 			b.size_flags_stretch_ratio = clampf(float(nuevo2.length()) / 12.0, 0.95, 1.9)
 		b.text = nuevo2
+	elif n is LineEdit:
+		## El texto de ayuda del campo ("🔎 Buscar..."), no lo que escribe el jugador.
+		var le := n as LineEdit
+		var actual_ph := le.placeholder_text
+		if actual_ph != "":
+			var fue_mio_ph: bool = le.has_meta("_i18n_ph_out") and String(le.get_meta("_i18n_ph_out")) == actual_ph
+			var base_ph: String = String(le.get_meta("_i18n_ph_src")) if fue_mio_ph else actual_ph
+			var nuevo_ph := base_ph if Idiomas.idioma == "es" else Idiomas.t(base_ph)
+			le.set_meta("_i18n_ph_src", base_ph)
+			le.set_meta("_i18n_ph_out", nuevo_ph)
+			le.placeholder_text = nuevo_ph
 	if n.has_method("get_tooltip_text") and n is Control:
 		var ctrl := n as Control
 		var actual_tip := ctrl.tooltip_text

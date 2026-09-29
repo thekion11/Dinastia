@@ -94,11 +94,13 @@ static func _fila_anillo(v: VBoxContainer, anillo: Control, grande: String, pie:
 	t.alignment = BoxContainer.ALIGNMENT_CENTER
 	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.add_child(t)
+	## Solo se corta en los espacios (29-9-2026): con WORD_SMART, en polaco o
+	## francés salía "jedenas / tki" o "Moyenn / e", partiendo la palabra.
 	var gr := _lbl(grande, 14, col)
-	gr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	gr.autowrap_mode = TextServer.AUTOWRAP_WORD
 	t.add_child(gr)
 	var p := _lbl(pie, 11, COL_SUAVE)
-	p.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	p.autowrap_mode = TextServer.AUTOWRAP_WORD
 	p.clip_text = false
 	t.add_child(p)
 
