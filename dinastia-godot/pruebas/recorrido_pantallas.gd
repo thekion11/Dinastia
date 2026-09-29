@@ -34,6 +34,12 @@ func _process(_d: float) -> void:
 		var tabs: TabContainer = _p.get("_pestanas")
 		for i in tabs.get_tab_count():
 			_cola.append(["tab", tabs.get_tab_title(i)])
+		## Los menús a pantalla completa del panel lateral, submenú a submenú.
+		for m: Dictionary in MenuLateral.MENUS:
+			for k in (m["subs"] as Array).size():
+				if not ((m["subs"] as Array)[k] as Dictionary).has("accion") and String((m["subs"] as Array)[k].get("secc", "")) != "kits":
+					_cola.append(["menu", String(m["id"]), k])
+		_cola.append(["cerrar_menu"])
 		_cola.append(["ficha", "propia"])
 		_cola.append(["ficha", "rival"])
 		return
@@ -41,7 +47,7 @@ func _process(_d: float) -> void:
 		return
 	## Cierra lo que haya quedado abierto encima (sorteos, pantallas completas).
 	for h in _p.get_children():
-		if h is Control and (h as Control).mouse_filter == Control.MOUSE_FILTER_STOP and h.get_index() > 3 and h.name != "PanelObjetivos":
+		if h is Control and (h as Control).mouse_filter == Control.MOUSE_FILTER_STOP and h.get_index() > 3 and h.name != "PanelObjetivos" and h.name != "MenuLateral" and not (h is PantallaMenu):
 			h.queue_free()
 	if _cola.is_empty():
 		print("RECORRIDO: %d pantallas, %d botones" % [_pantallas, _botones])
@@ -65,6 +71,20 @@ func _process(_d: float) -> void:
 			_p.call("_refrescar")
 			print("PANTALLA tab %s" % paso[1])
 			_pulsar_botones()
+		"menu":
+			var ml: MenuLateral = _p.get("_menu_lateral")
+			if not is_instance_valid(ml.pantalla_abierta) or ml.pantalla_abierta.get_meta("id", "") != paso[1]:
+				ml.abrir_menu(String(paso[1]), int(paso[2]))
+				ml.pantalla_abierta.set_meta("id", paso[1])
+			else:
+				ml.pantalla_abierta.elegir(int(paso[2]))
+			print("PANTALLA menu %s/%d" % [paso[1], paso[2]])
+		"cerrar_menu":
+			var ml2: MenuLateral = _p.get("_menu_lateral")
+			if is_instance_valid(ml2.pantalla_abierta):
+				ml2.pantalla_abierta.cerrar()
+			var tabs2: TabContainer = _p.get("_pestanas")
+			print("MUDANZA DEVUELTA: %s" % _p.is_ancestor_of(tabs2))
 		"ficha":
 			var m: Mundo = _p.get("mundo")
 			var c: Club = m.mi_club() if paso[1] == "propia" else m.ligas[0].clubes[3]

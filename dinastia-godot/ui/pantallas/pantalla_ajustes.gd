@@ -511,6 +511,14 @@ func _pintar_fondos_ajustes() -> void:
 			p._guardar_preferencias()
 			_pintar_ajustes())
 		fila_estilo.add_child(be)
+	## La rotación del menú central (mapa de metas 24).
+	var rot := CheckButton.new()
+	rot.text = "Cambiar el diseño del menú central cada 10 minutos de juego"
+	rot.button_pressed = p._rotar_diseno
+	rot.toggled.connect(func(v: bool) -> void:
+		p._rotar_diseno = v
+		p._guardar_preferencias())
+	p._lista_ajustes.add_child(rot)
 	p._lista_ajustes.add_child(HSeparator.new())
 
 	op.add_item("Sin fondo (verde plano)", 0)
