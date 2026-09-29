@@ -5094,8 +5094,9 @@ func _probar_aspecto_y_audio() -> void:
 			cortas.append(k2)
 	_comprobar(cortas.is_empty(), "y ninguna fila se queda corta (%s)" % ("todas completas" if cortas.is_empty() else ", ".join(cortas)))
 	for idi: String in Idiomas.ORDEN:
-		_comprobar(Idiomas.cobertura(idi) == Idiomas.TABLA.size(),
-			"«%s» tiene las %d frases" % [idi, Idiomas.TABLA.size()])
+		## Al menos las de la tabla (inglés y portugués suman el diccionario ampliado).
+		_comprobar(Idiomas.cobertura(idi) >= Idiomas.TABLA.size(),
+			"«%s» tiene al menos las %d frases (%d)" % [idi, Idiomas.TABLA.size(), Idiomas.cobertura(idi)])
 	Idiomas.idioma = "en"
 	_comprobar(Idiomas.t("Guardar") == "Save", "traducir funciona (Guardar -> %s)" % Idiomas.t("Guardar"))
 	_comprobar(Idiomas.t("Una frase que no existe") == "Una frase que no existe",
@@ -6324,6 +6325,35 @@ func _probar_tanda_c() -> void:
 	_comprobar(frac > 0.08 and frac < 0.45, "el clásico tiene sus 12 pentágonos oscuros (%.0f %% del balón)" % (frac * 100.0))
 	var t_mod := Balon3D.textura(Color.WHITE, Color.BLACK, "moderno")
 	_comprobar(t_mod != Balon3D.textura(Color.WHITE, Color.BLACK, "clasico") and t_mod == Balon3D.textura(Color.WHITE, Color.BLACK, "moderno"), "cada dibujo es distinto y se guarda en caché")
+	## EL CHOQUE DE CAMISETAS: la visita cambia si se parece al local.
+	var cl_a: Club = mf.ligas[0].clubes[0]
+	var cl_b: Club = mf.ligas[0].clubes[1]
+	var c1_a := cl_a.color1
+	var c2_a := cl_a.color2
+	cl_b.color1 = cl_a.color1
+	cl_b.color2 = cl_a.color2
+	var kv := Puente3D.kit_visita(cl_a, cl_b)
+	_comprobar(not Puente3D.chocan(Puente3D.kit(cl_a), kv), "si las camisetas chocan, la visita se cambia (%s vs %s)" % [String(Puente3D.kit(cl_a)["c1"]), String(kv["c1"])])
+	cl_a.color1 = c1_a
+	cl_a.color2 = c2_a
+	## EL PASE CON LA FUERZA JUSTA: el balón raso muere 2,5 m pasado el destino.
+	var v20 := MotorJugable.velocidad_para(20.0)
+	_comprobar(absf(MotorJugable.distancia_rodando(v20) - 22.5) < 0.3, "un pase de 20 m sale a %.1f m/s y rueda %.1f m" % [v20, MotorJugable.distancia_rodando(v20)])
+	## LA CARRERA DE JUGADOR: se crea en un club modesto y se guarda entera.
+	var cj := CarreraJugador.crear(mf, "Prueba Delantero", "DC", true, 99)
+	var yo := cj.jugador(mf)
+	_comprobar(yo != null and yo.edad == 17 and cj.club(mf) != null, "la carrera crea un jugador de 17 años con club")
+	cj.fama = 33
+	cj.eventos.append({"id": "x", "titulo": "t", "texto": "", "opciones": [], "unico": false})
+	var cj2 := CarreraJugador.desde_dic(cj.a_dic())
+	_comprobar(cj2.jugador_id == cj.jugador_id and cj2.fama == 33 and cj2.eventos.size() == cj.eventos.size(), "la carrera se guarda y se carga")
+	var ov_antes := yo.ovr
+	cj.foco = "tiro"
+	for _k in 30:
+		cj.energia = 100
+		cj.entrenar(mf)
+	_comprobar(yo.ovr > ov_antes, "entrenar sube la media (%d -> %d)" % [ov_antes, yo.ovr])
+	cj.club(mf).soltar(yo)
 	## LAS BUTACAS DE LOS RIVALES, de los colores de su club (no el verde del visor).
 	var riv_b: Club = mf.ligas[0].clubes[1]
 	_comprobar(String(riv_b.perfil_estadio().get("asiento1", "")) == riv_b.color1, "las butacas de un rival llevan los colores de su club")

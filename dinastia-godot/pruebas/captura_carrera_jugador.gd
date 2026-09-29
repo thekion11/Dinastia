@@ -46,15 +46,17 @@ func _process(_d: float) -> void:
 	if _n == 370:
 		var m2 := _pj.motor
 		m2.autopiloto = false
+		m2.lanza_usuario["penal"] = true
 		var d2 := MotorJugable.dir_ataque(bool(m2.usuario["es_local"]))
 		m2._empezar_saque("penal", bool(m2.usuario["es_local"]), Vector3(0, 0.11, (52.5 - 11.0) * d2))
 	if _n == 440:
 		_foto("partido_jugable_penal")
-	if _n == 450:
+	if _n == 441:
+		_pj.motor._lanzar_usuario(0.7)
 		_pj._simular_resto()
-	if _n == 480:
+	if _n == 460:
 		_foto("partido_jugable_final")
 		_pj._cerrar()
-	if _n == 520:
+	if _n == 490:
 		_foto("carrera_hub_tras_partido")
 		get_tree().quit()

@@ -217,6 +217,11 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		if n_guardadas.has(k):
 			m.normas[k] = bool(n_guardadas[k])
 	_restaurar_lo_tuyo(datos, m)
+	## La Carrera de Jugador va aparte: no tiene club de entrenador, y
+	## `_restaurar_lo_tuyo()` sale en seco sin él.
+	var cj: Dictionary = datos.get("carrera_jugador", {})
+	if not cj.is_empty():
+		m.carrera_jugador = CarreraJugador.desde_dic(cj)
 	return m
 
 static func borrar(nombre: String) -> void:
@@ -571,9 +576,6 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.trabajadores.desde_dic(datos.get("trabajadores", {}))
 	if m.redes != null:
 		m.redes.desde_dic(datos.get("redes", {}))
-	var cj: Dictionary = datos.get("carrera_jugador", {})
-	if not cj.is_empty():
-		m.carrera_jugador = CarreraJugador.desde_dic(cj)
 	if m.movil != null:
 		m.movil.desde_dic(datos.get("movil", {}))
 	if m.mercado_av != null:
