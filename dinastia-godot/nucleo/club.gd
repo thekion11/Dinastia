@@ -242,6 +242,10 @@ func perfil_estadio() -> Dictionary:
 		"pantalla": "dos" if rep >= 82 else ("una" if rep >= 58 else "sin"),
 		"vallas": rep < 78,
 		"aforo": estadio_aforo,
+		## Las butacas, de los colores del club (29-9-2026): sin esto todos los
+		## rivales salían con el verde por defecto del visor.
+		"asiento1": color1,
+		"asiento2": color2,
 	}
 	## MÁS VARIANTES DE ESTADIO PARA LOS RIVALES (25-9-2026). Hasta hoy todos
 	## los rivales compartían techo, focos, banderas, tono de césped, banquillo
