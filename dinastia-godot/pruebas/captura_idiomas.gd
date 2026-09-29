@@ -39,4 +39,8 @@ func _process(_d: float) -> void:
 		ml.abrir_menu("gente", -1)
 	if _n == 160:
 		_foto("idioma_tr_gente")
+		## Deja el castellano guardado: si no, la siguiente prueba (o el vídeo)
+		## arranca en turco, que es lo último que se eligió aquí.
+		Idiomas.idioma = "es"
+		_p._guardar_preferencias()
 		get_tree().quit()
