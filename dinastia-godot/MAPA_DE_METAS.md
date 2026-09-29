@@ -106,7 +106,7 @@ Junta tres fuentes:
 | 12 | Colores del estadio por sección: cada bandeja, redes, focos, LED | Pedido de la semana pasada | ✅ |
 | 13 | Presentación de fichajes como cinemática | Plan B3 | ✅ tu estadio real (el diseñado), tu camiseta con su dorsal, dominadas o saludo, confeti y rótulo |
 | 14 | Celebraciones de gol según el carácter del jugador | Informe | ✅ repertorio por rasgo, celebración propia de cada jugador (en su ficha) y provocación de visita |
-| 15 | Dividir `principal.gd` (15.189 líneas) en componentes | Informe | ⬜ |
+| 15 | Dividir `principal.gd` (15.189 líneas) en componentes | Informe | ✅ 6.300 líneas; 243 funciones en 14 pantallas de `ui/pantallas/`; validado con `pruebas/recorrido_pantallas.gd` (73 pantallas, 615 botones) |
 | 16 | Patada que luce como golpeo de balón | Informe, fallo 11 | ✅ los 20 tiros artesanales con carrera, cadera, brazo de equilibrio, apoyo flexionado y puntillas (`pruebas/golpeo_hoja.png`) |
 | 17 | Traducción al inglés y portugués | Informe (ventas) | ⬜ |
 | 18 | Carrera de Jugador | Modos | ⬜ |
