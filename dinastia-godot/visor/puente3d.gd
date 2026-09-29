@@ -67,6 +67,29 @@ static func once(jugadores: Array[Jugador]) -> Dictionary:
 ## ficha 2D, "Club → Equipación") ya resuelve las dos cosas -la equipación real
 ## archivada en `EQUIP_REAL` si el club tiene una, y si no el estampado
 ## determinista por id- desde hace tiempo; aquí solo faltaba llamarla.
+## EL CHOQUE DE CAMISETAS (29-9-2026). Nadie miraba si las dos camisetas se
+## parecían: con dos clubes amarillo y negro no se distinguía a nadie. Si la
+## camiseta de la visita choca con la del local, se cambia: primero sus
+## colores al revés, y si tampoco alcanza, blanca (o casi negra si el local va
+## de claro). El diseño del club se deja (la "x" del diseñador lleva sus
+## colores), así que la alternativa va lisa.
+static func distancia_color(a: Color, b: Color) -> float:
+	return Vector3(a.r - b.r, a.g - b.g, a.b - b.b).length()
+
+static func chocan(k1: Dictionary, k2: Dictionary) -> bool:
+	return distancia_color(Color(String(k1.get("c1", "#ffffff"))), Color(String(k2.get("c1", "#ffffff")))) < 0.45
+
+static func kit_visita(local: Club, visita: Club) -> Dictionary:
+	var kl := kit(local)
+	var kv := kit(visita)
+	if not chocan(kl, kv):
+		return kv
+	var invertido := {"c1": kv["c2"], "c2": kv["c1"], "estilo": String(kv.get("estilo", "liso")), "img": "", "x": {}}
+	if not chocan(kl, invertido):
+		return invertido
+	var claro := Color(String(kl.get("c1", "#ffffff"))).get_luminance() > 0.55
+	return {"c1": "#1b1f26" if claro else "#f2f2f2", "c2": String(kv["c1"]), "estilo": "liso", "img": "", "x": {}}
+
 static func kit(c: Club) -> Dictionary:
 	var estilo := Jersey.kit_de(c, c.kit_estilo)
 	var img := Jersey.fichero_real(c)

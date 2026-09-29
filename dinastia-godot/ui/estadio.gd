@@ -450,7 +450,7 @@ func _sacar_los_22() -> void:
 		Puente3D.kit(club), Puente3D.kit_portero(club)))
 	_en_campo.append_array(_spawner.spawn_team(_raiz3d, v["xi"], v["jugadores"],
 		Puente3D.formacion(visitante.tactica.formacion), false,
-		Puente3D.kit(visitante), Puente3D.kit_portero(visitante)))
+		Puente3D.kit_visita(club, visitante), Puente3D.kit_portero(visitante)))
 	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d))
 	_poner_banca(once_local, once_visita)
 	_poner_personal()
