@@ -319,11 +319,14 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 	var rasgos: Texture2D = null if foto != null else Cara.textura_rasgos(lk)
 	var barba: Texture2D = null if foto != null else Cara.textura_barba(lk)
 	var bi := int((lk as Dictionary).get("barba", 0))
-	## Con foto, la piel de todo el cuerpo toma el tono de la cara de la foto.
+	## IGUALITO A LA FOTO (29-9-2026): la foto trae sus propias cejas y su
+	## barba; las mallas 3D encima duplicaban cejas y tapaban la barba real.
+	## Y la foto se lleva al color de la piel del modelo (balance de blancos y
+	## flash de cada fotógrafo): así no se nota dónde termina la foto.
+	var tono_foto := Vector3.ONE
 	if foto != null:
-		var tono := _tono_foto(foto, af)
-		if tono.a > 0.0:
-			piel = tono
+		_ocultar_cejas_y_barba(d.get("nodo", modelo))
+		tono_foto = _ajuste_foto(foto, af, piel)
 	var iris := Color(String(Cara.IRIS[clampi(int((lk as Dictionary).get("ojos", 0)), 0, Cara.IRIS.size() - 1)]))
 	var puesta := false
 	for mv in _mallas(modelo):
@@ -348,8 +351,8 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 						mc.set_shader_parameter("foto_tex", foto)
 						mc.set_shader_parameter("foto_u", af[0])
 						mc.set_shader_parameter("foto_v", af[1])
-						mc.set_shader_parameter("foto_tono", Vector3.ONE * 0.92)
-						mc.set_shader_parameter("tinte_piel", _tinte(piel))
+						mc.set_shader_parameter("foto_tono", tono_foto)
+						mc.set_shader_parameter("foto_espejo", _lado_foto(Cara.puntos_foto(ruta)))
 					else:
 						mc.set_shader_parameter("cara_tex", rasgos)
 						if barba != null:
@@ -371,42 +374,81 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 					mo.shader = load(SHADER_OJOS)
 					mo.set_shader_parameter("iris", iris)
 					mo.set_shader_parameter("piel", piel)
+					if foto != null:
+						mo.set_shader_parameter("apertura", 0.78)
+						mo.set_shader_parameter("blanco", 0.82)
 					_cache_cara[clave_o] = mo
 				mi.set_surface_override_material(s, mo)
 	return puesta
 
-## El tono medio de la piel de la foto: mejillas, tabique y frente (en el
-## espacio del retrato), 5x5 píxeles cada punto. Alfa 0 si no se pudo.
-static func _tono_foto(foto: Texture2D, af: Array) -> Color:
+## Si la foto es de tres cuartos, qué mitad mira a la cámara (-1 la izquierda
+## de la imagen, 1 la derecha), o 0 si es de frente. La punta de la nariz se
+## corre hacia el lado lejano (medido con 5 retratos: de frente < 0,02; tres
+## cuartos 0,14-0,28).
+static func _lado_foto(p: Array) -> int:
+	if p.size() < 8:
+		return 0
+	var sep := absf(float(p[2]) - float(p[0]))
+	if sep < 0.001:
+		return 0
+	var corrida := (float(p[6]) - (float(p[0]) + float(p[2])) * 0.5) / sep
+	if corrida > 0.12:
+		return -1
+	if corrida < -0.12:
+		return 1
+	return 0
+
+## Esconde las cejas (las del cuerpo y las de `PeloQ`) y la barba 3D.
+static func _ocultar_cejas_y_barba(raiz: Node) -> void:
+	if raiz == null:
+		return
+	for mv in _mallas(raiz):
+		var mi: MeshInstance3D = mv
+		if mi.name in ["Eyebrows", "Eyebrows_Regular", "Hair_Beard"]:
+			mi.visible = false
+
+## Cuánto hay que multiplicar la foto (por canal, en lineal) para que su piel
+## media sea la piel del modelo: la media de un óvalo de la cara (sin ojos
+## ni boca, que son más oscuros) contra el tono del jugador.
+static func _ajuste_foto(foto: Texture2D, af: Array, piel: Color) -> Vector3:
 	var img := foto.get_image()
 	if img == null or af.size() != 2:
-		return Color(0, 0, 0, 0)
+		return Vector3.ONE
 	if img.is_compressed():
 		img.decompress()
 	var w := img.get_width()
 	var h := img.get_height()
-	var suma := Color(0, 0, 0, 0)
+	var suma := Vector3.ZERO
 	var n := 0
-	for pt: Vector2 in [Vector2(25, 39), Vector2(39, 39), Vector2(32, 36.5), Vector2(32, 27.5)]:
-		var q := Vector3(pt.x, pt.y, 1.0)
-		var u: float = (af[0] as Vector3).dot(q)
-		var v: float = (af[1] as Vector3).dot(q)
-		for dy in range(-2, 3):
-			for dx in range(-2, 3):
-				var px := int(u * w) + dx
-				var py := int(v * h) + dy
-				if px >= 0 and py >= 0 and px < w and py < h:
-					suma += img.get_pixel(px, py)
-					n += 1
-	if n == 0:
-		return Color(0, 0, 0, 0)
-	return Color(suma.r / n, suma.g / n, suma.b / n, 1.0)
+	for sy in range(28, 52, 2):
+		for sx in range(22, 43, 2):
+			var ov := Vector2((sx - 32.0) / 9.5, (sy - 39.0) / 12.5)
+			if ov.length() > 1.0:
+				continue
+			## Fuera ojos, cejas y boca.
+			if absf(sy - 32.0) < 3.5 or absf(sy - 44.5) < 2.5:
+				continue
+			var q := Vector3(sx, sy, 1.0)
+			var px := int((af[0] as Vector3).dot(q) * w)
+			var py := int((af[1] as Vector3).dot(q) * h)
+			if px < 0 or py < 0 or px >= w or py >= h:
+				continue
+			var c := img.get_pixel(px, py).srgb_to_linear()
+			suma += Vector3(c.r, c.g, c.b)
+			n += 1
+	if n < 8:
+		return Vector3.ONE
+	var media := suma / float(n)
+	var objetivo := piel.srgb_to_linear()
+	return Vector3(clampf(objetivo.r / maxf(media.x, 0.01), 0.5, 1.8),
+		clampf(objetivo.g / maxf(media.y, 0.01), 0.5, 1.8),
+		clampf(objetivo.b / maxf(media.z, 0.01), 0.5, 1.8))
 
 ## La transformación afín que lleva los ojos y la boca del retrato (espacio
 ## 0-64 de `Cara.svg_rasgos`) a los de la foto (0-1). [] si no hay puntos o
 ## son degenerados.
 static func _afin_foto(p: Array) -> Array:
-	if p.size() != 6:
+	if p.size() < 6:
 		return []
 	var origen := [Vector2(26, 33), Vector2(38, 33), Vector2(32, 44.5)]
 	var destino := [Vector2(p[0], p[1]), Vector2(p[2], p[3]), Vector2(p[4], p[5])]

@@ -13,6 +13,10 @@ shader_type spatial;
 // Globos: centro x = ±0,0338 m, y = 1,6986 m, radio 0,015 m.
 uniform vec4 iris : source_color = vec4(0.23, 0.16, 0.09, 1.0);
 uniform vec4 piel : source_color = vec4(0.78, 0.55, 0.4, 1.0);
+// Con foto real: ojos algo menos abiertos y blanco menos brillante, para que
+// no miren fijo al lado de la cara fotografiada.
+uniform float apertura = 1.0;
+uniform float blanco = 1.0;
 varying vec2 v_r;
 
 void vertex() {
@@ -34,7 +38,7 @@ void fragment() {
 	float ang = atan(d.y, d.x);
 
 	// 1. Esclerótica.
-	vec3 col = vec3(0.84, 0.81, 0.77);
+	vec3 col = vec3(0.84, 0.81, 0.77) * blanco;
 	float rincon = smoothstep(0.005, 0.014, abs(dx));
 	col = mix(col, vec3(0.78, 0.55, 0.5), rincon * (dx < 0.0 ? 0.55 : 0.3));
 	float venas = smoothstep(0.93, 1.0, ruido(vec2(ang * 9.0, r * 900.0))) * smoothstep(0.008, 0.013, r);
@@ -52,8 +56,8 @@ void fragment() {
 	col = mix(col, vec3(0.01), 1.0 - smoothstep(0.0024, 0.0029, r));
 
 	// Párpados en almendra: más abiertos al centro, se cierran hacia los rincones.
-	float borde_sup = 0.0060 - dx * dx * 22.0 + dx * 0.05;
-	float borde_inf = -0.0078 + dx * dx * 26.0;
+	float borde_sup = (0.0060 - dx * dx * 22.0 + dx * 0.05) * apertura;
+	float borde_inf = (-0.0078 + dx * dx * 26.0) * mix(1.0, apertura, 0.6);
 	// 4. Sombra del párpado de arriba sobre el globo.
 	col *= 1.0 - 0.45 * smoothstep(borde_sup - 0.004, borde_sup, d.y);
 	col *= 1.0 - 0.18 * smoothstep(borde_inf + 0.002, borde_inf, d.y);

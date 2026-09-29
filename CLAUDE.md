@@ -75,5 +75,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`, pref `pantalla/caras_foto`).
   Legal (explicado al usuario): la licencia libre cubre la foto, NO el derecho de
   imagen del jugador; para publicar/vender lo decide el dueño.
+- Pidió (29-9): «los jugadores que tenemos sus caras deben ser igualitos en su
+  personaje 3D». Hecho: con foto se esconden cejas y barba 3D, la foto se lleva
+  al color de la piel del modelo, óvalo con cejas, fotos de tres cuartos en
+  espejo (nariz en `caras_reales_puntos.json`, 8 valores), ojos más cerrados.
+  Límite: la cabeza 3D es la misma para todos (la forma no es la suya).
 - Esperando al usuario: túnel, informe nuevo.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
