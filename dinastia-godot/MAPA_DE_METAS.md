@@ -134,4 +134,4 @@ Junta tres fuentes:
   - contenido;
   - pulido;
   - originalidad.
-- Estimación actual: **~68/100**. Se cerró la Fase A salvo las entregas, que dependen del dueño, y casi toda la Fase B de contenido.
+- Estimación actual (29-9): **≈71/100**. El detalle, punto por punto contra el informe, está en `COMPARACION_INFORME.md`.
