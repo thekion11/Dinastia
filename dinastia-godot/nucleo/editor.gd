@@ -41,6 +41,39 @@ func renombrar_club(c: Club, nuevo: String) -> String:
 	cambiado.emit("club")
 	return ""
 
+# --- competiciones (28-9-2026, bloque 47) ------------------------------------
+
+func renombrar_liga(l: Liga, nuevo: String) -> String:
+	var n := nuevo.strip_edges()
+	if n.length() < 3:
+		return "el nombre es demasiado corto"
+	l.nombre = n
+	return ""
+
+func fijar_descensos(l: Liga, n: int) -> void:
+	l.plazas_descenso = clampi(n, 1, 4)
+
+func fijar_puntos_victoria(l: Liga, n: int) -> void:
+	l.puntos_victoria = clampi(n, 2, 3)
+
+## La copa se recrea cada temporada: el nombre y la sede se guardan en el
+## mundo y se aplican a la de ahora y a las siguientes.
+func renombrar_copa(nuevo: String) -> String:
+	var m := _mundo()
+	var n := nuevo.strip_edges()
+	if n.length() < 3:
+		return "el nombre es demasiado corto"
+	m.ajustes_competicion["copa_nombre"] = n
+	if m.copa != null:
+		m.copa.nombre = n
+	return ""
+
+func fijar_sede_final(c: Club) -> void:
+	var m := _mundo()
+	m.ajustes_competicion["copa_sede"] = c.id if c != null else ""
+	if m.copa != null:
+		m.copa.sede_final_id = c.id if c != null else ""
+
 func mover_reputacion(c: Club, d: int) -> void:
 	c.rep = clampi(c.rep + d, 30, 95)
 	cambiado.emit("club")
