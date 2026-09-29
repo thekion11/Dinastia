@@ -37,7 +37,7 @@ func _process(_d: float) -> void:
 			var hoja := Image.create(640 * CLIMAS.size(), 360, false, Image.FORMAT_RGBA8)
 			for k in _imgs.size():
 				hoja.blit_rect(_imgs[k], Rect2i(0, 0, 640, 360), Vector2i(k * 640, 0))
-			hoja.save_png("res://pruebas/clima_visible.png")
+			hoja.save_png("res://pruebas/capturas/clima_visible.png")
 			print("captura: clima_visible.png")
 			get_tree().quit()
 		else:

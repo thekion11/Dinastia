@@ -31,5 +31,5 @@ func _process(_d: float) -> void:
 				(sc as ScrollContainer).scroll_vertical = int((l as Label).global_position.y - lista.global_position.y) - 10
 				break
 	if _n == 24:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/reputacion.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/reputacion.png")
 		get_tree().quit()

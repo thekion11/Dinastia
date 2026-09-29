@@ -24,6 +24,6 @@ func _process(_d: float) -> void:
 			if (b as Button).text.begins_with("🎁"):
 				(b as Button).pressed.emit()
 	if _n == 60:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/album.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/album.png")
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(Meta.ruta))
 		get_tree().quit()

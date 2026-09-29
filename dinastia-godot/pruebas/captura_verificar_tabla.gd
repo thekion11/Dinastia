@@ -34,7 +34,7 @@ func _process(_d: float) -> void:
 		else:
 			print("OK: _lista_tabla tiene %d hijos pintados" % lista.get_child_count())
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_tabla_verificada.png")
+		img.save_png("res://pruebas/capturas/pantalla_tabla_verificada.png")
 		print("captura: pantalla_tabla_verificada.png")
 		print("FIN. %d fallos" % _fallos)
 		get_tree().quit(_fallos)

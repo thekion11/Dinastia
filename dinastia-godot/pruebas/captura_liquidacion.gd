@@ -29,7 +29,7 @@ func _process(_d: float) -> void:
 			mun.banco.liquidado_ya, mun.banco.semanas_en_rojo, mun.roles.sin_club])
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_liquidacion.png")
+		_guardar("res://pruebas/capturas/pantalla_liquidacion.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

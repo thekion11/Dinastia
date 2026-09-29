@@ -577,7 +577,7 @@ convirtiéndolos con la base global de reposo del hueso padre.
   focos, pantalla, césped y niveles.
 - Los rivales ahora salen en 6 formas en lugar de 2.
 
-Captura: `pruebas/estadios_nuevos.png`.
+Captura: `pruebas/capturas/estadios_nuevos.png`.
 
 ### 5. Aspecto de la interfaz, con Soccer Manager delante
 - **Inicio**: `ui/componentes/tablero_inicio.gd` es un tablero de tarjetas con estas piezas:
@@ -592,7 +592,7 @@ Captura: `pruebas/estadios_nuevos.png`.
   jugador lleva su cara, un anillo de media y una etiqueta de posición con el color de su línea
   (en rojo si juega fuera de posición).
 
-Capturas: `pruebas/inicio_tablero.png` y `pruebas/pizarra_tactica.png`.
+Capturas: `pruebas/capturas/inicio_tablero.png` y `pruebas/capturas/pizarra_tactica.png`.
 
 ### 6. Sonidos: de 157 sin usar a los que tienen momento claro
 - **En el partido**:
@@ -835,7 +835,7 @@ el motor, sin abrir ninguna pantalla, que el evento NO aparece con `enojo_arbitr
 con `enojo_arbitral = 3`, que "asistir" baja el contador de 3 a 2 Y cobra plata de verdad, y que
 "declinar" no toca ni el contador ni la caja. `pruebas/captura_visual_lobby_arbitral.gd` (nuevo)
 fuerza el evento y confirma que se pinta en pantalla real, idéntico a cualquier otro aviso del
-despacho -captura en `pruebas/pantalla_lobby_arbitral.png`-.
+despacho -captura en `pruebas/capturas/pantalla_lobby_arbitral.png`-.
 
 **Tropiezo real en la propia herramienta de verificación, corregido antes de dar esto por cerrado**:
 la primera versión de `captura_visual_lobby_arbitral.gd` usaba `var n := get_meta("n", 0) + 1` -
@@ -907,7 +907,7 @@ Se pasa como parámetro (`col_acento`) en su lugar.
 de verdad y que el primer jugador pintado pasa de ordenarse por media a orden alfabético -no solo
 que la cabecera se repinta-. Después pulsa el nombre de un jugador y confirma que la navegación por
 `Callable` sigue funcionando exactamente igual que antes: abre su ficha (50 hijos pintados) y deja
-"Mi plantel" al frente. Captura en `pruebas/pantalla_plantel.png`. Banco completo: 0 fallos,
+"Mi plantel" al frente. Captura en `pruebas/capturas/pantalla_plantel.png`. Banco completo: 0 fallos,
 `.err.txt` vacío. Auditoría estática: 0 duplicadas, 0 clases sin usar.
 
 `principal.gd`: 14.707 → 14.640 líneas en esta tanda. **Con las cinco tandas de hoy: 15.589 → 14.640
@@ -952,7 +952,7 @@ DEL CLUB en su lugar -pintada antes en la misma pestaña, con texto "Lanzar 2.9M
 pulsaba el botón equivocado y el fallo apuntaba a la función correcta. Se corrigió buscando el botón
 cuyo texto es SOLO el precio (empieza con un dígito), que es justo lo que distingue a una campaña
 ("700k EUR") de una fila de tienda ("Lanzar 700k EUR"). Captura en
-`pruebas/pantalla_finanzas.png`. Banco completo: 0 fallos, `.err.txt` vacío. Auditoría estática: 0
+`pruebas/capturas/pantalla_finanzas.png`. Banco completo: 0 fallos, `.err.txt` vacío. Auditoría estática: 0
 duplicadas, 0 clases sin usar.
 
 `principal.gd`: 15.036 → 14.707 líneas en esta tanda (370 de la extracción + otras de la función
@@ -993,7 +993,7 @@ fue justamente "un botón que se ve pero no hace nada no da ningún error"-. `pr
 confirmar la mutación real, no solo el pintado: desarrollo prioritario cambió de verdad en
 `mundo.entrenamiento.es_prioritario()`, la reconversión de puesto cambió `Jugador.pos_e` (de LI a
 LD), y "Poner en venta" marcó `transferible = true`. Captura guardada en
-`pruebas/pantalla_ficha_acciones.png`. Banco completo: 0 fallos, `.err.txt` vacío. Auditoría
+`pruebas/capturas/pantalla_ficha_acciones.png`. Banco completo: 0 fallos, `.err.txt` vacío. Auditoría
 estática: 0 duplicadas, 0 clases sin usar.
 
 **De paso, un hallazgo de la auditoría**: `_responder_oferta(idx, acepta)` en `principal.gd`
@@ -2098,7 +2098,7 @@ es decoración aparte con su propio número inventado.
 **Verificado**: banco completo (851+ comprobaciones) 0 fallos, `.err.txt` vacío. Captura real nueva
 (`pruebas/captura_hinchas_filas.gd` + `.tscn`, cámara propia a ras de campo pegada a la primera
 fila -las cámaras de partido normales siguen la pelota, no sirven para inspeccionar la grada de
-cerca-): `pruebas/pantalla_hinchas_filas.png` muestra las butacas vacías (respaldo negro) y las
+cerca-): `pruebas/capturas/pantalla_hinchas_filas.png` muestra las butacas vacías (respaldo negro) y las
 ocupadas con la figura torso+cabeza en colores variados, huecos realistas donde no hay ocupación.
 Nota al pasar: el script de captura reveló que `mundo.comercial` es `null` hasta que corre
 `tomar_el_mando()` -`generar()` solo, sin eso, no alcanza-; `captura_bandejas.gd` (14/16-9) accede a
@@ -2646,7 +2646,7 @@ es un paso atrás, no una mejora, aunque la postura y la animación mejoren.
 una textura de traje para este modelo específico, (b) usar el modelo Female con algún vestuario
 distinto, o (c) dejar al presentador con el modelo viejo hasta que haya una solución de vestuario
 limpia para el nuevo. Verificación de referencia (antes de este hallazgo, con el modelo viejo):
-`pruebas/sorteo_presentador_de_pie.png` / `sorteo_presentador_gesto.png`, reproducibles con
+`pruebas/capturas/sorteo_presentador_de_pie.png` / `sorteo_presentador_gesto.png`, reproducibles con
 `pruebas/captura_sorteo_presentador.gd/.tscn`.
 
 ## ANIMACIONES REALES (NO A MANO) + SEGUNDO CUERPO (18-9-2026, cambio grande)

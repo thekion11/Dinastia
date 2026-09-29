@@ -37,7 +37,7 @@ func _process(_d: float) -> void:
 		_ir_a(String(par[0]))
 	if _n > ESPERA and (_n - ESPERA) % 8 == 4 and _paso < PESTANAS.size():
 		var par2: Array = PESTANAS[_paso]
-		_guardar("res://pruebas/%s" % String(par2[1]))
+		_guardar("res://pruebas/capturas/%s" % String(par2[1]))
 		_paso += 1
 	if _paso >= PESTANAS.size() and (_n - ESPERA) % 8 == 5:
 		get_tree().quit()

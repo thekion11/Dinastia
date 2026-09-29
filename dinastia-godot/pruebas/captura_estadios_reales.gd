@@ -57,5 +57,5 @@ func _siguiente() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 6:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/estadio_real_%d.png" % _i)
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/estadio_real_%d.png" % _i)
 		_siguiente()

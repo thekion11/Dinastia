@@ -58,6 +58,6 @@ func _process(_d: float) -> void:
 						(h as Button).pressed.emit()
 		40:
 			_comprobar(not (mundo.club_dentro.app as Dictionary).is_empty(), "lanzar la app la deja lanzada")
-			get_viewport().get_texture().get_image().save_png("res://pruebas/club_dentro_panel.png")
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/club_dentro_panel.png")
 			print("captura_club_dentro_panel: %d fallos" % _fallos)
 			get_tree().quit(1 if _fallos > 0 else 0)

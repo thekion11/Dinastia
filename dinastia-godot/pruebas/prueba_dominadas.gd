@@ -6,7 +6,7 @@ extends Node3D
 ##    está sobre el pie (no a medio metro, no dentro).
 ## 2. La pelota nunca atraviesa el césped.
 ## 3. Existen las animaciones de regate y de conducción.
-## Deja `pruebas/dominadas.png`: un jugador en 8 momentos del clip.
+## Deja `pruebas/capturas/dominadas.png`: un jugador en 8 momentos del clip.
 var _fallos := 0
 var _ap: AnimationPlayer
 var _cam: Camera3D
@@ -91,7 +91,7 @@ func _process(_d: float) -> void:
 				var hoja := Image.create(240 * 8, 240, false, Image.FORMAT_RGBA8)
 				for i in _imgs.size():
 					hoja.blit_rect(_imgs[i], Rect2i(0, 0, 240, 240), Vector2i(i * 240, 0))
-				hoja.save_png("res://pruebas/dominadas.png")
+				hoja.save_png("res://pruebas/capturas/dominadas.png")
 				_fin()
 		return
 	_ap.play("dominadas_1")

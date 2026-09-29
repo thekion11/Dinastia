@@ -17,7 +17,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == ESPERA:
-		_guardar("res://pruebas/pantalla_modo.png")
+		_guardar("res://pruebas/capturas/pantalla_modo.png")
 		## Simula el clic: mismo efecto que _elegir("ayudante") sin depender de
 		## encontrar el boton exacto en el arbol.
 		Principal.modo_elegido = "ayudante"
@@ -37,7 +37,7 @@ func _process(_d: float) -> void:
 				tabs.current_tab = i
 				break
 	if _n == ESPERA + 9:
-		_guardar("res://pruebas/pantalla_modo_ayudante.png")
+		_guardar("res://pruebas/capturas/pantalla_modo_ayudante.png")
 		## Y la ficha de un rival, para ver que el ayudante NO tiene botones de
 		## fichar -el permiso que se acaba de hacer cumplir de verdad.
 		var mun = _pantalla.get("mundo")
@@ -48,7 +48,7 @@ func _process(_d: float) -> void:
 				break
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 12:
-		_guardar("res://pruebas/pantalla_ayudante_sin_fichar.png")
+		_guardar("res://pruebas/capturas/pantalla_ayudante_sin_fichar.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

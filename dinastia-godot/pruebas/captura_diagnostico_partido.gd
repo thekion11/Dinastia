@@ -58,7 +58,7 @@ func _process(_d: float) -> void:
 		print("camara -> %s" % rig.current_name())
 	if _n == ARRANQUE + 10:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/diagnostico_ras_campo.png")
+		img.save_png("res://pruebas/capturas/diagnostico_ras_campo.png")
 		print("captura: diagnostico_ras_campo.png")
 	if _n == ARRANQUE + 14:
 		var rig: CameraRig = _vista.get("_rig")
@@ -66,6 +66,6 @@ func _process(_d: float) -> void:
 		print("camara -> %s" % rig.current_name())
 	if _n == ARRANQUE + 24:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/diagnostico_tv.png")
+		img.save_png("res://pruebas/capturas/diagnostico_tv.png")
 		print("captura: diagnostico_tv.png")
 		get_tree().quit()

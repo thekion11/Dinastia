@@ -32,7 +32,7 @@ func _process(_d: float) -> void:
 	if _n == ESPERA + 8:
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 10:
-		_guardar("res://pruebas/pantalla_fundar.png")
+		_guardar("res://pruebas/capturas/pantalla_fundar.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:
