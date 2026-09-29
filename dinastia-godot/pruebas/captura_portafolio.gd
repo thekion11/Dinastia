@@ -65,7 +65,7 @@ func _poner(g: int) -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n % 20 == 0:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/portafolio_%d.png" % _g)
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/portafolio_%d.png" % _g)
 		_g += 1
 		if _g >= GRUPOS.size():
 			var ap: AnimationPlayer = (_jug[0] as Dictionary)["anim"]

@@ -31,7 +31,7 @@ func _process(_d: float) -> void:
 		_espera += 1
 		if _espera >= 45:
 			_espera = 0
-			get_viewport().get_texture().get_image().save_png("res://pruebas/%s.png" % String(f[1]))
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % String(f[1]))
 			_fotos.pop_front()
 			if _fotos.is_empty():
 				get_tree().quit()

@@ -57,8 +57,8 @@ func _process(_d: float) -> void:
 			var t: float = (sv2 as Node).get("_t")
 			if t > 2.0 and not has_meta("uno"):
 				set_meta("uno", true)
-				get_viewport().get_texture().get_image().save_png("res://pruebas/sala_var.png")
+				get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/sala_var.png")
 			if t > 5.6 and not has_meta("dos"):
 				set_meta("dos", true)
-				get_viewport().get_texture().get_image().save_png("res://pruebas/sala_var_decision.png")
+				get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/sala_var_decision.png")
 				get_tree().quit()

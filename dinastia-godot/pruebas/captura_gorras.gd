@@ -11,5 +11,5 @@ func _ready() -> void:
 		i += 1
 	var c := Camera3D.new(); c.position = Vector3(0.3, 1.72, 1.4); c.look_at(Vector3(0, 1.62, 0)); c.fov = 45; add_child(c)
 	await get_tree().create_timer(0.6).timeout
-	get_viewport().get_texture().get_image().save_png("res://pruebas/gorras.png")
+	get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/gorras.png")
 	get_tree().quit()

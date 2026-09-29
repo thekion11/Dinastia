@@ -29,7 +29,7 @@ func _process(_d: float) -> void:
 		if nodo != null and jugar != null:
 			(nodo as ScrollContainer).ensure_control_visible(jugar)
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/modos_selector.png")
+		_guardar("res://pruebas/capturas/modos_selector.png")
 		_pantalla.call("_fijar_modo_simulacion", _pantalla.call("_competicion_de_la_semana"), "resumen")
 		_pantalla.call("_dirigir")
 		for h in _pantalla.get_children():
@@ -37,11 +37,11 @@ func _process(_d: float) -> void:
 				_res = h
 	if _n > ESPERA + 6 and _n < ESPERA + 400 and _res != null and _res._t >= 11.0 and not has_meta("medio"):
 		set_meta("medio", true)
-		_guardar("res://pruebas/modos_resumen_medio.png")
+		_guardar("res://pruebas/capturas/modos_resumen_medio.png")
 		_res._mostrar_todo()
 		set_meta("fin_en", _n + 4)
 	if has_meta("fin_en") and _n == int(get_meta("fin_en")):
-		_guardar("res://pruebas/modos_resumen_final.png")
+		_guardar("res://pruebas/capturas/modos_resumen_final.png")
 		## Deja la preferencia como estaba de fábrica.
 		_pantalla.call("_fijar_modo_simulacion", _pantalla.call("_competicion_de_la_semana"), "completo")
 		get_tree().quit()

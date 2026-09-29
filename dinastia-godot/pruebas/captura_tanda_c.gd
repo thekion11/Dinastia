@@ -28,7 +28,7 @@ func _process(_d: float) -> void:
 	if _n == 13:
 		_bajar_a(_p.get("_ficha"), "PERFIL")
 	if _n == 22:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/ficha_premios.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ficha_premios.png")
 		for k in ["ct", "cocina", "piscina", "med", "gim"]:
 			m.obras.niveles[k] = 6 if k == "ct" else 2
 		_p.call("_ir_a_chip", {"tab": "Club", "secc": "infra", "label": "Infraestructura"})
@@ -36,5 +36,5 @@ func _process(_d: float) -> void:
 	if _n == 30:
 		_bajar_a(_p.get("_lista_club"), "Comedor")
 	if _n == 38:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/instalaciones_trabajadores.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/instalaciones_trabajadores.png")
 		get_tree().quit()

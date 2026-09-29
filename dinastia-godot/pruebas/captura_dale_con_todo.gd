@@ -23,11 +23,11 @@ func _process(_d: float) -> void:
 		_pantalla.call("_elegir_grupo", "central")
 		_pantalla.call("_refrescar")
 	if _n == 14:
-		_guardar("res://pruebas/pantalla_solicitud.png")
+		_guardar("res://pruebas/capturas/pantalla_solicitud.png")
 		## 2) Entrenamiento individual: la pestaña ya existe en el menú.
 		_pantalla.call("_ir_a_pestana", "Entrenar")
 	if _n == 16:
-		_guardar("res://pruebas/pantalla_entreno_individual.png")
+		_guardar("res://pruebas/capturas/pantalla_entreno_individual.png")
 		## 3) Mesa de negociación con un objetivo del mercado, para ver el
 		## selector de intercambio.
 		var mundo2: Mundo = _pantalla.get("mundo")
@@ -37,7 +37,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_ir_a_pestana", "Mercado")
 		_pantalla.call("_refrescar")
 	if _n == 18:
-		_guardar("res://pruebas/pantalla_intercambio.png")
+		_guardar("res://pruebas/capturas/pantalla_intercambio.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

@@ -22,5 +22,5 @@ func _process(_d: float) -> void:
 		if sc != null:
 			sc.scroll_vertical = 520
 	if _n == 45:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/maestrias.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/maestrias.png")
 		get_tree().quit()

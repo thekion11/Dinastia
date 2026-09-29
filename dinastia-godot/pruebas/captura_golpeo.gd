@@ -68,5 +68,5 @@ func _process(_d: float) -> void:
 		var hoja := Image.create(240 * N, 240 * CLIPS.size(), false, _imgs[0].get_format())
 		for i in _imgs.size():
 			hoja.blit_rect(_imgs[i], Rect2i(0, 0, 240, 240), Vector2i((i % N) * 240, (i / N) * 240))
-		hoja.save_png("res://pruebas/golpeo_hoja.png")
+		hoja.save_png("res://pruebas/capturas/golpeo_hoja.png")
 		get_tree().quit()

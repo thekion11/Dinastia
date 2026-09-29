@@ -14,5 +14,5 @@ func _process(_d: float) -> void:
 		_pantalla.call("_refrescar")
 	if _n == 14:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_atajos.png")
+		img.save_png("res://pruebas/capturas/pantalla_atajos.png")
 		get_tree().quit()

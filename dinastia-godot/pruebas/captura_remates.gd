@@ -45,7 +45,7 @@ func _process(_d: float) -> void:
 		_vivo.call("_poner_velocidad", 0)
 		_vivo.call("_refrescar")
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_remates.png")
+		_guardar("res://pruebas/capturas/pantalla_remates.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

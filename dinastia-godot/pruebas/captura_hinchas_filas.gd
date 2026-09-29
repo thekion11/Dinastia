@@ -46,7 +46,7 @@ func _process(_delta: float) -> void:
 	_frame += 1
 	if _frame == 20:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_hinchas_filas.png")
+		img.save_png("res://pruebas/capturas/pantalla_hinchas_filas.png")
 		print("captura guardada: res://pruebas/pantalla_hinchas_filas.png (%dx%d)" % [img.get_width(), img.get_height()])
 	elif _frame == 25:
 		## Segunda captura, SOLO para revisar la viñeta (22-9-2026): en el
@@ -58,7 +58,7 @@ func _process(_delta: float) -> void:
 		_vista._rig.switch_to(7)
 	elif _frame == 45:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/pantalla_vineta_cenital.png")
+		img2.save_png("res://pruebas/capturas/pantalla_vineta_cenital.png")
 		print("captura guardada: res://pruebas/pantalla_vineta_cenital.png (%dx%d)" % [img2.get_width(), img2.get_height()])
 		print("FIN. 0 fallos")
 		get_tree().quit()

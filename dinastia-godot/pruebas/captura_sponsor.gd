@@ -35,7 +35,7 @@ func _process(_d: float) -> void:
 		if scroll is ScrollContainer:
 			(scroll as ScrollContainer).scroll_vertical = 100000
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_sponsor.png")
+		_guardar("res://pruebas/capturas/pantalla_sponsor.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

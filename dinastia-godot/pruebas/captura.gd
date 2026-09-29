@@ -52,7 +52,7 @@ func _process(_d: float) -> void:
 				mejor = j
 		_pantalla.call("_ver_ficha", mejor)
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla.png")
+		_guardar("res://pruebas/capturas/pantalla.png")
 		## Ahora el mercado: se cambia de pestana y se abre la ficha del primer
 		## objetivo, que es de otro club y por tanto trae las tres puertas.
 		var tabs: TabContainer = _pantalla.get("_pestanas")
@@ -62,7 +62,7 @@ func _process(_d: float) -> void:
 		if not objetivos.is_empty():
 			_pantalla.call("_ver_ficha", objetivos[0])
 	if _n == ESPERA + 12:
-		_guardar("res://pruebas/pantalla_mercado.png")
+		_guardar("res://pruebas/capturas/pantalla_mercado.png")
 		## Y el partido en directo, con el reloj corriendo y un titular ya
 		## senalado para el cambio: es el estado en el que de verdad se usa.
 		_pantalla.call("_dirigir")
@@ -74,7 +74,7 @@ func _process(_d: float) -> void:
 			_vivo.call("_poner_velocidad", 0)
 			_vivo.call("_refrescar")
 	if _n == ESPERA + 18:
-		_guardar("res://pruebas/pantalla_partido.png")
+		_guardar("res://pruebas/capturas/pantalla_partido.png")
 		if _vivo != null:
 			_vivo.call("_hasta_el_final")
 			_vivo.queue_free()
@@ -97,12 +97,12 @@ func _process(_d: float) -> void:
 		## El pizarron tactico: es un dibujo, y un dibujo hay que MIRARLO.
 		_pantalla.call("_ir_a_pestana", "Táctica")
 	if _n == ESPERA + 26:
-		_guardar("res://pruebas/pantalla_tactica.png")
+		_guardar("res://pruebas/capturas/pantalla_tactica.png")
 		## EL MENU DE LA COMPETICION -columna izquierda-. Va ANTES del sorteo:
 		## el sorteo tapa la pantalla entera y ya no dejaria abrir nada mas.
 		_pantalla.call("_abrir_competicion")
 	if _n == ESPERA + 30:
-		_guardar("res://pruebas/pantalla_competicion.png")
+		_guardar("res://pruebas/capturas/pantalla_competicion.png")
 		var comp = _pantalla.get_children().filter(func(n): return n is Competicion).front()
 		if comp != null:
 			comp.queue_free()
@@ -120,7 +120,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_ir_a_pestana", "Ajustes")
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 34:
-		_guardar("res://pruebas/pantalla_ajustes.png")
+		_guardar("res://pruebas/capturas/pantalla_ajustes.png")
 		_pantalla.set("_paleta", "bosque")
 		Idiomas.idioma = _idioma_real
 		_pantalla.call("_aplicar_aspecto")
@@ -140,11 +140,11 @@ func _process(_d: float) -> void:
 	## Dos capturas del sorteo: una con el bombo en marcha y otra con el cuadro
 	## final ya puesto. Son dos momentos distintos y los dos hay que mirarlos.
 	if _n == ESPERA + 49:
-		_guardar("res://pruebas/pantalla_sorteo.png")
+		_guardar("res://pruebas/capturas/pantalla_sorteo.png")
 		if _sorteo != null:
 			_sorteo.call("_saltar")
 	if _n == ESPERA + 59:
-		_guardar("res://pruebas/pantalla_sorteo_cuadro.png")
+		_guardar("res://pruebas/capturas/pantalla_sorteo_cuadro.png")
 		if _sorteo != null:
 			_sorteo.queue_free()
 			_sorteo = null
@@ -153,7 +153,7 @@ func _process(_d: float) -> void:
 		## temporada con el escudo de cada rival.
 		_pantalla.call("_ir_a_pestana", "Calendario")
 	if _n == ESPERA + 61:
-		_guardar("res://pruebas/pantalla_calendario.png")
+		_guardar("res://pruebas/capturas/pantalla_calendario.png")
 		## SEGUNDA RED, además de la de `_n == ESPERA + 34`: si algo más
 		## adelante en esta misma secuencia -el sorteo, el calendario- llegara
 		## a repintar Ajustes con el idioma todavía en inglés, esto lo deja

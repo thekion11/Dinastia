@@ -31,7 +31,7 @@ func _process(_d: float) -> void:
 				break
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_ojeadores.png")
+		_guardar("res://pruebas/capturas/pantalla_ojeadores.png")
 		## Un rival de un pais SIN cubrir, para ver el rango borroso en su ficha.
 		for c: Club in _mundo.clubes.values():
 			if c.id != _mundo.mi_club_id and c.pais != "ARG" and c.pais != _mundo.mi_club().pais and not c.plantilla.is_empty():
@@ -39,7 +39,7 @@ func _process(_d: float) -> void:
 				break
 		_pantalla.call("_ver_ficha", _rival)
 	if _n == ESPERA + 8:
-		_guardar("res://pruebas/pantalla_ficha_borrosa.png")
+		_guardar("res://pruebas/capturas/pantalla_ficha_borrosa.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

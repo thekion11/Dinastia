@@ -5,7 +5,7 @@ extends Control
 ##         res://pruebas/captura_personas.tscn
 ##
 ## Seis retratos con aspectos distintos (ropa, pelo, piel, complexión) y tres
-## de cuerpo entero, en `pruebas/personas_retratos.png`. Comprueba que el
+## de cuerpo entero, en `pruebas/capturas/personas_retratos.png`. Comprueba que el
 ## modelo carga, que el material personalizado se aplica y que dos aspectos
 ## distintos dan materiales distintos.
 
@@ -53,6 +53,6 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 8:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/personas_retratos.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/personas_retratos.png")
 		print("captura_personas: %d fallos" % _fallos)
 		get_tree().quit(1 if _fallos > 0 else 0)

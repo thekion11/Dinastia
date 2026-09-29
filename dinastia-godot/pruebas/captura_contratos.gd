@@ -37,7 +37,7 @@ func _process(_d: float) -> void:
 				tabs.current_tab = i
 				break
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_contratos.png")
+		_guardar("res://pruebas/capturas/pantalla_contratos.png")
 		## Y la ficha de un rival con clausula, para ver el clausulazo.
 		var mun = _pantalla.get("mundo")
 		var mio: Club = mun.mi_club()
@@ -51,7 +51,7 @@ func _process(_d: float) -> void:
 			if _pantalla.get("_seleccionado") != null:
 				break
 	if _n == ESPERA + 10:
-		_guardar("res://pruebas/pantalla_clausulazo.png")
+		_guardar("res://pruebas/capturas/pantalla_clausulazo.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

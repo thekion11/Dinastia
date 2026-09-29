@@ -44,7 +44,7 @@ func _process(_d: float) -> void:
 			print("el partido dentro del visor es el mismo objeto que dirige PartidoVivo = %s" %
 				(j != null))
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/visor_nativo.png")
+		img.save_png("res://pruebas/capturas/visor_nativo.png")
 		if _vista_hija != null:
 			_vista_hija.emit_signal("cerrado")
 	if _n == 30:
@@ -52,5 +52,5 @@ func _process(_d: float) -> void:
 		print("tras cerrar el 3D, el panel de control de PartidoVivo sigue en pie = %s" % sigue_el_panel)
 	if _n == 34:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/visor_nativo_tras_volver.png")
+		img2.save_png("res://pruebas/capturas/visor_nativo_tras_volver.png")
 		get_tree().quit()

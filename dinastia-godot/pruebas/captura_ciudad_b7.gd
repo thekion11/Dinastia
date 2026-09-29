@@ -32,11 +32,11 @@ func _process(_d: float) -> void:
 		_v.set("_hora", 13.0)
 		_v.call("_aplicar_hora")
 	if _n == 12:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/ciudad_b7_mapa.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ciudad_b7_mapa.png")
 		_v.abrir_ficha("piscina")
 	if _n == 22:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/ciudad_b7_ficha.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ciudad_b7_ficha.png")
 		_v.abrir_ficha("video")
 	if _n == 32:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/ciudad_b7_solar.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ciudad_b7_solar.png")
 		get_tree().quit()

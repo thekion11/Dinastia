@@ -17,5 +17,5 @@ func _process(_d: float) -> void:
 		m.mi_club().esc_forma = "redondo" if m.mi_club().esc_forma != "redondo" else "clasico"
 		m.prensa.revisar_identidad(m.mi_club())
 	if _n == 16:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/mentor_voz.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/mentor_voz.png")
 		get_tree().quit()

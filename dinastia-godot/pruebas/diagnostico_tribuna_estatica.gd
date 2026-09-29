@@ -22,9 +22,9 @@ func _process(_d: float) -> void:
 	_frame += 1
 	if _frame == 8:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/tribuna_estatica_f8.png")
+		img.save_png("res://pruebas/capturas/tribuna_estatica_f8.png")
 	if _frame == 90:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/tribuna_estatica_f90.png")
+		img2.save_png("res://pruebas/capturas/tribuna_estatica_f90.png")
 		print("FIN. 0 fallos")
 		get_tree().quit(0)

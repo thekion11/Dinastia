@@ -13,7 +13,7 @@ func _ready() -> void:
 	add_child(_ui)
 
 func _foto(nombre: String) -> void:
-	get_viewport().get_texture().get_image().save_png("res://pruebas/%s.png" % nombre)
+	get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % nombre)
 
 func _process(_d: float) -> void:
 	_n += 1

@@ -45,14 +45,14 @@ func _acciones(d: float) -> void:
 			_esc_acc.set("_t", 5.5)
 			var brazo: Object = _esc_acc.get("_brazo")
 			if brazo != null and float(brazo.call("_peso_cafe")) > 0.95:
-				get_viewport().get_texture().get_image().save_png("res://pruebas/casa_cafe.png")
+				get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/casa_cafe.png")
 				_esc_acc.alternar_hora()
 				_reloj = 0.0
 				_fase_acc = 3
 		3:
 			_esc_acc.set("_t", 0.5)
 			if _reloj > 3.2:
-				get_viewport().get_texture().get_image().save_png("res://pruebas/casa_atardecer.png")
+				get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/casa_atardecer.png")
 				_esc_acc.libre = true
 				_esc_acc.set("_yaw", 2.4)
 				_esc_acc.set("_pitch", 0.35)
@@ -61,7 +61,7 @@ func _acciones(d: float) -> void:
 				_fase_acc = 4
 		4:
 			if _reloj > 0.5:
-				get_viewport().get_texture().get_image().save_png("res://pruebas/casa_libre.png")
+				get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/casa_libre.png")
 				get_tree().quit()
 
 func _process(_d: float) -> void:
@@ -88,7 +88,7 @@ func _process(_d: float) -> void:
 	_espera -= 1
 	if _espera > 0:
 		return
-	get_viewport().get_texture().get_image().save_png("res://pruebas/casa_%s_%d.png" % [CASOS[_caso][0], _plano + 1])
+	get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/casa_%s_%d.png" % [CASOS[_caso][0], _plano + 1])
 	_plano += 1
 	_espera = POR_PLANO
 	if _plano >= CasaEscena3D.PLANOS.size():

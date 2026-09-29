@@ -16,7 +16,7 @@ func _process(_d: float) -> void:
 	if _n == 10:
 		_p.call("_ir_a_pestana", "Estadio")
 	if _n == 12:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/disenador_b6_arriba.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/disenador_b6_arriba.png")
 	if _n == 20:
 		## Bajar hasta los bloques del diseñador.
 		var lista: Control = _p.get("_lista_estadio")
@@ -27,5 +27,5 @@ func _process(_d: float) -> void:
 			if h is Label and (h as Label).text == "LA ESTRUCTURA" and sc != null:
 				(sc as ScrollContainer).scroll_vertical = int(h.global_position.y - lista.global_position.y) - 10
 	if _n == 28:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/disenador_b6.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/disenador_b6.png")
 		get_tree().quit()

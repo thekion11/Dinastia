@@ -29,6 +29,6 @@ func _process(_d: float) -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var img := get_viewport().get_texture().get_image()
-	img.save_png("res://pruebas/verificar_banca.png")
+	img.save_png("res://pruebas/capturas/verificar_banca.png")
 	print("FIN. 0 fallos")
 	get_tree().quit(0)

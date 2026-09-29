@@ -33,7 +33,7 @@ func _process(_d: float) -> void:
 	_frame += 1
 	if _frame == 15:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_marcador_0_0.png")
+		img.save_png("res://pruebas/capturas/pantalla_marcador_0_0.png")
 		print("captura guardada: pantalla_marcador_0_0.png")
 		if _partido.once_local.size() >= 1:
 			_partido.gol.emit(_partido.local, _partido.once_local[0], 12, null)
@@ -42,7 +42,7 @@ func _process(_d: float) -> void:
 			_partido.gol.emit(_partido.visita, _partido.once_visita[0], 34, null)
 	if _frame == 35:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/pantalla_marcador_1_1.png")
+		img2.save_png("res://pruebas/capturas/pantalla_marcador_1_1.png")
 		print("captura guardada: pantalla_marcador_1_1.png")
 		print("FIN. 0 fallos")
 		get_tree().quit()

@@ -17,13 +17,13 @@ func _ready() -> void:
 		var img := esc_tex.get_image()
 		print("  get_image() -> %s  formato=%s  tam=%s" % [img, img.get_format() if img else "?", img.get_size() if img else "?"])
 		if img != null:
-			img.save_png("res://pruebas/diag_escudo_solo.png")
+			img.save_png("res://pruebas/capturas/diag_escudo_solo.png")
 	var tex := StadiumBuilder._pantalla_textura({"asiento1": mio.color1, "asiento2": mio.color2}, mio)
 	print("_pantalla_textura() -> %s" % [tex])
 	if tex != null:
 		var img2 := tex.get_image()
 		if img2 != null:
-			img2.save_png("res://pruebas/diag_pantalla_textura.png")
+			img2.save_png("res://pruebas/capturas/diag_pantalla_textura.png")
 			print("guardado diag_pantalla_textura.png")
 	print("FIN. 0 fallos")
 	get_tree().quit()

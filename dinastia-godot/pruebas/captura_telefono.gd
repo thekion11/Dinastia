@@ -65,4 +65,4 @@ func _process(_d: float) -> void:
 			"calendario": _tel.abrir_app("calendario")
 			"fin": get_tree().quit()
 		if String(g[2]) != "" and String(g[1]) == "":
-			get_viewport().get_texture().get_image().save_png("res://pruebas/telefono_%s.png" % String(g[2]))
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/telefono_%s.png" % String(g[2]))

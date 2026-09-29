@@ -70,5 +70,5 @@ func _hoja() -> void:
 	var hoja := Image.create(240 * cols, 240 * filas, false, Image.FORMAT_RGBA8)
 	for k in _imgs.size():
 		hoja.blit_rect(_imgs[k], Rect2i(0, 0, 240, 240), Vector2i((k % cols) * 240, (k / cols) * 240))
-	hoja.save_png(OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "res://pruebas/biomecanica.png")
+	hoja.save_png(OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "res://pruebas/capturas/biomecanica.png")
 	get_tree().quit()

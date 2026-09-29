@@ -7,7 +7,7 @@ extends Node3D
 ## Monta un `FutbolistaQ` con el catálogo completo (`construir(..., true)`) y
 ## comprueba que existe CADA animación que pide `match_playback.gd` -antes
 ## faltaban nueve y se descartaban en silencio-. Deja una hoja de contactos con
-## cada movimiento en su momento clave: `pruebas/movimientos_nuevos.png`.
+## cada movimiento en su momento clave: `pruebas/capturas/movimientos_nuevos.png`.
 
 const PEDIDAS := ["parado", "caminar", "trotar", "correr", "patear", "cabezazo", "celebrar",
 	"celebrar_rodillas", "celebrar_carrera", "atajar_izq", "atajar_der", "atajar_bajo", "portero_listo",
@@ -78,6 +78,6 @@ func _hoja() -> void:
 	var hoja := Image.create(240 * 9, 240 * 2, false, Image.FORMAT_RGBA8)
 	for k in _imgs.size():
 		hoja.blit_rect(_imgs[k], Rect2i(0, 0, 240, 240), Vector2i((k % 9) * 240, (k / 9) * 240))
-	hoja.save_png("res://pruebas/movimientos_nuevos.png")
+	hoja.save_png("res://pruebas/capturas/movimientos_nuevos.png")
 	print("captura_movimientos: %d fallos" % _fallos)
 	get_tree().quit(1 if _fallos > 0 else 0)

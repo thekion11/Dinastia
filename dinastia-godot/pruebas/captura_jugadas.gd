@@ -78,7 +78,7 @@ func _process(_d: float) -> void:
 		_arrancar()
 	if _n > 30 and _i < PRUEBA.size():
 		if _n == _t0 + 8:
-			get_viewport().get_texture().get_image().save_png("res://pruebas/jugada_%s.png" % PRUEBA[_i])
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/jugada_%s.png" % PRUEBA[_i])
 		if not _juego.reproductor.en_reproduccion and _n > _t0 + 5:
 			var bal: Node3D = _vista.get("_balon")
 			_comprobar(bal.position.distance_to(_balon_antes) > 2.0, "%s mueve el balón (%.1f m)" % [PRUEBA[_i], bal.position.distance_to(_balon_antes)])

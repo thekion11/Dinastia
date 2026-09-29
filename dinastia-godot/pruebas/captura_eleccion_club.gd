@@ -16,10 +16,10 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == ESPERA:
-		_guardar("res://pruebas/pantalla_eleccion_club_chi.png")
+		_guardar("res://pruebas/capturas/pantalla_eleccion_club_chi.png")
 		_pantalla.call("_elegir_pais", "ESP")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_eleccion_club_esp.png")
+		_guardar("res://pruebas/capturas/pantalla_eleccion_club_esp.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

@@ -19,5 +19,5 @@ func _ready() -> void:
 			var t := DisenosKit.textura_completa(k, lado == 1, 160)
 			var img := t.get_image()
 			lienzo.blend_rect(img, Rect2i(0, 0, img.get_width(), img.get_height()), Vector2i(10 + i * 172, 10 + lado * 310))
-	lienzo.save_png("res://pruebas/sponsors_2d.png")
+	lienzo.save_png("res://pruebas/capturas/sponsors_2d.png")
 	get_tree().quit()

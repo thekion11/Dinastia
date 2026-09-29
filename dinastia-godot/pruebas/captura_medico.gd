@@ -32,11 +32,11 @@ func _process(_d: float) -> void:
 				break
 		_pantalla.call("_ver_ficha", ajeno)
 	if _n == ESPERA + 2:
-		_guardar("res://pruebas/pantalla_medico_lesion.png")
+		_guardar("res://pruebas/capturas/pantalla_medico_lesion.png")
 		## Simula pulsar "Pedir informe médico": llama al mismo handler del botón.
 		_pantalla.call("_pedir_informe_medico", _pantalla.get("_seleccionado"))
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_medico_informe.png")
+		_guardar("res://pruebas/capturas/pantalla_medico_informe.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

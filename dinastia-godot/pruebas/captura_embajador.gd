@@ -26,7 +26,7 @@ func _process(_d: float) -> void:
 				break
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_embajador_candidatas.png")
+		_guardar("res://pruebas/capturas/pantalla_embajador_candidatas.png")
 		## Ahora se ficha a la primera candidata y se vuelve a capturar.
 		var mundo: Mundo = _pantalla.get("mundo")
 		var cand: Array = Directiva.candidatas_embajador(mundo.cantera.leyendas, mundo.anio)
@@ -34,7 +34,7 @@ func _process(_d: float) -> void:
 			mundo.directiva.contratar_embajador(cand[0])
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 8:
-		_guardar("res://pruebas/pantalla_embajador_fichado.png")
+		_guardar("res://pruebas/capturas/pantalla_embajador_fichado.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

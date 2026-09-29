@@ -29,5 +29,5 @@ func _process(_d: float) -> void:
 		print("pantalla de identidad pintada sin reventar con simbolo elegido")
 	if _n == 20:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_simbolo_escudo.png")
+		img.save_png("res://pruebas/capturas/pantalla_simbolo_escudo.png")
 		get_tree().quit()

@@ -22,7 +22,7 @@ func _process(_d: float) -> void:
 		mun.directiva.mover_confianza(-100, "racha de derrotas")
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_despido.png")
+		_guardar("res://pruebas/capturas/pantalla_despido.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

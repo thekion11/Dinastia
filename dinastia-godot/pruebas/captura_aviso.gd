@@ -31,11 +31,11 @@ func _process(_d: float) -> void:
 		mun.mercado.oferta_recibida.emit(mio.plantilla[1], otro, 8400000)
 		mun.logros.titulo_celebrado.emit("Copa de Chile")
 	if _n == ESPERA + 12:
-		_guardar("res://pruebas/pantalla_aviso1.png")
+		_guardar("res://pruebas/capturas/pantalla_aviso1.png")
 	if _n == ESPERA + 250:
-		_guardar("res://pruebas/pantalla_aviso2.png")
+		_guardar("res://pruebas/capturas/pantalla_aviso2.png")
 	if _n == ESPERA + 490:
-		_guardar("res://pruebas/pantalla_aviso3.png")
+		_guardar("res://pruebas/capturas/pantalla_aviso3.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

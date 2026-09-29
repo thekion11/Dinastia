@@ -30,4 +30,4 @@ func _process(_d: float) -> void:
 	_cam.look_at(TOMAS[i][1])
 	_cam.make_current()
 	if (_n - 10) % 10 == 8:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/mano_movil_%d.png" % (i + 1))
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/mano_movil_%d.png" % (i + 1))

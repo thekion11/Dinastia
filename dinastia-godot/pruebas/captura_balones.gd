@@ -34,5 +34,5 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 20:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/balones.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/balones.png")
 		get_tree().quit()
