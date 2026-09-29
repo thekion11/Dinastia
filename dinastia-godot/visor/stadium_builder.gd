@@ -2137,28 +2137,47 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## unos 400.000 en total: se puede de sobra, y es lo que de verdad se ve,
 	## porque las butacas de arriba ya las dibuja la textura de la grada.
 	var filas_todas: int = maxi(1, int(fondo / PASO_FILA))
+	## LA GRADA ENTERA CON BUTACAS (29-9-2026). Pedido del usuario: «ponelas en
+	## la totalidad de la grada, deja de hacer lo de poner una versión fea en la
+	## zona de arriba». Ahora TODAS las filas tienen butaca 3D: las cercanas al
+	## césped con el modelo real, y el resto con `_malla_butaca_lejos()`, la
+	## misma butaca con las medidas del modelo pero ~120 vértices en vez de 994
+	## -a esa distancia no se distinguen, y poner el modelo real en toda la
+	## rampa serían más de 15 millones de vértices-. La textura con gente
+	## pintada desaparece: debajo queda cemento.
 	var filas: int = mini(presupuesto, filas_todas)
 	## ¿QUÉ BORDE DEL DECK ES EL DE ABAJO? (29-9-2026). Se daba por hecho que
 	## el lado local negativo, y en las tribunas giradas al revés -la mitad-
-	## las 5 filas de butacas 3D y el público denso acababan ARRIBA DEL TODO,
-	## con la parte pegada al césped casi vacía: justo lo que se ve de cerca
-	## desde el partido jugable. Se mira la inclinación real del nodo.
+	## las filas de butacas 3D y el público denso acababan ARRIBA DEL TODO,
+	## con la parte pegada al césped casi vacía. Se mira la inclinación real.
 	var eje_fondo := Vector3(1, 0, 0) if lateral else Vector3(0, 0, 1)
 	var sentido: float = 1.0 if (deck.basis * eje_fondo).y >= 0.0 else -1.0
+	## HACIA DÓNDE MIRA LA BUTACA (29-9-2026, «las butacas están al revés»).
+	## En el modelo el respaldo queda en -Z: la butaca mira a +Z. Tiene que
+	## mirar al borde bajo de la rampa, que está en -sentido sobre el eje del
+	## fondo. `Basis.rotated(UP, g)` lleva +Z a (sin g, 0, cos g), así que:
+	##   tribuna lateral (fondo en X): sin g = -sentido -> g = -sentido·π/2
+	##   tribuna de fondo (fondo en Z): cos g = -sentido -> g = π si sentido > 0
+	## Antes las tribunas de detrás de los arcos quedaban al revés.
+	var giro: float = (-sentido * PI * 0.5) if lateral else (PI if sentido > 0.0 else 0.0)
 
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.use_colors = true
 	mm.mesh = malla
 	mm.instance_count = cuantas_fila * filas
+	var mm_lejos := MultiMesh.new()
+	mm_lejos.transform_format = MultiMesh.TRANSFORM_3D
+	mm_lejos.use_colors = true
+	mm_lejos.mesh = _malla_butaca_lejos()
+	mm_lejos.instance_count = cuantas_fila * (filas_todas - filas)
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(largo * 100.0) + filas
 	var c1 := Color(str(est.get("asiento1", "#1f5f3d")))
 	var c2 := Color(str(est.get("asiento2", "#e8e8e8")))
 	## Paleta de ropa de hincha: neutros de siempre + los dos colores del club
-	## -mismo criterio que ya usan las butacas de mas abajo- para que se lea
-	## "hinchada local", no una multitud generica.
+	## para que se lea "hinchada local", no una multitud generica.
 	var colores_hincha := [Color(0.85, 0.85, 0.88), Color(0.15, 0.16, 0.2), c1, c2,
 		Color(0.7, 0.2, 0.2), Color(0.2, 0.3, 0.7)]
 	var hinchas_xf: Array[Transform3D] = []
@@ -2166,77 +2185,74 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var det_xf: Array[Transform3D] = []
 	var det_col: Array[Color] = []
 	var filas_detalle: int = 6 if Calidad.elegida >= Calidad.ALTO else 3
-	var por_grupo: int = 2 if Calidad.elegida >= Calidad.ALTO else 1
+	## Un hincha por asiento ocupado: tres por grupo (dos en calidad Media).
+	var por_grupo: int = 3 if Calidad.elegida >= Calidad.ALTO else 2
+	var eje_largo := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
+	var eje_rake := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
 	var i := 0
+	var j := 0
 	for f in range(filas_todas):
 		## Se empieza por el borde de abajo del deck (el que da al cesped).
 		var d: float = sentido * (-fondo * 0.5 + 0.6 + f * PASO_FILA)
-		## De esta fila hacia arriba ya no hay butaca 3D, solo hincha: la
-		## butaca la pone la textura de la grada.
-		var con_butaca := f < filas
 		for c in range(cuantas_fila):
 			var l: float = -largo * 0.5 + 0.8 + c * PASO_BUTACA
 			var p: Vector3 = Vector3(d, 0.24, l) if lateral else Vector3(l, 0.24, d)
-			## Miran hacia el campo, o sea hacia el borde bajo de la rampa.
-			var giro: float = (-PI * 0.5 if lateral else 0.0) + (0.0 if sentido > 0.0 else PI)
-			## La contrarrotacion que las deja DE PIE -ver la nota de `rake` en
-			## la cabecera de esta funcion-. EL ORDEN IMPORTA: el deck aplica
-			## D y queremos que el resultado final D*I mire al campo y este
-			## derecho, o sea I = D⁻¹ * giro. `Basis.rotated()` premultiplica,
-			## asi que primero el giro y despues la contrarrotacion. Hacerlo al
-			## reves deja al hincha derecho pero mirando de lado.
+			## La contrarrotacion que las deja DE PIE: primero el giro y despues
+			## la contrarrotacion del rake (`rotated()` premultiplica).
 			var base := Basis().rotated(Vector3.UP, giro)
 			if rake != 0.0:
-				base = base.rotated(Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0), -rake)
-			if con_butaca:
+				base = base.rotated(eje_rake, -rake)
+			## Franjas de color del club, con alguna butaca desparejada: una grada
+			## de un solo tono se lee como una alfombra pintada.
+			var col: Color = c1 if (c / 3) % 2 == 0 else c2
+			if rng.randf() < 0.04:
+				col = col.lightened(0.25)
+			col = col.darkened(rng.randf() * 0.12)
+			if f < filas:
 				mm.set_instance_transform(i, Transform3D(base, p))
-				## Franjas de color del club, con alguna butaca desparejada: una grada
-				## de un solo tono se lee como una alfombra pintada.
-				var col: Color = c1 if (c / 3) % 2 == 0 else c2
-				if rng.randf() < 0.04:
-					col = col.lightened(0.25)
-				mm.set_instance_color(i, col.darkened(rng.randf() * 0.12))
+				mm.set_instance_color(i, col)
 				i += 1
-			## Filas de detalle: la bandeja de abajo, pegada al campo, con los
-			## TRES asientos del grupo (antes, uno solo cada 1,52 m: de cerca
-			## se leía como hinchas sueltos en una grada vacía).
-			if bandeja == 0 and f < filas_detalle:
-				for k in 3:
-					if rng.randf() >= ocupacion:
-						continue
-					var desp := (float(k) - 1.0) * 0.48
-					var pk: Vector3 = p + (Vector3(0, 0, desp) if lateral else Vector3(desp, 0, 0))
-					var jit := Vector3(rng.randf_range(-0.04, 0.04), 0, rng.randf_range(-0.04, 0.04))
-					var talla_d := rng.randf_range(0.9, 1.08)
-					var base_d := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla_d, talla_d, talla_d))
-					if rake != 0.0:
-						base_d = base_d.rotated(Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0), -rake)
-					det_xf.append(Transform3D(base_d, pk + jit + Vector3(0, 0.14, 0)))
-					var col_d: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
-					det_col.append(col_d.darkened(rng.randf() * 0.15))
-				continue
-			## Dos por grupo de tres butacas en calidad Alta (29-9-2026): con uno
-			## solo cada 1,52 m la grada alta se leía vacía sobre la textura.
-			for kg in por_grupo:
-				if rng.randf() < ocupacion:
-					## Sentado, un poco mas arriba del cojin (0.24) y con un jitter
-					## chico de posicion/mirada -una fila de maniquies perfectamente
-					## alineados se lee tan falso como una vacia.
-					var desp_k := (float(kg) - 0.5 * float(por_grupo - 1)) * 0.6
-					var jitter := Vector3(rng.randf_range(-0.08, 0.08), 0, rng.randf_range(-0.08, 0.08)) + (Vector3(0, 0, desp_k) if lateral else Vector3(desp_k, 0, 0))
-					var mirada := giro + rng.randf_range(-0.12, 0.12)
-					## NO TODOS MIDEN LO MISMO (23-9-2026). Una grada donde los
-					## miles de hinchas tienen exactamente la misma estatura se lee
-					## como una rejilla de maniquíes por muy bien que estén
-					## coloreados. ±10% cubre de un niño a un adulto alto, y es
-					## gratis: va en la misma matriz de la instancia.
-					var talla := rng.randf_range(0.88, 1.10)
-					var base_h := Basis().rotated(Vector3.UP, mirada).scaled(Vector3(talla, talla, talla))
-					if rake != 0.0:
-						base_h = base_h.rotated(Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0), -rake)
-					hinchas_xf.append(Transform3D(base_h, p + jitter + Vector3(0, 0.16, 0)))
-					var col_hincha: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
-					hinchas_col.append(col_hincha.darkened(rng.randf() * 0.15))
+			else:
+				mm_lejos.set_instance_transform(j, Transform3D(base, p))
+				mm_lejos.set_instance_color(j, col)
+				j += 1
+			## Un hincha por asiento ocupado. Las filas pegadas al césped de la
+			## bandeja de abajo llevan el hincha de detalle; el resto, el barato.
+			var cerca := bandeja == 0 and f < filas_detalle
+			for k in (3 if cerca else por_grupo):
+				if rng.randf() >= ocupacion:
+					continue
+				var desp := (float(k) - 0.5 * float((3 if cerca else por_grupo) - 1)) * 0.48
+				var jit := Vector3(rng.randf_range(-0.04, 0.04), 0, rng.randf_range(-0.04, 0.04))
+				## NO TODOS MIDEN LO MISMO: ±10% de talla, gratis en la matriz.
+				var talla := rng.randf_range(0.9, 1.08)
+				var base_h := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla, talla, talla))
+				if rake != 0.0:
+					base_h = base_h.rotated(eje_rake, -rake)
+				var xf := Transform3D(base_h, p + eje_largo * desp + jit + Vector3(0, 0.15, 0))
+				var col_h: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
+				col_h = col_h.darkened(rng.randf() * 0.15)
+				if cerca:
+					det_xf.append(xf)
+					det_col.append(col_h)
+				else:
+					hinchas_xf.append(xf)
+					hinchas_col.append(col_h)
+
+	## Debajo de las butacas, cemento: la textura con gente pintada ya no hace
+	## falta y entre fila y fila se veía como manchas estiradas.
+	deck.material_override = _mat_escalones()
+	if mm_lejos.instance_count > 0:
+		var mil := MultiMeshInstance3D.new()
+		mil.multimesh = mm_lejos
+		var mat_l := StandardMaterial3D.new()
+		mat_l.vertex_color_use_as_albedo = true
+		mat_l.albedo_color = Color(0.9, 0.9, 0.9)
+		mat_l.roughness = 0.55
+		mil.material_override = mat_l
+		mil.name = "ButacasLejos"
+		mil.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		deck.add_child(mil)
 
 	var mat := StandardMaterial3D.new()
 	mat.vertex_color_use_as_albedo = true
@@ -2246,6 +2262,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var mi := MultiMeshInstance3D.new()
 	mi.multimesh = mm
 	mi.material_override = mat
+	mi.name = "ButacasCerca"
 	## SIN SOMBRA PROPIA (25-9-2026, `pruebas/medir_partido.gd`). Miles de
 	## butacas y de hinchas proyectando sombra se dibujaban otra vez en CADA
 	## cascada del sol -cuatro en calidad ALTO-: eran el grueso de los ~2
@@ -2298,6 +2315,40 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	mih.name = "Hinchada"
 	mih.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mih)
+
+## LA BUTACA DE LEJOS (29-9-2026): las medidas del modelo real
+## (`asientos_lod.glb`: 1,50 × 0,74 × 0,59 m, tres asientos, respaldo en -Z)
+## hechas con cinco cajas -asiento corrido, tres respaldos con su hueco y la
+## viga-: ~120 vértices contra 994. Se usa en las filas altas, donde la
+## cámara nunca llega a distinguirlas.
+static var _butaca_lejos: Mesh
+
+static func _malla_butaca_lejos() -> Mesh:
+	if _butaca_lejos != null:
+		return _butaca_lejos
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var asiento := BoxMesh.new()
+	asiento.size = Vector3(1.46, 0.07, 0.40)
+	st.append_from(asiento, 0, Transform3D(Basis(), Vector3(-0.05, 0.40, 0.04)))
+	var respaldo := BoxMesh.new()
+	respaldo.size = Vector3(0.44, 0.38, 0.05)
+	for k in 3:
+		var x := -0.55 + float(k) * 0.5
+		st.append_from(respaldo, 0, Transform3D(Basis(Vector3(1, 0, 0), -0.14), Vector3(x, 0.58, -0.20)))
+	var viga := BoxMesh.new()
+	viga.size = Vector3(1.40, 0.30, 0.06)
+	st.append_from(viga, 0, Transform3D(Basis(), Vector3(-0.05, 0.20, -0.08)))
+	_butaca_lejos = st.commit()
+	return _butaca_lejos
+
+## El piso de la grada bajo las butacas: hormigón gris, compartido.
+static var _escalones: StandardMaterial3D
+
+static func _mat_escalones() -> StandardMaterial3D:
+	if _escalones == null:
+		_escalones = Texturas.hormigon(Color(0.52, 0.52, 0.54), 83)
+	return _escalones
 
 static func _primera_malla(n: Node) -> Mesh:
 	if n == null:
