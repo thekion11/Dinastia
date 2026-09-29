@@ -45,6 +45,8 @@ static func jugador(j: Jugador) -> Dictionary:
 		## Para la barra de energía sobre el nombre (26-9-2026).
 		"fisico": j.fisico,
 		"forma": j.forma,
+		## Para celebrar el gol según su carácter (29-9-2026).
+		"rasgo": j.rasgo,
 	}
 
 ## El once entero: los ids en orden y el diccionario que los describe. El
