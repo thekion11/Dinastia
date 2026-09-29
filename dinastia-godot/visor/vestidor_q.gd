@@ -298,6 +298,179 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 	cuerpo.set_surface_override_material(superficie, mat)
 	return true
 
+## LA CARA 2D MOLDEADA SOBRE EL MODELO 3D (29-9-2026). Llamar DESPUÉS de
+## `vestir_equipacion`. `datos` sale de `Cara.datos_3d()` (vía `Puente3D`):
+## {"look": aspecto del retrato, "foto": ruta del retrato real (opcional)}.
+## Cada jugador lleva su propio material de cuerpo (el de la equipación, con
+## la cara encima) y sus ojos. Devuelve false si no pudo.
+const SHADER_OJOS := "res://visor/ojos_q.gdshader"
+static var _cache_cara := {}
+
+static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
+	var modelo: Node = d.get("modelo")
+	var lk: Variant = datos.get("look")
+	if modelo == null or not (lk is Dictionary):
+		return false
+	var ruta := String(datos.get("foto", ""))
+	var foto: Texture2D = Cara.foto_de_ruta(ruta) if ruta != "" else null
+	var af := _afin_foto(Cara.puntos_foto(ruta)) if foto != null else []
+	if af.is_empty():
+		foto = null
+	var rasgos: Texture2D = null if foto != null else Cara.textura_rasgos(lk)
+	var barba: Texture2D = null if foto != null else Cara.textura_barba(lk)
+	var bi := int((lk as Dictionary).get("barba", 0))
+	## Con foto, la piel de todo el cuerpo toma el tono de la cara de la foto.
+	if foto != null:
+		var tono := _tono_foto(foto, af)
+		if tono.a > 0.0:
+			piel = tono
+	var iris := Color(String(Cara.IRIS[clampi(int((lk as Dictionary).get("ojos", 0)), 0, Cara.IRIS.size() - 1)]))
+	var puesta := false
+	for mv in _mallas(modelo):
+		var mi: MeshInstance3D = mv
+		if mi.mesh == null:
+			continue
+		for s in mi.mesh.get_surface_count():
+			var orig := mi.mesh.surface_get_material(s)
+			var nombre := orig.resource_name if orig != null else ""
+			var activo := mi.get_active_material(s)
+			if activo is ShaderMaterial and (activo as ShaderMaterial).shader != null \
+					and (activo as ShaderMaterial).shader.resource_path == SHADER_EQUIPACION:
+				if not bool((activo as ShaderMaterial).get_shader_parameter("usa_reposo")):
+					continue
+				var clave := "%d|%d|%s" % [activo.get_instance_id(), hash(lk), ruta]
+				var mc: ShaderMaterial = _cache_cara.get(clave)
+				if mc == null:
+					mc = (activo as ShaderMaterial).duplicate() as ShaderMaterial
+					mc.set_shader_parameter("hay_cara", true)
+					if foto != null:
+						mc.set_shader_parameter("hay_foto", true)
+						mc.set_shader_parameter("foto_tex", foto)
+						mc.set_shader_parameter("foto_u", af[0])
+						mc.set_shader_parameter("foto_v", af[1])
+						mc.set_shader_parameter("foto_tono", Vector3.ONE * 0.92)
+						mc.set_shader_parameter("tinte_piel", _tinte(piel))
+					else:
+						mc.set_shader_parameter("cara_tex", rasgos)
+						if barba != null:
+							mc.set_shader_parameter("barba_tex", barba)
+							mc.set_shader_parameter("barba_color", Color(String((lk as Dictionary).get("peloC", "#231a14"))))
+							## Bajo la barba 3D (1, 4 y 6) solo una sombra de pelo.
+							mc.set_shader_parameter("barba_fuerza", 0.55 if bi in [1, 4, 6] else 0.95)
+					_cache_cara[clave] = mc
+				mi.set_surface_override_material(s, mc)
+				puesta = true
+			elif nombre == MATERIAL_OJOS and ResourceLoader.exists(SHADER_OJOS):
+				_con_reposo_simple(mi)
+				if s >= mi.get_surface_override_material_count():
+					continue
+				var clave_o := "ojos|%s|%s|%s" % [iris.to_html(false), _piel_cuantizada(piel), ruta]
+				var mo: ShaderMaterial = _cache_cara.get(clave_o)
+				if mo == null:
+					mo = ShaderMaterial.new()
+					mo.shader = load(SHADER_OJOS)
+					mo.set_shader_parameter("iris", iris)
+					mo.set_shader_parameter("piel", piel)
+					_cache_cara[clave_o] = mo
+				mi.set_surface_override_material(s, mo)
+	return puesta
+
+## El tono medio de la piel de la foto: mejillas, tabique y frente (en el
+## espacio del retrato), 5x5 píxeles cada punto. Alfa 0 si no se pudo.
+static func _tono_foto(foto: Texture2D, af: Array) -> Color:
+	var img := foto.get_image()
+	if img == null or af.size() != 2:
+		return Color(0, 0, 0, 0)
+	if img.is_compressed():
+		img.decompress()
+	var w := img.get_width()
+	var h := img.get_height()
+	var suma := Color(0, 0, 0, 0)
+	var n := 0
+	for pt: Vector2 in [Vector2(25, 39), Vector2(39, 39), Vector2(32, 36.5), Vector2(32, 27.5)]:
+		var q := Vector3(pt.x, pt.y, 1.0)
+		var u: float = (af[0] as Vector3).dot(q)
+		var v: float = (af[1] as Vector3).dot(q)
+		for dy in range(-2, 3):
+			for dx in range(-2, 3):
+				var px := int(u * w) + dx
+				var py := int(v * h) + dy
+				if px >= 0 and py >= 0 and px < w and py < h:
+					suma += img.get_pixel(px, py)
+					n += 1
+	if n == 0:
+		return Color(0, 0, 0, 0)
+	return Color(suma.r / n, suma.g / n, suma.b / n, 1.0)
+
+## La transformación afín que lleva los ojos y la boca del retrato (espacio
+## 0-64 de `Cara.svg_rasgos`) a los de la foto (0-1). [] si no hay puntos o
+## son degenerados.
+static func _afin_foto(p: Array) -> Array:
+	if p.size() != 6:
+		return []
+	var origen := [Vector2(26, 33), Vector2(38, 33), Vector2(32, 44.5)]
+	var destino := [Vector2(p[0], p[1]), Vector2(p[2], p[3]), Vector2(p[4], p[5])]
+	## Resolver [a b c; d e f] con tres puntos: base con el primero.
+	var o1: Vector2 = origen[1] - origen[0]
+	var o2: Vector2 = origen[2] - origen[0]
+	var d1: Vector2 = destino[1] - destino[0]
+	var d2: Vector2 = destino[2] - destino[0]
+	var det := o1.x * o2.y - o1.y * o2.x
+	if absf(det) < 0.001 or absf(d1.x * d2.y - d1.y * d2.x) < 0.0001:
+		return []
+	## M * o1 = d1 y M * o2 = d2  =>  M = [d1 d2] * inversa([o1 o2]).
+	var inv := [Vector2(o2.y, -o1.y) / det, Vector2(-o2.x, o1.x) / det]  # columnas de la inversa
+	var a: float = d1.x * inv[0].x + d2.x * inv[0].y
+	var b: float = d1.x * inv[1].x + d2.x * inv[1].y
+	var dd: float = d1.y * inv[0].x + d2.y * inv[0].y
+	var e: float = d1.y * inv[1].x + d2.y * inv[1].y
+	var c: float = destino[0].x - (a * origen[0].x + b * origen[0].y)
+	var f: float = destino[0].y - (dd * origen[0].x + e * origen[0].y)
+	return [Vector3(a, b, c), Vector3(dd, e, f)]
+
+## Como `_con_reposo` pero sin el alisado: solo la pose de reposo (UV2 = x,y;
+## COLOR.r = z) en todas las superficies. Para los ojos.
+static func _con_reposo_simple(mi: MeshInstance3D) -> void:
+	var original := mi.mesh as ArrayMesh
+	if original == null or original.has_meta("con_reposo"):
+		return
+	var id := original.get_instance_id()
+	if _mallas_reposo.has(id):
+		mi.mesh = _mallas_reposo[id]
+		return
+	var nueva := ArrayMesh.new()
+	nueva.blend_shape_mode = original.blend_shape_mode
+	for bs in original.get_blend_shape_count():
+		nueva.add_blend_shape(original.get_blend_shape_name(bs))
+	for s in original.get_surface_count():
+		var arr := original.surface_get_arrays(s)
+		var pos: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+		var uv2 := PackedVector2Array()
+		var col := PackedColorArray()
+		uv2.resize(pos.size())
+		col.resize(pos.size())
+		for i in pos.size():
+			uv2[i] = Vector2(pos[i].x, pos[i].y)
+			col[i] = Color(clampf((pos[i].z + 0.25) / 0.5, 0.0, 1.0), 0.0, 0.0, 1.0)
+		arr[Mesh.ARRAY_TEX_UV2] = uv2
+		arr[Mesh.ARRAY_COLOR] = col
+		## Conservar el formato de los canales CUSTOM (los ojos traen uno) y los
+		## 8 huesos por vértice: sin eso Godot rechaza la superficie.
+		var fmt := original.surface_get_format(s)
+		var banderas := fmt & Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS
+		for c in 4:
+			var shift: int = Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT + c * Mesh.ARRAY_FORMAT_CUSTOM_BITS
+			banderas |= fmt & (Mesh.ARRAY_FORMAT_CUSTOM_MASK << shift)
+		nueva.add_surface_from_arrays(original.surface_get_primitive_type(s), arr, original.surface_get_blend_shape_arrays(s),
+			{}, banderas)
+		if nueva.get_surface_count() <= s:
+			return
+		nueva.surface_set_material(s, original.surface_get_material(s))
+		nueva.surface_set_name(s, original.surface_get_name(s))
+	nueva.set_meta("con_reposo", true)
+	_mallas_reposo[id] = nueva
+	mi.mesh = nueva
+
 static var _mallas_reposo: Dictionary = {}
 
 ## Cambia la malla del cuerpo por una copia con la pose de reposo en UV2 y
