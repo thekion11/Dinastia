@@ -120,6 +120,9 @@ var movil: Movil
 var mercado_av: MercadoAvanzado
 ## Resta de puntos, administrador, tope salarial, cláusula del DT, refundación.
 var insolvencia: Insolvencia
+## Lo editado de las competiciones que se recrean cada temporada (la copa):
+## {"copa_nombre", "copa_sede"}.
+var ajustes_competicion: Dictionary = {}
 var eventos_cantera: EventosCantera
 var calendario: Calendario
 var politica: Politica
@@ -1469,13 +1472,18 @@ func cerrar_temporada() -> Dictionary:
 		var t2: Array = tablas.get(segunda, segunda.tabla())
 		if t1.size() < 3 or t2.size() < 3:
 			continue
-		var bajan: Array[Club] = [t1[t1.size() - 1]["club"], t1[t1.size() - 2]["club"]]
-		var suben: Array[Club] = [t2[0]["club"], t2[1]["club"]]
+		## Cuántos bajan y suben: lo que diga la Primera (editable, 2 por defecto).
+		var n_cambio := clampi(primera.plazas_descenso, 1, mini(t1.size(), t2.size()) - 2)
+		var bajan: Array[Club] = []
+		var suben: Array[Club] = []
+		for i_c in n_cambio:
+			bajan.append(t1[t1.size() - 1 - i_c]["club"])
+			suben.append(t2[i_c]["club"])
 		## LA PROMOCIÓN (reglamento fino, si la asamblea la aprobó): el
 		## antepenúltimo de Primera contra el tercero de Ascenso, ida y vuelta.
-		if federacion != null and federacion.promocion and t1.size() >= 4 and t2.size() >= 4:
-			var arriba: Club = t1[t1.size() - 3]["club"]
-			var abajo: Club = t2[2]["club"]
+		if federacion != null and federacion.promocion and t1.size() >= n_cambio + 2 and t2.size() >= n_cambio + 2:
+			var arriba: Club = t1[t1.size() - 1 - n_cambio]["club"]
+			var abajo: Club = t2[n_cambio]["club"]
 			var prom := jugar_promocion(arriba, abajo)
 			resumen["promocion"] = prom
 			if prom["ganador"] == abajo:
@@ -1790,8 +1798,9 @@ func _montar_copa() -> void:
 	## se sientan iguales.
 	var copas: Array = Copa.copas_de(pais, nombre_pais)
 	var elegida: Array = copas[anio % copas.size()] if copas.size() > 1 else copas[0]
-	copa = Copa.new(String(elegida[0]))
+	copa = Copa.new(String(ajustes_competicion.get("copa_nombre", "")) if String(ajustes_competicion.get("copa_nombre", "")) != "" else String(elegida[0]))
 	copa.peso_premio = float(elegida[1])
+	copa.sede_final_id = String(ajustes_competicion.get("copa_sede", ""))
 	copa.preparar(aspirantes)
 
 ## Sube canteranos hasta completar la plantilla, y los sube EN EL PUESTO QUE

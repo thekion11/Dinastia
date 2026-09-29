@@ -97,6 +97,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"movil": m.movil.a_dic() if m.movil != null else {},
 		"mercado_av": m.mercado_av.a_dic() if m.mercado_av != null else {},
 		"insolvencia": m.insolvencia.a_dic() if m.insolvencia != null else {},
+		"ajustes_competicion": m.ajustes_competicion.duplicate(),
 		"calendario": m.calendario.a_dic() if m.calendario != null else {},
 		"politica": m.politica.a_dic() if m.politica != null else {},
 		"contratos": m.contratos.a_dic() if m.contratos != null else {},
@@ -347,6 +348,7 @@ static func _liga_a_dic(l: Liga) -> Dictionary:
 	return {
 		"nombre": l.nombre, "pais": l.pais, "div": l.div, "clubes": ids,
 		"jornada": l.jornada_actual, "tabla": l.tabla_puntos, "h2h": l.h2h,
+		"desc": l.plazas_descenso, "pv": l.puntos_victoria,
 	}
 
 ## La copa. Solo hacen falta tres cosas: el nombre, quiénes siguen vivos y en qué
@@ -402,6 +404,8 @@ static func _dic_a_liga(d: Dictionary, m: Mundo) -> Liga:
 				l.tabla_puntos[id][k] = int(fila[k])
 	for k2: String in d.get("h2h", {}):
 		l.h2h[k2] = int(d["h2h"][k2])
+	l.plazas_descenso = int(d.get("desc", 2))
+	l.puntos_victoria = int(d.get("pv", 3))
 	return l
 
 # --- lectura ----------------------------------------------------------------
@@ -572,6 +576,9 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.mercado_av.desde_dic(datos.get("mercado_av", {}))
 	if m.insolvencia != null:
 		m.insolvencia.desde_dic(datos.get("insolvencia", {}))
+	m.ajustes_competicion = (datos.get("ajustes_competicion", {}) as Dictionary).duplicate()
+	if m.copa != null:
+		m.copa.sede_final_id = String(m.ajustes_competicion.get("copa_sede", ""))
 	if m.calendario != null:
 		m.calendario.desde_dic(datos.get("calendario", {}))
 	if m.politica != null:

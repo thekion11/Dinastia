@@ -6270,6 +6270,31 @@ func _probar_tanda_c() -> void:
 	var aliados_antes := fed.aliados
 	mac.resolver(mr2, "b")
 	_comprobar(fed.aliados < aliados_antes, "denunciarla te cuesta aliados en la asamblea")
+	## EDITOR DE COMPETICIONES (bloque 47).
+	var me := Mundo.new()
+	me.generar(["CHI"], 47)
+	me.tomar_el_mando(me.ligas[0].clubes[0].id)
+	var ed_c := Editor.new(me)
+	var l1: Liga = me.ligas[0]
+	_comprobar(ed_c.renombrar_liga(l1, "Liga de Prueba") == "" and l1.nombre == "Liga de Prueba", "se renombra una liga")
+	ed_c.fijar_descensos(l1, 3)
+	ed_c.fijar_puntos_victoria(l1, 2)
+	var d1: Dictionary = Partida._liga_a_dic(l1)
+	var l1b := Partida._dic_a_liga(d1, me)
+	_comprobar(l1b.plazas_descenso == 3 and l1b.puntos_victoria == 2, "descensos y puntos por victoria se guardan")
+	l1.preparar()
+	l1._anotar_resultado(l1.clubes[0], l1.clubes[1], 2, 0)
+	_comprobar(int(l1.tabla_puntos[l1.clubes[0].id]["pts"]) == 2, "con 2 puntos por victoria, ganar da 2")
+	var resumen_e := me.nueva_temporada()
+	var bajan_chi := 0
+	for x_b: Variant in resumen_e["bajan"]:
+		if x_b is Club and (x_b as Club).pais == "CHI":
+			bajan_chi += 1
+	_comprobar(bajan_chi == 3, "con 3 plazas de descenso, bajan 3 (%d)" % bajan_chi)
+	var sede_c: Club = me.ligas[0].clubes[0]
+	ed_c.renombrar_copa("Copa Editada")
+	ed_c.fijar_sede_final(sede_c)
+	_comprobar(me.copa.nombre == "Copa Editada" and me.copa.sede_final_id == sede_c.id, "la copa se renombra y tiene sede fija")
 	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
 	var fi := FondoInversion.new()
 	fi.caja = 1000000000

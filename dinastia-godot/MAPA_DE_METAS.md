@@ -100,8 +100,8 @@ Junta tres fuentes:
 | 6 | Mercado avanzado: guerra de ofertas, derechos de formación, superagente, fichaje impuesto por el dueño (bloques 37-38) | Plan maestro | ✅ (más apuestas y transparencia; los derechos de formación ya existían) |
 | 7 | Insolvencia: renegociar deuda, resta de puntos, administrador, tope salarial (bloques 39-40) | Plan maestro | ✅ (más cláusula del DT y refundación; renegociar y bonos ya existían) |
 | 8 | Reglamento fino: historial por árbitro, desempates, playoffs de descenso (bloques 44-45) | Plan maestro | ✅ (más corrupción federativa; los cambios de reglas por asamblea ya existían) |
-| 9 | Selecciones: lista preliminar y conflicto club-selección (bloque 46) | Plan maestro | ⬜ |
-| 10 | Editor de competiciones y sede de final fija (bloque 47) | Plan maestro, informe | ⬜ |
+| 9 | Selecciones: lista preliminar y conflicto club-selección (bloque 46) | Plan maestro | ✅ ya estaba: prenómina antes de cada fecha FIFA, pedido de descanso, compensación y vuelta tocado |
+| 10 | Editor de competiciones y sede de final fija (bloque 47) | Plan maestro, informe | ✅ |
 | 11 | Meta: cromos, museo global, mundo heredado (bloque 50) | Plan maestro, informe (logros) | ⬜ |
 | 12 | Colores del estadio por sección: cada bandeja, redes, focos, LED | Pedido de la semana pasada | ⬜ |
 | 13 | Presentación de fichajes como cinemática | Plan B3 | ⬜ |
