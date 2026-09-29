@@ -418,13 +418,18 @@ func _cargar_extra() -> void:
 	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(EXTRA))
 	if not (d is Dictionary):
 		return
-	for k: String in ["en", "pt"]:
+	for k: String in ORDEN:
 		_extra[k] = (d as Dictionary).get(k, {})
+	## Cada patrón: [regex, plantilla en, pt, fr, it, de, ca, ...] en el orden
+	## de `ORDEN`; una plantilla que falte deja la frase en castellano.
 	_patrones.clear()
 	for fila: Array in (d as Dictionary).get("patrones", []):
 		var re := RegEx.new()
 		if re.compile(String(fila[0])) == OK:
-			_patrones.append([re, {"en": String(fila[1]), "pt": String(fila[2]) if fila.size() > 2 else ""}])
+			var plantillas := {}
+			for i in ORDEN.size():
+				plantillas[ORDEN[i]] = String(fila[i + 1]) if fila.size() > i + 1 else ""
+			_patrones.append([re, plantillas])
 
 ## Traduce una frase suelta. Si no está en la tabla, devuelve la castellana: una
 ## interfaz medio traducida se lee; una llena de claves crudas, no.
@@ -450,6 +455,18 @@ func _directa(frase: String) -> String:
 		var fila: Array = TABLA[frase]
 		if i < fila.size() and String(fila[i]) != "":
 			return String(fila[i])
+	## TÍTULOS EN MAYÚSCULAS (29-9-2026): muchas cabeceras se pintan con
+	## `to_upper()` antes de traducir ("PLANTEL", "PRÓXIMO PARTIDO"). Se busca
+	## la forma normal ("Plantel", "Próximo partido") y se devuelve en mayúsculas.
+	if frase.length() > 1 and frase == frase.to_upper() and frase != frase.to_lower():
+		var baja := frase.to_lower()
+		var normal := baja.substr(0, 1).to_upper() + baja.substr(1)
+		for cand: String in [normal, baja]:
+			if cand == frase:
+				continue
+			var r := _directa(cand)
+			if r != "":
+				return r.to_upper()
 	return ""
 
 func _t(frase: String, prof: int) -> String:

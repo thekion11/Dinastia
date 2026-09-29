@@ -135,6 +135,11 @@ func _montar() -> void:
 	_cuerpo = Control.new()
 	_cuerpo.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_raiz.add_child(_cuerpo)
+	## Estos menús no se repintan con la principal: se traducen aquí (el volver,
+	## el título y las pestañas; el contenido de cada submenú lo traduce la
+	## principal al repintar).
+	Idiomas.traducir_arbol(cab)
+	Idiomas.traducir_arbol(fila)
 
 	## La entrada: desde la izquierda, que es de donde viene el panel.
 	## Se anima el MARGEN y no `position`: tocar la posición de un control
@@ -201,7 +206,7 @@ func _pestana(sub: Dictionary, i: int) -> Button:
 func portada() -> void:
 	_devolver_contenido()
 	_activo = -1
-	_titulo_sub.text = String(_menu.get("lema", ""))
+	_titulo_sub.text = Idiomas.t(String(_menu.get("lema", "")))
 	_btn_portada.get_parent().visible = false
 	for n in _cuerpo.get_children():
 		_cuerpo.remove_child(n)
@@ -226,6 +231,7 @@ func portada() -> void:
 	for i in subs.size():
 		var tarjeta := _tarjeta(subs[i], i)
 		rej.add_child(tarjeta)
+		Idiomas.traducir_arbol(tarjeta)
 		## Entran escalonadas.
 		tarjeta.modulate.a = 0.0
 		var tw := tarjeta.create_tween()
@@ -316,7 +322,7 @@ func elegir(i: int) -> void:
 		_montar_detalle()
 	_activo = i
 	_marcar_pestana()
-	_titulo_sub.text = "%s  %s" % [String(sub.get("icono", "")), String(sub["label"])]
+	_titulo_sub.text = "%s  %s" % [String(sub.get("icono", "")), Idiomas.t(String(sub["label"]))]
 	_p._ir_a_chip(sub)
 	_p._refrescar()
 	if _hueco_contenido != null:
