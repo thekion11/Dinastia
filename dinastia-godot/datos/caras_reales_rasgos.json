@@ -2,7 +2,7 @@
 "Aaron Long": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#a67c4e",
+"peloC": "#5a3d24",
 "piel": "#f6d5bd"
 },
 "Aaron Ramsey": {
@@ -26,13 +26,13 @@
 "Achraf Hakimi": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#a67c4e",
+"peloC": "#7a5634",
 "piel": "#bb8257"
 },
 "Adam Hlozek": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#d8a075"
 },
 "Ademola Lookman": {
@@ -50,7 +50,7 @@
 "Agustín Marchesín": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#c78e62"
 },
 "Agustín Ojeda": {
@@ -62,7 +62,7 @@
 "Aimar Oroz": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#d2996c"
 },
 "Akor Adams": {
@@ -73,12 +73,13 @@
 "Alan Cervantes": {
 "barba": 2,
 "ojos": 0,
+"peloC": "#3d2a19",
 "piel": "#b47c52"
 },
 "Alan Patrick": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#9a9a9a",
+"peloC": "#3d2a19",
 "piel": "#a7714a"
 },
 "Alan Saldivia": {
@@ -102,13 +103,12 @@
 "Albert Rusnák": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d69f73"
 },
 "Aldo Corzo": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#9a9a9a",
 "piel": "#9d6944"
 },
 "Alejandro Balde": {
@@ -126,7 +126,7 @@
 "Aleksandar Pavlović": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c78e62"
 },
 "Alessandro Bastoni": {
@@ -138,13 +138,13 @@
 "Alessandro Buongiorno": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#dba57b"
 },
 "Alessio Romagnoli": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#7a5634",
 "piel": "#b98056"
 },
 "Alex Freeman": {
@@ -156,42 +156,43 @@
 "Alex Meret": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#cf9669"
 },
 "Alex Muyl": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d8a176"
 },
 "Alex Roldan": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#d0976b"
 },
 "Alex Telles": {
 "barba": 2,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#6d452a"
 },
 "Alexander Isak": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#95633f"
 },
 "Alexander Nübel": {
 "barba": 2,
 "ojos": 0,
+"peloC": "#5a3d24",
 "piel": "#d69e72"
 },
 "Alexander Sørloth": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#c2895e"
 },
 "Alexis Claude-Maurice": {
@@ -209,7 +210,7 @@
 "Alexis Mac Allister": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#a67c4e",
 "piel": "#aa734c"
 },
 "Alfredo Morelos": {
@@ -239,6 +240,7 @@
 "Alphonse Areola": {
 "barba": 4,
 "ojos": 1,
+"peloC": "#5a3d24",
 "piel": "#cd9467"
 },
 "Alphonso Davies": {
@@ -250,7 +252,7 @@
 "Amad Diallo": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#b47c53"
 },
 "Amir Richardson": {
@@ -262,7 +264,7 @@
 "Andre Blake": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#93613d"
 },
 "Andreas Hanche-Olsen": {
@@ -322,7 +324,7 @@
 "Ange-Yoan Bonny": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#141414",
 "piel": "#744a2d"
 },
 "Angeliño": {
@@ -340,7 +342,7 @@
 "Ansgar Knauff": {
 "barba": 2,
 "ojos": 1,
-"peloC": "#5a3d24",
+"peloC": "#231a14",
 "piel": "#e7b791"
 },
 "Ante Budimir": {
@@ -352,7 +354,7 @@
 "Anthony Elanga": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#cf9669"
 },
 "Anthony Gordon": {
@@ -400,7 +402,7 @@
 "Aníbal Chalá": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#875837"
 },
 "Aníbal Moreno": {
@@ -424,19 +426,19 @@
 "Arne Maier": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#5a3d24",
 "piel": "#d49c6f"
 },
 "Arthur Theate": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#d39a6e"
 },
 "Ashley Westwood": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#bc8359"
 },
 "Aurélien Tchouaméni": {
@@ -454,12 +456,13 @@
 "Baptiste Santamaria": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c0875c"
 },
 "Bartosz Slisz": {
 "barba": 5,
 "ojos": 0,
+"peloC": "#231a14",
 "piel": "#b17950"
 },
 "Bastos": {
@@ -495,7 +498,7 @@
 "Benjamín Rollheiser": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#764b2e"
 },
 "Benno Schmitz": {
@@ -507,7 +510,7 @@
 "Berke Özer": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#b67e54"
 },
 "Bernardo Cuesta": {
@@ -537,13 +540,13 @@
 "Borja Iglesias": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#c38a5e"
 },
 "Borja Mayoral": {
 "barba": 2,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#b37b52"
 },
 "Boulaye Dia": {
@@ -573,13 +576,13 @@
 "Brais Méndez": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d49c6f"
 },
 "Brandon Bye": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#c2895e"
 },
 "Brandon Vazquez": {
@@ -597,18 +600,19 @@
 "Brice Samba": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#141414",
 "piel": "#72482c"
 },
 "Bruno Damiani": {
 "barba": 0,
 "ojos": 0,
+"peloC": "#3d2a19",
 "piel": "#a57049"
 },
 "Bruno Fernandes": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#cd9467"
 },
 "Bruno Guimarães": {
@@ -655,18 +659,19 @@
 "Bukayo Saka": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#9d6944"
 },
 "Cade Cowell": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#dca67c"
 },
 "Calvin Bassey": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#141414",
 "piel": "#593721"
 },
 "Camilo Mayada": {
@@ -684,13 +689,13 @@
 "Carles Gil": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#141414",
 "piel": "#e7b790"
 },
 "Carlos Acevedo": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#cd9467"
 },
 "Carlos Bacca": {
@@ -707,7 +712,7 @@
 "Carlos Lampe": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#9a9a9a",
+"peloC": "#5a3d24",
 "piel": "#a67049"
 },
 "Carlos Melgar": {
@@ -737,7 +742,7 @@
 "Casemiro": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#c1885d"
 },
 "Castello Lukeba": {
@@ -755,30 +760,31 @@
 "Charalampos Lykogiannis": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c58c61"
 },
 "Charles Aránguiz": {
 "barba": 5,
 "ojos": 0,
+"peloC": "#141414",
 "piel": "#b27a51"
 },
 "Charles De Ketelaere": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#d39b6e"
 },
 "Che Adams": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#c58c61"
 },
 "Chris Wood": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#915f3d"
 },
 "Christian Günter": {
@@ -796,13 +802,13 @@
 "Christian Oliva": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#be855a"
 },
 "Christian Pulisic": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#d0976a"
 },
 "Christoph Baumgartner": {
@@ -820,7 +826,7 @@
 "Claudio Bravo": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#c2895e"
 },
 "Claudio Sepúlveda": {
@@ -838,12 +844,13 @@
 "Cole Palmer": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#3d2a19",
 "piel": "#bc8358"
 },
 "Cristian Calderón": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#9a9a9a",
+"peloC": "#5a3d24",
 "piel": "#ba8156"
 },
 "Cristian Insaurralde": {
@@ -855,13 +862,13 @@
 "Cristian Medina": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#5a3d24",
+"peloC": "#7a5634",
 "piel": "#e4b38b"
 },
 "Cristian Roldan": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#c48b60"
 },
 "Cristian Techera": {
@@ -891,13 +898,13 @@
 "Cédric Bakambu": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#684128"
 },
 "Célio Pompeu": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#9e6944"
 },
 "César Araújo": {
@@ -909,7 +916,7 @@
 "César Munder": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#bf865b"
 },
 "César Rigamonti": {
@@ -999,12 +1006,13 @@
 "Danny Musovski": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#b98056"
 },
 "Danny Welbeck": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#3d2a19",
 "piel": "#875837"
 },
 "Danny da Costa": {
@@ -1034,7 +1042,7 @@
 "David Martínez": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#986541"
 },
 "David Ospina": {
@@ -1045,7 +1053,7 @@
 "David Raum": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#9e6944"
 },
 "David Raya": {
@@ -1069,7 +1077,6 @@
 "Dayot Upamecano": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
 "piel": "#633e26"
 },
 "Dean Henderson": {
@@ -1099,7 +1106,7 @@
 "Denis Vavro": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d0976b"
 },
 "Deniz Undav": {
@@ -1153,7 +1160,7 @@
 "Diego Rossi": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#d39a6d"
 },
 "Diego Rubio": {
@@ -1181,7 +1188,7 @@
 "Diego Vallejos": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#7c5032"
 },
 "Diogo Leite": {
@@ -1221,7 +1228,7 @@
 "Désiré Doué": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#ca9165"
 },
 "Eberechi Eze": {
@@ -1233,6 +1240,7 @@
 "Ederson": {
 "barba": 2,
 "ojos": 0,
+"peloC": "#3d2a19",
 "piel": "#794d30"
 },
 "Edin Džeko": {
@@ -1244,7 +1252,7 @@
 "Edinson Cavani": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d49b6f"
 },
 "Eduard Löwen": {
@@ -1256,7 +1264,7 @@
 "Eduardo Salvio": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#a8724b"
 },
 "Eduardo Vargas": {
@@ -1268,7 +1276,7 @@
 "Edwin Cerrillo": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#9e6a44"
 },
 "Elisha Owusu": {
@@ -1286,13 +1294,13 @@
 "Elías Hernández": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#664027"
 },
 "Emanuel Emegha": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#492d1c"
 },
 "Emanuel Gularte": {
@@ -1310,19 +1318,19 @@
 "Emiliano Amor": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#af7850"
 },
 "Emiliano Martínez": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#a67c4e",
+"peloC": "#5a3d24",
 "piel": "#ca9165"
 },
 "Emmanuel Agbadou": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#865736"
 },
 "Emmanuel Ojeda": {
@@ -1340,7 +1348,7 @@
 "Enzo Fernández": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#9a6742"
 },
 "Enzo Pérez": {
@@ -1352,6 +1360,7 @@
 "Eric Ramírez": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#9a9a9a",
 "piel": "#855636"
 },
 "Erik Lira": {
@@ -1375,13 +1384,13 @@
 "Ethan Pinnock": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#a36e48"
 },
 "Evan Ndicka": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#a67c4e",
+"peloC": "#3d2a19",
 "piel": "#764b2e"
 },
 "Evander": {
@@ -1435,7 +1444,7 @@
 "Fabián Balbuena": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c38a5f"
 },
 "Fabián Hormazábal": {
@@ -1471,7 +1480,7 @@
 "Facundo Cambeses": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#c78e62"
 },
 "Facundo Medina": {
@@ -1525,24 +1534,25 @@
 "Felipe Mora": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#141414",
 "piel": "#dba57b"
 },
 "Felix Nmecha": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#825435"
 },
 "Ferland Mendy": {
 "barba": 0,
 "ojos": 0,
+"peloC": "#231a14",
 "piel": "#623e25"
 },
 "Fernando Arce": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#4a2e1c"
 },
 "Fernando Aristeguieta": {
@@ -1566,13 +1576,13 @@
 "Finn Surman": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#bc8359"
 },
 "Flaco López": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d2996c"
 },
 "Florian Neuhaus": {
@@ -1607,7 +1617,7 @@
 "Francisco Fydriszewski": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#c38a5f"
 },
 "Franco Armani": {
@@ -1624,7 +1634,7 @@
 "Frank Boya": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#70472b"
 },
 "Fábio": {
@@ -1642,7 +1652,7 @@
 "Félix Torres": {
 "barba": 2,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#855636"
 },
 "Gabriel Brazão": {
@@ -1654,7 +1664,7 @@
 "Gabriel Martinelli": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#d8a176"
 },
 "Gastón Brugman": {
@@ -1672,7 +1682,7 @@
 "Gaëtan Laborde": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#b87f55"
 },
 "Gaëtan Perrin": {
@@ -1690,7 +1700,7 @@
 "Georges Mikautadze": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#5a3d24",
 "piel": "#c68d61"
 },
 "Georginio Rutter": {
@@ -1726,7 +1736,7 @@
 "Gideon Mensah": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#754a2e"
 },
 "Gilberto Flores": {
@@ -1738,13 +1748,13 @@
 "Giorgian de Arrascaeta": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#dca67c"
 },
 "Giovani Lo Celso": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#bb8257"
 },
 "Giovanni Di Lorenzo": {
@@ -1756,7 +1766,7 @@
 "Giuliano Simeone": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#c58c61"
 },
 "Gleison Bremer": {
@@ -1768,13 +1778,13 @@
 "Gonzalo Montiel": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#dea980"
 },
 "Gonzalo Valle": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#9a9a9a",
+"peloC": "#7a5634",
 "piel": "#e3b189"
 },
 "Gonçalo Ramos": {
@@ -1786,7 +1796,7 @@
 "Gregor Kobel": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#a9734c"
 },
 "Grischa Prömel": {
@@ -1798,13 +1808,13 @@
 "Guela Doué": {
 "barba": 2,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#141414",
 "piel": "#b57d53"
 },
 "Guglielmo Vicario": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d9a278"
 },
 "Guilherme Biro": {
@@ -1822,19 +1832,19 @@
 "Guillermo Paiva": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#d79f73"
 },
 "Guillermo Viscarra": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#cd9468"
 },
 "Gédéon Kalulu": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#a16c46"
 },
 "Hakan Çalhanoğlu": {
@@ -1858,7 +1868,7 @@
 "Hannes Wolf": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#d2996c"
 },
 "Hany Mukhtar": {
@@ -1876,12 +1886,13 @@
 "Hassane Kamara": {
 "barba": 0,
 "ojos": 0,
+"peloC": "#3d2a19",
 "piel": "#825435"
 },
 "Henrikh Mkhitaryan": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c78e62"
 },
 "Henry Martín": {
@@ -1893,23 +1904,25 @@
 "Hernán Galíndez": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#e4b18a"
 },
 "Hugo Lloris": {
 "barba": 4,
 "ojos": 1,
+"peloC": "#141414",
 "piel": "#c78e62"
 },
 "Hugo Magnetti": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#986541"
 },
 "Hugo Rodallega": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#231a14",
 "piel": "#4d301d"
 },
 "Hugo Souza": {
@@ -1933,12 +1946,13 @@
 "Ibrahima Konaté": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#3d2a19",
 "piel": "#754b2e"
 },
 "Idan Toklomati": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c78e62"
 },
 "Idrissa Gueye": {
@@ -1968,13 +1982,13 @@
 "Igor Lichnovsky": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#cf966a"
 },
 "Igor Thiago": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#a67c4e",
+"peloC": "#7a5634",
 "piel": "#885938"
 },
 "Igor Zubeldia": {
@@ -1986,7 +2000,7 @@
 "Ilie Sánchez": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#e0ab82"
 },
 "Indiana Vassilev": {
@@ -1998,7 +2012,7 @@
 "Isaac Schmidt": {
 "barba": 0,
 "ojos": 3,
-"peloC": "#7a5634",
+"peloC": "#9a9a9a",
 "piel": "#96633f"
 },
 "Isaác Brizuela": {
@@ -2039,7 +2053,7 @@
 "Iván Leguizamón": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#e1ad84"
 },
 "Iñaki Williams": {
@@ -2057,6 +2071,7 @@
 "Jack Maher": {
 "barba": 2,
 "ojos": 0,
+"peloC": "#5a3d24",
 "piel": "#d8a075"
 },
 "Jackson Ragen": {
@@ -2068,13 +2083,13 @@
 "Jacob Murphy": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#dea980"
 },
 "Jacob Shaffelburg": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#a67c4e",
 "piel": "#b07950"
 },
 "Jaime Vásquez": {
@@ -2086,24 +2101,25 @@
 "Jaka Bijol": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#cf966a"
 },
 "Jakob Glesnes": {
 "barba": 0,
 "ojos": 0,
+"peloC": "#5a3d24",
 "piel": "#a67049"
 },
 "Jamal Musiala": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#3d2a19",
 "piel": "#b87f55"
 },
 "Jamal Thiaré": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#764b2e"
 },
 "James Garner": {
@@ -2119,6 +2135,7 @@
 "Jan Paul van Hecke": {
 "barba": 0,
 "ojos": 0,
+"peloC": "#a67c4e",
 "piel": "#b77e55"
 },
 "Jan Thielmann": {
@@ -2148,13 +2165,13 @@
 "Javier Correa": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#a67049"
 },
 "Javier Hernández": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#141414",
 "piel": "#d0976b"
 },
 "Javier Parraguez": {
@@ -2172,7 +2189,6 @@
 "Jean-Philippe Mateta": {
 "barba": 2,
 "ojos": 1,
-"peloC": "#9a9a9a",
 "piel": "#7b4f31"
 },
 "Jeremy Toljan": {
@@ -2195,7 +2211,7 @@
 "Jesús Bueno": {
 "barba": 2,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d9a277"
 },
 "Jesús Corona": {
@@ -2219,19 +2235,18 @@
 "Jhonder Cádiz": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#7a5634",
 "piel": "#52331f"
 },
 "Joachim Andersen": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#94623e"
 },
 "Joan García": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#bf865b"
 },
 "Joaquín Valiente": {
@@ -2255,6 +2270,7 @@
 "John": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#3d2a19",
 "piel": "#3e2718"
 },
 "John Kennedy": {
@@ -2266,7 +2282,7 @@
 "John McGinn": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#ce9569"
 },
 "John Nelson": {
@@ -2284,7 +2300,7 @@
 "Jonathan Betancourt": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#583621"
 },
 "Jonathan David": {
@@ -2296,7 +2312,7 @@
 "Jonathan Gradit": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#e5b38c"
 },
 "Jonathan Tah": {
@@ -2314,43 +2330,41 @@
 "Jordan Morris": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#d0976b"
 },
 "Jorge Broun": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#a67c4e",
 "piel": "#875837"
 },
 "Jorge Espejo": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#d69e72"
 },
 "Jorge Ruvalcaba": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#af774f"
 },
 "Jorginho": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
 "piel": "#e6b48e"
 },
 "Joseph Paintsil": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#8a5a39"
 },
 "Josh Bauer": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#bb8258"
 },
 "Joshua Kimmich": {
@@ -2362,13 +2376,13 @@
 "Josko Gvardiol": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#e2ae86"
 },
 "José Angulo": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#a56f49"
 },
 "José Caicedo": {
@@ -2397,7 +2411,7 @@
 "João Klauss": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#c8a05a",
+"peloC": "#a67c4e",
 "piel": "#e2ae87"
 },
 "João Neves": {
@@ -2451,7 +2465,7 @@
 "Juanlu Sánchez": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#3d2a19",
 "piel": "#a06b46"
 },
 "Jude Bellingham": {
@@ -2463,7 +2477,7 @@
 "Jules Koundé": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#a56f49"
 },
 "Julian Brandt": {
@@ -2486,7 +2500,7 @@
 "Julián Álvarez": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#c68d61"
 },
 "Juninho": {
@@ -2498,7 +2512,7 @@
 "Junior Adamu": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#91603d"
 },
 "Junior Messias": {
@@ -2516,7 +2530,7 @@
 "Justin Haak": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#aa744c"
 },
 "Justin Njinmah": {
@@ -2539,13 +2553,13 @@
 "Kai Havertz": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#9e6a44"
 },
 "Kai Wagner": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#9c6843"
 },
 "Kaiki": {
@@ -2575,12 +2589,13 @@
 "Kenedy": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#9a9a9a",
 "piel": "#905f3c"
 },
 "Kerwin Vargas": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#9a9a9a",
+"peloC": "#7a5634",
 "piel": "#ce9568"
 },
 "Kevin Castaño": {
@@ -2610,7 +2625,7 @@
 "Kevin O'Toole": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#cc9367"
 },
 "Kevin Schade": {
@@ -2646,6 +2661,7 @@
 "Khalil Fayad": {
 "barba": 0,
 "ojos": 0,
+"peloC": "#141414",
 "piel": "#c38a5e"
 },
 "Khvicha Kvaratskhelia": {
@@ -2663,25 +2679,25 @@
 "Kieran Trippier": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#8b5b3a"
 },
 "Ko Itakura": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#9e6a45"
 },
 "Koji Miyoshi": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#b98056"
 },
 "Koke": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#e8b892"
 },
 "Koni De Winter": {
@@ -2699,7 +2715,7 @@
 "Kristijan Jakic": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#ae774f"
 },
 "Kristijan Kahlina": {
@@ -2729,12 +2745,13 @@
 "Lamine Camara": {
 "barba": 0,
 "ojos": 0,
+"peloC": "#141414",
 "piel": "#482d1b"
 },
 "Lamine Yamal": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#8b5b39"
 },
 "Laurent Abergel": {
@@ -2776,19 +2793,19 @@
 "Lee Jae-sung": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#9e6944"
 },
 "Leo Campana": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d8a075"
 },
 "Leon Goretzka": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#af784f"
 },
 "Leonardo Balerdi": {
@@ -2888,13 +2905,13 @@
 "Lucas Cepeda": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#cf966a"
 },
 "Lucas Digne": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#d0976b"
 },
 "Lucas Höler": {
@@ -2924,7 +2941,7 @@
 "Ludovic Ajorque": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#b87f55"
 },
 "Luis Cangá": {
@@ -2990,7 +3007,7 @@
 "Luis Suárez": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#dfaa82"
 },
 "Luis Ángel Malagón": {
@@ -3008,13 +3025,13 @@
 "Lyanco": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#ab754d"
 },
 "Léo Pereira": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#d39a6d"
 },
 "Maghnes Akliouche": {
@@ -3038,7 +3055,7 @@
 "Mamadou Fofana": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#7c4f31"
 },
 "Mamadou Sarr": {
@@ -3050,7 +3067,7 @@
 "Manu Koné": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#9a9a9a",
+"peloC": "#7a5634",
 "piel": "#72482d"
 },
 "Manuel Ugarte": {
@@ -3068,7 +3085,7 @@
 "Marc Cucurella": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#5a3d24",
+"peloC": "#a67c4e",
 "piel": "#af7850"
 },
 "Marc Guéhi": {
@@ -3134,7 +3151,7 @@
 "Marco Reus": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#a67c4e",
+"peloC": "#7a5634",
 "piel": "#dba47a"
 },
 "Marcos Acuña": {
@@ -3146,7 +3163,7 @@
 "Marcus Thuram": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#784d2f"
 },
 "Marcão": {
@@ -3158,7 +3175,7 @@
 "Mario Götze": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#231a14",
 "piel": "#b47c53"
 },
 "Mark Delgado": {
@@ -3187,7 +3204,7 @@
 "Marquinhos": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#141414",
 "piel": "#7b4f31"
 },
 "Martin Ødegaard": {
@@ -3199,7 +3216,7 @@
 "Martinelli": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#d8a176"
 },
 "Martín Campaña": {
@@ -3222,7 +3239,7 @@
 "Marvin Schwäbe": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#e0ab82"
 },
 "Mason Greenwood": {
@@ -3234,7 +3251,7 @@
 "Mateo Retegui": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#7b4f31"
 },
 "Matheuzinho": {
@@ -3258,7 +3275,7 @@
 "Matt Polster": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#dda87f"
 },
 "Matteo Pessina": {
@@ -3323,7 +3340,7 @@
 "Max Kilman": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#a26d47"
 },
 "Maxence Lacroix": {
@@ -3347,19 +3364,19 @@
 "Maximilian Eggestein": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#daa379"
 },
 "Maximilian Mittelstädt": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#bb8257"
 },
 "Maximiliano Falcón": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#ba8157"
 },
 "Maximiliano Rodríguez": {
@@ -3377,7 +3394,7 @@
 "Maximiliano Urruti": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#9a9a9a",
+"peloC": "#5a3d24",
 "piel": "#d9a277"
 },
 "Maxloren Castro": {
@@ -3407,25 +3424,25 @@
 "Michael Estrada": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#ba8156"
 },
 "Michael Gregoritsch": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#cd9467"
 },
 "Michael Olise": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#be855b"
 },
 "Micky van de Ven": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#d0976a"
 },
 "Miguel Gutiérrez": {
@@ -3461,7 +3478,7 @@
 "Mikel Oyarzabal": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#b17950"
 },
 "Mikel Vesga": {
@@ -3515,6 +3532,7 @@
 "Moise Kean": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#231a14",
 "piel": "#4f311e"
 },
 "Moisés Caicedo": {
@@ -3549,7 +3567,7 @@
 "Moritz Broschinski": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#231a14",
 "piel": "#e4b18a"
 },
 "Mostafa Mohamed": {
@@ -3573,7 +3591,7 @@
 "Nahuel Molina": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#ab744d"
 },
 "Nathan Byrne": {
@@ -3585,19 +3603,19 @@
 "Nathan Collins": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#ca9165"
 },
 "Nathan Harriel": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#e9ba94"
 },
 "Nathan Ngoumou": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#d39a6d"
 },
 "Nathaniel Brown": {
@@ -3621,19 +3639,19 @@
 "Nick Hagglund": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#c99064"
 },
 "Nick Pope": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#91603d"
 },
 "Nick Woltemade": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#7a5634",
 "piel": "#c68d61"
 },
 "Niclas Füllkrug": {
@@ -3711,18 +3729,18 @@
 "Nicolás Thaller": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#b67d54"
 },
 "Nicolò Barella": {
 "barba": 5,
 "ojos": 0,
+"peloC": "#9a9a9a",
 "piel": "#be855a"
 },
 "Niklas Stark": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
 "piel": "#8c5c3a"
 },
 "Nikola Krstovic": {
@@ -3751,7 +3769,7 @@
 "Noah Allen": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#ca9165"
 },
 "Nouhou Tolo": {
@@ -3763,13 +3781,13 @@
 "Noussair Mazraoui": {
 "barba": 2,
 "ojos": 1,
-"peloC": "#9a9a9a",
+"peloC": "#7a5634",
 "piel": "#bf865b"
 },
 "Nuno Mendes": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#8f5e3c"
 },
 "Nuno Tavares": {
@@ -3787,6 +3805,7 @@
 "Octavio Rivero": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#141414",
 "piel": "#c2895e"
 },
 "Oihan Sancet": {
@@ -3834,7 +3853,7 @@
 "Oscar": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#dba57a"
 },
 "Ousmane Dembélé": {
@@ -3852,7 +3871,7 @@
 "Ozan Kabak": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c78e63"
 },
 "Ozziel Herrera": {
@@ -3870,13 +3889,12 @@
 "Pascal Groß": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#e2ae86"
 },
 "Pathé Ciss": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
 "piel": "#4b2f1c"
 },
 "Patricio Rodríguez": {
@@ -3898,31 +3916,31 @@
 "Patrick Schulte": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#7a5634",
 "piel": "#d8a176"
 },
 "Patrick Yazbek": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#dfaa81"
 },
 "Patrik Schick": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#cb9266"
 },
 "Pau Cubarsí": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#ac754e"
 },
 "Pau Torres": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c88f63"
 },
 "Paulinho": {
@@ -3952,7 +3970,7 @@
 "Pedro": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#b87f55"
 },
 "Pedro Amador": {
@@ -3964,13 +3982,13 @@
 "Pedro Ortiz": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#845536"
 },
 "Pedro Porro": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#a26d47"
 },
 "Pedro Raul": {
@@ -3982,7 +4000,7 @@
 "Pedro de la Vega": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#bd845a"
 },
 "Pep Biel": {
@@ -4000,7 +4018,7 @@
 "Phil Foden": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#7a5634",
+"peloC": "#231a14",
 "piel": "#d79f74"
 },
 "Philipp Lienhart": {
@@ -4012,7 +4030,7 @@
 "Philippe Coutinho": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#cb9266"
 },
 "Phillip Tietz": {
@@ -4036,19 +4054,19 @@
 "Péter Gulácsi": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#141414",
 "piel": "#d0976a"
 },
 "Quentin Merlin": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#b07850"
 },
 "Radamel Falcao": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d39a6d"
 },
 "Ramiro Sordo": {
@@ -4066,19 +4084,19 @@
 "Rani Khedira": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#a8724b"
 },
 "Raphael Veiga": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c0875c"
 },
 "Rasmus Højlund": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#a67c4e",
 "piel": "#c88f63"
 },
 "Rayan Aït-Nouri": {
@@ -4101,12 +4119,12 @@
 "Riccardo Calafiori": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
 "piel": "#a36e47"
 },
 "Riccardo Orsolini": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#7a5634",
 "piel": "#7a4e30"
 },
 "Richard Mina": {
@@ -4118,7 +4136,7 @@
 "Rico Lewis": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#c58c60"
 },
 "Ridle Baku": {
@@ -4142,6 +4160,7 @@
 "Robert Kenedy": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#9a9a9a",
 "piel": "#905f3c"
 },
 "Robert Sánchez": {
@@ -4182,7 +4201,7 @@
 "Robin Jansson": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#ba8157"
 },
 "Robin Risser": {
@@ -4194,7 +4213,7 @@
 "Robson Matheus": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#e3b088"
 },
 "Rodri": {
@@ -4206,7 +4225,7 @@
 "Rodrigo Bentancur": {
 "barba": 5,
 "ojos": 1,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#dda87f"
 },
 "Rodrigo Holgado": {
@@ -4242,7 +4261,6 @@
 "Rodrigo Vilca": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#9a9a9a",
 "piel": "#71472c"
 },
 "Rodrygo": {
@@ -4260,7 +4278,7 @@
 "Romain Perraud": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#c68d61"
 },
 "Roman Bürki": {
@@ -4271,7 +4289,7 @@
 "Romano Schmid": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#b57d53"
 },
 "Romelu Lukaku": {
@@ -4295,7 +4313,7 @@
 "Rubén Botta": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#d8a175"
 },
 "Rubén Vargas": {
@@ -4307,7 +4325,7 @@
 "Rudy Camacho": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#a67c4e",
+"peloC": "#7a5634",
 "piel": "#dea980"
 },
 "Ruslan Malinovskyi": {
@@ -4331,7 +4349,7 @@
 "Sam Beukema": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#141414",
 "piel": "#ad764e"
 },
 "Sam Surridge": {
@@ -4343,7 +4361,7 @@
 "Samuel Essende": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#ebbe98"
 },
 "Samuel Lino": {
@@ -4360,7 +4378,7 @@
 "Sandi Lovric": {
 "barba": 4,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#d0976a"
 },
 "Santi Comesaña": {
@@ -4378,7 +4396,7 @@
 "Santiago Castro": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#7a5634",
 "piel": "#eabb96"
 },
 "Santiago Giménez": {
@@ -4390,7 +4408,7 @@
 "Santiago Moreno": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#825435"
 },
 "Santiago Solari": {
@@ -4425,7 +4443,7 @@
 "Scott McTominay": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#cb9266"
 },
 "Sebastian Nanasi": {
@@ -4443,6 +4461,7 @@
 "Sebastián Fassi": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#141414",
 "piel": "#c38a5f"
 },
 "Sepp van den Berg": {
@@ -4454,7 +4473,7 @@
 "Sergi Darder": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#764b2e"
 },
 "Sergio Akieme": {
@@ -4508,12 +4527,13 @@
 "Souza": {
 "barba": 0,
 "ojos": 1,
+"peloC": "#3d2a19",
 "piel": "#6d452a"
 },
 "Stanislav Lobotka": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#7a5634",
 "piel": "#daa378"
 },
 "Stanley Nsoki": {
@@ -4525,7 +4545,7 @@
 "Stefan Frei": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#d49c6f"
 },
 "Steven Moreira": {
@@ -4537,7 +4557,7 @@
 "Sven Botman": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#ac754d"
 },
 "Tadeo Allende": {
@@ -4567,7 +4587,7 @@
 "Takuma Asano": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#9a6642"
 },
 "Tanguy Coulibaly": {
@@ -4579,13 +4599,13 @@
 "Tanner Beason": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#d39a6d"
 },
 "Tanner Tessmann": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#ce9568"
 },
 "Tayvon Gray": {
@@ -4657,31 +4677,31 @@
 "Tim Ream": {
 "barba": 4,
 "ojos": 0,
-"peloC": "#c8a05a",
+"peloC": "#a67c4e",
 "piel": "#efc4a1"
 },
 "Timo Hübers": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#ecbf9a"
 },
 "Tomas Totland": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#231a14",
 "piel": "#d2996c"
 },
 "Tomáš Souček": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#ae774f"
 },
 "Toti Gomes": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#9e6a44"
 },
 "Trent Alexander-Arnold": {
@@ -4705,7 +4725,7 @@
 "Valentin Barco": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#ab744d"
 },
 "Valentino Lazaro": {
@@ -4729,13 +4749,13 @@
 "Vicente Guaita": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#e9ba94"
 },
 "Vicente Pizarro": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#d79f74"
 },
 "Viktor Gyökeres": {
@@ -4759,7 +4779,7 @@
 "Virgil van Dijk": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#d49b6f"
 },
 "Vitalii Mykolenko": {
@@ -4782,13 +4802,13 @@
 "Vitão": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#141414",
 "piel": "#5c3923"
 },
 "Waldemar Anton": {
 "barba": 5,
 "ojos": 0,
-"peloC": "#7a5634",
+"peloC": "#5a3d24",
 "piel": "#cb9266"
 },
 "Walker Zimmerman": {
@@ -4812,7 +4832,7 @@
 "Welliton": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#231a14",
+"peloC": "#3d2a19",
 "piel": "#d79f73"
 },
 "Wendell": {
@@ -4854,18 +4874,19 @@
 "Willian Pacho": {
 "barba": 2,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#5a3d24",
 "piel": "#aa744c"
 },
 "Woo-yeong Jeong": {
 "barba": 0,
 "ojos": 0,
+"peloC": "#3d2a19",
 "piel": "#d69e72"
 },
 "Yairo Moreno": {
 "barba": 0,
 "ojos": 1,
-"peloC": "#3d2a19",
+"peloC": "#141414",
 "piel": "#996541"
 },
 "Yann Gboho": {
@@ -4917,7 +4938,7 @@
 "Zé Rafael": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#ba8157"
 },
 "Álex Baena": {
@@ -4929,7 +4950,7 @@
 "Álvaro Fidalgo": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#3d2a19",
+"peloC": "#231a14",
 "piel": "#b98056"
 },
 "Álvaro Morata": {
@@ -4940,7 +4961,7 @@
 "Ángel Di María": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#141414",
+"peloC": "#231a14",
 "piel": "#a46f49"
 },
 "Ángel Sepúlveda": {
@@ -4957,6 +4978,7 @@
 "Éderson": {
 "barba": 2,
 "ojos": 0,
+"peloC": "#3d2a19",
 "piel": "#794d30"
 },
 "Óliver Torres": {
@@ -4986,7 +5008,7 @@
 "Óscar Ustari": {
 "barba": 0,
 "ojos": 0,
-"peloC": "#5a3d24",
+"peloC": "#3d2a19",
 "piel": "#dfab82"
 },
 "Óscar de Marcos": {

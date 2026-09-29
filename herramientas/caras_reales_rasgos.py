@@ -107,11 +107,12 @@ def rasgos(img, p):
         else:
             out["ojos"] = 1 if lum(ir) < 45 else 0
     # Pelo: franja por encima de la frente (arriba de las cejas).
-    pelo = [mediana(img, (ox1 + ox2) / 2 + k * sep * 0.35, ojos_y - d * 1.35, r) for k in (-1, 0, 1)]
+    pelo = [mediana(img, (ox1 + ox2) / 2 + k * sep * 0.35, ojos_y - d * f, r) for k in (-1, 0, 1) for f in (1.2, 1.4, 1.6)]
     pelo = [m for m in pelo if m]
     if pelo:
-        # La muestra más oscura: el fondo suele ser más claro que el pelo.
-        pc = min(pelo, key=lum)
+        # Una de las más oscuras (la segunda de nueve): el fondo suele ser más
+        # claro que el pelo, pero la más oscura de todas borraba a los rubios.
+        pc = sorted(pelo, key=lum)[min(1, len(pelo) - 1)]
         # Si parece piel (calvo, entradas) o el fondo claro, no se toca.
         if distancia(pc, piel) > 35 and lum(pc) < 175:
             out["peloC"] = min(PELOS, key=lambda h: distancia(rgb(h), tuple(v * 0.9 for v in pc)))

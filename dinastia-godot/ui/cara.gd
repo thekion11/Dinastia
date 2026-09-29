@@ -660,7 +660,8 @@ static func textura_barba(lk: Dictionary) -> Texture2D:
 	_cache[clave] = t
 	return t
 
-## Ojos y boca del retrato real (de 0 a 1), o [] si no se encontraron.
+## Ojos, boca y (si está) nariz del retrato real, de 0 a 1, o [] si no se
+## encontraron.
 static func puntos_foto(ruta: String) -> Array:
 	if not _puntos_listos:
 		_puntos_listos = true
@@ -674,7 +675,7 @@ static func puntos_foto(ruta: String) -> Array:
 			nombre = k
 			break
 	var p: Variant = _puntos_fotos.get(nombre)
-	return p if p is Array and (p as Array).size() == 6 else []
+	return p if p is Array and (p as Array).size() >= 6 else []
 
 ## Todo lo que el 3D necesita para poner la cara de un jugador (lo arma
 ## `Puente3D.jugador`): el aspecto y, si es real y tiene retrato calzable, la foto.

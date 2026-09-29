@@ -6,7 +6,7 @@ de 256x256 ya recortados y guarda, normalizados de 0 a 1:
 
     datos/caras_reales_puntos.json  {nombre: [ojo_izq_x, ojo_izq_y,
                                               ojo_der_x, ojo_der_y,
-                                              boca_x, boca_y]}
+                                              boca_x, boca_y, nariz_x, nariz_y]}
 
 "izq"/"der" son los de la imagen (el ojo derecho del jugador cae a la
 izquierda). Uso: python3 herramientas/caras_reales_puntos.py yunet.onnx
@@ -44,7 +44,8 @@ def main() -> None:
         # Cara muy de perfil: los ojos casi juntos no sirven para calzar.
         if abs(ox2 - ox1) < 0.12 * w:
             continue
-        salida[nombre] = [round(float(v), 4) for v in (ox1 / w, oy1 / h, ox2 / w, oy2 / h, bx / w, by / h)]
+        nx, ny = c[8], c[9]
+        salida[nombre] = [round(float(v), 4) for v in (ox1 / w, oy1 / h, ox2 / w, oy2 / h, bx / w, by / h, nx / w, ny / h)]
     json.dump(salida, open(SALIDA, "w", encoding="utf-8"), ensure_ascii=False, indent=0, sort_keys=True)
     print(f"{len(salida)} de {len(indice)} retratos con ojos y boca")
 
