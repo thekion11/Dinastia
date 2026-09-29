@@ -1,7 +1,7 @@
 extends Node
 ## (Sin `class_name`: este script ES el autoload `Idiomas`.)
-## LOS IDIOMAS DE LA INTERFAZ. Siete: castellano, inglés, portugués de Brasil,
-## francés, italiano, alemán y catalán.
+## LOS IDIOMAS DE LA INTERFAZ. Nueve: castellano, inglés, portugués de Brasil,
+## francés, italiano, alemán, catalán, polaco y turco.
 ##
 ## CÓMO FUNCIONA, Y POR QUÉ ASÍ. Lo normal en Godot es marcar cada cadena con
 ## `tr("CLAVE")` y llevar un CSV de claves. Aquí eso costaba tocar más de dos mil
@@ -36,7 +36,12 @@ extends Node
 ## menús, pestañas, botones, títulos de sección, ajustes y etiquetas de datos,
 ## que es lo que hace falta para orientarse.
 
-const ORDEN := ["en", "pt", "fr", "it", "de", "ca"]
+## Polaco y turco (29-9-2026) no tienen columna en `TABLA`: viven enteros en
+## `datos/idiomas_extra.json` (tabla base incluida). Añadir un idioma así es
+## sumar su diccionario, sin tocar las 300 filas de abajo.
+const ORDEN := ["en", "pt", "fr", "it", "de", "ca", "pl", "tr"]
+## Cuántos idiomas tienen columna en `TABLA` (los primeros de `ORDEN`).
+const COLUMNAS_TABLA := 6
 
 ## clave -> [nombre en su propio idioma, bandera]
 const NOMBRES := {
@@ -47,6 +52,8 @@ const NOMBRES := {
 	"it": ["Italiano", "🇮🇹"],
 	"de": ["Deutsch", "🇩🇪"],
 	"ca": ["Català", "🏴"],
+	"pl": ["Polski", "🇵🇱"],
+	"tr": ["Türkçe", "🇹🇷"],
 }
 
 var idioma := "es"
@@ -538,6 +545,6 @@ func cobertura(cual: String) -> int:
 			n += 1
 	for k: String in TABLA:
 		var fila: Array = TABLA[k]
-		if i < fila.size() and String(fila[i]) != "":
+		if (i < fila.size() and String(fila[i]) != "") or String(ex.get(k, "")) != "":
 			n += 1
 	return n
