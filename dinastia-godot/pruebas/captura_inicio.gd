@@ -16,7 +16,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == ESPERA:
-		_guardar("res://pruebas/pantalla_inicio.png")
+		_guardar("res://pruebas/capturas/pantalla_inicio.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

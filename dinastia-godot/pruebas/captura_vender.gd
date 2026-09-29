@@ -35,13 +35,13 @@ func _process(_d: float) -> void:
 		tabs.current_tab = 1
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_ofertas.png")
+		_guardar("res://pruebas/capturas/pantalla_ofertas.png")
 		## Ahora la ficha de un jugador PROPIO -antes se quedaba en blanco tras
 		## los datos basicos-.
 		var mio2: Club = _mundo.mi_club()
 		_pantalla.call("_ver_ficha", mio2.plantilla[1])
 	if _n == ESPERA + 8:
-		_guardar("res://pruebas/pantalla_venta_ficha.png")
+		_guardar("res://pruebas/capturas/pantalla_venta_ficha.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

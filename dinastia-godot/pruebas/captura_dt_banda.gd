@@ -27,9 +27,9 @@ func _process(_d: float) -> void:
 	if _frame == 3:
 		_cam.make_current()
 	if _frame == 40:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/dt_banda.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/dt_banda.png")
 		_cam.position = Vector3(27.0, 2.0, 12.0)
 		_cam.look_at(Vector3(35.0, 1.2, 6.5), Vector3.UP)
 	if _frame == 46:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/dt_banda_rival.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/dt_banda_rival.png")
 		get_tree().quit()

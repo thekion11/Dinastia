@@ -41,7 +41,7 @@ func _process(_d: float) -> void:
 			var hoja := Image.create(1280, 360, false, Image.FORMAT_RGBA8)
 			hoja.blit_rect(_imgs[0], Rect2i(0, 0, 640, 360), Vector2i(0, 0))
 			hoja.blit_rect(_imgs[1], Rect2i(0, 0, 640, 360), Vector2i(640, 0))
-			hoja.save_png("res://pruebas/intro_partido.png")
+			hoja.save_png("res://pruebas/capturas/intro_partido.png")
 		print("===== INTRO: %d fallos =====" % _fallos)
 		get_tree().quit()
 	if _n > 5000:

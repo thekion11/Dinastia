@@ -17,7 +17,7 @@ func _process(_d: float) -> void:
 	var tabs := [8, 14, 20, 26, 32]
 	var k := tabs.find(_n)
 	if k >= 0:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/creador_personaje_%d.png" % k)
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/creador_personaje_%d.png" % k)
 		var pest: TabContainer = _c.get("_pestanas")
 		if k + 1 < pest.get_tab_count():
 			pest.current_tab = k + 1

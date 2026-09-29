@@ -40,13 +40,13 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 10:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/personaje_dt.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/personaje_dt.png")
 		_cam.position = Vector3(-2.25 + 0.25, 1.5, 0.8)
 		_cam.look_at(Vector3(-2.25, 1.45, 0), Vector3.UP)
 	if _n == 16:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/personaje_dt_cara.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/personaje_dt_cara.png")
 		_cam.position = Vector3(-2.25 + 0.6, 1.0, 1.9)
 		_cam.look_at(Vector3(-2.25, 0.85, 0), Vector3.UP)
 	if _n == 22:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/personaje_dt_abrigo.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/personaje_dt_abrigo.png")
 		get_tree().quit()

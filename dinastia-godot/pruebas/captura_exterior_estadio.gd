@@ -39,9 +39,9 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 8:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/exterior_estadio_sur.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/exterior_estadio_sur.png")
 		_cam.position = Vector3(30.0, 22.0, -_dz - 60.0)
 		_cam.look_at(Vector3(0.0, 0.0, -_dz - 22.0), Vector3.UP)
 	if _n == 14:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/exterior_estadio_norte.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/exterior_estadio_norte.png")
 		get_tree().quit()

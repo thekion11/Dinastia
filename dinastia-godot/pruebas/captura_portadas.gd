@@ -28,7 +28,7 @@ func _process(_d: float) -> void:
 	if _hoja_actual != null:
 		var img := get_viewport().get_texture().get_image()
 		if _i == 0:
-			img.save_png("res://pruebas/portada_completa.png")
+			img.save_png("res://pruebas/capturas/portada_completa.png")
 		var r := Rect2i(_hoja_actual._hoja.get_global_rect())
 		var rec := img.get_region(r.intersection(Rect2i(Vector2i.ZERO, img.get_size())))
 		rec.resize(300, 450)
@@ -40,7 +40,7 @@ func _process(_d: float) -> void:
 		var hoja := Image.create(300 * 3, 450 * 2, false, _fotos[0].get_format())
 		for k in _fotos.size():
 			hoja.blit_rect(_fotos[k], Rect2i(0, 0, 300, 450), Vector2i((k % 3) * 300, (k / 3) * 450))
-		hoja.save_png("res://pruebas/portadas_periodico.png")
+		hoja.save_png("res://pruebas/capturas/portadas_periodico.png")
 		get_tree().quit()
 		return
 	var m: Mundo = _p.get("mundo")

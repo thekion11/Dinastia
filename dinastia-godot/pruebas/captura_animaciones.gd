@@ -34,7 +34,7 @@ func _process(_d: float) -> void:
 		_ok(_textos.size() >= 4, "la caja pasa por %d valores intermedios al cobrar" % (_textos.size() - 1))
 		_pantalla.call("_ir_a_pestana", "Calendario")
 	if _n == ESPERA + 51 + 18:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/animacion_pestana.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/animacion_pestana.png")
 		var lista: Node = _pantalla.get("_lista_calendario")
 		var transparentes := 0
 		var visibles := 0

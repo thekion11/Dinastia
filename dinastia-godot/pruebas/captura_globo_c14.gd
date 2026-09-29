@@ -22,5 +22,5 @@ func _process(_d: float) -> void:
 		var vp: SubViewport = g.get("_viewport")
 		var punto := cam.unproject_position(arg.global_position) / (Vector2(vp.size) / g.size)
 		print("clic en ARG -> ", g.pais_en(punto))
-		get_viewport().get_texture().get_image().save_png("res://pruebas/globo_c14.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/globo_c14.png")
 		get_tree().quit()

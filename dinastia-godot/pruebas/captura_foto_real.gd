@@ -28,7 +28,7 @@ func _process(_d: float) -> void:
 		if vidal != null:
 			_pantalla.call("_ver_ficha", vidal)
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_foto_real.png")
+		_guardar("res://pruebas/capturas/pantalla_foto_real.png")
 		get_tree().quit()
 func _guardar(ruta: String) -> void:
 	var img := get_viewport().get_texture().get_image()

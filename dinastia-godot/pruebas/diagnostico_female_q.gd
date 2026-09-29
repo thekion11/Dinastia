@@ -47,11 +47,11 @@ func _process(_delta: float) -> void:
 		_ap.play("parado")
 	if f == 8:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_female_parado.png")
+		img.save_png("res://pruebas/capturas/q_female_parado.png")
 	if f == 12:
 		_ap.play("caminar")
 	if f == 40:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/q_female_caminar.png")
+		img2.save_png("res://pruebas/capturas/q_female_caminar.png")
 		print("FIN. 0 fallos")
 		get_tree().quit(0)

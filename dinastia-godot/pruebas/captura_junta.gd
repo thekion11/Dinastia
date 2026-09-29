@@ -17,5 +17,5 @@ func _process(_d: float) -> void:
 		_p.call("_refrescar")
 		_p.call("_ir_a_pestana", "Inicio")
 	if _n == 18:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/junta.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/junta.png")
 		get_tree().quit()

@@ -29,15 +29,15 @@ func _process(_d: float) -> void:
 	if _n == 18:
 		_forzar_plano(1.0)
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/rueda_sala_plano_trabajo.png")
+		img.save_png("res://pruebas/capturas/rueda_sala_plano_trabajo.png")
 	if _n == 20:
 		_forzar_plano(6.0)
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/rueda_sala_plano_general.png")
+		img2.save_png("res://pruebas/capturas/rueda_sala_plano_general.png")
 	if _n == 22:
 		_forzar_plano(8.0)
 		var img3 := get_viewport().get_texture().get_image()
-		img3.save_png("res://pruebas/rueda_sala_plano_lateral.png")
+		img3.save_png("res://pruebas/capturas/rueda_sala_plano_lateral.png")
 		print("capturados los 3 planos")
 		get_tree().quit()
 

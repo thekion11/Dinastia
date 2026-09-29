@@ -55,7 +55,7 @@ func _process(_d: float) -> void:
 	if (_n - 12) % 10 != 0:
 		return
 	var img := get_viewport().get_texture().get_image()
-	img.save_png("res://pruebas/%s.png" % String(CASOS[_paso][2]))
+	img.save_png("res://pruebas/capturas/%s.png" % String(CASOS[_paso][2]))
 	print("captura %s" % String(CASOS[_paso][2]))
 	_paso += 1
 	if _paso >= CASOS.size():

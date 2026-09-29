@@ -17,5 +17,5 @@ func _process(_d: float) -> void:
 		_p.call("_ir_a_chip", {"tab": "Legado", "label": "Historia"})
 		_p.call("_refrescar")
 	if _n == 22:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/historia_c4.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/historia_c4.png")
 		get_tree().quit()

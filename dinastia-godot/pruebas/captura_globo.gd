@@ -17,10 +17,10 @@ func _process(_d: float) -> void:
 	if _n == 6:
 		_globo.ir_a("AUS", true)
 	if _n == 8:
-		_guardar("res://pruebas/pantalla_globo_aus.png")
+		_guardar("res://pruebas/capturas/pantalla_globo_aus.png")
 		_globo.ir_a("BRA", true)
 	if _n == 10:
-		_guardar("res://pruebas/pantalla_globo_bra.png")
+		_guardar("res://pruebas/capturas/pantalla_globo_bra.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

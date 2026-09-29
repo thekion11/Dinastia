@@ -21,7 +21,7 @@ func _process(_d: float) -> void:
 					break
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_reales.png")
+		_guardar("res://pruebas/capturas/pantalla_reales.png")
 		get_tree().quit()
 func _guardar(ruta: String) -> void:
 	var img := get_viewport().get_texture().get_image()

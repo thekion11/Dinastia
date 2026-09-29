@@ -19,11 +19,11 @@ func _process(_dt: float) -> void:
 				"espalda": {"marca": "Banco Austral", "color": "#3a7bd5"}, "short": {"marca": "Autos Kalpa", "color": "#d5843a"}}})
 		_d.call("_rehacer")
 	if _n == 70:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/disenador_camiseta.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/disenador_camiseta.png")
 		(_d.get("_pestanas") as TabContainer).current_tab = 3
 	if _n == 85:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/disenador_botines.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/disenador_botines.png")
 		(_d.get("_pestanas") as TabContainer).current_tab = 6
 	if _n == 100:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/disenador_sponsors.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/disenador_sponsors.png")
 		get_tree().quit()

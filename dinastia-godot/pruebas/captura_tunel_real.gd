@@ -25,7 +25,7 @@ func _process(_d: float) -> void:
 	if _n == 20:
 		## Cámara principal (TV), la que usa la mayoría de las partidas.
 		var img0 := get_viewport().get_texture().get_image()
-		img0.save_png("res://pruebas/tunel_camara_principal.png")
+		img0.save_png("res://pruebas/capturas/tunel_camara_principal.png")
 		var rig: CameraRig = _vista.get("_rig")
 		for i in rig.camera_names.size():
 			if String(rig.camera_names[i]).begins_with("Detr"):
@@ -33,6 +33,6 @@ func _process(_d: float) -> void:
 				break
 	if _n == 30:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/tunel_camara_real.png")
+		img.save_png("res://pruebas/capturas/tunel_camara_real.png")
 		print("capturas guardadas")
 		get_tree().quit()

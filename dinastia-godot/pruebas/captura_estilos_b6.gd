@@ -58,7 +58,7 @@ func _process(_d: float) -> void:
 		var hoja := Image.create(480 * 4, 270 * 2, false, _fotos[0].get_format())
 		for k in _fotos.size():
 			hoja.blit_rect(_fotos[k], Rect2i(0, 0, 480, 270), Vector2i((k % 4) * 480, (k / 4) * 270))
-		hoja.save_png("res://pruebas/estilos_b6.png")
+		hoja.save_png("res://pruebas/capturas/estilos_b6.png")
 		get_tree().quit()
 		return
 	_montar(_i)

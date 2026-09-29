@@ -198,7 +198,7 @@ func _mirar_general() -> void:
 
 func _guardar(nombre: String) -> void:
 	var img := get_viewport().get_texture().get_image()
-	img.save_png("res://pruebas/%s.png" % nombre)
+	img.save_png("res://pruebas/capturas/%s.png" % nombre)
 	var activa := get_viewport().get_camera_3d()
 	print("captura: %s.png  (camara %s)" % [nombre,
 		activa.global_position if activa != null else "NINGUNA"])
@@ -214,7 +214,7 @@ func _volcar(nombre: String) -> void:
 	if img == null:
 		_mal("el SubViewport de la pantalla no devolvió imagen")
 		return
-	img.save_png("res://pruebas/%s.png" % nombre)
+	img.save_png("res://pruebas/capturas/%s.png" % nombre)
 
 ## Igual que `Partido._anotar()`: sube el contador y DESPUÉS emite.
 func _gol(es_local: bool, minuto: int) -> void:

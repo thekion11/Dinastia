@@ -22,7 +22,7 @@ func _process(_d: float) -> void:
 			mun.jugar_temporada()
 			mun.nueva_temporada()
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_registro.png")
+		_guardar("res://pruebas/capturas/pantalla_registro.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

@@ -34,14 +34,14 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 20:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/extras_estadio_dron.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/extras_estadio_dron.png")
 		_cam.position = Vector3(20, 25, -60)
 		_cam.look_at(Vector3(-40, 22, 10), Vector3.UP)
 	if _n == 35:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/extras_estadio_palcos.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/extras_estadio_palcos.png")
 		_cam.position = Vector3(-29.0, 1.9, -9.5)
 		_cam.fov = 40
 		_cam.look_at(Vector3(-35.6, 1.4, -12.0), Vector3.UP)
 	if _n == 50:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/extras_estadio_mascota.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/extras_estadio_mascota.png")
 		get_tree().quit()

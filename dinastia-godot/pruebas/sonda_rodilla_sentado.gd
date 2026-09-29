@@ -55,7 +55,7 @@ func _process(_d: float) -> void:
 		_aplicar(90.0, VALORES[_idx])
 	if _frame == 8:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/sonda_rodilla_%d.png" % int(VALORES[_idx]))
+		img.save_png("res://pruebas/capturas/sonda_rodilla_%d.png" % int(VALORES[_idx]))
 		print("rodilla=%.0f -> sonda_rodilla_%d.png" % [VALORES[_idx], int(VALORES[_idx])])
 		_idx += 1
 		if _idx >= VALORES.size():

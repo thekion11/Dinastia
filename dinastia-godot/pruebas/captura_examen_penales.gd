@@ -16,11 +16,11 @@ func _process(_d: float) -> void:
 		_abierto = ExamenLicencia.mostrar(_p, m)
 		_abierto.call("_responder", 1)
 	if _n == 16:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/examen_licencia.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/examen_licencia.png")
 		_abierto.queue_free()
 		_abierto = MinijuegoPenales.mostrar(_p, m)
 	if _n == 20:
 		_abierto.call("_patear", 0)
 	if _n == 27:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/minijuego_penales.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/minijuego_penales.png")
 		get_tree().quit()

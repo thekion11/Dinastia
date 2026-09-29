@@ -28,6 +28,6 @@ func _ready() -> void:
 				if img.get_pixel(x, y).a > 0.5:
 					opacos += 1
 		print("pixeles opacos muestreados: %d" % opacos)
-		img.save_png("res://pruebas/svg_prueba.png")
+		img.save_png("res://pruebas/capturas/svg_prueba.png")
 		print("guardado en pruebas/svg_prueba.png")
 	get_tree().quit()

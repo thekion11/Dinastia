@@ -58,7 +58,7 @@ func _n_tick() -> void:
 		var antes := _primer_nombre_pintado(lista)
 		print("orden inicial (por media): primero es %s" % antes)
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_plantel.png")
+		img.save_png("res://pruebas/capturas/pantalla_plantel.png")
 		print("captura: pantalla_plantel.png")
 
 		## Pulsar la cabecera NOMBRE: pasa a orden alfabético.

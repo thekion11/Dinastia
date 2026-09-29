@@ -21,6 +21,6 @@ func _ready() -> void:
 		uno.convert(Image.FORMAT_RGBA8)
 		img.blit_rect(uno, Rect2i(0, 0, 128, 128), Vector2i((i % 6) * 128, (i / 6) * 128))
 		i += 1
-	img.save_png("res://pruebas/hoja_caras.png")
+	img.save_png("res://pruebas/capturas/hoja_caras.png")
 	print("retratos: %d, cortes distintos: %d -> %s" % [i, cortes.size(), cortes.keys()])
 	get_tree().quit()
