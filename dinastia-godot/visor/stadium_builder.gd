@@ -1891,6 +1891,60 @@ static func _malla_hincha_cache() -> Mesh:
 	_malla_hincha = st.commit()
 	return _malla_hincha
 
+## EL HINCHA DE LAS PRIMERAS FILAS (29-9-2026). Pedido del usuario al ver el
+## partido jugable de la Carrera de Jugador ("ese público se ve horrible"):
+## ahí la cámara va a ras de césped y las primeras filas quedan a pocos metros.
+## La cápsula+esfera de arriba, de cerca, es una pastilla con una bola. Esta
+## lleva hombros, brazos, cuello y cabeza -el pelo lo pinta el shader por
+## altura-, ~150 vértices, y SOLO se usa en las filas bajas de la bandeja de
+## abajo: las de arriba siguen con la barata, que a 30 m no se distingue.
+static var _malla_hincha_det: Mesh
+
+static func _malla_hincha_detalle() -> Mesh:
+	if _malla_hincha_det != null:
+		return _malla_hincha_det
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var torso := CylinderMesh.new()
+	torso.top_radius = 0.16
+	torso.bottom_radius = 0.13
+	torso.height = 0.40
+	torso.radial_segments = 7
+	torso.rings = 1
+	st.append_from(torso, 0, Transform3D(Basis().scaled(Vector3(1.0, 1.0, 0.72)), Vector3(0, 0.29, 0)))
+	var hombros := CapsuleMesh.new()
+	hombros.radius = 0.075
+	hombros.height = 0.44
+	hombros.radial_segments = 6
+	hombros.rings = 1
+	st.append_from(hombros, 0, Transform3D(Basis(Vector3(0, 0, 1), PI * 0.5).scaled(Vector3(1.0, 1.0, 0.8)), Vector3(0, 0.47, 0)))
+	var brazo := CapsuleMesh.new()
+	brazo.radius = 0.045
+	brazo.height = 0.40
+	brazo.radial_segments = 5
+	brazo.rings = 1
+	for lado in [-1.0, 1.0]:
+		## Brazos caídos y un poco adelantados, como sentado con las manos en
+		## las rodillas.
+		var b := Basis(Vector3(1, 0, 0), -0.35).rotated(Vector3(0, 0, 1), 0.10 * lado)
+		st.append_from(brazo, 0, Transform3D(b, Vector3(0.20 * lado, 0.31, 0.05)))
+	var cuello := CylinderMesh.new()
+	cuello.top_radius = 0.045
+	cuello.bottom_radius = 0.05
+	cuello.height = 0.08
+	cuello.radial_segments = 5
+	cuello.rings = 1
+	st.append_from(cuello, 0, Transform3D(Basis(), Vector3(0, 0.56, 0)))
+	var cabeza := SphereMesh.new()
+	cabeza.radius = 0.10
+	cabeza.height = 0.23
+	cabeza.radial_segments = 8
+	cabeza.rings = 5
+	st.append_from(cabeza, 0, Transform3D(Basis(), Vector3(0, 0.67, 0)))
+	st.generate_normals()
+	_malla_hincha_det = st.commit()
+	return _malla_hincha_det
+
 ## `ocupacion` (22-9-2026): antes estas 5 filas reales -las que la camara de TV
 ## ve de cerca, ver el comentario de mas arriba- se quedaban con la butaca
 ## vacia aunque `_make_stand_texture()` ya pinte gente de verdad desde la fila
@@ -2084,6 +2138,13 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## porque las butacas de arriba ya las dibuja la textura de la grada.
 	var filas_todas: int = maxi(1, int(fondo / PASO_FILA))
 	var filas: int = mini(presupuesto, filas_todas)
+	## ¿QUÉ BORDE DEL DECK ES EL DE ABAJO? (29-9-2026). Se daba por hecho que
+	## el lado local negativo, y en las tribunas giradas al revés -la mitad-
+	## las 5 filas de butacas 3D y el público denso acababan ARRIBA DEL TODO,
+	## con la parte pegada al césped casi vacía: justo lo que se ve de cerca
+	## desde el partido jugable. Se mira la inclinación real del nodo.
+	var eje_fondo := Vector3(1, 0, 0) if lateral else Vector3(0, 0, 1)
+	var sentido: float = 1.0 if (deck.basis * eje_fondo).y >= 0.0 else -1.0
 
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
@@ -2102,10 +2163,14 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 		Color(0.7, 0.2, 0.2), Color(0.2, 0.3, 0.7)]
 	var hinchas_xf: Array[Transform3D] = []
 	var hinchas_col: Array[Color] = []
+	var det_xf: Array[Transform3D] = []
+	var det_col: Array[Color] = []
+	var filas_detalle: int = 6 if Calidad.elegida >= Calidad.ALTO else 3
+	var por_grupo: int = 2 if Calidad.elegida >= Calidad.ALTO else 1
 	var i := 0
 	for f in range(filas_todas):
 		## Se empieza por el borde de abajo del deck (el que da al cesped).
-		var d: float = -fondo * 0.5 + 0.6 + f * PASO_FILA
+		var d: float = sentido * (-fondo * 0.5 + 0.6 + f * PASO_FILA)
 		## De esta fila hacia arriba ya no hay butaca 3D, solo hincha: la
 		## butaca la pone la textura de la grada.
 		var con_butaca := f < filas
@@ -2113,7 +2178,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 			var l: float = -largo * 0.5 + 0.8 + c * PASO_BUTACA
 			var p: Vector3 = Vector3(d, 0.24, l) if lateral else Vector3(l, 0.24, d)
 			## Miran hacia el campo, o sea hacia el borde bajo de la rampa.
-			var giro: float = -PI * 0.5 if lateral else 0.0
+			var giro: float = (-PI * 0.5 if lateral else 0.0) + (0.0 if sentido > 0.0 else PI)
 			## La contrarrotacion que las deja DE PIE -ver la nota de `rake` en
 			## la cabecera de esta funcion-. EL ORDEN IMPORTA: el deck aplica
 			## D y queremos que el resultado final D*I mire al campo y este
@@ -2132,24 +2197,46 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 					col = col.lightened(0.25)
 				mm.set_instance_color(i, col.darkened(rng.randf() * 0.12))
 				i += 1
-			if rng.randf() < ocupacion:
-				## Sentado, un poco mas arriba del cojin (0.24) y con un jitter
-				## chico de posicion/mirada -una fila de maniquies perfectamente
-				## alineados se lee tan falso como una vacia.
-				var jitter := Vector3(rng.randf_range(-0.08, 0.08), 0, rng.randf_range(-0.08, 0.08))
-				var mirada := giro + rng.randf_range(-0.12, 0.12)
-				## NO TODOS MIDEN LO MISMO (23-9-2026). Una grada donde los
-				## miles de hinchas tienen exactamente la misma estatura se lee
-				## como una rejilla de maniquíes por muy bien que estén
-				## coloreados. ±10% cubre de un niño a un adulto alto, y es
-				## gratis: va en la misma matriz de la instancia.
-				var talla := rng.randf_range(0.88, 1.10)
-				var base_h := Basis().rotated(Vector3.UP, mirada).scaled(Vector3(talla, talla, talla))
-				if rake != 0.0:
-					base_h = base_h.rotated(Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0), -rake)
-				hinchas_xf.append(Transform3D(base_h, p + jitter + Vector3(0, 0.16, 0)))
-				var col_hincha: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
-				hinchas_col.append(col_hincha.darkened(rng.randf() * 0.15))
+			## Filas de detalle: la bandeja de abajo, pegada al campo, con los
+			## TRES asientos del grupo (antes, uno solo cada 1,52 m: de cerca
+			## se leía como hinchas sueltos en una grada vacía).
+			if bandeja == 0 and f < filas_detalle:
+				for k in 3:
+					if rng.randf() >= ocupacion:
+						continue
+					var desp := (float(k) - 1.0) * 0.48
+					var pk: Vector3 = p + (Vector3(0, 0, desp) if lateral else Vector3(desp, 0, 0))
+					var jit := Vector3(rng.randf_range(-0.04, 0.04), 0, rng.randf_range(-0.04, 0.04))
+					var talla_d := rng.randf_range(0.9, 1.08)
+					var base_d := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla_d, talla_d, talla_d))
+					if rake != 0.0:
+						base_d = base_d.rotated(Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0), -rake)
+					det_xf.append(Transform3D(base_d, pk + jit + Vector3(0, 0.14, 0)))
+					var col_d: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
+					det_col.append(col_d.darkened(rng.randf() * 0.15))
+				continue
+			## Dos por grupo de tres butacas en calidad Alta (29-9-2026): con uno
+			## solo cada 1,52 m la grada alta se leía vacía sobre la textura.
+			for kg in por_grupo:
+				if rng.randf() < ocupacion:
+					## Sentado, un poco mas arriba del cojin (0.24) y con un jitter
+					## chico de posicion/mirada -una fila de maniquies perfectamente
+					## alineados se lee tan falso como una vacia.
+					var desp_k := (float(kg) - 0.5 * float(por_grupo - 1)) * 0.6
+					var jitter := Vector3(rng.randf_range(-0.08, 0.08), 0, rng.randf_range(-0.08, 0.08)) + (Vector3(0, 0, desp_k) if lateral else Vector3(desp_k, 0, 0))
+					var mirada := giro + rng.randf_range(-0.12, 0.12)
+					## NO TODOS MIDEN LO MISMO (23-9-2026). Una grada donde los
+					## miles de hinchas tienen exactamente la misma estatura se lee
+					## como una rejilla de maniquíes por muy bien que estén
+					## coloreados. ±10% cubre de un niño a un adulto alto, y es
+					## gratis: va en la misma matriz de la instancia.
+					var talla := rng.randf_range(0.88, 1.10)
+					var base_h := Basis().rotated(Vector3.UP, mirada).scaled(Vector3(talla, talla, talla))
+					if rake != 0.0:
+						base_h = base_h.rotated(Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0), -rake)
+					hinchas_xf.append(Transform3D(base_h, p + jitter + Vector3(0, 0.16, 0)))
+					var col_hincha: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
+					hinchas_col.append(col_hincha.darkened(rng.randf() * 0.15))
 
 	var mat := StandardMaterial3D.new()
 	mat.vertex_color_use_as_albedo = true
@@ -2167,6 +2254,27 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mi)
 
+	if not det_xf.is_empty():
+		var mmd := MultiMesh.new()
+		mmd.transform_format = MultiMesh.TRANSFORM_3D
+		mmd.use_colors = true
+		mmd.mesh = _malla_hincha_detalle()
+		mmd.instance_count = det_xf.size()
+		for k in det_xf.size():
+			mmd.set_instance_transform(k, det_xf[k])
+			mmd.set_instance_color(k, det_col[k])
+		var mat_d := ShaderMaterial.new()
+		mat_d.shader = load("res://visor/hinchada.gdshader")
+		## La malla de detalle tiene el cuello más arriba y pelo.
+		mat_d.set_shader_parameter("cuello_desde", 0.535)
+		mat_d.set_shader_parameter("cuello_hasta", 0.55)
+		mat_d.set_shader_parameter("pelo_desde", 0.715)
+		var mid := MultiMeshInstance3D.new()
+		mid.multimesh = mmd
+		mid.material_override = mat_d
+		mid.name = "HinchadaCerca"
+		mid.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		deck.add_child(mid)
 	if hinchas_xf.is_empty():
 		return
 	var mmh := MultiMesh.new()

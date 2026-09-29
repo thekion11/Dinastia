@@ -49,6 +49,9 @@ const ARRASTRE := 0.06
 const BOTE := 0.55
 
 var jugadores: Array = []
+## El trío arbitral (los de `PlayerSpawner.spawn_arbitros`): no juegan, pero se
+## mueven con la jugada para que la cancha no tenga tres estatuas.
+var arbitros: Array = []
 var balon: Node3D
 var vel_balon := Vector3.ZERO
 var giro_balon := Vector3.ZERO
@@ -86,8 +89,10 @@ var depurar := false
 func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: int = 1) -> void:
 	_rng.seed = semilla
 	jugadores = []
+	arbitros = []
 	for p: Dictionary in lista:
 		if bool(p.get("arbitro", false)):
+			arbitros.append(p)
 			continue
 		var jd: Dictionary = p.get("jugador", {})
 		var at: Dictionary = jd.get("atributos", {}) if jd.get("atributos") is Dictionary else {}
@@ -137,6 +142,7 @@ func paso(delta: float) -> void:
 	if estado == "fin":
 		return
 	_t_estado += delta
+	_mover_arbitros(delta)
 	match estado:
 		"juego":
 			t += delta
@@ -1265,6 +1271,39 @@ func _mover_jugadores(delta: float) -> void:
 		var ap: AnimationPlayer = p.get("anim")
 		if is_instance_valid(ap):
 			ap.speed_scale = clampf(sp / (3.4 if anim == "trotar" else 7.0), 0.7, 1.4) if anim != "parado" else 1.0
+
+## EL ÁRBITRO SIGUE LA JUGADA (29-9-2026). El principal va en diagonal, unos
+## metros por detrás y a un lado del balón, sin meterse en la línea de pase;
+## los asistentes corren su banda a la altura del balón, cada uno en su mitad.
+func _mover_arbitros(delta: float) -> void:
+	if balon == null:
+		return
+	var b := balon.position
+	for a: Dictionary in arbitros:
+		var n: Node3D = a.get("node")
+		if not is_instance_valid(n):
+			continue
+		var obj: Vector3
+		match String(a.get("id", "")):
+			"arbitro":
+				obj = Vector3(clampf(b.x - 9.0 * signf(b.x + 0.01), -26.0, 26.0), 0, clampf(b.z - 6.0, -40.0, 40.0))
+			"linea_a":
+				obj = Vector3(-36.5, 0, clampf(b.z, -50.0, 0.0))
+			_:
+				obj = Vector3(36.5, 0, clampf(b.z, 0.0, 50.0))
+		var hacia := obj - n.position
+		hacia.y = 0.0
+		var v := minf(hacia.length() * 1.6, 6.5)
+		var sp := 0.0
+		if hacia.length() > 0.4:
+			n.position += hacia.normalized() * v * delta
+			sp = v
+		## Siempre de cara al juego.
+		var mira := b - n.position
+		mira.y = 0.0
+		if mira.length() > 0.5:
+			n.rotation.y = lerp_angle(n.rotation.y, atan2(mira.x, mira.z), clampf(delta * 5.0, 0.0, 1.0))
+		_anim(a, "parado" if sp < 0.5 else ("trotar" if sp < 4.5 else "correr"), false)
 
 func _anim(p: Dictionary, nombre: String, gesto: bool) -> void:
 	var ap: AnimationPlayer = p.get("anim")

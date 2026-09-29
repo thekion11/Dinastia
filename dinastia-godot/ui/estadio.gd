@@ -473,14 +473,19 @@ func _poner_banca(once_local: Array[Jugador], once_visita: Array[Jugador]) -> vo
 ## Los primeros 7 disponibles, de pie; del 8 al 12, sentados en el banco
 ## simple de al lado (22-9-2026, "que los que no caben estén sentados").
 func _poner_banca_de(c: Club, once_c: Array[Jugador], es_local: bool) -> void:
-	var disponibles := _disponibles_fuera_del_once(c, once_c)
+	_en_banca.append_array(VistaEstadio.poner_banca_de(_raiz3d, _spawner, c, once_c, es_local))
+
+## Estática para que la reutilice el partido jugable de la Carrera de Jugador:
+## la misma banda, el mismo DT, sin copiar código.
+static func poner_banca_de(raiz: Node3D, sp: PlayerSpawner, c: Club, once_c: Array, es_local: bool) -> Array:
+	var disponibles := disponibles_fuera_del_once(c, once_c)
 	var kit := Puente3D.kit(c)
 	var kit_por := Puente3D.kit_portero(c)
-	_en_banca.append_array(_spawner.spawn_banca(_raiz3d, disponibles, es_local, kit, kit_por))
-	_poner_dt(c, es_local, mini(disponibles.size(), 7))
+	var out: Array = sp.spawn_banca(raiz, disponibles, es_local, kit, kit_por)
+	poner_dt(raiz, c, es_local, mini(disponibles.size(), 7))
 	if disponibles.size() > 7:
-		_en_banca.append_array(_spawner.spawn_sentados(_raiz3d,
-			disponibles.slice(7, 12), es_local, kit, kit_por))
+		out.append_array(sp.spawn_sentados(raiz, disponibles.slice(7, 12), es_local, kit, kit_por))
+	return out
 
 ## EL ENTRENADOR EN LA BANDA (26-9-2026): tu personaje del creador en el
 ## área técnica de tu club, y un DT rival (siempre el mismo por club) en la
@@ -490,8 +495,12 @@ func _poner_banca_de(c: Club, once_c: Array[Jugador], es_local: bool) -> void:
 ## y se pone una persona entera detrás de la cámara. Y seis guardias de
 ## seguridad detrás de las vallas, de espaldas al juego, mirando a la grada.
 func _poner_personal() -> void:
-	if _raiz3d == null:
+	VistaEstadio.poner_personal(_raiz3d)
+
+static func poner_personal(raiz: Node3D) -> void:
+	if raiz == null:
 		return
+	var _raiz3d := raiz
 	var i := 0
 	for cam in _raiz3d.find_children("Camarografo*", "Node3D", true, false):
 		var base := cam as Node3D
@@ -510,7 +519,7 @@ func _poner_personal() -> void:
 		## El giro es hacia FUERA del campo: la persona mira a +Z sin girar.
 		PersonajeDT.personal_estadio(_raiz3d, "seguridad", puestos[k][0], puestos[k][1], 900 + k)
 
-func _poner_dt(c: Club, es_local: bool, cuantos: int) -> void:
+static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int) -> void:
 	var asp: Dictionary = PersonajeDT.del_usuario if c.id == PersonajeDT.club_usuario else PersonajeDT.de_rival(c.id)
 	var lado := -1.0 if es_local else 1.0
 	var z := lado * 14.0 - lado * (float(maxi(cuantos, 1)) * 0.8 + 1.8)
@@ -518,7 +527,7 @@ func _poner_dt(c: Club, es_local: bool, cuantos: int) -> void:
 
 ## Mejores disponibles (sin lesión/sanción, no en el once) por media, para que
 ## la banca se vea como un banco de verdad y no como un sorteo cualquiera.
-func _disponibles_fuera_del_once(c: Club, once_c: Array[Jugador]) -> Array:
+static func disponibles_fuera_del_once(c: Club, once_c: Array) -> Array:
 	var fuera: Array = []
 	for j in c.plantilla:
 		if once_c.has(j):
