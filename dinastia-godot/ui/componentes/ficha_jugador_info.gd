@@ -59,6 +59,7 @@ static func pintar_ciega(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta:
 	_dato(lista, "Partidos esta temporada", "%d · %d goles · %d asistencias" % [j.partidos, j.goles, j.asistencias], paleta["texto"], paleta)
 	_dato(lista, "Nota media", ("%.1f" % j.media_notas()) if j.notas.size() >= 3 else "sin datos", paleta["texto"], paleta)
 	_dato(lista, "Carácter", Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, ["sin rasgos marcados"])[0])) if j.rasgo != "" else "sin rasgos marcados", paleta["texto"], paleta)
+	_dato(lista, "Celebración", String(AnimExtra.NOMBRE_CELEBRACION.get(AnimExtra.celebracion_firma(j.rasgo, j.id), "Salto y abrazo")), paleta["texto"], paleta)
 	_dato(lista, "Fiabilidad del informe", oj.fiabilidad_de(j), paleta["suave"], paleta)
 
 ## Lo que ha hecho esta temporada.

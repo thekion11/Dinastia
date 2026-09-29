@@ -6813,6 +6813,45 @@ func _probar_portafolio_futbol() -> void:
 	_comprobar(faltan.is_empty(), "todas están en la librería del jugador %s" % str(faltan.slice(0, 5)))
 	_comprobar(ap.has_animation("bicicleta_espejo") and ap.has_animation("tiro_empeine_espejo"), "con su espejo para zurdos y para el otro lado")
 	_comprobar(ap.get_animation_list().size() >= 300, "%d movimientos por jugador" % ap.get_animation_list().size())
+	## CELEBRACIONES SEGÚN EL CARÁCTER (mapa de metas 14).
+	var sin_anim: Array = []
+	for rs: String in AnimExtra.CELEBRA_POR_RASGO:
+		for n: String in AnimExtra.CELEBRA_POR_RASGO[rs]:
+			if not ap.has_animation(n):
+				sin_anim.append(n)
+	_comprobar(sin_anim.is_empty(), "cada celebración de carácter existe en la librería %s" % str(sin_anim))
+	var rng_c := RandomNumberGenerator.new()
+	rng_c.seed = 11
+	var firma := AnimExtra.celebracion_firma("veloz", "j77")
+	var repite := 0
+	for i in 60:
+		if AnimExtra.celebracion(ap, "veloz", "j77", false, rng_c) == firma:
+			repite += 1
+	_comprobar(repite >= 30 and (AnimExtra.CELEBRA_POR_RASGO["veloz"] as Array).has(firma), "cada jugador repite su celebración casi siempre (%d/60, %s)" % [repite, firma])
+	var provoca := 0
+	for i in 60:
+		if AnimExtra.celebracion(ap, "polemico", "j78", true, rng_c) == "mano_oido":
+			provoca += 1
+	_comprobar(provoca >= 25, "el polémico, de visita, se pone la mano en la oreja (%d/60)" % provoca)
+	_comprobar(AnimExtra.NOMBRE_CELEBRACION.has(AnimExtra.celebracion_firma("lider", "x1")), "la ficha nombra su celebración")
+	## EL GOLPEO CON CUERPO (mapa de metas 16): al acompañar, el pie sube de
+	## verdad; al armar, el brazo contrario se abre para equilibrar.
+	var esq_g: Skeleton3D = d["esqueleto"]
+	var i_pie := esq_g.find_bone(String(AnimQuaternius.HUESOS["pie_d"]))
+	var i_mano := esq_g.find_bone(String(AnimQuaternius.HUESOS["mano_i"]))
+	var i_pel := esq_g.find_bone(String(AnimQuaternius.HUESOS["cadera"]))
+	var largo_g := ap.get_animation("tiro_empeine").length
+	ap.play("tiro_empeine")
+	ap.seek(0.0, true)
+	var pie0 := esq_g.get_bone_global_pose(i_pie).origin
+	var abre0 := absf(esq_g.get_bone_global_pose(i_mano).origin.x - esq_g.get_bone_global_pose(i_pel).origin.x)
+	ap.seek(largo_g * 0.68, true)
+	var pie1 := esq_g.get_bone_global_pose(i_pie).origin
+	ap.seek(largo_g * 0.5, true)
+	var abre1 := absf(esq_g.get_bone_global_pose(i_mano).origin.x - esq_g.get_bone_global_pose(i_pel).origin.x)
+	_comprobar(pie1.y - pie0.y > 0.25, "al acompañar el tiro, el pie sube (%.2f)" % (pie1.y - pie0.y))
+	_comprobar(abre1 - abre0 > 0.12, "al pegar, el brazo contrario se abre (%.2f)" % (abre1 - abre0))
+	ap.stop()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 5
 	var vistos := {}

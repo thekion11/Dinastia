@@ -466,3 +466,56 @@ static func silbar_dedos(esq: Skeleton3D, pre: String) -> Animation:
 	var a := AnimQuaternius._nueva(1.2, false)
 	_brazos(a, esq, pre, "d", [[0.0, 0, 6, 0], [0.3, 50, 20, 140], [0.9, 50, 20, 140], [1.2, 0, 6, 0]])
 	return a
+
+## ------------------------------------------------------------ CELEBRACIONES
+## LAS CELEBRACIONES SEGÚN EL CARÁCTER (29-9-2026, mapa de metas 14). Hasta hoy
+## el festejo de un gol se sorteaba entre todos. Ahora sale del RASGO del
+## goleador (`Jugador.rasgo`): el killer manda callar, el polémico se pone la
+## mano en la oreja delante de la grada rival, el líder besa el escudo, el veloz
+## hace el avión... Y cada jugador tiene SU celebración, la de siempre (un hash
+## de su id), que repite dos de cada tres goles: así se le reconoce.
+const CELEBRA_POR_RASGO := {
+	"killer": ["silencio_dedo", "senalar_cielo", "puno_rabia", "celebrar_carrera"],
+	"polemico": ["mano_oido", "silencio_dedo", "llamar_hinchada", "puno_rabia"],
+	"lider": ["besar_escudo", "llamar_hinchada", "puno_al_aire", "rodillas_brazos_arriba"],
+	"cerebro": ["senalar_cielo", "aplauso_arriba", "corazon_manos", "celebrar"],
+	"motor": ["puno_rabia", "celebrar_carrera", "rodillas_brazos_arriba", "puno_al_aire"],
+	"veloz": ["avion", "deslizar_rodillas", "celebrar_carrera", "baile"],
+	"fragil": ["corazon_manos", "senalar_cielo", "celebrar", "aplauso_arriba"],
+	"muralla": ["puno_rabia", "celebrar_rodillas", "rodillas_brazos_arriba", "besar_escudo"],
+	"": ["celebrar", "celebrar_rodillas", "celebrar_carrera", "baile", "puno_al_aire", "corazon_manos", "avion"],
+}
+## De visita, los provocadores le hablan a la grada rival.
+const CELEBRA_DE_VISITA := {"polemico": "mano_oido", "killer": "silencio_dedo"}
+const NOMBRE_CELEBRACION := {
+	"silencio_dedo": "Manda callar a la grada", "senalar_cielo": "Dedica el gol al cielo",
+	"puno_rabia": "Puño con rabia", "celebrar_carrera": "Carrera a la banda",
+	"mano_oido": "La mano en la oreja", "llamar_hinchada": "Pide más a la hinchada",
+	"besar_escudo": "Besa el escudo", "puno_al_aire": "Puño al aire",
+	"rodillas_brazos_arriba": "De rodillas, brazos arriba", "aplauso_arriba": "Aplaude a la grada",
+	"corazon_manos": "Corazón con las manos", "celebrar": "Salto y abrazo",
+	"avion": "El avión", "deslizar_rodillas": "Se desliza de rodillas", "baile": "Baile",
+	"celebrar_rodillas": "De rodillas en el césped",
+}
+
+## Su celebración de siempre (sin mirar qué animaciones hay: sirve para la ficha).
+static func celebracion_firma(rasgo: String, id_jugador: String) -> String:
+	var lista: Array = CELEBRA_POR_RASGO.get(rasgo, CELEBRA_POR_RASGO[""])
+	return String(lista[absi(("celebra:" + id_jugador).hash()) % lista.size()])
+
+## La que hace en ESTE gol: la suya dos de cada tres, otra de su carácter si no;
+## de visita, el provocador provoca. Solo devuelve animaciones que existen.
+static func celebracion(ap: AnimationPlayer, rasgo: String, id_jugador: String, de_visita: bool, rng: RandomNumberGenerator) -> String:
+	var lista: Array = CELEBRA_POR_RASGO.get(rasgo, CELEBRA_POR_RASGO[""])
+	var elegida := celebracion_firma(rasgo, id_jugador)
+	var r := rng.randf()
+	if de_visita and CELEBRA_DE_VISITA.has(rasgo) and r < 0.5:
+		elegida = String(CELEBRA_DE_VISITA[rasgo])
+	elif r > 0.66:
+		elegida = String(lista[rng.randi() % lista.size()])
+	if ap != null and not ap.has_animation(elegida):
+		for n: String in lista:
+			if ap.has_animation(n):
+				return n
+		return "celebrar"
+	return elegida
