@@ -375,19 +375,114 @@ const TABLA := {
 	"Relación tibia con el vecindario.": ["Lukewarm relations with the neighbourhood.", "Relação morna com a vizinhança.", "Relations tièdes avec le quartier.", "Rapporti tiepidi con il quartiere.", "Laues Verhältnis zur Nachbarschaft.", "Relació tèbia amb el veïnat."],
 }
 
+## EL DICCIONARIO AMPLIADO (29-9-2026, mapa de metas 17): inglés y portugués
+## de Brasil, los dos idiomas que más venden después del castellano. La tabla de
+## arriba se queda con las siete columnas del esqueleto; esto es lo demás que se
+## VE en la interfaz -medido con `pruebas/recorrido_pantallas.gd`, que recoge
+## cada texto de cada pantalla- en `datos/idiomas_extra.json`:
+##   {"en": {castellano: inglés}, "pt": {...}, "patrones": [[regex, en, pt]]}
+const EXTRA := "res://datos/idiomas_extra.json"
+var _extra := {}
+var _patrones: Array = []   ## [RegEx, {"en": plantilla, "pt": plantilla}]
+var _cache := {}
+
+func _ready() -> void:
+	_cargar_extra()
+
+func _cargar_extra() -> void:
+	if not FileAccess.file_exists(EXTRA):
+		return
+	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(EXTRA))
+	if not (d is Dictionary):
+		return
+	for k: String in ["en", "pt"]:
+		_extra[k] = (d as Dictionary).get(k, {})
+	_patrones.clear()
+	for fila: Array in (d as Dictionary).get("patrones", []):
+		var re := RegEx.new()
+		if re.compile(String(fila[0])) == OK:
+			_patrones.append([re, {"en": String(fila[1]), "pt": String(fila[2]) if fila.size() > 2 else ""}])
+
 ## Traduce una frase suelta. Si no está en la tabla, devuelve la castellana: una
 ## interfaz medio traducida se lee; una llena de claves crudas, no.
+## En orden: la frase entera; sin el icono o la flecha de los extremos; por
+## tramos separados con « · »; y por patrones con números ("Jornada 3 de 30").
 func t(frase: String) -> String:
 	if idioma == "es" or frase == "":
 		return frase
+	var cache: Dictionary = _cache.get(idioma, {})
+	if cache.has(frase):
+		return cache[frase]
+	var r := _t(frase, 0)
+	cache[frase] = r
+	_cache[idioma] = cache
+	return r
+
+func _directa(frase: String) -> String:
+	var ex: Dictionary = _extra.get(idioma, {})
+	if ex.has(frase) and String(ex[frase]) != "":
+		return String(ex[frase])
 	var i := ORDEN.find(idioma)
-	if i < 0 or not TABLA.has(frase):
-		return frase
-	var fila: Array = TABLA[frase]
-	if i >= fila.size():
-		return frase
-	var r := String(fila[i])
-	return r if r != "" else frase
+	if i >= 0 and TABLA.has(frase):
+		var fila: Array = TABLA[frase]
+		if i < fila.size() and String(fila[i]) != "":
+			return String(fila[i])
+	return ""
+
+func _t(frase: String, prof: int) -> String:
+	var d := _directa(frase)
+	if d != "" or prof > 3:
+		return d if d != "" else frase
+	## El icono de delante (emoji, flecha) y lo de detrás (▸, :, …) aparte.
+	var ini := 0
+	while ini < frase.length() and not _es_letra(frase.unicode_at(ini)):
+		ini += 1
+	var fin := frase.length()
+	while fin > ini and not _es_letra(frase.unicode_at(fin - 1)) and frase.unicode_at(fin - 1) != 41:
+		fin -= 1
+	if ini > 0 or fin < frase.length():
+		var medio := frase.substr(ini, fin - ini)
+		if medio != "" and medio != frase:
+			var tm := _t(medio, prof + 1)
+			if tm != medio:
+				return frase.substr(0, ini) + tm + frase.substr(fin)
+	## Por tramos.
+	for sep: String in ["  ·  ", " · ", " — ", " | "]:
+		if frase.contains(sep):
+			var partes := frase.split(sep)
+			var cambio := false
+			for k in partes.size():
+				var tp := _t(partes[k], prof + 1)
+				if tp != partes[k]:
+					cambio = true
+				partes[k] = tp
+			if cambio:
+				return sep.join(partes)
+	## Por patrones: los grupos con letras también se traducen.
+	for par: Array in _patrones:
+		var m: RegExMatch = (par[0] as RegEx).search(frase)
+		if m == null or m.get_start() != 0 or m.get_end() != frase.length():
+			continue
+		var plantilla := String((par[1] as Dictionary).get(idioma, ""))
+		if plantilla == "":
+			continue
+		for g in range(m.get_group_count(), 0, -1):
+			var v := m.get_string(g)
+			if _tiene_letras(v):
+				v = _t(v, prof + 1)
+			plantilla = plantilla.replace("$%d" % g, v)
+		return plantilla
+	return frase
+
+static func _es_letra(c: int) -> bool:
+	return (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c >= 192 and c <= 687) or (c >= 48 and c <= 57) or c == 191 or c == 161
+
+static func _tiene_letras(s: String) -> bool:
+	for i in s.length():
+		var c := s.unicode_at(i)
+		if (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c >= 192 and c <= 687):
+			return true
+	return false
 
 ## Cuántas frases hay traducidas a cada idioma. Lo usa la propia pantalla de
 ## ajustes para decir la verdad sobre la cobertura en vez de prometer un juego
@@ -397,6 +492,10 @@ func cobertura(cual: String) -> int:
 	if i < 0:
 		return TABLA.size()
 	var n := 0
+	var ex: Dictionary = _extra.get(cual, {})
+	for k: String in ex:
+		if not TABLA.has(k):
+			n += 1
 	for k: String in TABLA:
 		var fila: Array = TABLA[k]
 		if i < fila.size() and String(fila[i]) != "":
