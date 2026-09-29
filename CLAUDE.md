@@ -9,7 +9,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - Datos reales solo en `pack_real.json`; el resto con nombres ficticios. Política ficticia.
   No atribuir religión ni romances a jugadores reales.
 - Keystore, licencias, FPS, música y builds los maneja el usuario/dueño.
-- «La cara 2D moldeada sobre el modelo 3D»: NO tocar sin permiso explícito.
+- «La cara 2D moldeada sobre el modelo 3D»: PERMISO DADO el 29-9 («dale con todo»).
+  Después el usuario entregará un informe nuevo (el del 29-9 no es definitivo).
 - «Ejecuta las tareas en primer plano»: comandos cortos y en pasos separados, no
   cadenas largas en segundo plano.
 - El banco `pruebas/banco.gd` debe terminar en «FIN. 0 fallos» antes de subir.
@@ -60,5 +61,13 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - Hecho 29-9: REPASO y MEGAPLAN en `dinastia-godot/MEGAPLAN.md` (fases 1-6).
 - Siguiente: esperar al usuario o empezar MEGAPLAN fase 1 (pulido).
 - Carrera de Jugador: fuera de juego, más eventos, cambios, selección jugable.
-- Esperando al usuario: túnel, cara 2D→3D (necesita permiso).
+- Hecho 29-9: cara 2D→3D (rasgos del retrato proyectados con la pose de reposo en
+  `equipacion_q.gdshader`, capas que multiplican la piel, barba con ruido de pelo,
+  ojos nuevos `visor/ojos_q.gdshader`, foto real calzada por ojos/boca con
+  `datos/caras_reales_puntos.json`). Captura: pruebas/captura_cara_3d.gd.
+- Pidió «consigue las caras de los jugadores faltantes en Wikipedia, libres»: la red
+  de este entorno bloquea Wikimedia. Herramienta lista:
+  `herramientas/caras_reales_faltantes.py` → luego `caras_reales_recortar.py` y
+  `caras_reales_puntos.py`. Faltan ~906 de 2125.
+- Esperando al usuario: túnel, informe nuevo.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
