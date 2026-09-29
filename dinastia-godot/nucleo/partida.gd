@@ -94,6 +94,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"eventos_cantera": m.eventos_cantera.a_dic() if m.eventos_cantera != null else {},
 		"trabajadores": m.trabajadores.a_dic() if m.trabajadores != null else {},
 		"redes": m.redes.a_dic() if m.redes != null else {},
+		"carrera_jugador": m.carrera_jugador.a_dic() if m.carrera_jugador != null else {},
 		"movil": m.movil.a_dic() if m.movil != null else {},
 		"mercado_av": m.mercado_av.a_dic() if m.mercado_av != null else {},
 		"insolvencia": m.insolvencia.a_dic() if m.insolvencia != null else {},
@@ -570,6 +571,9 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.trabajadores.desde_dic(datos.get("trabajadores", {}))
 	if m.redes != null:
 		m.redes.desde_dic(datos.get("redes", {}))
+	var cj: Dictionary = datos.get("carrera_jugador", {})
+	if not cj.is_empty():
+		m.carrera_jugador = CarreraJugador.desde_dic(cj)
 	if m.movil != null:
 		m.movil.desde_dic(datos.get("movil", {}))
 	if m.mercado_av != null:

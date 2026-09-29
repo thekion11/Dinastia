@@ -9,7 +9,7 @@ extends Control
 ##   - PORTADA: el título grande y un mosaico de tarjetas, una por submenú, con
 ##     su icono, qué hay dentro y un dato vivo ("3 sin leer", "47.000 butacas").
 ##   - DETALLE: los submenús como pestañas arriba, el contenido en el centro y
-##     la ficha del jugador a la derecha (en los menús donde hay jugadores).
+##     sin la ficha del jugador (el contenido ocupa todo el ancho).
 ##
 ## No hay una segunda copia de cada pantalla: el contenido de verdad -el
 ## `TabContainer` de la pantalla principal y la columna de la ficha- se MUDA a
@@ -350,7 +350,9 @@ func _montar_detalle() -> void:
 	_hueco_contenido.add_theme_stylebox_override("panel", caja)
 	h.add_child(_hueco_contenido)
 	_hueco_ficha = null
-	if bool(_menu.get("ficha", true)):
+	## Sin ficha del jugador en estos menús (pedido del usuario): el contenido
+	## ocupa todo el ancho.
+	if bool(_menu.get("ficha", false)):
 		_hueco_ficha = MarginContainer.new()
 		_hueco_ficha.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_hueco_ficha.size_flags_stretch_ratio = 1.3
