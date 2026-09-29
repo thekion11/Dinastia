@@ -1,0 +1,4998 @@
+{
+"Aaron Long": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#f6d5bd"
+},
+"Aaron Ramsey": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#cd9468"
+},
+"Aaron Wan-Bissaka": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#7e5132"
+},
+"Abdallah Sima": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#845636"
+},
+"Achraf Hakimi": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#a67c4e",
+"piel": "#bb8257"
+},
+"Adam Hlozek": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d8a075"
+},
+"Ademola Lookman": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#674127"
+},
+"Adrián Martínez": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b77e55"
+},
+"Agustín Marchesín": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#c78e62"
+},
+"Agustín Ojeda": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c58c60"
+},
+"Aimar Oroz": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#d2996c"
+},
+"Akor Adams": {
+"barba": 0,
+"ojos": 0,
+"piel": "#563520"
+},
+"Alan Cervantes": {
+"barba": 2,
+"ojos": 0,
+"piel": "#b47c52"
+},
+"Alan Patrick": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#9a9a9a",
+"piel": "#a7714a"
+},
+"Alan Saldivia": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#d39b6e"
+},
+"Alassane Pléa": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#ab744d"
+},
+"Albert Guðmundsson": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#744a2e"
+},
+"Albert Rusnák": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d69f73"
+},
+"Aldo Corzo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#9a9a9a",
+"piel": "#9d6944"
+},
+"Alejandro Balde": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#583621"
+},
+"Alejandro Camargo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#95623e"
+},
+"Aleksandar Pavlović": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c78e62"
+},
+"Alessandro Bastoni": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#b67e54"
+},
+"Alessandro Buongiorno": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#dba57b"
+},
+"Alessio Romagnoli": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#b98056"
+},
+"Alex Freeman": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#c38a5f"
+},
+"Alex Meret": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#cf9669"
+},
+"Alex Muyl": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#d8a176"
+},
+"Alex Roldan": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d0976b"
+},
+"Alex Telles": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#6d452a"
+},
+"Alexander Isak": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#95633f"
+},
+"Alexander Nübel": {
+"barba": 2,
+"ojos": 0,
+"piel": "#d69e72"
+},
+"Alexander Sørloth": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#c2895e"
+},
+"Alexis Claude-Maurice": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#cc9367"
+},
+"Alexis Cuello": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#94613e"
+},
+"Alexis Mac Allister": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#aa734c"
+},
+"Alfredo Morelos": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#a9724b"
+},
+"Alhassan Yusuf": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#6a4329"
+},
+"Aljaz Ivacic": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#bf865c"
+},
+"Alonso Martínez": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#dca77d"
+},
+"Alphonse Areola": {
+"barba": 4,
+"ojos": 1,
+"piel": "#cd9467"
+},
+"Alphonso Davies": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#6a4329"
+},
+"Amad Diallo": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b47c53"
+},
+"Amir Richardson": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c58c60"
+},
+"Andre Blake": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#93613d"
+},
+"Andreas Hanche-Olsen": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#be855b"
+},
+"Andrej Kramaric": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d39a6d"
+},
+"Andrey Santos": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#bc8358"
+},
+"André Onana": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b57c53"
+},
+"André Ramalho": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#cf9669"
+},
+"Andrés Llinás": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#ba8157"
+},
+"Andrés Perea": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#70472c"
+},
+"Andy Najar": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#b57d53"
+},
+"Andy Robertson": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d1986b"
+},
+"Ange-Yoan Bonny": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#744a2d"
+},
+"Angeliño": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b17a51"
+},
+"Angelo Stiller": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#c88f63"
+},
+"Ansgar Knauff": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#e7b791"
+},
+"Ante Budimir": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#bd845a"
+},
+"Anthony Elanga": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#cf9669"
+},
+"Anthony Gordon": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#cf966a"
+},
+"Anthony Jung": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#bb8258"
+},
+"Anthony Losilla": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d39a6d"
+},
+"Antonee Robinson": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#d39a6d"
+},
+"Antonio Briseño": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#9b6742"
+},
+"Antonio Nusa": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#845636"
+},
+"Antonio Rüdiger": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#8e5d3b"
+},
+"Aníbal Chalá": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#875837"
+},
+"Aníbal Moreno": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#bd845a"
+},
+"Arda Güler": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#855636"
+},
+"Armando González": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#a46f48"
+},
+"Arne Maier": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d49c6f"
+},
+"Arthur Theate": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d39a6e"
+},
+"Ashley Westwood": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#bc8359"
+},
+"Aurélien Tchouaméni": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#815434"
+},
+"Bamo Meïté": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#5a3822"
+},
+"Baptiste Santamaria": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c0875c"
+},
+"Bartosz Slisz": {
+"barba": 5,
+"ojos": 0,
+"piel": "#b17950"
+},
+"Bastos": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#4c2f1d"
+},
+"Benjamin Pavard": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a67049"
+},
+"Benjamin Šeško": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#9c6843"
+},
+"Benjamín Gazzolo": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ce9568"
+},
+"Benjamín Kuscevic": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#ba8157"
+},
+"Benjamín Rollheiser": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#764b2e"
+},
+"Benno Schmitz": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#e1ac84"
+},
+"Berke Özer": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b67e54"
+},
+"Bernardo Cuesta": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#6c452a"
+},
+"Bernardo Silva": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c68d61"
+},
+"Bernd Leno": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b87f55"
+},
+"Blas Riveros": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b98056"
+},
+"Borja Iglesias": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#c38a5e"
+},
+"Borja Mayoral": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#b37b52"
+},
+"Boulaye Dia": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#7e5133"
+},
+"Brad Guzan": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d9a277"
+},
+"Bradley Barcola": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b17951"
+},
+"Braian Ojeda": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#cd9468"
+},
+"Brais Méndez": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#d49c6f"
+},
+"Brandon Bye": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#c2895e"
+},
+"Brandon Vazquez": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#9b6742"
+},
+"Brandt Bronico": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#7e5133"
+},
+"Brice Samba": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#72482c"
+},
+"Bruno Damiani": {
+"barba": 0,
+"ojos": 0,
+"piel": "#a57049"
+},
+"Bruno Fernandes": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#cd9467"
+},
+"Bruno Guimarães": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#bd8459"
+},
+"Bruno Henrique": {
+"barba": 5,
+"ojos": 0,
+"piel": "#94623e"
+},
+"Bryan Carrasco": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#ac764e"
+},
+"Bryan Carvallo": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#543420"
+},
+"Bryan Cristante": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#af784f"
+},
+"Bryan Gil": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#96633f"
+},
+"Bryan Mbeumo": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b07950"
+},
+"Bukayo Saka": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#9d6944"
+},
+"Cade Cowell": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#dca67c"
+},
+"Calvin Bassey": {
+"barba": 0,
+"ojos": 1,
+"piel": "#593721"
+},
+"Camilo Mayada": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#b67e54"
+},
+"Carl Starfelt": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#bd845a"
+},
+"Carles Gil": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#e7b790"
+},
+"Carlos Acevedo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#cd9467"
+},
+"Carlos Bacca": {
+"barba": 0,
+"ojos": 1,
+"piel": "#bd8459"
+},
+"Carlos Garcés": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#ab744d"
+},
+"Carlos Lampe": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#9a9a9a",
+"piel": "#a67049"
+},
+"Carlos Melgar": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#d8a176"
+},
+"Carlos Moreno": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#bf865b"
+},
+"Carlos Palacios": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#9f6a45"
+},
+"Carlos Villanueva": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d49b6e"
+},
+"Casemiro": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c1885d"
+},
+"Castello Lukeba": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#8c5c3a"
+},
+"Cesare Casadei": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#835535"
+},
+"Charalampos Lykogiannis": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c58c61"
+},
+"Charles Aránguiz": {
+"barba": 5,
+"ojos": 0,
+"piel": "#b27a51"
+},
+"Charles De Ketelaere": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d39b6e"
+},
+"Che Adams": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#c58c61"
+},
+"Chris Wood": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#915f3d"
+},
+"Christian Günter": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#b67d54"
+},
+"Christian Kofane": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#7f5233"
+},
+"Christian Oliva": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#be855a"
+},
+"Christian Pulisic": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#d0976a"
+},
+"Christoph Baumgartner": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d0976a"
+},
+"Christopher Trimmel": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#a9734c"
+},
+"Claudio Bravo": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#c2895e"
+},
+"Claudio Sepúlveda": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#905e3c"
+},
+"Clément Akpa": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#c48b60"
+},
+"Cole Palmer": {
+"barba": 0,
+"ojos": 1,
+"piel": "#bc8358"
+},
+"Cristian Calderón": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#9a9a9a",
+"piel": "#ba8156"
+},
+"Cristian Insaurralde": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#7a4e30"
+},
+"Cristian Medina": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#e4b38b"
+},
+"Cristian Roldan": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#c48b60"
+},
+"Cristian Techera": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#6c442a"
+},
+"Cristián Insaurralde": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#7a4e30"
+},
+"Cristián Suárez": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#ae774f"
+},
+"Cucho Hernández": {
+"barba": 0,
+"ojos": 3,
+"peloC": "#141414",
+"piel": "#774c2f"
+},
+"Cédric Bakambu": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#684128"
+},
+"Célio Pompeu": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#9e6944"
+},
+"César Araújo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#9c6843"
+},
+"César Munder": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#bf865b"
+},
+"César Rigamonti": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d7a074"
+},
+"Daley Blind": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#dea980"
+},
+"Damion Downs": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#8a5a39"
+},
+"Damián Díaz": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ab744d"
+},
+"Damián Lizio": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a16c46"
+},
+"Dan Burn": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#a8724b"
+},
+"Dani Olmo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#ba8156"
+},
+"Dani Parejo": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#dca77d"
+},
+"Dani de Wit": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#ebbe99"
+},
+"Daniel Boloca": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#b87f55"
+},
+"Daniel Gazdag": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c38a5f"
+},
+"Daniel Muñoz": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#805334"
+},
+"Danilo": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#986540"
+},
+"Danley Jean Jacques": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#93613e"
+},
+"Danny Musovski": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b98056"
+},
+"Danny Welbeck": {
+"barba": 0,
+"ojos": 1,
+"piel": "#875837"
+},
+"Danny da Costa": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#9a6642"
+},
+"Dany Mota": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b37b52"
+},
+"Darlington Nagbe": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#5a3822"
+},
+"David Hancko": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#b98056"
+},
+"David Martínez": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#986541"
+},
+"David Ospina": {
+"barba": 2,
+"ojos": 0,
+"piel": "#8d5d3b"
+},
+"David Raum": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#9e6944"
+},
+"David Raya": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#b17950"
+},
+"David Soria": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#95623f"
+},
+"David de Gea": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#e5b38c"
+},
+"Dayot Upamecano": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#633e26"
+},
+"Dean Henderson": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#dda87e"
+},
+"Dean Huijsen": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b27a51"
+},
+"Declan Rice": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#cb9265"
+},
+"Denis Bouanga": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c68d61"
+},
+"Denis Vavro": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d0976b"
+},
+"Deniz Undav": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#b67d54"
+},
+"Diego Buonanotte": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b27a51"
+},
+"Diego Coelho": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a57049"
+},
+"Diego Enríquez": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#9c6843"
+},
+"Diego López": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#bf865c"
+},
+"Diego Medina": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#efc4a0"
+},
+"Diego Otoya": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#8d5c3b"
+},
+"Diego Reyes": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c0875c"
+},
+"Diego Rossi": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d39a6d"
+},
+"Diego Rubio": {
+"barba": 0,
+"ojos": 0,
+"piel": "#bb8258"
+},
+"Diego Sánchez": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#c78e63"
+},
+"Diego Torres": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a56f49"
+},
+"Diego Valdés": {
+"barba": 5,
+"ojos": 0,
+"piel": "#ce9569"
+},
+"Diego Vallejos": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#7c5032"
+},
+"Diogo Leite": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#c0875c"
+},
+"Djibril Sidibé": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#9a6642"
+},
+"Domenico Berardi": {
+"barba": 0,
+"ojos": 1,
+"piel": "#a7714a"
+},
+"Dominic Solanke": {
+"barba": 0,
+"ojos": 1,
+"piel": "#d59c70"
+},
+"Dominik Szoboszlai": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#dea980"
+},
+"Dylan Chambost": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#ba8157"
+},
+"Désiré Doué": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#ca9165"
+},
+"Eberechi Eze": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#6d452a"
+},
+"Ederson": {
+"barba": 2,
+"ojos": 0,
+"piel": "#794d30"
+},
+"Edin Džeko": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#ca9165"
+},
+"Edinson Cavani": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d49b6f"
+},
+"Eduard Löwen": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#cc9367"
+},
+"Eduardo Salvio": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#a8724b"
+},
+"Eduardo Vargas": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d1986b"
+},
+"Edwin Cerrillo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#9e6a44"
+},
+"Elisha Owusu": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#684228"
+},
+"Elliot Anderson": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#bb8258"
+},
+"Elías Hernández": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#664027"
+},
+"Emanuel Emegha": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#492d1c"
+},
+"Emanuel Gularte": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#744a2d"
+},
+"Emil Holm": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#dba57b"
+},
+"Emiliano Amor": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#af7850"
+},
+"Emiliano Martínez": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#ca9165"
+},
+"Emmanuel Agbadou": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#865736"
+},
+"Emmanuel Ojeda": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b87f55"
+},
+"Enner Valencia": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#805333"
+},
+"Enzo Fernández": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#9a6742"
+},
+"Enzo Pérez": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#95633f"
+},
+"Eric Ramírez": {
+"barba": 0,
+"ojos": 1,
+"piel": "#855636"
+},
+"Erik Lira": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d9a278"
+},
+"Erling Haaland": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#9a9a9a",
+"piel": "#af784f"
+},
+"Esteban Andrada": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#bd845a"
+},
+"Ethan Pinnock": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a36e48"
+},
+"Evan Ndicka": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#764b2e"
+},
+"Evander": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#b17951"
+},
+"Evann Guessand": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#7d5132"
+},
+"Ever Banega": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#ba8157"
+},
+"Everson": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#7a4e31"
+},
+"Exequiel Palacios": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#a57049"
+},
+"Ezequiel Cerutti": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#9b6742"
+},
+"Ezri Konsa": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#825434"
+},
+"Fabian Schär": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#7a4e30"
+},
+"Fabián Balbuena": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c38a5f"
+},
+"Fabián Hormazábal": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#be855a"
+},
+"Fabián Ruiz": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#ab754d"
+},
+"Fabián Torres": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d49b6f"
+},
+"Fabián Ángel": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#bb8258"
+},
+"Fabricio Díaz": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a67049"
+},
+"Facundo Cambeses": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#c78e62"
+},
+"Facundo Medina": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#9a9a9a",
+"piel": "#ae774e"
+},
+"Fafà Picault": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#8e5d3b"
+},
+"Federico Baschirotto": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#5c3923"
+},
+"Federico Gatti": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#b37b52"
+},
+"Federico Redondo": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#d8a176"
+},
+"Federico Santander": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#976440"
+},
+"Federico Valverde": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#976440"
+},
+"Federico Viñas": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#ae774f"
+},
+"Felipe Mora": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#dba57b"
+},
+"Felix Nmecha": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#825435"
+},
+"Ferland Mendy": {
+"barba": 0,
+"ojos": 0,
+"piel": "#623e25"
+},
+"Fernando Arce": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#4a2e1c"
+},
+"Fernando Aristeguieta": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b47b52"
+},
+"Fernando Muslera": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#daa47a"
+},
+"Ferran Torres": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#c2895e"
+},
+"Finn Surman": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#bc8359"
+},
+"Flaco López": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#d2996c"
+},
+"Florian Neuhaus": {
+"barba": 0,
+"ojos": 0,
+"piel": "#dca77d"
+},
+"Florian Wirtz": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#c88f63"
+},
+"Folarin Balogun": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#8d5c3a"
+},
+"Formose Mendy": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#885938"
+},
+"Fran Beltrán": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c0875c"
+},
+"Francisco Fydriszewski": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c38a5f"
+},
+"Franco Armani": {
+"barba": 2,
+"ojos": 1,
+"piel": "#bc8358"
+},
+"Franco Mastantuono": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b17a51"
+},
+"Frank Boya": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#70472b"
+},
+"Fábio": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d8a176"
+},
+"Félix Lemaréchal": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#cb9266"
+},
+"Félix Torres": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#855636"
+},
+"Gabriel Brazão": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#bf865b"
+},
+"Gabriel Martinelli": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d8a176"
+},
+"Gastón Brugman": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ca9165"
+},
+"Gavi": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#bd8459"
+},
+"Gaëtan Laborde": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b87f55"
+},
+"Gaëtan Perrin": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#a46e48"
+},
+"Geoffrey Kondogbia": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#52331f"
+},
+"Georges Mikautadze": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c68d61"
+},
+"Georginio Rutter": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#ce9569"
+},
+"Gerardo Arteaga": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a46f48"
+},
+"Germán Cano": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#e5b48d"
+},
+"Gianfranco Chávez": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a36e48"
+},
+"Gianluca Scamacca": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#9a9a9a",
+"piel": "#b67d54"
+},
+"Gideon Mensah": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#754a2e"
+},
+"Gilberto Flores": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d8a175"
+},
+"Giorgian de Arrascaeta": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#dca67c"
+},
+"Giovani Lo Celso": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#bb8257"
+},
+"Giovanni Di Lorenzo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a26d47"
+},
+"Giuliano Simeone": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#c58c61"
+},
+"Gleison Bremer": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b87f55"
+},
+"Gonzalo Montiel": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#dea980"
+},
+"Gonzalo Valle": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#9a9a9a",
+"piel": "#e3b189"
+},
+"Gonçalo Ramos": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d8a176"
+},
+"Gregor Kobel": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#a9734c"
+},
+"Grischa Prömel": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b98056"
+},
+"Guela Doué": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#b57d53"
+},
+"Guglielmo Vicario": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d9a278"
+},
+"Guilherme Biro": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#5d3a23"
+},
+"Guillaume Restes": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#865737"
+},
+"Guillermo Paiva": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d79f73"
+},
+"Guillermo Viscarra": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#cd9468"
+},
+"Gédéon Kalulu": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#a16c46"
+},
+"Hakan Çalhanoğlu": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#dda77d"
+},
+"Hamilton Piedra": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#af774f"
+},
+"Hamza Igamane": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#bc8359"
+},
+"Hannes Wolf": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#d2996c"
+},
+"Hany Mukhtar": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#bc8358"
+},
+"Harry Kane": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#a16c46"
+},
+"Hassane Kamara": {
+"barba": 0,
+"ojos": 0,
+"piel": "#825435"
+},
+"Henrikh Mkhitaryan": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c78e62"
+},
+"Henry Martín": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#9c6843"
+},
+"Hernán Galíndez": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#e4b18a"
+},
+"Hugo Lloris": {
+"barba": 4,
+"ojos": 1,
+"piel": "#c78e62"
+},
+"Hugo Magnetti": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#986541"
+},
+"Hugo Rodallega": {
+"barba": 0,
+"ojos": 1,
+"piel": "#4d301d"
+},
+"Hugo Souza": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#482d1b"
+},
+"Hulk": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#e3b088"
+},
+"Iago Aspas": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#9d6944"
+},
+"Ibrahima Konaté": {
+"barba": 0,
+"ojos": 1,
+"piel": "#754b2e"
+},
+"Idan Toklomati": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c78e62"
+},
+"Idrissa Gueye": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#6b442a"
+},
+"Ignacio Rivero": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#815434"
+},
+"Ignacio Saavedra": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a9734c"
+},
+"Ignatius Ganago": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#96633f"
+},
+"Igor Lichnovsky": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#cf966a"
+},
+"Igor Thiago": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#885938"
+},
+"Igor Zubeldia": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d8a176"
+},
+"Ilie Sánchez": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#e0ab82"
+},
+"Indiana Vassilev": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#bd845a"
+},
+"Isaac Schmidt": {
+"barba": 0,
+"ojos": 3,
+"peloC": "#7a5634",
+"piel": "#96633f"
+},
+"Isaác Brizuela": {
+"barba": 0,
+"ojos": 1,
+"piel": "#a26d47"
+},
+"Isco": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c99064"
+},
+"Ismaël Doukouré": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#784d2f"
+},
+"Ismaïla Sarr": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#6c442a"
+},
+"Ivan Ilic": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#e3b088"
+},
+"Ivan Ordets": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d8a175"
+},
+"Iván Leguizamón": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#e1ad84"
+},
+"Iñaki Williams": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#71482c"
+},
+"Jack Grealish": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#c1885d"
+},
+"Jack Maher": {
+"barba": 2,
+"ojos": 0,
+"piel": "#d8a075"
+},
+"Jackson Ragen": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d8a176"
+},
+"Jacob Murphy": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#dea980"
+},
+"Jacob Shaffelburg": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#b07950"
+},
+"Jaime Vásquez": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d2996c"
+},
+"Jaka Bijol": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#cf966a"
+},
+"Jakob Glesnes": {
+"barba": 0,
+"ojos": 0,
+"piel": "#a67049"
+},
+"Jamal Musiala": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#b87f55"
+},
+"Jamal Thiaré": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#764b2e"
+},
+"James Garner": {
+"barba": 2,
+"ojos": 1,
+"piel": "#c58c61"
+},
+"James Rodríguez": {
+"barba": 0,
+"ojos": 0,
+"piel": "#95623f"
+},
+"Jan Paul van Hecke": {
+"barba": 0,
+"ojos": 0,
+"piel": "#b77e55"
+},
+"Jan Thielmann": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#efc6a3"
+},
+"Janik Haberer": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#bc8358"
+},
+"Jarell Quansah": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#c48b60"
+},
+"Javi Guerra": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#915f3d"
+},
+"Javier Correa": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#a67049"
+},
+"Javier Hernández": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d0976b"
+},
+"Javier Parraguez": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#764b2e"
+},
+"Jean Carlos Quiñónez": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#5a3822"
+},
+"Jean-Philippe Mateta": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#9a9a9a",
+"piel": "#7b4f31"
+},
+"Jeremy Toljan": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c48b60"
+},
+"Jerome Roussillon": {
+"barba": 0,
+"ojos": 0,
+"piel": "#b17951"
+},
+"Jesper Karlström": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#be855a"
+},
+"Jesús Bueno": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#d9a277"
+},
+"Jesús Corona": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#805233"
+},
+"Jhon Lucumí": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#9f6a45"
+},
+"Jhon Murillo": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#7b4f31"
+},
+"Jhonder Cádiz": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#52331f"
+},
+"Joachim Andersen": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#94623e"
+},
+"Joan García": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#bf865b"
+},
+"Joaquín Valiente": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d49b6e"
+},
+"Joe Scally": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#c1885d"
+},
+"Joelinton": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#ab744d"
+},
+"John": {
+"barba": 0,
+"ojos": 1,
+"piel": "#3e2718"
+},
+"John Kennedy": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#684128"
+},
+"John McGinn": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#ce9569"
+},
+"John Nelson": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#9e6a44"
+},
+"Jonas Wind": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#d59d71"
+},
+"Jonathan Betancourt": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#583621"
+},
+"Jonathan David": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#7d5032"
+},
+"Jonathan Gradit": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#e5b38c"
+},
+"Jonathan Tah": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#93613d"
+},
+"Jonathan Villagra": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d8a176"
+},
+"Jordan Morris": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#d0976b"
+},
+"Jorge Broun": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#875837"
+},
+"Jorge Espejo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d69e72"
+},
+"Jorge Ruvalcaba": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#af774f"
+},
+"Jorginho": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#e6b48e"
+},
+"Joseph Paintsil": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#8a5a39"
+},
+"Josh Bauer": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#bb8258"
+},
+"Joshua Kimmich": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#c68d61"
+},
+"Josko Gvardiol": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#e2ae86"
+},
+"José Angulo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#a56f49"
+},
+"José Caicedo": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#53341f"
+},
+"José Enamorado": {
+"barba": 0,
+"ojos": 0,
+"piel": "#b67d54"
+},
+"José Gayà": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#bd8459"
+},
+"José Sá": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d49b6e"
+},
+"João Klauss": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#c8a05a",
+"piel": "#e2ae87"
+},
+"João Neves": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#c88f63"
+},
+"João Schmidt": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#cf966a"
+},
+"Juan Cazares": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#3e2718"
+},
+"Juan Cuevas": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#dfab82"
+},
+"Juan Giménez": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#e6b58e"
+},
+"Juan Manuel Olivera": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b87f55"
+},
+"Juan Martín Lucero": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#664027"
+},
+"Juan Sforza": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a6714a"
+},
+"Juanlu Sánchez": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#a06b46"
+},
+"Jude Bellingham": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#be855b"
+},
+"Jules Koundé": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a56f49"
+},
+"Julian Brandt": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#b37b52"
+},
+"Julian Ryerson": {
+"barba": 0,
+"ojos": 0,
+"piel": "#ae774f"
+},
+"Julian Weigl": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#895a38"
+},
+"Julián Álvarez": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#c68d61"
+},
+"Juninho": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d49b6f"
+},
+"Junior Adamu": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#91603d"
+},
+"Junior Messias": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#855736"
+},
+"Junya Ito": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b27a51"
+},
+"Justin Haak": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#aa744c"
+},
+"Justin Njinmah": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#d59d71"
+},
+"Jérémie Boga": {
+"barba": 0,
+"ojos": 1,
+"piel": "#70472c"
+},
+"Jérémy Doku": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#b17a51"
+},
+"Kai Havertz": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#9e6a44"
+},
+"Kai Wagner": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#9c6843"
+},
+"Kaiki": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#976440"
+},
+"Kamory Doumbia": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#6b4329"
+},
+"Kaoru Mitoma": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#835535"
+},
+"Karim Adeyemi": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#c78e63"
+},
+"Kenedy": {
+"barba": 0,
+"ojos": 1,
+"piel": "#905f3c"
+},
+"Kerwin Vargas": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#9a9a9a",
+"piel": "#ce9568"
+},
+"Kevin Castaño": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#7f5233"
+},
+"Kevin De Bruyne": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#daa479"
+},
+"Kevin Kelsy": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#9c6843"
+},
+"Kevin Minda": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#a7714a"
+},
+"Kevin O'Toole": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#cc9367"
+},
+"Kevin Schade": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ba8157"
+},
+"Kevin Stöger": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b67e54"
+},
+"Kevin Viveros": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#9d6944"
+},
+"Kevin Volland": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#9f6a45"
+},
+"Kevin Álvarez": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#ab744d"
+},
+"Khalil Fayad": {
+"barba": 0,
+"ojos": 0,
+"piel": "#c38a5e"
+},
+"Khvicha Kvaratskhelia": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#ad764e"
+},
+"Khéphren Thuram": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#c48b5f"
+},
+"Kieran Trippier": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#8b5b3a"
+},
+"Ko Itakura": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#9e6a45"
+},
+"Koji Miyoshi": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#b98056"
+},
+"Koke": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#e8b892"
+},
+"Koni De Winter": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#dba47a"
+},
+"Konrad Laimer": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#cf9669"
+},
+"Kristijan Jakic": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#ae774f"
+},
+"Kristijan Kahlina": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b07850"
+},
+"Kylian Mbappé": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#8d5c3b"
+},
+"Kévin Denkey": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#885938"
+},
+"Lameck Banda": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#3f2718"
+},
+"Lamine Camara": {
+"barba": 0,
+"ojos": 0,
+"piel": "#482d1b"
+},
+"Lamine Yamal": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#8b5b39"
+},
+"Laurent Abergel": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#94623e"
+},
+"Lautaro Martínez": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#905f3c"
+},
+"Leandro Cabrera": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#573621"
+},
+"Leandro Fernández": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ca9165"
+},
+"Leandro Paredes": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#96633f"
+},
+"Leandro Sosa": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a7714a"
+},
+"Lee Jae-sung": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#9e6944"
+},
+"Leo Campana": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d8a075"
+},
+"Leon Goretzka": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#af784f"
+},
+"Leonardo Balerdi": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#a26d47"
+},
+"Levi Colwill": {
+"barba": 0,
+"ojos": 0,
+"piel": "#ab744d"
+},
+"Lewis Dunk": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#9b6742"
+},
+"Lewis Ferguson": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#d1986b"
+},
+"Lilian Brassier": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#895938"
+},
+"Lionel Messi": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#d49c6f"
+},
+"Lisandro Martínez": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#bd845a"
+},
+"Lorenzo Faravelli": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b57c53"
+},
+"Lorenzo Lucca": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#daa479"
+},
+"Lorenzo Melgarejo": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#eabc96"
+},
+"Lorenzo Pellegrini": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#e6b58e"
+},
+"Louis Leroux": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ae774f"
+},
+"Lovro Majer": {
+"barba": 0,
+"ojos": 0,
+"piel": "#e7b790"
+},
+"Loïs Openda": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#be855b"
+},
+"Luca Netz": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#7b4f31"
+},
+"Luca Ranieri": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#7a4e31"
+},
+"Lucas Cepeda": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#cf966a"
+},
+"Lucas Digne": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d0976b"
+},
+"Lucas Höler": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b47c53"
+},
+"Lucas Moura": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b57c53"
+},
+"Luciano Cabral": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#a16c46"
+},
+"Lucien Agoumé": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#a7714a"
+},
+"Ludovic Ajorque": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#b87f55"
+},
+"Luis Cangá": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#6f462b"
+},
+"Luis García": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#b17951"
+},
+"Luis Haquin": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#c88f63"
+},
+"Luis Iberico": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#92603d"
+},
+"Luis Milla": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#daa379"
+},
+"Luis Muriel": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#aa734c"
+},
+"Luis Ramos": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#ac754d"
+},
+"Luis Romo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#be855b"
+},
+"Luis Sandoval": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#bb8258"
+},
+"Luis Segovia": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#bb8257"
+},
+"Luis Suárez": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#dfaa82"
+},
+"Luis Ángel Malagón": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#b67e54"
+},
+"Luka Sučić": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d49b6f"
+},
+"Lyanco": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#ab754d"
+},
+"Léo Pereira": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d39a6d"
+},
+"Maghnes Akliouche": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a8724b"
+},
+"Malick Fofana": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#7b4f31"
+},
+"Malik Tillman": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#7e5133"
+},
+"Mamadou Fofana": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#7c4f31"
+},
+"Mamadou Sarr": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#7f5233"
+},
+"Manu Koné": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#9a9a9a",
+"piel": "#72482d"
+},
+"Manuel Ugarte": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#8d5d3b"
+},
+"Marc Bartra": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c88f63"
+},
+"Marc Cucurella": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#af7850"
+},
+"Marc Guéhi": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#754a2e"
+},
+"Marcel Ruiz": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#784d2f"
+},
+"Marcelo Estigarribia": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#c88f63"
+},
+"Marcelo Weigandt": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#dda77e"
+},
+"Marcin Bulka": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#9a6742"
+},
+"Marco Carnesecchi": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#986541"
+},
+"Marco Di Cesare": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ebbe99"
+},
+"Marco Fabián": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#9d6944"
+},
+"Marco Friedl": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#eabc97"
+},
+"Marco Pasalic": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#ac754e"
+},
+"Marco Reus": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#dba47a"
+},
+"Marcos Acuña": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#bc8359"
+},
+"Marcus Thuram": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#784d2f"
+},
+"Marcão": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#8e5d3b"
+},
+"Mario Götze": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#b47c53"
+},
+"Mark Delgado": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#af784f"
+},
+"Mark Flekken": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#94623e"
+},
+"Marlon": {
+"barba": 2,
+"ojos": 1,
+"piel": "#c88f63"
+},
+"Marlon Freitas": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#885938"
+},
+"Marquinhos": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#7b4f31"
+},
+"Martin Ødegaard": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#ca9165"
+},
+"Martinelli": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d8a176"
+},
+"Martín Campaña": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#875837"
+},
+"Martín Zubimendi": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#9b6742"
+},
+"Marvin Ducksch": {
+"barba": 0,
+"ojos": 3,
+"piel": "#bf865b"
+},
+"Marvin Schwäbe": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#e0ab82"
+},
+"Mason Greenwood": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#b77f55"
+},
+"Mateo Retegui": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#7b4f31"
+},
+"Matheuzinho": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#a67c4e",
+"piel": "#a16c47"
+},
+"Mathías Olivera": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a16c47"
+},
+"Matt Freese": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#d0976a"
+},
+"Matt Polster": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#dda87f"
+},
+"Matteo Pessina": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c38a5f"
+},
+"Matthias Ginter": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#e4b18a"
+},
+"Matthis Abline": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#c2895e"
+},
+"Mattia Zaccagni": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#8e5d3b"
+},
+"Matty Cash": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#bd8459"
+},
+"Matz Sels": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#603c24"
+},
+"Matías Marín": {
+"barba": 0,
+"ojos": 3,
+"piel": "#613d25"
+},
+"Matías Soulé": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#73492d"
+},
+"Matías Zaracho": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#643f26"
+},
+"Max Arfsten": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#e5b48d"
+},
+"Max Kilman": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#a26d47"
+},
+"Maxence Lacroix": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#c88f64"
+},
+"Maxi Moralez": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#d39b6e"
+},
+"Maximilian Beier": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#b57d53"
+},
+"Maximilian Eggestein": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#daa379"
+},
+"Maximilian Mittelstädt": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#bb8257"
+},
+"Maximiliano Falcón": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#ba8157"
+},
+"Maximiliano Rodríguez": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#b77e54"
+},
+"Maximiliano Silvera": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#92603d"
+},
+"Maximiliano Urruti": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#9a9a9a",
+"piel": "#d9a277"
+},
+"Maxloren Castro": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#8a5a39"
+},
+"Maya Yoshida": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#e5b38c"
+},
+"Melvin Bard": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#edc19c"
+},
+"Memphis Depay": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#ca9165"
+},
+"Michael Estrada": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#ba8156"
+},
+"Michael Gregoritsch": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#cd9467"
+},
+"Michael Olise": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#be855b"
+},
+"Micky van de Ven": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#d0976a"
+},
+"Miguel Gutiérrez": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#e8b993"
+},
+"Miguel Jiménez": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#8b5b39"
+},
+"Mikael Uhre": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#835535"
+},
+"Mikayil Faye": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#a06b46"
+},
+"Mikel Jauregizar": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d69e72"
+},
+"Mikel Oyarzabal": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#b17950"
+},
+"Mikel Vesga": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#a67049"
+},
+"Mile Svilar": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#8e5d3b"
+},
+"Miles Robinson": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d39a6e"
+},
+"Milos Kerkez": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c0875c"
+},
+"Mitchell Weiser": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#cb9266"
+},
+"Modibo Sagnan": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#a6704a"
+},
+"Mohamed Salah": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#bf865b"
+},
+"Mohammed Kudus": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#a8724b"
+},
+"Moise Kean": {
+"barba": 0,
+"ojos": 1,
+"piel": "#4f311e"
+},
+"Moisés Caicedo": {
+"barba": 0,
+"ojos": 1,
+"piel": "#a9724b"
+},
+"Montassar Talbi": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c0875c"
+},
+"Morgan Gibbs-White": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#92603d"
+},
+"Morgan Rogers": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#b17951"
+},
+"Morgan Sanson": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#dba47a"
+},
+"Moritz Broschinski": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#e4b18a"
+},
+"Mostafa Mohamed": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#cb9266"
+},
+"Nadiem Amiri": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a9734b"
+},
+"Nahuel Guzmán": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#5c3923"
+},
+"Nahuel Molina": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#ab744d"
+},
+"Nathan Byrne": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#af774f"
+},
+"Nathan Collins": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#ca9165"
+},
+"Nathan Harriel": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#e9ba94"
+},
+"Nathan Ngoumou": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d39a6d"
+},
+"Nathaniel Brown": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b47b52"
+},
+"Nelson Weiper": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d1986b"
+},
+"Nery Domínguez": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d0976a"
+},
+"Nick Hagglund": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c99064"
+},
+"Nick Pope": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#91603d"
+},
+"Nick Woltemade": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#c68d61"
+},
+"Niclas Füllkrug": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#dea980"
+},
+"Nico Schlotterbeck": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#e1ac84"
+},
+"Nico Williams": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#764b2e"
+},
+"Nicola Leali": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#9d6944"
+},
+"Nicolas Höfler": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#8a5a39"
+},
+"Nicolas Pépé": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#b07950"
+},
+"Nicolás Castillo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#cf9669"
+},
+"Nicolás Fernández": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#dfaa81"
+},
+"Nicolás Guerra": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a7714a"
+},
+"Nicolás Ibáñez": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#e0ab83"
+},
+"Nicolás Lodeiro": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#8a5a39"
+},
+"Nicolás Peranic": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#9f6b45"
+},
+"Nicolás Thaller": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#b67d54"
+},
+"Nicolò Barella": {
+"barba": 5,
+"ojos": 0,
+"piel": "#be855a"
+},
+"Niklas Stark": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#8c5c3a"
+},
+"Nikola Krstovic": {
+"barba": 0,
+"ojos": 0,
+"piel": "#996641"
+},
+"Nikola Milenković": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c38a5e"
+},
+"Nikola Vlasic": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#bc8358"
+},
+"Nilson Loyola": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a67049"
+},
+"Noah Allen": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#ca9165"
+},
+"Nouhou Tolo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#835535"
+},
+"Noussair Mazraoui": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#9a9a9a",
+"piel": "#bf865b"
+},
+"Nuno Mendes": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#8f5e3c"
+},
+"Nuno Tavares": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#93613e"
+},
+"Obinna Nwobodo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#603c24"
+},
+"Octavio Rivero": {
+"barba": 0,
+"ojos": 1,
+"piel": "#c2895e"
+},
+"Oihan Sancet": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a46e48"
+},
+"Oliver Baumann": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#d1986b"
+},
+"Olivier Giroud": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#e6b58e"
+},
+"Olivier Mbaizo": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#623d25"
+},
+"Ollie Watkins": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#ac754d"
+},
+"Omar El Hilali": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#bd845a"
+},
+"Omar Marmoush": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c38a5f"
+},
+"Oscar": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#dba57a"
+},
+"Ousmane Dembélé": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#a67c4e",
+"piel": "#905f3c"
+},
+"Owen Wolff": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#a16c46"
+},
+"Ozan Kabak": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c78e63"
+},
+"Ozziel Herrera": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a46f48"
+},
+"Pape Matar Sarr": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#4e301d"
+},
+"Pascal Groß": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#e2ae86"
+},
+"Pathé Ciss": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#4b2f1c"
+},
+"Patricio Rodríguez": {
+"barba": 0,
+"ojos": 0,
+"piel": "#cb9266"
+},
+"Patrick Agyemang": {
+"barba": 0,
+"ojos": 0,
+"piel": "#905f3c"
+},
+"Patrick Drewes": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#b57d53"
+},
+"Patrick Schulte": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d8a176"
+},
+"Patrick Yazbek": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#dfaa81"
+},
+"Patrik Schick": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#cb9266"
+},
+"Pau Cubarsí": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#ac754e"
+},
+"Pau Torres": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c88f63"
+},
+"Paulinho": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ab744d"
+},
+"Paulo Dybala": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#905e3c"
+},
+"Pavel Bucha": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#dda87f"
+},
+"Pedri": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#bd8459"
+},
+"Pedro": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#b87f55"
+},
+"Pedro Amador": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#bd845a"
+},
+"Pedro Ortiz": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#845536"
+},
+"Pedro Porro": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#a26d47"
+},
+"Pedro Raul": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#9a6642"
+},
+"Pedro de la Vega": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#bd845a"
+},
+"Pep Biel": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#815334"
+},
+"Peyton Miller": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#9b6742"
+},
+"Phil Foden": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#d79f74"
+},
+"Philipp Lienhart": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#c38a5f"
+},
+"Philippe Coutinho": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#cb9266"
+},
+"Phillip Tietz": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#c88f63"
+},
+"Pierre-Emerick Aubameyang": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a36d47"
+},
+"Pol Fernández": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a26d47"
+},
+"Péter Gulácsi": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#d0976a"
+},
+"Quentin Merlin": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b07850"
+},
+"Radamel Falcao": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#d39a6d"
+},
+"Ramiro Sordo": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c0875c"
+},
+"Ramy Bensebaini": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#573621"
+},
+"Rani Khedira": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#a8724b"
+},
+"Raphael Veiga": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#c0875c"
+},
+"Rasmus Højlund": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#c88f63"
+},
+"Rayan Aït-Nouri": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#ca9165"
+},
+"Reece James": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#b67d54"
+},
+"Remo Freuler": {
+"barba": 0,
+"ojos": 1,
+"piel": "#825435"
+},
+"Riccardo Calafiori": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#a36e47"
+},
+"Riccardo Orsolini": {
+"barba": 0,
+"ojos": 1,
+"piel": "#7a4e30"
+},
+"Richard Mina": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#8b5b39"
+},
+"Rico Lewis": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c58c60"
+},
+"Ridle Baku": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#93613e"
+},
+"Ritsu Doan": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#bc8358"
+},
+"Robert Andrich": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#8e5d3b"
+},
+"Robert Kenedy": {
+"barba": 0,
+"ojos": 1,
+"piel": "#905f3c"
+},
+"Robert Sánchez": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#895a39"
+},
+"Roberto Alvarado": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#c38a5f"
+},
+"Roberto Fernández": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#c99064"
+},
+"Roberto Gutiérrez": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#c2895e"
+},
+"Roberto Ovelar": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#c68d61"
+},
+"Robin Gosens": {
+"barba": 0,
+"ojos": 1,
+"piel": "#c68d62"
+},
+"Robin Jansson": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#ba8157"
+},
+"Robin Risser": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#be855a"
+},
+"Robson Matheus": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#e3b088"
+},
+"Rodri": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#dea97f"
+},
+"Rodrigo Bentancur": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#dda87f"
+},
+"Rodrigo Holgado": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#664027"
+},
+"Rodrigo López": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#71482c"
+},
+"Rodrigo Muniz": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#764b2e"
+},
+"Rodrigo Odriozola": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#b67e54"
+},
+"Rodrigo Rojas": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ad764e"
+},
+"Rodrigo Vilca": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#9a9a9a",
+"piel": "#71472c"
+},
+"Rodrygo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#7d5032"
+},
+"Rolando Mandragora": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#784d2f"
+},
+"Romain Perraud": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#c68d61"
+},
+"Roman Bürki": {
+"barba": 4,
+"ojos": 1,
+"piel": "#be855a"
+},
+"Romano Schmid": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#b57d53"
+},
+"Romelu Lukaku": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#7b4f31"
+},
+"Román Torres": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#3e2718"
+},
+"Ronnie Fernández": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#7b4f31"
+},
+"Rubén Botta": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d8a175"
+},
+"Rubén Vargas": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#996541"
+},
+"Rudy Camacho": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#a67c4e",
+"piel": "#dea980"
+},
+"Ruslan Malinovskyi": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#e4b18a"
+},
+"Rúben Dias": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#b67e54"
+},
+"Saba Lobjanidze": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d39b6e"
+},
+"Sam Beukema": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#ad764e"
+},
+"Sam Surridge": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#9a9a9a",
+"piel": "#d39b6e"
+},
+"Samuel Essende": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#ebbe98"
+},
+"Samuel Lino": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#9c6843"
+},
+"Samuele Ricci": {
+"barba": 0,
+"ojos": 0,
+"piel": "#a6704a"
+},
+"Sandi Lovric": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#d0976a"
+},
+"Santi Comesaña": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#cb9266"
+},
+"Santiago Bueno": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d2996c"
+},
+"Santiago Castro": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#eabb96"
+},
+"Santiago Giménez": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#daa47a"
+},
+"Santiago Moreno": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#825435"
+},
+"Santiago Solari": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#875837"
+},
+"Sasa Lukić": {
+"barba": 0,
+"ojos": 0,
+"piel": "#9c6843"
+},
+"Saul Coco": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#986440"
+},
+"Savinho": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#ce9568"
+},
+"Saïdou Sow": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#825435"
+},
+"Scott McTominay": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#cb9266"
+},
+"Sebastian Nanasi": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#d7a074"
+},
+"Sebastián Driussi": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#dda77d"
+},
+"Sebastián Fassi": {
+"barba": 0,
+"ojos": 1,
+"piel": "#c38a5f"
+},
+"Sepp van den Berg": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#dea980"
+},
+"Sergi Darder": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#764b2e"
+},
+"Sergio Akieme": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#95633f"
+},
+"Sergio Aquino": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#855636"
+},
+"Sergio Barreto": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#ca9165"
+},
+"Sergio Busquets": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#e4b28a"
+},
+"Sergio Herrera": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#a16c46"
+},
+"Simone Pafundi": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d39a6e"
+},
+"Sofiane Diop": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#9a6742"
+},
+"Son Heung-min": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#dea87f"
+},
+"Souza": {
+"barba": 0,
+"ojos": 1,
+"piel": "#6d452a"
+},
+"Stanislav Lobotka": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#daa378"
+},
+"Stanley Nsoki": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#ac764e"
+},
+"Stefan Frei": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#d49c6f"
+},
+"Steven Moreira": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#7a5634",
+"piel": "#cf9669"
+},
+"Sven Botman": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#ac754d"
+},
+"Tadeo Allende": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#dda77e"
+},
+"Tadeu": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c88f63"
+},
+"Tai Baribo": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#dca67c"
+},
+"Takefusa Kubo": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#744a2d"
+},
+"Takuma Asano": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#9a6642"
+},
+"Tanguy Coulibaly": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#8a3c1e",
+"piel": "#643f26"
+},
+"Tanner Beason": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d39a6d"
+},
+"Tanner Tessmann": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#ce9568"
+},
+"Tayvon Gray": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a9734b"
+},
+"Teddy Teuma": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#c99065"
+},
+"Telasco Segovia": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#9c6843"
+},
+"Terem Moffi": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#855636"
+},
+"Teun Koopmeiners": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#b47c52"
+},
+"Thiago Silva": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#875838"
+},
+"Thijs Dallinga": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b87f55"
+},
+"Théo Le Bris": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#9a9a9a",
+"piel": "#ab744d"
+},
+"Tiago Tomás": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a26d47"
+},
+"Tijjani Reijnders": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#c58c60"
+},
+"Tim Kleindienst": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#825434"
+},
+"Tim Ream": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#c8a05a",
+"piel": "#efc4a1"
+},
+"Timo Hübers": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#ecbf9a"
+},
+"Tomas Totland": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#d2996c"
+},
+"Tomáš Souček": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#ae774f"
+},
+"Toti Gomes": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#9e6a44"
+},
+"Trent Alexander-Arnold": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#aa744c"
+},
+"Téji Savanier": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d1986b"
+},
+"Umut Tohumcu": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#c78e62"
+},
+"Valentin Barco": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#ab744d"
+},
+"Valentino Lazaro": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#784d2f"
+},
+"Vanderson": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#9b6843"
+},
+"Vanja Milinkovic-Savic": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#ac754e"
+},
+"Vicente Guaita": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#e9ba94"
+},
+"Vicente Pizarro": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#d79f74"
+},
+"Viktor Gyökeres": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b87f55"
+},
+"Viktor Tsygankov": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#dca77d"
+},
+"Vinícius Júnior": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#895938"
+},
+"Virgil van Dijk": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d49b6f"
+},
+"Vitalii Mykolenko": {
+"barba": 0,
+"ojos": 0,
+"piel": "#d7a075"
+},
+"Vitinha": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#e9ba95"
+},
+"Vitor Roque": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#6c442a"
+},
+"Vitão": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#5c3923"
+},
+"Waldemar Anton": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#cb9266"
+},
+"Walker Zimmerman": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#5a3d24",
+"piel": "#bd845a"
+},
+"Walter Bou": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#a26d47"
+},
+"Wanderson": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#b77e54"
+},
+"Welliton": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#d79f73"
+},
+"Wendell": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#996541"
+},
+"Wesley Saïd": {
+"barba": 4,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#c88f63"
+},
+"Weston McKennie": {
+"barba": 2,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#dfaa81"
+},
+"Weverton": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#7a5634",
+"piel": "#e0ac83"
+},
+"Wilfried Zaha": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#7f5233"
+},
+"Willer Ditta": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#ba8157"
+},
+"Willian Pacho": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#aa744c"
+},
+"Woo-yeong Jeong": {
+"barba": 0,
+"ojos": 0,
+"piel": "#d69e72"
+},
+"Yairo Moreno": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#3d2a19",
+"piel": "#996541"
+},
+"Yann Gboho": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#93613e"
+},
+"Yann Sommer": {
+"barba": 5,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#e3af88"
+},
+"Yannick Gerhardt": {
+"barba": 0,
+"ojos": 0,
+"piel": "#cc9367"
+},
+"Yerson Mosquera": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#6e462b"
+},
+"Yimmi Chará": {
+"barba": 5,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#905f3c"
+},
+"Youri Tielemans": {
+"barba": 2,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#d69e72"
+},
+"Youssouf Fofana": {
+"barba": 0,
+"ojos": 0,
+"piel": "#492e1c"
+},
+"Yuri Alberto": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#e8b993"
+},
+"Zé Rafael": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#ba8157"
+},
+"Álex Baena": {
+"barba": 4,
+"ojos": 1,
+"peloC": "#231a14",
+"piel": "#d69f73"
+},
+"Álvaro Fidalgo": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b98056"
+},
+"Álvaro Morata": {
+"barba": 0,
+"ojos": 1,
+"piel": "#b37b52"
+},
+"Ángel Di María": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#141414",
+"piel": "#a46f49"
+},
+"Ángel Sepúlveda": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#aa744c"
+},
+"Éder Militão": {
+"barba": 0,
+"ojos": 1,
+"piel": "#a7714a"
+},
+"Éderson": {
+"barba": 2,
+"ojos": 0,
+"piel": "#794d30"
+},
+"Óliver Torres": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#905f3c"
+},
+"Óscar Cardozo": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#c2895e"
+},
+"Óscar Jiménez": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#3d2a19",
+"piel": "#b17a51"
+},
+"Óscar Ruiz": {
+"barba": 0,
+"ojos": 1,
+"peloC": "#141414",
+"piel": "#b57d53"
+},
+"Óscar Ustari": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#5a3d24",
+"piel": "#dfab82"
+},
+"Óscar de Marcos": {
+"barba": 0,
+"ojos": 0,
+"peloC": "#231a14",
+"piel": "#a36e48"
+}
+}
