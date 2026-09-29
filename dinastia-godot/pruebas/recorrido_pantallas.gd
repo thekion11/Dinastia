@@ -42,6 +42,14 @@ func _process(_d: float) -> void:
 		_cola.append(["cerrar_menu"])
 		_cola.append(["ficha", "propia"])
 		_cola.append(["ficha", "rival"])
+		## RECORRIDO_TRAMO=i/n (29-9-2026): solo el tramo i de n, para que cada
+		## parte quepa en una ejecución corta y en primer plano.
+		var tramo := OS.get_environment("RECORRIDO_TRAMO")
+		if tramo.contains("/"):
+			var i_t := int(tramo.get_slice("/", 0))
+			var n_t := maxi(1, int(tramo.get_slice("/", 1)))
+			var largo := int(ceil(float(_cola.size()) / float(n_t)))
+			_cola = _cola.slice((i_t - 1) * largo, i_t * largo)
 		return
 	if _n < 10:
 		return
@@ -121,6 +129,12 @@ func _pulsar_botones() -> void:
 		var bt := b as Button
 		if not bt.is_visible_in_tree() or bt.disabled:
 			continue
+		## Nada dentro de ventanas emergentes (29-9-2026): en «Elegir club»
+		## pulsaba los 32 clubes seguidos EN UN SOLO CUADRO -32 cambios de mando
+		## y reconstrucciones- y el cuadro no terminaba nunca. Un jugador no
+		## puede hacer eso: la ventana se cierra al elegir.
+		if bt.get_window() != get_tree().root:
+			continue
 		var t := bt.text
 		var ok := t != ""
 		for x: String in NO_PULSAR:
@@ -130,6 +144,8 @@ func _pulsar_botones() -> void:
 			lista.append(bt)
 	for bt: Button in lista.slice(0, 40):
 		if is_instance_valid(bt) and bt.is_inside_tree():
+			if OS.get_environment("RECORRIDO_VERBOSO") != "":
+				print("  BOTON «%s» t=%d" % [bt.text, Time.get_ticks_msec()])
 			bt.pressed.emit()
 			_botones += 1
 			if tabs.current_tab != actual:
