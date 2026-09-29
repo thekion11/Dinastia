@@ -5086,15 +5086,16 @@ func _probar_aspecto_y_audio() -> void:
 	## LOS IDIOMAS. Lo que se comprueba no es que la traduccion sea buena -eso no
 	## lo sabe un banco- sino que ninguna fila se quede CORTA: una fila con menos
 	## columnas que idiomas deja ese idioma en castellano sin avisar.
-	_comprobar(Idiomas.ORDEN.size() == 6, "hay 6 idiomas ademas del castellano (%d)" % Idiomas.ORDEN.size())
+	_comprobar(Idiomas.ORDEN.size() == 8, "hay 8 idiomas ademas del castellano (%d)" % Idiomas.ORDEN.size())
 	var cortas: Array[String] = []
 	for k2: String in Idiomas.TABLA:
 		var fila: Array = Idiomas.TABLA[k2]
-		if fila.size() != Idiomas.ORDEN.size():
+		if fila.size() != Idiomas.COLUMNAS_TABLA:
 			cortas.append(k2)
 	_comprobar(cortas.is_empty(), "y ninguna fila se queda corta (%s)" % ("todas completas" if cortas.is_empty() else ", ".join(cortas)))
 	for idi: String in Idiomas.ORDEN:
-		## Al menos las de la tabla (inglés y portugués suman el diccionario ampliado).
+		## Al menos las de la tabla: los de columna, por la tabla; polaco y turco,
+		## porque su diccionario la trae entera.
 		_comprobar(Idiomas.cobertura(idi) >= Idiomas.TABLA.size(),
 			"«%s» tiene al menos las %d frases (%d)" % [idi, Idiomas.TABLA.size(), Idiomas.cobertura(idi)])
 	Idiomas.idioma = "en"
