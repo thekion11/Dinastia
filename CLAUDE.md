@@ -52,7 +52,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 9 idiomas: es, en, pt, fr, it, de, ca + polaco y turco nuevos (1402 frases c/u).
 
 ## Pendientes
-- Siguiente en el plan: limpieza → comparar con informe → auditoría → vídeo.
+- Hecho 29-9: limpieza (capturas en pruebas/capturas), COMPARACION_INFORME.md (≈71/100),
+  AUDITORIA.md (refresco 14x más rápido, fallo al cerrar arreglado).
+- Siguiente: VÍDEO PROMO (jugando de verdad, largo) → dejarlo en el chat → repaso y MEGAPLAN.
 - Carrera de Jugador: fuera de juego, más eventos, cambios, selección jugable.
 - Esperando al usuario: túnel, cara 2D→3D (necesita permiso).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
