@@ -779,9 +779,18 @@ func _jugada_tiro_libre(atacante_es_local: bool, z_arco_propio: float) -> void:
 	}
 
 func _celebrar(p: Dictionary, asistidor) -> void:
-	var r_celeb := _rng.randf()
-	var anim_celeb: String = "celebrar_rodillas" if r_celeb > 0.6 else ("celebrar_carrera" if r_celeb > 0.3 else "celebrar")
-	_ejecutar_accion(p, anim_celeb, 3.8)
+	## Según su carácter y con su celebración de siempre (AnimExtra).
+	var jd: Dictionary = p.get("jugador", {}) if p.get("jugador") is Dictionary else {}
+	var ap_c: AnimationPlayer = p.get("anim")
+	var anim_celeb := AnimExtra.celebracion(ap_c if is_instance_valid(ap_c) else null, String(jd.get("rasgo", "")),
+		str(p.get("id", "")), not bool(p.get("es_local", true)), _rng)
+	var pid_c = p.get("id")
+	if pid_c != null:
+		## Directo, sin pasar por el sorteo de `_ejecutar_accion`.
+		_acciones_activas[pid_c] = {"anim": anim_celeb, "hasta": elapsed + 3.8}
+		if is_instance_valid(ap_c) and ap_c.has_animation(anim_celeb):
+			ap_c.play(anim_celeb)
+			ap_c.speed_scale = 1.0
 	_celebrando.append({"p": p, "hasta": elapsed + 4.2})
 	if asistidor != null and players_by_id.has(asistidor):
 		var a = players_by_id[asistidor]

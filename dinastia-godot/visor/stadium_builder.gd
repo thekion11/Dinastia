@@ -414,14 +414,28 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 static func _escudo_cancha(root: Node3D, mi: Club, donde: String) -> void:
 	if donde != "cancha" and donde != "todo":
 		return
-	var tex := Escudo.textura(mi, 256)
+	## PINTURA, NO PEGATINA (29-9-2026, mapa de metas 20). De cerca -la
+	## cinemática del fichaje- el escudo se veía tosco: 256 px sin mipmaps
+	## estirados en 9 m, opaco y sin luz, como un plástico encima del césped.
+	## Ahora: 1024 px con mipmaps y filtro anisótropo (bordes limpios de cerca y
+	## sin parpadeo de lejos), recibe el sol y las sombras como el césped, y la
+	## pintura deja ver un poco la hierba.
+	var tex := Escudo.textura(mi, 1024)
 	if tex == null:
 		return
+	var img := tex.get_image()
+	if img != null and not img.is_empty():
+		if img.is_compressed():
+			img.decompress()
+		img.generate_mipmaps()
+		tex = ImageTexture.create_from_image(img)
 	var mat := StandardMaterial3D.new()
 	mat.albedo_texture = tex
+	mat.albedo_color = Color(1, 1, 1, 0.55)
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.roughness = 1.0
+	mat.metallic_specular = 0.1
 	var quad := MeshInstance3D.new()
 	var qm := QuadMesh.new()
 	qm.size = Vector2(9.0, 9.0)

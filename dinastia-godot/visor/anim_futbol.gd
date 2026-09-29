@@ -138,18 +138,28 @@ static func golpeo(esq: Skeleton3D, pre: String, c: Dictionary) -> Animation:
 	var gir := float(c.get("giro", 0.0))
 	var salto := float(c.get("salto", 0.0))
 	var baja := float(c.get("baja", 0.04))
+	## EL GOLPEO CON CUERPO (29-9-2026, mapa de metas 16): el informe decía que
+	## la patada "termina como una pose de salto". Faltaba todo lo que no es la
+	## pierna: la cadera que avanza (la última zancada), la pelvis que se abre al
+	## armar y se cierra al pegar, el brazo contrario abierto para equilibrar,
+	## la pierna de apoyo clavada con la rodilla flexionada y, al acompañar, el
+	## cuerpo que sube en puntillas y cae hacia delante.
 	var claves: Array = [
-		{"t": 0.0, "pd": L(12, 22), "pi": L(6, 16), "p": [0.0, -0.02, 0.0]},
-		{"t": ta, "pd": L(af, ar, 20, abd * 0.3, rot * 0.5), "pi": L(14, 24, 4),
-			"p": [0.0, -baja, 0.05], "tr": [tra, -inc * 0.4, -gir * 0.5],
-			"bi": [18, 62, 22], "bd": [-28, 24, 16], "cu": [14, 0]},
-		{"t": ti, "pd": L(imf * 0.55, imr * 0.6 + 8, tob, abd, rot), "pi": L(16, 28, 6),
-			"p": [0.0, -baja + salto * 0.6, 0.12], "tr": [tri, inc, gir],
-			"bi": [22, 58, 28], "bd": [-18, 30, 20], "cu": [22, 0]},
-		{"t": tf, "pd": L(imf, imr, tob * 0.7, abd * 0.8, rot * 0.8), "pi": L(10, 20, 4),
-			"p": [0.0, salto - baja * 0.5, 0.14], "tr": [tri * 0.7, inc * 0.7, gir * 0.8],
-			"bi": [14, 45, 22], "bd": [-8, 24, 18]},
-		{"t": d, "pd": L(6, 14), "pi": L(4, 12), "p": [0.0, 0.0, 0.1], "tr": [2, 0, 0],
+		{"t": 0.0, "pd": L(12, 22), "pi": L(6, 16), "p": [0.0, -0.02, 0.0], "g": [0.0, 0.0, 0.0]},
+		{"t": ta, "pd": L(af, ar + 12, 20, abd * 0.3, rot * 0.5), "pi": L(22, 30, 6),
+			"p": [0.0, -baja - 0.02, 0.07], "tr": [tra, -inc * 0.4, -gir * 0.5 - 8],
+			"g": [4.0, -3.0, -14.0],
+			"bi": [34, 84, 30], "bd": [-40, 34, 24], "cu": [16, 6]},
+		{"t": ti, "pd": L(imf * 0.55, imr * 0.6 + 8, tob, abd, rot), "pi": L(20, 34, 8),
+			"p": [0.0, -baja - 0.03 + salto * 0.6, 0.14], "tr": [tri + 6, inc, gir + 6],
+			"g": [8.0, 2.0, 10.0],
+			"bi": [42, 80, 34], "bd": [-26, 38, 24], "cu": [26, 0]},
+		{"t": tf, "pd": L(imf, imr, tob * 0.7, abd * 0.8, rot * 0.8), "pi": L(6, 12, 22),
+			"p": [0.0, salto - baja * 0.5 + 0.03, 0.19], "tr": [tri * 0.7, inc * 0.7, gir * 0.8 + 8],
+			"g": [2.0, 0.0, 14.0],
+			"bi": [26, 60, 26], "bd": [4, 30, 20]},
+		{"t": d, "pd": L(18, 20), "pi": L(4, 12), "p": [0.0, 0.0, 0.12], "tr": [2, 0, 0],
+			"g": [0.0, 0.0, 4.0],
 			"bi": [2, 8, 10], "bd": [2, 8, 10], "cu": [4, 0]},
 	]
 	if c.has("giro_inicio"):
