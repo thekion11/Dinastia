@@ -110,7 +110,7 @@ Junta tres fuentes:
 | 16 | Patada que luce como golpeo de balón | Informe, fallo 11 | ✅ los 20 tiros artesanales con carrera, cadera, brazo de equilibrio, apoyo flexionado y puntillas (`pruebas/golpeo_hoja.png`) |
 | 17 | Traducción al inglés y portugués | Informe (ventas) | ⬜ |
 | 18 | Carrera de Jugador | Modos | ⬜ |
-| 19 | Balón mejor y con más variantes: modelos por competición y marca ficticia, texturas de paneles, desgaste, balón de invierno (naranja/amarillo) y elegir el del club | Pedido del usuario (29-9) | ⬜ |
+| 19 | Balón mejor y con más variantes: modelos por competición y marca ficticia, texturas de paneles, desgaste, balón de invierno (naranja/amarillo) y elegir el del club | Pedido del usuario (29-9) | ✅ 8 balones y 3 dibujos de paneles reales (32 paneles, 6 curvos, cuero de gajos), naranja con nieve, el del club en las dominadas (`pruebas/balones.png`) |
 | 20 | El escudo pintado en el círculo central se ve tosco de cerca: suavizarlo o vectorizarlo | Visto en la cinemática de fichajes | ✅ 1024 px con mipmaps, recibe luz y sombra, pintura translúcida |
 | 21 | Objetivos siempre a la vista en el borde derecho (directiva, confianza, próximo partido, misiones del mentor) | Pedido del usuario (29-9) | ✅ |
 | 22 | Las butacas de los rivales con los colores de su club (salían todas verdes) | Visto en la cinemática | ✅ |

@@ -65,6 +65,10 @@ func _montar(mundo: Mundo, j: Jugador, de: Club) -> void:
 	## La grada responde a quién presentas: llena para una estrella, a medias
 	## para uno de rotación (lo mismo que dice la noticia de `aplicar()`).
 	StadiumBuilder.build(_raiz, perfil, aforo, 0.92 if estrella else 0.4, mio._hash_id(), mio)
+	## El balón de las dominadas es el del club (Club → Detalles del club).
+	if mundo.comercial != null:
+		var cb := Comercial.color_balon(mundo.comercial.balon, mio)
+		Balon3D.material(cb[0], cb[1], String(cb[2]))
 	_poner_jugador(j, mio)
 	_poner_confeti(Color(mio.color_kit1()), Color(mio.color_kit2()))
 	_poner_flashes()
