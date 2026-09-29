@@ -813,7 +813,7 @@ static func centro_tribuna(eje: float, niveles: int) -> float:
 static func spawn_ball(root: Node3D, pos: Vector3, colores: Array = []) -> Balon3D:
 	var claro: Color = colores[0] if colores.size() > 0 else Color("#f8faf6")
 	var oscuro: Color = colores[1] if colores.size() > 1 else Color("#1a1a1a")
-	var ball := Balon3D.crear(pos, claro, oscuro)
+	var ball := Balon3D.crear(pos, claro, oscuro, String(colores[2]) if colores.size() > 2 else "clasico")
 	root.add_child(ball)
 	return ball
 

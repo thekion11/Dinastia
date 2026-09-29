@@ -185,6 +185,10 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## que es lo que hace la pantalla de un estadio de verdad un día entre
 	## semana. Antes, sin partido, se quedaba en el degradado estático.
 	_montar_pantalla()
+	## EL BALÓN DE INVIERNO (29-9-2026): con nieve se juega con el naranja,
+	## que se ve sobre el blanco, como en las ligas de verdad.
+	if String(perfil.get("clima", "")) == "nieve":
+		colores_balon = [Color("#ff7a1a"), Color("#1a1a1a"), "moderno"]
 	_balon = StadiumBuilder.spawn_ball(_raiz3d, Vector3(0, 0.11, 0), colores_balon)
 	## Si viene un partido sin empezar hay que prepararlo ANTES de sacar a nadie:
 	## `preparar()` es quien arma los dos onces y quien mide su fuerza. Sin eso,
