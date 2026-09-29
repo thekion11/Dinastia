@@ -15,6 +15,9 @@ var _n := 0
 var _cola: Array = []
 var _pantallas := 0
 var _botones := 0
+## Con RECORRIDO_TEXTOS=<ruta>, además guarda todos los textos que se vieron
+## (lo usa la traducción: mapa de metas 17).
+var _textos := {}
 
 func _ready() -> void:
 	_p = load("res://escenas/principal.tscn").instantiate()
@@ -42,6 +45,10 @@ func _process(_d: float) -> void:
 			h.queue_free()
 	if _cola.is_empty():
 		print("RECORRIDO: %d pantallas, %d botones" % [_pantallas, _botones])
+		var ruta := OS.get_environment("RECORRIDO_TEXTOS")
+		if ruta != "":
+			var f := FileAccess.open(ruta, FileAccess.WRITE)
+			f.store_string(JSON.stringify(_textos))
 		get_tree().quit()
 		return
 	var paso: Array = _cola.pop_front()
@@ -65,6 +72,26 @@ func _process(_d: float) -> void:
 			print("PANTALLA ficha %s" % paso[1])
 			_pulsar_botones()
 	_pantallas += 1
+	if OS.get_environment("RECORRIDO_TEXTOS") != "":
+		_recoger(_p)
+
+func _recoger(n: Node) -> void:
+	var ts: Array = []
+	if n is Label:
+		ts.append((n as Label).text)
+	elif n is OptionButton:
+		for i in (n as OptionButton).item_count:
+			ts.append((n as OptionButton).get_item_text(i))
+	elif n is Button:
+		ts.append((n as Button).text)
+	if n is Control and (n as Control).tooltip_text != "":
+		ts.append((n as Control).tooltip_text)
+	for t: String in ts:
+		t = t.strip_edges()
+		if t != "":
+			_textos[t] = int(_textos.get(t, 0)) + 1
+	for h in n.get_children():
+		_recoger(h)
 
 func _pulsar_botones() -> void:
 	var tabs: TabContainer = _p.get("_pestanas")
