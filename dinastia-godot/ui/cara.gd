@@ -449,6 +449,16 @@ static func foto_real(j: Jugador) -> Texture2D:
 	var ruta := String(_indice_fotos_de().get(Nombres.limpiar(j.nombre), ""))
 	if ruta == "":
 		return null
+	return foto_de_ruta(ruta)
+
+## La ruta del retrato real de un jugador, o "" (mismas reglas que `foto_real`).
+static func ruta_foto(j: Jugador) -> String:
+	if not j.real or not Datos.base_real:
+		return ""
+	return String(_indice_fotos_de().get(Nombres.limpiar(j.nombre), ""))
+
+## Lee un retrato por su ruta (cacheado).
+static func foto_de_ruta(ruta: String) -> Texture2D:
 	var clave := "foto_%s" % ruta
 	if _cache.has(clave):
 		return _cache[clave]
@@ -514,3 +524,125 @@ static func fotos_encontradas() -> int:
 static func limpiar_cache() -> void:
 	_cache.clear()
 	_indice_fotos_listo = false
+
+## ─── LA CARA 2D MOLDEADA SOBRE EL MODELO 3D (29-9-2026) ───────────────────
+## El retrato de la ficha, proyectado de frente sobre la cabeza del jugador del
+## partido (`equipacion_q.gdshader`, bloque «cara»). Se proyecta con la pose de
+## reposo del modelo, no con su atlas UV: los ojos del retrato (26,33) y (38,33)
+## caen sobre los ojos del modelo y la boca (32, 44.5) sobre su boca. Aquí solo
+## van los rasgos (sin fondo, pelo, orejas ni hombros): la piel es la del
+## modelo, teñida al tono del jugador, y las cejas y el pelo son mallas propias.
+## CAPAS: estos colores MULTIPLICAN la piel (sombras, labios, mejillas, pecas),
+## así sirven igual para una piel clara que para una oscura; la barba es otra
+## capa (`textura_barba`) que se pinta encima con el color del pelo.
+const PUNTOS_FOTOS := "res://datos/caras_reales_puntos.json"
+static var _puntos_fotos: Dictionary = {}
+static var _puntos_listos := false
+
+static func svg_rasgos(lk: Dictionary) -> String:
+	var cara := clampi(int(lk.get("cara", 0)), 0, CARAS_RX.size() - 1)
+	var rx: float = CARAS_RX[cara]
+	var pc := String(lk.get("peloC", "#231a14"))
+	var b := clampi(int(lk.get("boca", 0)), 0, 2)
+	var bocas := [
+		"M28 %.1fq4 2.2 8 0" % (43.5 + float(b)),
+		"M28 %.1fq4 .6 8 0" % (43.5 + float(b)),
+		"M28 %.1fq4 -1.8 8 0" % (44.0 + float(b)),
+	]
+	var narices := [
+		"M30.3 39.4q1.7 1 3.4 0",
+		"M30.6 39.2q1.4 1.1 2.8 0",
+		"M29.6 39.3q2.4 1.4 4.8 0",
+		"M30.2 39.1q1.8 .9 3.6 0",
+	]
+	var s := '<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'
+	s += '<defs><radialGradient id="mej" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#e89080" stop-opacity=".45"/><stop offset="1" stop-color="#e89080" stop-opacity="0"/></radialGradient>'
+	s += '<radialGradient id="och" cx="0.5" cy="0.35" r="0.6"><stop offset="0" stop-color="#8a6a58" stop-opacity=".55"/><stop offset="1" stop-color="#8a6a58" stop-opacity="0"/></radialGradient></defs>'
+	## Mejillas y cuenca de los ojos (sombra suave).
+	s += '<ellipse cx="25.2" cy="38.6" rx="3.6" ry="2.6" fill="url(#mej)"/><ellipse cx="38.8" cy="38.6" rx="3.6" ry="2.6" fill="url(#mej)"/>'
+	s += '<ellipse cx="26" cy="33" rx="4.4" ry="3.4" fill="url(#och)"/><ellipse cx="38" cy="33" rx="4.4" ry="3.4" fill="url(#och)"/>'
+	if bool(lk.get("pecas", false)):
+		s += '<g fill="#9a6040" opacity=".55">'
+		var h := hash(lk)
+		var rng := RandomNumberGenerator.new()
+		rng.seed = h
+		for i in 22:
+			var lado := -1.0 if i % 2 == 0 else 1.0
+			var px := 32.0 + lado * rng.randf_range(2.0, 9.5)
+			var py := rng.randf_range(35.0, 40.5) - maxf(0.0, 4.0 - absf(px - 32.0)) * 0.6
+			s += '<circle cx="%.2f" cy="%.2f" r="%.2f" opacity="%.2f"/>' % [px, py, rng.randf_range(0.2, 0.42), rng.randf_range(0.4, 1.0)]
+		s += "</g>"
+	## La barba va aparte (`textura_barba`): el shader la pinta como pelo
+	## corto con ruido, no como una mancha lisa.
+	## Pestañas: la línea del párpado de arriba y la sombra de abajo.
+	s += '<path d="M22.8 32.4q3.2 -2.6 6.4 0M34.8 32.4q3.2 -2.6 6.4 0" stroke="#1a0f0a" stroke-opacity=".75" stroke-width=".9" fill="none" stroke-linecap="round"/>'
+	s += '<path d="M23.4 34.6q2.6 1.3 5.2 0M35.4 34.6q2.6 1.3 5.2 0" stroke="#3a2418" stroke-opacity=".3" stroke-width=".7" fill="none" stroke-linecap="round"/>'
+	## Nariz: aletas y sombra lateral.
+	s += '<path d="%s" stroke="#3a2418" stroke-opacity=".45" stroke-width=".9" fill="none" stroke-linecap="round"/>' % narices[clampi(int(lk.get("nariz", 0)), 0, 3)]
+	s += '<path d="M30.6 34.6q-.5 2.4 -.4 4" stroke="#3a2418" stroke-opacity=".16" stroke-width="1" fill="none"/>'
+	## Boca: labios y la comisura.
+	s += '<path d="%s" stroke="#d8a098" stroke-width="1.6" fill="none" stroke-linecap="round"/>' % bocas[b]
+	s += '<path d="%s" stroke="#4a2a24" stroke-opacity=".7" stroke-width=".55" fill="none" stroke-linecap="round"/>' % bocas[b]
+	s += '<path d="M29 %.1fq3 1.4 6 0" stroke="#e0aaa0" stroke-opacity=".7" stroke-width="1.3" fill="none" stroke-linecap="round"/>' % (45.4 + float(b))
+	if bool(lk.get("cicatriz", false)):
+		s += '<path d="M%.1f 27l2.4 5.4" stroke="#a8756a" stroke-width=".9" opacity=".7"/>' % (32.0 + rx * 0.5)
+	if bool(lk.get("lunar", false)):
+		s += '<circle cx="%.1f" cy="41.6" r=".7" fill="#5a3a2a" opacity=".75"/>' % (32.0 - rx * 0.62)
+	return s + "</svg>"
+
+## Los rasgos rasterizados a 256x256, cacheados por aspecto.
+static func textura_rasgos(lk: Dictionary) -> Texture2D:
+	var clave := "rasgos_%d" % hash(lk)
+	if _cache.has(clave):
+		return _cache[clave]
+	var img := Image.new()
+	if img.load_svg_from_string(svg_rasgos(lk), 4.0) != OK:
+		return null
+	img.generate_mipmaps()
+	var t := ImageTexture.create_from_image(img)
+	_cache[clave] = t
+	return t
+
+## La barba sola, en blanco (el shader la tiñe y le pone el ruido del pelo).
+## null si no lleva.
+static func textura_barba(lk: Dictionary) -> Texture2D:
+	var bi := int(lk.get("barba", 0))
+	if bi <= 0:
+		return null
+	var clave := "barba_%d_%d" % [bi, int(lk.get("cara", 0))]
+	if _cache.has(clave):
+		return _cache[clave]
+	var rx: float = CARAS_RX[clampi(int(lk.get("cara", 0)), 0, CARAS_RX.size() - 1)]
+	var svg := '<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">%s</svg>' % _barba(bi, "#ffffff", rx)
+	var img := Image.new()
+	if img.load_svg_from_string(svg, 4.0) != OK:
+		return null
+	img.generate_mipmaps()
+	var t := ImageTexture.create_from_image(img)
+	_cache[clave] = t
+	return t
+
+## Ojos y boca del retrato real (de 0 a 1), o [] si no se encontraron.
+static func puntos_foto(ruta: String) -> Array:
+	if not _puntos_listos:
+		_puntos_listos = true
+		if FileAccess.file_exists(PUNTOS_FOTOS):
+			var jp := JSON.new()
+			if jp.parse(FileAccess.get_file_as_string(PUNTOS_FOTOS)) == OK and jp.data is Dictionary:
+				_puntos_fotos = jp.data
+	var nombre := ruta.get_file().get_basename()
+	for k: String in _indice_fotos_de():
+		if String(_indice_fotos[k]) == ruta:
+			nombre = k
+			break
+	var p: Variant = _puntos_fotos.get(nombre)
+	return p if p is Array and (p as Array).size() == 6 else []
+
+## Todo lo que el 3D necesita para poner la cara de un jugador (lo arma
+## `Puente3D.jugador`): el aspecto y, si es real y tiene retrato calzable, la foto.
+static func datos_3d(j: Jugador) -> Dictionary:
+	var d := {"look": look_de(j)}
+	var ruta := ruta_foto(j)
+	if ruta != "" and not puntos_foto(ruta).is_empty():
+		d["foto"] = ruta
+	return d

@@ -81,6 +81,23 @@ uniform float borde = 0.45;
 // reposo, no de la máscara, que solo marca la equipación de juego.
 uniform bool largo = false;
 
+// LA CARA 2D MOLDEADA SOBRE EL MODELO 3D (29-9-2026): los rasgos del retrato
+// de la ficha (`Cara.svg_rasgos`) o la foto real, proyectados de frente con la
+// pose de reposo. Ojos del retrato (26,33)/(38,33) = centro de los globos
+// oculares (x = ±0,0338 m, y = 1,6986 m); boca (32, 44,5) = boca (y = 1,622 m).
+uniform bool hay_cara = false;
+uniform sampler2D cara_tex : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D barba_tex : hint_default_transparent, filter_linear_mipmap, repeat_disable;
+uniform vec4 barba_color : source_color = vec4(0.1, 0.07, 0.05, 1.0);
+// Menos fuerza cuando encima va la barba 3D (la pintada solo rellena debajo).
+uniform float barba_fuerza = 0.0;
+uniform bool hay_foto = false;
+uniform sampler2D foto_tex : source_color, filter_linear_mipmap, repeat_disable;
+// Del espacio del retrato (0-64) a la foto (0-1): u = dot(foto_u, (sx, sy, 1)).
+uniform vec3 foto_u = vec3(0.0);
+uniform vec3 foto_v = vec3(0.0);
+uniform vec3 foto_tono = vec3(1.0);
+
 // La pose de reposo exacta, escrita en la malla por `VestidorQ._con_reposo()`.
 uniform bool usa_reposo = false;
 // Cuánto se separa la tela del cuerpo, en metros (0 = pintada sobre la piel).
@@ -527,6 +544,40 @@ void fragment() {
 	albedo = mix(albedo, med * pliegue, m.b);
 	albedo = mix(albedo, botin, m.a);
 	float tela = clamp(m.r + m.g + m.b, 0.0, 1.0);
+
+	if (hay_cara && usa_reposo) {
+		float sx = 32.0 + x / 0.00563;
+		float sy = 33.0 + (1.6986 - y) / 0.00666;
+		// Solo la cara de frente: se apaga hacia los costados de la cabeza y
+		// por debajo del mentón.
+		float peso = smoothstep(0.555, 0.60, z) * smoothstep(1.552, 1.572, y) * (1.0 - tela);
+		if (peso > 0.0 && sx > 0.0 && sx < 64.0 && sy > 0.0 && sy < 64.0) {
+			if (hay_foto) {
+				vec3 q = vec3(sx, sy, 1.0);
+				vec2 fuv = vec2(dot(foto_u, q), dot(foto_v, q));
+				vec2 ov = vec2((sx - 32.0) / 10.5, (sy - 38.5) / 14.0);
+				float mas = 1.0 - smoothstep(0.62, 1.0, length(ov));
+				if (fuv.x > 0.0 && fuv.x < 1.0 && fuv.y > 0.0 && fuv.y < 1.0) {
+					// La foto, llevada al tono de la piel del modelo (que ya se
+					// tiñó con el de la foto): no queda una máscara pegada.
+					albedo = mix(albedo, texture(foto_tex, fuv).rgb * foto_tono, mas * peso);
+				}
+			} else {
+				vec2 st = vec2(sx, sy) / 64.0;
+				// Capa de rasgos: multiplica la piel (vale para cualquier tono).
+				vec4 r = texture(cara_tex, st);
+				albedo = mix(albedo, albedo * r.rgb, r.a * peso);
+				if (barba_fuerza > 0.0) {
+					// Pelo corto: ruido fino (cada pelo) sobre ruido medio (la
+					// densidad), más ralo hacia el borde de la barba.
+					float bb = texture(barba_tex, st).a;
+					float n = ruido(vec2(sx, sy) * 9.0) * 0.55 + ruido(vec2(sx * 3.1, sy * 2.3)) * 0.45;
+					float a = bb * smoothstep(0.3, 0.7, n + (bb - 0.5) * 0.6) * barba_fuerza;
+					albedo = mix(albedo, barba_color.rgb * (0.75 + 0.5 * n), a * peso);
+				}
+			}
+		}
+	}
 
 	// ACCESORIOS, sobre la piel o sobre la ropa, por zonas de la pose de
 	// reposo (brazos en T desde |x|=0,2; mano desde 0,75; cabeza hasta 1,8).
