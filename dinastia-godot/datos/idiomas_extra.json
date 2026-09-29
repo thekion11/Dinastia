@@ -1105,7 +1105,11 @@
   "Licencia PRO": "PRO licence",
   "Ninguno\n(procedural)": "None\n(procedural)",
   "Juegas de LOCAL": "You play at HOME",
-  "Buscar": "Search"
+  "Buscar": "Search",
+  "Caras reales": "Real faces",
+  "FOTO": "PHOTO",
+  "RECREACIÓN": "RECREATION",
+  "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador.": "PHOTO: the free photo (Wikimedia Commons) on the card and in 3D. RECREATION: a drawn face with the player's skin, hair and beard."
  },
  "pt": {
   "Historia": "História",
@@ -2213,7 +2217,11 @@
   "Licencia PRO": "Licença PRO",
   "Ninguno\n(procedural)": "Nenhum\n(procedural)",
   "Juegas de LOCAL": "Você joga em CASA",
-  "Buscar": "Buscar"
+  "Buscar": "Buscar",
+  "Caras reales": "Rostos reais",
+  "FOTO": "FOTO",
+  "RECREACIÓN": "RECRIAÇÃO",
+  "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador.": "FOTO: a foto livre (Wikimedia Commons) na ficha e no 3D. RECRIAÇÃO: um rosto desenhado com a pele, o cabelo e a barba do jogador."
  },
  "patrones": [
   [
@@ -3829,7 +3837,11 @@
   "Licencia PRO": "Licence PRO",
   "Ninguno\n(procedural)": "Aucun\n(procédural)",
   "Juegas de LOCAL": "Tu joues à DOMICILE",
-  "Buscar": "Rechercher"
+  "Buscar": "Rechercher",
+  "Caras reales": "Visages réels",
+  "FOTO": "PHOTO",
+  "RECREACIÓN": "RECRÉATION",
+  "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador.": "PHOTO : la photo libre (Wikimedia Commons) sur la fiche et en 3D. RECRÉATION : un visage dessiné avec la peau, les cheveux et la barbe du joueur."
  },
  "it": {
   "Historia": "Storia",
@@ -4937,7 +4949,11 @@
   "Licencia PRO": "Licenza PRO",
   "Ninguno\n(procedural)": "Nessuno\n(procedurale)",
   "Juegas de LOCAL": "Giochi in CASA",
-  "Buscar": "Cerca"
+  "Buscar": "Cerca",
+  "Caras reales": "Volti reali",
+  "FOTO": "FOTO",
+  "RECREACIÓN": "RICREAZIONE",
+  "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador.": "FOTO: la foto libera (Wikimedia Commons) nella scheda e in 3D. RICREAZIONE: un volto disegnato con pelle, capelli e barba del giocatore."
  },
  "de": {
   "Historia": "Geschichte",
@@ -6045,7 +6061,11 @@
   "Licencia PRO": "PRO-Lizenz",
   "Ninguno\n(procedural)": "Keins\n(prozedural)",
   "Juegas de LOCAL": "Du spielst ZU HAUSE",
-  "Buscar": "Suchen"
+  "Buscar": "Suchen",
+  "Caras reales": "Echte Gesichter",
+  "FOTO": "FOTO",
+  "RECREACIÓN": "NACHBILDUNG",
+  "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador.": "FOTO: das freie Foto (Wikimedia Commons) im Profil und in 3D. NACHBILDUNG: ein gezeichnetes Gesicht mit Haut, Haaren und Bart des Spielers."
  },
  "ca": {
   "Historia": "Història",
@@ -7153,7 +7173,11 @@
   "Licencia PRO": "Llicència PRO",
   "Ninguno\n(procedural)": "Cap\n(procedimental)",
   "Juegas de LOCAL": "Jugues a CASA",
-  "Buscar": "Cercar"
+  "Buscar": "Cercar",
+  "Caras reales": "Cares reals",
+  "FOTO": "FOTO",
+  "RECREACIÓN": "RECREACIÓ",
+  "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador.": "FOTO: la foto lliure (Wikimedia Commons) a la fitxa i en 3D. RECREACIÓ: una cara dibuixada amb la pell, el cabell i la barba del jugador."
  },
  "pl": {
   "Club": "Klub",
@@ -8558,7 +8582,11 @@
   "Licencia PRO": "Licencja PRO",
   "Ninguno\n(procedural)": "Brak\n(proceduralny)",
   "Juegas de LOCAL": "Grasz U SIEBIE",
-  "Buscar": "Szukaj"
+  "Buscar": "Szukaj",
+  "Caras reales": "Prawdziwe twarze",
+  "FOTO": "ZDJĘCIE",
+  "RECREACIÓN": "ODWZOROWANIE",
+  "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador.": "ZDJĘCIE: wolne zdjęcie (Wikimedia Commons) w karcie i w 3D. ODWZOROWANIE: rysowana twarz z cerą, włosami i zarostem zawodnika."
  },
  "tr": {
   "Club": "Kulüp",
@@ -9963,6 +9991,10 @@
   "Licencia PRO": "PRO Lisansı",
   "Ninguno\n(procedural)": "Yok\n(prosedürel)",
   "Juegas de LOCAL": "İÇ SAHADA oynuyorsun",
-  "Buscar": "Ara"
+  "Buscar": "Ara",
+  "Caras reales": "Gerçek yüzler",
+  "FOTO": "FOTOĞRAF",
+  "RECREACIÓN": "CANLANDIRMA",
+  "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador.": "FOTOĞRAF: kartta ve 3D'de özgür fotoğraf (Wikimedia Commons). CANLANDIRMA: oyuncunun teni, saçı ve sakalıyla çizilmiş bir yüz."
  }
 }
