@@ -24,6 +24,14 @@ static func instalar() -> void:
 	_instalado.locale = TranslationServer.get_locale()
 	TranslationServer.add_translation(_instalado)
 
+## Se quita del servidor al cerrar el juego (lo llama el autoload `Cierre`).
+## Sin esto, Godot hacía «segmentation fault» al salir: el `TranslationServer`
+## liberaba esta traducción -que es un script- cuando GDScript ya estaba apagado.
+static func desinstalar() -> void:
+	if _instalado != null:
+		TranslationServer.remove_translation(_instalado)
+		_instalado = null
+
 ## Cambia el género; la interfaz se vuelve a traducir sola al refrescar.
 static func fijar(es_mujer: bool) -> void:
 	instalar()

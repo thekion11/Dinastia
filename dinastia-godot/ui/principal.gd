@@ -2322,6 +2322,12 @@ var _pais_elegido: String = ""
 
 func _abrir_elegir_club() -> void:
 	if _dlg_club != null and is_instance_valid(_dlg_club):
+		## Fuera del árbol YA, no al final del cuadro: si no, durante ese cuadro
+		## hay dos ventanas exclusivas y Godot se queja (visto en el recorrido).
+		_dlg_club.exclusive = false
+		_dlg_club.hide()
+		if _dlg_club.get_parent() != null:
+			_dlg_club.get_parent().remove_child(_dlg_club)
 		_dlg_club.queue_free()
 	_dlg_club = Window.new()
 	_dlg_club.title = "Elegir club"
@@ -2985,6 +2991,37 @@ func _anotar(titulo: String, cuerpo: String) -> void:
 
 var _panel_obj: PanelObjetivos
 
+## PINTAR SOLO LO QUE SE VE (29-9-2026, auditoría). `_refrescar` repintaba las
+## ~40 pantallas del juego en cada clic, se vieran o no: 2-4 segundos por
+## refresco medidos sin gráfica (entrenamiento 0,5 s, estadio 0,4 s, ficha
+## 0,4 s...). Ahora las pestañas que no están a la vista quedan PENDIENTES y se
+## pintan el cuadro en que aparecen (`_process`). `pintar_todo` lo desactiva.
+var pintar_todo := false
+var _pendientes := {}   ## Control -> Callable
+
+func _perezoso(cont: Control, pintar: Callable) -> void:
+	if pintar_todo or cont == null or not cont.is_inside_tree() or cont.is_visible_in_tree():
+		_pendientes.erase(cont)
+		pintar.call()
+	else:
+		_pendientes[cont] = pintar
+
+func _pintar_pendientes() -> void:
+	for cont: Variant in _pendientes.keys():
+		if not is_instance_valid(cont):
+			_pendientes.erase(cont)
+			continue
+		var ctl := cont as Control
+		if ctl.is_visible_in_tree():
+			var pintar: Callable = _pendientes[cont]
+			_pendientes.erase(cont)
+			pintar.call()
+			_traducir_pantalla(ctl)
+
+func _process(_d: float) -> void:
+	if not _pendientes.is_empty():
+		_pintar_pendientes()
+
 func _refrescar() -> void:
 	var c := mundo.mi_club()
 	## Los objetivos, fijos en el borde derecho (PanelObjetivos).
@@ -3074,44 +3111,46 @@ func _refrescar() -> void:
 			"rojo":   _color_accesible(COL_ROJO),
 			"oro":    _color_accesible(COL_ORO),
 		}, _negociacion_ultimo)
-	_ui_plantel._pintar_copa(c)
-	_ui_ficha._pintar_club(c)
-	_ui_club_vida._pintar_conti(c)
-	_ui_club_vida._pintar_medico(c)
-	_ui_club_vida._pintar_logros()
-	_ui_club_vida._pintar_entrenamiento(c)
-	_pintar_federacion(c)
-	_pintar_estadio(c)
-	_ui_cantera._pintar_seleccion(c)
-	_ui_cantera._pintar_cantera(c)
-	_ui_cantera._pintar_contratos(c)
-	_ui_cantera._pintar_comparar()
-	_ui_legado._pintar_records()
-	_ui_legado._filtrar_records()
-	_ui_legado._pintar_legado()
+	_perezoso(_lista_copa, _ui_plantel._pintar_copa.bind(c))
+	_perezoso(_lista_club, _ui_ficha._pintar_club.bind(c))
+	_perezoso(_lista_conti, _ui_club_vida._pintar_conti.bind(c))
+	_perezoso(_lista_medico, _ui_club_vida._pintar_medico.bind(c))
+	_perezoso(_lista_logros, _ui_club_vida._pintar_logros)
+	_perezoso(_lista_entren, _ui_club_vida._pintar_entrenamiento.bind(c))
+	_perezoso(_lista_fed, _pintar_federacion.bind(c))
+	_perezoso(_lista_estadio, _pintar_estadio.bind(c))
+	_perezoso(_lista_seleccion, _ui_cantera._pintar_seleccion.bind(c))
+	_perezoso(_lista_cantera, _ui_cantera._pintar_cantera.bind(c))
+	_perezoso(_lista_contratos, _ui_cantera._pintar_contratos.bind(c))
+	_perezoso(_lista_comparar, _ui_cantera._pintar_comparar)
+	_perezoso(_lista_records, func() -> void:
+		_ui_legado._pintar_records()
+		_ui_legado._filtrar_records())
+	_perezoso(_lista_legado, _ui_legado._pintar_legado)
 	_ui_legado._pintar_inicio(c)
 	## Las otras tres viven DENTRO de `_pintar_gente()` ahora -un chip por
 	## sección, solo se pinta la que está activa- en vez de apilarse las
 	## cuatro siempre, aunque solo una se vea.
-	_ui_gente._pintar_gente()
-	_pintar_finanzas(c)
-	_pintar_camarin(c)
-	_pintar_ciudad(c)
-	_ui_editor._pintar_editor()
-	_ui_opciones._pintar_glosario()
-	_ui_ajustes._pintar_ajustes()
-	_ui_gente._pintar_correo()
-	_ui_gente._pintar_redes()
-	_ui_gente._filtrar_redes()
+	_perezoso(_lista_gente, _ui_gente._pintar_gente)
+	_perezoso(_lista_finanzas, _pintar_finanzas.bind(c))
+	_perezoso(_lista_camarin, _pintar_camarin.bind(c))
+	_perezoso(_lista_ciudad, _pintar_ciudad.bind(c))
+	_perezoso(_lista_editor, _ui_editor._pintar_editor)
+	_perezoso(_lista_glosario, _ui_opciones._pintar_glosario)
+	_perezoso(_lista_ajustes, _ui_ajustes._pintar_ajustes)
+	_perezoso(_lista_correo, _ui_gente._pintar_correo)
+	_perezoso(_lista_redes, func() -> void:
+		_ui_gente._pintar_redes()
+		_ui_gente._filtrar_redes())
 	_ui_legado._pintar_vida()
 	_ui_legado._pintar_habilidades()
-	_ui_plantel._pintar_libres(c)
-	_ui_plantel._pintar_premios()
-	_pintar_clubes()
-	_ui_plantel._pintar_desafios()
-	_ui_plantel._pintar_tactica(c)
-	_ui_plantel._pintar_partido(c)
-	_ui_plantel._pintar_calendario(c)
+	_perezoso(_lista_libres, _ui_plantel._pintar_libres.bind(c))
+	_perezoso(_lista_premios, _ui_plantel._pintar_premios)
+	_perezoso(_lista_clubes, _pintar_clubes)
+	_perezoso(_lista_desafios, _ui_plantel._pintar_desafios)
+	_perezoso(_lista_tactica, _ui_plantel._pintar_tactica.bind(c))
+	_perezoso(_lista_partido, _ui_plantel._pintar_partido.bind(c))
+	_perezoso(_lista_calendario, _ui_plantel._pintar_calendario.bind(c))
 	_pintar_dias()
 	_actualizar_badges()
 	_ui_despacho._pintar_despacho()
@@ -3431,7 +3470,9 @@ func _ver_ficha(j: Jugador) -> void:
 	## no pasa por aquí cuando se pulsa una fila del plantel -eso llama solo a
 	## _ver_ficha(), no a _refrescar()-, así que sin esto el árbol se quedaba con
 	## el jugador anterior hasta la siguiente semana.
-	_ui_club_vida._pintar_entrenamiento(mundo.mi_club())
+	## Diferido (29-9-2026): solo se repinta si la pestaña está a la vista; si
+	## no, al abrirla. Era 0,3-0,5 s en cada clic de la ficha.
+	_perezoso(_lista_entren, _ui_club_vida._pintar_entrenamiento.bind(mundo.mi_club()))
 	for n in _ficha.get_children():
 		if n is Label and n.text == "FICHA DEL JUGADOR":
 			continue
