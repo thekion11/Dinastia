@@ -476,6 +476,25 @@ func _pintar_dispositivo() -> void:
 		p._refrescar())
 	fila_ra.add_child(b_ra)
 
+	## CARAS REALES (29-9-2026): con la base real, la foto libre del jugador o
+	## solo su recreación (piel, pelo y barba sacados de la foto).
+	if Datos.base_real:
+		var fila_cf := HBoxContainer.new()
+		fila_cf.add_theme_constant_override("separation", 8)
+		p._lista_ajustes.add_child(fila_cf)
+		var et_cf := p._texto(12, Principal.COL_TEXTO)
+		et_cf.text = "Caras reales"
+		et_cf.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		et_cf.tooltip_text = "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador."
+		fila_cf.add_child(et_cf)
+		var b_cf := Button.new()
+		b_cf.text = "FOTO" if Cara.usar_fotos else "RECREACIÓN"
+		b_cf.pressed.connect(func() -> void:
+			Cara.usar_fotos = not Cara.usar_fotos
+			p._guardar_preferencias()
+			p._refrescar())
+		fila_cf.add_child(b_cf)
+
 	## CALIDAD GRÁFICA. Manda en el visor 3D del estadio, que es lo único del
 	## juego que puede ir lento: la interfaz son etiquetas y no cuesta nada.
 	## `Calidad` ya tenía los tres niveles montados desde el porte del visor.
