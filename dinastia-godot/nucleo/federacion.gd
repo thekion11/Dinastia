@@ -73,6 +73,10 @@ const VOTO_IA := {
 	## El fair play financiero lo votan los CHICOS: es la unica regla que frena a
 	## quien puede gastar sin mirar, y por eso los grandes lo tumban.
 	"fpf":         {"umbral": 78, "grande": 0.25, "chico": 0.80},
+	## Reglamento fino (28-9-2026): al chico le conviene la promoción (una
+	## segunda oportunidad); el desempate directo divide a la asamblea.
+	"desempate":   {"umbral": 0,  "grande": 0.5, "chico": 0.5},
+	"promocion":   {"umbral": 78, "grande": 0.35, "chico": 0.7},
 }
 const PROB_NEUTRA := 0.5           ## moción desconocida: la asamblea se parte
 
@@ -140,6 +144,11 @@ var tope_extranjeros: int = 0      ## 0 = sin tope
 var playoffs: bool = false         ## el campeón se juega, no se suma
 var superliga: bool = false        ## te fuiste con los separatistas
 var var_activo: bool = false       ## hay VAR en la categoría
+var desempate_directo: bool = false  ## a igualdad de puntos, el enfrentamiento directo
+var promocion: bool = false        ## el antepenúltimo se juega la categoría
+## EL HISTORIAL POR ÁRBITRO (28-9-2026): con quién te fue cómo. nombre ->
+## {pj, g, e, p, perfil}. Solo tus partidos.
+var arbitros: Dictionary = {}
 
 ## --- POLÍTICA --------------------------------------------------------------
 var aliados: int = 0               ## peso político, de -10 a 10
@@ -320,6 +329,13 @@ func _aplicar_mocion(id: String, pasa: bool, opcion: String, mi: Club) -> String
 			fpf_activo = true
 			fpf_avisos = 0
 			return "Entra en vigor el fair play financiero: si tu masa salarial pasa del %d%% de los ingresos dos temporadas seguidas, hay multa y mercado cerrado." % FPF_UMBRAL
+		"desempate":
+			desempate_directo = true
+			Liga.desempate_directo = true
+			return "Desde ahora, a igualdad de puntos manda el enfrentamiento directo."
+		"promocion":
+			promocion = true
+			return "Desde esta temporada, el antepenúltimo de Primera juega la promoción contra el tercero de Ascenso."
 		"var":
 			var_activo = true
 			var coste := Eco.escalar(COSTE_VAR, float(mi.rep))
@@ -748,6 +764,7 @@ func a_dic() -> Dictionary:
 		"semanas_en_rojo": semanas_en_rojo, "enojo_arbitral": enojo_arbitral,
 		"playoffs_ultimo": playoffs_ultimo, "sec": _sec,
 		"presidente": presidente,
+		"desempate": desempate_directo, "promocion": promocion, "arbitros": arbitros,
 	}
 
 func desde_dic(d: Dictionary) -> void:
@@ -757,6 +774,10 @@ func desde_dic(d: Dictionary) -> void:
 	playoffs = bool(d.get("playoffs", false))
 	superliga = bool(d.get("superliga", false))
 	var_activo = bool(d.get("var", false))
+	desempate_directo = bool(d.get("desempate", false))
+	Liga.desempate_directo = desempate_directo
+	promocion = bool(d.get("promocion", false))
+	arbitros = (d.get("arbitros", {}) as Dictionary).duplicate(true)
 	fpf_activo = bool(d.get("fpf", false))
 	fpf_avisos = int(d.get("fpf_avisos", 0))
 	fpf_sancionado = bool(d.get("fpf_sancion", false))
@@ -781,6 +802,23 @@ func desde_dic(d: Dictionary) -> void:
 
 ## Las seis mociones. Vienen de la tabla del juego, no reescritas aquí: si el
 ## HTML añade una séptima, se vuelve a exportar `tablas.json` y aparece sola.
+## Anota el resultado de TU partido con su árbitro.
+func anotar_arbitro(nombre: String, perfil: String, gf: int, gc: int) -> void:
+	if nombre == "":
+		return
+	var h: Dictionary = arbitros.get(nombre, {"pj": 0, "g": 0, "e": 0, "p": 0, "perfil": perfil})
+	h["pj"] = int(h["pj"]) + 1
+	var k := "g" if gf > gc else ("e" if gf == gc else "p")
+	h[k] = int(h[k]) + 1
+	arbitros[nombre] = h
+
+## "Con él: 5 PJ · 1G 2E 2P" o vacío si nunca te dirigió.
+func texto_arbitro(nombre: String) -> String:
+	if not arbitros.has(nombre):
+		return ""
+	var h: Dictionary = arbitros[nombre]
+	return "Con él: %d PJ · %dG %dE %dP" % [int(h["pj"]), int(h["g"]), int(h["e"]), int(h["p"])]
+
 func catalogo() -> Array:
 	var t: Variant = Datos.tabla("VOTACIONES")
 	return t if t is Array else []

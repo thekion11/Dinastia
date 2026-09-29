@@ -346,7 +346,7 @@ static func _liga_a_dic(l: Liga) -> Dictionary:
 	## como si estuviera arriba.
 	return {
 		"nombre": l.nombre, "pais": l.pais, "div": l.div, "clubes": ids,
-		"jornada": l.jornada_actual, "tabla": l.tabla_puntos,
+		"jornada": l.jornada_actual, "tabla": l.tabla_puntos, "h2h": l.h2h,
 	}
 
 ## La copa. Solo hacen falta tres cosas: el nombre, quiénes siguen vivos y en qué
@@ -400,6 +400,8 @@ static func _dic_a_liga(d: Dictionary, m: Mundo) -> Liga:
 			var fila: Dictionary = d["tabla"][id]
 			for k: String in fila:
 				l.tabla_puntos[id][k] = int(fila[k])
+	for k2: String in d.get("h2h", {}):
+		l.h2h[k2] = int(d["h2h"][k2])
 	return l
 
 # --- lectura ----------------------------------------------------------------
