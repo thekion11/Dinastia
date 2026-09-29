@@ -1,5 +1,5 @@
 extends Node
-## LOS CUATRO ESCALONES DE `RendimientoAdaptativo` (25-9-2026).
+## LOS CINCO ESCALONES DE `RendimientoAdaptativo` (25-9-2026).
 ##
 ##   godot --headless --path . res://pruebas/probar_rendimiento_adaptativo.tscn
 ##
@@ -40,12 +40,19 @@ func _ready() -> void:
 	_comprobar(sol.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS \
 		and sol.directional_shadow_max_distance <= 120.0, "escalón 2: dos cascadas y sombra hasta 120 m")
 	ra.bajar()
+	var livianas := true
+	var cuantas := 0
+	for n in raiz.find_children("ButacasCerca*", "MultiMeshInstance3D", true, false):
+		cuantas += 1
+		livianas = livianas and (n as MultiMeshInstance3D).multimesh.mesh == StadiumBuilder._malla_butaca_lejos()
+	_comprobar(cuantas > 0 and livianas, "escalón 3: butacas cercanas con la malla liviana (%d tribunas)" % cuantas)
+	ra.bajar()
 	_comprobar(is_equal_approx(get_viewport().scaling_3d_scale, 0.8) \
-		and get_viewport().scaling_3d_mode == Viewport.SCALING_3D_MODE_FSR, "escalón 3: 3D al 80% con FSR")
+		and get_viewport().scaling_3d_mode == Viewport.SCALING_3D_MODE_FSR, "escalón 4: 3D al 80% con FSR")
 	ra.bajar()
-	_comprobar(is_equal_approx(get_viewport().scaling_3d_scale, 0.67), "escalón 4: 3D al 67%")
+	_comprobar(is_equal_approx(get_viewport().scaling_3d_scale, 0.67), "escalón 5: 3D al 67%")
 	ra.bajar()
-	_comprobar(ra.escalon == 4 and avisos.size() == 4, "no hay quinto escalón, y avisó de los cuatro")
+	_comprobar(ra.escalon == 5 and avisos.size() == 5, "no hay sexto escalón, y avisó de los cinco")
 	vista.queue_free()
 	await get_tree().process_frame
 	await get_tree().process_frame

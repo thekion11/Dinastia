@@ -15,8 +15,10 @@ extends Node
 ## lo que más-:
 ##   1. oclusión ambiental (SSAO),
 ##   2. sombras más cortas y con dos cascadas en vez de cuatro,
-##   3. render 3D al 80% con reescalado FSR,
-##   4. render 3D al 67%.
+##   3. butacas cercanas con la malla liviana (la grada llena del 29-9-2026
+##      cuesta vértices, que es lo que el reescalado no alivia),
+##   4. render 3D al 80% con reescalado FSR,
+##   5. render 3D al 67%.
 ## Nunca vuelve a subir en el mismo partido (subir y bajar se nota más que
 ## quedarse), y al cerrar el estadio devuelve la escala de render a 1.
 
@@ -28,6 +30,7 @@ const MUESTRAS := 4
 const ESCALONES := [
 	"sin oclusión ambiental",
 	"sombras más cortas",
+	"butacas cercanas livianas",
 	"render 3D al 80% (FSR)",
 	"render 3D al 67% (FSR)",
 ]
@@ -83,8 +86,13 @@ func bajar() -> void:
 					d.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 					d.directional_shadow_max_distance = minf(d.directional_shadow_max_distance, 120.0)
 		3:
-			_escala(0.8)
+			for n in raiz3d.find_children("ButacasCerca*", "MultiMeshInstance3D", true, false):
+				var mmi := n as MultiMeshInstance3D
+				if mmi.multimesh != null:
+					mmi.multimesh.mesh = StadiumBuilder._malla_butaca_lejos()
 		4:
+			_escala(0.8)
+		5:
 			_escala(0.67)
 	escalon_aplicado.emit(escalon, String(ESCALONES[escalon - 1]))
 
@@ -98,7 +106,7 @@ func _escala(e: float) -> void:
 func _exit_tree() -> void:
 	## El viewport es el de la ventana entera: si no se devuelve, el resto del
 	## juego seguiría renderizando 3D a menos resolución.
-	if escalon >= 3:
+	if escalon >= 4:
 		var vp := get_viewport()
 		if vp != null:
 			vp.scaling_3d_scale = 1.0

@@ -29,6 +29,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
    detalle, personal real, banca, árbitros, cámara que no se mete en la grada).
    Seguir puliendo si se ve algo feo.
 5. Guardar en memoria lo que pide (este archivo).
+6. (29-9, después) En AMBOS modos la grada y el público «se ven del asco», no parece
+   infraestructura de verdad. Usar el **modelo 3D de butacas** (`assets/ciudad/
+   asientos_lod.glb`) en la **totalidad de la grada**; dejar de poner la versión fea
+   (textura con gente pintada + hinchas sueltos) en la zona de arriba. Las butacas
+   estaban **al revés** (mirando hacia afuera): corregir.
 
 ## Pedidos anteriores ya hechos (no rehacer)
 - Panel lateral izquierdo con 9 menús a pantalla completa (historia, gente, mi
