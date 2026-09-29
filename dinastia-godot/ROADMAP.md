@@ -1225,9 +1225,9 @@ que dar esta lista por vigente sin re-verificar sería el mismo error de siempre
   esto puede solaparse con `Banco`, construido el 13/14-9 -revisar antes de reescribir.)
 - [x] **44/45 — Reglamento y federación fino (28-9-2026)**: historial por árbitro, cambios de reglas entre
   temporadas, criterios de desempate, playoffs de descenso, repechaje, corrupción federativa.
-- [ ] **46 — Selecciones**: lista preliminar, conflicto club-selección (lo demás de este bloque ya
+- [x] **46 — Selecciones (verificado el 28-9-2026: prenómina y `pedir_descanso` ya estaban)**: lista preliminar, conflicto club-selección (lo demás de este bloque ya
   está hecho según `dinastia-pendientes` v3.1).
-- [ ] **47 — Competencias**: editor de campeonatos, sede de final fija. (Cabezas de serie y
+- [x] **47 — Competencias (28-9-2026: editor en Ajustes → Editor)**: editor de campeonatos, sede de final fija. (Cabezas de serie y
   Apertura/Clausura ya existen.)
 - [ ] **50 — Meta**: cromos, museo global, mundo heredado. (Nivel de perfil del gestor ya existe.)
 
