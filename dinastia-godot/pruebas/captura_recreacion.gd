@@ -8,7 +8,7 @@ var _n := 0
 
 func _ready() -> void:
 	Datos.base_real = true
-	Cara.usar_fotos = false
+	Cara.usar_fotos = OS.get_environment("MODO") == "foto"
 	var amb := WorldEnvironment.new()
 	var e := Environment.new()
 	e.background_mode = Environment.BG_COLOR
@@ -32,7 +32,10 @@ func _ready() -> void:
 		var lk := Cara.look_de(j)
 		var cx := 1600.0 * (i + 0.5) / n
 		var foto := TextureRect.new()
-		foto.texture = Cara.foto_de_ruta("res://recursos/caras_reales_256/%s.jpg" % String(NOMBRES[i]).replace(" ", "_"))
+		var usar := Cara.usar_fotos
+		Cara.usar_fotos = true
+		foto.texture = Cara.foto_real(j)
+		Cara.usar_fotos = usar
 		foto.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		foto.size = Vector2(145, 145)
 		foto.position = Vector2(cx - 150, 10)
@@ -66,5 +69,5 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 12:
 		Cara.usar_fotos = true
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/recreacion_reales.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % ("fotos_reales_3d" if OS.get_environment("MODO") == "foto" else "recreacion_reales"))
 		get_tree().quit()

@@ -97,6 +97,9 @@ uniform sampler2D foto_tex : source_color, filter_linear_mipmap, repeat_disable;
 uniform vec3 foto_u = vec3(0.0);
 uniform vec3 foto_v = vec3(0.0);
 uniform vec3 foto_tono = vec3(1.0);
+// -1: usar la mitad izquierda de la foto (en espejo) para toda la cara; 1: la
+// derecha; 0: la foto entera (de frente).
+uniform int foto_espejo = 0;
 
 // La pose de reposo exacta, escrita en la malla por `VestidorQ._con_reposo()`.
 uniform bool usa_reposo = false;
@@ -553,10 +556,14 @@ void fragment() {
 		float peso = smoothstep(0.555, 0.60, z) * smoothstep(1.552, 1.572, y) * (1.0 - tela);
 		if (peso > 0.0 && sx > 0.0 && sx < 64.0 && sy > 0.0 && sy < 64.0) {
 			if (hay_foto) {
-				vec3 q = vec3(sx, sy, 1.0);
+				// Foto de tres cuartos: la mitad lejana sale aplastada y en
+				// sombra; se usa la mitad que mira a la cámara, en espejo.
+				float fx = (foto_espejo != 0 && sign(sx - 32.0) != float(foto_espejo)) ? 64.0 - sx : sx;
+				vec3 q = vec3(fx, sy, 1.0);
 				vec2 fuv = vec2(dot(foto_u, q), dot(foto_v, q));
-				vec2 ov = vec2((sx - 32.0) / 10.5, (sy - 38.5) / 14.0);
-				float mas = 1.0 - smoothstep(0.62, 1.0, length(ov));
+				// Óvalo de la frente (cejas incluidas) al mentón.
+				vec2 ov = vec2((sx - 32.0) / 10.5, (sy - 37.5) / 15.0);
+				float mas = 1.0 - smoothstep(0.55, 1.0, length(ov));
 				if (fuv.x > 0.0 && fuv.x < 1.0 && fuv.y > 0.0 && fuv.y < 1.0) {
 					// La foto, llevada al tono de la piel del modelo (que ya se
 					// tiñó con el de la foto): no queda una máscara pegada.

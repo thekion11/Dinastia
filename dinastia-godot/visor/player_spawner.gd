@@ -478,16 +478,17 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 				VestidorQ.vestir(dq, c1)
 			## Pelo, barba y cejas, con el mismo corte que su retrato 2D.
 			var look_j = jug.get("look")
-			## Y su cara: los rasgos del retrato (o la foto real) moldeados
-			## sobre la cabeza.
-			if typeof(look_j) == TYPE_DICTIONARY:
-				VestidorQ.poner_cara(dq, {"look": look_j, "foto": String(jug.get("foto", ""))}, piel)
 			var corte := "corto"
 			if typeof(look_j) == TYPE_DICTIONARY and look_j.get("pelo") is String:
 				corte = look_j["pelo"]
 			## Barba 3D solo para las barbas completas del retrato (1, 4 y 6):
 			## bigote, perilla o barba de días no son esa malla.
 			PeloQ.poner(dq, corte, pelo, barba in [1, 4, 6])
+			## Y su cara: los rasgos del retrato (o la foto real) moldeados
+			## sobre la cabeza. Después del pelo: con foto esconde las cejas y
+			## la barba 3D.
+			if typeof(look_j) == TYPE_DICTIONARY:
+				VestidorQ.poner_cara(dq, {"look": look_j, "foto": String(jug.get("foto", ""))}, piel)
 			var apq: AnimationPlayer = dq["anim"]
 			if apq.has_animation("parado"):
 				apq.play("parado")
