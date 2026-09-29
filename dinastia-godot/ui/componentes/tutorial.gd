@@ -905,6 +905,7 @@ func _process(delta: float) -> void:
 		if ahora and not _hecho_al_entrar:
 			_cumplidas[_i] = true
 			_t_cumplida = _t
+			PanelObjetivos.marcar_mision(_modo, String(paso["mision"]))
 			_pintar_mision()
 			_sonar("logro")
 		elif not ahora:

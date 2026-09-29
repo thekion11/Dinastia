@@ -6310,6 +6310,27 @@ func _probar_tanda_c() -> void:
 	_comprobar(String(perf_an.get("focosCol", "")) == "#1f4fa3" and String(perf_an.get("vallaCol", "")) == "#1b1d22", "focos y vallas con color propio")
 	var est_limpio := EstadioPropio.new()
 	_comprobar(not est_limpio.perfil(mf.mi_club()).has("focosCol") and claves_antes.size() > 0, "sin elegir, el perfil no suma claves nuevas")
+	## LAS BUTACAS DE LOS RIVALES, de los colores de su club (no el verde del visor).
+	var riv_b: Club = mf.ligas[0].clubes[1]
+	_comprobar(String(riv_b.perfil_estadio().get("asiento1", "")) == riv_b.color1, "las butacas de un rival llevan los colores de su club")
+	## LOS OBJETIVOS EN EL BORDE: directiva, confianza, próximo partido y misiones del mentor.
+	PanelObjetivos.ruta = "user://objetivos_banco.cfg"
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(PanelObjetivos.ruta))
+	var objs := PanelObjetivos.lista(mf, "dt")
+	var mis_obj: Array = objs.filter(func(o: Dictionary) -> bool: return bool(o.get("mentor", false)))
+	_comprobar(objs.size() >= 4 and String(objs[0]["icono"]) == "🏆" and not bool(objs[0]["hecho"]), "los objetivos: la meta de la directiva, sin cumplir antes de jugar (%d)" % objs.size())
+	_comprobar(mis_obj.size() >= 3 and mis_obj.all(func(o: Dictionary) -> bool: return not bool(o["hecho"])), "las misiones del mentor salen en el panel, pendientes")
+	PanelObjetivos.marcar_mision("dt", String(mis_obj[0]["texto"]))
+	_comprobar(bool(PanelObjetivos.lista(mf, "dt").filter(func(o: Dictionary) -> bool: return String(o["texto"]) == String(mis_obj[0]["texto"]))[0]["hecho"]), "una misión cumplida queda tachada y se guarda")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(PanelObjetivos.ruta))
+	## LA PRESENTACIÓN EN EL ESTADIO: tres planos por tiempo; cerrar avisa una vez.
+	var cin := CinematicaFichaje.new()
+	_comprobar(cin.plano(1.0) == 1 and cin.plano(5.0) == 2 and cin.plano(9.0) == 3, "la cinemática del fichaje tiene tres planos")
+	var avisos_cin := [0]
+	cin.terminada.connect(func() -> void: avisos_cin[0] += 1)
+	cin.cerrar()
+	cin.cerrar()
+	_comprobar(avisos_cin[0] == 1, "saltar la cinemática avisa una sola vez")
 	## META (bloque 50): cromos, museo global, mundo heredado.
 	var sobres_antes := int(Meta.leer()["sobres"])
 	mf.roles.sumar_trofeo("Copa de Prueba")

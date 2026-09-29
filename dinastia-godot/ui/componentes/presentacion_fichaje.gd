@@ -14,6 +14,7 @@ signal cerrado
 
 var _j: Jugador
 var _mundo: Mundo
+var _de: Club
 
 static func coste_estadio(c: Club) -> int:
 	## Montar el escenario, la seguridad y la pantalla: poco al lado de un
@@ -23,6 +24,7 @@ static func coste_estadio(c: Club) -> int:
 static func mostrar(padre: Control, mundo: Mundo, j: Jugador, de: Club) -> PresentacionFichaje:
 	var n := PresentacionFichaje.new()
 	n._j = j
+	n._de = de
 	n._mundo = mundo
 	n.set_anchors_preset(Control.PRESET_FULL_RECT)
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -119,6 +121,16 @@ static func aplicar(mundo: Mundo, j: Jugador, en_estadio: bool) -> Dictionary:
 	return {"animo": animo, "seguidores": seguidores, "texto": texto}
 
 func _presentar(en_estadio: bool) -> void:
+	var estrella := float(_j.ovr) >= _mundo.mi_club().media() + 3.0
 	aplicar(_mundo, _j, en_estadio)
+	## En el estadio se VE (mapa de metas 13): la cinemática con tu estadio y el
+	## jugador en el círculo central; la tarjeta se cierra al acabar.
+	if en_estadio and get_parent() is Control and DisplayServer.get_name() != "headless":
+		visible = false
+		var cin := CinematicaFichaje.mostrar(get_parent(), _mundo, _j, _de, estrella)
+		cin.terminada.connect(func() -> void:
+			cerrado.emit()
+			queue_free())
+		return
 	cerrado.emit()
 	queue_free()

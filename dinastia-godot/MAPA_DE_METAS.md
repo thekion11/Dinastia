@@ -104,12 +104,16 @@ Junta tres fuentes:
 | 10 | Editor de competiciones y sede de final fija (bloque 47) | Plan maestro, informe | ✅ |
 | 11 | Meta: cromos, museo global, mundo heredado (bloque 50) | Plan maestro, informe (logros) | ✅ |
 | 12 | Colores del estadio por sección: cada bandeja, redes, focos, LED | Pedido de la semana pasada | ✅ |
-| 13 | Presentación de fichajes como cinemática | Plan B3 | ⬜ |
+| 13 | Presentación de fichajes como cinemática | Plan B3 | ✅ tu estadio real (el diseñado), tu camiseta con su dorsal, dominadas o saludo, confeti y rótulo |
 | 14 | Celebraciones de gol según el carácter del jugador | Informe | ⬜ |
 | 15 | Dividir `principal.gd` (15.189 líneas) en componentes | Informe | ⬜ |
 | 16 | Patada que luce como golpeo de balón | Informe, fallo 11 | ⬜ |
 | 17 | Traducción al inglés y portugués | Informe (ventas) | ⬜ |
 | 18 | Carrera de Jugador | Modos | ⬜ |
+| 19 | Balón mejor y con más variantes: modelos por competición y marca ficticia, texturas de paneles, desgaste, balón de invierno (naranja/amarillo) y elegir el del club | Pedido del usuario (29-9) | ⬜ |
+| 20 | El escudo pintado en el círculo central se ve tosco de cerca: suavizarlo o vectorizarlo | Visto en la cinemática de fichajes | ⬜ |
+| 21 | Objetivos siempre a la vista en el borde derecho (directiva, confianza, próximo partido, misiones del mentor) | Pedido del usuario (29-9) | ✅ |
+| 22 | Las butacas de los rivales con los colores de su club (salían todas verdes) | Visto en la cinemática | ✅ |
 | — | Túnel navegable | Pedido para cuando exista "caminar por el estadio" | En espera |
 | — | Cara 2D moldeada sobre el modelo 3D | El usuario pidió no tocarlo sin permiso | En espera |
 | — | Contraseña del keystore, licencias 🟡, FPS en un PC real, música, builds de `entregas/` | Dueño | 🔒 |
