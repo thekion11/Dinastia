@@ -143,6 +143,14 @@ const CAPITULO := {
 	"bandeja_norte_col1": "butacas", "bandeja_norte_col2": "butacas",
 	"bandeja_este_col1": "butacas", "bandeja_este_col2": "butacas",
 	"bandeja_oeste_col1": "butacas", "bandeja_oeste_col2": "butacas",
+	## COLORES POR SECCIÓN (28-9-2026): cada anillo de cada tribuna se repinta
+	## por separado (butacas), y las vallas y la estructura de los focos son
+	## pintura.
+	"anillo_sur_1": "butacas", "anillo_sur_2": "butacas", "anillo_sur_3": "butacas", "anillo_sur_4": "butacas", "anillo_sur_5": "butacas",
+	"anillo_norte_1": "butacas", "anillo_norte_2": "butacas", "anillo_norte_3": "butacas", "anillo_norte_4": "butacas", "anillo_norte_5": "butacas",
+	"anillo_este_1": "butacas", "anillo_este_2": "butacas", "anillo_este_3": "butacas", "anillo_este_4": "butacas", "anillo_este_5": "butacas",
+	"anillo_oeste_1": "butacas", "anillo_oeste_2": "butacas", "anillo_oeste_3": "butacas", "anillo_oeste_4": "butacas", "anillo_oeste_5": "butacas",
+	"vallaCol": "fachada", "focosCol": "fachada",
 }
 
 ## De qué tabla salen las opciones válidas de cada campo. Sirve para dos cosas:
@@ -215,6 +223,11 @@ const DEF_B6 := {
 	"bandeja_norte_col1": "", "bandeja_norte_col2": "",
 	"bandeja_este_col1": "", "bandeja_este_col2": "",
 	"bandeja_oeste_col1": "", "bandeja_oeste_col2": "",
+	"anillo_sur_1": "", "anillo_sur_2": "", "anillo_sur_3": "", "anillo_sur_4": "", "anillo_sur_5": "",
+	"anillo_norte_1": "", "anillo_norte_2": "", "anillo_norte_3": "", "anillo_norte_4": "", "anillo_norte_5": "",
+	"anillo_este_1": "", "anillo_este_2": "", "anillo_este_3": "", "anillo_este_4": "", "anillo_este_5": "",
+	"anillo_oeste_1": "", "anillo_oeste_2": "", "anillo_oeste_3": "", "anillo_oeste_4": "", "anillo_oeste_5": "",
+	"vallaCol": "", "focosCol": "",
 }
 const CATALOGO_B6 := {
 	"fachada": "EST_FACHADAS", "fachadaCol": "EST_PALETA", "techoCol": "EST_PALETA",
@@ -223,6 +236,11 @@ const CATALOGO_B6 := {
 	"bandeja_norte_col1": "EST_PALETA", "bandeja_norte_col2": "EST_PALETA",
 	"bandeja_este_col1": "EST_PALETA", "bandeja_este_col2": "EST_PALETA",
 	"bandeja_oeste_col1": "EST_PALETA", "bandeja_oeste_col2": "EST_PALETA",
+	"anillo_sur_1": "EST_PALETA", "anillo_sur_2": "EST_PALETA", "anillo_sur_3": "EST_PALETA", "anillo_sur_4": "EST_PALETA", "anillo_sur_5": "EST_PALETA",
+	"anillo_norte_1": "EST_PALETA", "anillo_norte_2": "EST_PALETA", "anillo_norte_3": "EST_PALETA", "anillo_norte_4": "EST_PALETA", "anillo_norte_5": "EST_PALETA",
+	"anillo_este_1": "EST_PALETA", "anillo_este_2": "EST_PALETA", "anillo_este_3": "EST_PALETA", "anillo_este_4": "EST_PALETA", "anillo_este_5": "EST_PALETA",
+	"anillo_oeste_1": "EST_PALETA", "anillo_oeste_2": "EST_PALETA", "anillo_oeste_3": "EST_PALETA", "anillo_oeste_4": "EST_PALETA", "anillo_oeste_5": "EST_PALETA",
+	"vallaCol": "EST_PALETA", "focosCol": "EST_PALETA",
 }
 ## Cuánto multiplica cada superficie la probabilidad de lesión en TU campo.
 const LESION_POR_SUPERFICIE := {"natural": 1.0, "hibrido": 0.85, "artificial": 1.3}
@@ -381,6 +399,11 @@ func perfil(mi: Club, obras: Instalaciones = null) -> Dictionary:
 	## y con él apagado `p` sale exactamente igual que antes de esta fase.
 	if bool(ajustes.get("personalizar_tramos", false)):
 		p["tramos"] = _tramos_personalizados()
+	## Vallas y estructura de los focos: solo si se eligió un color (así un
+	## estadio sin tocar sigue con exactamente las mismas claves).
+	for k: String in ["vallaCol", "focosCol"]:
+		if String(ajustes.get(k, "")) != "":
+			p[k] = String(ajustes[k])
 	return p
 
 ## Vista derivada de las 4 tribunas. Solo se llama cuando `personalizar_bandejas`
@@ -398,6 +421,9 @@ func _bandejas_personalizadas() -> Dictionary:
 			## B6: los colores de las butacas de ESTA tribuna ("" = los globales).
 			"col1": String(ajustes.get("bandeja_%s_col1" % lado, "")),
 			"col2": String(ajustes.get("bandeja_%s_col2" % lado, "")),
+			## El color de cada anillo de esta tribuna, de abajo arriba ("" =
+			## el de la tribuna).
+			"niveles": [1, 2, 3, 4, 5].map(func(n: int) -> String: return String(ajustes.get("anillo_%s_%d" % [lado, n], ""))),
 		}
 	return salida
 

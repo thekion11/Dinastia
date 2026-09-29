@@ -542,7 +542,7 @@ reales y commit + push.
   - tramos por tribuna, componentes, pista de atletismo, banderas, pantallas en rotación y vallas
     LED.
 - **Hacer**:
-  1. **Colores por sección** (pedido del usuario, sin empezar, ver 2-sexies): cada bandeja, arcos,
+  1. [x] **Colores por sección** (hecho el 29-9-2026, ver 2-sexies): cada bandeja, arcos,
      red, líneas, focos, LED, banquillos y butacas por separado.
   2. **Exterior del estadio**: fachada (ladrillo, vidrio, membrana, hormigón), accesos, taquillas,
      tienda, estacionamiento y entorno.
@@ -1170,7 +1170,7 @@ nocturno, adaptación cultural-; el que de verdad falta es el que sigue en la li
    `herramientas\run_godot.ps1` antes de dar esto por cerrado del todo**, aunque
    `captura_formas_estadio.gd` (las 6 formas, hasta 5 bandejas) pasó en 0 fallos.
 
-   ### 2-sexies. PEDIDO EXPLÍCITO DEL USUARIO, SIN EMPEZAR: colores por sección
+   ### 2-sexies. [x] PEDIDO EXPLÍCITO DEL USUARIO: colores por sección (29-9-2026: `anillo_<lado>_<n>` por anillo de cada tribuna, `focosCol` y `vallaCol`; poste/red/líneas ya existían)
    *"El estadio sea modular significa poder cambiar colores por sección, arco, líneas, bandejas una
    por una, cesped, pantalla, faros, luces nocturnas, LED, bancas, gradas, asientos."* Hoy
    `asiento1`/`asiento2`/`asiento3` son globales (con la excepción parcial de "bandejas"/"tramos" por

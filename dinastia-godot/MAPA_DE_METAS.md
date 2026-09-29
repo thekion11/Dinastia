@@ -103,7 +103,7 @@ Junta tres fuentes:
 | 9 | Selecciones: lista preliminar y conflicto club-selección (bloque 46) | Plan maestro | ✅ ya estaba: prenómina antes de cada fecha FIFA, pedido de descanso, compensación y vuelta tocado |
 | 10 | Editor de competiciones y sede de final fija (bloque 47) | Plan maestro, informe | ✅ |
 | 11 | Meta: cromos, museo global, mundo heredado (bloque 50) | Plan maestro, informe (logros) | ✅ |
-| 12 | Colores del estadio por sección: cada bandeja, redes, focos, LED | Pedido de la semana pasada | ⬜ |
+| 12 | Colores del estadio por sección: cada bandeja, redes, focos, LED | Pedido de la semana pasada | ✅ |
 | 13 | Presentación de fichajes como cinemática | Plan B3 | ⬜ |
 | 14 | Celebraciones de gol según el carácter del jugador | Informe | ⬜ |
 | 15 | Dividir `principal.gd` (15.189 líneas) en componentes | Informe | ⬜ |
