@@ -10694,9 +10694,87 @@ func _pintar_editor() -> void:
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_editor.add_child(ex)
 
+	_pintar_editor_competiciones(ed)
 	_pintar_editor_clubes(ed)
 	_pintar_editor_jugadores(ed)
 	_pintar_editor_csv(ed)
+
+## EL EDITOR DE COMPETICIONES (28-9-2026, bloque 47): las ligas de tu país
+## (nombre, cuántos bajan, puntos por victoria) y la copa (nombre y sede fija
+## de la final).
+func _pintar_editor_competiciones(ed: Editor) -> void:
+	var mio := mundo.mi_club()
+	if mio == null:
+		return
+	_lista_editor.add_child(HSeparator.new())
+	var t := _texto(11, COL_ACENTO)
+	t.text = "COMPETICIONES"
+	_lista_editor.add_child(t)
+	for l: Liga in mundo.ligas:
+		if l.pais != mio.pais:
+			continue
+		var fila := HBoxContainer.new()
+		fila.add_theme_constant_override("separation", 6)
+		_lista_editor.add_child(fila)
+		var nom := LineEdit.new()
+		nom.text = l.nombre
+		nom.custom_minimum_size = Vector2(220, 0)
+		nom.add_theme_font_size_override("font_size", 12)
+		var liga := l
+		nom.text_submitted.connect(func(x: String) -> void:
+			var p := ed.renombrar_liga(liga, x)
+			if p != "":
+				_escribir("[color=#e05555]%s.[/color]" % p)
+			_refrescar())
+		fila.add_child(nom)
+		fila.add_child(_texto_con(11, COL_SUAVE, "Bajan/suben:"))
+		var desc := SpinBox.new()
+		desc.min_value = 1
+		desc.max_value = 4
+		desc.value = l.plazas_descenso
+		desc.value_changed.connect(func(v: float) -> void: ed.fijar_descensos(liga, int(v)))
+		fila.add_child(desc)
+		fila.add_child(_texto_con(11, COL_SUAVE, "Victoria:"))
+		var pv := OptionButton.new()
+		pv.add_item("3 puntos", 3)
+		pv.add_item("2 puntos", 2)
+		pv.select(0 if l.puntos_victoria == 3 else 1)
+		pv.item_selected.connect(func(i: int) -> void: ed.fijar_puntos_victoria(liga, 3 if i == 0 else 2))
+		fila.add_child(pv)
+	if mundo.copa != null:
+		var fila_c := HBoxContainer.new()
+		fila_c.add_theme_constant_override("separation", 6)
+		_lista_editor.add_child(fila_c)
+		var nc := LineEdit.new()
+		nc.text = mundo.copa.nombre
+		nc.custom_minimum_size = Vector2(220, 0)
+		nc.add_theme_font_size_override("font_size", 12)
+		nc.text_submitted.connect(func(x: String) -> void:
+			var p := ed.renombrar_copa(x)
+			if p != "":
+				_escribir("[color=#e05555]%s.[/color]" % p)
+			_refrescar())
+		fila_c.add_child(nc)
+		fila_c.add_child(_texto_con(11, COL_SUAVE, "Sede de la final:"))
+		var sede := OptionButton.new()
+		sede.add_item("Cancha neutral", 0)
+		var sedes: Array[Club] = []
+		for c: Club in mundo.clubes.values():
+			if c.pais == mio.pais and c.division == 1:
+				sedes.append(c)
+		sedes.sort_custom(func(a: Club, b: Club) -> bool: return a.estadio_aforo > b.estadio_aforo)
+		for i in sedes.size():
+			var c3: Club = sedes[i]
+			sede.add_item("%s (%s)" % [c3.estadio_nombre if c3.estadio_nombre != "" else c3.nombre, c3.nombre], i + 1)
+			if c3.id == mundo.copa.sede_final_id:
+				sede.select(i + 1)
+		sede.item_selected.connect(func(i: int) -> void: ed.fijar_sede_final(null if i == 0 else sedes[i - 1]))
+		fila_c.add_child(sede)
+
+func _texto_con(tam: int, col: Color, txt: String) -> Label:
+	var l := _texto(tam, col)
+	l.text = txt
+	return l
 
 func _pintar_editor_clubes(ed: Editor) -> void:
 	_lista_editor.add_child(HSeparator.new())

@@ -30,6 +30,10 @@ var tabla_puntos: Dictionary = {}   ## club_id -> {pts, pj, gf, gc, g, e, p}
 ## sacaron entre ellos). `h2h` guarda "a|b" -> puntos de a contra b.
 static var desempate_directo := false
 var h2h: Dictionary = {}
+## EDITABLES DESDE EL EDITOR DE COMPETICIONES (28-9-2026): cuántos bajan (y
+## suben de la división de abajo) y cuánto vale una victoria.
+var plazas_descenso := 2
+var puntos_victoria := 3
 
 func _init(_nombre: String = "", _pais: String = "CHI", _div: int = 1) -> void:
 	nombre = _nombre
@@ -150,15 +154,15 @@ func _anotar_resultado(l: Club, v: Club, gl: int, gv: int) -> void:
 	a["gf"] += gl; a["gc"] += gv
 	b["gf"] += gv; b["gc"] += gl
 	if gl > gv:
-		a["pts"] += 3; a["g"] += 1; b["p"] += 1
+		a["pts"] += puntos_victoria; a["g"] += 1; b["p"] += 1
 	elif gl < gv:
-		b["pts"] += 3; b["g"] += 1; a["p"] += 1
+		b["pts"] += puntos_victoria; b["g"] += 1; a["p"] += 1
 	else:
 		a["pts"] += 1; b["pts"] += 1; a["e"] += 1; b["e"] += 1
 	var k1 := "%s|%s" % [l.id, v.id]
 	var k2 := "%s|%s" % [v.id, l.id]
-	h2h[k1] = int(h2h.get(k1, 0)) + (3 if gl > gv else (1 if gl == gv else 0))
-	h2h[k2] = int(h2h.get(k2, 0)) + (3 if gv > gl else (1 if gl == gv else 0))
+	h2h[k1] = int(h2h.get(k1, 0)) + (puntos_victoria if gl > gv else (1 if gl == gv else 0))
+	h2h[k2] = int(h2h.get(k2, 0)) + (puntos_victoria if gv > gl else (1 if gl == gv else 0))
 
 ## Tabla ordenada: puntos, diferencia de gol, goles a favor.
 func tabla() -> Array:
