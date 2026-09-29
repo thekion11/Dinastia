@@ -80,7 +80,7 @@ func _montar(duracion_mitad: float) -> void:
 	var v := Puente3D.once(once_v)
 	var lista: Array = []
 	lista.append_array(sp.spawn_team(_raiz, l["xi"], l["jugadores"], Puente3D.formacion(local.tactica.formacion), true, Puente3D.kit(local), Puente3D.kit_portero(local)))
-	lista.append_array(sp.spawn_team(_raiz, v["xi"], v["jugadores"], Puente3D.formacion(visita.tactica.formacion), false, Puente3D.kit(visita), Puente3D.kit_portero(visita)))
+	lista.append_array(sp.spawn_team(_raiz, v["xi"], v["jugadores"], Puente3D.formacion(visita.tactica.formacion), false, Puente3D.kit_visita(local, visita), Puente3D.kit_portero(visita)))
 	var cb := Comercial.color_balon(mundo.comercial.balon, local) if mundo != null and mundo.comercial != null else []
 	var balon := StadiumBuilder.spawn_ball(_raiz, Vector3(0, 0.11, 0), cb)
 	motor = MotorJugable.new()
@@ -270,11 +270,17 @@ func _actualizar_camara(delta: float) -> void:
 	else:
 		foco = motor.balon.position
 	var detras := Vector3(0, 10.5, -14.0 * d)
+	var mira := foco + Vector3(0, 0.5, 9.0 * d)
 	if motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "penal":
 		detras = Vector3(0, 3.2, -7.0 * d)
+	elif motor.apuntando:
+		## Córner y falta: detrás del balón, mirando adonde apuntas.
+		var dir := motor.direccion_apunte()
+		detras = -dir * 9.0 + Vector3(0, 6.5, 0)
+		mira = foco + dir * 18.0
 	var deseada := foco + detras
 	_cam.position = _cam.position.lerp(deseada, clampf(delta * 3.5, 0.0, 1.0)) if _cam.position.length() > 0.1 else deseada
-	_cam.look_at(foco + Vector3(0, 0.5, 9.0 * d), Vector3.UP)
+	_cam.look_at(mira, Vector3.UP)
 
 func _actualizar_apunte() -> void:
 	_flecha.visible = false

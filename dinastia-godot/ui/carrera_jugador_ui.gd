@@ -67,7 +67,10 @@ func _lbl(tam: int, col: Color, texto := "") -> Label:
 	l.text = texto
 	l.add_theme_font_size_override("font_size", tam)
 	l.add_theme_color_override("font_color", col)
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	## Solo los textos largos se parten: con las cortas (la media, el puesto,
+	## el nombre de un club) el ajuste las dejaba letra por letra en vertical.
+	if texto.length() > 40:
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return l
 
 func _boton(texto: String, col: Color, accion: Callable, alto := 44) -> Button:
