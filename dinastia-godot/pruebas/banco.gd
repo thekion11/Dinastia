@@ -6198,6 +6198,40 @@ func _probar_tanda_c() -> void:
 	ma._montar(mf, "transparencia")
 	ma2.desde_dic(ma.a_dic())
 	_comprobar(String(ma2.pendiente.get("id", "")) == "transparencia" and ma2.superagente == ma.superagente, "el mercado avanzado se guarda con la partida")
+	## INSOLVENCIA (bloques 39-40): puntos, administrador, cláusula, refundación.
+	var mi2 := Mundo.new()
+	mi2.generar(["CHI"], 33)
+	mi2.tomar_el_mando(mi2.ligas[0].clubes[3].id)
+	var ci := mi2.mi_club()
+	var ins := mi2.insolvencia
+	var liga_i := mi2.ligas[0]
+	var pts_antes := int(liga_i.tabla_puntos[ci.id]["pts"])
+	for c_rico2: Club in mi2.clubes.values():
+		if c_rico2 != ci:
+			c_rico2.saldo = maxi(c_rico2.saldo, 90000000)
+	ci.saldo = -50000000
+	mi2.banco.semanas_en_rojo = Banco.SEM_MORA
+	ins.semana(mi2)
+	_comprobar(String(ins.pendiente.get("id", "")) == "clausula", "al entrar en mora, el DT puede activar su cláusula de salida")
+	ins.resolver(mi2, "a")
+	mi2.banco.semanas_en_rojo = Banco.SEM_VEEDOR
+	ins.semana(mi2)
+	var plantel_antes := ci.plantilla.size()
+	_comprobar(int(liga_i.tabla_puntos[ci.id]["pts"]) == pts_antes - Insolvencia.PUNTOS_SANCION, "con veedor, la federación resta %d puntos" % Insolvencia.PUNTOS_SANCION)
+	_comprobar(ins.tope_salarial > 0, "con veedor hay tope salarial (%s)" % _dinero(ins.tope_salarial))
+	ins.tope_salarial = 1
+	ins.semana(mi2)
+	_comprobar(ci.plantilla.size() == plantel_antes - 1, "el administrador vende al que más cobra si se pasa del tope")
+	mi2.banco.semanas_en_rojo = Banco.SEM_LIQUIDACION - 1
+	ins.pendiente = {}
+	ins.semana(mi2)
+	_comprobar(String(ins.pendiente.get("id", "")) == "refundacion", "una semana antes de liquidar, se ofrece la refundación")
+	var rep_ci := ci.rep
+	ins.resolver(mi2, "a")
+	_comprobar(mi2.banco.semanas_en_rojo == 0 and ci.saldo >= 0 and ci.rep < rep_ci and not mi2.banco.liquidado_ya, "refundar salva el club: deuda perdonada, caja a cero, reputación abajo")
+	var ins2 := Insolvencia.new()
+	ins2.desde_dic(ins.a_dic())
+	_comprobar(ins2.refundado_anio == ins.refundado_anio and ins2.sancion_anio == ins.sancion_anio, "la insolvencia se guarda con la partida")
 	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
 	var fi := FondoInversion.new()
 	fi.caja = 1000000000
