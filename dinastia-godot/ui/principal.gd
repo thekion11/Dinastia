@@ -5743,6 +5743,7 @@ func _guardar_preferencias() -> void:
 		_clima_interactivo, _marca_tarjeta, _tipografia, Idiomas.idioma,
 		Musica.encendida, Musica.volumen, Musica.pieza, Musica.automatica, _estilo_menu,
 		_velocidad_partido, _rotar_diseno]
+	firma += "|%s|%s" % [VestidorQ.ropa_aparte, Cara.usar_fotos]
 	if firma == _firma_prefs:
 		return
 	_firma_prefs = firma
@@ -5768,6 +5769,7 @@ func _guardar_preferencias() -> void:
 	cf.set_value("pantalla", "zoom", _zoom_interfaz)
 	cf.set_value("pantalla", "modo_tv", _modo_tv)
 	cf.set_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte)
+	cf.set_value("pantalla", "caras_foto", Cara.usar_fotos)
 	cf.set_value("pantalla", "fps", _fps_elegido)
 	cf.set_value("juego", "modo_experto", _modo_experto)
 	cf.set_value("sonido", "encendido", Sonido.encendido)
@@ -5823,6 +5825,7 @@ func _cargar_preferencias() -> void:
 	_zoom_interfaz = clampf(float(cf.get_value("pantalla", "zoom", _zoom_interfaz)), 0.7, 1.6)
 	_modo_tv = bool(cf.get_value("pantalla", "modo_tv", _modo_tv))
 	VestidorQ.ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte))
+	Cara.usar_fotos = bool(cf.get_value("pantalla", "caras_foto", Cara.usar_fotos))
 	_fps_elegido = clampi(int(cf.get_value("pantalla", "fps", _fps_elegido)), 30, 240)
 	_modo_experto = bool(cf.get_value("juego", "modo_experto", _modo_experto))
 	Sonido.encendido = bool(cf.get_value("sonido", "encendido", Sonido.encendido))

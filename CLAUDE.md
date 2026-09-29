@@ -69,5 +69,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   de este entorno bloquea Wikimedia. Herramienta lista:
   `herramientas/caras_reales_faltantes.py` → luego `caras_reales_recortar.py` y
   `caras_reales_puntos.py`. Faltan ~906 de 2125.
+- Hecho 29-9: RECREACIÓN de reales (piel por escala natural, pelo, barba y ojos
+  sacados de la foto: `herramientas/caras_reales_rasgos.py` →
+  `datos/caras_reales_rasgos.json`; sin marcas ni adornos inventados). Ajustes →
+  «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`, pref `pantalla/caras_foto`).
+  Legal (explicado al usuario): la licencia libre cubre la foto, NO el derecho de
+  imagen del jugador; para publicar/vender lo decide el dueño.
 - Esperando al usuario: túnel, informe nuevo.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.

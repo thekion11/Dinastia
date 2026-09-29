@@ -32,6 +32,8 @@ const CORTES := [
 	"mono", "flequillo", "rapado", "calvo", "fade", "rastas", "coleta", "melena",
 	"pincho", "tazon", "undercut", "ondulado", "entradas", "mohicano", "samurai", "cortina",
 ]
+## Los cortes que se le ponen a un jugador real recreado (no se sabe el suyo).
+const CORTES_SOBRIOS := ["corto", "fade", "rapado", "undercut", "tupe", "flequillo", "ondulado", "entradas"]
 const ACCESORIOS := ["", "", "", "", "cintillo", "vincha", "gafas", "tape", "aro", "cadena", "gorro", "tapa"]
 
 static var _cache: Dictionary = {}
@@ -81,6 +83,26 @@ static func _look_base(semilla: String) -> Dictionary:
 
 static func look_de(j: Jugador) -> Dictionary:
 	var base := _look_base(j.id)
+	## LA RECREACIÓN (29-9-2026): un jugador real (con la base real) toma la
+	## piel, el color de pelo y la barba de su foto
+	## (`herramientas/caras_reales_rasgos.py`), así su cara procedural se le
+	## parece aunque no se enseñe la foto.
+	if j.real and Datos.base_real:
+		var r: Variant = _rasgos_reales_de().get(Nombres.limpiar(j.nombre))
+		if r is Dictionary:
+			for k: String in (r as Dictionary):
+				base[k] = r[k]
+			## A una persona real no se le inventan marcas ni adornos, y el
+			## corte (que la foto no dice) sale de los habituales.
+			base["acc"] = ""
+			## Pelo que la foto no dejó ver (fondo, gorra): castaño oscuro, el
+			## más común, antes que un color al azar (salían rubios de mentira).
+			if not (r as Dictionary).has("peloC"):
+				base["peloC"] = "#2e2118"
+			base["pecas"] = false
+			base["lunar"] = false
+			base["cicatriz"] = false
+			base["pelo"] = CORTES_SOBRIOS[_hash(j.id + "corte") % CORTES_SOBRIOS.size()]
 	## Y encima, lo que el editor haya cambiado a mano. Solo las claves tocadas:
 	## cambiar el corte de pelo no debe reescribir la nariz.
 	for k: String in j.look:
@@ -441,10 +463,26 @@ static func _indice_fotos_de() -> Dictionary:
 
 ## La foto real de un jugador, ya recortada a cuadrado, o null si no es real o
 ## si la búsqueda todavía no le encontró ninguna.
+## AJUSTES → «Caras reales»: true = la foto (si la hay); false = solo la
+## recreación procedural. Lo guarda `Principal._guardar_preferencias()`.
+static var usar_fotos := true
+const RUTA_RASGOS_REALES := "res://datos/caras_reales_rasgos.json"
+static var _rasgos_reales: Dictionary = {}
+static var _rasgos_reales_listos := false
+
+static func _rasgos_reales_de() -> Dictionary:
+	if not _rasgos_reales_listos:
+		_rasgos_reales_listos = true
+		if FileAccess.file_exists(RUTA_RASGOS_REALES):
+			var jp := JSON.new()
+			if jp.parse(FileAccess.get_file_as_string(RUTA_RASGOS_REALES)) == OK and jp.data is Dictionary:
+				_rasgos_reales = jp.data
+	return _rasgos_reales
+
 static func foto_real(j: Jugador) -> Texture2D:
 	## Con la base ficticia no se enseña ninguna foto de una persona real,
 	## aunque el guardado traiga jugadores marcados como reales.
-	if not j.real or not Datos.base_real:
+	if not j.real or not Datos.base_real or not usar_fotos:
 		return null
 	var ruta := String(_indice_fotos_de().get(Nombres.limpiar(j.nombre), ""))
 	if ruta == "":
@@ -453,7 +491,7 @@ static func foto_real(j: Jugador) -> Texture2D:
 
 ## La ruta del retrato real de un jugador, o "" (mismas reglas que `foto_real`).
 static func ruta_foto(j: Jugador) -> String:
-	if not j.real or not Datos.base_real:
+	if not j.real or not Datos.base_real or not usar_fotos:
 		return ""
 	return String(_indice_fotos_de().get(Nombres.limpiar(j.nombre), ""))
 
