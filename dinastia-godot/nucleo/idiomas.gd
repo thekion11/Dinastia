@@ -389,6 +389,29 @@ var _cache := {}
 func _ready() -> void:
 	_cargar_extra()
 
+## Traduce un árbol de interfaz entero (etiquetas, botones y ayudas). Para las
+## pantallas que no cuelgan de la principal -la Carrera de Jugador, el
+## partido jugable-. Guarda el castellano original en el propio nodo para poder
+## volver a él o repintar en otro idioma.
+func traducir_arbol(n: Node) -> void:
+	if idioma == "es":
+		return
+	if n is Button:
+		var b := n as Button
+		if not b.has_meta("_i18n_src"):
+			b.set_meta("_i18n_src", b.text)
+		b.text = t(String(b.get_meta("_i18n_src")))
+	elif n is Label:
+		var l := n as Label
+		if not l.has_meta("_i18n_src") or String(l.get_meta("_i18n_out", "")) != l.text:
+			l.set_meta("_i18n_src", l.text)
+		l.text = t(String(l.get_meta("_i18n_src")))
+		l.set_meta("_i18n_out", l.text)
+	if n is Control and (n as Control).tooltip_text != "":
+		(n as Control).tooltip_text = t((n as Control).tooltip_text)
+	for h in n.get_children():
+		traducir_arbol(h)
+
 func _cargar_extra() -> void:
 	if not FileAccess.file_exists(EXTRA):
 		return

@@ -46,6 +46,7 @@ var eventos: Array = []           ## pendientes: [{id, titulo, texto, opciones}]
 var historial: Array = []         ## lo que decidiste: [{anio, semana, titulo, eleccion}]
 var ofertas: Array = []           ## [{club_id, sueldo, semanas}]
 var hitos := {}                   ## eventos únicos que ya ocurrieron (id -> true)
+var ultima_vez := {}              ## id -> semana absoluta: los repetibles esperan 5 semanas
 var _rng := RandomNumberGenerator.new()
 
 # ---------------------------------------------------------------- creación
@@ -199,11 +200,14 @@ func semana(m: Mundo) -> Array:
 	var j := jugador(m)
 	if j == null:
 		return nuevos
-	var pool := _eventos_posibles(m, j)
-	if not pool.is_empty() and _rng.randf() < 0.55:
+	var ahora := m.anio * 60 + m.semana
+	var pool := _eventos_posibles(m, j).filter(func(e: Dictionary) -> bool:
+		return ahora - int(ultima_vez.get(String(e["id"]), -99)) >= 5)
+	if not pool.is_empty() and _rng.randf() < 0.45:
 		var ev: Dictionary = pool[_rng.randi() % pool.size()]
 		eventos.append(ev)
 		nuevos.append(ev)
+		ultima_vez[String(ev["id"])] = ahora
 		if bool(ev.get("unico", false)):
 			hitos[String(ev["id"])] = true
 	## Ofertas de otros clubes si destacas.
@@ -397,7 +401,7 @@ func a_dic() -> Dictionary:
 		"seguidores": seguidores, "agente": agente, "foco": foco, "lanzador": lanzador,
 		"convocatorias": convocatorias, "partidos_jugables": partidos_jugables, "stats_temp": stats_temp,
 		"temporadas": temporadas, "eventos": eventos, "historial": historial, "ofertas": ofertas,
-		"hitos": hitos, "semilla": _rng.seed}
+		"hitos": hitos, "ultima_vez": ultima_vez, "semilla": _rng.seed}
 
 static func desde_dic(d: Dictionary) -> CarreraJugador:
 	var c := CarreraJugador.new()
@@ -417,5 +421,6 @@ static func desde_dic(d: Dictionary) -> CarreraJugador:
 	c.historial = d.get("historial", [])
 	c.ofertas = d.get("ofertas", [])
 	c.hitos = d.get("hitos", {})
+	c.ultima_vez = d.get("ultima_vez", {})
 	c._rng.seed = int(d.get("semilla", 1))
 	return c
