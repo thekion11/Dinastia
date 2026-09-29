@@ -8083,12 +8083,12 @@ func _pintar_estadio(c: Club) -> void:
 	## Se agrupan por bloques porque diecisiete desplegables seguidos son una
 	## lista de la compra: así se lee como lo que es, un estadio por partes.
 	for bloque: Array in [
-			["LA ESTRUCTURA", ["forma", "fachada", "fachadaCol", "techo", "techoCol", "focos", "luzFocos", "pantalla"]],
+			["LA ESTRUCTURA", ["forma", "fachada", "fachadaCol", "techo", "techoCol", "focos", "luzFocos", "focosCol", "pantalla"]],
 			["EL CAMPO", ["superficie", "cesped", "cespedTono", "lineaCol", "arcoCol", "redCol", "redTipo"]],
 			["LA GRADA", ["asientoP", "banderas", "escudoDonde", "corner"]],
 			## Sin "clima" (26-9-2026): el tiempo lo pone la ciudad, no el
 			## diseñador. Elegir "lluvia" como se elige un color era ilógico.
-			["LOS DETALLES", ["banquillo", "banquilloCol", "tunel", "sonidoGol"]],
+			["LOS DETALLES", ["banquillo", "banquilloCol", "vallaCol", "tunel", "sonidoGol"]],
 		]:
 		var tb := _texto(11, COL_ACENTO)
 		tb.text = String(bloque[0])
@@ -8132,6 +8132,9 @@ func _pintar_estadio(c: Club) -> void:
 		_fila_diseno_estadio(e, p, "bandeja_%s_techo" % _bandeja_actual)
 		_fila_diseno_estadio(e, p, "bandeja_%s_col1" % _bandeja_actual)
 		_fila_diseno_estadio(e, p, "bandeja_%s_col2" % _bandeja_actual)
+		## Cada anillo de esta tribuna, por separado (28-9-2026).
+		for n_an in mini(5, maxi(1, int(p.get("niveles", 1)))):
+			_fila_diseno_estadio(e, p, "anillo_%s_%d" % [_bandeja_actual, n_an + 1])
 
 	## LOS TERCIOS: estilos mixtos DENTRO de una misma tribuna (18/22-9-2026,
 	## Fase 3 de "el estadio por MÓDULOS", la última de las tres). El spike del
@@ -8195,6 +8198,11 @@ const ETIQUETAS_ESTADIO := {
 	"clima": "Clima", "sonidoGol": "Sonido del gol",
 	"fachada": "Fachada", "fachadaCol": "Color de la fachada", "techoCol": "Color del techo",
 	"luzFocos": "Luz de los focos", "superficie": "Superficie", "banquilloCol": "Color de los banquillos",
+	"vallaCol": "Marco de las vallas", "focosCol": "Estructura de los focos",
+	"anillo_sur_1": "Anillo 1 — Sur", "anillo_sur_2": "Anillo 2 — Sur", "anillo_sur_3": "Anillo 3 — Sur", "anillo_sur_4": "Anillo 4 — Sur", "anillo_sur_5": "Anillo 5 — Sur",
+	"anillo_norte_1": "Anillo 1 — Norte", "anillo_norte_2": "Anillo 2 — Norte", "anillo_norte_3": "Anillo 3 — Norte", "anillo_norte_4": "Anillo 4 — Norte", "anillo_norte_5": "Anillo 5 — Norte",
+	"anillo_este_1": "Anillo 1 — Este", "anillo_este_2": "Anillo 2 — Este", "anillo_este_3": "Anillo 3 — Este", "anillo_este_4": "Anillo 4 — Este", "anillo_este_5": "Anillo 5 — Este",
+	"anillo_oeste_1": "Anillo 1 — Oeste", "anillo_oeste_2": "Anillo 2 — Oeste", "anillo_oeste_3": "Anillo 3 — Oeste", "anillo_oeste_4": "Anillo 4 — Oeste", "anillo_oeste_5": "Anillo 5 — Oeste",
 	"bandeja_sur_col1": "Color 1 — Tribuna Sur", "bandeja_sur_col2": "Color 2 — Tribuna Sur",
 	"bandeja_norte_col1": "Color 1 — Tribuna Norte", "bandeja_norte_col2": "Color 2 — Tribuna Norte",
 	"bandeja_este_col1": "Color 1 — Tribuna Este", "bandeja_este_col2": "Color 2 — Tribuna Este",
