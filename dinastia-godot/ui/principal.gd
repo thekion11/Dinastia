@@ -843,6 +843,7 @@ func _construir() -> void:
 	der.size_flags_stretch_ratio = 1.9
 	der.add_theme_constant_override("separation", 12)
 	columnas.add_child(der)
+	_col_derecha = der
 	_ficha = _bloque(der, "FICHA DEL JUGADOR", 2.0)
 	## CON SCROLL PROPIO (25-9-2026). La ficha completa -atributos, contrato,
 	## cabeza, habilidades, notas- pide unos 1.060 px de alto y la columna no
@@ -871,6 +872,17 @@ func _construir() -> void:
 	_registro.add_theme_font_size_override("normal_font_size", 12)
 	caja_reg.add_child(_registro)
 
+	## EL PANEL LATERAL (mapa de metas 23): a la izquierda y por encima del menú
+	## central; el contenido se corre lo que mide el riel para no quedar tapado.
+	raiz.offset_left = 18.0 + MenuLateral.ANCHO_RIEL
+	_menu_lateral = MenuLateral.crear(self)
+	add_child(_menu_lateral)
+	_reloj_diseno = Timer.new()
+	_reloj_diseno.wait_time = ROTAR_CADA
+	_reloj_diseno.autostart = true
+	_reloj_diseno.timeout.connect(_siguiente_diseno)
+	add_child(_reloj_diseno)
+
 ## UNA PÍLDORA DEL MENÚ. Es la estética que el usuario mandó de su propio
 ## HTML: cápsula muy redondeada, oscura y con borde tenue cuando está en
 ## reposo, y CLARA con letra oscura cuando está activa -el contraste
@@ -890,6 +902,53 @@ const ESTILOS_MENU := [
 	["barra", "Barra clásica (recta)"],
 ]
 var _estilo_menu: String = "pildora"
+
+## EL MENÚ CENTRAL CAMBIA DE ESTÉTICA CADA 10 MINUTOS (29-9-2026, mapa de
+## metas 24). Pedido: que de forma nativa vaya rotando entre sus diseños. Cada
+## diseño junta lo que ya se elegía por separado en Ajustes → Interfaz:
+## [paleta, estilo del menú, forma de las tarjetas, fondo]. Cuenta tiempo de
+## juego (el temporizador se para si el juego se pausa) y se puede apagar.
+const DISENOS_CENTRAL := [
+	["bosque", "pildora", "redonda", "nocturna"],
+	["esports", "barra", "recta", "neon"],
+	["ejecutivo", "pildora", "suave", "trofeo"],
+	["marino", "compacto", "marcada", "tunel"],
+	["transmision", "barra", "redonda", "tifo"],
+	["vino", "pildora", "suave", "vestuario"],
+	["cibernetico", "compacto", "recta", "ciudad"],
+	["tierra", "pildora", "redonda", "amanecer"],
+]
+const ROTAR_CADA := 600.0
+var _rotar_diseno := true
+var _diseno_i := 0
+var _reloj_diseno: Timer
+
+func _siguiente_diseno() -> void:
+	if not _rotar_diseno:
+		return
+	_diseno_i = (_diseno_i + 1) % DISENOS_CENTRAL.size()
+	var d: Array = DISENOS_CENTRAL[_diseno_i]
+	## Un fundido corto para que el cambio se lea como una transición y no
+	## como un parpadeo.
+	var velo := ColorRect.new()
+	velo.color = Color(0, 0, 0, 0)
+	velo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	velo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(velo)
+	var tw := create_tween()
+	tw.tween_property(velo, "color:a", 0.55, 0.35)
+	tw.tween_callback(func() -> void:
+		_paleta = String(d[0])
+		_estilo_menu = String(d[1])
+		_forma_tarjeta = String(d[2])
+		_fondo_elegido = String(d[3])
+		_aplicar_aspecto()
+		_aplicar_fondo()
+		_reconstruir_grupos()
+		if mundo != null:
+			_refrescar())
+	tw.tween_property(velo, "color:a", 0.0, 0.45)
+	tw.tween_callback(velo.queue_free)
 
 func _pildora(texto: String, tam: int = 12, alto: int = 32) -> Button:
 	var b := Button.new()
@@ -1004,6 +1063,9 @@ func _construir_grupos() -> void:
 		## rótulos entran enteros y cada píldora mide lo que mide su texto.
 		var gid := String(g["id"])
 		b.pressed.connect(func() -> void: _elegir_grupo(gid))
+		## Los que ahora tienen menú propio en el panel lateral no se ven arriba
+		## (siguen existiendo: la navegación y el tutorial van por índice).
+		b.visible = not MenuLateral.EN_PANEL.has(gid)
 		_fila_grupos.add_child(b)
 
 func _grupo_por_id(gid: String) -> Dictionary:
@@ -1071,6 +1133,9 @@ func _ir_a_chip(chip: Dictionary) -> void:
 ## de bloque desliza el contenido hacia el lado del que viene -a la izquierda
 ## si vas hacia adelante, a la derecha si vuelves- y lo desvanece un punto.
 var _marco_paginas: MarginContainer
+## La columna de la ficha, para mudarla a los menús a pantalla completa.
+var _col_derecha: Control
+var _menu_lateral: MenuLateral
 
 func _paso_pagina(v: float) -> void:
 	if _marco_paginas == null:
@@ -1100,6 +1165,11 @@ func _indice_grupo(gid: String) -> int:
 func _bloque_vecino(paso: int) -> void:
 	var i := _indice_grupo(_grupo_actual)
 	var siguiente := (i + paso + GRUPOS.size()) % GRUPOS.size()
+	## Se saltan los grupos que viven en el panel lateral.
+	for _k in GRUPOS.size():
+		if not MenuLateral.EN_PANEL.has(String(GRUPOS[siguiente]["id"])):
+			break
+		siguiente = (siguiente + paso + GRUPOS.size()) % GRUPOS.size()
 	_elegir_grupo(String(GRUPOS[siguiente]["id"]))
 
 # --- tutorial guiado (ui/componentes/tutorial.gd) ---------------------------
@@ -5351,6 +5421,29 @@ func _preparar_mando() -> void:
 			InputMap.action_add_event(accion3, ea)
 
 func _input(evento: InputEvent) -> void:
+	## CON EL PANEL LATERAL ENCIMA (mapa de metas 23) los mismos botones
+	## navegan ESE menú y no el central de detrás: L1/R1 pasan de submenú,
+	## L2/R2 de menú, y el desliz con el dedo no cambia páginas escondidas.
+	if _menu_lateral != null and _menu_lateral.ocupado():
+		var pm: PantallaMenu = _menu_lateral.pantalla_abierta if is_instance_valid(_menu_lateral.pantalla_abierta) else null
+		if pm != null and evento.is_action_pressed("dinastia_tab_siguiente"):
+			pm.submenu_vecino(1)
+			get_viewport().set_input_as_handled()
+		elif pm != null and evento.is_action_pressed("dinastia_tab_anterior"):
+			pm.submenu_vecino(-1)
+			get_viewport().set_input_as_handled()
+		elif evento.is_action_pressed("dinastia_bloque_siguiente"):
+			_menu_lateral.menu_vecino(1)
+			get_viewport().set_input_as_handled()
+		elif evento.is_action_pressed("dinastia_bloque_anterior"):
+			_menu_lateral.menu_vecino(-1)
+			get_viewport().set_input_as_handled()
+		_arrastre_x = 0.0
+		_arrastre_y = 0.0
+		return
+	## Un desliz que empieza sobre el riel es del panel (abrirlo), no del menú.
+	if evento is InputEventScreenDrag and (evento as InputEventScreenDrag).position.x < MenuLateral.ANCHO_RIEL + 30.0:
+		return
 	## Los gatillos cambian de pestaña. Se mira aquí y no en `_unhandled_input`
 	## porque los contenedores de la interfaz se comen los eventos de navegación
 	## antes de que lleguen abajo.
@@ -5592,12 +5685,12 @@ const PREFS := "user://preferencias.cfg"
 var _firma_prefs: String = ""
 
 func _guardar_preferencias() -> void:
-	var firma := "%s|%s|%s|%s|%.2f|%s|%.2f|%s|%d|%s|%s|%s|%s|%s|%s|%s|%s|%.2f|%s|%s|%s|%d" % [_paleta, _forma_tarjeta,
+	var firma := "%s|%s|%s|%s|%.2f|%s|%.2f|%s|%d|%s|%s|%s|%s|%s|%s|%s|%s|%.2f|%s|%s|%s|%d|%s" % [_paleta, _forma_tarjeta,
 		_brillo_tarjetas, _fondo_elegido, _escala_texto, _daltonico, _zoom_interfaz,
 		_modo_tv, _fps_elegido, _modo_experto, Sonido.encendido, _clima_elegido,
 		_clima_interactivo, _marca_tarjeta, _tipografia, Idiomas.idioma,
 		Musica.encendida, Musica.volumen, Musica.pieza, Musica.automatica, _estilo_menu,
-		_velocidad_partido]
+		_velocidad_partido, _rotar_diseno]
 	if firma == _firma_prefs:
 		return
 	_firma_prefs = firma
@@ -5610,6 +5703,7 @@ func _guardar_preferencias() -> void:
 	cf.set_value("aspecto", "marca_tarjeta", _marca_tarjeta)
 	cf.set_value("aspecto", "tipografia", _tipografia)
 	cf.set_value("aspecto", "estilo_menu", _estilo_menu)
+	cf.set_value("aspecto", "rotar_diseno", _rotar_diseno)
 	cf.set_value("juego", "idioma", Idiomas.idioma)
 	cf.set_value("juego", "velocidad_partido", _velocidad_partido)
 	cf.set_value("musica", "encendida", Musica.encendida)
@@ -5647,6 +5741,7 @@ func _cargar_preferencias() -> void:
 	## perdería la rotación y volvería a uno fijo.
 	if fo == "" or fo == ROTAR_FONDO or Fondo.NOMBRES.has(fo):
 		_fondo_elegido = fo
+	_rotar_diseno = bool(cf.get_value("aspecto", "rotar_diseno", true))
 	var em := String(cf.get_value("aspecto", "estilo_menu", _estilo_menu))
 	for e: Array in ESTILOS_MENU:
 		if String(e[0]) == em:

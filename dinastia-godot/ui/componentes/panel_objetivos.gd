@@ -24,6 +24,10 @@ var _lista: VBoxContainer
 var _pestana: Button
 var _plegado := false
 var _t := 0.0
+## MOVIBLE (29-9-2026, pedido del usuario): se arrastra desde cualquier parte
+## que no sea un botón, y recuerda dónde lo dejaste.
+var _arrastrando := false
+var _agarre := Vector2.ZERO
 
 static func crear(principal: Node, modo: String) -> PanelObjetivos:
 	var p := PanelObjetivos.new()
@@ -112,7 +116,10 @@ func _montar() -> void:
 	_cuerpo.custom_minimum_size = Vector2(ANCHO, 0)
 	_cuerpo.add_theme_constant_override("separation", 6)
 	h.add_child(_cuerpo)
-	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, "🎯 OBJETIVOS"))
+	var cabeza := Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, "🎯 OBJETIVOS   ✥")
+	cabeza.tooltip_text = "Arrástralo para ponerlo donde quieras"
+	cabeza.mouse_filter = Control.MOUSE_FILTER_PASS
+	_cuerpo.add_child(cabeza)
 	_lista = VBoxContainer.new()
 	_lista.add_theme_constant_override("separation", 4)
 	_cuerpo.add_child(_lista)
@@ -124,6 +131,37 @@ func _montar() -> void:
 			_principal.call("abrir_tutorial", _modo))
 	_cuerpo.add_child(tut)
 	_aplicar_plegado()
+	gui_input.connect(_al_arrastrar)
+	var guardada: Variant = _leer("posicion", Vector2(-1, -1))
+	if guardada is Vector2 and (guardada as Vector2).x >= 0.0:
+		_colocar_en.call_deferred(guardada)
+
+func _colocar_en(pos: Vector2) -> void:
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	grow_horizontal = Control.GROW_DIRECTION_END
+	grow_vertical = Control.GROW_DIRECTION_END
+	var vp := get_viewport_rect().size
+	position = Vector2(clampf(pos.x, 0.0, maxf(0.0, vp.x - size.x)), clampf(pos.y, 0.0, maxf(0.0, vp.y - size.y)))
+
+func _al_arrastrar(e: InputEvent) -> void:
+	if e is InputEventMouseButton and (e as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		var mb := e as InputEventMouseButton
+		if mb.pressed:
+			_arrastrando = true
+			_agarre = mb.position
+			mouse_default_cursor_shape = Control.CURSOR_MOVE
+		elif _arrastrando:
+			_arrastrando = false
+			mouse_default_cursor_shape = Control.CURSOR_ARROW
+			_escribir("posicion", position)
+		accept_event()
+	elif e is InputEventMouseMotion and _arrastrando:
+		_colocar_en(position + (e as InputEventMouseMotion).position - _agarre)
+		accept_event()
+	elif e is InputEventScreenDrag:
+		_colocar_en(position + (e as InputEventScreenDrag).relative)
+		_escribir("posicion", position)
+		accept_event()
 
 func _aplicar_plegado() -> void:
 	_cuerpo.visible = not _plegado
