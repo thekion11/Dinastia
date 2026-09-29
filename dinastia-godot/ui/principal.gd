@@ -2897,8 +2897,15 @@ func _anotar(titulo: String, cuerpo: String) -> void:
 
 # --- pintado ----------------------------------------------------------------
 
+var _panel_obj: PanelObjetivos
+
 func _refrescar() -> void:
 	var c := mundo.mi_club()
+	## Los objetivos, fijos en el borde derecho (PanelObjetivos).
+	if not is_instance_valid(_panel_obj):
+		_panel_obj = PanelObjetivos.crear(self, mundo.roles.modo_actual() if mundo.roles != null else "dt")
+		add_child(_panel_obj)
+	_panel_obj.refrescar()
 	## Tu personaje 3D, a mano para la banda de cualquier estadio (la vista
 	## del partido no tiene el mundo delante).
 	PersonajeDT.del_usuario = mundo.roles.aspecto_3d()
