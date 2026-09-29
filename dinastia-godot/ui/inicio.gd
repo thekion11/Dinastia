@@ -664,6 +664,13 @@ func _al_pulsar_modo(m: Dictionary) -> void:
 		"proximo":
 			_avisar("🚧 %s todavía no se puede jugar. Está en la lista para cuando esté listo." % titulo)
 			return
+		"jugador":
+			## LA CARRERA DE JUGADOR (29-9-2026): su propia pantalla, con su
+			## propia estética; los partidos se juegan en el motor jugable.
+			CarreraJugadorUI.mundo = null
+			CarreraJugadorUI.nombre_pedido = _campo_nombre.text.strip_edges()
+			get_tree().change_scene_to_file("res://escenas/carrera_jugador.tscn")
+			return
 	var nombre := _campo_nombre.text.strip_edges()
 	Principal.modo_elegido = String(m.get("id", "dt"))
 	Principal.dt_nombre_elegido = nombre if nombre != "" else "Míster"

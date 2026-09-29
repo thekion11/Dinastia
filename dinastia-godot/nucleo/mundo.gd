@@ -114,6 +114,8 @@ var licencia: Licencia
 var trabajadores: Trabajadores
 ## Las redes sociales (Tribuna): tu cuenta y la oficial del club (28-9-2026).
 var redes: Redes
+## LA CARRERA DE JUGADOR (29-9-2026): solo existe en ese modo.
+var carrera_jugador: CarreraJugador = null
 ## Tu teléfono: personalización, foto de perfil y Mensajes (28-9-2026).
 var movil: Movil
 ## Guerra de ofertas, superagente, fichaje impuesto, apuestas, transparencia.
