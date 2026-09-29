@@ -111,6 +111,7 @@ func _construir() -> void:
 	raiz.add_child(_panel_continuar)
 
 	_construir_perfil(raiz)
+	_construir_meta(raiz)
 	_construir_datos_dt(raiz)
 
 	var titulo := _texto(20, COL_TEXTO)
@@ -266,6 +267,24 @@ func _construir_datos_dt(raiz: VBoxContainer) -> void:
 ## si esta instalación lo tiene. Ver `Datos` para el formato y dónde se busca.
 ## Se aplica AL MOMENTO -`eleccion_club.gd` genera el mundo con lo que haya
 ## activo- y se recuerda para la próxima vez.
+## El álbum, el museo de tus carreras y el mundo heredado (28-9-2026, `Meta`).
+func _construir_meta(raiz: VBoxContainer) -> void:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 10)
+	raiz.add_child(fila)
+	var d := Meta.leer()
+	var b := Button.new()
+	b.text = "📒 Álbum y museo  ·  %d cromos, %d títulos" % [(d["cromos"] as Dictionary).size(), (d["museo"] as Array).size()]
+	b.pressed.connect(func() -> void: PanelMeta.abrir(self))
+	fila.add_child(b)
+	if Meta.hay_legado():
+		var leg: Dictionary = d["legado"]
+		var h := CheckButton.new()
+		h.text = "🌍 Heredar el mundo de tu última partida (temporada %d)" % int(leg.get("anio", 0))
+		h.button_pressed = Meta.heredar_proximo
+		h.toggled.connect(func(si: bool) -> void: Meta.heredar_proximo = si)
+		fila.add_child(h)
+
 func _construir_selector_base(raiz: VBoxContainer) -> void:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
