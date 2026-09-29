@@ -1223,7 +1223,7 @@ que dar esta lista por vigente sin re-verificar sería el mismo error de siempre
 - [x] **39/40 — Insolvencia y política interna (28-9-2026, `Insolvencia` sobre `Banco`)**: renegociar deuda, resta de puntos, administrador
   externo, bonos de hinchas, tope salarial, refundación, cláusula de salida del DT. (Ojo: parte de
   esto puede solaparse con `Banco`, construido el 13/14-9 -revisar antes de reescribir.)
-- [ ] **44/45 — Reglamento y federación fino**: historial por árbitro, cambios de reglas entre
+- [x] **44/45 — Reglamento y federación fino (28-9-2026)**: historial por árbitro, cambios de reglas entre
   temporadas, criterios de desempate, playoffs de descenso, repechaje, corrupción federativa.
 - [ ] **46 — Selecciones**: lista preliminar, conflicto club-selección (lo demás de este bloque ya
   está hecho según `dinastia-pendientes` v3.1).

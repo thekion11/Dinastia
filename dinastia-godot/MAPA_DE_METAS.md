@@ -99,7 +99,7 @@ Junta tres fuentes:
 | 5 | Los jugadores también publican en Tribuna (y tú les respondes) | Redes | ✅ |
 | 6 | Mercado avanzado: guerra de ofertas, derechos de formación, superagente, fichaje impuesto por el dueño (bloques 37-38) | Plan maestro | ✅ (más apuestas y transparencia; los derechos de formación ya existían) |
 | 7 | Insolvencia: renegociar deuda, resta de puntos, administrador, tope salarial (bloques 39-40) | Plan maestro | ✅ (más cláusula del DT y refundación; renegociar y bonos ya existían) |
-| 8 | Reglamento fino: historial por árbitro, desempates, playoffs de descenso (bloques 44-45) | Plan maestro | ⬜ |
+| 8 | Reglamento fino: historial por árbitro, desempates, playoffs de descenso (bloques 44-45) | Plan maestro | ✅ (más corrupción federativa; los cambios de reglas por asamblea ya existían) |
 | 9 | Selecciones: lista preliminar y conflicto club-selección (bloque 46) | Plan maestro | ⬜ |
 | 10 | Editor de competiciones y sede de final fija (bloque 47) | Plan maestro, informe | ⬜ |
 | 11 | Meta: cromos, museo global, mundo heredado (bloque 50) | Plan maestro, informe (logros) | ⬜ |

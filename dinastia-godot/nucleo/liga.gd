@@ -24,6 +24,12 @@ var jornada_actual: int = 0
 ## vacío y se vuelve a llenar a partir de la jornada siguiente.
 var historial: Array = []
 var tabla_puntos: Dictionary = {}   ## club_id -> {pts, pj, gf, gc, g, e, p}
+## LOS DESEMPATES (28-9-2026, reglamento fino). Por defecto, a igualdad de
+## puntos decide la diferencia de gol; si la asamblea aprueba la moción
+## "desempate", decide antes el ENFRENTAMIENTO DIRECTO (los puntos que se
+## sacaron entre ellos). `h2h` guarda "a|b" -> puntos de a contra b.
+static var desempate_directo := false
+var h2h: Dictionary = {}
 
 func _init(_nombre: String = "", _pais: String = "CHI", _div: int = 1) -> void:
 	nombre = _nombre
@@ -40,6 +46,7 @@ func preparar() -> void:
 
 func _armar_tabla() -> void:
 	tabla_puntos.clear()
+	h2h.clear()
 	for c in clubes:
 		tabla_puntos[c.id] = {"pts": 0, "pj": 0, "gf": 0, "gc": 0, "g": 0, "e": 0, "p": 0}
 
@@ -148,6 +155,10 @@ func _anotar_resultado(l: Club, v: Club, gl: int, gv: int) -> void:
 		b["pts"] += 3; b["g"] += 1; a["p"] += 1
 	else:
 		a["pts"] += 1; b["pts"] += 1; a["e"] += 1; b["e"] += 1
+	var k1 := "%s|%s" % [l.id, v.id]
+	var k2 := "%s|%s" % [v.id, l.id]
+	h2h[k1] = int(h2h.get(k1, 0)) + (3 if gl > gv else (1 if gl == gv else 0))
+	h2h[k2] = int(h2h.get(k2, 0)) + (3 if gv > gl else (1 if gl == gv else 0))
 
 ## Tabla ordenada: puntos, diferencia de gol, goles a favor.
 func tabla() -> Array:
@@ -160,6 +171,10 @@ func tabla() -> Array:
 		})
 	filas.sort_custom(func(x: Dictionary, y: Dictionary) -> bool:
 		if x["pts"] != y["pts"]: return x["pts"] > y["pts"]
+		if desempate_directo:
+			var hx := int(h2h.get("%s|%s" % [(x["club"] as Club).id, (y["club"] as Club).id], 0))
+			var hy := int(h2h.get("%s|%s" % [(y["club"] as Club).id, (x["club"] as Club).id], 0))
+			if hx != hy: return hx > hy
 		if x["dif"] != y["dif"]: return x["dif"] > y["dif"]
 		return x["gf"] > y["gf"])
 	return filas
