@@ -85,5 +85,14 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   1164 jugadores). `visor/cara_malla.gd` la cuelga del hueso Head; la cara del
   cuerpo se hunde (`hay_malla`). Colores exactos también en la recreación.
   Datos de caras reales excluidos de los builds públicos (export_presets.cfg).
+- 30-9 PEDIDO: «hacele varias pasadas… de las cosas más importantes del juego…
+  cada vez que termines me muestras y yo te digo si estamos o si deben mejorar».
+  Pasada 1 hecha (caras_pasada1.png): recorte HD 384 px desde la foto original
+  (`recursos/caras_reales_cara/`), anillo de frente, quitar luz de la foto,
+  sRGB a mano (Compatibility no convertía), piel del cuerpo = color exacto de
+  la foto (media recortada), exposición normalizada por foto, relleno de cámara,
+  luz de piel (wrap), pelo 3D del color de la foto. Revisión:
+  `pruebas/captura_caras_reales.gd` (CARAS=, MOMENTO=estudio|dia|tarde).
+  Esperando su veredicto para la pasada 2.
 - Esperando al usuario: túnel, informe nuevo.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.

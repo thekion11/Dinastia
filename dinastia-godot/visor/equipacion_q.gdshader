@@ -86,7 +86,11 @@ uniform bool largo = false;
 // pose de reposo. Ojos del retrato (26,33)/(38,33) = centro de los globos
 // oculares (x = ±0,0338 m, y = 1,6986 m); boca (32, 44,5) = boca (y = 1,622 m).
 uniform bool hay_cara = false;
-uniform sampler2D cara_tex : source_color, filter_linear_mipmap, repeat_disable;
+// Los rasgos y la foto son ImageTexture hechas en el juego: sin `source_color`
+// (en Compatibility no se aplicaba y en Forward+ sí: la cara cambiaba según el
+// renderizador). Los rasgos se afinaron como multiplicadores directos; la foto
+// se pasa a lineal a mano.
+uniform sampler2D cara_tex : filter_linear_mipmap, repeat_disable;
 uniform sampler2D barba_tex : hint_default_transparent, filter_linear_mipmap, repeat_disable;
 uniform vec4 barba_color : source_color = vec4(0.1, 0.07, 0.05, 1.0);
 // Menos fuerza cuando encima va la barba 3D (la pintada solo rellena debajo).
@@ -94,8 +98,11 @@ uniform float barba_fuerza = 0.0;
 // La cara real va en su propia malla (`CaraMalla`): la cara del cuerpo se
 // hunde detrás para no asomar (la nariz del modelo, sobre todo).
 uniform bool hay_malla = false;
+uniform vec3 piel_foto = vec3(0.5, 0.35, 0.25);
+// Luminancia (lineal) media de la piel de la textura original.
+const float LUM_PIEL_REF = 0.2;
 uniform bool hay_foto = false;
-uniform sampler2D foto_tex : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D foto_tex : filter_linear_mipmap, repeat_disable;
 // Del espacio del retrato (0-64) a la foto (0-1): u = dot(foto_u, (sx, sy, 1)).
 uniform vec3 foto_u = vec3(0.0);
 uniform vec3 foto_v = vec3(0.0);
@@ -554,6 +561,17 @@ void fragment() {
 	if (y > 0.085 && y < 0.115) botin = mix(botin, familia >= 0 ? bot_c2.rgb : color2.rgb, 0.55);
 
 	vec3 albedo = piel * tinte_piel;
+	if (hay_malla) {
+		// Con cara real, la piel del cuerpo es EXACTAMENTE el color medio de
+		// su piel en la foto; de la textura solo queda el relieve (su claridad
+		// relativa). Teñir la textura dejaba el cuello mucho más claro que la
+		// cara: la textura es más clara en cuello y brazos que en su media.
+		// (Probado con gris plano en cara y cuerpo: la luz empata; lo que
+		// aclaraba el cuello era la textura, mucho más clara ahí que en su
+		// media. Del relieve queda un cuarto, acotado.)
+		float relieve = clamp(dot(piel, vec3(0.2126, 0.7152, 0.0722)) / LUM_PIEL_REF, 0.5, 1.8);
+		albedo = piel_foto * mix(1.0, relieve, 0.25);
+	}
 	albedo = mix(albedo, camiseta * pliegue, m.r);
 	albedo = mix(albedo, pant * pliegue, m.g);
 	albedo = mix(albedo, med * pliegue, m.b);
@@ -579,7 +597,9 @@ void fragment() {
 				if (fuv.x > 0.0 && fuv.x < 1.0 && fuv.y > 0.0 && fuv.y < 1.0) {
 					// La foto, llevada al tono de la piel del modelo (que ya se
 					// tiñó con el de la foto): no queda una máscara pegada.
-					albedo = mix(albedo, texture(foto_tex, fuv).rgb * foto_tono, mas * peso);
+					vec3 fc = texture(foto_tex, fuv).rgb;
+					fc = mix(fc / 12.92, pow((fc + 0.055) / 1.055, vec3(2.4)), step(vec3(0.04045), fc));
+					albedo = mix(albedo, fc * foto_tono, mas * peso);
 				}
 			} else {
 				vec2 st = vec2(sx, sy) / 64.0;
@@ -611,6 +631,11 @@ void fragment() {
 		if (acc_tobilleras.a > 0.5 && !brazo && y > 0.10 && y < 0.15) { albedo = acc_tobilleras.rgb; tela = 1.0; }
 	}
 	ALBEDO = albedo;
+	// Con cara real: el mismo relleno de luz que la cara (`cara_malla.gdshader`)
+	// en la piel, para que cuello y cara empaten también en sombra.
+	if (hay_malla) {
+		EMISSION = albedo * 0.3 * (0.35 + 0.65 * clamp(dot(NORMAL, VIEW), 0.0, 1.0)) * (1.0 - tela);
+	}
 
 	// LA TELA: punto fino de poliéster (una malla de puntitos que se ve de
 	// cerca y hace brillar la camiseta como las de verdad), algo más mate en
