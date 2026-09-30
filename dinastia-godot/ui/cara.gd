@@ -669,19 +669,21 @@ static func puntos_foto(ruta: String) -> Array:
 			var jp := JSON.new()
 			if jp.parse(FileAccess.get_file_as_string(PUNTOS_FOTOS)) == OK and jp.data is Dictionary:
 				_puntos_fotos = jp.data
-	var nombre := ruta.get_file().get_basename()
+	var p: Variant = _puntos_fotos.get(nombre_de_ruta(ruta))
+	return p if p is Array and (p as Array).size() >= 6 else []
+
+## El nombre (clave de los índices de retratos) de la foto en `ruta`.
+static func nombre_de_ruta(ruta: String) -> String:
 	for k: String in _indice_fotos_de():
 		if String(_indice_fotos[k]) == ruta:
-			nombre = k
-			break
-	var p: Variant = _puntos_fotos.get(nombre)
-	return p if p is Array and (p as Array).size() >= 6 else []
+			return k
+	return ruta.get_file().get_basename()
 
 ## Todo lo que el 3D necesita para poner la cara de un jugador (lo arma
 ## `Puente3D.jugador`): el aspecto y, si es real y tiene retrato calzable, la foto.
 static func datos_3d(j: Jugador) -> Dictionary:
 	var d := {"look": look_de(j)}
 	var ruta := ruta_foto(j)
-	if ruta != "" and not puntos_foto(ruta).is_empty():
+	if ruta != "" and (not puntos_foto(ruta).is_empty() or CaraMalla.tiene(nombre_de_ruta(ruta))):
 		d["foto"] = ruta
 	return d

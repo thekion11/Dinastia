@@ -45,30 +45,6 @@ def hexa(c):
     return "#%02x%02x%02x" % tuple(max(0, min(255, int(v))) for v in c)
 
 
-# Tonos de piel naturales, de claro a oscuro, y colores de pelo naturales.
-ESCALA_PIEL = ["#f6d5bd", "#efc4a0", "#e2ae86", "#d39a6d", "#b98056", "#976440", "#774c2f", "#5a3822", "#3e2718"]
-PELOS = ["#141414", "#231a14", "#3d2a19", "#5a3d24", "#7a5634", "#a67c4e", "#c8a05a", "#e0cc98", "#8a3c1e", "#9a9a9a"]
-
-
-def rgb(h):
-    return tuple(int(h[i:i + 2], 16) for i in (1, 3, 5))
-
-
-def en_escala(escala, l_foto):
-    """El tono de la escala con la claridad de la foto (interpolado)."""
-    tonos = [rgb(h) for h in escala]
-    ls = [lum(t) for t in tonos]
-    # Las fotos con flash salen más claras que la piel de verdad.
-    l_foto *= 0.93
-    if l_foto >= ls[0]:
-        return tonos[0]
-    for i in range(len(tonos) - 1):
-        if ls[i] >= l_foto >= ls[i + 1]:
-            t = (ls[i] - l_foto) / max(ls[i] - ls[i + 1], 1)
-            return tuple(a + (b - a) * t for a, b in zip(tonos[i], tonos[i + 1]))
-    return tonos[-1]
-
-
 def sat(c):
     return colorsys.rgb_to_hls(*(v / 255 for v in c))[2]
 
@@ -91,10 +67,9 @@ def rasgos(img, p):
     if not muestras:
         return None
     piel = tuple(sorted(m[i] for m in muestras)[len(muestras) // 2] for i in range(3))
-    # El color de la foto trae el flash y el balance de blancos de cada
-    # fotógrafo (salían pieles amarillas o rosadas). Solo se usa su CLARIDAD
-    # para elegir el punto de una escala de tonos de piel naturales.
-    out = {"piel": hexa(en_escala(ESCALA_PIEL, lum(piel)))}
+    # Pedido del usuario (30-9): los colores EXACTOS de la foto, sin llevarlos
+    # a una escala de tonos.
+    out = {"piel": hexa(piel)}
     # Ojos: el iris es un puntito; azul o verde si se nota, si no, marrón.
     iris = [mediana(img, x, y, 1) for x, y in ((ox1, oy1), (ox2, oy2))]
     iris = [c for c in iris if c]
@@ -115,7 +90,7 @@ def rasgos(img, p):
         pc = sorted(pelo, key=lum)[min(1, len(pelo) - 1)]
         # Si parece piel (calvo, entradas) o el fondo claro, no se toca.
         if distancia(pc, piel) > 35 and lum(pc) < 175:
-            out["peloC"] = min(PELOS, key=lambda h: distancia(rgb(h), tuple(v * 0.9 for v in pc)))
+            out["peloC"] = hexa(pc)
     # Barba: el pelo es más oscuro Y menos saturado que la piel; una sombra
     # (bajo el labio, de la nariz) oscurece pero conserva la saturación de la
     # piel. Calibrado a mano con 22 retratos: se prefiere no poner barba a
