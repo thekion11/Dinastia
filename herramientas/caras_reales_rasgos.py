@@ -18,8 +18,12 @@ Barba con los mismos números del retrato (`Cara._barba`): 0 nada, 2 perilla,
 import colorsys
 import json
 import os
+import sys
 
 from PIL import Image
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from motor_caras import pelo_natural  # noqa: E402
 
 RAIZ = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "dinastia-godot")
 INDICE = os.path.join(RAIZ, "datos", "caras_reales_recortes.json")
@@ -90,7 +94,7 @@ def rasgos(img, p):
         pc = sorted(pelo, key=lum)[min(1, len(pelo) - 1)]
         # Si parece piel (calvo, entradas) o el fondo claro, no se toca.
         if distancia(pc, piel) > 35 and lum(pc) < 175:
-            out["peloC"] = hexa(pc)
+            out["peloC"] = pelo_natural(hexa(pc))
     # Barba: el pelo es más oscuro Y menos saturado que la piel; una sombra
     # (bajo el labio, de la nariz) oscurece pero conserva la saturación de la
     # piel. Calibrado a mano con 22 retratos: se prefiere no poner barba a
