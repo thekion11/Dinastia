@@ -177,6 +177,24 @@ const CONTORNO_OJOS := [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158,
 static func _en_ojo(i: int) -> bool:
 	return i in CONTORNO_OJOS
 
+## El centro de la abertura de cada ojo en SU malla (espacio del modelo, x,y):
+## [ojo de x negativa, ojo de x positiva]. El iris 3D se centra ahí; con el
+## centro fijo del modelo, un iris quedaba corrido en la abertura y el
+## jugador parecía bizco.
+static func centros_ojos(nombre: String) -> Array:
+	var d := _datos(nombre)
+	if d.is_empty():
+		return []
+	var pos: PackedVector3Array = d[0]
+	var out := [Vector2.ZERO, Vector2.ZERO]
+	for grupo: Array in [CONTORNO_OJOS.slice(0, 16), CONTORNO_OJOS.slice(16, 32)]:
+		var c := Vector2.ZERO
+		for i: int in grupo:
+			c += Vector2(pos[i].x, pos[i].y)
+		c /= float(grupo.size())
+		out[0 if c.x < 0.0 else 1] = c
+	return out
+
 ## El color de su iris medido en la foto (alfa 0 si no hay).
 static func color_iris(nombre: String) -> Color:
 	var c := String(entrada(nombre).get("iris", ""))
