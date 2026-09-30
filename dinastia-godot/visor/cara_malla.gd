@@ -11,6 +11,7 @@ extends RefCounted
 const TOPOLOGIA := "res://datos/cara_malla_topologia.json"
 const MALLAS := "res://datos/caras_reales_mallas.json"
 const SHADER := "res://visor/cara_malla.gdshader"
+## Vértices de MediaPipe; la malla trae además un anillo alrededor (`_n`).
 const N := 468
 ## Ojos del modelo (centro de los globos, pose de reposo).
 const OJO_X := 0.0338
@@ -21,9 +22,8 @@ const OJOS_Z := 0.079
 ## Rabillos de cada ojo en la malla canónica de MediaPipe.
 const OJO_IZQ := [33, 133]
 const OJO_DER := [362, 263]
-## Mejillas y frente: de ahí sale el tono exacto de la piel del jugador.
-const PUNTOS_PIEL := [50, 280, 101, 330, 108, 337, 151]
 
+static var _n := N
 static var _tri := PackedInt32Array()
 static var _alfa := PackedFloat32Array()
 static var _mallas: Dictionary = {}
@@ -39,6 +39,7 @@ static func _cargar() -> void:
 	var jt := JSON.new()
 	if jt.parse(FileAccess.get_file_as_string(TOPOLOGIA)) != OK or not (jt.data is Dictionary):
 		return
+	_n = int(jt.data.get("n", N))
 	for i: Variant in jt.data["tri"]:
 		_tri.append(int(i))
 	for a: Variant in jt.data["alfa"]:
@@ -56,17 +57,17 @@ static func _datos(nombre: String) -> Array:
 	if _cache.has(nombre):
 		return _cache[nombre]
 	_cargar()
-	var b64 := String(_mallas.get(nombre, ""))
-	if b64 == "":
+	var e: Variant = _mallas.get(nombre)
+	if not (e is Dictionary):
 		return []
-	var bytes := Marshalls.base64_to_raw(b64)
-	if bytes.size() != N * 5 * 2:
+	var bytes := Marshalls.base64_to_raw(String((e as Dictionary).get("m", "")))
+	if bytes.size() != _n * 5 * 2:
 		return []
 	var canon := PackedVector3Array()
 	var uv := PackedVector2Array()
-	canon.resize(N)
-	uv.resize(N)
-	for i in N:
+	canon.resize(_n)
+	uv.resize(_n)
+	for i in _n:
 		var o := i * 10
 		canon[i] = Vector3(bytes.decode_s16(o), bytes.decode_s16(o + 2), bytes.decode_s16(o + 4)) / 100.0
 		uv[i] = Vector2(bytes.decode_s16(o + 6), bytes.decode_s16(o + 8)) / 32767.0
@@ -80,41 +81,75 @@ static func _datos(nombre: String) -> Array:
 	var k := OJO_X * 2.0 / sep
 	var medio := (oi + od) * 0.5
 	var pos := PackedVector3Array()
-	pos.resize(N)
-	for i in N:
+	pos.resize(_n)
+	for i in _n:
 		var c := canon[i] - medio
 		pos[i] = Vector3(c.x * k, OJO_Y + c.y * k, OJOS_Z + c.z * k)
-	var d := [pos, uv]
+	var d := [pos, uv, "res://" + String((e as Dictionary).get("f", ""))]
 	_cache[nombre] = d
 	return d
 
-## El tono medio de la piel en la foto (mejillas y frente), exacto.
-static func tono_piel(nombre: String, foto: Texture2D) -> Color:
+## El color de su pelo sacado de la foto (o alfa 0 si no se vio pelo).
+static func color_pelo(nombre: String) -> Color:
+	_cargar()
+	var e: Variant = _mallas.get(nombre)
+	if e is Dictionary and String((e as Dictionary).get("p", "")) != "":
+		return Color(String(e["p"]))
+	return Color(0, 0, 0, 0)
+
+## El recorte de su cara (384 px) con mipmaps, cacheado. Se lee a mano, como
+## `Cara.foto_de_ruta` (no hace falta reimportar el proyecto por foto nueva).
+static var _texturas := {}
+
+static func foto(nombre: String) -> Texture2D:
+	if _texturas.has(nombre):
+		return _texturas[nombre]
 	var d := _datos(nombre)
-	if d.is_empty() or foto == null:
+	if d.is_empty() or not FileAccess.file_exists(String(d[2])):
+		return null
+	var img := Image.new()
+	if img.load_jpg_from_buffer(FileAccess.get_file_as_bytes(String(d[2]))) != OK:
+		return null
+	img.generate_mipmaps()
+	var t := ImageTexture.create_from_image(img)
+	_texturas[nombre] = t
+	return t
+
+## El tono de su piel en la foto: la media RECORTADA de los 468 puntos de la
+## cara (se ordenan por claridad y se promedia el 60 % del medio: fuera
+## brillos, ojos, cejas y barba). Una media de pocos puntos caía en brillos
+## (cuello más claro y naranja); la mediana por canal perdía el azul (cuello
+## más rojo). Comprobado en Python contra la media de lo que pinta la cara.
+static func tono_piel(nombre: String, tex: Texture2D) -> Color:
+	var d := _datos(nombre)
+	if d.is_empty() or tex == null:
 		return Color(0, 0, 0, 0)
-	var img := foto.get_image()
+	var img := tex.get_image()
 	if img == null:
 		return Color(0, 0, 0, 0)
 	if img.is_compressed():
 		img.decompress()
+	var muestras: Array = []
+	var uvs: PackedVector2Array = d[1]
+	for i in N:
+		var px := clampi(int(uvs[i].x * img.get_width()), 0, img.get_width() - 1)
+		var py := clampi(int(uvs[i].y * img.get_height()), 0, img.get_height() - 1)
+		var c := img.get_pixel(px, py).srgb_to_linear()
+		muestras.append([0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b, c])
+	muestras.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
 	var suma := Color(0, 0, 0, 0)
-	var n := 0
-	for i: int in PUNTOS_PIEL:
-		var uv: Vector2 = (d[1] as PackedVector2Array)[i]
-		for dy in range(-1, 2):
-			for dx in range(-1, 2):
-				var px := clampi(int(uv.x * img.get_width()) + dx, 0, img.get_width() - 1)
-				var py := clampi(int(uv.y * img.get_height()) + dy, 0, img.get_height() - 1)
-				suma += img.get_pixel(px, py)
-				n += 1
-	return Color(suma.r / n, suma.g / n, suma.b / n, 1.0)
+	var desde := int(N * 0.2)
+	var hasta := int(N * 0.8)
+	for k in range(desde, hasta):
+		suma += muestras[k][1]
+	var n := float(hasta - desde)
+	return Color(suma.r / n, suma.g / n, suma.b / n, 1.0).linear_to_srgb()
 
 ## Cuelga la cara del hueso de la cabeza del jugador. null si no hay malla.
-static func poner(d: Dictionary, nombre: String, foto: Texture2D) -> MeshInstance3D:
+static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) -> MeshInstance3D:
 	var datos := _datos(nombre)
 	var esq: Skeleton3D = d.get("esqueleto")
-	if datos.is_empty() or foto == null or esq == null or _tri.size() < 3 or not ResourceLoader.exists(SHADER):
+	if datos.is_empty() or tex == null or esq == null or _tri.size() < 3 or not ResourceLoader.exists(SHADER):
 		return null
 	var hueso := esq.find_bone("Head")
 	if hueso < 0:
@@ -123,7 +158,7 @@ static func poner(d: Dictionary, nombre: String, foto: Texture2D) -> MeshInstanc
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var pos: PackedVector3Array = datos[0]
 	var uv: PackedVector2Array = datos[1]
-	for i in N:
+	for i in _n:
 		st.set_uv(uv[i])
 		st.set_color(Color(1, 1, 1, _alfa[i] if i < _alfa.size() else 1.0))
 		st.add_vertex(pos[i])
@@ -137,7 +172,12 @@ static func poner(d: Dictionary, nombre: String, foto: Texture2D) -> MeshInstanc
 	var malla := st.commit()
 	var mat := ShaderMaterial.new()
 	mat.shader = load(SHADER)
-	mat.set_shader_parameter("foto", foto)
+	mat.set_shader_parameter("foto", tex)
+	## Luminancia media de su piel (lineal): la referencia para quitarle a la
+	## foto la luz con que se sacó.
+	var pl := piel.srgb_to_linear()
+	mat.set_shader_parameter("piel_lin", Vector3(pl.r, pl.g, pl.b))
+	mat.set_shader_parameter("lum_media", 0.2126 * pl.r + 0.7152 * pl.g + 0.0722 * pl.b)
 	var mi := MeshInstance3D.new()
 	mi.name = "CaraReal"
 	mi.mesh = malla

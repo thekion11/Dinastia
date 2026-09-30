@@ -304,8 +304,13 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 ## Cada jugador lleva su propio material de cuerpo (el de la equipación, con
 ## la cara encima) y sus ojos. Devuelve false si no pudo.
 const SHADER_OJOS := "res://visor/ojos_q.gdshader"
-## Medido en captura (`pruebas/captura_recreacion.gd`, MODO=foto).
-const AJUSTE_CUERPO_MALLA := 0.72
+## La misma compensación de saturación que `cara_malla.gdshader`.
+const SATURACION_PIEL := 0.92
+
+## La misma normalización de exposición que `cara_malla.gdshader` (por la
+## luminancia lineal de su piel en la foto).
+static func exposicion_piel(lum: float) -> float:
+	return clampf(0.55 * pow(lum, 0.6) / maxf(lum, 0.001), 0.75, 3.0)
 static var _cache_cara := {}
 
 static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
@@ -328,12 +333,16 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 	var nombre_foto := Cara.nombre_de_ruta(ruta) if ruta != "" else ""
 	var con_malla := false
 	if foto != null and CaraMalla.tiene(nombre_foto):
-		if CaraMalla.poner(d, nombre_foto, foto) != null:
+		var cara_hd := CaraMalla.foto(nombre_foto)
+		var tono := CaraMalla.tono_piel(nombre_foto, cara_hd)
+		if tono.a > 0.0:
+			piel = tono
+		if CaraMalla.poner(d, nombre_foto, cara_hd, piel) != null:
 			con_malla = true
-			var tono := CaraMalla.tono_piel(nombre_foto, foto)
-			if tono.a > 0.0:
-				piel = tono
 			_ocultar_cejas_y_barba(d.get("nodo", modelo))
+			var pelo_foto := CaraMalla.color_pelo(nombre_foto)
+			if pelo_foto.a > 0.0:
+				_teñir_pelo(d.get("nodo", modelo), pelo_foto)
 	if foto != null and not con_malla:
 		if af.is_empty():
 			foto = null
@@ -364,10 +373,12 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 					mc.set_shader_parameter("hay_cara", not con_malla)
 					if con_malla:
 						mc.set_shader_parameter("hay_malla", true)
-						## El cuerpo sale más claro que la malla de la cara con el
-						## mismo color (su textura y su borde de luz): se baja un
-						## poco para que cuello y frente empaten con la foto.
-						mc.set_shader_parameter("tinte_piel", _tinte(piel) * AJUSTE_CUERPO_MALLA)
+						## El cuerpo, del color exacto de su piel en la foto.
+						var pl := piel.srgb_to_linear()
+						var v := Vector3(pl.r, pl.g, pl.b)
+						var gris := v.dot(Vector3(0.2126, 0.7152, 0.0722))
+						v = Vector3.ONE * gris + (v - Vector3.ONE * gris) * SATURACION_PIEL
+						mc.set_shader_parameter("piel_foto", v * exposicion_piel(gris))
 					elif foto != null:
 						mc.set_shader_parameter("hay_foto", true)
 						mc.set_shader_parameter("foto_tex", foto)
@@ -422,6 +433,21 @@ static func _lado_foto(p: Array) -> int:
 	if corrida < -0.12:
 		return 1
 	return 0
+
+## Tiñe el pelo 3D (`PeloQ`) con el color de la foto (misma cuenta que
+## `PeloQ._material`: la textura del pack es oscura y se aclara x1,7).
+static func _teñir_pelo(raiz: Node, color: Color) -> void:
+	var pelo := raiz.find_child("Pelo", true, false)
+	if pelo == null:
+		return
+	for mv in _mallas(pelo):
+		var mi: MeshInstance3D = mv
+		var m := mi.material_override as StandardMaterial3D
+		if m == null:
+			continue
+		m = m.duplicate() as StandardMaterial3D
+		m.albedo_color = Color(minf(color.r * 1.7, 1.0), minf(color.g * 1.7, 1.0), minf(color.b * 1.7, 1.0))
+		mi.material_override = m
 
 ## Esconde las cejas (las del cuerpo y las de `PeloQ`) y la barba 3D.
 static func _ocultar_cejas_y_barba(raiz: Node) -> void:
