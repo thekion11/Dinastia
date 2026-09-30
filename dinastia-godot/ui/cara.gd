@@ -89,6 +89,15 @@ static func look_de(j: Jugador) -> Dictionary:
 	## parece aunque no se enseñe la foto.
 	if j.real and Datos.base_real:
 		var r: Variant = _rasgos_reales_de().get(Nombres.limpiar(j.nombre))
+		## Sin rasgos viejos: la piel y el pelo medidos para su cara 3D.
+		if not (r is Dictionary):
+			var e := CaraMalla.entrada(Nombres.limpiar(j.nombre))
+			if String(e.get("s", "")) != "":
+				r = {"piel": String(e["s"])}
+				if e.get("h") is Dictionary:
+					r["peloC"] = String(e["h"].get("c", "#2e2118"))
+					if bool(e["h"].get("calvo", false)):
+						r["pelo"] = "calvo"
 		if r is Dictionary:
 			for k: String in (r as Dictionary):
 				base[k] = r[k]
@@ -102,7 +111,8 @@ static func look_de(j: Jugador) -> Dictionary:
 			base["pecas"] = false
 			base["lunar"] = false
 			base["cicatriz"] = false
-			base["pelo"] = CORTES_SOBRIOS[_hash(j.id + "corte") % CORTES_SOBRIOS.size()]
+			if String((r as Dictionary).get("pelo", "")) == "":
+				base["pelo"] = CORTES_SOBRIOS[_hash(j.id + "corte") % CORTES_SOBRIOS.size()]
 	## Y encima, lo que el editor haya cambiado a mano. Solo las claves tocadas:
 	## cambiar el corte de pelo no debe reescribir la nariz.
 	for k: String in j.look:
@@ -684,6 +694,8 @@ static func nombre_de_ruta(ruta: String) -> String:
 static func datos_3d(j: Jugador) -> Dictionary:
 	var d := {"look": look_de(j)}
 	var ruta := ruta_foto(j)
+	## Una foto marcada como mala para 3D (muy de lado o desde arriba) no se
+	## proyecta: queda la recreación con sus colores.
 	if ruta != "" and (not puntos_foto(ruta).is_empty() or CaraMalla.tiene(nombre_de_ruta(ruta))):
 		d["foto"] = ruta
 	return d

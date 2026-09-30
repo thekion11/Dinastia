@@ -3,7 +3,8 @@ extends Node3D
 ## personaje de frente y de tres cuartos, en primer plano, con la luz del
 ## estadio (sol alto de lado + cielo). Para las pasadas de mejora.
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/captura_caras_reales.tscn
-## CARAS="Nombre A,Nombre B,..." cambia los jugadores (4).
+## CARAS="Nombre A,Nombre B,..." cambia los jugadores (hasta 6; ver
+## `herramientas/caras_variadas.py`, que elige un surtido distinto cada vez).
 const POR_DEFECTO := ["Achraf Hakimi", "Aaron Ramsey", "Abdallah Sima", "Adam Hlozek"]
 var _n := 0
 
@@ -49,7 +50,8 @@ func _ready() -> void:
 		raiz.add_child(Calidad.sol(Calidad.MEDIO, momento))
 	var capa := CanvasLayer.new()
 	add_child(capa)
-	var ancho := 1600.0 / nombres.size()
+	## El lienzo puede ir escalado (`content_scale` del proyecto): medirlo.
+	var ancho := get_viewport().get_visible_rect().size.x / nombres.size()
 	for i in nombres.size():
 		var j := Jugador.new()
 		j.id = "revision_%d" % i
@@ -60,8 +62,8 @@ func _ready() -> void:
 		foto.texture = Cara.foto_real(j)
 		foto.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		foto.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		foto.size = Vector2(ancho - 10, 250)
-		foto.position = Vector2(ancho * i + 5, 5)
+		foto.size = Vector2(ancho - 6, 215)
+		foto.position = Vector2(ancho * i + 3, 5)
 		capa.add_child(foto)
 		var piel := Color(String(lk["piel"]))
 		var pelo := Color(String(lk["peloC"]))
@@ -79,16 +81,16 @@ func _ready() -> void:
 		for k in 2:
 			var cont := SubViewportContainer.new()
 			cont.stretch = false
-			cont.size = Vector2(ancho - 10, 315)
-			cont.position = Vector2(ancho * i + 5, 262 + k * 320)
+			cont.size = Vector2(ancho - 6, 300)
+			cont.position = Vector2(ancho * i + 3, 225 + k * 305)
 			capa.add_child(cont)
 			var vp := SubViewport.new()
 			vp.world_3d = mundo
 			vp.msaa_3d = Viewport.MSAA_4X
-			vp.size = Vector2i(int(ancho) - 10, 315)
+			vp.size = Vector2i(int(ancho) - 6, 300)
 			cont.add_child(vp)
 			var cam := Camera3D.new()
-			cam.fov = 30
+			cam.fov = 34
 			var ang := 0.0 if k == 0 else 0.6
 			cam.position = Vector3(x + sin(ang) * 0.62, 1.68, cos(ang) * 0.62)
 			vp.add_child(cam)

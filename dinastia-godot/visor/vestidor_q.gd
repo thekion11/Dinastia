@@ -305,12 +305,14 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 ## la cara encima) y sus ojos. Devuelve false si no pudo.
 const SHADER_OJOS := "res://visor/ojos_q.gdshader"
 ## La misma compensación de saturación que `cara_malla.gdshader`.
-const SATURACION_PIEL := 0.92
+const SATURACION_PIEL := 1.0
+## Compensación del "pie" del mapeo de tonos (ver `cara_malla.gdshader`).
+const COMPENSAR_PIEL := 1.6
 
 ## La misma normalización de exposición que `cara_malla.gdshader` (por la
 ## luminancia lineal de su piel en la foto).
 static func exposicion_piel(lum: float) -> float:
-	return clampf(0.55 * pow(lum, 0.6) / maxf(lum, 0.001), 0.75, 3.0)
+	return clampf(0.55 * pow(lum, 0.6) / maxf(lum, 0.001), 1.0, 3.0)
 static var _cache_cara := {}
 
 static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
@@ -334,7 +336,10 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 	var con_malla := false
 	if foto != null and CaraMalla.tiene(nombre_foto):
 		var cara_hd := CaraMalla.foto(nombre_foto)
-		var tono := CaraMalla.tono_piel(nombre_foto, cara_hd)
+		## La piel: la que el segmentador marcó como piel de la cara (sin
+		## barba, cejas ni fondo); si no, la media recortada de la malla.
+		var medida := CaraMalla.entrada(nombre_foto)
+		var tono := Color(String(medida["s"])) if String(medida.get("s", "")) != "" else CaraMalla.tono_piel(nombre_foto, cara_hd)
 		if tono.a > 0.0:
 			piel = tono
 		if CaraMalla.poner(d, nombre_foto, cara_hd, piel) != null:
@@ -343,6 +348,10 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 			var pelo_foto := CaraMalla.color_pelo(nombre_foto)
 			if pelo_foto.a > 0.0:
 				_teñir_pelo(d.get("nodo", modelo), pelo_foto)
+			## Pelo, barba, cejas y pestañas por capas, medidos en la foto.
+			var geo := CaraMalla.geometria(nombre_foto)
+			if not geo.is_empty() and PeloCapas.poner(d, medida, cara_hd, geo[0], geo[1], geo[2], geo[3]):
+				_ocultar_peinado(d.get("nodo", modelo))
 	if foto != null and not con_malla:
 		if af.is_empty():
 			foto = null
@@ -377,8 +386,12 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 						var pl := piel.srgb_to_linear()
 						var v := Vector3(pl.r, pl.g, pl.b)
 						var gris := v.dot(Vector3(0.2126, 0.7152, 0.0722))
-						v = Vector3.ONE * gris + (v - Vector3.ONE * gris) * SATURACION_PIEL
-						mc.set_shader_parameter("piel_foto", v * exposicion_piel(gris))
+						var e := exposicion_piel(gris)
+						## La misma compensación del pie del mapeo de tonos que la cara.
+						var gg := maxf(gris, 0.0001)
+						v = Vector3(pow(v.x / gg, 1.0 / COMPENSAR_PIEL), pow(v.y / gg, 1.0 / COMPENSAR_PIEL),
+							pow(v.z / gg, 1.0 / COMPENSAR_PIEL)) * gg
+						mc.set_shader_parameter("piel_foto", v * e)
 					elif foto != null:
 						mc.set_shader_parameter("hay_foto", true)
 						mc.set_shader_parameter("foto_tex", foto)
@@ -396,21 +409,27 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 					_cache_cara[clave] = mc
 				mi.set_surface_override_material(s, mc)
 				puesta = true
-			elif nombre == MATERIAL_OJOS and con_malla:
-				## Los ojos de la foto ya están en la malla de la cara.
-				mi.visible = false
 			elif nombre == MATERIAL_OJOS and ResourceLoader.exists(SHADER_OJOS):
 				_con_reposo_simple(mi)
 				if s >= mi.get_surface_override_material_count():
 					continue
-				var clave_o := "ojos|%s|%s|%s" % [iris.to_html(false), _piel_cuantizada(piel), ruta]
+				## Con cara real: el iris medido en su foto, y los párpados los
+				## pone la malla de la cara (el globo, bien abierto).
+				if con_malla and CaraMalla.color_iris(nombre_foto).a > 0.0:
+					iris = CaraMalla.color_iris(nombre_foto)
+				var clave_o := "ojos|%s|%s|%s|%s" % [iris.to_html(false), _piel_cuantizada(piel), ruta, con_malla]
 				var mo: ShaderMaterial = _cache_cara.get(clave_o)
 				if mo == null:
 					mo = ShaderMaterial.new()
 					mo.shader = load(SHADER_OJOS)
 					mo.set_shader_parameter("iris", iris)
 					mo.set_shader_parameter("piel", piel)
-					if foto != null:
+					if con_malla:
+						## Párpados que tapan un poco el iris arriba (como un ojo
+						## de verdad); bien abiertos parecía asustado.
+						mo.set_shader_parameter("apertura", 0.85)
+						mo.set_shader_parameter("blanco", 0.74)
+					elif foto != null:
 						mo.set_shader_parameter("apertura", 0.78)
 						mo.set_shader_parameter("blanco", 0.82)
 					_cache_cara[clave_o] = mo
@@ -433,6 +452,14 @@ static func _lado_foto(p: Array) -> int:
 	if corrida < -0.12:
 		return 1
 	return 0
+
+## Esconde el peinado genérico de `PeloQ` (el pelo por capas lo reemplaza).
+static func _ocultar_peinado(raiz: Node) -> void:
+	var pelo := raiz.find_child("Pelo", true, false)
+	if pelo == null:
+		return
+	for mv in _mallas(pelo):
+		(mv as MeshInstance3D).visible = false
 
 ## Tiñe el pelo 3D (`PeloQ`) con el color de la foto (misma cuenta que
 ## `PeloQ._material`: la textura del pack es oscura y se aclara x1,7).
