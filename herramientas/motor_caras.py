@@ -82,6 +82,9 @@ LECCIONES = [
     "Pelo azul/verde = cielo o césped detrás: filtrar a colores de pelo naturales (pelo_natural).",
     "Iris de foto oscura sale gris verdoso: un iris oscuro es castaño (iris_natural).",
     "«Se ve sucio» (30-9): relieve de la foto 0,32 y acotado 0,86-1,1; bilateral 9/26/9.",
+    "Barba y cejas por capas (pelo 3D) se ven como manchas negras a esta escala: mejor en la textura.",
+    "Largo del pelo: medirlo en el eje de SU cara y uniendo manchas (la oreja parte una melena).",
+    "Gorro/gorra en la foto: pelo corto oscuro, nunca un peinado inventado.",
     "El iris 3D se centra en la abertura de SU malla; sin eso parecía bizco.",
     "Con cara real, los ojos 3D sin párpados propios (la malla ya los tiene).",
 ]

@@ -283,16 +283,35 @@ def analizar(original, caja, cara, uv, forma, lazo, escala, seg, mp):
             if len(xs) and len(ys):
                 lados.append(float((cat[np.ix_(ys, xs)] == PELO).mean()))
         hp["lados"] = round(max(lados) if lados else 0.0, 2)
-        # Largo: pelo por debajo de la mandíbula, a los costados del cuello.
+        # Largo: hasta dónde baja SU pelo (todas sus manchas: una coleta o una
+        # melena se parten en varias) respecto de la boca, en alturas de cara.
+        # 0 = no pasa de las orejas; 1 = llega a los hombros o más.
         _, ymenton = a_grande(*uv[152])
-        # (junto a su cabeza: el pelo de otro jugador detrás no cuenta)
-        # y de la MISMA mancha de pelo que el de arriba de su frente.
-        fx1, fy1 = a_grande(*uv[10])
-        encima = etiquetas[max(0, int(fy1) - int(ancho_cara)):max(1, int(fy1)), max(0, int(fx1) - 20):int(fx1) + 20]
-        ids, cuentas = np.unique(encima[encima > 0], return_counts=True)
-        propia = (etiquetas == ids[np.argmax(cuentas)]) if len(ids) else (cat == PELO)
-        bajo = propia & (cat == PELO) & (yy > ymenton) & (np.abs(xx - caracx) < ancho_cara * 1.0)
-        hp["largo"] = round(float(min(1.0, bajo.sum() / max(1.0, (cat == PELO).sum()) * 3.0)), 2)
+        _, yboca = a_grande(*uv[14])
+        _, yfrente = a_grande(*uv[10])
+        alto_cara = max(ymenton - yfrente, 10.0)
+        # Solo las manchas que TAMBIÉN tienen pelo por encima de su frente (el
+        # pelo de otro jugador pegado al cuello no llega arriba: Caicedo).
+        # (Unidas con un cierre pequeño: la oreja parte una melena en dos.)
+        unido = cv2.dilate((cat == PELO).astype(np.uint8), np.ones((int(ancho_cara * 0.12) | 1,) * 2, np.uint8))
+        _, et2 = cv2.connectedComponents(unido)
+        arriba_ids = set(np.unique(et2[(cat == PELO) & (yy < yfrente)])) - {0}
+        pelo_suyo = (cat == PELO) & np.isin(et2, list(arriba_ids)) & (np.abs(xx - caracx) < ancho_cara * 1.3)
+        # Medido en el eje de SU cara (cabeza inclinada: Medina mirando arriba
+        # tenía el pelo de la nuca "por debajo" de la boca en vertical).
+        pyh, pxh = np.nonzero(pelo_suyo)
+        if len(pyh):
+            xb, yb = a_grande(*uv[14])
+            abajo = (pxh - xb) * -arriba[0] + (pyh - yb) * -arriba[1]
+            hondo = np.percentile(abajo, 99)
+        else:
+            hondo = -1e9
+        hp["largo"] = round(float(np.clip(hondo / (alto_cara * 0.6), 0.0, 1.0)), 2)
+        # GORRO: encima de la frente hay más "otros" (5: gorro, gorra, cinta)
+        # que pelo -> el pelo no se ve; el juego pone pelo corto oscuro.
+        banda = (yy < yfrente) & (yy > yfrente - alto_cara * 0.7) & (np.abs(xx - caracx) < ancho_cara * 0.6)
+        if (cat[banda] == 5).sum() > (cat[banda] == PELO).sum():
+            hp["gorro"] = True
         # Rizo: textura fina dentro del pelo (liso = poca, rizado = mucha).
         g = lum(arr.astype(float))
         fino = np.abs(g - np.asarray(Image.fromarray(g.astype(np.uint8)).filter(ImageFilter.GaussianBlur(2)), dtype=float))

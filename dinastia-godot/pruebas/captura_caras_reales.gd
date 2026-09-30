@@ -90,11 +90,11 @@ func _ready() -> void:
 			vp.size = Vector2i(int(ancho) - 6, 300)
 			cont.add_child(vp)
 			var cam := Camera3D.new()
-			cam.fov = 34
+			cam.fov = 40
 			var ang := 0.0 if k == 0 else 0.6
-			cam.position = Vector3(x + sin(ang) * 0.62, 1.68, cos(ang) * 0.62)
+			cam.position = Vector3(x + sin(ang) * 0.66, 1.72, cos(ang) * 0.66)
 			vp.add_child(cam)
-			cam.look_at(Vector3(x, 1.65, 0), Vector3.UP)
+			cam.look_at(Vector3(x, 1.69, 0), Vector3.UP)
 
 func _process(_d: float) -> void:
 	_n += 1

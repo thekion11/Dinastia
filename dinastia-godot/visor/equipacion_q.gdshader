@@ -570,7 +570,13 @@ void fragment() {
 		// aclaraba el cuello era la textura, mucho más clara ahí que en su
 		// media. Del relieve queda un cuarto, acotado.)
 		float relieve = clamp(dot(piel, vec3(0.2126, 0.7152, 0.0722)) / LUM_PIEL_REF, 0.5, 1.8);
-		albedo = piel_foto * mix(1.0, relieve, 0.25);
+		// OREJAS (x 0,068-0,091, y 1,65-1,74 en reposo): con un cuarto del
+		// relieve quedaban planas, sin sus pliegues. Ahí el relieve va casi
+		// entero, y la oreja es un poco más rosada (se transparenta la luz).
+		float oreja = usa_reposo ? smoothstep(0.064, 0.072, abs(x)) * smoothstep(1.64, 1.66, y)
+			* (1.0 - smoothstep(1.735, 1.75, y)) : 0.0;
+		albedo = piel_foto * mix(1.0, relieve, mix(0.25, 0.8, oreja));
+		albedo *= mix(vec3(1.0), vec3(1.06, 0.97, 0.95), oreja);
 	}
 	albedo = mix(albedo, camiseta * pliegue, m.r);
 	albedo = mix(albedo, pant * pliegue, m.g);
