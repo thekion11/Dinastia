@@ -79,6 +79,7 @@ LECCIONES = [
     "La normalización de exposición solo SUBE fotos oscuras; bajar las claras las bronceaba.",
     "Calvo: criterio conservador (una calva de más se ve peor que un rapado de más).",
     "La recreación dibujada queda peor que la malla aunque la foto sea mala: malla para todos.",
+    "Pelo azul/verde = cielo o césped detrás: filtrar a colores de pelo naturales (pelo_natural).",
 ]
 
 
@@ -106,6 +107,20 @@ def piel_realista(rgb):
     # auto-niveles daban #ffe2cf, casi blanco, en el juego).
     v = min(v, 0.9)
     return np.array(colorsys.hsv_to_rgb((tono % 360) / 360.0, s, v)) * 255.0
+
+
+def pelo_natural(h, respaldo="#2a211b"):
+    """Un color de pelo natural (negro, castaño, rubio, pelirrojo, canoso). Si
+    el medido tiene un matiz imposible (azul, verde: el cielo o el césped
+    detrás), el castaño oscuro de respaldo; si es teñido claro (rubio platino),
+    se deja. Tono 0-50°, o casi gris."""
+    import colorsys
+    r, g, b = (int(h[i:i + 2], 16) / 255.0 for i in (1, 3, 5))
+    hh, ss, vv = colorsys.rgb_to_hsv(r, g, b)
+    tono = hh * 360
+    if ss < 0.12 or tono <= 50 or tono >= 345:
+        return h
+    return respaldo
 
 
 def a_lineal(c):
