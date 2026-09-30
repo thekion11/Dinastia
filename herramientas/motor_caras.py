@@ -38,15 +38,15 @@ CONFIG = {
     "luz_radio": 14,
     # Del relieve de la piel (poros, arrugas, manchas) se conserva esta fracción
     # (en exponente): 1 = foto tal cual (se veía SUCIO), 0 = piel lisa de muñeco.
-    "relieve_piel": 0.45,
+    "relieve_piel": 0.32,
     # Límites del relieve (un grano, un brillo de flash no pasan de aquí).
-    "relieve_min": 0.78,
-    "relieve_max": 1.15,
+    "relieve_min": 0.86,
+    "relieve_max": 1.1,
     # Cuánto del color propio de cada píxel de piel se deja (0 = tono único
     # exacto de su piel: sin rojeces ni manchas de color de la foto).
-    "croma_propio": 0.18,
+    "croma_propio": 0.12,
     # Suavizado bilateral antes del relieve (quita ruido JPG sin borrar bordes).
-    "bilateral": (7, 18, 7),
+    "bilateral": (9, 26, 9),
     # Rasgos (ojos, cejas, labios, nariz, barba): se quedan con el color de la
     # foto, con la luz quitada a medias.
     "rasgo_luz": 0.6,
@@ -80,6 +80,10 @@ LECCIONES = [
     "Calvo: criterio conservador (una calva de más se ve peor que un rapado de más).",
     "La recreación dibujada queda peor que la malla aunque la foto sea mala: malla para todos.",
     "Pelo azul/verde = cielo o césped detrás: filtrar a colores de pelo naturales (pelo_natural).",
+    "Iris de foto oscura sale gris verdoso: un iris oscuro es castaño (iris_natural).",
+    "«Se ve sucio» (30-9): relieve de la foto 0,32 y acotado 0,86-1,1; bilateral 9/26/9.",
+    "El iris 3D se centra en la abertura de SU malla; sin eso parecía bizco.",
+    "Con cara real, los ojos 3D sin párpados propios (la malla ya los tiene).",
 ]
 
 
@@ -107,6 +111,25 @@ def piel_realista(rgb):
     # auto-niveles daban #ffe2cf, casi blanco, en el juego).
     v = min(v, 0.9)
     return np.array(colorsys.hsv_to_rgb((tono % 360) / 360.0, s, v)) * 255.0
+
+
+def iris_natural(h):
+    """Un iris creíble a partir de lo medido (las fotos no dan más que una
+    pista: el iris ocupa pocos píxeles). Tres familias:
+      - azul/gris: el azul pesa tanto como el rojo (ojo frío);
+      - verde/avellana: el verde claramente por encima del rojo;
+      - castaño (lo demás), de oscuro a claro según lo medido.
+    Nunca gris verdoso ni negro (salían ojos de muerto)."""
+    r, g, b = (int(h[i:i + 2], 16) for i in (1, 3, 5))
+    claro = 0.299 * r + 0.587 * g + 0.114 * b
+    t = min(max((claro - 25.0) / 90.0, 0.0), 1.0)
+    if b >= r - 4 and claro > 45:
+        c = np.array([62, 80, 96]) * (1 - t) + np.array([98, 120, 136]) * t
+    elif g > r + 6 and claro > 50:
+        c = np.array([70, 78, 46]) * (1 - t) + np.array([118, 122, 72]) * t
+    else:
+        c = np.array([44, 28, 18]) * (1 - t) + np.array([98, 68, 44]) * t
+    return "#%02x%02x%02x" % tuple(int(x) for x in c)
 
 
 def pelo_natural(h, respaldo="#2a211b"):
@@ -232,30 +255,24 @@ def albedo_limpio(cara, cat, uv, piel_srgb, wb, barba_m=None, cara_cls=3, pelo_c
 
 
 def color_iris(cara, iris):
-    """Color del iris. `iris`: por ojo, (centro, radio) en px. Del disco del
-    iris se toma el percentil 35 de claridad: la pupila es lo más oscuro y el
-    blanco del ojo o un brillo lo más claro (con la mediana de un cuadradito
-    salían iris amarillos o verdes que no eran). Acotado a lo que es un iris:
-    nunca más claro que un castaño claro o un azul/verde medio."""
+    """Color del iris. `iris`: por ojo, (centro, radio) en px. Se mide el
+    ANILLO del iris (sin la pupila, del 45 al 90 % del radio) y solo su mitad
+    de ABAJO (arriba cae la sombra del párpado y las pestañas); de ahí, la
+    mediana. (Con el disco entero y el percentil 35, todos salían castaño
+    oscuro, incluso los ojos azules.)"""
     muestras = []
     lado = cara.shape[0]
+    ys, xs = np.mgrid[0:lado, 0:lado]
     for (cx, cy), r in iris:
-        r = max(1.5, min(r * 0.85, 12.0))
-        ys, xs = np.mgrid[0:lado, 0:lado]
-        disco = (xs - cx) ** 2 + (ys - cy) ** 2 <= r * r
-        px = cara[disco].astype(float)
-        if len(px) < 3:
+        r = max(2.0, min(r, 14.0))
+        d = np.hypot(xs - cx, ys - cy)
+        anillo = (d >= r * 0.45) & (d <= r * 0.9) & (ys >= cy)
+        px = cara[anillo].astype(float)
+        if len(px) < 4:
             continue
-        o = np.argsort(px @ np.array([0.299, 0.587, 0.114]))
-        muestras.append(px[o[int(len(o) * 0.35)]])
+        muestras.append(np.median(px, 0))
     if not muestras:
         return None
     m = np.mean(muestras, 0)
-    l = m @ np.array([0.299, 0.587, 0.114])
-    if l > 95:
-        m = m * (95.0 / l)
-    # Ni negro: una foto oscura daba iris negros, y el ojo parecía un agujero.
-    # Mínimo, un castaño muy oscuro (con el matiz que tenga).
-    if l < 30:
-        m = m * (30.0 / max(l, 1.0)) if l > 8 else np.array([48.0, 32.0, 22.0])
-    return "#%02x%02x%02x" % tuple(int(v) for v in m)
+    return "#%02x%02x%02x" % tuple(int(v) for v in np.clip(m, 0, 255))
+
