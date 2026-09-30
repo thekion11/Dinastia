@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://pruebas/captura_caras_reales.gd" id="1"]
 
-[node name="C" type="Node"]
+[node name="S" type="Node3D"]
 script = ExtResource("1")
