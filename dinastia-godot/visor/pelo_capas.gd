@@ -22,7 +22,9 @@ const PARPADO_IZQ := [263, 466, 388, 387, 386, 385, 384, 398, 362]
 ## Altura del cráneo sobre el punto 10 (arriba de la frente), en cm de la malla
 ## canónica: lo que mide un rapado. Lo que sobra es pelo.
 const CRANEO_CM := 6.0
-const BARBA_CEJAS_3D := false
+const BARBA_CEJAS_3D := false  # (30-9: por capas se veían manchas negras; la textura limpia las trae mejor)
+## Desde aquí (0-1, `caras_reales_malla.py`: hasta dónde baja el pelo) es melena.
+const LARGO_MELENA := 0.12
 
 static var _mat_cache := {}
 
@@ -51,14 +53,28 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	var barba := _densidades(String(datos.get("b", "")) if BARBA_CEJAS_3D else "", pos.size())
 	## Solo dentro de la cara (no en el borde que se funde con el cuello: ahí
 	## quedaban pelos flotando bajo el mentón).
+	## Solo barba de verdad: por debajo de 0,2 era ruido de la foto (salían
+	## motas junto a los labios de jugadores sin barba, Haaland).
+	## Colores del pelo medido (para barba y cejas).
+	var hm: Variant = datos.get("h")
+	var c_pelo := Color(String(hm.get("c", "#2a211b"))) if hm is Dictionary and not bool(hm.get("gorro", false)) else Color("#2a211b")
+	var c_raiz := Color(String(hm.get("r", "#1a1411"))) if hm is Dictionary and not bool(hm.get("gorro", false)) else Color("#1a1411")
+	var cerca_labios := _anillo(LABIOS, tri, 2)
 	for i in barba.size():
+		barba[i] = smoothstep(0.3, 0.65, barba[i])
 		if i < CaraMalla._alfa.size() and CaraMalla._alfa[i] < 0.99:
 			barba[i] = 0.0
+		## Nada sobre los labios ni pegado a ellos (motas rojas en Haaland):
+		## el bigote y la perilla empiezan un poco más allá.
+		if cerca_labios.has(i):
+			barba[i] *= 0.0 if LABIOS.has(i) else 0.35
 	if _max(barba) > 0.05:
-		var m := _capas_sobre(pos, normales, uv, tri, barba, barba, int(CAPAS_BARBA * reduce), false)
+		## Solo triángulos con dos puntos de barba: sin puntos sueltos.
+		var m := _capas_sobre(pos, normales, uv, _solo_con(tri, barba, 2), barba, barba, int(CAPAS_BARBA * reduce), false)
 		if m != null:
-			var mat := _material({"usa_foto": true, "foto": foto, "balance": _wb(datos), "grosor": 0.0045, "caida": 0.55,
-				"hebras_cm": 11.0, "radio": 0.42, "oscurecer_foto": 1.0, "sombra_raiz": 0.9})
+			var mat := _material({"usa_foto": true, "foto": foto, "balance": _wb(datos),
+				"color_punta": _lineal(c_pelo), "color_raiz": _lineal(c_raiz), "grosor": 0.0026, "caida": 0.55, "nucleo": 0.6, "mezcla_foto": 0.55,
+				"hebras_cm": 16.0, "radio": 0.44, "oscurecer_foto": 1.0, "sombra_raiz": 0.9})
 			_colgar(anc, al_hueso, m, mat, "Barba")
 	var cejas := _densidades(String(datos.get("e", "")) if BARBA_CEJAS_3D else "", pos.size())
 	if _max(cejas) > 0.05:
@@ -67,8 +83,9 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 		## de puntos).
 		var m2 := _capas_sobre(pos, normales, uv, _solo_con(tri, cejas, 2), cejas, cejas, int(CAPAS_CEJAS * reduce), false)
 		if m2 != null:
-			var mat2 := _material({"usa_foto": true, "foto": foto, "balance": _wb(datos), "grosor": 0.0016, "caida": -0.2,
-				"hebras_cm": 15.0, "radio": 0.46, "estirar": 3.5, "oscurecer_foto": 0.95, "sombra_raiz": 0.9})
+			var mat2 := _material({"usa_foto": true, "foto": foto, "balance": _wb(datos),
+				"color_punta": _lineal(c_pelo), "color_raiz": _lineal(c_raiz), "grosor": 0.0011, "caida": -0.2, "nucleo": 0.6, "mezcla_foto": 0.5,
+				"hebras_cm": 18.0, "radio": 0.44, "estirar": 3.0, "oscurecer_foto": 0.95, "sombra_raiz": 0.9})
 			_colgar(anc, al_hueso, m2, mat2, "Cejas")
 	## PESTAÑAS: tiras de verdad sobre el párpado de arriba.
 	var pest := _pestanas(pos, normales)
@@ -81,6 +98,8 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	if not (h is Dictionary):
 		return false
 	var hd := h as Dictionary
+	if bool(hd.get("gorro", false)):
+		return false
 	var cuerpo := _malla_cuerpo(d.get("modelo"))
 	if cuerpo.is_empty():
 		return false
@@ -93,11 +112,16 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	var rizo := float(hd.get("rizo", 0.0))
 	var punta := _lineal(Color(String(hd.get("c", "#2a211b"))))
 	var raiz := _lineal(Color(String(hd.get("c", "#2a211b"))).lerp(Color(String(hd.get("r", "#1a1411"))), 0.5))
+	## AFRO: mucho volumen y rizo -> masa casi maciza con borde de rizos.
+	var afro := rizo > 0.5 and float(hd.get("alto", 0.0)) > 9.5
 	var mat3 := _material({"color_punta": punta, "color_raiz": raiz, "grosor": alto_cm * k,
-		"caida": lerpf(0.35, 0.1, rizo), "hebras_cm": lerpf(3.6, 2.4, rizo), "radio": lerpf(0.3, 0.4, rizo),
-		"rizo": rizo, "base_opaca": true, "nucleo": 0.45})
+		"caida": lerpf(0.35, 0.05, rizo), "hebras_cm": 2.0 if afro else lerpf(3.6, 2.4, rizo),
+		"radio": 0.46 if afro else lerpf(0.3, 0.4, rizo),
+		"rizo": rizo, "base_opaca": true, "nucleo": 0.78 if afro else 0.45})
 	_colgar(anc, al_hueso, cuero, mat3, "Cuero")
-	return float(hd.get("largo", 0.0)) < 0.35
+	## Melena (llega a la mandíbula o más): quien llama pone además el peinado
+	## largo del pack encima (el pelo por capas no cuelga).
+	return float(hd.get("largo", 0.0)) < LARGO_MELENA
 
 static func _wb(datos: Dictionary) -> Vector3:
 	var wb: Variant = datos.get("wb")
@@ -140,6 +164,25 @@ static func _max(a: PackedFloat32Array) -> float:
 	for v in a:
 		m = maxf(m, v)
 	return m
+
+## Contorno de los labios (MediaPipe).
+const LABIOS := [61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 409, 270, 269, 267, 0, 37, 39, 40, 185,
+	78, 95, 88, 178, 87, 14, 317, 402, 318, 324, 308, 415, 310, 311, 312, 13, 82, 81, 80, 191]
+
+## Los vértices a `anillos` pasos (por triángulos) de los de `base`.
+static func _anillo(base: Array, tri: PackedInt32Array, anillos: int) -> Dictionary:
+	var dentro := {}
+	for i: int in base:
+		dentro[i] = true
+	for _k in anillos:
+		var nuevos := {}
+		for t in range(0, tri.size() - 2, 3):
+			if dentro.has(tri[t]) or dentro.has(tri[t + 1]) or dentro.has(tri[t + 2]):
+				for j in 3:
+					nuevos[tri[t + j]] = true
+		for i: int in nuevos:
+			dentro[i] = true
+	return dentro
 
 ## Los triángulos con al menos `minimo` vértices de densidad > 0.
 static func _solo_con(tri: PackedInt32Array, dens: PackedFloat32Array, minimo: int) -> PackedInt32Array:
@@ -274,7 +317,21 @@ static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictiona
 			continue
 		puntos.append(Vector2(p.x, p.y + (0.0 if int(linea[kk]) == 1 else 0.015)))
 	puntos.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x)
+	## Suavizada (media de 5): con los saltos de 1,5 cm punto a punto la línea
+	## salía con muescas rectangulares.
+	var suave: Array = []
+	for i in puntos.size():
+		var acc := 0.0
+		var n := 0
+		for j in range(maxi(0, i - 2), mini(puntos.size(), i + 3)):
+			acc += (puntos[j] as Vector2).y
+			n += 1
+		suave.append(Vector2((puntos[i] as Vector2).x, acc / n))
+	puntos = suave
 	var lados := float(h.get("lados", 0.5))
+	## Afro: tanto volumen arriba como a los lados.
+	if float(h.get("rizo", 0.0)) > 0.5 and float(h.get("alto", 0.0)) > 9.5:
+		lados = 1.0
 	var dens := PackedFloat32Array()
 	var alto := PackedFloat32Array()
 	dens.resize(v.size())
@@ -288,7 +345,8 @@ static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictiona
 		var lateral := smoothstep(0.05, 0.08, absf(p.x))
 		var y_atras := lerpf(1.575, 1.67, lateral)
 		var y_lim := lerpf(y_atras, yl, frente)
-		dens[i] = smoothstep(y_lim - 0.004, y_lim + 0.008, p.y)
+		## Nacimiento difuso: el pelo se aclara en ~1,6 cm, no corta en seco.
+		dens[i] = smoothstep(y_lim - 0.006, y_lim + 0.016, p.y)
 		## Lados rapados (degradado): más corto y más ralo a los costados.
 		var corto := lerpf(1.0, lerpf(0.25, 1.0, lados), lateral * (1.0 - smoothstep(1.72, 1.77, p.y)))
 		## Y corto en la nuca y sobre las orejas: si no, colgaba hasta el

@@ -16,6 +16,7 @@ uniform bool usa_foto = false;
 uniform vec3 color_punta = vec3(0.05, 0.035, 0.025);
 uniform vec3 color_raiz = vec3(0.02, 0.015, 0.012);
 uniform float oscurecer_foto = 0.8;
+uniform float mezcla_foto = 0.3;
 uniform vec3 balance = vec3(1.0);
 // Largo del pelo (m) y cuánto cae hacia abajo al crecer.
 uniform float grosor = 0.01;
@@ -62,9 +63,12 @@ void fragment() {
 	float largo = mix(0.35, 1.0, h11(cel + 7.1));
 	float r = radio * (1.0 - v_capa * 0.65);
 	float hebra = step(length(f), r) * step(v_capa, largo * v_dens + 0.001);
-	// Menos hebras donde la densidad es baja (el nacimiento, la barba rala).
-	hebra *= step(h11(cel + 3.7), v_dens * 1.15);
-	if (v_capa > 0.001 && v_capa < nucleo * v_dens) {
+	// Menos hebras donde la densidad es baja (el nacimiento, la barba rala):
+	// el borde se ralea poco a poco, sin corte.
+	hebra *= step(h11(cel + 3.7), smoothstep(0.0, 0.8, v_dens) * 1.1);
+	// Núcleo: donde el pelo es tupido la masa es continua (solo con
+	// densidad alta: en el borde ralo quedan hebras sueltas).
+	if (v_capa > 0.001 && v_capa < nucleo * v_dens && v_dens > 0.45 + 0.3 * h11(cel + 2.2)) {
 		hebra = 1.0;
 	}
 	if (v_capa < 0.001) {
@@ -76,7 +80,12 @@ void fragment() {
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
 	vec3 c;
 	if (usa_foto) {
-		c = a_lineal(texture(foto, UV).rgb) * balance * oscurecer_foto;
+		// El color del PELO medido, con solo un poco de la foto (canas,
+		// mechas): el píxel de la foto trae la piel de debajo y la barba salía
+		// rojiza sobre piel oscura.
+		vec3 f = a_lineal(texture(foto, UV).rgb) * balance * oscurecer_foto;
+		vec3 base = mix(color_raiz, color_punta, 0.6);
+		c = mix(base, min(f, base * 1.6), mezcla_foto);
 	} else {
 		c = mix(color_raiz, color_punta, clamp(v_capa * 1.3, 0.0, 1.0));
 	}
