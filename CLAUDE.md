@@ -94,11 +94,15 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   luz de piel (wrap), pelo 3D del color de la foto. Revisión:
   `pruebas/captura_caras_reales.gd` (CARAS=, MOMENTO=estudio|dia|tarde).
   Pasada 2 (pelo por capas, barba, cejas, pestañas: `visor/pelo_capas.gd`) a medias.
+- **MEGAPLAN EN PAUSA** hasta terminar bien las caras reales (orden del usuario 30-9).
+  «Ten cuidado con los colores y respeta estas instrucciones.»
 - 30-9 VEREDICTO Y ORDEN DEL USUARIO (seguir al pie de la letra):
   1. «Físicamente tus jugadores están bien, el tema son los TONOS DE PIEL»: se ven
      sucios y muy saturados. Analizar la cara y los colores para REPLICARLOS
      (piel limpia), no pegar la foto tal cual.
   2. Cuidado con los OJOS: algunos parecen con estrabismo. Mejorar las OREJAS.
+     (Repetido tras la auditoría: «claramente aún las caras no están bien, pero vas
+     avanzando»; sigue viéndose SUCIO y SATURADO.)
   3. Construir un MOTOR que recuerde lo aprendido (colores, formas: cara, pelo,
      ojos, cejas, pestañas, barba) para facilitar las mejoras.
   4. Orden: primero dejar bien el paso 1 (cara/piel), luego aplicarlo a TODOS,
