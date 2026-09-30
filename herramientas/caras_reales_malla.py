@@ -260,8 +260,8 @@ def analizar(original, caja, cara, uv, forma, lazo, escala, seg, mp):
             l = lin(np.asarray(c, dtype=float)) * np.array(out["wb"])
             srgb = np.where(l <= 0.0031308, l * 12.92, 1.055 * np.power(np.clip(l, 0, 1), 1 / 2.4) - 0.055)
             return "#%02x%02x%02x" % tuple(int(np.clip(x * 255, 0, 255)) for x in srgb)
-        hp["c"] = con_wb(pelo_px[o[int(len(o) * 0.55)]])
-        hp["r"] = con_wb(pelo_px[o[int(len(o) * 0.12)]])
+        hp["c"] = motor.pelo_natural(con_wb(pelo_px[o[int(len(o) * 0.55)]]))
+        hp["r"] = motor.pelo_natural(con_wb(pelo_px[o[int(len(o) * 0.12)]]), "#1a1411")
         # Cuánto sube el pelo por encima de la frente, en la dirección de SU
         # cara (del mentón a la frente): con la cabeza inclinada, medir en
         # vertical exageraba.

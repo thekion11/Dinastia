@@ -6,6 +6,29 @@ razonable para mirarlo en las hojas de lotes (`pruebas/captura_lote_caras.gd`).
 - Jugadores con cara 3D: **1133** de 1146 (recreación: 13).
 - Sin ninguna marca: **964**.
 
+## Revisión a ojo (30-9-2026, las 96 hojas de 12 jugadores)
+
+Hecha mirando cada hoja (`pruebas/captura_lote_caras.gd`, luz de retrato). Estimación
+honesta, no una medida: en una muestra de ~190 jugadores contados uno a uno,
+**≈85 % se ven bien** (tono de piel y ojos creíbles y parecidos a la foto) y **≈15 %
+tienen un problema visible**:
+
+- **Tono más oscuro que el real (≈7 %)**: la cara estaba en sombra dentro de una foto
+  bien expuesta (p. ej. Ben White, Benjamin André, Benjamin Šeško, Benjamin Lecomte,
+  Robert Lewandowski). Con una sola foto no se distingue de una piel morena; el
+  auto-niveles solo corrige las fotos oscuras enteras (Pavard quedó bien).
+- **Manchas de la foto (≈5 %)**: brillos, sombras duras o mala resolución que
+  sobreviven a la piel replicada (Óscar de Marcos, Álvaro Vadillo, Rani Khedira,
+  Alex Valera, Eric Ramírez).
+- **Forma rara (≈3 %)**: fotos muy de lado o con la boca muy abierta.
+
+Además, en TODOS: el peinado es todavía el genérico (paso 2, pendiente por orden del
+usuario) y la barba/cejas vienen de la textura, no en 3D.
+
+Corregido durante la revisión: pieles claras rojas o quemadas, pieles claras en fotos
+oscuras (auto-niveles), iris negros o amarillos, pelo azul/verde (cielo o césped),
+calvas de más.
+
 ## Marcas por tipo
 
 - foto muy de lado: 147
