@@ -94,6 +94,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   luz de piel (wrap), pelo 3D del color de la foto. Revisión:
   `pruebas/captura_caras_reales.gd` (CARAS=, MOMENTO=estudio|dia|tarde).
   Pasada 2 (pelo por capas, barba, cejas, pestañas: `visor/pelo_capas.gd`) a medias.
+- **ORDEN VIGENTE (30-9, último mensaje)**: 1) dejar bien las caras (piel, ojos,
+  colores); 2) cuando estén bien: orejas, pelo, barba, cejas, pestañas; 3) recién
+  después, el MEGAPLAN. Los jugadores SIN foto quedan EN PAUSA (no buscar caras ahora).
 - **MEGAPLAN EN PAUSA** hasta terminar bien las caras reales (orden del usuario 30-9).
   «Ten cuidado con los colores y respeta estas instrucciones.»
 - 30-9 VEREDICTO Y ORDEN DEL USUARIO (seguir al pie de la letra):

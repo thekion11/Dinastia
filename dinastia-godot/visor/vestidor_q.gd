@@ -417,7 +417,11 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 				## pone la malla de la cara (el globo, bien abierto).
 				if con_malla and CaraMalla.color_iris(nombre_foto).a > 0.0:
 					iris = CaraMalla.color_iris(nombre_foto)
-				var clave_o := "ojos|%s|%s|%s|%s" % [iris.to_html(false), _piel_cuantizada(piel), ruta, con_malla]
+					## Un poco menos de color y de brillo: bajo la luz del
+					## juego los castaños se veían naranjas y los azules, neón.
+					var gris := iris.get_luminance()
+					iris = iris.lerp(Color(gris, gris, gris), 0.35).darkened(0.12)
+				var clave_o := "ojos|%s|%s|%s|%s|%s" % [iris.to_html(false), _piel_cuantizada(piel), ruta, con_malla, nombre_foto]
 				var mo: ShaderMaterial = _cache_cara.get(clave_o)
 				if mo == null:
 					mo = ShaderMaterial.new()
@@ -425,10 +429,16 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 					mo.set_shader_parameter("iris", iris)
 					mo.set_shader_parameter("piel", piel)
 					if con_malla:
-						## Párpados que tapan un poco el iris arriba (como un ojo
-						## de verdad); bien abiertos parecía asustado.
-						mo.set_shader_parameter("apertura", 0.85)
-						mo.set_shader_parameter("blanco", 0.74)
+						## Los párpados los pone su malla; el iris, centrado en SU
+						## abertura (si no, parecía bizco). Algo de sombra arriba
+						## (apertura) para que el blanco no brille.
+						mo.set_shader_parameter("sin_parpados", true)
+						mo.set_shader_parameter("apertura", 0.9)
+						mo.set_shader_parameter("blanco", 0.72)
+						var co := CaraMalla.centros_ojos(nombre_foto)
+						if co.size() == 2:
+							mo.set_shader_parameter("centro_neg", co[0])
+							mo.set_shader_parameter("centro_pos", co[1])
 					elif foto != null:
 						mo.set_shader_parameter("apertura", 0.78)
 						mo.set_shader_parameter("blanco", 0.82)

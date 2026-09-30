@@ -564,7 +564,9 @@ def main() -> None:
                      np.hypot((lm_todo[k + 1].x - lm_todo[k].x) * LADO, (lm_todo[k + 1].y - lm_todo[k].y) * LADO))
                     for k in (motor.IRIS_DER, motor.IRIS_IZQ)])
                 if iris:
-                    salida[nombre]["iris"] = iris
+                    salida[nombre]["iris"] = motor.iris_natural(iris)
+                    if solo:
+                        salida[nombre]["iris_crudo"] = iris
         salida[nombre]["giro"] = round(float(giro), 1)
         salida[nombre]["cabeceo"] = round(float(cabeceo), 1)
         # Una foto muy de lado o muy desde arriba/abajo no sirve para la cara
@@ -596,7 +598,7 @@ def main() -> None:
     if solo:
         for k, v in salida.items():
             tt = np.frombuffer(base64.b64decode(v["t"]), np.uint8) if v.get("t") else np.zeros(1)
-            print(k, "giro", v.get("giro"), "cabeceo", v.get("cabeceo"), "mala", v.get("mala", False), "tapados", int((tt > 0).sum()))
+            print(k, "IRIS_CRUDO", v.get("iris_crudo"), "giro", v.get("giro"), "cabeceo", v.get("cabeceo"), "mala", v.get("mala", False), "tapados", int((tt > 0).sum()))
             print(k, v.get("s"), v.get("h", {}) and {x: y for x, y in v["h"].items() if x != "linea"},
                   "barba", round(float(np.frombuffer(base64.b64decode(v["b"]), np.uint8).mean() / 255), 3),
                   "cejas", round(float(np.frombuffer(base64.b64decode(v["e"]), np.uint8)[CEJAS].mean() / 255), 2))
