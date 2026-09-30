@@ -352,6 +352,26 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 			var geo := CaraMalla.geometria(nombre_foto)
 			if not geo.is_empty() and PeloCapas.poner(d, medida, cara_hd, geo[0], geo[1], geo[2], geo[3]):
 				_ocultar_peinado(d.get("nodo", modelo))
+			elif medida.get("h") is Dictionary and float(medida["h"].get("largo", 0.0)) >= PeloCapas.LARGO_MELENA:
+				## Melena: el peinado largo del pack, del color de su pelo.
+				var viejo := (d.get("nodo", modelo) as Node).find_child("Pelo", true, false)
+				if viejo != null:
+					viejo.get_parent().remove_child(viejo)
+					viejo.queue_free()
+				## (`PeloQ` aclara su textura x1,7: se le pasa el color ya
+				## compensado; si no, un castaño salía gris y un rubio, blanco.)
+				var cp := Color(String(medida["h"].get("c", "#2a211b")))
+				PeloQ.poner(d, "largo", Color(cp.r / 1.7, cp.g / 1.7, cp.b / 1.7), false)
+				_ocultar_cejas_y_barba(d.get("nodo", modelo))
+			elif not (medida.get("h") is Dictionary) or bool(medida["h"].get("gorro", false)):
+				## Pelo tapado (gorro, gorra) o no visible: corto y oscuro,
+				## nunca un peinado inventado.
+				var viejo2 := (d.get("nodo", modelo) as Node).find_child("Pelo", true, false)
+				if viejo2 != null:
+					viejo2.get_parent().remove_child(viejo2)
+					viejo2.queue_free()
+				PeloQ.poner(d, "corto", Color(0.1, 0.075, 0.06), false)
+				_ocultar_cejas_y_barba(d.get("nodo", modelo))
 	if foto != null and not con_malla:
 		if af.is_empty():
 			foto = null

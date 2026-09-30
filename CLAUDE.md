@@ -94,6 +94,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   luz de piel (wrap), pelo 3D del color de la foto. Revisión:
   `pruebas/captura_caras_reales.gd` (CARAS=, MOMENTO=estudio|dia|tarde).
   Pasada 2 (pelo por capas, barba, cejas, pestañas: `visor/pelo_capas.gd`) a medias.
+- 30-9: el usuario dio por BUENAS las caras («sí, me convence») → EN CURSO el PUNTO 2:
+  orejas, pelo, barba, cejas y pestañas (mismo método: pasadas + surtido variado).
+  Pasada 1 de pelo (pelo_pasada1.png): largo/gorro medidos, melena con el pelo
+  largo del pack, afro con volumen, cuero por capas con nacimiento suave, orejas
+  con relieve. Barba/cejas por capas APAGADAS (se veían manchas; la textura va mejor).
 - **ORDEN VIGENTE (30-9, último mensaje)**: 1) dejar bien las caras (piel, ojos,
   colores); 2) cuando estén bien: orejas, pelo, barba, cejas, pestañas; 3) recién
   después, el MEGAPLAN. Los jugadores SIN foto quedan EN PAUSA (no buscar caras ahora).
