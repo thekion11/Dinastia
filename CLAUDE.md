@@ -93,6 +93,21 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   la foto (media recortada), exposición normalizada por foto, relleno de cámara,
   luz de piel (wrap), pelo 3D del color de la foto. Revisión:
   `pruebas/captura_caras_reales.gd` (CARAS=, MOMENTO=estudio|dia|tarde).
-  Esperando su veredicto para la pasada 2.
+  Pasada 2 (pelo por capas, barba, cejas, pestañas: `visor/pelo_capas.gd`) a medias.
+- 30-9 VEREDICTO Y ORDEN DEL USUARIO (seguir al pie de la letra):
+  1. «Físicamente tus jugadores están bien, el tema son los TONOS DE PIEL»: se ven
+     sucios y muy saturados. Analizar la cara y los colores para REPLICARLOS
+     (piel limpia), no pegar la foto tal cual.
+  2. Cuidado con los OJOS: algunos parecen con estrabismo. Mejorar las OREJAS.
+  3. Construir un MOTOR que recuerde lo aprendido (colores, formas: cara, pelo,
+     ojos, cejas, pestañas, barba) para facilitar las mejoras.
+  4. Orden: primero dejar bien el paso 1 (cara/piel), luego aplicarlo a TODOS,
+     luego conseguir las caras que faltan, y recién después el paso 2 (pelo etc.).
+  6. «Implementarlo a TODOS, auditar por lotes, no mentirse». Hecho 30-9: motor
+     (`herramientas/motor_caras.py`, `MOTOR_CARAS.md`), piel replicada para los
+     1146, auditoría automática + 96 hojas de lotes. Límite honesto: caras en
+     sombra dentro de fotos bien expuestas salen más oscuras (≈8 % en lo revisado).
+  5. Mostrar en cada pasada jugadores DISTINTOS (surtido variado:
+     `herramientas/caras_variadas.py`) para ver que el nivel se repite.
 - Esperando al usuario: túnel, informe nuevo.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
