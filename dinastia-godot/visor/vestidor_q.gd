@@ -304,6 +304,8 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 ## Cada jugador lleva su propio material de cuerpo (el de la equipación, con
 ## la cara encima) y sus ojos. Devuelve false si no pudo.
 const SHADER_OJOS := "res://visor/ojos_q.gdshader"
+## Medido en captura (`pruebas/captura_recreacion.gd`, MODO=foto).
+const AJUSTE_CUERPO_MALLA := 0.72
 static var _cache_cara := {}
 
 static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
@@ -314,19 +316,33 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 	var ruta := String(datos.get("foto", ""))
 	var foto: Texture2D = Cara.foto_de_ruta(ruta) if ruta != "" else null
 	var af := _afin_foto(Cara.puntos_foto(ruta)) if foto != null else []
-	if af.is_empty():
-		foto = null
-	var rasgos: Texture2D = null if foto != null else Cara.textura_rasgos(lk)
-	var barba: Texture2D = null if foto != null else Cara.textura_barba(lk)
 	var bi := int((lk as Dictionary).get("barba", 0))
 	## IGUALITO A LA FOTO (29-9-2026): la foto trae sus propias cejas y su
 	## barba; las mallas 3D encima duplicaban cejas y tapaban la barba real.
 	## Y la foto se lleva al color de la piel del modelo (balance de blancos y
 	## flash de cada fotógrafo): así no se nota dónde termina la foto.
 	var tono_foto := Vector3.ONE
-	if foto != null:
-		_ocultar_cejas_y_barba(d.get("nodo", modelo))
-		tono_foto = _ajuste_foto(foto, af, piel)
+	## LA CARA DE VERDAD EN 3D (30-9-2026): si hay malla de su cara, va la
+	## malla (forma y píxeles exactos de la foto) en vez de la proyección, y el
+	## cuerpo toma el tono EXACTO de su piel en la foto.
+	var nombre_foto := Cara.nombre_de_ruta(ruta) if ruta != "" else ""
+	var con_malla := false
+	if foto != null and CaraMalla.tiene(nombre_foto):
+		if CaraMalla.poner(d, nombre_foto, foto) != null:
+			con_malla = true
+			var tono := CaraMalla.tono_piel(nombre_foto, foto)
+			if tono.a > 0.0:
+				piel = tono
+			_ocultar_cejas_y_barba(d.get("nodo", modelo))
+	if foto != null and not con_malla:
+		if af.is_empty():
+			foto = null
+		else:
+			_ocultar_cejas_y_barba(d.get("nodo", modelo))
+			tono_foto = _ajuste_foto(foto, af, piel)
+	## Sin foto usable: los rasgos del retrato.
+	var rasgos: Texture2D = null if foto != null else Cara.textura_rasgos(lk)
+	var barba: Texture2D = null if foto != null else Cara.textura_barba(lk)
 	var iris := Color(String(Cara.IRIS[clampi(int((lk as Dictionary).get("ojos", 0)), 0, Cara.IRIS.size() - 1)]))
 	var puesta := false
 	for mv in _mallas(modelo):
@@ -341,12 +357,18 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 					and (activo as ShaderMaterial).shader.resource_path == SHADER_EQUIPACION:
 				if not bool((activo as ShaderMaterial).get_shader_parameter("usa_reposo")):
 					continue
-				var clave := "%d|%d|%s" % [activo.get_instance_id(), hash(lk), ruta]
+				var clave := "%d|%d|%s|%s" % [activo.get_instance_id(), hash(lk), ruta, con_malla]
 				var mc: ShaderMaterial = _cache_cara.get(clave)
 				if mc == null:
 					mc = (activo as ShaderMaterial).duplicate() as ShaderMaterial
-					mc.set_shader_parameter("hay_cara", true)
-					if foto != null:
+					mc.set_shader_parameter("hay_cara", not con_malla)
+					if con_malla:
+						mc.set_shader_parameter("hay_malla", true)
+						## El cuerpo sale más claro que la malla de la cara con el
+						## mismo color (su textura y su borde de luz): se baja un
+						## poco para que cuello y frente empaten con la foto.
+						mc.set_shader_parameter("tinte_piel", _tinte(piel) * AJUSTE_CUERPO_MALLA)
+					elif foto != null:
 						mc.set_shader_parameter("hay_foto", true)
 						mc.set_shader_parameter("foto_tex", foto)
 						mc.set_shader_parameter("foto_u", af[0])
@@ -363,6 +385,9 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 					_cache_cara[clave] = mc
 				mi.set_surface_override_material(s, mc)
 				puesta = true
+			elif nombre == MATERIAL_OJOS and con_malla:
+				## Los ojos de la foto ya están en la malla de la cara.
+				mi.visible = false
 			elif nombre == MATERIAL_OJOS and ResourceLoader.exists(SHADER_OJOS):
 				_con_reposo_simple(mi)
 				if s >= mi.get_surface_override_material_count():
@@ -653,7 +678,10 @@ static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Arr
 static func _tinte(piel: Color) -> Vector3:
 	var a := piel.srgb_to_linear()
 	var b := PIEL_REF.srgb_to_linear()
-	return Vector3(clampf(a.r / b.r, 0.15, 1.8), clampf(a.g / b.g, 0.15, 1.8), clampf(a.b / b.b, 0.15, 1.8))
+	## Hasta 3,2: una piel clara de foto con flash (224,164,129) pide 2,7 en el
+	## azul; con el tope viejo de 1,8 el cuello salía amarillo pálido al lado
+	## de la cara real.
+	return Vector3(clampf(a.r / b.r, 0.15, 3.2), clampf(a.g / b.g, 0.15, 3.2), clampf(a.b / b.b, 0.15, 3.2))
 
 ## Ocho niveles por canal: dos jugadores de piel casi igual comparten material.
 static func _piel_cuantizada(piel: Color) -> String:

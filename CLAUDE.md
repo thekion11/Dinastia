@@ -79,6 +79,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   personaje 3D». Hecho: con foto se esconden cejas y barba 3D, la foto se lleva
   al color de la piel del modelo, óvalo con cejas, fotos de tres cuartos en
   espejo (nariz en `caras_reales_puntos.json`, 8 valores), ojos más cerrados.
-  Límite: la cabeza 3D es la misma para todos (la forma no es la suya).
+  30-9: MALLA DEFORMABLE por jugador (MediaPipe, Apache 2.0, pip + modelo de
+  storage.googleapis.com): `herramientas/caras_reales_malla.py` → forma real de
+  la cara (468 vért.) + píxeles EXACTOS de la foto (`datos/caras_reales_mallas.json`,
+  1164 jugadores). `visor/cara_malla.gd` la cuelga del hueso Head; la cara del
+  cuerpo se hunde (`hay_malla`). Colores exactos también en la recreación.
+  Datos de caras reales excluidos de los builds públicos (export_presets.cfg).
 - Esperando al usuario: túnel, informe nuevo.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.

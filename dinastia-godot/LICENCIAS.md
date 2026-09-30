@@ -73,6 +73,8 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | `persona_realista.glb` (escaneo de una persona: presentador del sorteo y mentores) | `assets/personas/` | `recursos/modelos3d/navy-jacket-portrait.zip` ("Navy Jacket Portrait", formato de descarga de Sketchfab, sin licencia dentro del zip). Es el modelo que el usuario dejó para el presentador | 🟡 confirmar la licencia en Sketchfab. Además es una persona real escaneada: comprobar que la licencia permite su uso en un juego comercial |
 | `asientos_lod.glb` | `assets/ciudad/` | `normal_stadium_seats_v1...zip` | 🟡 confirmar |
 | `podio_prensa.glb` | `assets/props/generado_ia/` | Generado con Meshy | 🟡 en plan de pago es tuyo; en plan gratis Meshy lo publica bajo CC BY 4.0 y **hay que acreditar**. Confirmar con qué plan se generó |
+| Malla de cara deformable (468 vértices, 898 triángulos) y detector de puntos de la cara, usados para sacar la cara 3D de cada foto real | `datos/cara_malla_topologia.json` (la topología); el detector solo lo usa `herramientas/caras_reales_malla.py` | MediaPipe (Google): `canonical_face_model.obj` y `face_landmarker.task` | 🟢 Apache 2.0: uso comercial permitido; conservar el aviso «Copyright The MediaPipe Authors, Apache License 2.0» |
+| Caras 3D de jugadores reales, sus puntos y rasgos (sacados de las fotos) | `datos/caras_reales_mallas.json`, `caras_reales_puntos.json`, `caras_reales_rasgos.json` | Generados aquí desde las fotos de Commons | 🔴 excluido (es la imagen de personas reales) |
 
 ## 4. Escudos, texturas, sonido y tipografía
 

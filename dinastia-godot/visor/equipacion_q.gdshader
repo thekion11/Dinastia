@@ -91,6 +91,9 @@ uniform sampler2D barba_tex : hint_default_transparent, filter_linear_mipmap, re
 uniform vec4 barba_color : source_color = vec4(0.1, 0.07, 0.05, 1.0);
 // Menos fuerza cuando encima va la barba 3D (la pintada solo rellena debajo).
 uniform float barba_fuerza = 0.0;
+// La cara real va en su propia malla (`CaraMalla`): la cara del cuerpo se
+// hunde detrás para no asomar (la nariz del modelo, sobre todo).
+uniform bool hay_malla = false;
 uniform bool hay_foto = false;
 uniform sampler2D foto_tex : source_color, filter_linear_mipmap, repeat_disable;
 // Del espacio del retrato (0-64) a la foto (0-1): u = dot(foto_u, (sx, sy, 1)).
@@ -116,6 +119,15 @@ void vertex() {
 	// vértices de la camiseta y el pantalón se separan del cuerpo por su
 	// normal -la tela no se pega a cada músculo-, y la manga y el pantalón se
 	// abren hacia el borde como en una equipación de verdad.
+	if (usa_reposo && hay_malla) {
+		// Misma cuenta que el bloque «cara» del fragmento: la zona que tapa la
+		// malla de la cara real (frente a mentón, de oreja a oreja por delante).
+		float sx = 32.0 + v_reposo.x / 0.00563;
+		float sy = 33.0 + (1.6986 - v_reposo.y) / 0.00666;
+		vec2 ov = vec2((sx - 32.0) / 11.0, (sy - 37.0) / 15.5);
+		float dentro = (1.0 - smoothstep(0.7, 0.95, length(ov))) * smoothstep(0.54, 0.6, v_reposo.z);
+		VERTEX -= NORMAL * dentro * 0.018;
+	}
 	if (usa_reposo) {
 		float ax = abs(v_reposo.x);
 		float y = v_reposo.y;
