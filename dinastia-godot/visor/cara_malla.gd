@@ -50,6 +50,8 @@ static func _cargar() -> void:
 
 static func tiene(nombre: String) -> bool:
 	_cargar()
+	## (Las fotos "malas" también: la auditoría mostró que la recreación
+	## dibujada queda peor que su malla, aunque la foto sea de mucho costado.)
 	return _mallas.has(nombre)
 
 ## [posiciones (espacio del modelo, pose de reposo), uvs] o [] si no hay.
@@ -85,14 +87,38 @@ static func _datos(nombre: String) -> Array:
 	for i in _n:
 		var c := canon[i] - medio
 		pos[i] = Vector3(c.x * k, OJO_Y + c.y * k, OJOS_Z + c.z * k)
-	var d := [pos, uv, "res://" + String((e as Dictionary).get("f", ""))]
+	## [3] = metros del modelo por cm de la malla canónica.
+	## La textura que pinta el juego: la piel REPLICADA ("a", motor_caras) si
+	## está; si no, la foto recortada.
+	var tex := String((e as Dictionary).get("a", (e as Dictionary).get("f", "")))
+	var d := [pos, uv, "res://" + tex, k]
 	_cache[nombre] = d
 	return d
+
+## El balance de blancos de su foto (por canal, lineal).
+static func balance(nombre: String) -> Vector3:
+	var wb: Variant = entrada(nombre).get("wb")
+	if wb is Array and (wb as Array).size() == 3:
+		return Vector3(float(wb[0]), float(wb[1]), float(wb[2]))
+	return Vector3.ONE
+
+## Todo lo medido en su foto (pelo "h", barba "b", cejas "e", piel "s").
+static func entrada(nombre: String) -> Dictionary:
+	_cargar()
+	var e: Variant = _mallas.get(nombre)
+	return e if e is Dictionary else {}
+
+## Posiciones (espacio del modelo), uvs, triángulos y escala, para `PeloCapas`.
+static func geometria(nombre: String) -> Array:
+	var d := _datos(nombre)
+	return [] if d.is_empty() else [d[0], d[1], _tri, d[3]]
 
 ## El color de su pelo sacado de la foto (o alfa 0 si no se vio pelo).
 static func color_pelo(nombre: String) -> Color:
 	_cargar()
 	var e: Variant = _mallas.get(nombre)
+	if e is Dictionary and (e as Dictionary).get("h") is Dictionary:
+		return Color(String(e["h"].get("c", "#2a211b")))
 	if e is Dictionary and String((e as Dictionary).get("p", "")) != "":
 		return Color(String(e["p"]))
 	return Color(0, 0, 0, 0)
@@ -145,6 +171,17 @@ static func tono_piel(nombre: String, tex: Texture2D) -> Color:
 	var n := float(hasta - desde)
 	return Color(suma.r / n, suma.g / n, suma.b / n, 1.0).linear_to_srgb()
 
+const CONTORNO_OJOS := [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246,
+	263, 249, 390, 373, 374, 380, 381, 382, 362, 398, 384, 385, 386, 387, 388, 466]
+
+static func _en_ojo(i: int) -> bool:
+	return i in CONTORNO_OJOS
+
+## El color de su iris medido en la foto (alfa 0 si no hay).
+static func color_iris(nombre: String) -> Color:
+	var c := String(entrada(nombre).get("iris", ""))
+	return Color(c) if c != "" else Color(0, 0, 0, 0)
+
 ## Cuelga la cara del hueso de la cabeza del jugador. null si no hay malla.
 static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) -> MeshInstance3D:
 	var datos := _datos(nombre)
@@ -158,13 +195,22 @@ static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) ->
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var pos: PackedVector3Array = datos[0]
 	var uv: PackedVector2Array = datos[1]
+	## COLOR.g = tapado en la foto (una mano, un brazo): ahí se pinta su piel.
+	var tapado := PeloCapas._densidades(String(entrada(nombre).get("t", "")), _n)
 	for i in _n:
 		st.set_uv(uv[i])
-		st.set_color(Color(1, 1, 1, _alfa[i] if i < _alfa.size() else 1.0))
+		st.set_color(Color(1, tapado[i], 1, _alfa[i] if i < _alfa.size() else 1.0))
 		st.add_vertex(pos[i])
 	## Godot toma como cara de delante la de vértices en sentido horario vista
 	## desde fuera; la malla de MediaPipe viene al revés.
+	## Los ojos de la foto NO se pintan: se abre el ojo en la malla y se ven los
+	## globos 3D detrás, mirando al frente con el color de su iris. (En fotos
+	## de tres cuartos el espejo copiaba el mismo ojo a los dos lados y parecía
+	## bizco.) Se quitan los triángulos que tienen los tres puntos en el
+	## contorno de un ojo.
 	for t in range(0, _tri.size() - 2, 3):
+		if _en_ojo(_tri[t]) and _en_ojo(_tri[t + 1]) and _en_ojo(_tri[t + 2]):
+			continue
 		st.add_index(_tri[t])
 		st.add_index(_tri[t + 2])
 		st.add_index(_tri[t + 1])
@@ -177,6 +223,12 @@ static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) ->
 	## foto la luz con que se sacó.
 	var pl := piel.srgb_to_linear()
 	mat.set_shader_parameter("piel_lin", Vector3(pl.r, pl.g, pl.b))
+	if String(entrada(nombre).get("a", "")) != "":
+		## Piel replicada: la luz y el balance ya vienen quitados del motor.
+		mat.set_shader_parameter("quitar_luz", 0.0)
+		mat.set_shader_parameter("balance", Vector3.ONE)
+	else:
+		mat.set_shader_parameter("balance", balance(nombre))
 	mat.set_shader_parameter("lum_media", 0.2126 * pl.r + 0.7152 * pl.g + 0.0722 * pl.b)
 	var mi := MeshInstance3D.new()
 	mi.name = "CaraReal"

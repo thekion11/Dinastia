@@ -11,6 +11,9 @@ render_mode depth_draw_always, cull_back;
 uniform sampler2D foto : filter_linear_mipmap, repeat_disable;
 // Luminancia media de su piel (lineal), para quitar la luz de la foto.
 uniform float lum_media = 0.3;
+// Balance de blancos de la foto (por canal, lineal): quita el tinte de la luz
+// con que se sacó (amarillo, verde, azul). Ver `caras_reales_malla.py`, "wb".
+uniform vec3 balance = vec3(1.0);
 // Su piel media (lineal): el color al que van los brillos de la foto.
 uniform vec3 piel_lin = vec3(0.4, 0.25, 0.18);
 // Cuánto se quita de la luz de la foto (0 = foto tal cual, 1 = toda la luz la
@@ -20,7 +23,9 @@ uniform float quitar_luz = 0.7;
 // El mapeo de tonos del juego (ACES) satura los medios: la piel salía
 // anaranjada al lado de la foto. Se compensa un poco (igual en el cuerpo, ver
 // `VestidorQ.SATURACION_PIEL`).
-uniform float saturacion = 0.92;
+uniform float saturacion = 1.0;
+// Ver `VestidorQ.COMPENSAR_PIEL` (el mismo número para el cuerpo).
+uniform float compensar = 1.6;
 uniform float relleno = 0.3;
 // La cámara de la foto expone para la cara; la luz del estadio no. Sin esto la
 // piel salía mucho más oscura que en la foto (sobre todo la piel oscura).
@@ -36,11 +41,11 @@ vec3 a_lineal(vec3 c) {
 }
 
 void fragment() {
-	vec3 c = a_lineal(texture(foto, UV).rgb);
+	vec3 c = a_lineal(texture(foto, UV).rgb) * balance;
 	// La luz de la foto es lo que cambia despacio (mip 4 del recorte de 384:
 	// ~24 px, más grande que un ojo); los rasgos (ojos, cejas, labios, barba)
 	// son el detalle fino y se quedan.
-	float baja = lum(a_lineal(textureLod(foto, UV, 4.0).rgb));
+	float baja = lum(a_lineal(textureLod(foto, UV, 4.0).rgb) * balance);
 	float k = clamp(lum_media / max(baja, 0.004), 0.6, 1.8);
 	c *= mix(1.0, k, quitar_luz);
 	// Brillos de la foto (el flash en la nariz y la frente): se comprimen, el
@@ -54,8 +59,21 @@ void fragment() {
 		vec3 tono = piel_lin / max(lum(piel_lin), 0.001);
 		c = mix(c * ln / l, tono * ln, smoothstep(tope, tope * 1.8, l));
 	}
-	float exposicion = clamp(0.55 * pow(lum_media, 0.6) / max(lum_media, 0.001), 0.75, 3.0);
+	// Solo SUBE las fotos oscuras; a una piel clara no se la oscurece (con
+	// tope 0,75 las pieles claras salían bronceadas: auditoría de lotes 30-9).
+	float exposicion = clamp(0.55 * pow(lum_media, 0.6) / max(lum_media, 0.001), 1.0, 3.0);
+	// Al subir mucho la exposición (fotos oscuras) el color también se
+	// dispara (pieles rojizas): se quita saturación en proporción.
+	// COMPENSAR EL "PIE" DEL MAPEO DE TONOS: la caída de la luz y el mapeo
+	// hunden más los canales oscuros de un color (medido: lo que se ve sale
+	// como el color elevado a ~1,7 respecto de su gris) -una piel clara
+	// (177,123,107) se veía (162,85,69), roja-. Se aplica la inversa en torno a
+	// su gris: en pantalla queda el tono medido.
+	float g = max(lum(c), 1e-4);
+	c = g * pow(max(c / g, vec3(0.0)), vec3(1.0 / compensar));
 	c = mix(vec3(lum(c)), c, saturacion) * exposicion;
+	// Lo que en la foto tapaba la cara (una mano, un brazo): su piel.
+	c = mix(c, piel_lin * exposicion, COLOR.g);
 	ALBEDO = c;
 	// Relleno: la luz que rebota de la grada y el césped levanta un poco las
 	// sombras de la cara (el mismo relleno lleva la piel del cuerpo,
@@ -78,13 +96,15 @@ void fragment() {
 // "envuelve" la cara). Con la luz dura de siempre, el sol del estadio dejaba
 // las cuencas de los ojos y medio rostro en negro. `envolver` = cuánto pasa
 // la luz al lado en sombra; la sombra se tiñe un poco de rojo (sangre bajo la
-// piel), como en los retratos de verdad.
+// piel), apenas.
 uniform float envolver = 0.45;
 
 void light() {
 	float ndl = dot(NORMAL, LIGHT);
 	float w = clamp((ndl + envolver) / (1.0 + envolver), 0.0, 1.0);
-	vec3 sangre = mix(vec3(1.0, 0.72, 0.62), vec3(1.0), clamp(ndl * 2.0, 0.0, 1.0));
+	// (Con un rojo fuerte en la sombra, media cara en sombra quedaba roja:
+	// «el color de piel no es adecuado». Solo un matiz.)
+	vec3 sangre = mix(vec3(1.0, 0.94, 0.91), vec3(1.0), clamp(ndl * 2.0, 0.0, 1.0));
 	DIFFUSE_LIGHT += w * sangre * ATTENUATION * LIGHT_COLOR / PI;
 	// Brillo especular (Blinn), suave: piel, no plástico.
 	vec3 h = normalize(LIGHT + VIEW);
