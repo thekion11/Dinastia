@@ -99,6 +99,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   Pasada 1 de pelo (pelo_pasada1.png): largo/gorro medidos, melena con el pelo
   largo del pack, afro con volumen, cuero por capas con nacimiento suave, orejas
   con relieve. Barba/cejas por capas APAGADAS (se veían manchas; la textura va mejor).
+  Pasada 2 (pelo_pasada2.png, 2-10): cortes por forma (`PeloCapas.corte_de`: afro,
+  tupé, degradado, rapado, normal en domo), mechones y brillo; gorro sin franja.
 - **ORDEN VIGENTE (30-9, último mensaje)**: 1) dejar bien las caras (piel, ojos,
   colores); 2) cuando estén bien: orejas, pelo, barba, cejas, pestañas; 3) recién
   después, el MEGAPLAN. Los jugadores SIN foto quedan EN PAUSA (no buscar caras ahora).
