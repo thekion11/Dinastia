@@ -113,7 +113,13 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	var punta := _lineal(Color(String(hd.get("c", "#2a211b"))))
 	var raiz := _lineal(Color(String(hd.get("c", "#2a211b"))).lerp(Color(String(hd.get("r", "#1a1411"))), 0.5))
 	## AFRO: mucho volumen y rizo -> masa casi maciza con borde de rizos.
-	var afro := rizo > 0.5 and float(hd.get("alto", 0.0)) > 9.5
+	var corte := corte_de(hd)
+	var afro := corte == "afro"
+	if corte == "tupe":
+		## Un tupé o engominado no es tan alto como mide la foto (cabeza
+		## inclinada, pelo hacia atrás): como mucho 3,5 cm.
+		alto_cm = minf(alto_cm, 3.5)
+		rizo = 0.0
 	var mat3 := _material({"color_punta": punta, "color_raiz": raiz, "grosor": alto_cm * k,
 		"caida": lerpf(0.35, 0.05, rizo), "hebras_cm": 2.0 if afro else lerpf(3.6, 2.4, rizo),
 		"radio": 0.46 if afro else lerpf(0.3, 0.4, rizo),
@@ -164,6 +170,20 @@ static func _max(a: PackedFloat32Array) -> float:
 	for v in a:
 		m = maxf(m, v)
 	return m
+
+## El tipo de corte, de lo medido en la foto.
+static func corte_de(h: Dictionary) -> String:
+	var alto := float(h.get("alto", 7.0))
+	var lados := float(h.get("lados", 0.5))
+	if float(h.get("rizo", 0.0)) > 0.5 and alto > 9.5 and lados > 0.45:
+		return "afro"
+	if alto < 6.6:
+		return "rapado"
+	if alto > 8.3 and lados < 0.45:
+		return "tupe"
+	if lados < 0.35:
+		return "degradado"
+	return "normal"
 
 ## Contorno de los labios (MediaPipe).
 const LABIOS := [61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 409, 270, 269, 267, 0, 37, 39, 40, 185,
@@ -329,8 +349,8 @@ static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictiona
 		suave.append(Vector2((puntos[i] as Vector2).x, acc / n))
 	puntos = suave
 	var lados := float(h.get("lados", 0.5))
-	## Afro: tanto volumen arriba como a los lados.
-	if float(h.get("rizo", 0.0)) > 0.5 and float(h.get("alto", 0.0)) > 9.5:
+	var corte := corte_de(h)
+	if corte == "afro":
 		lados = 1.0
 	var dens := PackedFloat32Array()
 	var alto := PackedFloat32Array()
@@ -349,6 +369,20 @@ static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictiona
 		dens[i] = smoothstep(y_lim - 0.006, y_lim + 0.016, p.y)
 		## Lados rapados (degradado): más corto y más ralo a los costados.
 		var corto := lerpf(1.0, lerpf(0.25, 1.0, lados), lateral * (1.0 - smoothstep(1.72, 1.77, p.y)))
+		## LA FORMA DEL CORTE (pasada 2): no un casco parejo.
+		var arriba := smoothstep(1.72, 1.80, p.y)
+		match corte:
+			"tupe":
+				## Alto arriba y hacia la frente; costados casi al ras.
+				corto = lerpf(0.12, 1.0, (1.0 - lateral) * arriba) * (1.0 + 0.6 * frente * arriba)
+			"degradado":
+				## Arriba normal; abajo de los costados, degradado al ras.
+				corto = lerpf(lerpf(0.1, 0.5, smoothstep(1.64, 1.74, p.y)), 1.0, (1.0 - lateral) * arriba + arriba * 0.3)
+			"normal":
+				## Domo: más en la coronilla y la frente que sobre las orejas.
+				corto *= lerpf(0.7, 1.0, arriba)
+			"rapado":
+				corto = lerpf(0.6, 1.0, arriba)
 		## Y corto en la nuca y sobre las orejas: si no, colgaba hasta el
 		## cuello (parecía una melena "mullet").
 		corto *= lerpf(0.15, 1.0, smoothstep(1.6, 1.74, p.y))

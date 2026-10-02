@@ -89,9 +89,12 @@ void fragment() {
 	} else {
 		c = mix(color_raiz, color_punta, clamp(v_capa * 1.3, 0.0, 1.0));
 	}
-	// Cada hebra algo distinta, y más oscura cerca de la piel (sombra).
-	c *= (0.85 + 0.3 * h11(cel + 11.3)) * mix(sombra_raiz, 1.0, v_capa);
+	// Cada hebra algo distinta, y más oscura cerca de la piel (sombra); y
+	// mechones (variación lenta): sin eso el pelo era un casco de un color.
+	float mechon = h11(floor(UV2 * 0.9)) * 0.5 + h11(floor(UV2 * 2.1) + 3.0) * 0.5;
+	c *= (0.85 + 0.3 * h11(cel + 11.3)) * mix(sombra_raiz, 1.0, v_capa) * (0.82 + 0.36 * mechon);
 	ALBEDO = c;
-	ROUGHNESS = 0.55;
-	SPECULAR = 0.35;
+	// Brillo de pelo: más en la punta de las hebras.
+	ROUGHNESS = mix(0.62, 0.42, v_capa);
+	SPECULAR = 0.45;
 }
