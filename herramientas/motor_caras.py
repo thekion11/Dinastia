@@ -85,6 +85,8 @@ LECCIONES = [
     "Barba y cejas por capas (pelo 3D) se ven como manchas negras a esta escala: mejor en la textura.",
     "Largo del pelo: medirlo en el eje de SU cara y uniendo manchas (la oreja parte una melena).",
     "Gorro/gorra en la foto: pelo corto oscuro, nunca un peinado inventado.",
+    "Lo que no es cara ni pelo va con tono liso (sin relieve): el gorro dejaba franjas.",
+    "Afro = mucho volumen Y lados llenos; volumen sin lados es tupé/engominado (Ayoze).",
     "El iris 3D se centra en la abertura de SU malla; sin eso parecía bizco.",
     "Con cara real, los ojos 3D sin párpados propios (la malla ya los tiene).",
 ]
@@ -254,6 +256,9 @@ def albedo_limpio(cara, cat, uv, piel_srgb, wb, barba_m=None, cara_cls=3, pelo_c
     fuera = ~np.isin(cat, [cara_cls, pelo_cls])
     rasgo[fuera] = tono
     final = piel * (1 - mascara[..., None]) + rasgo * mascara[..., None]
+    # Lo que no es cara ni pelo (gorro, fondo, mano): su tono LISO, sin el
+    # relieve de la foto (el tejido del gorro dejaba una franja en la frente).
+    final[fuera] = tono
     return a_srgb(final).astype(np.uint8)
 
 

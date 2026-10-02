@@ -69,11 +69,12 @@ void fragment() {
 	// como el color elevado a ~1,7 respecto de su gris) -una piel clara
 	// (177,123,107) se veía (162,85,69), roja-. Se aplica la inversa en torno a
 	// su gris: en pantalla queda el tono medido.
+	// Lo que en la foto tapaba la cara (una mano, un brazo, un gorro): su
+	// piel, ANTES de la compensación de color (si no, salía una franja naranja).
+	c = mix(c, piel_lin, COLOR.g);
 	float g = max(lum(c), 1e-4);
 	c = g * pow(max(c / g, vec3(0.0)), vec3(1.0 / compensar));
 	c = mix(vec3(lum(c)), c, saturacion) * exposicion;
-	// Lo que en la foto tapaba la cara (una mano, un brazo): su piel.
-	c = mix(c, piel_lin * exposicion, COLOR.g);
 	ALBEDO = c;
 	// Relleno: la luz que rebota de la grada y el césped levanta un poco las
 	// sombras de la cara (el mismo relleno lleva la piel del cuerpo,
