@@ -101,6 +101,12 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   con relieve. Barba/cejas por capas APAGADAS (se veían manchas; la textura va mejor).
   Pasada 2 (pelo_pasada2.png, 2-10): cortes por forma (`PeloCapas.corte_de`: afro,
   tupé, degradado, rapado, normal en domo), mechones y brillo; gorro sin franja.
+- 3-10 PEDIDO: «sí, una pasada» (pasada 3 de pelo: caras oscuras de fotos agachadas,
+  pelo rizado largo) + «los pelos y las caras que estás creando, GUÁRDALAS para que
+  los personajes sean MODULARES (como el personaje que crea el jugador) y tener más
+  variantes; reciclar para tener más alternativas». → biblioteca de piezas (caras =
+  formas MEZCLADAS de varios reales, nunca la cara de uno en otro; pelos = cortes
+  medidos) usada por el creador de personaje y los jugadores ficticios.
 - **ORDEN VIGENTE (30-9, último mensaje)**: 1) dejar bien las caras (piel, ojos,
   colores); 2) cuando estén bien: orejas, pelo, barba, cejas, pestañas; 3) recién
   después, el MEGAPLAN. Los jugadores SIN foto quedan EN PAUSA (no buscar caras ahora).
