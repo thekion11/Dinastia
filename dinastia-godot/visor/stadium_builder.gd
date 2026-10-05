@@ -17,6 +17,33 @@ static func _c(hex, fallback := "#ffffff") -> Color:
 		return Color(hex)
 	return Color(fallback)
 
+## EL TECHO NO TAPA LA CÁMARA (MEGAPLAN fase 2): con techo de anillo la
+## cámara de TV quedaba detrás de la losa cercana y medio campo se veía marrón.
+## Cada losa sabe hacia dónde da afuera; la que queda entre la cámara y el
+## campo pasa a una capa que las cámaras no dibujan, pero el sol sí: su sombra
+## sobre la grada se mantiene (como en las retransmisiones de FC).
+const CAPA_TECHO_OCULTO := 1 << 10
+
+static func marcar_techo(mi: MeshInstance3D, fuera: Vector3) -> void:
+	if mi == null:
+		return
+	mi.add_to_group("techo_estadio")
+	mi.set_meta("fuera", Vector3(fuera.x, 0.0, fuera.z).normalized())
+
+## Llamar cada fotograma con la cámara activa.
+static func ocultar_techo_ante(cam: Camera3D) -> void:
+	if cam == null or not cam.is_inside_tree():
+		return
+	cam.cull_mask &= ~CAPA_TECHO_OCULTO
+	for n in cam.get_tree().get_nodes_in_group("techo_estadio"):
+		var mi := n as MeshInstance3D
+		if mi == null:
+			continue
+		var fuera: Vector3 = mi.get_meta("fuera", Vector3.ZERO)
+		var d := (cam.global_position - mi.global_position)
+		var detras := Vector3(d.x, 0.0, d.z).dot(fuera) > -3.0
+		mi.layers = CAPA_TECHO_OCULTO if detras else 1
+
 static func _box(root: Node3D, center: Vector3, size: Vector3, mat: Material) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	var m := BoxMesh.new()
@@ -37,6 +64,24 @@ static func _rect_outline(root: Node3D, center: Vector3, w: float, d: float, lin
 
 ## Dibuja el corte del cesped como textura procedural. El patron y los dos tonos
 ## de verde salen del disenador de estadio del juego (EST_CESPED / EST_TONOS).
+## CÉSPED DE VERDAD (MEGAPLAN fase 2): los verdes del diseñador salían
+## fluorescentes y las dos franjas casi iguales (frente a EA FC: verde apagado y
+## corte muy marcado). Se respeta el tono elegido pero con la saturación y la
+## claridad de un césped real, y las franjas se separan al menos un 22 % (lo
+## que da el corte en dos sentidos de la cortadora).
+static func _verdes_reales(a: Color, b: Color) -> Array:
+	var salida: Array = []
+	for c: Color in [a, b]:
+		salida.append(Color.from_hsv(c.h, minf(c.s, 0.5) * 0.9, clampf(c.v, 0.32, 0.5)))
+	var ca: Color = salida[0]
+	var cb: Color = salida[1]
+	var claro := ca if ca.v >= cb.v else cb
+	var oscuro := cb if ca.v >= cb.v else ca
+	if claro.v < oscuro.v * 1.22:
+		claro = Color.from_hsv(claro.h, claro.s * 0.94, minf(oscuro.v * 1.22, 0.62))
+	## (El orden de vuelta respeta cuál era el "claro" del diseñador.)
+	return [claro, oscuro] if ca.v >= cb.v else [oscuro, claro]
+
 static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> ImageTexture:
 	var n := 256
 	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
@@ -46,15 +91,17 @@ static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> 
 			var v := float(y) / n
 			var band := 0
 			match patron:
+				## ~6 m por franja (20 a lo largo), como el corte real.
 				"rayas":
-					band = int(v * 12.0)
+					band = int(v * 20.0)
 				"rayasH":
-					band = int(u * 12.0)
+					band = int(u * 20.0)
 				"damero":
 					band = int(u * 10.0) + int(v * 10.0)
 				"damGrande":
 					band = int(u * 5.0) + int(v * 5.0)
-				"circular":
+				## (`Club` sortea "circulos": antes no casaba y salía liso.)
+				"circular", "circulos":
 					band = int(Vector2(u - 0.5, v - 0.5).length() * 16.0)
 				"diagonal":
 					band = int((u + v) * 10.0)
@@ -68,8 +115,12 @@ static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> 
 					band = int((absf(u - 0.5) + absf(v - 0.5)) * 14.0)
 				"mitades":
 					band = 0 if v < 0.5 else 1
+				## "liso" (y lo desconocido): en un campo de verdad el corte
+				## siempre se nota un poco -franjas muy suaves, un tercio-.
 				_:
-					band = 0
+					band = int(v * 20.0)
+					img.set_pixel(x, y, claro.lerp(oscuro, 0.33) if band % 2 == 0 else oscuro)
+					continue
 			img.set_pixel(x, y, claro if band % 2 == 0 else oscuro)
 	var tex := ImageTexture.create_from_image(img)
 	return tex
@@ -282,10 +333,8 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	pm.size = Vector2(PITCH_WID + 12.0, PITCH_LEN + 12.0)
 	pitch.mesh = pm
 	var gmat := StandardMaterial3D.new()
-	gmat.albedo_texture = _make_grass_texture(
-		str(est.get("cesped", "rayas")),
-		_c(est.get("cespedClaro"), "#2f8043"),
-		_c(est.get("cespedOscuro"), "#3b9c53"))
+	var tonos := _verdes_reales(_c(est.get("cespedClaro"), "#2f8043"), _c(est.get("cespedOscuro"), "#3b9c53"))
+	gmat.albedo_texture = _make_grass_texture(str(est.get("cesped", "rayas")), tonos[0], tonos[1])
 	gmat.uv1_scale = Vector3(1, 1, 1)
 	## El cesped se veia SINTETICO: dos verdes planos, sin grano y con la misma
 	## rugosidad en los 7.000 m2. Un campo de verdad tiene brizna (relieve
@@ -1153,7 +1202,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## distinto del global; si no, sigue compartiendo `roof_mat` tal
 			## cual, igual que antes de esta fase.
 			var roof_mat_i := roof_mat if techo_i == techo else _techo_mat(techo_i, techo_col)
-			_box(root, pos + cara * (vuelo / 2.0) + Vector3(0, alto / 2.0 + 0.4, 0), rs, roof_mat_i)
+			marcar_techo(_box(root, pos + cara * (vuelo / 2.0) + Vector3(0, alto / 2.0 + 0.4, 0), rs, roof_mat_i), -cara)
 
 	## LAS ESQUINAS TAMBIÉN LLEVAN GENTE (22-9-2026). "Falta un tramo" -el
 	## usuario lo vio de inmediato justo después de la ronda de las butacas
@@ -1283,6 +1332,7 @@ static func _esquina_grada(root: Node3D, sx: float, sz: float, dx: float, dz: fl
 	if techo:
 		var tapa := _box(root, Vector3(centro_masa.x, alto + 0.4, centro_masa.z),
 			Vector3(masa * 1.5, 0.5, masa * 1.5), muro_mat)
+		marcar_techo(tapa, Vector3(sx, 0.0, sz).normalized())
 		tapa.rotation.y = giro
 	for b in niveles:
 		var avance: float = float(b) * RETRANQUEO_BANDEJA + FONDO_BANDEJA / 2.0
