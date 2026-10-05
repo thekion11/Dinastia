@@ -1666,7 +1666,9 @@ func nueva_temporada() -> Dictionary:
 			## La curva de progreso: los jovenes suben hacia su techo, los
 			## veteranos bajan. Es lo que hace que una plantilla envejezca.
 			if j.edad <= 24 and j.ovr < j.pot:
-				j.ajustar_media(Azar.ent(0, 3))
+				## Hasta su techo, no más (la prueba larga encontró chicos
+				## dos puntos por encima de su potencial).
+				j.ajustar_media(mini(Azar.ent(0, 3), j.pot - j.ovr))
 			elif j.edad >= 31:
 				j.ajustar_media(-Azar.ent(0, 3))
 			## EL RETIRO POR LESIONES. `Medico.retiro_forzado()` estaba escrita y no

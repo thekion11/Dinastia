@@ -645,7 +645,7 @@ func _chequeo_fugas() -> Array[Dictionary]:
 	for j in mio.plantilla.duplicate():
 		if not Azar.suerte(riesgo_fuga(j)):
 			continue
-		var destino := _grande_que_se_lo_lleva(m, mio)
+		var destino := _grande_que_se_lo_lleva(m, mio, j)
 		if destino == null:
 			continue
 		var compensacion := int(round(float(j.valor) * DERECHOS_FORMACION))
@@ -663,11 +663,17 @@ func _chequeo_fugas() -> Array[Dictionary]:
 ## Quién viene a robarte: uno de los seis clubes más grandes que el tuyo por al
 ## menos seis puntos de reputación. No el mayor de todos siempre, porque eso
 ## haría que el mismo club te vaciara la cantera veinte años seguidos.
-func _grande_que_se_lo_lleva(m: Mundo, mio: Club) -> Club:
+## Solo un grande CON SITIO: menos de 26 y, si el chico es portero, menos de
+## tres porteros. Sin esto la prueba larga encontró un club con 51 jugadores y
+## 8 porteros: se quedaba todos los canteranos que se escapaban.
+func _grande_que_se_lo_lleva(m: Mundo, mio: Club, j: Jugador = null) -> Club:
 	var grandes: Array[Club] = []
 	for c: Club in m.clubes.values():
-		if c.id != mio.id and c.rep >= mio.rep + 6:
-			grandes.append(c)
+		if c.id == mio.id or c.rep < mio.rep + 6 or c.plantilla.size() >= TOPE_PLANTEL:
+			continue
+		if j != null and j.es_portero() and c.plantilla.filter(func(x: Jugador) -> bool: return x.es_portero()).size() >= 3:
+			continue
+		grandes.append(c)
 	if grandes.is_empty():
 		return null
 	grandes.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
