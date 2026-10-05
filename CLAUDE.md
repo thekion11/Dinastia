@@ -119,7 +119,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   cielo. Detalle en `herramientas/MOTOR_CARAS.md`. Tras esto: esperar veredicto;
   si lo da por bueno, sigue el MEGAPLAN.
 - 5-10: el usuario APROBÓ la última pasada («Si, dale») → caras y punto 2 CERRADOS.
-  EN CURSO: MEGAPLAN (`dinastia-godot/MEGAPLAN.md`), desde la fase 1.
+  EN CURSO: MEGAPLAN (`dinastia-godot/MEGAPLAN.md`). Fase 1 HECHA (5-10); sigue la fase 2
+  (césped con franjas, sombra del techo en la grada, LED animadas, precarga del estadio).
+  Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
 - (Histórico) **ORDEN VIGENTE (30-9)**: 1) dejar bien las caras (piel, ojos,
   colores); 2) cuando estén bien: orejas, pelo, barba, cejas, pestañas; 3) recién
   después, el MEGAPLAN. Los jugadores SIN foto quedan EN PAUSA (no buscar caras ahora).

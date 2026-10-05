@@ -80,9 +80,16 @@ func _venta_forzada(m: Mundo, c: Club) -> Jugador:
 	if caro == null:
 		return null
 	var monto := int(round(float(caro.valor) * 0.7))
+	## Solo a un club con sitio (menos de 26) y, si es portero, con menos de
+	## tres: antes iba siempre al de más reputación y la prueba larga encontró
+	## un club con 51 jugadores y 8 porteros tras diez temporadas.
 	var comprador: Club = null
 	for otro: Club in m.clubes.values():
-		if otro.id != c.id and otro.saldo >= monto * 2 and (comprador == null or otro.rep > comprador.rep):
+		if otro.id == c.id or otro.saldo < monto * 2 or otro.plantilla.size() >= 26:
+			continue
+		if caro.es_portero() and otro.plantilla.filter(func(x: Jugador) -> bool: return x.es_portero()).size() >= 3:
+			continue
+		if comprador == null or otro.rep > comprador.rep:
 			comprador = otro
 	if comprador == null:
 		return null
