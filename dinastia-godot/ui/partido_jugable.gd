@@ -260,6 +260,7 @@ func _montar_hud() -> void:
 	add_child(_mira)
 
 func _process(delta: float) -> void:
+	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
 	if motor == null:
 		return
 	_actualizar_camara(delta)
