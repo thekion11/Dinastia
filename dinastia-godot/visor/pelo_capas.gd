@@ -123,10 +123,17 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 		## inclinada, pelo hacia atrás): como mucho 3,5 cm.
 		alto_cm = minf(alto_cm, 3.5)
 		rizo = 0.0
+	var calvo := bool(hd.get("calvo", false))
 	var mat3 := _material({"color_punta": punta, "color_raiz": raiz, "grosor": alto_cm * k,
 		"caida": lerpf(0.35, 0.05, rizo), "hebras_cm": 2.0 if afro else lerpf(3.6, 2.4, rizo),
 		"radio": 0.46 if afro else lerpf(0.3, 0.4, rizo),
 		"rizo": rizo, "base_opaca": true, "nucleo": 0.78 if afro else 0.45})
+	## Calvo: cabeza afeitada, sin capas. La herradura por capas (de pelo
+	## normal o de pocos días) se veía como puntos de suciedad detrás de la
+	## oreja (última pasada, 5-10). Se devuelve true: el peinado del pack se
+	## esconde igual.
+	if calvo:
+		return true
 	_colgar(anc, al_hueso, cuero, mat3, "Cuero")
 	## Melena (llega a la mandíbula o más): quien llama pone además el peinado
 	## largo del pack encima (el pelo por capas no cuelga).
@@ -395,10 +402,16 @@ static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictiona
 		if corte != "melena_rizada":
 			corto *= lerpf(0.15, 1.0, smoothstep(1.6, 1.74, p.y))
 		alto[i] = corto
-		## Calvo: solo la herradura de los lados y la nuca.
+		## Calvo: solo la herradura de los lados y la nuca (hoy `poner` no la
+		## cuelga: cabeza afeitada).
 		if bool(h.get("calvo", false)):
 			dens[i] *= 1.0 - smoothstep(1.695, 1.725, p.y)
 		dens[i] *= lerpf(1.0, lerpf(0.55, 1.0, lados), lateral)
+		## LA OREJA no lleva pelo (salía con pelo encima: manchas oscuras o
+		## doradas en la oreja). Es lo que sobresale del cráneo a esa altura.
+		var oreja := smoothstep(0.068, 0.073, absf(p.x)) * smoothstep(1.63, 1.645, p.y) \
+				* (1.0 - smoothstep(1.735, 1.75, p.y))
+		dens[i] *= 1.0 - oreja
 	var uv := PackedVector2Array()
 	uv.resize(v.size())
 	var m := _capas_sobre(v, nor, uv, ind, dens, alto, capas, true)

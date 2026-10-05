@@ -582,7 +582,9 @@ def main() -> None:
             # La barba medida en puntos con espejo se pinta en el lado de la
             # foto de donde sale (uv_foto).
             bm = motor.mascara_barba(uv_foto, tris, barba_v, LADO)
-            alb = motor.albedo_limpio(arr_cara, cat_cara, uv_foto, piel_rgb, medido.get("wb", [1, 1, 1]), bm)
+            agachada = float(np.clip((-cabeceo - 20.0) / 20.0, 0.0, 1.0))
+            alb = motor.albedo_limpio(arr_cara, cat_cara, uv_foto, piel_rgb, medido.get("wb", [1, 1, 1]), bm,
+                                      agachada=agachada)
             archivo_a = archivo.replace(CARPETA_CARAS, CARPETA_ALBEDO)
             os.makedirs(os.path.join(RAIZ, CARPETA_ALBEDO), exist_ok=True)
             Image.fromarray(alb).save(os.path.join(RAIZ, archivo_a), quality=92, optimize=True)
