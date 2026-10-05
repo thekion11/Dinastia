@@ -236,6 +236,7 @@ func plano(t: float) -> int:
 	return 1 if t < PLANO_2 else (2 if t < PLANO_3 else 3)
 
 func _process(delta: float) -> void:
+	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
 	if _cerrando:
 		return
 	_t += delta

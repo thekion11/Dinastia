@@ -836,6 +836,7 @@ func _frenar_destacado() -> void:
 		_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 
 func _process(delta: float) -> void:
+	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
 	_escalar_rotulos()
 	_despejar_rotulos(delta)
 	if _juego == null or partido == null:
