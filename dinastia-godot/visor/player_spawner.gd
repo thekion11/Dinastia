@@ -488,7 +488,12 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 			## sobre la cabeza. Después del pelo: con foto esconde las cejas y
 			## la barba 3D.
 			if typeof(look_j) == TYPE_DICTIONARY:
-				VestidorQ.poner_cara(dq, {"look": look_j, "foto": String(jug.get("foto", ""))}, piel)
+				var datos_cara := {"look": look_j, "foto": String(jug.get("foto", ""))}
+				## Sin foto (ficticios, reales sin foto): una cara y un corte de
+				## la biblioteca modular, siempre los mismos para el mismo id.
+				if String(datos_cara["foto"]) == "" and BibliotecaCaras.hay() and puesto != "ARB":
+					datos_cara["biblio"] = BibliotecaCaras.para(jid, piel, pelo)
+				VestidorQ.poner_cara(dq, datos_cara, piel)
 			var apq: AnimationPlayer = dq["anim"]
 			if apq.has_animation("parado"):
 				apq.play("parado")

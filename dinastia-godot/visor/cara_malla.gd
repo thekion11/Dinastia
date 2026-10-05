@@ -34,7 +34,7 @@ static func _cargar() -> void:
 	if _listo:
 		return
 	_listo = true
-	if not FileAccess.file_exists(TOPOLOGIA) or not FileAccess.file_exists(MALLAS):
+	if not FileAccess.file_exists(TOPOLOGIA):
 		return
 	var jt := JSON.new()
 	if jt.parse(FileAccess.get_file_as_string(TOPOLOGIA)) != OK or not (jt.data is Dictionary):
@@ -45,8 +45,12 @@ static func _cargar() -> void:
 	for a: Variant in jt.data["alfa"]:
 		_alfa.append(float(a))
 	var jm := JSON.new()
-	if jm.parse(FileAccess.get_file_as_string(MALLAS)) == OK and jm.data is Dictionary:
+	if FileAccess.file_exists(MALLAS) and jm.parse(FileAccess.get_file_as_string(MALLAS)) == OK and jm.data is Dictionary:
 		_mallas = jm.data
+	## Y las caras de la biblioteca modular (mezclas: `BibliotecaCaras`).
+	BibliotecaCaras._cargar()
+	for k: String in BibliotecaCaras._caras:
+		_mallas[k] = BibliotecaCaras._caras[k]
 
 static func tiene(nombre: String) -> bool:
 	_cargar()
@@ -87,6 +91,12 @@ static func _datos(nombre: String) -> Array:
 	for i in _n:
 		var c := canon[i] - medio
 		pos[i] = Vector3(c.x * k, OJO_Y + c.y * k, OJOS_Z + c.z * k)
+		## El anillo de fundido (los últimos 36, alfa 0) quedaba en el aire a
+		## la altura de las sienes: una mancha borrosa al lado de la cabeza
+		## (5-10). Se mete hacia el cráneo: más estrecho y un poco hundido.
+		if i >= 468:
+			pos[i].x *= 0.86
+			pos[i].z -= 0.006
 	## [3] = metros del modelo por cm de la malla canónica.
 	## La textura que pinta el juego: la piel REPLICADA ("a", motor_caras) si
 	## está; si no, la foto recortada.

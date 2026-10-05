@@ -19,3 +19,27 @@ Juego: `visor/cara_malla.gd(.gdshader)` (malla + textura), `visor/ojos_q.gdshade
 
 Números del juego a tener en cuenta: `COMPENSAR_PIEL` 1,6 (pie del mapeo de tonos),
 `exposicion_piel` (solo sube fotos oscuras), cara `quitar_luz` 0 con textura limpia.
+
+## Biblioteca modular (5-10-2026)
+
+Pedido: «guarda los pelos y las caras que estás creando para que los personajes
+sean modulares (como el personaje que crea el jugador)».
+
+- `biblioteca_caras.py canonical_face_model.obj 12` → 72 caras (6 tonos × 12).
+  Cada una MEZCLA 4 jugadores del mismo tono (fotos de frente, boca cerrada, sin
+  tapar): textura llevada al mapa UV canónico triángulo a triángulo, mediana por
+  píxel y forma media. Nunca es la cara de una persona.
+  Salida: `datos/biblioteca_caras.json` + `recursos/caras_biblioteca/`.
+  (Ojo: `decodificar` ya devuelve centésimas de cm; no volver a multiplicar.)
+- La misma herramienta escribe `datos/biblioteca_pelos.json`: 44 cortes medidos
+  (forma, nacimiento, rizo, largo; sin color) por grupo de corte.
+- Juego: `visor/biblioteca_caras.gd` (`BibliotecaCaras.para(semilla, piel, pelo)`,
+  `cara_de_tono(piel, i)`). Las usan los jugadores sin foto (`PlayerSpawner`, fijas
+  por id) y el creador de personaje («Cara» y «Corte medido»; solo cuerpo de hombre).
+- Las caras de la biblioteca salen de fotos con licencia libre: quedan FUERA de los
+  builds públicos (`export_presets.cfg`), igual que las caras reales.
+- Captura: `pruebas/captura_biblioteca.tscn`; creador: `BIBLIO=1 ... captura_personaje_dt.tscn`.
+
+Pasada 3 de pelo: cabeza agachada (cabeceo < -20°) → piel medida en la franja más
+clara (frente, nariz) y ganancia hasta ×1,5; corte `melena_rizada` (largo y con
+volumen a los lados). Anillo de fundido metido hacia el cráneo (manchas en las sienes).
