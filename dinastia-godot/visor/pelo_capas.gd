@@ -114,7 +114,10 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	var raiz := _lineal(Color(String(hd.get("c", "#2a211b"))).lerp(Color(String(hd.get("r", "#1a1411"))), 0.5))
 	## AFRO: mucho volumen y rizo -> masa casi maciza con borde de rizos.
 	var corte := corte_de(hd)
-	var afro := corte == "afro"
+	var afro := corte == "afro" or corte == "melena_rizada"
+	if corte == "melena_rizada":
+		alto_cm = maxf(alto_cm, 4.5)
+		rizo = maxf(rizo, 0.8)
 	if corte == "tupe":
 		## Un tupé o engominado no es tan alto como mide la foto (cabeza
 		## inclinada, pelo hacia atrás): como mucho 3,5 cm.
@@ -127,7 +130,7 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	_colgar(anc, al_hueso, cuero, mat3, "Cuero")
 	## Melena (llega a la mandíbula o más): quien llama pone además el peinado
 	## largo del pack encima (el pelo por capas no cuelga).
-	return float(hd.get("largo", 0.0)) < LARGO_MELENA
+	return float(hd.get("largo", 0.0)) < LARGO_MELENA or corte == "melena_rizada"
 
 static func _wb(datos: Dictionary) -> Vector3:
 	var wb: Variant = datos.get("wb")
@@ -177,6 +180,10 @@ static func corte_de(h: Dictionary) -> String:
 	var lados := float(h.get("lados", 0.5))
 	if float(h.get("rizo", 0.0)) > 0.5 and alto > 9.5 and lados > 0.45:
 		return "afro"
+	## Melena que abulta a los lados (rizos largos: Cucurella): el pelo largo del
+	## pack es liso y lacio; esto va por capas, con volumen y rizo.
+	if float(h.get("largo", 0.0)) >= LARGO_MELENA and lados > 0.75:
+		return "melena_rizada"
 	if alto < 6.6:
 		return "rapado"
 	if alto > 8.3 and lados < 0.45:
@@ -350,7 +357,7 @@ static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictiona
 	puntos = suave
 	var lados := float(h.get("lados", 0.5))
 	var corte := corte_de(h)
-	if corte == "afro":
+	if corte == "afro" or corte == "melena_rizada":
 		lados = 1.0
 	var dens := PackedFloat32Array()
 	var alto := PackedFloat32Array()
@@ -385,7 +392,8 @@ static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictiona
 				corto = lerpf(0.6, 1.0, arriba)
 		## Y corto en la nuca y sobre las orejas: si no, colgaba hasta el
 		## cuello (parecía una melena "mullet").
-		corto *= lerpf(0.15, 1.0, smoothstep(1.6, 1.74, p.y))
+		if corte != "melena_rizada":
+			corto *= lerpf(0.15, 1.0, smoothstep(1.6, 1.74, p.y))
 		alto[i] = corto
 		## Calvo: solo la herradura de los lados y la nuca.
 		if bool(h.get("calvo", false)):

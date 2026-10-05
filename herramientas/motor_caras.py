@@ -87,6 +87,7 @@ LECCIONES = [
     "Gorro/gorra en la foto: pelo corto oscuro, nunca un peinado inventado.",
     "Lo que no es cara ni pelo va con tono liso (sin relieve): el gorro dejaba franjas.",
     "Afro = mucho volumen Y lados llenos; volumen sin lados es tupé/engominado (Ayoze).",
+    "Cabeza agachada (cabeceo < -20°) = cara en su sombra: ganancia hasta x1,35.",
     "El iris 3D se centra en la abertura de SU malla; sin eso parecía bizco.",
     "Con cara real, los ojos 3D sin párpados propios (la malla ya los tiene).",
 ]

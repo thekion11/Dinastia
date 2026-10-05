@@ -333,12 +333,32 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 	## malla (forma y píxeles exactos de la foto) en vez de la proyección, y el
 	## cuerpo toma el tono EXACTO de su piel en la foto.
 	var nombre_foto := Cara.nombre_de_ruta(ruta) if ruta != "" else ""
+	## BIBLIOTECA MODULAR (5-10-2026): una cara mezclada y un corte de la
+	## biblioteca (jugadores ficticios, creador de personaje) van por el mismo
+	## camino que una cara real, con su propio corte y color de pelo.
+	var biblio: Variant = datos.get("biblio")
+	if foto == null and biblio is Dictionary and CaraMalla.tiene(String((biblio as Dictionary).get("cara", ""))):
+		nombre_foto = String(biblio["cara"])
+		foto = CaraMalla.foto(nombre_foto)
 	var con_malla := false
 	if foto != null and CaraMalla.tiene(nombre_foto):
 		var cara_hd := CaraMalla.foto(nombre_foto)
 		## La piel: la que el segmentador marcó como piel de la cara (sin
 		## barba, cejas ni fondo); si no, la media recortada de la malla.
 		var medida := CaraMalla.entrada(nombre_foto)
+		## Biblioteca sin corte medido (creador: "Ninguno"): el peinado que ya
+		## tiene el personaje se respeta tal cual.
+		var tocar_pelo := true
+		if biblio is Dictionary and String((biblio as Dictionary).get("cara", "")) == nombre_foto \
+				and String((biblio as Dictionary).get("pelo", "")) == "":
+			tocar_pelo = false
+		if biblio is Dictionary and String((biblio as Dictionary).get("cara", "")) == nombre_foto:
+			medida = medida.duplicate()
+			var hb := BibliotecaCaras.pelo(String(biblio.get("pelo", "")), Color(String(biblio.get("color_pelo", "#2a211b"))))
+			if hb.is_empty():
+				medida.erase("h")
+			else:
+				medida["h"] = hb
 		var tono := Color(String(medida["s"])) if String(medida.get("s", "")) != "" else CaraMalla.tono_piel(nombre_foto, cara_hd)
 		if tono.a > 0.0:
 			piel = tono
@@ -346,11 +366,15 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 			con_malla = true
 			_ocultar_cejas_y_barba(d.get("nodo", modelo))
 			var pelo_foto := CaraMalla.color_pelo(nombre_foto)
-			if pelo_foto.a > 0.0:
+			if not tocar_pelo:
+				pass
+			elif pelo_foto.a > 0.0:
 				_teñir_pelo(d.get("nodo", modelo), pelo_foto)
 			## Pelo, barba, cejas y pestañas por capas, medidos en la foto.
 			var geo := CaraMalla.geometria(nombre_foto)
-			if not geo.is_empty() and PeloCapas.poner(d, medida, cara_hd, geo[0], geo[1], geo[2], geo[3]):
+			if not tocar_pelo:
+				pass
+			elif not geo.is_empty() and PeloCapas.poner(d, medida, cara_hd, geo[0], geo[1], geo[2], geo[3]):
 				_ocultar_peinado(d.get("nodo", modelo))
 			elif medida.get("h") is Dictionary and float(medida["h"].get("largo", 0.0)) >= PeloCapas.LARGO_MELENA:
 				## Melena: el peinado largo del pack, del color de su pelo.

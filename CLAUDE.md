@@ -107,6 +107,12 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   variantes; reciclar para tener más alternativas». → biblioteca de piezas (caras =
   formas MEZCLADAS de varios reales, nunca la cara de uno en otro; pelos = cortes
   medidos) usada por el creador de personaje y los jugadores ficticios.
+- 5-10 HECHO: pasada 3 de pelo (cabeza agachada: piel de la franja clara + ganancia
+  x1,5; corte melena_rizada; anillo sin manchas en las sienes) y BIBLIOTECA MODULAR
+  (`visor/biblioteca_caras.gd`, `herramientas/biblioteca_caras.py`): 72 caras
+  mezcla de 4 reales + 44 cortes medidos; ficticios sin foto y creador de personaje
+  («Cara», «Corte medido»). Fuera de los builds públicos. Límite honesto: fotos
+  agachadas (Ayoze, Adrián Mora) mejoran pero siguen algo oscuras y deformadas.
 - **ORDEN VIGENTE (30-9, último mensaje)**: 1) dejar bien las caras (piel, ojos,
   colores); 2) cuando estén bien: orejas, pelo, barba, cejas, pestañas; 3) recién
   después, el MEGAPLAN. Los jugadores SIN foto quedan EN PAUSA (no buscar caras ahora).

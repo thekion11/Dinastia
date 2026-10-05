@@ -142,7 +142,7 @@ def b64(v):
     return base64.b64encode(np.clip(np.asarray(v) * 255, 0, 255).astype(np.uint8).tobytes()).decode()
 
 
-def analizar(original, caja, cara, uv, forma, lazo, escala, seg, mp):
+def analizar(original, caja, cara, uv, forma, lazo, escala, seg, mp, cabeceo=0.0):
     """Pelo, piel, barba y cejas, medidos en la foto.
 
     - "s": color de la piel (mediana de los píxeles que el segmentador marca
@@ -185,7 +185,12 @@ def analizar(original, caja, cara, uv, forma, lazo, escala, seg, mp):
     # medio, en fotos con luz de costado entraba la mitad en sombra y la piel
     # salía más oscura que la del jugador; por arriba se deja fuera el brillo.
     orden = np.argsort(lum(piel_px))
-    piel = piel_px[orden[int(len(orden) * 0.55):int(len(orden) * 0.9)]].mean(0)
+    # Con la cabeza agachada casi toda la cara cae en su propia sombra: lo que
+    # da a la luz es la frente y el puente de la nariz (lo más claro). La
+    # ventana sube hacia el 82-97 % (pasada 3, 5-10).
+    agachada = float(np.clip((-cabeceo - 20.0) / 20.0, 0.0, 1.0))
+    desde, hasta = 0.55 + 0.27 * agachada, 0.9 + 0.07 * agachada
+    piel = piel_px[orden[int(len(orden) * desde):int(len(orden) * hasta)]].mean(0)
     # BALANCE DE BLANCOS: una foto con luz amarilla, verde o azul (la camiseta,
     # los focos, el césped) daba pieles de colores imposibles. El tono de su
     # piel se lleva a la franja de las pieles reales (tono 12-32 grados,
@@ -203,6 +208,11 @@ def analizar(original, caja, cara, uv, forma, lazo, escala, seg, mp):
     # claro): la ganancia se aplica entera desde una piel medida de claridad
     # 122 y se apaga hacia 102.
     ganancia = 1.0 + (ganancia - 1.0) * float(np.clip((lum(piel) - 102.0) / 20.0, 0.0, 1.0))
+    # CABEZA AGACHADA (pasada 3, 5-10): con la cabeza hacia abajo (cabeceo
+    # < -20°) la cara queda en su propia sombra y salía mucho más oscura que el
+    # jugador (Ayoze, Jullien, Adrián Mora). Ganancia hasta x1,5 a
+    # -40°, también en piel oscura (la sombra no depende del tono).
+    ganancia *= 1.0 + 0.5 * agachada
     out["exp"] = round(ganancia, 3)
     piel = np.clip(piel * ganancia, 0, 255)
     # (motor_caras.piel_realista: tono 14-24° y la saturación típica de SU
@@ -541,7 +551,7 @@ def main() -> None:
         uv = np.clip(np.vstack([uv, uv_anillo]), 0.0, 1.0)
         datos = np.concatenate([np.clip(forma * 100, -32767, 32767), uv * 32767], axis=1)
         salida[nombre] = {"m": base64.b64encode(datos.astype("<i2").tobytes()).decode(), "f": archivo}
-        medido = analizar(original, caja_cara, np.asarray(cara), uv, forma, lazo, s, seg, mp)
+        medido = analizar(original, caja_cara, np.asarray(cara), uv, forma, lazo, s, seg, mp, cabeceo)
         datos = np.concatenate([np.clip(forma * 100, -32767, 32767), uv * 32767], axis=1)
         salida[nombre]["m"] = base64.b64encode(datos.astype("<i2").tobytes()).decode()
         tapado = medido.pop("_tapado", None)
