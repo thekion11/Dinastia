@@ -204,6 +204,11 @@ func ajustar_media(delta: int) -> void:
 		return
 	var antes := ovr
 	ovr = clampi(ovr + delta, 40, 96)
+	## Una subida extra (vuelta de cesión, Mundial, maestro) que pasa su techo
+	## lo sube: superó lo que se esperaba de él. El potencial nunca queda por
+	## debajo de la media.
+	if ovr > pot:
+		pot = ovr
 	if ovr != antes:
 		tasar()
 		cambio_media.emit(antes, ovr)

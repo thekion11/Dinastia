@@ -193,7 +193,16 @@ Pendientes, de menor a mayor esfuerzo:
 
 ## 8. Orden de trabajo propuesto
 
-**Fase 1 — Pulido y confianza (1-2 días)**
+**Fase 1 — Pulido y confianza (1-2 días)** ✅ HECHA el 5-10-2026:
+- Ordinales en francés («1er») y catalán (1r, 2n, 3r, 4t, 5è) y mayúsculas turcas («İ»), comprobados en el banco.
+- Panel de objetivos: en pantallas de menos de 1500 px arranca plegado y abajo a la derecha.
+- Rótulos del partido 3D: si dos se pisan, queda el del jugador más cerca del balón.
+- Sorteo: luz de relleno, cristal visible en Compatibility y colisionador con forma de cuenco (se escapaban 43 de 46 bolas).
+- `pruebas/prueba_larga.tscn` (10 temporadas × 3 semillas, unos 3 minutos). Encontró y se arreglaron dos fallos:
+  - chicos por encima de su potencial;
+  - canteranos fugados que iban siempre a un grande lleno (un club con 51 jugadores y 8 porteros).
+
+**Fase 1 — plan original**
 - Sección 4: puntos 1, 2, 3, 7 y 8.
 - Los roces visuales del vídeo.
 
