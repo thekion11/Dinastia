@@ -85,8 +85,11 @@ void fragment() {
 	col = mix(col, vec3(0.75, 0.5, 0.46), sin_parpados ? 0.0 : humeda * 0.6);
 
 	ALBEDO = col;
-	ROUGHNESS = mix(0.08, 0.6, parpado);
-	SPECULAR = mix(0.7, 0.4, parpado);
-	CLEARCOAT = 1.0 - parpado;
-	CLEARCOAT_ROUGHNESS = 0.05;
+	// Poco reflejo: con especular 0,7 + barniz el ojo entero reflejaba el
+	// cielo y los ojos castaños se veían azules de día (5-10). Queda un
+	// punto de brillo (barniz fino) y el color del iris.
+	ROUGHNESS = mix(0.25, 0.6, parpado);
+	SPECULAR = mix(0.2, 0.3, parpado);
+	CLEARCOAT = (1.0 - parpado) * 0.35;
+	CLEARCOAT_ROUGHNESS = 0.08;
 }

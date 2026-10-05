@@ -94,7 +94,8 @@ void fragment() {
 	float mechon = h11(floor(UV2 * 0.9)) * 0.5 + h11(floor(UV2 * 2.1) + 3.0) * 0.5;
 	c *= (0.85 + 0.3 * h11(cel + 11.3)) * mix(sombra_raiz, 1.0, v_capa) * (0.82 + 0.36 * mechon);
 	ALBEDO = c;
-	// Brillo de pelo: más en la punta de las hebras.
-	ROUGHNESS = mix(0.62, 0.42, v_capa);
-	SPECULAR = 0.45;
+	// Brillo de pelo: más en la punta de las hebras. Poco y áspero: con 0,45
+	// de día el pelo reflejaba el cielo y se veía azul marino (5-10).
+	ROUGHNESS = mix(0.78, 0.62, v_capa);
+	SPECULAR = 0.15;
 }

@@ -113,6 +113,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   mezcla de 4 reales + 44 cortes medidos; ficticios sin foto y creador de personaje
   («Cara», «Corte medido»). Fuera de los builds públicos. Límite honesto: fotos
   agachadas (Ayoze, Adrián Mora) mejoran pero siguen algo oscuras y deformadas.
+- 5-10 ÚLTIMA PASADA (pedida: «Última pasada»): exposición de piel recalibrada
+  midiendo (pieles medias/oscuras ya no se hunden), borde de la cara pegado al
+  cráneo, calvos limpios, sin pelo en la oreja, pelo y ojos sin reflejo azul del
+  cielo. Detalle en `herramientas/MOTOR_CARAS.md`. Tras esto: esperar veredicto;
+  si lo da por bueno, sigue el MEGAPLAN.
 - **ORDEN VIGENTE (30-9, último mensaje)**: 1) dejar bien las caras (piel, ojos,
   colores); 2) cuando estén bien: orejas, pelo, barba, cejas, pestañas; 3) recién
   después, el MEGAPLAN. Los jugadores SIN foto quedan EN PAUSA (no buscar caras ahora).

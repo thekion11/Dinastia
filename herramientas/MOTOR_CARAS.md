@@ -43,3 +43,19 @@ sean modulares (como el personaje que crea el jugador)».
 Pasada 3 de pelo: cabeza agachada (cabeceo < -20°) → piel medida en la franja más
 clara (frente, nariz) y ganancia hasta ×1,5; corte `melena_rizada` (largo y con
 volumen a los lados). Anillo de fundido metido hacia el cráneo (manchas en las sienes).
+
+## Última pasada (5-10-2026)
+
+- EXPOSICIÓN DE LA PIEL (cara y cuerpo, `cara_malla.gdshader` y
+  `VestidorQ.exposicion_piel`): `clamp((0,39/l)^0,53, 1, 3)`. Medido contra el
+  color guardado («s»): antes las pieles medias/oscuras salían al 64-74 %
+  (Kondogbia casi negro de día); ahora 0,85-1,12 de día y 0,91-0,97 en estudio.
+  Compensación de saturación mayor en pieles oscuras (`compensar_piel`): salían
+  naranjas. Medición repetible: capturas `MOMENTO=dia|estudio` y comparar la
+  mejilla iluminada con «s».
+- Borde de la cara pegado a la cabeza del cuerpo (`CaraMalla._pegar_borde`); el
+  cuerpo solo hunde el centro de la cara. Zona «oreja» del cuerpo más estrecha.
+- Pelo: calvo = cabeza afeitada; la oreja nunca lleva pelo; menos brillo (de día
+  reflejaba el cielo, azul). Ojos: menos reflejo (los castaños se veían azules).
+- Biblioteca: atlas sin raya en el óvalo, sin la luz de las fotos, piel del borde.
+- Fotos agachadas: `albedo_limpio(..., agachada=)` quita toda la luz de los rasgos.
