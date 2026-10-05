@@ -118,10 +118,12 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   cráneo, calvos limpios, sin pelo en la oreja, pelo y ojos sin reflejo azul del
   cielo. Detalle en `herramientas/MOTOR_CARAS.md`. Tras esto: esperar veredicto;
   si lo da por bueno, sigue el MEGAPLAN.
-- **ORDEN VIGENTE (30-9, último mensaje)**: 1) dejar bien las caras (piel, ojos,
+- 5-10: el usuario APROBÓ la última pasada («Si, dale») → caras y punto 2 CERRADOS.
+  EN CURSO: MEGAPLAN (`dinastia-godot/MEGAPLAN.md`), desde la fase 1.
+- (Histórico) **ORDEN VIGENTE (30-9)**: 1) dejar bien las caras (piel, ojos,
   colores); 2) cuando estén bien: orejas, pelo, barba, cejas, pestañas; 3) recién
   después, el MEGAPLAN. Los jugadores SIN foto quedan EN PAUSA (no buscar caras ahora).
-- **MEGAPLAN EN PAUSA** hasta terminar bien las caras reales (orden del usuario 30-9).
+- (Histórico, ya levantado el 5-10) MEGAPLAN en pausa hasta terminar las caras.
   «Ten cuidado con los colores y respeta estas instrucciones.»
 - 30-9 VEREDICTO Y ORDEN DEL USUARIO (seguir al pie de la letra):
   1. «Físicamente tus jugadores están bien, el tema son los TONOS DE PIEL»: se ven

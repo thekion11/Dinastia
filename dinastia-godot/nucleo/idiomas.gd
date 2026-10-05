@@ -448,7 +448,7 @@ func t(frase: String) -> String:
 	var cache: Dictionary = _cache.get(idioma, {})
 	if cache.has(frase):
 		return cache[frase]
-	var r := _t(frase, 0)
+	var r := _ordinales(_t(frase, 0))
 	cache[frase] = r
 	_cache[idioma] = cache
 	return r
@@ -473,7 +473,7 @@ func _directa(frase: String) -> String:
 				continue
 			var r := _directa(cand)
 			if r != "":
-				return r.to_upper()
+				return mayusculas(r)
 	return ""
 
 func _t(frase: String, prof: int) -> String:
@@ -520,6 +520,35 @@ func _t(frase: String, prof: int) -> String:
 			plantilla = plantilla.replace("$%d" % g, v)
 		return plantilla
 	return frase
+
+## Mayúsculas según el idioma: en turco la «i» con punto da «İ» y la «ı» sin
+## punto da «I» (`to_upper()` daba «I» para las dos).
+func mayusculas(texto: String) -> String:
+	if idioma == "tr":
+		texto = texto.replace("i", "İ").replace("ı", "I")
+	return texto.to_upper()
+
+## ORDINALES (MEGAPLAN fase 1): las plantillas ponen un sufijo fijo. Francés:
+## «1e» -> «1er». Catalán: 1r, 2n, 3r, 4t y desde 5, «è».
+var _re_ord_fr: RegEx
+var _re_ord_ca: RegEx
+func _ordinales(texto: String) -> String:
+	if idioma == "fr":
+		if _re_ord_fr == null:
+			_re_ord_fr = RegEx.create_from_string("\\b1e\\b")
+		return _re_ord_fr.sub(texto, "1er", true)
+	if idioma == "ca":
+		if _re_ord_ca == null:
+			_re_ord_ca = RegEx.create_from_string("\\b(\\d+)(r|n|t|è)\\b")
+		var salida := texto
+		var hallados := _re_ord_ca.search_all(texto)
+		hallados.reverse()
+		for m: RegExMatch in hallados:
+			var n := int(m.get_string(1))
+			var suf := "r" if n == 1 or n == 3 else ("n" if n == 2 else ("t" if n == 4 else "è"))
+			salida = salida.substr(0, m.get_start()) + m.get_string(1) + suf + salida.substr(m.get_end())
+		return salida
+	return texto
 
 static func _es_letra(c: int) -> bool:
 	return (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c >= 192 and c <= 687) or (c >= 48 and c <= 57) or c == 191 or c == 161
