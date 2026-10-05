@@ -152,8 +152,10 @@ func montar(acento: Color, fondo: Color, nivel: int = Calidad.ALTO) -> void:
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = fondo.darkened(0.88)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = fondo.lightened(0.1)
-	env.ambient_light_energy = 0.85
+	## (MEGAPLAN fase 1: la escena salía muy oscura. El ambiente era casi el
+	## color del fondo -un verde muy oscuro-; ahora va hacia el blanco.)
+	env.ambient_light_color = fondo.lerp(Color(0.85, 0.86, 0.9), 0.5)
+	env.ambient_light_energy = 1.0
 	## El resplandor sube respecto al estadio: en un plató las luces SON el
 	## decorado, y sin bloom los focos parecen bombillas pintadas.
 	env.glow_enabled = true
@@ -777,6 +779,14 @@ func _montar_luces() -> void:
 		add_child(f)
 		f.look_at_from_position(pos, Vector3(0, 1.4, -0.6), Vector3.UP)
 		_focos.append(f)
+	## RELLENO de frente (MEGAPLAN fase 1): sin él, fuera de los conos de los
+	## focos todo era negro -el presentador, la tarima, la mitad del bombo-.
+	var relleno := DirectionalLight3D.new()
+	relleno.light_color = Color(1.0, 0.97, 0.92)
+	relleno.light_energy = 0.7
+	relleno.shadow_enabled = false
+	relleno.rotation_degrees = Vector3(-28, 8, 0)
+	add_child(relleno)
 	## Contraluz frío por detrás: recorta la silueta del bombo contra la pared.
 	var contra := OmniLight3D.new()
 	contra.light_color = _acento
@@ -802,7 +812,9 @@ func _montar_bombo() -> void:
 	cristal.albedo_color = Color(0.80, 0.88, 0.95, 0.17)
 	cristal.metallic = 0.25
 	cristal.roughness = 0.03
-	cristal.refraction_enabled = true
+	## En Compatibility (móvil, web) la refracción no existe y el cristal se
+	## pintaba NEGRO y opaco: las bolas no se veían.
+	cristal.refraction_enabled = RenderingServer.get_current_rendering_method() != "gl_compatibility"
 	cristal.refraction_scale = 0.09
 	## CULL_DISABLED: sin esto solo se ve la mitad de atrás y el cristal parece
 	## una cáscara en vez de un recipiente.
@@ -843,10 +855,12 @@ func _montar_bombo() -> void:
 	var cil := CylinderMesh.new()
 	cil.top_radius = 0.07
 	cil.bottom_radius = 0.09
-	cil.height = 0.55
+	## Del fondo del cuenco (-RADIO) a la peana (-1,02): con el cuenco más
+	## grande, el tallo de antes asomaba DENTRO del cristal.
+	cil.height = maxf(0.05, 1.02 - RADIO_BOMBO)
 	tallo.mesh = cil
 	tallo.material_override = met
-	tallo.position = Vector3(0, -0.72, 0)
+	tallo.position = Vector3(0, -(1.02 + RADIO_BOMBO) * 0.5, 0)
 	_bombo.add_child(tallo)
 	var peana := MeshInstance3D.new()
 	var cil2 := CylinderMesh.new()
@@ -863,33 +877,37 @@ func _montar_bombo() -> void:
 ## El colisionador del cuenco: anillo de cajas inclinadas hacia dentro más un
 ## disco de suelo. Ver la nota de cabecera.
 func _montar_paredes_fisicas() -> void:
+	## EL CUENCO DE VERDAD (MEGAPLAN fase 1): antes era un disco del radio
+	## entero en el fondo y paredes que empezaban más arriba; por la rendija del
+	## borde se escapaban 43 de las 46 bolas y caían al vacío. Ahora son cajas
+	## TANGENTES a la esfera, en anillos de latitud que se solapan, y un disco
+	## pequeño en el fondo: misma forma que el cristal.
 	var cuerpo := StaticBody3D.new()
 	_bombo.add_child(cuerpo)
+	var grueso := 0.08
 	var suelo := CollisionShape3D.new()
 	var cil := CylinderShape3D.new()
-	cil.radius = RADIO_BOMBO
-	cil.height = 0.08
+	cil.radius = RADIO_BOMBO * sin(deg_to_rad(16.0))
+	cil.height = grueso
 	suelo.shape = cil
-	## El suelo del colisionador tiene que coincidir con el fondo VISIBLE del
-	## cuenco. Con +0,04 quedaba diez centímetros por encima y las bolas
-	## descansaban en el aire, formando un anillo flotante dentro del cristal.
-	## El cilindro mide 0,08 de alto, así que su centro va a -RADIO-0,04 para que
-	## su cara superior caiga justo en -RADIO.
-	suelo.position = Vector3(0, -RADIO_BOMBO - 0.04, 0)
+	suelo.position = Vector3(0, -RADIO_BOMBO - grueso * 0.5, 0)
 	cuerpo.add_child(suelo)
-	for i in 18:
-		var ang := float(i) * TAU / 18.0
-		var pared := CollisionShape3D.new()
-		var caja := BoxShape3D.new()
-		caja.size = Vector3(0.24, RADIO_BOMBO * 1.5, 0.04)
-		pared.shape = caja
-		var r := RADIO_BOMBO + 0.02
-		pared.position = Vector3(cos(ang) * r, -0.08, sin(ang) * r)
-		pared.rotation.y = -ang + PI * 0.5
-		## Inclinadas hacia dentro: el cuenco se estrecha abajo y las bolas se
-		## amontonan en el centro en vez de quedarse pegadas al borde.
-		pared.rotation.x = deg_to_rad(-14.0)
-		cuerpo.add_child(pared)
+	var lados := 20
+	for th_g: float in [16.0, 32.0, 48.0, 64.0, 80.0, 92.0]:
+		var th := deg_to_rad(th_g)
+		var r_lat := RADIO_BOMBO * sin(th)
+		for i in lados:
+			var ph := float(i) * TAU / float(lados)
+			var n := Vector3(sin(th) * cos(ph), -cos(th), sin(th) * sin(ph))
+			var forma := CollisionShape3D.new()
+			var caja := BoxShape3D.new()
+			caja.size = Vector3(maxf(0.08, TAU * r_lat / float(lados) * 1.25), RADIO_BOMBO * deg_to_rad(16.0) * 1.35, grueso)
+			forma.shape = caja
+			var zx := n
+			var xx := Vector3(-sin(ph), 0.0, cos(ph))
+			var yx := zx.cross(xx).normalized()
+			forma.transform = Transform3D(Basis(xx, yx, zx), n * (RADIO_BOMBO + grueso * 0.5))
+			cuerpo.add_child(forma)
 
 ## Las bolas. Nacen escalonadas en altura para que caigan unas sobre otras y se
 ## coloquen solas: por eso el montón nunca sale igual dos veces.
