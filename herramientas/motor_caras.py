@@ -60,6 +60,7 @@ CONFIG = {
 }
 
 LECCIONES = [
+    "Foto con la cabeza agachada: los rasgos copian la sombra de la cabeza -> quitar toda su luz (agachada).",
     "Pegar la foto tal cual se ve SUCIO y SATURADO: replicar la piel (tono único + relieve suave).",
     "El segmentador llama 'piel' también a los brazos: para lo tapado, solo piel de CARA o pelo.",
     "Con varias personas en la foto, quedarse con la cara MÁS GRANDE (el detector daba la de otro).",
@@ -218,7 +219,7 @@ def mascara_barba(uv, tris, barba, lado):
     return m
 
 
-def albedo_limpio(cara, cat, uv, piel_srgb, wb, barba_m=None, cara_cls=3, pelo_cls=1):
+def albedo_limpio(cara, cat, uv, piel_srgb, wb, barba_m=None, cara_cls=3, pelo_cls=1, agachada=0.0):
     """LA PIEL REPLICADA. `cara`: recorte RGB (uint8, lado x lado); `cat`:
     clases del segmentador a la misma medida; `uv`: puntos (0-1); `piel_srgb`:
     su tono medido; `wb`: balance de blancos por canal (lineal).
@@ -226,8 +227,14 @@ def albedo_limpio(cara, cat, uv, piel_srgb, wb, barba_m=None, cara_cls=3, pelo_c
     Piel = SU tono exacto (uno solo) x un relieve suave de la foto (poros y
     arrugas atenuados, sin la luz del fotógrafo ni las manchas de color).
     Rasgos (ojos, cejas, labios, orificios de la nariz, barba) = los píxeles de
-    la foto, con el balance de blancos y la luz quitada a medias."""
+    la foto, con el balance de blancos y la luz quitada a medias.
+
+    `agachada` (0-1, cabeza hacia abajo en la foto): la cara cae en su propia
+    sombra y los rasgos copiaban esa sombra (manchas oscuras en nariz y boca:
+    Ayoze, Adrián Mora, Biro). Con `agachada` se quita TODA la luz de los
+    rasgos, la nariz casi no copia la foto y el relieve se estrecha."""
     C = CONFIG
+    ag = float(np.clip(agachada, 0.0, 1.0))
     lado = cara.shape[0]
     import cv2
     d, s1, s2 = C["bilateral"]
@@ -237,20 +244,21 @@ def albedo_limpio(cara, cat, uv, piel_srgb, wb, barba_m=None, cara_cls=3, pelo_c
     Lb = np.asarray(Image.fromarray(np.clip(L * 255 / max(L.max(), 1e-4), 0, 255).astype(np.uint8))
                     .filter(ImageFilter.GaussianBlur(C["luz_radio"])), dtype=float) / 255.0 * max(L.max(), 1e-4)
     Lb = np.maximum(Lb, 1e-4)
-    relieve = np.clip((L / Lb) ** C["relieve_piel"], C["relieve_min"], C["relieve_max"])
+    relieve = np.clip((L / Lb) ** C["relieve_piel"], C["relieve_min"] + 0.07 * ag, C["relieve_max"] - 0.05 * ag)
     tono = a_lineal(piel_srgb)
     # Piel: su tono, con un poco del color propio del píxel (rubor de mejillas).
     croma = lin / np.maximum(L[..., None], 1e-4) * lum(tono)
-    base = tono[None, None, :] * (1 - C["croma_propio"]) + croma * C["croma_propio"]
+    cp = C["croma_propio"] * (1.0 - 0.7 * ag)
+    base = tono[None, None, :] * (1 - cp) + croma * cp
     piel = base * relieve[..., None]
     # Rasgos: foto con la luz quitada a medias (hacia la luz media de la cara).
     media = np.median(Lb[cat == cara_cls]) if (cat == cara_cls).any() else Lb.mean()
-    rasgo = lin * ((media / Lb) ** C["rasgo_luz"])[..., None]
+    rasgo = lin * ((media / Lb) ** (C["rasgo_luz"] + (1.0 - C["rasgo_luz"]) * ag))[..., None]
     reg = regiones(uv, lado)
     # Barba: la medida por punto (no "lo oscuro": la sombra de la mandíbula
     # también es oscura y no es barba).
     barba = (barba_m if barba_m is not None else np.zeros_like(L)) * (1 - reg["labios"])
-    mascara = np.maximum.reduce([reg["ojos"], reg["cejas"], reg["labios"], reg["nariz"] * 0.8, barba])
+    mascara = np.maximum.reduce([reg["ojos"], reg["cejas"], reg["labios"], reg["nariz"] * (0.8 - 0.5 * ag), barba])
     mascara = np.asarray(Image.fromarray((mascara * 255).astype(np.uint8))
                          .filter(ImageFilter.GaussianBlur(C["rasgo_suave"])), dtype=float) / 255.0
     # Fuera de la piel de la cara y del pelo (fondo, una mano): su tono.
