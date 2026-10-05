@@ -132,7 +132,9 @@ void vertex() {
 		float sx = 32.0 + v_reposo.x / 0.00563;
 		float sy = 33.0 + (1.6986 - v_reposo.y) / 0.00666;
 		vec2 ov = vec2((sx - 32.0) / 11.0, (sy - 37.0) / 15.5);
-		float dentro = (1.0 - smoothstep(0.7, 0.95, length(ov))) * smoothstep(0.54, 0.6, v_reposo.z);
+		// Solo el centro (nariz, boca): hundir hasta el borde dejaba el
+		// contorno de la cara en el aire (máscara despegada, última pasada 5-10).
+		float dentro = (1.0 - smoothstep(0.5, 0.8, length(ov))) * smoothstep(0.54, 0.6, v_reposo.z);
 		VERTEX -= NORMAL * dentro * 0.018;
 	}
 	if (usa_reposo) {
@@ -573,7 +575,7 @@ void fragment() {
 		// OREJAS (x 0,068-0,091, y 1,65-1,74 en reposo): con un cuarto del
 		// relieve quedaban planas, sin sus pliegues. Ahí el relieve va casi
 		// entero, y la oreja es un poco más rosada (se transparenta la luz).
-		float oreja = usa_reposo ? smoothstep(0.064, 0.072, abs(x)) * smoothstep(1.64, 1.66, y)
+		float oreja = usa_reposo ? smoothstep(0.071, 0.077, abs(x)) * smoothstep(1.64, 1.66, y)
 			* (1.0 - smoothstep(1.735, 1.75, y)) : 0.0;
 		albedo = piel_foto * mix(1.0, relieve, mix(0.25, 0.8, oreja));
 		albedo *= mix(vec3(1.0), vec3(1.06, 0.97, 0.95), oreja);

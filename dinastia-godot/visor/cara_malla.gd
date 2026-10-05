@@ -210,6 +210,39 @@ static func color_iris(nombre: String) -> Color:
 	var c := String(entrada(nombre).get("iris", ""))
 	return Color(c) if c != "" else Color(0, 0, 0, 0)
 
+## EL BORDE PEGADO AL CRÁNEO (última pasada, 5-10): el contorno de la cara
+## (los vértices que se funden, alfa < 1) se lleva a la superficie de la cabeza
+## del cuerpo; de perfil la cara parecía una máscara despegada, con una línea
+## en la frente. El anillo va entero a la piel; el borde visible, a medias.
+static func _pegar_borde(pos: PackedVector3Array, cuerpo: Dictionary) -> PackedVector3Array:
+	if cuerpo.is_empty():
+		return pos
+	var cv: PackedVector3Array = cuerpo["v"]
+	var cabeza := PackedVector3Array()
+	for p in cv:
+		if p.y > 1.55 and p.z > 0.0 and absf(p.x) < 0.11:
+			cabeza.append(p)
+	if cabeza.is_empty():
+		return pos
+	var salida := pos.duplicate()
+	for i in mini(salida.size(), _alfa.size()):
+		if _alfa[i] >= 1.0:
+			continue
+		var q := salida[i]
+		## La piel delante en ese (x, y): el vértice más adelantado cerca.
+		var z := -1.0
+		for r: float in [0.004, 0.008, 0.014]:
+			for p in cabeza:
+				if absf(p.x - q.x) < r and absf(p.y - q.y) < r and p.z > z:
+					z = p.z
+			if z > -1.0:
+				break
+		if z <= -1.0:
+			continue
+		var peso := 1.0 if _alfa[i] <= 0.0 else (0.6 if _alfa[i] < 0.9 else 0.3)
+		salida[i].z = lerpf(q.z, z + 0.0015, peso)
+	return salida
+
 ## Cuelga la cara del hueso de la cabeza del jugador. null si no hay malla.
 static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) -> MeshInstance3D:
 	var datos := _datos(nombre)
@@ -222,13 +255,24 @@ static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) ->
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var pos: PackedVector3Array = datos[0]
+	var pegada := _pegar_borde(pos, PeloCapas._malla_cuerpo(d.get("modelo")))
 	var uv: PackedVector2Array = datos[1]
 	## COLOR.g = tapado en la foto (una mano, un brazo): ahí se pinta su piel.
 	var tapado := PeloCapas._densidades(String(entrada(nombre).get("t", "")), _n)
+	## Las normales, de la forma SIN pegar: con el anillo doblado hacia el
+	## cráneo, la fila del borde se sombreaba oscura (una línea en la frente).
+	var normales := PackedVector3Array()
+	normales.resize(_n)
+	for t in range(0, _tri.size() - 2, 3):
+		var a := pos[_tri[t]]
+		var fn := (pos[_tri[t + 1]] - a).cross(pos[_tri[t + 2]] - a)
+		for k in 3:
+			normales[_tri[t + k]] += fn
 	for i in _n:
+		st.set_normal(normales[i].normalized() if normales[i].length_squared() > 0.0 else Vector3.BACK)
 		st.set_uv(uv[i])
 		st.set_color(Color(1, tapado[i], 1, _alfa[i] if i < _alfa.size() else 1.0))
-		st.add_vertex(pos[i])
+		st.add_vertex(pegada[i])
 	## Godot toma como cara de delante la de vértices en sentido horario vista
 	## desde fuera; la malla de MediaPipe viene al revés.
 	## Los ojos de la foto NO se pintan: se abre el ojo en la malla y se ven los
@@ -242,7 +286,6 @@ static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) ->
 		st.add_index(_tri[t])
 		st.add_index(_tri[t + 2])
 		st.add_index(_tri[t + 1])
-	st.generate_normals()
 	var malla := st.commit()
 	var mat := ShaderMaterial.new()
 	mat.shader = load(SHADER)

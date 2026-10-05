@@ -34,6 +34,11 @@ func _ready() -> void:
 		var piel := Color(PIELES[i % 6])
 		var pc := Color(PELOS[(i * 5) % 6])
 		var b := BibliotecaCaras.para("ficticio_%d" % (i * 37 + 11), piel, pc)
+		## CALVOS=1: todos calvos (para revisar el borde de la frente).
+		if OS.get_environment("CALVOS") != "":
+			for k: String in BibliotecaCaras.pelos():
+				if BibliotecaCaras.nombre_pelo(k) == "calvo":
+					b["pelo"] = k
 		var d := FutbolistaQ.crear(1.8, "male")
 		raiz.add_child(d["nodo"])
 		FutbolistaQ.terminar(d, true)
@@ -57,6 +62,8 @@ func _ready() -> void:
 		var cam := Camera3D.new()
 		cam.fov = 32
 		cam.position = Vector3(px + 0.2, 1.7, 0.85)
+		if OS.get_environment("CALVOS") != "" and i >= 6:
+			cam.position = Vector3(px + 0.75, 1.72, 0.35)
 		vp.add_child(cam)
 		cam.look_at(Vector3(px, 1.66, 0), Vector3.UP)
 		var et := Label.new()
@@ -70,5 +77,5 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 14:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/biblioteca_caras.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/biblioteca_caras%s.png" % ("_calvos" if OS.get_environment("CALVOS") != "" else ""))
 		get_tree().quit()
