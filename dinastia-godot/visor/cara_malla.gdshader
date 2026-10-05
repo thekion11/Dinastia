@@ -61,7 +61,9 @@ void fragment() {
 	}
 	// Solo SUBE las fotos oscuras; a una piel clara no se la oscurece (con
 	// tope 0,75 las pieles claras salían bronceadas: auditoría de lotes 30-9).
-	float exposicion = clamp(0.55 * pow(lum_media, 0.6) / max(lum_media, 0.001), 1.0, 3.0);
+	// (Última pasada 5-10: más fuerte en pieles medias y oscuras, que el pie
+	// del mapeo de tonos hundía. Igual que `VestidorQ.exposicion_piel`.)
+	float exposicion = clamp(pow(0.39 / max(lum_media, 0.001), 0.53), 1.0, 3.0);
 	// Al subir mucho la exposición (fotos oscuras) el color también se
 	// dispara (pieles rojizas): se quita saturación en proporción.
 	// COMPENSAR EL "PIE" DEL MAPEO DE TONOS: la caída de la luz y el mapeo
@@ -73,7 +75,10 @@ void fragment() {
 	// piel, ANTES de la compensación de color (si no, salía una franja naranja).
 	c = mix(c, piel_lin, COLOR.g);
 	float g = max(lum(c), 1e-4);
-	c = g * pow(max(c / g, vec3(0.0)), vec3(1.0 / compensar));
+	// En pieles oscuras el pie del mapeo satura más (salían naranjas): más
+	// compensación (igual que `VestidorQ.compensar_piel`).
+	float comp = compensar + 0.8 * clamp((0.25 - lum_media) / 0.2, 0.0, 1.0);
+	c = g * pow(max(c / g, vec3(0.0)), vec3(1.0 / comp));
 	c = mix(vec3(lum(c)), c, saturacion) * exposicion;
 	ALBEDO = c;
 	// Relleno: la luz que rebota de la grada y el césped levanta un poco las

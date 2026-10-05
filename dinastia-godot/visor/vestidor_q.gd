@@ -312,7 +312,14 @@ const COMPENSAR_PIEL := 1.6
 ## La misma normalización de exposición que `cara_malla.gdshader` (por la
 ## luminancia lineal de su piel en la foto).
 static func exposicion_piel(lum: float) -> float:
-	return clampf(0.55 * pow(lum, 0.6) / maxf(lum, 0.001), 1.0, 3.0)
+	## (Última pasada, 5-10: con 0,55·l^0,6/l las pieles medias y oscuras
+	## salían hundidas por el pie del mapeo de tonos -medido de día: Ayoze al
+	## 74 %, Kondogbia casi negro-. Las claras no cambian; el orden se mantiene.)
+	return clampf(pow(0.39 / maxf(lum, 0.001), 0.53), 1.0, 3.0)
+## La compensación de saturación, mayor en pieles oscuras (salían naranjas).
+## La misma cuenta que `cara_malla.gdshader`.
+static func compensar_piel(lum: float) -> float:
+	return COMPENSAR_PIEL + 0.8 * clampf((0.25 - lum) / 0.2, 0.0, 1.0)
 static var _cache_cara := {}
 
 static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
@@ -433,8 +440,9 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 						var e := exposicion_piel(gris)
 						## La misma compensación del pie del mapeo de tonos que la cara.
 						var gg := maxf(gris, 0.0001)
-						v = Vector3(pow(v.x / gg, 1.0 / COMPENSAR_PIEL), pow(v.y / gg, 1.0 / COMPENSAR_PIEL),
-							pow(v.z / gg, 1.0 / COMPENSAR_PIEL)) * gg
+						var cp := compensar_piel(gris)
+						v = Vector3(pow(v.x / gg, 1.0 / cp), pow(v.y / gg, 1.0 / cp),
+							pow(v.z / gg, 1.0 / cp)) * gg
 						mc.set_shader_parameter("piel_foto", v * e)
 					elif foto != null:
 						mc.set_shader_parameter("hay_foto", true)
