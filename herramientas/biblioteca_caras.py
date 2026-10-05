@@ -169,9 +169,35 @@ def caras(obj, por_tono):
             mediana = np.nanmedian(pila, axis=0)
             hay3 = (validos.sum(0) >= 3)[..., None]
             atlas = np.where(hay3, mediana, atlas)
-            # Hacia el borde se funde con su tono (sin corte).
-            f = np.clip(pw / MEZCLA * 1.6, 0, 1)[..., None]
-            atlas = atlas * f + tono_med[None, None, :] * (1 - f)
+            # EL BORDE (última pasada, 5-10): el contorno de las fotos dejaba
+            # una raya oscura alrededor del óvalo, y fuera iba el tono medio,
+            # más rojizo que la piel de dentro (en el juego: una línea en la
+            # frente y la cara como una máscara). Se recorta la zona válida
+            # 4 px hacia dentro, fuera va el color de la franja de piel del
+            # borde, y se funde en ~10 px.
+            valida = (pw / MEZCLA > 0.6).astype(np.uint8)
+            valida = cv2.erode(valida, np.ones((9, 9), np.uint8))
+            dist = cv2.distanceTransform(valida, cv2.DIST_L2, 5)
+            franja = (dist > 2) & (dist < 12)
+            if franja.sum() > 50:
+                borde = np.median(atlas[franja], axis=0)
+            else:
+                borde = tono_med
+            # SIN LA LUZ DE LAS FOTOS: las mejillas, de costado a la cámara,
+            # traían sombra; en el juego de perfil la cara era más oscura que
+            # la sien del cuerpo. Se quita la claridad lenta (desenfoque de
+            # ~18 px, solo con píxeles válidos) y queda la del borde; los
+            # rasgos (cejas, ojos, labios) son detalle fino y se quedan.
+            lu = atlas @ np.array([0.2126, 0.7152, 0.0722], np.float32)
+            wv = (dist > 0).astype(np.float32)
+            lenta = cv2.GaussianBlur(lu * wv, (0, 0), 18) / np.maximum(cv2.GaussianBlur(wv, (0, 0), 18), 1e-3)
+            objetivo = float(borde @ np.array([0.2126, 0.7152, 0.0722]))
+            k = np.clip(objetivo / np.maximum(lenta, 1.0), 0.75, 1.35) ** 0.85
+            atlas = atlas * np.where(wv > 0, k, 1.0)[..., None]
+            f = np.clip(dist / 10.0, 0, 1)[..., None]
+            f = f * f * (3 - 2 * f)
+            atlas = atlas * f + borde[None, None, :] * (1 - f)
+            tono_med = borde
             atlas = np.clip(atlas, 0, 255).astype(np.uint8)
             clave = "cara_%03d" % idx
             archivo = f"{CARPETA}/{clave}.jpg"
