@@ -354,6 +354,54 @@ func _escalar_rotulos() -> void:
 			if rot.has_node(PlayerSpawner.BARRA):
 				(rot.get_node(PlayerSpawner.BARRA) as Label3D).pixel_size = tam
 
+## RÓTULOS SIN AMONTONAR (MEGAPLAN fase 1): en las jugadas de área los
+## nombres se pisaban. Cada décima de segundo se proyectan a la pantalla y, si
+## dos se tocan, queda el del jugador más cerca del balón. El que ya se veía
+## tiene ventaja (si no, parpadeaban al cruzarse dos jugadores).
+var _t_despeje := 0.0
+
+func _despejar_rotulos(delta: float) -> void:
+	if not PlayerSpawner.mostrar_nombres:
+		return
+	_t_despeje -= delta
+	if _t_despeje > 0.0:
+		return
+	_t_despeje = 0.1
+	var cam := get_viewport().get_camera_3d()
+	if cam == null:
+		return
+	var bpos := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
+	var vh := get_viewport().get_visible_rect().size.y
+	var lista: Array = []
+	for f: Dictionary in _en_campo:
+		var n: Node3D = f.get("node")
+		if not is_instance_valid(n) or not n.has_node(PlayerSpawner.ROTULO):
+			continue
+		var rot := n.get_node(PlayerSpawner.ROTULO) as Label3D
+		if cam.is_position_behind(rot.global_position):
+			rot.visible = false
+			continue
+		var prio := n.global_position.distance_to(bpos) * (0.75 if rot.visible else 1.0)
+		lista.append([prio, rot])
+	lista.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+	## Con `fixed_size`, píxeles de pantalla por unidad del rótulo.
+	var k := vh / (2.0 * tan(deg_to_rad(cam.fov) * 0.5))
+	var puestos: Array[Rect2] = []
+	for e: Array in lista:
+		var rot: Label3D = e[1]
+		var c := cam.unproject_position(rot.global_position)
+		var px := rot.pixel_size * k
+		var caja := Rect2(c - Vector2(rot.text.length() * 0.3 * rot.font_size * px, 0.5 * rot.font_size * px),
+			Vector2(rot.text.length() * 0.6 * rot.font_size * px, 1.9 * rot.font_size * px))
+		var choca := false
+		for q: Rect2 in puestos:
+			if q.grow(-2.0).intersects(caja):
+				choca = true
+				break
+		rot.visible = not choca
+		if not choca:
+			puestos.append(caja)
+
 ## La energía bajo cada nombre, una vez por minuto simulado.
 var _minuto_barras := -1
 
@@ -789,6 +837,7 @@ func _frenar_destacado() -> void:
 
 func _process(delta: float) -> void:
 	_escalar_rotulos()
+	_despejar_rotulos(delta)
 	if _juego == null or partido == null:
 		return
 	## Durante la repetición y la presentación el partido está CONGELADO: ni
