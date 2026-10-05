@@ -33,9 +33,17 @@ static func crear(principal: Node, modo: String) -> PanelObjetivos:
 	var p := PanelObjetivos.new()
 	p._principal = principal
 	p._modo = modo
-	p._plegado = bool(_leer("plegado", false))
+	## Sin preferencia guardada: en pantallas estrechas (1280x720) arranca
+	## plegado; desplegado tapaba la ficha del jugador (MEGAPLAN fase 1).
+	var guardado: Variant = _leer("plegado", null)
+	p._plegado = bool(guardado) if guardado != null else _pantalla_estrecha(principal)
 	p._montar()
 	return p
+
+static func _pantalla_estrecha(principal: Node) -> bool:
+	if principal == null or not principal.is_inside_tree():
+		return false
+	return principal.get_viewport().get_visible_rect().size.x < 1500.0
 
 static func _leer(clave: String, defecto: Variant) -> Variant:
 	var c := ConfigFile.new()
@@ -167,6 +175,18 @@ func _aplicar_plegado() -> void:
 	_cuerpo.visible = not _plegado
 	_pestana.text = "🎯\n◂" if _plegado else "▸"
 	reset_size()
+	## Sin posición elegida por el usuario: plegado va abajo a la derecha (en
+	## el medio tapaba los números de la ficha del jugador); desplegado, al
+	## centro del borde derecho como siempre.
+	var guardada: Variant = _leer("posicion", Vector2(-1, -1))
+	if not (guardada is Vector2 and (guardada as Vector2).x >= 0.0):
+		set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT if _plegado else Control.PRESET_CENTER_RIGHT,
+			Control.PRESET_MODE_MINSIZE, 0)
+		grow_horizontal = Control.GROW_DIRECTION_BEGIN
+		grow_vertical = Control.GROW_DIRECTION_BEGIN if _plegado else Control.GROW_DIRECTION_BOTH
+		if _plegado:
+			offset_top -= 48.0
+			offset_bottom -= 48.0
 
 func refrescar() -> void:
 	if _lista == null or _principal == null:
