@@ -22,6 +22,9 @@ const BASE := {
 	"cuerpo": "male", "altura": 1.78,
 	"complexion": 0.0, "hombros": 0.0, "barriga": 0.0, "piernas": 0.0, "cabeza": 0.0,
 	"piel": "c68d68", "pelo": "tupe", "color_pelo": "2a1c12", "barba": false,
+	## Biblioteca modular (5-10-2026): "cara" = número de cara del tono de piel
+	## (-1 = la clásica); "corte_med" = un corte medido ("" = el peinado).
+	"cara": -1, "corte_med": "",
 	"ropa": "traje", "c_ropa": "1f2a44", "c_ropa2": "f2f2f2", "corbata": true,
 	"gafas": "", "gorra": false, "auriculares": false, "bufanda": false, "reloj": true,
 }
@@ -169,11 +172,28 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 	if bool(a["gorra"]) and not corte in ["corto", "fade", "rapado", "calvo"]:
 		corte = "corto"
 	PeloQ.poner(d, corte, Color(String(a["color_pelo"])), bool(a["barba"]) and String(a["cuerpo"]) == "male")
+	_cara_biblioteca(d, a)
 	_accesorios(d, a, c1, c2)
 	var ap: AnimationPlayer = d["anim"]
 	if ap.has_animation("parado"):
 		ap.play("parado")
 	return d
+
+## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)
+## y, si se eligió, un corte medido. Con gorra no va el corte medido.
+static func _cara_biblioteca(d: Dictionary, a: Dictionary) -> void:
+	var i := int(a.get("cara", -1))
+	## (Las mezclas salen de futbolistas hombres: en un cuerpo de mujer
+	## quedaban masculinas. Ahí va la cara clásica.)
+	if i < 0 or not BibliotecaCaras.hay() or String(a["cuerpo"]) == "female":
+		return
+	var piel := Color(String(a["piel"]))
+	var clave := BibliotecaCaras.cara_de_tono(piel, i)
+	if clave == "":
+		return
+	var corte := "" if bool(a["gorra"]) else String(a.get("corte_med", ""))
+	VestidorQ.poner_cara(d, {"look": {}, "foto": "",
+		"biblio": {"cara": clave, "pelo": corte, "color_pelo": "#" + String(a["color_pelo"])}}, piel)
 
 # -----------------------------------------------------------------------------
 #  EL CUERPO: ESCALAS DE HUESOS
