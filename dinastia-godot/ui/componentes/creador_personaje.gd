@@ -305,8 +305,52 @@ func _tab_pelo() -> Control:
 	_muestras(vb, "Tono de piel", "piel", PersonajeDT.PIELES)
 	_opciones(vb, "Peinado", "pelo", PersonajeDT.CORTES)
 	_muestras(vb, "Color de pelo", "color_pelo", PersonajeDT.COLORES_PELO)
-	_interruptor(vb, "Barba", "barba")
+	_interruptor(vb, "Barba (cara clásica)", "barba")
+	## BIBLIOTECA MODULAR: caras mezcladas (del tono elegido) y cortes medidos.
+	if BibliotecaCaras.hay():
+		var n_caras := BibliotecaCaras.del_tono(Color(String(_asp.get("piel", "c68d68")))).size()
+		var caras: Array = [[-1, "Clásica"]]
+		for i in n_caras:
+			caras.append([i, "Cara %d" % (i + 1)])
+		_selector(vb, "Cara (biblioteca)", "cara", caras)
+		var cortes: Array = [["", "Ninguno (el peinado)"]]
+		var cuenta := {}
+		for k: String in BibliotecaCaras.pelos():
+			var nom := BibliotecaCaras.nombre_pelo(k)
+			cuenta[nom] = int(cuenta.get(nom, 0)) + 1
+			cortes.append([k, "%s %d" % [nom.replace("_", " ").capitalize(), cuenta[nom]]])
+		_selector(vb, "Corte medido (con cara de biblioteca)", "corte_med", cortes)
+		vb.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE,
+			"Las caras de la biblioteca mezclan rasgos de varias personas: no son la cara de nadie. Por ahora, solo con cuerpo de hombre."))
 	return vb.get_parent()
+
+## ◀ nombre ▶ para listas largas (las caras y cortes de la biblioteca).
+func _selector(vb: VBoxContainer, rotulo: String, clave: String, lista: Array) -> void:
+	vb.add_child(Tema.rotulo(rotulo))
+	var fila := HBoxContainer.new()
+	vb.add_child(fila)
+	var actual := 0
+	for i in lista.size():
+		if (lista[i] as Array)[0] == _asp.get(clave):
+			actual = i
+	var et := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String((lista[actual] as Array)[1]))
+	et.custom_minimum_size = Vector2(220, 0)
+	et.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	for paso: int in [-1, 1]:
+		var b := Button.new()
+		b.text = "◀" if paso < 0 else "▶"
+		b.custom_minimum_size = Vector2(40, 32)
+		b.pressed.connect(func() -> void:
+			var j := 0
+			for i in lista.size():
+				if (lista[i] as Array)[0] == _asp.get(clave):
+					j = i
+			j = posmod(j + paso, lista.size())
+			et.text = String((lista[j] as Array)[1])
+			_cambiar(clave, (lista[j] as Array)[0]))
+		fila.add_child(b)
+		if paso < 0:
+			fila.add_child(et)
 
 func _tab_ropa() -> Control:
 	var vb := _hoja("Ropa")
