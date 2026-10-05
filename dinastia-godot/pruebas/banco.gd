@@ -5102,6 +5102,15 @@ func _probar_aspecto_y_audio() -> void:
 	_comprobar(Idiomas.t("Guardar") == "Save", "traducir funciona (Guardar -> %s)" % Idiomas.t("Guardar"))
 	_comprobar(Idiomas.t("Una frase que no existe") == "Una frase que no existe",
 		"y lo que no esta traducido se queda en castellano en vez de salir en blanco")
+	## Ordinales y mayúsculas por idioma (MEGAPLAN fase 1).
+	Idiomas.idioma = "fr"
+	var o_fr := Idiomas.t("vas 1º (meta: 3º)")
+	_comprobar(o_fr.contains("1er") and o_fr.contains("3e"), "francés: 1er y 3e (%s)" % o_fr)
+	Idiomas.idioma = "ca"
+	var o_ca := Idiomas.t("vas 2º (meta: 12º)")
+	_comprobar(o_ca.contains("2n") and o_ca.contains("12è"), "catalán: 2n y 12è (%s)" % o_ca)
+	Idiomas.idioma = "tr"
+	_comprobar(Idiomas.mayusculas("lig") == "LİG", "turco: la i con punto en mayúscula (%s)" % Idiomas.mayusculas("lig"))
 	Idiomas.idioma = "es"
 	_comprobar(Idiomas.t("Guardar") == "Guardar", "y volver al castellano no deja nada traducido")
 
