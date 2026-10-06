@@ -206,7 +206,14 @@ Pendientes, de menor a mayor esfuerzo:
 - Sección 4: puntos 1, 2, 3, 7 y 8.
 - Los roces visuales del vídeo.
 
-**Fase 2 — El partido se ve como uno de verdad (2-3 días)**
+**Fase 2 — El partido se ve como uno de verdad (2-3 días)** ✅ HECHA el 5-10-2026:
+- Césped: verdes de césped real (menos saturados), al menos un 22 % entre franjas y franjas de unos 6 m. Los cortes «circulos» y «liso» salían planos por un nombre que no casaba.
+- Techo: la losa entre la cámara y el campo ya no tapa la vista (con techo de anillo tapaba medio campo) y su sombra sobre la grada se mantiene.
+- Vallas LED: en el gol («¡GOOOL!» + club) y en los cambios («CAMBIO», quién entra y quién sale) todo el anillo parpadea con los colores del club.
+- Carga del estadio: con cachés de cara y pelo, la 2.ª apertura pasa de 5,6 a 3,6 s (`pruebas/medir_carga_estadio.tscn`). La 1.ª sigue en unos 9,6 s en este entorno sin tarjeta gráfica; lo que más cuesta es crear los modelos de los jugadores.
+- Etiquetas de nombre sin amontonar (hecho en la fase 1).
+
+**Fase 2 — plan original**
 - Césped con franjas.
 - Sombra del techo sobre la grada.
 - LED animadas.

@@ -1028,6 +1028,7 @@ func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) ->
 	## a su rotación a los 6,5 s -igual que la de un estadio de verdad-.
 	if _pantalla != null:
 		_pantalla.al_gol(c, autor, minuto)
+	_vallas_evento(["¡GOOOL!", c.nombre.to_upper()], c)
 	_seguir_jugada_gol(autor)
 	## EL BANQUILLO REACCIONA (22-9-2026). `a_favor` aquí es "el dueño de este
 	## estadio anotó", no necesariamente el club local en la cancha -mismo
@@ -1118,8 +1119,18 @@ func _a_la_tarjeta(j: Jugador, roja: bool, minuto: int) -> void:
 ## Un cambio en el campo: sale uno y entra otro DE VERDAD, no solo en la lista.
 ## Al que sale se le quita el modelo y al que entra se le crea en la ranura que
 ## deja libre, para que el once que se ve sea el once que juega.
+## Las vallas LED cortan al mensaje con los colores del club (`VallasLed.evento`).
+func _vallas_evento(palabras: Array, c: Club, seg: float = 6.0) -> void:
+	var led := _raiz3d.find_child("VallasLed", true, false) as VallasLed if _raiz3d != null else null
+	if led == null or c == null:
+		return
+	led.evento(palabras, Color(c.color1), Color(c.color2), seg)
+
 func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 	Sonido.toca("cambio")
+	var del_cambio: Club = club if club != null and club.plantilla.has(entra) else visitante
+	_vallas_evento(["CAMBIO", "⬆ %s" % entra.nombre.get_slice(" ", entra.nombre.get_slice_count(" ") - 1).to_upper(),
+		"⬇ %s" % sale.nombre.get_slice(" ", sale.nombre.get_slice_count(" ") - 1).to_upper()], del_cambio, 4.0)
 	## Si `entra` era uno de los 7 de la banca visual, se le quita el modelo
 	## de ahí antes de crearle uno en la cancha -si no, quedaría duplicado:
 	## uno de pie junto al banquillo y otro jugando, el mismo jugador dos
