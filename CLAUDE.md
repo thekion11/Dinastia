@@ -123,6 +123,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
+- **6-10 ORDEN DEL USUARIO**: «Sigue con todo el megaplan, yo iré revisando, pero NO
+  PARES, y cada fase la debes hacer con EXCELENCIA». Hacer las fases 3→6 seguidas, con
+  capturas y pruebas por fase; al cerrar cada fase, actualizar MEGAPLAN.md y pasarle
+  el documento.
 - (Histórico) **ORDEN VIGENTE (30-9)**: 1) dejar bien las caras (piel, ojos,
   colores); 2) cuando estén bien: orejas, pelo, barba, cejas, pestañas; 3) recién
   después, el MEGAPLAN. Los jugadores SIN foto quedan EN PAUSA (no buscar caras ahora).
