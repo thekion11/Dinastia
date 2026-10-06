@@ -33,6 +33,8 @@ signal gol(es_local: bool, autor: String, asistente: String)
 signal aviso(texto: String)
 signal cambio_estado(estado: String)
 signal terminado
+## Un cambio: quién sale, quién entra, de qué equipo (MEGAPLAN fase 3).
+signal sustitucion(sale: String, entra: String, es_local: bool)
 
 const LARGO := 52.5
 const ANCHO := 34.0
@@ -74,11 +76,32 @@ var cargando := false
 var carga := 0.0
 var pedido_hasta := 0.0        ## hasta cuándo vale que pediste el balón
 var _pase_usuario_vivo := false ## el balón en camino es un pase tuyo
-var stats := {"goles": 0, "asist": 0, "pases": 0, "pases_ok": 0, "tiros": 0, "a_puerta": 0,
+var stats := {"fueras_de_juego": 0, "goles": 0, "asist": 0, "pases": 0, "pases_ok": 0, "tiros": 0, "a_puerta": 0,
 	"entradas": 0, "entradas_ok": 0, "toques": 0, "faltas": 0}
 var posesion := [0.0, 0.0]
 var tiros := [0, 0]
 var _rng := RandomNumberGenerator.new()
+## FUERA DE JUEGO (MEGAPLAN fase 3): la foto del momento del pase. Quién del
+## equipo que patea estaba adelantado; si uno de ellos recibe, se pita.
+## {"local": bool, "ids": {id: true}}
+var _offside := {}
+## CAMBIOS (MEGAPLAN fase 3). `extra` es el jugador que espera en la banda: tú
+## si empiezas en el banco (`entra_usuario_min` >= 0) o el suplente de tu
+## puesto si empiezas jugando (te pueden sacar). El cambio se hace en el
+## primer balón parado desde su minuto, como en el fútbol.
+var extra: Dictionary = {}
+var entra_usuario_min := -1
+var usuario_sustituido := false
+var minutos_usuario := 0.0
+var _cambio_hecho := false
+## El nivel de exigencia del DT para sacarte: con buena relación aguanta más.
+var exigencia_dt := 0.5
+var prob_cambio_extra := 0.0   ## (para las pruebas: 1 = seguro que te cambia)
+var _cambio_decidido := false
+var _sin_desgaste := true  ## (el desgaste por tiempo restaba muchos tiros: apagado hasta ajustarlo)
+var fueras_de_juego := [0, 0]
+var _offside_previo := {}
+var _ultima_anim := ""
 var _jugada := {}             ## la jugada prehecha que guía el ataque del poseedor
 var _decision_en := 0.0
 var _t_estado := 0.0
@@ -94,21 +117,94 @@ func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: i
 		if bool(p.get("arbitro", false)):
 			arbitros.append(p)
 			continue
-		var jd: Dictionary = p.get("jugador", {})
-		var at: Dictionary = jd.get("atributos", {}) if jd.get("atributos") is Dictionary else {}
-		p["attr"] = _atributos(at, int(jd.get("ovr", 60)))
-		p["vel"] = Vector3.ZERO
-		p["aguante"] = 1.0
-		p["enfriar"] = 0.0
-		p["regate_hasta"] = 0.0
-		p["anim_actual"] = ""
-		p["por"] = String(p.get("slot_code", "")) == "POR"
+		_preparar_uno(p)
 		jugadores.append(p)
 		if String(p.get("id", "")) == jugador_usuario_id:
 			usuario = p
 	balon = ball
 	Mando.registrar()
 	_saque_de_centro(true)
+
+func _preparar_uno(p: Dictionary) -> void:
+	var jd: Dictionary = p.get("jugador", {})
+	var at: Dictionary = jd.get("atributos", {}) if jd.get("atributos") is Dictionary else {}
+	p["attr"] = _atributos(at, int(jd.get("ovr", 60)))
+	p["vel"] = Vector3.ZERO
+	p["aguante"] = 1.0
+	p["enfriar"] = 0.0
+	p["regate_hasta"] = 0.0
+	p["anim_actual"] = ""
+	p["por"] = String(p.get("slot_code", "")) == "POR"
+
+## El que espera en la banda. Si es el usuario, entra en `minuto_entrada`.
+func poner_extra(p: Dictionary, es_usuario: bool, minuto_entrada: int = -1) -> void:
+	_preparar_uno(p)
+	p["por"] = false
+	extra = p
+	(p["node"] as Node3D).position = Vector3(ANCHO + 2.5, 0, 6.0 if bool(p["es_local"]) else -6.0)
+	if es_usuario:
+		usuario = {}
+		entra_usuario_min = maxi(1, minuto_entrada)
+
+## ¿Toca hacer el cambio en este balón parado?
+func _revisar_cambio() -> void:
+	if extra.is_empty() or _cambio_hecho:
+		return
+	var minu := minuto()
+	if entra_usuario_min >= 0:
+		if minu >= entra_usuario_min:
+			_cambiar(_quien_sale_por(extra), extra, true)
+		return
+	## Tú en el campo: el DT lo decide UNA vez, en el primer balón parado
+	## pasada la hora. Pesa su exigencia, tu nota y tu cansancio.
+	if usuario.is_empty() or minu < 60 or _cambio_decidido:
+		return
+	_cambio_decidido = true
+	var prob := 0.05 + exigencia_dt * 0.35 + maxf(0.0, 6.6 - nota_usuario()) * 0.3 \
+		+ maxf(0.0, 0.75 - float(usuario["aguante"])) * 1.2 + prob_cambio_extra
+	if _rng.randf() < clampf(prob, 0.0, 0.95 + prob_cambio_extra):
+		_cambiar(usuario, extra, false)
+
+## El compañero que deja su sitio al que entra: el de su línea más cansado.
+func _quien_sale_por(entra: Dictionary) -> Dictionary:
+	var grupo := String((entra.get("jugador", {}) as Dictionary).get("pos", "MED"))
+	var peor: Dictionary = {}
+	for q: Dictionary in jugadores:
+		if bool(q["es_local"]) != bool(entra["es_local"]) or bool(q["por"]):
+			continue
+		var g := String((q.get("jugador", {}) as Dictionary).get("pos", ""))
+		var nota := float(q["aguante"]) + (0.0 if g == grupo else 0.5)
+		if peor.is_empty() or nota < float(peor["_nota_cambio"]):
+			q["_nota_cambio"] = nota
+			peor = q
+	return peor
+
+func _cambiar(sale: Dictionary, entra: Dictionary, entra_es_usuario: bool) -> void:
+	var i := jugadores.find(sale)
+	if i < 0 or entra.is_empty():
+		return
+	_cambio_hecho = true
+	## El que entra hereda el sitio táctico del que sale.
+	entra["slot_code"] = sale["slot_code"]
+	entra["base_pos"] = sale["base_pos"]
+	(entra["node"] as Node3D).position = Vector3(ANCHO - 0.5, 0, 0)
+	(entra["node"] as Node3D).visible = true
+	jugadores[i] = entra
+	var ns: Node3D = sale["node"]
+	ns.position = Vector3(ANCHO + 2.5, 0, 4.0)
+	ns.visible = false
+	if poseedor == sale:
+		poseedor = {}
+	if entra_es_usuario:
+		usuario = entra
+	elif sale == usuario:
+		usuario = {}
+		usuario_sustituido = true
+	extra = {}
+	var nom_s := String((sale.get("jugador", {}) as Dictionary).get("nombre", ""))
+	var nom_e := String((entra.get("jugador", {}) as Dictionary).get("nombre", ""))
+	aviso.emit("🔁 Cambio: entra %s, sale %s" % [nom_e, nom_s])
+	sustitucion.emit(nom_s, nom_e, bool(entra["es_local"]))
 
 func _atributos(at: Dictionary, ovr: int) -> Dictionary:
 	var a := {}
@@ -146,6 +242,8 @@ func paso(delta: float) -> void:
 	match estado:
 		"juego":
 			t += delta
+			if not usuario.is_empty():
+				minutos_usuario += delta / duracion_mitad * 45.0
 			if t >= duracion_mitad:
 				_fin_de_mitad()
 				return
@@ -156,6 +254,8 @@ func paso(delta: float) -> void:
 			_ia_equipos(delta)
 			_control_usuario(delta)
 		"saque":
+			if _t_estado <= delta * 1.5:
+				_revisar_cambio()
 			_colocar_saque(delta)
 		"gol", "descanso":
 			_mover_balon(delta)
@@ -323,6 +423,7 @@ static func velocidad_para(dist: float, sobra := 2.5) -> float:
 ## Patea el balón hacia `destino` con una velocidad horizontal `vh` y la
 ## parábola que haga falta para llegar ahí (más `loft` de altura extra).
 func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 0.0, anim := "pase") -> void:
+	_ultima_anim = anim
 	var b := balon.position
 	var d := Vector3(destino.x - b.x, 0, destino.z - b.z)
 	var dist := maxf(d.length(), 0.1)
@@ -347,6 +448,7 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 	giro_balon = Vector3(0, efecto, 0)
 	if depurar:
 		print("PATADA %s(%s) desde %s a %s vh %.1f loft %.1f vel %s" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", str(b), str(destino), vh, loft, str(vel_balon)])
+	_foto_offside(p)
 	penultimo_toque = ultimo_toque
 	ultimo_toque = p
 	poseedor = {}
@@ -359,8 +461,81 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 	if p == usuario:
 		stats["toques"] += 1
 
+## La foto del fuera de juego al patear `p`. En saque de banda, córner y saque
+## de puerta no hay fuera de juego (regla 11).
+func _foto_offside(p: Dictionary) -> void:
+	_offside = {}
+	if estado == "saque" and String(saque.get("tipo", "")) in ["banda", "corner", "puerta"]:
+		return
+	var local := bool(p["es_local"])
+	var d := dir_ataque(local)
+	## El penúltimo rival (el portero cuenta): la línea del fuera de juego.
+	var prof: Array = []
+	for q: Dictionary in jugadores:
+		if bool(q["es_local"]) != local:
+			prof.append(pos(q).z * d)
+	if prof.size() < 2:
+		return
+	prof.sort()
+	var penultimo: float = prof[prof.size() - 2]
+	var balon_prof := balon.position.z * d
+	var ids := {}
+	for q: Dictionary in jugadores:
+		if q == p or bool(q["es_local"]) != local:
+			continue
+		var z := pos(q).z * d
+		## En campo rival, por delante del balón y del penúltimo (con 30 cm de
+		## tolerancia: la línea la marca el cuerpo, no los pies).
+		if z > 0.0 and z > balon_prof + 0.3 and z > penultimo + 0.3:
+			ids[String(q.get("id", ""))] = true
+	if not ids.is_empty():
+		_offside = {"local": local, "ids": ids, "de": String(p.get("slot_code", "")), "anim": _ultima_anim, "t": t,
+			"por": bool(p["por"]), "z": pos(p).z * d}
+
+## ¿`q` está ahora en posición adelantada respecto de un pase de `p`?
+func _adelantado(q: Dictionary, p: Dictionary) -> bool:
+	var local := bool(q["es_local"])
+	var d := dir_ataque(local)
+	var z := pos(q).z * d
+	if z <= 0.0 or z <= pos(p).z * d + 0.3:
+		return false
+	var prof: Array = []
+	for r: Dictionary in jugadores:
+		if bool(r["es_local"]) != local:
+			prof.append(pos(r).z * d)
+	if prof.size() < 2:
+		return false
+	prof.sort()
+	return z > float(prof[prof.size() - 2]) + 0.3
+
+## ¿El que recibe estaba adelantado en el pase? Pita y saca el rival.
+func _pitar_offside(p: Dictionary) -> bool:
+	if _offside.is_empty():
+		return false
+	var mismo := bool(p["es_local"]) == bool(_offside["local"])
+	var adelantado := mismo and (_offside["ids"] as Dictionary).has(String(p.get("id", "")))
+	_offside_previo = _offside
+	_offside = {}
+	if not adelantado:
+		return false
+	if OS.get_environment("DEPURAR_OFF") != "":
+		print("OFFSIDE de %s(%s) tras %s de %s (por=%s z=%.1f) hace %.1fs, recibe en z=%.1f" % [String(p.get("slot_code","")), _rol(p),
+			String(_offside_previo.get("anim", "")), String(_offside_previo.get("de", "")), str(_offside_previo.get("por", false)),
+			float(_offside_previo.get("z", 0.0)), t - float(_offside_previo.get("t", 0.0)), pos(p).z * dir_ataque(bool(p["es_local"]))])
+	fueras_de_juego[0 if bool(p["es_local"]) else 1] += 1
+	if p == usuario:
+		stats["fueras_de_juego"] += 1
+	var nombre := String((p.get("jugador", {}) as Dictionary).get("nombre", "un atacante"))
+	aviso.emit("🚩 Fuera de juego de %s" % nombre)
+	var lugar := pos(p)
+	_empezar_saque("falta", not bool(p["es_local"]), Vector3(clampf(lugar.x, -ANCHO + 1.0, ANCHO - 1.0), R,
+		clampf(lugar.z, -LARGO + 1.0, LARGO - 1.0)))
+	return true
+
 func _tomar(p: Dictionary) -> void:
 	if poseedor == p:
+		return
+	if _pitar_offside(p):
 		return
 	## Tu pase llegó si lo controla uno de los tuyos.
 	if _pase_usuario_vivo and not usuario.is_empty() and p != usuario and bool(p["es_local"]) == bool(usuario["es_local"]):
@@ -409,6 +584,9 @@ func _disputas(delta: float) -> void:
 				penultimo_toque = ultimo_toque
 				ultimo_toque = mejor
 				mejor["enfriar"] = 0.4
+				## Un rechace del rival rompe el fuera de juego (no el de un compañero).
+				if not _offside.is_empty() and bool(mejor["es_local"]) != bool(_offside["local"]):
+					_offside = {}
 		## Cabezazos: balón alto a la altura de la cabeza.
 		elif b.y > 1.3 and b.y < 2.4:
 			for p: Dictionary in jugadores:
@@ -467,6 +645,7 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 			stats["entradas_ok"] += 1
 		poseedor = {}
 		ultimo_toque = p
+		_offside = {}
 		vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)
 		victima["enfriar"] = 0.6
 	elif r < exito + (0.18 if barrida else 0.07):
@@ -556,7 +735,14 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		var rol := _rol(p)
 		if dest.has(rol):
 			p["correr"] = true
-			return dest[rol]
+			## El desmarque de la jugada respeta la línea del fuera de juego
+			## mientras el balón no sale (sin esto, 10-13 por partido).
+			var dz := dir_ataque(bool(p["es_local"]))
+			var linea := _ultima_linea(not bool(p["es_local"]))
+			var dd: Vector3 = dest[rol]
+			if (dd.z - linea) * dz > -0.5 and (dd.z - balon.position.z) * dz > 0.0:
+				dd.z = linea - dz * 0.6
+			return dd
 	var obj := _forma(p, true)
 	## Apoyo: los dos más cercanos al portador se ofrecen en ángulo.
 	if not poseedor.is_empty():
@@ -567,10 +753,16 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 				lado = 1.0
 			obj = pos(poseedor) + Vector3(lado * 9.0, 0, dir_ataque(bool(p["es_local"])) * 5.0)
 	## Los delanteros atacan el espacio a la espalda de la defensa.
+	var linea := _ultima_linea(not bool(p["es_local"]))
+	var dz := dir_ataque(bool(p["es_local"]))
 	if _rol(p) in ["DC", "ED", "EI", "SD"]:
-		var linea := _ultima_linea(not bool(p["es_local"]))
-		var dz := dir_ataque(bool(p["es_local"]))
 		obj.z = clampf(linea - dz * 0.6, -LARGO + 6.0, LARGO - 6.0) if (linea - pos(p).z) * dz > -8.0 else obj.z
+	## Y NADIE se queda en fuera de juego esperando (MEGAPLAN fase 3): el
+	## central que subió al córner o el lateral que se proyectó vuelven a
+	## estar habilitados mientras el balón no pase la línea.
+	var tope := maxf(linea * dz, balon.position.z * dz) - 0.6
+	if obj.z * dz > tope:
+		obj.z = tope * dz
 	return obj
 
 ## La línea del último defensor (sin el portero) del equipo `local`.
@@ -779,6 +971,10 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 			if dl < 2.2:
 				riesgo += (2.2 - dl) * 1.4
 		var nota := progreso * 0.08 + minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02
+		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
+		## nunca se la da a un compañero adelantado.
+		if _adelantado(q, p) and _rng.randf() < 0.55 + float(p["attr"]["pas"]) * 0.4:
+			nota -= 6.0
 		if not _jugada.is_empty() and String(_jugada.get("pase_a", "")) == _rol(q):
 			nota += 1.2
 		if q == usuario and t < pedido_hasta:
@@ -1263,6 +1459,15 @@ func _mover_jugadores(delta: float) -> void:
 			p["aguante"] = maxf(0.2, float(p["aguante"]) - delta * 0.012 * (1.4 - float(p["attr"]["fis"])))
 		else:
 			p["aguante"] = minf(1.0, float(p["aguante"]) + delta * 0.006)
+		## Y el partido desgasta a todos (MEGAPLAN fase 3): unos 30 puntos en
+		## 90', más al de poco físico. Sin esto la barra apenas bajaba y el
+		## cansancio no decidía ningún cambio. El tope de recuperación también
+		## baja con el tiempo jugado: en el 85' nadie está como en el 1'.
+		if not _sin_desgaste:
+			var gastado := (float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad)
+			p["aguante"] = minf(float(p["aguante"]) - delta * 0.0007 * (1.3 - float(p["attr"]["fis"])),
+				1.0 - gastado * 0.35 * (1.3 - float(p["attr"]["fis"])))
+			p["aguante"] = maxf(0.2, float(p["aguante"]))
 		## La animación según la velocidad (salvo que haya un gesto en curso).
 		if float(p.get("gesto_hasta", 0.0)) > t:
 			continue

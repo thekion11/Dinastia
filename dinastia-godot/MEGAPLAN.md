@@ -220,7 +220,17 @@ Pendientes, de menor a mayor esfuerzo:
 - Precarga del estadio.
 - Etiquetas de nombre.
 
-**Fase 3 — Carrera de Jugador v2 (3-4 días)**
+**Fase 3 — Carrera de Jugador v2 (3-4 días)** 🟡 EN CURSO (6-10-2026):
+- ✅ Fuera de juego en el motor jugable: foto en cada pase o tiro (penúltimo rival, con tolerancia de 30 cm), se pita al recibir y saca el rival. No hay en saques de banda, córners ni saques de puerta, y un toque del rival lo anula. La IA no se queda en posición adelantada y el pasador lo ve según su visión. Medido: 2-4 por partido (antes de ajustar la IA, 10-13).
+- ✅ Cambios:
+  - Si empiezas en el banco, botón «IR AL BANCO»: el DT decide si entras y en qué minuto (antes cuanto mejor la relación) y juegas desde ahí.
+  - Si eres titular, el DT puede sacarte pasada la hora (pesan su exigencia y tu nota) y entra el suplente de tu puesto.
+  - Los minutos reales cuentan; en simulado, el suplente a veces entra un rato.
+  - `pruebas/prueba_motor_jugable.tscn` con `CAMBIO=banco` y `CAMBIO=sale`.
+- ⬜ Desgaste por tiempo jugado: hecho pero APAGADO, porque bajaba los tiros de 7-8 a 1-4 por partido. Falta ajustarlo.
+- ⬜ Más eventos únicos, convocatoria y partidos con la selección, y paso de jugador a DT al retirarse.
+
+**Fase 3 — plan original**
 - Fuera de juego, cambios, eventos y selección.
 - Transición de jugador a DT.
 

@@ -154,6 +154,19 @@ func once_para_partido(m: Mundo) -> Array[Jugador]:
 		once[peor] = j
 	return once
 
+## DESDE EL BANCO (MEGAPLAN fase 3): si empiezas de suplente, ¿te hace entrar
+## el DT y en qué minuto? Con buena relación y energía entras antes y más a
+## menudo. -1 = no sales del banco.
+func minuto_entrada_suplente() -> int:
+	var prob := clampf(0.35 + float(relacion_dt - 50) / 100.0 + (0.1 if energia > 50 else -0.1), 0.1, 0.85)
+	if _rng.randf() >= prob:
+		return -1
+	return clampi(_rng.randi_range(56, 82) - int(float(relacion_dt - 55) / 5.0), 46, 86)
+
+## Lo que tolera el DT antes de sacarte (0 = mucho, 1 = poco), para el motor.
+func exigencia_dt() -> float:
+	return clampf(float(70 - relacion_dt) / 40.0, 0.0, 1.0)
+
 func nota_media() -> float:
 	var n: Array = stats_temp["notas"]
 	if n.is_empty():
