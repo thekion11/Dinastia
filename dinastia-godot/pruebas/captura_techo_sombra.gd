@@ -20,6 +20,9 @@ func _ready() -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
+	## LED=1: las vallas en modo gol (MEGAPLAN fase 2).
+	if _n == 18 and OS.get_environment("LED") != "":
+		_vista.call("_vallas_evento", ["¡GOOOL!", "LAUTARO FC"], _vista.get("club"))
 	if _n == 25:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/techo_sombra.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % ("vallas_gol" if OS.get_environment("LED") != "" else "techo_sombra"))
 		get_tree().quit()
