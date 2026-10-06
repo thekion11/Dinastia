@@ -252,10 +252,23 @@ static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) ->
 	var hueso := esq.find_bone("Head")
 	if hueso < 0:
 		return null
+	var cuerpo := PeloCapas._malla_cuerpo(d.get("modelo"))
+	## Caché por jugador y cuerpo (MEGAPLAN fase 2): la malla no cambia entre
+	## partidos y armarla (pegar el borde al cráneo) costaba en cada apertura.
+	var clave := "%s|%s" % [nombre, String(cuerpo.get("id", ""))]
+	var malla: ArrayMesh = _cache_mallas.get(clave)
+	if malla == null:
+		malla = _armar(nombre, datos, cuerpo)
+		_cache_mallas[clave] = malla
+	return _vestir_cara(d, esq, hueso, nombre, tex, piel, malla)
+
+static var _cache_mallas := {}
+
+static func _armar(nombre: String, datos: Array, cuerpo: Dictionary) -> ArrayMesh:
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var pos: PackedVector3Array = datos[0]
-	var pegada := _pegar_borde(pos, PeloCapas._malla_cuerpo(d.get("modelo")))
+	var pegada := _pegar_borde(pos, cuerpo)
 	var uv: PackedVector2Array = datos[1]
 	## COLOR.g = tapado en la foto (una mano, un brazo): ahí se pinta su piel.
 	var tapado := PeloCapas._densidades(String(entrada(nombre).get("t", "")), _n)
@@ -286,7 +299,10 @@ static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) ->
 		st.add_index(_tri[t])
 		st.add_index(_tri[t + 2])
 		st.add_index(_tri[t + 1])
-	var malla := st.commit()
+	return st.commit()
+
+static func _vestir_cara(d: Dictionary, esq: Skeleton3D, hueso: int, nombre: String, tex: Texture2D,
+		piel: Color, malla: ArrayMesh) -> MeshInstance3D:
 	var mat := ShaderMaterial.new()
 	mat.shader = load(SHADER)
 	mat.set_shader_parameter("foto", tex)
