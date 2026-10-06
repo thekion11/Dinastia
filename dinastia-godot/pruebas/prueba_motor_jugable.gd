@@ -28,7 +28,28 @@ func _ready() -> void:
 	motor.autopiloto = true
 	motor.depurar = OS.get_environment("DEPURAR") == "2"
 	motor.duracion_mitad = 180.0
-	motor.preparar(lista, ball, String(l["xi"][9]), 5)
+	var semilla := int(OS.get_environment("SEMILLA")) if OS.get_environment("SEMILLA") != "" else 5
+	## CAMBIOS (MEGAPLAN fase 3): CAMBIO=banco (el usuario entra al 60') o
+	## CAMBIO=sale (titular con un DT muy exigente: lo sacan).
+	var modo := OS.get_environment("CAMBIO")
+	var usuario_id := String(l["xi"][9])
+	var reserva: Jugador = null
+	for j: Jugador in a.plantilla:
+		if not a.once().has(j) and not j.es_portero():
+			reserva = j
+			break
+	if modo == "banco":
+		usuario_id = reserva.id
+	motor.preparar(lista, ball, usuario_id, semilla)
+	if modo != "" and reserva != null:
+		var una := Puente3D.once([reserva] as Array[Jugador])
+		var hechos := sp.spawn_team(self, una["xi"], una["jugadores"], {"s": [[reserva.pos_e, 50, 50]]}, true, Puente3D.kit(a))
+		if modo == "banco":
+			motor.poner_extra(hechos[0], true, 60)
+		else:
+			motor.exigencia_dt = 1.0
+			motor.prob_cambio_extra = 1.0
+			motor.poner_extra(hechos[0], false)
 	var saques := {}
 	var goles_ev := [0]
 	var max_fuera := [0.0]
@@ -47,6 +68,7 @@ func _ready() -> void:
 		pasos += 1
 		var p := ball.position
 		max_fuera[0] = maxf(max_fuera[0], maxf(absf(p.x) - 34.0, absf(p.z) - 54.5))
+	print("FUERAS DE JUEGO %s" % str(motor.fueras_de_juego))
 	print("RESULTADO %d-%d  tiros %s  posesión local %d%%  saques %s  pasos %d" % [motor.goles[0], motor.goles[1], str(motor.tiros), motor.posesion_local(), str(saques), pasos])
 	_ok(motor.estado == "fin", "el partido termina (dos tiempos)")
 	_ok(motor.tiros[0] + motor.tiros[1] >= 6, "hay tiros de los dos lados (%d)" % (motor.tiros[0] + motor.tiros[1]))
@@ -55,5 +77,17 @@ func _ready() -> void:
 	_ok(goles_ev[0] == motor.goles[0] + motor.goles[1], "cada gol se avisa una vez")
 	var pos_l := motor.posesion_local()
 	_ok(pos_l > 20 and pos_l < 80, "la posesión se reparte (%d %%)" % pos_l)
+	if modo == "banco":
+		print("CAMBIO banco: usuario en campo=%s minutos=%.0f" % [str(not motor.usuario.is_empty()), motor.minutos_usuario])
+		_ok(not motor.usuario.is_empty() and motor.minutos_usuario > 15.0 and motor.minutos_usuario < 40.0,
+			"el suplente entra al 60' y juega unos 30 minutos (%.0f)" % motor.minutos_usuario)
+	elif modo == "sale":
+		print("CAMBIO sale: sustituido=%s minutos=%.0f aguante=%.2f nota=%.1f" % [str(motor.usuario_sustituido), motor.minutos_usuario, float(motor.usuario.get("aguante", -1)), motor.nota_usuario()])
+		_ok(motor.usuario_sustituido and motor.minutos_usuario >= 55.0 and motor.minutos_usuario < 90.0,
+			"un DT muy exigente lo cambia pasada la hora (%.0f')" % motor.minutos_usuario)
+		_ok(motor.jugadores.size() == 22, "siguen 22 en el campo tras el cambio")
+	## FUERA DE JUEGO (MEGAPLAN fase 3): se pita, pero no a cada ataque.
+	var off: int = motor.fueras_de_juego[0] + motor.fueras_de_juego[1]
+	_ok(off <= 12, "fueras de juego razonables en el partido (%d)" % off)
 	print("FIN MOTOR. %d fallos" % _fallos)
 	get_tree().quit()
