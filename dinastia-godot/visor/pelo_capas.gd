@@ -88,7 +88,12 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 				"hebras_cm": 18.0, "radio": 0.44, "estirar": 3.0, "oscurecer_foto": 0.95, "sombra_raiz": 0.9})
 			_colgar(anc, al_hueso, m2, mat2, "Cejas")
 	## PESTAÑAS: tiras de verdad sobre el párpado de arriba.
-	var pest := _pestanas(pos, normales)
+	var clave_p := hash(pos)
+	var pest: ArrayMesh = _cache_pestanas.get(clave_p)
+	if pest == null:
+		pest = _pestanas(pos, normales)
+		if pest != null:
+			_cache_pestanas[clave_p] = pest
 	if pest != null and ResourceLoader.exists(SHADER_PESTANAS):
 		var mp := ShaderMaterial.new()
 		mp.shader = load(SHADER_PESTANAS)
@@ -106,7 +111,12 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	var alto_cm := clampf(float(hd.get("alto", 7.0)) - CRANEO_CM, 0.25, 6.0)
 	if bool(hd.get("cortado", false)):
 		alto_cm = maxf(alto_cm, 2.0)
-	var cuero := _cuero(cuerpo, pos, datos, hd, int(CAPAS_CUERO * reduce))
+	var clave_cuero := "%s|%d|%d|%d" % [String(cuerpo.get("id", "")), hash(hd), hash(pos), int(CAPAS_CUERO * reduce)]
+	var cuero: ArrayMesh = _cache_cuero.get(clave_cuero)
+	if cuero == null:
+		cuero = _cuero(cuerpo, pos, datos, hd, int(CAPAS_CUERO * reduce))
+		if cuero != null:
+			_cache_cuero[clave_cuero] = cuero
 	if cuero == null:
 		return false
 	var rizo := float(hd.get("rizo", 0.0))
@@ -314,6 +324,14 @@ static func _capas_sobre(pos: PackedVector3Array, nor: PackedVector3Array, uv: P
 		Mesh.ARRAY_CUSTOM_RGBA_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT)
 	return m if m.get_surface_count() > 0 or total == 0 else null
 
+## CACHÉS (MEGAPLAN fase 2, carga del estadio): la cabeza del cuerpo y el
+## cuero cabelludo de cada jugador se recalculaban en GDScript cada vez que
+## se abría el partido (~2 s por apertura). El resultado solo depende de la
+## malla del cuerpo y de lo medido en la foto: se guarda.
+static var _cache_cuerpo := {}
+static var _cache_cuero := {}
+static var _cache_pestanas := {}
+
 ## La cabeza del cuerpo (pose de reposo): vértices, normales e índices.
 static func _malla_cuerpo(modelo: Node) -> Dictionary:
 	if modelo == null:
@@ -325,8 +343,13 @@ static func _malla_cuerpo(modelo: Node) -> Dictionary:
 		for s in mi.mesh.get_surface_count():
 			var mat := mi.mesh.surface_get_material(s)
 			if mat != null and mat.resource_name.begins_with("MI_Superhero"):
+				var clave := "%s|%d|%d" % [mi.mesh.resource_name, mi.mesh.surface_get_array_len(s), mi.mesh.surface_get_array_index_len(s)]
+				if _cache_cuerpo.has(clave):
+					return _cache_cuerpo[clave]
 				var a := mi.mesh.surface_get_arrays(s)
-				return {"v": a[Mesh.ARRAY_VERTEX], "n": a[Mesh.ARRAY_NORMAL], "i": a[Mesh.ARRAY_INDEX]}
+				var r := {"v": a[Mesh.ARRAY_VERTEX], "n": a[Mesh.ARRAY_NORMAL], "i": a[Mesh.ARRAY_INDEX], "id": clave}
+				_cache_cuerpo[clave] = r
+				return r
 	return {}
 
 ## El cuero cabelludo: los triángulos de la cabeza del cuerpo con la densidad
