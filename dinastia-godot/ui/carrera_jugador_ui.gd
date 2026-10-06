@@ -338,6 +338,11 @@ func _centro(j: Jugador, club: Club) -> Control:
 			var bj := _boton("🎮  JUGAR EL PARTIDO", LIMA, _jugar_partido, 56)
 			bj.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			botones.add_child(bj)
+		elif not par.is_empty() and carrera.jugador(mundo) != null and carrera.jugador(mundo).disponible():
+			## DESDE EL BANCO (MEGAPLAN fase 3): vas convocado y quizá entras.
+			var bb := _boton("🪑  IR AL BANCO (puedes entrar)", LIMA, _ir_al_banco, 56)
+			bb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			botones.add_child(bb)
 		var bs := _boton("⏩  Simular la semana", CIAN, func() -> void: _cerrar_semana({}), 56)
 		bs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		botones.add_child(bs)
@@ -439,6 +444,22 @@ func _jugar_partido() -> void:
 	var pj := PartidoJugable.abrir(self, mundo, carrera, par[0], par[1], 240.0)
 	pj.terminado.connect(func(res: Dictionary) -> void: _cerrar_semana(res, true))
 
+## Suplente: el DT decide si entras y cuándo. Si entras, juegas desde ese
+## minuto; si no, la semana se cierra con el partido visto desde el banco.
+func _ir_al_banco() -> void:
+	var club := carrera.club(mundo)
+	var par := _partido_de_la_semana(club)
+	if par.is_empty():
+		return
+	_msg = carrera.entrenar(mundo)
+	var minuto := carrera.minuto_entrada_suplente()
+	if minuto < 0:
+		_msg += "  ·  Calentaste toda la segunda parte, pero el DT no te hizo entrar."
+		_cerrar_semana({"sin_minutos": true}, true)
+		return
+	var pj := PartidoJugable.abrir(self, mundo, carrera, par[0], par[1], 240.0, minuto)
+	pj.terminado.connect(func(res: Dictionary) -> void: _cerrar_semana(res, true))
+
 ## Cierra la semana: el partido (jugado o simulado), el mundo y lo que te pasa.
 func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 	var m := mundo
@@ -448,6 +469,8 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 	if not ya_entrenado:
 		_msg = carrera.entrenar(m)
 	var titular := carrera.es_titular(m)
+	if bool(res.get("sin_minutos", false)):
+		res = {}
 	if not res.is_empty() and not par.is_empty():
 		var p := Partido.new(par[0], par[1])
 		p.goles_local = int(res["goles_local"])
@@ -455,7 +478,9 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 		m.avanzar_semana(p)
 		carrera.tras_partido(m, res)
 		carrera.partidos_jugables += 1
-		_msg += "  ·  Final %d-%d, tu nota %.1f." % [p.goles_local, p.goles_visita, float(res["nota"])]
+		_msg += "  ·  Final %d-%d, tu nota %.1f (%d')." % [p.goles_local, p.goles_visita, float(res["nota"]), int(res.get("minutos", 90))]
+		if bool(res.get("sustituido", false)):
+			_msg += " El DT te cambió."
 	else:
 		var goles_antes := j.goles if j != null else 0
 		m.avanzar_semana()
@@ -466,6 +491,17 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 			j.goles = goles_antes
 			carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": 0, "nota": snappedf(nota, 0.1), "titular": true})
 			_msg += "  ·  Jugaste (simulado): %d gol(es), nota %.1f." % [g, nota]
+		elif not titular and not par.is_empty() and j != null and j.disponible():
+			## Suplente simulado: a veces entras un rato.
+			var entra := carrera.minuto_entrada_suplente()
+			if entra >= 0:
+				var minutos := 90 - entra
+				var g2 := 1 if randf() < float(minutos) / 90.0 * (0.25 if j.pos == "DEL" else 0.08) else 0
+				var nota2 := clampf(5.8 + float(j.ovr - 55) * 0.03 + float(g2) * 0.9 + randf_range(-0.4, 0.4), 4.5, 9.0)
+				carrera.tras_partido(m, {"minutos": minutos, "goles": g2, "asist": 0, "nota": snappedf(nota2, 0.1), "titular": false})
+				_msg += "  ·  Entraste en el %d' (simulado): nota %.1f." % [entra, nota2]
+			else:
+				_msg += "  ·  No saliste del banco."
 	var nuevos := carrera.semana(m)
 	if not nuevos.is_empty():
 		_msg += "  ·  ¡%s!" % String(nuevos[0]["titulo"])

@@ -38,8 +38,13 @@ var _resumen: Control
 var _es_local_usuario := true
 var _minutos_usuario := 0.0
 
-static func abrir(padre: Node, m: Mundo, c: CarreraJugador, l: Club, v: Club, duracion_mitad := 240.0) -> PartidoJugable:
+## Si empiezas en el banco, el minuto en que entras (-1 = titular).
+var entra_al := -1
+
+static func abrir(padre: Node, m: Mundo, c: CarreraJugador, l: Club, v: Club, duracion_mitad := 240.0,
+		entra_al_minuto := -1) -> PartidoJugable:
 	var n := PartidoJugable.new()
+	n.entra_al = entra_al_minuto
 	n.mundo = m
 	n.carrera = c
 	n.local = l
@@ -103,6 +108,7 @@ func _montar(duracion_mitad: float) -> void:
 	add_child(motor)
 	motor.duracion_mitad = duracion_mitad
 	motor.preparar(lista, balon, yo.id if yo != null else "", hash(local.id + visita.id))
+	_preparar_cambio(sp, yo)
 	if carrera != null:
 		motor.lanza_usuario = {"corner": bool(carrera.lanzador.get("corners", true)),
 			"falta": bool(carrera.lanzador.get("faltas", false)), "penal": bool(carrera.lanzador.get("penales", false)), "banda": false}
@@ -118,10 +124,48 @@ func _montar(duracion_mitad: float) -> void:
 	_flecha = _crear_flecha()
 	_raiz.add_child(_flecha)
 	_montar_hud()
+	if _banner_pendiente != "":
+		_mostrar_banner.call_deferred(_banner_pendiente)
 	Sonido.toca("silbato" if Sonido.NOMBRES.has("silbato") else "clic", Sonido.Bus.INTERFAZ)
 
 ## La pantalla gigante del estadio, como en `VistaEstadio._montar_pantalla`
 ## (sin `Partido`: rota bienvenida, tabla y goleadores).
+## CAMBIOS (MEGAPLAN fase 3). En la banda espera un jugador más: tú, si
+## empiezas en el banco, o el mejor suplente de tu puesto, por si el DT te saca.
+func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
+	if yo == null or carrera == null:
+		return
+	var mi_club := local if _es_local_usuario else visita
+	var kit := Puente3D.kit(local) if _es_local_usuario else Puente3D.kit_visita(local, visita)
+	var quien: Jugador = yo
+	if entra_al < 0:
+		## Titular: el suplente de tu línea con más media.
+		quien = null
+		var once := mi_club.once()
+		for j: Jugador in mi_club.plantilla:
+			if j == yo or once.has(j) or not j.disponible() or j.es_portero():
+				continue
+			if quien == null or (j.pos == yo.pos) and (quien.pos != yo.pos or j.ovr > quien.ovr):
+				quien = j
+		if quien == null:
+			return
+	var una := Puente3D.once([quien] as Array[Jugador])
+	var hechos := sp.spawn_team(_raiz, una["xi"], una["jugadores"], {"s": [[quien.pos_e, 50, 50]]}, _es_local_usuario, kit)
+	if hechos.is_empty():
+		return
+	motor.exigencia_dt = carrera.exigencia_dt()
+	motor.poner_extra(hechos[0], entra_al >= 0, entra_al)
+	if entra_al >= 0:
+		## Hasta que entras, el partido corre solo y deprisa.
+		var pasos := 0
+		while motor.usuario.is_empty() and motor.estado != "fin" and pasos < 20 * 1200:
+			motor.paso(1.0 / 20.0)
+			pasos += 1
+		if not motor.usuario.is_empty():
+			_banner_pendiente = "🔁 ¡ENTRAS AL CAMPO!  %d'" % motor.minuto()
+
+var _banner_pendiente := ""
+
 func _montar_pantalla(perfil: Dictionary) -> void:
 	var pantallas := _raiz.find_children("PantallaMarcador*", "MeshInstance3D", true, false)
 	if pantallas.is_empty():
@@ -438,7 +482,8 @@ func _al_terminar() -> void:
 func resultado() -> Dictionary:
 	var s := motor.stats
 	return {"goles_local": motor.goles[0], "goles_visita": motor.goles[1], "goles": s["goles"], "asist": s["asist"],
-		"nota": motor.nota_usuario(), "minutos": 90 if not motor.usuario.is_empty() else 0, "titular": true}
+		"nota": motor.nota_usuario(), "minutos": int(round(motor.minutos_usuario)), "titular": entra_al < 0,
+		"sustituido": motor.usuario_sustituido}
 
 func _cerrar() -> void:
 	terminado.emit(resultado())
