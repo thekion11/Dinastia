@@ -371,14 +371,14 @@ Se queda **a un punto de la meta de 75**. Lo que más falta en pulido es traduci
 |---|---|---|---|---|
 | Arquitectura | 15 % | 73 | 75 | Red vial en datos, inventario automático y más pruebas. El núcleo sigue siendo el portado del HTML. |
 | Jugabilidad | 20 % | 78 | 81 | Ciudad recorrible, 8 minijuegos, mesa de agentes y dinastías. |
-| Visual / 3D | 15 % | 70 | 74 | Ciudad 2.0 con metro, autopista, noche, río y arquitectura propia en cada instalación. |
+| Visual / 3D | 15 % | 70 | 76 | Ciudad 2.0 y 2.2: metro usable, minijuegos e interiores en 3D, puentes de piedra, mobiliario urbano y vehículos a escala. |
 | Rendimiento | 10 % | 70 | 69 | La ciudad pesa más y sigue sin medirse en un PC real. |
-| Contenido | 20 % | 83 | 87 | Ciudad, minijuegos, documental y dinastías. |
-| Pulido | 10 % | 64 | 66 | Titulares traducidos. Los cuerpos de las noticias y el hardware real siguen pendientes. |
+| Contenido | 20 % | 83 | 88 | Ciudad con nombres, comercios e interiores; minijuegos, documental y dinastías. |
+| Pulido | 10 % | 64 | 72 | Narración entera en inglés y portugués; aviso técnico y fugas arreglados. Falta el hardware real. |
 | Originalidad | 10 % | 71 | 79 | Documental, ciudad que responde, modo foto, estatua del ídolo, Tribuna real y una vida entera en una partida. |
-| **Total** | | **≈74** | **≈77** | |
+| **Total** | | **≈74** | **≈78** | |
 
-Cuenta: 11,25 + 16,2 + 11,1 + 6,9 + 17,4 + 6,6 + 7,9 = **77,35**. Se pasa la meta de 75. Para 80+ hacen falta las 🔒 (hardware real, builds y licencias) y traducir los cuerpos de la narración.
+Cuenta: 11,25 + 16,2 + 11,4 + 6,9 + 17,6 + 7,2 + 7,9 = **78,45**. Se pasa la meta de 75. La narración ya está traducida; para 80+ hacen falta las 🔒 (medir en un PC y un Android reales, builds y licencias).
 
 **Ciudad 2.1 (7-10-2026, tarde)**
 - Metro usable: entrar por la boca, esperar en el andén, subir, viajar dentro del vagón (asientos, barras, puertas que se abren, rótulo LED), mirar por la ventana y bajar en otra estación. Estaciones subterráneas con su vestíbulo.
@@ -392,6 +392,13 @@ Cuenta: 11,25 + 16,2 + 11,1 + 6,9 + 17,4 + 6,6 + 7,9 = **77,35**. Se pasa la met
 - 50 calles con nombre (placas y HUD), parques con nombre, fuente y juegos, estaciones de metro con tema propio.
 - Instalaciones por dentro: 15 salas con gente trabajando.
 - Puentes de piedra con arcos; vehículos a medidas reales y autobús de 12 m.
+
+**Narración traducida (7-10-2026, punto 10 de «Se puede hacer aquí»)** ✅
+- Inglés y portugués para las noticias (títulos y cuerpos), la prensa (preguntas, respuestas, titulares, tertulianos), el vestuario, las charlas, las redes y la Carrera de Jugador: 1.064 frases y plantillas.
+- Herramientas: `herramientas/extraer_narracion.py` saca las plantillas del código (nombres y cifras pasan a ser huecos) y `herramientas/montar_narracion.py` arma `datos/narracion.json`.
+- El traductor gana dos pasos: los textos de varias oraciones se traducen frase a frase, y el registro de la portada (texto enriquecido) también se traduce.
+- Se cambiaron dos motivos de retiro que atribuían religión o política a un jugador (podía ser real).
+- Los otros seis idiomas siguen con la narración en castellano.
 
 **Fase 5 — plan original**
 - Documental de la temporada.
