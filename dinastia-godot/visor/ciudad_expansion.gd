@@ -332,6 +332,8 @@ func construir() -> void:
 	_orillas_nucleo()
 	_obras_en_calle()
 	cuenta["autopista"] = Autopista.montar(b)
+	_parque_eolico()
+	_deposito_agua()
 	_volcar_lotes()
 
 func _cargar_modelos() -> void:
@@ -718,11 +720,12 @@ func _instalacion(uso: String, r: Rect2) -> void:
 	match uso:
 		"plaza_mayor":
 			nombre = "Plaza Mayor"
-			b._caja_en(Vector3(c.x, 0.26, c.z), Vector3(w - 4.0, 0.1, f - 4.0), b._mat_simple(Color(0.78, 0.72, 0.62), 0.85))
+			b._caja_en(Vector3(c.x, 0.26, c.z), Vector3(w - 4.0, 0.1, f - 4.0), b._mat_simple(Color(0.62, 0.57, 0.5), 0.85))
 			var fuente := b._cil_en(c + Vector3(0, 0.7, 0), 7.0, 1.0, _mat["piedra"])
 			fuente.name = "Fuente"
 			b._cil_en(c + Vector3(0, 1.1, 0), 6.0, 0.3, _mat["agua"])
-			b._cil_en(c + Vector3(0, 3.0, 0), 0.8, 4.0, _mat["piedra"])
+			_estatua_idolo(c + Vector3(0, 0, -f * 0.3))
+			_mural(c + Vector3(-w * 0.5 + 1.0, 0, 0), PI * 0.5)
 			var esquinas: Array = []
 			for sx: float in [-1.0, 1.0]:
 				for sz: float in [-1.0, 1.0]:
@@ -847,6 +850,68 @@ func _instalacion(uso: String, r: Rect2) -> void:
 		b._rotulo(c + Vector3(0, 30.0, 0), nombre, Color(1, 1, 1), 22)
 		b.puntos_clic.append({"k": "ciudad_" + uso, "n": nombre, "pos": c, "estado": "ciudad"})
 	cuenta["instalaciones"] = int(cuenta.get("instalaciones", 0)) + 1
+
+## LA ESTATUA DEL ÍDOLO (originalidad): en la Plaza Mayor, un futbolista de
+## bronce de 5 m sobre su pedestal, con la placa del ídolo del club (su última
+## leyenda, o su capitán). Cambia con la historia de tu partida.
+func _estatua_idolo(p: Vector3) -> void:
+	var nombre := String(b.datos.get("idolo", ""))
+	b._caja_en(p + Vector3(0, 1.5, 0), Vector3(5.0, 3.0, 5.0), _mat["piedra"])
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(nombre)
+	var d := PeatonQ.crear(rng)
+	if not d.is_empty():
+		var n: Node3D = d["nodo"]
+		b.add_child(n)
+		PeatonQ.terminar(d)
+		n.position = p + Vector3(0, 3.0, 0)
+		n.scale = Vector3.ONE * 2.9
+		n.rotation.y = 0.0
+		var bronce := StandardMaterial3D.new()
+		bronce.albedo_color = Color(0.55, 0.38, 0.2)
+		bronce.metallic = 0.85
+		bronce.roughness = 0.35
+		_bronce(n, bronce)
+	if nombre != "":
+		var l := Label3D.new()
+		l.text = "A %s\nídolo de %s" % [nombre, String(b.datos.get("club", {}).get("nombre", ""))]
+		l.font_size = 48
+		l.pixel_size = 0.02
+		l.modulate = Color(0.95, 0.85, 0.55)
+		l.outline_size = 6
+		l.position = p + Vector3(0, 1.6, 2.6)
+		b.add_child(l)
+	cuenta["estatua"] = nombre
+
+## Todo el cuerpo en bronce y quieto (sin animación: es una estatua).
+func _bronce(n: Node, m: Material) -> void:
+	if n is MeshInstance3D:
+		(n as MeshInstance3D).material_override = m
+	if n is AnimationPlayer:
+		(n as AnimationPlayer).seek(0.35, true)
+		(n as AnimationPlayer).speed_scale = 0.0
+	for h in n.get_children():
+		_bronce(h, m)
+
+## UN MURAL DEL CLUB en una medianera: franjas de sus colores y su nombre.
+func _mural(p: Vector3, giro: float) -> void:
+	var c1 := b._color_club("c1", Color(0.2, 0.5, 0.3))
+	var c2 := b._color_club("c2", Color(1, 1, 1))
+	var muro := b._caja_en(p + Vector3(0, 9.0, 0), Vector3(1.0, 18.0, 30.0), _mat["claro"], giro)
+	muro.rotation.y = 0.0
+	for k in 5:
+		var franja := b._caja_en(p + Vector3(0.55, 3.0 + float(k) * 3.4, 0), Vector3(0.1, 2.6, 28.0), b._mat_simple(c1 if k % 2 == 0 else c2, 0.7))
+		franja.rotation.x = 0.18
+	var l := Label3D.new()
+	l.text = String(b.datos.get("club", {}).get("nombre", "")).to_upper()
+	l.font_size = 96
+	l.pixel_size = 0.05
+	l.modulate = Color.WHITE
+	l.outline_size = 12
+	l.outline_modulate = Color(0, 0, 0, 0.8)
+	l.position = p + Vector3(0.7, 15.0, 0)
+	l.rotation.y = PI * 0.5
+	b.add_child(l)
 
 func _bandera_mastil(p: Vector3) -> void:
 	b._cil_en(p + Vector3(0, 7.0, 0), 0.15, 14.0, _mat["claro"])
@@ -983,6 +1048,51 @@ func _obras_en_calle() -> void:
 		b._caja_en(centro + Vector3(0, 0.6, 0) + (Vector3(0, 0, 10.5) if vertical else Vector3(10.5, 0, 0)), Vector3(3.2, 1.0, 0.2) if vertical else Vector3(0.2, 1.0, 3.2), valla)
 		n += 1
 	cuenta["obras_calle"] = n
+
+## EL PARQUE EÓLICO en las lomas del noroeste, fuera de la autopista: diez
+## molinos de 45 m con las aspas girando (cada uno a su ritmo).
+func _parque_eolico() -> void:
+	var blanco := b._mat_simple(Color(0.93, 0.94, 0.95), 0.4)
+	for k in 10:
+		var ang := -2.3 + float(k) * 0.12
+		var r := 1750.0 + float(k % 3) * 120.0
+		var p := Vector3(cos(ang) * r, 0, sin(ang) * r)
+		p.y = b.altura_en(p.x, p.z)
+		b._cil_en(p + Vector3(0, 22.5, 0), 1.2, 45.0, blanco, 0.7)
+		b._caja_en(p + Vector3(0, 45.5, 0.8), Vector3(2.2, 2.2, 5.0), blanco)
+		var g := Girador.new()
+		g.vel = 0.8 + float(k % 4) * 0.15
+		g.position = p + Vector3(0, 45.5, 3.6)
+		g.rotation.y = 0.0
+		b.add_child(g)
+		for a in 3:
+			var pala := MeshInstance3D.new()
+			var bm := BoxMesh.new()
+			bm.size = Vector3(1.2, 20.0, 0.3)
+			pala.mesh = bm
+			pala.material_override = blanco
+			pala.rotation.z = TAU * float(a) / 3.0
+			pala.position = Vector3(sin(TAU * float(a) / 3.0) * -10.0, cos(TAU * float(a) / 3.0) * 10.0, 0)
+			g.add_child(pala)
+	cuenta["molinos"] = 10
+
+## El depósito de agua de la ciudad: una torre con su tanque, en el oeste.
+func _deposito_agua() -> void:
+	var p := Vector3(-990, 0, 440)
+	var gris := b._mat_simple(Color(0.62, 0.64, 0.66), 0.6)
+	for sx: float in [-1.0, 1.0]:
+		for sz: float in [-1.0, 1.0]:
+			b._cil_en(p + Vector3(sx * 5.0, 14.0, sz * 5.0), 0.6, 28.0, gris)
+	b._cil_en(p + Vector3(0, 33.0, 0), 9.0, 10.0, b._mat_simple(Color(0.85, 0.87, 0.9), 0.4))
+	var l := Label3D.new()
+	l.text = String(b.datos.get("club", {}).get("nombre", "")).to_upper()
+	l.font_size = 72
+	l.pixel_size = 0.04
+	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	l.modulate = b._color_club("c1", Color(0.2, 0.5, 0.3))
+	l.outline_size = 10
+	l.position = p + Vector3(0, 33.0, 0)
+	b.add_child(l)
 
 ## Las orillas del río a su paso por el núcleo: paseo y árboles en las dos
 ## márgenes, entre el anillo exterior y el bulevar.
