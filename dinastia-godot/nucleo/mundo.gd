@@ -1859,9 +1859,16 @@ func _subir_de_cantera(c: Club) -> void:
 				tiene += 1
 		for k in maxi(0, int(entrada[1]) - tiene):
 			faltan.append(demarcacion)
+	## Una línea VACÍA se repone aunque el plantel esté lleno (la prueba larga
+	## encontró un club sin delanteros con 25 fichas); el resto, hasta 24.
+	var lineas := {}
+	for j0 in c.plantilla:
+		lineas[j0.pos] = true
 	for demarcacion in faltan:
-		if c.plantilla.size() >= 24:
-			break
+		var vacia := not lineas.has(Datos.grupo(demarcacion))
+		if c.plantilla.size() >= 24 and not vacia:
+			continue
+		lineas[Datos.grupo(demarcacion)] = true
 		var edad := Azar.ent(17, 20)
 		## El canterano entra flojo y con techo: media baja, potencial alto. Es
 		## lo que hace que la cantera sea una apuesta y no una fuente de cracks.
