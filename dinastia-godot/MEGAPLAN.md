@@ -42,7 +42,7 @@ Estados:
 | Infraestructura del estadio, cinemáticas, ciudad 3D, optimización, creador estilo Los Sims, ropa, mascotas 3D, mini animaciones, tipos de simulación, barra de ajustes desplegable, variantes de estadio, entrevistas, eventos | ✅ | Bloques B1-B16 del ROADMAP |
 | Música libre en español | ⛔ | El usuario la descartó el 26-9 |
 | Pantalla gigante con tabla, goleadores y resultado | ✅ | |
-| Athletic Club: solo cantera local y apellidos por nacionalidad | ✅ | 🟡 falta el dato de **región de origen** del jugador |
+| Athletic Club: solo cantera local y apellidos por nacionalidad | ✅ | Región de origen (`Jugador.region`, Euskal Herria) hecha en C3 y probada. Solo falta el lugar de nacimiento REAL de los vascos reales de otros clubes (dato real nuevo para `pack_real.json`). |
 | Banquillo mejorado, historia real y guiños (la Ruca, Superclásico, Clásico universitario) | ✅ | Con historia para todos los clubes |
 | Escudos coherentes en la rueda de prensa; cambio de escudo como noticia | ✅ | |
 | El clima de la ciudad es el del estadio e influye en jugadores y prensa | ✅ | |
@@ -126,7 +126,7 @@ Estados:
 4. **Plantillas fijas** para los 128 clubes que no están en el pack.
 5. **Mini-juego de representantes**: la mecánica de agentes existe; falta la negociación como juego.
 6. **Banderas en el estudio** del sorteo y la rueda de prensa (hoy no hay ninguna).
-7. **Región de origen del jugador**: para la regla del Athletic Club, que hoy usa el país.
+7. ✅ **Región de origen del jugador**: ya existía (C3). Pendiente solo el dato real de nacimiento de los vascos reales fuera del Athletic.
 8. ✅ **Leyes laborales de México y Egipto**: verificadas el 7-10-2026 (México baja 2 h al año desde 2027; Egipto, Ley 14/2025, 48 h).
 9. **Túnel navegable**: espera al modo caminar por el estadio.
 10. **Traducir la narración** (noticias, prensa, vestuario), al menos al inglés.
