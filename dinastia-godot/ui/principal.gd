@@ -2779,7 +2779,14 @@ func _nueva_temporada() -> void:
 	if mundo.temporada_en_curso():
 		_escribir("[color=#e05555]Todavía queda calendario por jugar.[/color]")
 		return
+	## EL DOCUMENTAL (fase 5): se arma ANTES del cierre, que reinicia la tabla
+	## y las estadísticas; se proyecta al final del cierre.
+	var guion_doc := DocumentalTemporada.guion(mundo)
+	if mundo.mercado != null:
+		mundo.mercado.fichajes_temporada.clear()
 	var resumen := mundo.nueva_temporada()
+	if not guion_doc.is_empty():
+		(func() -> void: DocumentalTemporada.abrir(self, guion_doc, _retrato)).call_deferred()
 	## `mundo.nueva_temporada()` resortea los continentales por dentro
 	## (`_sortear_continentales()`, instancias NUEVAS cada vez): sin esta llamada,
 	## el sorteo y el aviso de campeón/ronda de Champions-Libertadores solo

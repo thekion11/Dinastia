@@ -21,6 +21,7 @@ const MENUS := [
 		"lema": "Lo que el club fue y lo que tú estás escribiendo.",
 		"colores": ["#140d07", "#2a1d10", "#e0a95a"], "subs": [
 		{"tab": "Legado", "label": "Historia del club", "icono": "🏛️", "desc": "Fundación, épocas doradas, clásicos y tu legado."},
+		{"accion": "documental", "label": "Documental de la temporada", "icono": "🎬", "desc": "Tu año contado como una película."},
 		{"tab": "Récords", "secc": "records", "label": "Récords", "icono": "📈", "desc": "Goleadores, rachas y marcas de todos los tiempos."},
 		{"tab": "Récords", "secc": "memoria", "label": "Memoria", "icono": "🕯️", "desc": "El salón de la fama y los que ya no están."},
 		{"tab": "Récords", "secc": "rivales", "label": "Rivales", "icono": "⚔️", "desc": "Clásicos, cara a cara y cuentas pendientes."},
@@ -154,6 +155,10 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			PanelMeta.abrir(p, p.mundo)
 		"minijuegos":
 			SalaMinijuegos.abrir(p, p.mundo)
+		"documental":
+			## El último cerrado; si todavía no hay, el avance de la que se juega.
+			var caps := DocumentalTemporada.ultimo if not DocumentalTemporada.ultimo.is_empty() else DocumentalTemporada.guion(p.mundo)
+			DocumentalTemporada.abrir(p, caps, p._retrato)
 
 func _montar() -> void:
 	set_anchors_preset(Control.PRESET_LEFT_WIDE)

@@ -123,6 +123,7 @@ func _ready() -> void:
 	_probar_ciudad_grande()
 	_probar_minijuegos()
 	_probar_dinastias()
+	_probar_documental()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5000,6 +5001,33 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## EL DOCUMENTAL DE LA TEMPORADA (fase 5): cuenta datos reales del año.
+func _probar_documental() -> void:
+	_titulo("DOCUMENTAL DE LA TEMPORADA (FASE 5)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 303)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var sem := 0
+	while m.temporada_en_curso() and sem < 80:
+		m.avanzar_semana()
+		sem += 1
+	var caps := DocumentalTemporada.guion(m)
+	_comprobar(caps.size() >= 6, "%d capítulos en el documental" % caps.size())
+	var mio := m.mi_club()
+	var gol: Jugador = null
+	for j: Jugador in mio.plantilla:
+		if gol == null or j.goles > gol.goles:
+			gol = j
+	var dice_goleador := false
+	var dice_veredicto := false
+	for cap: Dictionary in caps:
+		if String(cap["titulo"]).contains("goleador") and String(cap["texto"]).contains(gol.nombre) and String(cap["texto"]).contains(str(gol.goles)):
+			dice_goleador = true
+		if String(cap["titulo"]).contains("veredicto"):
+			dice_veredicto = true
+	_comprobar(dice_goleador, "el capítulo del goleador nombra al de verdad (%s, %d)" % [gol.nombre, gol.goles])
+	_comprobar(dice_veredicto, "hay veredicto final con el puesto")
 
 ## DINASTÍAS FAMILIARES (fase 5): tu hijo llega a la cantera que diriges.
 func _probar_dinastias() -> void:
