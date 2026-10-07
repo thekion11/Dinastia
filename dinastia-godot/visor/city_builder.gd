@@ -2257,6 +2257,13 @@ const RUTAS_COMERCIAL := [
 	"res://assets/ciudad/kenney_comercial_extra/building-h.glb",
 	"res://assets/ciudad/kenney_comercial_extra/building-j.glb",
 	"res://assets/ciudad/kenney_comercial_extra/building-l.glb",
+	## 7-10-2026: las seis versiones del kit básico que quedaban sin poner.
+	"res://assets/ciudad/kenney_comercial/building-b.glb",
+	"res://assets/ciudad/kenney_comercial/building-d.glb",
+	"res://assets/ciudad/kenney_comercial/building-f.glb",
+	"res://assets/ciudad/kenney_comercial/building-h.glb",
+	"res://assets/ciudad/kenney_comercial/building-j.glb",
+	"res://assets/ciudad/kenney_comercial/building-l.glb",
 ]
 
 ## Naves para la zona industrial del terreno sur: los modelos "de poco
@@ -3821,6 +3828,8 @@ const PIEZAS := ["debris-bolt", "debris-bumper", "debris-door-window", "debris-d
 	"debris-drivetrain", "debris-nut", "debris-plate-a", "debris-plate-b", "debris-plate-small-a",
 	"debris-plate-small-b", "debris-spoiler-a", "debris-spoiler-b", "debris-tire"]
 const KARTING_EN := Vector3(118.0, 0, 468.0)
+const RUEDAS_TODAS := ["wheel-default", "wheel-dark", "wheel-racing", "wheel-truck", "wheel-tractor-back",
+	"wheel-tractor-front", "wheel-tractor-dark-back", "wheel-tractor-dark-front"]
 
 static func _extra(nombre: String) -> PackedScene:
 	var r := "res://assets/ciudad/kenney_cars_extra/%s.glb" % nombre
@@ -3841,6 +3850,13 @@ func _poner_extra(nombre: String, pos: Vector3, esc: float, giro: float) -> Node
 func _desguace(centro: Vector3, semilla: int) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semilla
+	## Todas las piezas y ruedas del kit al menos una vez (7-10-2026).
+	for k in PIEZAS.size():
+		_poner_extra(PIEZAS[k], centro + Vector3(-14.0 + float(k) * 2.1, 0, 11.0), 2.4, rng.randf() * TAU)
+	for k in RUEDAS_TODAS.size():
+		var rr := _poner_extra(RUEDAS_TODAS[k], centro + Vector3(-12.0 + float(k) * 2.6, 0.5, -11.0), 2.2, 0.0)
+		if rr != null:
+			rr.rotation.x = PI * 0.5
 	for i in 6:
 		var p := centro + Vector3(rng.randf_range(-12.0, 12.0), 0, rng.randf_range(-8.0, 8.0))
 		var rueda: String = RUEDAS[rng.randi() % RUEDAS.size()]
