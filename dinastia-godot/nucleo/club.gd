@@ -57,9 +57,20 @@ func plantel() -> Array[Jugador]:
 func disponibles() -> Array[Jugador]:
 	return plantilla.filter(func(j: Jugador) -> bool: return j.disponible())
 
+## Fichajes que ocupan cupo por temporada (año -> cuántos), para las ligas
+## que limitan los fichajes extracomunitarios por temporada (Italia).
+var fichajes_cupo: Dictionary = {}
+## «cumplir»: el once se corrige solo a las reglas de la liga y el mercado no
+## deja pasarse del cupo. «incumplir»: tú decides y la federación multa.
+var ley_politica := "cumplir"
+var cupo_cache: Dictionary = {}
+
 func fichar(j: Jugador) -> void:
 	if j.club_id == id:
 		return
+	if int(LeyesPais.reglas(pais).get("no_ue_temp", 0)) > 0 and LeyesPais.ocupa_cupo(j, pais):
+		var k := str(LeyesPais.anio_actual)
+		fichajes_cupo[k] = int(fichajes_cupo.get(k, 0)) + 1
 	j.club_id = id
 	if not plantilla.has(j):
 		plantilla.append(j)
@@ -136,7 +147,8 @@ func once(f: String = "") -> Array[Jugador]:
 	## dejo de ser valido, se arma el automatico.
 	var manual := _once_manual()
 	if not manual.is_empty():
-		return manual
+		## Si el club decidió incumplir, sale el once que eligió (y paga).
+		return manual if ley_politica == "incumplir" else LeyesPais.ajustar_once(self, manual)
 	var forma := f if f != "" else tactica.formacion
 	var forms: Dictionary = Datos.tabla("FORMS")
 	var def: Dictionary = forms.get(forma, forms.get("4-3-3", {}))
@@ -200,7 +212,8 @@ func once(f: String = "") -> Array[Jugador]:
 	for i in ranuras.size():
 		if asignado.has(i):
 			elegidos.append(asignado[i])
-	return elegidos
+	## Las reglas de la liga de este club (cupo en cancha, juveniles).
+	return LeyesPais.ajustar_once(self, elegidos)
 
 func _es_puesto_portero(ranura: Variant) -> bool:
 	return _es_puesto_portero_str(String(ranura[0]))

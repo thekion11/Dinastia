@@ -189,6 +189,12 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   frases nuevas: volver a extraer, traducir lo que falte, montar. Se quitaron dos
   motivos de retiro con religión/política. Nota ≈78. Lo que queda del MEGAPLAN es
   🔒 del dueño (hardware, builds, keystore, licencias).
+  7-10 PEDIDO: «las leyes deben ser por cada país según el equipo» y «se puede
+  incumplir la ley a cambio de multas (más dinámico) y optimizar». HECHO:
+  `nucleo/leyes_pais.gd` (24 países: cupos plantel/cancha, criterio extranjero/
+  extracomunitario/no formado, min nacionales GER, fichajes no UE ITA, juveniles
+  CHI/BOL), `Club.ley_politica` cumplir/incumplir (Federación), multas crecientes
+  y -3 pts desde la 3.ª alineación indebida (`Federacion.revisar_leyes_pais`).
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.

@@ -393,6 +393,20 @@ Cuenta: 11,25 + 16,2 + 11,4 + 6,9 + 17,6 + 7,2 + 7,9 = **78,45**. Se pasa la met
 - Instalaciones por dentro: 15 salas con gente trabajando.
 - Puentes de piedra con arcos; vehículos a medidas reales y autobús de 12 m.
 
+**Leyes por país (7-10-2026, pedido: «las leyes deben ser por cada país en base al equipo»; «se puede incumplir la ley a cambio de multas»)** ✅
+- `nucleo/leyes_pais.gd`: cada club juega con las reglas de SU liga, verificadas en la prensa y normas de 2026:
+  - cupo en plantel y en cancha, y qué cuenta como «de fuera»: extranjero (la mayoría), extracomunitario (España 3, Francia 4) o no formado en el país (Liga MX 9/7, Premier 17 de 25);
+  - Alemania: 12 nacionales; Italia: 2 fichajes extracomunitarios por temporada;
+  - juveniles obligatorios: Chile (sub-21) y Bolivia (sub-20 y sub-23).
+  - Paraguay y Venezuela, «por verificar»: no hay cifra publicada para 2026.
+- Se aplica a tu club y a la IA, en el mercado y en el once. El tope que vote la asamblea se suma si es más estricto.
+- **Cumplir o incumplir** (pantalla de Federación):
+  - cumpliendo, el once se corrige solo y te avisa;
+  - incumpliendo, fichas y alineas lo que quieras y pagas: multa semanal creciente por plantel fuera de cupo, y multa creciente por alineación indebida, con 3 puntos menos desde la tercera;
+  - cada infracción enfada al tribunal y a la directiva.
+- Optimizado: el recuento del cupo se recuerda por club y semana, y las ligas sin reglas de cancha salen al instante.
+- Arreglo de paso: las noticias de `Contratos` (cambios de ley) no estaban conectadas a la portada.
+
 **Narración traducida (7-10-2026, punto 10 de «Se puede hacer aquí»)** ✅
 - Inglés y portugués para las noticias (títulos y cuerpos), la prensa (preguntas, respuestas, titulares, tertulianos), el vestuario, las charlas, las redes y la Carrera de Jugador: 1.064 frases y plantillas.
 - Herramientas: `herramientas/extraer_narracion.py` saca las plantillas del código (nombres y cifras pasan a ser huecos) y `herramientas/montar_narracion.py` arma `datos/narracion.json`.

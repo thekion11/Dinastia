@@ -122,6 +122,8 @@ func _ready() -> void:
 	_probar_ciudad_animo()
 	_probar_ciudad_grande()
 	_probar_minijuegos()
+	_probar_leyes_pais()
+	_probar_incumplir_ley()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -7256,10 +7258,18 @@ func _probar_motor_libre() -> void:
 	var gd := int(a["goles"][1]) + int(b["goles"][0])
 	_comprobar(gf > gd, "el equipo mejor gana sin guion (%d-%d en dos partidos)" % [gf, gd])
 	## Y las habilidades del club (el bono de maestrías y árbol) también aquí.
-	var c1 := MotorLibre.new(debil.once(), debil.once(), 1.2, 1.0, 3).simular()
-	var c2 := MotorLibre.new(debil.once(), debil.once(), 1.0, 1.2, 4).simular()
-	var xg_bono := float(c1["xg"][0]) + float(c2["xg"][1])
-	var xg_sin := float(c1["xg"][1]) + float(c2["xg"][0])
+	## Varias semillas: con una sola, el azar de un partido puede más que un
+	## bono del 20 % (pasó al cambiar el once por las reglas de la liga).
+	var xg_bono := 0.0
+	var xg_sin := 0.0
+	## Dos clubes parecidos y DISTINTOS: el motor guarda estado en cada
+	## jugador, y un equipo contra sí mismo comparte los mismos objetos.
+	var debil2: Club = cl[cl.size() - 2]
+	for sem in 6:
+		var c1 := MotorLibre.new(debil.once(), debil2.once(), 1.2, 1.0, 3 + sem * 2).simular()
+		var c2 := MotorLibre.new(debil.once(), debil2.once(), 1.0, 1.2, 4 + sem * 2).simular()
+		xg_bono += float(c1["xg"][0]) + float(c2["xg"][1])
+		xg_sin += float(c1["xg"][1]) + float(c2["xg"][0])
 	_comprobar(xg_bono > xg_sin, "con el bono del club se generan más ocasiones (xG %.1f vs %.1f)" % [xg_bono, xg_sin])
 	## El jugador controlado.
 	var ml := MotorLibre.new(fuerte.once(), debil.once(), 1.0, 1.0, 9)
@@ -7461,3 +7471,116 @@ func _probar_disenos_kit() -> void:
 	var u := DisenosKit.uniforms(DisenosKit.kit_de_club(c2), 10)
 	_comprobar(int(u["familia"]) == 26 and (u["acc_guantes"] as Color).a > 0.5 and int(u["dorsal"]) == 10, "el shader recibe diseño, accesorios y dorsal")
 	_comprobar(DisenosKit.textura_camiseta("tartan", cols, 1, 64) != null, "la miniatura 2D se dibuja")
+
+
+## LAS REGLAS DE CADA PAÍS (7-10-2026): cada club con las de su liga.
+func _jug_ley(id: String, pais: String, pos: String, ovr: int, edad: int = 26) -> Jugador:
+	var j := Jugador.new()
+	j.id = id
+	j.nombre = id
+	j.pais = pais
+	j.pos = pos
+	j.pos_e = {"POR": "POR", "DEF": "DFC", "MED": "MC", "DEL": "DC"}[pos]
+	j.ovr = ovr
+	j.edad = edad
+	return j
+
+func _probar_leyes_pais() -> void:
+	_titulo("LEYES POR PAÍS: CUPOS Y JUVENILES SEGÚN LA LIGA DEL CLUB")
+	## Chile: 6 extranjeros en el plantel, 5 en cancha y un sub-21 en el once.
+	var c := Club.new("chi_test", "Prueba CHI")
+	c.pais = "CHI"
+	var lineas := ["POR", "DEF", "DEF", "DEF", "DEF", "MED", "MED", "MED", "DEL", "DEL", "DEL"]
+	for k in 11:
+		c.plantilla.append(_jug_ley("e%d" % k, "ARG" if k < 7 else "CHI", lineas[k], 80 if k < 7 else 70))
+	for k in 6:
+		c.plantilla.append(_jug_ley("b%d" % k, "CHI", lineas[(k % 10) + 1], 65, 19 if k == 0 else 27))
+	for j: Jugador in c.plantilla:
+		j.club_id = c.id
+	var once := c.once()
+	var de_fuera := 0
+	var sub21 := false
+	for j: Jugador in once:
+		if j.pais != "CHI":
+			de_fuera += 1
+		if j.edad <= 21:
+			sub21 = true
+	_comprobar(once.size() == 11 and de_fuera <= 5 and sub21, "Chile: once con %d extranjeros (máx. 5) y sub-21 = %s" % [de_fuera, sub21])
+	_comprobar(LeyesPais.motivo_fichaje(c, _jug_ley("nuevo", "URU", "DEL", 75)) != "", "Chile: con 7 extranjeros no se ficha otro")
+	_comprobar(LeyesPais.motivo_fichaje(c, _jug_ley("local", "CHI", "DEL", 75)) == "", "Chile: un chileno siempre cabe")
+	## España: cuentan los extracomunitarios, no los europeos.
+	var e := Club.new("esp_test", "Prueba ESP")
+	e.pais = "ESP"
+	for k in 3:
+		e.plantilla.append(_jug_ley("br%d" % k, "BRA", "MED", 75))
+	_comprobar(LeyesPais.motivo_fichaje(e, _jug_ley("arg", "ARG", "DEL", 75)) != "", "España: el cuarto extracomunitario no entra")
+	_comprobar(LeyesPais.motivo_fichaje(e, _jug_ley("fra", "FRA", "DEL", 75)) == "", "España: un francés no ocupa cupo")
+	## Brasil: sin tope en el plantel, 9 en cancha.
+	var b := Club.new("bra_test", "Prueba BRA")
+	b.pais = "BRA"
+	for k in 12:
+		b.plantilla.append(_jug_ley("x%d" % k, "URU", "MED", 75))
+	_comprobar(LeyesPais.motivo_fichaje(b, _jug_ley("otro", "ARG", "DEL", 75)) == "", "Brasil: sin tope de extranjeros en el plantel")
+	## Cada liga tiene su resumen para la pantalla de Federación.
+	_comprobar(LeyesPais.resumen("MEX").size() >= 3 and LeyesPais.resumen("ZZZ").is_empty(), "resumen de reglas por país")
+	var sin_ley := 0
+	for p in ["CHI", "ARG", "BRA", "URU", "PAR", "PER", "ECU", "COL", "VEN", "BOL", "ESP", "ENG", "ITA", "GER", "FRA", "JPN", "KOR", "KSA", "EGY", "MAR", "RSA", "AUS", "MEX", "USA"]:
+		if LeyesPais.reglas(p).is_empty() or not Contratos.JORNADA.has(p):
+			sin_ley += 1
+	_comprobar(sin_ley == 0, "los 24 países del juego tienen reglas de liga y jornada (%d sin)" % sin_ley)
+
+
+## INCUMPLIR LA LEY SE PAGA (7-10-2026): multas que crecen y, desde la
+## tercera alineación indebida, puntos menos.
+func _probar_incumplir_ley() -> void:
+	_titulo("LEYES POR PAÍS: INCUMPLIR A CAMBIO DE MULTAS")
+	var m := Mundo.new()
+	m.generar(["CHI"], 7311)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mi := m.mi_club()
+	mi.saldo = 500000000
+	## Seis extranjeros en el once elegido (Chile permite 5 en cancha).
+	var once := mi.once()
+	var ids: Array[String] = []
+	for k in once.size():
+		if k >= 1 and k <= 7:
+			once[k].pais = "ARG"
+		ids.append(once[k].id)
+	mi.once_elegido = ids
+	var cuenta := 0
+	for j: Jugador in mi.once():
+		if j.pais != "CHI":
+			cuenta += 1
+	_comprobar(cuenta <= 5, "cumpliendo, el once se corrige solo (%d extranjeros)" % cuenta)
+	mi.ley_politica = "incumplir"
+	var cuenta2 := 0
+	for j: Jugador in mi.once():
+		if j.pais != "CHI":
+			cuenta2 += 1
+	var elegido := 0
+	for k in once.size():
+		if once[k].pais != "CHI":
+			elegido += 1
+	_comprobar(cuenta2 == elegido and cuenta2 > 5, "incumpliendo, sale el once que elegiste (%d extranjeros)" % cuenta2)
+	var liga: Liga = null
+	for l: Liga in m.ligas:
+		if l.clubes.has(mi):
+			liga = l
+	var pts0 := int(liga.tabla_puntos[mi.id]["pts"])
+	var s0 := mi.saldo
+	m.federacion.revisar_leyes_pais(m, mi)
+	var multa1 := s0 - mi.saldo
+	m.federacion.revisar_leyes_pais(m, mi)
+	var multa2 := s0 - mi.saldo - multa1
+	m.federacion.revisar_leyes_pais(m, mi)
+	_comprobar(multa1 > 0 and multa2 > multa1, "la multa crece al reincidir (%d → %d)" % [multa1, multa2])
+	_comprobar(int(liga.tabla_puntos[mi.id]["pts"]) == pts0 - 3, "a la tercera alineación indebida, 3 puntos menos")
+	_comprobar(int(m.federacion.infracciones_de(m.anio)["alin"]) == 3, "las infracciones se cuentan por temporada")
+	## Plantel: incumpliendo se puede fichar por encima del cupo.
+	var j_ext := Jugador.new()
+	j_ext.pais = "BRA"
+	_comprobar(m.federacion.puede_fichar_extranjero(mi, j_ext) == "", "incumpliendo, el mercado te deja pasarte del cupo")
+	mi.ley_politica = "cumplir"
+	_comprobar(m.federacion.puede_fichar_extranjero(mi, j_ext) != "", "cumpliendo, no (7 extranjeros, cupo 6)")
+	mi.ley_politica = "incumplir"
+	_comprobar(Partida._dic_a_club(Partida._club_a_dic(mi)).ley_politica == "incumplir", "la política se guarda con la partida")

@@ -67,6 +67,7 @@
    "Se acaba el naming": "Naming rights end",
    "El contrato de los derechos de nombre llega a su fin. El estadio vuelve a llamarse como siempre.": "The naming rights contract comes to an end. The stadium goes back to its old name.",
    "⚖️ Cambia la jornada laboral": "⚖️ Working hours change",
+   "📜 Tu once incumple la regla de la liga": "📜 Your line-up breaks the league rules",
    "Mentoría en la cantera": "Mentoring in the academy",
    "El alumno sale al maestro": "Like master, like pupil",
    "Punto de habilidad de entrenador": "Coach skill point",
@@ -82,6 +83,8 @@
    "Nueva votación en la asamblea": "New vote in the assembly",
    "Multa por incumplir el cupo juvenil": "Fine for breaking the youth quota",
    "Saliste sin ningún sub-21 en el once y la federación te sanciona. El reglamento que votó la asamblea obliga a alinear al menos uno.": "You started without a single under-21 in the line-up and the federation fines you. The rule the assembly voted for requires at least one.",
+   "📜 Multa por plantel fuera de reglamento": "📜 Fine for an out-of-rules squad",
+   "📜 Alineación indebida": "📜 Ineligible line-up",
    "El líder se quedó sin corona": "The leader missed out on the crown",
    "Auditoría federativa superada": "Federation audit passed",
    "El club cumple los seis requisitos de licencia. Sin observaciones: puedes competir e inscribir jugadores con normalidad.": "The club meets all six licensing requirements. No remarks: you can compete and register players as normal.",
@@ -839,6 +842,7 @@
    "Se acaba el naming": "Acabam os naming rights",
    "El contrato de los derechos de nombre llega a su fin. El estadio vuelve a llamarse como siempre.": "O contrato de naming rights chega ao fim. O estádio volta ao nome de sempre.",
    "⚖️ Cambia la jornada laboral": "⚖️ Muda a jornada de trabalho",
+   "📜 Tu once incumple la regla de la liga": "📜 Seu time descumpre a regra da liga",
    "Mentoría en la cantera": "Mentoria na base",
    "El alumno sale al maestro": "Tal mestre, tal aluno",
    "Punto de habilidad de entrenador": "Ponto de habilidade de treinador",
@@ -854,6 +858,8 @@
    "Nueva votación en la asamblea": "Nova votação na assembleia",
    "Multa por incumplir el cupo juvenil": "Multa por descumprir a cota de base",
    "Saliste sin ningún sub-21 en el once y la federación te sanciona. El reglamento que votó la asamblea obliga a alinear al menos uno.": "Você começou sem nenhum sub-21 no time e a federação te pune. O regulamento votado pela assembleia obriga a escalar pelo menos um.",
+   "📜 Multa por plantel fuera de reglamento": "📜 Multa por elenco fora do regulamento",
+   "📜 Alineación indebida": "📜 Escalação irregular",
    "El líder se quedó sin corona": "O líder ficou sem a coroa",
    "Auditoría federativa superada": "Auditoria da federação aprovada",
    "El club cumple los seis requisitos de licencia. Sin observaciones: puedes competir e inscribir jugadores con normalidad.": "O clube cumpre os seis requisitos de licença. Sem observações: pode competir e inscrever jogadores normalmente.",
@@ -1762,6 +1768,11 @@
    "A comissão técnica de $1 decide não convocar $2 nesta data FIFA, atendendo ao pedido de descanso do clube."
   ],
   [
+   "^Tienes\\ (.+?)\\ jugador\\(es\\)\\ de\\ más\\ para\\ el\\ cupo\\ de\\ tu\\ liga\\.\\ Multa\\ de\\ (.+?),\\ y\\ crece\\ cada\\ semana\\ que\\ sigas\\ así\\.\\ (.+?)$",
+   "You have $1 player(s) over your league's quota. A $2 fine, and it grows every week you stay like this. $3",
+   "Você tem $1 jogador(es) a mais para a cota da sua liga. Multa de $2, e ela cresce a cada semana que continuar assim. $3"
+  ],
+  [
    "^El\\ tribunal\\ confirma\\ la\\ sanción\\ de\\ (.+?)\\ y\\ deja\\ constancia\\ de\\ que\\ el\\ club\\ recurre\\ demasiado\\.\\ Los\\ árbitros\\ toman\\ nota\\.$",
    "The tribunal upholds $1's ban and notes that the club appeals too often. The referees take note.",
    "O tribunal confirma a suspensão de $1 e registra que o clube recorre demais. Os árbitros anotam."
@@ -2610,6 +2621,11 @@
    "^Pagada\\ la\\ última\\ cuota\\ por\\ (.+?)\\.$",
    "Last instalment paid for $1.",
    "Paga a última parcela por $1."
+  ],
+  [
+   "^Salen\\ (.+?)\\ y\\ entran\\ (.+?)\\.\\ (.+?)$",
+   "Out: $1; in: $2. $3",
+   "Saem $1 e entram $2. $3"
   ],
   [
    "^(.+?)\\ ya\\ es\\ de\\ su\\ nueva\\ posición$",
