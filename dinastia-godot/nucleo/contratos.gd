@@ -38,7 +38,7 @@ const JORNADA := {
 	"ECU": [40, "Código del Trabajo", "8 horas diarias y 40 semanales.", true],
 	"COL": [44, "Ley 2101 de 2021", "Bajó a 44 en julio de 2025 y baja a 42 el 15 de julio de 2026.", true],
 	"VEN": [40, "LOTTT (2012)", "40 horas semanales.", true],
-	"MEX": [48, "Ley Federal del Trabajo", "Jornada diurna de 8 horas; se discute una reducción gradual a 40.", false],
+	"MEX": [48, "Constitución, art. 123 (reforma de 2026)", "48 horas en 2026; baja 2 horas al año desde 2027 hasta 40 en 2030 (DOF, 3-3-2026).", true],
 	"USA": [40, "Fair Labor Standards Act", "No es un tope: desde la hora 40 se pagan horas extra.", true],
 	"ESP": [40, "Estatuto de los Trabajadores, art. 34", "La rebaja a 37,5 horas no salió adelante en 2025.", true],
 	"ENG": [48, "Working Time Regulations 1998", "Tope medio de 48 horas; se puede renunciar por escrito.", true],
@@ -48,7 +48,7 @@ const JORNADA := {
 	"JPN": [40, "Ley de Normas Laborales", "8 horas diarias y 40 semanales.", true],
 	"KOR": [40, "Ley de Normas Laborales", "40 horas más un máximo de 12 extra (semana de 52).", true],
 	"KSA": [48, "Ley del Trabajo", "En Ramadán baja a 36 horas para los musulmanes.", true],
-	"EGY": [48, "Ley del Trabajo", "8 horas diarias.", false],
+	"EGY": [48, "Ley del Trabajo n.º 14 de 2025", "8 horas diarias o 48 semanales; vigente desde el 1-9-2025.", true],
 	"MAR": [44, "Código del Trabajo", "2.288 horas al año fuera del campo (unas 44 semanales).", true],
 	"RSA": [45, "Basic Conditions of Employment Act", "45 horas semanales.", true],
 	"AUS": [38, "National Employment Standards", "38 horas más horas adicionales razonables.", true],
@@ -58,6 +58,11 @@ const JORNADA := {
 const CAMBIOS := [
 	["CHI", 2026, 4, 26, 42, "La jornada legal en Chile baja de 44 a 42 horas semanales (Ley 21.561)."],
 	["COL", 2026, 7, 15, 42, "La jornada legal en Colombia baja de 44 a 42 horas semanales (Ley 2101)."],
+	## México (reforma del art. 123, DOF 3-3-2026): dos horas menos cada enero.
+	["MEX", 2027, 1, 1, 46, "La jornada legal en México baja de 48 a 46 horas semanales (reforma constitucional de 2026)."],
+	["MEX", 2028, 1, 1, 44, "La jornada legal en México baja a 44 horas semanales."],
+	["MEX", 2029, 1, 1, 42, "La jornada legal en México baja a 42 horas semanales."],
+	["MEX", 2030, 1, 1, 40, "La jornada legal en México llega a las 40 horas semanales."],
 	["CHI", 2028, 4, 26, 40, "La jornada legal en Chile llega a 40 horas semanales (Ley 21.561)."],
 ]
 
