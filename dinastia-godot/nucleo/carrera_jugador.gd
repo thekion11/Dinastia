@@ -47,6 +47,17 @@ var historial: Array = []         ## lo que decidiste: [{anio, semana, titulo, e
 var ofertas: Array = []           ## [{club_id, sueldo, semanas}]
 var hitos := {}                   ## eventos únicos que ya ocurrieron (id -> true)
 var ultima_vez := {}              ## id -> semana absoluta: los repetibles esperan 5 semanas
+## FASE 3 DEL MEGAPLAN: selección, eventos de verdad y el paso a entrenador.
+var goles_carrera := 0
+var pj_carrera := 0
+var caps := 0                     ## partidos con la selección
+var goles_sel := 0
+var convocatoria := {}            ## la de esta fecha FIFA: {pais, nombre, rival}
+var capitan := false
+var licencia := false             ## curso de entrenador hecho (licencia C)
+var retiro_anunciado := false
+var retirado := false
+var clubes_pasados: Array = []    ## nombres de los clubes donde jugaste
 var _rng := RandomNumberGenerator.new()
 
 # ---------------------------------------------------------------- creación
@@ -213,6 +224,7 @@ func semana(m: Mundo) -> Array:
 	var j := jugador(m)
 	if j == null:
 		return nuevos
+	revisar_convocatoria(m)
 	var ahora := m.anio * 60 + m.semana
 	var pool := _eventos_posibles(m, j).filter(func(e: Dictionary) -> bool:
 		return ahora - int(ultima_vez.get(String(e["id"]), -99)) >= 5)
@@ -292,17 +304,83 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 			"Quieren que seas su cara joven. Pagan bien, pero hay sesiones de fotos.",
 			[_op("Aceptas.", {"seguidores": 800, "fama": 4, "energia": -8}),
 			_op("Ahora no, primero el fútbol.", {"relacion": 2})], true))
-	if not hitos.has("seleccion") and j.ovr >= 68:
-		p.append(_ev("seleccion", "¡Convocado a la selección!",
-			"El seleccionador te incluye en la lista para la próxima fecha FIFA.",
-			[_op("Aceptas con orgullo.", {"fama": 10, "seguidores": 1500, "energia": -15, "moral": 10, "convocado": true}),
-			_op("Pides no ir para asentarte en el club.", {"relacion": 6, "fama": -2})], true))
 	if j.anios_contrato <= 1 and not hitos.has("renovacion_%d" % m.anio):
 		p.append(_ev("renovacion_%d" % m.anio, "La renovación",
 			"El club te ofrece renovar tres años con una subida de sueldo.",
 			[_op("Firmas.", {"contrato": 3, "relacion": 4}),
 			_op("Pides más dinero.", {"contrato": 3, "sueldo": 1.3, "relacion": -4}),
 			_op("Esperas ofertas.", {"fama": 1})], true))
+	## --- LOS EVENTOS DE LA FASE 3: cada uno sale de algo que te pasó de verdad.
+	if not hitos.has("debut") and pj_carrera >= 1:
+		p.append(_ev("debut", "Tu debut profesional",
+			"Ya jugaste tu primer partido oficial. En el vestuario te hacen el pasillo y el utilero te guarda la camiseta.",
+			[_op("La enmarcas para tu familia.", {"moral": 6, "seguidores": 120}),
+			_op("Se la regalas al chico de la cantera que te alcanzaba los balones.", {"relacion": 3, "fama": 2, "seguidores": 200})], true))
+	if not hitos.has("primer_gol") and goles_carrera >= 1:
+		p.append(_ev("primer_gol", "¡Tu primer gol!",
+			"La televisión repite tu gol una y otra vez. Te preguntan a quién se lo dedicas.",
+			[_op("A tu familia, que te llevaba a entrenar.", {"moral": 8, "seguidores": 300}),
+			_op("A la grada, que te apoyó desde el primer día.", {"fama": 4, "seguidores": 500}),
+			_op("Le haces el gesto de silencio a la grada rival.", {"fama": 7, "seguidores": 900, "relacion": -4})], true))
+	var veterano := _veterano(c, j)
+	if not hitos.has("mentor") and j.edad <= 20 and veterano != null:
+		p.append(_ev("mentor", "%s se ofrece a enseñarte" % veterano.nombre,
+			"El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento." % veterano.edad,
+			[_op("Aceptas: aprender de él es oro.", {"attr_%s" % String(FOCOS.get(foco, ["", "tir"])[1]): 2, "energia": -10, "relacion": 3}),
+			_op("Le das las gracias, pero prefieres descansar.", {"energia": 8})], true))
+	var pj_t := int(stats_temp["pj"])
+	if not hitos.has("cesion_%d" % m.anio) and j.edad <= 21 and pj_t >= 6 and float(stats_temp["titular"]) / float(pj_t) < 0.3:
+		p.append(_ev("cesion_%d" % m.anio, "El club te propone una cesión",
+			"Casi no juegas de titular. Un club más modesto te quiere a préstamo hasta final de temporada para darte minutos.",
+			[_op("Aceptas: necesitas jugar.", {"cesion": true}),
+			_op("Te quedas a pelear el puesto.", {"relacion": -2, "moral": -3})], true))
+	if not hitos.has("jugador_mes_%d" % m.anio) and (stats_temp["notas"] as Array).size() >= 4 and nota_media() >= 7.6:
+		p.append(_ev("jugador_mes_%d" % m.anio, "Jugador del mes",
+			"La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido." % nota_media(),
+			[_op("Lo levantas ante tu grada.", {"fama": 6, "seguidores": 600, "moral": 6}),
+			_op("Lo dedicas a tus compañeros.", {"fama": 4, "relacion": 4, "moral": 4})], true))
+	if not capitan and j.edad >= 25 and fama >= 45 and relacion_dt >= 65:
+		p.append(_ev("brazalete", "El brazalete de capitán",
+			"Se retira el capitán y el DT quiere que el brazalete sea tuyo.",
+			[_op("Lo aceptas con orgullo.", {"capitan": true, "relacion": 5, "fama": 5}),
+			_op("Pides que lo lleve alguien con más años en el club.", {"relacion": 3})], true))
+	if j.lesion >= 4 and not hitos.has("lesion_larga_%d" % m.anio):
+		p.append(_ev("lesion_larga_%d" % m.anio, "Una lesión larga",
+			"El médico te da %d semanas de baja. Te propone dos caminos para la recuperación." % j.lesion,
+			[_op("Recuperación prudente, sin prisas.", {"energia": 30, "moral": -4}),
+			_op("Plan acelerado para volver antes.", {"lesion_menos": 2, "lesion_riesgo": true, "relacion": 2})], true))
+	if not hitos.has("polemica") and seguidores >= 5000:
+		p.append(_ev("polemica", "Una polémica en las redes",
+			"Alguien desentierra un mensaje tuyo de cuando tenías 15 años. Arde Tribuna.",
+			[_op("Pides perdón en un vídeo sincero.", {"seguidores": -300, "relacion": 2, "fama": 1}),
+			_op("No dices nada y esperas a que pase.", {"seguidores": -800, "fama": -2}),
+			_op("Contestas con ironía.", {"seguidores": 1200, "fama": 3, "relacion": -5})], true))
+	var rival_ex := _rival_ex_club(m, c)
+	if rival_ex != "" and not hitos.has("ex_%s_%d" % [rival_ex, m.anio]):
+		p.append(_ev("ex_%s_%d" % [rival_ex, m.anio], "Vuelves a %s" % rival_ex,
+			"Esta semana te toca contra tu antiguo club. La prensa te pregunta cómo vas a celebrar si marcas.",
+			[_op("«No celebraré: les tengo respeto.»", {"fama": 2, "seguidores": 250, "moral": 3}),
+			_op("«Si marco, lo celebraré como siempre.»", {"fama": 4, "seguidores": 600, "moral": 5})], true))
+	if not hitos.has("oferta_extranjero") and fama >= 55 and c != null:
+		p.append(_ev("oferta_extranjero", "Te llaman del extranjero",
+			"Un club grande de otra liga pregunta por ti. Tu agente dice que es ahora o nunca.",
+			[_op("Le dices que escuche la oferta.", {"oferta_fuera": true, "fama": 2}),
+			_op("Quieres triunfar primero aquí.", {"relacion": 4, "moral": 3})], true))
+	if not licencia and not hitos.has("licencia") and j.edad >= 30:
+		p.append(_ev("licencia", "El curso de entrenador",
+			"La federación abre el curso de la licencia C para futbolistas en activo. Son clases los lunes.",
+			[_op("Te inscribes: algún día dirigirás.", {"licencia": true, "energia": -8}),
+			_op("Ahora no: solo piensas en jugar.", {})], true))
+	if not retiro_anunciado and j.edad >= 33 and not hitos.has("retiro_%d" % m.anio):
+		p.append(_ev("retiro_%d" % m.anio, "¿Cuánto te queda?",
+			"Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año." % j.edad,
+			[_op("Anuncias que te retiras a final de temporada.", {"retiro": true, "fama": 4, "seguidores": 800}),
+			_op("Sigues mientras el cuerpo aguante.", {"moral": 2})], true))
+	if _rng.randf() < 0.3:
+		p.append(_ev("nino_camiseta", "Un niño te espera a la salida",
+			"Un chico de unos ocho años lleva una cartulina con tu nombre y te pide la camiseta.",
+			[_op("Se la das y te sacas una foto con él.", {"moral": 4, "seguidores": 150, "fama": 1}),
+			_op("Le firmas la cartulina: vas con prisa.", {"seguidores": 20})]))
 	if energia < 30:
 		p.append(_ev("sobrecarga", "Molestias en el isquio",
 			"Llevas semanas sin parar. El médico te recomienda frenar.",
@@ -343,6 +421,20 @@ func resolver(m: Mundo, indice: int, opcion: int) -> String:
 		convocatorias += 1
 	if String(ef.get("agente", "")) != "":
 		agente = "Agente propio"
+	if bool(ef.get("capitan", false)):
+		capitan = true
+	if bool(ef.get("licencia", false)):
+		licencia = true
+	if bool(ef.get("retiro", false)):
+		retiro_anunciado = true
+	if j != null and int(ef.get("lesion_menos", 0)) > 0:
+		j.lesion = maxi(0, j.lesion - int(ef["lesion_menos"]))
+	if bool(ef.get("cesion", false)):
+		_ceder(m)
+	if bool(ef.get("oferta_fuera", false)) and j != null:
+		var fuera := _club_extranjero(m, j)
+		if fuera != null:
+			ofertas.append({"club_id": fuera.id, "sueldo": int(float(j.sueldo) * 2.2), "semanas": 3})
 	historial.append({"anio": m.anio, "semana": m.semana, "titulo": String(ev["titulo"]), "eleccion": String(o["texto"])})
 	eventos.remove_at(indice)
 	return String(o["texto"])
@@ -359,6 +451,8 @@ func aceptar_oferta(m: Mundo, i: int) -> bool:
 	var origen := club(m)
 	if origen != null:
 		origen.soltar(j)
+		if not clubes_pasados.has(origen.nombre):
+			clubes_pasados.append(origen.nombre)
 	destino.fichar(j)
 	j.sueldo = int(o["sueldo"])
 	j.anios_contrato = 3
@@ -376,6 +470,8 @@ func tras_partido(m: Mundo, d: Dictionary) -> void:
 	if min_jugados <= 0:
 		return
 	stats_temp["pj"] = int(stats_temp["pj"]) + 1
+	pj_carrera += 1
+	goles_carrera += int(d.get("goles", 0))
 	if bool(d.get("titular", true)):
 		stats_temp["titular"] = int(stats_temp["titular"]) + 1
 	stats_temp["goles"] = int(stats_temp["goles"]) + int(d.get("goles", 0))
@@ -400,6 +496,188 @@ func fin_de_temporada(m: Mundo) -> void:
 		"goles": int(stats_temp["goles"]), "asist": int(stats_temp["asist"]), "nota": snappedf(nota_media(), 0.01)})
 	stats_temp = {"pj": 0, "titular": 0, "goles": 0, "asist": 0, "notas": []}
 
+## El partido de liga de `c` esta semana ([local, visita] o []).
+static func partido_de_la_semana(m: Mundo, c: Club) -> Array:
+	if c == null:
+		return []
+	for l: Liga in m.ligas:
+		if not l.clubes.has(c) or not l.quedan_jornadas():
+			continue
+		for par: Array in l.calendario[l.jornada_actual]:
+			if par[0] == c or par[1] == c:
+				return par
+	return []
+
+func _veterano(c: Club, j: Jugador) -> Jugador:
+	if c == null:
+		return null
+	var mejor: Jugador = null
+	for o: Jugador in c.plantilla:
+		if o != j and o.edad >= 32 and (mejor == null or o.ovr > mejor.ovr):
+			mejor = o
+	return mejor
+
+## El rival de esta semana, si es un club donde ya jugaste.
+func _rival_ex_club(m: Mundo, c: Club) -> String:
+	if c == null or clubes_pasados.is_empty():
+		return ""
+	var par := partido_de_la_semana(m, c)
+	if par.size() < 2:
+		return ""
+	for cl: Club in [par[0], par[1]]:
+		if cl != c and clubes_pasados.has(cl.nombre):
+			return cl.nombre
+	return ""
+
+## Cesión: a un club de su país con 8-20 puntos menos de reputación.
+func _ceder(m: Mundo) -> void:
+	var j := jugador(m)
+	var origen := club(m)
+	if j == null or origen == null:
+		return
+	var candidatos: Array = []
+	for c: Club in m.clubes.values():
+		if c != origen and c.pais == origen.pais and c.rep <= origen.rep - 8 and c.rep >= origen.rep - 20:
+			candidatos.append(c)
+	if candidatos.is_empty():
+		return
+	var destino: Club = candidatos[_rng.randi() % candidatos.size()]
+	origen.soltar(j)
+	if not clubes_pasados.has(origen.nombre):
+		clubes_pasados.append(origen.nombre)
+	destino.fichar(j)
+	j.dorsal = _dorsal_libre(destino)
+	relacion_dt = 62
+	historial.append({"anio": m.anio, "semana": m.semana, "titulo": "Cesión", "eleccion": "Cedido a %s" % destino.nombre})
+
+func _club_extranjero(m: Mundo, j: Jugador) -> Club:
+	var mio := club(m)
+	var mejores: Array = []
+	for c: Club in m.clubes.values():
+		if mio != null and c.pais != mio.pais and c.rep >= mio.rep:
+			mejores.append(c)
+	return mejores[_rng.randi() % mejores.size()] if not mejores.is_empty() else null
+
+# ---------------------------------------------------------------- selección
+
+## Cupos por línea de una convocatoria (18 jugadores).
+const CUPOS_SEL := {"POR": 2, "DEF": 6, "MED": 6, "DEL": 4}
+
+## ¿Te convoca tu selección? Los mejores de tu país en tu línea, jueguen donde
+## jueguen. Solo en las fechas FIFA.
+func revisar_convocatoria(m: Mundo) -> bool:
+	convocatoria = {}
+	var j := jugador(m)
+	if j == null or retirado or m.selecciones == null or not m.selecciones.hay_fecha_fifa(m.semana) or not j.disponible():
+		return false
+	var mejores := 0
+	for c: Club in m.clubes.values():
+		for o: Jugador in c.plantilla:
+			if o != j and o.pais == j.pais and o.pos == j.pos and o.disponible() and o.ovr > j.ovr:
+				mejores += 1
+	if mejores >= int(CUPOS_SEL.get(j.pos, 4)):
+		return false
+	var nombre := String(Selecciones._tabla_paises().get(j.pais, j.pais))
+	var rivales: Array = []
+	for n: Variant in Selecciones._tabla_selecciones():
+		if String(n) != nombre:
+			rivales.append(String(n))
+	convocatoria = {"pais": j.pais, "nombre": nombre,
+		"rival": String(rivales[_rng.randi() % rivales.size()]) if not rivales.is_empty() else "Selección rival"}
+	return true
+
+## La selección de tu país para el partido (18, por líneas, tú dentro) y la
+## rival. Clubes de paso, fuera del mundo: no tocan ninguna liga.
+func equipos_seleccion(m: Mundo) -> Array:
+	var j := jugador(m)
+	if convocatoria.is_empty() or j == null:
+		return []
+	var mia := Club.new()
+	mia.id = "sel_" + String(convocatoria["pais"])
+	mia.nombre = String(convocatoria["nombre"])
+	mia.pais = String(convocatoria["pais"])
+	mia.rep = 80
+	mia.color1 = "#c8102e"
+	mia.color2 = "#ffffff"
+	var todos: Array = []
+	for c: Club in m.clubes.values():
+		for o: Jugador in c.plantilla:
+			if o.pais == j.pais and o.disponible():
+				todos.append(o)
+	todos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
+	var cupos := CUPOS_SEL.duplicate()
+	mia.plantilla.append(j)
+	cupos[j.pos] = int(cupos[j.pos]) - 1
+	for o: Jugador in todos:
+		if o != j and int(cupos.get(o.pos, 0)) > 0:
+			mia.plantilla.append(o)
+			cupos[o.pos] = int(cupos[o.pos]) - 1
+	var rival := Club.new()
+	rival.id = "sel_rival"
+	rival.nombre = String(convocatoria["rival"])
+	rival.pais = "XXX"
+	rival.rep = clampi(m.selecciones.fuerza(rival.nombre), 62, 88) if m.selecciones != null else 75
+	rival.color1 = "#1d3c8f"
+	rival.color2 = "#f2c230"
+	## Si en el mundo no hay jugadores de ese país, se generan con su fuerza.
+	for g: String in CUPOS_SEL:
+		var dem := {"POR": "POR", "DEF": "DFC", "MED": "MC", "DEL": "DC"}[g] as String
+		for k in int(CUPOS_SEL[g]):
+			var nuevo := m.crear_jugador(rival, g, dem, _rng.randi_range(22, 31), rival.rep + _rng.randi_range(-6, 3))
+			rival.plantilla.append(nuevo)
+	## Que la mitad de tu plantel no quede sin cupo: si faltan, se completa.
+	for g: String in cupos:
+		var dem2 := {"POR": "POR", "DEF": "DFC", "MED": "MC", "DEL": "DC"}[g] as String
+		for k in int(cupos[g]):
+			mia.plantilla.append(m.crear_jugador(mia, g, dem2, _rng.randi_range(22, 31), 70))
+	return [mia, rival]
+
+## Lo que deja un partido con la selección.
+func tras_seleccion(d: Dictionary) -> void:
+	caps += 1
+	goles_sel += int(d.get("goles", 0))
+	fama = clampi(fama + 4 + int(d.get("goles", 0)) * 4, 0, 100)
+	seguidores += 600 + int(d.get("goles", 0)) * 900
+	energia = maxi(0, energia - 12)
+	convocatoria = {}
+
+# ---------------------------------------------------------------- el retiro
+
+## ¿Toca colgar las botas? Si lo anunciaste o el cuerpo ya no da (38 años).
+func toca_retirarse(m: Mundo) -> bool:
+	var j := jugador(m)
+	return j != null and not retirado and (retiro_anunciado or j.edad >= 38)
+
+## Clubes que le ofrecen el banquillo a un exjugador: de su país, con la
+## reputación que da su carrera (más fama, mejores clubes). Hasta tres.
+func ofertas_de_banquillo(m: Mundo) -> Array:
+	var j := jugador(m)
+	var pais := j.pais if j != null else "CHI"
+	var techo := 55 + fama / 3
+	var lista: Array = []
+	for c: Club in m.clubes.values():
+		if c.pais == pais and c.rep <= techo and c.rep >= techo - 18:
+			lista.append(c)
+	lista.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
+	return lista.slice(0, 3)
+
+## UNA VIDA ENTERA EN UNA PARTIDA (MEGAPLAN fases 3 y 7): te retiras y diriges
+## en el mismo mundo. Tu carrera de jugador queda como tu currículum.
+func pasar_a_entrenador(m: Mundo, club_dt: Club) -> bool:
+	var j := jugador(m)
+	if j == null or club_dt == null:
+		return false
+	retirado = true
+	var actual := club(m)
+	if actual != null:
+		actual.soltar(j)
+	m.tomar_el_mando(club_dt.id)
+	if m.roles != null:
+		m.roles.arrancar("dt", j.nombre)
+	historial.append({"anio": m.anio, "semana": m.semana, "titulo": "Retiro",
+		"eleccion": "Cuelga las botas tras %d partidos y %d goles; dirige a %s" % [pj_carrera, goles_carrera, club_dt.nombre]})
+	return true
+
 func _evento_bienvenida(m: Mundo) -> void:
 	eventos.append(_ev("debut_firma", "Tu primer contrato profesional",
 		"Tienes 17 años y acabas de firmar tu primer contrato. El utilero te da la camiseta con tu dorsal.",
@@ -414,7 +692,10 @@ func a_dic() -> Dictionary:
 		"seguidores": seguidores, "agente": agente, "foco": foco, "lanzador": lanzador,
 		"convocatorias": convocatorias, "partidos_jugables": partidos_jugables, "stats_temp": stats_temp,
 		"temporadas": temporadas, "eventos": eventos, "historial": historial, "ofertas": ofertas,
-		"hitos": hitos, "ultima_vez": ultima_vez, "semilla": _rng.seed}
+		"hitos": hitos, "ultima_vez": ultima_vez, "semilla": _rng.seed,
+		"goles_carrera": goles_carrera, "pj_carrera": pj_carrera, "caps": caps, "goles_sel": goles_sel,
+		"convocatoria": convocatoria, "capitan": capitan, "licencia": licencia,
+		"retiro_anunciado": retiro_anunciado, "retirado": retirado, "clubes_pasados": clubes_pasados}
 
 static func desde_dic(d: Dictionary) -> CarreraJugador:
 	var c := CarreraJugador.new()
@@ -436,4 +717,14 @@ static func desde_dic(d: Dictionary) -> CarreraJugador:
 	c.hitos = d.get("hitos", {})
 	c.ultima_vez = d.get("ultima_vez", {})
 	c._rng.seed = int(d.get("semilla", 1))
+	c.goles_carrera = int(d.get("goles_carrera", 0))
+	c.pj_carrera = int(d.get("pj_carrera", 0))
+	c.caps = int(d.get("caps", 0))
+	c.goles_sel = int(d.get("goles_sel", 0))
+	c.convocatoria = d.get("convocatoria", {})
+	c.capitan = bool(d.get("capitan", false))
+	c.licencia = bool(d.get("licencia", false))
+	c.retiro_anunciado = bool(d.get("retiro_anunciado", false))
+	c.retirado = bool(d.get("retirado", false))
+	c.clubes_pasados = d.get("clubes_pasados", [])
 	return c
