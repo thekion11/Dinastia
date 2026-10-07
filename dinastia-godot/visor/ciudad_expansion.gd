@@ -329,6 +329,7 @@ func construir() -> void:
 	_marquesinas_bus()
 	_guirnaldas()
 	_farolas()
+	_mobiliario_urbano()
 	_orillas_nucleo()
 	_obras_en_calle()
 	cuenta["autopista"] = Autopista.montar(b)
@@ -504,6 +505,8 @@ func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: fl
 
 func _kit(esc: PackedScene, pos: Vector3, escala: Vector3, giro: float) -> Node3D:
 	var n: Node3D = esc.instantiate()
+	if _rng.randf() < 0.45:
+		b.tenir(n, _rng.randi())
 	n.scale = escala
 	n.rotation.y = giro
 	n.position = pos
@@ -616,6 +619,17 @@ var _casas_col: Array[Color] = []
 var _techos_t: Array[Transform3D] = []
 var _techos_col: Array[Color] = []
 var _setos_t: Array[Transform3D] = []
+var _puertas_t: Array[Transform3D] = []
+var _vidrios_t: Array[Transform3D] = []
+var _marcos_t: Array[Transform3D] = []
+var _chimeneas_t: Array[Transform3D] = []
+var _buzones_t: Array[Transform3D] = []
+var _caminos_t: Array[Transform3D] = []
+## Fachadas de colores (7-10-2026, «haz que algunas casas sean de diferentes
+## colores»): de las claras de siempre a terracota, ocre, azul, menta, rosa y lila.
+const COLORES_CASA := [Color(0.93, 0.89, 0.8), Color(0.86, 0.78, 0.66), Color(0.95, 0.95, 0.93),
+	Color(0.85, 0.52, 0.38), Color(0.9, 0.74, 0.42), Color(0.6, 0.72, 0.85), Color(0.66, 0.82, 0.7),
+	Color(0.93, 0.7, 0.68), Color(0.76, 0.68, 0.84), Color(0.98, 0.88, 0.55), Color(0.55, 0.62, 0.55)]
 
 func _casas(r: Rect2) -> void:
 	_lote("cesped", Vector3(r.get_center().x, 0.05, r.get_center().y), Vector3(r.size.x, 0.1, r.size.y))
@@ -630,7 +644,7 @@ func _casas(r: Rect2) -> void:
 			var ancho := paso_x * 0.62
 			var fondo := r.size.y * 0.24
 			var alto := _rng.randf_range(5.0, 7.5)
-			var col := [Color(0.93, 0.89, 0.8), Color(0.86, 0.78, 0.66), Color(0.78, 0.82, 0.86), Color(0.92, 0.84, 0.74), Color(0.8, 0.7, 0.62)][_rng.randi() % 5] as Color
+			var col := COLORES_CASA[_rng.randi() % COLORES_CASA.size()] as Color
 			_casas_t.append(Transform3D(Basis.from_scale(Vector3(ancho, alto, fondo)), Vector3(x, alto * 0.5, z)))
 			_casas_col.append(col)
 			var tejado := [Color(0.62, 0.28, 0.2), Color(0.35, 0.33, 0.33), Color(0.5, 0.36, 0.26)][_rng.randi() % 3] as Color
@@ -638,7 +652,22 @@ func _casas(r: Rect2) -> void:
 			_techos_col.append(tejado)
 			## Seto del jardín delantero, hacia la calle.
 			var zs := z + lado * (fondo * 0.5 + 5.0)
-			_setos_t.append(Transform3D(Basis.from_scale(Vector3(paso_x * 0.9, 1.3, 0.9)), Vector3(x, 0.65, zs)))
+			_setos_t.append(Transform3D(Basis.from_scale(Vector3(paso_x * 0.9 * 0.42, 1.3, 0.9)), Vector3(x - paso_x * 0.26, 0.65, zs)))
+			_setos_t.append(Transform3D(Basis.from_scale(Vector3(paso_x * 0.9 * 0.42, 1.3, 0.9)), Vector3(x + paso_x * 0.26, 0.65, zs)))
+			## La fachada que da a la calle: puerta, ventanas con marco, el
+			## camino hasta la acera con su buzón, y la chimenea.
+			var zf := z + lado * (fondo * 0.5 + 0.06)
+			_puertas_t.append(Transform3D(Basis.from_scale(Vector3(1.3, 2.3, 0.12)), Vector3(x, 1.15, zf)))
+			for k: float in [-1.0, 1.0]:
+				for piso in (2 if alto > 6.2 else 1):
+					var pv := Vector3(x + k * ancho * 0.3, 1.6 + float(piso) * 2.8, zf)
+					_marcos_t.append(Transform3D(Basis.from_scale(Vector3(1.7, 1.5, 0.1)), pv))
+					_vidrios_t.append(Transform3D(Basis.from_scale(Vector3(1.4, 1.2, 0.12)), pv + Vector3(0, 0, lado * 0.02)))
+			var largo_c := absf(zs - zf)
+			_caminos_t.append(Transform3D(Basis.from_scale(Vector3(1.6, 0.06, largo_c)), Vector3(x, 0.13, (zs + zf) * 0.5)))
+			_buzones_t.append(Transform3D(Basis.from_scale(Vector3(0.45, 1.2, 0.35)), Vector3(x + 1.6, 0.6, zs)))
+			if _rng.randf() < 0.6:
+				_chimeneas_t.append(Transform3D(Basis.from_scale(Vector3(0.8, 2.6, 0.8)), Vector3(x + ancho * 0.28, alto + 2.0, z - lado * fondo * 0.15)))
 	cuenta["casas"] = int(cuenta.get("casas", 0)) + cols * filas
 
 func _casas_multimesh() -> void:
@@ -648,6 +677,14 @@ func _casas_multimesh() -> void:
 	var prisma := PrismMesh.new()
 	_multimesh(prisma, null, _techos_t, Vector3.ONE, _techos_col)
 	_multimesh(BoxMesh.new(), _mat["hoja"], _setos_t, Vector3.ONE)
+	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.36, 0.22, 0.14), 0.7), _puertas_t, Vector3.ONE)
+	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.96, 0.96, 0.94), 0.6), _marcos_t, Vector3.ONE)
+	var vid := b._mat_simple(Color(0.2, 0.28, 0.36), 0.12)
+	vid.metallic = 0.6
+	_multimesh(BoxMesh.new(), vid, _vidrios_t, Vector3.ONE)
+	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.7, 0.66, 0.6), 0.9), _caminos_t, Vector3.ONE)
+	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.15, 0.3, 0.55), 0.5), _buzones_t, Vector3.ONE)
+	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.55, 0.3, 0.24), 0.8), _chimeneas_t, Vector3.ONE)
 
 func _industrial(r: Rect2) -> void:
 	b._caja_en(Vector3(r.get_center().x, 0.06, r.get_center().y), Vector3(r.size.x, 0.12, r.size.y), b._mat_simple(Color(0.42, 0.42, 0.41), 0.9))
@@ -1301,6 +1338,138 @@ func _volcar_lotes() -> void:
 		lista.assign(_lotes[clave])
 		_multimesh(BoxMesh.new(), _mat[clave], lista, Vector3.ONE)
 	_lotes.clear()
+
+## EL MOBILIARIO URBANO (7-10-2026, «agrega cosas que tiene una ciudad real…
+## me gustan los detalles, el alcantarillado»): tapas de alcantarilla en los
+## carriles, sumideros junto al bordillo, papeleras, bancos, hidrantes,
+## contenedores de reciclaje, bolardos en las esquinas, señales de STOP y
+## ceda el paso en las calles sin semáforo, kioscos y aparcabicis en las
+## avenidas. Todo en lotes (MultiMesh): miles de piezas, pocas llamadas.
+func _mobiliario_urbano() -> void:
+	var cil := CylinderMesh.new()
+	cil.height = 1.0
+	cil.top_radius = 0.5
+	cil.bottom_radius = 0.5
+	cil.radial_segments = 12
+	var octo := CylinderMesh.new()
+	octo.height = 1.0
+	octo.top_radius = 0.5
+	octo.bottom_radius = 0.5
+	octo.radial_segments = 8
+	var caja := BoxMesh.new()
+	var tapas: Array[Transform3D] = []
+	var sumideros: Array[Transform3D] = []
+	var papeleras: Array[Transform3D] = []
+	var tapas_pap: Array[Transform3D] = []
+	var hidrantes: Array[Transform3D] = []
+	var bancos_a: Array[Transform3D] = []
+	var bancos_p: Array[Transform3D] = []
+	var contenedores: Array[Transform3D] = []
+	var cont_col: Array[Color] = []
+	var bolardos: Array[Transform3D] = []
+	var postes: Array[Transform3D] = []
+	var stops: Array[Transform3D] = []
+	var cedas: Array[Transform3D] = []
+	var kioscos: Array[Transform3D] = []
+	var techos_k: Array[Transform3D] = []
+	var bicis: Array[Transform3D] = []
+	var k_tramo := 0
+	for t: Dictionary in tramos:
+		k_tramo += 1
+		if bool(t["puente"]):
+			continue
+		var a: Vector3 = t["a"]
+		var c: Vector3 = t["b"]
+		var ancho: float = t["ancho"]
+		var largo := a.distance_to(c)
+		if largo < 30.0:
+			continue
+		var dir := (c - a).normalized()
+		var lat := Vector3(-dir.z, 0, dir.x)
+		var giro := atan2(dir.x, dir.z)
+		var rot := Basis(Vector3.UP, giro)
+		var acera := ancho * 0.5 + 2.6
+		## Alcantarillas: en el centro de cada carril, cada ~45 m.
+		var n := int(largo / 45.0)
+		for q in n:
+			var p := a + dir * (largo * (float(q) + 0.5) / float(n))
+			var carril := ancho * 0.25 * (1.0 if q % 2 == 0 else -1.0)
+			tapas.append(Transform3D(Basis.from_scale(Vector3(0.9, 0.05, 0.9)), p + lat * carril + Vector3(0, 0.33, 0)))
+		## Sumideros junto a los dos bordillos, cada 25 m.
+		n = int(largo / 25.0)
+		for q in n:
+			var p := a + dir * (largo * (float(q) + 0.5) / float(n))
+			for lado: float in [-1.0, 1.0]:
+				sumideros.append(Transform3D(rot * Basis.from_scale(Vector3(0.45, 0.04, 1.0)), p + lat * lado * (ancho * 0.5 - 0.35) + Vector3(0, 0.32, 0)))
+		## En la acera: papelera, banco e hidrante, alternando lados.
+		n = int(largo / 55.0)
+		for q in n:
+			var f := (float(q) + 0.25) / float(maxi(n, 1))
+			var lado := 1.0 if (q + k_tramo) % 2 == 0 else -1.0
+			var p := a + dir * (largo * f) + lat * lado * acera
+			papeleras.append(Transform3D(Basis.from_scale(Vector3(0.5, 0.95, 0.5)), p + Vector3(0, 0.75, 0)))
+			tapas_pap.append(Transform3D(Basis.from_scale(Vector3(0.56, 0.08, 0.56)), p + Vector3(0, 1.26, 0)))
+			if q % 2 == 1:
+				var pb := a + dir * (largo * (f + 0.12)) + lat * lado * (acera + 0.6)
+				var rb := Basis(Vector3.UP, giro + (PI * 0.5 if lado > 0.0 else -PI * 0.5))
+				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.08, 0.5)), pb + Vector3(0, 0.75, 0)))
+				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.45, 0.07)), pb + Vector3(0, 1.0, 0) + lat * lado * 0.25))
+				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.45, 0.45)), pb + Vector3(0, 0.5, 0) + dir * 0.8))
+				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.45, 0.45)), pb + Vector3(0, 0.5, 0) - dir * 0.8))
+			if q % 3 == 0:
+				var ph := a + dir * (largo * (f + 0.06)) + lat * -lado * (ancho * 0.5 + 0.7)
+				hidrantes.append(Transform3D(Basis.from_scale(Vector3(0.3, 0.75, 0.3)), ph + Vector3(0, 0.62, 0)))
+				hidrantes.append(Transform3D(Basis.from_scale(Vector3(0.42, 0.12, 0.42)), ph + Vector3(0, 1.02, 0)))
+				hidrantes.append(Transform3D(rot * Basis.from_scale(Vector3(0.62, 0.12, 0.12)), ph + Vector3(0, 0.8, 0)))
+		## Contenedores de reciclaje (vidrio, envases, papel, resto), uno por tramo.
+		if k_tramo % 2 == 0:
+			var lado2 := 1.0 if k_tramo % 4 == 0 else -1.0
+			var pc := a + dir * (largo * 0.62) + lat * lado2 * (ancho * 0.5 - 1.2)
+			var colores := [Color(0.2, 0.55, 0.25), Color(0.95, 0.8, 0.15), Color(0.15, 0.35, 0.75), Color(0.35, 0.35, 0.35)]
+			for i in 4:
+				contenedores.append(Transform3D(rot * Basis.from_scale(Vector3(1.5, 1.5, 1.4)), pc + dir * (float(i) - 1.5) * 1.7 + Vector3(0, 1.05, 0)))
+				cont_col.append(colores[i])
+		## Las esquinas: bolardos en el borde de la acera.
+		for extremo: Vector3 in [a + dir * (ancho * 0.5 + 9.0), c - dir * (ancho * 0.5 + 9.0)]:
+			for lado: float in [-1.0, 1.0]:
+				for i in 3:
+					bolardos.append(Transform3D(Basis.from_scale(Vector3(0.22, 0.9, 0.22)), extremo + lat * lado * (ancho * 0.5 + 0.45) + dir * (float(i) - 1.0) * 1.3 + Vector3(0, 0.75, 0)))
+		## Señal al final de las calles sin semáforo: STOP o ceda el paso.
+		if not bool(t["av"]):
+			var ps := c - dir * (ancho * 0.5 + 12.0) + lat * (ancho * 0.5 + 0.9)
+			postes.append(Transform3D(Basis.from_scale(Vector3(0.08, 2.6, 0.08)), ps + Vector3(0, 1.6, 0)))
+			var placa := Transform3D(Basis(Vector3.UP, giro) * Basis(Vector3.RIGHT, PI * 0.5) * Basis.from_scale(Vector3(0.75, 0.05, 0.75)), ps + Vector3(0, 2.95, 0) - dir * 0.06)
+			if k_tramo % 3 == 0:
+				stops.append(placa)
+			else:
+				cedas.append(placa)
+		## En las avenidas: un kiosco y un aparcabicis por tramo largo.
+		if bool(t["av"]) and largo > 90.0:
+			var pk := a + dir * (largo * 0.4) + lat * (ancho * 0.5 + 2.4)
+			kioscos.append(Transform3D(rot * Basis.from_scale(Vector3(2.4, 2.6, 2.0)), pk + Vector3(0, 1.6, 0)))
+			techos_k.append(Transform3D(rot * Basis.from_scale(Vector3(3.2, 0.25, 2.8)), pk + Vector3(0, 3.05, 0)))
+			for i in 5:
+				bicis.append(Transform3D(rot * Basis.from_scale(Vector3(0.06, 0.8, 0.9)), a + dir * (largo * 0.7 + float(i) * 0.7) - lat * (ancho * 0.5 + 1.6) + Vector3(0, 0.7, 0)))
+	var hierro := b._mat_simple(Color(0.14, 0.14, 0.15), 0.45)
+	hierro.metallic = 0.6
+	_multimesh(cil, hierro, tapas, Vector3.ONE)
+	_multimesh(caja, b._mat_simple(Color(0.1, 0.1, 0.11), 0.5), sumideros, Vector3.ONE)
+	_multimesh(cil, b._mat_simple(Color(0.2, 0.42, 0.25), 0.5), papeleras, Vector3.ONE)
+	_multimesh(cil, b._mat_simple(Color(0.12, 0.12, 0.12), 0.5), tapas_pap, Vector3.ONE)
+	_multimesh(cil, b._mat_simple(Color(0.85, 0.12, 0.1), 0.4), hidrantes, Vector3.ONE)
+	_multimesh(caja, _mat["tronco"], bancos_a, Vector3.ONE)
+	_multimesh(caja, hierro, bancos_p, Vector3.ONE)
+	_multimesh(caja, null, contenedores, Vector3.ONE, cont_col)
+	_multimesh(cil, b._mat_simple(Color(0.2, 0.2, 0.22), 0.5), bolardos, Vector3.ONE)
+	_multimesh(cil, b._mat_simple(Color(0.6, 0.62, 0.64), 0.4), postes, Vector3.ONE)
+	_multimesh(octo, b._mat_simple(Color(0.8, 0.08, 0.08), 0.5), stops, Vector3.ONE)
+	var ceda_m := b._mat_simple(Color(0.95, 0.95, 0.95), 0.5)
+	_multimesh(cil, ceda_m, cedas, Vector3.ONE)
+	_multimesh(caja, b._mat_simple(Color(0.15, 0.4, 0.3), 0.6), kioscos, Vector3.ONE)
+	_multimesh(caja, b._mat_simple(Color(0.1, 0.28, 0.22), 0.6), techos_k, Vector3.ONE)
+	_multimesh(caja, hierro, bicis, Vector3.ONE)
+	cuenta["mobiliario"] = tapas.size() + sumideros.size() + papeleras.size() + hidrantes.size() / 3 + bancos_a.size() / 2 \
+		+ contenedores.size() + bolardos.size() + postes.size() + kioscos.size() + bicis.size()
 
 func _multimesh(malla: Mesh, mat: Material, ts: Array[Transform3D], _esc: Vector3, colores: Array[Color] = []) -> void:
 	if ts.is_empty():
