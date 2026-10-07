@@ -226,7 +226,14 @@ func _pintar_semana() -> void:
 	cols.add_theme_constant_override("separation", 14)
 	raiz.add_child(cols)
 	cols.add_child(_carta(j))
-	cols.add_child(_centro(j, club))
+	## Con la convocatoria la columna crece: se desplaza en vez de cortarse.
+	var sc := ScrollContainer.new()
+	sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	cols.add_child(sc)
+	var centro := _centro(j, club)
+	centro.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	sc.add_child(centro)
 	cols.add_child(_derecha(j))
 	Idiomas.traducir_arbol(_cuerpo)
 
@@ -301,6 +308,25 @@ func _centro(j: Jugador, club: Club) -> Control:
 	var v := VBoxContainer.new()
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.add_theme_constant_override("separation", 12)
+	## LA SELECCIÓN (MEGAPLAN fase 3): en fecha FIFA, si te convocan.
+	if not carrera.convocatoria.is_empty():
+		var ps := _panel(Color("ffd24a"))
+		v.add_child(ps)
+		var sv := VBoxContainer.new()
+		sv.add_theme_constant_override("separation", 8)
+		ps.add_child(sv)
+		sv.add_child(_lbl(13, Color("ffd24a"), "🌎 FECHA FIFA · ¡CONVOCADO!"))
+		sv.add_child(_lbl(20, TEXTO, "%s  vs  %s" % [String(carrera.convocatoria["nombre"]), String(carrera.convocatoria["rival"])]))
+		sv.add_child(_lbl(13, SUAVE, "Partidos con la selección: %d  ·  goles: %d" % [carrera.caps, carrera.goles_sel]))
+		var fs := HBoxContainer.new()
+		fs.add_theme_constant_override("separation", 8)
+		sv.add_child(fs)
+		var bjs := _boton("🎮  JUGAR CON LA SELECCIÓN", Color("ffd24a"), _jugar_seleccion, 50)
+		bjs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fs.add_child(bjs)
+		var bss := _boton("⏩  Simular", CIAN, _simular_seleccion, 50)
+		bss.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fs.add_child(bss)
 	var p := _panel(FUCSIA)
 	v.add_child(p)
 	var pv := VBoxContainer.new()
@@ -309,7 +335,10 @@ func _centro(j: Jugador, club: Club) -> Control:
 	pv.add_child(_lbl(13, FUCSIA, "PRÓXIMO PARTIDO"))
 	if not mundo.temporada_en_curso():
 		pv.add_child(_lbl(20, TEXTO, "La temporada terminó."))
-		pv.add_child(_boton("🗓  Empezar la temporada siguiente", LIMA, _nueva_temporada, 50))
+		if carrera.toca_retirarse(mundo):
+			pv.add_child(_boton("👟  Colgar las botas", LIMA, _pintar_retiro, 50))
+		else:
+			pv.add_child(_boton("🗓  Empezar la temporada siguiente", LIMA, _nueva_temporada, 50))
 	else:
 		var par := _partido_de_la_semana(club)
 		if par.is_empty():
@@ -427,13 +456,7 @@ func _derecha(_j: Jugador) -> Control:
 # ---------------------------------------------------------------- jugar
 
 func _partido_de_la_semana(club: Club) -> Array:
-	for l: Liga in mundo.ligas:
-		if not l.clubes.has(club) or not l.quedan_jornadas():
-			continue
-		for par: Array in l.calendario[l.jornada_actual]:
-			if par[0] == club or par[1] == club:
-				return par
-	return []
+	return CarreraJugador.partido_de_la_semana(mundo, club)
 
 func _jugar_partido() -> void:
 	var club := carrera.club(mundo)
@@ -510,6 +533,85 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 		_msg += "  ·  Terminó la temporada."
 	Partida.guardar(m, GUARDADO)
 	_pintar_semana()
+
+## El partido con la selección: clubes de paso, tú del lado de tu país.
+func _jugar_seleccion() -> void:
+	var eq := carrera.equipos_seleccion(mundo)
+	if eq.size() < 2:
+		return
+	var pj := PartidoJugable.abrir(self, mundo, carrera, eq[0], eq[1], 240.0, -1, eq[0])
+	pj.terminado.connect(func(res: Dictionary) -> void: _cerrar_seleccion(res))
+
+func _simular_seleccion() -> void:
+	var j := carrera.jugador(mundo)
+	var g := 1 if j != null and randf() < (0.35 if j.pos == "DEL" else 0.12) else 0
+	_cerrar_seleccion({"goles": g, "goles_local": g + randi_range(0, 2), "goles_visita": randi_range(0, 2), "nota": 6.5 + g})
+
+func _cerrar_seleccion(res: Dictionary) -> void:
+	var nombre := String(carrera.convocatoria.get("nombre", "tu selección"))
+	var rival := String(carrera.convocatoria.get("rival", ""))
+	carrera.tras_seleccion(res)
+	if mundo.selecciones != null:
+		mundo.selecciones._anotar_resultado("%s %d - %d %s" % [nombre, int(res.get("goles_local", 0)), int(res.get("goles_visita", 0)), rival])
+	_msg = "🌎 %s %d - %d %s · tu nota %.1f%s" % [nombre, int(res.get("goles_local", 0)), int(res.get("goles_visita", 0)), rival,
+		float(res.get("nota", 6.0)), (" · ¡%d gol(es) con la selección!" % int(res["goles"])) if int(res.get("goles", 0)) > 0 else ""]
+	Partida.guardar(mundo, GUARDADO)
+	_pintar_semana()
+
+## EL RETIRO (MEGAPLAN fase 3): tu carrera en una página y, si quieres, el
+## banquillo. Una vida entera en una partida: dirigirás en el mismo mundo.
+func _pintar_retiro() -> void:
+	_limpiar()
+	var j := carrera.jugador(mundo)
+	var raiz := VBoxContainer.new()
+	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
+	raiz.offset_left = 60; raiz.offset_right = -60; raiz.offset_top = 40; raiz.offset_bottom = -40
+	raiz.add_theme_constant_override("separation", 14)
+	_cuerpo.add_child(raiz)
+	raiz.add_child(_lbl(40, LIMA, "👟 %s CUELGA LAS BOTAS" % (j.nombre.to_upper() if j != null else "")))
+	var temp := 0
+	for t: Dictionary in carrera.temporadas:
+		temp += 1
+	raiz.add_child(_lbl(18, TEXTO, "%d temporadas · %d partidos · %d goles · %d partidos con la selección (%d goles)" % [
+		temp, carrera.pj_carrera, carrera.goles_carrera, carrera.caps, carrera.goles_sel]))
+	var clubes: Array = carrera.clubes_pasados.duplicate()
+	var actual := carrera.club(mundo)
+	if actual != null and not clubes.has(actual.nombre):
+		clubes.append(actual.nombre)
+	raiz.add_child(_lbl(15, SUAVE, "Clubes: %s%s" % [", ".join(clubes.map(func(x: Variant) -> String: return Nombres.visible(String(x)))),
+		"  ·  fuiste capitán" if carrera.capitan else ""]))
+	var p := _panel(FUCSIA)
+	raiz.add_child(p)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 8)
+	p.add_child(v)
+	v.add_child(_lbl(15, FUCSIA, "TE OFRECEN EL BANQUILLO" + ("" if carrera.licencia else "  (harás el curso acelerado de la licencia)")))
+	v.add_child(_lbl(13, SUAVE, "Dirigirás en este mismo mundo, con tu carrera de jugador como currículum. Se abre como tu partida de entrenador (la que tuvieras se guarda como respaldo)."))
+	var ofertas := carrera.ofertas_de_banquillo(mundo)
+	if ofertas.is_empty():
+		v.add_child(_lbl(15, TEXTO, "Ningún club te ofrece el banquillo por ahora."))
+	for c: Club in ofertas:
+		var b := _boton("📋  Dirigir a %s (reputación %d)" % [Nombres.visible(c.nombre), c.rep], LIMA, func() -> void: _ser_entrenador(c), 46)
+		v.add_child(b)
+	raiz.add_child(_boton("🏠  Retirarme del fútbol (volver al menú)", SUAVE, _retiro_final, 44))
+	Idiomas.traducir_arbol(_cuerpo)
+
+func _ser_entrenador(c: Club) -> void:
+	## Respaldo de la partida de entrenador que hubiera.
+	var previa := Partida.cargar("partida")
+	if previa != null:
+		Partida.guardar(previa, "partida_respaldo")
+	if not carrera.pasar_a_entrenador(mundo, c):
+		return
+	Partida.guardar(mundo, GUARDADO)
+	Partida.guardar(mundo, "partida")
+	Principal.mundo_a_cargar = mundo
+	get_tree().change_scene_to_file("res://escenas/principal.tscn")
+
+func _retiro_final() -> void:
+	carrera.retirado = true
+	Partida.guardar(mundo, GUARDADO)
+	_salir()
 
 func _nueva_temporada() -> void:
 	mundo.nueva_temporada()

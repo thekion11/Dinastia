@@ -41,10 +41,14 @@ var _minutos_usuario := 0.0
 ## Si empiezas en el banco, el minuto en que entras (-1 = titular).
 var entra_al := -1
 
+## El equipo del usuario cuando no es su club (la selección).
+var equipo_usuario: Club = null
+
 static func abrir(padre: Node, m: Mundo, c: CarreraJugador, l: Club, v: Club, duracion_mitad := 240.0,
-		entra_al_minuto := -1) -> PartidoJugable:
+		entra_al_minuto := -1, equipo: Club = null) -> PartidoJugable:
 	var n := PartidoJugable.new()
 	n.entra_al = entra_al_minuto
+	n.equipo_usuario = equipo
 	n.mundo = m
 	n.carrera = c
 	n.local = l
@@ -74,7 +78,7 @@ func _montar(duracion_mitad: float) -> void:
 	_raiz = Node3D.new()
 	_vp.add_child(_raiz)
 	## El estadio del local, el que se juega.
-	var perfil := mundo.perfil_estadio_de(local).duplicate() if mundo != null else local.perfil_estadio()
+	var perfil := mundo.perfil_estadio_de(local).duplicate() if mundo != null and equipo_usuario == null else local.perfil_estadio()
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
 	StadiumBuilder.build_pitch(_raiz, perfil, local)
 	StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
@@ -90,6 +94,14 @@ func _montar(duracion_mitad: float) -> void:
 	_es_local_usuario = yo != null and yo.club_id == local.id
 	var once_l := carrera.once_para_partido(mundo) if _es_local_usuario else local.once()
 	var once_v := carrera.once_para_partido(mundo) if (yo != null and yo.club_id == visita.id) else visita.once()
+	if equipo_usuario != null and yo != null:
+		## Con la selección: tú siempre en el once de tu país.
+		_es_local_usuario = equipo_usuario == local
+		var mio := _once_con(equipo_usuario, yo)
+		if _es_local_usuario:
+			once_l = mio
+		else:
+			once_v = mio
 	var sp := PlayerSpawner.new()
 	var l := Puente3D.once(once_l)
 	var v := Puente3D.once(once_v)
@@ -130,18 +142,38 @@ func _montar(duracion_mitad: float) -> void:
 
 ## La pantalla gigante del estadio, como en `VistaEstadio._montar_pantalla`
 ## (sin `Partido`: rota bienvenida, tabla y goleadores).
+## El once de `c` con `yo` dentro (por el peor de su línea si no estaba).
+func _once_con(c: Club, yo: Jugador) -> Array[Jugador]:
+	var once := c.once()
+	if once.has(yo):
+		return once
+	var peor := -1
+	for i in once.size():
+		if once[i].pos == yo.pos and (peor < 0 or once[i].ovr < once[peor].ovr):
+			peor = i
+	if peor < 0:
+		for i in once.size():
+			if not once[i].es_portero() and (peor < 0 or once[i].ovr < once[peor].ovr):
+				peor = i
+	if peor >= 0:
+		once[peor] = yo
+	return once
+
 ## CAMBIOS (MEGAPLAN fase 3). En la banda espera un jugador más: tú, si
 ## empiezas en el banco, o el mejor suplente de tu puesto, por si el DT te saca.
 func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
 	if yo == null or carrera == null:
 		return
-	var mi_club := local if _es_local_usuario else visita
+	## Si ya estás en el once, eres titular: no hay entrada desde el banco.
+	if entra_al >= 0 and not motor.usuario.is_empty():
+		entra_al = -1
+	var mi_club := equipo_usuario if equipo_usuario != null else (local if _es_local_usuario else visita)
 	var kit := Puente3D.kit(local) if _es_local_usuario else Puente3D.kit_visita(local, visita)
 	var quien: Jugador = yo
 	if entra_al < 0:
 		## Titular: el suplente de tu línea con más media.
 		quien = null
-		var once := mi_club.once()
+		var once := _once_con(mi_club, yo) if equipo_usuario != null else mi_club.once()
 		for j: Jugador in mi_club.plantilla:
 			if j == yo or once.has(j) or not j.disponible() or j.es_portero():
 				continue
@@ -165,6 +197,7 @@ func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
 			_banner_pendiente = "🔁 ¡ENTRAS AL CAMPO!  %d'" % motor.minuto()
 
 var _banner_pendiente := ""
+var _t_rotulos := 0.0
 
 func _montar_pantalla(perfil: Dictionary) -> void:
 	var pantallas := _raiz.find_children("PantallaMarcador*", "MeshInstance3D", true, false)
@@ -305,6 +338,10 @@ func _montar_hud() -> void:
 
 func _process(delta: float) -> void:
 	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
+	_t_rotulos -= delta
+	if _t_rotulos <= 0.0 and motor != null:
+		_t_rotulos = 0.1
+		PlayerSpawner.despejar_rotulos(motor.jugadores, _cam, motor.balon.position, _vp.size.y if _vp != null else 900.0)
 	if motor == null:
 		return
 	_actualizar_camara(delta)
@@ -314,7 +351,7 @@ func _process(delta: float) -> void:
 	var s := motor.stats
 	_mis_stats.text = "⚽ %d   🅰 %d   🎯 %d/%d   ✔ %d/%d pases   ⭐ %.1f" % [s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], motor.nota_usuario()]
 	if not yo.is_empty():
-		_aguante.value = float(yo["aguante"])
+		_aguante.value = motor.forma_fisica(yo)
 		if motor.estado == "juego":
 			_minutos_usuario += delta / motor.duracion_mitad * 45.0
 	var con_balon := not yo.is_empty() and motor.poseedor == yo
