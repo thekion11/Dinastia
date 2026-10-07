@@ -5201,6 +5201,18 @@ func _probar_ciudad_grande() -> void:
 	_comprobar(ExploradorCiudad.libre(Vector3(CityBuilder.RIO_X, 0, 0.0), 1.0, obst), "por el puente sí se cruza")
 	_comprobar(ExploradorCiudad.altura_suelo(CityBuilder.RIO_X, 0.0) > 4.0 and ExploradorCiudad.altura_suelo(CityBuilder.RIO_X + 100.0, 0.0) < 0.5, "sobre el puente se va arriba y fuera de él, a ras de suelo")
 	_comprobar(MinijuegosCiudad.juego_de("ciudad_plaza_mayor") == "autografos" and MinijuegosCiudad.juego_de("ciudad_puerto") == "pesca" and MinijuegosCiudad.juego_de("karting") == "karting", "cada lugar de la ciudad lleva su minijuego")
+	## El circuito 3D del karting: el progreso medido sobre la trazada coincide
+	## con la distancia recorrida, y la trazada está siempre sobre el asfalto.
+	var mk := MinijuegosCiudad.new()
+	var err := 0.0
+	var fuera := 0.0
+	for k in 200:
+		var s_k := mk._largo_pista() * float(k) / 200.0
+		var c: Dictionary = mk._centro_pista(s_k)
+		err = maxf(err, absf(mk._progreso(c["p"]) - s_k))
+		fuera = maxf(fuera, mk._fuera_de_eje(c["p"]))
+	_comprobar(err < 0.05 and fuera < 0.01, "karting 3D: progreso exacto (error %.3f m) y trazada sobre el eje (%.3f m)" % [err, fuera])
+	mk.free()
 	var sem := Semaforos.new()
 	var vistos := {}
 	var cruzados := 0
