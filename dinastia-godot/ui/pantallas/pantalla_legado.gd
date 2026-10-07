@@ -186,7 +186,7 @@ func _pintar_legado() -> void:
 			var m2 := p._texto(11, Principal.COL_SUAVE)
 			m2.text = motivo
 			p._lista_club.add_child(m2)
-		p._boton("🎯 Minijuego: tanda de penales en el entrenamiento", p._ui_finanzas._abrir_penales, p._lista_club)
+		p._boton("🎮 Minijuegos: penales, tiros libres y trivia", func() -> void: SalaMinijuegos.abrir(p, p.mundo), p._lista_club)
 
 	var escalon := r.siguiente_escalon()
 	if escalon != "":
