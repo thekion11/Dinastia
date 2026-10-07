@@ -841,6 +841,18 @@ func _fotos() -> void:
 			f.custom_minimum_size = Vector2(104, 104)
 			rej.add_child(f)
 			n += 1
+	## Las del modo foto (fase 5): ciudad, estadio y casa.
+	for ruta: String in ModoFoto.fotos():
+		var img := Image.load_from_file(ProjectSettings.globalize_path(ruta))
+		if img == null or img.is_empty():
+			continue
+		var tr := TextureRect.new()
+		tr.texture = ImageTexture.create_from_image(img)
+		tr.custom_minimum_size = Vector2(104, 104)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		rej.add_child(tr)
+		n += 1
 	_cuerpo.add_child(_nota("%d foto%s" % [n, "" if n == 1 else "s"]))
 
 # --- ajustes ----------------------------------------------------------------------------
