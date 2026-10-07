@@ -320,6 +320,7 @@ func construir() -> void:
 	_marquesinas_bus()
 	_guirnaldas()
 	_farolas()
+	_orillas_nucleo()
 	_volcar_lotes()
 
 func _cargar_modelos() -> void:
@@ -902,6 +903,21 @@ func encender(noche: float) -> void:
 		_farola_charco.albedo_color.a = lerpf(0.0, 0.55, noche)
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.emission_energy_multiplier = lerpf(0.0, 0.35, noche)
+
+## Las orillas del río a su paso por el núcleo: paseo y árboles en las dos
+## márgenes, entre el anillo exterior y el bulevar.
+func _orillas_nucleo() -> void:
+	var rx := CityBuilder.RIO_X
+	var pts: Array = []
+	var z := NUC_Z0 + 20.0
+	while z < NUC_Z1 - 20.0:
+		if absf(z) > 30.0:   ## el puente del conector
+			pts.append(Vector3(rx - 56.0, 0, z))
+			pts.append(Vector3(rx + 56.0, 0, z))
+		z += 26.0
+	_arboles_en(pts, 0.9)
+	for lado: float in [-1.0, 1.0]:
+		_lote("acera", Vector3(rx + lado * 51.5, 0.1, (NUC_Z0 + NUC_Z1) * 0.5), Vector3(4.0, 0.2, NUC_Z1 - NUC_Z0))
 
 ## LAS FAROLAS de la ciudad grande: una cada ~33 m por acera, alternando
 ## lados. Sin luces de verdad (serían cientos): la cabeza se enciende y un
