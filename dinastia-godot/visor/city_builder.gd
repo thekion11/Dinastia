@@ -4151,6 +4151,7 @@ func _rotulo(pos: Vector3, texto: String, color: Color, tam: int = 28) -> void:
 	l.pixel_size = 0.0007
 	l.no_depth_test = true
 	l.position = pos
+	l.add_to_group("rotulo_mapa")
 	_rotulos.add_child(l)
 
 func mostrar_rotulos(si: bool) -> void:
