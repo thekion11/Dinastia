@@ -2974,7 +2974,28 @@ func _goleadores_de(clubes: Array) -> Array:
 	return tiradores.slice(0, 8)
 
 func _escribir(bbcode: String) -> void:
-	_registro.append_text(_bbcode_accesible(bbcode) + "\n")
+	_registro.append_text(_bbcode_accesible(_traducir_bbcode(bbcode)) + "\n")
+
+## El registro es texto enriquecido y no pasa por el traductor de etiquetas:
+## se traduce cada tramo de texto entre etiquetas BBCode (título y cuerpo de
+## la noticia van en tramos distintos).
+var _re_tramos_bb: RegEx
+
+func _traducir_bbcode(bb: String) -> String:
+	if Idiomas.idioma == "es":
+		return bb
+	if _re_tramos_bb == null:
+		_re_tramos_bb = RegEx.create_from_string("\\]([^\\[]+)")
+	var salida := bb
+	for m: RegExMatch in _re_tramos_bb.search_all(bb):
+		var tramo := m.get_string(1)
+		var limpio := tramo.strip_edges()
+		if limpio == "":
+			continue
+		var tr_ := Idiomas.t(limpio)
+		if tr_ != limpio:
+			salida = salida.replace(tramo, tramo.replace(limpio, tr_))
+	return salida
 
 ## Complementa a `_escribir()`, no lo reemplaza: `_escribir()` sigue pintando
 ## el registro exactamente igual que antes -no se le tocó una línea, cero
