@@ -151,5 +151,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
      sombra dentro de fotos bien expuestas salen más oscuras (≈8 % en lo revisado).
   5. Mostrar en cada pasada jugadores DISTINTOS (surtido variado:
      `herramientas/caras_variadas.py`) para ver que el nivel se repite.
+- 7-10: todo lo hecho hasta la fase 3 (parte) se FUSIONÓ a `main` (pull request #1,
+  pedido del usuario). Lo nuevo sigue en la rama asignada; para pasarlo a main, nuevo PR.
 - Esperando al usuario: túnel, informe nuevo.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
