@@ -287,14 +287,34 @@ func _interactuar_en_ciudad(k: String) -> void:
 		editar_estadio_pedido.emit()
 		return
 	var juego := MinijuegosCiudad.juego_de(k)
+	## Los edificios con interior: se entra (y si además tienen minijuego,
+	## dentro hay un botón para jugarlo).
+	if InteriorInstalacion.tiene(k):
+		var jugar := Callable()
+		if juego != "":
+			jugar = func() -> void: _abrir_minijuego(juego)
+		_pausar_mientras(InteriorInstalacion.abrir(self, k, club, jugar))
+		return
 	if juego != "":
-		var j := MinijuegosCiudad.abrir(self, juego, club)
-		## Mientras dura el minijuego, el paseo se pausa y su cartel se oculta.
-		if j != null and _explorador != null:
-			_explorador.pausar(true)
-			j.tree_exited.connect(func() -> void:
-				if _explorador != null:
-					_explorador.pausar(false))
+		_abrir_minijuego(juego)
+
+func _abrir_minijuego(juego: String) -> void:
+	_pausar_mientras(MinijuegosCiudad.abrir(self, juego, club))
+
+## Mientras dura un minijuego o una visita por dentro, el paseo se pausa y su
+## cartel se oculta.
+## Cuenta las ventanas abiertas: pasar del interior a su minijuego no debe
+## soltar la pausa por el camino.
+var _pausas := 0
+
+func _pausar_mientras(j: Control) -> void:
+	if j != null and _explorador != null:
+		_pausas += 1
+		_explorador.pausar(true)
+		j.tree_exited.connect(func() -> void:
+			_pausas = maxi(0, _pausas - 1)
+			if _explorador != null and _pausas == 0:
+				_explorador.pausar(false))
 
 func _process(delta: float) -> void:
 	if _explorador != null:
@@ -480,10 +500,8 @@ func abrir_ficha(k: String) -> void:
 	if _ficha != null:
 		_ficha.queue_free()
 	if not Instalaciones.CATALOGO.has(k):
-		## Los lugares de la ciudad con minijuego (7-10-2026).
-		var juego := MinijuegosCiudad.juego_de(k)
-		if juego != "":
-			MinijuegosCiudad.abrir(self, juego, club)
+		## Los lugares de la ciudad: su interior o su minijuego (7-10-2026).
+		_interactuar_en_ciudad(k)
 		return
 	for p: Dictionary in _ciudad.puntos_clic:
 		if String(p["k"]) == k:
@@ -544,6 +562,12 @@ func abrir_ficha(k: String) -> void:
 	elif coste < 0:
 		v.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.BIEN, "Al máximo."))
 	v.add_child(aviso)
+	if nivel > 0 and InteriorInstalacion.tiene(k):
+		var dentro := Button.new()
+		dentro.text = "🚪 Ver por dentro"
+		dentro.custom_minimum_size = Vector2(0, 34)
+		dentro.pressed.connect(func() -> void: InteriorInstalacion.abrir(self, k, club))
+		v.add_child(dentro)
 	var cerrar := Button.new()
 	cerrar.text = "Cerrar"
 	cerrar.flat = true
