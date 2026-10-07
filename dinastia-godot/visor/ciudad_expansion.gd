@@ -331,6 +331,7 @@ func construir() -> void:
 	_farolas()
 	_orillas_nucleo()
 	_obras_en_calle()
+	cuenta["autopista"] = Autopista.montar(b)
 	_volcar_lotes()
 
 func _cargar_modelos() -> void:
@@ -1201,6 +1202,16 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 				t.marcar_cola_al_ultimo()
 				n_coches += 1
 	cuenta["coches"] = n_coches
+	## La autopista: tráfico más rápido, sin semáforos.
+	for pts_a: PackedVector3Array in Autopista.rutas():
+		var ida := t.agregar_ruta(b._redondear(pts_a, 30.0))
+		if coches.is_empty():
+			continue
+		var largo_a := t.largo_de(ida)
+		for i in 12:
+			var na: Node3D = CityBuilder.instanciar_coche(coches[rng.randi() % coches.size()], rng)
+			t.agregar_vehiculo(na, ida, largo_a * float(i) / 12.0 + rng.randf() * 40.0, rng.randf_range(22.0, 30.0), 0.0, 0.0)
+			t.marcar_cola_al_ultimo()
 	## Los autobuses.
 	var bus := load(CityBuilder.RUTA_BUS) as PackedScene
 	var n_bus := 0
