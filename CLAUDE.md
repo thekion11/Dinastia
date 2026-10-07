@@ -122,6 +122,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   EN CURSO: MEGAPLAN (`dinastia-godot/MEGAPLAN.md`). Fases 1 y 2 HECHAS (5-10). Fase 3 HECHA (7-10: fuera de juego, cambios,
   desgaste separado de la velocidad, 13 eventos, selección jugable, retiro y paso a DT).
   7-10: el usuario pidió pasar la fase 3 a main y SEGUIR con la fase 4 (contenido).
+  Fase 4 HECHA (7-10): guiños de estadio + apodo, plantillas fijas por nombre de club,
+  banderas, mesa de representantes (`nucleo/mesa_agente.gd`), Carrera de Jugador en
+  prueba_modos; nota ≈74. Fase 4 aún NO está en main (PR nuevo si lo pide).
+  Siguiente: fase 5 (originalidad: documental, ciudad que responde, modo foto,
+  dinastías familiares), luego fase 6/cierre.
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
