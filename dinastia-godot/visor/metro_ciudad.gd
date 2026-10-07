@@ -158,6 +158,7 @@ func montar(exp: CiudadExpansion) -> void:
 				_estacion_elevada(p, dir, col, String(nombres[i]), String(l["nombre"]), i)
 			else:
 				_estacion_subterranea(p, dir, col, String(nombres[i]), String(l["nombre"]), i)
+			_decorar_estacion(p, dir, col, String(nombres[i]), bool(l["elevada"]))
 			_panel(p, l, est_s[i])
 		var trenes: Array = []
 		var nodos: Array = []
@@ -184,6 +185,9 @@ func montar(exp: CiudadExpansion) -> void:
 		var boca := p2 + Vector3(CiudadExpansion.ANCHO_AV * 0.5 + CiudadExpansion.ACERA + 3.0, 0, CiudadExpansion.ANCHO_AV * 0.5 + CiudadExpansion.ACERA + 3.0)
 		accesos.append({"pie": boca, "anden": _centro_anden(l2, i), "linea": "Línea 2", "idx": i, "elevada": false,
 			"nombre": String(NOMBRES["Línea 2"][i])})
+	## Un tótem «Ⓜ» con el nombre en cada acceso de la calle.
+	for acc: Dictionary in accesos:
+		_totem(acc["pie"], String(acc["nombre"]), Color(0.85, 0.15, 0.15) if bool(acc["elevada"]) else Color(0.15, 0.4, 0.9))
 
 ## El centro del andén (lado +lateral) de la estación `i` de una línea, a la
 ## altura del suelo del andén.
@@ -395,6 +399,117 @@ func _estacion_elevada(p: Vector3, dir: Vector3, col: Color, nombre: String, lin
 	l.outline_size = 8
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	l.position = p + Vector3(0, suelo + 7.5, 0)
+	add_child(l)
+
+## LA DECORACIÓN DE CADA ESTACIÓN (7-10-2026, «el metro debe tener
+## decoraciones por estación, nombre de estación»): cada una tiene su tema
+## -un icono y un color- en un mural a lo largo del andén, más lo que trae
+## cualquier estación de verdad: plano de la red, máquinas de billetes, una
+## expendedora, reloj, papeleras y jardineras.
+const TEMAS := {
+	"Alto Norte": ["⛰️", Color(0.45, 0.6, 0.8), "Las cumbres del norte"],
+	"Mercado Este": ["🍊", Color(0.95, 0.6, 0.2), "Frutas y mercados"],
+	"Cine": ["🎬", Color(0.25, 0.25, 0.3), "Cien años de cine"],
+	"Transbordo": ["🔁", Color(0.6, 0.3, 0.7), "Líneas 1 y 2"],
+	"Hospital": ["➕", Color(0.3, 0.7, 0.5), "Salud y cuidado"],
+	"Ensanche": ["🏘️", Color(0.85, 0.7, 0.45), "La ciudad que crece"],
+	"Puerta Sur": ["🚪", Color(0.7, 0.4, 0.3), "La antigua muralla"],
+	"Ribera Oeste": ["🌊", Color(0.25, 0.55, 0.75), "El río y sus orillas"],
+	"Puerto": ["⚓", Color(0.15, 0.3, 0.55), "Barcos y remeros"],
+	"Talleres": ["⚙️", Color(0.5, 0.5, 0.52), "Oficios de la ciudad"],
+	"Plaza Mayor": ["🏛️", Color(0.8, 0.65, 0.4), "El corazón del barrio"],
+	"Estación Central": ["🕰️", Color(0.55, 0.35, 0.25), "Trenes de toda la vida"],
+	"Ópera": ["🎭", Color(0.6, 0.15, 0.25), "Música y teatro"],
+}
+
+func _decorar_estacion(p: Vector3, dir: Vector3, col: Color, nombre: String, elevada: bool) -> void:
+	var vertical := absf(dir.z) > 0.5
+	var lat := Vector3(1, 0, 0) if vertical else Vector3(0, 0, 1)
+	var lon := Vector3(0, 0, 1) if vertical else Vector3(1, 0, 0)
+	var tema: Array = TEMAS.get(nombre, ["Ⓜ", col, ""])
+	var tcol: Color = tema[1]
+	var y := (ALTO_VIADUCTO + 0.6 + PISO_COCHE) if elevada else (PROF_TUNEL + PISO_COCHE)
+	## Lado del andén donde va el mural: en la subterránea, la pared del fondo
+	## del vestíbulo; en la elevada, un panel en cada andén (de espaldas a la vía).
+	var lados: Array = [1.0, -1.0] if elevada else [1.0]
+	for lado: float in lados:
+		var fondo := p + lat * lado * ((ANDEN_LAT + ANDEN_ANCHO * 0.5 - 0.15) if elevada else (2.0 + 8.0 - 0.45))
+		var hacia := -lat * lado
+		## El mural: tres paneles del color del tema con el icono y el lema.
+		for k in 3:
+			var c := fondo + lon * (float(k) - 1.0) * 16.0 + Vector3(0, y + (1.7 if elevada else 2.4), 0)
+			_caja(self, c, (Vector3(0.12, 2.6 if elevada else 3.2, 10.0) if vertical else Vector3(10.0, 2.6 if elevada else 3.2, 0.12)), _mat(tcol, 0.6, 0.15))
+			var ico := Label3D.new()
+			ico.text = String(tema[0]) if k != 1 else "%s\n%s" % [nombre, String(tema[2])]
+			ico.font_size = 120 if k != 1 else 54
+			ico.pixel_size = 0.012 if k != 1 else 0.011
+			ico.outline_size = 10
+			ico.outline_modulate = tcol.darkened(0.5)
+			ico.position = c + hacia * 0.1
+			ico.rotation.y = atan2(hacia.x, hacia.z)
+			ico.visibility_range_end = 90.0
+			add_child(ico)
+		## Plano de la red: un panel blanco con las dos líneas y sus estaciones.
+		var pl := fondo + lon * 24.0 + Vector3(0, y + 1.6, 0) + hacia * 0.05
+		_caja(self, pl, (Vector3(0.1, 1.8, 2.6) if vertical else Vector3(2.6, 1.8, 0.1)), _mat(Color(0.96, 0.96, 0.94), 0.6))
+		var plano := Label3D.new()
+		plano.text = "PLANO DE LA RED\n🔴 L1: %s\n🔵 L2: %s\n\nUsted está en: %s" % [" · ".join(NOMBRES["Línea 1"]), " · ".join(NOMBRES["Línea 2"]), nombre]
+		plano.font_size = 22
+		plano.pixel_size = 0.0045
+		plano.modulate = Color(0.1, 0.1, 0.15)
+		plano.outline_size = 0
+		plano.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		plano.width = 520.0
+		plano.position = pl + hacia * 0.07
+		plano.rotation.y = atan2(hacia.x, hacia.z)
+		plano.visibility_range_end = 40.0
+		add_child(plano)
+		## Máquinas de billetes y una expendedora junto al plano.
+		for k in 2:
+			var mq := fondo + lon * (-24.0 - float(k) * 1.4) + hacia * 0.5 + Vector3(0, y + 0.9, 0)
+			_caja(self, mq, Vector3(0.7, 1.8, 1.0) if vertical else Vector3(1.0, 1.8, 0.7), _mat(Color(0.2, 0.22, 0.25), 0.4))
+			_caja(self, mq + hacia * 0.36 + Vector3(0, 0.3, 0), Vector3(0.02, 0.5, 0.6) if vertical else Vector3(0.6, 0.5, 0.02), _mat(Color(0.3, 0.7, 1.0), 0.2, 1.2))
+		var exp_c := fondo + lon * -28.0 + hacia * 0.5 + Vector3(0, y + 0.95, 0)
+		_caja(self, exp_c, Vector3(0.8, 1.9, 1.1) if vertical else Vector3(1.1, 1.9, 0.8), _mat(Color(0.8, 0.12, 0.12), 0.4))
+		_caja(self, exp_c + hacia * 0.41 + Vector3(0, 0.2, 0), Vector3(0.02, 1.1, 0.8) if vertical else Vector3(0.8, 1.1, 0.02), _mat(Color(0.95, 0.9, 0.6), 0.2, 0.6))
+		## Jardineras y papeleras a lo largo del andén.
+		for k in 4:
+			var jd := fondo + lon * ((float(k) - 1.5) * 13.0 + 6.0) + hacia * 0.7 + Vector3(0, y + 0.35, 0)
+			_caja(self, jd, Vector3(0.9, 0.7, 0.9), _mat(Color(0.45, 0.42, 0.4), 0.8))
+			var mata := MeshInstance3D.new()
+			var sm := SphereMesh.new()
+			sm.radius = 0.6
+			sm.height = 1.0
+			mata.mesh = sm
+			mata.material_override = _mat(Color(0.2, 0.5, 0.22), 0.9)
+			mata.position = jd + Vector3(0, 0.75, 0)
+			add_child(mata)
+		## El reloj de la estación, colgado.
+		var rl := fondo + lon * 8.0 + hacia * 1.5 + Vector3(0, y + 3.3, 0)
+		var reloj := MeshInstance3D.new()
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.45
+		cm.bottom_radius = 0.45
+		cm.height = 0.1
+		reloj.mesh = cm
+		reloj.material_override = _mat(Color.WHITE, 0.4, 0.3)
+		reloj.position = rl
+		reloj.rotation = Vector3(PI * 0.5, atan2(hacia.x, hacia.z), 0)
+		add_child(reloj)
+
+## El tótem de la boca: poste alto con la «Ⓜ» y el nombre de la estación.
+func _totem(pie: Vector3, nombre: String, col: Color) -> void:
+	_caja(self, pie + Vector3(1.8, 2.2, 1.8), Vector3(0.18, 4.4, 0.18), _mat(Color(0.25, 0.25, 0.28), 0.4))
+	_caja(self, pie + Vector3(1.8, 4.7, 1.8), Vector3(0.9, 0.9, 0.9), _mat(col, 0.4, 0.6))
+	var l := Label3D.new()
+	l.text = "Ⓜ\n%s" % nombre
+	l.font_size = 40
+	l.pixel_size = 0.012
+	l.outline_size = 8
+	l.outline_modulate = col.darkened(0.5)
+	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	l.position = pie + Vector3(1.8, 5.9, 1.8)
+	l.visibility_range_end = 220.0
 	add_child(l)
 
 func _banco(p: Vector3, vertical: bool) -> void:

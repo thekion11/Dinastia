@@ -5175,6 +5175,13 @@ func _probar_ciudad_grande() -> void:
 	for l: Dictionary in e.lineas_metro:
 		est += (l["estaciones"] as Array).size()
 	_comprobar(e.lineas_metro.size() == 2 and est >= 10, "metro: %d líneas, %d estaciones" % [e.lineas_metro.size(), est])
+	## Las calles tienen nombre: en un cruce, las dos; dentro de una manzana, ninguno.
+	var cruce := e.nombre_calle_en(Vector3(0, 0, 0))
+	var en_fila := e.nombre_calle_en(Vector3(55.0, 0, 2.0))
+	var en_col := e.nombre_calle_en(Vector3(110.0, 0, 50.0))
+	var en_manzana := e.nombre_calle_en(Vector3(55.0, 0, 55.0))
+	_comprobar(cruce.contains(" con ") and en_fila.begins_with("Avenida") and en_col.begins_with("Calle") and en_manzana == "",
+		"nombres de calle: «%s» · «%s» · «%s»" % [cruce, en_fila, en_col])
 	var paradas := 0
 	for l: Dictionary in e.lineas_bus:
 		paradas += (l["paradas"] as Array).size()
