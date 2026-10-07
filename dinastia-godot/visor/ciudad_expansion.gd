@@ -124,6 +124,9 @@ func nombre_columna(i: int) -> String:
 ## La calle en la que está un punto («Calle X», o «Calle X con Avenida Y» en
 ## un cruce). Vacío si no está sobre ninguna (dentro de una manzana).
 func nombre_calle_en(p: Vector3) -> String:
+	## El núcleo del club tiene sus propios viales (anillo, accesos).
+	if dentro_nucleo(p.x, p.z, -1.0):
+		return ""
 	var i := roundi(p.x / CELDA)
 	var j := roundi(p.z / CELDA)
 	if absi(i) > K or absi(j) > K:
@@ -717,6 +720,8 @@ func _fachadas(r: Rect2, con_nave: bool) -> void:
 			## Escala UNIFORME (7-10-2026): estirarlos en vertical alargaba puertas
 			## y ventanas, y los edificios se veían deformados.
 			_kit(esc, Vector3(p.x, 0.2, p.z), Vector3.ONE * s, giro)
+			if _rng.randf() < 0.4:
+				_rotulo_comercio(p + n * (fondo * 0.5 + 0.35), giro, ancho)
 			u += ancho + _rng.randf_range(0.3, 1.5)
 	if con_nave and not _naves.is_empty():
 		_patio_de_manzana(r, c)
@@ -726,6 +731,43 @@ func _fachadas(r: Rect2, con_nave: bool) -> void:
 			_kit(_altos[_rng.randi() % _altos.size()], c + Vector3(0, 0.2, 0), Vector3.ONE * _rng.randf_range(3.2, 4.4), float(_rng.randi() % 4) * PI * 0.5)
 		else:
 			_kit(_naves[_rng.randi() % _naves.size()], c + Vector3(0, 0.2, 0), Vector3.ONE * s2 * 1.2, float(_rng.randi() % 4) * PI * 0.5)
+
+## LOS COMERCIOS (7-10-2026, «agrega cosas que tiene una ciudad real»): un
+## rótulo sobre la planta baja de las fachadas que dan a la calle. La farmacia
+## lleva su cruz verde encendida.
+const COMERCIOS := [["💊 Farmacia", Color(0.1, 0.55, 0.25)], ["☕ Cafetería", Color(0.45, 0.28, 0.18)],
+	["🥖 Panadería", Color(0.8, 0.55, 0.2)], ["🏦 Banco", Color(0.1, 0.25, 0.5)], ["📮 Correos", Color(0.95, 0.75, 0.1)],
+	["💈 Peluquería", Color(0.75, 0.15, 0.2)], ["📚 Librería", Color(0.3, 0.2, 0.45)], ["🛒 Supermercado", Color(0.85, 0.3, 0.1)],
+	["🍕 Pizzería", Color(0.75, 0.2, 0.1)], ["🏨 Hotel", Color(0.15, 0.15, 0.2)], ["👟 Deportes", Color(0.2, 0.45, 0.75)],
+	["🍺 Bar", Color(0.55, 0.2, 0.15)], ["🌸 Floristería", Color(0.85, 0.4, 0.6)], ["🔑 Ferretería", Color(0.4, 0.4, 0.42)],
+	["⚽ Peña del club", Color(0.2, 0.5, 0.3)], ["🍦 Heladería", Color(0.4, 0.75, 0.85)]]
+
+func _rotulo_comercio(frente: Vector3, giro: float, ancho: float) -> void:
+	var com: Array = COMERCIOS[_rng.randi() % COMERCIOS.size()]
+	var col: Color = com[1]
+	if String(com[0]).contains("Peña"):
+		col = b._color_club("c1", col)
+	var basis := Basis(Vector3.UP, giro)
+	var centro := frente + Vector3(0, 4.1, 0)
+	var placa := b._caja_en(centro, Vector3(minf(ancho * 0.8, 7.0), 0.9, 0.18), b._mat_simple(col, 0.5, 0.25))
+	placa.rotation.y = giro
+	var l := Label3D.new()
+	l.text = String(com[0])
+	l.font_size = 48
+	l.pixel_size = 0.012
+	l.outline_size = 8
+	l.outline_modulate = col.darkened(0.6)
+	l.position = centro + basis * Vector3(0, 0, 0.12)
+	l.rotation.y = giro
+	l.visibility_range_end = 110.0
+	b.add_child(l)
+	if String(com[0]).contains("Farmacia"):
+		var cruz := b._mat_simple(Color(0.2, 1.0, 0.4), 0.4, 2.0)
+		var pc := frente + basis * Vector3(minf(ancho * 0.4, 3.5) + 0.6, 0, 0.5) + Vector3(0, 5.2, 0)
+		var h := b._caja_en(pc, Vector3(0.9, 0.3, 0.12), cruz)
+		h.rotation.y = giro
+		var v := b._caja_en(pc, Vector3(0.3, 0.9, 0.12), cruz)
+		v.rotation.y = giro
 
 func _torres(r: Rect2) -> void:
 	if _altos.is_empty():
@@ -1646,6 +1688,13 @@ func _mobiliario_urbano() -> void:
 	var kioscos: Array[Transform3D] = []
 	var techos_k: Array[Transform3D] = []
 	var bicis: Array[Transform3D] = []
+	var mesas: Array[Transform3D] = []
+	var patas: Array[Transform3D] = []
+	var sombrillas: Array[Transform3D] = []
+	var somb_col: Array[Color] = []
+	var sillas_t: Array[Transform3D] = []
+	var vallas: Array[Transform3D] = []
+	var valla_col: Array[Color] = []
 	var k_tramo := 0
 	for t: Dictionary in tramos:
 		k_tramo += 1
@@ -1716,6 +1765,22 @@ func _mobiliario_urbano() -> void:
 				stops.append(placa)
 			else:
 				cedas.append(placa)
+		## Terrazas de bar en las avenidas: mesas con sombrilla en la acera.
+		if bool(t["av"]) and largo > 90.0 and k_tramo % 3 == 0:
+			for i in 4:
+				var pt := a + dir * (largo * 0.2 + float(i) * 3.2) - lat * (ancho * 0.5 + 2.6)
+				mesas.append(Transform3D(Basis.from_scale(Vector3(0.9, 0.05, 0.9)), pt + Vector3(0, 0.95, 0)))
+				patas.append(Transform3D(Basis.from_scale(Vector3(0.08, 0.7, 0.08)), pt + Vector3(0, 0.6, 0)))
+				sombrillas.append(Transform3D(Basis.from_scale(Vector3(2.6, 0.5, 2.6)), pt + Vector3(0, 2.6, 0)))
+				somb_col.append([Color(0.85, 0.2, 0.15), Color(0.95, 0.95, 0.9), Color(0.2, 0.45, 0.3), Color(0.95, 0.75, 0.2)][(k_tramo + i) % 4])
+				for q in 2:
+					sillas_t.append(Transform3D(Basis.from_scale(Vector3(0.45, 0.5, 0.45)), pt + dir * (0.9 if q == 0 else -0.9) + Vector3(0, 0.55, 0)))
+		## Vallas publicitarias en algunos cruces de avenida.
+		if bool(t["av"]) and k_tramo % 7 == 0:
+			var pv := c - dir * (ancho * 0.5 + 20.0) + lat * (ancho * 0.5 + 5.0)
+			postes.append(Transform3D(Basis.from_scale(Vector3(0.3, 6.0, 0.3)), pv + Vector3(0, 3.0, 0)))
+			vallas.append(Transform3D(rot * Basis.from_scale(Vector3(0.3, 3.2, 7.0)), pv + Vector3(0, 7.2, 0)))
+			valla_col.append(Color.from_hsv(fmod(float(k_tramo) * 0.13, 1.0), 0.6, 0.85))
 		## En las avenidas: un kiosco y un aparcabicis por tramo largo.
 		if bool(t["av"]) and largo > 90.0:
 			var pk := a + dir * (largo * 0.4) + lat * (ancho * 0.5 + 2.4)
@@ -1741,6 +1806,22 @@ func _mobiliario_urbano() -> void:
 	_multimesh(caja, b._mat_simple(Color(0.15, 0.4, 0.3), 0.6), kioscos, Vector3.ONE)
 	_multimesh(caja, b._mat_simple(Color(0.1, 0.28, 0.22), 0.6), techos_k, Vector3.ONE)
 	_multimesh(caja, hierro, bicis, Vector3.ONE)
+	_multimesh(cil, b._mat_simple(Color(0.92, 0.92, 0.9), 0.4), mesas, Vector3.ONE)
+	_multimesh(cil, hierro, patas, Vector3.ONE)
+	var cono := CylinderMesh.new()
+	cono.top_radius = 0.02
+	cono.bottom_radius = 0.5
+	cono.height = 1.0
+	cono.radial_segments = 8
+	_multimesh(cono, null, sombrillas, Vector3.ONE, somb_col)
+	_multimesh(caja, b._mat_simple(Color(0.35, 0.25, 0.18), 0.6), sillas_t, Vector3.ONE)
+	_multimesh(caja, b._mat_simple(Color(0.95, 0.95, 0.95), 0.4, 0.3), vallas, Vector3.ONE)
+	if not vallas.is_empty():
+		## El cartel de la valla: el color de cada anuncio, encima del marco.
+		var anuncios: Array[Transform3D] = []
+		for tv in vallas:
+			anuncios.append(Transform3D(tv.basis * Basis.from_scale(Vector3(1.4, 0.88, 0.94)), tv.origin))
+		_multimesh(caja, null, anuncios, Vector3.ONE, valla_col)
 	cuenta["mobiliario"] = tapas.size() + sumideros.size() + papeleras.size() + hidrantes.size() / 3 + bancos_a.size() / 2 \
 		+ contenedores.size() + bolardos.size() + postes.size() + kioscos.size() + bicis.size()
 
