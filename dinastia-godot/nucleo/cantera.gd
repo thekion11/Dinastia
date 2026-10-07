@@ -1032,7 +1032,8 @@ func sortear_guerra_agentes() -> Dictionary:
 	var ids: Array[String] = []
 	for j: Jugador in suyos:
 		ids.append(j.id)
-	exigencia = {"tipo": tipo, "agente": nombre, "pid": estrella.id, "ids": ids}
+	exigencia = {"tipo": tipo, "agente": nombre, "pid": estrella.id, "ids": ids,
+		"perfil": String(elegida["agente"].get("perfil", "discreto"))}
 	match tipo:
 		"canterano":
 			exigencia["txt"] = "%s (%s) controla a %d de tus jugadores. Te exige fichar a un canterano de su agencia o «no responde por el ánimo» de %s y compañía." % [
@@ -1062,7 +1063,11 @@ func hay_exigencia() -> bool:
 ##
 ## No hay opción neutra: las dos ramas mueven algo. Decirle que no a un agente
 ## con media plantilla en la cartera tiene precio, y decirle que sí también.
-func resolver_agente(op: String) -> Dictionary:
+##
+## `f` (fase 4, mini-juego de la mesa, ver `MesaAgente`): la parte de la
+## exigencia que se pactó, 0..1. `se_fue`: se levantó de la mesa sin trato,
+## que es un no con una pizca más de rencor.
+func resolver_agente(op: String, f: float = 1.0, se_fue: bool = false) -> Dictionary:
 	var m := _mundo()
 	if exigencia.is_empty() or m == null or m.mi_club() == null:
 		exigencia = {}
@@ -1072,6 +1077,9 @@ func resolver_agente(op: String) -> Dictionary:
 	var nombre := String(exigencia.get("agente", ""))
 	var tipo := String(exigencia.get("tipo", ""))
 	var cuerpo := ""
+	f = clampf(f, 0.0, 1.0)
+	if se_fue:
+		_mover_confianza(nombre, -1)
 	match tipo:
 		"canterano":
 			if acepta and mio.plantilla.size() >= TOPE_PLANTEL:
@@ -1087,7 +1095,9 @@ func resolver_agente(op: String) -> Dictionary:
 				_ficha(jov.id)["camada"] = m.anio
 				jov.dorsal = _dorsal_libre(mio)
 				mio.plantilla.append(jov)
-				_mover_confianza(nombre, 2)
+				if f < 1.0:
+					jov.sueldo = maxi(1, int(round(float(jov.sueldo) * f)))
+				_mover_confianza(nombre, 2 if f >= 0.8 else 1)
 				cuerpo = "Fichaste a %s (%d años, media %d, proyección %d). %s ahora te debe una." % [
 					jov.nombre, jov.edad, jov.ovr, jov.pot, nombre]
 			else:
@@ -1097,15 +1107,15 @@ func resolver_agente(op: String) -> Dictionary:
 		"mejora":
 			var j := _jugador(mio, String(exigencia.get("pid", "")))
 			if acepta and j != null:
-				j.sueldo = int(round(float(j.sueldo) * 1.3))
-				j.moral = clampi(j.moral + 14, 10, 99)
+				j.sueldo = int(round(float(j.sueldo) * (1.0 + 0.3 * f)))
+				j.moral = clampi(j.moral + int(round(14.0 * f)), 10, 99)
 				j.anios_contrato = maxi(j.anios_contrato, 3)
-				_mover_confianza(nombre, 1)
+				_mover_confianza(nombre, 1 if f >= 0.6 else 0)
 				## El resto del vestuario mira de reojo la escala salarial: no es
 				## un castigo aleatorio, es lo que pasa cuando uno cobra más y los
 				## de su nivel se enteran.
 				for x in mio.plantilla:
-					if x.id != j.id and x.ovr >= j.ovr - 3:
+					if f > 0.6 and x.id != j.id and x.ovr >= j.ovr - 3:
 						x.moral = clampi(x.moral - Azar.ent(1, 5), 10, 99)
 				cuerpo = "%s firma la mejora. El resto del vestuario mira de reojo la escala salarial." % j.nombre
 			else:
@@ -1114,10 +1124,10 @@ func resolver_agente(op: String) -> Dictionary:
 				cuerpo = "Aguantaste. Sus representados rinden con desgana y la prensa ya habla de la interna."
 		"comision":
 			if acepta:
-				var coste := Eco.escalar(float(mio.rep) * 2200.0, float(mio.rep))
+				var coste := int(round(float(Eco.escalar(float(mio.rep) * 2200.0, float(mio.rep))) * f))
 				mio.mover_saldo(-coste)
 				movimiento.emit("Gastos de intermediación (sin detalle)", -coste)
-				_mover_confianza(nombre, 3)
+				_mover_confianza(nombre, maxi(1, int(round(3.0 * f))))
 				turbio += 1
 				cuerpo = "Pagaste. %s te abre la puerta grande… y ahora sabe algo de ti." % nombre
 				## Tres pagos turbios y la cosa se filtra. No es seguro: es una
@@ -1133,7 +1143,7 @@ func resolver_agente(op: String) -> Dictionary:
 				cuerpo = "Lo denunciaste ante el directorio. Tu reputación limpia sube, pero %s te va a cerrar puertas." % nombre
 		_:
 			if acepta:
-				_mover_confianza(nombre, 4)
+				_mover_confianza(nombre, maxi(1, int(round(4.0 * f))))
 				exclusiva = nombre
 				cuerpo = "Trato cerrado con %s. Verás primero a sus jugadores en el mercado." % nombre
 			else:
@@ -1142,6 +1152,10 @@ func resolver_agente(op: String) -> Dictionary:
 					exclusiva = ""
 				cuerpo = "Prefieres moverte libre. %s se lo tomó con deportividad… por ahora." % nombre
 	var titulo := "Representantes: %s" % nombre
+	if acepta and f < 1.0:
+		cuerpo = "Negociado en la mesa al %d %% de lo que pedía. %s" % [int(round(f * 100.0)), cuerpo]
+	elif se_fue:
+		cuerpo = "%s se levantó de la mesa. %s" % [nombre, cuerpo]
 	exigencia = {}
 	noticia.emit(titulo, cuerpo)
 	return {"titulo": titulo, "cuerpo": cuerpo}
