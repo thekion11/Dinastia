@@ -276,6 +276,10 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_cajon.fila([["🔍 Acercar", func() -> void: if _rig: _rig.ajustar_zoom(-3.0)],
 		["🔍 Alejar", func() -> void: if _rig: _rig.ajustar_zoom(3.0)]])
 	_cajon.boton("📸 Modo foto", func() -> void: ModoFoto.abrir(self, club, "el estadio"))
+	## RECORRER EL ESTADIO A PIE (7-10-2026): del vestuario, por el túnel, a la
+	## cancha. Solo sin partido en marcha.
+	if partido == null:
+		_cajon.boton("🚶 Recorrer el estadio (vestuario y túnel)", recorrer)
 	if partido != null:
 		_cajon.seccion("Partido")
 		_btn_modo = _cajon.boton("🎮 Modo: Manager", _alternar_modo_control)
@@ -332,6 +336,42 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_pie.visible = _pref("pie", true)
 	add_child(_pie)
 	_actualizar_pie(perfil, aforo, ocupacion)
+
+var _explorador: ExploradorEstadio
+var _ocultos: Array = []
+
+## Baja al vestuario con el protagonista y deja recorrer el estadio a pie.
+func recorrer() -> void:
+	if _explorador != null:
+		return
+	if _cajon != null and _cajon.has_method("cerrar"):
+		_cajon.call("cerrar")
+	_ocultos = []
+	for c in get_children():
+		if c is CanvasItem and (c as CanvasItem).visible:
+			(c as CanvasItem).visible = false
+			_ocultos.append(c)
+	if _rig != null:
+		_rig.set_process(false)
+		_rig.set_process_unhandled_input(false)
+	_explorador = ExploradorEstadio.new()
+	_raiz3d.add_child(_explorador)
+	_explorador.iniciar(_perfil, StadiumBuilder.niveles_de(_perfil, int(_perfil.get("aforo", 20000))), club)
+	_explorador.salir.connect(_dejar_de_recorrer)
+
+func _dejar_de_recorrer() -> void:
+	if _explorador == null:
+		return
+	_explorador.queue_free()
+	_explorador = null
+	for c in _ocultos:
+		if is_instance_valid(c):
+			(c as CanvasItem).visible = true
+	_ocultos = []
+	if _rig != null:
+		_rig.set_process(true)
+		_rig.set_process_unhandled_input(true)
+		_rig.switch_to(_rig.current_index)
 
 ## `fixed_size` compensa la DISTANCIA, no el zoom: con "Tele Dinámica" (campo
 ## de visión estrecho) los nombres salían tres veces más grandes que con la de
