@@ -220,15 +220,31 @@ Pendientes, de menor a mayor esfuerzo:
 - Precarga del estadio.
 - Etiquetas de nombre.
 
-**Fase 3 — Carrera de Jugador v2 (3-4 días)** 🟡 EN CURSO (6-10-2026):
-- ✅ Fuera de juego en el motor jugable: foto en cada pase o tiro (penúltimo rival, con tolerancia de 30 cm), se pita al recibir y saca el rival. No hay en saques de banda, córners ni saques de puerta, y un toque del rival lo anula. La IA no se queda en posición adelantada y el pasador lo ve según su visión. Medido: 2-4 por partido (antes de ajustar la IA, 10-13).
-- ✅ Cambios:
-  - Si empiezas en el banco, botón «IR AL BANCO»: el DT decide si entras y en qué minuto (antes cuanto mejor la relación) y juegas desde ahí.
-  - Si eres titular, el DT puede sacarte pasada la hora (pesan su exigencia y tu nota) y entra el suplente de tu puesto.
-  - Los minutos reales cuentan; en simulado, el suplente a veces entra un rato.
-  - `pruebas/prueba_motor_jugable.tscn` con `CAMBIO=banco` y `CAMBIO=sale`.
-- ⬜ Desgaste por tiempo jugado: hecho pero APAGADO, porque bajaba los tiros de 7-8 a 1-4 por partido. Falta ajustarlo.
-- ⬜ Más eventos únicos, convocatoria y partidos con la selección, y paso de jugador a DT al retirarse.
+**Fase 3 — Carrera de Jugador v2 (3-4 días)** ✅ HECHA el 7-10-2026:
+- **Fuera de juego** en el motor jugable:
+  - en cada pase o tiro se toma una foto de quién está adelantado (penúltimo rival, con 30 cm de tolerancia);
+  - se pita al recibir y saca el rival;
+  - no hay fuera de juego en saques de banda, córners ni saques de puerta, y un toque del rival lo anula;
+  - la IA vuelve a estar habilitada y el pasador ve el fuera de juego según su visión;
+  - medido: 2-4 por partido.
+- **Cambios:**
+  - «IR AL BANCO» si eres suplente: el DT decide si entras y cuándo (antes cuanto mejor la relación).
+  - Siendo titular, el DT puede sacarte pasada la hora: pesan su exigencia, tu nota y tu desgaste.
+  - Si no hay un balón parado, el árbitro detiene el juego para el cambio.
+  - Los minutos reales cuentan.
+- **Desgaste del partido:** de 1 a ~0,6 en 90' según el físico. Es la barra de aguante y lo que mira el DT. No frena a los jugadores (cuando frenaba, los tiros bajaban de 7-8 a 1-4).
+- **13 eventos únicos nuevos**, cada uno nacido de algo que te pasa:
+  - debut, primer gol, mentor veterano, cesión si no juegas, jugador del mes, brazalete;
+  - lesión larga, polémica en redes, reencuentro con un ex club, oferta del extranjero;
+  - licencia de entrenador, pensar en el retiro, el niño que pide tu camiseta.
+- **Selección jugable:**
+  - convocatoria por nacionalidad en cada fecha FIFA (los mejores de tu país en tu línea);
+  - partido con la selección en el motor jugable o simulado, contra un rival con la fuerza de su país;
+  - internacionalidades y goles.
+- **Una vida entera en una partida:**
+  - al retirarte (lo anuncias, o a los 38 años) ves tu carrera resumida y hasta tres clubes de tu país te ofrecen el banquillo según tu fama;
+  - diriges en el mismo mundo con tu nombre, y la partida de entrenador previa queda de respaldo.
+- Pruebas: banco (eventos, convocatoria, selección, retiro y paso a DT, guardado) y `prueba_motor_jugable` (`CAMBIO=banco|sale`, 3 semillas). Capturas: `pruebas/captura_carrera_fase3.tscn`.
 
 **Fase 3 — plan original**
 - Fuera de juego, cambios, eventos y selección.
