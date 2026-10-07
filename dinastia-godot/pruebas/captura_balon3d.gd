@@ -63,7 +63,7 @@ func _process(_d: float) -> void:
 				print("el balon giro de verdad (rodado) tras %d fotogramas, diferencia=%.3f rad" % [_n - ARRANQUE, diff])
 	if _n == ARRANQUE + 40:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_balon3d.png")
+		img.save_png("res://pruebas/capturas/pantalla_balon3d.png")
 		print("captura guardada: pantalla_balon3d.png")
 	if _n == ARRANQUE + 200:
 		print("altura maxima vista en el balon (arco, radio=0.11 => debe pasar de 0.11) = %.3f" % _y_max_visto)

@@ -65,6 +65,11 @@ func valor_pedido(j: Jugador) -> int:
 		p *= 0.75
 	if j.edad <= 21 and j.pot >= j.ovr + 10:
 		p *= 1.35                                    ## joya: carísima
+	## JUEGO LIMPIO (26-9-2026, `Reputacion`): a quien tiene fama de honesto
+	## le piden menos; a quien no, más. Solo cuando compras tú.
+	var m := _mundo()
+	if m != null and m.roles != null and j.club_id != m.mi_club_id:
+		p *= m.roles.reputacion.mult_compras()
 	return int(max(1000.0, round(p / 1000.0) * 1000.0))
 
 ## Las ganas que tiene de ir a `destino`, de 0 a 1, con los motivos para poder
@@ -175,7 +180,7 @@ func fichar(j: Jugador, comprador: Club, monto: int, sueldo: int, anios: int) ->
 		vendedor.mover_saldo(monto)
 		vendedor.soltar(j)
 	j.sueldo = sueldo
-	j.anios_contrato = anios
+	j.anios_contrato = Contratos.ajustar_anios(j, anios)
 	j.pide_salir = false
 	comprador.fichar(j)
 	traspaso.emit(j, vendedor, comprador, monto)
@@ -227,28 +232,12 @@ func mover(compradores_por_semana: int = 6) -> Array[Dictionary]:
 ## Busca a quién ficharía este club: alguien mejor que su plantilla actual, de
 ## otro club, y de un tamaño parecido. Se mira una muestra al azar en vez de los
 ## 8.000 jugadores del mundo, que es lo que permite que esto corra cada semana.
-## CLUBES QUE SOLO FICHAN DE SU PROPIO PAÍS (22-9-2026, pedido directo del
-## usuario: "el Atlético Club de Bilbao solo ficha jugadores de la ciudad de
-## Bilbao... eso debe integrarse en el mercado"). El Athletic Club de Bilbao
-## SÍ existe en el juego (`Ath. Bilbao` en `PAISES_LIGAS.ESP` -en leetspeak
-## en la tabla, "B1lbao", por eso una búsqueda literal de "Bilbao" no lo
-## encontraba la primera vez-). La regla real (cantera vasca, jugadores
-## formados en el País Vasco) no se puede portar literal: `Jugador` solo
-## trackea `pais` (código de 3 letras), nunca ciudad ni región -aproximar
-## por "mismo país" (ESP) es lo más cerca que da el modelo de datos actual,
-## no una promesa de fidelidad perfecta a la regla real-. Lista aparte y no
-## un campo en `Club`: son pocos clubes con esta identidad en el mundo real
-## (Athletic es el caso de libro, hay más candidatos si el usuario los pide),
-## y así no hace falta tocar el guardado de cada club por uno solo.
-const CLUBES_SOLO_MISMO_PAIS := ["Ath. Bilbao"]
-
-func _solo_mismo_pais(c: Club) -> bool:
-	return CLUBES_SOLO_MISMO_PAIS.has(Nombres.limpiar(c.nombre))
-
+## CLUBES QUE SOLO FICHAN DE SU TIERRA: ver `Regiones` (26-9-2026, plan
+## maestro C3). Aquí había una aproximación por "mismo país" porque `Jugador` no
+## tenía región; ya la tiene, y la regla es la real (Euskal Herria).
 func _buscar_objetivo(comprador: Club) -> Jugador:
 	var lista: Array = _mundo().clubes.values()
 	var media := comprador.media()
-	var solo_local := _solo_mismo_pais(comprador)
 	var mejor: Jugador = null
 	var mejor_v := media + 1.0
 	for intento in 12:
@@ -260,7 +249,8 @@ func _buscar_objetivo(comprador: Club) -> Jugador:
 		var j: Jugador = otro.plantilla[Azar.ent(0, otro.plantilla.size() - 1)]
 		if j.edad > 33:
 			continue
-		if solo_local and j.pais != comprador.pais:
+		## Filosofía de cantera (C3): el Athletic solo mira a los de su tierra.
+		if not Regiones.admite(comprador, j):
 			continue
 		if float(j.ovr) > mejor_v:
 			mejor_v = float(j.ovr)
@@ -320,6 +310,9 @@ func buscar_oferta_por_mi_jugador() -> void:
 		return
 	var comprador: Club = candidatos[Azar.ent(0, candidatos.size() - 1)]
 	var monto := int(round(float(j.valor) * (0.85 + Azar.f() * 0.5)))
+	## Fama de negociador: te ofrecen más por tus jugadores.
+	if _mundo().roles != null:
+		monto = int(round(float(monto) * _mundo().roles.reputacion.mult_ventas()))
 	var es_clausula := false
 	var cesiones := _mundo().cesiones
 	if cesiones != null:
@@ -369,6 +362,14 @@ func responder_oferta(idx: int, acepta: bool) -> void:
 		j.moral = 70
 		j.transferible = false
 		j.pide_salir = false
+		## Operación rentable = fama de negociador (idea 608); malvender, lo
+		## contrario. Se compara con lo que vale el jugador.
+		var m2 := _mundo()
+		if m2 != null and m2.roles != null and j.valor > 0:
+			var razon := float(monto) / float(j.valor)
+			var d := clampi(int(round((razon - 1.0) * 20.0)), -5, 6)
+			if d != 0:
+				m2.roles.anotar_reputacion("negociador", d, "Venta de %s por el %d %% de su valor" % [j.nombre, int(razon * 100.0)])
 		traspaso.emit(j, vendedor, comprador, monto)
 	elif Azar.suerte(0.40):
 		j.moral = clampi(j.moral - 10, 10, 99)
@@ -432,6 +433,10 @@ func abrir_negociacion(j: Jugador) -> String:
 	if j.no_negociar_hasta > 0 and m.semana < j.no_negociar_hasta:
 		return "%s no se sienta a hablar de él hasta la semana %d" % [
 			(m.clubes.get(j.club_id) as Club).nombre if m.clubes.has(j.club_id) else "Su club", j.no_negociar_hasta]
+	## Si diriges un club con filosofía de cantera, la respetas tú también.
+	if not Regiones.admite(mio, j):
+		var mot := Regiones.motivo(mio)
+		return mot[0].to_upper() + mot.substr(1)
 	if m.federacion != null:
 		var motivo_ext := m.federacion.puede_fichar_extranjero(mio, j)
 		if motivo_ext != "":

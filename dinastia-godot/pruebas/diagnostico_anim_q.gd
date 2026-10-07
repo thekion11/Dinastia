@@ -57,11 +57,11 @@ func _process(_delta: float) -> void:
 		ap.play("parado")
 	if _frame == 30:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_parado_frente.png")
+		img.save_png("res://pruebas/capturas/q_parado_frente.png")
 		_cam_lado.current = true
 	if _frame == 33:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/q_parado_lado.png")
+		img2.save_png("res://pruebas/capturas/q_parado_lado.png")
 		_cam_frente.current = true
 		print("capturado parado")
 	if _frame == 40:
@@ -70,15 +70,15 @@ func _process(_delta: float) -> void:
 	# ver piernas y brazos en fases distintas, no siempre en la misma pose.
 	if _frame == 46:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_correr_f1.png")
+		img.save_png("res://pruebas/capturas/q_correr_f1.png")
 	if _frame == 52:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_correr_f2.png")
+		img.save_png("res://pruebas/capturas/q_correr_f2.png")
 	if _frame == 58:
 		_cam_lado.current = true
 	if _frame == 60:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_correr_lado.png")
+		img.save_png("res://pruebas/capturas/q_correr_lado.png")
 		print("capturado correr")
 	if _frame == 65:
 		_cam_frente.current = true
@@ -88,14 +88,14 @@ func _process(_delta: float) -> void:
 	# del 29 (0.48s). Capturamos ambos momentos, de frente y de perfil.
 	if _frame == 65 + 19:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_patear_armado_frente.png")
+		img.save_png("res://pruebas/capturas/q_patear_armado_frente.png")
 	if _frame == 65 + 29:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_patear_disparo_frente.png")
+		img.save_png("res://pruebas/capturas/q_patear_disparo_frente.png")
 		_cam_lado.current = true
 	if _frame == 65 + 32:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_patear_disparo_lado.png")
+		img.save_png("res://pruebas/capturas/q_patear_disparo_lado.png")
 		print("capturado patear")
 	if _frame == 65 + 36:
 		_cam_frente.current = true
@@ -105,11 +105,11 @@ func _process(_delta: float) -> void:
 	# cuello se enderece para el golpe.
 	if _frame == 65 + 36 + 26:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_cabezazo_pico_frente.png")
+		img.save_png("res://pruebas/capturas/q_cabezazo_pico_frente.png")
 		_cam_lado.current = true
 	if _frame == 65 + 36 + 29:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_cabezazo_pico_lado.png")
+		img.save_png("res://pruebas/capturas/q_cabezazo_pico_lado.png")
 		print("capturado cabezazo")
 	if _frame == 65 + 36 + 33:
 		_cam_frente.current = true
@@ -118,11 +118,11 @@ func _process(_delta: float) -> void:
 	# de 0.4s (frame ~24 relativo).
 	if _frame == 65 + 36 + 33 + 24:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_celebrar_frente.png")
+		img.save_png("res://pruebas/capturas/q_celebrar_frente.png")
 		_cam_lado.current = true
 	if _frame == 65 + 36 + 33 + 27:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/q_celebrar_lado.png")
+		img.save_png("res://pruebas/capturas/q_celebrar_lado.png")
 		print("capturado celebrar")
 		print("FIN. 0 fallos")
 		get_tree().quit(0)

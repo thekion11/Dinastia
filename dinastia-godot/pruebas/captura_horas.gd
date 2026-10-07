@@ -75,7 +75,7 @@ func _process(_d: float) -> void:
 				print("farola[0]: energia=%.2f  visible=%s  rango=%.0f  pos=%s  color=%s" % [
 					l0.light_energy, l0.visible, l0.omni_range, l0.global_position, l0.light_color])
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/%s.png" % String(h2[1]))
+		img.save_png("res://pruebas/capturas/%s.png" % String(h2[1]))
 		print("captura %s (hora %.1f)" % [String(h2[1]), float(h2[0])])
 		_paso += 1
 		if _paso >= HORAS.size():

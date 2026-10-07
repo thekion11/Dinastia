@@ -10,6 +10,16 @@ extends RefCounted
 signal semana_avanzada(semana: int, anio: int)
 signal temporada_terminada(anio: int, campeon: Club)
 
+## El último mundo creado, para lo que se dibuja sin tener el mundo a mano (los
+## patrocinadores de la camiseta, `SponsorKit`). Débil: no lo mantiene vivo.
+static var _ultimo: WeakRef = null
+
+static func actual() -> Mundo:
+	return _ultimo.get_ref() as Mundo if _ultimo != null else null
+
+func _init() -> void:
+	_ultimo = weakref(self)
+
 var semilla: int = 0
 var anio: int = 2026
 var semana: int = 1
@@ -36,6 +46,8 @@ var cesiones: Cesiones
 var vestuario: Vestuario
 var selecciones: Selecciones
 var cantera: Cantera
+## Los chicos de 10 a 16 años de tu club, antes de ser jugadores (`Academia`).
+var academia: Academia
 var ojeadores: Ojeadores
 
 ## `G.libro` del HTML: el registro de movimientos de caja de tu club. Siete
@@ -64,6 +76,10 @@ func _rol_cambio_directiva(_antes: String, _ahora: String) -> void:
 var roles: Roles
 var federacion: Federacion = Federacion.new()
 var estadio: EstadioPropio = EstadioPropio.new()
+## El reto elegido en el menú, si lo hay (`Retos`): {id, club, anio, juzgado, cumplido}.
+var reto: Dictionary = {}
+## El fondo de inversión (modo "fondo"); null en los demás modos.
+var fondo: FondoInversion = null
 var prensa: Prensa
 var medico: Medico
 ## Los desafíos activos de esta partida (claves de la tabla `DESAFIOS`), del
@@ -87,6 +103,36 @@ var hinchada: Hinchada
 var gente: Gente
 ## `vClubIn()`: vestuario, sala de prensa, palco y lo digital.
 var club_dentro: ClubDentro
+## El presidente del club, los accionistas y la junta trimestral (C5).
+var junta: Junta
+## Las charlas uno a uno con cada jugador y las promesas hechas (C7).
+var charlas: Charlas
+## La licencia de entrenador y sus exámenes (C7).
+var licencia: Licencia
+## Los trabajadores de las instalaciones y sus eventos (C10), y los asuntos de
+## la cantera (C11).
+var trabajadores: Trabajadores
+## Las redes sociales (Tribuna): tu cuenta y la oficial del club (28-9-2026).
+var redes: Redes
+## LA CARRERA DE JUGADOR (29-9-2026): solo existe en ese modo.
+var carrera_jugador: CarreraJugador = null
+## Tu teléfono: personalización, foto de perfil y Mensajes (28-9-2026).
+var movil: Movil
+## Guerra de ofertas, superagente, fichaje impuesto, apuestas, transparencia.
+var mercado_av: MercadoAvanzado
+## Resta de puntos, administrador, tope salarial, cláusula del DT, refundación.
+var insolvencia: Insolvencia
+## Lo editado de las competiciones que se recrean cada temporada (la copa):
+## {"copa_nombre", "copa_sede"}.
+var ajustes_competicion: Dictionary = {}
+var eventos_cantera: EventosCantera
+var calendario: Calendario
+var politica: Politica
+var contratos: Contratos
+var vida: VidaDT
+var maestria: Maestria
+## El resultado de tu último partido de liga para `VidaDT`: 1, 0, -1, o 2 si no hubo.
+var _resultado_semana: int = 2
 ## `vBanco()`: deuda, cuotas y el reloj de la liquidación.
 var banco: Banco
 ## La marca del pecho: ofertas, firma y exigencia contractual.
@@ -123,9 +169,15 @@ var anios_en_club: int = 0
 func es_clasico(a: Club, b: Club) -> bool:
 	if a == null or b == null or a.pais != b.pais or a.id == b.id:
 		return false
+	## Los clásicos con nombre propio (Superclásico, Gran Derbi...) lo son
+	## siempre, en la base ficticia y con el pack real.
+	if HistoriaClub.nombre_clasico(a.nombre, b.nombre) != "":
+		return true
 	var n1 := _norm_nombre(a.nombre)
 	var n2 := _norm_nombre(b.nombre)
-	var grandes := ["colocolo", "udechile", "ucatolica"]
+	## Los tres grandes, con sus nombres reales y con los de la base ficticia
+	## (sin los segundos, en la versión publicada no había clásico chileno).
+	var grandes := ["colocolo", "udechile", "ucatolica", "lautarofc", "uandina", "precordillera"]
 	if a.pais == "CHI" and grandes.has(n1) and grandes.has(n2):
 		return true
 	if a.rep + b.rep >= 164:
@@ -186,7 +238,7 @@ func aplicar_desafios() -> void:
 ## puede reventar el fundador.
 const REP_FUNDACION := 58
 
-func fundar_club(nombre_club: String, pais: String) -> Club:
+func fundar_club(nombre_club: String, pais: String, col1: String = "", col2: String = "", estadio: String = "") -> Club:
 	var candidatos: Array[Club] = []
 	for c: Club in clubes.values():
 		if c.pais != pais:
@@ -203,8 +255,12 @@ func fundar_club(nombre_club: String, pais: String) -> Club:
 	## no para tocar lo que alguien tecleó a mano.
 	c.nombre = nombre_club
 	c.rep = REP_FUNDACION
-	c.color1 = "#1e4030"
-	c.color2 = "#c9a227"
+	## Los colores y el estadio que eligió el fundador (26-9-2026, "Crear tu
+	## Club" desde el menú); sin elegir, los de siempre.
+	c.color1 = col1 if col1 != "" else "#1e4030"
+	c.color2 = col2 if col2 != "" else "#c9a227"
+	if estadio != "":
+		c.estadio_nombre = estadio
 	c.plantilla.clear()
 	_poblar(c)
 	tomar_el_mando(c.id)
@@ -402,6 +458,11 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	## generado -Reales necesita ver TODOS los clubes creados para poder cruzar
 	## sus nombres contra la tabla, no uno a uno mientras se crean-.
 	Reales.aplicar(self)
+	## EL MUNDO HEREDADO (28-9-2026, `Meta`): si se pidió, los clubes arrancan
+	## con la reputación con la que quedaron en tu última partida.
+	if Meta.heredar_proximo:
+		Meta.heredar_proximo = false
+		Meta.aplicar_herencia(self)
 
 ## Saca la lista de ligas de DATA_P1/DATA_P2 (Chile, las dos divisiones) y de
 ## PAISES_LIGAS (el resto del mundo), que es donde las tiene el HTML.
@@ -412,7 +473,7 @@ func _fuentes_de_liga(paises: Array[String]) -> Array:
 		var p1: Array = Datos.tabla("DATA_P1")
 		var p2: Array = Datos.tabla("DATA_P2")
 		if p1 != null:
-			salida.append({"nombre": "Primera Division", "pais": "CHI", "clubes": p1})
+			salida.append({"nombre": "Primera División", "pais": "CHI", "clubes": p1})
 		if p2 != null:
 			salida.append({"nombre": "Primera B", "pais": "CHI", "clubes": p2, "division": 2})
 	var pl: Dictionary = Datos.tabla("PAISES_LIGAS")
@@ -422,7 +483,7 @@ func _fuentes_de_liga(paises: Array[String]) -> Array:
 				continue
 			var d: Dictionary = pl[pais]
 			salida.append({
-				"nombre": Nombres.limpiar(String(d.get("liga", pais))),
+				"nombre": Nombres.de_tabla(String(d.get("liga", pais))),
 				"pais": pais,
 				"clubes": d.get("clubes", []),
 			})
@@ -431,7 +492,7 @@ func _fuentes_de_liga(paises: Array[String]) -> Array:
 ## Una fila de club es [nombre, color1, color2, reputacion, aforo].
 func _crear_club(fila: Array, pais: String) -> Club:
 	_seq_club += 1
-	var c := Club.new("c%d" % _seq_club, Nombres.limpiar(String(fila[0])))
+	var c := Club.new("c%d" % _seq_club, Nombres.de_tabla(String(fila[0])))
 	c.pais = pais
 	c.color1 = String(fila[1]) if fila.size() > 1 else "#2b6b45"
 	c.color2 = String(fila[2]) if fila.size() > 2 else "#ffffff"
@@ -506,7 +567,8 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 	j.pos = grupo
 	j.pos_e = demarcacion
 	j.pais = c.pais
-	j.nombre = _nombre_al_azar(c.pais)
+	j.region = Regiones.region_para(c.pais, j.id, c)
+	j.nombre = _nombre_al_azar(c.pais, j.region)
 	j.edad = edad if edad > 0 else Azar.ent(17, 35)
 	j.ovr = clampi(ovr if ovr > 0 else c.rep - 9 + Azar.ent(-7, 7), 40, 96)
 	## El techo: los muy jovenes pueden crecer mucho, a partir de los 25 lo que
@@ -517,7 +579,7 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 	j.rasgo = _rasgo_al_azar()
 	j.forma = Azar.ent(45, 70)
 	j.moral = Azar.ent(55, 80)
-	j.anios_contrato = Azar.ent(1, 4)
+	j.anios_contrato = Contratos.ajustar_anios(j, Azar.ent(1, 4))
 	j.generar_atributos()
 	j.tasar()
 	## LAS HABILIDADES DE NACIMIENTO. `Entrenamiento.sortear_habilidades()`
@@ -545,13 +607,23 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 ## `APELLIDOS_EXT` (para el DT "genérico" sin nacionalidad reconocida): un
 ## jugador peruano se lee mejor con un apellido hispano real que con uno
 ## inventado sin origen ninguno-. `ESP` se sumó a `POOLS_EU` en esta misma
-## ronda (con sabor vasco a propósito -Etxeberria, Aduriz, Zubizarreta...-,
+## ronda (con sabor vasco a propósito -Etxeberria, Agirre, Garmendia...-,
 ## a pedido del usuario, mencionando el Athletic Club de Bilbao).
-func _nombre_al_azar(pais: String = "") -> String:
+##
+## Nunca devuelve el nombre de un futbolista real (`Nombres.vetado()`).
+func _nombre_al_azar(pais: String = "", region: String = "") -> String:
+	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais, region))
+
+func _sortear_nombre(pais: String, region: String = "") -> String:
 	var n: Array = Datos.tabla("NOMBRES")
 	var a: Array = Datos.tabla("APELLIDOS")
 	var pools: Variant = Datos.tabla("POOLS_EU")
-	if pools is Dictionary and (pools as Dictionary).has(pais):
+	## España con su región (C3): bolsa general o vasca, ya no todos vascos.
+	var propias := Regiones.bolsas(pais, region)
+	if not propias.is_empty():
+		n = propias[0]
+		a = propias[1]
+	elif pools is Dictionary and (pools as Dictionary).has(pais):
 		var par: Array = (pools as Dictionary)[pais]
 		if par.size() >= 2 and not (par[0] as Array).is_empty() and not (par[1] as Array).is_empty():
 			n = par[0]
@@ -634,6 +706,8 @@ func fichar_libre(idx: int, c: Club) -> Dictionary:
 	if idx < 0 or idx >= libres.size():
 		return {"error": "ese jugador ya no está libre"}
 	var j := libres[idx]
+	if not Regiones.admite(c, j):
+		return {"error": Regiones.motivo(c)}
 	var factor_agente := 1.0
 	if prensa != null:
 		factor_agente = float(prensa.agente_de(j).get("f", 1.0))
@@ -706,6 +780,11 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	## `ctx_club_id`: se calcula una vez por semana, no dentro del bucle de
 	## fuerzas.
 	Partido.ctx_cesped_local = ciudad.penalizacion_cesped() if ciudad != null else 1.0
+	## B6.5: la superficie decide cuánto de ese desgaste llega al campo y cuánto
+	## se lesiona la gente en él.
+	if estadio != null:
+		Partido.ctx_cesped_local = lerpf(1.0, Partido.ctx_cesped_local, estadio.factor_desgaste_cesped())
+		Partido.ctx_lesion_local = estadio.factor_lesion()
 	## La moda de la era, para todos los dibujos que existen. Se calcula una vez
 	## por semana y no dentro del bucle de fuerzas, que corre miles de veces.
 	Partido.ctx_analisis = consumir_analisis()
@@ -764,6 +843,7 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 			## ajuste de la directiva como correctivo, no esta partida suelta-.
 			f.aplica_operacion = true
 			f.factor_operacion = obras.abarata_operacion()
+			f.factor_estructura = Contratos.factor_estructura(c.pais, anio, semana)
 		var en_casa := jugaron_en_casa.has(c.id)
 		## LOS PRECIOS DINAMICOS. El mismo asiento no vale lo mismo contra el
 		## lider que contra el colista, y con el interruptor encendido se cobra
@@ -801,6 +881,12 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		## incidente en el estadio, y por eso vale la pena pagar seguridad.
 		if soy_yo and ciudad != null:
 			f_publico *= ciudad.factor_aforo()
+		## C13: una semana de fiesta nacional llena más el estadio (y una de
+		## memoria no: con duelo no hay fiesta).
+		if soy_yo:
+			f_publico *= Calendario.factor_publico(c.pais, anio, semana)
+			if maestria != null:
+				f_publico *= maestria.factor_publico()
 		f.semana(en_casa, false, f_publico)
 		## EL PLUS DE LA TELEVISION POR EL HORARIO. Un lunes por la noche no va
 		## nadie al estadio y paga mucho mas la television: sin este cobro, elegir
@@ -918,6 +1004,21 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		if mio_normas != null:
 			for j in mio_normas.plantilla:
 				j.moral = clampi(j.moral - 1, 10, 99)
+	## LESIONES ABSURDAS FUERA DE LA CANCHA (C8): raras, cortas y noticia. El
+	## toque de queda evita las de noche. Sin `Azar`.
+	var absurda := LesionesAbsurdas.sortear(mi_club(), anio, semana, bool(normas.get("queda", false)))
+	if not absurda.is_empty():
+		var ja: Jugador = absurda["jugador"]
+		ja.lesionar(int(absurda["semanas"]))
+		if prensa != null:
+			var txt := "%s. Estará %d semana%s de baja." % [String(absurda["texto"]), int(absurda["semanas"]),
+				"" if int(absurda["semanas"]) == 1 else "s"]
+			prensa.noticia.emit("🤕 Lesión insólita", txt)
+			prensa.guardar_portada("¡INSÓLITO! " + String(absurda["texto"]).to_upper(), txt, "mal",
+				{"img": "pid:" + ja.id, "sub": txt, "medio": "Canal Deportes", "nueva": true})
+			if bool(absurda["noche"]):
+				prensa.mentor_dice.emit("Lo de %s" % ja.nombre,
+					"Esto pasó de noche. Un toque de queda en las normas del vestuario habría evitado el disgusto.")
 
 	## Las obras avanzan una semana. Se hace antes de la prensa para que la
 	## noticia de "obra terminada" salga la misma semana en que termina.
@@ -1020,6 +1121,32 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		## cierre de mes-, y crecen más rápido si vienes ganando en liga.
 		for mov: Dictionary in club_dentro.crecer_digital(mi_club(), prensa):
 			_anotar_movimiento(String(mov["concepto"]), int(mov["monto"]))
+	if junta != null and mi_club() != null:
+		junta.semana(mi_club(), anio, semana)
+	if charlas != null and mi_club() != null:
+		charlas.semana(mi_club(), anio, semana)
+	if trabajadores != null and mi_club() != null:
+		trabajadores.semana(mi_club(), obras, anio, semana, prensa)
+	if redes != null:
+		redes.iniciar(self)
+		redes.semana(self)
+	if mercado_av != null and mi_club() != null:
+		mercado_av.semana(self)
+	if fondo != null:
+		fondo.semana(self)
+	if eventos_cantera != null and mi_club() != null:
+		eventos_cantera.semana(academia, mi_club(), anio, semana)
+	if calendario != null and mi_club() != null:
+		calendario.semana(mi_club(), anio, semana)
+	if politica != null and mi_club() != null:
+		politica.semana(mi_club(), anio, semana, prensa)
+	if contratos != null and mi_club() != null:
+		contratos.semana(mi_club(), anio, semana)
+	if maestria != null and mi_club() != null:
+		maestria.semana(mi_club(), prensa, academia, semana, _resultado_semana)
+	if vida != null and mi_club() != null and roles != null:
+		vida.semana(mi_club(), roles, anio, semana, _resultado_semana)
+		_resultado_semana = 2
 	if banco != null and mi_club() != null:
 		## Los dos consejeros que hasta hoy decían "sin efecto" en su propia
 		## descripción (`Directiva.CONSEJEROS`, `fin`/`leg`): era cierto
@@ -1033,6 +1160,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 			banco.descuento_sobregiro = 0.65 if directiva.tiene_consejero("fin") else 1.0
 			banco.gracia_liquidacion = 3 if directiva.tiene_consejero("leg") else 0
 		banco.semana(mi_club())
+		if insolvencia != null:
+			insolvencia.semana(self)
 	## EL AUSPICIO GOTEA TODAS LAS SEMANAS. No entra de golpe: es el `monto/42`
 	## del HTML, y por eso firmar tarde cuesta dinero de verdad.
 	if auspicio != null and mi_club() != null:
@@ -1116,6 +1245,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		if cantera != null:
 			cantera.procesar_semana()
 			cantera.sortear_guerra_agentes()
+		## La academia de 10 a 16: crecimiento, colegio, comida y la familia.
+		if academia != null:
+			academia.procesar_semana()
 		## Y se recalculan los bonificadores: si no, el factor del camarin se queda
 		## congelado en el de la semana en que tomaste el mando.
 		aplicar_bonificadores()
@@ -1130,7 +1262,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 				## queda anotado. Hasta esta tanda esto se llamaba en blanco
 				## SIEMPRE: `_dirigir()` no sabía llevarte a un continental,
 				## así que nunca hacía falta -ahora sí-.
-				t.jugar_ronda(ya_jugado if _continental_es_de(t, ya_jugado) else null)
+				var res_c: Array = t.jugar_ronda(ya_jugado if _continental_es_de(t, ya_jugado) else null)
+				_rueda_de_eliminatoria(res_c, "conti", t.participantes)
 				## El continental se corona a mitad de temporada, no al cierre:
 				## por eso esta celebración no puede esperar a cerrar_temporada()
 				## como la de liga y copa. `en_curso()` pasa a false en cuanto hay
@@ -1145,10 +1278,34 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	if copa == null:
 		_montar_copa()
 	if copa != null and copa.en_curso() and semana % 4 == 0:
-		copa.jugar_ronda(ya_jugado if _copa_es_de(ya_jugado) else null)
+		var res_copa: Array = copa.jugar_ronda(ya_jugado if _copa_es_de(ya_jugado) else null)
+		_rueda_de_eliminatoria(res_copa, "copa", copa.participantes)
 
 	semana += 1
 	semana_avanzada.emit(semana, anio)
+
+## LA RUEDA DE PRENSA TAMBIÉN DESPUÉS DE LA COPA (26-9-2026, plan maestro C1).
+## Hasta hoy solo se abría tras la liga. Con la misma tirada de siempre
+## (`rueda_tras_resultado`), y avisando a la sala de qué competición es para
+## que los escudos del fondo sean los de ESA competición.
+func _rueda_de_eliminatoria(resultados: Array, comp: String, clubes: Array) -> void:
+	var mio := mi_club()
+	if prensa == null or mio == null:
+		return
+	for r: Dictionary in resultados:
+		if r["local"] != mio and r["visita"] != mio:
+			continue
+		var soy_local: bool = r["local"] == mio
+		var gf: int = r["gl"] if soy_local else r["gv"]
+		var gc: int = r["gv"] if soy_local else r["gl"]
+		var paso: bool = r.get("pasa") == mio if r.has("pasa") else gf > gc
+		var loc: Club = r["local"]
+		var vis: Club = r["visita"]
+		prensa.clima_ultimo = Clima.del_partido(loc.pais, semana, anio, loc.id + vis.id)
+		prensa.competicion_rueda = comp
+		prensa.clubes_rueda = clubes.duplicate()
+		prensa.rueda_tras_resultado(paso or gf > gc, gf == gc and not r.has("pasa"))
+		return
 
 ## ¿El partido que se acaba de dirigir era de copa y no de liga? Hace falta para
 ## no anotar un resultado en la competición equivocada.
@@ -1241,6 +1398,15 @@ const PREMIO_LIGA := 500000
 ## algo las hubiera tocado en medio. Es la nota que dejó el propio HTML.
 func cerrar_temporada() -> Dictionary:
 	var resumen := {"campeones": [], "suben": [], "bajan": [], "directiva": {}}
+	## LAS RAMAS TERMINAN SU TEMPORADA (C12).
+	if hinchada != null and mi_club() != null and prensa != null:
+		for rr: Dictionary in hinchada.temporada_ramas(mi_club(), anio):
+			var p := int(rr["puesto"])
+			var txt := ("¡Campeón!" if p == 1 else ("%d.º: al podio." % p if p <= 3 else "%d.º puesto." % p))
+			prensa.noticia.emit("🏅 %s" % String(rr["rama"]), "Temporada terminada: %s" % txt)
+			if p == 1 and String(rr["clave"]) == "femenino":
+				prensa.guardar_portada("¡EL FEMENINO, CAMPEÓN!", "La rama femenina del club gana la liga.", "bien",
+					{"img": "escudo", "sub": "La rama femenina gana la liga y el club suma reputación y socios.", "nueva": true})
 	var tablas := {}
 	## El puesto de TU club, con la foto de antes de mover a nadie.
 	var mi_puesto := 0
@@ -1313,8 +1479,23 @@ func cerrar_temporada() -> Dictionary:
 		var t2: Array = tablas.get(segunda, segunda.tabla())
 		if t1.size() < 3 or t2.size() < 3:
 			continue
-		var bajan: Array[Club] = [t1[t1.size() - 1]["club"], t1[t1.size() - 2]["club"]]
-		var suben: Array[Club] = [t2[0]["club"], t2[1]["club"]]
+		## Cuántos bajan y suben: lo que diga la Primera (editable, 2 por defecto).
+		var n_cambio := clampi(primera.plazas_descenso, 1, mini(t1.size(), t2.size()) - 2)
+		var bajan: Array[Club] = []
+		var suben: Array[Club] = []
+		for i_c in n_cambio:
+			bajan.append(t1[t1.size() - 1 - i_c]["club"])
+			suben.append(t2[i_c]["club"])
+		## LA PROMOCIÓN (reglamento fino, si la asamblea la aprobó): el
+		## antepenúltimo de Primera contra el tercero de Ascenso, ida y vuelta.
+		if federacion != null and federacion.promocion and t1.size() >= n_cambio + 2 and t2.size() >= n_cambio + 2:
+			var arriba: Club = t1[t1.size() - 1 - n_cambio]["club"]
+			var abajo: Club = t2[n_cambio]["club"]
+			var prom := jugar_promocion(arriba, abajo)
+			resumen["promocion"] = prom
+			if prom["ganador"] == abajo:
+				bajan.append(arriba)
+				suben.append(abajo)
 		for c in bajan:
 			_mover_de_liga(c, primera, segunda)
 		for c in suben:
@@ -1353,6 +1534,22 @@ func cerrar_temporada() -> Dictionary:
 	## cerrar la temporada), por temporada terminada.
 	if roles != null:
 		resumen["roles"] = roles.tras_temporada(resumen.get("directiva", {}))
+	## EL RETO (26-9-2026): se juzga al cerrar su temporada.
+	if not reto.is_empty() and mi_club() != null:
+		var yo := mi_club()
+		var subio := false
+		var bajo := false
+		for x: Variant in resumen["suben"]:
+			if (x is Club and x == yo) or (x is Dictionary and (x as Dictionary).get("club") == yo):
+				subio = true
+		for x2: Variant in resumen["bajan"]:
+			if (x2 is Club and x2 == yo) or (x2 is Dictionary and (x2 as Dictionary).get("club") == yo):
+				bajo = true
+		var rr := Retos.juzgar(self, mi_puesto, bajo, subio)
+		if not rr.is_empty():
+			resumen["reto"] = rr
+			if prensa != null:
+				prensa.noticia.emit(String(rr["titulo"]), String(rr["texto"]))
 	return resumen
 
 func _segunda_de(pais: String) -> Liga:
@@ -1386,12 +1583,63 @@ func _mover_de_liga(c: Club, desde: Liga, hasta: Liga) -> void:
 		hasta.tabla_puntos[c.id] = {"pts": 0, "pj": 0, "gf": 0, "gc": 0, "g": 0, "e": 0, "p": 0}
 
 ## Cierra la temporada: cumpleanos, retiros y un campeonato nuevo.
+## LOS CONTRATOS VENCEN (28-9-2026, informe externo: "sin validación de fin
+## de contrato"). `anios_contrato` no bajaba nunca: el aviso "sin renovar, se
+## van gratis" no se cumplía y nadie quedaba libre. Ahora cada temporada le
+## resta un año; al llegar a cero:
+##   - en un club de la máquina, casi siempre renueva (los veteranos menos);
+##   - en TU club, si no lo renovaste, se va a la bolsa de libres y es noticia.
+## La decisión sale de un hash (jugador + año), no de `Azar`: así no cambia
+## ninguna otra tirada de la simulación. Devuelve true si el jugador se va.
+func _vence_contrato(j: Jugador, c: Club) -> bool:
+	j.anios_contrato -= 1
+	if j.anios_contrato > 0:
+		return false
+	var h := absi(hash("%s|%d" % [j.id, anio]))
+	if c.id != mi_club_id:
+		var sigue := 0.5 if j.edad >= 33 else 0.88
+		if float(h % 1000) / 1000.0 < sigue:
+			j.anios_contrato = Contratos.ajustar_anios(j, 1 + (h / 1000) % 3)
+			return false
+	j.club_id = ""
+	j.motivo_libre = "Terminó su contrato con %s" % c.nombre
+	libres.append(j)
+	if libres.size() > 80:
+		libres.pop_front()
+	if c.id == mi_club_id and prensa != null:
+		prensa.noticia.emit("Se va libre: %s" % j.nombre,
+			"Se le acabó el contrato y no se renovó. Deja %s sin que el club cobre nada." % c.nombre)
+	return true
+
+## La promoción: dos partidos (ida en casa del de Ascenso, vuelta en la del de
+## Primera). Gana el global; con empate, se queda el de Primera (la ventaja
+## de categoría, como en muchos reglamentos). Devuelve {ganador, ida, vuelta}.
+func jugar_promocion(de_primera: Club, de_ascenso: Club) -> Dictionary:
+	var ida := Partido.new(de_ascenso, de_primera)
+	ida.preparar()
+	while not ida.terminado_ya:
+		ida.simular_minuto()
+	var vuelta := Partido.new(de_primera, de_ascenso)
+	vuelta.preparar()
+	while not vuelta.terminado_ya:
+		vuelta.simular_minuto()
+	var g_primera := ida.goles_visita + vuelta.goles_local
+	var g_ascenso := ida.goles_local + vuelta.goles_visita
+	var ganador: Club = de_ascenso if g_ascenso > g_primera else de_primera
+	var txt := "%s %d-%d %s en el global (ida %d-%d, vuelta %d-%d)." % [de_primera.nombre, g_primera, g_ascenso, de_ascenso.nombre,
+		ida.goles_local, ida.goles_visita, vuelta.goles_local, vuelta.goles_visita]
+	if prensa != null:
+		prensa.noticia.emit("⚔️ Promoción: %s" % ("¡%s sube!" % de_ascenso.nombre if ganador == de_ascenso else "%s se salva" % de_primera.nombre), txt)
+	return {"ganador": ganador, "texto": txt}
+
 func nueva_temporada() -> Dictionary:
 	## Primero se cierra la que acaba -premios, ascensos y descensos- y DESPUÉS
 	## envejece la gente. Al revés, los clubes se repartirían las divisiones con
 	## las plantillas del año siguiente y el descendido ya habría perdido a sus
 	## veteranos antes de saber que bajaba.
 	var resumen := cerrar_temporada()
+	## Lo que queda entre partidas: un sobre de cromos y la foto del mundo.
+	Meta.fin_de_temporada(self)
 	## La selección y el Mundial de Clubes leen los campeones continentales de
 	## ESTA temporada que se acaba, así que van antes de volver a sortear los
 	## continentales de la siguiente -si no, mirarían el cuadro vacío del año
@@ -1418,7 +1666,9 @@ func nueva_temporada() -> Dictionary:
 			## La curva de progreso: los jovenes suben hacia su techo, los
 			## veteranos bajan. Es lo que hace que una plantilla envejezca.
 			if j.edad <= 24 and j.ovr < j.pot:
-				j.ajustar_media(Azar.ent(0, 3))
+				## Hasta su techo, no más (la prueba larga encontró chicos
+				## dos puntos por encima de su potencial).
+				j.ajustar_media(mini(Azar.ent(0, 3), j.pot - j.ovr))
 			elif j.edad >= 31:
 				j.ajustar_media(-Azar.ent(0, 3))
 			## EL RETIRO POR LESIONES. `Medico.retiro_forzado()` estaba escrita y no
@@ -1436,6 +1686,8 @@ func nueva_temporada() -> Dictionary:
 				if cantera != null:
 					cantera.registrar_retiro(j, c)
 				continue   ## se retira
+			if _vence_contrato(j, c):
+				continue   ## se va libre
 			siguen.append(j)
 		c.plantilla = siguen
 		_subir_de_cantera(c)
@@ -1449,6 +1701,10 @@ func nueva_temporada() -> Dictionary:
 	if cantera != null:
 		cantera.camada_anual()
 		cantera.chequeo_promesas()
+	## Los de la academia que cumplen 16 suben DESPUÉS de la camada: son los
+	## tuyos de verdad, y si no hay ficha se quedan un año más (ver `Academia`).
+	if academia != null:
+		academia.fin_de_temporada()
 	## LAS JOYAS DE LAS ACADEMIAS, una por sede. Van DESPUES de la camada porque
 	## comparten el tope de plantilla: la joya que se paga todo el ano no puede
 	## quedarse fuera por un canterano de relleno que subio antes.
@@ -1553,8 +1809,9 @@ func _montar_copa() -> void:
 	## se sientan iguales.
 	var copas: Array = Copa.copas_de(pais, nombre_pais)
 	var elegida: Array = copas[anio % copas.size()] if copas.size() > 1 else copas[0]
-	copa = Copa.new(String(elegida[0]))
+	copa = Copa.new(String(ajustes_competicion.get("copa_nombre", "")) if String(ajustes_competicion.get("copa_nombre", "")) != "" else String(elegida[0]))
 	copa.peso_premio = float(elegida[1])
+	copa.sede_final_id = String(ajustes_competicion.get("copa_sede", ""))
 	copa.preparar(aspirantes)
 
 ## Sube canteranos hasta completar la plantilla, y los sube EN EL PUESTO QUE
@@ -1583,7 +1840,14 @@ func _subir_de_cantera(c: Club) -> void:
 		## El canterano entra flojo y con techo: media baja, potencial alto. Es
 		## lo que hace que la cantera sea una apuesta y no una fuente de cracks.
 		var ovr := c.rep - 20 + Azar.ent(0, 8)
-		c.plantilla.append(crear_jugador(c, Datos.grupo(demarcacion), demarcacion, edad, ovr))
+		var nuevo := crear_jugador(c, Datos.grupo(demarcacion), demarcacion, edad, ovr)
+		## EL CLUB QUE VIVE DE SU CANTERA (C3) la cuida más: sus chicos
+		## suben con más techo. Sin `Azar` extra: es un ajuste fijo.
+		if not Regiones.filosofia(c).is_empty():
+			nuevo.ovr = mini(nuevo.ovr + 4, 90)
+			nuevo.pot = clampi(nuevo.pot + 6, nuevo.ovr, 97)
+			nuevo.tasar()
+		c.plantilla.append(nuevo)
 
 ## --- LO QUE APORTA EL CUERPO TECNICO ---------------------------------------
 
@@ -1664,6 +1928,23 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	hinchada = Hinchada.new(self)
 	gente = Gente.new(self)
 	club_dentro = ClubDentro.new()
+	junta = Junta.new()
+	junta.formar(mi_club())
+	charlas = Charlas.new()
+	licencia = Licencia.new()
+	trabajadores = Trabajadores.new()
+	Trabajadores.actual = trabajadores
+	movil = Movil.new()
+	mercado_av = MercadoAvanzado.new()
+	insolvencia = Insolvencia.new()
+	redes = Redes.new()
+	redes.iniciar(self)
+	eventos_cantera = EventosCantera.new()
+	calendario = Calendario.new()
+	politica = Politica.new()
+	contratos = Contratos.new()
+	vida = VidaDT.new()
+	maestria = Maestria.new()
 	banco = Banco.new()
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)
@@ -1683,6 +1964,8 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	vestuario.armar()
 	selecciones = Selecciones.new(self)
 	cantera = Cantera.new(self)
+	academia = Academia.new(self)
+	academia.sembrar()
 	ojeadores = Ojeadores.new(self)
 	## Sembradas al tomar el mando y no en generar(): antes de elegir club no hay
 	## "tu" cantera todavía, y `sembrar_leyendas()` reparte las leyendas entre
@@ -1756,6 +2039,7 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 		if prensa != null and mio != null:
 			prensa.revisar_impuesto(mio, mio.once(), anio)
 		_gano_la_ultima = gf > gc
+		_resultado_semana = 1 if gf > gc else (0 if gf == gc else -1)
 		## "G.clubes[miClub].forma.push(...)" del HTML: solo cuenta para esto lo
 		## que se juega de LIGA -este bloque nace de `_avisar_a_la_directiva`,
 		## que `avanzar_semana()` llama justo después de `l.jugar_jornada()`-.
@@ -1769,6 +2053,11 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 		## MISMO `Previa.arbitro_de()` que ya usa `vPrevia()` y que acaba de
 		## pitar el partido en `Partido.preparar()`: no una tercera copia del
 		## hash.
+		## El historial por árbitro (reglamento fino, 28-9-2026).
+		if federacion != null:
+			var rival_arb: Club = r["visita"] if soy_local else r["local"]
+			var arb_h := Previa.arbitro_de(rival_arb.id, semana)
+			federacion.anotar_arbitro(String(arb_h["nombre"]), String(arb_h["perfil"]), gf, gc)
 		if prensa != null and gf < gc:
 			var rival_perdido: Club = r["visita"] if soy_local else r["local"]
 			var arb_partido := Previa.arbitro_de(rival_perdido.id, semana)
@@ -1814,7 +2103,17 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 			var gano := gf > gc
 			var empato := gf == gc
 			var semilla := "%d|%d|%s|%d-%d" % [anio, semana, otro.id, gf, gc]
-			prensa.portada_tras_resultado(gano, empato, es_clasico(mio, otro), semilla)
+			var loc0: Club = r["local"]
+			var vis0: Club = r["visita"]
+			prensa.portada_tras_resultado(gano, empato, es_clasico(mio, otro), semilla,
+				"%s %d-%d %s" % [Nombres.visible(loc0.nombre), int(r["gl"]), int(r["gv"]), Nombres.visible(vis0.nombre)],
+				HistoriaClub.nombre_clasico(mio.nombre, otro.nombre))
+			## El tiempo de ese partido, por si la rueda pregunta por él.
+			var loc: Club = r["local"]
+			var vis: Club = r["visita"]
+			prensa.clima_ultimo = Clima.del_partido(loc.pais, semana, anio, loc.id + vis.id)
+			prensa.competicion_rueda = "liga"
+			prensa.clubes_rueda = []
 			prensa.rueda_tras_resultado(gano, empato)
 		## LA PROMESA DE LA RUEDA DE PRENSA se cobra AQUÍ, que es el único sitio
 		## donde se sabe el resultado. `Prensa.presion_prometida` se encendía al
@@ -1867,8 +2166,16 @@ func aplicar_bonificadores() -> void:
 	staff.aplicar(c)
 	if entrenamiento != null:
 		var dt := entrenamiento.bonus_dt()
+		## MI VIDA: trabajar más prepara mejor el partido (y de baja, peor).
+		if vida != null:
+			dt *= vida.factor_trabajo(anio, semana)
 		c.bonus_ataque *= dt
 		c.bonus_defensa *= dt
+	## LAS MAESTRÍAS (15 categorías de 30 niveles): ataque, defensa, porteros,
+	## balón parado y análisis de rivales.
+	if maestria != null:
+		c.bonus_ataque *= maestria.factor_ataque()
+		c.bonus_defensa *= maestria.factor_defensa()
 	## Y el camarin: hermanos en el campo, roles cumplidos y ansiedad del once.
 	if vestuario != null:
 		c.bonus_ataque *= vestuario.factor_ataque(c)
@@ -1881,7 +2188,14 @@ func aplicar_bonificadores() -> void:
 ## HTML: tu recinto lo construyes, el del rival te lo encuentras.
 func perfil_estadio_de(c: Club) -> Dictionary:
 	if c != null and c.id == mi_club_id and estadio != null:
-		return estadio.perfil(c, obras)
+		estadio.asegurar_real(c)
+		var p := estadio.perfil(c, obras)
+		## Lo que el 3D necesita de las instalaciones: obras en curso (andamios
+		## y grúa) y lo construido (palcos, prensa, museo, tienda).
+		if obras != null:
+			p["en_obra"] = obras.obras.keys()
+			p["inst"] = obras.niveles.duplicate()
+		return p
 	return c.perfil_estadio() if c != null else {}
 
 # ---------------------------------------------------------------------------

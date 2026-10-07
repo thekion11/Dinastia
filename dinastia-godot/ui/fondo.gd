@@ -38,10 +38,10 @@ const TITULOS := {
 	"tunel": "Túnel de vestuario", "lluvia": "Banquillo bajo la lluvia",
 	"amanecer": "Grada vacía al amanecer", "autocar": "Llegada del autocar",
 	"tiza": "Pizarra de tiza",
-	"ciudad": "La ciudad detras de la grada", "montana": "Estadio de pueblo",
+	"ciudad": "La ciudad detrás de la grada", "montana": "Estadio de pueblo",
 	"playa": "Cancha de arena", "nieve": "Partido bajo la nieve",
 	"juntas": "Sala de juntas", "mapa": "Mapa del ojeador",
-	"vestuario": "Vestuario vacio", "bufandas": "Bufandas al viento",
+	"vestuario": "Vestuario vacío", "bufandas": "Bufandas al viento",
 	"diario": "Portada del diario", "aeropuerto": "Aeropuerto de madrugada",
 }
 

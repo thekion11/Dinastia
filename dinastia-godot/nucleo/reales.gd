@@ -13,9 +13,13 @@ extends RefCounted
 ## marca a quién se le tocó, y es la puerta para engancharle después una foto
 ## de verdad en vez de la cara procedural de `Cara.gd`.
 ##
-## `censurar()` es un passthrough en el HTML desde la v3.0 -los nombres van
-## siempre en texto claro-, así que aquí tampoco hay ninguna ofuscación que
-## portar: se copia el nombre tal cual trae la tabla.
+## Desde el 25-9-2026 el nombre pasa por `Nombres.de_tabla()`: con el pack real
+## activo se guarda cubierto ("Artur0 Vidal"), no en claro.
+##
+## Desde el 26-9-2026 la BASE FICTICIA también trae la tabla, con nombres de
+## guiño ("Arturo Bedal") generados por `herramientas/jugadores_guino.py`: los
+## mismos puestos, edades, medias y países que el pack, así los jugadores son
+## fijos en todas las partidas y se reconoce a quién representan.
 
 ## Las claves de `REALES` están en leetspeak ("C0lo-C0lo") porque así quedaron
 ## escritas en el JSON exportado, igual que el resto de nombres de club; hay
@@ -24,6 +28,12 @@ extends RefCounted
 ## el club.
 static var _indice: Dictionary = {}
 static var _indice_listo := false
+
+## `Datos.usar_base_real()` la llama al cambiar de base: el índice se arma con
+## la tabla `REALES` (con guiños en la base ficticia y en claro con el pack).
+static func invalidar() -> void:
+	_indice = {}
+	_indice_listo = false
 
 static func _indice_de() -> Dictionary:
 	if not _indice_listo:
@@ -47,7 +57,7 @@ static func aplicar(mundo: Mundo) -> int:
 		return 0
 	var total := 0
 	for club: Club in mundo.clubes.values():
-		var lista: Variant = idx.get(club.nombre)
+		var lista: Variant = idx.get(Nombres.limpiar(club.nombre))
 		if not (lista is Array) or (lista as Array).is_empty():
 			continue
 		total += _aplicar_en_club(club, lista as Array, posd as Dictionary)
@@ -60,7 +70,9 @@ static func _aplicar_en_club(club: Club, lista: Array, posd: Dictionary) -> int:
 		var partes := String(fila).split("|")
 		if partes.size() < 4:
 			continue
-		var nombre := partes[0]
+		## Con la cubierta activa el nombre se guarda ya cubierto (ver
+		## `Nombres.de_tabla`); las fotos lo buscan limpiándolo.
+		var nombre := Nombres.de_tabla(partes[0])
 		var pos_e := partes[1] if posd.has(partes[1]) else "MC"
 		var edad := int(partes[2]) if partes[2].is_valid_int() else 26
 		var media := int(partes[3]) if partes[3].is_valid_int() else 70
@@ -91,6 +103,13 @@ static func _aplicar_en_club(club: Club, lista: Array, posd: Dictionary) -> int:
 		candidato.pos = grupo
 		candidato.edad = clampi(edad, 15, 45)
 		candidato.ovr = clampi(media, 40, 96)
+		## FIJOS DE UNA PARTIDA A OTRA (26-9-2026, pedido: "en cada partida los
+		## nombres cambian; deberían ser fijos, junto a sus medias"): el
+		## potencial y los atributos de estos jugadores salen de su nombre, no
+		## de la semilla del mundo. Se guarda el estado de `Azar`, se siembra con
+		## el nombre y se devuelve tal cual: el resto del mundo no se entera.
+		var estado: int = Azar._rng.state
+		Azar._rng.seed = hash(Nombres.limpiar(nombre) + "|" + pos_e)
 		## Los reales no dan el estirón de un canterano cualquiera: el margen es
 		## más corto cuanto más veterano -igual que `aplicarReales()` del HTML-.
 		var margen := 0
@@ -103,6 +122,7 @@ static func _aplicar_en_club(club: Club, lista: Array, posd: Dictionary) -> int:
 		candidato.pot = clampi(candidato.ovr + margen, candidato.ovr, 97)
 		candidato.pais = pais
 		candidato.generar_atributos()
+		Azar._rng.state = estado
 		candidato.tasar()
 		aplicados += 1
 	if aplicados > 0:

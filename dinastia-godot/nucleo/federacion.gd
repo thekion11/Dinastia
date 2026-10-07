@@ -73,8 +73,67 @@ const VOTO_IA := {
 	## El fair play financiero lo votan los CHICOS: es la unica regla que frena a
 	## quien puede gastar sin mirar, y por eso los grandes lo tumban.
 	"fpf":         {"umbral": 78, "grande": 0.25, "chico": 0.80},
+	## Reglamento fino (28-9-2026): al chico le conviene la promoción (una
+	## segunda oportunidad); el desempate directo divide a la asamblea.
+	"desempate":   {"umbral": 0,  "grande": 0.5, "chico": 0.5},
+	"promocion":   {"umbral": 78, "grande": 0.35, "chico": 0.7},
 }
 const PROB_NEUTRA := 0.5           ## moción desconocida: la asamblea se parte
+
+## --- EL PRESIDENTE DE LA FEDERACIÓN (26-9-2026, plan maestro C5) -----------
+## Pedido: *"los presidentes de las competencias deben ser importantes, en la
+## vida real los presidentes de las instituciones del fútbol hacen reglas o
+## cambian formas"*. Hasta hoy la asamblea convocaba mociones al azar, sin nadie
+## detrás. Ahora hay un presidente con NOMBRE y AGENDA, elegido cada cuatro
+## años: las mociones de su agenda salen antes, y presiona a los clubes para
+## que las aprueben (+12 puntos a favor en el voto de la IA). Nombre y agenda
+## salen de un hash del año -ficticios: ni personas ni programas reales-.
+const MANDATO_ANIOS := 4
+## agenda -> [nombre de la corriente, mociones que empuja, frase de campaña]
+const AGENDAS := {
+	"modernizador": ["Modernizador", ["var", "fpf"], "«Tecnología y cuentas claras: el fútbol del siglo XXI.»"],
+	"comercial": ["Comercial", ["playoffs", "superliga"], "«Más espectáculo, más televisión, más dinero para todos.»"],
+	"proteccionista": ["Proteccionista", ["extranjeros", "juveniles"], "«Primero lo nuestro: la cantera y el jugador del país.»"],
+	"igualitario": ["Igualitario", ["tvigual", "fpf"], "«Que el chico pueda soñar: reparto justo y cuentas limpias.»"],
+}
+const EMPUJE_PRESIDENTE := 0.12
+const _PRES_NOMBRES := ["Armando", "Rodolfo", "Esteban", "Gustavo", "Horacio", "Ignacio", "Lisandro",
+	"Marcelo", "Norberto", "Osvaldo", "Patricio", "Reinaldo", "Susana", "Verónica", "Graciela", "Mónica"]
+const _PRES_APELLIDOS := ["Achával", "Berríos", "Cienfuegos", "Dalmasso", "Echazarreta", "Figueroa",
+	"Goycolea", "Hurtado", "Irarrázaval", "Lagos", "Maturana", "Ossandón", "Pradenas", "Quezada"]
+## {nombre, agenda, hasta (año en que acaba el mandato)}
+var presidente: Dictionary = {}
+
+## Elige presidente si no hay o si acabó el mandato. Devuelve true si hubo
+## elecciones.
+func revisar_presidencia(anio: int) -> bool:
+	if not presidente.is_empty() and anio < int(presidente.get("hasta", 0)):
+		return false
+	var h := absi(("presidencia|%d" % anio).hash())
+	var claves := AGENDAS.keys()
+	var agenda: String = claves[h % claves.size()]
+	var nombre := "%s %s" % [_PRES_NOMBRES[(h / 7) % _PRES_NOMBRES.size()], _PRES_APELLIDOS[(h / 131) % _PRES_APELLIDOS.size()]]
+	var reelegido := not presidente.is_empty() and String(presidente.get("agenda", "")) == agenda
+	if reelegido:
+		nombre = String(presidente["nombre"])
+	presidente = {"nombre": nombre, "agenda": agenda, "hasta": anio + MANDATO_ANIOS}
+	var a: Array = AGENDAS[agenda]
+	noticia.emit("🏛️ Elecciones en la federación",
+		"%s %s la presidencia (corriente %s) hasta %d. %s Empujará: %s." % [
+			nombre, "renueva" if reelegido else "gana", String(a[0]).to_lower(), anio + MANDATO_ANIOS,
+			String(a[2]), ", ".join(PackedStringArray((a[1] as Array).map(func(x: String) -> String: return _titulo_mocion(x))))])
+	return true
+
+func agenda_empuja(id_mocion: String) -> bool:
+	if presidente.is_empty():
+		return false
+	return (AGENDAS[String(presidente["agenda"])][1] as Array).has(id_mocion)
+
+func _titulo_mocion(id: String) -> String:
+	for v: Dictionary in catalogo():
+		if String(v.get("id", "")) == id:
+			return String(v.get("t", id))
+	return id
 
 ## --- EL REGLAMENTO EN VIGOR ------------------------------------------------
 ## Multiplicador de tus derechos de televisión. Lo aplica quien los cobra
@@ -85,6 +144,11 @@ var tope_extranjeros: int = 0      ## 0 = sin tope
 var playoffs: bool = false         ## el campeón se juega, no se suma
 var superliga: bool = false        ## te fuiste con los separatistas
 var var_activo: bool = false       ## hay VAR en la categoría
+var desempate_directo: bool = false  ## a igualdad de puntos, el enfrentamiento directo
+var promocion: bool = false        ## el antepenúltimo se juega la categoría
+## EL HISTORIAL POR ÁRBITRO (28-9-2026): con quién te fue cómo. nombre ->
+## {pj, g, e, p, perfil}. Solo tus partidos.
+var arbitros: Dictionary = {}
 
 ## --- POLÍTICA --------------------------------------------------------------
 var aliados: int = 0               ## peso político, de -10 a 10
@@ -130,6 +194,7 @@ func semana(mi: Club, anio: int, semana_n: int) -> void:
 		semanas_en_rojo += 1
 	else:
 		semanas_en_rojo = 0
+	revisar_presidencia(anio)
 	abrir_votacion()
 	control_antidopaje(mi, anio, semana_n)
 
@@ -153,14 +218,24 @@ func abrir_votacion() -> Dictionary:
 			libres.append(v)
 	if libres.is_empty():
 		return {}
+	## Lo que empuja el presidente sale antes (7 de cada 10 veces, por hash: la
+	## tirada de `Azar` es una sola, como siempre).
+	var suyas: Array = libres.filter(func(v: Dictionary) -> bool: return agenda_empuja(String(v.get("id", ""))))
+	if not suyas.is_empty() and absi(("agenda|%d" % votos.size()).hash()) % 10 < 7:
+		libres = suyas
 	voto_pendiente = Azar.uno(libres)
+	if agenda_empuja(String(voto_pendiente.get("id", ""))):
+		voto_pendiente["del_presidente"] = String(presidente.get("nombre", ""))
 	votacion_abierta.emit(voto_pendiente)
 	## Hasta el 14-9-2026 esto era la única de las nueve señales de la clase sin
 	## `noticia.emit()`: la asamblea convocaba de verdad y el jugador solo se
 	## enteraba si entraba a la pestaña Federación por su cuenta. Con solo seis
 	## mociones en toda la carrera, era fácil perderse una entera.
+	var quien := ""
+	if voto_pendiente.has("del_presidente"):
+		quien = "Propuesta del presidente %s. " % String(voto_pendiente["del_presidente"])
 	noticia.emit("Nueva votación en la asamblea",
-		"La federación convoca sobre: %s. %s Puedes votar desde Federación." % [
+		"%sLa federación convoca sobre: %s. %s Puedes votar desde Federación." % [quien,
 			String(voto_pendiente.get("t", "")), String(voto_pendiente.get("desc", ""))])
 	return voto_pendiente
 
@@ -185,6 +260,9 @@ func votar(opcion: String, mi: Club, asamblea: Array) -> Dictionary:
 		var p := PROB_NEUTRA
 		if not reglas.is_empty():
 			p = float(reglas["grande"]) if x.rep >= int(reglas["umbral"]) else float(reglas["chico"])
+		## El presidente hace campaña por lo suyo.
+		if agenda_empuja(id):
+			p = minf(p + EMPUJE_PRESIDENTE, 0.95)
 		if Azar.suerte(p):
 			a_favor += 1
 	if opcion == "a":
@@ -251,6 +329,13 @@ func _aplicar_mocion(id: String, pasa: bool, opcion: String, mi: Club) -> String
 			fpf_activo = true
 			fpf_avisos = 0
 			return "Entra en vigor el fair play financiero: si tu masa salarial pasa del %d%% de los ingresos dos temporadas seguidas, hay multa y mercado cerrado." % FPF_UMBRAL
+		"desempate":
+			desempate_directo = true
+			Liga.desempate_directo = true
+			return "Desde ahora, a igualdad de puntos manda el enfrentamiento directo."
+		"promocion":
+			promocion = true
+			return "Desde esta temporada, el antepenúltimo de Primera juega la promoción contra el tercero de Ascenso."
 		"var":
 			var_activo = true
 			var coste := Eco.escalar(COSTE_VAR, float(mi.rep))
@@ -392,9 +477,9 @@ func jugar_playoffs(tabla: Array, anio: int, mi_id: String = "") -> Dictionary:
 		"semis": [String(s1["marcador"]), String(s2["marcador"])],
 		"final": String(fin["marcador"]),
 		"campeon": campeon.id,
-		"campeon_nombre": Nombres.limpiar(campeon.nombre),
+		"campeon_nombre": Nombres.visible(campeon.nombre),
 		"lider": cuatro[0].id,
-		"lider_nombre": Nombres.limpiar(cuatro[0].nombre),
+		"lider_nombre": Nombres.visible(cuatro[0].nombre),
 	}
 
 	var mio := false
@@ -409,10 +494,10 @@ func jugar_playoffs(tabla: Array, anio: int, mi_id: String = "") -> Dictionary:
 	noticia.emit("PLAYOFFS POR EL TÍTULO %d" % anio,
 		"La federación decidió que el campeón se juega. Semifinales: %s · %s. FINAL: %s. Campeón: %s.%s" % [
 			s1["marcador"], s2["marcador"], fin["marcador"],
-			Nombres.limpiar(campeon.nombre), cola])
+			Nombres.visible(campeon.nombre), cola])
 	if cuatro[0].id != campeon.id:
 		noticia.emit("El líder se quedó sin corona",
-			"%s terminó primero en la tabla pero perdió los playoffs. Con este formato, treinta fechas no garantizan nada." % Nombres.limpiar(cuatro[0].nombre))
+			"%s terminó primero en la tabla pero perdió los playoffs. Con este formato, treinta fechas no garantizan nada." % Nombres.visible(cuatro[0].nombre))
 	playoffs_jugados.emit(playoffs_ultimo)
 	return playoffs_ultimo
 
@@ -443,8 +528,8 @@ func _duelo(a: Club, b: Club, ventaja: float) -> Dictionary:
 	var gb := Azar.ent(0, maxi(0, ga - 1))
 	return {
 		"gana": gana, "pierde": pierde,
-		"marcador": "%s %d-%d %s" % [Nombres.limpiar(gana.nombre),
-			maxi(ga, gb + 1), mini(ga, gb), Nombres.limpiar(pierde.nombre)],
+		"marcador": "%s %d-%d %s" % [Nombres.visible(gana.nombre),
+			maxi(ga, gb + 1), mini(ga, gb), Nombres.visible(pierde.nombre)],
 	}
 
 ## Acepta una fila de `Liga.tabla()` o un Club suelto.
@@ -546,7 +631,7 @@ func abrir_caso(tipo: String, j: Jugador, fechas: int, motivo: String, anio: int
 	var caso := {
 		"id": "k%d" % _sec, "tipo": tipo,
 		"pid": j.id if j != null else "",
-		"nombre": Nombres.limpiar(j.nombre) if j != null else "el club",
+		"nombre": Nombres.visible(j.nombre) if j != null else "el club",
 		"fechas": fechas, "motivo": motivo, "estado": "firme",
 		"anio": anio, "semana": semana_n, "apelado": false,
 	}
@@ -638,7 +723,7 @@ func control_antidopaje(mi: Club, anio: int, semana_n: int) -> Dictionary:
 	if j == null:
 		return {}
 	var positivo := Azar.suerte(PROB_POSITIVO)
-	var registro := {"nombre": Nombres.limpiar(j.nombre), "anio": anio,
+	var registro := {"nombre": Nombres.visible(j.nombre), "anio": anio,
 		"semana": semana_n, "positivo": positivo}
 	controles.push_front(registro)
 	if controles.size() > MAX_CONTROLES:
@@ -678,6 +763,8 @@ func a_dic() -> Dictionary:
 		"casos": casos, "controles": controles,
 		"semanas_en_rojo": semanas_en_rojo, "enojo_arbitral": enojo_arbitral,
 		"playoffs_ultimo": playoffs_ultimo, "sec": _sec,
+		"presidente": presidente,
+		"desempate": desempate_directo, "promocion": promocion, "arbitros": arbitros,
 	}
 
 func desde_dic(d: Dictionary) -> void:
@@ -687,10 +774,15 @@ func desde_dic(d: Dictionary) -> void:
 	playoffs = bool(d.get("playoffs", false))
 	superliga = bool(d.get("superliga", false))
 	var_activo = bool(d.get("var", false))
+	desempate_directo = bool(d.get("desempate", false))
+	Liga.desempate_directo = desempate_directo
+	promocion = bool(d.get("promocion", false))
+	arbitros = (d.get("arbitros", {}) as Dictionary).duplicate(true)
 	fpf_activo = bool(d.get("fpf", false))
 	fpf_avisos = int(d.get("fpf_avisos", 0))
 	fpf_sancionado = bool(d.get("fpf_sancion", false))
 	aliados = int(d.get("aliados", 0))
+	presidente = (d.get("presidente", {}) as Dictionary).duplicate()
 	votos = (d.get("votos", []) as Array).duplicate()
 	voto_pendiente = (d.get("voto_pendiente", {}) as Dictionary).duplicate()
 	licencia = String(d.get("licencia", "vigente"))
@@ -710,6 +802,23 @@ func desde_dic(d: Dictionary) -> void:
 
 ## Las seis mociones. Vienen de la tabla del juego, no reescritas aquí: si el
 ## HTML añade una séptima, se vuelve a exportar `tablas.json` y aparece sola.
+## Anota el resultado de TU partido con su árbitro.
+func anotar_arbitro(nombre: String, perfil: String, gf: int, gc: int) -> void:
+	if nombre == "":
+		return
+	var h: Dictionary = arbitros.get(nombre, {"pj": 0, "g": 0, "e": 0, "p": 0, "perfil": perfil})
+	h["pj"] = int(h["pj"]) + 1
+	var k := "g" if gf > gc else ("e" if gf == gc else "p")
+	h[k] = int(h[k]) + 1
+	arbitros[nombre] = h
+
+## "Con él: 5 PJ · 1G 2E 2P" o vacío si nunca te dirigió.
+func texto_arbitro(nombre: String) -> String:
+	if not arbitros.has(nombre):
+		return ""
+	var h: Dictionary = arbitros[nombre]
+	return "Con él: %d PJ · %dG %dE %dP" % [int(h["pj"]), int(h["g"]), int(h["e"]), int(h["p"])]
+
 func catalogo() -> Array:
 	var t: Variant = Datos.tabla("VOTACIONES")
 	return t if t is Array else []

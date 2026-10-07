@@ -409,7 +409,7 @@ func pagar_clausula(j: Jugador, comprador: Club) -> Dictionary:
 	comprador.fichar(j)
 	quitar_clausula(j.id)
 	j.sueldo = int(round(float(j.sueldo) * 1.15))
-	j.anios_contrato = Azar.ent(2, 4)
+	j.anios_contrato = Contratos.ajustar_anios(j, Azar.ent(2, 4))
 	j.moral = clampi(j.moral + 6, 10, 99)
 	j.pide_salir = false
 	noticia.emit("¡Clausulazo!",
@@ -554,7 +554,7 @@ func vender(j: Jugador, comprador: Club, monto: int, pct_futuro: int = 0) -> Dic
 		var del_fondo := int(round(float(neto) * float(pct_fondo) / 100.0))
 		if del_fondo > 0:
 			vendedor.mover_saldo(-del_fondo)
-			movimiento.emit("Al fondo de inversion por %s (%d%%)" % [j.nombre, pct_fondo], -del_fondo)
+			movimiento.emit("Al fondo de inversión por %s (%d%%)" % [j.nombre, pct_fondo], -del_fondo)
 			noticia.emit("El fondo cobra su parte",
 				"De los %s de la venta de %s, %s se van al fondo que compro el %d%% de sus derechos." % [
 					Cesiones.dinero(neto), j.nombre, Cesiones.dinero(del_fondo), pct_fondo])
@@ -839,20 +839,7 @@ func _localizar(pid: String) -> Array:
 ## tiene ahora mismo una copia privada de esto, y el día que se unifiquen basta
 ## con que llame aquí.
 static func dinero(n: int) -> String:
-	var e := int(round(float(n) * Eco.ECO))
-	var negativo := e < 0
-	e = absi(e)
-	var s := ""
-	if e >= 1000000000:
-		s = ("%.2f" % (float(e) / 1000000000.0)).replace(".", ",") + "MM"
-	elif e >= 1000000:
-		var mi := float(e) / 1000000.0
-		s = (("%.0f" % mi) if e >= 10000000 else ("%.1f" % mi).replace(".", ",")) + "M"
-	elif e >= 1000:
-		s = "%dk" % int(round(float(e) / 1000.0))
-	else:
-		s = str(e)
-	return ("-€" if negativo else "€") + s
+	return Eco.dinero(n)
 
 
 # ===========================================================================

@@ -152,8 +152,10 @@ func montar(acento: Color, fondo: Color, nivel: int = Calidad.ALTO) -> void:
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = fondo.darkened(0.88)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = fondo.lightened(0.1)
-	env.ambient_light_energy = 0.85
+	## (MEGAPLAN fase 1: la escena salía muy oscura. El ambiente era casi el
+	## color del fondo -un verde muy oscuro-; ahora va hacia el blanco.)
+	env.ambient_light_color = fondo.lerp(Color(0.85, 0.86, 0.9), 0.5)
+	env.ambient_light_energy = 1.0
 	## El resplandor sube respecto al estadio: en un plató las luces SON el
 	## decorado, y sin bloom los focos parecen bombillas pintadas.
 	env.glow_enabled = true
@@ -518,44 +520,17 @@ func rotular(competicion: String, ronda: String) -> void:
 	_pantalla_nombre.text = ronda
 	_pantalla_escudo.texture = null
 
-## EL PRESENTADOR (reescrito 14-9-2026, pedido explícito: "estéticamente deja
-## qué desear el presentador y la animación"). Ya no es una silueta de cajas:
-## es el MISMO modelo humano realista que usan los 22 del campo
-## (`Futbolista`/`AnimMixamo`, `visor/player_spawner.gd`), vestido de traje
-## liso con `Vestidor` -el mismo mecanismo que ya viste al árbitro sin
-## equipación de club-, con una animación real de pie (`parado`, la que hace
-## que respire y reparta el peso) y el gesto de sacar la bola resuelto con
-## `mostrar_tarjeta` -la misma animación del árbitro levantando la tarjeta en
-## alto sirve tal cual para "levantar la bola y mostrarla"-.
+## EL PRESENTADOR: el mismo cuerpo Quaternius (CC0) que usan los 22 del
+## campo, con traje liso pintado por `VestidorQ`, respirando de pie (`parado`)
+## y con el gesto de sacar la bola resuelto con `mostrar_tarjeta`. Si el
+## modelo no cargara, queda la silueta de cajas de respaldo.
 var _brazo: Node3D
 var _mano: MeshInstance3D
 ## El AnimationPlayer del modelo real, si se pudo montar. Null -> se usa el
 ## brazo suelto de respaldo (silueta), que sigue funcionando igual que antes.
 var _anim_presentador: AnimationPlayer
 
-# ---------------------------------------------------------------------------
-#  EL TRAJE DEL PRESENTADOR
-# ---------------------------------------------------------------------------
-#
-# El usuario pidió "usar el vagabundo que tenemos en recursos y ponerle un
-# traje". El "Vagabond" de `sorpresa/` NO es una persona: es un VELERO —sus
-# grupos son casco, quilla, mástil, velas, timón y cabina—. El nombre engaña.
-#
-# El atlas `skaterMaleA.png` + `characterMedium.fbx` (repintar rectángulos de
-# torso/piernas/zapatos a mano) fue el primer intento y quedó descartado: el
-# humanoide real de 22-del-campo (`futbolista_cr7.glb` vía `Futbolista.gd`) ya
-# resuelve esto mejor -reusa el mismo esqueleto puesto en pose, la misma
-## escala medida y el mismo `Vestidor.vestir()` con `color_liso` que ya viste
-# a árbitros y jueces de línea sin equipación de club-.
-
-## SI SE USA EL HUMANOIDE REAL O LA SILUETA DE RESPALDO.
-##
-## `Futbolista.crear()`/`terminar()` -la MISMA fábrica que usa
-## `player_spawner.gd` para los 22 del campo- resuelve exactamente el problema
-## que dejó esto apagado hasta hoy: el modelo humano con esqueleto Mixamo
-## necesitaba enderezarse, escalarse y montar su `AnimationPlayer` a mano, y
-## ese trabajo YA está hecho y probado ahí -no hay que repetirlo aquí ni
-## instanciar el `.glb` a pelo-.
+## SI SE USA EL HUMANOIDE O LA SILUETA DE RESPALDO.
 const USAR_MODELO_HUMANO := true
 
 func _montar_presentador() -> void:
@@ -563,36 +538,52 @@ func _montar_presentador() -> void:
 		return
 	_montar_presentador_siluetas()
 
-func _montar_presentador_modelo() -> bool:
-	var d := Futbolista.crear(1.78)
+## El presentador es el mismo cuerpo que usan los 22 del campo, con "parado"
+## y "mostrar_tarjeta" en su catálogo.
+func _montar_presentador_quaternius() -> bool:
+	var d := FutbolistaQ.crear(1.78, "male")
 	if d.is_empty():
 		return false
 	var raiz: Node3D = d["nodo"]
-	## Misma posición y orientación que ya tenía calibradas la silueta: en el
-	## hueco entre valla y tribuna... no, aquí es la tarima (Y=0,42, la cara
-	## superior de `deck` en `_montar_sala()`), un paso detrás del bombo.
 	raiz.position = Vector3(1.15, 0.42, -0.35)
 	raiz.rotation.y = deg_to_rad(-32.0)
 	add_child(raiz)
-	## `terminar()` necesita el nodo YA dentro del árbol -endereza, escala a la
-	## altura pedida y monta el catálogo de animaciones Mixamo en el
-	## `AnimationPlayer`, todo medido, no adivinado (ver los comentarios de
-	## `Futbolista.gd`, trampas ya pagadas ahí).
-	Futbolista.terminar(d)
-	## TRAJE LISO, no equipación de club: mismo mecanismo que ya viste al
-	## árbitro y a los jueces de línea (`Vestidor.vestir()` con `color_liso`).
-	## Azul marino oscuro, el mismo tono que ya usaba la silueta -contra un
-	## plató oscuro un traje negro puro se come la figura-.
-	var modelo: Node3D = d["modelo"]
-	Vestidor.vestir(modelo, "", Color(0.52, 0.40, 0.33), Color(0.14, 0.11, 0.09),
-		Color(0.12, 0.13, 0.19, 1.0))
-	## DE PIE, RESPIRANDO: `parado()` es la animación base de todo el catálogo
-	## Mixamo -mece el peso, la cabeza y los brazos en un ciclo de 3,2 s-, la
-	## misma que usan los 22 del campo cuando no hay balón cerca. Sin esto el
-	## modelo real se quedaba tan tieso como la silueta que reemplaza.
+	FutbolistaQ.terminar(d, true)
+	## Traje azul marino oscuro, de manga y pantalón largos: mismo tono que la
+	## silueta de respaldo. Solapa un poco más clara que el traje.
+	var traje := Color(0.12, 0.13, 0.19)
+	if not VestidorQ.vestir_equipacion(d, traje, Color(0.2, 0.22, 0.3), "liso",
+			Color(0.82, 0.63, 0.5), Color(0.14, 0.11, 0.09), traje, Color(0.05, 0.05, 0.06), true):
+		VestidorQ.vestir(d, traje)
 	_anim_presentador = d["anim"]
 	if _anim_presentador != null and _anim_presentador.has_animation("parado"):
 		_anim_presentador.play("parado")
+	return true
+
+func _montar_presentador_modelo() -> bool:
+	return _montar_presentador_realista() or _montar_presentador_quaternius()
+
+## EL PRESENTADOR REALISTA (25-9-2026): el modelo que el usuario dejó en su
+## Drive para esto ("un tipo" para el sorteo), `navy-jacket-portrait`, un
+## escaneo de una persona real -ver `PersonaRealista`-. Con chaqueta oscura,
+## camiseta negra y pantalón gris: de gala sin llegar a traje. No tiene
+## esqueleto, así que el gesto de sacar la bola se hace con el cuerpo entero:
+## se gira hacia el bombo y se inclina, mientras la bola sube.
+var _presentador_real: Node3D
+var _giro_presentador := 0.0
+
+func _montar_presentador_realista() -> bool:
+	if not PersonaRealista.disponible():
+		return false
+	var p := PersonaRealista.crear(PersonaRealista.aspecto("presentador_sorteo",
+		{"ropa": "negro", "pantalon": "gris", "pelo": "negro", "piel": "media", "alto": 1.82, "ancho": 1.0}))
+	if p == null:
+		return false
+	p.position = Vector3(1.15, 0.42, -0.35)
+	_giro_presentador = deg_to_rad(-32.0)
+	p.rotation.y = _giro_presentador
+	add_child(p)
+	_presentador_real = p
 	return true
 
 func _mallas_de(n: Node) -> Array[MeshInstance3D]:
@@ -616,7 +607,7 @@ func _mallas_de(n: Node) -> Array[MeshInstance3D]:
 ## giro con el que se monte al presentador. Sin argumentos se mantiene el
 ## comportamiento antiguo -colgado de `self`, posición absoluta-: esta función
 ## ya solo la usa `_montar_presentador_siluetas()`, el respaldo para cuando
-## `Futbolista.crear()` no puede montar el modelo real (`d.is_empty()`).
+## `FutbolistaQ.crear()` no puede montar el modelo (`d.is_empty()`).
 func _montar_brazo_suelto(padre: Node3D = null, hombro: Vector3 = Vector3(0.93, 1.78, -0.33)) -> void:
 	var traje_mat := StandardMaterial3D.new()
 	traje_mat.albedo_color = Color(0.10, 0.11, 0.16)
@@ -700,6 +691,14 @@ func _montar_presentador_siluetas() -> void:
 ## -levantar la mano en alto- y luego vuelve a "parado"; con la silueta de
 ## respaldo, sigue siendo el Tween del brazo suelto de siempre.
 func gesto_sacar() -> Tween:
+	if _presentador_real != null:
+		var tr := create_tween()
+		tr.tween_property(_presentador_real, "rotation", Vector3(deg_to_rad(6.0), _giro_presentador - deg_to_rad(22.0), 0), 0.5) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tr.tween_interval(0.35)
+		tr.tween_property(_presentador_real, "rotation", Vector3(0, _giro_presentador, 0), 0.55) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		return tr
 	if _anim_presentador != null and _anim_presentador.has_animation("mostrar_tarjeta"):
 		_anim_presentador.stop()
 		_anim_presentador.play("mostrar_tarjeta")
@@ -780,6 +779,14 @@ func _montar_luces() -> void:
 		add_child(f)
 		f.look_at_from_position(pos, Vector3(0, 1.4, -0.6), Vector3.UP)
 		_focos.append(f)
+	## RELLENO de frente (MEGAPLAN fase 1): sin él, fuera de los conos de los
+	## focos todo era negro -el presentador, la tarima, la mitad del bombo-.
+	var relleno := DirectionalLight3D.new()
+	relleno.light_color = Color(1.0, 0.97, 0.92)
+	relleno.light_energy = 0.7
+	relleno.shadow_enabled = false
+	relleno.rotation_degrees = Vector3(-28, 8, 0)
+	add_child(relleno)
 	## Contraluz frío por detrás: recorta la silueta del bombo contra la pared.
 	var contra := OmniLight3D.new()
 	contra.light_color = _acento
@@ -805,7 +812,9 @@ func _montar_bombo() -> void:
 	cristal.albedo_color = Color(0.80, 0.88, 0.95, 0.17)
 	cristal.metallic = 0.25
 	cristal.roughness = 0.03
-	cristal.refraction_enabled = true
+	## En Compatibility (móvil, web) la refracción no existe y el cristal se
+	## pintaba NEGRO y opaco: las bolas no se veían.
+	cristal.refraction_enabled = RenderingServer.get_current_rendering_method() != "gl_compatibility"
 	cristal.refraction_scale = 0.09
 	## CULL_DISABLED: sin esto solo se ve la mitad de atrás y el cristal parece
 	## una cáscara en vez de un recipiente.
@@ -846,10 +855,12 @@ func _montar_bombo() -> void:
 	var cil := CylinderMesh.new()
 	cil.top_radius = 0.07
 	cil.bottom_radius = 0.09
-	cil.height = 0.55
+	## Del fondo del cuenco (-RADIO) a la peana (-1,02): con el cuenco más
+	## grande, el tallo de antes asomaba DENTRO del cristal.
+	cil.height = maxf(0.05, 1.02 - RADIO_BOMBO)
 	tallo.mesh = cil
 	tallo.material_override = met
-	tallo.position = Vector3(0, -0.72, 0)
+	tallo.position = Vector3(0, -(1.02 + RADIO_BOMBO) * 0.5, 0)
 	_bombo.add_child(tallo)
 	var peana := MeshInstance3D.new()
 	var cil2 := CylinderMesh.new()
@@ -866,33 +877,37 @@ func _montar_bombo() -> void:
 ## El colisionador del cuenco: anillo de cajas inclinadas hacia dentro más un
 ## disco de suelo. Ver la nota de cabecera.
 func _montar_paredes_fisicas() -> void:
+	## EL CUENCO DE VERDAD (MEGAPLAN fase 1): antes era un disco del radio
+	## entero en el fondo y paredes que empezaban más arriba; por la rendija del
+	## borde se escapaban 43 de las 46 bolas y caían al vacío. Ahora son cajas
+	## TANGENTES a la esfera, en anillos de latitud que se solapan, y un disco
+	## pequeño en el fondo: misma forma que el cristal.
 	var cuerpo := StaticBody3D.new()
 	_bombo.add_child(cuerpo)
+	var grueso := 0.08
 	var suelo := CollisionShape3D.new()
 	var cil := CylinderShape3D.new()
-	cil.radius = RADIO_BOMBO
-	cil.height = 0.08
+	cil.radius = RADIO_BOMBO * sin(deg_to_rad(16.0))
+	cil.height = grueso
 	suelo.shape = cil
-	## El suelo del colisionador tiene que coincidir con el fondo VISIBLE del
-	## cuenco. Con +0,04 quedaba diez centímetros por encima y las bolas
-	## descansaban en el aire, formando un anillo flotante dentro del cristal.
-	## El cilindro mide 0,08 de alto, así que su centro va a -RADIO-0,04 para que
-	## su cara superior caiga justo en -RADIO.
-	suelo.position = Vector3(0, -RADIO_BOMBO - 0.04, 0)
+	suelo.position = Vector3(0, -RADIO_BOMBO - grueso * 0.5, 0)
 	cuerpo.add_child(suelo)
-	for i in 18:
-		var ang := float(i) * TAU / 18.0
-		var pared := CollisionShape3D.new()
-		var caja := BoxShape3D.new()
-		caja.size = Vector3(0.24, RADIO_BOMBO * 1.5, 0.04)
-		pared.shape = caja
-		var r := RADIO_BOMBO + 0.02
-		pared.position = Vector3(cos(ang) * r, -0.08, sin(ang) * r)
-		pared.rotation.y = -ang + PI * 0.5
-		## Inclinadas hacia dentro: el cuenco se estrecha abajo y las bolas se
-		## amontonan en el centro en vez de quedarse pegadas al borde.
-		pared.rotation.x = deg_to_rad(-14.0)
-		cuerpo.add_child(pared)
+	var lados := 20
+	for th_g: float in [16.0, 32.0, 48.0, 64.0, 80.0, 92.0]:
+		var th := deg_to_rad(th_g)
+		var r_lat := RADIO_BOMBO * sin(th)
+		for i in lados:
+			var ph := float(i) * TAU / float(lados)
+			var n := Vector3(sin(th) * cos(ph), -cos(th), sin(th) * sin(ph))
+			var forma := CollisionShape3D.new()
+			var caja := BoxShape3D.new()
+			caja.size = Vector3(maxf(0.08, TAU * r_lat / float(lados) * 1.25), RADIO_BOMBO * deg_to_rad(16.0) * 1.35, grueso)
+			forma.shape = caja
+			var zx := n
+			var xx := Vector3(-sin(ph), 0.0, cos(ph))
+			var yx := zx.cross(xx).normalized()
+			forma.transform = Transform3D(Basis(xx, yx, zx), n * (RADIO_BOMBO + grueso * 0.5))
+			cuerpo.add_child(forma)
 
 ## Las bolas. Nacen escalonadas en altura para que caigan unas sobre otras y se
 ## coloquen solas: por eso el montón nunca sale igual dos veces.
@@ -1046,6 +1061,9 @@ func _process(delta: float) -> void:
 		_cam_mira = _cam_mira.lerp(hacia, clampf(delta * 3.5, 0.0, 1.0))
 		_camara.position = _cam_pos
 		_camara.look_at(_cam_mira, Vector3.UP)
+	## El presentador respira: sin esqueleto, es lo que lo separa de una estatua.
+	if _presentador_real != null:
+		_presentador_real.scale = Vector3(1.0, 1.0 + sin(_t * 1.5) * 0.004, 1.0)
 	## Los focos barren despacio y desfasados entre sí: eso da vida al plató.
 	for i in _focos.size():
 		var f := _focos[i]

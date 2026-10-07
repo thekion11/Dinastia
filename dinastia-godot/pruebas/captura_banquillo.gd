@@ -83,17 +83,17 @@ func _process(_d: float) -> void:
 		_cam2.current = true
 	if _frame == 22:
 		var imgc := get_viewport().get_texture().get_image()
-		imgc.save_png("res://pruebas/pantalla_banquillo_sentados_cerca.png")
+		imgc.save_png("res://pruebas/capturas/pantalla_banquillo_sentados_cerca.png")
 		print("captura guardada: pantalla_banquillo_sentados_cerca.png (%dx%d)" % [imgc.get_width(), imgc.get_height()])
 		_cam3.current = true
 	if _frame == 24:
 		var imgp := get_viewport().get_texture().get_image()
-		imgp.save_png("res://pruebas/pantalla_banquillo_piernas.png")
+		imgp.save_png("res://pruebas/capturas/pantalla_banquillo_piernas.png")
 		print("captura guardada: pantalla_banquillo_piernas.png (%dx%d)" % [imgp.get_width(), imgp.get_height()])
 		_cam.current = true
 	if _frame == 25:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_banquillo_antes.png")
+		img.save_png("res://pruebas/capturas/pantalla_banquillo_antes.png")
 		print("captura guardada: pantalla_banquillo_antes.png (%dx%d)" % [img.get_width(), img.get_height()])
 		## Gol forzado del club LOCAL DE LA VISTA (`par[0]`, dueno del
 		## estadio) justo despues de la primera captura -mismo patron que
@@ -116,14 +116,14 @@ func _process(_d: float) -> void:
 		_cam.current = true
 	if _frame == 45:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/pantalla_banquillo_festejo.png")
+		img2.save_png("res://pruebas/capturas/pantalla_banquillo_festejo.png")
 		print("captura guardada: pantalla_banquillo_festejo.png (%dx%d)" % [img2.get_width(), img2.get_height()])
 	if _frame == 220:
 		## `_banca_celebra()` vuelve sola a "parado" a los 3s (~180 fotogramas
 		## a 60fps) -una tercera captura confirma que no se queda pegada en
 		## la pose de festejo para siempre.
 		var img3 := get_viewport().get_texture().get_image()
-		img3.save_png("res://pruebas/pantalla_banquillo_vuelta.png")
+		img3.save_png("res://pruebas/capturas/pantalla_banquillo_vuelta.png")
 		print("captura guardada: pantalla_banquillo_vuelta.png (%dx%d)" % [img3.get_width(), img3.get_height()])
 		print("FIN. 0 fallos")
 		get_tree().quit()

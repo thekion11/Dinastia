@@ -37,7 +37,7 @@ func _process(_d: float) -> void:
 		print("perfil_estadio_de(mio) dice forma=%s techo=%s" % [
 			mundo.perfil_estadio_de(mio).get("forma"), mundo.perfil_estadio_de(mio).get("techo")])
 		_pantalla.call("_pintar_estadio", mio)
-		_guardar("res://pruebas/pantalla_estadio_boton.png")
+		_guardar("res://pruebas/capturas/pantalla_estadio_boton.png")
 	if _n == ESPERA + 4:
 		## Pulsa el botón de verdad, buscándolo por texto -no llamando a la
 		## función interna a secas-, para probar el mismo camino que sigue el
@@ -53,9 +53,9 @@ func _process(_d: float) -> void:
 	if _n == ESPERA + 10:
 		var vista := _pantalla.get_children().filter(func(c): return c is VistaEstadio)
 		print("VistaEstadio abierta = %s" % (not vista.is_empty()))
-		_guardar("res://pruebas/pantalla_estadio_3d_abierto.png")
+		_guardar("res://pruebas/capturas/pantalla_estadio_3d_abierto.png")
 	if _n == ESPERA + 40:
-		_guardar("res://pruebas/pantalla_estadio_3d_abierto_tarde.png")
+		_guardar("res://pruebas/capturas/pantalla_estadio_3d_abierto_tarde.png")
 		var hijos := _pantalla.get_children().filter(func(c): return c is VistaEstadio)
 		if hijos.is_empty():
 			print("NO HAY VistaEstadio para cerrar")
@@ -67,7 +67,7 @@ func _process(_d: float) -> void:
 		print("VistaEstadio sigue abierta tras Volver = %s" % (not vista.is_empty()))
 		var lista: Control = _pantalla.get("_lista_estadio")
 		print("_lista_estadio visible tras Volver = %s" % (is_instance_valid(lista) and lista.is_visible_in_tree()))
-		_guardar("res://pruebas/pantalla_estadio_despues_de_volver.png")
+		_guardar("res://pruebas/capturas/pantalla_estadio_despues_de_volver.png")
 		get_tree().quit()
 
 func _buscar_boton(n: Node, texto: String) -> Button:

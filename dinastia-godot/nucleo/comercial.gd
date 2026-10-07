@@ -45,9 +45,13 @@ static func tipografias() -> Array: return _tabla("TIPOGRAFIAS")
 static func color_balon(clave: String, club: Club) -> Array:
 	var claro := Color("#f8faf6")
 	var oscuro := Color("#1a1a1a")
+	var diseno := "clasico"
 	for fila: Array in balones():
 		if fila.size() < 4 or String(fila[0]) != clave:
 			continue
+		## El quinto campo es el dibujo de los paneles (`Balon3D.DISENOS`).
+		if fila.size() > 4:
+			diseno = String(fila[4])
 		var c1 := String(fila[2])
 		var c2 := String(fila[3])
 		if c1 == "" and c2 == "":
@@ -58,7 +62,7 @@ static func color_balon(clave: String, club: Club) -> Array:
 			claro = Color(c1)
 			oscuro = Color(c2)
 		break
-	return [claro, oscuro]
+	return [claro, oscuro, diseno]
 
 # ---------------------------------------------------------------------------
 #  LAS TRES CAMISETAS

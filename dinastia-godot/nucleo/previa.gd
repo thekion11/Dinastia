@@ -24,7 +24,7 @@ static func arbitro_de(rival_id: String, semana: int) -> Dictionary:
 	var fila: Array = lista[h % lista.size()]
 	var perfil := String(fila[1])
 	return {
-		"nombre": Nombres.limpiar(String(fila[0])),
+		"nombre": Nombres.de_tabla(String(fila[0])),
 		"perfil": perfil,
 		"descripcion": String(descripciones.get(perfil, "")) if descripciones != null else "",
 	}

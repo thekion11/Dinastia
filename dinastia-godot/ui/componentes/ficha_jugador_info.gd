@@ -25,9 +25,8 @@ extends RefCounted
 ## Ajustes-, para no repetir el hueco de coherencia visual del mercado.
 ##   {"suave", "texto", "acento", "verde", "rojo", "oro", "escala"}
 ##
-## Sin `Ficcion.limpiar()`, igual que el resto de `principal.gd` fuera de
-## `PanelMercado`: el renombrado legal es una decisión pendiente de confirmar,
-## no un descuido de esta extracción.
+## Los nombres se pintan tal cual: lo legal se resuelve en los DATOS (base
+## ficticia por defecto, pack real opcional -ver `Datos`-), no en cada pantalla.
 
 ## `fichaCiega()` del HTML: lo que ve el jugador cuando `Ojeadores.modo_ciego`
 ## está activo y no conoce a este rival -en vez de la grilla de atributos
@@ -60,6 +59,7 @@ static func pintar_ciega(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta:
 	_dato(lista, "Partidos esta temporada", "%d · %d goles · %d asistencias" % [j.partidos, j.goles, j.asistencias], paleta["texto"], paleta)
 	_dato(lista, "Nota media", ("%.1f" % j.media_notas()) if j.notas.size() >= 3 else "sin datos", paleta["texto"], paleta)
 	_dato(lista, "Carácter", Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, ["sin rasgos marcados"])[0])) if j.rasgo != "" else "sin rasgos marcados", paleta["texto"], paleta)
+	_dato(lista, "Celebración", String(AnimExtra.NOMBRE_CELEBRACION.get(AnimExtra.celebracion_firma(j.rasgo, j.id), "Salto y abrazo")), paleta["texto"], paleta)
 	_dato(lista, "Fiabilidad del informe", oj.fiabilidad_de(j), paleta["suave"], paleta)
 
 ## Lo que ha hecho esta temporada.
@@ -96,6 +96,23 @@ static func pintar_estadisticas(lista: VBoxContainer, j: Jugador, paleta: Dictio
 		_dato(lista, "🟨 Amarillas", str(j.amarillas), paleta["oro"], paleta)
 
 ## La cabeza. `Vestuario` lleva ansiedad y confianza por jugador.
+## LO QUE FALTABA EN LA FICHA (C17): el pie, la pierna débil y el palmarés
+## individual temporada a temporada.
+static func pintar_perfil_y_premios(lista: VBoxContainer, j: Jugador, paleta: Dictionary) -> void:
+	lista.add_child(HSeparator.new())
+	var t := _texto(11, paleta["suave"], paleta)
+	t.text = "🦶 PERFIL"
+	lista.add_child(t)
+	var pd := j.pierna_debil()
+	_dato(lista, "Pie hábil", "Derecho" if j.pie() == "D" else "Izquierdo", paleta["texto"], paleta)
+	_dato(lista, "Pierna débil", "★".repeat(pd) + "☆".repeat(5 - pd), paleta["texto"], paleta)
+	if not j.premios.is_empty():
+		var tp := _texto(11, paleta["suave"], paleta)
+		tp.text = "🏆 PREMIOS"
+		lista.add_child(tp)
+		for p: Dictionary in j.premios:
+			_dato(lista, str(int(p.get("anio", 0))), String(p.get("premio", "")), Color("c9a227"), paleta)
+
 static func pintar_cabeza(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta: Dictionary) -> void:
 	var v := mundo.vestuario
 	if v == null:
@@ -241,7 +258,7 @@ static func pintar_historial(lista: VBoxContainer, j: Jugador, paleta: Dictionar
 		izq.clip_text = true
 		fila.add_child(izq)
 		var medio := _texto(11, paleta["texto"], paleta)
-		medio.text = "%d PJ · %d goles" % [int(h["pj"]), int(h["goles"])]
+		medio.text = "%d PJ · %d goles · %d asist." % [int(h["pj"]), int(h["goles"]), int(h.get("as", 0))]
 		medio.custom_minimum_size = Vector2(110, 0)
 		fila.add_child(medio)
 		var color_ovr: Color = paleta["texto"]
