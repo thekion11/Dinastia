@@ -166,6 +166,8 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	_boton(barra, "🏷 Rótulos", func() -> void:
 		_rotulos_visibles = not _rotulos_visibles
 		_ciudad.mostrar_rotulos(_rotulos_visibles))
+	_boton(barra, "🚗 Conducir", func() -> void: explorar("coche"))
+	_boton(barra, "🚶 Pasear", func() -> void: explorar("pie"))
 	_boton(barra, "🚇 Metro", func() -> void:
 		if _ciudad.expansion != null and _ciudad.expansion.metro != null:
 			_ciudad.expansion.metro.alternar_rayos_x())
@@ -238,7 +240,60 @@ func _mover_camara() -> void:
 	_camara.position = Vector3(o.x + sin(_ang) * _dist, _alto, o.z + cos(_ang) * _dist + 20.0)
 	_camara.look_at(o, Vector3.UP)
 
+## EL MODO A PIE / AL VOLANTE (7-10-2026): ver `ExploradorCiudad`.
+var _explorador: ExploradorCiudad = null
+var _barra_mapa: Array[Control] = []
+
+func explorar(modo: String) -> void:
+	if _explorador != null:
+		return
+	_explorador = ExploradorCiudad.new()
+	_raiz3d.add_child(_explorador)
+	var desde := Vector3(0, 0, CityBuilder.RING_Z_SUR) if modo == "coche" else Vector3(0, 0, -440)
+	_explorador.iniciar(_ciudad, modo, desde, club.nombre if club != null else "", String(animo.get("estado", "normal")))
+	_explorador.salir.connect(_dejar_de_explorar)
+	_explorador.interactuar.connect(_interactuar_en_ciudad)
+	for h in get_children():
+		if h is Control and (h as Control).visible and h != _ficha:
+			(h as Control).visible = false
+			_barra_mapa.append(h)
+
+func _dejar_de_explorar() -> void:
+	if _explorador == null:
+		return
+	_explorador.queue_free()
+	_explorador = null
+	_camara.make_current()
+	for h in _barra_mapa:
+		if is_instance_valid(h):
+			h.visible = true
+	_barra_mapa.clear()
+
+## La E en un lugar de la ciudad: la ficha de la instalación, el estadio, o
+## un minijuego de la ciudad.
+func _interactuar_en_ciudad(k: String) -> void:
+	if Instalaciones.CATALOGO.has(k):
+		abrir_ficha(k)
+		return
+	if k == "estadio":
+		editar_estadio_pedido.emit()
+		return
+	var juego := MinijuegosCiudad.juego_de(k)
+	if juego != "":
+		var j := MinijuegosCiudad.abrir(self, juego, club)
+		## Mientras dura el minijuego, el paseo se pausa y su cartel se oculta.
+		if j != null and _explorador != null:
+			_explorador.pausar(true)
+			j.tree_exited.connect(func() -> void:
+				if _explorador != null:
+					_explorador.pausar(false))
+
 func _process(delta: float) -> void:
+	if _explorador != null:
+		if _ciclo_activo:
+			_hora = fposmod(_hora + delta * (24.0 / CICLO_SEG), 24.0)
+			_aplicar_hora()
+		return
 	if _girando:
 		_ang += delta * 0.12
 	## CÁMARA LIBRE (B7): WASD mueve el punto que se mira, en el plano del
@@ -417,6 +472,10 @@ func abrir_ficha(k: String) -> void:
 	if _ficha != null:
 		_ficha.queue_free()
 	if not Instalaciones.CATALOGO.has(k):
+		## Los lugares de la ciudad con minijuego (7-10-2026).
+		var juego := MinijuegosCiudad.juego_de(k)
+		if juego != "":
+			MinijuegosCiudad.abrir(self, juego, club)
 		return
 	for p: Dictionary in _ciudad.puntos_clic:
 		if String(p["k"]) == k:

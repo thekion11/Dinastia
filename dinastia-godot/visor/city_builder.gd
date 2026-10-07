@@ -88,6 +88,9 @@ const FILA_PASO := 43.0
 
 var datos: Dictionary = {}
 var expansion: CiudadExpansion
+## Huellas sólidas que no son fachadas (estadio, edificios del club): para el
+## modo a pie / al volante (`ExploradorCiudad`).
+var huellas: Array[Rect2] = []
 var etiquetas: Array = []          ## [{pos:Vector3, texto:String, nivel:int}]
 ## LO QUE SE PUEDE TOCAR EN EL MAPA (plan maestro B7): cada instalación, su
 ## solar si todavía no existe, y el estadio. `VistaCiudad` proyecta `pos` a la
@@ -114,6 +117,7 @@ func build(d: Dictionary) -> void:
 	_ventanas_mat.clear()
 	_vias.clear()
 	_frentes.clear()
+	huellas.clear()
 	_anillo_con_banderas = false
 	_luminarias.clear()
 	_luz_color = _color_luces()
@@ -638,6 +642,7 @@ func _estadio() -> void:
 		## estadio se leía como una pista de hockey. Con 0,35 se distinguen las
 		## butacas del club, que es lo que lo hace reconocible desde arriba.
 		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, aforo)
+		huellas.append(Rect2(ESTADIO_EN.x - 62.0, ESTADIO_EN.z - 80.0, 124.0, 160.0))
 		puntos_clic.append({"k": "estadio", "n": str(datos.get("club", {}).get("estadioNom", "Estadio")),
 			"pos": ESTADIO_EN + Vector3(0, 15, 0), "estado": "estadio"})
 		## Si se están ampliando las tribunas o mejorando el recinto, se nota.
@@ -892,6 +897,7 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 	## dentro, torre de habitaciones, clínica escalonada, templo con columnas,
 	## escuela en L, pabellón con terraza, caja de medios con cristal oscuro.
 	var forma := String(FORMAS.get(String(e["k"]), "caja")) if not (enObra and niv <= 0) else "caja"
+	huellas.append(Rect2(pos.x - ancho * 0.5, pos.z - fondo * 0.5, ancho, fondo))
 	_cuerpo_instalacion(forma, pos, ancho, fondo, alto, plantas, mat)
 
 	## Franja del color del club en el tejado: ata los edificios al club y no a
@@ -3873,6 +3879,7 @@ func _desguace(centro: Vector3, semilla: int) -> void:
 ## colores, barrera de neumáticos, conos, boxes con su taller, y los cinco
 ## karts del kit dando vueltas (una ruta más de `TraficoCiudad`).
 func _karting() -> void:
+	puntos_clic.append({"k": "karting", "n": "Karting · contrarreloj", "pos": KARTING_EN, "estado": "ciudad"})
 	if _extra(KARTS[0]) == null:
 		return
 	var c := KARTING_EN
