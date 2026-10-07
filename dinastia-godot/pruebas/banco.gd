@@ -117,6 +117,7 @@ func _ready() -> void:
 	_probar_jugadores_fijos()
 	_probar_disenos_kit()
 	_probar_guinos_estadio()
+	_probar_plantillas_fijas()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -177,15 +178,14 @@ func _probar_repetibilidad() -> void:
 			iguales = false
 			break
 	_comprobar(iguales, "misma semilla, mismos jugadores uno a uno")
+	## Desde la fase 4 las plantillas de ARRANQUE son fijas (sembradas con el
+	## nombre del club): lo que cambia con la semilla es el mundo que corre,
+	## empezando por los resultados de la primera jornada.
 	var c := Mundo.new()
 	c.generar(["CHI"], 999)
-	var distinto := false
-	var jc := c.jugadores()
-	for i in mini(ja.size(), jc.size()):
-		if ja[i].nombre != jc[i].nombre:
-			distinto = true
-			break
-	_comprobar(distinto, "otra semilla, otro mundo")
+	var res_a := str(a.ligas[0].jugar_jornada()) + str(a.ligas[0].jugar_jornada())
+	var res_c := str(c.ligas[0].jugar_jornada()) + str(c.ligas[0].jugar_jornada())
+	_comprobar(res_a != res_c, "otra semilla, otro mundo (otros resultados)")
 
 func _probar_mundo() -> void:
 	_titulo("GENERACION DEL MUNDO")
@@ -4995,6 +4995,46 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## FASE 4: las plantillas de arranque son las mismas con cualquier semilla y
+## con cualquier mezcla de países cargados (sembradas con el nombre del club).
+func _probar_plantillas_fijas() -> void:
+	_titulo("PLANTILLAS FIJAS DE ARRANQUE (FASE 4)")
+	var a := Mundo.new()
+	a.generar(["CHI", "GER"], 5)
+	var b := Mundo.new()
+	b.generar(["CHI", "ARG", "GER", "ESP"], 424242)
+	var firma := func(c: Club) -> Array:
+		var f: Array = []
+		for j: Jugador in c.plantilla:
+			f.append("%s|%s|%d|%d|%d" % [j.nombre, j.pos_e, j.edad, j.ovr, j.pot])
+		f.sort()
+		return f
+	var por_nombre := {}
+	for c: Club in b.clubes.values():
+		por_nombre[c.nombre] = c
+	var iguales := 0
+	var sin_reales := 0
+	var total := 0
+	for c: Club in a.clubes.values():
+		if not por_nombre.has(c.nombre):
+			continue
+		total += 1
+		var reales := 0
+		for j: Jugador in c.plantilla:
+			if j.real:
+				reales += 1
+		if reales == 0:
+			sin_reales += 1
+		if firma.call(c) == firma.call(por_nombre[c.nombre]):
+			iguales += 1
+	_comprobar(total >= 40, "%d clubes (Chile y Alemania) en los dos mundos" % total)
+	_comprobar(iguales == total, "misma plantilla (nombre, puesto, edad, media, potencial) con otra semilla y otros países: %d de %d" % [iguales, total])
+	_comprobar(sin_reales >= 1, "incluye clubes sin tabla REALES (%d)" % sin_reales)
+	## Los canteranos que llegan después siguen siendo de cada partida.
+	var j1 := a.crear_jugador(a.ligas[0].clubes[0], "DEL", "DC")
+	var j2 := b.crear_jugador(a.ligas[0].clubes[0], "DEL", "DC")
+	_comprobar(j1.nombre != j2.nombre or j1.ovr != j2.ovr, "lo que nace después varía con la semilla (%s / %s)" % [j1.nombre, j2.nombre])
 
 ## FASE 4, E9: el rasgo del estadio real se DIBUJA y le da un apodo genérico.
 func _probar_guinos_estadio() -> void:
