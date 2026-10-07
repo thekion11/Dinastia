@@ -485,11 +485,140 @@ func _puente(a: Vector3, c: Vector3, ancho: float) -> void:
 	## Tablero sobre el agua.
 	_lote("asfalto", Vector3(rx, PUENTE_ALTO, z), Vector3(agua1 - agua0, 0.6, ancho))
 	b._caja_en(Vector3(rx, PUENTE_ALTO - 0.8, z), Vector3(agua1 - agua0, 1.0, ancho + 1.0), hormigon)
-	for lado2: float in [-1.0, 1.0]:
-		b._caja_en(Vector3(rx, PUENTE_ALTO + 0.7, z + lado2 * (ancho * 0.5 + 0.2)), Vector3(agua1 - agua0 + rampa * 2.0, 0.9, 0.3), hormigon)
 	for px: float in [agua0 + 6.0, rx, agua1 - 6.0]:
 		b._caja_en(Vector3(px, PUENTE_ALTO * 0.5 - 0.6, z), Vector3(2.2, PUENTE_ALTO, ancho * 0.7), hormigon)
+	_adornar_puente(rx, z, ancho, agua0, agua1, rampa)
 	cuenta["puentes"] = int(cuenta.get("puentes", 0)) + 1
+
+## EL PUENTE MÁS BONITO (7-10-2026, «el puente puede quedar más bonito»):
+## arcos de piedra entre los pilares, tajamares, cornisa, balaustrada de
+## columnillas, aceras sobre el tablero, farolas de forja con banderolas del
+## club, pilonos en las cuatro esquinas con el nombre del puente y una fila de
+## luces bajo el tablero que se ve de noche.
+const NOMBRES_PUENTE := ["Puente de Piedra", "Puente de la Ribera", "Puente del Centenario", "Puente de los Remeros",
+	"Puente Nuevo", "Puente del Molino", "Puente de la Afición", "Puente Real", "Puente del Carmen"]
+
+func _adornar_puente(rx: float, z: float, ancho: float, agua0: float, agua1: float, rampa: float) -> void:
+	var piedra := b._mat_simple(Color(0.78, 0.7, 0.58), 0.85)
+	var piedra_osc := b._mat_simple(Color(0.6, 0.53, 0.44), 0.9)
+	var forja := b._mat_simple(Color(0.1, 0.11, 0.12), 0.4)
+	forja.metallic = 0.5
+	var nombre := String(NOMBRES_PUENTE[absi(int(z / CELDA)) % NOMBRES_PUENTE.size()])
+	var dovelas: Array[Transform3D] = []
+	var timpanos: Array[Transform3D] = []
+	var balaustres: Array[Transform3D] = []
+	## Los arcos: dos vanos (entre los tres pilares), con su rosca de dovelas.
+	var pilares := [agua0 + 6.0, rx, agua1 - 6.0]
+	for v in 2:
+		var xa: float = pilares[v] + 1.1
+		var xb: float = pilares[v + 1] - 1.1
+		var cx := (xa + xb) * 0.5
+		var semi := (xb - xa) * 0.5
+		var alto := PUENTE_ALTO - 1.4
+		var n := 18
+		for k in n:
+			var t0 := PI * float(k) / float(n)
+			var t1 := PI * float(k + 1) / float(n)
+			var p0 := Vector3(cx - cos(t0) * semi, 0.3 + sin(t0) * alto, z)
+			var p1 := Vector3(cx - cos(t1) * semi, 0.3 + sin(t1) * alto, z)
+			var m := (p0 + p1) * 0.5
+			var d := p1 - p0
+			var ang := atan2(d.y, d.x)
+			for lado: float in [-1.0, 1.0]:
+				dovelas.append(Transform3D(Basis(Vector3(0, 0, 1), ang) * Basis.from_scale(Vector3(d.length() + 0.15, 0.9, 0.7)),
+					m + Vector3(0, 0, lado * (ancho * 0.5 + 0.2))))
+				## El tímpano: piedra maciza entre la rosca y el tablero.
+				var y_arco := maxf(p0.y, p1.y) + 0.4
+				var alto_t := PUENTE_ALTO - 0.3 - y_arco
+				if alto_t > 0.05:
+					timpanos.append(Transform3D(Basis.from_scale(Vector3(absf(d.x) + 0.05, alto_t, 0.55)),
+						Vector3(m.x, y_arco + alto_t * 0.5, z + lado * (ancho * 0.5 + 0.2))))
+	_multimesh(BoxMesh.new(), piedra_osc, dovelas, Vector3.ONE)
+	_multimesh(BoxMesh.new(), piedra, timpanos, Vector3.ONE)
+	## Tajamares: proas de piedra en los pilares, río arriba y río abajo.
+	for px: float in pilares:
+		for lado: float in [-1.0, 1.0]:
+			var t := b._caja_en(Vector3(px, PUENTE_ALTO * 0.35, z + lado * (ancho * 0.35 + 0.8)), Vector3(1.6, PUENTE_ALTO * 0.7, 1.6), piedra)
+			t.rotation.y = PI * 0.25
+	## Cornisa a lo largo del tablero.
+	for lado: float in [-1.0, 1.0]:
+		b._caja_en(Vector3(rx, PUENTE_ALTO - 0.2, z + lado * (ancho * 0.5 + 0.55)), Vector3(agua1 - agua0, 0.35, 0.5), piedra)
+	## Aceras sobre el tablero (los peatones van por los lados).
+	for lado: float in [-1.0, 1.0]:
+		b._caja_en(Vector3(rx, PUENTE_ALTO + 0.38, z + lado * (ancho * 0.5 - 1.1)), Vector3(agua1 - agua0, 0.18, 2.2), b._mat_simple(Color(0.72, 0.68, 0.62), 0.8))
+	## La balaustrada: columnillas bajo un pasamanos de piedra (sustituye al
+	## muro liso de hormigón).
+	var largo := agua1 - agua0 + rampa * 2.0
+	var cuantos := int(largo / 0.7)
+	for lado: float in [-1.0, 1.0]:
+		var zb := z + lado * (ancho * 0.5 + 0.2)
+		for k in cuantos:
+			var x := rx - largo * 0.5 + (float(k) + 0.5) * largo / float(cuantos)
+			var y_base := _altura_puente(x, rx, agua0, agua1, rampa)
+			balaustres.append(Transform3D(Basis.from_scale(Vector3(0.22, 0.85, 0.22)), Vector3(x, y_base + 0.75, zb)))
+		b._caja_en(Vector3(rx, PUENTE_ALTO + 1.25, zb), Vector3(agua1 - agua0, 0.2, 0.42), piedra)
+	var torno := CylinderMesh.new()
+	torno.height = 1.0
+	torno.top_radius = 0.38
+	torno.bottom_radius = 0.5
+	torno.radial_segments = 8
+	_multimesh(torno, piedra, balaustres, Vector3.ONE)
+	## Farolas de forja con banderolas del club, cada 11 m por lado.
+	var c1 := b._color_club("c1", Color(0.2, 0.5, 0.3))
+	var c2 := b._color_club("c2", Color(1, 1, 1))
+	var postes: Array[Transform3D] = []
+	var faroles: Array[Transform3D] = []
+	var banderolas: Array[Transform3D] = []
+	var band_col: Array[Color] = []
+	var nf := int((agua1 - agua0) / 11.0)
+	for lado: float in [-1.0, 1.0]:
+		for k in nf + 1:
+			var x := agua0 + float(k) * (agua1 - agua0) / float(nf)
+			var base := Vector3(x, PUENTE_ALTO + 1.35, z + lado * (ancho * 0.5 + 0.2))
+			postes.append(Transform3D(Basis.from_scale(Vector3(0.14, 4.2, 0.14)), base + Vector3(0, 2.1, 0)))
+			faroles.append(Transform3D(Basis.from_scale(Vector3(0.45, 0.6, 0.45)), base + Vector3(0, 4.45, 0)))
+			if k % 2 == 1:
+				banderolas.append(Transform3D(Basis.from_scale(Vector3(0.05, 1.5, 0.7)), base + Vector3(0, 3.0, -lado * 0.45)))
+				band_col.append(c1 if k % 4 == 1 else c2)
+	var cil := CylinderMesh.new()
+	cil.height = 1.0
+	cil.top_radius = 0.5
+	cil.bottom_radius = 0.5
+	_multimesh(cil, forja, postes, Vector3.ONE)
+	_multimesh(BoxMesh.new(), _mat_luz_farola(), faroles, Vector3.ONE)
+	_multimesh(BoxMesh.new(), null, banderolas, Vector3.ONE, band_col)
+	## Pilonos en las cuatro esquinas, con el nombre del puente.
+	for xe: float in [agua0 - rampa - 1.0, agua1 + rampa + 1.0]:
+		for lado: float in [-1.0, 1.0]:
+			var pz := z + lado * (ancho * 0.5 + 0.9)
+			b._caja_en(Vector3(xe, 2.0, pz), Vector3(1.6, 4.0, 1.6), piedra)
+			b._caja_en(Vector3(xe, 4.15, pz), Vector3(2.0, 0.3, 2.0), piedra_osc)
+			b._caja_en(Vector3(xe, 4.8, pz), Vector3(0.6, 1.0, 0.6), _mat_luz_farola())
+		var l := Label3D.new()
+		l.text = nombre
+		l.font_size = 44
+		l.pixel_size = 0.01
+		l.modulate = Color(0.25, 0.2, 0.15)
+		l.outline_size = 0
+		l.position = Vector3(xe + (-0.82 if xe < rx else 0.82), 2.4, z + ancho * 0.5 + 0.9)
+		l.rotation.y = -PI * 0.5 if xe < rx else PI * 0.5
+		l.visibility_range_end = 120.0
+		b.add_child(l)
+	b._rotulo(Vector3(rx, PUENTE_ALTO + 9.0, z), "🌉 " + nombre, Color(0.95, 0.9, 0.75), 16)
+	## Luces bajo el tablero, reflejadas en el agua de noche.
+	var luces: Array[Transform3D] = []
+	for k in 16:
+		for lado: float in [-1.0, 1.0]:
+			luces.append(Transform3D(Basis.from_scale(Vector3(0.6, 0.15, 0.3)), Vector3(agua0 + (float(k) + 0.5) * (agua1 - agua0) / 16.0, PUENTE_ALTO - 0.45, z + lado * (ancho * 0.5 + 0.85))))
+	_multimesh(BoxMesh.new(), _mat_luz_farola(), luces, Vector3.ONE)
+
+## Altura del suelo del puente en x (rampas y tablero), para la balaustrada.
+func _altura_puente(x: float, rx: float, agua0: float, agua1: float, rampa: float) -> float:
+	if x >= agua0 and x <= agua1:
+		return PUENTE_ALTO
+	if x < agua0:
+		return clampf((x - (agua0 - rampa)) / rampa, 0.0, 1.0) * PUENTE_ALTO
+	return clampf(((agua1 + rampa) - x) / rampa, 0.0, 1.0) * PUENTE_ALTO
 
 # ---------------------------------------------------------------- manzanas
 
@@ -1055,11 +1184,11 @@ func _instalacion(uso: String, r: Rect2) -> void:
 		"cocheras":
 			nombre = "Cocheras de autobuses"
 			b._caja_en(c + Vector3(0, 5.0, -f * 0.15), Vector3(w * 0.85, 10.0, f * 0.5), b._mat_simple(Color(0.6, 0.62, 0.6), 0.7))
-			var bus := load(CityBuilder.RUTA_BUS) as PackedScene
-			if bus != null:
-				for k in 4:
-					var n := _kit(bus, c + Vector3(-w * 0.3 + float(k) * w * 0.2, 0.2, f * 0.3), Vector3.ONE * 3.6, 0.0)
-					n.name = "Bus"
+			for k in 4:
+				var n := CityBuilder.autobus([Color(0.85, 0.15, 0.12), Color(0.15, 0.4, 0.8)][k % 2], "")
+				n.position = c + Vector3(-w * 0.3 + float(k) * w * 0.2, 0.2, f * 0.3)
+				n.name = "Bus"
+				b.add_child(n)
 		_:
 			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), _mat["claro"])
 	if nombre != "":
@@ -1339,6 +1468,17 @@ func _orillas_nucleo() -> void:
 var _farola_luz: StandardMaterial3D
 var _farola_charco: StandardMaterial3D
 
+## El material de las luces de farola: uno solo para toda la ciudad (los
+## puentes también lo usan), que la noche enciende.
+func _mat_luz_farola() -> StandardMaterial3D:
+	if _farola_luz == null:
+		_farola_luz = StandardMaterial3D.new()
+		_farola_luz.albedo_color = Color(1.0, 0.85, 0.6)
+		_farola_luz.emission_enabled = true
+		_farola_luz.emission = Color(1.0, 0.78, 0.45)
+		_farola_luz.emission_energy_multiplier = 0.0
+	return _farola_luz
+
 func _farolas() -> void:
 	var postes: Array[Transform3D] = []
 	var cabezas: Array[Transform3D] = []
@@ -1363,12 +1503,7 @@ func _farolas() -> void:
 			charcos.append(Transform3D(Basis.from_scale(Vector3(13.0, 1.0, 13.0)), base + hacia * 2.0 + Vector3(0, 0.3, 0)))
 	var gris := b._mat_simple(Color(0.25, 0.26, 0.27), 0.5)
 	_multimesh(CylinderMesh.new(), gris, postes, Vector3.ONE)
-	_farola_luz = StandardMaterial3D.new()
-	_farola_luz.albedo_color = Color(1.0, 0.85, 0.6)
-	_farola_luz.emission_enabled = true
-	_farola_luz.emission = Color(1.0, 0.78, 0.45)
-	_farola_luz.emission_energy_multiplier = 0.0
-	_multimesh(BoxMesh.new(), _farola_luz, cabezas, Vector3.ONE)
+	_multimesh(BoxMesh.new(), _mat_luz_farola(), cabezas, Vector3.ONE)
 	_farola_charco = StandardMaterial3D.new()
 	_farola_charco.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	_farola_charco.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -1730,7 +1865,6 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 			t.agregar_vehiculo(na, ida, largo_a * float(i) / 12.0 + rng.randf() * 40.0, rng.randf_range(22.0, 30.0), 0.0, 0.0)
 			t.marcar_cola_al_ultimo()
 	## Los autobuses.
-	var bus := load(CityBuilder.RUTA_BUS) as PackedScene
 	var n_bus := 0
 	for l: Dictionary in lineas_bus:
 		var pts2: PackedVector3Array = _subir_puentes(l["puntos"])
@@ -1739,12 +1873,10 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 		var paradas: Array = []
 		for p: Vector3 in l["paradas"]:
 			paradas.append(t.s_mas_cercano(id2, p))
-		if bus == null:
-			continue
 		var largo2 := t.largo_de(id2)
+		var col_bus := Color(0.85, 0.15, 0.12) if String(l["nombre"]).contains("10") else Color(0.15, 0.4, 0.8)
 		for k in 2:
-			var nb: Node3D = bus.instantiate()
-			nb.scale = Vector3.ONE * 3.6
+			var nb: Node3D = CityBuilder.autobus(col_bus, String(l["nombre"]).to_upper())
 			t.agregar_vehiculo(nb, id2, largo2 * float(k) * 0.5, 9.0, 0.0, 0.0)
 			t.agregar_paradas_al_ultimo(paradas, 7.0)
 			t.marcar_cola_al_ultimo()

@@ -1883,11 +1883,60 @@ static func flota_coches() -> Array:
 			pool.append({"esc": kc, "escala": 1.65, "fbx": false})
 	return pool
 
+## VEHÍCULOS PROPORCIONADOS (7-10-2026, «vehículos más realistas y que sean
+## proporcionados»): los del kit de Kenney son de juguete -a escala 1,65 un
+## turismo medía 2,1 m de alto y 2,5 de ancho, y un camión de bomberos 5 m de
+## largo-. Cada modelo se lleva a sus medidas reales (ancho, alto, largo en
+## metros) midiéndolo una vez; la deformación se limita para que las ruedas
+## no se vean ovaladas (el alto nunca baja del 72 % del factor del largo).
+const MEDIDAS_REALES := {
+	"sedan": Vector3(1.9, 1.65, 4.6), "sedan-sports": Vector3(1.9, 1.45, 4.5), "suv": Vector3(1.95, 1.8, 4.7),
+	"suv-luxury": Vector3(2.0, 1.85, 4.95), "hatchback-sports": Vector3(1.85, 1.5, 4.2), "taxi": Vector3(1.9, 1.7, 4.6),
+	"van": Vector3(2.0, 2.1, 5.1), "truck": Vector3(2.5, 3.3, 8.0), "truck-flat": Vector3(2.5, 3.0, 8.0),
+	"tractor-police": Vector3(2.1, 2.6, 4.4), "ambulance": Vector3(2.1, 2.7, 6.0), "police": Vector3(1.9, 1.65, 4.8),
+	"delivery": Vector3(2.1, 2.6, 6.0), "garbage-truck": Vector3(2.5, 3.4, 8.5), "firetruck": Vector3(2.5, 3.3, 9.0),
+	"delivery-flat": Vector3(2.1, 2.4, 6.0),
+}
+static var _escalas_reales := {}
+
+static func escala_real(esc: PackedScene) -> Vector3:
+	var ruta := esc.resource_path
+	if _escalas_reales.has(ruta):
+		return _escalas_reales[ruta]
+	var nombre := ruta.get_file().get_basename()
+	var res := Vector3.ONE * 1.65
+	if MEDIDAS_REALES.has(nombre):
+		var tmp: Node3D = esc.instantiate()
+		var caja := _caja_local(tmp, Transform3D.IDENTITY)
+		tmp.free()
+		if caja.size.x > 0.01 and caja.size.y > 0.01 and caja.size.z > 0.01:
+			var m: Vector3 = MEDIDAS_REALES[nombre]
+			res = Vector3(m.x / caja.size.x, m.y / caja.size.y, m.z / caja.size.z)
+			res.y = maxf(res.y, res.z * 0.72)
+			res.x = maxf(res.x, res.z * 0.6)
+	_escalas_reales[ruta] = res
+	return res
+
+## La caja de todas las mallas de un nodo que no está en el árbol.
+static func _caja_local(n: Node, t: Transform3D) -> AABB:
+	var caja := AABB()
+	var hay := false
+	var tt := t * (n as Node3D).transform if n is Node3D else t
+	if n is MeshInstance3D and (n as MeshInstance3D).mesh != null:
+		caja = tt * (n as MeshInstance3D).mesh.get_aabb()
+		hay = true
+	for h in n.get_children():
+		var c := _caja_local(h, tt)
+		if c.size != Vector3.ZERO:
+			caja = c if not hay else caja.merge(c)
+			hay = true
+	return caja
+
 ## Un coche de la flota, ya con el morro hacia +Z y a su escala.
 static func instanciar_coche(par: Dictionary, rng: RandomNumberGenerator = null) -> Node3D:
 	var modelo: Node3D = (par["esc"] as PackedScene).instantiate()
 	if not bool(par.get("fbx", false)):
-		modelo.scale = Vector3.ONE * float(par["escala"])
+		modelo.scale = escala_real(par["esc"])
 		return modelo
 	var raiz := Node3D.new()
 	raiz.add_child(modelo)
@@ -1905,6 +1954,92 @@ static func instanciar_coche(par: Dictionary, rng: RandomNumberGenerator = null)
 	mat.metallic = 0.3
 	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
 		(mi as MeshInstance3D).material_override = mat
+	return raiz
+
+## EL AUTOBÚS URBANO (7-10-2026): el kit no trae ninguno y la furgoneta
+## agrandada medía 6 m de alto. Este se arma con piezas: 12 m de largo, 3,1 de
+## alto y 2,55 de ancho, con franja de ventanas, parabrisas, dos puertas,
+## rótulo de destino encendido, ruedas y el color de la línea. Mira a +Z.
+static func autobus(col: Color, destino: String = "") -> Node3D:
+	var raiz := Node3D.new()
+	var pintura := StandardMaterial3D.new()
+	pintura.albedo_color = col
+	pintura.roughness = 0.35
+	pintura.metallic = 0.2
+	var blanco := StandardMaterial3D.new()
+	blanco.albedo_color = Color(0.94, 0.94, 0.92)
+	blanco.roughness = 0.4
+	var vidrio := StandardMaterial3D.new()
+	vidrio.albedo_color = Color(0.12, 0.16, 0.2)
+	vidrio.roughness = 0.08
+	vidrio.metallic = 0.6
+	var goma := StandardMaterial3D.new()
+	goma.albedo_color = Color(0.06, 0.06, 0.06)
+	goma.roughness = 0.9
+	var piezas := [
+		[Vector3(0, 1.0, 0), Vector3(2.55, 1.2, 12.0), pintura],           ## faldón
+		[Vector3(0, 2.3, 0), Vector3(2.5, 1.4, 11.9), vidrio],            ## ventanas
+		[Vector3(0, 3.05, 0), Vector3(2.55, 0.2, 12.0), blanco],          ## techo
+		[Vector3(0, 3.25, -1.5), Vector3(1.8, 0.25, 3.0), blanco],        ## climatizador
+		[Vector3(0, 2.3, 5.97), Vector3(2.3, 1.5, 0.08), vidrio],         ## parabrisas
+		[Vector3(0, 1.0, 6.02), Vector3(2.4, 0.5, 0.05), blanco],         ## parachoques
+		[Vector3(0, 2.85, 6.0), Vector3(1.8, 0.28, 0.06), null],          ## rótulo
+	]
+	for pz: Array in piezas:
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = pz[1]
+		mi.mesh = bm
+		mi.position = pz[0]
+		if pz[2] != null:
+			mi.material_override = pz[2]
+		else:
+			var led := StandardMaterial3D.new()
+			led.albedo_color = Color(1.0, 0.7, 0.1)
+			led.emission_enabled = true
+			led.emission = Color(1.0, 0.6, 0.1)
+			led.emission_energy_multiplier = 1.5
+			mi.material_override = led
+		raiz.add_child(mi)
+	## Pilares entre ventanas y las dos puertas (lado derecho, +X).
+	for k in 7:
+		var pil := MeshInstance3D.new()
+		var bm2 := BoxMesh.new()
+		bm2.size = Vector3(2.58, 1.4, 0.18)
+		pil.mesh = bm2
+		pil.material_override = pintura
+		pil.position = Vector3(0, 2.3, -5.4 + float(k) * 1.8)
+		raiz.add_child(pil)
+	for zp: float in [4.6, -0.8]:
+		var pu := MeshInstance3D.new()
+		var bm3 := BoxMesh.new()
+		bm3.size = Vector3(0.06, 2.3, 1.2)
+		pu.mesh = bm3
+		pu.material_override = vidrio
+		pu.position = Vector3(1.29, 1.55, zp)
+		raiz.add_child(pu)
+	## Ruedas.
+	for zr: float in [3.8, -3.6]:
+		for xr: float in [-1.15, 1.15]:
+			var r := MeshInstance3D.new()
+			var cm := CylinderMesh.new()
+			cm.top_radius = 0.5
+			cm.bottom_radius = 0.5
+			cm.height = 0.32
+			r.mesh = cm
+			r.material_override = goma
+			r.rotation.z = PI * 0.5
+			r.position = Vector3(xr, 0.5, zr)
+			raiz.add_child(r)
+	if destino != "":
+		var l := Label3D.new()
+		l.text = destino
+		l.font_size = 32
+		l.pixel_size = 0.006
+		l.modulate = Color(0.1, 0.05, 0.0)
+		l.outline_size = 0
+		l.position = Vector3(0, 2.85, 6.04)
+		raiz.add_child(l)
 	return raiz
 
 func _aparcamiento() -> void:
@@ -3008,11 +3143,9 @@ func _trafico() -> void:
 		## Y dos autobuses por sentido, en la misma ruta -es el eje que pasa
 		## junto a las cuatro paradas y la terminal-, más grandes y más lentos
 		## que el tráfico normal.
-		var bus_esc: PackedScene = load(RUTA_BUS)
-		if bus_esc != null:
-			for i in range(2):
-				var bus: Node3D = bus_esc.instantiate()
-				bus.scale = Vector3.ONE * 3.1
+		for i in range(2):
+			if true:
+				var bus: Node3D = autobus(Color(0.95, 0.75, 0.15), "ESTADIO")
 				t.agregar_vehiculo(bus, id_ex, rng.randf_range(200.0, 2000.0),
 					9.0, 0.0, 0.0)
 
