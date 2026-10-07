@@ -125,8 +125,14 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   Fase 4 HECHA (7-10): guiños de estadio + apodo, plantillas fijas por nombre de club,
   banderas, mesa de representantes (`nucleo/mesa_agente.gd`), Carrera de Jugador en
   prueba_modos; nota ≈74. Fase 4 aún NO está en main (PR nuevo si lo pide).
-  Siguiente: fase 5 (originalidad: documental, ciudad que responde, modo foto,
-  dinastías familiares), luego fase 6/cierre.
+  7-10: fase 4 FUSIONADA a main (PR #3); rama reiniciada desde main. EN CURSO fase 5.
+  Fase 5 hecho: ciudad que responde (`visor/ciudad_animo.gd`). Pendiente: documental,
+  modo foto, dinastías familiares.
+  7-10 PEDIDOS: «en la ciudad faltan edificios y cosas 3D que tenemos» → distritos de
+  manzanas (`_distritos` en city_builder: norte con torres, este, ensanche sur); casi
+  todo el kit ya se usaba (solo cono/tractor sueltos). «A la ciudad le falta mejorar
+  las instalaciones y coherencia» → pasada 1: forma propia por instalación (`FORMAS`,
+  `_cuerpo_instalacion`), campus con paseos, paleta única clara. Esperar veredicto.
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
