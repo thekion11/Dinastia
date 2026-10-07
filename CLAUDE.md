@@ -234,5 +234,19 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   `datos/narracion_traducida_mas.json`, se monta con `montar_narracion.py`).
 - 7-10: MEGAPLAN CERRADO (todo lo que no es 🔒). SIGUIENTE: el INFORME NUEVO del
   usuario (pedírselo) y, si lo indica, el túnel.
-- Esperando al usuario: túnel, informe nuevo.
+- 7-10 HECHO: TÚNEL DE VERDAD (`visor/tunel_vestuario.gd`: hueco en la tribuna +Z,
+  pasillo con colisión, pórtico, vestuario detrás) y RECORRER A PIE
+  (`visor/explorador_estadio.gd`, botón en el cajón de VistaEstadio).
+  Captura: `pruebas/captura_tunel_recorrido.tscn`.
+- **7-10 PEDIDO GRANDE: «ESTADIO INTERACTIVO 2.0»** (palabras del usuario): el estadio
+  se recorre JUNTO A LA CIUDAD (entrar y salir del estadio desde la ciudad); todos
+  los lugares creados en el estadio deben estar FÍSICAMENTE dentro, además de todo
+  lo que tiene un estadio: PISOS NEGATIVOS, OFICINA DEL DT…; si sancionan al DT y
+  solo puede ver el partido, verlo desde la grada: recorrer con el personaje y
+  SENTARSE EN LAS TRIBUNAS; el PERSONAL del club con presencia física, DIÁLOGOS en
+  persona, interacción y RUTINAS; todas las habitaciones PERSONALIZABLES (colores,
+  decoración, poner en las paredes las FOTOS sacadas con el modo foto, oficina con
+  objetos propios); NOMBRES de los jugadores correspondientes (taquillas).
+  Plan por fases en `dinastia-godot/ESTADIO_INTERACTIVO_2.md`.
+- Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.

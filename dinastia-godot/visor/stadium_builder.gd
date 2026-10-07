@@ -761,6 +761,26 @@ static func _mat_fachada(tipo: String, col: String) -> StandardMaterial3D:
 			return Texturas.metal(_c(col, "#8a9097"), 0.45)
 	return Texturas.hormigon(_c(col, "#6b7079"), 51)
 
+## EL TÚNEL DE VERDAD (7-10-2026): medio ancho del hueco que abre en la
+## tribuna del fondo +Z, y su eje X (el tipo «esquina» va hacia el córner).
+const TUNEL_HUECO := 3.2
+static func tunel_x(est: Dictionary) -> float:
+	return 24.0 if str(est.get("tunel", "central")) == "esquina" else 0.0
+
+## Los trozos [centro, largo] de un tramo `largo` centrado en `centro` que
+## quedan a los dos lados del hueco [g0, g1]. Si el hueco no lo toca, uno solo.
+static func _tramos_sin_hueco(centro: float, largo: float, g0: float, g1: float) -> Array:
+	var a := centro - largo / 2.0
+	var b := centro + largo / 2.0
+	if g1 <= a or g0 >= b:
+		return [Vector2(centro, largo)]
+	var sal: Array = []
+	if g0 > a + 0.05:
+		sal.append(Vector2((a + g0) / 2.0, g0 - a))
+	if b > g1 + 0.05:
+		sal.append(Vector2((g1 + b) / 2.0, b - g1))
+	return sal
+
 ## Geometria del recinto segun la forma elegida en el disenador del juego.
 ## dx/dz son la distancia del CENTRO de cada tribuna al centro del campo.
 ## La tribuna tiene 11 de fondo, asi que su cara interior queda en dx-5.5:
@@ -935,6 +955,8 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## Tribunas que no se construyen: la de `abierta` o varias ("dos").
 	var abiertas: Array = g.get("abiertas", [abierta] if abierta >= 0 else [])
 	var principal: int = int(g.get("principal", -1))
+	## Dónde cruza el túnel la tribuna del fondo +Z (-1000 = sin túnel).
+	var tunel_x0 := tunel_x(est) if not (0 in abiertas) else -1000.0
 
 	# Niveles: los que el club realmente construyo, pero nunca mas bandejas de
 	# las que el aforo justifica (un estadio de 8.000 con 3 bandejas seria falso).
@@ -1056,14 +1078,29 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 		# y el publico no se ve desde ninguna camara.
 		var muro_pos: Vector3 = pos + cara * (-fondo_s / 2.0 + 0.5)
 		var muro_size := Vector3(1.0, alto_s, size.z) if lateral else Vector3(size.x, alto_s, 1.0)
-		_box(root, muro_pos, muro_size, stand_mat)
-		# Zocalo bajo la primera bandeja, para que no se vea el hueco desde el
-		# campo. Va pegado a la cara interior, no al centro de la tribuna: con
-		# varias bandejas el centro se va muy hacia atras.
 		var pie: Vector3 = pos - cara * (fondo_s / 2.0 - FONDO_BANDEJA / 2.0)
-		var zocalo_size := Vector3(FONDO_BANDEJA, ALTURA_PIE, size.z) if lateral \
-			else Vector3(size.x, ALTURA_PIE, FONDO_BANDEJA)
-		_box(root, Vector3(pie.x, ALTURA_PIE / 2.0, pie.z), zocalo_size, stand_mat)
+		## EL TÚNEL ATRAVIESA ESTA TRIBUNA (7-10-2026, pedido: «la zona del
+		## túnel debe ser más real; el estadio será navegable»). En la tribuna
+		## del túnel (+Z) el muro, el zócalo y la primera bandeja se parten y
+		## dejan un hueco de verdad: ahí va el pasillo de `TunelVestuario`.
+		var hueco: bool = int(s["i"]) == 0 and tunel_x0 > -999.0
+		if hueco:
+			for tr: Vector2 in _tramos_sin_hueco(pos.x, size.x, tunel_x0 - TUNEL_HUECO, tunel_x0 + TUNEL_HUECO):
+				_box(root, Vector3(tr.x, muro_pos.y, muro_pos.z), Vector3(tr.y, alto_s, 1.0), stand_mat)
+				_box(root, Vector3(tr.x, ALTURA_PIE / 2.0, pie.z), Vector3(tr.y, ALTURA_PIE, FONDO_BANDEJA), stand_mat)
+			## Sobre la puerta del muro, el muro sigue.
+			var alto_puerta: float = TunelVestuario.ALTO + 0.4
+			if alto_s > alto_puerta:
+				_box(root, Vector3(tunel_x0, (alto_s + alto_puerta) / 2.0, muro_pos.z),
+					Vector3(TUNEL_HUECO * 2.0, alto_s - alto_puerta, 1.0), stand_mat)
+		else:
+			_box(root, muro_pos, muro_size, stand_mat)
+			# Zocalo bajo la primera bandeja, para que no se vea el hueco desde el
+			# campo. Va pegado a la cara interior, no al centro de la tribuna: con
+			# varias bandejas el centro se va muy hacia atras.
+			var zocalo_size := Vector3(FONDO_BANDEJA, ALTURA_PIE, size.z) if lateral \
+				else Vector3(size.x, ALTURA_PIE, FONDO_BANDEJA)
+			_box(root, Vector3(pie.x, ALTURA_PIE / 2.0, pie.z), zocalo_size, stand_mat)
 
 		var largo_rake := sqrt(FONDO_BANDEJA * FONDO_BANDEJA + subida_b * subida_b)
 		## El angulo CON SIGNO, que es el que hay que deshacer en las butacas y
@@ -1147,38 +1184,48 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			var avance: float = float(b) * RETRANQUEO_BANDEJA + FONDO_BANDEJA / 2.0
 			var centro_b: Vector3 = pos + cara * (fondo_s / 2.0) - cara * avance
 			var y_pie: float = ALTURA_PIE + float(b) * (subida_b + FRENTE_BANDEJA)
-			var deck := MeshInstance3D.new()
-			var dm := BoxMesh.new()
-			dm.size = Vector3(largo_rake, 0.4, largo_deck) if lateral \
-				else Vector3(largo_deck, 0.4, largo_rake)
-			deck.mesh = dm
-			deck.position = Vector3(centro_b.x, y_pie + subida_b / 2.0, centro_b.z)
-			deck.rotation = Vector3(0, 0, rake_firmado) if lateral \
-				else Vector3(rake_firmado, 0, 0)
-			## Cada bandeja lleva SU COPIA del material: comparten la misma
-			## textura, pero un material compartido significaria que tocarle el
-			## `uv1_*` a una se lo toca a las cinco.
-			## COLOR POR ANILLO (28-9-2026): si este anillo de esta tribuna
-			## tiene color propio, su textura y sus butacas salen con él.
-			var niveles_col: Array = estilo.get("niv_s", [])
-			var col_b := String(niveles_col[b]) if b < niveles_col.size() else ""
-			var est_b: Dictionary = est_s
-			if col_b != "" and not es_tramo:
-				est_b = est_s.duplicate()
-				est_b["asiento1"] = col_b
-				var mat_b := StandardMaterial3D.new()
-				mat_b.albedo_texture = _make_stand_texture(asientoP_i, _c(col_b, "#2b6b45"),
-					_c(est_s.get("asiento2"), "#ffffff"), _c(est_s.get("asiento3"), "#20272a"), seed_val + b, clampf(ocupacion, 0.05, 0.98))
-				mat_b.roughness = 1.0
-				mat_b.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-				mat_b.uv1_scale = deck_mat.uv1_scale
-				mat_b.uv1_offset = deck_mat.uv1_offset
-				deck.material_override = mat_b
-			else:
-				deck.material_override = deck_mat.duplicate()
-			root.add_child(deck)
-			_butacas(deck, dm.size, lateral, est_b, ocupacion, alto_s, rake_firmado, b)
-			_telones(deck, dm.size, lateral, est_s, seed_val + int(s["i"]) * 31 + b * 7)
+			## La primera bandeja de la tribuna del túnel va en dos trozos.
+			var piezas: Array = [Vector2(centro_b.x, largo_deck)]
+			if hueco and b == 0:
+				piezas = _tramos_sin_hueco(centro_b.x, largo_deck, tunel_x0 - TUNEL_HUECO, tunel_x0 + TUNEL_HUECO)
+			for pz: Vector2 in piezas:
+				var deck := MeshInstance3D.new()
+				var dm := BoxMesh.new()
+				dm.size = Vector3(largo_rake, 0.4, pz.y) if lateral \
+					else Vector3(pz.y, 0.4, largo_rake)
+				deck.mesh = dm
+				deck.position = Vector3(pz.x, y_pie + subida_b / 2.0, centro_b.z)
+				deck.rotation = Vector3(0, 0, rake_firmado) if lateral \
+					else Vector3(rake_firmado, 0, 0)
+				## Cada bandeja lleva SU COPIA del material: comparten la misma
+				## textura, pero un material compartido significaria que tocarle el
+				## `uv1_*` a una se lo toca a las cinco.
+				## COLOR POR ANILLO (28-9-2026): si este anillo de esta tribuna
+				## tiene color propio, su textura y sus butacas salen con él.
+				var niveles_col: Array = estilo.get("niveles", [])
+				var col_b := String(niveles_col[b]) if b < niveles_col.size() else ""
+				var est_b: Dictionary = est_s
+				if col_b != "" and not es_tramo:
+					est_b = est_s.duplicate()
+					est_b["asiento1"] = col_b
+					var mat_b := StandardMaterial3D.new()
+					mat_b.albedo_texture = _make_stand_texture(asientoP_i, _c(col_b, "#2b6b45"),
+						_c(est_s.get("asiento2"), "#ffffff"), _c(est_s.get("asiento3"), "#20272a"), seed_val + b, clampf(ocupacion, 0.05, 0.98))
+					mat_b.roughness = 1.0
+					mat_b.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+					mat_b.uv1_scale = deck_mat.uv1_scale
+					mat_b.uv1_offset = deck_mat.uv1_offset
+					deck.material_override = mat_b
+				else:
+					deck.material_override = deck_mat.duplicate()
+				root.add_child(deck)
+				## Un trozo más corto repite la textura menos veces (misma densidad).
+				if piezas.size() > 1 and not es_tramo and deck.material_override is StandardMaterial3D:
+					var rp := maxf(1.0, pz.y / 20.0)
+					(deck.material_override as StandardMaterial3D).uv1_scale.y = 2.0 * rp
+					(deck.material_override as StandardMaterial3D).uv1_offset.y = -rp
+				_butacas(deck, dm.size, lateral, est_b, ocupacion, alto_s, rake_firmado, b)
+				_telones(deck, dm.size, lateral, est_s, seed_val + int(s["i"]) * 31 + b * 7)
 			## El frente vertical bajo la bandeja: tapa el hueco que dejaria ver
 			## por debajo y es lo que le da al estadio su perfil escalonado. La
 			## primera bandeja no lo lleva -ahi va el zocalo.
@@ -1281,7 +1328,9 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 		## Metal de verdad (17-9-2026, ronda 5): es literalmente una malla/reja
 		## perimetral, el material menos "plastico" posible para esto.
 		var valla := Texturas.metal(Color(0.12, 0.13, 0.15), 0.5)
-		_box(root, Vector3(0, 0.6, 56.5), Vector3(78.0, 1.2, 0.3), valla)
+		## Con el paso del túnel abierto: la valla del fondo +Z se parte.
+		for tr: Vector2 in _tramos_sin_hueco(0.0, 78.0, tunel_x(est) - 2.6, tunel_x(est) + 2.6):
+			_box(root, Vector3(tr.x, 0.6, 56.5), Vector3(tr.y, 1.2, 0.3), valla)
 		_box(root, Vector3(0, 0.6, -56.5), Vector3(78.0, 1.2, 0.3), valla)
 		_box(root, Vector3(38.0, 0.6, 0), Vector3(0.3, 1.2, 113.0), valla)
 		_box(root, Vector3(-38.0, 0.6, 0), Vector3(0.3, 1.2, 113.0), valla)
@@ -1292,6 +1341,8 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## cosas que EXISTEN en el catálogo, se cobran, y no las mira nadie. En el
 	## visor había cuatro, y una de ellas es el capítulo MÁS CARO del diseñador.
 	_pista_atletismo(root, est, dx, dz)
+	## El túnel de verdad: pasillo, cubierta del hueco y vestuario.
+	TunelVestuario.montar(root, est, niveles, mi)
 	_banderas(root, est, dx, dz, alto, niveles, mi)
 	## LOS GUIÑOS DEL ESTADIO REAL (MEGAPLAN fase 4, E9): lo que dice su rasgo.
 	GuinosEstadio.montar(root, est, dx, dz, fondo_tribuna(niveles), alto)
@@ -2548,6 +2599,9 @@ static func _vallas_publicidad(root: Node3D, est: Dictionary, mi: Club = null) -
 		var m2: int = int(66.0 / largo)
 		for k in range(m2):
 			var x: float = -33.0 + (k + 0.5) * largo
+			## Delante de la boca del túnel no hay valla: es el paso a la cancha.
+			if lado > 0.0 and absf(x - tunel_x(est)) < 3.0:
+				continue
 			_una_valla(led, Vector3(x, 0.55, lado * 55.5), largo,
 				PI if lado > 0.0 else 0.0, false, i)
 			i += 1
@@ -2884,10 +2938,6 @@ static func _tunel(root: Node3D, tipo: String = "central", est: Dictionary = {},
 	## real: SU PROPIA luz de entrada, no depender de que algo externo la
 	## alcance. Material propio (no el `Texturas.hormigon()` compartido, para
 	## no afectar a nadie más que lo use) con un pelín de emisión.
-	var horm := Texturas.hormigon(Color(0.34, 0.35, 0.36), 17).duplicate()
-	horm.emission_enabled = true
-	horm.emission = Color(0.55, 0.50, 0.42)
-	horm.emission_energy_multiplier = 0.9
 	## "esquina" desplaza toda la boca hacia el lado del corner en vez del
 	## centro del lateral -los otros 4 tipos siguen centrados como siempre.
 	var x_off := 24.0 if tipo == "esquina" else 0.0
@@ -2916,30 +2966,25 @@ static func _tunel(root: Node3D, tipo: String = "central", est: Dictionary = {},
 	## tribuna, ni delante ni enterrado.
 	var ancla_z: float = dz - 2.5
 	if tipo == "central" or tipo == "esquina" or tipo == "telescopico":
-		_box(root, Vector3(x_off, 2.2, ancla_z), Vector3(9.0, 4.4, 6.0), horm)
-		var boca := _box(root, Vector3(x_off, 1.7, ancla_z - 3.1), Vector3(5.2, 3.4, 0.3),
-			Texturas.metal(Color(0.05, 0.05, 0.06), 0.7))
-		boca.name = "BocaTunel"
+		## La mole maciza con una placa negra (lo de antes) ya no hace falta:
+		## el pórtico, el pasillo y el vestuario los monta `TunelVestuario`.
 		if tipo == "telescopico":
-			## El tubo retractil se estira desde la boca hasta bien dentro del
-			## borde de la cancha -un cilindro largo en vez de un marco fijo.
+			## El tubo retractil se estira desde la boca hacia la cancha. Abierto
+			## por los dos extremos: se puede salir caminando por dentro.
 			var tubo := MeshInstance3D.new()
 			var cm := CylinderMesh.new()
 			cm.top_radius = 2.4
 			cm.bottom_radius = 2.6
-			cm.height = 9.0
+			cm.height = 5.0
+			cm.cap_top = false
+			cm.cap_bottom = false
 			tubo.mesh = cm
 			tubo.rotation.x = PI / 2.0
-			tubo.position = Vector3(x_off, 1.9, ancla_z - 7.5)
-			tubo.material_override = Texturas.metal(Color(0.55, 0.56, 0.58), 0.5)
+			tubo.position = Vector3(x_off, 1.9, ancla_z - 5.5)
+			var mt: StandardMaterial3D = Texturas.metal(Color(0.55, 0.56, 0.58), 0.5).duplicate()
+			mt.cull_mode = BaseMaterial3D.CULL_DISABLED
+			tubo.material_override = mt
 			root.add_child(tubo)
-		var arco_glb := load("res://assets/ciudad/arco_entrada.glb")
-		if arco_glb != null and arco_glb is PackedScene and tipo != "telescopico":
-			var n: Node3D = arco_glb.instantiate()
-			## El arco viene sin escalar: se ajusta para que su hueco case con la boca.
-			n.scale = Vector3(0.9, 0.9, 0.9)
-			n.position = Vector3(x_off, 0, ancla_z - 2.8)
-			root.add_child(n)
 	elif tipo == "arco":
 		## Portico hinchable: un arco curvo en vez de la mole de hormigon, con
 		## un pelin de brillo propio -es lona iluminada por dentro, no piedra.
@@ -2979,21 +3024,15 @@ static func _tunel(root: Node3D, tipo: String = "central", est: Dictionary = {},
 		## del suelo. Un foso de verdad se ve porque la boca asoma sobre el
 		## nivel del campo; subida para que sobresalga, con los escalones
 		## bajando hacia dentro desde el borde.
-		var glow := horm.duplicate()
-		glow.emission_energy_multiplier = 1.6
-		_box(root, Vector3(0, 0.6, ancla_z - 2.0), Vector3(5.5, 1.8, 5.0), glow)
-		## Hormigon de verdad (16-9-2026) y no un gris plano -DUPLICADO antes de
-		## tocar la emision, misma trampa que el portico inflable: `Texturas.
-		## hormigon()` cachea y esta lo comparte con medio complejo (ciudad,
-		## instalaciones), asi que prenderle luz sin duplicar encenderia
-		## paredes que no tienen nada que ver con este tunel.
+		## Ahora la boca es el pórtico de `TunelVestuario`; el «foso» es su
+		## umbral: tres peldaños bajos iluminados que bajan hacia la cancha.
 		var escalones: StandardMaterial3D = Texturas.hormigon(Color(0.3, 0.31, 0.33), 29).duplicate()
 		escalones.emission_enabled = true
 		escalones.emission = Color(0.5, 0.55, 0.65)
-		escalones.emission_energy_multiplier = 0.6
-		for k in range(5):
-			_box(root, Vector3(0, 1.2 - k * 0.28, ancla_z - 4.6 + k * 0.55),
-				Vector3(4.5, 0.12, 0.5), escalones)
+		escalones.emission_energy_multiplier = 0.8
+		for k in range(3):
+			_box(root, Vector3(0, 0.25 - k * 0.08, ancla_z - 3.4 - k * 0.6),
+				Vector3(4.6, 0.1, 0.6), escalones)
 
 ## EL EXTERIOR DEL ESTADIO (25-9-2026, plan maestro B6.2). Hasta hoy el recinto
 ## terminaba en su muro y detrás había una explanada gris vacía. Ahora, como en
@@ -3026,8 +3065,13 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 	caseta.roughness = 0.6
 	var ventanilla: StandardMaterial3D = Texturas.cristal(true, true)
 	var losa := Texturas.hormigon(Color(0.55, 0.56, 0.58), 61)
+	## El vestuario (`TunelVestuario`) está justo detrás de la tribuna, en el
+	## eje del túnel: las taquillas se abren a sus dos lados.
+	var tx := tunel_x(est)
 	for i in 4:
 		var x := -13.5 + float(i) * 9.0
+		if absf(x - tx) < TunelVestuario.VEST_MEDIO + 3.0:
+			x = tx + signf(x - tx + 0.01) * (TunelVestuario.VEST_MEDIO + 4.0 + absf(x - tx) * 0.5)
 		var z := fuera_z + 9.0
 		_box(ext, Vector3(x, 1.3, z), Vector3(3.0, 2.6, 2.4), caseta)
 		## La ventanilla mira a la calle (+Z), no al muro del estadio.
@@ -3040,7 +3084,7 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 	rot.modulate = Color(1, 1, 1)
 	rot.outline_size = 12
 	## Un `Label3D` sin girar ya mira a +Z, que es la calle.
-	rot.position = Vector3(0, 4.2, fuera_z + 11.0)
+	rot.position = Vector3(0, 4.2, fuera_z + (TunelVestuario.VEST_FONDO + 4.0 if absf(tx) < 12.0 else 11.0))
 	ext.add_child(rot)
 	## La tienda oficial, en la esquina sureste.
 	var tienda_pos := Vector3(fuera_x - 6.0, 0.0, fuera_z + 20.0)
