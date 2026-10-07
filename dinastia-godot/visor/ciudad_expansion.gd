@@ -546,6 +546,7 @@ func _fachadas(r: Rect2, con_nave: bool) -> void:
 			_kit(esc, Vector3(p.x, 0.2, p.z), Vector3.ONE * s, giro)
 			u += ancho + _rng.randf_range(0.3, 1.5)
 	if con_nave and not _naves.is_empty():
+		_patio_de_manzana(r, c)
 		var s2 := 6.5 * _rng.randf_range(0.9, 1.2)
 		## El bloque interior: un rascacielos del kit (pensado alto), uniforme.
 		if not _altos.is_empty() and _rng.randf() < 0.6:
@@ -585,7 +586,29 @@ func _pisos(r: Rect2) -> void:
 				_kit(_altos[_rng.randi() % _altos.size()], pos_p, Vector3.ONE * _rng.randf_range(2.8, 3.6), 0.0 if fila > 0.0 else PI)
 			else:
 				_kit(_naves[_rng.randi() % _naves.size()], pos_p, Vector3.ONE * s * 1.15, 0.0 if fila > 0.0 else PI)
-	_arboles_en([c + Vector3(-12, -0.2, 0), c + Vector3(12, -0.2, 0)], 0.8)
+	## El patio entre las dos hileras: césped, un camino y árboles.
+	_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(r.size.x * 0.82, 0.06, r.size.y * 0.2))
+	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(r.size.x * 0.82, 0.06, 2.4))
+	var pts: Array = []
+	for k in 5:
+		pts.append(c + Vector3((float(k) - 2.0) * r.size.x * 0.17, -0.2, (5.5 if k % 2 == 0 else -5.5)))
+	_arboles_en(pts, 0.8)
+
+## EL PATIO DE MANZANA (7-10-2026, «¿qué le pasó a los edificios?»): visto
+## desde arriba, el interior de las manzanas comerciales era una explanada
+## gris vacía detrás de las fachadas. Ahora es un patio como los del
+## ensanche: césped, dos caminos en cruz y árboles alrededor de la torre.
+func _patio_de_manzana(r: Rect2, c: Vector3) -> void:
+	var lado := Vector2(maxf(r.size.x - 36.0, 10.0), maxf(r.size.y - 36.0, 10.0))
+	_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(lado.x, 0.06, lado.y))
+	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(lado.x, 0.06, 2.6))
+	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(2.6, 0.06, lado.y))
+	var pts: Array = []
+	for sx: float in [-1.0, 1.0]:
+		for sz: float in [-1.0, 1.0]:
+			pts.append(c + Vector3(sx * lado.x * 0.36, 0.0, sz * lado.y * 0.36))
+			pts.append(c + Vector3(sx * lado.x * 0.18, 0.0, sz * lado.y * 0.4))
+	_arboles_en(pts, 0.85)
 
 ## Viviendas con jardín: se guardan y se dibujan todas juntas (MultiMesh).
 var _casas_t: Array[Transform3D] = []
