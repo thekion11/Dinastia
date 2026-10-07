@@ -28,9 +28,14 @@ extends Node
 ## Añadirlos exige empaquetar una fuente CJK —varios megas— y es una decisión
 ## aparte, no una columna más en esta tabla.
 ##
-## LO QUE NO SE TRADUCE, Y SE DICE CLARO. La narración —las noticias, las
+## LA NARRACIÓN (actualizado el 7-10-2026): las noticias, la prensa, el
+## vestuario, las redes y la Carrera de Jugador ya están en INGLÉS y
+## PORTUGUÉS (ver `_cargar_narracion`, unas 1.060 frases y plantillas). En los
+## otros seis idiomas siguen en castellano. Lo que sigue explica por qué se
+## dejó para el final.
+## LO QUE NO SE TRADUCÍA, Y SE DECÍA CLARO. La narración —las noticias, las
 ## preguntas de la prensa, los diálogos del vestuario, los textos de ayuda
-## largos— sigue en castellano. Son varios miles de frases escritas con voz
+## largos— seguía en castellano. Son varios miles de frases escritas con voz
 ## propia, muchas armadas por trozos con nombres dentro, y traducirlas a medias
 ## quedaría peor que no traducirlas. Lo que sí está entero es el ESQUELETO:
 ## menús, pestañas, botones, títulos de sección, ajustes y etiquetas de datos,
@@ -506,6 +511,27 @@ func _t(frase: String, prof: int) -> String:
 	var d := _directa(frase)
 	if d != "" or prof > 3:
 		return d if d != "" else frase
+	## Por oraciones: la narración a veces pega varias frases en un mismo
+	## texto («Pregunta. Tardaste en contestar: en la sala se notó.»).
+	if prof < 2 and frase.length() > 30 and (frase.contains(". ") or frase.contains("! ") or frase.contains("? ")):
+		## Si el texto entero encaja en un patrón, gana el patrón.
+		var entero := _patron(frase, prof)
+		if entero != "":
+			return entero
+		var partes := _oraciones(frase)
+		if partes.size() > 1:
+			var cambio := false
+			for k in partes.size():
+				var o: String = partes[k]
+				var limpia := o.strip_edges()
+				if limpia == "":
+					continue
+				var to := _t(limpia, prof + 1)
+				if to != limpia:
+					partes[k] = o.replace(limpia, to)
+					cambio = true
+			if cambio:
+				return "".join(partes)
 	## El icono de delante (emoji, flecha) y lo de detrás (▸, :, …) aparte.
 	var ini := 0
 	while ini < frase.length() and not _es_letra(frase.unicode_at(ini)):
@@ -532,6 +558,10 @@ func _t(frase: String, prof: int) -> String:
 			if cambio:
 				return sep.join(partes)
 	## Por patrones: los grupos con letras también se traducen.
+	var pp := _patron(frase, prof)
+	return pp if pp != "" else frase
+
+func _patron(frase: String, prof: int) -> String:
 	for par: Array in _patrones:
 		var m: RegExMatch = (par[0] as RegEx).search(frase)
 		if m == null or m.get_start() != 0 or m.get_end() != frase.length():
@@ -545,7 +575,21 @@ func _t(frase: String, prof: int) -> String:
 				v = _t(v, prof + 1)
 			plantilla = plantilla.replace("$%d" % g, v)
 		return plantilla
-	return frase
+	return ""
+
+## Parte un texto en oraciones, conservando los espacios de entre medio.
+func _oraciones(texto: String) -> Array:
+	var partes: Array = []
+	var ini := 0
+	var i := 0
+	while i < texto.length():
+		var c := texto[i]
+		if (c == "." or c == "!" or c == "?" or c == "»") and i + 1 < texto.length() and texto[i + 1] == " ":
+			partes.append(texto.substr(ini, i + 1 - ini))
+			ini = i + 1
+		i += 1
+	partes.append(texto.substr(ini))
+	return partes
 
 ## Mayúsculas según el idioma: en turco la «i» con punto da «İ» y la «ı» sin
 ## punto da «I» (`to_upper()` daba «I» para las dos).

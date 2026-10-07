@@ -19,6 +19,8 @@ import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CARPETAS = ["nucleo", "ui", "visor"]
+NARRATIVA = ["nucleo/prensa.gd", "nucleo/charlas.gd", "nucleo/vestuario.gd", "nucleo/redes.gd",
+             "nucleo/carrera_jugador.gd"]
 
 
 def argumentos(texto, ini):
@@ -174,6 +176,27 @@ def main():
                         salida.append({"re": "^" + regex + "$", "es": muestra,
                                        "de": "%s:%d" % (os.path.relpath(ruta, RAIZ), linea),
                                        "tipo": "titulo" if k == 0 else "cuerpo"})
+    ## Las frases sueltas de los archivos de pura narración (prensa, vestuario,
+    ## charlas, redes, carrera de jugador): todo literal con forma de frase.
+    for rel in NARRATIVA:
+        ruta = os.path.join(RAIZ, rel)
+        if not os.path.exists(ruta):
+            continue
+        texto = open(ruta, encoding="utf-8").read()
+        for m in re.finditer(r'"((?:[^"\\\n]|\\.)*)"', texto):
+            lit = m.group(1)
+            if len(lit.split()) < 3 or not re.search(r"[a-záéíóúñ]{3}", lit) or lit.startswith("res://"):
+                continue
+            pat = a_patron('"' + lit + '" % x') if "%" in lit else a_patron('"' + lit + '"')
+            if pat is None:
+                continue
+            regex, muestra = pat
+            ## Las comillas de cita se quedan: la pregunta se pinta con ellas.
+            if regex in vistos:
+                continue
+            vistos.add(regex)
+            linea = texto.count("\n", 0, m.start()) + 1
+            salida.append({"re": "^" + regex + "$", "es": muestra, "de": "%s:%d" % (rel, linea), "tipo": "frase"})
     destino = os.path.join(RAIZ, "datos", "narracion_plantillas.json")
     json.dump(salida, open(destino, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("%d plantillas → %s" % (len(salida), os.path.relpath(destino, RAIZ)))
