@@ -514,9 +514,23 @@ func _crear_club(fila: Array, pais: String) -> Club:
 ## exactamente lo que un manager no se puede permitir mostrar. El chico bueno
 ## tiene que tener POTENCIAL alto y media baja; eso es lo que hace que ficharlo
 ## sea una apuesta y no una compra evidente.
+##
+## PLANTILLAS FIJAS (MEGAPLAN fase 4): hasta hoy solo los clubes con tabla
+## `REALES` tenían caras conocidas de una partida a otra; en los otros 128
+## cada semilla repartía nombres, edades y medias nuevos, y el «9 de siempre»
+## del rival no existía. Ahora la plantilla de arranque se siembra con el
+## NOMBRE del club -no con la semilla del mundo ni con su id, que cambia según
+## qué países se carguen-: el mismo club trae siempre a la misma gente. Se
+## guarda el estado de `Azar` y se devuelve tal cual, así el resto del mundo
+## (calendario, canteras, mercado) sigue variando con la semilla. Lo que llega
+## después -canteranos, agentes libres, regens- sigue siendo de cada partida.
 func _poblar(c: Club) -> void:
 	var plan: Array = Datos.tabla("PLAN_PLANTEL")
 	var base := c.rep - 9
+	var estado: int = Azar._rng.state
+	Azar._rng.seed = hash("plantilla|" + Nombres.limpiar(c.nombre))
+	_clave_fija = "fijo|" + Nombres.limpiar(c.nombre)
+	_n_fijo = 0
 	for entrada: Array in plan:
 		var demarcacion := String(entrada[0])
 		for i in int(entrada[1]):
@@ -528,6 +542,8 @@ func _poblar(c: Club) -> void:
 				ovr -= 2
 			var j := crear_jugador(c, Datos.grupo(demarcacion), demarcacion, edad, ovr)
 			c.plantilla.append(j)
+	_clave_fija = ""
+	Azar._rng.state = estado
 	_repartir_dorsales(c)
 
 ## Dorsales por jerarquia y brazalete al veterano de mas media. Son dos detalles
@@ -558,6 +574,10 @@ func _repartir_dorsales(c: Club) -> void:
 
 ## `edad` y `ovr` a -1 significan "sortealos tu": lo usan los canteranos que
 ## suben a final de temporada, donde no hay una plantilla que respetar.
+## Mientras `_poblar` arma una plantilla fija (ver arriba).
+var _clave_fija := ""
+var _n_fijo := 0
+
 func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, ovr: int = -1) -> Jugador:
 	_seq_jugador += 1
 	var j := Jugador.new()
@@ -567,7 +587,13 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 	j.pos = grupo
 	j.pos_e = demarcacion
 	j.pais = c.pais
-	j.region = Regiones.region_para(c.pais, j.id, c)
+	## En una plantilla fija la región no puede salir del id (depende de los
+	## países cargados): sale del club y del orden dentro del plantel.
+	var clave_region := j.id
+	if _clave_fija != "":
+		_n_fijo += 1
+		clave_region = "%s%d" % [_clave_fija, _n_fijo]
+	j.region = Regiones.region_para(c.pais, clave_region, c)
 	j.nombre = _nombre_al_azar(c.pais, j.region)
 	j.edad = edad if edad > 0 else Azar.ent(17, 35)
 	j.ovr = clampi(ovr if ovr > 0 else c.rep - 9 + Azar.ent(-7, 7), 40, 96)
