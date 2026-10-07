@@ -17,7 +17,10 @@ const TIROS := 5
 const ZONAS := [Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(0, 1), Vector2(1, 1)]
 const NOMBRE_ZONA := ["la escuadra izquierda", "arriba al centro", "la escuadra derecha",
 	"abajo a la izquierda", "abajo al centro", "abajo a la derecha"]
-const ARCO_TAM := Vector2(480, 170)
+## En 3D (7-10-2026, «los mini juegos también deben ser 3D con animaciones»):
+## la falta desde la frontal con la barrera de verdad, el portero que se tira
+## y el balón que hace la curva por encima de la barrera.
+const FALTA := Vector3(-3.0, 0.11, 21.0)
 
 static var record := 0
 static var _premio_semana := -1
@@ -28,9 +31,14 @@ var _tiros := 0
 var _goles := 0
 var _zona := -1
 var _historial: Array[int] = []
-var _arco_pos := Vector2.ZERO
-var _balon: Label
-var _portero: Label
+var _v := {}
+var _cam: Camera3D
+var _raiz: Node3D
+var _red: Node3D
+var _balon: Node3D
+var _portero := {}
+var _pateador := {}
+var _barrera: Array = []
 var _marcador: Label
 var _aviso: Label
 var _barra: ProgressBar
@@ -44,7 +52,7 @@ var _ocupado := false
 static func mostrar(padre: Control, mundo: Mundo) -> MinijuegoTiroLibre:
 	var n := MinijuegoTiroLibre.new()
 	n._mundo = mundo
-	n.set_anchors_preset(Control.PRESET_FULL_RECT)
+	n.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
 	padre.add_child(n)
 	n._montar()
@@ -77,50 +85,56 @@ static func prob_atajada(zona: int, historial: Array[int], calidad: String) -> f
 func _montar() -> void:
 	_rng.seed = Time.get_ticks_usec()
 	var tam := get_viewport_rect().size
-	var fondo := ColorRect.new()
-	fondo.color = Color(0.05, 0.1, 0.07)
-	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(fondo)
-	_arco_pos = Vector2(tam.x / 2.0 - ARCO_TAM.x / 2.0, tam.y * 0.18)
-	var cesped := ColorRect.new()
-	cesped.color = Color(0.18, 0.45, 0.24)
-	cesped.position = Vector2(tam.x / 2.0 - 440.0, _arco_pos.y + ARCO_TAM.y)
-	cesped.size = Vector2(880, tam.y * 0.6)
-	add_child(cesped)
-	## El arco: red, palos y larguero.
-	var red := ColorRect.new()
-	red.color = Color(0.85, 0.88, 0.9, 0.18)
-	red.position = _arco_pos
-	red.size = ARCO_TAM
-	add_child(red)
-	for r: Rect2 in [Rect2(_arco_pos - Vector2(8, 8), Vector2(ARCO_TAM.x + 16, 8)),
-			Rect2(_arco_pos - Vector2(8, 8), Vector2(8, ARCO_TAM.y + 8)),
-			Rect2(_arco_pos + Vector2(ARCO_TAM.x, -8), Vector2(8, ARCO_TAM.y + 8))]:
-		var palo := ColorRect.new()
-		palo.color = Color.WHITE
-		palo.position = r.position
-		palo.size = r.size
-		add_child(palo)
-	_portero = _lbl("🧤", 64, Color.WHITE)
-	_portero.position = _arco_pos + Vector2(ARCO_TAM.x / 2.0 - 32, ARCO_TAM.y - 84)
-	add_child(_portero)
-	## La barrera: cuatro jugadores delante del arco.
+	_v = Mini3D.vista(self, Calidad.DIA)
+	_cam = _v["cam"]
+	_raiz = _v["raiz"]
+	_red = Mini3D.campo_y_arco(_raiz)
+	var c1 := Color(0.8, 0.12, 0.12)
+	var c2 := Color.WHITE
+	if _mundo != null and _mundo.mi_club() != null:
+		c1 = Color(_mundo.mi_club().color1)
+		c2 = Color(_mundo.mi_club().color2)
+	_portero = Mini3D.persona(_raiz, _rng, Vector3(0.6, 0, 0.3), [Color(0.95, 0.75, 0.1), Color(0.1, 0.1, 0.1), true])
+	## La barrera: cuatro suplentes con peto azul a 9,15 m, tapando el palo cercano.
+	var hacia := (Vector3(-0.8, 0, 0) - FALTA).normalized()
+	hacia.y = 0.0
+	var centro := FALTA + hacia * 9.15
+	var lat := Vector3(-hacia.z, 0, hacia.x)
 	for k in 4:
-		var j := _lbl("🧍", 58, Color.WHITE)
-		j.position = Vector2(tam.x / 2.0 - 110 + float(k) * 50.0, _arco_pos.y + ARCO_TAM.y + 70)
-		add_child(j)
-	_balon = _lbl("⚽", 40, Color.WHITE)
-	add_child(_balon)
+		var d := Mini3D.persona(_raiz, _rng, centro + lat * (float(k) - 1.5) * 0.62 - Vector3(0, centro.y, 0), [Color(0.15, 0.35, 0.8), Color(0.1, 0.12, 0.2)])
+		if d.is_empty():
+			continue
+		(d["nodo"] as Node3D).rotation.y = atan2(-hacia.x, -hacia.z)
+		_barrera.append(d)
+	_pateador = Mini3D.persona(_raiz, _rng, Vector3.ZERO, [c1, c2])
+	_balon = Node3D.new()
+	_raiz.add_child(_balon)
+	Mini3D.esfera(_balon, Vector3.ZERO, 0.11, Mini3D.mat(Color.WHITE, 0.4))
+	for k in 6:
+		var parche := Mini3D.esfera(_balon, Vector3(sin(float(k)), cos(float(k) * 1.7), sin(float(k) * 2.3)).normalized() * 0.085, 0.035, Mini3D.mat(Color(0.08, 0.08, 0.08), 0.4))
+		parche.scale = Vector3(1, 1, 0.6)
+	_cam.fov = 40.0
+	_cam.fov = 46.0
+	_cam.position = FALTA + Vector3(1.6, 3.4, 7.2)
+	_cam.look_at(Vector3(-1.2, -0.3, 11.0), Vector3.UP)
+	var banda := ColorRect.new()
+	banda.color = Color(0, 0, 0, 0.45)
+	banda.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	banda.offset_bottom = 60
+	banda.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(banda)
 	_poner_balon()
-	## Zonas: botones transparentes sobre el arco.
+	## Zonas: botones transparentes sobre el arco (siguen al arco proyectado).
 	for i in ZONAS.size():
 		var b := Button.new()
 		b.flat = true
 		b.text = ""
 		b.tooltip_text = NOMBRE_ZONA[i]
-		var zona := ZONAS[i] as Vector2
-		b.position = _arco_pos + Vector2((zona.x + 1.0) * ARCO_TAM.x / 3.0, (zona.y + 1.0) * ARCO_TAM.y / 4.0)
-		b.size = Vector2(ARCO_TAM.x / 3.0, ARCO_TAM.y / 2.0)
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(1, 1, 1, 0.12)
+		sb.border_color = Color(1, 0.85, 0.3, 0.9)
+		sb.set_border_width_all(2)
+		b.add_theme_stylebox_override("hover", sb)
 		b.pressed.connect(func() -> void: _elegir(i))
 		add_child(b)
 		_botones.append(b)
@@ -128,7 +142,7 @@ func _montar() -> void:
 	_marcador.position = Vector2(24, 20)
 	add_child(_marcador)
 	_aviso = _lbl("Toca la zona del arco a la que quieres patear.", 18, Color(1, 0.95, 0.75))
-	_aviso.position = Vector2(tam.x / 2.0 - 300, tam.y - 170)
+	_aviso.position = Vector2(tam.x - 660, tam.y - 170)
 	_aviso.size = Vector2(600, 30)
 	_aviso.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	add_child(_aviso)
@@ -136,7 +150,7 @@ func _montar() -> void:
 	_barra.max_value = 1.0
 	_barra.step = 0.001
 	_barra.show_percentage = false
-	_barra.position = Vector2(tam.x / 2.0 - 220, tam.y - 128)
+	_barra.position = Vector2(tam.x - 580, tam.y - 128)
 	_barra.size = Vector2(440, 22)
 	add_child(_barra)
 	var verde := ColorRect.new()
@@ -153,7 +167,7 @@ func _montar() -> void:
 	add_child(justo)
 	_boton_patear = Button.new()
 	_boton_patear.text = "¡PATEAR! (espacio)"
-	_boton_patear.position = Vector2(tam.x / 2.0 - 110, tam.y - 92)
+	_boton_patear.position = Vector2(tam.x - 470, tam.y - 92)
 	_boton_patear.size = Vector2(220, 44)
 	_boton_patear.disabled = true
 	_boton_patear.pressed.connect(_patear)
@@ -170,15 +184,31 @@ func _montar() -> void:
 
 func _lbl(t: String, tam: int, col: Color) -> Label:
 	var l := Label.new()
+	l.add_theme_constant_override("outline_size", 6)
+	l.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
 	l.text = t
 	l.add_theme_font_size_override("font_size", tam)
 	l.add_theme_color_override("font_color", col)
 	return l
 
+func _punto_zona(z: int) -> Vector3:
+	return Vector3(ZONAS[z].x * 2.5, 1.85 if ZONAS[z].y < 0 else 0.5, 0.0)
+
 func _poner_balon() -> void:
-	var tam := get_viewport_rect().size
-	_balon.position = Vector2(tam.x / 2.0 - 20, _arco_pos.y + ARCO_TAM.y + 165)
-	_balon.scale = Vector2.ONE
+	_balon.position = FALTA
+	_balon.rotation = Vector3.ZERO
+	if not _pateador.is_empty():
+		var tn: Node3D = _pateador["nodo"]
+		tn.position = FALTA + Vector3(-1.4, -FALTA.y, 2.4)
+		tn.rotation.y = PI + 0.5
+		Mini3D.anim(_pateador, "parado", "")
+	if not _portero.is_empty():
+		var pn: Node3D = _portero["nodo"]
+		pn.position = Vector3(0.6, 0, 0.3)
+		pn.rotation = Vector3.ZERO
+		Mini3D.anim(_portero, "portero_listo", "")
+	for d: Dictionary in _barrera:
+		Mini3D.anim(d, "muralla", "")
 
 func _pintar_marcador() -> void:
 	_marcador.text = "Tiros libres  ·  %d de %d  ·  goles: %d  ·  récord: %d" % [_tiros, TIROS, _goles, record]
@@ -194,6 +224,13 @@ func _elegir(i: int) -> void:
 	_aviso.text = "Apuntas a %s. ¡Frena la barra en la franja verde!" % NOMBRE_ZONA[i]
 
 func _process(delta: float) -> void:
+	if _cam != null and _cam.is_inside_tree():
+		for z in _botones.size():
+			var c := _punto_zona(z)
+			var a := _cam.unproject_position(c + Vector3(-1.22, 0.62, 0))
+			var b := _cam.unproject_position(c + Vector3(1.22, -0.62, 0))
+			_botones[z].position = Vector2(minf(a.x, b.x), minf(a.y, b.y))
+			_botones[z].size = (b - a).abs()
 	if not _cargando:
 		return
 	_potencia += (1.0 if _sube else -1.0) * delta * 1.1
@@ -217,40 +254,80 @@ func _patear() -> void:
 	_ocupado = true
 	_boton_patear.disabled = true
 	var cal := resultado_potencia(_potencia)
-	var zona := ZONAS[_zona] as Vector2
-	var destino := _arco_pos + Vector2((zona.x + 1.0) * ARCO_TAM.x / 3.0 + ARCO_TAM.x / 6.0 - 20, (zona.y + 1.0) * ARCO_TAM.y / 4.0 + ARCO_TAM.y / 4.0 - 20)
+	var destino := _punto_zona(_zona) + Vector3(_rng.randf_range(-0.3, 0.3), _rng.randf_range(-0.15, 0.15), 0)
 	var texto := ""
 	var gol := false
-	var tam := get_viewport_rect().size
+	var ataja := false
+	var dir_portero := 0.0
 	match cal:
 		"barrera":
-			destino = Vector2(tam.x / 2.0 - 20, _arco_pos.y + ARCO_TAM.y + 70)
+			destino = FALTA + (Vector3(-0.8, 0, 0) - FALTA).normalized() * 9.0 + Vector3(0, 1.5, 0)
 			texto = "Floja: se la comió la barrera."
 		"alto":
-			destino = Vector2(destino.x, _arco_pos.y - 90)
+			destino = Vector3(destino.x, 3.8, -1.5)
 			texto = "Demasiado fuerte: por encima del larguero."
 		_:
 			## El portero se tira: a la zona que más has repetido o al azar.
 			var p := prob_atajada(_zona, _historial, cal)
-			var ataja := _rng.randf() < p
-			var tirada := destino if ataja else _arco_pos + Vector2(_rng.randf_range(0.0, ARCO_TAM.x - 64), ARCO_TAM.y - 84)
-			var tw := create_tween()
-			tw.tween_property(_portero, "position", tirada - Vector2(12, 12), 0.35)
+			ataja = _rng.randf() < p
+			dir_portero = signf(destino.x) if ataja else [-1.0, 1.0][_rng.randi() % 2]
 			gol = not ataja
+			if gol:
+				destino.z = -1.4
 			texto = ("¡GOLAZO! Con rosca, imposible." if cal == "justo" else "¡Gol!") if gol else "¡Atajada! El portero se lo olía."
 	_historial.append(_zona)
-	var tw2 := create_tween()
-	tw2.tween_property(_balon, "position", destino, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tw2.parallel().tween_property(_balon, "scale", Vector2(0.6, 0.6), 0.45)
-	tw2.tween_interval(0.7)
-	tw2.tween_callback(func() -> void:
+	var tw := create_tween()
+	## Carrera y golpeo.
+	if not _pateador.is_empty():
+		var tn: Node3D = _pateador["nodo"]
+		Mini3D.anim(_pateador, "trotar", "")
+		tw.tween_property(tn, "position", FALTA + Vector3(-0.45, -FALTA.y, 0.5), 0.55)
+		tw.tween_callback(func() -> void: Mini3D.anim(_pateador, "patear", "parado", 0.1))
+		tw.tween_interval(0.3)
+	## La barrera salta y el portero vuela.
+	tw.tween_callback(func() -> void:
+		for d: Dictionary in _barrera:
+			var bn: Node3D = d["nodo"]
+			var tb := bn.create_tween()
+			tb.tween_property(bn, "position:y", 0.45, 0.22).set_ease(Tween.EASE_OUT)
+			tb.tween_property(bn, "position:y", 0.0, 0.25).set_ease(Tween.EASE_IN)
+		if cal != "barrera" and not _portero.is_empty():
+			var pn: Node3D = _portero["nodo"]
+			var clip := "atajar_bajo" if dir_portero == 0.0 else ("atajar_der" if dir_portero < 0.0 else "atajar_izq")
+			Mini3D.anim(_portero, clip, "", 0.05)
+			var tp := pn.create_tween()
+			tp.tween_interval(0.25)
+			tp.tween_property(pn, "position", Vector3(dir_portero * 1.8, 0, 0.4), 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT))
+	## El balón: curva de Bézier por encima de la barrera, con rosca hacia afuera.
+	var desde := FALTA
+	var rosca := Vector3(-2.2 if destino.x > desde.x else 2.2, 0, 0) * (1.4 if cal == "justo" else 1.0)
+	var control := (desde + destino) * 0.5 + Vector3(0, 2.2 if cal != "barrera" else 0.8, 0) + rosca
+	tw.tween_method(func(f: float) -> void:
+		var q0 := desde.lerp(control, f)
+		var q1 := control.lerp(destino, f)
+		_balon.position = q0.lerp(q1, f)
+		_balon.rotation.x -= 0.45
+		_balon.rotation.y += 0.3, 0.0, 1.0, 0.75 if cal != "barrera" else 0.4)
+	tw.tween_callback(func() -> void:
+		if gol:
+			var tr := _red.create_tween()
+			tr.tween_property(_red, "scale", Vector3(1, 1, 1.25), 0.1)
+			tr.tween_property(_red, "scale", Vector3.ONE, 0.4).set_trans(Tween.TRANS_ELASTIC)
+			_balon.create_tween().tween_property(_balon, "position:y", 0.11, 0.35).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+			Mini3D.anim(_pateador, ["celebrar", "puno_al_aire", "celebrar_rodillas"][_rng.randi() % 3], "parado")
+		else:
+			var rebote := _balon.position + Vector3(_rng.randf_range(-4.0, 4.0), 0, 4.0)
+			rebote.y = 0.11
+			_balon.create_tween().tween_property(_balon, "position", rebote, 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			Mini3D.anim(_pateador, "manos_cabeza", "parado")
+		_aviso.text = texto)
+	tw.tween_interval(1.6)
+	tw.tween_callback(func() -> void:
 		_tiros += 1
 		if gol:
 			_goles += 1
-		_aviso.text = texto
 		_pintar_marcador()
 		_poner_balon()
-		_portero.position = _arco_pos + Vector2(ARCO_TAM.x / 2.0 - 32, ARCO_TAM.y - 84)
 		_ocupado = false
 		_barra.value = 0.0
 		if _tiros >= TIROS:
