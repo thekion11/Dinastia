@@ -662,6 +662,7 @@ func _puerto(r: Rect2) -> void:
 	var alm := b._mat_simple(Color(0.6, 0.45, 0.32), 0.8)
 	b._caja_en(Vector3(r.position.x + 22.0, 5.0, r.get_center().y), Vector3(30.0, 10.0, r.size.y * 0.6), alm)
 	b._rotulo(Vector3(rx - 40.0, 22.0, r.get_center().y), "⚓ Puerto fluvial", Color(0.8, 0.9, 1.0), 22)
+	b.puntos_clic.append({"k": "ciudad_puerto", "n": "Puerto · pescar", "pos": Vector3(rx - 30.0, 0, r.get_center().y), "estado": "ciudad"})
 
 func _parque(r: Rect2, lago: bool) -> void:
 	var c := Vector3(r.get_center().x, 0, r.get_center().y)
@@ -689,6 +690,7 @@ func _parque(r: Rect2, lago: bool) -> void:
 		pts.append(p)
 	_arboles_en(pts, 1.0)
 	b._rotulo(c + Vector3(0, 14, 0), "🌳 Parque" + (" del Lago" if lago else ""), Color(0.7, 1.0, 0.7), 20)
+	b.puntos_clic.append({"k": "ciudad_parque_lago" if lago else "ciudad_parque", "n": "Parque · penales con los chicos", "pos": c, "estado": "ciudad"})
 
 ## La finca de la Casa Grande: césped, seto alrededor con portón al norte
 ## (al bulevar), la casa en el centro, camino de entrada, fuente y jardín.
