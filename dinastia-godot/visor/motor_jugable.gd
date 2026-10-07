@@ -98,7 +98,7 @@ var _cambio_hecho := false
 var exigencia_dt := 0.5
 var prob_cambio_extra := 0.0   ## (para las pruebas: 1 = seguro que te cambia)
 var _cambio_decidido := false
-var _sin_desgaste := true  ## (el desgaste por tiempo restaba muchos tiros: apagado hasta ajustarlo)
+
 var fueras_de_juego := [0, 0]
 var _offside_previo := {}
 var _ultima_anim := ""
@@ -125,6 +125,21 @@ func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: i
 	Mando.registrar()
 	_saque_de_centro(true)
 
+## EL DESGASTE DEL PARTIDO (MEGAPLAN fase 3): la forma física que queda, de
+## 1 a ~0,6 en 90' según el físico, más lo que pese el sprint. NO toca la
+## velocidad (eso lo lleva `aguante`, como siempre: cuando el desgaste frenaba
+## a todos, los ataques no llegaban y los tiros bajaban de 7-8 a 1-4 por
+## partido). Es la barra que ves y lo que mira el DT para cambiarte.
+func forma_fisica(p: Dictionary) -> float:
+	if p.is_empty():
+		return 1.0
+	var jugado := clampf((float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad), 0.0, 1.0)
+	var fis := float(p["attr"]["fis"]) if p.has("attr") else 0.6
+	var por_tiempo := jugado * 0.42 * (1.3 - fis)
+	## Quien entró desde el banco llega fresco: solo cuenta lo que jugó.
+	por_tiempo *= clampf(1.0 - float(p.get("entro_en", 0.0)), 0.0, 1.0) if jugado > 0.0 else 1.0
+	return clampf(1.0 - por_tiempo - (1.0 - float(p.get("aguante", 1.0))) * 0.5, 0.2, 1.0)
+
 func _preparar_uno(p: Dictionary) -> void:
 	var jd: Dictionary = p.get("jugador", {})
 	var at: Dictionary = jd.get("atributos", {}) if jd.get("atributos") is Dictionary else {}
@@ -147,10 +162,15 @@ func poner_extra(p: Dictionary, es_usuario: bool, minuto_entrada: int = -1) -> v
 		entra_usuario_min = maxi(1, minuto_entrada)
 
 ## ¿Toca hacer el cambio en este balón parado?
-func _revisar_cambio() -> void:
+## `forzar`: sin balón parado desde hace rato, el árbitro para el juego para
+## el cambio (con mitades cortas podía pasar media parte sin una interrupción y
+## el suplente no entraba nunca).
+func _revisar_cambio(forzar := false) -> void:
 	if extra.is_empty() or _cambio_hecho:
 		return
 	var minu := minuto()
+	if forzar:
+		minu = maxi(minu, 0)
 	if entra_usuario_min >= 0:
 		if minu >= entra_usuario_min:
 			_cambiar(_quien_sale_por(extra), extra, true)
@@ -161,7 +181,7 @@ func _revisar_cambio() -> void:
 		return
 	_cambio_decidido = true
 	var prob := 0.05 + exigencia_dt * 0.35 + maxf(0.0, 6.6 - nota_usuario()) * 0.3 \
-		+ maxf(0.0, 0.75 - float(usuario["aguante"])) * 1.2 + prob_cambio_extra
+		+ maxf(0.0, 0.75 - forma_fisica(usuario)) * 1.2 + prob_cambio_extra
 	if _rng.randf() < clampf(prob, 0.0, 0.95 + prob_cambio_extra):
 		_cambiar(usuario, extra, false)
 
@@ -173,7 +193,7 @@ func _quien_sale_por(entra: Dictionary) -> Dictionary:
 		if bool(q["es_local"]) != bool(entra["es_local"]) or bool(q["por"]):
 			continue
 		var g := String((q.get("jugador", {}) as Dictionary).get("pos", ""))
-		var nota := float(q["aguante"]) + (0.0 if g == grupo else 0.5)
+		var nota := forma_fisica(q) + (0.0 if g == grupo else 0.5)
 		if peor.is_empty() or nota < float(peor["_nota_cambio"]):
 			q["_nota_cambio"] = nota
 			peor = q
@@ -186,6 +206,7 @@ func _cambiar(sale: Dictionary, entra: Dictionary, entra_es_usuario: bool) -> vo
 	_cambio_hecho = true
 	## El que entra hereda el sitio táctico del que sale.
 	entra["slot_code"] = sale["slot_code"]
+	entra["entro_en"] = clampf((float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad), 0.0, 1.0)
 	entra["base_pos"] = sale["base_pos"]
 	(entra["node"] as Node3D).position = Vector3(ANCHO - 0.5, 0, 0)
 	(entra["node"] as Node3D).visible = true
@@ -244,6 +265,10 @@ func paso(delta: float) -> void:
 			t += delta
 			if not usuario.is_empty():
 				minutos_usuario += delta / duracion_mitad * 45.0
+			if not extra.is_empty() and not _cambio_hecho:
+				var due := entra_usuario_min if entra_usuario_min >= 0 else 60
+				if minuto() >= due + 3:
+					_revisar_cambio(true)
 			if t >= duracion_mitad:
 				_fin_de_mitad()
 				return
@@ -1459,15 +1484,7 @@ func _mover_jugadores(delta: float) -> void:
 			p["aguante"] = maxf(0.2, float(p["aguante"]) - delta * 0.012 * (1.4 - float(p["attr"]["fis"])))
 		else:
 			p["aguante"] = minf(1.0, float(p["aguante"]) + delta * 0.006)
-		## Y el partido desgasta a todos (MEGAPLAN fase 3): unos 30 puntos en
-		## 90', más al de poco físico. Sin esto la barra apenas bajaba y el
-		## cansancio no decidía ningún cambio. El tope de recuperación también
-		## baja con el tiempo jugado: en el 85' nadie está como en el 1'.
-		if not _sin_desgaste:
-			var gastado := (float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad)
-			p["aguante"] = minf(float(p["aguante"]) - delta * 0.0007 * (1.3 - float(p["attr"]["fis"])),
-				1.0 - gastado * 0.35 * (1.3 - float(p["attr"]["fis"])))
-			p["aguante"] = maxf(0.2, float(p["aguante"]))
+
 		## La animación según la velocidad (salvo que haya un gesto en curso).
 		if float(p.get("gesto_hasta", 0.0)) > t:
 			continue
