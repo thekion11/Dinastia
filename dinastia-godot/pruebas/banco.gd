@@ -119,6 +119,7 @@ func _ready() -> void:
 	_probar_guinos_estadio()
 	_probar_plantillas_fijas()
 	_probar_mesa_agente()
+	_probar_ciudad_animo()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -4996,6 +4997,34 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## FASE 5: la ciudad responde al club.
+func _probar_ciudad_animo() -> void:
+	_titulo("LA CIUDAD RESPONDE AL CLUB (FASE 5)")
+	_comprobar(CiudadAnimo.evaluar(1, 16, 30, 30, 4, 5, 2, true)["estado"] == "euforia", "campeón → euforia")
+	_comprobar(CiudadAnimo.evaluar(16, 16, 30, 30, -3, 5, 2, true)["estado"] == "crisis", "descendido → crisis")
+	_comprobar(CiudadAnimo.evaluar(8, 16, 15, 30, 0, 5, 2, false)["estado"] == "normal", "mitad de tabla sin racha → normal")
+	_comprobar(CiudadAnimo.evaluar(2, 16, 20, 30, 5, 5, 2, false)["estado"] in ["bien", "euforia"], "segundo con cinco victorias → buen ambiente")
+	_comprobar(CiudadAnimo.evaluar(15, 16, 22, 30, -1, 5, 2, false)["valor"] <= -0.6, "en descenso a falta de un tercio: al menos «mal»")
+	_comprobar(CiudadAnimo.evaluar(1, 16, 0, 30, 0, 0, 2, false)["estado"] == "normal", "antes de la 1.ª jornada: normal")
+	var frentes: Array = []
+	for i in 40:
+		frentes.append(Rect2(float(i) * 12.0 - 240.0, 300.0, 10.0, 10.0))
+	var raiz := Node3D.new()
+	var e := CiudadAnimo.montar(raiz, {"estado": "euforia"}, frentes, Vector3(0, 0, -150), Color.RED, Color.WHITE)
+	var raiz2 := Node3D.new()
+	var c := CiudadAnimo.montar(raiz2, {"estado": "crisis"}, frentes, Vector3(0, 0, -150), Color.RED, Color.WHITE)
+	_comprobar(int(e["pancartas"]) >= 35 and int(e["grafitis"]) == 0, "euforia: pancartas en las fachadas (%d), ningún grafiti" % e["pancartas"])
+	_comprobar(int(c["persianas"]) >= 20 and int(c["grafitis"]) >= 10 and int(c["pancartas"]) == 0, "crisis: persianas (%d) y grafitis (%d), ninguna pancarta" % [c["persianas"], c["grafitis"]])
+	raiz.free()
+	raiz2.free()
+	var m := Mundo.new()
+	m.generar(["CHI"], 55)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	for k in 6:
+		m.avanzar_semana()
+	var a := CiudadAnimo.de(m, m.mi_club())
+	_comprobar(String(a["estado"]) in CiudadAnimo.ESTADOS and String(a["motivo"]) != "", "el ánimo sale del mundo real: %s (%s)" % [a["estado"], a["motivo"]])
 
 ## FASE 4: el mini-juego de representantes (la mesa de regateo).
 func _probar_mesa_agente() -> void:
