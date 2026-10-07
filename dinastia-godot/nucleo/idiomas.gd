@@ -30,9 +30,9 @@ extends Node
 ##
 ## LA NARRACIÓN (actualizado el 7-10-2026): las noticias, la prensa, el
 ## vestuario, las redes y la Carrera de Jugador ya están en INGLÉS y
-## PORTUGUÉS (ver `_cargar_narracion`, unas 1.060 frases y plantillas). En los
-## otros seis idiomas siguen en castellano. Lo que sigue explica por qué se
-## dejó para el final.
+## PORTUGUÉS, y desde el mismo día también en los otros seis idiomas (ver
+## `_cargar_narracion`, unas 1.080 frases y plantillas por idioma). Lo que
+## sigue explica por qué se dejó para el final.
 ## LO QUE NO SE TRADUCÍA, Y SE DECÍA CLARO. La narración —las noticias, las
 ## preguntas de la prensa, los diálogos del vestuario, los textos de ayuda
 ## largos— seguía en castellano. Son varios miles de frases escritas con voz
@@ -445,10 +445,11 @@ func _cargar_extra() -> void:
 	_cargar_narracion()
 
 ## LA NARRACIÓN (7-10-2026, MEGAPLAN: «traducir la narración, al menos al
-## inglés»). Los títulos y cuerpos de las noticias, al inglés y al portugués:
+## inglés»). Los títulos y cuerpos de las noticias en los 8 idiomas:
 ## las frases fijas como tabla directa y las que llevan nombres o cifras como
 ## patrones. Lo monta `herramientas/montar_narracion.py` a partir de las
-## plantillas que extrae del código; en los demás idiomas siguen en castellano.
+## plantillas que extrae del código (fr/it/de/ca/pl/tr en
+## `datos/narracion_traducida_mas.json`).
 const NARRACION := "res://datos/narracion.json"
 
 func _cargar_narracion() -> void:
@@ -467,7 +468,11 @@ func _cargar_narracion() -> void:
 	for fila: Array in (d as Dictionary).get("patrones", []):
 		var re := RegEx.new()
 		if re.compile(String(fila[0])) == OK:
-			_patrones.append([re, {"en": String(fila[1]), "pt": String(fila[2])}])
+			## Formato nuevo: [regex, {idioma: texto}]; el viejo, [regex, en, pt].
+			if fila.size() == 2 and fila[1] is Dictionary:
+				_patrones.append([re, fila[1]])
+			else:
+				_patrones.append([re, {"en": String(fila[1]), "pt": String(fila[2])}])
 
 ## Traduce una frase suelta. Si no está en la tabla, devuelve la castellana: una
 ## interfaz medio traducida se lee; una llena de claves crudas, no.
