@@ -385,6 +385,14 @@ Cuenta: 11,25 + 16,2 + 11,1 + 6,9 + 17,4 + 6,6 + 7,9 = **77,35**. Se pasa la met
 - Minijuegos en 3D con animaciones: autógrafos, pesca, karting contra tres rivales, penales y tiro libre con barrera.
 - Patios verdes dentro de las manzanas. Revisión aérea: el metro y la autopista siguen las avenidas.
 
+**Ciudad 2.2 (7-10-2026, noche)**
+- Aviso técnico al reconstruir la ciudad arreglado (y fugas de nodos).
+- Casas de colores con fachada detallada; edificios del kit teñidos; comercios con rótulo (farmacia con cruz verde).
+- Mobiliario urbano completo: alcantarillas, sumideros, papeleras, bancos, hidrantes, reciclaje, bolardos, señales, kioscos, aparcabicis, terrazas y vallas.
+- 50 calles con nombre (placas y HUD), parques con nombre, fuente y juegos, estaciones de metro con tema propio.
+- Instalaciones por dentro: 15 salas con gente trabajando.
+- Puentes de piedra con arcos; vehículos a medidas reales y autobús de 12 m.
+
 **Fase 5 — plan original**
 - Documental de la temporada.
 - Ciudad que responde al club.

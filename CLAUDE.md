@@ -171,6 +171,17 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   trabajando; lo que tiene una ciudad real (alcantarillado, detalles); metro con
   decoración y nombre por estación; nombres de calles y de parques; puente más
   bonito; vehículos más realistas y PROPORCIONADOS; repasar toda la ciudad.
+  HECHO (7-10): aviso «material is null» (estatua del ídolo con prendas sueltas +
+  fugas de nodos); casas de colores con puerta/ventanas/chimenea/buzón y kit teñido
+  (`CityBuilder.tenir`); mobiliario urbano (alcantarillas, sumideros, papeleras,
+  bancos, hidrantes, reciclaje, bolardos, STOP/ceda, kioscos, bicis, terrazas,
+  vallas); 50 calles con nombre (`nombre_calle_en`, placas, HUD); parques con
+  nombre y juegos; estaciones con tema (`MetroCiudad.TEMAS`) y tótems; INTERIORES
+  (`ui/componentes/interior_instalacion.gd`, 15 salas, E en la puerta o «Ver por
+  dentro»); puente de piedra con arcos; vehículos a medidas reales
+  (`CityBuilder.MEDIDAS_REALES`) y autobús procedural (`CityBuilder.autobus`);
+  rótulos de comercios. Capturas: captura_interiores, captura_paseo,
+  captura_vehiculos. No se pudo descargar modelos (red bloqueada).
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
