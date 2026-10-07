@@ -51,5 +51,5 @@ func _process(_d: float) -> void:
 		print("pantalla del editor pintada sin reventar con un jugador seleccionado")
 	if _n == 20:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_editor_gaps.png")
+		img.save_png("res://pruebas/capturas/pantalla_editor_gaps.png")
 		get_tree().quit()

@@ -21,8 +21,8 @@ extends RefCounted
 ## `paleta`: los mismos colores ya resueltos -`_color_accesible()`/`_pal_*()`,
 ## con `escala`- que reciben los demás componentes de esta carpeta.
 ##
-## Sin `Ficcion.limpiar()`, igual que el resto de `principal.gd` fuera de
-## `PanelMercado` -decisión pendiente de confirmar, no un descuido.
+## Los nombres se pintan tal cual: lo legal se resuelve en los DATOS (base
+## ficticia por defecto, pack real opcional -ver `Datos`-), no en cada pantalla.
 
 ## BALANCE + FLUJO DE CAJA A 12 MESES. Puro: ni un botón, solo lee `c`,
 ## `mundo.banco` y la proyección que ya calculó `_pintar_finanzas()`.
@@ -388,9 +388,4 @@ static func _marca(nombre: String, color_hex: String, alto: int, paleta: Diction
 ## lección del bug real encontrado en `FichaJugadorAcciones` el 26-9: sin
 ## este factor los montos salen mal sin ningún error visible.
 static func _dinero(monto: int) -> String:
-	var euros := float(monto) * Eco.ECO
-	if absf(euros) >= 1000000.0:
-		return "%.1fM EUR" % (euros / 1000000.0)
-	if absf(euros) >= 1000.0:
-		return "%dk EUR" % int(euros / 1000.0)
-	return "%d EUR" % int(euros)
+	return Eco.dinero(monto)

@@ -34,16 +34,16 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 40:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/sdfgi_temprano.png")
+		img.save_png("res://pruebas/capturas/sdfgi_temprano.png")
 		print("temprano guardado (frame 40)")
 	if _n == 220:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/sdfgi_convergido.png")
+		img2.save_png("res://pruebas/capturas/sdfgi_convergido.png")
 		print("convergido guardado (frame 220)")
 		var env: Environment = _vista.get("_env")
 		env.sdfgi_enabled = false
 	if _n == 260:
 		var img3 := get_viewport().get_texture().get_image()
-		img3.save_png("res://pruebas/sdfgi_apagado.png")
+		img3.save_png("res://pruebas/capturas/sdfgi_apagado.png")
 		print("apagado guardado (frame 260)")
 		get_tree().quit()

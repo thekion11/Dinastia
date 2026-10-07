@@ -48,7 +48,7 @@ func _process(_d: float) -> void:
 		else:
 			print("NO SE ENCONTRO ESQUELETO")
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/sorteo_escena_sola.png")
+		img.save_png("res://pruebas/capturas/sorteo_escena_sola.png")
 		print("capturado escena sola")
 		get_tree().quit()
 

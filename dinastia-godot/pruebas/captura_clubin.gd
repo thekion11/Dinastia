@@ -16,7 +16,7 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 20 and _probado:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_clubin.png")
+		img.save_png("res://pruebas/capturas/pantalla_clubin.png")
 		get_tree().quit()
 		return
 	if _n != 12 or _probado:

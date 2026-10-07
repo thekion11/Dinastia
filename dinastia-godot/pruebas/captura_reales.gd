@@ -16,12 +16,12 @@ func _process(_d: float) -> void:
 		# Asegura que el club activo sea Colo-Colo si no lo es ya.
 		if mundo.mi_club().nombre != "Colo-Colo":
 			for c: Club in mundo.clubes.values():
-				if c.nombre == "Colo-Colo":
+				if Nombres.limpiar(c.nombre) == "Colo-Colo":
 					mundo.tomar_el_mando(c.id)
 					break
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_reales.png")
+		_guardar("res://pruebas/capturas/pantalla_reales.png")
 		get_tree().quit()
 func _guardar(ruta: String) -> void:
 	var img := get_viewport().get_texture().get_image()

@@ -10,6 +10,15 @@
 #    .\empaquetar.ps1 -Formato todos     -> los cinco
 #    .\empaquetar.ps1 -Servir            -> levanta la web en localhost:8060
 #
+#  PRIVADO Y PUBLICABLE (25-9-2026)
+#
+#  Solo "completo" lleva datos reales: el pack real (`datos/pack_real.json`,
+#  clubes, ligas y jugadores de verdad), las fotos de caras y las camisetas
+#  reales. Es para ti y NO se publica ni se vende. "ligero", "web", "apk" y
+#  "zip" salen con la BASE FICTICIA y sin ningun material real: sus presets en
+#  `export_presets.cfg` excluyen el pack, las caras y el modelo `futbolista_cr7`
+#  (ver `LICENCIAS.md`). Esos son los que se pueden subir a una tienda.
+#
 #  LOS DOS .EXE Y POR QUE SON DOS
 #
 #  El juego trae 1.048 fotos de futbolistas reales (117 MB) y 1.102 fotos de
@@ -62,12 +71,12 @@ if ($Formato -eq "" -and -not $Servir) {
   Write-Host ""
   Write-Host "  EN QUE FORMATO QUIERES EL JUEGO?" -ForegroundColor Cyan
   Write-Host ""
-  Write-Host "   1) completo   .exe con TODO: 1.048 caras reales y 1.102 camisetas."
+  Write-Host "   1) completo   PRIVADO, NO PUBLICAR. .exe con TODO: base real,"
+  Write-Host "                 1.048 caras reales y 1.102 camisetas."
   Write-Host "                 ~250 MB + la carpeta de camisetas al lado."
-  Write-Host "                 Es el que hay que usar para probar de verdad."
   Write-Host ""
-  Write-Host "   2) ligero     .exe pequeno, ~124 MB. Mismo juego, pero las caras"
-  Write-Host "                 se dibujan y las camisetas se generan por color."
+  Write-Host "   2) ligero     PUBLICABLE. .exe pequeno, ~124 MB. Base ficticia,"
+  Write-Host "                 caras dibujadas y camisetas generadas por color."
   Write-Host ""
   Write-Host "   3) web        Pagina para el navegador, ~58 MB. Sirve en movil."
   Write-Host "                 Se sube a cualquier hosting; carga mas lento."

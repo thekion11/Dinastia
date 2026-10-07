@@ -23,7 +23,7 @@ func _process(_d: float) -> void:
 		mun.logros.celebrar_titulo("Champions League")
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_titulo.png")
+		_guardar("res://pruebas/capturas/pantalla_titulo.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

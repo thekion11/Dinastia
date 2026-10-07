@@ -1,5 +1,812 @@
 # DINASTÍA en Godot — estado de la mudanza
 
+## OCTAVA RONDA: EQUIPACIÓN CON SPONSORS, ROPA APARTE, 238 MOVIMIENTOS NUEVOS, ÁRBITRO, VAR Y MODELOS 3D (26-9-2026)
+
+- **Equipación**:
+  - `ui/disenos_kit.gd`: familias 43-62, cada una en versión de dos colores (acento = color 1)
+    y de tres (acento = color 2), en 2D y en `visor/equipacion_q.gdshader`: 130 diseños;
+  - cuello en pico, redondo, polo con tapeta o mao (`kit.cuello`, `CUELLOS`);
+  - `ui/sponsor_kit.gd` (`SponsorKit`): patrocinadores por zona desde `Auspicio.contrato` y
+    `Comercial.zonas_firmadas`; los rivales, por hash (los grandes venden más zonas). La
+    palabra se escribe con una tipografía de bloques propia (el rasterizador SVG no pinta
+    texto), en una o dos líneas, junto al logo de `Marca`. La misma imagen va al 2D y al
+    shader (`sp_pecho`, `sp_manga`, `sp_espalda`, `sp_short`, encajada sin deformar);
+  - los sponsors no se guardan en `Club.kit_x` (salen de los contratos); `sp_ocultar` sí;
+  - el diseñador (`ui/componentes/disenador_kit.gd`) es una pantalla propia: su `CanvasLayer`
+    sobre la raíz y el menú oculto mientras está abierto; se abre con el chip «Equipación»;
+    filtros por colores y estilo, buscador, pestaña «Patrocinadores» y Esc para cerrar.
+- **Ropa aparte** (`visor/ropa_separada.gd`): camiseta, pantalón y medias extraídos de la malla
+  del cuerpo por zonas de la pose de reposo, separados por la normal (holgura propia, el bajo
+  que cae) y colgados del mismo esqueleto y piel (`skin`); el shader los pinta con `prenda`.
+  `VestidorQ.ropa_aparte`: siempre en el diseñador, opción en Ajustes › Dispositivo.
+- **Portafolio de fútbol** (`visor/anim_futbol.gd`): poses clave en lenguaje de cuerpo (cadera,
+  tronco, cuello, piernas con abducción y rotación, brazos) y generadores de golpeo, barrida
+  (con IK de pies en el césped) y estirada. 23 tiros, 20 pases, 20 barridas y entradas, 13
+  atajadas, 31 regates, 16 expresivos, 8 lesiones y 13 gestos arbitrales; se construyen una vez
+  por esqueleto y se espejan para zurdos: 333 movimientos por jugador, sin cargar más lento
+  (medido: 53 ms por jugador tras el primero, antes 62).
+  - **Dos ejes del brazo estaban mal** desde la ronda anterior y se corrigieron con
+    `pruebas/sonda_lados.gd`: el «adelante» del brazo derecho iba hacia atrás y el codo nunca
+    se doblaba (la Y del antebrazo solo lo gira; el codo es X+).
+  - El partido sortea tiros, pases y barridas por familia y después espeja al zurdo.
+- **Árbitro** (`visor/match_playback.gd`): cola de gestos programados y
+  `_trabajo_del_arbitro()`; la señal `revision_var` abre la sala VAR. Cámara «Árbitro (POV)»
+  en `visor/camera_rig.gd`.
+- **Sala VAR** (`ui/sala_var.gd`): sala 3D con cuatro monitores que son cámaras reales sobre el
+  mundo del partido, operadores con auriculares y la decisión; el partido se pausa.
+- **Modelos 3D pendientes**: `visor/estadio_extras.gd` (andamio con red y grúa torre durante las
+  obras, palcos VIP, cabina de prensa, museo y tienda según lo construido, y la mascota del
+  club) y `visor/peaton.gd` (peatones por las aceras de la ciudad).
+- **Jugadores fijos con guiño** (pedido: *"en cada partida los nombres de jugadores cambian;
+  deberían ser fijos y dar a entender a qué jugador representa, junto a sus medias"*):
+  - `herramientas/jugadores_guino.py` genera, para la base ficticia, las mismas plantillas que
+    el pack real (2.853 jugadores en 256 clubes: puesto, edad, media y país) con un nombre de
+    guiño: el nombre de pila se queda y el apellido cambia una consonante por otra de sonido
+    parecido y la primera vocal interior ("Arturo Bedal", "Lionel Misi"). Es determinista y
+    ningún guiño coincide con un nombre real (se comprueba contra la lista del pack);
+  - `base_ficticia.py` lo vuelca en `REALES` de `tablas.json`; `Reales.aplicar()` ya lo usa en
+    las dos bases;
+  - el potencial y los atributos de esos jugadores salen de su nombre (se siembra `Azar` y se
+    devuelve su estado): mismos nombres, medias y potenciales en cualquier partida;
+  - los 128 clubes sin plantilla en la lista siguen generando sus jugadores con la semilla.
+- **Plan**: octava ronda en el ROADMAP, con la lista larga del usuario (E9-E25) y lo que piden
+  los foros de FM26, FC 26, Soccer Manager y Top Eleven.
+- **Pruebas nuevas en el banco**: diseños de 2 y 3 colores, patrocinadores, portafolio (conteos,
+  espejos, zurdos), además de las capturas `captura_sponsors`, `captura_ropa_aparte`,
+  `captura_portafolio2`, `captura_sala_var`, `captura_arbitro`, `captura_extras_estadio` y
+  `captura_peatones`.
+
+## SÉPTIMA RONDA (3): PORTAFOLIO DE MOVIMIENTOS, HABILIDADES QUE SE NOTAN Y BASE DE LA IA LIBRE (26-9-2026)
+
+- **Portafolio de movimientos** (`visor/anim_extra.gd`): 95 animaciones por jugador.
+  - 23 clips de la Universal Animation Library (saludos, aplausos, protestas, gestos…);
+  - 24 espejos (`<nombre>_espejo`) hechos por reflexión en el espacio del modelo, para zurdos
+    y para que un regate o un festejo no salga siempre hacia el mismo lado;
+  - 14 expresiones procedurales (aplaudir, protestar, pedir el balón, manos a la cabeza,
+    cansado, mirar al cielo, besar el escudo…); los brazos que no se animan se bajan solos.
+  - `AnimExtra.variante()` la usa el partido: los golpeos de un zurdo van espejados y los
+    regates, festejos, lamentos y protestas se sortean por categoría (`CATEGORIAS`).
+- **Las habilidades influyen en el resultado** (prueba en el banco): el mismo club contra el
+  mismo rival, 300 partidos con la misma semilla, pasa de 1,40 a 1,73 puntos por partido con
+  las maestrías de juego al 30 y «Genio táctico». La cadena es `Mundo.aplicar_bonificadores()`
+  → `Club.bonus_ataque/defensa` → `Partido.fuerza()`, que usan liga, copa y continental.
+- **Base de la IA que juega sin jugadas prehechas y del mando** (futuro, pero ya en el código):
+  - `nucleo/acciones_juego.gd`: 21 acciones con los atributos que mandan, dificultad,
+    alcance, pierna débil, botón y familia de animación; `prob_exito()` y `xg()`;
+  - `nucleo/motor_libre.gd`: 22 agentes en un campo de 105 × 68 que eligen con IA de
+    utilidad (tirar, pasar a cada compañero, conducir, regatear), con presión, marcaje y
+    entradas. Admite un jugador controlado (`tomar_control`, `mover`, `ordenar`,
+    `cambiar_jugador`) y `foto()` para dibujarlo. Entre iguales da ~1-2 goles y ~20 tiros;
+    el mejor gana y el bono del club genera más ocasiones. `pruebas/sonda_motor_libre.tscn`
+    imprime estadísticas para calibrar;
+  - `nucleo/mando.gd`: mando y teclado en el InputMap sin tocar project.godot; el mismo botón
+    pasa con balón y presiona sin él.
+  - Falta: enchufarlo al visor 3D y calibrarlo con datos reales.
+- **Equipación**: 13 familias modernas más (90 diseños) y la ropa ya no va pegada al cuerpo
+  (el shader la infla desde la pose de reposo: más en torso y mangas, poco en el pantalón).
+- **Música**: la pista libre en español (B12) queda descartada; sigue la música procedural.
+
+## SÉPTIMA RONDA (2): MAESTRÍAS, DISEÑADOR DE EQUIPACIÓN Y REALISMO DE LA ROPA (26-9-2026)
+
+- **Maestrías** (`nucleo/maestria.gd`, `ui/componentes/panel_maestrias.gd`): 15 categorías
+  nuevas de 30 niveles (450 en total), debajo del árbol de habilidades.
+  - Las categorías son ataque, defensa, porteros, balón parado, análisis, física, cargas,
+    liderazgo, psicología, idiomas, formación, prensa, hinchada, finanzas y negociación.
+  - Se gana un punto por semana y otro por victoria. Cada nivel cuesta 1, 2 o 3 puntos según
+    la decena.
+  - Los hitos 10, 20 y 30 refuerzan el efecto y dan un punto de habilidad para el árbol.
+  - Todas tienen efecto real (el nivel 30 de Ataque son +6 % de ataque).
+- **Diseñador de equipación** (`ui/disenos_kit.gd`, `ui/componentes/disenador_kit.gd`), desde
+  Gente › Identidad:
+  - 70 diseños de camiseta (los 12 de siempre y 58 nuevos), con hasta 5 colores y color de
+    cuello y puños;
+  - 6 diseños de pantalón y 6 de medias, con dos colores cada uno;
+  - 30 modelos de botín con tres colores (base, detalle y suela);
+  - 7 accesorios (cintillo, manga térmica, guantes, muñequeras, brazalete, cuello térmico,
+    tobilleras);
+  - color de los números.
+  - Vista previa en 2D, de frente y de espaldas con el número, y un jugador 3D girando.
+  - El 3D (`visor/equipacion_q.gdshader`) y el 2D usan la misma fórmula; el dorsal se pinta en
+    la espalda en 3D.
+  - Se guarda en `Club.kit_x`.
+- **Realismo de la ropa** (pedido: «se ven poco realistas»):
+  - **3D**:
+    - la pose de reposo se escribe en la malla (UV2 y COLOR), así el dibujo y los cortes de
+      las prendas son exactos por píxel (antes, escalones de 7 mm por la textura de 8 bits);
+    - estampado suavizado;
+    - menos músculo marcado bajo la tela, arrugas, y sombra en axilas y cintura;
+    - tejido de punto con su brillo, botines brillantes;
+    - costuras, cuello y puños acanalados, escudo y marca en el pecho.
+  - **2D**:
+    - dibujado al doble y reducido, con volumen, brillo y arrugas;
+    - cuello en pico adelante y redondo atrás, puños acanalados, costuras, escudo, marca y
+      trama;
+    - pantalón con volumen, medias de canalé y botines con brillo, cordones y tacos.
+- Pruebas: `_probar_maestrias`, `_probar_disenos_kit`; capturas `captura_maestrias`,
+  `captura_disenos_3d` (frente, espalda y de cerca) y `captura_disenador`.
+
+## SÉPTIMA RONDA (1): HISTORIA CON GUIÑO, CLÁSICOS, MI VIDA Y ÁRBOL DE HABILIDADES (26-9-2026)
+
+- **Historia con guiño para los 384 clubes** (`herramientas/historia_clubes.py` →
+  `HISTORIA_CLUBES` y `CLASICOS`, en la base y en el pack):
+  - Cada club tiene su fundación, su apodo, el apodo de su estadio y una línea que deja
+    reconocer al club real. Ejemplo: Lautaro FC, fundado en 1925, «el Cacique», juega en la
+    Ruca.
+  - En la base van con los nombres ficticios y en el pack con los reales; `base_ficticia.py`
+    los regenera.
+  - Lo que falte (años de clubes chicos) se genera. Los años de los clubes menos conocidos
+    conviene revisarlos.
+- **66 clásicos con nombre propio**: Superclásico (Lautaro–Andina), Clásico Universitario
+  (Andina–Precordillera), el Clásico (Precordillera–Lautaro), Gran Derbi, Fla-Flu, Gre-Nal,
+  el Tráfico…
+  - Cuentan como clásico en el juego.
+  - Se nombran en la previa, en la ficha del rival y en la portada («SUPERCLÁSICO: …»).
+- **MI VIDA**, grupo nuevo del menú, con tu vida de DT (`nucleo/vida_dt.gd`,
+  `ui/componentes/panel_vida.gd`):
+  - Casa (de la pensión a la mansión) y transporte, pagados de tu patrimonio.
+  - Familia inventada: pareja, hijos y mascota.
+  - Equilibrio vida/trabajo: trabajar más da hasta +3 % de preparación, pero sube el estrés y
+    baja la familia.
+  - Estrés: con él alto, el vestuario te nota tenso; tres semanas al límite y el médico te para
+    una semana.
+  - Ocio semanal (asado, pádel, escapada…).
+  - Asuntos de casa en el despacho (cumpleaños, colegio, aniversario, televisión, publicidad…).
+- **Árbol de habilidades como esquema** (`ui/componentes/arbol_habilidades.gd`):
+  - Una columna por rama con su color, nodos redondos con icono, líneas de requisito y chispa
+    en la que se puede aprender.
+  - Estados: aprendida, disponible (con latido) o bloqueada (con candado).
+  - Ficha con el botón para aprender y botón «⛶ En grande» a pantalla completa.
+  - Vive en MI VIDA › Habilidades; en Historia queda un acceso.
+- **Recorrido visual de las 37 pantallas** (`pruebas/captura_todo.gd`, deja las capturas en
+  `pruebas/recorrido/`, que no se sube). Arreglado:
+  - el grupo del menú encendido al entrar por un chip;
+  - «Equipación» vacía;
+  - Memoria, Rivales y Vitrina en blanco;
+  - paneles de MI VIDA demasiado anchos;
+  - «Régimen» en la ficha;
+  - los precios de Mi vida escalan con el sueldo del DT.
+- Pruebas: `_probar_historia_c4` (reescrita) y `_probar_vida_dt`; capturas `captura_vida` y
+  `captura_todo`.
+
+## SEXTA RONDA, TANDA D: CALENDARIO, FESTIVIDADES, GLOBO, POLÍTICA, HISTORIA Y CONTRATOS (26-9-2026)
+
+- **Calendario de cada país** (`nucleo/calendario.gd`): independencias y fiestas patrias de los
+  24 países, el 1 de mayo (o el Labor Day de EE. UU.) y las fechas de memoria.
+  - El **11 de septiembre** es jornada de memoria en Chile (1973) y en EE. UU. (2001): minuto de
+    silencio, brazalete negro y ningún bonus de fiesta.
+  - Una semana de fiesta nacional llena más el estadio (×1,12) y sube la moral (+1).
+  - El mentor explica cada fecha la primera vez que aparece; lo ya explicado se guarda.
+  - La tira de días muestra el icono de la fecha, y la pestaña Calendario lista las próximas
+    fechas y el gran torneo del año (Mundial, JJ. OO., Eurocopa, Copa América, con sede
+    cuando se conoce).
+- **Festividades (C16)**: Semana Santa (Pascua calculada), Ramadán y Eid (calendario islámico
+  tabular), Navidad, Día de Muertos, Obon, Thanksgiving.
+  - Solo el calendario del país: ningún jugador tiene religión asignada.
+- **Globo (C14)**:
+  - fronteras de Natural Earth (dominio público);
+  - relieve aproximado a partir de la textura;
+  - pines y nombres de los 24 países;
+  - clic en un pin para elegir el país, con su ficha (capital, ligas, ranking, el club grande,
+    el tiempo y la próxima fecha).
+  - **Dos errores antiguos arreglados**:
+    - el lado de día se veía negro, porque dependía de una luz de escena que venía de atrás;
+    - los pines estaban 90° corridos respecto de la textura (Australia caía en el océano
+      Índico).
+- **Política y Estado (C15)** (`nucleo/politica.gd`):
+  - Estructura real de cada país (presidencial, semipresidencial, monarquía parlamentaria,
+    república parlamentaria, monarquía absoluta) y años de mandato.
+  - Partidos y dirigentes **inventados**, con posturas neutras que solo tocan al club:
+    obras, seguridad en estadios, impuestos o deporte base. Cada cuatro semanas se notan en la
+    caja.
+  - Elecciones con campaña dos semanas antes y resultado; Arabia Saudí no vota.
+  - El mentor explica cómo se gobierna el país. Se ve en Federación.
+- **Historia de cada club (C4)** (`nucleo/historia_club.gd`):
+  - En la base ficticia se genera coherente: fundación, apodo según los colores, estadio,
+    rival histórico, ligas y copas ganadas, origen y época dorada. Los grandes son más antiguos
+    y tienen más títulos.
+  - Con el pack real, la tabla `HISTORIA_REAL` (solo en `pack_real.json`) pone la fundación,
+    el apodo, el estadio y el rival reales de 36 clubes. Los títulos no, porque cambian cada año.
+  - Se ve en Historia y en la ficha de cada club.
+  - Arreglado de paso: en la base ficticia el clásico chileno de los tres grandes nunca se
+    detectaba, porque solo estaban los nombres reales.
+- **Contratos y jornada (C9)** (`nucleo/contratos.gd`):
+  - Norma FIFA en fichajes, renovaciones, cesiones y en el mundo generado: de 1 a 5 años, y
+    un menor de 18 no pasa de 3.
+  - La ficha muestra el tipo de contrato.
+  - Jornada legal del personal en los 24 países, con su norma. Chile baja de 44 a 42 horas el
+    26 de abril de 2026 y a 40 en 2028; Colombia baja a 42 el 15 de julio de 2026.
+  - Menos horas encarecen un poco la estructura (1 % por hora de diferencia con 44). Se ve en
+    Personal del Club y los cambios salen como noticia.
+  - México y Egipto quedan marcados para revisar antes de publicar.
+- Pruebas: `_probar_calendario_c13`, `_probar_politica_c15`, `_probar_historia_c4`, `_probar_contratos_c9`; capturas `captura_calendario`,
+  `captura_globo_c14`, `captura_gobierno` y `captura_historia`.
+
+## SEXTA RONDA, TANDA C: INSTALACIONES, CANTERA, RAMAS, FICHA DEL JUGADOR (26-9-2026)
+
+- **Instalaciones a 10 niveles** (`Instalaciones.NIVEL_MAX`), salvo las tribunas (5).
+  - Del 6 al 10, cada nivel vale la mitad.
+- **Trabajadores** (`nucleo/trabajadores.gd`): cada instalación construida tiene a alguien al
+  frente, con nombre y carácter.
+  - Los caracteres son perfeccionista, trabajador, despistado, carismático y conflictivo.
+  - Cada instalación tiene sus eventos (caldera rota, menú nuevo, campo inundado…).
+  - El despistado tiene el doble de averías.
+  - El carismático organiza asados y el conflictivo pide aumento.
+  - Se ven en Infraestructura y en la ciudad.
+- **Cantera viva** (`nucleo/eventos_cantera.gd`):
+  - Asuntos en el despacho: torneo sub-17, un chico que quiere dejarlo y padres que exigen que
+    suba.
+  - Convocatorias juveniles.
+  - Botón «Visitar el entrenamiento», una vez por semana.
+- **Ramas que compiten** (`Hinchada.temporada_ramas`): femenino, juveniles, futsal y otros
+  deportes juegan su temporada.
+  - Tienen posición y palmarés propios.
+  - Un título del femenino llega a portada.
+- **Ficha del jugador**: pierna débil (1 a 5 estrellas), premios por año (equipo ideal, mejor
+  joven, máximo goleador) y asistencias en el historial.
+  - Sin datos sentimentales ni religiosos de personas reales.
+- Pruebas: `_probar_tanda_c`; captura `captura_tanda_c`.
+
+## SEXTA RONDA, TANDA B: INSTITUCIONES, MEDIOS, CHARLAS, MINIJUEGO, LICENCIA (26-9-2026)
+
+- **Presidente de la federación** (`Federacion.presidente`):
+  - nombre y corriente (modernizador, comercial, proteccionista o igualitario);
+  - mandato de 4 años con elecciones;
+  - sus mociones salen antes en la asamblea y suma 12 puntos a favor en el voto de la IA;
+  - se ve en Federación.
+- **Junta del club** (`nucleo/junta.gd`):
+  - presidente con estilo y tres accionistas con su porcentaje y su exigencia (dividendos,
+    títulos, cantera o estadio);
+  - junta cada 13 semanas en el despacho, con dos salidas;
+  - un accionista harto presenta moción de censura (−10 de confianza).
+- **Lesiones absurdas** (`nucleo/lesiones_absurdas.gd`): la ducha, el perro, la consola…
+  - una cada ~14 semanas, sin `Azar`;
+  - salen en portada;
+  - el toque de queda evita las de noche.
+- **Entrevistas al paso** (`Prensa.revisar_al_paso`): streamers, podcasts y canales de hinchas,
+  con preguntas inesperadas que mueven seguidores.
+- **Charlas uno a uno** (`nucleo/charlas.gd`), desde la ficha:
+  - cinco temas;
+  - la respuesta depende del rasgo;
+  - repetir el tema enseguida vale la mitad;
+  - la promesa de minutos se cobra a las 4 semanas.
+- **Presentación de fichajes** (`ui/componentes/presentacion_fichaje.gd`): en el estadio o en la
+  sala de prensa.
+- **Minijuego de penales** (`ui/componentes/minijuego_penales.gd`): el portero aprende si repites
+  esquina.
+- **Licencia de entrenador** (`nucleo/licencia.gd`):
+  - niveles C, B, A y Pro;
+  - examen de 8 preguntas sobre las Reglas de Juego vigentes y táctica; se aprueba con 6;
+  - suspender obliga a esperar 4 semanas.
+- Pruebas: `_probar_instituciones_c5_c8`, `_probar_charlas_c6_c7`, `_probar_licencia_c7`;
+  capturas `captura_junta`, `captura_charlas` y `captura_examen_penales`.
+
+## SEXTA RONDA, TANDA A: COHERENCIA, PERIÓDICO (26-9-2026)
+
+- **Pantalla del estadio**:
+  - su misma textura se ve en vivo en una esquina de la transmisión (antes era una mota
+    ilegible), y se apaga desde el cajón;
+  - enseña la competición que se juega: cruces de copa, grupo o cruces continentales.
+- **Clima de la ciudad** (`nucleo/clima.gd`):
+  - el tiempo de cada partido sale del país del local (latitud de `GLOBO_PAIS`) y de la época
+    del año, sin consumir `Azar`;
+  - hemisferios opuestos, trópico sin invierno, nieve solo en países fríos, desierto seco, y
+    altura en Bolivia, Ecuador, Colombia y México;
+  - `Partido.clima` (que existía y valía siempre 1,0) traba el partido con lluvia, nieve,
+    tormenta, niebla o calor;
+  - el visitante no adaptado sufre;
+  - se ve en el 3D, en la tarjeta del próximo partido y en la rueda de prensa, y el mentor da un
+    consejo;
+  - el diseñador del estadio ya no elige el clima.
+- **Escudo o camiseta nuevos**: portada, reacción de la hinchada, pregunta en la próxima rueda y
+  comentario del mentor.
+- **Rueda de prensa tras copa y continental**, con los escudos de esa competición.
+- **`MentorVoz`**: el mentor comenta fuera del tutorial, con su cara.
+- **Periódico** (`ui/componentes/portada_periodico.gd`): 6 cabeceras propias; ver ROADMAP C20.
+- **Banquillo**: butacas con respaldo, techo y metacrilato. Los suplentes llevan botines y ponen
+  las manos sobre las rodillas.
+- **Filosofía de cantera** (`nucleo/regiones.gd`):
+  - región de origen de cada jugador;
+  - el Athletic solo ficha a jugadores de Euskal Herria por origen, no por pasaporte;
+  - los españoles tienen apellidos españoles, y solo un ~9 % son vascos.
+- Pruebas: `_probar_coherencia_c1`, `_probar_portadas_c20`; capturas `captura_mentor_voz` y
+  `captura_portadas`.
+
+## PLAN MAESTRO, TANDA 3: EL ESTADIO POR SECCIONES Y LA CIUDAD QUE SE TOCA (25-9-2026)
+
+- **B6 · El estadio por secciones** (`nucleo/estadio_propio.gd`, `visor/stadium_builder.gd`).
+  - **Fachada**: hormigón, ladrillo, vidrio, membrana o chapa, con su color. Revestirla es obra
+    (se cobra); pintarla es gratis.
+  - **Colores por sección**:
+    - color del techo, de los banquillos y de la luz de los focos (blanca de televisión,
+      cálida, fría o del color del club);
+    - con «Personalizar cada tribuna» activado, cada tribuna tiene sus dos colores de butaca;
+    - los colores se eligen con muestra en el desplegable.
+  - **Superficie** (efecto real en el juego):
+
+    | Superficie | Lesiones en tu campo | Desgaste del césped |
+    |---|---|---|
+    | Natural | igual (×1,0) | afecta completo |
+    | Híbrido | −15 % (×0,85) | afecta la mitad |
+    | Artificial | +30 % (×1,3) | no se estropea |
+
+    Las lesiones siguen usando una sola tirada de `Azar` por minuto. Con el techo retráctil no
+    llueve dentro.
+  - **Exterior**: taquillas con rótulo, tienda oficial con el nombre del club y un
+    estacionamiento con los coches Kenney (semilla local, no `Azar`).
+  - **24 estilos** (16 + 8): coliseo, caja inglesa, ladera, flotante, cúpula, desierto, hormigón
+    sudamericano y japonés moderno.
+  - Los catálogos nuevos viven en `estadio_propio.gd` y no en `tablas.json` (que es la
+    exportación del HTML). Tampoco entran en «sorpréndeme», que consume el mismo azar que antes.
+  - Pruebas:
+    - `_probar_estadio_b6` en el banco;
+    - capturas `captura_estilos_b6` (hoja 4×2), `captura_exterior_estadio` y
+      `captura_disenador_b6`.
+- **B7 · La ciudad 3D se puede tocar** (`ui/ciudad_vista.gd`, `visor/city_builder.gd`).
+  - **Parcelas fijas y solares**: cada una de las 15 instalaciones tiene su parcela fija, y lo
+    que no existe se ve como solar con su cartel.
+  - **Ficha y construcción desde el mapa**: un clic en un edificio o solar abre su ficha (qué
+    hace, nivel, obra en curso, coste) y la cámara se acerca. Desde ahí se construye o se mejora
+    con la misma función que en Club → Infraestructura (`Principal._empezar_obra`): mismo cobro
+    y mismos permisos.
+  - **Obras visibles**: andamio que sube con el avance y grúa torre. Si se amplía el estadio,
+    también hay grúa junto a él.
+  - **Rótulos flotantes** de tamaño fijo en pantalla, con botón para ocultarlos. Sobre el barrio
+    se ve el humor de los vecinos.
+  - **Día de partido**: si esta semana juegas en casa, hay banderas del club en el anillo, 600
+    hinchas alrededor del estadio, grada llena y el rótulo «HOY HAY PARTIDO». Hay un botón para
+    verlo cualquier día.
+  - **Cámara libre**: clic derecho o WASD para desplazarse, además de girar y hacer zoom.
+  - Las filas de parcelas ahora van cada 43 m desde z=108: la cuarta caía encima de la calle
+    exterior.
+  - Prueba: `_probar_ciudad_b7`; captura `captura_ciudad_b7`.
+
+## PLAN MAESTRO, TANDA 2: CINEMÁTICAS, EVENTOS Y ENTREVISTAS (25-9-2026)
+
+- **B3 · Cinemáticas del partido.**
+  - `visor/repeticion.gd`: guarda 12 s de jugada a 20 Hz y repite el gol a media velocidad desde
+    dos cámaras (detrás del arco y a ras de césped); devuelve a todos a su sitio al terminar.
+  - `visor/intro_partido.gd`: 6 s de vuelo alrededor del estadio con el rótulo del partido; se
+    salta con un clic.
+  - Las dos se apagan en el cajón de ajustes. El reloj del partido se congela mientras duran.
+  - Pruebas: `prueba_repeticion`, `prueba_intro`.
+- **B4 · Nueve eventos nuevos con efectos que duran** (`nucleo/prensa.gd`, `_eventos_nuevos`):
+  - túnel, vídeo viral, capitán, minuto de silencio, cambio de posición, patrocinio en la rueda,
+    apuestas, huelga por impagos y amenaza antes del derbi;
+  - efectos por semanas (`efectos`, se guardan): vestuario tenso, eco viral, posición nueva,
+    calendario de pagos;
+  - la tarjeta de decisión muestra la cara del implicado y, al decidir, sale un aviso con la
+    consecuencia.
+  - Prueba: `_probar_eventos_nuevos` en el banco; captura `captura_evento`.
+- **B5 · Entrevistas.**
+  - Pregunta un periodista concreto de los cinco (crítico, aliado, neutral, sensacionalista,
+    táctico); la placa dice su perfil y cómo te trata.
+  - Cada respuesta tiene tono (calma, soberbia o evasiva). Mueve la relación con ese periodista,
+    la calle y los árbitros.
+  - **Memoria**: recuerda tu última frase. Si fue soberbia y hoy perdiste, te la devuelve.
+  - **Repregunta** si evades, si titubeas o si tu soberbia le da titular al crítico o al
+    sensacionalista. Solo una por rueda.
+  - **Reloj de la sala**: una barra de 10 s. Contestar después cuenta como titubeo.
+  - **Titular del día siguiente**: cita tu frase, escrita a la manera del periodista. Sale al
+    pasar el día y va a la hemeroteca.
+  - **Texto libre**: un clasificador local por palabras clave decide el tono. Hablar de la gente,
+    del grupo o de los árbitros matiza el efecto. No usa IA en línea.
+  - **A pie de campo** (`ui/componentes/pie_de_campo.gd`): una pregunta al terminar el partido
+    dirigido (salvo en modo instantáneo), con tres salidas o pasar de largo.
+  - Nada de esto consume `Azar`: quién pregunta sale del hash de la fecha.
+  - Prueba: `_probar_entrevistas` (21 comprobaciones); captura `captura_entrevista`.
+
+## PLAN MAESTRO, TANDA 1: AJUSTES, MODOS DE PARTIDO, ANIMACIONES, DISEÑO Y PELO (25-9-2026)
+
+- **B1 · Cajón de ajustes** (`ui/componentes/cajon_ajustes.gd`).
+  - Qué hace: un ⚙ que despliega un panel lateral animado. Se cierra solo a los 6 s, con Esc o con
+    el ⚙, y recuerda su estado (`user://ajustes.cfg`, sección `hud`).
+  - Dónde: en la transmisión 3D y en el partido en vivo.
+  - Prueba: `captura_cajon_ajustes`.
+- **B2 · Cinco modos de ver un partido**: Instantáneo, Resumen, En vivo, 3D destacados y 3D
+  completo, con un selector por competición en Partido y Calendario.
+  - Nuevo componente `ResumenPartido`.
+  - El mismo partido da el mismo resultado en cualquier vista (prueba "MODOS DE SIMULACIÓN",
+    40/40 semillas). Para eso se corrigieron dos fallos:
+    - la invasión de campo pasó a `Partido.simular_minuto()`;
+    - la crónica en vivo elegía frases con `Azar`.
+  - Arreglado de paso: la ficha del jugador sin scroll estiraba la pantalla principal a 1.330 px
+    en una ventana de 720, y lo de abajo quedaba inalcanzable.
+- **B11 · Animaciones.**
+  - Clima visible en el estadio (`visor/precipitacion.gd`): lluvia, nieve y tormenta con
+    relámpagos, en dos capas (todo el campo y pegada a la cámara).
+  - Banderas de tela que ondean (`visor/bandera.gdshader`).
+  - `Animar` en la interfaz: entradas escalonadas, la caja cuenta hasta su valor, el día actual
+    late, y hay opción "Animaciones reducidas".
+- **B13 · Diseño y texto.**
+  - `ui/tema.gd` es la única fuente de colores, letra, radios y espaciados; 61 constantes de 12
+    pantallas apuntan ahí.
+  - Repaso ortográfico: invasión, césped, policía, túnel, camarín, táctica, médico, países,
+    también, detrás, así, inversión, cámara y "Primera División".
+  - Días y fecha con el nombre completo ("Lunes 26", "lunes 26 de enero de 2026").
+  - El banco vigila que ninguna pantalla vuelva a copiar la paleta y que esas palabras no pierdan
+    la tilde.
+- **Pelo de los jugadores 3D** (`visor/pelo_q.gd`).
+  - Los peinados CC0 de *Universal Base Characters* estaban en un zip sin abrir y los 22 del
+    campo eran calvos. Ahora llevan el corte de su retrato, teñido, con barba y cejas.
+  - El pelo largo y el moño venían para el cuerpo femenino, y el moño además en centímetros:
+    ambos corregidos.
+  - Los `.gltf` del pelo van fuera de LFS (`.gitattributes`).
+- **Fallo grave corregido: exportaciones.** `export_presets.cfg` tenía comentarios con `##`, que
+  en un `.cfg` no son comentarios (van con `;`). El archivo no se leía, así que los filtros que
+  dejan fuera el pack real y las fotos no se aplicaban. Ya se lee, y hay prueba en el banco.
+- **Inventario de modelos 3D sin usar**: en `ROADMAP.md`, con el bloque donde encaja cada uno.
+
+## CUARTA RONDA: MOVIMIENTOS CON ANATOMÍA HUMANA, REGATES, DOMINADAS Y CARAS REALES (25-9-2026)
+
+Pedido: *"comprueba que los movimientos tengan realismo biológico humano... había movimientos
+puramente de fútbol, de regates... usa las caras de Wikipedia"*.
+
+### 1. Auditoría biomecánica: medida, no a ojo
+`pruebas/auditoria_biomecanica.tscn` (headless) recorre las 34 animaciones cuadro a cuadro (30 fps).
+Mide todo por posiciones de los huesos, así no depende de cómo guarde cada clip sus giros:
+- **rodilla y codo**: flexión hasta 160° y nunca hacia atrás. El sentido de la bisagra se calibra
+  con la carrera mocap, que es captura de una persona real.
+- **cadera**: medida contra la pelvis, no contra el pecho.
+- **tobillo, muñeca, cuello y columna**: ángulo máximo de cada uno.
+- **pies bajo el césped**.
+- **velocidades imposibles**: más de 40 rad/s.
+
+`pruebas/captura_biomecanica.tscn` saca la hoja de perfil y de frente
+(`biomecanica_antes.png` / `biomecanica_despues.png`).
+
+Encontró cuatro errores de verdad (22 de 28 animaciones mal), todos corregidos en la raíz:
+1. **Las 6 poses de piernas hechas a mano doblaban cadera y rodilla al revés.** Afectaba a
+   sentado, lamento, rabia, dolor, barrida y cabezazo: el muslo iba hacia atrás y la rodilla doblaba
+   hacia delante. En el banquillo lo tapaba el propio banco.
+   - Medido con sonda: en este esqueleto la flexión de cadera es −X, la de rodilla +X y la flexión
+     plantar del tobillo +X.
+   - Ahora se escriben en grados anatómicos (`_pierna_anat`) y, cuando el pie está apoyado, con IK
+     de dos segmentos que lo deja plantado (`_pierna_apoyada`, muestreada a 20 Hz). El tobillo tiene
+     tope de 35° de dorsiflexión: pasado eso se levanta el talón.
+2. **El mocap estiraba los huesos.** El retarget global copiaba también la posición de cada hueso
+   del actor, que tiene otras proporciones: la rodilla quedaba hasta 14 cm fuera de la punta del
+   muslo. Ahora se hornea solo el giro (`_huesos_rigidos`); la pelvis conserva su desplazamiento.
+3. **El primer fotograma de los FBX es la pose en T.** Daba un salto de 49 rad/s al empezar los
+   festejos. Ahora se hornea desde el segundo fotograma.
+4. **Rodilla de 176° en el festejo de rodillas.** Ahora hay un tope anatómico de 150° de giro total.
+
+Resultado: **34/34 dentro de los rangos humanos**. Límites atléticos: el portero que se estira y el
+festejo con la rodilla al pecho, ambos capturas reales, llegan a 73° de abducción y 147° de flexión
+de cadera; están documentados en la cabecera de la auditoría.
+
+### 2. Regates y dominadas: los seis clips que estaban sin usar
+Del pack de mocap de fútbol (Dribble 1-3, Juggling 1-3), recortados y sin desplazamiento propio:
+- **`conducir`**: el jugador que está encima del balón lo lleva con el mocap de regate, en lugar de
+  correr como los demás.
+- **`regate_finta`**: amague cuando un rival se le acerca a menos de 6 m. Suena "regate".
+- **`regate_pausa`**: parado y atacando, pisa y protege el balón.
+- **Presión**: el jugador del equipo que defiende más cercano al balón sale a presionarlo, entre el
+  balón y su arco. Antes nadie se acercaba a menos de 4 m.
+- **La jugada ATQ-14** ("Desborde individual") ahora conduce y amaga antes del tiro.
+- **Dominadas con balón de verdad**: el suplente que calienta en la banda (uno por equipo) hace
+  dominadas. `visor/dominadas.gd` lee los toques del pie en el propio clip y entre toque y toque
+  la pelota hace la parábola que exige la gravedad. En los huecos largos cae al césped.
+
+Pruebas: `pruebas/prueba_dominadas.tscn` (la pelota está sobre el pie en cada toque y nunca
+atraviesa el césped; hoja `dominadas.png`) y `pruebas/prueba_regates.tscn` (partido real: hay
+conducción, amagues y un malabarista por equipo).
+
+### 3. Caras reales de Wikimedia Commons
+Ya estaban conectadas desde el 7-9 (1.219 fotos libres), pero solo con el pack real. Con la base
+ficticia no se enseña ninguna foto de una persona real, y eso se mantiene.
+
+Lo nuevo:
+- **Retratos recortados por la cara.** `herramientas/caras_reales_recortar.py` usa YuNet, el
+  detector neuronal de OpenCV (el modelo sale de opencv_zoo).
+  - Encontró cara en 1.211 de 1.219 fotos.
+  - Guarda cabeza y hombros a 256×256 en `recursos/caras_reales_256/`.
+  - Antes, en las fotos de cuerpo entero la cara quedaba del tamaño de un botón (hoja
+    `caras_reales_recorte.png`: arriba el recorte viejo, abajo el nuevo).
+  - El juego ya no decodifica fotos de 3.000 px en cada lista.
+  - La versión completo ya no lleva los 136 MB de originales, solo los 23 MB de retratos.
+- **Crédito de cada foto.** La ficha del jugador muestra, por ejemplo, "Foto: Rogan200 · CC BY-SA
+  4.0 · Wikimedia Commons, recortada". La lista completa está en `datos/creditos_fotos.txt`.
+- **Licencias.** Las fotos son libres, pero CC BY y CC BY-SA obligan a citar autor y licencia;
+  con esto se cumple.
+- **Derechos de imagen.** Son otra cosa: la cara de un futbolista en un juego comercial necesita
+  su permiso o el de FIFPro. Por eso las fotos siguen fuera de las versiones públicas (ver
+  `LICENCIAS.md`).
+
+Capturas: `caras_reales_inicio.png` y `caras_reales_ficha.png`.
+
+### Verificación
+Banco completo: **0 fallos**. Auditoría biomecánica: **0 animaciones con problemas**. Dominadas:
+**0 fallos**. Regates en partido real: **0 fallos**.
+
+
+## TERCERA RONDA DEL USUARIO: PERSONAS REALISTAS, MOVIMIENTOS, JUGADAS, ESTADIOS Y ASPECTO (25-9-2026)
+
+Pedido: integrar los movimientos que faltaban, mejorar las jugadas prehechas, cerrar lo pendiente de
+este LEEME, un repaso visual general, un mentor realista y personalizable, más estadios, y el
+presentador del Drive. Se comparó contra `marca/referencia/ea_fc25_referencia.mp4` (FC) y
+`ejemplo-partido.mp4` (Soccer Manager 2026).
+
+### 1. Personas realistas: el presentador y el mentor
+- **El modelo del Drive**: `navy-jacket-portrait` es un escaneo de persona de cuerpo entero, de 1,90 m
+  y sin esqueleto. Queda como `assets/personas/persona_realista.glb`, guardado como blob normal de git
+  (excepción en `.gitattributes`, porque LFS devolvía 403 desde la sesión).
+- **`visor/persona_realista.gd`** (`PersonaRealista`) más su shader, que recolorea el escaneo por zonas
+  del cuerpo:
+  - pelo, piel, chaqueta, pantalón y zapatos;
+  - los labios, las cejas y el cuello de la camisa van protegidos.
+  - `aspecto(semilla, pedido)` da variedad determinista.
+  - `retrato(asp, tam, fondo, plano)` saca un retrato vivo (luz de 3 puntos, respiración) en tres
+    planos: cara, medio y entero.
+- **Sorteo**: el presentador ahora es esta persona, con gesto de sacar bola y respiración. El
+  fallback al futbolista de traje (Mixamo) se borró.
+- **Mentor del tutorial**: retrato realista en lugar del dibujo de antes, y un botón ✎ para cambiarle
+  piel, pelo, chaqueta y pantalón. El aspecto se guarda por modo en `user://ajustes.cfg`
+  (`[mentor_aspecto]`).
+- ⚠️ El escaneo no tiene esqueleto: los gestos son del cuerpo entero (girar, inclinarse, respirar),
+  no de brazos. La licencia en Sketchfab está 🟡 en `LICENCIAS.md` (confirmar, es una persona real).
+- ❌ **El modelo del gato** para el menú no apareció en el Drive. Sigue pendiente.
+
+### 2. Movimientos: 9 animaciones nuevas y un bug de pelvis
+`visor/anim_quaternius.gd` recorta clips de los packs de Quaternius (`CLIP_RECORTES`):
+- el portero, en tres estiradas (izquierda, derecha, abajo);
+- dos celebraciones nuevas (de rodillas, carrera);
+- saque de banda, pase con interior, marcaje y empujón;
+- el árbitro mostrando la roja.
+
+Hay además cinco hechas a mano: lamento, rabia, señalar falta, barrida y dolor.
+
+**Bug corregido**: los desplazamientos de pelvis de las animaciones hechas a mano se aplicaban en el
+espacio equivocado, así que el cabezazo y los saltos de festejo iban hacia atrás. Se arregló
+convirtiéndolos con la base global de reposo del hueso padre.
+
+`pruebas/captura_movimientos` comprueba que las 24 animaciones del partido existen.
+
+### 3. Jugadas prehechas
+- `nucleo/catalogo_jugadas.gd` ahora tiene fases escritas a mano para ATQ-01…15, DEF-01…15 y
+  POR-01…15. Cada fase define pases, altura del balón, remate o cabezazo, y la acción por rol. Las REG
+  siguen con la plantilla genérica.
+- **Jugadas de ambiente**: durante el partido, con un 40% de probabilidad por minuto sin eventos
+  pendientes, el equipo ensaya una jugada del catálogo sin rematar. Arriba aparece el rótulo tipo TV
+  con su nombre, como en FC. Si llega un evento real, la jugada se aborta.
+- El balón llega al punto de inicio con un pase, sin teletransportarse.
+
+### 4. Estadios: de 8 a 16 estilos
+- Estilos nuevos en `datos/tablas.json` (`EST_PRESETS`): montaña, retro, futurista, campus, oasis,
+  muralla, jardín y tormenta.
+- `Club.perfil_estadio()` elige el estilo con un hash propio del club, y la reputación recorta techo,
+  focos, pantalla, césped y niveles.
+- Los rivales ahora salen en 6 formas en lugar de 2.
+
+Captura: `pruebas/capturas/estadios_nuevos.png`.
+
+### 5. Aspecto de la interfaz, con Soccer Manager delante
+- **Inicio**: `ui/componentes/tablero_inicio.gd` es un tablero de tarjetas con estas piezas:
+  - próximo partido con los dos escudos;
+  - anillos de valoración del plantel y del directorio;
+  - mini tabla, caja y estadio;
+  - la estrella del equipo con su cara;
+  - las rachas.
+  
+  El anillo es un componente nuevo (`ui/componentes/anillo.gd`).
+- **Pizarrón táctico**: `ui/componentes/pizarra_tactica.gd` dibuja la cancha con líneas. Cada
+  jugador lleva su cara, un anillo de media y una etiqueta de posición con el color de su línea
+  (en rojo si juega fuera de posición).
+
+Capturas: `pruebas/capturas/inicio_tablero.png` y `pruebas/capturas/pizarra_tactica.png`.
+
+### 6. Sonidos: de 157 sin usar a los que tienen momento claro
+- **En el partido**:
+  - salida del túnel y ambiente según el clima (lluvia, trueno, niebla, frío, noche, sol);
+  - medio tiempo, reanudación, último minuto y descuento;
+  - tensión del público en partidos apretados;
+  - doblete, hat-trick, gol rápido (≤3') y gol agónico (≥86');
+  - alarido en las atajadas, travesaño o suspiro de la grada en los postes;
+  - lesión grave.
+- **En las jugadas**: pase largo, despeje y entrada dura.
+- **Avisos**: `Aviso.mostrar(..., sfx)` acepta un sonido propio. Lo usan 14 avisos:
+  - despido, liquidación, oferta, ronda superada, obra terminada, parte médico;
+  - venta, clausulazo, patrocinio, cierre de mercado, contratos que vencen.
+- Los `gol_*` que aparecían "sin usar" eran falsos positivos: se arman como `"gol_" + estilo`.
+
+### 7. Pendientes viejos de este LEEME que ya estaban cerrados
+Se revisaron uno por uno y ya estaban resueltos en sesiones posteriores a cuando se anotaron:
+- el túnel anclado a mano y los túneles "arco" y "foso";
+- los banquillos superpuestos;
+- la cámara "Tribuna alta" clavada en 12;
+- la tabla de posiciones y los goleadores en la pantalla gigante.
+
+Las notas de más abajo quedan como historia.
+
+### Verificación
+Banco completo en headless: **0 fallos**. Todas las capturas citadas se regeneraron en esta sesión.
+
+
+## SEGUNDA RONDA DEL USUARIO: SIN RONALDO, NOMBRES CUBIERTOS Y TUTORIAL INMERSIVO (25-9-2026)
+
+El usuario revisó la primera ronda y pidió tres cosas:
+- "Lo de las caras era bien, se necesita de nuevo esa cubierta en el nombre, ya que no está activa".
+- "El tutorial debe mejorarse, debe ser inmersivo según modo de juego".
+- "El modelo Ronaldo debe ser eliminado".
+
+### 1. El modelo Ronaldo, borrado del proyecto
+- **Recursos borrados**: `assets/characters/futbolista_cr7*` (el `.glb` y sus texturas del Al-Nassr) y las fuentes
+  `recursos/modelos3d/cr7/`, `recursos/modelos3d/futbolista/` (`NewRonaldoBase`) y
+  `recursos/modelos3d/el-futbolista.zip`. Se abrió el zip para comprobarlo: dentro solo hay `NewRonaldoBase.zip`.
+- **Código borrado**: todo lo que solo existía para ese modelo, es decir `visor/futbolista.gd`,
+  `visor/anim_mixamo.gd` y `visor/vestidor.gd`, más seis diagnósticos de `pruebas/` que lo cargaban.
+- **Respaldos**: si el modelo Quaternius no carga, los partidos caen al muñeco de Kenney y el
+  presentador del sorteo a la silueta de cajas. Ya no pasan por el modelo viejo.
+- **Verificación**:
+  - `captura_equipaciones` da 0 fallos.
+  - `medir_partido` da las mismas 520 llamadas de dibujo y 0,66 M de triángulos.
+  - `LICENCIAS.md` y los presets de exportación ya no lo mencionan.
+
+### 2. La cubierta de los nombres reales, activa otra vez
+- **Por qué no se veía**: las tablas del pack real traen clubes, copas, árbitros y agentes cubiertos
+  ("C0lo-C0lo", "Champi0ns Le4gue", "R. T0bar"). El juego los pasaba por `Nombres.limpiar()` al crear el
+  mundo, así que la cubierta nunca llegaba a la pantalla. Los futbolistas reales (`REALES`) venían
+  directamente en claro.
+- **Qué hace ahora**: `Nombres.de_tabla()` se aplica al crear el nombre del club, la liga, la copa, el
+  árbitro, el agente y el jugador real.
+  - Con el pack real activo, conserva la cubierta de la tabla y cubre con `censurar()` lo que viene en claro
+    ("Fernand0 de Paul", "D. Iquiqu3").
+  - Con la base ficticia no hay nada que tapar y todo sigue limpio.
+- **Los textos** (noticias, logros, federación, estadio...) usan `Nombres.visible()` en vez de `limpiar()`,
+  para no destaparlos.
+- **Las caras se quedan**, como pidió el usuario. Las búsquedas por nombre comparan limpio en los dos lados,
+  así que siguen funcionando:
+  - fotos (`Cara.foto_real`), plantillas reales (`Reales`) y camisetas reales (`Jersey`);
+  - el buscador global y el filtro del mercado ("fernando" encuentra a "Fernand0").
+- **Banco**: sección nueva "CUBIERTA DE LOS NOMBRES REALES". Resultados:
+  - 379 de 384 clubes y 2.773 de 2.844 futbolistas reales salen cubiertos;
+  - las caras y las camisetas se siguen encontrando;
+  - con la base ficticia todo sale limpio.
+
+### 3. El tutorial, ahora es tu primer día
+`ui/componentes/tutorial.gd` está reescrito. No es un manual de botones: es la llegada al cargo.
+- **Prólogo de cine**: franjas negras, el escudo del club, el lugar y la temporada, y una escena escrita a
+  máquina que cambia con cada modo.
+  - Al entrenador lo deja un taxi frente al estadio.
+  - Al interino lo despierta el teléfono a medianoche ("cinco fechas, solo cinco").
+  - Al ayudante lo reciben a las 6:30 entre conos.
+  - Al director de cantera, en el campo anexo un sábado.
+  - Al dueño, en la notaría; al jeque, en la pista del aeropuerto; al creador, en un campo alquilado.
+  - Cada escena tiene su sonido (silbato, teléfono, ovación...).
+- **Un mentor con cara, nombre y cargo** que habla en primera persona: el presidente, tu jefe (el primer
+  entrenador de verdad de tu partida), el coordinador de la academia, tu director general, el enviado del
+  fondo o tu socio fundador. El nombre sale del club, así que siempre es el mismo, y la cara usa el mismo
+  generador que los jugadores.
+- **Habla de TU partida**: el objetivo del directorio, la confianza, la caja, el rival del domingo, tu
+  estrella por su nombre y su media, la promesa de la plantilla, el entrenador empleado, la meta de
+  debutantes, el mejor chico de la academia. Todo sale de `Tutorial.contexto()`.
+- **Misiones que se cumplen haciéndolas**, entre 4 y 7 por modo, cada una propia de su cargo.
+  - El director deportivo revisa contratos, finanzas, mercado y el personal.
+  - El ayudante va al entrenamiento, el camarín y la cantera.
+  - El dueño mira finanzas, estadio, infraestructura y mercado.
+  - El creador empieza por la identidad visual y la equipación.
+  - Cómo se cumplen:
+    - Al hacer la acción en la pantalla real, la misión se marca con ✔, suena un logro y el mentor sigue solo.
+    - "Muéstramelo" la hace por ti.
+    - Una misión que ya estaba hecha al llegar no cuenta sola.
+- **Epílogo**: la despedida del mentor, las misiones cumplidas y, si diriges partidos, "Ir al partido".
+- **Ganchos nuevos** en `principal.gd`:
+  - `tutorial_hecho` y `tutorial_accion` aceptan `tab:<pestaña>`, `chip:<pestaña>|<sección>` y
+    `ficha:<id>`;
+  - la tarjeta vuelve a su tamaño mínimo en cada cuadro.
+- **Tropiezo encontrado con la captura**: el prólogo salía sin fondo, porque `set_anchors_preset()`
+  deja el tamaño en cero. Se cambió a `set_anchors_and_offsets_preset()`, y la franja de abajo crece
+  hacia arriba.
+- **Verificación**:
+  - El banco comprueba los 8 guiones: prólogos distintos, al menos 6 mentores distintos, que cada misión
+    se pueda cumplir y apunte a una pestaña que existe, y que el presidente nombre al rival, a la estrella
+    y al objetivo reales.
+  - `pruebas/captura_tutorial.gd` juega el primer día de verdad: la misión del plantel se cumple a mano
+    y la de la ficha con "Muéstramelo". Termina en 0 fallos y deja las fotos `pruebas/tutorial_*.png`.
+
+### De paso
+La prueba del editor que subía "el primer atributo menor de 90" fallaba según qué jugador tocara ese
+mundo: subir la velocidad de un portero no mueve su media. Ahora elige un atributo que pese en el puesto.
+
+Banco completo: 0 fallos.
+
+## EL ANÁLISIS EXTERNO (62/100), PUNTO POR PUNTO (25-9-2026)
+
+El usuario pasó un PDF con un análisis externo del juego y pidió resolverlo entero sin ayuda. Cada
+punto se comprobó antes contra el código: no se corrigió nada solo porque el PDF lo dijera. Hay un
+commit por tema en la rama `claude/sweet-turing-tysv99`, y el banco quedó en 0 fallos después de cada
+uno.
+
+### 0. La contraseña del keystore de Android ya no está en el repositorio
+`export_presets.cfg` la tenía escrita. Ahora las credenciales viven en `export_credentials.cfg`, que
+no se sube (`.gitignore`); `export_credentials.cfg.ejemplo` explica qué poner. **El historial de git
+todavía guarda la contraseña vieja.** El repositorio es privado, pero lo seguro es cambiarla: sacar
+un keystore nuevo o cambiarle la contraseña con `keytool -storepasswd`.
+
+### 1. Legal: base ficticia por defecto y pack real aparte
+- `herramientas/base_ficticia.py` (se puede volver a correr sin romper nada) cambia los 384 clubes
+  reales por nombres inventados. Hace lo mismo con ligas, confederaciones, copas, árbitros y marcas
+  de ropa. También reemplaza las listas de nombres: salían de plantillas de selecciones reales, y
+  110 de los nombres generados coincidían con futbolistas reales.
+- `datos/tablas.json` ahora es la base FICTICIA. Todo lo real se mudó a `datos/pack_real.json`.
+- `Datos.usar_base_real()` activa el pack si existe, en este orden:
+  1. `user://pack_real.json`;
+  2. el `pack_real.json` junto al `.exe`;
+  3. `res://datos/pack_real.json`.
+- En Inicio se elige la base ("Ficticia / Real (pack)"). La partida guardada recuerda cuál usaba.
+- `Nombres.sin_vetar()`: ningún nombre generado (mundo, cantera, ojeadores, academia) puede coincidir
+  con uno de los 2.125 futbolistas reales. La lista de vetados guarda solo huellas md5, no los nombres.
+- Con la base ficticia no sale ninguna foto real (`Cara.foto_real()` devuelve null) ni ninguna
+  camiseta real.
+- Se quitaron el módulo `ficcion/` y las menciones a "FIFA".
+
+### 2. Licencias
+`LICENCIAS.md` es nuevo y va con un semáforo. Todo lo 🔴 queda fuera de los presets publicables
+(WindowsLigero, Web, Android): el pack real, las caras reales y los coches
+sacados de un juego comercial. El preset **Windows** ("completo") es el privado y lo lleva todo. Los
+🟡 son pendientes del dueño: hay que confirmar la fuente y no se pueden resolver desde el código.
+
+### 3. Partido 3D: equipación, jugadores lejanos y la "columna misteriosa"
+- La equipación se pinta en el shader (`visor/equipacion_q.gdshader`) sobre una máscara UV del modelo
+  Quaternius (`herramientas/mascara_equipacion.py`): 12 estilos, pantalón y medias propios, manga larga
+  opcional y un rim light para que no se vean oscuros. Antes se teñía la textura en la CPU y quedaba
+  rota. `VestidorQ.vestir_equipacion()` guarda los materiales en caché.
+- Encima de cada jugador flota su nombre (`Label3D` de tamaño fijo, escalado según el FOV), y se
+  puede apagar con el botón "🏷 Nombres".
+- Se reordenó la interfaz: el marcador arriba a la izquierda y los botones arriba a la derecha.
+- La **columna misteriosa** se reprodujo: aparece de noche, con el renderer Compatibility, y es un
+  reflejo especular de los focos sobre un césped demasiado brillante. Se arregló de dos maneras: la
+  rugosidad del césped ahora va de 0,78 a 1, y la luz de relleno ya no da brillo especular. Con capturas
+  de antes y después.
+
+### 4. Tutorial
+`ui/componentes/tutorial.gd` muestra una guía sobre la interfaz real en 15 pasos, uno de ellos propio
+de cada modo (`Roles.modo_actual()`). Arranca solo la primera vez y también se abre desde la tarjeta
+"Tutorial" de Inicio. En Ajustes → aspecto hay un botón para verlo de nuevo.
+
+### 5. Pendientes del PDF
+- **Moneda**: se puede elegir EUR, USD, GBP, CLP, ARS, BRL, MXN, COP, PEN o JPY en Ajustes → juego.
+  Todo pasa por `Eco.dinero()`, y las 8 copias de `_dinero` quedaron en una sola.
+- **Academia de 10 a 16 años** (`nucleo/academia.gd` y `ui/componentes/panel_academia.gd`, arriba de
+  Plantel → Cantera): se decide el plan de trabajo, la comida, los estudios y el molde de personalidad
+  de cada chico, se capta cada temporada y se lo entrega al DT a partir de los 15. La proyección se
+  muestra como horquilla porque el techo real está oculto. Se guarda con la partida.
+- **Contraste** de la cabecera de la previa: se añadió un velo degradado y se aclararon los textos
+  secundarios. El **buscador** ya no sale cortado.
+
+### 6. Rendimiento (medido, no estimado)
+| | antes | después |
+|---|---|---|
+| Arranque | 12,3 s | 0,9 s |
+| Abrir el estadio | 25,6 s | 2,9 s |
+| Triángulos por fotograma | 2,63 M | 0,66 M |
+| Llamadas de dibujo | 768 | 520 |
+| Fotograma (render por software) | 641 ms | 386 ms |
+
+Cambios:
+- Sonidos y música se componen en un hilo aparte.
+- La pantalla gigante se redibuja cada 0,25 s en vez de en cada fotograma.
+- Butacas y público ya no proyectan sombra.
+- `RendimientoAdaptativo` baja la calidad en cuatro escalones si la media cae por debajo de 40 FPS;
+  se puede apagar en Ajustes.
+
+Los FPS reales dependen de la gráfica. `pruebas/medir_partido.gd` mide lo que el juego le pide a la
+máquina, y eso sí se puede comparar entre versiones.
+
+### 7. `principal.gd`
+Dos paneles más pasaron a componentes: `PanelAspectoDT` y `PanelClubDentro`. Cada uno tiene una
+prueba que pulsa sus botones de verdad (`pruebas/captura_*_panel.gd`). Con esto el archivo quedó en
+14.395 líneas y 644 KB.
+
+**Lección que costó tiempo:** las lambdas conectadas a señales de `mundo` que viven toda la partida
+NO se pueden sacar de `Principal`. Se intentó con `NoticiasMundo`, primero como componente estático y
+después como nodo hijo, y el juego se cae al salir con `malloc_consolidate(): invalid chunk size`.
+Desconectarlas en `_exit_tree` lo cuelga. Se revirtió entero. Solo se pueden extraer los paneles cuyos
+callbacks mueren con sus botones.
+
+### 8. Un bug encontrado de paso
+La multa del vestuario (`nucleo/vestuario.gd`) era fija, y salía en 14,6 M… que además los cobraba
+el club. Ahora son dos semanas del sueldo del jugador (`MULTA_SEMANAS`).
+
 ## LOBBY INSTITUCIONAL CON ÁRBITROS: CERRADO (26-9-2026)
 
 Punto de la Fase 3 del `ROADMAP.md`, confirmado como hueco real desde el 14-9 ("Lobby institucional
@@ -28,7 +835,7 @@ el motor, sin abrir ninguna pantalla, que el evento NO aparece con `enojo_arbitr
 con `enojo_arbitral = 3`, que "asistir" baja el contador de 3 a 2 Y cobra plata de verdad, y que
 "declinar" no toca ni el contador ni la caja. `pruebas/captura_visual_lobby_arbitral.gd` (nuevo)
 fuerza el evento y confirma que se pinta en pantalla real, idéntico a cualquier otro aviso del
-despacho -captura en `pruebas/pantalla_lobby_arbitral.png`-.
+despacho -captura en `pruebas/capturas/pantalla_lobby_arbitral.png`-.
 
 **Tropiezo real en la propia herramienta de verificación, corregido antes de dar esto por cerrado**:
 la primera versión de `captura_visual_lobby_arbitral.gd` usaba `var n := get_meta("n", 0) + 1` -
@@ -100,7 +907,7 @@ Se pasa como parámetro (`col_acento`) en su lugar.
 de verdad y que el primer jugador pintado pasa de ordenarse por media a orden alfabético -no solo
 que la cabecera se repinta-. Después pulsa el nombre de un jugador y confirma que la navegación por
 `Callable` sigue funcionando exactamente igual que antes: abre su ficha (50 hijos pintados) y deja
-"Mi plantel" al frente. Captura en `pruebas/pantalla_plantel.png`. Banco completo: 0 fallos,
+"Mi plantel" al frente. Captura en `pruebas/capturas/pantalla_plantel.png`. Banco completo: 0 fallos,
 `.err.txt` vacío. Auditoría estática: 0 duplicadas, 0 clases sin usar.
 
 `principal.gd`: 14.707 → 14.640 líneas en esta tanda. **Con las cinco tandas de hoy: 15.589 → 14.640
@@ -145,7 +952,7 @@ DEL CLUB en su lugar -pintada antes en la misma pestaña, con texto "Lanzar 2.9M
 pulsaba el botón equivocado y el fallo apuntaba a la función correcta. Se corrigió buscando el botón
 cuyo texto es SOLO el precio (empieza con un dígito), que es justo lo que distingue a una campaña
 ("700k EUR") de una fila de tienda ("Lanzar 700k EUR"). Captura en
-`pruebas/pantalla_finanzas.png`. Banco completo: 0 fallos, `.err.txt` vacío. Auditoría estática: 0
+`pruebas/capturas/pantalla_finanzas.png`. Banco completo: 0 fallos, `.err.txt` vacío. Auditoría estática: 0
 duplicadas, 0 clases sin usar.
 
 `principal.gd`: 15.036 → 14.707 líneas en esta tanda (370 de la extracción + otras de la función
@@ -186,7 +993,7 @@ fue justamente "un botón que se ve pero no hace nada no da ningún error"-. `pr
 confirmar la mutación real, no solo el pintado: desarrollo prioritario cambió de verdad en
 `mundo.entrenamiento.es_prioritario()`, la reconversión de puesto cambió `Jugador.pos_e` (de LI a
 LD), y "Poner en venta" marcó `transferible = true`. Captura guardada en
-`pruebas/pantalla_ficha_acciones.png`. Banco completo: 0 fallos, `.err.txt` vacío. Auditoría
+`pruebas/capturas/pantalla_ficha_acciones.png`. Banco completo: 0 fallos, `.err.txt` vacío. Auditoría
 estática: 0 duplicadas, 0 clases sin usar.
 
 **De paso, un hallazgo de la auditoría**: `_responder_oferta(idx, acepta)` en `principal.gd`
@@ -1291,7 +2098,7 @@ es decoración aparte con su propio número inventado.
 **Verificado**: banco completo (851+ comprobaciones) 0 fallos, `.err.txt` vacío. Captura real nueva
 (`pruebas/captura_hinchas_filas.gd` + `.tscn`, cámara propia a ras de campo pegada a la primera
 fila -las cámaras de partido normales siguen la pelota, no sirven para inspeccionar la grada de
-cerca-): `pruebas/pantalla_hinchas_filas.png` muestra las butacas vacías (respaldo negro) y las
+cerca-): `pruebas/capturas/pantalla_hinchas_filas.png` muestra las butacas vacías (respaldo negro) y las
 ocupadas con la figura torso+cabeza en colores variados, huecos realistas donde no hay ocupación.
 Nota al pasar: el script de captura reveló que `mundo.comercial` es `null` hasta que corre
 `tomar_el_mando()` -`generar()` solo, sin eso, no alcanza-; `captura_bandejas.gd` (14/16-9) accede a
@@ -1839,7 +2646,7 @@ es un paso atrás, no una mejora, aunque la postura y la animación mejoren.
 una textura de traje para este modelo específico, (b) usar el modelo Female con algún vestuario
 distinto, o (c) dejar al presentador con el modelo viejo hasta que haya una solución de vestuario
 limpia para el nuevo. Verificación de referencia (antes de este hallazgo, con el modelo viejo):
-`pruebas/sorteo_presentador_de_pie.png` / `sorteo_presentador_gesto.png`, reproducibles con
+`pruebas/capturas/sorteo_presentador_de_pie.png` / `sorteo_presentador_gesto.png`, reproducibles con
 `pruebas/captura_sorteo_presentador.gd/.tscn`.
 
 ## ANIMACIONES REALES (NO A MANO) + SEGUNDO CUERPO (18-9-2026, cambio grande)

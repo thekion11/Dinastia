@@ -225,13 +225,13 @@ func _es_puesto_portero_str(puesto: String) -> bool:
 ##
 ## Y el tamaño manda sobre el gusto: un club de 8.000 butacas no puede tener tres
 ## bandejas por mucha reputación que tenga.
-const _FORMAS := ["cuenco", "ingles", "ovalo", "herradura", "cuadrado"]
+const _FORMAS := ["cuenco", "ingles", "oval", "herradura", "rect"]
 const _CESPED := ["rayas", "damero", "circulos", "liso"]
 const _ASIENTOS := ["franjas", "liso", "moteado", "degradado"]
 
 func perfil_estadio() -> Dictionary:
 	var h := _hash_id()
-	return {
+	var p := {
 		"personalizado": false,
 		"forma": _FORMAS[h % _FORMAS.size()],
 		"niveles": 3 if rep >= 80 else (2 if rep >= 62 else 1),
@@ -242,7 +242,49 @@ func perfil_estadio() -> Dictionary:
 		"pantalla": "dos" if rep >= 82 else ("una" if rep >= 58 else "sin"),
 		"vallas": rep < 78,
 		"aforo": estadio_aforo,
+		## Las butacas, de los colores del club (29-9-2026): sin esto todos los
+		## rivales salían con el verde por defecto del visor.
+		"asiento1": color1,
+		"asiento2": color2,
 	}
+	## MÁS VARIANTES DE ESTADIO PARA LOS RIVALES (25-9-2026). Hasta hoy todos
+	## los rivales compartían techo, focos, banderas, tono de césped, banquillo
+	## y red: solo cambiaban la forma y los asientos. Ahora cada club toma uno
+	## de los estilos completos (`EST_PRESETS`: la caldera, la catedral, la
+	## nave futurista, el estadio de montaña...), siempre el mismo para el mismo
+	## club, y su REPUTACIÓN lo recorta: un club chico no tiene techo total ni
+	## anillo de pantallas. El clima no se toca -lo pone la hora del partido- y
+	## el túnel tampoco.
+	var presets: Variant = Datos.tabla("EST_PRESETS")
+	if presets is Array and not (presets as Array).is_empty():
+		## Hash aparte y bien mezclado: con `h >> 7` los ids seguidos (c1, c2...)
+		## caían casi todos en el mismo estilo (se vio: dos formas en todo el mundo).
+		var he := absi(("estilo_estadio:" + id).hash())
+		var fila: Array = (presets as Array)[he % (presets as Array).size()]
+		var e: Dictionary = fila[3] if fila.size() > 3 and fila[3] is Dictionary else {}
+		for k in ["forma", "asientoP", "cespedTono", "banderas", "corner", "redTipo", "banquillo"]:
+			if e.has(k):
+				p[k] = e[k]
+		if rep >= 70:
+			for k in ["techo", "focos", "pantalla", "cesped"]:
+				if e.has(k):
+					p[k] = e[k]
+			p["niveles"] = mini(int(p["niveles"]) + 1, maxi(1, int(e.get("niveles", p["niveles"]))))
+		elif rep >= 60 and String(e.get("techo", "sin")) in ["sin", "parcial", "visera"]:
+			p["techo"] = e["techo"]
+	## SU ESTADIO DE VERDAD (26-9-2026, `herramientas/estadios_reales.py`): si
+	## el club representa a uno real, su estadio copia la arquitectura del real
+	## -forma, bandejas, techo, pista, focos y fachada-, gane o no reputación.
+	## La caldera de tres bandejas, el óvalo con pista, la herradura al cerro,
+	## el techo retráctil... Los demás siguen con los estilos genéricos.
+	var reales: Variant = Datos.tabla("ESTADIO_CLUB")
+	if reales is Dictionary and (reales as Dictionary).has(nombre):
+		var r: Dictionary = (reales as Dictionary)[nombre]
+		for k in ["forma", "niveles", "techo", "pista", "focos", "fachada", "rasgo"]:
+			if r.has(k):
+				p[k] = r[k]
+		p["real"] = true
+	return p
 
 ## djb2, el mismo que usa el HTML para que un club dé siempre el mismo recinto.
 func _hash_id() -> int:
@@ -267,6 +309,10 @@ func _to_string() -> String:
 var kit_color1: String = ""
 var kit_color2: String = ""
 var kit_estilo: String = ""
+## LA EQUIPACIÓN COMPLETA DEL DISEÑADOR (26-9-2026): diseño, 5 colores,
+## ribete, números, pantalón, medias, botines y accesorios. Vacío = la de
+## siempre (`DisenosKit.kit_de_club()` la arma con los colores del club).
+var kit_x: Dictionary = {}
 var esc_color1: String = ""
 var esc_color2: String = ""
 var esc_forma: String = ""
@@ -306,7 +352,7 @@ func igualar_identidad() -> void:
 
 func identidad_a_dic() -> Dictionary:
 	return {
-		"kit_c1": kit_color1, "kit_c2": kit_color2, "kit_est": kit_estilo,
+		"kit_c1": kit_color1, "kit_c2": kit_color2, "kit_est": kit_estilo, "kit_x": kit_x,
 		"esc_c1": esc_color1, "esc_c2": esc_color2,
 		"esc_f": esc_forma, "esc_p": esc_patron, "esc_s": esc_simbolo,
 		"esc_e": esc_especial,
@@ -317,6 +363,7 @@ func identidad_desde_dic(d: Dictionary) -> void:
 	kit_color1 = String(d.get("kit_c1", ""))
 	kit_color2 = String(d.get("kit_c2", ""))
 	kit_estilo = String(d.get("kit_est", ""))
+	kit_x = (d.get("kit_x", {}) as Dictionary).duplicate(true)
 	esc_color1 = String(d.get("esc_c1", ""))
 	esc_color2 = String(d.get("esc_c2", ""))
 	esc_forma = String(d.get("esc_f", ""))

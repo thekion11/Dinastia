@@ -58,7 +58,7 @@ func _process(_delta: float) -> void:
 	_frame += 1
 	if _frame == 20:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_bandejas.png")
+		img.save_png("res://pruebas/capturas/pantalla_bandejas.png")
 		print("captura guardada: res://pruebas/pantalla_bandejas.png (%dx%d)" % [img.get_width(), img.get_height()])
 		print("FIN. 0 fallos")
 		get_tree().quit()

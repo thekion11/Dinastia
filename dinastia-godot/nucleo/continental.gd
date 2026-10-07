@@ -108,7 +108,7 @@ static func paises_de(k: String) -> Array:
 ## ("Champi0ns Le4gue"). Mostrarlo crudo es el fallo que ya se pagó en el HTML.
 static func nombre_conti(k: String) -> String:
 	var c: Dictionary = _confed().get(k, {})
-	return Nombres.limpiar(String(c.get("n", k)))
+	return Nombres.de_tabla(String(c.get("n", k)))
 
 static func premio_de(k: String) -> int:
 	var c: Dictionary = _confed().get(k, {})

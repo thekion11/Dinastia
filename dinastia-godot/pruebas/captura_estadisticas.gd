@@ -30,7 +30,7 @@ func _process(_d: float) -> void:
 			_vivo.partido.simular_minuto()
 		_vivo.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_stats_vivo.png")
+		_guardar("res://pruebas/capturas/pantalla_stats_vivo.png")
 	if _n == ESPERA + 6:
 		## Hasta el pitido final: ahi entra `_al_final()`, que escribe el cuadro
 		## de estadisticas y el informe.
@@ -47,7 +47,7 @@ func _process(_d: float) -> void:
 			p2.faltas_local, p2.faltas_visita,
 			p2.fueras_local, p2.fueras_visita])
 	if _n == ESPERA + 10:
-		_guardar("res://pruebas/pantalla_stats_final.png")
+		_guardar("res://pruebas/capturas/pantalla_stats_final.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

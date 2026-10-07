@@ -29,13 +29,13 @@ func _process(_d: float) -> void:
 				tabs.current_tab = i
 				break
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_seleccion.png")
+		_guardar("res://pruebas/capturas/pantalla_seleccion.png")
 		var lista: VBoxContainer = _pantalla.get("_lista_seleccion")
 		var scroll := lista.get_parent() as ScrollContainer
 		if scroll != null:
 			scroll.scroll_vertical = 100000
 	if _n == ESPERA + 10:
-		_guardar("res://pruebas/pantalla_seleccion2.png")
+		_guardar("res://pruebas/capturas/pantalla_seleccion2.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

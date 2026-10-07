@@ -43,6 +43,6 @@ func _process(_d: float) -> void:
 				print("jugador en: ", p)
 	if _frame == 45:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pies_suelo.png")
+		img.save_png("res://pruebas/capturas/pies_suelo.png")
 		print("FIN. 0 fallos")
 		get_tree().quit(0)

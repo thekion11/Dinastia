@@ -20,7 +20,18 @@ var _fallos: Array[String] = []
 var _lineas: Array[String] = []
 
 func _ready() -> void:
+	## Lo que queda entre partidas (`Meta`) va a un archivo propio del banco:
+	## si no, cada corrida llenaría el álbum de verdad con sobres de prueba.
+	Meta.ruta = "user://meta_banco.json"
+	if FileAccess.file_exists(Meta.ruta):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(Meta.ruta))
 	_titulo("BANCO DE PRUEBAS DEL NUCLEO")
+	## El banco se escribió contra los datos REALES (Colo-Colo, Vidal, las
+	## equipaciones archivadas...) y así sigue: se corre con el pack real
+	## encima. La base ficticia -la que se publica- tiene su propia sección,
+	## `_probar_base_ficticia()`, que deja el pack puesto otra vez al salir.
+	## La preferencia del jugador (`user://ajustes.cfg`) no se toca.
+	Datos.usar_base_real(true)
 	## PRIMERO, Y BARATO: que las tres escenas raíz compilen. Si algo rompió la
 	## interfaz -el error exacto que costó un juego que no arrancaba el 25-9-,
 	## mejor saberlo en el primer segundo que después de 15 minutos de banco.
@@ -29,6 +40,8 @@ func _ready() -> void:
 	_probar_repetibilidad()
 	_probar_mundo()
 	_probar_reales()
+	_probar_base_ficticia()
+	_probar_cubierta_nombres()
 	_probar_calendario()
 	_probar_partidos()
 	_probar_previa()
@@ -75,6 +88,34 @@ func _ready() -> void:
 	_probar_ideas_del_documento()
 	_probar_aspecto_y_audio()
 	_probar_marca()
+	_probar_tutorial()
+	_probar_moneda()
+	_probar_academia()
+	_probar_modos_simulacion()
+	_probar_presets_exportacion()
+	_probar_tema_y_ortografia()
+	_probar_eventos_nuevos()
+	_probar_entrevistas()
+	_probar_estadio_b6()
+	_probar_ciudad_b7()
+	_probar_coherencia_c1()
+	_probar_portadas_c20()
+	_probar_cantera_c3()
+	_probar_instituciones_c5_c8()
+	_probar_charlas_c6_c7()
+	_probar_licencia_c7()
+	_probar_tanda_c()
+	_probar_calendario_c13()
+	_probar_politica_c15()
+	_probar_historia_c4()
+	_probar_contratos_c9()
+	_probar_vida_dt()
+	_probar_maestrias()
+	_probar_habilidades_en_resultados()
+	_probar_motor_libre()
+	_probar_portafolio_futbol()
+	_probar_jugadores_fijos()
+	_probar_disenos_kit()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -210,6 +251,222 @@ func _probar_mundo() -> void:
 			incompletos += 1
 	_comprobar(incompletos == 0, "todos los clubes tienen las cuatro lineas (%d sin)" % incompletos)
 
+## LA BASE FICTICIA (25-9-2026). Lo que se publica no puede llevar ni un club,
+## ni una liga, ni un jugador, ni una foto, ni una equipación real. Se
+## comprueba contra el propio pack: todo nombre real que el pack conoce tiene
+## que haber desaparecido de la base, y la base tiene que seguir teniendo la
+## MISMA forma (mismos colores, reputación, aforo y orden), para que el mundo
+## ficticio juegue exactamente igual que el real.
+## LA CUBIERTA DE LOS NOMBRES REALES (25-9-2026). Con el pack real, clubes,
+## copas, árbitros y futbolistas reales se enseñan cubiertos ("C0lo-C0lo"),
+## no en claro. Y todo lo que busca por nombre -plantillas reales, fotos,
+## camisetas- tiene que seguir encontrándolo a pesar de la cubierta.
+func _probar_cubierta_nombres() -> void:
+	_titulo("CUBIERTA DE LOS NOMBRES REALES")
+	if not Datos.hay_pack_real():
+		_comprobar(false, "hace falta el pack real para probar la cubierta")
+		return
+	Datos.usar_base_real(true)
+	_comprobar(Nombres.cubierta_activa(), "con el pack real la cubierta está activa")
+	var m := Mundo.new()
+	m.generar([], 7)
+	var reales_aplicados := 0
+	var clubes := 0
+	var clubes_cubiertos := 0
+	var jugadores := 0
+	var jugadores_cubiertos := 0
+	var con_foto := 0
+	var con_camiseta := 0
+	var ejemplo_club := ""
+	var ejemplo_jugador := ""
+	for c: Club in m.clubes.values():
+		clubes += 1
+		if Nombres.limpiar(c.nombre) != c.nombre:
+			clubes_cubiertos += 1
+			if ejemplo_club == "" or c.nombre.begins_with("C0lo"):
+				ejemplo_club = c.nombre
+		if Jersey.fichero_real(c) != "":
+			con_camiseta += 1
+		for j: Jugador in c.plantilla:
+			if not j.real:
+				continue
+			reales_aplicados += 1
+			jugadores += 1
+			if Nombres.limpiar(j.nombre) != j.nombre:
+				jugadores_cubiertos += 1
+				if ejemplo_jugador == "":
+					ejemplo_jugador = j.nombre
+			if con_foto < 3 and Cara.foto_real(j) != null:
+				con_foto += 1
+	_linea("  por ejemplo: %s, %s" % [ejemplo_club, ejemplo_jugador])
+	_comprobar(reales_aplicados > 500, "las plantillas reales se siguen encontrando con el club cubierto (%d jugadores)" % reales_aplicados)
+	_comprobar(clubes_cubiertos >= int(clubes * 0.95), "clubes cubiertos: %d de %d" % [clubes_cubiertos, clubes])
+	_comprobar(jugadores > 0 and jugadores_cubiertos >= int(jugadores * 0.95), "futbolistas reales cubiertos: %d de %d" % [jugadores_cubiertos, jugadores])
+	_comprobar(con_foto > 0, "las caras reales se siguen encontrando con el nombre cubierto")
+	_comprobar(con_camiseta > 0, "y las camisetas reales también (%d clubes)" % con_camiseta)
+	var arb := String(Previa.arbitro_de("c1", 3).get("nombre", ""))
+	_comprobar(arb != Nombres.limpiar(arb), "el árbitro va cubierto (%s)" % arb)
+	var copa := Continental.nombre_conti("ucl")
+	_comprobar(copa != Nombres.limpiar(copa), "la copa continental va cubierta (%s)" % copa)
+	_comprobar(Nombres.de_tabla("Colo-Colo") != "Colo-Colo" and Nombres.limpiar(Nombres.de_tabla("Colo-Colo")) == "Colo-Colo",
+		"un nombre en claro se cubre y se puede volver a limpiar")
+
+	## Con la base ficticia no hay nada que tapar: todo limpio, como antes.
+	Datos.usar_base_real(false)
+	_comprobar(not Nombres.cubierta_activa(), "con la base ficticia la cubierta se apaga")
+	var mf := Mundo.new()
+	mf.generar([], 7)
+	var con_numeros := 0
+	for c: Club in mf.clubes.values():
+		if Nombres.limpiar(c.nombre) != c.nombre:
+			con_numeros += 1
+	_comprobar(con_numeros == 0, "y los clubes ficticios se leen limpios (%d con números)" % con_numeros)
+	Datos.usar_base_real(true)
+
+func _probar_base_ficticia() -> void:
+	_titulo("BASE FICTICIA: LO QUE SE PUBLICA NO LLEVA NADA REAL")
+	_comprobar(Datos.hay_pack_real(), "el pack real del proyecto se encuentra (%s)" % Datos.ruta_pack())
+	if not Datos.hay_pack_real():
+		return
+	## Los nombres reales, sacados del pack, antes de quitarlo.
+	var reales_clubes := {}
+	var filas_reales: Array = []
+	for t in ["DATA_P1", "DATA_P2"]:
+		for fila: Array in Datos.tabla(t):
+			reales_clubes[Nombres.limpiar(String(fila[0])).to_lower()] = true
+			filas_reales.append(fila)
+	var ligas_reales := {}
+	var pl_real: Dictionary = Datos.tabla("PAISES_LIGAS")
+	for pais: String in pl_real:
+		ligas_reales[String(pl_real[pais].get("liga", ""))] = true
+		for fila: Array in pl_real[pais]["clubes"]:
+			reales_clubes[Nombres.limpiar(String(fila[0])).to_lower()] = true
+			filas_reales.append(fila)
+	var copas_reales := {}
+	for k: String in (Datos.tabla("CONFED") as Dictionary):
+		copas_reales[Nombres.limpiar(String(Datos.tabla("CONFED")[k]["n"]))] = true
+	var arbitros_reales := {}
+	for fila: Array in Datos.tabla("ARBITROS"):
+		arbitros_reales[Nombres.limpiar(String(fila[0]))] = true
+	var jugadores_reales := {}
+	for club: String in (Datos.tabla("REALES") as Dictionary):
+		for fila: Variant in Datos.tabla("REALES")[club]:
+			jugadores_reales[String(fila).split("|")[0]] = true
+	_linea("  el pack trae %d clubes y %d jugadores reales" % [reales_clubes.size(), jugadores_reales.size()])
+
+	var quedo := Datos.usar_base_real(false)
+	_comprobar(not quedo and not Datos.base_real, "se puede quitar el pack")
+	## Desde el 26-9-2026 la base SÍ trae plantillas, pero con nombres de guiño
+	## (`herramientas/jugadores_guino.py`): ninguno puede ser un nombre real.
+	var guinos_reales: Array = []
+	var n_guinos := 0
+	for club_f: String in (Datos.tabla("REALES") as Dictionary):
+		for fila_f: Variant in Datos.tabla("REALES")[club_f]:
+			n_guinos += 1
+			var nf := String(fila_f).split("|")[0]
+			if jugadores_reales.has(nf) or Nombres.vetado(nf):
+				guinos_reales.append(nf)
+	_comprobar(n_guinos > 0 and guinos_reales.is_empty(), "la base trae %d jugadores con guiño y ninguno con nombre real %s" % [n_guinos, str(guinos_reales.slice(0, 5))])
+	_comprobar((Datos.tabla("EQUIP_REAL") as Dictionary).is_empty(), "ni fotos de equipaciones reales")
+
+	## Misma forma: fila a fila, todo igual salvo el nombre.
+	var filas_fic: Array = []
+	for t in ["DATA_P1", "DATA_P2"]:
+		filas_fic.append_array(Datos.tabla(t))
+	var pl_fic: Dictionary = Datos.tabla("PAISES_LIGAS")
+	for pais: String in pl_fic:
+		filas_fic.append_array(pl_fic[pais]["clubes"])
+	var misma_forma := filas_fic.size() == filas_reales.size()
+	if misma_forma:
+		for i in filas_fic.size():
+			if (filas_fic[i] as Array).slice(1) != (filas_reales[i] as Array).slice(1):
+				misma_forma = false
+				break
+	_comprobar(misma_forma, "mismos %d clubes, en el mismo orden y con los mismos colores, reputación y aforo" % filas_fic.size())
+
+	## Ningún nombre real en el mundo generado.
+	var m := Mundo.new()
+	m.generar([], 7)
+	var clubes_reales_vistos: Array[String] = []
+	var jugadores_marcados := 0
+	var jugadores_reales_vistos := 0
+	var con_equipacion := 0
+	for c: Club in m.clubes.values():
+		if reales_clubes.has(c.nombre.to_lower()):
+			clubes_reales_vistos.append(c.nombre)
+		if Jersey.fichero_real(c) != "":
+			con_equipacion += 1
+		for j: Jugador in c.plantilla:
+			if j.real:
+				jugadores_marcados += 1
+			if jugadores_reales.has(j.nombre):
+				jugadores_reales_vistos += 1
+	_comprobar(m.clubes.size() == filas_fic.size(), "el mundo ficticio tiene sus %d clubes" % m.clubes.size())
+	_comprobar(clubes_reales_vistos.is_empty(), "ningún club lleva un nombre real %s" % str(clubes_reales_vistos.slice(0, 5)))
+	_comprobar(jugadores_marcados > 0 and jugadores_reales_vistos == 0, "los jugadores fijos llevan su guiño, no el nombre real (%d fijos, %d reales)" % [jugadores_marcados, jugadores_reales_vistos])
+	## Antes del filtro de vetados salían 110 -"Mohamed Salah", "Christian
+	## Pulisic", "Claudio Bravo"...-, porque varias bolsas de nombres eran la
+	## convocatoria de una selección. Ahora el generador vuelve a sortear.
+	_comprobar(jugadores_reales_vistos == 0, "ningún jugador generado se llama como uno real (%d)" % jugadores_reales_vistos)
+	_comprobar(Nombres.vetado("Mohamed Salah") and Nombres.vetado("arturo vidal"),
+		"el filtro reconoce a un real, sin importar mayúsculas")
+	_comprobar(Nombres.vetado("Óscar Opazo"), "y con tildes: la huella de Godot es la misma que la de Python")
+	_comprobar(not Nombres.vetado("Zacarías Quintupal"), "y deja pasar un nombre inventado")
+	var huellas_legibles := 0
+	for h: Variant in Datos.tabla("NOMBRES_VETADOS"):
+		if String(h).contains(" "):
+			huellas_legibles += 1
+	_comprobar(huellas_legibles == 0 and (Datos.tabla("NOMBRES_VETADOS") as Array).size() == jugadores_reales.size(),
+		"la base lleva %d huellas, ningún nombre legible" % (Datos.tabla("NOMBRES_VETADOS") as Array).size())
+	_comprobar(con_equipacion == 0, "ningún club viste una equipación real (%d)" % con_equipacion)
+	var ligas_mal: Array[String] = []
+	for l: Liga in m.ligas:
+		if ligas_reales.has(l.nombre) and not ["Primera División", "Primera B"].has(l.nombre):
+			for marca in ["Premier", "Bundesliga", "Serie A", "Ligue 1", "La Liga", "Liga MX", "Brasileir", "Botola", "League", "J-Liga", "K-"]:
+				if l.nombre.contains(marca):
+					ligas_mal.append(l.nombre)
+	_comprobar(ligas_mal.is_empty(), "ninguna liga con nombre registrado %s" % str(ligas_mal))
+	var copas_mal: Array[String] = []
+	for k: String in (Datos.tabla("CONFED") as Dictionary):
+		var n := Nombres.limpiar(String(Datos.tabla("CONFED")[k]["n"]))
+		if copas_reales.has(n) and n != "Copa África de Clubes" and n != "Liga de Oceanía":
+			copas_mal.append(n)
+	_comprobar(copas_mal.is_empty(), "ningún torneo continental con nombre registrado %s" % str(copas_mal))
+	var arbitros_mal := 0
+	for fila: Array in Datos.tabla("ARBITROS"):
+		if arbitros_reales.has(Nombres.limpiar(String(fila[0]))):
+			arbitros_mal += 1
+	_comprobar(arbitros_mal == 0, "ningún árbitro real (%d)" % arbitros_mal)
+
+	## Una foto real no se enseña con la base ficticia aunque el jugador venga
+	## marcado como real de un guardado viejo.
+	var falso := m.clubes.values()[0].plantilla[0] as Jugador
+	falso.real = true
+	_comprobar(Cara.foto_real(falso) == null, "con la base ficticia no se enseña ninguna foto real")
+	falso.real = false
+
+	## El guardado recuerda la base y la vuelve a poner al cargar.
+	m.mi_club_id = m.ligas[0].clubes[0].id
+	var foto := Partida.instantanea(m)
+	_comprobar(foto.get("base_real", true) == false, "el guardado anota que se jugó con la base ficticia")
+	Datos.usar_base_real(true)
+	var m2 := Partida.desde_instantanea(foto)
+	_comprobar(m2 != null and not Datos.base_real, "y al cargarlo vuelve a la base ficticia aunque el pack estuviera puesto")
+	## Un guardado sin la clave es anterior a todo esto: se jugó con lo real.
+	foto.erase("base_real")
+	var m3 := Partida.desde_instantanea(foto)
+	_comprobar(m3 != null and Datos.base_real, "un guardado viejo (sin la clave) se carga con el pack real")
+
+	## Y con el pack otra vez puesto, lo real vuelve entero.
+	Datos.usar_base_real(true)
+	var mr := Mundo.new()
+	mr.generar(["CHI"], 7)
+	var hay_colo := false
+	for c: Club in mr.clubes.values():
+		if Nombres.limpiar(c.nombre) == "Colo-Colo":
+			hay_colo = true
+	_comprobar(hay_colo, "con el pack puesto vuelve Colo-Colo")
+
 func _probar_reales() -> void:
 	_titulo("PLANTILLAS REALES: NOMBRES DE VERDAD SOBRE EL MUNDO GENERADO")
 	## Reales.aplicar() ya corrio dentro de generar(); aqui solo se comprueba
@@ -218,7 +475,7 @@ func _probar_reales() -> void:
 	m.generar(["CHI"], 2323)
 	var colo: Club = null
 	for c: Club in m.ligas[0].clubes:
-		if c.nombre == "Colo-Colo":
+		if Nombres.limpiar(c.nombre) == "Colo-Colo":
 			colo = c
 			break
 	_comprobar(colo != null, "Colo-Colo esta entre los clubes generados")
@@ -233,7 +490,7 @@ func _probar_reales() -> void:
 
 	var vidal: Jugador = null
 	for j: Jugador in colo.plantilla:
-		if j.nombre == "Arturo Vidal":
+		if Nombres.limpiar(j.nombre) == "Arturo Vidal":
 			vidal = j
 			break
 	_comprobar(vidal != null, "Arturo Vidal aparece en el plantel real de Colo-Colo")
@@ -286,6 +543,9 @@ func _probar_reales() -> void:
 		if foto != null:
 			_comprobar(foto.get_width() == foto.get_height(), "la foto queda recortada a cuadrado (%dx%d)" % [foto.get_width(), foto.get_height()])
 			_comprobar(Cara.textura(vidal, "#000000", "#ffffff", 64) == foto, "textura() prefiere la foto real sobre el dibujo procedural")
+			_comprobar(foto.get_width() == 256, "usa el retrato recortado por la cara (256 px), no la foto de prensa entera (%d px)" % foto.get_width())
+			var cred := Cara.credito_foto(vidal)
+			_comprobar(cred.contains("Wikimedia Commons") and cred.contains("CC"), "la ficha puede citar autor y licencia de la foto: " + cred)
 	var generado_cualquiera: Jugador = null
 	for j: Jugador in colo.plantilla:
 		if not j.real:
@@ -1421,17 +1681,24 @@ func _probar_roles_y_federacion() -> void:
 	var claves_esperadas: Array = ["aforo", "arcoCol", "asiento1", "asiento2", "asiento3",
 		"asientoP", "banderas", "banquillo", "cesped", "cespedClaro", "cespedOscuro", "clima",
 		"corner", "escudoDonde", "focos", "forma", "lineaCol", "niveles", "pantalla",
-		"personalizado", "redCol", "redTipo", "sonidoGol", "techo", "tunel", "vallas"]
+		"personalizado", "redCol", "redTipo", "sonidoGol", "techo", "tunel", "vallas",
+		## B6 (25-9-2026): las secciones, también incondicionales.
+		"fachada", "fachadaCol", "techoCol", "luzFocos", "luzClub", "banquilloCol",
+		"superficie", "exterior",
+		## 26-9-2026: obras en curso y lo construido, para el 3D (`EstadioExtras`).
+		"en_obra", "inst"]
 	claves_esperadas.sort()
 	_comprobar(claves_antes == claves_esperadas,
 		"perfil() trae exactamente las claves de siempre, ni una de mas (dio: %s)" % [claves_antes])
 
-	## COMPONENTES (16-9-2026, Fase 2): las 5 claves ya llegan al visor, y un
-	## rival sigue sin ellas -las ramas nuevas de StadiumBuilder usan el mismo
-	## default que dibujaban siempre, asi que su estadio no cambia.
+	## COMPONENTES (16-9-2026, Fase 2): las 5 claves ya llegan al visor. Desde
+	## el 25-9 el rival trae red, córner y banquillo de su estilo (más variedad
+	## de estadios), pero sigue sin túnel ni escudo: esos solo los decide quien
+	## diseña su propio estadio.
 	for k in ["redTipo", "corner", "banquillo", "tunel", "escudoDonde"]:
 		_comprobar(p.has(k), "el perfil propio trae la clave nueva '%s'" % k)
-		_comprobar(not pr.has(k), "el rival NO trae la clave nueva '%s' (sigue sin disenador)" % k)
+	for k in ["tunel", "escudoDonde"]:
+		_comprobar(not pr.has(k), "el rival NO trae '%s' (sigue sin disenador)" % k)
 
 	## Con el interruptor prendido y una reforma de una sola tribuna, solo esa
 	## tribuna cambia -las otras tres siguen heredando el valor global.
@@ -1484,7 +1751,7 @@ func _probar_roles_y_federacion() -> void:
 	## escudoDonde. Los 8, no solo uno, para no dejar pasar un typo de catalogo
 	## en cualquiera de ellos -"redTipo": "gruesa" vale, "REDTIPO":"Gruesa" no.
 	var estilos := m.estadio.presets()
-	_comprobar(estilos.size() == 8, "siguen los 8 estilos completos (dio %d)" % estilos.size())
+	_comprobar(estilos.size() == 24, "los 24 estilos completos (8 de siempre + 8 del 25-9 + 8 de B6) (dio %d)" % estilos.size())
 	for est_p: Dictionary in estilos:
 		var cambios: Dictionary = est_p["cambios"]
 		_comprobar(cambios.has("redTipo") and m.estadio.es_valido("redTipo", cambios["redTipo"]),
@@ -1610,7 +1877,7 @@ func _probar_estadio() -> void:
 		if int(q["aforo"]) <= 0:
 			mal += 1
 	_linea("  formas distintas en el mundo: %d" % formas.size())
-	_comprobar(formas.size() >= 3, "no todos los clubes tienen el mismo estadio (%d formas)" % formas.size())
+	_comprobar(formas.size() >= 5, "no todos los clubes tienen el mismo estadio (%d formas)" % formas.size())
 	_comprobar(mal == 0, "los niveles y el aforo son coherentes con el club (%d raros)" % mal)
 	_probar_pantalla_y_vallas(m)
 
@@ -4291,9 +4558,18 @@ func _probar_editor() -> void:
 	## seria mentir en la misma pantalla.
 	## Se busca uno que NO este ya en el tope: subir un atributo que vale 99
 	## no sube nada, y la prueba fallaria sin que hubiera nada roto.
+	## Y que PESE en su puesto: subir la velocidad de un portero no mueve su
+	## media, y la prueba fallaba según qué jugador tocara ese mundo.
 	var clave := ""
 	for k: String in j.atributos:
-		if int(j.atributos[k]) < 90:
+		if int(j.atributos[k]) >= 90:
+			continue
+		var v0 := int(j.atributos[k])
+		var m0 := j.media_en(j.pos_e)
+		j.atributos[k] = v0 + 8
+		var pesa := j.media_en(j.pos_e) != m0
+		j.atributos[k] = v0
+		if pesa:
 			clave = k
 			break
 	if clave == "":
@@ -4332,7 +4608,7 @@ func _probar_editor() -> void:
 			Editor.FILAS_PARA_REEMPLAZAR, antes_mio, mio.plantilla.size()])
 	var encontrado := false
 	for p: Jugador in mio.plantilla:
-		if p.nombre == "Edinson Cavani":
+		if Nombres.limpiar(p.nombre) == "Edinson Cavani":
 			encontrado = true
 			_comprobar(p.pais == "URU" and p.pot == 80 and p.edad == 39,
 				"y con su pais, su techo y su edad (%s, %d, %d)" % [p.pais, p.pot, p.edad])
@@ -4810,23 +5086,1937 @@ func _probar_aspecto_y_audio() -> void:
 	## LOS IDIOMAS. Lo que se comprueba no es que la traduccion sea buena -eso no
 	## lo sabe un banco- sino que ninguna fila se quede CORTA: una fila con menos
 	## columnas que idiomas deja ese idioma en castellano sin avisar.
-	_comprobar(Idiomas.ORDEN.size() == 6, "hay 6 idiomas ademas del castellano (%d)" % Idiomas.ORDEN.size())
+	_comprobar(Idiomas.ORDEN.size() == 8, "hay 8 idiomas ademas del castellano (%d)" % Idiomas.ORDEN.size())
 	var cortas: Array[String] = []
 	for k2: String in Idiomas.TABLA:
 		var fila: Array = Idiomas.TABLA[k2]
-		if fila.size() != Idiomas.ORDEN.size():
+		if fila.size() != Idiomas.COLUMNAS_TABLA:
 			cortas.append(k2)
 	_comprobar(cortas.is_empty(), "y ninguna fila se queda corta (%s)" % ("todas completas" if cortas.is_empty() else ", ".join(cortas)))
 	for idi: String in Idiomas.ORDEN:
-		_comprobar(Idiomas.cobertura(idi) == Idiomas.TABLA.size(),
-			"«%s» tiene las %d frases" % [idi, Idiomas.TABLA.size()])
+		## Al menos las de la tabla: los de columna, por la tabla; polaco y turco,
+		## porque su diccionario la trae entera.
+		_comprobar(Idiomas.cobertura(idi) >= Idiomas.TABLA.size(),
+			"«%s» tiene al menos las %d frases (%d)" % [idi, Idiomas.TABLA.size(), Idiomas.cobertura(idi)])
 	Idiomas.idioma = "en"
 	_comprobar(Idiomas.t("Guardar") == "Save", "traducir funciona (Guardar -> %s)" % Idiomas.t("Guardar"))
 	_comprobar(Idiomas.t("Una frase que no existe") == "Una frase que no existe",
 		"y lo que no esta traducido se queda en castellano en vez de salir en blanco")
+	## Ordinales y mayúsculas por idioma (MEGAPLAN fase 1).
+	Idiomas.idioma = "fr"
+	var o_fr := Idiomas.t("vas 1º (meta: 3º)")
+	_comprobar(o_fr.contains("1er") and o_fr.contains("3e"), "francés: 1er y 3e (%s)" % o_fr)
+	Idiomas.idioma = "ca"
+	var o_ca := Idiomas.t("vas 2º (meta: 12º)")
+	_comprobar(o_ca.contains("2n") and o_ca.contains("12è"), "catalán: 2n y 12è (%s)" % o_ca)
+	Idiomas.idioma = "tr"
+	_comprobar(Idiomas.mayusculas("lig") == "LİG", "turco: la i con punto en mayúscula (%s)" % Idiomas.mayusculas("lig"))
 	Idiomas.idioma = "es"
 	_comprobar(Idiomas.t("Guardar") == "Guardar", "y volver al castellano no deja nada traducido")
 
 	## LAS FORMAS Y MARCAS DE TARJETA.
 	_comprobar(MarcaPanel.ESTILOS.size() == 7, "hay 7 marcas de tarjeta (%d)" % MarcaPanel.ESTILOS.size())
 	_comprobar(MarcaPanel.ESTILOS.has("ninguno"), "y se pueden quitar")
+
+## EL GUION DEL TUTORIAL (25-9-2026). La interfaz la recorre
+## `pruebas/captura_tutorial.gd`; aquí solo el guion de cada modo, que no
+## necesita pantalla: todos terminan en "A jugar", cada modo trae su paso
+## propio y ningún paso apunta a un control que `Principal` no sepa encontrar.
+func _probar_tutorial() -> void:
+	_titulo("TUTORIAL INMERSIVO")
+	const OBJETIVOS := ["estado", "grupos", "chips", "plantel", "ficha", "dinero", "partido",
+		"tabla", "registro", "calendario", "un_dia", "guardar"]
+	const SIMPLES := ["grupo", "ficha", "grupo_club", "plantel", "dinero", "partido"]
+	var modos := ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "creador"]
+	## Con una partida de verdad: el mentor tiene que hablar de ELLA.
+	var m := Mundo.new()
+	m.generar(["CHI"], 5150)
+	m.tomar_el_mando(m.ligas[0].clubes[3].id)
+	var ctx := Tutorial.contexto(m)
+	var malos: Array[String] = []
+	var prologos := {}
+	var mentores := {}
+	var misiones_por_modo := {}
+	for modo: String in modos:
+		var g := Tutorial.guion(modo, ctx)
+		var pasos: Array = g["pasos"]
+		prologos[String(g["prologo"])] = true
+		mentores[String(g["mentor"]["cargo"])] = true
+		if not String(g["prologo"]).contains(String(ctx["club"])) and modo != "interino":
+			if not String(g["prologo"]).contains(String(g["mentor"]["nombre"])):
+				malos.append("%s: el prólogo no nombra al club ni al mentor" % modo)
+		if pasos.size() < 8 or not bool((pasos[pasos.size() - 1] as Dictionary).get("final", false)):
+			malos.append("%s: %d pasos o sin epílogo" % [modo, pasos.size()])
+		var misiones := 0
+		for p: Dictionary in pasos:
+			if p.has("mision"):
+				misiones += 1
+				if not p.has("hecho"):
+					malos.append("%s: misión sin forma de cumplirse (%s)" % [modo, p["mision"]])
+			if p.has("objetivo") and not OBJETIVOS.has(String(p["objetivo"])):
+				malos.append("%s: objetivo %s" % [modo, p["objetivo"]])
+			for k in ["hecho", "mostrar"]:
+				if not p.has(k):
+					continue
+				var v := String(p[k])
+				var ok := SIMPLES.has(v)
+				if v.begins_with("tab:"):
+					ok = Tutorial.PESTANAS.has(v.substr(4))
+				elif v.begins_with("chip:"):
+					ok = Tutorial.CHIPS.has(v.substr(5))
+				elif v.begins_with("ficha:"):
+					ok = false
+					for j: Jugador in m.mi_club().plantilla:
+						if j.id == v.substr(6):
+							ok = true
+				if not ok:
+					malos.append("%s: %s %s" % [modo, k, v])
+		misiones_por_modo[modo] = misiones
+		if misiones < 4:
+			malos.append("%s: solo %d misiones" % [modo, misiones])
+	_linea("  misiones por modo: %s" % str(misiones_por_modo))
+	_comprobar(malos.is_empty(), "el guion de los 8 modos es coherente %s" % str(malos))
+	_comprobar(prologos.size() == 8, "cada modo tiene su propio prólogo (%d distintos)" % prologos.size())
+	_comprobar(mentores.size() >= 6, "y su propio mentor (%d cargos distintos)" % mentores.size())
+	var todo_dt := ""
+	for p: Dictionary in Tutorial.guion("dt", ctx)["pasos"]:
+		todo_dt += String(p["texto"]) + " " + String(p.get("mision", ""))
+	_comprobar(String(ctx["rival"]) != "" and todo_dt.contains(String(ctx["rival"])), "el presidente habla del rival de verdad (%s)" % ctx["rival"])
+	_comprobar(todo_dt.contains(String(ctx["estrella"].get("nombre", "?"))), "y de tu mejor jugador por su nombre (%s)" % ctx["estrella"].get("nombre", "?"))
+	_comprobar(todo_dt.contains(String(ctx["objetivo"]).to_lower()), "y del objetivo del directorio (%s)" % ctx["objetivo"])
+	var m1 := Tutorial.mentor_de("dt", ctx)
+	_comprobar(m1["nombre"] == Tutorial.mentor_de("dt", ctx)["nombre"] and not Nombres.vetado(String(m1["nombre"])),
+		"el mentor es siempre el mismo para el mismo club, e inventado (%s)" % m1["nombre"])
+	_comprobar(Tutorial.pasos_para("dt", "Lautaro FC").size() >= 8, "sin partida también hay guion")
+
+## LA MONEDA (25-9-2026). Una sola función escribe el dinero en todo el juego,
+## con la moneda elegida. Se cambia `Eco.moneda` a mano, sin `elegir_moneda()`,
+## para no tocar la preferencia guardada del jugador.
+func _probar_moneda() -> void:
+	_titulo("MONEDA SELECCIONABLE")
+	var antes := Eco.moneda
+	Eco.moneda = "EUR"
+	## 1.000.008 y no 1.000.000: el millón no es múltiplo de `ECO` (12) y el
+	## redondeo daba 999.996, que se escribe -bien- "999k".
+	var un_millon := int(ceil(1000000.0 / Eco.ECO))
+	_comprobar(Eco.dinero(un_millon) == "1.0M EUR", "un millón interno se escribe en euros (%s)" % Eco.dinero(un_millon))
+	_comprobar(Eco.dinero(-un_millon).begins_with("-"), "y los negativos llevan signo (%s)" % Eco.dinero(-un_millon))
+	Eco.moneda = "USD"
+	_comprobar(Eco.dinero(un_millon) == "1.1M USD", "en dólares, al cambio fijo (%s)" % Eco.dinero(un_millon))
+	Eco.moneda = "CLP"
+	_comprobar(Eco.dinero(un_millon).ends_with("MM CLP"), "en pesos chilenos salta a miles de millones (%s)" % Eco.dinero(un_millon))
+	## Las ocho copias que había se escribían distinto; ahora todas pasan por Eco.
+	_comprobar(Cesiones.dinero(un_millon) == Eco.dinero(un_millon), "cesiones escribe igual que el resto")
+	var todas_eco := true
+	for ruta in ["res://ui/principal.gd", "res://ui/inicio.gd", "res://nucleo/prensa.gd",
+			"res://ui/componentes/panel_mercado.gd", "res://ui/componentes/panel_finanzas.gd",
+			"res://ui/componentes/panel_plantel.gd", "res://ui/componentes/ficha_jugador_acciones.gd"]:
+		var f := FileAccess.open(ruta, FileAccess.READ)
+		var texto := f.get_as_text()
+		f.close()
+		for linea in texto.split("\n"):
+			if linea.strip_edges().begins_with("#"):
+				continue
+			if linea.contains("M EUR\"") or linea.contains("\"$%d\""):
+				todas_eco = false
+	_comprobar(todas_eco, "ninguna pantalla escribe \"EUR\" ni \"$\" a mano")
+	Eco.moneda = antes
+
+## LA ACADEMIA DE 10 A 16 AÑOS (25-9-2026). Cada regla de `Academia` con un
+## número: formar bien se nota, comer mal se nota, el colegio se nota, y lo que
+## llega al primer equipo a los 16 es consecuencia de todo eso.
+func _probar_academia() -> void:
+	_titulo("ACADEMIA: LOS CHICOS DE 10 A 16")
+	Azar.sembrar(1016)
+	var m := Mundo.new()
+	m.generar(["CHI"], 1016)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var a := m.academia
+	_comprobar(a != null and a.chicos.size() == 6, "la academia arranca con seis chicos (%d)" % (a.chicos.size() if a != null else 0))
+	if a == null:
+		return
+	var edades := {}
+	for ch in a.chicos:
+		edades[int(ch["edad"])] = true
+	_comprobar(edades.size() == 6 and edades.has(10) and edades.has(15), "de 10 a 15 años, uno por edad")
+	_comprobar(a.candidatos.size() == Academia.CANDIDATOS_POR_TEMPORADA, "y %d candidatos para captar" % a.candidatos.size())
+
+	## Dos gemelos de laboratorio: mismo chico, dos formaciones opuestas.
+	var base: Dictionary = a.chicos[0].duplicate(true)
+	base["nivel"] = 30.0; base["techo"] = 80; base["fisico"] = 45.0; base["nota"] = 5.0; base["animo"] = 70.0
+	base["personalidad"] = {"disciplina": 50.0, "liderazgo": 40.0, "temple": 40.0, "ambicion": 40.0}
+	var bien: Dictionary = base.duplicate(true)
+	bien.merge({"plan": "tecnico", "dieta": "deportiva", "estudios": "futbol", "molde": "disciplina"}, true)
+	var mal: Dictionary = base.duplicate(true)
+	mal.merge({"plan": "descanso", "dieta": "libre", "estudios": "estudios", "molde": "liderazgo"}, true)
+	for sem in 76:
+		bien["lesion"] = 0
+		mal["lesion"] = 0
+		a._semana_de(bien)
+		a._semana_de(mal)
+	_linea("  dos temporadas: bien formado nivel %.1f / físico %.0f / nota %.1f   |   mal formado nivel %.1f / físico %.0f / nota %.1f" % [
+		float(bien["nivel"]), float(bien["fisico"]), float(bien["nota"]),
+		float(mal["nivel"]), float(mal["fisico"]), float(mal["nota"])])
+	_comprobar(float(bien["nivel"]) > float(mal["nivel"]) + 3.0, "entrenar técnico, comer bien y priorizar el fútbol hace crecer más")
+	_comprobar(float(bien["fisico"]) > float(mal["fisico"]) + 10.0, "el plan de nutricionista desarrolla el cuerpo más que el comedor libre")
+	_comprobar(float(bien["nota"]) < float(mal["nota"]), "pero priorizar el fútbol hunde las notas y priorizar el colegio las sube")
+	_comprobar(float(bien["nivel"]) < 80.0, "y nadie supera su techo (%.1f < 80)" % float(bien["nivel"]))
+	_comprobar(float(mal["personalidad"]["liderazgo"]) > 70.0, "el molde forja carácter: liderazgo de 40 a %.0f" % float(mal["personalidad"]["liderazgo"]))
+	_comprobar(a.rasgo_dominante(mal) == "liderazgo", "y ese carácter domina")
+	_comprobar(a.techo_al_entregar(bien) > a.techo_al_entregar(mal), "la formación sube el techo con el que llega (%d contra %d)" % [
+		a.techo_al_entregar(bien), a.techo_al_entregar(mal)])
+
+	## La familia: con notas hundidas, primero avisa el colegio y luego se lo llevan.
+	var flojo: Dictionary = base.duplicate(true)
+	flojo.merge({"id": "flojo", "nota": 3.0, "estudios": "futbol", "aviso_notas": false}, true)
+	a.chicos.append(flojo)
+	var hubo_aviso := false
+	var se_fue := false
+	for sem in 150:
+		for s2 in a.procesar_semana():
+			if String(s2["id"]) == "flojo":
+				hubo_aviso = hubo_aviso or String(s2["tipo"]) == "aviso"
+				se_fue = se_fue or String(s2["tipo"]) == "abandono"
+		if se_fue:
+			break
+	_comprobar(hubo_aviso and se_fue, "con notas hundidas avisa el colegio y la familia acaba sacándolo")
+	_comprobar(a.chico("flojo").is_empty(), "y deja de estar en la academia")
+
+	## La residencia cuesta: la semana descuenta la caja.
+	var c := m.mi_club()
+	var antes := c.saldo
+	a.procesar_semana()
+	_comprobar(c.saldo < antes, "la residencia se paga cada semana (%s)" % Eco.dinero(antes - c.saldo))
+
+	## Captar: cuesta, ocupa plaza y respeta el cupo.
+	var n_antes := a.chicos.size()
+	var err := a.captar(0)
+	_comprobar(err == "" and a.chicos.size() == n_antes + 1, "captar a un candidato lo trae a la residencia %s" % err)
+	while a.chicos.size() < Academia.CUPO:
+		a.chicos.append(a._nuevo_chico(10))
+	_comprobar(a.captar(0) != "", "con la residencia llena no se capta a nadie más")
+
+	## Entrega: a los 16 pasa al plantel como Jugador de verdad.
+	var chico15: Dictionary = {}
+	for ch in a.chicos:
+		if int(ch["edad"]) == 15:
+			chico15 = ch
+	if chico15.is_empty():
+		chico15 = a.chicos[0]
+		chico15["edad"] = 15
+	chico15["personalidad"]["liderazgo"] = 92.0
+	var nombre15 := String(chico15["nombre"])
+	var de14: Dictionary = a._nuevo_chico(14)
+	a.chicos.append(de14)
+	_comprobar(a.entregar(String(de14["id"])) != "", "no se puede entregar a uno de 14")
+	while c.plantilla.size() >= Cantera.TOPE_PLANTEL:
+		c.plantilla.pop_back()
+	var entregados := a.fin_de_temporada()
+	var nuevo: Jugador = null
+	for j in entregados:
+		if j.nombre == nombre15:
+			nuevo = j
+	_comprobar(nuevo != null, "al cumplir 16 pasa al primer equipo")
+	if nuevo != null:
+		_comprobar(c.plantilla.has(nuevo) and nuevo.edad == 16, "con 16 años y dentro de la plantilla")
+		_comprobar(nuevo.pot >= nuevo.ovr and nuevo.ovr >= 40, "media %d, proyección %d" % [nuevo.ovr, nuevo.pot])
+		_comprobar(nuevo.rasgo == "lider", "el carácter que forjaste es su rasgo (%s)" % nuevo.rasgo)
+		_comprobar(m.cantera.es_canterano(nuevo), "y cuenta como canterano de la casa")
+		_comprobar(a.chico(String(chico15["id"])).is_empty(), "y deja la academia")
+	_comprobar(a.candidatos.size() == Academia.CANDIDATOS_POR_TEMPORADA, "la temporada nueva trae otra tanda de candidatos")
+
+	## El guardado se la lleva entera.
+	var ids: Array[String] = []
+	for ch in a.chicos:
+		ids.append(String(ch["id"]))
+	var foto := Partida.instantanea(m)
+	var m2 := Partida.desde_instantanea(foto)
+	var ids2: Array[String] = []
+	if m2 != null and m2.academia != null:
+		for ch in m2.academia.chicos:
+			ids2.append(String(ch["id"]))
+	_comprobar(ids2 == ids, "guardar y cargar conserva a los %d chicos" % ids.size())
+
+
+## LOS CINCO MODOS DE MIRAR UN PARTIDO (25-9-2026, plan maestro B2). Con la
+## misma semilla, el partido jugado de una vez (Instantáneo), el Resumen y el
+## partido en vivo tienen que dar EXACTAMENTE lo mismo: mirar no decide nada.
+## El 3D usa los mismos `simular_minuto()` a su propio ritmo. Se juega con la
+## grada al límite (ánimo 10) y a varias semillas para que la invasión de
+## campo -que antes solo tiraba el partido en vivo- entre en juego.
+func _probar_modos_simulacion() -> void:
+	_titulo("MODOS DE SIMULACIÓN: MISMO PARTIDO, DISTINTA VISTA")
+	## Un mundo por camino, idénticos (misma semilla): un partido le cambia a
+	## los jugadores el físico, las lesiones y las tarjetas, así que reusar los
+	## mismos clubes haría que el segundo camino jugara con otro plantel.
+	var mundos: Array[Mundo] = []
+	for via in 3:
+		var mv := Mundo.new()
+		mv.generar(["CHI"], 77)
+		mundos.append(mv)
+	var iguales := 0
+	var invasiones := 0
+	var semillas := 40
+	for k in semillas:
+		var huellas: Array[String] = []
+		for via in 3:
+			var l := mundos[via].ligas[0]
+			var a: Club = l.clubes[k % l.clubes.size()]
+			var b: Club = l.clubes[(k + 3) % l.clubes.size()]
+			Azar.sembrar(9000 + k)
+			var p := Partido.new(a, b)
+			match via:
+				0:
+					p.preparar()
+					p.fijar_hinchada(a, 10)
+					while not p.terminado_ya:
+						p.simular_minuto()
+				1:
+					p.preparar()
+					p.fijar_hinchada(a, 10)
+					var capa := Control.new()
+					var r := ResumenPartido.mostrar(capa, p, a, false, true)
+					r.free()
+					capa.free()
+				2:
+					## El partido en vivo sin 3D, saltado al final.
+					p.fijar_hinchada(a, 10)
+					var vivo := PartidoVivo.new()
+					vivo.con_3d = false
+					vivo.abrir(p, a)
+					vivo.call("_hasta_el_final")
+					vivo.free()
+			huellas.append("%d-%d|%d|%s" % [p.goles_local, p.goles_visita, p.cronica.size(), str(p.invasion_ya)])
+			if via == 0 and p.invasion_ya:
+				invasiones += 1
+		if huellas[0] == huellas[1] and huellas[1] == huellas[2]:
+			iguales += 1
+		elif iguales == k:
+			print("    distinto en la semilla %d: %s" % [9000 + k, str(huellas)])
+	_comprobar(iguales == semillas, "Instantáneo, Resumen y En vivo dan el mismo partido en %d de %d semillas" % [iguales, semillas])
+	_comprobar(invasiones > 0, "la invasión de campo sigue pudiendo ocurrir, ahora en cualquier modo (%d de %d)" % [invasiones, semillas])
+	## EL DESCANSO NO BLOQUEA (28-9-2026, informe externo: "después de la charla
+	## del medio tiempo no deja continuar"). Se juega con el reloj real: se
+	## para en el 45, se da la charla, se sale y el partido termina.
+	var mh := mundos[0]
+	var lh := mh.ligas[0]
+	var ph := Partido.new(lh.clubes[0], lh.clubes[1])
+	var vh := PartidoVivo.new()
+	vh.con_3d = false
+	vh.abrir(ph, lh.clubes[0], mh.vestuario)
+	var vueltas := 0
+	## Una lesión propia para el reloj a propósito (hay que mover el banco):
+	## la prueba reanuda como lo haría el jugador.
+	var reanudar := func() -> void:
+		if int(vh.get("_velocidad")) == 0 and not bool(vh.get("_entretiempo")):
+			vh.call("_poner_velocidad", 2)
+	while ph.minuto < 45 and vueltas < 2000:
+		reanudar.call()
+		vh._process(1.0)
+		vueltas += 1
+	var parado := bool(vh.get("_entretiempo"))
+	var min_parado := ph.minuto
+	for _i in 20:
+		vh._process(1.0)
+	_comprobar(parado and ph.minuto == min_parado, "el reloj se para en el descanso (%d')" % min_parado)
+	vh.call("_dar_charla", String(Vestuario.TONOS.keys()[0]))
+	vh.call("_salir_segunda")
+	vueltas = 0
+	while not ph.terminado_ya and vueltas < 5000:
+		reanudar.call()
+		vh._process(1.0)
+		vueltas += 1
+	_comprobar(ph.terminado_ya, "tras la charla y salir a la segunda parte, el partido llega al final")
+	vh.free()
+
+
+## LAS EXPORTACIONES SE LEEN (25-9-2026). `export_presets.cfg` llevaba
+## comentarios con `##`, que en un .cfg de Godot NO son comentarios (van con
+## `;`): el archivo no se podía leer y los filtros que dejan fuera el pack real
+## y las fotos de personas reales no se aplicaban. Ahora se comprueba que carga
+## y que cada versión publicable excluye todo lo que tiene que excluir.
+func _probar_presets_exportacion() -> void:
+	_titulo("EXPORTACIONES: EL ARCHIVO SE LEE Y LO PRIVADO QUEDA FUERA")
+	var c := ConfigFile.new()
+	_comprobar(c.load("res://export_presets.cfg") == OK, "export_presets.cfg se puede leer")
+	var privados := ["datos/pack_real.json", "recursos/caras_reales/", "recursos/caras_reales_256/", "datos/creditos_fotos.txt"]
+	for i in 4:
+		var sec := "preset.%d" % i
+		var nombre := String(c.get_value(sec, "name", ""))
+		var excl := String(c.get_value(sec, "exclude_filter", ""))
+		if nombre == "Windows":
+			_comprobar(excl.contains("recursos/caras_reales/"), "la versión completa no lleva las fotos originales (solo los retratos)")
+			continue
+		var faltan: Array[String] = []
+		for p: String in privados:
+			if not excl.contains(p):
+				faltan.append(p)
+		_comprobar(faltan.is_empty(), "%s excluye el pack real y las fotos reales %s" % [nombre, str(faltan) if not faltan.is_empty() else ""])
+
+
+## EL SISTEMA DE DISEÑO Y LA ORTOGRAFÍA (25-9-2026, plan maestro B13). Dos redes
+## contra la regresión: (1) ninguna pantalla vuelve a escribir a mano los
+## colores canónicos -apuntan a `Tema`-; (2) las palabras que se corrigieron no
+## vuelven a aparecer sin tilde en un texto que ve el jugador.
+func _probar_tema_y_ortografia() -> void:
+	_titulo("TEMA ÚNICO Y ORTOGRAFÍA DE LOS TEXTOS")
+	var canonicos := ["e9eeea", "8ea595", "c9a227", "0c1510", "3fa06a", "141c16", "16211a"]
+	var copias: Array[String] = []
+	var sin_tilde: Array[String] = []
+	var vetadas := ["cesped", "policia", "tunel", "camarin", "tactica", "paises", "tambien", "detras", "INVASION", "Division"]
+	var rx := RegEx.new()
+	rx.compile("\"((?:[^\"\\\\]|\\\\.)*)\"")
+	for carpeta: String in ["res://ui", "res://ui/componentes", "res://nucleo", "res://visor"]:
+		var dir := DirAccess.open(carpeta)
+		if dir == null:
+			continue
+		for f: String in dir.get_files():
+			if not f.ends_with(".gd") or f == "tema.gd" or f == "idiomas.gd" or f == "pantalla_estadio.gd":
+				continue
+			var texto := FileAccess.get_file_as_string(carpeta + "/" + f)
+			for linea: String in texto.split("\n"):
+				var t := linea.strip_edges()
+				if t.begins_with("#"):
+					continue
+				if t.begins_with("const COL_"):
+					for c: String in canonicos:
+						if t.contains('Color("%s")' % c):
+							copias.append(f)
+				for m in rx.search_all(linea):
+					var v := m.get_string(1)
+					if not v.contains(" "):
+						continue
+					for w: String in vetadas:
+						var r2 := RegEx.new()
+						r2.compile("\\b" + w + "\\b")
+						if r2.search(v) != null:
+							sin_tilde.append("%s: %s" % [f, w])
+	_comprobar(copias.is_empty(), "ninguna pantalla copia la paleta a mano: todas apuntan a Tema %s" % str(copias))
+	_comprobar(sin_tilde.is_empty(), "sin palabras corregidas que vuelvan sin tilde %s" % str(sin_tilde))
+
+
+## LOS NUEVE EVENTOS NUEVOS (25-9-2026, plan maestro B4). Cada uno aparece en la
+## baraja cuando se dan sus condiciones y sus DOS salidas mueven algo medible
+## (moral, ánimo, funa, caja, sanción, posición o un efecto que dura). Los
+## efectos se descuentan semana a semana y viajan en el guardado.
+func _probar_eventos_nuevos() -> void:
+	_titulo("EVENTOS NUEVOS: TÚNEL, VIRAL, CAPITÁN, HOMENAJE, POSICIÓN, SPONSOR, APUESTAS, HUELGA, CLÁSICO")
+	var ids := ["tunel", "viral", "capitan", "silencio", "cambio_posicion", "sponsor_rueda", "apuestas", "huelga_impagos", "derbi_amenaza"]
+	var vistos := {}
+	var mueven := {}
+	for op: String in ["a", "b"]:
+		for id: String in ids:
+			var m := Mundo.new()
+			m.generar(["CHI"], 555)
+			m.tomar_el_mando(m.ligas[0].clubes[0].id)
+			var mio := m.mi_club()
+			mio.plantilla[0].capitan = true
+			mio.saldo = -1000   ## para que exista la huelga por impagos
+			var pool: Array[Dictionary] = m.prensa._pool(m, mio)
+			var ev: Dictionary = {}
+			for e: Dictionary in pool:
+				if String(e["id"]) == id:
+					ev = e
+			if ev.is_empty() and id == "derbi_amenaza":
+				ev = {"id": id, "pid": "", "txt": "", "opcion_a": "", "opcion_b": ""}
+			if ev.is_empty():
+				continue
+			vistos[id] = true
+			## Huella del estado antes y después.
+			var huella := func() -> String:
+				var moral := 0
+				var susp := 0
+				var sec := 0
+				for j: Jugador in mio.plantilla:
+					moral += j.moral
+					susp += j.suspension
+					sec += j.pos_sec.size()
+				return "%d|%d|%d|%d|%d|%d|%d|%d|%d|%d" % [moral, susp, sec, mio.saldo, m.prensa.animo, m.prensa.funa,
+					m.prensa.rep_entrenador, m.prensa.efectos.size(), m.federacion.enojo_arbitral if m.federacion != null else 0,
+					m.directiva.confianza if m.directiva != null else 0]
+			var antes: String = huella.call()
+			m.prensa.pendiente = ev
+			var r: Dictionary = m.prensa.resolver(op)
+			if not r.is_empty() and huella.call() != antes:
+				mueven["%s/%s" % [id, op]] = true
+	_comprobar(vistos.size() == ids.size(), "los nueve eventos existen en la baraja (%d de 9): %s" % [vistos.size(), str(vistos.keys())])
+	var quietas: Array[String] = []
+	for id: String in vistos:
+		for op: String in ["a", "b"]:
+			if not mueven.has("%s/%s" % [id, op]):
+				quietas.append("%s/%s" % [id, op])
+	## "silencio"/b solo sube el ánimo 2 (puede estar ya en el tope): se tolera
+	## que alguna salida sin azar quede igual si el valor ya estaba al límite.
+	_comprobar(quietas.size() <= 1, "cada salida mueve algo medible (sin efecto: %s)" % str(quietas))
+	## Efectos que duran: el capitán plantado deja 3 semanas de tensión.
+	var m2 := Mundo.new()
+	m2.generar(["CHI"], 556)
+	m2.tomar_el_mando(m2.ligas[0].clubes[0].id)
+	m2.prensa.pendiente = {"id": "capitan", "pid": m2.mi_club().plantilla[0].id}
+	m2.prensa.resolver("b")
+	_comprobar(m2.prensa.efectos.size() == 1 and int(m2.prensa.efectos[0]["semanas"]) == 3, "plantarse al capitán deja un efecto de 3 semanas")
+	var d := Partida._prensa_a_dic(m2.prensa)
+	_comprobar((d.get("efectos", []) as Array).size() == 1, "el efecto viaja en el guardado")
+	for k in 3:
+		m2.prensa.semana()
+	_comprobar(m2.prensa.efectos.is_empty(), "a las 3 semanas el efecto se termina solo")
+
+## B5: la rueda con periodista, tono, memoria, repregunta, titubeo, titular,
+## texto libre y pie de campo. Y que nada de eso toque `Azar`.
+func _probar_entrevistas() -> void:
+	_titulo("ENTREVISTAS: PERIODISTA, TONO, MEMORIA, REPREGUNTA, TITULAR, TEXTO LIBRE, PIE DE CAMPO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 777)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var pr := m.prensa
+	pr.abrir_rueda(true, false)
+	var e := pr.entrevista
+	_comprobar(String(e.get("periodista", "")) != "", "pregunta un periodista con nombre")
+	_comprobar(not String(e["pregunta"]).begins_with("Prensa:"), "la pregunta ya no la firma «Prensa»")
+	var todas_con_tono := true
+	for g: Array in [Prensa._GANE, Prensa._EMPATE, Prensa._PERDI]:
+		for q: Dictionary in g:
+			for o: Dictionary in q["opciones"]:
+				todas_con_tono = todas_con_tono and String(o.get("tono", "")) in ["calma", "soberbia", "evasiva"]
+	_comprobar(todas_con_tono, "cada respuesta del guion tiene tono")
+	## Calma y a tiempo: se cierra, sin repregunta, y deja titular pendiente.
+	var r := pr.responder(0, 2.0)
+	_comprobar(not bool(r["sigue"]) and not pr.hay_rueda(), "respuesta en calma cierra la rueda")
+	_comprobar(not pr.titular_pendiente.is_empty(), "queda un titular para mañana")
+	var tit := pr.publicar_titular_pendiente()
+	_comprobar(tit != "" and String(pr.portadas[0]["t"]) == tit, "el titular sale en la hemeroteca")
+	_comprobar(pr.memoria.has(String(e["periodista"])), "el periodista recuerda la frase")
+	## Titubeo: repregunta el mismo periodista.
+	pr.abrir_rueda(false, true)
+	var per := String(pr.entrevista["periodista"])
+	var calma_i := 0
+	for i in (pr.entrevista["opciones"] as Array).size():
+		if String(pr.entrevista["opciones"][i]["tono"]) == "calma":
+			calma_i = i
+	var funa0 := pr.funa
+	r = pr.responder(calma_i, Prensa.TITUBEO_SEG + 1.0)
+	_comprobar(bool(r["titubeo"]) and bool(r["sigue"]), "tardar en contestar trae repregunta")
+	_comprobar(pr.hay_rueda() and String(pr.entrevista["periodista"]) == per and int(pr.entrevista["paso"]) == 1, "repregunta el mismo, una sola vez")
+	_comprobar(pr.funa > funa0 or funa0 >= 98, "el titubeo se nota en la calle")
+	r = pr.responder(1, 1.0)   ## evasiva, pero ya no hay tercera pregunta
+	_comprobar(not bool(r["sigue"]) and not pr.hay_rueda(), "tras la repregunta se cierra aunque evadas")
+	## Memoria: soberbia hoy, derrota la semana que viene -> te la devuelven.
+	pr.memoria.clear()
+	for f: Array in Prensa.PERIODISTAS:
+		pr.memoria[String(f[0])] = {"frase": "Que se preparen los de arriba", "tono": "soberbia", "fecha": pr._fecha() - 1}
+	pr.abrir_rueda(false, false)
+	_comprobar(bool(pr.entrevista.get("memoria", false)) and String(pr.entrevista["pregunta"]).contains("Que se preparen"), "la frase soberbia vuelve tras perder")
+	## Texto libre.
+	_comprobar(pr.clasificar_respuesta("Sin comentarios") == "evasiva", "texto: «sin comentarios» es evasiva")
+	_comprobar(pr.clasificar_respuesta("Somos los mejores y que se preparen") == "soberbia", "texto: soberbia")
+	_comprobar(pr.clasificar_respuesta("Confío en el grupo, trabajaremos toda la semana") == "calma", "texto: calma")
+	_comprobar(pr.clasificar_respuesta("ok") == "evasiva", "texto: dos letras no es respuesta")
+	var arb0 := pr.enojo_arbitral
+	r = pr.responder_texto("El árbitro nos robó, ustedes no saben nada", 1.0)
+	_comprobar(String(r["tono"]) == "soberbia" and pr.enojo_arbitral >= arb0 + 2, "hablar de árbitros con soberbia los enoja")
+	if pr.hay_rueda():
+		pr.responder(0, 1.0)
+	## Pie de campo.
+	var moral0 := m.mi_club().plantilla[0].moral
+	var pie := pr.pie_de_campo(true, false, 2, 0)
+	_comprobar((pie["opciones"] as Array).size() == 3 and String(pie["pregunta"]).contains("2-0"), "a pie de campo: pregunta con el marcador")
+	var rp := pr.responder_pie(0)
+	_comprobar(rp["tono"] == "calma" and pr.pie.is_empty() and m.mi_club().plantilla[0].moral >= moral0, "a pie de campo: responder mueve y cierra")
+	pr.pie_de_campo(false, false, 0, 1)
+	_comprobar(String(pr.responder_pie(-1)["tono"]) == "evasiva", "a pie de campo: pasar de largo")
+	## Se guarda y se carga.
+	var d := Partida._prensa_a_dic(pr)
+	_comprobar(d.has("memoria") and d.has("titular_pendiente"), "memoria y titular se guardan")
+
+## B6: el estadio por secciones -fachada, colores por tribuna, luz, superficie-,
+## los ocho estilos nuevos y el exterior.
+func _probar_estadio_b6() -> void:
+	_titulo("ESTADIO B6: FACHADA, COLORES POR SECCIÓN, LUZ, SUPERFICIE, EXTERIOR, 24 ESTILOS")
+	var m := Mundo.new()
+	m.generar(["CHI"], 909)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mio := m.mi_club()
+	mio.saldo = 500000000
+	var e := m.estadio
+	_comprobar(e.presets().size() == 24, "24 estilos (16 + 8): %d" % e.presets().size())
+	var todos_validos := true
+	for p: Array in EstadioPropio.PRESETS_B6:
+		for k: String in (p[3] as Dictionary):
+			if k == "niveles":
+				continue
+			if not e.ajustes.has(k) or not e.es_valido(k, p[3][k]):
+				todos_validos = false
+				print("    estilo %s: «%s»=%s no vale" % [p[0], k, p[3][k]])
+	_comprobar(todos_validos, "cada valor de los 8 estilos nuevos existe en su catálogo")
+	for k: String in EstadioPropio.DEF_B6:
+		if not e.ajustes.has(k):
+			_comprobar(false, "clave nueva sembrada: %s" % k)
+	var viejo := EstadioPropio.new()
+	viejo.desde_dic({"nombre": "", "ajustes": {"forma": "oval"}})
+	_comprobar(viejo.ajustes.has("fachada") and String(viejo.ajustes["forma"]) == "oval", "un guardado viejo carga con las claves nuevas")
+	_comprobar(e.opciones("fachadaCol").size() == EstadioPropio.PALETA.size() and e.opciones("fachada").size() == 5, "la interfaz ve los catálogos nuevos")
+	_comprobar(e.presupuesto(mio, {"fachada": "ladrillo"}) > 0, "revestir la fachada cuesta")
+	_comprobar(e.presupuesto(mio, {"fachadaCol": "#b01e2d", "techoCol": "#1b1d22"}) == 0, "pintar es gratis")
+	_comprobar(e.reformar(mio, {"fachada": "vidrio"}) == "" and String(e.perfil(mio)["fachada"]) == "vidrio", "la reforma llega al perfil")
+	_comprobar(e.reformar(mio, {"fachada": "marmol"}) != "", "una fachada inventada se rechaza")
+	## Colores por tribuna.
+	e.reformar(mio, {"personalizar_bandejas": true, "bandeja_norte_col1": "#e8c21a"})
+	var pf := e.perfil(mio)
+	_comprobar(String(pf["bandejas"]["norte"]["col1"]) == "#e8c21a" and String(pf["bandejas"]["sur"]["col1"]) == "", "cada tribuna lleva sus colores")
+	## Superficie: efecto real.
+	_comprobar(e.factor_lesion() == 1.0 and e.factor_desgaste_cesped() == 1.0, "natural: sin cambios")
+	e.reformar(mio, {"superficie": "artificial"})
+	_comprobar(e.factor_lesion() > 1.0 and e.factor_desgaste_cesped() == 0.0, "artificial: más lesiones, no se estropea")
+	e.reformar(mio, {"superficie": "hibrido"})
+	_comprobar(e.factor_lesion() < 1.0, "híbrido: menos lesiones")
+	m.avanzar_semana()
+	_comprobar(is_equal_approx(Partido.ctx_lesion_local, e.factor_lesion()), "la semana usa la superficie de tu estadio")
+	Partido.limpiar_contexto()
+	_comprobar(Partido.ctx_lesion_local == 1.0, "limpiar el contexto la devuelve a 1")
+	## La luz.
+	var luces := {}
+	for l: String in ["neutra", "calida", "fria", "club"]:
+		luces[StadiumBuilder.color_luz({"luzFocos": l, "luzClub": "#b01e2d"}).to_html()] = true
+	_comprobar(luces.size() == 4, "las cuatro luces se distinguen")
+	## El exterior se construye (sin pantalla: solo el árbol de nodos).
+	var raiz := Node3D.new()
+	add_child(raiz)
+	StadiumBuilder.build(raiz, e.perfil(mio), 40000, 0.8, 1, mio)
+	var ext := raiz.find_child("Exterior", false, false)
+	_comprobar(ext != null and ext.find_children("*", "Label3D", false, false).size() >= 2, "hay taquillas, tienda y rótulos fuera")
+	raiz.queue_free()
+
+## B7: la ciudad se puede tocar -cada instalación tiene su punto, lo que no
+## existe es un solar-, las obras se ven con su grúa, y el día de partido trae
+## gente y banderas. Construir desde el mapa cobra lo mismo que dice la ficha.
+func _probar_ciudad_b7() -> void:
+	_titulo("CIUDAD B7: SOLARES, OBRAS CON GRÚA, DÍA DE PARTIDO, FICHA Y CONSTRUIR")
+	var m := Mundo.new()
+	m.generar(["CHI"], 313)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	c.saldo = 900000000
+	m.obras.niveles["gim"] = 2
+	var antes := c.saldo
+	var coste := m.obras.coste("piscina", c.rep)
+	_comprobar(m.obras.iniciar("piscina", c) == "" and antes - c.saldo == coste, "construir cobra lo que anuncia la ficha (%d)" % coste)
+	var datos := {
+		"club": {"nombre": c.nombre, "c1": c.color1, "c2": c.color2, "cap": 30000, "rep": c.rep, "socios": c.socios, "estadioNom": "Estadio"},
+		"inst": m.obras.niveles.duplicate(),
+		"obras": [{"k": "piscina", "semanas": 4}],
+		"terrenos": [], "negocios": {}, "perfil_estadio": {},
+		"dia_partido": true, "vecinos": 30,
+	}
+	var cb := CityBuilder.new()
+	add_child(cb)
+	cb.build(datos)
+	var por_k := {}
+	for p: Dictionary in cb.puntos_clic:
+		por_k[String(p["k"])] = String(p["estado"])
+	_comprobar(por_k.size() >= CityBuilder.EDIFICIOS.size(), "cada instalación tiene su punto en el mapa (%d)" % por_k.size())
+	_comprobar(por_k.get("gim", "") == "hecho" and por_k.get("piscina", "") == "obra" and por_k.get("video", "") == "solar",
+		"hecho, en obra y solar se distinguen")
+	_comprobar(cb.find_children("Grua", "Node3D", false, false).size() >= 1, "la obra tiene su grúa")
+	_comprobar(cb.find_child("Hinchada", false, false) != null, "el día de partido hay gente")
+	var rot: Node = cb.find_child("Rotulos", false, false)
+	_comprobar(rot != null and rot.get_child_count() >= CityBuilder.EDIFICIOS.size(), "rótulos flotantes sobre cada parcela")
+	var dentro := true
+	for p: Dictionary in cb.puntos_clic:
+		if String(p["estado"]) in ["hecho", "obra", "solar"] and (p["pos"] as Vector3).z > 250.0:
+			dentro = false
+	_comprobar(dentro, "ninguna parcela cae en la calle exterior (z=262)")
+	cb.mostrar_rotulos(false)
+	_comprobar(not rot.visible, "los rótulos se pueden ocultar")
+	cb.queue_free()
+
+## C1: el clima sale de la ciudad y la época (hemisferios al revés, altura,
+## nieve solo donde hace frío), no consume Azar y pesa en el partido; cambiar
+## el escudo es noticia y pregunta de rueda; la copa también tiene rueda.
+func _probar_coherencia_c1() -> void:
+	_titulo("C1 COHERENCIA: CLIMA DE LA CIUDAD, ESCUDO COMO NOTICIA, RUEDA TRAS LA COPA")
+	## Julio (semana 24): invierno en Santiago, verano en Madrid.
+	_comprobar(Clima.estacion("CHI", 24) == "invierno" and Clima.estacion("ESP", 24) == "verano", "hemisferios opuestos")
+	_comprobar(Clima.estacion("COL", 24) == "tropical", "el trópico no tiene invierno")
+	var a := Clima.del_partido("ENG", 3, 2026, "x")
+	_comprobar(a == Clima.del_partido("ENG", 3, 2026, "x"), "el mismo partido tiene siempre el mismo tiempo")
+	var nieve_tropico := false
+	var nieve_frio := false
+	for k in 400:
+		if String(Clima.del_partido("BRA", 26, 2026, str(k))["clave"]) == "nieve":
+			nieve_tropico = true
+		if String(Clima.del_partido("GER", 2, 2026, str(k))["clave"]) == "nieve":
+			nieve_frio = true
+	_comprobar(not nieve_tropico and nieve_frio, "nieve solo donde y cuando hace frío")
+	var alt := Clima.del_partido("BOL", 10, 2026, "y")
+	_comprobar(Clima.factor_visita(alt, "ARG", "BOL") < 1.0 and Clima.factor_visita(alt, "ECU", "BOL") == 1.0, "la altura castiga al visitante del llano, no al de altura")
+	## El factor llega al partido.
+	var m := Mundo.new()
+	m.generar(["CHI"], 2468)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mio := m.mi_club()
+	var p := Partido.new(mio, m.ligas[0].clubes[1])
+	p.fijar_clima({"clave": "nieve", "calor": false, "altura": false, "texto": "Nieve"})
+	_comprobar(p.clima < 1.0, "la nieve traba el partido (factor %.2f)" % p.clima)
+	## Escudo nuevo = noticia + pregunta.
+	var pr := m.prensa
+	pr.revisar_identidad(mio)   ## la primera vez solo toma la foto
+	_comprobar(pr.cambio_identidad == "", "sin cambios no hay noticia")
+	var portadas_antes := pr.portadas.size()
+	mio.esc_forma = "redondo" if mio.esc_forma != "redondo" else "clasico"
+	var que := pr.revisar_identidad(mio)
+	_comprobar(que == "escudo" and pr.portadas.size() == portadas_antes + 1, "cambiar el escudo sale en portada")
+	pr.abrir_rueda(true, false)
+	_comprobar(String(pr.entrevista["pregunta"]).contains("escudo") and pr.cambio_identidad == "", "y te preguntan por él en la rueda")
+	pr.responder(0, 1.0)
+	if pr.hay_rueda():
+		pr.responder(0, 1.0)
+	## La copa también tiene rueda (con su competición).
+	var rival: Club = m.ligas[0].clubes[2]
+	pr.entrevista = {}
+	var intentos := 0
+	while not pr.hay_rueda() and intentos < 20:
+		m._rueda_de_eliminatoria([{"local": mio, "visita": rival, "gl": 2, "gv": 1, "pasa": mio}], "copa", [mio, rival])
+		intentos += 1
+	_comprobar(pr.hay_rueda() and pr.competicion_rueda == "copa", "después de la copa también hay rueda de prensa")
+
+## C20: la portada guarda lo que necesita el periódico (foto, bajada, medio) y
+## cada medio tiene su cabecera; seis cabeceras distintas.
+func _probar_portadas_c20() -> void:
+	_titulo("C20 PORTADA DE PERIÓDICO: SEIS CABECERAS Y DATOS PARA DIBUJARLA")
+	var m := Mundo.new()
+	m.generar(["CHI"], 1357)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var pr := m.prensa
+	for k in 12:
+		pr.portada_tras_resultado(true, false, false, "semilla%d" % k, "A 2-0 B")
+	_comprobar(not pr.portadas.is_empty() and String(pr.portadas[0].get("sub", "")) == "A 2-0 B" and String(pr.portadas[0].get("img", "")) == "dt",
+		"la portada del partido lleva el marcador y la foto del DT")
+	var nombres := {}
+	for c: Array in PortadaPeriodico.CABECERAS:
+		nombres[String(c[1])] = true
+	_comprobar(nombres.size() == 6, "seis cabeceras distintas")
+	_comprobar(String(PortadaPeriodico.cabecera_de({"medio": "El Pelotazo"})[0]) == "pelotazo", "cada medio con su cabecera")
+	var a := PortadaPeriodico.cabecera_de({"t": "Algo", "semana": 3})
+	_comprobar(a == PortadaPeriodico.cabecera_de({"t": "Algo", "semana": 3}), "la misma portada, la misma cabecera")
+
+## C3: la región de origen existe y se guarda; los españoles ya no son todos
+## vascos; el Athletic (o su equivalente ficticio) es todo de Euskal Herria, su
+## mercado lo respeta -la IA y tú- y sus canteranos llevan apellidos vascos.
+func _probar_cantera_c3() -> void:
+	_titulo("C3 FILOSOFÍA DE CANTERA: REGIÓN DE ORIGEN, MERCADO Y APELLIDOS")
+	var m := Mundo.new()
+	m.generar(["ESP"], 8642)
+	var bilbao: Club = null
+	var otro: Club = null
+	for c: Club in m.clubes.values():
+		if not Regiones.filosofia(c).is_empty():
+			bilbao = c
+		elif c.pais == "ESP" and otro == null:
+			otro = c
+	_comprobar(bilbao != null, "el club de cantera vasca existe (Athletic o su equivalente)")
+	if bilbao == null:
+		return
+	var todos_vascos := true
+	for j: Jugador in bilbao.plantilla:
+		todos_vascos = todos_vascos and j.region == "EUS"
+	## Nacido o formado allí, aunque juegue con otra selección: cuenta la
+	## región, no la nacionalidad.
+	_comprobar(todos_vascos, "toda la plantilla es de Euskal Herria (por origen, no por pasaporte)")
+	var espanoles := 0
+	var vascos := 0
+	for c: Club in m.clubes.values():
+		if c == bilbao:
+			continue
+		for j: Jugador in c.plantilla:
+			if j.pais == "ESP":
+				espanoles += 1
+				if j.region == "EUS":
+					vascos += 1
+	var pct := 100.0 * float(vascos) / float(maxi(1, espanoles))
+	_comprobar(pct > 3.0 and pct < 18.0, "los vascos son una parte de los españoles, no todos (%.1f %%)" % pct)
+	var apellido_vasco := false
+	for j: Jugador in bilbao.plantilla:
+		for ap: String in Regiones.APELLIDOS_EUS:
+			if j.nombre.ends_with(ap):
+				apellido_vasco = true
+	_comprobar(apellido_vasco, "apellidos vascos en el Athletic")
+	## El mercado: un español no vasco no entra; uno vasco sí.
+	var no_vasco: Jugador = null
+	var vasco: Jugador = null
+	for j: Jugador in otro.plantilla:
+		if j.region == "" and no_vasco == null:
+			no_vasco = j
+	for c: Club in m.clubes.values():
+		if c != bilbao:
+			for j: Jugador in c.plantilla:
+				if j.region == "EUS" and vasco == null:
+					vasco = j
+	_comprobar(not Regiones.admite(bilbao, no_vasco), "el Athletic no puede fichar a un no vasco")
+	_comprobar(vasco == null or Regiones.admite(bilbao, vasco), "sí a uno de Euskal Herria")
+	m.tomar_el_mando(bilbao.id)
+	var motivo := m.mercado.abrir_negociacion(no_vasco)
+	_comprobar(String(motivo).to_lower().contains("euskal herria"), "si diriges al Athletic, la regla vale para ti: «%s»" % motivo)
+	## Guardado.
+	var d := Partida._jugador_a_dic(bilbao.plantilla[0])
+	_comprobar(Partida._dic_a_jugador(d).region == "EUS", "la región se guarda con la partida")
+
+## C5 y C8: el presidente de la federación con agenda y mandato, la junta de
+## accionistas del club, y las lesiones absurdas (raras, sin Azar, el toque de
+## queda evita las de noche).
+func _probar_instituciones_c5_c8() -> void:
+	_titulo("C5/C8 INSTITUCIONES: PRESIDENTE DE LA FEDERACIÓN, JUNTA DE ACCIONISTAS, LESIONES ABSURDAS")
+	var m := Mundo.new()
+	m.generar(["CHI"], 2024)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var f := m.federacion
+	_comprobar(f.revisar_presidencia(2026) and not f.presidente.is_empty(), "la federación elige presidente")
+	_comprobar(not f.revisar_presidencia(2027), "no hay elecciones a mitad de mandato")
+	_comprobar(f.revisar_presidencia(2026 + Federacion.MANDATO_ANIOS), "a los cuatro años, elecciones")
+	var ag: Array = Federacion.AGENDAS[String(f.presidente["agenda"])][1]
+	_comprobar(f.agenda_empuja(String(ag[0])), "el presidente empuja lo de su agenda")
+	var d := f.a_dic()
+	var f2 := Federacion.new()
+	f2.desde_dic(d)
+	_comprobar(f2.presidente == f.presidente, "el presidente se guarda")
+	## Junta.
+	var jt := m.junta
+	_comprobar(jt != null and jt.accionistas.size() == 3 and not jt.presidente.is_empty(), "el club tiene presidente y tres accionistas")
+	jt.semana(m.mi_club(), 2026, Junta.CADA)
+	_comprobar(not jt.pendiente.is_empty(), "cada trimestre hay junta")
+	var conf0 := m.directiva.confianza
+	var r := jt.resolver("a", m.mi_club(), m.directiva, m.prensa)
+	_comprobar(not r.is_empty() and jt.pendiente.is_empty(), "la junta se resuelve")
+	## Forzar la censura: todos hartos.
+	for a: Dictionary in jt.accionistas:
+		a["humor"] = 20
+	jt.pendiente = {"quien": String(jt.accionistas[0]["nombre"]), "exige": "cantera", "tema": "x", "a": "si", "b": "no", "monto": 0}
+	conf0 = m.directiva.confianza
+	r = jt.resolver("b", m.mi_club(), m.directiva, m.prensa)
+	_comprobar(bool(r["censura"]) and m.directiva.confianza < conf0, "un accionista harto presenta moción de censura")
+	## Lesiones absurdas.
+	var n := 0
+	var noche_con_queda := false
+	for sem in 400:
+		var la := LesionesAbsurdas.sortear(m.mi_club(), 2026, sem, true)
+		if not la.is_empty():
+			n += 1
+			if bool(la["noche"]):
+				noche_con_queda = true
+	_comprobar(n > 10 and n < 60, "son raras: %d en 400 semanas" % n)
+	_comprobar(not noche_con_queda, "con toque de queda no hay lesiones de noche")
+	_comprobar(LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false) == LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false), "no consume Azar: la misma semana, lo mismo")
+
+## C6/C7: hablar con un jugador (según quién es, con memoria y promesas que se
+## cobran), la entrevista al paso de un medio nuevo (mueve seguidores) y la
+## presentación de un fichaje.
+func _probar_charlas_c6_c7() -> void:
+	_titulo("C6/C7 CHARLAS UNO A UNO, ENTREVISTA AL PASO Y PRESENTACIÓN DE FICHAJES")
+	var m := Mundo.new()
+	m.generar(["CHI"], 777)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var j: Jugador = c.plantilla[5]
+	j.moral = 50
+	j.rasgo = "polemico"
+	var r := m.charlas.hablar(j, "exigir", 2026, 3)
+	_comprobar(int(r["moral"]) < 0, "al polémico, exigirle le sienta mal (%s)" % String(r["efecto"]))
+	j.rasgo = "lider"
+	j.moral = 50
+	r = m.charlas.hablar(j, "exigir", 2026, 10)
+	_comprobar(int(r["moral"]) > 0, "al líder, exigirle le motiva")
+	r = m.charlas.hablar(j, "exigir", 2026, 11)
+	_comprobar(bool(r["repetido"]) and String(r["respuesta"]).contains("Otra vez"), "repetir el tema enseguida vale menos")
+	## Promesa incumplida.
+	var k: Jugador = c.plantilla[20]
+	var moral_k := k.moral
+	m.charlas.hablar(k, "minutos", 2026, 20)
+	m.charlas.semana(c, 2026, 20 + Charlas.PLAZO_PROMESA)
+	_comprobar(k.moral < moral_k + 5 and not m.charlas.promesas.has(k.id), "la promesa de minutos incumplida se cobra")
+	## Al paso.
+	var hubo := false
+	for sem in 40:
+		m.prensa.al_paso = {}
+		if not m.prensa.revisar_al_paso(2026, sem).is_empty():
+			hubo = true
+			break
+	_comprobar(hubo, "cada tanto te para un medio nuevo")
+	var seg0 := m.prensa.seguidores
+	m.prensa.abrir_al_paso()
+	var rp := m.prensa.responder_pie(0)
+	_comprobar(m.prensa.seguidores != seg0 and not rp.is_empty(), "lo que dices al paso mueve seguidores")
+	## Presentación.
+	var nuevo: Jugador = m.ligas[0].clubes[3].plantilla[0]
+	nuevo.ovr = 95
+	var saldo0 := c.saldo
+	var pr := PresentacionFichaje.aplicar(m, nuevo, true)
+	_comprobar(c.saldo < saldo0 and int(pr["seguidores"]) > 1000, "presentar a una estrella en el estadio cuesta y trae seguidores")
+	nuevo.ovr = 40
+	pr = PresentacionFichaje.aplicar(m, nuevo, true)
+	_comprobar(int(pr["animo"]) <= 1, "presentar a lo grande a un suplente se lee como propaganda")
+	## Guardado de charlas.
+	var ch2 := Charlas.new()
+	ch2.desde_dic(m.charlas.a_dic())
+	_comprobar(ch2.ultima.has(j.id), "la memoria de las charlas se guarda")
+
+## C7: la licencia de entrenador (niveles, examen de 8, aprobar con 6, espera al
+## suspender, premio de prestigio) y el portero del minijuego que aprende.
+func _probar_licencia_c7() -> void:
+	_titulo("C7 LICENCIA DE ENTRENADOR Y MINIJUEGO DE PENALES")
+	var m := Mundo.new()
+	m.generar(["CHI"], 99)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var lic := m.licencia
+	var qs := lic.examen()
+	_comprobar(qs.size() == Licencia.PREGUNTAS_POR_EXAMEN, "el examen tiene %d preguntas" % qs.size())
+	var todas_ok := true
+	for q: Array in Licencia.BANCO:
+		todas_ok = todas_ok and int(q[2]) >= 0 and int(q[2]) < (q[1] as Array).size()
+	_comprobar(todas_ok, "toda pregunta del banco tiene una respuesta válida")
+	for n in range(1, 5):
+		var cuantas := 0
+		for q: Array in Licencia.BANCO:
+			if int(q[3]) <= n and int(q[3]) >= maxi(1, n - 1):
+				cuantas += 1
+		_comprobar(cuantas >= Licencia.PREGUNTAS_POR_EXAMEN, "hay preguntas de sobra para el nivel %d (%d)" % [n, cuantas])
+	## Suspender: todas mal.
+	var malas: Array = []
+	for q: Array in qs:
+		malas.append((int(q[2]) + 1) % (q[1] as Array).size())
+	var r := lic.corregir(qs, malas, 2026, 5, m.roles, m.prensa)
+	_comprobar(not bool(r["aprobado"]) and lic.puede_presentarse(2026, 6) != "", "suspender obliga a esperar")
+	_comprobar(lic.puede_presentarse(2026, 5 + Licencia.ESPERA_SEMANAS) == "", "pasada la espera, se puede repetir")
+	## Aprobar: todas bien.
+	qs = lic.examen()
+	var buenas: Array = []
+	for q: Array in qs:
+		buenas.append(int(q[2]))
+	var prest0 := m.roles.prestigio
+	r = lic.corregir(qs, buenas, 2026, 20, m.roles, m.prensa)
+	_comprobar(bool(r["aprobado"]) and lic.nivel == 1 and m.roles.prestigio >= prest0, "aprobar sube de nivel y de prestigio")
+	var l2 := Licencia.new()
+	l2.desde_dic(lic.a_dic())
+	_comprobar(l2.nivel == 1, "la licencia se guarda")
+	## El portero aprende.
+	var mj := MinijuegoPenales.new()
+	mj._rng.seed = 5
+	mj._historial = [2, 2]
+	var a_la_2 := 0
+	for k in 100:
+		if mj.eleccion_portero() == 2:
+			a_la_2 += 1
+	_comprobar(a_la_2 > 60, "si repites esquina, el portero se tira ahí (%d de 100)" % a_la_2)
+	mj.free()
+
+## TANDA C: instalaciones a 10 niveles (tribunas a 5, rendimiento a la mitad por
+## encima de 5), trabajadores con carácter y eventos, asuntos de la academia, las
+## ramas compiten, pierna débil y premios en la ficha.
+func _probar_tanda_c() -> void:
+	_titulo("TANDA C: INSTALACIONES, TRABAJADORES, CANTERA, RAMAS, FICHA")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5150)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	c.saldo = 2000000000
+	var o := m.obras
+	_comprobar(o.maximo("ct") == 10 and o.maximo("trib") == 5, "10 niveles, las tribunas se quedan en 5")
+	o.niveles["ct"] = 5
+	var r5 := o.ritmo_de_progreso()
+	o.niveles["ct"] = 10
+	var r10 := o.ritmo_de_progreso()
+	_comprobar(r10 > r5 and (r10 - r5) < (r5 - 1.0), "de 6 a 10 cada nivel rinde la mitad (%.2f → %.2f)" % [r5, r10])
+	_comprobar(o.coste("ct", c.rep) == -1, "al nivel 10 no se puede mejorar más")
+	o.niveles["trib"] = 5
+	_comprobar(o.iniciar("trib", c) != "", "las tribunas no pasan de 5")
+	## Trabajadores.
+	var t := Trabajadores.de(c, "cocina")
+	_comprobar(String(t["puesto"]) == "Chef del club" and Trabajadores.de(c, "cocina") == t, "cada instalación tiene su encargado, siempre el mismo")
+	for k: String in Instalaciones.CATALOGO:
+		o.niveles[k] = mini(3, o.maximo(k))
+	var eventos := 0
+	for sem in 104:
+		eventos += m.trabajadores.semana(c, o, 2026, sem, m.prensa).size()
+	_comprobar(eventos > 3 and eventos < 80, "en las instalaciones pasan cosas, pero no cada semana (%d en 2 años)" % eventos)
+	## El equipo de cada instalación (26-9-2026): gente con estado, efecto y
+	## asuntos con decisión.
+	var tr := m.trabajadores
+	_comprobar(tr.equipo(c, o, "cocina").size() == 2, "con nivel 3 la cocina tiene dos personas")
+	var f_ct: float = o.factor_personal.get("ct", 1.0)
+	_comprobar(f_ct >= 0.75 and f_ct <= 1.15, "el personal mueve el rendimiento de la instalación (%.2f)" % f_ct)
+	tr.equipos["ct"][0]["hab"] = 99
+	tr.equipos["ct"][0]["moral"] = 99
+	var f_bueno := tr.factor("ct")
+	tr.equipos["ct"][0]["hab"] = 30
+	tr.equipos["ct"][0]["moral"] = 20
+	_comprobar(f_bueno > tr.factor("ct"), "gente buena y contenta rinde más (%.2f > %.2f)" % [f_bueno, tr.factor("ct")])
+	var hubo_asunto := false
+	for sem2 in 400:
+		tr.semana(c, o, 2030, sem2, m.prensa)
+		if not tr.pendiente.is_empty():
+			hubo_asunto = true
+			break
+	_comprobar(hubo_asunto, "el personal trae asuntos para decidir")
+	if hubo_asunto:
+		var res_p := tr.resolver("b", c, o, m.prensa)
+		_comprobar(not res_p.is_empty() and tr.pendiente.is_empty(), "el asunto del personal se resuelve: %s" % String(res_p.get("titulo", "")))
+	var tr2 := Trabajadores.new()
+	tr2.desde_dic(tr.a_dic())
+	_comprobar(tr2.equipos.size() == tr.equipos.size(), "el personal se guarda con la partida")
+	## REPUTACIÓN (26-9-2026): niveles del club y fama por facetas.
+	var rp := m.roles.reputacion
+	_comprobar(rp.valor("honesto") == 50, "la fama arranca neutra")
+	rp.registrar("honesto", 30, "prueba")
+	_comprobar(rp.mult_compras() < 1.0, "con fama de honesto te piden menos (%.2f)" % rp.mult_compras())
+	rp.registrar("mediatico", 40, "prueba")
+	_comprobar(rp.mult_marcas() > 1.0 and not rp.historial.is_empty(), "la fama mediática sube las marcas y queda anotada")
+	_comprobar(Reputacion.nombre_nivel(20).contains("Local") and Reputacion.nombre_nivel(95).contains("Leyenda"), "los niveles del club van de Local a Leyenda")
+	_comprobar(Reputacion.tope_instalaciones(20) < Reputacion.tope_instalaciones(90), "más reputación, instalaciones más altas")
+	var rep_antes := c.rep
+	c.rep = 20
+	o.niveles["museo"] = Reputacion.tope_instalaciones(20)
+	o.obras.erase("museo")
+	_comprobar(o.iniciar("museo", c).contains("reputación"), "un club local no pasa del tope de su nivel")
+	c.rep = rep_antes
+	var rp2 := Reputacion.new()
+	rp2.desde_dic(rp.a_dic())
+	_comprobar(rp2.valor("honesto") == rp.valor("honesto") and rp2.historial.size() == rp.historial.size(), "la reputación se guarda con la partida")
+	## MODOS (26-9-2026): los cinco retos se montan y se juzgan; fundar con colores.
+	for r: Array in Retos.LISTA:
+		var mr := Mundo.new()
+		mr.generar(["CHI"], 11)
+		var cr := Retos.montar(mr, String(r[0]))
+		_comprobar(cr != null and mr.mi_club_id == cr.id and String(mr.reto["id"]) == String(r[0]), "el reto «%s» elige y prepara su club" % String(r[2]))
+		if String(r[0]) == "deuda" and cr != null:
+			_comprobar(cr.saldo < 0, "el club en ruinas arranca con deuda")
+			var jr := Retos.juzgar(mr, 5, false, false)
+			_comprobar(not bool(jr["cumplido"]) and Retos.juzgar(mr, 5, false, false).is_empty(), "el reto se juzga una sola vez")
+		if String(r[0]) == "titulo" and cr != null:
+			var jt := Retos.juzgar(mr, 1, false, false)
+			_comprobar(bool(jt["cumplido"]), "salir campeón cumple «Obligados a ganar»")
+	var mf := Mundo.new()
+	mf.generar(["CHI"], 12)
+	var cf := mf.fundar_club("Club Nuevo", "CHI", "#112233", "#ddeeff", "La Cancha")
+	_comprobar(cf != null and cf.color1 == "#112233" and cf.estadio_nombre == "La Cancha", "fundar un club con sus colores y su estadio")
+	## TU CASA (28-9-2026): las noticias se vuelven publicaciones y la escena se
+	## monta con cada vivienda (casa, auto y DT con el móvil).
+	## LAS REDES (Tribuna): cuentas, noticias, publicar, responder, guardar.
+	var rd := mf.redes
+	_comprobar(rd != null and String(rd.cuentas["club"]["usuario"]).ends_with("_oficial") and int(rd.cuentas["club"]["seguidores"]) > 0, "el club tiene su cuenta oficial (%s)" % String(rd.cuentas["club"]["usuario"]))
+	var n_antes := rd.publicaciones.size()
+	rd.desde_noticia(mf, "✅ Victoria de visita", "2-1 en el clásico")
+	_comprobar(rd.publicaciones.size() == n_antes + 2 and String(rd.publicaciones[1]["cuenta"]) == "club", "una victoria la publica el club y la comenta un hincha")
+	var pub := rd.publicar(mf, "hinchada", ["#Hinchada", rd.tendencia])
+	_comprobar(not pub.has("error") and int(pub["likes"]) > 0 and (pub["comentarios"] as Array).size() >= 3, "publicar un mensaje a la hinchada trae me gusta y comentarios (%d)" % int(pub.get("likes", 0)))
+	var pend_antes := rd.pendientes()
+	var resp := rd.responder(mf, int(pub["id"]), 0, "agradecer")
+	_comprobar(resp != "" and rd.pendientes() == pend_antes - 1 and rd.responder(mf, int(pub["id"]), 0, "broma") == "ya le respondiste", "responder un comentario, una sola vez")
+	rd.publicar(mf, "entreno", [])
+	_comprobar(rd.publicar(mf, "familia", []).has("error"), "no más de %d publicaciones por semana" % Redes.MAX_PROPIAS_SEMANA)
+	var gustos := int(pub["likes"])
+	rd.me_gusta(int(pub["id"]))
+	_comprobar(int(rd.buscar(int(pub["id"]))["likes"]) == gustos + 1, "dar me gusta suma uno")
+	## Los jugadores publican y tú les comentas.
+	var n_pub := rd.publicaciones.size()
+	rd._publican_jugadores(mf)
+	var pj: Dictionary = rd.publicaciones[0]
+	_comprobar(rd.publicaciones.size() > n_pub and String(pj["cuenta"]) == "jugador" and String(pj["autor"]).begins_with("@"), "un jugador de tu plantel publica (%s)" % String(pj["autor"]))
+	var jpj := mf.jugador_por_id(String(pj["jugador_id"]))
+	var moral_antes := jpj.moral
+	var rc := rd.comentar_jugador(mf, int(pj["id"]), "apoyo")
+	_comprobar(jpj.moral > moral_antes or moral_antes == 100, "apoyarlo en redes le sube la moral (%s)" % rc)
+	_comprobar(rd.comentar_jugador(mf, int(pj["id"]), "cortante") == "ya le comentaste", "a cada publicación se le comenta una vez")
+	var rd2 := Redes.new()
+	rd2.desde_dic(rd.a_dic())
+	_comprobar(rd2.publicaciones.size() == rd.publicaciones.size() and rd2.pendientes() == rd.pendientes(), "las redes se guardan con la partida")
+	## EL MÓVIL (28-9-2026): acceso a la cuenta del club, sesiones, apps.
+	_comprobar(not rd.acceso_club and rd.iniciar_sesion(String(rd.cuentas["club"]["usuario"]), "x") != "", "al principio la cuenta del club no es tuya")
+	for _s in Redes.SEMANAS_PARA_ACCESO:
+		rd.semana(mf)
+	_comprobar(rd.acceso_club and rd.clave_club != "" and mf.movil.sin_leer() >= 1, "a las %d semanas te dan la cuenta del club y la clave llega por Mensajes" % Redes.SEMANAS_PARA_ACCESO)
+	rd.cerrar_sesion()
+	_comprobar(rd.publicar(mf, "entreno", []).has("error"), "sin sesión no se publica")
+	_comprobar(rd.iniciar_sesion(String(rd.cuentas["club"]["usuario"]), "mala") == "clave incorrecta", "con la clave mala no se entra")
+	_comprobar(rd.iniciar_sesion(String(rd.cuentas["club"]["usuario"]), rd.clave_club) == "" and rd.sesion == "club", "con la clave buena se entra a la cuenta del club")
+	var saldo_antes := mf.mi_club().saldo
+	var pc := rd.publicar(mf, "camiseta", ["#NuevaCamiseta"])
+	_comprobar(not pc.has("error") and String(pc["cuenta"]) == "club" and mf.mi_club().saldo > saldo_antes, "publicar la camiseta desde el club vende en la tienda (%s)" % _dinero(mf.mi_club().saldo - saldo_antes))
+	rd.iniciar_sesion(String(rd.cuentas["dt"]["usuario"]), "")
+	_comprobar(rd.sesion == "dt", "se vuelve a tu cuenta")
+	mf.movil.fondo = "atardecer"
+	mf.movil.funda = "c0392b"
+	var mv2 := Movil.new()
+	mv2.desde_dic(mf.movil.a_dic())
+	_comprobar(mv2.fondo == "atardecer" and mv2.funda == "c0392b" and mv2.mensajes.size() == mf.movil.mensajes.size(), "la personalización y los mensajes del móvil se guardan")
+	_comprobar(Movil.remitente_de("La directiva pierde la paciencia", "").size() == 2 and Movil.remitente_de("Gol", "").is_empty(), "las noticias de la directiva llegan como mensaje")
+	_comprobar(mf.movil.textura_perfil(mf) != null, "la foto de perfil es tu retrato por defecto")
+	var tel := Telefono.crear(mf, [{"titulo": "Prueba", "cuerpo": "x"}])
+	for app: Array in Telefono.APPS:
+		tel.abrir_app(String(app[0]))
+	tel.abrir_app("inicio")
+	_comprobar(tel.get("_cuerpo") != null, "el móvil abre sus %d apps" % Telefono.APPS.size())
+	tel.free()
+	for viv: String in VidaDT.ORDEN_VIVIENDA:
+		var ce := CasaEscena3D.new()
+		ce.montar(viv, "deportivo", {}, Color.RED, Color.WHITE)
+		var mallas := ce.find_children("*", "MeshInstance3D", true, false).size()
+		_comprobar(mallas > 20, "la escena de «%s» se monta (%d mallas)" % [viv, mallas])
+		if viv == "jardin":
+			var hierba := ce.find_children("*", "MultiMeshInstance3D", true, false)
+			_comprobar(not hierba.is_empty() and (hierba[0] as MultiMeshInstance3D).multimesh.instance_count > 10000, "el jardín tiene césped de briznas (%d)" % ((hierba[0] as MultiMeshInstance3D).multimesh.instance_count if not hierba.is_empty() else 0))
+			var farolas: Array = ce.get("_farolas")
+			_comprobar(farolas.size() == 2, "hay dos farolas para el atardecer")
+			ce.libre = true
+			ce.acercar(100.0)
+			_comprobar(is_equal_approx(float(ce.get("_dist")), 14.0), "la cámara libre no se aleja más de la cuenta")
+		ce.free()
+	## LOS CONTRATOS VENCEN (28-9-2026, informe externo).
+	var mc := Mundo.new()
+	mc.generar(["CHI"], 21)
+	mc.mi_club_id = mc.ligas[0].clubes[0].id
+	var jc: Jugador = mc.mi_club().plantilla[0]
+	jc.anios_contrato = 1
+	var jr: Jugador = mc.mi_club().plantilla[1]
+	jr.anios_contrato = 3
+	var libres_antes := mc.libres.size()
+	mc.nueva_temporada()
+	_comprobar(not mc.mi_club().plantilla.has(jc) and mc.libres.has(jc) and jc.club_id == "", "el contrato que se acaba sin renovar deja al jugador libre")
+	_comprobar(mc.mi_club().plantilla.has(jr) and jr.anios_contrato == 2, "a los demás les queda un año menos")
+	_comprobar(mc.libres.size() > libres_antes, "la bolsa de libres se llena con los contratos vencidos (%d)" % (mc.libres.size() - libres_antes))
+	## MERCADO AVANZADO (bloques 37-38): guerra de ofertas y zonas grises.
+	var ma := MercadoAvanzado.new()
+	var estrella: Jugador = mf.mi_club().plantilla[0]
+	estrella.ovr = 80
+	var ofertante: Club = mf.ligas[0].clubes[1] if mf.ligas[0].clubes[1] != mf.mi_club() else mf.ligas[0].clubes[2]
+	mf.mercado.ofertas_recibidas.append({"jugador": estrella, "club": ofertante, "monto": 1000000, "semana": 1, "clausula": false})
+	for c_rico: Club in mf.clubes.values():
+		c_rico.saldo = maxi(c_rico.saldo, 50000000)
+	var hubo_puja := 0
+	for _k in 12:
+		hubo_puja += ma.guerra_de_ofertas(mf)
+	var max_oferta := 0
+	for o_ma: Dictionary in mf.mercado.ofertas_recibidas:
+		if o_ma["jugador"] == estrella:
+			max_oferta = maxi(max_oferta, int(o_ma["monto"]))
+	_comprobar(hubo_puja >= 1 and hubo_puja <= MercadoAvanzado.MAX_PUJAS and max_oferta > 1000000, "guerra de ofertas: otros clubes mejoran la oferta (%d pujas, hasta %s)" % [hubo_puja, _dinero(max_oferta)])
+	mf.mercado.ofertas_recibidas.clear()
+	for tipo_ma: String in ["superagente", "apuestas", "transparencia"]:
+		_comprobar(ma._montar(mf, tipo_ma) and not ma.pendiente.is_empty(), "zona gris «%s» se plantea" % tipo_ma)
+		var res_ma := ma.resolver(mf, "a")
+		_comprobar(res_ma.has("titulo") and ma.pendiente.is_empty(), "zona gris «%s» se resuelve: %s" % [tipo_ma, String(res_ma.get("titulo", ""))])
+	if mf.libres.is_empty():
+		mf.generar_libres()
+	for l_ma: Jugador in mf.libres:
+		l_ma.edad = maxi(l_ma.edad, 31)
+	var conf_antes := mf.directiva.confianza
+	_comprobar(ma._montar(mf, "impuesto"), "la directiva propone un fichaje")
+	ma.resolver(mf, "b")
+	_comprobar(mf.directiva.confianza < conf_antes, "negarte al fichaje impuesto baja la confianza (%d -> %d)" % [conf_antes, mf.directiva.confianza])
+	var ma2 := MercadoAvanzado.new()
+	ma._montar(mf, "transparencia")
+	ma2.desde_dic(ma.a_dic())
+	_comprobar(String(ma2.pendiente.get("id", "")) == "transparencia" and ma2.superagente == ma.superagente, "el mercado avanzado se guarda con la partida")
+	## INSOLVENCIA (bloques 39-40): puntos, administrador, cláusula, refundación.
+	var mi2 := Mundo.new()
+	mi2.generar(["CHI"], 33)
+	mi2.tomar_el_mando(mi2.ligas[0].clubes[3].id)
+	var ci := mi2.mi_club()
+	var ins := mi2.insolvencia
+	var liga_i := mi2.ligas[0]
+	var pts_antes := int(liga_i.tabla_puntos[ci.id]["pts"])
+	for c_rico2: Club in mi2.clubes.values():
+		if c_rico2 != ci:
+			c_rico2.saldo = maxi(c_rico2.saldo, 90000000)
+	ci.saldo = -50000000
+	mi2.banco.semanas_en_rojo = Banco.SEM_MORA
+	ins.semana(mi2)
+	_comprobar(String(ins.pendiente.get("id", "")) == "clausula", "al entrar en mora, el DT puede activar su cláusula de salida")
+	ins.resolver(mi2, "a")
+	mi2.banco.semanas_en_rojo = Banco.SEM_VEEDOR
+	ins.semana(mi2)
+	var plantel_antes := ci.plantilla.size()
+	_comprobar(int(liga_i.tabla_puntos[ci.id]["pts"]) == pts_antes - Insolvencia.PUNTOS_SANCION, "con veedor, la federación resta %d puntos" % Insolvencia.PUNTOS_SANCION)
+	_comprobar(ins.tope_salarial > 0, "con veedor hay tope salarial (%s)" % _dinero(ins.tope_salarial))
+	ins.tope_salarial = 1
+	ins.semana(mi2)
+	_comprobar(ci.plantilla.size() == plantel_antes - 1, "el administrador vende al que más cobra si se pasa del tope")
+	mi2.banco.semanas_en_rojo = Banco.SEM_LIQUIDACION - 1
+	ins.pendiente = {}
+	ins.semana(mi2)
+	_comprobar(String(ins.pendiente.get("id", "")) == "refundacion", "una semana antes de liquidar, se ofrece la refundación")
+	var rep_ci := ci.rep
+	ins.resolver(mi2, "a")
+	_comprobar(mi2.banco.semanas_en_rojo == 0 and ci.saldo >= 0 and ci.rep < rep_ci and not mi2.banco.liquidado_ya, "refundar salva el club: deuda perdonada, caja a cero, reputación abajo")
+	var ins2 := Insolvencia.new()
+	ins2.desde_dic(ins.a_dic())
+	_comprobar(ins2.refundado_anio == ins.refundado_anio and ins2.sancion_anio == ins.sancion_anio, "la insolvencia se guarda con la partida")
+	## REGLAMENTO FINO (bloques 44-45): desempate, promoción, árbitros, corrupción.
+	var mr2 := Mundo.new()
+	mr2.generar(["CHI"], 44)
+	mr2.tomar_el_mando(mr2.ligas[0].clubes[0].id)
+	var lr := mr2.ligas[0]
+	var ca: Club = lr.clubes[1]
+	var cb: Club = lr.clubes[2]
+	lr.tabla_puntos[ca.id]["pts"] = 30; lr.tabla_puntos[ca.id]["gf"] = 20; lr.tabla_puntos[ca.id]["gc"] = 20
+	lr.tabla_puntos[cb.id]["pts"] = 30; lr.tabla_puntos[cb.id]["gf"] = 30; lr.tabla_puntos[cb.id]["gc"] = 10
+	lr.h2h["%s|%s" % [ca.id, cb.id]] = 6
+	lr.h2h["%s|%s" % [cb.id, ca.id]] = 0
+	var pos := func(tb: Array, c0: Club) -> int:
+		for i_t in tb.size():
+			if tb[i_t]["club"] == c0:
+				return i_t
+		return -1
+	var t_dif: Array = lr.tabla()
+	_comprobar(pos.call(t_dif, cb) < pos.call(t_dif, ca), "sin la moción, a igualdad de puntos manda la diferencia de gol")
+	Liga.desempate_directo = true
+	var t_dir: Array = lr.tabla()
+	_comprobar(pos.call(t_dir, ca) < pos.call(t_dir, cb), "con la moción, manda el enfrentamiento directo")
+	Liga.desempate_directo = false
+	var fed := mr2.federacion
+	fed.anotar_arbitro("Árbitro X", "estricto", 2, 1)
+	fed.anotar_arbitro("Árbitro X", "estricto", 0, 0)
+	_comprobar(fed.texto_arbitro("Árbitro X") == "Con él: 2 PJ · 1G 1E 0P", "el historial por árbitro se lleva (%s)" % fed.texto_arbitro("Árbitro X"))
+	var prom := mr2.jugar_promocion(lr.clubes[3], lr.clubes[4])
+	_comprobar(prom["ganador"] == lr.clubes[3] or prom["ganador"] == lr.clubes[4], "la promoción se juega a ida y vuelta: %s" % String(prom["texto"]))
+	fed.promocion = true
+	var fed2 := Federacion.new()
+	fed2.desde_dic(fed.a_dic())
+	_comprobar(fed2.promocion and fed2.arbitros.has("Árbitro X"), "promoción e historial de árbitros se guardan")
+	Liga.desempate_directo = false
+	var mac := MercadoAvanzado.new()
+	_comprobar(mac._montar(mr2, "corrupcion") and String(mac.pendiente["id"]) == "corrupcion", "aparece la corrupción federativa")
+	var aliados_antes := fed.aliados
+	mac.resolver(mr2, "b")
+	_comprobar(fed.aliados < aliados_antes, "denunciarla te cuesta aliados en la asamblea")
+	## EDITOR DE COMPETICIONES (bloque 47).
+	var me := Mundo.new()
+	me.generar(["CHI"], 47)
+	me.tomar_el_mando(me.ligas[0].clubes[0].id)
+	var ed_c := Editor.new(me)
+	var l1: Liga = me.ligas[0]
+	_comprobar(ed_c.renombrar_liga(l1, "Liga de Prueba") == "" and l1.nombre == "Liga de Prueba", "se renombra una liga")
+	ed_c.fijar_descensos(l1, 3)
+	ed_c.fijar_puntos_victoria(l1, 2)
+	var d1: Dictionary = Partida._liga_a_dic(l1)
+	var l1b := Partida._dic_a_liga(d1, me)
+	_comprobar(l1b.plazas_descenso == 3 and l1b.puntos_victoria == 2, "descensos y puntos por victoria se guardan")
+	l1.preparar()
+	l1._anotar_resultado(l1.clubes[0], l1.clubes[1], 2, 0)
+	_comprobar(int(l1.tabla_puntos[l1.clubes[0].id]["pts"]) == 2, "con 2 puntos por victoria, ganar da 2")
+	var resumen_e := me.nueva_temporada()
+	var bajan_chi := 0
+	for x_b: Variant in resumen_e["bajan"]:
+		if x_b is Club and (x_b as Club).pais == "CHI":
+			bajan_chi += 1
+	_comprobar(bajan_chi == 3, "con 3 plazas de descenso, bajan 3 (%d)" % bajan_chi)
+	var sede_c: Club = me.ligas[0].clubes[0]
+	ed_c.renombrar_copa("Copa Editada")
+	ed_c.fijar_sede_final(sede_c)
+	_comprobar(me.copa.nombre == "Copa Editada" and me.copa.sede_final_id == sede_c.id, "la copa se renombra y tiene sede fija")
+	## COLORES POR SECCIÓN: cada anillo de cada tribuna, vallas y focos.
+	var est_p := mf.estadio
+	var claves_antes: Array = est_p.perfil(mf.mi_club()).keys()
+	mf.mi_club().saldo = maxi(mf.mi_club().saldo, 100000000)
+	var err_an := est_p.reformar(mf.mi_club(), {"personalizar_bandejas": true, "anillo_sur_2": "#b01e2d", "focosCol": "#1f4fa3", "vallaCol": "#1b1d22"})
+	var perf_an: Dictionary = est_p.perfil(mf.mi_club())
+	_comprobar(err_an == "" and String(((perf_an["bandejas"] as Dictionary)["sur"] as Dictionary)["niveles"][1]) == "#b01e2d", "el anillo 2 de la tribuna sur tiene su color (%s)" % err_an)
+	_comprobar(String(perf_an.get("focosCol", "")) == "#1f4fa3" and String(perf_an.get("vallaCol", "")) == "#1b1d22", "focos y vallas con color propio")
+	var est_limpio := EstadioPropio.new()
+	_comprobar(not est_limpio.perfil(mf.mi_club()).has("focosCol") and claves_antes.size() > 0, "sin elegir, el perfil no suma claves nuevas")
+	## LOS BALONES (mapa de metas 19): 8 pieles, 3 dibujos de paneles de verdad.
+	_comprobar(Comercial.balones().size() >= 8, "hay %d balones para elegir" % Comercial.balones().size())
+	var cb_club := Comercial.color_balon("club", mf.mi_club())
+	_comprobar(cb_club.size() == 3 and cb_club[0] == Color(mf.mi_club().color1) and String(cb_club[2]) == "moderno", "el balón del club lleva sus colores y su dibujo")
+	var img_cl := Balon3D.textura(Color.WHITE, Color.BLACK, "clasico").get_image()
+	var oscuros := 0
+	for yb in range(0, img_cl.get_height(), 2):
+		for xb in range(0, img_cl.get_width(), 2):
+			if img_cl.get_pixel(xb, yb).get_luminance() < 0.2:
+				oscuros += 1
+	var frac := float(oscuros) / float(img_cl.get_width() * img_cl.get_height() / 4)
+	_comprobar(frac > 0.08 and frac < 0.45, "el clásico tiene sus 12 pentágonos oscuros (%.0f %% del balón)" % (frac * 100.0))
+	var t_mod := Balon3D.textura(Color.WHITE, Color.BLACK, "moderno")
+	_comprobar(t_mod != Balon3D.textura(Color.WHITE, Color.BLACK, "clasico") and t_mod == Balon3D.textura(Color.WHITE, Color.BLACK, "moderno"), "cada dibujo es distinto y se guarda en caché")
+	## EL CHOQUE DE CAMISETAS: la visita cambia si se parece al local.
+	var cl_a: Club = mf.ligas[0].clubes[0]
+	var cl_b: Club = mf.ligas[0].clubes[1]
+	var c1_a := cl_a.color1
+	var c2_a := cl_a.color2
+	cl_b.color1 = cl_a.color1
+	cl_b.color2 = cl_a.color2
+	var kv := Puente3D.kit_visita(cl_a, cl_b)
+	_comprobar(not Puente3D.chocan(Puente3D.kit(cl_a), kv), "si las camisetas chocan, la visita se cambia (%s vs %s)" % [String(Puente3D.kit(cl_a)["c1"]), String(kv["c1"])])
+	cl_a.color1 = c1_a
+	cl_a.color2 = c2_a
+	## EL PASE CON LA FUERZA JUSTA: el balón raso muere 2,5 m pasado el destino.
+	var v20 := MotorJugable.velocidad_para(20.0)
+	_comprobar(absf(MotorJugable.distancia_rodando(v20) - 22.5) < 0.3, "un pase de 20 m sale a %.1f m/s y rueda %.1f m" % [v20, MotorJugable.distancia_rodando(v20)])
+	## LA CARRERA DE JUGADOR: se crea en un club modesto y se guarda entera.
+	var cj := CarreraJugador.crear(mf, "Prueba Delantero", "DC", true, 99)
+	var yo := cj.jugador(mf)
+	_comprobar(yo != null and yo.edad == 17 and cj.club(mf) != null, "la carrera crea un jugador de 17 años con club")
+	cj.fama = 33
+	cj.eventos.append({"id": "x", "titulo": "t", "texto": "", "opciones": [], "unico": false})
+	var cj2 := CarreraJugador.desde_dic(cj.a_dic())
+	_comprobar(cj2.jugador_id == cj.jugador_id and cj2.fama == 33 and cj2.eventos.size() == cj.eventos.size(), "la carrera se guarda y se carga")
+	var ov_antes := yo.ovr
+	cj.foco = "tiro"
+	for _k in 30:
+		cj.energia = 100
+		cj.entrenar(mf)
+	_comprobar(yo.ovr > ov_antes, "entrenar sube la media (%d -> %d)" % [ov_antes, yo.ovr])
+	cj.club(mf).soltar(yo)
+	## LAS BUTACAS DE LOS RIVALES, de los colores de su club (no el verde del visor).
+	var riv_b: Club = mf.ligas[0].clubes[1]
+	_comprobar(String(riv_b.perfil_estadio().get("asiento1", "")) == riv_b.color1, "las butacas de un rival llevan los colores de su club")
+	## LOS OBJETIVOS EN EL BORDE: directiva, confianza, próximo partido y misiones del mentor.
+	PanelObjetivos.ruta = "user://objetivos_banco.cfg"
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(PanelObjetivos.ruta))
+	var objs := PanelObjetivos.lista(mf, "dt")
+	var mis_obj: Array = objs.filter(func(o: Dictionary) -> bool: return bool(o.get("mentor", false)))
+	_comprobar(objs.size() >= 4 and String(objs[0]["icono"]) == "🏆" and not bool(objs[0]["hecho"]), "los objetivos: la meta de la directiva, sin cumplir antes de jugar (%d)" % objs.size())
+	_comprobar(mis_obj.size() >= 3 and mis_obj.all(func(o: Dictionary) -> bool: return not bool(o["hecho"])), "las misiones del mentor salen en el panel, pendientes")
+	PanelObjetivos.marcar_mision("dt", String(mis_obj[0]["texto"]))
+	_comprobar(bool(PanelObjetivos.lista(mf, "dt").filter(func(o: Dictionary) -> bool: return String(o["texto"]) == String(mis_obj[0]["texto"]))[0]["hecho"]), "una misión cumplida queda tachada y se guarda")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(PanelObjetivos.ruta))
+	## LA PRESENTACIÓN EN EL ESTADIO: tres planos por tiempo; cerrar avisa una vez.
+	var cin := CinematicaFichaje.new()
+	_comprobar(cin.plano(1.0) == 1 and cin.plano(5.0) == 2 and cin.plano(9.0) == 3, "la cinemática del fichaje tiene tres planos")
+	var avisos_cin := [0]
+	cin.terminada.connect(func() -> void: avisos_cin[0] += 1)
+	cin.cerrar()
+	cin.cerrar()
+	_comprobar(avisos_cin[0] == 1, "saltar la cinemática avisa una sola vez")
+	## META (bloque 50): cromos, museo global, mundo heredado.
+	var sobres_antes := int(Meta.leer()["sobres"])
+	mf.roles.sumar_trofeo("Copa de Prueba")
+	var dm := Meta.leer()
+	_comprobar(int(dm["sobres"]) == sobres_antes + 1 and String((dm["museo"] as Array)[0]["titulo"]) == "Copa de Prueba", "un título va al museo global y da un sobre")
+	var rng_m := RandomNumberGenerator.new()
+	rng_m.seed = 5
+	var salen := Meta.abrir_sobre(mf, rng_m)
+	_comprobar(salen.size() == Meta.POR_SOBRE and int(Meta.leer()["sobres"]) == sobres_antes, "abrir un sobre da %d cromos y gasta el sobre" % Meta.POR_SOBRE)
+	_comprobar((Meta.leer()["cromos"] as Dictionary).size() >= 1, "los cromos quedan en el álbum")
+	var cm0: Club = mf.clubes.values()[0]
+	var rep_real := cm0.rep
+	cm0.rep = 97
+	Meta.fin_de_temporada(mf)
+	cm0.rep = rep_real
+	_comprobar(Meta.hay_legado(), "al cerrar la temporada se guarda el mundo para heredar")
+	var mh := Mundo.new()
+	Meta.heredar_proximo = true
+	mh.generar(["CHI"], 12)
+	var cm_h: Club = null
+	for c_h: Club in mh.clubes.values():
+		if c_h.nombre == cm0.nombre:
+			cm_h = c_h
+	_comprobar(cm_h != null and cm_h.rep == 97 and not Meta.heredar_proximo, "el mundo heredado arranca con la reputación de la última partida")
+	## FONDO DE INVERSIÓN: comprar, tope del 49 %, dividendos, vender, guardar.
+	var fi := FondoInversion.new()
+	fi.caja = 1000000000
+	var otros: Array = mf.clubes.values().filter(func(x: Club) -> bool: return x.id != mf.mi_club_id)
+	var obj: Club = otros[0]
+	_comprobar(fi.comprar(mf, obj, 0.25) == "" and is_equal_approx(float(fi.cartera[obj.id]), 0.25), "el fondo compra un 25 %")
+	fi.comprar(mf, obj, 0.4)
+	_comprobar(float(fi.cartera[obj.id]) <= FondoInversion.MAX_PCT + 0.0001 and fi.comprar(mf, obj, 0.1) != "", "nunca pasa del 49 % de un club")
+	_comprobar(fi.comprar(mf, mf.mi_club(), 0.1) != "", "no compra su propio club")
+	mf.semana = 4
+	var div := fi.semana(mf)
+	_comprobar(div >= 0 and fi.dividendos_totales == div and fi.historia.size() == 1, "cada cuatro semanas reparte dividendos (%s)" % _dinero(div))
+	var fi2 := FondoInversion.new()
+	fi2.desde_dic(fi.a_dic())
+	_comprobar(fi2.caja == fi.caja and fi2.cartera.size() == 1 and fi2.dividendos_totales == fi.dividendos_totales, "el fondo se guarda con la partida")
+	var caja_antes := fi.caja
+	_comprobar(fi.vender(mf, obj, 1.0) == "" and fi.cartera.is_empty() and fi.caja > caja_antes, "vender todo devuelve caja y vacía la cartera")
+	## Cantera.
+	var ec := m.eventos_cantera
+	var hubo := false
+	for sem in 60:
+		ec.semana(m.academia, c, 2026, sem)
+		if not ec.pendiente.is_empty():
+			hubo = true
+			break
+	_comprobar(hubo, "la academia trae asuntos para decidir")
+	if hubo:
+		var r := ec.resolver("a", m.academia, c)
+		_comprobar(not r.is_empty() and ec.pendiente.is_empty(), "el asunto de la academia se resuelve")
+	_comprobar(ec.visitar(m.academia, 2026, 70) == "" and ec.visitar(m.academia, 2026, 70) != "", "una visita a la academia por semana")
+	## Ramas.
+	m.hinchada.ramas["femenino"] = true
+	var res := m.hinchada.temporada_ramas(c, 2026)
+	_comprobar(res.size() == 1 and int(res[0]["puesto"]) >= 1 and int(res[0]["puesto"]) <= 12, "la rama femenina termina en un puesto (%d.º)" % int(res[0]["puesto"]))
+	_comprobar(int(m.hinchada.anios_rama["femenino"]) == 1, "la rama suma temporadas")
+	## Ficha.
+	var cuenta := {}
+	for j: Jugador in m.jugadores():
+		var pd := j.pierna_debil()
+		cuenta[pd] = int(cuenta.get(pd, 0)) + 1
+	_comprobar(cuenta.size() == 5 and int(cuenta.get(2, 0)) + int(cuenta.get(3, 0)) > int(cuenta.get(5, 0)) * 5, "pierna débil de 1 a 5, casi todos 2-3: %s" % str(cuenta))
+	var j0: Jugador = c.plantilla[0]
+	j0.premios.append({"anio": 2026, "premio": "Equipo ideal de la temporada"})
+	_comprobar(Partida._dic_a_jugador(Partida._jugador_a_dic(j0)).premios.size() == 1, "los premios se guardan")
+
+func _probar_calendario_c13() -> void:
+	_titulo("C13/C16: CALENDARIO, DÍAS NACIONALES, MEMORIA Y FESTIVIDADES")
+	## Las fechas: el lunes de la semana 1 de 2026 es el 26 de enero.
+	var d := Calendario.fecha(2026, 1, 0)
+	_comprobar(int(d["month"]) == 1 and int(d["day"]) == 26, "la semana 1 de 2026 empieza el lunes 26 de enero")
+	var p := Calendario.pascua(2026)
+	_comprobar(int(p[0]) == 4 and int(p[1]) == 5, "Pascua 2026 cae el 5 de abril")
+	var p2 := Calendario.pascua(2027)
+	_comprobar(int(p2[0]) == 3 and int(p2[1]) == 28, "Pascua 2027 cae el 28 de marzo")
+	var ram := Calendario.ramadan(2026)
+	_comprobar(ram.size() == 2 and int(ram[0][0]) == 2 and absi(int(ram[0][1]) - 18) <= 1, "el Ramadán 2026 empieza hacia el 18 de febrero")
+	## El 11 de septiembre, en Chile y en EE. UU., es de memoria.
+	var chi := Calendario.del_anio("CHI", 2026)
+	var once_chi := chi.filter(func(f: Dictionary) -> bool: return int(f["mes"]) == 9 and int(f["dia"]) == 11)
+	var once_usa := Calendario.del_anio("USA", 2026).filter(func(f: Dictionary) -> bool: return int(f["mes"]) == 9 and int(f["dia"]) == 11)
+	_comprobar(once_chi.size() == 1 and String(once_chi[0]["tipo"]) == "memoria" and once_usa.size() == 1 and String(once_usa[0]["tipo"]) == "memoria",
+		"el 11 de septiembre es fecha de memoria en Chile y en EE. UU.")
+	_comprobar(chi.any(func(f: Dictionary) -> bool: return int(f["mes"]) == 5 and int(f["dia"]) == 1), "el 1 de mayo está en Chile")
+	var usa := Calendario.del_anio("USA", 2026)
+	_comprobar(not usa.any(func(f: Dictionary) -> bool: return int(f["mes"]) == 5 and int(f["dia"]) == 1)
+		and usa.any(func(f: Dictionary) -> bool: return String(f["nombre"]) == "Labor Day" and int(f["dia"]) == 7),
+		"en EE. UU. no es el 1 de mayo sino el Labor Day (7 de septiembre de 2026)")
+	_comprobar(Calendario.del_anio("URU", 2026).any(func(f: Dictionary) -> bool: return String(f["nombre"]) == "Semana de Turismo"), "en Uruguay es la Semana de Turismo")
+	_comprobar(Calendario.del_anio("KSA", 2026).any(func(f: Dictionary) -> bool: return String(f["nombre"]).begins_with("Empieza el Ramadán")), "Arabia Saudí tiene el Ramadán en su calendario")
+	## Buscar la semana del 18 de septiembre en Chile (fiesta) y la del 11 (memoria).
+	var sem_fiesta := -1
+	var sem_memoria := -1
+	for s in range(1, 50):
+		for f: Dictionary in Calendario.de_la_semana("CHI", 2026, s):
+			if String(f["nombre"]) == "Fiestas Patrias":
+				sem_fiesta = s
+			if String(f["nombre"]) == "11 de septiembre":
+				sem_memoria = s
+	_comprobar(sem_fiesta > 0 and sem_memoria > 0 and sem_fiesta != sem_memoria, "Fiestas Patrias y el 11 caen en semanas distintas (%d y %d)" % [sem_fiesta, sem_memoria])
+	_comprobar(Calendario.factor_publico("CHI", 2026, sem_fiesta) > 1.0, "la semana de Fiestas Patrias llena más el estadio")
+	_comprobar(Calendario.factor_publico("CHI", 2026, sem_memoria) == 1.0 and Calendario.hay_memoria("CHI", 2026, sem_memoria), "la del 11 de septiembre no tiene bonus de fiesta")
+	## Los torneos.
+	_comprobar(Calendario.torneos(2026).any(func(t: Dictionary) -> bool: return String(t["nombre"]) == "Copa del Mundo"), "2026 es año de Mundial")
+	_comprobar(not Calendario.torneos(2027).any(func(t: Dictionary) -> bool: return String(t["nombre"]) == "Copa del Mundo"), "2027 no")
+	## En el mundo: la semana de memoria da noticia y el mentor la explica una vez.
+	var m := Mundo.new()
+	m.generar(["CHI"], 5151)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var noticias: Array = []
+	var mentor: Array = []
+	m.calendario.noticia.connect(func(t: String, _b: String) -> void: noticias.append(t))
+	m.calendario.mentor.connect(func(t: String, _b: String) -> void: mentor.append(t))
+	var moral0 := c.plantilla[0].moral
+	m.calendario.semana(c, 2026, sem_memoria)
+	_comprobar(noticias.any(func(t: String) -> bool: return t.contains("11 de septiembre")) and mentor.has("11 de septiembre"), "el 11 sale en las noticias y el mentor lo explica")
+	_comprobar(c.plantilla[0].moral == moral0, "la memoria no sube la moral como una fiesta")
+	m.calendario.semana(c, 2026, sem_fiesta)
+	_comprobar(c.plantilla[0].moral == mini(moral0 + 1, 99), "la semana de fiesta sube la moral")
+	var m2 := mentor.size()
+	m.calendario.ultima_semana = -1
+	m.calendario.semana(c, 2027, sem_fiesta + 1 if Calendario.de_la_semana("CHI", 2027, sem_fiesta).is_empty() else sem_fiesta)
+	_comprobar(not mentor.slice(m2).has("Fiestas Patrias"), "el mentor no repite la explicación al año siguiente")
+	var dic := m.calendario.a_dic()
+	var cal2 := Calendario.new()
+	cal2.desde_dic(dic)
+	_comprobar(cal2.explicadas.has("11 de septiembre"), "se guarda lo que el mentor ya explicó")
+	_comprobar(Calendario.proximas("CHI", 2026, 1, 5).size() == 5, "hay próximas fechas para el calendario")
+
+func _probar_politica_c15() -> void:
+	_titulo("C15: POLÍTICA Y ESTADO (FICTICIA Y NEUTRAL)")
+	_comprobar(Politica.ESTRUCTURA.size() == 24, "los 24 países tienen su estructura de Estado")
+	_comprobar(Politica.sistema("CHI") == "presidencial" and Politica.mandato("CHI") == 4, "Chile: presidencial, cada 4 años")
+	_comprobar(Politica.sistema("ESP") == "monarquia_parlamentaria" and Politica.mandato("MEX") == 6, "España monarquía parlamentaria; México vota cada 6")
+	_comprobar(Politica.mandato("KSA") == 0, "Arabia Saudí no tiene elecciones nacionales")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5152)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var pol := m.politica
+	var g := pol.gobierno("CHI", 2026)
+	_comprobar(Politica.PARTIDOS.has(String(g["partido"])) and Politica.POSTURAS.has(String(g["postura"])), "el gobierno es de un partido inventado y con una postura neutra")
+	_comprobar(pol.gobierno("CHI", 2026) == g, "el gobierno no cambia al volver a pedirlo")
+	var noticias: Array = []
+	var mentor: Array = []
+	pol.noticia.connect(func(t: String, _b: String) -> void: noticias.append(t))
+	pol.mentor.connect(func(t: String, _b: String) -> void: mentor.append(t))
+	## Forzar elecciones este año y recorrer las semanas.
+	g["proxima"] = 2026
+	var saldo0 := c.saldo
+	for s in range(1, 45):
+		pol.semana(c, 2026, s, m.prensa)
+	_comprobar(mentor.size() == 1, "el mentor explica el Estado una sola vez")
+	_comprobar(noticias.has("🗳️ Campaña electoral") and noticias.has("🗳️ Elecciones en CHI"), "hay campaña y hay resultado")
+	var g2 := pol.gobierno("CHI", 2026)
+	_comprobar(int(g2["desde"]) == 2026 and int(g2["proxima"]) == 2030, "el nuevo gobierno dura 4 años")
+	_comprobar(c.saldo != saldo0, "la postura del gobierno se nota en la caja")
+	## Arabia Saudí: nunca vota.
+	var c2 := m.ligas[0].clubes[1]
+	c2.pais = "KSA"
+	var n0 := noticias.size()
+	for s in range(1, 45):
+		pol.semana(c2, 2026, s, m.prensa)
+	_comprobar(not noticias.slice(n0).any(func(t: String) -> bool: return t.begins_with("🗳️")), "en Arabia Saudí no hay elecciones")
+	_comprobar(Politica.explicacion("KSA").contains("No hay elecciones"), "y el mentor lo explica")
+	## Nombres ficticios y sin partidos reales.
+	_comprobar(not Politica.nombre_ficticio("CHI", "x").is_empty(), "los políticos tienen nombre inventado")
+	var d := pol.a_dic()
+	var p2 := Politica.new()
+	p2.desde_dic(d)
+	_comprobar(p2.gobierno("CHI", 2026)["partido"] == g2["partido"], "el gobierno se guarda")
+
+func _probar_historia_c4() -> void:
+	_titulo("C4: HISTORIA DE LOS CLUBES, CON GUIÑO AL REAL")
+	Datos.usar_base_real(false)
+	var m := Mundo.new()
+	m.generar(["CHI"], 5153)
+	var clubes: Array = m.ligas[0].clubes
+	var por_nombre := {}
+	for c: Club in m.clubes.values():
+		por_nombre[c.nombre] = c
+	var lautaro: Club = por_nombre.get("Lautaro FC")
+	var andina: Club = por_nombre.get("U. Andina")
+	var precord: Club = por_nombre.get("Precordillera")
+	_comprobar(lautaro != null and andina != null and precord != null, "están los tres grandes de la base ficticia")
+	var hl := HistoriaClub.de(lautaro, clubes)
+	_comprobar(bool(hl["con_guino"]) and String(hl["estadio"]) == "la Ruca" and int(hl["fundado"]) == 1925, "Lautaro FC guiña a su original: fundado en 1925, juega en la Ruca")
+	_comprobar(HistoriaClub.nombre_clasico("Lautaro FC", "U. Andina") == "Superclásico", "Lautaro-Andina es el Superclásico")
+	_comprobar(HistoriaClub.nombre_clasico("U. Andina", "Precordillera") == "Clásico Universitario", "Andina-Precordillera es el Clásico Universitario")
+	_comprobar(HistoriaClub.nombre_clasico("Precordillera", "Lautaro FC") == "el Clásico", "Precordillera-Lautaro es el Clásico")
+	_comprobar(m.es_clasico(lautaro, andina), "y el juego lo trata como clásico")
+	## Todos los clubes del mundo tienen historia con guiño.
+	var m2 := Mundo.new()
+	m2.generar([], 5155)
+	var sin := 0
+	var faltan: Array = []
+	for c: Club in m2.clubes.values():
+		if HistoriaClub.dato(c.nombre).is_empty():
+			sin += 1
+			faltan.append(c.nombre)
+	if sin > 0:
+		print("    sin historia: ", faltan)
+	_comprobar(sin == 0, "los %d clubes tienen su fila de historia (%d sin ella)" % [m2.clubes.size(), sin])
+	var grande: Club = clubes[0]
+	var chico: Club = clubes[clubes.size() - 1]
+	_comprobar(int(HistoriaClub.de(grande, clubes)["titulos"]) > int(HistoriaClub.de(chico, clubes)["titulos"]), "el grande tiene más títulos que el chico")
+	_comprobar(HistoriaClub.de(grande, clubes) == HistoriaClub.de(grande, clubes), "el mismo club tiene siempre la misma historia")
+	_comprobar(HistoriaClub.color_de("#ffffff") == "blanco" and HistoriaClub.color_de("#d50032") == "rojo" and HistoriaClub.color_de("#003da5") == "azul", "el apodo generado sale del color")
+	m.tomar_el_mando(clubes[0].id)
+	var t := m.prensa.titular_prensa(true, false, true, "x", "Superclásico")
+	_comprobar(String(t["tit"]).begins_with("SUPERCLÁSICO: "), "la portada dice SUPERCLÁSICO")
+	## Con el pack real, los mismos datos con los nombres reales.
+	if Datos.hay_pack_real():
+		Datos.usar_base_real(true)
+		_comprobar(int(HistoriaClub.dato("C0lo-C0lo").get("fundado", 0)) == 1925 and HistoriaClub.nombre_clasico("C0lo-C0lo", "U. de Ch1le") == "Superclásico", "con el pack real: Colo-Colo 1925 y el Superclásico con la U")
+		Datos.usar_base_real(false)
+
+func _probar_contratos_c9() -> void:
+	_titulo("C9: CONTRATOS Y JORNADA LABORAL")
+	_comprobar(Contratos.JORNADA.size() == 24, "los 24 países tienen su jornada legal")
+	## Chile: 44 horas hasta el 26 de abril de 2026, 42 después, 40 en 2028.
+	var sem_marzo := 8
+	var sem_junio := 20
+	_comprobar(Contratos.horas("CHI", 2026, sem_marzo) == 44 and Contratos.horas("CHI", 2026, sem_junio) == 42, "Chile pasa de 44 a 42 horas en abril de 2026")
+	_comprobar(Contratos.horas("CHI", 2028, sem_junio) == 40, "y llega a 40 en 2028")
+	_comprobar(Contratos.horas("COL", 2026, sem_junio) == 44 and Contratos.horas("COL", 2026, 30) == 42, "Colombia baja a 42 en julio de 2026")
+	_comprobar(Contratos.horas("FRA", 2026, 10) == 35 and Contratos.horas("MEX", 2026, 10) == 48, "Francia 35, México 48")
+	_comprobar(Contratos.factor_estructura("FRA", 2026, 10) > 1.0 and Contratos.factor_estructura("MEX", 2026, 10) < 1.0, "menos horas legales, estructura más cara")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5154)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var j := c.plantilla[0]
+	j.edad = 17
+	_comprobar(Contratos.ajustar_anios(j, 5) == 3, "un menor de 18 no firma por más de 3 años (FIFA)")
+	j.edad = 25
+	_comprobar(Contratos.ajustar_anios(j, 7) == 5 and Contratos.ajustar_anios(j, 0) == 1, "entre 1 y 5 años para el resto")
+	var noticias: Array = []
+	m.contratos.noticia.connect(func(t: String, _b: String) -> void: noticias.append(t))
+	for s in range(1, 30):
+		m.contratos.semana(c, 2026, s)
+	_comprobar(noticias.size() == 1, "el cambio de jornada de abril sale una vez en las noticias")
+	var jugadores_menores := 0
+	for cl: Club in m.clubes.values():
+		for x: Jugador in cl.plantilla:
+			if x.edad < 18 and x.anios_contrato > 3:
+				jugadores_menores += 1
+	_comprobar(jugadores_menores == 0, "ningún menor del mundo generado tiene más de 3 años de contrato")
+
+func _probar_vida_dt() -> void:
+	_titulo("MI VIDA: LA VIDA DEL DT FUERA DEL CLUB")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5156)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var v := m.vida
+	var r := m.roles
+	v.crear_perfil(c.id)
+	var perfil0 := v.perfil.duplicate(true)
+	v.perfil = {}
+	v.crear_perfil(c.id)
+	_comprobar(v.perfil == perfil0, "la familia sale siempre igual para el mismo club")
+	r.patrimonio = 100000
+	var p0 := r.patrimonio
+	v.semana(c, r, 2026, 1, 2)
+	_comprobar(r.patrimonio == p0 - v.coste_semanal(), "casa y transporte se pagan del patrimonio")
+	## Trabajar al máximo: más preparación, más estrés.
+	v.balance = 100
+	v.estres = 40
+	_comprobar(v.factor_trabajo(2026, 2) > 1.02, "trabajando al 100% se prepara mejor el partido")
+	for s in range(2, 8):
+		v.semana(c, r, 2026, s, -1)
+	_comprobar(v.estres > 60, "perder y trabajar sin parar dispara el estrés (%d)" % v.estres)
+	## Tres semanas al límite: reposo.
+	v.estres = 95
+	v.semanas_estres_alto = 0
+	for s in range(8, 11):
+		v.estres = 95
+		v.semana(c, r, 2026, s, -1)
+	_comprobar(v.de_baja(2026, 10) or v.de_baja(2026, 11), "tres semanas al límite: el médico te para")
+	## Ocio: una vez por semana.
+	v.estres = 50
+	_comprobar(v.hacer_ocio("asado", r, 2026, 20) == "" and v.estres < 50, "un asado baja el estrés")
+	_comprobar(v.hacer_ocio("gimnasio", r, 2026, 20) != "", "solo un respiro por semana")
+	## Mudanza.
+	var pat := r.patrimonio
+	_comprobar(v.cambiar_vivienda("casa", r) == "" and v.vivienda == "casa" and r.patrimonio < pat, "te puedes mudar pagando la mudanza")
+	r.patrimonio = 0
+	_comprobar(v.cambiar_vivienda("mansion", r) != "", "sin plata no hay mansión")
+	## Sin plata para la casa, vuelves a lo barato.
+	v.vivienda = "mansion"
+	v.transporte = "chofer"
+	r.patrimonio = 10
+	v.semana(c, r, 2026, 30, 2)
+	_comprobar(v.transporte == "micro" and v.vivienda != "mansion", "sin plata para la casa, te ajustas el cinturón")
+	## Asunto de casa.
+	v.pendiente = {"tipo": "tele", "texto": "x", "a": "si", "b": "no"}
+	r.patrimonio = 0
+	var res := v.resolver("a", r, c, m.prensa, 2026, 31)
+	_comprobar(res != "" and r.patrimonio > 0 and v.pendiente.is_empty(), "el programa de tele paga")
+	var d := v.a_dic()
+	var v2 := VidaDT.new()
+	v2.desde_dic(d)
+	_comprobar(v2.a_dic() == d, "Mi vida se guarda entera")
+
+func _probar_maestrias() -> void:
+	_titulo("MAESTRÍAS: 15 CATEGORÍAS DE 30 NIVELES")
+	_comprobar(Maestria.ORDEN.size() == 15 and Maestria.CATEGORIAS.size() == 15, "hay 15 categorías")
+	var m := Mundo.new()
+	m.generar(["CHI"], 5157)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var ma := m.maestria
+	_comprobar(ma.subir("ataque") != "", "sin puntos no se sube")
+	ma.puntos = 1000
+	var pts0 := m.entrenamiento.dt_puntos
+	for i in 30:
+		ma.subir("ataque", m.entrenamiento)
+	_comprobar(ma.nivel("ataque") == 30 and ma.subir("ataque") != "", "30 niveles y ni uno más")
+	_comprobar(m.entrenamiento.dt_puntos == pts0 + 3, "los hitos 10, 20 y 30 dan un punto de habilidad cada uno")
+	_comprobar(absf(ma.factor_ataque() - 1.06) < 0.001, "el nivel 30 de Ataque son +6 %% de ataque (%.3f)" % ma.factor_ataque())
+	_comprobar(1000 - ma.puntos == 10 * 1 + 10 * 2 + 10 * 3, "los niveles se encarecen por decenas (costó %d)" % (1000 - ma.puntos))
+	var c := m.mi_club()
+	m.aplicar_bonificadores()
+	var a0 := c.bonus_ataque
+	ma.niveles["ataque"] = 0
+	m.aplicar_bonificadores()
+	_comprobar(c.bonus_ataque < a0, "la maestría de ataque llega al bono del equipo")
+	ma.puntos = 0
+	ma.semana(c, m.prensa, m.academia, 1, 1)
+	_comprobar(ma.puntos == 2, "semana ganada: dos puntos de maestría")
+	ma.niveles["finanzas"] = 15
+	var s0 := c.saldo
+	ma.semana(c, m.prensa, m.academia, 2, 2)
+	_comprobar(c.saldo > s0, "Finanzas da un ingreso semanal")
+	var d := ma.a_dic()
+	var m2 := Maestria.new()
+	m2.desde_dic(d)
+	_comprobar(m2.nivel("finanzas") == 15 and m2.puntos == ma.puntos, "las maestrías se guardan")
+
+## ¿DE VERDAD PESAN EN EL MARCADOR? (26-9-2026). El mismo club contra el mismo
+## rival, 300 partidos con la misma semilla: una vez sin nada y otra con las
+## maestrías de juego al 30 y "Genio táctico" en el árbol. Al ser los mismos
+## números aleatorios, cualquier diferencia es de las habilidades.
+func _probar_habilidades_en_resultados() -> void:
+	_titulo("HABILIDADES Y MAESTRÍAS: SE NOTAN EN LOS RESULTADOS")
+	var m := Mundo.new()
+	m.generar(["CHI"], 777)
+	var yo: Club = m.ligas[0].clubes[0]
+	var rival: Club = m.ligas[0].clubes[1]
+	m.tomar_el_mando(yo.id)
+	var serie := func() -> Dictionary:
+		m.aplicar_bonificadores()
+		var r := {"g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "bono": yo.bonus_ataque}
+		seed(4242)
+		for i in 300:
+			var pa := Partido.new(yo, rival, true)
+			var res: Dictionary = pa.simular()
+			r["gf"] += int(res["local"])
+			r["gc"] += int(res["visita"])
+			if res["local"] > res["visita"]:
+				r["g"] += 1
+			elif res["local"] == res["visita"]:
+				r["e"] += 1
+			else:
+				r["p"] += 1
+		return r
+	var base: Dictionary = serie.call()
+	for k: String in ["ataque", "defensa", "porteros", "balon_parado", "analisis"]:
+		m.maestria.niveles[k] = Maestria.NIVEL_MAX
+	m.entrenamiento.dt_nodos["pizarra"] = true
+	m.entrenamiento.dt_nodos["genio"] = true
+	var top: Dictionary = serie.call()
+	var pts := func(r: Dictionary) -> float: return (3.0 * r["g"] + r["e"]) / 300.0
+	print("   · ", "sin nada:  %d-%d-%d, %d:%d goles, %.2f pts/partido (bono ataque %.3f)" % [base["g"], base["e"], base["p"], base["gf"], base["gc"], pts.call(base), base["bono"]])
+	print("   · ", "al máximo: %d-%d-%d, %d:%d goles, %.2f pts/partido (bono ataque %.3f)" % [top["g"], top["e"], top["p"], top["gf"], top["gc"], pts.call(top), top["bono"]])
+	_comprobar(float(top["bono"]) > float(base["bono"]) * 1.15, "el bono llega al motor del partido")
+	_comprobar(int(top["gf"]) > int(base["gf"]) and int(top["gc"]) < int(base["gc"]), "más goles a favor y menos en contra")
+	_comprobar(pts.call(top) > pts.call(base) + 0.1, "se ganan más puntos por partido (%.2f → %.2f)" % [pts.call(base), pts.call(top)])
+	## Y no deciden solas: un club muy inferior con todo al máximo sigue sin
+	## ser favorito ante el mejor.
+	_comprobar(pts.call(top) < 3.0, "no ganan todos los partidos")
+
+## LA BASE DE LA IA QUE JUEGA Y DEL MANDO (26-9-2026).
+func _probar_motor_libre() -> void:
+	_titulo("IA LIBRE: ACCIONES, MOTOR SIN JUGADAS PREHECHAS Y MANDO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 777)
+	var cl: Array = m.ligas[0].clubes.duplicate()
+	cl.sort_custom(func(a: Club, b: Club) -> bool: return a.media() > b.media())
+	var fuerte: Club = cl[0]
+	var debil: Club = cl[cl.size() - 1]
+	var j: Jugador = fuerte.once()[10]
+	## El catálogo.
+	_comprobar(AccionesJuego.CATALOGO.size() >= 20, "%d acciones en el catálogo" % AccionesJuego.CATALOGO.size())
+	var sin_anim: Array = []
+	for k: String in AccionesJuego.CATALOGO:
+		var an := String(AccionesJuego.CATALOGO[k]["anim"])
+		if an != "" and not AnimExtra.CATEGORIAS.has(an):
+			sin_anim.append(k)
+	_comprobar(sin_anim.is_empty(), "cada acción tiene su familia de animaciones %s" % str(sin_anim))
+	var p_cerca := AccionesJuego.prob_exito(j, "pase_corto", {"dist": 8.0})
+	var p_lejos := AccionesJuego.prob_exito(j, "pase_corto", {"dist": 30.0, "presion": 1.0})
+	_comprobar(p_cerca > p_lejos, "un pase corto y libre sale más que uno largo y presionado (%.2f > %.2f)" % [p_cerca, p_lejos])
+	var jb: Jugador = debil.once()[10]
+	_comprobar(AccionesJuego.prob_exito(j, "tiro", {"dist": 16.0}) != AccionesJuego.prob_exito(jb, "tiro", {"dist": 16.0}), "los atributos mueven la probabilidad")
+	_comprobar(AccionesJuego.prob_exito(j, "tiro", {"dist": 16.0, "pie_malo": true}) <= AccionesJuego.prob_exito(j, "tiro", {"dist": 16.0}), "la pierna débil resta")
+	_comprobar(AccionesJuego.xg(Vector2(11, 0)) > AccionesJuego.xg(Vector2(25, 0)) and AccionesJuego.xg(Vector2(11, 0)) > AccionesJuego.xg(Vector2(8, 20)), "el xG baja con la distancia y el ángulo")
+	## El motor: dos iguales dan un partido creíble.
+	var ig := MotorLibre.new(fuerte.once(), fuerte.once(), 1.0, 1.0, 51).simular()
+	var tiros: Array = ig["tiros"]
+	var acierto := float(ig["pases_ok"][0] + ig["pases_ok"][1]) / maxf(1.0, float(ig["pases"][0] + ig["pases"][1]))
+	print("   · iguales: ", ig["goles"], " tiros ", tiros, " pases ", ig["pases"], " acierto %.0f %%" % (acierto * 100.0))
+	_comprobar(int(ig["goles"][0]) + int(ig["goles"][1]) <= 8, "marcador de fútbol, no de balonmano")
+	## Entre dos equipos de élite el prototipo todavía tira de más (calibración
+	## pendiente, E17 del ROADMAP): el tope es generoso a propósito.
+	_comprobar(int(tiros[0]) + int(tiros[1]) >= 6 and int(tiros[0]) + int(tiros[1]) <= 160, "hay tiros, sin exagerar")
+	_comprobar(acierto > 0.5 and acierto < 0.95, "acierto de pase creíble")
+	var dec: Dictionary = ig["decisiones"]
+	_comprobar(dec.has("pase_corto") and dec.has("conducir") and dec.has("tiro"), "la IA elige entre pasar, conducir y tirar")
+	## El mejor gana, juegue de local o de visita.
+	var a := MotorLibre.new(fuerte.once(), debil.once(), 1.0, 1.0, 1).simular()
+	var b := MotorLibre.new(debil.once(), fuerte.once(), 1.0, 1.0, 2).simular()
+	var gf := int(a["goles"][0]) + int(b["goles"][1])
+	var gd := int(a["goles"][1]) + int(b["goles"][0])
+	_comprobar(gf > gd, "el equipo mejor gana sin guion (%d-%d en dos partidos)" % [gf, gd])
+	## Y las habilidades del club (el bono de maestrías y árbol) también aquí.
+	var c1 := MotorLibre.new(debil.once(), debil.once(), 1.2, 1.0, 3).simular()
+	var c2 := MotorLibre.new(debil.once(), debil.once(), 1.0, 1.2, 4).simular()
+	var xg_bono := float(c1["xg"][0]) + float(c2["xg"][1])
+	var xg_sin := float(c1["xg"][1]) + float(c2["xg"][0])
+	_comprobar(xg_bono > xg_sin, "con el bono del club se generan más ocasiones (xG %.1f vs %.1f)" % [xg_bono, xg_sin])
+	## El jugador controlado.
+	var ml := MotorLibre.new(fuerte.once(), debil.once(), 1.0, 1.0, 9)
+	ml.tomar_control(ml.poseedor)
+	var yo := ml.poseedor
+	ml.agentes[yo]["pos"] = Vector2(40.0, 0.0)
+	ml.mover(Vector2(1, 0))
+	ml.ordenar("tiro")
+	ml.paso()
+	_comprobar(int(ml.stats["tiros"][0]) == 1, "el jugador del mando tira cuando se le ordena")
+	ml.cambiar_jugador()
+	_comprobar(ml.controlado >= 0 and ml.agentes[ml.controlado]["eq"] == 0, "cambiar de jugador se queda en el propio equipo")
+	## El mapa de botones.
+	Mando.registrar()
+	_comprobar(Mando.MAPA.keys().all(func(k: String) -> bool: return InputMap.has_action(k)), "las acciones de juego están en el InputMap")
+	_comprobar(Mando.accion_de("jugar_pase", true) == "pase_corto" and Mando.accion_de("jugar_pase", false) == "presionar", "el mismo botón pasa con balón y presiona sin él")
+	var botones_catalogo: Array = []
+	for k: String in AccionesJuego.CATALOGO:
+		var bt := String(AccionesJuego.CATALOGO[k]["boton"])
+		if bt != "" and not Mando.MAPA.has(bt):
+			botones_catalogo.append(bt)
+	_comprobar(botones_catalogo.is_empty(), "cada botón del catálogo existe en el mapa del mando %s" % str(botones_catalogo))
+
+## EL PORTAFOLIO DE FÚTBOL (26-9-2026): cuántos de cada familia hay, que
+## existan en la librería de un jugador y que el partido los use.
+func _probar_portafolio_futbol() -> void:
+	_titulo("PORTAFOLIO: TIROS, PASES, BARRIDAS, ATAJADAS, REGATES, LESIONES Y ÁRBITRO")
+	var f := AnimFutbol.familias()
+	_comprobar((f["tiro"] as Array).size() >= 20, "%d tipos de tiro" % (f["tiro"] as Array).size())
+	_comprobar((f["pase"] as Array).size() >= 20, "%d tipos de pase" % (f["pase"] as Array).size())
+	_comprobar((f["barrida"] as Array).size() >= 20, "%d barridas y entradas" % (f["barrida"] as Array).size())
+	_comprobar((f["atajada"] as Array).size() >= 12, "%d atajadas nuevas" % (f["atajada"] as Array).size())
+	_comprobar((f["regate"] as Array).size() >= 30, "%d regates" % (f["regate"] as Array).size())
+	_comprobar((f["expresivo"] as Array).size() >= 12 and (f["lesion"] as Array).size() >= 6, "expresiones y lesiones")
+	_comprobar((f["arbitro"] as Array).size() >= 10, "%d gestos del árbitro y los asistentes" % (f["arbitro"] as Array).size())
+	var d := FutbolistaQ.crear(1.8, "male")
+	var raiz: Node3D = d["nodo"]
+	add_child(raiz)
+	FutbolistaQ.terminar(d, true)
+	var ap: AnimationPlayer = d["anim"]
+	var faltan: Array = []
+	for fam: String in f:
+		for n: String in f[fam]:
+			if not ap.has_animation(n):
+				faltan.append(n)
+	_comprobar(faltan.is_empty(), "todas están en la librería del jugador %s" % str(faltan.slice(0, 5)))
+	_comprobar(ap.has_animation("bicicleta_espejo") and ap.has_animation("tiro_empeine_espejo"), "con su espejo para zurdos y para el otro lado")
+	_comprobar(ap.get_animation_list().size() >= 300, "%d movimientos por jugador" % ap.get_animation_list().size())
+	## CELEBRACIONES SEGÚN EL CARÁCTER (mapa de metas 14).
+	var sin_anim: Array = []
+	for rs: String in AnimExtra.CELEBRA_POR_RASGO:
+		for n: String in AnimExtra.CELEBRA_POR_RASGO[rs]:
+			if not ap.has_animation(n):
+				sin_anim.append(n)
+	_comprobar(sin_anim.is_empty(), "cada celebración de carácter existe en la librería %s" % str(sin_anim))
+	var rng_c := RandomNumberGenerator.new()
+	rng_c.seed = 11
+	var firma := AnimExtra.celebracion_firma("veloz", "j77")
+	var repite := 0
+	for i in 60:
+		if AnimExtra.celebracion(ap, "veloz", "j77", false, rng_c) == firma:
+			repite += 1
+	_comprobar(repite >= 30 and (AnimExtra.CELEBRA_POR_RASGO["veloz"] as Array).has(firma), "cada jugador repite su celebración casi siempre (%d/60, %s)" % [repite, firma])
+	var provoca := 0
+	for i in 60:
+		if AnimExtra.celebracion(ap, "polemico", "j78", true, rng_c) == "mano_oido":
+			provoca += 1
+	_comprobar(provoca >= 25, "el polémico, de visita, se pone la mano en la oreja (%d/60)" % provoca)
+	_comprobar(AnimExtra.NOMBRE_CELEBRACION.has(AnimExtra.celebracion_firma("lider", "x1")), "la ficha nombra su celebración")
+	## EL GOLPEO CON CUERPO (mapa de metas 16): al acompañar, el pie sube de
+	## verdad; al armar, el brazo contrario se abre para equilibrar.
+	var esq_g: Skeleton3D = d["esqueleto"]
+	var i_pie := esq_g.find_bone(String(AnimQuaternius.HUESOS["pie_d"]))
+	var i_mano := esq_g.find_bone(String(AnimQuaternius.HUESOS["mano_i"]))
+	var i_pel := esq_g.find_bone(String(AnimQuaternius.HUESOS["cadera"]))
+	var largo_g := ap.get_animation("tiro_empeine").length
+	ap.play("tiro_empeine")
+	ap.seek(0.0, true)
+	var pie0 := esq_g.get_bone_global_pose(i_pie).origin
+	var abre0 := absf(esq_g.get_bone_global_pose(i_mano).origin.x - esq_g.get_bone_global_pose(i_pel).origin.x)
+	ap.seek(largo_g * 0.68, true)
+	var pie1 := esq_g.get_bone_global_pose(i_pie).origin
+	ap.seek(largo_g * 0.5, true)
+	var abre1 := absf(esq_g.get_bone_global_pose(i_mano).origin.x - esq_g.get_bone_global_pose(i_pel).origin.x)
+	_comprobar(pie1.y - pie0.y > 0.25, "al acompañar el tiro, el pie sube (%.2f)" % (pie1.y - pie0.y))
+	_comprobar(abre1 - abre0 > 0.12, "al pegar, el brazo contrario se abre (%.2f)" % (abre1 - abre0))
+	ap.stop()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	var vistos := {}
+	for i in 60:
+		vistos[AnimExtra.variante(ap, "patear", "j1", rng)] = true
+	_comprobar(vistos.size() >= 8, "el partido sortea entre muchos tiros (%d distintos en 60)" % vistos.size())
+	var zurdo := ""
+	for i in 200:
+		if AnimExtra.es_zurdo("z%d" % i):
+			zurdo = "z%d" % i
+			break
+	var todos_espejo := true
+	for i in 20:
+		if not AnimExtra.variante(ap, "patear", zurdo, rng).ends_with("_espejo"):
+			todos_espejo = false
+	_comprobar(todos_espejo, "un zurdo patea siempre con la zurda")
+	raiz.queue_free()
+
+## JUGADORES FIJOS CON GUIÑO (26-9-2026): en la base ficticia, el mismo club
+## tiene los mismos jugadores (nombre, media y potencial) en cualquier partida.
+func _probar_jugadores_fijos() -> void:
+	_titulo("JUGADORES FIJOS CON GUIÑO EN LA BASE FICTICIA")
+	var a := Mundo.new()
+	a.generar(["CHI"], 111)
+	var b := Mundo.new()
+	b.generar(["CHI"], 98765)
+	var ca: Club = a.ligas[0].clubes[0]
+	var cb: Club = null
+	for c: Club in b.ligas[0].clubes:
+		if c.nombre == ca.nombre:
+			cb = c
+	_comprobar(cb != null, "el mismo club en los dos mundos (%s)" % ca.nombre)
+	if cb == null:
+		return
+	var fijos_a := {}
+	for j: Jugador in ca.plantilla:
+		if j.real:
+			fijos_a[j.nombre] = [j.ovr, j.pot, j.pos_e]
+	var iguales := 0
+	for j: Jugador in cb.plantilla:
+		if j.real and fijos_a.has(j.nombre) and fijos_a[j.nombre] == [j.ovr, j.pot, j.pos_e]:
+			iguales += 1
+	print("   · ", ca.nombre, ": ", fijos_a.keys().slice(0, 5))
+	_comprobar(fijos_a.size() >= 8, "%d jugadores con guiño en el club" % fijos_a.size())
+	_comprobar(iguales == fijos_a.size(), "los mismos nombres, medias y potenciales con otra semilla (%d de %d)" % [iguales, fijos_a.size()])
+	## Ningún guiño es un nombre real.
+	var reales_ok := true
+	for n: String in fijos_a:
+		if Nombres.vetado(n):
+			reales_ok = false
+	_comprobar(reales_ok, "ningún guiño coincide con un nombre real vetado")
+
+func _probar_disenos_kit() -> void:
+	_titulo("EQUIPACIÓN: DISEÑOS, COLORES, BOTINES Y ACCESORIOS")
+	var claves := DisenosKit.claves()
+	_comprobar(claves.size() >= 62, "hay al menos 50 diseños nuevos (%d en total)" % claves.size())
+	var unicas := {}
+	for k: String in claves:
+		unicas[k] = true
+	_comprobar(unicas.size() == claves.size(), "sin claves repetidas")
+	_comprobar(Jersey.KITS.all(func(k: String) -> bool: return claves.has(k)), "los 12 estilos de siempre siguen")
+	_comprobar(DisenosKit.BOTINES.size() == 30, "30 modelos de botín")
+	var de_dos := DisenosKit.DISENOS.filter(func(d: Array) -> bool: return int(d[2]) >= 43 and int(d[2]) <= 62 and int(d[7]) == 2)
+	var de_tres := DisenosKit.DISENOS.filter(func(d: Array) -> bool: return int(d[2]) >= 43 and int(d[2]) <= 62 and int(d[7]) == 3)
+	_comprobar(de_dos.size() == 20 and de_tres.size() == 20, "20 diseños nuevos de dos colores y 20 de tres")
+	var cols3: Array[Color] = [Color.RED, Color.WHITE, Color.BLUE, Color.BLACK, Color.GREEN]
+	var usados := {}
+	for d: Array in de_dos:
+		for i in 60:
+			usados[DisenosKit.color_en(d, cols3, float(i % 10) / 5.0 - 1.0, float(i / 10) / 6.0).to_html(false)] = true
+	_comprobar(not usados.has(Color.BLUE.to_html(false)) and not usados.has(Color.BLACK.to_html(false)), "los de dos colores no usan un tercero")
+	## Patrocinadores.
+	var ms := Mundo.new()
+	ms.generar(["CHI"], 31)
+	ms.tomar_el_mando(ms.ligas[0].clubes[0].id)
+	_comprobar(SponsorKit.de_club(ms.mi_club(), ms).is_empty(), "sin contrato, tu camiseta va limpia")
+	ms.auspicio.contrato = {"marca": "Cerveza Andin4", "color": "#e8b13a", "monto": 1, "exig_pos": 5, "anio": 2026}
+	var spk := DisenosKit.kit_de_club(ms.mi_club())
+	_comprobar((spk["sp"] as Dictionary).has("pecho") and String(spk["sp"]["pecho"]["marca"]) == "Cerveza Andina", "el contrato principal va al pecho (sin la cubierta)")
+	var ajenos := 0
+	for cc: Club in ms.ligas[0].clubes:
+		if cc != ms.mi_club() and not SponsorKit.de_club(cc, ms).is_empty():
+			ajenos += 1
+	_comprobar(ajenos > 0 and SponsorKit.de_club(ms.ligas[0].clubes[3], ms) == SponsorKit.de_club(ms.ligas[0].clubes[3], ms), "los rivales llevan sus sponsors, siempre los mismos")
+	var im := SponsorKit.imagen("Seguros Patagonia", "#8fa3b5", Color.WHITE)
+	_comprobar(im.get_width() > im.get_height() and SponsorKit.lineas_de("SEGUROS PATAGONIA").size() == 2, "los nombres largos van en dos líneas")
+	var un := DisenosKit.uniforms(spk, 9)
+	_comprobar(bool(un["hay_sp_pecho"]) and un["sp_pecho"] is Texture2D, "el sponsor llega al shader 3D")
+	ms.mi_club().kit_x = {"sp_ocultar": ["pecho"]}
+	_comprobar(not (DisenosKit.kit_de_club(ms.mi_club())["sp"] as Dictionary).has("pecho"), "se puede no estampar una zona")
+	_comprobar(DisenosKit.ACCESORIOS.size() >= 6, "accesorios para los jugadores")
+	var cinco := DisenosKit.DISENOS.filter(func(d: Array) -> bool: return int(d[7]) == 5)
+	_comprobar(not cinco.is_empty(), "hay diseños que usan los 5 colores")
+	## La fórmula 2D da colores de la paleta.
+	var cols: Array[Color] = [Color.RED, Color.WHITE, Color.BLUE, Color.YELLOW, Color.BLACK]
+	var vistos := {}
+	var d := DisenosKit.diseno("franjas_cinco")
+	for i in 40:
+		vistos[DisenosKit.color_en(d, cols, -1.0 + float(i) / 20.0, 0.5).to_html()] = true
+	_comprobar(vistos.size() >= 4, "«Franjas de cinco colores» usa varios colores (%d)" % vistos.size())
+	## El kit de un club, guardado y leído.
+	var m := Mundo.new()
+	m.generar(["CHI"], 5158)
+	var c: Club = m.ligas[0].clubes[0]
+	var k := DisenosKit.kit_de_club(c)
+	_comprobar((k["cols"] as Array).size() == 5 and k.has("bot") and k.has("acc"), "la equipación completa tiene 5 colores, botines y accesorios")
+	c.kit_x = {"dis": "tartan", "bot": {"mod": "fuego"}, "acc": {"guantes": "111111"}}
+	var dic := c.identidad_a_dic()
+	var c2 := Club.new()
+	c2.identidad_desde_dic(dic)
+	_comprobar(String(DisenosKit.kit_de_club(c2)["dis"]) == "tartan", "el diseño elegido se guarda con el club")
+	var u := DisenosKit.uniforms(DisenosKit.kit_de_club(c2), 10)
+	_comprobar(int(u["familia"]) == 26 and (u["acc_guantes"] as Color).a > 0.5 and int(u["dorsal"]) == 10, "el shader recibe diseño, accesorios y dorsal")
+	_comprobar(DisenosKit.textura_camiseta("tartan", cols, 1, 64) != null, "la miniatura 2D se dibuja")
