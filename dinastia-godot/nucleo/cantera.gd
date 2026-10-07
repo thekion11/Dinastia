@@ -193,7 +193,7 @@ func _camada_de(c: Club) -> Array[Jugador]:
 	for i in cuantos:
 		if c.plantilla.size() >= TOPE_PLANTEL:
 			break
-		var grupo := String(Azar.uno(["POR", "DEF", "DEF", "MED", "MED", "DEL"]))
+		var grupo := grupo_con_tope(c, String(Azar.uno(["POR", "DEF", "DEF", "MED", "MED", "DEL"])))
 		var edad := Azar.ent(16, 18)
 		var ovr := c.rep - 24 + Azar.ent(-4, 8)
 		var j := m.crear_jugador(c, grupo, demarcacion_de(grupo), edad, ovr)
@@ -325,6 +325,22 @@ func registrar_retiro(j: Jugador, club: Club) -> bool:
 			"%s cuelga las botas. Queda inscrito entre las leyendas del club… y quién sabe si algún día llega un hijo suyo a la cantera." % j.nombre)
 	return true
 
+## TOPE DE PORTEROS (7-10-2026). La prueba larga encontró clubes con 6 y 7
+## porteros: la camada juvenil (uno de cada seis chicos), los hermanos (copian
+## el puesto) y los hijos de leyenda (heredan el del padre) metían porteros sin
+## mirar cuántos había. Solo los fugados tenían tope. Con tres porteros, el que
+## llega juega en otra línea.
+const TOPE_PORTEROS := 3
+
+func grupo_con_tope(c: Club, grupo: String) -> String:
+	if grupo != "POR" or c == null:
+		return grupo
+	var n := 0
+	for j: Jugador in c.plantilla:
+		if j.es_portero():
+			n += 1
+	return String(Azar.uno(["DEF", "MED", "DEL"])) if n >= TOPE_PORTEROS else grupo
+
 ## LA DINASTÍA DEL ENTRENADOR (fase 5): los hijos de tu familia (`VidaDT`)
 ## crecen con las temporadas y, al cumplir 16, el varón que juega al fútbol
 ## entra en la cantera del club que diriges, con tu apellido. Su techo sale de
@@ -394,6 +410,7 @@ func _hijos_de_leyendas() -> void:
 		var grupo := String(L.get("pos", "MED"))
 		if not Azar.suerte(0.7):
 			grupo = String(Azar.uno(["POR", "DEF", "MED", "DEL"]))
+		grupo = grupo_con_tope(destino, grupo)
 		var edad := Azar.ent(16, 17)
 		var ovr := destino.rep - 24 + Azar.ent(0, 6)
 		var j := m.crear_jugador(destino, grupo, demarcacion_de(grupo), edad, ovr)
@@ -495,8 +512,8 @@ func _sortear_hermano(mio: Club) -> void:
 	var gemelos := Azar.suerte(0.22)
 	var edad := base.edad if gemelos else clampi(base.edad + Azar.ent(-3, 3), 16, 24)
 	var ovr := base.ovr + (Azar.ent(-2, 2) if gemelos else Azar.ent(-8, 6))
-	var grupo := base.pos
-	var demarcacion := base.pos_e if gemelos else demarcacion_de(grupo)
+	var grupo := grupo_con_tope(mio, base.pos)
+	var demarcacion := base.pos_e if gemelos and grupo == base.pos else demarcacion_de(grupo)
 	var j := m.crear_jugador(mio, grupo, demarcacion, edad, ovr)
 	j.nombre = "%s %s" % [_nombre_de_pila(base.pais), _apellido_de(base.nombre)]
 	j.pais = base.pais

@@ -258,6 +258,14 @@ func _buscar_objetivo(comprador: Club) -> Jugador:
 		var j: Jugador = otro.plantilla[Azar.ent(0, otro.plantilla.size() - 1)]
 		if j.edad > 33:
 			continue
+		## CON SENTIDO DE PUESTO (7-10-2026, la prueba larga): la IA compraba al
+		## que mejorara su media sin mirar dónde juega, y en diez temporadas había
+		## clubes con 6-7 porteros y otros sin un solo delantero. No compra un
+		## cuarto portero ni deja al vendedor por debajo del mínimo de su línea.
+		if _cuenta_linea(comprador, j.pos) >= int(MAXIMO_LINEA.get(j.pos, 9)):
+			continue
+		if _cuenta_linea(otro, j.pos) <= int(MINIMO_LINEA.get(j.pos, 2)):
+			continue
 		## Filosofía de cantera (C3): el Athletic solo mira a los de su tierra.
 		if not Regiones.admite(comprador, j):
 			continue
@@ -265,6 +273,16 @@ func _buscar_objetivo(comprador: Club) -> Jugador:
 			mejor_v = float(j.ovr)
 			mejor = j
 	return mejor
+
+const MINIMO_LINEA := {"POR": 2, "DEF": 5, "MED": 5, "DEL": 3}
+const MAXIMO_LINEA := {"POR": 3, "DEF": 10, "MED": 10, "DEL": 7}
+
+static func _cuenta_linea(c: Club, linea: String) -> int:
+	var n := 0
+	for x: Jugador in c.plantilla:
+		if x.pos == linea:
+			n += 1
+	return n
 
 # ---------------------------------------------------------------------------
 #  VENDER: LISTA DE TRANSFERIBLES Y OFERTAS ENTRANTES
