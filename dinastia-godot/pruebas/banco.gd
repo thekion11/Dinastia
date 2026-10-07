@@ -6363,7 +6363,51 @@ func _probar_tanda_c() -> void:
 		cj.energia = 100
 		cj.entrenar(mf)
 	_comprobar(yo.ovr > ov_antes, "entrenar sube la media (%d -> %d)" % [ov_antes, yo.ovr])
+	## FASE 3 DEL MEGAPLAN: eventos que salen de lo que te pasa.
+	cj.pj_carrera = 1
+	cj.goles_carrera = 1
+	var ids_ev: Array = cj._eventos_posibles(mf, yo).map(func(e: Dictionary) -> String: return String(e["id"]))
+	_comprobar(ids_ev.has("debut") and ids_ev.has("primer_gol"), "tras debutar y marcar salen los eventos de debut y primer gol")
+	var edad_antes := yo.edad
+	yo.edad = 33
+	ids_ev = cj._eventos_posibles(mf, yo).map(func(e: Dictionary) -> String: return String(e["id"]))
+	_comprobar(ids_ev.has("licencia") and ids_ev.has("retiro_%d" % mf.anio), "a los 33 te ofrecen la licencia de entrenador y pensar en el retiro")
+	yo.edad = edad_antes
+	## LA SELECCIÓN: con la mejor media de tu país, en fecha FIFA te convocan.
+	var sem_antes := mf.semana
+	var ovr_antes2 := yo.ovr
+	yo.ovr = 99
+	mf.semana = Selecciones.SEMANAS_FIFA[0]
+	_comprobar(cj.revisar_convocatoria(mf) and String(cj.convocatoria.get("rival", "")) != "", "en fecha FIFA te convoca tu selección (vs %s)" % String(cj.convocatoria.get("rival", "")))
+	var eq_sel := cj.equipos_seleccion(mf)
+	_comprobar(eq_sel.size() == 2 and (eq_sel[0] as Club).plantilla.has(yo) and (eq_sel[0] as Club).plantilla.size() == 18 and (eq_sel[1] as Club).plantilla.size() == 18,
+		"la selección: 18 con el jugador dentro, contra 18 rivales")
+	var caps_antes := cj.caps
+	cj.tras_seleccion({"goles": 1})
+	_comprobar(cj.caps == caps_antes + 1 and cj.goles_sel >= 1 and cj.convocatoria.is_empty(), "el partido con la selección suma la internacionalidad y el gol")
+	mf.semana = sem_antes + 1 if Selecciones.SEMANAS_FIFA.has(sem_antes) else sem_antes
+	_comprobar(not cj.revisar_convocatoria(mf) or Selecciones.SEMANAS_FIFA.has(mf.semana), "fuera de fecha FIFA no hay convocatoria")
+	mf.semana = sem_antes
+	yo.ovr = ovr_antes2
+	var cj3 := CarreraJugador.desde_dic(cj.a_dic())
+	_comprobar(cj3.caps == cj.caps and cj3.pj_carrera == 1 and cj3.goles_carrera == 1, "la selección y los totales se guardan")
 	cj.club(mf).soltar(yo)
+	## EL RETIRO Y EL PASO A ENTRENADOR, en un mundo aparte (cambia el mando).
+	var mr := Mundo.new()
+	mr.generar(["CHI"], 4242)
+	var cjr := CarreraJugador.crear(mr, "Prueba Veterano", "MC", false, 7)
+	mr.carrera_jugador = cjr
+	var vet := cjr.jugador(mr)
+	vet.edad = 34
+	cjr.fama = 60
+	cjr.retiro_anunciado = true
+	_comprobar(cjr.toca_retirarse(mr), "si anunciaste el retiro, toca colgar las botas")
+	var ofs := cjr.ofertas_de_banquillo(mr)
+	_comprobar(not ofs.is_empty() and ofs.size() <= 3, "al retirarte te ofrecen banquillos (%d)" % ofs.size())
+	if not ofs.is_empty():
+		_comprobar(cjr.pasar_a_entrenador(mr, ofs[0]) and mr.mi_club_id == (ofs[0] as Club).id and cjr.retirado,
+			"te retiras y diriges a %s en el mismo mundo" % (ofs[0] as Club).nombre)
+		_comprobar(mr.roles.nombre == "Prueba Veterano" and mr.roles.rol == Roles.DT, "el entrenador eres tú, con tu nombre de jugador")
 	## LAS BUTACAS DE LOS RIVALES, de los colores de su club (no el verde del visor).
 	var riv_b: Club = mf.ligas[0].clubes[1]
 	_comprobar(String(riv_b.perfil_estadio().get("asiento1", "")) == riv_b.color1, "las butacas de un rival llevan los colores de su club")
