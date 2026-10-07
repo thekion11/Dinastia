@@ -1,17 +1,16 @@
 class_name FutbolistaQ
 extends RefCounted
-## Segundo modelo de jugador: el pack Quaternius "Universal Base Characters"
-## (gratuito, CC0, descargado por el usuario el 17-9-2026). A diferencia de
-## `Futbolista.gd` (el modelo único reutilizado hasta hoy, `futbolista_cr7.glb`),
-## este viene YA de pie, ya orientado hacia adelante, a escala casi humana
-## real -no hace falta "enderezar" nada, solo escalar el pelín que falta para
-## que la altura calce con la ficha del jugador, igual que hace `Futbolista`-.
+## El modelo de jugador: el pack Quaternius "Universal Base Characters"
+## (gratuito, CC0, descargado por el usuario el 17-9-2026). Viene ya de pie,
+## orientado hacia adelante y a escala casi humana: solo se escala lo que falta
+## para que la altura calce con la ficha del jugador.
+## (El modelo anterior, `futbolista_cr7.glb` con esqueleto Mixamo, se borró del
+## proyecto el 25-9-2026 a pedido del usuario.)
 ##
 ## ESQUELETO DISTINTO. Este modelo usa nombres de hueso estilo Unreal Engine
 ## (`pelvis`, `spine_01/02/03`, `clavicle_l`, `hand_l`...), NO `mixamorig_*`.
 ## Las animaciones viven en `visor/anim_quaternius.gd` (`AnimQuaternius`),
-## escritas y calibradas aparte de `AnimMixamo` -mismo principio, ejes
-## distintos, medidos con una sonda propia (`pruebas/sonda_ejes_q.gd`)-.
+## con los ejes medidos con una sonda propia (`pruebas/sonda_ejes_q.gd`).
 ## Por ahora el catalogo cubre "parado"/"caminar"/"trotar"/"correr" -las que
 ## mas se ven en un partido-, el resto queda para otra ronda.
 
@@ -31,8 +30,8 @@ const MODELOS := {
 static var _packed_male: PackedScene
 static var _packed_female: PackedScene
 
-## Huesos de referencia para medir la altura real del modelo -mismo criterio
-## que `Futbolista.HUESO_CORONILLA`/`HUESO_PIE`: los huesos, no el AABB de la
+## Huesos de referencia para medir la altura real del modelo -los huesos, no
+## el AABB de la
 ## malla en pose de enlace, que en un modelo con esqueleto no representa lo
 ## que se ve en pantalla.
 const HUESO_CORONILLA := "Head"

@@ -14,6 +14,9 @@ var current_index: int = 0
 ## Referencias para seguimiento dinámico
 var objetivo_seguimiento: Node3D = null
 var balon_ref: Node3D = null
+## El árbitro, para su cámara subjetiva (26-9-2026).
+var arbitro_ref: Node3D = null
+var _mira_arbitro: Vector3 = Vector3.ZERO
 
 var _dx: float = 49.0
 var _dz: float = 68.0
@@ -91,10 +94,15 @@ func build_for(dx: float, dz: float, alto: float) -> void:
 	_add("A ras de campo", Vector3(36.0, 1.75, 2.0), Vector3(0, 1.3, 6.0), 60)
 
 	# 8. Cenital táctica (90° vertical)
-	_add("Cenital tactica", Vector3(0, 88.0, 0.5), Vector3(0, 0, 0), 46)
+	_add("Cenital táctica", Vector3(0, 88.0, 0.5), Vector3(0, 0, 0), 46)
 
 	# 9. Dron orbital
 	_add("Dron orbital", Vector3(0, alto + 28.0, 60.0), Vector3(0, 0, 0), 48)
+
+	# 10. POV del árbitro (26-9-2026, pedido: "pov desde el árbitro"): a la
+	# altura de sus ojos, siguiendo el balón con la cabeza, con el vaivén de
+	# quien corre.
+	_add("Árbitro (POV)", Vector3(6.0, 1.75, 8.0), Vector3(0, 1.2, 0), 70)
 
 func _process(delta: float) -> void:
 	if cameras.is_empty():
@@ -108,6 +116,18 @@ func _process(delta: float) -> void:
 		return
 
 	var t_pos := target.global_position
+
+	if c_name == "Árbitro (POV)":
+		if is_instance_valid(arbitro_ref) and is_instance_valid(balon_ref):
+			var ojos := arbitro_ref.global_position + Vector3(0, 1.72, 0)
+			## Vaivén de la carrera: más cuanto más rápido se mueve.
+			var vel := (ojos - cam.global_position).length() / maxf(delta, 0.001)
+			var vaiven := sin(Time.get_ticks_msec() * 0.012) * clampf(vel * 0.004, 0.0, 0.035)
+			cam.global_position = ojos + Vector3(0, vaiven, 0)
+			_mira_arbitro = _mira_arbitro.lerp(balon_ref.global_position + Vector3(0, 0.3, 0), 4.0 * delta)
+			if cam.global_position.distance_to(_mira_arbitro) > 0.5:
+				cam.look_at(_mira_arbitro, Vector3.UP)
+		return
 
 	match c_name:
 		"Tele Dinámica":

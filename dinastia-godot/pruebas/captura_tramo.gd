@@ -81,7 +81,7 @@ func _process(_delta: float) -> void:
 		_cam.current = true
 	if _frame == 25:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_tramo_real_general.png")
+		img.save_png("res://pruebas/capturas/pantalla_tramo_real_general.png")
 		print("captura guardada: pantalla_tramo_real_general.png (%dx%d)" % [img.get_width(), img.get_height()])
 	if _frame == 30:
 		## Segunda camara, centrada en una costura (entre tercio 1 y 2, a 1/3
@@ -97,7 +97,7 @@ func _process(_delta: float) -> void:
 		_cam.look_at(Vector3(x_costura, 3.0, 68.0), Vector3.UP)
 	if _frame == 40:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/pantalla_tramo_real_costura.png")
+		img2.save_png("res://pruebas/capturas/pantalla_tramo_real_costura.png")
 		print("captura guardada: pantalla_tramo_real_costura.png (%dx%d)" % [img2.get_width(), img2.get_height()])
 		print("FIN. 0 fallos")
 		get_tree().quit()

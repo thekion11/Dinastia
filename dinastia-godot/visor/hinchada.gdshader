@@ -31,6 +31,9 @@ uniform float cuello_desde = 0.50;
 uniform float cuello_hasta = 0.57;
 uniform vec3 piel_clara : source_color = vec3(0.88, 0.71, 0.56);
 uniform vec3 piel_oscura : source_color = vec3(0.40, 0.27, 0.19);
+// Desde qué altura la cabeza es pelo (29-9-2026, malla de las primeras filas).
+// 9.0 = sin pelo, que es lo que usa la malla barata.
+uniform float pelo_desde = 9.0;
 
 varying float v_alto;
 varying float v_azar;
@@ -63,7 +66,15 @@ void vertex() {
 void fragment() {
 	vec3 ropa = COLOR.rgb;
 	vec3 piel = mix(piel_clara, piel_oscura, v_azar);
-	ALBEDO = mix(ropa, piel, smoothstep(cuello_desde, cuello_hasta, v_alto));
+	vec3 color = mix(ropa, piel, smoothstep(cuello_desde, cuello_hasta, v_alto));
+	// Pelo: negro, castaño, rubio o canoso, según el mismo azar del hincha;
+	// uno de cada seis, calvo o con gorro del color de la ropa.
+	float r = fract(v_azar * 7.31);
+	vec3 pelo = r < 0.35 ? vec3(0.05, 0.04, 0.035) : (r < 0.65 ? vec3(0.22, 0.13, 0.07) : (r < 0.8 ? vec3(0.72, 0.58, 0.32) : (r < 0.86 ? vec3(0.62, 0.62, 0.6) : ropa * 0.9)));
+	if (r < 0.94) {
+		color = mix(color, pelo, smoothstep(pelo_desde, pelo_desde + 0.01, v_alto));
+	}
+	ALBEDO = color;
 	ROUGHNESS = 0.85;
 	SPECULAR = 0.15;
 }

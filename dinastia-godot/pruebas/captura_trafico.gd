@@ -61,7 +61,7 @@ func _process(_d: float) -> void:
 			print("alineacion morro/marcha: media %.3f, peor %.3f (1.0 = perfecto, -1.0 = marcha atras)" % [
 				suma / maxf(float(cuantos), 1.0), peor])
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/trafico_a.png")
+		img.save_png("res://pruebas/capturas/trafico_a.png")
 	if _n == 52:
 		var ahora := _moviles()
 		var quietos := 0
@@ -76,6 +76,6 @@ func _process(_d: float) -> void:
 		print("tras 40 fotogramas: recorrido medio %.2f m, maximo %.2f m, quietos %d de %d" % [
 			total / maxf(float(ahora.size()), 1.0), maximo, quietos, ahora.size()])
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/trafico_b.png")
+		img2.save_png("res://pruebas/capturas/trafico_b.png")
 		print("capturas: trafico_a.png y trafico_b.png (misma camara)")
 		get_tree().quit()

@@ -16,15 +16,15 @@ extends Control
 signal cerrado
 
 ## La misma paleta que css/estilo.css (`:root`), no una propia de Godot.
-const COL_FONDO := Color("0c1510")
-const COL_PANEL := Color("141c16")
-const COL_BORDE := Color("ffffff12")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
-const COL_ACENTO := Color("3fa06a")
-const COL_VERDE := Color("4caf6d")
-const COL_ROJO := Color("e05555")
-const COL_ORO := Color("c9a227")
+const COL_FONDO := Tema.FONDO
+const COL_PANEL := Tema.PANEL
+const COL_BORDE := Tema.BORDE
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
+const COL_ACENTO := Tema.ACENTO
+const COL_VERDE := Tema.BIEN
+const COL_ROJO := Tema.MAL
+const COL_ORO := Tema.ORO
 
 ## Milisegundos por minuto de juego en cada velocidad. La pausa es la primera
 ## porque es la que más se usa: es cuando se piensa el cambio.
@@ -37,6 +37,9 @@ const VELOCIDADES := [
 
 var partido: Partido
 var mi_club: Club
+## Cómo se mira este partido (plan maestro B2). Se fijan ANTES de `abrir()`.
+var con_3d := true
+var destacados := false
 ## El perfil de TU estadio -el que diseñaste en `EstadioPropio`-, calculado por
 ## quien te abrió esta pantalla (`mundo.perfil_estadio_de()`). Sin esto,
 ## `_ver_estadio()` caería en el genérico por hash y una reforma pagada nunca
@@ -65,6 +68,7 @@ var _cronica: RichTextLabel
 var _banquillo: VBoxContainer
 var _campo: VBoxContainer
 var _botones_vel: Array[Button] = []
+var _btn_vel_actual: Button
 var _saliendo: Jugador = null
 var _pie: Label
 var _btn_volver: Button
@@ -107,6 +111,12 @@ func abrir(p: Partido, club: Club, vest: Vestuario = null, eliminatoria: bool = 
 	if velocidad_inicial >= 0 and velocidad_inicial < VELOCIDADES.size():
 		_velocidad = velocidad_inicial
 	partido.preparar()
+	if partido._hinchada_club == null and mi_club != null:
+		var animo_hoy := 60
+		if vestuario != null and vestuario._mundo() != null and vestuario._mundo().prensa != null:
+			animo_hoy = vestuario._mundo().prensa.animo
+		partido.fijar_hinchada(mi_club, animo_hoy)
+	partido.invasion_de_campo.connect(_a_la_invasion)
 	partido.gol.connect(_al_gol)
 	partido.remate.connect(_al_remate)
 	partido.tarjeta.connect(_a_la_tarjeta)
@@ -130,7 +140,10 @@ func abrir(p: Partido, club: Club, vest: Vestuario = null, eliminatoria: bool = 
 	## lo primero que se ve ya es el estadio, no un panel de texto con un
 	## botón escondido. Cerrar el 3D (✕/"Volver") te devuelve aquí para
 	## seguir con cambios, arengas y demás, exactamente como ya funcionaba.
-	_ver_estadio()
+	## `con_3d` (25-9-2026, plan maestro B2): el modo "En vivo (texto)" lo
+	## apaga; "3D destacados" lo abre con el reloj rápido.
+	if con_3d:
+		_ver_estadio()
 
 func _process(delta: float) -> void:
 	if partido == null or partido.terminado_ya:
@@ -153,26 +166,25 @@ func _process(delta: float) -> void:
 			return
 		if _entretiempo:
 			return
-		## LA INVASION DE CAMPO. Minuto 70, perdiendo en casa y con la grada
-		## harta: el partido se para veinte minutos con la policia desalojando, y
-		## el camarin se vuelve a abrir. Es la unica interrupcion del juego que no
-		## la provoca el jugador ni el reglamento: la provoca haberlo hecho mal.
-		if not partido.invasion_ya and mi_club != null:
-			var animo_hoy := 60
-			if vestuario != null and vestuario._mundo() != null and vestuario._mundo().prensa != null:
-				animo_hoy = vestuario._mundo().prensa.animo
-			var soy_local := partido.local == mi_club
-			var mis_goles: int = partido.goles_local if soy_local else partido.goles_visita
-			var sus_goles: int = partido.goles_visita if soy_local else partido.goles_local
-			if partido.chequear_invasion(animo_hoy, soy_local, mis_goles < sus_goles):
-				_entretiempo = true
-				_acumulado = 0.0
-				Sonido.toca("silbato")
-				_escribir("[color=#e05555][b]🚨 INVASION DE CAMPO.[/b][/color] La barra salta al cesped y lanza bengalas. El partido se para: la policia desaloja y los dos equipos se meten al tunel. Vuelve a abrirse el camarin, con otro clima.")
-				_refrescar()
-				return
 		_acumulado -= ms
 		partido.simular_minuto()
+		if _invasion_pendiente:
+			_invasion_pendiente = false
+			return
+	_refrescar()
+
+## LA INVASION DE CAMPO. Minuto 70, perdiendo en casa y con la grada harta: el
+## partido se para veinte minutos con la policia desalojando, y el camarin se
+## vuelve a abrir. La tirada la hace ahora `Partido.simular_minuto()` para
+## cualquier vista (ver `Partido.fijar_hinchada()`); aqui solo se cuenta.
+var _invasion_pendiente := false
+
+func _a_la_invasion(_minuto: int) -> void:
+	_invasion_pendiente = true
+	_entretiempo = true
+	_acumulado = 0.0
+	Sonido.toca("silbato")
+	_escribir("[color=#e05555][b]🚨 INVASIÓN DE CAMPO.[/b][/color] La barra salta al césped y lanza bengalas. El partido se para: la policía desaloja y los dos equipos se meten al túnel. Vuelve a abrirse el camarín, con otro clima.")
 	_refrescar()
 
 # --- construcción -----------------------------------------------------------
@@ -213,20 +225,19 @@ func _construir() -> void:
 	_momentum.custom_minimum_size = Vector2(0, 10)
 	raiz.add_child(_momentum)
 
-	## Velocidad del reloj.
+	## A LA VISTA SOLO LO QUE SE USA A CADA RATO (25-9-2026, plan maestro B1):
+	## la velocidad actual (un clic la pasa a la siguiente), "Ver en 3D" y "Al
+	## próximo gol". Las cinco velocidades sueltas, "Al final", qué paneles se
+	## ven, el tamaño de la crónica y el sonido van en el cajón del ⚙.
 	var barra := HBoxContainer.new()
 	barra.alignment = BoxContainer.ALIGNMENT_CENTER
 	barra.add_theme_constant_override("separation", 6)
 	raiz.add_child(barra)
-	for i in VELOCIDADES.size():
-		var b := Button.new()
-		b.text = String(VELOCIDADES[i]["txt"])
-		b.toggle_mode = true
-		b.button_pressed = (i == _velocidad)
-		b.custom_minimum_size = Vector2(86, 30)
-		b.pressed.connect(func() -> void: _poner_velocidad(i))
-		barra.add_child(b)
-		_botones_vel.append(b)
+	_btn_vel_actual = Button.new()
+	_btn_vel_actual.custom_minimum_size = Vector2(120, 30)
+	_btn_vel_actual.tooltip_text = "Pulsa para cambiar la velocidad"
+	_btn_vel_actual.pressed.connect(func() -> void: _poner_velocidad((_velocidad + 1) % VELOCIDADES.size()))
+	barra.add_child(_btn_vel_actual)
 	## El estadio en 3D del club que hace de local. Se abre encima del partido y
 	## el reloj se para solo mientras se mira.
 	var ver3d := Button.new()
@@ -235,18 +246,12 @@ func _construir() -> void:
 	ver3d.pressed.connect(_ver_estadio)
 	barra.add_child(ver3d)
 	## `saltarAlGol()` del HTML: avanza sin pausas hasta el próximo gol -de
-	## cualquiera de los dos-, o hasta el final si no llega ninguno. Antes solo
-	## existía el salto directo a "Al final".
+	## cualquiera de los dos-, o hasta el final si no llega ninguno.
 	var saltar_gol := Button.new()
 	saltar_gol.text = "Al próximo gol"
 	saltar_gol.custom_minimum_size = Vector2(100, 30)
 	saltar_gol.pressed.connect(_hasta_el_proximo_gol)
 	barra.add_child(saltar_gol)
-	var saltar := Button.new()
-	saltar.text = "Al final"
-	saltar.custom_minimum_size = Vector2(86, 30)
-	saltar.pressed.connect(_hasta_el_final)
-	barra.add_child(saltar)
 	## LA PUERTA DE SALIDA. Vivía después de un `return` dentro de `_informe()`
 	## -código muerto que nunca se ejecutaba, ni un error lo delataba- así que
 	## al terminar un partido en vivo NO había ninguna forma de volver al club:
@@ -289,6 +294,35 @@ func _construir() -> void:
 	_pie = _texto(12, COL_SUAVE)
 	_pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(_pie)
+	_montar_cajon()
+	_poner_velocidad(_velocidad)
+
+func _montar_cajon() -> void:
+	var cajon := CajonAjustes.crear(self, "partido_vivo")
+	cajon.seccion("Reloj")
+	for i in VELOCIDADES.size():
+		var b := cajon.boton(String(VELOCIDADES[i]["txt"]), func() -> void: _poner_velocidad(i))
+		b.toggle_mode = true
+		_botones_vel.append(b)
+	cajon.boton("⏭ Saltar al final", _hasta_el_final)
+	cajon.seccion("En pantalla")
+	cajon.interruptor("Barra de dominio", _momentum.visible, func(si: bool) -> void: _momentum.visible = si)
+	cajon.interruptor("Columna de estadísticas", true, func(si: bool) -> void:
+		## `_panel_stats` es la lista de dentro; se oculta su tarjeta entera.
+		var caja: Node = _panel_stats
+		while caja != null and not (caja is PanelContainer):
+			caja = caja.get_parent()
+		if caja != null:
+			(caja as Control).visible = si)
+	cajon.interruptor("Datos bajo el marcador", true, func(si: bool) -> void: _estadisticas.visible = si)
+	cajon.deslizador("Tamaño de la crónica", 0.3, func(v: float) -> void:
+		_cronica.add_theme_font_size_override("normal_font_size", int(lerpf(11.0, 20.0, v))))
+	cajon.seccion("Sonido")
+	cajon.deslizador("Efectos", float(Sonido.volumen.get(Sonido.Bus.EFECTOS, 0.8)), func(v: float) -> void:
+		Sonido.volumen[Sonido.Bus.EFECTOS] = v)
+	cajon.deslizador("Música", Musica.volumen, func(v: float) -> void:
+		Musica.volumen = v
+		Musica.aplicar_volumen())
 
 func _columna(padre: HBoxContainer, titulo: String, ratio: float, con_scroll: bool = true) -> VBoxContainer:
 	var caja := PanelContainer.new()
@@ -337,6 +371,8 @@ func _poner_velocidad(i: int) -> void:
 	_velocidad = i
 	for k in _botones_vel.size():
 		_botones_vel[k].button_pressed = (k == i)
+	if _btn_vel_actual != null:
+		_btn_vel_actual.text = "⏱ " + String(VELOCIDADES[i]["txt"])
 
 func _hasta_el_final() -> void:
 	while not partido.terminado_ya:
@@ -425,6 +461,16 @@ const _FRASES_FALLO := [
 	"🥅 Solo frente al arquero y la tira afuera",
 ]
 
+## LA FRASE DE LA CRÓNICA, SIN TOCAR `Azar` (25-9-2026). Antes salía de
+## `Azar.uno()`: narrar una atajada consumía el generador del partido, así que
+## el MISMO partido terminaba distinto mirado en texto que en 3D o simulado (lo
+## cazó la prueba "MODOS DE SIMULACIÓN" del banco). Contar no puede decidir
+## nada: la frase sale de un generador propio sembrado con quién y cuándo.
+func _frase(frases: Array, quien: String, minuto: int) -> String:
+	var r := RandomNumberGenerator.new()
+	r.seed = hash("%s|%d" % [quien, minuto])
+	return String(frases[r.randi_range(0, frases.size() - 1)])
+
 func _al_remate(club: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 	var mio := club == mi_club
 	var nombre := autor.nombre if autor else ""
@@ -432,13 +478,13 @@ func _al_remate(club: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 		"atajada":
 			if mio:
 				Sonido.toca("atajada")
-			_escribir("[color=#8ea595]%d'  %s%s[/color]" % [minuto, Azar.uno(_FRASES_ATAJADA), nombre])
+			_escribir("[color=#8ea595]%d'  %s%s[/color]" % [minuto, _frase(_FRASES_ATAJADA, nombre, minuto), nombre])
 		"poste":
 			if mio:
 				Sonido.toca("ocasion")
 			_escribir("[color=#8ea595]%d'  🪵 ¡Al palo! Increíble ocasión de %s[/color]" % [minuto, nombre])
 		_:
-			var frase: String = Azar.uno(_FRASES_FALLO)
+			var frase: String = _frase(_FRASES_FALLO, nombre, minuto)
 			if nombre != "":
 				frase += " — " + nombre
 			_escribir("[color=#8ea595]%d'  %s[/color]" % [minuto, frase])
@@ -819,6 +865,9 @@ func _salir_segunda() -> void:
 	_entretiempo = false
 	_escribir("[color=#8ea595]▶️ Comienza la segunda parte.[/color]")
 	_refrescar()
+	## Si el partido se estaba viendo en 3D, la segunda parte también.
+	if con_3d and not partido.terminado_ya:
+		_ver_estadio()
 
 func _pintar_banquillo() -> void:
 	_limpiar(_banquillo)
@@ -1043,6 +1092,7 @@ func _ver_estadio() -> void:
 	## dentro de esa llamada, así que asignarlo después llegaría tarde y la
 	## pantalla se quedaría sin tabla ni goleadores.
 	vista.datos_pantalla = datos_pantalla
+	vista.modo_destacados = destacados
 	add_child(vista)
 	## La ocupación que se ve en las gradas es la de verdad: la que sale de la
 	## curva de la taquilla con el precio de entrada que has puesto tú. Un
@@ -1052,6 +1102,7 @@ func _ver_estadio() -> void:
 	## Y con el partido de verdad dentro: los 22 juegan, el marcador corre y lo que
 	## pase ahi es lo que va a la tabla. El reloj de esta pantalla queda parado
 	## mientras tanto — manda el de la vista 3D, para que no haya dos relojes.
+	vista.parar_en_descanso = not _entretiempo_hecho
 	vista.abrir(partido.local, clampf(gente, 0.05, 1.0), partido.visita, partido, perfil_estadio, colores_balon)
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()

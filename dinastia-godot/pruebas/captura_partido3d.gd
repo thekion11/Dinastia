@@ -39,7 +39,7 @@ func _process(_d: float) -> void:
 	if _partido.minuto < MINUTOS[_disparos]:
 		return
 	var img := get_viewport().get_texture().get_image()
-	var ruta := "res://pruebas/partido3d_%d.png" % (_disparos + 1)
+	var ruta := "res://pruebas/capturas/partido3d_%d.png" % (_disparos + 1)
 	img.save_png(ruta)
 	print("captura %s en el minuto %d, marcador %d-%d, %d en el campo" % [
 		ruta, _partido.minuto, _partido.goles_local, _partido.goles_visita,

@@ -27,6 +27,6 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 20:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/cartel_ciudad_camara_real.png")
+		img.save_png("res://pruebas/capturas/cartel_ciudad_camara_real.png")
 		print("guardado")
 		get_tree().quit()

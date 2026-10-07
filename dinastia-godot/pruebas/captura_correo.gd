@@ -29,7 +29,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_elegir_grupo", "ajustes")
 		_pantalla.call("_ir_a_pestana", "Correo")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_correo_sinleer.png")
+		_guardar("res://pruebas/capturas/pantalla_correo_sinleer.png")
 	if _n == ESPERA + 6:
 		## Marca la primera como leída pulsando su botón de verdad, no a mano.
 		var lista = _pantalla.get("_lista_correo")
@@ -38,7 +38,7 @@ func _process(_d: float) -> void:
 				hijo.pressed.emit()
 				break
 	if _n == ESPERA + 8:
-		_guardar("res://pruebas/pantalla_correo_leida.png")
+		_guardar("res://pruebas/capturas/pantalla_correo_leida.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

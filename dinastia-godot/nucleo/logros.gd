@@ -354,7 +354,7 @@ func _anotar_participaciones(p: Partido, soy_local: bool) -> void:
 	var once: Array[Jugador] = p.once_local if soy_local else p.once_visita
 	var pj: Dictionary = rec["pj"]
 	for j in once:
-		var nombre := Nombres.limpiar(j.nombre)
+		var nombre := Nombres.visible(j.nombre)
 		if not pj.has(j.id):
 			pj[j.id] = {"nombre": nombre, "n": 0}
 		pj[j.id]["n"] += 1
@@ -364,7 +364,7 @@ func _anotar_participaciones(p: Partido, soy_local: bool) -> void:
 	for e: Dictionary in p.cronica:
 		if String(e.get("tipo", "")) != "gol" or String(e.get("club", "")) != mi_id:
 			continue
-		var autor := Nombres.limpiar(String(e.get("autor", "")))
+		var autor := Nombres.visible(String(e.get("autor", "")))
 		if autor == "" or autor == "?":
 			continue
 		goles[autor] = int(goles.get(autor, 0)) + 1
@@ -408,7 +408,7 @@ func celebrar_titulo(nombre: String) -> void:
 	once.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
 	var nombres: Array[String] = []
 	for j in once.slice(0, 11):
-		nombres.append(Nombres.limpiar(j.nombre))
+		nombres.append(Nombres.visible(j.nombre))
 	muro.append({"anio": mundo.anio, "titulo": nombre, "once": nombres})
 
 	c.confianza = clampi(c.confianza + Azar.ent(8, 16), 0, 100)
@@ -717,8 +717,21 @@ func premios_temporada() -> Dictionary:
 			ideal.append(mejor)
 	var ideal_texto: Array[String] = []
 	for j in ideal:
-		ideal_texto.append("%s (%s, %s)" % [Nombres.limpiar(j.nombre), j.pos_e, _nombre_club(j.club_id)])
+		ideal_texto.append("%s (%s, %s)" % [Nombres.visible(j.nombre), j.pos_e, _nombre_club(j.club_id)])
 	acta["ideal"] = ideal_texto
+	## Cada premio queda en la ficha del jugador (C17).
+	for j in ideal:
+		j.premios.append({"anio": mundo.anio, "premio": "Equipo ideal de la temporada"})
+	## EL MÁXIMO GOLEADOR de tu liga, con su trofeo en la ficha.
+	var pichichi: Jugador = null
+	if liga != null:
+		for c: Club in liga.clubes:
+			for j2: Jugador in c.plantilla:
+				if pichichi == null or j2.goles > pichichi.goles:
+					pichichi = j2
+	if pichichi != null and pichichi.goles > 0:
+		pichichi.premios.append({"anio": mundo.anio, "premio": "Máximo goleador (%d goles)" % pichichi.goles})
+		acta["pichichi"] = "%s (%d goles, %s)" % [Nombres.visible(pichichi.nombre), pichichi.goles, _nombre_club(pichichi.club_id)]
 
 	## MEJOR JOVEN. Sub-21, y en caso de empate manda la media: entre dos chicos
 	## con los mismos números, el mejor jugador.
@@ -731,8 +744,10 @@ func premios_temporada() -> Dictionary:
 		if n > joven_nota or (is_equal_approx(n, joven_nota) and joven != null and j.ovr > joven.ovr):
 			joven_nota = n
 			joven = j
+	if joven != null:
+		joven.premios.append({"anio": mundo.anio, "premio": "Mejor jugador joven"})
 	acta["joven"] = "%s (%d años, %s)" % [
-		Nombres.limpiar(joven.nombre), joven.edad, _nombre_club(joven.club_id)] if joven != null else "—"
+		Nombres.visible(joven.nombre), joven.edad, _nombre_club(joven.club_id)] if joven != null else "—"
 
 	## MEJOR ENTRENADOR: el del campeón. Los técnicos rivales no están portados,
 	## así que se nombra al club y no a la persona; lo que sí importa de verdad
@@ -795,7 +810,7 @@ func premios_temporada() -> Dictionary:
 	if bool(acta["estadio_es_mio"]):
 		ganados.append("Estadio del año")
 	if joven != null and joven.club_id == mio.id:
-		ganados.append("Mejor joven: %s" % Nombres.limpiar(joven.nombre))
+		ganados.append("Mejor joven: %s" % Nombres.visible(joven.nombre))
 	var mios_en_ideal := 0
 	for j in ideal:
 		if j.club_id == mio.id:
@@ -840,12 +855,12 @@ func _archivar_plantel(puesto: int) -> void:
 		## ni el dorsal, ni el puesto, ni lo que jugó, ni lo que hizo. Era una
 		## memoria que no se podia consultar.
 		lista.append({
-			"n": Nombres.limpiar(j.nombre), "ovr": j.ovr, "pos": j.pos_e,
+			"n": Nombres.visible(j.nombre), "ovr": j.ovr, "pos": j.pos_e,
 			"d": j.dorsal, "pj": j.partidos, "g": j.goles, "edad": j.edad,
 		})
 	planteles.append({
 		"anio": mundo.anio, "puesto": puesto,
-		"mvp": Nombres.limpiar(mvp.nombre) if mvp != null else "",
+		"mvp": Nombres.visible(mvp.nombre) if mvp != null else "",
 		"jugadores": lista,
 	})
 	while planteles.size() > MAX_PLANTELES:

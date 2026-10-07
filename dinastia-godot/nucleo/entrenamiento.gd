@@ -324,7 +324,7 @@ func crear_mentoria(maestro: Jugador, pupilo: Jugador) -> String:
 	pupilo.moral = clampi(pupilo.moral + 8, 10, 99)
 	noticia.emit("Mentoría en la cantera",
 		"%s apadrina a %s. Entrenarán juntos y el chico va a aprender de alguien que ya lo vivió todo." % [
-			Nombres.limpiar(maestro.nombre), Nombres.limpiar(pupilo.nombre)])
+			Nombres.visible(maestro.nombre), Nombres.visible(pupilo.nombre)])
 	return ""
 
 func romper_mentoria(indice: int) -> void:
@@ -360,7 +360,7 @@ func _procesar_mentorias(c: Club) -> void:
 			pupilo.rasgo = maestro.rasgo
 			noticia.emit("El alumno sale al maestro",
 				"%s ha copiado el carácter de %s." % [
-					Nombres.limpiar(pupilo.nombre), Nombres.limpiar(maestro.nombre)])
+					Nombres.visible(pupilo.nombre), Nombres.visible(maestro.nombre)])
 		pupilo.moral = clampi(pupilo.moral + 1, 10, 99)
 
 func procesar_semana(c: Club, anio: int = 0, semana: int = 0) -> Dictionary:

@@ -23,7 +23,7 @@ func _process(_d: float) -> void:
 		mun.avanzar_semana()
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 2:
-		_guardar("res://pruebas/pantalla_obra.png")
+		_guardar("res://pruebas/capturas/pantalla_obra.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

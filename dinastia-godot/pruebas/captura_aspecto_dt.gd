@@ -28,7 +28,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_limpiar", lista)
 		_pantalla.call("_club_carrera", mio)
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_aspecto_dt.png")
+		_guardar("res://pruebas/capturas/pantalla_aspecto_dt.png")
 		var mundo: Mundo = _pantalla.get("mundo")
 		var r: Roles = mundo.roles
 		var look_antes := r.look_efectivo().duplicate()
@@ -46,7 +46,7 @@ func _process(_d: float) -> void:
 		print("look sobrevive al guardado = %s" % (r2.look_efectivo() == look_despues))
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 10:
-		_guardar("res://pruebas/pantalla_aspecto_dt_aleatorio.png")
+		_guardar("res://pruebas/capturas/pantalla_aspecto_dt_aleatorio.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

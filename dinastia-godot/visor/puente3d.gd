@@ -37,12 +37,19 @@ static func jugador(j: Jugador) -> Dictionary:
 		"pos": j.pos,
 		"posE": j.pos_e,
 		"alt": ALTURA.get(j.pos_e, 1.80),
-		"look": {
-			"piel": PIELES[h % PIELES.size()],
-			"pelo": (h >> 4) % 23,
-			"peloC": PELOS[(h >> 8) % PELOS.size()],
-			"barba": (h >> 12) % 8,
-		},
+		## EL MISMO ASPECTO QUE SU RETRATO (25-9-2026). Antes el 3D sorteaba su
+		## propio pelo, piel y barba a partir del id, así que el jugador del
+		## campo no se parecía al de la ficha. Ahora sale de `Cara.look_de()`,
+		## que además respeta lo que el editor haya cambiado a mano.
+		"look": Cara.look_de(j),
+		## La cara de verdad sobre el modelo (29-9-2026): el retrato real
+		## calzado, si lo tiene (solo con la base real).
+		"foto": String(Cara.datos_3d(j).get("foto", "")),
+		## Para la barra de energía sobre el nombre (26-9-2026).
+		"fisico": j.fisico,
+		"forma": j.forma,
+		## Para celebrar el gol según su carácter (29-9-2026).
+		"rasgo": j.rasgo,
 	}
 
 ## El once entero: los ids en orden y el diccionario que los describe. El
@@ -63,10 +70,34 @@ static func once(jugadores: Array[Jugador]) -> Dictionary:
 ## ficha 2D, "Club → Equipación") ya resuelve las dos cosas -la equipación real
 ## archivada en `EQUIP_REAL` si el club tiene una, y si no el estampado
 ## determinista por id- desde hace tiempo; aquí solo faltaba llamarla.
+## EL CHOQUE DE CAMISETAS (29-9-2026). Nadie miraba si las dos camisetas se
+## parecían: con dos clubes amarillo y negro no se distinguía a nadie. Si la
+## camiseta de la visita choca con la del local, se cambia: primero sus
+## colores al revés, y si tampoco alcanza, blanca (o casi negra si el local va
+## de claro). El diseño del club se deja (la "x" del diseñador lleva sus
+## colores), así que la alternativa va lisa.
+static func distancia_color(a: Color, b: Color) -> float:
+	return Vector3(a.r - b.r, a.g - b.g, a.b - b.b).length()
+
+static func chocan(k1: Dictionary, k2: Dictionary) -> bool:
+	return distancia_color(Color(String(k1.get("c1", "#ffffff"))), Color(String(k2.get("c1", "#ffffff")))) < 0.45
+
+static func kit_visita(local: Club, visita: Club) -> Dictionary:
+	var kl := kit(local)
+	var kv := kit(visita)
+	if not chocan(kl, kv):
+		return kv
+	var invertido := {"c1": kv["c2"], "c2": kv["c1"], "estilo": String(kv.get("estilo", "liso")), "img": "", "x": {}}
+	if not chocan(kl, invertido):
+		return invertido
+	var claro := Color(String(kl.get("c1", "#ffffff"))).get_luminance() > 0.55
+	return {"c1": "#1b1f26" if claro else "#f2f2f2", "c2": String(kv["c1"]), "estilo": "liso", "img": "", "x": {}}
+
 static func kit(c: Club) -> Dictionary:
 	var estilo := Jersey.kit_de(c, c.kit_estilo)
 	var img := Jersey.fichero_real(c)
-	return {"c1": c.color_kit1(), "c2": c.color_kit2(), "estilo": estilo, "img": img}
+	## "x": la equipación completa del diseñador (26-9-2026).
+	return {"c1": c.color_kit1(), "c2": c.color_kit2(), "estilo": estilo, "img": img, "x": DisenosKit.kit_de_club(c)}
 
 ## La del portero. Tiene que CONTRASTAR con la de sus compañeros, o desde la
 ## cámara alta no se distingue al arquero de un defensa. Se elige el color que

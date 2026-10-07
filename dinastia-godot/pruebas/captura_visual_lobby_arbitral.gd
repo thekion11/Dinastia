@@ -34,6 +34,6 @@ func _process(_d: float) -> void:
 		_pantalla.call("_refrescar")
 	if n == ESPERA + 3:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_lobby_arbitral.png")
+		img.save_png("res://pruebas/capturas/pantalla_lobby_arbitral.png")
 		print("captura: pantalla_lobby_arbitral.png")
 		get_tree().quit(0)

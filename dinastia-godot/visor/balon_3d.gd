@@ -37,9 +37,8 @@ var giro_angular := Vector3.ZERO
 ## Construye el balón ya pintado con su piel y colocado en `pos`. `claro` y
 ## `oscuro` son los dos colores de la piel elegida -ya resueltos por
 ## `Comercial.color_balon()`, que sabe qué hacer con la piel "colores del
-## club"-, no una clave de catálogo: esta clase no conoce `Comercial` ni
-## falta que le haga, la resolución de qué piel toca vive donde vive el dato.
-static func crear(pos: Vector3, claro: Color, oscuro: Color) -> Balon3D:
+## club"-, y `diseno` el dibujo de los paneles (ver `DISENOS`).
+static func crear(pos: Vector3, claro: Color, oscuro: Color, diseno: String = "clasico") -> Balon3D:
 	var b := Balon3D.new()
 	b.position = pos
 	b._origen = pos
@@ -48,31 +47,186 @@ static func crear(pos: Vector3, claro: Color, oscuro: Color) -> Balon3D:
 	var mesh := SphereMesh.new()
 	mesh.radius = RADIO
 	mesh.height = RADIO * 2.0
-	mesh.radial_segments = 20
-	mesh.rings = 10
+	## 48×24: con 20×10 el balón se veía facetado en las repeticiones y en la
+	## presentación de fichajes, que lo enseñan de cerca.
+	mesh.radial_segments = 48
+	mesh.rings = 24
 	malla.mesh = mesh
-	var mat := StandardMaterial3D.new()
-	mat.albedo_texture = _textura(claro, oscuro)
-	mat.roughness = 0.4
-	malla.material_override = mat
+	malla.material_override = material(claro, oscuro, diseno)
 	malla.name = "Malla"
 	b.add_child(malla)
 	b.name = "Ball"
 	return b
 
-## El mismo patrón a cuadros de siempre -10×6 celdas, es lo que se lee como
-## "pelota" a la distancia de cámara de este juego, un balón de verdad con
-## pentágonos reales solo se distinguiría de cerca-, pero coloreado con la
-## piel que se le pida en vez de blanco y negro fijos.
-static func _textura(claro: Color, oscuro: Color) -> ImageTexture:
-	var w := 64
-	var h := 32
-	var img := Image.create(w, h, false, Image.FORMAT_RGB8)
-	for y in range(h):
-		for x in range(w):
-			var cell := int(floor(float(x) / w * 10.0)) + int(floor(float(y) / h * 6.0))
-			img.set_pixel(x, y, oscuro if cell % 2 == 0 else claro)
-	return ImageTexture.create_from_image(img)
+# ---------------------------------------------------------------------------
+#  LA PIEL: PANELES DE VERDAD (29-9-2026, mapa de metas 19)
+# ---------------------------------------------------------------------------
+## Hasta hoy la piel era un damero de 10×6 celdas. Ahora los paneles se
+## calculan SOBRE LA ESFERA -cada píxel de la textura se lleva a su punto del
+## balón con el mismo mapeo que usa `SphereMesh`-, así que no se estiran en
+## los polos y las costuras cierran:
+##   - "clasico": el balón de 32 paneles, 12 pentágonos oscuros y 20
+##     hexágonos claros (icosaedro truncado, con sus proporciones reales);
+##   - "moderno": 6 paneles curvos con una franja de color en los bordes, como
+##     los balones de liga de hoy;
+##   - "retro": cuero de 18 gajos cosidos, con su grano;
+## y cada uno con costuras hundidas y un poco de brillo.
+const DISENOS := ["clasico", "moderno", "retro"]
+const ANCHO_TEX := 256
+const ALTO_TEX := 128
+## El balón elegido del partido en curso: lo usan las dominadas del
+## calentamiento y la presentación de fichajes.
+static var material_actual: Material
+static var _cache_tex := {}
+
+static func material(claro: Color, oscuro: Color, diseno: String = "clasico") -> StandardMaterial3D:
+	var mat := StandardMaterial3D.new()
+	mat.albedo_texture = textura(claro, oscuro, diseno)
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	mat.roughness = 0.62 if diseno == "retro" else 0.38
+	mat.clearcoat_enabled = diseno != "retro"
+	mat.clearcoat = 0.35
+	mat.clearcoat_roughness = 0.3
+	material_actual = mat
+	return mat
+
+static func textura(claro: Color, oscuro: Color, diseno: String = "clasico") -> ImageTexture:
+	var clave := "%s|%s|%s" % [claro.to_html(false), oscuro.to_html(false), diseno]
+	if _cache_tex.has(clave):
+		return _cache_tex[clave]
+	var img := Image.create(ANCHO_TEX, ALTO_TEX, false, Image.FORMAT_RGB8)
+	var centros_p := _icosaedro()
+	var centros_h := _caras_icosaedro(centros_p)
+	var ejes := [Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN, Vector3.FORWARD, Vector3.BACK]
+	var costura := claro.darkened(0.45)
+	for y in ALTO_TEX:
+		var th := (float(y) + 0.5) / float(ALTO_TEX) * PI
+		for x in ANCHO_TEX:
+			var ph := (float(x) + 0.5) / float(ANCHO_TEX) * TAU
+			## El mismo mapeo que `SphereMesh`.
+			var d := Vector3(sin(ph) * sin(th), cos(th), cos(ph) * sin(th))
+			var col: Color
+			match diseno:
+				"moderno":
+					col = _pixel_moderno(d, ejes, claro, oscuro, costura)
+				"retro":
+					col = _pixel_retro(d, ejes, claro, oscuro, x, y)
+				_:
+					col = _pixel_clasico(d, centros_p, centros_h, claro, oscuro, costura)
+			img.set_pixel(x, y, col)
+	img.generate_mipmaps()
+	var tex := ImageTexture.create_from_image(img)
+	_cache_tex[clave] = tex
+	return tex
+
+## Los 12 vértices del icosaedro: los centros de los pentágonos.
+static func _icosaedro() -> Array[Vector3]:
+	var t := (1.0 + sqrt(5.0)) / 2.0
+	var v: Array[Vector3] = []
+	for a: float in [-1.0, 1.0]:
+		for b: float in [-t, t]:
+			v.append(Vector3(0, a, b).normalized())
+			v.append(Vector3(a, b, 0).normalized())
+			v.append(Vector3(b, 0, a).normalized())
+	return v
+
+## Los 20 centros de cara: los centros de los hexágonos (tres vértices vecinos).
+static func _caras_icosaedro(v: Array[Vector3]) -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	var lado := 99.0
+	for i in v.size():
+		for j in range(i + 1, v.size()):
+			lado = minf(lado, v[i].angle_to(v[j]))
+	for i in v.size():
+		for j in range(i + 1, v.size()):
+			if absf(v[i].angle_to(v[j]) - lado) > 0.01:
+				continue
+			for k in range(j + 1, v.size()):
+				if absf(v[i].angle_to(v[k]) - lado) < 0.01 and absf(v[j].angle_to(v[k]) - lado) < 0.01:
+					out.append((v[i] + v[j] + v[k]).normalized())
+	return out
+
+## Icosaedro truncado: del centro al borde hay 16,47° en un pentágono y 20,9°
+## en un hexágono. Comparar las distancias YA divididas por eso pone la
+## frontera justo en la arista, con las proporciones del balón de verdad.
+static func _pixel_clasico(d: Vector3, cp: Array[Vector3], ch: Array[Vector3], claro: Color, oscuro: Color, costura: Color) -> Color:
+	var m1 := 99.0
+	var m2 := 99.0
+	var es_pent := false
+	for c: Vector3 in cp:
+		var a := d.angle_to(c) / deg_to_rad(16.47)
+		if a < m1:
+			m2 = m1
+			m1 = a
+			es_pent = true
+		elif a < m2:
+			m2 = a
+	for c: Vector3 in ch:
+		var a := d.angle_to(c) / deg_to_rad(20.9)
+		if a < m1:
+			m2 = m1
+			m1 = a
+			es_pent = false
+		elif a < m2:
+			m2 = a
+	if m2 - m1 < 0.045:
+		return costura
+	var base := oscuro if es_pent else claro
+	## Relieve: el panel se oscurece un poco hacia la costura.
+	return base.darkened(clampf(0.12 - (m2 - m1) * 0.35, 0.0, 0.12))
+
+## Seis paneles torcidos (el giro depende de la altura, por eso se curvan) con
+## una franja del color secundario pegada a cada costura.
+static func _pixel_moderno(d: Vector3, ejes: Array, claro: Color, oscuro: Color, costura: Color) -> Color:
+	var q := d.rotated(Vector3.UP, d.y * 0.9).rotated(Vector3.RIGHT, d.z * 0.5)
+	var m1 := -9.0
+	var m2 := -9.0
+	var cual := 0
+	for i in ejes.size():
+		var p := q.dot(ejes[i])
+		if p > m1:
+			m2 = m1
+			m1 = p
+			cual = i
+		elif p > m2:
+			m2 = p
+	var ventaja := m1 - m2
+	if ventaja < 0.018:
+		return costura
+	if ventaja < 0.16:
+		## La franja: una pasada más fina con un tercer tono.
+		return oscuro if ventaja > 0.05 else oscuro.lerp(claro, 0.35)
+	if cual % 3 == 0 and ventaja > 0.42:
+		return claro.lerp(oscuro, 0.12)
+	return claro
+
+## Cuero de 18 gajos: 6 caras con 3 tiras cada una, con grano.
+static func _pixel_retro(d: Vector3, ejes: Array, claro: Color, oscuro: Color, x: int, y: int) -> Color:
+	var cual := 0
+	var m := -9.0
+	for i in ejes.size():
+		var p: float = d.dot(ejes[i])
+		if p > m:
+			m = p
+			cual = i
+	var eje: Vector3 = ejes[cual]
+	## Coordenada a lo ancho de la cara para partirla en 3 tiras.
+	var otro := Vector3.UP if absf(eje.y) < 0.5 else Vector3.RIGHT
+	var u := d.dot(eje.cross(otro).normalized()) / maxf(m, 0.2)
+	var tira := u * 1.5 + 1.5
+	var borde_tira := absf(tira - roundf(tira))
+	## Grano del cuero: ruido barato y estable por píxel.
+	var grano := float((x * 73856093) ^ (y * 19349663)) / 2147483647.0
+	grano = fposmod(grano, 1.0) * 0.08 - 0.04
+	var base := claro.lerp(oscuro, 0.08 * float(cual % 2)).darkened(grano)
+	## Costura de cara (donde dos caras empatan) y entre tiras.
+	var segundo := -9.0
+	for i in ejes.size():
+		if i != cual:
+			segundo = maxf(segundo, d.dot(ejes[i]))
+	if m - segundo < 0.03 or (borde_tira < 0.035 and absf(tira - 1.5) < 1.4):
+		return oscuro
+	return base
 
 # ---------------------------------------------------------------------------
 #  EL MOTOR: ARCO DE VERDAD Y RODADO CON EL EJE CORRECTO

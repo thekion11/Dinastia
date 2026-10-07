@@ -74,7 +74,7 @@ func _process(_d: float) -> void:
 			print("(auspicio ya firmado o sin ofertas, se salta esa prueba)")
 
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_finanzas.png")
+		img.save_png("res://pruebas/capturas/pantalla_finanzas.png")
 		print("captura: pantalla_finanzas.png")
 
 	if _n == ESPERA + 5:

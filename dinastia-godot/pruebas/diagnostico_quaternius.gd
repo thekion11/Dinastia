@@ -65,7 +65,7 @@ func _ready() -> void:
 
 	get_tree().create_timer(0.3).timeout.connect(func():
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/quaternius_vista.png")
+		img.save_png("res://pruebas/capturas/quaternius_vista.png")
 		print("captura guardada")
 		print("FIN. 0 fallos")
 		get_tree().quit(0))

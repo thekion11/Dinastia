@@ -33,7 +33,7 @@ func _process(_d: float) -> void:
 				break
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_negociacion_abierta.png")
+		_guardar("res://pruebas/capturas/pantalla_negociacion_abierta.png")
 		## Sube la ficha y la parte fija bastante, para que se acepte pronto.
 		var neg = _mundo.mercado.negociacion
 		neg.fijo = int(float(neg.pedido) * 1.1)
@@ -41,7 +41,7 @@ func _process(_d: float) -> void:
 		neg.firma = neg.sueldo * 5
 		_pantalla.call("_enviar_oferta_negociacion")
 	if _n == ESPERA + 8:
-		_guardar("res://pruebas/pantalla_negociacion_ronda.png")
+		_guardar("res://pruebas/capturas/pantalla_negociacion_ronda.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

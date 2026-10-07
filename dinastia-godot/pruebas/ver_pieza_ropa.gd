@@ -59,7 +59,7 @@ func _process(_d: float) -> void:
 	_frame += 1
 	if _frame == 3:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pieza_ropa_%s.png" % _variantes[_idx])
+		img.save_png("res://pruebas/capturas/pieza_ropa_%s.png" % _variantes[_idx])
 		_idx += 1
 		if _idx >= _variantes.size():
 			get_tree().quit(0)

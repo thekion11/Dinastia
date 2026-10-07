@@ -23,7 +23,7 @@ func _process(_d: float) -> void:
 		print("hay_rueda: ", mundo.prensa.hay_rueda(), "  pregunta: ", mundo.prensa.entrevista.get("pregunta", ""))
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 10:
-		_guardar("res://pruebas/pantalla_rueda3d.png")
+		_guardar("res://pruebas/capturas/pantalla_rueda3d.png")
 		## Prueba de la interacción real: cambiar el tono y responder, y
 		## comprobar que el popup se cierra solo sin dejar nada raro.
 		(_pantalla.get("mundo") as Mundo).prensa.fijar_cuerpo("dubitativo")
@@ -34,7 +34,7 @@ func _process(_d: float) -> void:
 		var pop_despues: Object = _pantalla.get("_rueda_pop")
 		print("popup despues de responder: ", pop_despues != null, "  (deberia ser false)")
 	if _n == ESPERA + 12:
-		_guardar("res://pruebas/pantalla_rueda3d_tras_responder.png")
+		_guardar("res://pruebas/capturas/pantalla_rueda3d_tras_responder.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

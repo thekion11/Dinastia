@@ -86,7 +86,7 @@ func _process(_d: float) -> void:
 				print("OK: reconversión cambió el puesto de %s a %s al pulsar '%s'" % [pos_antes, _jugador.pos_e, texto_boton])
 
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_ficha_acciones.png")
+		img.save_png("res://pruebas/capturas/pantalla_ficha_acciones.png")
 		print("captura: pantalla_ficha_acciones.png")
 
 	if _n == ESPERA + 4:

@@ -95,11 +95,52 @@ var _voz: AudioStreamPlayer = null
 var _cache: Dictionary = {}
 var _sonando := ""
 
+## COMPUESTA EN SEGUNDO PLANO (25-9-2026). Cada pieza tarda casi un segundo
+## en componerse (medido: 0,8-1,1 s por pieza) y antes se hacía en el hilo
+## principal justo cuando se pedía: al entrar al partido o al llegar los
+## minutos finales ("tension"), la pantalla se congelaba un segundo. Ahora un
+## hilo las compone todas al arrancar, y si se pide una que todavía no está,
+## pasa la primera de la cola y empieza a sonar en cuanto está lista.
+var _mutex := Mutex.new()
+var _hilo: Thread = null
+var _parar := false
+var _prioridad := ""
+var _esperando := ""
+
 func _ready() -> void:
 	_voz = AudioStreamPlayer.new()
 	## La música va en su propio reproductor, no en la rueda de ocho voces de
 	## `Sonido`: es larga y se pisaría con el noveno efecto que sonara.
 	add_child(_voz)
+	_hilo = Thread.new()
+	_hilo.start(_componer_en_fondo, Thread.PRIORITY_LOW)
+
+func _componer_en_fondo() -> void:
+	var pendientes: Array = PIEZAS.keys()
+	while not pendientes.is_empty() and not _parar:
+		_mutex.lock()
+		var clave: String = _prioridad if pendientes.has(_prioridad) else String(pendientes[0])
+		var ya := _cache.has(clave)
+		_mutex.unlock()
+		pendientes.erase(clave)
+		if ya:
+			continue
+		var w := _componer(clave)
+		_mutex.lock()
+		if not _cache.has(clave):
+			_cache[clave] = w
+		_mutex.unlock()
+		call_deferred("_pieza_lista", clave)
+
+func _pieza_lista(clave: String) -> void:
+	if _esperando == clave:
+		_esperando = ""
+		poner(clave)
+
+func _exit_tree() -> void:
+	_parar = true
+	if _hilo != null and _hilo.is_started():
+		_hilo.wait_to_finish()
 
 ## Pone una pieza. Si ya está sonando esa, no hace nada —volver a llamar desde
 ## un repintado no debe cortar la música y empezarla otra vez—.
@@ -110,6 +151,16 @@ func poner(clave: String) -> void:
 		return
 	if _sonando == clave and _voz.playing:
 		_voz.volume_db = linear_to_db(maxf(0.001, volumen))
+		return
+	## Si todavía no está compuesta y el hilo sigue vivo, se le pasa al frente
+	## de la cola y se espera: nada de componer aquí y congelar la pantalla.
+	_mutex.lock()
+	var lista := _cache.has(clave)
+	if not lista:
+		_prioridad = clave
+	_mutex.unlock()
+	if not lista and _hilo != null and _hilo.is_alive():
+		_esperando = clave
 		return
 	_sonando = clave
 	_voz.stream = _pista(clave)
@@ -124,6 +175,7 @@ func aplicar_volumen() -> void:
 
 func parar() -> void:
 	_sonando = ""
+	_esperando = ""
 	if _voz != null:
 		_voz.stop()
 
@@ -148,10 +200,17 @@ func ambientar(situacion: String) -> void:
 ## en memoria; seis piezas son 16 MB, y por eso se generan SOLO cuando se piden
 ## y no todas al arrancar.
 func _pista(clave: String) -> AudioStreamWAV:
-	if _cache.has(clave):
-		return _cache[clave]
+	_mutex.lock()
+	var hecha: AudioStreamWAV = _cache.get(clave)
+	_mutex.unlock()
+	if hecha != null:
+		return hecha
 	var w := _componer(clave)
-	_cache[clave] = w
+	_mutex.lock()
+	if not _cache.has(clave):
+		_cache[clave] = w
+	w = _cache[clave]
+	_mutex.unlock()
 	return w
 
 func _componer(clave: String) -> AudioStreamWAV:

@@ -41,7 +41,7 @@ func _process(_d: float) -> void:
 		var scroll: ScrollContainer = lista.get_parent()
 		scroll.scroll_vertical = 100000
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_carrera.png")
+		_guardar("res://pruebas/capturas/pantalla_carrera.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

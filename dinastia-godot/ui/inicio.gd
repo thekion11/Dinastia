@@ -14,15 +14,15 @@ extends Control
 ## guardado. Aquí no hay lógica de juego nueva, solo el primer clic.
 
 ## La misma paleta que css/estilo.css (`:root`), no una propia de Godot.
-const COL_FONDO := Color("0c1510")
-const COL_PANEL := Color("141c16")
-const COL_BORDE := Color("ffffff12")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
+const COL_FONDO := Tema.FONDO
+const COL_PANEL := Tema.PANEL
+const COL_BORDE := Tema.BORDE
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
 ## El verde de siempre. En el club ya elegido el acento es SU color -ver
 ## principal.gd- pero aquí todavía no hay ningún club escogido.
-const COL_ACENTO := Color("3fa06a")
-const COL_ORO := Color("c9a227")
+const COL_ACENTO := Tema.ACENTO
+const COL_ORO := Tema.ORO
 
 ## Los títulos de cada portada llevan su propio color en el HTML (`.pTretro`,
 ## `.pTneon`…): un blanco por defecto se perdía sobre el sol naranja del retro
@@ -43,7 +43,9 @@ const COLOR_CLAIM := {
 ## y "proximo" en el HTML, más la tarjeta "Crear tu Club" (`crear:true`)-. Se
 ## SIGUEN mostrando, como en el HTML: enseñarlas apagadas es honesto, esconderlas
 ## habría sido fingir que el menú tiene menos modos de los que en verdad tiene.
-const CATS_SIN_JUGAR := ["retos", "tutorial", "proximo"]
+## "tutorial" dejó la lista el 25-9-2026: lleva a una carrera de entrenador con
+## el recorrido guiado encendido (`ui/componentes/tutorial.gd`).
+const CATS_SIN_JUGAR := ["proximo"]
 
 const CONFIG_RUTA := "user://ajustes.cfg"
 
@@ -59,6 +61,8 @@ var _clave := "clasica"
 var _campo_nombre: LineEdit
 var _fila_dificultad: HBoxContainer
 var _dificultad := "normal"
+var _fila_base: HBoxContainer
+var _lbl_base: Label
 var _lbl_estado: Label
 
 var _panel_continuar: VBoxContainer
@@ -107,6 +111,7 @@ func _construir() -> void:
 	raiz.add_child(_panel_continuar)
 
 	_construir_perfil(raiz)
+	_construir_meta(raiz)
 	_construir_datos_dt(raiz)
 
 	var titulo := _texto(20, COL_TEXTO)
@@ -256,6 +261,70 @@ func _construir_datos_dt(raiz: VBoxContainer) -> void:
 		b.custom_minimum_size = Vector2(90, 28)
 		b.pressed.connect(func() -> void: _elegir_dificultad(k))
 		_fila_dificultad.add_child(b)
+	_construir_selector_base(raiz)
+
+## "BASE DE DATOS": ficticia (la que se publica, por defecto) o el pack real
+## si esta instalación lo tiene. Ver `Datos` para el formato y dónde se busca.
+## Se aplica AL MOMENTO -`eleccion_club.gd` genera el mundo con lo que haya
+## activo- y se recuerda para la próxima vez.
+## El álbum, el museo de tus carreras y el mundo heredado (28-9-2026, `Meta`).
+func _construir_meta(raiz: VBoxContainer) -> void:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 10)
+	raiz.add_child(fila)
+	var d := Meta.leer()
+	var b := Button.new()
+	b.text = "📒 Álbum y museo  ·  %d cromos, %d títulos" % [(d["cromos"] as Dictionary).size(), (d["museo"] as Array).size()]
+	b.pressed.connect(func() -> void: PanelMeta.abrir(self))
+	fila.add_child(b)
+	if Meta.hay_legado():
+		var leg: Dictionary = d["legado"]
+		var h := CheckButton.new()
+		h.text = "🌍 Heredar el mundo de tu última partida (temporada %d)" % int(leg.get("anio", 0))
+		h.button_pressed = Meta.heredar_proximo
+		h.toggled.connect(func(si: bool) -> void: Meta.heredar_proximo = si)
+		fila.add_child(h)
+
+func _construir_selector_base(raiz: VBoxContainer) -> void:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	raiz.add_child(fila)
+	var lb := _texto(12, COL_SUAVE)
+	lb.text = "Base de datos"
+	lb.custom_minimum_size = Vector2(90, 0)
+	lb.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	fila.add_child(lb)
+	_fila_base = HBoxContainer.new()
+	_fila_base.add_theme_constant_override("separation", 6)
+	fila.add_child(_fila_base)
+	for real: bool in [false, true]:
+		var b := Button.new()
+		b.text = "Ficticia" if not real else "Real (pack)"
+		b.toggle_mode = true
+		b.custom_minimum_size = Vector2(110, 28)
+		if real and not Datos.hay_pack_real():
+			b.disabled = true
+			b.tooltip_text = "No hay ningún pack real instalado. Copia un archivo pack_real.json en:\n%s" \
+				% ProjectSettings.globalize_path("user://")
+		b.pressed.connect(func() -> void: _elegir_base(real))
+		_fila_base.add_child(b)
+	_lbl_base = _texto(11, COL_SUAVE)
+	_lbl_base.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	raiz.add_child(_lbl_base)
+	_pintar_base()
+
+func _elegir_base(real: bool) -> void:
+	Datos.usar_base_real(real)
+	Datos.guardar_preferencia_base_real(Datos.base_real)
+	_pintar_base()
+
+func _pintar_base() -> void:
+	for i in _fila_base.get_child_count():
+		(_fila_base.get_child(i) as Button).button_pressed = (i == 1) == Datos.base_real
+	if Datos.base_real:
+		_lbl_base.text = "Clubes, ligas y jugadores reales de «%s», con sus caras y con los nombres cubiertos (C0lo-C0lo). Solo para uso privado." % Datos.nombre_pack()
+	else:
+		_lbl_base.text = "384 clubes y 24 ligas inventados, con jugadores generados. Es la base de la versión publicada."
 
 ## Una tarjeta del menú de modos -`tarjetaModo()`/`dibujarPortadaModo()` del
 ## HTML-: la carátula con degradado, el título y el subtítulo. Las que hoy no
@@ -263,7 +332,7 @@ func _construir_datos_dt(raiz: VBoxContainer) -> void:
 ## etiqueta "EN DESARROLLO" que ya usa el HTML para "proximo".
 func _tarjeta(m: Dictionary) -> Control:
 	var cat := String(m.get("cat", ""))
-	var sin_jugar := CATS_SIN_JUGAR.has(cat) or bool(m.get("crear", false))
+	var sin_jugar := CATS_SIN_JUGAR.has(cat)
 
 	var caja := PanelContainer.new()
 	caja.custom_minimum_size = Vector2(300, 150)
@@ -549,12 +618,7 @@ func _actualizar_continuar() -> void:
 	botones.add_child(bx)
 
 func _dinero(n: int) -> String:
-	var euros := float(n) * Eco.ECO
-	if absf(euros) >= 1000000.0:
-		return "%.1fM EUR" % (euros / 1000000.0)
-	if absf(euros) >= 1000.0:
-		return "%dk EUR" % int(euros / 1000.0)
-	return "%d EUR" % int(euros)
+	return Eco.dinero(n)
 
 func _borrar_partida() -> void:
 	Partida.borrar("partida")
@@ -581,17 +645,31 @@ func _al_pulsar_modo(m: Dictionary) -> void:
 	var cat := String(m.get("cat", ""))
 	var titulo := String(m.get("titulo", ""))
 	if bool(m.get("crear", false)):
-		_avisar("🛠️ \"%s\" (fundar un club de cero) todavía no está en esta versión de Godot." % titulo)
-		return
+		## CREAR TU CLUB (26-9-2026): la elección de club ya sabía fundar;
+		## ahora la tarjeta lleva ahí con el panel de fundar destacado.
+		Principal.fundar_pedido = true
+		m = {"id": "dt"}
 	match cat:
 		"retos":
-			_avisar("🚧 Los retos con guion propio todavía no son su propia pantalla en esta versión de Godot.")
+			## LOS RETOS (26-9-2026): se elige uno de los cinco y el club lo
+			## pone el propio reto.
+			_elegir_reto()
 			return
 		"tutorial":
-			_avisar("📖 El tutorial todavía no está en esta versión de Godot.")
-			return
+			## Una carrera de entrenador de verdad, con el recorrido encendido:
+			## se aprende jugando la propia partida, no una de mentira que
+			## luego hay que tirar. Se elige el club como siempre.
+			Principal.tutorial_pedido = true
+			m = {"id": "dt"}
 		"proximo":
 			_avisar("🚧 %s todavía no se puede jugar. Está en la lista para cuando esté listo." % titulo)
+			return
+		"jugador":
+			## LA CARRERA DE JUGADOR (29-9-2026): su propia pantalla, con su
+			## propia estética; los partidos se juegan en el motor jugable.
+			CarreraJugadorUI.mundo = null
+			CarreraJugadorUI.nombre_pedido = _campo_nombre.text.strip_edges()
+			get_tree().change_scene_to_file("res://escenas/carrera_jugador.tscn")
 			return
 	var nombre := _campo_nombre.text.strip_edges()
 	Principal.modo_elegido = String(m.get("id", "dt"))
@@ -602,3 +680,45 @@ func _al_pulsar_modo(m: Dictionary) -> void:
 func _avisar(texto: String) -> void:
 	_lbl_estado.text = texto
 	_lbl_estado.visible = true
+
+
+## El selector de retos: los cinco, con su planteamiento y su meta.
+func _elegir_reto() -> void:
+	var capa := ColorRect.new()
+	capa.color = Color(0, 0, 0, 0.6)
+	capa.set_anchors_preset(Control.PRESET_FULL_RECT)
+	capa.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(capa)
+	var centro := CenterContainer.new()
+	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
+	capa.add_child(centro)
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.ORO))
+	caja.custom_minimum_size = Vector2(640, 0)
+	centro.add_child(caja)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 8)
+	caja.add_child(v)
+	v.add_child(Tema.etiqueta(Tema.TAM_TITULO, Tema.ORO, "🎯 RETOS"))
+	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.")
+	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(nota)
+	for r: Array in Retos.LISTA:
+		var b := Button.new()
+		b.text = "%s  %s\n%s\nMeta: %s" % [String(r[1]), String(r[2]), String(r[3]), String(r[4])]
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.custom_minimum_size = Vector2(0, 76)
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var id := String(r[0])
+		b.pressed.connect(func() -> void:
+			var nombre := _campo_nombre.text.strip_edges()
+			Principal.reto_pedido = id
+			Principal.modo_elegido = "dt"
+			Principal.dt_nombre_elegido = nombre if nombre != "" else "Míster"
+			Principal.dificultad_elegida = _dificultad
+			get_tree().change_scene_to_file("res://escenas/eleccion_club.tscn"))
+		v.add_child(b)
+	var cerrar := Button.new()
+	cerrar.text = "Volver"
+	cerrar.pressed.connect(capa.queue_free)
+	v.add_child(cerrar)

@@ -40,6 +40,9 @@ signal evento_resuelto(id: String, opcion: String, titulo: String, cuerpo: Strin
 signal rueda_abierta(pregunta: String, opciones: Array)
 signal rueda_respondida(titular: String, d_moral: int, d_confianza: int, d_socios: int)
 signal humor_hinchada(animo: int, funa: int)
+## El mentor comenta lo que pasa (plan maestro C1): un cambio de escudo, un
+## partido con temporal... Lo pinta la pantalla con su cara.
+signal mentor_dice(titulo: String, texto: String)
 
 ## --- LENGUAJE CORPORAL ------------------------------------------------------
 ## No importa solo lo que dices, sino cómo lo dices: si titubeas, los periodistas
@@ -262,7 +265,7 @@ func _pool(m: Mundo, mio: Club) -> Array[Dictionary]:
 	var fuera := mio.plantilla.filter(func(x: Jugador) -> bool: return x.pais != mio.pais)
 	if fuera.size() >= 2:
 		pool.append({"id": "virus_fifa", "pid": "",
-			"txt": "✈️ Cierre de aeropuertos en plena fecha FIFA: %d de tus internacionales están atrapados fuera y el derbi es el domingo. Puedes reclamar el aplazamiento o jugarlo con lo que haya." % fuera.size(),
+			"txt": "✈️ Cierre de aeropuertos en plena fecha internacional: %d de tus internacionales están atrapados fuera y el derbi es el domingo. Puedes reclamar el aplazamiento o jugarlo con lo que haya." % fuera.size(),
 			"opcion_a": "Reclamar el aplazamiento", "opcion_b": "Se juega con juveniles"})
 
 	## LA VENGANZA DEL EXREPRESENTANTE. Filtra tus correos. No hay opción buena:
@@ -298,7 +301,115 @@ func _pool(m: Mundo, mio: Club) -> Array[Dictionary]:
 	## sobre el mismo nombre. Se revisó ANTES de escribir código -la lección de
 	## habs/pie de esta misma sesión-, no después.
 
+	_eventos_nuevos(pool, m, mio, fig, rival, rep)
 	return pool
+
+## LOS NUEVE EVENTOS DEL PLAN MAESTRO (25-9-2026, bloque B4). Sacados de
+## `instruciones profundas/instrucciones_extras.txt` y del plan, y revisados
+## contra el código antes de escribirlos: ninguno existía. Todos tienen dos
+## salidas que mueven algo, y varios dejan un efecto que dura semanas
+## (`efectos`, se descuenta en `semana()`).
+func _eventos_nuevos(pool: Array[Dictionary], m: Mundo, mio: Club, fig: Jugador, rival: Club, rep: float) -> void:
+	## Juegos mentales en el túnel: solo si hay partido esta semana.
+	if rival != null:
+		pool.append({"id": "tunel", "pid": "",
+			"txt": "🚇 En el túnel, antes de salir, te cruzas con el DT de %s y con el árbitro, que tiene fama de localista. Tienes diez segundos." % rival.nombre,
+			"opcion_a": "Susurrarle una provocación al DT", "opcion_b": "Dejarle caer algo al árbitro"})
+	## El video viral de la noche anterior.
+	var fiesteros := mio.plantilla.filter(func(x: Jugador) -> bool: return x.edad <= 27)
+	if not fiesteros.is_empty():
+		var q: Jugador = fiesteros[Azar.ent(0, fiesteros.size() - 1)]
+		pool.append({"id": "viral", "pid": q.id,
+			"txt": "📱 Circula un video de %s bailando en una discoteca a las 4 de la mañana, dos días antes del partido. Ya lo vio medio país." % q.nombre,
+			"opcion_a": "Sanción ejemplar", "opcion_b": "Defenderlo en público"})
+	## El capitán pide hablar en nombre del grupo.
+	var capi: Jugador = null
+	for x: Jugador in mio.plantilla:
+		if x.capitan:
+			capi = x
+	if capi != null:
+		pool.append({"id": "capitan", "pid": capi.id,
+			"txt": "🗣️ %s, el capitán, pide hablar a solas: el vestuario siente que los entrenamientos son demasiado duros y que no se les escucha." % capi.nombre,
+			"opcion_a": "Escuchar y aflojar la carga", "opcion_b": "\"Aquí mando yo\""})
+	## El minuto de silencio.
+	pool.append({"id": "silencio", "pid": "",
+		"txt": "🕯️ Murió un hincha histórico del club, socio desde hace 60 años. La barra pide un homenaje antes del próximo partido en casa.",
+		"opcion_a": "Homenaje con camiseta conmemorativa", "opcion_b": "Minuto de silencio y nada más"})
+	## Un jugador pide cambiar de posición.
+	var inquietos := mio.plantilla.filter(func(x: Jugador) -> bool: return x.pos != "POR" and x.edad <= 29)
+	if not inquietos.is_empty():
+		var q2: Jugador = inquietos[Azar.ent(0, inquietos.size() - 1)]
+		var nueva := String(_POSICION_DESEADA.get(q2.pos_e, "MC"))
+		pool.append({"id": "cambio_posicion", "pid": q2.id, "dato": nueva,
+			"txt": "🔄 %s (%s) te pide jugar de %s. Dice que ahí rinde más y que en su puesto actual se aburre." % [q2.nombre, q2.pos_e, nueva],
+			"opcion_a": "Probarlo de %s" % nueva, "opcion_b": "Su sitio es el de siempre"})
+	## El patrocinador que exige aparecer en la rueda de prensa.
+	pool.append({"id": "sponsor_rueda", "pid": "",
+		"txt": "🥤 El patrocinador principal exige que menciones su bebida energética en la próxima rueda de prensa. Pagan %s por la frase." % _dinero(Eco.escalar(120000.0, rep)),
+		"opcion_a": "Decir la frase", "opcion_b": "Yo hablo de fútbol"})
+	## Apuestas ilegales.
+	var sospechoso: Jugador = mio.plantilla[Azar.ent(0, mio.plantilla.size() - 1)]
+	pool.append({"id": "apuestas", "pid": sospechoso.id,
+		"txt": "🎲 La fiscalía investiga apuestas ilegales en tu liga y el nombre de %s aparece en unos mensajes. Todavía no hay cargos." % sospechoso.nombre,
+		"opcion_a": "Apartarlo mientras se investiga", "opcion_b": "Presunción de inocencia"})
+	## La huelga por sueldos impagos: solo con la caja en rojo.
+	if mio.saldo < 0:
+		pool.append({"id": "huelga_impagos", "pid": "",
+			"txt": "✊ Con la caja en rojo, el plantel anuncia que no entrena hasta cobrar los atrasos. El sindicato ya habló con la prensa.",
+			"opcion_a": "Pagar los atrasos ya", "opcion_b": "Negociar un calendario de pagos"})
+	## El derbi con amenaza de seguridad.
+	if rival != null and m != null and m.es_clasico(mio, rival):
+		pool.append({"id": "derbi_amenaza", "pid": "",
+			"txt": "🚨 La policía avisa de una amenaza creíble de enfrentamientos en el clásico contra %s. Recomienda reforzar el operativo." % rival.nombre,
+			"opcion_a": "Reforzar la seguridad (%s)" % _dinero(Eco.escalar(90000.0, rep)), "opcion_b": "Operativo normal"})
+
+## Hacia dónde quiere moverse cada demarcación (la vecina más ofensiva o la
+## más natural para su perfil).
+const _POSICION_DESEADA := {"DFC": "MCD", "LD": "CAD", "LI": "CAI", "CAD": "MD", "CAI": "MI",
+	"MCD": "MC", "MC": "MCO", "MCO": "SD", "MD": "ED", "MI": "EI", "ED": "DC", "EI": "DC",
+	"SD": "DC", "DC": "SD"}
+
+## EFECTOS QUE DURAN (plan maestro B4). Cada uno: {id, semanas, pid}. Se aplican
+## y descuentan en `semana()` y se guardan con la partida.
+var efectos: Array = []
+
+func _efecto(id: String, semanas: int, pid: String = "") -> void:
+	efectos.append({"id": id, "semanas": semanas, "pid": pid})
+
+func _aplicar_efectos(mio: Club) -> void:
+	var siguen: Array = []
+	for e: Dictionary in efectos:
+		var j := _jugador(mio, String(e.get("pid", "")))
+		match String(e["id"]):
+			"vestuario_tenso":
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral - 1, 10, 99)
+			"eco_viral":
+				mover_animo(-1)
+			"posicion_nueva":
+				## Mientras se adapta, rinde un poco menos; al final, contento.
+				if j != null:
+					j.forma = clampi(j.forma - 1, 10, 99)
+			"calendario_pagos":
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral - 2, 10, 99)
+		e["semanas"] = int(e["semanas"]) - 1
+		if int(e["semanas"]) > 0:
+			siguen.append(e)
+		else:
+			_fin_de_efecto(String(e["id"]), j)
+	efectos = siguen
+
+func _fin_de_efecto(id: String, j: Jugador) -> void:
+	match id:
+		"vestuario_tenso":
+			noticia.emit("El vestuario se calma", "Pasaron las semanas de tensión con el capitán. El grupo vuelve a remar.")
+		"posicion_nueva":
+			if j != null:
+				j.moral = clampi(j.moral + 5, 10, 99)
+				noticia.emit("%s ya es de su nueva posición" % j.nombre, "Terminó de adaptarse y está feliz con el cambio.")
+		"calendario_pagos":
+			noticia.emit("Atrasos saldados", "Se cumplió el calendario de pagos. El plantel vuelve a entrenar sin carteles.")
 
 func hay_evento() -> bool:
 	return not pendiente.is_empty()
@@ -318,6 +429,7 @@ func resolver(op: String) -> Dictionary:
 		return {}
 	var e := pendiente
 	var si := op == "a"
+	_reputacion_de_decision(m, String(e["id"]), si)
 	var j: Jugador = _jugador(mio, String(e.get("pid", "")))
 	var rep := float(mio.rep)
 	var salida := {"titulo": "", "cuerpo": ""}
@@ -335,7 +447,7 @@ func resolver(op: String) -> Dictionary:
 				if m != null and m.cesiones != null:
 					m.cesiones.rechazar_presion(j)
 				salida = {"titulo": "No se vende",
-					"cuerpo": "Le dices al fondo que %s se queda. Tomaron nota, y el jugador tambien." % j.nombre}
+					"cuerpo": "Le dices al fondo que %s se queda. Tomaron nota, y el jugador también." % j.nombre}
 
 		"retiro_joven":
 			## No se compra la decisión: lo único que se puede negociar es CUÁNDO.
@@ -551,6 +663,150 @@ func resolver(op: String) -> Dictionary:
 				salida = {"titulo": "Sin bonos",
 					"cuerpo": "\"El sueldo ya es el bono\". Caras largas en la práctica."}
 
+		"tunel":
+			if si:
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral + 3, 10, 99)
+				if Azar.suerte(0.3):
+					_mover_funa(6)
+					salida = {"titulo": "La provocación se filtra",
+						"cuerpo": "Tu frase en el túnel la captó un micrófono de ambiente. El equipo salió encendido, pero la prensa ya tiene titular."}
+				else:
+					salida = {"titulo": "Guerra psicológica",
+						"cuerpo": "El DT rival se quedó blanco. Tus jugadores lo vieron y salieron a la cancha dos metros más arriba."}
+			else:
+				if m != null and m.federacion != null:
+					m.federacion.enojo_arbitral += 1
+				if Azar.suerte(0.35):
+					_pagar(mio, -Eco.escalar(40000.0, rep), "Multa por presionar al árbitro")
+					salida = {"titulo": "El árbitro lo pone en el acta",
+						"cuerpo": "Tu comentario terminó en el informe arbitral. Multa, y el tribunal ya te mira con lupa."}
+				else:
+					salida = {"titulo": "Recado entregado",
+						"cuerpo": "El árbitro no dijo nada, pero lo escuchó. El tribunal, si se entera, no lo va a olvidar."}
+
+		"viral":
+			if si:
+				if j != null:
+					j.moral = clampi(j.moral - 6, 10, 99)
+					j.suspension = maxi(j.suspension, 1)
+				_mover_funa(-5)
+				if m != null and m.directiva != null:
+					m.directiva.mover_confianza(2, "la sanción ejemplar")
+				salida = {"titulo": "Sanción ejemplar",
+					"cuerpo": "Un partido fuera y multa interna. La directiva aplaude; el jugador, no."}
+			else:
+				if j != null:
+					j.moral = clampi(j.moral + 4, 10, 99)
+				_mover_funa(10)
+				_efecto("eco_viral", 2)
+				salida = {"titulo": "Lo defiendes",
+					"cuerpo": "\"Tiene derecho a una vida\". El vestuario lo agradece; las redes llevan dos semanas con el video."}
+
+		"capitan":
+			if si:
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral + 3, 10, 99)
+				rep_entrenador = clampi(rep_entrenador - 2, 0, 100)
+				salida = {"titulo": "Carga más liviana",
+					"cuerpo": "Aflojas los entrenamientos una semana. El grupo sonríe; algún periodista dice que el capitán manda más que tú."}
+			else:
+				if j != null:
+					j.moral = clampi(j.moral - 8, 10, 99)
+				rep_entrenador = clampi(rep_entrenador + 3, 0, 100)
+				_efecto("vestuario_tenso", 3)
+				salida = {"titulo": "\"Aquí mando yo\"",
+					"cuerpo": "Dejas claro quién decide. Autoridad ganada, pero el vestuario va a estar tenso unas semanas."}
+
+		"silencio":
+			if si:
+				_pagar(mio, -Eco.escalar(50000.0, rep), "Homenaje y camiseta conmemorativa")
+				mover_animo(6)
+				mio.socios += 200
+				salida = {"titulo": "Un homenaje a la altura",
+					"cuerpo": "Minuto de silencio, su nombre en la camiseta y la barra cantando su canción. Nadie en el estadio lo va a olvidar."}
+			else:
+				mover_animo(2)
+				salida = {"titulo": "Minuto de silencio",
+					"cuerpo": "Respeto total en el estadio. Sencillo y digno."}
+
+		"cambio_posicion":
+			var nueva := String(e.get("dato", "MC"))
+			if si and j != null:
+				if not j.pos_sec.has(nueva):
+					j.pos_sec.append(nueva)
+				j.moral = clampi(j.moral + 6, 10, 99)
+				_efecto("posicion_nueva", 3, j.id)
+				salida = {"titulo": "%s, de %s" % [j.nombre, nueva],
+					"cuerpo": "Ya figura como %s en su ficha. Unas semanas de adaptación y veremos si tenía razón." % nueva}
+			else:
+				if j != null:
+					j.moral = clampi(j.moral - 6, 10, 99)
+				salida = {"titulo": "Cada uno en su sitio",
+					"cuerpo": "Le dices que no. Lo entiende, pero se le nota en la cara."}
+
+		"sponsor_rueda":
+			if si:
+				_pagar(mio, Eco.escalar(120000.0, rep), "Mención del patrocinador")
+				rep_entrenador = clampi(rep_entrenador - 3, 0, 100)
+				_mover_funa(3)
+				salida = {"titulo": "La frase más cara",
+					"cuerpo": "Nombraste la bebida entre táctica y táctica. Cobrado; los memes, gratis."}
+			else:
+				if m != null and m.directiva != null:
+					m.directiva.mover_confianza(-3, "el desplante al patrocinador")
+				salida = {"titulo": "Yo hablo de fútbol",
+					"cuerpo": "El patrocinador llamó al presidente. El presidente te llamó a ti."}
+
+		"apuestas":
+			if si:
+				if j != null:
+					j.suspension = maxi(j.suspension, 3)
+					j.moral = clampi(j.moral - 8, 10, 99)
+				salida = {"titulo": "Apartado mientras se investiga",
+					"cuerpo": "Tres partidos fuera por decisión del club. Si sale limpio, habrá que pedirle perdón."}
+			else:
+				_mover_funa(12)
+				if Azar.suerte(0.4):
+					_pagar(mio, -Eco.escalar(150000.0, rep), "Multa de la federación (apuestas)")
+					if j != null:
+						j.suspension = maxi(j.suspension, 4)
+					salida = {"titulo": "La federación actúa",
+						"cuerpo": "Aparecieron más mensajes. Multa para el club y cuatro partidos de sanción. Defenderlo en público salió caro."}
+				else:
+					salida = {"titulo": "Se archiva",
+						"cuerpo": "La fiscalía no encuentra nada. Tu respaldo fue polémico, pero el jugador no lo va a olvidar."}
+					if j != null:
+						j.moral = clampi(j.moral + 6, 10, 99)
+
+		"huelga_impagos":
+			if si:
+				_pagar(mio, -mio.masa_salarial() * 2, "Atrasos al plantel")
+				for x: Jugador in mio.plantilla:
+					x.moral = clampi(x.moral + 2, 10, 99)
+				salida = {"titulo": "Atrasos pagados",
+					"cuerpo": "Dos semanas de sueldo sobre la mesa. Se vuelve a entrenar mañana."}
+			else:
+				_efecto("calendario_pagos", 2)
+				salida = {"titulo": "Calendario de pagos",
+					"cuerpo": "Firman un acuerdo a dos semanas. Entrenan, pero con carteles en la valla."}
+
+		"derbi_amenaza":
+			if si:
+				_pagar(mio, -Eco.escalar(90000.0, rep), "Operativo de seguridad del clásico")
+				salida = {"titulo": "Clásico en paz",
+					"cuerpo": "Más efectivos, controles en los accesos y ningún incidente. Nadie lo nota, que es la idea."}
+			elif Azar.suerte(0.35):
+				_pagar(mio, -Eco.escalar(200000.0, rep), "Multa por incidentes en el clásico")
+				mover_animo(-5)
+				salida = {"titulo": "Incidentes en el clásico",
+					"cuerpo": "Hubo enfrentamientos a la salida. Multa de la federación y una semana de portadas que nadie quería."}
+			else:
+				## Sin vallas extra ni cacheos eternos, la grada lo vive más cerca.
+				mover_animo(2)
+				salida = {"titulo": "Sin incidentes",
+					"cuerpo": "Esta vez no pasó nada, y la grada vivió el clásico sin vallas de más. Esta vez."}
+
 		"reclamo":
 			var arb := arbitro_polemico if arbitro_polemico != "" else "el árbitro"
 			## Se limpia SIEMPRE, reclames o no: el tema se cierra esta semana y
@@ -673,6 +929,16 @@ func abrir_rueda(gane: bool, empate: bool) -> Dictionary:
 	var guion: Array = _GANE if gane else (_EMPATE if empate else _PERDI)
 	entrevista = (Azar.uno(guion) as Dictionary).duplicate(true)
 	cuerpo = CUERPO_POR_DEFECTO
+	## LO QUE ES NOTICIA MANDA sobre la pregunta de siempre (C1): si cambiaste
+	## el escudo o la camiseta, te preguntan por eso; si se jugó con temporal,
+	## calor o altura, por el tiempo. El sorteo de arriba se hace igual, así
+	## que el consumo de `Azar` no cambia.
+	if cambio_identidad != "":
+		entrevista = _pregunta_identidad(cambio_identidad)
+		cambio_identidad = ""
+	elif Clima.es_extremo(clima_ultimo) and _hash_de(str(_fecha()) + "clima") % 2 == 0:
+		entrevista = _pregunta_clima(clima_ultimo, gane, empate)
+	_poner_periodista(gane, empate)
 	rueda_abierta.emit(String(entrevista["pregunta"]), entrevista["opciones"])
 	return entrevista
 
@@ -701,7 +967,15 @@ func cuerpos() -> Dictionary:
 ## redonda: la moral la cobra el plantel, la confianza la directiva y los socios
 ## la taquilla del mes que viene. Quedar bien con el vestuario puede costarte el
 ## despacho.
-func responder(i: int) -> Dictionary:
+##
+## `segundos` (B5): lo que tardaste en contestar, medido por la pantalla. Más de
+## `TITUBEO_SEG` y la sala lo nota -"los periodistas huelen sangre"-. Con -1 (las
+## pruebas, o quien no mida) no cuenta.
+##
+## Si la respuesta deja la puerta abierta -evasiva, titubeo, o soberbia ante
+## quien vive del titular-, el MISMO periodista repregunta: la rueda sigue
+## abierta con la repregunta en `entrevista` y el resultado trae "sigue": true.
+func responder(i: int, segundos: float = -1.0) -> Dictionary:
 	if entrevista.is_empty():
 		return {}
 	var opciones: Array = entrevista["opciones"]
@@ -718,6 +992,12 @@ func responder(i: int) -> Dictionary:
 	d_moral = int(extra["moral"])
 	d_conf = int(extra["confianza"])
 	d_socios = int(extra["socios"])
+	var tono := String(o.get("tono", "calma"))
+	var titubeo := segundos >= TITUBEO_SEG
+	var de_tono := _aplicar_tono(tono, titubeo)
+	d_moral += int(de_tono["moral"])
+	d_conf += int(de_tono["confianza"])
+	extra["texto"] = String(extra["texto"]) + String(de_tono["texto"])
 
 	## EL VOCERO AMORTIGUA. Si habla otro por ti, la rueda deja de ser tuya: ni
 	## te luces ni te hundes. Es la contrapartida que el HTML prometia en el
@@ -750,12 +1030,21 @@ func responder(i: int) -> Dictionary:
 	var quien := "🎙 Rueda de prensa"
 	if not vocero.is_empty():
 		quien = "🎙 Rueda de prensa · habla %s" % String(vocero.get("nombre", ""))
-	entrevista = {}
-	cuerpo = CUERPO_POR_DEFECTO
+	var per := String(entrevista.get("periodista", ""))
+	var paso := int(entrevista.get("paso", 0))
+	_recordar(per, titular, tono)
+	var sigue := paso == 0 and _toca_repreguntar(per, tono, titubeo)
+	if sigue:
+		entrevista = _repregunta(per, titular, tono, titubeo)
+	else:
+		_preparar_titular(per, titular, tono)
+		entrevista = {}
+		cuerpo = CUERPO_POR_DEFECTO
 	noticia.emit(quien, "«%s».%s" % [titular, String(extra["texto"])])
 	rueda_respondida.emit(titular, d_moral, d_conf, d_socios)
 	return {"titular": titular, "moral": d_moral, "confianza": d_conf,
-		"socios": d_socios, "extra": String(extra["texto"])}
+		"socios": d_socios, "extra": String(extra["texto"]), "tono": tono,
+		"titubeo": titubeo, "sigue": sigue}
 
 ## Cómo lo dijiste, sumado a lo que dijiste.
 ##
@@ -794,6 +1083,437 @@ func _aplicar_cuerpo(dm: int, dc: int, ds: int) -> Dictionary:
 
 
 # ===========================================================================
+#  LA RUEDA A FONDO (25-9-2026, plan maestro B5)
+# ===========================================================================
+## Pedido: *"mejoras en las entrevistas"*. Hasta hoy la rueda era UNA pregunta de
+## "Prensa" sin cara, tres botones y a casa. Ahora:
+##   - pregunta un PERIODISTA concreto de los cinco de `PERIODISTAS`, y cada uno
+##     trata distinto lo que dices (el crítico no te perdona la soberbia, el
+##     sensacionalista vive de ella);
+##   - cada respuesta tiene un TONO -calma, soberbia o evasiva- con su propio
+##     efecto, aparte de las cifras de la opción;
+##   - hay MEMORIA: el periodista recuerda tu última frase y, si fue soberbia y
+##     hoy perdiste, te la devuelve;
+##   - hay REPREGUNTA cuando dejas la puerta abierta;
+##   - cuenta el TIEMPO: si tardas más de `TITUBEO_SEG`, se nota;
+##   - al día siguiente sale el TITULAR citando tu frase, escrito a su manera;
+##   - se puede responder con TEXTO LIBRE: un clasificador local por palabras
+##     clave decide el tono (sin IA en línea: ver ROADMAP, B5);
+##   - y al terminar el partido dirigido, la entrevista corta A PIE DE CAMPO.
+## Nada de esto consume `Azar`: quién pregunta y cómo sale del hash de la fecha.
+
+const TITUBEO_SEG := 10.0
+
+## clave de periodista -> {frase, tono, fecha (anio*100+semana)}.
+var memoria: Dictionary = {}
+## La portada que saldrá con tu frase, o vacío. Claves: t, c, tipo.
+var titular_pendiente: Dictionary = {}
+## La entrevista a pie de campo abierta, o vacío (no se guarda: dura segundos).
+var pie: Dictionary = {}
+
+func periodista_de(clave: String) -> Array:
+	for f: Array in PERIODISTAS:
+		if String(f[0]) == clave:
+			return f
+	return PERIODISTAS[2]
+
+func _fecha() -> int:
+	var m := _mundo()
+	return (m.anio * 100 + m.semana) if m != null else 0
+
+## Quién pregunta hoy. Tras una derrota, uno de cada tres días le toca al
+## crítico, que es el que más ganas tiene.
+func _poner_periodista(gane: bool, empate: bool) -> void:
+	var h := _hash_de("%d|%s" % [_fecha(), String(entrevista.get("pregunta", ""))])
+	var f: Array = PERIODISTAS[h % PERIODISTAS.size()]
+	if not gane and not empate and h % 3 == 0:
+		f = periodista_de("ibarra")
+	var clave := String(f[0])
+	entrevista["periodista"] = clave
+	entrevista["quien"] = "%s · %s" % [String(f[1]), String(f[2])]
+	entrevista["perfil"] = String(f[3])
+	entrevista["paso"] = 0
+	## La pregunta ya no la hace "Prensa": la hace él.
+	var q := String(entrevista.get("pregunta", ""))
+	if q.begins_with("Prensa: "):
+		q = q.substr(8)
+	var mem: Dictionary = memoria.get(clave, {})
+	if not mem.is_empty() and _fecha() - int(mem.get("fecha", 0)) >= 1:
+		if String(mem.get("tono", "")) == "soberbia" and not gane:
+			## LA FRASE QUE VUELVE. Lo dijiste subido; hoy toca tragártelo.
+			q = "'Hace poco dijo «%s». Hoy no ganaron. ¿Se arrepiente de esa frase?'" % String(mem["frase"])
+			entrevista["opciones"] = [
+				{"txt": "Me equivoqué en el tono; el trabajo sigue", "moral": 1, "confianza": 1, "socios": 1, "tono": "calma"},
+				{"txt": "No vine a hablar del pasado", "moral": -1, "confianza": 0, "socios": -1, "tono": "evasiva"},
+				{"txt": "Lo sostengo: al final de la temporada hablamos", "moral": 1, "confianza": -1, "socios": 0, "tono": "soberbia"},
+			]
+			entrevista["memoria"] = true
+		elif String(mem.get("tono", "")) == "evasiva":
+			q = "'La última vez no me contestó; a ver hoy. %s" % q.trim_prefix("'")
+			entrevista["memoria"] = true
+	entrevista["pregunta"] = q
+
+## El tono, aparte de las cifras de la opción. Mueve la relación con quien
+## pregunta, y la soberbia la apunta el estamento arbitral.
+func _aplicar_tono(tono: String, titubeo: bool) -> Dictionary:
+	var per := String(entrevista.get("periodista", ""))
+	var perfil := String(entrevista.get("perfil", ""))
+	var dm := 0
+	var dc := 0
+	var texto := ""
+	match tono:
+		"calma":
+			_mover_relacion(per, 2)
+			funa = maxi(0, funa - 1)
+		"soberbia":
+			## El cuerpo "soberbio" ya lo apunta en `_aplicar_cuerpo`: dos veces
+			## por la misma frase sería cobrarla doble.
+			if cuerpo != "soberbio":
+				enojo_arbitral += 1
+			_mover_relacion(per, 3 if perfil == "sensacionalista" else -3)
+			dm += 1
+			texto = " La frase se va a repetir toda la semana."
+		"evasiva":
+			_mover_relacion(per, -2)
+			_mover_funa(1)
+			texto = " No contestaste, y eso también es una respuesta."
+	if titubeo:
+		dc -= 1
+		_mover_funa(2)
+		texto += " Tardaste en contestar: en la sala se notó."
+	return {"moral": dm, "confianza": dc, "texto": texto}
+
+func _mover_relacion(clave: String, d: int) -> void:
+	if clave == "":
+		return
+	relaciones[clave] = clampi(relacion_con(clave) + d, 0, 100)
+
+func _recordar(clave: String, frase: String, tono: String) -> void:
+	if clave == "":
+		return
+	memoria[clave] = {"frase": frase.substr(0, 90), "tono": tono, "fecha": _fecha()}
+
+## Repregunta si dejaste la puerta abierta. Con portavoz no: él cierra el tema.
+func _toca_repreguntar(clave: String, tono: String, titubeo: bool) -> bool:
+	if clave == "" or not vocero.is_empty():
+		return false
+	var perfil := String(periodista_de(clave)[3])
+	return titubeo or tono == "evasiva" or (tono == "soberbia" and perfil in ["crítico", "sensacionalista"])
+
+func _repregunta(clave: String, frase: String, tono: String, titubeo: bool) -> Dictionary:
+	var f := periodista_de(clave)
+	var q := ""
+	var ops: Array = []
+	if titubeo:
+		q = "'Se ha tomado su tiempo para contestar. ¿Duda usted de su propio proyecto?'"
+		ops = [
+			{"txt": "No dudo: hay un plan y el plantel lo conoce", "moral": 1, "confianza": 2, "socios": 0, "tono": "calma"},
+			{"txt": "No voy a entrar en eso", "moral": 0, "confianza": -2, "socios": -1, "tono": "evasiva"},
+			{"txt": "Dudar es cosa de ustedes", "moral": 1, "confianza": -1, "socios": 0, "tono": "soberbia"},
+		]
+	elif tono == "evasiva":
+		q = "'Con todo respeto, eso no es una respuesta. Se lo pregunto otra vez.'"
+		ops = [
+			{"txt": "Tiene razón: se lo digo claro, confío en este grupo", "moral": 1, "confianza": 1, "socios": 1, "tono": "calma"},
+			{"txt": "Ya respondí. Siguiente pregunta", "moral": -1, "confianza": -1, "socios": -1, "tono": "evasiva"},
+			{"txt": "Las respuestas las doy en la cancha", "moral": 2, "confianza": 0, "socios": 0, "tono": "soberbia"},
+		]
+	else:
+		q = "'«%s». ¿No teme que esa frase se le vuelva en contra?'" % frase
+		ops = [
+			{"txt": "Lo matizo: hablo de ambición, no de desprecio", "moral": 0, "confianza": 1, "socios": 1, "tono": "calma"},
+			{"txt": "No tengo nada más que añadir", "moral": 0, "confianza": -1, "socios": -1, "tono": "evasiva"},
+			{"txt": "Lo digo y lo sostengo", "moral": 2, "confianza": 0, "socios": 1, "tono": "soberbia"},
+		]
+	return {"pregunta": q, "opciones": ops, "periodista": clave, "perfil": String(f[3]),
+		"quien": "%s · %s (repregunta)" % [String(f[1]), String(f[2])], "paso": 1}
+
+## La portada de mañana, escrita a la manera de quien preguntó.
+func _preparar_titular(clave: String, frase: String, tono: String) -> void:
+	if clave == "":
+		return
+	var f := periodista_de(clave)
+	var perfil := String(f[3])
+	var cita := "«%s»" % frase.substr(0, 70)
+	var t := ""
+	match perfil:
+		"sensacionalista":
+			t = {"soberbia": "%s: el DT enciende la polémica" % cita, "evasiva": "El DT esquiva y la sala se queda con las ganas"}.get(tono, "%s, la frase del día" % cita)
+		"crítico":
+			t = {"soberbia": "Soberbia en la sala: %s" % cita, "evasiva": "Sin respuestas: el DT se escondió tras el micrófono"}.get(tono, "%s. Palabras; faltan hechos" % cita)
+		"aliado":
+			t = {"soberbia": "Un DT con carácter: %s" % cita, "evasiva": "El DT prefirió la prudencia"}.get(tono, "%s: el DT pone la cara" % cita)
+		"táctico":
+			t = "%s: lo que hay detrás de la idea del DT" % cita
+		_:
+			t = "El DT: %s" % cita
+	var tipo: String = {"calma": "bien", "soberbia": "neutro", "evasiva": "mal"}.get(tono, "neutro")
+	titular_pendiente = {"t": t, "c": "Lo firma %s en %s." % [String(f[1]), String(f[2])], "tipo": tipo, "medio": String(f[2])}
+
+## Sale al día siguiente de la rueda (la llama `semana()` y, si la hay, la
+## pantalla al pasar el día). Devuelve el titular, o vacío si no había.
+# --- el escudo, la camiseta y el tiempo (C1) ----------------------------------
+## La última identidad conocida del club: {esc, kit, col}. Vacía = aún no se
+## tomó la foto (la primera semana solo la toma, no da noticia).
+var identidad: Dictionary = {}
+## "escudo", "camiseta" o "escudo y camiseta" hasta que la rueda lo pregunte.
+var cambio_identidad: String = ""
+## El tiempo de tu último partido, para la rueda. Lo escribe `Mundo`.
+var clima_ultimo: Dictionary = {}
+## De qué competición es la rueda abierta ("liga" por defecto) y sus clubes,
+## para que la pared de la sala muestre los escudos que tocan. No se guardan:
+## la rueda se contesta en la misma sesión.
+var competicion_rueda: String = "liga"
+var clubes_rueda: Array = []
+
+static func firma_identidad(c: Club) -> Dictionary:
+	return {
+		"esc": "|".join([c.esc_color1, c.esc_color2, c.esc_forma, c.esc_patron, c.esc_simbolo, c.esc_especial]),
+		"kit": "|".join([c.kit_color1, c.kit_color2, c.kit_estilo]),
+		"col": "|".join([c.color1, c.color2]),
+	}
+
+## Cambiar el escudo o la camiseta es de las decisiones más sensibles de un
+## club: la gente se lo toma como algo suyo. Se revisa una vez por semana;
+## devuelve lo que cambió ("" si nada).
+func revisar_identidad(c: Club) -> String:
+	if c == null:
+		return ""
+	var ahora := firma_identidad(c)
+	if identidad.is_empty():
+		identidad = ahora
+		return ""
+	var escudo: bool = ahora["esc"] != identidad["esc"] or ahora["col"] != identidad["col"]
+	var camiseta: bool = ahora["kit"] != identidad["kit"] or ahora["col"] != identidad["col"]
+	identidad = ahora
+	if not escudo and not camiseta:
+		return ""
+	var que := "escudo y camiseta" if escudo and camiseta else ("escudo" if escudo else "camiseta")
+	cambio_identidad = que
+	## La afición se divide; cuánto, depende del día: un hash, no `Azar`.
+	var h := _hash_de("%s|%d|%s" % [c.id, _fecha(), que])
+	var d := (h % 11) - 6            ## de -6 a +4: tocar la identidad suele doler
+	mover_animo(d)
+	var reaccion := "La hinchada lo celebra en redes." if d > 0 else ("Hay división en la grada." if d > -3 else "Buena parte de la hinchada lo rechaza: «con la historia no se juega».")
+	var tit := "El club cambia su %s" % que
+	guardar_portada(tit.to_upper(), reaccion, "bien" if d > 0 else "mal", {"img": "escudo", "sub": reaccion, "nueva": true})
+	noticia.emit("🗞️ " + tit, reaccion)
+	mentor_dice.emit("Sobre el nuevo %s" % que,
+		"Esto se va a comentar toda la semana. Prepárate: en la próxima rueda de prensa te van a preguntar por el %s, y lo que digas pesa tanto como el cambio." % que)
+	return que
+
+func _pregunta_identidad(que: String) -> Dictionary:
+	return {"pregunta": "Prensa: 'El club estrena %s. Hay hinchas molestos: ¿por qué tocar algo tan sagrado?'" % que, "opciones": [
+		{"txt": "Respetamos la historia; esto la pone al día", "moral": 0, "confianza": 1, "socios": 1, "tono": "calma"},
+		{"txt": "El que no lo entienda, ya lo entenderá", "moral": 0, "confianza": 1, "socios": -2, "tono": "soberbia"},
+		{"txt": "Eso es cosa del departamento de marketing", "moral": 0, "confianza": -1, "socios": -1, "tono": "evasiva"},
+	]}
+
+func _pregunta_clima(info: Dictionary, gane: bool, empate: bool) -> Dictionary:
+	var que := String(info.get("texto", "el tiempo")).to_lower()
+	var q := "Prensa: '¿Cuánto influyó el tiempo (%s) en el resultado?'" % que
+	if gane:
+		q = "Prensa: 'Con %s, ¿fue un triunfo de carácter más que de fútbol?'" % que
+	return {"pregunta": q, "opciones": [
+		{"txt": "Es igual para los dos: no es excusa", "moral": 1, "confianza": 1, "socios": 0, "tono": "calma"},
+		{"txt": "Así no se puede jugar al fútbol", "moral": -1 if not gane else 0, "confianza": -1, "socios": 0, "tono": "soberbia"},
+		{"txt": "Prefiero hablar del partido", "moral": 0, "confianza": 0, "socios": -1, "tono": "evasiva"},
+	]}
+
+func publicar_titular_pendiente() -> String:
+	if titular_pendiente.is_empty():
+		return ""
+	var t := String(titular_pendiente["t"])
+	guardar_portada(t, String(titular_pendiente["c"]), String(titular_pendiente["tipo"]),
+		{"img": "dt", "medio": String(titular_pendiente.get("medio", "")), "sub": String(titular_pendiente["c"])})
+	noticia.emit("🗞️ " + t, String(titular_pendiente["c"]))
+	titular_pendiente = {}
+	return t
+
+# --- texto libre -------------------------------------------------------------
+## Lo que no es respuesta: cortar, derivar, "sin comentarios".
+const _EVASIVAS := ["sin comentarios", "no voy a", "siguiente", "no hablo", "no tengo nada",
+	"ya dije", "ya lo dije", "pregúntenle", "preguntenle", "pregunten a", "otro día", "no corresponde"]
+## Lo que suena subido.
+const _SOBERBIAS := ["somos los mejores", "que se preparen", "nadie nos", "ustedes no", "no saben",
+	"vamos a ganar", "ganaremos", "campeones", "obvio", "yo decido", "mi decisión", "ridícul",
+	"tendencios", "mentira", "no me importa", "lo sostengo", "cállense", "callense"]
+
+## El tono de una frase escrita. Menos de ocho letras tampoco es una respuesta.
+func clasificar_respuesta(texto: String) -> String:
+	var t := texto.strip_edges().to_lower()
+	if t.length() < 8:
+		return "evasiva"
+	for k: String in _SOBERBIAS:
+		if t.contains(k):
+			return "soberbia"
+	for k: String in _EVASIVAS:
+		if t.contains(k):
+			return "evasiva"
+	return "calma"
+
+## La opción que sale de un texto libre: el tono pone la base y lo que nombras
+## la matiza -hablar de la gente suma socios, del grupo suma moral, de los
+## árbitros los pone en tu contra-.
+func opcion_de_texto(texto: String) -> Dictionary:
+	var tono := clasificar_respuesta(texto)
+	var base: Dictionary = {"calma": [1, 1, 0], "soberbia": [2, 1, 1], "evasiva": [-1, 0, -1]}
+	var v: Array = base[tono]
+	var t := texto.to_lower()
+	var dm := int(v[0])
+	var dc := int(v[1])
+	var ds := int(v[2])
+	if t.contains("hinch") or t.contains("afici") or t.contains("la gente") or t.contains("cantera") or t.contains("juvenil"):
+		ds += 1
+	if t.contains("plantel") or t.contains("grupo") or t.contains("jugadores") or t.contains("equipo"):
+		dm += 1
+	if (t.contains("directiv") or t.contains("directorio") or t.contains("presidente")) and tono != "calma":
+		dc -= 1
+	return {"txt": texto.strip_edges().substr(0, 120), "moral": dm, "confianza": dc, "socios": ds,
+		"tono": tono, "arbitros": t.contains("árbitr") or t.contains("arbitr")}
+
+func responder_texto(texto: String, segundos: float = -1.0) -> Dictionary:
+	if entrevista.is_empty() or texto.strip_edges() == "":
+		return {}
+	var o := opcion_de_texto(texto)
+	## Hablar de los árbitros en una rueda nunca sale gratis.
+	if bool(o["arbitros"]):
+		enojo_arbitral += 1
+	(entrevista["opciones"] as Array).append(o)
+	return responder((entrevista["opciones"] as Array).size() - 1, segundos)
+
+# --- a pie de campo ------------------------------------------------------------
+## La entrevista corta al terminar el partido que dirigiste: una pregunta y
+## tres salidas. Mueve poco -ánimo de la hinchada y moral- porque es caliente y
+## todos lo saben; lo que cuenta es la frase, que va al registro.
+func pie_de_campo(gane: bool, empate: bool, gf: int, gc: int) -> Dictionary:
+	var f := periodista_de("navarrete")
+	var q := ""
+	var ops: Array = []
+	if gane:
+		q = "¡Victoria por %d-%d! ¿Qué le dice a la gente que vino hoy?" % [gf, gc]
+		ops = [
+			{"txt": "Gracias a ellos: este triunfo es de todos", "tono": "calma", "animo": 2, "moral": 1},
+			{"txt": "Que se vayan acostumbrando", "tono": "soberbia", "animo": 1, "moral": 1},
+			{"txt": "Ahora toca descansar", "tono": "evasiva", "animo": 0, "moral": 0},
+		]
+	elif empate:
+		q = "Empate %d-%d. ¿Sabe a poco?" % [gf, gc]
+		ops = [
+			{"txt": "Sumamos; el equipo dio la cara", "tono": "calma", "animo": 1, "moral": 1},
+			{"txt": "El árbitro nos quitó el partido", "tono": "soberbia", "animo": 1, "moral": 0, "arbitros": true},
+			{"txt": "Lo analizaremos en frío", "tono": "evasiva", "animo": 0, "moral": 0},
+		]
+	else:
+		q = "Derrota %d-%d, duro golpe. ¿Qué pasó hoy?" % [gf, gc]
+		ops = [
+			{"txt": "Lo asumo yo: hoy no estuvimos", "tono": "calma", "animo": 1, "moral": 1},
+			{"txt": "Los jugadores tendrán que dar explicaciones", "tono": "soberbia", "animo": 0, "moral": -2},
+			{"txt": "No es momento de hablar", "tono": "evasiva", "animo": -1, "moral": 0},
+		]
+	pie = {"pregunta": q, "opciones": ops, "quien": "%s · %s, a pie de campo" % [String(f[1]), String(f[2])]}
+	return pie
+
+# --- al paso: los medios nuevos (C6) -------------------------------------------
+## Pedido: *"entrevistas en medios de comunicación más nuevos y sin tanta
+## preparación, más naturales"*. Un streamer a la salida del entrenamiento, un
+## podcast en el aeropuerto, el canal de un hincha en la puerta del estadio: una
+## pregunta que no esperas, casi nunca de fútbol. Lo que dices mueve SEGUIDORES
+## (el alcance del club en redes) y un poco el ánimo; nada de confianza de la
+## directiva: nadie en el palco ve esos directos. Una vez cada ~8 semanas, por
+## hash (sin `Azar`).
+const MEDIOS_NUEVOS := [
+	["Kike en Directo", "streamer", "a la salida del entrenamiento"],
+	["El Vestuario Pod", "podcast", "en el aeropuerto"],
+	["Hincha TV", "canal de un hincha", "en la puerta del estadio"],
+	["Fútbol en 60 segundos", "vídeos cortos", "en el aparcamiento"],
+	["La Previa Live", "streaming", "en el supermercado"],
+]
+const PREGUNTAS_AL_PASO := [
+	["¿Qué música suena en el vestuario?", [
+		["Lo elige el capitán, y no siempre acierta", "calma", 900, 1],
+		["Silencio: aquí se viene a trabajar", "soberbia", -300, 0],
+		["Eso pregúntaselo al utilero", "evasiva", 400, 0]]],
+	["¿Quién es el peor bailarín del plantel?", [
+		["El portero, sin discusión", "calma", 1200, 1],
+		["Yo no bailo y ellos tampoco deberían", "soberbia", -200, 0],
+		["No voy a buscarme problemas", "evasiva", 300, 0]]],
+	["Te vimos haciendo la compra: ¿el entrenador cocina?", [
+		["Cocino fatal, pero lo intento", "calma", 1000, 1],
+		["Mi vida privada es privada", "soberbia", -400, -1],
+		["Solo compraba agua", "evasiva", 200, 0]]],
+	["¿Contestas los mensajes de los hinchas?", [
+		["Los leo todos, hasta los que me insultan", "calma", 1500, 2],
+		["No tengo tiempo para eso", "soberbia", -800, -2],
+		["A veces", "evasiva", 200, 0]]],
+	["¿A qué jugador del plantel te llevarías a una isla desierta?", [
+		["Al capitán: sabría organizarnos", "calma", 900, 1],
+		["A ninguno, me iría solo", "soberbia", -300, 0],
+		["A todos, que ninguno se enfade", "evasiva", 600, 0]]],
+	["Dicen que eres supersticioso: ¿cierto?", [
+		["La misma corbata desde hace diez partidos", "calma", 1300, 1],
+		["El fútbol es trabajo, no suerte", "soberbia", 0, 0],
+		["Sin comentarios", "evasiva", 100, 0]]],
+]
+## La entrevista al paso de esta semana, lista para enseñar, o vacío.
+var al_paso: Dictionary = {}
+
+func revisar_al_paso(anio: int, sem: int) -> Dictionary:
+	if not al_paso.is_empty() or not pie.is_empty():
+		return {}
+	var h := _hash_de("alpaso|%d|%d" % [anio, sem])
+	if h % 8 != 0:
+		return {}
+	var medio: Array = MEDIOS_NUEVOS[(h / 8) % MEDIOS_NUEVOS.size()]
+	var q: Array = PREGUNTAS_AL_PASO[(h / 64) % PREGUNTAS_AL_PASO.size()]
+	var ops: Array = []
+	for o: Array in q[1]:
+		ops.append({"txt": String(o[0]), "tono": String(o[1]), "seguidores": int(o[2]), "animo": int(o[3]), "moral": 0})
+	al_paso = {"pregunta": String(q[0]), "opciones": ops,
+		"quien": "%s · %s, %s" % [String(medio[0]), String(medio[1]), String(medio[2])], "rotulo": "📱 Al paso"}
+	return al_paso
+
+## Pasa la entrevista al paso a la "entrevista abierta" que contesta la
+## pantalla (la misma de pie de campo).
+func abrir_al_paso() -> Dictionary:
+	if al_paso.is_empty():
+		return {}
+	pie = al_paso
+	al_paso = {}
+	return pie
+
+## `i` = -1: pasas de largo ante la cámara.
+func responder_pie(i: int) -> Dictionary:
+	if pie.is_empty():
+		return {}
+	var ops: Array = pie["opciones"]
+	pie = {}
+	if i < 0 or i >= ops.size():
+		mover_animo(-1)
+		noticia.emit("🎤 A pie de campo", "Pasaste de largo ante la cámara. La imagen, sin palabras, se vio igual.")
+		return {"titular": "", "tono": "evasiva"}
+	var o: Dictionary = ops[i]
+	mover_animo(int(o.get("animo", 0)))
+	## Los medios nuevos mueven seguidores, no confianza (C6).
+	if o.has("seguidores"):
+		seguidores = maxi(0, seguidores + int(o["seguidores"]))
+	var dm := int(o.get("moral", 0))
+	var m := _mundo()
+	var mio: Club = m.mi_club() if m != null else null
+	if dm != 0 and mio != null:
+		for j in mio.plantilla:
+			j.moral = clampi(j.moral + dm, 10, 99)
+	if bool(o.get("arbitros", false)):
+		enojo_arbitral += 1
+	var frase := String(o["txt"])
+	var donde := "🎤 A pie de campo"
+	if o.has("seguidores"):
+		donde = "📱 Al paso"
+	noticia.emit(donde, "«%s»." % frase + (" %+d seguidores." % int(o["seguidores"]) if o.has("seguidores") else ""))
+	return {"titular": frase, "tono": String(o["tono"])}
+
+
+# ===========================================================================
 #  LOS GUIONES DE LA RUEDA
 # ===========================================================================
 ## Tres barajas según cómo acabó el partido. Las preguntas de la derrota son las
@@ -806,40 +1526,40 @@ func _aplicar_cuerpo(dm: int, dc: int, ds: int) -> Dictionary:
 
 const _GANE := [
 	{"pregunta": "Prensa: '¿Es este el triunfo que confirma la levantada?'", "opciones": [
-		{"txt": "Paso a paso, con humildad", "moral": 2, "confianza": 1, "socios": 0},
-		{"txt": "Sí: que se preparen los de arriba", "moral": 4, "confianza": 2, "socios": 3},
-		{"txt": "Las conclusiones las saco en privado", "moral": -1, "confianza": 1, "socios": -1},
+		{"txt": "Paso a paso, con humildad", "moral": 2, "confianza": 1, "socios": 0, "tono": "calma"},
+		{"txt": "Sí: que se preparen los de arriba", "moral": 4, "confianza": 2, "socios": 3, "tono": "soberbia"},
+		{"txt": "Las conclusiones las saco en privado", "moral": -1, "confianza": 1, "socios": -1, "tono": "evasiva"},
 	]},
 	{"pregunta": "Prensa: 'La gente pide más minutos para los juveniles, ¿los verá?'", "opciones": [
-		{"txt": "Los chicos empujan fuerte, tendrán su chance", "moral": 3, "confianza": 0, "socios": 2},
-		{"txt": "Juega el que está mejor, sin regalos", "moral": 1, "confianza": 2, "socios": -1},
-		{"txt": "Esa decisión es solo mía", "moral": -2, "confianza": 1, "socios": -2},
+		{"txt": "Los chicos empujan fuerte, tendrán su chance", "moral": 3, "confianza": 0, "socios": 2, "tono": "calma"},
+		{"txt": "Juega el que está mejor, sin regalos", "moral": 1, "confianza": 2, "socios": -1, "tono": "calma"},
+		{"txt": "Esa decisión es solo mía", "moral": -2, "confianza": 1, "socios": -2, "tono": "soberbia"},
 	]},
 ]
 
 const _EMPATE := [
 	{"pregunta": "Prensa: '¿Sabe a poco este empate?'", "opciones": [
-		{"txt": "Sumar siempre sirve", "moral": 1, "confianza": 0, "socios": 0},
-		{"txt": "Sí, merecimos más y lo dije en el camarín", "moral": 2, "confianza": 1, "socios": 1},
-		{"txt": "Prefiero no evaluar en caliente", "moral": -1, "confianza": 0, "socios": -1},
+		{"txt": "Sumar siempre sirve", "moral": 1, "confianza": 0, "socios": 0, "tono": "calma"},
+		{"txt": "Sí, merecimos más y lo dije en el camarín", "moral": 2, "confianza": 1, "socios": 1, "tono": "calma"},
+		{"txt": "Prefiero no evaluar en caliente", "moral": -1, "confianza": 0, "socios": -1, "tono": "evasiva"},
 	]},
 	{"pregunta": "Prensa: '¿Le preocupa la falta de gol?'", "opciones": [
-		{"txt": "Las ocasiones están, el gol va a llegar", "moral": 2, "confianza": 0, "socios": 0},
-		{"txt": "Trabajaremos definición toda la semana", "moral": 1, "confianza": 1, "socios": 0},
-		{"txt": "Pregunta tendenciosa. Siguiente", "moral": -3, "confianza": 0, "socios": -2},
+		{"txt": "Las ocasiones están, el gol va a llegar", "moral": 2, "confianza": 0, "socios": 0, "tono": "calma"},
+		{"txt": "Trabajaremos definición toda la semana", "moral": 1, "confianza": 1, "socios": 0, "tono": "calma"},
+		{"txt": "Pregunta tendenciosa. Siguiente", "moral": -3, "confianza": 0, "socios": -2, "tono": "soberbia"},
 	]},
 ]
 
 const _PERDI := [
 	{"pregunta": "Prensa: '¿Está en riesgo su puesto tras esta derrota?'", "opciones": [
-		{"txt": "Respondo con trabajo, no con excusas", "moral": 1, "confianza": 2, "socios": 0},
-		{"txt": "El plantel está conmigo, saldremos juntos", "moral": 3, "confianza": 0, "socios": 1},
-		{"txt": "Eso pregúntenselo al directorio", "moral": -2, "confianza": -2, "socios": -1},
+		{"txt": "Respondo con trabajo, no con excusas", "moral": 1, "confianza": 2, "socios": 0, "tono": "calma"},
+		{"txt": "El plantel está conmigo, saldremos juntos", "moral": 3, "confianza": 0, "socios": 1, "tono": "calma"},
+		{"txt": "Eso pregúntenselo al directorio", "moral": -2, "confianza": -2, "socios": -1, "tono": "evasiva"},
 	]},
 	{"pregunta": "Prensa: 'Los hinchas silbaron al equipo, ¿los entiende?'", "opciones": [
-		{"txt": "Tienen razón: hoy no los representamos", "moral": 2, "confianza": 1, "socios": 2},
-		{"txt": "El apoyo se necesita en las malas", "moral": -1, "confianza": 0, "socios": -3},
-		{"txt": "No escuché silbidos", "moral": -3, "confianza": -1, "socios": -2},
+		{"txt": "Tienen razón: hoy no los representamos", "moral": 2, "confianza": 1, "socios": 2, "tono": "calma"},
+		{"txt": "El apoyo se necesita en las malas", "moral": -1, "confianza": 0, "socios": -3, "tono": "soberbia"},
+		{"txt": "No escuché silbidos", "moral": -3, "confianza": -1, "socios": -2, "tono": "evasiva"},
 	]},
 ]
 
@@ -862,6 +1582,12 @@ func semana() -> void:
 	## nadie: aceptabas el documental, cobrabas, y las cámaras no hacían nada.
 	## Ahora sí: al plantel le incomoda que lo graben, y ese es el precio de la
 	## plata. Es poco por semana, pero seis semanas seguidas se notan.
+	if mio != null and not efectos.is_empty():
+		_aplicar_efectos(mio)
+	publicar_titular_pendiente()
+	revisar_identidad(mio)
+	if m != null:
+		revisar_al_paso(m.anio, m.semana)
 	if semanas_documental > 0:
 		semanas_documental -= 1
 		if mio != null:
@@ -896,7 +1622,7 @@ func semana() -> void:
 ## Lo llama quien simule el partido cuando el arbitraje fue un escándalo y
 ## perdiste. Mientras esté puesto, el directorio puede preguntarte si reclamas.
 func arbitro_dudoso(nombre: String) -> void:
-	arbitro_polemico = Nombres.limpiar(nombre)
+	arbitro_polemico = Nombres.visible(nombre)
 
 ## El parte médico robado sale UNA vez: es lo que compraste.
 func consumir_dato_del_rival() -> bool:
@@ -966,7 +1692,7 @@ func agente_de(j: Jugador) -> Dictionary:
 	var perfil := String(fila[1])
 	var p: Dictionary = perfiles.get(perfil, {})
 	return {
-		"nombre": Nombres.limpiar(String(fila[0])),
+		"nombre": Nombres.de_tabla(String(fila[0])),
 		"perfil": perfil,
 		"etiqueta": String(p.get("d", perfil)),
 		"f": float(p.get("f", 1.0)),
@@ -1111,20 +1837,7 @@ func _ceder(m: Mundo, mio: Club, j: Jugador) -> bool:
 ## precio y le cobraban otro. Aquí se imprime lo que se cobra. No cambia ninguna
 ## fórmula: cambia que el número de la pantalla sea verdad.
 func _dinero(n: int) -> String:
-	var e := int(round(float(n) * Eco.ECO))
-	var negativo := e < 0
-	e = absi(e)
-	var s := ""
-	if e >= 1000000000:
-		s = ("%.2f" % (float(e) / 1000000000.0)).replace(".", ",") + "MM"
-	elif e >= 1000000:
-		var m := float(e) / 1000000.0
-		s = (("%.0f" % m) if e >= 10000000 else ("%.1f" % m).replace(".", ",")) + "M"
-	elif e >= 1000:
-		s = "%dk" % int(round(float(e) / 1000.0))
-	else:
-		s = str(e)
-	return ("-€" if negativo else "€") + s
+	return Eco.dinero(n)
 
 # ---------------------------------------------------------------------------
 #  LAS REDES (`vSocial()`)
@@ -1537,13 +2250,19 @@ func factor_tv() -> float:
 const PORTADAS_MAX := 60
 var portadas: Array = []                ## {t, c, tipo, anio, semana}, la más nueva primero
 
-func guardar_portada(titulo: String, cuerpo_texto: String, tipo: String) -> void:
+## `extra` (26-9-2026, plan maestro C20): lo que necesita la portada dibujada
+## como periódico -"img": "dt" | "escudo" | "pid:<id>" (quién sale en la foto),
+## "sub": la bajada, "medio": la cabecera-. Opcional: una portada vieja sin
+## estas claves se dibuja igual, con valores por defecto.
+func guardar_portada(titulo: String, cuerpo_texto: String, tipo: String, extra: Dictionary = {}) -> void:
 	var m := _mundo()
-	portadas.push_front({
+	var d := {
 		"t": titulo, "c": cuerpo_texto, "tipo": tipo,
 		"anio": m.anio if m != null else 0,
 		"semana": m.semana if m != null else 0,
-	})
+	}
+	d.merge(extra)
+	portadas.push_front(d)
 	while portadas.size() > PORTADAS_MAX:
 		portadas.pop_back()
 
@@ -1666,13 +2385,14 @@ func _hash_de(clave: String) -> int:
 	return h
 
 ## El titular y su cuerpo, firmados por uno de los periodistas de la casa.
-func titular_prensa(gane: bool, empate: bool, clasico: bool, semilla: String) -> Dictionary:
+func titular_prensa(gane: bool, empate: bool, clasico: bool, semilla: String, nombre_clasico: String = "") -> Dictionary:
 	var pool: Array = _TIT_GANE if gane else (_TIT_EMPATE if empate else _TIT_PERDI)
 	var h := _hash_de(semilla)
 	var t: Array = pool[h % pool.size()]
 	var p: Array = PERIODISTAS[(h / 7) % PERIODISTAS.size()]
 	return {
-		"tit": ("CLÁSICO: " if clasico else "") + String(t[0]),
+		## Con nombre propio si lo tiene: "SUPERCLÁSICO: ..." (C4).
+		"tit": ((nombre_clasico.trim_prefix("el ").to_upper() + ": ") if nombre_clasico != "" else ("CLÁSICO: " if clasico else "")) + String(t[0]),
 		"cuerpo": "%s — %s, %s." % [String(t[1]), String(p[1]), String(p[2])],
 	}
 
@@ -1696,13 +2416,13 @@ func rueda_tras_resultado(gane: bool, empate: bool) -> Dictionary:
 	return abrir_rueda(gane, empate)
 
 ## La portada del lunes: la escribe el resultado y la archiva la hemeroteca.
-func portada_tras_resultado(gane: bool, empate: bool, clasico: bool, semilla: String) -> void:
+func portada_tras_resultado(gane: bool, empate: bool, clasico: bool, semilla: String, marcador: String = "", nombre_clasico: String = "") -> void:
 	var h := _hash_de(semilla + "|portada")
 	if h % PORTADA_DE_CADA >= PORTADAS_QUE_SALEN:
 		return
-	var t := titular_prensa(gane, empate, clasico, semilla)
+	var t := titular_prensa(gane, empate, clasico, semilla, nombre_clasico)
 	var tipo := "bien" if gane else ("neutro" if empate else "mal")
-	guardar_portada(String(t["tit"]), String(t["cuerpo"]), tipo)
+	guardar_portada(String(t["tit"]), String(t["cuerpo"]), tipo, {"img": "dt", "sub": marcador, "nueva": true})
 	noticia.emit("🗞️ " + String(t["tit"]), String(t["cuerpo"]))
 
 # ---------------------------------------------------------------------------
@@ -1785,3 +2505,30 @@ func responder_influencer(invitar: bool, c: Club) -> String:
 	noticia.emit("Puertas abiertas",
 		"Invitaste a un creador a un entrenamiento. El club ganó %d seguidores y algo de cariño en redes." % ganados)
 	return "El club gana %d seguidores." % ganados
+
+
+## LO QUE DECIDES HACE TU FAMA (26-9-2026, `Reputacion`): cada decisión del
+## despacho que dice algo de ti queda anotada. [faceta, delta si "a", delta si "b", motivo]
+const REPUTACION_DE := {
+	"espia": [["honesto", -12, 6, "El parte médico filtrado del rival"]],
+	"benefico": [["social", 6, -2, "El amistoso benéfico"]],
+	"provoca": [["mediatico", 4, -1, "Respuesta al DT rival"], ["honesto", -2, 2, "Respuesta al DT rival"]],
+	"docu": [["mediatico", 5, -2, "El documental del vestuario"]],
+	"aumento": [["leal", 3, -2, "El aumento de tu figura"]],
+	"agente": [["negociador", 3, -1, "El agente que ofreció a tu figura"]],
+	"apuestas": [["honesto", 5, -3, "La investigación de apuestas"]],
+	"lobby_arbitral": [["honesto", -4, 3, "El encuentro con la comisión arbitral"]],
+	"huelga_impagos": [["leal", 2, -4, "Los sueldos impagos"]],
+	"aniversario": [["social", 4, -1, "El aniversario del club"]],
+	"silencio": [["mediatico", -3, 2, "El silencio ante la prensa"]],
+	"reclamo": [["honesto", 2, -1, "El reclamo formal"]],
+	"tv": [["mediatico", 4, -1, "La oferta de la televisión"]],
+	"viral": [["mediatico", 3, 0, "El vídeo viral"]],
+}
+
+func _reputacion_de_decision(m: Mundo, id: String, si: bool) -> void:
+	if m == null or m.roles == null or not REPUTACION_DE.has(id):
+		return
+	for r: Array in REPUTACION_DE[id]:
+		var d: int = int(r[1]) if si else int(r[2])
+		m.roles.anotar_reputacion(String(r[0]), d, String(r[3]))

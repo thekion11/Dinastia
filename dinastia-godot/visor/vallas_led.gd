@@ -65,10 +65,58 @@ func registrar(caja: MeshInstance3D, label: Label3D, idx: int) -> void:
 	_paneles.append(p)
 	_pintar(p, idx)
 
+## EL ANILLO REACCIONA AL PARTIDO (MEGAPLAN fase 2): en el gol y en los
+## cambios todas las vallas cortan al mismo mensaje y parpadean con los colores
+## del club unos segundos; luego vuelven solas a los anuncios (como en FC).
+var _evento := {}
+var _mat_evento: Array[StandardMaterial3D] = []
+
+## `palabras`: se reparten panel a panel ("¡GOOOL!", "LAUTARO FC"...).
+func evento(palabras: Array, c1: Color, c2: Color, seg: float = 6.0) -> void:
+	if _paneles.is_empty() or palabras.is_empty():
+		return
+	_mat_evento.clear()
+	for col: Color in [c1, c2]:
+		var m := StandardMaterial3D.new()
+		m.albedo_color = col
+		m.roughness = 0.42
+		m.emission_enabled = true
+		m.emission = col
+		m.emission_energy_multiplier = 0.45
+		_mat_evento.append(m)
+	var tinta1 := Color.WHITE if c1.get_luminance() < 0.55 else Color(0.08, 0.08, 0.1)
+	var tinta2 := Color.WHITE if c2.get_luminance() < 0.55 else Color(0.08, 0.08, 0.1)
+	_evento = {"palabras": palabras, "hasta": _t + seg, "tintas": [tinta1, tinta2], "paso": -1}
+
+func _pintar_evento() -> void:
+	var paso := int(floor(_t / 0.35))
+	if paso == int(_evento["paso"]):
+		return
+	_evento["paso"] = paso
+	var palabras: Array = _evento["palabras"]
+	var tintas: Array = _evento["tintas"]
+	for i in _paneles.size():
+		var p: Dictionary = _paneles[i]
+		var k := (i + paso) % 2
+		var l: Label3D = p["label"]
+		if is_instance_valid(l):
+			l.text = String(palabras[i % palabras.size()])
+			l.modulate = tintas[k]
+		var c: MeshInstance3D = p["caja"]
+		if is_instance_valid(c):
+			c.material_override = _mat_evento[k]
+
 func _process(delta: float) -> void:
 	if _anuncios.is_empty() or _paneles.is_empty():
 		return
 	_t += delta
+	if not _evento.is_empty():
+		if _t < float(_evento["hasta"]):
+			_pintar_evento()
+			return
+		_evento = {}
+		for p: Dictionary in _paneles:
+			p["ult"] = -999
 	for p: Dictionary in _paneles:
 		## Solo una división y una comparación por panel y por frame. El texto
 		## de un `Label3D` reconstruye su malla al asignarlo, así que solo se

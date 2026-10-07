@@ -541,7 +541,8 @@ func joyas_de_academia(c: Club) -> Array[Jugador]:
 			var ext: Variant = Datos.tabla("NOMBRES_EXT")
 			var ape: Variant = Datos.tabla("APELLIDOS_EXT")
 			if ext is Array and ape is Array and not (ext as Array).is_empty() and not (ape as Array).is_empty():
-				j.nombre = "%s %s" % [String(Azar.uno(ext as Array)), String(Azar.uno(ape as Array))]
+				j.nombre = Nombres.sin_vetar(func() -> String:
+					return "%s %s" % [String(Azar.uno(ext as Array)), String(Azar.uno(ape as Array))])
 		j.generar_atributos()
 		j.tasar()
 		salida.append(j)

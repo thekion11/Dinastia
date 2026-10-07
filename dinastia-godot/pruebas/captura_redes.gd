@@ -18,13 +18,13 @@ func _process(_d: float) -> void:
 		_pantalla.call("_elegir_grupo", "operaciones")
 		_pantalla.call("_ir_a_chip", {"tab": "Redes", "secc": "redes", "label": "Feed de Redes"})
 	if _n == 14:
-		_guardar("res://pruebas/pantalla_redes_feed.png")
+		_guardar("res://pruebas/capturas/pantalla_redes_feed.png")
 		_pantalla.call("_ir_a_chip", {"tab": "Redes", "secc": "prensa", "label": "Sala de Prensa"})
 	if _n == 16:
-		_guardar("res://pruebas/pantalla_redes_prensa.png")
+		_guardar("res://pruebas/capturas/pantalla_redes_prensa.png")
 		_pantalla.call("_ir_a_chip", {"tab": "Redes", "secc": "debate", "label": "El Ruido de Fuera"})
 	if _n == 18:
-		_guardar("res://pruebas/pantalla_redes_debate.png")
+		_guardar("res://pruebas/capturas/pantalla_redes_debate.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

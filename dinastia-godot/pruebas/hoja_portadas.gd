@@ -25,6 +25,6 @@ func _ready() -> void:
 		if opacos < 500:
 			vacias += 1
 		img.blit_rect(una, Rect2i(0, 0, 1200, alto), Vector2i(0, i * alto))
-	img.save_png("res://pruebas/hoja_portadas.png")
+	img.save_png("res://pruebas/capturas/hoja_portadas.png")
 	print("portadas con dibujo: %d de %d" % [Portada.NOMBRES.size() - vacias, Portada.NOMBRES.size()])
 	get_tree().quit()

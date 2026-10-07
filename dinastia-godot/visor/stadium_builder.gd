@@ -17,6 +17,33 @@ static func _c(hex, fallback := "#ffffff") -> Color:
 		return Color(hex)
 	return Color(fallback)
 
+## EL TECHO NO TAPA LA CÁMARA (MEGAPLAN fase 2): con techo de anillo la
+## cámara de TV quedaba detrás de la losa cercana y medio campo se veía marrón.
+## Cada losa sabe hacia dónde da afuera; la que queda entre la cámara y el
+## campo pasa a una capa que las cámaras no dibujan, pero el sol sí: su sombra
+## sobre la grada se mantiene (como en las retransmisiones de FC).
+const CAPA_TECHO_OCULTO := 1 << 10
+
+static func marcar_techo(mi: MeshInstance3D, fuera: Vector3) -> void:
+	if mi == null:
+		return
+	mi.add_to_group("techo_estadio")
+	mi.set_meta("fuera", Vector3(fuera.x, 0.0, fuera.z).normalized())
+
+## Llamar cada fotograma con la cámara activa.
+static func ocultar_techo_ante(cam: Camera3D) -> void:
+	if cam == null or not cam.is_inside_tree():
+		return
+	cam.cull_mask &= ~CAPA_TECHO_OCULTO
+	for n in cam.get_tree().get_nodes_in_group("techo_estadio"):
+		var mi := n as MeshInstance3D
+		if mi == null:
+			continue
+		var fuera: Vector3 = mi.get_meta("fuera", Vector3.ZERO)
+		var d := (cam.global_position - mi.global_position)
+		var detras := Vector3(d.x, 0.0, d.z).dot(fuera) > -3.0
+		mi.layers = CAPA_TECHO_OCULTO if detras else 1
+
 static func _box(root: Node3D, center: Vector3, size: Vector3, mat: Material) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	var m := BoxMesh.new()
@@ -37,6 +64,24 @@ static func _rect_outline(root: Node3D, center: Vector3, w: float, d: float, lin
 
 ## Dibuja el corte del cesped como textura procedural. El patron y los dos tonos
 ## de verde salen del disenador de estadio del juego (EST_CESPED / EST_TONOS).
+## CÉSPED DE VERDAD (MEGAPLAN fase 2): los verdes del diseñador salían
+## fluorescentes y las dos franjas casi iguales (frente a EA FC: verde apagado y
+## corte muy marcado). Se respeta el tono elegido pero con la saturación y la
+## claridad de un césped real, y las franjas se separan al menos un 22 % (lo
+## que da el corte en dos sentidos de la cortadora).
+static func _verdes_reales(a: Color, b: Color) -> Array:
+	var salida: Array = []
+	for c: Color in [a, b]:
+		salida.append(Color.from_hsv(c.h, minf(c.s, 0.5) * 0.9, clampf(c.v, 0.32, 0.5)))
+	var ca: Color = salida[0]
+	var cb: Color = salida[1]
+	var claro := ca if ca.v >= cb.v else cb
+	var oscuro := cb if ca.v >= cb.v else ca
+	if claro.v < oscuro.v * 1.22:
+		claro = Color.from_hsv(claro.h, claro.s * 0.94, minf(oscuro.v * 1.22, 0.62))
+	## (El orden de vuelta respeta cuál era el "claro" del diseñador.)
+	return [claro, oscuro] if ca.v >= cb.v else [oscuro, claro]
+
 static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> ImageTexture:
 	var n := 256
 	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
@@ -46,15 +91,17 @@ static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> 
 			var v := float(y) / n
 			var band := 0
 			match patron:
+				## ~6 m por franja (20 a lo largo), como el corte real.
 				"rayas":
-					band = int(v * 12.0)
+					band = int(v * 20.0)
 				"rayasH":
-					band = int(u * 12.0)
+					band = int(u * 20.0)
 				"damero":
 					band = int(u * 10.0) + int(v * 10.0)
 				"damGrande":
 					band = int(u * 5.0) + int(v * 5.0)
-				"circular":
+				## (`Club` sortea "circulos": antes no casaba y salía liso.)
+				"circular", "circulos":
 					band = int(Vector2(u - 0.5, v - 0.5).length() * 16.0)
 				"diagonal":
 					band = int((u + v) * 10.0)
@@ -68,8 +115,12 @@ static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> 
 					band = int((absf(u - 0.5) + absf(v - 0.5)) * 14.0)
 				"mitades":
 					band = 0 if v < 0.5 else 1
+				## "liso" (y lo desconocido): en un campo de verdad el corte
+				## siempre se nota un poco -franjas muy suaves, un tercio-.
 				_:
-					band = 0
+					band = int(v * 20.0)
+					img.set_pixel(x, y, claro.lerp(oscuro, 0.33) if band % 2 == 0 else oscuro)
+					continue
 			img.set_pixel(x, y, claro if band % 2 == 0 else oscuro)
 	var tex := ImageTexture.create_from_image(img)
 	return tex
@@ -282,10 +333,8 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	pm.size = Vector2(PITCH_WID + 12.0, PITCH_LEN + 12.0)
 	pitch.mesh = pm
 	var gmat := StandardMaterial3D.new()
-	gmat.albedo_texture = _make_grass_texture(
-		str(est.get("cesped", "rayas")),
-		_c(est.get("cespedClaro"), "#2f8043"),
-		_c(est.get("cespedOscuro"), "#3b9c53"))
+	var tonos := _verdes_reales(_c(est.get("cespedClaro"), "#2f8043"), _c(est.get("cespedOscuro"), "#3b9c53"))
+	gmat.albedo_texture = _make_grass_texture(str(est.get("cesped", "rayas")), tonos[0], tonos[1])
 	gmat.uv1_scale = Vector3(1, 1, 1)
 	## El cesped se veia SINTETICO: dos verdes planos, sin grano y con la misma
 	## rugosidad en los 7.000 m2. Un campo de verdad tiene brizna (relieve
@@ -304,7 +353,21 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	gmat.normal_scale = 1.15
 	gmat.uv1_triplanar = false
 	gmat.roughness = 0.99
-	gmat.roughness_texture = Texturas._tex_ruido(0.03, 97, false, 4)
+	## LA COLUMNA MISTERIOSA (18-9 → 25-9-2026): ERA ESTO. El ruido de rugosidad
+	## iba de 0 a 1 en manchas grandes (frecuencia 0,03), así que había charcos
+	## de césped con rugosidad ~0 -un espejo- y, con el relieve de brizna
+	## (`bump_strength` 5), cada charco devolvía brillos redondos con volumen.
+	## De día el sol va inclinado y el reflejo cae fuera; de noche `Ambience`
+	## suma una luz de relleno casi vertical y el reflejo cae en el centro del
+	## campo: "burbujas translúcidas quietas cerca del círculo central, solo de
+	## noche". Reproducido con `pruebas/captura_columna_noche.gd`. El césped
+	## nunca es un espejo: la rampa deja la rugosidad entre 0,78 y 1.
+	var rugosidad := Texturas._tex_ruido(0.03, 97, false, 4)
+	var rampa := Gradient.new()
+	rampa.set_color(0, Color(0.78, 0.78, 0.78))
+	rampa.set_color(1, Color(1, 1, 1))
+	rugosidad.color_ramp = rampa
+	gmat.roughness_texture = rugosidad
 	gmat.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
 	gmat.metallic = 0.0
 	gmat.metallic_specular = 0.18
@@ -400,14 +463,28 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 static func _escudo_cancha(root: Node3D, mi: Club, donde: String) -> void:
 	if donde != "cancha" and donde != "todo":
 		return
-	var tex := Escudo.textura(mi, 256)
+	## PINTURA, NO PEGATINA (29-9-2026, mapa de metas 20). De cerca -la
+	## cinemática del fichaje- el escudo se veía tosco: 256 px sin mipmaps
+	## estirados en 9 m, opaco y sin luz, como un plástico encima del césped.
+	## Ahora: 1024 px con mipmaps y filtro anisótropo (bordes limpios de cerca y
+	## sin parpadeo de lejos), recibe el sol y las sombras como el césped, y la
+	## pintura deja ver un poco la hierba.
+	var tex := Escudo.textura(mi, 1024)
 	if tex == null:
 		return
+	var img := tex.get_image()
+	if img != null and not img.is_empty():
+		if img.is_compressed():
+			img.decompress()
+		img.generate_mipmaps()
+		tex = ImageTexture.create_from_image(img)
 	var mat := StandardMaterial3D.new()
 	mat.albedo_texture = tex
+	mat.albedo_color = Color(1, 1, 1, 0.55)
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.roughness = 1.0
+	mat.metallic_specular = 0.1
 	var quad := MeshInstance3D.new()
 	var qm := QuadMesh.new()
 	qm.size = Vector2(9.0, 9.0)
@@ -661,10 +738,28 @@ static func _make_stand_texture_tramos(patrones: Array, colores: Array, seed_val
 ## Ambas funciones cachean por color, asi que llamarla dos veces con el mismo
 ## `tipo` devuelve el mismo material -barato, y consistente con como ya
 ## comparten material las 4 tribunas cuando ninguna pide un techo distinto.
-static func _techo_mat(tipo: String) -> StandardMaterial3D:
+static func _techo_mat(tipo: String, col: String = "") -> StandardMaterial3D:
 	if tipo == "membrana" or tipo == "retractil":
-		return Texturas.tela(Color(0.88, 0.89, 0.85), 0.5)
-	return Texturas.metal(Color(0.20, 0.22, 0.26), 0.55)
+		return Texturas.tela(_c(col, "#e0e3d9"), 0.5)
+	return Texturas.metal(_c(col, "#33383f"), 0.55)
+
+## LA FACHADA (B6.2). Cinco pieles para el mismo muro; el color vacío deja el
+## tono propio de cada material.
+static func _mat_fachada(tipo: String, col: String) -> StandardMaterial3D:
+	match tipo:
+		"ladrillo":
+			return Texturas.ladrillo(_c(col, "#8a4a2b"))
+		"vidrio":
+			var v: StandardMaterial3D = Texturas.cristal(true, false).duplicate()
+			v.albedo_color = _c(col, "#6f8fa6")
+			v.metallic = 0.6
+			v.roughness = 0.12
+			return v
+		"membrana":
+			return Texturas.tela(_c(col, "#e8e8e2"), 0.6)
+		"metal":
+			return Texturas.metal(_c(col, "#8a9097"), 0.45)
+	return Texturas.hormigon(_c(col, "#6b7079"), 51)
 
 ## Geometria del recinto segun la forma elegida en el disenador del juego.
 ## dx/dz son la distancia del CENTRO de cada tribuna al centro del campo.
@@ -767,7 +862,7 @@ static func centro_tribuna(eje: float, niveles: int) -> float:
 static func spawn_ball(root: Node3D, pos: Vector3, colores: Array = []) -> Balon3D:
 	var claro: Color = colores[0] if colores.size() > 0 else Color("#f8faf6")
 	var oscuro: Color = colores[1] if colores.size() > 1 else Color("#1a1a1a")
-	var ball := Balon3D.crear(pos, claro, oscuro)
+	var ball := Balon3D.crear(pos, claro, oscuro, String(colores[2]) if colores.size() > 2 else "clasico")
 	root.add_child(ball)
 	return ball
 
@@ -805,7 +900,11 @@ static func _explanada_de_fondo(root: Node3D) -> void:
 	## de fondo (el propio comentario de arriba ya lo dice: "para no pelear en
 	## z-fighting", nunca se pensó como superficie protagonista).
 	var mat_explanada: StandardMaterial3D = Texturas.hormigon(Color(0.30, 0.31, 0.33), 41).duplicate()
-	mat_explanada.uv1_scale = Vector3(0.02, 0.02, 1.0)
+	## 26-9-2026: sin rayas en ángulo rasante. Se repite en el mundo (un
+	## mosaico cada 2 m, el tamaño de una losa de hormigón) y con filtrado
+	## anisótropo, en vez de estirar una textura sobre 400 m.
+	mat_explanada.uv1_world_triplanar = true
+	mat_explanada.uv1_scale = Vector3(0.5, 0.5, 0.5)
 	mat_explanada.normal_enabled = false
 	mi.material_override = mat_explanada
 	root.add_child(mi)
@@ -842,8 +941,10 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## ciudad), y el techo por tipo: membrana es LONA tensada de verdad -PTFE/
 	## ETFE, lo mismo que ya modela `Texturas.tela()`, no pintura sobre metal-,
 	## el resto es la cubierta metalica estructural de siempre.
-	var stand_mat := Texturas.hormigon(Color(0.42, 0.44, 0.48), 51)
-	var roof_mat := _techo_mat(techo)
+	## B6 (25-9-2026): la fachada y el techo, del material y color elegidos.
+	var stand_mat := _mat_fachada(str(est.get("fachada", "hormigon")), str(est.get("fachadaCol", "")))
+	var techo_col := str(est.get("techoCol", ""))
+	var roof_mat := _techo_mat(techo, techo_col)
 	var crowd_mat := StandardMaterial3D.new()
 	crowd_mat.albedo_texture = _make_stand_texture(
 		str(est.get("asientoP", "franjas")),
@@ -909,14 +1010,25 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 		var estilo: Dictionary = (est.get("bandejas", {}) as Dictionary).get(NOMBRE_BANDEJA.get(s["i"], ""), {})
 		var asientoP_i := str(estilo.get("asientoP", est.get("asientoP", "franjas")))
 		var techo_i := str(estilo.get("techo", techo))
+		## B6.1: los colores de ESTA tribuna. Si no se tocaron, `est_s` es el
+		## mismo diccionario de siempre y nada cambia.
+		var est_s: Dictionary = est
+		var col_i1 := str(estilo.get("col1", ""))
+		var col_i2 := str(estilo.get("col2", ""))
+		if col_i1 != "" or col_i2 != "":
+			est_s = est.duplicate()
+			if col_i1 != "":
+				est_s["asiento1"] = col_i1
+			if col_i2 != "":
+				est_s["asiento2"] = col_i2
 		## TRAMO (22-9-2026): si esta tribuna tiene tercios propios en
 		## `est["tramos"]" -independiente de "bandejas", ver el contrato en
 		## `estadio_propio.gd`-, son 3 patrones ya resueltos (nunca vacíos: la
 		## capa de `nucleo` ya rellenó cada tercio en blanco con `asientoP_i`).
-		## Sin `personalizar_tramos` activo `est.get("tramos", {})` da `{}` y
+		## Sin `personalizar_tramos` activo `est_s.get("tramos", {})` da `{}` y
 		## esto sale `[]` siempre, cero cambio para cualquier estadio que no
 		## haya tocado el interruptor.
-		var tramos_i: Array = (est.get("tramos", {}) as Dictionary).get(NOMBRE_BANDEJA.get(s["i"], ""), [])
+		var tramos_i: Array = (est_s.get("tramos", {}) as Dictionary).get(NOMBRE_BANDEJA.get(s["i"], ""), [])
 		# Muro exterior del recinto (la fachada). El interior NO se rellena con
 		# una caja solida: si se hace, la rampa de asientos queda dentro de ella
 		# y el publico no se ve desde ninguna camara.
@@ -952,8 +1064,8 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 		var deck_mat: StandardMaterial3D
 		var es_tramo := tramos_i.size() == 3
 		if es_tramo:
-			var trio := [_c(est.get("asiento1"), "#2b6b45"), _c(est.get("asiento2"), "#ffffff"),
-				_c(est.get("asiento3"), "#20272a")]
+			var trio := [_c(est_s.get("asiento1"), "#2b6b45"), _c(est_s.get("asiento2"), "#ffffff"),
+				_c(est_s.get("asiento3"), "#20272a")]
 			deck_mat = StandardMaterial3D.new()
 			deck_mat.albedo_texture = _make_stand_texture_tramos(tramos_i,
 				[trio, trio, trio], seed_val, clampf(ocupacion, 0.05, 0.98))
@@ -963,11 +1075,11 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## "estática de TV" del 21-9)-, y a la rasante con que se ve una
 			## grada desde la cancha eso vuelve a hacer aliasing.
 			deck_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-		elif asientoP_i != str(est.get("asientoP", "franjas")):
+		elif asientoP_i != str(est_s.get("asientoP", "franjas")) or est_s != est:
 			deck_mat = StandardMaterial3D.new()
 			deck_mat.albedo_texture = _make_stand_texture(asientoP_i,
-				_c(est.get("asiento1"), "#2b6b45"), _c(est.get("asiento2"), "#ffffff"),
-				_c(est.get("asiento3"), "#20272a"), seed_val, clampf(ocupacion, 0.05, 0.98))
+				_c(est_s.get("asiento1"), "#2b6b45"), _c(est_s.get("asiento2"), "#ffffff"),
+				_c(est_s.get("asiento3"), "#20272a"), seed_val, clampf(ocupacion, 0.05, 0.98))
 			deck_mat.roughness = 1.0
 			## Mismo arreglo que arriba -este material tampoco lo heredaba de
 			## `crowd_mat`, un vacío ya existente desde la Fase 1 (Bandeja,
@@ -1024,10 +1136,27 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## Cada bandeja lleva SU COPIA del material: comparten la misma
 			## textura, pero un material compartido significaria que tocarle el
 			## `uv1_*` a una se lo toca a las cinco.
-			deck.material_override = deck_mat.duplicate()
+			## COLOR POR ANILLO (28-9-2026): si este anillo de esta tribuna
+			## tiene color propio, su textura y sus butacas salen con él.
+			var niveles_col: Array = estilo.get("niveles", [])
+			var col_b := String(niveles_col[b]) if b < niveles_col.size() else ""
+			var est_b: Dictionary = est_s
+			if col_b != "" and not es_tramo:
+				est_b = est_s.duplicate()
+				est_b["asiento1"] = col_b
+				var mat_b := StandardMaterial3D.new()
+				mat_b.albedo_texture = _make_stand_texture(asientoP_i, _c(col_b, "#2b6b45"),
+					_c(est_s.get("asiento2"), "#ffffff"), _c(est_s.get("asiento3"), "#20272a"), seed_val + b, clampf(ocupacion, 0.05, 0.98))
+				mat_b.roughness = 1.0
+				mat_b.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+				mat_b.uv1_scale = deck_mat.uv1_scale
+				mat_b.uv1_offset = deck_mat.uv1_offset
+				deck.material_override = mat_b
+			else:
+				deck.material_override = deck_mat.duplicate()
 			root.add_child(deck)
-			_butacas(deck, dm.size, lateral, est, ocupacion, alto, rake_firmado, b)
-			_telones(deck, dm.size, lateral, est, seed_val + int(s["i"]) * 31 + b * 7)
+			_butacas(deck, dm.size, lateral, est_b, ocupacion, alto, rake_firmado, b)
+			_telones(deck, dm.size, lateral, est_s, seed_val + int(s["i"]) * 31 + b * 7)
 			## El frente vertical bajo la bandeja: tapa el hueco que dejaria ver
 			## por debajo y es lo que le da al estadio su perfil escalonado. La
 			## primera bandeja no lo lleva -ahi va el zocalo.
@@ -1072,8 +1201,8 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## se pide un material nuevo cuando esta tribuna pidió un techo
 			## distinto del global; si no, sigue compartiendo `roof_mat` tal
 			## cual, igual que antes de esta fase.
-			var roof_mat_i := roof_mat if techo_i == techo else _techo_mat(techo_i)
-			_box(root, pos + cara * (vuelo / 2.0) + Vector3(0, alto / 2.0 + 0.4, 0), rs, roof_mat_i)
+			var roof_mat_i := roof_mat if techo_i == techo else _techo_mat(techo_i, techo_col)
+			marcar_techo(_box(root, pos + cara * (vuelo / 2.0) + Vector3(0, alto / 2.0 + 0.4, 0), rs, roof_mat_i), -cara)
 
 	## LAS ESQUINAS TAMBIÉN LLEVAN GENTE (22-9-2026). "Falta un tramo" -el
 	## usuario lo vio de inmediato justo después de la ronda de las butacas
@@ -1142,10 +1271,16 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## visor había cuatro, y una de ellas es el capítulo MÁS CARO del diseñador.
 	_pista_atletismo(root, est, dx, dz)
 	_banderas(root, est, dx, dz, alto, niveles, mi)
-	_focos(root, str(est.get("focos", "torres")), dx, dz, alto)
+	_focos(root, str(est.get("focos", "torres")), dx, dz, alto, color_luz(est), str(est.get("focosCol", "")))
+	## B6.2: lo que hay FUERA del recinto: taquillas, tienda y estacionamiento.
+	if bool(est.get("exterior", false)):
+		_exterior(root, est, dx, dz, niveles, mi)
 	_pantallas(root, str(est.get("pantalla", "dos")), dz, alto, est, mi, abierta)
 	if mi != null:
 		_escudo_tribuna(root, mi, str(est.get("escudoDonde", "sin")), dx, dz, alto)
+	## Obras con andamios y grúa, palcos, prensa, museo, tienda y la mascota
+	## (26-9-2026, `EstadioExtras`).
+	EstadioExtras.construir(root, est, dx, dz, alto, niveles, mi)
 
 ## LA ESQUINA, COMO GRADA DE VERDAD (23-9-2026).
 ##
@@ -1197,6 +1332,7 @@ static func _esquina_grada(root: Node3D, sx: float, sz: float, dx: float, dz: fl
 	if techo:
 		var tapa := _box(root, Vector3(centro_masa.x, alto + 0.4, centro_masa.z),
 			Vector3(masa * 1.5, 0.5, masa * 1.5), muro_mat)
+		marcar_techo(tapa, Vector3(sx, 0.0, sz).normalized())
 		tapa.rotation.y = giro
 	for b in niveles:
 		var avance: float = float(b) * RETRANQUEO_BANDEJA + FONDO_BANDEJA / 2.0
@@ -1468,23 +1604,63 @@ static func _banderas(root: Node3D, est: Dictionary, dx: float, dz: float,
 				m.material_override = asta
 				m.position = p + Vector3(0, h / 2.0, 0)
 				root.add_child(m)
-				var tela := Texturas.tela(colores[i % colores.size()])
-				var b := _box(root, p + Vector3(0, h * 0.82, 0),
-					Vector3(1.3, 0.85, 0.03) if tipo != "banderines" else Vector3(0.6, 0.45, 0.03),
-					tela)
-				b.rotation.y = a
+				## Tela que ondea (25-9-2026): un plano subdividido con el
+				## shader `bandera.gdshader`, sujeto al asta por un lado. Antes
+				## era una caja rígida, como una chapa.
+				var tam := Vector2(1.3, 0.85) if tipo != "banderines" else Vector2(0.6, 0.45)
+				_bandera_ondeante(root, p + Vector3(0, h * 0.82, 0), tam, colores[i % colores.size()], a, float(i) * 1.7)
 
-static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float) -> void:
+const SHADER_BANDERA := preload("res://visor/bandera.gdshader")
+
+## Una bandera de tela que ondea, con el borde izquierdo en `pos` (el asta).
+static func _bandera_ondeante(root: Node3D, pos: Vector3, tam: Vector2, color: Color, giro: float, fase: float) -> MeshInstance3D:
+	var qm := QuadMesh.new()
+	qm.size = tam
+	qm.subdivide_width = 10
+	qm.subdivide_depth = 4
+	## El quad se centra en su origen: se corre medio ancho para que el borde
+	## x=0 (UV 0, quieto) quede pegado al asta.
+	qm.center_offset = Vector3(tam.x * 0.5, 0, 0)
+	var m := MeshInstance3D.new()
+	m.name = "Bandera"
+	m.mesh = qm
+	var mat := ShaderMaterial.new()
+	mat.shader = SHADER_BANDERA
+	mat.set_shader_parameter("color", color)
+	## La misma trama de `Texturas.tela()`, para que se lea como tejido.
+	mat.set_shader_parameter("tela", Texturas.tela(Color.WHITE).detail_albedo)
+	mat.set_shader_parameter("ancho", tam.x)
+	mat.set_shader_parameter("fase", fase)
+	m.material_override = mat
+	m.position = pos
+	m.rotation.y = giro
+	root.add_child(m)
+	return m
+
+## El color de la luz de los focos (B6.1). Lo usan las lámparas y la luz de
+## relleno nocturna de `Ambience`.
+static func color_luz(est: Dictionary) -> Color:
+	match str(est.get("luzFocos", "neutra")):
+		"calida":
+			return Color(1.0, 0.86, 0.62)
+		"fria":
+			return Color(0.80, 0.90, 1.0)
+		"club":
+			return Color(1, 1, 1).lerp(_c(est.get("luzClub", ""), "#ffffff"), 0.45)
+	return Color(1, 0.97, 0.85)
+
+static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float, luz: Color = Color(1, 0.97, 0.85), estructura := "") -> void:
 	if tipo == "sin":
 		return
 	## Torres de hasta `alto+12` metros -entre las estructuras mas altas y mas
 	## a la vista del estadio, recortadas contra el cielo- eran color plano
-	## puro (17-9-2026, ronda 5 de calidad visual).
-	var mat := Texturas.metal(Color(0.72, 0.73, 0.76), 0.4)
+	## puro (17-9-2026, ronda 5 de calidad visual). `estructura`: el color
+	## que eligió el club (28-9-2026, colores por sección).
+	var mat := Texturas.metal(Color(estructura) if estructura != "" else Color(0.72, 0.73, 0.76), 0.4)
 	var lampara := StandardMaterial3D.new()
-	lampara.albedo_color = Color(1, 0.97, 0.85)
+	lampara.albedo_color = luz
 	lampara.emission_enabled = true
-	lampara.emission = Color(1, 0.97, 0.85)
+	lampara.emission = luz
 	lampara.emission_energy_multiplier = 1.6
 
 	if tipo == "torres" or tipo == "mixto":
@@ -1765,6 +1941,60 @@ static func _malla_hincha_cache() -> Mesh:
 	_malla_hincha = st.commit()
 	return _malla_hincha
 
+## EL HINCHA DE LAS PRIMERAS FILAS (29-9-2026). Pedido del usuario al ver el
+## partido jugable de la Carrera de Jugador ("ese público se ve horrible"):
+## ahí la cámara va a ras de césped y las primeras filas quedan a pocos metros.
+## La cápsula+esfera de arriba, de cerca, es una pastilla con una bola. Esta
+## lleva hombros, brazos, cuello y cabeza -el pelo lo pinta el shader por
+## altura-, ~150 vértices, y SOLO se usa en las filas bajas de la bandeja de
+## abajo: las de arriba siguen con la barata, que a 30 m no se distingue.
+static var _malla_hincha_det: Mesh
+
+static func _malla_hincha_detalle() -> Mesh:
+	if _malla_hincha_det != null:
+		return _malla_hincha_det
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var torso := CylinderMesh.new()
+	torso.top_radius = 0.16
+	torso.bottom_radius = 0.13
+	torso.height = 0.40
+	torso.radial_segments = 7
+	torso.rings = 1
+	st.append_from(torso, 0, Transform3D(Basis().scaled(Vector3(1.0, 1.0, 0.72)), Vector3(0, 0.29, 0)))
+	var hombros := CapsuleMesh.new()
+	hombros.radius = 0.075
+	hombros.height = 0.44
+	hombros.radial_segments = 6
+	hombros.rings = 1
+	st.append_from(hombros, 0, Transform3D(Basis(Vector3(0, 0, 1), PI * 0.5).scaled(Vector3(1.0, 1.0, 0.8)), Vector3(0, 0.47, 0)))
+	var brazo := CapsuleMesh.new()
+	brazo.radius = 0.045
+	brazo.height = 0.40
+	brazo.radial_segments = 5
+	brazo.rings = 1
+	for lado in [-1.0, 1.0]:
+		## Brazos caídos y un poco adelantados, como sentado con las manos en
+		## las rodillas.
+		var b := Basis(Vector3(1, 0, 0), -0.35).rotated(Vector3(0, 0, 1), 0.10 * lado)
+		st.append_from(brazo, 0, Transform3D(b, Vector3(0.20 * lado, 0.31, 0.05)))
+	var cuello := CylinderMesh.new()
+	cuello.top_radius = 0.045
+	cuello.bottom_radius = 0.05
+	cuello.height = 0.08
+	cuello.radial_segments = 5
+	cuello.rings = 1
+	st.append_from(cuello, 0, Transform3D(Basis(), Vector3(0, 0.56, 0)))
+	var cabeza := SphereMesh.new()
+	cabeza.radius = 0.10
+	cabeza.height = 0.23
+	cabeza.radial_segments = 8
+	cabeza.rings = 5
+	st.append_from(cabeza, 0, Transform3D(Basis(), Vector3(0, 0.67, 0)))
+	st.generate_normals()
+	_malla_hincha_det = st.commit()
+	return _malla_hincha_det
+
 ## `ocupacion` (22-9-2026): antes estas 5 filas reales -las que la camara de TV
 ## ve de cerca, ver el comentario de mas arriba- se quedaban con la butaca
 ## vacia aunque `_make_stand_texture()` ya pinte gente de verdad desde la fila
@@ -1957,73 +2187,122 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## unos 400.000 en total: se puede de sobra, y es lo que de verdad se ve,
 	## porque las butacas de arriba ya las dibuja la textura de la grada.
 	var filas_todas: int = maxi(1, int(fondo / PASO_FILA))
+	## LA GRADA ENTERA CON BUTACAS (29-9-2026). Pedido del usuario: «ponelas en
+	## la totalidad de la grada, deja de hacer lo de poner una versión fea en la
+	## zona de arriba». Ahora TODAS las filas tienen butaca 3D: las cercanas al
+	## césped con el modelo real, y el resto con `_malla_butaca_lejos()`, la
+	## misma butaca con las medidas del modelo pero ~120 vértices en vez de 994
+	## -a esa distancia no se distinguen, y poner el modelo real en toda la
+	## rampa serían más de 15 millones de vértices-. La textura con gente
+	## pintada desaparece: debajo queda cemento.
 	var filas: int = mini(presupuesto, filas_todas)
+	## ¿QUÉ BORDE DEL DECK ES EL DE ABAJO? (29-9-2026). Se daba por hecho que
+	## el lado local negativo, y en las tribunas giradas al revés -la mitad-
+	## las filas de butacas 3D y el público denso acababan ARRIBA DEL TODO,
+	## con la parte pegada al césped casi vacía. Se mira la inclinación real.
+	var eje_fondo := Vector3(1, 0, 0) if lateral else Vector3(0, 0, 1)
+	var sentido: float = 1.0 if (deck.basis * eje_fondo).y >= 0.0 else -1.0
+	## HACIA DÓNDE MIRA LA BUTACA (29-9-2026, «las butacas están al revés»).
+	## En el modelo el respaldo queda en -Z: la butaca mira a +Z. Tiene que
+	## mirar al borde bajo de la rampa, que está en -sentido sobre el eje del
+	## fondo. `Basis.rotated(UP, g)` lleva +Z a (sin g, 0, cos g), así que:
+	##   tribuna lateral (fondo en X): sin g = -sentido -> g = -sentido·π/2
+	##   tribuna de fondo (fondo en Z): cos g = -sentido -> g = π si sentido > 0
+	## Antes las tribunas de detrás de los arcos quedaban al revés.
+	var giro: float = (-sentido * PI * 0.5) if lateral else (PI if sentido > 0.0 else 0.0)
 
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.use_colors = true
 	mm.mesh = malla
 	mm.instance_count = cuantas_fila * filas
+	var mm_lejos := MultiMesh.new()
+	mm_lejos.transform_format = MultiMesh.TRANSFORM_3D
+	mm_lejos.use_colors = true
+	mm_lejos.mesh = _malla_butaca_lejos()
+	mm_lejos.instance_count = cuantas_fila * (filas_todas - filas)
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(largo * 100.0) + filas
 	var c1 := Color(str(est.get("asiento1", "#1f5f3d")))
 	var c2 := Color(str(est.get("asiento2", "#e8e8e8")))
 	## Paleta de ropa de hincha: neutros de siempre + los dos colores del club
-	## -mismo criterio que ya usan las butacas de mas abajo- para que se lea
-	## "hinchada local", no una multitud generica.
+	## para que se lea "hinchada local", no una multitud generica.
 	var colores_hincha := [Color(0.85, 0.85, 0.88), Color(0.15, 0.16, 0.2), c1, c2,
 		Color(0.7, 0.2, 0.2), Color(0.2, 0.3, 0.7)]
 	var hinchas_xf: Array[Transform3D] = []
 	var hinchas_col: Array[Color] = []
+	var det_xf: Array[Transform3D] = []
+	var det_col: Array[Color] = []
+	var filas_detalle: int = 6 if Calidad.elegida >= Calidad.ALTO else 3
+	## Un hincha por asiento ocupado: tres por grupo (dos en calidad Media).
+	var por_grupo: int = 3 if Calidad.elegida >= Calidad.ALTO else 2
+	var eje_largo := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
+	var eje_rake := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
 	var i := 0
+	var j := 0
 	for f in range(filas_todas):
 		## Se empieza por el borde de abajo del deck (el que da al cesped).
-		var d: float = -fondo * 0.5 + 0.6 + f * PASO_FILA
-		## De esta fila hacia arriba ya no hay butaca 3D, solo hincha: la
-		## butaca la pone la textura de la grada.
-		var con_butaca := f < filas
+		var d: float = sentido * (-fondo * 0.5 + 0.6 + f * PASO_FILA)
 		for c in range(cuantas_fila):
 			var l: float = -largo * 0.5 + 0.8 + c * PASO_BUTACA
 			var p: Vector3 = Vector3(d, 0.24, l) if lateral else Vector3(l, 0.24, d)
-			## Miran hacia el campo, o sea hacia el borde bajo de la rampa.
-			var giro: float = -PI * 0.5 if lateral else 0.0
-			## La contrarrotacion que las deja DE PIE -ver la nota de `rake` en
-			## la cabecera de esta funcion-. EL ORDEN IMPORTA: el deck aplica
-			## D y queremos que el resultado final D*I mire al campo y este
-			## derecho, o sea I = D⁻¹ * giro. `Basis.rotated()` premultiplica,
-			## asi que primero el giro y despues la contrarrotacion. Hacerlo al
-			## reves deja al hincha derecho pero mirando de lado.
+			## La contrarrotacion que las deja DE PIE: primero el giro y despues
+			## la contrarrotacion del rake (`rotated()` premultiplica).
 			var base := Basis().rotated(Vector3.UP, giro)
 			if rake != 0.0:
-				base = base.rotated(Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0), -rake)
-			if con_butaca:
+				base = base.rotated(eje_rake, -rake)
+			## Franjas de color del club, con alguna butaca desparejada: una grada
+			## de un solo tono se lee como una alfombra pintada.
+			var col: Color = c1 if (c / 3) % 2 == 0 else c2
+			if rng.randf() < 0.04:
+				col = col.lightened(0.25)
+			col = col.darkened(rng.randf() * 0.12)
+			if f < filas:
 				mm.set_instance_transform(i, Transform3D(base, p))
-				## Franjas de color del club, con alguna butaca desparejada: una grada
-				## de un solo tono se lee como una alfombra pintada.
-				var col: Color = c1 if (c / 3) % 2 == 0 else c2
-				if rng.randf() < 0.04:
-					col = col.lightened(0.25)
-				mm.set_instance_color(i, col.darkened(rng.randf() * 0.12))
+				mm.set_instance_color(i, col)
 				i += 1
-			if rng.randf() < ocupacion:
-				## Sentado, un poco mas arriba del cojin (0.24) y con un jitter
-				## chico de posicion/mirada -una fila de maniquies perfectamente
-				## alineados se lee tan falso como una vacia.
-				var jitter := Vector3(rng.randf_range(-0.08, 0.08), 0, rng.randf_range(-0.08, 0.08))
-				var mirada := giro + rng.randf_range(-0.12, 0.12)
-				## NO TODOS MIDEN LO MISMO (23-9-2026). Una grada donde los
-				## miles de hinchas tienen exactamente la misma estatura se lee
-				## como una rejilla de maniquíes por muy bien que estén
-				## coloreados. ±10% cubre de un niño a un adulto alto, y es
-				## gratis: va en la misma matriz de la instancia.
-				var talla := rng.randf_range(0.88, 1.10)
-				var base_h := Basis().rotated(Vector3.UP, mirada).scaled(Vector3(talla, talla, talla))
+			else:
+				mm_lejos.set_instance_transform(j, Transform3D(base, p))
+				mm_lejos.set_instance_color(j, col)
+				j += 1
+			## Un hincha por asiento ocupado. Las filas pegadas al césped de la
+			## bandeja de abajo llevan el hincha de detalle; el resto, el barato.
+			var cerca := bandeja == 0 and f < filas_detalle
+			for k in (3 if cerca else por_grupo):
+				if rng.randf() >= ocupacion:
+					continue
+				var desp := (float(k) - 0.5 * float((3 if cerca else por_grupo) - 1)) * 0.48
+				var jit := Vector3(rng.randf_range(-0.04, 0.04), 0, rng.randf_range(-0.04, 0.04))
+				## NO TODOS MIDEN LO MISMO: ±10% de talla, gratis en la matriz.
+				var talla := rng.randf_range(0.9, 1.08)
+				var base_h := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla, talla, talla))
 				if rake != 0.0:
-					base_h = base_h.rotated(Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0), -rake)
-				hinchas_xf.append(Transform3D(base_h, p + jitter + Vector3(0, 0.16, 0)))
-				var col_hincha: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
-				hinchas_col.append(col_hincha.darkened(rng.randf() * 0.15))
+					base_h = base_h.rotated(eje_rake, -rake)
+				var xf := Transform3D(base_h, p + eje_largo * desp + jit + Vector3(0, 0.15, 0))
+				var col_h: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
+				col_h = col_h.darkened(rng.randf() * 0.15)
+				if cerca:
+					det_xf.append(xf)
+					det_col.append(col_h)
+				else:
+					hinchas_xf.append(xf)
+					hinchas_col.append(col_h)
+
+	## Debajo de las butacas, cemento: la textura con gente pintada ya no hace
+	## falta y entre fila y fila se veía como manchas estiradas.
+	deck.material_override = _mat_escalones()
+	if mm_lejos.instance_count > 0:
+		var mil := MultiMeshInstance3D.new()
+		mil.multimesh = mm_lejos
+		var mat_l := StandardMaterial3D.new()
+		mat_l.vertex_color_use_as_albedo = true
+		mat_l.albedo_color = Color(0.9, 0.9, 0.9)
+		mat_l.roughness = 0.55
+		mil.material_override = mat_l
+		mil.name = "ButacasLejos"
+		mil.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		deck.add_child(mil)
 
 	var mat := StandardMaterial3D.new()
 	mat.vertex_color_use_as_albedo = true
@@ -2033,8 +2312,36 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var mi := MultiMeshInstance3D.new()
 	mi.multimesh = mm
 	mi.material_override = mat
+	mi.name = "ButacasCerca"
+	## SIN SOMBRA PROPIA (25-9-2026, `pruebas/medir_partido.gd`). Miles de
+	## butacas y de hinchas proyectando sombra se dibujaban otra vez en CADA
+	## cascada del sol -cuatro en calidad ALTO-: eran el grueso de los ~2
+	## millones de triángulos por fotograma. Bajo el techo de la grada esa
+	## sombra no se ve; la de la grada entera (el `deck`) sigue estando.
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mi)
 
+	if not det_xf.is_empty():
+		var mmd := MultiMesh.new()
+		mmd.transform_format = MultiMesh.TRANSFORM_3D
+		mmd.use_colors = true
+		mmd.mesh = _malla_hincha_detalle()
+		mmd.instance_count = det_xf.size()
+		for k in det_xf.size():
+			mmd.set_instance_transform(k, det_xf[k])
+			mmd.set_instance_color(k, det_col[k])
+		var mat_d := ShaderMaterial.new()
+		mat_d.shader = load("res://visor/hinchada.gdshader")
+		## La malla de detalle tiene el cuello más arriba y pelo.
+		mat_d.set_shader_parameter("cuello_desde", 0.535)
+		mat_d.set_shader_parameter("cuello_hasta", 0.55)
+		mat_d.set_shader_parameter("pelo_desde", 0.715)
+		var mid := MultiMeshInstance3D.new()
+		mid.multimesh = mmd
+		mid.material_override = mat_d
+		mid.name = "HinchadaCerca"
+		mid.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		deck.add_child(mid)
 	if hinchas_xf.is_empty():
 		return
 	var mmh := MultiMesh.new()
@@ -2056,7 +2363,42 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	mih.multimesh = mmh
 	mih.material_override = mat_h
 	mih.name = "Hinchada"
+	mih.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mih)
+
+## LA BUTACA DE LEJOS (29-9-2026): las medidas del modelo real
+## (`asientos_lod.glb`: 1,50 × 0,74 × 0,59 m, tres asientos, respaldo en -Z)
+## hechas con cinco cajas -asiento corrido, tres respaldos con su hueco y la
+## viga-: ~120 vértices contra 994. Se usa en las filas altas, donde la
+## cámara nunca llega a distinguirlas.
+static var _butaca_lejos: Mesh
+
+static func _malla_butaca_lejos() -> Mesh:
+	if _butaca_lejos != null:
+		return _butaca_lejos
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var asiento := BoxMesh.new()
+	asiento.size = Vector3(1.46, 0.07, 0.40)
+	st.append_from(asiento, 0, Transform3D(Basis(), Vector3(-0.05, 0.40, 0.04)))
+	var respaldo := BoxMesh.new()
+	respaldo.size = Vector3(0.44, 0.38, 0.05)
+	for k in 3:
+		var x := -0.55 + float(k) * 0.5
+		st.append_from(respaldo, 0, Transform3D(Basis(Vector3(1, 0, 0), -0.14), Vector3(x, 0.58, -0.20)))
+	var viga := BoxMesh.new()
+	viga.size = Vector3(1.40, 0.30, 0.06)
+	st.append_from(viga, 0, Transform3D(Basis(), Vector3(-0.05, 0.20, -0.08)))
+	_butaca_lejos = st.commit()
+	return _butaca_lejos
+
+## El piso de la grada bajo las butacas: hormigón gris, compartido.
+static var _escalones: StandardMaterial3D
+
+static func _mat_escalones() -> StandardMaterial3D:
+	if _escalones == null:
+		_escalones = Texturas.hormigon(Color(0.52, 0.52, 0.54), 83)
+	return _escalones
 
 static func _primera_malla(n: Node) -> Mesh:
 	if n == null:
@@ -2156,6 +2498,9 @@ static func _vallas_publicidad(root: Node3D, est: Dictionary, mi: Club = null) -
 	var led := VallasLed.new()
 	led.name = "VallasLed"
 	root.add_child(led)
+	## El marco de las vallas en el color que eligió el club (si eligió uno).
+	if str(est.get("vallaCol", "")) != "":
+		led.set_meta("marco", Color(str(est["vallaCol"])))
 	led.sembrar(_anuncios_de(est, mi))
 	var i := 0
 	for lado in [1.0, -1.0]:
@@ -2186,6 +2531,11 @@ static func _una_valla(led: VallasLed, pos: Vector3, largo: float, rot_y: float,
 	var tam := Vector3(0.25, 1.1, largo - 0.25) if lateral \
 		else Vector3(largo - 0.25, 1.1, 0.25)
 	var caja := _box(led, pos, tam, null)
+	if led.has_meta("marco"):
+		var mm := StandardMaterial3D.new()
+		mm.albedo_color = led.get_meta("marco")
+		mm.roughness = 0.5
+		caja.material_override = mm
 	var l := Label3D.new()
 	l.text = ""
 	l.font_size = 64
@@ -2218,7 +2568,7 @@ static func _una_valla(led: VallasLed, pos: Vector3, largo: float, rot_y: float,
 static func _anuncios_de(est: Dictionary, mi: Club) -> Array:
 	var lista: Array = []
 	if mi != null:
-		lista.append(_anuncio(Nombres.limpiar(mi.nombre), _c(mi.color_escudo1(), "#1f5f3d")))
+		lista.append(_anuncio(Nombres.visible(mi.nombre), _c(mi.color_escudo1(), "#1f5f3d")))
 	lista.append(_anuncio("DINASTÍA", Color(0.06, 0.08, 0.12)))
 	if Datos.tiene("MARCAS"):
 		var t: Variant = Datos.tabla("MARCAS")
@@ -2231,7 +2581,7 @@ static func _anuncios_de(est: Dictionary, mi: Club) -> Array:
 					_c(m[1] if m.size() > 1 else "", "#e8b13a")))
 	## Un color de la casa para cerrar el ciclo, si hay club.
 	if mi != null:
-		lista.append(_anuncio("VAMOS " + Nombres.limpiar(mi.nombre),
+		lista.append(_anuncio("VAMOS " + Nombres.visible(mi.nombre),
 			_c(est.get("asiento1"), "#1f5f3d")))
 	return lista
 
@@ -2282,7 +2632,7 @@ static func _banquillos_detalle(root: Node3D, tipo: String = "cristal", est: Dic
 	vidrio.cull_mode = BaseMaterial3D.CULL_DISABLED
 	vidrio.metallic = 0.1
 	vidrio.roughness = 0.08
-	var estructura := Texturas.metal(Color(0.16, 0.17, 0.19), 0.4)
+	var estructura := Texturas.metal(_c(est.get("banquilloCol", ""), "#292b30"), 0.4)
 	## Cuero de verdad (16-9-2026) para los sillones -antes color plano, y era
 	## justo el banquillo mas "de lujo" del catalogo el que menos brillaba de
 	## verdad. El resto sigue con el plastico simple: es a proposito, un
@@ -2396,6 +2746,10 @@ static func _camarografos(root: Node3D) -> void:
 
 static func _un_camarografo(root: Node3D, pos: Vector3, chaleco: Material, pantalon: Material, piel: Material, equipo: Material) -> void:
 	var base := Node3D.new()
+	## `VistaEstadio` busca este nombre para poner un operador de verdad en
+	## lugar del maniquí de cajas (26-9-2026); los trozos con meta "cuerpo" son
+	## los que se ocultan, la cámara y el monopié se quedan.
+	base.name = "Camarografo"
 	base.position = pos
 	## Siempre mirando al centro del campo: nadie graba de espaldas a la jugada.
 	var hacia := -pos
@@ -2416,6 +2770,8 @@ static func _un_camarografo(root: Node3D, pos: Vector3, chaleco: Material, panta
 			_box(base, Vector3(0, 1.15, 0.34), Vector3(0.30, 0.22, 0.55), equipo),
 		]:
 		m.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if m.material_override != equipo:
+			m.set_meta("cuerpo", true)
 	var cabeza := MeshInstance3D.new()
 	var sm := SphereMesh.new()
 	sm.radius = 0.14
@@ -2424,6 +2780,7 @@ static func _un_camarografo(root: Node3D, pos: Vector3, chaleco: Material, panta
 	cabeza.position = Vector3(0, 1.55, 0)
 	cabeza.material_override = piel
 	cabeza.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	cabeza.set_meta("cuerpo", true)
 	base.add_child(cabeza)
 
 ## Boca del tunel de vestuarios, con el arco de entrada que trajo el usuario si
@@ -2560,3 +2917,107 @@ static func _tunel(root: Node3D, tipo: String = "central", est: Dictionary = {},
 		for k in range(5):
 			_box(root, Vector3(0, 1.2 - k * 0.28, ancla_z - 4.6 + k * 0.55),
 				Vector3(4.5, 0.12, 0.5), escalones)
+
+## EL EXTERIOR DEL ESTADIO (25-9-2026, plan maestro B6.2). Hasta hoy el recinto
+## terminaba en su muro y detrás había una explanada gris vacía. Ahora, como en
+## cualquier estadio de verdad: una fila de taquillas frente a la tribuna sur,
+## la tienda oficial en la esquina y un estacionamiento con coches detrás de la
+## tribuna norte. Todo sale de una semilla local (no de `Azar`): el mismo
+## estadio siempre tiene los coches en el mismo sitio.
+const RUTAS_COCHES := [
+	"res://assets/ciudad/kenney_cars/sedan.glb",
+	"res://assets/ciudad/kenney_cars/sedan-sports.glb",
+	"res://assets/ciudad/kenney_cars/suv.glb",
+	"res://assets/ciudad/kenney_cars/hatchback-sports.glb",
+	"res://assets/ciudad/kenney_cars/taxi.glb",
+	"res://assets/ciudad/kenney_cars/van.glb",
+]
+
+static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, niveles: int, mi: Club) -> void:
+	var fuera_z := centro_tribuna(dz, niveles) + fondo_tribuna(niveles) / 2.0
+	var fuera_x := centro_tribuna(dx, niveles) + fondo_tribuna(niveles) / 2.0
+	var club_col := _c(est.get("asiento1"), "#2b6b45")
+	var ext := Node3D.new()
+	ext.name = "Exterior"
+	root.add_child(ext)
+	## Taquillas: cuatro casetas con ventanilla iluminada y marquesina.
+	## Mezclado con gris: con un club de camiseta negra la caseta era un
+	## agujero negro en la explanada.
+	## Pintura plana y no metal: el metal sin reflejos de cielo sale negro.
+	var caseta := StandardMaterial3D.new()
+	caseta.albedo_color = club_col.lerp(Color(0.62, 0.64, 0.66), 0.45)
+	caseta.roughness = 0.6
+	var ventanilla: StandardMaterial3D = Texturas.cristal(true, true)
+	var losa := Texturas.hormigon(Color(0.55, 0.56, 0.58), 61)
+	for i in 4:
+		var x := -13.5 + float(i) * 9.0
+		var z := fuera_z + 9.0
+		_box(ext, Vector3(x, 1.3, z), Vector3(3.0, 2.6, 2.4), caseta)
+		## La ventanilla mira a la calle (+Z), no al muro del estadio.
+		_box(ext, Vector3(x, 1.5, z + 1.22), Vector3(1.8, 0.9, 0.05), ventanilla)
+		_box(ext, Vector3(x, 2.75, z + 0.5), Vector3(3.8, 0.15, 3.6), losa)
+	var rot := Label3D.new()
+	rot.text = "TAQUILLAS"
+	rot.font_size = 96
+	rot.pixel_size = 0.012
+	rot.modulate = Color(1, 1, 1)
+	rot.outline_size = 12
+	## Un `Label3D` sin girar ya mira a +Z, que es la calle.
+	rot.position = Vector3(0, 4.2, fuera_z + 11.0)
+	ext.add_child(rot)
+	## La tienda oficial, en la esquina sureste.
+	var tienda_pos := Vector3(fuera_x - 6.0, 0.0, fuera_z + 20.0)
+	_box(ext, tienda_pos + Vector3(0, 3.0, 0), Vector3(18.0, 6.0, 10.0), _mat_fachada(str(est.get("fachada", "hormigon")), str(est.get("fachadaCol", ""))))
+	_box(ext, tienda_pos + Vector3(0, 2.0, 5.05), Vector3(14.0, 3.0, 0.1), ventanilla)
+	var franja := StandardMaterial3D.new()
+	franja.albedo_color = club_col
+	franja.emission_enabled = true
+	franja.emission = club_col
+	franja.emission_energy_multiplier = 0.4
+	_box(ext, tienda_pos + Vector3(0, 5.0, 5.1), Vector3(18.0, 1.2, 0.1), franja)
+	var r_tienda := Label3D.new()
+	r_tienda.text = "TIENDA OFICIAL" if mi == null else "TIENDA %s" % Nombres.visible(mi.nombre).to_upper()
+	r_tienda.font_size = 80
+	r_tienda.pixel_size = 0.012
+	r_tienda.outline_size = 10
+	r_tienda.position = tienda_pos + Vector3(0, 5.0, 5.2)
+	ext.add_child(r_tienda)
+	## El estacionamiento: asfalto, rayas y coches.
+	var park_z := -(fuera_z + 26.0)
+	var asfalto := MeshInstance3D.new()
+	var pm := PlaneMesh.new()
+	pm.size = Vector2(84.0, 34.0)
+	asfalto.mesh = pm
+	asfalto.position = Vector3(0, -0.1, park_z)
+	## Seco y mate: el de fábrica está pensado para calzada y a esta escala
+	## se leía como un charco.
+	var mat_asf: StandardMaterial3D = Texturas.asfalto().duplicate()
+	mat_asf.roughness = 0.97
+	mat_asf.roughness_texture = null
+	mat_asf.normal_enabled = false
+	mat_asf.metallic_specular = 0.2
+	## (26-9-2026) Ya se repite en coordenadas del mundo: sin reescalar.
+	asfalto.material_override = mat_asf
+	ext.add_child(asfalto)
+	var raya := StandardMaterial3D.new()
+	raya.albedo_color = Color(0.92, 0.92, 0.88)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(dx * 131.0 + dz * 17.0) + niveles
+	var escenas: Array = []
+	for r: String in RUTAS_COCHES:
+		if ResourceLoader.exists(r):
+			var e := load(r)
+			if e is PackedScene:
+				escenas.append(e)
+	for fila in 2:
+		var z_f := park_z - 7.5 + float(fila) * 15.0
+		for k in 14:
+			var x := -39.0 + float(k) * 6.0
+			_box(ext, Vector3(x - 3.0, -0.05, z_f), Vector3(0.15, 0.02, 5.0), raya)
+			if escenas.is_empty() or rng.randf() < 0.3:
+				continue
+			var coche: Node3D = (escenas[rng.randi() % escenas.size()] as PackedScene).instantiate()
+			coche.position = Vector3(x, 0.0, z_f)
+			coche.rotation.y = (0.0 if fila == 0 else PI) + rng.randf_range(-0.05, 0.05)
+			coche.scale = Vector3.ONE * 1.65   ## la misma que en la ciudad
+			ext.add_child(coche)

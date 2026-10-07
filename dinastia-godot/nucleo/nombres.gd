@@ -80,3 +80,65 @@ static func censurar(nombre: String) -> String:
 		vistas += 1
 		salida += LEET[min_c] if vistas % CADA == 0 else c
 	return salida
+
+## LA CUBIERTA DE LOS NOMBRES REALES (25-9-2026, pedido del usuario: "se
+## necesita de nuevo esa cubierta en el nombre, ya que no está activa").
+##
+## Las tablas del pack real traen clubes, copas, árbitros y agentes ya
+## cubiertos ("C0lo-C0lo", "Champi0ns Le4gue", "R. T0bar"), pero el juego los
+## pasaba por `limpiar()` al crear el mundo y la cubierta nunca se veía. Los
+## futbolistas reales (`REALES`) venían directamente en claro.
+##
+## Con el pack real activo, lo que sale de una tabla CONSERVA su cubierta, y lo
+## que viene en claro se cubre con `censurar()`. Con la base ficticia no hay
+## nada real que tapar y todo sigue limpio como antes. Se aplica al CREAR el
+## nombre (club, liga, copa, árbitro, agente, jugador real): después el nombre
+## guardado ya es el que se enseña en todas partes.
+##
+## Para comparar dos nombres se sigue usando `limpiar()` en los dos lados.
+static func cubierta_activa() -> bool:
+	return Datos.base_real
+
+## Un nombre sacado de una tabla, listo para guardarlo y enseñarlo.
+static func de_tabla(nombre: String) -> String:
+	if not cubierta_activa():
+		return limpiar(nombre)
+	return nombre if limpiar(nombre) != nombre else censurar(nombre)
+
+## Un nombre YA guardado (de un club o de un jugador), para ponerlo en un
+## texto. Con la cubierta activa se deja tal cual -ya viene cubierto si es
+## real, y los inventados nunca llevaron números-; sin ella, se limpia como
+## siempre por si una partida vieja trajera restos de leetspeak.
+static func visible(nombre: String) -> String:
+	return nombre if cubierta_activa() else limpiar(nombre)
+
+## NOMBRES VETADOS (25-9-2026). Un nombre generado al azar no puede ser el de
+## un futbolista real: con las bolsas chilenas sale "Claudio Bravo" o "Vicente
+## Pizarro" sin que nadie lo busque. La tabla `NOMBRES_VETADOS` trae la huella
+## de cada jugador real conocido -md5 del nombre en minúsculas, 12 hex, la
+## genera `herramientas/base_ficticia.py`-, así que la base publicada no lleva
+## ni un nombre real legible y aun así puede evitarlos.
+static var _vetados: Dictionary = {}
+static var _vetados_listos := false
+
+static func huella(nombre: String) -> String:
+	return nombre.strip_edges().to_lower().md5_text().substr(0, 12)
+
+static func vetado(nombre: String) -> bool:
+	if not _vetados_listos:
+		_vetados_listos = true
+		if Datos.tiene("NOMBRES_VETADOS"):
+			for h: Variant in Datos.tabla("NOMBRES_VETADOS"):
+				_vetados[String(h)] = true
+	return _vetados.has(huella(nombre))
+
+## Llama a `sortear` hasta que devuelva un nombre no vetado. Ocho intentos
+## sobran -la probabilidad de caer en uno real es del orden de 1 entre 70- y
+## el tope evita un bucle infinito si una bolsa diminuta solo diera reales.
+static func sin_vetar(sortear: Callable) -> String:
+	var nombre: String = sortear.call()
+	var intentos := 1
+	while vetado(nombre) and intentos < 8:
+		nombre = sortear.call()
+		intentos += 1
+	return nombre

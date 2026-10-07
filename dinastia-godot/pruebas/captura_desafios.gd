@@ -28,7 +28,7 @@ func _process(_d: float) -> void:
 				b.button_pressed = true
 				_pantalla.call("_alternar_desafio", clave)
 	if _n == ESPERA + 2:
-		_guardar("res://pruebas/pantalla_desafios.png")
+		_guardar("res://pruebas/capturas/pantalla_desafios.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

@@ -21,7 +21,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_elegir_grupo", "finanzas")
 		_pantalla.call("_ir_a_pestana", "Libres")
 	if _n == ESPERA + 2:
-		_guardar("res://pruebas/pantalla_libres.png")
+		_guardar("res://pruebas/capturas/pantalla_libres.png")
 	if _n == ESPERA + 4:
 		var mun = _pantalla.get("mundo")
 		var e = mun._nuevo_libre(true)
@@ -29,7 +29,7 @@ func _process(_d: float) -> void:
 		mun.libre_estrella.emit(e)
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_libre_estrella.png")
+		_guardar("res://pruebas/capturas/pantalla_libre_estrella.png")
 	if _n == ESPERA + 8:
 		## Ficha al primero de la lista, con reintentos: puede decir que no.
 		var mun = _pantalla.get("mundo")
@@ -42,7 +42,7 @@ func _process(_d: float) -> void:
 			intentos += 1
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 10:
-		_guardar("res://pruebas/pantalla_libre_fichado.png")
+		_guardar("res://pruebas/capturas/pantalla_libre_fichado.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

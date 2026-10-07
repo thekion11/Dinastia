@@ -264,6 +264,8 @@ func multiplicador_de_reputacion() -> float:
 	var rep := 50
 	if m != null and m.roles != null:
 		rep = m.roles.prestigio
+		## Y la fama de formador (26-9-2026, `Reputacion`).
+		return (1.0 + float(rep - 50) * 0.005) * m.roles.reputacion.mult_cantera()
 	return 1.0 + float(rep - 50) * 0.005
 
 
@@ -643,7 +645,7 @@ func _chequeo_fugas() -> Array[Dictionary]:
 	for j in mio.plantilla.duplicate():
 		if not Azar.suerte(riesgo_fuga(j)):
 			continue
-		var destino := _grande_que_se_lo_lleva(m, mio)
+		var destino := _grande_que_se_lo_lleva(m, mio, j)
 		if destino == null:
 			continue
 		var compensacion := int(round(float(j.valor) * DERECHOS_FORMACION))
@@ -661,11 +663,17 @@ func _chequeo_fugas() -> Array[Dictionary]:
 ## Quién viene a robarte: uno de los seis clubes más grandes que el tuyo por al
 ## menos seis puntos de reputación. No el mayor de todos siempre, porque eso
 ## haría que el mismo club te vaciara la cantera veinte años seguidos.
-func _grande_que_se_lo_lleva(m: Mundo, mio: Club) -> Club:
+## Solo un grande CON SITIO: menos de 26 y, si el chico es portero, menos de
+## tres porteros. Sin esto la prueba larga encontró un club con 51 jugadores y
+## 8 porteros: se quedaba todos los canteranos que se escapaban.
+func _grande_que_se_lo_lleva(m: Mundo, mio: Club, j: Jugador = null) -> Club:
 	var grandes: Array[Club] = []
 	for c: Club in m.clubes.values():
-		if c.id != mio.id and c.rep >= mio.rep + 6:
-			grandes.append(c)
+		if c.id == mio.id or c.rep < mio.rep + 6 or c.plantilla.size() >= TOPE_PLANTEL:
+			continue
+		if j != null and j.es_portero() and c.plantilla.filter(func(x: Jugador) -> bool: return x.es_portero()).size() >= 3:
+			continue
+		grandes.append(c)
 	if grandes.is_empty():
 		return null
 	grandes.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
@@ -781,6 +789,14 @@ func origen_de(j: Jugador) -> Dictionary:
 ## llegó. Vacío si es un jugador sin apellido que pese.
 func linaje_de(j: Jugador) -> Dictionary:
 	return _fichas.get(j.id, {}).get("linaje", {}) if j != null else {}
+
+## Un chico que llega de la Academia (10-16 años, `Academia`) es tan canterano
+## como uno de la camada: se anota igual, con su año, para el linaje, las
+## etiquetas y la cuenta de debutantes del modo director de cantera.
+func registrar_de_academia(j: Jugador, anio: int) -> void:
+	var f := _ficha(j.id)
+	f["camada"] = anio
+	f["origen"] = "academia"
 
 func es_canterano(j: Jugador) -> bool:
 	return j != null and _fichas.get(j.id, {}).has("camada")
@@ -900,7 +916,7 @@ func renovar(j: Jugador, con_clausula: bool = false) -> Dictionary:
 		return {"error": "ese jugador no es tuyo"}
 	var pedido := pide_para_renovar(j)
 	j.sueldo = int(round(float(pedido) * 0.9)) if con_clausula else pedido
-	j.anios_contrato = Azar.ent(2, 4)
+	j.anios_contrato = Contratos.ajustar_anios(j, Azar.ent(2, 4))
 	var clausula := 0
 	if con_clausula and m.cesiones != null:
 		clausula = m.cesiones.pactar_clausula(j)
@@ -909,7 +925,7 @@ func renovar(j: Jugador, con_clausula: bool = false) -> Dictionary:
 	var ag := agente_de(j)
 	if String(ag.get("perfil", "")) == "mediatico":
 		j.moral = clampi(j.moral + 3, 10, 99)
-	noticia.emit("Renovado: %s" % Nombres.limpiar(j.nombre),
+	noticia.emit("Renovado: %s" % Nombres.visible(j.nombre),
 		"Firma por %d temporadas a %d/sem%s. Negoció su agente %s (%s)." % [
 			j.anios_contrato, j.sueldo,
 			" con cláusula de salida" if con_clausula else "",
@@ -958,7 +974,7 @@ func ofrecer_fidelidad(j: Jugador, c: Club) -> String:
 	c.mover_saldo(-costo)
 	j.fidelidad_hasta = (m.anio if m != null else 0) + 3
 	j.moral = clampi(j.moral + 14, 10, 99)
-	noticia.emit("Prima de fidelidad: %s" % Nombres.limpiar(j.nombre),
+	noticia.emit("Prima de fidelidad: %s" % Nombres.visible(j.nombre),
 		"Firma su cláusula de fidelidad hasta %d: no pedirá salir mientras siga vigente." % j.fidelidad_hasta)
 	return ""
 
@@ -1197,9 +1213,16 @@ func _nombre_de_pila(pais: String = "") -> String:
 		return String(Azar.uno(n))
 	return "Juan"
 
-func _nombre_al_azar(pais: String = "") -> String:
+## Nunca devuelve el nombre de un futbolista real (`Nombres.vetado()`).
+func _nombre_al_azar(pais: String = "", region: String = "") -> String:
+	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais, region))
+
+func _sortear_nombre(pais: String, region: String = "") -> String:
 	var a: Array = Datos.tabla("APELLIDOS")
 	var pools: Variant = Datos.tabla("POOLS_EU")
+	var propias := Regiones.bolsas(pais, region)
+	if not propias.is_empty():
+		return "%s %s" % [String(Azar.uno(propias[0])), String(Azar.uno(propias[1]))]
 	if pools is Dictionary and (pools as Dictionary).has(pais):
 		var par: Array = (pools as Dictionary)[pais]
 		if par.size() >= 2 and not (par[1] as Array).is_empty():

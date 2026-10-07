@@ -40,7 +40,7 @@ func _process(_d: float) -> void:
 				break
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_finanzas.png")
+		_guardar("res://pruebas/capturas/pantalla_finanzas.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

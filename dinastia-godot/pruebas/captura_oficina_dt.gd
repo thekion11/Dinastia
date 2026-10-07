@@ -54,7 +54,7 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 20:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_oficina_dt_aislada.png")
+		img.save_png("res://pruebas/capturas/pantalla_oficina_dt_aislada.png")
 		print("captura guardada")
 	if _n == 24:
 		get_tree().quit()

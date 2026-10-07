@@ -14,7 +14,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == ESPERA:
-		_guardar("res://pruebas/pantalla_continuar.png")
+		_guardar("res://pruebas/capturas/pantalla_continuar.png")
 		get_tree().quit()
 func _guardar(ruta: String) -> void:
 	var img := get_viewport().get_texture().get_image()

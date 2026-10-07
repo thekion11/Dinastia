@@ -29,6 +29,7 @@ Eco="*res://nucleo/economia.gd"
 Sonido="*res://nucleo/sonido.gd"
 Musica="*res://nucleo/musica.gd"
 Idiomas="*res://nucleo/idiomas.gd"
+Cierre="*res://nucleo/cierre.gd"
 
 [input_devices]
 

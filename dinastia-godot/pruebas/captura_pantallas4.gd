@@ -40,10 +40,10 @@ func _process(_d: float) -> void:
 			_pantalla.call("_ver_ficha", mio.plantilla[0])
 		_ir_a("Entrenar")
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_entrenar2.png")
+		_guardar("res://pruebas/capturas/pantalla_entrenar2.png")
 		_ir_a("Federación")
 	if _n == ESPERA + 12:
-		_guardar("res://pruebas/pantalla_federacion.png")
+		_guardar("res://pruebas/capturas/pantalla_federacion.png")
 		_ir_a("Club")
 	if _n == ESPERA + 17:
 		## "TU CARGO" va al final de la pestana Club, despues de directiva, staff
@@ -53,10 +53,10 @@ func _process(_d: float) -> void:
 		if scroll != null:
 			scroll.scroll_vertical = 100000
 	if _n == ESPERA + 18:
-		_guardar("res://pruebas/pantalla_rol.png")
+		_guardar("res://pruebas/capturas/pantalla_rol.png")
 		_ir_a("Estadio")
 	if _n == ESPERA + 24:
-		_guardar("res://pruebas/pantalla_estadio2.png")
+		_guardar("res://pruebas/capturas/pantalla_estadio2.png")
 		get_tree().quit()
 
 func _ir_a(nombre: String) -> void:

@@ -36,7 +36,7 @@ func _process(_d: float) -> void:
 		juego.fase = "medio"
 	if _frame in [90, 240, 400]:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/calma_idle_f%d.png" % _frame)
+		img.save_png("res://pruebas/capturas/calma_idle_f%d.png" % _frame)
 	if _frame >= 400:
 		print("FIN. 0 fallos")
 		get_tree().quit(0)

@@ -45,7 +45,7 @@ func _process(_d: float) -> void:
 				print("scroll bajado en %s" % s.name)
 	if _n == 22:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_picker_especiales.png")
+		img.save_png("res://pruebas/capturas/pantalla_picker_especiales.png")
 		print("captura guardada: res://pruebas/pantalla_picker_especiales.png")
 		print("FIN. 0 fallos")
 		get_tree().quit()

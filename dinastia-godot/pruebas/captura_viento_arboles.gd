@@ -32,11 +32,11 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 20:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/viento_arboles_a.png")
+		img.save_png("res://pruebas/capturas/viento_arboles_a.png")
 		print("captura A guardada")
 	if _n == 110:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/viento_arboles_b.png")
+		img2.save_png("res://pruebas/capturas/viento_arboles_b.png")
 		print("captura B guardada")
 		## Verificación numérica, no solo ojo: un punto en el BORDE de la copa
 		## grande de primer plano (donde el vaivén desplaza más el contorno,
@@ -45,7 +45,7 @@ func _process(_d: float) -> void:
 		## verdad, ese punto pasa de "borde de la copa" a "fondo" o viceversa
 		## entre una captura y otra.
 		var imgA := Image.new()
-		imgA.load("res://pruebas/viento_arboles_a.png")
+		imgA.load("res://pruebas/capturas/viento_arboles_a.png")
 		var pA := imgA.get_pixel(560, 470)
 		var pB := img2.get_pixel(560, 470)
 		print("pixel de borde en A: %s   en B: %s   ¿distinto? %s" % [pA, pB, pA != pB])

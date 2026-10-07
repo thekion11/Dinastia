@@ -21,6 +21,9 @@ signal cambio_media(antes: int, ahora: int)
 var id: String = ""
 var nombre: String = ""
 var pais: String = "CHI"
+## Región de origen dentro del país ("EUS" = Euskal Herria), o vacío. Solo
+## importa para los clubes con filosofía de cantera (`Regiones`, C3).
+var region: String = ""
 var club_id: String = ""
 var club_formacion: String = ""
 
@@ -59,8 +62,13 @@ var ovr_al_empezar: int = 0
 ## el bueno y no hace falta mantener dos listas para lo mismo.
 var historial: Array = []
 
+## Los premios individuales de cada temporada (C17): [{anio, premio}]. Los
+## escribe la gala de fin de año (`Logros.premios_temporada()`).
+var premios: Array = []
+
 func registrar_temporada(anio: int, club_nombre: String) -> void:
-	historial.append({"anio": anio, "club": club_nombre, "pj": partidos, "goles": goles, "ovr": ovr})
+	historial.append({"anio": anio, "club": club_nombre, "pj": partidos, "goles": goles,
+		"as": asistencias, "ovr": ovr})
 	if historial.size() > 12:
 		historial.pop_front()
 
@@ -196,6 +204,11 @@ func ajustar_media(delta: int) -> void:
 		return
 	var antes := ovr
 	ovr = clampi(ovr + delta, 40, 96)
+	## Una subida extra (vuelta de cesión, Mundial, maestro) que pasa su techo
+	## lo sube: superó lo que se esperaba de él. El potencial nunca queda por
+	## debajo de la media.
+	if ovr > pot:
+		pot = ovr
 	if ovr != antes:
 		tasar()
 		cambio_media.emit(antes, ovr)
@@ -246,6 +259,24 @@ func media_notas(minimo: int = 3) -> float:
 ## "24 jugadores con dos cortes de pelo entre todos"-, aqui sin arreglar
 ## todavia. Con una mezcla multiplicativa (djb2, la misma que usa `Escudo.
 ## _hash()`/`Cara._hash()`) el bit bajo SI depende de todos los caracteres.
+## LA PIERNA DÉBIL, de 1 a 5 estrellas (26-9-2026, plan maestro C17): lo bien
+## que usa el pie malo. Sale del mismo hash estable que `pie()`, con la
+## proporción del fútbol real: casi todos entre 2 y 3, pocos ambidiestros.
+func pierna_debil() -> int:
+	var h := 5381
+	for i in id.length():
+		h = ((h << 5) + h + id.unicode_at(i) * 7) & 0x7FFFFFFF
+	var r := (h / 101) % 100
+	if r < 10:
+		return 1
+	if r < 45:
+		return 2
+	if r < 80:
+		return 3
+	if r < 95:
+		return 4
+	return 5
+
 func pie() -> String:
 	var h := 5381
 	for i in id.length():

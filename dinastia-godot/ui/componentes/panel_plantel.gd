@@ -84,10 +84,10 @@ static func _comparar(a: Jugador, b: Jugador, orden: String, orden_desc: bool) -
 # las columnas que no son el nombre-. `COL_ACENTO` NO está aquí: en Principal
 # es `var`, no `const` -cambia cada refresco al color del club (`_acento_de`)-,
 # así que llega como parámetro (`col_acento`) en vez de duplicarse mal.
-const COL_SUAVE := Color("8ea595")
-const COL_TEXTO := Color("e9eeea")
-const COL_ROJO := Color("e05555")
-const COL_VERDE := Color("4caf6d")
+const COL_SUAVE := Tema.SUAVE
+const COL_TEXTO := Tema.TEXTO
+const COL_ROJO := Tema.MAL
+const COL_VERDE := Tema.BIEN
 
 static func _texto(tam: int, color: Color) -> Label:
 	var l := Label.new()
@@ -112,9 +112,4 @@ static func _rejilla(lista: VBoxContainer) -> GridContainer:
 
 ## Calcado de `Principal._dinero()`, con el mismo factor `Eco.ECO`.
 static func _dinero(monto: int) -> String:
-	var euros := float(monto) * Eco.ECO
-	if absf(euros) >= 1000000.0:
-		return "%.1fM EUR" % (euros / 1000000.0)
-	if absf(euros) >= 1000.0:
-		return "%dk EUR" % int(euros / 1000.0)
-	return "%d EUR" % int(euros)
+	return Eco.dinero(monto)

@@ -14,7 +14,11 @@ extends Control
 ## comporta exactamente igual (comprobado: Vulkan 1.3.237 sobre Intel UHD).
 
 signal cerrado
+## Lo pide el partido en vivo dirigido: al 45 se cierra para abrir el camarín.
+var parar_en_descanso := false
+var _descanso_hecho := false
 
+var _mini_pantalla: TextureRect
 var club: Club
 var visitante: Club
 var _raiz3d: Node3D
@@ -47,6 +51,18 @@ var _balon: Node3D
 var _control: ControlPartido
 var _radar: RadarPartido
 var _btn_modo: Button
+## 3D DESTACADOS (25-9-2026, plan maestro B2): el partido corre a x4 y frena a
+## velocidad normal en cada ocasión -remate o gol- durante `SEG_DESTACADO`
+## segundos reales, para ver la jugada. La simulación es la misma: solo cambia
+## a qué velocidad se mira.
+var modo_destacados := false
+const VEL_DESTACADOS_RAPIDO := 4
+const VEL_DESTACADOS_JUGADA := 2
+const SEG_DESTACADO := 6.0
+var _destacado_hasta_ms := -1
+var _btn_camara: Button
+var _cajon: CajonAjustes
+var _vineta: ColorRect
 var _perfil: Dictionary = {}
 var _banner: Label
 var _banner_caja: PanelContainer
@@ -143,6 +159,24 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## `build_pitch`, que es una función aparte.
 	Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	Ambience.apply(_raiz3d, perfil, null, Calidad.elegida)
+	## El clima también se VE, no solo se oye (plan maestro B11).
+	var gp := StadiumBuilder.geom_de_forma(String(perfil["forma"]))
+	## B6.5: con el techo retráctil cerrado no llueve dentro.
+	if String(perfil.get("techo", "")) != "retractil":
+		Precipitacion.montar(_raiz3d, String(perfil.get("clima", "noche")), float(gp["dx"]), float(gp["dz"]), Calidad.elegida)
+	## Si la máquina no llega a 40 FPS, se bajan efectos por escalones durante
+	## el partido (ver `RendimientoAdaptativo`). En un renderizador por software
+	## -los servidores de pruebas- no tiene sentido: ahí nunca se llegaría y las
+	## capturas saldrían con la calidad rebajada.
+	var adaptador := RenderingServer.get_video_adapter_name().to_lower()
+	if Calidad.adaptativa and not adaptador.contains("llvmpipe") and not adaptador.contains("swiftshader"):
+		var ra := RendimientoAdaptativo.new()
+		ra.raiz3d = _raiz3d
+		add_child(ra)
+		ra.escalon_aplicado.connect(func(_e: int, que: String) -> void:
+			if _pie != null:
+				_pie_base += "  ·  calidad ajustada: %s" % que
+				_pie.text = _pie_base)
 	StadiumBuilder.build_pitch(_raiz3d, perfil, club)
 	## La semilla sale del id del club: el mismo recinto siempre.
 	StadiumBuilder.build(_raiz3d, perfil, aforo, ocupacion, club._hash_id(), club)
@@ -151,6 +185,10 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## que es lo que hace la pantalla de un estadio de verdad un día entre
 	## semana. Antes, sin partido, se quedaba en el degradado estático.
 	_montar_pantalla()
+	## EL BALÓN DE INVIERNO (29-9-2026): con nieve se juega con el naranja,
+	## que se ve sobre el blanco, como en las ligas de verdad.
+	if String(perfil.get("clima", "")) == "nieve":
+		colores_balon = [Color("#ff7a1a"), Color("#1a1a1a"), "moderno"]
 	_balon = StadiumBuilder.spawn_ball(_raiz3d, Vector3(0, 0.11, 0), colores_balon)
 	## Si viene un partido sin empezar hay que prepararlo ANTES de sacar a nadie:
 	## `preparar()` es quien arma los dos onces y quien mide su fuerza. Sin eso,
@@ -183,41 +221,105 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## árbol para quedar DEBAJO de ellos (los Control últimos en añadirse se
 	## dibujan encima): la viñeta oscurece justo las esquinas donde vive el HUD,
 	## y si se dibujara arriba le restaría legibilidad al marcador y los botones.
-	var vineta := ColorRect.new()
-	vineta.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vineta.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vineta.material = ShaderMaterial.new()
-	vineta.material.shader = load("res://visor/vineta.gdshader")
-	add_child(vineta)
+	_vineta = ColorRect.new()
+	_vineta.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_vineta.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_vineta.material = ShaderMaterial.new()
+	_vineta.material.shader = load("res://visor/vineta.gdshader")
+	_vineta.visible = _pref("vineta", true)
+	add_child(_vineta)
 
 	# Radar táctico 2D en esquina inferior derecha
 	_radar = RadarPartido.new()
 	_radar.anchor_left = 1.0; _radar.anchor_right = 1.0; _radar.anchor_top = 1.0; _radar.anchor_bottom = 1.0
 	_radar.offset_left = -226; _radar.offset_right = -16; _radar.offset_top = -178; _radar.offset_bottom = -42
+	_radar.visible = _pref("radar", true)
 	add_child(_radar)
 
-	## Barra de control por encima del 3D.
-	var barra := HBoxContainer.new()
-	barra.add_theme_constant_override("separation", 8)
-	barra.offset_left = 18
-	barra.offset_top = 14
-	add_child(barra)
-	_boton(barra, "📷 Cámara", _rotar_camara)
-	_boton(barra, "🔍 +", func() -> void: if _rig: _rig.ajustar_zoom(-3.0))
-	_boton(barra, "🔍 -", func() -> void: if _rig: _rig.ajustar_zoom(3.0))
+	## LA PANTALLA GIGANTE, EN LA ESQUINA (26-9-2026). La del estadio rota
+	## marcador, tabla y goleadores, pero desde la cámara de transmisión es una
+	## mota al fondo del estadio: nadie la leía. Aquí se ve la MISMA textura,
+	## en vivo, arriba a la derecha. Se apaga desde el cajón.
+	_mini_pantalla = TextureRect.new()
+	_mini_pantalla.anchor_left = 1.0; _mini_pantalla.anchor_right = 1.0
+	_mini_pantalla.offset_left = -348; _mini_pantalla.offset_right = -16
+	_mini_pantalla.offset_top = 64; _mini_pantalla.offset_bottom = 64 + 177
+	_mini_pantalla.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_mini_pantalla.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_mini_pantalla.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_mini_pantalla.visible = false
+	add_child(_mini_pantalla)
+	## La pantalla se monta antes que el HUD: aquí ya puede existir.
+	if _pantalla != null:
+		_mini_pantalla.texture = _pantalla.get_texture()
+		_mini_pantalla.visible = _pref("pantalla_esquina", true)
 
+	## AJUSTES EN UN CAJÓN (25-9-2026, plan maestro B1). Antes siete botones
+	## vivían encima de la transmisión (cámara, zoom ±, modo, velocidad, nombres,
+	## volver); el usuario pidió que no estuvieran todos a la vista. Ahora en
+	## pantalla quedan el marcador, "Volver" y el ⚙, y el resto entra desde la
+	## derecha al pulsarlo (`CajonAjustes`).
+	_cajon = CajonAjustes.crear(self, "partido3d")
+	var volver := Button.new()
+	volver.text = "Volver"
+	volver.focus_mode = Control.FOCUS_NONE
+	add_child(volver)
+	volver.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	volver.offset_left = -150
+	volver.offset_right = -66
+	volver.offset_top = 14
+	volver.offset_bottom = 54
+	volver.pressed.connect(func() -> void: cerrado.emit())
+
+	_cajon.seccion("Transmisión")
+	_btn_camara = _cajon.boton("📷 Cámara: " + (_rig.current_name() if _rig != null else "TV"), _rotar_camara)
+	_cajon.fila([["🔍 Acercar", func() -> void: if _rig: _rig.ajustar_zoom(-3.0)],
+		["🔍 Alejar", func() -> void: if _rig: _rig.ajustar_zoom(3.0)]])
 	if partido != null:
-		_btn_modo = Button.new()
-		_btn_modo.text = "🎮 Modo: Manager"
-		_btn_modo.custom_minimum_size = Vector2(0, 32)
-		_btn_modo.pressed.connect(_alternar_modo_control)
-		barra.add_child(_btn_modo)
-
-		_btn_velocidad = Button.new()
-		_btn_velocidad.custom_minimum_size = Vector2(0, 32)
-		_btn_velocidad.pressed.connect(_ciclar_velocidad)
-		barra.add_child(_btn_velocidad)
-	_boton(barra, "Volver", func() -> void: cerrado.emit())
+		_cajon.seccion("Partido")
+		_btn_modo = _cajon.boton("🎮 Modo: Manager", _alternar_modo_control)
+		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
+		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
+		## simular el partido entero"). Existía en la pantalla de texto, que
+		## queda oculta mientras se ve el 3D. Juega todos los minutos que
+		## faltan -descanso incluido- y vuelve al resumen.
+		_cajon.boton("⏭ Simular hasta el final", func() -> void:
+			_descanso_hecho = true
+			while not partido.terminado_ya:
+				partido.simular_minuto()
+			cerrado.emit())
+	_cajon.seccion("En pantalla")
+	_cajon.interruptor("🏷 Nombres de los jugadores", PlayerSpawner.mostrar_nombres, _mostrar_nombres)
+	_cajon.interruptor("📺 Pantalla del estadio en la esquina", _pref("pantalla_esquina", true), func(si: bool) -> void:
+		_guardar_pref("pantalla_esquina", si)
+		_mini_pantalla.visible = si and _mini_pantalla.texture != null)
+	_cajon.interruptor("🗺 Radar táctico", _radar.visible, func(si: bool) -> void:
+		_radar.visible = si
+		_guardar_pref("radar", si))
+	_cajon.interruptor("📺 Rótulos de las jugadas", _pref("rotulos", true), func(si: bool) -> void:
+		_guardar_pref("rotulos", si)
+		if _rotulo_jugada != null and not si:
+			_rotulo_jugada.modulate.a = 0.0)
+	_cajon.interruptor("🎞 Viñeta de transmisión", _vineta.visible, func(si: bool) -> void:
+		_vineta.visible = si
+		_guardar_pref("vineta", si))
+	_cajon.interruptor("ℹ Ficha del estadio abajo", _pref("pie", true), func(si: bool) -> void:
+		_pie.visible = si
+		_guardar_pref("pie", si))
+	_cajon.interruptor("🎬 Presentación antes del partido", _pref("intro", true), func(si: bool) -> void:
+		_guardar_pref("intro", si))
+	_cajon.interruptor("🔁 Repetición de los goles", _pref("repeticiones", true), func(si: bool) -> void:
+		_guardar_pref("repeticiones", si))
+	_cajon.interruptor("⚡ Calidad automática", Calidad.adaptativa, func(si: bool) -> void:
+		Calidad.adaptativa = si)
+	_cajon.seccion("Sonido")
+	_cajon.deslizador("Grada y ambiente", float(Sonido.volumen.get(Sonido.Bus.AMBIENTE, 0.5)), func(v: float) -> void:
+		Sonido.volumen[Sonido.Bus.AMBIENTE] = v)
+	_cajon.deslizador("Efectos (balón, silbato)", float(Sonido.volumen.get(Sonido.Bus.EFECTOS, 0.8)), func(v: float) -> void:
+		Sonido.volumen[Sonido.Bus.EFECTOS] = v)
+	_cajon.deslizador("Música", Musica.volumen, func(v: float) -> void:
+		Musica.volumen = v
+		Musica.aplicar_volumen())
 
 	_pie = Label.new()
 	_pie.add_theme_font_size_override("font_size", 13)
@@ -226,15 +328,98 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_pie.offset_left = 18
 	_pie.offset_bottom = -14
 	_pie.offset_top = -34
+	_pie.visible = _pref("pie", true)
 	add_child(_pie)
 	_actualizar_pie(perfil, aforo, ocupacion)
 
-func _boton(padre: Node, texto: String, accion: Callable) -> void:
-	var b := Button.new()
-	b.text = texto
-	b.custom_minimum_size = Vector2(0, 32)
-	b.pressed.connect(accion)
-	padre.add_child(b)
+## `fixed_size` compensa la DISTANCIA, no el zoom: con "Tele Dinámica" (campo
+## de visión estrecho) los nombres salían tres veces más grandes que con la de
+## TV. Se reescalan con la tangente del campo de visión de la cámara activa,
+## tomando la de TV (46°) como referencia. Solo cuando cambia el campo de visión.
+var _fov_rotulos := -1.0
+
+func _escalar_rotulos() -> void:
+	if not PlayerSpawner.mostrar_nombres:
+		return
+	var cam := get_viewport().get_camera_3d()
+	if cam == null or is_equal_approx(cam.fov, _fov_rotulos):
+		return
+	_fov_rotulos = cam.fov
+	var tam := PlayerSpawner.TAM_ROTULO * tan(deg_to_rad(cam.fov) * 0.5) / tan(deg_to_rad(46.0) * 0.5)
+	for f: Dictionary in _en_campo:
+		var n: Node3D = f.get("node")
+		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO):
+			var rot := n.get_node(PlayerSpawner.ROTULO) as Label3D
+			rot.pixel_size = tam
+			if rot.has_node(PlayerSpawner.BARRA):
+				(rot.get_node(PlayerSpawner.BARRA) as Label3D).pixel_size = tam
+
+## RÓTULOS SIN AMONTONAR (MEGAPLAN fase 1): en las jugadas de área los
+## nombres se pisaban. Cada décima de segundo se proyectan a la pantalla y, si
+## dos se tocan, queda el del jugador más cerca del balón. El que ya se veía
+## tiene ventaja (si no, parpadeaban al cruzarse dos jugadores).
+var _t_despeje := 0.0
+
+func _despejar_rotulos(delta: float) -> void:
+	if not PlayerSpawner.mostrar_nombres:
+		return
+	_t_despeje -= delta
+	if _t_despeje > 0.0:
+		return
+	_t_despeje = 0.1
+	var cam := get_viewport().get_camera_3d()
+	if cam == null:
+		return
+	var bpos := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
+	var vh := get_viewport().get_visible_rect().size.y
+	var lista: Array = []
+	for f: Dictionary in _en_campo:
+		var n: Node3D = f.get("node")
+		if not is_instance_valid(n) or not n.has_node(PlayerSpawner.ROTULO):
+			continue
+		var rot := n.get_node(PlayerSpawner.ROTULO) as Label3D
+		if cam.is_position_behind(rot.global_position):
+			rot.visible = false
+			continue
+		var prio := n.global_position.distance_to(bpos) * (0.75 if rot.visible else 1.0)
+		lista.append([prio, rot])
+	lista.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+	## Con `fixed_size`, píxeles de pantalla por unidad del rótulo.
+	var k := vh / (2.0 * tan(deg_to_rad(cam.fov) * 0.5))
+	var puestos: Array[Rect2] = []
+	for e: Array in lista:
+		var rot: Label3D = e[1]
+		var c := cam.unproject_position(rot.global_position)
+		var px := rot.pixel_size * k
+		var caja := Rect2(c - Vector2(rot.text.length() * 0.3 * rot.font_size * px, 0.5 * rot.font_size * px),
+			Vector2(rot.text.length() * 0.6 * rot.font_size * px, 1.9 * rot.font_size * px))
+		var choca := false
+		for q: Rect2 in puestos:
+			if q.grow(-2.0).intersects(caja):
+				choca = true
+				break
+		rot.visible = not choca
+		if not choca:
+			puestos.append(caja)
+
+## La energía bajo cada nombre, una vez por minuto simulado.
+var _minuto_barras := -1
+
+func _actualizar_barras() -> void:
+	if not PlayerSpawner.mostrar_nombres:
+		return
+	for f: Dictionary in _en_campo:
+		var n: Node3D = f.get("node")
+		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO + "/" + PlayerSpawner.BARRA):
+			PlayerSpawner.actualizar_barra(n.get_node(PlayerSpawner.ROTULO + "/" + PlayerSpawner.BARRA) as Label3D, _minuto_barras)
+
+func _mostrar_nombres(si: bool) -> void:
+	PlayerSpawner.mostrar_nombres = si
+	_fov_rotulos = -1.0
+	for f: Dictionary in _en_campo:
+		var n: Node3D = f.get("node")
+		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO):
+			(n.get_node(PlayerSpawner.ROTULO) as Node3D).visible = si
 
 ## Cicla Pausa → Lento → Normal → Rápido → x4 → Pausa. `mas_rapido()` no
 ## envuelve -se queda en el último escalón-, así que al llegar a x4 hay que
@@ -248,11 +433,36 @@ func _ciclar_velocidad() -> void:
 		_juego.mas_rapido()
 	_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 
+## 47000 -> "47.000", como se escribe en español.
+func _miles(n: int) -> String:
+	var t := str(n)
+	var out := ""
+	while t.length() > 3:
+		out = "." + t.substr(t.length() - 3) + out
+		t = t.substr(0, t.length() - 3)
+	return t + out
+
+## Preferencias de lo que se ve sobre la transmisión, en el mismo archivo que
+## el resto de ajustes (`user://ajustes.cfg`, sección `hud`).
+func _pref(k: String, por_defecto: bool) -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.load(CajonAjustes.RUTA) != OK:
+		return por_defecto
+	return bool(cfg.get_value(CajonAjustes.SECCION, k, por_defecto))
+
+func _guardar_pref(k: String, v: bool) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, k, v)
+	cfg.save(CajonAjustes.RUTA)
+
 func _rotar_camara() -> void:
 	if _rig != null:
 		_rig.cycle()
+		if _btn_camara != null:
+			_btn_camara.text = "📷 Cámara: " + _rig.current_name()
 		if _pie != null:
-			_pie.text = _pie_base + "  ·  camara: " + _rig.current_name()
+			_pie.text = _pie_base + "  ·  cámara: " + _rig.current_name()
 
 func _actualizar_pie(perfil: Dictionary, aforo: int, ocupacion: float) -> void:
 	_pie_base = "%s  ·  %s de %d niveles  ·  techo %s  ·  %d butacas, %d%% de ocupación" % [
@@ -288,9 +498,10 @@ func _sacar_los_22() -> void:
 		Puente3D.kit(club), Puente3D.kit_portero(club)))
 	_en_campo.append_array(_spawner.spawn_team(_raiz3d, v["xi"], v["jugadores"],
 		Puente3D.formacion(visitante.tactica.formacion), false,
-		Puente3D.kit(visitante), Puente3D.kit_portero(visitante)))
+		Puente3D.kit_visita(club, visitante), Puente3D.kit_portero(visitante)))
 	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d))
 	_poner_banca(once_local, once_visita)
+	_poner_personal()
 	_purgar_nodos_fantasma()
 
 ## LA BANDA YA NO ESTÁ VACÍA (22-9-2026). Hasta hoy solo se veían los 22 +
@@ -310,17 +521,61 @@ func _poner_banca(once_local: Array[Jugador], once_visita: Array[Jugador]) -> vo
 ## Los primeros 7 disponibles, de pie; del 8 al 12, sentados en el banco
 ## simple de al lado (22-9-2026, "que los que no caben estén sentados").
 func _poner_banca_de(c: Club, once_c: Array[Jugador], es_local: bool) -> void:
-	var disponibles := _disponibles_fuera_del_once(c, once_c)
+	_en_banca.append_array(VistaEstadio.poner_banca_de(_raiz3d, _spawner, c, once_c, es_local))
+
+## Estática para que la reutilice el partido jugable de la Carrera de Jugador:
+## la misma banda, el mismo DT, sin copiar código.
+static func poner_banca_de(raiz: Node3D, sp: PlayerSpawner, c: Club, once_c: Array, es_local: bool) -> Array:
+	var disponibles := disponibles_fuera_del_once(c, once_c)
 	var kit := Puente3D.kit(c)
 	var kit_por := Puente3D.kit_portero(c)
-	_en_banca.append_array(_spawner.spawn_banca(_raiz3d, disponibles, es_local, kit, kit_por))
+	var out: Array = sp.spawn_banca(raiz, disponibles, es_local, kit, kit_por)
+	poner_dt(raiz, c, es_local, mini(disponibles.size(), 7))
 	if disponibles.size() > 7:
-		_en_banca.append_array(_spawner.spawn_sentados(_raiz3d,
-			disponibles.slice(7, 12), es_local, kit, kit_por))
+		out.append_array(sp.spawn_sentados(raiz, disponibles.slice(7, 12), es_local, kit, kit_por))
+	return out
+
+## EL ENTRENADOR EN LA BANDA (26-9-2026): tu personaje del creador en el
+## área técnica de tu club, y un DT rival (siempre el mismo por club) en la
+## otra. Delante de su fila de suplentes, del lado del centro del campo.
+## CAMARÓGRAFOS Y GUARDIAS DE VERDAD (26-9-2026). El constructor deja a cada
+## operador como un maniquí de cajas con su cámara; aquí se oculta el maniquí
+## y se pone una persona entera detrás de la cámara. Y seis guardias de
+## seguridad detrás de las vallas, de espaldas al juego, mirando a la grada.
+func _poner_personal() -> void:
+	VistaEstadio.poner_personal(_raiz3d)
+
+static func poner_personal(raiz: Node3D) -> void:
+	if raiz == null:
+		return
+	var _raiz3d := raiz
+	var i := 0
+	for cam in _raiz3d.find_children("Camarografo*", "Node3D", true, false):
+		var base := cam as Node3D
+		var d := PersonajeDT.personal_estadio(_raiz3d, "prensa", base.position - base.basis.z * 0.12, base.rotation.y, 700 + i)
+		if not d.is_empty():
+			for mi in base.find_children("*", "MeshInstance3D", false, false):
+				if mi.has_meta("cuerpo"):
+					(mi as Node3D).visible = false
+		i += 1
+	var puestos := [
+		[Vector3(-38.8, 0, -36.0), -PI * 0.5], [Vector3(-38.8, 0, -12.0), -PI * 0.5],
+		[Vector3(-38.8, 0, 12.0), -PI * 0.5], [Vector3(-38.8, 0, 36.0), -PI * 0.5],
+		[Vector3(0.0, 0, 57.0), 0.0], [Vector3(0.0, 0, -57.0), PI],
+	]
+	for k in puestos.size():
+		## El giro es hacia FUERA del campo: la persona mira a +Z sin girar.
+		PersonajeDT.personal_estadio(_raiz3d, "seguridad", puestos[k][0], puestos[k][1], 900 + k)
+
+static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int) -> void:
+	var asp: Dictionary = PersonajeDT.del_usuario if c.id == PersonajeDT.club_usuario else PersonajeDT.de_rival(c.id)
+	var lado := -1.0 if es_local else 1.0
+	var z := lado * 14.0 - lado * (float(maxi(cuantos, 1)) * 0.8 + 1.8)
+	PersonajeDT.poner_en_banda(_raiz3d, asp, Color(c.color1), Color(c.color2), Vector3(34.6, 0, z), -PI * 0.5)
 
 ## Mejores disponibles (sin lesión/sanción, no en el once) por media, para que
 ## la banca se vea como un banco de verdad y no como un sorteo cualquiera.
-func _disponibles_fuera_del_once(c: Club, once_c: Array[Jugador]) -> Array:
+static func disponibles_fuera_del_once(c: Club, once_c: Array) -> Array:
 	var fuera: Array = []
 	for j in c.plantilla:
 		if once_c.has(j):
@@ -354,6 +609,9 @@ func _montar_pantalla() -> void:
 	_pantalla.montar(club, visitante, partido, datos_pantalla, recinto)
 
 	var tex := _pantalla.get_texture()
+	if _mini_pantalla != null:
+		_mini_pantalla.texture = tex
+		_mini_pantalla.visible = _pref("pantalla_esquina", true)
 	for p: MeshInstance3D in pantallas:
 		var mat := StandardMaterial3D.new()
 		mat.albedo_texture = tex
@@ -397,9 +655,39 @@ func _arrancar_partido() -> void:
 	var fv: float = partido.fuerza(partido.once_visita, partido.visita)["ata"]
 	var pos := 100.0 * fl / maxf(fl + fv, 0.001)
 	_juego.setup([], _en_campo, Partido.MINUTOS, pos, _balon, club.tactica, visitante.tactica)
+	## EL RELOJ EMPIEZA DONDE VA EL PARTIDO (28-9-2026). Al reabrir el 3D a
+	## mitad de partido -tras el descanso, o con "Volver" y "Ver en 3D"- la
+	## reproducción arrancaba en el 0' con el partido ya en el 45': durante
+	## 45 minutos de reloj no se simulaba nada y parecía colgado ("después de
+	## la charla del medio tiempo no deja continuar").
+	_juego.elapsed = float(partido.minuto) * _juego.seconds_per_minute
+	_descanso_hecho = partido.minuto >= 45
+	## La cámara del árbitro sigue su cabeza.
+	var arb: Variant = _juego.players_by_id.get("arbitro")
+	if arb is Dictionary and _rig != null:
+		_rig.arbitro_ref = (arb as Dictionary).get("node")
+	## La sala VAR, cuando el árbitro pide revisar.
+	_juego.revision_var.connect(_a_la_revision_var)
+	## La repetición del gol (plan maestro B3): graba siempre los últimos
+	## segundos de los 22 y del balón.
+	_repe = Repeticion.new()
+	add_child(_repe)
+	_repe.setup(_en_campo, _balon)
+	_repe.terminada.connect(func() -> void:
+		if _rotulo_repe != null:
+			_rotulo_repe.visible = false)
+	_juego.jugada_ambiente.connect(_al_jugada_ambiente)
 	if _btn_velocidad != null:
 		_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 	partido.gol.connect(_al_gol)
+	partido.gol.connect(func(_c: Club, _a: Jugador, _m: int, _as: Jugador) -> void: _frenar_destacado())
+	partido.remate.connect(func(_c: Club, _a: Jugador, _t: String, _m: int) -> void: _frenar_destacado())
+	partido.invasion_de_campo.connect(func(_m: int) -> void:
+		_mostrar_banner_gol("🚨 INVASIÓN DE CAMPO", false))
+	if modo_destacados:
+		_juego.vel_idx = VEL_DESTACADOS_RAPIDO
+		if _btn_velocidad != null:
+			_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 	partido.tarjeta.connect(_a_la_tarjeta)
 	partido.cambio_hecho.connect(_al_cambio)
 	partido.remate.connect(_al_remate)
@@ -410,6 +698,25 @@ func _arrancar_partido() -> void:
 	## juega- nunca reproducía.
 	Sonido.toca("saque_inicial")
 	Sonido.toca("murmullo", Sonido.Bus.AMBIENTE)
+	## SONIDOS QUE EXISTÍAN Y NUNCA SONABAN (25-9-2026): de los 205 del
+	## catálogo, 157 no tenían ningún disparador. Aquí los del partido: la
+	## salida del túnel, el ambiente según el clima del estadio, los tiempos
+	## del reloj y los goles especiales.
+	if partido.minuto == 0:
+		Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
+	## La presentación: vuelo de cámara con el rótulo del partido (B3).
+	if _pref("intro", true) and partido.minuto == 0:
+		var gi := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+		var nombre_est := club.estadio_nombre if club.estadio_nombre != "" else "Estadio de %s" % club.nombre
+		_intro = IntroPartido.iniciar(self, float(gi["dx"]), float(gi["dz"]), 20.0,
+			"%s  vs  %s" % [club.nombre, visitante.nombre],
+			"%s  ·  %s butacas" % [nombre_est, _miles(club.estadio_aforo)])
+	var clima := String(_perfil.get("clima", "noche"))
+	var por_clima := {"lluvia": "lluvia_ambiente", "tormenta": "trueno", "niebla": "niebla_ambiente",
+		"nieve": "frio_extremo", "noche": "noche_estadio", "dia": "dia_soleado", "tarde": "eco_estadio"}
+	if por_clima.has(clima):
+		Sonido.toca(String(por_clima[clima]), Sonido.Bus.AMBIENTE)
+	partido.minuto_jugado.connect(_al_minuto_sonoro)
 	## Semilla fija por partido (mismo criterio que `_rng` en MatchPlayback):
 	## repetible si se reabre el mismo partido, pero sin tocar `Azar`.
 	_rng_ambiente.seed = hash("ambiente") + partido.local.id.hash() + partido.visita.id.hash()
@@ -435,14 +742,14 @@ func _arrancar_partido() -> void:
 	## `set_anchors_preset(..., keep_offsets)` tampoco: ese `keep_offsets`
 	## RECALCULA los offsets para conservar el rectángulo actual, así que pisa lo
 	## que se le ponga justo después. Puestas las cuatro anclas y los cuatro
-	## offsets a mano no hay ambigüedad: 0.5 en horizontal es el centro, y los
-	## offsets son metros a cada lado de ese centro.
-	caja.anchor_left = 0.5
-	caja.anchor_right = 0.5
+	## offsets a mano no hay ambigüedad. Desde el 25-9 va arriba a la izquierda
+	## (la barra de botones pasó a la derecha), con 380 px de ancho.
+	caja.anchor_left = 0.0
+	caja.anchor_right = 0.0
 	caja.anchor_top = 0.0
 	caja.anchor_bottom = 0.0
-	caja.offset_left = -190
-	caja.offset_right = 190
+	caja.offset_left = 18
+	caja.offset_right = 398
 	caja.offset_top = 12
 	caja.offset_bottom = 54
 	add_child(caja)
@@ -459,6 +766,49 @@ func _arrancar_partido() -> void:
 	_refrescar_marcador()
 
 	_crear_banner_gol()
+	_crear_rotulo_jugada()
+
+## EL RÓTULO DE LA JUGADA (25-9-2026): como en la tele, cuando un equipo
+## construye una jugada del catálogo aparece su nombre debajo del marcador
+## ("▸ PARED FRONTAL 1-2"), con el color del equipo, y se va solo.
+var _rotulo_jugada: PanelContainer
+var _lbl_jugada: Label
+var _tween_jugada: Tween
+
+func _crear_rotulo_jugada() -> void:
+	_rotulo_jugada = PanelContainer.new()
+	var e := StyleBoxFlat.new()
+	e.bg_color = Color(0, 0, 0, 0.62)
+	e.border_width_left = 4
+	e.border_color = Color("c9a227")
+	e.set_corner_radius_all(4)
+	e.content_margin_left = 12; e.content_margin_right = 14
+	e.content_margin_top = 4; e.content_margin_bottom = 4
+	_rotulo_jugada.add_theme_stylebox_override("panel", e)
+	_rotulo_jugada.anchor_left = 0.0
+	_rotulo_jugada.anchor_right = 0.0
+	_rotulo_jugada.offset_left = 18
+	_rotulo_jugada.offset_top = 60
+	_rotulo_jugada.modulate.a = 0.0
+	_rotulo_jugada.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_rotulo_jugada)
+	_lbl_jugada = Label.new()
+	_lbl_jugada.add_theme_font_size_override("font_size", 14)
+	_lbl_jugada.add_theme_color_override("font_color", Color("e9eeea"))
+	_rotulo_jugada.add_child(_lbl_jugada)
+
+func _al_jugada_ambiente(nombre: String, es_local: bool) -> void:
+	if _rotulo_jugada == null or not _pref("rotulos", true):
+		return
+	var equipo: Club = club if es_local else visitante
+	(_rotulo_jugada.get_theme_stylebox("panel") as StyleBoxFlat).border_color = Color(equipo.color1) if equipo != null else Color("c9a227")
+	_lbl_jugada.text = "▸ %s  ·  %s" % [nombre.to_upper(), equipo.nombre if equipo != null else ""]
+	if _tween_jugada != null and _tween_jugada.is_valid():
+		_tween_jugada.kill()
+	_tween_jugada = create_tween()
+	_tween_jugada.tween_property(_rotulo_jugada, "modulate:a", 1.0, 0.25)
+	_tween_jugada.tween_interval(3.2)
+	_tween_jugada.tween_property(_rotulo_jugada, "modulate:a", 0.0, 0.6)
 
 ## Sonidos de grada sin evento puntual detras -el "ruido de fondo con vida"
 ## que faltaba-. Uno por bloque para no repetir siempre el mismo: percusion,
@@ -477,14 +827,46 @@ func _tocar_ambiente() -> void:
 	else:
 		Sonido.toca("abucheo", Sonido.Bus.AMBIENTE)
 
+func _frenar_destacado() -> void:
+	if not modo_destacados or _juego == null or _juego.vel_idx == 0:
+		return
+	_juego.vel_idx = VEL_DESTACADOS_JUGADA
+	_destacado_hasta_ms = Time.get_ticks_msec() + int(SEG_DESTACADO * 1000.0)
+	if _btn_velocidad != null:
+		_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
+
 func _process(delta: float) -> void:
+	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
+	_escalar_rotulos()
+	_despejar_rotulos(delta)
 	if _juego == null or partido == null:
 		return
+	## Durante la repetición y la presentación el partido está CONGELADO: ni
+	## reloj ni minutos.
+	if _repe != null and _repe.reproduciendo:
+		return
+	if _intro != null and _intro.activa:
+		return
+	if _destacado_hasta_ms > 0 and Time.get_ticks_msec() >= _destacado_hasta_ms:
+		_destacado_hasta_ms = -1
+		if _juego.vel_idx == VEL_DESTACADOS_JUGADA:
+			_juego.vel_idx = VEL_DESTACADOS_RAPIDO
+			if _btn_velocidad != null:
+				_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 	_juego.tick(delta)
 	## El reloj de la reproducción manda: cuando cruza un minuto, se le pide otro
 	## minuto al partido. Nunca al revés, y nunca los dos a la vez.
 	while partido.minuto < _juego.current_minute() and not partido.terminado_ya:
 		partido.simular_minuto()
+		## EL DESCANSO TAMBIÉN EN 3D: al 45 se vuelve al camarín (charla,
+		## cambios, pizarra) y "Salir a la segunda parte" reabre el estadio.
+		if parar_en_descanso and not _descanso_hecho and partido.minuto >= 45:
+			_descanso_hecho = true
+			cerrado.emit()
+			return
+	if partido.minuto != _minuto_barras:
+		_minuto_barras = partido.minuto
+		_actualizar_barras()
 	_refrescar_marcador()
 
 	if _juego.elapsed >= _prox_ambiente:
@@ -581,8 +963,33 @@ func _corto(n: String) -> String:
 			return parte
 	return n.substr(0, 14)
 
+## Cuánto se espera tras el gol antes de repetirlo: el remate, el balón en la
+## red y el primer festejo se ven en vivo; después, la repetición.
+const SEG_ANTES_REPETICION := 6.0
+var _repe: Repeticion
+var _intro: IntroPartido
+var _rotulo_repe: PanelContainer
+
+func _repetir_gol() -> void:
+	if _repe == null or not _pref("repeticiones", true) or partido == null or partido.terminado_ya:
+		return
+	if _repe.reproducir(9.0):
+		if _rotulo_repe == null:
+			_rotulo_repe = PanelContainer.new()
+			var st := Tema.caja(Color(0.55, 0.08, 0.08, 0.9), Tema.RADIO_CHICO, Color(1, 1, 1, 0.2))
+			_rotulo_repe.add_theme_stylebox_override("panel", st)
+			var l := Tema.etiqueta(16, Color.WHITE, "⟲  REPETICIÓN")
+			_rotulo_repe.add_child(l)
+			add_child(_rotulo_repe)
+			_rotulo_repe.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+			_rotulo_repe.offset_top = 70
+			_rotulo_repe.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		_rotulo_repe.visible = true
+		Animar.aparecer(_rotulo_repe)
+
 func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) -> void:
 	var a_favor := c == club
+	get_tree().create_timer(SEG_ANTES_REPETICION).timeout.connect(_repetir_gol)
 	_juego.suceso({
 		"min": minuto, "t": "golMi" if a_favor else "golR",
 		"equipo": "local" if a_favor else "visita",
@@ -598,7 +1005,19 @@ func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) ->
 	## sí tenía sus propios `Sonido.toca()`, este visor no-. `a_favor` aquí
 	## significa "anotó el club dueño de ESTE estadio" -es la bocina de SU
 	## recinto, no una noción de "mi club" que este visor no conoce-.
+	## Goles con nombre propio: el doblete, el hat-trick, el tempranero y el
+	## agónico tienen su propio grito encima del de siempre.
+	if autor != null:
+		_goles_autor[autor.id] = int(_goles_autor.get(autor.id, 0)) + 1
+		match int(_goles_autor[autor.id]):
+			2: Sonido.toca("doblete", Sonido.Bus.AMBIENTE)
+			3: Sonido.toca("hat_trick", Sonido.Bus.AMBIENTE)
+	if minuto <= 3:
+		Sonido.toca("gol_rapido", Sonido.Bus.AMBIENTE)
+	elif minuto >= 86:
+		Sonido.toca("gol_agonico", Sonido.Bus.AMBIENTE)
 	if a_favor:
+		Sonido.toca("festejo_hinchada_extra", Sonido.Bus.AMBIENTE)
 		var estilo := String(_perfil.get("sonidoGol", "bombo"))
 		Sonido.toca("gol_" + estilo if Sonido.catalogo().has("gol_" + estilo) else "gol")
 	else:
@@ -609,6 +1028,7 @@ func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) ->
 	## a su rotación a los 6,5 s -igual que la de un estadio de verdad-.
 	if _pantalla != null:
 		_pantalla.al_gol(c, autor, minuto)
+	_vallas_evento(["¡GOOOL!", c.nombre.to_upper()], c)
 	_seguir_jugada_gol(autor)
 	## EL BANQUILLO REACCIONA (22-9-2026). `a_favor` aquí es "el dueño de este
 	## estadio anotó", no necesariamente el club local en la cancha -mismo
@@ -680,9 +1100,11 @@ func _banca_celebra(es_local: bool) -> void:
 			continue
 		if ap.has_animation("celebrar"):
 			ap.play("celebrar")
+		## Vuelve a lo suyo: "parado", o las dominadas si estaba calentando.
+		var reposo := String(f.get("reposo_anim", "parado"))
 		get_tree().create_timer(3.0).timeout.connect(func() -> void:
-			if is_instance_valid(ap) and ap.has_animation("parado"):
-				ap.play("parado"))
+			if is_instance_valid(ap) and ap.has_animation(reposo):
+				ap.play(reposo))
 
 func _a_la_tarjeta(j: Jugador, roja: bool, minuto: int) -> void:
 	Sonido.toca("roja" if roja else "amarilla")
@@ -690,14 +1112,25 @@ func _a_la_tarjeta(j: Jugador, roja: bool, minuto: int) -> void:
 		"min": minuto, "t": "warn",
 		"equipo": "local" if j.club_id == club.id else "visita",
 		"tx": ("ROJA a " if roja else "Amarilla a ") + j.nombre,
+		"roja": roja,
 		"jugadorId": j.id,
 	})
 
 ## Un cambio en el campo: sale uno y entra otro DE VERDAD, no solo en la lista.
 ## Al que sale se le quita el modelo y al que entra se le crea en la ranura que
 ## deja libre, para que el once que se ve sea el once que juega.
+## Las vallas LED cortan al mensaje con los colores del club (`VallasLed.evento`).
+func _vallas_evento(palabras: Array, c: Club, seg: float = 6.0) -> void:
+	var led := _raiz3d.find_child("VallasLed", true, false) as VallasLed if _raiz3d != null else null
+	if led == null or c == null:
+		return
+	led.evento(palabras, Color(c.color1), Color(c.color2), seg)
+
 func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 	Sonido.toca("cambio")
+	var del_cambio: Club = club if club != null and club.plantilla.has(entra) else visitante
+	_vallas_evento(["CAMBIO", "⬆ %s" % entra.nombre.get_slice(" ", entra.nombre.get_slice_count(" ") - 1).to_upper(),
+		"⬇ %s" % sale.nombre.get_slice(" ", sale.nombre.get_slice_count(" ") - 1).to_upper()], del_cambio, 4.0)
 	## Si `entra` era uno de los 7 de la banca visual, se le quita el modelo
 	## de ahí antes de crearle uno en la cancha -si no, quedaría duplicado:
 	## uno de pie junto al banquillo y otro jugando, el mismo jugador dos
@@ -738,6 +1171,7 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 		nf["slot_code"] = f["slot_code"]
 		nf["es_local"] = es_local
 		_en_campo[i] = nf
+		_fov_rotulos = -1.0
 		_juego.players = _en_campo
 		_juego.players_by_id[entra.id] = nf
 		_juego.players_by_id.erase(sale.id)
@@ -764,8 +1198,12 @@ func _al_remate(c: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 	## esa noción, y hasta hoy ninguna de las dos vivía aquí.
 	if c == club:
 		match tipo:
-			"atajada": Sonido.toca("atajada")
-			"poste": Sonido.toca("ocasion")
+			"atajada":
+				Sonido.toca("atajada")
+				Sonido.toca("alarido_atajada", Sonido.Bus.AMBIENTE)
+			"poste":
+				Sonido.toca("travesano" if minuto % 2 == 0 else "ocasion")
+				Sonido.toca("suspiro_grada", Sonido.Bus.AMBIENTE)
 			## BUG REAL ENCONTRADO Y CORREGIDO (21-9-2026): un remate desviado no
 			## sonaba NADA -la rama por defecto solo hacia `pass`- pese a que
 			## `Sonido` ya trae "remate_fuera" sintetizado y sin usar en ningun
@@ -783,11 +1221,24 @@ func _al_remate(c: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 		"jugadorId": autor.id if autor else "",
 	})
 
+var _goles_autor := {}
+
+## Los tiempos del partido, a oído: el descanso, la vuelta, el último minuto,
+## el descuento, y la grada que se pone tensa en un final apretado.
+func _al_minuto_sonoro(minuto: int) -> void:
+	match minuto:
+		45: Sonido.toca("medio_tiempo")
+		46: Sonido.toca("reanudacion")
+		89: Sonido.toca("ultimo_minuto", Sonido.Bus.AMBIENTE)
+		90: Sonido.toca("descuento_anunciado")
+	if minuto >= 80 and minuto % 4 == 0 and absi(partido.goles_local - partido.goles_visita) <= 1:
+		Sonido.toca("tension_publico", Sonido.Bus.AMBIENTE)
+
 func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 	if _juego == null:
 		return
 	if j.club_id == club.id:
-		Sonido.toca("lesion")
+		Sonido.toca("lesion_grave" if semanas >= 6 else "lesion")
 	_juego.suceso({
 		"min": minuto,
 		"t": "lesion",
@@ -795,6 +1246,23 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 		"tx": "¡Lesión de %s! (%d sem)" % [j.nombre, semanas],
 		"jugadorId": j.id,
 	})
+
+## LA SALA VAR (26-9-2026): el partido se para, se ve la sala por dentro con
+## los monitores mostrando la jugada desde cuatro cámaras, y se sigue.
+var _sala_var: SalaVAR = null
+
+func _a_la_revision_var(minuto: int, motivo: String) -> void:
+	if _sala_var != null or _raiz3d == null:
+		return
+	var vel_antes := _juego.vel_idx if _juego != null else 2
+	if _juego != null:
+		_juego.vel_idx = 0
+	var foco := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
+	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo)
+	_sala_var.terminada.connect(func() -> void:
+		_sala_var = null
+		if _juego != null:
+			_juego.vel_idx = maxi(vel_antes, 1))
 
 func _a_la_decision_arbitral(texto: String, minuto: int) -> void:
 	if _juego == null:

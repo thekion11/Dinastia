@@ -28,10 +28,8 @@ extends RefCounted
 ## aquí se hace bien desde el principio.
 ##   {"suave", "texto", "acento", "verde", "rojo", "escala"}
 ##
-## Sin `Ficcion.limpiar()` en los nombres de club, igual que el resto de
-## `principal.gd` fuera de `PanelMercado`: el renombrado legal solo se
-## extendió ahí por ahora, es una decisión pendiente de confirmar, no un
-## descuido de esta extracción.
+## Los nombres se pintan tal cual: lo legal se resuelve en los DATOS (base
+## ficticia por defecto, pack real opcional -ver `Datos`-), no en cada pantalla.
 
 ## Qué título le corresponde a la columna. Vive FUERA del `VBoxContainer` que
 ## pinta `pintar()` -el título no se mueve con el scroll, por diseño de

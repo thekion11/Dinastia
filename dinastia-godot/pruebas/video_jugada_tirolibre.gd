@@ -43,7 +43,7 @@ func _process(_d: float) -> void:
 			juego._tirolibre_pendiente.is_empty(), " disparo_vacio=", juego._disparo_pendiente.is_empty(),
 			" ball_pos=", (juego.ball as Node3D).position if juego.ball else "?")
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/tirolibre_f%d.png" % _frame)
+		img.save_png("res://pruebas/capturas/tirolibre_f%d.png" % _frame)
 	if _frame >= 160:
 		print("FIN. 0 fallos")
 		get_tree().quit(0)

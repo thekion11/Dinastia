@@ -27,22 +27,22 @@ func _process(_d: float) -> void:
 		_pantalla.call("_ir_a_pestana", "Táctica")
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 3:
-		_guardar("res://pruebas/pantalla_tactica.png")
+		_guardar("res://pruebas/capturas/pantalla_tactica.png")
 	if _n == ESPERA + 5:
 		_pantalla.call("_elegir_grupo", "club")
 		_pantalla.call("_ir_a_pestana", "Estadio")
 	if _n == ESPERA + 7:
-		_guardar("res://pruebas/pantalla_hinchada.png")
+		_guardar("res://pruebas/capturas/pantalla_hinchada.png")
 	if _n == ESPERA + 9:
 		_pantalla.call("_elegir_grupo", "finanzas")
 		_pantalla.call("_ir_a_pestana", "Finanzas")
 	if _n == ESPERA + 11:
-		_guardar("res://pruebas/pantalla_contabilidad.png")
+		_guardar("res://pruebas/capturas/pantalla_contabilidad.png")
 	if _n == ESPERA + 13:
 		_pantalla.call("_elegir_grupo", "plantel")
 		_pantalla.call("_ir_a_pestana", "Entrenar")
 	if _n == ESPERA + 15:
-		_guardar("res://pruebas/pantalla_entrenar_plus.png")
+		_guardar("res://pruebas/capturas/pantalla_entrenar_plus.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

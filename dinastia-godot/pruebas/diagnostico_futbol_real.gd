@@ -77,11 +77,11 @@ func _process(_delta: float) -> void:
 		_ap.seek(float(SECUENCIA[_i][1]), true)
 	if _frame_desde_clip == 9:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/futbol_real_%s_frente.png" % SECUENCIA[_i][0])
+		img.save_png("res://pruebas/capturas/futbol_real_%s_frente.png" % SECUENCIA[_i][0])
 		_cam_lado.current = true
 	if _frame_desde_clip == 12:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/futbol_real_%s_lado.png" % SECUENCIA[_i][0])
+		img2.save_png("res://pruebas/capturas/futbol_real_%s_lado.png" % SECUENCIA[_i][0])
 		print("capturado ", SECUENCIA[_i][0], " tiene_animacion=", _ap.has_animation(SECUENCIA[_i][0]))
 		_cam_frente.current = true
 		_siguiente()

@@ -64,7 +64,13 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"semana": m.semana,
 		"horario": m.horario,
 		"mi_club": m.mi_club_id,
+		## Con qué base se creó el mundo: la ficticia o el pack real. Al cargar
+		## se vuelve a poner la misma, para que lo que se busca por nombre de
+		## club (equipaciones reales, plantillas) siga cuadrando.
+		"base_real": Datos.base_real,
 		"desafios": m.desafios,
+		"reto": m.reto,
+		"fondo": m.fondo.a_dic() if m.fondo != null else {},
 		"clubes": [],
 		"ligas": [],
 		"copa": _copa_a_dic(m.copa),
@@ -82,6 +88,22 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"hinchada": m.hinchada.a_dic() if m.hinchada != null else {},
 		"gente": m.gente.a_dic() if m.gente != null else {},
 		"club_dentro": m.club_dentro.a_dic() if m.club_dentro != null else {},
+		"junta": m.junta.a_dic() if m.junta != null else {},
+		"charlas": m.charlas.a_dic() if m.charlas != null else {},
+		"licencia": m.licencia.a_dic() if m.licencia != null else {},
+		"eventos_cantera": m.eventos_cantera.a_dic() if m.eventos_cantera != null else {},
+		"trabajadores": m.trabajadores.a_dic() if m.trabajadores != null else {},
+		"redes": m.redes.a_dic() if m.redes != null else {},
+		"carrera_jugador": m.carrera_jugador.a_dic() if m.carrera_jugador != null else {},
+		"movil": m.movil.a_dic() if m.movil != null else {},
+		"mercado_av": m.mercado_av.a_dic() if m.mercado_av != null else {},
+		"insolvencia": m.insolvencia.a_dic() if m.insolvencia != null else {},
+		"ajustes_competicion": m.ajustes_competicion.duplicate(),
+		"calendario": m.calendario.a_dic() if m.calendario != null else {},
+		"politica": m.politica.a_dic() if m.politica != null else {},
+		"contratos": m.contratos.a_dic() if m.contratos != null else {},
+		"vida": m.vida.a_dic() if m.vida != null else {},
+		"maestria": m.maestria.a_dic() if m.maestria != null else {},
 		"banco": m.banco.a_dic() if m.banco != null else {},
 		"auspicio": m.auspicio.a_dic() if m.auspicio != null else {},
 		"eras": m.eras.a_dic() if m.eras != null else {},
@@ -93,6 +115,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"campana": m.campana.duplicate(),
 		"selecciones": m.selecciones.a_dic() if m.selecciones != null else {},
 		"cantera": m.cantera.a_dic() if m.cantera != null else {},
+		"academia": m.academia.a_dic() if m.academia != null else {},
 		"ojeadores": m.ojeadores.a_dic() if m.ojeadores != null else {},
 		"cesiones_datos": m.cesiones.a_dic() if m.cesiones != null else {},
 		"mercado": m.mercado.a_dic() if m.mercado != null else {},
@@ -142,6 +165,12 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 			int(datos["version"]), VERSION])
 		return null
 
+	## Un guardado anterior a la base ficticia (sin la clave) se jugó siempre
+	## con los datos reales. Si esta instalación no tiene el pack, se queda en
+	## la ficticia: los nombres del propio guardado se ven igual, solo se
+	## pierden las equipaciones reales.
+	Datos.usar_base_real(bool(datos.get("base_real", true)))
+
 	var m := Mundo.new()
 	## Se siembra con la semilla guardada para que lo que pase a partir de aquí
 	## siga la misma línea que seguía la partida. Sin esto, cargar y seguir
@@ -165,6 +194,11 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.campana = (datos.get("campana", {}) as Dictionary).duplicate()
 	m.mi_club_id = String(datos["mi_club"])
 	m.desafios.clear()
+	m.reto = (datos.get("reto", {}) as Dictionary).duplicate()
+	var df: Dictionary = datos.get("fondo", {})
+	if not df.is_empty():
+		m.fondo = FondoInversion.new()
+		m.fondo.desde_dic(df)
 	for k in datos.get("desafios", []):
 		m.desafios.append(String(k))
 
@@ -183,6 +217,11 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		if n_guardadas.has(k):
 			m.normas[k] = bool(n_guardadas[k])
 	_restaurar_lo_tuyo(datos, m)
+	## La Carrera de Jugador va aparte: no tiene club de entrenador, y
+	## `_restaurar_lo_tuyo()` sale en seco sin él.
+	var cj: Dictionary = datos.get("carrera_jugador", {})
+	if not cj.is_empty():
+		m.carrera_jugador = CarreraJugador.desde_dic(cj)
 	return m
 
 static func borrar(nombre: String) -> void:
@@ -263,7 +302,7 @@ static func _dic_a_club(d: Dictionary) -> Club:
 ## en vez de "at" son 60 KB de más en cada guardado sin que nadie lo lea nunca.
 static func _jugador_a_dic(j: Jugador) -> Dictionary:
 	return {
-		"i": j.id, "n": j.nombre, "p": j.pais, "c": j.club_id, "cf": j.club_formacion,
+		"i": j.id, "n": j.nombre, "p": j.pais, "rg": j.region, "c": j.club_id, "cf": j.club_formacion,
 		"g": j.pos, "pe": j.pos_e, "e": j.edad, "o": j.ovr, "t": j.pot,
 		"at": j.atributos, "r": j.rasgo,
 		"f": j.forma, "m": j.moral, "fi": j.fisico,
@@ -276,12 +315,13 @@ static func _jugador_a_dic(j: Jugador) -> Dictionary:
 		## Solo lo que el editor haya tocado de su cara. Casi siempre esta vacio y
 		## no pesa nada: diez mil jugadores con quince rasgos cada uno serian dos
 		## megas de guardado para nada.
-		"lk": j.look, "oe": j.ovr_al_empezar, "hs": j.historial,
+		"lk": j.look, "oe": j.ovr_al_empezar, "hs": j.historial, "pr": j.premios,
 	}
 
 static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	var j := Jugador.new()
 	j.id = String(d["i"]); j.nombre = String(d["n"]); j.pais = String(d["p"])
+	j.region = String(d.get("rg", ""))
 	j.club_id = String(d["c"]); j.club_formacion = String(d["cf"])
 	j.pos = String(d["g"]); j.pos_e = String(d["pe"])
 	j.edad = int(d["e"]); j.ovr = int(d["o"]); j.pot = int(d["t"])
@@ -300,6 +340,7 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	j.ovr_al_empezar = int(d.get("oe", 0))
 	var hs: Variant = d.get("hs", [])
 	j.historial = (hs as Array).duplicate() if hs is Array else []
+	j.premios = (d.get("pr", []) as Array).duplicate(true)
 	return j
 
 static func _liga_a_dic(l: Liga) -> Dictionary:
@@ -312,7 +353,8 @@ static func _liga_a_dic(l: Liga) -> Dictionary:
 	## como si estuviera arriba.
 	return {
 		"nombre": l.nombre, "pais": l.pais, "div": l.div, "clubes": ids,
-		"jornada": l.jornada_actual, "tabla": l.tabla_puntos,
+		"jornada": l.jornada_actual, "tabla": l.tabla_puntos, "h2h": l.h2h,
+		"desc": l.plazas_descenso, "pv": l.puntos_victoria,
 	}
 
 ## La copa. Solo hacen falta tres cosas: el nombre, quiénes siguen vivos y en qué
@@ -366,6 +408,10 @@ static func _dic_a_liga(d: Dictionary, m: Mundo) -> Liga:
 			var fila: Dictionary = d["tabla"][id]
 			for k: String in fila:
 				l.tabla_puntos[id][k] = int(fila[k])
+	for k2: String in d.get("h2h", {}):
+		l.h2h[k2] = int(d["h2h"][k2])
+	l.plazas_descenso = int(d.get("desc", 2))
+	l.puntos_victoria = int(d.get("pv", 3))
 	return l
 
 # --- lectura ----------------------------------------------------------------
@@ -427,7 +473,7 @@ const _CAMPOS_PRENSA := [
 	"rep_entrenador", "clausulas", "cesiones", "arbitro_polemico",
 	"oferta_forzada", "abogado_en_directorio", "posts", "seguidores",
 	"relaciones", "medios", "vocero", "tv_individual", "portadas",
-	"impuesto_pid", "impuesto_hasta",
+	"impuesto_pid", "impuesto_hasta", "efectos", "memoria", "titular_pendiente", "identidad", "cambio_identidad",
 ]
 
 static func _prensa_a_dic(p: Prensa) -> Dictionary:
@@ -520,6 +566,38 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.gente.desde_dic(datos.get("gente", {}))
 	if m.club_dentro != null:
 		m.club_dentro.desde_dic(datos.get("club_dentro", {}))
+	if m.charlas != null:
+		m.charlas.desde_dic(datos.get("charlas", {}))
+	if m.licencia != null:
+		m.licencia.desde_dic(datos.get("licencia", {}))
+	if m.eventos_cantera != null:
+		m.eventos_cantera.desde_dic(datos.get("eventos_cantera", {}))
+	if m.trabajadores != null:
+		m.trabajadores.desde_dic(datos.get("trabajadores", {}))
+	if m.redes != null:
+		m.redes.desde_dic(datos.get("redes", {}))
+	if m.movil != null:
+		m.movil.desde_dic(datos.get("movil", {}))
+	if m.mercado_av != null:
+		m.mercado_av.desde_dic(datos.get("mercado_av", {}))
+	if m.insolvencia != null:
+		m.insolvencia.desde_dic(datos.get("insolvencia", {}))
+	m.ajustes_competicion = (datos.get("ajustes_competicion", {}) as Dictionary).duplicate()
+	if m.copa != null:
+		m.copa.sede_final_id = String(m.ajustes_competicion.get("copa_sede", ""))
+	if m.calendario != null:
+		m.calendario.desde_dic(datos.get("calendario", {}))
+	if m.politica != null:
+		m.politica.desde_dic(datos.get("politica", {}))
+	if m.contratos != null:
+		m.contratos.desde_dic(datos.get("contratos", {}))
+	if m.vida != null:
+		m.vida.desde_dic(datos.get("vida", {}))
+	if m.maestria != null:
+		m.maestria.desde_dic(datos.get("maestria", {}))
+	if m.junta != null:
+		m.junta.desde_dic(datos.get("junta", {}))
+		m.junta.formar(m.mi_club())
 	if m.banco != null:
 		m.banco.desde_dic(datos.get("banco", {}))
 	if m.auspicio != null:
@@ -539,6 +617,8 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.selecciones.desde_dic(datos.get("selecciones", {}))
 	if m.cantera != null:
 		m.cantera.desde_dic(datos.get("cantera", {}))
+	if m.academia != null:
+		m.academia.desde_dic(datos.get("academia", {}))
 	if m.ojeadores != null:
 		m.ojeadores.desde_dic(datos.get("ojeadores", {}))
 	if m.cesiones != null:

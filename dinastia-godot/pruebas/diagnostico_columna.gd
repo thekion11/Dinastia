@@ -68,7 +68,7 @@ func _process(_d: float) -> void:
 		cam.current = true
 	if _frame in [40, 400, 900, 1400, 1900]:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/columna_cenital_f%d.png" % _frame)
+		img.save_png("res://pruebas/capturas/columna_cenital_f%d.png" % _frame)
 		var juego = _vista.get("_juego")
 		var el = juego.get("elapsed") if juego != null else -1.0
 		print("capturado cenital: f%d  elapsed~%s" % [_frame, el])
