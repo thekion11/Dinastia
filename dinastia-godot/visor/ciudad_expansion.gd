@@ -319,6 +319,7 @@ func construir() -> void:
 	_bocas_metro()
 	_marquesinas_bus()
 	_guirnaldas()
+	_farolas()
 	_volcar_lotes()
 
 func _cargar_modelos() -> void:
@@ -891,10 +892,73 @@ func _guirnaldas() -> void:
 		_multimesh(esf, mat, lista, Vector3.ONE)
 	cuenta["bombillas"] = n
 
-## 0 de día, 1 de noche: las guirnaldas brillan de noche.
+## 0 de día, 1 de noche: guirnaldas, farolas y ventanas lejanas.
 func encender(noche: float) -> void:
 	for m in _bombillas:
-		m.emission_energy_multiplier = lerpf(0.2, 3.5, noche)
+		m.emission_energy_multiplier = lerpf(0.15, 1.4, noche)
+	if _farola_luz != null:
+		_farola_luz.emission_energy_multiplier = lerpf(0.0, 2.6, noche)
+	if _farola_charco != null:
+		_farola_charco.albedo_color.a = lerpf(0.0, 0.55, noche)
+	if _ventanas_lejanas != null:
+		_ventanas_lejanas.emission_energy_multiplier = lerpf(0.0, 0.35, noche)
+
+## LAS FAROLAS de la ciudad grande: una cada ~33 m por acera, alternando
+## lados. Sin luces de verdad (serían cientos): la cabeza se enciende y un
+## charco de luz cálida en el suelo hace el resto, que es lo que se lee de
+## noche desde la cámara del mapa.
+var _farola_luz: StandardMaterial3D
+var _farola_charco: StandardMaterial3D
+
+func _farolas() -> void:
+	var postes: Array[Transform3D] = []
+	var cabezas: Array[Transform3D] = []
+	var charcos: Array[Transform3D] = []
+	for t: Dictionary in tramos:
+		if bool(t["puente"]):
+			continue
+		var a: Vector3 = t["a"]
+		var c: Vector3 = t["b"]
+		var ancho: float = t["ancho"]
+		var vertical := absf(a.x - c.x) < 0.1
+		var largo := a.distance_to(c)
+		var n := maxi(1, int(largo / 33.0))
+		for q in n:
+			var p := a.lerp(c, (float(q) + 0.5) / float(n))
+			var lado := 1.0 if q % 2 == 0 else -1.0
+			var off := (ancho * 0.5 + 0.8) * lado
+			var base := p + (Vector3(off, 0, 0) if vertical else Vector3(0, 0, off))
+			postes.append(Transform3D(Basis.from_scale(Vector3(0.16, 8.0, 0.16)), base + Vector3(0, 4.0, 0)))
+			var hacia := (Vector3(-lado, 0, 0) if vertical else Vector3(0, 0, -lado)) * 1.4
+			cabezas.append(Transform3D(Basis.from_scale(Vector3(0.9, 0.3, 0.9)), base + Vector3(0, 8.0, 0) + hacia))
+			charcos.append(Transform3D(Basis.from_scale(Vector3(13.0, 1.0, 13.0)), base + hacia * 2.0 + Vector3(0, 0.3, 0)))
+	var gris := b._mat_simple(Color(0.25, 0.26, 0.27), 0.5)
+	_multimesh(CylinderMesh.new(), gris, postes, Vector3.ONE)
+	_farola_luz = StandardMaterial3D.new()
+	_farola_luz.albedo_color = Color(1.0, 0.85, 0.6)
+	_farola_luz.emission_enabled = true
+	_farola_luz.emission = Color(1.0, 0.78, 0.45)
+	_farola_luz.emission_energy_multiplier = 0.0
+	_multimesh(BoxMesh.new(), _farola_luz, cabezas, Vector3.ONE)
+	_farola_charco = StandardMaterial3D.new()
+	_farola_charco.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_farola_charco.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	_farola_charco.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	_farola_charco.albedo_texture = _textura_charco()
+	_farola_charco.albedo_color = Color(1.0, 0.75, 0.45, 0.0)
+	var pl := PlaneMesh.new()
+	pl.size = Vector2(1, 1)
+	_multimesh(pl, _farola_charco, charcos, Vector3.ONE)
+	cuenta["farolas"] = postes.size()
+
+func _textura_charco() -> ImageTexture:
+	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	for y in 64:
+		for x in 64:
+			var d := Vector2(float(x) - 31.5, float(y) - 31.5).length() / 32.0
+			var a := clampf(1.0 - d, 0.0, 1.0)
+			img.set_pixel(x, y, Color(1, 1, 1, a * a))
+	return ImageTexture.create_from_image(img)
 
 ## Los edificios lejanos: cajas con ventanas en un solo MultiMesh.
 var _lejanos: Array[Rect2] = []
@@ -920,12 +984,32 @@ func _edificios_lejanos() -> void:
 	mat.uv1_world_triplanar = true
 	mat.uv1_scale = Vector3(1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0)
 	mat.roughness = 0.7
+	## De noche se encienden las ventanas (la misma rejilla, en cálido).
+	mat.emission_enabled = true
+	mat.emission_texture = _textura_ventanas(true)
+	mat.emission = Color(1.0, 0.82, 0.5)
+	mat.emission_energy_multiplier = 0.0
+	_ventanas_lejanas = mat
 	_multimesh(BoxMesh.new(), mat, ts, Vector3.ONE, cs)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + ts.size()
 
-func _textura_ventanas() -> ImageTexture:
+var _ventanas_lejanas: StandardMaterial3D
+
+## `luz`: la máscara de las ventanas encendidas (blanco = ventana, unas sí y
+## otras no) para la emisión nocturna.
+func _textura_ventanas(luz: bool = false) -> ImageTexture:
 	var img := Image.create(64, 64, false, Image.FORMAT_RGB8)
-	img.fill(Color(1, 1, 1))
+	img.fill(Color(0, 0, 0) if luz else Color(1, 1, 1))
+	if luz:
+		var rr := RandomNumberGenerator.new()
+		rr.seed = 99
+		for vy in 4:
+			for vx in 4:
+				if rr.randf() < 0.35:
+					for y in range(vy * 16 + 4, vy * 16 + 12):
+						for x in range(vx * 16 + 4, vx * 16 + 13):
+							img.set_pixel(x, y, Color(1, 1, 1))
+		return ImageTexture.create_from_image(img)
 	for y in 64:
 		for x in 64:
 			var vx := (x % 16) >= 4 and (x % 16) < 13
