@@ -356,6 +356,15 @@ Se queda **a un punto de la meta de 75**. Lo que más falta en pulido es traduci
   - la línea 2 del metro se ve solo en rayos X;
   - los cuerpos de las noticias siguen en castellano.
 
+**Caza de fallos de cierre (7-10-2026):**
+- **Prueba larga:** en 10 temporadas aparecían clubes con 6-7 porteros o sin delanteros. Estaba roto desde la fase 4.
+  - Tope de 3 porteros en la camada, los hermanos y los hijos de leyenda.
+  - La IA ficha con sentido de puesto: no compra un cuarto portero ni deja al vendedor sin mínimos.
+  - La cantera repone una línea vacía aunque el plantel esté lleno.
+  - Vuelve a 0 fallos con 3 semillas.
+- **Metro:** el tren no paraba en las estaciones (las daba por pasadas a menos de 0,5 m). Lo cazó el banco.
+- **Recorrido de pantallas:** 106 pantallas y 492 botones sin errores. Banco, prueba de modos y prueba larga en 0 fallos.
+
 **Nota recalculada tras las fases 1-5** (estimación propia, mismas categorías y pesos):
 
 | Categoría | Peso | Tras la fase 4 | Ahora | Por qué |
