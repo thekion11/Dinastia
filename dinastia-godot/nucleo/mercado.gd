@@ -183,7 +183,16 @@ func fichar(j: Jugador, comprador: Club, monto: int, sueldo: int, anios: int) ->
 	j.anios_contrato = Contratos.ajustar_anios(j, anios)
 	j.pide_salir = false
 	comprador.fichar(j)
+	## Para el documental de la temporada (fase 5): los traspasos de tu club.
+	var m := _mundo()
+	if m != null and (comprador.id == m.mi_club_id or (vendedor != null and vendedor.id == m.mi_club_id)):
+		fichajes_temporada.append({"nombre": j.nombre, "entra": comprador.id == m.mi_club_id,
+			"otro": (vendedor.nombre if vendedor != null else "libre") if comprador.id == m.mi_club_id else comprador.nombre,
+			"monto": monto, "ovr": j.ovr})
 	traspaso.emit(j, vendedor, comprador, monto)
+
+## Los traspasos de tu club en esta temporada (se vacía al cerrarla).
+var fichajes_temporada: Array = []
 
 # ---------------------------------------------------------------------------
 #  EL MERCADO DE LA IA
