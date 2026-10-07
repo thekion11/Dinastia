@@ -116,6 +116,7 @@ func _ready() -> void:
 	_probar_portafolio_futbol()
 	_probar_jugadores_fijos()
 	_probar_disenos_kit()
+	_probar_guinos_estadio()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -4994,6 +4995,25 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## FASE 4, E9: el rasgo del estadio real se DIBUJA y le da un apodo genérico.
+func _probar_guinos_estadio() -> void:
+	_titulo("GUIÑOS DE LOS ESTADIOS REALES (FASE 4, E9)")
+	_comprobar(GuinosEstadio.apodo({"rasgo": "Herradura abierta a la cordillera"}) == "El Mirador", "cordillera → «El Mirador»")
+	_comprobar(GuinosEstadio.apodo({"rasgo": "La caldera: tres bandejas"}) == "La Caldera", "caldera → «La Caldera»")
+	_comprobar(GuinosEstadio.apodo({"rasgo": "", "niveles": 1}) == "", "sin rasgo ni tamaño: sin apodo inventado")
+	var tabla: Dictionary = Datos.tabla("ESTADIO_CLUB")
+	var con_apodo := 0
+	for k: String in tabla:
+		if GuinosEstadio.apodo(tabla[k]) != "":
+			con_apodo += 1
+	_comprobar(con_apodo >= 100, "%d de %d estadios reales con apodo (≥100)" % [con_apodo, tabla.size()])
+	for caso: Array in [["Herradura abierta a la cordillera", 6], ["Cuatro torres rojas en las esquinas", 4], ["Junto al río", 1], ["Estadio minero en pleno desierto", 15]]:
+		var raiz := Node3D.new()
+		GuinosEstadio.montar(raiz, {"rasgo": caso[0]}, 40.0, 58.0, 20.0, 18.0)
+		var n := raiz.get_child(0).get_child_count() if raiz.get_child_count() > 0 else 0
+		_comprobar(n >= int(caso[1]), "«%s» dibuja %d piezas (≥%d)" % [caso[0], n, caso[1]])
+		raiz.free()
 
 func _dinero(n: int) -> String:
 	var euros := float(n) * Eco.ECO
