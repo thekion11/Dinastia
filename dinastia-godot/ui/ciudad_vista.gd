@@ -353,8 +353,8 @@ func _desplazar(d: Vector2) -> void:
 	var derecha := Vector3(cos(_ang), 0, -sin(_ang))
 	var atras := Vector3(sin(_ang), 0, cos(_ang))
 	_objetivo_deseado += derecha * d.x + atras * d.y
-	_objetivo_deseado.x = clampf(_objetivo_deseado.x, -600.0, 600.0)
-	_objetivo_deseado.z = clampf(_objetivo_deseado.z, -600.0, 700.0)
+	_objetivo_deseado.x = clampf(_objetivo_deseado.x, -1400.0, 1400.0)
+	_objetivo_deseado.z = clampf(_objetivo_deseado.z, -1400.0, 1400.0)
 	_girando = false
 
 func _gui_input(ev: InputEvent) -> void:
@@ -375,9 +375,9 @@ func _gui_input(ev: InputEvent) -> void:
 			_probar_clic_estadio(ev.position)
 	elif ev is InputEventMouseButton and ev.pressed:
 		if ev.button_index == MOUSE_BUTTON_WHEEL_UP:
-			_dist = clampf(_dist - 30.0, 120.0, 1000.0)
+			_dist = clampf(_dist - 60.0, 120.0, 2600.0)
 		elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			_dist = clampf(_dist + 30.0, 120.0, 1000.0)
+			_dist = clampf(_dist + 60.0, 120.0, 2600.0)
 
 ## El clic busca el punto tocable más cercano en pantalla (B7): el estadio
 ## abre el editor, como siempre; un edificio o un solar abre su ficha.

@@ -52,8 +52,12 @@ static func montar(root: Node3D, est: Dictionary, dx: float, dz: float, fondo: f
 	var nodo := Node3D.new()
 	nodo.name = "GuinosEstadio"
 	root.add_child(nodo)
+	## En la ciudad 3D el estadio ya tiene la ciudad alrededor: allí no se
+	## dibuja el paisaje del guiño (montañas, agua, desierto, bosque, edificios),
+	## solo lo que es del propio estadio (torres, techo).
+	var paisaje := not root.has_meta("en_ciudad")
 	## EL FONDO NATURAL: montaña, volcán, cerros.
-	if _hay(r, ["cordillera", "montaña", "3.600", "pie del volcán", "cerro", "altura", "2.300"]):
+	if paisaje and _hay(r, ["cordillera", "montaña", "3.600", "pie del volcán", "cerro", "altura", "2.300"]):
 		var nieve := _hay(r, ["cordillera", "3.600", "volcán"])
 		var volcan := r.contains("pie del volcán")
 		for k in 5:
@@ -61,11 +65,11 @@ static func montar(root: Node3D, est: Dictionary, dx: float, dz: float, fondo: f
 			var h := (95.0 if volcan and k == 2 else 55.0 + float((k * 37) % 30)) * (1.25 if nieve else 0.8)
 			_monte(nodo, Vector3(x, 0, -(az + 130.0 + float(k % 3) * 25.0)), h, h * 1.4, nieve, volcan and k == 2)
 	## EL AGUA: río, lago, laguna, mar, rambla.
-	if _hay(r, ["río", "támesis", "lago", "laguna", "mar", "rambla", "porteño", "caribe"]):
+	if paisaje and _hay(r, ["río", "támesis", "lago", "laguna", "mar", "rambla", "porteño", "caribe"]):
 		var mar := _hay(r, ["mar", "rambla", "porteño", "caribe"])
 		_agua(nodo, Vector3(ax + (90.0 if mar else 30.0), -0.04, 0), Vector2(160.0 if mar else 40.0, 600.0 if mar else 400.0))
 	## EL DESIERTO: arena y dunas bajas alrededor.
-	if r.contains("desierto"):
+	if paisaje and r.contains("desierto"):
 		var arena := StandardMaterial3D.new()
 		arena.albedo_color = Color(0.78, 0.64, 0.42)
 		arena.roughness = 1.0
@@ -81,7 +85,7 @@ static func montar(root: Node3D, est: Dictionary, dx: float, dz: float, fondo: f
 			var rad := az + 70.0 + float((k * 23) % 40)
 			_duna(nodo, Vector3(cos(a) * rad, 0, sin(a) * rad), arena)
 	## EL BOSQUE: un anillo de árboles por fuera.
-	if r.contains("bosque"):
+	if paisaje and r.contains("bosque"):
 		var hoja := StandardMaterial3D.new()
 		hoja.albedo_color = Color(0.13, 0.3, 0.14)
 		for k in 60:
@@ -128,7 +132,7 @@ static func montar(root: Node3D, est: Dictionary, dx: float, dz: float, fondo: f
 				d.position = Vector3(sx * (dx + fondo * 0.5), alto + 0.5, -dz * 0.6 + float(k) * dz * 0.4)
 				nodo.add_child(d)
 	## LOS EDIFICIOS: un muro de ciudad detrás de un fondo.
-	if r.contains("edificios") or r.contains("en lo alto de la ciudad"):
+	if paisaje and r.contains("edificios") or r.contains("en lo alto de la ciudad"):
 		for k in 9:
 			var b := MeshInstance3D.new()
 			var bm2 := BoxMesh.new()

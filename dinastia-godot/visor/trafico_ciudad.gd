@@ -64,6 +64,56 @@ class Ruta:
 
 var _rutas: Array = []          ## [Ruta]
 var _vehiculos: Array = []      ## [{nodo, ruta, s, vel, alto}]
+## SEMÁFOROS Y PARADAS (7-10-2026, la ciudad grande). `semaforos` es el
+## controlador (`Semaforos`); cada ruta puede tener «controles» -la línea de
+## detención de un cruce y el eje que la gobierna- y cada vehículo, paradas
+## donde se queda unos segundos (los autobuses).
+var semaforos: Semaforos = null
+var _controles := {}            ## ruta -> [{s, eje}]
+
+## El punto de la ruta más cercano a `p`, como distancia recorrida.
+func s_mas_cercano(ruta: int, p: Vector3) -> float:
+	var r: Ruta = _rutas[ruta]
+	var mejor := INF
+	var s_mejor := 0.0
+	for i in r.puntos.size():
+		var a: Vector3 = r.puntos[i]
+		var c: Vector3 = r.puntos[(i + 1) % r.puntos.size()]
+		var q := Geometry3D.get_closest_point_to_segment(p, a, c)
+		var d := q.distance_to(p)
+		if d < mejor:
+			mejor = d
+			s_mejor = r.acumulado[i] + a.distance_to(q)
+	return s_mejor
+
+func largo_de(ruta: int) -> float:
+	return (_rutas[ruta] as Ruta).largo
+
+## Una línea de detención en la ruta: en `s` se para si el eje está en rojo.
+func agregar_control(ruta: int, s: float, eje: int) -> void:
+	if not _controles.has(ruta):
+		_controles[ruta] = []
+	(_controles[ruta] as Array).append({"s": s, "eje": eje})
+
+## El último vehículo añadido respeta la cola (no se mete encima del de
+## delante cuando este frena en un semáforo o en una parada).
+func marcar_cola_al_ultimo() -> void:
+	if not _vehiculos.is_empty():
+		_vehiculos[_vehiculos.size() - 1]["cola"] = true
+		var r := int(_vehiculos[_vehiculos.size() - 1]["ruta"])
+		if not _en_cola.has(r):
+			_en_cola[r] = []
+		(_en_cola[r] as Array).append(_vehiculos[_vehiculos.size() - 1])
+
+var _en_cola := {}              ## ruta -> [vehículos con cola]
+
+## Paradas de un vehículo ya añadido (el último): distancias en la ruta.
+func agregar_paradas_al_ultimo(paradas: Array, espera: float = 8.0) -> void:
+	if _vehiculos.is_empty():
+		return
+	var v: Dictionary = _vehiculos[_vehiculos.size() - 1]
+	v["paradas"] = paradas
+	v["espera_parada"] = espera
 
 ## Añade un recorrido y devuelve su índice, para colgarle vehículos.
 func agregar_ruta(puntos: PackedVector3Array) -> int:
@@ -86,7 +136,36 @@ func agregar_vehiculo(nodo: Node3D, ruta: int, s: float, vel: float,
 
 func _process(delta: float) -> void:
 	for v in _vehiculos:
-		v["s"] = float(v["s"]) + float(v["vel"]) * delta
+		if float(v.get("espera", 0.0)) > 0.0:
+			v["espera"] = float(v["espera"]) - delta
+			continue
+		var avance := float(v["vel"]) * delta
+		var ruta := int(v["ruta"])
+		var s0 := float(v["s"])
+		var largo := (_rutas[ruta] as Ruta).largo
+		## En rojo (o ámbar), se detiene en la línea.
+		if semaforos != null and _controles.has(ruta):
+			for c: Dictionary in _controles[ruta]:
+				var d := fposmod(float(c["s"]) - s0, largo)
+				if d < avance + 0.5 and d < 12.0 and not semaforos.verde(int(c["eje"])):
+					avance = maxf(0.0, d - 0.3)
+					break
+		## Las paradas del autobús.
+		if v.has("paradas"):
+			for ps: float in v["paradas"]:
+				var d2 := fposmod(ps - s0, largo)
+				if d2 < avance:
+					avance = d2 + 0.05
+					v["espera"] = float(v.get("espera_parada", 8.0))
+					break
+		if v.has("cola"):
+			for o: Dictionary in _en_cola[ruta]:
+				if o == v:
+					continue
+				var d3 := fposmod(float(o["s"]) - s0, largo)
+				if d3 < 9.0:
+					avance = minf(avance, maxf(0.0, d3 - 8.0))
+		v["s"] = s0 + avance
 		_colocar(v)
 
 func _colocar(v: Dictionary) -> void:
