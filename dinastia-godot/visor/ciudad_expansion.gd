@@ -100,6 +100,46 @@ static func en_borde_nucleo(a: Vector3, c: Vector3) -> bool:
 	return (absf(a.z - NUC_Z0) < 0.1 or absf(a.z - NUC_Z1) < 0.1) and en_x
 
 ## Arma el grafo: rejilla, bulevar del núcleo y conectores a los anillos.
+## LOS NOMBRES DE LAS CALLES (7-10-2026, «las calles deben tener nombre, los
+## parques también»). Ficticios, como toda la ciudad. Las filas (de oeste a
+## este, z fija) y las columnas (de norte a sur, x fija) tienen cada una el
+## suyo; una de cada tres es avenida.
+const NOMBRES_EO := ["de los Almendros", "del Rocío", "de la Alameda", "del Mirador", "de las Acacias", "de la Ribera",
+	"del Olivar", "de los Tilos", "de la Fragua", "del Pósito", "de las Moreras", "de la Estación", "Mayor",
+	"del Sol", "de los Naranjos", "del Molino", "de la Vega", "de las Huertas", "del Carmen", "de los Arcos",
+	"del Lucero", "de la Cantera", "de los Jazmines", "del Prado", "de la Muralla"]
+const NOMBRES_NS := ["de los Tejedores", "del Puerto", "de la Cordelería", "de los Plateros", "del Faro", "de la Imprenta",
+	"de los Herreros", "del Telégrafo", "de la Seda", "del Navegante", "de los Alfareros", "de la Libertad", "del Estadio",
+	"de la Constitución", "de los Canteranos", "del Reloj", "de la Ilustración", "de los Remeros", "del Campeonato",
+	"de las Artes", "de la Hinchada", "del Gol", "de los Fundadores", "del Ensanche", "de la Afición"]
+const NOMBRES_PARQUE := ["Parque de la Alameda", "Jardines del Mirador", "Parque de los Tilos", "Parque de la Ribera",
+	"Parque de los Fundadores", "Jardín Botánico", "Parque del Reloj", "Parque de la Afición", "Pinar del Ensanche"]
+
+func nombre_fila(j: int) -> String:
+	return ("Avenida " if j % 3 == 0 else "Calle ") + String(NOMBRES_EO[clampi(j + K, 0, NOMBRES_EO.size() - 1)])
+
+func nombre_columna(i: int) -> String:
+	return ("Avenida " if i % 3 == 0 else "Calle ") + String(NOMBRES_NS[clampi(i + K, 0, NOMBRES_NS.size() - 1)])
+
+## La calle en la que está un punto («Calle X», o «Calle X con Avenida Y» en
+## un cruce). Vacío si no está sobre ninguna (dentro de una manzana).
+func nombre_calle_en(p: Vector3) -> String:
+	var i := roundi(p.x / CELDA)
+	var j := roundi(p.z / CELDA)
+	if absi(i) > K or absi(j) > K:
+		return ""
+	var dx := absf(p.x - float(i) * CELDA)
+	var dz := absf(p.z - float(j) * CELDA)
+	var en_col := dx < ((ANCHO_AV if i % 3 == 0 else ANCHO_CALLE) * 0.5 + ACERA)
+	var en_fila := dz < ((ANCHO_AV if j % 3 == 0 else ANCHO_CALLE) * 0.5 + ACERA)
+	if en_col and en_fila:
+		return "%s con %s" % [nombre_fila(j), nombre_columna(i)]
+	if en_col:
+		return nombre_columna(i)
+	if en_fila:
+		return nombre_fila(j)
+	return ""
+
 func armar_red() -> void:
 	nodos.clear()
 	tramos.clear()
@@ -330,6 +370,7 @@ func construir() -> void:
 	_guirnaldas()
 	_farolas()
 	_mobiliario_urbano()
+	_placas_de_calle()
 	_orillas_nucleo()
 	_obras_en_calle()
 	cuenta["autopista"] = Autopista.montar(b)
@@ -763,14 +804,111 @@ func _parque(r: Rect2, lago: bool) -> void:
 		l.scale = Vector3(1.4, 1, 1)
 		b.add_child(l)
 	var pts: Array = []
-	for k in 14:
-		var p := c + Vector3(_rng.randf_range(-0.45, 0.45) * r.size.x, 0, _rng.randf_range(-0.45, 0.45) * r.size.y)
-		if absf(p.x - c.x) < 4.0 or absf(p.z - c.z) < 4.0:
+	for k in 40:
+		var p := c + Vector3(_rng.randf_range(-0.46, 0.46) * r.size.x, 0, _rng.randf_range(-0.46, 0.46) * r.size.y)
+		## Lejos de los paseos, los parterres y la zona de juegos.
+		if absf(p.x - c.x) < 6.0 or absf(p.z - c.z) < 6.0 or (absf(p.x - c.x) < 11.0 and absf(p.z - c.z) < 11.0):
+			continue
+		if p.x < c.x - r.size.x * 0.1 and p.z < c.z - r.size.y * 0.1 and not lago:
 			continue
 		pts.append(p)
 	_arboles_en(pts, 1.0)
-	b._rotulo(c + Vector3(0, 14, 0), "🌳 Parque" + (" del Lago" if lago else ""), Color(0.7, 1.0, 0.7), 20)
+	var nombre := "Parque del Lago" if lago else String(NOMBRES_PARQUE[absi(int(c.x * 7.0 + c.z * 13.0)) % NOMBRES_PARQUE.size()])
+	_detalles_parque(r, c, nombre, lago)
+	b._rotulo(c + Vector3(0, 14, 0), "🌳 " + nombre, Color(0.7, 1.0, 0.7), 20)
 	b.puntos_clic.append({"k": "ciudad_parque_lago" if lago else "ciudad_parque", "n": "Parque · penales con los chicos", "pos": c, "estado": "ciudad"})
+
+## LOS DETALLES DEL PARQUE (7-10-2026): el portón con su nombre, una fuente
+## en la cruz de los caminos, parterres de flores, bancos y farolas a lo largo
+## de los paseos y una zona de juegos (columpios, tobogán y arenero).
+func _detalles_parque(r: Rect2, c: Vector3, nombre: String, lago: bool) -> void:
+	var piedra: Material = _mat["piedra"] if _mat.has("piedra") else b._mat_simple(Color(0.75, 0.72, 0.66), 0.8)
+	var hierro := b._mat_simple(Color(0.12, 0.13, 0.12), 0.5)
+	## El portón de entrada (lado sur) con el nombre.
+	var puerta := c + Vector3(0, 0, r.size.y * 0.5 - 1.5)
+	for lado: float in [-1.0, 1.0]:
+		b._caja_en(puerta + Vector3(lado * 3.2, 1.8, 0), Vector3(0.7, 3.6, 0.7), piedra)
+	b._caja_en(puerta + Vector3(0, 3.9, 0), Vector3(7.4, 0.7, 0.5), hierro)
+	for cara: float in [1.0, -1.0]:
+		var l := Label3D.new()
+		l.text = nombre
+		l.font_size = 48
+		l.pixel_size = 0.009
+		l.modulate = Color(0.95, 0.88, 0.6)
+		l.outline_size = 8
+		l.outline_modulate = Color(0.1, 0.12, 0.1)
+		l.position = puerta + Vector3(0, 3.9, 0.3 * cara)
+		l.rotation.y = 0.0 if cara > 0.0 else PI
+		l.visibility_range_end = 160.0
+		b.add_child(l)
+	## La fuente en el cruce (si no hay lago ocupando el centro).
+	if not lago:
+		b._cil_en(c + Vector3(0, 0.45, 0), 3.0, 0.9, piedra)
+		b._cil_en(c + Vector3(0, 0.88, 0), 2.7, 0.08, _mat["agua"])
+		b._cil_en(c + Vector3(0, 1.6, 0), 0.3, 2.2, piedra)
+		b._cil_en(c + Vector3(0, 2.8, 0), 1.1, 0.2, piedra)
+	## Parterres de flores en las cuatro esquinas de la cruz.
+	var flores: Array[Transform3D] = []
+	var flores_col: Array[Color] = []
+	var paleta := [Color(0.9, 0.2, 0.3), Color(0.98, 0.8, 0.2), Color(0.6, 0.3, 0.8), Color(1.0, 0.55, 0.7), Color(1, 1, 1)]
+	for sx: float in [-1.0, 1.0]:
+		for sz: float in [-1.0, 1.0]:
+			var q := c + Vector3(sx * 7.0, 0, sz * 7.0)
+			b._caja_en(q + Vector3(0, 0.2, 0), Vector3(5.0, 0.4, 5.0), b._mat_simple(Color(0.35, 0.25, 0.18), 0.9))
+			for k in 12:
+				flores.append(Transform3D(Basis.from_scale(Vector3(0.5, 0.45, 0.5)), q + Vector3(_rng.randf_range(-2.1, 2.1), 0.55, _rng.randf_range(-2.1, 2.1))))
+				flores_col.append(paleta[_rng.randi() % paleta.size()])
+	var esf := SphereMesh.new()
+	esf.radial_segments = 8
+	esf.rings = 4
+	_multimesh(esf, null, flores, Vector3.ONE, flores_col)
+	## Bancos y farolas a lo largo de los paseos.
+	var bancos: Array[Transform3D] = []
+	var faroles: Array[Transform3D] = []
+	var globos: Array[Transform3D] = []
+	for k in 6:
+		var u := (float(k) - 2.5) / 6.0
+		for paseo in 2:
+			var pp := c + (Vector3(u * r.size.x, 0, 3.4) if paseo == 0 else Vector3(3.4, 0, u * r.size.y))
+			if absf(u) < 0.12:
+				continue
+			bancos.append(Transform3D(Basis(Vector3.UP, 0.0 if paseo == 0 else PI * 0.5) * Basis.from_scale(Vector3(1.9, 0.5, 0.6)), pp + Vector3(0, 0.5, 0)))
+			if k % 2 == 0:
+				var pf := pp - (Vector3(0, 0, 6.8) if paseo == 0 else Vector3(6.8, 0, 0))
+				faroles.append(Transform3D(Basis.from_scale(Vector3(0.12, 3.6, 0.12)), pf + Vector3(0, 1.8, 0)))
+				globos.append(Transform3D(Basis.from_scale(Vector3(0.5, 0.5, 0.5)), pf + Vector3(0, 3.8, 0)))
+	_multimesh(BoxMesh.new(), _mat["tronco"], bancos, Vector3.ONE)
+	var cil := CylinderMesh.new()
+	cil.height = 1.0
+	cil.top_radius = 0.5
+	cil.bottom_radius = 0.5
+	_multimesh(cil, hierro, faroles, Vector3.ONE)
+	_multimesh(SphereMesh.new(), b._mat_simple(Color(1.0, 0.95, 0.8), 0.3, 0.8), globos, Vector3.ONE)
+	## La zona de juegos: arenero, columpios y tobogán.
+	var zj := c + Vector3(-r.size.x * 0.27, 0, -r.size.y * 0.27)
+	if lago:
+		zj = c + Vector3(-r.size.x * 0.27, 0, r.size.y * 0.27)
+	b._caja_en(zj + Vector3(0, 0.12, 0), Vector3(14.0, 0.24, 10.0), b._mat_simple(Color(0.86, 0.78, 0.58), 0.95))
+	var rojo := b._mat_simple(Color(0.85, 0.2, 0.15), 0.5)
+	var amarillo := b._mat_simple(Color(0.98, 0.8, 0.15), 0.5)
+	var azul := b._mat_simple(Color(0.2, 0.45, 0.85), 0.5)
+	## Columpios: pórtico en A y dos asientos.
+	for lado: float in [-1.0, 1.0]:
+		var pa := b._caja_en(zj + Vector3(-3.5 + lado * 1.8, 1.4, -2.5), Vector3(0.14, 3.0, 0.14), rojo)
+		pa.rotation.z = lado * 0.18
+	b._caja_en(zj + Vector3(-3.5, 2.85, -2.5), Vector3(3.8, 0.14, 0.14), rojo)
+	for k: float in [-0.7, 0.7]:
+		b._caja_en(zj + Vector3(-3.5 + k, 1.75, -2.5), Vector3(0.03, 2.2, 0.03), hierro)
+		b._caja_en(zj + Vector3(-3.5 + k, 0.65, -2.5), Vector3(0.5, 0.06, 0.25), azul)
+	## Tobogán: escalera, plataforma y la rampa.
+	b._caja_en(zj + Vector3(3.0, 1.0, 1.5), Vector3(1.0, 2.0, 1.0), amarillo)
+	b._caja_en(zj + Vector3(3.0, 2.05, 1.5), Vector3(1.3, 0.1, 1.3), azul)
+	var rampa := b._caja_en(zj + Vector3(3.0, 1.05, -0.4), Vector3(0.8, 0.08, 3.0), rojo)
+	rampa.rotation.x = -0.62
+	## Un balancín.
+	var bal := b._caja_en(zj + Vector3(0.5, 0.55, 2.8), Vector3(3.0, 0.12, 0.3), amarillo)
+	bal.rotation.z = 0.15
+	b._caja_en(zj + Vector3(0.5, 0.3, 2.8), Vector3(0.3, 0.5, 0.3), azul)
 
 ## La finca de la Casa Grande: césped, seto alrededor con portón al norte
 ## (al bulevar), la casa en el centro, camino de entrada, fuente y jardín.
@@ -1470,6 +1608,56 @@ func _mobiliario_urbano() -> void:
 	_multimesh(caja, hierro, bicis, Vector3.ONE)
 	cuenta["mobiliario"] = tapas.size() + sumideros.size() + papeleras.size() + hidrantes.size() / 3 + bancos_a.size() / 2 \
 		+ contenedores.size() + bolardos.size() + postes.size() + kioscos.size() + bicis.size()
+
+## Placas de calle en las esquinas: un poste con dos placas azules (una por
+## calle), como en cualquier ciudad. Solo se dibujan de cerca.
+func _placas_de_calle() -> void:
+	var postes: Array[Transform3D] = []
+	var placas: Array[Transform3D] = []
+	var cuantas := 0
+	for k: Vector2i in vecinos:
+		var p: Vector3 = nodos[k]
+		if dentro_nucleo(p.x, p.z, 20.0):
+			continue
+		var lista: Array = vecinos[k]
+		var hay_fila := false
+		var hay_col := false
+		for v: Vector2i in lista:
+			if v.y == k.y:
+				hay_fila = true
+			if v.x == k.x:
+				hay_col = true
+		var ax := (ANCHO_AV if k.x % 3 == 0 else ANCHO_CALLE) * 0.5 + 1.0
+		var az := (ANCHO_AV if k.y % 3 == 0 else ANCHO_CALLE) * 0.5 + 1.0
+		var esquina := p + Vector3(ax, 0, az)
+		postes.append(Transform3D(Basis.from_scale(Vector3(0.09, 3.4, 0.09)), esquina + Vector3(0, 1.9, 0)))
+		for cual in 2:
+			if (cual == 0 and not hay_fila) or (cual == 1 and not hay_col):
+				continue
+			var texto := nombre_fila(k.y) if cual == 0 else nombre_columna(k.x)
+			## La placa de la fila mira a lo largo de la fila (se lee desde la calle).
+			var giro := 0.0 if cual == 0 else PI * 0.5
+			var alto := 3.3 if cual == 0 else 2.75
+			var centro := esquina + Vector3(0, alto, 0) + (Vector3(-1.2, 0, 0) if cual == 0 else Vector3(0, 0, -1.2))
+			placas.append(Transform3D(Basis(Vector3.UP, giro) * Basis.from_scale(Vector3(2.4, 0.46, 0.05)), centro))
+			for cara: float in [1.0, -1.0]:
+				var l := Label3D.new()
+				l.text = texto
+				l.font_size = 34
+				l.pixel_size = 0.0055
+				l.modulate = Color.WHITE
+				l.outline_size = 0
+				l.width = 420.0
+				l.autowrap_mode = TextServer.AUTOWRAP_OFF
+				l.position = centro + Basis(Vector3.UP, giro) * Vector3(0, 0, 0.035 * cara)
+				l.rotation.y = giro + (0.0 if cara > 0.0 else PI)
+				l.visibility_range_end = 70.0
+				b.add_child(l)
+				cuantas += 1
+	_multimesh(CylinderMesh.new(), b._mat_simple(Color(0.25, 0.27, 0.3), 0.5), postes, Vector3(1, 0.5, 1))
+	var azul := b._mat_simple(Color(0.08, 0.22, 0.55), 0.4)
+	_multimesh(BoxMesh.new(), azul, placas, Vector3.ONE)
+	cuenta["placas_calle"] = cuantas / 2
 
 func _multimesh(malla: Mesh, mat: Material, ts: Array[Transform3D], _esc: Vector3, colores: Array[Color] = []) -> void:
 	if ts.is_empty():
