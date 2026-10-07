@@ -764,7 +764,13 @@
    "Tu primer contrato profesional": "Your first professional contract",
    "Tienes 17 años y acabas de firmar tu primer contrato. El utilero te da la camiseta con tu dorsal.": "You're 17 and have just signed your first contract. The kit man hands you the shirt with your number.",
    "Te sacas una foto con ella para tu familia.": "You take a photo with it for your family.",
-   "La guardas y te vas a entrenar.": "You put it away and go to training."
+   "La guardas y te vas a entrenar.": "You put it away and go to training.",
+   "La jornada legal en Chile baja de 44 a 42 horas semanales (Ley 21.561).": "Chile's legal working week drops from 44 to 42 hours (Law 21,561).",
+   "La jornada legal en Colombia baja de 44 a 42 horas semanales (Ley 2101).": "Colombia's legal working week drops from 44 to 42 hours (Law 2101).",
+   "La jornada legal en México baja de 48 a 46 horas semanales (reforma constitucional de 2026).": "Mexico's legal working week drops from 48 to 46 hours (2026 constitutional reform).",
+   "La jornada legal en México baja a 44 horas semanales.": "Mexico's legal working week drops to 44 hours.",
+   "La jornada legal en México baja a 42 horas semanales.": "Mexico's legal working week drops to 42 hours.",
+   "La jornada legal en México llega a las 40 horas semanales.": "Mexico's legal working week reaches 40 hours."
   },
   "pt": {
    "Nuevo chico en la academia": "Novo garoto na academia",
@@ -1530,7 +1536,13 @@
    "Tu primer contrato profesional": "Seu primeiro contrato profissional",
    "Tienes 17 años y acabas de firmar tu primer contrato. El utilero te da la camiseta con tu dorsal.": "Você tem 17 anos e acaba de assinar seu primeiro contrato. O roupeiro te entrega a camisa com seu número.",
    "Te sacas una foto con ella para tu familia.": "Você tira uma foto com ela para sua família.",
-   "La guardas y te vas a entrenar.": "Você guarda e vai treinar."
+   "La guardas y te vas a entrenar.": "Você guarda e vai treinar.",
+   "La jornada legal en Chile baja de 44 a 42 horas semanales (Ley 21.561).": "A jornada legal no Chile cai de 44 para 42 horas semanais (Lei 21.561).",
+   "La jornada legal en Colombia baja de 44 a 42 horas semanales (Ley 2101).": "A jornada legal na Colômbia cai de 44 para 42 horas semanais (Lei 2101).",
+   "La jornada legal en México baja de 48 a 46 horas semanales (reforma constitucional de 2026).": "A jornada legal no México cai de 48 para 46 horas semanais (reforma constitucional de 2026).",
+   "La jornada legal en México baja a 44 horas semanales.": "A jornada legal no México cai para 44 horas semanais.",
+   "La jornada legal en México baja a 42 horas semanales.": "A jornada legal no México cai para 42 horas semanais.",
+   "La jornada legal en México llega a las 40 horas semanales.": "A jornada legal no México chega às 40 horas semanais."
   }
  },
  "patrones": [

@@ -47,6 +47,13 @@ def main():
             continue
         a_godot = lambda s: re.sub(r"\{(\d+)\}", r"$\1", s)
         patrones.append([p["re"], a_godot(en), a_godot(pt)])
+    ## Frases sueltas traducidas a mano que no salen del extractor (textos de
+    ## tablas que se meten dentro de una noticia): van como directas.
+    vistas = {p["es"] for p in plantillas}
+    for es, (en, pt) in trad.items():
+        if es not in vistas and not re.search(r"\{\d+\}", es):
+            directas["en"].setdefault(es, en)
+            directas["pt"].setdefault(es, pt)
     ## Las más largas primero: una plantilla corta no debe tragarse a una larga.
     patrones.sort(key=lambda f: -len(f[0]))
     salida = {"directas": directas, "patrones": patrones}
