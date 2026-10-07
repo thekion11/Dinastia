@@ -166,6 +166,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   aérea: L1 sobre el bulevar x=660, L2 bajo z=-660, rampas en el eje de la avenida
   (ensanchadas a 16 m). Pendiente de caza: aviso «material is null» al construir
   la ciudad (ya existía antes).
+  7-10 PEDIDO (ciudad 2.2, luego volver al MEGAPLAN): revisar el aviso técnico;
+  casas de distintos colores; decoraciones; instalaciones POR DENTRO con NPC
+  trabajando; lo que tiene una ciudad real (alcantarillado, detalles); metro con
+  decoración y nombre por estación; nombres de calles y de parques; puente más
+  bonito; vehículos más realistas y PROPORCIONADOS; repasar toda la ciudad.
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
