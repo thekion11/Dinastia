@@ -132,7 +132,18 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   manzanas (`_distritos` en city_builder: norte con torres, este, ensanche sur); casi
   todo el kit ya se usaba (solo cono/tractor sueltos). «A la ciudad le falta mejorar
   las instalaciones y coherencia» → pasada 1: forma propia por instalación (`FORMAS`,
-  `_cuerpo_instalacion`), campus con paseos, paleta única clara. Esperar veredicto.
+  `_cuerpo_instalacion`), campus con paseos, paleta única clara.
+  7-10 PEDIDO GRANDE (ciudad): ×4, bote y río, instalaciones, carreteras y metro a
+  futuro, personas, semáforos y luces de colores, casa gigante con seto, «ciudad
+  utilizable» (conducir/caminar/NPC). HECHO: `visor/ciudad_expansion.gd` (2640 m,
+  red vial en DATOS con `camino_entre`, zonas, 20+ instalaciones, puentes, puerto,
+  botes, metro trazado con bocas, 2 líneas de bus que paran, peatones), semáforos
+  con ciclo (`visor/semaforos.gd`) y coches que frenan en rojo y hacen cola
+  (`TraficoCiudad`), farolas/ventanas/guirnaldas de noche, Casa Grande en finca 2x2
+  con seto (el 26-9 se había quitado la casa por error). Río movido a x=-470.
+  Minijuegos: no se perdieron (penales escondido); sala en Mi Vida → penales +
+  tiro libre + trivia del club (nuevos). Pendiente: metro funcional, modo a pie/
+  volante, pasada 2 de instalaciones si la pide. Esperar veredicto.
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
