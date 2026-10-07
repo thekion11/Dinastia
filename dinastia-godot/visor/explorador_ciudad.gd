@@ -42,6 +42,23 @@ var _cerca := {}        ## lo que hay delante para la E: {tipo, k, n, peaton}
 var _burbuja: Label3D
 var _t_burbuja := 0.0
 
+## EL METRO A PIE (7-10-2026, «que nuestro personaje lo pueda usar… y por
+## dentro»): `estado` es "calle", "anden" o "tren".
+var estado := "calle"
+var metro: MetroCiudad
+var _acc: Dictionary = {}       ## el acceso por el que se entró
+var _linea := ""
+var _idx := -1
+var _anden_c := Vector3.ZERO    ## centro del andén
+var _anden_lat := Vector3.ZERO
+var _anden_lon := Vector3.ZERO
+var _anden_medio := Vector2.ZERO   ## medio ancho (lat) y medio largo (lon)
+var _tren_k := -1
+var _bajar_en_proxima := false
+var _ventana := false
+var _luz_cam: OmniLight3D
+var _t_sacudida := 0.0
+
 const FRASES := {
 	"euforia": ["¡Campeones! ¡Esta ciudad es de %s!", "No me lo creo todavía… ¡qué temporada!", "Mi abuelo lloró con el último gol. Gracias, míster."],
 	"bien": ["Vamos bien, míster. Que no se nos suba.", "El sábado voy con mis hijos al estadio.", "Ese chico de la cantera va a ser crack."],
@@ -56,6 +73,7 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	club_nombre = club
 	animo = estado_animo
 	trafico = cb.get_node_or_null("Trafico") as TraficoCiudad
+	metro = cb.expansion.metro if cb.expansion != null else null
 	obstaculos = construir_obstaculos(cb)
 	position = Vector3.ZERO
 	cuerpo = _crear_cuerpo()
@@ -66,6 +84,11 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	camara.far = 5000.0
 	add_child(camara)
 	camara.make_current()
+	_luz_cam = OmniLight3D.new()
+	_luz_cam.omni_range = 12.0
+	_luz_cam.light_energy = 0.45
+	_luz_cam.visible = false
+	camara.add_child(_luz_cam)
 	_burbuja = Label3D.new()
 	_burbuja.font_size = 40
 	_burbuja.pixel_size = 0.012
@@ -251,6 +274,12 @@ func _entrada() -> Vector2:
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
 		return
+	if estado == "anden":
+		_mover_en_anden(delta)
+		return
+	if estado == "tren":
+		_viajar(delta)
+		return
 	var e := _entrada()
 	if modo == "coche":
 		var acel := e.y * 14.0
@@ -287,6 +316,14 @@ func _colocar_camara(delta: float) -> void:
 	var alto := 5.5 if modo == "coche" else 2.6
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var deseo := cuerpo.position - adelante * atras + Vector3(0, alto, 0)
+	if estado == "anden" and not _acc.is_empty() and not bool(_acc["elevada"]):
+		## BAJO TIERRA la cámara no puede salirse del vestíbulo: se queda entre
+		## la vía y la pared del fondo, y bajo el techo.
+		var rel := deseo - _anden_c
+		var l_lat := clampf(rel.dot(_anden_lat), -5.0, 3.0)
+		var l_lon := clampf(rel.dot(_anden_lon), -29.0, 29.0)
+		deseo = _anden_c + _anden_lat * l_lat + _anden_lon * l_lon
+		deseo.y = minf(cuerpo.position.y + alto, MetroCiudad.PROF_TUNEL + 5.6)
 	camara.position = camara.position.lerp(deseo, clampf(delta * 5.0, 0.0, 1.0)) if delta < 1.0 else deseo
 	camara.look_at(cuerpo.position + Vector3(0, 1.6 if modo == "coche" else 1.4, 0) + adelante * 4.0, Vector3.UP)
 
@@ -294,6 +331,14 @@ func _colocar_camara(delta: float) -> void:
 func _buscar_cerca() -> void:
 	_cerca = {}
 	var p := cuerpo.position
+	## Una entrada de metro (a pie).
+	if modo == "pie" and metro != null:
+		for a: Dictionary in metro.accesos:
+			var q: Vector3 = a["pie"]
+			if Vector2(q.x - p.x, q.z - p.z).length() < 4.0:
+				_cerca = {"tipo": "metro", "acc": a, "n": "Ⓜ %s · %s" % [a["linea"], a["nombre"]]}
+				_aviso.text = "E: entrar al metro (%s, estación %s)" % [a["linea"], a["nombre"]]
+				return
 	if modo == "pie" and trafico != null:
 		for v: Dictionary in trafico._vehiculos:
 			var n: Node3D = v["nodo"]
@@ -330,9 +375,23 @@ func _unhandled_input(ev: InputEvent) -> void:
 	elif k == KEY_E:
 		get_viewport().set_input_as_handled()
 		_usar()
+	elif k == KEY_C and estado == "tren":
+		_ventana = not _ventana
 
 func _usar() -> void:
+	if estado == "anden":
+		_usar_en_anden()
+		return
+	if estado == "tren":
+		if metro.estacion_del_tren(_linea, _tren_k) >= 0:
+			_bajar_del_tren()
+		else:
+			_bajar_en_proxima = not _bajar_en_proxima
+		return
 	if _cerca.is_empty():
+		return
+	if _cerca["tipo"] == "metro":
+		_entrar_al_anden(_cerca["acc"])
 		return
 	if _cerca["tipo"] == "peaton":
 		var v: Dictionary = _cerca["v"]
@@ -347,3 +406,168 @@ func _usar() -> void:
 		_t_burbuja = 5.0
 	else:
 		interactuar.emit(String(_cerca["k"]))
+
+
+# ============================================================== EL METRO
+
+## Del pie de la escalera (o de la boca) al andén.
+func _entrar_al_anden(a: Dictionary) -> void:
+	_acc = a
+	_linea = String(a["linea"])
+	_idx = int(a["idx"])
+	var l := metro.linea(_linea)
+	var dir: Vector3 = l["dir"]
+	var p: Vector3 = l["estaciones"][_idx]
+	_anden_lon = dir.abs()
+	_anden_lat = Vector3(dir.z, 0, -dir.x).abs()
+	if bool(a["elevada"]):
+		var lado := float(a.get("lado", 1.0))
+		_anden_c = p + _anden_lat * lado * MetroCiudad.ANDEN_LAT
+		_anden_c.y = MetroCiudad.ALTO_VIADUCTO + 0.6 + MetroCiudad.PISO_COCHE
+		_anden_medio = Vector2(MetroCiudad.ANDEN_ANCHO * 0.5 - 0.4, MetroCiudad.ANDEN_LARGO * 0.5 - 1.0)
+	else:
+		_anden_c = p + _anden_lat * MetroCiudad.ANDEN_LAT * 1.6
+		_anden_c.y = MetroCiudad.PROF_TUNEL + MetroCiudad.PISO_COCHE
+		_anden_medio = Vector2(MetroCiudad.ANDEN_ANCHO * 1.1 - 0.5, MetroCiudad.ANDEN_LARGO * 0.5 - 1.0)
+	estado = "anden"
+	cuerpo.visible = true
+	cuerpo.position = a["anden"] if bool(a["elevada"]) else _anden_c
+	cuerpo.position.y = _anden_c.y
+	_luz_cam.visible = not bool(a["elevada"])
+	_bajo_tierra(not bool(a["elevada"]))
+	if not bool(a["elevada"]):
+		rumbo = atan2(_anden_lon.x, _anden_lon.z)
+	_colocar_camara(1.0)
+
+func _mover_en_anden(delta: float) -> void:
+	var e := _entrada()
+	var corre := Input.is_physical_key_pressed(KEY_SHIFT)
+	vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+	rumbo -= e.x * delta * 2.6
+	if _anim != null:
+		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
+	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
+	var p := cuerpo.position + adelante * vel * delta
+	## Dentro del andén: ni a la vía ni fuera de la estación.
+	var rel := p - _anden_c
+	var la := clampf(rel.dot(_anden_lat), -_anden_medio.x, _anden_medio.x)
+	var lo := clampf(rel.dot(_anden_lon), -_anden_medio.y, _anden_medio.y)
+	cuerpo.position = _anden_c + _anden_lat * la + _anden_lon * lo
+	cuerpo.rotation.y = rumbo
+	_colocar_camara(delta)
+	var k := metro.tren_parado_en(_linea, _idx)
+	var eta := metro.eta_minima(_linea, _idx)
+	var nombre := String(MetroCiudad.NOMBRES[_linea][_idx])
+	_hud.text = "Ⓜ %s · estación %s  ·  W/A/S/D · Mayús: correr · E: %s · Esc: mapa" % [
+		_linea, nombre, "subir al tren" if k >= 0 else "salir a la calle"]
+	if k >= 0:
+		_aviso.text = "🚇 Tren en el andén, puertas abiertas · E para subir"
+	else:
+		_aviso.text = "Próximo tren: %s · E: salir a la calle" % ("llegando" if eta < 20.0 else "%d s" % int(eta))
+
+func _usar_en_anden() -> void:
+	var k := metro.tren_parado_en(_linea, _idx)
+	if k >= 0:
+		_subir_al_tren(k)
+		return
+	## Salir a la calle por donde se entró (o por la boca de esta estación).
+	estado = "calle"
+	_luz_cam.visible = false
+	_bajo_tierra(false)
+	var pie: Vector3 = _acc.get("pie", cuerpo.position)
+	cuerpo.position = Vector3(pie.x, altura_suelo(pie.x, pie.z), pie.z)
+	_colocar_camara(1.0)
+
+func _subir_al_tren(k: int) -> void:
+	estado = "tren"
+	_tren_k = k
+	_bajar_en_proxima = false
+	_ventana = false
+	cuerpo.visible = false
+	_luz_cam.visible = true
+
+func _viajar(delta: float) -> void:
+	var l := metro.linea(_linea)
+	var tren: Node3D = l["nodos"][_tren_k]
+	_t_sacudida += delta
+	var f := MetroCiudad.PISO_COCHE
+	var t: MetroCiudad.Tren = l["trenes"][_tren_k]
+	var vaiven := sin(_t_sacudida * 9.0) * 0.012 * clampf(t.v / MetroCiudad.VEL, 0.0, 1.0)
+	var local_pos := Vector3(0.45, f + 1.62 + vaiven, -5.0)
+	var local_mira := Vector3(0.2, f + 1.45, 10.0)
+	if _ventana:
+		local_pos = Vector3(-0.6, f + 1.55 + vaiven, 0.0)
+		local_mira = Vector3(6.0, f + 1.3, 0.5)
+	camara.global_position = tren.global_transform * local_pos
+	camara.look_at(tren.global_transform * local_mira, Vector3.UP)
+	var parada := metro.estacion_del_tren(_linea, _tren_k)
+	if parada >= 0 and _bajar_en_proxima and t.espera < MetroCiudad.PARADA - 1.0:
+		_bajar_del_tren()
+		return
+	var prox := metro.proxima_de(_linea, _tren_k)
+	_hud.text = "🚇 %s · %s · %d km/h  ·  C: %s · Esc: mapa" % [_linea,
+		("parado en %s" % String(MetroCiudad.NOMBRES[_linea][parada])) if parada >= 0 else ("próxima: %s" % prox),
+		int(t.v * 3.6), "mirar al frente" if _ventana else "mirar por la ventana"]
+	if parada >= 0:
+		_aviso.text = "Puertas abiertas en %s · E: bajar aquí" % String(MetroCiudad.NOMBRES[_linea][parada])
+	else:
+		_aviso.text = "Próxima estación: %s · E: %s" % [prox, "no bajar" if _bajar_en_proxima else "bajar en la próxima"]
+
+func _bajar_del_tren() -> void:
+	var parada := metro.estacion_del_tren(_linea, _tren_k)
+	if parada < 0:
+		return
+	var l := metro.linea(_linea)
+	var a := {"linea": _linea, "idx": parada, "elevada": bool(l["elevada"]), "nombre": String(MetroCiudad.NOMBRES[_linea][parada]), "lado": 1.0}
+	## La salida a la calle de la estación de llegada.
+	for acc: Dictionary in metro.accesos:
+		if String(acc["linea"]) == _linea and int(acc["idx"]) == parada and float(acc.get("lado", 1.0)) > 0.0:
+			a["pie"] = acc["pie"]
+			a["anden"] = acc["anden"]
+	if not a.has("anden"):
+		a["anden"] = Vector3.ZERO
+	_entrar_al_anden(a)
+	if bool(a["elevada"]):
+		var tren: Node3D = l["nodos"][_tren_k]
+		cuerpo.position = Vector3(cuerpo.position.x, _anden_c.y, cuerpo.position.z)
+		## Aparece frente a la puerta del coche central.
+		var rel := tren.global_position - _anden_c
+		var lo := clampf(rel.dot(_anden_lon), -_anden_medio.y, _anden_medio.y)
+		cuerpo.position = _anden_c + _anden_lon * lo
+
+
+## BAJO TIERRA el cielo de la ciudad no puede iluminar ni empañar: sin niebla y
+## con poca luz ambiente (se restaura al salir).
+var _env_guardado := {}
+var _soles_apagados: Array = []
+
+func _bajo_tierra(si: bool) -> void:
+	var env: Environment = camara.get_world_3d().environment if camara.get_world_3d() != null else null
+	if env == null:
+		return
+	if si and _env_guardado.is_empty():
+		_env_guardado = {"fog": env.fog_enabled, "amb": env.ambient_light_energy, "exp": env.tonemap_exposure,
+			"vol": env.volumetric_fog_enabled}
+		env.fog_enabled = false
+		env.volumetric_fog_enabled = false
+		env.ambient_light_energy = 0.25
+		env.tonemap_exposure = 0.9
+		for n in get_tree().root.find_children("*", "DirectionalLight3D", true, false):
+			if (n as DirectionalLight3D).visible:
+				(n as DirectionalLight3D).visible = false
+				_soles_apagados.append(n)
+		get_tree().call_group("rotulo_mapa", "hide")
+	elif not si and not _env_guardado.is_empty():
+		env.fog_enabled = _env_guardado["fog"]
+		env.volumetric_fog_enabled = _env_guardado["vol"]
+		env.ambient_light_energy = _env_guardado["amb"]
+		env.tonemap_exposure = _env_guardado["exp"]
+		for n in _soles_apagados:
+			if is_instance_valid(n):
+				(n as DirectionalLight3D).visible = true
+		_soles_apagados.clear()
+		get_tree().call_group("rotulo_mapa", "show")
+		_env_guardado = {}
+
+func _exit_tree() -> void:
+	_bajo_tierra(false)

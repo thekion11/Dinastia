@@ -98,8 +98,20 @@ class Tren:
 		return d / VEL + float(n_paradas) * (PARADA + VEL / ACEL) + maxf(espera, 0.0)
 
 ## Los accesos para el personaje: {pie (calle), anden (donde aparece), linea, elevada}.
+
+## LOS NOMBRES DE LAS ESTACIONES (de norte a sur / de oeste a este).
+const NOMBRES := {
+	"Línea 1": ["Alto Norte", "Mercado Este", "Cine", "Transbordo", "Hospital", "Ensanche", "Puerta Sur"],
+	"Línea 2": ["Ribera Oeste", "Puerto", "Talleres", "Plaza Mayor", "Estación Central", "Ópera", "Transbordo"],
+}
+const ANDEN_LAT := 4.0      ## centro de cada andén lateral (a cada lado de la vía)
+const ANDEN_ANCHO := 4.0
+const ANDEN_LARGO := 60.0
+const PISO_COCHE := 1.0     ## altura del suelo del coche sobre la vía
+
+## Los accesos para el personaje: {pie (calle), anden (centro del andén), linea, idx, elevada, dir}.
 var accesos: Array = []
-var lineas: Array = []     ## [{nombre, color, a, b, elevada, estaciones: [Vector3], trenes: [Tren], nodos: [Node3D]}]
+var lineas: Array = []     ## [{nombre, color, a, b, elevada, estaciones, est_s, trenes, nodos, nodos_x}]
 var _xray: Node3D
 var _paneles: Array = []   ## [{label, linea, s}]
 var _t_panel := 0.0
@@ -134,25 +146,103 @@ func montar(exp: CiudadExpansion) -> void:
 		l["largo"] = largo
 		l["dir"] = dir
 		var col: Color = l["color"]
+		var nombres: Array = NOMBRES[l["nombre"]]
 		if bool(l["elevada"]):
 			_viaducto(a, b, col)
 		else:
 			_tunel_xray(a, b, col)
-		for p: Vector3 in est_pos:
+			_tunel(a, b, est_pos, dir)
+		for i in est_pos.size():
+			var p: Vector3 = est_pos[i]
 			if bool(l["elevada"]):
-				_estacion_elevada(p, dir, col, String(l["nombre"]))
-			_panel(p, l, est_s[est_pos.find(p)])
+				_estacion_elevada(p, dir, col, String(nombres[i]), String(l["nombre"]), i)
+			else:
+				_estacion_subterranea(p, dir, col, String(nombres[i]), String(l["nombre"]), i)
+			_panel(p, l, est_s[i])
 		var trenes: Array = []
 		var nodos: Array = []
+		var nodos_x: Array = []
 		for k in 3:
 			var t := Tren.new(largo, est_s, largo * (float(k) + 0.5) / 3.0, 1.0 if k % 2 == 0 else -1.0)
 			trenes.append(t)
-			nodos.append(_tren(col, not bool(l["elevada"])))
+			var real := _tren_real(col)
+			add_child(real)
+			nodos.append(real)
+			if not bool(l["elevada"]):
+				nodos_x.append(_tren_fantasma(col))
 		l["trenes"] = trenes
 		l["nodos"] = nodos
+		l["nodos_x"] = nodos_x
 	exp.lineas_metro = []
 	for l: Dictionary in lineas:
 		exp.lineas_metro.append({"nombre": l["nombre"], "color": l["color"], "estaciones": l["estaciones"], "elevada": l["elevada"]})
+	## Accesos de la línea subterránea: las bocas de la acera (las dibuja
+	## `CiudadExpansion._bocas_metro` en esta misma posición).
+	var l2: Dictionary = lineas[1]
+	for i in (l2["estaciones"] as Array).size():
+		var p2: Vector3 = l2["estaciones"][i]
+		var boca := p2 + Vector3(CiudadExpansion.ANCHO_AV * 0.5 + CiudadExpansion.ACERA + 3.0, 0, CiudadExpansion.ANCHO_AV * 0.5 + CiudadExpansion.ACERA + 3.0)
+		accesos.append({"pie": boca, "anden": _centro_anden(l2, i), "linea": "Línea 2", "idx": i, "elevada": false,
+			"nombre": String(NOMBRES["Línea 2"][i])})
+
+## El centro del andén (lado +lateral) de la estación `i` de una línea, a la
+## altura del suelo del andén.
+func _centro_anden(l: Dictionary, i: int) -> Vector3:
+	var p: Vector3 = l["estaciones"][i]
+	var dir: Vector3 = l["dir"]
+	var lat := Vector3(dir.z, 0, -dir.x).abs() if true else Vector3.ZERO
+	var y := ALTO_VIADUCTO + 0.6 + PISO_COCHE if bool(l["elevada"]) else PROF_TUNEL + PISO_COCHE
+	return p + lat * ANDEN_LAT + Vector3(0, y, 0)
+
+func linea(nombre: String) -> Dictionary:
+	for l: Dictionary in lineas:
+		if String(l["nombre"]) == nombre:
+			return l
+	return {}
+
+## Un tren detenido con las puertas abiertas en la estación `i` (o -1).
+func tren_parado_en(nombre: String, i: int) -> int:
+	var l := linea(nombre)
+	if l.is_empty():
+		return -1
+	var s := float(l["est_s"][i])
+	for k in (l["trenes"] as Array).size():
+		var t: Tren = l["trenes"][k]
+		if t.espera > 0.8 and absf(t.s - s) < 1.0:
+			return k
+	return -1
+
+## La estación (índice) donde está parado el tren `k`, o -1 si va en marcha.
+func estacion_del_tren(nombre: String, k: int) -> int:
+	var l := linea(nombre)
+	var t: Tren = l["trenes"][k]
+	if t.espera <= 0.0:
+		return -1
+	for i in (l["est_s"] as PackedFloat32Array).size():
+		if absf(t.s - float(l["est_s"][i])) < 1.0:
+			return i
+	return -1
+
+## El nombre de la próxima estación del tren `k`.
+func proxima_de(nombre: String, k: int) -> String:
+	var l := linea(nombre)
+	var t: Tren = l["trenes"][k]
+	var obj := t.proxima()
+	var est: PackedFloat32Array = l["est_s"]
+	var mejor := 0
+	for i in est.size():
+		if absf(est[i] - obj) < absf(est[mejor] - obj):
+			mejor = i
+	if obj == INF:
+		return String(NOMBRES[nombre][0 if t.sentido > 0.0 else est.size() - 1])
+	return String(NOMBRES[nombre][mejor])
+
+func eta_minima(nombre: String, i: int) -> float:
+	var l := linea(nombre)
+	var mejor := INF
+	for t: Tren in l["trenes"]:
+		mejor = minf(mejor, t.eta(float(l["est_s"][i])))
+	return mejor
 
 func alternar_rayos_x() -> bool:
 	_xray.visible = not _xray.visible
@@ -162,13 +252,18 @@ func _process(delta: float) -> void:
 	for l: Dictionary in lineas:
 		var a: Vector3 = l["a"]
 		var dir: Vector3 = l["dir"]
-		var y := ALTO_VIADUCTO + 1.0 if bool(l["elevada"]) else PROF_TUNEL
+		var y := ALTO_VIADUCTO + 0.6 if bool(l["elevada"]) else PROF_TUNEL
 		for i in (l["trenes"] as Array).size():
 			var t: Tren = l["trenes"][i]
 			t.simular(delta)
 			var n: Node3D = l["nodos"][i]
-			n.position = a + dir * t.s + Vector3(0, y if bool(l["elevada"]) else 0.9, 0)
+			n.position = a + dir * t.s + Vector3(0, y, 0)
 			n.rotation.y = atan2(dir.x, dir.z) + (0.0 if t.sentido > 0.0 else PI)
+			_puertas(n, t.espera > 0.8 and t.espera < PARADA - 0.4)
+			if not (l["nodos_x"] as Array).is_empty():
+				var g: Node3D = l["nodos_x"][i]
+				g.position = a + dir * t.s + Vector3(0, 0.9, 0)
+				g.rotation.y = n.rotation.y
 	_t_panel -= delta
 	if _t_panel <= 0.0:
 		_t_panel = 1.0
@@ -178,6 +273,20 @@ func _process(delta: float) -> void:
 				mejor = minf(mejor, t.eta(float(pa["s"])))
 			var lab: Label3D = pa["label"]
 			lab.text = "%s · próximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), "llegando" if mejor < 20.0 else "%d min" % int(ceil(mejor / 60.0))]
+		for l: Dictionary in lineas:
+			for k in (l["trenes"] as Array).size():
+				var led: Label3D = (l["nodos"][k] as Node3D).get_meta("led", null)
+				if led != null:
+					led.text = "%s  ▸  Próxima: %s" % [String(l["nombre"]), proxima_de(String(l["nombre"]), k)]
+
+## Abre o cierra las puertas (paneles que se deslizan a lo largo del coche).
+func _puertas(n: Node3D, abiertas: bool) -> void:
+	for d: Array in n.get_meta("puertas", []):
+		var nodo: Node3D = d[0]
+		var base: Vector3 = d[1]
+		var hacia: float = d[2]
+		var obj := base + Vector3(0, 0, hacia * (0.75 if abiertas else 0.0))
+		nodo.position = nodo.position.lerp(obj, 0.18)
 
 # ---------------------------------------------------------------- dibujo
 
@@ -207,11 +316,9 @@ func _viaducto(a: Vector3, b: Vector3, col: Color) -> void:
 	var m := (a + b) * 0.5
 	var vertical := absf(a.x - b.x) < 0.1
 	_caja(self, m + Vector3(0, ALTO_VIADUCTO, 0), Vector3(7.0, 1.2, largo) if vertical else Vector3(largo, 1.2, 7.0), hormigon)
-	## Pretiles con la franja del color de la línea.
 	for lado: float in [-1.0, 1.0]:
 		var off := Vector3(lado * 3.4, 0, 0) if vertical else Vector3(0, 0, lado * 3.4)
 		_caja(self, m + off + Vector3(0, ALTO_VIADUCTO + 1.0, 0), Vector3(0.3, 1.0, largo) if vertical else Vector3(largo, 1.0, 0.3), _mat(col, 0.5))
-	## Pilares cada 30 m (en la mediana de la avenida), en un MultiMesh.
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	var cm := CylinderMesh.new()
@@ -229,41 +336,47 @@ func _viaducto(a: Vector3, b: Vector3, col: Color) -> void:
 	mi.material_override = hormigon
 	add_child(mi)
 
-func _estacion_elevada(p: Vector3, dir: Vector3, col: Color, nombre: String) -> void:
+## Estación elevada: DOS andenes laterales (la vía va por el medio), marquesina,
+## pasarelas a las aceras y escaleras paralelas a la avenida.
+func _estacion_elevada(p: Vector3, dir: Vector3, col: Color, nombre: String, linea_n: String, idx: int) -> void:
 	var vertical := absf(dir.z) > 0.5
-	var largo := 60.0
-	var anden := Vector3(14.0, 0.8, largo) if vertical else Vector3(largo, 0.8, 14.0)
-	_caja(self, p + Vector3(0, ALTO_VIADUCTO + 0.1, 0), anden, _mat(Color(0.82, 0.8, 0.76), 0.7))
-	## Marquesina de cristal y pilares.
+	var lat := Vector3(1, 0, 0) if vertical else Vector3(0, 0, 1)
+	var lon := Vector3(0, 0, 1) if vertical else Vector3(1, 0, 0)
+	var suelo := ALTO_VIADUCTO + 0.6 + PISO_COCHE
+	var losa := _mat(Color(0.8, 0.78, 0.74), 0.7)
+	var borde := _mat(Color(0.95, 0.8, 0.1), 0.5)
+	for lado: float in [-1.0, 1.0]:
+		var c := p + lat * lado * ANDEN_LAT
+		_caja(self, c + Vector3(0, suelo - 0.5, 0), (Vector3(ANDEN_ANCHO, 1.0, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 1.0, ANDEN_ANCHO)), losa)
+		## Franja amarilla del borde del andén.
+		_caja(self, c - lat * lado * (ANDEN_ANCHO * 0.5 - 0.25) + Vector3(0, suelo + 0.01, 0), (Vector3(0.4, 0.02, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 0.02, 0.4)), borde)
+		for k in 3:
+			var f := (float(k) - 1.0) * 18.0
+			_banco(c + lon * f + lat * lado * 1.2 + Vector3(0, suelo, 0), vertical)
 	var vidrio := StandardMaterial3D.new()
 	vidrio.albedo_color = Color(0.7, 0.85, 0.95, 0.4)
 	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	_caja(self, p + Vector3(0, ALTO_VIADUCTO + 5.5, 0), Vector3(15.0, 0.3, largo) if vertical else Vector3(largo, 0.3, 15.0), vidrio)
+	_caja(self, p + Vector3(0, suelo + 4.5, 0), Vector3(16.0, 0.3, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 0.3, 16.0), vidrio)
 	for k in 4:
 		for lado: float in [-1.0, 1.0]:
-			var f := (float(k) / 3.0 - 0.5) * (largo - 6.0)
-			var q := p + (Vector3(lado * 6.8, 0, f) if vertical else Vector3(f, 0, lado * 6.8))
-			_caja(self, q + Vector3(0, ALTO_VIADUCTO + 3.0, 0), Vector3(0.4, 5.0, 0.4), _mat(col, 0.5))
-	## ACCESOS (7-10-2026, «¿el metro y la carretera respetan la calle?»):
-	## antes las escaleras salían hacia los lados y se metían en las manzanas.
-	## Ahora una pasarela cruza por encima de los carriles hasta la acera y la
-	## escalera baja PARALELA a la avenida, sobre la acera.
+			var f := (float(k) / 3.0 - 0.5) * (ANDEN_LARGO - 6.0)
+			_caja(self, p + lat * lado * 5.8 + lon * f + Vector3(0, suelo + 2.2, 0), Vector3(0.4, 4.6, 0.4), _mat(col, 0.5))
+	## Accesos: pasarela por encima de los carriles hasta la acera y escalera
+	## bajando PARALELA a la avenida (no se mete en las manzanas).
 	var gris := _mat(Color(0.6, 0.6, 0.62), 0.6)
 	var baranda := _mat(col, 0.5)
 	var subida := 22.0
+	var alto := suelo
 	for lado2: float in [-1.0, 1.0]:
-		var lat := Vector3(1, 0, 0) if vertical else Vector3(0, 0, 1)
-		var lon := Vector3(0, 0, 1) if vertical else Vector3(1, 0, 0)
 		var x_acera := CiudadExpansion.ANCHO_AV * 0.5 + 2.0
-		var z0 := 28.0
-		## Pasarela del andén a la vertical de la acera.
-		var pas_c := p + lat * lado2 * (7.0 + x_acera) * 0.5 + lon * z0 + Vector3(0, ALTO_VIADUCTO + 0.2, 0)
-		_caja(self, pas_c, (Vector3(x_acera - 7.0, 0.4, 3.0) if vertical else Vector3(3.0, 0.4, x_acera - 7.0)), gris)
-		## Escalera bajando sobre la acera.
-		var largo_e := sqrt(subida * subida + ALTO_VIADUCTO * ALTO_VIADUCTO)
-		var esc_c := p + lat * lado2 * x_acera + lon * (z0 + 1.5 + subida * 0.5) + Vector3(0, ALTO_VIADUCTO * 0.5, 0)
+		var z0 := ANDEN_LARGO * 0.5 - 2.0
+		var x0 := ANDEN_LAT + ANDEN_ANCHO * 0.5
+		var pas_c := p + lat * lado2 * (x0 + x_acera) * 0.5 + lon * z0 + Vector3(0, alto - 0.2, 0)
+		_caja(self, pas_c, (Vector3(x_acera - x0 + 1.5, 0.4, 3.0) if vertical else Vector3(3.0, 0.4, x_acera - x0 + 1.5)), gris)
+		var largo_e := sqrt(subida * subida + alto * alto)
+		var esc_c := p + lat * lado2 * x_acera + lon * (z0 + 1.5 + subida * 0.5) + Vector3(0, alto * 0.5, 0)
 		var esc := _caja(self, esc_c, Vector3(3.0, 0.4, largo_e) if vertical else Vector3(largo_e, 0.4, 3.0), gris)
-		var ang := atan2(ALTO_VIADUCTO, subida)
+		var ang := atan2(alto, subida)
 		if vertical:
 			esc.rotation.x = ang
 		else:
@@ -272,7 +385,8 @@ func _estacion_elevada(p: Vector3, dir: Vector3, col: Color, nombre: String) -> 
 			var bar := _caja(self, esc_c + lat * lb + Vector3(0, 1.0, 0), Vector3(0.1, 0.1, largo_e) if vertical else Vector3(largo_e, 0.1, 0.1), baranda)
 			bar.rotation = esc.rotation
 		var pie := p + lat * lado2 * x_acera + lon * (z0 + 1.5 + subida + 1.5)
-		accesos.append({"pie": Vector3(pie.x, 0.0, pie.z), "anden": p + Vector3(0, ALTO_VIADUCTO + 0.6, 0), "linea": nombre, "elevada": true})
+		accesos.append({"pie": Vector3(pie.x, 0.0, pie.z), "anden": p + lat * lado2 * ANDEN_LAT + lon * (ANDEN_LARGO * 0.5 - 5.0) + Vector3(0, suelo, 0),
+			"linea": linea_n, "idx": idx, "elevada": true, "nombre": nombre, "lado": lado2})
 	var l := Label3D.new()
 	l.text = "Ⓜ %s" % nombre
 	l.font_size = 64
@@ -280,18 +394,130 @@ func _estacion_elevada(p: Vector3, dir: Vector3, col: Color, nombre: String) -> 
 	l.modulate = Color.WHITE
 	l.outline_size = 8
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	l.position = p + Vector3(0, ALTO_VIADUCTO + 8.5, 0)
+	l.position = p + Vector3(0, suelo + 7.5, 0)
 	add_child(l)
 
+func _banco(p: Vector3, vertical: bool) -> void:
+	var madera := _mat(Color(0.5, 0.35, 0.2), 0.7)
+	_caja(self, p + Vector3(0, 0.45, 0), Vector3(0.5, 0.1, 2.2) if vertical else Vector3(2.2, 0.1, 0.5), madera)
+
+## El túnel de la línea subterránea: cerrado (suelo, paredes, techo) para que
+## desde dentro no se vea el cielo, con luces cada 30 m. Se corta en las
+## estaciones, que tienen su propio vestíbulo.
+func _tunel(a: Vector3, b: Vector3, estaciones: Array, dir: Vector3) -> void:
+	var muro := _mat(Color(0.32, 0.32, 0.34), 0.95)
+	var luz := _mat(Color(1.0, 0.92, 0.7), 0.4, 2.0)
+	var vertical := absf(dir.z) > 0.5
+	var lat := Vector3(1, 0, 0) if vertical else Vector3(0, 0, 1)
+	var cortes: Array = [0.0]
+	for p: Vector3 in estaciones:
+		var s := a.distance_to(p)
+		cortes.append(s - ANDEN_LARGO * 0.5 - 2.0)
+		cortes.append(s + ANDEN_LARGO * 0.5 + 2.0)
+	cortes.append(a.distance_to(b))
+	var luces: Array[Transform3D] = []
+	for k in range(0, cortes.size() - 1, 2):
+		var s0 := float(cortes[k])
+		var s1 := float(cortes[k + 1])
+		if s1 - s0 < 1.0:
+			continue
+		var c := a + dir * (s0 + s1) * 0.5
+		var largo := s1 - s0
+		var y := PROF_TUNEL
+		_caja(self, c + Vector3(0, y - 0.3, 0), (Vector3(8.0, 0.6, largo) if vertical else Vector3(largo, 0.6, 8.0)), muro)
+		_caja(self, c + Vector3(0, y + 5.5, 0), (Vector3(8.0, 0.6, largo) if vertical else Vector3(largo, 0.6, 8.0)), muro)
+		for lado: float in [-1.0, 1.0]:
+			_caja(self, c + lat * lado * 3.8 + Vector3(0, y + 2.6, 0), (Vector3(0.4, 5.6, largo) if vertical else Vector3(largo, 5.6, 0.4)), muro)
+		var n := int(largo / 30.0)
+		for q in n:
+			var pl := a + dir * (s0 + (float(q) + 0.5) * largo / float(maxi(n, 1)))
+			luces.append(Transform3D(Basis.from_scale(Vector3(0.4, 0.15, 1.6) if vertical else Vector3(1.6, 0.15, 0.4)), pl + lat * 3.4 + Vector3(0, y + 4.6, 0)))
+	if not luces.is_empty():
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = BoxMesh.new()
+		mm.instance_count = luces.size()
+		for i in luces.size():
+			mm.set_instance_transform(i, luces[i])
+		var mi := MultiMeshInstance3D.new()
+		mi.multimesh = mm
+		mi.material_override = luz
+		add_child(mi)
+
+## Estación subterránea: vestíbulo alicatado con el andén a un lado, bancos,
+## carteles con el nombre, luces y el panel del próximo tren.
+func _estacion_subterranea(p: Vector3, dir: Vector3, col: Color, nombre: String, linea_n: String, idx: int) -> void:
+	var vertical := absf(dir.z) > 0.5
+	var lat := Vector3(1, 0, 0) if vertical else Vector3(0, 0, 1)
+	var lon := Vector3(0, 0, 1) if vertical else Vector3(1, 0, 0)
+	var y := PROF_TUNEL
+	var largo := ANDEN_LARGO + 4.0
+	var ancho := 16.0
+	var azulejo := _mat(Color(0.7, 0.72, 0.74), 0.5)
+	var franja := _mat(col, 0.4, 0.3)
+	var suelo_m := _mat(Color(0.45, 0.45, 0.47), 0.8)
+	var c := p + lat * 2.0
+	_caja(self, c + Vector3(0, y - 0.3, 0), (Vector3(ancho, 0.6, largo) if vertical else Vector3(largo, 0.6, ancho)), suelo_m)
+	_caja(self, c + Vector3(0, y + 6.5, 0), (Vector3(ancho, 0.6, largo) if vertical else Vector3(largo, 0.6, ancho)), azulejo)
+	for lado: float in [-1.0, 1.0]:
+		var pared := c + lat * lado * ancho * 0.5 + Vector3(0, y + 3.1, 0)
+		_caja(self, pared, (Vector3(0.4, 6.8, largo) if vertical else Vector3(largo, 6.8, 0.4)), azulejo)
+		_caja(self, pared - lat * lado * 0.21 + Vector3(0, -1.2, 0), (Vector3(0.05, 0.6, largo) if vertical else Vector3(largo, 0.6, 0.05)), franja)
+		var cart := Label3D.new()
+		cart.text = "Ⓜ  %s" % nombre
+		cart.font_size = 72
+		cart.pixel_size = 0.02
+		cart.modulate = Color.WHITE
+		cart.outline_size = 6
+		cart.outline_modulate = col.darkened(0.4)
+		cart.position = pared - lat * lado * 0.3 + Vector3(0, 0.6, 0)
+		cart.rotation.y = atan2(-lat.x * lado, -lat.z * lado)
+		add_child(cart)
+	for e: float in [-1.0, 1.0]:
+		_caja(self, c + lon * e * largo * 0.5 + Vector3(0, y + 3.1, 0), (Vector3(ancho, 6.8, 0.4) if vertical else Vector3(0.4, 6.8, ancho)), azulejo)
+	## El andén (lado +lateral), con su borde amarillo y bancos.
+	var ca := p + lat * ANDEN_LAT * 1.6
+	_caja(self, ca + Vector3(0, y + PISO_COCHE - 0.5, 0), (Vector3(ANDEN_ANCHO * 2.2, 1.0, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 1.0, ANDEN_ANCHO * 2.2)), _mat(Color(0.7, 0.68, 0.64), 0.7))
+	_caja(self, p + lat * (ANDEN_LAT * 1.6 - ANDEN_ANCHO * 1.1 + 0.25) + Vector3(0, y + PISO_COCHE + 0.01, 0), (Vector3(0.4, 0.02, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 0.02, 0.4)), _mat(Color(0.95, 0.8, 0.1), 0.5))
+	for k in 3:
+		_banco(ca + lon * (float(k) - 1.0) * 18.0 + lat * 3.0 + Vector3(0, y + PISO_COCHE, 0), vertical)
+	## Luces del vestíbulo: tiras y dos focos de verdad.
+	for k in 4:
+		_caja(self, c + lon * (float(k) - 1.5) * 15.0 + Vector3(0, y + 6.1, 0), Vector3(1.2, 0.1, 6.0) if vertical else Vector3(6.0, 0.1, 1.2), _mat(Color(1, 0.97, 0.9), 0.3, 2.5))
+	for f: float in [-0.25, 0.25]:
+		var o := OmniLight3D.new()
+		o.omni_range = 30.0
+		o.light_energy = 0.7
+		o.position = c + lon * f * largo + Vector3(0, y + 5.0, 0)
+		add_child(o)
+	var panel := Label3D.new()
+	panel.font_size = 32
+	panel.pixel_size = 0.006
+	panel.modulate = Color(1.0, 0.85, 0.3)
+	panel.outline_size = 6
+	panel.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	panel.position = ca + lon * 12.0 + Vector3(0, y + PISO_COCHE + 2.6, 0)
+	add_child(panel)
+	_paneles.append({"label": panel, "linea_n": linea_n, "s": a_s(linea_n, idx), "pend": true})
+
+func a_s(_n: String, _i: int) -> float:
+	return 0.0
+
 func _panel(p: Vector3, linea: Dictionary, s: float) -> void:
+	## Arreglo de los paneles subterráneos creados antes de tener la línea.
+	for pa: Dictionary in _paneles:
+		if pa.has("pend") and String(pa["linea_n"]) == String(linea["nombre"]) and not pa.has("linea"):
+			pa["linea"] = linea
+			pa["s"] = s
+			pa.erase("pend")
+			return
 	var l := Label3D.new()
 	l.font_size = 40
 	l.pixel_size = 0.022
 	l.modulate = Color(1.0, 0.85, 0.3)
 	l.outline_size = 6
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	l.no_depth_test = not bool(linea["elevada"])
-	l.position = p + Vector3(0, ALTO_VIADUCTO + 6.8 if bool(linea["elevada"]) else 5.5, 0) + (Vector3(18, 0, 18) if not bool(linea["elevada"]) else Vector3.ZERO)
+	l.position = p + Vector3(0, ALTO_VIADUCTO + 8.6, 0)
 	add_child(l)
 	_paneles.append({"label": l, "linea": linea, "s": s})
 
@@ -306,26 +532,86 @@ func _tunel_xray(a: Vector3, b: Vector3, col: Color) -> void:
 	var vertical := absf(a.x - b.x) < 0.1
 	_caja(_xray, (a + b) * 0.5 + Vector3(0, 0.6, 0), Vector3(10.0, 0.4, largo) if vertical else Vector3(largo, 0.4, 10.0), m)
 
-## Un tren de tres coches. `fantasma`: el de la línea subterránea, que solo se
-## ve en rayos X (dibujado sobre todo, translúcido).
-func _tren(col: Color, fantasma: bool) -> Node3D:
+## El tren de verdad: tres coches HUECOS con su interior (asientos, barras,
+## asideros, luces, ventanas, puertas que se abren) y un panel LED con la
+## próxima estación. Se ve desde fuera por las ventanas y se puede viajar dentro.
+func _tren_real(col: Color) -> Node3D:
 	var n := Node3D.new()
-	var cuerpo := _mat(Color(0.92, 0.93, 0.95), 0.35)
-	var franja := _mat(col, 0.4, 0.3)
-	var ventana := _mat(Color(0.15, 0.2, 0.28), 0.1)
-	if fantasma:
-		for mm: StandardMaterial3D in [cuerpo, franja, ventana]:
-			mm.no_depth_test = true
-			mm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-			mm.albedo_color.a = 0.85
-			mm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var blanco := _mat(Color(0.93, 0.94, 0.96), 0.35)
+	var franja := _mat(col, 0.4, 0.2)
+	var vidrio := StandardMaterial3D.new()
+	vidrio.albedo_color = Color(0.6, 0.75, 0.85, 0.22)
+	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	vidrio.roughness = 0.05
+	var asiento := _mat(col.darkened(0.3), 0.7)
+	var metal := _mat(Color(0.75, 0.76, 0.78), 0.25)
+	metal.metallic = 0.8
+	var luz := _mat(Color(1, 0.97, 0.9), 0.3, 1.1)
+	var suelo := _mat(Color(0.3, 0.3, 0.32), 0.9)
+	var puerta_m := _mat(Color(0.82, 0.84, 0.86), 0.3)
+	var puertas: Array = []
+	var f := PISO_COCHE
 	for k in 3:
-		var z := (float(k) - 1.0) * 17.0
-		_caja(n, Vector3(0, 1.8, z), Vector3(3.0, 3.4, 16.0), cuerpo)
-		_caja(n, Vector3(0, 1.0, z), Vector3(3.05, 0.5, 16.05), franja)
-		_caja(n, Vector3(0, 2.4, z), Vector3(3.08, 1.0, 14.0), ventana)
-	if fantasma:
-		_xray.add_child(n)
-	else:
-		add_child(n)
+		var z := (float(k) - 1.0) * 16.6
+		_caja(n, Vector3(0, f - 0.3, z), Vector3(3.0, 0.6, 16.0), blanco)          ## bastidor
+		_caja(n, Vector3(0, f + 0.02, z), Vector3(2.9, 0.04, 15.9), suelo)
+		_caja(n, Vector3(0, f + 2.65, z), Vector3(3.0, 0.15, 16.0), blanco)        ## techo
+		for lado: float in [-1.0, 1.0]:
+			var x := lado * 1.45
+			_caja(n, Vector3(x, f + 0.45, z), Vector3(0.1, 0.9, 16.0), blanco)       ## panel bajo
+			_caja(n, Vector3(x * 1.04, f + 0.35, z), Vector3(0.02, 0.25, 16.0), franja)
+			_caja(n, Vector3(x, f + 2.4, z), Vector3(0.1, 0.4, 16.0), blanco)        ## sobre ventanas
+			_caja(n, Vector3(x, f + 1.55, z), Vector3(0.04, 1.3, 16.0), vidrio)      ## ventanas
+			for q in 8:
+				_caja(n, Vector3(x, f + 1.55, z - 7.0 + float(q) * 2.0), Vector3(0.12, 1.3, 0.18), blanco)
+			## Asientos laterales entre puertas, con respaldo.
+			for tramo: Array in [[-6.0, 3.0], [0.0, 5.0], [6.0, 3.0]]:
+				_caja(n, Vector3(lado * 1.1, f + 0.45, z + float(tramo[0])), Vector3(0.55, 0.12, float(tramo[1])), asiento)
+				_caja(n, Vector3(lado * 1.35, f + 0.8, z + float(tramo[0])), Vector3(0.1, 0.6, float(tramo[1])), asiento)
+			## Puertas: dos por lado; se deslizan al abrir.
+			for dz: float in [-3.5, 3.5]:
+				for hoja: float in [-1.0, 1.0]:
+					var base := Vector3(x * 1.03, f + 1.15, z + dz + hoja * 0.37)
+					var p := _caja(n, base, Vector3(0.06, 2.2, 0.72), puerta_m)
+					puertas.append([p, base, hoja])
+		## Barras y asideros.
+		for q in 5:
+			var b := MeshInstance3D.new()
+			var cm := CylinderMesh.new()
+			cm.top_radius = 0.03
+			cm.bottom_radius = 0.03
+			cm.height = 2.6
+			b.mesh = cm
+			b.material_override = metal
+			b.position = Vector3(0, f + 1.3, z - 6.0 + float(q) * 3.0)
+			n.add_child(b)
+		for lado3: float in [-0.55, 0.55]:
+			_caja(n, Vector3(lado3, f + 2.25, z), Vector3(0.04, 0.04, 15.0), metal)
+		_caja(n, Vector3(0, f + 2.55, z), Vector3(0.5, 0.05, 15.0), luz)
+		## Testeros con ventana (los extremos del coche).
+		for e: float in [-1.0, 1.0]:
+			_caja(n, Vector3(0, f + 1.3, z + e * 8.0), Vector3(3.0, 2.6, 0.1), blanco)
+	## Panel LED en el testero delantero del primer coche.
+	var led := Label3D.new()
+	led.font_size = 36
+	led.pixel_size = 0.006
+	led.modulate = Color(1.0, 0.6, 0.1)
+	led.position = Vector3(0, f + 2.25, 16.6 + 7.9)
+	led.rotation.y = PI
+	n.add_child(led)
+	n.set_meta("led", led)
+	n.set_meta("puertas", puertas)
+	return n
+
+## El tren «fantasma» de la línea subterránea: solo se ve en rayos X.
+func _tren_fantasma(col: Color) -> Node3D:
+	var n := Node3D.new()
+	var m := StandardMaterial3D.new()
+	m.albedo_color = Color(col.r, col.g, col.b, 0.85)
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.no_depth_test = true
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	for k in 3:
+		_caja(n, Vector3(0, 1.8, (float(k) - 1.0) * 17.0), Vector3(3.0, 3.4, 16.0), m)
+	_xray.add_child(n)
 	return n
