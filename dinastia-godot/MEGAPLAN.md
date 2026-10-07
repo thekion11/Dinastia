@@ -250,7 +250,54 @@ Pendientes, de menor a mayor esfuerzo:
 - Fuera de juego, cambios, eventos y selección.
 - Transición de jugador a DT.
 
-**Fase 4 — Contenido que falta (2-3 días)**
+**Fase 4 — Contenido que falta (2-3 días)** ✅ HECHA el 7-10-2026:
+- **Guiños de estadio (E9):** el rasgo de los 176 estadios reales (`ESTADIO_CLUB`) ya no es solo texto, ahora se dibuja (`visor/guinos_estadio.gd`):
+  - cordillera, cerro o volcán de fondo, con nieve en las cumbres altas;
+  - río, lago o mar junto al estadio (con el agua animada del juego);
+  - desierto con dunas, bosque alrededor;
+  - cuatro torres rojas, torres de rampas, una torre sola, techo en arco, burbujas o carpas, y un muro de edificios.
+  - Cada estadio tiene un **apodo** genérico, nunca el nombre oficial («El Mirador», «La Caldera», «Las Torres»…). Sale en el rótulo del estadio: 111 de 176 tienen uno.
+  - Capturas: `pruebas/capturas/estadio_guino_0..7.png` (`GUINOS=1 … captura_estadios_reales.tscn`).
+- **Plantillas fijas:** la plantilla inicial de **todos** los clubes se siembra con el nombre del club, no con la semilla ni con su id.
+  - El mismo club trae a la misma gente en cada partida, cargues los países que cargues (probado: 48 de 48).
+  - Esto incluye los clubes sin tabla de reales.
+  - Lo que llega después (canteranos, regens, resultados) sigue variando con la semilla.
+  - De paso se corrigió el **motor libre**: tiraba 100-200 veces por partido y salían 9-6. Ahora tira 10-40 veces. La prueba pasaba solo por la plantilla de una semilla concreta.
+- **Banderas del estudio:** 24 banderas nacionales dibujadas en código más la del club (`visor/banderas.gd`, shader con espejo).
+  - En el sorteo, mástiles con los países del bombo.
+  - En la sala de prensa, la del país y la del club.
+- **Mini-juego de representantes:** la presión del agente ya no es un sí o un no. Con «🤝 Sentarse a negociar» se regatea por rondas (`nucleo/mesa_agente.gd`, `ui/componentes/mesa_agente_ui.gd`):
+  - El agente pide el 100 % y esconde un mínimo según su perfil: el tiburón aprieta y el formador cede. También influyen la confianza que te tiene y el bono de agentes del DT.
+  - Cada ronda gasta una taza de paciencia. Ofrecer muy poco lo ofende. Si se le acaba la paciencia se levanta de la mesa, y eso es peor que un no.
+  - Tienes un farol por mesa: si cuela, baja mucho; si no, se enfada.
+  - Cada ronda deja una señal de cuánto margen le queda. El tiburón a veces disimula.
+  - El trato se aplica a escala: una mejora pactada al 50 % sube el sueldo un 15 %, no un 30 %.
+  - Medido en 300 mesas: el formador cierra de media al 64 % y el tiburón al 84 %.
+  - Capturas: `pruebas/capturas/mesa_agente_1/2.png`.
+- **Modos hasta el final (E16):** `pruebas/prueba_modos.tscn` juega los 11 modos de entrenador y ahora también la **Carrera de Jugador**: una temporada entera, la siguiente, los eventos y el guardado. 0 fallos.
+  - Ya no queda ninguna tarjeta «en desarrollo» en el menú.
+  - «Leyenda» es una dificultad.
+  - La selección jugable llegó en la fase 3.
+- Banco: 0 fallos, con pruebas nuevas de guiños, plantillas fijas y la mesa.
+
+**Nota recalculada tras las fases 1-4** (estimación propia, mismas 7 categorías y pesos que en `COMPARACION_INFORME.md`):
+
+| Categoría | Peso | Antes (29-9) | Ahora | Por qué sube |
+|---|---|---|---|---|
+| Arquitectura | 15 % | 72 | 73 | Prueba larga de 10 temporadas y prueba de los 12 modos. |
+| Jugabilidad | 20 % | 74 | 78 | Fuera de juego, cambios, selección, de jugador a DT y la mesa de agentes. |
+| Visual / 3D | 15 % | 64 | 70 | Caras reales en el campo, pelo por cortes, césped, techo, LED, guiños y banderas. |
+| Rendimiento | 10 % | 70 | 70 | Sin medir en un PC real. |
+| Contenido | 20 % | 80 | 83 | Plantillas fijas, 13 eventos y 176 estadios con guiño. |
+| Pulido | 10 % | 60 | 64 | Los roces del vídeo arreglados. La narración sigue solo en castellano. |
+| Originalidad | 10 % | 68 | 71 | Una vida entera en una partida y el regateo con representantes. |
+| **Total** | | **≈71** | **≈74** | |
+
+Cuenta: 10,95 + 15,6 + 10,5 + 7,0 + 16,6 + 6,4 + 7,1 = **74,2**.
+
+Se queda **a un punto de la meta de 75**. Lo que más falta en pulido es traducir la narración (punto 10 de la lista) y probar en hardware real (🔒). La fase 5 (originalidad) es la siguiente.
+
+**Fase 4 — plan original**
 - Guiños de estadio por club (E9).
 - Plantillas fijas de los 128 clubes.
 - Banderas del estudio.

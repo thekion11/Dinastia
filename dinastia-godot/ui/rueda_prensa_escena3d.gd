@@ -110,6 +110,7 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 	_montar_sala()
 	_montar_periodistas()
 	_montar_fondo_sponsors(club, acento, clubes_competencia)
+	_montar_banderas(club)
 	_montar_luces()
 	_montar_podio()
 	_montar_dt(look_dt)
@@ -125,6 +126,50 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 # vacío. Mismo principio que ya resolvió esto para el sorteo
 # (`SorteoEscena3D._montar_sala()`): paredes que cierran el encuadre y un
 # techo con su truss de focos, a la escala mucho más chica de este plató.
+
+## LAS BANDERAS DE LA SALA (MEGAPLAN fase 4): la del país del club y la del
+## club, en mástiles a los dos lados de la pared de sponsors.
+func _montar_banderas(club: Club) -> void:
+	if club == null:
+		return
+	var asta := StandardMaterial3D.new()
+	asta.albedo_color = Color(0.8, 0.8, 0.83)
+	asta.metallic = 0.9
+	asta.roughness = 0.3
+	var texs := [Banderas.textura(club.pais), Banderas.de_club(club)]
+	for i in 2:
+		var lado := -1.0 if i == 0 else 1.0
+		var base := Vector3(lado * 2.95, 0.0, -1.4)
+		var palo := MeshInstance3D.new()
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.02
+		cm.bottom_radius = 0.03
+		cm.height = 2.25
+		palo.mesh = cm
+		palo.material_override = asta
+		palo.position = base + Vector3(0, 1.125, 0)
+		add_child(palo)
+		## Colgada del asta, cae vertical (sala cerrada: sin viento).
+		var qm := QuadMesh.new()
+		qm.size = Vector2(0.9, 0.6)
+		qm.subdivide_width = 10
+		qm.subdivide_depth = 4
+		qm.center_offset = Vector3(0.45, 0, 0)
+		var tela := MeshInstance3D.new()
+		tela.mesh = qm
+		var mat := ShaderMaterial.new()
+		mat.shader = StadiumBuilder.SHADER_BANDERA
+		mat.set_shader_parameter("usa_dibujo", true)
+		mat.set_shader_parameter("espejo", lado > 0.0)
+		mat.set_shader_parameter("dibujo", texs[i])
+		mat.set_shader_parameter("tela", Texturas.tela(Color.WHITE).detail_albedo)
+		mat.set_shader_parameter("ancho", 0.9)
+		mat.set_shader_parameter("fase", float(i) * 2.0)
+		mat.set_shader_parameter("viento", 0.12)
+		tela.material_override = mat
+		tela.position = base + Vector3(0, 1.88, 0.02)
+		tela.rotation.y = 0.0 if lado < 0.0 else PI
+		add_child(tela)
 
 func _montar_sala() -> void:
 	var oscuro := StandardMaterial3D.new()

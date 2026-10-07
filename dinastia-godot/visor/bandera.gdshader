@@ -9,6 +9,13 @@ uniform sampler2D tela : source_color, hint_default_white;
 uniform float ancho = 1.3;
 uniform float fase = 0.0;
 uniform float viento = 1.0;   // 0 = calma, 1 = normal, 2 = temporal
+// El dibujo de una bandera nacional (`Banderas.textura`): si está, manda él y
+// `color` queda como tinte blanco (MEGAPLAN fase 4, banderas del estudio).
+uniform sampler2D dibujo : source_color, hint_default_white;
+uniform bool usa_dibujo = false;
+// Las banderas giradas 180° (asta a la derecha) se ven por detrás: el dibujo
+// se lee al revés si no se refleja.
+uniform bool espejo = false;
 
 void vertex() {
 	float x = UV.x;                         // 0 en el asta, 1 en la punta
@@ -21,7 +28,9 @@ void vertex() {
 
 void fragment() {
 	// La trama se mezcla suave: multiplicada entera oscurecía el color del club.
-	vec3 base = color.rgb * mix(vec3(1.0), texture(tela, UV * vec2(3.0, 2.0)).rgb, 0.35);
+	vec2 uv_d = espejo ? vec2(1.0 - UV.x, UV.y) : UV;
+	vec3 tinte = usa_dibujo ? texture(dibujo, uv_d).rgb : color.rgb;
+	vec3 base = tinte * mix(vec3(1.0), texture(tela, UV * vec2(3.0, 2.0)).rgb, 0.35);
 	// Los pliegues se oscurecen un poco: se lee como tela, no como chapa.
 	float pliegue = 0.9 + 0.1 * sin(TIME * 3.0 + fase - UV.x * 6.0);
 	ALBEDO = base * pliegue;

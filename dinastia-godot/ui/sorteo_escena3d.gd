@@ -192,6 +192,58 @@ func montar(acento: Color, fondo: Color, nivel: int = Calidad.ALTO) -> void:
 ## se veía que era una escena montada, no un sitio. Un sorteo es una GALA, y una
 ## gala tiene tarima elevada, paredes que cierran, techo con truss de focos y
 ## gente sentada mirando. Sin esas cuatro cosas no hay sala, hay un objeto.
+## LAS BANDERAS DEL ESTUDIO (MEGAPLAN fase 4): mástiles a los dos lados del
+## fondo de la tarima con las banderas de los países que entran en el bombo
+## (en una copa nacional, la del país repetida). Tela que ondea con el dibujo
+## de `Banderas`.
+func poner_banderas(codigos: Array) -> void:
+	if codigos.is_empty():
+		return
+	var asta := StandardMaterial3D.new()
+	asta.albedo_color = Color(0.82, 0.83, 0.86)
+	asta.metallic = 0.9
+	asta.roughness = 0.25
+	var puestos: Array = []
+	## Contra la pared del fondo, a los lados de la pantalla gigante: se leen
+	## de frente y no se tapan entre sí.
+	for lado in [-1.0, 1.0]:
+		for k in 3:
+			puestos.append(Vector3(lado * (3.7 + float(k) * 0.95), 0.42, -4.6))
+	for i in puestos.size():
+		var cod := String(codigos[i % codigos.size()])
+		var base: Vector3 = puestos[i]
+		var palo := MeshInstance3D.new()
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.025
+		cm.bottom_radius = 0.035
+		cm.height = 3.0
+		palo.mesh = cm
+		palo.material_override = asta
+		palo.position = base + Vector3(0, 1.5, 0)
+		add_child(palo)
+		var qm := QuadMesh.new()
+		qm.size = Vector2(0.82, 0.55)
+		qm.subdivide_width = 12
+		qm.subdivide_depth = 5
+		qm.center_offset = Vector3(0.41, 0, 0)
+		var tela := MeshInstance3D.new()
+		tela.mesh = qm
+		var mat := ShaderMaterial.new()
+		mat.shader = StadiumBuilder.SHADER_BANDERA
+		mat.set_shader_parameter("usa_dibujo", true)
+		mat.set_shader_parameter("espejo", base.x > 0.0)
+		mat.set_shader_parameter("dibujo", Banderas.textura(cod))
+		mat.set_shader_parameter("tela", Texturas.tela(Color.WHITE).detail_albedo)
+		mat.set_shader_parameter("ancho", 0.82)
+		mat.set_shader_parameter("fase", float(i) * 1.3)
+		mat.set_shader_parameter("viento", 0.35)
+		tela.material_override = mat
+		## La tela sale del asta hacia el centro del plató.
+		var hacia_centro := -signf(base.x)
+		tela.position = base + Vector3(0, 2.62, 0.03)
+		tela.rotation.y = 0.0 if hacia_centro > 0.0 else PI
+		add_child(tela)
+
 func _montar_sala(fondo: Color) -> void:
 	var oscuro := StandardMaterial3D.new()
 	oscuro.albedo_color = fondo.darkened(0.72)
