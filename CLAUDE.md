@@ -142,8 +142,16 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (`TraficoCiudad`), farolas/ventanas/guirnaldas de noche, Casa Grande en finca 2x2
   con seto (el 26-9 se había quitado la casa por error). Río movido a x=-470.
   Minijuegos: no se perdieron (penales escondido); sala en Mi Vida → penales +
-  tiro libre + trivia del club (nuevos). Pendiente: metro funcional, modo a pie/
-  volante, pasada 2 de instalaciones si la pide. Esperar veredicto.
+  tiro libre + trivia del club (nuevos).
+  7-10 NOCHE (usuario dormido, «sigue y termina el megaplan»): HECHO inventario de
+  modelos (0 sin usar), metro funcional (L1 elevada, L2 rayos X), autopista, ciudad
+  interactiva (conducir/pasear, NPC, E para entrar, táctil), minijuegos de ciudad,
+  estatua del ídolo, murales, eólico; FASE 5 CERRADA (documental, ciudad responde,
+  modo foto, dinastías, Tribuna real); 129 titulares EN/PT. Nota ≈77. Fase 6 = 🔒
+  del dueño (builds, keystore, licencias; presentador en pausa). Nada fusionado a
+  main desde el PR #3: lo nuevo está en la rama (PR nuevo si lo pide).
+  OJO banco: si el script tiene error de sintaxis se queda colgado; comprobar
+  que aparece «===== FIN».
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.

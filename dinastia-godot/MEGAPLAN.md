@@ -304,17 +304,84 @@ Se queda **a un punto de la meta de 75**. Lo que más falta en pulido es traduci
 - Mini-juego de representantes.
 - Modos a medias (E16).
 
-**Fase 5 — Originalidad (en paralelo)**
+**Fase 5 — Originalidad** ✅ HECHA el 7-10-2026:
+- **Documental de la temporada** (`ui/componentes/documental_temporada.gd`): al cerrar el año, la temporada contada como una película.
+  - Franjas de cine, zoom lento y narración que se escribe sola.
+  - Capítulos con datos reales: fichajes, goleador, mayor goleada, racha, peor derrota y veredicto.
+  - Se vuelve a ver en Historia → «Documental de la temporada».
+- **La ciudad responde al club** (`visor/ciudad_animo.gd`): según el puesto, la racha y el título o el descenso:
+  - en la euforia, pancartas en las fachadas y banderas en el anillo;
+  - en la crisis, persianas y grafitis genéricos;
+  - el color de la escena también cambia.
+- **Modo foto** (`ui/componentes/modo_foto.gd`) en la ciudad, el estadio y la casa:
+  - 6 filtros: natural, club, blanco y negro, sepia, cine y vintage;
+  - marco con escudo y pie;
+  - las fotos se guardan en la app de Fotos del móvil.
+- **Dinastías familiares**:
+  - el hijo de tu jugador retirado (Carrera de Jugador → DT) llega a la cantera que diriges, con tu apellido y un techo heredado;
+  - en el modo entrenador, tus hijos crecen y a los 16 entran en tu cantera («el hijo del míster»).
+- **La Tribuna como termómetro real:** los hinchas citan goles, minutos y resultados de tu último partido.
+- **Y además, la estatua del ídolo:** en la Plaza Mayor hay una estatua de bronce de la última leyenda del club, o de su capitán.
+
+**La ciudad 2.0 (7-10-2026, pedidos del usuario durante la fase 5):**
+- **Tamaño:** 2.640 m de lado, más de 4 veces la superficie anterior (`visor/ciudad_expansion.gd`).
+- **Red vial en datos:** 1.027 tramos, avenidas cada tres calles y un bulevar alrededor del núcleo. Incluye `camino_entre`, la base para conducir, caminar y mover NPC.
+- **Zonas:** centro de torres, comercio y oficinas, casas con jardín, industria y puerto.
+- **Instalaciones de ciudad:**
+  - ayuntamiento y Plaza Mayor, estación central, mercado, cine;
+  - hospital, comisaría, bomberos, escuela, instituto, universidad;
+  - centro comercial, gasolineras, cocheras, granja, desguace;
+  - Villa moderna y parques con lago.
+- **El río:** 33 tramos de puente, puerto con veleros y botes que pasan bajo los puentes. Se movió a x = −470 para no pisar el anillo exterior.
+- **Semáforos con ciclo real** en 326 cruces (`visor/semaforos.gd`). Los coches frenan en rojo y hacen cola.
+- **Transporte:**
+  - dos líneas de bus que paran en 28 marquesinas;
+  - **metro**: la línea 1 elevada con viaducto, estaciones y trenes que paran y dan la vuelta; la línea 2 subterránea, visible en rayos X; paneles de próximo tren (`visor/metro_ciudad.gd`);
+  - **autopista** elevada alrededor de la ciudad, con enlaces y carreteras al horizonte (`visor/autopista.gd`).
+- **La Casa Grande** vuelve, en su finca de 2×2 manzanas rodeada de seto. El 26-9 se había quitado la casa por error.
+- **Ciudad interactiva** (`visor/explorador_ciudad.gd`):
+  - conducir y pasear, con choques contra manzanas y río y subida a los puentes;
+  - hablar con los peatones (te comentan cómo va el club);
+  - entrar a los lugares;
+  - teclado, mando y controles táctiles.
+- **Minijuegos:**
+  - en la ciudad: autógrafos en la Plaza Mayor, pesca en el puerto, contrarreloj en el karting, trivia en la universidad y el cine, penales en los parques;
+  - sala en Mi Vida: penales, tiro libre (nuevo) y trivia del club (nueva).
+- **Identidad y noche:** murales del club, parque eólico con aspas girando, depósito de agua, farolas con charco de luz, ventanas encendidas y guirnaldas de colores.
+- **Inventario automático:** **todos** los modelos de `assets/ciudad` aparecen en la ciudad, 0 sin usar (`pruebas/prueba_ciudad_modelos.tscn`).
+- **Instalaciones del club:** cada una con su arquitectura (naves con bóveda, piscina de cristal, torre, clínica, templo, escuela en L, pabellón, medios, tienda) y un campus con paseos.
+- **Narración:** 129 titulares de noticias traducidos al inglés y al portugués (punto 10, primera parte).
+- **Límite honesto:**
+  - la ciudad tarda unos 3-5 s en construirse en este entorno sin tarjeta gráfica (unos 13.600 nodos); falta medirla en un PC real;
+  - la línea 2 del metro se ve solo en rayos X;
+  - los cuerpos de las noticias siguen en castellano.
+
+**Nota recalculada tras las fases 1-5** (estimación propia, mismas categorías y pesos):
+
+| Categoría | Peso | Tras la fase 4 | Ahora | Por qué |
+|---|---|---|---|---|
+| Arquitectura | 15 % | 73 | 75 | Red vial en datos, inventario automático y más pruebas. El núcleo sigue siendo el portado del HTML. |
+| Jugabilidad | 20 % | 78 | 81 | Ciudad recorrible, 8 minijuegos, mesa de agentes y dinastías. |
+| Visual / 3D | 15 % | 70 | 74 | Ciudad 2.0 con metro, autopista, noche, río y arquitectura propia en cada instalación. |
+| Rendimiento | 10 % | 70 | 69 | La ciudad pesa más y sigue sin medirse en un PC real. |
+| Contenido | 20 % | 83 | 87 | Ciudad, minijuegos, documental y dinastías. |
+| Pulido | 10 % | 64 | 66 | Titulares traducidos. Los cuerpos de las noticias y el hardware real siguen pendientes. |
+| Originalidad | 10 % | 71 | 79 | Documental, ciudad que responde, modo foto, estatua del ídolo, Tribuna real y una vida entera en una partida. |
+| **Total** | | **≈74** | **≈77** | |
+
+Cuenta: 11,25 + 16,2 + 11,1 + 6,9 + 17,4 + 6,6 + 7,9 = **77,35**. Se pasa la meta de 75. Para 80+ hacen falta las 🔒 (hardware real, builds y licencias) y traducir los cuerpos de la narración.
+
+**Fase 5 — plan original**
 - Documental de la temporada.
 - Ciudad que responde al club.
 - Modo foto.
 - Dinastías familiares.
 
-**Fase 6 — Lo que depende de ti 🔒**
-- PC y Android reales, builds y keystore.
-- Licencias.
-- Cara 2D→3D (permiso).
-- Presentador del sorteo.
+**Fase 6 — Lo que depende de ti 🔒** (estado al 7-10-2026):
+- PC y Android reales, builds y keystore: 🔒 del dueño. Ya hay controles táctiles en la ciudad.
+- Licencias: 🔒 del dueño. Todo lo nuevo de la fase 5 está hecho en código, sin modelos de terceros nuevos.
+- Cara 2D→3D: ✅ hecha con el permiso del 29-9 (malla deformable por jugador y motor de caras).
+- Presentador del sorteo: en pausa a pedido del usuario.
 
 **Cómo se mide:**
 - Cada fase termina con el banco en 0 fallos, el recorrido de pantallas sin errores y capturas.
