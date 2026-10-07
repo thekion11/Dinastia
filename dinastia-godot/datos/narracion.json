@@ -1,0 +1,1359 @@
+{
+ "directas": {
+  "en": {
+   "Nuevo chico en la academia": "New kid at the academy",
+   "Lesión en la academia": "Injury at the academy",
+   "Llaman del colegio": "The school calls",
+   "Un chico deja la academia": "A kid leaves the academy",
+   "De la academia al primer equipo": "From the academy to the first team",
+   "Mercado de auspicios abierto": "Sponsorship market open",
+   "Auspiciador molesto": "Unhappy sponsor",
+   "Auspiciador conforme": "Satisfied sponsor",
+   "Llega la camada juvenil": "The youth intake arrives",
+   "La academia se queda sin cupo": "The academy has no room",
+   "Se retira una figura": "A star retires",
+   "👨‍👦 Tu hijo entra en la cantera": "👨‍👦 Your son joins the academy",
+   "👨‍👦 Tu hijo llega a la cantera": "👨‍👦 Your son arrives at the academy",
+   "Llega el hijo de una leyenda": "A legend's son arrives",
+   "Un hermano más en el plantel": "Another brother in the squad",
+   "El club le paga estudios, alojamiento y comida. Se queda tranquilo y es mucho más difícil que se lo lleven.": "The club pays for his studies, lodging and meals. He feels settled and it's much harder for anyone to poach him.",
+   "Te roban un canterano": "A youth player is poached",
+   "El peso de un apellido": "The weight of a surname",
+   "Ya no es «el nuevo» nadie": "No longer \"the new\" anyone",
+   "Le prometiste traer a alguien de su país y ahora tiene con quién hablar en su idioma. Se le nota en el ánimo.": "You promised to bring someone from his country and now he has someone to talk to in his language. You can see it in his mood.",
+   "Pasó la temporada y nunca llegó ese compatriota que le prometiste. Se siente solo, la moral se le cayó y ya pidió salir.": "The season went by and the compatriot you promised never arrived. He feels lonely, his morale has dropped and he has asked to leave.",
+   "Cedido a préstamo": "Sent out on loan",
+   "¡Clausulazo!": "Release clause triggered!",
+   "Cobras una plusvalía": "You cash in a sell-on fee",
+   "El fondo cobra su parte": "The fund takes its cut",
+   "Te toca pagar el porcentaje pactado": "Time to pay the agreed percentage",
+   "Venta concretada": "Sale completed",
+   "Cobras derechos de formación": "You receive training compensation",
+   "Traspaso saldado": "Transfer paid off",
+   "Entra dinero de un fondo": "Money from an investment fund",
+   "El fondo se lo toma mal": "The fund takes it badly",
+   "🗣️ Promesa incumplida": "🗣️ Broken promise",
+   "🤝 Promesa cumplida": "🤝 Promise kept",
+   "Terreno comprado": "Land purchased",
+   "Solicitud presentada": "Application submitted",
+   "Obra en el barrio": "Work in the neighbourhood",
+   "Cancha de barrio, luminarias y una plaza. Los vecinos lo notaron: la relación mejora.": "A local pitch, street lights and a square. The neighbours noticed: relations improve.",
+   "Reunión vecinal": "Neighbourhood meeting",
+   "Salió bien: el barrio queda más tranquilo y la relación mejora.": "It went well: the neighbourhood is calmer and relations improve.",
+   "Terminó a gritos. Había más quejas acumuladas de las que parecía.": "It ended in shouting. There were more pent-up complaints than it seemed.",
+   "Entradas para el barrio": "Tickets for the neighbourhood",
+   "Repartiste localidades entre las juntas vecinales. Barato y efectivo.": "You handed out tickets to the residents' associations. Cheap and effective.",
+   "Concierto en el estadio": "Concert at the stadium",
+   "Césped como nuevo": "Pitch as good as new",
+   "Resiembra completa. El campo vuelve a estar en condiciones para jugar.": "Full reseeding. The pitch is fit for play again.",
+   "Estadio certificado": "Stadium certified",
+   "Sello verde: exención tributaria, mejor imagen y auspiciadores que solo firman con clubes certificados.": "Green seal: tax exemption, a better image and sponsors who only sign with certified clubs.",
+   "Seguridad reforzada": "Security reinforced",
+   "PARTIDO A PUERTAS CERRADAS": "MATCH BEHIND CLOSED DOORS",
+   "El tribunal cierra el estadio un partido por los incidentes. Cero taquilla y el equipo juega en un silencio irreal.": "The tribunal closes the stadium for one match over the incidents. Zero gate receipts and the team plays in eerie silence.",
+   "AFORO REDUCIDO": "REDUCED CAPACITY",
+   "Subvención municipal": "Council grant",
+   "Permiso APROBADO": "Permit APPROVED",
+   "El municipio autoriza la ampliación. Ya puedes subir las tribunas por encima del nivel 5.": "The council approves the expansion. You can now raise the stands above level 5.",
+   "Permiso RECHAZADO": "Permit REJECTED",
+   "La comisión falló en contra: informe de impacto vial desfavorable y oposición vecinal. Puedes volver a intentarlo.": "The committee ruled against it: unfavourable traffic impact report and neighbourhood opposition. You can try again.",
+   "Sanción cumplida": "Sanction served",
+   "El estadio vuelve a abrir con normalidad.": "The stadium reopens as normal.",
+   "El estadio cambia de nombre": "The stadium changes its name",
+   "El estadio recupera su nombre": "The stadium gets its name back",
+   "Pagaste por romper el contrato. El recinto vuelve a llamarse como siempre y la hinchada lo celebra.": "You paid to break the contract. The ground goes back to its old name and the fans celebrate.",
+   "Avión del club": "Club plane",
+   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "The squad stops flying commercial: less fatigue on long trips.",
+   "Se acaba el naming": "Naming rights end",
+   "El contrato de los derechos de nombre llega a su fin. El estadio vuelve a llamarse como siempre.": "The naming rights contract comes to an end. The stadium goes back to its old name.",
+   "⚖️ Cambia la jornada laboral": "⚖️ Working hours change",
+   "Mentoría en la cantera": "Mentoring in the academy",
+   "El alumno sale al maestro": "Like master, like pupil",
+   "Punto de habilidad de entrenador": "Coach skill point",
+   "Lesión en entrenamiento": "Injury in training",
+   "Termina su plan de liderazgo: más peso en el vestuario y candidato natural a la cinta.": "He completes his leadership plan: more weight in the dressing room and a natural candidate for the armband.",
+   "Ya tenía la habilidad, así que el trabajo se tradujo en atributos.": "He already had the skill, so the work turned into attributes.",
+   "Puntos de habilidad de la temporada": "Season skill points",
+   "Se apaga una generación": "A generation fades",
+   "🇺🇳 Convocatoria juvenil": "🇺🇳 Youth call-up",
+   "🌱 Visita a la academia": "🌱 Visit to the academy",
+   "Pasas la mañana con los chicos. Se nota: entrenan con otra cara.": "You spend the morning with the kids. It shows: they train with a different attitude.",
+   "🏛️ Elecciones en la federación": "🏛️ Federation elections",
+   "Nueva votación en la asamblea": "New vote in the assembly",
+   "Multa por incumplir el cupo juvenil": "Fine for breaking the youth quota",
+   "Saliste sin ningún sub-21 en el once y la federación te sanciona. El reglamento que votó la asamblea obliga a alinear al menos uno.": "You started without a single under-21 in the line-up and the federation fines you. The rule the assembly voted for requires at least one.",
+   "El líder se quedó sin corona": "The leader missed out on the crown",
+   "Auditoría federativa superada": "Federation audit passed",
+   "El club cumple los seis requisitos de licencia. Sin observaciones: puedes competir e inscribir jugadores con normalidad.": "The club meets all six licensing requirements. No remarks: you can compete and register players as normal.",
+   "Licencia CONDICIONAL": "CONDITIONAL licence",
+   "LICENCIA DENEGADA": "LICENCE DENIED",
+   "Tribunal de disciplina": "Disciplinary tribunal",
+   "Apelación ACOGIDA": "Appeal UPHELD",
+   "Apelación RECHAZADA": "Appeal REJECTED",
+   "Control antidopaje": "Doping test",
+   "Cuentas en regla": "Accounts in order",
+   "Aviso de fair play financiero": "Financial fair play warning",
+   "Sanción por fair play financiero": "Financial fair play sanction",
+   "💼 El fondo compra": "💼 The fund buys",
+   "💼 El fondo vende": "💼 The fund sells",
+   "💼 Dividendos del fondo": "💼 Fund dividends",
+   "Campaña de abonos": "Season ticket campaign",
+   "La barra se planta": "The ultras stand firm",
+   "Silencio en la tribuna y lienzos contra la dirigencia. El ambiente se cae.": "Silence in the stands and banners against the board. The atmosphere dies.",
+   "Encuesta a los socios": "Members' survey",
+   "📉 Tope salarial": "📉 Wage cap",
+   "🏷️ Venta forzada": "🏷️ Forced sale",
+   "🔄 Club refundado": "🔄 Club re-founded",
+   "🏛️ Junta de accionistas": "🏛️ Shareholders' meeting",
+   "⚠️ Moción de censura": "⚠️ Motion of no confidence",
+   "🎓 Examen suspendido": "🎓 Exam failed",
+   "🏅 Hito de maestría": "🏅 Mastery milestone",
+   "📰 Salió a la luz": "📰 It came out",
+   "💣 Escándalo de corrupción": "💣 Corruption scandal",
+   "⚖️ Denuncia de corrupción": "⚖️ Corruption report",
+   "Rotacion": "Rotation",
+   "🤕 Lesión insólita": "🤕 Freak injury",
+   "✈️ Vuelta de un viaje largo": "✈️ Back from a long trip",
+   "Dijiste que ganabas y ganaste": "You said you'd win and you did",
+   "La hinchada celebra el doble: primero el resultado y después la cara del otro.": "The fans celebrate twice: first the result, then the look on the other side's faces.",
+   "Prometiste y no cumpliste": "You promised and didn't deliver",
+   "La frase de la conferencia se te da vuelta. En la calle no se habla del partido, se habla de ti.": "Your press conference line comes back to bite you. On the street nobody talks about the match, they talk about you.",
+   "🚪 Renuncia un ojeador": "🚪 A scout resigns",
+   "Crece el departamento de datos": "The data department grows",
+   "El modelo señala un nombre": "The model flags a name",
+   "Guerra en la sala de fichajes": "War in the transfer room",
+   "El jefe de ojeadores y el jefe de analistas se cruzaron a gritos en el pasillo. Uno dice que el modelo ficha planillas de Excel; el otro, que el ojeo es superstición cara. Antes o después hay que decidir quién manda.": "The chief scout and the head of analytics had a shouting match in the corridor. One says the model signs spreadsheets; the other, that scouting is expensive superstition. Sooner or later someone has to decide who's in charge.",
+   "Academia cerrada": "Academy closed",
+   "🗳️ Campaña electoral": "🗳️ Election campaign",
+   "Decisión pendiente": "Decision pending",
+   "Hay un tema esperando tu firma en el despacho.": "There's a matter waiting for your signature in the office.",
+   "El vestuario se calma": "The dressing room calms down",
+   "Pasaron las semanas de tensión con el capitán. El grupo vuelve a remar.": "The weeks of tension with the captain are over. The group is pulling together again.",
+   "Terminó de adaptarse y está feliz con el cambio.": "He has finished adapting and is happy with the change.",
+   "Atrasos saldados": "Arrears paid",
+   "Se cumplió el calendario de pagos. El plantel vuelve a entrenar sin carteles.": "The payment schedule was met. The squad is back to training without protest signs.",
+   "🎤 A pie de campo": "🎤 Pitchside",
+   "Pasaste de largo ante la cámara. La imagen, sin palabras, se vio igual.": "You walked straight past the camera. The image, without words, was seen all the same.",
+   "Banderazo en la práctica": "Fan rally at training",
+   "Cientos de hinchas coparon el entrenamiento con bombos y lienzos de aliento. El plantel se agranda.": "Hundreds of fans packed the training session with drums and banners of support. The squad grows in confidence.",
+   "Lienzos contra el club": "Banners against the club",
+   "Amanecieron rayados frente al estadio: 'jugadores sin sangre'. Semana tensa en la ciudad deportiva.": "Graffiti appeared outside the stadium overnight: 'players with no fight'. A tense week at the training ground.",
+   "Vuelve de la cesión": "Back from loan",
+   "Se acabó el compromiso comercial": "The commercial commitment is over",
+   "El acuerdo que te obligaba a alinear a un jugador concreto llegó a su fin. Vuelves a elegir el once sin condiciones.": "The deal that forced you to field a particular player has ended. You pick the line-up freely again.",
+   "El patrocinador te lo cobra": "The sponsor makes you pay",
+   "Nuevo vocero del club": "New club spokesperson",
+   "El club se queda sin vocero": "The club loses its spokesperson",
+   "Vuelves al reparto en bloque": "Back to collective TV deals",
+   "El club vuelve a negociar la televisión junto al resto de la liga. Menos techo, más seguridad.": "The club negotiates TV rights with the rest of the league again. A lower ceiling, more security.",
+   "Contrato de TV individual": "Individual TV contract",
+   "Negociaste por tu cuenta y te fue bien: tu marca vende. Los derechos suben un 35%, pero los clubes pequeños te lo van a cobrar en la asamblea.": "You negotiated on your own and it went well: your brand sells. Rights go up 35%, but the small clubs will make you pay for it in the assembly.",
+   "Negociaste por tu cuenta y te fue mal: sin la fuerza del bloque, los derechos caen un 30%.": "You negotiated on your own and it went badly: without the bloc's strength, rights fall 30%.",
+   "Puertas abiertas": "Open doors",
+   "🌶️ Polémica en redes": "🌶️ Social media row",
+   "🧊 Mensaje en público": "🧊 A public message",
+   "🔑 La cuenta del club es tuya": "🔑 The club account is yours",
+   "La federación respeta el pedido": "The federation respects the request",
+   "La federación ignora el pedido": "The federation ignores the request",
+   "Quedaron fuera de la nómina final": "Left out of the final squad",
+   "Convocados de tu club": "Your club's call-ups",
+   "Carta de nacionalización": "Citizenship granted",
+   "Vuelve tocado del Mundial": "Back injured from the World Cup",
+   "🏆🌍 ¡CAMPEONES DEL MUNDO!": "🏆🌍 WORLD CHAMPIONS!",
+   "🍖 Asado del club": "🍖 Club barbecue",
+   "💼 Pide aumento": "💼 Asks for a raise",
+   "Hay algo que decidir en el despacho.": "There's something to decide in the office.",
+   "🧨 Ruido en el camarín": "🧨 Trouble in the dressing room",
+   "Lo apartas de la convocatoria por unos días para que despeje la cabeza. Vuelve más entero.": "You leave him out of the squad for a few days to clear his head. He comes back in better shape.",
+   "Un jugador quiere hablar contigo": "A player wants to talk to you",
+   "👨‍👦 Un hermano más en el plantel": "👨‍👦 Another brother in the squad",
+   "Reunió al plantel a puertas cerradas: «aquí nadie se esconde». El grupo sale enchufado.": "He gathered the squad behind closed doors: \"nobody hides here\". The group comes out fired up.",
+   "Se queda después de cada práctica definiendo. Huele gol.": "He stays after every session practising finishing. He can smell a goal.",
+   "La joya pide pista": "The gem wants a chance",
+   "Cumpleaños en el camarín": "Birthday in the dressing room",
+   "💸 Te ajustas el cinturón": "💸 Tightening your belt",
+   "No te alcanza para la casa y el auto: vuelves a un departamento y al transporte público.": "You can't afford the house and the car: back to a flat and public transport.",
+   "🩺 El médico te para": "🩺 The doctor stops you",
+   "Tres semanas al límite pasan factura: una semana de reposo. Tu ayudante dirige los entrenamientos y el equipo lo nota un poco.": "Three weeks at the limit take their toll: a week of rest. Your assistant runs training and the team notices a little.",
+   "😬 Te notan tenso": "😬 They notice you're tense",
+   "El plantel nota tu estrés en los entrenamientos (moral −1).": "The squad notices your stress in training (morale −1).",
+   "🏠 Mi vida": "🏠 My life"
+  },
+  "pt": {
+   "Nuevo chico en la academia": "Novo garoto na academia",
+   "Lesión en la academia": "Lesão na academia",
+   "Llaman del colegio": "Ligaram da escola",
+   "Un chico deja la academia": "Um garoto deixa a academia",
+   "De la academia al primer equipo": "Da academia para o time principal",
+   "Mercado de auspicios abierto": "Mercado de patrocínios aberto",
+   "Auspiciador molesto": "Patrocinador incomodado",
+   "Auspiciador conforme": "Patrocinador satisfeito",
+   "Llega la camada juvenil": "Chega a nova geração da base",
+   "La academia se queda sin cupo": "A academia fica sem vagas",
+   "Se retira una figura": "Um ídolo se aposenta",
+   "👨‍👦 Tu hijo entra en la cantera": "👨‍👦 Seu filho entra na base",
+   "👨‍👦 Tu hijo llega a la cantera": "👨‍👦 Seu filho chega à base",
+   "Llega el hijo de una leyenda": "Chega o filho de uma lenda",
+   "Un hermano más en el plantel": "Mais um irmão no elenco",
+   "El club le paga estudios, alojamiento y comida. Se queda tranquilo y es mucho más difícil que se lo lleven.": "O clube paga estudos, moradia e comida. Ele fica tranquilo e é muito mais difícil que o levem.",
+   "Te roban un canterano": "Roubam um garoto da base",
+   "El peso de un apellido": "O peso de um sobrenome",
+   "Ya no es «el nuevo» nadie": "Já não é \"o novo\" ninguém",
+   "Le prometiste traer a alguien de su país y ahora tiene con quién hablar en su idioma. Se le nota en el ánimo.": "Você prometeu trazer alguém do país dele e agora ele tem com quem falar na sua língua. Dá para ver no ânimo.",
+   "Pasó la temporada y nunca llegó ese compatriota que le prometiste. Se siente solo, la moral se le cayó y ya pidió salir.": "A temporada passou e o compatriota que você prometeu nunca chegou. Ele se sente sozinho, a moral caiu e já pediu para sair.",
+   "Cedido a préstamo": "Emprestado",
+   "¡Clausulazo!": "Multa rescisória paga!",
+   "Cobras una plusvalía": "Você recebe uma mais-valia",
+   "El fondo cobra su parte": "O fundo recebe sua parte",
+   "Te toca pagar el porcentaje pactado": "Hora de pagar a porcentagem combinada",
+   "Venta concretada": "Venda concretizada",
+   "Cobras derechos de formación": "Você recebe direitos de formação",
+   "Traspaso saldado": "Transferência quitada",
+   "Entra dinero de un fondo": "Entra dinheiro de um fundo",
+   "El fondo se lo toma mal": "O fundo não gostou",
+   "🗣️ Promesa incumplida": "🗣️ Promessa não cumprida",
+   "🤝 Promesa cumplida": "🤝 Promessa cumprida",
+   "Terreno comprado": "Terreno comprado",
+   "Solicitud presentada": "Pedido apresentado",
+   "Obra en el barrio": "Obra no bairro",
+   "Cancha de barrio, luminarias y una plaza. Los vecinos lo notaron: la relación mejora.": "Quadra no bairro, iluminação e uma praça. Os vizinhos notaram: a relação melhora.",
+   "Reunión vecinal": "Reunião com os vizinhos",
+   "Salió bien: el barrio queda más tranquilo y la relación mejora.": "Deu certo: o bairro fica mais tranquilo e a relação melhora.",
+   "Terminó a gritos. Había más quejas acumuladas de las que parecía.": "Terminou aos gritos. Havia mais queixas acumuladas do que parecia.",
+   "Entradas para el barrio": "Ingressos para o bairro",
+   "Repartiste localidades entre las juntas vecinales. Barato y efectivo.": "Você distribuiu ingressos entre as associações de moradores. Barato e eficaz.",
+   "Concierto en el estadio": "Show no estádio",
+   "Césped como nuevo": "Gramado novo em folha",
+   "Resiembra completa. El campo vuelve a estar en condiciones para jugar.": "Replantio completo. O campo volta a ter condições de jogo.",
+   "Estadio certificado": "Estádio certificado",
+   "Sello verde: exención tributaria, mejor imagen y auspiciadores que solo firman con clubes certificados.": "Selo verde: isenção fiscal, imagem melhor e patrocinadores que só assinam com clubes certificados.",
+   "Seguridad reforzada": "Segurança reforçada",
+   "PARTIDO A PUERTAS CERRADAS": "JOGO COM PORTÕES FECHADOS",
+   "El tribunal cierra el estadio un partido por los incidentes. Cero taquilla y el equipo juega en un silencio irreal.": "O tribunal fecha o estádio por uma partida pelos incidentes. Bilheteria zero e o time joga num silêncio irreal.",
+   "AFORO REDUCIDO": "CAPACIDADE REDUZIDA",
+   "Subvención municipal": "Subsídio da prefeitura",
+   "Permiso APROBADO": "Licença APROVADA",
+   "El municipio autoriza la ampliación. Ya puedes subir las tribunas por encima del nivel 5.": "A prefeitura autoriza a ampliação. Já pode subir as arquibancadas acima do nível 5.",
+   "Permiso RECHAZADO": "Licença NEGADA",
+   "La comisión falló en contra: informe de impacto vial desfavorable y oposición vecinal. Puedes volver a intentarlo.": "A comissão decidiu contra: relatório de impacto viário desfavorável e oposição dos vizinhos. Você pode tentar de novo.",
+   "Sanción cumplida": "Punição cumprida",
+   "El estadio vuelve a abrir con normalidad.": "O estádio volta a abrir normalmente.",
+   "El estadio cambia de nombre": "O estádio muda de nome",
+   "El estadio recupera su nombre": "O estádio recupera o nome",
+   "Pagaste por romper el contrato. El recinto vuelve a llamarse como siempre y la hinchada lo celebra.": "Você pagou para romper o contrato. O estádio volta ao nome de sempre e a torcida comemora.",
+   "Avión del club": "Avião do clube",
+   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "O elenco deixa de voar em linha comercial: menos cansaço nas viagens longas.",
+   "Se acaba el naming": "Acabam os naming rights",
+   "El contrato de los derechos de nombre llega a su fin. El estadio vuelve a llamarse como siempre.": "O contrato de naming rights chega ao fim. O estádio volta ao nome de sempre.",
+   "⚖️ Cambia la jornada laboral": "⚖️ Muda a jornada de trabalho",
+   "Mentoría en la cantera": "Mentoria na base",
+   "El alumno sale al maestro": "Tal mestre, tal aluno",
+   "Punto de habilidad de entrenador": "Ponto de habilidade de treinador",
+   "Lesión en entrenamiento": "Lesão no treino",
+   "Termina su plan de liderazgo: más peso en el vestuario y candidato natural a la cinta.": "Termina o plano de liderança: mais peso no vestiário e candidato natural à braçadeira.",
+   "Ya tenía la habilidad, así que el trabajo se tradujo en atributos.": "Ele já tinha a habilidade, então o trabalho virou atributos.",
+   "Puntos de habilidad de la temporada": "Pontos de habilidade da temporada",
+   "Se apaga una generación": "Uma geração se apaga",
+   "🇺🇳 Convocatoria juvenil": "🇺🇳 Convocação de base",
+   "🌱 Visita a la academia": "🌱 Visita à academia",
+   "Pasas la mañana con los chicos. Se nota: entrenan con otra cara.": "Você passa a manhã com os garotos. Dá para notar: treinam com outra cara.",
+   "🏛️ Elecciones en la federación": "🏛️ Eleições na federação",
+   "Nueva votación en la asamblea": "Nova votação na assembleia",
+   "Multa por incumplir el cupo juvenil": "Multa por descumprir a cota de base",
+   "Saliste sin ningún sub-21 en el once y la federación te sanciona. El reglamento que votó la asamblea obliga a alinear al menos uno.": "Você começou sem nenhum sub-21 no time e a federação te pune. O regulamento votado pela assembleia obriga a escalar pelo menos um.",
+   "El líder se quedó sin corona": "O líder ficou sem a coroa",
+   "Auditoría federativa superada": "Auditoria da federação aprovada",
+   "El club cumple los seis requisitos de licencia. Sin observaciones: puedes competir e inscribir jugadores con normalidad.": "O clube cumpre os seis requisitos de licença. Sem observações: pode competir e inscrever jogadores normalmente.",
+   "Licencia CONDICIONAL": "Licença CONDICIONAL",
+   "LICENCIA DENEGADA": "LICENÇA NEGADA",
+   "Tribunal de disciplina": "Tribunal de disciplina",
+   "Apelación ACOGIDA": "Recurso ACEITO",
+   "Apelación RECHAZADA": "Recurso NEGADO",
+   "Control antidopaje": "Exame antidoping",
+   "Cuentas en regla": "Contas em dia",
+   "Aviso de fair play financiero": "Aviso de fair play financeiro",
+   "Sanción por fair play financiero": "Punição por fair play financeiro",
+   "💼 El fondo compra": "💼 O fundo compra",
+   "💼 El fondo vende": "💼 O fundo vende",
+   "💼 Dividendos del fondo": "💼 Dividendos do fundo",
+   "Campaña de abonos": "Campanha de sócios",
+   "La barra se planta": "A organizada protesta",
+   "Silencio en la tribuna y lienzos contra la dirigencia. El ambiente se cae.": "Silêncio na arquibancada e faixas contra a diretoria. O clima despenca.",
+   "Encuesta a los socios": "Pesquisa com os sócios",
+   "📉 Tope salarial": "📉 Teto salarial",
+   "🏷️ Venta forzada": "🏷️ Venda forçada",
+   "🔄 Club refundado": "🔄 Clube refundado",
+   "🏛️ Junta de accionistas": "🏛️ Assembleia de acionistas",
+   "⚠️ Moción de censura": "⚠️ Moção de censura",
+   "🎓 Examen suspendido": "🎓 Prova reprovada",
+   "🏅 Hito de maestría": "🏅 Marco de maestria",
+   "📰 Salió a la luz": "📰 Veio à tona",
+   "💣 Escándalo de corrupción": "💣 Escândalo de corrupção",
+   "⚖️ Denuncia de corrupción": "⚖️ Denúncia de corrupção",
+   "Rotacion": "Rodízio",
+   "🤕 Lesión insólita": "🤕 Lesão insólita",
+   "✈️ Vuelta de un viaje largo": "✈️ Volta de uma viagem longa",
+   "Dijiste que ganabas y ganaste": "Você disse que ganharia e ganhou",
+   "La hinchada celebra el doble: primero el resultado y después la cara del otro.": "A torcida comemora em dobro: primeiro o resultado, depois a cara do rival.",
+   "Prometiste y no cumpliste": "Você prometeu e não cumpriu",
+   "La frase de la conferencia se te da vuelta. En la calle no se habla del partido, se habla de ti.": "A frase da coletiva se voltou contra você. Na rua não se fala da partida, fala-se de você.",
+   "🚪 Renuncia un ojeador": "🚪 Um olheiro pede demissão",
+   "Crece el departamento de datos": "O departamento de dados cresce",
+   "El modelo señala un nombre": "O modelo aponta um nome",
+   "Guerra en la sala de fichajes": "Guerra na sala de contratações",
+   "El jefe de ojeadores y el jefe de analistas se cruzaron a gritos en el pasillo. Uno dice que el modelo ficha planillas de Excel; el otro, que el ojeo es superstición cara. Antes o después hay que decidir quién manda.": "O chefe dos olheiros e o chefe dos analistas bateram boca no corredor. Um diz que o modelo contrata planilhas de Excel; o outro, que o olheiro é superstição cara. Cedo ou tarde é preciso decidir quem manda.",
+   "Academia cerrada": "Academia fechada",
+   "🗳️ Campaña electoral": "🗳️ Campanha eleitoral",
+   "Decisión pendiente": "Decisão pendente",
+   "Hay un tema esperando tu firma en el despacho.": "Tem um assunto esperando sua assinatura no escritório.",
+   "El vestuario se calma": "O vestiário se acalma",
+   "Pasaron las semanas de tensión con el capitán. El grupo vuelve a remar.": "Passaram as semanas de tensão com o capitão. O grupo volta a remar junto.",
+   "Terminó de adaptarse y está feliz con el cambio.": "Terminou de se adaptar e está feliz com a mudança.",
+   "Atrasos saldados": "Atrasados quitados",
+   "Se cumplió el calendario de pagos. El plantel vuelve a entrenar sin carteles.": "O calendário de pagamentos foi cumprido. O elenco volta a treinar sem faixas de protesto.",
+   "🎤 A pie de campo": "🎤 Beira do campo",
+   "Pasaste de largo ante la cámara. La imagen, sin palabras, se vio igual.": "Você passou direto pela câmera. A imagem, sem palavras, foi vista do mesmo jeito.",
+   "Banderazo en la práctica": "Bandeiraço no treino",
+   "Cientos de hinchas coparon el entrenamiento con bombos y lienzos de aliento. El plantel se agranda.": "Centenas de torcedores lotaram o treino com bumbos e faixas de apoio. O elenco se agiganta.",
+   "Lienzos contra el club": "Faixas contra o clube",
+   "Amanecieron rayados frente al estadio: 'jugadores sin sangre'. Semana tensa en la ciudad deportiva.": "Amanheceram pichações em frente ao estádio: 'jogadores sem sangue'. Semana tensa no CT.",
+   "Vuelve de la cesión": "Volta do empréstimo",
+   "Se acabó el compromiso comercial": "Acabou o compromisso comercial",
+   "El acuerdo que te obligaba a alinear a un jugador concreto llegó a su fin. Vuelves a elegir el once sin condiciones.": "O acordo que te obrigava a escalar um jogador específico chegou ao fim. Você volta a escolher o time sem condições.",
+   "El patrocinador te lo cobra": "O patrocinador te cobra",
+   "Nuevo vocero del club": "Novo porta-voz do clube",
+   "El club se queda sin vocero": "O clube fica sem porta-voz",
+   "Vuelves al reparto en bloque": "Volta à negociação coletiva",
+   "El club vuelve a negociar la televisión junto al resto de la liga. Menos techo, más seguridad.": "O clube volta a negociar a TV junto com o resto da liga. Menos teto, mais segurança.",
+   "Contrato de TV individual": "Contrato de TV individual",
+   "Negociaste por tu cuenta y te fue bien: tu marca vende. Los derechos suben un 35%, pero los clubes pequeños te lo van a cobrar en la asamblea.": "Você negociou por conta própria e foi bem: sua marca vende. Os direitos sobem 35%, mas os clubes pequenos vão te cobrar na assembleia.",
+   "Negociaste por tu cuenta y te fue mal: sin la fuerza del bloque, los derechos caen un 30%.": "Você negociou por conta própria e foi mal: sem a força do bloco, os direitos caem 30%.",
+   "Puertas abiertas": "Portas abertas",
+   "🌶️ Polémica en redes": "🌶️ Polêmica nas redes",
+   "🧊 Mensaje en público": "🧊 Mensagem em público",
+   "🔑 La cuenta del club es tuya": "🔑 A conta do clube é sua",
+   "La federación respeta el pedido": "A federação atende o pedido",
+   "La federación ignora el pedido": "A federação ignora o pedido",
+   "Quedaron fuera de la nómina final": "Ficaram fora da lista final",
+   "Convocados de tu club": "Convocados do seu clube",
+   "Carta de nacionalización": "Carta de naturalização",
+   "Vuelve tocado del Mundial": "Volta machucado da Copa",
+   "🏆🌍 ¡CAMPEONES DEL MUNDO!": "🏆🌍 CAMPEÕES DO MUNDO!",
+   "🍖 Asado del club": "🍖 Churrasco do clube",
+   "💼 Pide aumento": "💼 Pede aumento",
+   "Hay algo que decidir en el despacho.": "Tem algo para decidir no escritório.",
+   "🧨 Ruido en el camarín": "🧨 Barulho no vestiário",
+   "Lo apartas de la convocatoria por unos días para que despeje la cabeza. Vuelve más entero.": "Você o tira da convocação por alguns dias para ele espairecer. Volta mais inteiro.",
+   "Un jugador quiere hablar contigo": "Um jogador quer falar com você",
+   "👨‍👦 Un hermano más en el plantel": "👨‍👦 Mais um irmão no elenco",
+   "Reunió al plantel a puertas cerradas: «aquí nadie se esconde». El grupo sale enchufado.": "Reuniu o elenco a portas fechadas: \"aqui ninguém se esconde\". O grupo sai ligado.",
+   "Se queda después de cada práctica definiendo. Huele gol.": "Fica depois de cada treino finalizando. Está com cheiro de gol.",
+   "La joya pide pista": "A joia pede passagem",
+   "Cumpleaños en el camarín": "Aniversário no vestiário",
+   "💸 Te ajustas el cinturón": "💸 Apertando o cinto",
+   "No te alcanza para la casa y el auto: vuelves a un departamento y al transporte público.": "Não dá para pagar a casa e o carro: você volta para um apartamento e o transporte público.",
+   "🩺 El médico te para": "🩺 O médico te para",
+   "Tres semanas al límite pasan factura: una semana de reposo. Tu ayudante dirige los entrenamientos y el equipo lo nota un poco.": "Três semanas no limite cobram a conta: uma semana de repouso. Seu auxiliar comanda os treinos e o time sente um pouco.",
+   "😬 Te notan tenso": "😬 Notam você tenso",
+   "El plantel nota tu estrés en los entrenamientos (moral −1).": "O elenco nota seu estresse nos treinos (moral −1).",
+   "🏠 Mi vida": "🏠 Minha vida"
+  }
+ },
+ "patrones": [
+  [
+   "^El\\ departamento\\ de\\ datos\\ destaca\\ a\\ (.+?)\\ \\((.+?)\\ años,\\ (.+?)\\)\\.\\ No\\ aparece\\ en\\ ningún\\ informe\\ de\\ ojeo,\\ pero\\ sus\\ números\\ por\\ noventa\\ minutos\\ están\\ muy\\ por\\ encima\\ de\\ lo\\ que\\ cuesta\\.\\ El\\ jefe\\ de\\ ojeadores\\ ya\\ dijo\\ en\\ la\\ reunión\\ que\\ «los\\ números\\ no\\ ven\\ la\\ cara\\ del\\ chico\\ cuando\\ va\\ perdiendo»\\.$",
+   "The data department highlights $1 ($2, $3). He isn't in any scouting report, but his per-ninety numbers are far above what he costs. The chief scout already said in the meeting that \"numbers don't see the kid's face when he's losing\".",
+   "O departamento de dados destaca $1 ($2 anos, $3). Não aparece em nenhum relatório de olheiro, mas os números por noventa minutos estão muito acima do que custa. O chefe dos olheiros já disse na reunião que \"os números não veem a cara do garoto quando está perdendo\"."
+  ],
+  [
+   "^Algo\\ pasó\\ en\\ las\\ canteras\\ de\\ (.+?)\\ hace\\ quince\\ años\\ y\\ recién\\ ahora\\ se\\ ve:\\ está\\ saliendo\\ una\\ generación\\ entera\\ por\\ encima\\ de\\ la\\ media\\.\\ Durante\\ los\\ próximos\\ (.+?)\\ años\\ sus\\ juveniles\\ van\\ a\\ valer\\ oro\\.\\ Si\\ tienes\\ ojeadores\\ allí,\\ es\\ el\\ momento\\.$",
+   "Something happened in $1's academies fifteen years ago and only now does it show: a whole generation above the average is coming through. For the next $2 years their youngsters will be worth gold. If you have scouts there, now's the time.",
+   "Algo aconteceu nas bases de $1 há quinze anos e só agora aparece: está surgindo uma geração inteira acima da média. Nos próximos $2 anos os jovens de lá vão valer ouro. Se você tem olheiros lá, é a hora."
+  ],
+  [
+   "^La\\ prensa\\ se\\ cansó\\ de\\ esperar\\ a\\ (.+?)\\.\\ «El\\ nuevo\\ (.+?)\\ no\\ aparece»,\\ titulan\\ hoy\\.\\ El\\ chico\\ entrenó\\ cabizbajo\\ toda\\ la\\ semana:\\ la\\ etiqueta\\ que\\ le\\ pusieron\\ a\\ los\\ diecisiete\\ le\\ pesa\\ como\\ una\\ mochila\\ de\\ piedras\\.$",
+   "The press got tired of waiting for $1. \"The new $2 is nowhere to be seen\", reads today's headline. The kid trained with his head down all week: the label they gave him at seventeen weighs on him like a backpack full of stones.",
+   "A imprensa cansou de esperar por $1. \"O novo $2 não aparece\", diz a manchete de hoje. O garoto treinou cabisbaixo a semana toda: o rótulo que lhe deram aos dezessete pesa como uma mochila de pedras."
+  ],
+  [
+   "^La\\ liga\\ de\\ (.+?)\\ se\\ hundió\\ económicamente\\ y\\ las\\ canteras\\ se\\ quedaron\\ sin\\ recursos\\.\\ Sus\\ juveniles\\ llegarán\\ bastante\\ por\\ debajo\\ de\\ lo\\ habitual\\ durante\\ los\\ próximos\\ años\\.\\ Un\\ país\\ entero\\ perdiendo\\ una\\ generación\\.$",
+   "$1's league collapsed financially and the academies ran out of resources. Their youngsters will come through well below the usual level for the next few years. A whole country losing a generation.",
+   "A liga de $1 afundou financeiramente e as bases ficaram sem recursos. Os jovens de lá vão chegar bem abaixo do normal nos próximos anos. Um país inteiro perdendo uma geração."
+  ],
+  [
+   "^(.+?),\\ tu\\ hombre\\ en\\ (.+?),\\ presentó\\ la\\ renuncia\\.\\ «Llevo\\ (.+?)\\ informes\\ y\\ no\\ fichaste\\ a\\ ninguno»,\\ escribió\\.\\ «Prefiero\\ trabajar\\ donde\\ me\\ lean\\.»\\ Pierdes\\ la\\ cobertura\\ de\\ ese\\ país\\ hasta\\ que\\ mandes\\ a\\ otro\\.$",
+   "$1, your man in $2, has resigned. \"I've sent $3 reports and you didn't sign anyone\", he wrote. \"I'd rather work where people read me.\" You lose coverage of that country until you send someone else.",
+   "$1, seu homem em $2, pediu demissão. \"Mandei $3 relatórios e você não contratou ninguém\", escreveu. \"Prefiro trabalhar onde me leiam.\" Você perde a cobertura desse país até mandar outro."
+  ],
+  [
+   "^(.+?)\\ se\\ lleva\\ a\\ (.+?)\\ \\((.+?)\\ años,\\ proyección\\ (.+?)\\)\\ aprovechando\\ que\\ no\\ tenía\\ contrato\\ profesional\\.\\ Solo\\ cobras\\ los\\ derechos\\ de\\ formación\\.\\ Con\\ residencia,\\ academia\\ y\\ becas\\ esto\\ pasa\\ mucho\\ menos\\.$",
+   "$1 takes $2 ($3, potential $4) because he had no professional contract. You only get the training compensation. With a residence, academy and scholarships this happens much less.",
+   "$1 leva $2 ($3 anos, projeção $4) aproveitando que ele não tinha contrato profissional. Você só recebe os direitos de formação. Com alojamento, academia e bolsas isso acontece bem menos."
+  ],
+  [
+   "^(.+?)\\ dio\\ positivo\\.\\ Suspensión\\ provisional\\ de\\ (.+?)\\ fechas,\\ escándalo\\ mediático\\ y\\ patrocinadores\\ llamando\\.\\ Puedes\\ montarle\\ defensa\\ legal\\ apelando\\ en\\ Federación,\\ o\\ soltarlo\\ y\\ salvar\\ la\\ imagen\\ del\\ club\\.$",
+   "$1 tested positive. Provisional $2-match suspension, a media scandal and sponsors on the phone. You can mount a legal defence by appealing in Federation, or drop him and save the club's image.",
+   "$1 testou positivo. Suspensão provisória de $2 rodadas, escândalo na mídia e patrocinadores ligando. Você pode montar uma defesa recorrendo em Federação, ou soltá-lo e salvar a imagem do clube."
+  ],
+  [
+   "^Los\\ expertos\\ dan\\ por\\ cerrada\\ la\\ época\\ dorada\\ de\\ (.+?)\\.\\ Aquella\\ camada\\ ya\\ pasó\\ los\\ treinta\\ y\\ el\\ relevo\\ no\\ aparece\\.\\ Quedan\\ las\\ fotos\\ y\\ dos\\ o\\ tres\\ apellidos\\ que\\ nadie\\ va\\ a\\ olvidar\\.$",
+   "Experts declare $1's golden era over. That generation is past thirty and no successors are in sight. What's left are the photos and two or three surnames nobody will forget.",
+   "Os especialistas dão por encerrada a era de ouro de $1. Aquela geração já passou dos trinta e a renovação não aparece. Ficam as fotos e dois ou três sobrenomes que ninguém vai esquecer."
+  ],
+  [
+   "^El\\ jugador\\ reconoce\\ que\\ no\\ está\\ bien:\\ ansiedad,\\ insomnio\\ y\\ miedo\\ a\\ fallar\\.\\ El\\ club\\ le\\ da\\ (.+?)\\ semana\\(s\\)\\ de\\ baja\\ psicológica\\.\\ Puedes\\ acelerarlo\\ con\\ terapia\\ desde\\ su\\ ficha\\.$",
+   "The player admits he isn't well: anxiety, insomnia and fear of failing. The club gives him $1 week(s) of mental health leave. You can speed it up with therapy from his profile.",
+   "O jogador admite que não está bem: ansiedade, insônia e medo de errar. O clube lhe dá $1 semana(s) de afastamento psicológico. Você pode acelerar com terapia na ficha dele."
+  ],
+  [
+   "^(.+?)\\ se\\ hace\\ cargo\\ de\\ la\\ zona\\.\\ Precisión\\ (.+?)/3,\\ especialista\\ en\\ (.+?)\\.\\ (.+?):\\ (.+?)\\.\\ Sus\\ informes\\ van\\ a\\ llegar\\ cada\\ semana;\\ si\\ nunca\\ le\\ haces\\ caso,\\ se\\ acabará\\ yendo\\.$",
+   "$1 takes charge of the region. Accuracy $2/3, specialises in $3. $4: $5. His reports will arrive every week; if you never listen to him, he'll end up leaving.",
+   "$1 assume a região. Precisão $2/3, especialista em $3. $4: $5. Os relatórios vão chegar toda semana; se você nunca der atenção, ele vai acabar saindo."
+  ],
+  [
+   "^Dos\\ temporadas\\ gastando\\ por\\ encima\\ de\\ lo\\ que\\ ingresas\\.\\ La\\ federación\\ multa\\ al\\ club\\ con\\ (.+?)\\ y\\ te\\ cierra\\ el\\ mercado\\ la\\ próxima\\ ventana:\\ solo\\ podrás\\ fichar\\ libres\\.$",
+   "Two seasons spending more than you earn. The federation fines the club $1 and closes the market to you next window: free agents only.",
+   "Duas temporadas gastando mais do que arrecada. A federação multa o clube em $1 e fecha o mercado na próxima janela: só jogadores livres."
+  ],
+  [
+   "^Tres\\ marcas\\ quieren\\ la\\ camiseta\\ de\\ (.+?)\\.\\ Compara\\ montos\\ y\\ exigencias:\\ la\\ que\\ más\\ paga\\ suele\\ ser\\ también\\ la\\ que\\ más\\ pide\\.\\ Sin\\ firma\\ no\\ hay\\ ingreso\\ semanal\\.$",
+   "Three brands want $1's shirt. Compare amounts and demands: the one that pays most usually asks the most too. No signature, no weekly income.",
+   "Três marcas querem a camisa do $1. Compare valores e exigências: quem paga mais costuma exigir mais. Sem assinatura não há receita semanal."
+  ],
+  [
+   "^Sesión\\ de\\ vídeo\\ con\\ todo\\ el\\ plantel:\\ dónde\\ aprietan,\\ por\\ dónde\\ salen\\ y\\ a\\ quién\\ hay\\ que\\ tapar\\.\\ El\\ equipo\\ sale\\ al\\ campo\\ con\\ la\\ lección\\ hecha\\ \\(\\+(.+?)%\\)\\.$",
+   "Video session with the whole squad: where they press, how they build up and who needs marking. The team takes the field with its homework done (+$1%).",
+   "Sessão de vídeo com todo o elenco: onde pressionam, por onde saem e quem marcar. O time entra em campo com a lição feita (+$1%)."
+  ],
+  [
+   "^El\\ club\\ incorpora\\ a\\ (.+?),\\ hermano\\ gemelo\\ de\\ (.+?)\\.\\ Se\\ parecen\\ tanto\\ que\\ el\\ utilero\\ ya\\ se\\ equivocó\\ dos\\ veces\\.\\ Juntos\\ en\\ cancha\\ se\\ entienden\\ sin\\ mirarse\\.$",
+   "The club signs $1, twin brother of $2. They look so alike the kit man has already mixed them up twice. On the pitch they find each other without looking.",
+   "O clube contrata $1, irmão gêmeo de $2. São tão parecidos que o roupeiro já se confundiu duas vezes. Juntos em campo se entendem sem se olhar."
+  ],
+  [
+   "^Firmaste\\ los\\ derechos\\ de\\ nombre\\ con\\ (.+?):\\ (.+?)\\ al\\ año\\ durante\\ (.+?)\\ temporadas\\.\\ El\\ recinto\\ pasa\\ a\\ llamarse\\ «(.+?)»\\.\\ En\\ la\\ calle\\ no\\ ha\\ caído\\ bien\\.$",
+   "You signed the naming rights with $1: $2 a year for $3 seasons. The ground is now called \"$4\". It hasn't gone down well with the fans.",
+   "Você assinou os direitos de nome com $1: $2 ao ano por $3 temporadas. O estádio passa a se chamar \"$4\". Nas ruas não pegou bem."
+  ],
+  [
+   "^La\\ federación\\ rechaza\\ la\\ licencia\\ por\\ (.+?)\\ incumplimientos:\\ (.+?)\\.\\ Multa,\\ sin\\ cupo\\ internacional\\ y\\ con\\ el\\ mercado\\ bajo\\ lupa\\.\\ Arréglalo\\ esta\\ temporada\\.$",
+   "The federation rejects the licence over $1 breaches: $2. A fine, no international spot and the market under scrutiny. Fix it this season.",
+   "A federação nega a licença por $1 descumprimentos: $2. Multa, sem vaga internacional e o mercado sob lupa. Resolva nesta temporada."
+  ],
+  [
+   "^(.+?)\\ cumplió\\ 16\\ y\\ firma\\ por\\ la\\ cantera\\ de\\ (.+?)\\.\\ En\\ el\\ vestuario\\ ya\\ le\\ llaman\\ «el\\ hijo\\ del\\ míster»;\\ decidir\\ si\\ juega\\ o\\ no\\ es\\ cosa\\ tuya\\.$",
+   "$1 turned 16 and signs for $2's academy. In the dressing room they already call him \"the boss's son\"; whether he plays is up to you.",
+   "$1 fez 16 anos e assina com a base do $2. No vestiário já o chamam de \"o filho do professor\"; decidir se ele joga é com você."
+  ],
+  [
+   "^(.+?),\\ tu\\ hijo,\\ se\\ incorpora\\ a\\ la\\ cantera\\ de\\ (.+?)\\.\\ Lleva\\ tu\\ apellido\\ y\\ tu\\ forma\\ de\\ pisar\\ el\\ área\\.\\ Ahora\\ el\\ entrenador\\ eres\\ tú\\.$",
+   "$1, your son, joins $2's academy. He carries your surname and your way of moving in the box. Now you're the coach.",
+   "$1, seu filho, entra na base do $2. Leva seu sobrenome e seu jeito de pisar na área. Agora o treinador é você."
+  ],
+  [
+   "^Vendiste\\ el\\ (.+?)%\\ del\\ próximo\\ traspaso\\ de\\ (.+?)\\ por\\ (.+?)\\.\\ El\\ club\\ respira\\ hoy;\\ el\\ día\\ que\\ lo\\ vendas,\\ ese\\ porcentaje\\ no\\ es\\ tuyo\\.$",
+   "You sold $1% of $2's next transfer for $3. The club breathes today; the day you sell him, that percentage isn't yours.",
+   "Você vendeu $1% da próxima transferência de $2 por $3. O clube respira hoje; no dia em que vendê-lo, essa porcentagem não é sua."
+  ],
+  [
+   "^Dejaste\\ a\\ (.+?)\\ fuera\\ del\\ once\\ y\\ el\\ acuerdo\\ comercial\\ exigía\\ que\\ jugara\\.\\ Descuento\\ de\\ (.+?)\\ y\\ una\\ llamada\\ incómoda\\ del\\ directorio\\.$",
+   "You left $1 out of the line-up and the commercial deal required him to play. A $2 deduction and an awkward call from the board.",
+   "Você deixou $1 fora do time e o acordo comercial exigia que ele jogasse. Desconto de $2 e uma ligação incômoda da diretoria."
+  ],
+  [
+   "^(.+?)\\ cuelga\\ las\\ botas\\.\\ Queda\\ inscrito\\ entre\\ las\\ leyendas\\ del\\ club…\\ y\\ quién\\ sabe\\ si\\ algún\\ día\\ llega\\ un\\ hijo\\ suyo\\ a\\ la\\ cantera\\.$",
+   "$1 hangs up his boots. He joins the club's legends… and who knows if one day a son of his will come through the academy.",
+   "$1 pendura as chuteiras. Entra para as lendas do clube… e quem sabe um dia um filho dele chegue à base."
+  ],
+  [
+   "^Los\\ médicos\\ no\\ le\\ dan\\ el\\ alta\\ competitiva\\.\\ (.+?)\\ años\\ y\\ tres\\ lesiones\\ graves\\ en\\ poco\\ tiempo:\\ cuelga\\ las\\ botas\\ antes\\ de\\ tiempo\\.$",
+   "The doctors won't clear him to compete. $1 years old and three serious injuries in a short time: he hangs up his boots early.",
+   "Os médicos não o liberam para competir. $1 anos e três lesões graves em pouco tempo: pendura as chuteiras antes da hora."
+  ],
+  [
+   "^El\\ municipio\\ estudia\\ tu\\ ampliación\\.\\ Resolución\\ estimada\\ en\\ unas\\ semanas\\.\\ La\\ opinión\\ del\\ barrio\\ pesa:\\ hoy\\ está\\ en\\ (.+?)\\ de\\ 100\\.$",
+   "The council is reviewing your expansion. A decision is expected in a few weeks. The neighbourhood's opinion matters: today it's at $1 out of 100.",
+   "A prefeitura analisa sua ampliação. Decisão prevista em algumas semanas. A opinião do bairro pesa: hoje está em $1 de 100."
+  ],
+  [
+   "^Se\\ llenó:\\ (.+?)\\ limpios\\ para\\ la\\ caja\\.\\ El\\ césped\\ quedó\\ para\\ el\\ arrastre\\ \\((.+?)\\ de\\ 100\\)\\ y\\ los\\ vecinos\\ protestan\\ por\\ el\\ ruido\\.$",
+   "Sold out: $1 net for the coffers. The pitch is wrecked ($2 out of 100) and the neighbours complain about the noise.",
+   "Lotou: $1 líquidos para o caixa. O gramado ficou destruído ($2 de 100) e os vizinhos reclamam do barulho."
+  ],
+  [
+   "^«(.+?)»\\ no\\ digiere\\ que\\ (.+?)\\ lleve\\ semanas\\ fuera\\ del\\ once\\.\\ El\\ grupo\\ bajó\\ el\\ ánimo\\ y\\ alguien\\ filtró\\ la\\ interna\\ a\\ la\\ prensa\\.$",
+   "\"$1\" can't accept that $2 has been out of the line-up for weeks. The group's mood has dropped and someone leaked the story to the press.",
+   "\"$1\" não engole que $2 esteja há semanas fora do time. O grupo baixou o ânimo e alguém vazou a história para a imprensa."
+  ],
+  [
+   "^Tu\\ academia\\ abre\\ en\\ (.+?):\\ cada\\ pretemporada\\ llegará\\ una\\ joya\\ local\\ con\\ proyección\\ de\\ verdad\\.\\ Mantención:\\ (.+?)\\ a\\ la\\ semana\\.$",
+   "Your academy opens in $1: every pre-season a local gem with real potential will arrive. Upkeep: $2 a week.",
+   "Sua academia abre em $1: a cada pré-temporada vai chegar uma joia local com projeção de verdade. Manutenção: $2 por semana."
+  ],
+  [
+   "^La\\ cantera\\ de\\ (.+?)\\ incorpora\\ a\\ (.+?),\\ hijo\\ de\\ (.+?)\\ \\((.+?)\\ en\\ su\\ mejor\\ momento\\)\\.\\ La\\ prensa\\ ya\\ habla\\ del\\ «nuevo\\ (.+?)»\\.$",
+   "$1's academy signs $2, son of $3 ($4 at his peak). The press is already talking about \"the new $5\".",
+   "A base do $1 contrata $2, filho de $3 ($4 no auge). A imprensa já fala do \"novo $5\"."
+  ],
+  [
+   "^(.+?)\\ se\\ sacó\\ la\\ etiqueta\\ de\\ encima\\ a\\ fuerza\\ de\\ partidos\\.\\ Hoy\\ la\\ prensa\\ escribe\\ su\\ nombre\\ solo,\\ sin\\ compararlo\\ con\\ (.+?)\\.$",
+   "$1 shook off the label one match at a time. Today the press writes his name on its own, without comparing him to $2.",
+   "$1 se livrou do rótulo à base de partidas. Hoje a imprensa escreve o nome dele sozinho, sem compará-lo com $2."
+  ],
+  [
+   "^(.+?)\\ se\\ había\\ guardado\\ el\\ (.+?)%\\ de\\ la\\ próxima\\ venta\\ de\\ (.+?)\\.\\ De\\ los\\ (.+?)\\ que\\ entran,\\ (.+?)\\ salen\\ directos\\ para\\ ellos\\.$",
+   "$1 had kept $2% of $3's next sale. Of the $4 coming in, $5 go straight to them.",
+   "$1 tinha guardado $2% da próxima venda de $3. Dos $4 que entram, $5 vão direto para eles."
+  ],
+  [
+   "^La\\ federación\\ detectó\\ (.+?)\\ incumplimiento\\(s\\):\\ (.+?)\\.\\ Tienes\\ una\\ temporada\\ para\\ corregirlo\\ o\\ pierdes\\ el\\ cupo\\ internacional\\.$",
+   "The federation found $1 breach(es): $2. You have one season to fix it or you lose the international spot.",
+   "A federação detectou $1 descumprimento(s): $2. Você tem uma temporada para corrigir ou perde a vaga internacional."
+  ],
+  [
+   "^El\\ cuerpo\\ técnico\\ de\\ (.+?)\\ decide\\ no\\ citar\\ a\\ (.+?)\\ esta\\ fecha\\ internacional,\\ atendiendo\\ el\\ pedido\\ de\\ descanso\\ del\\ club\\.$",
+   "$1's coaching staff decide not to call up $2 this international window, honouring the club's request for rest.",
+   "A comissão técnica de $1 decide não convocar $2 nesta data FIFA, atendendo ao pedido de descanso do clube."
+  ],
+  [
+   "^El\\ tribunal\\ confirma\\ la\\ sanción\\ de\\ (.+?)\\ y\\ deja\\ constancia\\ de\\ que\\ el\\ club\\ recurre\\ demasiado\\.\\ Los\\ árbitros\\ toman\\ nota\\.$",
+   "The tribunal upholds $1's ban and notes that the club appeals too often. The referees take note.",
+   "O tribunal confirma a suspensão de $1 e registra que o clube recorre demais. Os árbitros anotam."
+  ],
+  [
+   "^Tu\\ masa\\ salarial\\ se\\ lleva\\ el\\ (.+?)%\\ de\\ los\\ ingresos,\\ por\\ encima\\ del\\ (.+?)%\\ permitido\\.\\ Un\\ año\\ más\\ así\\ y\\ hay\\ sanción\\.$",
+   "Your wage bill takes $1% of revenue, above the $2% allowed. One more year like this and there'll be a sanction.",
+   "Sua folha consome $1% das receitas, acima dos $2% permitidos. Mais um ano assim e haverá punição."
+  ],
+  [
+   "^(.+?)\\ chicos\\ suben\\ de\\ la\\ academia\\ a\\ la\\ plantilla\\.\\ Están\\ verdes\\ y\\ ese\\ es\\ el\\ trato:\\ mira\\ la\\ proyección,\\ no\\ la\\ media\\.$",
+   "$1 kids move up from the academy to the squad. They're raw and that's the deal: look at the potential, not the rating.",
+   "$1 garotos sobem da academia para o elenco. Estão verdes, e esse é o acordo: olhe a projeção, não a média."
+  ],
+  [
+   "^Este\\ año\\ no\\ sube\\ nadie\\ de\\ la\\ cantera:\\ el\\ plantel\\ tiene\\ (.+?)\\ fichas\\ y\\ no\\ caben\\ más\\.\\ Dar\\ salidas\\ también\\ es\\ formar\\.$",
+   "Nobody comes up from the youth ranks this year: the squad has $1 players and there's no room. Letting players go is part of developing them too.",
+   "Ninguém sobe da base este ano: o elenco tem $1 jogadores e não cabem mais. Liberar jogadores também é formar."
+  ],
+  [
+   "^Contrataste\\ más\\ analistas\\.\\ El\\ modelo\\ propio\\ del\\ club\\ ya\\ cruza\\ minutos,\\ duelos\\ y\\ kilómetros\\ de\\ (.+?)\\ futbolistas\\.\\ (.+?)$",
+   "You hired more analysts. The club's own model now cross-checks minutes, duels and distance for $1 players. $2",
+   "Você contratou mais analistas. O modelo próprio do clube já cruza minutos, duelos e quilômetros de $1 jogadores. $2"
+  ],
+  [
+   "^(.+?)\\ hablará\\ por\\ ti\\ en\\ las\\ ruedas\\ de\\ prensa\\.\\ Menos\\ desgaste\\ para\\ ti,\\ pero\\ también\\ menos\\ control\\ sobre\\ el\\ mensaje\\.$",
+   "$1 will speak for you at press conferences. Less wear and tear for you, but also less control over the message.",
+   "$1 vai falar por você nas coletivas. Menos desgaste para você, mas também menos controle sobre a mensagem."
+  ],
+  [
+   "^Estaban\\ en\\ la\\ prenómina\\ pero\\ no\\ llegaron\\ a\\ la\\ lista\\ definitiva:\\ (.+?)\\.\\ El\\ cuerpo\\ técnico\\ prefirió\\ otras\\ variantes\\.$",
+   "They were on the preliminary list but missed the final cut: $1. The coaching staff preferred other options.",
+   "Estavam na pré-lista mas não entraram na lista final: $1. A comissão técnica preferiu outras opções."
+  ],
+  [
+   "^(.+?)\\ terminó\\ primero\\ en\\ la\\ tabla\\ pero\\ perdió\\ los\\ playoffs\\.\\ Con\\ este\\ formato,\\ treinta\\ fechas\\ no\\ garantizan\\ nada\\.$",
+   "$1 finished top of the table but lost the playoffs. With this format, thirty matchdays guarantee nothing.",
+   "$1 terminou em primeiro na tabela mas perdeu os playoffs. Com esse formato, trinta rodadas não garantem nada."
+  ],
+  [
+   "^\\((.+?)\\)\\ Los\\ partidos\\ de\\ esta\\ semana\\ empiezan\\ con\\ un\\ minuto\\ de\\ silencio\\ y\\ los\\ jugadores\\ llevan\\ brazalete\\ negro\\.$",
+   "($1) This week's matches begin with a minute's silence and the players wear black armbands.",
+   "($1) As partidas desta semana começam com um minuto de silêncio e os jogadores usam braçadeira preta."
+  ],
+  [
+   "^El\\ club\\ incorpora\\ a\\ (.+?),\\ hermano\\ gemelo\\ de\\ (.+?)\\.\\ Se\\ parecen\\ tanto\\ que\\ el\\ utilero\\ ya\\ se\\ equivocó\\ dos\\ veces\\.$",
+   "The club signs $1, twin brother of $2. They look so alike the kit man has already mixed them up twice.",
+   "O clube contrata $1, irmão gêmeo de $2. São tão parecidos que o roupeiro já se confundiu duas vezes."
+  ],
+  [
+   "^(.+?)\\ El\\ personal\\ del\\ club\\ trabaja\\ menos\\ horas\\ y\\ hay\\ que\\ cubrir\\ más\\ turnos:\\ la\\ estructura\\ cuesta\\ un\\ poco\\ más\\.$",
+   "$1 Club staff work fewer hours and more shifts must be covered: the structure costs a little more.",
+   "$1 Os funcionários do clube trabalham menos horas e é preciso cobrir mais turnos: a estrutura custa um pouco mais."
+  ],
+  [
+   "^(.+?)\\ cambió\\ de\\ club\\ y\\ te\\ llevas\\ el\\ (.+?)%\\ de\\ la\\ operación:\\ (.+?)\\.\\ Aquella\\ venta\\ barata\\ acabó\\ saliendo\\ bien\\.$",
+   "$1 changed clubs and you get $2% of the deal: $3. That cheap sale turned out well in the end.",
+   "$1 mudou de clube e você leva $2% da operação: $3. Aquela venda barata acabou dando certo."
+  ],
+  [
+   "^La\\ federación\\ decidió\\ que\\ el\\ campeón\\ se\\ juega\\.\\ Semifinales:\\ (.+?)\\ ·\\ (.+?)\\.\\ FINAL:\\ (.+?)\\.\\ Campeón:\\ (.+?)\\.(.+?)$",
+   "The federation decided the title is played for. Semi-finals: $1 · $2. FINAL: $3. Champion: $4.$5",
+   "A federação decidiu que o campeão se decide em campo. Semifinais: $1 · $2. FINAL: $3. Campeão: $4.$5"
+  ],
+  [
+   "^Jugó\\ el\\ Mundial\\ y\\ volvió\\ con\\ (.+?)\\ punto\\(s\\)\\ de\\ media\\ más\\.\\ Su\\ valor\\ de\\ mercado\\ se\\ disparó:\\ espera\\ ofertas\\.$",
+   "He played at the World Cup and came back $1 rating point(s) better. His market value has soared: expect offers.",
+   "Jogou a Copa e voltou com $1 ponto(s) a mais de média. O valor de mercado disparou: espere propostas."
+  ],
+  [
+   "^La\\ selección\\ de\\ (.+?)\\ publica\\ una\\ lista\\ preliminar\\ de\\ (.+?)\\ jugadores\\ rumbo\\ a\\ la\\ próxima\\ fecha\\ internacional\\.$",
+   "$1's national team publishes a preliminary list of $2 players ahead of the next international window.",
+   "A seleção de $1 publica uma pré-lista de $2 jogadores para a próxima data FIFA."
+  ],
+  [
+   "^La\\ marca\\ lucirá\\ en\\ el\\ pecho\\ por\\ (.+?)\\ la\\ temporada\\.\\ Exigencia\\ contractual:\\ terminar\\ top\\ (.+?)\\ de\\ la\\ liga\\.$",
+   "The brand will be on the chest for $1 a season. Contract demand: finish in the league's top $2.",
+   "A marca vai estampar o peito por $1 a temporada. Exigência contratual: terminar entre os $2 primeiros da liga."
+  ],
+  [
+   "^Te\\ niegas\\ a\\ vender\\ a\\ (.+?)\\.\\ Su\\ entorno\\ lleva\\ semanas\\ diciéndole\\ que\\ el\\ club\\ le\\ está\\ frenando\\ la\\ carrera\\.$",
+   "You refuse to sell $1. His entourage has been telling him for weeks that the club is holding his career back.",
+   "Você se recusa a vender $1. O entorno dele diz há semanas que o clube está freando a carreira dele."
+  ],
+  [
+   "^La\\ federación\\ cierra\\ el\\ expediente:\\ tu\\ masa\\ salarial\\ vuelve\\ a\\ estar\\ por\\ debajo\\ del\\ (.+?)%\\ de\\ los\\ ingresos\\.$",
+   "The federation closes the case: your wage bill is back below $1% of revenue.",
+   "A federação encerra o processo: sua folha salarial volta a ficar abaixo de $1% das receitas."
+  ],
+  [
+   "^El\\ community\\ manager\\ se\\ va\\ de\\ vacaciones\\ y\\ la\\ directiva\\ te\\ confía\\ (.+?)\\.\\ La\\ clave\\ te\\ llegó\\ por\\ Mensajes\\.$",
+   "The social media manager is going on holiday and the board trusts you with $1. The password came via Messages.",
+   "O social media sai de férias e a diretoria te confia $1. A senha chegou por Mensagens."
+  ],
+  [
+   "^Fotos\\ del\\ jugador\\ de\\ fiesta\\ a\\ mitad\\ de\\ semana\\.\\ El\\ camarín\\ queda\\ tocado\\ y\\ la\\ prensa\\ afila\\ el\\ lápiz\\.(.+?)$",
+   "Photos of the player partying midweek. The dressing room is shaken and the press sharpens its pencils.$1",
+   "Fotos do jogador na balada no meio da semana. O vestiário fica abalado e a imprensa afia o lápis.$1"
+  ],
+  [
+   "^(.+?)\\ \\((.+?)\\ %\\ del\\ club\\)\\ pide\\ tu\\ destitución\\ ante\\ la\\ junta\\.\\ No\\ prospera,\\ pero\\ la\\ directiva\\ toma\\ nota\\.$",
+   "$1 ($2% of the club) calls for your dismissal before the meeting. It fails, but the board takes note.",
+   "$1 ($2% do clube) pede sua demissão na assembleia. Não passa, mas a diretoria anota."
+  ],
+  [
+   "^Se\\ filtró\\ el\\ pago\\ de\\ (.+?)\\ a\\ un\\ intermediario\\ de\\ la\\ federación:\\ 9\\ puntos\\ menos\\ y\\ la\\ hinchada\\ furiosa\\.$",
+   "The payment of $1 to a federation middleman was leaked: 9 points deducted and furious fans.",
+   "Vazou o pagamento de $1 a um intermediário da federação: 9 pontos a menos e a torcida furiosa."
+  ],
+  [
+   "^(.+?)\\ \\((.+?)\\ años,\\ (.+?)\\)\\ sube\\ al\\ primer\\ equipo\\.\\ Es\\ hermano\\ de\\ (.+?):\\ jugar\\ juntos\\ les\\ da\\ un\\ plus\\.$",
+   "$1 ($2, $3) moves up to the first team. He is $4's brother: playing together gives them a boost.",
+   "$1 ($2 anos, $3) sobe para o time principal. É irmão de $4: jogar juntos dá um plus."
+  ],
+  [
+   "^El\\ municipio\\ ingresa\\ (.+?)\\ por\\ el\\ deporte\\ de\\ base,\\ los\\ negocios\\ abiertos\\ y\\ la\\ relación\\ con\\ el\\ barrio\\.$",
+   "The council pays in $1 for grassroots sport, local businesses and relations with the neighbourhood.",
+   "A prefeitura repassa $1 pelo esporte de base, os negócios abertos e a relação com o bairro."
+  ],
+  [
+   "^(.+?)\\ apadrina\\ a\\ (.+?)\\.\\ Entrenarán\\ juntos\\ y\\ el\\ chico\\ va\\ a\\ aprender\\ de\\ alguien\\ que\\ ya\\ lo\\ vivió\\ todo\\.$",
+   "$1 takes $2 under his wing. They'll train together and the kid will learn from someone who has seen it all.",
+   "$1 apadrinha $2. Vão treinar juntos e o garoto vai aprender com quem já viveu tudo."
+  ],
+  [
+   "^El\\ plantel\\ llegó\\ de\\ madrugada\\ desde\\ (.+?)\\ y\\ paga\\ el\\ viaje:\\ −(.+?)\\ de\\ estado\\ físico\\ a\\ los\\ que\\ juegan\\.$",
+   "The squad got back from $1 in the early hours and feels the trip: −$2 fitness for those playing.",
+   "O elenco chegou de madrugada de $1 e sente a viagem: −$2 de condição física para quem joga."
+  ],
+  [
+   "^El\\ estadio\\ funcionará\\ al\\ 40%\\ de\\ aforo\\ durante\\ (.+?)\\ semanas\\.\\ El\\ golpe\\ a\\ la\\ taquilla\\ se\\ va\\ a\\ notar\\.$",
+   "The stadium will run at 40% capacity for $1 weeks. The hit to gate receipts will be felt.",
+   "O estádio vai funcionar com 40% da capacidade por $1 semanas. O golpe na bilheteria vai ser sentido."
+  ],
+  [
+   "^Invitaste\\ a\\ un\\ creador\\ a\\ un\\ entrenamiento\\.\\ El\\ club\\ ganó\\ (.+?)\\ seguidores\\ y\\ algo\\ de\\ cariño\\ en\\ redes\\.$",
+   "You invited a content creator to training. The club gained $1 followers and some love on social media.",
+   "Você convidou um criador de conteúdo para um treino. O clube ganhou $1 seguidores e um pouco de carinho nas redes."
+  ],
+  [
+   "^(.+?)\\ denuncia\\ a\\ un\\ intermediario\\ de\\ la\\ federación\\.\\ La\\ prensa\\ aplaude;\\ en\\ la\\ asamblea\\ te\\ miran\\ mal\\.$",
+   "$1 reports a federation middleman. The press applauds; in the assembly they give you dirty looks.",
+   "$1 denuncia um intermediário da federação. A imprensa aplaude; na assembleia te olham torto."
+  ],
+  [
+   "^(.+?)\\ es\\ convocado\\ por\\ la\\ selección\\ juvenil\\ de\\ su\\ país\\.\\ Vuelve\\ con\\ más\\ confianza\\ \\(\\+2\\ de\\ nivel\\)\\.$",
+   "$1 is called up by his country's youth team. He comes back more confident (+2 rating).",
+   "$1 é convocado pela seleção de base do seu país. Volta mais confiante (+2 de nível)."
+  ],
+  [
+   "^De\\ los\\ (.+?)\\ de\\ la\\ venta\\ de\\ (.+?),\\ (.+?)\\ se\\ van\\ al\\ fondo\\ que\\ compro\\ el\\ (.+?)%\\ de\\ sus\\ derechos\\.$",
+   "Of the $1 from $2's sale, $3 go to the fund that bought $4% of his rights.",
+   "Dos $1 da venda de $2, $3 vão para o fundo que comprou $4% dos direitos."
+  ],
+  [
+   "^\\((.+?)\\)\\ El\\ personal\\ del\\ club\\ libra\\.\\ El\\ plantel\\ dedica\\ el\\ partido\\ a\\ los\\ trabajadores\\ del\\ club\\.$",
+   "($1) The club staff have the day off. The squad dedicates the match to the club's workers.",
+   "($1) Os funcionários do clube folgam. O elenco dedica a partida aos trabalhadores do clube."
+  ],
+  [
+   "^(.+?)\\ llega\\ al\\ nivel\\ (.+?):\\ su\\ efecto\\ se\\ refuerza\\ y\\ ganas\\ un\\ punto\\ de\\ habilidad\\ para\\ el\\ árbol\\.$",
+   "$1 reaches level $2: its effect grows stronger and you gain a skill point for the tree.",
+   "$1 chega ao nível $2: o efeito se reforça e você ganha um ponto de habilidade para a árvore."
+  ],
+  [
+   "^El\\ administrador\\ concursal\\ limita\\ la\\ masa\\ salarial\\ a\\ (.+?)\\ por\\ semana\\.\\ Lo\\ que\\ sobre,\\ se\\ vende\\.$",
+   "The administrator caps the wage bill at $1 a week. Whatever is over gets sold.",
+   "O administrador judicial limita a folha a $1 por semana. O que sobrar é vendido."
+  ],
+  [
+   "^Tu\\ publicación\\ «(.+?)»\\ encendió\\ la\\ discusión:\\ (.+?)\\ comentarios\\ y\\ la\\ prensa\\ ya\\ habla\\ del\\ tema\\.$",
+   "Your post \"$1\" sparked a debate: $2 comments and the press is already talking about it.",
+   "Seu post \"$1\" acendeu a discussão: $2 comentários e a imprensa já fala do assunto."
+  ],
+  [
+   "^(.+?)\\ entra\\ en\\ la\\ pelea\\ y\\ ofrece\\ (.+?),\\ más\\ que\\ (.+?)\\.\\ La\\ decisión\\ es\\ tuya\\ en\\ el\\ mercado\\.$",
+   "$1 joins the fight and offers $2, more than $3. The decision is yours in the market.",
+   "$1 entra na briga e oferece $2, mais que $3. A decisão é sua no mercado."
+  ],
+  [
+   "^Pediste\\ que\\ (.+?)\\ descansara\\ y\\ la\\ federación\\ lo\\ citó\\ igual\\.\\ Vuelve\\ el\\ lunes,\\ y\\ verás\\ cómo\\.$",
+   "You asked for $1 to be rested and the federation called him up anyway. He's back on Monday, and you'll see in what state.",
+   "Você pediu descanso para $1 e a federação o convocou mesmo assim. Volta na segunda, e você vai ver como."
+  ],
+  [
+   "^Las\\ notas\\ de\\ (.+?)\\ van\\ en\\ (.+?)\\.\\ Si\\ siguen\\ bajando,\\ su\\ familia\\ lo\\ sacará\\ de\\ la\\ academia\\.$",
+   "$1's grades are at $2. If they keep dropping, his family will pull him out of the academy.",
+   "As notas de $1 estão em $2. Se continuarem caindo, a família vai tirá-lo da academia."
+  ],
+  [
+   "^(.+?)\\ cuenta\\ en\\ el\\ vestuario\\ que\\ le\\ prometiste\\ minutos\\ y\\ no\\ llegaron\\.\\ El\\ grupo\\ toma\\ nota\\.$",
+   "$1 tells the dressing room you promised him minutes that never came. The group takes note.",
+   "$1 conta no vestiário que você prometeu minutos que não vieram. O grupo anota."
+  ],
+  [
+   "^(.+?)\\ ya\\ no\\ está\\ en\\ el\\ plantel\\.\\ A\\ partir\\ de\\ la\\ próxima\\ rueda\\ vuelves\\ a\\ dar\\ tú\\ la\\ cara\\.$",
+   "$1 is no longer in the squad. From the next press conference you face the media yourself.",
+   "$1 não está mais no elenco. A partir da próxima coletiva você volta a dar a cara."
+  ],
+  [
+   "^Las\\ apuestas\\ de\\ (.+?)\\ y\\ que\\ el\\ club\\ lo\\ tapó\\.\\ La\\ federación\\ lo\\ suspende\\ cinco\\ partidos\\.$",
+   "$1's betting, and that the club covered it up. The federation bans him for five matches.",
+   "As apostas de $1, e que o clube abafou. A federação o suspende por cinco partidas."
+  ],
+  [
+   "^Le\\ prometiste\\ ser\\ (.+?)\\ y\\ lleva\\ (.+?)%\\ de\\ titularidades\\.\\ Su\\ agente\\ ya\\ llamó\\ dos\\ veces\\.$",
+   "You promised him he'd be a $1 and he has started $2% of matches. His agent has called twice already.",
+   "Você prometeu que ele seria $1 e ele foi titular em $2% dos jogos. O empresário já ligou duas vezes."
+  ],
+  [
+   "^Han\\ llamado\\ desde\\ (.+?):\\ te\\ ofrecen\\ su\\ banquillo\\.\\ Puedes\\ contestar\\ en\\ Club\\ ›\\ Legado\\.$",
+   "$1 have called: they're offering you their dugout. You can reply in Club › Legacy.",
+   "Ligaram do $1: oferecem o comando técnico. Você pode responder em Clube › Legado."
+  ],
+  [
+   "^Pagaste\\ la\\ cláusula\\ de\\ (.+?)\\.\\ Su\\ agente\\ (.+?)\\ se\\ lleva\\ (.+?)\\.\\ Bienvenido\\ al\\ club\\.$",
+   "You paid $1's release clause. His agent $2 takes $3. Welcome to the club.",
+   "Você pagou a multa de $1. O empresário $2 leva $3. Bem-vindo ao clube."
+  ],
+  [
+   "^La\\ familia\\ de\\ (.+?)\\ lo\\ saca\\ de\\ la\\ residencia:\\ con\\ esas\\ notas,\\ primero\\ el\\ colegio\\.$",
+   "$1's family takes him out of the residence: with those grades, school comes first.",
+   "A família de $1 o tira do alojamento: com essas notas, primeiro a escola."
+  ],
+  [
+   "^Menos\\ gasto\\ energético\\ y\\ beneficios\\ tributarios\\.\\ El\\ club\\ ahorra\\ (.+?)\\ a\\ la\\ semana\\.$",
+   "Lower energy costs and tax benefits. The club saves $1 a week.",
+   "Menos gasto de energia e benefícios fiscais. O clube economiza $1 por semana."
+  ],
+  [
+   "^Resultado:\\ (.+?)\\ votos\\ a\\ favor\\ de\\ (.+?)\\.\\ La\\ moción\\ (.+?)\\.\\ (.+?)\\ Tu\\ posición\\ (.+?)$",
+   "Result: $1 votes in favour of $2. The motion $3. $4 Your position $5",
+   "Resultado: $1 votos a favor de $2. A moção $3. $4 Sua posição $5"
+  ],
+  [
+   "^Se\\ le\\ acabó\\ el\\ contrato\\ y\\ no\\ se\\ renovó\\.\\ Deja\\ (.+?)\\ sin\\ que\\ el\\ club\\ cobre\\ nada\\.$",
+   "His contract ran out and wasn't renewed. He leaves $1 without the club earning a penny.",
+   "O contrato acabou e não foi renovado. Deixa o $1 sem o clube receber nada."
+  ],
+  [
+   "^Firma\\ su\\ cláusula\\ de\\ fidelidad\\ hasta\\ (.+?):\\ no\\ pedirá\\ salir\\ mientras\\ siga\\ vigente\\.$",
+   "Signs his loyalty clause until $1: he won't ask to leave while it lasts.",
+   "Assina a cláusula de fidelidade até $1: não vai pedir para sair enquanto valer."
+  ],
+  [
+   "^(.+?)\\ (.+?)\\ la\\ presidencia\\ \\(corriente\\ (.+?)\\)\\ hasta\\ (.+?)\\.\\ (.+?)\\ Empujará:\\ (.+?)\\.$",
+   "$1 $2 the presidency ($3 faction) until $4. $5 Will push for: $6.",
+   "$1 $2 a presidência (corrente $3) até $4. $5 Vai defender: $6."
+  ],
+  [
+   "^Se\\ van\\ con\\ (.+?):\\ (.+?)\\.\\ Vuelven\\ con\\ la\\ moral\\ arriba\\ y\\ con\\ el\\ depósito\\ vacío\\.$",
+   "Off to $1: $2. They'll come back with morale up and the tank empty.",
+   "Vão para $1: $2. Voltam com a moral lá em cima e o tanque vazio."
+  ],
+  [
+   "^(.+?)\\ \\((.+?)\\ años,\\ (.+?)\\)\\ deja\\ su\\ club\\ de\\ barrio\\ y\\ se\\ muda\\ a\\ la\\ residencia\\.$",
+   "$1 ($2, $3) leaves his neighbourhood club and moves into the residence.",
+   "$1 ($2 anos, $3) deixa o clube do bairro e se muda para o alojamento."
+  ],
+  [
+   "^(.+?)\\ regresa\\ con\\ (.+?)\\ punto\\(s\\)\\ más\\ de\\ media\\ tras\\ una\\ temporada\\ con\\ minutos\\.$",
+   "$1 returns with $2 more rating point(s) after a season with minutes.",
+   "$1 volta com $2 ponto(s) a mais de média depois de uma temporada jogando."
+  ],
+  [
+   "^La\\ federación\\ sanciona\\ a\\ (.+?)\\ por\\ impagos:\\ le\\ resta\\ (.+?)\\ puntos\\ en\\ la\\ tabla\\.$",
+   "The federation punishes $1 for unpaid debts: $2 points deducted.",
+   "A federação pune $1 por falta de pagamento: perde $2 pontos na tabela."
+  ],
+  [
+   "^(.+?)\\ \\((.+?)\\ años,\\ (.+?)\\)\\ sube\\ al\\ plantel:\\ media\\ (.+?),\\ proyección\\ (.+?)(.+?)\\.$",
+   "$1 ($2, $3) is promoted to the squad: rating $4, potential $5$6.",
+   "$1 ($2 anos, $3) sobe para o elenco: média $4, projeção $5$6."
+  ],
+  [
+   "^Firma\\ por\\ (.+?)\\ temporadas\\ a\\ (.+?)/sem(.+?)\\.\\ Negoció\\ su\\ agente\\ (.+?)\\ \\((.+?)\\)\\.$",
+   "Signs for $1 seasons at $2/wk$3. Negotiated by his agent $4 ($5).",
+   "Assina por $1 temporadas a $2/sem$3. Negociou o empresário $4 ($5)."
+  ],
+  [
+   "^(.+?)\\ \\((.+?),\\ (.+?)\\ años\\)\\ llega\\ desde\\ tu\\ sede\\ en\\ (.+?)\\ con\\ proyección\\ (.+?)\\.$",
+   "$1 ($2, $3) arrives from your $4 branch with potential $5.",
+   "$1 ($2, $3 anos) chega da sua sede em $4 com projeção $5."
+  ],
+  [
+   "^Llegó\\ a\\ (.+?)\\ partidos\\ y\\ se\\ gatilla\\ el\\ bono\\ de\\ (.+?)\\ para\\ su\\ club\\ anterior\\.$",
+   "He reached $1 matches, triggering the $2 bonus for his former club.",
+   "Chegou a $1 partidas e dispara o bônus de $2 para o clube anterior."
+  ],
+  [
+   "^El\\ tribunal\\ rebaja\\ la\\ sanción\\ de\\ (.+?)\\ en\\ (.+?)\\ fecha\\(s\\)\\.\\ Le\\ quedan\\ (.+?)\\.$",
+   "The tribunal reduces $1's ban by $2 match(es). $3 left.",
+   "O tribunal reduz a suspensão de $1 em $2 rodada(s). Restam $3."
+  ],
+  [
+   "^El\\ plantel\\ está\\ lleno\\ \\((.+?)\\ fichas\\):\\ se\\ queda\\ un\\ año\\ más\\ en\\ la\\ academia\\.$",
+   "The squad is full ($1 players): he stays another year at the academy.",
+   "O elenco está cheio ($1 jogadores): ele fica mais um ano na academia."
+  ],
+  [
+   "^(.+?)La\\ federación\\ convoca\\ sobre:\\ (.+?)\\.\\ (.+?)\\ Puedes\\ votar\\ desde\\ Federación\\.$",
+   "$1The federation calls a vote on: $2. $3 You can vote from Federation.",
+   "$1A federação convoca votação sobre: $2. $3 Você pode votar em Federação."
+  ],
+  [
+   "^Le\\ contestaste\\ a\\ (.+?)\\ en\\ redes\\ delante\\ de\\ todos\\.\\ El\\ vestuario\\ lo\\ comenta\\.$",
+   "You answered $1 on social media in front of everyone. The dressing room is talking about it.",
+   "Você respondeu $1 nas redes na frente de todo mundo. O vestiário comenta."
+  ],
+  [
+   "^(.+?):\\ (.+?)\\.\\ Sanción\\ de\\ (.+?)\\ fecha\\(s\\)\\.\\ Puedes\\ apelar\\ desde\\ Federación\\.$",
+   "$1: $2. $3-match ban. You can appeal from Federation.",
+   "$1: $2. Suspensão de $3 rodada(s). Você pode recorrer em Federação."
+  ],
+  [
+   "^Deuda\\ perdonada,\\ caja\\ a\\ cero\\ y\\ reputación\\ en\\ el\\ suelo\\.\\ Se\\ fueron:\\ (.+?)\\.$",
+   "Debt written off, coffers at zero and reputation on the floor. Gone: $1.",
+   "Dívida perdoada, caixa zerado e reputação no chão. Saíram: $1."
+  ],
+  [
+   "^(.+?)\\ Los\\ que\\ juegan\\ con\\ (.+?)\\ salen\\ ganando;\\ los\\ de\\ (.+?)\\ van\\ a\\ sufrir\\.$",
+   "$1 Teams playing $2 come out on top; those playing $3 will suffer.",
+   "$1 Quem joga com $2 sai ganhando; quem joga com $3 vai sofrer."
+  ],
+  [
+   "^El\\ administrador\\ vende\\ a\\ (.+?)\\ a\\ (.+?)\\ por\\ (.+?),\\ lejos\\ de\\ lo\\ que\\ vale\\.$",
+   "The administrator sells $1 to $2 for $3, far below his value.",
+   "O administrador vende $1 ao $2 por $3, bem abaixo do que vale."
+  ],
+  [
+   "^(.+?)\\ se\\ formó\\ aquí\\ y\\ acaba\\ de\\ cambiar\\ de\\ club:\\ te\\ corresponden\\ (.+?)\\.$",
+   "$1 came through here and has just changed clubs: you're owed $2.",
+   "$1 se formou aqui e acaba de mudar de clube: cabem a você $2."
+  ],
+  [
+   "^(.+?)\\ de\\ (.+?):\\ hacían\\ falta\\ (.+?)\\.\\ Podrás\\ repetirlo\\ en\\ (.+?)\\ semanas\\.$",
+   "$1 of $2: you needed $3. You can retake it in $4 weeks.",
+   "$1 de $2: precisava de $3. Você pode refazer em $4 semanas."
+  ],
+  [
+   "^(.+?)\\ la\\ rompió\\ en\\ la\\ práctica\\ y\\ golpea\\ la\\ puerta\\ de\\ la\\ titularidad\\.$",
+   "$1 was brilliant in training and is knocking on the door of the starting line-up.",
+   "$1 arrebentou no treino e bate à porta da titularidade."
+  ],
+  [
+   "^(.+?)\\ se\\ va\\ cedido\\ una\\ temporada\\.\\ (.+?)\\ Pagan\\ el\\ (.+?)%\\ del\\ sueldo\\.$",
+   "$1 leaves on a season-long loan. $2 They pay $3% of his wages.",
+   "$1 sai emprestado por uma temporada. $2 Eles pagam $3% do salário."
+  ],
+  [
+   "^Le\\ tocó\\ a\\ (.+?)\\ tras\\ el\\ partido\\.\\ Muestra\\ negativa,\\ todo\\ en\\ orden\\.$",
+   "$1 was selected after the match. Negative sample, all in order.",
+   "Calhou para $1 depois da partida. Amostra negativa, tudo certo."
+  ],
+  [
+   "^(.+?)\\ de\\ (.+?)\\ respuestas\\ correctas\\.\\ Más\\ prestigio\\ en\\ el\\ banquillo\\.$",
+   "$1 of $2 correct answers. More prestige on the bench.",
+   "$1 de $2 respostas corretas. Mais prestígio no banco."
+  ],
+  [
+   "^\\((.+?)\\)\\ Semana\\ de\\ fiesta\\ en\\ el\\ país:\\ se\\ esperan\\ estadios\\ llenos\\.$",
+   "($1) A holiday week in the country: full stadiums are expected.",
+   "($1) Semana de feriado no país: espera-se estádios lotados."
+  ],
+  [
+   "^Cierra\\ la\\ ventana\\ internacional\\.\\ Los\\ que\\ fueron\\ vuelven\\ con\\ (.+?)\\.$",
+   "The international window closes. Those who went come back with $1.",
+   "Fecha a janela internacional. Os que foram voltam com $1."
+  ],
+  [
+   "^(.+?)\\ cambio\\(s\\)\\ en\\ el\\ once:\\ los\\ que\\ llegaban\\ fundidos\\ descansan\\.$",
+   "$1 change(s) to the line-up: the exhausted ones get a rest.",
+   "$1 mudança(s) no time: os que chegavam esgotados descansam."
+  ],
+  [
+   "^(.+?)\\ (.+?)\\-(.+?)\\ (.+?)\\.\\ (.+?)\\ levanta\\ el\\ primer\\ título\\ del\\ año\\.$",
+   "$1 $2-$3 $4. $5 lift the first trophy of the year.",
+   "$1 $2-$3 $4. $5 levanta o primeiro título do ano."
+  ],
+  [
+   "^El\\ plantel\\ sorprendió\\ a\\ (.+?)\\ con\\ torta\\ y\\ bromas\\.\\ Buen\\ ambiente\\.$",
+   "The squad surprised $1 with a cake and jokes. Good atmosphere.",
+   "O elenco surpreendeu $1 com bolo e brincadeiras. Clima bom."
+  ],
+  [
+   "^El\\ plantel\\ llega\\ a\\ la\\ primera\\ jornada\\ con\\ (.+?)\\ de\\ forma\\ extra\\.$",
+   "The squad reaches the first matchday with $1 extra form.",
+   "O elenco chega à primeira rodada com $1 de forma extra."
+  ],
+  [
+   "^(.+?)\\ \\((.+?)\\)\\ organiza\\ un\\ asado\\ con\\ el\\ plantel\\.\\ Buen\\ ambiente\\.$",
+   "$1 ($2) organises a barbecue with the squad. Good atmosphere.",
+   "$1 ($2) organiza um churrasco com o elenco. Clima bom."
+  ],
+  [
+   "^(.+?)\\ ocupa\\ (.+?)\\ por\\ (.+?)\\ al\\ año\\ durante\\ (.+?)\\ temporada\\(s\\)\\.$",
+   "$1 takes $2 for $3 a year for $4 season(s).",
+   "$1 ocupa $2 por $3 ao ano durante $4 temporada(s)."
+  ],
+  [
+   "^(.+?)\\.\\ Tu\\ ficha\\ de\\ entrenador\\ suma\\ un\\ punto\\ más\\ de\\ prestigio\\.$",
+   "$1. Your coaching record gains another point of prestige.",
+   "$1. Sua ficha de treinador ganha mais um ponto de prestígio."
+  ],
+  [
+   "^(.+?)\\ no\\ renueva\\.\\ La\\ zona\\ queda\\ libre\\ para\\ quien\\ pague\\ más\\.$",
+   "$1 doesn't renew. The area is free for whoever pays most.",
+   "$1 não renova. A área fica livre para quem pagar mais."
+  ],
+  [
+   "^(.+?)\\ termina\\ su\\ préstamo\\ y\\ se\\ reincorpora\\ a\\ la\\ pretemporada\\.$",
+   "$1 ends his loan and rejoins pre-season.",
+   "$1 termina o empréstimo e se reapresenta na pré-temporada."
+  ],
+  [
+   "^(.+?)\\.\\ Gobierna\\ (.+?)\\ \\((.+?)\\)\\.\\ Su\\ prioridad:\\ (.+?)\\ —\\ (.+?)$",
+   "$1. $2 ($3) governs. Their priority: $4 — $5",
+   "$1. Governa $2 ($3). Prioridade: $4 — $5"
+  ],
+  [
+   "^La\\ sede\\ de\\ (.+?)\\ se\\ vende\\.\\ Los\\ proyectos\\ vuelven\\ a\\ casa\\.$",
+   "The $1 branch is sold. The prospects come home.",
+   "A sede de $1 é vendida. Os projetos voltam para casa."
+  ],
+  [
+   "^(.+?)\\ se\\ queda\\ con\\ (.+?)\\ pagando\\ (.+?)\\.\\ Buena\\ operación\\.$",
+   "$1 keep $2, paying $3. Good business.",
+   "$1 fica com $2 pagando $3. Bom negócio."
+  ],
+  [
+   "^(.+?)\\ jugará\\ esta\\ temporada\\ en\\ (.+?)\\ para\\ sumar\\ minutos\\.$",
+   "$1 will play this season at $2 to get minutes.",
+   "$1 vai jogar esta temporada no $2 para ganhar minutos."
+  ],
+  [
+   "^(.+?)\\ \\((.+?)\\)\\ amenazó\\ con\\ irse\\ y\\ consiguió\\ un\\ aumento\\.$",
+   "$1 ($2) threatened to leave and got a raise.",
+   "$1 ($2) ameaçou sair e conseguiu um aumento."
+  ],
+  [
+   "^Se\\ jugó\\ la\\ Copa\\ del\\ Mundo\\.\\ (.+?)\\ levantó\\ el\\ trofeo\\.\\ $",
+   "The World Cup has been played. $1 lifted the trophy. ",
+   "A Copa do Mundo foi disputada. $1 levantou o troféu. "
+  ],
+  [
+   "^(.+?)\\ abonados\\ con\\ el\\ (.+?)\\.\\ Entran\\ (.+?)\\ de\\ golpe\\.$",
+   "$1 season ticket holders with the $2. $3 comes in at once.",
+   "$1 sócios com o $2. Entram $3 de uma vez."
+  ],
+  [
+   "^En\\ dos\\ semanas\\ se\\ vota\\ en\\ (.+?)\\.\\ Candidatos:\\ (.+?)\\.$",
+   "$1 votes in two weeks. Candidates: $2.",
+   "Em duas semanas tem eleição em $1. Candidatos: $2."
+  ],
+  [
+   "^(.+?)\\ vuelve\\ tocado\\ de\\ la\\ gira:\\ (.+?)\\ \\((.+?)\\ sem\\)\\.$",
+   "$1 comes back injured from the trip: $2 ($3 wks).",
+   "$1 volta machucado da viagem: $2 ($3 sem)."
+  ],
+  [
+   "^(.+?)\\ se\\ lesiona\\ entrenando:\\ (.+?)\\ semanas\\ de\\ baja\\.$",
+   "$1 gets injured in training: out for $2 weeks.",
+   "$1 se machuca no treino: $2 semanas fora."
+  ],
+  [
+   "^🩹\\ (.+?)\\ llega\\ lesionado\\ de\\ la\\ Copa\\ \\((.+?)\\ sem\\)\\.$",
+   "🩹 $1 returns injured from the tournament ($2 wks).",
+   "🩹 $1 chega lesionado da Copa ($2 sem)."
+  ],
+  [
+   "^(.+?)\\.\\ Todos\\ ellos\\ disputan\\ el\\ Mundial\\ de\\ Clubes\\.$",
+   "$1. All of them take part in the Club World Cup.",
+   "$1. Todos eles disputam o Mundial de Clubes."
+  ],
+  [
+   "^(.+?)\\.\\ Suma\\ (.+?)\\ a\\ la\\ semana,\\ llueva\\ o\\ truene\\.$",
+   "$1. Adds $2 a week, come rain or shine.",
+   "$1. Rende $2 por semana, faça chuva ou faça sol."
+  ],
+  [
+   "^(.+?)\\ \\((.+?)\\ %\\ del\\ club\\)\\ pide\\ la\\ palabra:\\ (.+?)$",
+   "$1 ($2% of the club) takes the floor: $3",
+   "$1 ($2% do clube) pede a palavra: $3"
+  ],
+  [
+   "^(.+?)\\ Menos\\ riesgo\\ de\\ incidentes\\ y\\ de\\ sanción\\.$",
+   "$1 Less risk of incidents and sanctions.",
+   "$1 Menos risco de incidentes e de punição."
+  ],
+  [
+   "^Te\\ mudas\\ a:\\ (.+?)\\.\\ La\\ mudanza\\ costó\\ (.+?)\\.$",
+   "You move to: $1. The move cost $2.",
+   "Você se muda para: $1. A mudança custou $2."
+  ],
+  [
+   "^(.+?)\\ tuvo\\ sus\\ minutos,\\ como\\ le\\ dijiste\\.$",
+   "$1 got his minutes, as you told him.",
+   "$1 teve seus minutos, como você disse."
+  ],
+  [
+   "^(.+?)\\ ha\\ copiado\\ el\\ carácter\\ de\\ (.+?)\\.$",
+   "$1 has picked up $2's character.",
+   "$1 copiou o caráter de $2."
+  ],
+  [
+   "^Tus\\ participaciones\\ repartieron\\ (.+?)\\.$",
+   "Your holdings paid out $1.",
+   "Suas participações renderam $1."
+  ],
+  [
+   "^(.+?)\\ parte\\ a\\ (.+?)\\ por\\ (.+?)\\.(.+?)$",
+   "$1 leaves for $2 for $3.$4",
+   "$1 vai para o $2 por $3.$4"
+  ],
+  [
+   "^Pagada\\ la\\ última\\ cuota\\ por\\ (.+?)\\.$",
+   "Last instalment paid for $1.",
+   "Paga a última parcela por $1."
+  ],
+  [
+   "^(.+?)\\ ya\\ es\\ de\\ su\\ nueva\\ posición$",
+   "$1 has settled into his new position",
+   "$1 já é da nova posição"
+  ],
+  [
+   "^(.+?)\\ Te\\ espera\\ en\\ el\\ despacho\\.$",
+   "$1 He's waiting in your office.",
+   "$1 Ele te espera no escritório."
+  ],
+  [
+   "^(.+?)\\ domina\\ una\\ habilidad\\ nueva$",
+   "$1 masters a new skill",
+   "$1 domina uma habilidade nova"
+  ],
+  [
+   "^Decadencia\\ futbolística\\ de\\ (.+?)$",
+   "Footballing decline in $1",
+   "Decadência do futebol em $1"
+  ],
+  [
+   "^🏆\\ MUNDIAL\\ (.+?):\\ campeón\\ (.+?)$",
+   "🏆 WORLD CUP $1: champions $2",
+   "🏆 COPA DO MUNDO $1: campeão $2"
+  ],
+  [
+   "^🌍\\ Campeones\\ continentales\\ (.+?)$",
+   "🌍 Continental champions $1",
+   "🌍 Campeões continentais $1"
+  ],
+  [
+   "^(.+?)\\ %\\ de\\ (.+?)\\ por\\ (.+?)\\.$",
+   "$1% of $2 for $3.",
+   "$1% de $2 por $3."
+  ],
+  [
+   "^Se\\ retira\\ por\\ lesiones:\\ (.+?)$",
+   "Retires through injury: $1",
+   "Aposenta-se por lesões: $1"
+  ],
+  [
+   "^Joya\\ de\\ la\\ academia\\ de\\ (.+?)$",
+   "Gem from the $1 academy",
+   "Joia da academia de $1"
+  ],
+  [
+   "^(.+?)\\.\\ \\(Al\\ frente:\\ (.+?)\\.\\)$",
+   "$1. (In charge: $2.)",
+   "$1. (No comando: $2.)"
+  ],
+  [
+   "^Ejecutan\\ la\\ opción\\ por\\ (.+?)$",
+   "They exercise the option on $1",
+   "Exercem a opção por $1"
+  ],
+  [
+   "^(.+?)\\ afina\\ lo\\ que\\ ya\\ sabía$",
+   "$1 sharpens what he already knew",
+   "$1 aprimora o que já sabia"
+  ],
+  [
+   "^PLAYOFFS\\ POR\\ EL\\ TÍTULO\\ (.+?)$",
+   "TITLE PLAYOFFS $1",
+   "PLAYOFFS PELO TÍTULO $1"
+  ],
+  [
+   "^🌍\\ Vitrina\\ mundialista:\\ (.+?)$",
+   "🌍 World Cup showcase: $1",
+   "🌍 Vitrine da Copa: $1"
+  ],
+  [
+   "^Vuelve\\ de\\ la\\ cesión:\\ (.+?)$",
+   "Back from loan: $1",
+   "Volta do empréstimo: $1"
+  ],
+  [
+   "^Asamblea\\ de\\ la\\ liga:\\ (.+?)$",
+   "League assembly: $1",
+   "Assembleia da liga: $1"
+  ],
+  [
+   "^👯\\ Llegan\\ los\\ gemelos\\ (.+?)$",
+   "👯 The $1 twins arrive",
+   "👯 Chegam os gêmeos $1"
+  ],
+  [
+   "^(.+?)\\ \\(\\+(.+?)\\ seguidores\\)$",
+   "$1 (+$2 followers)",
+   "$1 (+$2 seguidores)"
+  ],
+  [
+   "^Cubierta\\ solar\\ nivel\\ (.+?)$",
+   "Solar roof level $1",
+   "Cobertura solar nível $1"
+  ],
+  [
+   "^POSITIVO\\ POR\\ DOPAJE:\\ (.+?)$",
+   "POSITIVE DOPING TEST: $1",
+   "DOPING POSITIVO: $1"
+  ],
+  [
+   "^Puede\\ nacionalizarse:\\ (.+?)$",
+   "Eligible for citizenship: $1",
+   "Pode se naturalizar: $1"
+  ],
+  [
+   "^🌍\\ Mundial\\ de\\ Clubes\\ (.+?)$",
+   "🌍 Club World Cup $1",
+   "🌍 Mundial de Clubes $1"
+  ],
+  [
+   "^Descanso\\ mental\\ para\\ (.+?)$",
+   "Mental rest for $1",
+   "Descanso mental para $1"
+  ],
+  [
+   "^Prima\\ de\\ fidelidad:\\ (.+?)$",
+   "Loyalty bonus: $1",
+   "Bônus de fidelidade: $1"
+  ],
+  [
+   "^Temporada\\ terminada:\\ (.+?)$",
+   "Season over: $1",
+   "Temporada encerrada: $1"
+  ],
+  [
+   "^🔎\\ Nuevo\\ ojeador\\ en\\ (.+?)$",
+   "🔎 New scout in $1",
+   "🔎 Novo olheiro em $1"
+  ],
+  [
+   "^Bandera\\ plantada\\ en\\ (.+?)$",
+   "Flag planted in $1",
+   "Bandeira fincada em $1"
+  ],
+  [
+   "^Fecha\\ internacional:\\ (.+?)$",
+   "International window: $1",
+   "Data FIFA: $1"
+  ],
+  [
+   "^Lo\\ ganó\\ (.+?)\\ \\((.+?)\\)\\.$",
+   "Won by $1 ($2).",
+   "Vencido por $1 ($2)."
+  ],
+  [
+   "^Llegan\\ los\\ gemelos\\ (.+?)$",
+   "The $1 twins arrive",
+   "Chegam os gêmeos $1"
+  ],
+  [
+   "^Promesa\\ incumplida:\\ (.+?)$",
+   "Promise broken: $1",
+   "Promessa não cumprida: $1"
+  ],
+  [
+   "^Contrato\\ terminado:\\ (.+?)$",
+   "Contract ended: $1",
+   "Contrato encerrado: $1"
+  ],
+  [
+   "^✍️\\ Presentación\\ de\\ (.+?)$",
+   "✍️ $1 unveiled",
+   "✍️ Apresentação de $1"
+  ],
+  [
+   "^Promesa\\ cumplida:\\ (.+?)$",
+   "Promise kept: $1",
+   "Promessa cumprida: $1"
+  ],
+  [
+   "^(.+?)\\ crece\\ como\\ líder$",
+   "$1 grows as a leader",
+   "$1 cresce como líder"
+  ],
+  [
+   "^🗳️\\ Elecciones\\ en\\ (.+?)$",
+   "🗳️ Elections in $1",
+   "🗳️ Eleições em $1"
+  ],
+  [
+   "^Nueva\\ habilidad:\\ (.+?)$",
+   "New skill: $1",
+   "Nova habilidade: $1"
+  ],
+  [
+   "^Época\\ dorada\\ en\\ (.+?)$",
+   "Golden era in $1",
+   "Era de ouro em $1"
+  ],
+  [
+   "^⚖️\\ (.+?)\\ puntos\\ menos$",
+   "⚖️ $1 points deducted",
+   "⚖️ $1 pontos a menos"
+  ],
+  [
+   "^Cambia\\ la\\ moda:\\ (.+?)$",
+   "The trend changes: $1",
+   "Muda a moda: $1"
+  ],
+  [
+   "^Videoanálisis\\ de\\ (.+?)$",
+   "Video analysis of $1",
+   "Análise de vídeo de $1"
+  ],
+  [
+   "^Sin\\ ficha\\ para\\ (.+?)$",
+   "No squad place for $1",
+   "Sem vaga no elenco para $1"
+  ],
+  [
+   "^Bono\\ activado:\\ (.+?)$",
+   "Bonus triggered: $1",
+   "Bônus ativado: $1"
+  ],
+  [
+   "^Zona\\ vendida:\\ (.+?)$",
+   "Area sold: $1",
+   "Área vendida: $1"
+  ],
+  [
+   "^🔥\\ Guerra\\ por\\ (.+?)$",
+   "🔥 Bidding war for $1",
+   "🔥 Disputa por $1"
+  ],
+  [
+   "^Se\\ va\\ libre:\\ (.+?)$",
+   "Leaves on a free: $1",
+   "Sai de graça: $1"
+  ],
+  [
+   "^⚔️\\ Promoción:\\ (.+?)$",
+   "⚔️ Play-off: $1",
+   "⚔️ Repescagem: $1"
+  ],
+  [
+   "^🧠\\ (.+?)\\ pide\\ ayuda$",
+   "🧠 $1 asks for help",
+   "🧠 $1 pede ajuda"
+  ],
+  [
+   "^Lío\\ nocturno:\\ (.+?)$",
+   "Night out trouble: $1",
+   "Confusão na noite: $1"
+  ],
+  [
+   "^(.+?):\\ nivel\\ (.+?)$",
+   "$1: level $2",
+   "$1: nível $2"
+  ],
+  [
+   "^Pretemporada:\\ (.+?)$",
+   "Pre-season: $1",
+   "Pré-temporada: $1"
+  ],
+  [
+   "^Prenómina\\ de\\ (.+?)$",
+   "$1 preliminary squad",
+   "Pré-lista de $1"
+  ],
+  [
+   "^🏢\\ Asunto\\ en\\ (.+?)$",
+   "🏢 Matter in $1",
+   "🏢 Assunto em $1"
+  ],
+  [
+   "^Malestar\\ de\\ (.+?)$",
+   "$1 is unhappy",
+   "Insatisfação de $1"
+  ],
+  [
+   "^Inaugurado:\\ (.+?)$",
+   "Opened: $1",
+   "Inaugurado: $1"
+  ],
+  [
+   "^🎓\\ (.+?)\\ aprobada$",
+   "🎓 $1 passed",
+   "🎓 $1 aprovada"
+  ],
+  [
+   "^Beca\\ para\\ (.+?)$",
+   "Scholarship for $1",
+   "Bolsa para $1"
+  ],
+  [
+   "^Te\\ quiere\\ (.+?)$",
+   "$1 wants you",
+   "$1 te quer"
+  ],
+  [
+   "^Arenga\\ de\\ (.+?)$",
+   "$1's rallying speech",
+   "Discurso de $1"
+  ],
+  [
+   "^Renovado:\\ (.+?)$",
+   "Renewed: $1",
+   "Renovado: $1"
+  ],
+  [
+   "^Cesión\\ a\\ (.+?)$",
+   "Loan to $1",
+   "Empréstimo ao $1"
+  ],
+  [
+   "^Racha\\ de\\ (.+?)$",
+   "$1's hot streak",
+   "Boa fase de $1"
+  ],
+  [
+   "^Firmado:\\ (.+?)$",
+   "Signed: $1",
+   "Assinado: $1"
+  ],
+  [
+   "^(.+?)\\ Mudanza$",
+   "$1 Moving house",
+   "$1 Mudança"
+  ]
+ ]
+}

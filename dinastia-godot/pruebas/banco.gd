@@ -5017,6 +5017,17 @@ func _probar_narracion_traducida() -> void:
 	Idiomas.idioma = "pt"
 	Idiomas._cache.clear()
 	_comprobar(Idiomas.t("Se retira una figura") == "Um craque se aposenta", "titular en portugués")
+	## Los cuerpos (7-10-2026): con nombres y cifras dentro, por patrón.
+	var cuerpo_pt := Idiomas.t("Juan Ríos se lesiona entrenando: 3 semanas de baja.")
+	_comprobar(cuerpo_pt == "Juan Ríos se machuca no treino: 3 semanas fora.", "cuerpo con nombre en portugués: %s" % cuerpo_pt)
+	Idiomas.idioma = "en"
+	Idiomas._cache.clear()
+	var cuerpo_en := Idiomas.t("Juan Ríos se lesiona entrenando: 3 semanas de baja.")
+	_comprobar(cuerpo_en == "Juan Ríos gets injured in training: out for 3 weeks.", "cuerpo con nombre en inglés: %s" % cuerpo_en)
+	var fijo_en := Idiomas.t("El estadio vuelve a abrir con normalidad.")
+	_comprobar(fijo_en == "The stadium reopens as normal.", "cuerpo fijo en inglés")
+	var tv := Idiomas.t("Ana Sol termina su préstamo y se reincorpora a la pretemporada.")
+	_comprobar(tv == "Ana Sol ends his loan and rejoins pre-season.", "otro cuerpo en inglés: %s" % tv)
 	Idiomas.idioma = antes
 	Idiomas._cache.clear()
 

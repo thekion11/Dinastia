@@ -437,6 +437,32 @@ func _cargar_extra() -> void:
 			for i in ORDEN.size():
 				plantillas[ORDEN[i]] = String(fila[i + 1]) if fila.size() > i + 1 else ""
 			_patrones.append([re, plantillas])
+	_cargar_narracion()
+
+## LA NARRACIÓN (7-10-2026, MEGAPLAN: «traducir la narración, al menos al
+## inglés»). Los títulos y cuerpos de las noticias, al inglés y al portugués:
+## las frases fijas como tabla directa y las que llevan nombres o cifras como
+## patrones. Lo monta `herramientas/montar_narracion.py` a partir de las
+## plantillas que extrae del código; en los demás idiomas siguen en castellano.
+const NARRACION := "res://datos/narracion.json"
+
+func _cargar_narracion() -> void:
+	if not FileAccess.file_exists(NARRACION):
+		return
+	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(NARRACION))
+	if not (d is Dictionary):
+		return
+	var directas: Dictionary = (d as Dictionary).get("directas", {})
+	for k: String in directas:
+		var tabla: Dictionary = _extra.get(k, {})
+		for frase: String in (directas[k] as Dictionary):
+			if not tabla.has(frase):
+				tabla[frase] = directas[k][frase]
+		_extra[k] = tabla
+	for fila: Array in (d as Dictionary).get("patrones", []):
+		var re := RegEx.new()
+		if re.compile(String(fila[0])) == OK:
+			_patrones.append([re, {"en": String(fila[1]), "pt": String(fila[2])}])
 
 ## Traduce una frase suelta. Si no está en la tabla, devuelve la castellana: una
 ## interfaz medio traducida se lee; una llena de claves crudas, no.

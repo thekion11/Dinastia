@@ -1,0 +1,2318 @@
+[
+ {
+  "re": "^Nuevo\\ chico\\ en\\ la\\ academia$",
+  "es": "Nuevo chico en la academia",
+  "de": "nucleo/academia.gd:181",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ \\((.+?)\\ años,\\ (.+?)\\)\\ deja\\ su\\ club\\ de\\ barrio\\ y\\ se\\ muda\\ a\\ la\\ residencia\\.$",
+  "es": "{1} ({2} años, {3}) deja su club de barrio y se muda a la residencia.",
+  "de": "nucleo/academia.gd:181",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Lesión\\ en\\ la\\ academia$",
+  "es": "Lesión en la academia",
+  "de": "nucleo/academia.gd:303",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ se\\ lesiona\\ entrenando:\\ (.+?)\\ semanas\\ de\\ baja\\.$",
+  "es": "{1} se lesiona entrenando: {2} semanas de baja.",
+  "de": "nucleo/academia.gd:303",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Llaman\\ del\\ colegio$",
+  "es": "Llaman del colegio",
+  "de": "nucleo/academia.gd:310",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Las\\ notas\\ de\\ (.+?)\\ van\\ en\\ (.+?)\\.\\ Si\\ siguen\\ bajando,\\ su\\ familia\\ lo\\ sacará\\ de\\ la\\ academia\\.$",
+  "es": "Las notas de {1} van en {2}. Si siguen bajando, su familia lo sacará de la academia.",
+  "de": "nucleo/academia.gd:310",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Un\\ chico\\ deja\\ la\\ academia$",
+  "es": "Un chico deja la academia",
+  "de": "nucleo/academia.gd:316",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ familia\\ de\\ (.+?)\\ lo\\ saca\\ de\\ la\\ residencia:\\ con\\ esas\\ notas,\\ primero\\ el\\ colegio\\.$",
+  "es": "La familia de {1} lo saca de la residencia: con esas notas, primero el colegio.",
+  "de": "nucleo/academia.gd:316",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Sin\\ ficha\\ para\\ (.+?)$",
+  "es": "Sin ficha para {1}",
+  "de": "nucleo/academia.gd:360",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ plantel\\ está\\ lleno\\ \\((.+?)\\ fichas\\):\\ se\\ queda\\ un\\ año\\ más\\ en\\ la\\ academia\\.$",
+  "es": "El plantel está lleno ({1} fichas): se queda un año más en la academia.",
+  "de": "nucleo/academia.gd:360",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^De\\ la\\ academia\\ al\\ primer\\ equipo$",
+  "es": "De la academia al primer equipo",
+  "de": "nucleo/academia.gd:387",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ \\((.+?)\\ años,\\ (.+?)\\)\\ sube\\ al\\ plantel:\\ media\\ (.+?),\\ proyección\\ (.+?)(.+?)\\.$",
+  "es": "{1} ({2} años, {3}) sube al plantel: media {4}, proyección {5}{6}.",
+  "de": "nucleo/academia.gd:387",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Mercado\\ de\\ auspicios\\ abierto$",
+  "es": "Mercado de auspicios abierto",
+  "de": "nucleo/auspicio.gd:103",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Tres\\ marcas\\ quieren\\ la\\ camiseta\\ de\\ (.+?)\\.\\ Compara\\ montos\\ y\\ exigencias:\\ la\\ que\\ más\\ paga\\ suele\\ ser\\ también\\ la\\ que\\ más\\ pide\\.\\ Sin\\ firma\\ no\\ hay\\ ingreso\\ semanal\\.$",
+  "es": "Tres marcas quieren la camiseta de {1}. Compara montos y exigencias: la que más paga suele ser también la que más pide. Sin firma no hay ingreso semanal.",
+  "de": "nucleo/auspicio.gd:103",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Firmado:\\ (.+?)$",
+  "es": "Firmado: {1}",
+  "de": "nucleo/auspicio.gd:120",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ marca\\ lucirá\\ en\\ el\\ pecho\\ por\\ (.+?)\\ la\\ temporada\\.\\ Exigencia\\ contractual:\\ terminar\\ top\\ (.+?)\\ de\\ la\\ liga\\.$",
+  "es": "La marca lucirá en el pecho por {1} la temporada. Exigencia contractual: terminar top {2} de la liga.",
+  "de": "nucleo/auspicio.gd:120",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Auspiciador\\ molesto$",
+  "es": "Auspiciador molesto",
+  "de": "nucleo/auspicio.gd:148",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Auspiciador\\ conforme$",
+  "es": "Auspiciador conforme",
+  "de": "nucleo/auspicio.gd:151",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ (.+?)$",
+  "es": "{1} {2}",
+  "de": "nucleo/calendario.gd:292",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^\\((.+?)\\)\\ Los\\ partidos\\ de\\ esta\\ semana\\ empiezan\\ con\\ un\\ minuto\\ de\\ silencio\\ y\\ los\\ jugadores\\ llevan\\ brazalete\\ negro\\.$",
+  "es": "({1}) Los partidos de esta semana empiezan con un minuto de silencio y los jugadores llevan brazalete negro.",
+  "de": "nucleo/calendario.gd:292",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^\\((.+?)\\)\\ Semana\\ de\\ fiesta\\ en\\ el\\ país:\\ se\\ esperan\\ estadios\\ llenos\\.$",
+  "es": "({1}) Semana de fiesta en el país: se esperan estadios llenos.",
+  "de": "nucleo/calendario.gd:296",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^\\((.+?)\\)\\ El\\ personal\\ del\\ club\\ libra\\.\\ El\\ plantel\\ dedica\\ el\\ partido\\ a\\ los\\ trabajadores\\ del\\ club\\.$",
+  "es": "({1}) El personal del club libra. El plantel dedica el partido a los trabajadores del club.",
+  "de": "nucleo/calendario.gd:298",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^\\((.+?)\\)\\ (.+?)$",
+  "es": "({1}) {2}",
+  "de": "nucleo/calendario.gd:300",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🌍\\ (.+?)\\ (.+?)$",
+  "es": "🌍 {1} {2}",
+  "de": "nucleo/calendario.gd:315",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Llega\\ la\\ camada\\ juvenil$",
+  "es": "Llega la camada juvenil",
+  "de": "nucleo/cantera.gd:175",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ chicos\\ suben\\ de\\ la\\ academia\\ a\\ la\\ plantilla\\.\\ Están\\ verdes\\ y\\ ese\\ es\\ el\\ trato:\\ mira\\ la\\ proyección,\\ no\\ la\\ media\\.$",
+  "es": "{1} chicos suben de la academia a la plantilla. Están verdes y ese es el trato: mira la proyección, no la media.",
+  "de": "nucleo/cantera.gd:175",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^La\\ academia\\ se\\ queda\\ sin\\ cupo$",
+  "es": "La academia se queda sin cupo",
+  "de": "nucleo/cantera.gd:178",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Este\\ año\\ no\\ sube\\ nadie\\ de\\ la\\ cantera:\\ el\\ plantel\\ tiene\\ (.+?)\\ fichas\\ y\\ no\\ caben\\ más\\.\\ Dar\\ salidas\\ también\\ es\\ formar\\.$",
+  "es": "Este año no sube nadie de la cantera: el plantel tiene {1} fichas y no caben más. Dar salidas también es formar.",
+  "de": "nucleo/cantera.gd:178",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Se\\ retira\\ una\\ figura$",
+  "es": "Se retira una figura",
+  "de": "nucleo/cantera.gd:324",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ cuelga\\ las\\ botas\\.\\ Queda\\ inscrito\\ entre\\ las\\ leyendas\\ del\\ club…\\ y\\ quién\\ sabe\\ si\\ algún\\ día\\ llega\\ un\\ hijo\\ suyo\\ a\\ la\\ cantera\\.$",
+  "es": "{1} cuelga las botas. Queda inscrito entre las leyendas del club… y quién sabe si algún día llega un hijo suyo a la cantera.",
+  "de": "nucleo/cantera.gd:324",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^👨‍👦\\ Tu\\ hijo\\ entra\\ en\\ la\\ cantera$",
+  "es": "👨‍👦 Tu hijo entra en la cantera",
+  "de": "nucleo/cantera.gd:380",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ cumplió\\ 16\\ y\\ firma\\ por\\ la\\ cantera\\ de\\ (.+?)\\.\\ En\\ el\\ vestuario\\ ya\\ le\\ llaman\\ «el\\ hijo\\ del\\ míster»;\\ decidir\\ si\\ juega\\ o\\ no\\ es\\ cosa\\ tuya\\.$",
+  "es": "{1} cumplió 16 y firma por la cantera de {2}. En el vestuario ya le llaman «el hijo del míster»; decidir si juega o no es cosa tuya.",
+  "de": "nucleo/cantera.gd:380",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^👨‍👦\\ Tu\\ hijo\\ llega\\ a\\ la\\ cantera$",
+  "es": "👨‍👦 Tu hijo llega a la cantera",
+  "de": "nucleo/cantera.gd:448",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?),\\ tu\\ hijo,\\ se\\ incorpora\\ a\\ la\\ cantera\\ de\\ (.+?)\\.\\ Lleva\\ tu\\ apellido\\ y\\ tu\\ forma\\ de\\ pisar\\ el\\ área\\.\\ Ahora\\ el\\ entrenador\\ eres\\ tú\\.$",
+  "es": "{1}, tu hijo, se incorpora a la cantera de {2}. Lleva tu apellido y tu forma de pisar el área. Ahora el entrenador eres tú.",
+  "de": "nucleo/cantera.gd:448",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Llega\\ el\\ hijo\\ de\\ una\\ leyenda$",
+  "es": "Llega el hijo de una leyenda",
+  "de": "nucleo/cantera.gd:451",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ cantera\\ de\\ (.+?)\\ incorpora\\ a\\ (.+?),\\ hijo\\ de\\ (.+?)\\ \\((.+?)\\ en\\ su\\ mejor\\ momento\\)\\.\\ La\\ prensa\\ ya\\ habla\\ del\\ «nuevo\\ (.+?)»\\.$",
+  "es": "La cantera de {1} incorpora a {2}, hijo de {3} ({4} en su mejor momento). La prensa ya habla del «nuevo {5}».",
+  "de": "nucleo/cantera.gd:451",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Llegan\\ los\\ gemelos\\ (.+?)$",
+  "es": "Llegan los gemelos {1}",
+  "de": "nucleo/cantera.gd:535",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ club\\ incorpora\\ a\\ (.+?),\\ hermano\\ gemelo\\ de\\ (.+?)\\.\\ Se\\ parecen\\ tanto\\ que\\ el\\ utilero\\ ya\\ se\\ equivocó\\ dos\\ veces\\.$",
+  "es": "El club incorpora a {1}, hermano gemelo de {2}. Se parecen tanto que el utilero ya se equivocó dos veces.",
+  "de": "nucleo/cantera.gd:535",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Un\\ hermano\\ más\\ en\\ el\\ plantel$",
+  "es": "Un hermano más en el plantel",
+  "de": "nucleo/cantera.gd:538",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ \\((.+?)\\ años,\\ (.+?)\\)\\ sube\\ al\\ primer\\ equipo\\.\\ Es\\ hermano\\ de\\ (.+?):\\ jugar\\ juntos\\ les\\ da\\ un\\ plus\\.$",
+  "es": "{1} ({2} años, {3}) sube al primer equipo. Es hermano de {4}: jugar juntos les da un plus.",
+  "de": "nucleo/cantera.gd:538",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Beca\\ para\\ (.+?)$",
+  "es": "Beca para {1}",
+  "de": "nucleo/cantera.gd:669",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ club\\ le\\ paga\\ estudios,\\ alojamiento\\ y\\ comida\\.\\ Se\\ queda\\ tranquilo\\ y\\ es\\ mucho\\ más\\ difícil\\ que\\ se\\ lo\\ lleven\\.$",
+  "es": "El club le paga estudios, alojamiento y comida. Se queda tranquilo y es mucho más difícil que se lo lleven.",
+  "de": "nucleo/cantera.gd:669",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Te\\ roban\\ un\\ canterano$",
+  "es": "Te roban un canterano",
+  "de": "nucleo/cantera.gd:723",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ se\\ lleva\\ a\\ (.+?)\\ \\((.+?)\\ años,\\ proyección\\ (.+?)\\)\\ aprovechando\\ que\\ no\\ tenía\\ contrato\\ profesional\\.\\ Solo\\ cobras\\ los\\ derechos\\ de\\ formación\\.\\ Con\\ residencia,\\ academia\\ y\\ becas\\ esto\\ pasa\\ mucho\\ menos\\.$",
+  "es": "{1} se lleva a {2} ({3} años, proyección {4}) aprovechando que no tenía contrato profesional. Solo cobras los derechos de formación. Con residencia, academia y becas esto pasa mucho menos.",
+  "de": "nucleo/cantera.gd:723",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ peso\\ de\\ un\\ apellido$",
+  "es": "El peso de un apellido",
+  "de": "nucleo/cantera.gd:793",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ prensa\\ se\\ cansó\\ de\\ esperar\\ a\\ (.+?)\\.\\ «El\\ nuevo\\ (.+?)\\ no\\ aparece»,\\ titulan\\ hoy\\.\\ El\\ chico\\ entrenó\\ cabizbajo\\ toda\\ la\\ semana:\\ la\\ etiqueta\\ que\\ le\\ pusieron\\ a\\ los\\ diecisiete\\ le\\ pesa\\ como\\ una\\ mochila\\ de\\ piedras\\.$",
+  "es": "La prensa se cansó de esperar a {1}. «El nuevo {2} no aparece», titulan hoy. El chico entrenó cabizbajo toda la semana: la etiqueta que le pusieron a los diecisiete le pesa como una mochila de piedras.",
+  "de": "nucleo/cantera.gd:793",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Ya\\ no\\ es\\ «el\\ nuevo»\\ nadie$",
+  "es": "Ya no es «el nuevo» nadie",
+  "de": "nucleo/cantera.gd:801",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ se\\ sacó\\ la\\ etiqueta\\ de\\ encima\\ a\\ fuerza\\ de\\ partidos\\.\\ Hoy\\ la\\ prensa\\ escribe\\ su\\ nombre\\ solo,\\ sin\\ compararlo\\ con\\ (.+?)\\.$",
+  "es": "{1} se sacó la etiqueta de encima a fuerza de partidos. Hoy la prensa escribe su nombre solo, sin compararlo con {2}.",
+  "de": "nucleo/cantera.gd:801",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Promesa\\ cumplida:\\ (.+?)$",
+  "es": "Promesa cumplida: {1}",
+  "de": "nucleo/cantera.gd:908",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Le\\ prometiste\\ traer\\ a\\ alguien\\ de\\ su\\ país\\ y\\ ahora\\ tiene\\ con\\ quién\\ hablar\\ en\\ su\\ idioma\\.\\ Se\\ le\\ nota\\ en\\ el\\ ánimo\\.$",
+  "es": "Le prometiste traer a alguien de su país y ahora tiene con quién hablar en su idioma. Se le nota en el ánimo.",
+  "de": "nucleo/cantera.gd:908",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Promesa\\ incumplida:\\ (.+?)$",
+  "es": "Promesa incumplida: {1}",
+  "de": "nucleo/cantera.gd:917",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Pasó\\ la\\ temporada\\ y\\ nunca\\ llegó\\ ese\\ compatriota\\ que\\ le\\ prometiste\\.\\ Se\\ siente\\ solo,\\ la\\ moral\\ se\\ le\\ cayó\\ y\\ ya\\ pidió\\ salir\\.$",
+  "es": "Pasó la temporada y nunca llegó ese compatriota que le prometiste. Se siente solo, la moral se le cayó y ya pidió salir.",
+  "de": "nucleo/cantera.gd:917",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Renovado:\\ (.+?)$",
+  "es": "Renovado: {1}",
+  "de": "nucleo/cantera.gd:994",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Firma\\ por\\ (.+?)\\ temporadas\\ a\\ (.+?)/sem(.+?)\\.\\ Negoció\\ su\\ agente\\ (.+?)\\ \\((.+?)\\)\\.$",
+  "es": "Firma por {1} temporadas a {2}/sem{3}. Negoció su agente {4} ({5}).",
+  "de": "nucleo/cantera.gd:994",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Prima\\ de\\ fidelidad:\\ (.+?)$",
+  "es": "Prima de fidelidad: {1}",
+  "de": "nucleo/cantera.gd:1043",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Firma\\ su\\ cláusula\\ de\\ fidelidad\\ hasta\\ (.+?):\\ no\\ pedirá\\ salir\\ mientras\\ siga\\ vigente\\.$",
+  "es": "Firma su cláusula de fidelidad hasta {1}: no pedirá salir mientras siga vigente.",
+  "de": "nucleo/cantera.gd:1043",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Cedido\\ a\\ préstamo$",
+  "es": "Cedido a préstamo",
+  "de": "nucleo/cesiones.gd:153",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ jugará\\ esta\\ temporada\\ en\\ (.+?)\\ para\\ sumar\\ minutos\\.$",
+  "es": "{1} jugará esta temporada en {2} para sumar minutos.",
+  "de": "nucleo/cesiones.gd:153",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Cesión\\ a\\ (.+?)$",
+  "es": "Cesión a {1}",
+  "de": "nucleo/cesiones.gd:186",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ se\\ va\\ cedido\\ una\\ temporada\\.\\ (.+?)\\ Pagan\\ el\\ (.+?)%\\ del\\ sueldo\\.$",
+  "es": "{1} se va cedido una temporada. {2} Pagan el {3}% del sueldo.",
+  "de": "nucleo/cesiones.gd:186",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Ejecutan\\ la\\ opción\\ por\\ (.+?)$",
+  "es": "Ejecutan la opción por {1}",
+  "de": "nucleo/cesiones.gd:297",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ se\\ queda\\ con\\ (.+?)\\ pagando\\ (.+?)\\.\\ Buena\\ operación\\.$",
+  "es": "{1} se queda con {2} pagando {3}. Buena operación.",
+  "de": "nucleo/cesiones.gd:297",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Vuelve\\ de\\ la\\ cesión:\\ (.+?)$",
+  "es": "Vuelve de la cesión: {1}",
+  "de": "nucleo/cesiones.gd:309",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ regresa\\ con\\ (.+?)\\ punto\\(s\\)\\ más\\ de\\ media\\ tras\\ una\\ temporada\\ con\\ minutos\\.$",
+  "es": "{1} regresa con {2} punto(s) más de media tras una temporada con minutos.",
+  "de": "nucleo/cesiones.gd:309",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^¡Clausulazo!$",
+  "es": "¡Clausulazo!",
+  "de": "nucleo/cesiones.gd:415",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Pagaste\\ la\\ cláusula\\ de\\ (.+?)\\.\\ Su\\ agente\\ (.+?)\\ se\\ lleva\\ (.+?)\\.\\ Bienvenido\\ al\\ club\\.$",
+  "es": "Pagaste la cláusula de {1}. Su agente {2} se lleva {3}. Bienvenido al club.",
+  "de": "nucleo/cesiones.gd:415",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Cobras\\ una\\ plusvalía$",
+  "es": "Cobras una plusvalía",
+  "de": "nucleo/cesiones.gd:501",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ cambió\\ de\\ club\\ y\\ te\\ llevas\\ el\\ (.+?)%\\ de\\ la\\ operación:\\ (.+?)\\.\\ Aquella\\ venta\\ barata\\ acabó\\ saliendo\\ bien\\.$",
+  "es": "{1} cambió de club y te llevas el {2}% de la operación: {3}. Aquella venta barata acabó saliendo bien.",
+  "de": "nucleo/cesiones.gd:501",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ fondo\\ cobra\\ su\\ parte$",
+  "es": "El fondo cobra su parte",
+  "de": "nucleo/cesiones.gd:558",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^De\\ los\\ (.+?)\\ de\\ la\\ venta\\ de\\ (.+?),\\ (.+?)\\ se\\ van\\ al\\ fondo\\ que\\ compro\\ el\\ (.+?)%\\ de\\ sus\\ derechos\\.$",
+  "es": "De los {1} de la venta de {2}, {3} se van al fondo que compro el {4}% de sus derechos.",
+  "de": "nucleo/cesiones.gd:558",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Te\\ toca\\ pagar\\ el\\ porcentaje\\ pactado$",
+  "es": "Te toca pagar el porcentaje pactado",
+  "de": "nucleo/cesiones.gd:577",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ se\\ había\\ guardado\\ el\\ (.+?)%\\ de\\ la\\ próxima\\ venta\\ de\\ (.+?)\\.\\ De\\ los\\ (.+?)\\ que\\ entran,\\ (.+?)\\ salen\\ directos\\ para\\ ellos\\.$",
+  "es": "{1} se había guardado el {2}% de la próxima venta de {3}. De los {4} que entran, {5} salen directos para ellos.",
+  "de": "nucleo/cesiones.gd:577",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Venta\\ concretada$",
+  "es": "Venta concretada",
+  "de": "nucleo/cesiones.gd:591",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ parte\\ a\\ (.+?)\\ por\\ (.+?)\\.(.+?)$",
+  "es": "{1} parte a {2} por {3}.{4}",
+  "de": "nucleo/cesiones.gd:591",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Cobras\\ derechos\\ de\\ formación$",
+  "es": "Cobras derechos de formación",
+  "de": "nucleo/cesiones.gd:744",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ se\\ formó\\ aquí\\ y\\ acaba\\ de\\ cambiar\\ de\\ club:\\ te\\ corresponden\\ (.+?)\\.$",
+  "es": "{1} se formó aquí y acaba de cambiar de club: te corresponden {2}.",
+  "de": "nucleo/cesiones.gd:744",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Traspaso\\ saldado$",
+  "es": "Traspaso saldado",
+  "de": "nucleo/cesiones.gd:767",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Pagada\\ la\\ última\\ cuota\\ por\\ (.+?)\\.$",
+  "es": "Pagada la última cuota por {1}.",
+  "de": "nucleo/cesiones.gd:767",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Bono\\ activado:\\ (.+?)$",
+  "es": "Bono activado: {1}",
+  "de": "nucleo/cesiones.gd:790",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Llegó\\ a\\ (.+?)\\ partidos\\ y\\ se\\ gatilla\\ el\\ bono\\ de\\ (.+?)\\ para\\ su\\ club\\ anterior\\.$",
+  "es": "Llegó a {1} partidos y se gatilla el bono de {2} para su club anterior.",
+  "de": "nucleo/cesiones.gd:790",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Entra\\ dinero\\ de\\ un\\ fondo$",
+  "es": "Entra dinero de un fondo",
+  "de": "nucleo/cesiones.gd:949",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Vendiste\\ el\\ (.+?)%\\ del\\ próximo\\ traspaso\\ de\\ (.+?)\\ por\\ (.+?)\\.\\ El\\ club\\ respira\\ hoy;\\ el\\ día\\ que\\ lo\\ vendas,\\ ese\\ porcentaje\\ no\\ es\\ tuyo\\.$",
+  "es": "Vendiste el {1}% del próximo traspaso de {2} por {3}. El club respira hoy; el día que lo vendas, ese porcentaje no es tuyo.",
+  "de": "nucleo/cesiones.gd:949",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ fondo\\ se\\ lo\\ toma\\ mal$",
+  "es": "El fondo se lo toma mal",
+  "de": "nucleo/cesiones.gd:1000",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Te\\ niegas\\ a\\ vender\\ a\\ (.+?)\\.\\ Su\\ entorno\\ lleva\\ semanas\\ diciéndole\\ que\\ el\\ club\\ le\\ está\\ frenando\\ la\\ carrera\\.$",
+  "es": "Te niegas a vender a {1}. Su entorno lleva semanas diciéndole que el club le está frenando la carrera.",
+  "de": "nucleo/cesiones.gd:1000",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🗣️\\ Promesa\\ incumplida$",
+  "es": "🗣️ Promesa incumplida",
+  "de": "nucleo/charlas.gd:111",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ cuenta\\ en\\ el\\ vestuario\\ que\\ le\\ prometiste\\ minutos\\ y\\ no\\ llegaron\\.\\ El\\ grupo\\ toma\\ nota\\.$",
+  "es": "{1} cuenta en el vestuario que le prometiste minutos y no llegaron. El grupo toma nota.",
+  "de": "nucleo/charlas.gd:111",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🤝\\ Promesa\\ cumplida$",
+  "es": "🤝 Promesa cumplida",
+  "de": "nucleo/charlas.gd:115",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ tuvo\\ sus\\ minutos,\\ como\\ le\\ dijiste\\.$",
+  "es": "{1} tuvo sus minutos, como le dijiste.",
+  "de": "nucleo/charlas.gd:115",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Terreno\\ comprado$",
+  "es": "Terreno comprado",
+  "de": "nucleo/ciudad.gd:133",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\.\\ (.+?)$",
+  "es": "{1}. {2}",
+  "de": "nucleo/ciudad.gd:133",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Inaugurado:\\ (.+?)$",
+  "es": "Inaugurado: {1}",
+  "de": "nucleo/ciudad.gd:172",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\.\\ Suma\\ (.+?)\\ a\\ la\\ semana,\\ llueva\\ o\\ truene\\.$",
+  "es": "{1}. Suma {2} a la semana, llueva o truene.",
+  "de": "nucleo/ciudad.gd:172",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Solicitud\\ presentada$",
+  "es": "Solicitud presentada",
+  "de": "nucleo/ciudad.gd:207",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ municipio\\ estudia\\ tu\\ ampliación\\.\\ Resolución\\ estimada\\ en\\ unas\\ semanas\\.\\ La\\ opinión\\ del\\ barrio\\ pesa:\\ hoy\\ está\\ en\\ (.+?)\\ de\\ 100\\.$",
+  "es": "El municipio estudia tu ampliación. Resolución estimada en unas semanas. La opinión del barrio pesa: hoy está en {1} de 100.",
+  "de": "nucleo/ciudad.gd:207",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Obra\\ en\\ el\\ barrio$",
+  "es": "Obra en el barrio",
+  "de": "nucleo/ciudad.gd:228",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Cancha\\ de\\ barrio,\\ luminarias\\ y\\ una\\ plaza\\.\\ Los\\ vecinos\\ lo\\ notaron:\\ la\\ relación\\ mejora\\.$",
+  "es": "Cancha de barrio, luminarias y una plaza. Los vecinos lo notaron: la relación mejora.",
+  "de": "nucleo/ciudad.gd:228",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Reunión\\ vecinal$",
+  "es": "Reunión vecinal",
+  "de": "nucleo/ciudad.gd:237",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Salió\\ bien:\\ el\\ barrio\\ queda\\ más\\ tranquilo\\ y\\ la\\ relación\\ mejora\\.$",
+  "es": "Salió bien: el barrio queda más tranquilo y la relación mejora.",
+  "de": "nucleo/ciudad.gd:237",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Terminó\\ a\\ gritos\\.\\ Había\\ más\\ quejas\\ acumuladas\\ de\\ las\\ que\\ parecía\\.$",
+  "es": "Terminó a gritos. Había más quejas acumuladas de las que parecía.",
+  "de": "nucleo/ciudad.gd:241",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Entradas\\ para\\ el\\ barrio$",
+  "es": "Entradas para el barrio",
+  "de": "nucleo/ciudad.gd:248",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Repartiste\\ localidades\\ entre\\ las\\ juntas\\ vecinales\\.\\ Barato\\ y\\ efectivo\\.$",
+  "es": "Repartiste localidades entre las juntas vecinales. Barato y efectivo.",
+  "de": "nucleo/ciudad.gd:248",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Concierto\\ en\\ el\\ estadio$",
+  "es": "Concierto en el estadio",
+  "de": "nucleo/ciudad.gd:269",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Se\\ llenó:\\ (.+?)\\ limpios\\ para\\ la\\ caja\\.\\ El\\ césped\\ quedó\\ para\\ el\\ arrastre\\ \\((.+?)\\ de\\ 100\\)\\ y\\ los\\ vecinos\\ protestan\\ por\\ el\\ ruido\\.$",
+  "es": "Se llenó: {1} limpios para la caja. El césped quedó para el arrastre ({2} de 100) y los vecinos protestan por el ruido.",
+  "de": "nucleo/ciudad.gd:269",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Césped\\ como\\ nuevo$",
+  "es": "Césped como nuevo",
+  "de": "nucleo/ciudad.gd:286",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Resiembra\\ completa\\.\\ El\\ campo\\ vuelve\\ a\\ estar\\ en\\ condiciones\\ para\\ jugar\\.$",
+  "es": "Resiembra completa. El campo vuelve a estar en condiciones para jugar.",
+  "de": "nucleo/ciudad.gd:286",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Cubierta\\ solar\\ nivel\\ (.+?)$",
+  "es": "Cubierta solar nivel {1}",
+  "de": "nucleo/ciudad.gd:311",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Menos\\ gasto\\ energético\\ y\\ beneficios\\ tributarios\\.\\ El\\ club\\ ahorra\\ (.+?)\\ a\\ la\\ semana\\.$",
+  "es": "Menos gasto energético y beneficios tributarios. El club ahorra {1} a la semana.",
+  "de": "nucleo/ciudad.gd:311",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Estadio\\ certificado$",
+  "es": "Estadio certificado",
+  "de": "nucleo/ciudad.gd:330",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Sello\\ verde:\\ exención\\ tributaria,\\ mejor\\ imagen\\ y\\ auspiciadores\\ que\\ solo\\ firman\\ con\\ clubes\\ certificados\\.$",
+  "es": "Sello verde: exención tributaria, mejor imagen y auspiciadores que solo firman con clubes certificados.",
+  "de": "nucleo/ciudad.gd:330",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Seguridad\\ reforzada$",
+  "es": "Seguridad reforzada",
+  "de": "nucleo/ciudad.gd:357",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ Menos\\ riesgo\\ de\\ incidentes\\ y\\ de\\ sanción\\.$",
+  "es": "{1} Menos riesgo de incidentes y de sanción.",
+  "de": "nucleo/ciudad.gd:357",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^PARTIDO\\ A\\ PUERTAS\\ CERRADAS$",
+  "es": "PARTIDO A PUERTAS CERRADAS",
+  "de": "nucleo/ciudad.gd:376",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ tribunal\\ cierra\\ el\\ estadio\\ un\\ partido\\ por\\ los\\ incidentes\\.\\ Cero\\ taquilla\\ y\\ el\\ equipo\\ juega\\ en\\ un\\ silencio\\ irreal\\.$",
+  "es": "El tribunal cierra el estadio un partido por los incidentes. Cero taquilla y el equipo juega en un silencio irreal.",
+  "de": "nucleo/ciudad.gd:376",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^AFORO\\ REDUCIDO$",
+  "es": "AFORO REDUCIDO",
+  "de": "nucleo/ciudad.gd:379",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ estadio\\ funcionará\\ al\\ 40%\\ de\\ aforo\\ durante\\ (.+?)\\ semanas\\.\\ El\\ golpe\\ a\\ la\\ taquilla\\ se\\ va\\ a\\ notar\\.$",
+  "es": "El estadio funcionará al 40% de aforo durante {1} semanas. El golpe a la taquilla se va a notar.",
+  "de": "nucleo/ciudad.gd:379",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Subvención\\ municipal$",
+  "es": "Subvención municipal",
+  "de": "nucleo/ciudad.gd:415",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ municipio\\ ingresa\\ (.+?)\\ por\\ el\\ deporte\\ de\\ base,\\ los\\ negocios\\ abiertos\\ y\\ la\\ relación\\ con\\ el\\ barrio\\.$",
+  "es": "El municipio ingresa {1} por el deporte de base, los negocios abiertos y la relación con el barrio.",
+  "de": "nucleo/ciudad.gd:415",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Permiso\\ APROBADO$",
+  "es": "Permiso APROBADO",
+  "de": "nucleo/ciudad.gd:457",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ municipio\\ autoriza\\ la\\ ampliación\\.\\ Ya\\ puedes\\ subir\\ las\\ tribunas\\ por\\ encima\\ del\\ nivel\\ 5\\.$",
+  "es": "El municipio autoriza la ampliación. Ya puedes subir las tribunas por encima del nivel 5.",
+  "de": "nucleo/ciudad.gd:457",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Permiso\\ RECHAZADO$",
+  "es": "Permiso RECHAZADO",
+  "de": "nucleo/ciudad.gd:461",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ comisión\\ falló\\ en\\ contra:\\ informe\\ de\\ impacto\\ vial\\ desfavorable\\ y\\ oposición\\ vecinal\\.\\ Puedes\\ volver\\ a\\ intentarlo\\.$",
+  "es": "La comisión falló en contra: informe de impacto vial desfavorable y oposición vecinal. Puedes volver a intentarlo.",
+  "de": "nucleo/ciudad.gd:461",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Sanción\\ cumplida$",
+  "es": "Sanción cumplida",
+  "de": "nucleo/ciudad.gd:471",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ estadio\\ vuelve\\ a\\ abrir\\ con\\ normalidad\\.$",
+  "es": "El estadio vuelve a abrir con normalidad.",
+  "de": "nucleo/ciudad.gd:471",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Zona\\ vendida:\\ (.+?)$",
+  "es": "Zona vendida: {1}",
+  "de": "nucleo/comercial.gd:180",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ ocupa\\ (.+?)\\ por\\ (.+?)\\ al\\ año\\ durante\\ (.+?)\\ temporada\\(s\\)\\.$",
+  "es": "{1} ocupa {2} por {3} al año durante {4} temporada(s).",
+  "de": "nucleo/comercial.gd:180",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ estadio\\ cambia\\ de\\ nombre$",
+  "es": "El estadio cambia de nombre",
+  "de": "nucleo/comercial.gd:265",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Firmaste\\ los\\ derechos\\ de\\ nombre\\ con\\ (.+?):\\ (.+?)\\ al\\ año\\ durante\\ (.+?)\\ temporadas\\.\\ El\\ recinto\\ pasa\\ a\\ llamarse\\ «(.+?)»\\.\\ En\\ la\\ calle\\ no\\ ha\\ caído\\ bien\\.$",
+  "es": "Firmaste los derechos de nombre con {1}: {2} al año durante {3} temporadas. El recinto pasa a llamarse «{4}». En la calle no ha caído bien.",
+  "de": "nucleo/comercial.gd:265",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ estadio\\ recupera\\ su\\ nombre$",
+  "es": "El estadio recupera su nombre",
+  "de": "nucleo/comercial.gd:285",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Pagaste\\ por\\ romper\\ el\\ contrato\\.\\ El\\ recinto\\ vuelve\\ a\\ llamarse\\ como\\ siempre\\ y\\ la\\ hinchada\\ lo\\ celebra\\.$",
+  "es": "Pagaste por romper el contrato. El recinto vuelve a llamarse como siempre y la hinchada lo celebra.",
+  "de": "nucleo/comercial.gd:285",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^(.+?):\\ nivel\\ (.+?)$",
+  "es": "{1}: nivel {2}",
+  "de": "nucleo/comercial.gd:332",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Avión\\ del\\ club$",
+  "es": "Avión del club",
+  "de": "nucleo/comercial.gd:381",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ plantel\\ deja\\ de\\ volar\\ en\\ línea\\ regular:\\ menos\\ fatiga\\ en\\ los\\ viajes\\ largos\\.$",
+  "es": "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.",
+  "de": "nucleo/comercial.gd:381",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Contrato\\ terminado:\\ (.+?)$",
+  "es": "Contrato terminado: {1}",
+  "de": "nucleo/comercial.gd:406",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ no\\ renueva\\.\\ La\\ zona\\ queda\\ libre\\ para\\ quien\\ pague\\ más\\.$",
+  "es": "{1} no renueva. La zona queda libre para quien pague más.",
+  "de": "nucleo/comercial.gd:406",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Se\\ acaba\\ el\\ naming$",
+  "es": "Se acaba el naming",
+  "de": "nucleo/comercial.gd:411",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ contrato\\ de\\ los\\ derechos\\ de\\ nombre\\ llega\\ a\\ su\\ fin\\.\\ El\\ estadio\\ vuelve\\ a\\ llamarse\\ como\\ siempre\\.$",
+  "es": "El contrato de los derechos de nombre llega a su fin. El estadio vuelve a llamarse como siempre.",
+  "de": "nucleo/comercial.gd:411",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^⚖️\\ Cambia\\ la\\ jornada\\ laboral$",
+  "es": "⚖️ Cambia la jornada laboral",
+  "de": "nucleo/contratos.gd:119",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ El\\ personal\\ del\\ club\\ trabaja\\ menos\\ horas\\ y\\ hay\\ que\\ cubrir\\ más\\ turnos:\\ la\\ estructura\\ cuesta\\ un\\ poco\\ más\\.$",
+  "es": "{1} El personal del club trabaja menos horas y hay que cubrir más turnos: la estructura cuesta un poco más.",
+  "de": "nucleo/contratos.gd:119",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Mentoría\\ en\\ la\\ cantera$",
+  "es": "Mentoría en la cantera",
+  "de": "nucleo/entrenamiento.gd:325",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ apadrina\\ a\\ (.+?)\\.\\ Entrenarán\\ juntos\\ y\\ el\\ chico\\ va\\ a\\ aprender\\ de\\ alguien\\ que\\ ya\\ lo\\ vivió\\ todo\\.$",
+  "es": "{1} apadrina a {2}. Entrenarán juntos y el chico va a aprender de alguien que ya lo vivió todo.",
+  "de": "nucleo/entrenamiento.gd:325",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ alumno\\ sale\\ al\\ maestro$",
+  "es": "El alumno sale al maestro",
+  "de": "nucleo/entrenamiento.gd:361",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ ha\\ copiado\\ el\\ carácter\\ de\\ (.+?)\\.$",
+  "es": "{1} ha copiado el carácter de {2}.",
+  "de": "nucleo/entrenamiento.gd:361",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Punto\\ de\\ habilidad\\ de\\ entrenador$",
+  "es": "Punto de habilidad de entrenador",
+  "de": "nucleo/entrenamiento.gd:397",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Lesión\\ en\\ entrenamiento$",
+  "es": "Lesión en entrenamiento",
+  "de": "nucleo/entrenamiento.gd:488",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ crece\\ como\\ líder$",
+  "es": "{1} crece como líder",
+  "de": "nucleo/entrenamiento.gd:534",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Termina\\ su\\ plan\\ de\\ liderazgo:\\ más\\ peso\\ en\\ el\\ vestuario\\ y\\ candidato\\ natural\\ a\\ la\\ cinta\\.$",
+  "es": "Termina su plan de liderazgo: más peso en el vestuario y candidato natural a la cinta.",
+  "de": "nucleo/entrenamiento.gd:534",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^(.+?)\\ domina\\ una\\ habilidad\\ nueva$",
+  "es": "{1} domina una habilidad nueva",
+  "de": "nucleo/entrenamiento.gd:542",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ afina\\ lo\\ que\\ ya\\ sabía$",
+  "es": "{1} afina lo que ya sabía",
+  "de": "nucleo/entrenamiento.gd:553",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Ya\\ tenía\\ la\\ habilidad,\\ así\\ que\\ el\\ trabajo\\ se\\ tradujo\\ en\\ atributos\\.$",
+  "es": "Ya tenía la habilidad, así que el trabajo se tradujo en atributos.",
+  "de": "nucleo/entrenamiento.gd:553",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Nueva\\ habilidad:\\ (.+?)$",
+  "es": "Nueva habilidad: {1}",
+  "de": "nucleo/entrenamiento.gd:783",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Puntos\\ de\\ habilidad\\ de\\ la\\ temporada$",
+  "es": "Puntos de habilidad de la temporada",
+  "de": "nucleo/entrenamiento.gd:819",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\.\\ Tu\\ ficha\\ de\\ entrenador\\ suma\\ un\\ punto\\ más\\ de\\ prestigio\\.$",
+  "es": "{1}. Tu ficha de entrenador suma un punto más de prestigio.",
+  "de": "nucleo/entrenamiento.gd:921",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Se\\ apaga\\ una\\ generación$",
+  "es": "Se apaga una generación",
+  "de": "nucleo/eras.gd:71",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Los\\ expertos\\ dan\\ por\\ cerrada\\ la\\ época\\ dorada\\ de\\ (.+?)\\.\\ Aquella\\ camada\\ ya\\ pasó\\ los\\ treinta\\ y\\ el\\ relevo\\ no\\ aparece\\.\\ Quedan\\ las\\ fotos\\ y\\ dos\\ o\\ tres\\ apellidos\\ que\\ nadie\\ va\\ a\\ olvidar\\.$",
+  "es": "Los expertos dan por cerrada la época dorada de {1}. Aquella camada ya pasó los treinta y el relevo no aparece. Quedan las fotos y dos o tres apellidos que nadie va a olvidar.",
+  "de": "nucleo/eras.gd:71",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Época\\ dorada\\ en\\ (.+?)$",
+  "es": "Época dorada en {1}",
+  "de": "nucleo/eras.gd:101",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Algo\\ pasó\\ en\\ las\\ canteras\\ de\\ (.+?)\\ hace\\ quince\\ años\\ y\\ recién\\ ahora\\ se\\ ve:\\ está\\ saliendo\\ una\\ generación\\ entera\\ por\\ encima\\ de\\ la\\ media\\.\\ Durante\\ los\\ próximos\\ (.+?)\\ años\\ sus\\ juveniles\\ van\\ a\\ valer\\ oro\\.\\ Si\\ tienes\\ ojeadores\\ allí,\\ es\\ el\\ momento\\.$",
+  "es": "Algo pasó en las canteras de {1} hace quince años y recién ahora se ve: está saliendo una generación entera por encima de la media. Durante los próximos {2} años sus juveniles van a valer oro. Si tienes ojeadores allí, es el momento.",
+  "de": "nucleo/eras.gd:101",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Decadencia\\ futbolística\\ de\\ (.+?)$",
+  "es": "Decadencia futbolística de {1}",
+  "de": "nucleo/eras.gd:104",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ liga\\ de\\ (.+?)\\ se\\ hundió\\ económicamente\\ y\\ las\\ canteras\\ se\\ quedaron\\ sin\\ recursos\\.\\ Sus\\ juveniles\\ llegarán\\ bastante\\ por\\ debajo\\ de\\ lo\\ habitual\\ durante\\ los\\ próximos\\ años\\.\\ Un\\ país\\ entero\\ perdiendo\\ una\\ generación\\.$",
+  "es": "La liga de {1} se hundió económicamente y las canteras se quedaron sin recursos. Sus juveniles llegarán bastante por debajo de lo habitual durante los próximos años. Un país entero perdiendo una generación.",
+  "de": "nucleo/eras.gd:104",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🇺🇳\\ Convocatoria\\ juvenil$",
+  "es": "🇺🇳 Convocatoria juvenil",
+  "de": "nucleo/eventos_cantera.gd:47",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ es\\ convocado\\ por\\ la\\ selección\\ juvenil\\ de\\ su\\ país\\.\\ Vuelve\\ con\\ más\\ confianza\\ \\(\\+2\\ de\\ nivel\\)\\.$",
+  "es": "{1} es convocado por la selección juvenil de su país. Vuelve con más confianza (+2 de nivel).",
+  "de": "nucleo/eventos_cantera.gd:47",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🌱\\ Visita\\ a\\ la\\ academia$",
+  "es": "🌱 Visita a la academia",
+  "de": "nucleo/eventos_cantera.gd:106",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Pasas\\ la\\ mañana\\ con\\ los\\ chicos\\.\\ Se\\ nota:\\ entrenan\\ con\\ otra\\ cara\\.$",
+  "es": "Pasas la mañana con los chicos. Se nota: entrenan con otra cara.",
+  "de": "nucleo/eventos_cantera.gd:106",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🏛️\\ Elecciones\\ en\\ la\\ federación$",
+  "es": "🏛️ Elecciones en la federación",
+  "de": "nucleo/federacion.gd:121",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ (.+?)\\ la\\ presidencia\\ \\(corriente\\ (.+?)\\)\\ hasta\\ (.+?)\\.\\ (.+?)\\ Empujará:\\ (.+?)\\.$",
+  "es": "{1} {2} la presidencia (corriente {3}) hasta {4}. {5} Empujará: {6}.",
+  "de": "nucleo/federacion.gd:121",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Nueva\\ votación\\ en\\ la\\ asamblea$",
+  "es": "Nueva votación en la asamblea",
+  "de": "nucleo/federacion.gd:237",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)La\\ federación\\ convoca\\ sobre:\\ (.+?)\\.\\ (.+?)\\ Puedes\\ votar\\ desde\\ Federación\\.$",
+  "es": "{1}La federación convoca sobre: {2}. {3} Puedes votar desde Federación.",
+  "de": "nucleo/federacion.gd:237",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Asamblea\\ de\\ la\\ liga:\\ (.+?)$",
+  "es": "Asamblea de la liga: {1}",
+  "de": "nucleo/federacion.gd:283",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Resultado:\\ (.+?)\\ votos\\ a\\ favor\\ de\\ (.+?)\\.\\ La\\ moción\\ (.+?)\\.\\ (.+?)\\ Tu\\ posición\\ (.+?)$",
+  "es": "Resultado: {1} votos a favor de {2}. La moción {3}. {4} Tu posición {5}",
+  "de": "nucleo/federacion.gd:283",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Multa\\ por\\ incumplir\\ el\\ cupo\\ juvenil$",
+  "es": "Multa por incumplir el cupo juvenil",
+  "de": "nucleo/federacion.gd:380",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Saliste\\ sin\\ ningún\\ sub\\-21\\ en\\ el\\ once\\ y\\ la\\ federación\\ te\\ sanciona\\.\\ El\\ reglamento\\ que\\ votó\\ la\\ asamblea\\ obliga\\ a\\ alinear\\ al\\ menos\\ uno\\.$",
+  "es": "Saliste sin ningún sub-21 en el once y la federación te sanciona. El reglamento que votó la asamblea obliga a alinear al menos uno.",
+  "de": "nucleo/federacion.gd:380",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^PLAYOFFS\\ POR\\ EL\\ TÍTULO\\ (.+?)$",
+  "es": "PLAYOFFS POR EL TÍTULO {1}",
+  "de": "nucleo/federacion.gd:494",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ federación\\ decidió\\ que\\ el\\ campeón\\ se\\ juega\\.\\ Semifinales:\\ (.+?)\\ ·\\ (.+?)\\.\\ FINAL:\\ (.+?)\\.\\ Campeón:\\ (.+?)\\.(.+?)$",
+  "es": "La federación decidió que el campeón se juega. Semifinales: {1} · {2}. FINAL: {3}. Campeón: {4}.{5}",
+  "de": "nucleo/federacion.gd:494",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ líder\\ se\\ quedó\\ sin\\ corona$",
+  "es": "El líder se quedó sin corona",
+  "de": "nucleo/federacion.gd:499",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ terminó\\ primero\\ en\\ la\\ tabla\\ pero\\ perdió\\ los\\ playoffs\\.\\ Con\\ este\\ formato,\\ treinta\\ fechas\\ no\\ garantizan\\ nada\\.$",
+  "es": "{1} terminó primero en la tabla pero perdió los playoffs. Con este formato, treinta fechas no garantizan nada.",
+  "de": "nucleo/federacion.gd:499",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Auditoría\\ federativa\\ superada$",
+  "es": "Auditoría federativa superada",
+  "de": "nucleo/federacion.gd:596",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ club\\ cumple\\ los\\ seis\\ requisitos\\ de\\ licencia\\.\\ Sin\\ observaciones:\\ puedes\\ competir\\ e\\ inscribir\\ jugadores\\ con\\ normalidad\\.$",
+  "es": "El club cumple los seis requisitos de licencia. Sin observaciones: puedes competir e inscribir jugadores con normalidad.",
+  "de": "nucleo/federacion.gd:596",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Licencia\\ CONDICIONAL$",
+  "es": "Licencia CONDICIONAL",
+  "de": "nucleo/federacion.gd:601",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ federación\\ detectó\\ (.+?)\\ incumplimiento\\(s\\):\\ (.+?)\\.\\ Tienes\\ una\\ temporada\\ para\\ corregirlo\\ o\\ pierdes\\ el\\ cupo\\ internacional\\.$",
+  "es": "La federación detectó {1} incumplimiento(s): {2}. Tienes una temporada para corregirlo o pierdes el cupo internacional.",
+  "de": "nucleo/federacion.gd:601",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^LICENCIA\\ DENEGADA$",
+  "es": "LICENCIA DENEGADA",
+  "de": "nucleo/federacion.gd:611",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ federación\\ rechaza\\ la\\ licencia\\ por\\ (.+?)\\ incumplimientos:\\ (.+?)\\.\\ Multa,\\ sin\\ cupo\\ internacional\\ y\\ con\\ el\\ mercado\\ bajo\\ lupa\\.\\ Arréglalo\\ esta\\ temporada\\.$",
+  "es": "La federación rechaza la licencia por {1} incumplimientos: {2}. Multa, sin cupo internacional y con el mercado bajo lupa. Arréglalo esta temporada.",
+  "de": "nucleo/federacion.gd:611",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Tribunal\\ de\\ disciplina$",
+  "es": "Tribunal de disciplina",
+  "de": "nucleo/federacion.gd:643",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?):\\ (.+?)\\.\\ Sanción\\ de\\ (.+?)\\ fecha\\(s\\)\\.\\ Puedes\\ apelar\\ desde\\ Federación\\.$",
+  "es": "{1}: {2}. Sanción de {3} fecha(s). Puedes apelar desde Federación.",
+  "de": "nucleo/federacion.gd:643",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Apelación\\ ACOGIDA$",
+  "es": "Apelación ACOGIDA",
+  "de": "nucleo/federacion.gd:692",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ tribunal\\ rebaja\\ la\\ sanción\\ de\\ (.+?)\\ en\\ (.+?)\\ fecha\\(s\\)\\.\\ Le\\ quedan\\ (.+?)\\.$",
+  "es": "El tribunal rebaja la sanción de {1} en {2} fecha(s). Le quedan {3}.",
+  "de": "nucleo/federacion.gd:692",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Apelación\\ RECHAZADA$",
+  "es": "Apelación RECHAZADA",
+  "de": "nucleo/federacion.gd:698",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ tribunal\\ confirma\\ la\\ sanción\\ de\\ (.+?)\\ y\\ deja\\ constancia\\ de\\ que\\ el\\ club\\ recurre\\ demasiado\\.\\ Los\\ árbitros\\ toman\\ nota\\.$",
+  "es": "El tribunal confirma la sanción de {1} y deja constancia de que el club recurre demasiado. Los árbitros toman nota.",
+  "de": "nucleo/federacion.gd:698",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Control\\ antidopaje$",
+  "es": "Control antidopaje",
+  "de": "nucleo/federacion.gd:734",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Le\\ tocó\\ a\\ (.+?)\\ tras\\ el\\ partido\\.\\ Muestra\\ negativa,\\ todo\\ en\\ orden\\.$",
+  "es": "Le tocó a {1} tras el partido. Muestra negativa, todo en orden.",
+  "de": "nucleo/federacion.gd:734",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^POSITIVO\\ POR\\ DOPAJE:\\ (.+?)$",
+  "es": "POSITIVO POR DOPAJE: {1}",
+  "de": "nucleo/federacion.gd:744",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ dio\\ positivo\\.\\ Suspensión\\ provisional\\ de\\ (.+?)\\ fechas,\\ escándalo\\ mediático\\ y\\ patrocinadores\\ llamando\\.\\ Puedes\\ montarle\\ defensa\\ legal\\ apelando\\ en\\ Federación,\\ o\\ soltarlo\\ y\\ salvar\\ la\\ imagen\\ del\\ club\\.$",
+  "es": "{1} dio positivo. Suspensión provisional de {2} fechas, escándalo mediático y patrocinadores llamando. Puedes montarle defensa legal apelando en Federación, o soltarlo y salvar la imagen del club.",
+  "de": "nucleo/federacion.gd:744",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Cuentas\\ en\\ regla$",
+  "es": "Cuentas en regla",
+  "de": "nucleo/federacion.gd:858",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ federación\\ cierra\\ el\\ expediente:\\ tu\\ masa\\ salarial\\ vuelve\\ a\\ estar\\ por\\ debajo\\ del\\ (.+?)%\\ de\\ los\\ ingresos\\.$",
+  "es": "La federación cierra el expediente: tu masa salarial vuelve a estar por debajo del {1}% de los ingresos.",
+  "de": "nucleo/federacion.gd:858",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Aviso\\ de\\ fair\\ play\\ financiero$",
+  "es": "Aviso de fair play financiero",
+  "de": "nucleo/federacion.gd:865",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Tu\\ masa\\ salarial\\ se\\ lleva\\ el\\ (.+?)%\\ de\\ los\\ ingresos,\\ por\\ encima\\ del\\ (.+?)%\\ permitido\\.\\ Un\\ año\\ más\\ así\\ y\\ hay\\ sanción\\.$",
+  "es": "Tu masa salarial se lleva el {1}% de los ingresos, por encima del {2}% permitido. Un año más así y hay sanción.",
+  "de": "nucleo/federacion.gd:865",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Sanción\\ por\\ fair\\ play\\ financiero$",
+  "es": "Sanción por fair play financiero",
+  "de": "nucleo/federacion.gd:873",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Dos\\ temporadas\\ gastando\\ por\\ encima\\ de\\ lo\\ que\\ ingresas\\.\\ La\\ federación\\ multa\\ al\\ club\\ con\\ (.+?)\\ y\\ te\\ cierra\\ el\\ mercado\\ la\\ próxima\\ ventana:\\ solo\\ podrás\\ fichar\\ libres\\.$",
+  "es": "Dos temporadas gastando por encima de lo que ingresas. La federación multa al club con {1} y te cierra el mercado la próxima ventana: solo podrás fichar libres.",
+  "de": "nucleo/federacion.gd:873",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^💼\\ El\\ fondo\\ compra$",
+  "es": "💼 El fondo compra",
+  "de": "nucleo/fondo_inversion.gd:58",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ %\\ de\\ (.+?)\\ por\\ (.+?)\\.$",
+  "es": "{1} % de {2} por {3}.",
+  "de": "nucleo/fondo_inversion.gd:58",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^💼\\ El\\ fondo\\ vende$",
+  "es": "💼 El fondo vende",
+  "de": "nucleo/fondo_inversion.gd:76",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^💼\\ Dividendos\\ del\\ fondo$",
+  "es": "💼 Dividendos del fondo",
+  "de": "nucleo/fondo_inversion.gd:113",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Tus\\ participaciones\\ repartieron\\ (.+?)\\.$",
+  "es": "Tus participaciones repartieron {1}.",
+  "de": "nucleo/fondo_inversion.gd:113",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Campaña\\ de\\ abonos$",
+  "es": "Campaña de abonos",
+  "de": "nucleo/hinchada.gd:76",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ abonados\\ con\\ el\\ (.+?)\\.\\ Entran\\ (.+?)\\ de\\ golpe\\.$",
+  "es": "{1} abonados con el {2}. Entran {3} de golpe.",
+  "de": "nucleo/hinchada.gd:76",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^La\\ barra\\ se\\ planta$",
+  "es": "La barra se planta",
+  "de": "nucleo/hinchada.gd:101",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Silencio\\ en\\ la\\ tribuna\\ y\\ lienzos\\ contra\\ la\\ dirigencia\\.\\ El\\ ambiente\\ se\\ cae\\.$",
+  "es": "Silencio en la tribuna y lienzos contra la dirigencia. El ambiente se cae.",
+  "de": "nucleo/hinchada.gd:101",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Encuesta\\ a\\ los\\ socios$",
+  "es": "Encuesta a los socios",
+  "de": "nucleo/hinchada.gd:128",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^📉\\ Tope\\ salarial$",
+  "es": "📉 Tope salarial",
+  "de": "nucleo/insolvencia.gd:53",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ administrador\\ concursal\\ limita\\ la\\ masa\\ salarial\\ a\\ (.+?)\\ por\\ semana\\.\\ Lo\\ que\\ sobre,\\ se\\ vende\\.$",
+  "es": "El administrador concursal limita la masa salarial a {1} por semana. Lo que sobre, se vende.",
+  "de": "nucleo/insolvencia.gd:53",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^⚖️\\ (.+?)\\ puntos\\ menos$",
+  "es": "⚖️ {1} puntos menos",
+  "de": "nucleo/insolvencia.gd:69",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ federación\\ sanciona\\ a\\ (.+?)\\ por\\ impagos:\\ le\\ resta\\ (.+?)\\ puntos\\ en\\ la\\ tabla\\.$",
+  "es": "La federación sanciona a {1} por impagos: le resta {2} puntos en la tabla.",
+  "de": "nucleo/insolvencia.gd:69",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🏷️\\ Venta\\ forzada$",
+  "es": "🏷️ Venta forzada",
+  "de": "nucleo/insolvencia.gd:103",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ administrador\\ vende\\ a\\ (.+?)\\ a\\ (.+?)\\ por\\ (.+?),\\ lejos\\ de\\ lo\\ que\\ vale\\.$",
+  "es": "El administrador vende a {1} a {2} por {3}, lejos de lo que vale.",
+  "de": "nucleo/insolvencia.gd:103",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🔄\\ Club\\ refundado$",
+  "es": "🔄 Club refundado",
+  "de": "nucleo/insolvencia.gd:140",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Deuda\\ perdonada,\\ caja\\ a\\ cero\\ y\\ reputación\\ en\\ el\\ suelo\\.\\ Se\\ fueron:\\ (.+?)\\.$",
+  "es": "Deuda perdonada, caja a cero y reputación en el suelo. Se fueron: {1}.",
+  "de": "nucleo/insolvencia.gd:140",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🏛️\\ Junta\\ de\\ accionistas$",
+  "es": "🏛️ Junta de accionistas",
+  "de": "nucleo/junta.gd:72",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ \\((.+?)\\ %\\ del\\ club\\)\\ pide\\ la\\ palabra:\\ (.+?)$",
+  "es": "{1} ({2} % del club) pide la palabra: {3}",
+  "de": "nucleo/junta.gd:72",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^⚠️\\ Moción\\ de\\ censura$",
+  "es": "⚠️ Moción de censura",
+  "de": "nucleo/junta.gd:152",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ \\((.+?)\\ %\\ del\\ club\\)\\ pide\\ tu\\ destitución\\ ante\\ la\\ junta\\.\\ No\\ prospera,\\ pero\\ la\\ directiva\\ toma\\ nota\\.$",
+  "es": "{1} ({2} % del club) pide tu destitución ante la junta. No prospera, pero la directiva toma nota.",
+  "de": "nucleo/junta.gd:152",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🎓\\ (.+?)\\ aprobada$",
+  "es": "🎓 {1} aprobada",
+  "de": "nucleo/licencia.gd:104",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ de\\ (.+?)\\ respuestas\\ correctas\\.\\ Más\\ prestigio\\ en\\ el\\ banquillo\\.$",
+  "es": "{1} de {2} respuestas correctas. Más prestigio en el banquillo.",
+  "de": "nucleo/licencia.gd:104",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🎓\\ Examen\\ suspendido$",
+  "es": "🎓 Examen suspendido",
+  "de": "nucleo/licencia.gd:107",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ de\\ (.+?):\\ hacían\\ falta\\ (.+?)\\.\\ Podrás\\ repetirlo\\ en\\ (.+?)\\ semanas\\.$",
+  "es": "{1} de {2}: hacían falta {3}. Podrás repetirlo en {4} semanas.",
+  "de": "nucleo/licencia.gd:107",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🏅\\ Hito\\ de\\ maestría$",
+  "es": "🏅 Hito de maestría",
+  "de": "nucleo/maestria.gd:86",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ llega\\ al\\ nivel\\ (.+?):\\ su\\ efecto\\ se\\ refuerza\\ y\\ ganas\\ un\\ punto\\ de\\ habilidad\\ para\\ el\\ árbol\\.$",
+  "es": "{1} llega al nivel {2}: su efecto se refuerza y ganas un punto de habilidad para el árbol.",
+  "de": "nucleo/maestria.gd:86",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🔥\\ Guerra\\ por\\ (.+?)$",
+  "es": "🔥 Guerra por {1}",
+  "de": "nucleo/mercado_avanzado.gd:76",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ entra\\ en\\ la\\ pelea\\ y\\ ofrece\\ (.+?),\\ más\\ que\\ (.+?)\\.\\ La\\ decisión\\ es\\ tuya\\ en\\ el\\ mercado\\.$",
+  "es": "{1} entra en la pelea y ofrece {2}, más que {3}. La decisión es tuya en el mercado.",
+  "de": "nucleo/mercado_avanzado.gd:76",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^📰\\ Salió\\ a\\ la\\ luz$",
+  "es": "📰 Salió a la luz",
+  "de": "nucleo/mercado_avanzado.gd:197",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Las\\ apuestas\\ de\\ (.+?)\\ y\\ que\\ el\\ club\\ lo\\ tapó\\.\\ La\\ federación\\ lo\\ suspende\\ cinco\\ partidos\\.$",
+  "es": "Las apuestas de {1} y que el club lo tapó. La federación lo suspende cinco partidos.",
+  "de": "nucleo/mercado_avanzado.gd:197",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^💣\\ Escándalo\\ de\\ corrupción$",
+  "es": "💣 Escándalo de corrupción",
+  "de": "nucleo/mercado_avanzado.gd:215",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Se\\ filtró\\ el\\ pago\\ de\\ (.+?)\\ a\\ un\\ intermediario\\ de\\ la\\ federación:\\ 9\\ puntos\\ menos\\ y\\ la\\ hinchada\\ furiosa\\.$",
+  "es": "Se filtró el pago de {1} a un intermediario de la federación: 9 puntos menos y la hinchada furiosa.",
+  "de": "nucleo/mercado_avanzado.gd:215",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^⚖️\\ Denuncia\\ de\\ corrupción$",
+  "es": "⚖️ Denuncia de corrupción",
+  "de": "nucleo/mercado_avanzado.gd:222",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ denuncia\\ a\\ un\\ intermediario\\ de\\ la\\ federación\\.\\ La\\ prensa\\ aplaude;\\ en\\ la\\ asamblea\\ te\\ miran\\ mal\\.$",
+  "es": "{1} denuncia a un intermediario de la federación. La prensa aplaude; en la asamblea te miran mal.",
+  "de": "nucleo/mercado_avanzado.gd:222",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Rotacion$",
+  "es": "Rotacion",
+  "de": "nucleo/mundo.gd:830",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ cambio\\(s\\)\\ en\\ el\\ once:\\ los\\ que\\ llegaban\\ fundidos\\ descansan\\.$",
+  "es": "{1} cambio(s) en el once: los que llegaban fundidos descansan.",
+  "de": "nucleo/mundo.gd:830",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🤕\\ Lesión\\ insólita$",
+  "es": "🤕 Lesión insólita",
+  "de": "nucleo/mundo.gd:1042",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Te\\ quiere\\ (.+?)$",
+  "es": "Te quiere {1}",
+  "de": "nucleo/mundo.gd:1139",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Han\\ llamado\\ desde\\ (.+?):\\ te\\ ofrecen\\ su\\ banquillo\\.\\ Puedes\\ contestar\\ en\\ Club\\ ›\\ Legado\\.$",
+  "es": "Han llamado desde {1}: te ofrecen su banquillo. Puedes contestar en Club › Legado.",
+  "de": "nucleo/mundo.gd:1139",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^✈️\\ Vuelta\\ de\\ un\\ viaje\\ largo$",
+  "es": "✈️ Vuelta de un viaje largo",
+  "de": "nucleo/mundo.gd:1388",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ plantel\\ llegó\\ de\\ madrugada\\ desde\\ (.+?)\\ y\\ paga\\ el\\ viaje:\\ −(.+?)\\ de\\ estado\\ físico\\ a\\ los\\ que\\ juegan\\.$",
+  "es": "El plantel llegó de madrugada desde {1} y paga el viaje: −{2} de estado físico a los que juegan.",
+  "de": "nucleo/mundo.gd:1388",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🏅\\ (.+?)$",
+  "es": "🏅 {1}",
+  "de": "nucleo/mundo.gd:1432",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Temporada\\ terminada:\\ (.+?)$",
+  "es": "Temporada terminada: {1}",
+  "de": "nucleo/mundo.gd:1432",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Se\\ va\\ libre:\\ (.+?)$",
+  "es": "Se va libre: {1}",
+  "de": "nucleo/mundo.gd:1636",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Se\\ le\\ acabó\\ el\\ contrato\\ y\\ no\\ se\\ renovó\\.\\ Deja\\ (.+?)\\ sin\\ que\\ el\\ club\\ cobre\\ nada\\.$",
+  "es": "Se le acabó el contrato y no se renovó. Deja {1} sin que el club cobre nada.",
+  "de": "nucleo/mundo.gd:1636",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^⚔️\\ Promoción:\\ (.+?)$",
+  "es": "⚔️ Promoción: {1}",
+  "de": "nucleo/mundo.gd:1658",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Se\\ retira\\ por\\ lesiones:\\ (.+?)$",
+  "es": "Se retira por lesiones: {1}",
+  "de": "nucleo/mundo.gd:1708",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Los\\ médicos\\ no\\ le\\ dan\\ el\\ alta\\ competitiva\\.\\ (.+?)\\ años\\ y\\ tres\\ lesiones\\ graves\\ en\\ poco\\ tiempo:\\ cuelga\\ las\\ botas\\ antes\\ de\\ tiempo\\.$",
+  "es": "Los médicos no le dan el alta competitiva. {1} años y tres lesiones graves en poco tiempo: cuelga las botas antes de tiempo.",
+  "de": "nucleo/mundo.gd:1708",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Dijiste\\ que\\ ganabas\\ y\\ ganaste$",
+  "es": "Dijiste que ganabas y ganaste",
+  "de": "nucleo/mundo.gd:2159",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ hinchada\\ celebra\\ el\\ doble:\\ primero\\ el\\ resultado\\ y\\ después\\ la\\ cara\\ del\\ otro\\.$",
+  "es": "La hinchada celebra el doble: primero el resultado y después la cara del otro.",
+  "de": "nucleo/mundo.gd:2159",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Prometiste\\ y\\ no\\ cumpliste$",
+  "es": "Prometiste y no cumpliste",
+  "de": "nucleo/mundo.gd:2163",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ frase\\ de\\ la\\ conferencia\\ se\\ te\\ da\\ vuelta\\.\\ En\\ la\\ calle\\ no\\ se\\ habla\\ del\\ partido,\\ se\\ habla\\ de\\ ti\\.$",
+  "es": "La frase de la conferencia se te da vuelta. En la calle no se habla del partido, se habla de ti.",
+  "de": "nucleo/mundo.gd:2163",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^(.+?)\\ (.+?)\\-(.+?)\\ (.+?)\\.\\ (.+?)\\ levanta\\ el\\ primer\\ título\\ del\\ año\\.$",
+  "es": "{1} {2}-{3} {4}. {5} levanta el primer título del año.",
+  "de": "nucleo/mundo.gd:2481",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Pretemporada:\\ (.+?)$",
+  "es": "Pretemporada: {1}",
+  "de": "nucleo/mundo.gd:2543",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ plantel\\ llega\\ a\\ la\\ primera\\ jornada\\ con\\ (.+?)\\ de\\ forma\\ extra\\.$",
+  "es": "El plantel llega a la primera jornada con {1} de forma extra.",
+  "de": "nucleo/mundo.gd:2543",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^(.+?)\\.$",
+  "es": "{1}.",
+  "de": "nucleo/mundo.gd:2618",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Cambia\\ la\\ moda:\\ (.+?)$",
+  "es": "Cambia la moda: {1}",
+  "de": "nucleo/mundo.gd:2750",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ Los\\ que\\ juegan\\ con\\ (.+?)\\ salen\\ ganando;\\ los\\ de\\ (.+?)\\ van\\ a\\ sufrir\\.$",
+  "es": "{1} Los que juegan con {2} salen ganando; los de {3} van a sufrir.",
+  "de": "nucleo/mundo.gd:2750",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Videoanálisis\\ de\\ (.+?)$",
+  "es": "Videoanálisis de {1}",
+  "de": "nucleo/mundo.gd:2894",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Sesión\\ de\\ vídeo\\ con\\ todo\\ el\\ plantel:\\ dónde\\ aprietan,\\ por\\ dónde\\ salen\\ y\\ a\\ quién\\ hay\\ que\\ tapar\\.\\ El\\ equipo\\ sale\\ al\\ campo\\ con\\ la\\ lección\\ hecha\\ \\(\\+(.+?)%\\)\\.$",
+  "es": "Sesión de vídeo con todo el plantel: dónde aprietan, por dónde salen y a quién hay que tapar. El equipo sale al campo con la lección hecha (+{1}%).",
+  "de": "nucleo/mundo.gd:2894",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🔎\\ Nuevo\\ ojeador\\ en\\ (.+?)$",
+  "es": "🔎 Nuevo ojeador en {1}",
+  "de": "nucleo/ojeadores.gd:126",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ se\\ hace\\ cargo\\ de\\ la\\ zona\\.\\ Precisión\\ (.+?)/3,\\ especialista\\ en\\ (.+?)\\.\\ (.+?):\\ (.+?)\\.\\ Sus\\ informes\\ van\\ a\\ llegar\\ cada\\ semana;\\ si\\ nunca\\ le\\ haces\\ caso,\\ se\\ acabará\\ yendo\\.$",
+  "es": "{1} se hace cargo de la zona. Precisión {2}/3, especialista en {3}. {4}: {5}. Sus informes van a llegar cada semana; si nunca le haces caso, se acabará yendo.",
+  "de": "nucleo/ojeadores.gd:126",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🚪\\ Renuncia\\ un\\ ojeador$",
+  "es": "🚪 Renuncia un ojeador",
+  "de": "nucleo/ojeadores.gd:145",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?),\\ tu\\ hombre\\ en\\ (.+?),\\ presentó\\ la\\ renuncia\\.\\ «Llevo\\ (.+?)\\ informes\\ y\\ no\\ fichaste\\ a\\ ninguno»,\\ escribió\\.\\ «Prefiero\\ trabajar\\ donde\\ me\\ lean\\.»\\ Pierdes\\ la\\ cobertura\\ de\\ ese\\ país\\ hasta\\ que\\ mandes\\ a\\ otro\\.$",
+  "es": "{1}, tu hombre en {2}, presentó la renuncia. «Llevo {3} informes y no fichaste a ninguno», escribió. «Prefiero trabajar donde me lean.» Pierdes la cobertura de ese país hasta que mandes a otro.",
+  "de": "nucleo/ojeadores.gd:145",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Crece\\ el\\ departamento\\ de\\ datos$",
+  "es": "Crece el departamento de datos",
+  "de": "nucleo/ojeadores.gd:418",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Contrataste\\ más\\ analistas\\.\\ El\\ modelo\\ propio\\ del\\ club\\ ya\\ cruza\\ minutos,\\ duelos\\ y\\ kilómetros\\ de\\ (.+?)\\ futbolistas\\.\\ (.+?)$",
+  "es": "Contrataste más analistas. El modelo propio del club ya cruza minutos, duelos y kilómetros de {1} futbolistas. {2}",
+  "de": "nucleo/ojeadores.gd:418",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ modelo\\ señala\\ un\\ nombre$",
+  "es": "El modelo señala un nombre",
+  "de": "nucleo/ojeadores.gd:453",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ departamento\\ de\\ datos\\ destaca\\ a\\ (.+?)\\ \\((.+?)\\ años,\\ (.+?)\\)\\.\\ No\\ aparece\\ en\\ ningún\\ informe\\ de\\ ojeo,\\ pero\\ sus\\ números\\ por\\ noventa\\ minutos\\ están\\ muy\\ por\\ encima\\ de\\ lo\\ que\\ cuesta\\.\\ El\\ jefe\\ de\\ ojeadores\\ ya\\ dijo\\ en\\ la\\ reunión\\ que\\ «los\\ números\\ no\\ ven\\ la\\ cara\\ del\\ chico\\ cuando\\ va\\ perdiendo»\\.$",
+  "es": "El departamento de datos destaca a {1} ({2} años, {3}). No aparece en ningún informe de ojeo, pero sus números por noventa minutos están muy por encima de lo que cuesta. El jefe de ojeadores ya dijo en la reunión que «los números no ven la cara del chico cuando va perdiendo».",
+  "de": "nucleo/ojeadores.gd:453",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Guerra\\ en\\ la\\ sala\\ de\\ fichajes$",
+  "es": "Guerra en la sala de fichajes",
+  "de": "nucleo/ojeadores.gd:461",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ jefe\\ de\\ ojeadores\\ y\\ el\\ jefe\\ de\\ analistas\\ se\\ cruzaron\\ a\\ gritos\\ en\\ el\\ pasillo\\.\\ Uno\\ dice\\ que\\ el\\ modelo\\ ficha\\ planillas\\ de\\ Excel;\\ el\\ otro,\\ que\\ el\\ ojeo\\ es\\ superstición\\ cara\\.\\ Antes\\ o\\ después\\ hay\\ que\\ decidir\\ quién\\ manda\\.$",
+  "es": "El jefe de ojeadores y el jefe de analistas se cruzaron a gritos en el pasillo. Uno dice que el modelo ficha planillas de Excel; el otro, que el ojeo es superstición cara. Antes o después hay que decidir quién manda.",
+  "de": "nucleo/ojeadores.gd:461",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Academia\\ cerrada$",
+  "es": "Academia cerrada",
+  "de": "nucleo/ojeadores.gd:504",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ sede\\ de\\ (.+?)\\ se\\ vende\\.\\ Los\\ proyectos\\ vuelven\\ a\\ casa\\.$",
+  "es": "La sede de {1} se vende. Los proyectos vuelven a casa.",
+  "de": "nucleo/ojeadores.gd:504",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Bandera\\ plantada\\ en\\ (.+?)$",
+  "es": "Bandera plantada en {1}",
+  "de": "nucleo/ojeadores.gd:515",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Tu\\ academia\\ abre\\ en\\ (.+?):\\ cada\\ pretemporada\\ llegará\\ una\\ joya\\ local\\ con\\ proyección\\ de\\ verdad\\.\\ Mantención:\\ (.+?)\\ a\\ la\\ semana\\.$",
+  "es": "Tu academia abre en {1}: cada pretemporada llegará una joya local con proyección de verdad. Mantención: {2} a la semana.",
+  "de": "nucleo/ojeadores.gd:515",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Joya\\ de\\ la\\ academia\\ de\\ (.+?)$",
+  "es": "Joya de la academia de {1}",
+  "de": "nucleo/ojeadores.gd:549",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ \\((.+?),\\ (.+?)\\ años\\)\\ llega\\ desde\\ tu\\ sede\\ en\\ (.+?)\\ con\\ proyección\\ (.+?)\\.$",
+  "es": "{1} ({2}, {3} años) llega desde tu sede en {4} con proyección {5}.",
+  "de": "nucleo/ojeadores.gd:549",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🗳️\\ Campaña\\ electoral$",
+  "es": "🗳️ Campaña electoral",
+  "de": "nucleo/politica.gd:184",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^En\\ dos\\ semanas\\ se\\ vota\\ en\\ (.+?)\\.\\ Candidatos:\\ (.+?)\\.$",
+  "es": "En dos semanas se vota en {1}. Candidatos: {2}.",
+  "de": "nucleo/politica.gd:184",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🗳️\\ Elecciones\\ en\\ (.+?)$",
+  "es": "🗳️ Elecciones en {1}",
+  "de": "nucleo/politica.gd:195",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\.\\ Gobierna\\ (.+?)\\ \\((.+?)\\)\\.\\ Su\\ prioridad:\\ (.+?)\\ —\\ (.+?)$",
+  "es": "{1}. Gobierna {2} ({3}). Su prioridad: {4} — {5}",
+  "de": "nucleo/politica.gd:195",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Decisión\\ pendiente$",
+  "es": "Decisión pendiente",
+  "de": "nucleo/prensa.gd:153",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Hay\\ un\\ tema\\ esperando\\ tu\\ firma\\ en\\ el\\ despacho\\.$",
+  "es": "Hay un tema esperando tu firma en el despacho.",
+  "de": "nucleo/prensa.gd:153",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ vestuario\\ se\\ calma$",
+  "es": "El vestuario se calma",
+  "de": "nucleo/prensa.gd:406",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Pasaron\\ las\\ semanas\\ de\\ tensión\\ con\\ el\\ capitán\\.\\ El\\ grupo\\ vuelve\\ a\\ remar\\.$",
+  "es": "Pasaron las semanas de tensión con el capitán. El grupo vuelve a remar.",
+  "de": "nucleo/prensa.gd:406",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^(.+?)\\ ya\\ es\\ de\\ su\\ nueva\\ posición$",
+  "es": "{1} ya es de su nueva posición",
+  "de": "nucleo/prensa.gd:410",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Terminó\\ de\\ adaptarse\\ y\\ está\\ feliz\\ con\\ el\\ cambio\\.$",
+  "es": "Terminó de adaptarse y está feliz con el cambio.",
+  "de": "nucleo/prensa.gd:410",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Atrasos\\ saldados$",
+  "es": "Atrasos saldados",
+  "de": "nucleo/prensa.gd:412",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Se\\ cumplió\\ el\\ calendario\\ de\\ pagos\\.\\ El\\ plantel\\ vuelve\\ a\\ entrenar\\ sin\\ carteles\\.$",
+  "es": "Se cumplió el calendario de pagos. El plantel vuelve a entrenar sin carteles.",
+  "de": "nucleo/prensa.gd:412",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^«(.+?)»\\.(.+?)$",
+  "es": "«{1}».{2}",
+  "de": "nucleo/prensa.gd:1043",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🎤\\ A\\ pie\\ de\\ campo$",
+  "es": "🎤 A pie de campo",
+  "de": "nucleo/prensa.gd:1493",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Pasaste\\ de\\ largo\\ ante\\ la\\ cámara\\.\\ La\\ imagen,\\ sin\\ palabras,\\ se\\ vio\\ igual\\.$",
+  "es": "Pasaste de largo ante la cámara. La imagen, sin palabras, se vio igual.",
+  "de": "nucleo/prensa.gd:1493",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^«(.+?)»\\.$",
+  "es": "«{1}».",
+  "de": "nucleo/prensa.gd:1512",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Banderazo\\ en\\ la\\ práctica$",
+  "es": "Banderazo en la práctica",
+  "de": "nucleo/prensa.gd:1614",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Cientos\\ de\\ hinchas\\ coparon\\ el\\ entrenamiento\\ con\\ bombos\\ y\\ lienzos\\ de\\ aliento\\.\\ El\\ plantel\\ se\\ agranda\\.$",
+  "es": "Cientos de hinchas coparon el entrenamiento con bombos y lienzos de aliento. El plantel se agranda.",
+  "de": "nucleo/prensa.gd:1614",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Lienzos\\ contra\\ el\\ club$",
+  "es": "Lienzos contra el club",
+  "de": "nucleo/prensa.gd:1619",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Amanecieron\\ rayados\\ frente\\ al\\ estadio:\\ 'jugadores\\ sin\\ sangre'\\.\\ Semana\\ tensa\\ en\\ la\\ ciudad\\ deportiva\\.$",
+  "es": "Amanecieron rayados frente al estadio: 'jugadores sin sangre'. Semana tensa en la ciudad deportiva.",
+  "de": "nucleo/prensa.gd:1619",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Vuelve\\ de\\ la\\ cesión$",
+  "es": "Vuelve de la cesión",
+  "de": "nucleo/prensa.gd:1668",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ termina\\ su\\ préstamo\\ y\\ se\\ reincorpora\\ a\\ la\\ pretemporada\\.$",
+  "es": "{1} termina su préstamo y se reincorpora a la pretemporada.",
+  "de": "nucleo/prensa.gd:1668",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Se\\ acabó\\ el\\ compromiso\\ comercial$",
+  "es": "Se acabó el compromiso comercial",
+  "de": "nucleo/prensa.gd:1741",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ acuerdo\\ que\\ te\\ obligaba\\ a\\ alinear\\ a\\ un\\ jugador\\ concreto\\ llegó\\ a\\ su\\ fin\\.\\ Vuelves\\ a\\ elegir\\ el\\ once\\ sin\\ condiciones\\.$",
+  "es": "El acuerdo que te obligaba a alinear a un jugador concreto llegó a su fin. Vuelves a elegir el once sin condiciones.",
+  "de": "nucleo/prensa.gd:1741",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ patrocinador\\ te\\ lo\\ cobra$",
+  "es": "El patrocinador te lo cobra",
+  "de": "nucleo/prensa.gd:1757",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Dejaste\\ a\\ (.+?)\\ fuera\\ del\\ once\\ y\\ el\\ acuerdo\\ comercial\\ exigía\\ que\\ jugara\\.\\ Descuento\\ de\\ (.+?)\\ y\\ una\\ llamada\\ incómoda\\ del\\ directorio\\.$",
+  "es": "Dejaste a {1} fuera del once y el acuerdo comercial exigía que jugara. Descuento de {2} y una llamada incómoda del directorio.",
+  "de": "nucleo/prensa.gd:1757",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Nuevo\\ vocero\\ del\\ club$",
+  "es": "Nuevo vocero del club",
+  "de": "nucleo/prensa.gd:2181",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ hablará\\ por\\ ti\\ en\\ las\\ ruedas\\ de\\ prensa\\.\\ Menos\\ desgaste\\ para\\ ti,\\ pero\\ también\\ menos\\ control\\ sobre\\ el\\ mensaje\\.$",
+  "es": "{1} hablará por ti en las ruedas de prensa. Menos desgaste para ti, pero también menos control sobre el mensaje.",
+  "de": "nucleo/prensa.gd:2181",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^El\\ club\\ se\\ queda\\ sin\\ vocero$",
+  "es": "El club se queda sin vocero",
+  "de": "nucleo/prensa.gd:2195",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ ya\\ no\\ está\\ en\\ el\\ plantel\\.\\ A\\ partir\\ de\\ la\\ próxima\\ rueda\\ vuelves\\ a\\ dar\\ tú\\ la\\ cara\\.$",
+  "es": "{1} ya no está en el plantel. A partir de la próxima rueda vuelves a dar tú la cara.",
+  "de": "nucleo/prensa.gd:2195",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Vuelves\\ al\\ reparto\\ en\\ bloque$",
+  "es": "Vuelves al reparto en bloque",
+  "de": "nucleo/prensa.gd:2217",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ club\\ vuelve\\ a\\ negociar\\ la\\ televisión\\ junto\\ al\\ resto\\ de\\ la\\ liga\\.\\ Menos\\ techo,\\ más\\ seguridad\\.$",
+  "es": "El club vuelve a negociar la televisión junto al resto de la liga. Menos techo, más seguridad.",
+  "de": "nucleo/prensa.gd:2217",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Contrato\\ de\\ TV\\ individual$",
+  "es": "Contrato de TV individual",
+  "de": "nucleo/prensa.gd:2224",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Negociaste\\ por\\ tu\\ cuenta\\ y\\ te\\ fue\\ bien:\\ tu\\ marca\\ vende\\.\\ Los\\ derechos\\ suben\\ un\\ 35%,\\ pero\\ los\\ clubes\\ pequeños\\ te\\ lo\\ van\\ a\\ cobrar\\ en\\ la\\ asamblea\\.$",
+  "es": "Negociaste por tu cuenta y te fue bien: tu marca vende. Los derechos suben un 35%, pero los clubes pequeños te lo van a cobrar en la asamblea.",
+  "de": "nucleo/prensa.gd:2224",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Negociaste\\ por\\ tu\\ cuenta\\ y\\ te\\ fue\\ mal:\\ sin\\ la\\ fuerza\\ del\\ bloque,\\ los\\ derechos\\ caen\\ un\\ 30%\\.$",
+  "es": "Negociaste por tu cuenta y te fue mal: sin la fuerza del bloque, los derechos caen un 30%.",
+  "de": "nucleo/prensa.gd:2227",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Puertas\\ abiertas$",
+  "es": "Puertas abiertas",
+  "de": "nucleo/prensa.gd:2505",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Invitaste\\ a\\ un\\ creador\\ a\\ un\\ entrenamiento\\.\\ El\\ club\\ ganó\\ (.+?)\\ seguidores\\ y\\ algo\\ de\\ cariño\\ en\\ redes\\.$",
+  "es": "Invitaste a un creador a un entrenamiento. El club ganó {1} seguidores y algo de cariño en redes.",
+  "de": "nucleo/prensa.gd:2505",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🌶️\\ Polémica\\ en\\ redes$",
+  "es": "🌶️ Polémica en redes",
+  "de": "nucleo/redes.gd:190",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Tu\\ publicación\\ «(.+?)»\\ encendió\\ la\\ discusión:\\ (.+?)\\ comentarios\\ y\\ la\\ prensa\\ ya\\ habla\\ del\\ tema\\.$",
+  "es": "Tu publicación «{1}» encendió la discusión: {2} comentarios y la prensa ya habla del tema.",
+  "de": "nucleo/redes.gd:190",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🧊\\ Mensaje\\ en\\ público$",
+  "es": "🧊 Mensaje en público",
+  "de": "nucleo/redes.gd:397",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Le\\ contestaste\\ a\\ (.+?)\\ en\\ redes\\ delante\\ de\\ todos\\.\\ El\\ vestuario\\ lo\\ comenta\\.$",
+  "es": "Le contestaste a {1} en redes delante de todos. El vestuario lo comenta.",
+  "de": "nucleo/redes.gd:397",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🔑\\ La\\ cuenta\\ del\\ club\\ es\\ tuya$",
+  "es": "🔑 La cuenta del club es tuya",
+  "de": "nucleo/redes.gd:409",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ community\\ manager\\ se\\ va\\ de\\ vacaciones\\ y\\ la\\ directiva\\ te\\ confía\\ (.+?)\\.\\ La\\ clave\\ te\\ llegó\\ por\\ Mensajes\\.$",
+  "es": "El community manager se va de vacaciones y la directiva te confía {1}. La clave te llegó por Mensajes.",
+  "de": "nucleo/redes.gd:409",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Prenómina\\ de\\ (.+?)$",
+  "es": "Prenómina de {1}",
+  "de": "nucleo/selecciones.gd:314",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^La\\ selección\\ de\\ (.+?)\\ publica\\ una\\ lista\\ preliminar\\ de\\ (.+?)\\ jugadores\\ rumbo\\ a\\ la\\ próxima\\ fecha\\ internacional\\.$",
+  "es": "La selección de {1} publica una lista preliminar de {2} jugadores rumbo a la próxima fecha internacional.",
+  "de": "nucleo/selecciones.gd:314",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^La\\ federación\\ respeta\\ el\\ pedido$",
+  "es": "La federación respeta el pedido",
+  "de": "nucleo/selecciones.gd:334",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ cuerpo\\ técnico\\ de\\ (.+?)\\ decide\\ no\\ citar\\ a\\ (.+?)\\ esta\\ fecha\\ internacional,\\ atendiendo\\ el\\ pedido\\ de\\ descanso\\ del\\ club\\.$",
+  "es": "El cuerpo técnico de {1} decide no citar a {2} esta fecha internacional, atendiendo el pedido de descanso del club.",
+  "de": "nucleo/selecciones.gd:334",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^La\\ federación\\ ignora\\ el\\ pedido$",
+  "es": "La federación ignora el pedido",
+  "de": "nucleo/selecciones.gd:337",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Pediste\\ que\\ (.+?)\\ descansara\\ y\\ la\\ federación\\ lo\\ citó\\ igual\\.\\ Vuelve\\ el\\ lunes,\\ y\\ verás\\ cómo\\.$",
+  "es": "Pediste que {1} descansara y la federación lo citó igual. Vuelve el lunes, y verás cómo.",
+  "de": "nucleo/selecciones.gd:337",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Quedaron\\ fuera\\ de\\ la\\ nómina\\ final$",
+  "es": "Quedaron fuera de la nómina final",
+  "de": "nucleo/selecciones.gd:363",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Estaban\\ en\\ la\\ prenómina\\ pero\\ no\\ llegaron\\ a\\ la\\ lista\\ definitiva:\\ (.+?)\\.\\ El\\ cuerpo\\ técnico\\ prefirió\\ otras\\ variantes\\.$",
+  "es": "Estaban en la prenómina pero no llegaron a la lista definitiva: {1}. El cuerpo técnico prefirió otras variantes.",
+  "de": "nucleo/selecciones.gd:363",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Convocados\\ de\\ tu\\ club$",
+  "es": "Convocados de tu club",
+  "de": "nucleo/selecciones.gd:385",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Se\\ van\\ con\\ (.+?):\\ (.+?)\\.\\ Vuelven\\ con\\ la\\ moral\\ arriba\\ y\\ con\\ el\\ depósito\\ vacío\\.$",
+  "es": "Se van con {1}: {2}. Vuelven con la moral arriba y con el depósito vacío.",
+  "de": "nucleo/selecciones.gd:385",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^(.+?)\\ vuelve\\ tocado\\ de\\ la\\ gira:\\ (.+?)\\ \\((.+?)\\ sem\\)\\.$",
+  "es": "{1} vuelve tocado de la gira: {2} ({3} sem).",
+  "de": "nucleo/selecciones.gd:423",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Fecha\\ internacional:\\ (.+?)$",
+  "es": "Fecha internacional: {1}",
+  "de": "nucleo/selecciones.gd:446",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Cierra\\ la\\ ventana\\ internacional\\.\\ Los\\ que\\ fueron\\ vuelven\\ con\\ (.+?)\\.$",
+  "es": "Cierra la ventana internacional. Los que fueron vuelven con {1}.",
+  "de": "nucleo/selecciones.gd:446",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Carta\\ de\\ nacionalización$",
+  "es": "Carta de nacionalización",
+  "de": "nucleo/selecciones.gd:522",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Puede\\ nacionalizarse:\\ (.+?)$",
+  "es": "Puede nacionalizarse: {1}",
+  "de": "nucleo/selecciones.gd:647",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?):\\ (.+?)\\ (.+?)$",
+  "es": "{1}: {2} {3}",
+  "de": "nucleo/selecciones.gd:668",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^🏆\\ MUNDIAL\\ (.+?):\\ campeón\\ (.+?)$",
+  "es": "🏆 MUNDIAL {1}: campeón {2}",
+  "de": "nucleo/selecciones.gd:722",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Se\\ jugó\\ la\\ Copa\\ del\\ Mundo\\.\\ (.+?)\\ levantó\\ el\\ trofeo\\.\\ $",
+  "es": "Se jugó la Copa del Mundo. {1} levantó el trofeo. ",
+  "de": "nucleo/selecciones.gd:722",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🌍\\ Vitrina\\ mundialista:\\ (.+?)$",
+  "es": "🌍 Vitrina mundialista: {1}",
+  "de": "nucleo/selecciones.gd:740",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Jugó\\ el\\ Mundial\\ y\\ volvió\\ con\\ (.+?)\\ punto\\(s\\)\\ de\\ media\\ más\\.\\ Su\\ valor\\ de\\ mercado\\ se\\ disparó:\\ espera\\ ofertas\\.$",
+  "es": "Jugó el Mundial y volvió con {1} punto(s) de media más. Su valor de mercado se disparó: espera ofertas.",
+  "de": "nucleo/selecciones.gd:740",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Vuelve\\ tocado\\ del\\ Mundial$",
+  "es": "Vuelve tocado del Mundial",
+  "de": "nucleo/selecciones.gd:750",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^🩹\\ (.+?)\\ llega\\ lesionado\\ de\\ la\\ Copa\\ \\((.+?)\\ sem\\)\\.$",
+  "es": "🩹 {1} llega lesionado de la Copa ({2} sem).",
+  "de": "nucleo/selecciones.gd:750",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🌍\\ Campeones\\ continentales\\ (.+?)$",
+  "es": "🌍 Campeones continentales {1}",
+  "de": "nucleo/selecciones.gd:797",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\.\\ Todos\\ ellos\\ disputan\\ el\\ Mundial\\ de\\ Clubes\\.$",
+  "es": "{1}. Todos ellos disputan el Mundial de Clubes.",
+  "de": "nucleo/selecciones.gd:797",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🏆🌍\\ ¡CAMPEONES\\ DEL\\ MUNDO!$",
+  "es": "🏆🌍 ¡CAMPEONES DEL MUNDO!",
+  "de": "nucleo/selecciones.gd:836",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^🌍\\ Mundial\\ de\\ Clubes\\ (.+?)$",
+  "es": "🌍 Mundial de Clubes {1}",
+  "de": "nucleo/selecciones.gd:840",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Lo\\ ganó\\ (.+?)\\ \\((.+?)\\)\\.$",
+  "es": "Lo ganó {1} ({2}).",
+  "de": "nucleo/selecciones.gd:840",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🍖\\ Asado\\ del\\ club$",
+  "es": "🍖 Asado del club",
+  "de": "nucleo/trabajadores.gd:205",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ \\((.+?)\\)\\ organiza\\ un\\ asado\\ con\\ el\\ plantel\\.\\ Buen\\ ambiente\\.$",
+  "es": "{1} ({2}) organiza un asado con el plantel. Buen ambiente.",
+  "de": "nucleo/trabajadores.gd:205",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^💼\\ Pide\\ aumento$",
+  "es": "💼 Pide aumento",
+  "de": "nucleo/trabajadores.gd:212",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ \\((.+?)\\)\\ amenazó\\ con\\ irse\\ y\\ consiguió\\ un\\ aumento\\.$",
+  "es": "{1} ({2}) amenazó con irse y consiguió un aumento.",
+  "de": "nucleo/trabajadores.gd:212",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🏢\\ (.+?)$",
+  "es": "🏢 {1}",
+  "de": "nucleo/trabajadores.gd:222",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\.\\ \\(Al\\ frente:\\ (.+?)\\.\\)$",
+  "es": "{1}. (Al frente: {2}.)",
+  "de": "nucleo/trabajadores.gd:222",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🏢\\ Asunto\\ en\\ (.+?)$",
+  "es": "🏢 Asunto en {1}",
+  "de": "nucleo/trabajadores.gd:306",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Hay\\ algo\\ que\\ decidir\\ en\\ el\\ despacho\\.$",
+  "es": "Hay algo que decidir en el despacho.",
+  "de": "nucleo/trabajadores.gd:306",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🧨\\ Ruido\\ en\\ el\\ camarín$",
+  "es": "🧨 Ruido en el camarín",
+  "de": "nucleo/vestuario.gd:307",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^«(.+?)»\\ no\\ digiere\\ que\\ (.+?)\\ lleve\\ semanas\\ fuera\\ del\\ once\\.\\ El\\ grupo\\ bajó\\ el\\ ánimo\\ y\\ alguien\\ filtró\\ la\\ interna\\ a\\ la\\ prensa\\.$",
+  "es": "«{1}» no digiere que {2} lleve semanas fuera del once. El grupo bajó el ánimo y alguien filtró la interna a la prensa.",
+  "de": "nucleo/vestuario.gd:307",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🧠\\ (.+?)\\ pide\\ ayuda$",
+  "es": "🧠 {1} pide ayuda",
+  "de": "nucleo/vestuario.gd:434",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ jugador\\ reconoce\\ que\\ no\\ está\\ bien:\\ ansiedad,\\ insomnio\\ y\\ miedo\\ a\\ fallar\\.\\ El\\ club\\ le\\ da\\ (.+?)\\ semana\\(s\\)\\ de\\ baja\\ psicológica\\.\\ Puedes\\ acelerarlo\\ con\\ terapia\\ desde\\ su\\ ficha\\.$",
+  "es": "El jugador reconoce que no está bien: ansiedad, insomnio y miedo a fallar. El club le da {1} semana(s) de baja psicológica. Puedes acelerarlo con terapia desde su ficha.",
+  "de": "nucleo/vestuario.gd:434",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Descanso\\ mental\\ para\\ (.+?)$",
+  "es": "Descanso mental para {1}",
+  "de": "nucleo/vestuario.gd:473",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Lo\\ apartas\\ de\\ la\\ convocatoria\\ por\\ unos\\ días\\ para\\ que\\ despeje\\ la\\ cabeza\\.\\ Vuelve\\ más\\ entero\\.$",
+  "es": "Lo apartas de la convocatoria por unos días para que despeje la cabeza. Vuelve más entero.",
+  "de": "nucleo/vestuario.gd:473",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Malestar\\ de\\ (.+?)$",
+  "es": "Malestar de {1}",
+  "de": "nucleo/vestuario.gd:612",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Le\\ prometiste\\ ser\\ (.+?)\\ y\\ lleva\\ (.+?)%\\ de\\ titularidades\\.\\ Su\\ agente\\ ya\\ llamó\\ dos\\ veces\\.$",
+  "es": "Le prometiste ser {1} y lleva {2}% de titularidades. Su agente ya llamó dos veces.",
+  "de": "nucleo/vestuario.gd:612",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Un\\ jugador\\ quiere\\ hablar\\ contigo$",
+  "es": "Un jugador quiere hablar contigo",
+  "de": "nucleo/vestuario.gd:720",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ Te\\ espera\\ en\\ el\\ despacho\\.$",
+  "es": "{1} Te espera en el despacho.",
+  "de": "nucleo/vestuario.gd:720",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^👯\\ Llegan\\ los\\ gemelos\\ (.+?)$",
+  "es": "👯 Llegan los gemelos {1}",
+  "de": "nucleo/vestuario.gd:1034",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ club\\ incorpora\\ a\\ (.+?),\\ hermano\\ gemelo\\ de\\ (.+?)\\.\\ Se\\ parecen\\ tanto\\ que\\ el\\ utilero\\ ya\\ se\\ equivocó\\ dos\\ veces\\.\\ Juntos\\ en\\ cancha\\ se\\ entienden\\ sin\\ mirarse\\.$",
+  "es": "El club incorpora a {1}, hermano gemelo de {2}. Se parecen tanto que el utilero ya se equivocó dos veces. Juntos en cancha se entienden sin mirarse.",
+  "de": "nucleo/vestuario.gd:1034",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^👨‍👦\\ Un\\ hermano\\ más\\ en\\ el\\ plantel$",
+  "es": "👨‍👦 Un hermano más en el plantel",
+  "de": "nucleo/vestuario.gd:1037",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Lío\\ nocturno:\\ (.+?)$",
+  "es": "Lío nocturno: {1}",
+  "de": "nucleo/vestuario.gd:1397",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Fotos\\ del\\ jugador\\ de\\ fiesta\\ a\\ mitad\\ de\\ semana\\.\\ El\\ camarín\\ queda\\ tocado\\ y\\ la\\ prensa\\ afila\\ el\\ lápiz\\.(.+?)$",
+  "es": "Fotos del jugador de fiesta a mitad de semana. El camarín queda tocado y la prensa afila el lápiz.{1}",
+  "de": "nucleo/vestuario.gd:1397",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Arenga\\ de\\ (.+?)$",
+  "es": "Arenga de {1}",
+  "de": "nucleo/vestuario.gd:1408",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Reunió\\ al\\ plantel\\ a\\ puertas\\ cerradas:\\ «aquí\\ nadie\\ se\\ esconde»\\.\\ El\\ grupo\\ sale\\ enchufado\\.$",
+  "es": "Reunió al plantel a puertas cerradas: «aquí nadie se esconde». El grupo sale enchufado.",
+  "de": "nucleo/vestuario.gd:1408",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Racha\\ de\\ (.+?)$",
+  "es": "Racha de {1}",
+  "de": "nucleo/vestuario.gd:1416",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Se\\ queda\\ después\\ de\\ cada\\ práctica\\ definiendo\\.\\ Huele\\ gol\\.$",
+  "es": "Se queda después de cada práctica definiendo. Huele gol.",
+  "de": "nucleo/vestuario.gd:1416",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^La\\ joya\\ pide\\ pista$",
+  "es": "La joya pide pista",
+  "de": "nucleo/vestuario.gd:1424",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ la\\ rompió\\ en\\ la\\ práctica\\ y\\ golpea\\ la\\ puerta\\ de\\ la\\ titularidad\\.$",
+  "es": "{1} la rompió en la práctica y golpea la puerta de la titularidad.",
+  "de": "nucleo/vestuario.gd:1424",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^Cumpleaños\\ en\\ el\\ camarín$",
+  "es": "Cumpleaños en el camarín",
+  "de": "nucleo/vestuario.gd:1433",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ plantel\\ sorprendió\\ a\\ (.+?)\\ con\\ torta\\ y\\ bromas\\.\\ Buen\\ ambiente\\.$",
+  "es": "El plantel sorprendió a {1} con torta y bromas. Buen ambiente.",
+  "de": "nucleo/vestuario.gd:1433",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^(.+?)\\ Mudanza$",
+  "es": "{1} Mudanza",
+  "de": "nucleo/vida_dt.gd:133",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Te\\ mudas\\ a:\\ (.+?)\\.\\ La\\ mudanza\\ costó\\ (.+?)\\.$",
+  "es": "Te mudas a: {1}. La mudanza costó {2}.",
+  "de": "nucleo/vida_dt.gd:133",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^💸\\ Te\\ ajustas\\ el\\ cinturón$",
+  "es": "💸 Te ajustas el cinturón",
+  "de": "nucleo/vida_dt.gd:187",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^No\\ te\\ alcanza\\ para\\ la\\ casa\\ y\\ el\\ auto:\\ vuelves\\ a\\ un\\ departamento\\ y\\ al\\ transporte\\ público\\.$",
+  "es": "No te alcanza para la casa y el auto: vuelves a un departamento y al transporte público.",
+  "de": "nucleo/vida_dt.gd:187",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🩺\\ El\\ médico\\ te\\ para$",
+  "es": "🩺 El médico te para",
+  "de": "nucleo/vida_dt.gd:202",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Tres\\ semanas\\ al\\ límite\\ pasan\\ factura:\\ una\\ semana\\ de\\ reposo\\.\\ Tu\\ ayudante\\ dirige\\ los\\ entrenamientos\\ y\\ el\\ equipo\\ lo\\ nota\\ un\\ poco\\.$",
+  "es": "Tres semanas al límite pasan factura: una semana de reposo. Tu ayudante dirige los entrenamientos y el equipo lo nota un poco.",
+  "de": "nucleo/vida_dt.gd:202",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^😬\\ Te\\ notan\\ tenso$",
+  "es": "😬 Te notan tenso",
+  "de": "nucleo/vida_dt.gd:209",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ plantel\\ nota\\ tu\\ estrés\\ en\\ los\\ entrenamientos\\ \\(moral\\ −1\\)\\.$",
+  "es": "El plantel nota tu estrés en los entrenamientos (moral −1).",
+  "de": "nucleo/vida_dt.gd:209",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🏠\\ Mi\\ vida$",
+  "es": "🏠 Mi vida",
+  "de": "nucleo/vida_dt.gd:311",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^✍️\\ Presentación\\ de\\ (.+?)$",
+  "es": "✍️ Presentación de {1}",
+  "de": "ui/componentes/presentacion_fichaje.gd:119",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^(.+?)\\ \\(\\+(.+?)\\ seguidores\\)$",
+  "es": "{1} (+{2} seguidores)",
+  "de": "ui/componentes/presentacion_fichaje.gd:119",
+  "tipo": "cuerpo"
+ }
+]
