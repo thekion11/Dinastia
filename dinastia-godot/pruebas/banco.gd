@@ -5085,6 +5085,14 @@ func _probar_ciudad_grande() -> void:
 			dentro = false
 	_comprobar(tren.paradas_hechas >= 6, "el tren del metro paró en %d estaciones en 10 minutos" % tren.paradas_hechas)
 	_comprobar(giro and dentro, "el tren da la vuelta en la cabecera sin salirse de la vía")
+	## El modo a pie / al volante: choques y puentes.
+	var obst: Array[Rect2] = [Rect2(100, 100, 50, 50)]
+	_comprobar(not ExploradorCiudad.libre(Vector3(120, 0, 120), 1.0, obst), "no se atraviesa una manzana")
+	_comprobar(ExploradorCiudad.libre(Vector3(200, 0, 200), 1.0, obst), "por la calle se pasa")
+	_comprobar(not ExploradorCiudad.libre(Vector3(CityBuilder.RIO_X, 0, 55.0), 1.0, obst), "no se cae al río fuera de un puente")
+	_comprobar(ExploradorCiudad.libre(Vector3(CityBuilder.RIO_X, 0, 0.0), 1.0, obst), "por el puente sí se cruza")
+	_comprobar(ExploradorCiudad.altura_suelo(CityBuilder.RIO_X, 0.0) > 4.0 and ExploradorCiudad.altura_suelo(CityBuilder.RIO_X + 100.0, 0.0) < 0.5, "sobre el puente se va arriba y fuera de él, a ras de suelo")
+	_comprobar(MinijuegosCiudad.juego_de("ciudad_plaza_mayor") == "autografos" and MinijuegosCiudad.juego_de("ciudad_puerto") == "pesca" and MinijuegosCiudad.juego_de("karting") == "karting", "cada lugar de la ciudad lleva su minijuego")
 	var sem := Semaforos.new()
 	var vistos := {}
 	var cruzados := 0
