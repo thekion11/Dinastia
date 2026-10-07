@@ -124,6 +124,7 @@ func _ready() -> void:
 	_probar_minijuegos()
 	_probar_dinastias()
 	_probar_documental()
+	_probar_tribuna_real()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5001,6 +5002,31 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## LA TRIBUNA COMO TERMÓMETRO (fase 5): los hinchas citan jugadas reales.
+func _probar_tribuna_real() -> void:
+	_titulo("TRIBUNA: LOS HINCHAS CITAN JUGADAS REALES (FASE 5)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 909)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var citado := false
+	var intentos := 0
+	while not citado and intentos < 12:
+		m.avanzar_semana()
+		intentos += 1
+		var u: Dictionary = Partido.ultimo_mio
+		if u.is_empty() or m.redes == null:
+			continue
+		var autores: Array = []
+		for e: Dictionary in u["cronica"]:
+			if String(e.get("tipo", "")) == "gol" and String(e.get("club", "")) == m.mi_club_id:
+				autores.append(String(e["autor"]))
+		var posts := m.redes.comentar_ultimo_partido(m)
+		for f: Dictionary in m.redes.publicaciones.slice(0, 6):
+			for a: String in autores:
+				if String(f["texto"]).contains(a):
+					citado = true
+	_comprobar(citado, "un hincha nombra a quien marcó en tu último partido (en %d semanas)" % intentos)
 
 ## EL DOCUMENTAL DE LA TEMPORADA (fase 5): cuenta datos reales del año.
 func _probar_documental() -> void:
