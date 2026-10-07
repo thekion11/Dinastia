@@ -187,6 +187,52 @@ func _montar_hud() -> void:
 	_aviso.add_theme_color_override("font_outline_color", Color.BLACK)
 	_aviso.add_theme_constant_override("outline_size", 8)
 	capa.add_child(_aviso)
+	_tactil(capa)
+
+## CONTROLES TÁCTILES (el juego también va en Android): cruceta abajo a la
+## izquierda, «E» y «Salir» abajo a la derecha. Mantener pulsado = tecla.
+var _tactil_vec := Vector2.ZERO
+
+func _tactil(capa: CanvasLayer) -> void:
+	var tam := 74.0
+	var base := Control.new()
+	base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	base.offset_left = 24
+	base.offset_top = -tam * 3.0 - 24
+	capa.add_child(base)
+	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
+			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
+		var b := Button.new()
+		b.text = String(d[0])
+		b.position = (d[1] as Vector2) * tam
+		b.size = Vector2(tam - 6, tam - 6)
+		b.add_theme_font_size_override("font_size", 28)
+		b.modulate = Color(1, 1, 1, 0.7)
+		var v: Vector2 = d[2]
+		b.button_down.connect(func() -> void: _tactil_vec += v)
+		b.button_up.connect(func() -> void: _tactil_vec -= v)
+		base.add_child(b)
+	var der := HBoxContainer.new()
+	der.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	der.offset_left = -260
+	der.offset_top = -100
+	der.offset_right = -24
+	der.offset_bottom = -24
+	der.add_theme_constant_override("separation", 12)
+	capa.add_child(der)
+	var be := Button.new()
+	be.text = "E"
+	be.custom_minimum_size = Vector2(tam, tam)
+	be.add_theme_font_size_override("font_size", 28)
+	be.modulate = Color(1, 1, 1, 0.75)
+	be.pressed.connect(_usar)
+	der.add_child(be)
+	var bs := Button.new()
+	bs.text = "Salir"
+	bs.custom_minimum_size = Vector2(tam * 1.6, tam)
+	bs.modulate = Color(1, 1, 1, 0.75)
+	bs.pressed.connect(func() -> void: salir.emit())
+	der.add_child(bs)
 
 func _entrada() -> Vector2:
 	var x := float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT))
@@ -197,6 +243,9 @@ func _entrada() -> Vector2:
 		x = jx
 	if absf(jy) > 0.2:
 		y = jy
+	if _tactil_vec != Vector2.ZERO:
+		x = clampf(_tactil_vec.x, -1.0, 1.0)
+		y = clampf(_tactil_vec.y, -1.0, 1.0)
 	return Vector2(x, y)
 
 func _physics_process(delta: float) -> void:
