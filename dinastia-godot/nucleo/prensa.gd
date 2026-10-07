@@ -249,8 +249,8 @@ func _pool(m: Mundo, mio: Club) -> Array[Dictionary]:
 	if not maduros.is_empty():
 		var quien: Jugador = maduros[Azar.ent(0, maduros.size() - 1)]
 		var motivo := String(Azar.uno([
-			"se va a dedicar a la iglesia de su barrio",
-			"se presenta a concejal en su ciudad",
+			"se va a entrenar a los niños de la escuelita de su barrio",
+			"abre una escuela de fútbol en su ciudad",
 			"vuelve al negocio familiar, que su padre ya no puede llevar",
 			"dice que no disfruta desde hace dos años y no quiere seguir fingiendo",
 		]))

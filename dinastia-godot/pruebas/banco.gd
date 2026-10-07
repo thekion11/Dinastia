@@ -5028,6 +5028,13 @@ func _probar_narracion_traducida() -> void:
 	_comprobar(fijo_en == "The stadium reopens as normal.", "cuerpo fijo en inglés")
 	var tv := Idiomas.t("Ana Sol termina su préstamo y se reincorpora a la pretemporada.")
 	_comprobar(tv == "Ana Sol ends his loan and rejoins pre-season.", "otro cuerpo en inglés: %s" % tv)
+	## La prensa y la carrera de jugador (7-10-2026), y frases pegadas.
+	_comprobar(Idiomas.t("Prensa: '¿Le preocupa la falta de gol?'") == "Press: 'Are you worried about the lack of goals?'", "pregunta de prensa en inglés")
+	_comprobar(Idiomas.t("Los chicos empujan fuerte, tendrán su chance").contains("pushing hard"), "respuesta de prensa en inglés")
+	var pegadas := Idiomas.t("Sumamos; el equipo dio la cara. Tardaste en contestar: en la sala se notó.")
+	_comprobar(pegadas.contains("You took a while to answer"), "frases pegadas, oración por oración: %s" % pegadas)
+	var cesion := Idiomas.t("Leo Mar se va cedido una temporada. Juega en Cumbres. Pagan el 50% del sueldo.")
+	_comprobar(cesion.begins_with("Leo Mar leaves on a season-long loan.") and cesion.ends_with("They pay 50% of his wages."), "texto de varias oraciones con patrón entero: %s" % cesion)
 	Idiomas.idioma = antes
 	Idiomas._cache.clear()
 
