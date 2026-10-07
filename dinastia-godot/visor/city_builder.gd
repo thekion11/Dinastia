@@ -1077,6 +1077,31 @@ func _vidrio_oscuro() -> StandardMaterial3D:
 ## prensa, el pórtico con la copa del museo, los toldos de la tienda, los
 ## columpios de la guardería, el neón de la sala de juegos... Y más cuanto más
 ## nivel: una instalación grande se nota también en lo que tiene alrededor.
+## TINTES PARA EL KIT (7-10-2026): los edificios del kit de Kenney salían
+## todos del mismo blanco. Se multiplica su textura por un tono pastel (uno de
+## ocho, cacheado por material) para que las calles tengan fachadas de colores.
+const TINTES := [Color(1.0, 0.86, 0.72), Color(0.86, 0.93, 1.0), Color(0.9, 1.0, 0.88), Color(1.0, 0.82, 0.8),
+	Color(1.0, 0.95, 0.75), Color(0.92, 0.86, 1.0), Color(0.95, 0.78, 0.62), Color(0.82, 0.9, 0.9)]
+var _cache_tintes := {}
+
+func tenir(n: Node, semilla: int) -> void:
+	var t: int = absi(semilla) % TINTES.size()
+	for mi in n.find_children("*", "MeshInstance3D", true, false):
+		var m3 := mi as MeshInstance3D
+		if m3.mesh == null:
+			continue
+		for s in m3.mesh.get_surface_count():
+			var orig := m3.mesh.surface_get_material(s) as StandardMaterial3D
+			if orig == null:
+				continue
+			var clave := "%d|%d" % [orig.get_instance_id(), t]
+			var m: StandardMaterial3D = _cache_tintes.get(clave)
+			if m == null:
+				m = orig.duplicate() as StandardMaterial3D
+				m.albedo_color = orig.albedo_color * TINTES[t]
+				_cache_tintes[clave] = m
+			m3.set_surface_override_material(s, m)
+
 func _mat_simple(c: Color, rug := 0.6, emi := 0.0) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = c
@@ -2140,6 +2165,8 @@ func _horizonte() -> void:
 		var pos := Vector3(sin(ang) * radio, 0, cos(ang) * radio)
 		var esc: PackedScene = mallas[rng.randi() % mallas.size()]
 		var nodo: Node3D = esc.instantiate()
+		if rng.randf() < 0.45:
+			tenir(nodo, rng.randi())
 		## Y además más ALTOS con el club grande: una ciudad de primera no solo
 		## tiene más edificios, los tiene más altos.
 		var escala: float = 6.0 * rng.randf_range(0.8, 1.4) * lerpf(0.75, 1.35, _empuje_club())
@@ -3538,6 +3565,8 @@ func _manzana(c: Vector3, comercial: Array[PackedScene], naves: Array[PackedScen
 		var giro := atan2(n.x, n.z)
 		while u < largo * 0.5 - 5.0:
 			var nodo: Node3D = comercial[rng.randi() % comercial.size()].instantiate()
+			if rng.randf() < 0.45:
+				tenir(nodo, rng.randi())
 			var s: float = 4.6 * rng.randf_range(0.9, 1.1)
 			nodo.scale = Vector3.ONE * s
 			var caja := _caja_de(nodo)
@@ -3629,6 +3658,8 @@ func _fila_urbana(calle: Vector3, dir: Vector3, afuera: Vector3, medio_largo: fl
 		## encima de la fachada como en cualquier centro.
 		if not bloques.is_empty() and rng.randf() < 0.8:
 			var b: Node3D = bloques[rng.randi() % bloques.size()].instantiate()
+			if rng.randf() < 0.45:
+				tenir(b, rng.randi())
 			var sb: float = 6.0 * rng.randf_range(0.9, 1.2)
 			b.scale = Vector3.ONE * sb
 			var cb := _caja_de(b)
