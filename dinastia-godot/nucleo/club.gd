@@ -284,6 +284,10 @@ func perfil_estadio() -> Dictionary:
 			if r.has(k):
 				p[k] = r[k]
 		p["real"] = true
+		## El apodo del estadio (genérico, nunca el oficial): sale en el rótulo.
+		var ap := GuinosEstadio.apodo(p)
+		if ap != "":
+			p["apodo"] = ap
 	return p
 
 ## djb2, el mismo que usa el HTML para que un club dé siempre el mismo recinto.

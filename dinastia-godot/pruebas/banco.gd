@@ -116,6 +116,9 @@ func _ready() -> void:
 	_probar_portafolio_futbol()
 	_probar_jugadores_fijos()
 	_probar_disenos_kit()
+	_probar_guinos_estadio()
+	_probar_plantillas_fijas()
+	_probar_mesa_agente()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -176,15 +179,14 @@ func _probar_repetibilidad() -> void:
 			iguales = false
 			break
 	_comprobar(iguales, "misma semilla, mismos jugadores uno a uno")
+	## Desde la fase 4 las plantillas de ARRANQUE son fijas (sembradas con el
+	## nombre del club): lo que cambia con la semilla es el mundo que corre,
+	## empezando por los resultados de la primera jornada.
 	var c := Mundo.new()
 	c.generar(["CHI"], 999)
-	var distinto := false
-	var jc := c.jugadores()
-	for i in mini(ja.size(), jc.size()):
-		if ja[i].nombre != jc[i].nombre:
-			distinto = true
-			break
-	_comprobar(distinto, "otra semilla, otro mundo")
+	var res_a := str(a.ligas[0].jugar_jornada()) + str(a.ligas[0].jugar_jornada())
+	var res_c := str(c.ligas[0].jugar_jornada()) + str(c.ligas[0].jugar_jornada())
+	_comprobar(res_a != res_c, "otra semilla, otro mundo (otros resultados)")
 
 func _probar_mundo() -> void:
 	_titulo("GENERACION DEL MUNDO")
@@ -4994,6 +4996,119 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## FASE 4: el mini-juego de representantes (la mesa de regateo).
+func _probar_mesa_agente() -> void:
+	_titulo("MINI-JUEGO DE REPRESENTANTES (FASE 4)")
+	var ex := {"tipo": "mejora", "agente": "R. Prueba", "perfil": "discreto", "pid": "j1"}
+	var m := MesaAgente.new(ex, 0, 0.0, 7)
+	m.ceder()
+	_comprobar(m.estado == "acuerdo" and is_equal_approx(m.fraccion(), 1.0), "ceder cierra al 100 %")
+	m = MesaAgente.new(ex, 0, 0.0, 7)
+	m.plantarse()
+	_comprobar(m.estado == "plantado" and m.fraccion() < 0.0, "plantarse es un no")
+	m = MesaAgente.new(ex, 0, 0.0, 7)
+	var rondas := 0
+	while m.estado == "abierta" and rondas < 20:
+		m.regatear(0)
+		rondas += 1
+	_comprobar(m.estado == "se_fue" and rondas <= m.paciencia_max, "ofrecer nada lo ofende: se va en %d rondas (paciencia %d)" % [rondas, m.paciencia_max])
+	m = MesaAgente.new(ex, 0, 0.0, 7)
+	m.farol()
+	var pide := m.pide
+	var pac := m.paciencia
+	m.farol()
+	_comprobar(m.farol_usado and m.pide == pide and m.paciencia == pac, "un solo farol por mesa")
+	## Una estrategia sensata (la oferta del medio; ceder a la última taza)
+	## saca tratos mejores al formador que al tiburón, y casi siempre cierra.
+	var medias := {}
+	for perfil: String in ["formador", "tiburon"]:
+		var suma := 0.0
+		var tratos := 0
+		for k in 300:
+			var mm := MesaAgente.new({"tipo": "comision", "agente": "A%d" % k, "perfil": perfil}, 0, 0.0, 1000 + k)
+			while mm.estado == "abierta":
+				if mm.paciencia <= 1:
+					mm.ceder()
+				else:
+					var o := mm.ofertas()
+					mm.regatear(o[mini(1, o.size() - 1)])
+			if mm.estado == "acuerdo":
+				tratos += 1
+				suma += float(mm.acordado)
+		medias[perfil] = suma / maxf(1.0, float(tratos))
+		_comprobar(tratos >= 240, "%s: %d de 300 mesas cierran con trato" % [perfil, tratos])
+	_comprobar(float(medias["formador"]) + 8.0 < float(medias["tiburon"]), "el formador cede más que el tiburón (%.0f %% / %.0f %%)" % [medias["formador"], medias["tiburon"]])
+	_comprobar(float(medias["tiburon"]) < 99.0, "regatear sirve: al tiburón tampoco se le paga siempre todo (%.0f %%)" % medias["tiburon"])
+	## El trato se aplica a escala: una mejora al 50 % sube el sueldo un 15 %.
+	var w := Mundo.new()
+	w.generar(["CHI"], 31)
+	w.tomar_el_mando(w.ligas[0].clubes[0].id)
+	var j: Jugador = w.mi_club().plantilla[0]
+	var antes := j.sueldo
+	w.cantera.exigencia = {"tipo": "mejora", "agente": "R. Prueba", "pid": j.id, "ids": [j.id], "perfil": "discreto"}
+	var r := w.cantera.resolver_agente("a", 0.5)
+	_comprobar(absi(j.sueldo - int(round(float(antes) * 1.15))) <= 1, "mejora pactada al 50 %%: sueldo %d → %d (+15 %%)" % [antes, j.sueldo])
+	_comprobar(String(r.get("cuerpo", "")).contains("50 %"), "la noticia cuenta lo pactado en la mesa")
+
+## FASE 4: las plantillas de arranque son las mismas con cualquier semilla y
+## con cualquier mezcla de países cargados (sembradas con el nombre del club).
+func _probar_plantillas_fijas() -> void:
+	_titulo("PLANTILLAS FIJAS DE ARRANQUE (FASE 4)")
+	var a := Mundo.new()
+	a.generar(["CHI", "GER"], 5)
+	var b := Mundo.new()
+	b.generar(["CHI", "ARG", "GER", "ESP"], 424242)
+	var firma := func(c: Club) -> Array:
+		var f: Array = []
+		for j: Jugador in c.plantilla:
+			f.append("%s|%s|%d|%d|%d" % [j.nombre, j.pos_e, j.edad, j.ovr, j.pot])
+		f.sort()
+		return f
+	var por_nombre := {}
+	for c: Club in b.clubes.values():
+		por_nombre[c.nombre] = c
+	var iguales := 0
+	var sin_reales := 0
+	var total := 0
+	for c: Club in a.clubes.values():
+		if not por_nombre.has(c.nombre):
+			continue
+		total += 1
+		var reales := 0
+		for j: Jugador in c.plantilla:
+			if j.real:
+				reales += 1
+		if reales == 0:
+			sin_reales += 1
+		if firma.call(c) == firma.call(por_nombre[c.nombre]):
+			iguales += 1
+	_comprobar(total >= 40, "%d clubes (Chile y Alemania) en los dos mundos" % total)
+	_comprobar(iguales == total, "misma plantilla (nombre, puesto, edad, media, potencial) con otra semilla y otros países: %d de %d" % [iguales, total])
+	_comprobar(sin_reales >= 1, "incluye clubes sin tabla REALES (%d)" % sin_reales)
+	## Los canteranos que llegan después siguen siendo de cada partida.
+	var j1 := a.crear_jugador(a.ligas[0].clubes[0], "DEL", "DC")
+	var j2 := b.crear_jugador(a.ligas[0].clubes[0], "DEL", "DC")
+	_comprobar(j1.nombre != j2.nombre or j1.ovr != j2.ovr, "lo que nace después varía con la semilla (%s / %s)" % [j1.nombre, j2.nombre])
+
+## FASE 4, E9: el rasgo del estadio real se DIBUJA y le da un apodo genérico.
+func _probar_guinos_estadio() -> void:
+	_titulo("GUIÑOS DE LOS ESTADIOS REALES (FASE 4, E9)")
+	_comprobar(GuinosEstadio.apodo({"rasgo": "Herradura abierta a la cordillera"}) == "El Mirador", "cordillera → «El Mirador»")
+	_comprobar(GuinosEstadio.apodo({"rasgo": "La caldera: tres bandejas"}) == "La Caldera", "caldera → «La Caldera»")
+	_comprobar(GuinosEstadio.apodo({"rasgo": "", "niveles": 1}) == "", "sin rasgo ni tamaño: sin apodo inventado")
+	var tabla: Dictionary = Datos.tabla("ESTADIO_CLUB")
+	var con_apodo := 0
+	for k: String in tabla:
+		if GuinosEstadio.apodo(tabla[k]) != "":
+			con_apodo += 1
+	_comprobar(con_apodo >= 100, "%d de %d estadios reales con apodo (≥100)" % [con_apodo, tabla.size()])
+	for caso: Array in [["Herradura abierta a la cordillera", 6], ["Cuatro torres rojas en las esquinas", 4], ["Junto al río", 1], ["Estadio minero en pleno desierto", 15]]:
+		var raiz := Node3D.new()
+		GuinosEstadio.montar(raiz, {"rasgo": caso[0]}, 40.0, 58.0, 20.0, 18.0)
+		var n := raiz.get_child(0).get_child_count() if raiz.get_child_count() > 0 else 0
+		_comprobar(n >= int(caso[1]), "«%s» dibuja %d piezas (≥%d)" % [caso[0], n, caso[1]])
+		raiz.free()
 
 func _dinero(n: int) -> String:
 	var euros := float(n) * Eco.ECO
