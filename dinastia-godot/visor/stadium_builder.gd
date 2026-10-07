@@ -1271,6 +1271,8 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## visor había cuatro, y una de ellas es el capítulo MÁS CARO del diseñador.
 	_pista_atletismo(root, est, dx, dz)
 	_banderas(root, est, dx, dz, alto, niveles, mi)
+	## LOS GUIÑOS DEL ESTADIO REAL (MEGAPLAN fase 4, E9): lo que dice su rasgo.
+	GuinosEstadio.montar(root, est, dx, dz, fondo_tribuna(niveles), alto)
 	_focos(root, str(est.get("focos", "torres")), dx, dz, alto, color_luz(est), str(est.get("focosCol", "")))
 	## B6.2: lo que hay FUERA del recinto: taquillas, tienda y estacionamiento.
 	if bool(est.get("exterior", false)):
