@@ -433,8 +433,9 @@ func _rotar_camara() -> void:
 			_pie.text = _pie_base + "  ·  cámara: " + _rig.current_name()
 
 func _actualizar_pie(perfil: Dictionary, aforo: int, ocupacion: float) -> void:
-	_pie_base = "%s  ·  %s de %d niveles  ·  techo %s  ·  %d butacas, %d%% de ocupación" % [
-		club.nombre, String(perfil["forma"]).capitalize(), int(perfil["niveles"]),
+	_pie_base = "%s%s  ·  %s de %d niveles  ·  techo %s  ·  %d butacas, %d%% de ocupación" % [
+		club.nombre, ("  ·  «%s»" % String(perfil["apodo"])) if String(perfil.get("apodo", "")) != "" else "",
+		String(perfil["forma"]).capitalize(), int(perfil["niveles"]),
 		String(perfil["techo"]), aforo, int(ocupacion * 100.0)]
 	if visitante != null:
 		_pie_base += "  ·  %d en el campo" % _en_campo.size()
