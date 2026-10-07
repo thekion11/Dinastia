@@ -214,6 +214,17 @@ const TABLAS_B6 := {
 		["artificial", "Césped artificial", "No se estropea nunca, pero castiga las articulaciones: más lesiones."],
 	],
 	"EST_PALETA": PALETA,
+	## Paleta de las vallas LED (MEGAPLAN B6). Es programación de la pantalla,
+	## no obra: gratis, como la pintura.
+	"EST_LED": [
+		["marcas", "Patrocinadores", "Cada marca con su color, como en la tele."],
+		["club", "Colores del club", "Todo el anillo con los dos colores de la camiseta."],
+		["neon", "Neón nocturno", "Paneles negros y letras de neón que cambian de color."],
+		["oro", "Negro y oro", "Elegante, de final: blanco y dorado sobre negro."],
+		["retro", "Cartel pintado", "Fondo blanco y letras de chapa, de estadio de los ochenta."],
+		["arcoiris", "Multicolor", "Cada panel de un color distinto, en ola por todo el anillo."],
+		["propia", "A tu gusto", "Eliges el color del fondo y el de las letras (abajo)."],
+	],
 }
 ## Las claves nuevas y su valor de fábrica. "" en un color = hereda.
 const DEF_B6 := {
@@ -227,7 +238,7 @@ const DEF_B6 := {
 	"anillo_norte_1": "", "anillo_norte_2": "", "anillo_norte_3": "", "anillo_norte_4": "", "anillo_norte_5": "",
 	"anillo_este_1": "", "anillo_este_2": "", "anillo_este_3": "", "anillo_este_4": "", "anillo_este_5": "",
 	"anillo_oeste_1": "", "anillo_oeste_2": "", "anillo_oeste_3": "", "anillo_oeste_4": "", "anillo_oeste_5": "",
-	"vallaCol": "", "focosCol": "",
+	"vallaCol": "", "focosCol": "", "ledPaleta": "marcas", "ledFondo": "", "ledTinta": "",
 }
 const CATALOGO_B6 := {
 	"fachada": "EST_FACHADAS", "fachadaCol": "EST_PALETA", "techoCol": "EST_PALETA",
@@ -240,7 +251,8 @@ const CATALOGO_B6 := {
 	"anillo_norte_1": "EST_PALETA", "anillo_norte_2": "EST_PALETA", "anillo_norte_3": "EST_PALETA", "anillo_norte_4": "EST_PALETA", "anillo_norte_5": "EST_PALETA",
 	"anillo_este_1": "EST_PALETA", "anillo_este_2": "EST_PALETA", "anillo_este_3": "EST_PALETA", "anillo_este_4": "EST_PALETA", "anillo_este_5": "EST_PALETA",
 	"anillo_oeste_1": "EST_PALETA", "anillo_oeste_2": "EST_PALETA", "anillo_oeste_3": "EST_PALETA", "anillo_oeste_4": "EST_PALETA", "anillo_oeste_5": "EST_PALETA",
-	"vallaCol": "EST_PALETA", "focosCol": "EST_PALETA",
+	"vallaCol": "EST_PALETA", "focosCol": "EST_PALETA", "ledPaleta": "EST_LED",
+	"ledFondo": "EST_PALETA", "ledTinta": "EST_PALETA",
 }
 ## Cuánto multiplica cada superficie la probabilidad de lesión en TU campo.
 const LESION_POR_SUPERFICIE := {"natural": 1.0, "hibrido": 0.85, "artificial": 1.3}
@@ -404,6 +416,12 @@ func perfil(mi: Club, obras: Instalaciones = null) -> Dictionary:
 	for k: String in ["vallaCol", "focosCol"]:
 		if String(ajustes.get(k, "")) != "":
 			p[k] = String(ajustes[k])
+	if String(ajustes.get("ledPaleta", "marcas")) != "marcas":
+		p["ledPaleta"] = String(ajustes["ledPaleta"])
+	## Colores propios de las LED: mandan sobre la paleta elegida.
+	for k: String in ["ledFondo", "ledTinta"]:
+		if String(ajustes.get(k, "")) != "":
+			p[k] = String(ajustes[k])
 	return p
 
 ## Vista derivada de las 4 tribunas. Solo se llama cuando `personalizar_bandejas`
@@ -484,6 +502,10 @@ func ambiente() -> int:
 	var a := (1.10 - float(f[5])) * 46.0 if f.size() > 5 else 0.0
 	if bool(ajustes.get("pista", false)):
 		a -= 3.5
+	## Sin fondos el ruido se escapa por los dos lados: su factor de aforo es
+	## bajo por tener menos grada, no por ser compacto, así que no suma ruido.
+	if String(ajustes.get("forma", "")) == "dos":
+		a = -6.0
 	if String(ajustes.get("techo", "sin")) != "sin":
 		a += 2.0
 	if int(ajustes.get("niveles", 1)) >= 3:
@@ -749,7 +771,16 @@ func _tabla(nombre_tabla: String) -> Array:
 	if TABLAS_B6.has(nombre_tabla):
 		return TABLAS_B6[nombre_tabla]
 	var t: Variant = Datos.tabla(nombre_tabla)
+	if nombre_tabla == "EST_FORMAS" and t is Array:
+		return (t as Array) + FORMAS_B6
 	return t if t is Array else []
+
+## Formas nuevas (MEGAPLAN B6), con el mismo formato que `EST_FORMAS` de
+## `tablas.json` (que se regenera desde el HTML: por eso viven aquí).
+const FORMAS_B6 := [
+	["dos", "Dos tribunas", "Solo las laterales; detrás de los arcos, cielo abierto. Barato y con poco ruido.", 3, "lados", 0.72],
+	["principal", "Tribuna de honor", "Cuatro tribunas y una principal con una bandeja más, la de los banquillos.", 6, "lados", 1.0],
+]
 
 ## Una fila del catálogo por su clave, con la primera como red de seguridad: es
 ## el `EST_TONOS.find(...)||EST_TONOS[0]` del HTML, y existe porque un tono que
