@@ -39,6 +39,11 @@ def main():
         if not huecos:
             directas["en"][es] = en
             directas["pt"][es] = pt
+            ## Las que empiezan con espacio (se pegan detrás de otra frase)
+            ## también sin él: el traductor las busca oración por oración.
+            if es != es.strip():
+                directas["en"][es.strip()] = en.strip()
+                directas["pt"][es.strip()] = pt.strip()
             continue
         a_godot = lambda s: re.sub(r"\{(\d+)\}", r"$\1", s)
         patrones.append([p["re"], a_godot(en), a_godot(pt)])

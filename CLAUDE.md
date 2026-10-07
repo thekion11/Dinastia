@@ -182,6 +182,13 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (`CityBuilder.MEDIDAS_REALES`) y autobús procedural (`CityBuilder.autobus`);
   rótulos de comercios. Capturas: captura_interiores, captura_paseo,
   captura_vehiculos. No se pudo descargar modelos (red bloqueada).
+  7-10 (usuario: «Sigue») vuelta al MEGAPLAN: NARRACIÓN TRADUCIDA a EN y PT
+  (`herramientas/extraer_narracion.py` → `datos/narracion_plantillas.json`;
+  traducciones a mano en `datos/narracion_traducida.json`; `montar_narracion.py`
+  → `datos/narracion.json`, que carga `Idiomas._cargar_narracion`). Para añadir
+  frases nuevas: volver a extraer, traducir lo que falte, montar. Se quitaron dos
+  motivos de retiro con religión/política. Nota ≈78. Lo que queda del MEGAPLAN es
+  🔒 del dueño (hardware, builds, keystore, licencias).
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
