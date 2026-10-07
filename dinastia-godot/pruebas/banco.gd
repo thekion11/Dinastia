@@ -124,6 +124,7 @@ func _ready() -> void:
 	_probar_minijuegos()
 	_probar_leyes_pais()
 	_probar_incumplir_ley()
+	_probar_b6_formas_led()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -7584,3 +7585,25 @@ func _probar_incumplir_ley() -> void:
 	_comprobar(m.federacion.puede_fichar_extranjero(mi, j_ext) != "", "cumpliendo, no (7 extranjeros, cupo 6)")
 	mi.ley_politica = "incumplir"
 	_comprobar(Partida._dic_a_club(Partida._club_a_dic(mi)).ley_politica == "incumplir", "la política se guarda con la partida")
+
+func _probar_b6_formas_led() -> void:
+	_titulo("B6: FORMAS NUEVAS DE ESTADIO Y COLORES DE LAS LED")
+	var g := StadiumBuilder.geom_de_forma("dos")
+	_comprobar(0 in g["abiertas"] and 1 in g["abiertas"], "«dos tribunas» deja abiertos los dos fondos")
+	_comprobar(int(StadiumBuilder.geom_de_forma("principal").get("principal", -1)) == 2,
+		"«tribuna de honor» agranda el lateral de los banquillos")
+	var ep := EstadioPropio.new()
+	var formas: Array = ep.opciones("forma").map(func(o): return o["clave"])
+	_comprobar("dos" in formas and "principal" in formas, "las formas nuevas salen en el diseñador")
+	ep.ajustes["forma"] = "dos"
+	_comprobar(ep.ambiente() < 0, "sin fondos el estadio hace menos ruido (%d)" % ep.ambiente())
+	var leds: Array = ep.opciones("ledPaleta").map(func(o): return o["clave"])
+	_comprobar(leds.size() >= 7 and "arcoiris" in leds, "7 paletas de LED en el diseñador")
+	var neon := StadiumBuilder._anuncios_de({"ledPaleta": "neon"}, null)
+	_comprobar(neon.all(func(a): return (a["fondo"] as Color).get_luminance() < 0.1), "neón: paneles negros")
+	var propia := StadiumBuilder._anuncios_de({"ledFondo": "#6b2d8f", "ledTinta": "#e8c21a"}, null)
+	_comprobar(propia.all(func(a): return a["fondo"] == Color("#6b2d8f") and a["tinta"] == Color("#e8c21a")),
+		"colores elegidos a mano: fondo y letra")
+	var solo_fondo := StadiumBuilder._anuncios_de({"ledFondo": "#ffffff"}, null)
+	_comprobar(solo_fondo.all(func(a): return (a["tinta"] as Color).get_luminance() < 0.3),
+		"solo fondo blanco: la letra se oscurece sola")
