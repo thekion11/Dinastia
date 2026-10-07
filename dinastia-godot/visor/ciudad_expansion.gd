@@ -59,6 +59,7 @@ const ESPECIALES := {
 	Vector2i(-9, 5): "cocheras", Vector2i(3, -8): "gasolinera", Vector2i(8, 6): "gasolinera",
 	Vector2i(-7, -2): "gasolinera", Vector2i(-6, 3): "parque", Vector2i(9, -6): "parque",
 	Vector2i(6, 4): "parque", Vector2i(-3, -9): "parque",
+	Vector2i(4, 8): "villa_moderna", Vector2i(-8, 1): "desguace", Vector2i(-2, 9): "granja",
 }
 
 var b: CityBuilder
@@ -321,6 +322,7 @@ func construir() -> void:
 	_guirnaldas()
 	_farolas()
 	_orillas_nucleo()
+	_obras_en_calle()
 	_volcar_lotes()
 
 func _cargar_modelos() -> void:
@@ -782,6 +784,44 @@ func _instalacion(uso: String, r: Rect2) -> void:
 					b._cil_en(c + Vector3(sx * w * 0.18, 3.0, sz * f * 0.12), 0.3, 6.0, _mat["claro"])
 			b._caja_en(c + Vector3(0, 1.0, 0), Vector3(1.2, 2.0, 2.0), b._mat_simple(Color(0.85, 0.2, 0.15), 0.5))
 			b._caja_en(c + Vector3(-w * 0.35, 2.5, -f * 0.3), Vector3(10.0, 5.0, 8.0), _mat["claro"])
+		"villa_moderna":
+			nombre = "Villa moderna"
+			_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(w, 0.06, f))
+			var esc := load(CityBuilder.RUTA_OFICINA_DT) as PackedScene
+			if esc != null:
+				var n0: Node3D = esc.instantiate()
+				var raiz := Node3D.new()
+				b.add_child(raiz)
+				raiz.add_child(n0)
+				var caja := b._caja_de(n0)
+				n0.position = -Vector3(caja.position.x + caja.size.x * 0.5, caja.position.y, caja.position.z + caja.size.z * 0.5)
+				var s := minf((w - 12.0) / maxf(caja.size.x, 0.01), (f - 12.0) / maxf(caja.size.z, 0.01))
+				raiz.scale = Vector3.ONE * s
+				raiz.position = c
+				cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
+		"desguace":
+			nombre = "Desguace"
+			_lote("solar", Vector3(c.x, 0.26, c.z), Vector3(w, 0.05, f))
+			b._desguace(c, 404)
+			var ex := load("res://assets/ciudad/kenney_cars/tractor-shovel.glb") as PackedScene
+			if ex != null:
+				_kit(ex, c + Vector3(w * 0.3, 0, -f * 0.25), Vector3.ONE * 2.6, 0.6)
+			var caja2 := load("res://assets/ciudad/kenney_cars/box.glb") as PackedScene
+			if caja2 != null:
+				for k in 6:
+					_kit(caja2, c + Vector3(-w * 0.35 + float(k % 3) * 3.0, float(k / 3) * 2.2, -f * 0.3), Vector3.ONE * 2.2, 0.0)
+		"granja":
+			nombre = "Granja urbana"
+			_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(w, 0.06, f))
+			var tierra := b._mat_simple(Color(0.36, 0.26, 0.18), 0.95)
+			var verde := b._mat_simple(Color(0.3, 0.55, 0.22), 0.9)
+			for k in 8:
+				b._caja_en(c + Vector3(-w * 0.4 + float(k) * w * 0.11, 0.35, 0), Vector3(w * 0.07, 0.3, f * 0.7), tierra)
+				b._caja_en(c + Vector3(-w * 0.4 + float(k) * w * 0.11, 0.7, 0), Vector3(w * 0.05, 0.5, f * 0.65), verde)
+			var tra := load("res://assets/ciudad/kenney_cars/tractor.glb") as PackedScene
+			if tra != null:
+				_kit(tra, c + Vector3(w * 0.38, 0, f * 0.35), Vector3.ONE * 2.4, PI * 0.5)
+			b._caja_en(c + Vector3(-w * 0.3, 5.0, -f * 0.38), Vector3(14.0, 10.0, 9.0), b._mat_simple(Color(0.65, 0.2, 0.15), 0.8))
 		"cocheras":
 			nombre = "Cocheras de autobuses"
 			b._caja_en(c + Vector3(0, 5.0, -f * 0.15), Vector3(w * 0.85, 10.0, f * 0.5), b._mat_simple(Color(0.6, 0.62, 0.6), 0.7))
@@ -903,6 +943,33 @@ func encender(noche: float) -> void:
 		_farola_charco.albedo_color.a = lerpf(0.0, 0.55, noche)
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.emission_energy_multiplier = lerpf(0.0, 0.35, noche)
+
+## OBRAS EN LA CALLE: media calzada cortada con conos, vallas y una zanja.
+## Una ciudad de verdad siempre tiene alguna calle levantada.
+func _obras_en_calle() -> void:
+	var cono := load("res://assets/ciudad/kenney_cars/cone.glb") as PackedScene
+	if cono == null:
+		return
+	var n := 0
+	var zanja := b._mat_simple(Color(0.35, 0.27, 0.2), 0.95)
+	var valla := b._mat_simple(Color(0.95, 0.55, 0.1), 0.6)
+	for t: Dictionary in tramos:
+		if bool(t["av"]) or bool(t["puente"]) or _rng.randf() > 0.012:
+			continue
+		var a: Vector3 = t["a"]
+		var c: Vector3 = t["b"]
+		var vertical := absf(a.x - c.x) < 0.1
+		var m := (a + c) * 0.5
+		var lado := ANCHO_CALLE * 0.25
+		var centro := m + (Vector3(lado, 0, 0) if vertical else Vector3(0, 0, lado))
+		b._caja_en(centro + Vector3(0, 0.14, 0), Vector3(3.0, 0.06, 16.0) if vertical else Vector3(16.0, 0.06, 3.0), zanja)
+		for k in 7:
+			var f := float(k) / 6.0 - 0.5
+			var p := centro + (Vector3(-lado * 0.9, 0, f * 20.0) if vertical else Vector3(f * 20.0, 0, -lado * 0.9))
+			_kit(cono, p + Vector3(0, 0.14, 0), Vector3.ONE * 2.0, 0.0)
+		b._caja_en(centro + Vector3(0, 0.6, 0) + (Vector3(0, 0, 10.5) if vertical else Vector3(10.5, 0, 0)), Vector3(3.2, 1.0, 0.2) if vertical else Vector3(0.2, 1.0, 3.2), valla)
+		n += 1
+	cuenta["obras_calle"] = n
 
 ## Las orillas del río a su paso por el núcleo: paseo y árboles en las dos
 ## márgenes, entre el anillo exterior y el bulevar.
