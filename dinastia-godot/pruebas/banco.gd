@@ -5071,6 +5071,20 @@ func _probar_ciudad_grande() -> void:
 	for l: Dictionary in e.lineas_bus:
 		paradas += (l["paradas"] as Array).size()
 	_comprobar(paradas >= 10, "autobuses: %d paradas" % paradas)
+	## El metro: un tren va, para en cada estación y da la vuelta en la cabecera.
+	var est := PackedFloat32Array([220.0, 550.0, 880.0, 1210.0, 1540.0, 1870.0, 2200.0])
+	var tren := MetroCiudad.Tren.new(2420.0, est, 300.0, 1.0)
+	var dentro := true
+	var giro := false
+	for k in 6000:
+		var antes := tren.sentido
+		tren.simular(0.1)
+		if tren.sentido != antes:
+			giro = true
+		if tren.s < -1.0 or tren.s > 2421.0:
+			dentro = false
+	_comprobar(tren.paradas_hechas >= 6, "el tren del metro paró en %d estaciones en 10 minutos" % tren.paradas_hechas)
+	_comprobar(giro and dentro, "el tren da la vuelta en la cabecera sin salirse de la vía")
 	var sem := Semaforos.new()
 	var vistos := {}
 	var cruzados := 0

@@ -166,6 +166,9 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	_boton(barra, "🏷 Rótulos", func() -> void:
 		_rotulos_visibles = not _rotulos_visibles
 		_ciudad.mostrar_rotulos(_rotulos_visibles))
+	_boton(barra, "🚇 Metro", func() -> void:
+		if _ciudad.expansion != null and _ciudad.expansion.metro != null:
+			_ciudad.expansion.metro.alternar_rayos_x())
 	_boton(barra, "⚽ Día de partido", func() -> void:
 		dia_partido = not dia_partido
 		_reconstruir())
