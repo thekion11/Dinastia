@@ -97,6 +97,8 @@ class Tren:
 				n_paradas += 1
 		return d / VEL + float(n_paradas) * (PARADA + VEL / ACEL) + maxf(espera, 0.0)
 
+## Los accesos para el personaje: {pie (calle), anden (donde aparece), linea, elevada}.
+var accesos: Array = []
 var lineas: Array = []     ## [{nombre, color, a, b, elevada, estaciones: [Vector3], trenes: [Tren], nodos: [Node3D]}]
 var _xray: Node3D
 var _paneles: Array = []   ## [{label, linea, s}]
@@ -242,15 +244,35 @@ func _estacion_elevada(p: Vector3, dir: Vector3, col: Color, nombre: String) -> 
 			var f := (float(k) / 3.0 - 0.5) * (largo - 6.0)
 			var q := p + (Vector3(lado * 6.8, 0, f) if vertical else Vector3(f, 0, lado * 6.8))
 			_caja(self, q + Vector3(0, ALTO_VIADUCTO + 3.0, 0), Vector3(0.4, 5.0, 0.4), _mat(col, 0.5))
-	## Escaleras a las dos aceras.
+	## ACCESOS (7-10-2026, «¿el metro y la carretera respetan la calle?»):
+	## antes las escaleras salían hacia los lados y se metían en las manzanas.
+	## Ahora una pasarela cruza por encima de los carriles hasta la acera y la
+	## escalera baja PARALELA a la avenida, sobre la acera.
+	var gris := _mat(Color(0.6, 0.6, 0.62), 0.6)
+	var baranda := _mat(col, 0.5)
+	var subida := 22.0
 	for lado2: float in [-1.0, 1.0]:
-		var base := p + (Vector3(lado2 * 22.0, 0, largo * 0.35) if vertical else Vector3(largo * 0.35, 0, lado2 * 22.0))
-		var esc := _caja(self, base + Vector3(0, ALTO_VIADUCTO * 0.5, 0) - (Vector3(lado2 * 7.0, 0, 0) if vertical else Vector3(0, 0, lado2 * 7.0)),
-			Vector3(3.0, 0.5, sqrt(ALTO_VIADUCTO * ALTO_VIADUCTO + 16.0 * 16.0)) if not vertical else Vector3(sqrt(ALTO_VIADUCTO * ALTO_VIADUCTO + 16.0 * 16.0), 0.5, 3.0), _mat(Color(0.6, 0.6, 0.62), 0.6))
+		var lat := Vector3(1, 0, 0) if vertical else Vector3(0, 0, 1)
+		var lon := Vector3(0, 0, 1) if vertical else Vector3(1, 0, 0)
+		var x_acera := CiudadExpansion.ANCHO_AV * 0.5 + 2.0
+		var z0 := 28.0
+		## Pasarela del andén a la vertical de la acera.
+		var pas_c := p + lat * lado2 * (7.0 + x_acera) * 0.5 + lon * z0 + Vector3(0, ALTO_VIADUCTO + 0.2, 0)
+		_caja(self, pas_c, (Vector3(x_acera - 7.0, 0.4, 3.0) if vertical else Vector3(3.0, 0.4, x_acera - 7.0)), gris)
+		## Escalera bajando sobre la acera.
+		var largo_e := sqrt(subida * subida + ALTO_VIADUCTO * ALTO_VIADUCTO)
+		var esc_c := p + lat * lado2 * x_acera + lon * (z0 + 1.5 + subida * 0.5) + Vector3(0, ALTO_VIADUCTO * 0.5, 0)
+		var esc := _caja(self, esc_c, Vector3(3.0, 0.4, largo_e) if vertical else Vector3(largo_e, 0.4, 3.0), gris)
+		var ang := atan2(ALTO_VIADUCTO, subida)
 		if vertical:
-			esc.rotation.z = atan2(ALTO_VIADUCTO, 16.0) * lado2
+			esc.rotation.x = ang
 		else:
-			esc.rotation.x = -atan2(ALTO_VIADUCTO, 16.0) * lado2
+			esc.rotation.z = -ang
+		for lb: float in [-1.6, 1.6]:
+			var bar := _caja(self, esc_c + lat * lb + Vector3(0, 1.0, 0), Vector3(0.1, 0.1, largo_e) if vertical else Vector3(largo_e, 0.1, 0.1), baranda)
+			bar.rotation = esc.rotation
+		var pie := p + lat * lado2 * x_acera + lon * (z0 + 1.5 + subida + 1.5)
+		accesos.append({"pie": Vector3(pie.x, 0.0, pie.z), "anden": p + Vector3(0, ALTO_VIADUCTO + 0.6, 0), "linea": nombre, "elevada": true})
 	var l := Label3D.new()
 	l.text = "Ⓜ %s" % nombre
 	l.font_size = 64
