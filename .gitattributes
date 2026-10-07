@@ -18,3 +18,14 @@
 *.ogg filter=lfs diff=lfs merge=lfs -text
 *.wem filter=lfs diff=lfs merge=lfs -text
 *.pck filter=lfs diff=lfs merge=lfs -text
+
+# El escaneo de la persona realista va como archivo normal (25 MB): desde las
+# sesiones en la nube no se puede subir a LFS.
+dinastia-godot/assets/personas/*.glb -filter -diff -merge binary
+# Los peinados de los jugadores (glTF de texto + .bin chicos, <1 MB en total): archivos normales.
+dinastia-godot/assets/characters/quaternius/pelo/*.gltf -filter -diff -merge
+# Los edificios del kit comercial de Kenney que faltaban (CC0, ~2 MB): archivos normales.
+dinastia-godot/assets/ciudad/kenney_comercial_extra/*.glb -filter -diff -merge binary
+# El resto del Car Kit de Kenney (CC0): archivos normales.
+dinastia-godot/assets/ciudad/kenney_cars_extra/*.glb -filter -diff -merge binary
+dinastia-godot/assets/objetos/*.glb -filter -diff -merge binary

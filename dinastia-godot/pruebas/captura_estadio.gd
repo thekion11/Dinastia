@@ -55,6 +55,6 @@ func _process(_d: float) -> void:
 		print("camara -> %s" % rig.current_name())
 	else:
 		var img := get_viewport().get_texture().get_image()
-		var ruta := "res://pruebas/estadio_%d.png" % (i / 2 + 1)
+		var ruta := "res://pruebas/capturas/estadio_%d.png" % (i / 2 + 1)
 		img.save_png(ruta)
 		print("captura: %s" % ruta)

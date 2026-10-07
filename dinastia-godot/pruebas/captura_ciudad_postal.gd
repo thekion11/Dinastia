@@ -60,7 +60,7 @@ func _process(_d: float) -> void:
 	else:
 		var p: Array = PLANOS[_paso]
 		var img := get_viewport().get_texture().get_image()
-		var ruta := "res://pruebas/%s.png" % String(p[3])
+		var ruta := "res://pruebas/capturas/%s.png" % String(p[3])
 		img.save_png(ruta)
 		print("captura: %s (%dx%d)" % [ruta, img.get_width(), img.get_height()])
 		_paso += 1

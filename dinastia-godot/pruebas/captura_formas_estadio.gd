@@ -89,7 +89,7 @@ func _process(_d: float) -> void:
 		return
 	if _i >= 0 and _i < FORMAS.size():
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/forma_%d_%s.png" % [_i + 1, FORMAS[_i]])
+		img.save_png("res://pruebas/capturas/forma_%d_%s.png" % [_i + 1, FORMAS[_i]])
 		print("captura: forma_%d_%s.png" % [_i + 1, FORMAS[_i]])
 	_i += 1
 	if _i >= FORMAS.size():

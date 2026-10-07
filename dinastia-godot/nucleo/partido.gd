@@ -62,6 +62,18 @@ var local: Club
 var visita: Club
 var neutral: bool = false
 var clima: float = 1.0   ## 1.0 = seco; por debajo, partido mas trabado
+## El tiempo de ESTE partido (plan maestro C1, `Clima.del_partido()`): el de la
+## ciudad del local en esa época del año. Se fija en `preparar()` si nadie lo
+## fijó antes -la pantalla lo fija al abrir el partido dirigido para pintar el
+## mismo cielo que se juega-.
+var clima_info: Dictionary = {}
+## Lo que le cuesta al visitante no estar hecho a ese clima (1.0 = nada).
+var _f_clima_visita: float = 1.0
+
+func fijar_clima(info: Dictionary) -> void:
+	clima_info = info
+	clima = Clima.factor(info)
+	_f_clima_visita = 1.0 if neutral else Clima.factor_visita(info, visita.pais, local.pais)
 
 var goles_local: int = 0
 var goles_visita: int = 0
@@ -136,6 +148,9 @@ static var ctx_semana: int = 0
 ## no tienes -Ciudad se crea con el primer terreno, no desde el arranque-.
 ## Solo pega cuando juegas de LOCAL: el pasto que se destroza es el tuyo.
 static var ctx_cesped_local: float = 1.0
+## Cuánto multiplica la superficie de TU estadio las lesiones cuando juegas de
+## local (B6.5: el artificial castiga, el híbrido protege). 1.0 = natural.
+static var ctx_lesion_local: float = 1.0
 ## Lo que la moda tactica le hace a cada dibujo esta temporada. Lo pone `Mundo`
 ## junto al resto del contexto: `Liga` crea sus partidos por dentro y no conoce
 ## el mundo.
@@ -150,6 +165,7 @@ static func limpiar_contexto() -> void:
 	ctx_club_id = ""
 	ctx_anio = 0
 	ctx_semana = 0
+	ctx_lesion_local = 1.0
 
 ## Enciende a un jugador. Devuelve "" si se hizo, o el motivo por el que no.
 func arengar(j: Jugador) -> String:
@@ -219,6 +235,8 @@ func _init(_local: Club, _visita: Club, _neutral: bool = false) -> void:
 	neutral = _neutral
 
 func preparar() -> void:
+	if clima_info.is_empty():
+		fijar_clima(Clima.del_partido(local.pais, ctx_semana, ctx_anio, local.id + visita.id))
 	once_local = local.once()
 	once_visita = visita.once()
 	## `Previa.arbitro_de(rival_id, semana)` -la MISMA que ya usa `vPrevia()`
@@ -360,6 +378,17 @@ func _media_linea(once: Array[Jugador], grupo: String) -> float:
 func simular_minuto() -> void:
 	if terminado_ya:
 		return
+	## LA INVASIÓN, DENTRO DEL MINUTO (25-9-2026, plan maestro B2). Antes solo
+	## la miraba `PartidoVivo` desde su reloj: jugado en 3D o simulado, esa
+	## tirada de `Azar` no ocurría y el mismo partido podía terminar distinto
+	## según cómo se mirara. Ahora es parte del minuto para cualquier vista; cada
+	## una solo decide cómo contarla (`invasion_de_campo`).
+	if _hinchada_club != null and not invasion_ya:
+		var soy_local := local == _hinchada_club
+		var mis_goles: int = goles_local if soy_local else goles_visita
+		var sus_goles: int = goles_visita if soy_local else goles_local
+		if chequear_invasion(_hinchada_animo, soy_local, mis_goles < sus_goles):
+			invasion_de_campo.emit(minuto)
 	minuto += 1
 	## LOS PLANES SEGÚN EL MARCADOR. A partir del minuto 60 el entrenador aplica
 	## lo que dejó preparado: ir a por el partido si va perdiendo, cerrarlo si va
@@ -377,7 +406,7 @@ func simular_minuto() -> void:
 	var bono_v := 1.0 if neutral else 0.94
 
 	var p_l := _probabilidad(fl["ata"], fv["def"]) * bono_l * clima
-	var p_v := _probabilidad(fv["ata"], fl["def"]) * bono_v * clima
+	var p_v := _probabilidad(fv["ata"], fl["def"]) * bono_v * clima * _f_clima_visita
 	## Las instrucciones efímeras solo pegan de TU lado: "riesgo" (todo al
 	## ataque) sube tu llegada un 18% y baja tu defensa un 16%; "tiempo"
 	## (cerrar el partido) hace justo lo contrario -0.72/1.12-, los mismos
@@ -642,7 +671,10 @@ func _incidencias() -> void:
 			if roja:
 				l.suspension = max(l.suspension, 1)
 			tarjeta.emit(l, roja, minuto)
-	if Azar.suerte(0.0024):
+	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas
+	## veces se consulta `Azar`.
+	var f_sup := ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0
+	if Azar.suerte(0.0024 * f_sup):
 		var h := _alguien(_todos)
 		if h != null:
 			## LA LESION LA DIAGNOSTICA `Medico`, no un numero suelto.
@@ -839,6 +871,18 @@ func es_ex_de(j: Jugador, rival: Club) -> bool:
 ## Cuándo se harta la grada. Minuto 70, perdiendo en casa y con el ánimo por los
 ## suelos: los tres a la vez, porque una invasión de campo que salta cada dos
 ## partidos deja de ser una noticia y se vuelve una molestia.
+signal invasion_de_campo(minuto: int)
+
+## El club cuya hinchada puede saltar al campo y su ánimo de hoy. Lo fija quien
+## juega el partido del usuario (`fijar_hinchada()`); en los partidos del resto
+## del mundo queda vacío y nunca hay invasión, igual que antes.
+var _hinchada_club: Club = null
+var _hinchada_animo := 60
+
+func fijar_hinchada(club: Club, animo: int) -> void:
+	_hinchada_club = club
+	_hinchada_animo = animo
+
 const MINUTO_INVASION := 70
 const ANIMO_PARA_INVASION := 30
 

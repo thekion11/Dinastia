@@ -21,6 +21,19 @@ signal cerrado
 signal editar_estadio_pedido
 
 var club: Club
+## B7: quien sabe construir de verdad. Lo pone `Principal` para que construir
+## desde el mapa sea EXACTAMENTE lo mismo que desde Club → Infraestructura
+## (mismo cobro, mismos permisos, mismo registro). Devuelve "" o el motivo.
+var construir: Callable
+## B7: ¿se juega en casa esta semana? La ciudad se viste de partido.
+var dia_partido := false
+var _obras: Instalaciones
+var _ciudad_datos: Ciudad
+var _perfil: Dictionary = {}
+var _objetivo := Vector3(0, 16, 0)
+var _objetivo_deseado := Vector3(0, 16, 0)
+var _ficha: PanelContainer
+var _rotulos_visibles := true
 var _raiz3d: Node3D
 var _ciudad: CityBuilder
 var _camara: Camera3D
@@ -67,6 +80,9 @@ var _reloj: Label
 ## pagado -no una maqueta genérica-.
 func abrir(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary = {}) -> void:
 	club = c
+	_obras = obras
+	_ciudad_datos = ciudad
+	_perfil = perfil_estadio
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_construir(obras, ciudad, perfil_estadio)
 
@@ -143,6 +159,12 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	_boton(barra, "Detener giro", _alternar_giro)
 	_boton(barra, "☀ Detener el día", alternar_ciclo)
 	_boton(barra, "🏟️ Editar mi estadio", func() -> void: editar_estadio_pedido.emit())
+	_boton(barra, "🏷 Rótulos", func() -> void:
+		_rotulos_visibles = not _rotulos_visibles
+		_ciudad.mostrar_rotulos(_rotulos_visibles))
+	_boton(barra, "⚽ Día de partido", func() -> void:
+		dia_partido = not dia_partido
+		_reconstruir())
 	_boton(barra, "Volver", func() -> void: cerrado.emit())
 
 	_reloj = Label.new()
@@ -152,7 +174,7 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	add_child(_reloj)
 
 	var ayuda := Label.new()
-	ayuda.text = "arrastra para girar · rueda para acercar · clic en el estadio para editarlo"
+	ayuda.text = "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha"
 	ayuda.add_theme_font_size_override("font_size", 13)
 	ayuda.add_theme_color_override("font_color", Color(1, 1, 1, 0.65))
 	ayuda.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
@@ -189,6 +211,8 @@ func _datos_de(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Di
 		"negocios": ciudad.negocios.duplicate() if ciudad != null else {},
 		"perfil_estadio": perfil_estadio,
 		"luces": ciudad.luces if ciudad != null else Ciudad.LUCES_POR_DEFECTO,
+		"dia_partido": dia_partido,
+		"vecinos": ciudad.vecinos if ciudad != null else 55,
 	}
 
 func _boton(padre: Node, texto: String, accion: Callable) -> void:
@@ -202,12 +226,21 @@ func _alternar_giro() -> void:
 	_girando = not _girando
 
 func _mover_camara() -> void:
-	_camara.position = Vector3(sin(_ang) * _dist, _alto, cos(_ang) * _dist + 20.0)
-	_camara.look_at(Vector3(0, 16, 0), Vector3.UP)
+	var o := _objetivo
+	_camara.position = Vector3(o.x + sin(_ang) * _dist, _alto, o.z + cos(_ang) * _dist + 20.0)
+	_camara.look_at(o, Vector3.UP)
 
 func _process(delta: float) -> void:
 	if _girando:
 		_ang += delta * 0.12
+	## CÁMARA LIBRE (B7): WASD mueve el punto que se mira, en el plano del
+	## suelo y según hacia dónde mira la cámara.
+	var mov := Vector2(
+		float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A)),
+		float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W)))
+	if mov != Vector2.ZERO:
+		_desplazar(mov * delta * _dist * 0.9)
+	_objetivo = _objetivo.lerp(_objetivo_deseado, clampf(delta * 4.0, 0.0, 1.0))
 	if _ciclo_activo:
 		_hora = fposmod(_hora + delta * (24.0 / CICLO_SEG), 24.0)
 		_aplicar_hora()
@@ -310,7 +343,19 @@ var _mouse_down_valido := false
 const CLIC_TOLERANCIA_PX := 6.0
 const ESTADIO_CLIC_RADIO_PX := 90.0
 
+## Mueve el punto mirado: `d.x` a la derecha de la cámara, `d.y` hacia atrás.
+func _desplazar(d: Vector2) -> void:
+	var derecha := Vector3(cos(_ang), 0, -sin(_ang))
+	var atras := Vector3(sin(_ang), 0, cos(_ang))
+	_objetivo_deseado += derecha * d.x + atras * d.y
+	_objetivo_deseado.x = clampf(_objetivo_deseado.x, -600.0, 600.0)
+	_objetivo_deseado.z = clampf(_objetivo_deseado.z, -600.0, 700.0)
+	_girando = false
+
 func _gui_input(ev: InputEvent) -> void:
+	if ev is InputEventMouseMotion and (ev.button_mask & (MOUSE_BUTTON_MASK_RIGHT | MOUSE_BUTTON_MASK_MIDDLE)):
+		_desplazar(Vector2(-ev.relative.x, -ev.relative.y) * _dist * 0.0022)
+		return
 	if ev is InputEventMouseMotion and (ev.button_mask & MOUSE_BUTTON_MASK_LEFT):
 		_ang -= ev.relative.x * 0.006
 		_alto = clampf(_alto - ev.relative.y * 0.9, 35.0, 520.0)
@@ -329,12 +374,113 @@ func _gui_input(ev: InputEvent) -> void:
 		elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_dist = clampf(_dist + 30.0, 120.0, 1000.0)
 
+## El clic busca el punto tocable más cercano en pantalla (B7): el estadio
+## abre el editor, como siempre; un edificio o un solar abre su ficha.
 func _probar_clic_estadio(pos_click: Vector2) -> void:
-	if _camara == null:
+	var p := punto_en(pos_click)
+	if p.is_empty():
 		return
-	var centro := CityBuilder.ESTADIO_EN + Vector3(0, 15.0, 0)
-	if _camara.is_position_behind(centro):
-		return
-	var pos_pantalla := _camara.unproject_position(centro)
-	if pos_pantalla.distance_to(pos_click) <= ESTADIO_CLIC_RADIO_PX:
+	if String(p["estado"]) == "estadio":
 		editar_estadio_pedido.emit()
+		return
+	abrir_ficha(String(p["k"]))
+
+const CLIC_RADIO_PX := 60.0
+
+func punto_en(pos_click: Vector2) -> Dictionary:
+	if _camara == null or _ciudad == null:
+		return {}
+	var mejor: Dictionary = {}
+	var mejor_d := INF
+	for p: Dictionary in _ciudad.puntos_clic:
+		var pos3: Vector3 = p["pos"]
+		if _camara.is_position_behind(pos3):
+			continue
+		var d := _camara.unproject_position(pos3).distance_to(pos_click)
+		var radio := ESTADIO_CLIC_RADIO_PX if String(p["estado"]) == "estadio" else CLIC_RADIO_PX
+		if d <= radio and d < mejor_d:
+			mejor_d = d
+			mejor = p
+	return mejor
+
+## LA FICHA DE UNA INSTALACIÓN, dentro del mapa: qué es, en qué nivel está,
+## qué cuesta el siguiente y el botón para hacerlo. La cámara se acerca a ella.
+func abrir_ficha(k: String) -> void:
+	if _ficha != null:
+		_ficha.queue_free()
+	if not Instalaciones.CATALOGO.has(k):
+		return
+	for p: Dictionary in _ciudad.puntos_clic:
+		if String(p["k"]) == k:
+			_objetivo_deseado = p["pos"]
+			_dist = minf(_dist, 200.0)
+			_girando = false
+	var cat: Array = Instalaciones.CATALOGO[k]
+	_ficha = PanelContainer.new()
+	_ficha.add_theme_stylebox_override("panel", Tema.caja(Color(0.05, 0.08, 0.07, 0.94), Tema.RADIO_GRANDE, Tema.ORO))
+	_ficha.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_ficha.offset_left = -360
+	_ficha.offset_right = -18
+	_ficha.offset_top = 14
+	add_child(_ficha)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", Tema.ESPACIO)
+	_ficha.add_child(v)
+	var nivel := _obras.nivel(k)
+	v.add_child(Tema.rotulo("Instalación"))
+	v.add_child(Tema.etiqueta(Tema.TAM_TITULO, Tema.TEXTO, String(cat[0])))
+	var que := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, String(cat[1]))
+	que.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	que.custom_minimum_size = Vector2(300, 0)
+	v.add_child(que)
+	var estado := "Solar sin construir" if nivel == 0 else "Nivel %d de %d" % [nivel, _obras.maximo(k)]
+	if _obras.en_obra(k):
+		estado = "🏗 En obra hacia el nivel %d: faltan %d semanas" % [nivel + 1, int(_obras.obras[k])]
+	if nivel > 0:
+		var txt_t := ("👥 " + Trabajadores.actual.texto_equipo(club, _obras, k).replace("\n", "\n👥 ")) if Trabajadores.actual != null else ("👤 " + Trabajadores.texto_de(club, k))
+		var trab := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, txt_t)
+		trab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		trab.custom_minimum_size = Vector2(300, 0)
+		v.add_child(trab)
+	var l_estado := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.ORO, estado)
+	l_estado.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l_estado.custom_minimum_size = Vector2(300, 0)
+	v.add_child(l_estado)
+	var coste := _obras.coste(k, club.rep)
+	var aviso := Tema.etiqueta(Tema.TAM_CUERPO, Tema.MAL, "")
+	aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	aviso.custom_minimum_size = Vector2(300, 0)
+	if coste > 0 and not _obras.en_obra(k):
+		var b := Button.new()
+		b.text = "%s  ·  %s  ·  %d sem" % ["Construir" if nivel == 0 else "Mejorar al nivel %d" % (nivel + 1),
+			Cesiones.dinero(coste), _obras.semanas_de(k)]
+		b.custom_minimum_size = Vector2(0, 36)
+		b.disabled = coste > club.saldo
+		if coste > club.saldo:
+			aviso.text = "No alcanza la caja: tienes %s." % Cesiones.dinero(club.saldo)
+		b.pressed.connect(func() -> void:
+			var problema: String = String(construir.call(k)) if construir.is_valid() else "no disponible"
+			if problema != "":
+				aviso.text = "No se puede: %s." % problema
+				return
+			_reconstruir()
+			abrir_ficha(k))
+		v.add_child(b)
+	elif coste < 0:
+		v.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.BIEN, "Al máximo."))
+	v.add_child(aviso)
+	var cerrar := Button.new()
+	cerrar.text = "Cerrar"
+	cerrar.flat = true
+	cerrar.pressed.connect(func() -> void:
+		_ficha.queue_free()
+		_ficha = null)
+	v.add_child(cerrar)
+	Animar.aparecer(_ficha)
+
+## Vuelve a levantar la ciudad con los datos de ahora (tras construir o al
+## cambiar el día de partido).
+func _reconstruir() -> void:
+	_ciudad.build(_datos_de(club, _obras, _ciudad_datos, _perfil))
+	_ciudad.mostrar_rotulos(_rotulos_visibles)
+	_aplicar_hora()

@@ -24,8 +24,8 @@ extends RefCounted
 ## `paleta`: los mismos colores ya resueltos que reciben `TablaCompeticion` y
 ## `FichaJugadorInfo` -`_color_accesible()`/`_pal_*()`, con `escala`-.
 ##
-## Sin `Ficcion.limpiar()`, igual que el resto de `principal.gd` fuera de
-## `PanelMercado` -decisión pendiente de confirmar, no un descuido-.
+## Los nombres se pintan tal cual: lo legal se resuelve en los DATOS (base
+## ficticia por defecto, pack real opcional -ver `Datos`-), no en cada pantalla.
 
 ## Desarrollo prioritario -togglePrioridad() del HTML-: menores de 24. El
 ## único botón de este bloque, así que un solo `Callable` sin argumentos.
@@ -214,6 +214,36 @@ static func pintar_venta(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 	lista.add_child(br)
 
 # ── HELPERS DE UI, duplicados a propósito de `principal.gd` ────────────────
+## HABLAR CON ÉL (26-9-2026, plan maestro C7): cinco temas y su respuesta, que
+## depende de quién es (ver `Charlas`). La respuesta sale debajo, sin rehacer la
+## ficha entera.
+static func pintar_charla(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta: Dictionary) -> void:
+	if mundo == null or mundo.charlas == null or j.club_id != mundo.mi_club_id:
+		return
+	lista.add_child(HSeparator.new())
+	var t := _texto(11, paleta["suave"], paleta)
+	t.text = "💬 HABLAR CON %s" % j.nombre.to_upper()
+	lista.add_child(t)
+	var fila := HFlowContainer.new()
+	fila.add_theme_constant_override("h_separation", 6)
+	fila.add_theme_constant_override("v_separation", 6)
+	lista.add_child(fila)
+	var resp := _texto(12, paleta["texto"], paleta)
+	resp.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var efecto := _texto(11, paleta["suave"], paleta)
+	for tema: String in Charlas.TEMAS:
+		var b := Button.new()
+		b.text = String(Charlas.TEMAS[tema])
+		b.add_theme_font_size_override("font_size", 11)
+		b.pressed.connect(func() -> void:
+			var r := mundo.charlas.hablar(j, tema, mundo.anio, mundo.semana)
+			resp.text = String(r.get("respuesta", ""))
+			efecto.text = "→ " + String(r.get("efecto", "")) + (" · se lo prometiste: en 4 semanas debe jugar al menos 2 partidos" if tema == "minutos" else "")
+			Animar.aparecer(resp))
+		fila.add_child(b)
+	lista.add_child(resp)
+	lista.add_child(efecto)
+
 static func _texto(tam: int, color: Color, paleta: Dictionary) -> Label:
 	var l := Label.new()
 	var escala: float = float(paleta.get("escala", 1.0))
@@ -248,9 +278,4 @@ static func _boton(padre: Node, texto: String, accion: Callable) -> void:
 ## que nada avisara: el código compila igual, el número solo está mal. Se
 ## corrigió calcándolo del original ANTES de correr una sola captura.
 static func _dinero(monto: int) -> String:
-	var euros := float(monto) * Eco.ECO
-	if absf(euros) >= 1000000.0:
-		return "%.1fM EUR" % (euros / 1000000.0)
-	if absf(euros) >= 1000.0:
-		return "%dk EUR" % int(euros / 1000.0)
-	return "%d EUR" % int(euros)
+	return Eco.dinero(monto)

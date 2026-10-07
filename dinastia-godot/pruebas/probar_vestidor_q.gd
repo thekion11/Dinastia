@@ -42,10 +42,10 @@ func _process(_d: float) -> void:
 	_frame += 1
 	if _frame == 20:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/vestidor_q_correr_frente.png")
+		img.save_png("res://pruebas/capturas/vestidor_q_correr_frente.png")
 	if _frame == 22:
 		(get_meta("cam_l") as Camera3D).current = true
 	if _frame == 24:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/vestidor_q_correr_lado.png")
+		img2.save_png("res://pruebas/capturas/vestidor_q_correr_lado.png")
 		get_tree().quit(0)

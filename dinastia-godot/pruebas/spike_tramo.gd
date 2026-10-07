@@ -124,13 +124,13 @@ func _process(_delta: float) -> void:
 	_frame += 1
 	if _frame == 15:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_tramo_general_sinrepetir.png")
+		img.save_png("res://pruebas/capturas/pantalla_tramo_general_sinrepetir.png")
 		print("captura guardada: pantalla_tramo_general_sinrepetir.png (%dx%d)" % [img.get_width(), img.get_height()])
 		var cam2: Camera3D = get_meta("cam2")
 		cam2.current = true
 	if _frame == 30:
 		var img2 := get_viewport().get_texture().get_image()
-		img2.save_png("res://pruebas/pantalla_tramo_costura_sinrepetir.png")
+		img2.save_png("res://pruebas/capturas/pantalla_tramo_costura_sinrepetir.png")
 		print("captura guardada: pantalla_tramo_costura_sinrepetir.png (%dx%d)" % [img2.get_width(), img2.get_height()])
 		print("FIN. 0 fallos")
 		get_tree().quit()

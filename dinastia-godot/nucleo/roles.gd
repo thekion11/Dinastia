@@ -173,9 +173,37 @@ func look_efectivo() -> Dictionary:
 		base[k] = look[k]
 	return base
 
+## TU PERSONAJE EN 3D (26-9-2026, `CreadorPersonaje`): el aspecto guardado
+## (solo lo tocado; `PersonajeDT.aspecto()` rellena el resto). Si nunca se
+## tocó, sale del retrato 2D: mismo corte y color de pelo, para que el 3D y
+## la ficha no parezcan dos personas distintas.
+func aspecto_3d() -> Dictionary:
+	var guardado: Variant = look.get("p3d")
+	if guardado is Dictionary and not (guardado as Dictionary).is_empty():
+		return guardado
+	var l := look_efectivo()
+	var a := {}
+	var corte := String(l.get("pelo", ""))
+	if corte in PersonajeDT.CORTES:
+		a["pelo"] = corte
+	if l.get("pelo_c") != null:
+		a["color_pelo"] = String(l["pelo_c"]).trim_prefix("#")
+	if l.get("piel") != null:
+		a["piel"] = String(l["piel"]).trim_prefix("#")
+	a["barba"] = int(l.get("barba", 0)) > 0
+	var traje := String(l.get("traje", ""))
+	for r: Array in PersonajeDT.ROPAS:
+		if String(r[0]) == traje:
+			a["ropa"] = traje
+	if bool(l.get("gafas", false)):
+		a["gafas"] = "ver"
+	return a
+
 ## El prestigio del entrenador y su vitrina, que son de la CARRERA y no del club:
 ## `Directiva.trofeos` se queda en el club que abandonas, esto te sigue.
 var prestigio: int = PRESTIGIO_INICIAL
+## TU REPUTACIÓN POR FACETAS y los niveles del club (26-9-2026, `Reputacion`).
+var reputacion: Reputacion = Reputacion.new()
 var trofeos: Array[Dictionary] = []      ## {anio, titulo}
 var historial: Array[Dictionary] = []    ## {club, hasta} — los clubes por donde pasaste
 var temporadas: int = 0
@@ -320,6 +348,7 @@ var _objetivo_club: String = ""
 var _ref: WeakRef
 
 func _init(mundo: Mundo) -> void:
+	reputacion.cambio.connect(func(t: String, x: String) -> void: aviso.emit(t, x))
 	_ref = weakref(mundo)
 
 func _mundo() -> Mundo:
@@ -387,6 +416,19 @@ func arrancar(modo_id: String, dt_nombre: String = "Míster") -> void:
 	elif bool(_modo(modo_id).get("sandbox", false)):
 		_arrancar_sandbox()
 	rol_cambiado.emit("", rol)
+
+## El modo de menú que corresponde al rol de ahora -el camino inverso de
+## `rol_de_modo()`-. Lo usa el tutorial al repetirse desde Ajustes, cuando el
+## modo con el que se empezó la carrera ya no está en ninguna parte.
+func modo_actual() -> String:
+	if en_interinato():
+		return MODO_INTERINO
+	match rol:
+		DIR: return "dir"
+		AYUDANTE: return "ayudante"
+		CANTERA: return "cantera"
+		DUENO: return "jeque" if sandbox else "imperio"
+	return "dt"
 
 static func _modo(modo_id: String) -> Dictionary:
 	var t: Variant = Datos.tabla("MODOS_JUEGO")
@@ -802,6 +844,13 @@ func tras_partido(goles_propios: int, goles_rival: int) -> void:
 	var gane := goles_propios > goles_rival
 	var empate := goles_propios == goles_rival
 	sumar_prestigio(1 if gane else (0 if empate else -1))
+	## Ganar de a muchos (o perder por goleada) también hace fama.
+	var dif := goles_propios - goles_rival
+	if absi(dif) >= 3:
+		_rep("ganador", 2 if dif > 0 else -2, "Goleada %s %d-%d" % ["a favor" if dif > 0 else "en contra", goles_propios, goles_rival])
+	var m0 := _mundo()
+	if m0 != null:
+		reputacion.revisar_nivel(m0.mi_club())
 	if es_ayudante():
 		_chequeo_ayudante(gane, empate)
 
@@ -821,8 +870,11 @@ func tras_temporada(resumen: Dictionary = {}) -> Dictionary:
 	temporadas += 1
 	if bool(resumen.get("cumplido", false)):
 		sumar_prestigio(3)
+		_rep("ganador", 3, "Cumpliste el objetivo de la temporada")
 	elif not resumen.is_empty():
 		sumar_prestigio(-2)
+		_rep("ganador", -3, "No cumpliste el objetivo de la temporada")
+	_reputacion_de_temporada()
 	if int(resumen.get("puesto", 0)) == 1:
 		sumar_trofeo("Liga")
 	if es_cantera():
@@ -841,7 +893,10 @@ func sumar_prestigio(delta: int) -> void:
 func sumar_trofeo(titulo: String) -> void:
 	var m := _mundo()
 	trofeos.append({"anio": m.anio if m != null else 0, "titulo": titulo})
+	_rep("ganador", 8, "Título: %s" % titulo)
 	sumar_prestigio(3)
+	## Al museo de todas tus carreras, y un sobre de cromos.
+	Meta.registrar_trofeo(m, titulo)
 
 # ---------------------------------------------------------------------------
 # AYUDANTE: ganarte el banco de tu jefe
@@ -1377,6 +1432,7 @@ func resumen() -> Dictionary:
 
 func a_dic() -> Dictionary:
 	return {
+		"reputacion": reputacion.a_dic(),
 		"rol": rol, "nombre": nombre, "prestigio": prestigio,
 		"trofeos": trofeos.duplicate(true),
 		"historial": historial.duplicate(true),
@@ -1404,6 +1460,7 @@ func a_dic() -> Dictionary:
 	}
 
 func desde_dic(d: Dictionary) -> void:
+	reputacion.desde_dic(d.get("reputacion", {}))
 	rol = String(d.get("rol", DT))
 	if not PERMISOS.has(rol):
 		rol = DT   ## un guardado viejo con un rol que ya no existe no rompe nada
@@ -1519,14 +1576,17 @@ func sueldo_semanal() -> int:
 ## del HTML, que `deseoDeVenir()` SUMA a la probabilidad. A prestigio 99 son
 ## +0,29; a prestigio 20, -0,18.
 func bono_reputacion_fichajes() -> float:
-	return float(prestigio - 50) * 0.006
+	return float(prestigio - 50) * 0.006 + reputacion.bono_fichajes()
 
 ## Lo que el prestigio multiplica en las ofertas de marcas y de zonas
 ## publicitarias -`generarSponsorOfertas()` y `generarOfertasZona()` del
 ## HTML-. NO toca el patrocinio semanal genérico de `Finanzas`: en el HTML
 ## tampoco lo toca.
 func multiplicador_sponsor() -> float:
-	return 1.0 + float(prestigio - 50) * 0.004
+	## Prestigio, faceta mediática y el nivel del club (patrocinadores premium).
+	var m := _mundo()
+	var rep_club: int = m.mi_club().rep if m != null and m.mi_club() != null else 50
+	return (1.0 + float(prestigio - 50) * 0.004) * reputacion.mult_marcas() * Reputacion.mult_patrocinio(rep_club)
 
 func tiene(clave: String) -> bool:
 	if clave == "licB":
@@ -1678,7 +1738,7 @@ func nombrar_leyenda_viva(j: Jugador) -> String:
 		return "no hay a quién nombrar"
 	var m := _mundo()
 	leyenda_viva = {
-		"nombre": Nombres.limpiar(j.nombre), "pos": j.pos_e,
+		"nombre": Nombres.visible(j.nombre), "pos": j.pos_e,
 		"desde": m.anio if m != null else 0, "visitas": 0,
 	}
 	if m != null and m.prensa != null:
@@ -1957,3 +2017,42 @@ func responder_oferta_de_club(acepta: bool) -> String:
 	if m != null:
 		m.tomar_el_mando(destino)
 	return "Te vas a %s. Capítulo cerrado; empieza otro." % nombre
+
+
+# ---------------------------------------------------------------------------
+# REPUTACIÓN POR FACETAS (26-9-2026)
+# ---------------------------------------------------------------------------
+
+## Anota un movimiento de reputación con la fecha de la partida.
+func _rep(faceta: String, delta: int, motivo: String) -> void:
+	var m := _mundo()
+	reputacion.registrar(faceta, delta, motivo, m.anio if m != null else 0, m.semana if m != null else 0)
+
+## Para que otros sistemas (mercado, prensa, cantera) anoten lo suyo.
+func anotar_reputacion(faceta: String, delta: int, motivo: String) -> void:
+	_rep(faceta, delta, motivo)
+
+## Lo que se anota al cerrar la temporada: seguir en el club (lealtad), los
+## canteranos que tienes en el plantel (formador) y lo que el club hace por su
+## comunidad (social). Y los socios que eso trae.
+func _reputacion_de_temporada() -> void:
+	var m := _mundo()
+	if m == null or m.mi_club() == null:
+		return
+	var c := m.mi_club()
+	_rep("leal", 3, "Otra temporada en %s" % c.nombre)
+	var canteranos := 0
+	if m.cantera != null:
+		for j: Jugador in c.plantilla:
+			if m.cantera.es_canterano(j):
+				canteranos += 1
+	_rep("formador", clampi(canteranos - 2, -3, 6), "%d canteranos en el plantel" % canteranos)
+	var social := 0
+	if m.obras != null:
+		for k: String in ["huerto", "guarderia", "bienestar"]:
+			if m.obras.nivel(k) > 0:
+				social += 1
+	_rep("social", social * 2 - 1, "Lo que el club hace por su gente")
+	var socios := reputacion.socios_por_temporada(c)
+	if socios != 0:
+		c.socios = maxi(0, c.socios + socios)

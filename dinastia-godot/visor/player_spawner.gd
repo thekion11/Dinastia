@@ -4,17 +4,18 @@ extends RefCounted
 ## Pone los 22 titulares sobre el cesped, cada uno en su sitio de la formacion,
 ## con la equipacion real de su club, su cara y su estatura.
 ##
-## Usa el modelo humano realista (`futbolista_cr7.glb`, esqueleto Mixamo) con las
-## animaciones generadas por AnimMixamo. El muneco low-poly de Kenney que habia
-## antes sigue en el proyecto como respaldo: si el modelo realista no carga —
-## porque falte el .glb o la maquina no dé para 22 cuerpos de 17.000 vertices—
-## se cae a el en vez de dejar la cancha vacia.
+## Usa el cuerpo Quaternius (CC0, `FutbolistaQ`) con la equipación pintada
+## encima (`VestidorQ.vestir_equipacion`). El muñeco low-poly de Kenney sigue
+## en el proyecto como respaldo: si el modelo no carga, se cae a él en vez de
+## dejar la cancha vacía.
 
 const MODELO_RESPALDO := "res://assets/characters/Model/characterMedium.fbx"
 const ANIM_RESPALDO := {"idle": "res://assets/characters/Animations/idle.fbx",
 	"run": "res://assets/characters/Animations/run.fbx", "jump": "res://assets/characters/Animations/jump.fbx"}
 
 var kit_factory: KitTextureFactory = KitTextureFactory.new()
+## La equipación completa (`DisenosKit`) del equipo que se está creando.
+var _kit_x: Dictionary = {}
 var _shared_lib: AnimationLibrary
 var _packed_respaldo: PackedScene
 var usando_respaldo := false
@@ -82,12 +83,86 @@ static func slot_to_position(slot: Array, es_local: bool) -> Vector3:
 	var x: float = -34.0 + (width_coord / 100.0) * 68.0
 	return Vector3(x, 0, z)
 
+## NOMBRE Y DORSAL FLOTANDO SOBRE CADA JUGADOR (25-9-2026, ROADMAP Fase 3:
+## "nombre del jugador flotando sobre cada futbolista", y el análisis externo:
+## "a distancia de juego los jugadores son siluetas minúsculas"). `fixed_size`:
+## el rótulo mide lo mismo en pantalla esté cerca o en la otra punta del campo,
+## que es justo cuando hace falta. Se enciende y apaga para todos a la vez desde
+## el botón "Nombres" de `VistaEstadio`.
+static var mostrar_nombres := true
+const ROTULO := "Rotulo"
+const BARRA := "Barra"
+## Tamaño del rótulo con la cámara de TV; `VistaEstadio._escalar_rotulos()` lo
+## corrige para las cámaras con más o menos zoom.
+const TAM_ROTULO := 0.00055
+
+##
+## Los del visitante van medio metro más arriba: el caso más común de dos
+## jugadores pegados es un defensor marcando a un delantero RIVAL, y con los
+## rótulos a la misma altura se pisaban ("5 QuiFigueroa" en captura).
+static func poner_rotulo(n: Node3D, jug: Dictionary, es_local: bool = true) -> void:
+	var nombre := String(jug.get("nombre", ""))
+	if nombre == "":
+		return
+	var partes := nombre.split(" ", false)
+	var apellido := partes[partes.size() - 1] if partes.size() > 0 else nombre
+	var dorsal := int(jug.get("dorsal", 0))
+	var r := Label3D.new()
+	r.name = ROTULO
+	r.text = ("%d  %s" % [dorsal, apellido]) if dorsal > 0 else apellido
+	r.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	r.fixed_size = true
+	r.pixel_size = TAM_ROTULO
+	r.font_size = 30
+	r.outline_size = 10
+	r.modulate = Color(1, 1, 1, 0.95)
+	r.outline_modulate = Color(0, 0, 0, 0.85)
+	## Por encima de todo: si la cabeza de otro lo tapara, se perdería el
+	## nombre justo en las jugadas con más gente.
+	r.no_depth_test = true
+	r.render_priority = 2
+	r.position = Vector3(0, 2.25 if es_local else 2.8, 0)
+	r.visible = mostrar_nombres
+	n.add_child(r)
+	## LA BARRA DE ESTADO (26-9-2026, pendiente del estadio): bajo el nombre,
+	## ocho segmentos con la energía que le queda. Va colgada del rótulo, así
+	## que se oculta y se escala con él; `offset` está en píxeles del propio
+	## rótulo, y con `fixed_size` queda siempre a la misma distancia del texto.
+	var b := Label3D.new()
+	b.name = BARRA
+	b.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	b.fixed_size = true
+	b.pixel_size = TAM_ROTULO
+	b.font_size = 22
+	b.outline_size = 8
+	b.outline_modulate = Color(0, 0, 0, 0.85)
+	b.no_depth_test = true
+	b.render_priority = 2
+	b.offset = Vector2(0, -34)
+	b.set_meta("fisico", float(jug.get("fisico", 100)))
+	b.set_meta("forma", float(jug.get("forma", 60)))
+	r.add_child(b)
+	actualizar_barra(b, 0)
+
+## La energía estimada al minuto `minuto`: arranca en su estado físico y baja
+## más rápido cuanto peor está de forma (60 de forma ≈ -25 a los 90').
+static func energia(fisico: float, forma: float, minuto: int) -> float:
+	var ritmo := 0.40 - clampf(forma, 0.0, 100.0) * 0.0025
+	return clampf(fisico - float(minuto) * ritmo, 0.0, 100.0)
+
+static func actualizar_barra(b: Label3D, minuto: int) -> void:
+	var e := energia(float(b.get_meta("fisico", 100.0)), float(b.get_meta("forma", 60.0)), minuto)
+	var llenos := clampi(int(ceil(e / 12.5)), 0, 8)
+	b.text = "▰".repeat(llenos) + "▱".repeat(8 - llenos)
+	b.modulate = Color("5fd35f") if e >= 65.0 else (Color("f0c040") if e >= 40.0 else Color("e5534b"))
+
 func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dictionary,
 		es_local: bool, kit: Dictionary, kit_portero: Dictionary = {}) -> Array:
 	var slots: Array = formacion.get("s", [])
 	var c1 := Color(kit.get("c1", "#2b6b45"))
 	var c2 := Color(kit.get("c2", "#ffffff"))
 	var estilo: String = kit.get("estilo", "liso")
+	_kit_x = kit.get("x", {})
 	var img_kit := str(kit.get("img", "")) if kit.get("img") != null else ""
 	var out: Array = []
 
@@ -114,12 +189,8 @@ func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dicti
 			kestilo = str(kit_portero.get("estilo", "liso"))
 			kimg = ""
 
-		## OJO: en la rama del modelo realista, `Vestidor.vestir()` NO recibe c1/c2.
-		## Solo mira `kit_img` y `color_liso`. Con las dos vacías se queda la
-		## textura que trae el modelo de fábrica —el amarillo y azul del Al-Nassr—
-		## y los 22 jugadores salen vestidos igual, los dos equipos y el portero.
-		## Así que cuando no hay una equipación real que ponerle, se le pasa el
-		## color del club como color liso.
+		## Color liso: el pantalón del árbitro y, en el muñeco de respaldo, la
+		## equipación cuando no hay una imagen de camiseta que ponerle.
 		var liso := kc1 if kimg == "" else Color(0, 0, 0, 0)
 		var nodo := _crear_jugador(root, jid, str(slot[0]), kimg, kc1, kc2, kestilo,
 			int(jug.get("dorsal", 0)), piel, pelo, look[2], liso, jug)
@@ -129,6 +200,7 @@ func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dicti
 		n.position = base_pos
 		if not es_local:
 			n.rotation.y = PI
+		poner_rotulo(n, jug, es_local)
 
 		out.append({"node": n, "anim": nodo["anim"], "id": jid, "jugador": jug,
 			"base_pos": base_pos, "slot_code": slot[0], "es_local": es_local,
@@ -188,6 +260,7 @@ func spawn_banca(root: Node3D, jugadores: Array, es_local: bool, kit: Dictionary
 	var c1 := Color(kit.get("c1", "#2b6b45"))
 	var c2 := Color(kit.get("c2", "#ffffff"))
 	var estilo: String = kit.get("estilo", "liso")
+	_kit_x = kit.get("x", {})
 	var img_kit := str(kit.get("img", "")) if kit.get("img") != null else ""
 	var out: Array = []
 	## Misma banda tecnica que usa `_banquillos_detalle()` para el mueble -X
@@ -207,6 +280,11 @@ func spawn_banca(root: Node3D, jugadores: Array, es_local: bool, kit: Dictionary
 	var lado := -1.0 if es_local else 1.0
 	var x_banda := 34.0 + DISTANCIA_LINEA_BANDA
 	var cuantos: int = mini(jugadores.size(), 7)
+	## Quién calienta con dominadas: el último de la fila que no sea portero.
+	var calienta := -1
+	for i in cuantos:
+		if (jugadores[i] as Jugador).pos_e != "POR":
+			calienta = i
 	for i in cuantos:
 		var j: Jugador = jugadores[i]
 		var jug := Puente3D.jugador(j)
@@ -238,9 +316,20 @@ func spawn_banca(root: Node3D, jugadores: Array, es_local: bool, kit: Dictionary
 		## en vez de de frente" ya documentada para la camara de
 		## `spike_tramo.gd"- antes de dar esto por cerrado.
 		n.rotation.y = -PI * 0.5
-		out.append({"node": n, "anim": nodo["anim"], "id": j.id, "jugador": jug,
+		var entrada := {"node": n, "anim": nodo["anim"], "id": j.id, "jugador": jug,
 			"base_pos": n.position, "slot_code": j.pos_e, "es_local": es_local,
-			"realista": nodo["realista"], "banca": true})
+			"realista": nodo["realista"], "banca": true}
+		## El último de la fila (nunca un portero) calienta haciendo dominadas
+		## con balón -mocap real, ver `Dominadas`-, un poco apartado del resto.
+		if i == calienta and bool(nodo["realista"]):
+			var clip := "dominadas_%d" % (1 + absi(j.id.hash()) % 3)
+			n.position.z += lado * 1.4
+			entrada["base_pos"] = n.position
+			var ap_d: AnimationPlayer = nodo["anim"]
+			if Dominadas.montar(n, ap_d, clip) != null:
+				ap_d.play(clip)
+				entrada["reposo_anim"] = clip
+		out.append(entrada)
 	return out
 
 ## LOS QUE NO CABEN, SENTADOS (22-9-2026, pedido directo del usuario tras ver
@@ -258,6 +347,7 @@ func spawn_sentados(root: Node3D, jugadores: Array, es_local: bool, kit: Diction
 	var c1 := Color(kit.get("c1", "#2b6b45"))
 	var c2 := Color(kit.get("c2", "#ffffff"))
 	var estilo: String = kit.get("estilo", "liso")
+	_kit_x = kit.get("x", {})
 	var img_kit := str(kit.get("img", "")) if kit.get("img") != null else ""
 	var out: Array = []
 	if jugadores.is_empty():
@@ -272,15 +362,7 @@ func spawn_sentados(root: Node3D, jugadores: Array, es_local: bool, kit: Diction
 	var z0: float = lado * 14.0 + lado * (3.0 * 1.6 + 1.6)
 	var paso_sentado := 1.1
 	var largo_banco: float = float(cuantos) * paso_sentado + 0.4
-	var banco := BoxMesh.new()
-	banco.size = Vector3(0.9, 0.1, largo_banco)
-	var mi := MeshInstance3D.new()
-	mi.mesh = banco
-	mi.position = Vector3(x_banda, 0.45, z0 + lado * largo_banco * 0.5)
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.30, 0.20, 0.12)
-	mi.material_override = mat
-	root.add_child(mi)
+	_banco_de_suplentes(root, x_banda, z0, lado, cuantos, paso_sentado, largo_banco, c1)
 
 	for i in cuantos:
 		var j: Jugador = jugadores[i]
@@ -319,6 +401,52 @@ func spawn_sentados(root: Node3D, jugadores: Array, es_local: bool, kit: Diction
 			"realista": nodo["realista"], "banca": true, "sentado": true})
 	return out
 
+## EL BANCO DE LOS SUPLENTES, DE VERDAD (26-9-2026, plan maestro C2). Era una
+## tabla marrón a 0,45 m y nada más. Ahora es lo que hay en un estadio: una
+## base, una butaca por jugador -asiento y respaldo del color del club-, la
+## pared de atrás y un techo con frente de metacrilato. Las butacas van justo
+## donde se sienta cada uno (mismo `paso`), así que la pose no cambia.
+static func _banco_de_suplentes(root: Node3D, x: float, z0: float, lado: float, cuantos: int,
+		paso: float, largo: float, color: Color) -> void:
+	var zc := z0 + lado * largo * 0.5
+	var base_mat := StandardMaterial3D.new()
+	base_mat.albedo_color = Color(0.22, 0.23, 0.25)
+	base_mat.roughness = 0.7
+	var butaca := StandardMaterial3D.new()
+	butaca.albedo_color = color.lerp(Color(0.12, 0.12, 0.14), 0.25)
+	butaca.roughness = 0.45
+	var metal := StandardMaterial3D.new()
+	metal.albedo_color = Color(0.72, 0.74, 0.77)
+	metal.metallic = 0.6
+	metal.roughness = 0.35
+	var vidrio := StandardMaterial3D.new()
+	vidrio.albedo_color = Color(0.6, 0.7, 0.78, 0.25)
+	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	vidrio.cull_mode = BaseMaterial3D.CULL_DISABLED
+	vidrio.roughness = 0.05
+	var caja := func(pos: Vector3, tam: Vector3, mat: Material) -> void:
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = tam
+		mi.mesh = bm
+		mi.material_override = mat
+		mi.position = pos
+		root.add_child(mi)
+	## Plataforma y pared trasera.
+	caja.call(Vector3(x + 0.15, 0.04, zc), Vector3(1.6, 0.08, largo + 0.6), base_mat)
+	caja.call(Vector3(x + 0.85, 1.05, zc), Vector3(0.1, 2.0, largo + 0.6), base_mat)
+	## Una butaca por jugador: asiento, respaldo y el pie metálico.
+	for i in cuantos:
+		var z := z0 + lado * (float(i) + 0.5) * paso
+		caja.call(Vector3(x + 0.05, 0.45, z), Vector3(0.5, 0.08, 0.5), butaca)
+		caja.call(Vector3(x + 0.33, 0.78, z), Vector3(0.08, 0.62, 0.5), butaca)
+		caja.call(Vector3(x + 0.1, 0.23, z), Vector3(0.08, 0.38, 0.08), metal)
+	## Techo con frente de metacrilato (el del banquillo de un estadio de hoy).
+	caja.call(Vector3(x + 0.2, 2.08, zc), Vector3(1.5, 0.08, largo + 0.6), metal)
+	caja.call(Vector3(x - 0.55, 1.75, zc), Vector3(0.03, 0.65, largo + 0.6), vidrio)
+	for extremo in [-1.0, 1.0]:
+		caja.call(Vector3(x + 0.15, 1.05, zc + extremo * (largo + 0.6) * 0.5), Vector3(1.5, 2.0, 0.04), vidrio)
+
 ## Modelo Quaternius en partidos reales (21-9-2026), a pedido explicito del
 ## usuario -"conectalo igual, desnudo por ahora"-. El cuerpo mocap real ya esta
 ## listo (parado/caminar/trotar/correr/patear/celebrar/atajar/cabezazo/
@@ -339,26 +467,39 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 		if not dq.is_empty():
 			root.add_child(dq["nodo"])
 			FutbolistaQ.terminar(dq, true)
-			VestidorQ.vestir(dq, c1)
+			## Equipación pintada sobre el cuerpo (camiseta con su estilo,
+			## pantalón, medias, botines); la ropa teñida de antes queda solo
+			## como respaldo si faltara la máscara.
+			var pantalon := color_liso if puesto == "ARB" else Color(0, 0, 0, 0)
+			## La equipación completa del club (diseñador), salvo arquero y
+			## árbitro, que visten la suya.
+			var kx: Dictionary = {} if puesto in ["POR", "ARB"] else _kit_x
+			if not VestidorQ.vestir_equipacion(dq, c1, c2, estilo, piel, pelo, pantalon, Color(0, 0, 0, 0), false, kx, dorsal):
+				VestidorQ.vestir(dq, c1)
+			## Pelo, barba y cejas, con el mismo corte que su retrato 2D.
+			var look_j = jug.get("look")
+			var corte := "corto"
+			if typeof(look_j) == TYPE_DICTIONARY and look_j.get("pelo") is String:
+				corte = look_j["pelo"]
+			## Barba 3D solo para las barbas completas del retrato (1, 4 y 6):
+			## bigote, perilla o barba de días no son esa malla.
+			PeloQ.poner(dq, corte, pelo, barba in [1, 4, 6])
+			## Y su cara: los rasgos del retrato (o la foto real) moldeados
+			## sobre la cabeza. Después del pelo: con foto esconde las cejas y
+			## la barba 3D.
+			if typeof(look_j) == TYPE_DICTIONARY:
+				var datos_cara := {"look": look_j, "foto": String(jug.get("foto", ""))}
+				## Sin foto (ficticios, reales sin foto): una cara y un corte de
+				## la biblioteca modular, siempre los mismos para el mismo id.
+				if String(datos_cara["foto"]) == "" and BibliotecaCaras.hay() and puesto != "ARB":
+					datos_cara["biblio"] = BibliotecaCaras.para(jid, piel, pelo)
+				VestidorQ.poner_cara(dq, datos_cara, piel)
 			var apq: AnimationPlayer = dq["anim"]
 			if apq.has_animation("parado"):
 				apq.play("parado")
 			return {"nodo": dq["nodo"], "anim": apq, "realista": true}
 		usando_respaldo = true
 		push_warning("PlayerSpawner: no cargo el modelo Quaternius, se usa el de respaldo")
-
-	if not usando_respaldo:
-		var d: Dictionary = Futbolista.crear(altura_de(jug, jid, puesto))
-		if not d.is_empty():
-			root.add_child(d["nodo"])
-			Futbolista.terminar(d)
-			Vestidor.vestir(d["modelo"], img_kit, piel, pelo, color_liso)
-			var ap: AnimationPlayer = d["anim"]
-			if ap.has_animation("parado"):
-				ap.play("parado")
-			return {"nodo": d["nodo"], "anim": ap, "realista": true}
-		usando_respaldo = true
-		push_warning("PlayerSpawner: no cargo el modelo realista, se usa el de respaldo")
 
 	if _packed_respaldo == null:
 		_packed_respaldo = load(MODELO_RESPALDO)

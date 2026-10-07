@@ -59,7 +59,7 @@ func _process(_delta: float) -> void:
 		return
 	_retarget.aplicar()
 	var img := get_viewport().get_texture().get_image()
-	img.save_png("res://pruebas/retarget_global_power_kick_lado.png")
+	img.save_png("res://pruebas/capturas/retarget_global_power_kick_lado.png")
 	print("RETARGET GLOBAL OK")
 	get_tree().quit(0)
 

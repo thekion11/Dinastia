@@ -11,7 +11,7 @@ func _ready() -> void:
 		print("torso salio NULL -no encontro el archivo o la caja de recorte fallo")
 		get_tree().quit(1)
 		return
-	torso.save_png("res://pruebas/torso_colo_colo.png")
+	torso.save_png("res://pruebas/capturas/torso_colo_colo.png")
 	print("torso recortado guardado, tamano: ", torso.get_size())
 
 	var dom := KitTextureFactory._color_dominante(torso, Rect2i(Vector2i.ZERO, torso.get_size()))
@@ -23,7 +23,7 @@ func _ready() -> void:
 	var mat := kit_factory.get_material(Color("#000000"), Color("#ffffff"), "liso", 9, 0, "colo_colo_1.png")
 	var tex: Texture2D = mat.albedo_texture
 	var img := tex.get_image()
-	img.save_png("res://pruebas/atlas_colo_colo.png")
+	img.save_png("res://pruebas/capturas/atlas_colo_colo.png")
 	print("atlas completo guardado, tamano: ", img.get_size())
 	print("FIN. 0 fallos")
 	get_tree().quit(0)

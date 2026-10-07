@@ -15,20 +15,20 @@ func _process(_d: float) -> void:
 		var mundo: Mundo = _pantalla.get("mundo")
 		if mundo.mi_club().nombre != "Colo-Colo":
 			for c: Club in mundo.clubes.values():
-				if c.nombre == "Colo-Colo":
+				if Nombres.limpiar(c.nombre) == "Colo-Colo":
 					mundo.tomar_el_mando(c.id)
 					break
 		_pantalla.call("_refrescar")
 		var mio := mundo.mi_club()
 		var vidal: Jugador = null
 		for j: Jugador in mio.plantilla:
-			if j.nombre == "Arturo Vidal":
+			if Nombres.limpiar(j.nombre) == "Arturo Vidal":
 				vidal = j
 				break
 		if vidal != null:
 			_pantalla.call("_ver_ficha", vidal)
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_foto_real.png")
+		_guardar("res://pruebas/capturas/pantalla_foto_real.png")
 		get_tree().quit()
 func _guardar(ruta: String) -> void:
 	var img := get_viewport().get_texture().get_image()

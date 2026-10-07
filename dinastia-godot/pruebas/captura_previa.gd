@@ -29,7 +29,7 @@ func _process(_d: float) -> void:
 		## la imagen resultante hasta hoy.
 		_pantalla.call("_ir_a_pestana", "Partido")
 	if _n == ESPERA + 2:
-		_guardar("res://pruebas/pantalla_previa.png")
+		_guardar("res://pruebas/capturas/pantalla_previa.png")
 	if _n == ESPERA + 4:
 		var mun = _pantalla.get("mundo")
 		mun.obras.niveles["video"] = 2
@@ -44,7 +44,7 @@ func _process(_d: float) -> void:
 		mun.prensa.dato_del_rival = true
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_previa_video.png")
+		_guardar("res://pruebas/capturas/pantalla_previa_video.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

@@ -10,6 +10,12 @@ extends RefCounted
 ## posesion final del local y la linea de eventos con su minuto y su equipo.
 
 signal event_fired(text: String)
+## Una jugada del catálogo empieza a escenificarse (para el rótulo de la TV).
+signal jugada_ambiente(nombre: String, es_local: bool)
+## El árbitro pide revisar una jugada: la pantalla abre la sala VAR.
+signal revision_var(minuto: int, motivo: String)
+const PROB_JUGADA_AMBIENTE := 0.4
+var _jugadas_ambiente := true
 
 const LARGO := 105.0
 const ANCHO := 68.0
@@ -153,10 +159,43 @@ func tick(delta_real: float) -> void:
 		_disparar(events[next_event_idx])
 		next_event_idx += 1
 
+	## Los gestos programados (el árbitro que primero pita y después saca la
+	## tarjeta, la revisión del VAR, el asistente que levanta la bandera...).
+	var i_g := 0
+	while i_g < _gestos_pendientes.size():
+		var g: Array = _gestos_pendientes[i_g]
+		if elapsed >= float(g[0]):
+			var pg = players_by_id.get(g[1])
+			if pg != null:
+				_ejecutar_accion(pg, String(g[2]), float(g[3]))
+			_gestos_pendientes.remove_at(i_g)
+		else:
+			i_g += 1
+
 	var min_ahora := current_minute()
+	## Llegando al 90, el cuarto árbitro no está: lo indica el principal.
+	if min_ahora >= 89 and not _anadido_mostrado:
+		_anadido_mostrado = true
+		_programar_gesto("arbitro", "arbitro_tiempo_anadido", 1.8, 0.0)
 	if min_ahora != _ultimo_min and not reproductor.en_reproduccion:
 		_ultimo_min = min_ahora
-		_recalcular_fase(null)
+		## LAS JUGADAS PREHECHAS, EN EL PARTIDO DE VERDAD (25-9-2026). Hasta hoy
+		## el catálogo solo corría en las pruebas: ningún partido lo usaba. En
+		## los minutos sin suceso, a veces, el equipo con el balón construye una
+		## jugada del catálogo -pase al pie, desmarque, cambio de orientación,
+		## saque del portero, repliegue- en vez de un balón a un punto al azar.
+		## Sin remate: el remate lo decide la simulación y llega como suceso.
+		if _jugadas_ambiente and _disparo_pendiente.is_empty() and _corner_pendiente.is_empty() \
+				and _tirolibre_pendiente.is_empty() and _rng.randf() < PROB_JUGADA_AMBIENTE:
+			var ids := CatalogoJugadas.ambientales()
+			var id: String = ids[_rng.randi() % ids.size()]
+			var es_local := _rng.randf() * 100.0 < posesion_local
+			if reproductor.iniciar(id, self, ball, es_local, true):
+				jugada_ambiente.emit(CatalogoJugadas.obtener_definicion(id)["nombre"], es_local)
+			else:
+				_recalcular_fase(null)
+		else:
+			_recalcular_fase(null)
 
 	if not _disparo_pendiente.is_empty():
 		_disparo_pendiente["restante"] -= delta
@@ -238,6 +277,55 @@ func ejecutar_jugada_prehecha(codigo: String, es_local: bool = true) -> bool:
 
 ## Acciones temporales por jugador: pid -> {"anim": String, "hasta": float}
 var _acciones_activas: Dictionary = {}
+## Gestos que llegan un poco después del suceso: [cuándo (elapsed), id, animación, duración]
+var _gestos_pendientes: Array = []
+var _anadido_mostrado := false
+
+func _programar_gesto(id: String, anim: String, dur: float, retraso: float) -> void:
+	_gestos_pendientes.append([elapsed + retraso, id, anim, dur])
+
+## Lo que hace el árbitro (y los asistentes) con cada suceso, además de las
+## faltas: gol (silbato, a veces revisión del VAR, y al centro), balón que se
+## va (córner o saque de meta), fuera de juego con bandera, lesión (pide
+## calma y llama a las asistencias) y las decisiones arbitrales de la
+## simulación (revisión o calmar a los jugadores).
+func _trabajo_del_arbitro(t_ev: String, tipo_ev: String, ev: Dictionary, es_gol: bool) -> void:
+	if not players_by_id.has("arbitro"):
+		return
+	var minuto := int(ev.get("min", current_minute()))
+	if es_gol:
+		_programar_gesto("arbitro", "arbitro_silbato", 0.9, 0.4)
+		## Uno de cada seis goles se revisa en el VAR (se confirma: la
+		## simulación ya decidió que es gol; esto solo lo dramatiza).
+		if _rng.randf() < 0.17:
+			_programar_gesto("arbitro", "arbitro_var", 2.2, 2.2)
+			revision_var.emit(minuto, "Posible fuera de juego en el gol")
+		_programar_gesto("arbitro", "senalar_falta", 1.8, 4.8)
+	elif tipo_ev == "fallo":
+		if _rng.randf() < 0.14:
+			## Fuera de juego: el asistente levanta la bandera y la baja en
+			## horizontal; el árbitro pita.
+			var asist := "linea_a" if _rng.randf() < 0.5 else "linea_b"
+			_programar_gesto(asist, "asistente_bandera", 1.8, 0.2)
+			_programar_gesto(asist, "asistente_fuera_juego", 1.8, 2.0)
+			_programar_gesto("arbitro", "arbitro_silbato", 0.9, 0.6)
+		elif not _corner_pendiente.is_empty():
+			_programar_gesto("arbitro", "arbitro_corner", 1.6, 0.8)
+		else:
+			_programar_gesto("arbitro", "arbitro_saque_meta", 1.6, 0.8)
+	elif t_ev == "lesion":
+		_programar_gesto("arbitro", "arbitro_silbato", 0.9, 0.3)
+		_programar_gesto("arbitro", "arbitro_calma", 1.4, 1.4)
+	elif t_ev == "arbitro":
+		var tx := str(ev.get("tx", "")).to_lower()
+		if tx.contains("var") or tx.contains("revis"):
+			_programar_gesto("arbitro", "arbitro_var", 2.2, 0.4)
+			revision_var.emit(minuto, str(ev.get("tx", "Revisión")))
+		elif tx.contains("penal"):
+			_programar_gesto("arbitro", "arbitro_silbato", 0.9, 0.2)
+			_programar_gesto("arbitro", "arbitro_penal", 1.8, 1.1)
+		else:
+			_programar_gesto("arbitro", "arbitro_calma", 1.4, 0.3)
 
 ## Elige hacia donde va el juego este minuto. Si acaba de pasar algo (ev != null)
 ## manda el suceso: tras un remate la pelota esta en el area, no en el medio.
@@ -336,7 +424,31 @@ func _recalcular_fase(ev) -> void:
 				"altura": altura, "es_gol": es_gol, "restante": CONTACTO_PATADA,
 			}
 		else:
+			## EL PASE TIENE GESTO: quien está pegado al balón le pega con el
+			## interior del pie. Antes el balón salía solo, sin que nadie lo tocara.
+			var pasador := _mas_cercano_a(origen, 2.6)
+			if not pasador.is_empty():
+				_ejecutar_accion(pasador, "pase", 0.8)
+				var np: Node3D = pasador.get("node")
+				if is_instance_valid(np):
+					np.look_at(Vector3(ball_target.x, np.position.y, ball_target.z), Vector3.UP)
 			(ball as Balon3D).enviar(ball_target, duracion, altura, es_gol)
+
+## El jugador de campo más cercano a un punto, si está a menos de `radio`.
+func _mas_cercano_a(punto: Vector3, radio: float) -> Dictionary:
+	var mejor: Dictionary = {}
+	var d_mejor := radio
+	for p in players:
+		if bool(p.get("arbitro", false)) or bool(p.get("banca", false)):
+			continue
+		var n: Node3D = p.get("node")
+		if not is_instance_valid(n):
+			continue
+		var d := Vector2(n.position.x - punto.x, n.position.z - punto.z).length()
+		if d < d_mejor:
+			d_mejor = d
+			mejor = p
+	return mejor
 
 func _buscar_portero(es_local: bool) -> Dictionary:
 	for p in players:
@@ -348,8 +460,12 @@ func _ejecutar_accion(p: Dictionary, anim_name: String, duracion: float) -> void
 	var pid = p.get("id")
 	if pid == null:
 		return
-	_acciones_activas[pid] = {"anim": anim_name, "hasta": elapsed + duracion}
 	var ap: AnimationPlayer = p.get("anim")
+	## EL PORTAFOLIO (26-9-2026): el zurdo patea con la zurda y los regates,
+	## festejos y lamentos se eligen entre muchas variantes.
+	if is_instance_valid(ap):
+		anim_name = AnimExtra.variante(ap, anim_name, str(pid), _rng)
+	_acciones_activas[pid] = {"anim": anim_name, "hasta": elapsed + duracion}
 	if is_instance_valid(ap) and ap.has_animation(anim_name):
 		ap.play(anim_name)
 		ap.speed_scale = 1.0
@@ -363,11 +479,19 @@ func _desolar_defensa(es_local_defensa: bool) -> void:
 				_ejecutar_accion(p, anim_lamento, 2.4)
 
 func _disparar(ev: Dictionary) -> void:
+	## Un suceso real manda sobre la jugada que se estuviera escenificando.
+	if reproductor.en_reproduccion and reproductor.ambiente:
+		reproductor.abortar()
 	event_fired.emit("%d'  %s" % [int(ev["min"]), ev["tx"]])
 	_recalcular_fase(ev)
 
 	var t_ev: String = str(ev.get("t", ""))
 	var tipo_ev: String = str(ev.get("tipo", ""))
+	## El lesionado se duele, agachado y con las manos en la rodilla.
+	if t_ev == "lesion":
+		var lesionado = players_by_id.get(ev.get("jugadorId"))
+		if lesionado != null:
+			_ejecutar_accion(lesionado, "dolor", 3.0)
 	var es_gol: bool = t_ev == "golMi" or t_ev == "golR"
 	## Mismo arreglo que en `_recalcular_fase()`: el remate real llega como
 	## `"t": "disparo"`, no como `"t": "atajada"/"poste"/"fallo"` directo.
@@ -392,7 +516,10 @@ func _disparar(ev: Dictionary) -> void:
 		if tipo_ev == "atajada" or (es_gol and _rng.randf() < 0.75) or tipo_ev == "poste":
 			var lado_der := ball_target.x > 0 if not es_local_atacando else ball_target.x < 0
 			var anim_atajada := "atajar_der" if lado_der else "atajar_izq"
-			_ejecutar_accion(por_defensor, anim_atajada, 1.15)
+			## Balón a ras de suelo y centrado: el portero se agacha, no vuela.
+			if ball_target.y < 0.6 and absf(ball_target.x) < 1.6:
+				anim_atajada = "atajar_bajo"
+			_ejecutar_accion(por_defensor, anim_atajada, 1.9)
 
 	## JUGADAS PREHECHAS, segunda pieza (21-9-2026): un remate desviado
 	## ("fallo") es, en la realidad, a menudo un balon que sale por el fondo
@@ -419,13 +546,29 @@ func _disparar(ev: Dictionary) -> void:
 	if tipo_ev == "fallo" and _corner_pendiente.is_empty() and _rng.randf() < 0.30:
 		_jugada_corner(es_local_atacando)
 
+	## EL ÁRBITRO HACE SU TRABAJO (26-9-2026): pita, señala, habla, revisa.
+	_trabajo_del_arbitro(t_ev, tipo_ev, ev, es_gol)
+
 	# Faltas y tarjetas
 	if t_ev in ["warn", "falta"]:
 		if p_remate != null:
 			_ejecutar_accion(p_remate, "falta_barrida" if _rng.randf() > 0.35 else "falta_empujon", 1.2)
 		var arb = players_by_id.get("arbitro")
 		if arb != null:
-			_ejecutar_accion(arb, "mostrar_tarjeta" if t_ev == "warn" else "senalar_falta", 1.8)
+			## Primero el silbato; en una falta sin tarjeta, a veces deja seguir
+			## (ventaja); con tarjeta, habla con el jugador y después la muestra.
+			_ejecutar_accion(arb, "arbitro_silbato", 0.9)
+			if t_ev == "warn":
+				_programar_gesto("arbitro", "arbitro_amonestar_hablar", 1.6, 0.9)
+				var gesto := "mostrar_roja" if bool(ev.get("roja", false)) else "mostrar_tarjeta"
+				_programar_gesto("arbitro", gesto, 2.4 if gesto == "mostrar_roja" else 1.8, 2.5)
+				## Protestas y el árbitro que las aparta.
+				if p_remate != null:
+					_programar_gesto(str(p_remate.get("id")), "protestar", 1.6, 2.6)
+				_programar_gesto("arbitro", "arbitro_dispersar", 1.6, 4.3)
+			else:
+				var ventaja := _rng.randf() < 0.3
+				_programar_gesto("arbitro", "arbitro_ventaja" if ventaja else "senalar_falta", 1.6, 0.8)
 
 		## JUGADAS PREHECHAS, tercera pieza (21-9-2026): el tiro libre. Mismo
 		## principio que el corner -no redecide nada, `ev` sigue siendo un
@@ -636,8 +779,18 @@ func _jugada_tiro_libre(atacante_es_local: bool, z_arco_propio: float) -> void:
 	}
 
 func _celebrar(p: Dictionary, asistidor) -> void:
-	var anim_celeb: String = "celebrar_rodillas" if _rng.randf() > 0.45 else "celebrar"
-	_ejecutar_accion(p, anim_celeb, 3.8)
+	## Según su carácter y con su celebración de siempre (AnimExtra).
+	var jd: Dictionary = p.get("jugador", {}) if p.get("jugador") is Dictionary else {}
+	var ap_c: AnimationPlayer = p.get("anim")
+	var anim_celeb := AnimExtra.celebracion(ap_c if is_instance_valid(ap_c) else null, String(jd.get("rasgo", "")),
+		str(p.get("id", "")), not bool(p.get("es_local", true)), _rng)
+	var pid_c = p.get("id")
+	if pid_c != null:
+		## Directo, sin pasar por el sorteo de `_ejecutar_accion`.
+		_acciones_activas[pid_c] = {"anim": anim_celeb, "hasta": elapsed + 3.8}
+		if is_instance_valid(ap_c) and ap_c.has_animation(anim_celeb):
+			ap_c.play(anim_celeb)
+			ap_c.speed_scale = 1.0
 	_celebrando.append({"p": p, "hasta": elapsed + 4.2})
 	if asistidor != null and players_by_id.has(asistidor):
 		var a = players_by_id[asistidor]
@@ -663,6 +816,14 @@ func _mover(delta: float) -> void:
 	_celebrando = vivas
 
 	var bola: Vector3 = ball.position if is_instance_valid(ball) else Vector3.ZERO
+	_portador = _buscar_portador(bola)
+	_presionador = {}
+	if fase == "ataqueLocal" or fase == "ataqueVisita":
+		## Defiende el que no ataca; su jugador de campo más cercano al balón
+		## sale a presionarlo.
+		var r: Variant = _companero_mas_cercano_al_balon(fase == "ataqueVisita", bola)
+		if r != null and (r["node"] as Node3D).position.distance_to(bola) < RADIO_IR_A_PRESIONAR:
+			_presionador = r
 
 	for p in players:
 		var node: Node3D = p["node"]
@@ -712,6 +873,17 @@ func _mover(delta: float) -> void:
 			objetivo = _objetivo_portero(base, bola, es_local)
 		else:
 			objetivo = _objetivo_jugador(base, bola, es_local, p, delta)
+			## LA PRESIÓN (25-9-2026): el jugador del equipo que defiende más
+			## cercano al balón sale a presionarlo y se planta entre el balón y
+			## su propio arco, a un par de metros -no encima, que sería falta-.
+			## Sin esto nadie se acercaba nunca a menos de 4 m del que llevaba
+			## la pelota (medido en `pruebas/prueba_regates.gd`: mediana 7 m):
+			## el partido era un rondo sin oposición y el regate no tenía a
+			## quién regatear.
+			if not _presionador.is_empty() and p.get("id") == _presionador.get("id"):
+				var z_arco_propio: float = 52.5 if es_local else -52.5
+				var hacia_arco := Vector3(0.0, 0.0, signf(z_arco_propio - bola.z))
+				objetivo = objetivo.lerp(Vector3(bola.x, 0.0, bola.z) + hacia_arco * 2.0, 0.8)
 			## RONDA 3 (17-9-2026): SEPARACION entre companeros. La formula de
 			## `_objetivo_jugador()` atrae a TODOS los de un lado hacia la
 			## misma zona de la pelota -sin nada que los separe, dos o tres
@@ -799,6 +971,8 @@ func _mover(delta: float) -> void:
 		node.position += vel_actual * delta
 
 		var vel := vel_actual.length()
+		if not _portador.is_empty() and p.get("id") == _portador.get("id"):
+			_decidir_regate(p, vel)
 		_animar(p, ap, vel, _esta_celebrando(p))
 		if vel > 0.35:
 			var ang_deseado := atan2(vel_actual.x, vel_actual.z)
@@ -1028,7 +1202,73 @@ func _objetivo_portero(base: Vector3, bola: Vector3, es_local: bool) -> Vector3:
 	z += (-6.0 if es_local else 6.0) * lejania
 	return Vector3(x, 0, z)
 
-const VEL_CICLO := {"correr": 6.2, "trotar": 3.05, "caminar": 1.35}
+## `conducir`: el Dribble_03 del mocap avanza ~1,15 m/s llevando el balón.
+const VEL_CICLO := {"correr": 6.2, "trotar": 3.05, "caminar": 1.35, "conducir": 1.15}
+
+## EL QUE LLEVA EL BALÓN (25-9-2026). Hasta hoy nadie "tenía" la pelota: el
+## más cercano corría igual que los demás y el balón iba pegado a sus pies
+## sin que las piernas hicieran nada con él. Ahora, cada fotograma, el jugador
+## de campo que está encima del balón (a menos de `RADIO_PORTADOR`, balón a ras
+## de césped) lo conduce con el mocap de regate; si un rival se le echa encima,
+## amaga (`regate_finta`); si su equipo ataca y él está parado, lo pisa y
+## protege (`regate_pausa`). Los tres son clips de captura real del mismo pack
+## de fútbol, sin desplazamiento propio: el partido sigue moviendo al jugador.
+const RADIO_PORTADOR := 1.4
+## Distancia del rival a la que el portador amaga. Medido en un partido real
+## (`pruebas/prueba_regates.gd`): el balón cambia de pies cada 1-2 s, así que
+## el rival que sale a presionar rara vez llega a menos de 4 m; a 6 m ya viene
+## encima y el amague se lee como respuesta a él.
+const RADIO_PRESION := 6.0
+const RADIO_IR_A_PRESIONAR := 16.0
+var _presionador: Dictionary = {}
+const PAUSA_ENTRE_REGATES := 5.0
+var _portador: Dictionary = {}
+var _proximo_regate: Dictionary = {}   ## id -> elapsed a partir del cual puede volver a amagar
+var regates_hechos := 0                ## para las pruebas
+
+func _buscar_portador(bola: Vector3) -> Dictionary:
+	if not is_instance_valid(ball) or bola.y > 0.4:
+		return {}
+	var mejor: Dictionary = {}
+	var mejor_d := RADIO_PORTADOR * RADIO_PORTADOR
+	for p in players:
+		if bool(p.get("arbitro", false)) or str(p.get("slot_code", "")) == "POR":
+			continue
+		var n: Node3D = p.get("node")
+		if not is_instance_valid(n):
+			continue
+		var d := Vector2(n.position.x - bola.x, n.position.z - bola.z).length_squared()
+		if d < mejor_d:
+			mejor_d = d
+			mejor = p
+	return mejor
+
+func _decidir_regate(p: Dictionary, vel: float) -> void:
+	var pid = p.get("id")
+	if pid == null or _acciones_activas.has(pid) or _esta_celebrando(p):
+		return
+	if elapsed < float(_proximo_regate.get(pid, 0.0)):
+		return
+	var ap: AnimationPlayer = p.get("anim")
+	if not is_instance_valid(ap):
+		return
+	var es_local: bool = p["es_local"]
+	var rival: Variant = _rival_mas_cercano(p, es_local)
+	var n: Node3D = p["node"]
+	if rival != null and (rival["node"] as Node3D).position.distance_to(n.position) < RADIO_PRESION \
+			and ap.has_animation("regate_finta"):
+		_ejecutar_accion(p, "regate_finta", 1.3)
+		_proximo_regate[pid] = elapsed + PAUSA_ENTRE_REGATES
+		regates_hechos += 1
+		Sonido.toca("regate")
+		return
+	var ataca := (fase == "ataqueLocal" and es_local) or (fase == "ataqueVisita" and not es_local)
+	if ataca and vel < 0.35 and ap.has_animation("regate_pausa") and _rng.randf() < 0.35:
+		_ejecutar_accion(p, "regate_pausa", 2.0)
+		_proximo_regate[pid] = elapsed + PAUSA_ENTRE_REGATES
+		return
+	## Tampoco se reintenta cada fotograma: una decisión cada medio segundo.
+	_proximo_regate[pid] = elapsed + 0.5
 
 func _animar(p: Dictionary, ap: AnimationPlayer, vel: float, celebrando: bool) -> void:
 	if not is_instance_valid(ap):
@@ -1050,6 +1290,9 @@ func _animar(p: Dictionary, ap: AnimationPlayer, vel: float, celebrando: bool) -
 	var quiere: String
 	if celebrando:
 		quiere = "celebrar" if realista else "jump"
+	elif realista and vel > 0.9 and vel < 2.0 and not _portador.is_empty() and p.get("id") == _portador.get("id") \
+			and ap.has_animation("conducir"):
+		quiere = "conducir"
 	elif vel > 2.6:
 		quiere = "correr" if realista else "run"
 	elif vel > 1.1:

@@ -26,7 +26,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_ir_a_pestana", "Clubes")
 		_pantalla.call("_refrescar")
 	if _n == ESPERA + 2:
-		_guardar("res://pruebas/pantalla_clubes.png")
+		_guardar("res://pruebas/capturas/pantalla_clubes.png")
 	if _n == ESPERA + 4:
 		## Abrir el plantel de un club ajeno: eso es `vFichaClub`.
 		var mun = _pantalla.get("mundo")
@@ -38,14 +38,14 @@ func _process(_d: float) -> void:
 		_pantalla.set("_clubes_ficha", otro)
 		_pantalla.call("_pintar_clubes")
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_ficha_club.png")
+		_guardar("res://pruebas/capturas/pantalla_ficha_club.png")
 	if _n == ESPERA + 8:
 		## Y la gala: cerrar la temporada la genera.
 		_pantalla.call("_nueva_temporada")
 		_pantalla.call("_elegir_grupo", "club")
 		_pantalla.call("_ir_a_pestana", "Premios")
 	if _n == ESPERA + 10:
-		_guardar("res://pruebas/pantalla_premios.png")
+		_guardar("res://pruebas/capturas/pantalla_premios.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

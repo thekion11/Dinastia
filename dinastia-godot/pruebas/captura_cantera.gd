@@ -27,7 +27,7 @@ func _process(_d: float) -> void:
 				tabs.current_tab = i
 				break
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_cantera.png")
+		_guardar("res://pruebas/capturas/pantalla_cantera.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

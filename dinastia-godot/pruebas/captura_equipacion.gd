@@ -46,7 +46,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_limpiar", lista)
 		_pantalla.call("_pintar_equipacion", probar)
 	if _n == ESPERA + 6:
-		_guardar("res://pruebas/pantalla_equipacion.png")
+		_guardar("res://pruebas/capturas/pantalla_equipacion.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

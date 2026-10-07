@@ -33,7 +33,7 @@ func _process(_d: float) -> void:
 		if rival != null:
 			_pantalla.call("_ver_ficha", rival)
 	if _n == ESPERA + 4:
-		_guardar("res://pruebas/pantalla_modo_ciego.png")
+		_guardar("res://pruebas/capturas/pantalla_modo_ciego.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

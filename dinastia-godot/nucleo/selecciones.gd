@@ -312,7 +312,7 @@ func _prenomina() -> void:
 			mios.append(j.nombre)
 	var sel := nombre_seleccion()
 	noticia.emit("Prenómina de " + sel,
-		"La selección de %s publica una lista preliminar de %d jugadores rumbo a la próxima fecha FIFA." % [sel, lista.size()]
+		"La selección de %s publica una lista preliminar de %d jugadores rumbo a la próxima fecha internacional." % [sel, lista.size()]
 		+ (" De tu club: %s." % ", ".join(mios) if not mios.is_empty() else " Sin jugadores de tu club en el corte inicial."))
 	prenomina_publicada.emit(lista)
 
@@ -332,7 +332,7 @@ func _fecha_fifa(anio: int, semana_n: int) -> void:
 			if Azar.suerte(RESPETA_A_LA_FIGURA if figura else RESPETA_AL_SUPLENTE):
 				_racha[j.id] = 0
 				noticia.emit("La federación respeta el pedido",
-					"El cuerpo técnico de %s decide no citar a %s esta fecha FIFA, atendiendo el pedido de descanso del club." % [sel, j.nombre])
+					"El cuerpo técnico de %s decide no citar a %s esta fecha internacional, atendiendo el pedido de descanso del club." % [sel, j.nombre])
 				continue
 			noticia.emit("La federación ignora el pedido",
 				"Pediste que %s descansara y la federación lo citó igual. Vuelve el lunes, y verás cómo." % j.nombre)
@@ -419,12 +419,12 @@ func _desgastar(j: Jugador, mio: Club, anio: int, semana_n: int) -> void:
 	var compensacion := Eco.escalar(float(j.sueldo) * float(COMPENSACION_BASE + sem), float(mio.rep))
 	if compensacion > 0:
 		mio.mover_saldo(compensacion)
-		movimiento.emit("Compensación FIFA por lesión en gira: " + j.nombre, compensacion)
+		movimiento.emit("Compensación de la federación internacional por lesión en gira: " + j.nombre, compensacion)
 	noticia.emit(
 		("⚠️ Sobrecarga en la selección: " if sobreuso else "Lesionado en la selección: ") + j.nombre,
 		"%s vuelve tocado de la gira: %s (%d sem)." % [j.nombre, tipo.to_lower(), sem]
 		+ (" Es su %dª convocatoria seguida sin descanso: la selección lo exprime y el club paga las consecuencias." % racha if sobreuso else "")
-		+ (" El club recibe la ayuda del programa de protección de clubes de la FIFA." if compensacion > 0 else ""))
+		+ (" El club recibe la ayuda del programa de protección de clubes de la federación internacional." if compensacion > 0 else ""))
 	vuelve_tocado.emit(j, sem, sobreuso)
 
 ## El partido de la fecha FIFA. El rival sale del escalafón mundial evitando que
@@ -443,7 +443,7 @@ func _jugar_amistoso(sel: String) -> void:
 	var g2 := Azar.ent(0, 3)
 	var linea := "%s %d - %d %s" % [sel, g1, g2, rival]
 	_anotar_resultado(linea)
-	noticia.emit("Fecha FIFA: " + linea,
+	noticia.emit("Fecha internacional: " + linea,
 		"Cierra la ventana internacional. Los que fueron vuelven con %s." % ("el ánimo arriba" if g1 >= g2 else "la mochila pesada"))
 
 func _anotar_resultado(linea: String) -> void:

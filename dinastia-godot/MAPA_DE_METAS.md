@@ -1,0 +1,137 @@
+# Mapa de metas de Dinastía
+
+Hecho el 28-9-2026 a partir de dos fuentes:
+- el **informe externo** del 28-9, que puntúa el juego con 61/100;
+- el **plan de trabajo** que venía siguiendo, en `ROADMAP.md`.
+
+Antes de escribir cada meta se comprobó contra el código. El informe se hizo sobre la versión del 25-9 y sobre la documentación, así que varias de sus carencias ya estaban resueltas.
+
+Estados:
+- ✅ hecho y probado en el banco;
+- 🔨 en curso;
+- ⬜ por hacer;
+- 🔒 depende de algo externo (lo gestiona el dueño).
+
+```
+ FASE A — MÍNIMO JUGABLE        FASE B — EARLY ACCESS          FASE C — VERSIÓN 1.0
+ (lo que bloquea jugar)         (lo que hace falta vender)     (lo que lo hace distinto)
+ ────────────────────────       ────────────────────────       ────────────────────────
+ ✅ Descanso sin bloqueo         ✅ 20+ uniformes               ✅ Drama humano: redes
+ ✅ Simular hasta el final       ✅ Árbol de habilidades        ⬜ Charlas con IA real
+ ✅ Tutorial inmersivo           ✅ Selecciones y Mundial       ⬜ Representantes (mini-juego)
+ ✅ Uniforme ≠ color del menú    ✅ Copas de 8 confederaciones  ✅ Salud mental y camarillas
+ ✅ Pizarra táctica              ✅ Camarillas en el vestuario  ⬜ Celebraciones por jugador
+ 🔨 Animaciones de partido       ✅ Estadios de 5 bandejas      ⬜ Editor avanzado (+100)
+ 🔒 Builds de entrega            ⬜ Dividir principal.gd        ⬜ Carrera de jugador
+ 🔒 Contraseña del keystore      ⬜ Mercado avanzado            ⬜ Logros e historial
+                                 ⬜ Insolvencia y reglamento    ⬜ Multijugador asíncrono
+```
+
+## Fase A — Mínimo jugable (objetivo: 65/100)
+
+| Meta | Estado | Qué hay / qué falta |
+|---|---|---|
+| El descanso no bloquea el partido | ✅ | El reloj del 3D arranca donde va el partido. El 3D se para en el 45' y abre el camarín. Hay prueba en el banco y `pruebas/prueba_descanso_3d.gd`. |
+| Simular el partido entero | ✅ | Botón "⏭ Simular hasta el final" en la vista 3D y en la de texto. |
+| Tutorial interactivo | ✅ | Tutorial inmersivo: prólogo, mentor con datos de tu partida y misiones por modo. |
+| Color del uniforme separado del menú | ✅ | Cuatro capas independientes: club, uniforme, escudo e interfaz. |
+| Vista táctica de cancha | ✅ | `ui/componentes/pizarra_tactica.gd`. |
+| Animaciones de partido creíbles | 🔨 | 333 movimientos por jugador (23 tiros, 20 pases, 13 atajadas, 31 regates, lesiones y árbitro). Falta una revisión visual jugada a jugada. |
+| Builds de entrega | 🔒 | Los ZIP de `entregas/` son punteros LFS. Hay que generarlos en un PC y subirlos fuera de LFS. |
+| Secretos fuera del repo | 🔒 | `export_credentials.cfg` ya no está en el repo. La contraseña vieja sigue en el historial y hay que cambiarla. |
+
+## Fase B — Early Access (objetivo: 72-75/100)
+
+| Meta | Estado | Qué hay / qué falta |
+|---|---|---|
+| Uniformes variados | ✅ | 130 diseños (40 nuevos: 20 de dos colores y 20 de tres), patrocinadores en la camiseta y diseñador a pantalla completa. |
+| Árbol de habilidades del DT | ✅ | Árbol, 15 maestrías de 30 niveles, vista en grande. |
+| Selecciones y Mundial | ✅ | `nucleo/selecciones.gd`. |
+| Copas continentales | ✅ | Libertadores, Sudamericana, Champions, Europa League, Asia, África, Oceanía y Concacaf. |
+| Psicología del vestuario | ✅ | Camarillas, ansiedad y roles, en `nucleo/vestuario.gd`. |
+| Estadios variados | ✅ | Seis formas, hasta 5 bandejas y 150.000 personas. El estadio sigue al real de cada club. |
+| Reputación por facetas | ✅ | Niveles del club y siete facetas del DT con efectos reales. |
+| Modos de juego | ✅ | Crear tu Club, Retos y Fondo de Inversión. ⬜ Carrera de Jugador. |
+| **Dividir `principal.gd`** | ⬜ | 15.189 líneas. Hay que sacar los paneles a `ui/componentes/` y bajar de 10.000. |
+| Mercado avanzado (bloque 37) | ⬜ | Cláusulas, pagos a plazos y co-propiedad. |
+| Insolvencia (bloque 38) | ⬜ | Concurso de acreedores, administración y descenso administrativo. |
+| Reglamento y federación (bloques 39-40) | ⬜ | Fair play financiero y límite de extranjeros por liga. |
+| Editor de competiciones (bloque 42) | ⬜ | Crear ligas y copas propias. |
+
+## Fase C — Versión 1.0 (objetivo: 80-85/100)
+
+| Meta | Estado | Qué hay / qué falta |
+|---|---|---|
+| **Vida del personaje y redes sociales** | ✅ | Casa 3D interactiva, teléfono con 7 apps, Tribuna con tu cuenta y la del club. Falta que los jugadores también publiquen. |
+| Charlas con IA conversacional | ⬜ | Hoy la charla escrita deduce el tono de lo que escribes. Falta una IA real, opcional y con clave del jugador. |
+| Representantes con agencia propia | ⬜ | Mini-juego de negociación con agentes que tienen su propia cartera. |
+| Celebraciones de gol por jugador | ⬜ | Cada jugador con su festejo, según su carácter. |
+| Editor avanzado | ⬜ | Más de 100 variaciones de caras, uniformes y estadios desde el juego. |
+| Carrera de Jugador | ⬜ | Jugar como futbolista, no como DT. Es el modo más grande que queda. |
+| Logros e historial | ⬜ | Logros, récords y estadísticas históricas. |
+| Multijugador asíncrono | ⬜ | Ligas entre amigos. Opcional. |
+
+## Lo que se pidió el 28-9 (hecho)
+
+| Meta | Estado |
+|---|---|
+| Mapa de metas (este documento) | ✅ |
+| El móvil bien agarrado en la mano: muñeca orientada, palma contra el dorso, pose de lectura | ✅ |
+| Teléfono con pantalla de inicio, 7 apps (Tribuna, Mensajes, Noticias, Banco, Calendario, Fotos, Ajustes) y personalización (fondo, funda, letra) | ✅ |
+| Foto de perfil: la cara de tu personaje o una imagen de tu galería | ✅ |
+| Acceso a la cuenta del club por un evento, cierre de sesión animado y entrada con usuario y clave | ✅ |
+| Escena de la casa más natural: cielo con nubes que se mueven, 26.000 briznas con viento, árboles con copa de varias masas, agua con oleaje, pájaros | ✅ |
+| Escena interactiva: tomar un café, mirar el paisaje, cámara libre y pasar al atardecer con farolas | ✅ |
+
+## Lo que queda, en el orden en que se hace
+
+Junta tres fuentes:
+- los fallos concretos del informe que no entraban en las fases;
+- lo pendiente de la semana pasada en `ROADMAP.md`;
+- lo que salió al revisar la escena de tu casa.
+
+| # | Meta | De dónde viene | Estado |
+|---|---|---|---|
+| 1 | La gorra no flota sobre el pelo voluminoso (rizado, afro...) | Revisión de la escena | ✅ (`pruebas/captura_gorras.gd`) |
+| 2 | Botón de "salir a la segunda parte" separado de las acciones del camarín | Informe, fallo 10 | ✅ ya estaba: botón propio bajo la charla |
+| 3 | Sin tirones en tablas con muchas caras (caché de retratos) | Informe, fallo 19 | ✅ ya estaba: `cara.gd` guarda cada retrato en caché |
+| 4 | Fin de contrato validado en todos los caminos | Informe, fallo 21 | ✅ era real: los contratos no vencían nunca; ahora vencen cada temporada |
+| 5 | Los jugadores también publican en Tribuna (y tú les respondes) | Redes | ✅ |
+| 6 | Mercado avanzado: guerra de ofertas, derechos de formación, superagente, fichaje impuesto por el dueño (bloques 37-38) | Plan maestro | ✅ (más apuestas y transparencia; los derechos de formación ya existían) |
+| 7 | Insolvencia: renegociar deuda, resta de puntos, administrador, tope salarial (bloques 39-40) | Plan maestro | ✅ (más cláusula del DT y refundación; renegociar y bonos ya existían) |
+| 8 | Reglamento fino: historial por árbitro, desempates, playoffs de descenso (bloques 44-45) | Plan maestro | ✅ (más corrupción federativa; los cambios de reglas por asamblea ya existían) |
+| 9 | Selecciones: lista preliminar y conflicto club-selección (bloque 46) | Plan maestro | ✅ ya estaba: prenómina antes de cada fecha FIFA, pedido de descanso, compensación y vuelta tocado |
+| 10 | Editor de competiciones y sede de final fija (bloque 47) | Plan maestro, informe | ✅ |
+| 11 | Meta: cromos, museo global, mundo heredado (bloque 50) | Plan maestro, informe (logros) | ✅ |
+| 12 | Colores del estadio por sección: cada bandeja, redes, focos, LED | Pedido de la semana pasada | ✅ |
+| 13 | Presentación de fichajes como cinemática | Plan B3 | ✅ tu estadio real (el diseñado), tu camiseta con su dorsal, dominadas o saludo, confeti y rótulo |
+| 14 | Celebraciones de gol según el carácter del jugador | Informe | ✅ repertorio por rasgo, celebración propia de cada jugador (en su ficha) y provocación de visita |
+| 15 | Dividir `principal.gd` (15.189 líneas) en componentes | Informe | ✅ 6.300 líneas; 243 funciones en 14 pantallas de `ui/pantallas/`; validado con `pruebas/recorrido_pantallas.gd` (73 pantallas, 615 botones) |
+| 16 | Patada que luce como golpeo de balón | Informe, fallo 11 | ✅ los 20 tiros artesanales con carrera, cadera, brazo de equilibrio, apoyo flexionado y puntillas (`pruebas/capturas/golpeo_hoja.png`) |
+| 17 | Traducción al inglés y portugués | Informe (ventas) | ✅ 29-9: 1402+ frases de interfaz por idioma (menús, pestañas, botones, fechas, títulos en mayúsculas, frases con nombres como patrones). La narración larga sigue en castellano a propósito |
+| 18 | Carrera de Jugador: eventos únicos, CONTROL REAL del jugador (mando 🎮 y teclado), NPC con más inteligencia a partir de las jugadas prehechas, córners/penales/tiros libres ejecutados por el jugador, estética propia | Modos, pedido del usuario (29-9) | 🔨 primera versión jugable: `MotorJugable` (física del balón, reglas, IA de los 21 guiada por las jugadas prehechas, portero), `PartidoJugable` (cámara, HUD propio, apuntado de córner/falta/penal, pausa, resumen), `CarreraJugador` (entrenamiento, DT, fama, agente, ofertas, eventos únicos) y su pantalla. Falta pulir: fuera de juego, más eventos, sustituciones, selección jugable |
+| 23 | Panel lateral a la izquierda (estilo Soccer Manager), que se desliza o se toca, con los accesos de Historia, Gente, Mi Carrera, Operaciones, Mi Vida, Editar, Ajustes, Ciudad 3D y Estadio 3D y sus submenús; cada uno abre SU pantalla completa con fondo único animado | Pedido del usuario (29-9) | ✅ riel + cajón deslizable; portada de tarjetas grandes (3 columnas, hacia abajo, aprobada por el usuario) y detalle; 9 fondos animados en `ui/fondo_menu.gdshader`; L1/R1 y L2/R2 navegan el menú abierto; recorrido: 106 pantallas sin errores |
+| 24 | El menú central cambia de estética cada 10 minutos de juego, rotando entre sus diseños | Pedido del usuario (29-9) | ✅ 8 diseños (paleta + estilo de menú + tarjetas + fondo), con fundido; se apaga en Ajustes → Interfaz |
+| 25 | Más idiomas | Pedido del usuario (29-9) | ✅ 29-9: francés, italiano, alemán y catalán completados al nivel del inglés; **polaco y turco nuevos**. 9 idiomas en total. Captura: `pruebas/captura_idiomas.gd` |
+| 26 | El panel de objetivos se mueve arrastrándolo y recuerda dónde quedó | Pedido del usuario (29-9) | ✅ |
+| 27 | Repaso real final (tras el vídeo): todo el chat, memorias, instrucciones profundas, vídeos comparativos y LEEME; lista de lo que está, lo que no y lo que hay que mejorar. El vídeo: jugando de verdad, detallado y largo | Pedido del usuario (29-9) | ⬜ |
+| 19 | Balón mejor y con más variantes: modelos por competición y marca ficticia, texturas de paneles, desgaste, balón de invierno (naranja/amarillo) y elegir el del club | Pedido del usuario (29-9) | ✅ 8 balones y 3 dibujos de paneles reales (32 paneles, 6 curvos, cuero de gajos), naranja con nieve, el del club en las dominadas (`pruebas/capturas/balones.png`) |
+| 20 | El escudo pintado en el círculo central se ve tosco de cerca: suavizarlo o vectorizarlo | Visto en la cinemática de fichajes | ✅ 1024 px con mipmaps, recibe luz y sombra, pintura translúcida |
+| 21 | Objetivos siempre a la vista en el borde derecho (directiva, confianza, próximo partido, misiones del mentor) | Pedido del usuario (29-9) | ✅ |
+| 22 | Las butacas de los rivales con los colores de su club (salían todas verdes) | Visto en la cinemática | ✅ |
+| — | Túnel navegable | Pedido para cuando exista "caminar por el estadio" | En espera |
+| — | Cara 2D moldeada sobre el modelo 3D | El usuario pidió no tocarlo sin permiso | En espera |
+| — | Contraseña del keystore, licencias 🟡, FPS en un PC real, música, builds de `entregas/` | Dueño | 🔒 |
+
+## Cómo se mide
+
+- **Cada meta cerrada tiene prueba en el banco** (`pruebas/banco.gd`, 0 fallos) y, si se ve, una captura en `pruebas/`.
+- La puntuación se recalcula con las siete categorías del informe:
+  - arquitectura;
+  - jugabilidad;
+  - visual;
+  - rendimiento;
+  - contenido;
+  - pulido;
+  - originalidad.
+- Estimación actual (29-9): **≈71/100**. El detalle, punto por punto contra el informe, está en `COMPARACION_INFORME.md`.

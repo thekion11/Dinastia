@@ -16,7 +16,7 @@ func _process(_d: float) -> void:
 		_pantalla.call("_ir_a_pestana", "Ajustes")
 		_pantalla.call("_refrescar")
 	if _n == 14:
-		_guardar("res://pruebas/pantalla_velocidad_ajustes.png")
+		_guardar("res://pruebas/capturas/pantalla_velocidad_ajustes.png")
 		## Elegir "Rápido" (índice 3) y comprobar que un partido nuevo arranca ahí.
 		_pantalla.set("_velocidad_partido", 3)
 		_pantalla.call("_dirigir")
@@ -26,7 +26,7 @@ func _process(_d: float) -> void:
 			if h is PartidoVivo:
 				vivo = h
 		print("velocidad guardada=3, velocidad real del partido=%s (Rápido=3)" % (vivo._velocidad if vivo != null else "NO SE ABRIO"))
-		_guardar("res://pruebas/pantalla_velocidad_partido.png")
+		_guardar("res://pruebas/capturas/pantalla_velocidad_partido.png")
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:

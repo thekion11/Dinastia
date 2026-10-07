@@ -66,7 +66,7 @@ func _process(delta: float) -> void:
 	var textura := get_viewport().get_texture()
 	var img := textura.get_image() if textura != null else null
 	if img != null:
-		img.save_png("res://pruebas/mocap_origen_power_kick_lado.png")
+		img.save_png("res://pruebas/capturas/mocap_origen_power_kick_lado.png")
 		print("CAPTURA ORIGEN OK en ", _tiempo)
 	else:
 		## El renderer dummy de --headless no tiene framebuffer: el mismo

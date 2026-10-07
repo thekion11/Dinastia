@@ -56,7 +56,7 @@ func _process(_delta: float) -> void:
 		_ap.seek(float(SECUENCIA[_i][2]), true)
 	if _frame_desde_clip == 9:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/mocap_origen_%s_lado.png" % SECUENCIA[_i][1])
+		img.save_png("res://pruebas/capturas/mocap_origen_%s_lado.png" % SECUENCIA[_i][1])
 		print("capturado origen ", SECUENCIA[_i][1])
 		_siguiente()
 

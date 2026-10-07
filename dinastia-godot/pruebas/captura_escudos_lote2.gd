@@ -59,7 +59,7 @@ func _process(_d: float) -> void:
 	_frame += 1
 	if _frame == 5:
 		var img := get_viewport().get_texture().get_image()
-		img.save_png("res://pruebas/pantalla_escudos_lote2.png")
+		img.save_png("res://pruebas/capturas/pantalla_escudos_lote2.png")
 		print("captura guardada: res://pruebas/pantalla_escudos_lote2.png")
 		print("FIN. 0 fallos")
 		get_tree().quit()

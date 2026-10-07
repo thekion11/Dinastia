@@ -47,6 +47,10 @@ var vivos: Array[Club] = []
 var ronda: int = 0
 var campeon: Club = null
 var historial: Array[Dictionary] = []
+## LA SEDE FIJA DE LA FINAL (editor de competiciones, 28-9-2026): el id del
+## club cuyo estadio la alberga. Si ese club llega a la final, juega en casa;
+## si no, la final sigue en cancha neutral.
+var sede_final_id := ""
 
 func _init(_nombre: String = "Copa") -> void:
 	nombre = _nombre
@@ -109,8 +113,14 @@ func jugar_ronda(ya_jugado: Partido = null) -> Array:
 			if gl == gv:
 				penales = ya_jugado.penales()
 		else:
-			## La final se juega en cancha neutral: sin empuje de local.
-			var p := Partido.new(a, b, final)
+			## La final se juega en cancha neutral: sin empuje de local, salvo
+			## que uno de los dos sea el dueño de la sede fija.
+			var en_casa := final and sede_final_id != "" and (a.id == sede_final_id or b.id == sede_final_id)
+			if en_casa and b.id == sede_final_id:
+				var tmp := a
+				a = b
+				b = tmp
+			var p := Partido.new(a, b, final and not en_casa)
 			var r := p.simular()
 			gl = r["local"]
 			gv = r["visita"]

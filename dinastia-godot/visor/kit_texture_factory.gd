@@ -84,7 +84,7 @@ static func _torso_de_camiseta(fichero: String) -> Image:
 		return null
 	var ruta := dir.path_join(fichero)
 	if not FileAccess.file_exists(ruta):
-		print("KitTextureFactory: falta la equipacion ", fichero)
+		print("KitTextureFactory: falta la equipación ", fichero)
 		_jersey_cache[fichero] = null
 		return null
 	var src := Image.load_from_file(ruta)

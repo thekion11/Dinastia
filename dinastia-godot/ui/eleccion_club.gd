@@ -8,12 +8,12 @@ extends Control
 ## mando. Antes de esto no había ningún paso así: `_nuevo_mundo()` tomaba
 ## siempre al primero de Chile, sin preguntar.
 
-const COL_FONDO := Color("0c1510")
-const COL_PANEL := Color("141c16")
-const COL_BORDE := Color("ffffff12")
-const COL_TEXTO := Color("e9eeea")
-const COL_SUAVE := Color("8ea595")
-const COL_ACENTO := Color("3fa06a")
+const COL_FONDO := Tema.FONDO
+const COL_PANEL := Tema.PANEL
+const COL_BORDE := Tema.BORDE
+const COL_TEXTO := Tema.TEXTO
+const COL_SUAVE := Tema.SUAVE
+const COL_ACENTO := Tema.ACENTO
 
 var _mundo: Mundo
 var _pais_actual := "CHI"
@@ -21,18 +21,31 @@ var _fila_paises: HBoxContainer
 var _lista_clubes: VBoxContainer
 var _titulo_liga: Label
 var _desafios: Array[String] = []
+var _col1: ColorPickerButton
+var _col2: ColorPickerButton
+var _campo_estadio: LineEdit
 var _fila_desafios: HFlowContainer
 var _etiqueta_mult: Label
 ## El globo interactivo de verdad, idea de Gemini: reemplaza el mapa plano que
 ## nunca llegó a construirse. Arrastrarlo lo gira; elegir un país lo hace viajar
 ## hasta ahí solo, como `globoIr()` en el HTML.
 var _globo: Globo3D
+var _ficha_pais: Label
 
 func _ready() -> void:
 	Escudo.limpiar_cache()
 	Cara.limpiar_cache()
 	_mundo = Mundo.new()
 	_mundo.generar([], 0)
+	## UN RETO (26-9-2026): el club lo elige el propio reto, y a jugar.
+	if Principal.reto_pedido != "":
+		var id := Principal.reto_pedido
+		Principal.reto_pedido = ""
+		if Retos.montar(_mundo, id) != null:
+			Principal.mundo_pregenerado = _mundo
+			Principal.desafios_elegidos = []
+			get_tree().change_scene_to_file.call_deferred("res://escenas/principal.tscn")
+			return
 	_construir()
 	_elegir_pais("CHI")
 
@@ -60,12 +73,18 @@ func _construir() -> void:
 	## HTML. Va antes de los chips de país -que se quedan, son el atajo rápido
 	## y accesible- porque el globo es quien anima el viaje cuando se toca uno.
 	_globo = Globo3D.new()
-	_globo.custom_minimum_size = Vector2(0, 200)
+	_globo.custom_minimum_size = Vector2(0, 250)
 	raiz.add_child(_globo)
 	var pista := _texto(11, COL_SUAVE)
-	pista.text = "Arrastra el globo para girarlo, o toca un país."
+	pista.text = "Arrastra el globo para girarlo, o haz clic en el pin de un país."
 	pista.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(pista)
+	_globo.pais_tocado.connect(_elegir_pais)
+	## C14: la ficha del país elegido, con sus datos.
+	_ficha_pais = _texto(12, COL_TEXTO)
+	_ficha_pais.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_ficha_pais.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	raiz.add_child(_ficha_pais)
 
 	## Los países: uno por cada liga distinta que trajo el mundo, ordenados con
 	## Chile primero -es donde vive el juego- y el resto tal como los devuelve
@@ -138,6 +157,27 @@ func _construir_fundar(raiz: VBoxContainer) -> void:
 	_campo_nombre_club.placeholder_text = "Nombre de tu club"
 	_campo_nombre_club.custom_minimum_size = Vector2(220, 32)
 	fila.add_child(_campo_nombre_club)
+	## Colores y estadio del club nuevo (26-9-2026).
+	_col1 = ColorPickerButton.new()
+	_col1.color = Color("1e4030")
+	_col1.custom_minimum_size = Vector2(40, 32)
+	_col1.tooltip_text = "Color principal"
+	fila.add_child(_col1)
+	_col2 = ColorPickerButton.new()
+	_col2.color = Color("c9a227")
+	_col2.custom_minimum_size = Vector2(40, 32)
+	_col2.tooltip_text = "Color secundario"
+	fila.add_child(_col2)
+	_campo_estadio = LineEdit.new()
+	_campo_estadio.placeholder_text = "Nombre del estadio"
+	_campo_estadio.custom_minimum_size = Vector2(170, 32)
+	fila.add_child(_campo_estadio)
+	if Principal.fundar_pedido:
+		e.border_color = COL_ACENTO
+		e.set_border_width_all(2)
+		t.text = "🛠️ FUNDA TU CLUB"
+		t.add_theme_color_override("font_color", COL_ACENTO)
+		_campo_nombre_club.call_deferred("grab_focus")
 	var b := Button.new()
 	b.text = "Fundar en el país elegido"
 	b.custom_minimum_size = Vector2(0, 32)
@@ -153,7 +193,8 @@ func _fundar() -> void:
 	var nombre := _campo_nombre_club.text.strip_edges()
 	if nombre == "":
 		return
-	var club := _mundo.fundar_club(nombre, _pais_actual)
+	Principal.fundar_pedido = false
+	var club := _mundo.fundar_club(nombre, _pais_actual, "#" + _col1.color.to_html(false), "#" + _col2.color.to_html(false), _campo_estadio.text.strip_edges())
 	if club == null:
 		return
 	Principal.mundo_pregenerado = _mundo
@@ -237,6 +278,8 @@ func _elegir_pais(p: String) -> void:
 	var total_clubes := 0
 	for l: Liga in ligas_del_pais:
 		total_clubes += l.clubes.size()
+	if _ficha_pais != null:
+		_ficha_pais.text = ficha_pais(p, ligas_del_pais, total_clubes)
 	_titulo_liga.text = "%s  ·  %d clubes" % [
 		", ".join(ligas_del_pais.map(func(l: Liga) -> String: return l.nombre)), total_clubes]
 	_limpiar(_lista_clubes)
@@ -300,3 +343,31 @@ func _elegir_club(c: Club) -> void:
 	Principal.mundo_pregenerado = _mundo
 	Principal.desafios_elegidos = _desafios.duplicate()
 	get_tree().change_scene_to_file("res://escenas/principal.tscn")
+
+## C14: la ficha del país en una línea -capital, ligas, nivel del fútbol en el
+## ranking del juego, el mejor club, el tiempo de esta semana y la próxima
+## fecha señalada del calendario-.
+func ficha_pais(p: String, ligas_del_pais: Array[Liga], total_clubes: int) -> String:
+	var tiers: Variant = Datos.tabla("TIER_PAIS")
+	var ranking := 0
+	if tiers is Dictionary:
+		var orden: Array = (tiers as Dictionary).keys()
+		orden.sort_custom(func(a: String, b: String) -> bool: return float(tiers[a]) > float(tiers[b]))
+		ranking = orden.find(p) + 1
+	var mejor: Club = null
+	for l: Liga in ligas_del_pais:
+		for c: Club in l.clubes:
+			if mejor == null or c.rep > mejor.rep:
+				mejor = c
+	var clima := Clima.del_partido(p, _mundo.semana, _mundo.anio, "globo")
+	var prox := Calendario.proximas(p, _mundo.anio, _mundo.semana, 1)
+	var partes: Array[String] = ["📍 %s · capital %s" % [p, String(Globo3D.CAPITAL.get(p, "?"))],
+		"%d liga%s, %d clubes" % [ligas_del_pais.size(), "" if ligas_del_pais.size() == 1 else "s", total_clubes]]
+	if ranking > 0:
+		partes.append("n.º %d del ranking de ligas" % ranking)
+	if mejor != null:
+		partes.append("el grande: %s" % mejor.nombre)
+	partes.append("%s %s" % [Clima.icono(clima), String(clima.get("texto", ""))])
+	if not prox.is_empty():
+		partes.append("%s %s (%d/%d)" % [Calendario.icono(String(prox[0]["tipo"])), String(prox[0]["nombre"]), int(prox[0]["dia"]), int(prox[0]["mes"])])
+	return "  ·  ".join(partes)
