@@ -2754,7 +2754,7 @@ func _cartel(pos: Vector3, texto: String, mio: bool) -> void:
 ## descripción, y de paso rompe la explanada verde por el oeste. Con su velero,
 ## que es lo que `vagabond.obj` resultó ser de verdad -no una persona, pese al
 ## nombre; ver `dinastia-calidad-grafica.md`- y llevaba dos semanas sin usarse.
-const RIO_X := -400.0
+const RIO_X := -470.0  ## 7-10-2026: entre el anillo exterior (-392) y el bulevar (-550)
 const RUTA_VELERO := "res://assets/ciudad/vagabond.obj"
 
 const RUTA_SHADER_AGUA := "res://visor/agua.gdshader"
@@ -2777,6 +2777,9 @@ func _rio() -> void:
 		sm.shader = sh
 		sm.set_shader_parameter("color_hondo", Color(0.06, 0.16, 0.24))
 		sm.set_shader_parameter("color_orilla", Color(0.18, 0.38, 0.44))
+		## Con la ola de 0,55 m los valles bajaban del suelo y asomaba el
+		## césped en mitad del río (visto al alargarlo, 7-10-2026).
+		sm.set_shader_parameter("altura_ola", 0.16)
 		agua.material_override = sm
 		_agua_mat = sm
 	else:
@@ -2785,7 +2788,7 @@ func _rio() -> void:
 		m.metallic = 0.55
 		m.roughness = 0.12
 		agua.material_override = m
-	agua.position = Vector3(RIO_X, 0.1, 0)
+	agua.position = Vector3(RIO_X, 0.3, 0)
 	add_child(agua)
 	## Las dos orillas: sin ellas el agua es un rectángulo azul pegado sobre el
 	## césped, y desde la cámara alta se nota que no hay cauce.
