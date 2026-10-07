@@ -493,6 +493,15 @@ func _dibujar_bloque(bl: Dictionary) -> void:
 func _acera_bloque(r: Rect2) -> void:
 	_lote("solar", Vector3(r.get_center().x, 0.12, r.get_center().y), Vector3(r.size.x, 0.24, r.size.y))
 
+## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en
+## vez de estirarlo): crece en pisos y las ventanas conservan su forma.
+func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: float) -> void:
+	var tmp: Node3D = esc.instantiate()
+	var alto := b._caja_de(tmp).size.y * s
+	tmp.free()
+	for k in pisos:
+		_kit(esc, pos + Vector3(0, float(k) * alto * 0.98, 0), Vector3.ONE * s, giro)
+
 func _kit(esc: PackedScene, pos: Vector3, escala: Vector3, giro: float) -> Node3D:
 	var n: Node3D = esc.instantiate()
 	n.scale = escala
@@ -532,11 +541,17 @@ func _fachadas(r: Rect2, con_nave: bool) -> void:
 			if u + ancho > largo * 0.5:
 				break
 			var p := c + dir * (u + ancho * 0.5) + n * (fondo_b * 0.5 - fondo * 0.5 - 0.3)
-			_kit(esc, Vector3(p.x, 0.2, p.z), Vector3(s, s * _rng.randf_range(1.0, 2.0), s), giro)
+			## Escala UNIFORME (7-10-2026): estirarlos en vertical alargaba puertas
+			## y ventanas, y los edificios se veían deformados.
+			_kit(esc, Vector3(p.x, 0.2, p.z), Vector3.ONE * s, giro)
 			u += ancho + _rng.randf_range(0.3, 1.5)
 	if con_nave and not _naves.is_empty():
 		var s2 := 6.5 * _rng.randf_range(0.9, 1.2)
-		_kit(_naves[_rng.randi() % _naves.size()], c + Vector3(0, 0.2, 0), Vector3(s2, s2 * _rng.randf_range(2.0, 3.6), s2), float(_rng.randi() % 4) * PI * 0.5)
+		## El bloque interior: un rascacielos del kit (pensado alto), uniforme.
+		if not _altos.is_empty() and _rng.randf() < 0.6:
+			_kit(_altos[_rng.randi() % _altos.size()], c + Vector3(0, 0.2, 0), Vector3.ONE * _rng.randf_range(3.2, 4.4), float(_rng.randi() % 4) * PI * 0.5)
+		else:
+			_kit(_naves[_rng.randi() % _naves.size()], c + Vector3(0, 0.2, 0), Vector3.ONE * s2 * 1.2, float(_rng.randi() % 4) * PI * 0.5)
 
 func _torres(r: Rect2) -> void:
 	if _altos.is_empty():
@@ -565,8 +580,11 @@ func _pisos(r: Rect2) -> void:
 		for k in 3:
 			var x := c.x + (float(k) - 1.0) * r.size.x * 0.3
 			var s := 5.6 * _rng.randf_range(0.9, 1.1)
-			_kit(_naves[_rng.randi() % _naves.size()], Vector3(x, 0.2, c.z + fila * r.size.y * 0.27),
-				Vector3(s, s * _rng.randf_range(1.6, 2.8), s), 0.0 if fila > 0.0 else PI)
+			var pos_p := Vector3(x, 0.2, c.z + fila * r.size.y * 0.27)
+			if not _altos.is_empty() and (k + int(fila > 0.0)) % 2 == 0:
+				_kit(_altos[_rng.randi() % _altos.size()], pos_p, Vector3.ONE * _rng.randf_range(2.8, 3.6), 0.0 if fila > 0.0 else PI)
+			else:
+				_kit(_naves[_rng.randi() % _naves.size()], pos_p, Vector3.ONE * s * 1.15, 0.0 if fila > 0.0 else PI)
 	_arboles_en([c + Vector3(-12, -0.2, 0), c + Vector3(12, -0.2, 0)], 0.8)
 
 ## Viviendas con jardín: se guardan y se dibujan todas juntas (MultiMesh).
