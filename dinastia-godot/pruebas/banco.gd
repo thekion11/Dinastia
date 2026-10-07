@@ -125,6 +125,7 @@ func _ready() -> void:
 	_probar_leyes_pais()
 	_probar_incumplir_ley()
 	_probar_b6_formas_led()
+	_probar_region_reales()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -7622,3 +7623,37 @@ func _probar_b6_formas_led() -> void:
 	var solo_fondo := StadiumBuilder._anuncios_de({"ledFondo": "#ffffff"}, null)
 	_comprobar(solo_fondo.all(func(a): return (a["tinta"] as Color).get_luminance() < 0.3),
 		"solo fondo blanco: la letra se oscurece sola")
+
+func _probar_region_reales() -> void:
+	_titulo("REGIÓN REAL: VASCOS FUERA DEL ATHLETIC")
+	var antes := Datos.usar_base_real(true)
+	Reales.invalidar()
+	var m := Mundo.new()
+	m.generar(["ESP"], 4242)
+	var ath: Club = null
+	var vascos := 0
+	var falsos := 0
+	for c: Club in m.clubes.values():
+		if Nombres.limpiar(c.nombre) == "Ath. Bilbao":
+			ath = c
+		for j: Jugador in c.plantilla:
+			if not j.real:
+				continue
+			## Con la cubierta de nombres, algún apellido sale en minúscula.
+			var n := Nombres.limpiar(j.nombre).to_lower()
+			if n in ["mikel oyarzabal", "martín zubimendi", "aimar oroz"]:
+				if j.region == "EUS":
+					vascos += 1
+			elif n in ["pedri", "koke", "iago aspas", "isco"] and j.region != "":
+				falsos += 1
+	_comprobar(vascos >= 3, "Oyarzabal, Zubimendi y Oroz son de Euskal Herria (%d)" % vascos)
+	_comprobar(falsos == 0, "los reales de otras regiones no heredan una región sorteada")
+	if ath != null:
+		var oya: Jugador = null
+		for c: Club in m.clubes.values():
+			for j: Jugador in c.plantilla:
+				if Nombres.limpiar(j.nombre).to_lower() == "mikel oyarzabal":
+					oya = j
+		_comprobar(oya != null and Regiones.admite(ath, oya), "el Athletic puede fichar a Oyarzabal")
+	Datos.usar_base_real(antes)
+	Reales.invalidar()

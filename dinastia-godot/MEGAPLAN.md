@@ -126,7 +126,7 @@ Estados:
 4. **Plantillas fijas** para los 128 clubes que no están en el pack.
 5. **Mini-juego de representantes**: la mecánica de agentes existe; falta la negociación como juego.
 6. **Banderas en el estudio** del sorteo y la rueda de prensa (hoy no hay ninguna).
-7. ✅ **Región de origen del jugador**: ya existía (C3). Pendiente solo el dato real de nacimiento de los vascos reales fuera del Athletic.
+7. ✅ **Región de origen del jugador**: ya existía (C3). 7-10-2026: los reales nacidos en Euskal Herria fuera del Athletic (Real Sociedad, Osasuna, Zubimendi en el Arsenal) llevan «EUS» en el pack, y ningún real hereda una región sorteada.
 8. ✅ **Leyes laborales de México y Egipto**: verificadas el 7-10-2026 (México baja 2 h al año desde 2027; Egipto, Ley 14/2025, 48 h).
 9. **Túnel navegable**: espera al modo caminar por el estadio.
 10. ✅ **Traducir la narración** (noticias, prensa, vestuario): 7-10-2026 en inglés y portugués, y el mismo día en francés, italiano, alemán, catalán, polaco y turco (1.077 frases y plantillas por idioma, `datos/narracion_traducida_mas.json`).
@@ -398,7 +398,7 @@ Cuenta: 11,25 + 16,2 + 11,4 + 6,9 + 17,6 + 7,2 + 7,9 = **78,45**. Se pasa la met
   - cupo en plantel y en cancha, y qué cuenta como «de fuera»: extranjero (la mayoría), extracomunitario (España 3, Francia 4) o no formado en el país (Liga MX 9/7, Premier 17 de 25);
   - Alemania: 12 nacionales; Italia: 2 fichajes extracomunitarios por temporada;
   - juveniles obligatorios: Chile (sub-21) y Bolivia (sub-20 y sub-23).
-  - Paraguay y Venezuela, «por verificar»: no hay cifra publicada para 2026.
+  - Paraguay (4 en cancha desde 2024) y Venezuela (6 por equipo en 2026) salen de prensa, no del reglamento: siguen marcados «por verificar».
 - Se aplica a tu club y a la IA, en el mercado y en el once. El tope que vote la asamblea se suma si es más estricto.
 - **Cumplir o incumplir** (pantalla de Federación):
   - cumpliendo, el once se corrige solo y te avisa;
