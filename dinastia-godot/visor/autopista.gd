@@ -53,7 +53,8 @@ static func montar(b: CityBuilder) -> Dictionary:
 	var enlaces := [Vector3(0, 0, -R), Vector3(0, 0, R), Vector3(R, 0, 0), Vector3(-R, 0, 0)]
 	for e: Vector3 in enlaces:
 		var hacia := -e.normalized()
-		var base := e + hacia * (ANCHO * 0.5 + RAMPA * 0.5) + Vector3(hacia.z, 0, -hacia.x) * 20.0
+		## Centrada en la avenida que continúa (antes iba 20 m desplazada).
+		var base := e + hacia * (ANCHO * 0.5 + RAMPA * 0.5)
 		var r := b._caja_en(base + Vector3(0, ALTO * 0.5, 0), Vector3(10.0, 0.8, sqrt(RAMPA * RAMPA + ALTO * ALTO)) if absf(hacia.z) > 0.5 else Vector3(sqrt(RAMPA * RAMPA + ALTO * ALTO), 0.8, 10.0), asf)
 		var ang := atan2(ALTO, RAMPA)
 		if absf(hacia.z) > 0.5:

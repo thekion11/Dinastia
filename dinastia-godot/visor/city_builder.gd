@@ -3350,8 +3350,7 @@ func _barrio_residencial() -> void:
 			var esc2: PackedScene = casas[k % casas.size()]
 			var casa: Node3D = esc2.instantiate()
 			var e3 := 3.2
-			casa.scale = Vector3(e3 * rng3.randf_range(0.85, 1.2),
-				e3 * rng3.randf_range(0.75, 1.45), e3 * rng3.randf_range(0.85, 1.2))
+			casa.scale = Vector3.ONE * e3 * rng3.randf_range(0.85, 1.2)
 			casa.position = BARRIO_EN + Vector3(
 				lado * rng3.randf_range(42.0, 52.0), 0, -60.0 + i * 30.0 + rng3.randf_range(-4.0, 4.0))
 			casa.rotation.y = ((PI * 0.5) if lado < 0.0 else (-PI * 0.5)) + rng3.randf_range(-0.12, 0.12)
@@ -3536,7 +3535,7 @@ func _manzana(c: Vector3, comercial: Array[PackedScene], naves: Array[PackedScen
 		while u < largo * 0.5 - 5.0:
 			var nodo: Node3D = comercial[rng.randi() % comercial.size()].instantiate()
 			var s: float = 4.6 * rng.randf_range(0.9, 1.1)
-			nodo.scale = Vector3(s, s * rng.randf_range(0.9, 1.7), s)
+			nodo.scale = Vector3.ONE * s
 			var caja := _caja_de(nodo)
 			var ancho: float = maxf(caja.size.x * s, 5.0)
 			var fondo: float = maxf(caja.size.z * s, 5.0)
@@ -3559,7 +3558,7 @@ func _manzana(c: Vector3, comercial: Array[PackedScene], naves: Array[PackedScen
 	if not naves.is_empty() and rng.randf() < 0.85:
 		var b: Node3D = naves[rng.randi() % naves.size()].instantiate()
 		var sb: float = 5.5 * rng.randf_range(0.9, 1.2)
-		b.scale = Vector3(sb, sb * rng.randf_range(1.6, 3.2), sb)
+		b.scale = Vector3.ONE * sb
 		b.rotation.y = float(rng.randi() % 4) * PI * 0.5
 		b.position = Vector3(c.x, altura_en(c.x, c.z) - 0.1, c.z)
 		add_child(b)
@@ -3600,7 +3599,7 @@ func _fila_urbana(calle: Vector3, dir: Vector3, afuera: Vector3, medio_largo: fl
 		orden += 1
 		var nodo: Node3D = esc.instantiate()
 		var s: float = 5.5 * rng.randf_range(0.9, 1.1)
-		nodo.scale = Vector3(s, s * rng.randf_range(0.85, 1.6), s)
+		nodo.scale = Vector3.ONE * s
 		var caja := _caja_de(nodo)
 		var ancho: float = maxf(caja.size.x * s, 6.0)
 		var fondo: float = maxf(caja.size.z * s, 6.0)
@@ -3626,7 +3625,7 @@ func _fila_urbana(calle: Vector3, dir: Vector3, afuera: Vector3, medio_largo: fl
 		if not bloques.is_empty() and rng.randf() < 0.8:
 			var b: Node3D = bloques[rng.randi() % bloques.size()].instantiate()
 			var sb: float = 6.0 * rng.randf_range(0.9, 1.2)
-			b.scale = Vector3(sb, sb * rng.randf_range(1.2, 2.4), sb)
+			b.scale = Vector3.ONE * sb
 			var cb := _caja_de(b)
 			var fondo_b: float = maxf(cb.size.z * sb, 6.0)
 			var pb: Vector3 = c + afuera * (fondo * 0.5 + 4.0 + fondo_b * 0.5)
