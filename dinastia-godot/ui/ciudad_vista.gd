@@ -168,6 +168,11 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	_boton(barra, "🏷 Rótulos", func() -> void:
 		_rotulos_visibles = not _rotulos_visibles
 		_ciudad.mostrar_rotulos(_rotulos_visibles))
+	_boton(barra, "📷 Foto", func() -> void:
+		## Sin rótulos flotantes en la foto; vuelven al salir.
+		_ciudad.mostrar_rotulos(false)
+		ModoFoto.abrir(self, club, "la ciudad").tree_exited.connect(func() -> void:
+			_ciudad.mostrar_rotulos(_rotulos_visibles)))
 	_boton(barra, "🚗 Conducir", func() -> void: explorar("coche"))
 	_boton(barra, "🚶 Pasear", func() -> void: explorar("pie"))
 	_boton(barra, "🚇 Metro", func() -> void:

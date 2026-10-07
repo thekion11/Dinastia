@@ -275,6 +275,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_btn_camara = _cajon.boton("📷 Cámara: " + (_rig.current_name() if _rig != null else "TV"), _rotar_camara)
 	_cajon.fila([["🔍 Acercar", func() -> void: if _rig: _rig.ajustar_zoom(-3.0)],
 		["🔍 Alejar", func() -> void: if _rig: _rig.ajustar_zoom(3.0)]])
+	_cajon.boton("📸 Modo foto", func() -> void: ModoFoto.abrir(self, club, "el estadio"))
 	if partido != null:
 		_cajon.seccion("Partido")
 		_btn_modo = _cajon.boton("🎮 Modo: Manager", _alternar_modo_control)
