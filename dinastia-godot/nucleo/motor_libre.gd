@@ -263,7 +263,10 @@ func _opciones(i: int) -> Array:
 		var rel := (p - meta) * Vector2(-_dir(eq), 1.0)
 		var pg := AccionesJuego.xg(Vector2(absf(rel.x), rel.y)) * (0.3 + 0.7 * pe) * _factor_portero(1 - eq) * (1.0 - 0.5 * pres)
 		## Tirar es perder el balón si no entra: se descuenta lo que valía tenerlo.
-		ops.append([pg - aqui * 0.3 - 0.004, acc, i])
+		## CORREGIDO (fase 4): con 0,3 y 0,004 la IA tiraba 100-200 veces por
+		## partido y salían 9-6 (la prueba solo pasaba con la plantilla de una
+		## semilla concreta). Un tiro malo regala la posesión entera.
+		ops.append([pg - aqui * 0.9 - 0.03, acc, i])
 	## PASAR a cada compañero
 	for k in agentes.size():
 		if k == i or agentes[k]["eq"] != eq:
