@@ -1,0 +1,214 @@
+class_name ExploradorEstadio
+extends Node3D
+## RECORRER EL ESTADIO A PIE (7-10-2026, pedido: «a futuro el estadio será
+## navegable con el protagonista»).
+##
+## Se empieza en el vestuario, se cruza el túnel y se sale a la cancha. Usa el
+## mismo control que el paseo por la ciudad (`ExploradorCiudad`): W/S/A/D o
+## flechas, el mando o la cruceta táctil; Mayús para correr y E para usar.
+## El suelo transitable son las zonas de `TunelVestuario.datos()` (vestuario,
+## pasillo, el paso de la banda y el campo); la cámara no sale del pasillo ni
+## atraviesa su techo.
+
+signal salir
+
+const VEL_PIE := 1.8
+const VEL_CORRER := 5.2
+const RADIO := 0.45
+
+var cuerpo: Node3D
+var camara: Camera3D
+var rumbo := PI
+var vel := 0.0
+var zonas: Array = []
+var club_nombre := ""
+var _anim: AnimationPlayer
+var _hud: Label
+var _aviso: Label
+var _capa: CanvasLayer
+var _tactil_vec := Vector2.ZERO
+var _zona_actual := ""
+var _datos: Dictionary = {}
+var _rugido_hecho := false
+
+func iniciar(est: Dictionary, niveles: int, club: Club) -> void:
+	_datos = TunelVestuario.datos(est, niveles)
+	zonas = _datos["zonas"]
+	club_nombre = Nombres.visible(club.nombre) if club != null else ""
+	cuerpo = _crear_cuerpo()
+	add_child(cuerpo)
+	cuerpo.position = _datos["inicio"]
+	rumbo = float(_datos["rumbo_inicio"])
+	camara = Camera3D.new()
+	camara.fov = 68.0
+	camara.near = 0.05
+	add_child(camara)
+	camara.make_current()
+	_montar_hud()
+	_colocar_camara(1.0)
+
+func _crear_cuerpo() -> Node3D:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7
+	var d := PeatonQ.crear(rng)
+	if d.is_empty():
+		return Node3D.new()
+	var n: Node3D = d["nodo"]
+	add_child(n)
+	PeatonQ.terminar(d)
+	remove_child(n)
+	_anim = _buscar_anim(n)
+	return n
+
+func _buscar_anim(n: Node) -> AnimationPlayer:
+	if n is AnimationPlayer:
+		return n
+	for h in n.get_children():
+		var a := _buscar_anim(h)
+		if a != null:
+			return a
+	return null
+
+## ¿En qué zona cae este punto? (vacío si en ninguna: no se puede pisar).
+func zona_en(p: Vector3, radio: float = 0.0) -> Dictionary:
+	for z: Dictionary in zonas:
+		var r: Rect2 = z["r"]
+		if p.x >= r.position.x + radio and p.x <= r.end.x - radio and p.z >= r.position.y + radio and p.z <= r.end.y - radio:
+			return z
+	## En las uniones entre zonas (puerta del vestuario, boca del túnel) basta
+	## con estar dentro de una sin margen.
+	for z2: Dictionary in zonas:
+		if (z2["r"] as Rect2).has_point(Vector2(p.x, p.z)):
+			return z2
+	return {}
+
+func _montar_hud() -> void:
+	_capa = CanvasLayer.new()
+	add_child(_capa)
+	_hud = Label.new()
+	_hud.position = Vector2(18, 14)
+	_hud.add_theme_font_size_override("font_size", 16)
+	_hud.add_theme_color_override("font_color", Color.WHITE)
+	_hud.add_theme_color_override("font_outline_color", Color.BLACK)
+	_hud.add_theme_constant_override("outline_size", 6)
+	_capa.add_child(_hud)
+	_aviso = Label.new()
+	_aviso.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	_aviso.offset_top = -90
+	_aviso.offset_left = -320
+	_aviso.offset_right = 320
+	_aviso.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_aviso.add_theme_font_size_override("font_size", 20)
+	_aviso.add_theme_color_override("font_color", Color(1, 0.92, 0.6))
+	_aviso.add_theme_color_override("font_outline_color", Color.BLACK)
+	_aviso.add_theme_constant_override("outline_size", 8)
+	_capa.add_child(_aviso)
+	## Táctil: cruceta abajo a la izquierda y «Salir» abajo a la derecha.
+	var tam := 74.0
+	var base := Control.new()
+	base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	base.offset_left = 24
+	base.offset_top = -tam * 3.0 - 24
+	_capa.add_child(base)
+	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
+			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
+		var b := Button.new()
+		b.text = String(d[0])
+		b.position = (d[1] as Vector2) * tam
+		b.size = Vector2(tam - 6, tam - 6)
+		b.add_theme_font_size_override("font_size", 28)
+		b.modulate = Color(1, 1, 1, 0.7)
+		var v: Vector2 = d[2]
+		b.button_down.connect(func() -> void: _tactil_vec += v)
+		b.button_up.connect(func() -> void: _tactil_vec -= v)
+		base.add_child(b)
+	var bs := Button.new()
+	bs.text = Idiomas.t("Salir")
+	bs.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	bs.offset_left = -150
+	bs.offset_top = -100
+	bs.offset_right = -24
+	bs.offset_bottom = -24
+	bs.modulate = Color(1, 1, 1, 0.75)
+	bs.focus_mode = Control.FOCUS_NONE
+	bs.pressed.connect(func() -> void: salir.emit())
+	_capa.add_child(bs)
+
+func _entrada() -> Vector2:
+	var x := float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT))
+	var y := float(Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP)) - float(Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN))
+	var jx := Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
+	var jy := -Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
+	if absf(jx) > 0.2:
+		x = jx
+	if absf(jy) > 0.2:
+		y = jy
+	if _tactil_vec != Vector2.ZERO:
+		x = clampf(_tactil_vec.x, -1.0, 1.0)
+		y = clampf(_tactil_vec.y, -1.0, 1.0)
+	return Vector2(x, y)
+
+## Un paso de simulación (lo usa `_physics_process` y las pruebas).
+func paso(e: Vector2, corre: bool, delta: float) -> void:
+	vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+	rumbo -= e.x * delta * 2.6
+	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
+	var nueva := cuerpo.position + adelante * vel * delta
+	if not zona_en(nueva, RADIO).is_empty():
+		cuerpo.position = Vector3(nueva.x, 0.02, nueva.z)
+	else:
+		vel = 0.0
+	cuerpo.rotation.y = rumbo
+	if _anim != null:
+		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
+
+func _physics_process(delta: float) -> void:
+	if cuerpo == null:
+		return
+	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	paso(_entrada(), corre, delta)
+	_colocar_camara(delta)
+	_rotulos()
+
+func _rotulos() -> void:
+	var z := zona_en(cuerpo.position)
+	var nombre := String(z.get("nombre", ""))
+	if nombre != _zona_actual:
+		_zona_actual = nombre
+		match nombre:
+			"Vestuario":
+				_aviso.text = Idiomas.t("El vestuario de %s. Sal por el túnel hacia el campo.") % club_nombre
+			"Túnel":
+				_aviso.text = Idiomas.t("El túnel. Al fondo se oye la grada.")
+			"Banda":
+				_aviso.text = Idiomas.t("¡A la cancha!")
+				if not _rugido_hecho:
+					_rugido_hecho = true
+					Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
+			"Campo":
+				_aviso.text = ""
+	_hud.text = "📍 %s  ·  %s" % [Idiomas.t(nombre), Idiomas.t("W/S/A/D o mando · Mayús: correr · Esc: salir")]
+
+func _unhandled_input(ev: InputEvent) -> void:
+	if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE:
+		get_viewport().set_input_as_handled()
+		salir.emit()
+
+## Cámara en tercera persona. Dentro del vestuario y del túnel no sale de las
+## paredes ni pasa del techo: si no, se vería el exterior de la caja.
+func _colocar_camara(delta: float) -> void:
+	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
+	var z := zona_en(cuerpo.position)
+	var cerrado := float(z.get("techo", 99.0)) < 50.0
+	var atras := 3.2 if cerrado else 5.5
+	var alto := 1.9 if cerrado else 2.6
+	var deseo := cuerpo.position - adelante * atras + Vector3(0, alto, 0)
+	if cerrado:
+		var r: Rect2 = z["r"]
+		## La cámara puede ir un poco por detrás del límite de la zona por donde
+		## se viene (la boca, la puerta) pero nunca atravesar una pared lateral.
+		deseo.x = clampf(deseo.x, r.position.x + 0.15, r.end.x - 0.15)
+		deseo.z = clampf(deseo.z, r.position.y - 1.0, r.end.y + 1.0)
+		deseo.y = minf(deseo.y, float(z["techo"]) - 0.25)
+	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
+	camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 3.0, Vector3.UP)

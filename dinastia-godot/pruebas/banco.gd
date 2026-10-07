@@ -126,6 +126,7 @@ func _ready() -> void:
 	_probar_incumplir_ley()
 	_probar_b6_formas_led()
 	_probar_region_reales()
+	_probar_tunel_navegable()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -7657,3 +7658,56 @@ func _probar_region_reales() -> void:
 		_comprobar(oya != null and Regiones.admite(ath, oya), "el Athletic puede fichar a Oyarzabal")
 	Datos.usar_base_real(antes)
 	Reales.invalidar()
+
+func _probar_tunel_navegable() -> void:
+	_titulo("TÚNEL DE VERDAD Y ESTADIO A PIE")
+	var t: Array = StadiumBuilder._tramos_sin_hueco(0.0, 100.0, -3.2, 3.2)
+	_comprobar(t.size() == 2 and is_equal_approx((t[0] as Vector2).y + (t[1] as Vector2).y, 93.6), "el hueco parte la bandeja en dos trozos")
+	_comprobar(StadiumBuilder._tramos_sin_hueco(0.0, 10.0, 20.0, 26.0).size() == 1, "si el hueco no la toca, queda entera")
+	## En las 8 formas y con túnel central y de esquina: del vestuario se llega
+	## caminando al centro del campo.
+	var fallos := []
+	for forma: String in ["cuenco", "oval", "rect", "caldera", "herradura", "ingles", "dos", "principal"]:
+		for tunel: String in ["central", "esquina"]:
+			var est := {"forma": forma, "tunel": tunel}
+			var ex := ExploradorEstadio.new()
+			ex._datos = TunelVestuario.datos(est, 2)
+			ex.zonas = ex._datos["zonas"]
+			ex.cuerpo = Node3D.new()
+			ex.cuerpo.position = ex._datos["inicio"]
+			ex.rumbo = PI
+			## Hacia el eje del túnel y luego recto al campo.
+			var x0: float = ex._datos["x0"]
+			for i in 400:
+				var p: Vector3 = ex.cuerpo.position
+				## Al eje del túnel, recto por él hasta la cancha y luego al centro.
+				var objetivo := Vector3(x0 * 0.5, 0, 0.0)
+				if p.z > float(ex._datos["z_out"]):
+					objetivo = Vector3(x0, 0, float(ex._datos["z_out"]) - 1.0)
+				elif p.z > 52.0:
+					objetivo = Vector3(x0, 0, 50.0)
+				var dir := (objetivo - p)
+				dir.y = 0
+				ex.rumbo = atan2(dir.x, dir.z)
+				ex.paso(Vector2(0, 1), true, 1.0 / 10.0)
+			if ex.zona_en(ex.cuerpo.position).get("nombre", "") != "Campo" or ex.cuerpo.position.z > 30.0:
+				fallos.append("%s/%s z=%.1f" % [forma, tunel, ex.cuerpo.position.z])
+			ex.cuerpo.free()
+			ex.free()
+	_comprobar(fallos.is_empty(), "del vestuario al campo a pie en las 8 formas %s" % str(fallos))
+	## Fuera de las zonas no se puede pisar (la grada, por ejemplo).
+	var ex2 := ExploradorEstadio.new()
+	ex2.zonas = TunelVestuario.datos({"forma": "cuenco"}, 2)["zonas"]
+	_comprobar(ex2.zona_en(Vector3(20, 0, 64)).is_empty(), "la grada no se pisa")
+	ex2.free()
+	## El estadio se construye con el pasillo y el vestuario.
+	var raiz := Node3D.new()
+	StadiumBuilder.build(raiz, {"forma": "cuenco", "niveles": 2}, 30000, 0.8, 7)
+	var tv := raiz.get_node_or_null("TunelVestuario")
+	var cuerpos := 0
+	if tv != null:
+		for h in tv.get_children():
+			if h is StaticBody3D:
+				cuerpos += 1
+	_comprobar(tv != null and cuerpos >= 10, "el túnel y el vestuario tienen colisión (%d piezas)" % cuerpos)
+	raiz.free()
