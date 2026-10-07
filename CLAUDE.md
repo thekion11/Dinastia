@@ -229,5 +229,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 7-10: el usuario YA TIENE un informe nuevo («no es tan nuevo»): se usa DESPUÉS de
   terminar el MEGAPLAN. Ahora: seguir con lo que no depende de él (B6 LED/formas
   de estadio, narración en fr/it/de/ca/pl/tr, cupos PAR/VEN, nacimiento vascos).
+- 7-10 HECHO: B6 (7 paletas LED + colores propios de fondo/letra; formas «dos» y
+  «principal») y NARRACIÓN en los 9 idiomas (fr/it/de/ca/pl/tr en
+  `datos/narracion_traducida_mas.json`, se monta con `montar_narracion.py`).
 - Esperando al usuario: túnel.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.

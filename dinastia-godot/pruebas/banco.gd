@@ -5038,6 +5038,21 @@ func _probar_narracion_traducida() -> void:
 	_comprobar(pegadas.contains("You took a while to answer"), "frases pegadas, oración por oración: %s" % pegadas)
 	var cesion := Idiomas.t("Leo Mar se va cedido una temporada. Juega en Cumbres. Pagan el 50% del sueldo.")
 	_comprobar(cesion.begins_with("Leo Mar leaves on a season-long loan.") and cesion.ends_with("They pay 50% of his wages."), "texto de varias oraciones con patrón entero: %s" % cesion)
+	## Los otros seis idiomas (7-10-2026): la misma narración en fr/it/de/ca/pl/tr.
+	var esperado := {
+		"fr": "Juan Ríos se blesse à l'entraînement : 3 semaines d'absence.",
+		"it": "Juan Ríos si infortuna in allenamento: 3 settimane di stop.",
+		"de": "Juan Ríos verletzt sich im Training: 3 Wochen Pause.",
+		"ca": "Juan Ríos es lesiona entrenant: 3 setmanes de baixa.",
+		"pl": "Juan Ríos doznaje kontuzji na treningu: 3 tyg. przerwy.",
+		"tr": "Juan Ríos antrenmanda sakatlandı: 3 hafta yok.",
+	}
+	for k: String in esperado:
+		Idiomas.idioma = k
+		Idiomas._cache.clear()
+		var c := Idiomas.t("Juan Ríos se lesiona entrenando: 3 semanas de baja.")
+		_comprobar(c == esperado[k], "cuerpo con nombre en %s: %s" % [k, c])
+		_comprobar(Idiomas.t("Se retira una figura") != "Se retira una figura", "titular fijo en %s" % k)
 	Idiomas.idioma = antes
 	Idiomas._cache.clear()
 
