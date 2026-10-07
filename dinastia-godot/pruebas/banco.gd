@@ -5072,8 +5072,8 @@ func _probar_ciudad_grande() -> void:
 		paradas += (l["paradas"] as Array).size()
 	_comprobar(paradas >= 10, "autobuses: %d paradas" % paradas)
 	## El metro: un tren va, para en cada estación y da la vuelta en la cabecera.
-	var est := PackedFloat32Array([220.0, 550.0, 880.0, 1210.0, 1540.0, 1870.0, 2200.0])
-	var tren := MetroCiudad.Tren.new(2420.0, est, 300.0, 1.0)
+	var est_metro := PackedFloat32Array([220.0, 550.0, 880.0, 1210.0, 1540.0, 1870.0, 2200.0])
+	var tren := MetroCiudad.Tren.new(2420.0, est_metro, 300.0, 1.0)
 	var dentro := true
 	var giro := false
 	for k in 6000:
