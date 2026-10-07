@@ -226,5 +226,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
      `herramientas/caras_variadas.py`) para ver que el nivel se repite.
 - 7-10: todo lo hecho hasta la fase 3 (parte) se FUSIONÓ a `main` (pull request #1,
   pedido del usuario). Lo nuevo sigue en la rama asignada; para pasarlo a main, nuevo PR.
-- Esperando al usuario: túnel, informe nuevo.
+- 7-10: el usuario YA TIENE un informe nuevo («no es tan nuevo»): se usa DESPUÉS de
+  terminar el MEGAPLAN. Ahora: seguir con lo que no depende de él (B6 LED/formas
+  de estadio, narración en fr/it/de/ca/pl/tr, cupos PAR/VEN, nacimiento vascos).
+- Esperando al usuario: túnel.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
