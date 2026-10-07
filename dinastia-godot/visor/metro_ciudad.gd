@@ -504,7 +504,7 @@ func _totem(pie: Vector3, nombre: String, col: Color) -> void:
 	var l := Label3D.new()
 	l.text = "Ⓜ\n%s" % nombre
 	l.font_size = 40
-	l.pixel_size = 0.012
+	l.pixel_size = 0.005
 	l.outline_size = 8
 	l.outline_modulate = col.darkened(0.5)
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
