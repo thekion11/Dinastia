@@ -58,7 +58,7 @@ Estados:
 | 50+ diseños de camiseta, 5 colores, 30 botines, 20 de 3 colores y 20 de 2 colores, sponsors, diseñador a pantalla completa | ✅ | 130 diseños |
 | 15 categorías de habilidades × 30 niveles que influyen en los resultados | ✅ | |
 | Tiros, pases, barridas, atajadas, regates, expresiones, lesiones, árbitro, POV del árbitro, VAR por dentro | ✅ | |
-| Recrear los estadios de TODOS los clubes | 🟡 | Hay forma y aforo del real; falta la tabla de guiños por club (E9) |
+| Recrear los estadios de TODOS los clubes | ✅ | Forma, aforo, guiño y apodo de los 176 estadios reales (fase 4) |
 | Más idiomas | ✅ | 9. El usuario: «con esos idiomas estamos bien» |
 | Tipografías y diseño; 40 % más rápido | ✅ | Hoy el refresco es 14 veces más rápido |
 | Más escudos | ✅ | |
@@ -95,7 +95,7 @@ Estados:
   - Los **fondos buitre** están en `FondoInversion`.
 - ⛔ **Charla con IA conversacional en línea** (coste por uso y conexión): la charla escrita deduce el tono sin IA.
 - ⛔ **Estadísticas y dorsales de FC 26**: los datos tienen licencia.
-- 🟡 **«Jugar 10 temporadas × 3 como humano»**: hoy hay una simulación de 3 temporadas con 0 errores. Falta la prueba automática de **10 temporadas con 3 semillas** (ver fase 1).
+- ✅ **«Jugar 10 temporadas × 3 como humano»**: `pruebas/prueba_larga.tscn` (10 temporadas × 3 semillas, fase 1).
 - **Las 1.050 ideas (300 + 750)**: el ROADMAP las cruzó por bloques. Según `dinastia-pendientes` v3.1 están hechas salvo las marcadas ⛔ (monetización agresiva, datos con licencia, IA en línea).
 
 ## 3. Lo que falta de verdad
@@ -111,24 +111,24 @@ Estados:
 
 ### Se puede hacer aquí ⬜
 
-1. **Carrera de Jugador v2:**
+1. ✅ **Carrera de Jugador v2** (fase 3):
    - fuera de juego;
    - cambios (sales o entras del banco);
    - más eventos únicos;
    - convocatoria y partidos con la selección;
    - pasar de jugador a DT al retirarse, en la misma partida (ver originalidad).
-2. **Estadios de todos los clubes (E9):**
+2. ✅ **Estadios de todos los clubes (E9)** (fase 4, guiños y apodos):
    - una tabla de guiños por club (techo, color, detalle icónico, apodo del estadio);
    - hoy la forma y el aforo ya siguen al real.
-3. **Modos a medias (E16):**
+3. ✅ **Modos a medias (E16)** (fase 4, prueba de los 12 modos):
    - revisar Leyenda y Selección jugable en el menú de inicio;
    - cerrar lo que no llegue al final de una temporada.
-4. **Plantillas fijas** para los 128 clubes que no están en el pack.
-5. **Mini-juego de representantes**: la mecánica de agentes existe; falta la negociación como juego.
-6. **Banderas en el estudio** del sorteo y la rueda de prensa (hoy no hay ninguna).
+4. ✅ **Plantillas fijas** para los 128 clubes que no están en el pack (fase 4).
+5. ✅ **Mini-juego de representantes** (fase 4, mesa de negociación).
+6. ✅ **Banderas en el estudio** del sorteo y la rueda de prensa (fase 4).
 7. ✅ **Región de origen del jugador**: ya existía (C3). 7-10-2026: los reales nacidos en Euskal Herria fuera del Athletic (Real Sociedad, Osasuna, Zubimendi en el Arsenal) llevan «EUS» en el pack, y ningún real hereda una región sorteada.
 8. ✅ **Leyes laborales de México y Egipto**: verificadas el 7-10-2026 (México baja 2 h al año desde 2027; Egipto, Ley 14/2025, 48 h).
-9. **Túnel navegable**: espera al modo caminar por el estadio.
+9. ⏸ **Túnel navegable**: espera tu indicación (modo caminar por el estadio).
 10. ✅ **Traducir la narración** (noticias, prensa, vestuario): 7-10-2026 en inglés y portugués, y el mismo día en francés, italiano, alemán, catalán, polaco y turco (1.077 frases y plantillas por idioma, `datos/narracion_traducida_mas.json`).
 11. ✅ **Paleta de vallas LED y formas nuevas** de estadio (B6), 7-10-2026: 7 paletas (patrocinadores, club, neón, negro y oro, cartel pintado, multicolor, a tu gusto) + color de fondo y de letra elegibles; formas «Dos tribunas» (fondos abiertos, menos ruido) y «Tribuna de honor» (lateral de banquillos con una bandeja más). Captura: `pruebas/capturas/b6_formas_led.png`.
 
@@ -425,6 +425,16 @@ Cuenta: 11,25 + 16,2 + 11,4 + 6,9 + 17,6 + 7,2 + 7,9 = **78,45**. Se pasa la met
 - Licencias: 🔒 del dueño. Todo lo nuevo de la fase 5 está hecho en código, sin modelos de terceros nuevos.
 - Cara 2D→3D: ✅ hecha con el permiso del 29-9 (malla deformable por jugador y motor de caras).
 - Presentador del sorteo: en pausa a pedido del usuario.
+
+**Cierre del MEGAPLAN (7-10-2026):** todo lo que se puede hacer aquí está hecho:
+- fases 1 a 5;
+- ciudad 2.2;
+- narración en los 9 idiomas;
+- leyes por país con multas;
+- B6 (LED y formas de estadio);
+- región real de los vascos.
+
+Quedan las 🔒 del dueño y el túnel (a tu indicación). Lo siguiente es el informe nuevo del usuario.
 
 **Cómo se mide:**
 - Cada fase termina con el banco en 0 fallos, el recorrido de pantallas sin errores y capturas.
