@@ -129,7 +129,7 @@ Estados:
 7. ✅ **Región de origen del jugador**: ya existía (C3). Pendiente solo el dato real de nacimiento de los vascos reales fuera del Athletic.
 8. ✅ **Leyes laborales de México y Egipto**: verificadas el 7-10-2026 (México baja 2 h al año desde 2027; Egipto, Ley 14/2025, 48 h).
 9. **Túnel navegable**: espera al modo caminar por el estadio.
-10. **Traducir la narración** (noticias, prensa, vestuario), al menos al inglés.
+10. ✅ **Traducir la narración** (noticias, prensa, vestuario): 7-10-2026 en inglés y portugués, y el mismo día en francés, italiano, alemán, catalán, polaco y turco (1.077 frases y plantillas por idioma, `datos/narracion_traducida_mas.json`).
 11. ✅ **Paleta de vallas LED y formas nuevas** de estadio (B6), 7-10-2026: 7 paletas (patrocinadores, club, neón, negro y oro, cartel pintado, multicolor, a tu gusto) + color de fondo y de letra elegibles; formas «Dos tribunas» (fondos abiertos, menos ruido) y «Tribuna de honor» (lateral de banquillos con una bandeja más). Captura: `pruebas/capturas/b6_formas_led.png`.
 
 ## 4. Fallos y roces encontrados hoy
