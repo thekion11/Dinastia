@@ -568,7 +568,9 @@ const CUPOS_SEL := {"POR": 2, "DEF": 6, "MED": 6, "DEL": 4}
 func revisar_convocatoria(m: Mundo) -> bool:
 	convocatoria = {}
 	var j := jugador(m)
-	if j == null or retirado or m.selecciones == null or not m.selecciones.hay_fecha_fifa(m.semana) or not j.disponible():
+	## (Sin depender de `m.selecciones`: en la carrera de jugador no se crea,
+	## solo existe cuando diriges un club.)
+	if j == null or retirado or not Selecciones.SEMANAS_FIFA.has(m.semana) or not j.disponible():
 		return false
 	var mejores := 0
 	for c: Club in m.clubes.values():

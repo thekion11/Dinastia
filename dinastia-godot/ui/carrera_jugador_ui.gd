@@ -226,7 +226,14 @@ func _pintar_semana() -> void:
 	cols.add_theme_constant_override("separation", 14)
 	raiz.add_child(cols)
 	cols.add_child(_carta(j))
-	cols.add_child(_centro(j, club))
+	## Con la convocatoria la columna crece: se desplaza en vez de cortarse.
+	var sc := ScrollContainer.new()
+	sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	cols.add_child(sc)
+	var centro := _centro(j, club)
+	centro.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	sc.add_child(centro)
 	cols.add_child(_derecha(j))
 	Idiomas.traducir_arbol(_cuerpo)
 

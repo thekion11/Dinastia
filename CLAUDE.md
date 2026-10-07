@@ -119,9 +119,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   cielo. Detalle en `herramientas/MOTOR_CARAS.md`. Tras esto: esperar veredicto;
   si lo da por bueno, sigue el MEGAPLAN.
 - 5-10: el usuario APROBÓ la última pasada («Si, dale») → caras y punto 2 CERRADOS.
-  EN CURSO: MEGAPLAN (`dinastia-godot/MEGAPLAN.md`). Fases 1 y 2 HECHAS (5-10). Fase 3 A MEDIAS (6-10: fuera de juego y cambios hechos;
-  desgaste apagado; faltan eventos, selección y paso a DT). 7-10 el usuario pidió
-  SEGUIR con la fase 3 (eventos, selección, paso a DT, ajustar desgaste)
+  EN CURSO: MEGAPLAN (`dinastia-godot/MEGAPLAN.md`). Fases 1 y 2 HECHAS (5-10). Fase 3 HECHA (7-10: fuera de juego, cambios,
+  desgaste separado de la velocidad, 13 eventos, selección jugable, retiro y paso a DT).
+  Siguiente: fase 4 (cuando el usuario lo pida)
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
