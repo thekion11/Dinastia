@@ -125,6 +125,7 @@ func _ready() -> void:
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
+	_probar_narracion_traducida()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -5002,6 +5003,22 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## LA NARRACIÓN, AL INGLÉS Y AL PORTUGUÉS (punto 10 del MEGAPLAN): los
+## titulares de las noticias.
+func _probar_narracion_traducida() -> void:
+	_titulo("NARRACIÓN TRADUCIDA: TITULARES DE NOTICIAS")
+	var antes := Idiomas.idioma
+	Idiomas.idioma = "en"
+	Idiomas._cache.clear()
+	_comprobar(Idiomas.t("🗳️ Campaña electoral") == "🗳️ Election campaign", "titular con icono en inglés: %s" % Idiomas.t("🗳️ Campaña electoral"))
+	_comprobar(Idiomas.t("Llega la camada juvenil") == "The youth intake arrives", "titular en inglés")
+	_comprobar(Idiomas.t("Representantes: R. Prueba") == "Agents: R. Prueba", "titular con nombre (patrón)")
+	Idiomas.idioma = "pt"
+	Idiomas._cache.clear()
+	_comprobar(Idiomas.t("Se retira una figura") == "Um craque se aposenta", "titular en portugués")
+	Idiomas.idioma = antes
+	Idiomas._cache.clear()
 
 ## LA TRIBUNA COMO TERMÓMETRO (fase 5): los hinchas citan jugadas reales.
 func _probar_tribuna_real() -> void:
