@@ -120,6 +120,7 @@ func _ready() -> void:
 	_probar_plantillas_fijas()
 	_probar_mesa_agente()
 	_probar_ciudad_animo()
+	_probar_ciudad_grande()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -4997,6 +4998,58 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## LA CIUDAD GRANDE (7-10-2026): red vial en datos, semáforos, transporte.
+func _probar_ciudad_grande() -> void:
+	_titulo("LA CIUDAD GRANDE: RED VIAL, SEMÁFOROS Y TRANSPORTE")
+	var cb := CityBuilder.new()
+	var e := CiudadExpansion.new(cb)
+	e.armar_red()
+	e.armar_bloques()
+	e.armar_transporte()
+	var lado := float(CiudadExpansion.K) * CiudadExpansion.CELDA * 2.0
+	_comprobar(lado * lado >= 4.0 * 1200.0 * 1200.0, "la ciudad mide %d m de lado: más de 4 veces la superficie de antes" % int(lado))
+	_comprobar(e.tramos.size() >= 900, "%d tramos de calle en la red" % e.tramos.size())
+	var puentes := 0
+	for t: Dictionary in e.tramos:
+		if bool(t["puente"]):
+			puentes += 1
+	_comprobar(puentes >= 15, "%d tramos cruzan el río por puente" % puentes)
+	_comprobar(e.cruces_semaforo.size() >= 40, "%d cruces con semáforo" % e.cruces_semaforo.size())
+	var camino := e.camino_entre(Vector2i(-12, -12), Vector2i(12, 12))
+	_comprobar(camino.size() >= 25, "la red está conectada: de una esquina a la otra en %d cruces" % camino.size())
+	var camino2 := e.camino_entre(Vector2i(-9, 0), Vector2i(9, 0))
+	_comprobar(not camino2.is_empty(), "se cruza de la orilla oeste a la este (%d cruces)" % camino2.size())
+	var en_rio := 0
+	var usos := {}
+	for bl: Dictionary in e.bloques:
+		var r: Rect2 = bl["rect"]
+		usos[bl["uso"]] = true
+		if not (String(bl["uso"]) in ["rio", "puerto"]) and r.position.x < CityBuilder.RIO_X + 45.0 and r.end.x > CityBuilder.RIO_X - 45.0:
+			en_rio += 1
+	_comprobar(en_rio == 0, "ninguna manzana edificada encima del río")
+	for u in ["ayuntamiento", "hospital", "comisaria", "bomberos", "escuela", "universidad", "estacion_central", "centro_comercial", "puerto", "casa_grande", "torres", "casas", "industrial"]:
+		_comprobar(usos.has(u), "la ciudad tiene %s" % u)
+	var est := 0
+	for l: Dictionary in e.lineas_metro:
+		est += (l["estaciones"] as Array).size()
+	_comprobar(e.lineas_metro.size() == 2 and est >= 10, "metro: %d líneas, %d estaciones" % [e.lineas_metro.size(), est])
+	var paradas := 0
+	for l: Dictionary in e.lineas_bus:
+		paradas += (l["paradas"] as Array).size()
+	_comprobar(paradas >= 10, "autobuses: %d paradas" % paradas)
+	var sem := Semaforos.new()
+	var vistos := {}
+	var cruzados := 0
+	for k in 80:
+		sem.t = float(k) * 0.5
+		vistos["%s%s" % [sem.estado(0), sem.estado(1)]] = true
+		if sem.verde(0) and sem.verde(1):
+			cruzados += 1
+	_comprobar(cruzados == 0, "nunca verde en los dos ejes a la vez")
+	_comprobar(vistos.has("vr") and vistos.has("rv") and vistos.has("ar"), "el ciclo pasa por verde, ámbar y rojo en cada eje")
+	sem.free()
+	cb.free()
 
 ## FASE 5: la ciudad responde al club.
 func _probar_ciudad_animo() -> void:

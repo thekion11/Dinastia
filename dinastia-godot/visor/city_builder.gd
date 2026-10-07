@@ -87,6 +87,7 @@ const FILA_0_Z := 108.0
 const FILA_PASO := 43.0
 
 var datos: Dictionary = {}
+var expansion: CiudadExpansion
 var etiquetas: Array = []          ## [{pos:Vector3, texto:String, nivel:int}]
 ## LO QUE SE PUEDE TOCAR EN EL MAPA (plan maestro B7): cada instalación, su
 ## solar si todavía no existe, y el estadio. `VistaCiudad` proyecta `pos` a la
@@ -132,7 +133,10 @@ func build(d: Dictionary) -> void:
 	_parcelas()
 	_barrio_residencial()
 	_frentes_urbanos()
-	_distritos()
+	## LA CIUDAD GRANDE (7-10-2026): sustituye a los tres distritos sueltos de
+	## la pasada anterior por una ciudad entera con su red vial.
+	expansion = CiudadExpansion.new(self)
+	expansion.construir()
 	_karting()
 	_arbolado()
 	_horizonte()
@@ -150,6 +154,8 @@ func build(d: Dictionary) -> void:
 ## es lo que hace que a las 22:00 la ciudad deportiva siga estando AHÍ en vez
 ## de desaparecer en un bloque negro.
 func encender_luces(noche: float) -> void:
+	if expansion != null:
+		expansion.encender(noche)
 	var f: float = clampf(noche, 0.0, 1.0)
 	for l in _farolas_luz:
 		if is_instance_valid(l):
@@ -420,10 +426,10 @@ func _arbolado() -> void:
 ## sube suavemente -con una transición larga, o se vería el escalón-. Es el
 ## mismo truco que usa cualquier juego de gestión con un mapa "natural"
 ## alrededor de una parcela edificable.
-const TERRENO_LADO := 5000.0
-const TERRENO_CELDAS := 120          ## 121x121 vértices: suficiente para que las
+const TERRENO_LADO := 7600.0
+const TERRENO_CELDAS := 160          ## 121x121 vértices: suficiente para que las
                                      ## lomas se lean y barato de generar.
-const LLANO_RADIO := 620.0           ## dentro de esto, altura 0 garantizada
+const LLANO_RADIO := 1480.0          ## dentro de esto, altura 0 garantizada
 const LLANO_TRANSICION := 520.0      ## y esto es lo que tarda en empezar a subir
 const TERRENO_ALTURA := 78.0
 
@@ -623,6 +629,7 @@ func _estadio() -> void:
 	if not perfil.is_empty():
 		var nodo := Node3D.new()
 		nodo.position = ESTADIO_EN
+		nodo.set_meta("en_ciudad", true)
 		add_child(nodo)
 		var aforo := int(perfil.get("aforo", datos.get("club", {}).get("cap", 20000)))
 		StadiumBuilder.build_pitch(nodo, perfil)
@@ -2118,7 +2125,8 @@ func _horizonte() -> void:
 		## justo encima de las parcelas nuevas -que están a ~300 m- y salían
 		## rascacielos plantados dentro de un solar. Ahora empieza donde acaba
 		## el mapa jugable.
-		var radio: float = rng.randf_range(560.0, 780.0)
+		## 7-10-2026: con la ciudad grande, el horizonte empieza donde acaba ella.
+		var radio: float = rng.randf_range(1560.0, 1950.0)
 		var pos := Vector3(sin(ang) * radio, 0, cos(ang) * radio)
 		var esc: PackedScene = mallas[rng.randi() % mallas.size()]
 		var nodo: Node3D = esc.instantiate()
@@ -2755,12 +2763,13 @@ var _agua_mat: ShaderMaterial
 func _rio() -> void:
 	var agua := MeshInstance3D.new()
 	var pl := PlaneMesh.new()
-	pl.size = Vector2(80, 900)
+	## 7-10-2026: el río cruza la ciudad grande entera, de punta a punta.
+	pl.size = Vector2(80, 2700)
 	## SUBDIVIDIDO, o el oleaje no tiene dónde ocurrir: un `PlaneMesh` sin
 	## subdividir tiene cuatro vértices, y un shader que mueve vértices sobre
 	## cuatro puntos no produce olas, produce un plano inclinado que cabecea.
 	pl.subdivide_width = 12
-	pl.subdivide_depth = 140
+	pl.subdivide_depth = 300
 	agua.mesh = pl
 	var sh := load(RUTA_SHADER_AGUA)
 	if sh != null:
@@ -2776,7 +2785,7 @@ func _rio() -> void:
 		m.metallic = 0.55
 		m.roughness = 0.12
 		agua.material_override = m
-	agua.position = Vector3(RIO_X, 0.1, -120)
+	agua.position = Vector3(RIO_X, 0.1, 0)
 	add_child(agua)
 	## Las dos orillas: sin ellas el agua es un rectángulo azul pegado sobre el
 	## césped, y desde la cámara alta se nota que no hay cauce.
@@ -2786,10 +2795,10 @@ func _rio() -> void:
 	for lado in [-1.0, 1.0]:
 		var orilla := MeshInstance3D.new()
 		var bm := BoxMesh.new()
-		bm.size = Vector3(9.0, 1.6, 900.0)
+		bm.size = Vector3(9.0, 1.6, 2700.0)
 		orilla.mesh = bm
 		orilla.material_override = tierra
-		orilla.position = Vector3(RIO_X + lado * 44.0, 0.4, -120)
+		orilla.position = Vector3(RIO_X + lado * 44.0, 0.4, 0)
 		add_child(orilla)
 
 ## LA CASA DE LA RIBERA: el modelo moderno que trajo el usuario ("ДОМ скетч").
@@ -2818,6 +2827,44 @@ func _casa_ribera(centro: Vector3) -> void:
 
 ## El velero ya no se monta aquí: navega, así que lo cuelga `_trafico()` de su
 ## propia ruta por el río. Esta función solo lo fabrica.
+## Un bote de paseo (casco, cabina y toldo), lo bastante bajo para pasar bajo
+## los puentes. Mira a +Z como los coches.
+func _hacer_bote(k: int) -> Node3D:
+	var n := Node3D.new()
+	n.name = "Bote"
+	var casco := [Color(0.9, 0.9, 0.88), Color(0.15, 0.3, 0.55), Color(0.7, 0.15, 0.12)][k % 3] as Color
+	var mc := _mat_simple(casco, 0.4)
+	var c := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(3.4, 1.2, 9.0)
+	c.mesh = bm
+	c.material_override = mc
+	c.position = Vector3(0, 0.3, 0)
+	n.add_child(c)
+	var proa := MeshInstance3D.new()
+	var pr := PrismMesh.new()
+	pr.size = Vector3(3.4, 2.2, 1.2)
+	proa.mesh = pr
+	proa.material_override = mc
+	proa.rotation = Vector3(PI * 0.5, 0, 0)
+	proa.position = Vector3(0, 0.3, 5.0)
+	n.add_child(proa)
+	var cab := MeshInstance3D.new()
+	var cb := BoxMesh.new()
+	cb.size = Vector3(2.6, 1.3, 3.2)
+	cab.mesh = cb
+	cab.material_override = _mat_simple(Color(0.95, 0.95, 0.93), 0.5)
+	cab.position = Vector3(0, 1.5, -0.8)
+	n.add_child(cab)
+	var toldo := MeshInstance3D.new()
+	var tb := BoxMesh.new()
+	tb.size = Vector3(3.0, 0.12, 3.6)
+	toldo.mesh = tb
+	toldo.material_override = _mat_simple(_color_club("c1", Color(0.2, 0.5, 0.3)), 0.7)
+	toldo.position = Vector3(0, 2.25, -0.8)
+	n.add_child(toldo)
+	return n
+
 func _hacer_velero() -> Node3D:
 	var malla := load(RUTA_VELERO)
 	if malla == null:
@@ -2970,16 +3017,18 @@ func _trafico() -> void:
 	for i in range(int(round(lerpf(6.0, 14.0, _empuje_club())))):
 		_un_peaton(t, rng_p, id_av, rng_p.randf() * 900.0)
 
-	## 4) EL VELERO. Mismo circuito estrecho, pero en el agua y muy lento: un
-	## velero a 22 m/s sería una lancha motora.
-	var barco := _hacer_velero()
-	if barco != null:
-		var cauce := PackedVector3Array([
-			Vector3(RIO_X - 14.0, 0.0, -520.0), Vector3(RIO_X - 14.0, 0.0, 230.0),
-			Vector3(RIO_X + 14.0, 0.0, 230.0), Vector3(RIO_X + 14.0, 0.0, -520.0),
-		])
-		var id3 := t.agregar_ruta(_redondear(cauce, 13.0))
-		t.agregar_vehiculo(barco, id3, 120.0, 3.4, 0.7, -PI * 0.5)
+	## 4) LOS BOTES DEL RÍO (7-10-2026). El velero tiene el mástil más alto
+	## que los puentes de la ciudad grande: se queda amarrado en el puerto y
+	## el río lo recorren botes de paseo, que pasan por debajo.
+	var cauce := PackedVector3Array([
+		Vector3(RIO_X - 14.0, 0.0, -1300.0), Vector3(RIO_X - 14.0, 0.0, 1300.0),
+		Vector3(RIO_X + 14.0, 0.0, 1300.0), Vector3(RIO_X + 14.0, 0.0, -1300.0),
+	])
+	var id3 := t.agregar_ruta(_redondear(cauce, 13.0))
+	for k in 3:
+		t.agregar_vehiculo(_hacer_bote(k), id3, 2700.0 * float(k), 4.0, 0.15, 0.0)
+	if expansion != null:
+		expansion.trafico(t, coches, rng)
 
 ## Un peatón de verdad (`PeatonQ`: hombre o mujer del paquete Quaternius, con
 ## ropa de calle, pelo y a veces barba) caminando por la acera a paso humano.
@@ -3252,6 +3301,8 @@ func _barrio_residencial() -> void:
 	## una finca cerrada por un muro cubierto de hiedra, con su portón y
 	## árboles que asoman por encima.
 	_finca_enredadera(BARRIO_EN, FINCA_TAM)
+	## La Casa Grande ya no cabe aquí: tiene finca propia en la ciudad grande
+	## (`CiudadExpansion`, 2x2 manzanas al sur del barrio).
 	_cartel(Vector3(BARRIO_EN.x + 14.0, 0, FINCA_PORTON_Z - 6.0), "Barrio residencial", false)
 
 	## UN BARRIO ES MÁS DE UNA CASA. Con el complejo solo, aquello era una
@@ -3599,6 +3650,37 @@ func _hueco_urbano(eje: Vector3, afuera: Vector3, fondo: float) -> bool:
 		return true
 	return false
 
+
+const RUTA_CASA_GIGANTE := "res://assets/ciudad/complejo_residencial.glb"
+var casa_gigante: Node3D = null
+
+## La casa grande del barrio (`complejo_residencial.glb`), medida y centrada
+## dentro de la finca, con un margen de jardín hasta el muro y el camino de
+## entrada desde el portón.
+func _casa_gigante(centro: Vector3, tam: Vector2) -> void:
+	var esc := load(RUTA_CASA_GIGANTE)
+	if esc == null or not (esc is PackedScene):
+		return
+	var n: Node3D = (esc as PackedScene).instantiate()
+	var raiz := Node3D.new()
+	raiz.name = "CasaGigante"
+	add_child(raiz)
+	raiz.add_child(n)
+	var caja := _caja_de(n)
+	## El origen del modelo no está en su centro ni en su base: se corrige.
+	n.position = -Vector3(caja.position.x + caja.size.x * 0.5, caja.position.y, caja.position.z + caja.size.z * 0.5)
+	var margen := 8.0
+	var escala := minf((tam.x - margen * 2.0) / maxf(caja.size.x, 0.01), (tam.y - margen * 2.0 - 6.0) / maxf(caja.size.z, 0.01))
+	raiz.scale = Vector3.ONE * escala
+	raiz.rotation.y = PI
+	raiz.position = centro + Vector3(0, 0.05, 3.0)
+	casa_gigante = raiz
+	## El camino desde el portón hasta la puerta.
+	var losa := _mat_simple(Color(0.78, 0.74, 0.66), 0.85)
+	var z0 := centro.z - tam.y * 0.5
+	_caja_en(Vector3(centro.x, 0.06, z0 + 5.0), Vector3(6.0, 0.1, 10.0), losa)
+	_rotulo(centro + Vector3(0, caja.size.y * escala + 6.0, 0), "🏰 La Casa Grande", Color(1, 0.92, 0.7), 22)
+	puntos_clic.append({"k": "casa_grande", "n": "La Casa Grande", "pos": centro, "estado": "ciudad"})
 
 ## La finca del barrio: muro de 5,5 m cubierto de enredadera, con la copa de
 ## la hiedra desbordando por arriba (bultos irregulares, no una arista recta),
