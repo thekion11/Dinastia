@@ -127,6 +127,7 @@ func jugar_jornada(ya_jugado: Partido = null) -> Array:
 		if ya_jugado != null and ya_jugado.local == par[0] and ya_jugado.visita == par[1]:
 			gl = ya_jugado.goles_local
 			gv = ya_jugado.goles_visita
+			ya_jugado.guardar_si_es_mio()
 		else:
 			var p := Partido.new(par[0], par[1])
 			var r := p.simular()

@@ -355,6 +355,7 @@ func semana(m: Mundo) -> void:
 	var dt := int(cuentas["dt"]["seguidores"])
 	cuentas["dt"]["seguidores"] = maxi(100, dt + int(dt * (float(fama) - 45.0) / 4000.0) + _rng.randi_range(0, 12))
 	_publican_jugadores(m)
+	comentar_ultimo_partido(m)
 	var tags := ["#DíaDePartido", "#Hinchada", "#Cantera", "#Trabajo", "#Familia", hashtag_club(c)]
 	tendencia = String(tags[(m.semana + m.anio) % tags.size()])
 
@@ -406,6 +407,59 @@ func dar_acceso_club(m: Mundo) -> void:
 	if m.movil != null:
 		m.movil.recibir("Community manager", "📱", "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!" % [String(cuentas["club"]["usuario"]), clave_club], m.anio, m.semana)
 	noticia.emit("🔑 La cuenta del club es tuya", "El community manager se va de vacaciones y la directiva te confía %s. La clave te llegó por Mensajes." % String(cuentas["club"]["usuario"]))
+
+## LA TRIBUNA COMO TERMÓMETRO REAL (fase 5): los hinchas comentan jugadas
+## concretas de TU último partido -quién marcó, en qué minuto, si fue al final,
+## si hubo remontada o goleada-, no frases sueltas. Una vez por partido.
+var _comentado := ""
+
+func comentar_ultimo_partido(m: Mundo) -> Array:
+	var u: Dictionary = Partido.ultimo_mio
+	var c := m.mi_club()
+	if u.is_empty() or c == null:
+		return []
+	var clave := "%d|%d|%s" % [int(u["anio"]), int(u["semana"]), String(u["local"])]
+	if clave == _comentado:
+		return []
+	_comentado = clave
+	var local_mio := String(u["local_id"]) == c.id
+	var gf := int(u["gl"]) if local_mio else int(u["gv"])
+	var gc := int(u["gv"]) if local_mio else int(u["gl"])
+	var rival := String(u["visita"]) if local_mio else String(u["local"])
+	var nuestros: Array = []
+	var suyos: Array = []
+	for e: Dictionary in u["cronica"]:
+		if String(e.get("tipo", "")) != "gol":
+			continue
+		(nuestros if String(e.get("club", "")) == c.id else suyos).append(e)
+	var frases: Array = []
+	for g: Dictionary in nuestros:
+		var mi := int(g["min"])
+		if mi >= 85:
+			frases.append("¡¡%s en el %d'!! Me quedé sin voz. Esto es fútbol. %s" % [g["autor"], mi, hashtag_club(c)])
+		elif frases.size() < 2:
+			frases.append("Qué golazo el de %s en el %d'. Que alguien le renueve YA." % [g["autor"], mi])
+	if gf >= gc + 3:
+		frases.append("%d-%d a %s. Esta noche no duerme nadie en la ciudad." % [gf, gc, rival])
+	elif gf < gc:
+		if not suyos.is_empty():
+			var ult: Dictionary = suyos[suyos.size() - 1]
+			frases.append("Ese gol de %s en el %d' nos dolió en el alma. %d-%d y a casa." % [ult["autor"], int(ult["min"]), gf, gc])
+		else:
+			frases.append("Perder %d-%d contra %s… alguien tiene que dar explicaciones." % [gf, gc, rival])
+	elif gf == gc:
+		frases.append("%d-%d con %s. Punto y gracias, pero se podía más." % [gf, gc, rival])
+	if nuestros.is_empty() and gf == 0:
+		frases.append("Noventa minutos sin hacerle un gol a %s. Así no." % rival)
+	var hechas: Array = []
+	for t: String in frases.slice(0, 3):
+		var f := _nueva("fan", t, [hashtag_club(c), "#DíaDePartido"], "opinion", m)
+		f["autor"] = FANS[_rng.randi() % FANS.size()]
+		f["likes"] = _rng.randi_range(20, 900)
+		f["compartidos"] = _rng.randi_range(0, 80)
+		_comentar(f, _rng.randi_range(0, 2), "bien" if gf > gc else ("mal" if gf < gc else ""))
+		hechas.append(f)
+	return hechas
 
 func _nueva(cuenta: String, texto: String, hashtags: Array, tipo: String, m: Mundo) -> Dictionary:
 	var p := {"id": _siguiente_id, "cuenta": cuenta,
