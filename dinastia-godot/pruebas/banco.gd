@@ -122,6 +122,7 @@ func _ready() -> void:
 	_probar_ciudad_animo()
 	_probar_ciudad_grande()
 	_probar_minijuegos()
+	_probar_dinastias()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -4999,6 +5000,42 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## DINASTÍAS FAMILIARES (fase 5): tu hijo llega a la cantera que diriges.
+func _probar_dinastias() -> void:
+	_titulo("DINASTÍAS FAMILIARES (FASE 5)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 77)
+	m.tomar_el_mando(m.ligas[0].clubes[3].id)
+	var mio := m.mi_club()
+	while mio.plantilla.size() > 26:
+		mio.plantilla.pop_back()
+	## 1) Leyenda propia (de la Carrera de Jugador).
+	m.cantera.leyendas.append({"nombre": "Ramiro Valdivia", "club_id": m.ligas[0].clubes[7].id, "pos": "DEL",
+		"nivel": 86, "anio_hijo": m.anio, "usado": false, "propio": true})
+	var copia := Cantera.new(m)
+	copia.desde_dic(m.cantera.a_dic())
+	var guardado_propio := false
+	for L: Dictionary in copia.leyendas:
+		if String(L["nombre"]) == "Ramiro Valdivia" and bool(L.get("propio", false)):
+			guardado_propio = true
+	_comprobar(guardado_propio, "la dinastía propia sobrevive al guardado")
+	m.cantera.call("_hijos_de_leyendas")
+	var hijo: Jugador = null
+	for j: Jugador in mio.plantilla:
+		if j.nombre.ends_with("Valdivia"):
+			hijo = j
+	_comprobar(hijo != null, "el hijo de tu jugador retirado llega a TU cantera (no a otro club)")
+	if hijo != null:
+		_comprobar(hijo.edad <= 17 and hijo.pot > hijo.ovr, "llega joven y con techo (%d años, %d → %d)" % [hijo.edad, hijo.ovr, hijo.pot])
+	## 2) El hijo del entrenador (familia de VidaDT) al cumplir 16.
+	m.vida.perfil = {"pareja": "", "hijos": [{"nombre": "Mateo", "edad": 15}], "mascota": "", "anio0": m.anio - 1}
+	m.cantera.call("_hijos_del_dt")
+	var del_dt := false
+	for j2: Jugador in mio.plantilla:
+		if j2.nombre.begins_with("Mateo "):
+			del_dt = true
+	_comprobar(del_dt, "el hijo del míster entra en la cantera al cumplir 16")
 
 ## LOS MINIJUEGOS (7-10-2026): tiros libres y trivia del club.
 func _probar_minijuegos() -> void:
