@@ -27,6 +27,8 @@ var club: Club
 var construir: Callable
 ## B7: ¿se juega en casa esta semana? La ciudad se viste de partido.
 var dia_partido := false
+## El momento del club (`CiudadAnimo.de`), lo pone quien abre la vista.
+var animo: Dictionary = {}
 var _obras: Instalaciones
 var _ciudad_datos: Ciudad
 var _perfil: Dictionary = {}
@@ -112,7 +114,9 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	## mismo `Calidad` y no debe cambiar.
 	var env := we.environment
 	env.tonemap_exposure = 1.02
-	env.adjustment_saturation = 1.16
+	## El ánimo del club también tiñe la escena: más viva en la euforia, más
+	## gris en la crisis (fase 5).
+	env.adjustment_saturation = _saturacion_animo()
 	env.adjustment_contrast = 1.10
 	if env.fog_enabled:
 		env.fog_density = 0.00016
@@ -212,6 +216,7 @@ func _datos_de(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Di
 		"perfil_estadio": perfil_estadio,
 		"luces": ciudad.luces if ciudad != null else Ciudad.LUCES_POR_DEFECTO,
 		"dia_partido": dia_partido,
+		"animo": animo,
 		"vecinos": ciudad.vecinos if ciudad != null else 55,
 	}
 
@@ -480,7 +485,12 @@ func abrir_ficha(k: String) -> void:
 
 ## Vuelve a levantar la ciudad con los datos de ahora (tras construir o al
 ## cambiar el día de partido).
+func _saturacion_animo() -> float:
+	return {"euforia": 1.3, "bien": 1.22, "mal": 1.0, "crisis": 0.72}.get(String(animo.get("estado", "")), 1.16)
+
 func _reconstruir() -> void:
+	if _env != null:
+		_env.adjustment_saturation = _saturacion_animo()
 	_ciudad.build(_datos_de(club, _obras, _ciudad_datos, _perfil))
 	_ciudad.mostrar_rotulos(_rotulos_visibles)
 	_aplicar_hora()
