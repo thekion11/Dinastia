@@ -4830,6 +4830,22 @@ func _pintar_ciudad(c: Club) -> void:
 ## Mismo motivo y mismo arreglo que `_ver_estadio_propio()`: `VistaCiudad`
 ## tampoco trae fondo opaco -para que el 3D se vea de verdad-, así que hay
 ## que esconder el resto de la pantalla mientras está abierta.
+## El ídolo del club para la estatua de la ciudad: la última leyenda retirada
+## del club; si no hay, el capitán; si no, el de más media.
+func _idolo_del_club(c: Club) -> String:
+	if mundo.cantera != null:
+		for k in range(mundo.cantera.leyendas.size() - 1, -1, -1):
+			var L: Dictionary = mundo.cantera.leyendas[k]
+			if String(L.get("club_id", "")) == c.id:
+				return String(L.get("nombre", ""))
+	var mejor: Jugador = null
+	for j: Jugador in c.plantilla:
+		if j.capitan:
+			return j.nombre
+		if mejor == null or j.ovr > mejor.ovr:
+			mejor = j
+	return mejor.nombre if mejor != null else ""
+
 func _ver_ciudad_propia() -> void:
 	var c := mundo.mi_club()
 	if c == null or mundo.obras == null:
@@ -4845,6 +4861,7 @@ func _ver_ciudad_propia() -> void:
 	var prox := mundo.proximo_partido()
 	vista.dia_partido = not prox.is_empty() and prox[0] == c
 	vista.animo = CiudadAnimo.de(mundo, c)
+	vista.idolo = _idolo_del_club(c)
 	vista.abrir(c, mundo.obras, mundo.ciudad, mundo.perfil_estadio_de(c))
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
