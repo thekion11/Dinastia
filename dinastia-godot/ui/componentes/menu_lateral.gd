@@ -60,7 +60,8 @@ const MENUS := [
 		{"tab": "Vida", "secc": "hogar", "label": "Casa y auto", "icono": "🏡", "desc": "Dónde vives y en qué te mueves."},
 		{"tab": "Vida", "secc": "familia", "label": "Familia", "icono": "👨‍👩‍👧", "desc": "Los tuyos, sus planes y sus quejas."},
 		{"accion": "casa", "label": "Ver tu casa", "icono": "🛋️", "desc": "Tu terraza en 3D, con café y paisaje."},
-		{"accion": "movil", "label": "Abrir el móvil", "icono": "📲", "desc": "Tribuna, mensajes, banco y tus fotos."}]},
+		{"accion": "movil", "label": "Abrir el móvil", "icono": "📲", "desc": "Tribuna, mensajes, banco y tus fotos."},
+		{"accion": "minijuegos", "label": "Minijuegos", "icono": "🎮", "desc": "Penales, tiros libres y la trivia del club."}]},
 	{"id": "editar", "icono": "✏️", "nombre": "Editar", "estilo": 5, "ficha": false,
 		"lema": "El mundo a tu medida: ligas, clubes y jugadores.",
 		"colores": ["#06162e", "#0b2447", "#8fd3ff"], "subs": [
@@ -151,6 +152,8 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			p._ver_ciudad_propia()
 		"album":
 			PanelMeta.abrir(p, p.mundo)
+		"minijuegos":
+			SalaMinijuegos.abrir(p, p.mundo)
 
 func _montar() -> void:
 	set_anchors_preset(Control.PRESET_LEFT_WIDE)
