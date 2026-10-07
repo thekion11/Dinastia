@@ -306,6 +306,11 @@ func _physics_process(delta: float) -> void:
 	_buscar_cerca()
 	_hud.text = ("🚗 Conduciendo" if modo == "coche" else "🚶 A pie") + "  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa" % [
 		int(absf(vel) * 3.6), "" if modo == "coche" else "Mayús: correr · "]
+	## Dónde estás: el nombre de la calle (o el cruce).
+	if cb != null and cb.expansion != null:
+		var calle := cb.expansion.nombre_calle_en(cuerpo.position)
+		if calle != "":
+			_hud.text = "📍 %s\n%s" % [calle, _hud.text]
 	if _t_burbuja > 0.0:
 		_t_burbuja -= delta
 		if _t_burbuja <= 0.0:
