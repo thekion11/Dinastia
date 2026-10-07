@@ -89,6 +89,21 @@ func _paleta() -> Dictionary:
 		p["nombre"] = Nombres.de_tabla(String(((confed as Dictionary)[_clave] as Dictionary).get("n", p["nombre"]))).to_upper()
 	return p
 
+## Los países de los clubes que entran en el bombo (hasta 6, en orden).
+func _paises_del_sorteo() -> Array:
+	var clubes: Array = []
+	for g: Variant in _grupos:
+		clubes.append_array(g as Array)
+	for par: Variant in _parejas:
+		clubes.append_array(par as Array)
+	var codigos: Array = []
+	for c: Variant in clubes:
+		if c is Club and not codigos.has((c as Club).pais):
+			codigos.append((c as Club).pais)
+		if codigos.size() >= 6:
+			break
+	return codigos
+
 # ---------------------------------------------------------------------------
 #  CONSTRUCCIÓN
 # ---------------------------------------------------------------------------
@@ -126,6 +141,7 @@ func _construir() -> void:
 	vp.add_child(_escena)
 	_escena.montar(Color(String(p["acento"])), Color(String(p["fondo"])))
 	_escena.rotular(String(p["nombre"]), _titulo_ronda)
+	_escena.poner_banderas(_paises_del_sorteo())
 
 	## El degradado de sala por encima del 3D: hunde los bordes y deja el centro
 	## limpio, para que los rótulos se lean sobre cualquier fotograma.
