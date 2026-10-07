@@ -49,7 +49,7 @@ Estados:
 | Presidentes de competiciones, accionistas y reuniones | ✅ | |
 | Medios nuevos y minijuegos | ✅ | |
 | Hablar con jugadores, exámenes, presentaciones y lesiones absurdas | ✅ | |
-| Contratos según la ley de cada país (2026) | 🟡 | México y Egipto, por revisar |
+| Contratos según la ley de cada país (2026) | ✅ | México (reforma de 2026: de 48 a 40 h entre 2027 y 2030) y Egipto (Ley 14/2025) verificados el 7-10-2026 |
 | Instalaciones con más niveles, trabajadores y eventos; cantera; otras ramas del club; días nacionales; globo terráqueo | ✅ | |
 | Política y religión | 🟡 | A propósito: política ficticia y solo festividades del país |
 | Ficha del jugador «simulado» | ✅ | ⛔ vida sentimental de personas reales (regla fija) |
@@ -127,7 +127,7 @@ Estados:
 5. **Mini-juego de representantes**: la mecánica de agentes existe; falta la negociación como juego.
 6. **Banderas en el estudio** del sorteo y la rueda de prensa (hoy no hay ninguna).
 7. **Región de origen del jugador**: para la regla del Athletic Club, que hoy usa el país.
-8. **Leyes laborales de México y Egipto**: verificar el dato.
+8. ✅ **Leyes laborales de México y Egipto**: verificadas el 7-10-2026 (México baja 2 h al año desde 2027; Egipto, Ley 14/2025, 48 h).
 9. **Túnel navegable**: espera al modo caminar por el estadio.
 10. **Traducir la narración** (noticias, prensa, vestuario), al menos al inglés.
 11. **Paleta de vallas LED y formas nuevas** de estadio (B6).
