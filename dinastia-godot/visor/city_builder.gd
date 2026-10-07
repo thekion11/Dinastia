@@ -113,6 +113,7 @@ func build(d: Dictionary) -> void:
 	_ventanas_mat.clear()
 	_vias.clear()
 	_frentes.clear()
+	_anillo_con_banderas = false
 	_luminarias.clear()
 	_luz_color = _color_luces()
 
@@ -131,6 +132,7 @@ func build(d: Dictionary) -> void:
 	_parcelas()
 	_barrio_residencial()
 	_frentes_urbanos()
+	_distritos()
 	_karting()
 	_arbolado()
 	_horizonte()
@@ -138,6 +140,7 @@ func build(d: Dictionary) -> void:
 	## B7: el día de partido, el ánimo del barrio y los rótulos flotantes.
 	if bool(datos.get("dia_partido", false)):
 		_dia_de_partido()
+	_animo_del_club()
 	_rotulo_barrio()
 	add_child(_rotulos)
 
@@ -3171,6 +3174,164 @@ func _frentes_urbanos() -> void:
 	for t in tramos:
 		_fila_urbana(t["calle"], t["dir"], t["afuera"], float(t["largo"]), detalle, bloques, toldos, rng, lleno)
 
+# ---------------------------------------------------------------- distritos
+
+## LOS DISTRITOS DE FUERA (7-10-2026, pedido: «en la ciudad faltan edificios y
+## cosas 3D que tenemos»). Vista desde arriba, la ciudad acababa en el anillo:
+## una fila corta de fachadas y después campo hasta el horizonte. Aquí se
+## levantan MANZANAS de verdad en el suelo libre de fuera (norte, este y
+## sudeste), con sus calles, con todo el kit comercial en las fachadas, las
+## naves «de poco detalle» como bloques interiores y, en el centro del distrito
+## norte, los rascacielos del kit (que hasta hoy solo estaban de fondo). Cuantos
+## más socios y reputación, más manzanas llenas. Se apartan del río, del
+## barrio, del karting y de las parcelas.
+const DISTRITOS := [
+	{"nombre": "Distrito Norte", "desde": Vector2(-360, -575), "hasta": Vector2(360, -410), "centro": true},
+	{"nombre": "Distrito Este", "desde": Vector2(425, -270), "hasta": Vector2(590, 250), "centro": false},
+	{"nombre": "Ensanche Sur", "desde": Vector2(230, 300), "hasta": Vector2(420, 545), "centro": false},
+]
+const MANZANA := Vector2(54.0, 42.0)
+const CALLE_DISTRITO := 14.0
+
+func _distritos() -> void:
+	var comercial: Array[PackedScene] = []
+	for ruta in RUTAS_COMERCIAL:
+		var e: PackedScene = load(ruta)
+		if e != null:
+			comercial.append(e)
+	var naves: Array[PackedScene] = []
+	for ruta in RUTAS_NAVES:
+		var e2: PackedScene = load(ruta)
+		if e2 != null:
+			naves.append(e2)
+	var altos: Array[PackedScene] = []
+	for ruta in RUTAS_HORIZONTE:
+		var e3: PackedScene = load(ruta)
+		if e3 != null:
+			altos.append(e3)
+	var toldos: Array[PackedScene] = []
+	for ruta in RUTAS_MOBILIARIO:
+		var e4: PackedScene = load(ruta)
+		if e4 != null:
+			toldos.append(e4)
+	if comercial.is_empty():
+		return
+	var asfalto: StandardMaterial3D = Texturas.asfalto(Color(0.14, 0.14, 0.15)).duplicate()
+	asfalto.roughness = 0.5
+	var acera := _mat_simple(Color(0.42, 0.41, 0.39), 0.9)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7102026
+	var lleno: float = lerpf(0.62, 1.0, _empuje_club())
+	manzanas_distrito = 0
+	for d: Dictionary in DISTRITOS:
+		var desde: Vector2 = d["desde"]
+		var hasta: Vector2 = d["hasta"]
+		var paso := MANZANA + Vector2(CALLE_DISTRITO, CALLE_DISTRITO)
+		var nx := int(floor((hasta.x - desde.x) / paso.x))
+		var nz := int(floor((hasta.y - desde.y) / paso.y))
+		if nx <= 0 or nz <= 0:
+			continue
+		## Centrado en su rectángulo.
+		var origen := desde + ((hasta - desde) - Vector2(nx, nz) * paso + Vector2(CALLE_DISTRITO, CALLE_DISTRITO)) * 0.5
+		## Las calles del distrito: una rejilla de franjas de asfalto.
+		var ancho_total := float(nx) * paso.x + CALLE_DISTRITO
+		var fondo_total := float(nz) * paso.y + CALLE_DISTRITO
+		var esquina := origen - Vector2(CALLE_DISTRITO, CALLE_DISTRITO)
+		for i in nx + 1:
+			var x := esquina.x + CALLE_DISTRITO * 0.5 + float(i) * paso.x
+			_franja(Vector3(x, 0, esquina.y + fondo_total * 0.5), Vector2(CALLE_DISTRITO, fondo_total), asfalto)
+		for k in nz + 1:
+			var z := esquina.y + CALLE_DISTRITO * 0.5 + float(k) * paso.y
+			_franja(Vector3(esquina.x + ancho_total * 0.5, 0, z), Vector2(ancho_total, CALLE_DISTRITO), asfalto)
+		var mitad := Vector2(float(nx) * 0.5, float(nz) * 0.5)
+		for i in nx:
+			for k in nz:
+				var c2 := origen + Vector2(float(i) * paso.x + MANZANA.x * 0.5, float(k) * paso.y + MANZANA.y * 0.5)
+				var c := Vector3(c2.x, 0, c2.y)
+				## La acera de la manzana.
+				var base := _caja_en(Vector3(c.x, altura_en(c.x, c.z) + 0.1, c.z), Vector3(MANZANA.x, 0.2, MANZANA.y), acera)
+				base.name = "Manzana"
+				if rng.randf() > lleno:
+					continue
+				manzanas_distrito += 1
+				## El corazón del distrito norte: torres.
+				var cerca_centro: bool = bool(d["centro"]) and absf(float(i) + 0.5 - mitad.x) <= 1.0 and absf(float(k) + 0.5 - mitad.y) <= 1.0
+				if cerca_centro and not altos.is_empty():
+					## Tres torres por manzana y comercios en la planta baja.
+					for o: Vector3 in [Vector3(-14, 0, -9), Vector3(14, 0, -9), Vector3(0, 0, 10)]:
+						_torre_distrito(altos[rng.randi() % altos.size()], c + o, rng)
+				else:
+					_manzana(c, comercial, naves, toldos, rng)
+		_cartel(Vector3(origen.x - 6.0, 0, origen.y - 6.0), String(d["nombre"]), false)
+
+var manzanas_distrito := 0
+
+func _franja(centro: Vector3, tam: Vector2, mat: Material) -> void:
+	var m := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(tam.x, 0.1, tam.y)
+	m.mesh = bm
+	m.material_override = mat
+	m.position = Vector3(centro.x, altura_en(centro.x, centro.z) + 0.05, centro.z)
+	add_child(m)
+
+## Una manzana: fachadas del kit mirando a la calle por los cuatro lados y un
+## bloque alto dentro que asoma por encima.
+func _manzana(c: Vector3, comercial: Array[PackedScene], naves: Array[PackedScene], toldos: Array[PackedScene], rng: RandomNumberGenerator) -> void:
+	var lados := [
+		{"n": Vector3(0, 0, 1), "dir": Vector3.RIGHT, "largo": MANZANA.x, "fondo": MANZANA.y},
+		{"n": Vector3(0, 0, -1), "dir": Vector3.LEFT, "largo": MANZANA.x, "fondo": MANZANA.y},
+		{"n": Vector3(1, 0, 0), "dir": Vector3.FORWARD, "largo": MANZANA.y, "fondo": MANZANA.x},
+		{"n": Vector3(-1, 0, 0), "dir": Vector3.BACK, "largo": MANZANA.y, "fondo": MANZANA.x},
+	]
+	for l: Dictionary in lados:
+		var n: Vector3 = l["n"]
+		var dir: Vector3 = l["dir"]
+		var largo: float = float(l["largo"]) - 14.0   ## las esquinas quedan libres
+		var u := -largo * 0.5
+		var giro := atan2(n.x, n.z)
+		while u < largo * 0.5 - 5.0:
+			var nodo: Node3D = comercial[rng.randi() % comercial.size()].instantiate()
+			var s: float = 4.6 * rng.randf_range(0.9, 1.1)
+			nodo.scale = Vector3(s, s * rng.randf_range(0.9, 1.7), s)
+			var caja := _caja_de(nodo)
+			var ancho: float = maxf(caja.size.x * s, 5.0)
+			var fondo: float = maxf(caja.size.z * s, 5.0)
+			if u + ancho > largo * 0.5:
+				nodo.free()
+				break
+			var p: Vector3 = c + dir * (u + ancho * 0.5) + n * (float(l["fondo"]) * 0.5 - fondo * 0.5 - 0.5)
+			nodo.rotation.y = giro
+			nodo.position = Vector3(p.x, altura_en(p.x, p.z) - 0.1, p.z)
+			add_child(nodo)
+			_frentes.append(_rect_de(p, dir, ancho, fondo))
+			if not toldos.is_empty() and rng.randf() < 0.25:
+				var tl: Node3D = toldos[rng.randi() % toldos.size()].instantiate()
+				tl.scale = Vector3.ONE * 3.8
+				tl.rotation.y = giro
+				var tp: Vector3 = c + dir * (u + ancho * 0.5) + n * (float(l["fondo"]) * 0.5 + 1.2)
+				tl.position = Vector3(tp.x, altura_en(tp.x, tp.z), tp.z)
+				add_child(tl)
+			u += ancho + rng.randf_range(0.3, 2.0)
+	if not naves.is_empty() and rng.randf() < 0.85:
+		var b: Node3D = naves[rng.randi() % naves.size()].instantiate()
+		var sb: float = 5.5 * rng.randf_range(0.9, 1.2)
+		b.scale = Vector3(sb, sb * rng.randf_range(1.6, 3.2), sb)
+		b.rotation.y = float(rng.randi() % 4) * PI * 0.5
+		b.position = Vector3(c.x, altura_en(c.x, c.z) - 0.1, c.z)
+		add_child(b)
+
+## Una torre del kit en el centro del distrito norte, con su plaza.
+func _torre_distrito(esc: PackedScene, c: Vector3, rng: RandomNumberGenerator) -> void:
+	var t: Node3D = esc.instantiate()
+	var s: float = 3.6 * rng.randf_range(0.85, 1.3) * lerpf(0.85, 1.3, _empuje_club())
+	t.scale = Vector3.ONE * s
+	t.rotation.y = float(rng.randi() % 4) * PI * 0.5
+	t.position = Vector3(c.x, altura_en(c.x, c.z) - 0.1, c.z)
+	add_child(t)
+	var caja := _caja_de(t)
+	_frentes.append(Rect2(c.x - caja.size.x * s * 0.5, c.z - caja.size.z * s * 0.5, caja.size.x * s, caja.size.z * s))
+
 ## Una fila de edificios a lo largo de una acera. Se salta los cruces, el
 ## ramal del barrio y los ramales y solares de las parcelas.
 func _fila_urbana(calle: Vector3, dir: Vector3, afuera: Vector3, medio_largo: float,
@@ -3713,6 +3874,26 @@ func mostrar_rotulos(si: bool) -> void:
 	if _rotulos != null:
 		_rotulos.visible = si
 
+## LA CIUDAD RESPONDE AL CLUB (fase 5): pancartas en la euforia, persianas y
+## grafitis en la crisis. Ver `CiudadAnimo`.
+var animo_montado: Dictionary = {}
+
+func _animo_del_club() -> void:
+	var animo: Dictionary = datos.get("animo", {})
+	if animo.is_empty():
+		return
+	var c1 := _color_club("c1", Color(0.2, 0.5, 0.3))
+	var c2 := _color_club("c2", Color(1, 1, 1))
+	animo_montado = CiudadAnimo.montar(self, animo, _frentes, ESTADIO_EN, c1, c2)
+	var est := String(animo.get("estado", "normal"))
+	if est == "euforia":
+		_banderas_anillo(c1, c2)
+	var txt := {"euforia": "🏆 LA CIUDAD ESTÁ DE FIESTA", "bien": "🙂 Buen ambiente en la ciudad",
+		"mal": "😒 La ciudad empieza a impacientarse", "crisis": "😡 LA CIUDAD ESTÁ HARTA"}.get(est, "") as String
+	if txt != "":
+		var col := Color(1.0, 0.85, 0.3) if est in ["euforia", "bien"] else Color(1.0, 0.45, 0.4)
+		_rotulo(ESTADIO_EN + Vector3(0, 78.0, 0), "%s · %s" % [txt, String(animo.get("motivo", ""))], col, 26)
+
 ## El humor del barrio sobre el barrio.
 func _rotulo_barrio() -> void:
 	if not datos.has("vecinos"):
@@ -3730,7 +3911,16 @@ func _dia_de_partido() -> void:
 	var c2 := _color_club("c2", Color(1, 1, 1))
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 4242
-	## Banderas a lo largo del anillo.
+	_banderas_anillo(c1, c2)
+	_hinchada_estadio(c1, c2, rng)
+
+## Banderas del club en las farolas del anillo (día de partido y euforia).
+var _anillo_con_banderas := false
+
+func _banderas_anillo(c1: Color, c2: Color) -> void:
+	if _anillo_con_banderas:
+		return
+	_anillo_con_banderas = true
 	for i in 28:
 		var t := float(i) / 28.0
 		var x := lerpf(-RING_X, RING_X, t)
@@ -3746,7 +3936,9 @@ func _dia_de_partido() -> void:
 			add_child(mastil)
 			StadiumBuilder._bandera_ondeante(self, Vector3(x + 1.3, 7.6, z), Vector2(2.6, 1.6),
 				c1 if i % 2 == 0 else c2, 0.0, float(i) * 0.7)
-	## La marea de gente alrededor del estadio.
+
+## La marea de gente alrededor del estadio.
+func _hinchada_estadio(c1: Color, c2: Color, rng: RandomNumberGenerator) -> void:
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.use_colors = true

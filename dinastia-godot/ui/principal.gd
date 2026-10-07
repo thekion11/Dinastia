@@ -4844,6 +4844,7 @@ func _ver_ciudad_propia() -> void:
 	vista.construir = _ui_club_vida._empezar_obra
 	var prox := mundo.proximo_partido()
 	vista.dia_partido = not prox.is_empty() and prox[0] == c
+	vista.animo = CiudadAnimo.de(mundo, c)
 	vista.abrir(c, mundo.obras, mundo.ciudad, mundo.perfil_estadio_de(c))
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
