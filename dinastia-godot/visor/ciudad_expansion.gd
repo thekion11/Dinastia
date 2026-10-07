@@ -71,6 +71,7 @@ var bloques: Array = []    ## {rect: Rect2, celda: Vector2i, zona: String, uso: 
 var lineas_metro: Array = []       ## [{nombre, color, estaciones: [Vector3]}]
 var lineas_bus: Array = []         ## [{nombre, puntos: PackedVector3Array, paradas: [Vector3]}]
 var semaforos: Semaforos
+var metro: MetroCiudad
 var cuenta := {}           ## lo que se levantó, para las pruebas y el rótulo
 
 var _rng := RandomNumberGenerator.new()
@@ -257,13 +258,16 @@ func _uso_de_zona(zona: String, c: Vector2) -> String:
 
 ## Dos líneas de metro (en datos: estaciones en cruces) y dos de autobús.
 func armar_transporte() -> void:
+	## Mismas líneas que dibuja y mueve `MetroCiudad`: la 1 elevada por la
+	## avenida x = 660 y la 2 subterránea bajo z = -660 (transbordo en el cruce).
+	var l1: Array = []
+	var l2: Array = []
+	for k in [-9, -6, -3, 0, 3, 6, 9]:
+		l1.append(Vector3(6.0 * CELDA, 0, float(k) * CELDA))
+		l2.append(Vector3(float(k) * CELDA, 0, -6.0 * CELDA))
 	lineas_metro = [
-		{"nombre": "Línea 1", "color": Color(0.85, 0.15, 0.15), "estaciones": [
-			Vector3(0, 0, -1100), Vector3(0, 0, -770), Vector3(110, 0, -440), Vector3(440, 0, 0),
-			Vector3(770, 0, 330), Vector3(1100, 0, 660)]},
-		{"nombre": "Línea 2", "color": Color(0.15, 0.4, 0.9), "estaciones": [
-			Vector3(-1100, 0, -330), Vector3(-770, 0, 0), Vector3(-550, 0, 330), Vector3(-330, 0, 660),
-			Vector3(0, 0, 990), Vector3(660, 0, 990)]},
+		{"nombre": "Línea 1", "color": Color(0.85, 0.15, 0.15), "estaciones": l1, "elevada": true},
+		{"nombre": "Línea 2", "color": Color(0.15, 0.4, 0.9), "estaciones": l2, "elevada": false},
 	]
 	## Autobuses: recorridos cerrados por avenidas, por el carril derecho.
 	lineas_bus = [
@@ -317,6 +321,10 @@ func construir() -> void:
 		_dibujar_bloque(bl)
 	_edificios_lejanos()
 	_casas_multimesh()
+	metro = MetroCiudad.new()
+	metro.name = "Metro"
+	b.add_child(metro)
+	metro.montar(self)
 	_bocas_metro()
 	_marquesinas_bus()
 	_guirnaldas()
@@ -860,6 +868,8 @@ func _cartel_m(p: Vector3, col: Color) -> void:
 func _bocas_metro() -> void:
 	var n := 0
 	for linea: Dictionary in lineas_metro:
+		if bool(linea.get("elevada", false)):
+			continue   ## la elevada tiene sus escaleras al andén
 		var col: Color = linea["color"]
 		for e: Vector3 in linea["estaciones"]:
 			var p := e + Vector3(ANCHO_AV * 0.5 + ACERA + 3.0, 0, ANCHO_AV * 0.5 + ACERA + 3.0)

@@ -40,6 +40,8 @@ func _process(_d: float) -> void:
 		_v.set("_alto", _f("ALTO", 900.0))
 		_v.set("_ang", _f("ANG", 0.0))
 		_v.call("_mover_camara")
+		if OS.get_environment("METRO") == "1":
+			(_v.get("_ciudad") as CityBuilder).expansion.metro.alternar_rayos_x()
 	if _n == 12:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % (OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "ciudad_cenital"))
 		get_tree().quit()
