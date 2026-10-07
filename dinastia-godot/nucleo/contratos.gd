@@ -112,6 +112,7 @@ static func texto_jornada(pais: String, anio: int, semana: int) -> String:
 func semana(c: Club, anio: int, sem: int) -> void:
 	if c == null:
 		return
+	_avisar_once_ilegal(c)
 	var desde := Calendario.unix_de(anio, sem, 0)
 	var hasta := Calendario.unix_de(anio, sem, 6)
 	for cb: Array in CAMBIOS:
@@ -122,6 +123,36 @@ func semana(c: Club, anio: int, sem: int) -> void:
 		if uc >= desde and uc <= hasta and not avisados.has(clave):
 			avisados[clave] = true
 			noticia.emit("⚖️ Cambia la jornada laboral", "%s El personal del club trabaja menos horas y hay que cubrir más turnos: la estructura cuesta un poco más." % String(cb[5]))
+
+## Si tu once elegido a mano incumple las reglas de tu liga (cupo de
+## extranjeros en cancha, juveniles), el partido lo corrige: aquí se avisa
+## una vez de qué cambia y por qué, en vez de hacerlo en silencio.
+var _ultimo_aviso_once := ""
+
+func _avisar_once_ilegal(c: Club) -> void:
+	var manual: Array[Jugador] = c._once_manual()
+	if manual.is_empty() or c.ley_politica == "incumplir":
+		_ultimo_aviso_once = ""
+		return
+	var ajustado := LeyesPais.ajustar_once(c, manual)
+	var salen: Array = []
+	var entran: Array = []
+	for j: Jugador in manual:
+		if not ajustado.has(j):
+			salen.append(j.nombre)
+	for j: Jugador in ajustado:
+		if not manual.has(j):
+			entran.append(j.nombre)
+	if salen.is_empty():
+		_ultimo_aviso_once = ""
+		return
+	var clave := ",".join(salen) + "|" + ",".join(entran)
+	if clave == _ultimo_aviso_once:
+		return
+	_ultimo_aviso_once = clave
+	var norma := String(LeyesPais.reglas(c.pais).get("norma", "las reglas de la liga"))
+	noticia.emit("📜 Tu once incumple la regla de la liga",
+		"Salen %s y entran %s. %s" % [", ".join(salen), ", ".join(entran) if not entran.is_empty() else "nadie (no hay suplentes que cumplan)", norma])
 
 func a_dic() -> Dictionary:
 	return {"av": avisados.keys()}

@@ -222,6 +222,8 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	var cj: Dictionary = datos.get("carrera_jugador", {})
 	if not cj.is_empty():
 		m.carrera_jugador = CarreraJugador.desde_dic(cj)
+	LeyesPais.clubes_mundo = m.clubes
+	LeyesPais.anio_actual = m.anio
 	return m
 
 static func borrar(nombre: String) -> void:
@@ -234,7 +236,7 @@ static func _club_a_dic(c: Club) -> Dictionary:
 	for j in c.plantilla:
 		js.append(_jugador_a_dic(j))
 	return {
-		"id": c.id, "nombre": c.nombre, "pais": c.pais, "rep": c.rep,
+		"id": c.id, "nombre": c.nombre, "pais": c.pais, "rep": c.rep, "fcupo": c.fichajes_cupo, "lpol": c.ley_politica,
 		"saldo": c.saldo, "aforo": c.estadio_aforo, "division": c.division,
 		"est_nombre": c.estadio_nombre,
 		## Los colores del club: no se guardaban, así que cambiarlos duraba hasta
@@ -266,6 +268,8 @@ static func _club_a_dic(c: Club) -> Dictionary:
 static func _dic_a_club(d: Dictionary) -> Club:
 	var c := Club.new(String(d["id"]), String(d["nombre"]))
 	c.pais = String(d["pais"])
+	c.fichajes_cupo = d.get("fcupo", {})
+	c.ley_politica = String(d.get("lpol", "cumplir"))
 	c.rep = int(d["rep"])
 	c.saldo = int(d["saldo"])
 	c.estadio_aforo = int(d["aforo"])
