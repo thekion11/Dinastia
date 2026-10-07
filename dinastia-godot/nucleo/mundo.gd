@@ -463,6 +463,8 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	if Meta.heredar_proximo:
 		Meta.heredar_proximo = false
 		Meta.aplicar_herencia(self)
+	LeyesPais.clubes_mundo = clubes
+	LeyesPais.anio_actual = anio
 
 ## Saca la lista de ligas de DATA_P1/DATA_P2 (Chile, las dos divisiones) y de
 ## PAISES_LIGAS (el resto del mundo), que es donde las tiene el HTML.
@@ -1168,6 +1170,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		politica.semana(mi_club(), anio, semana, prensa)
 	if contratos != null and mi_club() != null:
 		contratos.semana(mi_club(), anio, semana)
+	LeyesPais.anio_actual = anio
+	LeyesPais.clubes_mundo = clubes
+	LeyesPais.tick += 1
 	if maestria != null and mi_club() != null:
 		maestria.semana(mi_club(), prensa, academia, semana, _resultado_semana)
 	if vida != null and mi_club() != null and roles != null:
@@ -2065,6 +2070,8 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 		## y no pasaba absolutamente nada en toda la temporada.
 		if federacion != null and mio != null:
 			federacion.revisar_cupo_juvenil(mio, mio.once())
+			## Las reglas de la liga de tu país: si decidiste incumplirlas, multa.
+			federacion.revisar_leyes_pais(self, mio)
 		## EL FICHAJE IMPUESTO -por la ocupación hostil del dueño o el trato
 		## comercial del patrocinador-, mismo patrón que el cupo juvenil de
 		## arriba: `Prensa.revisar_impuesto()` ya existía escrito y nadie lo

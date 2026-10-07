@@ -4278,5 +4278,33 @@
  "La jornada legal en México llega a las 40 horas semanales.": [
   "Mexico's legal working week reaches 40 hours.",
   "A jornada legal no México chega às 40 horas semanais."
+ ],
+ "📜 Tu once incumple la regla de la liga": [
+  "📜 Your line-up breaks the league rules",
+  "📜 Seu time descumpre a regra da liga"
+ ],
+ "Salen {1} y entran {2}. {3}": [
+  "Out: {1}; in: {2}. {3}",
+  "Saem {1} e entram {2}. {3}"
+ ],
+ "📜 Multa por plantel fuera de reglamento": [
+  "📜 Fine for an out-of-rules squad",
+  "📜 Multa por elenco fora do regulamento"
+ ],
+ "Tienes {1} jugador(es) de más para el cupo de tu liga. Multa de {2}, y crece cada semana que sigas así. {3}": [
+  "You have {1} player(s) over your league's quota. A {2} fine, and it grows every week you stay like this. {3}",
+  "Você tem {1} jogador(es) a mais para a cota da sua liga. Multa de {2}, e ela cresce a cada semana que continuar assim. {3}"
+ ],
+ "📜 Alineación indebida": [
+  "📜 Ineligible line-up",
+  "📜 Escalação irregular"
+ ],
+ "Por reincidir, el tribunal te quita {1} puntos.": [
+  "As a repeat offender, the tribunal docks you {1} points.",
+  "Por reincidência, o tribunal tira {1} pontos."
+ ],
+ "Alineaste {1} ({2}ª vez esta temporada): multa de {3}.": [
+  "You fielded {1} (time number {2} this season): a {3} fine.",
+  "Você escalou {1} ({2}ª vez nesta temporada): multa de {3}."
  ]
 }
