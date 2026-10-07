@@ -781,6 +781,13 @@ static func geom_de_forma(forma: String) -> Dictionary:
 			return {"dz": 65.0, "dx": 46.0, "esquinas": true, "abierta": -1}
 		"oval":
 			return {"dz": 74.0, "dx": 54.0, "esquinas": true, "abierta": -1}
+		## Formas nuevas (MEGAPLAN B6). "dos": solo las dos laterales, los
+		## fondos a cielo abierto (campos chicos y de barrio). "principal":
+		## cuatro cajas y una gran tribuna de honor una bandeja más alta.
+		"dos":
+			return {"dz": 67.0, "dx": 47.0, "esquinas": false, "abierta": -1, "abiertas": [0, 1]}
+		"principal":
+			return {"dz": 67.0, "dx": 48.0, "esquinas": false, "abierta": -1, "principal": 2}
 		_:  # cuenco
 			return {"dz": 68.0, "dx": 49.0, "esquinas": true, "abierta": -1}
 
@@ -925,6 +932,9 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	var dz: float = g["dz"]
 	var dx: float = g["dx"]
 	var abierta: int = g["abierta"]
+	## Tribunas que no se construyen: la de `abierta` o varias ("dos").
+	var abiertas: Array = g.get("abiertas", [abierta] if abierta >= 0 else [])
+	var principal: int = int(g.get("principal", -1))
 
 	# Niveles: los que el club realmente construyo, pero nunca mas bandejas de
 	# las que el aforo justifica (un estadio de 8.000 con 3 bandejas seria falso).
@@ -992,10 +1002,22 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	var subida_b := subida_bandeja()
 
 	for s in stands:
-		if s["i"] == abierta:
+		if s["i"] in abiertas:
 			continue
+		## FORMA "principal" (MEGAPLAN B6): la tribuna de los banquillos (+X)
+		## lleva una bandeja más que el resto, como los estadios con una gran
+		## tribuna de honor. Las demás tribunas no cambian.
+		var niv_s := niveles
+		var alto_s := alto
+		var fondo_s := fondo_trib
 		var pos: Vector3 = s["pos"]
 		var size: Vector3 = s["size"]
+		if s["i"] == principal:
+			niv_s = mini(niveles + 1, NIVELES_MAX)
+			alto_s = ALTURA_PIE + float(niv_s) * subida_bandeja() + float(niv_s - 1) * FRENTE_BANDEJA
+			fondo_s = fondo_tribuna(niv_s)
+			pos = Vector3(centro_tribuna(dx, niv_s), alto_s / 2.0, 0)
+			size = Vector3(fondo_s, alto_s, dz * 2.0 - 4.0)
 		var cara: Vector3 = s["cara"]
 		var lateral: bool = absf(cara.x) > 0.5
 		## BANDEJA (16-9-2026): si esta tribuna tiene un estilo propio en
@@ -1032,13 +1054,13 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 		# Muro exterior del recinto (la fachada). El interior NO se rellena con
 		# una caja solida: si se hace, la rampa de asientos queda dentro de ella
 		# y el publico no se ve desde ninguna camara.
-		var muro_pos: Vector3 = pos + cara * (-fondo_trib / 2.0 + 0.5)
-		var muro_size := Vector3(1.0, alto, size.z) if lateral else Vector3(size.x, alto, 1.0)
+		var muro_pos: Vector3 = pos + cara * (-fondo_s / 2.0 + 0.5)
+		var muro_size := Vector3(1.0, alto_s, size.z) if lateral else Vector3(size.x, alto_s, 1.0)
 		_box(root, muro_pos, muro_size, stand_mat)
 		# Zocalo bajo la primera bandeja, para que no se vea el hueco desde el
 		# campo. Va pegado a la cara interior, no al centro de la tribuna: con
 		# varias bandejas el centro se va muy hacia atras.
-		var pie: Vector3 = pos - cara * (fondo_trib / 2.0 - FONDO_BANDEJA / 2.0)
+		var pie: Vector3 = pos - cara * (fondo_s / 2.0 - FONDO_BANDEJA / 2.0)
 		var zocalo_size := Vector3(FONDO_BANDEJA, ALTURA_PIE, size.z) if lateral \
 			else Vector3(size.x, ALTURA_PIE, FONDO_BANDEJA)
 		_box(root, Vector3(pie.x, ALTURA_PIE / 2.0, pie.z), zocalo_size, stand_mat)
@@ -1118,12 +1140,12 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 		## FRENTE vertical -el paño de palcos y pasillo de un estadio real, y
 		## la reja de donde cuelgan los trapos-.
 		var largo_deck: float = size.z - 1.0 if lateral else size.x - 1.0
-		for b in niveles:
+		for b in niv_s:
 			## El centro de ESTA bandeja, medido desde la cara interior de la
 			## tribuna hacia afuera. `cara` apunta al campo, o sea que restarle
 			## `cara` es alejarse de la cancha.
 			var avance: float = float(b) * RETRANQUEO_BANDEJA + FONDO_BANDEJA / 2.0
-			var centro_b: Vector3 = pos + cara * (fondo_trib / 2.0) - cara * avance
+			var centro_b: Vector3 = pos + cara * (fondo_s / 2.0) - cara * avance
 			var y_pie: float = ALTURA_PIE + float(b) * (subida_b + FRENTE_BANDEJA)
 			var deck := MeshInstance3D.new()
 			var dm := BoxMesh.new()
@@ -1138,7 +1160,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## `uv1_*` a una se lo toca a las cinco.
 			## COLOR POR ANILLO (28-9-2026): si este anillo de esta tribuna
 			## tiene color propio, su textura y sus butacas salen con él.
-			var niveles_col: Array = estilo.get("niveles", [])
+			var niveles_col: Array = estilo.get("niv_s", [])
 			var col_b := String(niveles_col[b]) if b < niveles_col.size() else ""
 			var est_b: Dictionary = est_s
 			if col_b != "" and not es_tramo:
@@ -1155,7 +1177,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			else:
 				deck.material_override = deck_mat.duplicate()
 			root.add_child(deck)
-			_butacas(deck, dm.size, lateral, est_b, ocupacion, alto, rake_firmado, b)
+			_butacas(deck, dm.size, lateral, est_b, ocupacion, alto_s, rake_firmado, b)
 			_telones(deck, dm.size, lateral, est_s, seed_val + int(s["i"]) * 31 + b * 7)
 			## El frente vertical bajo la bandeja: tapa el hueco que dejaria ver
 			## por debajo y es lo que le da al estadio su perfil escalonado. La
@@ -1194,7 +1216,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## donde apuntan las camaras de dron y cenital. Se recorta la losa
 			## de las CABECERAS para que acabe donde empieza la del lateral;
 			## la esquina la cubre su propia losa, mas abajo.
-			var recorte: float = 2.0 * (fondo_trib / 2.0 + vuelo)
+			var recorte: float = 2.0 * (fondo_s / 2.0 + vuelo)
 			var rs := Vector3(maxf(size.x + 2.0 - recorte, 4.0), 0.5, size.z + vuelo) if not lateral \
 				else Vector3(size.x + vuelo, 0.5, size.z + 2.0)
 			## Mismo criterio que el `roof_mat` global -ver `_techo_mat()`-. Solo
@@ -1202,7 +1224,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## distinto del global; si no, sigue compartiendo `roof_mat` tal
 			## cual, igual que antes de esta fase.
 			var roof_mat_i := roof_mat if techo_i == techo else _techo_mat(techo_i, techo_col)
-			marcar_techo(_box(root, pos + cara * (vuelo / 2.0) + Vector3(0, alto / 2.0 + 0.4, 0), rs, roof_mat_i), -cara)
+			marcar_techo(_box(root, pos + cara * (vuelo / 2.0) + Vector3(0, alto_s / 2.0 + 0.4, 0), rs, roof_mat_i), -cara)
 
 	## LAS ESQUINAS TAMBIÉN LLEVAN GENTE (22-9-2026). "Falta un tramo" -el
 	## usuario lo vio de inmediato justo después de la ronda de las butacas
@@ -1248,7 +1270,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			for sz in [1.0, -1.0]:
 				## `stands` numera 0 = fondo en +dz, 1 = fondo en -dz. Una
 				## esquina solo se quita si da al fondo que no existe.
-				if (abierta == 0 and sz > 0.0) or (abierta == 1 and sz < 0.0):
+				if (0 in abiertas and sz > 0.0) or (1 in abiertas and sz < 0.0):
 					continue
 				_esquina_grada(root, sx, sz, dx, dz, alto, niveles,
 					esquina_mat, stand_mat, ang, est, ocupacion, seed_val,
@@ -1277,7 +1299,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## B6.2: lo que hay FUERA del recinto: taquillas, tienda y estacionamiento.
 	if bool(est.get("exterior", false)):
 		_exterior(root, est, dx, dz, niveles, mi)
-	_pantallas(root, str(est.get("pantalla", "dos")), dz, alto, est, mi, abierta)
+	_pantallas(root, str(est.get("pantalla", "dos")), dz, alto, est, mi, abierta, abiertas)
 	if mi != null:
 		_escudo_tribuna(root, mi, str(est.get("escudoDonde", "sin")), dx, dz, alto)
 	## Obras con andamios y grúa, palcos, prensa, museo, tienda y la mascota
@@ -1755,7 +1777,7 @@ static func _pantalla_textura(est: Dictionary, mi: Club) -> ImageTexture:
 ## es el por defecto) colgaba la segunda pantalla en el lado abierto: un marco
 ## de hasta 9 m flotando en el aire, sin tribuna ni techo detrás de él.
 static func _pantallas(root: Node3D, tipo: String, dz: float, alto: float,
-		est: Dictionary = {}, mi: Club = null, abierta: int = -1) -> void:
+		est: Dictionary = {}, mi: Club = null, abierta: int = -1, abiertas: Array = []) -> void:
 	if tipo == "sin":
 		return
 	var marco := Texturas.metal(Color(0.08, 0.08, 0.1), 0.5)
@@ -1798,9 +1820,9 @@ static func _pantallas(root: Node3D, tipo: String, dz: float, alto: float,
 		lados = [1.0, -1.0]
 	## `stands` numera 0 = fondo en +dz, 1 = fondo en -dz. Se quita el lado
 	## cuya tribuna no se construyó.
-	if abierta == 0:
+	if abierta == 0 or 0 in abiertas:
 		lados.erase(1.0)
-	elif abierta == 1:
+	if abierta == 1 or 1 in abiertas:
 		lados.erase(-1.0)
 	for sz in lados:
 		var p := Vector3(0, y_marco, sz * (dz - 6.0))
@@ -2590,7 +2612,55 @@ static func _anuncios_de(est: Dictionary, mi: Club) -> Array:
 	if mi != null:
 		lista.append(_anuncio("VAMOS " + Nombres.visible(mi.nombre),
 			_c(est.get("asiento1"), "#1f5f3d")))
+	lista = _con_paleta(lista, String(est.get("ledPaleta", "marcas")), mi)
+	## Colores elegidos a mano: el fondo y/o la letra mandan sobre la paleta.
+	## Si solo se elige el fondo, la letra se busca por contraste.
+	var f_propio := str(est.get("ledFondo", ""))
+	var t_propia := str(est.get("ledTinta", ""))
+	if f_propio != "" or t_propia != "":
+		for a: Dictionary in lista:
+			if f_propio != "":
+				a["fondo"] = Color(f_propio)
+			if t_propia != "":
+				a["tinta"] = Color(t_propia)
+			elif f_propio != "":
+				a["tinta"] = _anuncio("", a["fondo"])["tinta"]
 	return lista
+
+## PALETA DE LAS VALLAS (MEGAPLAN B6): los mismos textos, otra estética. La
+## de fábrica ("marcas") deja cada anuncio con el color de su marca.
+const NEON := [Color(0.25, 0.95, 1.0), Color(1.0, 0.3, 0.85), Color(0.6, 1.0, 0.25),
+	Color(1.0, 0.72, 0.2)]
+static func _con_paleta(lista: Array, paleta: String, mi: Club) -> Array:
+	if paleta == "marcas" or paleta == "" or paleta == "propia":
+		return lista
+	var c1 := _c(mi.color_escudo1() if mi != null else "", "#1f5f3d")
+	var c2 := _c(mi.color_escudo2() if mi != null else "", "#f2f2f2")
+	## Dos colores de club casi iguales no se leerían: el segundo pasa a blanco
+	## o negro, el que más contraste dé con el primero.
+	if absf(c1.get_luminance() - c2.get_luminance()) < 0.25:
+		c2 = Color(0.96, 0.96, 0.97) if c1.get_luminance() < 0.5 else Color(0.07, 0.08, 0.1)
+	var salida: Array = []
+	for k in lista.size():
+		var a: Dictionary = (lista[k] as Dictionary).duplicate()
+		match paleta:
+			"club":
+				a["fondo"] = c1 if k % 2 == 0 else c2
+				a["tinta"] = c2 if k % 2 == 0 else c1
+			"neon":
+				a["fondo"] = Color(0.03, 0.03, 0.05)
+				a["tinta"] = NEON[k % NEON.size()]
+			"oro":
+				a["fondo"] = Color(0.05, 0.05, 0.06) if k % 2 == 0 else Color(0.96, 0.95, 0.92)
+				a["tinta"] = Color(0.85, 0.68, 0.25) if k % 2 == 0 else Color(0.06, 0.06, 0.07)
+			"arcoiris":
+				a["fondo"] = Color.from_hsv(float(k) / float(maxi(lista.size(), 1)), 0.78, 0.82)
+				a["tinta"] = _anuncio("", a["fondo"])["tinta"]
+			"retro":
+				a["fondo"] = Color(0.93, 0.92, 0.86)
+				a["tinta"] = [Color(0.72, 0.1, 0.12), Color(0.1, 0.2, 0.55), Color(0.08, 0.08, 0.09)][k % 3]
+		salida.append(a)
+	return salida
 
 ## La tinta se decide contra el fondo, no a ojo: sobre un panel claro un texto
 ## blanco desaparece, y la mitad de las 38 marcas traen colores claros.
