@@ -144,6 +144,41 @@ static func poner_rotulo(n: Node3D, jug: Dictionary, es_local: bool = true) -> v
 	r.add_child(b)
 	actualizar_barra(b, 0)
 
+## RÓTULOS SIN AMONTONAR (MEGAPLAN fases 1 y 3): `filas` = diccionarios con
+## "node" (los del estadio o los del motor jugable). Se proyectan a la pantalla
+## y, si dos se tocan, queda el del jugador más cerca del balón; el que ya se
+## veía tiene ventaja (si no, parpadeaban al cruzarse).
+static func despejar_rotulos(filas: Array, cam: Camera3D, balon_pos: Vector3, alto_pantalla: float) -> void:
+	if not mostrar_nombres or cam == null:
+		return
+	var lista: Array = []
+	for f: Dictionary in filas:
+		var n: Node3D = f.get("node")
+		if not is_instance_valid(n) or not n.has_node(ROTULO) or not n.visible:
+			continue
+		var rot := n.get_node(ROTULO) as Label3D
+		if cam.is_position_behind(rot.global_position):
+			rot.visible = false
+			continue
+		lista.append([n.global_position.distance_to(balon_pos) * (0.75 if rot.visible else 1.0), rot])
+	lista.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+	var k := alto_pantalla / (2.0 * tan(deg_to_rad(cam.fov) * 0.5))
+	var puestos: Array[Rect2] = []
+	for e: Array in lista:
+		var rot: Label3D = e[1]
+		var c := cam.unproject_position(rot.global_position)
+		var px := rot.pixel_size * k
+		var caja := Rect2(c - Vector2(rot.text.length() * 0.3 * rot.font_size * px, 0.5 * rot.font_size * px),
+			Vector2(rot.text.length() * 0.6 * rot.font_size * px, 1.9 * rot.font_size * px))
+		var choca := false
+		for q: Rect2 in puestos:
+			if q.grow(-2.0).intersects(caja):
+				choca = true
+				break
+		rot.visible = not choca
+		if not choca:
+			puestos.append(caja)
+
 ## La energía estimada al minuto `minuto`: arranca en su estado físico y baja
 ## más rápido cuanto peor está de forma (60 de forma ≈ -25 a los 90').
 static func energia(fisico: float, forma: float, minuto: int) -> float:

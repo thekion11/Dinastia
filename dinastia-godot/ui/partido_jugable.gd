@@ -164,6 +164,9 @@ func _once_con(c: Club, yo: Jugador) -> Array[Jugador]:
 func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
 	if yo == null or carrera == null:
 		return
+	## Si ya estás en el once, eres titular: no hay entrada desde el banco.
+	if entra_al >= 0 and not motor.usuario.is_empty():
+		entra_al = -1
 	var mi_club := equipo_usuario if equipo_usuario != null else (local if _es_local_usuario else visita)
 	var kit := Puente3D.kit(local) if _es_local_usuario else Puente3D.kit_visita(local, visita)
 	var quien: Jugador = yo
@@ -194,6 +197,7 @@ func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
 			_banner_pendiente = "🔁 ¡ENTRAS AL CAMPO!  %d'" % motor.minuto()
 
 var _banner_pendiente := ""
+var _t_rotulos := 0.0
 
 func _montar_pantalla(perfil: Dictionary) -> void:
 	var pantallas := _raiz.find_children("PantallaMarcador*", "MeshInstance3D", true, false)
@@ -334,6 +338,10 @@ func _montar_hud() -> void:
 
 func _process(delta: float) -> void:
 	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
+	_t_rotulos -= delta
+	if _t_rotulos <= 0.0 and motor != null:
+		_t_rotulos = 0.1
+		PlayerSpawner.despejar_rotulos(motor.jugadores, _cam, motor.balon.position, _vp.size.y if _vp != null else 900.0)
 	if motor == null:
 		return
 	_actualizar_camara(delta)
@@ -343,7 +351,7 @@ func _process(delta: float) -> void:
 	var s := motor.stats
 	_mis_stats.text = "⚽ %d   🅰 %d   🎯 %d/%d   ✔ %d/%d pases   ⭐ %.1f" % [s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], motor.nota_usuario()]
 	if not yo.is_empty():
-		_aguante.value = float(yo["aguante"])
+		_aguante.value = motor.forma_fisica(yo)
 		if motor.estado == "juego":
 			_minutos_usuario += delta / motor.duracion_mitad * 45.0
 	var con_balon := not yo.is_empty() and motor.poseedor == yo
