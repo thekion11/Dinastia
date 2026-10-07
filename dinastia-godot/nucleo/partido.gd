@@ -775,7 +775,21 @@ func simular() -> Dictionary:
 	while not terminado_ya:
 		simular_minuto()
 	_cerrar_notas()
+	guardar_si_es_mio()
 	return {"local": goles_local, "visita": goles_visita}
+
+## EL ÚLTIMO PARTIDO DE TU CLUB, con su crónica (goles, minutos, autores):
+## para que la Tribuna comente jugadas concretas (fase 5, «termómetro real»).
+static var ultimo_mio: Dictionary = {}
+
+func guardar_si_es_mio() -> void:
+	if local == null or visita == null:
+		return
+	if local.id != ctx_club_id and visita.id != ctx_club_id:
+		return
+	ultimo_mio = {"local": local.nombre, "visita": visita.nombre, "local_id": local.id,
+		"gl": goles_local, "gv": goles_visita, "cronica": cronica.duplicate(true),
+		"anio": ctx_anio, "semana": ctx_semana}
 
 func _to_string() -> String:
 	return "%s %d-%d %s" % [local.nombre, goles_local, goles_visita, visita.nombre]
