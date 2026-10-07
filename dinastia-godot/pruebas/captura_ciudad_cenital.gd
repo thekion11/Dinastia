@@ -18,6 +18,10 @@ func _process(_d: float) -> void:
 	if _n == 6:
 		var m: Mundo = _p.get("mundo")
 		m.mi_club().rep = int(_f("REP", 80.0))
+		## TODO=1: todas las instalaciones construidas a nivel 3.
+		if OS.get_environment("TODO") == "1":
+			for k: String in m.obras.niveles:
+				m.obras.niveles[k] = 3
 		_p.call("_ver_ciudad_propia")
 		for h in _p.get_children():
 			if h is VistaCiudad:

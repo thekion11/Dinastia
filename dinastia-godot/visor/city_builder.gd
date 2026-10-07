@@ -244,8 +244,10 @@ func _suelo() -> void:
 	var filas_p: int = maxi(1, int(ceil(float(maxi(cuantas, 1)) / 4.0)))
 	var fondo_p: float = 56.0 + (filas_p - 1) * 48.0
 	var centro_p: float = 118.0 + (filas_p - 1) * 24.0
+	## 7-10-2026: la plaza de las instalaciones ya no es una losa de asfalto
+	## de 276 m (se leía como un aparcamiento con edificios encima, «falta de
+	## coherencia»): el complejo es césped con paseos, ver `_campus()`.
 	for zona in [
-			{"pos": Vector3(0, 0.02, centro_p), "tam": Vector2(276, fondo_p)},
 			{"pos": Vector3(104, 0.02, -45), "tam": Vector2(90, 80)},   # explanada del aparcamiento
 		]:
 		var asfalto := MeshInstance3D.new()
@@ -808,6 +810,41 @@ func _complejo() -> void:
 			Color(1.0, 0.85, 0.4) if obra else Color(1, 1, 1))
 		puntos_clic.append({"k": String(e["k"]), "n": str(e["n"]), "pos": pos + Vector3(0, 6.0 * maxi(1, niv) * 0.5, 0),
 			"estado": "obra" if obra else "hecho"})
+	_campus()
+
+## EL CAMPUS (7-10-2026): un paseo peatonal delante de cada fila de
+## instalaciones, el acceso pavimentado de cada puerta hasta el paseo, y bancos,
+## farolillos y árboles en línea. Es lo que une los edificios en UN complejo en
+## vez de cajas sueltas sobre una losa.
+func _campus() -> void:
+	var losa := _mat_simple(Color(0.8, 0.77, 0.7), 0.9)
+	var banco := _mat_simple(Color(0.45, 0.32, 0.2), 0.8)
+	var hoja := _mat_simple(Color(0.2, 0.42, 0.22), 0.9)
+	var tronco := _mat_simple(Color(0.35, 0.26, 0.18), 0.9)
+	var filas := int(ceil(float(EDIFICIOS.size()) / 4.0))
+	for fila in filas:
+		var z := FILA_0_Z + float(fila) * FILA_PASO + 19.0
+		## La última fila da ya a la calle exterior: su acera hace de paseo.
+		if z + 6.0 > EX_S - ANCHO_CALLE * 0.5 - 2.0:
+			continue
+		for lado in [-1.0, 1.0]:
+			## Del borde del complejo a la avenida central, sin pisarla.
+			_caja_en(Vector3(lado * 82.0, 0.05, z), Vector3(146.0, 0.1, 6.0), losa)
+			for k in 7:
+				var x: float = lado * (18.0 + float(k) * 20.0)
+				_cil_en(Vector3(x, 1.4, z - 4.2), 0.18, 2.8, tronco)
+				_cil_en(Vector3(x, 3.6, z - 4.2), 1.6, 2.6, hoja, 0.4)
+				_caja_en(Vector3(x + 7.0, 0.35, z + 3.6), Vector3(2.2, 0.7, 0.6), banco)
+		## El acceso de cada edificio de la fila hasta el paseo.
+		for col in 4:
+			var i := fila * 4 + col
+			if i >= EDIFICIOS.size():
+				break
+			var e: Dictionary = EDIFICIOS[i]
+			var x2 := -111.0 + float(col) * 74.0
+			var z0 := FILA_0_Z + float(fila) * FILA_PASO + float(e["fondo"]) * 0.5
+			var largo := maxf(1.0, (z - 3.0) - z0)
+			_caja_en(Vector3(x2, 0.06, z0 + largo * 0.5), Vector3(7.0, 0.1, largo), losa)
 
 func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 	## La ALTURA sale del nivel: 4 metros por planta. Es la senal visual mas barata
@@ -820,10 +857,6 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 	var ancho: float = float(e["ancho"]) * (1.0 + 0.06 * (plantas - 1))
 	var fondo: float = float(e["fondo"]) * (1.0 + 0.06 * (plantas - 1))
 
-	var cuerpo := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = Vector3(ancho, alto, fondo)
-	cuerpo.mesh = bm
 	var mat: StandardMaterial3D
 	if enObra and niv <= 0:
 		## En obra y sin nivel todavia: se ve el esqueleto, no un edificio acabado.
@@ -840,29 +873,39 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 		## exista, compartida entre todos los edificios de ese club.
 		## Fachada clara con el color de la instalación en tono suave (antes
 		## el color puro sobre el hormigón oscuro dejaba el complejo casi negro).
-		mat = Texturas.hormigon((e["col"] as Color).lerp(Color(0.92, 0.91, 0.88), 0.55)).duplicate()
-		mat.roughness = 0.62
-		mat.metallic = 0.04
-		mat.metallic_specular = 0.35
-	cuerpo.material_override = mat
-	cuerpo.position = pos + Vector3(0, alto * 0.5, 0)
-	add_child(cuerpo)
-
-	_ventanas(pos, ancho, fondo, plantas)
+		## 7-10-2026: una sola paleta para todo el complejo -hormigón claro con
+		## el color de la instalación muy suave y el acento del club-. Con la
+		## textura de hormigón y el color al 45 % salían cajas casi negras.
+		mat = _mat_simple((e["col"] as Color).lerp(Color(0.93, 0.92, 0.89), 0.72), 0.7)
+	## CADA INSTALACIÓN CON SU ARQUITECTURA (7-10-2026, «a la ciudad le falta
+	## mejorar las instalaciones»): hasta hoy el cuerpo era SIEMPRE la misma
+	## caja y solo cambiaban los adornos, así que desde el mapa la piscina, el
+	## museo y la tienda eran el mismo bloque repetido en cuadrícula. Ahora la
+	## forma dice qué es: nave con bóveda, pabellón de cristal con el agua
+	## dentro, torre de habitaciones, clínica escalonada, templo con columnas,
+	## escuela en L, pabellón con terraza, caja de medios con cristal oscuro.
+	var forma := String(FORMAS.get(String(e["k"]), "caja")) if not (enObra and niv <= 0) else "caja"
+	_cuerpo_instalacion(forma, pos, ancho, fondo, alto, plantas, mat)
 
 	## Franja del color del club en el tejado: ata los edificios al club y no a
 	## un poligono industrial cualquiera.
-	var techo := MeshInstance3D.new()
-	var tm := BoxMesh.new()
-	tm.size = Vector3(ancho + 0.6, 0.5, fondo + 0.6)
-	techo.mesh = tm
-	var tmat := StandardMaterial3D.new()
-	tmat.albedo_color = _color_club("c1", Color(0.2, 0.5, 0.3))
-	techo.material_override = tmat
-	techo.position = pos + Vector3(0, alto + 0.25, 0)
-	add_child(techo)
+	## Solo las formas de tejado plano a la altura `alto` llevan la franja y
+	## las máquinas: en una bóveda o un frontón atravesarían la cubierta.
+	var plano := forma in ["caja", "medios", "tienda", "clinica", "escuela"]
+	if plano:
+		var techo := MeshInstance3D.new()
+		var tm := BoxMesh.new()
+		tm.size = Vector3(ancho + 0.6, 0.5, fondo + 0.6)
+		if forma == "escuela":
+			tm.size = Vector3(ancho + 0.6, 0.5, fondo * 0.56 + 0.6)
+		techo.mesh = tm
+		var tmat := StandardMaterial3D.new()
+		tmat.albedo_color = _color_club("c1", Color(0.2, 0.5, 0.3))
+		techo.material_override = tmat
+		techo.position = pos + Vector3(0, alto + 0.25, -fondo * 0.22 if forma == "escuela" else 0.0)
+		add_child(techo)
 
-	_detalle_edificio(pos, ancho, fondo, alto, e)
+	_detalle_edificio(pos, ancho, fondo, alto, e, plano, not (forma in ["templo", "pabellon"]))
 	_rasgo_instalacion(String(e["k"]), pos, ancho, fondo, alto, niv)
 	if not enObra or niv > 0:
 		_personal_en(String(e["k"]), pos, fondo, niv)
@@ -872,6 +915,135 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 		"texto": str(e["n"]) + ("  (en obra)" if enObra else ""),
 		"nivel": niv,
 	})
+
+const FORMAS := {
+	"ct": "nave", "gim": "nave", "piscina": "cristal", "resid": "torre",
+	"med": "clinica", "rehab": "clinica", "museo": "templo", "acad": "escuela",
+	"guarderia": "escuela", "cocina": "pabellon", "bienestar": "pabellon",
+	"video": "medios", "pren": "medios", "esports": "medios", "com": "tienda",
+}
+
+func _cuerpo_instalacion(forma: String, pos: Vector3, ancho: float, fondo: float, alto: float, plantas: int, mat: StandardMaterial3D) -> void:
+	match forma:
+		"nave":
+			## Nave deportiva: muro bajo y bóveda de cañón a lo largo.
+			var muro := alto * 0.55 + 2.0
+			_caja_en(pos + Vector3(0, muro * 0.5, 0), Vector3(ancho, muro, fondo), mat)
+			_boveda(pos + Vector3(0, muro, 0), ancho, fondo, _mat_simple(Color(0.78, 0.8, 0.82), 0.35, 0.0), 0.42)
+			_ventanas(pos, ancho, fondo, maxi(1, plantas / 2))
+		"cristal":
+			## Pabellón de cristal con la lámina de agua dentro y bóveda.
+			var muro2 := maxf(6.0, alto * 0.6)
+			var vidrio := StandardMaterial3D.new()
+			vidrio.albedo_color = Color(0.62, 0.82, 0.9, 0.38)
+			vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			vidrio.roughness = 0.08
+			vidrio.metallic = 0.3
+			_caja_en(pos + Vector3(0, muro2 * 0.5, 0), Vector3(ancho, muro2, fondo), vidrio)
+			var agua := StandardMaterial3D.new()
+			agua.albedo_color = Color(0.1, 0.55, 0.78)
+			agua.roughness = 0.05
+			agua.emission_enabled = true
+			agua.emission = Color(0.05, 0.25, 0.35)
+			_caja_en(pos + Vector3(0, 0.35, 0), Vector3(ancho * 0.78, 0.3, fondo * 0.62), agua)
+			_caja_en(pos + Vector3(0, 0.15, 0), Vector3(ancho - 0.6, 0.3, fondo - 0.6), _mat_simple(Color(0.9, 0.9, 0.88), 0.7))
+			for k in 6:
+				_caja_en(pos + Vector3(-ancho * 0.39 + float(k) * ancho * 0.156, 0.52, 0), Vector3(0.12, 0.06, fondo * 0.6), _mat_simple(Color.WHITE, 0.6))
+			_boveda(pos + Vector3(0, muro2, 0), ancho, fondo, _mat_simple(Color(0.86, 0.9, 0.93), 0.3, 0.0), 0.35)
+		"torre":
+			## Residencia: torre estrecha y alta con balcones corridos.
+			var a2 := ancho * 0.62
+			var h := alto * 1.45 + 4.0
+			_caja_en(pos + Vector3(0, 2.5, 0), Vector3(ancho, 5.0, fondo), mat)
+			_caja_en(pos + Vector3(0, 5.0 + h * 0.5, -fondo * 0.12), Vector3(a2, h, fondo * 0.62), mat)
+			var bal := _mat_simple(Color(0.95, 0.95, 0.93), 0.6)
+			var pisos := int(h / 3.2)
+			for k in pisos:
+				_caja_en(pos + Vector3(0, 5.0 + 1.2 + float(k) * 3.2, -fondo * 0.12 + fondo * 0.31 + 0.6), Vector3(a2 + 0.4, 0.25, 1.2), bal)
+			_ventanas(pos + Vector3(0, 0, -fondo * 0.12), a2, fondo * 0.62, maxi(2, int(h / 6.0)))
+		"clinica":
+			## Clínica: zócalo ancho y volumen blanco más estrecho encima.
+			var blanco := _mat_simple(Color(0.95, 0.96, 0.97), 0.45)
+			var bajo := maxf(5.0, alto * 0.55)
+			_caja_en(pos + Vector3(0, bajo * 0.5, 0), Vector3(ancho, bajo, fondo), blanco)
+			if alto > bajo + 1.0:
+				_caja_en(pos + Vector3(-ancho * 0.12, bajo + (alto - bajo) * 0.5, -fondo * 0.1), Vector3(ancho * 0.7, alto - bajo, fondo * 0.75), blanco)
+			_caja_en(pos + Vector3(0, bajo * 0.5, fondo * 0.5 + 0.05), Vector3(ancho * 0.9, bajo * 0.55, 0.1), _vidrio_oscuro())
+			_ventanas(pos, ancho, fondo, plantas)
+		"templo":
+			## Museo: podio, cuerpo, columnata delante y frontón.
+			var piedra := _mat_simple(Color(0.86, 0.82, 0.72), 0.75)
+			_caja_en(pos + Vector3(0, 0.8, 1.5), Vector3(ancho + 4.0, 1.6, fondo + 7.0), piedra)
+			var h2 := maxf(9.0, alto)
+			_caja_en(pos + Vector3(0, 1.6 + h2 * 0.5, -1.0), Vector3(ancho, h2, fondo - 2.0), piedra)
+			var cols := 6
+			for k in cols:
+				var x := -ancho * 0.42 + float(k) * ancho * 0.84 / float(cols - 1)
+				_cil_en(pos + Vector3(x, 1.6 + (h2 - 1.2) * 0.5, fondo * 0.5 + 2.6), 0.75, h2 - 1.2, piedra)
+			_caja_en(pos + Vector3(0, 1.6 + h2 - 0.6, fondo * 0.5 + 2.4), Vector3(ancho + 1.0, 1.2, 4.2), piedra)
+			var fronton := MeshInstance3D.new()
+			var pr := PrismMesh.new()
+			pr.size = Vector3(ancho + 1.0, 3.2, 4.2)
+			fronton.mesh = pr
+			fronton.material_override = piedra
+			fronton.position = pos + Vector3(0, 1.6 + h2 + 1.6, fondo * 0.5 + 2.4)
+			add_child(fronton)
+		"escuela":
+			## Academia y guardería: escuela en L de ladrillo.
+			var ladrillo := Texturas.hormigon(Color(0.66, 0.38, 0.3)).duplicate() as StandardMaterial3D
+			ladrillo.roughness = 0.85
+			_caja_en(pos + Vector3(0, alto * 0.5, -fondo * 0.22), Vector3(ancho, alto, fondo * 0.56), ladrillo)
+			_caja_en(pos + Vector3(-ancho * 0.32, alto * 0.4, fondo * 0.18), Vector3(ancho * 0.36, alto * 0.8, fondo * 0.64), ladrillo)
+			_ventanas(pos + Vector3(0, 0, -fondo * 0.22), ancho, fondo * 0.56, plantas)
+		"pabellon":
+			## Comedor y bienestar: planta baja acristalada y una cubierta que
+			## vuela sobre la terraza.
+			var h3 := maxf(5.0, alto * 0.7)
+			_caja_en(pos + Vector3(0, h3 * 0.5, -1.0), Vector3(ancho - 2.0, h3, fondo - 2.0), mat)
+			_caja_en(pos + Vector3(0, h3 * 0.5, fondo * 0.5 - 1.0 + 0.05), Vector3(ancho - 3.0, h3 * 0.7, 0.1), _vidrio_oscuro())
+			_caja_en(pos + Vector3(0, h3 + 0.3, 1.5), Vector3(ancho + 3.0, 0.6, fondo + 5.0), _mat_simple(Color(0.88, 0.86, 0.8), 0.6))
+			for sx in [-1.0, 1.0]:
+				_cil_en(pos + Vector3(sx * (ancho * 0.5 + 0.8), h3 * 0.5, fondo * 0.5 + 3.2), 0.22, h3, _mat_simple(Color(0.3, 0.3, 0.32), 0.5))
+		"medios":
+			## Prensa, vídeo y juegos: caja con piel de cristal oscuro y franja.
+			_caja_en(pos + Vector3(0, alto * 0.5, 0), Vector3(ancho, alto, fondo), mat)
+			_caja_en(pos + Vector3(0, alto * 0.55, fondo * 0.5 + 0.06), Vector3(ancho * 0.94, alto * 0.7, 0.12), _vidrio_oscuro())
+			_caja_en(pos + Vector3(ancho * 0.5 + 0.06, alto * 0.55, 0), Vector3(0.12, alto * 0.7, fondo * 0.9), _vidrio_oscuro())
+		"tienda":
+			## Tienda oficial: escaparate entero de cristal y cartel del club.
+			_caja_en(pos + Vector3(0, alto * 0.5, 0), Vector3(ancho, alto, fondo), mat)
+			var vit := _vidrio_oscuro()
+			vit.emission_enabled = true
+			vit.emission = Color(0.35, 0.3, 0.2)
+			_caja_en(pos + Vector3(0, 2.4, fondo * 0.5 + 0.06), Vector3(ancho * 0.92, 4.2, 0.12), vit)
+			_caja_en(pos + Vector3(0, alto + 1.4, fondo * 0.5 - 0.5), Vector3(ancho * 0.6, 2.4, 0.4), _mat_simple(_color_club("c1", Color(0.2, 0.5, 0.3)), 0.5, 0.25))
+		_:
+			_caja_en(pos + Vector3(0, alto * 0.5, 0), Vector3(ancho, alto, fondo), mat)
+			_ventanas(pos, ancho, fondo, plantas)
+
+## Una bóveda de cañón sobre un muro: medio cilindro a lo ancho, aplanado.
+func _boveda(base: Vector3, ancho: float, fondo: float, m: Material, aplanado: float) -> void:
+	var b := MeshInstance3D.new()
+	var cm := CylinderMesh.new()
+	cm.top_radius = fondo * 0.5
+	cm.bottom_radius = fondo * 0.5
+	cm.height = ancho
+	cm.radial_segments = 24
+	b.mesh = cm
+	b.material_override = m
+	b.rotation.z = PI * 0.5
+	b.scale = Vector3(1.0, 1.0, 1.0)
+	b.position = base
+	## Aplanado en vertical: el eje local X queda vertical tras el giro.
+	b.scale = Vector3(aplanado * 2.0, 1.0, 1.0)
+	add_child(b)
+
+func _vidrio_oscuro() -> StandardMaterial3D:
+	var v := StandardMaterial3D.new()
+	v.albedo_color = Color(0.12, 0.18, 0.24)
+	v.metallic = 0.7
+	v.roughness = 0.12
+	return v
 
 ## Lo que convierte una caja con ventanas en un EDIFICIO: la marquesina de la
 ## entrada con sus pilares, las máquinas de la cubierta y una banda de rótulo
@@ -1118,7 +1290,7 @@ func _notification(que: int) -> void:
 		for p: Array in lista:
 			_personal_en(String(p[0]), p[1], float(p[2]), int(p[3]))
 
-func _detalle_edificio(pos: Vector3, ancho: float, fondo: float, alto: float, e: Dictionary) -> void:
+func _detalle_edificio(pos: Vector3, ancho: float, fondo: float, alto: float, e: Dictionary, cubierta := true, marquesina := true) -> void:
 	## Se llamaba "hormigon" desde antes de esta sesion sin serlo -color plano
 	## puro. `Texturas.hormigon()` de verdad ahora (17-9-2026), duplicado para
 	## conservar la rugosidad 0.7 ya afinada aqui en vez del 0.92 por defecto.
@@ -1132,6 +1304,8 @@ func _detalle_edificio(pos: Vector3, ancho: float, fondo: float, alto: float, e:
 	## MARQUESINA: un voladizo sobre la entrada, en la cara sur (la que mira al
 	## acceso), con dos pilares. Es el gesto que dice "por aquí se entra".
 	var z_frente: float = fondo * 0.5
+	if not marquesina:
+		return
 	var mar := MeshInstance3D.new()
 	var mm := BoxMesh.new()
 	mm.size = Vector3(ancho * 0.5, 0.45, 5.0)
@@ -1162,6 +1336,8 @@ func _detalle_edificio(pos: Vector3, ancho: float, fondo: float, alto: float, e:
 
 	## MÁQUINAS DE CUBIERTA: climatizadoras y un cajón de escalera. Es lo que
 	## rompe la silueta plana del tejado, que es lo que más delata a una caja.
+	if not cubierta:
+		return
 	var maq: StandardMaterial3D = Texturas.metal(Color(0.58, 0.59, 0.61), 0.55).duplicate()
 	maq.metallic = 0.35
 	for par in [
