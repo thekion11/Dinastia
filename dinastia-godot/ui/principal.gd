@@ -1828,6 +1828,10 @@ func _conectar_noticias() -> void:
 			Aviso.mostrar(self, "alerta", "💀", "EL CLUB SE LIQUIDA",
 				"La deuda pudo más: la asociación toma el control y tu etapa aquí se acaba. Elige tu próximo club entre las ofertas de abajo.", "descenso_administrativo")
 			mundo.roles.quedar_sin_banco())
+	## Cambios de ley y avisos de la regla de la liga (7-10-2026: la señal
+	## existía pero nadie la escuchaba).
+	if mundo.contratos != null and not mundo.contratos.noticia.is_connected(_noticia_contratos):
+		mundo.contratos.noticia.connect(_noticia_contratos)
 	if mundo.selecciones != null:
 		mundo.selecciones.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -3002,6 +3006,10 @@ func _traducir_bbcode(bb: String) -> String:
 ## riesgo de que una captura ya verificada cambie de aspecto-, esto solo
 ## archiva la misma noticia en la bandeja de "Correo" para poder filtrarla y
 ## marcarla leída más tarde.
+func _noticia_contratos(titulo: String, cuerpo: String) -> void:
+	_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
+	_anotar(titulo, cuerpo)
+
 func _anotar(titulo: String, cuerpo: String) -> void:
 	_bandeja.push_front({"titulo": titulo, "cuerpo": cuerpo, "semana": mundo.semana, "anio": mundo.anio, "leida": false})
 	## Lo que pasa también se comenta en Tribuna (las redes del móvil).
@@ -4404,11 +4412,34 @@ func _pintar_federacion(c: Club) -> void:
 	var t := _texto(11, COL_SUAVE)
 	t.text = "REGLAMENTO VIGENTE"
 	_lista_fed.add_child(t)
-	for regla in f.reglas_vigentes():
+	for regla in f.reglas_vigentes(c.pais if c != null else ""):
 		var l := _texto(12, COL_TEXTO)
 		l.text = "· " + String(regla)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_fed.add_child(l)
+	## CUMPLIR O INCUMPLIR LAS REGLAS DE LA LIGA (7-10-2026): una decisión
+	## del club, con su precio.
+	if c != null:
+		var inf: Dictionary = f.infracciones_de(mundo.anio)
+		var est := _texto(12, COL_SUAVE)
+		est.text = "Política con el reglamento: %s · esta temporada: %d semana(s) con el plantel fuera de cupo, %d alineación(es) indebida(s)" % [
+			"CUMPLIR (el once se corrige solo)" if c.ley_politica == "cumplir" else "INCUMPLIR (pagas multas; a la tercera alineación indebida, 3 puntos menos cada vez)",
+			int(inf.get("plantel", 0)), int(inf.get("alin", 0))]
+		est.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_lista_fed.add_child(est)
+		var fila := HBoxContainer.new()
+		fila.add_theme_constant_override("separation", 8)
+		for op: Array in [["cumplir", "✅ Cumplir el reglamento"], ["incumplir", "⚠️ Incumplir y asumir multas"]]:
+			var bt := Button.new()
+			bt.text = String(op[1])
+			bt.toggle_mode = true
+			bt.button_pressed = c.ley_politica == String(op[0])
+			var valor := String(op[0])
+			bt.pressed.connect(func() -> void:
+				c.ley_politica = valor
+				_pintar_federacion(c))
+			fila.add_child(bt)
+		_lista_fed.add_child(fila)
 
 	if f.voto_pendiente.is_empty():
 		_lista_fed.add_child(HSeparator.new())

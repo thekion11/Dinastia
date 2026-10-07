@@ -269,6 +269,9 @@ func _buscar_objetivo(comprador: Club) -> Jugador:
 		## Filosofía de cantera (C3): el Athletic solo mira a los de su tierra.
 		if not Regiones.admite(comprador, j):
 			continue
+		## Las reglas de la liga del comprador (cupo de extranjeros, etc.).
+		if LeyesPais.motivo_fichaje(comprador, j) != "":
+			continue
 		if float(j.ovr) > mejor_v:
 			mejor_v = float(j.ovr)
 			mejor = j

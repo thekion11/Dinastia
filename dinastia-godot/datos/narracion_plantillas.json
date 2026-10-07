@@ -818,13 +818,25 @@
  {
   "re": "^⚖️\\ Cambia\\ la\\ jornada\\ laboral$",
   "es": "⚖️ Cambia la jornada laboral",
-  "de": "nucleo/contratos.gd:119",
+  "de": "nucleo/contratos.gd:125",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ El\\ personal\\ del\\ club\\ trabaja\\ menos\\ horas\\ y\\ hay\\ que\\ cubrir\\ más\\ turnos:\\ la\\ estructura\\ cuesta\\ un\\ poco\\ más\\.$",
   "es": "{1} El personal del club trabaja menos horas y hay que cubrir más turnos: la estructura cuesta un poco más.",
-  "de": "nucleo/contratos.gd:119",
+  "de": "nucleo/contratos.gd:125",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^📜\\ Tu\\ once\\ incumple\\ la\\ regla\\ de\\ la\\ liga$",
+  "es": "📜 Tu once incumple la regla de la liga",
+  "de": "nucleo/contratos.gd:154",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Salen\\ (.+?)\\ y\\ entran\\ (.+?)\\.\\ (.+?)$",
+  "es": "Salen {1} y entran {2}. {3}",
+  "de": "nucleo/contratos.gd:154",
   "tipo": "cuerpo"
  },
  {
@@ -1020,159 +1032,177 @@
   "tipo": "cuerpo"
  },
  {
+  "re": "^📜\\ Multa\\ por\\ plantel\\ fuera\\ de\\ reglamento$",
+  "es": "📜 Multa por plantel fuera de reglamento",
+  "de": "nucleo/federacion.gd:432",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Tienes\\ (.+?)\\ jugador\\(es\\)\\ de\\ más\\ para\\ el\\ cupo\\ de\\ tu\\ liga\\.\\ Multa\\ de\\ (.+?),\\ y\\ crece\\ cada\\ semana\\ que\\ sigas\\ así\\.\\ (.+?)$",
+  "es": "Tienes {1} jugador(es) de más para el cupo de tu liga. Multa de {2}, y crece cada semana que sigas así. {3}",
+  "de": "nucleo/federacion.gd:432",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^📜\\ Alineación\\ indebida$",
+  "es": "📜 Alineación indebida",
+  "de": "nucleo/federacion.gd:452",
+  "tipo": "titulo"
+ },
+ {
   "re": "^PLAYOFFS\\ POR\\ EL\\ TÍTULO\\ (.+?)$",
   "es": "PLAYOFFS POR EL TÍTULO {1}",
-  "de": "nucleo/federacion.gd:494",
+  "de": "nucleo/federacion.gd:543",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ federación\\ decidió\\ que\\ el\\ campeón\\ se\\ juega\\.\\ Semifinales:\\ (.+?)\\ ·\\ (.+?)\\.\\ FINAL:\\ (.+?)\\.\\ Campeón:\\ (.+?)\\.(.+?)$",
   "es": "La federación decidió que el campeón se juega. Semifinales: {1} · {2}. FINAL: {3}. Campeón: {4}.{5}",
-  "de": "nucleo/federacion.gd:494",
+  "de": "nucleo/federacion.gd:543",
   "tipo": "cuerpo"
  },
  {
   "re": "^El\\ líder\\ se\\ quedó\\ sin\\ corona$",
   "es": "El líder se quedó sin corona",
-  "de": "nucleo/federacion.gd:499",
+  "de": "nucleo/federacion.gd:548",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ terminó\\ primero\\ en\\ la\\ tabla\\ pero\\ perdió\\ los\\ playoffs\\.\\ Con\\ este\\ formato,\\ treinta\\ fechas\\ no\\ garantizan\\ nada\\.$",
   "es": "{1} terminó primero en la tabla pero perdió los playoffs. Con este formato, treinta fechas no garantizan nada.",
-  "de": "nucleo/federacion.gd:499",
+  "de": "nucleo/federacion.gd:548",
   "tipo": "cuerpo"
  },
  {
   "re": "^Auditoría\\ federativa\\ superada$",
   "es": "Auditoría federativa superada",
-  "de": "nucleo/federacion.gd:596",
+  "de": "nucleo/federacion.gd:645",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ club\\ cumple\\ los\\ seis\\ requisitos\\ de\\ licencia\\.\\ Sin\\ observaciones:\\ puedes\\ competir\\ e\\ inscribir\\ jugadores\\ con\\ normalidad\\.$",
   "es": "El club cumple los seis requisitos de licencia. Sin observaciones: puedes competir e inscribir jugadores con normalidad.",
-  "de": "nucleo/federacion.gd:596",
+  "de": "nucleo/federacion.gd:645",
   "tipo": "cuerpo"
  },
  {
   "re": "^Licencia\\ CONDICIONAL$",
   "es": "Licencia CONDICIONAL",
-  "de": "nucleo/federacion.gd:601",
+  "de": "nucleo/federacion.gd:650",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ federación\\ detectó\\ (.+?)\\ incumplimiento\\(s\\):\\ (.+?)\\.\\ Tienes\\ una\\ temporada\\ para\\ corregirlo\\ o\\ pierdes\\ el\\ cupo\\ internacional\\.$",
   "es": "La federación detectó {1} incumplimiento(s): {2}. Tienes una temporada para corregirlo o pierdes el cupo internacional.",
-  "de": "nucleo/federacion.gd:601",
+  "de": "nucleo/federacion.gd:650",
   "tipo": "cuerpo"
  },
  {
   "re": "^LICENCIA\\ DENEGADA$",
   "es": "LICENCIA DENEGADA",
-  "de": "nucleo/federacion.gd:611",
+  "de": "nucleo/federacion.gd:660",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ federación\\ rechaza\\ la\\ licencia\\ por\\ (.+?)\\ incumplimientos:\\ (.+?)\\.\\ Multa,\\ sin\\ cupo\\ internacional\\ y\\ con\\ el\\ mercado\\ bajo\\ lupa\\.\\ Arréglalo\\ esta\\ temporada\\.$",
   "es": "La federación rechaza la licencia por {1} incumplimientos: {2}. Multa, sin cupo internacional y con el mercado bajo lupa. Arréglalo esta temporada.",
-  "de": "nucleo/federacion.gd:611",
+  "de": "nucleo/federacion.gd:660",
   "tipo": "cuerpo"
  },
  {
   "re": "^Tribunal\\ de\\ disciplina$",
   "es": "Tribunal de disciplina",
-  "de": "nucleo/federacion.gd:643",
+  "de": "nucleo/federacion.gd:692",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?):\\ (.+?)\\.\\ Sanción\\ de\\ (.+?)\\ fecha\\(s\\)\\.\\ Puedes\\ apelar\\ desde\\ Federación\\.$",
   "es": "{1}: {2}. Sanción de {3} fecha(s). Puedes apelar desde Federación.",
-  "de": "nucleo/federacion.gd:643",
+  "de": "nucleo/federacion.gd:692",
   "tipo": "cuerpo"
  },
  {
   "re": "^Apelación\\ ACOGIDA$",
   "es": "Apelación ACOGIDA",
-  "de": "nucleo/federacion.gd:692",
+  "de": "nucleo/federacion.gd:741",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ tribunal\\ rebaja\\ la\\ sanción\\ de\\ (.+?)\\ en\\ (.+?)\\ fecha\\(s\\)\\.\\ Le\\ quedan\\ (.+?)\\.$",
   "es": "El tribunal rebaja la sanción de {1} en {2} fecha(s). Le quedan {3}.",
-  "de": "nucleo/federacion.gd:692",
+  "de": "nucleo/federacion.gd:741",
   "tipo": "cuerpo"
  },
  {
   "re": "^Apelación\\ RECHAZADA$",
   "es": "Apelación RECHAZADA",
-  "de": "nucleo/federacion.gd:698",
+  "de": "nucleo/federacion.gd:747",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ tribunal\\ confirma\\ la\\ sanción\\ de\\ (.+?)\\ y\\ deja\\ constancia\\ de\\ que\\ el\\ club\\ recurre\\ demasiado\\.\\ Los\\ árbitros\\ toman\\ nota\\.$",
   "es": "El tribunal confirma la sanción de {1} y deja constancia de que el club recurre demasiado. Los árbitros toman nota.",
-  "de": "nucleo/federacion.gd:698",
+  "de": "nucleo/federacion.gd:747",
   "tipo": "cuerpo"
  },
  {
   "re": "^Control\\ antidopaje$",
   "es": "Control antidopaje",
-  "de": "nucleo/federacion.gd:734",
+  "de": "nucleo/federacion.gd:783",
   "tipo": "titulo"
  },
  {
   "re": "^Le\\ tocó\\ a\\ (.+?)\\ tras\\ el\\ partido\\.\\ Muestra\\ negativa,\\ todo\\ en\\ orden\\.$",
   "es": "Le tocó a {1} tras el partido. Muestra negativa, todo en orden.",
-  "de": "nucleo/federacion.gd:734",
+  "de": "nucleo/federacion.gd:783",
   "tipo": "cuerpo"
  },
  {
   "re": "^POSITIVO\\ POR\\ DOPAJE:\\ (.+?)$",
   "es": "POSITIVO POR DOPAJE: {1}",
-  "de": "nucleo/federacion.gd:744",
+  "de": "nucleo/federacion.gd:793",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ dio\\ positivo\\.\\ Suspensión\\ provisional\\ de\\ (.+?)\\ fechas,\\ escándalo\\ mediático\\ y\\ patrocinadores\\ llamando\\.\\ Puedes\\ montarle\\ defensa\\ legal\\ apelando\\ en\\ Federación,\\ o\\ soltarlo\\ y\\ salvar\\ la\\ imagen\\ del\\ club\\.$",
   "es": "{1} dio positivo. Suspensión provisional de {2} fechas, escándalo mediático y patrocinadores llamando. Puedes montarle defensa legal apelando en Federación, o soltarlo y salvar la imagen del club.",
-  "de": "nucleo/federacion.gd:744",
+  "de": "nucleo/federacion.gd:793",
   "tipo": "cuerpo"
  },
  {
   "re": "^Cuentas\\ en\\ regla$",
   "es": "Cuentas en regla",
-  "de": "nucleo/federacion.gd:858",
+  "de": "nucleo/federacion.gd:908",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ federación\\ cierra\\ el\\ expediente:\\ tu\\ masa\\ salarial\\ vuelve\\ a\\ estar\\ por\\ debajo\\ del\\ (.+?)%\\ de\\ los\\ ingresos\\.$",
   "es": "La federación cierra el expediente: tu masa salarial vuelve a estar por debajo del {1}% de los ingresos.",
-  "de": "nucleo/federacion.gd:858",
+  "de": "nucleo/federacion.gd:908",
   "tipo": "cuerpo"
  },
  {
   "re": "^Aviso\\ de\\ fair\\ play\\ financiero$",
   "es": "Aviso de fair play financiero",
-  "de": "nucleo/federacion.gd:865",
+  "de": "nucleo/federacion.gd:915",
   "tipo": "titulo"
  },
  {
   "re": "^Tu\\ masa\\ salarial\\ se\\ lleva\\ el\\ (.+?)%\\ de\\ los\\ ingresos,\\ por\\ encima\\ del\\ (.+?)%\\ permitido\\.\\ Un\\ año\\ más\\ así\\ y\\ hay\\ sanción\\.$",
   "es": "Tu masa salarial se lleva el {1}% de los ingresos, por encima del {2}% permitido. Un año más así y hay sanción.",
-  "de": "nucleo/federacion.gd:865",
+  "de": "nucleo/federacion.gd:915",
   "tipo": "cuerpo"
  },
  {
   "re": "^Sanción\\ por\\ fair\\ play\\ financiero$",
   "es": "Sanción por fair play financiero",
-  "de": "nucleo/federacion.gd:873",
+  "de": "nucleo/federacion.gd:923",
   "tipo": "titulo"
  },
  {
   "re": "^Dos\\ temporadas\\ gastando\\ por\\ encima\\ de\\ lo\\ que\\ ingresas\\.\\ La\\ federación\\ multa\\ al\\ club\\ con\\ (.+?)\\ y\\ te\\ cierra\\ el\\ mercado\\ la\\ próxima\\ ventana:\\ solo\\ podrás\\ fichar\\ libres\\.$",
   "es": "Dos temporadas gastando por encima de lo que ingresas. La federación multa al club con {1} y te cierra el mercado la próxima ventana: solo podrás fichar libres.",
-  "de": "nucleo/federacion.gd:873",
+  "de": "nucleo/federacion.gd:923",
   "tipo": "cuerpo"
  },
  {
@@ -1394,157 +1424,157 @@
  {
   "re": "^Rotacion$",
   "es": "Rotacion",
-  "de": "nucleo/mundo.gd:830",
+  "de": "nucleo/mundo.gd:832",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ cambio\\(s\\)\\ en\\ el\\ once:\\ los\\ que\\ llegaban\\ fundidos\\ descansan\\.$",
   "es": "{1} cambio(s) en el once: los que llegaban fundidos descansan.",
-  "de": "nucleo/mundo.gd:830",
+  "de": "nucleo/mundo.gd:832",
   "tipo": "cuerpo"
  },
  {
   "re": "^🤕\\ Lesión\\ insólita$",
   "es": "🤕 Lesión insólita",
-  "de": "nucleo/mundo.gd:1042",
+  "de": "nucleo/mundo.gd:1044",
   "tipo": "titulo"
  },
  {
   "re": "^Te\\ quiere\\ (.+?)$",
   "es": "Te quiere {1}",
-  "de": "nucleo/mundo.gd:1139",
+  "de": "nucleo/mundo.gd:1141",
   "tipo": "titulo"
  },
  {
   "re": "^Han\\ llamado\\ desde\\ (.+?):\\ te\\ ofrecen\\ su\\ banquillo\\.\\ Puedes\\ contestar\\ en\\ Club\\ ›\\ Legado\\.$",
   "es": "Han llamado desde {1}: te ofrecen su banquillo. Puedes contestar en Club › Legado.",
-  "de": "nucleo/mundo.gd:1139",
+  "de": "nucleo/mundo.gd:1141",
   "tipo": "cuerpo"
  },
  {
   "re": "^✈️\\ Vuelta\\ de\\ un\\ viaje\\ largo$",
   "es": "✈️ Vuelta de un viaje largo",
-  "de": "nucleo/mundo.gd:1388",
+  "de": "nucleo/mundo.gd:1393",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ plantel\\ llegó\\ de\\ madrugada\\ desde\\ (.+?)\\ y\\ paga\\ el\\ viaje:\\ −(.+?)\\ de\\ estado\\ físico\\ a\\ los\\ que\\ juegan\\.$",
   "es": "El plantel llegó de madrugada desde {1} y paga el viaje: −{2} de estado físico a los que juegan.",
-  "de": "nucleo/mundo.gd:1388",
+  "de": "nucleo/mundo.gd:1393",
   "tipo": "cuerpo"
  },
  {
   "re": "^🏅\\ (.+?)$",
   "es": "🏅 {1}",
-  "de": "nucleo/mundo.gd:1432",
+  "de": "nucleo/mundo.gd:1437",
   "tipo": "titulo"
  },
  {
   "re": "^Temporada\\ terminada:\\ (.+?)$",
   "es": "Temporada terminada: {1}",
-  "de": "nucleo/mundo.gd:1432",
+  "de": "nucleo/mundo.gd:1437",
   "tipo": "cuerpo"
  },
  {
   "re": "^Se\\ va\\ libre:\\ (.+?)$",
   "es": "Se va libre: {1}",
-  "de": "nucleo/mundo.gd:1636",
+  "de": "nucleo/mundo.gd:1641",
   "tipo": "titulo"
  },
  {
   "re": "^Se\\ le\\ acabó\\ el\\ contrato\\ y\\ no\\ se\\ renovó\\.\\ Deja\\ (.+?)\\ sin\\ que\\ el\\ club\\ cobre\\ nada\\.$",
   "es": "Se le acabó el contrato y no se renovó. Deja {1} sin que el club cobre nada.",
-  "de": "nucleo/mundo.gd:1636",
+  "de": "nucleo/mundo.gd:1641",
   "tipo": "cuerpo"
  },
  {
   "re": "^⚔️\\ Promoción:\\ (.+?)$",
   "es": "⚔️ Promoción: {1}",
-  "de": "nucleo/mundo.gd:1658",
+  "de": "nucleo/mundo.gd:1663",
   "tipo": "titulo"
  },
  {
   "re": "^Se\\ retira\\ por\\ lesiones:\\ (.+?)$",
   "es": "Se retira por lesiones: {1}",
-  "de": "nucleo/mundo.gd:1708",
+  "de": "nucleo/mundo.gd:1713",
   "tipo": "titulo"
  },
  {
   "re": "^Los\\ médicos\\ no\\ le\\ dan\\ el\\ alta\\ competitiva\\.\\ (.+?)\\ años\\ y\\ tres\\ lesiones\\ graves\\ en\\ poco\\ tiempo:\\ cuelga\\ las\\ botas\\ antes\\ de\\ tiempo\\.$",
   "es": "Los médicos no le dan el alta competitiva. {1} años y tres lesiones graves en poco tiempo: cuelga las botas antes de tiempo.",
-  "de": "nucleo/mundo.gd:1708",
+  "de": "nucleo/mundo.gd:1713",
   "tipo": "cuerpo"
  },
  {
   "re": "^Dijiste\\ que\\ ganabas\\ y\\ ganaste$",
   "es": "Dijiste que ganabas y ganaste",
-  "de": "nucleo/mundo.gd:2159",
+  "de": "nucleo/mundo.gd:2166",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ hinchada\\ celebra\\ el\\ doble:\\ primero\\ el\\ resultado\\ y\\ después\\ la\\ cara\\ del\\ otro\\.$",
   "es": "La hinchada celebra el doble: primero el resultado y después la cara del otro.",
-  "de": "nucleo/mundo.gd:2159",
+  "de": "nucleo/mundo.gd:2166",
   "tipo": "cuerpo"
  },
  {
   "re": "^Prometiste\\ y\\ no\\ cumpliste$",
   "es": "Prometiste y no cumpliste",
-  "de": "nucleo/mundo.gd:2163",
+  "de": "nucleo/mundo.gd:2170",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ frase\\ de\\ la\\ conferencia\\ se\\ te\\ da\\ vuelta\\.\\ En\\ la\\ calle\\ no\\ se\\ habla\\ del\\ partido,\\ se\\ habla\\ de\\ ti\\.$",
   "es": "La frase de la conferencia se te da vuelta. En la calle no se habla del partido, se habla de ti.",
-  "de": "nucleo/mundo.gd:2163",
+  "de": "nucleo/mundo.gd:2170",
   "tipo": "cuerpo"
  },
  {
   "re": "^(.+?)\\ (.+?)\\-(.+?)\\ (.+?)\\.\\ (.+?)\\ levanta\\ el\\ primer\\ título\\ del\\ año\\.$",
   "es": "{1} {2}-{3} {4}. {5} levanta el primer título del año.",
-  "de": "nucleo/mundo.gd:2481",
+  "de": "nucleo/mundo.gd:2488",
   "tipo": "cuerpo"
  },
  {
   "re": "^Pretemporada:\\ (.+?)$",
   "es": "Pretemporada: {1}",
-  "de": "nucleo/mundo.gd:2543",
+  "de": "nucleo/mundo.gd:2550",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ plantel\\ llega\\ a\\ la\\ primera\\ jornada\\ con\\ (.+?)\\ de\\ forma\\ extra\\.$",
   "es": "El plantel llega a la primera jornada con {1} de forma extra.",
-  "de": "nucleo/mundo.gd:2543",
+  "de": "nucleo/mundo.gd:2550",
   "tipo": "cuerpo"
  },
  {
   "re": "^(.+?)\\.$",
   "es": "{1}.",
-  "de": "nucleo/mundo.gd:2618",
+  "de": "nucleo/mundo.gd:2625",
   "tipo": "cuerpo"
  },
  {
   "re": "^Cambia\\ la\\ moda:\\ (.+?)$",
   "es": "Cambia la moda: {1}",
-  "de": "nucleo/mundo.gd:2750",
+  "de": "nucleo/mundo.gd:2757",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ Los\\ que\\ juegan\\ con\\ (.+?)\\ salen\\ ganando;\\ los\\ de\\ (.+?)\\ van\\ a\\ sufrir\\.$",
   "es": "{1} Los que juegan con {2} salen ganando; los de {3} van a sufrir.",
-  "de": "nucleo/mundo.gd:2750",
+  "de": "nucleo/mundo.gd:2757",
   "tipo": "cuerpo"
  },
  {
   "re": "^Videoanálisis\\ de\\ (.+?)$",
   "es": "Videoanálisis de {1}",
-  "de": "nucleo/mundo.gd:2894",
+  "de": "nucleo/mundo.gd:2901",
   "tipo": "titulo"
  },
  {
   "re": "^Sesión\\ de\\ vídeo\\ con\\ todo\\ el\\ plantel:\\ dónde\\ aprietan,\\ por\\ dónde\\ salen\\ y\\ a\\ quién\\ hay\\ que\\ tapar\\.\\ El\\ equipo\\ sale\\ al\\ campo\\ con\\ la\\ lección\\ hecha\\ \\(\\+(.+?)%\\)\\.$",
   "es": "Sesión de vídeo con todo el plantel: dónde aprietan, por dónde salen y a quién hay que tapar. El equipo sale al campo con la lección hecha (+{1}%).",
-  "de": "nucleo/mundo.gd:2894",
+  "de": "nucleo/mundo.gd:2901",
   "tipo": "cuerpo"
  },
  {

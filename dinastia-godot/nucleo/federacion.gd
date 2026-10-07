@@ -391,23 +391,72 @@ func revisar_cupo_juvenil(mi: Club, once: Array) -> int:
 ## Lo consulta el mercado ANTES de cerrar un fichaje: rechazarlo después sería
 ## fichar y descubrir en la pantalla siguiente que no puede jugar.
 func puede_fichar_extranjero(mi: Club, j: Jugador) -> String:
-	if tope_extranjeros <= 0 or mi == null or j == null:
+	## Las reglas del país del club (7-10-2026) y, encima, el tope que haya
+	## votado la asamblea si es más estricto. Si el club decidió incumplirlas,
+	## puede fichar: lo paga en multas (`revisar_leyes_pais`).
+	if mi != null and mi.ley_politica == "incumplir":
 		return ""
-	if j.pais == mi.pais:
-		return ""
-	var extranjeros := 0
-	for x: Jugador in mi.plantilla:
-		if x.pais != mi.pais:
-			extranjeros += 1
-	if extranjeros >= tope_extranjeros:
-		return "Cupo de extranjeros lleno (%d): la liga lo votó así" % tope_extranjeros
-	return ""
+	return LeyesPais.motivo_fichaje(mi, j, {}, tope_extranjeros)
+
+## INCUMPLIR LA LEY SE PAGA (7-10-2026, pedido: «se puede incumplir la ley a
+## cambio de multas, eso haría que fuera más dinámico»). Tras cada partido:
+##   · plantel por encima del cupo: multa por cada jugador de más, que crece
+##     con cada semana que sigues así en la temporada;
+##   · alineación indebida (más «de fuera» en cancha o sin el juvenil): multa
+##     que crece con cada reincidencia; desde la tercera, además, 3 puntos menos;
+##   · cada infracción enfada al tribunal y la directiva toma nota.
+## Todo se escala con el tamaño del club (`Eco.escalar`) y se reinicia cada año.
+const MULTA_PLANTEL_LEY := 35000.0
+const MULTA_ALINEACION := 110000.0
+const PUNTOS_ALINEACION := 3
+var infracciones_ley: Dictionary = {}   ## "anio" -> {"plantel": n, "alin": n}
+
+func infracciones_de(anio: int) -> Dictionary:
+	return infracciones_ley.get(str(anio), {"plantel": 0, "alin": 0})
+
+func revisar_leyes_pais(m: Mundo, mi: Club) -> void:
+	if mi == null or m == null:
+		return
+	var k := str(m.anio)
+	var inf: Dictionary = infracciones_de(m.anio).duplicate()
+	var norma := String(LeyesPais.reglas(mi.pais).get("norma", "el reglamento de la liga"))
+	var exceso := LeyesPais.exceso_plantel(mi, tope_extranjeros)
+	if exceso > 0:
+		inf["plantel"] = int(inf["plantel"]) + 1
+		var veces := int(inf["plantel"])
+		var multa := int(Eco.escalar(MULTA_PLANTEL_LEY, float(mi.rep)) * exceso * (1.0 + 0.25 * float(veces - 1)))
+		mi.mover_saldo(-multa)
+		movimiento.emit("Multa: plantel fuera de reglamento (%d de más)" % exceso, -multa)
+		enojo_arbitral += 1
+		if veces == 1 or veces % 4 == 0:
+			noticia.emit("📜 Multa por plantel fuera de reglamento",
+				"Tienes %d jugador(es) de más para el cupo de tu liga. Multa de %s, y crece cada semana que sigas así. %s" % [exceso, Cesiones.dinero(multa), norma])
+	var faltas := LeyesPais.infracciones_once(mi, mi.once())
+	if not faltas.is_empty():
+		inf["alin"] = int(inf["alin"]) + 1
+		var n := int(inf["alin"])
+		var multa2 := int(Eco.escalar(MULTA_ALINEACION, float(mi.rep)) * float(n))
+		mi.mover_saldo(-multa2)
+		movimiento.emit("Multa: alineación indebida", -multa2)
+		enojo_arbitral += 2
+		castigo_directiva.emit(-1, "alineación indebida")
+		var textos: Array = []
+		for f: Dictionary in faltas:
+			textos.append(String(f["texto"]))
+		var cuerpo := "Alineaste %s (%dª vez esta temporada): multa de %s." % [", ".join(textos), n, Cesiones.dinero(multa2)]
+		if n >= 3:
+			for l: Liga in m.ligas:
+				if l.clubes.has(mi) and l.tabla_puntos.has(mi.id):
+					l.tabla_puntos[mi.id]["pts"] = int(l.tabla_puntos[mi.id]["pts"]) - PUNTOS_ALINEACION
+			cuerpo += " Por reincidir, el tribunal te quita %d puntos." % PUNTOS_ALINEACION
+		noticia.emit("📜 Alineación indebida", cuerpo + " " + norma)
+	infracciones_ley[k] = inf
 
 ## Las reglas que están en vigor ahora mismo, en frases. Es lo que se enseña en
 ## la pantalla de Federación: un puñado de banderas booleanas no le dice nada a
 ## nadie.
-func reglas_vigentes() -> Array:
-	var l: Array = []
+func reglas_vigentes(pais: String = "") -> Array:
+	var l: Array = LeyesPais.resumen(pais) if pais != "" else []
 	if not is_equal_approx(reparto_tv, 1.0):
 		l.append("Reparto de TV al %d%% de lo normal" % int(round(reparto_tv * 100.0)))
 	if cupo_juvenil:
@@ -754,7 +803,7 @@ func control_antidopaje(mi: Club, anio: int, semana_n: int) -> Dictionary:
 func a_dic() -> Dictionary:
 	return {
 		"reparto_tv": reparto_tv, "cupo_juvenil": cupo_juvenil,
-		"tope_extranjeros": tope_extranjeros, "playoffs": playoffs,
+		"tope_extranjeros": tope_extranjeros, "playoffs": playoffs, "infr_ley": infracciones_ley,
 		"superliga": superliga, "var": var_activo,
 		"fpf": fpf_activo, "fpf_avisos": fpf_avisos, "fpf_sancion": fpf_sancionado,
 		"aliados": aliados, "votos": votos, "voto_pendiente": voto_pendiente,
@@ -771,6 +820,7 @@ func desde_dic(d: Dictionary) -> void:
 	reparto_tv = float(d.get("reparto_tv", 1.0))
 	cupo_juvenil = bool(d.get("cupo_juvenil", false))
 	tope_extranjeros = int(d.get("tope_extranjeros", 0))
+	infracciones_ley = d.get("infr_ley", {})
 	playoffs = bool(d.get("playoffs", false))
 	superliga = bool(d.get("superliga", false))
 	var_activo = bool(d.get("var", false))
