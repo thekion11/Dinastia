@@ -27,7 +27,8 @@ func _process(_d: float) -> void:
 			if h is VistaCiudad:
 				_v = h
 		var t0 := Time.get_ticks_msec()
-		_v.call("_reconstruir")
+		if OS.get_environment("SIN_RECON") != "1":
+			_v.call("_reconstruir")
 		var cb := _v.get("_ciudad") as CityBuilder
 		print("CIUDAD construida en %d ms · %d nodos · %d manzanas de distrito" % [Time.get_ticks_msec() - t0, cb.get_child_count(), cb.manzanas_distrito])
 		_v.set("_girando", false)
