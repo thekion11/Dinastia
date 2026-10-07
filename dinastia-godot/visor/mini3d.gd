@@ -158,3 +158,50 @@ static func suelo_bajo(cam: Camera3D, pos_pantalla: Vector2, alto: float = 0.0) 
 		return null
 	var t := (alto - o.y) / d.y
 	return o + d * t if t > 0.0 else null
+
+const ANCHO_ARCO := 7.32
+const ALTO_ARCO := 2.44
+
+## Medio campo de entrenamiento: césped a franjas, líneas del área, el arco
+## con su red (devuelta, para inflarla con el gol), vallas y una grada.
+static func campo_y_arco(raiz: Node3D) -> Node3D:
+	## El césped a franjas y las líneas del área.
+	for k in 16:
+		Mini3D.caja(raiz, Vector3(0, -0.05, -10.0 + float(k) * 3.0), Vector3(70, 0.1, 3.0),
+			Mini3D.mat(Color(0.2, 0.47, 0.22) if k % 2 == 0 else Color(0.24, 0.53, 0.26), 0.9))
+	var cal := Mini3D.mat(Color(0.95, 0.95, 0.95), 0.6)
+	Mini3D.caja(raiz, Vector3(0, 0.01, 0), Vector3(40.3, 0.02, 0.12), cal)
+	for x: float in [-9.16, 9.16]:
+		Mini3D.caja(raiz, Vector3(x, 0.01, 2.75), Vector3(0.12, 0.02, 5.5), cal)
+	Mini3D.caja(raiz, Vector3(0, 0.01, 5.5), Vector3(18.32, 0.02, 0.12), cal)
+	for x: float in [-20.16, 20.16]:
+		Mini3D.caja(raiz, Vector3(x, 0.01, 8.25), Vector3(0.12, 0.02, 16.5), cal)
+	Mini3D.caja(raiz, Vector3(0, 0.01, 16.5), Vector3(40.3, 0.02, 0.12), cal)
+	Mini3D.cilindro(raiz, Vector3(0, 0.01, 11.0), 0.12, 0.02, cal)
+	## El arco: postes, travesaño y la red (lados, techo y fondo).
+	var blanco := Mini3D.mat(Color.WHITE, 0.3)
+	for x: float in [-ANCHO_ARCO * 0.5, ANCHO_ARCO * 0.5]:
+		Mini3D.cilindro(raiz, Vector3(x, ALTO_ARCO * 0.5, 0), 0.06, ALTO_ARCO + 0.06, blanco)
+	var trav := Mini3D.cilindro(raiz, Vector3(0, ALTO_ARCO, 0), 0.06, ANCHO_ARCO + 0.12, blanco)
+	trav.rotation.z = PI * 0.5
+	var red := Node3D.new()
+	raiz.add_child(red)
+	var red_m := Mini3D.mat(Color(0.95, 0.95, 0.95, 0.28), 0.8)
+	red_m.cull_mode = BaseMaterial3D.CULL_DISABLED
+	Mini3D.caja(red, Vector3(0, ALTO_ARCO * 0.5, -2.0), Vector3(ANCHO_ARCO, ALTO_ARCO, 0.02), red_m)
+	Mini3D.caja(red, Vector3(0, ALTO_ARCO, -1.0), Vector3(ANCHO_ARCO, 0.02, 2.0), red_m)
+	for x: float in [-ANCHO_ARCO * 0.5, ANCHO_ARCO * 0.5]:
+		Mini3D.caja(red, Vector3(x, ALTO_ARCO * 0.5, -1.0), Vector3(0.02, ALTO_ARCO, 2.0), red_m)
+	## La cuadrícula de la red, en hilos.
+	var hilo := Mini3D.mat(Color(0.9, 0.9, 0.9, 0.6), 0.8)
+	for k in 25:
+		Mini3D.caja(red, Vector3(-ANCHO_ARCO * 0.5 + float(k) * ANCHO_ARCO / 24.0, ALTO_ARCO * 0.5, -2.0), Vector3(0.015, ALTO_ARCO, 0.015), hilo)
+	for k in 9:
+		Mini3D.caja(red, Vector3(0, float(k) * ALTO_ARCO / 8.0, -2.0), Vector3(ANCHO_ARCO, 0.015, 0.015), hilo)
+	## Vallas de publicidad y una grada al fondo.
+	for k in 6:
+		Mini3D.caja(raiz, Vector3(-17.5 + float(k) * 7.0, 0.5, -5.0), Vector3(6.8, 1.0, 0.2),
+			Mini3D.mat(Color.from_hsv(float(k) * 0.17, 0.6, 0.8), 0.5, 0.25))
+	for f in 6:
+		Mini3D.caja(raiz, Vector3(0, 1.4 + float(f) * 0.9, -8.0 - float(f) * 1.2), Vector3(48, 0.9, 1.2), Mini3D.mat(Color(0.3, 0.32, 0.38), 0.8))
+	return red

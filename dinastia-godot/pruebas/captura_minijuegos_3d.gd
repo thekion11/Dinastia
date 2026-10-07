@@ -87,5 +87,19 @@ func _process(d: float) -> void:
 			if _t > 0.45:
 				_foto("mini3d_9_penales_estirada"); _paso = 16; _t = 0.0
 		16:
+			if _t > 0.3:
+				_mj.queue_free()
+				_mj = MinijuegoTiroLibre.mostrar(self, null)
+				_paso = 17; _t = 0.0
+		17:
+			if _t > 1.0:
+				_foto("mini3d_10_tiro_libre"); _mj.call("_elegir", 0); _mj.set("_potencia", 0.62); _mj.call("_patear"); _paso = 18; _t = 0.0
+		18:
+			if _t > 1.15:
+				_foto("mini3d_11_tiro_libre_curva"); _paso = 19; _t = 0.0
+		19:
 			if _t > 0.5:
+				_foto("mini3d_12_tiro_libre_final"); _paso = 20; _t = 0.0
+		20:
+			if _t > 0.3:
 				get_tree().quit()
