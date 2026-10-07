@@ -19,6 +19,8 @@ func _ready() -> void:
 		if solo != "" and modo != solo:
 			continue
 		_un_modo(modo)
+	if solo == "" or solo == "jugador":
+		_carrera_jugador()
 	print("")
 	for f in _fallos:
 		print("  FALLO ", f)
@@ -61,3 +63,54 @@ func _un_modo(modo: String) -> void:
 		_comprobar(club.plantilla.size() >= 16, "%s: el plantel no se vacía (%d)" % [modo, club.plantilla.size()])
 	_comprobar(String(m.roles.rol) != "", "%s: el rol sigue definido (%s)" % [modo, m.roles.rol])
 	print("  %s en %d ms" % [modo, Time.get_ticks_msec() - t0])
+
+## LA CARRERA DE JUGADOR, de punta a punta como la juega `CarreraJugadorUI`
+## con los partidos simulados: entrenar, la semana, los eventos (se elige
+## siempre la primera opción), el cierre de temporada, la siguiente y el
+## guardado de ida y vuelta.
+func _carrera_jugador() -> void:
+	print("")
+	print("===== MODO jugador (Carrera de Jugador) =====")
+	var t0 := Time.get_ticks_msec()
+	var m := Mundo.new()
+	m.generar(["CHI"], 640)
+	m.carrera_jugador = CarreraJugador.crear(m, "Prueba", "DC", false, 640)
+	var c := m.carrera_jugador
+	_comprobar(c != null and c.jugador(m) != null and c.club(m) != null, "jugador: arranca con jugador y club")
+	if c == null or c.jugador(m) == null:
+		return
+	var semanas := 0
+	var eventos := 0
+	while m.temporada_en_curso() and semanas < 80:
+		c.entrenar(m)
+		var j := c.jugador(m)
+		var goles_antes := j.goles
+		var titular := c.es_titular(m)
+		var hay := not CarreraJugador.partido_de_la_semana(m, c.club(m)).is_empty()
+		m.avanzar_semana()
+		if titular and hay:
+			var g := j.goles - goles_antes
+			j.goles = goles_antes
+			c.tras_partido(m, {"minutos": 90, "goles": g, "asist": 0, "nota": 6.5 + float(g), "titular": true})
+		for ev: Dictionary in c.semana(m):
+			eventos += 1
+			var i := c.eventos.find(ev)
+			if i >= 0:
+				c.resolver(m, i, 0)
+		semanas += 1
+	_comprobar(not m.temporada_en_curso(), "jugador: la temporada termina (%d semanas)" % semanas)
+	var pj := int(c.stats_temp["pj"])
+	_comprobar(pj >= 5, "jugador: juega partidos (%d) y vive eventos (%d)" % [pj, eventos])
+	c.fin_de_temporada(m)
+	_comprobar(c.temporadas.size() == 1 and int(c.temporadas[0]["pj"]) == pj, "jugador: la temporada queda en su historial")
+	var anio := m.anio
+	m.nueva_temporada()
+	for k in 6:
+		m.avanzar_semana()
+		c.semana(m)
+	_comprobar(m.anio == anio + 1 and c.jugador(m) != null, "jugador: sigue en la temporada siguiente")
+	var copia := CarreraJugador.desde_dic(c.a_dic())
+	_comprobar(copia.temporadas.size() == 1 and copia.goles_carrera == c.goles_carrera and copia.pj_carrera == c.pj_carrera,
+		"jugador: el guardado de la carrera va y vuelve (%d PJ, %d goles)" % [copia.pj_carrera, copia.goles_carrera])
+	_comprobar(not c.toca_retirarse(m), "jugador: a los %d años no le toca retirarse" % c.jugador(m).edad)
+	print("  jugador en %d ms" % (Time.get_ticks_msec() - t0))
