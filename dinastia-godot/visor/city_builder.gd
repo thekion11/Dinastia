@@ -107,8 +107,12 @@ var _ventanas_mat: Array[StandardMaterial3D] = []
 
 func build(d: Dictionary) -> void:
 	datos = d
+	## La ciudad vieja se quita YA, no al final del cuadro: con `queue_free` las
+	## dos ciudades convivían un cuadro y el motor avisaba «material is null»
+	## al soltar la vieja (7-10-2026).
 	for c in get_children():
-		c.queue_free()
+		remove_child(c)
+		c.free()
 	etiquetas.clear()
 	puntos_clic.clear()
 	_rotulos = Node3D.new()
@@ -3605,6 +3609,7 @@ func _fila_urbana(calle: Vector3, dir: Vector3, afuera: Vector3, medio_largo: fl
 		var fondo: float = maxf(caja.size.z * s, 6.0)
 		## No invadir el hueco siguiente (cruce, ramal o parcela).
 		if _hueco_urbano(calle + dir * (u + ancho), afuera, linea):
+			nodo.free()
 			u += 6.0
 			continue
 		var c: Vector3 = calle + dir * (u + ancho * 0.5) + afuera * (linea + fondo * 0.5)
@@ -3634,6 +3639,8 @@ func _fila_urbana(calle: Vector3, dir: Vector3, afuera: Vector3, medio_largo: fl
 				b.position = Vector3(pb.x, altura_en(pb.x, pb.z) - 0.2, pb.z)
 				add_child(b)
 				_frentes.append(_rect_de(pb, dir, maxf(cb.size.x * sb, 6.0), fondo_b))
+			else:
+				b.free()
 		u += ancho + rng.randf_range(0.5, 3.5)
 
 func _rect_de(c: Vector3, dir: Vector3, ancho: float, fondo: float) -> Rect2:
