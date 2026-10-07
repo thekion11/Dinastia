@@ -121,6 +121,7 @@ func _ready() -> void:
 	_probar_mesa_agente()
 	_probar_ciudad_animo()
 	_probar_ciudad_grande()
+	_probar_minijuegos()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -4998,6 +4999,38 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## LOS MINIJUEGOS (7-10-2026): tiros libres y trivia del club.
+func _probar_minijuegos() -> void:
+	_titulo("MINIJUEGOS: TIROS LIBRES Y TRIVIA DEL CLUB")
+	_comprobar(MinijuegoTiroLibre.resultado_potencia(0.2) == "barrera", "potencia floja: barrera")
+	_comprobar(MinijuegoTiroLibre.resultado_potencia(0.95) == "alto", "potencia pasada: por encima")
+	_comprobar(MinijuegoTiroLibre.resultado_potencia(0.62) == "justo", "en el centro: con rosca")
+	var h: Array[int] = [0, 0]
+	_comprobar(MinijuegoTiroLibre.prob_atajada(0, h, "bueno") > MinijuegoTiroLibre.prob_atajada(0, [] as Array[int], "bueno"), "repetir zona: el portero se adelanta")
+	var m := Mundo.new()
+	m.generar(["CHI"], 21)
+	m.tomar_el_mando(m.ligas[0].clubes[2].id)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	var ps := TriviaClub.preguntas(m, rng)
+	_comprobar(ps.size() >= 6, "%d preguntas de trivia con los datos de la partida" % ps.size())
+	var bien := true
+	for pr: Dictionary in ps:
+		var ops: Array = pr["opciones"]
+		if ops.size() < 3 or int(pr["correcta"]) < 0 or int(pr["correcta"]) >= ops.size():
+			bien = false
+	_comprobar(bien, "cada pregunta tiene opciones y la respuesta correcta está entre ellas")
+	var c := m.mi_club()
+	var cap := ""
+	for j: Jugador in c.plantilla:
+		if j.capitan:
+			cap = j.nombre
+	var ok_cap := true
+	for pr2: Dictionary in ps:
+		if String(pr2["q"]).contains("brazalete"):
+			ok_cap = String(pr2["opciones"][int(pr2["correcta"])]) == cap
+	_comprobar(ok_cap, "la respuesta del capitán es el capitán de verdad (%s)" % cap)
 
 ## LA CIUDAD GRANDE (7-10-2026): red vial en datos, semáforos, transporte.
 func _probar_ciudad_grande() -> void:
