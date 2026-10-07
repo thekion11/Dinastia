@@ -900,11 +900,18 @@ func _estatua_idolo(p: Vector3) -> void:
 	b._caja_en(p + Vector3(0, 1.5, 0), Vector3(5.0, 3.0, 5.0), _mat["piedra"])
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(nombre)
-	var d := PeatonQ.crear(rng)
+	## Un cuerpo de futbolista sin ropa aparte ni pelo: en bronce no se ven, y
+	## el peatón completo (prendas en mallas sueltas) hacía que el motor avisara
+	## «material is null» al reconstruir la ciudad.
+	var d := FutbolistaQ.crear(1.8, "male")
 	if not d.is_empty():
 		var n: Node3D = d["nodo"]
 		b.add_child(n)
-		PeatonQ.terminar(d)
+		FutbolistaQ.terminar(d, false)
+		if (d["anim"] as AnimationPlayer).has_animation("celebrar"):
+			(d["anim"] as AnimationPlayer).play("celebrar")
+		elif (d["anim"] as AnimationPlayer).has_animation("parado"):
+			(d["anim"] as AnimationPlayer).play("parado")
 		n.position = p + Vector3(0, 3.0, 0)
 		n.scale = Vector3.ONE * 2.9
 		n.rotation.y = 0.0

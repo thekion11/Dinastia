@@ -2145,7 +2145,12 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var esc := load(RUTA_BUTACAS)
 	if esc == null:
 		return
-	var malla: Mesh = _primera_malla(esc.instantiate() if esc is PackedScene else null)
+	## Se instancia solo para sacar la malla: el nodo se libera enseguida (antes
+	## quedaba suelto, y al cerrar el juego el motor avisaba «material is null»).
+	var tmp: Node = esc.instantiate() if esc is PackedScene else null
+	var malla: Mesh = _primera_malla(tmp)
+	if tmp != null:
+		tmp.free()
 	if malla == null:
 		return
 
