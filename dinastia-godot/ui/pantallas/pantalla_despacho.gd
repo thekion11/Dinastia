@@ -320,6 +320,25 @@ func _pintar_exigencia_agente(e: Dictionary) -> void:
 	v.add_child(fila)
 	p._boton(String(e.get("opcion_a", "Sí")), func() -> void: _resolver_agente("a"), fila)
 	p._boton(String(e.get("opcion_b", "No")), func() -> void: _resolver_agente("b"), fila)
+	## El mini-juego (fase 4): regatearle en la mesa en vez de un sí o un no.
+	p._boton("🤝 Sentarse a negociar", func() -> void: _abrir_mesa(e), fila)
+
+func _abrir_mesa(e: Dictionary) -> void:
+	var c := p.mundo.cantera
+	var bono := p.mundo.entrenamiento.bono_agentes() if p.mundo.entrenamiento != null else 0.0
+	var mesa := MesaAgente.new(e, c.confianza_de(String(e.get("agente", ""))), bono, Azar.ent(1, 1 << 30))
+	p.add_child(MesaAgenteUI.new(mesa, func(m: MesaAgente) -> void:
+		var r: Dictionary
+		match m.estado:
+			"acuerdo":
+				r = c.resolver_agente("a", m.fraccion())
+			"se_fue":
+				r = c.resolver_agente("b", 1.0, true)
+			_:
+				r = c.resolver_agente("b")
+		p._escribir("[color=#4caf6d][b]%s[/b][/color] %s" % [
+			String(r.get("titulo", "Resuelto")), String(r.get("cuerpo", ""))])
+		p._refrescar()))
 
 func _resolver_agente(op: String) -> void:
 	var r := p.mundo.cantera.resolver_agente(op)

@@ -118,6 +118,7 @@ func _ready() -> void:
 	_probar_disenos_kit()
 	_probar_guinos_estadio()
 	_probar_plantillas_fijas()
+	_probar_mesa_agente()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -4995,6 +4996,60 @@ func _probar_carga_de_ui() -> void:
 			"%s instancia CON su script compilado (no solo el Node vacío)" % ruta)
 		if nodo != null:
 			nodo.free()
+
+## FASE 4: el mini-juego de representantes (la mesa de regateo).
+func _probar_mesa_agente() -> void:
+	_titulo("MINI-JUEGO DE REPRESENTANTES (FASE 4)")
+	var ex := {"tipo": "mejora", "agente": "R. Prueba", "perfil": "discreto", "pid": "j1"}
+	var m := MesaAgente.new(ex, 0, 0.0, 7)
+	m.ceder()
+	_comprobar(m.estado == "acuerdo" and is_equal_approx(m.fraccion(), 1.0), "ceder cierra al 100 %")
+	m = MesaAgente.new(ex, 0, 0.0, 7)
+	m.plantarse()
+	_comprobar(m.estado == "plantado" and m.fraccion() < 0.0, "plantarse es un no")
+	m = MesaAgente.new(ex, 0, 0.0, 7)
+	var rondas := 0
+	while m.estado == "abierta" and rondas < 20:
+		m.regatear(0)
+		rondas += 1
+	_comprobar(m.estado == "se_fue" and rondas <= m.paciencia_max, "ofrecer nada lo ofende: se va en %d rondas (paciencia %d)" % [rondas, m.paciencia_max])
+	m = MesaAgente.new(ex, 0, 0.0, 7)
+	m.farol()
+	var pide := m.pide
+	var pac := m.paciencia
+	m.farol()
+	_comprobar(m.farol_usado and m.pide == pide and m.paciencia == pac, "un solo farol por mesa")
+	## Una estrategia sensata (la oferta del medio; ceder a la última taza)
+	## saca tratos mejores al formador que al tiburón, y casi siempre cierra.
+	var medias := {}
+	for perfil: String in ["formador", "tiburon"]:
+		var suma := 0.0
+		var tratos := 0
+		for k in 300:
+			var mm := MesaAgente.new({"tipo": "comision", "agente": "A%d" % k, "perfil": perfil}, 0, 0.0, 1000 + k)
+			while mm.estado == "abierta":
+				if mm.paciencia <= 1:
+					mm.ceder()
+				else:
+					var o := mm.ofertas()
+					mm.regatear(o[mini(1, o.size() - 1)])
+			if mm.estado == "acuerdo":
+				tratos += 1
+				suma += float(mm.acordado)
+		medias[perfil] = suma / maxf(1.0, float(tratos))
+		_comprobar(tratos >= 240, "%s: %d de 300 mesas cierran con trato" % [perfil, tratos])
+	_comprobar(float(medias["formador"]) + 8.0 < float(medias["tiburon"]), "el formador cede más que el tiburón (%.0f %% / %.0f %%)" % [medias["formador"], medias["tiburon"]])
+	_comprobar(float(medias["tiburon"]) < 99.0, "regatear sirve: al tiburón tampoco se le paga siempre todo (%.0f %%)" % medias["tiburon"])
+	## El trato se aplica a escala: una mejora al 50 % sube el sueldo un 15 %.
+	var w := Mundo.new()
+	w.generar(["CHI"], 31)
+	w.tomar_el_mando(w.ligas[0].clubes[0].id)
+	var j: Jugador = w.mi_club().plantilla[0]
+	var antes := j.sueldo
+	w.cantera.exigencia = {"tipo": "mejora", "agente": "R. Prueba", "pid": j.id, "ids": [j.id], "perfil": "discreto"}
+	var r := w.cantera.resolver_agente("a", 0.5)
+	_comprobar(absi(j.sueldo - int(round(float(antes) * 1.15))) <= 1, "mejora pactada al 50 %%: sueldo %d → %d (+15 %%)" % [antes, j.sueldo])
+	_comprobar(String(r.get("cuerpo", "")).contains("50 %"), "la noticia cuenta lo pactado en la mesa")
 
 ## FASE 4: las plantillas de arranque son las mismas con cualquier semilla y
 ## con cualquier mezcla de países cargados (sembradas con el nombre del club).
