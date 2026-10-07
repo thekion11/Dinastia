@@ -29,6 +29,8 @@ var construir: Callable
 var dia_partido := false
 ## El momento del club (`CiudadAnimo.de`), lo pone quien abre la vista.
 var animo: Dictionary = {}
+## El ídolo del club (nombre), para la estatua de la Plaza Mayor.
+var idolo := ""
 var _obras: Instalaciones
 var _ciudad_datos: Ciudad
 var _perfil: Dictionary = {}
@@ -222,6 +224,7 @@ func _datos_de(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Di
 		"luces": ciudad.luces if ciudad != null else Ciudad.LUCES_POR_DEFECTO,
 		"dia_partido": dia_partido,
 		"animo": animo,
+		"idolo": idolo,
 		"vecinos": ciudad.vecinos if ciudad != null else 55,
 	}
 
