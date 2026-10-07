@@ -32,7 +32,7 @@ func _process(_d: float) -> void:
 		print("CIUDAD construida en %d ms · %d nodos · %d manzanas de distrito" % [Time.get_ticks_msec() - t0, cb.get_child_count(), cb.manzanas_distrito])
 		_v.set("_girando", false)
 		_v.set("_ciclo_activo", false)
-		_v.set("_hora", 13.0)
+		_v.set("_hora", _f("HORA", 13.0))
 		_v.call("_aplicar_hora")
 		_v.set("_objetivo", Vector3(_f("OX", 0.0), 10.0, _f("OZ", 0.0)))
 		_v.set("_objetivo_deseado", Vector3(_f("OX", 0.0), 10.0, _f("OZ", 0.0)))
