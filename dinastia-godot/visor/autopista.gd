@@ -55,7 +55,7 @@ static func montar(b: CityBuilder) -> Dictionary:
 		var hacia := -e.normalized()
 		## Centrada en la avenida que continúa (antes iba 20 m desplazada).
 		var base := e + hacia * (ANCHO * 0.5 + RAMPA * 0.5)
-		var r := b._caja_en(base + Vector3(0, ALTO * 0.5, 0), Vector3(10.0, 0.8, sqrt(RAMPA * RAMPA + ALTO * ALTO)) if absf(hacia.z) > 0.5 else Vector3(sqrt(RAMPA * RAMPA + ALTO * ALTO), 0.8, 10.0), asf)
+		var r := b._caja_en(base + Vector3(0, ALTO * 0.5, 0), Vector3(16.0, 0.8, sqrt(RAMPA * RAMPA + ALTO * ALTO)) if absf(hacia.z) > 0.5 else Vector3(sqrt(RAMPA * RAMPA + ALTO * ALTO), 0.8, 16.0), asf)
 		var ang := atan2(ALTO, RAMPA)
 		if absf(hacia.z) > 0.5:
 			r.rotation.x = ang * signf(hacia.z)

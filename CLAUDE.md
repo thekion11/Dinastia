@@ -152,6 +152,20 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   main desde el PR #3: lo nuevo está en la rama (PR nuevo si lo pide).
   OJO banco: si el script tiene error de sintaxis se queda colgado; comprobar
   que aparece «===== FIN».
+  7-10 PEDIDO: «que la línea de metro funcione, que nuestro personaje la use, usable
+  por dentro; minijuegos 3D con animaciones; ¿qué pasó con los edificios?; ¿metro y
+  carretera respetan la calle?». HECHO: metro usable (`metro_ciudad.gd` +
+  estados calle/anden/tren en `explorador_ciudad.gd`: bocas → andén → subir → ventana
+  (C) → bajar; estaciones subterráneas alicatadas; bajo tierra sin niebla/sol y
+  cámara dentro del vestíbulo). Captura: `pruebas/captura_metro_usable.tscn`.
+  MINIJUEGOS 3D (`visor/mini3d.gd` + `minijuegos_ciudad.gd`, `minijuego_penales.gd`,
+  `minijuego_tiro_libre.gd`): autógrafos, pesca, karting (3 rivales), penales y tiro
+  libre, con personas animadas. Deportistas: `Mini3D._deportista` (NO revestir un
+  PeatonQ: las prendas aparte se suman). Captura: `pruebas/captura_minijuegos_3d.tscn`.
+  Edificios: patios verdes en el interior de manzana (`_patio_de_manzana`). Revisión
+  aérea: L1 sobre el bulevar x=660, L2 bajo z=-660, rampas en el eje de la avenida
+  (ensanchadas a 16 m). Pendiente de caza: aviso «material is null» al construir
+  la ciudad (ya existía antes).
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.

@@ -380,6 +380,11 @@ Se queda **a un punto de la meta de 75**. Lo que más falta en pulido es traduci
 
 Cuenta: 11,25 + 16,2 + 11,1 + 6,9 + 17,4 + 6,6 + 7,9 = **77,35**. Se pasa la meta de 75. Para 80+ hacen falta las 🔒 (hardware real, builds y licencias) y traducir los cuerpos de la narración.
 
+**Ciudad 2.1 (7-10-2026, tarde)**
+- Metro usable: entrar por la boca, esperar en el andén, subir, viajar dentro del vagón (asientos, barras, puertas que se abren, rótulo LED), mirar por la ventana y bajar en otra estación. Estaciones subterráneas con su vestíbulo.
+- Minijuegos en 3D con animaciones: autógrafos, pesca, karting contra tres rivales, penales y tiro libre con barrera.
+- Patios verdes dentro de las manzanas. Revisión aérea: el metro y la autopista siguen las avenidas.
+
 **Fase 5 — plan original**
 - Documental de la temporada.
 - Ciudad que responde al club.
