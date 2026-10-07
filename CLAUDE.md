@@ -119,9 +119,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   cielo. Detalle en `herramientas/MOTOR_CARAS.md`. Tras esto: esperar veredicto;
   si lo da por bueno, sigue el MEGAPLAN.
 - 5-10: el usuario APROBÓ la última pasada («Si, dale») → caras y punto 2 CERRADOS.
-  EN CURSO: MEGAPLAN (`dinastia-godot/MEGAPLAN.md`). Fases 1 y 2 HECHAS (5-10). Fase 3 A MEDIAS (6-10: fuera de juego y cambios hechos;
-  desgaste apagado; faltan eventos, selección y paso a DT). El usuario pidió PARAR y
-  pasarle el documento («déjalo así»): esperar su orden antes de seguir la fase 3
+  EN CURSO: MEGAPLAN (`dinastia-godot/MEGAPLAN.md`). Fases 1 y 2 HECHAS (5-10). Fase 3 HECHA (7-10: fuera de juego, cambios,
+  desgaste separado de la velocidad, 13 eventos, selección jugable, retiro y paso a DT).
+  7-10: el usuario pidió pasar la fase 3 a main y SEGUIR con la fase 4 (contenido).
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
@@ -151,5 +151,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
      sombra dentro de fotos bien expuestas salen más oscuras (≈8 % en lo revisado).
   5. Mostrar en cada pasada jugadores DISTINTOS (surtido variado:
      `herramientas/caras_variadas.py`) para ver que el nivel se repite.
+- 7-10: todo lo hecho hasta la fase 3 (parte) se FUSIONÓ a `main` (pull request #1,
+  pedido del usuario). Lo nuevo sigue en la rama asignada; para pasarlo a main, nuevo PR.
 - Esperando al usuario: túnel, informe nuevo.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
