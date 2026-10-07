@@ -41,11 +41,19 @@ class Tren:
 
 	## La próxima estación en el sentido de la marcha (INF si no queda ninguna:
 	## está en la cabecera).
+	## CORREGIDO (7-10-2026): con «d > 0,5» el tren frenaba hasta quedar a
+	## menos de medio metro, daba la estación por pasada y seguía sin parar
+	## (el banco lo cazó: 0 paradas en 10 minutos). Ahora solo se descarta la
+	## estación donde acaba de parar.
+	var ultima_parada := -INF
+
 	func proxima() -> float:
 		var mejor := INF
 		for e in estaciones:
+			if absf(e - ultima_parada) < 0.01:
+				continue
 			var d := (e - s) * sentido
-			if d > 0.5 and d < mejor:
+			if d > -0.01 and d < mejor:
 				mejor = d
 		if mejor == INF:
 			return INF
@@ -67,11 +75,12 @@ class Tren:
 		else:
 			v = minf(VEL, v + ACEL * delta)
 		var paso := v * delta
-		if paso >= dist or (v <= 0.05 and dist < 1.5):
+		if paso >= dist or dist < 0.6:
 			s = objetivo
 			v = 0.0
 			espera = PARADA
 			paradas_hechas += 1
+			ultima_parada = objetivo
 			return
 		s += paso * sentido
 
