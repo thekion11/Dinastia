@@ -207,6 +207,11 @@ func _physics_process(delta: float) -> void:
 	_colocar_camara(delta)
 	_rotulos()
 
+func _junto_a_la_persiana() -> bool:
+	var x0 := float(_datos.get("x0", 0.0))
+	return absf(cuerpo.position.x - (x0 + TunelVestuario.PUERTA_X)) < GaleriaClub.MEDIO + 0.6 \
+		and cuerpo.position.z > float(_datos.get("z_fin", 0.0)) - 1.6
+
 func _rotulos() -> void:
 	var z := zona_en(cuerpo.position)
 	var nombre := String(z.get("nombre", ""))
@@ -217,6 +222,11 @@ func _rotulos() -> void:
 	elif RecorridoClub.junto_a_la_grada(cuerpo.position, planta):
 		_aviso.text = Idiomas.t("E: sentarse en la grada")
 		_zona_actual = "·grada"
+	elif planta == GaleriaClub.PLANTA and nombre == "Pasillo" and _junto_a_la_persiana():
+		## La puerta de la galería: aquí está cerrada (el complejo está en la ciudad).
+		if _zona_actual != "·galeria":
+			_zona_actual = "·galeria"
+			_aviso.text = Idiomas.t("La galería al complejo se recorre desde la ciudad (Ciudad 3D → a pie)")
 	elif nombre != _zona_actual:
 		_zona_actual = nombre
 		_aviso.text = RecorridoClub.aviso_de(nombre, club_nombre)
