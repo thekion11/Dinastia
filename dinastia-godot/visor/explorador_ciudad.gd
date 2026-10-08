@@ -471,6 +471,8 @@ func _usar() -> void:
 			_salir_del_estadio()
 		elif _zona_est == "Ascensor" and not is_instance_valid(_menu_asc):
 			_menu_asc = RecorridoClub.menu_ascensor(_capa, _planta, _ir_a_planta)
+		elif RecorridoClub.sala_decorable(_zona_est):
+			_menu_asc = RecorridoClub.panel_decorar(_capa, get_tree(), _zona_est)
 		return
 	if estado == "anden":
 		_usar_en_anden()
@@ -582,6 +584,8 @@ func _mover_en_estadio(delta: float) -> void:
 	elif nombre != _zona_est or _aviso.text.begins_with("E: hablar"):
 		_zona_est = nombre
 		_aviso.text = RecorridoClub.aviso_de(nombre)
+		if RecorridoClub.sala_decorable(nombre):
+			_aviso.text += "  ·  " + Idiomas.t("E: decorar")
 	_hud.text = "📍 %s · %s %d · %s\n🚶 %s" % [Idiomas.t(nombre), Idiomas.t("Planta"), _planta, str(cb.datos.get("club", {}).get("estadioNom", "Estadio")),
 		Idiomas.t("W/S/A/D o mando · Mayús: correr · E: usar · Esc: volver al mapa")]
 	## Cámara: dentro de una sala no atraviesa paredes ni techo.

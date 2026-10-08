@@ -87,6 +87,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"vestuario": m.vestuario.a_dic() if m.vestuario != null else {},
 		"hinchada": m.hinchada.a_dic() if m.hinchada != null else {},
 		"gente": m.gente.a_dic() if m.gente != null else {},
+		"interiores": m.interiores.a_dic(),
 		"club_dentro": m.club_dentro.a_dic() if m.club_dentro != null else {},
 		"junta": m.junta.a_dic() if m.junta != null else {},
 		"charlas": m.charlas.a_dic() if m.charlas != null else {},
@@ -568,6 +569,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.hinchada.desde_dic(datos.get("hinchada", {}))
 	if m.gente != null:
 		m.gente.desde_dic(datos.get("gente", {}))
+	m.interiores.desde_dic(datos.get("interiores", {}))
 	if m.club_dentro != null:
 		m.club_dentro.desde_dic(datos.get("club_dentro", {}))
 	if m.charlas != null:
