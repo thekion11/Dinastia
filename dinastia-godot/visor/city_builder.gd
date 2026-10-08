@@ -415,6 +415,9 @@ func _arbolado() -> void:
 	## pero además mece cada copa con una fase propia sacada de su posición.
 	var mc := ShaderMaterial.new()
 	mc.shader = load("res://visor/follaje_viento.gdshader")
+	## El verde ya viene por copa: con el tinte base encima se multiplicaba dos
+	## veces y las copas salían NEGRAS (8-10-2026).
+	mc.set_shader_parameter("tinte_base", Color(1.0, 1.0, 1.0))
 	var mi_c := MultiMeshInstance3D.new()
 	mi_c.multimesh = copa_mm
 	mi_c.material_override = mc
@@ -642,14 +645,19 @@ func _estadio() -> void:
 		nodo.set_meta("en_ciudad", true)
 		add_child(nodo)
 		var aforo := int(perfil.get("aforo", datos.get("club", {}).get("cap", 20000)))
-		StadiumBuilder.build_pitch(nodo, perfil)
+		## EL MISMO ESTADIO QUE EN EL PARTIDO Y EN EL VISOR (8-10-2026): misma
+		## semilla (el id del club) y el club para escudos, telones y pantallas.
+		## Antes la semilla era el aforo y sin club: butacas y detalles distintos.
+		var club_obj: Club = datos.get("club_obj") as Club
+		var semilla := club_obj._hash_id() if club_obj != null else aforo
+		StadiumBuilder.build_pitch(nodo, perfil, club_obj)
 		## Ocupación media-baja: fuera de partido el estadio no está lleno, pero
 		## con 0,06 la grada salía de un gris uniforme y desde el mapa el
 		## estadio se leía como una pista de hockey. Con 0,35 se distinguen las
 		## butacas del club, que es lo que lo hace reconocible desde arriba.
 		## Con la galería subterránea (2.0, fase 6) la puerta del sótano queda abierta.
 		GaleriaClub.en_ciudad = true
-		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, aforo)
+		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, semilla, club_obj)
 		GaleriaClub.en_ciudad = false
 		huellas.append(Rect2(ESTADIO_EN.x - 62.0, ESTADIO_EN.z - 80.0, 124.0, 160.0))
 		## El vestuario del túnel sobresale por detrás de la tribuna (estadio 2.0).
@@ -662,6 +670,13 @@ func _estadio() -> void:
 		_rect_vestuario = Rect2(ESTADIO_EN.x + float(tv["x0"]) - TunelVestuario.VEST_MEDIO - 0.4,
 			ESTADIO_EN.z + float(tv["z_out"]), TunelVestuario.VEST_MEDIO * 2.0 + 0.8, TunelVestuario.VEST_FONDO + 0.4)
 		huellas.append(_rect_vestuario)
+		## La entrada del club (8-10-2026): la garita del portero es sólida y
+		## delante de la puerta no puede haber bolardos, bancos ni papeleras.
+		var x0e := ESTADIO_EN.x + float(tv["x0"])
+		var zfe := ESTADIO_EN.z + float(tv["z_fin"])
+		var rg := EntradaClub.rect_garita(float(tv["x0"]), float(tv["z_fin"]))
+		huellas.append(Rect2(rg.position + Vector2(ESTADIO_EN.x, ESTADIO_EN.z), rg.size))
+		_rect_entrada = Rect2(EntradaClub.centro(x0e) - 7.5, zfe + 0.3, 15.0, 5.5)
 		puntos_clic.append({"k": "estadio", "n": str(datos.get("club", {}).get("estadioNom", "Estadio")),
 			"pos": ESTADIO_EN + Vector3(0, 15, 0), "estado": "estadio"})
 		## Si se están ampliando las tribunas o mejorando el recinto, se nota.
@@ -4417,6 +4432,7 @@ func _en_huella(p: Vector3) -> bool:
 ## del estadio. Las marcas viales y piezas planas de la calle que caen dentro
 ## asomarían por su suelo: se quitan.
 var _rect_vestuario := Rect2()
+var _rect_entrada := Rect2()
 
 func _despejar_vestuario(n: Node, t: Transform3D = Transform3D()) -> void:
 	## Se llama antes de que la ciudad esté en el árbol: las posiciones se
@@ -4430,43 +4446,131 @@ func _despejar_vestuario(n: Node, t: Transform3D = Transform3D()) -> void:
 		if h is MeshInstance3D:
 			var mi := h as MeshInstance3D
 			var p := th.origin
-			if mi.mesh != null and _rect_vestuario.has_point(Vector2(p.x, p.z)) and mi.get_aabb().size.y < 0.3 and p.y < 0.5:
+			var en_entrada := _rect_entrada.has_point(Vector2(p.x, p.z)) and p.y < 3.0 and mi.get_aabb().size.y >= 0.3 and mi.get_aabb().size.y < 3.5
+			if mi.mesh != null and (en_entrada or (_rect_vestuario.has_point(Vector2(p.x, p.z)) and mi.get_aabb().size.y < 0.3 and p.y < 0.5)):
 				mi.get_parent().remove_child(mi)
 				mi.queue_free()
 				continue
 		_despejar_vestuario(h, th)
 
 ## La marea de gente alrededor del estadio.
+##
+## 8-10-2026: antes era una cápsula por persona, toda del color del club, y
+## desde arriba se leían como PALOS blancos y negros clavados en el césped
+## (el usuario: «¿esas cosas negras y blancas como palos son personas?»).
+## Ahora cada hincha tiene piernas con pantalón, torso y brazos con la
+## camiseta, cuello y cabeza con su tono de piel: tres MultiMesh que comparten
+## posiciones (una sola llamada de dibujo por pieza para los 600).
 func _hinchada_estadio(c1: Color, c2: Color, rng: RandomNumberGenerator) -> void:
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.use_colors = true
-	var cap := CapsuleMesh.new()
-	cap.radius = 0.35
-	cap.height = 1.75
-	var mat := StandardMaterial3D.new()
-	mat.vertex_color_use_as_albedo = true
-	mat.roughness = 0.9
-	cap.material = mat
-	mm.mesh = cap
+	var piezas := _mallas_hincha_de_pie()
 	var n := 600
-	mm.instance_count = n
+	var mms: Array[MultiMesh] = []
+	for pz in 3:
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_colors = true
+		mm.mesh = piezas[pz]
+		mm.instance_count = n
+		mms.append(mm)
+	var pieles := [Color(0.96, 0.8, 0.66), Color(0.87, 0.67, 0.5), Color(0.72, 0.52, 0.36), Color(0.5, 0.34, 0.22), Color(0.34, 0.22, 0.15)]
+	var pantalones := [Color(0.16, 0.2, 0.32), Color(0.12, 0.12, 0.14), Color(0.3, 0.32, 0.36), Color(0.42, 0.36, 0.28), Color(0.22, 0.3, 0.48)]
 	for k in n:
 		var ang := rng.randf() * TAU
 		var r := rng.randf_range(105.0, 150.0)
-		var p := ESTADIO_EN + Vector3(cos(ang) * r, 0.9, sin(ang) * r * 0.8)
+		var p := ESTADIO_EN + Vector3(cos(ang) * r, 0.0, sin(ang) * r * 0.8)
 		## Nadie dentro de un edificio (el vestuario del estadio, por ejemplo).
 		for intento in 8:
 			if not _en_huella(p):
 				break
 			ang = rng.randf() * TAU
-			p = ESTADIO_EN + Vector3(cos(ang) * r, 0.9, sin(ang) * r * 0.8)
-		mm.set_instance_transform(k, Transform3D(Basis(), p))
+			p = ESTADIO_EN + Vector3(cos(ang) * r, 0.0, sin(ang) * r * 0.8)
+		## Mirando más o menos al estadio, cada uno a su altura.
+		var hacia := ESTADIO_EN - p
+		var giro := atan2(hacia.x, hacia.z) + rng.randf_range(-0.9, 0.9)
+		var esc := rng.randf_range(0.9, 1.08)
+		var t := Transform3D(Basis(Vector3.UP, giro).scaled(Vector3.ONE * esc), p)
 		var tono := rng.randf()
-		var col: Color = c1 if tono < 0.45 else (c2 if tono < 0.7 else Color(0.2, 0.22, 0.25).lerp(Color(0.8, 0.8, 0.8), rng.randf()))
-		mm.set_instance_color(k, col)
-	var gente := MultiMeshInstance3D.new()
+		var camiseta: Color = c1 if tono < 0.45 else (c2 if tono < 0.7 else Color(0.2, 0.22, 0.25).lerp(Color(0.85, 0.85, 0.85), rng.randf()))
+		var cols := [pantalones[rng.randi() % pantalones.size()], camiseta, pieles[rng.randi() % pieles.size()]]
+		for pz in 3:
+			mms[pz].set_instance_transform(k, t)
+			mms[pz].set_instance_color(k, cols[pz])
+	var gente := Node3D.new()
 	gente.name = "Hinchada"
-	gente.multimesh = mm
 	add_child(gente)
+	for pz in 3:
+		var mi := MultiMeshInstance3D.new()
+		mi.multimesh = mms[pz]
+		gente.add_child(mi)
 	_rotulo(ESTADIO_EN + Vector3(0, 62.0, 0), "⚽ HOY HAY PARTIDO", Color(1.0, 0.85, 0.3))
+
+## Un hincha de pie en tres piezas (pantalón, camiseta, piel), cada una con su
+## color por instancia. Low-poly: se ven de lejos y son cientos.
+static var _piezas_hincha: Array = []
+
+static func _mallas_hincha_de_pie() -> Array:
+	if not _piezas_hincha.is_empty():
+		return _piezas_hincha
+	var mat := StandardMaterial3D.new()
+	mat.vertex_color_use_as_albedo = true
+	mat.roughness = 0.85
+	## Piernas.
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var pierna := CapsuleMesh.new()
+	pierna.radius = 0.085
+	pierna.height = 0.9
+	pierna.radial_segments = 6
+	pierna.rings = 1
+	for lado in [-1.0, 1.0]:
+		st.append_from(pierna, 0, Transform3D(Basis(), Vector3(0.1 * lado, 0.45, 0)))
+	var cadera := CylinderMesh.new()
+	cadera.top_radius = 0.17
+	cadera.bottom_radius = 0.16
+	cadera.height = 0.16
+	cadera.radial_segments = 7
+	cadera.rings = 1
+	st.append_from(cadera, 0, Transform3D(Basis().scaled(Vector3(1, 1, 0.72)), Vector3(0, 0.86, 0)))
+	st.generate_normals()
+	var piernas := st.commit()
+	## Torso y brazos.
+	st = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var torso := CylinderMesh.new()
+	torso.top_radius = 0.2
+	torso.bottom_radius = 0.17
+	torso.height = 0.58
+	torso.radial_segments = 7
+	torso.rings = 1
+	st.append_from(torso, 0, Transform3D(Basis().scaled(Vector3(1, 1, 0.7)), Vector3(0, 1.21, 0)))
+	var brazo := CapsuleMesh.new()
+	brazo.radius = 0.055
+	brazo.height = 0.62
+	brazo.radial_segments = 5
+	brazo.rings = 1
+	for lado in [-1.0, 1.0]:
+		st.append_from(brazo, 0, Transform3D(Basis(Vector3(0, 0, 1), 0.08 * lado), Vector3(0.25 * lado, 1.17, 0)))
+	st.generate_normals()
+	var camiseta := st.commit()
+	## Cuello y cabeza.
+	st = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var cuello := CylinderMesh.new()
+	cuello.top_radius = 0.05
+	cuello.bottom_radius = 0.055
+	cuello.height = 0.1
+	cuello.radial_segments = 5
+	cuello.rings = 1
+	st.append_from(cuello, 0, Transform3D(Basis(), Vector3(0, 1.54, 0)))
+	var cabeza := SphereMesh.new()
+	cabeza.radius = 0.11
+	cabeza.height = 0.25
+	cabeza.radial_segments = 8
+	cabeza.rings = 5
+	st.append_from(cabeza, 0, Transform3D(Basis(), Vector3(0, 1.67, 0)))
+	st.generate_normals()
+	var piel := st.commit()
+	for m: Mesh in [piernas, camiseta, piel]:
+		m.surface_set_material(0, mat)
+	_piezas_hincha = [piernas, camiseta, piel]
+	return _piezas_hincha

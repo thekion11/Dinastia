@@ -1985,6 +1985,8 @@ func _conectar_noticias() -> void:
 		mundo.obra_lista.connect(func(clave: String) -> void:
 			var nombre_obra: String = String(Instalaciones.CATALOGO[clave][0]) if Instalaciones.CATALOGO.has(clave) else clave
 			var cuerpo_obra := "%s llega a nivel %d." % [nombre_obra, mundo.obras.nivel(clave)]
+			if clave == "reforma_estadio":
+				cuerpo_obra = "Termina la reforma del estadio: desde hoy se juega en el estadio nuevo."
 			_escribir("[color=#c9a227][b]🏗️ Obra terminada:[/b][/color] %s" % cuerpo_obra)
 			_anotar("🏗️ Obra terminada:", cuerpo_obra)
 			## Una obra son semanas de espera y millones: cuando por fin termina, se
@@ -4591,6 +4593,14 @@ func _pintar_estadio(c: Club) -> void:
 	var t := _texto(13, COL_ORO)
 	t.text = c.estadio_nombre if c.estadio_nombre != "" else e.nombre_de(c)
 	_lista_estadio.add_child(t)
+	## Reforma en obras: el diseñador enseña el PROYECTO; el estadio que se ve y
+	## se juega sigue siendo el de antes hasta que termine.
+	if e.en_obras():
+		var ob := _texto(12, Color(1.0, 0.8, 0.3))
+		ob.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ob.text = "🏗️ Reforma en obras: faltan %d de %d semanas. Aquí ves el proyecto; en la ciudad y en los partidos sigue el estadio de siempre, con andamios." % [
+			int(e.obra["semanas"]), int(e.obra["total"])]
+		_lista_estadio.add_child(ob)
 	## PONERLE NOMBRE AL ESTADIO, de `vEstadio()`. Es lo más barato que puede
 	## hacer un club por su identidad y lo primero que hace cualquiera al llegar
 	## a uno nuevo. Vacío vuelve al nombre por defecto: no se puede quedar sin.

@@ -143,6 +143,9 @@ static func obras(root: Node3D, dx: float, dz: float, alto: float, niveles: int,
 	var cartel := Label3D.new()
 	var nombres: Array[String] = []
 	for k: String in en_obra:
+		if k == "reforma":
+			nombres.append(Idiomas.t("REFORMA DEL ESTADIO"))
+			continue
 		nombres.append(String((Instalaciones.CATALOGO.get(k, [k]) as Array)[0]).to_upper())
 	cartel.text = "EN OBRA: %s" % ", ".join(nombres)
 	cartel.font_size = 96

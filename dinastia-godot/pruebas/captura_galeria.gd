@@ -47,7 +47,7 @@ func _process(_d: float) -> void:
 		_e.rumbo = PI
 		_e.cuerpo.position = GaleriaClub.boca_mundo(_e._est) + Vector3(0, 0.2, 1.2)
 		_e.call("_buscar_cerca")
-		_e.call("_usar")                    # dentro del vestuario
+		_e.call("_entrar_al_estadio")       # dentro del vestuario (ya abrió el portero)
 		_e.call("_ir_a_planta", -2)         # ascensor al sótano
 		var t := GaleriaClub.trazado(_e._est)
 		_e.cuerpo.position = CityBuilder.ESTADIO_EN + Vector3(float(t["xa"]) - 2.5, RecorridoClub.y_de(-2), float(_e._est["z_fin"]) - 1.5)

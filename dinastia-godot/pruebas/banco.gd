@@ -132,6 +132,7 @@ func _ready() -> void:
 	_probar_sancion_dt()
 	_probar_interiores_club()
 	_probar_galeria_club()
+	_probar_reforma_con_obra()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -1727,6 +1728,7 @@ func _probar_roles_y_federacion() -> void:
 		"se puede activar personalizar cada tribuna")
 	_comprobar(m.estadio.reformar(mio, {"bandeja_sur_asientoP": "damero"}, m.obras) == "",
 		"se puede reformar solo la tribuna sur")
+	m.estadio.terminar_obra()
 	var p2 := m.perfil_estadio_de(mio)
 	_comprobar(p2.has("bandejas"), "con el interruptor activo, el perfil SI trae bandejas")
 	var bandejas: Dictionary = p2.get("bandejas", {})
@@ -1748,6 +1750,7 @@ func _probar_roles_y_federacion() -> void:
 		"se puede activar mezclar patrones por tercios")
 	_comprobar(m.estadio.reformar(mio, {"tramo_sur_2": "moteado"}, m.obras) == "",
 		"se puede reformar solo el tercio 2 de la tribuna sur")
+	m.estadio.terminar_obra()
 	var p3 := m.perfil_estadio_de(mio)
 	_comprobar(p3.has("tramos"), "con el interruptor activo, el perfil SI trae tramos")
 	var tramos: Dictionary = p3.get("tramos", {})
@@ -6079,17 +6082,20 @@ func _probar_estadio_b6() -> void:
 	_comprobar(e.opciones("fachadaCol").size() == EstadioPropio.PALETA.size() and e.opciones("fachada").size() == 5, "la interfaz ve los catálogos nuevos")
 	_comprobar(e.presupuesto(mio, {"fachada": "ladrillo"}) > 0, "revestir la fachada cuesta")
 	_comprobar(e.presupuesto(mio, {"fachadaCol": "#b01e2d", "techoCol": "#1b1d22"}) == 0, "pintar es gratis")
-	_comprobar(e.reformar(mio, {"fachada": "vidrio"}) == "" and String(e.perfil(mio)["fachada"]) == "vidrio", "la reforma llega al perfil")
+	_comprobar(e.reformar(mio, {"fachada": "vidrio"}) == "" and e.terminar_obra() and String(e.perfil(mio)["fachada"]) == "vidrio", "la reforma llega al perfil")
 	_comprobar(e.reformar(mio, {"fachada": "marmol"}) != "", "una fachada inventada se rechaza")
 	## Colores por tribuna.
 	e.reformar(mio, {"personalizar_bandejas": true, "bandeja_norte_col1": "#e8c21a"})
+	e.terminar_obra()
 	var pf := e.perfil(mio)
 	_comprobar(String(pf["bandejas"]["norte"]["col1"]) == "#e8c21a" and String(pf["bandejas"]["sur"]["col1"]) == "", "cada tribuna lleva sus colores")
 	## Superficie: efecto real.
 	_comprobar(e.factor_lesion() == 1.0 and e.factor_desgaste_cesped() == 1.0, "natural: sin cambios")
 	e.reformar(mio, {"superficie": "artificial"})
+	e.terminar_obra()
 	_comprobar(e.factor_lesion() > 1.0 and e.factor_desgaste_cesped() == 0.0, "artificial: más lesiones, no se estropea")
 	e.reformar(mio, {"superficie": "hibrido"})
+	e.terminar_obra()
 	_comprobar(e.factor_lesion() < 1.0, "híbrido: menos lesiones")
 	m.avanzar_semana()
 	_comprobar(is_equal_approx(Partido.ctx_lesion_local, e.factor_lesion()), "la semana usa la superficie de tu estadio")
@@ -6738,6 +6744,7 @@ func _probar_tanda_c() -> void:
 	var claves_antes: Array = est_p.perfil(mf.mi_club()).keys()
 	mf.mi_club().saldo = maxi(mf.mi_club().saldo, 100000000)
 	var err_an := est_p.reformar(mf.mi_club(), {"personalizar_bandejas": true, "anillo_sur_2": "#b01e2d", "focosCol": "#1f4fa3", "vallaCol": "#1b1d22"})
+	est_p.terminar_obra()
 	var perf_an: Dictionary = est_p.perfil(mf.mi_club())
 	_comprobar(err_an == "" and String(((perf_an["bandejas"] as Dictionary)["sur"] as Dictionary)["niveles"][1]) == "#b01e2d", "el anillo 2 de la tribuna sur tiene su color (%s)" % err_an)
 	_comprobar(String(perf_an.get("focosCol", "")) == "#1f4fa3" and String(perf_an.get("vallaCol", "")) == "#1b1d22", "focos y vallas con color propio")
@@ -7783,10 +7790,18 @@ func _probar_personal_estadio() -> void:
 			var b: Vector3 = ruta[i + 1]
 			for k in 11:
 				var q := a.lerp(b, float(k) / 10.0)
-				if TunelVestuario.zona_en(d["zonas"], q, int(p[0])).is_empty():
+				## El portero y el hincha trabajan FUERA, en la acera de la
+				## entrada: ni dentro del edificio ni dentro de la garita.
+				if clave in ["portero", "hincha"]:
+					var rg := EntradaClub.rect_garita(float(d["x0"]), float(d["z_fin"]))
+					if q.z < float(d["z_fin"]) + 0.4 or rg.grow(0.3).has_point(Vector2(q.x, q.z)):
+						mal.append("%s tramo %d" % [clave, i])
+						break
+				elif TunelVestuario.zona_en(d["zonas"], q, int(p[0])).is_empty():
 					mal.append("%s tramo %d" % [clave, i])
 					break
-	_comprobar(mal.is_empty(), "las 11 personas tienen puesto y rutina dentro del estadio %s" % str(mal))
+	_comprobar(mal.is_empty(), "las %d personas tienen puesto y rutina en su sitio %s" % [PersonalEstadio.PUESTOS.size(), str(mal)])
+	_comprobar(PersonalEstadio.PUESTOS.has("portero"), "hay portero en la entrada del club")
 	_comprobar(String(PersonalEstadio.PUESTOS["utilero"][1]) == "Utilería" and String(PersonalEstadio.PUESTOS["presidente"][1]) == "Despacho del presidente",
 		"el utilero en la utilería y el presidente en su despacho")
 	pe.free()
@@ -7892,3 +7907,44 @@ func _probar_galeria_club() -> void:
 	_comprobar(not ex._junto_a_la_persiana(), "lejos de la persiana, no")
 	ex.cuerpo.free()
 	ex.free()
+
+func _probar_reforma_con_obra() -> void:
+	_titulo("EL MISMO ESTADIO EN TODAS PARTES: LAS REFORMAS TARDAN")
+	var m := Mundo.new()
+	m.generar(["CHI"], 424242)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mio := m.mi_club()
+	if mio == null or m.estadio == null:
+		_comprobar(false, "hay partida para probar la reforma")
+		return
+	mio.saldo = 999999999
+	var antes := String(m.perfil_estadio_de(mio)["forma"])
+	var nueva := "rect" if antes != "rect" else "oval"
+	_comprobar(m.estadio.reformar(mio, {"forma": nueva}, m.obras) == "", "se encarga la reforma de la forma")
+	_comprobar(m.estadio.en_obras() and String(m.perfil_estadio_de(mio)["forma"]) == antes,
+		"mientras dura la obra se juega en el estadio de siempre")
+	_comprobar("reforma" in (m.perfil_estadio_de(mio).get("en_obra", []) as Array), "y se ven los andamios")
+	_comprobar(String(m.estadio.ajustes["forma"]) == nueva, "el diseñador enseña el proyecto")
+	## La pintura no espera.
+	var cal := String(m.perfil_estadio_de(mio)["lineaCol"])
+	var nueva_cal := cal
+	for o: Variant in m.estadio.opciones("lineaCol"):
+		var v := String((o as Dictionary).get("clave", o)) if o is Dictionary else String(o)
+		if v != cal:
+			nueva_cal = v
+			break
+	var err_cal := m.estadio.reformar(mio, {"lineaCol": nueva_cal}, m.obras)
+	_comprobar(err_cal == "" and nueva_cal != cal and String(m.perfil_estadio_de(mio)["lineaCol"]) == nueva_cal,
+		"la pintura se ve al momento, aun en obras (%s)" % err_cal)
+	var semanas := int(m.estadio.obra["semanas"])
+	_comprobar(semanas == int(EstadioPropio.SEMANAS_OBRA["obra"]), "mover el graderío lleva %d semanas" % semanas)
+	## Se guarda y se carga con la obra a medias.
+	var otro := EstadioPropio.new()
+	otro.desde_dic(m.estadio.a_dic())
+	_comprobar(otro.en_obras() and String(otro.hecho()["forma"]) == antes, "la obra a medias sobrevive al guardado")
+	var termino := false
+	for i in semanas:
+		termino = m.estadio.avanzar_semana() or termino
+	_comprobar(termino and not m.estadio.en_obras() and String(m.perfil_estadio_de(mio)["forma"]) == nueva,
+		"al terminar, el estadio nuevo es el de todas partes")
+	_comprobar(not ("reforma" in (m.perfil_estadio_de(mio).get("en_obra", []) as Array)), "y se van los andamios")

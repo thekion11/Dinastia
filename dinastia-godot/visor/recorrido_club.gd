@@ -73,6 +73,7 @@ const SALUDOS := {
 	"presidente": "Siéntese. Hablemos de cómo va esto.",
 	"prensa": "La sala está lista. Intente no encender ningún fuego hoy.",
 	"cocinera": "Hoy hay legumbres. Y nadie se levanta sin terminar el plato.",
+	"portero": "Aquí estoy, míster. Nadie entra sin que yo lo vea.",
 }
 
 ## La conversación en persona con alguien del club. `g` es de
@@ -135,6 +136,85 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 	adios.pressed.connect(cerrar)
 	fila.add_child(adios)
 	capa.add_child(panel)
+	return panel
+
+## Lo que cuenta el portero si le preguntas (gente ficticia del club).
+const NOVEDADES_PORTERO := [
+	"Esta mañana vino un periodista preguntando por usted. Le dije que no estaba.",
+	"El jefe de cancha lleva dos horas regando la misma esquina. Algo le pasa con esa esquina.",
+	"Han llegado las camisetas nuevas; el utilero no deja ni mirarlas.",
+	"Anoche se quedó encendida la luz de la sala de vídeo. Ya la apagué yo.",
+	"Un chico del barrio dejó una carta para el capitán. La tengo guardada aquí.",
+	"El de la puerta 7 ya está ahí fuera. Dice que hoy no se mueve hasta el domingo.",
+	"El bus salió a lavar y volvió más sucio. No pregunte.",
+]
+
+## EL PORTERO (8-10-2026): saluda según la hora, sabe si estás sancionado, te
+## cuenta lo que ha visto y, si se lo pides, abre la puerta (gesto + puertas
+## correderas) y te deja pasar: `al_pasar` se llama cuando ya está abierta.
+static func dialogo_portero(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary, desde: Vector3,
+		al_pasar: Callable) -> PanelContainer:
+	personal.atender(g, desde, true)
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	panel.offset_left = -330
+	panel.offset_right = 330
+	panel.offset_top = -270
+	panel.offset_bottom = -110
+	var caja := VBoxContainer.new()
+	caja.add_theme_constant_override("separation", 6)
+	panel.add_child(caja)
+	var t := Label.new()
+	t.text = "%s · %s" % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
+	t.add_theme_font_size_override("font_size", 19)
+	t.add_theme_color_override("font_color", Color(1, 0.9, 0.6))
+	caja.add_child(t)
+	var dice := Label.new()
+	dice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dice.custom_minimum_size = Vector2(620, 0)
+	var h := PersonalEstadio.hora
+	var saludo := "Buenas, míster."
+	if h >= 0.0:
+		saludo = "Buenos días, míster." if h < 13.0 else ("Buenas tardes, míster." if h < 20.5 else "Buenas noches, míster. Aquí sigo de guardia.")
+	var txt := Idiomas.t(saludo)
+	if PersonajeDT.sancionado:
+		txt += " " + Idiomas.t("Ya me enteré de la sanción… Al club puede pasar; al banquillo, el domingo no.")
+	txt += " " + Idiomas.t("¿Le abro?")
+	dice.text = "«%s»" % txt
+	caja.add_child(dice)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	caja.add_child(fila)
+	var cerrar := func() -> void:
+		personal.atender(g, desde, false)
+		panel.queue_free()
+	var ba := Button.new()
+	ba.text = "🚪 " + Idiomas.t("Sí, ábrame, por favor")
+	ba.pressed.connect(func() -> void:
+		ba.disabled = true
+		personal.gesto(g, ["saludo_mano", "saludar_publico", "senalar"])
+		EntradaClub.abrir(capa.get_tree(), true)
+		dice.text = "«%s»" % Idiomas.t("Adelante, míster. Que tenga buena jornada.")
+		var arbol := capa.get_tree()
+		arbol.create_timer(EntradaClub.SEG_ABRIR + 0.2).timeout.connect(func() -> void:
+			personal.atender(g, desde, false)
+			if is_instance_valid(panel):
+				panel.queue_free()
+			al_pasar.call()))
+	fila.add_child(ba)
+	var bn := Button.new()
+	bn.text = "💬 " + Idiomas.t("¿Alguna novedad?")
+	var vez := [absi(String(g["nombre"]).hash())]
+	bn.pressed.connect(func() -> void:
+		vez[0] = int(vez[0]) + 1
+		dice.text = "«%s»" % Idiomas.t(String(NOVEDADES_PORTERO[int(vez[0]) % NOVEDADES_PORTERO.size()])))
+	fila.add_child(bn)
+	var adios := Button.new()
+	adios.text = Idiomas.t("Adiós")
+	adios.pressed.connect(cerrar)
+	fila.add_child(adios)
+	capa.add_child(panel)
+	ba.grab_focus()
 	return panel
 
 ## UNA BUTACA DE LA GRADA (estadio 2.0, fase 3): en la primera bandeja de la
