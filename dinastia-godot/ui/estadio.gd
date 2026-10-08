@@ -146,6 +146,8 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## es un lujo y esto es lo que tiene que verse.
 	_raiz3d = Node3D.new()
 	add_child(_raiz3d)
+	## Fuera de la ciudad no se sabe la hora: la gente del club está siempre.
+	PersonalEstadio.hora = -1.0
 
 	var perfil := perfil_forzado if not perfil_forzado.is_empty() else club.perfil_estadio()
 	_perfil = perfil

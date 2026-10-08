@@ -196,6 +196,11 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 
 	_vestuario(nodo, x0, z_out, z_fin, c1, c2, pared, suelo, techo, luz, horm, nombre, mi)
 	EdificioClub.montar(nodo, x0, z_out, z_fin, c1, c2, horm, luz, nombre)
+	## La gente del club, cada uno en su puesto (solo en el estadio propio).
+	if mi == null or mi.id == PersonajeDT.club_usuario:
+		var personal := PersonalEstadio.new()
+		personal.preparar(d, c1, c2)
+		nodo.add_child(personal)
 
 static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: Color, c2: Color,
 		pared: StandardMaterial3D, suelo: StandardMaterial3D, techo: StandardMaterial3D,

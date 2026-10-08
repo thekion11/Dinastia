@@ -29,13 +29,16 @@ const ASC_X1 := -2.2
 ## {inst: {clave: nivel}, dentro: {vestuario, sala_prensa, palco},
 ##  plantilla: [[dorsal, nombre]], titulos: int, presidente: String}
 static var ctx: Dictionary = {}
+## El mundo, para hablar con la gente en persona (`Gente.charlar`, la junta…).
+## Débil: el edificio no debe sujetar la partida en memoria.
+static var mundo_ref: WeakRef
 
 ## [planta, nombre corto, [[sala, x0 relativo, x1 relativo], ...]]
 const PLANTAS := [
 	[-2, "Estacionamiento", [["Estacionamiento", -8.0, 3.0], ["Cuarto de máquinas", 3.0, 8.0]]],
 	[-1, "Utilería y enfermería", [["Utilería", -8.0, -3.0], ["Enfermería", -3.0, 2.5], ["Vestuario visitante", 2.5, 8.0]]],
 	[1, "Oficinas", [["Oficina del DT", -8.0, -2.0], ["Despacho del presidente", -2.0, 3.0], ["Sala de vídeo", 3.0, 8.0]]],
-	[2, "Prensa y museo", [["Sala de prensa", -8.0, 1.5], ["Museo del club", 1.5, 8.0]]],
+	[2, "Prensa, comedor y museo", [["Sala de prensa", -8.0, -0.5], ["Comedor del plantel", -0.5, 3.5], ["Museo del club", 3.5, 8.0]]],
 ]
 
 static func nombre_planta(p: int) -> String:
@@ -173,7 +176,7 @@ static func _suelo_de(sala: String) -> Color:
 			return Color(0.42, 0.44, 0.46)
 		"Enfermería":
 			return Color(0.78, 0.86, 0.88)
-		"Oficina del DT", "Despacho del presidente", "Museo del club":
+		"Oficina del DT", "Despacho del presidente", "Museo del club", "Comedor del plantel":
 			return Color(0.55, 0.38, 0.24)
 		"Sala de vídeo", "Sala de prensa":
 			return Color(0.25, 0.27, 0.33)
@@ -316,6 +319,17 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			if tipo == "television":
 				for k in 3:
 					TunelVestuario._caja(nodo, Vector3(caja.position.x + 1.5 + k * 2.2, y0 + 1.5, caja.end.y - 0.5), Vector3(0.4, 0.3, 0.6), oscuro, false)
+		"Comedor del plantel":
+			## Mesa larga con sillas, la barra con la comida y la campana.
+			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.75, cz + 0.4), Vector3(1.0, 0.08, caja.size.y - 2.4), madera, true)
+			for k in int((caja.size.y - 2.6) / 0.8):
+				for lado in [-1.0, 1.0]:
+					TunelVestuario._caja(nodo, Vector3(cx + lado * 0.75, y0 + 0.45, caja.position.y + 1.6 + k * 0.8), Vector3(0.45, 0.9, 0.45), club, false)
+			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.5, caja.position.y + 0.4), Vector3(caja.size.x - 0.4, 1.0, 0.6), Texturas.metal(Color(0.75, 0.77, 0.8), 0.35), true)
+			for k in 4:
+				TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.6 + k * (caja.size.x - 1.2) / 3.0, y0 + 1.05, caja.position.y + 0.4),
+					Vector3(0.45, 0.1, 0.35), TunelVestuario._mat([Color(0.9, 0.6, 0.2), Color(0.3, 0.6, 0.25), Color(0.85, 0.85, 0.75), Color(0.7, 0.2, 0.15)][k], 0.8), false)
+			TunelVestuario._caja(nodo, Vector3(cx, y0 + 2.7, caja.position.y + 0.4), Vector3(caja.size.x - 0.6, 0.5, 0.7), Texturas.metal(Color(0.6, 0.62, 0.65), 0.4), false)
 		"Museo del club":
 			## Vitrinas con una copa por título (hasta 12) y la camiseta histórica.
 			var vitrinas := clampi(2 + nivel("museo") / 2, 2, 6)

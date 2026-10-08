@@ -434,6 +434,13 @@ func _unhandled_input(ev: InputEvent) -> void:
 
 func _usar() -> void:
 	if estado == "estadio":
+		if is_instance_valid(_menu_asc):
+			return
+		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		var g: Dictionary = pe.cercano(cuerpo.position - CityBuilder.ESTADIO_EN, _planta) if pe != null else {}
+		if not g.is_empty():
+			_menu_asc = RecorridoClub.dialogo(_capa, pe, g, cuerpo.position - CityBuilder.ESTADIO_EN)
+			return
 		if _zona_est == "Acceso":
 			_salir_del_estadio()
 		elif _zona_est == "Ascensor" and not is_instance_valid(_menu_asc):
@@ -532,7 +539,12 @@ func _mover_en_estadio(delta: float) -> void:
 	_animar_dt(vel)
 	var z := TunelVestuario.zona_en(zonas, cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
 	var nombre := String(z.get("nombre", ""))
-	if nombre != _zona_est:
+	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	var g: Dictionary = pe.cercano(cuerpo.position - CityBuilder.ESTADIO_EN, _planta) if pe != null else {}
+	if not g.is_empty():
+		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
+		_zona_est = nombre
+	elif nombre != _zona_est or _aviso.text.begins_with("E: hablar"):
 		_zona_est = nombre
 		_aviso.text = RecorridoClub.aviso_de(nombre)
 	_hud.text = "📍 %s · %s %d · %s\n🚶 %s" % [Idiomas.t(nombre), Idiomas.t("Planta"), _planta, str(cb.datos.get("club", {}).get("estadioNom", "Estadio")),
