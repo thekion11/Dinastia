@@ -2618,6 +2618,7 @@ func _dirigir() -> void:
 	## Lo de la PANTALLA GIGANTE va antes de `abrir()`: `PartidoVivo` abre el
 	## visor 3D de entrada, así que asignarlo después llegaría tarde.
 	vivo.datos_pantalla = _datos_pantalla_estadio(p.local, "copa" if es_copa else ("conti" if conti != null else "liga"))
+	_fundido_entrada()
 	vivo.abrir(p, mundo.mi_club(), mundo.vestuario, es_eliminatoria, mundo.roles,
 		_velocidad_partido, _perfil_con_clima(p),
 		Comercial.color_balon(mundo.comercial.balon, mundo.mi_club()))
@@ -4557,7 +4558,26 @@ var _propuesta_estadio: Dictionary = {}
 ## sí mismo. La ocupación de las gradas es la de verdad -la misma cuenta que
 ## usa el partido en vivo-, no un número fijo: un estadio medio vacío tiene
 ## que verse medio vacío también aquí.
+## FUNDIDO DE ENTRADA (etapa 1, 8-10-2026): al abrir una escena 3D grande
+## (ciudad, estadio, partido) la pantalla saltaba de golpe del menú al 3D, a
+## veces con un fotograma a medio construir. Un velo negro por encima de todo
+## que se aclara en medio segundo.
+func _fundido_entrada() -> void:
+	var capa := CanvasLayer.new()
+	capa.layer = 120
+	get_tree().root.add_child(capa)
+	var velo := ColorRect.new()
+	velo.color = Color.BLACK
+	velo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	velo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	capa.add_child(velo)
+	var tw := velo.create_tween()
+	tw.tween_interval(0.12)
+	tw.tween_property(velo, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(capa.queue_free)
+
 func _ver_estadio_propio() -> void:
+	_fundido_entrada()
 	var c := mundo.mi_club()
 	if c == null:
 		return
@@ -4955,6 +4975,7 @@ func _idolo_del_club(c: Club) -> String:
 	return mejor.nombre if mejor != null else ""
 
 func _ver_ciudad_propia() -> void:
+	_fundido_entrada()
 	var c := mundo.mi_club()
 	if c == null or mundo.obras == null:
 		return
