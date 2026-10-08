@@ -75,8 +75,11 @@ func _ready() -> void:
 		semilla += 7
 		var et := Label3D.new()
 		et.text = "%s\n%s" % [nombre, Idiomas.t(puesto)]
-		et.font_size = 30
-		et.pixel_size = 0.004
+		## Pequeño: el personal se cruza a un metro de la cámara y a 0,004 su
+		## nombre tapaba media pantalla (etapa 1).
+		et.font_size = 26
+		et.pixel_size = 0.0022
+		et.visibility_range_end = 14.0
 		et.outline_size = 6
 		et.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 		et.position = Vector3(0, 2.15, 0)
