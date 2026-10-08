@@ -159,8 +159,12 @@ func build(d: Dictionary) -> void:
 	_despejar_vestuario(self)
 	## Etapa 3: primitivas con el detalle justo y butacas livianas (el estadio
 	## se ve de lejos; al entrar a pie vuelven las buenas).
-	Optimizar.primitivas(self)
-	Optimizar.butacas_livianas(self, true)
+	## (SIN_OPTIMIZAR=1 lo apaga, para comparar capturas antes/después.)
+	if OS.get_environment("SIN_OPTIMIZAR") == "":
+		Optimizar.primitivas(self)
+		Optimizar.butacas_livianas(self, true)
+		Optimizar.distancias(self)
+		Optimizar.agrupar(self)
 
 ## `noche` va de 0 (pleno día) a 1 (noche cerrada). Lo llama el ciclo del sol
 ## de `VistaCiudad` en cada fotograma. Las farolas se encienden con la luz, y
@@ -661,6 +665,9 @@ func _estadio() -> void:
 		## butacas del club, que es lo que lo hace reconocible desde arriba.
 		## Con la galería subterránea (2.0, fase 6) la puerta del sótano queda abierta.
 		GaleriaClub.en_ciudad = true
+		## El estadio es lo que se mira en el mapa: sin cortes por distancia
+		## (si no, los jugadores del campo desaparecían desde la vista aérea).
+		nodo.set_meta("sin_corte", true)
 		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, semilla, club_obj)
 		GaleriaClub.en_ciudad = false
 		huellas.append(Rect2(ESTADIO_EN.x - 62.0, ESTADIO_EN.z - 80.0, 124.0, 160.0))

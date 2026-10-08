@@ -50,6 +50,8 @@ func _process(_d: float) -> void:
 		_m.append(_muestra())
 	if _n == 71:
 		_res["aerea"] = _media(_m)
+		if OS.get_environment("DETALLE") != "":
+			_detalle()
 		_m.clear()
 		_v.explorar("pie")
 		var e: ExploradorCiudad = _v.get("_explorador")
@@ -60,3 +62,21 @@ func _process(_d: float) -> void:
 		_res["a_pie"] = _media(_m)
 		print("MEDIDA_CIUDAD ", JSON.stringify(_res))
 		get_tree().quit()
+
+## Con DETALLE=1: qué piezas sueltas (sin distancia de corte) pesan más, por
+## el nombre del nodo padre. Sirve para elegir dónde atacar.
+func _detalle() -> void:
+	var grupos := {}
+	for n in _v.find_children("*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		if not g.is_visible_in_tree() or g.visibility_range_end > 0.0:
+			continue
+		var nom := ""
+		if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
+			nom = (g as MeshInstance3D).mesh.resource_name
+		var clave := String(g.get_parent().name).rstrip("0123456789@") + "/" + g.get_class() + " " + nom + " d=" + str(snappedf(Optimizar._diagonal(g), 5.0))
+		grupos[clave] = int(grupos.get(clave, 0)) + 1
+	var orden := grupos.keys()
+	orden.sort_custom(func(a, b): return grupos[a] > grupos[b])
+	for k in orden.slice(0, 30):
+		print("DETALLE ", grupos[k], "  ", k)
