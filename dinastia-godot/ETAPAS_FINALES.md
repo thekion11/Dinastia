@@ -112,8 +112,8 @@ balón conserva la energía) y con capturas o vídeo de movimiento.
 
 | Etapa | Estado |
 |---|---|
-| 1 · Ultra pulido | en curso |
-| 2 · Texturas y personajes | pendiente |
+| 1 · Ultra pulido | **hecha (8-10)** · hoja `pruebas/capturas/etapa1_resumen.png` |
+| 2 · Texturas y personajes | en curso |
 | 3 · Optimización | pendiente |
 | 4 · Realismo visual | pendiente |
 | 5 · Física y movimiento | pendiente |
