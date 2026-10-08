@@ -945,7 +945,17 @@ const NOMBRE_BANDEJA := {0: "sur", 1: "norte", 2: "este", 3: "oeste"}
 ## `mi` (16-9-2026, Fase 2 "Componentes"): igual que en `build_pitch()`,
 ## opcional y solo para el escudo en grada/fachada/techo -`null` no cambia
 ## nada respecto a antes de esta fase.
+## Cronómetro de la construcción (etapa 3): con TIEMPOS=1 imprime cada parte.
+static var _t_tm := 0
+static func _tm(que: String) -> void:
+	if CityBuilder._medir_tiempos:
+		var ahora := Time.get_ticks_usec()
+		if que != "":
+			print("TIEMPO estadio.%-16s %6.0f ms" % [que, (ahora - _t_tm) / 1000.0])
+		_t_tm = ahora
+
 static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: float, seed_val: int, mi: Club = null) -> void:
+	_tm("")
 	_explanada_de_fondo(root)
 	var forma := str(est.get("forma", "cuenco"))
 	var g := geom_de_forma(forma)
@@ -1000,6 +1010,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	# corre hacia afuera a medida que se le suman bandejas (ver
 	# `centro_tribuna()`). La cara que da al cesped se queda siempre en el mismo
 	# sitio, que es lo que importa para la cancha y las camaras.
+	_tm("textura_grada")
 	var fondo_trib := fondo_tribuna(niveles)
 	var cz := centro_tribuna(dz, niveles)
 	var cx := centro_tribuna(dx, niveles)
@@ -1292,6 +1303,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## -"herradura"- se quitaban LAS CUATRO esquinas, incluidas las dos del
 	## extremo CERRADO, donde las dos tribunas vecinas si existen y el hueco
 	## entre ellas queda a la vista. Ahora se decide esquina por esquina.
+	_tm("tribunas")
 	if bool(g["esquinas"]):
 		var esquina_mat := StandardMaterial3D.new()
 		esquina_mat.albedo_texture = _make_stand_texture(
@@ -1324,6 +1336,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 					techo in ["anillo", "total", "membrana", "retractil"])
 
 	# vallas perimetrales, siempre por dentro de la cara interior de la tribuna
+	_tm("esquinas")
 	if bool(est.get("vallas", true)):
 		## Metal de verdad (17-9-2026, ronda 5): es literalmente una malla/reja
 		## perimetral, el material menos "plastico" posible para esto.
@@ -1340,22 +1353,32 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## el mismo patrón que este proyecto ya persiguió dos veces en `nucleo/`:
 	## cosas que EXISTEN en el catálogo, se cobran, y no las mira nadie. En el
 	## visor había cuatro, y una de ellas es el capítulo MÁS CARO del diseñador.
+	_tm("vallas")
 	_pista_atletismo(root, est, dx, dz)
 	## El túnel de verdad: pasillo, cubierta del hueco y vestuario.
+	_tm("pista")
 	TunelVestuario.montar(root, est, niveles, mi)
+	_tm("tunel")
 	_banderas(root, est, dx, dz, alto, niveles, mi)
 	## LOS GUIÑOS DEL ESTADIO REAL (MEGAPLAN fase 4, E9): lo que dice su rasgo.
+	_tm("banderas")
 	GuinosEstadio.montar(root, est, dx, dz, fondo_tribuna(niveles), alto)
+	_tm("guinos")
 	_focos(root, str(est.get("focos", "torres")), dx, dz, alto, color_luz(est), str(est.get("focosCol", "")))
 	## B6.2: lo que hay FUERA del recinto: taquillas, tienda y estacionamiento.
+	_tm("focos")
 	if bool(est.get("exterior", false)):
 		_exterior(root, est, dx, dz, niveles, mi)
+	_tm("exterior")
 	_pantallas(root, str(est.get("pantalla", "dos")), dz, alto, est, mi, abierta, abiertas)
+	_tm("pantallas")
 	if mi != null:
 		_escudo_tribuna(root, mi, str(est.get("escudoDonde", "sin")), dx, dz, alto)
 	## Obras con andamios y grúa, palcos, prensa, museo, tienda y la mascota
 	## (26-9-2026, `EstadioExtras`).
+	_tm("club")
 	EstadioExtras.construir(root, est, dx, dz, alto, niveles, mi)
+	_tm("extras")
 
 ## LA ESQUINA, COMO GRADA DE VERDAD (23-9-2026).
 ##
