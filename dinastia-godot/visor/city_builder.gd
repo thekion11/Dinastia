@@ -105,6 +105,16 @@ var _rotulos: Node3D
 var _farolas_luz: Array[OmniLight3D] = []
 var _ventanas_mat: Array[StandardMaterial3D] = []
 
+## CRONÓMETRO DE LA CONSTRUCCIÓN (etapa 3): con TIEMPOS=1 imprime lo que tarda
+## cada parte. Sirve para saber qué conviene aligerar o repartir.
+var _t_marca := 0
+static var _medir_tiempos := OS.get_environment("TIEMPOS") != ""
+func _marca(que: String) -> void:
+	if _medir_tiempos:
+		var ahora := Time.get_ticks_usec()
+		print("TIEMPO %-24s %6.0f ms" % [que, (ahora - _t_marca) / 1000.0])
+		_t_marca = ahora
+
 func build(d: Dictionary) -> void:
 	datos = d
 	## La ciudad vieja se quita YA, no al final del cuadro: con `queue_free` las
@@ -126,35 +136,59 @@ func build(d: Dictionary) -> void:
 	_anillo_con_banderas = false
 	_luminarias.clear()
 	_luz_color = _color_luces()
+	_t_marca = Time.get_ticks_usec()
 
 	_suelo()
+	_marca("_suelo")
 	_calles()
+	_marca("_calles")
 	_estadio()
+	_marca("_estadio")
 	_campos()
+	_marca("_campos")
 	_complejo()
+	_marca("_complejo")
 	_huerto()
+	_marca("_huerto")
 	_piscina_olimpica()
+	_marca("_piscina_olimpica")
 	_polideportivo()
+	_marca("_polideportivo")
 	_canchas_secundarias()
+	_marca("_canchas_secundarias")
 	_aparcamiento()
+	_marca("_aparcamiento")
 	_paradas_bus()
+	_marca("_paradas_bus")
 	_perimetro()
+	_marca("_perimetro")
 	_parcelas()
+	_marca("_parcelas")
 	_barrio_residencial()
+	_marca("_barrio_residencial")
 	_frentes_urbanos()
+	_marca("_frentes_urbanos")
 	## LA CIUDAD GRANDE (7-10-2026): sustituye a los tres distritos sueltos de
 	## la pasada anterior por una ciudad entera con su red vial.
 	expansion = CiudadExpansion.new(self)
 	expansion.construir()
+	_marca("expansion.construir")
 	_karting()
+	_marca("_karting")
 	_arbolado()
+	_marca("_arbolado")
 	_horizonte()
+	_marca("_horizonte")
 	_trafico()
+	_marca("_trafico")
 	## B7: el día de partido, el ánimo del barrio y los rótulos flotantes.
 	if bool(datos.get("dia_partido", false)):
 		_dia_de_partido()
+		_marca("_dia_de_partido")
 	_animo_del_club()
+	_marca("_animo_del_club")
 	_rotulo_barrio()
+	_marca("_rotulo_barrio")
 	add_child(_rotulos)
 	_despejar_vestuario(self)
 	## Etapa 3: primitivas con el detalle justo y butacas livianas (el estadio
@@ -164,7 +198,13 @@ func build(d: Dictionary) -> void:
 		Optimizar.primitivas(self)
 		Optimizar.butacas_livianas(self, true)
 		Optimizar.distancias(self)
+		_marca("despejar")
+		Optimizar.primitivas(self)
+		Optimizar.butacas_livianas(self, true)
+		Optimizar.distancias(self)
+		_marca("opt_distancias")
 		Optimizar.agrupar(self)
+		_marca("opt_agrupar")
 
 ## `noche` va de 0 (pleno día) a 1 (noche cerrada). Lo llama el ciclo del sol
 ## de `VistaCiudad` en cada fotograma. Las farolas se encienden con la luz, y
