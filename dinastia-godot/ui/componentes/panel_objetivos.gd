@@ -51,7 +51,7 @@ static func _pantalla_estrecha(principal: Node) -> bool:
 
 static func _leer(clave: String, defecto: Variant) -> Variant:
 	var c := ConfigFile.new()
-	if c.load(ruta) != OK:
+	if c.load(ruta) != OK or not c.has_section_key(SECCION, clave):
 		return defecto
 	return c.get_value(SECCION, clave, defecto)
 

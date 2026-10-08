@@ -524,6 +524,13 @@ void fragment() {
 		camiseta = manga ? (familia >= 0 ? C(0) : color1.rgb) : camiseta;
 	}
 
+	// LAS MANOS SON PIEL (etapa 2, 8-10-2026): con manga larga (traje,
+	// abrigo, chándal) la manga o el puño de la camisa se comían la mano y el
+	// DT llevaba «guantes blancos». Los guantes de verdad van como accesorio.
+	if (abs(x) >= 0.765 && y > 1.22) {
+		m = vec4(0.0);
+	}
+
 	// LOS PIES CALZADOS (C2): botín por debajo del tobillo, media hasta la
 	// rodilla.
 	if (cubierta && !manga && y < 0.115) {
@@ -666,8 +673,14 @@ void fragment() {
 	rugo = mix(rugo, 0.55, m.g);
 	rugo = mix(rugo, 0.88, m.b);
 	rugo = mix(rugo, 0.28, m.a);
+	// Ropa de calle (traje, abrigo, polo): lana y algodón son MATES. Con la
+	// rugosidad de la camiseta de poliéster el traje brillaba como látex y
+	// marcaba el músculo (etapa 2). Los zapatos (m.a) siguen brillando.
+	if (civil) {
+		rugo = mix(rugo, 0.86, tela * (1.0 - m.a));
+	}
 	ROUGHNESS = rugo + punto * 0.05 * tela;
-	SPECULAR = mix(0.45, 0.55, clamp(es_camiseta + m.g + m.a, 0.0, 1.0));
+	SPECULAR = civil ? mix(0.3, 0.5, m.a) : mix(0.45, 0.55, clamp(es_camiseta + m.g + m.a, 0.0, 1.0));
 	vec3 nm = usa_normal ? texture(normal_tex, UV).rgb : vec3(0.5, 0.5, 1.0);
 	// Micro relieve del tejido sobre el relieve del cuerpo.
 	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * 0.045 * tela * nitidez;

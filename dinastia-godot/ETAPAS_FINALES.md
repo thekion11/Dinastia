@@ -160,3 +160,10 @@ Recorrido TOTAL de la interfaz (`pruebas/captura_recorrido_total.tscn`: principa
       parten y desplazamiento horizontal dentro de la hoja.
 - [x] Fondo de «Mi carrera»: manchas amarillas → hilos de luz finos.
 - [x] (Pedido 8-10: «había más fondos, faltan para la transición») Los 24 fondos de pantalla completa (`Fondo.NOMBRES`) también rotan: detrás de toda la página de inicio, cada 30 s a destiempo de la portada (las 18 portadas siguen en la franja).
+
+### Etapa 2 · avance (8-10)
+- [x] Tela con relieve de pliegues (la luz los marca) y trama sin muaré de lejos.
+- [x] Manos siempre de piel (con manga larga parecían guantes blancos).
+- [x] Creador de personaje sobreexpuesto (piel clara quemada a blanco): luces
+      más suaves, ACES y exposición 0,95.
+- [x] Ropa de calle MATE (traje/abrigo/polo): parecía látex brillante.
