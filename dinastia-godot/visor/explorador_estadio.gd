@@ -220,6 +220,8 @@ func _rotulos() -> void:
 	elif nombre != _zona_actual:
 		_zona_actual = nombre
 		_aviso.text = RecorridoClub.aviso_de(nombre, club_nombre)
+		if RecorridoClub.sala_decorable(nombre):
+			_aviso.text += "  ·  " + Idiomas.t("E: decorar")
 		if nombre == "Banda" and not _rugido_hecho:
 			_rugido_hecho = true
 			Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
@@ -281,6 +283,8 @@ func usar() -> void:
 		return
 	if _zona_actual == "Ascensor":
 		_menu = RecorridoClub.menu_ascensor(_capa, planta, ir_a_planta)
+	elif RecorridoClub.sala_decorable(_zona_actual):
+		_menu = RecorridoClub.panel_decorar(_capa, get_tree(), _zona_actual)
 
 func _personal() -> PersonalEstadio:
 	return get_tree().get_first_node_in_group("personal_club") as PersonalEstadio

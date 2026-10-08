@@ -3077,7 +3077,9 @@ func _contexto_edificio(c: Club) -> Dictionary:
 		pres = String(mundo.junta.presidente.get("nombre", ""))
 	return {"inst": mundo.obras.niveles.duplicate() if mundo.obras != null else {}, "dentro": dentro,
 		"plantilla": pl, "titulos": titulos, "presidente": pres,
-		"gente": mundo.gente.fichas.duplicate(true) if mundo.gente != null else {}}
+		"gente": mundo.gente.fichas.duplicate(true) if mundo.gente != null else {},
+		## Por referencia: lo que decores en el 3D se guarda en la partida.
+		"interiores": mundo.interiores}
 
 func _refrescar() -> void:
 	var c := mundo.mi_club()

@@ -130,6 +130,7 @@ func _ready() -> void:
 	_probar_edificio_club()
 	_probar_personal_estadio()
 	_probar_sancion_dt()
+	_probar_interiores_club()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -7808,3 +7809,37 @@ func _probar_sancion_dt() -> void:
 	var b := RecorridoClub.butaca({"forma": "cuenco"}, 1.0, 10.0)
 	_comprobar((b["pos"] as Vector3).x > 43.5 and (b["pos"] as Vector3).y > 2.0, "la butaca está en la primera bandeja de la grada")
 	_comprobar(RecorridoClub.junto_a_la_grada(Vector3(35, 0, 0), 0) and not RecorridoClub.junto_a_la_grada(Vector3(0, 0, 0), 0), "solo se sienta uno desde la banda")
+
+func _probar_interiores_club() -> void:
+	_titulo("ESTADIO 2.0: DECORAR LAS SALAS")
+	var it := InterioresClub.new()
+	it.pintar("Oficina del DT", "pared", "1f3f6b")
+	_comprobar(it.poner("Oficina del DT", "bufanda"), "en tu oficina caben tus objetos propios")
+	_comprobar(not it.poner("Sala de prensa", "bufanda"), "tu bufanda no va a la sala de prensa")
+	for k in 6:
+		it.poner("Museo del club", "planta")
+	_comprobar(not it.poner("Museo del club", "sofa"), "seis huecos por sala, ni uno más")
+	it.quitar_ultima("Museo del club")
+	_comprobar((it.sala("Museo del club")["deco"] as Array).count("planta") == 5, "se quita el último objeto")
+	it.colgar("Oficina del DT", "user://fotos/foto_x.png")
+	var m := Mundo.new()
+	m.generar(["CHI"], 616)
+	m.interiores = it
+	var m2 := Mundo.new()
+	m2.generar(["CHI"], 616)
+	m2.interiores.desde_dic(m.interiores.a_dic())
+	_comprobar(String(m2.interiores.sala("Oficina del DT")["pared"]) == "1f3f6b" and (m2.interiores.sala("Oficina del DT")["fotos"] as Array).has("user://fotos/foto_x.png"),
+		"la decoración y las fotos se guardan con la partida")
+	## El edificio la pinta: con decoración hay más piezas que sin ella.
+	EdificioClub.ctx = {"interiores": InterioresClub.new()}
+	var r1 := Node3D.new()
+	EdificioClub.montar(r1, 0.0, 70.0, 83.0, Color.RED, Color.WHITE, StandardMaterial3D.new(), StandardMaterial3D.new(), "X")
+	var antes := r1.find_children("*", "MeshInstance3D", true, false).size()
+	EdificioClub.ctx = {"interiores": it}
+	var r2 := Node3D.new()
+	EdificioClub.montar(r2, 0.0, 70.0, 83.0, Color.RED, Color.WHITE, StandardMaterial3D.new(), StandardMaterial3D.new(), "X")
+	var despues := r2.find_children("*", "MeshInstance3D", true, false).size()
+	_comprobar(despues > antes, "el edificio pinta la decoración (%d → %d piezas)" % [antes, despues])
+	r1.free()
+	r2.free()
+	EdificioClub.ctx = {}
