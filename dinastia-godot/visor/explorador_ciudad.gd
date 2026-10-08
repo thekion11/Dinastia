@@ -64,6 +64,10 @@ var _est: Dictionary = {}
 var _zona_est := ""
 var _planta := 0
 var _menu_asc: PanelContainer
+var _sentado := false
+var _hinchas_quitados: Array = []
+var _de_pie := Vector3.ZERO
+var _mirada := 0.0
 var _t_sacudida := 0.0
 
 const FRASES := {
@@ -436,6 +440,28 @@ func _usar() -> void:
 	if estado == "estadio":
 		if is_instance_valid(_menu_asc):
 			return
+		var loc := cuerpo.position - CityBuilder.ESTADIO_EN
+		if _sentado:
+			_sentado = false
+			cuerpo.visible = true
+			RecorridoClub.devolver_hinchas(_hinchas_quitados)
+			_hinchas_quitados = []
+			cuerpo.position = _de_pie
+			_aviso.text = ""
+			_zona_est = "?"
+			return
+		if RecorridoClub.junto_a_la_grada(loc, _planta):
+			var b := RecorridoClub.butaca(cb.datos.get("perfil_estadio", {}), signf(loc.x), loc.z)
+			_de_pie = cuerpo.position
+			cuerpo.position = CityBuilder.ESTADIO_EN + (b["pos"] as Vector3)
+			rumbo = float(b["rumbo"])
+			cuerpo.rotation.y = rumbo
+			_mirada = 0.0
+			_sentado = true
+			cuerpo.visible = false
+			_hinchas_quitados = RecorridoClub.despejar_hinchas(cb, cuerpo.global_position + Vector3(0, 0.5, 0))
+			_aviso.text = Idiomas.t("En la grada. A/D: mirar alrededor · E: levantarse")
+			return
 		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
 		var g: Dictionary = pe.cercano(cuerpo.position - CityBuilder.ESTADIO_EN, _planta) if pe != null else {}
 		if not g.is_empty():
@@ -520,6 +546,12 @@ func _salir_del_estadio() -> void:
 ## túnel, banda, campo y la puerta). Salir por la puerta devuelve a la calle.
 func _mover_en_estadio(delta: float) -> void:
 	var e := _entrada()
+	if _sentado:
+		_mirada = clampf(_mirada - e.x * delta * 1.4, -1.2, 1.2)
+		var dir := Vector3(sin(rumbo + _mirada), 0, cos(rumbo + _mirada))
+		camara.position = cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * 0.1
+		camara.look_at(camara.position + dir * 10.0 + Vector3(0, -1.6, 0), Vector3.UP)
+		return
 	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 	vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 	rumbo -= e.x * delta * 2.6
@@ -544,6 +576,9 @@ func _mover_en_estadio(delta: float) -> void:
 	if not g.is_empty():
 		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
 		_zona_est = nombre
+	elif RecorridoClub.junto_a_la_grada(cuerpo.position - CityBuilder.ESTADIO_EN, _planta):
+		_aviso.text = Idiomas.t("E: sentarse en la grada")
+		_zona_est = "·grada"
 	elif nombre != _zona_est or _aviso.text.begins_with("E: hablar"):
 		_zona_est = nombre
 		_aviso.text = RecorridoClub.aviso_de(nombre)
