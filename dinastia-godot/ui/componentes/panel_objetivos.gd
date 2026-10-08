@@ -23,6 +23,7 @@ var _cuerpo: VBoxContainer
 var _lista: VBoxContainer
 var _pestana: Button
 var _plegado := false
+var _pendientes := 0
 var _t := 0.0
 ## MOVIBLE (29-9-2026, pedido del usuario): se arrastra desde cualquier parte
 ## que no sea un botón, y recuerda dónde lo dejaste.
@@ -35,7 +36,7 @@ static func crear(principal: Node, modo: String) -> PanelObjetivos:
 	p._modo = modo
 	## Sin preferencia guardada: en pantallas estrechas (1280x720) arranca
 	## plegado; desplegado tapaba la ficha del jugador (MEGAPLAN fase 1).
-	var guardado: Variant = _leer("plegado", null)
+	var guardado: Variant = _leer("plegado_v2", null)
 	p._plegado = bool(guardado) if guardado != null else _pantalla_estrecha(principal)
 	p._montar()
 	return p
@@ -43,7 +44,10 @@ static func crear(principal: Node, modo: String) -> PanelObjetivos:
 static func _pantalla_estrecha(principal: Node) -> bool:
 	if principal == null or not principal.is_inside_tree():
 		return false
-	return principal.get_viewport().get_visible_rect().size.x < 1500.0
+	## 1900 y no 1500 (etapa 1, 2.ª pasada): a 1600x900 desplegado seguía
+	## tapando la ficha del jugador en TODAS las pestañas. Plegado, la pestaña
+	## dice cuántos objetivos quedan.
+	return principal.get_viewport().get_visible_rect().size.x < 1900.0
 
 static func _leer(clave: String, defecto: Variant) -> Variant:
 	var c := ConfigFile.new()
@@ -117,7 +121,7 @@ func _montar() -> void:
 	_pestana.tooltip_text = "Mostrar u ocultar los objetivos"
 	_pestana.pressed.connect(func() -> void:
 		_plegado = not _plegado
-		_escribir("plegado", _plegado)
+		_escribir("plegado_v2", _plegado)
 		_aplicar_plegado())
 	h.add_child(_pestana)
 	_cuerpo = VBoxContainer.new()
@@ -173,7 +177,7 @@ func _al_arrastrar(e: InputEvent) -> void:
 
 func _aplicar_plegado() -> void:
 	_cuerpo.visible = not _plegado
-	_pestana.text = "🎯\n◂" if _plegado else "▸"
+	_pestana.text = ("🎯\n%d\n◂" % _pendientes) if (_plegado and _pendientes > 0) else ("🎯\n◂" if _plegado else "▸")
 	reset_size()
 	## Sin posición elegida por el usuario: plegado va abajo a la derecha (en
 	## el medio tapaba los números de la ficha del jugador); desplegado, al
@@ -208,6 +212,9 @@ func refrescar() -> void:
 		l.custom_minimum_size = Vector2(ANCHO, 0)
 		_lista.add_child(l)
 	_pestana.tooltip_text = "Objetivos (%d pendientes)" % pendientes
+	_pendientes = pendientes
+	if _plegado:
+		_pestana.text = ("🎯\n%d\n◂" % _pendientes) if _pendientes > 0 else "🎯\n◂"
 	reset_size()
 
 ## Las misiones del mentor se cumplen haciéndolas, con o sin tutorial abierto:
