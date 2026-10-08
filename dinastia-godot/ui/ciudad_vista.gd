@@ -414,7 +414,7 @@ func _aplicar_hora() -> void:
 		## propio no da luz ambiente: lo que queda a la sombra -la espalda de la
 		## grada, la copa de los árboles- salía NEGRO a mediodía. Ahí la luz
 		## ambiente va como color, el del cielo de esa hora.
-		if RenderingServer.get_current_rendering_method() == "gl_compatibility":
+		if Calidad.es_compatibilidad():
 			_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 			_env.ambient_light_color = Color(0.16, 0.18, 0.26).lerp(Color(0.62, 0.68, 0.74), dia)
 		if _env.fog_enabled:

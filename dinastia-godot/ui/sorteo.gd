@@ -128,7 +128,8 @@ func _construir() -> void:
 	vp.own_world_3d = true
 	vp.transparent_bg = false
 	vp.msaa_3d = Viewport.MSAA_4X
-	vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
+	if not Calidad.es_compatibilidad():
+		vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 	## UPDATE_ALWAYS y no el "cuando sea visible" por defecto: la física de las
 	## bolas y el barrido de los focos tienen que correr aunque el contenedor
 	## todavía no haya terminado de colocarse, o el primer segundo sale negro.

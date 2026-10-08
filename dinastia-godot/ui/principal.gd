@@ -450,6 +450,18 @@ func _avanzar_dia() -> void:
 var _ficha: VBoxContainer
 var _registro: RichTextLabel
 
+## AL CERRAR (etapa 1, 8-10-2026): las referencias estáticas a la partida
+## (el contexto del edificio del club, la Carrera de Jugador, el último mundo)
+## sobrevivían al cierre y el motor avisaba de objetos sin liberar.
+func _exit_tree() -> void:
+	EdificioClub.ctx = {}
+	EdificioClub.mundo_ref = null
+	CarreraJugadorUI.mundo = null
+	Trabajadores.actual = null
+	Partido.ctx_medico = null
+	mundo_a_cargar = null
+	mundo_pregenerado = null
+
 func _ready() -> void:
 	## El mando se prepara ANTES de construir la interfaz: las acciones `ui_*`
 	## tienen que existir cuando aparezca el primer boton para que el foco se
