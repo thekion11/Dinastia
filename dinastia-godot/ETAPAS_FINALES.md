@@ -141,3 +141,7 @@ balón conserva la energía) y con capturas o vídeo de movimiento.
       botones; ahora van detrás del contenido. 8-10.
 - [x] Revisados sin cosas raras graves: partido 3D (marcador, nombres, radar,
       grada) y minijuegos de autógrafos, pesca, penales y tiro libre. 8-10.
+- [x] Informe de la semana sin traducir (frases con números): 10 patrones nuevos
+      en los 8 idiomas y traducción antes de la viñeta. «Documental de la
+      temporada» traducido. 8-10.
+- [x] Fondo «bokeh» de los menús: los círculos se cortaban en cuadrados. 8-10.
