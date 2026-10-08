@@ -53,7 +53,12 @@ func _process(_d: float) -> void:
 		_foto()                             # 1: en la calle, delante de la puerta
 		_andar(3.4)
 		_e.call("_buscar_cerca")
-		_e.call("_usar")                    # entrar
+		_e.call("_usar")                    # hablar con el portero…
+		if is_instance_valid(_e._menu_asc):
+			_e._menu_asc.queue_free()
+		EntradaClub.abrir(get_tree(), true)
+		_e.call("_cruzar_puerta")           # …que abre, y se entra andando
+		_andar(4.0)
 	if _n == 18:
 		_andar(0.3)
 		_foto()                             # 2: dentro del vestuario

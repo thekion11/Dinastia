@@ -255,5 +255,16 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   pasillo con cinta rodante bajo la avenida → escalera mecánica y caseta junto al
   complejo; solo en la ciudad. Captura `pruebas/captura_galeria.tscn`. Fase 7 (pulido) HECHA: 2.0 CERRADO.
   SIGUIENTE: pedir al usuario el INFORME NUEVO.
+- 8-10 PEDIDO: «el estadio al entrar, al jugar y fuera del 3D debe ser EL MISMO; solo
+  cambia cuando el usuario lo cambia, y eso TARDA tiempo de construcción»; «la entrada
+  es poco realista: PORTERO que abra, diálogo y animación»; «¿esos palos blancos y
+  negros son personas?». HECHO: la ciudad construye el estadio con la semilla y el
+  club del partido (comparado nodo a nodo: idéntico salvo la galería);
+  `EstadioPropio.obra` (ajustes = proyecto, `hecho()` = lo construido, semanas por
+  capítulo en `SEMANAS_OBRA`, pintura al momento, andamios «reforma», aviso al
+  terminar); `visor/entrada_club.gd` (puertas correderas, pórtico, marquesina,
+  garita) + portero en `PersonalEstadio` + `RecorridoClub.dialogo_portero`;
+  hinchas de pie (no cápsulas); hormigón y copas ya no salen negros. Capturas:
+  captura_entrada, captura_mismo_estadio.
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.

@@ -218,17 +218,19 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 	for tr: Vector2 in StadiumBuilder._tramos_sin_hueco(x0, ancho + 0.6, x0 + PUERTA_X - PUERTA_MEDIO, x0 + PUERTA_X + PUERTA_MEDIO):
 		_caja(nodo, Vector3(tr.x, alto / 2.0, z_fin + 0.15), Vector3(tr.y, alto, 0.3), horm, true)
 	_caja(nodo, Vector3(x0 + PUERTA_X, (alto + 2.6) / 2.0, z_fin + 0.15), Vector3(PUERTA_MEDIO * 2.0, alto - 2.6, 0.3), horm, false)
-	## Marquesina y felpudo del club.
-	_caja(nodo, Vector3(x0 + PUERTA_X, 2.85, z_fin + 1.0), Vector3(PUERTA_MEDIO * 2.0 + 1.2, 0.12, 1.6), _mat(c1.lerp(Color(0.1, 0.1, 0.12), 0.3), 0.5), false)
-	_caja(nodo, Vector3(x0 + PUERTA_X, 0.03, z_fin + 1.0), Vector3(PUERTA_MEDIO * 2.0, 0.03, 1.2), _mat(c1, 0.9), false)
-	_rotulo(nodo, Idiomas.t("ENTRADA DEL CLUB"), Vector3(x0 + PUERTA_X, 3.15, z_fin + 1.81), 0.0, 40, Color(1, 1, 1))
+	## La entrada de verdad: puertas correderas, pórtico, marquesina, garita
+	## y el portero (`EntradaClub`, 8-10-2026).
+	EntradaClub.montar(nodo, x0, z_fin, c1, c2, horm, nombre, mi)
 	## La pared del lado del túnel, con la puerta del pasillo.
 	for tr: Vector2 in StadiumBuilder._tramos_sin_hueco(x0, ancho + 0.6, x0 - MEDIO, x0 + MEDIO):
 		_caja(nodo, Vector3(tr.x, alto / 2.0, z_out + 0.15), Vector3(tr.y, alto, 0.3), horm, true)
 	## Pintura de dentro (una piel fina sobre los muros).
 	for lado in [-1.0, 1.0]:
 		_caja(nodo, Vector3(x0 + lado * (VEST_MEDIO - 0.02), alto / 2.0, zc), Vector3(0.04, alto, VEST_FONDO), pared, false)
-	_caja(nodo, Vector3(x0, alto / 2.0, z_fin - 0.02), Vector3(ancho, alto, 0.04), pared, false)
+	## (Con el hueco de la puerta del club: entera tapaba la salida por dentro.)
+	for tr2: Vector2 in StadiumBuilder._tramos_sin_hueco(x0, ancho, x0 + PUERTA_X - PUERTA_MEDIO, x0 + PUERTA_X + PUERTA_MEDIO):
+		_caja(nodo, Vector3(tr2.x, alto / 2.0, z_fin - 0.02), Vector3(tr2.y, alto, 0.04), pared, false)
+	_caja(nodo, Vector3(x0 + PUERTA_X, (alto + 2.6) / 2.0, z_fin - 0.02), Vector3(PUERTA_MEDIO * 2.0, alto - 2.6, 0.04), pared, false)
 
 	## Taquillas con las camisetas a lo largo de las dos paredes largas, con
 	## su banco delante. El número y el color son los del club.
@@ -290,7 +292,8 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 		ol.light_color = Color(1, 0.95, 0.86)
 		nodo.add_child(ol)
 	## Fuera, sobre la fachada que da a la calle: el letrero.
-	_rotulo(nodo, Idiomas.t("VESTUARIOS") + " · " + nombre.to_upper(), Vector3(x0, alto - 0.6, z_fin + 0.32), 0.0, 60, Color(1, 1, 1))
+	## (Al otro lado de la entrada del club, para no pisar su pórtico.)
+	_rotulo(nodo, Idiomas.t("VESTUARIOS"), Vector3(x0 - 4.0, alto - 0.6, z_fin + 0.32), 0.0, 44, Color(1, 1, 1))
 	## Y dentro, sobre la puerta del túnel, lo que se lee al salir.
 	_rotulo(nodo, Idiomas.t("¡A POR ELLOS!"), Vector3(x0, alto - 0.5, z_out + 0.33), 0.0, 50, c1.lerp(Color.WHITE, 0.2))
 

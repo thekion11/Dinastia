@@ -217,6 +217,9 @@ func _datos_de(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Di
 			"cap": c.estadio_aforo, "rep": c.rep, "socios": c.socios,
 			"estadioNom": c.estadio_nombre if c.estadio_nombre != "" else ("Estadio " + c.nombre),
 		},
+		## El club en sí: el estadio de la ciudad se levanta con su semilla y su
+		## escudo, igual que en el partido y en el visor (el MISMO estadio).
+		"club_obj": c,
 		"inst": obras.niveles.duplicate(),
 		"obras": arr_obras,
 		## LOS TERRENOS Y LOS NEGOCIOS, que hasta ahora solo existían como texto
@@ -407,6 +410,13 @@ func _aplicar_hora() -> void:
 		## o se quema. Es exactamente lo que hace una cámara de verdad.
 		_env.tonemap_exposure = lerpf(1.40, 1.02, dia)
 		_env.ambient_light_energy = lerpf(0.62, 1.0, dia)
+		## En el renderizador de compatibilidad (móvil, web) el cielo con shader
+		## propio no da luz ambiente: lo que queda a la sombra -la espalda de la
+		## grada, la copa de los árboles- salía NEGRO a mediodía. Ahí la luz
+		## ambiente va como color, el del cielo de esa hora.
+		if RenderingServer.get_current_rendering_method() == "gl_compatibility":
+			_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+			_env.ambient_light_color = Color(0.16, 0.18, 0.26).lerp(Color(0.62, 0.68, 0.74), dia)
 		if _env.fog_enabled:
 			_env.fog_light_color = Color(0.10, 0.12, 0.18).lerp(Color(0.78, 0.80, 0.84), dia)
 

@@ -61,3 +61,10 @@ Pedido del usuario (7-10-2026):
    **HECHO (8-10):** aviso en el estadio suelto junto a la persiana de la galería; galería probada en el banco (8 formas × 2 túneles + persiana); capturas de todas las fases rehechas sin regresiones (`edificio_club`, `estadio_ciudad`, `galeria`). Arreglado: al cerrar el explorador bajo tierra ya no salta el error del mundo y se devuelve el sol.
 
 **ESTADO: estadio interactivo 2.0 CERRADO (fases 1-7).**
+
+## Repaso tras el cierre (8-10-2026)
+
+- **El mismo estadio en todas partes.** La ciudad levantaba el estadio con otra semilla y sin el club (sin escudos ni telones). Ahora usa la del partido; comparado nodo a nodo con el visor: idéntico (solo la ciudad tiene la galería). Captura: `pruebas/captura_mismo_estadio.tscn`.
+- **Las reformas tardan.** `EstadioPropio.obra`: el diseñador enseña el proyecto y en la ciudad, el visor y los partidos sigue el estadio construido, con andamios «REFORMA DEL ESTADIO», hasta que pasan las semanas del capítulo más largo (obra 10, bandejas 12, techo 8…). La pintura es al momento. Aviso al terminar.
+- **La entrada del club** (`visor/entrada_club.gd`): puertas de cristal correderas, pórtico con el nombre y el escudo, marquesina, escalón, maceteros, mástiles y la garita del portero. El **portero** saluda según la hora, sabe si estás sancionado, cuenta novedades y, si se lo pides, saluda con la mano, abre y el DT entra andando. Al salir, la puerta se abre sola y se despide. Captura: `pruebas/captura_entrada.tscn`.
+- **Cosas raras arregladas:** la gente del día de partido eran cápsulas (palos); ahora son personas con pantalón, camiseta y piel. El hormigón y las copas de los árboles salían negros; las taquillas y el letrero de vestuarios tapaban la entrada.
