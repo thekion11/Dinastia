@@ -275,5 +275,12 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 8-10 PEDIDO (hecho): partículas del menú de inicio «más bonitas» y el fondo (portada)
   «cambiando cada 30 segundos por sus variantes» → `FondoParticulas` ("motas"/"bokeh",
   aditivas, teñidas por `TINTE` de cada portada) y `_rotar_portada` en `ui/inicio.gd`.
+- **8-10 ORDEN VIGENTE (bucle, «no paras hasta que yo te interrumpa»)**:
+  1) terminar el repaso (2.ª pasada de la etapa 1); 2) etapas 2→5 de
+  `ETAPAS_FINALES.md` UNA POR UNA; 3) AUDITORÍA COMPLETA; 4) OPTIMIZACIÓN COMPLETA
+  del código: medir FPS con un perfil de HARDWARE DE GAMA BAJA, trucos de peso y
+  velocidad, y cambiar de lenguaje (C#/GDExtension) si de verdad hace falta;
+  5) volver a empezar el ciclo. Commits pequeños y frecuentes; banco solo (sin
+  otras pruebas a la vez, que se corta).
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
