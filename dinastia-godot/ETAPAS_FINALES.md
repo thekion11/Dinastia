@@ -126,3 +126,9 @@ balón conserva la energía) y con capturas o vídeo de movimiento.
 - [x] Taquillas y letrero de vestuarios tapando la entrada. 8-10.
 - [x] La pared pintada del vestuario tapaba la puerta por dentro. 8-10.
 - [x] El diálogo del portero no se cerraba al alejarse. 8-10.
+- [x] 122 frases del estadio 2.0 sin traducir (8 idiomas). Herramienta:
+      `pruebas/frases_sin_traducir.gd` + `pruebas/frases_2_0.gd`. 8-10.
+- [x] Aviso de suavizado (FXAA/TAA) en el modo de compatibilidad. 8-10.
+- [x] Fuga al cerrar: ciclo Roles ↔ Reputación y referencias estáticas. 8-10.
+- [x] La cámara de la calle se metía dentro de los edificios. 8-10.
+- [x] Saltos de golpe al cruzar puertas, escaleras y galería: ahora fundido. 8-10.

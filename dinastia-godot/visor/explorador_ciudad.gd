@@ -115,6 +115,20 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	add_child(_burbuja)
 	_montar_hud()
 	_colocar_camara(1.0)
+	_rotulos_de_paseo(true)
+
+## A pie o en coche, los rótulos del mapa (pensados para la vista aérea) se
+## veían a kilómetros y a través de los edificios: aquí solo los cercanos y
+## tapados por lo que haya delante (etapa 1, 8-10-2026).
+func _rotulos_de_paseo(si: bool) -> void:
+	if not is_inside_tree():
+		return
+	for n in get_tree().get_nodes_in_group("rotulo_mapa"):
+		var l := n as Label3D
+		if l == null:
+			continue
+		l.visibility_range_end = (60.0 if modo == "pie" else 140.0) if si else 0.0
+		l.no_depth_test = not si
 
 ## Las huellas sólidas: manzanas edificadas, edificios del núcleo e
 ## instalaciones (todo lo que `CityBuilder` apunta en `_frentes`).
@@ -381,6 +395,23 @@ func _colocar_camara(delta: float) -> void:
 		var l_lon := clampf(rel.dot(_anden_lon), -29.0, 29.0)
 		deseo = _anden_c + _anden_lat * l_lat + _anden_lon * l_lon
 		deseo.y = minf(cuerpo.position.y + alto, MetroCiudad.PROF_TUNEL + 5.6)
+	elif estado == "calle":
+		## La cámara no se mete dentro de los edificios: si el punto de detrás
+		## cae en una huella, se acerca al personaje hasta el último sitio libre
+		## (etapa 1, 8-10-2026).
+		var desde := cuerpo.position + Vector3(0, alto, 0)
+		var paso := (deseo - desde)
+		var largo := paso.length()
+		if largo > 0.01 and not libre(deseo, 0.3, obstaculos):
+			var bueno := desde
+			var k := 0.5
+			while k <= largo:
+				var q := desde + paso / largo * k
+				if not libre(q, 0.3, obstaculos):
+					break
+				bueno = q
+				k += 0.5
+			deseo = bueno
 	camara.position = camara.position.lerp(deseo, clampf(delta * 5.0, 0.0, 1.0)) if delta < 1.0 else deseo
 	camara.look_at(cuerpo.position + Vector3(0, 1.6 if modo == "coche" else 1.4, 0) + adelante * 4.0, Vector3.UP)
 
@@ -539,6 +570,7 @@ func _usar() -> void:
 
 ## Cruza la puerta del club: ya dentro, en el vestuario.
 func _entrar_al_estadio() -> void:
+	_fundido()
 	estado = "estadio"
 	_planta = 0
 	## Los rótulos flotantes del mapa se ven a través de las paredes: fuera.
@@ -563,6 +595,24 @@ func _ir_a_planta(p: int) -> void:
 
 ## De vuelta a la calle, delante de la puerta del club.
 var _rotulos_antes := true
+
+## FUNDIDO al cambiar de sitio de golpe (puerta, escaleras, galería): la
+## pantalla parte de negro y se aclara, en vez de saltar (etapa 1).
+var _velo: ColorRect
+
+func _fundido() -> void:
+	if _capa == null:
+		return
+	if not is_instance_valid(_velo):
+		_velo = ColorRect.new()
+		_velo.color = Color.BLACK
+		_velo.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_velo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_capa.add_child(_velo)
+		_capa.move_child(_velo, 0)
+	_velo.modulate.a = 1.0
+	var tw := _velo.create_tween()
+	tw.tween_property(_velo, "modulate:a", 0.0, 0.45).set_delay(0.05)
 
 # ---------------------------------------------------- la puerta y el portero
 
@@ -624,6 +674,7 @@ func _cerrar_puerta_si_lejos() -> void:
 
 ## Desde la caseta de la calle: escalera abajo, al pie de la galería.
 func _bajar_a_la_galeria() -> void:
+	_fundido()
 	estado = "estadio"
 	_rotulos_antes = cb._rotulos.visible if cb._rotulos != null else true
 	cb.mostrar_rotulos(false)
@@ -637,6 +688,7 @@ func _bajar_a_la_galeria() -> void:
 
 ## Arriba de la escalera mecánica: a la calle, delante de la caseta.
 func _subir_de_la_galeria() -> void:
+	_fundido()
 	estado = "calle"
 	_planta = 0
 	_bajo_tierra(false)
@@ -648,6 +700,7 @@ func _subir_de_la_galeria() -> void:
 	_colocar_camara(1.0)
 
 func _salir_del_estadio() -> void:
+	_fundido()
 	estado = "calle"
 	cb.mostrar_rotulos(_rotulos_antes)
 	var pu: Vector3 = _est["puerta"]
@@ -920,3 +973,4 @@ func _bajo_tierra(si: bool) -> void:
 
 func _exit_tree() -> void:
 	_bajo_tierra(false)
+	_rotulos_de_paseo(false)
