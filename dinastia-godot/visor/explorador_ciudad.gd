@@ -585,6 +585,7 @@ func _usar() -> void:
 ## Cruza la puerta del club: ya dentro, en el vestuario.
 func _entrar_al_estadio() -> void:
 	_fundido()
+	Optimizar.butacas_livianas(cb, false)
 	estado = "estadio"
 	_planta = 0
 	## Los rótulos flotantes del mapa se ven a través de las paredes: fuera.
@@ -715,6 +716,7 @@ func _subir_de_la_galeria() -> void:
 
 func _salir_del_estadio() -> void:
 	_fundido()
+	Optimizar.butacas_livianas(cb, true)
 	estado = "calle"
 	cb.mostrar_rotulos(_rotulos_antes)
 	var pu: Vector3 = _est["puerta"]

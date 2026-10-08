@@ -157,6 +157,10 @@ func build(d: Dictionary) -> void:
 	_rotulo_barrio()
 	add_child(_rotulos)
 	_despejar_vestuario(self)
+	## Etapa 3: primitivas con el detalle justo y butacas livianas (el estadio
+	## se ve de lejos; al entrar a pie vuelven las buenas).
+	Optimizar.primitivas(self)
+	Optimizar.butacas_livianas(self, true)
 
 ## `noche` va de 0 (pleno día) a 1 (noche cerrada). Lo llama el ciclo del sol
 ## de `VistaCiudad` en cada fotograma. Las farolas se encienden con la luz, y
