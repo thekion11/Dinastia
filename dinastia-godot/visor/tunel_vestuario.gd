@@ -23,6 +23,10 @@ extends RefCounted
 ## Medio ancho libre del pasillo y su alto libre.
 const MEDIO := 2.4
 const ALTO := 3.0
+## La puerta del club en la fachada de atrás del vestuario (a la calle):
+## desplazada del eje para no chocar con la pizarra.
+const PUERTA_X := 5.5
+const PUERTA_MEDIO := 1.3
 ## Vestuario: medio ancho y fondo.
 const VEST_MEDIO := 8.0
 const VEST_FONDO := 13.0
@@ -42,10 +46,21 @@ static func datos(est: Dictionary, niveles: int) -> Dictionary:
 		## De la boca a la cancha: el paso entre las vallas.
 		{"nombre": "Banda", "r": Rect2(x0 - MEDIO + 0.35, 53.8, (MEDIO - 0.35) * 2.0, z_boca - 53.2), "techo": 99.0},
 		{"nombre": "Campo", "r": Rect2(-37.2, -54.6, 74.4, 109.2), "techo": 99.0},
+		## La puerta del club en la fachada de atrás: da a la calle (ciudad).
+		{"nombre": "Acceso", "r": Rect2(x0 + PUERTA_X - PUERTA_MEDIO + 0.3, z_fin - 1.0, (PUERTA_MEDIO - 0.3) * 2.0, 4.0), "techo": 99.0},
 	]
 	return {"x0": x0, "z_boca": z_boca, "z_out": z_out, "z_fin": z_fin, "zonas": zonas,
 		"inicio": Vector3(x0 + 3.0, 0.02, z_fin - 3.2), "rumbo_inicio": PI,
+		"puerta": Vector3(x0 + PUERTA_X, 0.02, z_fin + 0.2),
 		"abierta": 0 in (g.get("abiertas", [g["abierta"]] if int(g["abierta"]) >= 0 else []) as Array)}
+
+## ¿En qué zona transitable cae `p` (coordenadas del estadio)? Vacío si en
+## ninguna. Lo usan los dos exploradores (el del estadio y el de la ciudad).
+static func zona_en(zonas: Array, p: Vector3) -> Dictionary:
+	for z: Dictionary in zonas:
+		if (z["r"] as Rect2).has_point(Vector2(p.x, p.z)):
+			return z
+	return {}
 
 ## Monta pasillo, cubierta, pórtico y vestuario. `mi` puede ser null (rival).
 static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null) -> void:
@@ -105,7 +120,7 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 
 	## LO QUE SE LEE AL PASAR: el escudo, el nombre, fotos de la historia y la
 	## señal de salida. Los textos van con `Label3D` (como las vallas LED).
-	var nombre := Nombres.visible(mi.nombre) if mi != null else "LOCAL"
+	var nombre := Nombres.visible(mi.nombre) if mi != null else String(est.get("club_nombre", "LOCAL"))
 	_rotulo(nodo, Idiomas.t("AL CAMPO") + "  ↑", Vector3(x0, ALTO - 0.45, z_boca + 0.6), 0.0, 44, Color(1, 0.95, 0.75))
 	_rotulo(nodo, nombre.to_upper(), Vector3(x0 - MEDIO + 0.03, 2.2, zc), PI / 2.0, 72, c2.lerp(Color.WHITE, 0.3))
 	_rotulo(nodo, Idiomas.t("AQUÍ SE DEJA TODO"), Vector3(x0 + MEDIO - 0.03, 2.2, z_boca + 2.0), -PI / 2.0, 52, c1.lerp(Color.WHITE, 0.1))
@@ -190,7 +205,14 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 	_caja(nodo, Vector3(x0, alto - 0.02, zc), Vector3(ancho - 0.1, 0.04, VEST_FONDO - 0.1), techo, false)
 	for lado in [-1.0, 1.0]:
 		_caja(nodo, Vector3(x0 + lado * (VEST_MEDIO + 0.15), alto / 2.0, zc), Vector3(0.3, alto, VEST_FONDO + 0.6), horm, true)
-	_caja(nodo, Vector3(x0, alto / 2.0, z_fin + 0.15), Vector3(ancho + 0.6, alto, 0.3), horm, true)
+	## La fachada de atrás, con la PUERTA DEL CLUB a la calle.
+	for tr: Vector2 in StadiumBuilder._tramos_sin_hueco(x0, ancho + 0.6, x0 + PUERTA_X - PUERTA_MEDIO, x0 + PUERTA_X + PUERTA_MEDIO):
+		_caja(nodo, Vector3(tr.x, alto / 2.0, z_fin + 0.15), Vector3(tr.y, alto, 0.3), horm, true)
+	_caja(nodo, Vector3(x0 + PUERTA_X, (alto + 2.6) / 2.0, z_fin + 0.15), Vector3(PUERTA_MEDIO * 2.0, alto - 2.6, 0.3), horm, false)
+	## Marquesina y felpudo del club.
+	_caja(nodo, Vector3(x0 + PUERTA_X, 2.85, z_fin + 1.0), Vector3(PUERTA_MEDIO * 2.0 + 1.2, 0.12, 1.6), _mat(c1.lerp(Color(0.1, 0.1, 0.12), 0.3), 0.5), false)
+	_caja(nodo, Vector3(x0 + PUERTA_X, 0.03, z_fin + 1.0), Vector3(PUERTA_MEDIO * 2.0, 0.03, 1.2), _mat(c1, 0.9), false)
+	_rotulo(nodo, Idiomas.t("ENTRADA DEL CLUB"), Vector3(x0 + PUERTA_X, 3.15, z_fin + 1.81), 0.0, 40, Color(1, 1, 1))
 	## La pared del lado del túnel, con la puerta del pasillo.
 	for tr: Vector2 in StadiumBuilder._tramos_sin_hueco(x0, ancho + 0.6, x0 - MEDIO, x0 + MEDIO):
 		_caja(nodo, Vector3(tr.x, alto / 2.0, z_out + 0.15), Vector3(tr.y, alto, 0.3), horm, true)
@@ -222,12 +244,13 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 	_caja(nodo, Vector3(x0, 1.7, z_fin - 0.1), Vector3(3.2, 1.6, 0.06), pizarra, false)
 	_rotulo(nodo, "4-3-3\n○ → ✕", Vector3(x0, 1.75, z_fin - 0.15), PI, 46, Color(0.15, 0.2, 0.5))
 	## La camilla del fisio y las duchas (alicatado y alcachofas) en una esquina.
-	_caja(nodo, Vector3(x0 - 4.0, 0.75, z_fin - 2.2), Vector3(0.8, 0.12, 2.0), _mat(Color(0.2, 0.35, 0.55), 0.6), true)
-	_caja(nodo, Vector3(x0 - 4.0, 0.35, z_fin - 2.2), Vector3(0.6, 0.7, 1.6), Texturas.metal(Color(0.6, 0.62, 0.64), 0.5), false)
+	_caja(nodo, Vector3(x0 - 3.6, 0.75, z_fin - 2.4), Vector3(0.8, 0.12, 2.0), _mat(Color(0.2, 0.35, 0.55), 0.6), true)
+	_caja(nodo, Vector3(x0 - 3.6, 0.35, z_fin - 2.4), Vector3(0.6, 0.7, 1.6), Texturas.metal(Color(0.6, 0.62, 0.64), 0.5), false)
 	var azulejo := _mat(Color(0.82, 0.9, 0.93), 0.25)
-	_caja(nodo, Vector3(x0 + 5.0, alto / 2.0, z_fin - 0.06), Vector3(4.6, alto, 0.06), azulejo, false)
-	for k in 3:
-		_caja(nodo, Vector3(x0 + 3.5 + float(k) * 1.5, 2.2, z_fin - 0.25), Vector3(0.18, 0.06, 0.3),
+	## Las duchas, en la pared del lado de la camilla (la otra tiene la puerta).
+	_caja(nodo, Vector3(x0 - VEST_MEDIO + 0.06, alto / 2.0, z_fin - 1.7), Vector3(0.06, alto, 2.8), azulejo, false)
+	for k in 2:
+		_caja(nodo, Vector3(x0 - VEST_MEDIO + 0.3, 2.2, z_fin - 1.0 - float(k) * 1.3), Vector3(0.3, 0.06, 0.18),
 			Texturas.metal(Color(0.8, 0.8, 0.82), 0.3), false)
 	## Banco central con la bolsa de cada uno.
 	_caja(nodo, Vector3(x0, 0.45, zc - 0.5), Vector3(1.2, 0.08, 4.0), madera, true)
