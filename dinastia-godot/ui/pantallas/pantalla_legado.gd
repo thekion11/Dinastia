@@ -550,14 +550,14 @@ func _comprar_dt(clave: String) -> void:
 ## vitrina, te sigue cuando cambias de banquillo.
 ## MI VIDA (26-9-2026).
 func _pintar_vida() -> void:
-	if p._lista_vida == null or not p._lista_vida.is_visible_in_tree():
+	if p._lista_vida == null:
 		return
 	PanelVida.pintar(p._lista_vida, p, p.mundo, p._secc_vida)
 
 ## EL ÁRBOL DE HABILIDADES, COMO ESQUEMA (26-9-2026): columnas por rama, nodos
 ## y líneas de requisito, y la ficha de la elegida debajo.
 func _pintar_habilidades() -> void:
-	if p._lista_habilidades == null or not p._lista_habilidades.is_visible_in_tree():
+	if p._lista_habilidades == null:
 		return
 	p._limpiar(p._lista_habilidades)
 	var e := p.mundo.entrenamiento

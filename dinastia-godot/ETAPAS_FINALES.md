@@ -149,3 +149,13 @@ balón conserva la energía) y con capturas o vídeo de movimiento.
 - [x] Revisada la Carrera de Jugador (creación, semana, partido, córner). 8-10.
 - [x] El sonido «puerta» se pedía y no existía (silencio): creado, más pasos al andar a pie. 8-10.
 - [x] (Pedido 8-10) Partículas del menú más bonitas (chispas con halo que titilan y se mecen + luces bokeh, teñidas por portada) y PORTADA que cambia sola cada 30 s con fundido. Captura: pruebas/captura_portada_rota.tscn.
+
+### Segunda pasada de la etapa 1 (8-10, pedida: «siento que puedes hacerlo mejor»)
+Recorrido TOTAL de la interfaz (`pruebas/captura_recorrido_total.tscn`: principal,
+9 menús y las 42 pestañas, en hojas `recorrido_N.png`). Encontrado y arreglado:
+- [x] El panel de OBJETIVOS tapaba la ficha del jugador en todas las pestañas a
+      1600x900: plegado por defecto hasta 1900 px, con el número de pendientes.
+- [x] «Vida» y «Habilidades» salían VACÍAS (no estaban en el pintado diferido).
+- [x] «Editor» y «Libres» empujaban la ficha fuera de la pantalla: filas que se
+      parten y desplazamiento horizontal dentro de la hoja.
+- [x] Fondo de «Mi carrera»: manchas amarillas → hilos de luz finos.
