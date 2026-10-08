@@ -202,7 +202,11 @@ func _physics_process(delta: float) -> void:
 func _rotulos() -> void:
 	var z := zona_en(cuerpo.position)
 	var nombre := String(z.get("nombre", ""))
-	if nombre != _zona_actual:
+	var g := _persona_cerca()
+	if not g.is_empty():
+		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
+		_zona_actual = "·" + nombre
+	elif nombre != _zona_actual:
 		_zona_actual = nombre
 		_aviso.text = RecorridoClub.aviso_de(nombre, club_nombre)
 		if nombre == "Banda" and not _rugido_hecho:
@@ -219,10 +223,23 @@ func _unhandled_input(ev: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		usar()
 
-## E: lo que haya a mano. Por ahora, el ascensor.
+## E: lo que haya a mano: alguien del club para hablar, o el ascensor.
 func usar() -> void:
-	if _zona_actual == "Ascensor" and not is_instance_valid(_menu):
+	if is_instance_valid(_menu):
+		return
+	var g := _persona_cerca()
+	if not g.is_empty():
+		_menu = RecorridoClub.dialogo(_capa, _personal(), g, cuerpo.position)
+		return
+	if _zona_actual == "Ascensor":
 		_menu = RecorridoClub.menu_ascensor(_capa, planta, ir_a_planta)
+
+func _personal() -> PersonalEstadio:
+	return get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+
+func _persona_cerca() -> Dictionary:
+	var pe := _personal()
+	return pe.cercano(cuerpo.position, planta) if pe != null else {}
 
 ## Cámara en tercera persona. Dentro del vestuario y del túnel no sale de las
 ## paredes ni pasa del techo: si no, se vería el exterior de la caja.
