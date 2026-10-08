@@ -1615,7 +1615,10 @@ func _hoja(tabs: TabContainer, titulo: String) -> VBoxContainer:
 func _con_scroll(padre: VBoxContainer) -> VBoxContainer:
 	var s := ScrollContainer.new()
 	s.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	## AUTO y no DISABLED (etapa 1, 2.ª pasada): desactivado, una fila más ancha
+	## que la columna AGRANDABA la columna entera y sacaba la ficha del jugador
+	## de la pantalla (Editor, Libres). Ahora lo que no cabe se desplaza dentro.
+	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	padre.add_child(s)
 	var lista := VBoxContainer.new()
 	lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -3220,8 +3223,11 @@ func _refrescar() -> void:
 	_perezoso(_lista_redes, func() -> void:
 		_ui_gente._pintar_redes()
 		_ui_gente._filtrar_redes())
-	_ui_legado._pintar_vida()
-	_ui_legado._pintar_habilidades()
+	## Diferidas como las demás (etapa 1, 2.ª pasada): llamadas a pelo, con
+	## la pestaña oculta no pintaban NI quedaban pendientes, y al entrar en
+	## «Vida» o «Habilidades» la hoja salía vacía.
+	_perezoso(_lista_vida, _ui_legado._pintar_vida)
+	_perezoso(_lista_habilidades, _ui_legado._pintar_habilidades)
 	_perezoso(_lista_libres, _ui_plantel._pintar_libres.bind(c))
 	_perezoso(_lista_premios, _ui_plantel._pintar_premios)
 	_perezoso(_lista_clubes, _pintar_clubes)
