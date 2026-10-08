@@ -119,7 +119,9 @@ const NOMBRES := ["silbato", "gol", "gol_rival", "roja", "amarilla",
 	## --- Más estilo de juego ---
 	"pase_corto", "centro", "regate", "tiro_potente", "tiro_flojo",
 	"paso_atras", "presion_alta", "contragolpe", "posesion_larga",
-	"cambio_ritmo"]
+	"cambio_ritmo",
+	## --- Recorridos a pie (etapa 1, 8-10-2026): se pedían y no existían ---
+	"puerta", "paso"]
 
 
 ## Genera TODO de golpe, en el hilo que llama. Solo para pruebas y
@@ -349,6 +351,17 @@ func _sintetizar(nombre: String, sal: float) -> AudioStreamWAV:
 			## El clic de las pestañas: más apagado que "clic", porque cambiar de
 			## pantalla se hace veinte veces por minuto.
 			m = _tono(1180.0 * tono, 0.035, 0.028, "seno")
+		"puerta":
+			## Puerta corredera de cristal: el soplido de las hojas (ruido que
+			## baja de agudo a grave) y un golpe sordo al llegar al tope.
+			m.resize(int(0.75 * largo * float(FRECUENCIA)))
+			_mezclar(m, _ruido(0.6 * largo, 2600.0 * tono, 500.0, 0.10))
+			_mezclar(m, _tono(95.0 * tono, 0.12, 0.10, "seno"), 0.58 * largo)
+			_mezclar(m, _ruido(0.08, 900.0, 300.0, 0.06), 0.58 * largo)
+		"paso":
+			## Un paso de suela sobre baldosa: golpe grave muy corto y un roce.
+			m = _tono(120.0 * tono, 0.07, 0.07, "seno")
+			_mezclar(m, _ruido(0.06, 1800.0 * tono, 600.0, 0.05))
 		"abrir":
 			## Un panel que se abre: dos notas que SUBEN, muy cortas.
 			m.resize(int(0.14 * float(FRECUENCIA)))
