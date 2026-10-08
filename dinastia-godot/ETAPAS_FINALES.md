@@ -148,3 +148,4 @@ balón conserva la energía) y con capturas o vídeo de movimiento.
 - [x] Fundido de entrada al abrir la ciudad 3D, el estadio y el partido. 8-10.
 - [x] Revisada la Carrera de Jugador (creación, semana, partido, córner). 8-10.
 - [x] El sonido «puerta» se pedía y no existía (silencio): creado, más pasos al andar a pie. 8-10.
+- [x] (Pedido 8-10) Partículas del menú más bonitas (chispas con halo que titilan y se mecen + luces bokeh, teñidas por portada) y PORTADA que cambia sola cada 30 s con fundido. Captura: pruebas/captura_portada_rota.tscn.

@@ -1,63 +1,131 @@
 class_name FondoParticulas
 extends CPUParticles2D
 ## El "fondo animado" del menú -`iniciarPhaserMenu()`/`EscenaMenuFx` del
-## HTML-: motas de luz naciendo en cualquier punto de la pantalla y subiendo
-## despacio, como polvo en el aire. El HTML monta un `Phaser.Game` entero
-## para esto solo; Godot ya trae su propio sistema de partículas, así que se
-## porta como lo que es de verdad -un emisor con esta forma-, no como "cargar
-## un motor externo".
+## HTML-: luz flotando en el aire de la portada.
 ##
-## Mismos números que `this.emisor=this.add.particles(...)`: nace en
-## cualquier (x,y) de la pantalla, sube entre 4 y 12 px por fotograma con una
-## deriva lateral pequeña, dura 6 segundos, y se apaga en tamaño (.6→0) y
-## opacidad (.3→0) según se acerca el final de su vida.
+## 8-10-2026 (pedido: «esas partículas mejóralas y haz que se vean más
+## bonitas»). Antes eran puntos blancos planos que subían todos igual. Ahora
+## hay dos tipos, con brillo de verdad (mezcla aditiva y textura de halo):
+##   "motas"  chispas pequeñas con núcleo brillante y halo, que nacen, titilan
+##            (la escala late a lo largo de su vida), se mecen al subir y se
+##            apagan; cada una con un tono un poco distinto.
+##   "bokeh"  pocas luces grandes y desenfocadas, lentísimas, como las luces
+##            de un estadio vistas a través de una lente.
+## El color lo pone la portada (`teñir`): cada variante tiñe su propia luz.
 
-static var _punto: Texture2D = null
-static func _textura_punto() -> Texture2D:
-	if _punto != null:
-		return _punto
-	var img := Image.new()
-	img.load_svg_from_string('<svg width="8" height="8" xmlns="http://www.w3.org/2000/svg"><circle cx="4" cy="4" r="4" fill="#ffffff"/></svg>', 2.0)
-	_punto = ImageTexture.create_from_image(img)
-	return _punto
+const TAM_TEX := 64
 
-func _init() -> void:
-	texture = _textura_punto()
+static var _halo: Texture2D = null
+static var _disco: Texture2D = null
+
+## Halo: núcleo casi blanco que se apaga en curva suave (una chispa).
+static func _textura_halo() -> Texture2D:
+	if _halo != null:
+		return _halo
+	var g := Gradient.new()
+	g.offsets = PackedFloat32Array([0.0, 0.12, 0.35, 1.0])
+	g.colors = PackedColorArray([Color(1, 1, 1, 1.0), Color(1, 1, 1, 0.85), Color(1, 1, 1, 0.22), Color(1, 1, 1, 0.0)])
+	_halo = _radial(g)
+	return _halo
+
+## Disco de bokeh: lleno y parejo, con el borde un poco más claro y un corte
+## suave, que es como se ve una luz fuera de foco.
+static func _textura_disco() -> Texture2D:
+	if _disco != null:
+		return _disco
+	var g := Gradient.new()
+	g.offsets = PackedFloat32Array([0.0, 0.7, 0.86, 0.95, 1.0])
+	g.colors = PackedColorArray([Color(1, 1, 1, 0.55), Color(1, 1, 1, 0.6), Color(1, 1, 1, 0.85), Color(1, 1, 1, 0.25), Color(1, 1, 1, 0.0)])
+	_disco = _radial(g)
+	return _disco
+
+static func _radial(g: Gradient) -> Texture2D:
+	var t := GradientTexture2D.new()
+	t.gradient = g
+	t.fill = GradientTexture2D.FILL_RADIAL
+	t.fill_from = Vector2(0.5, 0.5)
+	t.fill_to = Vector2(1.0, 0.5)
+	t.width = TAM_TEX
+	t.height = TAM_TEX
+	return t
+
+var tipo := "motas"
+
+func _init(tipo_: String = "motas") -> void:
+	tipo = tipo_
+	## Luz que SUMA: donde se cruzan dos motas brilla más, como la luz real.
+	var mat := CanvasItemMaterial.new()
+	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	material = mat
 	emitting = true
-	amount = 40
-	lifetime = 6.0
-	preprocess = 6.0
-	randomness = 0.7
-	speed_scale = 1.0
-	## No es un `Control` -no tiene mouse_filter-, pero al ser puramente visual
-	## (sin script de colisión ni de input) nunca le quita el clic a ningún
-	## botón de debajo, sea cual sea su lugar en el árbol.
-	z_index = 50
-
+	randomness = 0.8
 	emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
-	direction = Vector2(0, -1)
-	spread = 12.0
-	initial_velocity_min = 16.0
-	initial_velocity_max = 46.0
 	gravity = Vector2.ZERO
-	angular_velocity_min = 0.0
-	angular_velocity_max = 0.0
+	direction = Vector2(0, -1)
+	if tipo == "bokeh":
+		texture = _textura_disco()
+		amount = 12
+		lifetime = 16.0
+		preprocess = 16.0
+		spread = 40.0
+		initial_velocity_min = 3.0
+		initial_velocity_max = 11.0
+		scale_amount_min = 0.9
+		scale_amount_max = 2.6
+		_curva_escala([Vector2(0, 0.85), Vector2(0.5, 1.0), Vector2(1, 0.9)])
+		_rampa([0.0, 0.25, 0.75, 1.0], [0.0, 0.16, 0.16, 0.0])
+		hue_variation_min = -0.04
+		hue_variation_max = 0.04
+	else:
+		texture = _textura_halo()
+		amount = 70
+		lifetime = 9.0
+		preprocess = 9.0
+		spread = 14.0
+		initial_velocity_min = 10.0
+		initial_velocity_max = 34.0
+		## Se mecen al subir: una órbita pequeña, a izquierda o derecha.
+		orbit_velocity_min = -0.012
+		orbit_velocity_max = 0.012
+		## Deriva lateral, como polvo en una corriente de aire.
+		tangential_accel_min = -4.0
+		tangential_accel_max = 4.0
+		scale_amount_min = 0.12
+		scale_amount_max = 0.55
+		## Titilan: la escala late tres veces en su vida y se apaga al final.
+		_curva_escala([Vector2(0, 0.2), Vector2(0.15, 1.0), Vector2(0.3, 0.6), Vector2(0.45, 1.0),
+			Vector2(0.62, 0.55), Vector2(0.8, 0.9), Vector2(1, 0.0)])
+		_rampa([0.0, 0.12, 0.7, 1.0], [0.0, 0.7, 0.55, 0.0])
+		hue_variation_min = -0.06
+		hue_variation_max = 0.06
 
-	scale_amount_min = 0.35
-	scale_amount_max = 1.0
-	var curva_escala := Curve.new()
-	curva_escala.add_point(Vector2(0, 1.0))
-	curva_escala.add_point(Vector2(1, 0.0))
-	scale_amount_curve = curva_escala
+func _curva_escala(puntos: Array) -> void:
+	var c := Curve.new()
+	for p: Vector2 in puntos:
+		c.add_point(p)
+	scale_amount_curve = c
 
-	var rampa := Gradient.new()
-	rampa.set_color(0, Color(1, 1, 1, 0.34))
-	rampa.set_color(1, Color(1, 1, 1, 0.0))
-	color_ramp = rampa
+func _rampa(offs: Array, alfas: Array) -> void:
+	var g := Gradient.new()
+	var o := PackedFloat32Array()
+	var cs := PackedColorArray()
+	for i in offs.size():
+		o.append(float(offs[i]))
+		cs.append(Color(1, 1, 1, float(alfas[i])))
+	g.offsets = o
+	g.colors = cs
+	color_ramp = g
 
-## Se llama una vez, cuando ya se conoce el tamaño real de la pantalla -antes
-## de eso, `position`/`emission_rect_extents` se quedarían con cualquier valor
-## y las motas nacerían todas en la esquina-.
+## El color de la luz, el de la portada. Se mezcla con blanco para que las
+## chispas sigan pareciendo luz y no confeti.
+func tenir(c: Color) -> void:
+	var destino := c.lerp(Color.WHITE, 0.45 if tipo == "motas" else 0.25)
+	var tw := create_tween()
+	tw.tween_property(self, "color", destino, 1.2)
+
+## Se llama cuando ya se conoce el tamaño del área -antes de eso, `position`/
+## `emission_rect_extents` se quedarían con cualquier valor y las motas
+## nacerían todas en la esquina-.
 func ajustar_area(tam: Vector2) -> void:
 	position = tam / 2.0
 	emission_rect_extents = tam / 2.0

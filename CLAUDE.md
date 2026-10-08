@@ -272,5 +272,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   los objetos, y más físicas»). Plan y estado en `dinastia-godot/ETAPAS_FINALES.md`
   (con la lista de cosas raras). Hacerlas EN ORDEN, cada una con capturas antes/
   después, banco y modos en verde, y el documento al día.
+- 8-10 PEDIDO (hecho): partículas del menú de inicio «más bonitas» y el fondo (portada)
+  «cambiando cada 30 segundos por sus variantes» → `FondoParticulas` ("motas"/"bokeh",
+  aditivas, teñidas por `TINTE` de cada portada) y `_rotar_portada` en `ui/inicio.gd`.
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
