@@ -145,3 +145,5 @@ balón conserva la energía) y con capturas o vídeo de movimiento.
       en los 8 idiomas y traducción antes de la viñeta. «Documental de la
       temporada» traducido. 8-10.
 - [x] Fondo «bokeh» de los menús: los círculos se cortaban en cuadrados. 8-10.
+- [x] Fundido de entrada al abrir la ciudad 3D, el estadio y el partido. 8-10.
+- [x] Revisada la Carrera de Jugador (creación, semana, partido, córner). 8-10.
