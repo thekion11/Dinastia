@@ -111,6 +111,14 @@ func abrir(p: Partido, club: Club, vest: Vestuario = null, eliminatoria: bool = 
 	if velocidad_inicial >= 0 and velocidad_inicial < VELOCIDADES.size():
 		_velocidad = velocidad_inicial
 	partido.preparar()
+	## SANCIONADO (estadio 2.0): sin banda; el partido se ve desde la grada.
+	var m_s := vestuario._mundo() if vestuario != null else null
+	if m_s != null and m_s.federacion != null and m_s.federacion.dt_sancionado():
+		_expulsado_banda = true
+		PersonajeDT.sancionado = true
+		call_deferred("_escribir", "[color=#e0a040][b]🟥 Sancionado[/b][/color] Ves el partido desde la grada (quedan %d). No puedes dar órdenes desde la banda." % m_s.federacion.dt_suspension)
+	else:
+		PersonajeDT.sancionado = false
 	if partido._hinchada_club == null and mi_club != null:
 		var animo_hoy := 60
 		if vestuario != null and vestuario._mundo() != null and vestuario._mundo().prensa != null:
@@ -410,7 +418,10 @@ func _gritar_desde_la_banda() -> void:
 	var fed := vestuario._mundo().federacion if vestuario._mundo() != null else null
 	if fed != null and fed.enojo_arbitral >= 2 and Azar.suerte(0.16):
 		_expulsado_banda = true
-		_escribir("[color=#e05555][b]🟥 ¡Te expulsan a ti![/b][/color] Protestar de forma airada al cuarto árbitro. Te vas a la tribuna: no puedes volver a gritar desde la banda este partido.")
+		## Y ya no es solo este partido (estadio 2.0): el tribunal sanciona.
+		var fechas := 1 + (1 if fed.enojo_arbitral >= 4 else 0)
+		fed.sancionar_dt(fechas)
+		_escribir("[color=#e05555][b]🟥 ¡Te expulsan a ti![/b][/color] Protestar de forma airada al cuarto árbitro. Te vas a la tribuna, y el tribunal te sanciona con %d partido(s) más desde la grada." % fechas)
 		_refrescar()
 		return
 	_escribir("[color=#8ea595]%s[/color]" % Azar.uno(_FRASES_BANDA))

@@ -104,6 +104,8 @@ func build_for(dx: float, dz: float, alto: float) -> void:
 	# quien corre.
 	_add("Árbitro (POV)", Vector3(6.0, 1.75, 8.0), Vector3(0, 1.2, 0), 70)
 
+var _mira_grada := Vector3.ZERO
+
 func _process(delta: float) -> void:
 	if cameras.is_empty():
 		return
@@ -130,6 +132,10 @@ func _process(delta: float) -> void:
 		return
 
 	match c_name:
+		"Desde la grada (sancionado)":
+			## El DT sancionado sigue el partido con la cabeza desde su butaca.
+			_mira_grada = _mira_grada.lerp(t_pos + Vector3(0, 0.4, 0), 3.0 * delta)
+			cam.look_at(_mira_grada, Vector3.UP)
 		"Tele Dinámica":
 			# Documento maestro, remapeado: aquí Z es el largo y X la banda.
 			var cam_z := clampf(t_pos.z * 0.72, -36.0, 36.0)

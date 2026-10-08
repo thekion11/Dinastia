@@ -36,6 +36,7 @@ var _menu: PanelContainer
 
 func iniciar(est: Dictionary, niveles: int, club: Club) -> void:
 	_datos = TunelVestuario.datos(est, niveles)
+	_est_perfil = est
 	zonas = _datos["zonas"]
 	club_nombre = Nombres.visible(club.nombre) if club != null else ""
 	cuerpo = _crear_cuerpo()
@@ -194,6 +195,13 @@ func paso(e: Vector2, corre: bool, delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
 		return
+	if sentado:
+		## Sentado: A/D giran la mirada (hasta 70° a cada lado).
+		_mirada = clampf(_mirada - _entrada().x * delta * 1.4, -1.2, 1.2)
+		var dir := Vector3(sin(rumbo + _mirada), 0, cos(rumbo + _mirada))
+		camara.position = cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * 0.1
+		camara.look_at(camara.position + dir * 10.0 + Vector3(0, -1.6, 0), Vector3.UP)
+		return
 	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 	paso(_entrada(), corre, delta)
 	_colocar_camara(delta)
@@ -206,6 +214,9 @@ func _rotulos() -> void:
 	if not g.is_empty():
 		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
 		_zona_actual = "·" + nombre
+	elif RecorridoClub.junto_a_la_grada(cuerpo.position, planta):
+		_aviso.text = Idiomas.t("E: sentarse en la grada")
+		_zona_actual = "·grada"
 	elif nombre != _zona_actual:
 		_zona_actual = nombre
 		_aviso.text = RecorridoClub.aviso_de(nombre, club_nombre)
@@ -223,9 +234,46 @@ func _unhandled_input(ev: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		usar()
 
+## Sentado en la grada: dónde y hacia dónde se mira.
+var sentado := false
+var _de_pie := Vector3.ZERO
+var _mirada := 0.0
+var _est_perfil: Dictionary = {}
+
+func sentarse() -> void:
+	var lado := signf(cuerpo.position.x)
+	var b := RecorridoClub.butaca(_est_perfil, lado, cuerpo.position.z)
+	_de_pie = cuerpo.position
+	cuerpo.position = b["pos"]
+	rumbo = float(b["rumbo"])
+	_mirada = 0.0
+	cuerpo.rotation.y = rumbo
+	sentado = true
+	## Desde los ojos: el propio cuerpo no se ve y nadie ocupa tu butaca.
+	cuerpo.visible = false
+	_hinchas_quitados = RecorridoClub.despejar_hinchas(get_parent(), cuerpo.global_position + Vector3(0, 0.5, 0))
+	_aviso.text = Idiomas.t("En la grada. A/D: mirar alrededor · E: levantarse")
+
+var _hinchas_quitados: Array = []
+
+func levantarse() -> void:
+	sentado = false
+	cuerpo.visible = true
+	RecorridoClub.devolver_hinchas(_hinchas_quitados)
+	_hinchas_quitados = []
+	cuerpo.position = _de_pie
+	_aviso.text = ""
+	_zona_actual = "?"
+
 ## E: lo que haya a mano: alguien del club para hablar, o el ascensor.
 func usar() -> void:
 	if is_instance_valid(_menu):
+		return
+	if sentado:
+		levantarse()
+		return
+	if RecorridoClub.junto_a_la_grada(cuerpo.position, planta) and _persona_cerca().is_empty():
+		sentarse()
 		return
 	var g := _persona_cerca()
 	if not g.is_empty():

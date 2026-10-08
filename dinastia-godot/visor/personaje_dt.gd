@@ -39,6 +39,8 @@ const GAFAS := [["", "Sin gafas"], ["ver", "De ver"], ["sol", "De sol"]]
 
 ## El personaje del usuario y su club, para la banda de los partidos (lo fija
 ## `Principal._refrescar()`; la vista del estadio no tiene el mundo delante).
+## Si el DT del usuario está sancionado (ve el partido desde la grada).
+static var sancionado := false
 static var del_usuario: Dictionary = {}
 static var club_usuario: String = ""
 
