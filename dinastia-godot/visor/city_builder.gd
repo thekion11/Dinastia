@@ -647,10 +647,18 @@ func _estadio() -> void:
 		## con 0,06 la grada salía de un gris uniforme y desde el mapa el
 		## estadio se leía como una pista de hockey. Con 0,35 se distinguen las
 		## butacas del club, que es lo que lo hace reconocible desde arriba.
+		## Con la galería subterránea (2.0, fase 6) la puerta del sótano queda abierta.
+		GaleriaClub.en_ciudad = true
 		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, aforo)
+		GaleriaClub.en_ciudad = false
 		huellas.append(Rect2(ESTADIO_EN.x - 62.0, ESTADIO_EN.z - 80.0, 124.0, 160.0))
 		## El vestuario del túnel sobresale por detrás de la tribuna (estadio 2.0).
 		var tv := TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, aforo))
+		## La galería que une el sótano del club con el complejo, y su caseta.
+		var g1 := _color_club("c1", Color(0.2, 0.5, 0.3))
+		var g2 := _color_club("c2", Color(0.95, 0.95, 0.95))
+		GaleriaClub.montar(nodo, tv, g1, g2, String(perfil.get("club_nombre", "")))
+		GaleriaClub.montar_caseta(self, tv, g1)
 		_rect_vestuario = Rect2(ESTADIO_EN.x + float(tv["x0"]) - TunelVestuario.VEST_MEDIO - 0.4,
 			ESTADIO_EN.z + float(tv["z_out"]), TunelVestuario.VEST_MEDIO * 2.0 + 0.8, TunelVestuario.VEST_FONDO + 0.4)
 		huellas.append(_rect_vestuario)
