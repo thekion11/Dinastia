@@ -266,5 +266,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   garita) + portero en `PersonalEstadio` + `RecorridoClub.dialogo_portero`;
   hinchas de pie (no cápsulas); hormigón y copas ya no salen negros. Capturas:
   captura_entrada, captura_mismo_estadio.
+- **8-10 PEDIDO: 5 ETAPAS MÁS** («1 ultra pulido, 2 más realismo en las texturas y
+  personajes, 3 optimización mediante código, 4 realismo visual en infraestructura y
+  personajes, 5 mejora físicas, movimientos más naturales, que no se puedan atravesar
+  los objetos, y más físicas»). Plan y estado en `dinastia-godot/ETAPAS_FINALES.md`
+  (con la lista de cosas raras). Hacerlas EN ORDEN, cada una con capturas antes/
+  después, banco y modos en verde, y el documento al día.
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
