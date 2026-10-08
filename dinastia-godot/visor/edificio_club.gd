@@ -94,7 +94,8 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 	var zc := (z_out + z_fin) / 2.0
 	var fondo := z_fin - z_out
 	var z_tabique := z_fin - PASILLO - 0.1
-	var pared := TunelVestuario._mat(Color(0.94, 0.94, 0.92), 0.85)
+	## Etapa 2: 0,94 se quemaba a blanco puro con las luces de sala.
+	var pared := TunelVestuario._mat(Color(0.82, 0.81, 0.78), 0.85)
 	var suelo := TunelVestuario._mat(Color(0.5, 0.5, 0.52), 0.9)
 	var vidrio: StandardMaterial3D = Texturas.cristal(true, true)
 	## El ascensor de la planta 0 (dentro del vestuario, junto a la pizarra).
@@ -145,12 +146,12 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			TunelVestuario._caja(nodo, Vector3(xs, y0 + ALTO_LIBRE / 2.0, (z_out + z_tabique) / 2.0),
 				Vector3(0.2, ALTO_LIBRE, z_tabique - z_out), pared, true)
 		TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE - 0.01, z_fin - PASILLO / 2.0), Vector3(ancho - 0.1, 0.02, PASILLO - 0.1),
-			TunelVestuario._mat(Color(0.9, 0.9, 0.88), 0.9), false)
+			TunelVestuario._mat(Color(0.8, 0.8, 0.78), 0.9), false)
 		## Luz del pasillo y rótulo de la planta junto al ascensor.
 		var lp := OmniLight3D.new()
 		lp.position = Vector3(x0, y0 + ALTO_LIBRE - 0.4, z_fin - PASILLO / 2.0)
 		lp.omni_range = 10.0
-		lp.light_energy = 1.0
+		lp.light_energy = 0.75
 		nodo.add_child(lp)
 		TunelVestuario._rotulo(nodo, Idiomas.t("PLANTA %d · %s") % [p, Idiomas.t(String(f[1])).to_upper()],
 			Vector3(x0 + (ASC_X0 + ASC_X1) / 2.0, y0 + ALTO_LIBRE - 0.45, z_fin - 0.06), PI, 34, c1.lerp(Color(0.1, 0.1, 0.12), 0.2))
@@ -165,7 +166,7 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			var o := OmniLight3D.new()
 			o.position = Vector3(c, y0 + ALTO_LIBRE - 0.4, (z_out + z_tabique) / 2.0)
 			o.omni_range = maxf(6.0, (b - a) * 0.9)
-			o.light_energy = 1.3
+			o.light_energy = 0.9
 			nodo.add_child(o)
 			TunelVestuario._caja(nodo, Vector3(c, y0 + ALTO_LIBRE - 0.03, (z_out + z_tabique) / 2.0), Vector3(1.8, 0.05, 0.6), luz, false)
 			## Suelo y techo propios de la sala.
@@ -174,7 +175,7 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			TunelVestuario._caja(nodo, Vector3(c, y0 + 0.025, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.01, z_tabique - z_out - 0.1),
 				TunelVestuario._mat(col_suelo, 0.75), false)
 			TunelVestuario._caja(nodo, Vector3(c, y0 + ALTO_LIBRE - 0.01, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.02, z_tabique - z_out - 0.1),
-				TunelVestuario._mat(Color(0.9, 0.9, 0.88), 0.9), false)
+				TunelVestuario._mat(Color(0.8, 0.8, 0.78), 0.9), false)
 			var caja := Rect2(a + 0.2, z_out + 0.2, b - a - 0.4, z_tabique - z_out - 0.4)
 			_amueblar(nodo, String(sala[0]), caja, y0, c1, c2, nombre_club)
 			_decorar(nodo, String(sala[0]), a, b, z_out, z_tabique, y0, c1, c2, gusto)

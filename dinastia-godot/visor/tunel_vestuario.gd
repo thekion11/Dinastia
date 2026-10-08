@@ -81,7 +81,7 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 		c1 = StadiumBuilder._c(mi.color_escudo1(), c1.to_html())
 		c2 = StadiumBuilder._c(mi.color_escudo2(), c2.to_html())
 	var horm: StandardMaterial3D = Texturas.hormigon(Color(0.52, 0.53, 0.55), 23).duplicate()
-	var pared := _mat(Color(0.93, 0.93, 0.9), 0.85)
+	var pared := _mat(Color(0.83, 0.82, 0.79), 0.85)
 	var zocalo := _mat(c1.lerp(Color(0.1, 0.1, 0.12), 0.25), 0.6)
 	var suelo := _mat(Color(0.16, 0.17, 0.19).lerp(c1, 0.18), 0.95)
 	var techo := _mat(Color(0.82, 0.83, 0.84), 0.9)
@@ -115,7 +115,7 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 			var o := OmniLight3D.new()
 			o.position = Vector3(x0, ALTO - 0.4, z)
 			o.omni_range = 6.5
-			o.light_energy = 1.3
+			o.light_energy = 0.95
 			o.light_color = Color(1, 0.96, 0.9)
 			nodo.add_child(o)
 		z += 3.5
@@ -281,14 +281,14 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 		var o := OmniLight3D.new()
 		o.position = Vector3(x0, alto - 0.5, zz)
 		o.omni_range = 13.0
-		o.light_energy = 1.6
+		o.light_energy = 1.15
 		nodo.add_child(o)
 	## Luz de pared a los dos lados: si no, las taquillas quedan en sombra.
 	for lado in [-1.0, 1.0]:
 		var ol := OmniLight3D.new()
 		ol.position = Vector3(x0 + lado * (VEST_MEDIO - 2.2), alto - 0.4, zc)
 		ol.omni_range = 7.5
-		ol.light_energy = 1.1
+		ol.light_energy = 0.85
 		ol.light_color = Color(1, 0.95, 0.86)
 		nodo.add_child(ol)
 	## Fuera, sobre la fachada que da a la calle: el letrero.
