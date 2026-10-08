@@ -347,7 +347,8 @@ func _estacion_elevada(p: Vector3, dir: Vector3, col: Color, nombre: String, lin
 	var lat := Vector3(1, 0, 0) if vertical else Vector3(0, 0, 1)
 	var lon := Vector3(0, 0, 1) if vertical else Vector3(1, 0, 0)
 	var suelo := ALTO_VIADUCTO + 0.6 + PISO_COCHE
-	var losa := _mat(Color(0.8, 0.78, 0.74), 0.7)
+	## Gris de baldosa: con 0,8 el andén al sol salía blanco quemado (etapa 1).
+	var losa: StandardMaterial3D = Texturas.hormigon(Color(0.6, 0.59, 0.56), 41)
 	var borde := _mat(Color(0.95, 0.8, 0.1), 0.5)
 	for lado: float in [-1.0, 1.0]:
 		var c := p + lat * lado * ANDEN_LAT
@@ -441,8 +442,9 @@ func _decorar_estacion(p: Vector3, dir: Vector3, col: Color, nombre: String, ele
 			_caja(self, c, (Vector3(0.12, 2.6 if elevada else 3.2, 10.0) if vertical else Vector3(10.0, 2.6 if elevada else 3.2, 0.12)), _mat(tcol, 0.6, 0.15))
 			var ico := Label3D.new()
 			ico.text = String(tema[0]) if k != 1 else "%s\n%s" % [nombre, String(tema[2])]
+			## Más contenido: con 0,011 el lema llenaba la ventana del tren.
 			ico.font_size = 120 if k != 1 else 54
-			ico.pixel_size = 0.012 if k != 1 else 0.011
+			ico.pixel_size = 0.009 if k != 1 else 0.0075
 			ico.outline_size = 10
 			ico.outline_modulate = tcol.darkened(0.5)
 			ico.position = c + hacia * 0.1
@@ -452,6 +454,8 @@ func _decorar_estacion(p: Vector3, dir: Vector3, col: Color, nombre: String, ele
 		## Plano de la red: un panel blanco con las dos líneas y sus estaciones.
 		var pl := fondo + lon * 24.0 + Vector3(0, y + 1.6, 0) + hacia * 0.05
 		_caja(self, pl, (Vector3(0.1, 1.8, 2.6) if vertical else Vector3(2.6, 1.8, 0.1)), _mat(Color(0.96, 0.96, 0.94), 0.6))
+		## Marco y trasera oscuros: por detrás era una placa blanca lisa.
+		_caja(self, pl - hacia * 0.06, (Vector3(0.06, 1.95, 2.75) if vertical else Vector3(2.75, 1.95, 0.06)), _mat(Color(0.18, 0.2, 0.24), 0.5))
 		var plano := Label3D.new()
 		plano.text = "PLANO DE LA RED\n🔴 L1: %s\n🔵 L2: %s\n\nUsted está en: %s" % [" · ".join(NOMBRES["Línea 1"]), " · ".join(NOMBRES["Línea 2"]), nombre]
 		plano.font_size = 22
@@ -592,7 +596,7 @@ func _estacion_subterranea(p: Vector3, dir: Vector3, col: Color, nombre: String,
 		_caja(self, c + lon * e * largo * 0.5 + Vector3(0, y + 3.1, 0), (Vector3(ancho, 6.8, 0.4) if vertical else Vector3(0.4, 6.8, ancho)), azulejo)
 	## El andén (lado +lateral), con su borde amarillo y bancos.
 	var ca := p + lat * ANDEN_LAT * 1.6
-	_caja(self, ca + Vector3(0, y + PISO_COCHE - 0.5, 0), (Vector3(ANDEN_ANCHO * 2.2, 1.0, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 1.0, ANDEN_ANCHO * 2.2)), _mat(Color(0.7, 0.68, 0.64), 0.7))
+	_caja(self, ca + Vector3(0, y + PISO_COCHE - 0.5, 0), (Vector3(ANDEN_ANCHO * 2.2, 1.0, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 1.0, ANDEN_ANCHO * 2.2)), _mat(Color(0.56, 0.55, 0.52), 0.75))
 	_caja(self, p + lat * (ANDEN_LAT * 1.6 - ANDEN_ANCHO * 1.1 + 0.25) + Vector3(0, y + PISO_COCHE + 0.01, 0), (Vector3(0.4, 0.02, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 0.02, 0.4)), _mat(Color(0.95, 0.8, 0.1), 0.5))
 	for k in 3:
 		_banco(ca + lon * (float(k) - 1.0) * 18.0 + lat * 3.0 + Vector3(0, y + PISO_COCHE, 0), vertical)
