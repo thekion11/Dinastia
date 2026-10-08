@@ -2072,6 +2072,8 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 			federacion.revisar_cupo_juvenil(mio, mio.once())
 			## Las reglas de la liga de tu país: si decidiste incumplirlas, multa.
 			federacion.revisar_leyes_pais(self, mio)
+			## La sanción al DT se cumple partido a partido.
+			federacion.cumplir_sancion_dt()
 		## EL FICHAJE IMPUESTO -por la ocupación hostil del dueño o el trato
 		## comercial del patrocinador-, mismo patrón que el cupo juvenil de
 		## arriba: `Prensa.revisar_impuesto()` ya existía escrito y nadie lo
