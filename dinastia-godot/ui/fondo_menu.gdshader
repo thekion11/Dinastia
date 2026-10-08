@@ -63,10 +63,19 @@ void fragment() {
 		col += mix(c3.rgb, c2.rgb, 0.5) * bokeh(p + 3.7, 9.0, t * 0.08, 0.36) * 0.16;
 		col += c3.rgb * bokeh(p + 9.1, 16.0, t * 0.12, 0.3) * 0.1;
 	} else if (estilo == 2) {
-		float d = (p.x + p.y) * 3.0;
-		float w = sin(d * 2.0 - t * 0.8 + fbm(p * 2.0 + t * 0.05) * 3.0);
-		col += c3.rgb * smoothstep(0.92, 1.0, w) * 0.35;
-		col += c3.rgb * 0.08 * (0.5 + 0.5 * sin(d - t * 0.3));
+		// Hilos de luz (etapa 1, 2.ª pasada): antes eran ondas anchas
+		// deformadas con ruido que se veían como manchas de pintura. Ahora,
+		// cinco trayectorias finas que suben en diagonal y ondulan despacio,
+		// con un halo suave: «tu camino», no un borrón.
+		for (int i = 0; i < 5; i++) {
+			float fi = float(i);
+			float base = 0.15 + fi * 0.19;
+			float y = base + (aspecto.x - p.x) * 0.32 + 0.05 * sin(p.x * (2.2 + fi * 0.4) + t * (0.25 + fi * 0.05) + fi * 1.7);
+			float d = abs(p.y - y);
+			float ancho = 0.0025 + 0.0015 * fi;
+			col += c3.rgb * (smoothstep(ancho * 2.0, 0.0, d) * (0.28 - fi * 0.03) + exp(-d * 38.0) * 0.06);
+		}
+		col += c3.rgb * 0.05 * smoothstep(1.2, 0.0, length(p - vec2(aspecto.x * 0.85, 0.9)));
 	} else if (estilo == 3) {
 		vec2 g = fract(p * 14.0);
 		float lin = max(smoothstep(0.96, 1.0, g.x), smoothstep(0.96, 1.0, g.y));
