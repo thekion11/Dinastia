@@ -938,14 +938,16 @@ func _pintar_informe() -> void:
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_inicio.add_child(fila)
 		var n := p._texto(12, Principal.COL_ROJO if grave else Principal.COL_TEXTO)
-		n.text = "%s %s" % ["●" if grave else "○", String(f["txt"])]
+		## Traducido ANTES de ponerle la viñeta: los patrones con números
+		## («5 contratos terminan…») empiezan en la frase, no en «●».
+		n.text = "%s %s" % ["●" if grave else "○", Idiomas.t(String(f["txt"]))]
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		n.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		fila.add_child(n)
 		if tab == "":
 			continue
 		var b := Button.new()
-		b.text = tab
+		b.text = Idiomas.t(tab)
 		b.add_theme_font_size_override("font_size", 10)
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(92, 24)

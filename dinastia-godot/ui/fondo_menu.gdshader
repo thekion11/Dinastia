@@ -35,8 +35,10 @@ float bokeh(vec2 uv, float escala, float t, float tam) {
 	vec2 id = floor(g); vec2 f = fract(g) - 0.5;
 	float r = h1(id);
 	vec2 off = vec2(h1(id + 3.1), h1(id + 7.7)) - 0.5;
-	float d = length(f - off * 0.6);
 	float s = tam * (0.4 + 0.6 * r);
+	// El círculo cabe SIEMPRE en su celda (radio + desplazamiento <= 0,5): si
+	// se salía, el borde de la celda lo cortaba y se veían cuadrados (etapa 1).
+	float d = length(f - off * max(0.0, 1.0 - 2.0 * s));
 	return smoothstep(s, s * 0.55, d) * step(0.45, r);
 }
 
