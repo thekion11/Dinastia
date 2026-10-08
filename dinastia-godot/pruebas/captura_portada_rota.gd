@@ -28,16 +28,21 @@ func _process(d: float) -> void:
 	match _paso:
 		1:
 			_foto()
+			## De la última portada al primer fondo de pantalla completa.
+			_p.set("_clave", "marmol")
+			_p.call("_pintar_banner")
 			_p.call("_rotar_portada")     # lo que hace el reloj cada 30 s
 		2:
 			_foto()                       # a mitad del fundido
 		3:
 			_foto()                       # ya en la siguiente
+			_p.call("_rotar_pagina")       # el fondo de la página
 			_p.call("_rotar_portada")
 		4:
-			pass
+			_p.call("_rotar_pagina")
 		5:
 			_foto()
+			_p.call("_rotar_pagina")
 			_p.call("_rotar_portada")
 		6:
 			_foto()
