@@ -159,3 +159,4 @@ Recorrido TOTAL de la interfaz (`pruebas/captura_recorrido_total.tscn`: principa
 - [x] «Editor» y «Libres» empujaban la ficha fuera de la pantalla: filas que se
       parten y desplazamiento horizontal dentro de la hoja.
 - [x] Fondo de «Mi carrera»: manchas amarillas → hilos de luz finos.
+- [x] (Pedido 8-10: «había más fondos, faltan para la transición») Los 24 fondos de pantalla completa (`Fondo.NOMBRES`) también rotan: detrás de toda la página de inicio, cada 30 s a destiempo de la portada (las 18 portadas siguen en la franja).
