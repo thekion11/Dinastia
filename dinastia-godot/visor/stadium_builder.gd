@@ -1997,6 +1997,8 @@ const PASO_BUTACA := 1.52        ## ancho de una fila de tres butacas
 static var _malla_hincha: Mesh
 
 static func _malla_hincha_cache() -> Mesh:
+	if Calidad.elegida == Calidad.MEDIO:
+		return _malla_hincha_minima()
 	if _malla_hincha != null:
 		return _malla_hincha
 	var torso := CapsuleMesh.new()
@@ -2015,6 +2017,36 @@ static func _malla_hincha_cache() -> Mesh:
 	st.append_from(cabeza, 0, Transform3D(Basis(), Vector3(0, 0.61, 0)))
 	_malla_hincha = st.commit()
 	return _malla_hincha
+
+## EL HINCHA MÍNIMO (etapa 3, 8-10-2026). En calidad MEDIO la hinchada lejana
+## era 1,7 M de los 3,1 M de triángulos del partido (decenas de miles de
+## hinchas de 60). Este tiene la MISMA silueta y alturas -el shader de la
+## hinchada pinta cuello, cabeza y pelo por altura- con un torso de 5 lados
+## sin tapa de abajo (la tapa la sientan las butacas) y una cabeza de 5x2:
+## 26 triángulos. A más de 30 m, que es donde está, no se distingue.
+static var _malla_hincha_min: Mesh
+
+static func _malla_hincha_minima() -> Mesh:
+	if _malla_hincha_min != null:
+		return _malla_hincha_min
+	var torso := CylinderMesh.new()
+	torso.top_radius = 0.16
+	torso.bottom_radius = 0.18
+	torso.height = 0.55
+	torso.radial_segments = 5
+	torso.rings = 0
+	torso.cap_bottom = false
+	var cabeza := SphereMesh.new()
+	cabeza.radius = 0.11
+	cabeza.height = 0.22
+	cabeza.radial_segments = 5
+	cabeza.rings = 2
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	st.append_from(torso, 0, Transform3D(Basis(), Vector3(0, 0.28, 0)))
+	st.append_from(cabeza, 0, Transform3D(Basis(), Vector3(0, 0.61, 0)))
+	_malla_hincha_min = st.commit()
+	return _malla_hincha_min
 
 ## EL HINCHA DE LAS PRIMERAS FILAS (29-9-2026). Pedido del usuario al ver el
 ## partido jugable de la Carrera de Jugador ("ese público se ve horrible"):
@@ -2249,8 +2281,13 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	##   bandeja 1 -> 2 filas
 	##   bandeja 2+ -> ninguna (textura + hinchas, que sí siguen en todas)
 	## Total: ~2,4 millones de vértices, MENOS que antes de esta tanda.
-	var presupuesto: int = FILAS_REALES if bandeja == 0 \
-		else (maxi(1, FILAS_REALES / 2) if bandeja == 1 else 0)
+	## Etapa 3 (8-10-2026): en calidad MEDIO -la de un equipo modesto- solo las
+	## 2 filas pegadas al césped llevan el modelo real (1.944 triángulos por
+	## butaca); el resto, la butaca liviana. Medido en el partido: las butacas
+	## eran 4,4 M de triángulos, más que todo lo demás junto.
+	var reales: int = 2 if Calidad.elegida == Calidad.MEDIO else FILAS_REALES
+	var presupuesto: int = reales if bandeja == 0 \
+		else (maxi(1, reales / 2) if bandeja == 1 and reales == FILAS_REALES else 0)
 	## LA HINCHADA LLEGA ARRIBA DEL TODO; LAS BUTACAS 3D, NO (23-9-2026).
 	##
 	## Pedido directo del usuario -"ese modelo de público debe estar en toda la

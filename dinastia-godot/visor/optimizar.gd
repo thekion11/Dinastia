@@ -310,3 +310,43 @@ static func _mat_unico(m: Material, vistos: Dictionary) -> Material:
 		res = vistos[k]
 	vistos[id] = res
 	return res
+
+## INFORME para perfilar una escena: los que más triángulos y piezas suman
+## (malla × instancias), entre lo visible. Lo usan las pruebas `medir_*` con
+## DETALLE=1; no se llama en el juego.
+static func informe(raiz: Node, cuantos := 20) -> Array:
+	var suma := {}
+	for n in raiz.find_children("*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		if not g.is_visible_in_tree():
+			continue
+		var m: Mesh = null
+		var veces := 1
+		if g is MeshInstance3D:
+			m = (g as MeshInstance3D).mesh
+		elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null:
+			var mm := (g as MultiMeshInstance3D).multimesh
+			m = mm.mesh
+			veces = mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count
+		if m == null:
+			continue
+		var clave := "%s %s <%s>" % [g.get_class().left(5), m.get_class(), (m.resource_name if m.resource_name != "" else String(g.get_parent().name)).left(28)]
+		if not suma.has(clave):
+			suma[clave] = {"clave": clave + " nodo=" + String(g.name) + " x" + str(veces) + " t/u=" + str(_tris(m)), "tris": 0, "piezas": 0, "corte": g.visibility_range_end}
+		suma[clave]["tris"] += _tris(m) * veces
+		suma[clave]["piezas"] += 1
+	var lista := suma.values()
+	lista.sort_custom(func(a, b): return a["tris"] > b["tris"])
+	return lista.slice(0, cuantos)
+
+static var _tris_cache := {}
+static func _tris(m: Mesh) -> int:
+	if _tris_cache.has(m):
+		return _tris_cache[m]
+	var t := 0
+	for s in m.get_surface_count():
+		var arr := m.surface_get_arrays(s)
+		var idx: PackedInt32Array = arr[Mesh.ARRAY_INDEX] if arr[Mesh.ARRAY_INDEX] != null else PackedInt32Array()
+		t += (idx.size() if idx.size() > 0 else (arr[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()) / 3
+	_tris_cache[m] = t
+	return t
