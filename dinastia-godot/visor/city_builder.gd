@@ -122,6 +122,7 @@ func build(d: Dictionary) -> void:
 	_vias.clear()
 	_frentes.clear()
 	huellas.clear()
+	_rect_vestuario = Rect2()
 	_anillo_con_banderas = false
 	_luminarias.clear()
 	_luz_color = _color_luces()
@@ -155,6 +156,7 @@ func build(d: Dictionary) -> void:
 	_animo_del_club()
 	_rotulo_barrio()
 	add_child(_rotulos)
+	_despejar_vestuario(self)
 
 ## `noche` va de 0 (pleno día) a 1 (noche cerrada). Lo llama el ciclo del sol
 ## de `VistaCiudad` en cada fotograma. Las farolas se encienden con la luz, y
@@ -647,6 +649,11 @@ func _estadio() -> void:
 		## butacas del club, que es lo que lo hace reconocible desde arriba.
 		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, aforo)
 		huellas.append(Rect2(ESTADIO_EN.x - 62.0, ESTADIO_EN.z - 80.0, 124.0, 160.0))
+		## El vestuario del túnel sobresale por detrás de la tribuna (estadio 2.0).
+		var tv := TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, aforo))
+		_rect_vestuario = Rect2(ESTADIO_EN.x + float(tv["x0"]) - TunelVestuario.VEST_MEDIO - 0.4,
+			ESTADIO_EN.z + float(tv["z_out"]), TunelVestuario.VEST_MEDIO * 2.0 + 0.8, TunelVestuario.VEST_FONDO + 0.4)
+		huellas.append(_rect_vestuario)
 		puntos_clic.append({"k": "estadio", "n": str(datos.get("club", {}).get("estadioNom", "Estadio")),
 			"pos": ESTADIO_EN + Vector3(0, 15, 0), "estado": "estadio"})
 		## Si se están ampliando las tribunas o mejorando el recinto, se nota.
@@ -4392,6 +4399,35 @@ func _banderas_anillo(c1: Color, c2: Color) -> void:
 			StadiumBuilder._bandera_ondeante(self, Vector3(x + 1.3, 7.6, z), Vector2(2.6, 1.6),
 				c1 if i % 2 == 0 else c2, 0.0, float(i) * 0.7)
 
+func _en_huella(p: Vector3) -> bool:
+	for r: Rect2 in huellas:
+		if r.has_point(Vector2(p.x, p.z)):
+			return true
+	return false
+
+## ESTADIO 2.0: el vestuario está detrás de la tribuna, donde muere la avenida
+## del estadio. Las marcas viales y piezas planas de la calle que caen dentro
+## asomarían por su suelo: se quitan.
+var _rect_vestuario := Rect2()
+
+func _despejar_vestuario(n: Node, t: Transform3D = Transform3D()) -> void:
+	## Se llama antes de que la ciudad esté en el árbol: las posiciones se
+	## componen a mano (relativas a la ciudad), no con `global_position`.
+	if _rect_vestuario.size == Vector2.ZERO or n.name == "TunelVestuario":
+		return
+	for h in n.get_children():
+		if not (h is Node3D):
+			continue
+		var th: Transform3D = t * (h as Node3D).transform
+		if h is MeshInstance3D:
+			var mi := h as MeshInstance3D
+			var p := th.origin
+			if mi.mesh != null and _rect_vestuario.has_point(Vector2(p.x, p.z)) and mi.get_aabb().size.y < 0.3 and p.y < 0.5:
+				mi.get_parent().remove_child(mi)
+				mi.queue_free()
+				continue
+		_despejar_vestuario(h, th)
+
 ## La marea de gente alrededor del estadio.
 func _hinchada_estadio(c1: Color, c2: Color, rng: RandomNumberGenerator) -> void:
 	var mm := MultiMesh.new()
@@ -4411,6 +4447,12 @@ func _hinchada_estadio(c1: Color, c2: Color, rng: RandomNumberGenerator) -> void
 		var ang := rng.randf() * TAU
 		var r := rng.randf_range(105.0, 150.0)
 		var p := ESTADIO_EN + Vector3(cos(ang) * r, 0.9, sin(ang) * r * 0.8)
+		## Nadie dentro de un edificio (el vestuario del estadio, por ejemplo).
+		for intento in 8:
+			if not _en_huella(p):
+				break
+			ang = rng.randf() * TAU
+			p = ESTADIO_EN + Vector3(cos(ang) * r, 0.9, sin(ang) * r * 0.8)
 		mm.set_instance_transform(k, Transform3D(Basis(), p))
 		var tono := rng.randf()
 		var col: Color = c1 if tono < 0.45 else (c2 if tono < 0.7 else Color(0.2, 0.22, 0.25).lerp(Color(0.8, 0.8, 0.8), rng.randf()))
