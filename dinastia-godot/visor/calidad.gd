@@ -238,6 +238,10 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 
 # ------------------------------------------------------------------ viewport
 
+## ¿Renderizador de compatibilidad (OpenGL: móvil, web, capturas)?
+static func es_compatibilidad() -> bool:
+	return RenderingServer.get_current_rendering_method() == "gl_compatibility"
+
 ## Ajustes del propio viewport: suavizado de bordes y filtrado de texturas. Sin
 ## esto, a 4K se ven los dientes de sierra de cada farola.
 static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
@@ -248,13 +252,18 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 	## casi no se nota en el angulo de camara tipico de un partido (no es un
 	## FPS en primera persona donde cada borde se ve de cerca). Bajado a x2 en
 	## ALTO, x4 se guarda para ULTRA (capturas, donde SI importa el detalle).
+	## FXAA y TAA solo existen en Forward+/Mobile: en compatibilidad (móvil,
+	## web) el motor avisaba en cada pantalla 3D y no hacía nada.
+	var avanzado := not es_compatibilidad()
 	if nivel >= ULTRA:
 		vp.msaa_3d = Viewport.MSAA_8X
-		vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
-		vp.use_taa = true
+		if avanzado:
+			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
+			vp.use_taa = true
 	elif nivel >= ALTO:
 		vp.msaa_3d = Viewport.MSAA_2X
-		vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
+		if avanzado:
+			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 	else:
 		vp.msaa_3d = Viewport.MSAA_2X
 	vp.use_debanding = true
