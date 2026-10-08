@@ -215,7 +215,20 @@ func _crear_cuerpo() -> Node3D:
 var _es_dt := false
 
 ## Con el cuerpo del DT: «caminar» o «correr» al moverse y «parado» quieto.
+## Pasos que suenan al andar a pie (etapa 1): uno cada ~0,7 m caminando y
+## cada ~1,1 m corriendo.
+var _hasta_paso := 0.0
+
+func _sonar_pasos(v: float) -> void:
+	if modo != "pie" or absf(v) < 0.3:
+		return
+	_hasta_paso -= absf(v) * get_physics_process_delta_time()
+	if _hasta_paso <= 0.0:
+		_hasta_paso = 1.1 if absf(v) > 3.0 else 0.7
+		Sonido.toca("paso", Sonido.Bus.EFECTOS)
+
 func _animar_dt(v: float) -> void:
+	_sonar_pasos(v)
 	if not _es_dt or _anim == null:
 		return
 	var quiere := "parado"
@@ -360,6 +373,7 @@ func _physics_process(delta: float) -> void:
 			_animar_dt(vel)
 		elif _anim != null:
 			_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
+			_sonar_pasos(vel)
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var nueva := cuerpo.position + adelante * vel * delta
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
@@ -843,6 +857,7 @@ func _mover_en_anden(delta: float) -> void:
 	rumbo -= e.x * delta * 2.6
 	if _anim != null:
 		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
+	_sonar_pasos(vel)
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var p := cuerpo.position + adelante * vel * delta
 	## Dentro del andén: ni a la vía ni fuera de la estación.

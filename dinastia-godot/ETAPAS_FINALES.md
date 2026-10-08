@@ -147,3 +147,4 @@ balón conserva la energía) y con capturas o vídeo de movimiento.
 - [x] Fondo «bokeh» de los menús: los círculos se cortaban en cuadrados. 8-10.
 - [x] Fundido de entrada al abrir la ciudad 3D, el estadio y el partido. 8-10.
 - [x] Revisada la Carrera de Jugador (creación, semana, partido, córner). 8-10.
+- [x] El sonido «puerta» se pedía y no existía (silencio): creado, más pasos al andar a pie. 8-10.
