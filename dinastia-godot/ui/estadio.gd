@@ -151,6 +151,8 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 
 	var perfil := perfil_forzado if not perfil_forzado.is_empty() else club.perfil_estadio()
 	_perfil = perfil
+	perfil_actual = perfil
+	butaca_sancion = {}
 	var aforo := int(perfil.get("aforo", 20000))
 
 	## EL ORDEN ES EL DEL VISOR QUE YA FUNCIONABA, y las cuatro llamadas hacen
@@ -216,6 +218,11 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_raiz3d.add_child(_rig)
 	_rig.build_for(g["dx"], g["dz"], alto)
 	_rig.balon_ref = _balon
+	## SANCIONADO (estadio 2.0): el partido, desde tu butaca de la grada.
+	if partido != null and PersonajeDT.sancionado and not butaca_sancion.is_empty():
+		var ojo: Vector3 = (butaca_sancion["pos"] as Vector3) + Vector3(0, 1.2, 0)
+		_rig._add("Desde la grada (sancionado)", ojo + Vector3(0.6, 0.3, 0), Vector3(0, 0, ojo.z * 0.3), 62)
+		_rig.switch_to(_rig.cameras.size() - 1)
 
 	## Viñeta de transmisión (22-9-2026, comparando contra el look de cámara de
 	## Open-Soccer): un oscurecido 2D encima del 3D, no un efecto de Environment
@@ -579,10 +586,30 @@ static func poner_personal(raiz: Node3D) -> void:
 		## El giro es hacia FUERA del campo: la persona mira a +Z sin girar.
 		PersonajeDT.personal_estadio(_raiz3d, "seguridad", puestos[k][0], puestos[k][1], 900 + k)
 
-static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int) -> void:
+## Dónde se sienta el DT sancionado: la grada de los banquillos, a la altura
+## de su banquillo (estadio 2.0, fase 3).
+static var butaca_sancion: Dictionary = {}
+## El perfil del estadio que se está montando (para la butaca del sancionado).
+static var perfil_actual: Dictionary = {}
+
+static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int, perfil: Dictionary = {}) -> void:
 	var asp: Dictionary = PersonajeDT.del_usuario if c.id == PersonajeDT.club_usuario else PersonajeDT.de_rival(c.id)
 	var lado := -1.0 if es_local else 1.0
 	var z := lado * 14.0 - lado * (float(maxi(cuantos, 1)) * 0.8 + 1.8)
+	## SANCIONADO: no está en la banda, está sentado en la grada.
+	if c.id == PersonajeDT.club_usuario and PersonajeDT.sancionado:
+		butaca_sancion = RecorridoClub.butaca(perfil if not perfil.is_empty() else perfil_actual, 1.0, z, 4)
+		var d := PersonajeDT.crear(_raiz3d, asp, Color(c.color1), Color(c.color2))
+		if not d.is_empty():
+			var n: Node3D = d["nodo"]
+			n.position = butaca_sancion["pos"]
+			n.rotation.y = float(butaca_sancion["rumbo"])
+			var ap: AnimationPlayer = d.get("anim") as AnimationPlayer
+			if ap != null and ap.has_animation("sentado"):
+				ap.play("sentado")
+			## Su butaca y las de al lado, libres de hinchas.
+			RecorridoClub.despejar_hinchas(_raiz3d, _raiz3d.global_position + (butaca_sancion["pos"] as Vector3) + Vector3(0, 0.5, 0), 1.6)
+		return
 	PersonajeDT.poner_en_banda(_raiz3d, asp, Color(c.color1), Color(c.color2), Vector3(34.6, 0, z), -PI * 0.5)
 
 ## Mejores disponibles (sin lesión/sanción, no en el once) por media, para que

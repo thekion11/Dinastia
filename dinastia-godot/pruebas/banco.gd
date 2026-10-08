@@ -129,6 +129,7 @@ func _ready() -> void:
 	_probar_tunel_navegable()
 	_probar_edificio_club()
 	_probar_personal_estadio()
+	_probar_sancion_dt()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -7787,3 +7788,23 @@ func _probar_personal_estadio() -> void:
 	_comprobar(String(PersonalEstadio.PUESTOS["utilero"][1]) == "Utilería" and String(PersonalEstadio.PUESTOS["presidente"][1]) == "Despacho del presidente",
 		"el utilero en la utilería y el presidente en su despacho")
 	pe.free()
+
+func _probar_sancion_dt() -> void:
+	_titulo("ESTADIO 2.0: SANCIÓN AL DT Y LA GRADA")
+	var m := Mundo.new()
+	m.generar(["CHI"], 515)
+	var f := m.federacion
+	f.sancionar_dt(2)
+	_comprobar(not f.dt_sancionado(), "el partido de la expulsión no cuenta como sanción")
+	f.cumplir_sancion_dt()
+	_comprobar(f.dt_sancionado() and f.dt_suspension == 2, "los dos siguientes, desde la grada (%d)" % f.dt_suspension)
+	f.cumplir_sancion_dt()
+	f.cumplir_sancion_dt()
+	_comprobar(not f.dt_sancionado() and f.dt_suspension == 0, "cumplida, vuelve a la banda")
+	f.sancionar_dt(1)
+	var f2 := Federacion.new()
+	f2.desde_dic(f.a_dic())
+	_comprobar(f2.dt_suspension == 1 and f2.dt_susp_nueva, "la sanción se guarda con la partida")
+	var b := RecorridoClub.butaca({"forma": "cuenco"}, 1.0, 10.0)
+	_comprobar((b["pos"] as Vector3).x > 43.5 and (b["pos"] as Vector3).y > 2.0, "la butaca está en la primera bandeja de la grada")
+	_comprobar(RecorridoClub.junto_a_la_grada(Vector3(35, 0, 0), 0) and not RecorridoClub.junto_a_la_grada(Vector3(0, 0, 0), 0), "solo se sienta uno desde la banda")

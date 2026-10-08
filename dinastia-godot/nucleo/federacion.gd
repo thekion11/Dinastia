@@ -166,6 +166,11 @@ var semanas_en_rojo: int = 0
 ## Cuántas veces has recurrido y te han dicho que no. Los árbitros toman nota y
 ## la siguiente apelación sale más cara de ganar.
 var enojo_arbitral: int = 0
+## SANCIÓN AL DT (estadio 2.0, fase 3; el `G.dtSusp` del HTML que no se había
+## portado). Fechas que te quedan viéndolo desde la grada, y si la sanción es
+## de ESTE partido (aún no ha empezado a cumplirse).
+var dt_suspension: int = 0
+var dt_susp_nueva := false
 var playoffs_ultimo: Dictionary = {}
 
 ## Contador para los identificadores de caso. El HTML usaba `Date.now()`, que en
@@ -796,6 +801,29 @@ func control_antidopaje(mi: Club, anio: int, semana_n: int) -> Dictionary:
 	registro["fechas"] = fechas
 	return registro
 
+## Te expulsan del área técnica: el tribunal te sanciona `fechas` partidos.
+func sancionar_dt(fechas: int) -> void:
+	dt_suspension = maxi(dt_suspension, fechas)
+	dt_susp_nueva = true
+	enojo_arbitral = mini(enojo_arbitral + 1, 5)
+	noticia.emit("🟥 Sanción al entrenador",
+		"El tribunal te sanciona con %d partido(s) por la expulsión. Los verás desde la grada, sin dar órdenes desde la banda." % fechas)
+
+## Tras cada partido tuyo: la sanción corre (no la del partido en que te
+## expulsaron, que empieza a contar en el siguiente).
+func cumplir_sancion_dt() -> void:
+	if dt_susp_nueva:
+		dt_susp_nueva = false
+		return
+	if dt_suspension > 0:
+		dt_suspension -= 1
+		if dt_suspension == 0:
+			noticia.emit("✅ Vuelves a la banda", "Cumpliste la sanción: el próximo partido lo diriges desde el banquillo.")
+
+## ¿Ves este partido desde la grada?
+func dt_sancionado() -> bool:
+	return dt_suspension > 0 and not dt_susp_nueva
+
 # ============================================================================
 # GUARDADO
 # ============================================================================
@@ -811,6 +839,7 @@ func a_dic() -> Dictionary:
 		"sin_cupo": sin_cupo_internacional,
 		"casos": casos, "controles": controles,
 		"semanas_en_rojo": semanas_en_rojo, "enojo_arbitral": enojo_arbitral,
+		"dt_susp": dt_suspension, "dt_susp_n": dt_susp_nueva,
 		"playoffs_ultimo": playoffs_ultimo, "sec": _sec,
 		"presidente": presidente,
 		"desempate": desempate_directo, "promocion": promocion, "arbitros": arbitros,
@@ -821,6 +850,8 @@ func desde_dic(d: Dictionary) -> void:
 	cupo_juvenil = bool(d.get("cupo_juvenil", false))
 	tope_extranjeros = int(d.get("tope_extranjeros", 0))
 	infracciones_ley = d.get("infr_ley", {})
+	dt_suspension = int(d.get("dt_susp", 0))
+	dt_susp_nueva = bool(d.get("dt_susp_n", false))
 	playoffs = bool(d.get("playoffs", false))
 	superliga = bool(d.get("superliga", false))
 	var_activo = bool(d.get("var", false))
