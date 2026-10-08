@@ -154,9 +154,13 @@ func _construir() -> void:
 	## despacio por toda la pantalla. Va la última, fuera del scroll -como el
 	## canvas de Phaser, que flota encima de #main sin desplazarse con la
 	## página- y cubriendo el viewport, no el contenido entero.
+	## Etapa 1 (8-10-2026): DETRÁS del contenido (entre el fondo y el scroll).
+	## Encima, las motas tapaban letras y botones como manchas blancas.
 	var fondo_part := FondoParticulas.new()
 	fondo_part.ajustar_area(get_viewport_rect().size)
+	fondo_part.z_index = 0
 	add_child(fondo_part)
+	move_child(fondo_part, 1)
 
 ## La franja panorámica con el fondo de la portada, el degradado que hace
 ## legible el texto y el título encima. El HTML lo llama `.pHero`: cielo,
