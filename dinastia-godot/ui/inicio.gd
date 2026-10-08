@@ -125,6 +125,8 @@ func _ready() -> void:
 	Calidad.cargar()
 	if Calidad.relanzar_si_hace_falta(get_tree()):
 		return
+	## Mientras se mira el menú, los modelos pesados se cargan en un hilo.
+	Precarga.empezar(get_tree())
 	_clave = _leer_ajuste()
 	_construir()
 	_pintar_banner()

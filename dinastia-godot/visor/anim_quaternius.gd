@@ -788,8 +788,33 @@ static func dolor(esq: Skeleton3D, prefijo: String) -> Animation:
 ## aparte activarlas en partidos de verdad via `PlayerSpawner`, esto solo dice
 ## que el contenido ya no esta roto-. La locomocion real de Quaternius (Idle/
 ## Walk/Jog/Sprint) nunca dependio de esta bandera, se agrega siempre.
+## BIBLIOTECAS COMPARTIDAS (etapa 3, 8-10-2026). Medido con TIEMPOS=1: la
+## ciudad armaba 105 bibliotecas IDÉNTICAS -una por peatón, hincha o empleado-
+## a ~27 ms cada una: 2,9 s de la construcción. Lo que sale de aquí solo
+## depende de la ruta al esqueleto, de las acciones de fútbol y de la pose de
+## reposo del modelo, así que se arma una vez por combinación y se comparte
+## (nadie la modifica después; si alguien lo hiciera, cambiaría a todos).
+static var _bibliotecas := {}
+
+static func _firma(esq: Skeleton3D) -> int:
+	var partes := PackedStringArray()
+	for i in esq.get_bone_count():
+		partes.append(esq.get_bone_name(i) + str(esq.get_bone_rest(i)))
+	return hash("|".join(partes))
+
 static func construir(esq: Skeleton3D, ruta_esqueleto: String = "", acciones_experimentales: bool = false) -> AnimationLibrary:
 	var prefijo := ruta_esqueleto if ruta_esqueleto != "" else str(esq.name)
+	return _en_cache(esq, prefijo, acciones_experimentales)
+
+static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
+	var clave := "%s|%s|%d" % [prefijo, acciones_experimentales, _firma(esq)]
+	if _bibliotecas.has(clave):
+		return _bibliotecas[clave]
+	var lib := _construir(esq, prefijo, acciones_experimentales)
+	_bibliotecas[clave] = lib
+	return lib
+
+static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var lib := AnimationLibrary.new()
 	var a_mano := {
 		"parado": parado(esq, prefijo),
