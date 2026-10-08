@@ -120,7 +120,10 @@ func _estudio() -> Control:
 	cam.transform = Transform3D(Basis.looking_at(Vector3(0, 0.92, 0) - Vector3(0, 1.1, 4.0), Vector3.UP), Vector3(0, 1.1, 4.0))
 	mundo3.add_child(cam)
 	## Luz de tres puntos: principal cálida, relleno frío y contraluz.
-	var luces := [[Vector3(-30, 35, 0), 1.25, Color(1.0, 0.95, 0.88)], [Vector3(-10, -40, 0), 0.45, Color(0.8, 0.88, 1.0)], [Vector3(-20, 170, 0), 0.9, Color(1, 1, 1)]]
+	## Etapa 2 (8-10-2026): más suaves. Con 1,25 + 0,45 + 0,9 y ambiente 0,8 la
+	## escena estaba quemada: la piel clara salía BLANCA (manos y cuello
+	## «enguantados») y la tarima casi negra se veía gris claro.
+	var luces := [[Vector3(-30, 35, 0), 0.95, Color(1.0, 0.95, 0.88)], [Vector3(-10, -40, 0), 0.3, Color(0.8, 0.88, 1.0)], [Vector3(-20, 170, 0), 0.55, Color(1, 1, 1)]]
 	for i in luces.size():
 		var l: Array = luces[i]
 		var luz := DirectionalLight3D.new()
@@ -135,8 +138,10 @@ func _estudio() -> Control:
 	e.background_color = Color(0.09, 0.11, 0.13)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	e.ambient_light_color = Color(0.55, 0.57, 0.62)
-	e.ambient_light_energy = 0.8
-	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	e.ambient_light_energy = 0.45
+	e.tonemap_mode = Environment.TONE_MAPPER_ACES
+	e.tonemap_exposure = 0.95
+	e.tonemap_white = 6.0
 	env.environment = e
 	mundo3.add_child(env)
 	## La tarima: un disco con borde del color del club.
