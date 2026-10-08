@@ -47,7 +47,20 @@ func iniciar(est: Dictionary, niveles: int, club: Club) -> void:
 	_montar_hud()
 	_colocar_camara(1.0)
 
+var _es_dt := false
+
 func _crear_cuerpo() -> Node3D:
+	## Tu personaje: el DT con su aspecto, si lo hay.
+	if not PersonajeDT.del_usuario.is_empty():
+		var raiz := Node3D.new()
+		add_child(raiz)
+		var dt := PersonajeDT.crear(raiz, PersonajeDT.del_usuario, Color(0.12, 0.13, 0.16), Color(0.9, 0.9, 0.92))
+		remove_child(raiz)
+		if not dt.is_empty():
+			_anim = dt.get("anim") as AnimationPlayer
+			_es_dt = true
+			return raiz
+		raiz.queue_free()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7
 	var d := PeatonQ.crear(rng)
@@ -159,7 +172,11 @@ func paso(e: Vector2, corre: bool, delta: float) -> void:
 	else:
 		vel = 0.0
 	cuerpo.rotation.y = rumbo
-	if _anim != null:
+	if _es_dt and _anim != null:
+		var quiere := "correr" if absf(vel) > 3.0 else ("caminar" if absf(vel) > 0.05 else "parado")
+		if _anim.has_animation(quiere) and _anim.current_animation != quiere:
+			_anim.play(quiere, 0.25)
+	elif _anim != null:
 		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 
 func _physics_process(delta: float) -> void:
@@ -208,7 +225,8 @@ func _colocar_camara(delta: float) -> void:
 		## La cámara puede ir un poco por detrás del límite de la zona por donde
 		## se viene (la boca, la puerta) pero nunca atravesar una pared lateral.
 		deseo.x = clampf(deseo.x, r.position.x + 0.15, r.end.x - 0.15)
-		deseo.z = clampf(deseo.z, r.position.y - 1.0, r.end.y + 1.0)
+		var holgura := 1.0 if String(z.get("nombre", "")) == "Túnel" else -0.15
+		deseo.z = clampf(deseo.z, r.position.y - holgura, r.end.y + holgura)
 		deseo.y = minf(deseo.y, float(z["techo"]) - 0.25)
 	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
 	camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 3.0, Vector3.UP)

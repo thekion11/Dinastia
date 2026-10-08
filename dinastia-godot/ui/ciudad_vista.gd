@@ -225,7 +225,8 @@ func _datos_de(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Di
 		## sueltas alrededor.
 		"terrenos": ciudad.terrenos.duplicate() if ciudad != null else [],
 		"negocios": ciudad.negocios.duplicate() if ciudad != null else {},
-		"perfil_estadio": perfil_estadio,
+		## El nombre del club para los rótulos del túnel y el vestuario.
+		"perfil_estadio": perfil_estadio.merged({"club_nombre": Nombres.visible(c.nombre)}) if not perfil_estadio.is_empty() else perfil_estadio,
 		"luces": ciudad.luces if ciudad != null else Ciudad.LUCES_POR_DEFECTO,
 		"dia_partido": dia_partido,
 		"animo": animo,
