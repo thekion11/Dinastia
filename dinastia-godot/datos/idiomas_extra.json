@@ -1360,7 +1360,13 @@
   "¿Alguna novedad?": "Any news?",
   "¿Cómo nos ve la directiva?": "How does the board see us?",
   "¿Le abro?": "Shall I open up?",
-  "…": "…"
+  "…": "…",
+  "Todavía no has jugado la pretemporada: el plantel llega frío.": "You haven't played pre-season yet: the squad arrives cold.",
+  "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.": "All in order: no long-term injuries, no contracts up in the air and healthy finances.",
+  "Documental de la temporada": "Season documentary",
+  "Tu año contado como una película.": "Your year told like a film.",
+  "Mundo nuevo.": "New world.",
+  "Semilla": "Seed"
  },
  "pt": {
   "Historia": "História",
@@ -2723,7 +2729,13 @@
   "¿Alguna novedad?": "Alguma novidade?",
   "¿Cómo nos ve la directiva?": "Como nos vê a direção?",
   "¿Le abro?": "Abro-lhe?",
-  "…": "…"
+  "…": "…",
+  "Todavía no has jugado la pretemporada: el plantel llega frío.": "Ainda não jogaste a pré-temporada: o plantel chega frio.",
+  "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.": "Tudo em ordem: sem lesionados longos, sem contratos no ar e com o saldo saudável.",
+  "Documental de la temporada": "Documentário da temporada",
+  "Tu año contado como una película.": "O teu ano contado como um filme.",
+  "Mundo nuevo.": "Mundo novo.",
+  "Semilla": "Semente"
  },
  "patrones": [
   [
@@ -3241,6 +3253,116 @@
    "^(.+) cuelga las botas\\. Queda inscrito entre las leyendas del club… y quién sabe si algún día llega un hijo suyo a la cantera\\.$",
    "$1 hangs up his boots. He joins the club's legends… and who knows, one day his son may join the academy.",
    "$1 pendura as chuteiras. Entra para as lendas do clube… e quem sabe um dia um filho dele chegue à base."
+  ],
+  [
+   "^La caja está en rojo \\((.+)\\)\\. Cada semana así cuesta intereses\\.$",
+   "The bank balance is in the red ($1). Every week like this costs interest.",
+   "O saldo está no vermelho ($1). Cada semana assim custa juros.",
+   "La trésorerie est dans le rouge ($1). Chaque semaine coûte des intérêts.",
+   "La cassa è in rosso ($1). Ogni settimana così costa interessi.",
+   "Die Kasse ist im Minus ($1). Jede Woche so kostet Zinsen.",
+   "La caixa és en vermell ($1). Cada setmana així costa interessos.",
+   "Kasa jest na minusie ($1). Każdy taki tydzień kosztuje odsetki.",
+   "Kasa ekside ($1). Böyle geçen her hafta faiz demek."
+  ],
+  [
+   "^La caja está justa: (.+)\\. Cuidado con el próximo fichaje\\.$",
+   "Money is tight: $1. Careful with the next signing.",
+   "O saldo está apertado: $1. Cuidado com a próxima contratação.",
+   "La trésorerie est juste : $1. Attention au prochain transfert.",
+   "La cassa è al limite: $1. Attenzione al prossimo acquisto.",
+   "Die Kasse ist knapp: $1. Vorsicht beim nächsten Transfer.",
+   "La caixa va justa: $1. Compte amb el pròxim fitxatge.",
+   "Kasa jest napięta: $1. Ostrożnie z następnym transferem.",
+   "Kasa sıkışık: $1. Bir sonraki transfere dikkat."
+  ],
+  [
+   "^(\\d+) jugador(?:es)? no están? disponibles?\\.$",
+   "$1 player(s) unavailable.",
+   "$1 jogador(es) indisponível(eis).",
+   "$1 joueur(s) indisponible(s).",
+   "$1 giocatore/i non disponibile/i.",
+   "$1 Spieler nicht verfügbar.",
+   "$1 jugador(s) no disponible(s).",
+   "Niedostępni zawodnicy: $1.",
+   "$1 oyuncu oynayamıyor."
+  ],
+  [
+   "^(\\d+) contratos? terminan? este año\\. Sin renovar, se van gratis\\.$",
+   "$1 contract(s) end this year. Without renewal, they leave for free.",
+   "$1 contrato(s) termina(m) este ano. Sem renovar, saem a custo zero.",
+   "$1 contrat(s) se termine(nt) cette année. Sans prolongation, ils partent libres.",
+   "$1 contratto/i scade/scadono quest'anno. Senza rinnovo, se ne vanno gratis.",
+   "$1 Vertrag/Verträge läuft/laufen dieses Jahr aus. Ohne Verlängerung gehen sie ablösefrei.",
+   "$1 contracte(s) acaba(en) aquest any. Sense renovar, se'n van gratis.",
+   "Kończące się w tym roku kontrakty: $1. Bez przedłużenia odejdą za darmo.",
+   "$1 sözleşme bu yıl bitiyor. Yenilenmezse bedavaya giderler."
+  ],
+  [
+   "^(\\d+) jugador(?:es)? con la moral por los suelos o pidiendo salir\\.$",
+   "$1 player(s) with morale on the floor or asking to leave.",
+   "$1 jogador(es) com o moral em baixo ou a pedir para sair.",
+   "$1 joueur(s) au moral à zéro ou demandant à partir.",
+   "$1 giocatore/i con il morale a terra o che chiede/chiedono di andare via.",
+   "$1 Spieler mit Moral am Boden oder Wechselwunsch.",
+   "$1 jugador(s) amb la moral pels terres o demanant marxar.",
+   "Zawodnicy z morale na dnie lub chcący odejść: $1.",
+   "$1 oyuncunun morali yerlerde ya da ayrılmak istiyor."
+  ],
+  [
+   "^El ruido en redes está en (\\d+)\\. La directiva lo lee\\.$",
+   "Social media noise is at $1. The board reads it.",
+   "O ruído nas redes está em $1. A direção lê.",
+   "Le bruit sur les réseaux est à $1. La direction le lit.",
+   "Il rumore sui social è a $1. La dirigenza lo legge.",
+   "Der Lärm in den sozialen Netzen liegt bei $1. Der Vorstand liest mit.",
+   "El soroll a les xarxes és a $1. La directiva ho llegeix.",
+   "Szum w mediach społecznościowych: $1. Zarząd to czyta.",
+   "Sosyal medyadaki gürültü $1. Yönetim okuyor."
+  ],
+  [
+   "^La confianza del directorio está en (\\d+)\\. Estás en la cuerda floja\\.$",
+   "Board confidence is at $1. You're on thin ice.",
+   "A confiança da direção está em $1. Estás na corda bamba.",
+   "La confiance de la direction est à $1. Vous êtes sur la sellette.",
+   "La fiducia della dirigenza è a $1. Sei sulla graticola.",
+   "Das Vertrauen des Vorstands liegt bei $1. Du stehst auf der Kippe.",
+   "La confiança de la directiva és a $1. Estàs a la corda fluixa.",
+   "Zaufanie zarządu: $1. Jesteś na cenzurowanym.",
+   "Yönetimin güveni $1. Pamuk ipliğine bağlısın."
+  ],
+  [
+   "^El mercado cierra en (\\d+) semana\\(s\\)\\.$",
+   "The transfer window closes in $1 week(s).",
+   "O mercado fecha em $1 semana(s).",
+   "Le mercato ferme dans $1 semaine(s).",
+   "Il mercato chiude tra $1 settimana/e.",
+   "Das Transferfenster schließt in $1 Woche(n).",
+   "El mercat tanca en $1 setmana/es.",
+   "Okno transferowe zamyka się za tygodnie: $1.",
+   "Transfer dönemi $1 hafta içinde kapanıyor."
+  ],
+  [
+   "^Tienes (\\d+) punto\\(s\\) de entrenador sin gastar\\.$",
+   "You have $1 unspent manager point(s).",
+   "Tens $1 ponto(s) de treinador por gastar.",
+   "Vous avez $1 point(s) d'entraîneur à dépenser.",
+   "Hai $1 punto/i allenatore da spendere.",
+   "Du hast $1 ungenutzte(n) Trainerpunkt(e).",
+   "Tens $1 punt(s) d'entrenador sense gastar.",
+   "Niewydane punkty trenera: $1.",
+   "Harcanmamış $1 teknik direktör puanın var."
+  ],
+  [
+   "^Hay (\\d+) marcas esperando respuesta por la camiseta\\.$",
+   "$1 brands are waiting for an answer about the shirt.",
+   "Há $1 marcas à espera de resposta pela camisola.",
+   "$1 marques attendent une réponse pour le maillot.",
+   "Ci sono $1 marchi in attesa di risposta per la maglia.",
+   "$1 Marken warten auf eine Antwort zum Trikot.",
+   "Hi ha $1 marques esperant resposta per la samarreta.",
+   "Marki czekające na odpowiedź w sprawie koszulki: $1.",
+   "Forma için yanıt bekleyen $1 marka var."
   ]
  ],
  "fr": {
@@ -4475,7 +4597,13 @@
   "¿Alguna novedad?": "Du nouveau ?",
   "¿Cómo nos ve la directiva?": "Comment la direction nous voit-elle ?",
   "¿Le abro?": "Je vous ouvre ?",
-  "…": "…"
+  "…": "…",
+  "Todavía no has jugado la pretemporada: el plantel llega frío.": "Vous n'avez pas encore joué la présaison : l'équipe arrive à froid.",
+  "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.": "Tout est en ordre : pas de blessés longue durée, pas de contrats en suspens et des finances saines.",
+  "Documental de la temporada": "Documentaire de la saison",
+  "Tu año contado como una película.": "Votre année racontée comme un film.",
+  "Mundo nuevo.": "Nouveau monde.",
+  "Semilla": "Graine"
  },
  "it": {
   "Historia": "Storia",
@@ -5709,7 +5837,13 @@
   "¿Alguna novedad?": "Novità?",
   "¿Cómo nos ve la directiva?": "Come ci vede la dirigenza?",
   "¿Le abro?": "Le apro?",
-  "…": "…"
+  "…": "…",
+  "Todavía no has jugado la pretemporada: el plantel llega frío.": "Non hai ancora giocato il precampionato: la squadra arriva fredda.",
+  "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.": "Tutto in ordine: niente infortuni lunghi, niente contratti in sospeso e cassa sana.",
+  "Documental de la temporada": "Documentario della stagione",
+  "Tu año contado como una película.": "Il tuo anno raccontato come un film.",
+  "Mundo nuevo.": "Nuovo mondo.",
+  "Semilla": "Seme"
  },
  "de": {
   "Historia": "Geschichte",
@@ -6943,7 +7077,13 @@
   "¿Alguna novedad?": "Gibt's was Neues?",
   "¿Cómo nos ve la directiva?": "Wie sieht uns der Vorstand?",
   "¿Le abro?": "Soll ich aufmachen?",
-  "…": "…"
+  "…": "…",
+  "Todavía no has jugado la pretemporada: el plantel llega frío.": "Du hast noch keine Vorbereitung gespielt: Die Mannschaft kommt kalt.",
+  "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.": "Alles in Ordnung: keine Langzeitverletzten, keine offenen Verträge, gesunde Kasse.",
+  "Documental de la temporada": "Saisondokumentation",
+  "Tu año contado como una película.": "Dein Jahr, erzählt wie ein Film.",
+  "Mundo nuevo.": "Neue Welt.",
+  "Semilla": "Seed"
  },
  "ca": {
   "Historia": "Història",
@@ -8177,7 +8317,13 @@
   "¿Alguna novedad?": "Alguna novetat?",
   "¿Cómo nos ve la directiva?": "Com ens veu la directiva?",
   "¿Le abro?": "L'hi obro?",
-  "…": "…"
+  "…": "…",
+  "Todavía no has jugado la pretemporada: el plantel llega frío.": "Encara no has jugat la pretemporada: la plantilla arriba freda.",
+  "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.": "Tot en ordre: sense lesionats llargs, sense contractes en l'aire i amb la caixa sana.",
+  "Documental de la temporada": "Documental de la temporada",
+  "Tu año contado como una película.": "El teu any explicat com una pel·lícula.",
+  "Mundo nuevo.": "Món nou.",
+  "Semilla": "Llavor"
  },
  "pl": {
   "Club": "Klub",
@@ -9708,7 +9854,13 @@
   "¿Alguna novedad?": "Coś nowego?",
   "¿Cómo nos ve la directiva?": "Jak widzi nas zarząd?",
   "¿Le abro?": "Otworzyć?",
-  "…": "…"
+  "…": "…",
+  "Todavía no has jugado la pretemporada: el plantel llega frío.": "Nie rozegrałeś jeszcze okresu przygotowawczego: drużyna jest nierozgrzana.",
+  "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.": "Wszystko w porządku: bez długich kontuzji, bez wiszących kontraktów i ze zdrową kasą.",
+  "Documental de la temporada": "Dokument sezonu",
+  "Tu año contado como una película.": "Twój rok opowiedziany jak film.",
+  "Mundo nuevo.": "Nowy świat.",
+  "Semilla": "Ziarno"
  },
  "tr": {
   "Club": "Kulüp",
@@ -11239,6 +11391,12 @@
   "¿Alguna novedad?": "Yeni bir şey var mı?",
   "¿Cómo nos ve la directiva?": "Yönetim bizi nasıl görüyor?",
   "¿Le abro?": "Açayım mı?",
-  "…": "…"
+  "…": "…",
+  "Todavía no has jugado la pretemporada: el plantel llega frío.": "Henüz hazırlık maçı oynamadın: takım soğuk geliyor.",
+  "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.": "Her şey yolunda: uzun sakat yok, askıda sözleşme yok, kasa sağlam.",
+  "Documental de la temporada": "Sezon belgeseli",
+  "Tu año contado como una película.": "Senin yılın bir film gibi anlatılıyor.",
+  "Mundo nuevo.": "Yeni dünya.",
+  "Semilla": "Tohum"
  }
 }
