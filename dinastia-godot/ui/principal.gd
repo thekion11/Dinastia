@@ -3076,7 +3076,8 @@ func _contexto_edificio(c: Club) -> Dictionary:
 	if mundo.junta != null:
 		pres = String(mundo.junta.presidente.get("nombre", ""))
 	return {"inst": mundo.obras.niveles.duplicate() if mundo.obras != null else {}, "dentro": dentro,
-		"plantilla": pl, "titulos": titulos, "presidente": pres}
+		"plantilla": pl, "titulos": titulos, "presidente": pres,
+		"gente": mundo.gente.fichas.duplicate(true) if mundo.gente != null else {}}
 
 func _refrescar() -> void:
 	var c := mundo.mi_club()
@@ -3092,6 +3093,7 @@ func _refrescar() -> void:
 	## El edificio del club (estadio 2.0) también necesita saber del mundo.
 	if c != null:
 		EdificioClub.ctx = _contexto_edificio(c)
+		EdificioClub.mundo_ref = weakref(mundo)
 	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal.
 	Genero.fijar(String(PersonajeDT.aspecto(PersonajeDT.del_usuario)["cuerpo"]) == "female")
 	var liga := _liga_de(c)

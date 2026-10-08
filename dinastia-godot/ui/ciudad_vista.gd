@@ -343,6 +343,8 @@ func _process(delta: float) -> void:
 ## el cambio de color va siempre con la altura del sol, que es lo que pasa de
 ## verdad.
 func _aplicar_hora() -> void:
+	## La gente del club del estadio trabaja de 8 a 21 h.
+	PersonalEstadio.hora = _hora
 	## Altura del sol: -1 a medianoche, +1 a mediodía. El seno hace justo esta
 	## curva si se desplaza para que el cero caiga a las 6 y a las 18.
 	var t: float = (_hora - 6.0) / 12.0 * PI

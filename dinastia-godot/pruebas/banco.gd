@@ -128,6 +128,7 @@ func _ready() -> void:
 	_probar_region_reales()
 	_probar_tunel_navegable()
 	_probar_edificio_club()
+	_probar_personal_estadio()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -7746,7 +7747,7 @@ func _probar_edificio_club() -> void:
 				z += 0.2
 			if not ok:
 				mal.append(String(sala[0]) + " (puerta)")
-	_comprobar(mal.is_empty(), "las 10 salas se pisan y se sale al pasillo %s" % str(mal))
+	_comprobar(mal.is_empty(), "las 11 salas se pisan y se sale al pasillo %s" % str(mal))
 	## Sin plantilla a mano, las taquillas no inventan nombres.
 	var antes := EdificioClub.ctx
 	EdificioClub.ctx = {"plantilla": [[10, "Prueba Diez"]]}
@@ -7760,3 +7761,29 @@ func _probar_edificio_club() -> void:
 	_comprobar(raiz.find_child("EdificioClub", true, false) != null, "el edificio del club se construye")
 	raiz.free()
 	EdificioClub.ctx = antes
+
+func _probar_personal_estadio() -> void:
+	_titulo("ESTADIO 2.0: LA GENTE DEL CLUB EN SU PUESTO")
+	var d := TunelVestuario.datos({"forma": "cuenco"}, 2)
+	var pe := PersonalEstadio.new()
+	pe.preparar(d, Color.RED, Color.WHITE)
+	var mal := []
+	for clave: String in PersonalEstadio.PUESTOS:
+		var p: Array = PersonalEstadio.PUESTOS[clave]
+		var ruta := pe._ruta(clave, int(p[0]), String(p[1]))
+		if ruta.size() < 2:
+			mal.append(clave + " sin ruta")
+			continue
+		## Cada tramo de la rutina se camina sin salir de las zonas.
+		for i in range(ruta.size() - 1):
+			var a: Vector3 = ruta[i]
+			var b: Vector3 = ruta[i + 1]
+			for k in 11:
+				var q := a.lerp(b, float(k) / 10.0)
+				if TunelVestuario.zona_en(d["zonas"], q, int(p[0])).is_empty():
+					mal.append("%s tramo %d" % [clave, i])
+					break
+	_comprobar(mal.is_empty(), "las 11 personas tienen puesto y rutina dentro del estadio %s" % str(mal))
+	_comprobar(String(PersonalEstadio.PUESTOS["utilero"][1]) == "Utilería" and String(PersonalEstadio.PUESTOS["presidente"][1]) == "Despacho del presidente",
+		"el utilero en la utilería y el presidente en su despacho")
+	pe.free()
