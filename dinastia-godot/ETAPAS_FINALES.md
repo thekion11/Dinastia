@@ -137,3 +137,7 @@ balón conserva la energía) y con capturas o vídeo de movimiento.
       ventana del tren, plano de la red blanco por detrás. 8-10.
 - [x] Karting: pilotos cabezones del kit (cabeza del tamaño del kart) → pilotos
       con proporciones de persona. 8-10.
+- [x] Menú de inicio: las motas del fondo se dibujaban encima de textos y
+      botones; ahora van detrás del contenido. 8-10.
+- [x] Revisados sin cosas raras graves: partido 3D (marcador, nombres, radar,
+      grada) y minijuegos de autógrafos, pesca, penales y tiro libre. 8-10.
