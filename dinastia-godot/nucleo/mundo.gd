@@ -101,6 +101,8 @@ signal libre_estrella(j: Jugador)
 var hinchada: Hinchada
 ## `vGente()`: las diez personas del club. Ver `nucleo/gente.gd`.
 var gente: Gente
+## Las salas del edificio del club decoradas a tu gusto (estadio 2.0).
+var interiores := InterioresClub.new()
 ## `vClubIn()`: vestuario, sala de prensa, palco y lo digital.
 var club_dentro: ClubDentro
 ## El presidente del club, los accionistas y la junta trimestral (C5).
