@@ -132,3 +132,8 @@ balón conserva la energía) y con capturas o vídeo de movimiento.
 - [x] Fuga al cerrar: ciclo Roles ↔ Reputación y referencias estáticas. 8-10.
 - [x] La cámara de la calle se metía dentro de los edificios. 8-10.
 - [x] Saltos de golpe al cruzar puertas, escaleras y galería: ahora fundido. 8-10.
+- [x] Nombres del personal gigantes de cerca. 8-10.
+- [x] Metro: andén elevado blanco quemado, murales con letras enormes en la
+      ventana del tren, plano de la red blanco por detrás. 8-10.
+- [x] Karting: pilotos cabezones del kit (cabeza del tamaño del kart) → pilotos
+      con proporciones de persona. 8-10.

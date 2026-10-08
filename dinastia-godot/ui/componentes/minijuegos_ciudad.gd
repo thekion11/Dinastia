@@ -845,9 +845,31 @@ func _nuevo_kart(i: int) -> Node3D:
 	if k != null:
 		k.scale = Vector3.ONE * 2.2
 		n.add_child(k)
+		## El muñeco cabezón del kit (cabeza como el kart entero) se cambia
+		## por un piloto con proporciones de persona (etapa 1, 8-10-2026).
+		var muneco := k.find_child("character", true, false) as Node3D
+		if muneco != null:
+			muneco.visible = false
+		_piloto(k, Color.from_hsv(float(i) * 0.23 + 0.02, 0.75, 0.85))
 	else:
 		Mini3D.caja(n, Vector3(0, 0.35, 0), Vector3(1.2, 0.4, 2.0), Mini3D.mat(Color.from_hsv(float(i) * 0.25, 0.8, 0.9), 0.4))
 	return n
+
+## Un piloto sentado, en coordenadas del kit (que va escalado ×2,2): mono de
+## carreras del color del kart, brazos al volante y casco con visera.
+func _piloto(k: Node3D, col: Color) -> void:
+	var mono := Mini3D.mat(col, 0.6)
+	var casco := Mini3D.mat(col.lightened(0.35), 0.25)
+	var visera := Mini3D.mat(Color(0.08, 0.09, 0.12), 0.1)
+	var torso := Mini3D.cilindro(k, Vector3(0, 0.5, -0.16), 0.085, 0.28, mono, 0.1)
+	torso.rotation.x = -0.25
+	for lado in [-1.0, 1.0]:
+		var brazo := Mini3D.cilindro(k, Vector3(lado * 0.11, 0.49, -0.04), 0.03, 0.22, mono)
+		brazo.rotation.x = 1.15
+	Mini3D.cilindro(k, Vector3(0, 0.66, -0.18), 0.035, 0.06, Mini3D.mat(Color(0.2, 0.2, 0.22), 0.6))
+	Mini3D.esfera(k, Vector3(0, 0.73, -0.17), 0.075, casco)
+	var vis := Mini3D.caja(k, Vector3(0, 0.735, -0.105), Vector3(0.11, 0.04, 0.02), visera)
+	vis.rotation.x = 0.15
 
 func _colocar_kart(delta: float) -> void:
 	_kart_n.position = _kp
