@@ -120,6 +120,11 @@ const TINTE := {
 }
 
 func _ready() -> void:
+	## Lo gráfico va primero: si el jugador eligió el motor ligero, el juego
+	## se relanza con él antes de montar nada.
+	Calidad.cargar()
+	if Calidad.relanzar_si_hace_falta(get_tree()):
+		return
 	_clave = _leer_ajuste()
 	_construir()
 	_pintar_banner()

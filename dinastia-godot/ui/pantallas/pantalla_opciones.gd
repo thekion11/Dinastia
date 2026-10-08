@@ -520,6 +520,7 @@ func _pintar_dispositivo() -> void:
 		b_c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b_c.pressed.connect(func() -> void:
 			Calidad.elegida = clave
+			Calidad.guardar()
 			p._refrescar())
 		fila_c.add_child(b_c)
 	var ad := CheckButton.new()
@@ -527,8 +528,31 @@ func _pintar_dispositivo() -> void:
 	ad.tooltip_text = "Si tu equipo no llega a 40 FPS, el partido apaga por escalones la oclusión ambiental, acorta las sombras y baja la resolución del 3D."
 	ad.button_pressed = Calidad.adaptativa
 	ad.add_theme_font_size_override("font_size", 11)
-	ad.toggled.connect(func(si: bool) -> void: Calidad.adaptativa = si)
+	ad.toggled.connect(func(si: bool) -> void:
+		Calidad.adaptativa = si
+		Calidad.guardar())
 	p._lista_ajustes.add_child(ad)
+	## MOTOR GRÁFICO (etapa 3): el ligero (OpenGL) para gráficas integradas
+	## viejas. Hay que reiniciar el juego: se ofrece hacerlo en el momento.
+	var ml := CheckButton.new()
+	ml.text = "Motor gráfico ligero (para equipos modestos; reinicia el juego)"
+	ml.tooltip_text = "Usa el renderizador de compatibilidad (OpenGL). En gráficas integradas antiguas va más fluido; se pierden algunos efectos de luz."
+	ml.button_pressed = Calidad.motor_ligero
+	ml.disabled = not Calidad.puede_relanzar()
+	ml.add_theme_font_size_override("font_size", 11)
+	ml.toggled.connect(func(si: bool) -> void:
+		Calidad.motor_ligero = si
+		Calidad.guardar()
+		if Calidad.es_compatibilidad() != si and Calidad.puede_relanzar():
+			var dlg := ConfirmationDialog.new()
+			dlg.dialog_text = "El cambio de motor se aplica al reiniciar. ¿Reiniciar ahora? (la partida guardada se conserva)"
+			dlg.confirmed.connect(func() -> void:
+				if p.get("mundo") != null:
+					p.call("_guardar")
+				Calidad.relanzar(p.get_tree()))
+			p.add_child(dlg)
+			dlg.popup_centered())
+	p._lista_ajustes.add_child(ml)
 	if not p._modo_experto:
 		var ec := p._texto(10, Principal.COL_SUAVE)
 		ec.text = "Si el estadio en 3D se siente lento, baja la calidad. La interfaz no cambia: son etiquetas y no cuestan nada."

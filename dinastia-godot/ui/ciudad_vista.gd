@@ -151,6 +151,13 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	_ciudad = CityBuilder.new()
 	_raiz3d.add_child(_ciudad)
 	_ciudad.build(_datos_de(club, obras, ciudad, perfil_estadio))
+	## Etapa 3: la misma calidad adaptativa que el partido -si la máquina no
+	## llega a 40 FPS se bajan efectos por escalones-. No en render por software.
+	var adaptador := RenderingServer.get_video_adapter_name().to_lower()
+	if Calidad.adaptativa and not adaptador.contains("llvmpipe") and not adaptador.contains("swiftshader"):
+		var ra := RendimientoAdaptativo.new()
+		ra.raiz3d = _raiz3d
+		add_child(ra)
 
 	_camara = Camera3D.new()
 	_camara.fov = 55.0
