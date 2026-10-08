@@ -57,6 +57,11 @@ var _tren_k := -1
 var _bajar_en_proxima := false
 var _ventana := false
 var _luz_cam: OmniLight3D
+## ESTADIO INTERACTIVO 2.0 (fase 1): el estadio de la ciudad se recorre por
+## dentro sin salir del mundo. `_est` son los datos de `TunelVestuario.datos()`
+## (en coordenadas del estadio, que está en `CityBuilder.ESTADIO_EN`).
+var _est: Dictionary = {}
+var _zona_est := ""
 var _t_sacudida := 0.0
 
 const FRASES := {
@@ -75,6 +80,10 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	trafico = cb.get_node_or_null("Trafico") as TraficoCiudad
 	metro = cb.expansion.metro if cb.expansion != null else null
 	obstaculos = construir_obstaculos(cb)
+	var perfil: Dictionary = cb.datos.get("perfil_estadio", {})
+	if not perfil.is_empty():
+		var aforo := int(perfil.get("aforo", 20000))
+		_est = TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, aforo))
 	position = Vector3.ZERO
 	cuerpo = _crear_cuerpo()
 	add_child(cuerpo)
@@ -160,6 +169,17 @@ func _crear_cuerpo() -> Node3D:
 			c.scale = Vector3.ONE * 1.65
 			raiz.add_child(c)
 		return raiz
+	## TU PERSONAJE (estadio 2.0): el DT con el aspecto que elegiste, si hay.
+	if not PersonajeDT.del_usuario.is_empty():
+		var raiz := Node3D.new()
+		add_child(raiz)
+		var dt := PersonajeDT.crear(raiz, PersonajeDT.del_usuario, Color(0.12, 0.13, 0.16), Color(0.9, 0.9, 0.92))
+		remove_child(raiz)
+		if not dt.is_empty():
+			_anim = dt.get("anim") as AnimationPlayer
+			_es_dt = true
+			return raiz
+		raiz.queue_free()
 	var d := PeatonQ.crear(rng)
 	if d.is_empty():
 		return Node3D.new()
@@ -169,6 +189,21 @@ func _crear_cuerpo() -> Node3D:
 	remove_child(n)
 	_anim = _buscar_anim(n)
 	return n
+
+var _es_dt := false
+
+## Con el cuerpo del DT: «caminar» o «correr» al moverse y «parado» quieto.
+func _animar_dt(v: float) -> void:
+	if not _es_dt or _anim == null:
+		return
+	var quiere := "parado"
+	if absf(v) > 3.0 and _anim.has_animation("correr"):
+		quiere = "correr"
+	elif absf(v) > 0.05 and _anim.has_animation("caminar"):
+		quiere = "caminar"
+	if _anim.current_animation != quiere and _anim.has_animation(quiere):
+		_anim.play(quiere, 0.25)
+	_anim.speed_scale = 1.0
 
 func _buscar_anim(n: Node) -> AnimationPlayer:
 	if n is AnimationPlayer:
@@ -280,6 +315,9 @@ func _physics_process(delta: float) -> void:
 	if estado == "tren":
 		_viajar(delta)
 		return
+	if estado == "estadio":
+		_mover_en_estadio(delta)
+		return
 	var e := _entrada()
 	if modo == "coche":
 		var acel := e.y * 14.0
@@ -292,7 +330,9 @@ func _physics_process(delta: float) -> void:
 		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 		vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 		rumbo -= e.x * delta * 2.6
-		if _anim != null:
+		if _es_dt:
+			_animar_dt(vel)
+		elif _anim != null:
 			_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var nueva := cuerpo.position + adelante * vel * delta
@@ -336,6 +376,13 @@ func _colocar_camara(delta: float) -> void:
 func _buscar_cerca() -> void:
 	_cerca = {}
 	var p := cuerpo.position
+	## La puerta del club del estadio (a pie).
+	if modo == "pie" and not _est.is_empty():
+		var pu: Vector3 = CityBuilder.ESTADIO_EN + (_est["puerta"] as Vector3)
+		if Vector2(pu.x - p.x, pu.z - p.z).length() < 3.5:
+			_cerca = {"tipo": "puerta_estadio", "n": "el estadio"}
+			_aviso.text = Idiomas.t("E: entrar al estadio por la puerta del club")
+			return
 	## Una entrada de metro (a pie).
 	if modo == "pie" and metro != null:
 		for a: Dictionary in metro.accesos:
@@ -384,6 +431,10 @@ func _unhandled_input(ev: InputEvent) -> void:
 		_ventana = not _ventana
 
 func _usar() -> void:
+	if estado == "estadio":
+		if _zona_est == "Acceso":
+			_salir_del_estadio()
+		return
 	if estado == "anden":
 		_usar_en_anden()
 		return
@@ -397,6 +448,9 @@ func _usar() -> void:
 		return
 	if _cerca["tipo"] == "metro":
 		_entrar_al_anden(_cerca["acc"])
+		return
+	if _cerca["tipo"] == "puerta_estadio":
+		_entrar_al_estadio()
 		return
 	if _cerca["tipo"] == "peaton":
 		var v: Dictionary = _cerca["v"]
@@ -412,6 +466,88 @@ func _usar() -> void:
 	else:
 		interactuar.emit(String(_cerca["k"]))
 
+
+# ============================================================== EL ESTADIO (2.0)
+
+## Cruza la puerta del club: ya dentro, en el vestuario.
+func _entrar_al_estadio() -> void:
+	estado = "estadio"
+	## Los rótulos flotantes del mapa se ven a través de las paredes: fuera.
+	_rotulos_antes = cb._rotulos.visible if cb._rotulos != null else true
+	cb.mostrar_rotulos(false)
+	var pu: Vector3 = _est["puerta"]
+	cuerpo.position = CityBuilder.ESTADIO_EN + pu + Vector3(0, 0, -2.2)
+	rumbo = PI
+	_zona_est = ""
+	_aviso.text = ""
+	Sonido.toca("puerta", Sonido.Bus.EFECTOS)
+
+## De vuelta a la calle, delante de la puerta del club.
+var _rotulos_antes := true
+
+func _salir_del_estadio() -> void:
+	estado = "calle"
+	cb.mostrar_rotulos(_rotulos_antes)
+	var pu: Vector3 = _est["puerta"]
+	cuerpo.position = CityBuilder.ESTADIO_EN + pu + Vector3(0, 0, 3.2)
+	cuerpo.position.y = altura_suelo(cuerpo.position.x, cuerpo.position.z)
+	rumbo = 0.0
+	_aviso.text = ""
+
+## Dentro del estadio se camina por las zonas de `TunelVestuario` (vestuario,
+## túnel, banda, campo y la puerta). Salir por la puerta devuelve a la calle.
+func _mover_en_estadio(delta: float) -> void:
+	var e := _entrada()
+	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+	rumbo -= e.x * delta * 2.6
+	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
+	var nueva := cuerpo.position + adelante * vel * delta
+	var local := nueva - CityBuilder.ESTADIO_EN
+	var zonas: Array = _est["zonas"]
+	if not TunelVestuario.zona_en(zonas, local).is_empty():
+		cuerpo.position = Vector3(nueva.x, 0.02, nueva.z)
+	elif local.z > float((_est["puerta"] as Vector3).z) + 0.5:
+		## Por la puerta, a la calle: sin pulsar nada, como en la vida.
+		_salir_del_estadio()
+		return
+	else:
+		vel = 0.0
+	cuerpo.rotation.y = rumbo
+	_animar_dt(vel)
+	var z := TunelVestuario.zona_en(zonas, cuerpo.position - CityBuilder.ESTADIO_EN)
+	var nombre := String(z.get("nombre", ""))
+	if nombre != _zona_est:
+		_zona_est = nombre
+		match nombre:
+			"Vestuario":
+				_aviso.text = Idiomas.t("El vestuario. Por el túnel se sale al campo.")
+			"Túnel":
+				_aviso.text = Idiomas.t("El túnel. Al fondo se oye la grada.")
+			"Banda":
+				_aviso.text = Idiomas.t("¡A la cancha!")
+			"Acceso":
+				_aviso.text = Idiomas.t("E: salir a la calle")
+			_:
+				_aviso.text = ""
+	_hud.text = "📍 %s · %s\n🚶 %s" % [Idiomas.t(nombre), str(cb.datos.get("club", {}).get("estadioNom", "Estadio")),
+		Idiomas.t("W/S/A/D o mando · Mayús: correr · Esc: volver al mapa")]
+	## Cámara: dentro de una sala no atraviesa paredes ni techo.
+	var cerrado := float(z.get("techo", 99.0)) < 50.0
+	var atras := 3.2 if cerrado else 5.5
+	var alto := 1.9 if cerrado else 2.6
+	var deseo := cuerpo.position - adelante * atras + Vector3(0, alto, 0)
+	if cerrado:
+		var r: Rect2 = z["r"]
+		var o := CityBuilder.ESTADIO_EN
+		deseo.x = clampf(deseo.x, o.x + r.position.x + 0.15, o.x + r.end.x - 0.15)
+		## Solo el túnel deja que la cámara asome por sus extremos (la boca y la
+		## puerta del vestuario); en una sala cerrada se queda dentro.
+		var holgura := 1.0 if nombre == "Túnel" else -0.15
+		deseo.z = clampf(deseo.z, o.z + r.position.y - holgura, o.z + r.end.y + holgura)
+		deseo.y = minf(deseo.y, float(z["techo"]) - 0.25)
+	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
+	camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 3.0, Vector3.UP)
 
 # ============================================================== EL METRO
 
