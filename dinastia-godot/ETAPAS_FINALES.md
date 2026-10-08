@@ -167,3 +167,4 @@ Recorrido TOTAL de la interfaz (`pruebas/captura_recorrido_total.tscn`: principa
 - [x] Creador de personaje sobreexpuesto (piel clara quemada a blanco): luces
       más suaves, ACES y exposición 0,95.
 - [x] Ropa de calle MATE (traje/abrigo/polo): parecía látex brillante.
+- [x] Interiores del club y vestuario quemados (paredes blanco puro): paredes 0,82 y luces de sala más suaves.
