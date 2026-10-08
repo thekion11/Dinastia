@@ -25,7 +25,10 @@ func _muestra() -> Dictionary:
 		"primitivas": Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
 		"objetos": Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME),
 		"nodos": Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
-		"frame_ms": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
+		## Tiempo REAL entre fotogramas (el monitor TIME_PROCESS se refresca una
+		## vez por segundo y arrastraba la construcción). Sin gráfica (headless)
+		## es el coste de la CPU: scripts, animación y física.
+		"frame_ms": _dt_ms,
 	}
 
 func _media(arr: Array) -> Dictionary:
@@ -37,7 +40,15 @@ func _media(arr: Array) -> Dictionary:
 		r[k] = snappedf(s / arr.size(), 0.1)
 	return r
 
+var _t_prev := 0
+var _dt_ms := 0.0
+
 func _process(_d: float) -> void:
+	var ahora := Time.get_ticks_usec()
+	_dt_ms = (ahora - _t_prev) / 1000.0
+	_t_prev = ahora
+	## Sin tope de FPS (Principal pone el que eligió el jugador).
+	Engine.max_fps = 0
 	_n += 1
 	if _n == 5:
 		_t0 = Time.get_ticks_msec()
@@ -48,6 +59,8 @@ func _process(_d: float) -> void:
 		_res["construir_ms"] = Time.get_ticks_msec() - _t0
 	if _n > 40 and _n <= 70:
 		_m.append(_muestra())
+		if OS.get_environment("CUADROS") != "":
+			print("CUADRO ", _n, " ", snappedf(_m[-1]["frame_ms"], 0.1))
 	if _n == 71:
 		_res["aerea"] = _media(_m)
 		if OS.get_environment("DETALLE") != "":
@@ -60,6 +73,9 @@ func _process(_d: float) -> void:
 		_m.append(_muestra())
 	if _n == 131:
 		_res["a_pie"] = _media(_m)
+		if OS.get_environment("CPU") != "":
+			_cpu_por_partes()
+			return
 		print("MEDIDA_CIUDAD ", JSON.stringify(_res))
 		get_tree().quit()
 
@@ -80,3 +96,40 @@ func _detalle() -> void:
 	orden.sort_custom(func(a, b): return grupos[a] > grupos[b])
 	for k in orden.slice(0, 30):
 		print("DETALLE ", grupos[k], "  ", k)
+
+## Con CPU=1 (headless): apaga el `_process` de cada sistema a la vez y mide
+## cuánto baja el fotograma a pie. Dice dónde se va la CPU.
+func _cpu_por_partes() -> void:
+	var por_clase := {}
+	for n in _v.find_children("*", "Node", true, false):
+		if n.get_script() != null and (n.is_processing() or n.is_physics_processing()):
+			var k := String(n.get_script().resource_path.get_file())
+			if not por_clase.has(k):
+				por_clase[k] = []
+			por_clase[k].append(n)
+	var base := await _medir_cuadros(40)
+	print("CPU base %.2f ms  (%d clases con proceso)" % [base, por_clase.size()])
+	for k: String in por_clase:
+		for n: Node in por_clase[k]:
+			n.process_mode = Node.PROCESS_MODE_DISABLED
+		var t := await _medir_cuadros(40)
+		for n: Node in por_clase[k]:
+			n.process_mode = Node.PROCESS_MODE_INHERIT
+		print("CPU sin %-28s x%-4d -%.2f ms" % [k, por_clase[k].size(), base - t])
+	for clase in ["AnimationPlayer", "AnimationTree", "Skeleton3D", "PhysicsBody3D", "Area3D", "Label3D"]:
+		var ns := _v.find_children("*", clase, true, false)
+		for n in ns:
+			n.process_mode = Node.PROCESS_MODE_DISABLED
+		var t2 := await _medir_cuadros(40)
+		for n in ns:
+			n.process_mode = Node.PROCESS_MODE_INHERIT
+		print("CPU sin %-28s x%-4d -%.2f ms" % [clase, ns.size(), base - t2])
+	get_tree().quit()
+
+func _medir_cuadros(c: int) -> float:
+	for i in 5:
+		await get_tree().process_frame
+	var t0 := Time.get_ticks_usec()
+	for i in c:
+		await get_tree().process_frame
+	return (Time.get_ticks_usec() - t0) / 1000.0 / c
