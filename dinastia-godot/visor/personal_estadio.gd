@@ -14,6 +14,7 @@ extends Node3D
 
 ## clave -> [planta, zona del puesto, ropa, color 1, color 2]
 const PUESTOS := {
+	"portero": [0, "Puerta", "traje", "1c2233", "f2f2f2"],
 	"conserje": [0, "Vestuario", "abrigo", "5a5f66", "c9c9c9"],
 	"jardinero": [0, "Campo", "abrigo", "2e7d32", "a5d6a7"],
 	"hincha": [0, "Acceso", "abrigo", "club", "club2"],
@@ -67,7 +68,8 @@ func _ready() -> void:
 		asp["ropa"] = String(p[2])
 		asp["c_ropa"] = _hex(String(p[3]))
 		asp["c_ropa2"] = _hex(String(p[4]))
-		asp["corbata"] = clave in ["presidente", "secretaria"]
+		asp["corbata"] = clave in ["presidente", "secretaria", "portero"]
+		asp["gorra"] = clave == "portero"
 		asp["gafas"] = "" if clave != "ojeador" else String(asp.get("gafas", ""))
 		var d := PersonajeDT.crear(raiz, asp, c1, c2)
 		semilla += 7
@@ -98,6 +100,8 @@ func _hex(h: String) -> String:
 func _puesto(clave: String) -> String:
 	if clave == "presidente":
 		return "Presidente"
+	if clave == "portero":
+		return "Portero del club"
 	for f: Array in Gente.ROLES:
 		if String(f[0]) == clave:
 			return String(f[1])
@@ -106,6 +110,8 @@ func _puesto(clave: String) -> String:
 func _nombre_de_respaldo(clave: String) -> String:
 	var nombres := ["Rosa Medina", "Tito Barrios", "Chela Ruiz", "Don Aurelio", "Marta Soler", "Pancho Vidal",
 		"Doctor Olmos", "El Negro Paz", "Lalo Ferro", "Don Ernesto", "Amalia Rey"]
+	if clave == "portero":
+		return "Don Ramiro"
 	return nombres[absi(clave.hash()) % nombres.size()]
 
 ## El camino de cada uno: del puesto a su vuelta (y de vuelta). En una sala:
@@ -122,7 +128,12 @@ func _ruta(clave: String, planta: int, zona: String) -> Array:
 			return [Vector3(x0 + 12.0, y, 48.0), Vector3(x0 - 12.0, y, 46.0), Vector3(x0 - 14.0, y, 30.0)]
 		"Acceso":
 			var pa: Vector3 = datos.get("puerta", Vector3.ZERO)
-			return [Vector3(pa.x + 0.7, y, pa.z + 2.2), Vector3(pa.x - 0.7, y, pa.z + 2.6)]
+			## El hincha, fuera de la marquesina (la puerta es del portero).
+			return [Vector3(pa.x - 3.2, y, pa.z + 3.4), Vector3(pa.x - 4.6, y, pa.z + 3.9)]
+		"Puerta":
+			## El portero: junto a la puerta y, de vez en cuando, a su garita.
+			var sp := EntradaClub.sitio_portero(x0, z_fin)
+			return [Vector3(sp.x, y, sp.z), Vector3(sp.x, y, sp.z + 1.6), Vector3(sp.x + 1.6, y, sp.z + 1.6)]
 		"Pasillo":
 			var zp := z_fin - EdificioClub.PASILLO / 2.0
 			return [Vector3(x0 + 5.6, y, zp), Vector3(x0 - 5.0, y, zp)]
@@ -146,7 +157,11 @@ func _process(delta: float) -> void:
 		var n: Node3D = g["nodo"]
 		if not is_instance_valid(n):
 			continue
-		n.visible = de_turno or String(g["clave"]) == "hincha"
+		n.visible = de_turno or String(g["clave"]) in ["hincha", "portero"]
+		## Mientras hace un gesto (saludar, abrir), ni anda ni se le pisa.
+		if float(g.get("gesto_t", 0.0)) > 0.0:
+			g["gesto_t"] = float(g["gesto_t"]) - delta
+			continue
 		if bool(g["quieto"]):
 			_anim(g, "parado")
 			continue
@@ -161,6 +176,9 @@ func _process(delta: float) -> void:
 			## se queda más (está trabajando).
 			g["dir"] = -int(g["dir"])
 			g["espera"] = 22.0 + float(absi(String(g["clave"]).hash()) % 18) if sig < 0 else 7.0
+			if String(g["clave"]) == "portero" and sig < 0:
+				## En la puerta, mirando a la calle.
+				(g["nodo"] as Node3D).rotation.y = 0.0
 			continue
 		var meta: Vector3 = ruta[sig]
 		var hacia := meta - n.position
@@ -200,3 +218,23 @@ func atender(g: Dictionary, hacia: Vector3, si: bool) -> void:
 	if si and is_instance_valid(n):
 		var v := hacia - n.position
 		n.rotation.y = atan2(v.x, v.z)
+
+## Un gesto (saludo, señalar…) si el cuerpo lo tiene; luego vuelve a estar
+## parado. Devuelve lo que dura.
+func gesto(g: Dictionary, nombres: Array) -> float:
+	var a: AnimationPlayer = g.get("anim") as AnimationPlayer
+	if a == null:
+		return 0.0
+	for nombre: String in nombres:
+		if a.has_animation(nombre):
+			a.play(nombre, 0.25)
+			a.queue("parado")
+			g["gesto_t"] = a.get_animation(nombre).length
+			return a.get_animation(nombre).length
+	return 0.0
+
+func buscar(clave: String) -> Dictionary:
+	for g: Dictionary in gente:
+		if String(g["clave"]) == clave:
+			return g
+	return {}

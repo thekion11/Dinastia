@@ -326,6 +326,10 @@ func _physics_process(delta: float) -> void:
 	if estado == "estadio":
 		_mover_en_estadio(delta)
 		return
+	if estado == "puerta":
+		_andar_solo(delta)
+		return
+	_cerrar_puerta_si_lejos()
 	var e := _entrada()
 	if modo == "coche":
 		var acel := e.y * 14.0
@@ -387,6 +391,12 @@ func _buscar_cerca() -> void:
 	## La puerta del club del estadio (a pie).
 	if modo == "pie" and not _est.is_empty():
 		var pu: Vector3 = CityBuilder.ESTADIO_EN + (_est["puerta"] as Vector3)
+		## El portero: es él quien abre (8-10-2026).
+		var port := _portero()
+		if not port.is_empty() and Vector2(pu.x - p.x, pu.z - p.z).length() < 4.5:
+			_cerca = {"tipo": "portero", "g": port, "n": String(port["nombre"])}
+			_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(port["nombre"]), Idiomas.t(String(port["puesto"]))]
+			return
 		if Vector2(pu.x - p.x, pu.z - p.z).length() < 3.5:
 			_cerca = {"tipo": "puerta_estadio", "n": "el estadio"}
 			_aviso.text = Idiomas.t("E: entrar al estadio por la puerta del club")
@@ -499,6 +509,13 @@ func _usar() -> void:
 	if _cerca["tipo"] == "puerta_estadio":
 		_entrar_al_estadio()
 		return
+	if _cerca["tipo"] == "portero":
+		if is_instance_valid(_menu_asc):
+			return
+		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		_menu_asc = RecorridoClub.dialogo_portero(_capa, pe, _cerca["g"], cuerpo.position - CityBuilder.ESTADIO_EN, _cruzar_puerta)
+		_menu_asc.set_meta("portero", _cerca["g"])
+		return
 	if _cerca["tipo"] == "galeria":
 		_bajar_a_la_galeria()
 		return
@@ -510,6 +527,7 @@ func _usar() -> void:
 		if frase.contains("%s"):
 			frase = frase % club_nombre
 		_burbuja.text = "💬 " + frase
+		_burbuja.pixel_size = 0.012
 		_burbuja.position = (v["nodo"] as Node3D).global_position + Vector3(0, 2.4, 0)
 		_burbuja.visible = true
 		_t_burbuja = 5.0
@@ -546,6 +564,64 @@ func _ir_a_planta(p: int) -> void:
 ## De vuelta a la calle, delante de la puerta del club.
 var _rotulos_antes := true
 
+# ---------------------------------------------------- la puerta y el portero
+
+## Camino que el DT hace solo al cruzar la puerta (mundo).
+var _auto: Array = []
+
+func _portero() -> Dictionary:
+	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	if pe == null:
+		return {}
+	var g := pe.buscar("portero")
+	if g.is_empty() or not is_instance_valid(g["nodo"]) or not (g["nodo"] as Node3D).visible:
+		return {}
+	return g
+
+## El portero ya abrió: el DT sube el escalón y entra andando.
+func _cruzar_puerta() -> void:
+	var pu: Vector3 = CityBuilder.ESTADIO_EN + (_est["puerta"] as Vector3)
+	## Hacia la puerta sin dar la vuelta (si ya está pegado, entra recto).
+	_auto = [Vector3(pu.x, cuerpo.position.y, maxf(cuerpo.position.z - 0.3, pu.z + 0.6)), Vector3(pu.x, cuerpo.position.y, pu.z - 1.6)]
+	estado = "puerta"
+	_aviso.text = ""
+
+func _andar_solo(delta: float) -> void:
+	if _auto.is_empty():
+		_entrar_al_estadio()
+		get_tree().create_timer(1.4).timeout.connect(func() -> void: EntradaClub.abrir(get_tree(), false))
+		return
+	var meta: Vector3 = _auto[0]
+	var hacia := meta - cuerpo.position
+	hacia.y = 0.0
+	var d := hacia.length()
+	if d < 0.08:
+		_auto.pop_front()
+		return
+	rumbo = atan2(hacia.x, hacia.z)
+	cuerpo.rotation.y = rumbo
+	cuerpo.position += hacia / d * minf(d, VEL_PIE * delta)
+	_animar_dt(VEL_PIE)
+	## La cámara se queda donde estaba (detrás, en la calle) y le sigue con
+	## la mirada: así se ve al DT cruzar la puerta.
+	camara.look_at(cuerpo.position + Vector3(0, 1.3, 0), Vector3.UP)
+
+## En la calle, con la puerta abierta y ya lejos: se cierra sola. Y si te
+## vas a mitad de la charla con el portero, la charla se acaba.
+func _cerrar_puerta_si_lejos() -> void:
+	if _est.is_empty():
+		return
+	var pu: Vector3 = CityBuilder.ESTADIO_EN + (_est["puerta"] as Vector3)
+	var lejos := Vector2(pu.x - cuerpo.position.x, pu.z - cuerpo.position.z).length() > 5.5
+	if lejos and is_instance_valid(_menu_asc) and _menu_asc.has_meta("portero"):
+		var g: Dictionary = _menu_asc.get_meta("portero")
+		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		if pe != null:
+			pe.atender(g, Vector3.ZERO, false)
+		_menu_asc.queue_free()
+	if lejos and EntradaClub.abierta(get_tree()):
+		EntradaClub.abrir(get_tree(), false)
+
 ## Desde la caseta de la calle: escalera abajo, al pie de la galería.
 func _bajar_a_la_galeria() -> void:
 	estado = "estadio"
@@ -579,6 +655,19 @@ func _salir_del_estadio() -> void:
 	cuerpo.position.y = altura_suelo(cuerpo.position.x, cuerpo.position.z)
 	rumbo = 0.0
 	_aviso.text = ""
+	## El portero despide con la mano.
+	var port := _portero()
+	if not port.is_empty():
+		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		pe.atender(port, cuerpo.position - CityBuilder.ESTADIO_EN, true)
+		pe.gesto(port, ["saludo_mano", "saludar_publico"])
+		port["quieto"] = false
+		_burbuja.text = "💬 " + Idiomas.t("¡Hasta luego, míster!")
+		## Pequeña: el portero está a dos pasos de la cámara.
+		_burbuja.pixel_size = 0.0035
+		_burbuja.position = (port["nodo"] as Node3D).global_position + Vector3(0, 2.25, 0)
+		_burbuja.visible = true
+		_t_burbuja = 3.0
 
 ## Dentro del estadio se camina por las zonas de `TunelVestuario` (vestuario,
 ## túnel, banda, campo y la puerta). Salir por la puerta devuelve a la calle.
@@ -600,9 +689,17 @@ func _mover_en_estadio(delta: float) -> void:
 	var nueva := cuerpo.position + adelante * vel * delta
 	var local := nueva - CityBuilder.ESTADIO_EN
 	var zonas: Array = _est["zonas"]
+	## La puerta del club se abre sola desde dentro (sensor), como en la vida.
+	if _planta == 0:
+		var pl: Vector3 = _est["puerta"]
+		EntradaClub.abrir(get_tree(), Vector2(local.x - pl.x, local.z - pl.z).length() < 1.9)
 	if _planta == GaleriaClub.PLANTA and GaleriaClub.arriba(_est, local):
 		## Arriba de la escalera mecánica: la calle.
 		_subir_de_la_galeria()
+		return
+	if _planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 1.0:
+		## Cruzada la puerta, ya en la calle.
+		_salir_del_estadio()
 		return
 	if not TunelVestuario.zona_en(zonas, local, _planta).is_empty():
 		cuerpo.position = Vector3(nueva.x, RecorridoClub.y_de(_planta), nueva.z)

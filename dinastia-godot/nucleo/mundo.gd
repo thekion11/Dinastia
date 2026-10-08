@@ -1056,6 +1056,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	if mio_obras != null:
 		for k in obras.avanzar_semana(mio_obras):
 			obra_lista.emit(k)
+		## La reforma del diseñador del estadio también es obra.
+		if estadio != null and estadio.avanzar_semana():
+			obra_lista.emit("reforma_estadio")
 
 	## El ojeador trae informes: descubre el techo real de un chico de otro club.
 	## Es lo unico que hace que fichar a ciegas y fichar informado se distingan.
@@ -2239,6 +2242,10 @@ func perfil_estadio_de(c: Club) -> Dictionary:
 		if obras != null:
 			p["en_obra"] = obras.obras.keys()
 			p["inst"] = obras.niveles.duplicate()
+		## La reforma del diseñador en obras: andamios hasta que termine.
+		if estadio.en_obras():
+			var eo: Array = p.get("en_obra", [])
+			p["en_obra"] = eo + ["reforma"]
 		return p
 	return c.perfil_estadio() if c != null else {}
 

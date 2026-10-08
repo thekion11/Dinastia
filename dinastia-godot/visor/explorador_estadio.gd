@@ -213,6 +213,10 @@ func _junto_a_la_persiana() -> bool:
 		and cuerpo.position.z > float(_datos.get("z_fin", 0.0)) - 1.6
 
 func _rotulos() -> void:
+	## La puerta del club se abre sola al acercarse desde dentro.
+	if planta == 0 and _datos.has("puerta"):
+		var pl: Vector3 = _datos["puerta"]
+		EntradaClub.abrir(get_tree(), Vector2(cuerpo.position.x - pl.x, cuerpo.position.z - pl.z).length() < 1.9)
 	var z := zona_en(cuerpo.position)
 	var nombre := String(z.get("nombre", ""))
 	var g := _persona_cerca()

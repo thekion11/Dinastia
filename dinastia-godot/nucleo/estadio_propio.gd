@@ -72,6 +72,55 @@ var nombre: String = ""
 ## el juego añade mañana un tipo de techo aparece solo, sin tocar esta clase.
 var ajustes: Dictionary = {}
 
+## LAS REFORMAS TARDAN (8-10-2026). Pedido: «el estadio al entrar, al jugar y
+## fuera del 3D debe ser el mismo; solo cambia cuando el usuario lo cambia, y
+## eso tarda tiempo de construcción». `ajustes` es el PROYECTO (lo que enseña
+## el diseñador); mientras dura la obra, el estadio que se ve y se juega en
+## todas partes es `obra["antes"]` (lo construido), con andamios. La pintura
+## (cal, redes, banderas, la hora, el sonido del gol) no es obra: es al momento.
+##   obra = {antes: {ajustes construidos}, semanas: int, total: int, capitulos: []}
+var obra: Dictionary = {}
+
+## Semanas de obra por capítulo (se toma el más largo del paquete).
+const SEMANAS_OBRA := {
+	"obra": 10, "bandeja": 12, "techo": 8, "fachada": 8, "focos": 4,
+	"pantalla": 3, "superficie": 3, "butacas": 3, "cesped": 2,
+	"mobiliario": 1, "vallas": 1, "personalizacion": 2, "personalizacion_tramos": 2,
+}
+
+## Lo que está CONSTRUIDO (lo que se ve y se juega).
+func hecho() -> Dictionary:
+	return obra["antes"] if en_obras() else ajustes
+
+func en_obras() -> bool:
+	return not obra.is_empty() and int(obra.get("semanas", 0)) > 0
+
+## Pasa una semana de obra. Devuelve true la semana en que termina: desde ahí
+## el proyecto ES el estadio.
+func avanzar_semana() -> bool:
+	if not en_obras():
+		return false
+	obra["semanas"] = int(obra["semanas"]) - 1
+	if int(obra["semanas"]) <= 0:
+		obra = {}
+		return true
+	return false
+
+## Termina la obra en curso de golpe (pruebas y herramientas). true siempre.
+func terminar_obra() -> bool:
+	obra = {}
+	return true
+
+## Semanas que tardaría este paquete de cambios (0 = es pintura).
+func semanas_de(cambios: Dictionary) -> int:
+	var sem := 0
+	for campo: String in cambios:
+		if not ajustes.has(campo) or _mismo(ajustes[campo], cambios[campo]):
+			continue
+		var cap := "bandeja" if campo == "niveles" else String(CAPITULO.get(campo, "pintura"))
+		sem = maxi(sem, int(SEMANAS_OBRA.get(cap, 0)))
+	return sem
+
 ## --- QUÉ CUESTA CADA REFORMA -----------------------------------------------
 ## El HTML no cobraba nada por rediseñar (era una maqueta: se tocaba un desplegable
 ## y el estadio cambiaba de alma gratis). Aquí sí se cobra, porque un estadio que
@@ -348,80 +397,80 @@ func _sembrar_b6() -> void:
 ## `personalizado: true` es la marca de que este recinto lo hizo alguien y no un
 ## hash: sirve para que la interfaz sepa cuándo enseñar el botón de rediseñar.
 func perfil(mi: Club, obras: Instalaciones = null) -> Dictionary:
-	var tono := _fila("EST_TONOS", String(ajustes.get("cespedTono", "vivo")))
+	var tono := _fila("EST_TONOS", String(hecho().get("cespedTono", "vivo")))
 	## Las butacas heredan los colores de la camiseta mientras no se elijan a
 	## mano. Es lo que hace que un estadio recién tomado ya se vea del club y no
 	## de un gris cualquiera.
-	var a1 := String(ajustes.get("asiento1", ""))
-	var a2 := String(ajustes.get("asiento2", ""))
+	var a1 := String(hecho().get("asiento1", ""))
+	var a2 := String(hecho().get("asiento2", ""))
 	if a1 == "":
 		a1 = mi.color1
 	if a2 == "":
 		a2 = mi.color2
 	var p := {
 		"personalizado": true,
-		"forma": String(ajustes.get("forma", "cuenco")),
+		"forma": String(hecho().get("forma", "cuenco")),
 		"niveles": niveles_visibles(mi, obras),
-		"techo": String(ajustes.get("techo", "anillo")),
-		"cesped": String(ajustes.get("cesped", "rayas")),
+		"techo": String(hecho().get("techo", "anillo")),
+		"cesped": String(hecho().get("cesped", "rayas")),
 		"cespedClaro": String(tono[2]) if tono.size() > 2 else "#2f8043",
 		"cespedOscuro": String(tono[3]) if tono.size() > 3 else "#3b9c53",
-		"lineaCol": String(ajustes.get("lineaCol", "#ffffff")),
-		"arcoCol": String(ajustes.get("arcoCol", "#ffffff")),
-		"redCol": String(ajustes.get("redCol", "#ffffff")),
-		"asientoP": String(ajustes.get("asientoP", "franjas")),
+		"lineaCol": String(hecho().get("lineaCol", "#ffffff")),
+		"arcoCol": String(hecho().get("arcoCol", "#ffffff")),
+		"redCol": String(hecho().get("redCol", "#ffffff")),
+		"asientoP": String(hecho().get("asientoP", "franjas")),
 		"asiento1": a1,
 		"asiento2": a2,
-		"asiento3": String(ajustes.get("asiento3", "#20272a")),
-		"focos": String(ajustes.get("focos", "torres")),
-		"pantalla": String(ajustes.get("pantalla", "dos")),
-		"clima": String(ajustes.get("clima", "noche")),
-		"vallas": bool(ajustes.get("vallas", true)),
-		"banderas": String(ajustes.get("banderas", "club")),
+		"asiento3": String(hecho().get("asiento3", "#20272a")),
+		"focos": String(hecho().get("focos", "torres")),
+		"pantalla": String(hecho().get("pantalla", "dos")),
+		"clima": String(hecho().get("clima", "noche")),
+		"vallas": bool(hecho().get("vallas", true)),
+		"banderas": String(hecho().get("banderas", "club")),
 		"aforo": aforo_efectivo(mi),
-		"redTipo": String(ajustes.get("redTipo", "cuadrada")),
-		"corner": String(ajustes.get("corner", "clasico")),
-		"banquillo": String(ajustes.get("banquillo", "cristal")),
-		"tunel": String(ajustes.get("tunel", "central")),
-		"escudoDonde": String(ajustes.get("escudoDonde", "cancha")),
+		"redTipo": String(hecho().get("redTipo", "cuadrada")),
+		"corner": String(hecho().get("corner", "clasico")),
+		"banquillo": String(hecho().get("banquillo", "cristal")),
+		"tunel": String(hecho().get("tunel", "central")),
+		"escudoDonde": String(hecho().get("escudoDonde", "cancha")),
 		## FALTABA (18-9-2026): "sonidoGol" esta en `CATALOGO_DE`/`CAPITULO`/
 		## `PRECIO` desde antes de esta sesion -se puede elegir y pagar en la UI-
 		## pero nunca llegaba hasta aqui, asi que el gol de CUALQUIER estadio
 		## propio sonaba siempre al "bombo" por defecto de `Sonido`. El usuario
 		## lo reporto como "el sonido es generico" viendo su propio estadio.
-		"sonidoGol": String(ajustes.get("sonidoGol", "bombo")),
+		"sonidoGol": String(hecho().get("sonidoGol", "bombo")),
 		## B6: las secciones. Los colores vacíos se resuelven aquí, no en el
 		## visor: el visor no sabe de camisetas.
-		"fachada": String(ajustes.get("fachada", "hormigon")),
-		"fachadaCol": String(ajustes.get("fachadaCol", "")),
-		"techoCol": String(ajustes.get("techoCol", "")),
-		"luzFocos": String(ajustes.get("luzFocos", "neutra")),
+		"fachada": String(hecho().get("fachada", "hormigon")),
+		"fachadaCol": String(hecho().get("fachadaCol", "")),
+		"techoCol": String(hecho().get("techoCol", "")),
+		"luzFocos": String(hecho().get("luzFocos", "neutra")),
 		"luzClub": mi.color1,
-		"banquilloCol": String(ajustes.get("banquilloCol", "")),
-		"superficie": String(ajustes.get("superficie", "natural")),
+		"banquilloCol": String(hecho().get("banquilloCol", "")),
+		"superficie": String(hecho().get("superficie", "natural")),
 		"exterior": true,
 	}
 	## `bandejas` es la única clave que se AÑADE condicionalmente: con el
 	## interruptor apagado (el caso de siempre) `p` sale con exactamente las
 	## mismas claves que antes de esta fase -ni una de más-, y con el
 	## interruptor prendido se suma la vista derivada de las 4 tribunas.
-	if bool(ajustes.get("personalizar_bandejas", false)):
+	if bool(hecho().get("personalizar_bandejas", false)):
 		p["bandejas"] = _bandejas_personalizadas()
 	## Igual que `bandejas`: solo se añade con su propio interruptor prendido,
 	## y con él apagado `p` sale exactamente igual que antes de esta fase.
-	if bool(ajustes.get("personalizar_tramos", false)):
+	if bool(hecho().get("personalizar_tramos", false)):
 		p["tramos"] = _tramos_personalizados()
 	## Vallas y estructura de los focos: solo si se eligió un color (así un
 	## estadio sin tocar sigue con exactamente las mismas claves).
 	for k: String in ["vallaCol", "focosCol"]:
-		if String(ajustes.get(k, "")) != "":
-			p[k] = String(ajustes[k])
-	if String(ajustes.get("ledPaleta", "marcas")) != "marcas":
-		p["ledPaleta"] = String(ajustes["ledPaleta"])
+		if String(hecho().get(k, "")) != "":
+			p[k] = String(hecho()[k])
+	if String(hecho().get("ledPaleta", "marcas")) != "marcas":
+		p["ledPaleta"] = String(hecho()["ledPaleta"])
 	## Colores propios de las LED: mandan sobre la paleta elegida.
 	for k: String in ["ledFondo", "ledTinta"]:
-		if String(ajustes.get(k, "")) != "":
-			p[k] = String(ajustes[k])
+		if String(hecho().get(k, "")) != "":
+			p[k] = String(hecho()[k])
 	return p
 
 ## Vista derivada de las 4 tribunas. Solo se llama cuando `personalizar_bandejas`
@@ -431,17 +480,17 @@ func perfil(mi: Club, obras: Instalaciones = null) -> Dictionary:
 func _bandejas_personalizadas() -> Dictionary:
 	var salida := {}
 	for lado: String in LADOS_BANDEJA:
-		var asientoP := String(ajustes.get("bandeja_%s_asientoP" % lado, ""))
-		var techo := String(ajustes.get("bandeja_%s_techo" % lado, ""))
+		var asientoP := String(hecho().get("bandeja_%s_asientoP" % lado, ""))
+		var techo := String(hecho().get("bandeja_%s_techo" % lado, ""))
 		salida[lado] = {
-			"asientoP": asientoP if asientoP != "" else String(ajustes.get("asientoP", "franjas")),
-			"techo": techo if techo != "" else String(ajustes.get("techo", "anillo")),
+			"asientoP": asientoP if asientoP != "" else String(hecho().get("asientoP", "franjas")),
+			"techo": techo if techo != "" else String(hecho().get("techo", "anillo")),
 			## B6: los colores de las butacas de ESTA tribuna ("" = los globales).
-			"col1": String(ajustes.get("bandeja_%s_col1" % lado, "")),
-			"col2": String(ajustes.get("bandeja_%s_col2" % lado, "")),
+			"col1": String(hecho().get("bandeja_%s_col1" % lado, "")),
+			"col2": String(hecho().get("bandeja_%s_col2" % lado, "")),
 			## El color de cada anillo de esta tribuna, de abajo arriba ("" =
 			## el de la tribuna).
-			"niveles": [1, 2, 3, 4, 5].map(func(n: int) -> String: return String(ajustes.get("anillo_%s_%d" % [lado, n], ""))),
+			"niveles": [1, 2, 3, 4, 5].map(func(n: int) -> String: return String(hecho().get("anillo_%s_%d" % [lado, n], ""))),
 		}
 	return salida
 
@@ -454,12 +503,12 @@ func _bandejas_personalizadas() -> Dictionary:
 func _tramos_personalizados() -> Dictionary:
 	var salida := {}
 	for lado: String in LADOS_BANDEJA:
-		var base := String(ajustes.get("bandeja_%s_asientoP" % lado, ""))
+		var base := String(hecho().get("bandeja_%s_asientoP" % lado, ""))
 		if base == "":
-			base = String(ajustes.get("asientoP", "franjas"))
+			base = String(hecho().get("asientoP", "franjas"))
 		var patrones: Array = []
 		for n in [1, 2, 3]:
-			var v := String(ajustes.get("tramo_%s_%d" % [lado, n], ""))
+			var v := String(hecho().get("tramo_%s_%d" % [lado, n], ""))
 			patrones.append(v if v != "" else base)
 		salida[lado] = patrones
 	return salida
@@ -483,7 +532,7 @@ func renombrar(nuevo: String) -> void:
 ## gente que cuatro tribunas sueltas, y esa es la contrapartida de elegir un
 ## recinto compacto.
 func factor_forma() -> float:
-	var f := _fila("EST_FORMAS", String(ajustes.get("forma", "cuenco")))
+	var f := _fila("EST_FORMAS", String(hecho().get("forma", "cuenco")))
 	return float(f[5]) if f.size() > 5 else 1.0
 
 ## El aforo REAL con el que se llena el estadio: el del club —que ya trae el
@@ -498,19 +547,19 @@ func aforo_efectivo(mi: Club) -> int:
 ## que hace que elegir una caldera de 20.000 en vez de un óvalo de 30.000 sea una
 ## decisión y no un error.
 func ambiente() -> int:
-	var f := _fila("EST_FORMAS", String(ajustes.get("forma", "cuenco")))
+	var f := _fila("EST_FORMAS", String(hecho().get("forma", "cuenco")))
 	var a := (1.10 - float(f[5])) * 46.0 if f.size() > 5 else 0.0
-	if bool(ajustes.get("pista", false)):
+	if bool(hecho().get("pista", false)):
 		a -= 3.5
 	## Sin fondos el ruido se escapa por los dos lados: su factor de aforo es
 	## bajo por tener menos grada, no por ser compacto, así que no suma ruido.
-	if String(ajustes.get("forma", "")) == "dos":
+	if String(hecho().get("forma", "")) == "dos":
 		a = -6.0
-	if String(ajustes.get("techo", "sin")) != "sin":
+	if String(hecho().get("techo", "sin")) != "sin":
 		a += 2.0
-	if int(ajustes.get("niveles", 1)) >= 3:
+	if int(hecho().get("niveles", 1)) >= 3:
 		a += 1.0
-	var banderas := String(ajustes.get("banderas", "club"))
+	var banderas := String(hecho().get("banderas", "club"))
 	if banderas == "tifo" or banderas == "bufandas":
 		a += 1.5
 	return clampi(int(round(a)), -6, 8)
@@ -542,7 +591,7 @@ func niveles_maximos(mi: Club, obras: Instalaciones = null) -> int:
 ## Las bandejas que se van a ver de verdad: las diseñadas, recortadas por lo que
 ## el club puede sostener.
 func niveles_visibles(mi: Club, obras: Instalaciones = null) -> int:
-	return clampi(int(ajustes.get("niveles", 1)), 1, niveles_maximos(mi, obras))
+	return clampi(int(hecho().get("niveles", 1)), 1, niveles_maximos(mi, obras))
 
 # ============================================================================
 # REFORMAR: LO QUE CUESTA CAMBIAR DE IDEA
@@ -600,8 +649,23 @@ func reformar(mi: Club, cambios: Dictionary, obras: Instalaciones = null) -> Str
 	var aviso := ""
 	var tope := niveles_maximos(mi, obras)
 	var aplicados := {}
+	## La obra: lo construido se congela hasta que termine. La pintura pasa
+	## también a lo construido (no espera a nadie).
+	var sem := semanas_de(cambios)
+	if sem > 0:
+		if not en_obras():
+			obra = {"antes": ajustes.duplicate(true), "semanas": sem, "total": sem, "capitulos": []}
+		else:
+			obra["semanas"] = maxi(int(obra["semanas"]), sem)
+			obra["total"] = maxi(int(obra["total"]), int(obra["semanas"]))
 	for campo: String in cambios:
 		var v: Variant = cambios[campo]
+		var cap := "bandeja" if campo == "niveles" else String(CAPITULO.get(campo, "pintura"))
+		if en_obras():
+			if int(SEMANAS_OBRA.get(cap, 0)) == 0:
+				(obra["antes"] as Dictionary)[campo] = v
+			elif not (cap in (obra["capitulos"] as Array)):
+				(obra["capitulos"] as Array).append(cap)
 		if campo == "niveles":
 			var pedidas := int(v)
 			v = clampi(pedidas, 1, tope)
@@ -615,6 +679,9 @@ func reformar(mi: Club, cambios: Dictionary, obras: Instalaciones = null) -> Str
 	if coste > 0:
 		mi.mover_saldo(-coste)
 		movimiento.emit("Reforma del estadio", -coste)
+	if sem > 0:
+		var txt := "Reforma en obras: %d semana(s). Hasta entonces se juega en el estadio de siempre." % int(obra["semanas"])
+		aviso = txt if aviso == "" else aviso + " " + txt
 	reforma_hecha.emit(aplicados, coste, aviso)
 	return ""
 
@@ -716,7 +783,7 @@ func aleatorio(mi: Club, obras: Instalaciones = null) -> Dictionary:
 # ============================================================================
 
 func a_dic() -> Dictionary:
-	return {"nombre": nombre, "ajustes": ajustes, "real_de": real_de}
+	return {"nombre": nombre, "ajustes": ajustes, "real_de": real_de, "obra": obra.duplicate(true)}
 
 ## EL ESTADIO REAL DE TU CLUB (26-9-2026): al tomar un club que representa a
 ## uno real, tu estadio arranca con la arquitectura del real (forma, bandejas,
@@ -749,6 +816,14 @@ func desde_dic(d: Dictionary) -> void:
 	for k: String in guardado:
 		if ajustes.has(k):
 			ajustes[k] = guardado[k]
+	obra = (d.get("obra", {}) as Dictionary).duplicate(true)
+	if not obra.is_empty():
+		## Lo construido también con todas las claves de hoy.
+		var antes: Dictionary = ajustes.duplicate(true)
+		for k2: String in (obra.get("antes", {}) as Dictionary):
+			if antes.has(k2):
+				antes[k2] = obra["antes"][k2]
+		obra["antes"] = antes
 
 # ============================================================================
 # UTILIDADES
@@ -761,11 +836,11 @@ func _catalogo(campo: String) -> String:
 
 ## Cuánto multiplica tu superficie la probabilidad de lesión en casa (B6.5).
 func factor_lesion() -> float:
-	return float(LESION_POR_SUPERFICIE.get(String(ajustes.get("superficie", "natural")), 1.0))
+	return float(LESION_POR_SUPERFICIE.get(String(hecho().get("superficie", "natural")), 1.0))
 
 ## Qué parte del desgaste del césped llega al juego (B6.5).
 func factor_desgaste_cesped() -> float:
-	return float(DESGASTE_POR_SUPERFICIE.get(String(ajustes.get("superficie", "natural")), 1.0))
+	return float(DESGASTE_POR_SUPERFICIE.get(String(hecho().get("superficie", "natural")), 1.0))
 
 func _tabla(nombre_tabla: String) -> Array:
 	if TABLAS_B6.has(nombre_tabla):

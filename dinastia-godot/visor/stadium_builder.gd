@@ -3068,10 +3068,11 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 	## El vestuario (`TunelVestuario`) está justo detrás de la tribuna, en el
 	## eje del túnel: las taquillas se abren a sus dos lados.
 	var tx := tunel_x(est)
+	## 8-10-2026: todas del lado OESTE del vestuario. La entrada del club
+	## (puerta, portero y garita) queda al este y no puede tener taquillas
+	## delante.
 	for i in 4:
-		var x := -13.5 + float(i) * 9.0
-		if absf(x - tx) < TunelVestuario.VEST_MEDIO + 3.0:
-			x = tx + signf(x - tx + 0.01) * (TunelVestuario.VEST_MEDIO + 4.0 + absf(x - tx) * 0.5)
+		var x := tx - (TunelVestuario.VEST_MEDIO + 4.0 + float(i) * 4.5)
 		var z := fuera_z + 9.0
 		_box(ext, Vector3(x, 1.3, z), Vector3(3.0, 2.6, 2.4), caseta)
 		## La ventanilla mira a la calle (+Z), no al muro del estadio.
@@ -3084,7 +3085,7 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 	rot.modulate = Color(1, 1, 1)
 	rot.outline_size = 12
 	## Un `Label3D` sin girar ya mira a +Z, que es la calle.
-	rot.position = Vector3(0, 4.2, fuera_z + (TunelVestuario.VEST_FONDO + 4.0 if absf(tx) < 12.0 else 11.0))
+	rot.position = Vector3(tx - (TunelVestuario.VEST_MEDIO + 4.0 + 6.75), 4.6, fuera_z + 9.0)
 	ext.add_child(rot)
 	## La tienda oficial, en la esquina sureste.
 	var tienda_pos := Vector3(fuera_x - 6.0, 0.0, fuera_z + 20.0)
