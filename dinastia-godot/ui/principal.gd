@@ -3058,6 +3058,26 @@ func _process(_d: float) -> void:
 	if not _pendientes.is_empty():
 		_pintar_pendientes()
 
+## Lo que el edificio del club pinta del mundo: niveles, salas elegidas,
+## plantilla con dorsales, títulos y presidente.
+func _contexto_edificio(c: Club) -> Dictionary:
+	var pl: Array = []
+	var orden := c.plantilla.duplicate()
+	orden.sort_custom(func(a: Jugador, b: Jugador) -> bool: return (a.dorsal if a.dorsal > 0 else 99) < (b.dorsal if b.dorsal > 0 else 99))
+	var n := 1
+	for j: Jugador in orden:
+		pl.append([j.dorsal if j.dorsal > 0 else n, Nombres.visible(j.nombre)])
+		n += 1
+	var dentro := {}
+	if mundo.club_dentro != null:
+		dentro = {"vestuario": mundo.club_dentro.vestuario, "sala_prensa": mundo.club_dentro.sala_prensa, "palco": mundo.club_dentro.palco}
+	var titulos := mundo.roles.trofeos.size() if mundo.roles != null else 0
+	var pres := ""
+	if mundo.junta != null:
+		pres = String(mundo.junta.presidente.get("nombre", ""))
+	return {"inst": mundo.obras.niveles.duplicate() if mundo.obras != null else {}, "dentro": dentro,
+		"plantilla": pl, "titulos": titulos, "presidente": pres}
+
 func _refrescar() -> void:
 	var c := mundo.mi_club()
 	## Los objetivos, fijos en el borde derecho (PanelObjetivos).
@@ -3069,6 +3089,9 @@ func _refrescar() -> void:
 	## del partido no tiene el mundo delante).
 	PersonajeDT.del_usuario = mundo.roles.aspecto_3d()
 	PersonajeDT.club_usuario = c.id if c != null else ""
+	## El edificio del club (estadio 2.0) también necesita saber del mundo.
+	if c != null:
+		EdificioClub.ctx = _contexto_edificio(c)
 	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal.
 	Genero.fijar(String(PersonajeDT.aspecto(PersonajeDT.del_usuario)["cuerpo"]) == "female")
 	var liga := _liga_de(c)

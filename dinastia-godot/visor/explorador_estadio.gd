@@ -30,6 +30,9 @@ var _tactil_vec := Vector2.ZERO
 var _zona_actual := ""
 var _datos: Dictionary = {}
 var _rugido_hecho := false
+## La planta del edificio del club en la que estás (0 = vestuario y campo).
+var planta := 0
+var _menu: PanelContainer
 
 func iniciar(est: Dictionary, niveles: int, club: Club) -> void:
 	_datos = TunelVestuario.datos(est, niveles)
@@ -82,18 +85,16 @@ func _buscar_anim(n: Node) -> AnimationPlayer:
 			return a
 	return null
 
-## ¿En qué zona cae este punto? (vacío si en ninguna: no se puede pisar).
-func zona_en(p: Vector3, radio: float = 0.0) -> Dictionary:
-	for z: Dictionary in zonas:
-		var r: Rect2 = z["r"]
-		if p.x >= r.position.x + radio and p.x <= r.end.x - radio and p.z >= r.position.y + radio and p.z <= r.end.y - radio:
-			return z
-	## En las uniones entre zonas (puerta del vestuario, boca del túnel) basta
-	## con estar dentro de una sin margen.
-	for z2: Dictionary in zonas:
-		if (z2["r"] as Rect2).has_point(Vector2(p.x, p.z)):
-			return z2
-	return {}
+## ¿En qué zona de la planta actual cae este punto? (vacío: no se pisa).
+func zona_en(p: Vector3, _radio: float = 0.0) -> Dictionary:
+	return TunelVestuario.zona_en(zonas, p, planta)
+
+## Cambia de planta por el ascensor (misma x y z: el hueco está apilado).
+func ir_a_planta(p: int) -> void:
+	planta = p
+	cuerpo.position.y = RecorridoClub.y_de(p)
+	_zona_actual = "?"
+	_colocar_camara(1.0)
 
 func _montar_hud() -> void:
 	_capa = CanvasLayer.new()
@@ -135,6 +136,17 @@ func _montar_hud() -> void:
 		b.button_down.connect(func() -> void: _tactil_vec += v)
 		b.button_up.connect(func() -> void: _tactil_vec -= v)
 		base.add_child(b)
+	var be := Button.new()
+	be.text = "E"
+	be.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	be.offset_left = -240
+	be.offset_top = -100
+	be.offset_right = -166
+	be.offset_bottom = -24
+	be.modulate = Color(1, 1, 1, 0.75)
+	be.focus_mode = Control.FOCUS_NONE
+	be.pressed.connect(usar)
+	_capa.add_child(be)
 	var bs := Button.new()
 	bs.text = Idiomas.t("Salir")
 	bs.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
@@ -168,7 +180,7 @@ func paso(e: Vector2, corre: bool, delta: float) -> void:
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var nueva := cuerpo.position + adelante * vel * delta
 	if not zona_en(nueva, RADIO).is_empty():
-		cuerpo.position = Vector3(nueva.x, 0.02, nueva.z)
+		cuerpo.position = Vector3(nueva.x, RecorridoClub.y_de(planta), nueva.z)
 	else:
 		vel = 0.0
 	cuerpo.rotation.y = rumbo
@@ -192,24 +204,25 @@ func _rotulos() -> void:
 	var nombre := String(z.get("nombre", ""))
 	if nombre != _zona_actual:
 		_zona_actual = nombre
-		match nombre:
-			"Vestuario":
-				_aviso.text = Idiomas.t("El vestuario de %s. Sal por el túnel hacia el campo.") % club_nombre
-			"Túnel":
-				_aviso.text = Idiomas.t("El túnel. Al fondo se oye la grada.")
-			"Banda":
-				_aviso.text = Idiomas.t("¡A la cancha!")
-				if not _rugido_hecho:
-					_rugido_hecho = true
-					Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
-			"Campo":
-				_aviso.text = ""
-	_hud.text = "📍 %s  ·  %s" % [Idiomas.t(nombre), Idiomas.t("W/S/A/D o mando · Mayús: correr · Esc: salir")]
+		_aviso.text = RecorridoClub.aviso_de(nombre, club_nombre)
+		if nombre == "Banda" and not _rugido_hecho:
+			_rugido_hecho = true
+			Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
+	_hud.text = "📍 %s · %s %d  ·  %s" % [Idiomas.t(nombre), Idiomas.t("Planta"), planta, Idiomas.t("W/S/A/D o mando · Mayús: correr · E: usar · Esc: salir")]
 
 func _unhandled_input(ev: InputEvent) -> void:
 	if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		salir.emit()
+	elif (ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_E) \
+			or (ev is InputEventJoypadButton and ev.pressed and ev.button_index == JOY_BUTTON_X):
+		get_viewport().set_input_as_handled()
+		usar()
+
+## E: lo que haya a mano. Por ahora, el ascensor.
+func usar() -> void:
+	if _zona_actual == "Ascensor" and not is_instance_valid(_menu):
+		_menu = RecorridoClub.menu_ascensor(_capa, planta, ir_a_planta)
 
 ## Cámara en tercera persona. Dentro del vestuario y del túnel no sale de las
 ## paredes ni pasa del techo: si no, se vería el exterior de la caja.
@@ -227,6 +240,6 @@ func _colocar_camara(delta: float) -> void:
 		deseo.x = clampf(deseo.x, r.position.x + 0.15, r.end.x - 0.15)
 		var holgura := 1.0 if String(z.get("nombre", "")) == "Túnel" else -0.15
 		deseo.z = clampf(deseo.z, r.position.y - holgura, r.end.y + holgura)
-		deseo.y = minf(deseo.y, float(z["techo"]) - 0.25)
+		deseo.y = minf(deseo.y, RecorridoClub.y_de(planta) + float(z["techo"]) - 0.25)
 	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
 	camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 3.0, Vector3.UP)

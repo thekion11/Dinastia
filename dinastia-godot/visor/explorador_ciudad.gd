@@ -62,6 +62,8 @@ var _luz_cam: OmniLight3D
 ## (en coordenadas del estadio, que está en `CityBuilder.ESTADIO_EN`).
 var _est: Dictionary = {}
 var _zona_est := ""
+var _planta := 0
+var _menu_asc: PanelContainer
 var _t_sacudida := 0.0
 
 const FRASES := {
@@ -434,6 +436,8 @@ func _usar() -> void:
 	if estado == "estadio":
 		if _zona_est == "Acceso":
 			_salir_del_estadio()
+		elif _zona_est == "Ascensor" and not is_instance_valid(_menu_asc):
+			_menu_asc = RecorridoClub.menu_ascensor(_capa, _planta, _ir_a_planta)
 		return
 	if estado == "anden":
 		_usar_en_anden()
@@ -472,6 +476,7 @@ func _usar() -> void:
 ## Cruza la puerta del club: ya dentro, en el vestuario.
 func _entrar_al_estadio() -> void:
 	estado = "estadio"
+	_planta = 0
 	## Los rótulos flotantes del mapa se ven a través de las paredes: fuera.
 	_rotulos_antes = cb._rotulos.visible if cb._rotulos != null else true
 	cb.mostrar_rotulos(false)
@@ -481,6 +486,16 @@ func _entrar_al_estadio() -> void:
 	_zona_est = ""
 	_aviso.text = ""
 	Sonido.toca("puerta", Sonido.Bus.EFECTOS)
+
+## El ascensor del edificio del club: misma x y z, otra planta. Los sótanos
+## van sin sol ni niebla (como el metro).
+func _ir_a_planta(p: int) -> void:
+	var antes := _planta
+	_planta = p
+	cuerpo.position.y = RecorridoClub.y_de(p)
+	_zona_est = "?"
+	if (antes < 0) != (p < 0):
+		_bajo_tierra(p < 0)
 
 ## De vuelta a la calle, delante de la puerta del club.
 var _rotulos_antes := true
@@ -505,9 +520,9 @@ func _mover_en_estadio(delta: float) -> void:
 	var nueva := cuerpo.position + adelante * vel * delta
 	var local := nueva - CityBuilder.ESTADIO_EN
 	var zonas: Array = _est["zonas"]
-	if not TunelVestuario.zona_en(zonas, local).is_empty():
-		cuerpo.position = Vector3(nueva.x, 0.02, nueva.z)
-	elif local.z > float((_est["puerta"] as Vector3).z) + 0.5:
+	if not TunelVestuario.zona_en(zonas, local, _planta).is_empty():
+		cuerpo.position = Vector3(nueva.x, RecorridoClub.y_de(_planta), nueva.z)
+	elif _planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 0.5:
 		## Por la puerta, a la calle: sin pulsar nada, como en la vida.
 		_salir_del_estadio()
 		return
@@ -515,23 +530,13 @@ func _mover_en_estadio(delta: float) -> void:
 		vel = 0.0
 	cuerpo.rotation.y = rumbo
 	_animar_dt(vel)
-	var z := TunelVestuario.zona_en(zonas, cuerpo.position - CityBuilder.ESTADIO_EN)
+	var z := TunelVestuario.zona_en(zonas, cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
 	var nombre := String(z.get("nombre", ""))
 	if nombre != _zona_est:
 		_zona_est = nombre
-		match nombre:
-			"Vestuario":
-				_aviso.text = Idiomas.t("El vestuario. Por el túnel se sale al campo.")
-			"Túnel":
-				_aviso.text = Idiomas.t("El túnel. Al fondo se oye la grada.")
-			"Banda":
-				_aviso.text = Idiomas.t("¡A la cancha!")
-			"Acceso":
-				_aviso.text = Idiomas.t("E: salir a la calle")
-			_:
-				_aviso.text = ""
-	_hud.text = "📍 %s · %s\n🚶 %s" % [Idiomas.t(nombre), str(cb.datos.get("club", {}).get("estadioNom", "Estadio")),
-		Idiomas.t("W/S/A/D o mando · Mayús: correr · Esc: volver al mapa")]
+		_aviso.text = RecorridoClub.aviso_de(nombre)
+	_hud.text = "📍 %s · %s %d · %s\n🚶 %s" % [Idiomas.t(nombre), Idiomas.t("Planta"), _planta, str(cb.datos.get("club", {}).get("estadioNom", "Estadio")),
+		Idiomas.t("W/S/A/D o mando · Mayús: correr · E: usar · Esc: volver al mapa")]
 	## Cámara: dentro de una sala no atraviesa paredes ni techo.
 	var cerrado := float(z.get("techo", 99.0)) < 50.0
 	var atras := 3.2 if cerrado else 5.5
@@ -545,7 +550,7 @@ func _mover_en_estadio(delta: float) -> void:
 		## puerta del vestuario); en una sala cerrada se queda dentro.
 		var holgura := 1.0 if nombre == "Túnel" else -0.15
 		deseo.z = clampf(deseo.z, o.z + r.position.y - holgura, o.z + r.end.y + holgura)
-		deseo.y = minf(deseo.y, float(z["techo"]) - 0.25)
+		deseo.y = minf(deseo.y, RecorridoClub.y_de(_planta) + float(z["techo"]) - 0.25)
 	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
 	camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 3.0, Vector3.UP)
 

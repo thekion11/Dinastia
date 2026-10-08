@@ -248,5 +248,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   decoración, poner en las paredes las FOTOS sacadas con el modo foto, oficina con
   objetos propios); NOMBRES de los jugadores correspondientes (taquillas).
   Plan por fases en `dinastia-godot/ESTADIO_INTERACTIVO_2.md`.
+  8-10 AÑADIDO: «cada uno [la gente del club] debe tener su LUGAR DE TRABAJO
+  dentro del estadio» y «a futuro deben CONECTARSE las instalaciones del club con
+  el estadio, podría ser SUBTERRÁNEO» (galería desde los sótanos).
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.

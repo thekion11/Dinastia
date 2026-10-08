@@ -47,11 +47,13 @@ Pedido del usuario (7-10-2026):
    - Cada sala refleja su nivel: lo que no está construido sale «en obras» o vacío.
 3. **La grada.** Sentarse en cualquier tribuna con E y ver el estadio desde ahí.
    - Sanción de varias fechas al DT (portar `dtSusp`). Sancionado, el partido se ve desde el palco o desde tu asiento, sin poder dar órdenes desde la banda.
-4. **El personal en persona.**
+4. **El personal en persona** (8-10: «cada uno debe tener su lugar de trabajo dentro del estadio»).
+   - Puesto fijo de cada persona: utilero en la utilería, médico y fisio en la enfermería, jefa de prensa en la sala de prensa, presidente en su despacho, secretaria junto a la oficina del DT, conserje en el acceso, jardinero en el césped, cocinera en el comedor, jefe de mantenimiento en el cuarto de máquinas.
    - Cada trabajador y cada persona de `Gente` tiene cuerpo, puesto y rutina según la hora: llega, trabaja, come, se va.
    - Con E se habla en persona (diálogo con opciones que usa `Gente.charlar`, los asuntos `pendiente` de `Trabajadores` y la junta del presidente).
 5. **Personalizar.**
    - Cada sala con color de paredes y suelo, decoración de un catálogo (plantas, sofás, trofeos, banderas, pantallas…) y cuadros con TUS FOTOS del modo foto.
    - La oficina del DT con objetos propios.
    - Se guarda con la partida.
-6. **Pulido.** Capturas por planta, pruebas en el banco y documentación.
+6. **Galería subterránea** (8-10, «a futuro»): desde la planta −2 se llega por un pasillo bajo la ciudad a las instalaciones del club (complejo deportivo, centro médico…).
+7. **Pulido.** Capturas por planta, pruebas en el banco y documentación.
