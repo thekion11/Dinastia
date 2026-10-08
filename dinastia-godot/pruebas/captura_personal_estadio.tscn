@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://pruebas/captura_personal_estadio.gd" id="1"]
 
-[node name="S" type="Node"]
+[node name="E" type="Node"]
 script = ExtResource("1")
