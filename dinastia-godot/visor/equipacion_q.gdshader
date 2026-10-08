@@ -403,11 +403,18 @@ void fragment() {
 
 	float lum = dot(piel, vec3(0.299, 0.587, 0.114));
 	float pliegue = clamp(0.78 + lum * 0.45, 0.8, 1.12);
+	// Relieve de los pliegues (etapa 2): la pendiente del ruido de arrugas,
+	// que se suma al mapa de normales para que la LUZ los marque, no solo el
+	// color.
+	vec2 relieve_tela = vec2(0.0);
 	if (usa_reposo) {
 		// La tela no se pega al músculo como la piel: menos relieve del cuerpo
 		// y, en cambio, arrugas suaves de tela (más en costados y cintura) y
 		// sombra bajo el brazo y en el borde del pantalón.
 		float arruga = ruido(vec2(x * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2(x * 34.0, y * 11.0 + 7.0)) * 0.4;
+		float arr_x = ruido(vec2((x + 0.006) * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2((x + 0.006) * 34.0, y * 11.0 + 7.0)) * 0.4;
+		float arr_y = ruido(vec2(x * 16.0 + 3.0, (y + 0.012) * 5.0)) * 0.6 + ruido(vec2(x * 34.0, (y + 0.012) * 11.0 + 7.0)) * 0.4;
+		relieve_tela = vec2(arr_x - arruga, arr_y - arruga) * 5.0;
 		float lado_t = smoothstep(0.1, 0.2, abs(x)) * step(abs(x), 0.215);
 		pliegue = clamp(0.93 + lum * 0.12, 0.92, 1.05) * (1.0 - (arruga - 0.45) * (0.08 + lado_t * 0.1));
 		pliegue *= 1.0 - 0.18 * (1.0 - smoothstep(0.0, 0.05, abs(y - 1.26))) * smoothstep(0.17, 0.215, abs(x)) * step(abs(x), 0.25);
@@ -649,6 +656,10 @@ void fragment() {
 	// cerca y hace brillar la camiseta como las de verdad), algo más mate en
 	// las medias y brillante en los botines.
 	float punto = sin(UV.x * 2600.0) * sin(UV.y * 2600.0);
+	// Sin muaré (etapa 2): cuando un píxel abarca varios hilos (de lejos), la
+	// trama se apaga en vez de parpadear.
+	float nitidez = 1.0 - smoothstep(0.35, 1.2, fwidth(UV.x * 2600.0));
+	punto *= nitidez;
 	float es_camiseta = m.r * (1.0 - m.g);
 	ALBEDO *= 1.0 + punto * 0.035 * tela;
 	float rugo = mix(0.62, 0.5, es_camiseta);
@@ -659,7 +670,8 @@ void fragment() {
 	SPECULAR = mix(0.45, 0.55, clamp(es_camiseta + m.g + m.a, 0.0, 1.0));
 	vec3 nm = usa_normal ? texture(normal_tex, UV).rgb : vec3(0.5, 0.5, 1.0);
 	// Micro relieve del tejido sobre el relieve del cuerpo.
-	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * 0.045 * tela;
+	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * 0.045 * tela * nitidez;
+	nm.xy += relieve_tela * tela;
 	NORMAL_MAP = nm;
 	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
 	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.06 : 0.22) : 0.45, tela) : 0.6 * tela;
