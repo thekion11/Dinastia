@@ -90,6 +90,8 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	if not perfil.is_empty():
 		var aforo := int(perfil.get("aforo", 20000))
 		_est = TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, aforo))
+		## La galería subterránea al complejo (fase 6) solo existe aquí.
+		_est["zonas"] = GaleriaClub.zonas(_est) + (_est["zonas"] as Array)
 	position = Vector3.ZERO
 	cuerpo = _crear_cuerpo()
 	add_child(cuerpo)
@@ -389,6 +391,12 @@ func _buscar_cerca() -> void:
 			_cerca = {"tipo": "puerta_estadio", "n": "el estadio"}
 			_aviso.text = Idiomas.t("E: entrar al estadio por la puerta del club")
 			return
+		## La caseta de la galería, junto al complejo.
+		var gb := GaleriaClub.boca_mundo(_est)
+		if absf(gb.x - p.x) < 2.2 and p.z > gb.z - 5.0 and p.z < gb.z + 3.0:
+			_cerca = {"tipo": "galeria", "n": "la galería"}
+			_aviso.text = Idiomas.t("E: bajar a la galería del club (al estadio)")
+			return
 	## Una entrada de metro (a pie).
 	if modo == "pie" and metro != null:
 		for a: Dictionary in metro.accesos:
@@ -491,6 +499,9 @@ func _usar() -> void:
 	if _cerca["tipo"] == "puerta_estadio":
 		_entrar_al_estadio()
 		return
+	if _cerca["tipo"] == "galeria":
+		_bajar_a_la_galeria()
+		return
 	if _cerca["tipo"] == "peaton":
 		var v: Dictionary = _cerca["v"]
 		v["espera"] = 5.0
@@ -535,6 +546,31 @@ func _ir_a_planta(p: int) -> void:
 ## De vuelta a la calle, delante de la puerta del club.
 var _rotulos_antes := true
 
+## Desde la caseta de la calle: escalera abajo, al pie de la galería.
+func _bajar_a_la_galeria() -> void:
+	estado = "estadio"
+	_rotulos_antes = cb._rotulos.visible if cb._rotulos != null else true
+	cb.mostrar_rotulos(false)
+	_planta = GaleriaClub.PLANTA
+	cuerpo.position = CityBuilder.ESTADIO_EN + GaleriaClub.pie_de_escalera(_est)
+	rumbo = PI
+	_zona_est = "?"
+	_aviso.text = ""
+	_bajo_tierra(true)
+	_mover_en_estadio(1.0)
+
+## Arriba de la escalera mecánica: a la calle, delante de la caseta.
+func _subir_de_la_galeria() -> void:
+	estado = "calle"
+	_planta = 0
+	_bajo_tierra(false)
+	cb.mostrar_rotulos(_rotulos_antes)
+	cuerpo.position = GaleriaClub.boca_mundo(_est) + Vector3(0, 0, 1.6)
+	cuerpo.position.y = altura_suelo(cuerpo.position.x, cuerpo.position.z)
+	rumbo = 0.0
+	_aviso.text = ""
+	_colocar_camara(1.0)
+
 func _salir_del_estadio() -> void:
 	estado = "calle"
 	cb.mostrar_rotulos(_rotulos_antes)
@@ -556,11 +592,18 @@ func _mover_en_estadio(delta: float) -> void:
 		return
 	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 	vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+	## La galería tiene cinta rodante: 150 m se hacen en un rato.
+	if _zona_est == "Galería":
+		vel *= GaleriaClub.CINTA
 	rumbo -= e.x * delta * 2.6
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var nueva := cuerpo.position + adelante * vel * delta
 	var local := nueva - CityBuilder.ESTADIO_EN
 	var zonas: Array = _est["zonas"]
+	if _planta == GaleriaClub.PLANTA and GaleriaClub.arriba(_est, local):
+		## Arriba de la escalera mecánica: la calle.
+		_subir_de_la_galeria()
+		return
 	if not TunelVestuario.zona_en(zonas, local, _planta).is_empty():
 		cuerpo.position = Vector3(nueva.x, RecorridoClub.y_de(_planta), nueva.z)
 	elif _planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 0.5:
@@ -586,6 +629,8 @@ func _mover_en_estadio(delta: float) -> void:
 		_aviso.text = RecorridoClub.aviso_de(nombre)
 		if RecorridoClub.sala_decorable(nombre):
 			_aviso.text += "  ·  " + Idiomas.t("E: decorar")
+	if nombre == "Galería":
+		_aviso.text = Idiomas.t("Galería del club · al complejo: %d m · cinta rodante") % GaleriaClub.metros_hasta(_est, cuerpo.position - CityBuilder.ESTADIO_EN)
 	_hud.text = "📍 %s · %s %d · %s\n🚶 %s" % [Idiomas.t(nombre), Idiomas.t("Planta"), _planta, str(cb.datos.get("club", {}).get("estadioNom", "Estadio")),
 		Idiomas.t("W/S/A/D o mando · Mayús: correr · E: usar · Esc: volver al mapa")]
 	## Cámara: dentro de una sala no atraviesa paredes ni techo.
@@ -602,6 +647,11 @@ func _mover_en_estadio(delta: float) -> void:
 		var holgura := 1.0 if nombre == "Túnel" else -0.15
 		deseo.z = clampf(deseo.z, o.z + r.position.y - holgura, o.z + r.end.y + holgura)
 		deseo.y = minf(deseo.y, RecorridoClub.y_de(_planta) + float(z["techo"]) - 0.25)
+		if nombre == "Escalera de la galería":
+			## Mirando hacia abajo desde la escalera: la cámara va sobre los
+			## peldaños, dentro del pozo, y no se sale por arriba.
+			deseo.z = minf(deseo.z, o.z + float(GaleriaClub.trazado(_est)["z_esc"]) + 4.0)
+			deseo.y = RecorridoClub.y_de(_planta) + GaleriaClub.alto_rampa(_est, deseo.z - o.z) + 1.7
 	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
 	camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 3.0, Vector3.UP)
 
@@ -739,11 +789,15 @@ var _env_guardado := {}
 var _soles_apagados: Array = []
 
 func _bajo_tierra(si: bool) -> void:
-	var env: Environment = camara.get_world_3d().environment if camara.get_world_3d() != null else null
+	## El entorno se guarda con lo demás: al cerrar el explorador bajo tierra la
+	## cámara ya no está en el mundo, pero hay que devolver el sol igual.
+	var env: Environment = _env_guardado.get("env") as Environment
+	if env == null and camara != null and camara.is_inside_tree() and camara.get_world_3d() != null:
+		env = camara.get_world_3d().environment
 	if env == null:
 		return
 	if si and _env_guardado.is_empty():
-		_env_guardado = {"fog": env.fog_enabled, "amb": env.ambient_light_energy, "exp": env.tonemap_exposure,
+		_env_guardado = {"env": env, "fog": env.fog_enabled, "amb": env.ambient_light_energy, "exp": env.tonemap_exposure,
 			"vol": env.volumetric_fog_enabled}
 		env.fog_enabled = false
 		env.volumetric_fog_enabled = false
@@ -763,7 +817,8 @@ func _bajo_tierra(si: bool) -> void:
 			if is_instance_valid(n):
 				(n as DirectionalLight3D).visible = true
 		_soles_apagados.clear()
-		get_tree().call_group("rotulo_mapa", "show")
+		if is_inside_tree():
+			get_tree().call_group("rotulo_mapa", "show")
 		_env_guardado = {}
 
 func _exit_tree() -> void:

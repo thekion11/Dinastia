@@ -251,5 +251,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   8-10 AÑADIDO: «cada uno [la gente del club] debe tener su LUGAR DE TRABAJO
   dentro del estadio» y «a futuro deben CONECTARSE las instalaciones del club con
   el estadio, podría ser SUBTERRÁNEO» (galería desde los sótanos).
+- 8-10 HECHO 2.0 fase 6: GALERÍA SUBTERRÁNEA (`visor/galeria_club.gd`): planta −2 →
+  pasillo con cinta rodante bajo la avenida → escalera mecánica y caseta junto al
+  complejo; solo en la ciudad. Captura `pruebas/captura_galeria.tscn`. Falta fase 7 (pulido).
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.

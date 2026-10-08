@@ -112,9 +112,12 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 				Vector3(0.3, ALTO_LIBRE, fondo + 0.6), horm, true)
 			TunelVestuario._caja(nodo, Vector3(x0 + lado * (TunelVestuario.VEST_MEDIO - 0.02), y0 + ALTO_LIBRE / 2.0, zc),
 				Vector3(0.04, ALTO_LIBRE, fondo), pared, false)
-		for zz in [z_out - 0.15, z_fin + 0.15]:
-			TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, zz), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
-		TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin - 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
+		TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out - 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
+		if p == GaleriaClub.PLANTA:
+			_pared_galeria(nodo, x0, z_fin, y0, ancho, horm, pared, c1)
+		else:
+			TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin + 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
+			TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin - 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
 		TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out + 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
 		## Ventanas corridas en las plantas de arriba (a la calle y a los lados).
 		if not bajo_tierra:
@@ -175,6 +178,34 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			var caja := Rect2(a + 0.2, z_out + 0.2, b - a - 0.4, z_tabique - z_out - 0.4)
 			_amueblar(nodo, String(sala[0]), caja, y0, c1, c2, nombre_club)
 			_decorar(nodo, String(sala[0]), a, b, z_out, z_tabique, y0, c1, c2, gusto)
+
+## La pared del fondo del sótano (−2), con la puerta de la galería que lleva
+## al complejo (`GaleriaClub`). En el estadio suelto no hay complejo: persiana.
+static func _pared_galeria(nodo: Node3D, x0: float, z_fin: float, y0: float, ancho: float,
+		horm: StandardMaterial3D, pared: StandardMaterial3D, c1: Color) -> void:
+	var xp := x0 + TunelVestuario.PUERTA_X
+	var h0 := xp - GaleriaClub.MEDIO
+	var h1 := xp + GaleriaClub.MEDIO
+	for tr: Vector2 in StadiumBuilder._tramos_sin_hueco(x0, ancho + 0.6, h0, h1):
+		TunelVestuario._caja(nodo, Vector3(tr.x, y0 + ALTO_LIBRE / 2.0, z_fin + 0.15), Vector3(tr.y, ALTO_LIBRE, 0.3), horm, true)
+	for tr2: Vector2 in StadiumBuilder._tramos_sin_hueco(x0, ancho, h0, h1):
+		TunelVestuario._caja(nodo, Vector3(tr2.x, y0 + ALTO_LIBRE / 2.0, z_fin - 0.02), Vector3(tr2.y, ALTO_LIBRE, 0.04), pared, false)
+	## Dintel y marco con el color del club.
+	var marco := TunelVestuario._mat(c1, 0.5)
+	TunelVestuario._caja(nodo, Vector3(xp, y0 + ALTO_LIBRE - 0.05, z_fin - 0.05), Vector3(h1 - h0 + 0.3, 0.12, 0.1), marco, false)
+	for xx in [h0, h1]:
+		TunelVestuario._caja(nodo, Vector3(xx, y0 + (ALTO_LIBRE - 0.1) / 2.0, z_fin - 0.05), Vector3(0.12, ALTO_LIBRE - 0.1, 0.1), marco, false)
+	var texto := Idiomas.t("GALERÍA AL COMPLEJO")
+	if not GaleriaClub.en_ciudad:
+		## Persiana bajada: la galería se recorre desde la ciudad.
+		var persiana := TunelVestuario._mat(Color(0.62, 0.64, 0.66), 0.45)
+		persiana.metallic = 0.6
+		TunelVestuario._caja(nodo, Vector3(xp, y0 + ALTO_LIBRE / 2.0, z_fin + 0.1), Vector3(h1 - h0, ALTO_LIBRE, 0.06), persiana, true)
+		for k in 14:
+			TunelVestuario._caja(nodo, Vector3(xp, y0 + 0.15 + float(k) * 0.24, z_fin + 0.06), Vector3(h1 - h0, 0.03, 0.02),
+				TunelVestuario._mat(Color(0.45, 0.47, 0.5), 0.5), false)
+		texto += "\n" + Idiomas.t("(se recorre desde la ciudad)")
+	TunelVestuario._rotulo(nodo, "⇣ " + texto, Vector3(xp, y0 + ALTO_LIBRE - 0.35, z_fin - 0.14), PI, 30, c1.lerp(Color(0.08, 0.08, 0.1), 0.3))
 
 ## Lo que el usuario eligió para esta sala (`InterioresClub`), o vacío.
 static func _gusto(sala: String) -> Dictionary:

@@ -131,6 +131,7 @@ func _ready() -> void:
 	_probar_personal_estadio()
 	_probar_sancion_dt()
 	_probar_interiores_club()
+	_probar_galeria_club()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -7843,3 +7844,41 @@ func _probar_interiores_club() -> void:
 	r1.free()
 	r2.free()
 	EdificioClub.ctx = {}
+
+func _probar_galeria_club() -> void:
+	_titulo("GALERÍA SUBTERRÁNEA AL COMPLEJO (2.0, fase 6)")
+	## En todas las formas y túneles: del pasillo del sótano se llega andando,
+	## por zonas pisables, hasta arriba de la escalera mecánica.
+	var fallos := []
+	var largos := []
+	for forma: String in ["cuenco", "oval", "rect", "caldera", "herradura", "ingles", "dos", "principal"]:
+		for tunel: String in ["central", "esquina"]:
+			var est := TunelVestuario.datos({"forma": forma, "tunel": tunel}, 2)
+			var zonas: Array = GaleriaClub.zonas(est) + (est["zonas"] as Array)
+			var t := GaleriaClub.trazado(est)
+			var pasos: Array = [Vector3(float(t["xa"]), 0, float(est["z_fin"]) - 1.5), Vector3(float(t["xa"]), 0, float(t["zc"])),
+				Vector3(float(t["xb"]), 0, float(t["zc"])), Vector3(float(t["xb"]), 0, float(t["z_esc"]) + 3.0)]
+			var ok := true
+			for i in pasos.size() - 1:
+				var a: Vector3 = pasos[i]
+				var b: Vector3 = pasos[i + 1]
+				var n := int(a.distance_to(b) / 0.25) + 1
+				for k in n + 1:
+					var q := a.lerp(b, float(k) / float(n))
+					if TunelVestuario.zona_en(zonas, q, GaleriaClub.PLANTA).is_empty():
+						ok = false
+			var fin := Vector3(float(t["xb"]), 0, float(t["z_esc"]) + 3.6)
+			if not ok or not GaleriaClub.arriba(est, fin):
+				fallos.append("%s/%s" % [forma, tunel])
+			largos.append(GaleriaClub.metros_hasta(est, pasos[0]))
+	_comprobar(fallos.is_empty(), "del sótano a la calle por la galería en las 8 formas %s" % str(fallos))
+	_comprobar(largos.min() > 100 and largos.max() < 260, "la galería mide lo que separa estadio y complejo (%d-%d m)" % [largos.min(), largos.max()])
+	## Sale delante del complejo, fuera de la avenida y antes de los edificios.
+	var b := GaleriaClub.boca_mundo(TunelVestuario.datos({"forma": "cuenco"}, 2))
+	_comprobar(absf(b.x) > 10.0 and b.z > 70.0 and b.z < CityBuilder.FILA_0_Z - 16.0, "la caseta queda junto al complejo, sin pisar la avenida (%s)" % str(b))
+	## No se pisa fuera: ni la tierra junto a la galería ni otras plantas.
+	var est2 := TunelVestuario.datos({"forma": "cuenco"}, 2)
+	var z2: Array = GaleriaClub.zonas(est2)
+	var t2 := GaleriaClub.trazado(est2)
+	_comprobar(TunelVestuario.zona_en(z2, Vector3(float(t2["xa"]) + 4.0, 0, 150.0), GaleriaClub.PLANTA).is_empty(), "la tierra de al lado no se pisa")
+	_comprobar(TunelVestuario.zona_en(z2, Vector3(float(t2["xa"]), 0, 150.0), 0).is_empty(), "la galería solo está en la planta −2")

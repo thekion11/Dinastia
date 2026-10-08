@@ -56,4 +56,5 @@ Pedido del usuario (7-10-2026):
    - La oficina del DT con objetos propios.
    - Se guarda con la partida.
 6. **Galería subterránea** (8-10, «a futuro»): desde la planta −2 se llega por un pasillo bajo la ciudad a las instalaciones del club (complejo deportivo, centro médico…).
+   **HECHO (8-10):** `visor/galeria_club.gd`. Puerta con marco en el pasillo del sótano (en el estadio suelto, persiana: «se recorre desde la ciudad»); ~145 m bajo la avenida y los campos con cinta rodante (x2,2), luces, rótulos con los metros que faltan y paneles del club; giro y escalera mecánica que sube a una caseta con tótem junto al complejo (14,5; 87,6). Desde la caseta también se baja (E). Banco: `_probar_galeria_club` (8 formas × 2 túneles). Captura: `pruebas/captura_galeria.tscn`.
 7. **Pulido.** Capturas por planta, pruebas en el banco y documentación.
