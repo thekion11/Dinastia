@@ -79,6 +79,30 @@ var _reloj_portada: Timer
 var _motas: FondoParticulas
 var _bokeh_fondo: FondoParticulas
 var _bokeh_banner: FondoParticulas
+var _pagina: TextureRect
+var _pagina2: TextureRect
+var _i_pagina := 0
+var _reloj_pagina: Timer
+
+## LA ROTACIÓN ENTERA (8-10, pedido: «había más fondos, faltan para la
+## transición»): las 18 portadas Y los 24 fondos de pantalla completa de
+## Ajustes (`Fondo.NOMBRES`, con prefijo "fondo:"). Los fondos se dibujaron
+## oscuros para ir detrás de la interfaz: en la portada se aclaran un poco.
+const PREFIJO_FONDO := "fondo:"
+
+## La franja de arriba rota por las portadas; los fondos de pantalla
+## completa van DETRÁS de toda la página (`_rotar_pagina`): recortados a la
+## franja solo se veía un trozo y quedaban lavados.
+static func rotacion() -> Array:
+	return Portada.NOMBRES.duplicate()
+
+func _textura_de(k: String) -> Texture2D:
+	if k.begins_with(PREFIJO_FONDO):
+		return Fondo.textura(k.substr(PREFIJO_FONDO.length()))
+	return Portada.textura(k, maxi(int(get_viewport_rect().size.x), 1280) * 2)
+
+func _brillo_de(k: String) -> Color:
+	return Color(1.45, 1.45, 1.45) if k.begins_with(PREFIJO_FONDO) else Color.WHITE
 
 ## El color de la luz de cada portada (las partículas se tiñen de él).
 const TINTE := {
@@ -87,6 +111,12 @@ const TINTE := {
 	"minimal": "e0e0e0", "andino": "ffcf8a", "vestuario": "b3e5fc", "cabina": "80deea",
 	"ejecutiva": "e6c27a", "tunel": "ffe0b2", "lluvia": "a7c7e7", "datos": "64ffda",
 	"graffiti": "ff80ab", "marmol": "f5f5f5",
+	"fondo:cesped": "9be7b4", "fondo:nocturna": "8fb4ff", "fondo:retro": "ffcc80", "fondo:prensa": "e6d3a3",
+	"fondo:neon": "ff6ef7", "fondo:tifo": "ff8a65", "fondo:trofeo": "ffd54f", "fondo:pizarra": "fff59d",
+	"fondo:minimal": "e0e0e0", "fondo:tunel": "ffe0b2", "fondo:lluvia": "a7c7e7", "fondo:amanecer": "ffb385",
+	"fondo:autocar": "ffd9a0", "fondo:tiza": "f0f0e8", "fondo:ciudad": "ffd27a", "fondo:montana": "b9e6a0",
+	"fondo:playa": "ffe08a", "fondo:nieve": "e3f2ff", "fondo:juntas": "e6c27a", "fondo:mapa": "c8e6a0",
+	"fondo:vestuario": "b3e5fc", "fondo:bufandas": "ff8a80", "fondo:diario": "e6d3a3", "fondo:aeropuerto": "9fb8ff",
 }
 
 func _ready() -> void:
@@ -100,6 +130,16 @@ func _ready() -> void:
 	_reloj_portada.timeout.connect(_rotar_portada)
 	add_child(_reloj_portada)
 	_reloj_portada.start()
+	## El fondo de la página cambia a destiempo de la portada (15 s después):
+	## cada 15 s se mueve algo, nunca las dos cosas a la vez.
+	_reloj_pagina = Timer.new()
+	_reloj_pagina.wait_time = SEG_PORTADA
+	_reloj_pagina.timeout.connect(_rotar_pagina)
+	add_child(_reloj_pagina)
+	get_tree().create_timer(SEG_PORTADA * 0.5).timeout.connect(func() -> void:
+		if is_instance_valid(_reloj_pagina):
+			_rotar_pagina()
+			_reloj_pagina.start())
 	_tenir_particulas()
 	_banner.resized.connect(func() -> void:
 		if is_instance_valid(_bokeh_banner):
@@ -112,6 +152,23 @@ func _construir() -> void:
 	fondo.color = COL_FONDO
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(fondo)
+	## Detrás de toda la página, los 24 fondos de pantalla completa rotando
+	## (dos capas para el fundido). Atenuados: el menú se tiene que leer.
+	for k in 2:
+		var tr := TextureRect.new()
+		tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tr.self_modulate = Color(0.78, 0.78, 0.78)
+		tr.modulate.a = 1.0 if k == 0 else 0.0
+		add_child(tr)
+		if k == 0:
+			_pagina = tr
+		else:
+			_pagina2 = tr
+	_i_pagina = int(Time.get_unix_time_from_system()) % Fondo.NOMBRES.size()
+	_pagina.texture = Fondo.textura(String(Fondo.NOMBRES[_i_pagina]))
 
 	var scroll := ScrollContainer.new()
 	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -189,11 +246,11 @@ func _construir() -> void:
 	_bokeh_fondo = FondoParticulas.new("bokeh")
 	_bokeh_fondo.ajustar_area(get_viewport_rect().size)
 	add_child(_bokeh_fondo)
-	move_child(_bokeh_fondo, 1)
+	move_child(_bokeh_fondo, 3)
 	_motas = FondoParticulas.new("motas")
 	_motas.ajustar_area(get_viewport_rect().size)
 	add_child(_motas)
-	move_child(_motas, 2)
+	move_child(_motas, 4)
 
 ## La franja panorámica con el fondo de la portada, el degradado que hace
 ## legible el texto y el título encima. El HTML lo llama `.pHero`: cielo,
@@ -463,9 +520,9 @@ func _construir_selector_portada(raiz: VBoxContainer) -> void:
 	scroll_picker.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll_picker.add_child(_fila_picker)
 	v.add_child(scroll_picker)
-	for k: String in Portada.NOMBRES:
+	for k: String in rotacion():
 		var b := Button.new()
-		b.text = String(Portada.TITULOS[k])
+		b.text = ("🖼 " + String(Fondo.TITULOS[k.substr(PREFIJO_FONDO.length())])) if k.begins_with(PREFIJO_FONDO) else String(Portada.TITULOS[k])
 		b.toggle_mode = true
 		b.custom_minimum_size = Vector2(0, 32)
 		b.pressed.connect(func() -> void: _elegir(k))
@@ -529,8 +586,8 @@ func _pintar_banner() -> void:
 	## Se pide el doble de la resolución real y se deja que STRETCH_KEEP_ASPECT_
 	## COVERED la encoja: es la misma regla que ya deja escrita Portada.gd para
 	## la tabla y el plantel, y aquí el lienzo ocupa toda la pantalla.
-	var ancho := maxi(int(get_viewport_rect().size.x), 1280) * 2
-	_fondo_banner.texture = Portada.textura(_clave, ancho)
+	_fondo_banner.texture = _textura_de(_clave)
+	_fondo_banner.self_modulate = _brillo_de(_clave)
 	_overlay.texture = _degradado(_clave)
 	_lbl_titulo.add_theme_color_override("font_color", Color(String(COLOR_TITULO.get(_clave, "eef3ee"))))
 	_lbl_sub.add_theme_color_override("font_color", Color(String(COLOR_SUB.get(_clave, "3fa06a"))))
@@ -571,10 +628,11 @@ func _elegir(k: String) -> void:
 func _rotar_portada() -> void:
 	if not is_inside_tree() or not is_visible_in_tree():
 		return
-	var i := Portada.NOMBRES.find(_clave)
-	var sig := String(Portada.NOMBRES[(i + 1) % Portada.NOMBRES.size()])
-	var ancho := maxi(int(get_viewport_rect().size.x), 1280) * 2
-	_fondo_banner2.texture = Portada.textura(sig, ancho)
+	var lista := rotacion()
+	var i := lista.find(_clave)
+	var sig := String(lista[(i + 1) % lista.size()])
+	_fondo_banner2.texture = _textura_de(sig)
+	_fondo_banner2.self_modulate = _brillo_de(sig)
 	_fondo_banner2.modulate.a = 0.0
 	var tw := _fondo_banner2.create_tween()
 	tw.tween_property(_fondo_banner2, "modulate:a", 1.0, 1.4).set_trans(Tween.TRANS_SINE)
@@ -584,6 +642,20 @@ func _rotar_portada() -> void:
 		_fondo_banner2.modulate.a = 0.0
 		_actualizar_picker())
 	_clave_tinte(sig)
+
+## Cada 30 s (a destiempo de la portada): el siguiente fondo de pantalla
+## completa, fundido sobre el actual en 2 s.
+func _rotar_pagina() -> void:
+	if not is_inside_tree() or _pagina == null:
+		return
+	_i_pagina = (_i_pagina + 1) % Fondo.NOMBRES.size()
+	_pagina2.texture = Fondo.textura(String(Fondo.NOMBRES[_i_pagina]))
+	_pagina2.modulate.a = 0.0
+	var tw := _pagina2.create_tween()
+	tw.tween_property(_pagina2, "modulate:a", 1.0, 2.0).set_trans(Tween.TRANS_SINE)
+	tw.tween_callback(func() -> void:
+		_pagina.texture = _pagina2.texture
+		_pagina2.modulate.a = 0.0)
 
 func _tenir_particulas() -> void:
 	_clave_tinte(_clave)
@@ -595,9 +667,10 @@ func _clave_tinte(k: String) -> void:
 			e.tenir(c)
 
 func _actualizar_picker() -> void:
-	for i in Portada.NOMBRES.size():
+	var lista := rotacion()
+	for i in mini(lista.size(), _fila_picker.get_child_count()):
 		var b: Button = _fila_picker.get_child(i)
-		b.button_pressed = (Portada.NOMBRES[i] == _clave)
+		b.button_pressed = (String(lista[i]) == _clave)
 
 # --- ajustes: la portada elegida se recuerda entre sesiones ------------------
 
@@ -606,7 +679,7 @@ func _leer_ajuste() -> String:
 	if c.load(CONFIG_RUTA) != OK:
 		return "clasica"
 	var k: String = c.get_value("portada", "clave", "clasica")
-	return k if Portada.NOMBRES.has(k) else "clasica"
+	return k if rotacion().has(k) else "clasica"
 
 func _guardar_ajuste(k: String) -> void:
 	var c := ConfigFile.new()
