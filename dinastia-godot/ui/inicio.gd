@@ -68,12 +68,42 @@ var _lbl_estado: Label
 var _panel_continuar: VBoxContainer
 var _mundo_guardado: Mundo = null
 
+## LA PORTADA QUE CAMBIA SOLA (8-10-2026, pedido: «que el fondo de ahí se vaya
+## cambiando cada 30 segundos por sus variantes»). Cada 30 s pasa a la
+## siguiente de `Portada.NOMBRES` con un fundido; elegir una a mano la fija
+## como punto de partida y reinicia la cuenta. Solo la elegida a mano se
+## guarda en ajustes.
+const SEG_PORTADA := 30.0
+var _fondo_banner2: TextureRect
+var _reloj_portada: Timer
+var _motas: FondoParticulas
+var _bokeh_fondo: FondoParticulas
+var _bokeh_banner: FondoParticulas
+
+## El color de la luz de cada portada (las partículas se tiñen de él).
+const TINTE := {
+	"clasica": "9be7b4", "nocturna": "8fb4ff", "retro": "ffcc80", "prensa": "c9a227",
+	"neon": "ff6ef7", "tifo": "ff8a65", "trofeo": "ffd54f", "pizarra": "fff59d",
+	"minimal": "e0e0e0", "andino": "ffcf8a", "vestuario": "b3e5fc", "cabina": "80deea",
+	"ejecutiva": "e6c27a", "tunel": "ffe0b2", "lluvia": "a7c7e7", "datos": "64ffda",
+	"graffiti": "ff80ab", "marmol": "f5f5f5",
+}
+
 func _ready() -> void:
 	_clave = _leer_ajuste()
 	_construir()
 	_pintar_banner()
 	_actualizar_picker()
 	_actualizar_continuar()
+	_reloj_portada = Timer.new()
+	_reloj_portada.wait_time = SEG_PORTADA
+	_reloj_portada.timeout.connect(_rotar_portada)
+	add_child(_reloj_portada)
+	_reloj_portada.start()
+	_tenir_particulas()
+	_banner.resized.connect(func() -> void:
+		if is_instance_valid(_bokeh_banner):
+			_bokeh_banner.ajustar_area(_banner.size))
 
 # --- construcción ------------------------------------------------------------
 
@@ -156,11 +186,14 @@ func _construir() -> void:
 	## página- y cubriendo el viewport, no el contenido entero.
 	## Etapa 1 (8-10-2026): DETRÁS del contenido (entre el fondo y el scroll).
 	## Encima, las motas tapaban letras y botones como manchas blancas.
-	var fondo_part := FondoParticulas.new()
-	fondo_part.ajustar_area(get_viewport_rect().size)
-	fondo_part.z_index = 0
-	add_child(fondo_part)
-	move_child(fondo_part, 1)
+	_bokeh_fondo = FondoParticulas.new("bokeh")
+	_bokeh_fondo.ajustar_area(get_viewport_rect().size)
+	add_child(_bokeh_fondo)
+	move_child(_bokeh_fondo, 1)
+	_motas = FondoParticulas.new("motas")
+	_motas.ajustar_area(get_viewport_rect().size)
+	add_child(_motas)
+	move_child(_motas, 2)
 
 ## La franja panorámica con el fondo de la portada, el degradado que hace
 ## legible el texto y el título encima. El HTML lo llama `.pHero`: cielo,
@@ -176,6 +209,17 @@ func _construir_banner(raiz: VBoxContainer) -> void:
 	_fondo_banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_fondo_banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_banner.add_child(_fondo_banner)
+	## La siguiente portada entra encima, fundiéndose.
+	_fondo_banner2 = TextureRect.new()
+	_fondo_banner2.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_fondo_banner2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_fondo_banner2.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_fondo_banner2.modulate.a = 0.0
+	_banner.add_child(_fondo_banner2)
+	## Luces desenfocadas flotando sobre la foto, bajo el texto.
+	_bokeh_banner = FondoParticulas.new("bokeh")
+	_bokeh_banner.amount = 9
+	_banner.add_child(_bokeh_banner)
 
 	_overlay = TextureRect.new()
 	_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -519,6 +563,36 @@ func _elegir(k: String) -> void:
 	_guardar_ajuste(k)
 	_pintar_banner()
 	_actualizar_picker()
+	_tenir_particulas()
+	if _reloj_portada != null:
+		_reloj_portada.start()
+
+## Cada 30 s: la siguiente variante, fundida encima de la actual (1,4 s).
+func _rotar_portada() -> void:
+	if not is_inside_tree() or not is_visible_in_tree():
+		return
+	var i := Portada.NOMBRES.find(_clave)
+	var sig := String(Portada.NOMBRES[(i + 1) % Portada.NOMBRES.size()])
+	var ancho := maxi(int(get_viewport_rect().size.x), 1280) * 2
+	_fondo_banner2.texture = Portada.textura(sig, ancho)
+	_fondo_banner2.modulate.a = 0.0
+	var tw := _fondo_banner2.create_tween()
+	tw.tween_property(_fondo_banner2, "modulate:a", 1.0, 1.4).set_trans(Tween.TRANS_SINE)
+	tw.tween_callback(func() -> void:
+		_clave = sig
+		_pintar_banner()
+		_fondo_banner2.modulate.a = 0.0
+		_actualizar_picker())
+	_clave_tinte(sig)
+
+func _tenir_particulas() -> void:
+	_clave_tinte(_clave)
+
+func _clave_tinte(k: String) -> void:
+	var c := Color(String(TINTE.get(k, "ffffff")))
+	for e: FondoParticulas in [_motas, _bokeh_fondo, _bokeh_banner]:
+		if is_instance_valid(e):
+			e.tenir(c)
 
 func _actualizar_picker() -> void:
 	for i in Portada.NOMBRES.size():
