@@ -7882,3 +7882,13 @@ func _probar_galeria_club() -> void:
 	var t2 := GaleriaClub.trazado(est2)
 	_comprobar(TunelVestuario.zona_en(z2, Vector3(float(t2["xa"]) + 4.0, 0, 150.0), GaleriaClub.PLANTA).is_empty(), "la tierra de al lado no se pisa")
 	_comprobar(TunelVestuario.zona_en(z2, Vector3(float(t2["xa"]), 0, 150.0), 0).is_empty(), "la galería solo está en la planta −2")
+	## En el estadio suelto la puerta tiene persiana y se avisa al llegar.
+	var ex := ExploradorEstadio.new()
+	ex._datos = est2
+	ex.cuerpo = Node3D.new()
+	ex.cuerpo.position = Vector3(float(t2["xa"]), RecorridoClub.y_de(-2), float(est2["z_fin"]) - 1.0)
+	_comprobar(ex._junto_a_la_persiana(), "junto a la persiana del sótano se avisa de la galería")
+	ex.cuerpo.position.x -= 6.0
+	_comprobar(not ex._junto_a_la_persiana(), "lejos de la persiana, no")
+	ex.cuerpo.free()
+	ex.free()
