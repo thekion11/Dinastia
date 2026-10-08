@@ -127,6 +127,7 @@ func _ready() -> void:
 	_probar_b6_formas_led()
 	_probar_region_reales()
 	_probar_tunel_navegable()
+	_probar_edificio_club()
 	_probar_dinastias()
 	_probar_documental()
 	_probar_tribuna_real()
@@ -7711,3 +7712,51 @@ func _probar_tunel_navegable() -> void:
 				cuerpos += 1
 	_comprobar(tv != null and cuerpos >= 10, "el túnel y el vestuario tienen colisión (%d piezas)" % cuerpos)
 	raiz.free()
+
+func _probar_edificio_club() -> void:
+	_titulo("ESTADIO 2.0: EL EDIFICIO DEL CLUB POR PLANTAS")
+	var d := TunelVestuario.datos({"forma": "cuenco"}, 2)
+	var zonas: Array = d["zonas"]
+	var x0: float = d["x0"]
+	var sin_asc := []
+	for p in EdificioClub.plantas():
+		var hay := false
+		for z: Dictionary in zonas:
+			if int(z.get("planta", 0)) == p and String(z["nombre"]) == "Ascensor":
+				hay = true
+		if not hay:
+			sin_asc.append(p)
+	_comprobar(sin_asc.is_empty(), "ascensor en las 5 plantas %s" % str(sin_asc))
+	## Cada sala: se pisa su centro, y desde su puerta se llega al pasillo.
+	var mal := []
+	var z_tab: float = float(d["z_fin"]) - EdificioClub.PASILLO - 0.1
+	for f: Array in EdificioClub.PLANTAS:
+		for sala: Array in f[2]:
+			var c := x0 + (float(sala[1]) + float(sala[2])) / 2.0
+			var centro := Vector3(c, 0, (float(d["z_out"]) + z_tab) / 2.0)
+			if String(TunelVestuario.zona_en(zonas, centro, int(f[0])).get("nombre", "")) != String(sala[0]):
+				mal.append(String(sala[0]))
+			## Del centro de la sala al pasillo, recto por la puerta.
+			var z := centro.z
+			var ok := true
+			while z < z_tab + 0.8:
+				if TunelVestuario.zona_en(zonas, Vector3(c, 0, z), int(f[0])).is_empty():
+					ok = false
+					break
+				z += 0.2
+			if not ok:
+				mal.append(String(sala[0]) + " (puerta)")
+	_comprobar(mal.is_empty(), "las 10 salas se pisan y se sale al pasillo %s" % str(mal))
+	## Sin plantilla a mano, las taquillas no inventan nombres.
+	var antes := EdificioClub.ctx
+	EdificioClub.ctx = {"plantilla": [[10, "Prueba Diez"]]}
+	var raiz := Node3D.new()
+	TunelVestuario.montar(raiz, {"forma": "cuenco", "club_nombre": "Mi Club"}, 2, null)
+	var con_nombre := false
+	for n in raiz.find_children("*", "Label3D", true, false):
+		if (n as Label3D).text.contains("Prueba Diez"):
+			con_nombre = true
+	_comprobar(con_nombre, "la taquilla lleva el dorsal y el nombre del jugador")
+	_comprobar(raiz.find_child("EdificioClub", true, false) != null, "el edificio del club se construye")
+	raiz.free()
+	EdificioClub.ctx = antes

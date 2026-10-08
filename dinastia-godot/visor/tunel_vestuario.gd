@@ -49,6 +49,9 @@ static func datos(est: Dictionary, niveles: int) -> Dictionary:
 		## La puerta del club en la fachada de atrás: da a la calle (ciudad).
 		{"nombre": "Acceso", "r": Rect2(x0 + PUERTA_X - PUERTA_MEDIO + 0.3, z_fin - 1.0, (PUERTA_MEDIO - 0.3) * 2.0, 4.0), "techo": 99.0},
 	]
+	## Las plantas del edificio del club (estadio 2.0): sus ascensores van
+	## delante para ganar al pisar.
+	zonas = EdificioClub.zonas(x0, z_out, z_fin) + zonas
 	return {"x0": x0, "z_boca": z_boca, "z_out": z_out, "z_fin": z_fin, "zonas": zonas,
 		"inicio": Vector3(x0 + 3.0, 0.02, z_fin - 3.2), "rumbo_inicio": PI,
 		"puerta": Vector3(x0 + PUERTA_X, 0.02, z_fin + 0.2),
@@ -56,9 +59,9 @@ static func datos(est: Dictionary, niveles: int) -> Dictionary:
 
 ## ¿En qué zona transitable cae `p` (coordenadas del estadio)? Vacío si en
 ## ninguna. Lo usan los dos exploradores (el del estadio y el de la ciudad).
-static func zona_en(zonas: Array, p: Vector3) -> Dictionary:
+static func zona_en(zonas: Array, p: Vector3, planta: int = 0) -> Dictionary:
 	for z: Dictionary in zonas:
-		if (z["r"] as Rect2).has_point(Vector2(p.x, p.z)):
+		if int(z.get("planta", 0)) == planta and (z["r"] as Rect2).has_point(Vector2(p.x, p.z)):
 			return z
 	return {}
 
@@ -192,6 +195,7 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 		_caja(nodo, Vector3(x0, ALTO + 0.6, zc), Vector3(StadiumBuilder.TUNEL_HUECO * 2.0 + 0.6, 0.2, largo + 0.6), portico, false)
 
 	_vestuario(nodo, x0, z_out, z_fin, c1, c2, pared, suelo, techo, luz, horm, nombre, mi)
+	EdificioClub.montar(nodo, x0, z_out, z_fin, c1, c2, horm, luz, nombre)
 
 static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: Color, c2: Color,
 		pared: StandardMaterial3D, suelo: StandardMaterial3D, techo: StandardMaterial3D,
@@ -234,7 +238,17 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 			_caja(nodo, Vector3(x_t, 1.25, z_t), Vector3(0.8, 2.5, 0.95), taquilla, true)
 			## La camiseta colgada, mirando al centro del vestuario.
 			_caja(nodo, Vector3(x_t - lado * 0.43, 1.55, z_t), Vector3(0.06, 0.8, 0.62), camiseta, false)
-			_rotulo(nodo, str(dorsal), Vector3(x_t - lado * 0.47, 1.6, z_t), -lado * PI / 2.0, 40, c2)
+			## Con la plantilla a mano (estadio 2.0), el dorsal y el nombre de
+			## cada jugador; si no, solo el número.
+			## Solo en el estadio propio (en la ciudad `mi` es null y es el tuyo).
+			var plantilla: Array = EdificioClub.ctx.get("plantilla", []) if (mi == null or mi.id == PersonajeDT.club_usuario) else []
+			var txt := str(dorsal)
+			var t_tam := 40
+			if dorsal - 1 < plantilla.size():
+				var fila: Array = plantilla[dorsal - 1]
+				txt = "%d\n%s" % [int(fila[0]), String(fila[1])]
+				t_tam = 24
+			_rotulo(nodo, txt, Vector3(x_t - lado * 0.47, 1.6, z_t), -lado * PI / 2.0, t_tam, c2)
 			dorsal += 1
 			z_t += 1.05
 		_caja(nodo, Vector3(x0 + lado * (VEST_MEDIO - 1.25), 0.45, (z_out + z_fin - 3.0) / 2.0),
@@ -244,8 +258,8 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 	_caja(nodo, Vector3(x0, 1.7, z_fin - 0.1), Vector3(3.2, 1.6, 0.06), pizarra, false)
 	_rotulo(nodo, "4-3-3\n○ → ✕", Vector3(x0, 1.75, z_fin - 0.15), PI, 46, Color(0.15, 0.2, 0.5))
 	## La camilla del fisio y las duchas (alicatado y alcachofas) en una esquina.
-	_caja(nodo, Vector3(x0 - 3.6, 0.75, z_fin - 2.4), Vector3(0.8, 0.12, 2.0), _mat(Color(0.2, 0.35, 0.55), 0.6), true)
-	_caja(nodo, Vector3(x0 - 3.6, 0.35, z_fin - 2.4), Vector3(0.6, 0.7, 1.6), Texturas.metal(Color(0.6, 0.62, 0.64), 0.5), false)
+	_caja(nodo, Vector3(x0 + 3.0, 0.75, z_fin - 4.6), Vector3(0.8, 0.12, 2.0), _mat(Color(0.2, 0.35, 0.55), 0.6), true)
+	_caja(nodo, Vector3(x0 + 3.0, 0.35, z_fin - 4.6), Vector3(0.6, 0.7, 1.6), Texturas.metal(Color(0.6, 0.62, 0.64), 0.5), false)
 	var azulejo := _mat(Color(0.82, 0.9, 0.93), 0.25)
 	## Las duchas, en la pared del lado de la camilla (la otra tiene la puerta).
 	_caja(nodo, Vector3(x0 - VEST_MEDIO + 0.06, alto / 2.0, z_fin - 1.7), Vector3(0.06, alto, 2.8), azulejo, false)
