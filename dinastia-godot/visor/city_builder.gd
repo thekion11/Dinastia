@@ -108,6 +108,8 @@ var _ventanas_mat: Array[StandardMaterial3D] = []
 ## CRONÓMETRO DE LA CONSTRUCCIÓN (etapa 3): con TIEMPOS=1 imprime lo que tarda
 ## cada parte. Sirve para saber qué conviene aligerar o repartir.
 var _t_marca := 0
+## Círculos [x, z, radio] de lo pequeño y sólido (farolas, troncos, coches...).
+var circulos := PackedVector3Array()
 static var _medir_tiempos := OS.get_environment("TIEMPOS") != ""
 func _marca(que: String) -> void:
 	if _medir_tiempos:
@@ -124,6 +126,7 @@ func build(d: Dictionary) -> void:
 		remove_child(c)
 		c.free()
 	etiquetas.clear()
+	circulos = PackedVector3Array()
 	puntos_clic.clear()
 	_rotulos = Node3D.new()
 	_rotulos.name = "Rotulos"
@@ -203,6 +206,8 @@ func build(d: Dictionary) -> void:
 		Optimizar.butacas_livianas(self, true)
 		Optimizar.distancias(self)
 		_marca("opt_distancias")
+		circulos = Optimizar.obstaculos(self, ExploradorCiudad.construir_obstaculos(self))
+		_marca("obstaculos")
 		Optimizar.agrupar(self)
 		_marca("opt_agrupar")
 
