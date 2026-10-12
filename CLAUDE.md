@@ -282,5 +282,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   velocidad, y cambiar de lenguaje (C#/GDExtension) si de verdad hace falta;
   5) volver a empezar el ciclo. Commits pequeños y frecuentes; banco solo (sin
   otras pruebas a la vez, que se corta).
+- 8/12-10 AVANCE del bucle: etapa 3 (optimización: `visor/optimizar.gd`, cifras en
+  ETAPAS_FINALES.md, motor ligero en Ajustes, `herramientas/banco.sh`), etapa 4
+  (aceras/zócalos/peatones con accesorios) y etapa 5 (colisión con círculos, deslizar,
+  ceder el paso) con una primera pasada. SIGUE: AUDITORÍA COMPLETA → optimización
+  completa (gama baja) → repetir ciclo (pendientes en ETAPAS_FINALES.md).
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
