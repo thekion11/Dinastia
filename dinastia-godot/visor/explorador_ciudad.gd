@@ -35,6 +35,7 @@ var camara: Camera3D
 var rumbo := 0.0        ## ángulo en Y (0 = mirando a +Z)
 var vel := 0.0
 var obstaculos: Array[Rect2] = []
+var _vel_pie := 0.0   ## velocidad a pie dentro del estadio, sin la cinta rodante
 var _anim: AnimationPlayer
 var _hud: Label
 var _aviso: Label
@@ -808,7 +809,9 @@ func _mover_en_estadio(delta: float) -> void:
 		camara.look_at(camara.position + dir * 10.0 + Vector3(0, -1.6, 0), Vector3.UP)
 		return
 	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
-	vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+	var objetivo_e := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+	_vel_pie = move_toward(_vel_pie, objetivo_e, (7.0 if absf(objetivo_e) > absf(_vel_pie) else 12.0) * delta)
+	vel = _vel_pie
 	## La galería tiene cinta rodante: 150 m se hacen en un rato.
 	if _zona_est == "Galería":
 		vel *= GaleriaClub.CINTA
@@ -829,6 +832,22 @@ func _mover_en_estadio(delta: float) -> void:
 		## Cruzada la puerta, ya en la calle.
 		_salir_del_estadio()
 		return
+	## Choque en diagonal contra una pared: se desliza en vez de pararse.
+	if TunelVestuario.zona_en(zonas, local, _planta).is_empty() \
+			and not (_planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 0.5):
+		var ant := cuerpo.position
+		var px := Vector3(nueva.x, ant.y, ant.z)
+		var pz := Vector3(ant.x, ant.y, nueva.z)
+		if not TunelVestuario.zona_en(zonas, px - CityBuilder.ESTADIO_EN, _planta).is_empty():
+			nueva = px
+			local = nueva - CityBuilder.ESTADIO_EN
+			_vel_pie *= 0.92
+		elif not TunelVestuario.zona_en(zonas, pz - CityBuilder.ESTADIO_EN, _planta).is_empty():
+			nueva = pz
+			local = nueva - CityBuilder.ESTADIO_EN
+			_vel_pie *= 0.92
+		else:
+			_vel_pie = 0.0
 	if not TunelVestuario.zona_en(zonas, local, _planta).is_empty():
 		cuerpo.position = Vector3(nueva.x, RecorridoClub.y_de(_planta), nueva.z)
 	elif _planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 0.5:
