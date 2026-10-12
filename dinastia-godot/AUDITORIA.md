@@ -39,3 +39,28 @@ Qué se revisó, qué se encontró y qué se arregló. Todo se ejecutó en el se
 - **Construir un estadio de 47.000 butacas:** 4,2 s la primera vez (carga modelos y shaders) y 0,25 s las siguientes.
 - **Grada completa:** +30 % de triángulos (3,59 M). El rendimiento adaptativo tiene un escalón para aligerarla.
 - **Archivos subidos por el usuario:** `datos/tablas.json.bak` y `test_shark.png` siguen en el repositorio. No se tocaron. El primero tiene datos reales y ya está excluido de los builds.
+
+---
+
+## Auditoría del bucle · 12-10-2026 (tras las etapas 3, 4 y 5)
+
+| Comprobación | Resultado |
+|---|---|
+| Banco (`herramientas/banco.sh`) | FIN. 0 fallos |
+| `prueba_modos` | FIN MODOS. 0 fallos |
+| Frases sin traducir (9 idiomas) | 0 de 65 literales; la narración va aparte |
+| Registro de la ciudad 3D y de la entrada con portero | sin errores ni avisos (solo el V-Sync del servidor) |
+| Registro del partido al cerrar | 3 scripts y 9 objetos «sin soltar» **solo si la prueba sale en seco con el partido abierto** (`medir_partido`); el cierre normal ya no fuga. Pendiente: confirmar con una prueba que abre y cierra. |
+| CPU de la ciudad sin gráfica | 7–9 ms por fotograma |
+| CPU del partido sin gráfica | 3,8 ms por fotograma |
+| Carga del estadio | 1.ª apertura 5,6 s, 2.ª 0,5 s |
+
+Hallazgos de esta pasada y arreglados: biblioteca de animación armada 105 veces
+(2,9 s de la ciudad); texturas del escaneo y de la Tierra sin compresión de
+VRAM; calidad gráfica que no se guardaba; ciudad sin ajuste automático de
+calidad; mobiliario atravesable; movimiento brusco (sin aceleración ni
+deslizamiento).
+
+Límites honestos: `-s` (scripts sueltos) se cuelga en este entorno, hay que
+envolverlos en una escena; los FPS reales dependen de la máquina del dueño (aquí
+el render es por software), por eso se miden llamadas de dibujo, triángulos y CPU.
