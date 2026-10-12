@@ -86,6 +86,7 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	trafico = cb.get_node_or_null("Trafico") as TraficoCiudad
 	metro = cb.expansion.metro if cb.expansion != null else null
 	obstaculos = construir_obstaculos(cb)
+	_indexar_circulos()
 	var perfil: Dictionary = cb.datos.get("perfil_estadio", {})
 	if not perfil.is_empty():
 		var aforo := int(perfil.get("aforo", 20000))
@@ -151,6 +152,51 @@ static func libre(p: Vector3, radio: float, obst: Array[Rect2]) -> bool:
 			return false
 	return true
 
+## Círculos sólidos (farolas, troncos, coches aparcados...) por celdas de 8 m.
+const CELDA_CIRC := 8.0
+var _rej_circ := {}
+
+func _indexar_circulos() -> void:
+	_rej_circ.clear()
+	if cb == null:
+		return
+	for c: Vector3 in cb.circulos:
+		var k := Vector2i(floori(c.x / CELDA_CIRC), floori(c.y / CELDA_CIRC))
+		if not _rej_circ.has(k):
+			_rej_circ[k] = []
+		(_rej_circ[k] as Array).append(c)
+
+func _choca_circulos(p: Vector3, radio: float) -> bool:
+	var cx := floori(p.x / CELDA_CIRC)
+	var cz := floori(p.z / CELDA_CIRC)
+	for i in range(cx - 1, cx + 2):
+		for j in range(cz - 1, cz + 2):
+			var lista: Array = _rej_circ.get(Vector2i(i, j), [])
+			for c: Vector3 in lista:
+				var dx := p.x - c.x
+				var dz := p.z - c.y
+				var rr := radio + c.z
+				if dx * dx + dz * dz < rr * rr:
+					return true
+	return false
+
+## Los que se mueven: coches y vecinos del tráfico.
+func _choca_moviles(p: Vector3, radio: float) -> bool:
+	if trafico == null:
+		return false
+	for v: Dictionary in trafico._vehiculos:
+		var n: Node3D = v["nodo"]
+		if not is_instance_valid(n):
+			continue
+		var d := Vector2(n.global_position.x - p.x, n.global_position.z - p.z).length()
+		if d < radio + (0.45 if float(v["alto"]) < 0.3 else 1.7):
+			return true
+	return false
+
+## Manzanas, río, círculos y móviles: todo lo que impide estar en `p`.
+func libre_total(p: Vector3, radio: float) -> bool:
+	return libre(p, radio, obstaculos) and not _choca_circulos(p, radio) and not _choca_moviles(p, radio)
+
 static func en_rio(x: float, z: float) -> bool:
 	return absf(x - CityBuilder.RIO_X) < 50.0 and absf(z) < 1360.0
 
@@ -176,7 +222,7 @@ func buscar_libre(desde: Vector3) -> Vector3:
 		var ang := float(k) * 0.7
 		var d := float(k) * 2.0
 		var p := desde + Vector3(cos(ang) * d, 0, sin(ang) * d)
-		if libre(p, r, obstaculos):
+		if libre_total(p, r):
 			return Vector3(p.x, altura_suelo(p.x, p.z), p.z)
 	return desde
 
@@ -367,7 +413,9 @@ func _physics_process(delta: float) -> void:
 		rumbo -= e.x * delta * 1.9 * clampf(absf(vel) / 8.0, 0.0, 1.0) * signf(vel if vel != 0.0 else 1.0)
 	else:
 		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
-		vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+		## Aceleración y frenada suaves: arrancar y parar no es instantáneo.
+		var objetivo := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+		vel = move_toward(vel, objetivo, (7.0 if absf(objetivo) > absf(vel) else 12.0) * delta)
 		rumbo -= e.x * delta * 2.6
 		if _es_dt:
 			_animar_dt(vel)
@@ -375,12 +423,23 @@ func _physics_process(delta: float) -> void:
 			_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 			_sonar_pasos(vel)
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
-	var nueva := cuerpo.position + adelante * vel * delta
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
-	if libre(nueva, r, obstaculos):
-		cuerpo.position = Vector3(nueva.x, altura_suelo(nueva.x, nueva.z), nueva.z)
+	var paso := adelante * vel * delta
+	var pos := cuerpo.position
+	## Si ya estás dentro de algo (al salir del metro, por ejemplo), se te deja
+	## andar para salir en vez de quedarte atrapado.
+	var atrapado := not libre_total(pos, r)
+	if atrapado or libre_total(pos + paso, r):
+		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z + paso.z), pos.z + paso.z)
+	elif libre_total(pos + Vector3(paso.x, 0, 0), r):
+		## Choque en diagonal: se desliza por la pared en vez de pararse en seco.
+		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z), pos.z)
+		vel *= 0.92
+	elif libre_total(pos + Vector3(0, 0, paso.z), r):
+		cuerpo.position = Vector3(pos.x, altura_suelo(pos.x, pos.z + paso.z), pos.z + paso.z)
+		vel *= 0.92
 	else:
-		vel *= -0.25
+		vel *= -0.25 if modo == "coche" else 0.0
 	cuerpo.rotation.y = rumbo
 	_colocar_camara(delta)
 	_buscar_cerca()
