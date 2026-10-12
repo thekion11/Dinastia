@@ -72,6 +72,33 @@ noche, y en los dos renderizadores (escritorio y móvil).
 
 Se comprueba repitiendo el banco de rendimiento: cada mejora con su cifra.
 
+### Etapa 3 · Avance (8-10-2026) — cifras medidas (calidad MEDIO)
+
+Herramientas: `pruebas/medir_ciudad` (DETALLE=1, CPU=1, CUADROS=1, TIEMPOS=1),
+`pruebas/medir_partido` (DETALLE=1, PARTES=1, FOTO=), `medir_carga_estadio`,
+`medir_precarga`, `lista_precarga`; `visor/optimizar.gd` reúne las pasadas.
+
+| Escena | Antes | Después |
+|---|---|---|
+| Ciudad, vista aérea: triángulos | 30,1 M | 9,3 M |
+| Ciudad, vista aérea: llamadas de dibujo | 8.118 | 3.333 |
+| Ciudad a pie: llamadas / triángulos | 2.028 / 9,9 M | 775 / 2,8 M |
+| Partido: triángulos por fotograma | 3,12 M | 2,20–2,35 M |
+| Estadio, 1.ª / 2.ª apertura | 7,6 / 2,3 s | 5,6 / 0,5 s |
+| Memoria de vídeo (escaneo, móvil, Tierra) | ≈21 MB c/u | ≈2,8 MB c/u |
+
+Hecho: primitivas con los lados justos, cortes por tamaño, agrupado de piezas
+repetidas en MultiMesh (tamaño plegado en la escala), materiales iguales
+unificados, butacas livianas en la ciudad, hinchada lejana de 26 triángulos y
+2 filas de butacas reales en MEDIO, bibliotecas de animación compartidas,
+precarga de modelos desde el menú, compresión de VRAM, calidad gráfica guardada,
+«Motor gráfico ligero» (OpenGL, reinicia) y calidad adaptativa también en la
+ciudad. CPU sin gráfica: partido 3,8 ms, ciudad 7–9 ms por fotograma.
+Descartado: armar animaciones en un hilo (se bloquea).
+Pendiente: repartir la construcción de la ciudad en varios fotogramas
+(estadio ≈2,6 s, expansión 0,8 s, suelo 0,8 s), LOD de personajes.
+
+
 ## Etapa 4 · Realismo visual en infraestructura y personajes
 
 - **Edificios.** Fachadas con ventanas de verdad (marcos, profundidad,
