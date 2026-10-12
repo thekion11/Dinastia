@@ -114,6 +114,16 @@ Pendiente: repartir la construcción de la ciudad en varios fotogramas
 
 Se comprueba con capturas de los mismos encuadres que en la etapa 2.
 
+### Etapa 4 · Avance (12-10-2026)
+Hecho: aceras de baldosa con juntas, solares de hormigón y césped texturado en
+toda la expansión; asfalto mate; zócalo oscuro en la base de los edificios del
+kit y cornisa + equipos de aire + depósito en las torres de azotea plana
+(`CiudadExpansion._detalle_edificio`); peatones con complexión variada y
+accesorios (mochila, bolso, móvil, gafas de sol, gorra: `PeatonQ._variedad`).
+Captura: `pruebas/captura_peatones`. Pendiente: barandillas y cerchas del
+estadio (hay que contrarrotar con la pendiente de cada grada), paraguas con
+lluvia, fachadas del kit con marcos y profundidad.
+
 ## Etapa 5 · Física y movimientos naturales
 
 - **Que nada se atraviese.** Colisión real en ciudad y estadio, con cuerpos
@@ -134,6 +144,17 @@ Se comprueba con pruebas en el banco (no atravesar paredes, coches y gente; el
 balón conserva la energía) y con capturas o vídeo de movimiento.
 
 ---
+
+### Etapa 5 · Avance (12-10-2026)
+Hecho: el paseo choca ahora con farolas, troncos, hidrantes, kioscos y coches
+aparcados (23.000 círculos sacados de la propia escena por
+`Optimizar.obstaculos`, rejilla de 8 m en `ExploradorCiudad`); coches y vecinos
+del tráfico también bloquean; se desliza por las paredes (ciudad y estadio) en
+vez de pararse en seco; aceleración y frenada suaves al caminar; peatones y
+coches ceden el paso al jugador (`TraficoCiudad.jugador`). El balón del
+partido jugable ya tenía gravedad, Magnus, rozamiento, botes y postes.
+Pendiente: esquivar entre peatones, colisión jugador-jugador en el partido,
+animaciones de giro y de parada.
 
 ## Estado
 
