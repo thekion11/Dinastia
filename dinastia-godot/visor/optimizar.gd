@@ -350,3 +350,88 @@ static func _tris(m: Mesh) -> int:
 		t += (idx.size() if idx.size() > 0 else (arr[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()) / 3
 	_tris_cache[m] = t
 	return t
+
+## OBSTÁCULOS PARA CAMINAR (etapa 5, 12-10-2026). El paseo solo chocaba con los
+## rectángulos de manzanas e instalaciones: farolas, troncos, hidrantes,
+## kioscos y coches aparcados se atravesaban. Se sacan de la propia escena
+## -así lo que se añada mañana también es sólido-: cada pieza quieta que
+## apoya en el suelo, mide más de 0,9 m de alto y cabe en 8 m de lado, y no
+## cae dentro de un rectángulo ya sólido, pasa a ser un círculo [x, z, radio].
+## Se llama ANTES de `agrupar` (después las piezas ya no son nodos sueltos).
+static func obstaculos(raiz: Node3D, rects: Array[Rect2]) -> PackedVector3Array:
+	var sal := PackedVector3Array()
+	var rej := _rejilla(rects)
+	for n in raiz.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.mesh == null or not mi.is_visible_in_tree() or mi.transparency > 0.0:
+			continue
+		if not _sin_dinamica(mi, raiz):
+			continue
+		var caja := mi.global_transform * mi.get_aabb()
+		var sx := caja.size.x
+		var sz := caja.size.z
+		if caja.size.y < 0.9 or caja.position.y > 0.9 or maxf(sx, sz) > 8.0 or minf(sx, sz) < 0.08:
+			continue
+		var c := caja.get_center()
+		if _en_rejilla(rej, c.x, c.z):
+			continue
+		## Una pieza alargada (un coche) se cubre con dos círculos a lo largo.
+		var largo := maxf(sx, sz)
+		var ancho := minf(sx, sz)
+		var r_c := clampf(ancho * 0.5, 0.15, 2.5)
+		if largo > ancho * 1.8:
+			var eje := Vector2(1, 0) if sx >= sz else Vector2(0, 1)
+			var sep := (largo - ancho) * 0.5
+			sal.append(Vector3(c.x + eje.x * sep, c.z + eje.y * sep, r_c))
+			sal.append(Vector3(c.x - eje.x * sep, c.z - eje.y * sep, r_c))
+		else:
+			sal.append(Vector3(c.x, c.z, clampf(maxf(sx, sz) * 0.5, 0.15, 3.0)))
+	## Lo repetido en MultiMesh (postes, troncos, hidrantes...): una por instancia.
+	for n in raiz.find_children("*", "MultiMeshInstance3D", true, false):
+		var mmi := n as MultiMeshInstance3D
+		var mm := mmi.multimesh
+		if mm == null or mm.mesh == null or not mmi.is_visible_in_tree() or not _sin_dinamica(mmi, raiz):
+			continue
+		if mm.instance_count > 30000 or String(mmi.name).begins_with("Butacas") or String(mmi.name).begins_with("Hinchada"):
+			continue
+		var base := mm.mesh.get_aabb()
+		var nodo_t := mmi.global_transform
+		for i in mm.instance_count:
+			var caja := nodo_t * mm.get_instance_transform(i) * base
+			if caja.size.y < 0.9 or caja.position.y > 0.9 or maxf(caja.size.x, caja.size.z) > 8.0 or minf(caja.size.x, caja.size.z) < 0.08:
+				continue
+			var c := caja.get_center()
+			if not _en_rejilla(rej, c.x, c.z):
+				sal.append(Vector3(c.x, c.z, clampf(maxf(caja.size.x, caja.size.z) * 0.5, 0.15, 3.0)))
+	return sal
+
+const CELDA_REJ := 32.0
+
+static func _rejilla(rects: Array[Rect2]) -> Dictionary:
+	var rej := {}
+	for r: Rect2 in rects:
+		for cx in range(floori(r.position.x / CELDA_REJ), floori(r.end.x / CELDA_REJ) + 1):
+			for cz in range(floori(r.position.y / CELDA_REJ), floori(r.end.y / CELDA_REJ) + 1):
+				var k := Vector2i(cx, cz)
+				if not rej.has(k):
+					rej[k] = []
+				(rej[k] as Array).append(r)
+	return rej
+
+static func _en_rejilla(rej: Dictionary, x: float, z: float) -> bool:
+	var k := Vector2i(floori(x / CELDA_REJ), floori(z / CELDA_REJ))
+	if rej.has(k):
+		for r: Rect2 in rej[k]:
+			if r.has_point(Vector2(x, z)):
+				return true
+	return false
+
+static func _sin_dinamica(mi: Node, raiz: Node) -> bool:
+	if mi.get_script() != null or not mi.get_groups().is_empty():
+		return false
+	var p := mi.get_parent()
+	while p != null and p != raiz:
+		if p.get_script() != null or p is Skeleton3D or not p.get_groups().is_empty():
+			return false
+		p = p.get_parent()
+	return true

@@ -73,6 +73,15 @@ func _process(_d: float) -> void:
 		_m.append(_muestra())
 	if _n == 131:
 		_res["a_pie"] = _media(_m)
+		var ex: ExploradorCiudad = _v.get("_explorador")
+		_res["circulos"] = ex.cb.circulos.size()
+		var ok := 0
+		var n_prueba := mini(40, ex.cb.circulos.size())
+		for i in n_prueba:
+			var c: Vector3 = ex.cb.circulos[i * (ex.cb.circulos.size() / maxi(n_prueba, 1))]
+			if not ex.libre_total(Vector3(c.x, 0.2, c.y), 0.3):
+				ok += 1
+		_res["circulos_solidos"] = "%d de %d" % [ok, n_prueba]
 		if OS.get_environment("CPU") != "":
 			_cpu_por_partes()
 			return
