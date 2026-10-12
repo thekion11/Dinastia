@@ -176,14 +176,27 @@ func _entrada() -> Vector2:
 
 ## Un paso de simulación (lo usa `_physics_process` y las pruebas).
 func paso(e: Vector2, corre: bool, delta: float) -> void:
-	vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+	var objetivo := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
+	## Aceleración y frenada suaves (con delta 0, las pruebas de captura no se mueven).
+	vel = move_toward(vel, objetivo, (7.0 if absf(objetivo) > absf(vel) else 12.0) * delta) if delta > 0.0 else objetivo
 	rumbo -= e.x * delta * 2.6
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var nueva := cuerpo.position + adelante * vel * delta
 	if not zona_en(nueva, RADIO).is_empty():
 		cuerpo.position = Vector3(nueva.x, RecorridoClub.y_de(planta), nueva.z)
 	else:
-		vel = 0.0
+		## Choque en diagonal: se desliza por la pared en vez de pararse.
+		var ant := cuerpo.position
+		var px := Vector3(nueva.x, ant.y, ant.z)
+		var pz := Vector3(ant.x, ant.y, nueva.z)
+		if not zona_en(px, RADIO).is_empty():
+			cuerpo.position = Vector3(px.x, RecorridoClub.y_de(planta), px.z)
+			vel *= 0.92
+		elif not zona_en(pz, RADIO).is_empty():
+			cuerpo.position = Vector3(pz.x, RecorridoClub.y_de(planta), pz.z)
+			vel *= 0.92
+		else:
+			vel = 0.0
 	cuerpo.rotation.y = rumbo
 	if _es_dt and _anim != null:
 		var quiere := "correr" if absf(vel) > 3.0 else ("caminar" if absf(vel) > 0.05 else "parado")
