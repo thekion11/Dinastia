@@ -67,6 +67,7 @@ static func terminar(d: Dictionary) -> void:
 	VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo_col, pant, pant, true, kit, 0)
 	var corte: String = CORTES_M[rng.randi() % CORTES_M.size()] if mujer else CORTES_H[rng.randi() % CORTES_H.size()]
 	PeloQ.poner(d, corte, pelo_col, not mujer and rng.randf() < 0.35)
+	_variedad(d, rng, mujer, pelo_col)
 	var ap: AnimationPlayer = d["anim"]
 	if ap.has_animation("caminar"):
 		ap.play("caminar")
@@ -76,3 +77,84 @@ static func terminar(d: Dictionary) -> void:
 	for mi in nodo.find_children("*", "MeshInstance3D", true, false):
 		(mi as MeshInstance3D).visibility_range_end = 220.0
 		(mi as MeshInstance3D).visibility_range_end_margin = 20.0
+
+
+## COMPLEXIÓN Y ACCESORIOS (etapa 4, 12-10-2026). Todos los peatones eran el
+## mismo cuerpo con distinta ropa. Ahora cambian de ANCHURA (de delgado a
+## robusto) y llevan, según el azar, mochila, bolso, móvil en la mano, gafas de
+## sol o gorra. Piezas de pocos polígonos, colgadas del hueso, que comparten
+## materiales (una sola caja de cada color en toda la ciudad). El azar sale de
+## `rng` DESPUÉS de todo lo ya sorteado: la ropa de cada peatón no cambia.
+static var _mats := {}
+
+static func _m(c: Color, rug := 0.7) -> StandardMaterial3D:
+	var k := "%s|%.2f" % [c.to_html(false), rug]
+	if not _mats.has(k):
+		var m := StandardMaterial3D.new()
+		m.albedo_color = c
+		m.roughness = rug
+		_mats[k] = m
+	return _mats[k]
+
+static func _pieza(padre: Node3D, malla: Mesh, mat: Material, pos: Vector3, giro := Vector3.ZERO) -> void:
+	var mi := MeshInstance3D.new()
+	mi.mesh = malla
+	mi.material_override = mat
+	mi.position = pos
+	mi.rotation_degrees = giro
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.visibility_range_end = 40.0
+	padre.add_child(mi)
+
+static func _caja(t: Vector3) -> BoxMesh:
+	var b := BoxMesh.new()
+	b.size = t
+	return b
+
+static func _en_hueso(esq: Skeleton3D, hueso: String, k: float) -> Node3D:
+	if esq.find_bone(hueso) < 0:
+		return null
+	var ba := BoneAttachment3D.new()
+	ba.bone_name = hueso
+	esq.add_child(ba)
+	var n := Node3D.new()
+	n.scale = Vector3.ONE * k
+	ba.add_child(n)
+	return n
+
+static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pelo_col: Color) -> void:
+	var modelo: Node3D = d["modelo"]
+	## Complexión: más o menos ancho (y algo de fondo), sin cambiar la estatura.
+	var ancho := rng.randf_range(0.9, 1.14)
+	modelo.scale = Vector3(modelo.scale.x * ancho, modelo.scale.y, modelo.scale.z * lerpf(1.0, ancho, 0.6))
+	var esq: Skeleton3D = d["esqueleto"]
+	var k := 1.0 / maxf(modelo.scale.y, 0.01)
+	var acc := rng.randf()
+	var col := Color(String(ROPA[rng.randi() % ROPA.size()])).darkened(0.25)
+	if acc < 0.28:
+		## Mochila a la espalda (el pecho mira a +Z en el hueso de la columna).
+		var h := _en_hueso(esq, "spine_03", k)
+		if h != null:
+			_pieza(h, _caja(Vector3(0.26, 0.32, 0.13)), _m(col), Vector3(0, 0.02, -0.16))
+			_pieza(h, _caja(Vector3(0.22, 0.14, 0.05)), _m(col.darkened(0.2)), Vector3(0, -0.06, -0.25))
+	elif acc < 0.42:
+		## Bolso colgado de la cadera.
+		var h2 := _en_hueso(esq, "hand_r" if rng.randf() < 0.5 else "hand_l", k)
+		if h2 != null:
+			_pieza(h2, _caja(Vector3(0.28, 0.2, 0.1)), _m(col, 0.5), Vector3(0, -0.14, 0))
+	elif acc < 0.62:
+		## Móvil en la mano: un rectángulo oscuro con la pantalla clara.
+		var h3 := _en_hueso(esq, "hand_r", k)
+		if h3 != null:
+			_pieza(h3, _caja(Vector3(0.07, 0.14, 0.012)), _m(Color(0.05, 0.05, 0.06), 0.3), Vector3(0, 0.05, 0.05))
+	var cab_extra := rng.randf()
+	var cab := _en_hueso(esq, "Head", k)
+	if cab != null:
+		if cab_extra < 0.2:
+			## Gafas de sol.
+			_pieza(cab, _caja(Vector3(0.15, 0.04, 0.02)), _m(Color(0.04, 0.04, 0.05), 0.2), Vector3(0, 0.1, 0.1))
+		elif cab_extra < 0.34:
+			## Gorra: casquete y visera.
+			var gm := _m(col.lightened(0.1))
+			_pieza(cab, _caja(Vector3(0.2, 0.09, 0.22)), gm, Vector3(0, 0.2, 0.0))
+			_pieza(cab, _caja(Vector3(0.19, 0.02, 0.1)), gm, Vector3(0, 0.17, 0.14))
