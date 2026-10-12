@@ -399,10 +399,11 @@ func _materiales() -> void:
 	var asf: StandardMaterial3D = Texturas.asfalto(Color(0.15, 0.15, 0.16)).duplicate()
 	asf.roughness = 0.5
 	_mat["asfalto"] = asf
-	_mat["acera"] = b._mat_simple(Color(0.5, 0.49, 0.47), 0.9)
-	_mat["solar"] = b._mat_simple(Color(0.4, 0.4, 0.39), 0.92)
+	## Etapa 4: acera de baldosa con juntas y solar de hormigón, no colores lisos.
+	_mat["acera"] = Texturas.baldosa(Color(0.62, 0.61, 0.58), 53)
+	_mat["solar"] = Texturas.hormigon(Color(0.42, 0.42, 0.41), 29)
 	_mat["linea"] = b._mat_simple(Color(0.92, 0.9, 0.82), 0.7)
-	_mat["cesped"] = b._mat_simple(Color(0.27, 0.48, 0.24), 0.95)
+	_mat["cesped"] = Texturas.cesped(Color(0.27, 0.48, 0.24), 37)
 	_mat["hoja"] = b._mat_simple(Color(0.18, 0.4, 0.2), 0.9)
 	_mat["tronco"] = b._mat_simple(Color(0.35, 0.26, 0.18), 0.9)
 	_mat["claro"] = b._mat_simple(Color(0.9, 0.89, 0.86), 0.7)
@@ -676,7 +677,7 @@ func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: fl
 	for k in pisos:
 		_kit(esc, pos + Vector3(0, float(k) * alto * 0.98, 0), Vector3.ONE * s, giro)
 
-func _kit(esc: PackedScene, pos: Vector3, escala: Vector3, giro: float) -> Node3D:
+func _kit(esc: PackedScene, pos: Vector3, escala: Vector3, giro: float, azotea_plana := false) -> Node3D:
 	var n: Node3D = esc.instantiate()
 	if _rng.randf() < 0.45:
 		b.tenir(n, _rng.randi())
@@ -685,7 +686,73 @@ func _kit(esc: PackedScene, pos: Vector3, escala: Vector3, giro: float) -> Node3
 	n.position = pos
 	b.add_child(n)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
+	_detalle_edificio(n, escala, giro, pos, azotea_plana)
 	return n
+
+## DETALLE DE EDIFICIO (etapa 4, 12-10-2026). El kit trae fachadas planas: sin
+## zócalo, sin cornisa y con la azotea vacía, y desde la calle se leen como
+## cajas. Se les pone, con cajas sueltas -que luego `Optimizar.agrupar` junta
+## en un MultiMesh, así que casi no cuestan-: un ZÓCALO oscuro y gastado en la
+## base, una CORNISA con parapeto arriba y, en la azotea, equipos de aire,
+## un depósito y una caseta de escalera. El azar sale de la posición, NO de
+## `_rng`, para no mover ni un edificio de sitio.
+var _mats_det := {}
+
+func _mat_det(clave: String, c: Color, rug: float) -> StandardMaterial3D:
+	if not _mats_det.has(clave):
+		_mats_det[clave] = b._mat_simple(c, rug)
+	return _mats_det[clave]
+
+func _caja_det(centro: Vector3, tam: Vector3, giro: float, m: Material) -> void:
+	var mi := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = tam
+	mi.mesh = bm
+	mi.material_override = m
+	mi.position = centro
+	mi.rotation.y = giro
+	b.add_child(mi)
+
+func _detalle_edificio(n: Node3D, escala: Vector3, giro: float, pos: Vector3, azotea_plana: bool) -> void:
+	var caja := b._caja_de(n)
+	var tam := Vector3(caja.size.x * escala.x, caja.size.y * escala.y, caja.size.z * escala.z)
+	if tam.y < 7.0 or tam.x < 4.0 or tam.z < 4.0:
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(pos)
+	var rot := Basis(Vector3.UP, giro)
+	var centro: Vector3 = pos + rot * Vector3(
+		(caja.position.x + caja.size.x * 0.5) * escala.x, 0.0, (caja.position.z + caja.size.z * 0.5) * escala.z)
+	var base_y := pos.y + caja.position.y * escala.y
+	var techo_y := base_y + tam.y
+	## Zócalo: más oscuro y áspero, como la base sucia de salpicaduras.
+	_caja_det(Vector3(centro.x, base_y + 0.45, centro.z),
+		Vector3(tam.x + 0.3, 0.9, tam.z + 0.3), giro, _mat_det("zocalo", Color(0.30, 0.29, 0.28), 0.95))
+	if not azotea_plana:
+		return
+	## Cornisa con parapeto.
+	_caja_det(Vector3(centro.x, techo_y + 0.25, centro.z), Vector3(tam.x + 0.5, 0.5, tam.z + 0.5), giro,
+		_mat_det("cornisa", Color(0.80, 0.78, 0.74), 0.7))
+	## Azotea: equipos y depósito (ligeros: 3 cajas y un cilindro).
+	var util := _mat_det("equipo", Color(0.55, 0.57, 0.58), 0.5)
+	var n_eq := 1 + rng.randi() % 3
+	for i in n_eq:
+		var dx := rng.randf_range(-0.3, 0.3) * tam.x
+		var dz := rng.randf_range(-0.3, 0.3) * tam.z
+		var off := rot * Vector3(dx, 0, dz)
+		_caja_det(Vector3(centro.x + off.x, techo_y + 0.5 + 0.45, centro.z + off.z),
+			Vector3(1.8, 0.9, 1.2) * rng.randf_range(0.8, 1.3), giro + rng.randf() * 0.4, util)
+	if rng.randf() < 0.5:
+		var cil := MeshInstance3D.new()
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.9
+		cm.bottom_radius = 0.9
+		cm.height = 1.8
+		cil.mesh = cm
+		cil.material_override = _mat_det("deposito", Color(0.42, 0.30, 0.22), 0.8)
+		var off2 := rot * Vector3(tam.x * 0.25, 0, -tam.z * 0.2)
+		cil.position = Vector3(centro.x + off2.x, techo_y + 0.5 + 0.9, centro.z + off2.z)
+		b.add_child(cil)
 
 func _comercial_bloque_borde(r: Rect2) -> void:
 	_fachadas(r, false)
@@ -783,7 +850,7 @@ func _torres(r: Rect2) -> void:
 		if k == 2 and _rng.randf() < 0.5:
 			continue
 		var s := 6.2 * _rng.randf_range(0.9, 1.25) * lerpf(0.9, 1.3, empuje)
-		_kit(_altos[_rng.randi() % _altos.size()], c + (offs[k] as Vector3), Vector3(s * 1.25, s, s * 1.25), float(_rng.randi() % 4) * PI * 0.5)
+		_kit(_altos[_rng.randi() % _altos.size()], c + (offs[k] as Vector3), Vector3(s * 1.25, s, s * 1.25), float(_rng.randi() % 4) * PI * 0.5, true)
 	_arboles_en([c + Vector3(-r.size.x * 0.2, -0.2, r.size.y * 0.16), c + Vector3(r.size.x * 0.02, -0.2, -r.size.y * 0.2)], 0.9)
 
 func _pisos(r: Rect2) -> void:
@@ -798,7 +865,7 @@ func _pisos(r: Rect2) -> void:
 			var s := 5.6 * _rng.randf_range(0.9, 1.1)
 			var pos_p := Vector3(x, 0.2, c.z + fila * r.size.y * 0.27)
 			if not _altos.is_empty() and (k + int(fila > 0.0)) % 2 == 0:
-				_kit(_altos[_rng.randi() % _altos.size()], pos_p, Vector3.ONE * _rng.randf_range(2.8, 3.6), 0.0 if fila > 0.0 else PI)
+				_kit(_altos[_rng.randi() % _altos.size()], pos_p, Vector3.ONE * _rng.randf_range(2.8, 3.6), 0.0 if fila > 0.0 else PI, true)
 			else:
 				_kit(_naves[_rng.randi() % _naves.size()], pos_p, Vector3.ONE * s * 1.15, 0.0 if fila > 0.0 else PI)
 	## El patio entre las dos hileras: césped, un camino y árboles.
