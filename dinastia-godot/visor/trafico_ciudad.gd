@@ -134,6 +134,10 @@ func agregar_vehiculo(nodo: Node3D, ruta: int, s: float, vel: float,
 	})
 	_colocar(_vehiculos[_vehiculos.size() - 1])
 
+## Quién camina o conduce por la ciudad (lo pone `ExploradorCiudad`): todos le
+## ceden el paso.
+var jugador: Node3D = null
+
 func _process(delta: float) -> void:
 	for v in _vehiculos:
 		if float(v.get("espera", 0.0)) > 0.0:
@@ -165,6 +169,20 @@ func _process(delta: float) -> void:
 				var d3 := fposmod(float(o["s"]) - s0, largo)
 				if d3 < 9.0:
 					avance = minf(avance, maxf(0.0, d3 - 8.0))
+		## CEDER EL PASO AL JUGADOR (etapa 5): un peatón se detiene si estás
+		## delante a menos de 1,6 m; un coche, a menos de 7 m. Solo se mira a los
+		## que están a menos de 14 m (barato) y solo hacia dónde van.
+		if jugador != null and is_instance_valid(jugador) and avance > 0.0:
+			var nodo_v: Node3D = v["nodo"]
+			if is_instance_valid(nodo_v):
+				var rel := Vector3(jugador.global_position.x - nodo_v.position.x, 0, jugador.global_position.z - nodo_v.position.z)
+				var dist := rel.length()
+				if dist < 14.0:
+					var dir_v: Vector3 = (_rutas[ruta] as Ruta).en(s0)[1]
+					var peaton := float(v["alto"]) < 0.3
+					var umbral := 1.6 if peaton else 7.0
+					if dist < umbral and rel.normalized().dot(Vector3(dir_v.x, 0, dir_v.z).normalized()) > 0.5:
+						avance = 0.0
 		v["s"] = s0 + avance
 		_colocar(v)
 
