@@ -96,6 +96,8 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 		_est["zonas"] = GaleriaClub.zonas(_est) + (_est["zonas"] as Array)
 	position = Vector3.ZERO
 	cuerpo = _crear_cuerpo()
+	if trafico != null:
+		trafico.jugador = cuerpo
 	add_child(cuerpo)
 	cuerpo.position = buscar_libre(desde)
 	camara = Camera3D.new()
@@ -1067,5 +1069,7 @@ func _bajo_tierra(si: bool) -> void:
 		_env_guardado = {}
 
 func _exit_tree() -> void:
+	if trafico != null and is_instance_valid(trafico):
+		trafico.jugador = null
 	_bajo_tierra(false)
 	_rotulos_de_paseo(false)
