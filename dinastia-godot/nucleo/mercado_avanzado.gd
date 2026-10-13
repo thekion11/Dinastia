@@ -209,7 +209,7 @@ func resolver(m: Mundo, op: String) -> Dictionary:
 				if _rng.randf() < 0.35:
 					for l in m.ligas:
 						if l.clubes.has(c) and l.tabla_puntos.has(c.id):
-							l.tabla_puntos[c.id]["pts"] = int(l.tabla_puntos[c.id]["pts"]) - 9
+							l.sancionar(c.id, 9)
 					if m.prensa != null:
 						m.prensa.animo = clampi(m.prensa.animo - 10, 0, 100)
 					noticia.emit("💣 Escándalo de corrupción", "Se filtró el pago de %s a un intermediario de la federación: 9 puntos menos y la hinchada furiosa." % c.nombre)
