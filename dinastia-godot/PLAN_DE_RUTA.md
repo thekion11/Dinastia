@@ -65,6 +65,13 @@ sensación de progreso. Propuesta: hacerlo **opcional** en Ajustes («Todo abier
 - [x] Expresiones: parpadeo y gestos de ojos (alegre, sorpresa, enfado, triste) en el DT, el personal del estadio y el goleador. Ojos reales también con la cara clásica.
 - [x] Personalización: color de ojos, 14 tonos de piel, gafas redondas y deportivas, pendientes, cadena. Pendiente: más ropa y tatuajes.
 - [x] Ciudad sin textos fijos: ⚙ Ajustes de la ciudad, tutorial propio y móvil en la mano con la velocidad.
+- [x] Pasadas 2-4 (noche del 13-10): ropa de calle rehecha (la holgura del shader nunca se aplicaba;
+  paleta apagada, tela con costuras, vaqueros, cinturón, escote correcto, músculos alisados, zapatos
+  mates), pieles sin recortes (manos y caras ya no se queman), material propio para cuerpo de mujer,
+  cejas de mujer teñidas, manos relajadas, brazos junto al cuerpo, paso formal, manga corta y tatuajes,
+  plano de conversación (ciudad, estadio, interiores), nombres y oficios acordes, 4 oficios nuevos en
+  9 idiomas, gente alrededor (reciclaje de peatones), humo del menú quitado de las vistas 3D, rueda de
+  prensa con tu personaje 3D, decisiones/junta/móvil con botones en píldora, Mensajes tipo app.
 
 ### Semana 2 (20-10 → 26-10) — Partido I: táctica en vivo
 - [ ] Panel en pausa y atajos en vivo: formación, mentalidad (defensiva ↔ ofensiva), presión, línea defensiva.
