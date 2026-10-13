@@ -55,7 +55,7 @@ static func terminar(d: Dictionary) -> void:
 	var pant := Color(String(PANTALONES[rng.randi() % PANTALONES.size()]))
 	var piel := Color(String(PIELES[rng.randi() % PIELES.size()]))
 	var pelo_col: Color = PELOS[rng.randi() % PELOS.size()]
-	var zapatilla: String = ["ffffff", "111111", "3e2723", "1565c0"][rng.randi() % 4]
+	var zapatilla: String = ["ffffff", "111111", "3e2723", "5d6d7e"][rng.randi() % 4]
 	var kit := {
 		"dis": String(PRENDAS[rng.randi() % PRENDAS.size()]),
 		"cols": [c1.to_html(false), c2.to_html(false), c2.darkened(0.3).to_html(false), "ffffff", "111111"],
