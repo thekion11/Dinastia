@@ -477,7 +477,7 @@ func _cubrir_juveniles(m: Mundo, mi: Club) -> void:
 		if m.academia != null:
 			var mejor: Dictionary = {}
 			for ch: Dictionary in m.academia.chicos:
-				if int(ch["edad"]) <= edad and String(ch.get("pos", "")) != "POR" and (mejor.is_empty() or float(ch["nivel"]) > float(mejor["nivel"])):
+				if int(ch["edad"]) <= edad and int(ch["edad"]) >= Academia.EDAD_ENTREGA_ANTICIPADA and String(ch.get("pos", "")) != "POR" and (mejor.is_empty() or float(ch["nivel"]) > float(mejor["nivel"])):
 					mejor = ch
 			if not mejor.is_empty():
 				subido = m.academia._entregar(mejor, true)
