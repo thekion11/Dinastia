@@ -299,6 +299,8 @@ func _crear_cuerpo() -> Node3D:
 		if not dt.is_empty():
 			_anim = dt.get("anim") as AnimationPlayer
 			_es_dt = true
+			## Parpadea y gesticula con los ojos (13-10-2026).
+			Expresion.de.call_deferred(raiz)
 			return raiz
 		raiz.queue_free()
 	var d := PeatonQ.crear(rng)

@@ -792,6 +792,10 @@ func _celebrar(p: Dictionary, asistidor) -> void:
 			ap_c.play(anim_celeb)
 			ap_c.speed_scale = 1.0
 	_celebrando.append({"p": p, "hasta": elapsed + 4.2})
+	## Cara de alegría del goleador (13-10-2026).
+	var nodo_c = p.get("node")
+	if nodo_c is Node and is_instance_valid(nodo_c):
+		Expresion.de(nodo_c).poner("alegre", 4.0)
 	if asistidor != null and players_by_id.has(asistidor):
 		var a = players_by_id[asistidor]
 		_ejecutar_accion(a, "celebrar", 3.4)
