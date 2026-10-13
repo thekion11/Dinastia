@@ -292,5 +292,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   jugabilidad en el estadio, nivel de animaciones, cinemáticas, partidos, VISIÓN EN
   PRIMERA PERSONA, mejores diálogos con más variedad, NPCs con vida. El usuario
   entregará el INFORME tras esta pasada por las fases.
+- 13-10 HECHO (pasada 2 de las 6 etapas): entrar CAMINANDO a edificios y casas
+  (`ExploradorCiudad._entrar_en_edificio`, `InteriorInstalacion.en_mundo`), 5
+  arquetipos de casa, `fachada_torre.gdshader`, primera persona (V), diálogos por
+  oficio (`herramientas/dialogos_ciudad.py` genera `nucleo/dialogos_ciudad.gd` y
+  las traducciones; no editar a mano). Detalle y pendientes: ETAPAS_FINALES.md.
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
