@@ -463,6 +463,7 @@ func _exit_tree() -> void:
 	mundo_pregenerado = null
 
 func _ready() -> void:
+	BotonFx.activar(get_tree())
 	## El mando se prepara ANTES de construir la interfaz: las acciones `ui_*`
 	## tienen que existir cuando aparezca el primer boton para que el foco se
 	## pueda mover con la cruceta desde el primer momento.
@@ -3615,11 +3616,25 @@ func _ver_ficha(j: Jugador) -> void:
 	if cegado_ficha:
 		FichaJugadorInfo.pintar_ciega(_ficha, j, mundo, _ui_ficha._paleta_ficha())
 	else:
+		var fila_attr := HBoxContainer.new()
+		fila_attr.add_theme_constant_override("separation", 8)
+		_ficha.add_child(fila_attr)
 		var g := GridContainer.new()
 		g.columns = 4
 		g.add_theme_constant_override("h_separation", 10)
 		g.add_theme_constant_override("v_separation", 3)
-		_ficha.add_child(g)
+		g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila_attr.add_child(g)
+		## El radar: la forma del jugador de un vistazo (informe de diseño).
+		var radar := RadarAtributos.new()
+		var etq := PackedStringArray()
+		var vals := PackedFloat32Array()
+		for k: String in j.atributos:
+			etq.append(String(NOMBRES_ATRIBUTOS.get(k, k)).left(4))
+			vals.append(float(j.atributos[k]))
+		radar.color_texto = COL_SUAVE
+		radar.poner(etq, vals, COL_VERDE)
+		fila_attr.add_child(radar)
 		## Los atributos, que son la razón de que un central de 90 de ritmo no
 		## sea un central de 90.
 		for k: String in j.atributos:
