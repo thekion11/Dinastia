@@ -120,13 +120,15 @@ func _pintar() -> void:
 ## sitio para enseñar: goles a favor, en contra y diferencia.
 func _pintar_tabla_completa(mio: Club) -> void:
 	var g := GridContainer.new()
-	g.columns = 9
+	## A todo lo ancho (antes ocupaba un tercio y dejaba un hueco vacío): la
+	## columna del club se estira y las cifras van en columnas fijas.
+	g.columns = 10
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 14)
 	g.add_theme_constant_override("v_separation", 4)
 	_lista.add_child(g)
-	for t in ["#", "CLUB", "PJ", "G", "E", "P", "GF", "GC", "PTS"]:
-		_celda(g, t, COL_SUAVE, t != "CLUB" and t != "#", 11)
+	for t in ["#", "CLUB", "PJ", "G", "E", "P", "GF", "GC", "DG", "PTS"]:
+		_celda(g, t, COL_SUAVE, t != "CLUB" and t != "#", 12)
 	var puesto := 0
 	for f: Dictionary in _liga.tabla():
 		puesto += 1
@@ -144,17 +146,19 @@ func _pintar_tabla_completa(mio: Club) -> void:
 			col_puesto = COL_ROJO
 		_celda(g, str(puesto), col_puesto)
 		var fila := HBoxContainer.new()
-		fila.add_theme_constant_override("separation", 6)
-		fila.add_child(_escudo(c, 20))
+		fila.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila.add_theme_constant_override("separation", 8)
+		fila.add_child(_escudo(c, 22))
 		var nom := Label.new()
 		nom.text = c.nombre
-		nom.add_theme_font_size_override("font_size", 12)
+		nom.add_theme_font_size_override("font_size", 14)
 		nom.add_theme_color_override("font_color", color)
 		nom.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		fila.add_child(nom)
 		g.add_child(fila)
-		for v in [f["pj"], f["g"], f["e"], f["p"], f["gf"], f["gc"], f["pts"]]:
-			_celda(g, str(v), color, true)
+		var dg := int(f["gf"]) - int(f["gc"])
+		for v in [f["pj"], f["g"], f["e"], f["p"], f["gf"], f["gc"], ("+%d" % dg) if dg > 0 else str(dg), f["pts"]]:
+			_celda(g, str(v), color, true, 14)
 
 ## Los resultados de la última jornada jugada. `Liga.historial` los guarda desde
 ## esta tanda; antes viajaban en una señal y se perdían.
@@ -242,6 +246,7 @@ func _celda(g: GridContainer, txt: String, color: Color, derecha: bool = false, 
 	l.add_theme_color_override("font_color", color)
 	if derecha:
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		l.custom_minimum_size = Vector2(44, 0)
 	g.add_child(l)
 
 func _escudo(c: Club, tam: int) -> TextureRect:
