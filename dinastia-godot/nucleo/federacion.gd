@@ -436,6 +436,8 @@ func revisar_leyes_pais(m: Mundo, mi: Club) -> void:
 		if veces == 1 or veces % 4 == 0:
 			noticia.emit("📜 Multa por plantel fuera de reglamento",
 				"Tienes %d jugador(es) de más para el cupo de tu liga. Multa de %s, y crece cada semana que sigas así. %s" % [exceso, Cesiones.dinero(multa), norma])
+	if mi.ley_politica != "incumplir":
+		_cubrir_juveniles(m, mi)
 	var faltas := LeyesPais.infracciones_once(mi, mi.once())
 	if not faltas.is_empty():
 		inf["alin"] = int(inf["alin"]) + 1
@@ -452,10 +454,45 @@ func revisar_leyes_pais(m: Mundo, mi: Club) -> void:
 		if n >= 3:
 			for l: Liga in m.ligas:
 				if l.clubes.has(mi) and l.tabla_puntos.has(mi.id):
-					l.tabla_puntos[mi.id]["pts"] = int(l.tabla_puntos[mi.id]["pts"]) - PUNTOS_ALINEACION
+					l.sancionar(mi.id, PUNTOS_ALINEACION)
 			cuerpo += " Por reincidir, el tribunal te quita %d puntos." % PUNTOS_ALINEACION
 		noticia.emit("📜 Alineación indebida", cuerpo + " " + norma)
 	infracciones_ley[k] = inf
+
+## SI EL CLUB CUMPLE LA LEY, EL CUERPO TÉCNICO LA HACE CUMPLIR (13-10-2026). Con
+## la regla de juveniles (Chile: un sub-21 en el once) y ningún chico sano en el
+## plantel, el once no podía cumplirla nunca: multa y −3 puntos cada semana, la
+## caja a −90 M en una temporada. Ahora se sube a uno: el mejor de la academia
+## o, si no hay, uno del filial.
+func _cubrir_juveniles(m: Mundo, mi: Club) -> void:
+	for edad: int in LeyesPais.reglas(mi.pais).get("juveniles", []):
+		var hay := false
+		for j: Jugador in mi.disponibles():
+			if j.edad <= edad and not j.es_portero():
+				hay = true
+				break
+		if hay:
+			continue
+		var subido: Jugador = null
+		if m.academia != null:
+			var mejor: Dictionary = {}
+			for ch: Dictionary in m.academia.chicos:
+				if int(ch["edad"]) <= edad and String(ch.get("pos", "")) != "POR" and (mejor.is_empty() or float(ch["nivel"]) > float(mejor["nivel"])):
+					mejor = ch
+			if not mejor.is_empty():
+				subido = m.academia._entregar(mejor, true)
+		if subido == null:
+			var grupos := [["DEF", "DFC"], ["MED", "MC"], ["DEL", "DC"]]
+			var g: Array = grupos[Azar.ent(0, 2)]
+			subido = m.crear_jugador(mi, String(g[0]), String(g[1]), Azar.ent(18, edad), clampi(mi.rep - 12, 45, 70))
+			if subido != null:
+				subido.anios_contrato = 2
+				if not mi.plantilla.has(subido):
+					mi.plantilla.append(subido)
+		if subido != null:
+			noticia.emit("🌱 Sube un chico del filial",
+				"Para cumplir la norma de juveniles (%s), el cuerpo técnico sube a %s (%d años, %s)." % [
+					String(LeyesPais.reglas(mi.pais).get("norma", "la liga")), subido.nombre, subido.edad, subido.pos_e])
 
 ## Las reglas que están en vigor ahora mismo, en frases. Es lo que se enseña en
 ## la pantalla de Federación: un puñado de banderas booleanas no le dice nada a
