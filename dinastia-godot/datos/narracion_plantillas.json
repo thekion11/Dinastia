@@ -998,211 +998,247 @@
  {
   "re": "^Nueva\\ votación\\ en\\ la\\ asamblea$",
   "es": "Nueva votación en la asamblea",
-  "de": "nucleo/federacion.gd:237",
+  "de": "nucleo/federacion.gd:242",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)La\\ federación\\ convoca\\ sobre:\\ (.+?)\\.\\ (.+?)\\ Puedes\\ votar\\ desde\\ Federación\\.$",
   "es": "{1}La federación convoca sobre: {2}. {3} Puedes votar desde Federación.",
-  "de": "nucleo/federacion.gd:237",
+  "de": "nucleo/federacion.gd:242",
   "tipo": "cuerpo"
  },
  {
   "re": "^Asamblea\\ de\\ la\\ liga:\\ (.+?)$",
   "es": "Asamblea de la liga: {1}",
-  "de": "nucleo/federacion.gd:283",
+  "de": "nucleo/federacion.gd:288",
   "tipo": "titulo"
  },
  {
   "re": "^Resultado:\\ (.+?)\\ votos\\ a\\ favor\\ de\\ (.+?)\\.\\ La\\ moción\\ (.+?)\\.\\ (.+?)\\ Tu\\ posición\\ (.+?)$",
   "es": "Resultado: {1} votos a favor de {2}. La moción {3}. {4} Tu posición {5}",
-  "de": "nucleo/federacion.gd:283",
+  "de": "nucleo/federacion.gd:288",
   "tipo": "cuerpo"
  },
  {
   "re": "^Multa\\ por\\ incumplir\\ el\\ cupo\\ juvenil$",
   "es": "Multa por incumplir el cupo juvenil",
-  "de": "nucleo/federacion.gd:380",
+  "de": "nucleo/federacion.gd:385",
   "tipo": "titulo"
  },
  {
   "re": "^Saliste\\ sin\\ ningún\\ sub\\-21\\ en\\ el\\ once\\ y\\ la\\ federación\\ te\\ sanciona\\.\\ El\\ reglamento\\ que\\ votó\\ la\\ asamblea\\ obliga\\ a\\ alinear\\ al\\ menos\\ uno\\.$",
   "es": "Saliste sin ningún sub-21 en el once y la federación te sanciona. El reglamento que votó la asamblea obliga a alinear al menos uno.",
-  "de": "nucleo/federacion.gd:380",
+  "de": "nucleo/federacion.gd:385",
   "tipo": "cuerpo"
  },
  {
   "re": "^📜\\ Multa\\ por\\ plantel\\ fuera\\ de\\ reglamento$",
   "es": "📜 Multa por plantel fuera de reglamento",
-  "de": "nucleo/federacion.gd:432",
+  "de": "nucleo/federacion.gd:437",
   "tipo": "titulo"
  },
  {
   "re": "^Tienes\\ (.+?)\\ jugador\\(es\\)\\ de\\ más\\ para\\ el\\ cupo\\ de\\ tu\\ liga\\.\\ Multa\\ de\\ (.+?),\\ y\\ crece\\ cada\\ semana\\ que\\ sigas\\ así\\.\\ (.+?)$",
   "es": "Tienes {1} jugador(es) de más para el cupo de tu liga. Multa de {2}, y crece cada semana que sigas así. {3}",
-  "de": "nucleo/federacion.gd:432",
+  "de": "nucleo/federacion.gd:437",
   "tipo": "cuerpo"
  },
  {
   "re": "^📜\\ Alineación\\ indebida$",
   "es": "📜 Alineación indebida",
-  "de": "nucleo/federacion.gd:452",
+  "de": "nucleo/federacion.gd:459",
   "tipo": "titulo"
+ },
+ {
+  "re": "^🌱\\ Sube\\ un\\ chico\\ del\\ filial$",
+  "es": "🌱 Sube un chico del filial",
+  "de": "nucleo/federacion.gd:493",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Para\\ cumplir\\ la\\ norma\\ de\\ juveniles\\ \\((.+?)\\),\\ el\\ cuerpo\\ técnico\\ sube\\ a\\ (.+?)\\ \\((.+?)\\ años,\\ (.+?)\\)\\.$",
+  "es": "Para cumplir la norma de juveniles ({1}), el cuerpo técnico sube a {2} ({3} años, {4}).",
+  "de": "nucleo/federacion.gd:493",
+  "tipo": "cuerpo"
  },
  {
   "re": "^PLAYOFFS\\ POR\\ EL\\ TÍTULO\\ (.+?)$",
   "es": "PLAYOFFS POR EL TÍTULO {1}",
-  "de": "nucleo/federacion.gd:543",
+  "de": "nucleo/federacion.gd:585",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ federación\\ decidió\\ que\\ el\\ campeón\\ se\\ juega\\.\\ Semifinales:\\ (.+?)\\ ·\\ (.+?)\\.\\ FINAL:\\ (.+?)\\.\\ Campeón:\\ (.+?)\\.(.+?)$",
   "es": "La federación decidió que el campeón se juega. Semifinales: {1} · {2}. FINAL: {3}. Campeón: {4}.{5}",
-  "de": "nucleo/federacion.gd:543",
+  "de": "nucleo/federacion.gd:585",
   "tipo": "cuerpo"
  },
  {
   "re": "^El\\ líder\\ se\\ quedó\\ sin\\ corona$",
   "es": "El líder se quedó sin corona",
-  "de": "nucleo/federacion.gd:548",
+  "de": "nucleo/federacion.gd:590",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ terminó\\ primero\\ en\\ la\\ tabla\\ pero\\ perdió\\ los\\ playoffs\\.\\ Con\\ este\\ formato,\\ treinta\\ fechas\\ no\\ garantizan\\ nada\\.$",
   "es": "{1} terminó primero en la tabla pero perdió los playoffs. Con este formato, treinta fechas no garantizan nada.",
-  "de": "nucleo/federacion.gd:548",
+  "de": "nucleo/federacion.gd:590",
   "tipo": "cuerpo"
  },
  {
   "re": "^Auditoría\\ federativa\\ superada$",
   "es": "Auditoría federativa superada",
-  "de": "nucleo/federacion.gd:645",
+  "de": "nucleo/federacion.gd:687",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ club\\ cumple\\ los\\ seis\\ requisitos\\ de\\ licencia\\.\\ Sin\\ observaciones:\\ puedes\\ competir\\ e\\ inscribir\\ jugadores\\ con\\ normalidad\\.$",
   "es": "El club cumple los seis requisitos de licencia. Sin observaciones: puedes competir e inscribir jugadores con normalidad.",
-  "de": "nucleo/federacion.gd:645",
+  "de": "nucleo/federacion.gd:687",
   "tipo": "cuerpo"
  },
  {
   "re": "^Licencia\\ CONDICIONAL$",
   "es": "Licencia CONDICIONAL",
-  "de": "nucleo/federacion.gd:650",
+  "de": "nucleo/federacion.gd:692",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ federación\\ detectó\\ (.+?)\\ incumplimiento\\(s\\):\\ (.+?)\\.\\ Tienes\\ una\\ temporada\\ para\\ corregirlo\\ o\\ pierdes\\ el\\ cupo\\ internacional\\.$",
   "es": "La federación detectó {1} incumplimiento(s): {2}. Tienes una temporada para corregirlo o pierdes el cupo internacional.",
-  "de": "nucleo/federacion.gd:650",
+  "de": "nucleo/federacion.gd:692",
   "tipo": "cuerpo"
  },
  {
   "re": "^LICENCIA\\ DENEGADA$",
   "es": "LICENCIA DENEGADA",
-  "de": "nucleo/federacion.gd:660",
+  "de": "nucleo/federacion.gd:702",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ federación\\ rechaza\\ la\\ licencia\\ por\\ (.+?)\\ incumplimientos:\\ (.+?)\\.\\ Multa,\\ sin\\ cupo\\ internacional\\ y\\ con\\ el\\ mercado\\ bajo\\ lupa\\.\\ Arréglalo\\ esta\\ temporada\\.$",
   "es": "La federación rechaza la licencia por {1} incumplimientos: {2}. Multa, sin cupo internacional y con el mercado bajo lupa. Arréglalo esta temporada.",
-  "de": "nucleo/federacion.gd:660",
+  "de": "nucleo/federacion.gd:702",
   "tipo": "cuerpo"
  },
  {
   "re": "^Tribunal\\ de\\ disciplina$",
   "es": "Tribunal de disciplina",
-  "de": "nucleo/federacion.gd:692",
+  "de": "nucleo/federacion.gd:734",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?):\\ (.+?)\\.\\ Sanción\\ de\\ (.+?)\\ fecha\\(s\\)\\.\\ Puedes\\ apelar\\ desde\\ Federación\\.$",
   "es": "{1}: {2}. Sanción de {3} fecha(s). Puedes apelar desde Federación.",
-  "de": "nucleo/federacion.gd:692",
+  "de": "nucleo/federacion.gd:734",
   "tipo": "cuerpo"
  },
  {
   "re": "^Apelación\\ ACOGIDA$",
   "es": "Apelación ACOGIDA",
-  "de": "nucleo/federacion.gd:741",
+  "de": "nucleo/federacion.gd:783",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ tribunal\\ rebaja\\ la\\ sanción\\ de\\ (.+?)\\ en\\ (.+?)\\ fecha\\(s\\)\\.\\ Le\\ quedan\\ (.+?)\\.$",
   "es": "El tribunal rebaja la sanción de {1} en {2} fecha(s). Le quedan {3}.",
-  "de": "nucleo/federacion.gd:741",
+  "de": "nucleo/federacion.gd:783",
   "tipo": "cuerpo"
  },
  {
   "re": "^Apelación\\ RECHAZADA$",
   "es": "Apelación RECHAZADA",
-  "de": "nucleo/federacion.gd:747",
+  "de": "nucleo/federacion.gd:789",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ tribunal\\ confirma\\ la\\ sanción\\ de\\ (.+?)\\ y\\ deja\\ constancia\\ de\\ que\\ el\\ club\\ recurre\\ demasiado\\.\\ Los\\ árbitros\\ toman\\ nota\\.$",
   "es": "El tribunal confirma la sanción de {1} y deja constancia de que el club recurre demasiado. Los árbitros toman nota.",
-  "de": "nucleo/federacion.gd:747",
+  "de": "nucleo/federacion.gd:789",
   "tipo": "cuerpo"
  },
  {
   "re": "^Control\\ antidopaje$",
   "es": "Control antidopaje",
-  "de": "nucleo/federacion.gd:783",
+  "de": "nucleo/federacion.gd:825",
   "tipo": "titulo"
  },
  {
   "re": "^Le\\ tocó\\ a\\ (.+?)\\ tras\\ el\\ partido\\.\\ Muestra\\ negativa,\\ todo\\ en\\ orden\\.$",
   "es": "Le tocó a {1} tras el partido. Muestra negativa, todo en orden.",
-  "de": "nucleo/federacion.gd:783",
+  "de": "nucleo/federacion.gd:825",
   "tipo": "cuerpo"
  },
  {
   "re": "^POSITIVO\\ POR\\ DOPAJE:\\ (.+?)$",
   "es": "POSITIVO POR DOPAJE: {1}",
-  "de": "nucleo/federacion.gd:793",
+  "de": "nucleo/federacion.gd:835",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ dio\\ positivo\\.\\ Suspensión\\ provisional\\ de\\ (.+?)\\ fechas,\\ escándalo\\ mediático\\ y\\ patrocinadores\\ llamando\\.\\ Puedes\\ montarle\\ defensa\\ legal\\ apelando\\ en\\ Federación,\\ o\\ soltarlo\\ y\\ salvar\\ la\\ imagen\\ del\\ club\\.$",
   "es": "{1} dio positivo. Suspensión provisional de {2} fechas, escándalo mediático y patrocinadores llamando. Puedes montarle defensa legal apelando en Federación, o soltarlo y salvar la imagen del club.",
-  "de": "nucleo/federacion.gd:793",
+  "de": "nucleo/federacion.gd:835",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^🟥\\ Sanción\\ al\\ entrenador$",
+  "es": "🟥 Sanción al entrenador",
+  "de": "nucleo/federacion.gd:846",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^El\\ tribunal\\ te\\ sanciona\\ con\\ (.+?)\\ partido\\(s\\)\\ por\\ la\\ expulsión\\.\\ Los\\ verás\\ desde\\ la\\ grada,\\ sin\\ dar\\ órdenes\\ desde\\ la\\ banda\\.$",
+  "es": "El tribunal te sanciona con {1} partido(s) por la expulsión. Los verás desde la grada, sin dar órdenes desde la banda.",
+  "de": "nucleo/federacion.gd:846",
+  "tipo": "cuerpo"
+ },
+ {
+  "re": "^✅\\ Vuelves\\ a\\ la\\ banda$",
+  "es": "✅ Vuelves a la banda",
+  "de": "nucleo/federacion.gd:858",
+  "tipo": "titulo"
+ },
+ {
+  "re": "^Cumpliste\\ la\\ sanción:\\ el\\ próximo\\ partido\\ lo\\ diriges\\ desde\\ el\\ banquillo\\.$",
+  "es": "Cumpliste la sanción: el próximo partido lo diriges desde el banquillo.",
+  "de": "nucleo/federacion.gd:858",
   "tipo": "cuerpo"
  },
  {
   "re": "^Cuentas\\ en\\ regla$",
   "es": "Cuentas en regla",
-  "de": "nucleo/federacion.gd:908",
+  "de": "nucleo/federacion.gd:976",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ federación\\ cierra\\ el\\ expediente:\\ tu\\ masa\\ salarial\\ vuelve\\ a\\ estar\\ por\\ debajo\\ del\\ (.+?)%\\ de\\ los\\ ingresos\\.$",
   "es": "La federación cierra el expediente: tu masa salarial vuelve a estar por debajo del {1}% de los ingresos.",
-  "de": "nucleo/federacion.gd:908",
+  "de": "nucleo/federacion.gd:976",
   "tipo": "cuerpo"
  },
  {
   "re": "^Aviso\\ de\\ fair\\ play\\ financiero$",
   "es": "Aviso de fair play financiero",
-  "de": "nucleo/federacion.gd:915",
+  "de": "nucleo/federacion.gd:983",
   "tipo": "titulo"
  },
  {
   "re": "^Tu\\ masa\\ salarial\\ se\\ lleva\\ el\\ (.+?)%\\ de\\ los\\ ingresos,\\ por\\ encima\\ del\\ (.+?)%\\ permitido\\.\\ Un\\ año\\ más\\ así\\ y\\ hay\\ sanción\\.$",
   "es": "Tu masa salarial se lleva el {1}% de los ingresos, por encima del {2}% permitido. Un año más así y hay sanción.",
-  "de": "nucleo/federacion.gd:915",
+  "de": "nucleo/federacion.gd:983",
   "tipo": "cuerpo"
  },
  {
   "re": "^Sanción\\ por\\ fair\\ play\\ financiero$",
   "es": "Sanción por fair play financiero",
-  "de": "nucleo/federacion.gd:923",
+  "de": "nucleo/federacion.gd:991",
   "tipo": "titulo"
  },
  {
   "re": "^Dos\\ temporadas\\ gastando\\ por\\ encima\\ de\\ lo\\ que\\ ingresas\\.\\ La\\ federación\\ multa\\ al\\ club\\ con\\ (.+?)\\ y\\ te\\ cierra\\ el\\ mercado\\ la\\ próxima\\ ventana:\\ solo\\ podrás\\ fichar\\ libres\\.$",
   "es": "Dos temporadas gastando por encima de lo que ingresas. La federación multa al club con {1} y te cierra el mercado la próxima ventana: solo podrás fichar libres.",
-  "de": "nucleo/federacion.gd:923",
+  "de": "nucleo/federacion.gd:991",
   "tipo": "cuerpo"
  },
  {
@@ -1424,157 +1460,157 @@
  {
   "re": "^Rotacion$",
   "es": "Rotacion",
-  "de": "nucleo/mundo.gd:832",
+  "de": "nucleo/mundo.gd:834",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ cambio\\(s\\)\\ en\\ el\\ once:\\ los\\ que\\ llegaban\\ fundidos\\ descansan\\.$",
   "es": "{1} cambio(s) en el once: los que llegaban fundidos descansan.",
-  "de": "nucleo/mundo.gd:832",
+  "de": "nucleo/mundo.gd:834",
   "tipo": "cuerpo"
  },
  {
   "re": "^🤕\\ Lesión\\ insólita$",
   "es": "🤕 Lesión insólita",
-  "de": "nucleo/mundo.gd:1044",
+  "de": "nucleo/mundo.gd:1046",
   "tipo": "titulo"
  },
  {
   "re": "^Te\\ quiere\\ (.+?)$",
   "es": "Te quiere {1}",
-  "de": "nucleo/mundo.gd:1141",
+  "de": "nucleo/mundo.gd:1146",
   "tipo": "titulo"
  },
  {
   "re": "^Han\\ llamado\\ desde\\ (.+?):\\ te\\ ofrecen\\ su\\ banquillo\\.\\ Puedes\\ contestar\\ en\\ Club\\ ›\\ Legado\\.$",
   "es": "Han llamado desde {1}: te ofrecen su banquillo. Puedes contestar en Club › Legado.",
-  "de": "nucleo/mundo.gd:1141",
+  "de": "nucleo/mundo.gd:1146",
   "tipo": "cuerpo"
  },
  {
   "re": "^✈️\\ Vuelta\\ de\\ un\\ viaje\\ largo$",
   "es": "✈️ Vuelta de un viaje largo",
-  "de": "nucleo/mundo.gd:1393",
+  "de": "nucleo/mundo.gd:1398",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ plantel\\ llegó\\ de\\ madrugada\\ desde\\ (.+?)\\ y\\ paga\\ el\\ viaje:\\ −(.+?)\\ de\\ estado\\ físico\\ a\\ los\\ que\\ juegan\\.$",
   "es": "El plantel llegó de madrugada desde {1} y paga el viaje: −{2} de estado físico a los que juegan.",
-  "de": "nucleo/mundo.gd:1393",
+  "de": "nucleo/mundo.gd:1398",
   "tipo": "cuerpo"
  },
  {
   "re": "^🏅\\ (.+?)$",
   "es": "🏅 {1}",
-  "de": "nucleo/mundo.gd:1437",
+  "de": "nucleo/mundo.gd:1442",
   "tipo": "titulo"
  },
  {
   "re": "^Temporada\\ terminada:\\ (.+?)$",
   "es": "Temporada terminada: {1}",
-  "de": "nucleo/mundo.gd:1437",
+  "de": "nucleo/mundo.gd:1442",
   "tipo": "cuerpo"
  },
  {
   "re": "^Se\\ va\\ libre:\\ (.+?)$",
   "es": "Se va libre: {1}",
-  "de": "nucleo/mundo.gd:1641",
+  "de": "nucleo/mundo.gd:1646",
   "tipo": "titulo"
  },
  {
   "re": "^Se\\ le\\ acabó\\ el\\ contrato\\ y\\ no\\ se\\ renovó\\.\\ Deja\\ (.+?)\\ sin\\ que\\ el\\ club\\ cobre\\ nada\\.$",
   "es": "Se le acabó el contrato y no se renovó. Deja {1} sin que el club cobre nada.",
-  "de": "nucleo/mundo.gd:1641",
+  "de": "nucleo/mundo.gd:1646",
   "tipo": "cuerpo"
  },
  {
   "re": "^⚔️\\ Promoción:\\ (.+?)$",
   "es": "⚔️ Promoción: {1}",
-  "de": "nucleo/mundo.gd:1663",
+  "de": "nucleo/mundo.gd:1668",
   "tipo": "titulo"
  },
  {
   "re": "^Se\\ retira\\ por\\ lesiones:\\ (.+?)$",
   "es": "Se retira por lesiones: {1}",
-  "de": "nucleo/mundo.gd:1713",
+  "de": "nucleo/mundo.gd:1718",
   "tipo": "titulo"
  },
  {
   "re": "^Los\\ médicos\\ no\\ le\\ dan\\ el\\ alta\\ competitiva\\.\\ (.+?)\\ años\\ y\\ tres\\ lesiones\\ graves\\ en\\ poco\\ tiempo:\\ cuelga\\ las\\ botas\\ antes\\ de\\ tiempo\\.$",
   "es": "Los médicos no le dan el alta competitiva. {1} años y tres lesiones graves en poco tiempo: cuelga las botas antes de tiempo.",
-  "de": "nucleo/mundo.gd:1713",
+  "de": "nucleo/mundo.gd:1718",
   "tipo": "cuerpo"
  },
  {
   "re": "^Dijiste\\ que\\ ganabas\\ y\\ ganaste$",
   "es": "Dijiste que ganabas y ganaste",
-  "de": "nucleo/mundo.gd:2166",
+  "de": "nucleo/mundo.gd:2173",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ hinchada\\ celebra\\ el\\ doble:\\ primero\\ el\\ resultado\\ y\\ después\\ la\\ cara\\ del\\ otro\\.$",
   "es": "La hinchada celebra el doble: primero el resultado y después la cara del otro.",
-  "de": "nucleo/mundo.gd:2166",
+  "de": "nucleo/mundo.gd:2173",
   "tipo": "cuerpo"
  },
  {
   "re": "^Prometiste\\ y\\ no\\ cumpliste$",
   "es": "Prometiste y no cumpliste",
-  "de": "nucleo/mundo.gd:2170",
+  "de": "nucleo/mundo.gd:2177",
   "tipo": "titulo"
  },
  {
   "re": "^La\\ frase\\ de\\ la\\ conferencia\\ se\\ te\\ da\\ vuelta\\.\\ En\\ la\\ calle\\ no\\ se\\ habla\\ del\\ partido,\\ se\\ habla\\ de\\ ti\\.$",
   "es": "La frase de la conferencia se te da vuelta. En la calle no se habla del partido, se habla de ti.",
-  "de": "nucleo/mundo.gd:2170",
+  "de": "nucleo/mundo.gd:2177",
   "tipo": "cuerpo"
  },
  {
   "re": "^(.+?)\\ (.+?)\\-(.+?)\\ (.+?)\\.\\ (.+?)\\ levanta\\ el\\ primer\\ título\\ del\\ año\\.$",
   "es": "{1} {2}-{3} {4}. {5} levanta el primer título del año.",
-  "de": "nucleo/mundo.gd:2488",
+  "de": "nucleo/mundo.gd:2499",
   "tipo": "cuerpo"
  },
  {
   "re": "^Pretemporada:\\ (.+?)$",
   "es": "Pretemporada: {1}",
-  "de": "nucleo/mundo.gd:2550",
+  "de": "nucleo/mundo.gd:2561",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ plantel\\ llega\\ a\\ la\\ primera\\ jornada\\ con\\ (.+?)\\ de\\ forma\\ extra\\.$",
   "es": "El plantel llega a la primera jornada con {1} de forma extra.",
-  "de": "nucleo/mundo.gd:2550",
+  "de": "nucleo/mundo.gd:2561",
   "tipo": "cuerpo"
  },
  {
   "re": "^(.+?)\\.$",
   "es": "{1}.",
-  "de": "nucleo/mundo.gd:2625",
+  "de": "nucleo/mundo.gd:2636",
   "tipo": "cuerpo"
  },
  {
   "re": "^Cambia\\ la\\ moda:\\ (.+?)$",
   "es": "Cambia la moda: {1}",
-  "de": "nucleo/mundo.gd:2757",
+  "de": "nucleo/mundo.gd:2768",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ Los\\ que\\ juegan\\ con\\ (.+?)\\ salen\\ ganando;\\ los\\ de\\ (.+?)\\ van\\ a\\ sufrir\\.$",
   "es": "{1} Los que juegan con {2} salen ganando; los de {3} van a sufrir.",
-  "de": "nucleo/mundo.gd:2757",
+  "de": "nucleo/mundo.gd:2768",
   "tipo": "cuerpo"
  },
  {
   "re": "^Videoanálisis\\ de\\ (.+?)$",
   "es": "Videoanálisis de {1}",
-  "de": "nucleo/mundo.gd:2901",
+  "de": "nucleo/mundo.gd:2912",
   "tipo": "titulo"
  },
  {
   "re": "^Sesión\\ de\\ vídeo\\ con\\ todo\\ el\\ plantel:\\ dónde\\ aprietan,\\ por\\ dónde\\ salen\\ y\\ a\\ quién\\ hay\\ que\\ tapar\\.\\ El\\ equipo\\ sale\\ al\\ campo\\ con\\ la\\ lección\\ hecha\\ \\(\\+(.+?)%\\)\\.$",
   "es": "Sesión de vídeo con todo el plantel: dónde aprietan, por dónde salen y a quién hay que tapar. El equipo sale al campo con la lección hecha (+{1}%).",
-  "de": "nucleo/mundo.gd:2901",
+  "de": "nucleo/mundo.gd:2912",
   "tipo": "cuerpo"
  },
  {
@@ -1754,145 +1790,145 @@
  {
   "re": "^🎤\\ A\\ pie\\ de\\ campo$",
   "es": "🎤 A pie de campo",
-  "de": "nucleo/prensa.gd:1493",
+  "de": "nucleo/prensa.gd:1499",
   "tipo": "titulo"
  },
  {
   "re": "^Pasaste\\ de\\ largo\\ ante\\ la\\ cámara\\.\\ La\\ imagen,\\ sin\\ palabras,\\ se\\ vio\\ igual\\.$",
   "es": "Pasaste de largo ante la cámara. La imagen, sin palabras, se vio igual.",
-  "de": "nucleo/prensa.gd:1493",
+  "de": "nucleo/prensa.gd:1499",
   "tipo": "cuerpo"
  },
  {
   "re": "^«(.+?)»\\.$",
   "es": "«{1}».",
-  "de": "nucleo/prensa.gd:1512",
+  "de": "nucleo/prensa.gd:1518",
   "tipo": "cuerpo"
  },
  {
   "re": "^Banderazo\\ en\\ la\\ práctica$",
   "es": "Banderazo en la práctica",
-  "de": "nucleo/prensa.gd:1614",
+  "de": "nucleo/prensa.gd:1620",
   "tipo": "titulo"
  },
  {
   "re": "^Cientos\\ de\\ hinchas\\ coparon\\ el\\ entrenamiento\\ con\\ bombos\\ y\\ lienzos\\ de\\ aliento\\.\\ El\\ plantel\\ se\\ agranda\\.$",
   "es": "Cientos de hinchas coparon el entrenamiento con bombos y lienzos de aliento. El plantel se agranda.",
-  "de": "nucleo/prensa.gd:1614",
+  "de": "nucleo/prensa.gd:1620",
   "tipo": "cuerpo"
  },
  {
   "re": "^Lienzos\\ contra\\ el\\ club$",
   "es": "Lienzos contra el club",
-  "de": "nucleo/prensa.gd:1619",
+  "de": "nucleo/prensa.gd:1625",
   "tipo": "titulo"
  },
  {
   "re": "^Amanecieron\\ rayados\\ frente\\ al\\ estadio:\\ 'jugadores\\ sin\\ sangre'\\.\\ Semana\\ tensa\\ en\\ la\\ ciudad\\ deportiva\\.$",
   "es": "Amanecieron rayados frente al estadio: 'jugadores sin sangre'. Semana tensa en la ciudad deportiva.",
-  "de": "nucleo/prensa.gd:1619",
+  "de": "nucleo/prensa.gd:1625",
   "tipo": "cuerpo"
  },
  {
   "re": "^Vuelve\\ de\\ la\\ cesión$",
   "es": "Vuelve de la cesión",
-  "de": "nucleo/prensa.gd:1668",
+  "de": "nucleo/prensa.gd:1674",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ termina\\ su\\ préstamo\\ y\\ se\\ reincorpora\\ a\\ la\\ pretemporada\\.$",
   "es": "{1} termina su préstamo y se reincorpora a la pretemporada.",
-  "de": "nucleo/prensa.gd:1668",
+  "de": "nucleo/prensa.gd:1674",
   "tipo": "cuerpo"
  },
  {
   "re": "^Se\\ acabó\\ el\\ compromiso\\ comercial$",
   "es": "Se acabó el compromiso comercial",
-  "de": "nucleo/prensa.gd:1741",
+  "de": "nucleo/prensa.gd:1747",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ acuerdo\\ que\\ te\\ obligaba\\ a\\ alinear\\ a\\ un\\ jugador\\ concreto\\ llegó\\ a\\ su\\ fin\\.\\ Vuelves\\ a\\ elegir\\ el\\ once\\ sin\\ condiciones\\.$",
   "es": "El acuerdo que te obligaba a alinear a un jugador concreto llegó a su fin. Vuelves a elegir el once sin condiciones.",
-  "de": "nucleo/prensa.gd:1741",
+  "de": "nucleo/prensa.gd:1747",
   "tipo": "cuerpo"
  },
  {
   "re": "^El\\ patrocinador\\ te\\ lo\\ cobra$",
   "es": "El patrocinador te lo cobra",
-  "de": "nucleo/prensa.gd:1757",
+  "de": "nucleo/prensa.gd:1763",
   "tipo": "titulo"
  },
  {
   "re": "^Dejaste\\ a\\ (.+?)\\ fuera\\ del\\ once\\ y\\ el\\ acuerdo\\ comercial\\ exigía\\ que\\ jugara\\.\\ Descuento\\ de\\ (.+?)\\ y\\ una\\ llamada\\ incómoda\\ del\\ directorio\\.$",
   "es": "Dejaste a {1} fuera del once y el acuerdo comercial exigía que jugara. Descuento de {2} y una llamada incómoda del directorio.",
-  "de": "nucleo/prensa.gd:1757",
+  "de": "nucleo/prensa.gd:1763",
   "tipo": "cuerpo"
  },
  {
   "re": "^Nuevo\\ vocero\\ del\\ club$",
   "es": "Nuevo vocero del club",
-  "de": "nucleo/prensa.gd:2181",
+  "de": "nucleo/prensa.gd:2187",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ hablará\\ por\\ ti\\ en\\ las\\ ruedas\\ de\\ prensa\\.\\ Menos\\ desgaste\\ para\\ ti,\\ pero\\ también\\ menos\\ control\\ sobre\\ el\\ mensaje\\.$",
   "es": "{1} hablará por ti en las ruedas de prensa. Menos desgaste para ti, pero también menos control sobre el mensaje.",
-  "de": "nucleo/prensa.gd:2181",
+  "de": "nucleo/prensa.gd:2187",
   "tipo": "cuerpo"
  },
  {
   "re": "^El\\ club\\ se\\ queda\\ sin\\ vocero$",
   "es": "El club se queda sin vocero",
-  "de": "nucleo/prensa.gd:2195",
+  "de": "nucleo/prensa.gd:2201",
   "tipo": "titulo"
  },
  {
   "re": "^(.+?)\\ ya\\ no\\ está\\ en\\ el\\ plantel\\.\\ A\\ partir\\ de\\ la\\ próxima\\ rueda\\ vuelves\\ a\\ dar\\ tú\\ la\\ cara\\.$",
   "es": "{1} ya no está en el plantel. A partir de la próxima rueda vuelves a dar tú la cara.",
-  "de": "nucleo/prensa.gd:2195",
+  "de": "nucleo/prensa.gd:2201",
   "tipo": "cuerpo"
  },
  {
   "re": "^Vuelves\\ al\\ reparto\\ en\\ bloque$",
   "es": "Vuelves al reparto en bloque",
-  "de": "nucleo/prensa.gd:2217",
+  "de": "nucleo/prensa.gd:2223",
   "tipo": "titulo"
  },
  {
   "re": "^El\\ club\\ vuelve\\ a\\ negociar\\ la\\ televisión\\ junto\\ al\\ resto\\ de\\ la\\ liga\\.\\ Menos\\ techo,\\ más\\ seguridad\\.$",
   "es": "El club vuelve a negociar la televisión junto al resto de la liga. Menos techo, más seguridad.",
-  "de": "nucleo/prensa.gd:2217",
+  "de": "nucleo/prensa.gd:2223",
   "tipo": "cuerpo"
  },
  {
   "re": "^Contrato\\ de\\ TV\\ individual$",
   "es": "Contrato de TV individual",
-  "de": "nucleo/prensa.gd:2224",
+  "de": "nucleo/prensa.gd:2230",
   "tipo": "titulo"
  },
  {
   "re": "^Negociaste\\ por\\ tu\\ cuenta\\ y\\ te\\ fue\\ bien:\\ tu\\ marca\\ vende\\.\\ Los\\ derechos\\ suben\\ un\\ 35%,\\ pero\\ los\\ clubes\\ pequeños\\ te\\ lo\\ van\\ a\\ cobrar\\ en\\ la\\ asamblea\\.$",
   "es": "Negociaste por tu cuenta y te fue bien: tu marca vende. Los derechos suben un 35%, pero los clubes pequeños te lo van a cobrar en la asamblea.",
-  "de": "nucleo/prensa.gd:2224",
+  "de": "nucleo/prensa.gd:2230",
   "tipo": "cuerpo"
  },
  {
   "re": "^Negociaste\\ por\\ tu\\ cuenta\\ y\\ te\\ fue\\ mal:\\ sin\\ la\\ fuerza\\ del\\ bloque,\\ los\\ derechos\\ caen\\ un\\ 30%\\.$",
   "es": "Negociaste por tu cuenta y te fue mal: sin la fuerza del bloque, los derechos caen un 30%.",
-  "de": "nucleo/prensa.gd:2227",
+  "de": "nucleo/prensa.gd:2233",
   "tipo": "cuerpo"
  },
  {
   "re": "^Puertas\\ abiertas$",
   "es": "Puertas abiertas",
-  "de": "nucleo/prensa.gd:2505",
+  "de": "nucleo/prensa.gd:2511",
   "tipo": "titulo"
  },
  {
   "re": "^Invitaste\\ a\\ un\\ creador\\ a\\ un\\ entrenamiento\\.\\ El\\ club\\ ganó\\ (.+?)\\ seguidores\\ y\\ algo\\ de\\ cariño\\ en\\ redes\\.$",
   "es": "Invitaste a un creador a un entrenamiento. El club ganó {1} seguidores y algo de cariño en redes.",
-  "de": "nucleo/prensa.gd:2505",
+  "de": "nucleo/prensa.gd:2511",
   "tipo": "cuerpo"
  },
  {
@@ -3906,1143 +3942,1155 @@
   "tipo": "frase"
  },
  {
-  "re": "^Es\\ igual\\ para\\ los\\ dos:\\ no\\ es\\ excusa$",
-  "es": "Es igual para los dos: no es excusa",
-  "de": "nucleo/prensa.gd:1318",
+  "re": "^De\\ las\\ dos\\ cosas:\\ el\\ equipo\\ supo\\ sufrir$",
+  "es": "De las dos cosas: el equipo supo sufrir",
+  "de": "nucleo/prensa.gd:1319",
   "tipo": "frase"
  },
  {
-  "re": "^Así\\ no\\ se\\ puede\\ jugar\\ al\\ fútbol$",
-  "es": "Así no se puede jugar al fútbol",
-  "de": "nucleo/prensa.gd:1319",
+  "re": "^Jugamos\\ bien\\ con\\ sol,\\ lluvia\\ o\\ lo\\ que\\ sea$",
+  "es": "Jugamos bien con sol, lluvia o lo que sea",
+  "de": "nucleo/prensa.gd:1320",
   "tipo": "frase"
  },
  {
   "re": "^Prefiero\\ hablar\\ del\\ partido$",
   "es": "Prefiero hablar del partido",
-  "de": "nucleo/prensa.gd:1320",
+  "de": "nucleo/prensa.gd:1321",
+  "tipo": "frase"
+ },
+ {
+  "re": "^Es\\ igual\\ para\\ los\\ dos:\\ no\\ es\\ excusa$",
+  "es": "Es igual para los dos: no es excusa",
+  "de": "nucleo/prensa.gd:1324",
+  "tipo": "frase"
+ },
+ {
+  "re": "^Así\\ no\\ se\\ puede\\ jugar\\ al\\ fútbol$",
+  "es": "Así no se puede jugar al fútbol",
+  "de": "nucleo/prensa.gd:1325",
   "tipo": "frase"
  },
  {
   "re": "^no\\ voy\\ a$",
   "es": "no voy a",
-  "de": "nucleo/prensa.gd:1335",
+  "de": "nucleo/prensa.gd:1341",
   "tipo": "frase"
  },
  {
   "re": "^no\\ tengo\\ nada$",
   "es": "no tengo nada",
-  "de": "nucleo/prensa.gd:1335",
+  "de": "nucleo/prensa.gd:1341",
   "tipo": "frase"
  },
  {
   "re": "^ya\\ lo\\ dije$",
   "es": "ya lo dije",
-  "de": "nucleo/prensa.gd:1336",
+  "de": "nucleo/prensa.gd:1342",
   "tipo": "frase"
  },
  {
   "re": "^somos\\ los\\ mejores$",
   "es": "somos los mejores",
-  "de": "nucleo/prensa.gd:1338",
+  "de": "nucleo/prensa.gd:1344",
   "tipo": "frase"
  },
  {
   "re": "^que\\ se\\ preparen$",
   "es": "que se preparen",
-  "de": "nucleo/prensa.gd:1338",
+  "de": "nucleo/prensa.gd:1344",
   "tipo": "frase"
  },
  {
   "re": "^vamos\\ a\\ ganar$",
   "es": "vamos a ganar",
-  "de": "nucleo/prensa.gd:1339",
+  "de": "nucleo/prensa.gd:1345",
   "tipo": "frase"
  },
  {
   "re": "^no\\ me\\ importa$",
   "es": "no me importa",
-  "de": "nucleo/prensa.gd:1340",
+  "de": "nucleo/prensa.gd:1346",
   "tipo": "frase"
  },
  {
   "re": "^¡Victoria\\ por\\ (.+?)\\-(.+?)!\\ ¿Qué\\ le\\ dice\\ a\\ la\\ gente\\ que\\ vino\\ hoy\\?$",
   "es": "¡Victoria por {1}-{2}! ¿Qué le dice a la gente que vino hoy?",
-  "de": "nucleo/prensa.gd:1394",
+  "de": "nucleo/prensa.gd:1400",
   "tipo": "frase"
  },
  {
   "re": "^Gracias\\ a\\ ellos:\\ este\\ triunfo\\ es\\ de\\ todos$",
   "es": "Gracias a ellos: este triunfo es de todos",
-  "de": "nucleo/prensa.gd:1396",
+  "de": "nucleo/prensa.gd:1402",
   "tipo": "frase"
  },
  {
   "re": "^Que\\ se\\ vayan\\ acostumbrando$",
   "es": "Que se vayan acostumbrando",
-  "de": "nucleo/prensa.gd:1397",
+  "de": "nucleo/prensa.gd:1403",
   "tipo": "frase"
  },
  {
   "re": "^Ahora\\ toca\\ descansar$",
   "es": "Ahora toca descansar",
-  "de": "nucleo/prensa.gd:1398",
+  "de": "nucleo/prensa.gd:1404",
   "tipo": "frase"
  },
  {
   "re": "^Empate\\ (.+?)\\-(.+?)\\.\\ ¿Sabe\\ a\\ poco\\?$",
   "es": "Empate {1}-{2}. ¿Sabe a poco?",
-  "de": "nucleo/prensa.gd:1401",
+  "de": "nucleo/prensa.gd:1407",
   "tipo": "frase"
  },
  {
   "re": "^Sumamos;\\ el\\ equipo\\ dio\\ la\\ cara$",
   "es": "Sumamos; el equipo dio la cara",
-  "de": "nucleo/prensa.gd:1403",
+  "de": "nucleo/prensa.gd:1409",
   "tipo": "frase"
  },
  {
   "re": "^El\\ árbitro\\ nos\\ quitó\\ el\\ partido$",
   "es": "El árbitro nos quitó el partido",
-  "de": "nucleo/prensa.gd:1404",
+  "de": "nucleo/prensa.gd:1410",
   "tipo": "frase"
  },
  {
   "re": "^Lo\\ analizaremos\\ en\\ frío$",
   "es": "Lo analizaremos en frío",
-  "de": "nucleo/prensa.gd:1405",
+  "de": "nucleo/prensa.gd:1411",
   "tipo": "frase"
  },
  {
   "re": "^Derrota\\ (.+?)\\-(.+?),\\ duro\\ golpe\\.\\ ¿Qué\\ pasó\\ hoy\\?$",
   "es": "Derrota {1}-{2}, duro golpe. ¿Qué pasó hoy?",
-  "de": "nucleo/prensa.gd:1408",
+  "de": "nucleo/prensa.gd:1414",
   "tipo": "frase"
  },
  {
   "re": "^Lo\\ asumo\\ yo:\\ hoy\\ no\\ estuvimos$",
   "es": "Lo asumo yo: hoy no estuvimos",
-  "de": "nucleo/prensa.gd:1410",
+  "de": "nucleo/prensa.gd:1416",
   "tipo": "frase"
  },
  {
   "re": "^Los\\ jugadores\\ tendrán\\ que\\ dar\\ explicaciones$",
   "es": "Los jugadores tendrán que dar explicaciones",
-  "de": "nucleo/prensa.gd:1411",
+  "de": "nucleo/prensa.gd:1417",
   "tipo": "frase"
  },
  {
   "re": "^No\\ es\\ momento\\ de\\ hablar$",
   "es": "No es momento de hablar",
-  "de": "nucleo/prensa.gd:1412",
+  "de": "nucleo/prensa.gd:1418",
   "tipo": "frase"
  },
  {
   "re": "^(.+?)\\ ·\\ (.+?),\\ a\\ pie\\ de\\ campo$",
   "es": "{1} · {2}, a pie de campo",
-  "de": "nucleo/prensa.gd:1414",
+  "de": "nucleo/prensa.gd:1420",
   "tipo": "frase"
  },
  {
   "re": "^Kike\\ en\\ Directo$",
   "es": "Kike en Directo",
-  "de": "nucleo/prensa.gd:1426",
+  "de": "nucleo/prensa.gd:1432",
   "tipo": "frase"
  },
  {
   "re": "^a\\ la\\ salida\\ del\\ entrenamiento$",
   "es": "a la salida del entrenamiento",
-  "de": "nucleo/prensa.gd:1426",
+  "de": "nucleo/prensa.gd:1432",
   "tipo": "frase"
  },
  {
   "re": "^El\\ Vestuario\\ Pod$",
   "es": "El Vestuario Pod",
-  "de": "nucleo/prensa.gd:1427",
+  "de": "nucleo/prensa.gd:1433",
   "tipo": "frase"
  },
  {
   "re": "^en\\ el\\ aeropuerto$",
   "es": "en el aeropuerto",
-  "de": "nucleo/prensa.gd:1427",
+  "de": "nucleo/prensa.gd:1433",
   "tipo": "frase"
  },
  {
   "re": "^canal\\ de\\ un\\ hincha$",
   "es": "canal de un hincha",
-  "de": "nucleo/prensa.gd:1428",
+  "de": "nucleo/prensa.gd:1434",
   "tipo": "frase"
  },
  {
   "re": "^en\\ la\\ puerta\\ del\\ estadio$",
   "es": "en la puerta del estadio",
-  "de": "nucleo/prensa.gd:1428",
+  "de": "nucleo/prensa.gd:1434",
   "tipo": "frase"
  },
  {
   "re": "^Fútbol\\ en\\ 60\\ segundos$",
   "es": "Fútbol en 60 segundos",
-  "de": "nucleo/prensa.gd:1429",
+  "de": "nucleo/prensa.gd:1435",
   "tipo": "frase"
  },
  {
   "re": "^en\\ el\\ aparcamiento$",
   "es": "en el aparcamiento",
-  "de": "nucleo/prensa.gd:1429",
+  "de": "nucleo/prensa.gd:1435",
   "tipo": "frase"
  },
  {
   "re": "^La\\ Previa\\ Live$",
   "es": "La Previa Live",
-  "de": "nucleo/prensa.gd:1430",
+  "de": "nucleo/prensa.gd:1436",
   "tipo": "frase"
  },
  {
   "re": "^en\\ el\\ supermercado$",
   "es": "en el supermercado",
-  "de": "nucleo/prensa.gd:1430",
+  "de": "nucleo/prensa.gd:1436",
   "tipo": "frase"
  },
  {
   "re": "^¿Qué\\ música\\ suena\\ en\\ el\\ vestuario\\?$",
   "es": "¿Qué música suena en el vestuario?",
-  "de": "nucleo/prensa.gd:1433",
+  "de": "nucleo/prensa.gd:1439",
   "tipo": "frase"
  },
  {
   "re": "^Lo\\ elige\\ el\\ capitán,\\ y\\ no\\ siempre\\ acierta$",
   "es": "Lo elige el capitán, y no siempre acierta",
-  "de": "nucleo/prensa.gd:1434",
+  "de": "nucleo/prensa.gd:1440",
   "tipo": "frase"
  },
  {
   "re": "^Silencio:\\ aquí\\ se\\ viene\\ a\\ trabajar$",
   "es": "Silencio: aquí se viene a trabajar",
-  "de": "nucleo/prensa.gd:1435",
+  "de": "nucleo/prensa.gd:1441",
   "tipo": "frase"
  },
  {
   "re": "^Eso\\ pregúntaselo\\ al\\ utilero$",
   "es": "Eso pregúntaselo al utilero",
-  "de": "nucleo/prensa.gd:1436",
+  "de": "nucleo/prensa.gd:1442",
   "tipo": "frase"
  },
  {
   "re": "^¿Quién\\ es\\ el\\ peor\\ bailarín\\ del\\ plantel\\?$",
   "es": "¿Quién es el peor bailarín del plantel?",
-  "de": "nucleo/prensa.gd:1437",
+  "de": "nucleo/prensa.gd:1443",
   "tipo": "frase"
  },
  {
   "re": "^El\\ portero,\\ sin\\ discusión$",
   "es": "El portero, sin discusión",
-  "de": "nucleo/prensa.gd:1438",
+  "de": "nucleo/prensa.gd:1444",
   "tipo": "frase"
  },
  {
   "re": "^Yo\\ no\\ bailo\\ y\\ ellos\\ tampoco\\ deberían$",
   "es": "Yo no bailo y ellos tampoco deberían",
-  "de": "nucleo/prensa.gd:1439",
+  "de": "nucleo/prensa.gd:1445",
   "tipo": "frase"
  },
  {
   "re": "^No\\ voy\\ a\\ buscarme\\ problemas$",
   "es": "No voy a buscarme problemas",
-  "de": "nucleo/prensa.gd:1440",
+  "de": "nucleo/prensa.gd:1446",
   "tipo": "frase"
  },
  {
   "re": "^Te\\ vimos\\ haciendo\\ la\\ compra:\\ ¿el\\ entrenador\\ cocina\\?$",
   "es": "Te vimos haciendo la compra: ¿el entrenador cocina?",
-  "de": "nucleo/prensa.gd:1441",
+  "de": "nucleo/prensa.gd:1447",
   "tipo": "frase"
  },
  {
   "re": "^Cocino\\ fatal,\\ pero\\ lo\\ intento$",
   "es": "Cocino fatal, pero lo intento",
-  "de": "nucleo/prensa.gd:1442",
+  "de": "nucleo/prensa.gd:1448",
   "tipo": "frase"
  },
  {
   "re": "^Mi\\ vida\\ privada\\ es\\ privada$",
   "es": "Mi vida privada es privada",
-  "de": "nucleo/prensa.gd:1443",
+  "de": "nucleo/prensa.gd:1449",
   "tipo": "frase"
  },
  {
   "re": "^Solo\\ compraba\\ agua$",
   "es": "Solo compraba agua",
-  "de": "nucleo/prensa.gd:1444",
+  "de": "nucleo/prensa.gd:1450",
   "tipo": "frase"
  },
  {
   "re": "^¿Contestas\\ los\\ mensajes\\ de\\ los\\ hinchas\\?$",
   "es": "¿Contestas los mensajes de los hinchas?",
-  "de": "nucleo/prensa.gd:1445",
+  "de": "nucleo/prensa.gd:1451",
   "tipo": "frase"
  },
  {
   "re": "^Los\\ leo\\ todos,\\ hasta\\ los\\ que\\ me\\ insultan$",
   "es": "Los leo todos, hasta los que me insultan",
-  "de": "nucleo/prensa.gd:1446",
+  "de": "nucleo/prensa.gd:1452",
   "tipo": "frase"
  },
  {
   "re": "^No\\ tengo\\ tiempo\\ para\\ eso$",
   "es": "No tengo tiempo para eso",
-  "de": "nucleo/prensa.gd:1447",
+  "de": "nucleo/prensa.gd:1453",
   "tipo": "frase"
  },
  {
   "re": "^¿A\\ qué\\ jugador\\ del\\ plantel\\ te\\ llevarías\\ a\\ una\\ isla\\ desierta\\?$",
   "es": "¿A qué jugador del plantel te llevarías a una isla desierta?",
-  "de": "nucleo/prensa.gd:1449",
+  "de": "nucleo/prensa.gd:1455",
   "tipo": "frase"
  },
  {
   "re": "^Al\\ capitán:\\ sabría\\ organizarnos$",
   "es": "Al capitán: sabría organizarnos",
-  "de": "nucleo/prensa.gd:1450",
+  "de": "nucleo/prensa.gd:1456",
   "tipo": "frase"
  },
  {
   "re": "^A\\ ninguno,\\ me\\ iría\\ solo$",
   "es": "A ninguno, me iría solo",
-  "de": "nucleo/prensa.gd:1451",
+  "de": "nucleo/prensa.gd:1457",
   "tipo": "frase"
  },
  {
   "re": "^A\\ todos,\\ que\\ ninguno\\ se\\ enfade$",
   "es": "A todos, que ninguno se enfade",
-  "de": "nucleo/prensa.gd:1452",
+  "de": "nucleo/prensa.gd:1458",
   "tipo": "frase"
  },
  {
   "re": "^Dicen\\ que\\ eres\\ supersticioso:\\ ¿cierto\\?$",
   "es": "Dicen que eres supersticioso: ¿cierto?",
-  "de": "nucleo/prensa.gd:1453",
+  "de": "nucleo/prensa.gd:1459",
   "tipo": "frase"
  },
  {
   "re": "^La\\ misma\\ corbata\\ desde\\ hace\\ diez\\ partidos$",
   "es": "La misma corbata desde hace diez partidos",
-  "de": "nucleo/prensa.gd:1454",
+  "de": "nucleo/prensa.gd:1460",
   "tipo": "frase"
  },
  {
   "re": "^El\\ fútbol\\ es\\ trabajo,\\ no\\ suerte$",
   "es": "El fútbol es trabajo, no suerte",
-  "de": "nucleo/prensa.gd:1455",
+  "de": "nucleo/prensa.gd:1461",
   "tipo": "frase"
  },
  {
   "re": "^📱\\ Al\\ paso$",
   "es": "📱 Al paso",
-  "de": "nucleo/prensa.gd:1473",
+  "de": "nucleo/prensa.gd:1479",
   "tipo": "frase"
  },
  {
   "re": "^Prensa:\\ '¿Es\\ este\\ el\\ triunfo\\ que\\ confirma\\ la\\ levantada\\?'$",
   "es": "Prensa: '¿Es este el triunfo que confirma la levantada?'",
-  "de": "nucleo/prensa.gd:1528",
+  "de": "nucleo/prensa.gd:1534",
   "tipo": "frase"
  },
  {
   "re": "^Paso\\ a\\ paso,\\ con\\ humildad$",
   "es": "Paso a paso, con humildad",
-  "de": "nucleo/prensa.gd:1529",
+  "de": "nucleo/prensa.gd:1535",
   "tipo": "frase"
  },
  {
   "re": "^Sí:\\ que\\ se\\ preparen\\ los\\ de\\ arriba$",
   "es": "Sí: que se preparen los de arriba",
-  "de": "nucleo/prensa.gd:1530",
+  "de": "nucleo/prensa.gd:1536",
   "tipo": "frase"
  },
  {
   "re": "^Las\\ conclusiones\\ las\\ saco\\ en\\ privado$",
   "es": "Las conclusiones las saco en privado",
-  "de": "nucleo/prensa.gd:1531",
+  "de": "nucleo/prensa.gd:1537",
   "tipo": "frase"
  },
  {
   "re": "^Prensa:\\ 'La\\ gente\\ pide\\ más\\ minutos\\ para\\ los\\ juveniles,\\ ¿los\\ verá\\?'$",
   "es": "Prensa: 'La gente pide más minutos para los juveniles, ¿los verá?'",
-  "de": "nucleo/prensa.gd:1533",
+  "de": "nucleo/prensa.gd:1539",
   "tipo": "frase"
  },
  {
   "re": "^Los\\ chicos\\ empujan\\ fuerte,\\ tendrán\\ su\\ chance$",
   "es": "Los chicos empujan fuerte, tendrán su chance",
-  "de": "nucleo/prensa.gd:1534",
+  "de": "nucleo/prensa.gd:1540",
   "tipo": "frase"
  },
  {
   "re": "^Juega\\ el\\ que\\ está\\ mejor,\\ sin\\ regalos$",
   "es": "Juega el que está mejor, sin regalos",
-  "de": "nucleo/prensa.gd:1535",
+  "de": "nucleo/prensa.gd:1541",
   "tipo": "frase"
  },
  {
   "re": "^Esa\\ decisión\\ es\\ solo\\ mía$",
   "es": "Esa decisión es solo mía",
-  "de": "nucleo/prensa.gd:1536",
+  "de": "nucleo/prensa.gd:1542",
   "tipo": "frase"
  },
  {
   "re": "^Prensa:\\ '¿Sabe\\ a\\ poco\\ este\\ empate\\?'$",
   "es": "Prensa: '¿Sabe a poco este empate?'",
-  "de": "nucleo/prensa.gd:1541",
+  "de": "nucleo/prensa.gd:1547",
   "tipo": "frase"
  },
  {
   "re": "^Sumar\\ siempre\\ sirve$",
   "es": "Sumar siempre sirve",
-  "de": "nucleo/prensa.gd:1542",
+  "de": "nucleo/prensa.gd:1548",
   "tipo": "frase"
  },
  {
   "re": "^Sí,\\ merecimos\\ más\\ y\\ lo\\ dije\\ en\\ el\\ camarín$",
   "es": "Sí, merecimos más y lo dije en el camarín",
-  "de": "nucleo/prensa.gd:1543",
+  "de": "nucleo/prensa.gd:1549",
   "tipo": "frase"
  },
  {
   "re": "^Prefiero\\ no\\ evaluar\\ en\\ caliente$",
   "es": "Prefiero no evaluar en caliente",
-  "de": "nucleo/prensa.gd:1544",
+  "de": "nucleo/prensa.gd:1550",
   "tipo": "frase"
  },
  {
   "re": "^Prensa:\\ '¿Le\\ preocupa\\ la\\ falta\\ de\\ gol\\?'$",
   "es": "Prensa: '¿Le preocupa la falta de gol?'",
-  "de": "nucleo/prensa.gd:1546",
+  "de": "nucleo/prensa.gd:1552",
   "tipo": "frase"
  },
  {
   "re": "^Las\\ ocasiones\\ están,\\ el\\ gol\\ va\\ a\\ llegar$",
   "es": "Las ocasiones están, el gol va a llegar",
-  "de": "nucleo/prensa.gd:1547",
+  "de": "nucleo/prensa.gd:1553",
   "tipo": "frase"
  },
  {
   "re": "^Trabajaremos\\ definición\\ toda\\ la\\ semana$",
   "es": "Trabajaremos definición toda la semana",
-  "de": "nucleo/prensa.gd:1548",
+  "de": "nucleo/prensa.gd:1554",
   "tipo": "frase"
  },
  {
   "re": "^Pregunta\\ tendenciosa\\.\\ Siguiente$",
   "es": "Pregunta tendenciosa. Siguiente",
-  "de": "nucleo/prensa.gd:1549",
+  "de": "nucleo/prensa.gd:1555",
   "tipo": "frase"
  },
  {
   "re": "^Prensa:\\ '¿Está\\ en\\ riesgo\\ su\\ puesto\\ tras\\ esta\\ derrota\\?'$",
   "es": "Prensa: '¿Está en riesgo su puesto tras esta derrota?'",
-  "de": "nucleo/prensa.gd:1554",
+  "de": "nucleo/prensa.gd:1560",
   "tipo": "frase"
  },
  {
   "re": "^Respondo\\ con\\ trabajo,\\ no\\ con\\ excusas$",
   "es": "Respondo con trabajo, no con excusas",
-  "de": "nucleo/prensa.gd:1555",
+  "de": "nucleo/prensa.gd:1561",
   "tipo": "frase"
  },
  {
   "re": "^El\\ plantel\\ está\\ conmigo,\\ saldremos\\ juntos$",
   "es": "El plantel está conmigo, saldremos juntos",
-  "de": "nucleo/prensa.gd:1556",
+  "de": "nucleo/prensa.gd:1562",
   "tipo": "frase"
  },
  {
   "re": "^Eso\\ pregúntenselo\\ al\\ directorio$",
   "es": "Eso pregúntenselo al directorio",
-  "de": "nucleo/prensa.gd:1557",
+  "de": "nucleo/prensa.gd:1563",
   "tipo": "frase"
  },
  {
   "re": "^Prensa:\\ 'Los\\ hinchas\\ silbaron\\ al\\ equipo,\\ ¿los\\ entiende\\?'$",
   "es": "Prensa: 'Los hinchas silbaron al equipo, ¿los entiende?'",
-  "de": "nucleo/prensa.gd:1559",
+  "de": "nucleo/prensa.gd:1565",
   "tipo": "frase"
  },
  {
   "re": "^Tienen\\ razón:\\ hoy\\ no\\ los\\ representamos$",
   "es": "Tienen razón: hoy no los representamos",
-  "de": "nucleo/prensa.gd:1560",
+  "de": "nucleo/prensa.gd:1566",
   "tipo": "frase"
  },
  {
   "re": "^El\\ apoyo\\ se\\ necesita\\ en\\ las\\ malas$",
   "es": "El apoyo se necesita en las malas",
-  "de": "nucleo/prensa.gd:1561",
+  "de": "nucleo/prensa.gd:1567",
   "tipo": "frase"
  },
  {
   "re": "^No\\ escuché\\ silbidos$",
   "es": "No escuché silbidos",
-  "de": "nucleo/prensa.gd:1562",
+  "de": "nucleo/prensa.gd:1568",
   "tipo": "frase"
  },
  {
   "re": "^vuelve\\ hecho\\ jugador$",
   "es": "vuelve hecho jugador",
-  "de": "nucleo/prensa.gd:1647",
+  "de": "nucleo/prensa.gd:1653",
   "tipo": "frase"
  },
  {
   "re": "^Penalización\\ del\\ patrocinador:\\ (.+?)\\ fuera\\ del\\ once$",
   "es": "Penalización del patrocinador: {1} fuera del once",
-  "de": "nucleo/prensa.gd:1753",
+  "de": "nucleo/prensa.gd:1759",
   "tipo": "frase"
  },
  {
   "re": "^(.+?)\\ fuera\\ del\\ once\\ pese\\ al\\ pacto$",
   "es": "{1} fuera del once pese al pacto",
-  "de": "nucleo/prensa.gd:1756",
+  "de": "nucleo/prensa.gd:1762",
   "tipo": "frase"
  },
  {
   "re": "^El\\ club\\ cierra\\ filas\\ con\\ el\\ entrenador\\.\\ Veremos\\ cuánto\\ dura\\.$",
   "es": "El club cierra filas con el entrenador. Veremos cuánto dura.",
-  "de": "nucleo/prensa.gd:1926",
+  "de": "nucleo/prensa.gd:1932",
   "tipo": "frase"
  },
  {
   "re": "^Comunicado\\ de\\ apoyo:\\ la\\ funa\\ baja\\ y\\ la\\ hinchada\\ lo\\ agradece,\\ pero\\ has\\ gastado\\ un\\ cartucho\\.$",
   "es": "Comunicado de apoyo: la funa baja y la hinchada lo agradece, pero has gastado un cartucho.",
-  "de": "nucleo/prensa.gd:1927",
+  "de": "nucleo/prensa.gd:1933",
   "tipo": "frase"
  },
  {
   "re": "^Ni\\ una\\ palabra\\ desde\\ el\\ club\\.\\ El\\ silencio\\ también\\ dice\\ cosas\\.$",
   "es": "Ni una palabra desde el club. El silencio también dice cosas.",
-  "de": "nucleo/prensa.gd:1930",
+  "de": "nucleo/prensa.gd:1936",
   "tipo": "frase"
  },
  {
   "re": "^Silencio\\ de\\ prensa:\\ no\\ gastas\\ nada,\\ pero\\ la\\ bola\\ sigue\\ rodando\\ sola\\.$",
   "es": "Silencio de prensa: no gastas nada, pero la bola sigue rodando sola.",
-  "de": "nucleo/prensa.gd:1931",
+  "de": "nucleo/prensa.gd:1937",
   "tipo": "frase"
  },
  {
   "re": "^Respuesta\\ directa\\ y\\ sin\\ anestesia\\.\\ La\\ hinchada\\ lo\\ celebra\\.$",
   "es": "Respuesta directa y sin anestesia. La hinchada lo celebra.",
-  "de": "nucleo/prensa.gd:1938",
+  "de": "nucleo/prensa.gd:1944",
   "tipo": "frase"
  },
  {
   "re": "^Contestaste\\ y\\ salió\\ bien:\\ la\\ funa\\ se\\ desinfla\\ y\\ el\\ vestuario\\ lo\\ nota\\.$",
   "es": "Contestaste y salió bien: la funa se desinfla y el vestuario lo nota.",
-  "de": "nucleo/prensa.gd:1939",
+  "de": "nucleo/prensa.gd:1945",
   "tipo": "frase"
  },
  {
   "re": "^Le\\ contestaron\\ a\\ la\\ prensa\\ y\\ ahora\\ hay\\ tres\\ titulares\\ más\\.$",
   "es": "Le contestaron a la prensa y ahora hay tres titulares más.",
-  "de": "nucleo/prensa.gd:1942",
+  "de": "nucleo/prensa.gd:1948",
   "tipo": "frase"
  },
  {
   "re": "^Contestaste\\ y\\ salió\\ mal:\\ ahora\\ hay\\ tres\\ titulares\\ donde\\ había\\ uno\\.$",
   "es": "Contestaste y salió mal: ahora hay tres titulares donde había uno.",
-  "de": "nucleo/prensa.gd:1943",
+  "de": "nucleo/prensa.gd:1949",
   "tipo": "frase"
  },
  {
   "re": "^Va\\ a\\ por\\ ti\\ desde\\ el\\ día\\ uno\\.\\ Cualquier\\ tropiezo\\ es\\ portada\\.$",
   "es": "Va a por ti desde el día uno. Cualquier tropiezo es portada.",
-  "de": "nucleo/prensa.gd:1961",
+  "de": "nucleo/prensa.gd:1967",
   "tipo": "frase"
  },
  {
   "re": "^Te\\ tiene\\ simpatía:\\ suaviza\\ las\\ derrotas\\ si\\ le\\ das\\ material\\.$",
   "es": "Te tiene simpatía: suaviza las derrotas si le das material.",
-  "de": "nucleo/prensa.gd:1963",
+  "de": "nucleo/prensa.gd:1969",
   "tipo": "frase"
  },
  {
   "re": "^Diario\\ La\\ Banda$",
   "es": "Diario La Banda",
-  "de": "nucleo/prensa.gd:1964",
+  "de": "nucleo/prensa.gd:1970",
   "tipo": "frase"
  },
  {
   "re": "^Cuenta\\ lo\\ que\\ pasa,\\ sin\\ bando\\.$",
   "es": "Cuenta lo que pasa, sin bando.",
-  "de": "nucleo/prensa.gd:1965",
+  "de": "nucleo/prensa.gd:1971",
   "tipo": "frase"
  },
  {
   "re": "^Vive\\ del\\ titular\\ grande,\\ sea\\ verdad\\ o\\ no\\.$",
   "es": "Vive del titular grande, sea verdad o no.",
-  "de": "nucleo/prensa.gd:1967",
+  "de": "nucleo/prensa.gd:1973",
   "tipo": "frase"
  },
  {
   "re": "^Podcast\\ Fuera\\ de\\ Juego$",
   "es": "Podcast Fuera de Juego",
-  "de": "nucleo/prensa.gd:1968",
+  "de": "nucleo/prensa.gd:1974",
   "tipo": "frase"
  },
  {
   "re": "^Analiza\\ de\\ verdad\\.\\ Si\\ le\\ explicas\\ tu\\ idea,\\ la\\ defiende\\.$",
   "es": "Analiza de verdad. Si le explicas tu idea, la defiende.",
-  "de": "nucleo/prensa.gd:1969",
+  "de": "nucleo/prensa.gd:1975",
   "tipo": "frase"
  },
  {
   "re": "^Podcast\\ oficial\\ del\\ club$",
   "es": "Podcast oficial del club",
-  "de": "nucleo/prensa.gd:1974",
+  "de": "nucleo/prensa.gd:1980",
   "tipo": "frase"
  },
  {
   "re": "^Contenido\\ semanal:\\ fideliza\\ socios\\ y\\ da\\ voz\\ a\\ tu\\ versión$",
   "es": "Contenido semanal: fideliza socios y da voz a tu versión",
-  "de": "nucleo/prensa.gd:1975",
+  "de": "nucleo/prensa.gd:1981",
   "tipo": "frase"
  },
  {
   "re": "^Revista\\ del\\ club$",
   "es": "Revista del club",
-  "de": "nucleo/prensa.gd:1976",
+  "de": "nucleo/prensa.gd:1982",
   "tipo": "frase"
  },
  {
   "re": "^A\\ la\\ vieja\\ usanza:\\ llega\\ a\\ los\\ socios\\ de\\ siempre$",
   "es": "A la vieja usanza: llega a los socios de siempre",
-  "de": "nucleo/prensa.gd:1977",
+  "de": "nucleo/prensa.gd:1983",
   "tipo": "frase"
  },
  {
   "re": "^Productora\\ de\\ documentales$",
   "es": "Productora de documentales",
-  "de": "nucleo/prensa.gd:1978",
+  "de": "nucleo/prensa.gd:1984",
   "tipo": "frase"
  },
  {
   "re": "^Series\\ tras\\ bambalinas\\ que\\ se\\ venden\\ fuera$",
   "es": "Series tras bambalinas que se venden fuera",
-  "de": "nucleo/prensa.gd:1979",
+  "de": "nucleo/prensa.gd:1985",
   "tipo": "frase"
  },
  {
   "re": "^Canal\\ de\\ streaming\\ propio$",
   "es": "Canal de streaming propio",
-  "de": "nucleo/prensa.gd:1980",
+  "de": "nucleo/prensa.gd:1986",
   "tipo": "frase"
  },
  {
   "re": "^Partidos\\ de\\ cantera\\ y\\ contenido\\ de\\ pago:\\ suscriptores\\ todo\\ el\\ año$",
   "es": "Partidos de cantera y contenido de pago: suscriptores todo el año",
-  "de": "nucleo/prensa.gd:1981",
+  "de": "nucleo/prensa.gd:1987",
   "tipo": "frase"
  },
  {
   "re": "^todos\\ en\\ 50$",
   "es": "todos en 50",
-  "de": "nucleo/prensa.gd:1984",
+  "de": "nucleo/prensa.gd:1990",
   "tipo": "frase"
  },
  {
   "re": "^ya\\ has\\ atendido\\ a\\ alguien\\ esta\\ semana$",
   "es": "ya has atendido a alguien esta semana",
-  "de": "nucleo/prensa.gd:1996",
+  "de": "nucleo/prensa.gd:2002",
   "tipo": "frase"
  },
  {
   "re": "^Le\\ das\\ media\\ hora\\ y\\ algo\\ de\\ material\\.\\ La\\ relación\\ mejora\\.$",
   "es": "Le das media hora y algo de material. La relación mejora.",
-  "de": "nucleo/prensa.gd:2002",
+  "de": "nucleo/prensa.gd:2008",
   "tipo": "frase"
  },
  {
   "re": "^ya\\ lo\\ tienes$",
   "es": "ya lo tienes",
-  "de": "nucleo/prensa.gd:2035",
+  "de": "nucleo/prensa.gd:2041",
   "tipo": "frase"
  },
  {
   "re": "^cuesta\\ (.+?)\\ y\\ no\\ hay\\ caja$",
   "es": "cuesta {1} y no hay caja",
-  "de": "nucleo/prensa.gd:2041",
+  "de": "nucleo/prensa.gd:2047",
   "tipo": "frase"
  },
  {
   "re": "^ese\\ medio\\ no\\ existe$",
   "es": "ese medio no existe",
-  "de": "nucleo/prensa.gd:2045",
+  "de": "nucleo/prensa.gd:2051",
   "tipo": "frase"
  },
  {
   "re": "^No\\ cambia\\ un\\ resultado,\\ pero\\ sí\\ lo\\ que\\ el\\ directorio\\ escucha\\ en\\ el\\ desayuno$",
   "es": "No cambia un resultado, pero sí lo que el directorio escucha en el desayuno",
-  "de": "nucleo/prensa.gd:2059",
+  "de": "nucleo/prensa.gd:2065",
   "tipo": "frase"
  },
  {
   "re": "^Habla\\ de\\ pizarra\\ y\\ desconfía\\ de\\ los\\ jóvenes$",
   "es": "Habla de pizarra y desconfía de los jóvenes",
-  "de": "nucleo/prensa.gd:2065",
+  "de": "nucleo/prensa.gd:2071",
   "tipo": "frase"
  },
  {
   "re": "^Periodista\\ de\\ toda\\ la\\ vida$",
   "es": "Periodista de toda la vida",
-  "de": "nucleo/prensa.gd:2066",
+  "de": "nucleo/prensa.gd:2072",
   "tipo": "frase"
  },
  {
   "re": "^Le\\ importa\\ el\\ club,\\ no\\ tú$",
   "es": "Le importa el club, no tú",
-  "de": "nucleo/prensa.gd:2066",
+  "de": "nucleo/prensa.gd:2072",
   "tipo": "frase"
  },
  {
   "re": "^Ex\\ jugador\\ ídolo$",
   "es": "Ex jugador ídolo",
-  "de": "nucleo/prensa.gd:2067",
+  "de": "nucleo/prensa.gd:2073",
   "tipo": "frase"
  },
  {
   "re": "^Defiende\\ al\\ vestuario\\ por\\ encima\\ de\\ todo$",
   "es": "Defiende al vestuario por encima de todo",
-  "de": "nucleo/prensa.gd:2067",
+  "de": "nucleo/prensa.gd:2073",
   "tipo": "frase"
  },
  {
   "re": "^Analista\\ de\\ datos$",
   "es": "Analista de datos",
-  "de": "nucleo/prensa.gd:2068",
+  "de": "nucleo/prensa.gd:2074",
   "tipo": "frase"
  },
  {
   "re": "^Solo\\ cree\\ en\\ los\\ números$",
   "es": "Solo cree en los números",
-  "de": "nucleo/prensa.gd:2068",
+  "de": "nucleo/prensa.gd:2074",
   "tipo": "frase"
  },
  {
   "re": "^Vive\\ de\\ encender\\ el\\ fuego$",
   "es": "Vive de encender el fuego",
-  "de": "nucleo/prensa.gd:2069",
+  "de": "nucleo/prensa.gd:2075",
   "tipo": "frase"
  },
  {
   "re": "^Con\\ esos\\ chicos\\ no\\ se\\ gana\\ nada;\\ ya\\ se\\ verá\\ en\\ marzo\\.$",
   "es": "Con esos chicos no se gana nada; ya se verá en marzo.",
-  "de": "nucleo/prensa.gd:2099",
+  "de": "nucleo/prensa.gd:2105",
   "tipo": "frase"
  },
  {
   "re": "^Ordenado\\ atrás\\.\\ Eso\\ es\\ lo\\ primero,\\ lo\\ demás\\ viene\\ solo\\.$",
   "es": "Ordenado atrás. Eso es lo primero, lo demás viene solo.",
-  "de": "nucleo/prensa.gd:2100",
+  "de": "nucleo/prensa.gd:2106",
   "tipo": "frase"
  },
  {
   "re": "^El\\ club\\ está\\ donde\\ tiene\\ que\\ estar\\.\\ El\\ entrenador\\ es\\ lo\\ de\\ menos\\.$",
   "es": "El club está donde tiene que estar. El entrenador es lo de menos.",
-  "de": "nucleo/prensa.gd:2102",
+  "de": "nucleo/prensa.gd:2108",
   "tipo": "frase"
  },
  {
   "re": "^Aquí\\ ha\\ habido\\ épocas\\ peores,\\ y\\ también\\ se\\ salió\\ de\\ ellas\\.$",
   "es": "Aquí ha habido épocas peores, y también se salió de ellas.",
-  "de": "nucleo/prensa.gd:2103",
+  "de": "nucleo/prensa.gd:2109",
   "tipo": "frase"
  },
  {
   "re": "^Ese\\ vestuario\\ está\\ vivo\\.\\ Se\\ nota\\ que\\ corren\\ por\\ alguien\\.$",
   "es": "Ese vestuario está vivo. Se nota que corren por alguien.",
-  "de": "nucleo/prensa.gd:2105",
+  "de": "nucleo/prensa.gd:2111",
   "tipo": "frase"
  },
  {
   "re": "^Al\\ vestuario\\ lo\\ veo\\ solo\\.\\ Y\\ cuando\\ el\\ vestuario\\ está\\ solo,\\ pasa\\ lo\\ que\\ pasa\\.$",
   "es": "Al vestuario lo veo solo. Y cuando el vestuario está solo, pasa lo que pasa.",
-  "de": "nucleo/prensa.gd:2106",
+  "de": "nucleo/prensa.gd:2112",
   "tipo": "frase"
  },
  {
   "re": "^Los\\ números\\ lo\\ sostienen:\\ genera\\ más\\ de\\ lo\\ que\\ concede\\.$",
   "es": "Los números lo sostienen: genera más de lo que concede.",
-  "de": "nucleo/prensa.gd:2108",
+  "de": "nucleo/prensa.gd:2114",
   "tipo": "frase"
  },
  {
   "re": "^Los\\ números\\ no\\ engañan,\\ y\\ ahora\\ mismo\\ no\\ dan\\.$",
   "es": "Los números no engañan, y ahora mismo no dan.",
-  "de": "nucleo/prensa.gd:2109",
+  "de": "nucleo/prensa.gd:2115",
   "tipo": "frase"
  },
  {
   "re": "^Que\\ alguien\\ explique\\ qué\\ es\\ esto,\\ porque\\ yo\\ no\\ lo\\ entiendo\\.$",
   "es": "Que alguien explique qué es esto, porque yo no lo entiendo.",
-  "de": "nucleo/prensa.gd:2111",
+  "de": "nucleo/prensa.gd:2117",
   "tipo": "frase"
  },
  {
   "re": "^Ganan,\\ sí\\.\\ Pero\\ que\\ no\\ se\\ relajen,\\ que\\ aquí\\ se\\ olvida\\ rápido\\.$",
   "es": "Ganan, sí. Pero que no se relajen, que aquí se olvida rápido.",
-  "de": "nucleo/prensa.gd:2112",
+  "de": "nucleo/prensa.gd:2118",
   "tipo": "frase"
  },
  {
   "re": "^Vuelves\\ a\\ dar\\ tú\\ la\\ cara\\ en\\ cada\\ rueda\\ de\\ prensa\\.$",
   "es": "Vuelves a dar tú la cara en cada rueda de prensa.",
-  "de": "nucleo/prensa.gd:2170",
+  "de": "nucleo/prensa.gd:2176",
   "tipo": "frase"
  },
  {
   "re": "^no\\ hay\\ plantilla$",
   "es": "no hay plantilla",
-  "de": "nucleo/prensa.gd:2172",
+  "de": "nucleo/prensa.gd:2178",
   "tipo": "frase"
  },
  {
   "re": "^hace\\ falta\\ un\\ capitán\\ o\\ un\\ líder\\ de\\ vestuario:\\ nadie\\ más\\ tiene\\ el\\ peso\\ para\\ hablar\\ por\\ el\\ club$",
   "es": "hace falta un capitán o un líder de vestuario: nadie más tiene el peso para hablar por el club",
-  "de": "nucleo/prensa.gd:2178",
+  "de": "nucleo/prensa.gd:2184",
   "tipo": "frase"
  },
  {
   "re": "^(.+?)\\ habla\\ por\\ ti\\ desde\\ hoy\\.$",
   "es": "{1} habla por ti desde hoy.",
-  "de": "nucleo/prensa.gd:2183",
+  "de": "nucleo/prensa.gd:2189",
   "tipo": "frase"
  },
  {
   "re": "^ya\\ estás\\ en\\ ese\\ modelo$",
   "es": "ya estás en ese modelo",
-  "de": "nucleo/prensa.gd:2214",
+  "de": "nucleo/prensa.gd:2220",
   "tipo": "frase"
  },
  {
   "re": "^Vuelves\\ al\\ reparto\\ en\\ bloque\\.$",
   "es": "Vuelves al reparto en bloque.",
-  "de": "nucleo/prensa.gd:2219",
+  "de": "nucleo/prensa.gd:2225",
   "tipo": "frase"
  },
  {
   "re": "^Los\\ derechos\\ suben\\ un\\ 35%\\.$",
   "es": "Los derechos suben un 35%.",
-  "de": "nucleo/prensa.gd:2226",
+  "de": "nucleo/prensa.gd:2232",
   "tipo": "frase"
  },
  {
   "re": "^Los\\ derechos\\ caen\\ un\\ 30%\\.$",
   "es": "Los derechos caen un 30%.",
-  "de": "nucleo/prensa.gd:2229",
+  "de": "nucleo/prensa.gd:2235",
   "tipo": "frase"
  },
  {
   "re": "^Todavía\\ no\\ hay\\ temporada\\ que\\ contar\\.$",
   "es": "Todavía no hay temporada que contar.",
-  "de": "nucleo/prensa.gd:2281",
+  "de": "nucleo/prensa.gd:2287",
   "tipo": "frase"
  },
  {
   "re": "^La\\ temporada\\ (.+?)\\ de\\ (.+?)\\ terminó\\ en\\ el\\ puesto\\ (.+?)\\.$",
   "es": "La temporada {1} de {2} terminó en el puesto {3}.",
-  "de": "nucleo/prensa.gd:2296",
+  "de": "nucleo/prensa.gd:2302",
   "tipo": "frase"
  },
  {
   "re": "^La\\ temporada\\ (.+?)\\ de\\ (.+?)\\ todavía\\ se\\ está\\ jugando\\.$",
   "es": "La temporada {1} de {2} todavía se está jugando.",
-  "de": "nucleo/prensa.gd:2298",
+  "de": "nucleo/prensa.gd:2304",
   "tipo": "frase"
  },
  {
   "re": "^Se\\ levantaron\\ (.+?)\\ título(.+?):\\ (.+?)\\.$",
   "es": "Se levantaron {1} título{2}: {3}.",
-  "de": "nucleo/prensa.gd:2306",
+  "de": "nucleo/prensa.gd:2312",
   "tipo": "frase"
  },
  {
   "re": "^Sin\\ títulos\\ esta\\ vez\\.$",
   "es": "Sin títulos esta vez.",
-  "de": "nucleo/prensa.gd:2310",
+  "de": "nucleo/prensa.gd:2316",
   "tipo": "frase"
  },
  {
   "re": "^Hubo\\ una\\ racha\\ de\\ (.+?)\\ partidos\\ sin\\ perder\\ que\\ hizo\\ soñar\\ a\\ la\\ ciudad\\.$",
   "es": "Hubo una racha de {1} partidos sin perder que hizo soñar a la ciudad.",
-  "de": "nucleo/prensa.gd:2315",
+  "de": "nucleo/prensa.gd:2321",
   "tipo": "frase"
  },
  {
   "re": "^También\\ hubo\\ un\\ bache\\ de\\ (.+?)\\ partidos\\ sin\\ ganar\\ que\\ puso\\ todo\\ en\\ duda\\.$",
   "es": "También hubo un bache de {1} partidos sin ganar que puso todo en duda.",
-  "de": "nucleo/prensa.gd:2317",
+  "de": "nucleo/prensa.gd:2323",
   "tipo": "frase"
  },
  {
   "re": "^La\\ noche\\ grande\\ fue\\ el\\ (.+?)\\ a\\ (.+?)\\.$",
   "es": "La noche grande fue el {1} a {2}.",
-  "de": "nucleo/prensa.gd:2321",
+  "de": "nucleo/prensa.gd:2327",
   "tipo": "frase"
  },
  {
   "re": "^La\\ peor,\\ el\\ (.+?)\\ con\\ (.+?)\\.$",
   "es": "La peor, el {1} con {2}.",
-  "de": "nucleo/prensa.gd:2325",
+  "de": "nucleo/prensa.gd:2331",
   "tipo": "frase"
  },
  {
   "re": "^(.+?)\\ fue\\ el\\ hombre\\ gol\\ con\\ (.+?)\\ tantos\\.$",
   "es": "{1} fue el hombre gol con {2} tantos.",
-  "de": "nucleo/prensa.gd:2338",
+  "de": "nucleo/prensa.gd:2344",
   "tipo": "frase"
  },
  {
   "re": "^La\\ prensa\\ cerró\\ el\\ año\\ de\\ tu\\ lado\\.$",
   "es": "La prensa cerró el año de tu lado.",
-  "de": "nucleo/prensa.gd:2342",
+  "de": "nucleo/prensa.gd:2348",
   "tipo": "frase"
  },
  {
   "re": "^La\\ prensa\\ cerró\\ el\\ año\\ afilando\\ los\\ cuchillos\\.$",
   "es": "La prensa cerró el año afilando los cuchillos.",
-  "de": "nucleo/prensa.gd:2344",
+  "de": "nucleo/prensa.gd:2350",
   "tipo": "frase"
  },
  {
   "re": "^La\\ prensa\\ mantuvo\\ la\\ distancia\\.$",
   "es": "La prensa mantuvo la distancia.",
-  "de": "nucleo/prensa.gd:2346",
+  "de": "nucleo/prensa.gd:2352",
   "tipo": "frase"
  },
  {
   "re": "^\"Una\\ máquina\":\\ el\\ equipo\\ pisa\\ fuerte\\ y\\ la\\ ciudad\\ sueña$",
   "es": "\"Una máquina\": el equipo pisa fuerte y la ciudad sueña",
-  "de": "nucleo/prensa.gd:2366",
+  "de": "nucleo/prensa.gd:2372",
   "tipo": "frase"
  },
  {
   "re": "^Exhibición\\ de\\ fútbol\\ y\\ carácter\\.\\ El\\ plantel\\ responde\\ a\\ su\\ gente\\.$",
   "es": "Exhibición de fútbol y carácter. El plantel responde a su gente.",
-  "de": "nucleo/prensa.gd:2367",
+  "de": "nucleo/prensa.gd:2373",
   "tipo": "frase"
  },
  {
   "re": "^\"Golpe\\ de\\ autoridad\"$",
   "es": "\"Golpe de autoridad\"",
-  "de": "nucleo/prensa.gd:2368",
+  "de": "nucleo/prensa.gd:2374",
   "tipo": "frase"
  },
  {
   "re": "^Sólido\\ atrás,\\ letal\\ arriba:\\ así\\ se\\ construyen\\ los\\ campeones\\.$",
   "es": "Sólido atrás, letal arriba: así se construyen los campeones.",
-  "de": "nucleo/prensa.gd:2369",
+  "de": "nucleo/prensa.gd:2375",
   "tipo": "frase"
  },
  {
   "re": "^\"Sabor\\ a\\ poco\"$",
   "es": "\"Sabor a poco\"",
-  "de": "nucleo/prensa.gd:2372",
+  "de": "nucleo/prensa.gd:2378",
   "tipo": "frase"
  },
  {
   "re": "^Un\\ punto\\ que\\ no\\ conforma\\ a\\ nadie\\ en\\ las\\ tribunas\\.$",
   "es": "Un punto que no conforma a nadie en las tribunas.",
-  "de": "nucleo/prensa.gd:2372",
+  "de": "nucleo/prensa.gd:2378",
   "tipo": "frase"
  },
  {
   "re": "^\"Preocupación\\ en\\ la\\ interna\"$",
   "es": "\"Preocupación en la interna\"",
-  "de": "nucleo/prensa.gd:2375",
+  "de": "nucleo/prensa.gd:2381",
   "tipo": "frase"
  },
  {
   "re": "^La\\ derrota\\ abre\\ preguntas:\\ ¿alcanza\\ este\\ plantel\\ para\\ pelear\\ arriba\\?$",
   "es": "La derrota abre preguntas: ¿alcanza este plantel para pelear arriba?",
-  "de": "nucleo/prensa.gd:2376",
+  "de": "nucleo/prensa.gd:2382",
   "tipo": "frase"
  },
  {
   "re": "^\"Noche\\ para\\ el\\ olvido\"$",
   "es": "\"Noche para el olvido\"",
-  "de": "nucleo/prensa.gd:2377",
+  "de": "nucleo/prensa.gd:2383",
   "tipo": "frase"
  },
  {
   "re": "^Sin\\ ideas\\ y\\ sin\\ actitud:\\ la\\ crítica\\ apunta\\ a\\ la\\ conducción\\.$",
   "es": "Sin ideas y sin actitud: la crítica apunta a la conducción.",
-  "de": "nucleo/prensa.gd:2378",
+  "de": "nucleo/prensa.gd:2384",
   "tipo": "frase"
  },
  {
   "re": "^Este\\ equipo\\ se\\ ha\\ convertido\\ en\\ algo\\ serio\\.\\ Lo\\ digo\\ yo,\\ que\\ critico\\ todo\\.$",
   "es": "Este equipo se ha convertido en algo serio. Lo digo yo, que critico todo.",
-  "de": "nucleo/prensa.gd:2443",
+  "de": "nucleo/prensa.gd:2449",
   "tipo": "frase"
  },
  {
   "re": "^El\\ proyecto\\ funciona\\.\\ Aguanten\\ al\\ técnico,\\ por\\ favor\\.$",
   "es": "El proyecto funciona. Aguanten al técnico, por favor.",
-  "de": "nucleo/prensa.gd:2444",
+  "de": "nucleo/prensa.gd:2450",
   "tipo": "frase"
  },
  {
   "re": "^Hoy\\ salí\\ del\\ estadio\\ con\\ los\\ pelos\\ de\\ punta\\.$",
   "es": "Hoy salí del estadio con los pelos de punta.",
-  "de": "nucleo/prensa.gd:2445",
+  "de": "nucleo/prensa.gd:2451",
   "tipo": "frase"
  },
  {
   "re": "^No\\ es\\ solo\\ perder,\\ es\\ CÓMO\\ se\\ pierde\\.\\ Bochorno\\.$",
   "es": "No es solo perder, es CÓMO se pierde. Bochorno.",
-  "de": "nucleo/prensa.gd:2448",
+  "de": "nucleo/prensa.gd:2454",
   "tipo": "frase"
  },
  {
   "re": "^Cambien\\ lo\\ que\\ haya\\ que\\ cambiar,\\ pero\\ cambien\\ algo\\ ya\\.$",
   "es": "Cambien lo que haya que cambiar, pero cambien algo ya.",
-  "de": "nucleo/prensa.gd:2449",
+  "de": "nucleo/prensa.gd:2455",
   "tipo": "frase"
  },
  {
   "re": "^Llevo\\ diez\\ años\\ yendo\\ y\\ no\\ había\\ visto\\ un\\ equipo\\ tan\\ sin\\ alma\\.$",
   "es": "Llevo diez años yendo y no había visto un equipo tan sin alma.",
-  "de": "nucleo/prensa.gd:2450",
+  "de": "nucleo/prensa.gd:2456",
   "tipo": "frase"
  },
  {
   "re": "^Ni\\ tan\\ mal\\ ni\\ tan\\ bien\\.\\ El\\ club\\ necesita\\ decidir\\ qué\\ quiere\\ ser\\.$",
   "es": "Ni tan mal ni tan bien. El club necesita decidir qué quiere ser.",
-  "de": "nucleo/prensa.gd:2453",
+  "de": "nucleo/prensa.gd:2459",
   "tipo": "frase"
  },
  {
   "re": "^Hay\\ materia\\ prima\\.\\ Falta\\ paciencia,\\ que\\ es\\ lo\\ que\\ nunca\\ hay\\.$",
   "es": "Hay materia prima. Falta paciencia, que es lo que nunca hay.",
-  "de": "nucleo/prensa.gd:2454",
+  "de": "nucleo/prensa.gd:2460",
   "tipo": "frase"
  },
  {
   "re": "^Ojo\\ con\\ la\\ cantera,\\ que\\ ahí\\ está\\ la\\ respuesta\\.$",
   "es": "Ojo con la cantera, que ahí está la respuesta.",
-  "de": "nucleo/prensa.gd:2455",
+  "de": "nucleo/prensa.gd:2461",
   "tipo": "frase"
  },
  {
   "re": "^Lo\\ dejaste\\ hablando\\ solo\\.\\ Se\\ nota\\ en\\ el\\ índice\\ de\\ prensa\\.$",
   "es": "Lo dejaste hablando solo. Se nota en el índice de prensa.",
-  "de": "nucleo/prensa.gd:2494",
+  "de": "nucleo/prensa.gd:2500",
   "tipo": "frase"
  },
  {
   "re": "^no\\ hay\\ club$",
   "es": "no hay club",
-  "de": "nucleo/prensa.gd:2496",
+  "de": "nucleo/prensa.gd:2502",
   "tipo": "frase"
  },
  {
   "re": "^invitarlo\\ cuesta\\ (.+?)\\ y\\ no\\ hay\\ caja$",
   "es": "invitarlo cuesta {1} y no hay caja",
-  "de": "nucleo/prensa.gd:2499",
+  "de": "nucleo/prensa.gd:2505",
   "tipo": "frase"
  },
  {
   "re": "^Acción\\ con\\ creadores\\ de\\ contenido$",
   "es": "Acción con creadores de contenido",
-  "de": "nucleo/prensa.gd:2501",
+  "de": "nucleo/prensa.gd:2507",
   "tipo": "frase"
  },
  {
   "re": "^El\\ club\\ gana\\ (.+?)\\ seguidores\\.$",
   "es": "El club gana {1} seguidores.",
-  "de": "nucleo/prensa.gd:2507",
+  "de": "nucleo/prensa.gd:2513",
   "tipo": "frase"
  },
  {
   "re": "^El\\ parte\\ médico\\ filtrado\\ del\\ rival$",
   "es": "El parte médico filtrado del rival",
-  "de": "nucleo/prensa.gd:2513",
+  "de": "nucleo/prensa.gd:2519",
   "tipo": "frase"
  },
  {
   "re": "^El\\ amistoso\\ benéfico$",
   "es": "El amistoso benéfico",
-  "de": "nucleo/prensa.gd:2514",
+  "de": "nucleo/prensa.gd:2520",
   "tipo": "frase"
  },
  {
   "re": "^Respuesta\\ al\\ DT\\ rival$",
   "es": "Respuesta al DT rival",
-  "de": "nucleo/prensa.gd:2515",
+  "de": "nucleo/prensa.gd:2521",
   "tipo": "frase"
  },
  {
   "re": "^El\\ documental\\ del\\ vestuario$",
   "es": "El documental del vestuario",
-  "de": "nucleo/prensa.gd:2516",
+  "de": "nucleo/prensa.gd:2522",
   "tipo": "frase"
  },
  {
   "re": "^El\\ aumento\\ de\\ tu\\ figura$",
   "es": "El aumento de tu figura",
-  "de": "nucleo/prensa.gd:2517",
+  "de": "nucleo/prensa.gd:2523",
   "tipo": "frase"
  },
  {
   "re": "^El\\ agente\\ que\\ ofreció\\ a\\ tu\\ figura$",
   "es": "El agente que ofreció a tu figura",
-  "de": "nucleo/prensa.gd:2518",
+  "de": "nucleo/prensa.gd:2524",
   "tipo": "frase"
  },
  {
   "re": "^La\\ investigación\\ de\\ apuestas$",
   "es": "La investigación de apuestas",
-  "de": "nucleo/prensa.gd:2519",
+  "de": "nucleo/prensa.gd:2525",
   "tipo": "frase"
  },
  {
   "re": "^El\\ encuentro\\ con\\ la\\ comisión\\ arbitral$",
   "es": "El encuentro con la comisión arbitral",
-  "de": "nucleo/prensa.gd:2520",
+  "de": "nucleo/prensa.gd:2526",
   "tipo": "frase"
  },
  {
   "re": "^Los\\ sueldos\\ impagos$",
   "es": "Los sueldos impagos",
-  "de": "nucleo/prensa.gd:2521",
+  "de": "nucleo/prensa.gd:2527",
   "tipo": "frase"
  },
  {
   "re": "^El\\ aniversario\\ del\\ club$",
   "es": "El aniversario del club",
-  "de": "nucleo/prensa.gd:2522",
+  "de": "nucleo/prensa.gd:2528",
   "tipo": "frase"
  },
  {
   "re": "^El\\ silencio\\ ante\\ la\\ prensa$",
   "es": "El silencio ante la prensa",
-  "de": "nucleo/prensa.gd:2523",
+  "de": "nucleo/prensa.gd:2529",
   "tipo": "frase"
  },
  {
   "re": "^El\\ reclamo\\ formal$",
   "es": "El reclamo formal",
-  "de": "nucleo/prensa.gd:2524",
+  "de": "nucleo/prensa.gd:2530",
   "tipo": "frase"
  },
  {
   "re": "^La\\ oferta\\ de\\ la\\ televisión$",
   "es": "La oferta de la televisión",
-  "de": "nucleo/prensa.gd:2525",
+  "de": "nucleo/prensa.gd:2531",
   "tipo": "frase"
  },
  {
   "re": "^El\\ vídeo\\ viral$",
   "es": "El vídeo viral",
-  "de": "nucleo/prensa.gd:2526",
+  "de": "nucleo/prensa.gd:2532",
   "tipo": "frase"
  },
  {
