@@ -52,7 +52,7 @@ func _una(semilla: int, temporadas: int) -> void:
 			var gf := 0
 			var gc := 0
 			for fila: Dictionary in liga.tabla():
-				_comprobar(int(fila["pts"]) == int(fila["g"]) * liga.puntos_victoria + int(fila["e"]),
+				_comprobar(int(fila["pts"]) == int(fila["g"]) * liga.puntos_victoria + int(fila["e"]) - int(fila.get("sancion", 0)),
 					"%s: puntos mal sumados en %s" % [et, fila["club"].nombre])
 				_comprobar(int(fila["pj"]) == int(fila["g"]) + int(fila["e"]) + int(fila["p"]),
 					"%s: partidos mal sumados en %s" % [et, fila["club"].nombre])

@@ -173,6 +173,8 @@ func tabla() -> Array:
 		filas.append({
 			"club": c, "pts": d["pts"], "pj": d["pj"], "g": d["g"], "e": d["e"], "p": d["p"],
 			"gf": d["gf"], "gc": d["gc"], "dif": d["gf"] - d["gc"],
+			## Puntos quitados por sanciones (insolvencia, alineación indebida…).
+			"sancion": int(d.get("sancion", 0)),
 		})
 	filas.sort_custom(func(x: Dictionary, y: Dictionary) -> bool:
 		if x["pts"] != y["pts"]: return x["pts"] > y["pts"]
@@ -188,3 +190,13 @@ func jugar_temporada() -> Array:
 	while quedan_jornadas():
 		jugar_jornada()
 	return tabla()
+
+
+## Quita puntos por una sanción y lo deja anotado en la fila (13-10-2026: si
+## no, la tabla no cuadraba con victorias y empates y nadie sabía por qué).
+func sancionar(club_id: String, puntos: int) -> void:
+	if not tabla_puntos.has(club_id):
+		return
+	var d: Dictionary = tabla_puntos[club_id]
+	d["pts"] = int(d["pts"]) - puntos
+	d["sancion"] = int(d.get("sancion", 0)) + puntos
