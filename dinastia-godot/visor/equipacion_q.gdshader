@@ -607,7 +607,7 @@ void fragment() {
 		const vec3 REF = vec3(0.374, 0.170, 0.080);
 		float l_ref = dot(REF, vec3(0.2126, 0.7152, 0.0722));
 		float l = max(dot(piel, vec3(0.2126, 0.7152, 0.0722)), 0.0001);
-		float rel = clamp(pow(l / l_ref, 0.6), 0.55, 1.4);
+		float rel = clamp(pow(l / l_ref, 0.6), 0.55, 1.2);
 		vec3 matiz = (piel / l) / (REF / l_ref);
 		albedo = piel_obj * rel * mix(vec3(1.0), clamp(matiz, vec3(0.6), vec3(1.6)), 0.3);
 		// Sin saturar (el usuario lo pidió el 30-9: pieles limpias, no naranjas).
