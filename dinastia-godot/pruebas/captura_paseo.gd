@@ -32,6 +32,7 @@ func _process(_d: float) -> void:
 		_v.call("_aplicar_hora")
 		_v.explorar("pie")
 		_e = _v.get("_explorador")
+		_e.primera_persona = OS.get_environment("FP") != ""
 	var k := (_n - 8) / 8
 	if _n >= 8 and (_n - 8) % 8 == 0 and k < PARADAS.size():
 		var par: Array = PARADAS[k]
