@@ -3076,6 +3076,14 @@ func _pintar_pendientes() -> void:
 func _process(_d: float) -> void:
 	if not _pendientes.is_empty():
 		_pintar_pendientes()
+	## Las partículas del fondo del menú NO van encima de una vista 3D (ciudad,
+	## estadio, partido): salían como «humo» sobre la cabeza del personaje,
+	## donde estaba el cursor (13-10-2026).
+	if _clima != null:
+		var cam := get_viewport().get_camera_3d()
+		var hay_3d := cam != null and cam.is_inside_tree() and cam.is_visible_in_tree()
+		if _clima.visible == hay_3d:
+			_clima.visible = not hay_3d
 
 ## Lo que el edificio del club pinta del mundo: niveles, salas elegidas,
 ## plantilla con dorsales, títulos y presidente.
