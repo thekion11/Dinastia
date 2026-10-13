@@ -125,8 +125,76 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   Fase 4 HECHA (7-10): guiños de estadio + apodo, plantillas fijas por nombre de club,
   banderas, mesa de representantes (`nucleo/mesa_agente.gd`), Carrera de Jugador en
   prueba_modos; nota ≈74. Fase 4 aún NO está en main (PR nuevo si lo pide).
-  Siguiente: fase 5 (originalidad: documental, ciudad que responde, modo foto,
-  dinastías familiares), luego fase 6/cierre.
+  7-10: fase 4 FUSIONADA a main (PR #3); rama reiniciada desde main. EN CURSO fase 5.
+  Fase 5 hecho: ciudad que responde (`visor/ciudad_animo.gd`). Pendiente: documental,
+  modo foto, dinastías familiares.
+  7-10 PEDIDOS: «en la ciudad faltan edificios y cosas 3D que tenemos» → distritos de
+  manzanas (`_distritos` en city_builder: norte con torres, este, ensanche sur); casi
+  todo el kit ya se usaba (solo cono/tractor sueltos). «A la ciudad le falta mejorar
+  las instalaciones y coherencia» → pasada 1: forma propia por instalación (`FORMAS`,
+  `_cuerpo_instalacion`), campus con paseos, paleta única clara.
+  7-10 PEDIDO GRANDE (ciudad): ×4, bote y río, instalaciones, carreteras y metro a
+  futuro, personas, semáforos y luces de colores, casa gigante con seto, «ciudad
+  utilizable» (conducir/caminar/NPC). HECHO: `visor/ciudad_expansion.gd` (2640 m,
+  red vial en DATOS con `camino_entre`, zonas, 20+ instalaciones, puentes, puerto,
+  botes, metro trazado con bocas, 2 líneas de bus que paran, peatones), semáforos
+  con ciclo (`visor/semaforos.gd`) y coches que frenan en rojo y hacen cola
+  (`TraficoCiudad`), farolas/ventanas/guirnaldas de noche, Casa Grande en finca 2x2
+  con seto (el 26-9 se había quitado la casa por error). Río movido a x=-470.
+  Minijuegos: no se perdieron (penales escondido); sala en Mi Vida → penales +
+  tiro libre + trivia del club (nuevos).
+  7-10 NOCHE (usuario dormido, «sigue y termina el megaplan»): HECHO inventario de
+  modelos (0 sin usar), metro funcional (L1 elevada, L2 rayos X), autopista, ciudad
+  interactiva (conducir/pasear, NPC, E para entrar, táctil), minijuegos de ciudad,
+  estatua del ídolo, murales, eólico; FASE 5 CERRADA (documental, ciudad responde,
+  modo foto, dinastías, Tribuna real); 129 titulares EN/PT. Nota ≈77. Fase 6 = 🔒
+  del dueño (builds, keystore, licencias; presentador en pausa). Nada fusionado a
+  main desde el PR #3: lo nuevo está en la rama (PR nuevo si lo pide).
+  OJO banco: si el script tiene error de sintaxis se queda colgado; comprobar
+  que aparece «===== FIN».
+  7-10 PEDIDO: «que la línea de metro funcione, que nuestro personaje la use, usable
+  por dentro; minijuegos 3D con animaciones; ¿qué pasó con los edificios?; ¿metro y
+  carretera respetan la calle?». HECHO: metro usable (`metro_ciudad.gd` +
+  estados calle/anden/tren en `explorador_ciudad.gd`: bocas → andén → subir → ventana
+  (C) → bajar; estaciones subterráneas alicatadas; bajo tierra sin niebla/sol y
+  cámara dentro del vestíbulo). Captura: `pruebas/captura_metro_usable.tscn`.
+  MINIJUEGOS 3D (`visor/mini3d.gd` + `minijuegos_ciudad.gd`, `minijuego_penales.gd`,
+  `minijuego_tiro_libre.gd`): autógrafos, pesca, karting (3 rivales), penales y tiro
+  libre, con personas animadas. Deportistas: `Mini3D._deportista` (NO revestir un
+  PeatonQ: las prendas aparte se suman). Captura: `pruebas/captura_minijuegos_3d.tscn`.
+  Edificios: patios verdes en el interior de manzana (`_patio_de_manzana`). Revisión
+  aérea: L1 sobre el bulevar x=660, L2 bajo z=-660, rampas en el eje de la avenida
+  (ensanchadas a 16 m). Pendiente de caza: aviso «material is null» al construir
+  la ciudad (ya existía antes).
+  7-10 PEDIDO (ciudad 2.2, luego volver al MEGAPLAN): revisar el aviso técnico;
+  casas de distintos colores; decoraciones; instalaciones POR DENTRO con NPC
+  trabajando; lo que tiene una ciudad real (alcantarillado, detalles); metro con
+  decoración y nombre por estación; nombres de calles y de parques; puente más
+  bonito; vehículos más realistas y PROPORCIONADOS; repasar toda la ciudad.
+  HECHO (7-10): aviso «material is null» (estatua del ídolo con prendas sueltas +
+  fugas de nodos); casas de colores con puerta/ventanas/chimenea/buzón y kit teñido
+  (`CityBuilder.tenir`); mobiliario urbano (alcantarillas, sumideros, papeleras,
+  bancos, hidrantes, reciclaje, bolardos, STOP/ceda, kioscos, bicis, terrazas,
+  vallas); 50 calles con nombre (`nombre_calle_en`, placas, HUD); parques con
+  nombre y juegos; estaciones con tema (`MetroCiudad.TEMAS`) y tótems; INTERIORES
+  (`ui/componentes/interior_instalacion.gd`, 15 salas, E en la puerta o «Ver por
+  dentro»); puente de piedra con arcos; vehículos a medidas reales
+  (`CityBuilder.MEDIDAS_REALES`) y autobús procedural (`CityBuilder.autobus`);
+  rótulos de comercios. Capturas: captura_interiores, captura_paseo,
+  captura_vehiculos. No se pudo descargar modelos (red bloqueada).
+  7-10 (usuario: «Sigue») vuelta al MEGAPLAN: NARRACIÓN TRADUCIDA a EN y PT
+  (`herramientas/extraer_narracion.py` → `datos/narracion_plantillas.json`;
+  traducciones a mano en `datos/narracion_traducida.json`; `montar_narracion.py`
+  → `datos/narracion.json`, que carga `Idiomas._cargar_narracion`). Para añadir
+  frases nuevas: volver a extraer, traducir lo que falte, montar. Se quitaron dos
+  motivos de retiro con religión/política. Nota ≈78. Lo que queda del MEGAPLAN es
+  🔒 del dueño (hardware, builds, keystore, licencias).
+  7-10 PEDIDO: «las leyes deben ser por cada país según el equipo» y «se puede
+  incumplir la ley a cambio de multas (más dinámico) y optimizar». HECHO:
+  `nucleo/leyes_pais.gd` (24 países: cupos plantel/cancha, criterio extranjero/
+  extracomunitario/no formado, min nacionales GER, fichajes no UE ITA, juveniles
+  CHI/BOL), `Club.ley_politica` cumplir/incumplir (Federación), multas crecientes
+  y -3 pts desde la 3.ª alineación indebida (`Federacion.revisar_leyes_pais`).
   (Carrera de Jugador v2: fuera de juego, cambios, eventos, selección, paso a DT). El
   usuario pidió el documento del MEGAPLAN (entregado el 5-10).
   Prueba larga nocturna: `godot --headless --path . res://pruebas/prueba_larga.tscn`.
@@ -158,5 +226,117 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
      `herramientas/caras_variadas.py`) para ver que el nivel se repite.
 - 7-10: todo lo hecho hasta la fase 3 (parte) se FUSIONÓ a `main` (pull request #1,
   pedido del usuario). Lo nuevo sigue en la rama asignada; para pasarlo a main, nuevo PR.
-- Esperando al usuario: túnel, informe nuevo.
+- 7-10: el usuario YA TIENE un informe nuevo («no es tan nuevo»): se usa DESPUÉS de
+  terminar el MEGAPLAN. Ahora: seguir con lo que no depende de él (B6 LED/formas
+  de estadio, narración en fr/it/de/ca/pl/tr, cupos PAR/VEN, nacimiento vascos).
+- 7-10 HECHO: B6 (7 paletas LED + colores propios de fondo/letra; formas «dos» y
+  «principal») y NARRACIÓN en los 9 idiomas (fr/it/de/ca/pl/tr en
+  `datos/narracion_traducida_mas.json`, se monta con `montar_narracion.py`).
+- 7-10: MEGAPLAN CERRADO (todo lo que no es 🔒). SIGUIENTE: el INFORME NUEVO del
+  usuario (pedírselo) y, si lo indica, el túnel.
+- 7-10 HECHO: TÚNEL DE VERDAD (`visor/tunel_vestuario.gd`: hueco en la tribuna +Z,
+  pasillo con colisión, pórtico, vestuario detrás) y RECORRER A PIE
+  (`visor/explorador_estadio.gd`, botón en el cajón de VistaEstadio).
+  Captura: `pruebas/captura_tunel_recorrido.tscn`.
+- **7-10 PEDIDO GRANDE: «ESTADIO INTERACTIVO 2.0»** (palabras del usuario): el estadio
+  se recorre JUNTO A LA CIUDAD (entrar y salir del estadio desde la ciudad); todos
+  los lugares creados en el estadio deben estar FÍSICAMENTE dentro, además de todo
+  lo que tiene un estadio: PISOS NEGATIVOS, OFICINA DEL DT…; si sancionan al DT y
+  solo puede ver el partido, verlo desde la grada: recorrer con el personaje y
+  SENTARSE EN LAS TRIBUNAS; el PERSONAL del club con presencia física, DIÁLOGOS en
+  persona, interacción y RUTINAS; todas las habitaciones PERSONALIZABLES (colores,
+  decoración, poner en las paredes las FOTOS sacadas con el modo foto, oficina con
+  objetos propios); NOMBRES de los jugadores correspondientes (taquillas).
+  Plan por fases en `dinastia-godot/ESTADIO_INTERACTIVO_2.md`.
+  8-10 AÑADIDO: «cada uno [la gente del club] debe tener su LUGAR DE TRABAJO
+  dentro del estadio» y «a futuro deben CONECTARSE las instalaciones del club con
+  el estadio, podría ser SUBTERRÁNEO» (galería desde los sótanos).
+- 8-10 HECHO 2.0 fase 6: GALERÍA SUBTERRÁNEA (`visor/galeria_club.gd`): planta −2 →
+  pasillo con cinta rodante bajo la avenida → escalera mecánica y caseta junto al
+  complejo; solo en la ciudad. Captura `pruebas/captura_galeria.tscn`. Fase 7 (pulido) HECHA: 2.0 CERRADO.
+  SIGUIENTE: pedir al usuario el INFORME NUEVO.
+- 8-10 PEDIDO: «el estadio al entrar, al jugar y fuera del 3D debe ser EL MISMO; solo
+  cambia cuando el usuario lo cambia, y eso TARDA tiempo de construcción»; «la entrada
+  es poco realista: PORTERO que abra, diálogo y animación»; «¿esos palos blancos y
+  negros son personas?». HECHO: la ciudad construye el estadio con la semilla y el
+  club del partido (comparado nodo a nodo: idéntico salvo la galería);
+  `EstadioPropio.obra` (ajustes = proyecto, `hecho()` = lo construido, semanas por
+  capítulo en `SEMANAS_OBRA`, pintura al momento, andamios «reforma», aviso al
+  terminar); `visor/entrada_club.gd` (puertas correderas, pórtico, marquesina,
+  garita) + portero en `PersonalEstadio` + `RecorridoClub.dialogo_portero`;
+  hinchas de pie (no cápsulas); hormigón y copas ya no salen negros. Capturas:
+  captura_entrada, captura_mismo_estadio.
+- **8-10 PEDIDO: 5 ETAPAS MÁS** («1 ultra pulido, 2 más realismo en las texturas y
+  personajes, 3 optimización mediante código, 4 realismo visual en infraestructura y
+  personajes, 5 mejora físicas, movimientos más naturales, que no se puedan atravesar
+  los objetos, y más físicas»). Plan y estado en `dinastia-godot/ETAPAS_FINALES.md`
+  (con la lista de cosas raras). Hacerlas EN ORDEN, cada una con capturas antes/
+  después, banco y modos en verde, y el documento al día.
+- 8-10 PEDIDO (hecho): partículas del menú de inicio «más bonitas» y el fondo (portada)
+  «cambiando cada 30 segundos por sus variantes» → `FondoParticulas` ("motas"/"bokeh",
+  aditivas, teñidas por `TINTE` de cada portada) y `_rotar_portada` en `ui/inicio.gd`.
+- **8-10 ORDEN VIGENTE (bucle, «no paras hasta que yo te interrumpa»)**:
+  1) terminar el repaso (2.ª pasada de la etapa 1); 2) etapas 2→5 de
+  `ETAPAS_FINALES.md` UNA POR UNA; 3) AUDITORÍA COMPLETA; 4) OPTIMIZACIÓN COMPLETA
+  del código: medir FPS con un perfil de HARDWARE DE GAMA BAJA, trucos de peso y
+  velocidad, y cambiar de lenguaje (C#/GDExtension) si de verdad hace falta;
+  5) volver a empezar el ciclo. Commits pequeños y frecuentes; banco solo (sin
+  otras pruebas a la vez, que se corta).
+- 8/12-10 AVANCE del bucle: etapa 3 (optimización: `visor/optimizar.gd`, cifras en
+  ETAPAS_FINALES.md, motor ligero en Ajustes, `herramientas/banco.sh`), etapa 4
+  (aceras/zócalos/peatones con accesorios) y etapa 5 (colisión con círculos, deslizar,
+  ceder el paso) con una primera pasada. SIGUE: AUDITORÍA COMPLETA → optimización
+  completa (gama baja) → repetir ciclo (pendientes en ETAPAS_FINALES.md).
+- **13-10 PEDIDO**: ETAPA 6 «casas y edificios, uno por uno, cada uno distinto, poder
+  entrar en la mayoría» (plan en ETAPAS_FINALES.md) y AMPLIAR la etapa 1: recorrido y
+  jugabilidad en el estadio, nivel de animaciones, cinemáticas, partidos, VISIÓN EN
+  PRIMERA PERSONA, mejores diálogos con más variedad, NPCs con vida. El usuario
+  entregará el INFORME tras esta pasada por las fases.
+- 13-10 HECHO (pasada 2 de las 6 etapas): entrar CAMINANDO a edificios y casas
+  (`ExploradorCiudad._entrar_en_edificio`, `InteriorInstalacion.en_mundo`), 5
+  arquetipos de casa, `fachada_torre.gdshader`, primera persona (V), diálogos por
+  oficio (`herramientas/dialogos_ciudad.py` genera `nucleo/dialogos_ciudad.gd` y
+  las traducciones; no editar a mano). Detalle y pendientes: ETAPAS_FINALES.md.
+- Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
+- 13-10 PEDIDO: comparar modo partido con FC 26, FC Mobile, DLS, Soccer Manager 2027 y
+  seguir un plan de ruta de ≥2 meses. HECHO: `dinastia-godot/COMPARACION_MODO_PARTIDO.md`
+  y `PLAN_DE_RUTA.md` (9 semanas, detallado: GTA V, qué falta para lanzar, «el bloqueo» =
+  desbloquear modos jugando, opcional). 13-10 pedidos: teléfono medio realista/medio
+  informe (HECHO), diálogos con mejor estética (HECHO: `CuadroDialogo`), menos músculo
+  (HECHO: `PersonajeDT.BASE_ESBELTA`, `adelgazar`), más personalización, expresiones,
+  tutorial, ultra pulido. EN CURSO: semana 1 del plan.
+- 13-10 PEDIDO (hecho): en la ciudad 3D NADA de texto fijo arriba/abajo; controles en
+  ⚙ «Ajustes de la ciudad» (`AjustesCiudad`, opción de ayudas, apagada) y en el
+  TUTORIAL DE LA CIUDAD (1.ª vez); velocidad en un MÓVIL EN LA MANO al correr/conducir/
+  metro (`MovilMano`); el botón E brilla si hay algo cerca. Permiso dado para
+  DESCARGAR contenido externo si hace falta (solo licencias libres). La red del entorno
+  bloquea polyhaven/ambientcg/quaternius (el usuario puede permitirlos en Network access).
+- 13-10 (noche) PEDIDO: «la ropa es horrible»; seguir con la semana 1 y PULIR HASTA LAS 12:00
+  de su hora (UTC−3 = 15:00 UTC), con pasadas sucesivas. Hecho: ver PLAN_DE_RUTA semana 1.
+  Claves: `equipacion_q.gdshader` (escala_holgura, piel_obj, muneca, manga_corta, tatuaje,
+  tela civil), `VestidorQ._alisado` (también hacia dentro), `PersonajeDT.adelgazar`,
+  `AnimQuaternius._relajar_dedos/_brazos_al_cuerpo`, `TraficoCiudad.reciclar_peatones`.
+- 13-10 PEDIDO: «ve qué más se puede pulir» / «sigue». HECHO: cristal de torres lejanas,
+  periódico (letras limpias, TRADUCIDO entero: `PortadaPeriodico.titular_traducido`),
+  ficha del estadio con el aforo oficial, ventanas de prensa de una en una, tabla de
+  competición a todo lo ancho con DG, respuestas de prensa coherentes, peatones (sin
+  zapatillas marrón, sin cejas dobles en mujeres, `PeloQ.color_cejas`, gafas a la altura,
+  escote sin babero). Prueba de caras de peatones: `CARA=i captura_peatones_fila.tscn`.
+- 13-10 (tarde) FÍSICA DEL PARTIDO 3D (pedido: «las físicas siguen siendo de lo peor»):
+  `pruebas/sonda_fisica_partido.tscn` mide solapes, velocidades, giros y balón
+  (FOTOGRAMAS=n; ~0,5 s por fotograma en xvfb, 600 = 20 s de juego). HECHO: esprint en
+  plena jugada (~7 m/s), balón con roce al rodar y pases rasos que frenan, tope de
+  velocidad del balón (18 raso / 24 aire / 30 gol), cuerpos que no se atraviesan
+  (`MatchPlayback._resolver_choques`). Pendiente: aceleraciones/giros bruscos, disputas
+  por el balón, portero (semana 3).
+- 13-10 PEDIDO: acercar el partido a FC 26 con un VÍDEO de una partida que el usuario
+  dará: está en su Drive (carpeta 1N8kbMPGpPm4Z5t2GudinzJsufdolBwIw, MP4 de 67 MB; el
+  conector de Drive no sirve para bajarlo: base64 no cabe). El usuario está cambiando
+  «Network access» del entorno «Default» a Personalizado con `drive.usercontent.google.com`
+  y `drive.google.com`; el vídeo debe estar compartido «cualquiera con el enlace». Con
+  él: bajar, sacar fotogramas (OpenCV ya está) y comparar números con la sonda.
+  Alternativas: clip corto en la rama o capturas en el chat.
+- 13-10: plataforma Aura (tryaura.dev): solo Unreal/Unity, sin Godot → NO se usa. No hace
+  falta conector ni nivel especial de modelo; lo que falta es ver el vídeo.
+

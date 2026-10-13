@@ -30,7 +30,7 @@ func _process(_d: float) -> void:
 		mun.cesiones.clausula_pagada.emit(mio.plantilla[0], mio, otro, 12500000)
 		mun.mercado.oferta_recibida.emit(mio.plantilla[1], otro, 8400000)
 		mun.logros.titulo_celebrado.emit("Copa de Chile")
-	if _n == ESPERA + 12:
+	if _n == ESPERA + 5:
 		_guardar("res://pruebas/capturas/pantalla_aviso1.png")
 	if _n == ESPERA + 250:
 		_guardar("res://pruebas/capturas/pantalla_aviso2.png")

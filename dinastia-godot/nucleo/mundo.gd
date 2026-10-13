@@ -101,6 +101,8 @@ signal libre_estrella(j: Jugador)
 var hinchada: Hinchada
 ## `vGente()`: las diez personas del club. Ver `nucleo/gente.gd`.
 var gente: Gente
+## Las salas del edificio del club decoradas a tu gusto (estadio 2.0).
+var interiores := InterioresClub.new()
 ## `vClubIn()`: vestuario, sala de prensa, palco y lo digital.
 var club_dentro: ClubDentro
 ## El presidente del club, los accionistas y la junta trimestral (C5).
@@ -463,6 +465,8 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	if Meta.heredar_proximo:
 		Meta.heredar_proximo = false
 		Meta.aplicar_herencia(self)
+	LeyesPais.clubes_mundo = clubes
+	LeyesPais.anio_actual = anio
 
 ## Saca la lista de ligas de DATA_P1/DATA_P2 (Chile, las dos divisiones) y de
 ## PAISES_LIGAS (el resto del mundo), que es donde las tiene el HTML.
@@ -1052,6 +1056,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	if mio_obras != null:
 		for k in obras.avanzar_semana(mio_obras):
 			obra_lista.emit(k)
+		## La reforma del diseñador del estadio también es obra.
+		if estadio != null and estadio.avanzar_semana():
+			obra_lista.emit("reforma_estadio")
 
 	## El ojeador trae informes: descubre el techo real de un chico de otro club.
 	## Es lo unico que hace que fichar a ciegas y fichar informado se distingan.
@@ -1168,6 +1175,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		politica.semana(mi_club(), anio, semana, prensa)
 	if contratos != null and mi_club() != null:
 		contratos.semana(mi_club(), anio, semana)
+	LeyesPais.anio_actual = anio
+	LeyesPais.clubes_mundo = clubes
+	LeyesPais.tick += 1
 	if maestria != null and mi_club() != null:
 		maestria.semana(mi_club(), prensa, academia, semana, _resultado_semana)
 	if vida != null and mi_club() != null and roles != null:
@@ -1859,9 +1869,16 @@ func _subir_de_cantera(c: Club) -> void:
 				tiene += 1
 		for k in maxi(0, int(entrada[1]) - tiene):
 			faltan.append(demarcacion)
+	## Una línea VACÍA se repone aunque el plantel esté lleno (la prueba larga
+	## encontró un club sin delanteros con 25 fichas); el resto, hasta 24.
+	var lineas := {}
+	for j0 in c.plantilla:
+		lineas[j0.pos] = true
 	for demarcacion in faltan:
-		if c.plantilla.size() >= 24:
-			break
+		var vacia := not lineas.has(Datos.grupo(demarcacion))
+		if c.plantilla.size() >= 24 and not vacia:
+			continue
+		lineas[Datos.grupo(demarcacion)] = true
 		var edad := Azar.ent(17, 20)
 		## El canterano entra flojo y con techo: media baja, potencial alto. Es
 		## lo que hace que la cantera sea una apuesta y no una fuente de cracks.
@@ -2058,6 +2075,10 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 		## y no pasaba absolutamente nada en toda la temporada.
 		if federacion != null and mio != null:
 			federacion.revisar_cupo_juvenil(mio, mio.once())
+			## Las reglas de la liga de tu país: si decidiste incumplirlas, multa.
+			federacion.revisar_leyes_pais(self, mio)
+			## La sanción al DT se cumple partido a partido.
+			federacion.cumplir_sancion_dt()
 		## EL FICHAJE IMPUESTO -por la ocupación hostil del dueño o el trato
 		## comercial del patrocinador-, mismo patrón que el cupo juvenil de
 		## arriba: `Prensa.revisar_impuesto()` ya existía escrito y nadie lo
@@ -2221,6 +2242,10 @@ func perfil_estadio_de(c: Club) -> Dictionary:
 		if obras != null:
 			p["en_obra"] = obras.obras.keys()
 			p["inst"] = obras.niveles.duplicate()
+		## La reforma del diseñador en obras: andamios hasta que termine.
+		if estadio.en_obras():
+			var eo: Array = p.get("en_obra", [])
+			p["en_obra"] = eo + ["reforma"]
 		return p
 	return c.perfil_estadio() if c != null else {}
 

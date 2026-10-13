@@ -29,6 +29,13 @@ extends Control
 
 signal terminado(completo: bool)
 
+## Negrita de verdad (la sintética del texto enriquecido montaba letras).
+static func _negrita() -> Font:
+	var f := FontVariation.new()
+	f.base_font = ThemeDB.fallback_font
+	f.variation_embolden = 0.7
+	return f
+
 const AJUSTES := "user://ajustes.cfg"
 const SECCION := "tutorial"
 
@@ -491,6 +498,7 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	_lbl_prologo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_lbl_prologo.add_theme_font_size_override("normal_font_size", 20)
 	_lbl_prologo.add_theme_font_size_override("bold_font_size", 20)
+	_lbl_prologo.add_theme_font_override("bold_font", _negrita())
 	_lbl_prologo.add_theme_font_size_override("italics_font_size", 20)
 	_lbl_prologo.add_theme_color_override("default_color", COL_TEXTO)
 	v.add_child(_lbl_prologo)
@@ -509,6 +517,8 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	_btn_prologo.custom_minimum_size = Vector2(150, 40)
 	_btn_prologo.add_theme_font_size_override("font_size", 16)
 	_btn_prologo.pressed.connect(pulsar_prologo)
+	CuadroDialogo.respuesta(_btn_prologo)
+	_btn_prologo.add_theme_font_size_override("font_size", 16)
 	fila.add_child(_btn_prologo)
 	## Un clic en cualquier parte acaba de escribir la escena.
 	_prologo.gui_input.connect(func(ev: InputEvent) -> void:
@@ -616,6 +626,7 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	_lbl_texto.add_theme_font_size_override("bold_font_size", 15)
 	_lbl_texto.add_theme_font_size_override("italics_font_size", 15)
 	_lbl_texto.add_theme_color_override("default_color", COL_TEXTO)
+	_lbl_texto.add_theme_font_override("bold_font", _negrita())
 	_lbl_texto.custom_minimum_size = Vector2(ancho - 150.0, 0)
 	_lbl_texto.mouse_filter = Control.MOUSE_FILTER_STOP
 	_lbl_texto.gui_input.connect(func(ev: InputEvent) -> void:
@@ -669,6 +680,9 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	_btn_sig.custom_minimum_size = Vector2(110, 0)
 	_btn_sig.pressed.connect(pulsar_siguiente)
 	botones.add_child(_btn_sig)
+	## Botones con el estilo de los diálogos (13-10-2026).
+	for b: Button in [_btn_mostrar, _btn_extra, _btn_atras, _btn_sig]:
+		CuadroDialogo.respuesta(b)
 
 ## EL ASPECTO DEL MENTOR, PERSONALIZABLE. Sale de su semilla (siempre el
 ## mismo para el mismo club) y encima va lo que el jugador haya elegido con ✎,

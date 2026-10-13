@@ -42,14 +42,14 @@ Estados:
 | Infraestructura del estadio, cinemáticas, ciudad 3D, optimización, creador estilo Los Sims, ropa, mascotas 3D, mini animaciones, tipos de simulación, barra de ajustes desplegable, variantes de estadio, entrevistas, eventos | ✅ | Bloques B1-B16 del ROADMAP |
 | Música libre en español | ⛔ | El usuario la descartó el 26-9 |
 | Pantalla gigante con tabla, goleadores y resultado | ✅ | |
-| Athletic Club: solo cantera local y apellidos por nacionalidad | ✅ | 🟡 falta el dato de **región de origen** del jugador |
+| Athletic Club: solo cantera local y apellidos por nacionalidad | ✅ | Región de origen (`Jugador.region`, Euskal Herria) hecha en C3 y probada. Solo falta el lugar de nacimiento REAL de los vascos reales de otros clubes (dato real nuevo para `pack_real.json`). |
 | Banquillo mejorado, historia real y guiños (la Ruca, Superclásico, Clásico universitario) | ✅ | Con historia para todos los clubes |
 | Escudos coherentes en la rueda de prensa; cambio de escudo como noticia | ✅ | |
 | El clima de la ciudad es el del estadio e influye en jugadores y prensa | ✅ | |
 | Presidentes de competiciones, accionistas y reuniones | ✅ | |
 | Medios nuevos y minijuegos | ✅ | |
 | Hablar con jugadores, exámenes, presentaciones y lesiones absurdas | ✅ | |
-| Contratos según la ley de cada país (2026) | 🟡 | México y Egipto, por revisar |
+| Contratos según la ley de cada país (2026) | ✅ | México (reforma de 2026: de 48 a 40 h entre 2027 y 2030) y Egipto (Ley 14/2025) verificados el 7-10-2026 |
 | Instalaciones con más niveles, trabajadores y eventos; cantera; otras ramas del club; días nacionales; globo terráqueo | ✅ | |
 | Política y religión | 🟡 | A propósito: política ficticia y solo festividades del país |
 | Ficha del jugador «simulado» | ✅ | ⛔ vida sentimental de personas reales (regla fija) |
@@ -58,7 +58,7 @@ Estados:
 | 50+ diseños de camiseta, 5 colores, 30 botines, 20 de 3 colores y 20 de 2 colores, sponsors, diseñador a pantalla completa | ✅ | 130 diseños |
 | 15 categorías de habilidades × 30 niveles que influyen en los resultados | ✅ | |
 | Tiros, pases, barridas, atajadas, regates, expresiones, lesiones, árbitro, POV del árbitro, VAR por dentro | ✅ | |
-| Recrear los estadios de TODOS los clubes | 🟡 | Hay forma y aforo del real; falta la tabla de guiños por club (E9) |
+| Recrear los estadios de TODOS los clubes | ✅ | Forma, aforo, guiño y apodo de los 176 estadios reales (fase 4) |
 | Más idiomas | ✅ | 9. El usuario: «con esos idiomas estamos bien» |
 | Tipografías y diseño; 40 % más rápido | ✅ | Hoy el refresco es 14 veces más rápido |
 | Más escudos | ✅ | |
@@ -95,7 +95,7 @@ Estados:
   - Los **fondos buitre** están en `FondoInversion`.
 - ⛔ **Charla con IA conversacional en línea** (coste por uso y conexión): la charla escrita deduce el tono sin IA.
 - ⛔ **Estadísticas y dorsales de FC 26**: los datos tienen licencia.
-- 🟡 **«Jugar 10 temporadas × 3 como humano»**: hoy hay una simulación de 3 temporadas con 0 errores. Falta la prueba automática de **10 temporadas con 3 semillas** (ver fase 1).
+- ✅ **«Jugar 10 temporadas × 3 como humano»**: `pruebas/prueba_larga.tscn` (10 temporadas × 3 semillas, fase 1).
 - **Las 1.050 ideas (300 + 750)**: el ROADMAP las cruzó por bloques. Según `dinastia-pendientes` v3.1 están hechas salvo las marcadas ⛔ (monetización agresiva, datos con licencia, IA en línea).
 
 ## 3. Lo que falta de verdad
@@ -111,26 +111,26 @@ Estados:
 
 ### Se puede hacer aquí ⬜
 
-1. **Carrera de Jugador v2:**
+1. ✅ **Carrera de Jugador v2** (fase 3):
    - fuera de juego;
    - cambios (sales o entras del banco);
    - más eventos únicos;
    - convocatoria y partidos con la selección;
    - pasar de jugador a DT al retirarse, en la misma partida (ver originalidad).
-2. **Estadios de todos los clubes (E9):**
+2. ✅ **Estadios de todos los clubes (E9)** (fase 4, guiños y apodos):
    - una tabla de guiños por club (techo, color, detalle icónico, apodo del estadio);
    - hoy la forma y el aforo ya siguen al real.
-3. **Modos a medias (E16):**
+3. ✅ **Modos a medias (E16)** (fase 4, prueba de los 12 modos):
    - revisar Leyenda y Selección jugable en el menú de inicio;
    - cerrar lo que no llegue al final de una temporada.
-4. **Plantillas fijas** para los 128 clubes que no están en el pack.
-5. **Mini-juego de representantes**: la mecánica de agentes existe; falta la negociación como juego.
-6. **Banderas en el estudio** del sorteo y la rueda de prensa (hoy no hay ninguna).
-7. **Región de origen del jugador**: para la regla del Athletic Club, que hoy usa el país.
-8. **Leyes laborales de México y Egipto**: verificar el dato.
-9. **Túnel navegable**: espera al modo caminar por el estadio.
-10. **Traducir la narración** (noticias, prensa, vestuario), al menos al inglés.
-11. **Paleta de vallas LED y formas nuevas** de estadio (B6).
+4. ✅ **Plantillas fijas** para los 128 clubes que no están en el pack (fase 4).
+5. ✅ **Mini-juego de representantes** (fase 4, mesa de negociación).
+6. ✅ **Banderas en el estudio** del sorteo y la rueda de prensa (fase 4).
+7. ✅ **Región de origen del jugador**: ya existía (C3). 7-10-2026: los reales nacidos en Euskal Herria fuera del Athletic (Real Sociedad, Osasuna, Zubimendi en el Arsenal) llevan «EUS» en el pack, y ningún real hereda una región sorteada.
+8. ✅ **Leyes laborales de México y Egipto**: verificadas el 7-10-2026 (México baja 2 h al año desde 2027; Egipto, Ley 14/2025, 48 h).
+9. ⏸ **Túnel navegable**: espera tu indicación (modo caminar por el estadio).
+10. ✅ **Traducir la narración** (noticias, prensa, vestuario): 7-10-2026 en inglés y portugués, y el mismo día en francés, italiano, alemán, catalán, polaco y turco (1.077 frases y plantillas por idioma, `datos/narracion_traducida_mas.json`).
+11. ✅ **Paleta de vallas LED y formas nuevas** de estadio (B6), 7-10-2026: 7 paletas (patrocinadores, club, neón, negro y oro, cartel pintado, multicolor, a tu gusto) + color de fondo y de letra elegibles; formas «Dos tribunas» (fondos abiertos, menos ruido) y «Tribuna de honor» (lateral de banquillos con una bandeja más). Captura: `pruebas/capturas/b6_formas_led.png`.
 
 ## 4. Fallos y roces encontrados hoy
 
@@ -304,17 +304,137 @@ Se queda **a un punto de la meta de 75**. Lo que más falta en pulido es traduci
 - Mini-juego de representantes.
 - Modos a medias (E16).
 
-**Fase 5 — Originalidad (en paralelo)**
+**Fase 5 — Originalidad** ✅ HECHA el 7-10-2026:
+- **Documental de la temporada** (`ui/componentes/documental_temporada.gd`): al cerrar el año, la temporada contada como una película.
+  - Franjas de cine, zoom lento y narración que se escribe sola.
+  - Capítulos con datos reales: fichajes, goleador, mayor goleada, racha, peor derrota y veredicto.
+  - Se vuelve a ver en Historia → «Documental de la temporada».
+- **La ciudad responde al club** (`visor/ciudad_animo.gd`): según el puesto, la racha y el título o el descenso:
+  - en la euforia, pancartas en las fachadas y banderas en el anillo;
+  - en la crisis, persianas y grafitis genéricos;
+  - el color de la escena también cambia.
+- **Modo foto** (`ui/componentes/modo_foto.gd`) en la ciudad, el estadio y la casa:
+  - 6 filtros: natural, club, blanco y negro, sepia, cine y vintage;
+  - marco con escudo y pie;
+  - las fotos se guardan en la app de Fotos del móvil.
+- **Dinastías familiares**:
+  - el hijo de tu jugador retirado (Carrera de Jugador → DT) llega a la cantera que diriges, con tu apellido y un techo heredado;
+  - en el modo entrenador, tus hijos crecen y a los 16 entran en tu cantera («el hijo del míster»).
+- **La Tribuna como termómetro real:** los hinchas citan goles, minutos y resultados de tu último partido.
+- **Y además, la estatua del ídolo:** en la Plaza Mayor hay una estatua de bronce de la última leyenda del club, o de su capitán.
+
+**La ciudad 2.0 (7-10-2026, pedidos del usuario durante la fase 5):**
+- **Tamaño:** 2.640 m de lado, más de 4 veces la superficie anterior (`visor/ciudad_expansion.gd`).
+- **Red vial en datos:** 1.027 tramos, avenidas cada tres calles y un bulevar alrededor del núcleo. Incluye `camino_entre`, la base para conducir, caminar y mover NPC.
+- **Zonas:** centro de torres, comercio y oficinas, casas con jardín, industria y puerto.
+- **Instalaciones de ciudad:**
+  - ayuntamiento y Plaza Mayor, estación central, mercado, cine;
+  - hospital, comisaría, bomberos, escuela, instituto, universidad;
+  - centro comercial, gasolineras, cocheras, granja, desguace;
+  - Villa moderna y parques con lago.
+- **El río:** 33 tramos de puente, puerto con veleros y botes que pasan bajo los puentes. Se movió a x = −470 para no pisar el anillo exterior.
+- **Semáforos con ciclo real** en 326 cruces (`visor/semaforos.gd`). Los coches frenan en rojo y hacen cola.
+- **Transporte:**
+  - dos líneas de bus que paran en 28 marquesinas;
+  - **metro**: la línea 1 elevada con viaducto, estaciones y trenes que paran y dan la vuelta; la línea 2 subterránea, visible en rayos X; paneles de próximo tren (`visor/metro_ciudad.gd`);
+  - **autopista** elevada alrededor de la ciudad, con enlaces y carreteras al horizonte (`visor/autopista.gd`).
+- **La Casa Grande** vuelve, en su finca de 2×2 manzanas rodeada de seto. El 26-9 se había quitado la casa por error.
+- **Ciudad interactiva** (`visor/explorador_ciudad.gd`):
+  - conducir y pasear, con choques contra manzanas y río y subida a los puentes;
+  - hablar con los peatones (te comentan cómo va el club);
+  - entrar a los lugares;
+  - teclado, mando y controles táctiles.
+- **Minijuegos:**
+  - en la ciudad: autógrafos en la Plaza Mayor, pesca en el puerto, contrarreloj en el karting, trivia en la universidad y el cine, penales en los parques;
+  - sala en Mi Vida: penales, tiro libre (nuevo) y trivia del club (nueva).
+- **Identidad y noche:** murales del club, parque eólico con aspas girando, depósito de agua, farolas con charco de luz, ventanas encendidas y guirnaldas de colores.
+- **Inventario automático:** **todos** los modelos de `assets/ciudad` aparecen en la ciudad, 0 sin usar (`pruebas/prueba_ciudad_modelos.tscn`).
+- **Instalaciones del club:** cada una con su arquitectura (naves con bóveda, piscina de cristal, torre, clínica, templo, escuela en L, pabellón, medios, tienda) y un campus con paseos.
+- **Narración:** 129 titulares de noticias traducidos al inglés y al portugués (punto 10, primera parte).
+- **Límite honesto:**
+  - la ciudad tarda unos 3-5 s en construirse en este entorno sin tarjeta gráfica (unos 13.600 nodos); falta medirla en un PC real;
+  - la línea 2 del metro se ve solo en rayos X;
+  - los cuerpos de las noticias siguen en castellano.
+
+**Caza de fallos de cierre (7-10-2026):**
+- **Prueba larga:** en 10 temporadas aparecían clubes con 6-7 porteros o sin delanteros. Estaba roto desde la fase 4.
+  - Tope de 3 porteros en la camada, los hermanos y los hijos de leyenda.
+  - La IA ficha con sentido de puesto: no compra un cuarto portero ni deja al vendedor sin mínimos.
+  - La cantera repone una línea vacía aunque el plantel esté lleno.
+  - Vuelve a 0 fallos con 3 semillas.
+- **Metro:** el tren no paraba en las estaciones (las daba por pasadas a menos de 0,5 m). Lo cazó el banco.
+- **Recorrido de pantallas:** 106 pantallas y 492 botones sin errores. Banco, prueba de modos y prueba larga en 0 fallos.
+
+**Nota recalculada tras las fases 1-5** (estimación propia, mismas categorías y pesos):
+
+| Categoría | Peso | Tras la fase 4 | Ahora | Por qué |
+|---|---|---|---|---|
+| Arquitectura | 15 % | 73 | 75 | Red vial en datos, inventario automático y más pruebas. El núcleo sigue siendo el portado del HTML. |
+| Jugabilidad | 20 % | 78 | 81 | Ciudad recorrible, 8 minijuegos, mesa de agentes y dinastías. |
+| Visual / 3D | 15 % | 70 | 76 | Ciudad 2.0 y 2.2: metro usable, minijuegos e interiores en 3D, puentes de piedra, mobiliario urbano y vehículos a escala. |
+| Rendimiento | 10 % | 70 | 69 | La ciudad pesa más y sigue sin medirse en un PC real. |
+| Contenido | 20 % | 83 | 88 | Ciudad con nombres, comercios e interiores; minijuegos, documental y dinastías. |
+| Pulido | 10 % | 64 | 72 | Narración entera en inglés y portugués; aviso técnico y fugas arreglados. Falta el hardware real. |
+| Originalidad | 10 % | 71 | 79 | Documental, ciudad que responde, modo foto, estatua del ídolo, Tribuna real y una vida entera en una partida. |
+| **Total** | | **≈74** | **≈78** | |
+
+Cuenta: 11,25 + 16,2 + 11,4 + 6,9 + 17,6 + 7,2 + 7,9 = **78,45**. Se pasa la meta de 75. La narración ya está traducida; para 80+ hacen falta las 🔒 (medir en un PC y un Android reales, builds y licencias).
+
+**Ciudad 2.1 (7-10-2026, tarde)**
+- Metro usable: entrar por la boca, esperar en el andén, subir, viajar dentro del vagón (asientos, barras, puertas que se abren, rótulo LED), mirar por la ventana y bajar en otra estación. Estaciones subterráneas con su vestíbulo.
+- Minijuegos en 3D con animaciones: autógrafos, pesca, karting contra tres rivales, penales y tiro libre con barrera.
+- Patios verdes dentro de las manzanas. Revisión aérea: el metro y la autopista siguen las avenidas.
+
+**Ciudad 2.2 (7-10-2026, noche)**
+- Aviso técnico al reconstruir la ciudad arreglado (y fugas de nodos).
+- Casas de colores con fachada detallada; edificios del kit teñidos; comercios con rótulo (farmacia con cruz verde).
+- Mobiliario urbano completo: alcantarillas, sumideros, papeleras, bancos, hidrantes, reciclaje, bolardos, señales, kioscos, aparcabicis, terrazas y vallas.
+- 50 calles con nombre (placas y HUD), parques con nombre, fuente y juegos, estaciones de metro con tema propio.
+- Instalaciones por dentro: 15 salas con gente trabajando.
+- Puentes de piedra con arcos; vehículos a medidas reales y autobús de 12 m.
+
+**Leyes por país (7-10-2026, pedido: «las leyes deben ser por cada país en base al equipo»; «se puede incumplir la ley a cambio de multas»)** ✅
+- `nucleo/leyes_pais.gd`: cada club juega con las reglas de SU liga, verificadas en la prensa y normas de 2026:
+  - cupo en plantel y en cancha, y qué cuenta como «de fuera»: extranjero (la mayoría), extracomunitario (España 3, Francia 4) o no formado en el país (Liga MX 9/7, Premier 17 de 25);
+  - Alemania: 12 nacionales; Italia: 2 fichajes extracomunitarios por temporada;
+  - juveniles obligatorios: Chile (sub-21) y Bolivia (sub-20 y sub-23).
+  - Paraguay (4 en cancha desde 2024) y Venezuela (6 por equipo en 2026) salen de prensa, no del reglamento: siguen marcados «por verificar».
+- Se aplica a tu club y a la IA, en el mercado y en el once. El tope que vote la asamblea se suma si es más estricto.
+- **Cumplir o incumplir** (pantalla de Federación):
+  - cumpliendo, el once se corrige solo y te avisa;
+  - incumpliendo, fichas y alineas lo que quieras y pagas: multa semanal creciente por plantel fuera de cupo, y multa creciente por alineación indebida, con 3 puntos menos desde la tercera;
+  - cada infracción enfada al tribunal y a la directiva.
+- Optimizado: el recuento del cupo se recuerda por club y semana, y las ligas sin reglas de cancha salen al instante.
+- Arreglo de paso: las noticias de `Contratos` (cambios de ley) no estaban conectadas a la portada.
+
+**Narración traducida (7-10-2026, punto 10 de «Se puede hacer aquí»)** ✅
+- Inglés y portugués para las noticias (títulos y cuerpos), la prensa (preguntas, respuestas, titulares, tertulianos), el vestuario, las charlas, las redes y la Carrera de Jugador: 1.064 frases y plantillas.
+- Herramientas: `herramientas/extraer_narracion.py` saca las plantillas del código (nombres y cifras pasan a ser huecos) y `herramientas/montar_narracion.py` arma `datos/narracion.json`.
+- El traductor gana dos pasos: los textos de varias oraciones se traducen frase a frase, y el registro de la portada (texto enriquecido) también se traduce.
+- Se cambiaron dos motivos de retiro que atribuían religión o política a un jugador (podía ser real).
+- Los otros seis idiomas siguen con la narración en castellano.
+
+**Fase 5 — plan original**
 - Documental de la temporada.
 - Ciudad que responde al club.
 - Modo foto.
 - Dinastías familiares.
 
-**Fase 6 — Lo que depende de ti 🔒**
-- PC y Android reales, builds y keystore.
-- Licencias.
-- Cara 2D→3D (permiso).
-- Presentador del sorteo.
+**Fase 6 — Lo que depende de ti 🔒** (estado al 7-10-2026):
+- PC y Android reales, builds y keystore: 🔒 del dueño. Ya hay controles táctiles en la ciudad.
+- Licencias: 🔒 del dueño. Todo lo nuevo de la fase 5 está hecho en código, sin modelos de terceros nuevos.
+- Cara 2D→3D: ✅ hecha con el permiso del 29-9 (malla deformable por jugador y motor de caras).
+- Presentador del sorteo: en pausa a pedido del usuario.
+
+**Cierre del MEGAPLAN (7-10-2026):** todo lo que se puede hacer aquí está hecho:
+- fases 1 a 5;
+- ciudad 2.2;
+- narración en los 9 idiomas;
+- leyes por país con multas;
+- B6 (LED y formas de estadio);
+- región real de los vascos.
+
+Quedan las 🔒 del dueño y el túnel (a tu indicación). Lo siguiente es el informe nuevo del usuario.
 
 **Cómo se mide:**
 - Cada fase termina con el banco en 0 fallos, el recorrido de pantallas sin errores y capturas.

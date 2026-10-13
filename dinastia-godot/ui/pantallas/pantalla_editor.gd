@@ -42,8 +42,11 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 	for l: Liga in p.mundo.ligas:
 		if l.pais != mio.pais:
 			continue
-		var fila := HBoxContainer.new()
-		fila.add_theme_constant_override("separation", 6)
+		## Filas que SE PARTEN (etapa 1): en una sola línea eran más anchas que la
+		## columna y sacaban de la pantalla la ficha del jugador.
+		var fila := HFlowContainer.new()
+		fila.add_theme_constant_override("h_separation", 6)
+		fila.add_theme_constant_override("v_separation", 4)
 		p._lista_editor.add_child(fila)
 		var nom := LineEdit.new()
 		nom.text = l.nombre
@@ -71,8 +74,9 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 		pv.item_selected.connect(func(i: int) -> void: ed.fijar_puntos_victoria(liga, 3 if i == 0 else 2))
 		fila.add_child(pv)
 	if p.mundo.copa != null:
-		var fila_c := HBoxContainer.new()
-		fila_c.add_theme_constant_override("separation", 6)
+		var fila_c := HFlowContainer.new()
+		fila_c.add_theme_constant_override("h_separation", 6)
+		fila_c.add_theme_constant_override("v_separation", 4)
 		p._lista_editor.add_child(fila_c)
 		var nc := LineEdit.new()
 		nc.text = p.mundo.copa.nombre

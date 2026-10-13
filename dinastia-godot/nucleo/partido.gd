@@ -46,6 +46,8 @@ const MINUTOS := 90
 const BASE_ATAQUE := 0.048
 const EXPONENTE := 1.6
 const REPARTO := 1.9
+## Cuánto pesa la diferencia de calidad (ver `_probabilidad`).
+const SENSIBILIDAD := 3.2
 ## De cada ataque que se genera, este porcentaje termina dentro. Es el `r<0.30`
 ## del HTML, y es facil de pasar por alto al portar: la formula de arriba NO da
 ## goles, da LLEGADAS. Portandola como si diera goles salian ocho por partido en
@@ -462,8 +464,12 @@ func simular_minuto() -> void:
 		terminado.emit(goles_local, goles_visita)
 
 func _probabilidad(ata: float, def_rival: float) -> float:
-	var reparto: float = max((ata + def_rival) / REPARTO, 0.001)
-	return BASE_ATAQUE * pow(ata / reparto, EXPONENTE)
+	## REALISMO (13-10-2026): con la fórmula vieja un once de media 86 contra
+	## uno de 69 llegaba solo un 17 % más, y los campeones sacaban el 56-64 % de
+	## los puntos (en las ligas de verdad, 70-85 %). Ahora cuenta el cociente
+	## ataque/defensa con más peso; entre iguales, la misma probabilidad de antes.
+	var igual: float = pow(REPARTO / 2.0, EXPONENTE)
+	return BASE_ATAQUE * igual * pow(ata / maxf(def_rival, 0.001), SENSIBILIDAD)
 
 ## Una llegada al area. Se anota como remate siempre, y solo a veces como gol:
 ## el resto se reparte entre atajada, palo y fallo con el mismo `r` -un solo
@@ -775,7 +781,21 @@ func simular() -> Dictionary:
 	while not terminado_ya:
 		simular_minuto()
 	_cerrar_notas()
+	guardar_si_es_mio()
 	return {"local": goles_local, "visita": goles_visita}
+
+## EL ÚLTIMO PARTIDO DE TU CLUB, con su crónica (goles, minutos, autores):
+## para que la Tribuna comente jugadas concretas (fase 5, «termómetro real»).
+static var ultimo_mio: Dictionary = {}
+
+func guardar_si_es_mio() -> void:
+	if local == null or visita == null:
+		return
+	if local.id != ctx_club_id and visita.id != ctx_club_id:
+		return
+	ultimo_mio = {"local": local.nombre, "visita": visita.nombre, "local_id": local.id,
+		"gl": goles_local, "gv": goles_visita, "cronica": cronica.duplicate(true),
+		"anio": ctx_anio, "semana": ctx_semana}
 
 func _to_string() -> String:
 	return "%s %d-%d %s" % [local.nombre, goles_local, goles_visita, visita.nombre]

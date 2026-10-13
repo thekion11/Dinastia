@@ -119,6 +119,25 @@ func _ready() -> void:
 	_probar_guinos_estadio()
 	_probar_plantillas_fijas()
 	_probar_mesa_agente()
+	_probar_ciudad_animo()
+	_probar_ciudad_grande()
+	_probar_minijuegos()
+	_probar_leyes_pais()
+	_probar_incumplir_ley()
+	_probar_b6_formas_led()
+	_probar_region_reales()
+	_probar_tunel_navegable()
+	_probar_edificio_club()
+	_probar_personal_estadio()
+	_probar_sancion_dt()
+	_probar_interiores_club()
+	_probar_galeria_club()
+	_probar_reforma_con_obra()
+	_probar_optimizacion()
+	_probar_dinastias()
+	_probar_documental()
+	_probar_tribuna_real()
+	_probar_narracion_traducida()
 	_cerrar()
 
 func _titulo(t: String) -> void:
@@ -1710,6 +1729,7 @@ func _probar_roles_y_federacion() -> void:
 		"se puede activar personalizar cada tribuna")
 	_comprobar(m.estadio.reformar(mio, {"bandeja_sur_asientoP": "damero"}, m.obras) == "",
 		"se puede reformar solo la tribuna sur")
+	m.estadio.terminar_obra()
 	var p2 := m.perfil_estadio_de(mio)
 	_comprobar(p2.has("bandejas"), "con el interruptor activo, el perfil SI trae bandejas")
 	var bandejas: Dictionary = p2.get("bandejas", {})
@@ -1731,6 +1751,7 @@ func _probar_roles_y_federacion() -> void:
 		"se puede activar mezclar patrones por tercios")
 	_comprobar(m.estadio.reformar(mio, {"tramo_sur_2": "moteado"}, m.obras) == "",
 		"se puede reformar solo el tercio 2 de la tribuna sur")
+	m.estadio.terminar_obra()
 	var p3 := m.perfil_estadio_de(mio)
 	_comprobar(p3.has("tramos"), "con el interruptor activo, el perfil SI trae tramos")
 	var tramos: Dictionary = p3.get("tramos", {})
@@ -4997,6 +5018,296 @@ func _probar_carga_de_ui() -> void:
 		if nodo != null:
 			nodo.free()
 
+## LA NARRACIÓN, AL INGLÉS Y AL PORTUGUÉS (punto 10 del MEGAPLAN): los
+## titulares de las noticias.
+func _probar_narracion_traducida() -> void:
+	_titulo("NARRACIÓN TRADUCIDA: TITULARES DE NOTICIAS")
+	var antes := Idiomas.idioma
+	Idiomas.idioma = "en"
+	Idiomas._cache.clear()
+	_comprobar(Idiomas.t("🗳️ Campaña electoral") == "🗳️ Election campaign", "titular con icono en inglés: %s" % Idiomas.t("🗳️ Campaña electoral"))
+	_comprobar(Idiomas.t("Llega la camada juvenil") == "The youth intake arrives", "titular en inglés")
+	_comprobar(Idiomas.t("Representantes: R. Prueba") == "Agents: R. Prueba", "titular con nombre (patrón)")
+	Idiomas.idioma = "pt"
+	Idiomas._cache.clear()
+	_comprobar(Idiomas.t("Se retira una figura") == "Um craque se aposenta", "titular en portugués")
+	## Los cuerpos (7-10-2026): con nombres y cifras dentro, por patrón.
+	var cuerpo_pt := Idiomas.t("Juan Ríos se lesiona entrenando: 3 semanas de baja.")
+	_comprobar(cuerpo_pt == "Juan Ríos se machuca no treino: 3 semanas fora.", "cuerpo con nombre en portugués: %s" % cuerpo_pt)
+	Idiomas.idioma = "en"
+	Idiomas._cache.clear()
+	var cuerpo_en := Idiomas.t("Juan Ríos se lesiona entrenando: 3 semanas de baja.")
+	_comprobar(cuerpo_en == "Juan Ríos gets injured in training: out for 3 weeks.", "cuerpo con nombre en inglés: %s" % cuerpo_en)
+	var fijo_en := Idiomas.t("El estadio vuelve a abrir con normalidad.")
+	_comprobar(fijo_en == "The stadium reopens as normal.", "cuerpo fijo en inglés")
+	var tv := Idiomas.t("Ana Sol termina su préstamo y se reincorpora a la pretemporada.")
+	_comprobar(tv == "Ana Sol ends his loan and rejoins pre-season.", "otro cuerpo en inglés: %s" % tv)
+	## La prensa y la carrera de jugador (7-10-2026), y frases pegadas.
+	_comprobar(Idiomas.t("Prensa: '¿Le preocupa la falta de gol?'") == "Press: 'Are you worried about the lack of goals?'", "pregunta de prensa en inglés")
+	_comprobar(Idiomas.t("Los chicos empujan fuerte, tendrán su chance").contains("pushing hard"), "respuesta de prensa en inglés")
+	var pegadas := Idiomas.t("Sumamos; el equipo dio la cara. Tardaste en contestar: en la sala se notó.")
+	_comprobar(pegadas.contains("You took a while to answer"), "frases pegadas, oración por oración: %s" % pegadas)
+	var cesion := Idiomas.t("Leo Mar se va cedido una temporada. Juega en Cumbres. Pagan el 50% del sueldo.")
+	_comprobar(cesion.begins_with("Leo Mar leaves on a season-long loan.") and cesion.ends_with("They pay 50% of his wages."), "texto de varias oraciones con patrón entero: %s" % cesion)
+	## Los otros seis idiomas (7-10-2026): la misma narración en fr/it/de/ca/pl/tr.
+	var esperado := {
+		"fr": "Juan Ríos se blesse à l'entraînement : 3 semaines d'absence.",
+		"it": "Juan Ríos si infortuna in allenamento: 3 settimane di stop.",
+		"de": "Juan Ríos verletzt sich im Training: 3 Wochen Pause.",
+		"ca": "Juan Ríos es lesiona entrenant: 3 setmanes de baixa.",
+		"pl": "Juan Ríos doznaje kontuzji na treningu: 3 tyg. przerwy.",
+		"tr": "Juan Ríos antrenmanda sakatlandı: 3 hafta yok.",
+	}
+	for k: String in esperado:
+		Idiomas.idioma = k
+		Idiomas._cache.clear()
+		var c := Idiomas.t("Juan Ríos se lesiona entrenando: 3 semanas de baja.")
+		_comprobar(c == esperado[k], "cuerpo con nombre en %s: %s" % [k, c])
+		_comprobar(Idiomas.t("Se retira una figura") != "Se retira una figura", "titular fijo en %s" % k)
+	Idiomas.idioma = antes
+	Idiomas._cache.clear()
+
+## LA TRIBUNA COMO TERMÓMETRO (fase 5): los hinchas citan jugadas reales.
+func _probar_tribuna_real() -> void:
+	_titulo("TRIBUNA: LOS HINCHAS CITAN JUGADAS REALES (FASE 5)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 909)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var citado := false
+	var intentos := 0
+	while not citado and intentos < 12:
+		m.avanzar_semana()
+		intentos += 1
+		var u: Dictionary = Partido.ultimo_mio
+		if u.is_empty() or m.redes == null:
+			continue
+		var autores: Array = []
+		for e: Dictionary in u["cronica"]:
+			if String(e.get("tipo", "")) == "gol" and String(e.get("club", "")) == m.mi_club_id:
+				autores.append(String(e["autor"]))
+		var posts := m.redes.comentar_ultimo_partido(m)
+		for f: Dictionary in m.redes.publicaciones.slice(0, 6):
+			for a: String in autores:
+				if String(f["texto"]).contains(a):
+					citado = true
+	_comprobar(citado, "un hincha nombra a quien marcó en tu último partido (en %d semanas)" % intentos)
+
+## EL DOCUMENTAL DE LA TEMPORADA (fase 5): cuenta datos reales del año.
+func _probar_documental() -> void:
+	_titulo("DOCUMENTAL DE LA TEMPORADA (FASE 5)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 303)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var sem := 0
+	while m.temporada_en_curso() and sem < 80:
+		m.avanzar_semana()
+		sem += 1
+	var caps := DocumentalTemporada.guion(m)
+	_comprobar(caps.size() >= 6, "%d capítulos en el documental" % caps.size())
+	var mio := m.mi_club()
+	var gol: Jugador = null
+	for j: Jugador in mio.plantilla:
+		if gol == null or j.goles > gol.goles:
+			gol = j
+	var dice_goleador := false
+	var dice_veredicto := false
+	for cap: Dictionary in caps:
+		if String(cap["titulo"]).contains("goleador") and String(cap["texto"]).contains(gol.nombre) and String(cap["texto"]).contains(str(gol.goles)):
+			dice_goleador = true
+		if String(cap["titulo"]).contains("veredicto"):
+			dice_veredicto = true
+	_comprobar(dice_goleador, "el capítulo del goleador nombra al de verdad (%s, %d)" % [gol.nombre, gol.goles])
+	_comprobar(dice_veredicto, "hay veredicto final con el puesto")
+
+## DINASTÍAS FAMILIARES (fase 5): tu hijo llega a la cantera que diriges.
+func _probar_dinastias() -> void:
+	_titulo("DINASTÍAS FAMILIARES (FASE 5)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 77)
+	m.tomar_el_mando(m.ligas[0].clubes[3].id)
+	var mio := m.mi_club()
+	while mio.plantilla.size() > 26:
+		mio.plantilla.pop_back()
+	## 1) Leyenda propia (de la Carrera de Jugador).
+	m.cantera.leyendas.append({"nombre": "Ramiro Valdivia", "club_id": m.ligas[0].clubes[7].id, "pos": "DEL",
+		"nivel": 86, "anio_hijo": m.anio, "usado": false, "propio": true})
+	var copia := Cantera.new(m)
+	copia.desde_dic(m.cantera.a_dic())
+	var guardado_propio := false
+	for L: Dictionary in copia.leyendas:
+		if String(L["nombre"]) == "Ramiro Valdivia" and bool(L.get("propio", false)):
+			guardado_propio = true
+	_comprobar(guardado_propio, "la dinastía propia sobrevive al guardado")
+	m.cantera.call("_hijos_de_leyendas")
+	var hijo: Jugador = null
+	for j: Jugador in mio.plantilla:
+		if j.nombre.ends_with("Valdivia"):
+			hijo = j
+	_comprobar(hijo != null, "el hijo de tu jugador retirado llega a TU cantera (no a otro club)")
+	if hijo != null:
+		_comprobar(hijo.edad <= 17 and hijo.pot > hijo.ovr, "llega joven y con techo (%d años, %d → %d)" % [hijo.edad, hijo.ovr, hijo.pot])
+	## 2) El hijo del entrenador (familia de VidaDT) al cumplir 16.
+	m.vida.perfil = {"pareja": "", "hijos": [{"nombre": "Mateo", "edad": 15}], "mascota": "", "anio0": m.anio - 1}
+	m.cantera.call("_hijos_del_dt")
+	var del_dt := false
+	for j2: Jugador in mio.plantilla:
+		if j2.nombre.begins_with("Mateo "):
+			del_dt = true
+	_comprobar(del_dt, "el hijo del míster entra en la cantera al cumplir 16")
+
+## LOS MINIJUEGOS (7-10-2026): tiros libres y trivia del club.
+func _probar_minijuegos() -> void:
+	_titulo("MINIJUEGOS: TIROS LIBRES Y TRIVIA DEL CLUB")
+	_comprobar(MinijuegoTiroLibre.resultado_potencia(0.2) == "barrera", "potencia floja: barrera")
+	_comprobar(MinijuegoTiroLibre.resultado_potencia(0.95) == "alto", "potencia pasada: por encima")
+	_comprobar(MinijuegoTiroLibre.resultado_potencia(0.62) == "justo", "en el centro: con rosca")
+	var h: Array[int] = [0, 0]
+	_comprobar(MinijuegoTiroLibre.prob_atajada(0, h, "bueno") > MinijuegoTiroLibre.prob_atajada(0, [] as Array[int], "bueno"), "repetir zona: el portero se adelanta")
+	var m := Mundo.new()
+	m.generar(["CHI"], 21)
+	m.tomar_el_mando(m.ligas[0].clubes[2].id)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	var ps := TriviaClub.preguntas(m, rng)
+	_comprobar(ps.size() >= 6, "%d preguntas de trivia con los datos de la partida" % ps.size())
+	var bien := true
+	for pr: Dictionary in ps:
+		var ops: Array = pr["opciones"]
+		if ops.size() < 3 or int(pr["correcta"]) < 0 or int(pr["correcta"]) >= ops.size():
+			bien = false
+	_comprobar(bien, "cada pregunta tiene opciones y la respuesta correcta está entre ellas")
+	var c := m.mi_club()
+	var cap := ""
+	for j: Jugador in c.plantilla:
+		if j.capitan:
+			cap = j.nombre
+	var ok_cap := true
+	for pr2: Dictionary in ps:
+		if String(pr2["q"]).contains("brazalete"):
+			ok_cap = String(pr2["opciones"][int(pr2["correcta"])]) == cap
+	_comprobar(ok_cap, "la respuesta del capitán es el capitán de verdad (%s)" % cap)
+
+## LA CIUDAD GRANDE (7-10-2026): red vial en datos, semáforos, transporte.
+func _probar_ciudad_grande() -> void:
+	_titulo("LA CIUDAD GRANDE: RED VIAL, SEMÁFOROS Y TRANSPORTE")
+	var cb := CityBuilder.new()
+	var e := CiudadExpansion.new(cb)
+	e.armar_red()
+	e.armar_bloques()
+	e.armar_transporte()
+	var lado := float(CiudadExpansion.K) * CiudadExpansion.CELDA * 2.0
+	_comprobar(lado * lado >= 4.0 * 1200.0 * 1200.0, "la ciudad mide %d m de lado: más de 4 veces la superficie de antes" % int(lado))
+	_comprobar(e.tramos.size() >= 900, "%d tramos de calle en la red" % e.tramos.size())
+	var puentes := 0
+	for t: Dictionary in e.tramos:
+		if bool(t["puente"]):
+			puentes += 1
+	_comprobar(puentes >= 15, "%d tramos cruzan el río por puente" % puentes)
+	_comprobar(e.cruces_semaforo.size() >= 40, "%d cruces con semáforo" % e.cruces_semaforo.size())
+	var camino := e.camino_entre(Vector2i(-12, -12), Vector2i(12, 12))
+	_comprobar(camino.size() >= 25, "la red está conectada: de una esquina a la otra en %d cruces" % camino.size())
+	var camino2 := e.camino_entre(Vector2i(-9, 0), Vector2i(9, 0))
+	_comprobar(not camino2.is_empty(), "se cruza de la orilla oeste a la este (%d cruces)" % camino2.size())
+	var en_rio := 0
+	var usos := {}
+	for bl: Dictionary in e.bloques:
+		var r: Rect2 = bl["rect"]
+		usos[bl["uso"]] = true
+		if not (String(bl["uso"]) in ["rio", "puerto"]) and r.position.x < CityBuilder.RIO_X + 45.0 and r.end.x > CityBuilder.RIO_X - 45.0:
+			en_rio += 1
+	_comprobar(en_rio == 0, "ninguna manzana edificada encima del río")
+	for u in ["ayuntamiento", "hospital", "comisaria", "bomberos", "escuela", "universidad", "estacion_central", "centro_comercial", "puerto", "casa_grande", "torres", "casas", "industrial"]:
+		_comprobar(usos.has(u), "la ciudad tiene %s" % u)
+	var est := 0
+	for l: Dictionary in e.lineas_metro:
+		est += (l["estaciones"] as Array).size()
+	_comprobar(e.lineas_metro.size() == 2 and est >= 10, "metro: %d líneas, %d estaciones" % [e.lineas_metro.size(), est])
+	## Las calles tienen nombre: en un cruce, las dos; dentro de una manzana, ninguno.
+	var cruce := e.nombre_calle_en(Vector3(990.0, 0, -990.0))
+	var en_fila := e.nombre_calle_en(Vector3(1045.0, 0, -988.0))
+	var en_col := e.nombre_calle_en(Vector3(1100.0, 0, -940.0))
+	var en_manzana := e.nombre_calle_en(Vector3(1045.0, 0, -935.0))
+	_comprobar(cruce.contains(" con ") and en_fila.begins_with("Avenida") and en_col.begins_with("Calle") and en_manzana == "" and e.nombre_calle_en(Vector3.ZERO) == "",
+		"nombres de calle: «%s» · «%s» · «%s»" % [cruce, en_fila, en_col])
+	var paradas := 0
+	for l: Dictionary in e.lineas_bus:
+		paradas += (l["paradas"] as Array).size()
+	_comprobar(paradas >= 10, "autobuses: %d paradas" % paradas)
+	## El metro: un tren va, para en cada estación y da la vuelta en la cabecera.
+	var est_metro := PackedFloat32Array([220.0, 550.0, 880.0, 1210.0, 1540.0, 1870.0, 2200.0])
+	var tren := MetroCiudad.Tren.new(2420.0, est_metro, 300.0, 1.0)
+	var dentro := true
+	var giro := false
+	for k in 6000:
+		var antes := tren.sentido
+		tren.simular(0.1)
+		if tren.sentido != antes:
+			giro = true
+		if tren.s < -1.0 or tren.s > 2421.0:
+			dentro = false
+	_comprobar(tren.paradas_hechas >= 6, "el tren del metro paró en %d estaciones en 10 minutos" % tren.paradas_hechas)
+	_comprobar(giro and dentro, "el tren da la vuelta en la cabecera sin salirse de la vía")
+	## El modo a pie / al volante: choques y puentes.
+	var obst: Array[Rect2] = [Rect2(100, 100, 50, 50)]
+	_comprobar(not ExploradorCiudad.libre(Vector3(120, 0, 120), 1.0, obst), "no se atraviesa una manzana")
+	_comprobar(ExploradorCiudad.libre(Vector3(200, 0, 200), 1.0, obst), "por la calle se pasa")
+	_comprobar(not ExploradorCiudad.libre(Vector3(CityBuilder.RIO_X, 0, 55.0), 1.0, obst), "no se cae al río fuera de un puente")
+	_comprobar(ExploradorCiudad.libre(Vector3(CityBuilder.RIO_X, 0, 0.0), 1.0, obst), "por el puente sí se cruza")
+	_comprobar(ExploradorCiudad.altura_suelo(CityBuilder.RIO_X, 0.0) > 4.0 and ExploradorCiudad.altura_suelo(CityBuilder.RIO_X + 100.0, 0.0) < 0.5, "sobre el puente se va arriba y fuera de él, a ras de suelo")
+	_comprobar(MinijuegosCiudad.juego_de("ciudad_plaza_mayor") == "autografos" and MinijuegosCiudad.juego_de("ciudad_puerto") == "pesca" and MinijuegosCiudad.juego_de("karting") == "karting", "cada lugar de la ciudad lleva su minijuego")
+	## El circuito 3D del karting: el progreso medido sobre la trazada coincide
+	## con la distancia recorrida, y la trazada está siempre sobre el asfalto.
+	var mk := MinijuegosCiudad.new()
+	var err := 0.0
+	var fuera := 0.0
+	for k in 200:
+		var s_k := mk._largo_pista() * float(k) / 200.0
+		var c: Dictionary = mk._centro_pista(s_k)
+		err = maxf(err, absf(mk._progreso(c["p"]) - s_k))
+		fuera = maxf(fuera, mk._fuera_de_eje(c["p"]))
+	_comprobar(err < 0.05 and fuera < 0.01, "karting 3D: progreso exacto (error %.3f m) y trazada sobre el eje (%.3f m)" % [err, fuera])
+	mk.free()
+	var sem := Semaforos.new()
+	var vistos := {}
+	var cruzados := 0
+	for k in 80:
+		sem.t = float(k) * 0.5
+		vistos["%s%s" % [sem.estado(0), sem.estado(1)]] = true
+		if sem.verde(0) and sem.verde(1):
+			cruzados += 1
+	_comprobar(cruzados == 0, "nunca verde en los dos ejes a la vez")
+	_comprobar(vistos.has("vr") and vistos.has("rv") and vistos.has("ar"), "el ciclo pasa por verde, ámbar y rojo en cada eje")
+	sem.free()
+	cb.free()
+
+## FASE 5: la ciudad responde al club.
+func _probar_ciudad_animo() -> void:
+	_titulo("LA CIUDAD RESPONDE AL CLUB (FASE 5)")
+	_comprobar(CiudadAnimo.evaluar(1, 16, 30, 30, 4, 5, 2, true)["estado"] == "euforia", "campeón → euforia")
+	_comprobar(CiudadAnimo.evaluar(16, 16, 30, 30, -3, 5, 2, true)["estado"] == "crisis", "descendido → crisis")
+	_comprobar(CiudadAnimo.evaluar(8, 16, 15, 30, 0, 5, 2, false)["estado"] == "normal", "mitad de tabla sin racha → normal")
+	_comprobar(CiudadAnimo.evaluar(2, 16, 20, 30, 5, 5, 2, false)["estado"] in ["bien", "euforia"], "segundo con cinco victorias → buen ambiente")
+	_comprobar(CiudadAnimo.evaluar(15, 16, 22, 30, -1, 5, 2, false)["valor"] <= -0.6, "en descenso a falta de un tercio: al menos «mal»")
+	_comprobar(CiudadAnimo.evaluar(1, 16, 0, 30, 0, 0, 2, false)["estado"] == "normal", "antes de la 1.ª jornada: normal")
+	var frentes: Array = []
+	for i in 40:
+		frentes.append(Rect2(float(i) * 12.0 - 240.0, 300.0, 10.0, 10.0))
+	var raiz := Node3D.new()
+	var e := CiudadAnimo.montar(raiz, {"estado": "euforia"}, frentes, Vector3(0, 0, -150), Color.RED, Color.WHITE)
+	var raiz2 := Node3D.new()
+	var c := CiudadAnimo.montar(raiz2, {"estado": "crisis"}, frentes, Vector3(0, 0, -150), Color.RED, Color.WHITE)
+	_comprobar(int(e["pancartas"]) >= 35 and int(e["grafitis"]) == 0, "euforia: pancartas en las fachadas (%d), ningún grafiti" % e["pancartas"])
+	_comprobar(int(c["persianas"]) >= 20 and int(c["grafitis"]) >= 10 and int(c["pancartas"]) == 0, "crisis: persianas (%d) y grafitis (%d), ninguna pancarta" % [c["persianas"], c["grafitis"]])
+	raiz.free()
+	raiz2.free()
+	var m := Mundo.new()
+	m.generar(["CHI"], 55)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	for k in 6:
+		m.avanzar_semana()
+	var a := CiudadAnimo.de(m, m.mi_club())
+	_comprobar(String(a["estado"]) in CiudadAnimo.ESTADOS and String(a["motivo"]) != "", "el ánimo sale del mundo real: %s (%s)" % [a["estado"], a["motivo"]])
+
 ## FASE 4: el mini-juego de representantes (la mesa de regateo).
 func _probar_mesa_agente() -> void:
 	_titulo("MINI-JUEGO DE REPRESENTANTES (FASE 4)")
@@ -5772,17 +6083,20 @@ func _probar_estadio_b6() -> void:
 	_comprobar(e.opciones("fachadaCol").size() == EstadioPropio.PALETA.size() and e.opciones("fachada").size() == 5, "la interfaz ve los catálogos nuevos")
 	_comprobar(e.presupuesto(mio, {"fachada": "ladrillo"}) > 0, "revestir la fachada cuesta")
 	_comprobar(e.presupuesto(mio, {"fachadaCol": "#b01e2d", "techoCol": "#1b1d22"}) == 0, "pintar es gratis")
-	_comprobar(e.reformar(mio, {"fachada": "vidrio"}) == "" and String(e.perfil(mio)["fachada"]) == "vidrio", "la reforma llega al perfil")
+	_comprobar(e.reformar(mio, {"fachada": "vidrio"}) == "" and e.terminar_obra() and String(e.perfil(mio)["fachada"]) == "vidrio", "la reforma llega al perfil")
 	_comprobar(e.reformar(mio, {"fachada": "marmol"}) != "", "una fachada inventada se rechaza")
 	## Colores por tribuna.
 	e.reformar(mio, {"personalizar_bandejas": true, "bandeja_norte_col1": "#e8c21a"})
+	e.terminar_obra()
 	var pf := e.perfil(mio)
 	_comprobar(String(pf["bandejas"]["norte"]["col1"]) == "#e8c21a" and String(pf["bandejas"]["sur"]["col1"]) == "", "cada tribuna lleva sus colores")
 	## Superficie: efecto real.
 	_comprobar(e.factor_lesion() == 1.0 and e.factor_desgaste_cesped() == 1.0, "natural: sin cambios")
 	e.reformar(mio, {"superficie": "artificial"})
+	e.terminar_obra()
 	_comprobar(e.factor_lesion() > 1.0 and e.factor_desgaste_cesped() == 0.0, "artificial: más lesiones, no se estropea")
 	e.reformar(mio, {"superficie": "hibrido"})
+	e.terminar_obra()
 	_comprobar(e.factor_lesion() < 1.0, "híbrido: menos lesiones")
 	m.avanzar_semana()
 	_comprobar(is_equal_approx(Partido.ctx_lesion_local, e.factor_lesion()), "la semana usa la superficie de tu estadio")
@@ -6431,6 +6745,7 @@ func _probar_tanda_c() -> void:
 	var claves_antes: Array = est_p.perfil(mf.mi_club()).keys()
 	mf.mi_club().saldo = maxi(mf.mi_club().saldo, 100000000)
 	var err_an := est_p.reformar(mf.mi_club(), {"personalizar_bandejas": true, "anillo_sur_2": "#b01e2d", "focosCol": "#1f4fa3", "vallaCol": "#1b1d22"})
+	est_p.terminar_obra()
 	var perf_an: Dictionary = est_p.perfil(mf.mi_club())
 	_comprobar(err_an == "" and String(((perf_an["bandejas"] as Dictionary)["sur"] as Dictionary)["niveles"][1]) == "#b01e2d", "el anillo 2 de la tribuna sur tiene su color (%s)" % err_an)
 	_comprobar(String(perf_an.get("focosCol", "")) == "#1f4fa3" and String(perf_an.get("vallaCol", "")) == "#1b1d22", "focos y vallas con color propio")
@@ -6974,10 +7289,18 @@ func _probar_motor_libre() -> void:
 	var gd := int(a["goles"][1]) + int(b["goles"][0])
 	_comprobar(gf > gd, "el equipo mejor gana sin guion (%d-%d en dos partidos)" % [gf, gd])
 	## Y las habilidades del club (el bono de maestrías y árbol) también aquí.
-	var c1 := MotorLibre.new(debil.once(), debil.once(), 1.2, 1.0, 3).simular()
-	var c2 := MotorLibre.new(debil.once(), debil.once(), 1.0, 1.2, 4).simular()
-	var xg_bono := float(c1["xg"][0]) + float(c2["xg"][1])
-	var xg_sin := float(c1["xg"][1]) + float(c2["xg"][0])
+	## Varias semillas: con una sola, el azar de un partido puede más que un
+	## bono del 20 % (pasó al cambiar el once por las reglas de la liga).
+	var xg_bono := 0.0
+	var xg_sin := 0.0
+	## Dos clubes parecidos y DISTINTOS: el motor guarda estado en cada
+	## jugador, y un equipo contra sí mismo comparte los mismos objetos.
+	var debil2: Club = cl[cl.size() - 2]
+	for sem in 6:
+		var c1 := MotorLibre.new(debil.once(), debil2.once(), 1.2, 1.0, 3 + sem * 2).simular()
+		var c2 := MotorLibre.new(debil.once(), debil2.once(), 1.0, 1.2, 4 + sem * 2).simular()
+		xg_bono += float(c1["xg"][0]) + float(c2["xg"][1])
+		xg_sin += float(c1["xg"][1]) + float(c2["xg"][0])
 	_comprobar(xg_bono > xg_sin, "con el bono del club se generan más ocasiones (xG %.1f vs %.1f)" % [xg_bono, xg_sin])
 	## El jugador controlado.
 	var ml := MotorLibre.new(fuerte.once(), debil.once(), 1.0, 1.0, 9)
@@ -7179,3 +7502,522 @@ func _probar_disenos_kit() -> void:
 	var u := DisenosKit.uniforms(DisenosKit.kit_de_club(c2), 10)
 	_comprobar(int(u["familia"]) == 26 and (u["acc_guantes"] as Color).a > 0.5 and int(u["dorsal"]) == 10, "el shader recibe diseño, accesorios y dorsal")
 	_comprobar(DisenosKit.textura_camiseta("tartan", cols, 1, 64) != null, "la miniatura 2D se dibuja")
+
+
+## LAS REGLAS DE CADA PAÍS (7-10-2026): cada club con las de su liga.
+func _jug_ley(id: String, pais: String, pos: String, ovr: int, edad: int = 26) -> Jugador:
+	var j := Jugador.new()
+	j.id = id
+	j.nombre = id
+	j.pais = pais
+	j.pos = pos
+	j.pos_e = {"POR": "POR", "DEF": "DFC", "MED": "MC", "DEL": "DC"}[pos]
+	j.ovr = ovr
+	j.edad = edad
+	return j
+
+func _probar_leyes_pais() -> void:
+	_titulo("LEYES POR PAÍS: CUPOS Y JUVENILES SEGÚN LA LIGA DEL CLUB")
+	## Chile: 6 extranjeros en el plantel, 5 en cancha y un sub-21 en el once.
+	var c := Club.new("chi_test", "Prueba CHI")
+	c.pais = "CHI"
+	var lineas := ["POR", "DEF", "DEF", "DEF", "DEF", "MED", "MED", "MED", "DEL", "DEL", "DEL"]
+	for k in 11:
+		c.plantilla.append(_jug_ley("e%d" % k, "ARG" if k < 7 else "CHI", lineas[k], 80 if k < 7 else 70))
+	for k in 6:
+		c.plantilla.append(_jug_ley("b%d" % k, "CHI", lineas[(k % 10) + 1], 65, 19 if k == 0 else 27))
+	for j: Jugador in c.plantilla:
+		j.club_id = c.id
+	var once := c.once()
+	var de_fuera := 0
+	var sub21 := false
+	for j: Jugador in once:
+		if j.pais != "CHI":
+			de_fuera += 1
+		if j.edad <= 21:
+			sub21 = true
+	_comprobar(once.size() == 11 and de_fuera <= 5 and sub21, "Chile: once con %d extranjeros (máx. 5) y sub-21 = %s" % [de_fuera, sub21])
+	_comprobar(LeyesPais.motivo_fichaje(c, _jug_ley("nuevo", "URU", "DEL", 75)) != "", "Chile: con 7 extranjeros no se ficha otro")
+	_comprobar(LeyesPais.motivo_fichaje(c, _jug_ley("local", "CHI", "DEL", 75)) == "", "Chile: un chileno siempre cabe")
+	## España: cuentan los extracomunitarios, no los europeos.
+	var e := Club.new("esp_test", "Prueba ESP")
+	e.pais = "ESP"
+	for k in 3:
+		e.plantilla.append(_jug_ley("br%d" % k, "BRA", "MED", 75))
+	_comprobar(LeyesPais.motivo_fichaje(e, _jug_ley("arg", "ARG", "DEL", 75)) != "", "España: el cuarto extracomunitario no entra")
+	_comprobar(LeyesPais.motivo_fichaje(e, _jug_ley("fra", "FRA", "DEL", 75)) == "", "España: un francés no ocupa cupo")
+	## Brasil: sin tope en el plantel, 9 en cancha.
+	var b := Club.new("bra_test", "Prueba BRA")
+	b.pais = "BRA"
+	for k in 12:
+		b.plantilla.append(_jug_ley("x%d" % k, "URU", "MED", 75))
+	_comprobar(LeyesPais.motivo_fichaje(b, _jug_ley("otro", "ARG", "DEL", 75)) == "", "Brasil: sin tope de extranjeros en el plantel")
+	## Cada liga tiene su resumen para la pantalla de Federación.
+	_comprobar(LeyesPais.resumen("MEX").size() >= 3 and LeyesPais.resumen("ZZZ").is_empty(), "resumen de reglas por país")
+	var sin_ley := 0
+	for p in ["CHI", "ARG", "BRA", "URU", "PAR", "PER", "ECU", "COL", "VEN", "BOL", "ESP", "ENG", "ITA", "GER", "FRA", "JPN", "KOR", "KSA", "EGY", "MAR", "RSA", "AUS", "MEX", "USA"]:
+		if LeyesPais.reglas(p).is_empty() or not Contratos.JORNADA.has(p):
+			sin_ley += 1
+	_comprobar(sin_ley == 0, "los 24 países del juego tienen reglas de liga y jornada (%d sin)" % sin_ley)
+
+
+## INCUMPLIR LA LEY SE PAGA (7-10-2026): multas que crecen y, desde la
+## tercera alineación indebida, puntos menos.
+func _probar_incumplir_ley() -> void:
+	_titulo("LEYES POR PAÍS: INCUMPLIR A CAMBIO DE MULTAS")
+	var m := Mundo.new()
+	m.generar(["CHI"], 7311)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mi := m.mi_club()
+	mi.saldo = 500000000
+	## Seis extranjeros en el once elegido (Chile permite 5 en cancha).
+	var once := mi.once()
+	var ids: Array[String] = []
+	for k in once.size():
+		if k >= 1 and k <= 7:
+			once[k].pais = "ARG"
+		ids.append(once[k].id)
+	mi.once_elegido = ids
+	var cuenta := 0
+	for j: Jugador in mi.once():
+		if j.pais != "CHI":
+			cuenta += 1
+	_comprobar(cuenta <= 5, "cumpliendo, el once se corrige solo (%d extranjeros)" % cuenta)
+	mi.ley_politica = "incumplir"
+	var cuenta2 := 0
+	for j: Jugador in mi.once():
+		if j.pais != "CHI":
+			cuenta2 += 1
+	var elegido := 0
+	for k in once.size():
+		if once[k].pais != "CHI":
+			elegido += 1
+	_comprobar(cuenta2 == elegido and cuenta2 > 5, "incumpliendo, sale el once que elegiste (%d extranjeros)" % cuenta2)
+	var liga: Liga = null
+	for l: Liga in m.ligas:
+		if l.clubes.has(mi):
+			liga = l
+	var pts0 := int(liga.tabla_puntos[mi.id]["pts"])
+	var s0 := mi.saldo
+	m.federacion.revisar_leyes_pais(m, mi)
+	var multa1 := s0 - mi.saldo
+	m.federacion.revisar_leyes_pais(m, mi)
+	var multa2 := s0 - mi.saldo - multa1
+	m.federacion.revisar_leyes_pais(m, mi)
+	_comprobar(multa1 > 0 and multa2 > multa1, "la multa crece al reincidir (%d → %d)" % [multa1, multa2])
+	_comprobar(int(liga.tabla_puntos[mi.id]["pts"]) == pts0 - 3, "a la tercera alineación indebida, 3 puntos menos")
+	_comprobar(int(m.federacion.infracciones_de(m.anio)["alin"]) == 3, "las infracciones se cuentan por temporada")
+	## Plantel: incumpliendo se puede fichar por encima del cupo.
+	var j_ext := Jugador.new()
+	j_ext.pais = "BRA"
+	_comprobar(m.federacion.puede_fichar_extranjero(mi, j_ext) == "", "incumpliendo, el mercado te deja pasarte del cupo")
+	mi.ley_politica = "cumplir"
+	_comprobar(m.federacion.puede_fichar_extranjero(mi, j_ext) != "", "cumpliendo, no (7 extranjeros, cupo 6)")
+	mi.ley_politica = "incumplir"
+	_comprobar(Partida._dic_a_club(Partida._club_a_dic(mi)).ley_politica == "incumplir", "la política se guarda con la partida")
+
+func _probar_b6_formas_led() -> void:
+	_titulo("B6: FORMAS NUEVAS DE ESTADIO Y COLORES DE LAS LED")
+	var g := StadiumBuilder.geom_de_forma("dos")
+	_comprobar(0 in g["abiertas"] and 1 in g["abiertas"], "«dos tribunas» deja abiertos los dos fondos")
+	_comprobar(int(StadiumBuilder.geom_de_forma("principal").get("principal", -1)) == 2,
+		"«tribuna de honor» agranda el lateral de los banquillos")
+	var ep := EstadioPropio.new()
+	var formas: Array = ep.opciones("forma").map(func(o): return o["clave"])
+	_comprobar("dos" in formas and "principal" in formas, "las formas nuevas salen en el diseñador")
+	ep.ajustes["forma"] = "dos"
+	_comprobar(ep.ambiente() < 0, "sin fondos el estadio hace menos ruido (%d)" % ep.ambiente())
+	var leds: Array = ep.opciones("ledPaleta").map(func(o): return o["clave"])
+	_comprobar(leds.size() >= 7 and "arcoiris" in leds, "7 paletas de LED en el diseñador")
+	var neon := StadiumBuilder._anuncios_de({"ledPaleta": "neon"}, null)
+	_comprobar(neon.all(func(a): return (a["fondo"] as Color).get_luminance() < 0.1), "neón: paneles negros")
+	var propia := StadiumBuilder._anuncios_de({"ledFondo": "#6b2d8f", "ledTinta": "#e8c21a"}, null)
+	_comprobar(propia.all(func(a): return a["fondo"] == Color("#6b2d8f") and a["tinta"] == Color("#e8c21a")),
+		"colores elegidos a mano: fondo y letra")
+	var solo_fondo := StadiumBuilder._anuncios_de({"ledFondo": "#ffffff"}, null)
+	_comprobar(solo_fondo.all(func(a): return (a["tinta"] as Color).get_luminance() < 0.3),
+		"solo fondo blanco: la letra se oscurece sola")
+
+func _probar_region_reales() -> void:
+	_titulo("REGIÓN REAL: VASCOS FUERA DEL ATHLETIC")
+	var antes := Datos.usar_base_real(true)
+	Reales.invalidar()
+	var m := Mundo.new()
+	m.generar(["ESP"], 4242)
+	var ath: Club = null
+	var vascos := 0
+	var falsos := 0
+	for c: Club in m.clubes.values():
+		if Nombres.limpiar(c.nombre) == "Ath. Bilbao":
+			ath = c
+		for j: Jugador in c.plantilla:
+			if not j.real:
+				continue
+			## Con la cubierta de nombres, algún apellido sale en minúscula.
+			var n := Nombres.limpiar(j.nombre).to_lower()
+			if n in ["mikel oyarzabal", "martín zubimendi", "aimar oroz"]:
+				if j.region == "EUS":
+					vascos += 1
+			elif n in ["pedri", "koke", "iago aspas", "isco"] and j.region != "":
+				falsos += 1
+	_comprobar(vascos >= 3, "Oyarzabal, Zubimendi y Oroz son de Euskal Herria (%d)" % vascos)
+	_comprobar(falsos == 0, "los reales de otras regiones no heredan una región sorteada")
+	if ath != null:
+		var oya: Jugador = null
+		for c: Club in m.clubes.values():
+			for j: Jugador in c.plantilla:
+				if Nombres.limpiar(j.nombre).to_lower() == "mikel oyarzabal":
+					oya = j
+		_comprobar(oya != null and Regiones.admite(ath, oya), "el Athletic puede fichar a Oyarzabal")
+	Datos.usar_base_real(antes)
+	Reales.invalidar()
+
+func _probar_tunel_navegable() -> void:
+	_titulo("TÚNEL DE VERDAD Y ESTADIO A PIE")
+	var t: Array = StadiumBuilder._tramos_sin_hueco(0.0, 100.0, -3.2, 3.2)
+	_comprobar(t.size() == 2 and is_equal_approx((t[0] as Vector2).y + (t[1] as Vector2).y, 93.6), "el hueco parte la bandeja en dos trozos")
+	_comprobar(StadiumBuilder._tramos_sin_hueco(0.0, 10.0, 20.0, 26.0).size() == 1, "si el hueco no la toca, queda entera")
+	## En las 8 formas y con túnel central y de esquina: del vestuario se llega
+	## caminando al centro del campo.
+	var fallos := []
+	for forma: String in ["cuenco", "oval", "rect", "caldera", "herradura", "ingles", "dos", "principal"]:
+		for tunel: String in ["central", "esquina"]:
+			var est := {"forma": forma, "tunel": tunel}
+			var ex := ExploradorEstadio.new()
+			ex._datos = TunelVestuario.datos(est, 2)
+			ex.zonas = ex._datos["zonas"]
+			ex.cuerpo = Node3D.new()
+			ex.cuerpo.position = ex._datos["inicio"]
+			ex.rumbo = PI
+			## Hacia el eje del túnel y luego recto al campo.
+			var x0: float = ex._datos["x0"]
+			for i in 400:
+				var p: Vector3 = ex.cuerpo.position
+				## Al eje del túnel, recto por él hasta la cancha y luego al centro.
+				var objetivo := Vector3(x0 * 0.5, 0, 0.0)
+				if p.z > float(ex._datos["z_out"]):
+					objetivo = Vector3(x0, 0, float(ex._datos["z_out"]) - 1.0)
+				elif p.z > 52.0:
+					objetivo = Vector3(x0, 0, 50.0)
+				var dir := (objetivo - p)
+				dir.y = 0
+				ex.rumbo = atan2(dir.x, dir.z)
+				ex.paso(Vector2(0, 1), true, 1.0 / 10.0)
+			if ex.zona_en(ex.cuerpo.position).get("nombre", "") != "Campo" or ex.cuerpo.position.z > 30.0:
+				fallos.append("%s/%s z=%.1f" % [forma, tunel, ex.cuerpo.position.z])
+			ex.cuerpo.free()
+			ex.free()
+	_comprobar(fallos.is_empty(), "del vestuario al campo a pie en las 8 formas %s" % str(fallos))
+	## Fuera de las zonas no se puede pisar (la grada, por ejemplo).
+	var ex2 := ExploradorEstadio.new()
+	ex2.zonas = TunelVestuario.datos({"forma": "cuenco"}, 2)["zonas"]
+	_comprobar(ex2.zona_en(Vector3(20, 0, 64)).is_empty(), "la grada no se pisa")
+	ex2.free()
+	## El estadio se construye con el pasillo y el vestuario.
+	var raiz := Node3D.new()
+	StadiumBuilder.build(raiz, {"forma": "cuenco", "niveles": 2}, 30000, 0.8, 7)
+	var tv := raiz.get_node_or_null("TunelVestuario")
+	var cuerpos := 0
+	if tv != null:
+		for h in tv.get_children():
+			if h is StaticBody3D:
+				cuerpos += 1
+	_comprobar(tv != null and cuerpos >= 10, "el túnel y el vestuario tienen colisión (%d piezas)" % cuerpos)
+	raiz.free()
+
+func _probar_edificio_club() -> void:
+	_titulo("ESTADIO 2.0: EL EDIFICIO DEL CLUB POR PLANTAS")
+	var d := TunelVestuario.datos({"forma": "cuenco"}, 2)
+	var zonas: Array = d["zonas"]
+	var x0: float = d["x0"]
+	var sin_asc := []
+	for p in EdificioClub.plantas():
+		var hay := false
+		for z: Dictionary in zonas:
+			if int(z.get("planta", 0)) == p and String(z["nombre"]) == "Ascensor":
+				hay = true
+		if not hay:
+			sin_asc.append(p)
+	_comprobar(sin_asc.is_empty(), "ascensor en las 5 plantas %s" % str(sin_asc))
+	## Cada sala: se pisa su centro, y desde su puerta se llega al pasillo.
+	var mal := []
+	var z_tab: float = float(d["z_fin"]) - EdificioClub.PASILLO - 0.1
+	for f: Array in EdificioClub.PLANTAS:
+		for sala: Array in f[2]:
+			var c := x0 + (float(sala[1]) + float(sala[2])) / 2.0
+			var centro := Vector3(c, 0, (float(d["z_out"]) + z_tab) / 2.0)
+			if String(TunelVestuario.zona_en(zonas, centro, int(f[0])).get("nombre", "")) != String(sala[0]):
+				mal.append(String(sala[0]))
+			## Del centro de la sala al pasillo, recto por la puerta.
+			var z := centro.z
+			var ok := true
+			while z < z_tab + 0.8:
+				if TunelVestuario.zona_en(zonas, Vector3(c, 0, z), int(f[0])).is_empty():
+					ok = false
+					break
+				z += 0.2
+			if not ok:
+				mal.append(String(sala[0]) + " (puerta)")
+	_comprobar(mal.is_empty(), "las 11 salas se pisan y se sale al pasillo %s" % str(mal))
+	## Sin plantilla a mano, las taquillas no inventan nombres.
+	var antes := EdificioClub.ctx
+	EdificioClub.ctx = {"plantilla": [[10, "Prueba Diez"]]}
+	var raiz := Node3D.new()
+	TunelVestuario.montar(raiz, {"forma": "cuenco", "club_nombre": "Mi Club"}, 2, null)
+	var con_nombre := false
+	for n in raiz.find_children("*", "Label3D", true, false):
+		if (n as Label3D).text.contains("Prueba Diez"):
+			con_nombre = true
+	_comprobar(con_nombre, "la taquilla lleva el dorsal y el nombre del jugador")
+	_comprobar(raiz.find_child("EdificioClub", true, false) != null, "el edificio del club se construye")
+	raiz.free()
+	EdificioClub.ctx = antes
+
+func _probar_personal_estadio() -> void:
+	_titulo("ESTADIO 2.0: LA GENTE DEL CLUB EN SU PUESTO")
+	var d := TunelVestuario.datos({"forma": "cuenco"}, 2)
+	var pe := PersonalEstadio.new()
+	pe.preparar(d, Color.RED, Color.WHITE)
+	var mal := []
+	for clave: String in PersonalEstadio.PUESTOS:
+		var p: Array = PersonalEstadio.PUESTOS[clave]
+		var ruta := pe._ruta(clave, int(p[0]), String(p[1]))
+		if ruta.size() < 2:
+			mal.append(clave + " sin ruta")
+			continue
+		## Cada tramo de la rutina se camina sin salir de las zonas.
+		for i in range(ruta.size() - 1):
+			var a: Vector3 = ruta[i]
+			var b: Vector3 = ruta[i + 1]
+			for k in 11:
+				var q := a.lerp(b, float(k) / 10.0)
+				## El portero y el hincha trabajan FUERA, en la acera de la
+				## entrada: ni dentro del edificio ni dentro de la garita.
+				if clave in ["portero", "hincha"]:
+					var rg := EntradaClub.rect_garita(float(d["x0"]), float(d["z_fin"]))
+					if q.z < float(d["z_fin"]) + 0.4 or rg.grow(0.3).has_point(Vector2(q.x, q.z)):
+						mal.append("%s tramo %d" % [clave, i])
+						break
+				elif TunelVestuario.zona_en(d["zonas"], q, int(p[0])).is_empty():
+					mal.append("%s tramo %d" % [clave, i])
+					break
+	_comprobar(mal.is_empty(), "las %d personas tienen puesto y rutina en su sitio %s" % [PersonalEstadio.PUESTOS.size(), str(mal)])
+	_comprobar(PersonalEstadio.PUESTOS.has("portero"), "hay portero en la entrada del club")
+	_comprobar(String(PersonalEstadio.PUESTOS["utilero"][1]) == "Utilería" and String(PersonalEstadio.PUESTOS["presidente"][1]) == "Despacho del presidente",
+		"el utilero en la utilería y el presidente en su despacho")
+	pe.free()
+
+func _probar_sancion_dt() -> void:
+	_titulo("ESTADIO 2.0: SANCIÓN AL DT Y LA GRADA")
+	var m := Mundo.new()
+	m.generar(["CHI"], 515)
+	var f := m.federacion
+	f.sancionar_dt(2)
+	_comprobar(not f.dt_sancionado(), "el partido de la expulsión no cuenta como sanción")
+	f.cumplir_sancion_dt()
+	_comprobar(f.dt_sancionado() and f.dt_suspension == 2, "los dos siguientes, desde la grada (%d)" % f.dt_suspension)
+	f.cumplir_sancion_dt()
+	f.cumplir_sancion_dt()
+	_comprobar(not f.dt_sancionado() and f.dt_suspension == 0, "cumplida, vuelve a la banda")
+	f.sancionar_dt(1)
+	var f2 := Federacion.new()
+	f2.desde_dic(f.a_dic())
+	_comprobar(f2.dt_suspension == 1 and f2.dt_susp_nueva, "la sanción se guarda con la partida")
+	var b := RecorridoClub.butaca({"forma": "cuenco"}, 1.0, 10.0)
+	_comprobar((b["pos"] as Vector3).x > 43.5 and (b["pos"] as Vector3).y > 2.0, "la butaca está en la primera bandeja de la grada")
+	_comprobar(RecorridoClub.junto_a_la_grada(Vector3(35, 0, 0), 0) and not RecorridoClub.junto_a_la_grada(Vector3(0, 0, 0), 0), "solo se sienta uno desde la banda")
+
+func _probar_interiores_club() -> void:
+	_titulo("ESTADIO 2.0: DECORAR LAS SALAS")
+	var it := InterioresClub.new()
+	it.pintar("Oficina del DT", "pared", "1f3f6b")
+	_comprobar(it.poner("Oficina del DT", "bufanda"), "en tu oficina caben tus objetos propios")
+	_comprobar(not it.poner("Sala de prensa", "bufanda"), "tu bufanda no va a la sala de prensa")
+	for k in 6:
+		it.poner("Museo del club", "planta")
+	_comprobar(not it.poner("Museo del club", "sofa"), "seis huecos por sala, ni uno más")
+	it.quitar_ultima("Museo del club")
+	_comprobar((it.sala("Museo del club")["deco"] as Array).count("planta") == 5, "se quita el último objeto")
+	it.colgar("Oficina del DT", "user://fotos/foto_x.png")
+	var m := Mundo.new()
+	m.generar(["CHI"], 616)
+	m.interiores = it
+	var m2 := Mundo.new()
+	m2.generar(["CHI"], 616)
+	m2.interiores.desde_dic(m.interiores.a_dic())
+	_comprobar(String(m2.interiores.sala("Oficina del DT")["pared"]) == "1f3f6b" and (m2.interiores.sala("Oficina del DT")["fotos"] as Array).has("user://fotos/foto_x.png"),
+		"la decoración y las fotos se guardan con la partida")
+	## El edificio la pinta: con decoración hay más piezas que sin ella.
+	EdificioClub.ctx = {"interiores": InterioresClub.new()}
+	var r1 := Node3D.new()
+	EdificioClub.montar(r1, 0.0, 70.0, 83.0, Color.RED, Color.WHITE, StandardMaterial3D.new(), StandardMaterial3D.new(), "X")
+	var antes := r1.find_children("*", "MeshInstance3D", true, false).size()
+	EdificioClub.ctx = {"interiores": it}
+	var r2 := Node3D.new()
+	EdificioClub.montar(r2, 0.0, 70.0, 83.0, Color.RED, Color.WHITE, StandardMaterial3D.new(), StandardMaterial3D.new(), "X")
+	var despues := r2.find_children("*", "MeshInstance3D", true, false).size()
+	_comprobar(despues > antes, "el edificio pinta la decoración (%d → %d piezas)" % [antes, despues])
+	r1.free()
+	r2.free()
+	EdificioClub.ctx = {}
+
+func _probar_galeria_club() -> void:
+	_titulo("GALERÍA SUBTERRÁNEA AL COMPLEJO (2.0, fase 6)")
+	## En todas las formas y túneles: del pasillo del sótano se llega andando,
+	## por zonas pisables, hasta arriba de la escalera mecánica.
+	var fallos := []
+	var largos := []
+	for forma: String in ["cuenco", "oval", "rect", "caldera", "herradura", "ingles", "dos", "principal"]:
+		for tunel: String in ["central", "esquina"]:
+			var est := TunelVestuario.datos({"forma": forma, "tunel": tunel}, 2)
+			var zonas: Array = GaleriaClub.zonas(est) + (est["zonas"] as Array)
+			var t := GaleriaClub.trazado(est)
+			var pasos: Array = [Vector3(float(t["xa"]), 0, float(est["z_fin"]) - 1.5), Vector3(float(t["xa"]), 0, float(t["zc"])),
+				Vector3(float(t["xb"]), 0, float(t["zc"])), Vector3(float(t["xb"]), 0, float(t["z_esc"]) + 3.0)]
+			var ok := true
+			for i in pasos.size() - 1:
+				var a: Vector3 = pasos[i]
+				var b: Vector3 = pasos[i + 1]
+				var n := int(a.distance_to(b) / 0.25) + 1
+				for k in n + 1:
+					var q := a.lerp(b, float(k) / float(n))
+					if TunelVestuario.zona_en(zonas, q, GaleriaClub.PLANTA).is_empty():
+						ok = false
+			var fin := Vector3(float(t["xb"]), 0, float(t["z_esc"]) + 3.6)
+			if not ok or not GaleriaClub.arriba(est, fin):
+				fallos.append("%s/%s" % [forma, tunel])
+			largos.append(GaleriaClub.metros_hasta(est, pasos[0]))
+	_comprobar(fallos.is_empty(), "del sótano a la calle por la galería en las 8 formas %s" % str(fallos))
+	_comprobar(largos.min() > 100 and largos.max() < 260, "la galería mide lo que separa estadio y complejo (%d-%d m)" % [largos.min(), largos.max()])
+	## Sale delante del complejo, fuera de la avenida y antes de los edificios.
+	var b := GaleriaClub.boca_mundo(TunelVestuario.datos({"forma": "cuenco"}, 2))
+	_comprobar(absf(b.x) > 10.0 and b.z > 70.0 and b.z < CityBuilder.FILA_0_Z - 16.0, "la caseta queda junto al complejo, sin pisar la avenida (%s)" % str(b))
+	## No se pisa fuera: ni la tierra junto a la galería ni otras plantas.
+	var est2 := TunelVestuario.datos({"forma": "cuenco"}, 2)
+	var z2: Array = GaleriaClub.zonas(est2)
+	var t2 := GaleriaClub.trazado(est2)
+	_comprobar(TunelVestuario.zona_en(z2, Vector3(float(t2["xa"]) + 4.0, 0, 150.0), GaleriaClub.PLANTA).is_empty(), "la tierra de al lado no se pisa")
+	_comprobar(TunelVestuario.zona_en(z2, Vector3(float(t2["xa"]), 0, 150.0), 0).is_empty(), "la galería solo está en la planta −2")
+	## En el estadio suelto la puerta tiene persiana y se avisa al llegar.
+	var ex := ExploradorEstadio.new()
+	ex._datos = est2
+	ex.cuerpo = Node3D.new()
+	ex.cuerpo.position = Vector3(float(t2["xa"]), RecorridoClub.y_de(-2), float(est2["z_fin"]) - 1.0)
+	_comprobar(ex._junto_a_la_persiana(), "junto a la persiana del sótano se avisa de la galería")
+	ex.cuerpo.position.x -= 6.0
+	_comprobar(not ex._junto_a_la_persiana(), "lejos de la persiana, no")
+	ex.cuerpo.free()
+	ex.free()
+
+func _probar_reforma_con_obra() -> void:
+	_titulo("EL MISMO ESTADIO EN TODAS PARTES: LAS REFORMAS TARDAN")
+	var m := Mundo.new()
+	m.generar(["CHI"], 424242)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mio := m.mi_club()
+	if mio == null or m.estadio == null:
+		_comprobar(false, "hay partida para probar la reforma")
+		return
+	mio.saldo = 999999999
+	var antes := String(m.perfil_estadio_de(mio)["forma"])
+	var nueva := "rect" if antes != "rect" else "oval"
+	_comprobar(m.estadio.reformar(mio, {"forma": nueva}, m.obras) == "", "se encarga la reforma de la forma")
+	_comprobar(m.estadio.en_obras() and String(m.perfil_estadio_de(mio)["forma"]) == antes,
+		"mientras dura la obra se juega en el estadio de siempre")
+	_comprobar("reforma" in (m.perfil_estadio_de(mio).get("en_obra", []) as Array), "y se ven los andamios")
+	_comprobar(String(m.estadio.ajustes["forma"]) == nueva, "el diseñador enseña el proyecto")
+	## La pintura no espera.
+	var cal := String(m.perfil_estadio_de(mio)["lineaCol"])
+	var nueva_cal := cal
+	for o: Variant in m.estadio.opciones("lineaCol"):
+		var v := String((o as Dictionary).get("clave", o)) if o is Dictionary else String(o)
+		if v != cal:
+			nueva_cal = v
+			break
+	var err_cal := m.estadio.reformar(mio, {"lineaCol": nueva_cal}, m.obras)
+	_comprobar(err_cal == "" and nueva_cal != cal and String(m.perfil_estadio_de(mio)["lineaCol"]) == nueva_cal,
+		"la pintura se ve al momento, aun en obras (%s)" % err_cal)
+	var semanas := int(m.estadio.obra["semanas"])
+	_comprobar(semanas == int(EstadioPropio.SEMANAS_OBRA["obra"]), "mover el graderío lleva %d semanas" % semanas)
+	## Se guarda y se carga con la obra a medias.
+	var otro := EstadioPropio.new()
+	otro.desde_dic(m.estadio.a_dic())
+	_comprobar(otro.en_obras() and String(otro.hecho()["forma"]) == antes, "la obra a medias sobrevive al guardado")
+	var termino := false
+	for i in semanas:
+		termino = m.estadio.avanzar_semana() or termino
+	_comprobar(termino and not m.estadio.en_obras() and String(m.perfil_estadio_de(mio)["forma"]) == nueva,
+		"al terminar, el estadio nuevo es el de todas partes")
+	_comprobar(not ("reforma" in (m.perfil_estadio_de(mio).get("en_obra", []) as Array)), "y se van los andamios")
+
+## ETAPA 3: la optimización por código no cambia lo que se ve y lo elegido en
+## gráficos se guarda.
+func _probar_optimizacion() -> void:
+	_titulo("ETAPA 3: OPTIMIZACIÓN (AGRUPAR, PRIMITIVAS, CALIDAD GUARDADA)")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	for i in 6:
+		var mi := MeshInstance3D.new()
+		var b := BoxMesh.new()
+		b.size = Vector3(1.0 + i, 2.0, 0.5)
+		mi.mesh = b
+		var m := StandardMaterial3D.new()
+		m.albedo_color = Color(0.3, 0.6, 0.2)
+		mi.material_override = m
+		mi.position = Vector3(i * 4.0, 0, 0)
+		raiz.add_child(mi)
+	## Uno que se mueve (cuelga de un nodo con script): no se toca.
+	var movil := Node3D.new()
+	movil.set_script(GDScript.new())
+	raiz.add_child(movil)
+	var mi2 := MeshInstance3D.new()
+	mi2.mesh = BoxMesh.new()
+	movil.add_child(mi2)
+	var cil := MeshInstance3D.new()
+	var cm := CylinderMesh.new()
+	cm.top_radius = 0.1
+	cm.bottom_radius = 0.1
+	cil.mesh = cm
+	raiz.add_child(cil)
+	Optimizar.primitivas(raiz)
+	_comprobar(cm.radial_segments <= 8 and cm.rings == 0, "un poste fino baja de 64 lados a %d" % cm.radial_segments)
+	var r := Optimizar.agrupar(raiz)
+	var mms := raiz.find_children("Agrupado*", "MultiMeshInstance3D", true, false)
+	_comprobar(int(r["piezas"]) >= 6 and mms.size() >= 1, "las 6 cajas iguales (distinto tamaño) quedan en un MultiMesh")
+	## (Sin gráfica, el servidor de render no guarda las transformaciones del
+	## MultiMesh: se comprueba el plegado de tamaño y el número de instancias.)
+	var n6 := 0
+	for n in mms:
+		if (n as MultiMeshInstance3D).multimesh.instance_count == 6:
+			n6 += 1
+	var cj := MeshInstance3D.new()
+	var bj := BoxMesh.new()
+	bj.size = Vector3(6.0, 2.0, 0.5)
+	cj.mesh = bj
+	var pl := Optimizar._plegar(cj, bj)
+	cj.free()
+	var ok_tam: bool = n6 == 1 and pl.size() == 2 and (pl[0] as BoxMesh).size == Vector3.ONE \
+		and (pl[1] as Vector3).is_equal_approx(Vector3(6.0, 2.0, 0.5))
+	_comprobar(ok_tam, "cada caja agrupada conserva su tamaño y su sitio")
+	_comprobar(is_instance_valid(mi2) and mi2.get_parent() == movil, "lo que cuelga de un nodo con script no se agrupa")
+	raiz.queue_free()
+	## Lo elegido en gráficos sobrevive a reabrir el juego.
+	var previo := [Calidad.elegida, Calidad.adaptativa, Calidad.motor_ligero]
+	var existia := FileAccess.file_exists(Calidad.ARCHIVO)
+	Calidad.elegida = Calidad.MEDIO
+	Calidad.adaptativa = false
+	Calidad.motor_ligero = true
+	Calidad.guardar()
+	Calidad.elegida = Calidad.ULTRA
+	Calidad.adaptativa = true
+	Calidad.motor_ligero = false
+	Calidad.cargar()
+	_comprobar(Calidad.elegida == Calidad.MEDIO and not Calidad.adaptativa and Calidad.motor_ligero,
+		"calidad, ajuste automático y motor se guardan y se leen")
+	Calidad.elegida = previo[0]
+	Calidad.adaptativa = previo[1]
+	Calidad.motor_ligero = previo[2]
+	if existia:
+		Calidad.guardar()
+	else:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(Calidad.ARCHIVO))

@@ -19,15 +19,16 @@ extends PanelContainer
 ##  2. Se encolan. Al cerrar una temporada pueden caer cuatro de golpe; sin
 ##     cola, el último pisaría al primero y no se leería ninguno.
 
-const ANCHO := 340.0
-const ALTO := 74.0
+## 13-10-2026: más grande y legible (letras de 9-10 px no se leían).
+const ANCHO := 400.0
+const ALTO := 84.0
 const MARGEN := 16.0
 const ENTRADA := 0.42
 const QUEDARSE := 3.4
 const SALIDA := 0.45
 const MAX_EN_COLA := 8   ## por si una temporada dispara veinte: se ven ocho
 
-const COL_PANEL := Color("1b2620")
+const COL_PANEL := Color(0.06, 0.07, 0.1, 0.97)
 const COL_TEXTO := Tema.TEXTO
 const COL_SUAVE := Tema.SUAVE
 
@@ -97,12 +98,14 @@ func _ready() -> void:
 	estilo.bg_color = COL_PANEL
 	estilo.border_color = acento
 	estilo.set_border_width_all(1)
-	estilo.border_width_left = 3
-	estilo.set_corner_radius_all(6)
-	estilo.content_margin_left = 12
-	estilo.content_margin_right = 12
-	estilo.content_margin_top = 8
-	estilo.content_margin_bottom = 8
+	estilo.border_width_left = 4
+	estilo.set_corner_radius_all(14)
+	estilo.shadow_color = Color(0, 0, 0, 0.45)
+	estilo.shadow_size = 12
+	estilo.content_margin_left = 16
+	estilo.content_margin_right = 16
+	estilo.content_margin_top = 10
+	estilo.content_margin_bottom = 10
 	add_theme_stylebox_override("panel", estilo)
 
 	var caja := HBoxContainer.new()
@@ -122,22 +125,22 @@ func _ready() -> void:
 	caja.add_child(col)
 	var arriba := Label.new()
 	arriba.text = String(def["et"])
-	arriba.add_theme_font_size_override("font_size", 9)
+	arriba.add_theme_font_size_override("font_size", 12)
 	arriba.add_theme_color_override("font_color", COL_SUAVE)
 	arriba.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(arriba)
 	var tit := Label.new()
 	tit.text = _titulo
-	tit.add_theme_font_size_override("font_size", 14)
+	tit.add_theme_font_size_override("font_size", 18)
 	tit.add_theme_color_override("font_color", acento)
 	tit.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(tit)
 	var des := Label.new()
 	des.text = _desc
-	des.add_theme_font_size_override("font_size", 10)
+	des.add_theme_font_size_override("font_size", 14)
 	des.add_theme_color_override("font_color", COL_TEXTO)
 	des.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	des.custom_minimum_size = Vector2(ANCHO - 70.0, 0)
+	des.custom_minimum_size = Vector2(ANCHO - 80.0, 0)
 	des.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(des)
 
@@ -145,6 +148,8 @@ func _ready() -> void:
 	_animar()
 
 func _animar() -> void:
+	## Por encima de la interfaz que se dibuja después (botones de la barra).
+	z_index = 150
 	var padre := get_parent_control()
 	var ancho_padre := padre.size.x if padre != null else 1600.0
 	position = Vector2(ancho_padre, MARGEN)

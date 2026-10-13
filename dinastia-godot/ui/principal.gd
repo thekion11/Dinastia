@@ -450,7 +450,20 @@ func _avanzar_dia() -> void:
 var _ficha: VBoxContainer
 var _registro: RichTextLabel
 
+## AL CERRAR (etapa 1, 8-10-2026): las referencias estáticas a la partida
+## (el contexto del edificio del club, la Carrera de Jugador, el último mundo)
+## sobrevivían al cierre y el motor avisaba de objetos sin liberar.
+func _exit_tree() -> void:
+	EdificioClub.ctx = {}
+	EdificioClub.mundo_ref = null
+	CarreraJugadorUI.mundo = null
+	Trabajadores.actual = null
+	Partido.ctx_medico = null
+	mundo_a_cargar = null
+	mundo_pregenerado = null
+
 func _ready() -> void:
+	BotonFx.activar(get_tree())
 	## El mando se prepara ANTES de construir la interfaz: las acciones `ui_*`
 	## tienen que existir cuando aparezca el primer boton para que el foco se
 	## pueda mover con la cruceta desde el primer momento.
@@ -1603,7 +1616,10 @@ func _hoja(tabs: TabContainer, titulo: String) -> VBoxContainer:
 func _con_scroll(padre: VBoxContainer) -> VBoxContainer:
 	var s := ScrollContainer.new()
 	s.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	## AUTO y no DISABLED (etapa 1, 2.ª pasada): desactivado, una fila más ancha
+	## que la columna AGRANDABA la columna entera y sacaba la ficha del jugador
+	## de la pantalla (Editor, Libres). Ahora lo que no cabe se desplaza dentro.
+	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	padre.add_child(s)
 	var lista := VBoxContainer.new()
 	lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1828,6 +1844,10 @@ func _conectar_noticias() -> void:
 			Aviso.mostrar(self, "alerta", "💀", "EL CLUB SE LIQUIDA",
 				"La deuda pudo más: la asociación toma el control y tu etapa aquí se acaba. Elige tu próximo club entre las ofertas de abajo.", "descenso_administrativo")
 			mundo.roles.quedar_sin_banco())
+	## Cambios de ley y avisos de la regla de la liga (7-10-2026: la señal
+	## existía pero nadie la escuchaba).
+	if mundo.contratos != null and not mundo.contratos.noticia.is_connected(_noticia_contratos):
+		mundo.contratos.noticia.connect(_noticia_contratos)
 	if mundo.selecciones != null:
 		mundo.selecciones.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
@@ -1981,6 +2001,8 @@ func _conectar_noticias() -> void:
 		mundo.obra_lista.connect(func(clave: String) -> void:
 			var nombre_obra: String = String(Instalaciones.CATALOGO[clave][0]) if Instalaciones.CATALOGO.has(clave) else clave
 			var cuerpo_obra := "%s llega a nivel %d." % [nombre_obra, mundo.obras.nivel(clave)]
+			if clave == "reforma_estadio":
+				cuerpo_obra = "Termina la reforma del estadio: desde hoy se juega en el estadio nuevo."
 			_escribir("[color=#c9a227][b]🏗️ Obra terminada:[/b][/color] %s" % cuerpo_obra)
 			_anotar("🏗️ Obra terminada:", cuerpo_obra)
 			## Una obra son semanas de espera y millones: cuando por fin termina, se
@@ -2237,8 +2259,9 @@ func _conectar_noticias() -> void:
 		## LA PORTADA DEL LUNES, COMO PERIÓDICO (C20): si la semana dejó una
 		## portada nueva, se abre sola (se puede desactivar en la propia hoja).
 		mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
-			call_deferred("_portada_nueva")
-			call_deferred("_al_paso_nuevo"))
+			## Una ventana detrás de otra: el periódico primero y la
+			## entrevista al paso cuando se cierra (antes salían apiladas).
+			call_deferred("_portada_nueva"))
 		for con_mentor: Object in [mundo.calendario, mundo.politica, mundo.vida]:
 			if con_mentor != null:
 				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:
@@ -2600,6 +2623,7 @@ func _dirigir() -> void:
 	## Lo de la PANTALLA GIGANTE va antes de `abrir()`: `PartidoVivo` abre el
 	## visor 3D de entrada, así que asignarlo después llegaría tarde.
 	vivo.datos_pantalla = _datos_pantalla_estadio(p.local, "copa" if es_copa else ("conti" if conti != null else "liga"))
+	_fundido_entrada()
 	vivo.abrir(p, mundo.mi_club(), mundo.vestuario, es_eliminatoria, mundo.roles,
 		_velocidad_partido, _perfil_con_clima(p),
 		Comercial.color_balon(mundo.comercial.balon, mundo.mi_club()))
@@ -2779,7 +2803,14 @@ func _nueva_temporada() -> void:
 	if mundo.temporada_en_curso():
 		_escribir("[color=#e05555]Todavía queda calendario por jugar.[/color]")
 		return
+	## EL DOCUMENTAL (fase 5): se arma ANTES del cierre, que reinicia la tabla
+	## y las estadísticas; se proyecta al final del cierre.
+	var guion_doc := DocumentalTemporada.guion(mundo)
+	if mundo.mercado != null:
+		mundo.mercado.fichajes_temporada.clear()
 	var resumen := mundo.nueva_temporada()
+	if not guion_doc.is_empty():
+		(func() -> void: DocumentalTemporada.abrir(self, guion_doc, _retrato)).call_deferred()
 	## `mundo.nueva_temporada()` resortea los continentales por dentro
 	## (`_sortear_continentales()`, instancias NUEVAS cada vez): sin esta llamada,
 	## el sorteo y el aviso de campeón/ronda de Champions-Libertadores solo
@@ -2967,13 +2998,38 @@ func _goleadores_de(clubes: Array) -> Array:
 	return tiradores.slice(0, 8)
 
 func _escribir(bbcode: String) -> void:
-	_registro.append_text(_bbcode_accesible(bbcode) + "\n")
+	_registro.append_text(_bbcode_accesible(_traducir_bbcode(bbcode)) + "\n")
+
+## El registro es texto enriquecido y no pasa por el traductor de etiquetas:
+## se traduce cada tramo de texto entre etiquetas BBCode (título y cuerpo de
+## la noticia van en tramos distintos).
+var _re_tramos_bb: RegEx
+
+func _traducir_bbcode(bb: String) -> String:
+	if Idiomas.idioma == "es":
+		return bb
+	if _re_tramos_bb == null:
+		_re_tramos_bb = RegEx.create_from_string("\\]([^\\[]+)")
+	var salida := bb
+	for m: RegExMatch in _re_tramos_bb.search_all(bb):
+		var tramo := m.get_string(1)
+		var limpio := tramo.strip_edges()
+		if limpio == "":
+			continue
+		var tr_ := Idiomas.t(limpio)
+		if tr_ != limpio:
+			salida = salida.replace(tramo, tramo.replace(limpio, tr_))
+	return salida
 
 ## Complementa a `_escribir()`, no lo reemplaza: `_escribir()` sigue pintando
 ## el registro exactamente igual que antes -no se le tocó una línea, cero
 ## riesgo de que una captura ya verificada cambie de aspecto-, esto solo
 ## archiva la misma noticia en la bandeja de "Correo" para poder filtrarla y
 ## marcarla leída más tarde.
+func _noticia_contratos(titulo: String, cuerpo: String) -> void:
+	_escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
+	_anotar(titulo, cuerpo)
+
 func _anotar(titulo: String, cuerpo: String) -> void:
 	_bandeja.push_front({"titulo": titulo, "cuerpo": cuerpo, "semana": mundo.semana, "anio": mundo.anio, "leida": false})
 	## Lo que pasa también se comenta en Tribuna (las redes del móvil).
@@ -3021,6 +3077,37 @@ func _pintar_pendientes() -> void:
 func _process(_d: float) -> void:
 	if not _pendientes.is_empty():
 		_pintar_pendientes()
+	## Las partículas del fondo del menú NO van encima de una vista 3D (ciudad,
+	## estadio, partido): salían como «humo» sobre la cabeza del personaje,
+	## donde estaba el cursor (13-10-2026).
+	if _clima != null:
+		var cam := get_viewport().get_camera_3d()
+		var hay_3d := cam != null and cam.is_inside_tree() and cam.is_visible_in_tree()
+		if _clima.visible == hay_3d:
+			_clima.visible = not hay_3d
+
+## Lo que el edificio del club pinta del mundo: niveles, salas elegidas,
+## plantilla con dorsales, títulos y presidente.
+func _contexto_edificio(c: Club) -> Dictionary:
+	var pl: Array = []
+	var orden := c.plantilla.duplicate()
+	orden.sort_custom(func(a: Jugador, b: Jugador) -> bool: return (a.dorsal if a.dorsal > 0 else 99) < (b.dorsal if b.dorsal > 0 else 99))
+	var n := 1
+	for j: Jugador in orden:
+		pl.append([j.dorsal if j.dorsal > 0 else n, Nombres.visible(j.nombre)])
+		n += 1
+	var dentro := {}
+	if mundo.club_dentro != null:
+		dentro = {"vestuario": mundo.club_dentro.vestuario, "sala_prensa": mundo.club_dentro.sala_prensa, "palco": mundo.club_dentro.palco}
+	var titulos := mundo.roles.trofeos.size() if mundo.roles != null else 0
+	var pres := ""
+	if mundo.junta != null:
+		pres = String(mundo.junta.presidente.get("nombre", ""))
+	return {"inst": mundo.obras.niveles.duplicate() if mundo.obras != null else {}, "dentro": dentro,
+		"plantilla": pl, "titulos": titulos, "presidente": pres,
+		"gente": mundo.gente.fichas.duplicate(true) if mundo.gente != null else {},
+		## Por referencia: lo que decores en el 3D se guarda en la partida.
+		"interiores": mundo.interiores}
 
 func _refrescar() -> void:
 	var c := mundo.mi_club()
@@ -3033,6 +3120,10 @@ func _refrescar() -> void:
 	## del partido no tiene el mundo delante).
 	PersonajeDT.del_usuario = mundo.roles.aspecto_3d()
 	PersonajeDT.club_usuario = c.id if c != null else ""
+	## El edificio del club (estadio 2.0) también necesita saber del mundo.
+	if c != null:
+		EdificioClub.ctx = _contexto_edificio(c)
+		EdificioClub.mundo_ref = weakref(mundo)
 	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal.
 	Genero.fijar(String(PersonajeDT.aspecto(PersonajeDT.del_usuario)["cuerpo"]) == "female")
 	var liga := _liga_de(c)
@@ -3142,8 +3233,11 @@ func _refrescar() -> void:
 	_perezoso(_lista_redes, func() -> void:
 		_ui_gente._pintar_redes()
 		_ui_gente._filtrar_redes())
-	_ui_legado._pintar_vida()
-	_ui_legado._pintar_habilidades()
+	## Diferidas como las demás (etapa 1, 2.ª pasada): llamadas a pelo, con
+	## la pestaña oculta no pintaban NI quedaban pendientes, y al entrar en
+	## «Vida» o «Habilidades» la hoja salía vacía.
+	_perezoso(_lista_vida, _ui_legado._pintar_vida)
+	_perezoso(_lista_habilidades, _ui_legado._pintar_habilidades)
 	_perezoso(_lista_libres, _ui_plantel._pintar_libres.bind(c))
 	_perezoso(_lista_premios, _ui_plantel._pintar_premios)
 	_perezoso(_lista_clubes, _pintar_clubes)
@@ -3395,7 +3489,11 @@ func _pintar_clubes() -> void:
 				_pintar_clubes())
 			g.add_child(b)
 			for clave in ["pj", "g", "e", "p", "pts"]:
-				_celda(g, str(int(fila.get(clave, 0))), COL_TEXTO if clave == "pts" else COL_SUAVE, true, 11)
+				var txt := str(int(fila.get(clave, 0)))
+				## Los puntos quitados por sanción, a la vista (−3 en rojo).
+				if clave == "pts" and int(fila.get("sancion", 0)) > 0:
+					txt += " (−%d)" % int(fila["sancion"])
+				_celda(g, txt, COL_TEXTO if clave == "pts" else COL_SUAVE, true, 11)
 			puesto += 1
 		_lista_clubes.add_child(HSeparator.new())
 
@@ -3531,11 +3629,25 @@ func _ver_ficha(j: Jugador) -> void:
 	if cegado_ficha:
 		FichaJugadorInfo.pintar_ciega(_ficha, j, mundo, _ui_ficha._paleta_ficha())
 	else:
+		var fila_attr := HBoxContainer.new()
+		fila_attr.add_theme_constant_override("separation", 8)
+		_ficha.add_child(fila_attr)
 		var g := GridContainer.new()
 		g.columns = 4
 		g.add_theme_constant_override("h_separation", 10)
 		g.add_theme_constant_override("v_separation", 3)
-		_ficha.add_child(g)
+		g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila_attr.add_child(g)
+		## El radar: la forma del jugador de un vistazo (informe de diseño).
+		var radar := RadarAtributos.new()
+		var etq := PackedStringArray()
+		var vals := PackedFloat32Array()
+		for k: String in j.atributos:
+			etq.append(String(NOMBRES_ATRIBUTOS.get(k, k)).left(4))
+			vals.append(float(j.atributos[k]))
+		radar.color_texto = COL_SUAVE
+		radar.poner(etq, vals, COL_VERDE)
+		fila_attr.add_child(radar)
 		## Los atributos, que son la razón de que un central de 90 de ritmo no
 		## sea un central de 90.
 		for k: String in j.atributos:
@@ -4038,6 +4150,11 @@ func _pintar_decision(e: Dictionary) -> void:
 	v.add_child(fila)
 	_boton(String(e.get("opcion_a", "Sí")), func() -> void: _resolver("a"), fila)
 	_boton(String(e.get("opcion_b", "No")), func() -> void: _resolver("b"), fila)
+	## Respuestas con el estilo de los diálogos (13-10-2026).
+	for b in fila.get_children():
+		if b is Button:
+			CuadroDialogo.respuesta(b as Button)
+			(b as Button).add_theme_font_size_override("font_size", 16)
 	var clave := "%s|%s" % [String(e.get("id", "")), pid]
 	if clave != _decision_mostrada:
 		_decision_mostrada = clave
@@ -4376,11 +4493,34 @@ func _pintar_federacion(c: Club) -> void:
 	var t := _texto(11, COL_SUAVE)
 	t.text = "REGLAMENTO VIGENTE"
 	_lista_fed.add_child(t)
-	for regla in f.reglas_vigentes():
+	for regla in f.reglas_vigentes(c.pais if c != null else ""):
 		var l := _texto(12, COL_TEXTO)
 		l.text = "· " + String(regla)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_fed.add_child(l)
+	## CUMPLIR O INCUMPLIR LAS REGLAS DE LA LIGA (7-10-2026): una decisión
+	## del club, con su precio.
+	if c != null:
+		var inf: Dictionary = f.infracciones_de(mundo.anio)
+		var est := _texto(12, COL_SUAVE)
+		est.text = "Política con el reglamento: %s · esta temporada: %d semana(s) con el plantel fuera de cupo, %d alineación(es) indebida(s)" % [
+			"CUMPLIR (el once se corrige solo)" if c.ley_politica == "cumplir" else "INCUMPLIR (pagas multas; a la tercera alineación indebida, 3 puntos menos cada vez)",
+			int(inf.get("plantel", 0)), int(inf.get("alin", 0))]
+		est.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_lista_fed.add_child(est)
+		var fila := HBoxContainer.new()
+		fila.add_theme_constant_override("separation", 8)
+		for op: Array in [["cumplir", "✅ Cumplir el reglamento"], ["incumplir", "⚠️ Incumplir y asumir multas"]]:
+			var bt := Button.new()
+			bt.text = String(op[1])
+			bt.toggle_mode = true
+			bt.button_pressed = c.ley_politica == String(op[0])
+			var valor := String(op[0])
+			bt.pressed.connect(func() -> void:
+				c.ley_politica = valor
+				_pintar_federacion(c))
+			fila.add_child(bt)
+		_lista_fed.add_child(fila)
 
 	if f.voto_pendiente.is_empty():
 		_lista_fed.add_child(HSeparator.new())
@@ -4457,7 +4597,43 @@ var _propuesta_estadio: Dictionary = {}
 ## sí mismo. La ocupación de las gradas es la de verdad -la misma cuenta que
 ## usa el partido en vivo-, no un número fijo: un estadio medio vacío tiene
 ## que verse medio vacío también aquí.
+## FUNDIDO DE ENTRADA (etapa 1, 8-10-2026): al abrir una escena 3D grande
+## (ciudad, estadio, partido) la pantalla saltaba de golpe del menú al 3D, a
+## veces con un fotograma a medio construir. Un velo negro por encima de todo
+## que se aclara en medio segundo.
+func _fundido_entrada() -> void:
+	var capa := CanvasLayer.new()
+	capa.layer = 120
+	get_tree().root.add_child(capa)
+	var velo := ColorRect.new()
+	velo.color = Color.BLACK
+	velo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	velo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	capa.add_child(velo)
+	var tw := velo.create_tween()
+	tw.tween_interval(0.12)
+	tw.tween_property(velo, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(capa.queue_free)
+
+## Con pantalla de carga y consejos: se pinta ANTES de empezar a construir.
+func _ver_estadio_con_carga() -> void:
+	PantallaCarga.club = mundo.mi_club() if mundo != null else null
+	var carga := PantallaCarga.mostrar(self, Idiomas.t("Levantando el estadio…"))
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_ver_estadio_propio()
+	carga.cerrar()
+
+func _ver_ciudad_con_carga() -> void:
+	PantallaCarga.club = mundo.mi_club() if mundo != null else null
+	var carga := PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_ver_ciudad_propia()
+	carga.cerrar()
+
 func _ver_estadio_propio() -> void:
+	_fundido_entrada()
 	var c := mundo.mi_club()
 	if c == null:
 		return
@@ -4505,6 +4681,14 @@ func _pintar_estadio(c: Club) -> void:
 	var t := _texto(13, COL_ORO)
 	t.text = c.estadio_nombre if c.estadio_nombre != "" else e.nombre_de(c)
 	_lista_estadio.add_child(t)
+	## Reforma en obras: el diseñador enseña el PROYECTO; el estadio que se ve y
+	## se juega sigue siendo el de antes hasta que termine.
+	if e.en_obras():
+		var ob := _texto(12, Color(1.0, 0.8, 0.3))
+		ob.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ob.text = "🏗️ Reforma en obras: faltan %d de %d semanas. Aquí ves el proyecto; en la ciudad y en los partidos sigue el estadio de siempre, con andamios." % [
+			int(e.obra["semanas"]), int(e.obra["total"])]
+		_lista_estadio.add_child(ob)
 	## PONERLE NOMBRE AL ESTADIO, de `vEstadio()`. Es lo más barato que puede
 	## hacer un club por su identidad y lo primero que hace cualquiera al llegar
 	## a uno nuevo. Vacío vuelve al nombre por defecto: no se puede quedar sin.
@@ -4536,7 +4720,7 @@ func _pintar_estadio(c: Club) -> void:
 	var ver3d := Button.new()
 	ver3d.text = "👁️ Ver mi estadio en 3D"
 	ver3d.add_theme_font_size_override("font_size", 11)
-	ver3d.pressed.connect(_ver_estadio_propio)
+	ver3d.pressed.connect(_ver_estadio_con_carga)
 	fila_n.add_child(ver3d)
 	_ui_club_estadio._pintar_estilos_estadio(c)
 	## LA HINCHADA. `Prensa.animo` y `Prensa.funa` se mueven solos desde hace
@@ -4590,7 +4774,7 @@ func _pintar_estadio(c: Club) -> void:
 			["LA GRADA", ["asientoP", "banderas", "escudoDonde", "corner"]],
 			## Sin "clima" (26-9-2026): el tiempo lo pone la ciudad, no el
 			## diseñador. Elegir "lluvia" como se elige un color era ilógico.
-			["LOS DETALLES", ["banquillo", "banquilloCol", "vallaCol", "tunel", "sonidoGol"]],
+			["LOS DETALLES", ["banquillo", "banquilloCol", "vallaCol", "ledPaleta", "ledFondo", "ledTinta", "tunel", "sonidoGol"]],
 		]:
 		var tb := _texto(11, COL_ACENTO)
 		tb.text = String(bloque[0])
@@ -4700,7 +4884,7 @@ const ETIQUETAS_ESTADIO := {
 	"clima": "Clima", "sonidoGol": "Sonido del gol",
 	"fachada": "Fachada", "fachadaCol": "Color de la fachada", "techoCol": "Color del techo",
 	"luzFocos": "Luz de los focos", "superficie": "Superficie", "banquilloCol": "Color de los banquillos",
-	"vallaCol": "Marco de las vallas", "focosCol": "Estructura de los focos",
+	"vallaCol": "Marco de las vallas", "ledPaleta": "Pantallas LED", "ledFondo": "Fondo de las LED", "ledTinta": "Letras de las LED", "focosCol": "Estructura de los focos",
 	"anillo_sur_1": "Anillo 1 — Sur", "anillo_sur_2": "Anillo 2 — Sur", "anillo_sur_3": "Anillo 3 — Sur", "anillo_sur_4": "Anillo 4 — Sur", "anillo_sur_5": "Anillo 5 — Sur",
 	"anillo_norte_1": "Anillo 1 — Norte", "anillo_norte_2": "Anillo 2 — Norte", "anillo_norte_3": "Anillo 3 — Norte", "anillo_norte_4": "Anillo 4 — Norte", "anillo_norte_5": "Anillo 5 — Norte",
 	"anillo_este_1": "Anillo 1 — Este", "anillo_este_2": "Anillo 2 — Este", "anillo_este_3": "Anillo 3 — Este", "anillo_este_4": "Anillo 4 — Este", "anillo_este_5": "Anillo 5 — Este",
@@ -4793,7 +4977,7 @@ func _pintar_ciudad(c: Club) -> void:
 	var ver3d := Button.new()
 	ver3d.text = "🏙️ Ver la ciudad en 3D"
 	ver3d.add_theme_font_size_override("font_size", 11)
-	ver3d.pressed.connect(_ver_ciudad_propia)
+	ver3d.pressed.connect(_ver_ciudad_con_carga)
 	_lista_ciudad.add_child(ver3d)
 	_ui_ciudad._pintar_luces_ciudad(ci)
 
@@ -4830,7 +5014,24 @@ func _pintar_ciudad(c: Club) -> void:
 ## Mismo motivo y mismo arreglo que `_ver_estadio_propio()`: `VistaCiudad`
 ## tampoco trae fondo opaco -para que el 3D se vea de verdad-, así que hay
 ## que esconder el resto de la pantalla mientras está abierta.
+## El ídolo del club para la estatua de la ciudad: la última leyenda retirada
+## del club; si no hay, el capitán; si no, el de más media.
+func _idolo_del_club(c: Club) -> String:
+	if mundo.cantera != null:
+		for k in range(mundo.cantera.leyendas.size() - 1, -1, -1):
+			var L: Dictionary = mundo.cantera.leyendas[k]
+			if String(L.get("club_id", "")) == c.id:
+				return String(L.get("nombre", ""))
+	var mejor: Jugador = null
+	for j: Jugador in c.plantilla:
+		if j.capitan:
+			return j.nombre
+		if mejor == null or j.ovr > mejor.ovr:
+			mejor = j
+	return mejor.nombre if mejor != null else ""
+
 func _ver_ciudad_propia() -> void:
+	_fundido_entrada()
 	var c := mundo.mi_club()
 	if c == null or mundo.obras == null:
 		return
@@ -4844,6 +5045,8 @@ func _ver_ciudad_propia() -> void:
 	vista.construir = _ui_club_vida._empezar_obra
 	var prox := mundo.proximo_partido()
 	vista.dia_partido = not prox.is_empty() and prox[0] == c
+	vista.animo = CiudadAnimo.de(mundo, c)
+	vista.idolo = _idolo_del_club(c)
 	vista.abrir(c, mundo.obras, mundo.ciudad, mundo.perfil_estadio_de(c))
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
@@ -5982,12 +6185,23 @@ var _secc_redes: String = "redes"
 func _al_paso_nuevo() -> void:
 	if mundo == null or mundo.prensa == null or mundo.prensa.al_paso.is_empty():
 		return
+	## Si hay un periódico abierto (de esta semana o de otra que pasó de
+	## corrido), la entrevista espera a que se cierre.
+	for h in get_children():
+		if h is PortadaPeriodico and not h.is_queued_for_deletion():
+			if not h.cerrado.is_connected(_al_paso_nuevo):
+				h.cerrado.connect(_al_paso_nuevo)
+			return
+	for h in get_children():
+		if h is PieDeCampo and not h.is_queued_for_deletion():
+			return
 	var n := PieDeCampo.mostrar_al_paso(self, mundo.prensa)
 	if n != null:
 		n.cerrado.connect(_refrescar)
 
 func _portada_nueva() -> void:
 	if mundo == null or mundo.prensa == null or mundo.prensa.portadas.is_empty():
+		_al_paso_nuevo()
 		return
 	var d: Dictionary = mundo.prensa.portadas[0]
 	var nueva := bool(d.get("nueva", false))
@@ -5995,6 +6209,7 @@ func _portada_nueva() -> void:
 		x.erase("nueva")
 	if nueva and PortadaPeriodico.auto():
 		PortadaPeriodico.mostrar(self, mundo, d)
+	_al_paso_nuevo()
 
 func _pintar_finanzas(c: Club) -> void:
 	_limpiar(_lista_finanzas)

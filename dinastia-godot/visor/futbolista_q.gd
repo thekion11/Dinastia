@@ -89,7 +89,7 @@ static func crear(altura: float = ALTURA_BASE, cuerpo: String = "male") -> Dicti
 	var ap := AnimationPlayer.new()
 	raiz.add_child(ap)
 	ap.root_node = ap.get_path_to(modelo)
-	return {"nodo": raiz, "modelo": modelo, "esqueleto": esq, "anim": ap, "altura": altura}
+	return {"nodo": raiz, "modelo": modelo, "esqueleto": esq, "anim": ap, "altura": altura, "cuerpo": cuerpo}
 
 ## Segunda mitad de crear(): llamar cuando el nodo YA esta en el arbol -la
 ## medida de huesos necesita transformadas actualizadas, que solo existen

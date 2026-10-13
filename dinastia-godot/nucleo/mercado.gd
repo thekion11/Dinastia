@@ -183,7 +183,16 @@ func fichar(j: Jugador, comprador: Club, monto: int, sueldo: int, anios: int) ->
 	j.anios_contrato = Contratos.ajustar_anios(j, anios)
 	j.pide_salir = false
 	comprador.fichar(j)
+	## Para el documental de la temporada (fase 5): los traspasos de tu club.
+	var m := _mundo()
+	if m != null and (comprador.id == m.mi_club_id or (vendedor != null and vendedor.id == m.mi_club_id)):
+		fichajes_temporada.append({"nombre": j.nombre, "entra": comprador.id == m.mi_club_id,
+			"otro": (vendedor.nombre if vendedor != null else "libre") if comprador.id == m.mi_club_id else comprador.nombre,
+			"monto": monto, "ovr": j.ovr})
 	traspaso.emit(j, vendedor, comprador, monto)
+
+## Los traspasos de tu club en esta temporada (se vacía al cerrarla).
+var fichajes_temporada: Array = []
 
 # ---------------------------------------------------------------------------
 #  EL MERCADO DE LA IA
@@ -249,13 +258,34 @@ func _buscar_objetivo(comprador: Club) -> Jugador:
 		var j: Jugador = otro.plantilla[Azar.ent(0, otro.plantilla.size() - 1)]
 		if j.edad > 33:
 			continue
+		## CON SENTIDO DE PUESTO (7-10-2026, la prueba larga): la IA compraba al
+		## que mejorara su media sin mirar dónde juega, y en diez temporadas había
+		## clubes con 6-7 porteros y otros sin un solo delantero. No compra un
+		## cuarto portero ni deja al vendedor por debajo del mínimo de su línea.
+		if _cuenta_linea(comprador, j.pos) >= int(MAXIMO_LINEA.get(j.pos, 9)):
+			continue
+		if _cuenta_linea(otro, j.pos) <= int(MINIMO_LINEA.get(j.pos, 2)):
+			continue
 		## Filosofía de cantera (C3): el Athletic solo mira a los de su tierra.
 		if not Regiones.admite(comprador, j):
+			continue
+		## Las reglas de la liga del comprador (cupo de extranjeros, etc.).
+		if LeyesPais.motivo_fichaje(comprador, j) != "":
 			continue
 		if float(j.ovr) > mejor_v:
 			mejor_v = float(j.ovr)
 			mejor = j
 	return mejor
+
+const MINIMO_LINEA := {"POR": 2, "DEF": 5, "MED": 5, "DEL": 3}
+const MAXIMO_LINEA := {"POR": 3, "DEF": 10, "MED": 10, "DEL": 7}
+
+static func _cuenta_linea(c: Club, linea: String) -> int:
+	var n := 0
+	for x: Jugador in c.plantilla:
+		if x.pos == linea:
+			n += 1
+	return n
 
 # ---------------------------------------------------------------------------
 #  VENDER: LISTA DE TRANSFERIBLES Y OFERTAS ENTRANTES

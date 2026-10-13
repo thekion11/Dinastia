@@ -49,6 +49,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	var cp: Dictionary = CLIMA_PARTIDO.get(clima_key, CLIMA_PARTIDO["despejado"])
 
 	var oscuro: float = clampf(float(amb["oscuro"]) + float(cp["oscuro"]) * 0.6, 0.0, 1.0)
+	StadiumBuilder.encender_conos(oscuro)
 	var niebla: float = float(cp["niebla"])
 
 	var top := Color(str(amb["top"])).darkened(float(cp["oscuro"]) * 0.5)

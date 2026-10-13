@@ -209,6 +209,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		return false
 	var cuerpo: MeshInstance3D = null
 	var superficie := -1
+	var es_mujer := false
 	for mv in _mallas(modelo):
 		var mi: MeshInstance3D = mv
 		if mi.mesh == null:
@@ -221,8 +222,9 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 				MATERIAL_CUERPO, "MI_Superhero_Female":
 					cuerpo = mi
 					superficie = s
-				MATERIAL_CEJAS:
-					mi.set_surface_override_material(s, _material_liso(pelo, 0.9))
+					es_mujer = m.resource_name == "MI_Superhero_Female"
+				MATERIAL_CEJAS, "MI_Hair_2":  # el cuerpo de mujer trae sus cejas con MI_Hair_2
+					mi.set_surface_override_material(s, _material_liso(PeloQ.color_cejas(pelo), 0.9))
 				MATERIAL_OJOS:
 					## Las texturas de ojos del pack no vinieron en el repo:
 					## sin esto, blanco puro de fábrica y mirada de maniquí.
@@ -253,6 +255,10 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 			"bot": {"mod": "clasico"}, "acc": {}}
 	var clave := "%s|%s|%d|%s|%s|%s|%s|%d|%d" % [c1.to_html(false), c2.to_html(false), i_estilo,
 		pantalon.to_html(false), medias.to_html(false), _piel_cuantizada(piel), largo, hash(kit), dorsal]
+	## Cuerpo de mujer y de hombre NO comparten material (13-10-2026): su
+	## textura de piel y sus medidas son otras.
+	if es_mujer:
+		clave += "|m"
 	var mat: ShaderMaterial = _cache_equipacion.get(clave)
 	if mat == null:
 		var original := cuerpo.get_active_material(superficie) as BaseMaterial3D
@@ -271,6 +277,11 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("color_medias", medias)
 		mat.set_shader_parameter("estilo", i_estilo)
 		mat.set_shader_parameter("tinte_piel", _tinte(piel))
+		## La muñeca (fin de la manga larga) del cuerpo de mujer está más adentro.
+		mat.set_shader_parameter("muneca", 0.69 if es_mujer else 0.755)
+		mat.set_shader_parameter("dy_cuerpo", -0.06 if es_mujer else 0.0)
+		var pl := piel.srgb_to_linear()
+		mat.set_shader_parameter("piel_obj", Vector3(pl.r, pl.g, pl.b))
 		mat.set_shader_parameter("largo", largo)
 		mat.set_shader_parameter("usa_reposo", (cuerpo.mesh as ArrayMesh) != null and cuerpo.mesh.has_meta("con_reposo"))
 		var un := DisenosKit.uniforms(kit, dorsal)
@@ -747,8 +758,10 @@ static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Arr
 				vecinos[w].append(u)
 	## Taubin: un paso que encoge (lambda) y otro que infla (mu).
 	var p := unicos.duplicate()
-	for it in 24:
-		var f: float = 0.55 if it % 2 == 0 else -0.58
+	## 13-10-2026: 24 → 64 pasos; con 24 la camiseta aún marcaba abdominales.
+	var t0 := Time.get_ticks_msec()
+	for it in 110:
+		var f: float = 0.62 if it % 2 == 0 else -0.5
 		var q := p.duplicate()
 		for i in m:
 			var vs: PackedInt32Array = vecinos[i]
@@ -760,6 +773,7 @@ static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Arr
 			media /= float(vs.size())
 			q[i] = p[i] + (media - p[i]) * f
 		p = q
+	print_verbose("alisado: %d ms" % (Time.get_ticks_msec() - t0))
 	## Normales de la superficie alisada.
 	var ns := PackedVector3Array()
 	ns.resize(m)
@@ -782,7 +796,8 @@ static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Arr
 		c0[i * 4] = sn.x
 		c0[i * 4 + 1] = sn.y
 		c0[i * 4 + 2] = sn.z
-		c0[i * 4 + 3] = clampf(relleno, 0.0, 0.03)
+		## 13-10-2026: también hacia dentro (los pectorales y bíceps se marcaban).
+		c0[i * 4 + 3] = clampf(relleno, -0.035, 0.03)
 		c1[i * 3] = nr.x
 		c1[i * 3 + 1] = nr.y
 		c1[i * 3 + 2] = nr.z

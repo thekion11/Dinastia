@@ -28,9 +28,14 @@ extends Node
 ## Añadirlos exige empaquetar una fuente CJK —varios megas— y es una decisión
 ## aparte, no una columna más en esta tabla.
 ##
-## LO QUE NO SE TRADUCE, Y SE DICE CLARO. La narración —las noticias, las
+## LA NARRACIÓN (actualizado el 7-10-2026): las noticias, la prensa, el
+## vestuario, las redes y la Carrera de Jugador ya están en INGLÉS y
+## PORTUGUÉS, y desde el mismo día también en los otros seis idiomas (ver
+## `_cargar_narracion`, unas 1.080 frases y plantillas por idioma). Lo que
+## sigue explica por qué se dejó para el final.
+## LO QUE NO SE TRADUCÍA, Y SE DECÍA CLARO. La narración —las noticias, las
 ## preguntas de la prensa, los diálogos del vestuario, los textos de ayuda
-## largos— sigue en castellano. Son varios miles de frases escritas con voz
+## largos— seguía en castellano. Son varios miles de frases escritas con voz
 ## propia, muchas armadas por trozos con nombres dentro, y traducirlas a medias
 ## quedaría peor que no traducirlas. Lo que sí está entero es el ESQUELETO:
 ## menús, pestañas, botones, títulos de sección, ajustes y etiquetas de datos,
@@ -437,6 +442,37 @@ func _cargar_extra() -> void:
 			for i in ORDEN.size():
 				plantillas[ORDEN[i]] = String(fila[i + 1]) if fila.size() > i + 1 else ""
 			_patrones.append([re, plantillas])
+	_cargar_narracion()
+
+## LA NARRACIÓN (7-10-2026, MEGAPLAN: «traducir la narración, al menos al
+## inglés»). Los títulos y cuerpos de las noticias en los 8 idiomas:
+## las frases fijas como tabla directa y las que llevan nombres o cifras como
+## patrones. Lo monta `herramientas/montar_narracion.py` a partir de las
+## plantillas que extrae del código (fr/it/de/ca/pl/tr en
+## `datos/narracion_traducida_mas.json`).
+const NARRACION := "res://datos/narracion.json"
+
+func _cargar_narracion() -> void:
+	if not FileAccess.file_exists(NARRACION):
+		return
+	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(NARRACION))
+	if not (d is Dictionary):
+		return
+	var directas: Dictionary = (d as Dictionary).get("directas", {})
+	for k: String in directas:
+		var tabla: Dictionary = _extra.get(k, {})
+		for frase: String in (directas[k] as Dictionary):
+			if not tabla.has(frase):
+				tabla[frase] = directas[k][frase]
+		_extra[k] = tabla
+	for fila: Array in (d as Dictionary).get("patrones", []):
+		var re := RegEx.new()
+		if re.compile(String(fila[0])) == OK:
+			## Formato nuevo: [regex, {idioma: texto}]; el viejo, [regex, en, pt].
+			if fila.size() == 2 and fila[1] is Dictionary:
+				_patrones.append([re, fila[1]])
+			else:
+				_patrones.append([re, {"en": String(fila[1]), "pt": String(fila[2])}])
 
 ## Traduce una frase suelta. Si no está en la tabla, devuelve la castellana: una
 ## interfaz medio traducida se lee; una llena de claves crudas, no.
@@ -480,6 +516,27 @@ func _t(frase: String, prof: int) -> String:
 	var d := _directa(frase)
 	if d != "" or prof > 3:
 		return d if d != "" else frase
+	## Por oraciones: la narración a veces pega varias frases en un mismo
+	## texto («Pregunta. Tardaste en contestar: en la sala se notó.»).
+	if prof < 2 and frase.length() > 30 and (frase.contains(". ") or frase.contains("! ") or frase.contains("? ")):
+		## Si el texto entero encaja en un patrón, gana el patrón.
+		var entero := _patron(frase, prof)
+		if entero != "":
+			return entero
+		var partes := _oraciones(frase)
+		if partes.size() > 1:
+			var cambio := false
+			for k in partes.size():
+				var o: String = partes[k]
+				var limpia := o.strip_edges()
+				if limpia == "":
+					continue
+				var to := _t(limpia, prof + 1)
+				if to != limpia:
+					partes[k] = o.replace(limpia, to)
+					cambio = true
+			if cambio:
+				return "".join(partes)
 	## El icono de delante (emoji, flecha) y lo de detrás (▸, :, …) aparte.
 	var ini := 0
 	while ini < frase.length() and not _es_letra(frase.unicode_at(ini)):
@@ -506,6 +563,10 @@ func _t(frase: String, prof: int) -> String:
 			if cambio:
 				return sep.join(partes)
 	## Por patrones: los grupos con letras también se traducen.
+	var pp := _patron(frase, prof)
+	return pp if pp != "" else frase
+
+func _patron(frase: String, prof: int) -> String:
 	for par: Array in _patrones:
 		var m: RegExMatch = (par[0] as RegEx).search(frase)
 		if m == null or m.get_start() != 0 or m.get_end() != frase.length():
@@ -519,7 +580,21 @@ func _t(frase: String, prof: int) -> String:
 				v = _t(v, prof + 1)
 			plantilla = plantilla.replace("$%d" % g, v)
 		return plantilla
-	return frase
+	return ""
+
+## Parte un texto en oraciones, conservando los espacios de entre medio.
+func _oraciones(texto: String) -> Array:
+	var partes: Array = []
+	var ini := 0
+	var i := 0
+	while i < texto.length():
+		var c := texto[i]
+		if (c == "." or c == "!" or c == "?" or c == "»") and i + 1 < texto.length() and texto[i + 1] == " ":
+			partes.append(texto.substr(ini, i + 1 - ini))
+			ini = i + 1
+		i += 1
+	partes.append(texto.substr(ini))
+	return partes
 
 ## Mayúsculas según el idioma: en turco la «i» con punto da «İ» y la «ı» sin
 ## punto da «I» (`to_upper()` daba «I» para las dos).

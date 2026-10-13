@@ -146,9 +146,13 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## es un lujo y esto es lo que tiene que verse.
 	_raiz3d = Node3D.new()
 	add_child(_raiz3d)
+	## Fuera de la ciudad no se sabe la hora: la gente del club está siempre.
+	PersonalEstadio.hora = -1.0
 
 	var perfil := perfil_forzado if not perfil_forzado.is_empty() else club.perfil_estadio()
 	_perfil = perfil
+	perfil_actual = perfil
+	butaca_sancion = {}
 	var aforo := int(perfil.get("aforo", 20000))
 
 	## EL ORDEN ES EL DEL VISOR QUE YA FUNCIONABA, y las cuatro llamadas hacen
@@ -214,6 +218,11 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_raiz3d.add_child(_rig)
 	_rig.build_for(g["dx"], g["dz"], alto)
 	_rig.balon_ref = _balon
+	## SANCIONADO (estadio 2.0): el partido, desde tu butaca de la grada.
+	if partido != null and PersonajeDT.sancionado and not butaca_sancion.is_empty():
+		var ojo: Vector3 = (butaca_sancion["pos"] as Vector3) + Vector3(0, 1.2, 0)
+		_rig._add("Desde la grada (sancionado)", ojo + Vector3(0.6, 0.3, 0), Vector3(0, 0, ojo.z * 0.3), 62)
+		_rig.switch_to(_rig.cameras.size() - 1)
 
 	## Viñeta de transmisión (22-9-2026, comparando contra el look de cámara de
 	## Open-Soccer): un oscurecido 2D encima del 3D, no un efecto de Environment
@@ -275,6 +284,11 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_btn_camara = _cajon.boton("📷 Cámara: " + (_rig.current_name() if _rig != null else "TV"), _rotar_camara)
 	_cajon.fila([["🔍 Acercar", func() -> void: if _rig: _rig.ajustar_zoom(-3.0)],
 		["🔍 Alejar", func() -> void: if _rig: _rig.ajustar_zoom(3.0)]])
+	_cajon.boton("📸 Modo foto", func() -> void: ModoFoto.abrir(self, club, "el estadio"))
+	## RECORRER EL ESTADIO A PIE (7-10-2026): del vestuario, por el túnel, a la
+	## cancha. Solo sin partido en marcha.
+	if partido == null:
+		_cajon.boton("🚶 Recorrer el estadio (vestuario y túnel)", recorrer)
 	if partido != null:
 		_cajon.seccion("Partido")
 		_btn_modo = _cajon.boton("🎮 Modo: Manager", _alternar_modo_control)
@@ -303,7 +317,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_cajon.interruptor("🎞 Viñeta de transmisión", _vineta.visible, func(si: bool) -> void:
 		_vineta.visible = si
 		_guardar_pref("vineta", si))
-	_cajon.interruptor("ℹ Ficha del estadio abajo", _pref("pie", true), func(si: bool) -> void:
+	_cajon.interruptor("ℹ Ficha del estadio abajo", _pref("pie", false), func(si: bool) -> void:
 		_pie.visible = si
 		_guardar_pref("pie", si))
 	_cajon.interruptor("🎬 Presentación antes del partido", _pref("intro", true), func(si: bool) -> void:
@@ -328,9 +342,45 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_pie.offset_left = 18
 	_pie.offset_bottom = -14
 	_pie.offset_top = -34
-	_pie.visible = _pref("pie", true)
+	_pie.visible = _pref("pie", false)
 	add_child(_pie)
 	_actualizar_pie(perfil, aforo, ocupacion)
+
+var _explorador: ExploradorEstadio
+var _ocultos: Array = []
+
+## Baja al vestuario con el protagonista y deja recorrer el estadio a pie.
+func recorrer() -> void:
+	if _explorador != null:
+		return
+	if _cajon != null and _cajon.has_method("cerrar"):
+		_cajon.call("cerrar")
+	_ocultos = []
+	for c in get_children():
+		if c is CanvasItem and (c as CanvasItem).visible:
+			(c as CanvasItem).visible = false
+			_ocultos.append(c)
+	if _rig != null:
+		_rig.set_process(false)
+		_rig.set_process_unhandled_input(false)
+	_explorador = ExploradorEstadio.new()
+	_raiz3d.add_child(_explorador)
+	_explorador.iniciar(_perfil, StadiumBuilder.niveles_de(_perfil, int(_perfil.get("aforo", 20000))), club)
+	_explorador.salir.connect(_dejar_de_recorrer)
+
+func _dejar_de_recorrer() -> void:
+	if _explorador == null:
+		return
+	_explorador.queue_free()
+	_explorador = null
+	for c in _ocultos:
+		if is_instance_valid(c):
+			(c as CanvasItem).visible = true
+	_ocultos = []
+	if _rig != null:
+		_rig.set_process(true)
+		_rig.set_process_unhandled_input(true)
+		_rig.switch_to(_rig.current_index)
 
 ## `fixed_size` compensa la DISTANCIA, no el zoom: con "Tele Dinámica" (campo
 ## de visión estrecho) los nombres salían tres veces más grandes que con la de
@@ -433,10 +483,14 @@ func _rotar_camara() -> void:
 			_pie.text = _pie_base + "  ·  cámara: " + _rig.current_name()
 
 func _actualizar_pie(perfil: Dictionary, aforo: int, ocupacion: float) -> void:
-	_pie_base = "%s%s  ·  %s de %d niveles  ·  techo %s  ·  %d butacas, %d%% de ocupación" % [
+	## El aforo es el OFICIAL del club (el mismo que en la presentación y en
+	## los menús), no el recuento de butacas del modelo 3D, que no coincidía.
+	var techo := String(perfil["techo"])
+	_pie_base = "%s%s  ·  %s de %d niveles  ·  %s  ·  %s butacas, %d%% de ocupación" % [
 		club.nombre, ("  ·  «%s»" % String(perfil["apodo"])) if String(perfil.get("apodo", "")) != "" else "",
 		String(perfil["forma"]).capitalize(), int(perfil["niveles"]),
-		String(perfil["techo"]), aforo, int(ocupacion * 100.0)]
+		"sin techo" if techo == "sin" else "techo " + techo,
+		_miles(club.estadio_aforo if club.estadio_aforo > 0 else aforo), int(ocupacion * 100.0)]
 	if visitante != null:
 		_pie_base += "  ·  %d en el campo" % _en_campo.size()
 	_pie.text = _pie_base
@@ -536,10 +590,30 @@ static func poner_personal(raiz: Node3D) -> void:
 		## El giro es hacia FUERA del campo: la persona mira a +Z sin girar.
 		PersonajeDT.personal_estadio(_raiz3d, "seguridad", puestos[k][0], puestos[k][1], 900 + k)
 
-static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int) -> void:
+## Dónde se sienta el DT sancionado: la grada de los banquillos, a la altura
+## de su banquillo (estadio 2.0, fase 3).
+static var butaca_sancion: Dictionary = {}
+## El perfil del estadio que se está montando (para la butaca del sancionado).
+static var perfil_actual: Dictionary = {}
+
+static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int, perfil: Dictionary = {}) -> void:
 	var asp: Dictionary = PersonajeDT.del_usuario if c.id == PersonajeDT.club_usuario else PersonajeDT.de_rival(c.id)
 	var lado := -1.0 if es_local else 1.0
 	var z := lado * 14.0 - lado * (float(maxi(cuantos, 1)) * 0.8 + 1.8)
+	## SANCIONADO: no está en la banda, está sentado en la grada.
+	if c.id == PersonajeDT.club_usuario and PersonajeDT.sancionado:
+		butaca_sancion = RecorridoClub.butaca(perfil if not perfil.is_empty() else perfil_actual, 1.0, z, 4)
+		var d := PersonajeDT.crear(_raiz3d, asp, Color(c.color1), Color(c.color2))
+		if not d.is_empty():
+			var n: Node3D = d["nodo"]
+			n.position = butaca_sancion["pos"]
+			n.rotation.y = float(butaca_sancion["rumbo"])
+			var ap: AnimationPlayer = d.get("anim") as AnimationPlayer
+			if ap != null and ap.has_animation("sentado"):
+				ap.play("sentado")
+			## Su butaca y las de al lado, libres de hinchas.
+			RecorridoClub.despejar_hinchas(_raiz3d, _raiz3d.global_position + (butaca_sancion["pos"] as Vector3) + Vector3(0, 0.5, 0), 1.6)
+		return
 	PersonajeDT.poner_en_banda(_raiz3d, asp, Color(c.color1), Color(c.color2), Vector3(34.6, 0, z), -PI * 0.5)
 
 ## Mejores disponibles (sin lesión/sanción, no en el once) por media, para que

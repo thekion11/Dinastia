@@ -238,6 +238,10 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 
 # ------------------------------------------------------------------ viewport
 
+## ¿Renderizador de compatibilidad (OpenGL: móvil, web, capturas)?
+static func es_compatibilidad() -> bool:
+	return RenderingServer.get_current_rendering_method() == "gl_compatibility"
+
 ## Ajustes del propio viewport: suavizado de bordes y filtrado de texturas. Sin
 ## esto, a 4K se ven los dientes de sierra de cada farola.
 static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
@@ -248,13 +252,18 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 	## casi no se nota en el angulo de camara tipico de un partido (no es un
 	## FPS en primera persona donde cada borde se ve de cerca). Bajado a x2 en
 	## ALTO, x4 se guarda para ULTRA (capturas, donde SI importa el detalle).
+	## FXAA y TAA solo existen en Forward+/Mobile: en compatibilidad (móvil,
+	## web) el motor avisaba en cada pantalla 3D y no hacía nada.
+	var avanzado := not es_compatibilidad()
 	if nivel >= ULTRA:
 		vp.msaa_3d = Viewport.MSAA_8X
-		vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
-		vp.use_taa = true
+		if avanzado:
+			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
+			vp.use_taa = true
 	elif nivel >= ALTO:
 		vp.msaa_3d = Viewport.MSAA_2X
-		vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
+		if avanzado:
+			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 	else:
 		vp.msaa_3d = Viewport.MSAA_2X
 	vp.use_debanding = true
@@ -264,3 +273,66 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		RenderingServer.directional_shadow_atlas_set_size(8192, true)
 	elif nivel >= ALTO:
 		RenderingServer.directional_shadow_atlas_set_size(2048, true)
+
+# ------------------------------------------------- guardado y motor gráfico
+
+## LO ELEGIDO SE GUARDA (etapa 3, 8-10-2026). Antes la calidad vivía solo en
+## memoria: quien bajaba a «Media» porque su equipo no daba, al reabrir el
+## juego volvía a «Alta». Archivo propio (y no las preferencias de la
+## interfaz) porque el motor gráfico hay que saberlo ANTES de abrir nada.
+const ARCHIVO := "user://grafica.cfg"
+
+## MOTOR LIGERO: el renderizador de compatibilidad (OpenGL 3). En una gráfica
+## integrada vieja va bastante más suelto que Forward+ (Vulkan): menos pasadas,
+## sin efectos de pantalla caros. No se puede cambiar en caliente; el juego se
+## relanza con `--rendering-method gl_compatibility`.
+static var motor_ligero := false
+
+static func cargar() -> void:
+	var cf := ConfigFile.new()
+	if cf.load(ARCHIVO) != OK:
+		return
+	if cf.has_section_key("grafica", "calidad"):
+		elegida = clampi(int(cf.get_value("grafica", "calidad")), MEDIO, ULTRA)
+	if cf.has_section_key("grafica", "adaptativa"):
+		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
+	if cf.has_section_key("grafica", "motor_ligero"):
+		motor_ligero = bool(cf.get_value("grafica", "motor_ligero"))
+
+static func guardar() -> void:
+	var cf := ConfigFile.new()
+	cf.set_value("grafica", "calidad", elegida)
+	cf.set_value("grafica", "adaptativa", adaptativa)
+	cf.set_value("grafica", "motor_ligero", motor_ligero)
+	cf.save(ARCHIVO)
+
+## ¿Se puede relanzar el juego? Solo en un ejecutable de escritorio (en el
+## editor, el móvil o la web no: ahí el motor lo fija la plataforma).
+static func puede_relanzar() -> bool:
+	return not OS.has_feature("editor") and OS.has_feature("pc")
+
+## Al arrancar: si el jugador eligió el motor ligero y no está puesto, se
+## relanza con él. Devuelve true si se relanzó (quien llama debe salir).
+static func relanzar_si_hace_falta(arbol: SceneTree) -> bool:
+	if not motor_ligero or es_compatibilidad() or not puede_relanzar():
+		return false
+	return relanzar(arbol)
+
+## Vuelve a abrir el juego con el motor elegido y cierra este.
+static func relanzar(arbol: SceneTree) -> bool:
+	var args := PackedStringArray()
+	var saltar := false
+	for a in OS.get_cmdline_args():
+		if saltar:
+			saltar = false
+			continue
+		if a == "--rendering-method" or a == "--rendering-driver":
+			saltar = true
+			continue
+		args.append(a)
+	if motor_ligero:
+		args.append_array(["--rendering-method", "gl_compatibility"])
+	if OS.create_process(OS.get_executable_path(), args) <= 0:
+		return false
+	arbol.quit()
+	return true

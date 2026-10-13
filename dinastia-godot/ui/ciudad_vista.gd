@@ -27,6 +27,10 @@ var club: Club
 var construir: Callable
 ## B7: ¿se juega en casa esta semana? La ciudad se viste de partido.
 var dia_partido := false
+## El momento del club (`CiudadAnimo.de`), lo pone quien abre la vista.
+var animo: Dictionary = {}
+## El ídolo del club (nombre), para la estatua de la Plaza Mayor.
+var idolo := ""
 var _obras: Instalaciones
 var _ciudad_datos: Ciudad
 var _perfil: Dictionary = {}
@@ -112,7 +116,9 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	## mismo `Calidad` y no debe cambiar.
 	var env := we.environment
 	env.tonemap_exposure = 1.02
-	env.adjustment_saturation = 1.16
+	## El ánimo del club también tiñe la escena: más viva en la euforia, más
+	## gris en la crisis (fase 5).
+	env.adjustment_saturation = _saturacion_animo()
 	env.adjustment_contrast = 1.10
 	if env.fog_enabled:
 		env.fog_density = 0.00016
@@ -145,6 +151,13 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	_ciudad = CityBuilder.new()
 	_raiz3d.add_child(_ciudad)
 	_ciudad.build(_datos_de(club, obras, ciudad, perfil_estadio))
+	## Etapa 3: la misma calidad adaptativa que el partido -si la máquina no
+	## llega a 40 FPS se bajan efectos por escalones-. No en render por software.
+	var adaptador := RenderingServer.get_video_adapter_name().to_lower()
+	if Calidad.adaptativa and not adaptador.contains("llvmpipe") and not adaptador.contains("swiftshader"):
+		var ra := RendimientoAdaptativo.new()
+		ra.raiz3d = _raiz3d
+		add_child(ra)
 
 	_camara = Camera3D.new()
 	_camara.fov = 55.0
@@ -162,6 +175,16 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	_boton(barra, "🏷 Rótulos", func() -> void:
 		_rotulos_visibles = not _rotulos_visibles
 		_ciudad.mostrar_rotulos(_rotulos_visibles))
+	_boton(barra, "📷 Foto", func() -> void:
+		## Sin rótulos flotantes en la foto; vuelven al salir.
+		_ciudad.mostrar_rotulos(false)
+		ModoFoto.abrir(self, club, "la ciudad").tree_exited.connect(func() -> void:
+			_ciudad.mostrar_rotulos(_rotulos_visibles)))
+	_boton(barra, "🚗 Conducir", func() -> void: explorar("coche"))
+	_boton(barra, "🚶 Pasear", func() -> void: explorar("pie"))
+	_boton(barra, "🚇 Metro", func() -> void:
+		if _ciudad.expansion != null and _ciudad.expansion.metro != null:
+			_ciudad.expansion.metro.alternar_rayos_x())
 	_boton(barra, "⚽ Día de partido", func() -> void:
 		dia_partido = not dia_partido
 		_reconstruir())
@@ -201,6 +224,9 @@ func _datos_de(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Di
 			"cap": c.estadio_aforo, "rep": c.rep, "socios": c.socios,
 			"estadioNom": c.estadio_nombre if c.estadio_nombre != "" else ("Estadio " + c.nombre),
 		},
+		## El club en sí: el estadio de la ciudad se levanta con su semilla y su
+		## escudo, igual que en el partido y en el visor (el MISMO estadio).
+		"club_obj": c,
 		"inst": obras.niveles.duplicate(),
 		"obras": arr_obras,
 		## LOS TERRENOS Y LOS NEGOCIOS, que hasta ahora solo existían como texto
@@ -209,9 +235,12 @@ func _datos_de(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Di
 		## sueltas alrededor.
 		"terrenos": ciudad.terrenos.duplicate() if ciudad != null else [],
 		"negocios": ciudad.negocios.duplicate() if ciudad != null else {},
-		"perfil_estadio": perfil_estadio,
+		## El nombre del club para los rótulos del túnel y el vestuario.
+		"perfil_estadio": perfil_estadio.merged({"club_nombre": Nombres.visible(c.nombre)}) if not perfil_estadio.is_empty() else perfil_estadio,
 		"luces": ciudad.luces if ciudad != null else Ciudad.LUCES_POR_DEFECTO,
 		"dia_partido": dia_partido,
+		"animo": animo,
+		"idolo": idolo,
 		"vecinos": ciudad.vecinos if ciudad != null else 55,
 	}
 
@@ -230,7 +259,80 @@ func _mover_camara() -> void:
 	_camara.position = Vector3(o.x + sin(_ang) * _dist, _alto, o.z + cos(_ang) * _dist + 20.0)
 	_camara.look_at(o, Vector3.UP)
 
+## EL MODO A PIE / AL VOLANTE (7-10-2026): ver `ExploradorCiudad`.
+var _explorador: ExploradorCiudad = null
+var _barra_mapa: Array[Control] = []
+
+func explorar(modo: String) -> void:
+	if _explorador != null:
+		return
+	_explorador = ExploradorCiudad.new()
+	_raiz3d.add_child(_explorador)
+	var desde := Vector3(0, 0, CityBuilder.RING_Z_SUR) if modo == "coche" else Vector3(0, 0, -440)
+	_explorador.iniciar(_ciudad, modo, desde, club.nombre if club != null else "", String(animo.get("estado", "normal")))
+	_explorador.salir.connect(_dejar_de_explorar)
+	_explorador.interactuar.connect(_interactuar_en_ciudad)
+	for h in get_children():
+		if h is Control and (h as Control).visible and h != _ficha:
+			(h as Control).visible = false
+			_barra_mapa.append(h)
+
+func _dejar_de_explorar() -> void:
+	if _explorador == null:
+		return
+	_explorador.queue_free()
+	_explorador = null
+	_camara.make_current()
+	for h in _barra_mapa:
+		if is_instance_valid(h):
+			h.visible = true
+	_barra_mapa.clear()
+
+## La E en un lugar de la ciudad: la ficha de la instalación, el estadio, o
+## un minijuego de la ciudad.
+func _interactuar_en_ciudad(k: String) -> void:
+	if Instalaciones.CATALOGO.has(k):
+		abrir_ficha(k)
+		return
+	if k == "estadio":
+		editar_estadio_pedido.emit()
+		return
+	var juego := MinijuegosCiudad.juego_de(k)
+	## Los edificios con interior: se entra (y si además tienen minijuego,
+	## dentro hay un botón para jugarlo).
+	if InteriorInstalacion.tiene(k):
+		var jugar := Callable()
+		if juego != "":
+			jugar = func() -> void: _abrir_minijuego(juego)
+		_pausar_mientras(InteriorInstalacion.abrir(self, k, club, jugar))
+		return
+	if juego != "":
+		_abrir_minijuego(juego)
+
+func _abrir_minijuego(juego: String) -> void:
+	_pausar_mientras(MinijuegosCiudad.abrir(self, juego, club))
+
+## Mientras dura un minijuego o una visita por dentro, el paseo se pausa y su
+## cartel se oculta.
+## Cuenta las ventanas abiertas: pasar del interior a su minijuego no debe
+## soltar la pausa por el camino.
+var _pausas := 0
+
+func _pausar_mientras(j: Control) -> void:
+	if j != null and _explorador != null:
+		_pausas += 1
+		_explorador.pausar(true)
+		j.tree_exited.connect(func() -> void:
+			_pausas = maxi(0, _pausas - 1)
+			if _explorador != null and _pausas == 0:
+				_explorador.pausar(false))
+
 func _process(delta: float) -> void:
+	if _explorador != null:
+		if _ciclo_activo:
+			_hora = fposmod(_hora + delta * (24.0 / CICLO_SEG), 24.0)
+			_aplicar_hora()
+		return
 	if _girando:
 		_ang += delta * 0.12
 	## CÁMARA LIBRE (B7): WASD mueve el punto que se mira, en el plano del
@@ -251,6 +353,8 @@ func _process(delta: float) -> void:
 ## el cambio de color va siempre con la altura del sol, que es lo que pasa de
 ## verdad.
 func _aplicar_hora() -> void:
+	## La gente del club del estadio trabaja de 8 a 21 h.
+	PersonalEstadio.hora = _hora
 	## Altura del sol: -1 a medianoche, +1 a mediodía. El seno hace justo esta
 	## curva si se desplaza para que el cero caiga a las 6 y a las 18.
 	var t: float = (_hora - 6.0) / 12.0 * PI
@@ -278,14 +382,15 @@ func _aplicar_hora() -> void:
 		_sol.transform.basis = base
 		var sol_dia := Color(1.0, 0.97, 0.90)
 		var sol_rasante := Color(1.0, 0.62, 0.34)
-		var luna := Color(0.55, 0.66, 1.0)
+		## Luna fría pero no azul eléctrico (13-10-2026: teñía aceras y calles).
+		var luna := Color(0.66, 0.72, 0.9)
 		var col: Color = sol_dia.lerp(sol_rasante, rasante)
 		_sol.light_color = luna.lerp(col, clampf(dia + rasante * 0.8, 0.0, 1.0))
 		## 1,15 y no 1,45: a pleno día con 1,45 el césped y los campos salían
 		## lavados, casi blancos. El sol de mediodía quema, pero la cámara de
 		## este juego no es una cámara real sin diafragma. Y 0,30 de noche, no
 		## 0,06: con 0,06 no se veía el suelo.
-		_sol.light_energy = lerpf(0.30, 1.15, dia)
+		_sol.light_energy = lerpf(0.24, 1.15, dia)
 		_sol.shadow_enabled = dia > 0.05
 
 	if _cielo != null:
@@ -313,8 +418,17 @@ func _aplicar_hora() -> void:
 		## o se quema. Es exactamente lo que hace una cámara de verdad.
 		_env.tonemap_exposure = lerpf(1.40, 1.02, dia)
 		_env.ambient_light_energy = lerpf(0.62, 1.0, dia)
+		## En el renderizador de compatibilidad (móvil, web) el cielo con shader
+		## propio no da luz ambiente: lo que queda a la sombra -la espalda de la
+		## grada, la copa de los árboles- salía NEGRO a mediodía. Ahí la luz
+		## ambiente va como color, el del cielo de esa hora.
+		if Calidad.es_compatibilidad():
+			_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+			## De noche, el reflejo cálido de las farolas sobre la ciudad (como el
+			## sodio de una ciudad real), no un azul puro que lo tiñe todo.
+			_env.ambient_light_color = Color(0.24, 0.21, 0.22).lerp(Color(0.62, 0.68, 0.74), dia)
 		if _env.fog_enabled:
-			_env.fog_light_color = Color(0.10, 0.12, 0.18).lerp(Color(0.78, 0.80, 0.84), dia)
+			_env.fog_light_color = Color(0.16, 0.13, 0.14).lerp(Color(0.78, 0.80, 0.84), dia)
 
 	## Y las luces de la ciudad: farolas y ventanas encendidas cuando cae el sol.
 	if _ciudad != null:
@@ -348,8 +462,8 @@ func _desplazar(d: Vector2) -> void:
 	var derecha := Vector3(cos(_ang), 0, -sin(_ang))
 	var atras := Vector3(sin(_ang), 0, cos(_ang))
 	_objetivo_deseado += derecha * d.x + atras * d.y
-	_objetivo_deseado.x = clampf(_objetivo_deseado.x, -600.0, 600.0)
-	_objetivo_deseado.z = clampf(_objetivo_deseado.z, -600.0, 700.0)
+	_objetivo_deseado.x = clampf(_objetivo_deseado.x, -1400.0, 1400.0)
+	_objetivo_deseado.z = clampf(_objetivo_deseado.z, -1400.0, 1400.0)
 	_girando = false
 
 func _gui_input(ev: InputEvent) -> void:
@@ -370,9 +484,9 @@ func _gui_input(ev: InputEvent) -> void:
 			_probar_clic_estadio(ev.position)
 	elif ev is InputEventMouseButton and ev.pressed:
 		if ev.button_index == MOUSE_BUTTON_WHEEL_UP:
-			_dist = clampf(_dist - 30.0, 120.0, 1000.0)
+			_dist = clampf(_dist - 60.0, 120.0, 2600.0)
 		elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			_dist = clampf(_dist + 30.0, 120.0, 1000.0)
+			_dist = clampf(_dist + 60.0, 120.0, 2600.0)
 
 ## El clic busca el punto tocable más cercano en pantalla (B7): el estadio
 ## abre el editor, como siempre; un edificio o un solar abre su ficha.
@@ -409,6 +523,8 @@ func abrir_ficha(k: String) -> void:
 	if _ficha != null:
 		_ficha.queue_free()
 	if not Instalaciones.CATALOGO.has(k):
+		## Los lugares de la ciudad: su interior o su minijuego (7-10-2026).
+		_interactuar_en_ciudad(k)
 		return
 	for p: Dictionary in _ciudad.puntos_clic:
 		if String(p["k"]) == k:
@@ -469,6 +585,12 @@ func abrir_ficha(k: String) -> void:
 	elif coste < 0:
 		v.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.BIEN, "Al máximo."))
 	v.add_child(aviso)
+	if nivel > 0 and InteriorInstalacion.tiene(k):
+		var dentro := Button.new()
+		dentro.text = "🚪 Ver por dentro"
+		dentro.custom_minimum_size = Vector2(0, 34)
+		dentro.pressed.connect(func() -> void: InteriorInstalacion.abrir(self, k, club))
+		v.add_child(dentro)
 	var cerrar := Button.new()
 	cerrar.text = "Cerrar"
 	cerrar.flat = true
@@ -480,7 +602,13 @@ func abrir_ficha(k: String) -> void:
 
 ## Vuelve a levantar la ciudad con los datos de ahora (tras construir o al
 ## cambiar el día de partido).
+func _saturacion_animo() -> float:
+	## Sin pasarse (13-10-2026): con 1,3 la euforia quemaba los colores.
+	return {"euforia": 1.14, "bien": 1.09, "mal": 0.96, "crisis": 0.8}.get(String(animo.get("estado", "")), 1.05)
+
 func _reconstruir() -> void:
+	if _env != null:
+		_env.adjustment_saturation = _saturacion_animo()
 	_ciudad.build(_datos_de(club, _obras, _ciudad_datos, _perfil))
 	_ciudad.mostrar_rotulos(_rotulos_visibles)
 	_aplicar_hora()

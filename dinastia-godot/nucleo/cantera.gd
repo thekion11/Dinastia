@@ -178,6 +178,7 @@ func camada_anual() -> Array[Jugador]:
 			noticia.emit("La academia se queda sin cupo",
 				"Este año no sube nadie de la cantera: el plantel tiene %d fichas y no caben más. Dar salidas también es formar." % mio.plantilla.size())
 	_hijos_de_leyendas()
+	_hijos_del_dt()
 	_sortear_hermano(mio)
 	return salida
 
@@ -192,7 +193,7 @@ func _camada_de(c: Club) -> Array[Jugador]:
 	for i in cuantos:
 		if c.plantilla.size() >= TOPE_PLANTEL:
 			break
-		var grupo := String(Azar.uno(["POR", "DEF", "DEF", "MED", "MED", "DEL"]))
+		var grupo := grupo_con_tope(c, String(Azar.uno(["POR", "DEF", "DEF", "MED", "MED", "DEL"])))
 		var edad := Azar.ent(16, 18)
 		var ovr := c.rep - 24 + Azar.ent(-4, 8)
 		var j := m.crear_jugador(c, grupo, demarcacion_de(grupo), edad, ovr)
@@ -324,6 +325,61 @@ func registrar_retiro(j: Jugador, club: Club) -> bool:
 			"%s cuelga las botas. Queda inscrito entre las leyendas del club… y quién sabe si algún día llega un hijo suyo a la cantera." % j.nombre)
 	return true
 
+## TOPE DE PORTEROS (7-10-2026). La prueba larga encontró clubes con 6 y 7
+## porteros: la camada juvenil (uno de cada seis chicos), los hermanos (copian
+## el puesto) y los hijos de leyenda (heredan el del padre) metían porteros sin
+## mirar cuántos había. Solo los fugados tenían tope. Con tres porteros, el que
+## llega juega en otra línea.
+const TOPE_PORTEROS := 3
+
+func grupo_con_tope(c: Club, grupo: String) -> String:
+	if grupo != "POR" or c == null:
+		return grupo
+	var n := 0
+	for j: Jugador in c.plantilla:
+		if j.es_portero():
+			n += 1
+	return String(Azar.uno(["DEF", "MED", "DEL"])) if n >= TOPE_PORTEROS else grupo
+
+## LA DINASTÍA DEL ENTRENADOR (fase 5): los hijos de tu familia (`VidaDT`)
+## crecen con las temporadas y, al cumplir 16, el varón que juega al fútbol
+## entra en la cantera del club que diriges, con tu apellido. Su techo sale de
+## la casa (la academia y la reputación) más un poco de suerte.
+const HIJOS_FUTBOLISTAS := ["Agustín", "Benjamín", "Vicente", "Lucas", "Mateo"]
+
+func _hijos_del_dt() -> void:
+	var m := _mundo()
+	if m == null or m.mi_club() == null or m.vida == null:
+		return
+	var perfil: Dictionary = m.vida.perfil
+	if perfil.is_empty():
+		return
+	if not perfil.has("anio0"):
+		perfil["anio0"] = m.anio
+	var mio := m.mi_club()
+	var apellido := _apellido_de(m.roles.nombre if m.roles != null else "Míster")
+	for h: Dictionary in perfil.get("hijos", []):
+		if bool(h.get("cantera", false)) or not (String(h.get("nombre", "")) in HIJOS_FUTBOLISTAS):
+			continue
+		var edad := int(h.get("edad", 0)) + m.anio - int(perfil["anio0"])
+		if edad < 16 or mio.plantilla.size() >= TOPE_PLANTEL:
+			continue
+		h["cantera"] = true
+		var grupo := String(Azar.uno(["DEF", "MED", "DEL"]))
+		var j := m.crear_jugador(mio, grupo, demarcacion_de(grupo), 16, mio.rep - 22 + Azar.ent(0, 6))
+		j.nombre = "%s %s" % [String(h["nombre"]), apellido]
+		j.pot = clampi(mio.rep + Azar.ent(-2, 14), j.ovr + 6, 95)
+		j.generar_atributos()
+		j.tasar()
+		var f := _ficha(j.id)
+		f["camada"] = m.anio
+		f["linaje"] = {"padre": m.roles.nombre if m.roles != null else "", "club": mio.nombre, "nivel": j.pot,
+			"padre_en_club": true, "pedido": false, "propio": true}
+		j.dorsal = _dorsal_libre(mio)
+		mio.plantilla.append(j)
+		noticia.emit("👨‍👦 Tu hijo entra en la cantera",
+			"%s cumplió 16 y firma por la cantera de %s. En el vestuario ya le llaman «el hijo del míster»; decidir si juega o no es cosa tuya." % [j.nombre, mio.nombre])
+
 ## Los hijos que tocaban este año. El techo del chico sale del NIVEL DEL PADRE,
 ## no de la reputación del club: por eso el hijo de un 93 es una joya aunque
 ## aparezca en un club modesto, y por eso conviene tener ojeadores.
@@ -342,13 +398,19 @@ func _hijos_de_leyendas() -> void:
 		## resto es la mejor historia que da el sistema: el hijo de tu ídolo
 		## formándose en el rival.
 		var destino: Club = club_padre
-		if destino == null or not Azar.suerte(0.7):
+		## DINASTÍA PROPIA (fase 5): el hijo de TU jugador retirado llega siempre
+		## a la cantera del club que diriges ahora.
+		var propio := bool(L.get("propio", false))
+		if propio:
+			destino = m.mi_club()
+		elif destino == null or not Azar.suerte(0.7):
 			destino = m.clubes.get(String(Azar.uno(m.clubes.keys())))
 		if destino == null or destino.plantilla.size() >= TOPE_PLANTEL:
 			continue
 		var grupo := String(L.get("pos", "MED"))
 		if not Azar.suerte(0.7):
 			grupo = String(Azar.uno(["POR", "DEF", "MED", "DEL"]))
+		grupo = grupo_con_tope(destino, grupo)
 		var edad := Azar.ent(16, 17)
 		var ovr := destino.rep - 24 + Azar.ent(0, 6)
 		var j := m.crear_jugador(destino, grupo, demarcacion_de(grupo), edad, ovr)
@@ -369,6 +431,7 @@ func _hijos_de_leyendas() -> void:
 			"nivel": int(L.get("nivel", 80)),
 			"padre_en_club": false,
 			"pedido": false,
+			"propio": propio,
 		}
 		j.dorsal = _dorsal_libre(destino)
 		destino.plantilla.append(j)
@@ -381,7 +444,10 @@ func _hijos_de_leyendas() -> void:
 		## que no conoces. Interesa el que llega a TU cantera y el que lleva el
 		## apellido de alguien que jugó en tu club: ese es el que duele.
 		var mio_id := m.mi_club_id
-		if destino.id == mio_id or (club_padre != null and club_padre.id == mio_id):
+		if propio:
+			noticia.emit("👨‍👦 Tu hijo llega a la cantera",
+				"%s, tu hijo, se incorpora a la cantera de %s. Lleva tu apellido y tu forma de pisar el área. Ahora el entrenador eres tú." % [j.nombre, destino.nombre])
+		elif destino.id == mio_id or (club_padre != null and club_padre.id == mio_id):
 			noticia.emit("Llega el hijo de una leyenda",
 				"La cantera de %s incorpora a %s, hijo de %s (%d en su mejor momento). La prensa ya habla del «nuevo %s»." % [
 					destino.nombre, j.nombre, String(L.get("nombre", "")), int(L.get("nivel", 80)), apellido])
@@ -446,8 +512,8 @@ func _sortear_hermano(mio: Club) -> void:
 	var gemelos := Azar.suerte(0.22)
 	var edad := base.edad if gemelos else clampi(base.edad + Azar.ent(-3, 3), 16, 24)
 	var ovr := base.ovr + (Azar.ent(-2, 2) if gemelos else Azar.ent(-8, 6))
-	var grupo := base.pos
-	var demarcacion := base.pos_e if gemelos else demarcacion_de(grupo)
+	var grupo := grupo_con_tope(mio, base.pos)
+	var demarcacion := base.pos_e if gemelos and grupo == base.pos else demarcacion_de(grupo)
 	var j := m.crear_jugador(mio, grupo, demarcacion, edad, ovr)
 	j.nombre = "%s %s" % [_nombre_de_pila(base.pais), _apellido_de(base.nombre)]
 	j.pais = base.pais
@@ -1293,6 +1359,7 @@ func desde_dic(d: Dictionary) -> void:
 			"nivel": int(L.get("nivel", 80)),
 			"anio_hijo": int(L.get("anio_hijo", 0)),
 			"usado": bool(L.get("usado", false)),
+			"propio": bool(L.get("propio", false)),
 		})
 	_fichas.clear()
 	var f: Dictionary = d.get("fichas", {})

@@ -934,6 +934,10 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 	b_hora.pressed.connect(func() -> void:
 		b_hora.text = "☀️ De día" if escena.alternar_hora() else "🌙 Atardecer")
 	acciones.add_child(b_hora)
+	var b_foto := Button.new()
+	b_foto.text = "📷 Foto"
+	b_foto.pressed.connect(func() -> void: ModoFoto.abrir(pop, m.mi_club(), "en casa"))
+	acciones.add_child(b_foto)
 	## El móvil de verdad: Tribuna, interactivo (publicar, responder, me gusta).
 	if m.redes != null:
 		var tel := Telefono.crear(m, p.get("_bandeja") if p.get("_bandeja") != null else [])

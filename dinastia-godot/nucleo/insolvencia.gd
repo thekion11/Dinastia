@@ -65,7 +65,7 @@ func semana(m: Mundo) -> void:
 func _restar_puntos(m: Mundo, c: Club) -> void:
 	for l in m.ligas:
 		if l.clubes.has(c) and l.tabla_puntos.has(c.id):
-			l.tabla_puntos[c.id]["pts"] = int(l.tabla_puntos[c.id]["pts"]) - PUNTOS_SANCION
+			l.sancionar(c.id, PUNTOS_SANCION)
 			noticia.emit("⚖️ %d puntos menos" % PUNTOS_SANCION, "La federación sanciona a %s por impagos: le resta %d puntos en la tabla." % [c.nombre, PUNTOS_SANCION])
 			return
 
