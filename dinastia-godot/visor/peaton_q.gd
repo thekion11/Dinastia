@@ -17,14 +17,20 @@ extends RefCounted
 ## Lejos de la cámara se dejan de dibujar (`visibility_range_end`): la ciudad
 ## puede tener decenas sin notarse en los fotogramas.
 
-const PIELES := ["f1c7a5", "e0b08a", "c68d68", "a86b45", "7a4e32", "5a3a26"]
+const PIELES := ["f1c7a5", "e0b08a", "c68d68", "a86b45", "8a5a3c", "6b4430"]
 const PELOS := [Color(0.08, 0.06, 0.05), Color(0.25, 0.16, 0.09), Color(0.45, 0.3, 0.16), Color(0.7, 0.55, 0.3), Color(0.55, 0.55, 0.55), Color(0.85, 0.85, 0.82)]
 const CORTES_H := ["corto", "fade", "tupe", "flequillo", "rizado", "largo", "coleta", "rapado"]
 const CORTES_M := ["largo", "melena", "coleta", "trenzas", "corto"]
 ## [diseño, nombre]: lo que se ve por la calle.
-const PRENDAS := ["liso", "liso", "liso", "franjas_finas", "aros_finos", "cuadros_chicos", "tartan", "mangas_contraste", "canesu"]
-const PANTALONES := ["274472", "1f2f4f", "3a3a3a", "c2b280", "5a4a3a", "111111", "6b6b70"]
-const ROPA := ["ffffff", "111111", "c62828", "1565c0", "2e7d32", "f9a825", "6a1b9a", "455a64", "8d6e63", "ec407a", "00838f", "ef6c00", "9e9e9e"]
+## 13-10-2026: ropa de calle de verdad. Sobre todo liso; rayas finas y cuadros
+## pequeños de vez en cuando; nada de dibujos de equipación (arlequín, canesú,
+## mangas de contraste) ni colores de camiseta de fútbol.
+const PRENDAS := ["liso", "liso", "liso", "liso", "liso", "franjas_finas", "cuadros_chicos"]
+## Vaqueros (tres lavados), chinos, gris, negro, verde oliva.
+const PANTALONES := ["2c3e5c", "3b5577", "1e2a3d", "b8a27a", "4a4a4e", "1b1b1d", "55583f"]
+## Colores apagados de calle: blanco roto, gris, negro, azul marino, burdeos,
+## verde botella, mostaza apagado, camel, crudo, azul grisáceo, teja.
+const ROPA := ["ecebe6", "8f9296", "2b2c30", "26324a", "6e2a33", "2f4a3c", "b5913f", "a67b55", "d9cfbd", "5f7486", "9c5a3c", "46494f", "c9c3b6"]
 
 ## Crea el peatón (sin terminar: `terminar()` cuando ya esté en el árbol).
 static func crear(rng: RandomNumberGenerator) -> Dictionary:
@@ -55,7 +61,7 @@ static func terminar(d: Dictionary) -> void:
 	var pant := Color(String(PANTALONES[rng.randi() % PANTALONES.size()]))
 	var piel := Color(String(PIELES[rng.randi() % PIELES.size()]))
 	var pelo_col: Color = PELOS[rng.randi() % PELOS.size()]
-	var zapatilla: String = ["ffffff", "111111", "3e2723", "5d6d7e"][rng.randi() % 4]
+	var zapatilla: String = ["e8e6e0", "1c1c1e", "3e2723", "4a4d52"][rng.randi() % 4]
 	var kit := {
 		"dis": String(PRENDAS[rng.randi() % PRENDAS.size()]),
 		"cols": [c1.to_html(false), c2.to_html(false), c2.darkened(0.3).to_html(false), "ffffff", "111111"],
