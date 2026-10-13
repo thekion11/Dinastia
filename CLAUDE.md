@@ -323,3 +323,20 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   competición a todo lo ancho con DG, respuestas de prensa coherentes, peatones (sin
   zapatillas marrón, sin cejas dobles en mujeres, `PeloQ.color_cejas`, gafas a la altura,
   escote sin babero). Prueba de caras de peatones: `CARA=i captura_peatones_fila.tscn`.
+- 13-10 (tarde) FÍSICA DEL PARTIDO 3D (pedido: «las físicas siguen siendo de lo peor»):
+  `pruebas/sonda_fisica_partido.tscn` mide solapes, velocidades, giros y balón
+  (FOTOGRAMAS=n; ~0,5 s por fotograma en xvfb, 600 = 20 s de juego). HECHO: esprint en
+  plena jugada (~7 m/s), balón con roce al rodar y pases rasos que frenan, tope de
+  velocidad del balón (18 raso / 24 aire / 30 gol), cuerpos que no se atraviesan
+  (`MatchPlayback._resolver_choques`). Pendiente: aceleraciones/giros bruscos, disputas
+  por el balón, portero (semana 3).
+- 13-10 PEDIDO: acercar el partido a FC 26 con un VÍDEO de una partida que el usuario
+  dará: está en su Drive (carpeta 1N8kbMPGpPm4Z5t2GudinzJsufdolBwIw, MP4 de 67 MB; el
+  conector de Drive no sirve para bajarlo: base64 no cabe). El usuario está cambiando
+  «Network access» del entorno «Default» a Personalizado con `drive.usercontent.google.com`
+  y `drive.google.com`; el vídeo debe estar compartido «cualquiera con el enlace». Con
+  él: bajar, sacar fotogramas (OpenCV ya está) y comparar números con la sonda.
+  Alternativas: clip corto en la rama o capturas en el chat.
+- 13-10: plataforma Aura (tryaura.dev): solo Unreal/Unity, sin Godot → NO se usa. No hace
+  falta conector ni nivel especial de modelo; lo que falta es ver el vídeo.
+
