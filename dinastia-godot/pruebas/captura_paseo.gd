@@ -28,7 +28,7 @@ func _process(_d: float) -> void:
 			if h is VistaCiudad:
 				_v = h
 		_v.set("_ciclo_activo", false)
-		_v.set("_hora", 11.0)
+		_v.set("_hora", float(OS.get_environment("HORA")) if OS.get_environment("HORA") != "" else 11.0)
 		_v.call("_aplicar_hora")
 		_v.explorar("pie")
 		_e = _v.get("_explorador")
