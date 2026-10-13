@@ -84,6 +84,10 @@ uniform float borde = 0.45;
 uniform bool largo = false;
 // Dónde acaba la manga larga (|x| de reposo): 0,755 hombre, 0,69 mujer.
 uniform float muneca = 0.755;
+// Ropa de calle: manga corta con pantalón largo, y tatuaje (0 ninguno,
+// 1 antebrazo derecho, 2 los dos antebrazos, 3 brazo derecho entero).
+uniform bool manga_corta = false;
+uniform int tatuaje = 0;
 
 // LA CARA 2D MOLDEADA SOBRE EL MODELO 3D (29-9-2026): los rasgos del retrato
 // de la ficha (`Cara.svg_rasgos`) o la foto real, proyectados de frente con la
@@ -537,7 +541,7 @@ void fragment() {
 	}
 
 	if (largo) {
-		bool antebrazo = manga && abs(x) < muneca;
+		bool antebrazo = manga && abs(x) < (manga_corta ? 0.43 : muneca);
 		bool pierna = !manga && y >= 0.085 && y < 1.0;
 		m.r = max(m.r, (cubierta && antebrazo) ? 1.0 : 0.0);
 		m.g = max(m.g, (cubierta && pierna) ? 1.0 : 0.0);
@@ -632,6 +636,19 @@ void fragment() {
 		albedo = piel_foto * mix(1.0, relieve, mix(0.25, 0.8, oreja));
 		albedo *= mix(vec3(1.0), vec3(1.06, 0.97, 0.95), oreja);
 	}
+	// TATUAJE (13-10-2026): trazos tribales sobre la piel del antebrazo (y del
+	// brazo entero en el 3); la manga, si la hay, lo tapa después.
+	if (tatuaje > 0 && usa_reposo && abs(x) > 0.23 && abs(x) < muneca - 0.02 && y > 1.2) {
+		bool lado_ok = x < 0.0 || tatuaje == 2;
+		float desde = tatuaje == 3 ? 0.24 : 0.45;
+		if (lado_ok && abs(x) > desde) {
+			float u_t = abs(x) * 40.0;
+			float a_t = atan(z - 0.5, y - 1.455) * 3.0;
+			float trazo = abs(sin(u_t + sin(a_t * 2.0) * 1.3)) * abs(cos(a_t + u_t * 0.35));
+			float tinta = smoothstep(0.62, 0.7, trazo) * smoothstep(desde, desde + 0.02, abs(x));
+			albedo = mix(albedo, vec3(0.05, 0.06, 0.08), tinta * 0.82);
+		}
+	}
 	// ROPA DE CALLE CON TELA (13-10-2026): el color plano parecía pintura.
 	// Tejido fino, costuras de hombro y laterales, dobladillo, puños, cintura
 	// y, en el vaquero, la sarga diagonal, el desgaste de los muslos y la
@@ -643,7 +660,8 @@ void fragment() {
 		float costura_l = (1.0 - smoothstep(0.0, 0.004, abs(ax_t - 0.205))) * step(y, 1.4) * step(1.0, y);
 		float costura_h = (1.0 - smoothstep(0.0, 0.005, abs(ax_t - 0.215))) * step(1.22, y);
 		float dobladillo = 1.0 - smoothstep(0.0, 0.016, y - 1.0);
-		float puno = largo ? (1.0 - smoothstep(0.0, 0.025, muneca - ax_t)) * step(1.22, y) : 0.0;
+		float fin_m = manga_corta ? 0.43 : muneca;
+		float puno = largo ? (1.0 - smoothstep(0.0, 0.025, fin_m - ax_t)) * step(1.22, y) * step(ax_t, fin_m + 0.005) : 0.0;
 		camiseta *= 1.0 - 0.16 * max(max(costura_l, costura_h), max(dobladillo, puno));
 		vec3 p0 = pant;
 		float azul = p0.b - p0.r;
