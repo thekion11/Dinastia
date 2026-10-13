@@ -1210,7 +1210,9 @@ func vestir_torre(n: Node, semilla: int) -> void:
 			var m := ShaderMaterial.new()
 			m.shader = sh
 			m.set_shader_parameter("pared", TONOS_TORRE[i])
-			m.set_shader_parameter("vidrio", Color(0.2, 0.34, 0.5).lerp(Color(0.3, 0.45, 0.4), float(i % 3) * 0.3))
+			## Cristal oscuro y casi neutro (13-10-2026: el azul 0,2/0,34/0,5 se
+			## leía como azul cielo con la exposición del día).
+			m.set_shader_parameter("vidrio", Color(0.13, 0.16, 0.2).lerp(Color(0.16, 0.18, 0.17), float(i % 3) * 0.4))
 			_mats_torre.append(m)
 	var mat := _mats_torre[absi(semilla) % _mats_torre.size()]
 	if n is MeshInstance3D:

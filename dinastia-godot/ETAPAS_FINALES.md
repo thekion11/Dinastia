@@ -59,6 +59,11 @@ variedad**; y **NPCs con vida** (rutinas, charlas, reacciones; no solo andar).
 Se comprueba con capturas lado a lado (antes/después) en luz de día, tarde y
 noche, y en los dos renderizadores (escritorio y móvil).
 
+### Pendiente visto el 13-10-2026 (etapa 6)
+- La torre de oficinas junto a la avenida (x≈1010, z≈-535) tiene ventanas
+  grandes azul cielo que NO salen de `fachada_torre.gdshader` ni de
+  `Texturas.cristal` (ya corregidos a cristal tintado): localizar su origen.
+
 ## Etapa 3 · Optimización mediante código
 
 - **Medir antes de tocar.** Un banco de rendimiento con tiempos de construcción
