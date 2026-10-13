@@ -2,7 +2,7 @@ extends Node
 ## Entrar a un edificio y pasearlo (etapa 6): bar, casa y taller en tercera y
 ## primera persona, y la salida a la calle. Salida: pruebas/capturas/entrar_N.png
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_entrar.tscn
-const CLAVES := ["edificio_bar|Bar El Rincón", "edificio_vivienda|Casa de la familia Ortega", "edificio_taller|Taller Motor"]
+const CLAVES := ["ciudad_hospital", "edificio_bar|Bar El Rincón", "edificio_vivienda|Casa de la familia Ortega"]
 var _p: Node
 var _v: VistaCiudad
 var _e: ExploradorCiudad
@@ -37,6 +37,8 @@ func _process(_d: float) -> void:
 	if _n > 12 and fase < CLAVES.size():
 		if paso == 1:
 			_e.call("_entrar_en_edificio", CLAVES[fase])
+		if paso == 2:
+			print("MUEBLES ", fase, " círculos=", _e._int_circulos.size())
 		if paso == 12:
 			_foto("%d_tercera" % fase)
 			_e.primera_persona = true
