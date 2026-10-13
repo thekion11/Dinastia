@@ -176,7 +176,7 @@ func _rutas_gente_cerca(centro: Vector3) -> Array:
 		for dz in range(-1, 2):
 			out.append_array(_gente_celdas.get(k0 + Vector2i(dx, dz), []))
 	return out
-func reciclar_peatones(centro: Vector3, mira: Vector3, lejos := 95.0, tope := 3, max_cerca := 28) -> int:
+func reciclar_peatones(centro: Vector3, mira: Vector3, lejos := 95.0, tope := 3, max_cerca := 28, inicial := false) -> int:
 	var movidos := 0
 	var c2 := Vector2(centro.x, centro.z)
 	## Con bastante gente alrededor no se trae más (rendimiento y realismo).
@@ -211,7 +211,12 @@ func reciclar_peatones(centro: Vector3, mira: Vector3, lejos := 95.0, tope := 3,
 				var pos: Vector3 = ruta.en(sp)[0]
 				var d := Vector2(pos.x, pos.z) - c2
 				var dist := d.length()
-				if dist < 40.0 or dist > 75.0 or (m2 != Vector2.ZERO and d.normalized().dot(m2) > 0.2):
+				## Al entrar (`inicial`) vale cualquier sitio a 12-60 m; después, a la
+				## espalda desde 40 m o por delante desde 55 m (de lejos no se nota).
+				if inicial:
+					if dist < 12.0 or dist > 60.0:
+						continue
+				elif dist < 40.0 or dist > 80.0 or (m2 != Vector2.ZERO and d.normalized().dot(m2) > 0.2 and dist < 55.0):
 					continue
 				var vieja := int(v["ruta"])
 				if vieja != r:
