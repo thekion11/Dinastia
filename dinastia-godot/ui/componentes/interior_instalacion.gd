@@ -167,6 +167,8 @@ func _montar() -> void:
 
 ## Levanta la sala según `tipo` en `_raiz` (la usa la ventana y también el paseo).
 func _construir_sala() -> void:
+	## Ropa corta de deporte solo donde se hace deporte (13-10-2026).
+	Mini3D.sala_deportiva = tipo in ["gimnasio", "piscina"]
 	match tipo:
 		"oficina": _oficina()
 		"hospital": _hospital()
@@ -189,6 +191,8 @@ func _construir_sala() -> void:
 		"peluqueria": _peluqueria()
 		"libreria": _libreria()
 		"taller": _taller()
+	## De vuelta al valor de siempre: los minijuegos y la ciudad lo usan.
+	Mini3D.sala_deportiva = true
 
 # ------------------------------------------------------------------ la sala
 
