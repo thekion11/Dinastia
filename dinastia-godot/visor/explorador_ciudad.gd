@@ -221,6 +221,12 @@ const EDIFICIOS := [
 func edificio_en(p: Vector3) -> Dictionary:
 	if cb == null:
 		return {}
+	## Entre casas no hay bares: las viviendas ya son sus propios lugares.
+	for pc: Dictionary in cb.puntos_clic:
+		if String(pc["k"]).begins_with("edificio_vivienda"):
+			var q: Vector3 = pc["pos"]
+			if Vector2(q.x - p.x, q.z - p.z).length() < 22.0:
+				return {}
 	for r: Rect2 in cb._frentes:
 		var dx := maxf(maxf(r.position.x - p.x, 0.0), p.x - r.end.x)
 		var dz := maxf(maxf(r.position.y - p.z, 0.0), p.z - r.end.y)
@@ -584,7 +590,7 @@ func _buscar_cerca() -> void:
 		for pc: Dictionary in cb.puntos_clic:
 			var q: Vector3 = pc["pos"]
 			var d := Vector2(q.x - p.x, q.z - p.z).length()
-			if d < mejor:
+			if d < mejor and d < float(pc.get("radio", 99.0)):
 				mejor = d
 				_cerca = {"tipo": "lugar", "k": String(pc["k"]), "n": String(pc["n"])}
 	## Cualquier fachada de manzana: se puede entrar (etapa 6). El tipo y el
