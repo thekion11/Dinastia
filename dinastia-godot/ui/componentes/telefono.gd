@@ -174,7 +174,17 @@ func abrir_app(app: String) -> void:
 		"fotos": _fotos()
 		"ajustes": _ajustes()
 	_escalar_letra.call_deferred()
+	_botones_movil.call_deferred()
 	_scroll.scroll_vertical = 0
+
+## Botones con forma de móvil (13-10-2026): píldoras, no los rectángulos del
+## resto del juego. Los planos (atrás, iconos) se quedan como están.
+func _botones_movil() -> void:
+	for n in _cuerpo.find_children("*", "Button", true, false):
+		var b := n as Button
+		if b.flat or b.get_child_count() > 0 or b.has_theme_stylebox_override("normal"):
+			continue
+		CuadroDialogo.respuesta(b)
 
 ## El tamaño de letra elegido en Ajustes, aplicado a todo lo que se pintó.
 func _escalar_letra() -> void:
