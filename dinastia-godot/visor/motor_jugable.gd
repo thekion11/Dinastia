@@ -151,6 +151,8 @@ var _t_attr := 0.0
 var _eligiendo := false
 ## Cuántas veces se ha pateado el balón: el portero decide UNA vez por disparo.
 var _n_patada := 0
+## Qué clase de golpeo es el próximo `_patear` (lo fija quien patea).
+var _ctx_golpeo := ""
 
 # ---------------------------------------------------------------- montaje
 
@@ -712,9 +714,72 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 	(p["node"] as Node3D).rotation.y = atan2(d.x, d.z)
 	var ap: AnimationPlayer = p.get("anim")
 	if is_instance_valid(ap):
-		_anim(p, AnimExtra.variante(ap, anim, String(p.get("id", "")), _rng), true)
+		_anim(p, _golpeo_anim(p, ap, anim, destino, b, vh, loft, efecto), true)
+	_ctx_golpeo = ""
 	if p == usuario:
 		stats["toques"] += 1
+
+## EL GESTO QUE TOCA (13-10-2026). Hay 333 animaciones de futbolista y el motor
+## usaba un puñado, y los golpeos se sorteaban a ciegas (un pase corto podía
+## salir con gesto de rabona). Aquí se elige por la jugada: tiro colocado,
+## cañonazo, rosca, de primera, volea o en carrera; pase interior, al pie,
+## bombeado, largo, filtrado, atrás o de primera; centro, despeje, saque de
+## banda, cabezazo de pase o de remate. Y el zurdo, con la zurda (espejo).
+func _golpeo_anim(p: Dictionary, ap: AnimationPlayer, anim: String, destino: Vector3, desde: Vector3, vh: float, loft: float, efecto: float) -> String:
+	var d := dir_ataque(bool(p["es_local"]))
+	var dist := Vector2(destino.x - desde.x, destino.z - desde.z).length()
+	var de_primera := t - float(p.get("tomo_en", -9.0)) < 0.35
+	var en_aire := desde.y > 0.45
+	var sp := (p["vel"] as Vector3).length()
+	var ops: Array = []
+	match _ctx_golpeo:
+		"tiro":
+			if en_aire:
+				ops = ["volea", "media_volea"] if desde.y < 1.2 else ["tijera", "chilena"]
+			elif de_primera:
+				ops = ["tiro_de_primera"]
+			elif absf(efecto) > 2.2:
+				ops = ["tiro_rosca", "trivela"]
+			elif vh > 30.0:
+				ops = ["tiro_canonazo", "tiro_empeine", "tiro_seco"]
+			elif sp > 5.0:
+				ops = ["tiro_carrera"]
+			else:
+				ops = ["tiro_colocado", "tiro_rastron", "tiro_puntera"]
+		"filtrado":
+			ops = ["pase_filtrado"]
+		"centro":
+			ops = ["centro_raso"] if destino.y < 0.6 else (["centro_rosca", "centro"] if absf(efecto) > 3.0 else ["centro"])
+		"despeje":
+			ops = ["patear", "pase_largo"]
+		"banda":
+			ops = ["saque_banda"]
+		_:
+			if anim == "cabezazo":
+				ops = ["cabezazo_potente", "cabezazo_picado"] if vh > 15.0 else ["pase_cabeza", "cabezazo"]
+			elif en_aire and anim == "pase":
+				ops = ["pase_pecho"] if desde.y > 1.0 else ["media_volea"]
+			elif anim == "pase":
+				var atras := (destino.z - desde.z) * d < -3.0
+				if loft > 0.0:
+					ops = ["pase_largo", "pase_bombeado"] if dist > 28.0 else ["pase_bombeado"]
+				elif de_primera:
+					ops = ["pase_primera"]
+				elif atras:
+					ops = ["pase_atras"]
+				elif dist < 13.0:
+					ops = ["pase_interior", "pase"]
+				elif absf(destino.x - desde.x) > absf(destino.z - desde.z) * 1.6:
+					ops = ["pase_lateral", "pase_cruzado"]
+				else:
+					ops = ["pase_empeine", "pase", "pase_exterior"]
+			else:
+				ops = [anim]
+	var vivos: Array = ops.filter(func(n: String) -> bool: return ap.has_animation(n))
+	var nombre := String(vivos[_rng.randi() % vivos.size()]) if not vivos.is_empty() else anim
+	if AnimExtra.es_zurdo(String(p.get("id", ""))) and ap.has_animation(nombre + "_espejo"):
+		nombre += "_espejo"
+	return nombre
 
 ## La foto del fuera de juego al patear `p`. En saque de banda, córner y saque
 ## de puerta no hay fuera de juego (regla 11).
@@ -819,6 +884,17 @@ func _tomar(p: Dictionary) -> void:
 		_jugada = {}
 	penultimo_toque = ultimo_toque if ultimo_toque != p else penultimo_toque
 	ultimo_toque = p
+	## El control: con el pecho si viene alto, orientado con el pie si viene
+	## fuerte y él casi parado; el portero blocando.
+	var alto := balon.position.y
+	var fuerte := vel_balon.length()
+	p["tomo_en"] = t
+	if bool(p["por"]):
+		_anim(p, "blocaje_alto" if alto > 1.4 else ("blocaje_rasante" if fuerte > 6.0 else "recoger_balon"), true, 0.8)
+	elif alto > 0.9:
+		_anim(p, "golpe_pecho", true, 0.6)
+	elif fuerte > 7.0 and (p["vel"] as Vector3).length() < 2.0:
+		_anim(p, "parada_pie", true, 0.6)
 	poseedor = p
 	pase_a = {}
 	vel_balon = Vector3.ZERO
@@ -926,7 +1002,13 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32)
 	if p == usuario:
 		stats["entradas"] += 1
-	_anim(p, "falta_barrida" if barrida else "entrada_de_pie", true)
+	var de_lado := absf((pos(victima) - pos(p)).normalized().dot(Vector3(sin((p["node"] as Node3D).rotation.y), 0, cos((p["node"] as Node3D).rotation.y)))) < 0.5
+	var gesto_e := "entrada_de_pie"
+	if barrida:
+		gesto_e = ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga", "falta_barrida"][_rng.randi() % 5]
+	elif de_lado:
+		gesto_e = "carga_hombro" if _rng.randf() < 0.5 else "entrada_lateral_pie"
+	_anim(p, gesto_e, true)
 	var r := _rng.randf()
 	if r < exito:
 		if p == usuario:
@@ -1185,7 +1267,8 @@ func _ia_portero(p: Dictionary) -> Vector3:
 func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	_cerrar_tiro("atajada")
 	var lado := "izq" if (cruce.x - pos(p).x) * dir_ataque(bool(p["es_local"])) > 0.0 else "der"
-	var anim := "atajar_bajo" if cruce.y < 0.6 else ("atajar_%s" % lado)
+	var altura := "baja" if cruce.y < 0.7 else ("media" if cruce.y < 1.6 else "alta")
+	var anim := ("estirada_%s_%s" % [altura, lado]) if estirada else ("atajar_bajo" if cruce.y < 0.6 else ("blocaje_alto" if cruce.y > 1.6 else "atajar"))
 	_anim(p, anim, true)
 	(p["node"] as Node3D).position.x = move_toward(pos(p).x, cruce.x, 1.6 if estirada else 0.8)
 	var fuerza := vel_balon.length()
@@ -1235,6 +1318,7 @@ func _ia_portador(p: Dictionary) -> void:
 	if en_su_tercio and presion < 2.2 and _rng.randf() < 0.55:
 		var lado := signf(yo.x) if yo.x != 0.0 else 1.0
 		var despeje := Vector3(lado * _rng.randf_range(18, 36), 0, yo.z + d * _rng.randf_range(20, 40))
+		_ctx_golpeo = "despeje"
 		_patear(p, despeje, 18.0, 4.0, 0.0, "patear")
 		despejes[0 if bool(p["es_local"]) else 1] += 1
 		return
@@ -1254,6 +1338,7 @@ func _ia_portador(p: Dictionary) -> void:
 	if absf(yo.x) > 17.0 and absf(arco.z - yo.z) < 20.0 and _rng.randf() < 0.55:
 		var err_c := (1.0 - float(p["attr"]["pas"])) * 7.0
 		var destino := Vector3(_rng.randf_range(-4, 4) + _rng.randf_range(-err_c, err_c), 1.6, arco.z - d * _rng.randf_range(4, 10))
+		_ctx_golpeo = "centro"
 		_patear(p, destino, 17.0, 0.0, -signf(yo.x) * 6.0, "pase")
 		pase_a = _companero_cerca(p, destino)
 		return
@@ -1263,7 +1348,19 @@ func _ia_portador(p: Dictionary) -> void:
 		p["regate_hasta"] = t + 0.7
 		var lado := Vector3(d, 0, 0) * (1.0 if _rng.randf() < 0.5 else -1.0)
 		(p["node"] as Node3D).position += lado * 0.8
-		_anim(p, AnimExtra.variante(p["anim"], "regate_finta", String(p["id"]), _rng), true)
+		## El repertorio crece con el regate: los buenos sacan bicicletas,
+		## elásticas, ruletas y caños.
+		var reg_a := float(p["attr"]["reg"])
+		var fintas := ["regate_finta", "recorte_interior", "recorte_exterior", "amague_cuerpo", "finta_hombro"]
+		if reg_a > 0.7:
+			fintas.append_array(["bicicleta", "cola_de_vaca", "giro_cruyff", "pisada_lateral"])
+		if reg_a > 0.82:
+			fintas.append_array(["elastica", "ruleta", "cano", "croqueta", "sombrero"])
+		var nom: String = fintas[_rng.randi() % fintas.size()]
+		var ap_r: AnimationPlayer = p["anim"]
+		if is_instance_valid(ap_r) and lado.x * d < 0.0 and ap_r.has_animation(nom + "_espejo"):
+			nom += "_espejo"
+		_anim(p, nom, true)
 		return
 	## EL PASE AL HUECO (13-10-2026). La IA nunca filtraba: los ataques
 	## morían a 30 m de la portería tocando atrás (la sonda: 5 tiros en 8
@@ -1399,6 +1496,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false) -
 	## de la línea = por arriba» la sonda medía el balón en el aire el 64 % del
 	## tiempo (pelotazo y cabezazo). Ahora por arriba solo el envío largo o el
 	## que está tapado y lejos, y a media altura.
+	_ctx_golpeo = "filtrado" if al_hueco else ""
 	var elevado := largo or dist > 32.0 or (dist > 15.0 and _linea_tapada(pos(p), destino, bool(p["es_local"])))
 	if elevado:
 		## Envío por arriba: vuela despacio y cae cerca del compañero.
@@ -1446,6 +1544,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	var y := clampf(0.35 + fuerza * 1.2 + apunte_.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)
 	var destino := Vector3(x, y, arco.z + signf(arco.z) * 0.3)
 	var vh := 16.0 + fuerza * 14.0 + tec * 4.0
+	_ctx_golpeo = "tiro"
 	_patear(p, destino, vh, 0.0, _rng.randf_range(-3, 3), "patear")
 	tiros[0 if bool(p["es_local"]) else 1] += 1
 	_tiro_vivo = {"p": p, "t": t}
@@ -1668,6 +1767,7 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 	match tipo:
 		"corner":
 			var destino := Vector3(_rng.randf_range(-3, 4), 1.7, arco.z - signf(arco.z) * _rng.randf_range(5, 9))
+			_ctx_golpeo = "centro"
 			_patear(p, destino, 18.0, 0.0, -signf(lugar.x) * 8.0, "pase")
 			pase_a = _companero_cerca(p, destino)
 		"penal":
@@ -1695,6 +1795,8 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 			var m := _mejor_pase(p)
 			if not m.is_empty():
 				_pasar_a(p, m)
+				if tipo == "banda":
+					_anim(p, AnimExtra.variante(p["anim"], "saque_banda", String(p.get("id", "")), _rng), true)
 			else:
 				_patear(p, pos(p) + Vector3(0, 0, dir_ataque(bool(p["es_local"])) * 8.0), 10.0)
 	_reanudar()
@@ -1797,6 +1899,7 @@ func _control_usuario(delta: float) -> void:
 		elif Input.is_action_just_pressed("jugar_centro"):
 			var arco := _arco_rival(p)
 			var destino := Vector3(_rng.randf_range(-3, 3), 1.6, arco.z - d * 7.0)
+			_ctx_golpeo = "centro"
 			_patear(p, destino, 17.0, 0.0, -signf(pos(p).x) * 6.0, "pase")
 			pase_a = _companero_cerca(p, destino)
 			stats["pases"] += 1
@@ -1887,7 +1990,17 @@ func _mover_jugadores(delta: float) -> void:
 		n.position.x = clampf(n.position.x, -ANCHO - 2.0, ANCHO + 2.0)
 		n.position.z = clampf(n.position.z, -LARGO - 2.0, LARGO + 2.0)
 		var sp := vel.length()
-		if sp > 0.4:
+		## RECORRER HACIA ATRÁS (13-10-2026): el defensa que se repliega cerca
+		## de la jugada no da la espalda al balón; retrocede mirándolo.
+		var hacia_b := balon.position - n.position
+		hacia_b.y = 0.0
+		var atras := false
+		if sp > 0.5 and sp < 4.2 and poseedor != p and not bool(p["por"]) and hacia_b.length() < 18.0 \
+				and not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]) \
+				and vel.normalized().dot(hacia_b.normalized()) < -0.35:
+			atras = true
+			n.rotation.y = rotate_toward(n.rotation.y, atan2(hacia_b.x, hacia_b.z), 7.0 * delta)
+		elif sp > 0.4:
 			n.rotation.y = rotate_toward(n.rotation.y, atan2(vel.x, vel.z), 9.0 * delta)
 		elif poseedor != p:
 			var hacia := balon.position - n.position
@@ -1905,10 +2018,21 @@ func _mover_jugadores(delta: float) -> void:
 		if float(p.get("gesto_hasta", 0.0)) > t:
 			continue
 		var anim := "parado" if sp < 0.5 else ("trotar" if sp < 5.2 else "correr")
+		## Con el balón en los pies se conduce (no se trota); el portero espera
+		## en guardia; el que está fundido se nota parado.
+		if poseedor == p and sp >= 0.5 and sp < 6.5:
+			anim = "conducir"
+		elif atras:
+			anim = "trotar_atras"
+		elif sp < 0.5 and bool(p["por"]) and hacia_b.length() < 32.0:
+			anim = "portero_listo"
+		elif sp < 0.5 and cansancio_real and forma_fisica(p) < 0.6:
+			anim = "cansado"
 		_anim(p, anim, false)
 		var ap: AnimationPlayer = p.get("anim")
 		if is_instance_valid(ap):
-			ap.speed_scale = clampf(sp / (3.4 if anim == "trotar" else 7.0), 0.7, 1.4) if anim != "parado" else 1.0
+			var ciclo := {"trotar": 3.4, "correr": 7.0, "conducir": 3.6, "trotar_atras": 2.6}
+			ap.speed_scale = clampf(sp / float(ciclo[anim]), 0.7, 1.4) if ciclo.has(anim) else 1.0
 
 ## EL ÁRBITRO SIGUE LA JUGADA (29-9-2026). El principal va en diagonal, unos
 ## metros por detrás y a un lado del balón, sin meterse en la línea de pase;
@@ -1943,14 +2067,14 @@ func _mover_arbitros(delta: float) -> void:
 			n.rotation.y = lerp_angle(n.rotation.y, atan2(mira.x, mira.z), clampf(delta * 5.0, 0.0, 1.0))
 		_anim(a, "parado" if sp < 0.5 else ("trotar" if sp < 4.5 else "correr"), false)
 
-func _anim(p: Dictionary, nombre: String, gesto: bool) -> void:
+func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
 	var ap: AnimationPlayer = p.get("anim")
 	if not is_instance_valid(ap) or not ap.has_animation(nombre):
 		return
 	if gesto:
 		ap.play(nombre, 0.1)
 		ap.speed_scale = 1.0
-		p["gesto_hasta"] = t + minf(ap.get_animation(nombre).length, 1.4)
+		p["gesto_hasta"] = t + minf(ap.get_animation(nombre).length, dur_max)
 		p["anim_actual"] = nombre
 	elif String(p.get("anim_actual", "")) != nombre:
 		ap.play(nombre, 0.2)
