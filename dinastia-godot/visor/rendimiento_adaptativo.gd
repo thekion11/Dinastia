@@ -100,7 +100,10 @@ func _escala(e: float) -> void:
 	var vp := get_viewport()
 	if vp == null:
 		return
-	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR
+	## FSR no existe en el renderizador de compatibilidad (OpenGL, el de los
+	## equipos más modestos): ahí se reescala bilineal, que también existe.
+	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR if Calidad.es_compatibilidad() \
+		else Viewport.SCALING_3D_MODE_FSR
 	vp.scaling_3d_scale = e
 
 func _exit_tree() -> void:

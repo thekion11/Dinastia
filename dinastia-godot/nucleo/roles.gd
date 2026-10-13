@@ -348,8 +348,14 @@ var _objetivo_club: String = ""
 var _ref: WeakRef
 
 func _init(mundo: Mundo) -> void:
-	reputacion.cambio.connect(func(t: String, x: String) -> void: aviso.emit(t, x))
+	## Método y no función anónima: la lambda guardaba a `self` dentro de la
+	## señal de `reputacion` (que es nuestra) y el ciclo Roles ↔ Reputacion no
+	## se liberaba nunca (fuga al cerrar, etapa 1, 8-10-2026).
+	reputacion.cambio.connect(_al_cambiar_reputacion)
 	_ref = weakref(mundo)
+
+func _al_cambiar_reputacion(t: String, x: String) -> void:
+	aviso.emit(t, x)
 
 func _mundo() -> Mundo:
 	return _ref.get_ref() as Mundo

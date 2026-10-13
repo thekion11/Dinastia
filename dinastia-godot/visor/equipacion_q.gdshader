@@ -55,6 +55,8 @@ uniform vec4 acc_cuello : source_color = vec4(0.0);
 uniform vec4 acc_tobilleras : source_color = vec4(0.0);
 // Tono de piel del jugador sobre el tono medio de la textura original.
 uniform vec3 tinte_piel = vec3(1.0);
+// El color de piel buscado, en lineal (13-10-2026). x < 0: el método viejo.
+uniform vec3 piel_obj = vec3(-1.0);
 // Patrocinadores (`SponsorKit`): logo + palabra en el pecho y la espalda, solo
 // logo en la manga y el pantalón.
 uniform bool hay_sp_pecho = false;
@@ -80,6 +82,15 @@ uniform float borde = 0.45;
 // zonas extra -antebrazo, rodilla y pantorrilla- salen de las coordenadas de
 // reposo, no de la máscara, que solo marca la equipación de juego.
 uniform bool largo = false;
+// Dónde acaba la manga larga (|x| de reposo): 0,755 hombre, 0,69 mujer.
+uniform float muneca = 0.755;
+// Cuánto más abajo están los hombros y el cuello (0 hombre, -0,06 mujer: medido
+// con la cabeza y las clavículas del esqueleto).
+uniform float dy_cuerpo = 0.0;
+// Ropa de calle: manga corta con pantalón largo, y tatuaje (0 ninguno,
+// 1 antebrazo derecho, 2 los dos antebrazos, 3 brazo derecho entero).
+uniform bool manga_corta = false;
+uniform int tatuaje = 0;
 
 // LA CARA 2D MOLDEADA SOBRE EL MODELO 3D (29-9-2026): los rasgos del retrato
 // de la ficha (`Cara.svg_rasgos`) o la foto real, proyectados de frente con la
@@ -115,6 +126,8 @@ uniform int foto_espejo = 0;
 uniform bool usa_reposo = false;
 // Cuánto se separa la tela del cuerpo, en metros (0 = pintada sobre la piel).
 uniform float holgura = 0.02;
+// Cuánto de la holgura calculada se aplica de verdad (calibrado el 13-10-2026).
+uniform float escala_holgura = 0.3;
 // Cuánto tapa la tela los músculos (0 = pintada sobre la piel, 1 = superficie
 // alisada del todo). Ropa de calle más; camisetas de juego menos.
 uniform float alisar = 0.0;
@@ -166,8 +179,18 @@ void vertex() {
 				vec2 rb = vec2(y - 1.455, (v_reposo.z * 0.5 - 0.25) + 0.068);
 				float manga_c = brazo * (1.0 - smoothstep(0.66, 0.7, ax));
 				inflar += manga_c * max(mix(0.058, 0.046, smoothstep(0.3, 0.66, ax)) - length(rb), 0.0);
+				// CAMISETA DE CALLE (13-10-2026): cae recta desde el pecho; se
+				// rellena la cintura hasta un óvalo, sin la V del culturista
+				// ni los abdominales. Solo hacia fuera.
+				float zm = v_reposo.z * 0.5 - 0.25;
+				vec2 rt = vec2(ax / 0.175, (zm - 0.005) / 0.125);
+				float tronco = (1.0 - brazo) * smoothstep(0.9, 0.98, y) * (1.0 - smoothstep(1.38, 1.46, y));
+				inflar += tronco * max(1.0 - length(rt), 0.0) * 0.3;
 			}
 		}
+		// La holgura calculada arriba (13-10-2026: se calculaba y nunca se
+		// aplicaba; por eso la ropa parecía pintada sobre el cuerpo).
+		VERTEX += NORMAL * inflar * escala_holgura;
 		// LA TELA TAPA LOS MÚSCULOS (26-9-2026): donde hay ropa, la superficie
 		// se acerca a la versión ALISADA del cuerpo (`VestidorQ._alisado`):
 		// se rellenan los surcos entre músculos y la luz cae como sobre tela,
@@ -391,7 +414,10 @@ void fragment() {
 		float ax = abs(x);
 		float w = 0.004;
 		float brazo = smoothstep(0.215 - w, 0.215 + w, ax) * smoothstep(1.22 - w, 1.22 + w, y);
-		float torso = smoothstep(1.0 - w, 1.0 + w, y) * (1.0 - smoothstep(1.535 - w, 1.535 + w, y));
+		// Ropa de calle (13-10-2026): el escote llega a la base del cuello; con
+		// el corte de camiseta de fútbol (1,535) asomaba media clavícula.
+		float tope_t = civil ? mix(1.552, 1.60, smoothstep(0.06, 0.085, ax)) + dy_cuerpo : 1.535;
+		float torso = smoothstep(1.0 - w, 1.0 + w, y) * (1.0 - smoothstep(tope_t - w, tope_t + w, y));
 		m.r = max(brazo * (1.0 - smoothstep(0.43 - w, 0.43 + w, ax)), (1.0 - brazo) * torso);
 		m.g = (1.0 - brazo) * smoothstep(0.62 - w, 0.62 + w, y) * (1.0 - smoothstep(1.0 - w, 1.0 + w, y));
 		m.b = (1.0 - brazo) * smoothstep(0.085 - w, 0.085 + w, y) * (1.0 - smoothstep(0.47 - w, 0.47 + w, y));
@@ -403,11 +429,18 @@ void fragment() {
 
 	float lum = dot(piel, vec3(0.299, 0.587, 0.114));
 	float pliegue = clamp(0.78 + lum * 0.45, 0.8, 1.12);
+	// Relieve de los pliegues (etapa 2): la pendiente del ruido de arrugas,
+	// que se suma al mapa de normales para que la LUZ los marque, no solo el
+	// color.
+	vec2 relieve_tela = vec2(0.0);
 	if (usa_reposo) {
 		// La tela no se pega al músculo como la piel: menos relieve del cuerpo
 		// y, en cambio, arrugas suaves de tela (más en costados y cintura) y
 		// sombra bajo el brazo y en el borde del pantalón.
 		float arruga = ruido(vec2(x * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2(x * 34.0, y * 11.0 + 7.0)) * 0.4;
+		float arr_x = ruido(vec2((x + 0.006) * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2((x + 0.006) * 34.0, y * 11.0 + 7.0)) * 0.4;
+		float arr_y = ruido(vec2(x * 16.0 + 3.0, (y + 0.012) * 5.0)) * 0.6 + ruido(vec2(x * 34.0, (y + 0.012) * 11.0 + 7.0)) * 0.4;
+		relieve_tela = vec2(arr_x - arruga, arr_y - arruga) * 5.0;
 		float lado_t = smoothstep(0.1, 0.2, abs(x)) * step(abs(x), 0.215);
 		pliegue = clamp(0.93 + lum * 0.12, 0.92, 1.05) * (1.0 - (arruga - 0.45) * (0.08 + lado_t * 0.1));
 		pliegue *= 1.0 - 0.18 * (1.0 - smoothstep(0.0, 0.05, abs(y - 1.26))) * smoothstep(0.17, 0.215, abs(x)) * step(abs(x), 0.25);
@@ -460,7 +493,14 @@ void fragment() {
 			if (abs(x) < 0.004 && (abs(y - 1.46) < 0.004 || abs(y - 1.485) < 0.004)) camiseta = C(0) * 0.7;
 		}
 	}
-	if (familia >= 0 && !manga && cuello == 3 && y > 1.485) camiseta = trim_col;
+	if (familia >= 0 && !manga && cuello == 3 && y > 1.485) camiseta = civil ? camiseta * 0.82 : trim_col;
+	// Ropa de calle: un ribete fino y del mismo color en el escote.
+	// Solo una franja de 1,2 cm pegada al borde del escote: con un rectángulo
+	// desde 1,53 se veía un babero oscuro en el pecho.
+	if (civil && !manga) {
+		float tope_r = mix(1.552, 1.60, smoothstep(0.06, 0.085, abs(x))) + dy_cuerpo;
+		if (y > tope_r - 0.012 && abs(x) < 0.11) camiseta *= 0.85;
+	}
 	if (!manga && abs(abs(x) - 0.205) < 0.006 && y < 1.40) camiseta *= 0.8;
 	if (manga && abs(abs(x) - 0.222) < 0.005) camiseta *= 0.82;
 	if (!manga && y > 1.005 && y < 1.02) camiseta *= 0.85;
@@ -509,12 +549,19 @@ void fragment() {
 	}
 
 	if (largo) {
-		bool antebrazo = manga && abs(x) < 0.755;
+		bool antebrazo = manga && abs(x) < (manga_corta ? 0.43 : muneca);
 		bool pierna = !manga && y >= 0.085 && y < 1.0;
 		m.r = max(m.r, (cubierta && antebrazo) ? 1.0 : 0.0);
 		m.g = max(m.g, (cubierta && pierna) ? 1.0 : 0.0);
 		m.b = 0.0;
 		camiseta = manga ? (familia >= 0 ? C(0) : color1.rgb) : camiseta;
+	}
+
+	// LAS MANOS SON PIEL (etapa 2, 8-10-2026): con manga larga (traje,
+	// abrigo, chándal) la manga o el puño de la camisa se comían la mano y el
+	// DT llevaba «guantes blancos». Los guantes de verdad van como accesorio.
+	if (abs(x) >= muneca + 0.01 && y > 1.22) {
+		m = vec4(0.0);
 	}
 
 	// LOS PIES CALZADOS (C2): botín por debajo del tobillo, media hasta la
@@ -563,6 +610,23 @@ void fragment() {
 	if (y > 0.085 && y < 0.115) botin = mix(botin, familia >= 0 ? bot_c2.rgb : color2.rgb, 0.55);
 
 	vec3 albedo = piel * tinte_piel;
+	// PIEL SIN RECORTES (13-10-2026): multiplicar la textura por un tinte con
+	// tope quemaba las pieles claras (manos como guantes, caras amarillas o
+	// verdosas: el tope cortaba el azul y el verde). Ahora: el color buscado
+	// por la luz relativa de la textura, con un poco de su matiz (labios,
+	// mejillas) y los brillos comprimidos.
+	if (piel_obj.x >= 0.0) {
+		const vec3 REF = vec3(0.374, 0.170, 0.080);
+		float l_ref = dot(REF, vec3(0.2126, 0.7152, 0.0722));
+		float l = max(dot(piel, vec3(0.2126, 0.7152, 0.0722)), 0.0001);
+		float rel = clamp(pow(l / l_ref, 0.6), 0.55, 1.2);
+		vec3 matiz = (piel / l) / (REF / l_ref);
+		albedo = piel_obj * rel * mix(vec3(1.0), clamp(matiz, vec3(0.6), vec3(1.6)), 0.3);
+		// Sin saturar (el usuario lo pidió el 30-9: pieles limpias, no naranjas).
+		albedo = mix(vec3(dot(albedo, vec3(0.2126, 0.7152, 0.0722))), albedo, 0.78);
+	}
+	float tope = max(max(albedo.r, albedo.g), albedo.b);
+	albedo *= tope > 0.72 ? (0.72 + (tope - 0.72) * 0.25) / tope : 1.0;
 	if (hay_malla) {
 		// Con cara real, la piel del cuerpo es EXACTAMENTE el color medio de
 		// su piel en la foto; de la textura solo queda el relieve (su claridad
@@ -579,6 +643,52 @@ void fragment() {
 			* (1.0 - smoothstep(1.735, 1.75, y)) : 0.0;
 		albedo = piel_foto * mix(1.0, relieve, mix(0.25, 0.8, oreja));
 		albedo *= mix(vec3(1.0), vec3(1.06, 0.97, 0.95), oreja);
+	}
+	// TATUAJE (13-10-2026): trazos tribales sobre la piel del antebrazo (y del
+	// brazo entero en el 3); la manga, si la hay, lo tapa después.
+	if (tatuaje > 0 && usa_reposo && abs(x) > 0.23 && abs(x) < muneca - 0.02 && y > 1.2) {
+		bool lado_ok = x < 0.0 || tatuaje == 2;
+		float desde = tatuaje == 3 ? 0.24 : 0.45;
+		if (lado_ok && abs(x) > desde) {
+			float u_t = abs(x) * 40.0;
+			float a_t = atan(z - 0.5, y - 1.455) * 3.0;
+			float trazo = abs(sin(u_t + sin(a_t * 2.0) * 1.3)) * abs(cos(a_t + u_t * 0.35));
+			float tinta = smoothstep(0.62, 0.7, trazo) * smoothstep(desde, desde + 0.02, abs(x));
+			albedo = mix(albedo, vec3(0.05, 0.06, 0.08), tinta * 0.82);
+		}
+	}
+	// ROPA DE CALLE CON TELA (13-10-2026): el color plano parecía pintura.
+	// Tejido fino, costuras de hombro y laterales, dobladillo, puños, cintura
+	// y, en el vaquero, la sarga diagonal, el desgaste de los muslos y la
+	// costura lateral.
+	if (civil && usa_reposo) {
+		float ax_t = abs(x);
+		float tej = ruido(vec2(x * 700.0, y * 700.0)) * 0.55 + ruido(vec2((x + y) * 380.0, y * 520.0)) * 0.45;
+		camiseta *= 0.94 + 0.09 * tej;
+		float costura_l = (1.0 - smoothstep(0.0, 0.004, abs(ax_t - 0.205))) * step(y, 1.4) * step(1.0, y);
+		float costura_h = (1.0 - smoothstep(0.0, 0.005, abs(ax_t - 0.215))) * step(1.22, y);
+		float dobladillo = 1.0 - smoothstep(0.0, 0.016, y - 1.0);
+		float fin_m = manga_corta ? 0.43 : muneca;
+		float puno = largo ? (1.0 - smoothstep(0.0, 0.025, fin_m - ax_t)) * step(1.22, y) * step(ax_t, fin_m + 0.005) : 0.0;
+		camiseta *= 1.0 - 0.16 * max(max(costura_l, costura_h), max(dobladillo, puno));
+		vec3 p0 = pant;
+		float azul = p0.b - p0.r;
+		float tej_p = ruido(vec2(x * 650.0, y * 650.0));
+		pant *= 0.93 + 0.1 * tej_p;
+		if (azul > 0.04) {
+			// Sarga diagonal y desgaste claro en el frente de los muslos.
+			float sarga = 0.5 + 0.5 * sin((x * 0.7 + y) * 2300.0);
+			pant *= 0.94 + 0.08 * sarga;
+			float muslo = smoothstep(0.55, 0.85, z) * smoothstep(0.55, 0.7, y) * (1.0 - smoothstep(0.85, 0.95, y));
+			float rodilla = smoothstep(0.6, 0.8, z) * (1.0 - smoothstep(0.0, 0.05, abs(y - 0.5)));
+			pant = mix(pant, pant * 1.35 + vec3(0.03, 0.04, 0.05), (muslo * 0.6 + rodilla * 0.35) * (0.6 + 0.4 * ruido(vec2(x * 60.0, y * 40.0))));
+		}
+		float cintura = smoothstep(0.955, 0.965, y) * (1.0 - smoothstep(0.995, 1.0, y));
+		float lateral_p = (1.0 - smoothstep(0.0, 0.004, abs(ax_t - 0.19))) * step(y, 0.95) * step(0.12, y);
+		float bajo = 1.0 - smoothstep(0.0, 0.02, y - 0.115);
+		pant *= 1.0 - 0.18 * max(cintura, max(lateral_p, bajo));
+		// Hebilla del cinturón, al frente.
+		if (y > 0.958 && y < 0.993 && ax_t < 0.018 && z > 0.6) pant = vec3(0.55, 0.52, 0.45);
 	}
 	albedo = mix(albedo, camiseta * pliegue, m.r);
 	albedo = mix(albedo, pant * pliegue, m.g);
@@ -649,17 +759,30 @@ void fragment() {
 	// cerca y hace brillar la camiseta como las de verdad), algo más mate en
 	// las medias y brillante en los botines.
 	float punto = sin(UV.x * 2600.0) * sin(UV.y * 2600.0);
+	// Sin muaré (etapa 2): cuando un píxel abarca varios hilos (de lejos), la
+	// trama se apaga en vez de parpadear.
+	float nitidez = 1.0 - smoothstep(0.35, 1.2, fwidth(UV.x * 2600.0));
+	punto *= nitidez;
 	float es_camiseta = m.r * (1.0 - m.g);
 	ALBEDO *= 1.0 + punto * 0.035 * tela;
 	float rugo = mix(0.62, 0.5, es_camiseta);
 	rugo = mix(rugo, 0.55, m.g);
 	rugo = mix(rugo, 0.88, m.b);
 	rugo = mix(rugo, 0.28, m.a);
+	// Ropa de calle (traje, abrigo, polo): lana y algodón son MATES. Con la
+	// rugosidad de la camiseta de poliéster el traje brillaba como látex y
+	// marcaba el músculo (etapa 2). Los zapatos (m.a) siguen brillando.
+	if (civil) {
+		rugo = mix(rugo, 0.86, tela * (1.0 - m.a));
+		// Zapatos de calle (13-10-2026): cuero o lona, no charol de botín.
+		rugo = mix(rugo, 0.62, m.a);
+	}
 	ROUGHNESS = rugo + punto * 0.05 * tela;
-	SPECULAR = mix(0.45, 0.55, clamp(es_camiseta + m.g + m.a, 0.0, 1.0));
+	SPECULAR = civil ? mix(0.3, 0.5, m.a) : mix(0.45, 0.55, clamp(es_camiseta + m.g + m.a, 0.0, 1.0));
 	vec3 nm = usa_normal ? texture(normal_tex, UV).rgb : vec3(0.5, 0.5, 1.0);
 	// Micro relieve del tejido sobre el relieve del cuerpo.
-	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * 0.045 * tela;
+	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * 0.045 * tela * nitidez;
+	nm.xy += relieve_tela * tela;
 	NORMAL_MAP = nm;
 	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
 	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.06 : 0.22) : 0.45, tela) : 0.6 * tela;

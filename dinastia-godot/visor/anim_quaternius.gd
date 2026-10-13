@@ -563,7 +563,9 @@ static func _nueva(dur: float, bucle: bool) -> Animation:
 ## para las que SI tienen equivalente real.
 const CLIP_REAL := {
 	"parado": "Idle",
-	"caminar": "Walk",
+	## 13-10-2026: el paso «formal» (brazos cerca del cuerpo, erguido) en vez
+	## del paso de superhéroe.
+	"caminar": "Walk_Formal",
 	"trotar": "Jog_Fwd",
 	"correr": "Sprint",
 }
@@ -788,8 +790,70 @@ static func dolor(esq: Skeleton3D, prefijo: String) -> Animation:
 ## aparte activarlas en partidos de verdad via `PlayerSpawner`, esto solo dice
 ## que el contenido ya no esta roto-. La locomocion real de Quaternius (Idle/
 ## Walk/Jog/Sprint) nunca dependio de esta bandera, se agrega siempre.
+## BIBLIOTECAS COMPARTIDAS (etapa 3, 8-10-2026). Medido con TIEMPOS=1: la
+## ciudad armaba 105 bibliotecas IDÉNTICAS -una por peatón, hincha o empleado-
+## a ~27 ms cada una: 2,9 s de la construcción. Lo que sale de aquí solo
+## depende de la ruta al esqueleto, de las acciones de fútbol y de la pose de
+## reposo del modelo, así que se arma una vez por combinación y se comparte
+## (nadie la modifica después; si alguien lo hiciera, cambiaría a todos).
+static var _bibliotecas := {}
+
+static func _firma(esq: Skeleton3D) -> int:
+	var partes := PackedStringArray()
+	for i in esq.get_bone_count():
+		partes.append(esq.get_bone_name(i) + str(esq.get_bone_rest(i)))
+	return hash("|".join(partes))
+
 static func construir(esq: Skeleton3D, ruta_esqueleto: String = "", acciones_experimentales: bool = false) -> AnimationLibrary:
 	var prefijo := ruta_esqueleto if ruta_esqueleto != "" else str(esq.name)
+	return _en_cache(esq, prefijo, acciones_experimentales)
+
+static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
+	var clave := "%s|%s|%d" % [prefijo, acciones_experimentales, _firma(esq)]
+	if _bibliotecas.has(clave):
+		return _bibliotecas[clave]
+	var lib := _construir(esq, prefijo, acciones_experimentales)
+	_bibliotecas[clave] = lib
+	return lib
+
+## Copia del clip con las rotaciones de los dedos acercadas a la pose de
+## reposo (mano abierta) en `cuanto` (0 = igual, 1 = abierta del todo).
+static func _relajar_dedos(anim: Animation, esq: Skeleton3D, cuanto: float) -> Animation:
+	var a := anim.duplicate(true) as Animation
+	for t in a.get_track_count():
+		if a.track_get_type(t) != Animation.TYPE_ROTATION_3D:
+			continue
+		var ruta := str(a.track_get_path(t))
+		var hueso := ruta.get_slice(":", ruta.get_slice_count(":") - 1)
+		if not (hueso.begins_with("index") or hueso.begins_with("middle") or hueso.begins_with("ring") \
+				or hueso.begins_with("pinky") or hueso.begins_with("thumb")):
+			continue
+		var i := esq.find_bone(hueso)
+		if i < 0:
+			continue
+		var reposo := esq.get_bone_rest(i).basis.get_rotation_quaternion()
+		for k in a.track_get_key_count(t):
+			var q: Quaternion = a.track_get_key_value(t, k)
+			a.track_set_key_value(t, k, q.slerp(reposo, cuanto))
+	return a
+
+## El reposo del clip abre los brazos como un superhéroe: se acercan al
+## cuerpo `ang` radianes (giro local sobre Z del brazo).
+static func _brazos_al_cuerpo(anim: Animation, ang: float) -> Animation:
+	for t in anim.get_track_count():
+		if anim.track_get_type(t) != Animation.TYPE_ROTATION_3D:
+			continue
+		var ruta := str(anim.track_get_path(t))
+		var hueso := ruta.get_slice(":", ruta.get_slice_count(":") - 1)
+		if hueso != "upperarm_l" and hueso != "upperarm_r":
+			continue
+		var giro := Quaternion(Vector3(0, 0, 1), ang if hueso.ends_with("_l") else -ang)
+		for k in anim.track_get_key_count(t):
+			var q: Quaternion = anim.track_get_key_value(t, k)
+			anim.track_set_key_value(t, k, q * giro)
+	return anim
+
+static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var lib := AnimationLibrary.new()
 	var a_mano := {
 		"parado": parado(esq, prefijo),
@@ -798,7 +862,13 @@ static func construir(esq: Skeleton3D, ruta_esqueleto: String = "", acciones_exp
 		"correr": correr(esq, prefijo, 0.52, 1.0),
 	}
 	for clave in a_mano:
-		var real: Animation = cargar_real(CLIP_REAL[clave], prefijo)
+		var real: Animation = cargar_real(String(CLIP_REAL[clave]), prefijo)
+		## Manos relajadas (13-10-2026): los clips llevan el puño cerrado de
+		## superhéroe; parado y andando, los dedos van a medio cerrar.
+		if real != null:
+			real = _relajar_dedos(real, esq, 0.5)
+			if clave == "parado":
+				real = _brazos_al_cuerpo(real, -0.2)
 		lib.add_animation(clave, real if real != null else a_mano[clave])
 	## "sentado" no tiene equivalente en la Universal Animation Library
 	## (ninguno de los 43 clips gratis es una pose sentada) -se queda a mano,

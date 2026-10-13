@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://pruebas/sonda_futbol.gd" id="1"]
+
+[node name="SondaFutbol" type="Node"]
+script = ExtResource("1")
