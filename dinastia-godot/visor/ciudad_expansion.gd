@@ -2164,6 +2164,27 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 		elegidos += 1
 		if elegidos >= 16:
 			break
+	## GENTE EN TODOS LOS BARRIOS (13-10-2026): la acera de cada manzana queda
+	## como ruta posible (solo datos); los peatones que quedan lejos de ti
+	## reaparecen en las de tu alrededor (`TraficoCiudad.reciclar_peatones`).
+	for bl2: Dictionary in bloques:
+		if String(bl2["uso"]) in ["lejano", "rio"]:
+			continue
+		var r2: Rect2 = bl2["rect"]
+		if r2.size.x < 12.0 or r2.size.y < 12.0:
+			continue
+		var m2 := 1.6
+		var pts4 := PackedVector3Array([
+			Vector3(r2.position.x - m2, 0.3, r2.position.y - m2), Vector3(r2.end.x + m2, 0.3, r2.position.y - m2),
+			Vector3(r2.end.x + m2, 0.3, r2.end.y + m2), Vector3(r2.position.x - m2, 0.3, r2.end.y + m2)])
+		t.registrar_ruta_gente(t.agregar_ruta(b._redondear(pts4, 3.0)))
+	## Y más gente para repartir: el reciclaje la lleva donde estés.
+	var rutas_g: Array = t.rutas_gente()
+	for q2 in 24:
+		if rutas_g.is_empty():
+			break
+		b._un_peaton(t, rng, int(rutas_g[rng.randi() % rutas_g.size()]), rng.randf() * 300.0)
+		n_p += 1
 	cuenta["peatones"] = n_p
 
 ## El recorrido por el carril derecho de un circuito de esquinas.
