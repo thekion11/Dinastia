@@ -46,13 +46,15 @@ static func terminar(d: Dictionary) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(d["semilla"])
 	FutbolistaQ.terminar(d, false)
+	## Sin el cuerpo de culturista del modelo (sin coste por fotograma).
+	PersonajeDT.adelgazar(d, false)
 	var mujer: bool = d["mujer"]
 	var c1 := Color(String(ROPA[rng.randi() % ROPA.size()]))
 	var c2 := Color(String(ROPA[rng.randi() % ROPA.size()]))
 	var pant := Color(String(PANTALONES[rng.randi() % PANTALONES.size()]))
 	var piel := Color(String(PIELES[rng.randi() % PIELES.size()]))
 	var pelo_col: Color = PELOS[rng.randi() % PELOS.size()]
-	var zapatilla: String = ["ffffff", "111111", "8d6e63", "1565c0"][rng.randi() % 4]
+	var zapatilla: String = ["ffffff", "111111", "3e2723", "1565c0"][rng.randi() % 4]
 	var kit := {
 		"dis": String(PRENDAS[rng.randi() % PRENDAS.size()]),
 		"cols": [c1.to_html(false), c2.to_html(false), c2.darkened(0.3).to_html(false), "ffffff", "111111"],
@@ -68,6 +70,8 @@ static func terminar(d: Dictionary) -> void:
 	var corte: String = CORTES_M[rng.randi() % CORTES_M.size()] if mujer else CORTES_H[rng.randi() % CORTES_H.size()]
 	PeloQ.poner(d, corte, pelo_col, not mujer and rng.randf() < 0.35)
 	_variedad(d, rng, mujer, pelo_col)
+	## Ojos de verdad (iris y párpados), con el material compartido (13-10-2026).
+	PersonajeDT._ojos_vivos(d, piel, Color(String(PersonajeDT.OJOS[rng.randi() % PersonajeDT.OJOS.size()])), false)
 	var ap: AnimationPlayer = d["anim"]
 	if ap.has_animation("caminar"):
 		ap.play("caminar")
@@ -125,7 +129,8 @@ static func _en_hueso(esq: Skeleton3D, hueso: String, k: float) -> Node3D:
 static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pelo_col: Color) -> void:
 	var modelo: Node3D = d["modelo"]
 	## Complexión: más o menos ancho (y algo de fondo), sin cambiar la estatura.
-	var ancho := rng.randf_range(0.9, 1.14)
+	## Más esbeltos que el modelo base de culturista (13-10-2026).
+	var ancho := rng.randf_range(0.84, 1.06)
 	modelo.scale = Vector3(modelo.scale.x * ancho, modelo.scale.y, modelo.scale.z * lerpf(1.0, ancho, 0.6))
 	var esq: Skeleton3D = d["esqueleto"]
 	var k := 1.0 / maxf(modelo.scale.y, 0.01)
@@ -141,7 +146,15 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 		## Bolso colgado de la cadera.
 		var h2 := _en_hueso(esq, "hand_r" if rng.randf() < 0.5 else "hand_l", k)
 		if h2 != null:
-			_pieza(h2, _caja(Vector3(0.28, 0.2, 0.1)), _m(col, 0.5), Vector3(0, -0.14, 0))
+			## Bolsa con asa, colgando BAJO la mano (+Y del hueso = hacia los dedos).
+			var bolsa := col if rng.randf() < 0.6 else Color(0.78, 0.66, 0.48)
+			_pieza(h2, _caja(Vector3(0.26, 0.22, 0.09)), _m(bolsa, 0.6), Vector3(0, 0.24, 0))
+			var asa := TorusMesh.new()
+			asa.inner_radius = 0.045
+			asa.outer_radius = 0.055
+			asa.rings = 10
+			asa.ring_segments = 6
+			_pieza(h2, asa, _m(bolsa.darkened(0.35), 0.5), Vector3(0, 0.1, 0), Vector3(0, 0, 90))
 	elif acc < 0.62:
 		## Móvil en la mano: un rectángulo oscuro con la pantalla clara.
 		var h3 := _en_hueso(esq, "hand_r", k)
@@ -152,9 +165,27 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 	if cab != null:
 		if cab_extra < 0.2:
 			## Gafas de sol.
-			_pieza(cab, _caja(Vector3(0.15, 0.04, 0.02)), _m(Color(0.04, 0.04, 0.05), 0.2), Vector3(0, 0.1, 0.1))
+			var lente := SphereMesh.new()
+			lente.radius = 0.024
+			lente.height = 0.02
+			lente.radial_segments = 10
+			lente.rings = 4
+			for sx in [-1.0, 1.0]:
+				_pieza(cab, lente, _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0.034 * sx, 0.1, 0.1))
+			_pieza(cab, _caja(Vector3(0.03, 0.005, 0.005)), _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0, 0.105, 0.108))
 		elif cab_extra < 0.34:
 			## Gorra: casquete y visera.
 			var gm := _m(col.lightened(0.1))
-			_pieza(cab, _caja(Vector3(0.2, 0.09, 0.22)), gm, Vector3(0, 0.2, 0.0))
-			_pieza(cab, _caja(Vector3(0.19, 0.02, 0.1)), gm, Vector3(0, 0.17, 0.14))
+			var copa := SphereMesh.new()
+			copa.radius = 0.108
+			copa.height = 0.13
+			copa.radial_segments = 14
+			copa.rings = 6
+			copa.is_hemisphere = true
+			_pieza(cab, copa, gm, Vector3(0, 0.155, -0.005))
+			var visera := CylinderMesh.new()
+			visera.top_radius = 0.075
+			visera.bottom_radius = 0.075
+			visera.height = 0.01
+			visera.radial_segments = 12
+			_pieza(cab, visera, _m(col.darkened(0.15)), Vector3(0, 0.16, 0.11), Vector3(-8, 0, 0))

@@ -193,7 +193,7 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 ## OJOS DE VERDAD también con la cara clásica (13-10-2026): eran ranuras
 ## blancas. El shader de ojos (iris, párpados de su piel) y, con él, el
 ## parpadeo y las expresiones (`Expresion`).
-static func _ojos_vivos(d: Dictionary, piel: Color, iris := Color(0.24, 0.16, 0.1)) -> void:
+static func _ojos_vivos(d: Dictionary, piel: Color, iris := Color(0.24, 0.16, 0.1), propio := true) -> void:
 	for mi: MeshInstance3D in (d["nodo"] as Node).find_children("*", "MeshInstance3D", true, false):
 		if mi.mesh == null:
 			continue
@@ -202,18 +202,30 @@ static func _ojos_vivos(d: Dictionary, piel: Color, iris := Color(0.24, 0.16, 0.
 			var actual := mi.get_surface_override_material(s)
 			if base == null or base.resource_name != VestidorQ.MATERIAL_OJOS:
 				continue
+			if actual is ShaderMaterial and not propio:
+				continue
 			if actual is ShaderMaterial:
 				## Cara de biblioteca: ya tiene el shader (compartido); uno propio con tu iris.
-				var propio := (actual as ShaderMaterial).duplicate() as ShaderMaterial
-				propio.set_shader_parameter("iris", iris)
-				mi.set_surface_override_material(s, propio)
+				var copia := (actual as ShaderMaterial).duplicate() as ShaderMaterial
+				copia.set_shader_parameter("iris", iris)
+				mi.set_surface_override_material(s, copia)
 				continue
 			VestidorQ._con_reposo_simple(mi)
-			var mo := ShaderMaterial.new()
-			mo.shader = load(Expresion.SHADER_OJOS)
-			mo.set_shader_parameter("iris", iris)
-			mo.set_shader_parameter("piel", piel)
-			mi.set_surface_override_material(s, mo)
+			mi.set_surface_override_material(s, material_ojos(piel, iris))
+
+## Un material de ojos por par piel/iris, compartido (peatones incluidos).
+## `Expresion` hace su copia propia cuando alguien gesticula.
+static var _mats_ojos := {}
+static func material_ojos(piel: Color, iris: Color) -> ShaderMaterial:
+	var k := piel.to_html(false) + iris.to_html(false)
+	if _mats_ojos.has(k):
+		return _mats_ojos[k]
+	var mo := ShaderMaterial.new()
+	mo.shader = load(Expresion.SHADER_OJOS)
+	mo.set_shader_parameter("iris", iris)
+	mo.set_shader_parameter("piel", piel)
+	_mats_ojos[k] = mo
+	return mo
 
 ## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)
 ## y, si se eligió, un corte medido. Con gorra no va el corte medido.
@@ -272,7 +284,7 @@ const BASE_ESBELTA := {
 	"calf_l": Vector3(0.94, 1.0, 0.94), "calf_r": Vector3(0.94, 1.0, 0.94),
 }
 
-static func _cuerpo(d: Dictionary, a: Dictionary) -> void:
+static func _cuerpo(d: Dictionary, a: Dictionary, con_guardian := true) -> void:
 	var esq: Skeleton3D = d["esqueleto"]
 	var obj := _objetivos(a)
 	## La escala acumulada en el mundo de cada hueso, para compensar la del
@@ -298,7 +310,10 @@ static func _cuerpo(d: Dictionary, a: Dictionary) -> void:
 	var modelo: Node3D = d["modelo"]
 	modelo.position.y = 0.9 * 0.08 * float(a["piernas"]) * modelo.scale.y
 	## Las animaciones pueden reponer la pose: se vuelve a aplicar al final de
-	## cada fotograma (un nodo que corre después del AnimationPlayer).
+	## cada fotograma (un nodo que corre después del AnimationPlayer). Medido el
+	## 13-10-2026: caminar y parado NO tocan la escala; los peatones van sin él.
+	if not con_guardian:
+		return
 	var guardian := _Escalas.new()
 	guardian.esq = esq
 	guardian.escalas = {}
@@ -311,10 +326,10 @@ static func _cuerpo(d: Dictionary, a: Dictionary) -> void:
 
 ## Solo la base esbelta, para futbolistas y demás gente con el mismo modelo
 ## (13-10-2026). Usa el mismo guardián que el personaje del jugador.
-static func adelgazar(d: Dictionary) -> void:
+static func adelgazar(d: Dictionary, con_guardian := true) -> void:
 	if not d.has("esqueleto") or not d.has("modelo"):
 		return
-	_cuerpo(d, ASPECTO_NEUTRO)
+	_cuerpo(d, ASPECTO_NEUTRO, con_guardian)
 
 const ASPECTO_NEUTRO := {"complexion": 0.0, "hombros": 0.0, "barriga": 0.0, "piernas": 0.0, "cabeza": 0.0}
 

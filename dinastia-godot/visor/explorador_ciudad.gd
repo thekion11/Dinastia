@@ -52,6 +52,7 @@ var _cerca := {}        ## lo que hay delante para la E: {tipo, k, n, peaton}
 var _burbuja: Label3D
 var _t_burbuja := 0.0
 var _cuadro: CuadroDialogo
+var _hablando_con: Node3D
 
 ## EL METRO A PIE (7-10-2026, «que nuestro personaje lo pueda usar… y por
 ## dentro»): `estado` es "calle", "anden" o "tren".
@@ -566,6 +567,21 @@ func _physics_process(delta: float) -> void:
 				_cuadro.cerrar()
 
 func _colocar_camara(delta: float) -> void:
+	## PLANO DE CONVERSACIÓN (13-10-2026): mientras alguien te habla, la cámara
+	## se pone tras tu hombro y encuadra su cara (antes tu espalda la tapaba).
+	if _hablando_con != null and is_instance_valid(_hablando_con) and _t_burbuja > 0.0 \
+			and estado == "calle" and modo != "coche" and not primera_persona:
+		var yo := cuerpo.position
+		var el := _hablando_con.global_position
+		var dir := Vector3(el.x - yo.x, 0, el.z - yo.z)
+		if dir.length() > 0.2:
+			dir = dir.normalized()
+			var lado := dir.cross(Vector3.UP)
+			var plano := yo - dir * 1.5 + lado * 0.75 + Vector3(0, 1.75, 0)
+			var k := 1.0 if delta >= 1.0 else minf(1.0, delta * 5.0)
+			camara.position = camara.position.lerp(plano, k)
+			camara.look_at(el + Vector3(0, 1.55, 0) - lado * 0.25, Vector3.UP)
+			return
 	## PRIMERA PERSONA (V): la cámara en los ojos, el cuerpo escondido.
 	if primera_persona and (modo != "coche"):
 		var dir_fp := Vector3(sin(rumbo), 0, cos(rumbo))
@@ -887,6 +903,7 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 	var nodo: Node3D = v["nodo"]
 	if not is_instance_valid(nodo):
 		return
+	_hablando_con = nodo
 	if not v.has("oficio"):
 		v["oficio"] = DialogosCiudad.oficio_de(hash(String(nodo.name)) + int(nodo.position.x * 7.0))
 	var ahora := Time.get_ticks_msec()
@@ -904,13 +921,18 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 		add_child(_cuadro)
 	var tono := Color.from_hsv(fposmod(float(hash(oficio)) / 1000.0, 1.0), 0.45, 1.0)
 	_cuadro.decir(DialogosCiudad.nombre(oficio), frase, tono, turno, 3)
+	## Con el plano de conversación el globo sobra: solo en primera persona.
 	_burbuja.text = "💬"
-	_burbuja.pixel_size = 0.012
+	_burbuja.pixel_size = 0.006
 	_burbuja.position = nodo.global_position + Vector3(0, 2.3, 0)
-	_burbuja.visible = true
+	_burbuja.visible = primera_persona
 	_t_burbuja = 6.0
 	v["turno"] = (turno + 1) % 3
 	v["espera"] = 6.0
+	## Y la cara acompaña: alegre al saludar y despedirse; en la charla, según
+	## cómo va el club.
+	var cara: String = "alegre" if turno != 1 else {"euforia": "alegre", "bien": "alegre", "mal": "triste", "crisis": "enfado"}.get(animo, "neutral")
+	Expresion.de(nodo).poner(cara, 5.0)
 	## Se gira hacia ti y hace el gesto que toca (saluda, charla, se despide).
 	var d := cuerpo.global_position - nodo.global_position
 	nodo.rotation.y = atan2(d.x, d.z)

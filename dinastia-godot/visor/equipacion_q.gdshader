@@ -115,6 +115,8 @@ uniform int foto_espejo = 0;
 uniform bool usa_reposo = false;
 // Cuánto se separa la tela del cuerpo, en metros (0 = pintada sobre la piel).
 uniform float holgura = 0.02;
+// Cuánto de la holgura calculada se aplica de verdad (calibrado el 13-10-2026).
+uniform float escala_holgura = 0.3;
 // Cuánto tapa la tela los músculos (0 = pintada sobre la piel, 1 = superficie
 // alisada del todo). Ropa de calle más; camisetas de juego menos.
 uniform float alisar = 0.0;
@@ -166,8 +168,18 @@ void vertex() {
 				vec2 rb = vec2(y - 1.455, (v_reposo.z * 0.5 - 0.25) + 0.068);
 				float manga_c = brazo * (1.0 - smoothstep(0.66, 0.7, ax));
 				inflar += manga_c * max(mix(0.058, 0.046, smoothstep(0.3, 0.66, ax)) - length(rb), 0.0);
+				// CAMISETA DE CALLE (13-10-2026): cae recta desde el pecho; se
+				// rellena la cintura hasta un óvalo, sin la V del culturista
+				// ni los abdominales. Solo hacia fuera.
+				float zm = v_reposo.z * 0.5 - 0.25;
+				vec2 rt = vec2(ax / 0.175, (zm - 0.005) / 0.125);
+				float tronco = (1.0 - brazo) * smoothstep(0.9, 0.98, y) * (1.0 - smoothstep(1.38, 1.46, y));
+				inflar += tronco * max(1.0 - length(rt), 0.0) * 0.3;
 			}
 		}
+		// La holgura calculada arriba (13-10-2026: se calculaba y nunca se
+		// aplicaba; por eso la ropa parecía pintada sobre el cuerpo).
+		VERTEX += NORMAL * inflar * escala_holgura;
 		// LA TELA TAPA LOS MÚSCULOS (26-9-2026): donde hay ropa, la superficie
 		// se acerca a la versión ALISADA del cuerpo (`VestidorQ._alisado`):
 		// se rellenan los surcos entre músculos y la luz cae como sobre tela,
