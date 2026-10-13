@@ -44,6 +44,10 @@ func _process(_d: float) -> void:
 			var cual := OS.get_environment("ANIM") if OS.get_environment("ANIM") != "" else "parado"
 			if ap.has_animation(cual):
 				ap.play(cual)
+	if _n == 4 and OS.get_environment("MEDIR") != "":
+		for d: Dictionary in _ds:
+			var e: Skeleton3D = d["esqueleto"]
+			print("MANO ", "mujer" if d["mujer"] else "hombre", " ", e.get_bone_global_rest(e.find_bone("hand_l")).origin, " ", e.get_bone_global_rest(e.find_bone("lowerarm_l")).origin)
 	if _n == 4:
 		var e0: Skeleton3D = _ds[0]["esqueleto"]
 		print("BRAZO peatón 0: ", e0.get_bone_pose_scale(e0.find_bone("upperarm_l")))

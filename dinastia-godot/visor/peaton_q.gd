@@ -34,6 +34,7 @@ static func crear(rng: RandomNumberGenerator) -> Dictionary:
 		return d
 	d["mujer"] = mujer
 	d["semilla"] = rng.randi()
+	(d["nodo"] as Node).set_meta("mujer", mujer)
 	return d
 
 ## Lo arma cuando ya está en el árbol: medidas, ropa, pelo y paso.
