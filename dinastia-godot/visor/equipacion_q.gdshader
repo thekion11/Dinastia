@@ -82,6 +82,8 @@ uniform float borde = 0.45;
 // zonas extra -antebrazo, rodilla y pantorrilla- salen de las coordenadas de
 // reposo, no de la máscara, que solo marca la equipación de juego.
 uniform bool largo = false;
+// Dónde acaba la manga larga (|x| de reposo): 0,755 hombre, 0,69 mujer.
+uniform float muneca = 0.755;
 
 // LA CARA 2D MOLDEADA SOBRE EL MODELO 3D (29-9-2026): los rasgos del retrato
 // de la ficha (`Cara.svg_rasgos`) o la foto real, proyectados de frente con la
@@ -530,7 +532,7 @@ void fragment() {
 	}
 
 	if (largo) {
-		bool antebrazo = manga && abs(x) < 0.755;
+		bool antebrazo = manga && abs(x) < muneca;
 		bool pierna = !manga && y >= 0.085 && y < 1.0;
 		m.r = max(m.r, (cubierta && antebrazo) ? 1.0 : 0.0);
 		m.g = max(m.g, (cubierta && pierna) ? 1.0 : 0.0);
@@ -541,7 +543,7 @@ void fragment() {
 	// LAS MANOS SON PIEL (etapa 2, 8-10-2026): con manga larga (traje,
 	// abrigo, chándal) la manga o el puño de la camisa se comían la mano y el
 	// DT llevaba «guantes blancos». Los guantes de verdad van como accesorio.
-	if (abs(x) >= 0.765 && y > 1.22) {
+	if (abs(x) >= muneca + 0.01 && y > 1.22) {
 		m = vec4(0.0);
 	}
 

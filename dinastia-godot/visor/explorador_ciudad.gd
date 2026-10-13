@@ -53,6 +53,9 @@ var _burbuja: Label3D
 var _t_burbuja := 0.0
 var _cuadro: CuadroDialogo
 var _hablando_con: Node3D
+## Nombres de pila ficticios para los vecinos.
+const NOMBRES_M := ["Marta", "Lucía", "Carmen", "Elena", "Paula", "Rosa", "Inés", "Julia", "Nuria", "Teresa", "Alba", "Sara"]
+const NOMBRES_H := ["Andrés", "Manolo", "Jorge", "Ramón", "Pablo", "Luis", "Tomás", "Iván", "Héctor", "Ernesto", "Óscar", "Félix"]
 
 ## EL METRO A PIE (7-10-2026, «que nuestro personaje lo pueda usar… y por
 ## dentro»): `estado` es "calle", "anden" o "tren".
@@ -577,10 +580,12 @@ func _colocar_camara(delta: float) -> void:
 		if dir.length() > 0.2:
 			dir = dir.normalized()
 			var lado := dir.cross(Vector3.UP)
-			var plano := yo - dir * 1.5 + lado * 0.75 + Vector3(0, 1.75, 0)
+			var plano := yo - dir * 0.9 + lado * 0.6 + Vector3(0, 1.7, 0)
 			var k := 1.0 if delta >= 1.0 else minf(1.0, delta * 5.0)
 			camara.position = camara.position.lerp(plano, k)
-			camara.look_at(el + Vector3(0, 1.55, 0) - lado * 0.25, Vector3.UP)
+			## Se mira algo por debajo de la cara: así queda en el tercio de arriba
+			## y el cuadro de diálogo no la tapa.
+			camara.look_at(el + Vector3(0, 1.2, 0) - lado * 0.25, Vector3.UP)
 			return
 	## PRIMERA PERSONA (V): la cámara en los ojos, el cuerpo escondido.
 	if primera_persona and (modo != "coche"):
@@ -904,8 +909,20 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 	if not is_instance_valid(nodo):
 		return
 	_hablando_con = nodo
+	## Si el texto aún se escribe, E lo completa en vez de pasar de turno.
+	if _cuadro != null and _cuadro.escribiendo() and _hablando_con == nodo:
+		_cuadro.completar()
+		_t_burbuja = maxf(_t_burbuja, 4.0)
+		return
 	if not v.has("oficio"):
-		v["oficio"] = DialogosCiudad.oficio_de(hash(String(nodo.name)) + int(nodo.position.x * 7.0))
+		## Oficio acorde a quien es (antes un hombre podía ser «La panadera»)
+		## y un nombre propio, ficticio.
+		var semilla := absi(hash(String(nodo.name)) + int(nodo.position.x * 7.0))
+		var mujer := bool(nodo.get_meta("mujer", semilla % 2 == 0))
+		var lista: Array = ["panadera", "estudiante"] if mujer else ["jubilado", "taxista", "hincha"]
+		v["oficio"] = String(lista[semilla % lista.size()])
+		var nombres: Array = NOMBRES_M if mujer else NOMBRES_H
+		v["nombre"] = String(nombres[(semilla / 7) % nombres.size()])
 	var ahora := Time.get_ticks_msec()
 	if ahora - int(v.get("t_charla", 0)) > 25000:
 		v["turno"] = 0
@@ -920,7 +937,7 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 		_cuadro = CuadroDialogo.new()
 		add_child(_cuadro)
 	var tono := Color.from_hsv(fposmod(float(hash(oficio)) / 1000.0, 1.0), 0.45, 1.0)
-	_cuadro.decir(DialogosCiudad.nombre(oficio), frase, tono, turno, 3)
+	_cuadro.decir("%s · %s" % [String(v.get("nombre", "")), DialogosCiudad.nombre(oficio)], frase, tono, turno, 3)
 	## Con el plano de conversación el globo sobra: solo en primera persona.
 	_burbuja.text = "💬"
 	_burbuja.pixel_size = 0.006

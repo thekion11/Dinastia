@@ -209,6 +209,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		return false
 	var cuerpo: MeshInstance3D = null
 	var superficie := -1
+	var es_mujer := false
 	for mv in _mallas(modelo):
 		var mi: MeshInstance3D = mv
 		if mi.mesh == null:
@@ -221,6 +222,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 				MATERIAL_CUERPO, "MI_Superhero_Female":
 					cuerpo = mi
 					superficie = s
+					es_mujer = m.resource_name == "MI_Superhero_Female"
 				MATERIAL_CEJAS:
 					mi.set_surface_override_material(s, _material_liso(pelo, 0.9))
 				MATERIAL_OJOS:
@@ -253,6 +255,10 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 			"bot": {"mod": "clasico"}, "acc": {}}
 	var clave := "%s|%s|%d|%s|%s|%s|%s|%d|%d" % [c1.to_html(false), c2.to_html(false), i_estilo,
 		pantalon.to_html(false), medias.to_html(false), _piel_cuantizada(piel), largo, hash(kit), dorsal]
+	## Cuerpo de mujer y de hombre NO comparten material (13-10-2026): su
+	## textura de piel y sus medidas son otras.
+	if es_mujer:
+		clave += "|m"
 	var mat: ShaderMaterial = _cache_equipacion.get(clave)
 	if mat == null:
 		var original := cuerpo.get_active_material(superficie) as BaseMaterial3D
@@ -271,6 +277,8 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("color_medias", medias)
 		mat.set_shader_parameter("estilo", i_estilo)
 		mat.set_shader_parameter("tinte_piel", _tinte(piel))
+		## La muñeca (fin de la manga larga) del cuerpo de mujer está más adentro.
+		mat.set_shader_parameter("muneca", 0.69 if es_mujer else 0.755)
 		var pl := piel.srgb_to_linear()
 		mat.set_shader_parameter("piel_obj", Vector3(pl.r, pl.g, pl.b))
 		mat.set_shader_parameter("largo", largo)
