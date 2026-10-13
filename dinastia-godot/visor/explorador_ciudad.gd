@@ -54,6 +54,7 @@ var _t_burbuja := 0.0
 var _cuadro: CuadroDialogo
 var _hablando_con: Node3D
 var _int_cerca: Dictionary = {}   ## alguien de la sala a mano para charlar
+var _t_gesto_propio := 0.0   ## mientras tu personaje gesticula, no se le cambia el clip
 var _t_gente := -1000.0   ## < -100: aún no se llenó el entorno
 ## Nombres de pila ficticios para los vecinos.
 const NOMBRES_M := ["Marta", "Lucía", "Carmen", "Elena", "Paula", "Rosa", "Inés", "Julia", "Nuria", "Teresa", "Alba", "Sara"]
@@ -338,6 +339,12 @@ func _animar_dt(v: float) -> void:
 	_sonar_pasos(v)
 	if not _es_dt or _anim == null:
 		return
+	## Un gesto en curso (al charlar) no se corta mientras estés quieto.
+	if _t_gesto_propio > 0.0:
+		_t_gesto_propio -= get_physics_process_delta_time()
+		if absf(v) < 0.05:
+			return
+		_t_gesto_propio = 0.0
 	var quiere := "parado"
 	if absf(v) > 3.0 and _anim.has_animation("correr"):
 		quiere = "correr"
@@ -531,7 +538,13 @@ func _physics_process(delta: float) -> void:
 		if _es_dt:
 			_animar_dt(vel)
 		elif _anim != null:
-			_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
+			if _t_gesto_propio > 0.0 and absf(vel) < 0.05:
+				_t_gesto_propio -= delta
+			else:
+				if _t_gesto_propio > 0.0 and _anim.has_animation("caminar"):
+					_anim.play("caminar")
+				_t_gesto_propio = 0.0
+				_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 			_sonar_pasos(vel)
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
@@ -942,6 +955,21 @@ func _salir_del_edificio() -> void:
 ## gira hacia ti y gesticula; al acabar vuelve a andar.
 var _rng_dialogo := RandomNumberGenerator.new()
 
+## Un gesto de tu personaje (saludar, charlar) y vuelta a estar parado.
+func _gesto_propio(gesto: String) -> void:
+	if _anim == null or not AnimExtra.UAL.has(gesto):
+		return
+	var lib := _anim.get_animation_library("")
+	if lib != null and not lib.has_animation(gesto):
+		var esq := FutbolistaQ.esqueleto_de(cuerpo)
+		var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[gesto]), str(_anim.get_path_to(esq)) if esq != null else "")
+		if clip != null:
+			lib.add_animation(gesto, clip)
+	if _anim.has_animation(gesto):
+		_anim.speed_scale = 1.0
+		_anim.play(gesto, 0.25)
+		_t_gesto_propio = minf(_anim.get_animation(gesto).length, 3.0)
+
 func _hablar_con_vecino(v: Dictionary) -> void:
 	var nodo: Node3D = v["nodo"]
 	if not is_instance_valid(nodo):
@@ -1000,6 +1028,13 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 	## Se gira hacia ti y hace el gesto que toca (saluda, charla, se despide).
 	var d := cuerpo.global_position - nodo.global_position
 	nodo.rotation.y = atan2(d.x, d.z)
+	## Y tú hacia esa persona, con tu propio gesto (13-10-2026).
+	if not primera_persona:
+		rumbo = atan2(-d.x, -d.z)
+		cuerpo.rotation.y = rumbo
+		_vel_pie = 0.0
+		vel = 0.0
+		_gesto_propio("saludo_mano" if turno == 0 else "charla")
 	var gesto := "saludo_mano" if turno != 1 else "charla"
 	for ap: AnimationPlayer in nodo.find_children("*", "AnimationPlayer", true, false):
 		var lib := ap.get_animation_library("")
