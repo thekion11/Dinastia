@@ -27,7 +27,7 @@ const CORTES_M := ["largo", "largo", "melena", "melena", "trenzas", "corto", "co
 ## 13-10-2026: ropa de calle de verdad. Sobre todo liso; rayas finas y cuadros
 ## pequeños de vez en cuando; nada de dibujos de equipación (arlequín, canesú,
 ## mangas de contraste) ni colores de camiseta de fútbol.
-const PRENDAS := ["liso", "liso", "liso", "liso", "liso", "franjas_finas", "cuadros_chicos"]
+const PRENDAS := ["liso", "liso", "liso", "liso", "liso", "franjas", "cuadros_chicos"]
 ## Vaqueros (tres lavados), chinos, gris, negro, verde oliva.
 const PANTALONES := ["2c3e5c", "3b5577", "1e2a3d", "b8a27a", "4a4a4e", "1b1b1d", "55583f"]
 ## Colores apagados de calle: blanco roto, gris, negro, azul marino, burdeos,
@@ -66,7 +66,9 @@ static func terminar(d: Dictionary) -> void:
 	var zapatilla: String = ["e8e6e0", "1c1c1e", "3e2723", "4a4d52"][rng.randi() % 4]
 	var kit := {
 		"dis": String(PRENDAS[rng.randi() % PRENDAS.size()]),
-		"cols": [c1.to_html(false), c2.to_html(false), c2.darkened(0.3).to_html(false), "ffffff", "111111"],
+		## El segundo color, cerca del primero: las rayas y los cuadros de calle
+		## son de tonos suaves, no de camiseta de fútbol.
+		"cols": [c1.to_html(false), c1.lerp(c2, 0.4).to_html(false), c2.darkened(0.3).to_html(false), "ffffff", "111111"],
 		"trim": 1 if rng.randf() < 0.5 else 0,
 		"cuello": 1 if rng.randf() < 0.7 else 2,
 		"pant": {"dis": "liso", "c1": pant.to_html(false), "c2": pant.to_html(false)},
@@ -79,7 +81,7 @@ static func terminar(d: Dictionary) -> void:
 		"tatuaje": 1 + absi(int(d["semilla"]) / 100) % 3 if absi(int(d["semilla"]) / 7) % 100 < 9 else 0,
 	}
 	## Las rayas, con la forma del cuerpo de mujer, se deformaban como cebra.
-	if mujer and String(kit["dis"]) == "franjas_finas":
+	if mujer and String(kit["dis"]) == "franjas":
 		kit["dis"] = "liso"
 	VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo_col, pant, pant, true, kit, 0)
 	var corte: String = CORTES_M[rng.randi() % CORTES_M.size()] if mujer else CORTES_H[rng.randi() % CORTES_H.size()]
