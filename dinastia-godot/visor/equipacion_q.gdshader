@@ -84,6 +84,9 @@ uniform float borde = 0.45;
 uniform bool largo = false;
 // Dónde acaba la manga larga (|x| de reposo): 0,755 hombre, 0,69 mujer.
 uniform float muneca = 0.755;
+// Cuánto más abajo están los hombros y el cuello (0 hombre, -0,06 mujer: medido
+// con la cabeza y las clavículas del esqueleto).
+uniform float dy_cuerpo = 0.0;
 // Ropa de calle: manga corta con pantalón largo, y tatuaje (0 ninguno,
 // 1 antebrazo derecho, 2 los dos antebrazos, 3 brazo derecho entero).
 uniform bool manga_corta = false;
@@ -413,7 +416,7 @@ void fragment() {
 		float brazo = smoothstep(0.215 - w, 0.215 + w, ax) * smoothstep(1.22 - w, 1.22 + w, y);
 		// Ropa de calle (13-10-2026): el escote llega a la base del cuello; con
 		// el corte de camiseta de fútbol (1,535) asomaba media clavícula.
-		float tope_t = civil ? mix(1.552, 1.60, smoothstep(0.06, 0.085, ax)) : 1.535;
+		float tope_t = civil ? mix(1.552, 1.60, smoothstep(0.06, 0.085, ax)) + dy_cuerpo : 1.535;
 		float torso = smoothstep(1.0 - w, 1.0 + w, y) * (1.0 - smoothstep(tope_t - w, tope_t + w, y));
 		m.r = max(brazo * (1.0 - smoothstep(0.43 - w, 0.43 + w, ax)), (1.0 - brazo) * torso);
 		m.g = (1.0 - brazo) * smoothstep(0.62 - w, 0.62 + w, y) * (1.0 - smoothstep(1.0 - w, 1.0 + w, y));
@@ -492,7 +495,7 @@ void fragment() {
 	}
 	if (familia >= 0 && !manga && cuello == 3 && y > 1.485) camiseta = civil ? camiseta * 0.82 : trim_col;
 	// Ropa de calle: un ribete fino y del mismo color en el escote.
-	if (civil && !manga && y > 1.53 && abs(x) < 0.095) camiseta *= 0.85;
+	if (civil && !manga && y > 1.53 + dy_cuerpo && abs(x) < 0.095) camiseta *= 0.85;
 	if (!manga && abs(abs(x) - 0.205) < 0.006 && y < 1.40) camiseta *= 0.8;
 	if (manga && abs(abs(x) - 0.222) < 0.005) camiseta *= 0.82;
 	if (!manga && y > 1.005 && y < 1.02) camiseta *= 0.85;
