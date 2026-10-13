@@ -258,6 +258,8 @@ func _unhandled_input(ev: InputEvent) -> void:
 	if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		salir.emit()
+	elif ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_V:
+		primera_persona = not primera_persona
 	elif (ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_E) \
 			or (ev is InputEventJoypadButton and ev.pressed and ev.button_index == JOY_BUTTON_X):
 		get_viewport().set_input_as_handled()
@@ -265,6 +267,8 @@ func _unhandled_input(ev: InputEvent) -> void:
 
 ## Sentado en la grada: dónde y hacia dónde se mira.
 var sentado := false
+## Visión en primera persona (tecla V).
+var primera_persona := false
 var _de_pie := Vector3.ZERO
 var _mirada := 0.0
 var _est_perfil: Dictionary = {}
@@ -323,6 +327,15 @@ func _persona_cerca() -> Dictionary:
 ## Cámara en tercera persona. Dentro del vestuario y del túnel no sale de las
 ## paredes ni pasa del techo: si no, se vería el exterior de la caja.
 func _colocar_camara(delta: float) -> void:
+	## PRIMERA PERSONA (V): la cámara en los ojos, el cuerpo escondido.
+	if primera_persona and true:
+		var dir_fp := Vector3(sin(rumbo), 0, cos(rumbo))
+		camara.position = cuerpo.position + Vector3(0, 1.62, 0) + dir_fp * 0.18
+		camara.look_at(camara.position + dir_fp * 5.0 + Vector3(0, -0.15, 0), Vector3.UP)
+		cuerpo.visible = false
+		return
+	if not cuerpo.visible and not sentado:
+		cuerpo.visible = true
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var z := zona_en(cuerpo.position)
 	var cerrado := float(z.get("techo", 99.0)) < 50.0
