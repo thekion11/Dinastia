@@ -175,11 +175,31 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 		corte = "corto"
 	PeloQ.poner(d, corte, Color(String(a["color_pelo"])), bool(a["barba"]) and String(a["cuerpo"]) == "male")
 	_cara_biblioteca(d, a)
+	_ojos_vivos(d, Color(String(a["piel"])))
 	_accesorios(d, a, c1, c2)
 	var ap: AnimationPlayer = d["anim"]
 	if ap.has_animation("parado"):
 		ap.play("parado")
 	return d
+
+## OJOS DE VERDAD también con la cara clásica (13-10-2026): eran ranuras
+## blancas. El shader de ojos (iris, párpados de su piel) y, con él, el
+## parpadeo y las expresiones (`Expresion`).
+static func _ojos_vivos(d: Dictionary, piel: Color) -> void:
+	for mi: MeshInstance3D in (d["nodo"] as Node).find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh == null:
+			continue
+		for s in mi.mesh.get_surface_count():
+			var base := mi.mesh.surface_get_material(s)
+			var actual := mi.get_surface_override_material(s)
+			if base == null or base.resource_name != VestidorQ.MATERIAL_OJOS or actual is ShaderMaterial:
+				continue
+			VestidorQ._con_reposo_simple(mi)
+			var mo := ShaderMaterial.new()
+			mo.shader = load(Expresion.SHADER_OJOS)
+			mo.set_shader_parameter("iris", Color(0.24, 0.16, 0.1))
+			mo.set_shader_parameter("piel", piel)
+			mi.set_surface_override_material(s, mo)
 
 ## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)
 ## y, si se eligió, un corte medido. Con gorra no va el corte medido.

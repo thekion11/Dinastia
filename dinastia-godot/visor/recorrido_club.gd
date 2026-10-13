@@ -82,6 +82,8 @@ const SALUDOS := {
 ## la directiva y la junta); si no, solo saluda.
 static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary, desde: Vector3) -> PanelContainer:
 	personal.atender(g, desde, true)
+	if g.has("nodo") and is_instance_valid(g["nodo"]):
+		Expresion.de(g["nodo"]).poner("alegre", 2.5)
 	var panel := PanelContainer.new()
 	panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	panel.offset_left = -330
@@ -156,6 +158,8 @@ const NOVEDADES_PORTERO := [
 static func dialogo_portero(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary, desde: Vector3,
 		al_pasar: Callable) -> PanelContainer:
 	personal.atender(g, desde, true)
+	if g.has("nodo") and is_instance_valid(g["nodo"]):
+		Expresion.de(g["nodo"]).poner("sorpresa" if PersonajeDT.sancionado else "alegre", 2.5)
 	var panel := PanelContainer.new()
 	panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	panel.offset_left = -330
