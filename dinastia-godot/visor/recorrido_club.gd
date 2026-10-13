@@ -33,6 +33,7 @@ static func menu_ascensor(capa: CanvasLayer, actual: int, al_elegir: Callable) -
 	panel.offset_right = 190
 	panel.offset_top = -170
 	panel.offset_bottom = 170
+	panel.add_theme_stylebox_override("panel", CuadroDialogo.estilo_panel())
 	var caja := VBoxContainer.new()
 	caja.add_theme_constant_override("separation", 6)
 	panel.add_child(caja)
@@ -87,19 +88,17 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 	panel.offset_right = 330
 	panel.offset_top = -270
 	panel.offset_bottom = -110
+	panel.add_theme_stylebox_override("panel", CuadroDialogo.estilo_panel())
 	var caja := VBoxContainer.new()
 	caja.add_theme_constant_override("separation", 6)
 	panel.add_child(caja)
-	var t := Label.new()
-	t.text = "%s · %s" % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
-	t.add_theme_font_size_override("font_size", 19)
-	t.add_theme_color_override("font_color", Color(1, 0.9, 0.6))
-	caja.add_child(t)
+	caja.add_child(CuadroDialogo.placa("%s · %s" % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]))
 	var dice := Label.new()
 	dice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	dice.custom_minimum_size = Vector2(620, 0)
-	dice.text = "«%s»" % Idiomas.t(String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")))
+	dice.custom_minimum_size = Vector2(610, 0)
+	dice.add_theme_font_size_override("font_size", 19)
 	caja.add_child(dice)
+	CuadroDialogo.escribir(dice, "«%s»" % Idiomas.t(String(SALUDOS.get(String(g["clave"]), "Buenas, míster."))))
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	caja.add_child(fila)
@@ -135,6 +134,8 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 	adios.text = Idiomas.t("Adiós")
 	adios.pressed.connect(cerrar)
 	fila.add_child(adios)
+	for b in fila.get_children():
+		CuadroDialogo.respuesta(b as Button)
 	capa.add_child(panel)
 	return panel
 
@@ -161,17 +162,15 @@ static func dialogo_portero(capa: CanvasLayer, personal: PersonalEstadio, g: Dic
 	panel.offset_right = 330
 	panel.offset_top = -270
 	panel.offset_bottom = -110
+	panel.add_theme_stylebox_override("panel", CuadroDialogo.estilo_panel())
 	var caja := VBoxContainer.new()
 	caja.add_theme_constant_override("separation", 6)
 	panel.add_child(caja)
-	var t := Label.new()
-	t.text = "%s · %s" % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
-	t.add_theme_font_size_override("font_size", 19)
-	t.add_theme_color_override("font_color", Color(1, 0.9, 0.6))
-	caja.add_child(t)
+	caja.add_child(CuadroDialogo.placa("%s · %s" % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]))
 	var dice := Label.new()
 	dice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	dice.custom_minimum_size = Vector2(620, 0)
+	dice.custom_minimum_size = Vector2(610, 0)
+	dice.add_theme_font_size_override("font_size", 19)
 	var h := PersonalEstadio.hora
 	var saludo := "Buenas, míster."
 	if h >= 0.0:
@@ -180,8 +179,8 @@ static func dialogo_portero(capa: CanvasLayer, personal: PersonalEstadio, g: Dic
 	if PersonajeDT.sancionado:
 		txt += " " + Idiomas.t("Ya me enteré de la sanción… Al club puede pasar; al banquillo, el domingo no.")
 	txt += " " + Idiomas.t("¿Le abro?")
-	dice.text = "«%s»" % txt
 	caja.add_child(dice)
+	CuadroDialogo.escribir(dice, "«%s»" % txt)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	caja.add_child(fila)
@@ -213,6 +212,8 @@ static func dialogo_portero(capa: CanvasLayer, personal: PersonalEstadio, g: Dic
 	adios.text = Idiomas.t("Adiós")
 	adios.pressed.connect(cerrar)
 	fila.add_child(adios)
+	for b in fila.get_children():
+		CuadroDialogo.respuesta(b as Button)
 	capa.add_child(panel)
 	ba.grab_focus()
 	return panel
@@ -288,6 +289,7 @@ static func panel_decorar(capa: CanvasLayer, arbol: SceneTree, sala: String) -> 
 	panel.offset_right = -16
 	panel.offset_top = -280
 	panel.offset_bottom = 280
+	panel.add_theme_stylebox_override("panel", CuadroDialogo.estilo_panel())
 	var scroll := ScrollContainer.new()
 	panel.add_child(scroll)
 	var caja := VBoxContainer.new()
