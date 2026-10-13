@@ -4612,6 +4612,7 @@ func _fundido_entrada() -> void:
 
 ## Con pantalla de carga y consejos: se pinta ANTES de empezar a construir.
 func _ver_estadio_con_carga() -> void:
+	PantallaCarga.club = mundo.mi_club() if mundo != null else null
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Levantando el estadio…"))
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -4619,6 +4620,7 @@ func _ver_estadio_con_carga() -> void:
 	carga.cerrar()
 
 func _ver_ciudad_con_carga() -> void:
+	PantallaCarga.club = mundo.mi_club() if mundo != null else null
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
 	await get_tree().process_frame
 	await get_tree().process_frame
