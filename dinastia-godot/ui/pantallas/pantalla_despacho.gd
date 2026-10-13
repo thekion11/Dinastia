@@ -510,7 +510,11 @@ func _fila_opciones_rueda(e: Dictionary) -> VBoxContainer:
 			b2.text = str(op)
 		b2.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b2.custom_minimum_size = Vector2(0, 42)
-		b2.add_theme_font_size_override("font_size", 13)
+		## Mismo estilo que los diálogos (13-10-2026): píldora con borde dorado
+		## al pasar, numerada.
+		CuadroDialogo.respuesta(b2)
+		b2.text = "%d.  %s" % [i + 1, b2.text]
+		b2.add_theme_font_size_override("font_size", 15)
 		b2.pressed.connect(func() -> void: p._responder(i))
 		col.add_child(b2)
 	return col
