@@ -407,7 +407,10 @@ void fragment() {
 		float ax = abs(x);
 		float w = 0.004;
 		float brazo = smoothstep(0.215 - w, 0.215 + w, ax) * smoothstep(1.22 - w, 1.22 + w, y);
-		float torso = smoothstep(1.0 - w, 1.0 + w, y) * (1.0 - smoothstep(1.535 - w, 1.535 + w, y));
+		// Ropa de calle (13-10-2026): el escote llega a la base del cuello; con
+		// el corte de camiseta de fútbol (1,535) asomaba media clavícula.
+		float tope_t = civil ? mix(1.552, 1.60, smoothstep(0.06, 0.085, ax)) : 1.535;
+		float torso = smoothstep(1.0 - w, 1.0 + w, y) * (1.0 - smoothstep(tope_t - w, tope_t + w, y));
 		m.r = max(brazo * (1.0 - smoothstep(0.43 - w, 0.43 + w, ax)), (1.0 - brazo) * torso);
 		m.g = (1.0 - brazo) * smoothstep(0.62 - w, 0.62 + w, y) * (1.0 - smoothstep(1.0 - w, 1.0 + w, y));
 		m.b = (1.0 - brazo) * smoothstep(0.085 - w, 0.085 + w, y) * (1.0 - smoothstep(0.47 - w, 0.47 + w, y));
@@ -483,7 +486,9 @@ void fragment() {
 			if (abs(x) < 0.004 && (abs(y - 1.46) < 0.004 || abs(y - 1.485) < 0.004)) camiseta = C(0) * 0.7;
 		}
 	}
-	if (familia >= 0 && !manga && cuello == 3 && y > 1.485) camiseta = trim_col;
+	if (familia >= 0 && !manga && cuello == 3 && y > 1.485) camiseta = civil ? camiseta * 0.82 : trim_col;
+	// Ropa de calle: un ribete fino y del mismo color en el escote.
+	if (civil && !manga && y > 1.53 && abs(x) < 0.095) camiseta *= 0.85;
 	if (!manga && abs(abs(x) - 0.205) < 0.006 && y < 1.40) camiseta *= 0.8;
 	if (manga && abs(abs(x) - 0.222) < 0.005) camiseta *= 0.82;
 	if (!manga && y > 1.005 && y < 1.02) camiseta *= 0.85;
