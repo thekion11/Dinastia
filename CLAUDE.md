@@ -301,4 +301,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
 - 13-10 PEDIDO: comparar modo partido con FC 26, FC Mobile, DLS, Soccer Manager 2027 y
   seguir un plan de ruta de ≥2 meses. HECHO: `dinastia-godot/COMPARACION_MODO_PARTIDO.md`
-  y `PLAN_DE_RUTA.md` (9 semanas). EN CURSO: semana 1 (táctica en vivo).
+  y `PLAN_DE_RUTA.md` (9 semanas, detallado: GTA V, qué falta para lanzar, «el bloqueo» =
+  desbloquear modos jugando, opcional). 13-10 pedidos: teléfono medio realista/medio
+  informe (HECHO), diálogos con mejor estética (HECHO: `CuadroDialogo`), menos músculo
+  (HECHO: `PersonajeDT.BASE_ESBELTA`, `adelgazar`), más personalización, expresiones,
+  tutorial, ultra pulido. EN CURSO: semana 1 del plan.
