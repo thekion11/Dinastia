@@ -602,7 +602,7 @@ void fragment() {
 		const vec3 REF = vec3(0.374, 0.170, 0.080);
 		float l_ref = dot(REF, vec3(0.2126, 0.7152, 0.0722));
 		float l = max(dot(piel, vec3(0.2126, 0.7152, 0.0722)), 0.0001);
-		float rel = clamp(pow(l / l_ref, 0.8), 0.35, 1.5);
+		float rel = clamp(pow(l / l_ref, 0.6), 0.55, 1.4);
 		vec3 matiz = (piel / l) / (REF / l_ref);
 		albedo = piel_obj * rel * mix(vec3(1.0), clamp(matiz, vec3(0.6), vec3(1.6)), 0.3);
 		// Sin saturar (el usuario lo pidió el 30-9: pieles limpias, no naranjas).
@@ -626,6 +626,38 @@ void fragment() {
 			* (1.0 - smoothstep(1.735, 1.75, y)) : 0.0;
 		albedo = piel_foto * mix(1.0, relieve, mix(0.25, 0.8, oreja));
 		albedo *= mix(vec3(1.0), vec3(1.06, 0.97, 0.95), oreja);
+	}
+	// ROPA DE CALLE CON TELA (13-10-2026): el color plano parecía pintura.
+	// Tejido fino, costuras de hombro y laterales, dobladillo, puños, cintura
+	// y, en el vaquero, la sarga diagonal, el desgaste de los muslos y la
+	// costura lateral.
+	if (civil && usa_reposo) {
+		float ax_t = abs(x);
+		float tej = ruido(vec2(x * 700.0, y * 700.0)) * 0.55 + ruido(vec2((x + y) * 380.0, y * 520.0)) * 0.45;
+		camiseta *= 0.94 + 0.09 * tej;
+		float costura_l = (1.0 - smoothstep(0.0, 0.004, abs(ax_t - 0.205))) * step(y, 1.4) * step(1.0, y);
+		float costura_h = (1.0 - smoothstep(0.0, 0.005, abs(ax_t - 0.215))) * step(1.22, y);
+		float dobladillo = 1.0 - smoothstep(0.0, 0.016, y - 1.0);
+		float puno = largo ? (1.0 - smoothstep(0.0, 0.025, muneca - ax_t)) * step(1.22, y) : 0.0;
+		camiseta *= 1.0 - 0.16 * max(max(costura_l, costura_h), max(dobladillo, puno));
+		vec3 p0 = pant;
+		float azul = p0.b - p0.r;
+		float tej_p = ruido(vec2(x * 650.0, y * 650.0));
+		pant *= 0.93 + 0.1 * tej_p;
+		if (azul > 0.04) {
+			// Sarga diagonal y desgaste claro en el frente de los muslos.
+			float sarga = 0.5 + 0.5 * sin((x * 0.7 + y) * 2300.0);
+			pant *= 0.94 + 0.08 * sarga;
+			float muslo = smoothstep(0.55, 0.85, z) * smoothstep(0.55, 0.7, y) * (1.0 - smoothstep(0.85, 0.95, y));
+			float rodilla = smoothstep(0.6, 0.8, z) * (1.0 - smoothstep(0.0, 0.05, abs(y - 0.5)));
+			pant = mix(pant, pant * 1.35 + vec3(0.03, 0.04, 0.05), (muslo * 0.6 + rodilla * 0.35) * (0.6 + 0.4 * ruido(vec2(x * 60.0, y * 40.0))));
+		}
+		float cintura = smoothstep(0.955, 0.965, y) * (1.0 - smoothstep(0.995, 1.0, y));
+		float lateral_p = (1.0 - smoothstep(0.0, 0.004, abs(ax_t - 0.19))) * step(y, 0.95) * step(0.12, y);
+		float bajo = 1.0 - smoothstep(0.0, 0.02, y - 0.115);
+		pant *= 1.0 - 0.18 * max(cintura, max(lateral_p, bajo));
+		// Hebilla del cinturón, al frente.
+		if (y > 0.958 && y < 0.993 && ax_t < 0.018 && z > 0.6) pant = vec3(0.55, 0.52, 0.45);
 	}
 	albedo = mix(albedo, camiseta * pliegue, m.r);
 	albedo = mix(albedo, pant * pliegue, m.g);
@@ -711,6 +743,8 @@ void fragment() {
 	// marcaba el músculo (etapa 2). Los zapatos (m.a) siguen brillando.
 	if (civil) {
 		rugo = mix(rugo, 0.86, tela * (1.0 - m.a));
+		// Zapatos de calle (13-10-2026): cuero o lona, no charol de botín.
+		rugo = mix(rugo, 0.62, m.a);
 	}
 	ROUGHNESS = rugo + punto * 0.05 * tela;
 	SPECULAR = civil ? mix(0.3, 0.5, m.a) : mix(0.45, 0.55, clamp(es_camiseta + m.g + m.a, 0.0, 1.0));

@@ -223,7 +223,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 					cuerpo = mi
 					superficie = s
 					es_mujer = m.resource_name == "MI_Superhero_Female"
-				MATERIAL_CEJAS:
+				MATERIAL_CEJAS, "MI_Hair_2":  # el cuerpo de mujer trae sus cejas con MI_Hair_2
 					mi.set_surface_override_material(s, _material_liso(pelo, 0.9))
 				MATERIAL_OJOS:
 					## Las texturas de ojos del pack no vinieron en el repo:
@@ -759,8 +759,8 @@ static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Arr
 	var p := unicos.duplicate()
 	## 13-10-2026: 24 → 64 pasos; con 24 la camiseta aún marcaba abdominales.
 	var t0 := Time.get_ticks_msec()
-	for it in 64:
-		var f: float = 0.55 if it % 2 == 0 else -0.58
+	for it in 110:
+		var f: float = 0.62 if it % 2 == 0 else -0.5
 		var q := p.duplicate()
 		for i in m:
 			var vs: PackedInt32Array = vecinos[i]
@@ -795,7 +795,8 @@ static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Arr
 		c0[i * 4] = sn.x
 		c0[i * 4 + 1] = sn.y
 		c0[i * 4 + 2] = sn.z
-		c0[i * 4 + 3] = clampf(relleno, 0.0, 0.03)
+		## 13-10-2026: también hacia dentro (los pectorales y bíceps se marcaban).
+		c0[i * 4 + 3] = clampf(relleno, -0.035, 0.03)
 		c1[i * 3] = nr.x
 		c1[i * 3 + 1] = nr.y
 		c1[i * 3 + 2] = nr.z

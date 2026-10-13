@@ -33,7 +33,7 @@ func _ready() -> void:
 	var cam := Camera3D.new()
 	cam.fov = 30
 	add_child(cam)
-	cam.look_at_from_position(Vector3(0, 1.0, 6.2), Vector3(0, 0.95, 0))
+	cam.look_at_from_position(Vector3(0, 1.05, 4.6), Vector3(0, 1.0, 0))
 
 func _process(_d: float) -> void:
 	_n += 1
