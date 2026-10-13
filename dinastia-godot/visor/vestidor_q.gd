@@ -279,6 +279,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("tinte_piel", _tinte(piel))
 		## La muñeca (fin de la manga larga) del cuerpo de mujer está más adentro.
 		mat.set_shader_parameter("muneca", 0.69 if es_mujer else 0.755)
+		mat.set_shader_parameter("dy_cuerpo", -0.06 if es_mujer else 0.0)
 		var pl := piel.srgb_to_linear()
 		mat.set_shader_parameter("piel_obj", Vector3(pl.r, pl.g, pl.b))
 		mat.set_shader_parameter("largo", largo)
