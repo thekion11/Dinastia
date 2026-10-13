@@ -310,4 +310,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   ⚙ «Ajustes de la ciudad» (`AjustesCiudad`, opción de ayudas, apagada) y en el
   TUTORIAL DE LA CIUDAD (1.ª vez); velocidad en un MÓVIL EN LA MANO al correr/conducir/
   metro (`MovilMano`); el botón E brilla si hay algo cerca. Permiso dado para
-  DESCARGAR contenido externo si hace falta (solo licencias libres).
+  DESCARGAR contenido externo si hace falta (solo licencias libres). La red del entorno
+  bloquea polyhaven/ambientcg/quaternius (el usuario puede permitirlos en Network access).
+- 13-10 (noche) PEDIDO: «la ropa es horrible»; seguir con la semana 1 y PULIR HASTA LAS 12:00
+  de su hora (UTC−3 = 15:00 UTC), con pasadas sucesivas. Hecho: ver PLAN_DE_RUTA semana 1.
+  Claves: `equipacion_q.gdshader` (escala_holgura, piel_obj, muneca, manga_corta, tatuaje,
+  tela civil), `VestidorQ._alisado` (también hacia dentro), `PersonajeDT.adelgazar`,
+  `AnimQuaternius._relajar_dedos/_brazos_al_cuerpo`, `TraficoCiudad.reciclar_peatones`.
