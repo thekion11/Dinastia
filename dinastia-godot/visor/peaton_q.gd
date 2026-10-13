@@ -196,9 +196,12 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 			lente.height = 0.02
 			lente.radial_segments = 10
 			lente.rings = 4
+			## En la cabeza de mujer los ojos quedan más arriba: con la altura
+			## del hombre las gafas tapaban la mejilla y asomaba el ojo encima.
+			var gy := 0.118 if mujer else 0.1
 			for sx in [-1.0, 1.0]:
-				_pieza(cab, lente, _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0.034 * sx, 0.1, 0.1))
-			_pieza(cab, _caja(Vector3(0.03, 0.005, 0.005)), _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0, 0.105, 0.108))
+				_pieza(cab, lente, _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0.034 * sx, gy, 0.1))
+			_pieza(cab, _caja(Vector3(0.03, 0.005, 0.005)), _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0, gy + 0.005, 0.108))
 		elif cab_extra < 0.34:
 			## Gorra: casquete y visera.
 			var gm := _m(col.lightened(0.1))

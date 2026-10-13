@@ -113,6 +113,13 @@ static func _material(color: Color, tex: int = 1) -> StandardMaterial3D:
 	_mats[clave] = m
 	return m
 
+## Las cejas, del color del pelo pero más oscuras; con pelo canoso o rubio
+## muy claro, bastante más oscuras (unas cejas blancas y gruesas parecían
+## pintadas con tiza).
+static func color_cejas(pelo: Color) -> Color:
+	var lum := pelo.get_luminance()
+	return pelo.darkened(0.55 if lum > 0.55 else (0.35 if lum > 0.35 else 0.15))
+
 ## Pone pelo, barba (si `barba`) y cejas a un jugador de `FutbolistaQ.crear()`.
 ## `corte`: uno de `Cara.CORTES`. Devuelve el nodo del que cuelga todo.
 static func poner(d: Dictionary, corte: String, color: Color, barba: bool) -> Node3D:
@@ -133,7 +140,10 @@ static func poner(d: Dictionary, corte: String, color: Color, barba: bool) -> No
 		piezas.append([String(fila[0]), float(fila[1])])
 	if barba:
 		piezas.append(["Hair_Beard", 1.0])
-	piezas.append(["Eyebrows_Regular", 1.0])
+	## El cuerpo de mujer ya trae sus cejas finas: con estas encima salían
+	## dobles (dos rayas gruesas sobre los ojos).
+	if String(d.get("cuerpo", "male")) != "female":
+		piezas.append(["Eyebrows_Regular", 1.0])
 	for p: Array in piezas:
 		var malla := _malla(String(p[0]))
 		if malla == null:
@@ -141,7 +151,7 @@ static func poner(d: Dictionary, corte: String, color: Color, barba: bool) -> No
 		var mi := MeshInstance3D.new()
 		mi.name = String(p[0])
 		mi.mesh = malla
-		mi.material_override = _material(color, 2 if String(p[0]) in TEXTURA_2 else 1)
+		mi.material_override = _material(color_cejas(color) if String(p[0]).begins_with("Eyebrows") else color, 2 if String(p[0]) in TEXTURA_2 else 1)
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		var t := desde_cabeza
 		if String(p[0]) in DE_CUERPO_FEMENINO:
