@@ -957,6 +957,12 @@ func _mover(delta: float) -> void:
 		var dir := objetivo - antes
 		dir.y = 0.0
 		var dist := dir.length()
+		## ESPRINT (13-10-2026): la sonda medía 3,5 m/s de máximo -un trote-
+		## para los 22 todo el partido. Quien tiene lejos su sitio en plena
+		## jugada (repliegue, desmarque, llegar a la presión) acelera hasta
+		## casi el doble; en calma («medio») no.
+		if mult_calma >= 1.0 and not bool(p.get("arbitro", false)) and not es_por:
+			paso *= 1.0 + clampf((dist - 3.0) / 9.0, 0.0, 1.0) * 1.05
 
 		## INERCIA: antes el jugador saltaba a velocidad máxima en el instante
 		## que cambiaba de objetivo -frenar en seco y arrancar en seco es lo
