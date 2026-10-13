@@ -36,6 +36,13 @@ func _process(_d: float) -> void:
 	var k := (_n - 8) / 8
 	if _n >= 8 and (_n - 8) % 8 == 0 and k < PARADAS.size():
 		var par: Array = PARADAS[k]
+		if k == 1 and OS.get_environment("CASA") != "":
+			## Frente a la fachada de una casa del barrio (CASA=n elige cuál).
+			var ct: Transform3D = _e.cb.expansion._casas_t[int(OS.get_environment("CASA")) % _e.cb.expansion._casas_t.size()]
+			var ix := int(OS.get_environment("CASA")) % _e.cb.expansion._casas_t.size()
+			var puerta: Transform3D = _e.cb.expansion._puertas_t[ix]
+			var lado := signf(puerta.origin.z - ct.origin.z)
+			par = ["casa", Vector3(ct.origin.x, 0, puerta.origin.z + lado * 9.0), 0.0 if lado < 0.0 else PI]
 		_e.cuerpo.position = par[1]
 		_e.cuerpo.position.y = _e.altura_suelo(par[1].x, par[1].z)
 		_e.set("rumbo", float(par[2]))
