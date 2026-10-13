@@ -135,11 +135,98 @@ func agregar_vehiculo(nodo: Node3D, ruta: int, s: float, vel: float,
 	## Los peatones (alto bajo) se anotan por ruta para no atravesarse.
 	if alto > 0.05 and alto < 0.3:
 		if not _peatones_ruta.has(ruta):
-			_peatones_ruta[ruta] = []
+			registrar_ruta_gente(ruta)
 		(_peatones_ruta[ruta] as Array).append(_vehiculos[_vehiculos.size() - 1])
 	_colocar(_vehiculos[_vehiculos.size() - 1])
 
 var _peatones_ruta := {}        ## ruta -> [peatones]
+
+## GENTE ALREDEDOR (13-10-2026). La ciudad mide 2,6 km y los peatones se
+## repartían por bucles enormes: a pie casi no se veía a nadie. Como en los
+## juegos de mundo abierto, los que quedan lejos de ti reaparecen en una acera
+## cercana, a una distancia y por detrás de la cámara para no verlos «nacer».
+## `mira`: hacia dónde mira la cámara (en el suelo). Mueve como mucho `tope`.
+var _rng_gente := RandomNumberGenerator.new()
+## Rutas de peatones por celdas de 100 m (para buscar solo las cercanas).
+var _gente_celdas := {}
+
+func registrar_ruta_gente(id: int) -> void:
+	if id < 0 or id >= _rutas.size():
+		return
+	if not _peatones_ruta.has(id):
+		_peatones_ruta[id] = []
+	var ruta: Ruta = _rutas[id]
+	var c := Vector3.ZERO
+	for p: Vector3 in ruta.puntos:
+		c += p
+	c /= maxf(1.0, float(ruta.puntos.size()))
+	var k := Vector2i(floori(c.x / 100.0), floori(c.z / 100.0))
+	if not _gente_celdas.has(k):
+		_gente_celdas[k] = []
+	if not (_gente_celdas[k] as Array).has(id):
+		(_gente_celdas[k] as Array).append(id)
+
+func rutas_gente() -> Array:
+	return _peatones_ruta.keys()
+
+func _rutas_gente_cerca(centro: Vector3) -> Array:
+	var out: Array = []
+	var k0 := Vector2i(floori(centro.x / 100.0), floori(centro.z / 100.0))
+	for dx in range(-1, 2):
+		for dz in range(-1, 2):
+			out.append_array(_gente_celdas.get(k0 + Vector2i(dx, dz), []))
+	return out
+func reciclar_peatones(centro: Vector3, mira: Vector3, lejos := 95.0, tope := 3, max_cerca := 28) -> int:
+	var movidos := 0
+	var c2 := Vector2(centro.x, centro.z)
+	## Con bastante gente alrededor no se trae más (rendimiento y realismo).
+	var cerca := 0
+	for v0: Dictionary in _vehiculos:
+		var a0 := float(v0["alto"])
+		if a0 > 0.05 and a0 < 0.3 and is_instance_valid(v0["nodo"]):
+			var n0: Node3D = v0["nodo"]
+			if Vector2(n0.position.x, n0.position.z).distance_to(c2) < 80.0:
+				cerca += 1
+	if cerca >= max_cerca:
+		return 0
+	tope = mini(tope, max_cerca - cerca)
+	var m2 := Vector2(mira.x, mira.z).normalized()
+	for v: Dictionary in _vehiculos:
+		if movidos >= tope:
+			break
+		var alto := float(v["alto"])
+		if alto <= 0.05 or alto >= 0.3 or not is_instance_valid(v["nodo"]):
+			continue
+		var n: Node3D = v["nodo"]
+		if Vector2(n.position.x, n.position.z).distance_to(c2) < lejos:
+			continue
+		## Busca en las rutas de peatones un punto a 40-75 m y a la espalda.
+		var candidatas := _rutas_gente_cerca(centro)
+		candidatas.shuffle()
+		for r: int in candidatas:
+			var ruta: Ruta = _rutas[r]
+			var hecho := false
+			for intento in 6:
+				var sp := _rng_gente.randf() * ruta.largo
+				var pos: Vector3 = ruta.en(sp)[0]
+				var d := Vector2(pos.x, pos.z) - c2
+				var dist := d.length()
+				if dist < 40.0 or dist > 75.0 or (m2 != Vector2.ZERO and d.normalized().dot(m2) > 0.2):
+					continue
+				var vieja := int(v["ruta"])
+				if vieja != r:
+					if _peatones_ruta.has(vieja):
+						(_peatones_ruta[vieja] as Array).erase(v)
+					(_peatones_ruta[r] as Array).append(v)
+					v["ruta"] = r
+				v["s"] = sp
+				_colocar(v)
+				movidos += 1
+				hecho = true
+				break
+			if hecho:
+				break
+	return movidos
 
 ## Quién camina o conduce por la ciudad (lo pone `ExploradorCiudad`): todos le
 ## ceden el paso.

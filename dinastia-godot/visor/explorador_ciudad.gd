@@ -53,6 +53,7 @@ var _burbuja: Label3D
 var _t_burbuja := 0.0
 var _cuadro: CuadroDialogo
 var _hablando_con: Node3D
+var _t_gente := 0.0
 ## Nombres de pila ficticios para los vecinos.
 const NOMBRES_M := ["Marta", "Lucía", "Carmen", "Elena", "Paula", "Rosa", "Inés", "Julia", "Nuria", "Teresa", "Alba", "Sara"]
 const NOMBRES_H := ["Andrés", "Manolo", "Jorge", "Ramón", "Pablo", "Luis", "Tomás", "Iván", "Héctor", "Ernesto", "Óscar", "Félix"]
@@ -552,6 +553,12 @@ func _physics_process(delta: float) -> void:
 	cuerpo.rotation.y = rumbo
 	_colocar_camara(delta)
 	_buscar_cerca()
+	## Gente alrededor: los peatones lejanos reaparecen cerca (a la espalda).
+	_t_gente -= delta
+	if _t_gente <= 0.0 and trafico != null and estado == "calle":
+		_t_gente = 1.2
+		var mira := -camara.global_transform.basis.z
+		trafico.reciclar_peatones(cuerpo.position, mira)
 	var corriendo := modo != "coche" and absf(vel) > VEL_PIE * 1.15
 	_actualizar_mano("coche" if modo == "coche" else ("correr" if corriendo else "pie"), absf(vel) * 3.6,
 		VEL_COCHE * 3.6 if modo == "coche" else VEL_CORRER * 3.6, absf(vel) * delta)
