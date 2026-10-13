@@ -787,27 +787,73 @@ func _mensajes() -> void:
 	if _chat != "":
 		_un_chat()
 		return
+	## COMO UNA APP DE MENSAJERÍA (13-10-2026): fila con foto redonda, nombre,
+	## último mensaje en gris y el contador verde de no leídos.
 	_titulo_app("Mensajes")
 	var chats := m.movil.chats()
 	if chats.is_empty():
 		_cuerpo.add_child(_nota("No tienes mensajes."))
 	for ch: Dictionary in chats:
 		var b := Button.new()
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.custom_minimum_size = Vector2(0, 56)
-		var ult := String(ch["ultimo"])
-		b.text = "%s  %s%s\n      %s" % [String(ch["icono"]), String(ch["de"]),
-			("  (%d)" % int(ch["sin_leer"])) if int(ch["sin_leer"]) > 0 else "",
-			ult.substr(0, 34) + ("…" if ult.length() > 34 else "")]
-		b.add_theme_font_size_override("font_size", 12)
+		b.flat = true
+		b.custom_minimum_size = Vector2(0, 60)
+		var fila := HBoxContainer.new()
+		fila.set_anchors_preset(Control.PRESET_FULL_RECT)
+		fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fila.add_theme_constant_override("separation", 10)
+		b.add_child(fila)
+		fila.add_child(_burbuja_icono(String(ch["icono"]), 42))
+		var col := VBoxContainer.new()
+		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		col.alignment = BoxContainer.ALIGNMENT_CENTER
+		col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fila.add_child(col)
+		var nom := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(ch["de"]))
+		col.add_child(nom)
+		var ult := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(ch["ultimo"]))
+		ult.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		ult.custom_minimum_size = Vector2(10, 0)
+		col.add_child(ult)
+		var n := int(ch["sin_leer"])
+		if n > 0:
+			var badge := PanelContainer.new()
+			badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			var sb := Tema.caja(Color("25d366"), 10, Color("25d366"))
+			sb.content_margin_left = 7
+			sb.content_margin_right = 7
+			badge.add_theme_stylebox_override("panel", sb)
+			badge.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Color(0.05, 0.1, 0.06), str(n)))
+			fila.add_child(badge)
 		var de := String(ch["de"])
 		b.pressed.connect(func() -> void:
 			_chat = de
 			abrir_app("mensajes"))
 		_cuerpo.add_child(b)
+		var linea := ColorRect.new()
+		linea.color = Color(1, 1, 1, 0.06)
+		linea.custom_minimum_size = Vector2(0, 1)
+		_cuerpo.add_child(linea)
+
+## Un círculo de color con el emoji del contacto (su «foto»).
+func _burbuja_icono(icono: String, lado: float) -> Control:
+	var p := PanelContainer.new()
+	p.custom_minimum_size = Vector2(lado, lado)
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var sb := Tema.caja(Color(0.2, 0.24, 0.3), int(lado / 2.0), Color(0.2, 0.24, 0.3))
+	sb.set_content_margin_all(0)
+	p.add_theme_stylebox_override("panel", sb)
+	var l := Tema.etiqueta(int(lado * 0.5), Tema.TEXTO, icono)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	p.add_child(l)
+	return p
 
 func _un_chat() -> void:
+	## Cabecera del chat: atrás, foto, nombre y «en línea».
 	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
 	var atras := Button.new()
 	atras.flat = true
 	atras.text = "‹"
@@ -816,21 +862,53 @@ func _un_chat() -> void:
 		_chat = ""
 		abrir_app("mensajes"))
 	fila.add_child(atras)
-	fila.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, _chat))
+	var icono := "💬"
+	for ch: Dictionary in m.movil.chats():
+		if String(ch["de"]) == _chat:
+			icono = String(ch["icono"])
+	fila.add_child(_burbuja_icono(icono, 34))
+	var cab := VBoxContainer.new()
+	cab.add_theme_constant_override("separation", 0)
+	cab.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, _chat))
+	cab.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Color("25d366"), "en línea"))
+	fila.add_child(cab)
 	_cuerpo.add_child(fila)
 	var lista: Array = []
 	for msj: Dictionary in m.movil.mensajes:
 		if String(msj["de"]) == _chat:
 			lista.push_front(msj)
 			msj["leido"] = true
+	var semana_previa := -1
 	for msj: Dictionary in lista:
+		## Separador de fecha cuando cambia la semana, centrado.
+		if int(msj["semana"]) != semana_previa:
+			semana_previa = int(msj["semana"])
+			var fecha := Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.SUAVE, "Semana %d · %d" % [int(msj["semana"]), int(msj["anio"])])
+			fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			_cuerpo.add_child(fecha)
+		var envoltura := HBoxContainer.new()
 		var burbuja := PanelContainer.new()
-		burbuja.add_theme_stylebox_override("panel", Tema.caja(Color(0.16, 0.18, 0.22), 14, Color(0.16, 0.18, 0.22)))
+		var sb := Tema.caja(Color(0.15, 0.2, 0.24), 14, Color(0.15, 0.2, 0.24))
+		sb.corner_radius_top_left = 3
+		sb.content_margin_left = 10
+		sb.content_margin_right = 10
+		sb.content_margin_top = 6
+		sb.content_margin_bottom = 4
+		burbuja.add_theme_stylebox_override("panel", sb)
+		burbuja.custom_minimum_size = Vector2(0, 0)
+		burbuja.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		var v := VBoxContainer.new()
+		v.add_theme_constant_override("separation", 0)
+		burbuja.add_child(v)
 		var l := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(msj["texto"]))
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		burbuja.add_child(l)
-		_cuerpo.add_child(burbuja)
-		_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "  semana %d · %d" % [int(msj["semana"]), int(msj["anio"])]))
+		l.custom_minimum_size = Vector2(minf(260.0, 9.0 * String(msj["texto"]).length()), 0)
+		v.add_child(l)
+		var hora := Tema.etiqueta(Tema.TAM_ROTULO - 3, Tema.SUAVE, _hora())
+		hora.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		v.add_child(hora)
+		envoltura.add_child(burbuja)
+		_cuerpo.add_child(envoltura)
 
 func _noticias() -> void:
 	_titulo_app("Noticias")
