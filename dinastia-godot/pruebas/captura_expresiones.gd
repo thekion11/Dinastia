@@ -27,7 +27,8 @@ func _ready() -> void:
 	## ACCESORIOS=1: gafas redondas, pendientes, cadena y ojos azules.
 	if OS.get_environment("ACCESORIOS") != "":
 		asp.merge({"gafas": OS.get_environment("ACCESORIOS") if OS.get_environment("ACCESORIOS") != "1" else "redondas",
-			"pendiente": true, "cadena": true, "ojos": "3f6a9a", "ropa": "polo"}, true)
+			"pendiente": true, "cadena": true, "ojos": "3f6a9a",
+			"ropa": OS.get_environment("ROPA") if OS.get_environment("ROPA") != "" else "polo"}, true)
 	PersonajeDT.crear(_raiz, asp)
 	var cam := Camera3D.new()
 	cam.fov = 18

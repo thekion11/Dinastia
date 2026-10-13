@@ -39,7 +39,8 @@ const CORTES := ["corto", "fade", "tupe", "flequillo", "ondulado", "rizado", "af
 	"coleta", "samurai", "rastas", "rapado", "calvo"]
 ## [clave, nombre]
 const ROPAS := [["traje", "Traje"], ["chandal", "Chándal del club"], ["polo", "Polo"],
-	["camisa", "Camisa"], ["sudadera", "Sudadera"], ["abrigo", "Abrigo largo"]]
+	["camisa", "Camisa"], ["sudadera", "Sudadera"], ["abrigo", "Abrigo largo"],
+	["cuero", "Chaqueta de cuero"], ["rayas", "Camisa a rayas"], ["vaqueros", "Jersey y vaqueros"]]
 const GAFAS := [["", "Sin gafas"], ["ver", "De ver"], ["sol", "De sol"], ["redondas", "Redondas"], ["deportivas", "Deportivas"]]
 
 ## El personaje del usuario y su club, para la banda de los partidos (lo fija
@@ -389,6 +390,24 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 			cuello = 1
 		"abrigo":
 			cuello = 3
+		"cuero":
+			## Cuero oscuro (si eliges un color claro, se oscurece) y vaqueros.
+			var cuero := r1 if r1.get_luminance() < 0.35 else r1.darkened(0.55)
+			cols = [cuero, cuero, cuero.lightened(0.08), cuero, cuero]
+			pant = Color("2f4a6b")
+			cuello = 3
+			zapato = "3e2723"
+		"rayas":
+			dis = "franjas_finas"
+			cols = [r2, r1.lightened(0.15), r1, r1, r2]
+			pant = Color("2b2f3a") if r1.get_luminance() > 0.3 else Color("c2b280")
+			cuello = 2
+			zapato = "5a4636"
+		"vaqueros":
+			cols = [r1, r1, r1.darkened(0.2), r1, r1]
+			pant = Color("3b5b82")
+			cuello = 1
+			zapato = "f2f2f2"
 	var kit := {
 		"dis": dis,
 		"cols": cols.map(func(c: Color) -> String: return c.to_html(false)),
@@ -416,6 +435,11 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 		_caja(torso, Vector3(0, pecho_y + 0.1, pecho_z - 0.008), Vector3(0.028, 0.026, 0.016), corb)
 		var larga := _caja(torso, Vector3(0, pecho_y - 0.02, pecho_z + 0.012), Vector3(0.036, 0.2, 0.006), corb)
 		larga.rotation_degrees.x = -14.0
+	## La chaqueta de cuero: cremallera metálica en el centro del pecho.
+	if ropa == "cuero":
+		var torso_c := _pegar(esq, "spine_03")
+		var metal := _mat(Color(0.75, 0.75, 0.78), 0.3)
+		_caja(torso_c, Vector3(0.012, pecho_y - 0.05, pecho_z + 0.004), Vector3(0.008, 0.34, 0.006), metal)
 	## El abrigo: faldón hasta la rodilla.
 	if ropa == "abrigo":
 		var cadera := _pegar(esq, "pelvis")
