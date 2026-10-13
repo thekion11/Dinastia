@@ -49,6 +49,22 @@ func _process(d: float) -> void:
 		_e.set("rumbo", PI * 0.5)
 		_e.cuerpo.rotation.y = PI * 0.5
 		_e.call("_colocar_camara", 1.0)
+	if _n == 44:
+		## Al peatón más cercano y por delante, para ver ropa y caras de cerca.
+		var mejor: Node3D = null
+		for v: Dictionary in _e.trafico._vehiculos:
+			var a := float(v["alto"])
+			if a > 0.05 and a < 0.3 and is_instance_valid(v["nodo"]):
+				var n: Node3D = v["nodo"]
+				if mejor == null or n.position.distance_to(_e.cuerpo.position) < mejor.position.distance_to(_e.cuerpo.position):
+					mejor = n
+		if mejor != null:
+			var dir := (mejor.position - _e.cuerpo.position)
+			dir.y = 0
+			_e.cuerpo.position = mejor.position - dir.normalized() * 4.0
+			_e.set("rumbo", atan2(dir.x, dir.z))
+			_e.cuerpo.rotation.y = atan2(dir.x, dir.z)
+			_e.call("_colocar_camara", 1.0)
 	if _n == 46:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/gente.png")
 		get_tree().quit()
