@@ -35,6 +35,11 @@ var camara: Camera3D
 var rumbo := 0.0        ## ángulo en Y (0 = mirando a +Z)
 var vel := 0.0
 var obstaculos: Array[Rect2] = []
+## Visión en primera persona (tecla V).
+var primera_persona := false
+func _sentado_fp() -> bool:
+	return _sentado
+
 var _vel_pie := 0.0   ## velocidad a pie dentro del estadio, sin la cinta rodante
 var _anim: AnimationPlayer
 var _hud: Label
@@ -447,7 +452,7 @@ func _physics_process(delta: float) -> void:
 	_colocar_camara(delta)
 	_buscar_cerca()
 	_hud.text = ("🚗 Conduciendo" if modo == "coche" else "🚶 A pie") + "  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa" % [
-		int(absf(vel) * 3.6), "" if modo == "coche" else "Mayús: correr · "]
+		int(absf(vel) * 3.6), "" if modo == "coche" else "Mayús: correr · V: vista · "]
 	## Dónde estás: el nombre de la calle (o el cruce).
 	if cb != null and cb.expansion != null:
 		var calle := cb.expansion.nombre_calle_en(cuerpo.position)
@@ -459,6 +464,15 @@ func _physics_process(delta: float) -> void:
 			_burbuja.visible = false
 
 func _colocar_camara(delta: float) -> void:
+	## PRIMERA PERSONA (V): la cámara en los ojos, el cuerpo escondido.
+	if primera_persona and (modo != "coche"):
+		var dir_fp := Vector3(sin(rumbo), 0, cos(rumbo))
+		camara.position = cuerpo.position + Vector3(0, 1.62, 0) + dir_fp * 0.18
+		camara.look_at(camara.position + dir_fp * 5.0 + Vector3(0, -0.15, 0), Vector3.UP)
+		cuerpo.visible = false
+		return
+	if modo != "coche" and not cuerpo.visible and not _sentado_fp():
+		cuerpo.visible = true
 	var atras := 13.0 if modo == "coche" else 5.5
 	var alto := 5.5 if modo == "coche" else 2.6
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
@@ -558,6 +572,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 	elif k == KEY_E:
 		get_viewport().set_input_as_handled()
 		_usar()
+	elif k == KEY_V:
+		primera_persona = not primera_persona
+		_aviso.text = "Primera persona" if primera_persona else "Tercera persona"
 	elif k == KEY_C and estado == "tren":
 		_ventana = not _ventana
 
