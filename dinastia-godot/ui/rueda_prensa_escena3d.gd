@@ -38,6 +38,11 @@ var _dt_quad: MeshInstance3D
 ## retrato 2D de `CaraDT` -no vale la pena montar un humanoide entero para dos
 ## manos que solo se ven del codo para abajo, tapadas por el podio-.
 var _dt_brazos: Array[Node3D] = []
+var _dt_3d_pendiente := false
+var _dt_3d: Dictionary = {}
+var _t_gesto_dt := 3.0
+var _rng_dt := RandomNumberGenerator.new()
+const GESTOS_PRENSA := ["charla", "pedir_con_brazo", "brazos_al_frente", "charla"]
 var _t := 0.0
 var _cam_pos := Vector3.ZERO
 var _cam_mira := Vector3.ZERO
@@ -56,7 +61,7 @@ var _cam_mira := Vector3.ZERO
 ## necesita abrir el ángulo de verdad para leerse como sala completa, no solo
 ## como el mismo plano un poco más lejos.
 const PLANOS := [
-	{"pos": Vector3(0.0, 1.5, 2.15), "mira": Vector3(0.0, 1.25, -0.5), "fov": 34.0},
+	{"pos": Vector3(0.0, 1.62, 2.15), "mira": Vector3(0.0, 1.4, -0.5), "fov": 34.0},
 	## Contra la pared del fondo, mirando hacia el podio: se ve la sala
 	## entera -paredes, techo, periodistas de espaldas en primer plano- con el
 	## DT pequeño al fondo, como el plano general de cualquier retransmisión.
@@ -113,8 +118,13 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 	_montar_banderas(club)
 	_montar_luces()
 	_montar_podio()
-	_montar_dt(look_dt)
-	_montar_gesto_dt(look_dt)
+	## TU PERSONAJE 3D en el atril (13-10-2026), si lo creaste: se monta al
+	## entrar en el árbol (medir los huesos lo necesita). Si no, el retrato.
+	if not PersonajeDT.del_usuario.is_empty():
+		_dt_3d_pendiente = true
+	else:
+		_montar_dt(look_dt)
+		_montar_gesto_dt(look_dt)
 	_montar_camara()
 
 # ---------------------------------------------------------------------------
@@ -463,7 +473,9 @@ const USAR_PODIO_IA := true
 const TINTE_PODIO := Color(0.16, 0.22, 0.5)
 
 func _montar_podio() -> void:
-	var uso_generado := USAR_PODIO_IA and _montar_podio_generado()
+	## Con el personaje 3D, el podio procedural completo (a la altura del pecho):
+	## el generado con su caja oscura dejaba una franja negra en la cintura.
+	var uso_generado := USAR_PODIO_IA and PersonajeDT.del_usuario.is_empty() and _montar_podio_generado()
 	## El ocultador SIEMPRE se monta -tanto si el modelo generado cargó como
 	## si no-: es lo único de lo que depende que el DT quede bien tapado, así
 	## que no puede fallar en silencio si el asset generado no está.
@@ -804,7 +816,45 @@ func _montar_camara() -> void:
 func _cortar_plano() -> void:
 	_plano = (_plano + 1) % PLANOS.size()
 
+func _montar_dt_3d() -> void:
+	_dt_3d_pendiente = false
+	var raiz := Node3D.new()
+	raiz.position = Vector3(0, 0.0, -0.78)
+	add_child(raiz)
+	_dt_3d = PersonajeDT.crear(raiz, PersonajeDT.del_usuario)
+	if _dt_3d.is_empty():
+		raiz.queue_free()
+		_montar_dt({})
+		return
+	Expresion.de(raiz)
+
+## Cada pocos segundos un gesto de manos y una cara, como quien contesta.
+func _gesticular_dt(delta: float) -> void:
+	if _dt_3d.is_empty():
+		return
+	_t_gesto_dt -= delta
+	if _t_gesto_dt > 0.0:
+		return
+	_t_gesto_dt = _rng_dt.randf_range(3.5, 6.5)
+	var ap: AnimationPlayer = _dt_3d.get("anim")
+	var gesto: String = GESTOS_PRENSA[_rng_dt.randi() % GESTOS_PRENSA.size()]
+	if ap != null:
+		var lib := ap.get_animation_library("")
+		if lib != null and not lib.has_animation(gesto) and AnimExtra.UAL.has(gesto):
+			var esq: Skeleton3D = _dt_3d.get("esqueleto")
+			var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[gesto]), str(ap.get_path_to(esq)))
+			if clip != null:
+				lib.add_animation(gesto, clip)
+		if ap.has_animation(gesto):
+			ap.play(gesto, 0.3)
+			ap.queue("parado")
+	var raiz: Node = (_dt_3d["nodo"] as Node).get_parent()
+	Expresion.de(raiz).poner(["concentrado", "alegre", "neutral", "enfado"][_rng_dt.randi() % 4], 3.0)
+
 func _process(delta: float) -> void:
+	if _dt_3d_pendiente and is_inside_tree():
+		_montar_dt_3d()
+	_gesticular_dt(delta)
 	_t += delta
 	## Un corte cada varios segundos, siempre volviendo al plano de trabajo
 	## entre los otros dos -que es donde de verdad se lee la pregunta y las
