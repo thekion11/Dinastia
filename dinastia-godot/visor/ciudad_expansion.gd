@@ -1776,6 +1776,9 @@ func _edificios_lejanos() -> void:
 	mat.shader = load("res://visor/fachada_torre.gdshader") as Shader
 	mat.set_shader_parameter("pared_de_instancia", true)
 	mat.set_shader_parameter("celda", Vector2(3.0, 3.6))
+	## Cristal tintado como el de las torres (sin esto, el azul por defecto
+	## del shader: la torre azul de la avenida, 13-10-2026).
+	mat.set_shader_parameter("vidrio", Color(0.14, 0.17, 0.2))
 	_ventanas_lejanas = mat
 	_multimesh(BoxMesh.new(), mat, ts, Vector3.ONE, cs)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + ts.size()
