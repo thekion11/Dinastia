@@ -306,3 +306,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   informe (HECHO), diálogos con mejor estética (HECHO: `CuadroDialogo`), menos músculo
   (HECHO: `PersonajeDT.BASE_ESBELTA`, `adelgazar`), más personalización, expresiones,
   tutorial, ultra pulido. EN CURSO: semana 1 del plan.
+- 13-10 PEDIDO (hecho): en la ciudad 3D NADA de texto fijo arriba/abajo; controles en
+  ⚙ «Ajustes de la ciudad» (`AjustesCiudad`, opción de ayudas, apagada) y en el
+  TUTORIAL DE LA CIUDAD (1.ª vez); velocidad en un MÓVIL EN LA MANO al correr/conducir/
+  metro (`MovilMano`); el botón E brilla si hay algo cerca. Permiso dado para
+  DESCARGAR contenido externo si hace falta (solo licencias libres).
