@@ -55,6 +55,8 @@ uniform vec4 acc_cuello : source_color = vec4(0.0);
 uniform vec4 acc_tobilleras : source_color = vec4(0.0);
 // Tono de piel del jugador sobre el tono medio de la textura original.
 uniform vec3 tinte_piel = vec3(1.0);
+// El color de piel buscado, en lineal (13-10-2026). x < 0: el método viejo.
+uniform vec3 piel_obj = vec3(-1.0);
 // Patrocinadores (`SponsorKit`): logo + palabra en el pecho y la espalda, solo
 // logo en la manga y el pantalón.
 uniform bool hay_sp_pecho = false;
@@ -589,6 +591,23 @@ void fragment() {
 	if (y > 0.085 && y < 0.115) botin = mix(botin, familia >= 0 ? bot_c2.rgb : color2.rgb, 0.55);
 
 	vec3 albedo = piel * tinte_piel;
+	// PIEL SIN RECORTES (13-10-2026): multiplicar la textura por un tinte con
+	// tope quemaba las pieles claras (manos como guantes, caras amarillas o
+	// verdosas: el tope cortaba el azul y el verde). Ahora: el color buscado
+	// por la luz relativa de la textura, con un poco de su matiz (labios,
+	// mejillas) y los brillos comprimidos.
+	if (piel_obj.x >= 0.0) {
+		const vec3 REF = vec3(0.374, 0.170, 0.080);
+		float l_ref = dot(REF, vec3(0.2126, 0.7152, 0.0722));
+		float l = max(dot(piel, vec3(0.2126, 0.7152, 0.0722)), 0.0001);
+		float rel = clamp(pow(l / l_ref, 0.8), 0.35, 1.5);
+		vec3 matiz = (piel / l) / (REF / l_ref);
+		albedo = piel_obj * rel * mix(vec3(1.0), clamp(matiz, vec3(0.6), vec3(1.6)), 0.3);
+		// Sin saturar (el usuario lo pidió el 30-9: pieles limpias, no naranjas).
+		albedo = mix(vec3(dot(albedo, vec3(0.2126, 0.7152, 0.0722))), albedo, 0.78);
+	}
+	float tope = max(max(albedo.r, albedo.g), albedo.b);
+	albedo *= tope > 0.72 ? (0.72 + (tope - 0.72) * 0.25) / tope : 1.0;
 	if (hay_malla) {
 		// Con cara real, la piel del cuerpo es EXACTAMENTE el color medio de
 		// su piel en la foto; de la textura solo queda el relieve (su claridad
