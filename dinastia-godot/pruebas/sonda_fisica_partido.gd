@@ -9,7 +9,7 @@ extends Node
 ## y guarda una tira de fotogramas (fisica_tira.png) para mirarla.
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --fixed-fps 30 --resolution 960x540 res://pruebas/sonda_fisica_partido.tscn
 const DT := 1.0 / 30.0
-const FOTOGRAMAS := 1800       ## 60 s de juego
+var FOTOGRAMAS := int(OS.get_environment("FOTOGRAMAS")) if OS.get_environment("FOTOGRAMAS") != "" else 600
 var _n := 0
 var _vista: VistaEstadio
 var _partido: Partido
@@ -23,6 +23,7 @@ var _amax := 0.0
 var _tira: Array[Image] = []
 
 func _ready() -> void:
+	Calidad.elegida = Calidad.MEDIO
 	var m := Mundo.new()
 	m.generar(["CHI"], 4711)
 	m.mi_club_id = m.ligas[0].clubes[0].id
@@ -34,6 +35,8 @@ func _ready() -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
+	if _n % 30 == 0:
+		print("F ", _n, " t=", Time.get_ticks_msec() / 1000)
 	var intro: Variant = _vista.get("_intro")
 	if intro != null and is_instance_valid(intro) and intro.activa:
 		intro.terminar()
@@ -58,13 +61,13 @@ func _process(_d: float) -> void:
 			if vel > 10.5:
 				_c["vel"] += 1
 			if _vprev.has(id):
-				var ac := (v - _vprev[id]).length() / DT
+				var ac: float = (v - (_vprev[id] as Vector3)).length() / DT
 				_amax = maxf(_amax, ac)
 				if ac > 15.0 and vel < 10.5:
 					_c["acel"] += 1
 			_vprev[id] = v
 		if _rprev.has(id):
-			var dr := absf(wrapf(a.global_rotation.y - float(_rprev[id]), -PI, PI)) / DT
+			var dr: float = absf(wrapf(a.global_rotation.y - float(_rprev[id]), -PI, PI)) / DT
 			if dr > deg_to_rad(720.0):
 				_c["giro"] += 1
 		_rprev[id] = a.global_rotation.y

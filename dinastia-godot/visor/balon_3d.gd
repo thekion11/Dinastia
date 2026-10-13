@@ -250,8 +250,13 @@ func enviar(destino: Vector3, duracion: float, altura_max: float, es_gol: bool =
 	_modo_fisica = false
 	_origen = Vector3(position.x, maxf(position.y, radio), position.z)
 	_destino = Vector3(destino.x, maxf(destino.y, radio), destino.z)
-	_duracion = maxf(duracion, 0.05)
 	_altura_max = maxf(altura_max, 0.0)
+	## TOPE DE VELOCIDAD (13-10-2026): la sonda de física medía balones a más
+	## de 130 km/h en pases normales. Media máxima: 18 m/s raso (sale a ~27,
+	## un pase tenso) y 24 m/s por el aire; un tiro a gol, 30.
+	var largo := Vector2(_destino.x - _origen.x, _destino.z - _origen.z).length()
+	var tope := 30.0 if es_gol else (18.0 if _altura_max < 0.4 else 24.0)
+	_duracion = maxf(maxf(duracion, 0.05), largo / tope)
 	_t = 0.0
 	_en_red = es_gol
 
