@@ -81,6 +81,26 @@ var _caja_marcador: PanelContainer
 var _rng_ambiente := RandomNumberGenerator.new()
 var _prox_ambiente := 0.0
 
+## EL PARTIDO, JUGADO DE VERDAD (13-10-2026). Con el motor real encendido
+## (`_pref("motor_real")`, por defecto sí) ya no hay jugadas con guion: los 22
+## los mueve `MotorJugable`, el resultado sale del césped y el `Partido` solo
+## lleva el reloj y el acta (`motor_externo`). La pizarra y los cambios que
+## hace el DT -desde el panel de pausa o desde la pantalla 2D- cambian lo que
+## pasa. Y con «Controlar a mi equipo» manejas a tus jugadores como en FC.
+var _motor: MotorJugable
+var _mi_lado := -1
+var _acum_motor := 0.0
+var _t_tactica := 0.0
+var _cursor: Node3D
+var _ayuda_control: Label
+var _panel_dt: PanelDTPartido
+## Lo que el DT rival cambia en vivo (sin tocar la táctica guardada de su club).
+var _ajuste_rival := [{}, {}]
+var _final_motor := false
+const DT_MOTOR := 1.0 / 60.0
+## Segundos reales por minuto de partido con el motor real.
+const SEG_POR_MINUTO := {"rapido": 2.7, "normal": 4.0, "largo": 6.0}
+
 ## Tres modos, según lo que se le pase:
 ##
 ##   abrir(club)                      el recinto vacío, para mirarlo
@@ -291,13 +311,22 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_cajon.boton("🚶 Recorrer el estadio (vestuario y túnel)", recorrer)
 	if partido != null:
 		_cajon.seccion("Partido")
-		_btn_modo = _cajon.boton("🎮 Modo: Manager", _alternar_modo_control)
+		_btn_modo = _cajon.boton("🎮 Controlar a mi equipo: NO", _alternar_modo_control)
+		_cajon.boton("📋 Táctica y cambios (Esc)", _abrir_panel_dt)
+		_cajon.interruptor("⚽ Motor real: el resultado se juega en el césped", _pref("motor_real", true), func(si: bool) -> void:
+			_guardar_pref("motor_real", si))
+		_cajon.fila([["⏩ Partido corto", func() -> void: _fijar_ritmo("rapido")],
+			["⏯ Normal", func() -> void: _fijar_ritmo("normal")],
+			["🐢 Largo (FC)", func() -> void: _fijar_ritmo("largo")]])
 		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
 		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
 		## simular el partido entero"). Existía en la pantalla de texto, que
 		## queda oculta mientras se ve el 3D. Juega todos los minutos que
 		## faltan -descanso incluido- y vuelve al resumen.
 		_cajon.boton("⏭ Simular hasta el final", func() -> void:
+			if _motor != null:
+				_simular_resto_motor()
+				return
 			_descanso_hecho = true
 			while not partido.terminado_ya:
 				partido.simular_minuto()
@@ -765,11 +794,14 @@ func _arrancar_partido() -> void:
 	_rng_ambiente.seed = hash("ambiente") + partido.local.id.hash() + partido.visita.id.hash()
 	_prox_ambiente = _juego.elapsed + _rng_ambiente.randf_range(10.0, 18.0)
 
-	# Control interactivo de jugador (Modo FC 26)
-	_control = ControlPartido.new()
-	add_child(_control)
-	var es_local_user: bool = (partido.local == club)
-	_control.setup(_en_campo, _balon, _rig, es_local_user, _juego, _radar)
+	if _pref("motor_real", true):
+		_montar_motor()
+	else:
+		# Control interactivo de jugador (Modo FC 26), con las jugadas con guion
+		_control = ControlPartido.new()
+		add_child(_control)
+		var es_local_user: bool = (partido.local == club)
+		_control.setup(_en_campo, _balon, _rig, es_local_user, _juego, _radar)
 
 
 	var caja := PanelContainer.new()
@@ -889,6 +921,9 @@ func _process(delta: float) -> void:
 	if _repe != null and _repe.reproduciendo:
 		return
 	if _intro != null and _intro.activa:
+		return
+	if _motor != null:
+		_paso_motor(delta)
 		return
 	if _destacado_hasta_ms > 0 and Time.get_ticks_msec() >= _destacado_hasta_ms:
 		_destacado_hasta_ms = -1
@@ -1033,7 +1068,7 @@ func _repetir_gol() -> void:
 func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) -> void:
 	var a_favor := c == club
 	get_tree().create_timer(SEG_ANTES_REPETICION).timeout.connect(_repetir_gol)
-	_juego.suceso({
+	_suceso({
 		"min": minuto, "t": "golMi" if a_favor else "golR",
 		"equipo": "local" if a_favor else "visita",
 		"tx": "¡GOL de %s! %s" % [c.nombre, autor.nombre if autor else ""],
@@ -1151,7 +1186,7 @@ func _banca_celebra(es_local: bool) -> void:
 
 func _a_la_tarjeta(j: Jugador, roja: bool, minuto: int) -> void:
 	Sonido.toca("roja" if roja else "amarilla")
-	_juego.suceso({
+	_suceso({
 		"min": minuto, "t": "warn",
 		"equipo": "local" if j.club_id == club.id else "visita",
 		"tx": ("ROJA a " if roja else "Amarilla a ") + j.nombre,
@@ -1188,7 +1223,7 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 				nb.queue_free()
 			_en_banca.remove_at(i)
 			break
-	_juego.suceso({
+	_suceso({
 		"min": minuto, "t": "info", "equipo": "local",
 		"tx": "Cambio: entra %s por %s" % [entra.nombre, sale.nombre], "jugadorId": entra.id,
 	})
@@ -1214,6 +1249,10 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 		nf["slot_code"] = f["slot_code"]
 		nf["es_local"] = es_local
 		_en_campo[i] = nf
+		if _motor != null:
+			_motor.reemplazar(sale.id, nf)
+			_mostrar_banner_gol("🔁 %s  ⬆ %s   ⬇ %s" % [Idiomas.t("CAMBIO"), Nombres.visible(entra.nombre), Nombres.visible(sale.nombre)],
+				equipo.id == Partido.ctx_club_id)
 		_fov_rotulos = -1.0
 		_juego.players = _en_campo
 		_juego.players_by_id[entra.id] = nf
@@ -1221,6 +1260,9 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 		return
 
 func _alternar_modo_control() -> void:
+	if _motor != null:
+		_alternar_control_motor()
+		return
 	if _control == null:
 		return
 	_control.alternar_modo()
@@ -1255,7 +1297,7 @@ func _al_remate(c: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 			## el palo).
 			"fallo": Sonido.toca("remate_fuera")
 			_: pass
-	_juego.suceso({
+	_suceso({
 		"min": minuto,
 		"t": "disparo",
 		"tipo": tipo,
@@ -1282,7 +1324,7 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 		return
 	if j.club_id == club.id:
 		Sonido.toca("lesion_grave" if semanas >= 6 else "lesion")
-	_juego.suceso({
+	_suceso({
 		"min": minuto,
 		"t": "lesion",
 		"equipo": "local" if j.club_id == club.id else "visita",
@@ -1310,9 +1352,306 @@ func _a_la_revision_var(minuto: int, motivo: String) -> void:
 func _a_la_decision_arbitral(texto: String, minuto: int) -> void:
 	if _juego == null:
 		return
-	_juego.suceso({
+	_suceso({
 		"min": minuto,
 		"t": "arbitro",
 		"tx": texto,
 	})
 
+
+# --- el partido con el motor real ---------------------------------------------
+
+## Las jugadas con guion de `MatchPlayback` solo cuando NO juega el motor real
+## (con el motor, `MatchPlayback` no mueve a nadie).
+func _suceso(ev: Dictionary) -> void:
+	if _motor != null or _juego == null:
+		return
+	_juego.suceso(ev)
+
+static func ritmo_partido() -> String:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	return String(cfg.get_value(CajonAjustes.SECCION, "ritmo_partido", "normal"))
+
+func _fijar_ritmo(r: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "ritmo_partido", r)
+	cfg.save(CajonAjustes.RUTA)
+	if _motor != null:
+		## Se respeta el minuto en curso: solo cambia lo que dura cada minuto.
+		var frac := _motor.t / maxf(_motor.duracion_mitad, 1.0)
+		_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(r, 4.0))
+		_motor.t = frac * _motor.duracion_mitad
+	_mostrar_banner_gol({"rapido": "⏩ Partido corto", "normal": "⏯ Ritmo normal", "largo": "🐢 Partido largo"}.get(r, r), true)
+
+func _montar_motor() -> void:
+	partido.motor_externo = true
+	_motor = MotorJugable.new()
+	add_child(_motor)
+	_motor.set_physics_process(false)
+	_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(ritmo_partido(), 4.0))
+	_motor.cansancio_real = true
+	_motor.tarjetas_reales = true
+	_motor.autopiloto = true
+	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": false}
+	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
+	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
+	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
+	_motor.gol.connect(func(de_local: bool, autor: String, asist: String) -> void:
+		partido.gol_externo(de_local, autor, asist))
+	_motor.remate.connect(func(de_local: bool, autor: String, tipo: String) -> void:
+		partido.remate_externo(de_local, autor, tipo))
+	_motor.tarjeta.connect(func(id: String, roja: bool, _l: bool) -> void:
+		partido.tarjeta_externa(id, roja))
+	_motor.aviso.connect(_al_aviso_motor)
+	_actualizar_tacticas()
+
+## Los avisos del motor que merecen rótulo (los goles ya tienen el suyo).
+func _al_aviso_motor(texto: String) -> void:
+	for clave in ["Córner", "Penal", "PENAL", "Fuera de juego", "Roja", "PALO", "LARGUERO", "parada", "Atajada"]:
+		if texto.contains(clave):
+			_mostrar_rotulo_suceso(Idiomas.t(texto))
+			return
+
+## Un rótulo corto debajo del marcador (reutiliza el de las jugadas).
+func _mostrar_rotulo_suceso(texto: String) -> void:
+	if _rotulo_jugada == null or not _pref("rotulos", true):
+		return
+	(_rotulo_jugada.get_theme_stylebox("panel") as StyleBoxFlat).border_color = Color("c9a227")
+	_lbl_jugada.text = "▸ " + texto
+	if _tween_jugada != null and _tween_jugada.is_valid():
+		_tween_jugada.kill()
+	_tween_jugada = create_tween()
+	_tween_jugada.tween_property(_rotulo_jugada, "modulate:a", 1.0, 0.2)
+	_tween_jugada.tween_interval(2.2)
+	_tween_jugada.tween_property(_rotulo_jugada, "modulate:a", 0.0, 0.5)
+
+## La pizarra de los dos clubes, con las instrucciones efímeras y lo que haya
+## cambiado el DT rival en vivo.
+func _actualizar_tacticas() -> void:
+	if _motor == null:
+		return
+	for i in 2:
+		var c: Club = partido.local if i == 0 else partido.visita
+		var mio := c.id == Partido.ctx_club_id
+		var t := MotorJugable.tactica_desde(c.tactica, mio and partido.instr_riesgo, mio and partido.instr_tiempo)
+		t.merge(_ajuste_rival[i], true)
+		_motor.tacticas[i] = t
+
+func _paso_motor(delta: float) -> void:
+	if _panel_dt != null:
+		return
+	var mult := _juego.velocidad() if _juego != null else 1.0
+	_acum_motor = minf(_acum_motor + delta * mult, DT_MOTOR * 16.0)
+	while _acum_motor >= DT_MOTOR:
+		_motor.paso(DT_MOTOR)
+		_acum_motor -= DT_MOTOR
+	_t_tactica -= delta
+	if _t_tactica <= 0.0:
+		_t_tactica = 1.0
+		_actualizar_tacticas()
+	if _sincronizar_partido():
+		return
+	_refrescar_marcador()
+	_mover_cursor()
+	if _motor.estado == "fin" and not _final_motor:
+		_final_motor = true
+		var mio_gana := (partido.goles_local > partido.goles_visita and _mi_lado == 0) or (partido.goles_visita > partido.goles_local and _mi_lado == 1)
+		_mostrar_banner_gol("🏁 %s  %s %d - %d %s" % [Idiomas.t("FINAL"), Nombres.visible(partido.local.nombre),
+			partido.goles_local, partido.goles_visita, Nombres.visible(partido.visita.nombre)], mio_gana)
+		get_tree().create_timer(5.0).timeout.connect(func() -> void:
+			if is_instance_valid(self):
+				cerrado.emit())
+	if _juego != null and _juego.velocidad() > 0.0:
+		_prox_ambiente -= delta
+		if _prox_ambiente <= 0.0:
+			_tocar_ambiente()
+			_prox_ambiente = _rng_ambiente.randf_range(10.0, 18.0)
+	if _radar != null:
+		var pos_ctrl := Vector3.ZERO
+		if not _motor.usuario.is_empty() and is_instance_valid(_motor.usuario.get("node")):
+			pos_ctrl = (_motor.usuario["node"] as Node3D).global_position
+		_radar.actualizar_datos(_en_campo, _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO, pos_ctrl)
+
+## El reloj del acta sigue al del césped. Devuelve true si la vista se cierra
+## (descanso: el camarín).
+func _sincronizar_partido() -> bool:
+	var objetivo := 90 if _motor.estado == "fin" else _motor.minuto()
+	while partido.minuto < objetivo and not partido.terminado_ya:
+		partido.simular_minuto()
+		partido.fijar_estadisticas(float(_motor.posesion_local()), _motor.corners, _motor.faltas)
+		_dt_rival(partido.minuto)
+		if parar_en_descanso and not _descanso_hecho and partido.minuto >= 45:
+			_descanso_hecho = true
+			cerrado.emit()
+			return true
+	return false
+
+## EL DT DE LA IA, EN VIVO: al 60', 70' y 80' cambia al más cansado si tiene
+## con qué; perdiendo desde el 70' va a por el partido, y ganando por uno
+## desde el 80' lo cierra. Los dos si el partido no es tuyo.
+func _dt_rival(minuto: int) -> void:
+	for i in 2:
+		if i == _mi_lado:
+			continue
+		var c: Club = partido.local if i == 0 else partido.visita
+		var mios := partido.goles_local if i == 0 else partido.goles_visita
+		var suyos := partido.goles_visita if i == 0 else partido.goles_local
+		if minuto == 70 and mios < suyos:
+			_ajuste_rival[i] = {"mentalidad": 3, "presion": 2, "linea": 2}
+		elif minuto == 80 and mios == suyos + 1:
+			_ajuste_rival[i] = {"mentalidad": 0, "linea": 0}
+		if minuto in [60, 70, 80]:
+			_cambio_ia(c, i == 0)
+
+func _cambio_ia(c: Club, es_local: bool) -> void:
+	var peor: Dictionary = {}
+	for p: Dictionary in _motor.jugadores:
+		if bool(p["es_local"]) != es_local or bool(p["por"]):
+			continue
+		if peor.is_empty() or _motor.forma_fisica(p) < _motor.forma_fisica(peor):
+			peor = p
+	if peor.is_empty() or _motor.forma_fisica(peor) > 0.85:
+		return
+	var once := partido.once_local if es_local else partido.once_visita
+	var sale: Jugador = null
+	for j: Jugador in once:
+		if j.id == String(peor["id"]):
+			sale = j
+	if sale == null:
+		return
+	var grupo := Datos.grupo(sale.pos_e)
+	var mejor: Jugador = null
+	for j: Jugador in VistaEstadio.disponibles_fuera_del_once(c, once):
+		if j.es_portero():
+			continue
+		if mejor == null or (Datos.grupo(j.pos_e) == grupo and Datos.grupo(mejor.pos_e) != grupo) \
+				or (Datos.grupo(j.pos_e) == Datos.grupo(mejor.pos_e) and j.ovr > mejor.ovr):
+			mejor = j
+	if mejor != null:
+		partido.cambiar(sale, mejor)
+
+## «Simular hasta el final» con el motor: lo que falta se juega a toda
+## velocidad y sin pantalla (tu equipo en piloto automático).
+func _simular_resto_motor() -> void:
+	_motor.autopiloto = true
+	_motor.control_equipo = -1
+	_descanso_hecho = true
+	var pasos := 0
+	while _motor.estado != "fin" and pasos < 60 * 3600:
+		_motor.paso(1.0 / 20.0)
+		pasos += 1
+		if pasos % 20 == 0:
+			_t_tactica = 0.0
+			parar_en_descanso = false
+			_sincronizar_partido()
+	parar_en_descanso = false
+	_sincronizar_partido()
+	while not partido.terminado_ya:
+		partido.simular_minuto()
+	cerrado.emit()
+
+## CONTROLAR A MI EQUIPO (como en FC): manejas al que tiene el balón o al más
+## cercano, con la cámara de televisión; Q / LB cambia de jugador.
+func _alternar_control_motor() -> void:
+	if _mi_lado < 0:
+		_mostrar_banner_gol(Idiomas.t("Este partido no es de tu club: solo puedes mirarlo."), false)
+		return
+	var activo := _motor.control_equipo < 0
+	_motor.control_equipo = _mi_lado if activo else -1
+	_motor.autopiloto = not activo
+	_motor.camara = get_viewport().get_camera_3d() if activo else null
+	if not activo:
+		_motor.usuario = {}
+	if _btn_modo != null:
+		_btn_modo.text = "🎮 Controlar a mi equipo: " + ("SÍ" if activo else "NO")
+	if _cursor == null:
+		_crear_cursor()
+	_cursor.visible = activo
+	if activo:
+		_mostrar_ayuda_control()
+
+func _crear_cursor() -> void:
+	_cursor = Node3D.new()
+	_raiz3d.add_child(_cursor)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color("ffd23f")
+	mat.emission_enabled = true
+	mat.emission = Color("ffd23f")
+	mat.emission_energy_multiplier = 1.6
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var flecha := MeshInstance3D.new()
+	var pm := PrismMesh.new()
+	pm.size = Vector3(0.42, 0.42, 0.12)
+	flecha.mesh = pm
+	flecha.rotation.x = PI
+	flecha.position = Vector3(0, 2.35, 0)
+	flecha.material_override = mat
+	flecha.name = "Flecha"
+	_cursor.add_child(flecha)
+	var aro := MeshInstance3D.new()
+	var tm := TorusMesh.new()
+	tm.inner_radius = 0.5
+	tm.outer_radius = 0.6
+	aro.mesh = tm
+	aro.position = Vector3(0, 0.04, 0)
+	aro.material_override = mat
+	_cursor.add_child(aro)
+	_cursor.visible = false
+
+func _mover_cursor() -> void:
+	if _cursor == null or not _cursor.visible:
+		return
+	var u: Dictionary = _motor.usuario
+	if u.is_empty() or not is_instance_valid(u.get("node")):
+		return
+	_cursor.global_position = (u["node"] as Node3D).global_position
+	var f := _cursor.get_node_or_null("Flecha") as Node3D
+	if f != null:
+		f.position.y = 2.35 + sin(Time.get_ticks_msec() * 0.006) * 0.08
+
+## La guía de controles: aparece al empezar a controlar y se va sola (y está
+## en el cajón ⚙ siempre que haga falta).
+func _mostrar_ayuda_control() -> void:
+	if _ayuda_control == null:
+		_ayuda_control = Tema.etiqueta(13, Color(1, 1, 1, 0.92), "")
+		_ayuda_control.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
+		_ayuda_control.add_theme_constant_override("shadow_offset_y", 2)
+		_ayuda_control.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_ayuda_control.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+		_ayuda_control.offset_top = -64
+		_ayuda_control.offset_bottom = -40
+		_ayuda_control.offset_left = -560
+		_ayuda_control.offset_right = 560
+		add_child(_ayuda_control)
+	_ayuda_control.text = Idiomas.t("WASD/stick mover · Shift/RT sprint · Espacio/A pase · K/B tiro (mantén) · L/X centro · U/RB al hueco · E regate · Q/LB cambiar de jugador · Esc táctica y cambios")
+	_ayuda_control.modulate.a = 1.0
+	var tw := create_tween()
+	tw.tween_interval(7.0)
+	tw.tween_property(_ayuda_control, "modulate:a", 0.0, 0.8)
+
+func _abrir_panel_dt() -> void:
+	if _motor == null or _panel_dt != null or partido == null or partido.terminado_ya:
+		return
+	if _mi_lado < 0:
+		_mostrar_banner_gol(Idiomas.t("Este partido no es de tu club: solo puedes mirarlo."), false)
+		return
+	var mio: Club = partido.local if _mi_lado == 0 else partido.visita
+	_panel_dt = PanelDTPartido.abrir(self, partido, mio, _motor)
+	_panel_dt.cerrado.connect(func() -> void:
+		_panel_dt = null
+		_actualizar_tacticas())
+
+func _unhandled_input(e: InputEvent) -> void:
+	if _motor != null and _panel_dt == null and e.is_action_pressed("jugar_pausa"):
+		if _cajon != null and _cajon.abierto:
+			return
+		get_viewport().set_input_as_handled()
+		_abrir_panel_dt()
+
+## Al salir del 3D el partido puede seguir en la pantalla 2D: ahí vuelve a
+## jugarlo el `Partido` por su cuenta (si no, no habría goles).
+func _exit_tree() -> void:
+	if partido != null and _motor != null:
+		partido.motor_externo = false
