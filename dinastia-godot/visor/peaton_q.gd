@@ -19,8 +19,10 @@ extends RefCounted
 
 const PIELES := ["f1c7a5", "e0b08a", "c68d68", "a86b45", "8a5a3c", "6b4430"]
 const PELOS := [Color(0.08, 0.06, 0.05), Color(0.25, 0.16, 0.09), Color(0.45, 0.3, 0.16), Color(0.7, 0.55, 0.3), Color(0.55, 0.55, 0.55), Color(0.85, 0.85, 0.82)]
-const CORTES_H := ["corto", "fade", "tupe", "flequillo", "rizado", "largo", "coleta", "rapado"]
-const CORTES_M := ["largo", "melena", "coleta", "trenzas", "corto"]
+## Peinados de calle (13-10-2026): el moño doble era casi la mitad de las
+## mujeres y la coleta de samurái salía en hombres; ahora pesan lo que en la calle.
+const CORTES_H := ["corto", "corto", "fade", "fade", "tupe", "flequillo", "rizado", "rapado", "largo"]
+const CORTES_M := ["largo", "largo", "melena", "melena", "trenzas", "corto", "coleta"]
 ## [diseño, nombre]: lo que se ve por la calle.
 ## 13-10-2026: ropa de calle de verdad. Sobre todo liso; rayas finas y cuadros
 ## pequeños de vez en cuando; nada de dibujos de equipación (arlequín, canesú,
