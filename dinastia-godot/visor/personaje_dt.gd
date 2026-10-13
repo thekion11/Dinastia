@@ -408,8 +408,10 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 			cuello = 3
 			zapato = "3e2723"
 		"rayas":
-			dis = "franjas_finas"
-			cols = [r2, r1.lightened(0.15), r1, r1, r2]
+			## Rayas anchas y suaves (13-10-2026): las finas, sobre la forma del
+			## pecho, se torcían y daban muaré.
+			dis = "franjas"
+			cols = [r2, r2.lerp(r1, 0.45), r1, r1, r2]
 			pant = Color("2b2f3a") if r1.get_luminance() > 0.3 else Color("c2b280")
 			cuello = 2
 			zapato = "5a4636"
