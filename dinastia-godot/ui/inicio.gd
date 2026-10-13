@@ -123,6 +123,7 @@ func _ready() -> void:
 	## Lo gráfico va primero: si el jugador eligió el motor ligero, el juego
 	## se relanza con él antes de montar nada.
 	Calidad.cargar()
+	BotonFx.activar(get_tree())
 	if Calidad.relanzar_si_hace_falta(get_tree()):
 		return
 	## Mientras se mira el menú, los modelos pesados se cargan en un hilo.
