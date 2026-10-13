@@ -30,6 +30,8 @@ var _altura_max := 0.0
 const GRAVEDAD := 9.81
 const RESISTENCIA_AIRE := 0.12
 const RESTITUCION_CESPED := 0.58
+## Frenada del balón rodando por césped (m/s²).
+const ROCE_RODADA := 1.4
 var _modo_fisica := false
 var velocidad_vectorial := Vector3.ZERO
 var giro_angular := Vector3.ZERO
@@ -279,8 +281,11 @@ func avanzar(delta: float) -> void:
 		return
 	var t_antes := _t
 	_t = minf(1.0, _t + delta / _duracion)
-	var xz_antes := Vector2(_origen.x, _origen.z).lerp(Vector2(_destino.x, _destino.z), t_antes)
-	var xz_ahora := Vector2(_origen.x, _origen.z).lerp(Vector2(_destino.x, _destino.z), _t)
+	## PASE RASO QUE FRENA (13-10-2026): con un `lerp` lineal el balón iba a
+	## velocidad constante y se clavaba en el destino. Raso, el césped lo frena
+	## (sale con fuerza y llega con un tercio); por el aire casi no pierde.
+	var xz_antes := Vector2(_origen.x, _origen.z).lerp(Vector2(_destino.x, _destino.z), _recorrido(t_antes))
+	var xz_ahora := Vector2(_origen.x, _origen.z).lerp(Vector2(_destino.x, _destino.z), _recorrido(_t))
 	var y_base := lerpf(_origen.y, _destino.y, _t)
 	var y := y_base + _altura_max * 4.0 * _t * (1.0 - _t)
 	position = Vector3(xz_ahora.x, y, xz_ahora.y)
@@ -290,6 +295,15 @@ func avanzar(delta: float) -> void:
 		var eje := Vector3(despl.y, 0.0, -despl.x).normalized()
 		var angulo := despl.length() / radio
 		global_rotate(eje, angulo)
+
+## Fracción del camino hecha en el instante `t` (0-1). Raso: velocidad que cae
+## en línea recta hasta un tercio de la inicial (roce del césped); con altura,
+## casi lineal. Siempre 0 al salir y 1 al llegar: el receptor no cambia.
+func _recorrido(t: float) -> float:
+	var final := 0.34 if _altura_max < 0.4 else 0.85
+	## v(t) = v0·(1 - (1-final)·t)  →  s(t) = (t - (1-final)·t²/2) / (1 - (1-final)/2)
+	var k := 1.0 - final
+	return (t - k * t * t * 0.5) / (1.0 - k * 0.5)
 
 ## ¿Sigue en el aire o ya llegó? Le sirve a quien lo mueve para saber cuándo
 ## puede pedirle el próximo destino sin que el arco actual se corte a medias.
@@ -303,11 +317,23 @@ func _avanzar_fisica(delta: float) -> void:
 	position += velocidad_vectorial * dt
 	if position.y <= radio:
 		position.y = radio
-		velocidad_vectorial.y = -velocidad_vectorial.y * RESTITUCION_CESPED
-		velocidad_vectorial.x *= 0.82
-		velocidad_vectorial.z *= 0.82
-		giro_angular *= 0.7
-		if velocidad_vectorial.length() < 0.35:
+		## BOTE O RODADA (13-10-2026). Antes cada fotograma en el suelo contaba
+		## como un bote y quitaba el 18 % de la velocidad: un tiro raso se paraba
+		## en medio segundo. Ahora: si cae con fuerza, bota (pierde altura y un
+		## poco de velocidad); si ya rueda, solo el roce del césped (~1,4 m/s²).
+		if velocidad_vectorial.y < -1.2:
+			velocidad_vectorial.y = -velocidad_vectorial.y * RESTITUCION_CESPED
+			velocidad_vectorial.x *= 0.9
+			velocidad_vectorial.z *= 0.9
+			giro_angular *= 0.7
+		else:
+			velocidad_vectorial.y = 0.0
+			var h := Vector2(velocidad_vectorial.x, velocidad_vectorial.z)
+			h = h.move_toward(Vector2.ZERO, ROCE_RODADA * dt)
+			velocidad_vectorial.x = h.x
+			velocidad_vectorial.z = h.y
+			giro_angular *= 0.95
+		if velocidad_vectorial.length() < 0.15:
 			detener()
 			return
 	var despl := Vector2(position.x, position.z) - Vector2(pos_antes.x, pos_antes.z)
