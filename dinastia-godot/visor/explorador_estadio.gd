@@ -26,6 +26,27 @@ var _anim: AnimationPlayer
 var _hud: Label
 var _aviso: Label
 var _capa: CanvasLayer
+var _boton_e: Button
+var _hablando: Node3D
+var _lugar: Label
+var _ayudas := false
+
+func _aplicar_ajustes() -> void:
+	_ayudas = bool(AjustesCiudad.valor("ayudas", false))
+	if _hud != null:
+		_hud.visible = _ayudas
+	if _aviso != null:
+		_aviso.visible = _ayudas
+
+## El nombre del sitio, un instante, arriba al centro.
+func _mostrar_lugar(texto: String) -> void:
+	if _lugar == null or texto == "":
+		return
+	_lugar.text = texto
+	var tw := _lugar.create_tween()
+	tw.tween_property(_lugar, "modulate:a", 1.0, 0.3)
+	tw.tween_interval(1.8)
+	tw.tween_property(_lugar, "modulate:a", 0.0, 0.8)
 var _tactil_vec := Vector2.ZERO
 var _zona_actual := ""
 var _datos: Dictionary = {}
@@ -148,6 +169,36 @@ func _montar_hud() -> void:
 	be.focus_mode = Control.FOCUS_NONE
 	be.pressed.connect(usar)
 	_capa.add_child(be)
+	_boton_e = be
+	## Sin textos fijos (13-10-2026, como en la ciudad): controles en ⚙ y, al
+	## entrar en una sala, su nombre aparece un momento y se desvanece.
+	var engranaje := CuadroDialogo.respuesta(Button.new())
+	engranaje.text = "⚙"
+	engranaje.add_theme_font_size_override("font_size", 22)
+	engranaje.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	engranaje.offset_left = -70
+	engranaje.offset_top = 16
+	engranaje.offset_right = -18
+	engranaje.offset_bottom = 62
+	engranaje.focus_mode = Control.FOCUS_NONE
+	engranaje.pressed.connect(func() -> void:
+		if _capa.get_node_or_null("AjustesCiudad") == null:
+			var a := AjustesCiudad.crear(_aplicar_ajustes)
+			a.name = "AjustesCiudad"
+			_capa.add_child(a))
+	_capa.add_child(engranaje)
+	_lugar = Label.new()
+	_lugar.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_lugar.offset_left = -300
+	_lugar.offset_right = 300
+	_lugar.offset_top = 28
+	_lugar.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_lugar.add_theme_font_size_override("font_size", 26)
+	_lugar.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
+	_lugar.add_theme_constant_override("outline_size", 8)
+	_lugar.modulate.a = 0.0
+	_capa.add_child(_lugar)
+	_aplicar_ajustes()
 	var bs := Button.new()
 	bs.text = Idiomas.t("Salir")
 	bs.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
@@ -246,12 +297,16 @@ func _rotulos() -> void:
 			_aviso.text = Idiomas.t("La galería al complejo se recorre desde la ciudad (Ciudad 3D → a pie)")
 	elif nombre != _zona_actual:
 		_zona_actual = nombre
+		_mostrar_lugar(Idiomas.t(nombre))
 		_aviso.text = RecorridoClub.aviso_de(nombre, club_nombre)
 		if RecorridoClub.sala_decorable(nombre):
 			_aviso.text += "  ·  " + Idiomas.t("E: decorar")
 		if nombre == "Banda" and not _rugido_hecho:
 			_rugido_hecho = true
 			Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
+	if _boton_e != null:
+		var hay := not g.is_empty() or _zona_actual in ["·grada", "Ascensor"] or RecorridoClub.sala_decorable(_zona_actual)
+		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
 	_hud.text = "📍 %s · %s %d  ·  %s" % [Idiomas.t(nombre), Idiomas.t("Planta"), planta, Idiomas.t("W/S/A/D o mando · Mayús: correr · E: usar · Esc: salir")]
 
 func _unhandled_input(ev: InputEvent) -> void:
@@ -319,6 +374,7 @@ func usar() -> void:
 	var g := _persona_cerca()
 	if not g.is_empty():
 		_menu = RecorridoClub.dialogo(_capa, _personal(), g, cuerpo.position)
+		_hablando = g.get("nodo") as Node3D
 		return
 	if _zona_actual == "Ascensor":
 		_menu = RecorridoClub.menu_ascensor(_capa, planta, ir_a_planta)
@@ -335,6 +391,18 @@ func _persona_cerca() -> Dictionary:
 ## Cámara en tercera persona. Dentro del vestuario y del túnel no sale de las
 ## paredes ni pasa del techo: si no, se vería el exterior de la caja.
 func _colocar_camara(delta: float) -> void:
+	## PLANO DE CONVERSACIÓN (13-10-2026): tras tu hombro, encuadrando su cara.
+	if is_instance_valid(_menu) and _hablando != null and is_instance_valid(_hablando) and not primera_persona:
+		var yo := cuerpo.global_position
+		var el := _hablando.global_position
+		var dir := Vector3(el.x - yo.x, 0, el.z - yo.z)
+		if dir.length() > 0.2:
+			dir = dir.normalized()
+			var lado := dir.cross(Vector3.UP)
+			var plano := yo - dir * 0.9 + lado * 0.6 + Vector3(0, 1.7, 0)
+			camara.global_position = camara.global_position.lerp(plano, 1.0 if delta >= 1.0 else minf(1.0, delta * 5.0))
+			camara.look_at(el + Vector3(0, 1.2, 0) - lado * 0.25, Vector3.UP)
+			return
 	## PRIMERA PERSONA (V): la cámara en los ojos, el cuerpo escondido.
 	if primera_persona and true:
 		var dir_fp := Vector3(sin(rumbo), 0, cos(rumbo))
