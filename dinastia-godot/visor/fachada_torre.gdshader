@@ -43,11 +43,16 @@ void fragment() {
 		vec3 col = pared_de_instancia ? COLOR.rgb : pared.rgb;
 		col *= 1.0 - 0.18 * (1.0 - smoothstep(0.0, 0.1 + w.y, f.y));   // banda de forjado
 		col = mix(col, vec3(0.1, 0.11, 0.12), marco);
-		vec3 g = vidrio.rgb * mix(0.8, 1.6, h);
+		// Cada ventana con su tono: unas con la persiana a media altura, otras
+		// con cortina clara o reflejo más oscuro (13-10-2026: todas iguales y muy
+		// pulidas devolvían el azul del cielo en una sola mancha).
+		vec3 g = vidrio.rgb * mix(0.7, 1.25, h);
+		float persiana = step(0.72, h) * step(1.0 - mix(0.25, 0.7, fract(h * 7.3)), f.y);
+		g = mix(g, pared_de_instancia ? COLOR.rgb * 0.85 : vec3(0.78, 0.76, 0.72), persiana * 0.8);
 		col = mix(col, g, v);
 		ALBEDO = col;
-		ROUGHNESS = mix(0.85, 0.12, v);
-		METALLIC = v * 0.4;
+		ROUGHNESS = mix(0.85, 0.32, v);
+		METALLIC = v * 0.25;
 		float enc = step(0.6, h) * v * noche;
 		EMISSION = vec3(1.0, 0.82, 0.5) * enc * 1.0;
 	}

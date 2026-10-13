@@ -311,10 +311,12 @@ static func cristal(encendida: bool, calido: bool = true) -> StandardMaterial3D:
 	if _cache.has(clave):
 		return _cache[clave]
 	var m := StandardMaterial3D.new()
-	m.albedo_color = Color(0.06, 0.08, 0.11)
-	m.metallic = 0.9
-	m.metallic_specular = 0.85
-	m.roughness = 0.05
+	## Cristal tintado (13-10-2026): con metálico 0,9 y rugosidad 0,05 era un
+	## espejo perfecto que devolvía el cielo entero: fachadas azul eléctrico.
+	m.albedo_color = Color(0.1, 0.12, 0.14)
+	m.metallic = 0.5
+	m.metallic_specular = 0.6
+	m.roughness = 0.22
 	## Un poco de ruido en la rugosidad = reflejo LIGERAMENTE distorsionado, que
 	## es lo que separa un cristal real de un espejo perfecto.
 	m.roughness_texture = _tex_ruido(0.4, 61, false, 2)
