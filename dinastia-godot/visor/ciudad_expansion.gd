@@ -910,6 +910,8 @@ const COLORES_CASA := [Color(0.93, 0.89, 0.8), Color(0.86, 0.78, 0.66), Color(0.
 	Color(0.85, 0.52, 0.38), Color(0.9, 0.74, 0.42), Color(0.6, 0.72, 0.85), Color(0.66, 0.82, 0.7),
 	Color(0.93, 0.7, 0.68), Color(0.76, 0.68, 0.84), Color(0.98, 0.88, 0.55), Color(0.55, 0.62, 0.55)]
 
+const APELLIDOS := ["Ortega", "Salas", "Núñez", "Ibarra", "Campos", "Rivas", "Lagos", "Vidal", "Peña", "Soto", "Carrasco", "Herrera", "Molina", "Aguirre", "Duarte", "Bravo", "Rojas", "Marín", "Leal", "Pizarro"]
+
 func _casas(r: Rect2) -> void:
 	_lote("cesped", Vector3(r.get_center().x, 0.05, r.get_center().y), Vector3(r.size.x, 0.1, r.size.y))
 	var cols := 4
@@ -927,8 +929,14 @@ func _casas(r: Rect2) -> void:
 			_casas_t.append(Transform3D(Basis.from_scale(Vector3(ancho, alto, fondo)), Vector3(x, alto * 0.5, z)))
 			_casas_col.append(col)
 			var tejado := [Color(0.62, 0.28, 0.2), Color(0.35, 0.33, 0.33), Color(0.5, 0.36, 0.26)][_rng.randi() % 3] as Color
-			_techos_t.append(Transform3D(Basis.from_scale(Vector3(ancho + 1.0, 3.0, fondo + 1.0)), Vector3(x, alto + 1.5, z)))
-			_techos_col.append(tejado)
+			## Cada casa es DISTINTA (etapa 6): el arquetipo y sus detalles salen
+			## de la posición, no de `_rng`, para no mover nada más de sitio.
+			var hr := RandomNumberGenerator.new()
+			hr.seed = hash(Vector2(x, z))
+			var arq := hr.randi() % 5
+			if arq != 1:
+				_techos_t.append(Transform3D(Basis.from_scale(Vector3(ancho + 1.0, 3.0, fondo + 1.0)), Vector3(x, alto + 1.5, z)))
+				_techos_col.append(tejado)
 			## Seto del jardín delantero, hacia la calle.
 			var zs := z + lado * (fondo * 0.5 + 5.0)
 			_setos_t.append(Transform3D(Basis.from_scale(Vector3(paso_x * 0.9 * 0.42, 1.3, 0.9)), Vector3(x - paso_x * 0.26, 0.65, zs)))
@@ -947,7 +955,88 @@ func _casas(r: Rect2) -> void:
 			_buzones_t.append(Transform3D(Basis.from_scale(Vector3(0.45, 1.2, 0.35)), Vector3(x + 1.6, 0.6, zs)))
 			if _rng.randf() < 0.6:
 				_chimeneas_t.append(Transform3D(Basis.from_scale(Vector3(0.8, 2.6, 0.8)), Vector3(x + ancho * 0.28, alto + 2.0, z - lado * fondo * 0.15)))
+			_detalle_casa(hr, arq, x, z, zf, ancho, fondo, alto, lado, paso_x, col, tejado)
+			## Cada casa es un sitio al que entrar, con la familia que vive allí.
+			var fam: String = String(APELLIDOS[hr.randi() % APELLIDOS.size()])
+			b.puntos_clic.append({"k": "edificio_vivienda|Casa de la familia %s" % fam, "n": "Casa de la familia %s" % fam,
+				"pos": Vector3(x, 0, zf + lado * 3.0), "estado": "ciudad", "radio": 6.0})
 	cuenta["casas"] = int(cuenta.get("casas", 0)) + cols * filas
+
+
+## DETALLE DE CASA (etapa 6, 13-10-2026). Todo son cajas con color propio que
+## `_casas_multimesh` dibuja en UN MultiMesh. `lado` es hacia dónde da la
+## fachada (+1 o -1 en Z).
+var _det_t: Array[Transform3D] = []
+var _det_c: Array[Color] = []
+
+func _cd(pos: Vector3, tam: Vector3, col: Color) -> void:
+	_det_t.append(Transform3D(Basis.from_scale(tam), pos))
+	_det_c.append(col)
+
+func _detalle_casa(hr: RandomNumberGenerator, arq: int, x: float, z: float, zf: float, ancho: float,
+		fondo: float, alto: float, lado: float, paso_x: float, col: Color, tejado: Color) -> void:
+	var piedra := Color(0.72, 0.7, 0.66)
+	var blanco := Color(0.96, 0.95, 0.92)
+	var acento := [Color(0.15, 0.35, 0.3), Color(0.45, 0.18, 0.15), Color(0.2, 0.3, 0.5), Color(0.25, 0.25, 0.27), Color(0.55, 0.45, 0.2)][hr.randi() % 5] as Color
+	## Escalones y umbral a la puerta.
+	_cd(Vector3(x, 0.1, zf + lado * 0.55), Vector3(2.2, 0.2, 1.1), piedra)
+	_cd(Vector3(x, 0.28, zf + lado * 0.25), Vector3(1.9, 0.2, 0.5), piedra)
+	## Alféizares y contraventanas en cada ventana de la fachada.
+	for k: float in [-1.0, 1.0]:
+		for piso in (2 if alto > 6.2 else 1):
+			var py := 1.6 + float(piso) * 2.8
+			var px := x + k * ancho * 0.3
+			_cd(Vector3(px, py - 0.8, zf + lado * 0.1), Vector3(1.95, 0.1, 0.28), blanco)
+			for sx: float in [-1.0, 1.0]:
+				_cd(Vector3(px + sx * 1.05, py, zf + lado * 0.05), Vector3(0.42, 1.5, 0.08), acento)
+	## Ventanas en los laterales (antes eran paredes ciegas).
+	for sx: float in [-1.0, 1.0]:
+		for piso in (2 if alto > 6.2 else 1):
+			var pl := Vector3(x + sx * (ancho * 0.5 + 0.05), 1.6 + float(piso) * 2.8, z + lado * fondo * 0.12)
+			_marcos_t.append(Transform3D(Basis.from_scale(Vector3(0.1, 1.5, 1.7)), pl))
+			_vidrios_t.append(Transform3D(Basis.from_scale(Vector3(0.12, 1.2, 1.4)), pl + Vector3(sx * 0.02, 0, 0)))
+	## Parterres con flores a los lados de la puerta.
+	for sx: float in [-1.0, 1.0]:
+		_cd(Vector3(x + sx * 1.7, 0.18, zf + lado * 0.5), Vector3(1.2, 0.36, 0.6), Color(0.35, 0.22, 0.14))
+		_cd(Vector3(x + sx * 1.7, 0.42, zf + lado * 0.5), Vector3(1.0, 0.12, 0.45), [Color(0.9, 0.3, 0.4), Color(0.95, 0.8, 0.2), Color(0.8, 0.4, 0.9)][hr.randi() % 3])
+	## Aire acondicionado en un lateral de la planta alta.
+	if hr.randf() < 0.5:
+		_cd(Vector3(x + ancho * 0.5 + 0.25, alto * 0.6, z + lado * fondo * 0.1), Vector3(0.5, 0.6, 0.9), Color(0.8, 0.82, 0.84))
+	match arq:
+		0:  ## Chalet: un ala más baja al lado y una buhardilla en el tejado.
+			_cd(Vector3(x + ancho * 0.62, alto * 0.3, z - lado * fondo * 0.08), Vector3(ancho * 0.5, alto * 0.6, fondo * 0.8), col * 0.96)
+			_cd(Vector3(x + ancho * 0.62, alto * 0.6 + 0.2, z - lado * fondo * 0.08), Vector3(ancho * 0.56, 0.4, fondo * 0.88), tejado)
+			_cd(Vector3(x - ancho * 0.15, alto + 1.5, zf - lado * 1.4), Vector3(1.8, 1.4, 1.4), col)
+			_cd(Vector3(x - ancho * 0.15, alto + 2.3, zf - lado * 1.4), Vector3(2.1, 0.25, 1.7), tejado)
+		1:  ## Adosado de azotea plana con parapeto.
+			_cd(Vector3(x, alto + 0.12, z), Vector3(ancho + 0.4, 0.24, fondo + 0.4), piedra)
+			for sz: float in [-1.0, 1.0]:
+				_cd(Vector3(x, alto + 0.55, z + sz * (fondo * 0.5 + 0.1)), Vector3(ancho + 0.4, 0.6, 0.2), col * 0.92)
+			for sx: float in [-1.0, 1.0]:
+				_cd(Vector3(x + sx * (ancho * 0.5 + 0.1), alto + 0.55, z), Vector3(0.2, 0.6, fondo + 0.4), col * 0.92)
+			## Valla blanca baja delante.
+			var zv := zf + lado * 4.2
+			_cd(Vector3(x, 0.78, zv), Vector3(paso_x * 0.8, 0.07, 0.06), blanco)
+			for q in 9:
+				_cd(Vector3(x - paso_x * 0.38 + float(q) * paso_x * 0.095, 0.4, zv), Vector3(0.06, 0.8, 0.06), blanco)
+		2:  ## Con porche: tejadillo sobre columnas.
+			_cd(Vector3(x, 2.95, zf + lado * 1.3), Vector3(3.4, 0.18, 2.6), tejado)
+			for sx: float in [-1.0, 1.0]:
+				_cd(Vector3(x + sx * 1.5, 1.45, zf + lado * 2.3), Vector3(0.16, 2.9, 0.16), blanco)
+			_cd(Vector3(x, 0.08, zf + lado * 1.4), Vector3(3.4, 0.16, 2.6), piedra)
+		3:  ## Con garaje y camino de entrada.
+			_cd(Vector3(x - ancho * 0.66, 1.8, z + lado * fondo * 0.05), Vector3(ancho * 0.42, 3.6, fondo * 0.7), col * 0.95)
+			_cd(Vector3(x - ancho * 0.66, 3.7, z + lado * fondo * 0.05), Vector3(ancho * 0.48, 0.25, fondo * 0.78), tejado)
+			_cd(Vector3(x - ancho * 0.66, 1.15, z + lado * (fondo * 0.4 + 0.02)), Vector3(ancho * 0.34, 2.3, 0.1), Color(0.88, 0.88, 0.86))
+			_cd(Vector3(x - ancho * 0.66, 0.1, z + lado * (fondo * 0.4 + 3.2)), Vector3(ancho * 0.34, 0.05, 6.4), Color(0.45, 0.45, 0.46))
+		4:  ## Con balcón corrido en la planta alta.
+			if alto > 6.2:
+				_cd(Vector3(x, 4.35, zf + lado * 0.65), Vector3(ancho * 0.7, 0.15, 1.3), piedra)
+				_cd(Vector3(x, 4.95, zf + lado * 1.25), Vector3(ancho * 0.7, 0.07, 0.07), blanco)
+				for q in 8:
+					_cd(Vector3(x - ancho * 0.33 + float(q) * ancho * 0.66 / 7.0, 4.7, zf + lado * 1.25), Vector3(0.06, 0.6, 0.06), blanco)
+			else:
+				_cd(Vector3(x, 2.7, zf + lado * 0.4), Vector3(ancho * 0.8, 0.5, 0.8), acento)  ## marquesina
 
 func _casas_multimesh() -> void:
 	if _casas_t.is_empty():
@@ -964,6 +1053,8 @@ func _casas_multimesh() -> void:
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.7, 0.66, 0.6), 0.9), _caminos_t, Vector3.ONE)
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.15, 0.3, 0.55), 0.5), _buzones_t, Vector3.ONE)
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.55, 0.3, 0.24), 0.8), _chimeneas_t, Vector3.ONE)
+	if not _det_t.is_empty():
+		_multimesh(BoxMesh.new(), null, _det_t, Vector3.ONE, _det_c)
 
 func _industrial(r: Rect2) -> void:
 	b._caja_en(Vector3(r.get_center().x, 0.06, r.get_center().y), Vector3(r.size.x, 0.12, r.size.y), b._mat_simple(Color(0.42, 0.42, 0.41), 0.9))
