@@ -4306,5 +4306,37 @@
  "Alineaste {1} ({2}ª vez esta temporada): multa de {3}.": [
   "You fielded {1} (time number {2} this season): a {3} fine.",
   "Você escalou {1} ({2}ª vez nesta temporada): multa de {3}."
+ ],
+ "De las dos cosas: el equipo supo sufrir": [
+  "Both: the team knew how to suffer",
+  "Das duas coisas: a equipa soube sofrer"
+ ],
+ "Jugamos bien con sol, lluvia o lo que sea": [
+  "We play well in sun, rain or whatever",
+  "Jogamos bem com sol, chuva ou o que for"
+ ],
+ "🌱 Sube un chico del filial": [
+  "🌱 A youngster steps up from the reserves",
+  "🌱 Sobe um miúdo da equipa B"
+ ],
+ "Para cumplir la norma de juveniles ({1}), el cuerpo técnico sube a {2} ({3} años, {4}).": [
+  "To meet the youth-player rule ({1}), the coaching staff promote {2} ({3}, {4}).",
+  "Para cumprir a regra de juvenis ({1}), a equipa técnica sobe {2} ({3} anos, {4})."
+ ],
+ "🟥 Sanción al entrenador": [
+  "🟥 Coach suspended",
+  "🟥 Treinador suspenso"
+ ],
+ "El tribunal te sanciona con {1} partido(s) por la expulsión. Los verás desde la grada, sin dar órdenes desde la banda.": [
+  "The disciplinary panel bans you for {1} match(es) for the sending-off. You'll watch from the stands, unable to give orders from the touchline.",
+  "O tribunal suspende-te por {1} jogo(s) pela expulsão. Vais vê-los da bancada, sem dar ordens da linha."
+ ],
+ "✅ Vuelves a la banda": [
+  "✅ Back on the touchline",
+  "✅ Voltas ao banco"
+ ],
+ "Cumpliste la sanción: el próximo partido lo diriges desde el banquillo.": [
+  "You've served your ban: you'll lead the next match from the bench.",
+  "Cumpriste a suspensão: o próximo jogo diriges do banco."
  ]
 }

@@ -8614,5 +8614,69 @@
   "ca": "Has alineat {1} ({2}a vegada aquesta temporada): multa de {3}.",
   "pl": "Wystawiłeś {1} ({2}. raz w tym sezonie): kara {3}.",
   "tr": "{1} oynattın (bu sezon {2}. kez): {3} ceza."
+ },
+ "De las dos cosas: el equipo supo sufrir": {
+  "fr": "Les deux : l'équipe a su souffrir",
+  "it": "Entrambe le cose: la squadra ha saputo soffrire",
+  "de": "Beides: die Mannschaft wusste zu leiden",
+  "ca": "De les dues coses: l'equip va saber patir",
+  "pl": "Jedno i drugie: drużyna umiała cierpieć",
+  "tr": "İkisi de: takım acı çekmeyi bildi"
+ },
+ "Jugamos bien con sol, lluvia o lo que sea": {
+  "fr": "On joue bien sous le soleil, la pluie ou n'importe quoi",
+  "it": "Giochiamo bene con sole, pioggia o qualsiasi cosa",
+  "de": "Wir spielen gut bei Sonne, Regen oder was auch immer",
+  "ca": "Juguem bé amb sol, pluja o el que sigui",
+  "pl": "Gramy dobrze w słońcu, deszczu czy czymkolwiek",
+  "tr": "Güneşte, yağmurda, her havada iyi oynarız"
+ },
+ "🌱 Sube un chico del filial": {
+  "fr": "🌱 Un jeune de la réserve monte",
+  "it": "🌱 Sale un ragazzo dalla squadra B",
+  "de": "🌱 Ein Talent aus der Zweiten rückt auf",
+  "ca": "🌱 Puja un noi del filial",
+  "pl": "🌱 Awans chłopaka z rezerw",
+  "tr": "🌱 Altyapıdan bir genç yükseliyor"
+ },
+ "Para cumplir la norma de juveniles ({1}), el cuerpo técnico sube a {2} ({3} años, {4}).": {
+  "fr": "Pour respecter la règle des jeunes ({1}), le staff fait monter {2} ({3} ans, {4}).",
+  "it": "Per rispettare la regola dei giovani ({1}), lo staff promuove {2} ({3} anni, {4}).",
+  "de": "Um die Nachwuchsregel ({1}) zu erfüllen, zieht das Trainerteam {2} hoch ({3} Jahre, {4}).",
+  "ca": "Per complir la norma de juvenils ({1}), el cos tècnic puja {2} ({3} anys, {4}).",
+  "pl": "Aby spełnić przepis o młodzieżowcach ({1}), sztab awansuje {2} ({3} lat, {4}).",
+  "tr": "Genç oyuncu kuralına ({1}) uymak için teknik ekip {2} oyuncusunu yukarı alıyor ({3} yaş, {4})."
+ },
+ "🟥 Sanción al entrenador": {
+  "fr": "🟥 Entraîneur suspendu",
+  "it": "🟥 Allenatore squalificato",
+  "de": "🟥 Trainer gesperrt",
+  "ca": "🟥 Sanció a l'entrenador",
+  "pl": "🟥 Trener zawieszony",
+  "tr": "🟥 Teknik direktöre ceza"
+ },
+ "El tribunal te sanciona con {1} partido(s) por la expulsión. Los verás desde la grada, sin dar órdenes desde la banda.": {
+  "fr": "La commission te suspend {1} match(s) pour l'expulsion. Tu les verras depuis la tribune, sans donner d'ordres depuis le banc.",
+  "it": "Il giudice ti squalifica per {1} partita/e per l'espulsione. Le vedrai dalla tribuna, senza dare ordini dalla panchina.",
+  "de": "Das Sportgericht sperrt dich für {1} Spiel(e) wegen des Platzverweises. Du siehst sie von der Tribüne, ohne Anweisungen von der Seitenlinie.",
+  "ca": "El tribunal et sanciona amb {1} partit(s) per l'expulsió. Els veuràs des de la grada, sense donar ordres des de la banda.",
+  "pl": "Komisja zawiesza cię na {1} mecz(e) za czerwoną kartkę. Obejrzysz je z trybun, bez wydawania poleceń przy linii.",
+  "tr": "Disiplin kurulu ihraç nedeniyle sana {1} maç ceza verdi. Maçları tribünden izleyeceksin, kenardan talimat veremeyeceksin."
+ },
+ "✅ Vuelves a la banda": {
+  "fr": "✅ Retour sur le banc",
+  "it": "✅ Torni in panchina",
+  "de": "✅ Zurück an der Seitenlinie",
+  "ca": "✅ Tornes a la banda",
+  "pl": "✅ Wracasz na ławkę",
+  "tr": "✅ Kenara geri dönüyorsun"
+ },
+ "Cumpliste la sanción: el próximo partido lo diriges desde el banquillo.": {
+  "fr": "Tu as purgé ta suspension : tu dirigeras le prochain match depuis le banc.",
+  "it": "Hai scontato la squalifica: la prossima partita la dirigi dalla panchina.",
+  "de": "Du hast die Sperre abgesessen: Das nächste Spiel leitest du von der Bank.",
+  "ca": "Has complert la sanció: el proper partit el dirigeixes des de la banqueta.",
+  "pl": "Odbyłeś karę: następny mecz poprowadzisz z ławki.",
+  "tr": "Cezanı tamamladın: bir sonraki maçı kulübeden yöneteceksin."
  }
 }

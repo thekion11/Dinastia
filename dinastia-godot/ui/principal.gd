@@ -6185,6 +6185,16 @@ var _secc_redes: String = "redes"
 func _al_paso_nuevo() -> void:
 	if mundo == null or mundo.prensa == null or mundo.prensa.al_paso.is_empty():
 		return
+	## Si hay un periódico abierto (de esta semana o de otra que pasó de
+	## corrido), la entrevista espera a que se cierre.
+	for h in get_children():
+		if h is PortadaPeriodico and not h.is_queued_for_deletion():
+			if not h.cerrado.is_connected(_al_paso_nuevo):
+				h.cerrado.connect(_al_paso_nuevo)
+			return
+	for h in get_children():
+		if h is PieDeCampo and not h.is_queued_for_deletion():
+			return
 	var n := PieDeCampo.mostrar_al_paso(self, mundo.prensa)
 	if n != null:
 		n.cerrado.connect(_refrescar)
@@ -6198,10 +6208,7 @@ func _portada_nueva() -> void:
 	for x: Dictionary in mundo.prensa.portadas:
 		x.erase("nueva")
 	if nueva and PortadaPeriodico.auto():
-		var p := PortadaPeriodico.mostrar(self, mundo, d)
-		if p != null:
-			p.cerrado.connect(_al_paso_nuevo)
-			return
+		PortadaPeriodico.mostrar(self, mundo, d)
 	_al_paso_nuevo()
 
 func _pintar_finanzas(c: Club) -> void:
