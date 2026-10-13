@@ -690,20 +690,57 @@ func _usar() -> void:
 		_bajar_a_la_galeria()
 		return
 	if _cerca["tipo"] == "peaton":
-		var v: Dictionary = _cerca["v"]
-		v["espera"] = 5.0
-		var lista: Array = FRASES.get(animo, FRASES["normal"])
-		var frase := String(lista[randi() % lista.size()])
-		if frase.contains("%s"):
-			frase = frase % club_nombre
-		_burbuja.text = "💬 " + frase
-		_burbuja.pixel_size = 0.012
-		_burbuja.position = (v["nodo"] as Node3D).global_position + Vector3(0, 2.4, 0)
-		_burbuja.visible = true
-		_t_burbuja = 5.0
+		_hablar_con_vecino(_cerca["v"])
 	else:
 		interactuar.emit(String(_cerca["k"]))
 
+
+## UNA CONVERSACIÓN CON UN VECINO (13-10-2026): tiene un OFICIO, habla en tres
+## turnos (saludo según el ánimo del club, charla de su oficio, despedida), se
+## gira hacia ti y gesticula; al acabar vuelve a andar.
+var _rng_dialogo := RandomNumberGenerator.new()
+
+func _hablar_con_vecino(v: Dictionary) -> void:
+	var nodo: Node3D = v["nodo"]
+	if not is_instance_valid(nodo):
+		return
+	if not v.has("oficio"):
+		v["oficio"] = DialogosCiudad.oficio_de(hash(String(nodo.name)) + int(nodo.position.x * 7.0))
+	var ahora := Time.get_ticks_msec()
+	if ahora - int(v.get("t_charla", 0)) > 25000:
+		v["turno"] = 0
+	var turno := int(v.get("turno", 0))
+	v["t_charla"] = ahora
+	var oficio: String = v["oficio"]
+	var frase := DialogosCiudad.linea(oficio, turno, animo, _rng_dialogo)
+	if frase.contains("%s"):
+		frase = frase % club_nombre
+	_burbuja.text = "💬 %s\n%s" % [DialogosCiudad.nombre(oficio), frase]
+	## Ajuste de línea: el texto largo cabe en 4 m de ancho, no se sale de la pantalla.
+	_burbuja.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_burbuja.width = 480.0
+	_burbuja.pixel_size = 0.008
+	_burbuja.position = nodo.global_position + Vector3(0, 2.4, 0)
+	_burbuja.visible = true
+	_t_burbuja = 6.0
+	v["turno"] = (turno + 1) % 3
+	v["espera"] = 6.0
+	## Se gira hacia ti y hace el gesto que toca (saluda, charla, se despide).
+	var d := cuerpo.global_position - nodo.global_position
+	nodo.rotation.y = atan2(d.x, d.z)
+	var gesto := "saludo_mano" if turno != 1 else "charla"
+	for ap: AnimationPlayer in nodo.find_children("*", "AnimationPlayer", true, false):
+		var lib := ap.get_animation_library("")
+		if lib != null and not lib.has_animation(gesto):
+			var esq := FutbolistaQ.esqueleto_de(nodo)
+			var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[gesto]), str(ap.get_path_to(esq)) if esq != null else "")
+			if clip != null:
+				lib.add_animation(gesto, clip)
+		if lib != null and lib.has_animation(gesto):
+			ap.play(gesto, 0.2)
+			get_tree().create_timer(6.0).timeout.connect(func() -> void:
+				if is_instance_valid(ap) and ap.has_animation("caminar"):
+					ap.play("caminar", 0.3))
 
 # ============================================================== EL ESTADIO (2.0)
 
