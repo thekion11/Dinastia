@@ -2180,7 +2180,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 		t.registrar_ruta_gente(t.agregar_ruta(b._redondear(pts4, 3.0)))
 	## Y más gente para repartir: el reciclaje la lleva donde estés.
 	var rutas_g: Array = t.rutas_gente()
-	for q2 in 24:
+	for q2 in 34:
 		if rutas_g.is_empty():
 			break
 		b._un_peaton(t, rng, int(rutas_g[rng.randi() % rutas_g.size()]), rng.randf() * 300.0)
