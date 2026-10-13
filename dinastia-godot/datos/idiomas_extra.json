@@ -1474,7 +1474,9 @@
 		"Encargada de prensa": "Press officer",
 		"Ojeadora jubilada": "Retired scout",
 		"Portera del club": "Club doorwoman",
-		"Presidenta": "President"
+		"Presidenta": "President",
+		"Consejo": "Tip",
+		"Consejo: ": "Tip: "
 	},
 	"pt": {
 		"Historia": "História",
@@ -2951,7 +2953,9 @@
 		"Encargada de prensa": "Responsável de imprensa",
 		"Ojeadora jubilada": "Olheira reformada",
 		"Portera del club": "Porteira do clube",
-		"Presidenta": "Presidente"
+		"Presidenta": "Presidente",
+		"Consejo": "Dica",
+		"Consejo: ": "Dica: "
 	},
 	"patrones": [
 		[
@@ -4927,7 +4931,9 @@
 		"Encargada de prensa": "Attachée de presse",
 		"Ojeadora jubilada": "Recruteuse retraitée",
 		"Portera del club": "Gardienne du club",
-		"Presidenta": "Présidente"
+		"Presidenta": "Présidente",
+		"Consejo": "Astuce",
+		"Consejo: ": "Astuce : "
 	},
 	"it": {
 		"Historia": "Storia",
@@ -6275,7 +6281,9 @@
 		"Encargada de prensa": "Addetta stampa",
 		"Ojeadora jubilada": "Osservatrice in pensione",
 		"Portera del club": "Portinaia del club",
-		"Presidenta": "Presidentessa"
+		"Presidenta": "Presidentessa",
+		"Consejo": "Consiglio",
+		"Consejo: ": "Consiglio: "
 	},
 	"de": {
 		"Historia": "Geschichte",
@@ -7623,7 +7631,9 @@
 		"Encargada de prensa": "Pressesprecherin",
 		"Ojeadora jubilada": "Pensionierte Scoutin",
 		"Portera del club": "Pförtnerin des Klubs",
-		"Presidenta": "Präsidentin"
+		"Presidenta": "Präsidentin",
+		"Consejo": "Tipp",
+		"Consejo: ": "Tipp: "
 	},
 	"ca": {
 		"Historia": "Història",
@@ -8971,7 +8981,9 @@
 		"Encargada de prensa": "Encarregada de premsa",
 		"Ojeadora jubilada": "Ojejadora jubilada",
 		"Portera del club": "Portera del club",
-		"Presidenta": "Presidenta"
+		"Presidenta": "Presidenta",
+		"Consejo": "Consell",
+		"Consejo: ": "Consell: "
 	},
 	"pl": {
 		"Club": "Klub",
@@ -10616,7 +10628,9 @@
 		"Encargada de prensa": "Rzeczniczka prasowa",
 		"Ojeadora jubilada": "Emerytowana skautka",
 		"Portera del club": "Portierka klubu",
-		"Presidenta": "Prezeska"
+		"Presidenta": "Prezeska",
+		"Consejo": "Wskazówka",
+		"Consejo: ": "Wskazówka: "
 	},
 	"tr": {
 		"Club": "Kulüp",
@@ -12261,6 +12275,8 @@
 		"Encargada de prensa": "Basın sorumlusu",
 		"Ojeadora jubilada": "Emekli gözlemci",
 		"Portera del club": "Kulüp kapıcısı",
-		"Presidenta": "Başkan"
+		"Presidenta": "Başkan",
+		"Consejo": "İpucu",
+		"Consejo: ": "İpucu: "
 	}
 }
