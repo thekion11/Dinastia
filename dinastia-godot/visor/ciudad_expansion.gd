@@ -396,7 +396,7 @@ func _cargar_modelos() -> void:
 			_altos.append(e3)
 
 func _materiales() -> void:
-	var asf: StandardMaterial3D = Texturas.asfalto(Color(0.15, 0.15, 0.16)).duplicate()
+	var asf: StandardMaterial3D = Texturas.asfalto(Color(0.24, 0.235, 0.23)).duplicate()
 	asf.roughness = 0.85
 	_mat["asfalto"] = asf
 	## Etapa 4: acera de baldosa con juntas y solar de hormigón, no colores lisos.
@@ -684,8 +684,12 @@ func _kit(esc: PackedScene, pos: Vector3, escala: Vector3, giro: float, azotea_p
 		b.vestir_torre(n, hash(Vector2(pos.x, pos.z)))
 		if _rng.randf() < 0.45:
 			_rng.randi()   ## (se consume igual que antes para no mover el resto)
-	elif _rng.randf() < 0.45:
-		b.tenir(n, _rng.randi())
+	else:
+		## Todos llevan tinte propio (antes solo el 45 %): el tono sale de la
+		## posición, y el azar de siempre se consume igual para no mover la ciudad.
+		if _rng.randf() < 0.45:
+			_rng.randi()
+		b.tenir(n, hash(Vector2(pos.x, pos.z)))
 	n.scale = escala
 	n.rotation.y = giro
 	n.position = pos
