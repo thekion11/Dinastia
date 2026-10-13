@@ -5,11 +5,15 @@ extends Node
 var _vista: VistaEstadio
 var _ex: ExploradorEstadio
 var _n := 0
+var _m: Mundo
 
 func _ready() -> void:
 	var m := Mundo.new()
 	m.generar(["CHI"], 77)
 	var club: Club = m.ligas[0].clubes[0]
+	m.mi_club_id = club.id
+	EdificioClub.mundo_ref = weakref(m)
+	_m = m
 	var ep := EstadioPropio.new()
 	PersonajeDT.club_usuario = club.id
 	_vista = VistaEstadio.new()
@@ -26,8 +30,9 @@ func _process(_d: float) -> void:
 		print("personal: ", pe.gente.size() if pe != null else -1)
 		if pe != null and not pe.gente.is_empty():
 			var g: Dictionary = pe.gente[0]
+			var buscado := OS.get_environment("QUIEN") if OS.get_environment("QUIEN") != "" else ""
 			for x: Dictionary in pe.gente:
-				if int(x.get("planta", 0)) == _ex.planta:
+				if (buscado != "" and String(x["clave"]) == buscado) or (buscado == "" and int(x.get("planta", 0)) == _ex.planta):
 					g = x
 					break
 			if int(g.get("planta", 0)) != _ex.planta:
@@ -42,6 +47,10 @@ func _process(_d: float) -> void:
 			_ex.usar()
 	if _n > 30 and _n < 60 and _ex != null:
 		_ex._colocar_camara(1.0 / 30.0)
+	if _n == 44 and OS.get_environment("QUIEN") != "":
+		for b in get_tree().root.find_children("*", "Button", true, false):
+			if (b as Button).text.begins_with("❓"):
+				(b as Button).pressed.emit()
 	if _n == 60:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/dialogo_estadio.png")
 		get_tree().quit()
