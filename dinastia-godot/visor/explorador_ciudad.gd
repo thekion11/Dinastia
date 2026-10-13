@@ -380,6 +380,50 @@ func _montar_hud() -> void:
 	_aviso.add_theme_constant_override("outline_size", 8)
 	capa.add_child(_aviso)
 	_tactil(capa)
+	## Sin textos fijos en pantalla (13-10-2026): los controles van en ⚙ y en el
+	## tutorial de la ciudad; la velocidad, en el móvil que sacas al correr.
+	_movil = MovilMano.new()
+	capa.add_child(_movil)
+	var engranaje := CuadroDialogo.respuesta(Button.new())
+	engranaje.text = "⚙"
+	engranaje.add_theme_font_size_override("font_size", 22)
+	engranaje.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	engranaje.offset_left = -70
+	engranaje.offset_top = 16
+	engranaje.offset_right = -18
+	engranaje.offset_bottom = 62
+	engranaje.pressed.connect(func() -> void:
+		if capa.get_node_or_null("AjustesCiudad") == null:
+			var a := AjustesCiudad.crear(_aplicar_ajustes)
+			a.name = "AjustesCiudad"
+			capa.add_child(a))
+	capa.add_child(engranaje)
+	_aplicar_ajustes()
+	if not bool(AjustesCiudad.valor("tutorial_visto", false)):
+		capa.add_child.call_deferred(AjustesCiudad.TutorialCiudad.new())
+
+var _movil: MovilMano
+var _boton_e: Button
+var _ayudas := false
+var _con_movil := true
+
+func _aplicar_ajustes() -> void:
+	_ayudas = bool(AjustesCiudad.valor("ayudas", false))
+	_con_movil = bool(AjustesCiudad.valor("movil", true))
+	_hud.visible = _ayudas
+	_aviso.visible = _ayudas
+
+## El móvil en la mano y el botón E que brilla si hay algo cerca.
+func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: float) -> void:
+	if _movil != null:
+		var calle := ""
+		if cb != null and cb.expansion != null and estado == "calle":
+			calle = cb.expansion.nombre_calle_en(cuerpo.position)
+		_movil.poner(modo_mano if _con_movil else "pie", km_h, maxima, calle, metros)
+	if _boton_e != null:
+		var hay := _aviso.text.strip_edges() != ""
+		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
+		_boton_e.tooltip_text = _aviso.text
 
 ## CONTROLES TÁCTILES (el juego también va en Android): cruceta abajo a la
 ## izquierda, «E» y «Salir» abajo a la derecha. Mantener pulsado = tecla.
@@ -419,6 +463,7 @@ func _tactil(capa: CanvasLayer) -> void:
 	be.modulate = Color(1, 1, 1, 0.75)
 	be.pressed.connect(_usar)
 	der.add_child(be)
+	_boton_e = be
 	var bs := Button.new()
 	bs.text = "Salir"
 	bs.custom_minimum_size = Vector2(tam * 1.6, tam)
@@ -443,6 +488,8 @@ func _entrada() -> Vector2:
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
 		return
+	if estado in ["anden", "estadio", "interior", "puerta"]:
+		_actualizar_mano("pie", 0.0, 1.0, 0.0)
 	if estado == "anden":
 		_mover_en_anden(delta)
 		return
@@ -499,6 +546,9 @@ func _physics_process(delta: float) -> void:
 	cuerpo.rotation.y = rumbo
 	_colocar_camara(delta)
 	_buscar_cerca()
+	var corriendo := modo != "coche" and absf(vel) > VEL_PIE * 1.15
+	_actualizar_mano("coche" if modo == "coche" else ("correr" if corriendo else "pie"), absf(vel) * 3.6,
+		VEL_COCHE * 3.6 if modo == "coche" else VEL_CORRER * 3.6, absf(vel) * delta)
 	_hud.text = ("🚗 Conduciendo" if modo == "coche" else "🚶 A pie") + "  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa" % [
 		int(absf(vel) * 3.6), "" if modo == "coche" else "Mayús: correr · V: vista · "]
 	## Dónde estás: el nombre de la calle (o el cruce).
@@ -1220,6 +1270,7 @@ func _viajar(delta: float) -> void:
 	_t_sacudida += delta
 	var f := MetroCiudad.PISO_COCHE
 	var t: MetroCiudad.Tren = l["trenes"][_tren_k]
+	_actualizar_mano("tren", t.v * 3.6, MetroCiudad.VEL * 3.6, t.v * delta)
 	var vaiven := sin(_t_sacudida * 9.0) * 0.012 * clampf(t.v / MetroCiudad.VEL, 0.0, 1.0)
 	var local_pos := Vector3(0.45, f + 1.62 + vaiven, -5.0)
 	var local_mira := Vector3(0.2, f + 1.45, 10.0)
