@@ -59,8 +59,9 @@ sensación de progreso. Propuesta: hacerlo **opcional** en Ajustes («Todo abier
 - [x] Cuadro de diálogo nuevo (placa con nombre, letra a letra, turnos) en la ciudad.
 - [x] Teléfono: medio realista (isla, carcasa con sombra, dock) y medio informe (parte del club).
 - [x] Personaje del jugador con menos músculo (base esbelta).
-- [ ] Mismo cuadro de diálogo en el estadio (personal, portero) y en los interiores.
-- [ ] Menos músculo también en futbolistas y peatones.
+- [x] Mismo estilo de diálogo en el estadio (personal, portero, ascensor, decorar). Interiores: semana 6 (aún no hablan).
+- [x] Menos músculo en futbolistas (peatones: pendiente, por coste por fotograma).
+- [x] Tutorial: negrita real (las letras se montaban).
 - [ ] Expresiones: gestos de cara (sonrisa, enfado, sorpresa) en diálogos y celebraciones.
 - [ ] Personalización: más ropa, peinados de la biblioteca, tatuajes simples, relojes y gafas.
 
