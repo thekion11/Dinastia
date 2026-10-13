@@ -2259,8 +2259,9 @@ func _conectar_noticias() -> void:
 		## LA PORTADA DEL LUNES, COMO PERIÓDICO (C20): si la semana dejó una
 		## portada nueva, se abre sola (se puede desactivar en la propia hoja).
 		mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
-			call_deferred("_portada_nueva")
-			call_deferred("_al_paso_nuevo"))
+			## Una ventana detrás de otra: el periódico primero y la
+			## entrevista al paso cuando se cierra (antes salían apiladas).
+			call_deferred("_portada_nueva"))
 		for con_mentor: Object in [mundo.calendario, mundo.politica, mundo.vida]:
 			if con_mentor != null:
 				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:
@@ -6190,13 +6191,18 @@ func _al_paso_nuevo() -> void:
 
 func _portada_nueva() -> void:
 	if mundo == null or mundo.prensa == null or mundo.prensa.portadas.is_empty():
+		_al_paso_nuevo()
 		return
 	var d: Dictionary = mundo.prensa.portadas[0]
 	var nueva := bool(d.get("nueva", false))
 	for x: Dictionary in mundo.prensa.portadas:
 		x.erase("nueva")
 	if nueva and PortadaPeriodico.auto():
-		PortadaPeriodico.mostrar(self, mundo, d)
+		var p := PortadaPeriodico.mostrar(self, mundo, d)
+		if p != null:
+			p.cerrado.connect(_al_paso_nuevo)
+			return
+	_al_paso_nuevo()
 
 func _pintar_finanzas(c: Club) -> void:
 	_limpiar(_lista_finanzas)
