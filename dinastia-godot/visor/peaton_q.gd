@@ -89,7 +89,7 @@ static func terminar(d: Dictionary) -> void:
 	## Cara de la biblioteca modular para los hombres (13-10-2026): mezclas de
 	## varias caras, nunca la de nadie; sin ella todos tenían la mandíbula del
 	## modelo de superhéroe. (Las mezclas salen de hombres: en mujer no van.)
-	if not mujer and BibliotecaCaras.hay():
+	if not mujer and BibliotecaCaras.hay() and OS.get_environment("SIN_CARAS_PEATON") == "":
 		var bib := BibliotecaCaras.para(str(d["semilla"]), piel, pelo_col)
 		if not bib.is_empty():
 			bib["pelo"] = ""
