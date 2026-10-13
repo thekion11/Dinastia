@@ -222,7 +222,21 @@ static func _objetivos(a: Dictionary) -> Dictionary:
 		o["lowerarm" + s] = Vector3(1.0, 1.0 + 0.18 * c, 1.0 + 0.18 * c)
 		o["thigh" + s] = Vector3(1.0 + 0.18 * c + 0.04 * b, 1.0 + 0.08 * p, 1.0 + 0.18 * c)
 		o["calf" + s] = Vector3(1.0 + 0.14 * c, 1.0 + 0.08 * p, 1.0 + 0.14 * c)
+	## MENOS MÚSCULO (13-10-2026): el modelo base es de culturista. Una base más
+	## esbelta (brazos, pecho, cuello y muslos) y encima la complexión elegida.
+	for nombre: String in BASE_ESBELTA:
+		o[nombre] = (o.get(nombre, Vector3.ONE) as Vector3) * (BASE_ESBELTA[nombre] as Vector3)
 	return o
+
+const BASE_ESBELTA := {
+	"spine_02": Vector3(0.95, 1.0, 0.93), "spine_03": Vector3(0.92, 1.0, 0.9),
+	"neck_01": Vector3(0.86, 1.0, 0.86),
+	"clavicle_l": Vector3(0.93, 0.9, 0.9), "clavicle_r": Vector3(0.93, 0.9, 0.9),
+	"upperarm_l": Vector3(1.0, 0.84, 0.84), "upperarm_r": Vector3(1.0, 0.84, 0.84),
+	"lowerarm_l": Vector3(1.0, 0.88, 0.88), "lowerarm_r": Vector3(1.0, 0.88, 0.88),
+	"thigh_l": Vector3(0.92, 1.0, 0.92), "thigh_r": Vector3(0.92, 1.0, 0.92),
+	"calf_l": Vector3(0.94, 1.0, 0.94), "calf_r": Vector3(0.94, 1.0, 0.94),
+}
 
 static func _cuerpo(d: Dictionary, a: Dictionary) -> void:
 	var esq: Skeleton3D = d["esqueleto"]
