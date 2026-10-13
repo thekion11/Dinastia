@@ -48,6 +48,8 @@ func _process(_d: float) -> void:
 		_e.set("rumbo", float(par[2]))
 		_e.cuerpo.rotation.y = float(par[2])
 		_e.call("_colocar_camara", 1.0)
+		## Como al llegar a un sitio nuevo: la gente se reparte alrededor.
+		_e.trafico.reciclar_peatones(_e.cuerpo.position, Vector3.ZERO, 70.0, 22, 28, true)
 		if OS.get_environment("DEBUG_MALLAS") != "" and k == 0:
 			for g in _e.cb.find_children("*", "MultiMeshInstance3D", true, false):
 				var mmq := (g as MultiMeshInstance3D).multimesh
