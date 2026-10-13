@@ -148,9 +148,9 @@ static func ejecutar(p: Principal, accion: String) -> void:
 		"movil":
 			Telefono.abrir(p, p.mundo)
 		"ver_estadio":
-			p._ver_estadio_propio()
+			p._ver_estadio_con_carga()
 		"ver_ciudad":
-			p._ver_ciudad_propia()
+			p._ver_ciudad_con_carga()
 		"album":
 			PanelMeta.abrir(p, p.mundo)
 		"minijuegos":
