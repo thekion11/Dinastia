@@ -835,6 +835,22 @@ static func _relajar_dedos(anim: Animation, esq: Skeleton3D, cuanto: float) -> A
 			a.track_set_key_value(t, k, q.slerp(reposo, cuanto))
 	return a
 
+## El reposo del clip abre los brazos como un superhéroe: se acercan al
+## cuerpo `ang` radianes (giro local sobre Z del brazo).
+static func _brazos_al_cuerpo(anim: Animation, ang: float) -> Animation:
+	for t in anim.get_track_count():
+		if anim.track_get_type(t) != Animation.TYPE_ROTATION_3D:
+			continue
+		var ruta := str(anim.track_get_path(t))
+		var hueso := ruta.get_slice(":", ruta.get_slice_count(":") - 1)
+		if hueso != "upperarm_l" and hueso != "upperarm_r":
+			continue
+		var giro := Quaternion(Vector3(0, 0, 1), ang if hueso.ends_with("_l") else -ang)
+		for k in anim.track_get_key_count(t):
+			var q: Quaternion = anim.track_get_key_value(t, k)
+			anim.track_set_key_value(t, k, q * giro)
+	return anim
+
 static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var lib := AnimationLibrary.new()
 	var a_mano := {
@@ -849,6 +865,8 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 		## superhéroe; parado y andando, los dedos van a medio cerrar.
 		if real != null:
 			real = _relajar_dedos(real, esq, 0.5)
+			if clave == "parado":
+				real = _brazos_al_cuerpo(real, -0.2)
 		lib.add_animation(clave, real if real != null else a_mano[clave])
 	## "sentado" no tiene equivalente en la Universal Animation Library
 	## (ninguno de los 43 clips gratis es una pose sentada) -se queda a mano,
