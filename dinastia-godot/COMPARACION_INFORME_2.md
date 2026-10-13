@@ -30,7 +30,7 @@ Estado real, sección por sección (✅ hecho · 🟡 parcial · ⏳ pendiente �
 | 16 | Sorteo en estudio de TV, sin presentador flotando | ✅ rehecho el 25-9 |
 | 17 | La casa del jugador dentro de la ciudad | ✅ finca con la Casa Grande; y ahora se entra a casas y bares |
 | 18 | CSV con errores: decir la fila exacta | 🟡 el JSON dice la línea; revisar el CSV |
-| 18 | «Recolector de basura» del historial (guardado) | ⏳ medir el tamaño del guardado a 20 temporadas |
+| 18 | «Recolector de basura» del historial (guardado) | ✅ no hace falta: medido con 4 ligas y 20 temporadas, el guardado pesa 0,14 MB comprimido en el año 1 y en el 20 (`pruebas/medir_guardado`) |
 | 19 | Instanciado y agrupado | ✅ (MultiMesh, troceo, LOD jerárquico) |
 | 19 | Carga asíncrona con pantalla de carga | 🟡 pantalla de carga con consejos hoy; construcción aún en un solo hilo |
 | 19 | Simulación en hilo secundario | ⏳ la semana tarda 150 ms con 6 ligas: no hace falta aún |
@@ -40,4 +40,4 @@ Estado real, sección por sección (✅ hecho · 🟡 parcial · ⏳ pendiente �
 pantalla de carga con consejos (9 idiomas) y haces de luz de los focos.
 **Pendiente que te propongo, por orden de valor:** (1) bloquear modos tras progresión;
 (2) unificar el estilo de prensa y teléfono (decisión tuya); (3) blob shadows y
-tilt-shift; (4) medir el guardado a 20 temporadas.
+tilt-shift; (4) tilt-shift y humo en chimeneas.
