@@ -106,8 +106,8 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	nombre.position = Vector2(0, 10)
 	nombre.size = Vector2(caja_cab.size.x, 70)
 	caja_cab.add_child(nombre)
-	var fecha := _lbl("%s · Semana %d de %d · Página %d" % [String(cab[1]).capitalize(), int(p.get("semana", 0)),
-		int(p.get("anio", 0)), 2 + absi(String(p.get("t", "")).hash()) % 46], 10, Color(1, 1, 1, 0.8), false)
+	var fecha := _lbl("%s · %s %d · %d · %s %d" % [String(cab[1]).capitalize(), Idiomas.t("Semana"), int(p.get("semana", 0)),
+		int(p.get("anio", 0)), Idiomas.t("Página"), 2 + absi(String(p.get("t", "")).hash()) % 46], 10, Color(1, 1, 1, 0.8), false)
 	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	fecha.position = Vector2(0, 82)
 	fecha.size = Vector2(caja_cab.size.x - 10, 16)
@@ -118,7 +118,7 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	franja.position = Vector2(28, 118)
 	franja.size = Vector2(ANCHO - 70, 26)
 	_hoja.add_child(franja)
-	var tf := _lbl(String(cab[4]), 14, Color.WHITE, true)
+	var tf := _lbl(Idiomas.mayusculas(Idiomas.t(String(cab[4]).substr(0, 1) + String(cab[4]).substr(1).to_lower())), 14, Color.WHITE, true)
 	tf.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tf.size = franja.size
 	franja.add_child(tf)
@@ -132,7 +132,7 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	marco.position = Vector2(14, 150)
 	marco.size = Vector2(ANCHO - 28, 190)
 	_hoja.add_child(marco)
-	var titular := String(p.get("t", "")).replace("\"", "").to_upper()
+	var titular := titular_traducido(String(p.get("t", "")))
 	var tam := 40 if titular.length() < 40 else (32 if titular.length() < 70 else 24)
 	var tt := _lbl(titular, tam, Color(0.06, 0.06, 0.06), false)
 	tt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -150,7 +150,8 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	var sub := String(p.get("sub", ""))
 	if sub == "":
 		sub = String(p.get("c", ""))
-	var ts := _lbl(sub.to_upper(), 19 if sub.length() < 45 else (15 if sub.length() < 80 else 13), Color.WHITE, false)
+	sub = Idiomas.t(sub)
+	var ts := _lbl(Idiomas.mayusculas(sub), 19 if sub.length() < 45 else (15 if sub.length() < 80 else 13), Color.WHITE, false)
 	ts.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	ts.position = Vector2(10, 6)
 	ts.size = Vector2(banda.size.x - 130, banda.size.y - 12)
@@ -267,7 +268,7 @@ func _tabla(mundo: Mundo, pos: Vector2, tam: Vector2) -> void:
 	enc.color = Color(0.12, 0.13, 0.15)
 	enc.size = Vector2(tam.x, 24)
 	caja.add_child(enc)
-	var l_enc := _lbl("TABLA DE LA LIGA          PJ   PTS", 11, Color.WHITE, false)
+	var l_enc := _lbl("%s          %s   %s" % [Idiomas.mayusculas(Idiomas.t("Tabla de la liga")), Idiomas.t("PJ"), Idiomas.t("PTS")], 11, Color.WHITE, false)
 	l_enc.position = Vector2(8, 3)
 	enc.add_child(l_enc)
 	if mundo == null or mundo.mi_club() == null:
@@ -292,6 +293,19 @@ func _tabla(mundo: Mundo, pos: Vector2, tam: Vector2) -> void:
 		i += 1
 
 ## Una etiqueta de periódico: negrita gruesa y, si toca, inclinada.
+## El titular en el idioma del jugador. Se traduce CON las comillas (así está
+## en la tabla de la narración) y el prefijo del clásico («CLÁSICO: »,
+## «SUPERCLÁSICO: ») por separado; después se quitan las comillas.
+static func titular_traducido(t: String) -> String:
+	var pre := ""
+	var i := t.find(": ")
+	if i > 0 and t.substr(0, i) == t.substr(0, i).to_upper():
+		pre = t.substr(0, i)
+		t = t.substr(i + 2)
+		var baja := pre.to_lower()
+		pre = Idiomas.t(baja.substr(0, 1).to_upper() + baja.substr(1)) + ": "
+	return Idiomas.mayusculas(pre + Idiomas.t(t).replace("\"", ""))
+
 func _lbl(texto: String, tam: int, color: Color, inclinada: bool) -> Label:
 	var l := Label.new()
 	l.text = texto
