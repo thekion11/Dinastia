@@ -48,6 +48,18 @@ func _process(_d: float) -> void:
 		_e.set("rumbo", float(par[2]))
 		_e.cuerpo.rotation.y = float(par[2])
 		_e.call("_colocar_camara", 1.0)
+		if OS.get_environment("DEBUG_MALLAS") != "" and k == 0:
+			for g in _e.cb.find_children("*", "MultiMeshInstance3D", true, false):
+				var mmq := (g as MultiMeshInstance3D).multimesh
+				if mmq != null and mmq.mesh is ArrayMesh and mmq.mesh.get_aabb().size.y > 6.0:
+					print("MM ", g.name, " ", mmq.mesh.resource_name, " n=", mmq.instance_count, " ovr=", (g as MultiMeshInstance3D).material_override)
+			for g in _e.cb.find_children("*", "GeometryInstance3D", true, false):
+				var gp: Vector3 = g.global_position
+				if Vector2(gp.x - par[1].x, gp.z - par[1].z).length() < 40.0 and (g is MeshInstance3D) and (g as MeshInstance3D).mesh != null:
+					var mm := (g as MeshInstance3D).mesh
+					var ab := (g as MeshInstance3D).get_aabb().size * (g as Node3D).global_transform.basis.get_scale()
+					if ab.y > 12.0:
+						print("MALLA ", g.name, " ", mm.resource_name, " alto=", snappedf(ab.y, 0.1), " ovr=", (g as MeshInstance3D).material_override, " pos=", gp)
 	if _n >= 8 and (_n - 8) % 8 == 6 and k < PARADAS.size():
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % PARADAS[k][0])
 		print("FOTO ", PARADAS[k][0])
