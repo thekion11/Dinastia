@@ -1406,7 +1406,15 @@
 		"¡Vamos, míster! ¡Mañana en la tribuna nos vemos!": "Come on, boss! See you in the stands tomorrow!",
 		"Tengo el abono desde hace veinte años y ni una baja.": "I've had my season ticket for twenty years without missing a game.",
 		"Con los de la grada baja hemos preparado un tifo enorme para el próximo domingo.": "With the lower stand crowd we've prepared a huge tifo for next Sunday.",
-		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Whatever happens, I'll be singing. That's not negotiable."
+		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Whatever happens, I'll be singing. That's not negotiable.",
+		"Consejo: los días de partido el estadio se llena más si el equipo viene ganando.": "Tip: on match days the stadium fills up more when the team is winning.",
+		"Consejo: el Centro médico acelera la recuperación entre partidos.": "Tip: the Medical Centre speeds up recovery between matches.",
+		"Consejo: pulsa V al pasear para cambiar a primera persona.": "Tip: press V while walking to switch to first person.",
+		"Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Tip: step into the houses and bars; the people of the city have things to tell you.",
+		"Consejo: la Academia juvenil mejora el potencial de los canteranos.": "Tip: the Youth Academy improves the potential of your academy players.",
+		"Consejo: de noche las ventanas se encienden y las farolas alumbran la calle.": "Tip: at night the windows light up and the street lamps glow.",
+		"Construyendo la ciudad…": "Building the city…",
+		"Levantando el estadio…": "Raising the stadium…"
 	},
 	"pt": {
 		"Historia": "História",
@@ -2815,7 +2823,15 @@
 		"¡Vamos, míster! ¡Mañana en la tribuna nos vemos!": "Vamos, mister! Amanhã vemo-nos na bancada!",
 		"Tengo el abono desde hace veinte años y ni una baja.": "Tenho o passe anual há vinte anos e nem uma falta.",
 		"Con los de la grada baja hemos preparado un tifo enorme para el próximo domingo.": "Com o pessoal da bancada baixa preparámos um tifo enorme para domingo.",
-		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Aconteça o que acontecer, eu vou cantar. Isso não se negocia."
+		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Aconteça o que acontecer, eu vou cantar. Isso não se negocia.",
+		"Consejo: los días de partido el estadio se llena más si el equipo viene ganando.": "Dica: nos dias de jogo o estádio enche mais quando a equipa vem a ganhar.",
+		"Consejo: el Centro médico acelera la recuperación entre partidos.": "Dica: o Centro médico acelera a recuperação entre jogos.",
+		"Consejo: pulsa V al pasear para cambiar a primera persona.": "Dica: carregue em V ao passear para mudar para a primeira pessoa.",
+		"Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Dica: entre nas casas e nos bares; as pessoas da cidade têm coisas para lhe contar.",
+		"Consejo: la Academia juvenil mejora el potencial de los canteranos.": "Dica: a Academia juvenil melhora o potencial dos jovens da formação.",
+		"Consejo: de noche las ventanas se encienden y las farolas alumbran la calle.": "Dica: à noite as janelas acendem-se e os candeeiros iluminam a rua.",
+		"Construyendo la ciudad…": "A construir a cidade…",
+		"Levantando el estadio…": "A levantar o estádio…"
 	},
 	"patrones": [
 		[
@@ -4723,7 +4739,15 @@
 		"¡Vamos, míster! ¡Mañana en la tribuna nos vemos!": "Allez, coach ! On se voit demain dans les tribunes !",
 		"Tengo el abono desde hace veinte años y ni una baja.": "J'ai mon abonnement depuis vingt ans sans en manquer un seul.",
 		"Con los de la grada baja hemos preparado un tifo enorme para el próximo domingo.": "Avec ceux de la tribune basse, on a préparé un énorme tifo pour dimanche.",
-		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Quoi qu'il arrive, je chanterai. Ça ne se négocie pas."
+		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Quoi qu'il arrive, je chanterai. Ça ne se négocie pas.",
+		"Consejo: los días de partido el estadio se llena más si el equipo viene ganando.": "Astuce : les jours de match, le stade se remplit davantage quand l'équipe gagne.",
+		"Consejo: el Centro médico acelera la recuperación entre partidos.": "Astuce : le centre médical accélère la récupération entre les matchs.",
+		"Consejo: pulsa V al pasear para cambiar a primera persona.": "Astuce : appuyez sur V en vous promenant pour passer à la première personne.",
+		"Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Astuce : entrez dans les maisons et les bars ; les habitants ont des choses à vous raconter.",
+		"Consejo: la Academia juvenil mejora el potencial de los canteranos.": "Astuce : l'Académie des jeunes améliore le potentiel des jeunes du centre.",
+		"Consejo: de noche las ventanas se encienden y las farolas alumbran la calle.": "Astuce : la nuit, les fenêtres s'allument et les lampadaires éclairent la rue.",
+		"Construyendo la ciudad…": "Construction de la ville…",
+		"Levantando el estadio…": "Construction du stade…"
 	},
 	"it": {
 		"Historia": "Storia",
@@ -6003,7 +6027,15 @@
 		"¡Vamos, míster! ¡Mañana en la tribuna nos vemos!": "Forza, mister! Ci vediamo domani in tribuna!",
 		"Tengo el abono desde hace veinte años y ni una baja.": "Ho l'abbonamento da vent'anni e non ho saltato una partita.",
 		"Con los de la grada baja hemos preparado un tifo enorme para el próximo domingo.": "Con quelli della curva bassa abbiamo preparato una coreografia enorme per domenica.",
-		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Qualunque cosa accada, io canto. Non si negozia."
+		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Qualunque cosa accada, io canto. Non si negozia.",
+		"Consejo: los días de partido el estadio se llena más si el equipo viene ganando.": "Consiglio: nei giorni di partita lo stadio si riempie di più se la squadra vince.",
+		"Consejo: el Centro médico acelera la recuperación entre partidos.": "Consiglio: il Centro medico accelera il recupero tra le partite.",
+		"Consejo: pulsa V al pasear para cambiar a primera persona.": "Consiglio: premi V mentre cammini per passare alla prima persona.",
+		"Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Consiglio: entra nelle case e nei bar; la gente della città ha cose da raccontarti.",
+		"Consejo: la Academia juvenil mejora el potencial de los canteranos.": "Consiglio: l'Accademia giovanile migliora il potenziale dei giovani del vivaio.",
+		"Consejo: de noche las ventanas se encienden y las farolas alumbran la calle.": "Consiglio: di notte le finestre si accendono e i lampioni illuminano la strada.",
+		"Construyendo la ciudad…": "Costruzione della città…",
+		"Levantando el estadio…": "Costruzione dello stadio…"
 	},
 	"de": {
 		"Historia": "Geschichte",
@@ -7283,7 +7315,15 @@
 		"¡Vamos, míster! ¡Mañana en la tribuna nos vemos!": "Auf geht's, Trainer! Morgen sehen wir uns auf der Tribüne!",
 		"Tengo el abono desde hace veinte años y ni una baja.": "Ich habe seit zwanzig Jahren eine Dauerkarte und kein Spiel verpasst.",
 		"Con los de la grada baja hemos preparado un tifo enorme para el próximo domingo.": "Mit der unteren Tribüne haben wir eine riesige Choreo für Sonntag vorbereitet.",
-		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Egal was passiert, ich singe. Das ist nicht verhandelbar."
+		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Egal was passiert, ich singe. Das ist nicht verhandelbar.",
+		"Consejo: los días de partido el estadio se llena más si el equipo viene ganando.": "Tipp: An Spieltagen füllt sich das Stadion mehr, wenn die Mannschaft gewinnt.",
+		"Consejo: el Centro médico acelera la recuperación entre partidos.": "Tipp: Das Medizinzentrum beschleunigt die Erholung zwischen den Spielen.",
+		"Consejo: pulsa V al pasear para cambiar a primera persona.": "Tipp: Drücke beim Spazieren V, um in die Ich-Perspektive zu wechseln.",
+		"Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Tipp: Betritt die Häuser und Bars; die Menschen der Stadt haben dir etwas zu erzählen.",
+		"Consejo: la Academia juvenil mejora el potencial de los canteranos.": "Tipp: Die Jugendakademie verbessert das Potenzial deiner Nachwuchsspieler.",
+		"Consejo: de noche las ventanas se encienden y las farolas alumbran la calle.": "Tipp: Nachts leuchten die Fenster und die Laternen erhellen die Straße.",
+		"Construyendo la ciudad…": "Die Stadt wird gebaut…",
+		"Levantando el estadio…": "Das Stadion wird errichtet…"
 	},
 	"ca": {
 		"Historia": "Història",
@@ -8563,7 +8603,15 @@
 		"¡Vamos, míster! ¡Mañana en la tribuna nos vemos!": "Som-hi, míster! Demà ens veiem a la grada!",
 		"Tengo el abono desde hace veinte años y ni una baja.": "Tinc l'abonament des de fa vint anys i cap baixa.",
 		"Con los de la grada baja hemos preparado un tifo enorme para el próximo domingo.": "Amb els de la graderia baixa hem preparat un tifo enorme per diumenge.",
-		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Passi el que passi, jo cantaré. Això no es negocia."
+		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Passi el que passi, jo cantaré. Això no es negocia.",
+		"Consejo: los días de partido el estadio se llena más si el equipo viene ganando.": "Consell: els dies de partit l'estadi s'omple més si l'equip va guanyant.",
+		"Consejo: el Centro médico acelera la recuperación entre partidos.": "Consell: el Centre mèdic accelera la recuperació entre partits.",
+		"Consejo: pulsa V al pasear para cambiar a primera persona.": "Consell: prem V mentre passeges per canviar a primera persona.",
+		"Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Consell: entra a les cases i als bars; la gent de la ciutat té coses per explicar-te.",
+		"Consejo: la Academia juvenil mejora el potencial de los canteranos.": "Consell: l'Acadèmia juvenil millora el potencial dels jugadors de la pedrera.",
+		"Consejo: de noche las ventanas se encienden y las farolas alumbran la calle.": "Consell: de nit les finestres s'encenen i els fanals il·luminen el carrer.",
+		"Construyendo la ciudad…": "Construint la ciutat…",
+		"Levantando el estadio…": "Aixecant l'estadi…"
 	},
 	"pl": {
 		"Club": "Klub",
@@ -10140,7 +10188,15 @@
 		"¡Vamos, míster! ¡Mañana en la tribuna nos vemos!": "Dalej, trenerze! Jutro widzimy się na trybunach!",
 		"Tengo el abono desde hace veinte años y ni una baja.": "Mam karnet od dwudziestu lat i ani jednej absencji.",
 		"Con los de la grada baja hemos preparado un tifo enorme para el próximo domingo.": "Z kibicami z dolnej trybuny przygotowaliśmy ogromną oprawę na niedzielę.",
-		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Cokolwiek się stanie, będę śpiewać. To nie podlega negocjacjom."
+		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Cokolwiek się stanie, będę śpiewać. To nie podlega negocjacjom.",
+		"Consejo: los días de partido el estadio se llena más si el equipo viene ganando.": "Wskazówka: w dni meczowe stadion zapełnia się bardziej, gdy drużyna wygrywa.",
+		"Consejo: el Centro médico acelera la recuperación entre partidos.": "Wskazówka: Centrum medyczne przyspiesza regenerację między meczami.",
+		"Consejo: pulsa V al pasear para cambiar a primera persona.": "Wskazówka: naciśnij V podczas spaceru, by przełączyć na widok z pierwszej osoby.",
+		"Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Wskazówka: wchodź do domów i barów; mieszkańcy miasta mają ci wiele do opowiedzenia.",
+		"Consejo: la Academia juvenil mejora el potencial de los canteranos.": "Wskazówka: Akademia młodzieżowa podnosi potencjał wychowanków.",
+		"Consejo: de noche las ventanas se encienden y las farolas alumbran la calle.": "Wskazówka: nocą zapalają się okna, a latarnie oświetlają ulicę.",
+		"Construyendo la ciudad…": "Budowanie miasta…",
+		"Levantando el estadio…": "Wznoszenie stadionu…"
 	},
 	"tr": {
 		"Club": "Kulüp",
@@ -11717,6 +11773,14 @@
 		"¡Vamos, míster! ¡Mañana en la tribuna nos vemos!": "Haydi hocam! Yarın tribünde görüşürüz!",
 		"Tengo el abono desde hace veinte años y ni una baja.": "Yirmi yıldır kombine kartım var, hiç maç kaçırmadım.",
 		"Con los de la grada baja hemos preparado un tifo enorme para el próximo domingo.": "Alt tribünle pazar için dev bir koreografi hazırladık.",
-		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Ne olursa olsun şarkı söyleyeceğim. Bu pazarlık konusu değil."
+		"Pase lo que pase, yo voy a cantar. Eso no se negocia.": "Ne olursa olsun şarkı söyleyeceğim. Bu pazarlık konusu değil.",
+		"Consejo: los días de partido el estadio se llena más si el equipo viene ganando.": "İpucu: Maç günlerinde takım kazanıyorsa stadyum daha çok dolar.",
+		"Consejo: el Centro médico acelera la recuperación entre partidos.": "İpucu: Sağlık merkezi maçlar arasındaki toparlanmayı hızlandırır.",
+		"Consejo: pulsa V al pasear para cambiar a primera persona.": "İpucu: Gezerken V'ye basarak birinci şahıs görünümüne geç.",
+		"Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "İpucu: Evlere ve barlara gir; şehrin insanlarının sana anlatacakları var.",
+		"Consejo: la Academia juvenil mejora el potencial de los canteranos.": "İpucu: Genç akademisi altyapı oyuncularının potansiyelini artırır.",
+		"Consejo: de noche las ventanas se encienden y las farolas alumbran la calle.": "İpucu: Geceleri pencereler yanar ve sokak lambaları yolu aydınlatır.",
+		"Construyendo la ciudad…": "Şehir inşa ediliyor…",
+		"Levantando el estadio…": "Stadyum yükseltiliyor…"
 	}
 }
