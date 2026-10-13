@@ -75,7 +75,7 @@ static func terminar(d: Dictionary) -> void:
 		ap.speed_scale = rng.randf_range(0.9, 1.1)
 	## Lejos de la cámara no se dibuja (ni su sombra).
 	for mi in nodo.find_children("*", "MeshInstance3D", true, false):
-		(mi as MeshInstance3D).visibility_range_end = 220.0
+		(mi as MeshInstance3D).visibility_range_end = 120.0
 		(mi as MeshInstance3D).visibility_range_end_margin = 20.0
 
 

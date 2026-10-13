@@ -199,6 +199,7 @@ func build(d: Dictionary) -> void:
 	## (SIN_OPTIMIZAR=1 lo apaga, para comparar capturas antes/después.)
 	if OS.get_environment("SIN_OPTIMIZAR") == "":
 		Optimizar.primitivas(self)
+		Optimizar.trocear(self)
 		Optimizar.butacas_livianas(self, true)
 		Optimizar.distancias(self)
 		_marca("despejar")
