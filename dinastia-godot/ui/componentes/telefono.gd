@@ -64,6 +64,11 @@ static func crear(mundo: Mundo, noticias: Array = []) -> Telefono:
 func _montar() -> void:
 	custom_minimum_size = Vector2(ANCHO, 0)
 	_marco = Tema.caja(m.movil.color_funda(m.mi_club()), 34, m.movil.color_funda(m.mi_club()).lightened(0.2))
+	## Carcasa realista: sombra que lo despega del fondo y canto más claro.
+	_marco.shadow_color = Color(0, 0, 0, 0.55)
+	_marco.shadow_size = 22
+	_marco.shadow_offset = Vector2(0, 8)
+	_marco.set_border_width_all(2)
 	add_theme_stylebox_override("panel", _marco)
 	var borde := MarginContainer.new()
 	for k in ["left", "right", "top", "bottom"]:
@@ -83,8 +88,25 @@ func _montar() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 0)
 	pantalla.add_child(v)
+	## La «isla» de la cámara frontal, centrada arriba.
+	var isla := Panel.new()
+	isla.add_theme_stylebox_override("panel", Tema.caja(Color(0, 0, 0), 11, Color(0, 0, 0)))
+	isla.custom_minimum_size = Vector2(92, 24)
+	isla.anchor_left = 0.5
+	isla.anchor_right = 0.5
+	isla.offset_left = -46
+	isla.offset_right = 46
+	isla.offset_top = 8
+	isla.offset_bottom = 32
+	isla.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	## Dentro de un Control libre: el PanelContainer estiraría la isla a toda la pantalla.
+	var capa := Control.new()
+	capa.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	capa.add_child(isla)
+	pantalla.add_child(capa)
 	## Barra de estado.
 	var estado := HBoxContainer.new()
+	estado.custom_minimum_size = Vector2(0, 40)
 	var hora := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, "   " + _hora())
 	hora.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	estado.add_child(hora)
@@ -229,16 +251,15 @@ func _avatar_de(cuenta: String, lado: float) -> Control:
 # --- inicio -----------------------------------------------------------------------
 
 func _inicio() -> void:
-	_cuerpo.add_child(Control.new())
-	var reloj := Tema.etiqueta(64, Tema.TEXTO, _hora())
+	## MEDIO MÓVIL, MEDIO INFORME (13-10-2026): reloj de pantalla de bloqueo,
+	## un widget con el parte del club (sobrio, como el informe) y un dock.
+	var reloj := Tema.etiqueta(58, Tema.TEXTO, _hora())
 	reloj.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cuerpo.add_child(reloj)
 	var fecha := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "Semana %d · %d" % [m.semana, m.anio])
 	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cuerpo.add_child(fecha)
-	var hueco := Control.new()
-	hueco.custom_minimum_size = Vector2(0, 30)
-	_cuerpo.add_child(hueco)
+	_cuerpo.add_child(_widget_informe())
 	var rej := GridContainer.new()
 	rej.columns = 4
 	rej.add_theme_constant_override("h_separation", 10)
@@ -246,8 +267,60 @@ func _inicio() -> void:
 	var centro := CenterContainer.new()
 	centro.add_child(rej)
 	_cuerpo.add_child(centro)
+	var dock := HBoxContainer.new()
+	dock.alignment = BoxContainer.ALIGNMENT_CENTER
+	dock.add_theme_constant_override("separation", 10)
 	for a: Array in APPS:
-		rej.add_child(_icono_app(a))
+		## Mensajes, Tribuna y Calendario van al dock, como las apps de siempre.
+		if String(a[0]) in ["mensajes", "tribuna", "calendario"]:
+			dock.add_child(_icono_app(a))
+		else:
+			rej.add_child(_icono_app(a))
+	var hueco := Control.new()
+	hueco.custom_minimum_size = Vector2(0, 150)
+	_cuerpo.add_child(hueco)
+	var bandeja_dock := PanelContainer.new()
+	bandeja_dock.add_theme_stylebox_override("panel", Tema.caja(Color(1, 1, 1, 0.14), 22, Color(1, 1, 1, 0.2)))
+	bandeja_dock.add_child(dock)
+	_cuerpo.add_child(bandeja_dock)
+
+## El parte del club: tres líneas con cifras alineadas y un filo dorado.
+func _widget_informe() -> Control:
+	var pc := PanelContainer.new()
+	var sb := Tema.caja(Color(0.04, 0.05, 0.07, 0.62), 16, Color(1, 1, 1, 0.1))
+	sb.set_border_width_all(0)
+	sb.border_width_left = 3
+	sb.border_color = Tema.ORO
+	sb.set_content_margin_all(10)
+	pc.add_theme_stylebox_override("panel", sb)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 2)
+	pc.add_child(v)
+	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, "PARTE DEL CLUB"))
+	var c := m.mi_club()
+	var prox := m.proximo_partido()
+	var rival := "—"
+	if prox.size() >= 2 and c != null:
+		var otro: Club = prox[1] if prox[0] == c else prox[0]
+		rival = ("🏠 " if prox[0] == c else "✈️ ") + otro.nombre
+	var puesto := "—"
+	for l in m.ligas:
+		if c != null and l.clubes.has(c):
+			var t: Array = l.tabla()
+			for i in t.size():
+				if t[i]["club"] == c:
+					puesto = "%dº de %d" % [i + 1, t.size()]
+			break
+	for f: Array in [["Próximo", rival], ["Liga", puesto], ["Caja", Cesiones.dinero(c.saldo) if c != null else "—"]]:
+		var fila := HBoxContainer.new()
+		var k := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(f[0]))
+		k.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila.add_child(k)
+		var val := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, String(f[1]))
+		val.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		fila.add_child(val)
+		v.add_child(fila)
+	return pc
 
 func _insignia(app: String) -> int:
 	match app:

@@ -51,6 +51,7 @@ var _aviso: Label
 var _cerca := {}        ## lo que hay delante para la E: {tipo, k, n, peaton}
 var _burbuja: Label3D
 var _t_burbuja := 0.0
+var _cuadro: CuadroDialogo
 
 ## EL METRO A PIE (7-10-2026, «que nuestro personaje lo pueda usar… y por
 ## dentro»): `estado` es "calle", "anden" o "tren".
@@ -509,6 +510,8 @@ func _physics_process(delta: float) -> void:
 		_t_burbuja -= delta
 		if _t_burbuja <= 0.0:
 			_burbuja.visible = false
+			if _cuadro != null:
+				_cuadro.cerrar()
 
 func _colocar_camara(delta: float) -> void:
 	## PRIMERA PERSONA (V): la cámara en los ojos, el cuerpo escondido.
@@ -843,12 +846,15 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 	var frase := DialogosCiudad.linea(oficio, turno, animo, _rng_dialogo)
 	if frase.contains("%s"):
 		frase = frase % club_nombre
-	_burbuja.text = "💬 %s\n%s" % [DialogosCiudad.nombre(oficio), frase]
-	## Ajuste de línea: el texto largo cabe en 4 m de ancho, no se sale de la pantalla.
-	_burbuja.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_burbuja.width = 480.0
-	_burbuja.pixel_size = 0.008
-	_burbuja.position = nodo.global_position + Vector3(0, 2.4, 0)
+	## El texto va al CUADRO DE DIÁLOGO; sobre la cabeza solo queda un aviso.
+	if _cuadro == null:
+		_cuadro = CuadroDialogo.new()
+		add_child(_cuadro)
+	var tono := Color.from_hsv(fposmod(float(hash(oficio)) / 1000.0, 1.0), 0.45, 1.0)
+	_cuadro.decir(DialogosCiudad.nombre(oficio), frase, tono, turno, 3)
+	_burbuja.text = "💬"
+	_burbuja.pixel_size = 0.012
+	_burbuja.position = nodo.global_position + Vector3(0, 2.3, 0)
 	_burbuja.visible = true
 	_t_burbuja = 6.0
 	v["turno"] = (turno + 1) % 3
