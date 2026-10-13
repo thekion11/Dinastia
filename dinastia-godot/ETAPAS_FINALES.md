@@ -82,6 +82,9 @@ Se comprueba repitiendo el banco de rendimiento: cada mejora con su cifra.
 - Texturas en memoria: **~823 MB** (la ciudad entera); memoria estática ~1,7 GB.
   Las caras de la biblioteca en los peatones suman solo ~9 MB de texturas.
 - ~2.200 llamadas de dibujo con 28 peatones alrededor.
+- Recursos importados: 109 imágenes, ~153 Mpx (las 3 de 4096² son del traje
+  medieval «Peasant», casi sin uso). El resto de la memoria son texturas hechas
+  en código (rótulos, escudos, fachadas, caras): revisar tamaños y cachés.
 - PENDIENTE (gama baja): bajar texturas grandes (atlas, compresión VRAM, mipmaps
   y tamaño máximo por calidad) — es lo que más pesa.
 
