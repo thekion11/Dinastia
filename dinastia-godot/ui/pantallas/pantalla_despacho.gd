@@ -252,6 +252,8 @@ func _pintar_junta() -> void:
 			var r := p.mundo.junta.resolver(op, p.mundo.mi_club(), p.mundo.directiva, p.mundo.prensa)
 			Aviso.mostrar(p, "contrato", "🏛️", String(r.get("titulo", "")), String(r.get("cuerpo", "")))
 			p._refrescar())
+		CuadroDialogo.respuesta(b)
+		b.add_theme_font_size_override("font_size", 16)
 		fila.add_child(b)
 	var partes: PackedStringArray = []
 	for a: Dictionary in jt.accionistas:
@@ -377,6 +379,12 @@ func _marco_aviso(color: Color) -> VBoxContainer:
 	caja.modulate.a = 0.0
 	var tw := p.create_tween()
 	tw.tween_property(caja, "modulate:a", 1.0, 0.22).set_trans(Tween.TRANS_SINE)
+	## Las respuestas del aviso, con el estilo de los diálogos (13-10-2026);
+	## diferido: los botones se añaden después de este marco.
+	(func() -> void:
+		if is_instance_valid(caja):
+			for b in caja.find_children("*", "Button", true, false):
+				CuadroDialogo.respuesta(b as Button)).call_deferred()
 	return v
 
 ## `SOLICITUDES` del HTML: un jugador te viene a pedir algo -más minutos, un
