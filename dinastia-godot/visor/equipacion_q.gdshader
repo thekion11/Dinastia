@@ -495,7 +495,12 @@ void fragment() {
 	}
 	if (familia >= 0 && !manga && cuello == 3 && y > 1.485) camiseta = civil ? camiseta * 0.82 : trim_col;
 	// Ropa de calle: un ribete fino y del mismo color en el escote.
-	if (civil && !manga && y > 1.53 + dy_cuerpo && abs(x) < 0.095) camiseta *= 0.85;
+	// Solo una franja de 1,2 cm pegada al borde del escote: con un rectángulo
+	// desde 1,53 se veía un babero oscuro en el pecho.
+	if (civil && !manga) {
+		float tope_r = mix(1.552, 1.60, smoothstep(0.06, 0.085, abs(x))) + dy_cuerpo;
+		if (y > tope_r - 0.012 && abs(x) < 0.11) camiseta *= 0.85;
+	}
 	if (!manga && abs(abs(x) - 0.205) < 0.006 && y < 1.40) camiseta *= 0.8;
 	if (manga && abs(abs(x) - 0.222) < 0.005) camiseta *= 0.82;
 	if (!manga && y > 1.005 && y < 1.02) camiseta *= 0.85;
