@@ -54,4 +54,29 @@ func _ready() -> void:
 			quien = j.nombre
 	valores.sort()
 	print("máximo goleador: %s %d · valor mediano %d mil · máximo %d M" % [quien, max_gol, int(valores[valores.size() / 2]) / 1000, int(valores[valores.size() - 1]) / 1000000])
+	## Coherencia de personas: lesiones, edades, valores por media.
+	var lesionados := 0
+	var largos := 0
+	var edades := {}
+	var por_media := {}
+	for j: Jugador in m.jugadores():
+		if j.lesion > 0:
+			lesionados += 1
+		if j.edad < 15:
+			print("NIÑO: ", j.nombre, " ", j.edad, " años, club ", j.club_id, " ovr ", j.ovr, " id ", j.id, " formación ", j.club_formacion)
+		if j.lesion > 30:
+			largos += 1
+		var tramo := int(j.edad / 5) * 5
+		edades[tramo] = int(edades.get(tramo, 0)) + 1
+		var mt := int(j.ovr / 10) * 10
+		if not por_media.has(mt):
+			por_media[mt] = []
+		(por_media[mt] as Array).append(j.valor)
+	print("lesionados al cierre: %d (más de 30 sem.: %d) de %d" % [lesionados, largos, m.jugadores().size()])
+	print("edades por tramo: ", edades)
+	for mt: int in [50, 60, 70, 80]:
+		var arr: Array = por_media.get(mt, [])
+		arr.sort()
+		if not arr.is_empty():
+			print("media %d-%d: %d jugadores, valor mediano %d mil" % [mt, mt + 9, arr.size(), int(arr[arr.size() / 2]) / 1000])
 	get_tree().quit()
