@@ -139,7 +139,12 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 		var bq := Button.new()
 		bq.text = "❓ " + Idiomas.t(pregunta)
 		bq.pressed.connect(func() -> void:
-			CuadroDialogo.escribir(dice, "«%s»" % respuesta_oficio(clave, m))
+			var r := respuesta_oficio(clave, m)
+			CuadroDialogo.escribir(dice, "«%s»" % r)
+			## La cara acompaña lo que dice (13-10-2026).
+			if g.has("nodo") and is_instance_valid(g["nodo"]):
+				var malo := _ultima_mala
+				Expresion.de(g["nodo"]).poner("triste" if malo else "alegre", 4.0)
 			bq.disabled = true)
 		fila.add_child(bq)
 	var adios := Button.new()
@@ -160,8 +165,12 @@ const PREGUNTA_OFICIO := {
 	"ojeador": "¿Algún chico de la cantera que valga?",
 }
 
+## ¿La última respuesta fue mala noticia? (para la cara de quien la dice)
+static var _ultima_mala := false
+
 ## Lo que contesta, sacado de la partida.
 static func respuesta_oficio(clave: String, m: Mundo) -> String:
+	_ultima_mala = false
 	var c := m.mi_club()
 	if c == null:
 		return Idiomas.t("Hoy no sé qué decirle, míster.")
@@ -173,6 +182,7 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 					fuera.append("%s (%d sem.)" % [Nombres.visible(j.nombre), j.lesion])
 			if fuera.is_empty():
 				return Idiomas.t("Enfermería vacía, míster. Que siga así.")
+			_ultima_mala = true
 			return Idiomas.t("Tengo a %s. Paciencia con ellos.") % ", ".join(fuera.slice(0, 3))
 		"cocinera":
 			var suma := 0
@@ -183,6 +193,7 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 				return Idiomas.t("Comen con hambre y se ríen en la mesa. El grupo está bien.")
 			if media >= 55:
 				return Idiomas.t("Normal, míster. Algunos callados, nada raro.")
+			_ultima_mala = true
 			return Idiomas.t("Están apagados. Ni el postre les levanta el ánimo.")
 		"jardinero":
 			var cesped := m.ciudad.cesped if m.ciudad != null else 100
@@ -190,9 +201,11 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 				return Idiomas.t("Como una alfombra. Que no me lo pisen en los rondos.")
 			if cesped >= 60:
 				return Idiomas.t("Aguanta, pero hay calvas en las áreas. Riego cada noche.")
+			_ultima_mala = true
 			return Idiomas.t("Sufre, míster. Necesita descanso o una inversión.")
 		"secretaria":
 			var sem := int(c.saldo / maxi(1, c.masa_salarial())) if c.saldo > 0 else 0
+			_ultima_mala = sem < 8
 			return Idiomas.t("En caja hay para %d semanas de sueldos. El presidente pregunta a menudo.") % sem
 		"utilero":
 			var mejor: Jugador = null
