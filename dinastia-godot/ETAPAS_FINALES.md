@@ -80,9 +80,9 @@ Herramientas: `pruebas/medir_ciudad` (DETALLE=1, CPU=1, CUADROS=1, TIEMPOS=1),
 
 | Escena | Antes | Después |
 |---|---|---|
-| Ciudad, vista aérea: triángulos | 30,1 M | 9,3 M |
+| Ciudad, vista aérea: triángulos | 30,1 M | 3,0 M |
 | Ciudad, vista aérea: llamadas de dibujo | 8.118 | 3.333 |
-| Ciudad a pie: llamadas / triángulos | 2.028 / 9,9 M | 775 / 2,8 M |
+| Ciudad a pie: llamadas / triángulos | 2.028 / 9,9 M | 700 / 0,9 M |
 | Partido: triángulos por fotograma | 3,12 M | 2,20–2,35 M |
 | Estadio, 1.ª / 2.ª apertura | 7,6 / 2,3 s | 5,6 / 0,5 s |
 | Memoria de vídeo (escaneo, móvil, Tierra) | ≈21 MB c/u | ≈2,8 MB c/u |
@@ -95,6 +95,13 @@ precarga de modelos desde el menú, compresión de VRAM, calidad gráfica guarda
 «Motor gráfico ligero» (OpenGL, reinicia) y calidad adaptativa también en la
 ciudad. CPU sin gráfica: partido 3,8 ms, ciudad 7–9 ms por fotograma.
 Descartado: armar animaciones en un hilo (se bloquea).
+Segunda tanda (13-10): `Optimizar.trocear` parte los MultiMesh de toda la ciudad
+en celdas de 100 m con distancia de corte (era lo que más pesaba: 41 mil
+cilindros y miles de esferas que no se podían recortar), LOD jerárquico de
+edificios pesados (cajas de color medio a más de 520 m), cuerpos con esqueleto
+a 150 m, celdas de agrupado de 160 m. Medido: simular una semana con 6 ligas
+150 ms (el 80 % son los 60 partidos, ≈2 ms c/u); repintar la interfaz ≈150 ms
+(`medir_interfaz`: plantel 38, ficha 26, inicio 17).
 Pendiente: repartir la construcción de la ciudad en varios fotogramas
 (estadio ≈2,6 s, expansión 0,8 s, suelo 0,8 s), LOD de personajes.
 
