@@ -47,6 +47,19 @@ static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
 	t.noise = _ruido(tipo, frec, semilla, octavas)
 	return t
 
+## Ruido para MULTIPLICAR el color (albedo y detalle): de `piso` a blanco.
+## 8-10-2026: el ruido crudo va de negro a blanco (media 0,5), y con albedo y
+## detalle multiplicados el hormigón quedaba a ~¼ de su tinte: la espalda de
+## las gradas y las fachadas salían NEGRAS a mediodía. Así el grano se nota
+## pero el tinte manda.
+static func _ruido_claro(frec: float, semilla: int, octavas: int, piso: float) -> NoiseTexture2D:
+	var t := _tex_ruido(frec, semilla, false, octavas)
+	var g := Gradient.new()
+	g.set_color(0, Color(piso, piso, piso))
+	g.set_color(1, Color.WHITE)
+	t.color_ramp = g
+	return t
+
 # --------------------------------------------------------------- hormigon
 
 ## Hormigon visto: grano fino, rugosidad desigual y un relieve muy suave. Es la
@@ -57,12 +70,12 @@ static func hormigon(tinte: Color, semilla: int = 11) -> StandardMaterial3D:
 		return _cache[clave]
 	var m := StandardMaterial3D.new()
 	m.albedo_color = tinte
-	m.albedo_texture = _tex_ruido(0.012, semilla, false, 5)
+	m.albedo_texture = _ruido_claro(0.012, semilla, 5, 0.72)
 	## El ruido en albedo entra como gris: se mezcla con el tinte en vez de
 	## sustituirlo, para que el color del edificio siga mandando.
 	m.detail_enabled = true
 	m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
-	m.detail_albedo = _tex_ruido(0.05, semilla + 7, false, 3)
+	m.detail_albedo = _ruido_claro(0.05, semilla + 7, 3, 0.8)
 	m.detail_uv_layer = BaseMaterial3D.DETAIL_UV_1
 	m.normal_enabled = true
 	m.normal_texture = _tex_ruido(0.03, semilla + 3, true, 4)
@@ -274,10 +287,10 @@ static func cesped(tinte: Color = Color(0.30, 0.46, 0.24), semilla: int = 31) ->
 		return _cache[clave]
 	var m := StandardMaterial3D.new()
 	m.albedo_color = tinte
-	m.albedo_texture = _tex_ruido(0.008, semilla, false, 5)
+	m.albedo_texture = _ruido_claro(0.008, semilla, 5, 0.7)
 	m.detail_enabled = true
 	m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
-	m.detail_albedo = _tex_ruido(0.25, semilla + 4, false, 2)
+	m.detail_albedo = _ruido_claro(0.25, semilla + 4, 2, 0.8)
 	m.normal_enabled = true
 	m.normal_texture = _tex_ruido(0.2, semilla + 8, true, 3)
 	m.normal_scale = 0.7
@@ -298,10 +311,12 @@ static func cristal(encendida: bool, calido: bool = true) -> StandardMaterial3D:
 	if _cache.has(clave):
 		return _cache[clave]
 	var m := StandardMaterial3D.new()
-	m.albedo_color = Color(0.06, 0.08, 0.11)
-	m.metallic = 0.9
-	m.metallic_specular = 0.85
-	m.roughness = 0.05
+	## Cristal tintado (13-10-2026): con metálico 0,9 y rugosidad 0,05 era un
+	## espejo perfecto que devolvía el cielo entero: fachadas azul eléctrico.
+	m.albedo_color = Color(0.1, 0.12, 0.14)
+	m.metallic = 0.5
+	m.metallic_specular = 0.6
+	m.roughness = 0.22
 	## Un poco de ruido en la rugosidad = reflejo LIGERAMENTE distorsionado, que
 	## es lo que separa un cristal real de un espejo perfecto.
 	m.roughness_texture = _tex_ruido(0.4, 61, false, 2)
@@ -331,7 +346,7 @@ static func tela(tinte: Color, rugoso: float = 0.88) -> StandardMaterial3D:
 	## plano de color puro incluso de cerca.
 	m.detail_enabled = true
 	m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
-	m.detail_albedo = _tex_ruido(0.6, 71, false, 2)
+	m.detail_albedo = _ruido_claro(0.6, 71, 2, 0.75)
 	m.normal_enabled = true
 	m.normal_texture = _tex_ruido(0.35, 73, true, 3)
 	m.normal_scale = 0.4
@@ -355,7 +370,7 @@ static func madera(tinte: Color, rugoso: float = 0.65) -> StandardMaterial3D:
 	m.albedo_color = tinte
 	m.detail_enabled = true
 	m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
-	m.detail_albedo = _tex_ruido(0.15, 83, false, 2)
+	m.detail_albedo = _ruido_claro(0.15, 83, 2, 0.75)
 	m.normal_enabled = true
 	m.normal_texture = _tex_ruido(0.4, 87, true, 3)
 	m.normal_scale = 0.3

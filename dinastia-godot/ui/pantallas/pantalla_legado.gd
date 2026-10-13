@@ -186,7 +186,7 @@ func _pintar_legado() -> void:
 			var m2 := p._texto(11, Principal.COL_SUAVE)
 			m2.text = motivo
 			p._lista_club.add_child(m2)
-		p._boton("🎯 Minijuego: tanda de penales en el entrenamiento", p._ui_finanzas._abrir_penales, p._lista_club)
+		p._boton("🎮 Minijuegos: penales, tiros libres y trivia", func() -> void: SalaMinijuegos.abrir(p, p.mundo), p._lista_club)
 
 	var escalon := r.siguiente_escalon()
 	if escalon != "":
@@ -550,14 +550,14 @@ func _comprar_dt(clave: String) -> void:
 ## vitrina, te sigue cuando cambias de banquillo.
 ## MI VIDA (26-9-2026).
 func _pintar_vida() -> void:
-	if p._lista_vida == null or not p._lista_vida.is_visible_in_tree():
+	if p._lista_vida == null:
 		return
 	PanelVida.pintar(p._lista_vida, p, p.mundo, p._secc_vida)
 
 ## EL ÁRBOL DE HABILIDADES, COMO ESQUEMA (26-9-2026): columnas por rama, nodos
 ## y líneas de requisito, y la ficha de la elegida debajo.
 func _pintar_habilidades() -> void:
-	if p._lista_habilidades == null or not p._lista_habilidades.is_visible_in_tree():
+	if p._lista_habilidades == null:
 		return
 	p._limpiar(p._lista_habilidades)
 	var e := p.mundo.entrenamiento

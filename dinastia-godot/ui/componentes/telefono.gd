@@ -64,6 +64,11 @@ static func crear(mundo: Mundo, noticias: Array = []) -> Telefono:
 func _montar() -> void:
 	custom_minimum_size = Vector2(ANCHO, 0)
 	_marco = Tema.caja(m.movil.color_funda(m.mi_club()), 34, m.movil.color_funda(m.mi_club()).lightened(0.2))
+	## Carcasa realista: sombra que lo despega del fondo y canto más claro.
+	_marco.shadow_color = Color(0, 0, 0, 0.55)
+	_marco.shadow_size = 22
+	_marco.shadow_offset = Vector2(0, 8)
+	_marco.set_border_width_all(2)
 	add_theme_stylebox_override("panel", _marco)
 	var borde := MarginContainer.new()
 	for k in ["left", "right", "top", "bottom"]:
@@ -83,8 +88,25 @@ func _montar() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 0)
 	pantalla.add_child(v)
+	## La «isla» de la cámara frontal, centrada arriba.
+	var isla := Panel.new()
+	isla.add_theme_stylebox_override("panel", Tema.caja(Color(0, 0, 0), 11, Color(0, 0, 0)))
+	isla.custom_minimum_size = Vector2(92, 24)
+	isla.anchor_left = 0.5
+	isla.anchor_right = 0.5
+	isla.offset_left = -46
+	isla.offset_right = 46
+	isla.offset_top = 8
+	isla.offset_bottom = 32
+	isla.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	## Dentro de un Control libre: el PanelContainer estiraría la isla a toda la pantalla.
+	var capa := Control.new()
+	capa.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	capa.add_child(isla)
+	pantalla.add_child(capa)
 	## Barra de estado.
 	var estado := HBoxContainer.new()
+	estado.custom_minimum_size = Vector2(0, 40)
 	var hora := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, "   " + _hora())
 	hora.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	estado.add_child(hora)
@@ -152,7 +174,17 @@ func abrir_app(app: String) -> void:
 		"fotos": _fotos()
 		"ajustes": _ajustes()
 	_escalar_letra.call_deferred()
+	_botones_movil.call_deferred()
 	_scroll.scroll_vertical = 0
+
+## Botones con forma de móvil (13-10-2026): píldoras, no los rectángulos del
+## resto del juego. Los planos (atrás, iconos) se quedan como están.
+func _botones_movil() -> void:
+	for n in _cuerpo.find_children("*", "Button", true, false):
+		var b := n as Button
+		if b.flat or b.get_child_count() > 0 or b.has_theme_stylebox_override("normal"):
+			continue
+		CuadroDialogo.respuesta(b)
 
 ## El tamaño de letra elegido en Ajustes, aplicado a todo lo que se pintó.
 func _escalar_letra() -> void:
@@ -229,16 +261,15 @@ func _avatar_de(cuenta: String, lado: float) -> Control:
 # --- inicio -----------------------------------------------------------------------
 
 func _inicio() -> void:
-	_cuerpo.add_child(Control.new())
-	var reloj := Tema.etiqueta(64, Tema.TEXTO, _hora())
+	## MEDIO MÓVIL, MEDIO INFORME (13-10-2026): reloj de pantalla de bloqueo,
+	## un widget con el parte del club (sobrio, como el informe) y un dock.
+	var reloj := Tema.etiqueta(58, Tema.TEXTO, _hora())
 	reloj.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cuerpo.add_child(reloj)
 	var fecha := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "Semana %d · %d" % [m.semana, m.anio])
 	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cuerpo.add_child(fecha)
-	var hueco := Control.new()
-	hueco.custom_minimum_size = Vector2(0, 30)
-	_cuerpo.add_child(hueco)
+	_cuerpo.add_child(_widget_informe())
 	var rej := GridContainer.new()
 	rej.columns = 4
 	rej.add_theme_constant_override("h_separation", 10)
@@ -246,8 +277,60 @@ func _inicio() -> void:
 	var centro := CenterContainer.new()
 	centro.add_child(rej)
 	_cuerpo.add_child(centro)
+	var dock := HBoxContainer.new()
+	dock.alignment = BoxContainer.ALIGNMENT_CENTER
+	dock.add_theme_constant_override("separation", 10)
 	for a: Array in APPS:
-		rej.add_child(_icono_app(a))
+		## Mensajes, Tribuna y Calendario van al dock, como las apps de siempre.
+		if String(a[0]) in ["mensajes", "tribuna", "calendario"]:
+			dock.add_child(_icono_app(a))
+		else:
+			rej.add_child(_icono_app(a))
+	var hueco := Control.new()
+	hueco.custom_minimum_size = Vector2(0, 150)
+	_cuerpo.add_child(hueco)
+	var bandeja_dock := PanelContainer.new()
+	bandeja_dock.add_theme_stylebox_override("panel", Tema.caja(Color(1, 1, 1, 0.14), 22, Color(1, 1, 1, 0.2)))
+	bandeja_dock.add_child(dock)
+	_cuerpo.add_child(bandeja_dock)
+
+## El parte del club: tres líneas con cifras alineadas y un filo dorado.
+func _widget_informe() -> Control:
+	var pc := PanelContainer.new()
+	var sb := Tema.caja(Color(0.04, 0.05, 0.07, 0.62), 16, Color(1, 1, 1, 0.1))
+	sb.set_border_width_all(0)
+	sb.border_width_left = 3
+	sb.border_color = Tema.ORO
+	sb.set_content_margin_all(10)
+	pc.add_theme_stylebox_override("panel", sb)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 2)
+	pc.add_child(v)
+	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, "PARTE DEL CLUB"))
+	var c := m.mi_club()
+	var prox := m.proximo_partido()
+	var rival := "—"
+	if prox.size() >= 2 and c != null:
+		var otro: Club = prox[1] if prox[0] == c else prox[0]
+		rival = ("🏠 " if prox[0] == c else "✈️ ") + otro.nombre
+	var puesto := "—"
+	for l in m.ligas:
+		if c != null and l.clubes.has(c):
+			var t: Array = l.tabla()
+			for i in t.size():
+				if t[i]["club"] == c:
+					puesto = "%dº de %d" % [i + 1, t.size()]
+			break
+	for f: Array in [["Próximo", rival], ["Liga", puesto], ["Caja", Cesiones.dinero(c.saldo) if c != null else "—"]]:
+		var fila := HBoxContainer.new()
+		var k := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(f[0]))
+		k.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila.add_child(k)
+		var val := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, String(f[1]))
+		val.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		fila.add_child(val)
+		v.add_child(fila)
+	return pc
 
 func _insignia(app: String) -> int:
 	match app:
@@ -714,27 +797,73 @@ func _mensajes() -> void:
 	if _chat != "":
 		_un_chat()
 		return
+	## COMO UNA APP DE MENSAJERÍA (13-10-2026): fila con foto redonda, nombre,
+	## último mensaje en gris y el contador verde de no leídos.
 	_titulo_app("Mensajes")
 	var chats := m.movil.chats()
 	if chats.is_empty():
 		_cuerpo.add_child(_nota("No tienes mensajes."))
 	for ch: Dictionary in chats:
 		var b := Button.new()
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.custom_minimum_size = Vector2(0, 56)
-		var ult := String(ch["ultimo"])
-		b.text = "%s  %s%s\n      %s" % [String(ch["icono"]), String(ch["de"]),
-			("  (%d)" % int(ch["sin_leer"])) if int(ch["sin_leer"]) > 0 else "",
-			ult.substr(0, 34) + ("…" if ult.length() > 34 else "")]
-		b.add_theme_font_size_override("font_size", 12)
+		b.flat = true
+		b.custom_minimum_size = Vector2(0, 60)
+		var fila := HBoxContainer.new()
+		fila.set_anchors_preset(Control.PRESET_FULL_RECT)
+		fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fila.add_theme_constant_override("separation", 10)
+		b.add_child(fila)
+		fila.add_child(_burbuja_icono(String(ch["icono"]), 42))
+		var col := VBoxContainer.new()
+		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		col.alignment = BoxContainer.ALIGNMENT_CENTER
+		col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fila.add_child(col)
+		var nom := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(ch["de"]))
+		col.add_child(nom)
+		var ult := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(ch["ultimo"]))
+		ult.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		ult.custom_minimum_size = Vector2(10, 0)
+		col.add_child(ult)
+		var n := int(ch["sin_leer"])
+		if n > 0:
+			var badge := PanelContainer.new()
+			badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			var sb := Tema.caja(Color("25d366"), 10, Color("25d366"))
+			sb.content_margin_left = 7
+			sb.content_margin_right = 7
+			badge.add_theme_stylebox_override("panel", sb)
+			badge.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Color(0.05, 0.1, 0.06), str(n)))
+			fila.add_child(badge)
 		var de := String(ch["de"])
 		b.pressed.connect(func() -> void:
 			_chat = de
 			abrir_app("mensajes"))
 		_cuerpo.add_child(b)
+		var linea := ColorRect.new()
+		linea.color = Color(1, 1, 1, 0.06)
+		linea.custom_minimum_size = Vector2(0, 1)
+		_cuerpo.add_child(linea)
+
+## Un círculo de color con el emoji del contacto (su «foto»).
+func _burbuja_icono(icono: String, lado: float) -> Control:
+	var p := PanelContainer.new()
+	p.custom_minimum_size = Vector2(lado, lado)
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var sb := Tema.caja(Color(0.2, 0.24, 0.3), int(lado / 2.0), Color(0.2, 0.24, 0.3))
+	sb.set_content_margin_all(0)
+	p.add_theme_stylebox_override("panel", sb)
+	var l := Tema.etiqueta(int(lado * 0.5), Tema.TEXTO, icono)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	p.add_child(l)
+	return p
 
 func _un_chat() -> void:
+	## Cabecera del chat: atrás, foto, nombre y «en línea».
 	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
 	var atras := Button.new()
 	atras.flat = true
 	atras.text = "‹"
@@ -743,32 +872,70 @@ func _un_chat() -> void:
 		_chat = ""
 		abrir_app("mensajes"))
 	fila.add_child(atras)
-	fila.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, _chat))
+	var icono := "💬"
+	for ch: Dictionary in m.movil.chats():
+		if String(ch["de"]) == _chat:
+			icono = String(ch["icono"])
+	fila.add_child(_burbuja_icono(icono, 34))
+	var cab := VBoxContainer.new()
+	cab.add_theme_constant_override("separation", 0)
+	cab.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, _chat))
+	cab.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Color("25d366"), "en línea"))
+	fila.add_child(cab)
 	_cuerpo.add_child(fila)
 	var lista: Array = []
 	for msj: Dictionary in m.movil.mensajes:
 		if String(msj["de"]) == _chat:
 			lista.push_front(msj)
 			msj["leido"] = true
+	var semana_previa := -1
 	for msj: Dictionary in lista:
+		## Separador de fecha cuando cambia la semana, centrado.
+		if int(msj["semana"]) != semana_previa:
+			semana_previa = int(msj["semana"])
+			var fecha := Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.SUAVE, "Semana %d · %d" % [int(msj["semana"]), int(msj["anio"])])
+			fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			_cuerpo.add_child(fecha)
+		var envoltura := HBoxContainer.new()
 		var burbuja := PanelContainer.new()
-		burbuja.add_theme_stylebox_override("panel", Tema.caja(Color(0.16, 0.18, 0.22), 14, Color(0.16, 0.18, 0.22)))
+		var sb := Tema.caja(Color(0.15, 0.2, 0.24), 14, Color(0.15, 0.2, 0.24))
+		sb.corner_radius_top_left = 3
+		sb.content_margin_left = 10
+		sb.content_margin_right = 10
+		sb.content_margin_top = 6
+		sb.content_margin_bottom = 4
+		burbuja.add_theme_stylebox_override("panel", sb)
+		burbuja.custom_minimum_size = Vector2(0, 0)
+		burbuja.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		var v := VBoxContainer.new()
+		v.add_theme_constant_override("separation", 0)
+		burbuja.add_child(v)
 		var l := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(msj["texto"]))
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		burbuja.add_child(l)
-		_cuerpo.add_child(burbuja)
-		_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "  semana %d · %d" % [int(msj["semana"]), int(msj["anio"])]))
+		l.custom_minimum_size = Vector2(minf(260.0, 9.0 * String(msj["texto"]).length()), 0)
+		v.add_child(l)
+		var hora := Tema.etiqueta(Tema.TAM_ROTULO - 3, Tema.SUAVE, _hora())
+		hora.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		v.add_child(hora)
+		envoltura.add_child(burbuja)
+		_cuerpo.add_child(envoltura)
 
 func _noticias() -> void:
 	_titulo_app("Noticias")
 	if bandeja.is_empty():
 		_cuerpo.add_child(_nota("Sin noticias por ahora."))
+	## Medio informe (13-10-2026): titular en negrita con filo dorado a la
+	## izquierda, la primera noticia destacada como portada.
+	var primera := true
 	for n: Dictionary in bandeja.slice(0, 20):
 		var pc := PanelContainer.new()
-		pc.add_theme_stylebox_override("panel", Tema.caja(TARJETA, 12, TARJETA))
+		pc.add_theme_stylebox_override("panel", _caja_informe(primera))
 		var v := VBoxContainer.new()
 		pc.add_child(v)
-		var t := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(n.get("titulo", "")))
+		if primera:
+			v.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, "PORTADA"))
+		var t := Tema.etiqueta(Tema.TAM_DESTACADO if primera else Tema.TAM_CUERPO, Tema.TEXTO, String(n.get("titulo", "")))
+		primera = false
 		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		v.add_child(t)
 		var c := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(n.get("cuerpo", "")))
@@ -776,19 +943,32 @@ func _noticias() -> void:
 		v.add_child(c)
 		_cuerpo.add_child(pc)
 
+## Tarjeta del estilo informe: fondo de app y filo dorado a la izquierda.
+func _caja_informe(destacada := false) -> StyleBoxFlat:
+	var sb := Tema.caja(TARJETA.lightened(0.04) if destacada else TARJETA, 12, TARJETA)
+	sb.set_border_width_all(0)
+	sb.border_width_left = 3
+	sb.border_color = Tema.ORO if destacada else Color(1, 1, 1, 0.18)
+	sb.set_content_margin_all(10)
+	return sb
+
 func _banco() -> void:
 	_titulo_app("Banco")
 	var c := m.mi_club()
 	var filas := []
 	if c != null:
 		filas.append(["🏟️ Caja del club", Cesiones.dinero(c.saldo), Tema.BIEN if c.saldo >= 0 else Color("e5534b")])
+		filas.append(["💸 Sueldos del plantel", Cesiones.dinero(c.masa_salarial()) + " / semana", Tema.TEXTO])
+		## Cuántas semanas aguanta la caja pagando solo sueldos.
+		var sem := int(c.saldo / maxi(1, c.masa_salarial())) if c.saldo > 0 else 0
+		filas.append(["⏳ Semanas de sueldos en caja", str(sem) if sem < 999 else "999+", Tema.BIEN if sem > 20 else (Tema.ORO if sem > 6 else Color("e5534b"))])
 	if m.roles != null:
 		filas.append(["👤 Tu patrimonio", Cesiones.dinero(m.roles.patrimonio), Tema.TEXTO])
 	if m.fondo != null:
 		filas.append(["💼 Tu fondo de inversión", Cesiones.dinero(m.fondo.valor_total(m)), Tema.ORO])
 	for f: Array in filas:
 		var pc := PanelContainer.new()
-		pc.add_theme_stylebox_override("panel", Tema.caja(TARJETA, 12, TARJETA))
+		pc.add_theme_stylebox_override("panel", _caja_informe(f == filas[0]))
 		var v := VBoxContainer.new()
 		pc.add_child(v)
 		v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(f[0])))
@@ -796,21 +976,49 @@ func _banco() -> void:
 		_cuerpo.add_child(pc)
 
 func _calendario() -> void:
+	## MEDIO INFORME (13-10-2026): la ficha del próximo partido con los dos
+	## escudos y la tabla con columnas, sobria, como el parte del club.
 	_titulo_app("Calendario")
 	var c := m.mi_club()
 	var prox := m.proximo_partido()
 	var caja := PanelContainer.new()
-	caja.add_theme_stylebox_override("panel", Tema.caja(TARJETA, 12, TARJETA))
+	var sb := Tema.caja(TARJETA, 12, TARJETA)
+	sb.border_width_left = 3
+	sb.border_color = Tema.ORO
+	caja.add_theme_stylebox_override("panel", sb)
 	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
-	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "PRÓXIMO PARTIDO"))
+	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, "PRÓXIMO PARTIDO"))
 	if prox.size() >= 2:
-		v.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, "%s  vs  %s" % [(prox[0] as Club).nombre, (prox[1] as Club).nombre]))
-		v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "🏠 En casa" if prox[0] == c else "✈️ De visita"))
+		var fila := HBoxContainer.new()
+		fila.alignment = BoxContainer.ALIGNMENT_CENTER
+		fila.add_theme_constant_override("separation", 10)
+		for i in 2:
+			var cl: Club = prox[i]
+			var col := VBoxContainer.new()
+			col.custom_minimum_size = Vector2(130, 0)
+			var esc := TextureRect.new()
+			esc.texture = Escudo.textura(cl, 96)
+			esc.custom_minimum_size = Vector2(44, 44)
+			esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			col.add_child(esc)
+			var nom := Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO if cl == c else Tema.TEXTO, cl.nombre)
+			nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			col.add_child(nom)
+			fila.add_child(col)
+			if i == 0:
+				fila.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.SUAVE, "vs"))
+		v.add_child(fila)
+		var donde := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "🏠 En casa" if prox[0] == c else "✈️ De visita")
+		donde.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		v.add_child(donde)
 	else:
 		v.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "Semana sin partido de liga."))
 	_cuerpo.add_child(caja)
-	## La tabla, cerca de tu puesto.
+	## La tabla alrededor de tu puesto, con columnas alineadas.
 	for l in m.ligas:
 		if not l.clubes.has(c):
 			continue
@@ -819,11 +1027,28 @@ func _calendario() -> void:
 		for i in t.size():
 			if t[i]["club"] == c:
 				yo = i
-		_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "  TU LIGA"))
-		for i in range(maxi(0, yo - 2), mini(t.size(), yo + 3)):
-			var fila: Dictionary = t[i]
-			var cl: Club = fila["club"]
-			_cuerpo.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO if cl == c else Tema.TEXTO, "%2d. %s  ·  %d pts" % [i + 1, cl.nombre, int(fila.get("pts", 0))]))
+		_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, "  TU LIGA"))
+		var rej := GridContainer.new()
+		rej.columns = 5
+		rej.add_theme_constant_override("h_separation", 10)
+		for cab: String in ["#", "Club", "PJ", "DG", "Pts"]:
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.SUAVE, cab))
+		for i in range(maxi(0, yo - 3), mini(t.size(), yo + 4)):
+			var f: Dictionary = t[i]
+			var cl: Club = f["club"]
+			var tono := Tema.ORO if cl == c else Tema.TEXTO
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO, tono, str(i + 1)))
+			var nom := Tema.etiqueta(Tema.TAM_ROTULO, tono, cl.nombre)
+			nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			nom.clip_text = true
+			rej.add_child(nom)
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO, tono, str(int(f.get("pj", 0)))))
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO, tono, "%+d" % int(f.get("dif", 0))))
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO, tono, str(int(f.get("pts", 0)))))
+		var pc := PanelContainer.new()
+		pc.add_theme_stylebox_override("panel", Tema.caja(TARJETA, 12, TARJETA))
+		pc.add_child(rej)
+		_cuerpo.add_child(pc)
 		break
 
 func _fotos() -> void:
@@ -841,6 +1066,18 @@ func _fotos() -> void:
 			f.custom_minimum_size = Vector2(104, 104)
 			rej.add_child(f)
 			n += 1
+	## Las del modo foto (fase 5): ciudad, estadio y casa.
+	for ruta: String in ModoFoto.fotos():
+		var img := Image.load_from_file(ProjectSettings.globalize_path(ruta))
+		if img == null or img.is_empty():
+			continue
+		var tr := TextureRect.new()
+		tr.texture = ImageTexture.create_from_image(img)
+		tr.custom_minimum_size = Vector2(104, 104)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		rej.add_child(tr)
+		n += 1
 	_cuerpo.add_child(_nota("%d foto%s" % [n, "" if n == 1 else "s"]))
 
 # --- ajustes ----------------------------------------------------------------------------

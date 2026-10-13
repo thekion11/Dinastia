@@ -40,8 +40,11 @@ func _pintar_libres(c: Club) -> void:
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_libres.add_child(t)
 
-	var filtros := HBoxContainer.new()
-	filtros.add_theme_constant_override("separation", 6)
+	## HFlow y no HBox (etapa 1): con 14 posiciones la fila era más ancha que
+	## la columna y empujaba la ficha del jugador fuera de la pantalla.
+	var filtros := HFlowContainer.new()
+	filtros.add_theme_constant_override("h_separation", 6)
+	filtros.add_theme_constant_override("v_separation", 6)
 	p._lista_libres.add_child(filtros)
 	var b_todos := Button.new()
 	b_todos.text = "Todos"

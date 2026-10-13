@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://v4ft6pglv81q"
-path="res://.godot/imported/persona_realista_Image_2.png-b7f1c30b6470e1677c9b2672bbe17673.ctex"
+path.s3tc="res://.godot/imported/persona_realista_Image_2.png-b7f1c30b6470e1677c9b2672bbe17673.s3tc.ctex"
+path.etc2="res://.godot/imported/persona_realista_Image_2.png-b7f1c30b6470e1677c9b2672bbe17673.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "1149b5c5a057337711d665202cf21467"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/personas/persona_realista_Image_2.png"
-dest_files=["res://.godot/imported/persona_realista_Image_2.png-b7f1c30b6470e1677c9b2672bbe17673.ctex"]
+dest_files=["res://.godot/imported/persona_realista_Image_2.png-b7f1c30b6470e1677c9b2672bbe17673.s3tc.ctex", "res://.godot/imported/persona_realista_Image_2.png-b7f1c30b6470e1677c9b2672bbe17673.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

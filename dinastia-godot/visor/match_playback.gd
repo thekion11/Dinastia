@@ -792,6 +792,10 @@ func _celebrar(p: Dictionary, asistidor) -> void:
 			ap_c.play(anim_celeb)
 			ap_c.speed_scale = 1.0
 	_celebrando.append({"p": p, "hasta": elapsed + 4.2})
+	## Cara de alegría del goleador (13-10-2026).
+	var nodo_c = p.get("node")
+	if nodo_c is Node and is_instance_valid(nodo_c):
+		Expresion.de(nodo_c).poner("alegre", 4.0)
 	if asistidor != null and players_by_id.has(asistidor):
 		var a = players_by_id[asistidor]
 		_ejecutar_accion(a, "celebrar", 3.4)
@@ -953,6 +957,12 @@ func _mover(delta: float) -> void:
 		var dir := objetivo - antes
 		dir.y = 0.0
 		var dist := dir.length()
+		## ESPRINT (13-10-2026): la sonda medía 3,5 m/s de máximo -un trote-
+		## para los 22 todo el partido. Quien tiene lejos su sitio en plena
+		## jugada (repliegue, desmarque, llegar a la presión) acelera hasta
+		## casi el doble; en calma («medio») no.
+		if mult_calma >= 1.0 and not bool(p.get("arbitro", false)) and not es_por:
+			paso *= 1.0 + clampf((dist - 3.0) / 9.0, 0.0, 1.0) * 1.05
 
 		## INERCIA: antes el jugador saltaba a velocidad máxima en el instante
 		## que cambiaba de objetivo -frenar en seco y arrancar en seco es lo
@@ -977,6 +987,39 @@ func _mover(delta: float) -> void:
 		if vel > 0.35:
 			var ang_deseado := atan2(vel_actual.x, vel_actual.z)
 			node.rotation.y = rotate_toward(node.rotation.y, ang_deseado, 8.5 * delta)
+	_resolver_choques()
+
+## CUERPOS QUE NO SE ATRAVIESAN (13-10-2026, «las físicas siguen siendo de lo
+## peor»). La separación de arriba solo mira a los compañeros: un defensa se
+## metía DENTRO del delantero que presionaba. Aquí, después de mover a todos,
+## cada par (rivales y árbitro incluidos) que quede a menos de dos «radios de
+## hombro» se aparta a medias por la línea que los une. 22+3 cuerpos: ~300
+## comparaciones baratas por fotograma.
+const RADIO_CUERPO := 0.31
+
+func _resolver_choques() -> void:
+	var n := players.size()
+	var minimo := RADIO_CUERPO * 2.0
+	for i in n:
+		var a: Node3D = players[i].get("node")
+		if not is_instance_valid(a):
+			continue
+		for j in range(i + 1, n):
+			var b: Node3D = players[j].get("node")
+			if not is_instance_valid(b):
+				continue
+			var dx := b.position.x - a.position.x
+			var dz := b.position.z - a.position.z
+			var d2 := dx * dx + dz * dz
+			if d2 >= minimo * minimo:
+				continue
+			var d := sqrt(d2)
+			var dir := Vector2(dx, dz) / d if d > 0.001 else Vector2(1.0, 0.0).rotated(float(i * 7 + j))
+			var mitad := (minimo - d) * 0.5
+			a.position.x -= dir.x * mitad
+			a.position.z -= dir.y * mitad
+			b.position.x += dir.x * mitad
+			b.position.z += dir.y * mitad
 
 ## Empuje de separacion respecto a los companeros de equipo que esten
 ## demasiado cerca (radio `SEPARACION_RADIO`). Solo mira jugadores de campo

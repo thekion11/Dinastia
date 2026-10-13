@@ -249,8 +249,8 @@ func _pool(m: Mundo, mio: Club) -> Array[Dictionary]:
 	if not maduros.is_empty():
 		var quien: Jugador = maduros[Azar.ent(0, maduros.size() - 1)]
 		var motivo := String(Azar.uno([
-			"se va a dedicar a la iglesia de su barrio",
-			"se presenta a concejal en su ciudad",
+			"se va a entrenar a los niños de la escuelita de su barrio",
+			"abre una escuela de fútbol en su ciudad",
 			"vuelve al negocio familiar, que su padre ya no puede llevar",
 			"dice que no disfruta desde hace dos años y no quiere seguir fingiendo",
 		]))
@@ -1314,6 +1314,12 @@ func _pregunta_clima(info: Dictionary, gane: bool, empate: bool) -> Dictionary:
 	var q := "Prensa: '¿Cuánto influyó el tiempo (%s) en el resultado?'" % que
 	if gane:
 		q = "Prensa: 'Con %s, ¿fue un triunfo de carácter más que de fútbol?'" % que
+		## Tras ganar, quejarse del tiempo no tiene sentido: otras respuestas.
+		return {"pregunta": q, "opciones": [
+			{"txt": "De las dos cosas: el equipo supo sufrir", "moral": 1, "confianza": 1, "socios": 1, "tono": "calma"},
+			{"txt": "Jugamos bien con sol, lluvia o lo que sea", "moral": 1, "confianza": 0, "socios": 0, "tono": "soberbia"},
+			{"txt": "Prefiero hablar del partido", "moral": 0, "confianza": 0, "socios": -1, "tono": "evasiva"},
+		]}
 	return {"pregunta": q, "opciones": [
 		{"txt": "Es igual para los dos: no es excusa", "moral": 1, "confianza": 1, "socios": 0, "tono": "calma"},
 		{"txt": "Así no se puede jugar al fútbol", "moral": -1 if not gane else 0, "confianza": -1, "socios": 0, "tono": "soberbia"},

@@ -21,6 +21,7 @@ const MENUS := [
 		"lema": "Lo que el club fue y lo que tú estás escribiendo.",
 		"colores": ["#140d07", "#2a1d10", "#e0a95a"], "subs": [
 		{"tab": "Legado", "label": "Historia del club", "icono": "🏛️", "desc": "Fundación, épocas doradas, clásicos y tu legado."},
+		{"accion": "documental", "label": "Documental de la temporada", "icono": "🎬", "desc": "Tu año contado como una película."},
 		{"tab": "Récords", "secc": "records", "label": "Récords", "icono": "📈", "desc": "Goleadores, rachas y marcas de todos los tiempos."},
 		{"tab": "Récords", "secc": "memoria", "label": "Memoria", "icono": "🕯️", "desc": "El salón de la fama y los que ya no están."},
 		{"tab": "Récords", "secc": "rivales", "label": "Rivales", "icono": "⚔️", "desc": "Clásicos, cara a cara y cuentas pendientes."},
@@ -60,7 +61,8 @@ const MENUS := [
 		{"tab": "Vida", "secc": "hogar", "label": "Casa y auto", "icono": "🏡", "desc": "Dónde vives y en qué te mueves."},
 		{"tab": "Vida", "secc": "familia", "label": "Familia", "icono": "👨‍👩‍👧", "desc": "Los tuyos, sus planes y sus quejas."},
 		{"accion": "casa", "label": "Ver tu casa", "icono": "🛋️", "desc": "Tu terraza en 3D, con café y paisaje."},
-		{"accion": "movil", "label": "Abrir el móvil", "icono": "📲", "desc": "Tribuna, mensajes, banco y tus fotos."}]},
+		{"accion": "movil", "label": "Abrir el móvil", "icono": "📲", "desc": "Tribuna, mensajes, banco y tus fotos."},
+		{"accion": "minijuegos", "label": "Minijuegos", "icono": "🎮", "desc": "Penales, tiros libres y la trivia del club."}]},
 	{"id": "editar", "icono": "✏️", "nombre": "Editar", "estilo": 5, "ficha": false,
 		"lema": "El mundo a tu medida: ligas, clubes y jugadores.",
 		"colores": ["#06162e", "#0b2447", "#8fd3ff"], "subs": [
@@ -146,11 +148,17 @@ static func ejecutar(p: Principal, accion: String) -> void:
 		"movil":
 			Telefono.abrir(p, p.mundo)
 		"ver_estadio":
-			p._ver_estadio_propio()
+			p._ver_estadio_con_carga()
 		"ver_ciudad":
-			p._ver_ciudad_propia()
+			p._ver_ciudad_con_carga()
 		"album":
 			PanelMeta.abrir(p, p.mundo)
+		"minijuegos":
+			SalaMinijuegos.abrir(p, p.mundo)
+		"documental":
+			## El último cerrado; si todavía no hay, el avance de la que se juega.
+			var caps := DocumentalTemporada.ultimo if not DocumentalTemporada.ultimo.is_empty() else DocumentalTemporada.guion(p.mundo)
+			DocumentalTemporada.abrir(p, caps, p._retrato)
 
 func _montar() -> void:
 	set_anchors_preset(Control.PRESET_LEFT_WIDE)

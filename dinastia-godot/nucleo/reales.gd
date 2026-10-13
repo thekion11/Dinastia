@@ -121,6 +121,14 @@ static func _aplicar_en_club(club: Club, lista: Array, posd: Dictionary) -> int:
 			margen = Azar.ent(0, 5)
 		candidato.pot = clampi(candidato.ovr + margen, candidato.ovr, 97)
 		candidato.pais = pais
+		## REGIÓN REAL (MEGAPLAN C3): el 6.º campo del pack dice dónde nació
+		## («EUS» = Euskal Herria). Sin él, la del club de cantera si lo es (el
+		## Athletic solo tiene gente de allí) y si no, ninguna: un real no puede
+		## heredar la región sorteada del generado al que reemplaza.
+		if partes.size() > 5 and partes[5] != "":
+			candidato.region = partes[5]
+		else:
+			candidato.region = String(Regiones.filosofia(club).get("region", ""))
 		candidato.generar_atributos()
 		Azar._rng.state = estado
 		candidato.tasar()

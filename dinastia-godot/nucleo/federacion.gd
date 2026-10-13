@@ -166,6 +166,11 @@ var semanas_en_rojo: int = 0
 ## Cuántas veces has recurrido y te han dicho que no. Los árbitros toman nota y
 ## la siguiente apelación sale más cara de ganar.
 var enojo_arbitral: int = 0
+## SANCIÓN AL DT (estadio 2.0, fase 3; el `G.dtSusp` del HTML que no se había
+## portado). Fechas que te quedan viéndolo desde la grada, y si la sanción es
+## de ESTE partido (aún no ha empezado a cumplirse).
+var dt_suspension: int = 0
+var dt_susp_nueva := false
 var playoffs_ultimo: Dictionary = {}
 
 ## Contador para los identificadores de caso. El HTML usaba `Date.now()`, que en
@@ -391,23 +396,109 @@ func revisar_cupo_juvenil(mi: Club, once: Array) -> int:
 ## Lo consulta el mercado ANTES de cerrar un fichaje: rechazarlo después sería
 ## fichar y descubrir en la pantalla siguiente que no puede jugar.
 func puede_fichar_extranjero(mi: Club, j: Jugador) -> String:
-	if tope_extranjeros <= 0 or mi == null or j == null:
+	## Las reglas del país del club (7-10-2026) y, encima, el tope que haya
+	## votado la asamblea si es más estricto. Si el club decidió incumplirlas,
+	## puede fichar: lo paga en multas (`revisar_leyes_pais`).
+	if mi != null and mi.ley_politica == "incumplir":
 		return ""
-	if j.pais == mi.pais:
-		return ""
-	var extranjeros := 0
-	for x: Jugador in mi.plantilla:
-		if x.pais != mi.pais:
-			extranjeros += 1
-	if extranjeros >= tope_extranjeros:
-		return "Cupo de extranjeros lleno (%d): la liga lo votó así" % tope_extranjeros
-	return ""
+	return LeyesPais.motivo_fichaje(mi, j, {}, tope_extranjeros)
+
+## INCUMPLIR LA LEY SE PAGA (7-10-2026, pedido: «se puede incumplir la ley a
+## cambio de multas, eso haría que fuera más dinámico»). Tras cada partido:
+##   · plantel por encima del cupo: multa por cada jugador de más, que crece
+##     con cada semana que sigues así en la temporada;
+##   · alineación indebida (más «de fuera» en cancha o sin el juvenil): multa
+##     que crece con cada reincidencia; desde la tercera, además, 3 puntos menos;
+##   · cada infracción enfada al tribunal y la directiva toma nota.
+## Todo se escala con el tamaño del club (`Eco.escalar`) y se reinicia cada año.
+const MULTA_PLANTEL_LEY := 35000.0
+const MULTA_ALINEACION := 110000.0
+const PUNTOS_ALINEACION := 3
+var infracciones_ley: Dictionary = {}   ## "anio" -> {"plantel": n, "alin": n}
+
+func infracciones_de(anio: int) -> Dictionary:
+	return infracciones_ley.get(str(anio), {"plantel": 0, "alin": 0})
+
+func revisar_leyes_pais(m: Mundo, mi: Club) -> void:
+	if mi == null or m == null:
+		return
+	var k := str(m.anio)
+	var inf: Dictionary = infracciones_de(m.anio).duplicate()
+	var norma := String(LeyesPais.reglas(mi.pais).get("norma", "el reglamento de la liga"))
+	var exceso := LeyesPais.exceso_plantel(mi, tope_extranjeros)
+	if exceso > 0:
+		inf["plantel"] = int(inf["plantel"]) + 1
+		var veces := int(inf["plantel"])
+		var multa := int(Eco.escalar(MULTA_PLANTEL_LEY, float(mi.rep)) * exceso * (1.0 + 0.25 * float(veces - 1)))
+		mi.mover_saldo(-multa)
+		movimiento.emit("Multa: plantel fuera de reglamento (%d de más)" % exceso, -multa)
+		enojo_arbitral += 1
+		if veces == 1 or veces % 4 == 0:
+			noticia.emit("📜 Multa por plantel fuera de reglamento",
+				"Tienes %d jugador(es) de más para el cupo de tu liga. Multa de %s, y crece cada semana que sigas así. %s" % [exceso, Cesiones.dinero(multa), norma])
+	if mi.ley_politica != "incumplir":
+		_cubrir_juveniles(m, mi)
+	var faltas := LeyesPais.infracciones_once(mi, mi.once())
+	if not faltas.is_empty():
+		inf["alin"] = int(inf["alin"]) + 1
+		var n := int(inf["alin"])
+		var multa2 := int(Eco.escalar(MULTA_ALINEACION, float(mi.rep)) * float(n))
+		mi.mover_saldo(-multa2)
+		movimiento.emit("Multa: alineación indebida", -multa2)
+		enojo_arbitral += 2
+		castigo_directiva.emit(-1, "alineación indebida")
+		var textos: Array = []
+		for f: Dictionary in faltas:
+			textos.append(String(f["texto"]))
+		var cuerpo := "Alineaste %s (%dª vez esta temporada): multa de %s." % [", ".join(textos), n, Cesiones.dinero(multa2)]
+		if n >= 3:
+			for l: Liga in m.ligas:
+				if l.clubes.has(mi) and l.tabla_puntos.has(mi.id):
+					l.sancionar(mi.id, PUNTOS_ALINEACION)
+			cuerpo += " Por reincidir, el tribunal te quita %d puntos." % PUNTOS_ALINEACION
+		noticia.emit("📜 Alineación indebida", cuerpo + " " + norma)
+	infracciones_ley[k] = inf
+
+## SI EL CLUB CUMPLE LA LEY, EL CUERPO TÉCNICO LA HACE CUMPLIR (13-10-2026). Con
+## la regla de juveniles (Chile: un sub-21 en el once) y ningún chico sano en el
+## plantel, el once no podía cumplirla nunca: multa y −3 puntos cada semana, la
+## caja a −90 M en una temporada. Ahora se sube a uno: el mejor de la academia
+## o, si no hay, uno del filial.
+func _cubrir_juveniles(m: Mundo, mi: Club) -> void:
+	for edad: int in LeyesPais.reglas(mi.pais).get("juveniles", []):
+		var hay := false
+		for j: Jugador in mi.disponibles():
+			if j.edad <= edad and not j.es_portero():
+				hay = true
+				break
+		if hay:
+			continue
+		var subido: Jugador = null
+		if m.academia != null:
+			var mejor: Dictionary = {}
+			for ch: Dictionary in m.academia.chicos:
+				if int(ch["edad"]) <= edad and int(ch["edad"]) >= Academia.EDAD_ENTREGA_ANTICIPADA and String(ch.get("pos", "")) != "POR" and (mejor.is_empty() or float(ch["nivel"]) > float(mejor["nivel"])):
+					mejor = ch
+			if not mejor.is_empty():
+				subido = m.academia._entregar(mejor, true)
+		if subido == null:
+			var grupos := [["DEF", "DFC"], ["MED", "MC"], ["DEL", "DC"]]
+			var g: Array = grupos[Azar.ent(0, 2)]
+			subido = m.crear_jugador(mi, String(g[0]), String(g[1]), Azar.ent(18, edad), clampi(mi.rep - 12, 45, 70))
+			if subido != null:
+				subido.anios_contrato = 2
+				if not mi.plantilla.has(subido):
+					mi.plantilla.append(subido)
+		if subido != null:
+			noticia.emit("🌱 Sube un chico del filial",
+				"Para cumplir la norma de juveniles (%s), el cuerpo técnico sube a %s (%d años, %s)." % [
+					String(LeyesPais.reglas(mi.pais).get("norma", "la liga")), subido.nombre, subido.edad, subido.pos_e])
 
 ## Las reglas que están en vigor ahora mismo, en frases. Es lo que se enseña en
 ## la pantalla de Federación: un puñado de banderas booleanas no le dice nada a
 ## nadie.
-func reglas_vigentes() -> Array:
-	var l: Array = []
+func reglas_vigentes(pais: String = "") -> Array:
+	var l: Array = LeyesPais.resumen(pais) if pais != "" else []
 	if not is_equal_approx(reparto_tv, 1.0):
 		l.append("Reparto de TV al %d%% de lo normal" % int(round(reparto_tv * 100.0)))
 	if cupo_juvenil:
@@ -747,6 +838,29 @@ func control_antidopaje(mi: Club, anio: int, semana_n: int) -> Dictionary:
 	registro["fechas"] = fechas
 	return registro
 
+## Te expulsan del área técnica: el tribunal te sanciona `fechas` partidos.
+func sancionar_dt(fechas: int) -> void:
+	dt_suspension = maxi(dt_suspension, fechas)
+	dt_susp_nueva = true
+	enojo_arbitral = mini(enojo_arbitral + 1, 5)
+	noticia.emit("🟥 Sanción al entrenador",
+		"El tribunal te sanciona con %d partido(s) por la expulsión. Los verás desde la grada, sin dar órdenes desde la banda." % fechas)
+
+## Tras cada partido tuyo: la sanción corre (no la del partido en que te
+## expulsaron, que empieza a contar en el siguiente).
+func cumplir_sancion_dt() -> void:
+	if dt_susp_nueva:
+		dt_susp_nueva = false
+		return
+	if dt_suspension > 0:
+		dt_suspension -= 1
+		if dt_suspension == 0:
+			noticia.emit("✅ Vuelves a la banda", "Cumpliste la sanción: el próximo partido lo diriges desde el banquillo.")
+
+## ¿Ves este partido desde la grada?
+func dt_sancionado() -> bool:
+	return dt_suspension > 0 and not dt_susp_nueva
+
 # ============================================================================
 # GUARDADO
 # ============================================================================
@@ -754,7 +868,7 @@ func control_antidopaje(mi: Club, anio: int, semana_n: int) -> Dictionary:
 func a_dic() -> Dictionary:
 	return {
 		"reparto_tv": reparto_tv, "cupo_juvenil": cupo_juvenil,
-		"tope_extranjeros": tope_extranjeros, "playoffs": playoffs,
+		"tope_extranjeros": tope_extranjeros, "playoffs": playoffs, "infr_ley": infracciones_ley,
 		"superliga": superliga, "var": var_activo,
 		"fpf": fpf_activo, "fpf_avisos": fpf_avisos, "fpf_sancion": fpf_sancionado,
 		"aliados": aliados, "votos": votos, "voto_pendiente": voto_pendiente,
@@ -762,6 +876,7 @@ func a_dic() -> Dictionary:
 		"sin_cupo": sin_cupo_internacional,
 		"casos": casos, "controles": controles,
 		"semanas_en_rojo": semanas_en_rojo, "enojo_arbitral": enojo_arbitral,
+		"dt_susp": dt_suspension, "dt_susp_n": dt_susp_nueva,
 		"playoffs_ultimo": playoffs_ultimo, "sec": _sec,
 		"presidente": presidente,
 		"desempate": desempate_directo, "promocion": promocion, "arbitros": arbitros,
@@ -771,6 +886,9 @@ func desde_dic(d: Dictionary) -> void:
 	reparto_tv = float(d.get("reparto_tv", 1.0))
 	cupo_juvenil = bool(d.get("cupo_juvenil", false))
 	tope_extranjeros = int(d.get("tope_extranjeros", 0))
+	infracciones_ley = d.get("infr_ley", {})
+	dt_suspension = int(d.get("dt_susp", 0))
+	dt_susp_nueva = bool(d.get("dt_susp_n", false))
 	playoffs = bool(d.get("playoffs", false))
 	superliga = bool(d.get("superliga", false))
 	var_activo = bool(d.get("var", false))
