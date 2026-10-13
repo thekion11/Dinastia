@@ -61,10 +61,32 @@ func _process(_d: float) -> void:
 		_m.append(_muestra())
 		if OS.get_environment("CUADROS") != "":
 			print("CUADRO ", _n, " ", snappedf(_m[-1]["frame_ms"], 0.1))
+	if _n == 71 and OS.get_environment("PARTES") != "":
+		_res["aerea"] = _media(_m)
+		print("MEDIDA_CIUDAD ", JSON.stringify(_res))
+		_v.set("_girando", false)   ## sin giro: si no, cada medida mira a otro sitio
+		_partes_aerea()
+		return
 	if _n == 71:
 		_res["aerea"] = _media(_m)
 		if OS.get_environment("DETALLE") != "":
 			_detalle()
+			var por_dueno := {}
+			for g in _v.find_children("*", "MeshInstance3D", true, false):
+				if g.get_parent() is Skeleton3D and g.is_visible_in_tree():
+					var a: Node = g
+					var cadena := ""
+					for k in 6:
+						a = a.get_parent()
+						if a == null or a == _v:
+							break
+						cadena += String(a.name).left(14) + "<"
+					var kk := "%s rango=%.0f" % [cadena, (g as GeometryInstance3D).visibility_range_end]
+					por_dueno[kk] = int(por_dueno.get(kk, 0)) + 1
+			for kk in por_dueno:
+				print("CUERPO ", por_dueno[kk], " ", kk)
+			for f: Dictionary in Optimizar.informe(_v, 22):
+				print("TRIS %9d  piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
 		_m.clear()
 		_v.explorar("pie")
 		var e: ExploradorCiudad = _v.get("_explorador")
@@ -142,3 +164,78 @@ func _medir_cuadros(c: int) -> float:
 	for i in c:
 		await get_tree().process_frame
 	return (Time.get_ticks_usec() - t0) / 1000.0 / c
+
+func _cat(g: GeometryInstance3D) -> String:
+	var estadio := false
+	var a: Node = g
+	while a != null:
+		if a.has_meta("sin_corte"):
+			estadio = true
+		a = a.get_parent()
+	if estadio:
+		return "estadio"
+	if g.get_parent() is Skeleton3D:
+		return "cuerpos"
+	if String(g.name) == "EdificiosLejos":
+		return "edificios_lejos"
+	var m: Mesh = null
+	var n_inst := 1
+	if g is MeshInstance3D:
+		m = (g as MeshInstance3D).mesh
+	elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null:
+		m = (g as MultiMeshInstance3D).multimesh.mesh
+		n_inst = (g as MultiMeshInstance3D).multimesh.instance_count
+	if m == null:
+		return "otros"
+	var t := Optimizar._tris(m)
+	if m is ArrayMesh and t > 1500:
+		return "edificios_%s" % ("multi" if g is MultiMeshInstance3D else "suelto")
+	if m is ArrayMesh:
+		return "modelos_chicos"
+	if m is CylinderMesh or m is SphereMesh or m is CapsuleMesh:
+		return "cilindros_esferas"
+	if m is BoxMesh:
+		return "cajas"
+	return "otros"
+
+func _partes_aerea() -> void:
+	var grupos := {}
+	for g in _v.find_children("*", "GeometryInstance3D", true, false):
+		if g is Label3D or not g.is_visible_in_tree():
+			continue
+		var k := _cat(g)
+		if not grupos.has(k):
+			grupos[k] = []
+		grupos[k].append(g)
+	var det := {}
+	for g in grupos.get("cilindros_esferas", []):
+		var m2: Mesh = (g as MeshInstance3D).mesh if g is MeshInstance3D else (g as MultiMeshInstance3D).multimesh.mesh
+		var n2 := 1 if g is MeshInstance3D else (g as MultiMeshInstance3D).multimesh.instance_count
+		var d := ""
+		if m2 is CylinderMesh:
+			d = "cil r=%.2f h=%.1f seg=%d" % [(m2 as CylinderMesh).top_radius, (m2 as CylinderMesh).height, (m2 as CylinderMesh).radial_segments]
+		elif m2 is SphereMesh:
+			d = "esf r=%.2f seg=%d anillos=%d" % [(m2 as SphereMesh).radius, (m2 as SphereMesh).radial_segments, (m2 as SphereMesh).rings]
+		else:
+			d = m2.get_class()
+		var kk := "%s (%d tris/u, %s)" % [d, Optimizar._tris(m2), String(g.get_parent().name).left(12)]
+		det[kk] = int(det.get(kk, 0)) + n2
+	var ord := det.keys()
+	ord.sort_custom(func(a, b): return det[a] * 1 > det[b] * 1)
+	for kk in ord.slice(0, 14):
+		print("CIL %6d  %s" % [det[kk], kk])
+	var base := await _medir_prim()
+	print("PARTES base %d tris" % base)
+	for k: String in grupos:
+		for g in grupos[k]:
+			g.visible = false
+		var t := await _medir_prim()
+		for g in grupos[k]:
+			g.visible = true
+		print("PARTES sin %-18s (%4d nodos) -%d tris" % [k, grupos[k].size(), base - t])
+	get_tree().quit()
+
+func _medir_prim() -> int:
+	for i in 4:
+		await get_tree().process_frame
+	return int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))

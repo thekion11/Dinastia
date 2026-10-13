@@ -90,6 +90,13 @@ static func distancias(raiz: Node) -> int:
 				fuera[x] = true
 	for n in raiz.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
+		if g.get_parent() is Skeleton3D and g.visibility_range_end <= 0.0:
+			## Cuerpos con esqueleto (personal, mascota): 12 mil triángulos cada
+			## uno. A más de 150 m no se distingue ni que son personas.
+			g.visibility_range_end = 150.0
+			g.visibility_range_end_margin = 15.0
+			n_puestas += 1
+			continue
 		if fuera.has(g) or g is Label3D or g.visibility_range_end > 0.0:
 			continue
 		var diag := _diagonal(g)
@@ -113,14 +120,18 @@ static func _diagonal(g: GeometryInstance3D) -> float:
 ## `CELDA` m (así la cámara sigue recortando por zonas) y se borran las sueltas.
 ## Solo lo QUIETO: se salta todo lo que cuelga de un nodo con script (tráfico,
 ## metro, semáforos, peatones), de un grupo (puertas que se abren) o con hijos.
-const CELDA := 660.0
+const CELDA := 160.0
 const MIN_GRUPO := 2
+const UMBRAL_PESADO := 1500       ## triángulos a partir de los cuales hay proxy lejano
+const RANGO_EDIFICIO := 520.0     ## hasta dónde se dibuja el edificio entero
 
 static func agrupar(raiz: Node3D) -> Dictionary:
 	_motivos.clear()
 	var grupos := {}
 	var mallas_con_mat := {}
 	var mats := {}
+	var proxies: Array = []
+	var colores := {}
 	for n in raiz.find_children("*", "MeshInstance3D", true, false):
 		var mi := n as MeshInstance3D
 		if not _quieto(mi, raiz):
@@ -129,6 +140,13 @@ static func agrupar(raiz: Node3D) -> Dictionary:
 			mi.material_override = _mat_unico(mi.material_override, mats)
 		var malla := _malla_efectiva(mi, mallas_con_mat)
 		var t := mi.global_transform
+		## LOD JERÁRQUICO: un edificio pesado se dibuja entero hasta RANGO_EDIFICIO
+		## y, más allá, como una caja de su color medio (12 triángulos).
+		if mi.mesh is ArrayMesh and _tris(mi.mesh) > UMBRAL_PESADO and mi.visibility_range_end <= 0.0 and not _sin_lod(mi):
+			var caja_e := mi.get_aabb()
+			proxies.append([t * Transform3D(Basis.from_scale(caja_e.size), caja_e.get_center()), _color_medio(mi, colores), Vector2i(floori(t.origin.x / CELDA), floori(t.origin.z / CELDA))])
+			mi.visibility_range_end = RANGO_EDIFICIO
+			mi.visibility_range_end_margin = 20.0
 		var pleg := _plegar(mi, malla)
 		if not pleg.is_empty():
 			malla = pleg[0]
@@ -182,7 +200,8 @@ static func agrupar(raiz: Node3D) -> Dictionary:
 			mi.free()
 		piezas += lista.size()
 		hechos += 1
-	return {"multimesh": hechos, "piezas": piezas}
+	_montar_proxies(raiz, proxies)
+	return {"multimesh": hechos, "piezas": piezas, "proxies": proxies.size()}
 
 static var _motivos := {}
 static func _no(m: String) -> bool:
@@ -435,3 +454,150 @@ static func _sin_dinamica(mi: Node, raiz: Node) -> bool:
 			return false
 		p = p.get_parent()
 	return true
+
+
+## Lo que no debe tener proxy: nada que se vea de cerca y de lejos igual de bien.
+static func _sin_lod(_mi: MeshInstance3D) -> bool:
+	return false
+
+## Color medio del material de un modelo (textura × color), cacheado.
+static func _color_medio(mi: MeshInstance3D, cache: Dictionary) -> Color:
+	var mat: Material = mi.material_override
+	if mat == null and mi.mesh != null and mi.mesh.get_surface_count() > 0:
+		mat = mi.mesh.surface_get_material(0)
+	var clave := mat.get_instance_id() if mat != null else 0
+	if cache.has(clave):
+		return cache[clave]
+	var c := Color(0.74, 0.74, 0.77)
+	if mat is BaseMaterial3D:
+		var bm := mat as BaseMaterial3D
+		c = bm.albedo_color
+		if bm.albedo_texture != null:
+			var img := bm.albedo_texture.get_image()
+			if img != null:
+				if img.is_compressed():
+					img.decompress()
+				img.resize(1, 1, Image.INTERPOLATE_LANCZOS)
+				c = c * img.get_pixel(0, 0)
+	## Un poco más claro y sin brillo: de lejos lo oscuro se traga los detalles.
+	c = c.lerp(Color(0.92, 0.92, 0.94), 0.5)
+	cache[clave] = c
+	return c
+
+## Las cajas lejanas, un MultiMesh por celda con el color de cada edificio.
+static func _montar_proxies(raiz: Node3D, proxies: Array) -> void:
+	if proxies.is_empty():
+		return
+	var por_celda := {}
+	for p: Array in proxies:
+		var k: Vector2i = p[2]
+		if not por_celda.has(k):
+			por_celda[k] = []
+		(por_celda[k] as Array).append(p)
+	var caja := BoxMesh.new()
+	caja.size = Vector3.ONE
+	var mat := StandardMaterial3D.new()
+	mat.vertex_color_use_as_albedo = true
+	mat.roughness = 0.95
+	var inv := raiz.global_transform.affine_inverse()
+	for k: Vector2i in por_celda:
+		var lista: Array = por_celda[k]
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_colors = true
+		mm.mesh = caja
+		mm.instance_count = lista.size()
+		for i in lista.size():
+			mm.set_instance_transform(i, inv * (lista[i][0] as Transform3D))
+			mm.set_instance_color(i, lista[i][1])
+		var mmi := MultiMeshInstance3D.new()
+		mmi.name = "EdificiosLejos"
+		mmi.multimesh = mm
+		mmi.material_override = mat
+		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mmi.visibility_range_begin = RANGO_EDIFICIO - 20.0
+		mmi.visibility_range_begin_margin = 20.0
+		raiz.add_child(mmi)
+
+
+## TROCEAR MULTIMESH GRANDES (bucle de optimización, 13-10-2026). Medido en la
+## vista aérea: cilindros y esferas -troncos, copas, postes, semáforos- eran lo
+## que más triángulos sumaba y no se podían recortar por distancia, porque cada
+## MultiMesh abarca la ciudad ENTERA (una sola caja de 2,6 km) y la distancia de
+## visibilidad se aplica a esa caja. Aquí se parte cada uno en celdas de 100 m
+## con su propia caja, y a las piezas pequeñas se les pone distancia de corte.
+## Todas las de un mismo tamaño comparten distancia, así que un tronco y su
+## copa desaparecen a la vez. Sin gráfica (headless) el servidor no guarda las
+## transformaciones y no se hace nada.
+const CELDA_TROCEO := 100.0
+const MIN_INSTANCIAS_TROCEO := 48
+
+static func trocear(raiz: Node3D) -> int:
+	if DisplayServer.get_name() == "headless":
+		return 0
+	var fuera := {}
+	for r in raiz.find_children("*", "Node3D", true, false):
+		if r.has_meta("sin_corte"):
+			for x in r.find_children("*", "MultiMeshInstance3D", true, false):
+				fuera[x] = true
+	var hechos := 0
+	for n in raiz.find_children("*", "MultiMeshInstance3D", true, false):
+		var mmi := n as MultiMeshInstance3D
+		var mm := mmi.multimesh
+		if fuera.has(mmi) or mm == null or mm.mesh == null or mm.instance_count < MIN_INSTANCIAS_TROCEO:
+			continue
+		if mmi.visibility_range_end > 0.0 or String(mmi.name).begins_with("Agrupado") or String(mmi.name).begins_with("Edificios"):
+			continue
+		if not _sin_dinamica(mmi, raiz) or mm.transform_format != MultiMesh.TRANSFORM_3D:
+			continue
+		var base := mm.mesh.get_aabb()
+		var diag := base.size.length()
+		var corte := 0.0
+		for f: Array in TROCEO_CORTE:
+			if diag <= float(f[0]):
+				corte = float(f[1])
+				break
+		var por_celda := {}
+		for i in mm.instance_count:
+			var o := mmi.global_transform * mm.get_instance_transform(i)
+			var k := Vector2i(floori(o.origin.x / CELDA_TROCEO), floori(o.origin.z / CELDA_TROCEO))
+			if not por_celda.has(k):
+				por_celda[k] = []
+			(por_celda[k] as Array).append(i)
+		if por_celda.size() < 2 and corte <= 0.0:
+			continue
+		for k: Vector2i in por_celda:
+			var idx: Array = por_celda[k]
+			var nuevo := MultiMesh.new()
+			nuevo.transform_format = MultiMesh.TRANSFORM_3D
+			nuevo.use_colors = mm.use_colors
+			nuevo.use_custom_data = mm.use_custom_data
+			nuevo.mesh = mm.mesh
+			nuevo.instance_count = idx.size()
+			for j in idx.size():
+				nuevo.set_instance_transform(j, mm.get_instance_transform(idx[j]))
+				if mm.use_colors:
+					nuevo.set_instance_color(j, mm.get_instance_color(idx[j]))
+				if mm.use_custom_data:
+					nuevo.set_instance_custom_data(j, mm.get_instance_custom_data(idx[j]))
+			var m2 := MultiMeshInstance3D.new()
+			m2.name = "Troceo"
+			m2.multimesh = nuevo
+			m2.transform = mmi.transform
+			m2.material_override = mmi.material_override
+			m2.material_overlay = mmi.material_overlay
+			m2.cast_shadow = mmi.cast_shadow
+			m2.layers = mmi.layers
+			m2.gi_mode = mmi.gi_mode
+			if corte > 0.0:
+				m2.visibility_range_end = corte
+				m2.visibility_range_end_margin = corte * 0.1
+			mmi.get_parent().add_child(m2)
+		mmi.get_parent().remove_child(mmi)
+		mmi.free()
+		hechos += 1
+	return hechos
+
+## Tamaño de la pieza (diagonal en m) -> distancia de corte. Lo pequeño y
+## numeroso (postes, troncos, copas, hidrantes, setos) no se ve de lejos.
+const TROCEO_CORTE := [[4.5, 380.0]]
