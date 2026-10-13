@@ -78,6 +78,13 @@ noche, y en los dos renderizadores (escritorio y móvil).
 
 Se comprueba repitiendo el banco de rendimiento: cada mejora con su cifra.
 
+### Etapa 3 · Medida del 13-10-2026 (a pie, barrio de casas, calidad MEDIO)
+- Texturas en memoria: **~823 MB** (la ciudad entera); memoria estática ~1,7 GB.
+  Las caras de la biblioteca en los peatones suman solo ~9 MB de texturas.
+- ~2.200 llamadas de dibujo con 28 peatones alrededor.
+- PENDIENTE (gama baja): bajar texturas grandes (atlas, compresión VRAM, mipmaps
+  y tamaño máximo por calidad) — es lo que más pesa.
+
 ### Etapa 3 · Avance (8-10-2026) — cifras medidas (calidad MEDIO)
 
 Herramientas: `pruebas/medir_ciudad` (DETALLE=1, CPU=1, CUADROS=1, TIEMPOS=1),

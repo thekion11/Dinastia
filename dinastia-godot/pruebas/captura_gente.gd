@@ -39,12 +39,15 @@ func _process(d: float) -> void:
 		_e.set("rumbo", -PI * 0.5)
 	if _n == 8:
 		print("GENTE al llegar: ", _cerca())
+		print("MEMORIA textura MB: ", snappedf(Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1048576.0, 0.1),
+			"  estática MB: ", snappedf(Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0, 0.1))
 	if _n > 8:
 		_t += d
 		## Se simula más deprisa: varias rondas de reciclaje por fotograma.
 		_e.trafico.reciclar_peatones(_e.cuerpo.position, -_e.camara.global_transform.basis.z)
 	if _n == 40:
 		print("GENTE tras reciclar: ", _cerca())
+		print("LLAMADAS: ", Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME), "  objetos: ", Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME))
 		## Media vuelta: la gente que apareció a la espalda queda a la vista.
 		_e.set("rumbo", PI * 0.5)
 		_e.cuerpo.rotation.y = PI * 0.5
