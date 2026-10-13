@@ -814,6 +814,27 @@ static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales:
 	_bibliotecas[clave] = lib
 	return lib
 
+## Copia del clip con las rotaciones de los dedos acercadas a la pose de
+## reposo (mano abierta) en `cuanto` (0 = igual, 1 = abierta del todo).
+static func _relajar_dedos(anim: Animation, esq: Skeleton3D, cuanto: float) -> Animation:
+	var a := anim.duplicate(true) as Animation
+	for t in a.get_track_count():
+		if a.track_get_type(t) != Animation.TYPE_ROTATION_3D:
+			continue
+		var ruta := str(a.track_get_path(t))
+		var hueso := ruta.get_slice(":", ruta.get_slice_count(":") - 1)
+		if not (hueso.begins_with("index") or hueso.begins_with("middle") or hueso.begins_with("ring") \
+				or hueso.begins_with("pinky") or hueso.begins_with("thumb")):
+			continue
+		var i := esq.find_bone(hueso)
+		if i < 0:
+			continue
+		var reposo := esq.get_bone_rest(i).basis.get_rotation_quaternion()
+		for k in a.track_get_key_count(t):
+			var q: Quaternion = a.track_get_key_value(t, k)
+			a.track_set_key_value(t, k, q.slerp(reposo, cuanto))
+	return a
+
 static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var lib := AnimationLibrary.new()
 	var a_mano := {
@@ -824,6 +845,10 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 	}
 	for clave in a_mano:
 		var real: Animation = cargar_real(CLIP_REAL[clave], prefijo)
+		## Manos relajadas (13-10-2026): los clips llevan el puño cerrado de
+		## superhéroe; parado y andando, los dedos van a medio cerrar.
+		if real != null:
+			real = _relajar_dedos(real, esq, 0.5)
 		lib.add_animation(clave, real if real != null else a_mano[clave])
 	## "sentado" no tiene equivalente en la Universal Animation Library
 	## (ninguno de los 43 clips gratis es una pose sentada) -se queda a mano,
