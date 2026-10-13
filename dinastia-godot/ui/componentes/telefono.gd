@@ -836,12 +836,18 @@ func _noticias() -> void:
 	_titulo_app("Noticias")
 	if bandeja.is_empty():
 		_cuerpo.add_child(_nota("Sin noticias por ahora."))
+	## Medio informe (13-10-2026): titular en negrita con filo dorado a la
+	## izquierda, la primera noticia destacada como portada.
+	var primera := true
 	for n: Dictionary in bandeja.slice(0, 20):
 		var pc := PanelContainer.new()
-		pc.add_theme_stylebox_override("panel", Tema.caja(TARJETA, 12, TARJETA))
+		pc.add_theme_stylebox_override("panel", _caja_informe(primera))
 		var v := VBoxContainer.new()
 		pc.add_child(v)
-		var t := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(n.get("titulo", "")))
+		if primera:
+			v.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, "PORTADA"))
+		var t := Tema.etiqueta(Tema.TAM_DESTACADO if primera else Tema.TAM_CUERPO, Tema.TEXTO, String(n.get("titulo", "")))
+		primera = false
 		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		v.add_child(t)
 		var c := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(n.get("cuerpo", "")))
@@ -849,19 +855,32 @@ func _noticias() -> void:
 		v.add_child(c)
 		_cuerpo.add_child(pc)
 
+## Tarjeta del estilo informe: fondo de app y filo dorado a la izquierda.
+func _caja_informe(destacada := false) -> StyleBoxFlat:
+	var sb := Tema.caja(TARJETA.lightened(0.04) if destacada else TARJETA, 12, TARJETA)
+	sb.set_border_width_all(0)
+	sb.border_width_left = 3
+	sb.border_color = Tema.ORO if destacada else Color(1, 1, 1, 0.18)
+	sb.set_content_margin_all(10)
+	return sb
+
 func _banco() -> void:
 	_titulo_app("Banco")
 	var c := m.mi_club()
 	var filas := []
 	if c != null:
 		filas.append(["🏟️ Caja del club", Cesiones.dinero(c.saldo), Tema.BIEN if c.saldo >= 0 else Color("e5534b")])
+		filas.append(["💸 Sueldos del plantel", Cesiones.dinero(c.masa_salarial()) + " / semana", Tema.TEXTO])
+		## Cuántas semanas aguanta la caja pagando solo sueldos.
+		var sem := int(c.saldo / maxi(1, c.masa_salarial())) if c.saldo > 0 else 0
+		filas.append(["⏳ Semanas de sueldos en caja", str(sem) if sem < 999 else "999+", Tema.BIEN if sem > 20 else (Tema.ORO if sem > 6 else Color("e5534b"))])
 	if m.roles != null:
 		filas.append(["👤 Tu patrimonio", Cesiones.dinero(m.roles.patrimonio), Tema.TEXTO])
 	if m.fondo != null:
 		filas.append(["💼 Tu fondo de inversión", Cesiones.dinero(m.fondo.valor_total(m)), Tema.ORO])
 	for f: Array in filas:
 		var pc := PanelContainer.new()
-		pc.add_theme_stylebox_override("panel", Tema.caja(TARJETA, 12, TARJETA))
+		pc.add_theme_stylebox_override("panel", _caja_informe(f == filas[0]))
 		var v := VBoxContainer.new()
 		pc.add_child(v)
 		v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(f[0])))
