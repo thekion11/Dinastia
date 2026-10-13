@@ -310,6 +310,7 @@ func _tab_pelo() -> Control:
 	_muestras(vb, "Tono de piel", "piel", PersonajeDT.PIELES)
 	_opciones(vb, "Peinado", "pelo", PersonajeDT.CORTES)
 	_muestras(vb, "Color de pelo", "color_pelo", PersonajeDT.COLORES_PELO)
+	_muestras(vb, "Color de ojos", "ojos", PersonajeDT.OJOS)
 	_interruptor(vb, "Barba (cara clásica)", "barba")
 	## BIBLIOTECA MODULAR: caras mezcladas (del tono elegido) y cortes medidos.
 	if BibliotecaCaras.hay():
@@ -376,6 +377,8 @@ func _tab_accesorios() -> Control:
 	_interruptor(vb, "Bufanda del club", "bufanda")
 	_interruptor(vb, "Auriculares", "auriculares")
 	_interruptor(vb, "Reloj", "reloj")
+	_interruptor(vb, "Pendientes", "pendiente")
+	_interruptor(vb, "Cadena al cuello", "cadena")
 	return vb.get_parent()
 
 ## Hasta cinco conjuntos guardados con nombre: para cambiar de traje de gala a

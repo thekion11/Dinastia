@@ -62,8 +62,9 @@ sensación de progreso. Propuesta: hacerlo **opcional** en Ajustes («Todo abier
 - [x] Mismo estilo de diálogo en el estadio (personal, portero, ascensor, decorar). Interiores: semana 6 (aún no hablan).
 - [x] Menos músculo en futbolistas (peatones: pendiente, por coste por fotograma).
 - [x] Tutorial: negrita real (las letras se montaban).
-- [ ] Expresiones: gestos de cara (sonrisa, enfado, sorpresa) en diálogos y celebraciones.
-- [ ] Personalización: más ropa, peinados de la biblioteca, tatuajes simples, relojes y gafas.
+- [x] Expresiones: parpadeo y gestos de ojos (alegre, sorpresa, enfado, triste) en el DT, el personal del estadio y el goleador. Ojos reales también con la cara clásica.
+- [x] Personalización: color de ojos, 14 tonos de piel, gafas redondas y deportivas, pendientes, cadena. Pendiente: más ropa y tatuajes.
+- [x] Ciudad sin textos fijos: ⚙ Ajustes de la ciudad, tutorial propio y móvil en la mano con la velocidad.
 
 ### Semana 2 (20-10 → 26-10) — Partido I: táctica en vivo
 - [ ] Panel en pausa y atajos en vivo: formación, mentalidad (defensiva ↔ ofensiva), presión, línea defensiva.
