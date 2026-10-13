@@ -86,6 +86,14 @@ static func terminar(d: Dictionary) -> void:
 	VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo_col, pant, pant, true, kit, 0)
 	var corte: String = CORTES_M[rng.randi() % CORTES_M.size()] if mujer else CORTES_H[rng.randi() % CORTES_H.size()]
 	PeloQ.poner(d, corte, pelo_col, not mujer and rng.randf() < 0.35)
+	## Cara de la biblioteca modular para los hombres (13-10-2026): mezclas de
+	## varias caras, nunca la de nadie; sin ella todos tenían la mandíbula del
+	## modelo de superhéroe. (Las mezclas salen de hombres: en mujer no van.)
+	if not mujer and BibliotecaCaras.hay():
+		var bib := BibliotecaCaras.para(str(d["semilla"]), piel, pelo_col)
+		if not bib.is_empty():
+			bib["pelo"] = ""
+			VestidorQ.poner_cara(d, {"look": {}, "foto": "", "biblio": bib}, piel)
 	_variedad(d, rng, mujer, pelo_col)
 	## Ojos de verdad (iris y párpados), con el material compartido (13-10-2026).
 	PersonajeDT._ojos_vivos(d, piel, Color(String(PersonajeDT.OJOS[rng.randi() % PersonajeDT.OJOS.size()])), false)
@@ -193,13 +201,20 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 		elif cab_extra < 0.34:
 			## Gorra: casquete y visera.
 			var gm := _m(col.lightened(0.1))
+			## Bajo la gorra, el pelo largo o alto asomaba: se esconde.
+			var pelo_n := esq.get_node_or_null("Pelo")
+			if pelo_n != null:
+				for mp: Node in pelo_n.get_children():
+					if mp is MeshInstance3D and not String(mp.name).begins_with("Eyebrows") and not String(mp.name).contains("Beard"):
+						(mp as MeshInstance3D).visible = String(mp.name) == "Hair_Buzzed"
 			var copa := SphereMesh.new()
-			copa.radius = 0.108
-			copa.height = 0.13
+			## Algo más grande que la cabeza con pelo: si no, el pelo asomaba.
+			copa.radius = 0.118
+			copa.height = 0.15
 			copa.radial_segments = 14
 			copa.rings = 6
 			copa.is_hemisphere = true
-			_pieza(cab, copa, gm, Vector3(0, 0.155, -0.005))
+			_pieza(cab, copa, gm, Vector3(0, 0.15, -0.01))
 			var visera := CylinderMesh.new()
 			visera.top_radius = 0.075
 			visera.bottom_radius = 0.075
