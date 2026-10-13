@@ -35,6 +35,8 @@ func _ready() -> void:
 	_vista = VistaEstadio.new()
 	add_child(_vista)
 	_vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
+	if OS.get_environment("NOCHE") != "":
+		Ambience.apply(_vista.get("_raiz3d"), {"clima": "noche"}, null, Calidad.nivel_de_argumentos(Calidad.ALTO))
 
 var _fin := false
 

@@ -232,6 +232,7 @@ func encender_luces(noche: float) -> void:
 	var f: float = clampf(noche, 0.0, 1.0)
 	for mt in _mats_torre:
 		mt.set_shader_parameter("noche", f)
+	StadiumBuilder.encender_conos(f)
 	for l in _farolas_luz:
 		if is_instance_valid(l):
 			## 5,4 y no 2,4: se midió que a 2,4 las farolas SÍ estaban
