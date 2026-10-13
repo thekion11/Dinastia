@@ -248,3 +248,28 @@ la mayoría».
   Los interiores ya existentes de instalaciones (`interior_instalacion.gd`) son
   la base.
 - **Se comprueba** con capturas de cada tipo por fuera y por dentro.
+
+### Etapa 6 · Avance (13-10-2026)
+Hecho: **entrar caminando** a cualquier fachada de manzana y a cada casa (sala real
+bajo el mapa, puerta, gente dentro, tercera y primera persona, salida a la misma
+posición de la calle) con 6 salas nuevas (vivienda, bar, panadería, peluquería,
+librería, taller) y nombre propio por edificio (`ExploradorCiudad.edificio_en`,
+`InteriorInstalacion.en_mundo`); casas con 5 arquetipos (chalet con ala y
+buhardilla, adosado de azotea con valla, con porche, con garaje y camino, con
+balcón) más escalones, contraventanas, alféizares, ventanas laterales y
+parterres; todos los edificios del kit con tinte propio; **fachada de torre**
+(`fachada_torre.gdshader`: ventanas con marco, reflejo variado, encendido
+nocturno) en rascacielos, bloques y edificios lejanos. Capturas:
+`captura_entrar`, `captura_edificios`, `captura_paseo` (CASA=n, HORA=h).
+Pendiente: colisión con el mobiliario dentro, interiores caminables también para
+las instalaciones (hospital, escuela...), fachadas del kit con más relieve,
+tejados distintos por tipo, patios y jardines propios.
+
+### Etapa 1 · Ampliación, avance (13-10-2026)
+Hecho: visión en **primera persona** (V, con ratón) en ciudad, estadio e
+interiores; vecinos con **oficio y conversación en 3 turnos** (`DialogosCiudad`,
+35 frases en 9 idiomas, generadas por `herramientas/dialogos_ciudad.py`) que se
+giran y gesticulan; peatones que se paran a mirar el móvil. El partido ya
+tenía cámaras POV y repeticiones.
+Pendiente: más oficios y charlas por barrio y por hora, NPCs que charlan entre
+sí, cinemáticas de entrada al campo.
