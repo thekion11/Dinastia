@@ -50,7 +50,7 @@ Qué se revisó, qué se encontró y qué se arregló. Todo se ejecutó en el se
 | `prueba_modos` | FIN MODOS. 0 fallos |
 | Frases sin traducir (9 idiomas) | 0 de 65 literales; la narración va aparte |
 | Registro de la ciudad 3D y de la entrada con portero | sin errores ni avisos (solo el V-Sync del servidor) |
-| Registro del partido al cerrar | 3 scripts y 9 objetos «sin soltar» **solo si la prueba sale en seco con el partido abierto** (`medir_partido`); el cierre normal ya no fuga. Pendiente: confirmar con una prueba que abre y cierra. |
+| Registro del partido al cerrar | **Fuga real, ya arreglada (13-10):** `MatchPlayback` y `ReproductorJugadas` se referenciaban mutuamente (ciclo `RefCounted`) y quedaban 9 objetos y 3 scripts sin soltar tras cerrar el partido. La vuelta es ahora un `WeakRef`. Comprobado con `CERRAR=1 medir_partido`: cero fugas. |
 | CPU de la ciudad sin gráfica | 7–9 ms por fotograma |
 | CPU del partido sin gráfica | 3,8 ms por fotograma |
 | Carga del estadio | 1.ª apertura 5,6 s, 2.ª 0,5 s |
