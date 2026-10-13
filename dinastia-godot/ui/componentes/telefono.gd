@@ -869,21 +869,49 @@ func _banco() -> void:
 		_cuerpo.add_child(pc)
 
 func _calendario() -> void:
+	## MEDIO INFORME (13-10-2026): la ficha del próximo partido con los dos
+	## escudos y la tabla con columnas, sobria, como el parte del club.
 	_titulo_app("Calendario")
 	var c := m.mi_club()
 	var prox := m.proximo_partido()
 	var caja := PanelContainer.new()
-	caja.add_theme_stylebox_override("panel", Tema.caja(TARJETA, 12, TARJETA))
+	var sb := Tema.caja(TARJETA, 12, TARJETA)
+	sb.border_width_left = 3
+	sb.border_color = Tema.ORO
+	caja.add_theme_stylebox_override("panel", sb)
 	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
-	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "PRÓXIMO PARTIDO"))
+	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, "PRÓXIMO PARTIDO"))
 	if prox.size() >= 2:
-		v.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, "%s  vs  %s" % [(prox[0] as Club).nombre, (prox[1] as Club).nombre]))
-		v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "🏠 En casa" if prox[0] == c else "✈️ De visita"))
+		var fila := HBoxContainer.new()
+		fila.alignment = BoxContainer.ALIGNMENT_CENTER
+		fila.add_theme_constant_override("separation", 10)
+		for i in 2:
+			var cl: Club = prox[i]
+			var col := VBoxContainer.new()
+			col.custom_minimum_size = Vector2(130, 0)
+			var esc := TextureRect.new()
+			esc.texture = Escudo.textura(cl, 96)
+			esc.custom_minimum_size = Vector2(44, 44)
+			esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			col.add_child(esc)
+			var nom := Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO if cl == c else Tema.TEXTO, cl.nombre)
+			nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			col.add_child(nom)
+			fila.add_child(col)
+			if i == 0:
+				fila.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.SUAVE, "vs"))
+		v.add_child(fila)
+		var donde := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "🏠 En casa" if prox[0] == c else "✈️ De visita")
+		donde.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		v.add_child(donde)
 	else:
 		v.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "Semana sin partido de liga."))
 	_cuerpo.add_child(caja)
-	## La tabla, cerca de tu puesto.
+	## La tabla alrededor de tu puesto, con columnas alineadas.
 	for l in m.ligas:
 		if not l.clubes.has(c):
 			continue
@@ -892,11 +920,28 @@ func _calendario() -> void:
 		for i in t.size():
 			if t[i]["club"] == c:
 				yo = i
-		_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "  TU LIGA"))
-		for i in range(maxi(0, yo - 2), mini(t.size(), yo + 3)):
-			var fila: Dictionary = t[i]
-			var cl: Club = fila["club"]
-			_cuerpo.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO if cl == c else Tema.TEXTO, "%2d. %s  ·  %d pts" % [i + 1, cl.nombre, int(fila.get("pts", 0))]))
+		_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, "  TU LIGA"))
+		var rej := GridContainer.new()
+		rej.columns = 5
+		rej.add_theme_constant_override("h_separation", 10)
+		for cab: String in ["#", "Club", "PJ", "DG", "Pts"]:
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.SUAVE, cab))
+		for i in range(maxi(0, yo - 3), mini(t.size(), yo + 4)):
+			var f: Dictionary = t[i]
+			var cl: Club = f["club"]
+			var tono := Tema.ORO if cl == c else Tema.TEXTO
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO, tono, str(i + 1)))
+			var nom := Tema.etiqueta(Tema.TAM_ROTULO, tono, cl.nombre)
+			nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			nom.clip_text = true
+			rej.add_child(nom)
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO, tono, str(int(f.get("pj", 0)))))
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO, tono, "%+d" % int(f.get("dif", 0))))
+			rej.add_child(Tema.etiqueta(Tema.TAM_ROTULO, tono, str(int(f.get("pts", 0)))))
+		var pc := PanelContainer.new()
+		pc.add_theme_stylebox_override("panel", Tema.caja(TARJETA, 12, TARJETA))
+		pc.add_child(rej)
+		_cuerpo.add_child(pc)
 		break
 
 func _fotos() -> void:
