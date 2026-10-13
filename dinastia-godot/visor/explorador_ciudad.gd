@@ -53,7 +53,7 @@ var _burbuja: Label3D
 var _t_burbuja := 0.0
 var _cuadro: CuadroDialogo
 var _hablando_con: Node3D
-var _t_gente := 0.0
+var _t_gente := -1000.0   ## < -100: aún no se llenó el entorno
 ## Nombres de pila ficticios para los vecinos.
 const NOMBRES_M := ["Marta", "Lucía", "Carmen", "Elena", "Paula", "Rosa", "Inés", "Julia", "Nuria", "Teresa", "Alba", "Sara"]
 const NOMBRES_H := ["Andrés", "Manolo", "Jorge", "Ramón", "Pablo", "Luis", "Tomás", "Iván", "Héctor", "Ernesto", "Óscar", "Félix"]
@@ -556,9 +556,12 @@ func _physics_process(delta: float) -> void:
 	## Gente alrededor: los peatones lejanos reaparecen cerca (a la espalda).
 	_t_gente -= delta
 	if _t_gente <= 0.0 and trafico != null and estado == "calle":
-		_t_gente = 1.2
 		var mira := -camara.global_transform.basis.z
-		trafico.reciclar_peatones(cuerpo.position, mira)
+		## La primera vez (al empezar a pasear) se llena el entorno de golpe.
+		## Cuánta gente alrededor: menos en calidad media o con el motor ligero.
+		var max_gente := 18 if (Calidad.motor_ligero or Calidad.elegida == Calidad.MEDIO) else 34
+		trafico.reciclar_peatones(cuerpo.position, mira, 95.0, max_gente if _t_gente < -100.0 else 3, max_gente, _t_gente < -100.0)
+		_t_gente = 1.2
 	var corriendo := modo != "coche" and absf(vel) > VEL_PIE * 1.15
 	_actualizar_mano("coche" if modo == "coche" else ("correr" if corriendo else "pie"), absf(vel) * 3.6,
 		VEL_COCHE * 3.6 if modo == "coche" else VEL_CORRER * 3.6, absf(vel) * delta)
@@ -898,6 +901,7 @@ func _salir_del_edificio() -> void:
 	_int = null
 	_int_raiz = null
 	estado = "calle"
+	_t_gente = -1000.0   ## al volver a la calle se llena el entorno
 	_bajo_tierra(false)
 	_vel_pie = 0.0
 	cuerpo.visible = not primera_persona
@@ -1099,6 +1103,7 @@ func _bajar_a_la_galeria() -> void:
 func _subir_de_la_galeria() -> void:
 	_fundido()
 	estado = "calle"
+	_t_gente = -1000.0   ## al volver a la calle se llena el entorno
 	_planta = 0
 	_bajo_tierra(false)
 	cb.mostrar_rotulos(_rotulos_antes)
@@ -1112,6 +1117,7 @@ func _salir_del_estadio() -> void:
 	_fundido()
 	Optimizar.butacas_livianas(cb, true)
 	estado = "calle"
+	_t_gente = -1000.0   ## al volver a la calle se llena el entorno
 	cb.mostrar_rotulos(_rotulos_antes)
 	var pu: Vector3 = _est["puerta"]
 	cuerpo.position = CityBuilder.ESTADIO_EN + pu + Vector3(0, 0, 3.2)
@@ -1298,6 +1304,7 @@ func _usar_en_anden() -> void:
 		return
 	## Salir a la calle por donde se entró (o por la boca de esta estación).
 	estado = "calle"
+	_t_gente = -1000.0   ## al volver a la calle se llena el entorno
 	_luz_cam.visible = false
 	_bajo_tierra(false)
 	var pie: Vector3 = _acc.get("pie", cuerpo.position)
