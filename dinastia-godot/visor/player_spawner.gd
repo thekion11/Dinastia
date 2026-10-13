@@ -502,6 +502,8 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 		if not dq.is_empty():
 			root.add_child(dq["nodo"])
 			FutbolistaQ.terminar(dq, true)
+			## Menos músculo que el modelo base (13-10-2026).
+			PersonajeDT.adelgazar(dq)
 			## Equipación pintada sobre el cuerpo (camiseta con su estilo,
 			## pantalón, medias, botines); la ropa teñida de antes queda solo
 			## como respaldo si faltara la máscara.

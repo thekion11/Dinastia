@@ -275,6 +275,15 @@ static func _cuerpo(d: Dictionary, a: Dictionary) -> void:
 	guardian.process_priority = 100
 	(d["nodo"] as Node3D).add_child(guardian)
 
+## Solo la base esbelta, para futbolistas y demás gente con el mismo modelo
+## (13-10-2026). Usa el mismo guardián que el personaje del jugador.
+static func adelgazar(d: Dictionary) -> void:
+	if not d.has("esqueleto") or not d.has("modelo"):
+		return
+	_cuerpo(d, ASPECTO_NEUTRO)
+
+const ASPECTO_NEUTRO := {"complexion": 0.0, "hombros": 0.0, "barriga": 0.0, "piernas": 0.0, "cabeza": 0.0}
+
 class _Escalas extends Node:
 	var esq: Skeleton3D
 	var escalas: Dictionary

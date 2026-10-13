@@ -123,3 +123,60 @@ func _process(delta: float) -> void:
 			completar()
 	## El aviso parpadea suave para invitar a seguir.
 	_aviso.modulate.a = 0.6 + 0.4 * sin(_t * 4.0)
+
+# --- piezas compartidas: el mismo aspecto en la ciudad, el estadio y los interiores ---
+
+static func estilo_panel() -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.06, 0.07, 0.1, 0.9)
+	sb.set_corner_radius_all(14)
+	sb.set_border_width_all(1)
+	sb.border_color = Color(1, 1, 1, 0.12)
+	sb.shadow_color = Color(0, 0, 0, 0.45)
+	sb.shadow_size = 12
+	sb.content_margin_left = 22
+	sb.content_margin_right = 22
+	sb.content_margin_top = 12
+	sb.content_margin_bottom = 14
+	return sb
+
+static func placa(texto: String, color := Color(1.0, 0.8, 0.35)) -> PanelContainer:
+	var p := PanelContainer.new()
+	p.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	var sp := StyleBoxFlat.new()
+	sp.bg_color = color
+	sp.set_corner_radius_all(8)
+	sp.content_margin_left = 12
+	sp.content_margin_right = 12
+	sp.content_margin_top = 3
+	sp.content_margin_bottom = 3
+	p.add_theme_stylebox_override("panel", sp)
+	var l := Label.new()
+	l.text = texto
+	l.add_theme_font_size_override("font_size", 15)
+	l.add_theme_color_override("font_color", Color(0.05, 0.05, 0.07))
+	p.add_child(l)
+	return p
+
+## Botón de respuesta: píldora oscura con borde que se ilumina al pasar.
+static func respuesta(b: Button) -> Button:
+	for estado in ["normal", "hover", "pressed", "disabled", "focus"]:
+		var sb := StyleBoxFlat.new()
+		sb.set_corner_radius_all(18)
+		sb.content_margin_left = 14
+		sb.content_margin_right = 14
+		sb.content_margin_top = 6
+		sb.content_margin_bottom = 6
+		sb.set_border_width_all(1)
+		sb.bg_color = Color(1, 1, 1, 0.06 if estado == "normal" else (0.16 if estado != "disabled" else 0.02))
+		sb.border_color = Color(1, 0.85, 0.4, 0.8) if estado in ["hover", "focus"] else Color(1, 1, 1, 0.18)
+		b.add_theme_stylebox_override(estado, sb)
+	b.add_theme_font_size_override("font_size", 15)
+	return b
+
+## Escribe el texto de una etiqueta letra a letra.
+static func escribir(l: Label, texto: String) -> void:
+	l.text = texto
+	l.visible_ratio = 0.0
+	var tw := l.create_tween()
+	tw.tween_property(l, "visible_ratio", 1.0, clampf(texto.length() / VELOCIDAD, 0.2, 2.5))

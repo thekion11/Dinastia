@@ -29,6 +29,13 @@ extends Control
 
 signal terminado(completo: bool)
 
+## Negrita de verdad (la sintética del texto enriquecido montaba letras).
+static func _negrita() -> Font:
+	var f := FontVariation.new()
+	f.base_font = ThemeDB.fallback_font
+	f.variation_embolden = 0.7
+	return f
+
 const AJUSTES := "user://ajustes.cfg"
 const SECCION := "tutorial"
 
@@ -491,6 +498,7 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	_lbl_prologo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_lbl_prologo.add_theme_font_size_override("normal_font_size", 20)
 	_lbl_prologo.add_theme_font_size_override("bold_font_size", 20)
+	_lbl_prologo.add_theme_font_override("bold_font", _negrita())
 	_lbl_prologo.add_theme_font_size_override("italics_font_size", 20)
 	_lbl_prologo.add_theme_color_override("default_color", COL_TEXTO)
 	v.add_child(_lbl_prologo)
@@ -616,6 +624,7 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	_lbl_texto.add_theme_font_size_override("bold_font_size", 15)
 	_lbl_texto.add_theme_font_size_override("italics_font_size", 15)
 	_lbl_texto.add_theme_color_override("default_color", COL_TEXTO)
+	_lbl_texto.add_theme_font_override("bold_font", _negrita())
 	_lbl_texto.custom_minimum_size = Vector2(ancho - 150.0, 0)
 	_lbl_texto.mouse_filter = Control.MOUSE_FILTER_STOP
 	_lbl_texto.gui_input.connect(func(ev: InputEvent) -> void:
