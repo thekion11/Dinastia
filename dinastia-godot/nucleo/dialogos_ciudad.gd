@@ -6,7 +6,7 @@ extends RefCounted
 ## `herramientas/dialogos_ciudad.py` (no editar a mano: las frases y sus traducciones
 ## a los 9 idiomas viven en ese script).
 
-const OFICIOS := ["panadera", "jubilado", "estudiante", "taxista", "hincha"]
+const OFICIOS := ["panadera", "jubilado", "estudiante", "taxista", "hincha", "barrendero", "kiosquera", "enfermera", "repartidor"]
 
 static func oficio_de(numero: int) -> String:
 	return String(OFICIOS[absi(numero) % OFICIOS.size()])
@@ -25,6 +25,10 @@ static func nombre(oficio: String) -> String:
 		"estudiante": return Idiomas.t("La estudiante")
 		"taxista": return Idiomas.t("El taxista")
 		"hincha": return Idiomas.t("El hincha")
+		"barrendero": return Idiomas.t("El barrendero")
+		"kiosquera": return Idiomas.t("La kiosquera")
+		"enfermera": return Idiomas.t("La enfermera")
+		"repartidor": return Idiomas.t("El repartidor")
 	return ""
 
 ## Turno 0 = saludo, 1 = charla, 2 = despedida.
@@ -80,4 +84,44 @@ static func linea(oficio: String, turno: int, animo: String, rng: RandomNumberGe
 				var c := [Idiomas.t("Tengo el abono desde hace veinte años y ni una baja."), Idiomas.t("Con los de la grada baja hemos preparado un tifo enorme para el próximo domingo."), Idiomas.t("Pase lo que pase, yo voy a cantar. Eso no se negocia.")]
 				return String(c[rng.randi() % c.size()])
 			return Idiomas.t("¡Vamos, míster! ¡Mañana en la tribuna nos vemos!")
+		"barrendero":
+			if turno == 0:
+				match grupo(animo):
+					"pos": return Idiomas.t("¡Míster! Después de cada victoria barro confeti hasta el mediodía, y encantado.")
+					"neg": return Idiomas.t("Míster, tras la derrota hasta las papeleras parecían tristes.")
+				return Idiomas.t("Buenas, míster. Usted a lo suyo y yo a lo mío: la calle limpia.")
+			if turno == 1:
+				var c := [Idiomas.t("Por los papeles del suelo sé cómo fue el partido sin mirar el marcador."), Idiomas.t("Empiezo a las cinco, cuando la ciudad todavía duerme."), Idiomas.t("Mi nieto juega en la escuelita del club. Dice que quiere ser como sus jugadores.")]
+				return String(c[rng.randi() % c.size()])
+			return Idiomas.t("Siga, míster, que yo sigo barriendo.")
+		"kiosquera":
+			if turno == 0:
+				match grupo(animo):
+					"pos": return Idiomas.t("¡Míster! Hoy los diarios se agotaron antes de las ocho. ¡Usted sale en portada!")
+					"neg": return Idiomas.t("Míster, yo vendo los diarios, no los escribo… pero hoy duelen.")
+				return Idiomas.t("Buenas, míster. ¿El periódico deportivo de siempre?")
+			if turno == 1:
+				var c := [Idiomas.t("Guardo las portadas de las grandes victorias en la pared del kiosco."), Idiomas.t("Los cromos del club son lo que más vendo; los niños los cambian aquí mismo."), Idiomas.t("Los periodistas pasan por aquí antes de la rueda de prensa. Les oigo de todo.")]
+				return String(c[rng.randi() % c.size()])
+			return Idiomas.t("¡Hasta mañana, míster! Le guardo el diario.")
+		"enfermera":
+			if turno == 0:
+				match grupo(animo):
+					"pos": return Idiomas.t("¡Míster! En el hospital celebramos el gol hasta en la sala de espera.")
+					"neg": return Idiomas.t("Ánimo, míster. He visto remontadas peores en urgencias.")
+				return Idiomas.t("Buenas, míster. Salgo de guardia, pero un saludo siempre.")
+			if turno == 1:
+				var c := [Idiomas.t("Cuide las rodillas de sus jugadores: las lesiones de ligamento son muy largas."), Idiomas.t("Los domingos de partido, la guardia se hace más larga y más ruidosa."), Idiomas.t("Mi hija es la que me hizo del club. Yo antes ni sabía qué era un fuera de juego.")]
+				return String(c[rng.randi() % c.size()])
+			return Idiomas.t("Que descanse, míster. Y que no haya lesionados.")
+		"repartidor":
+			if turno == 0:
+				match grupo(animo):
+					"pos": return Idiomas.t("¡Míster! Hoy reparto con la camiseta puesta, ¡y me dan más propina!")
+					"neg": return Idiomas.t("Míster, hoy en cada portal me preguntan lo mismo… mejor no le digo qué.")
+				return Idiomas.t("Perdone, míster, voy con prisa: tengo cuarenta paquetes.")
+			if turno == 1:
+				var c := [Idiomas.t("Llevo pedidos al estadio cada semana: botellas de agua, vendas, de todo."), Idiomas.t("En moto conozco cada atajo de la ciudad. El metro va bien, pero yo llego antes."), Idiomas.t("Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.")]
+				return String(c[rng.randi() % c.size()])
+			return Idiomas.t("¡Me voy, míster! ¡A ganar el sábado!")
 	return ""

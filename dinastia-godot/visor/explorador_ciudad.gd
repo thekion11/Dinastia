@@ -930,7 +930,7 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 		## y un nombre propio, ficticio.
 		var semilla := absi(hash(String(nodo.name)) + int(nodo.position.x * 7.0))
 		var mujer := bool(nodo.get_meta("mujer", semilla % 2 == 0))
-		var lista: Array = ["panadera", "estudiante"] if mujer else ["jubilado", "taxista", "hincha"]
+		var lista: Array = ["panadera", "estudiante", "kiosquera", "enfermera"] if mujer else ["jubilado", "taxista", "hincha", "barrendero", "repartidor"]
 		v["oficio"] = String(lista[semilla % lista.size()])
 		var nombres: Array = NOMBRES_M if mujer else NOMBRES_H
 		v["nombre"] = String(nombres[(semilla / 7) % nombres.size()])
