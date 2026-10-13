@@ -299,7 +299,11 @@ func _lbl(texto: String, tam: int, color: Color, inclinada: bool) -> Label:
 	l.add_theme_color_override("font_color", color)
 	var fv := FontVariation.new()
 	fv.base_font = ThemeDB.fallback_font if get_theme_default_font() == null else get_theme_default_font()
-	fv.variation_embolden = 0.55
+	## Negrita con un contorno DEL MISMO COLOR y no con `variation_embolden`:
+	## el engorde de la fuente pisaba los trazos de las tildes y las letras
+	## salían sucias («ÁUTORIDAD» con un piquito encima de la A).
+	l.add_theme_constant_override("outline_size", maxi(2, tam / 14))
+	l.add_theme_color_override("font_outline_color", color)
 	if inclinada:
 		fv.variation_transform = Transform2D(Vector2(1, 0), Vector2(-0.22, 1), Vector2.ZERO)
 	l.add_theme_font_override("font", fv)

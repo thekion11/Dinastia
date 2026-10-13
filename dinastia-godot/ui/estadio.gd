@@ -317,7 +317,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_cajon.interruptor("🎞 Viñeta de transmisión", _vineta.visible, func(si: bool) -> void:
 		_vineta.visible = si
 		_guardar_pref("vineta", si))
-	_cajon.interruptor("ℹ Ficha del estadio abajo", _pref("pie", true), func(si: bool) -> void:
+	_cajon.interruptor("ℹ Ficha del estadio abajo", _pref("pie", false), func(si: bool) -> void:
 		_pie.visible = si
 		_guardar_pref("pie", si))
 	_cajon.interruptor("🎬 Presentación antes del partido", _pref("intro", true), func(si: bool) -> void:
@@ -342,7 +342,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_pie.offset_left = 18
 	_pie.offset_bottom = -14
 	_pie.offset_top = -34
-	_pie.visible = _pref("pie", true)
+	_pie.visible = _pref("pie", false)
 	add_child(_pie)
 	_actualizar_pie(perfil, aforo, ocupacion)
 
@@ -483,10 +483,14 @@ func _rotar_camara() -> void:
 			_pie.text = _pie_base + "  ·  cámara: " + _rig.current_name()
 
 func _actualizar_pie(perfil: Dictionary, aforo: int, ocupacion: float) -> void:
-	_pie_base = "%s%s  ·  %s de %d niveles  ·  techo %s  ·  %d butacas, %d%% de ocupación" % [
+	## El aforo es el OFICIAL del club (el mismo que en la presentación y en
+	## los menús), no el recuento de butacas del modelo 3D, que no coincidía.
+	var techo := String(perfil["techo"])
+	_pie_base = "%s%s  ·  %s de %d niveles  ·  %s  ·  %s butacas, %d%% de ocupación" % [
 		club.nombre, ("  ·  «%s»" % String(perfil["apodo"])) if String(perfil.get("apodo", "")) != "" else "",
 		String(perfil["forma"]).capitalize(), int(perfil["niveles"]),
-		String(perfil["techo"]), aforo, int(ocupacion * 100.0)]
+		"sin techo" if techo == "sin" else "techo " + techo,
+		_miles(club.estadio_aforo if club.estadio_aforo > 0 else aforo), int(ocupacion * 100.0)]
 	if visitante != null:
 		_pie_base += "  ·  %d en el campo" % _en_campo.size()
 	_pie.text = _pie_base
