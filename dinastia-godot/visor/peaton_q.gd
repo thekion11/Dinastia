@@ -63,7 +63,8 @@ static func terminar(d: Dictionary) -> void:
 	var pant := Color(String(PANTALONES[rng.randi() % PANTALONES.size()]))
 	var piel := Color(String(PIELES[rng.randi() % PIELES.size()]))
 	var pelo_col: Color = PELOS[rng.randi() % PELOS.size()]
-	var zapatilla: String = ["e8e6e0", "1c1c1e", "3e2723", "4a4d52"][rng.randi() % 4]
+	## Sin marrón oscuro: con pieles oscuras parecía que iban descalzos.
+	var zapatilla: String = ["e8e6e0", "1c1c1e", "26324a", "4a4d52"][rng.randi() % 4]
 	var kit := {
 		"dis": String(PRENDAS[rng.randi() % PRENDAS.size()]),
 		## El segundo color, cerca del primero: las rayas y los cuadros de calle
