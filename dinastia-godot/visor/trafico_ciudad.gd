@@ -195,6 +195,10 @@ func _process(delta: float) -> void:
 				var d4 := fposmod(float(o["s"]) - s0, largo)
 				if d4 < 0.9 + avance:
 					avance = minf(avance, maxf(0.0, d4 - 0.9))
+					## Si se alcanzan, a veces se paran a charlar (etapa 1: NPCs con vida).
+					if float(o.get("espera", 0.0)) <= 0.0 and randf() < 0.004:
+						_charlar(v, o)
+						avance = 0.0
 		## CEDER EL PASO AL JUGADOR (etapa 5): un peatón se detiene si estás
 		## delante a menos de 1,6 m; un coche, a menos de 7 m. Solo se mira a los
 		## que están a menos de 14 m (barato) y solo hacia dónde van.
@@ -211,6 +215,38 @@ func _process(delta: float) -> void:
 						avance = 0.0
 		v["s"] = s0 + avance
 		_colocar(v)
+
+## Dos peatones se paran, se miran y charlan unos segundos.
+func _charlar(a: Dictionary, b: Dictionary) -> void:
+	var t := randf_range(5.0, 11.0)
+	var na: Node3D = a["nodo"]
+	var nb: Node3D = b["nodo"]
+	if not is_instance_valid(na) or not is_instance_valid(nb):
+		return
+	for par: Array in [[a, na, nb], [b, nb, na]]:
+		var v: Dictionary = par[0]
+		var yo: Node3D = par[1]
+		var otro: Node3D = par[2]
+		v["espera"] = t
+		v["pausa"] = true
+		var d := otro.global_position - yo.global_position
+		yo.rotation.y = atan2(d.x, d.z)
+		_gesto(v, "charla")
+
+## Un gesto sacado de los clips reales (se añade al peatón la primera vez).
+func _gesto(v: Dictionary, gesto: String) -> void:
+	var nodo: Node3D = v["nodo"]
+	for ap: AnimationPlayer in nodo.find_children("*", "AnimationPlayer", true, false):
+		var lib := ap.get_animation_library("")
+		if lib == null:
+			continue
+		if not lib.has_animation(gesto) and AnimExtra.UAL.has(gesto):
+			var esq := FutbolistaQ.esqueleto_de(nodo)
+			var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[gesto]), str(ap.get_path_to(esq)) if esq != null else "")
+			if clip != null:
+				lib.add_animation(gesto, clip)
+		if lib.has_animation(gesto):
+			ap.play(gesto, 0.3)
 
 ## Pone una animación al peatón `v` (si su cuerpo la tiene).
 func _animar(v: Dictionary, anim: String) -> void:
