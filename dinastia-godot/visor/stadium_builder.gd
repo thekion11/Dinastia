@@ -1776,6 +1776,7 @@ static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float
 				pole.material_override = mat
 				root.add_child(pole)
 				_box(root, base + Vector3(0, h, 0), Vector3(6.0, 1.6, 0.6), lampara)
+				_cono_de_luz(root, base + Vector3(0, h - 0.6, 0), Vector3(0, 0.3, 0), 7.0, luz)
 	if tipo == "corona" or tipo == "mixto" or tipo == "halo":
 		## BUG REAL (23-9-2026): la corona se repartia sobre una ELIPSE
 		## (`cos(a)*dx`, `sin(a)*dz`), y el anillo de tribunas es un
@@ -1795,6 +1796,8 @@ static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float
 				continue
 			var p := Vector3(d.x / k, alto + 1.2, d.y / k)
 			_box(root, p, Vector3(2.0, 0.4, 0.6), lampara)
+			if i % 2 == 0:
+				_cono_de_luz(root, p - Vector3(0, 0.3, 0), Vector3(0, 0.3, 0), 4.0, luz)
 
 ## LA PANTALLA, CON CONTENIDO DE VERDAD (22-9-2026): "esa pantalla azul puede
 ## mejorarse", con razón -era un rectángulo de UN SOLO COLOR LISO, sin nada
@@ -1807,6 +1810,43 @@ static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float
 ## es contenido de baja frecuencia, sin el problema que motivó dejarla lisa.
 ## Reutiliza `Escudo.textura()` -ya usado para el círculo central y la
 ## fachada, cero arte nuevo- en vez de inventar un logo aparte.
+## HACES DE LUZ DE LOS FOCOS (informe de diseño, 13-10-2026: «los focos deben
+## proyectar conos translúcidos sobre el césped»). Un cono aditivo del foco al
+## campo, invisible de día y cada vez más visible cuanto más oscuro es el
+## ambiente (`encender_conos`). Comparten un material.
+static var _mat_cono: StandardMaterial3D = null
+
+static func _cono_de_luz(root: Node3D, desde: Vector3, hasta: Vector3, radio_suelo: float, luz: Color) -> void:
+	if _mat_cono == null:
+		_mat_cono = StandardMaterial3D.new()
+		_mat_cono.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_mat_cono.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_mat_cono.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+		_mat_cono.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_mat_cono.albedo_color = Color(luz, 0.0)
+	var largo := desde.distance_to(hasta)
+	var dir := (desde - hasta).normalized()
+	var cono := CylinderMesh.new()
+	cono.top_radius = 0.25
+	cono.bottom_radius = radio_suelo
+	cono.height = largo
+	cono.radial_segments = 10
+	cono.rings = 0
+	cono.cap_top = false
+	cono.cap_bottom = false
+	var mi := MeshInstance3D.new()
+	mi.mesh = cono
+	mi.material_override = _mat_cono
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.transform = Transform3D(Basis(Quaternion(Vector3.UP, dir)), (desde + hasta) * 0.5)
+	mi.add_to_group("foco_cono")
+	root.add_child(mi)
+
+## `oscuro` 0 (pleno día) a 1 (noche cerrada): lo que se ven los haces.
+static func encender_conos(oscuro: float) -> void:
+	if _mat_cono != null:
+		_mat_cono.albedo_color.a = clampf((oscuro - 0.4) / 0.6, 0.0, 1.0) * 0.035
+
 static func _pantalla_textura(est: Dictionary, mi: Club) -> ImageTexture:
 	## 240x128 = 1,875, la misma proporcion que la malla de la pantalla y que
 	## el lienzo de `PantallaEstadio`. Antes era 256x144 (16:9) y el degradado
