@@ -358,7 +358,11 @@ func spawn_banca(root: Node3D, jugadores: Array, es_local: bool, kit: Dictionary
 		## con balón -mocap real, ver `Dominadas`-, un poco apartado del resto.
 		if i == calienta and bool(nodo["realista"]):
 			var clip := "dominadas_%d" % (1 + absi(j.id.hash()) % 3)
-			n.position.z += lado * 1.4
+			## Apartado de la fila: un paso hacia el campo y fuera del hueco
+			## de su vecino (con 1,4 m en Z caía encima del de al lado, que
+			## está a 1,6 m) (13-10-2026).
+			n.position.z += lado * 2.6
+			n.position.x -= signf(x_banda) * 1.2
 			entrada["base_pos"] = n.position
 			var ap_d: AnimationPlayer = nodo["anim"]
 			if Dominadas.montar(n, ap_d, clip) != null:
