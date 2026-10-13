@@ -317,3 +317,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   Claves: `equipacion_q.gdshader` (escala_holgura, piel_obj, muneca, manga_corta, tatuaje,
   tela civil), `VestidorQ._alisado` (también hacia dentro), `PersonajeDT.adelgazar`,
   `AnimQuaternius._relajar_dedos/_brazos_al_cuerpo`, `TraficoCiudad.reciclar_peatones`.
+- 13-10 PEDIDO: «ve qué más se puede pulir» / «sigue». HECHO: cristal de torres lejanas,
+  periódico (letras limpias, TRADUCIDO entero: `PortadaPeriodico.titular_traducido`),
+  ficha del estadio con el aforo oficial, ventanas de prensa de una en una, tabla de
+  competición a todo lo ancho con DG, respuestas de prensa coherentes, peatones (sin
+  zapatillas marrón, sin cejas dobles en mujeres, `PeloQ.color_cejas`, gafas a la altura,
+  escote sin babero). Prueba de caras de peatones: `CARA=i captura_peatones_fila.tscn`.
