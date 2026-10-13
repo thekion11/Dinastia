@@ -299,3 +299,6 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   las traducciones; no editar a mano). Detalle y pendientes: ETAPAS_FINALES.md.
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.
+- 13-10 PEDIDO: comparar modo partido con FC 26, FC Mobile, DLS, Soccer Manager 2027 y
+  seguir un plan de ruta de ≥2 meses. HECHO: `dinastia-godot/COMPARACION_MODO_PARTIDO.md`
+  y `PLAN_DE_RUTA.md` (9 semanas). EN CURSO: semana 1 (táctica en vivo).
