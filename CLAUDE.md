@@ -287,5 +287,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (aceras/zócalos/peatones con accesorios) y etapa 5 (colisión con círculos, deslizar,
   ceder el paso) con una primera pasada. SIGUE: AUDITORÍA COMPLETA → optimización
   completa (gama baja) → repetir ciclo (pendientes en ETAPAS_FINALES.md).
+- **13-10 PEDIDO**: ETAPA 6 «casas y edificios, uno por uno, cada uno distinto, poder
+  entrar en la mayoría» (plan en ETAPAS_FINALES.md) y AMPLIAR la etapa 1: recorrido y
+  jugabilidad en el estadio, nivel de animaciones, cinemáticas, partidos, VISIÓN EN
+  PRIMERA PERSONA, mejores diálogos con más variedad, NPCs con vida. El usuario
+  entregará el INFORME tras esta pasada por las fases.
 - Esperando al usuario: informe nuevo (después del MEGAPLAN; ahora va el 2.0).
 - Mapa de metas: `dinastia-godot/MAPA_DE_METAS.md`. Informe base: INFORME_DINASTIA.md.

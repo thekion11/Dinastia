@@ -37,6 +37,12 @@ El objetivo es que nada se vea ni se sienta «a medio hacer».
 
 Se comprueba con las hojas de capturas por zona y con un registro limpio.
 
+### Etapa 1 · Ampliación (pedida el 13-10-2026)
+La etapa 1 contempla también: el **recorrido y la jugabilidad dentro del
+estadio**, el **nivel de las animaciones**, las **cinemáticas** y los
+**partidos**; una **visión en primera persona**; **mejores diálogos, con más
+variedad**; y **NPCs con vida** (rutinas, charlas, reacciones; no solo andar).
+
 ## Etapa 2 · Más realismo en texturas y personajes
 
 - **Materiales del mundo.** Hormigón, asfalto, césped, madera, metal y cristal,
@@ -223,3 +229,22 @@ Recorrido TOTAL de la interfaz (`pruebas/captura_recorrido_total.tscn`: principa
       más suaves, ACES y exposición 0,95.
 - [x] Ropa de calle MATE (traje/abrigo/polo): parecía látex brillante.
 - [x] Interiores del club y vestuario quemados (paredes blanco puro): paredes 0,82 y luces de sala más suaves.
+
+## Etapa 6 · Casas y edificios, uno por uno (pedida el 13-10-2026)
+
+Palabras del usuario: «las casas y edificios del juego se ven muy mal; una
+etapa solo para mejorarlos uno por uno, cada edificio distinto, poder entrar en
+la mayoría».
+
+- **Inventario.** Lista de cada tipo de edificio (casas, comercios, torres,
+  instalaciones, servicios públicos) con captura de «antes».
+- **Cada uno distinto.** Fachada, proporciones, tejado, color y detalles
+  propios por tipo y por parcela; que dos vecinos no sean el mismo modelo
+  girado.
+- **Fachadas con detalle real.** Marcos y profundidad de ventanas, puertas con
+  umbral y escalones, balcones, toldos, cornisas, canalones, chimeneas, rótulos.
+- **Entrar en la mayoría.** Interior generado por tipo (casa, tienda, bar,
+  oficina, hospital, colegio...), con puerta que se abre, habitaciones y NPCs.
+  Los interiores ya existentes de instalaciones (`interior_instalacion.gd`) son
+  la base.
+- **Se comprueba** con capturas de cada tipo por fuera y por dentro.
