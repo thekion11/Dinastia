@@ -65,6 +65,60 @@ static func abrir(padre: Control, clave: String, club: Club = null, minijuego: C
 	n._montar()
 	return n
 
+## LA SALA PARA PASEARLA (etapa 6): se construye dentro del mundo 3D de la
+## ciudad, bajo el mapa, con la fachada cerrada salvo la puerta. Devuelve el
+## objeto (hay que añadirlo al árbol para que la gente se mueva) o null.
+static func en_mundo(raiz3d: Node3D, clave_: String, club_: Club = null) -> InteriorInstalacion:
+	if not tiene(clave_):
+		return null
+	var n := InteriorInstalacion.new()
+	n.clave = clave_
+	n.club = club_
+	n._raiz = raiz3d
+	n.visible = false
+	n.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sala: Array = _sala_de(clave_)
+	n.tipo = String(sala[0])
+	n._rng.seed = hash(clave_)
+	if club_ != null:
+		n._c1 = Color(club_.color1)
+		n._c2 = Color(club_.color2)
+	n._construir_sala()
+	n._cerrar_para_pasear()
+	return n
+
+## El nombre propio de este sitio («Bar El Rincón»).
+func _sala_nombre() -> String:
+	return String(_sala_de(clave)[1])
+
+## Tamaño de la sala (m): ancho X, alto Y, fondo Z. La puerta está en z = +fondo/2.
+func tam_sala() -> Vector3:
+	return _tam
+
+## Cierra la fachada (antes baja, para ver dentro) dejando un hueco de puerta de
+## 3 m, y pone techo a toda la sala.
+func _cerrar_para_pasear() -> void:
+	var m := Mini3D.mat(Color(0.88, 0.86, 0.82), 0.85)
+	var zf := _tam.z * 0.5
+	var lado := (_tam.x - 3.0) * 0.5
+	for sx: float in [-1.0, 1.0]:
+		Mini3D.caja(_raiz, Vector3(sx * (1.5 + lado * 0.5), _tam.y * 0.5, zf), Vector3(lado, _tam.y, 0.3), m)
+	Mini3D.caja(_raiz, Vector3(0, _tam.y - 0.5, zf), Vector3(3.0, 1.0, 0.3), m)
+	Mini3D.caja(_raiz, Vector3(0, _tam.y + 0.1, _tam.z * 0.25), Vector3(_tam.x, 0.2, _tam.z * 0.5), Mini3D.mat(Color(0.92, 0.92, 0.9), 0.9))
+	## Marco de la puerta y felpudo.
+	var marco := Mini3D.mat(Color(0.3, 0.2, 0.14), 0.6)
+	for sx: float in [-1.0, 1.0]:
+		Mini3D.caja(_raiz, Vector3(sx * 1.55, 1.3, zf), Vector3(0.12, 2.6, 0.4), marco)
+	Mini3D.caja(_raiz, Vector3(0, 2.6, zf), Vector3(3.2, 0.14, 0.4), marco)
+	Mini3D.caja(_raiz, Vector3(0, 0.02, zf - 0.6), Vector3(2.2, 0.04, 1.0), Mini3D.mat(Color(0.45, 0.2, 0.18), 0.95))
+	## Luz de ambiente propia: aquí no hay sol.
+	var luz := OmniLight3D.new()
+	luz.position = Vector3(0, _tam.y - 0.8, 0)
+	luz.omni_range = maxf(_tam.x, _tam.z) * 0.9
+	luz.light_energy = 1.1
+	luz.shadow_enabled = false
+	_raiz.add_child(luz)
+
 var clave := ""
 var club: Club
 var tipo := ""
@@ -107,6 +161,12 @@ func _montar() -> void:
 			env.ambient_light_color = Color(0.85, 0.85, 0.9)
 			env.ambient_light_energy = 0.55
 			env.tonemap_exposure = 1.0
+	_construir_sala()
+	_interfaz(String(sala[1]))
+	_colocar_camara()
+
+## Levanta la sala según `tipo` en `_raiz` (la usa la ventana y también el paseo).
+func _construir_sala() -> void:
 	match tipo:
 		"oficina": _oficina()
 		"hospital": _hospital()
@@ -129,8 +189,6 @@ func _montar() -> void:
 		"peluqueria": _peluqueria()
 		"libreria": _libreria()
 		"taller": _taller()
-	_interfaz(String(sala[1]))
-	_colocar_camara()
 
 # ------------------------------------------------------------------ la sala
 

@@ -451,6 +451,9 @@ func _physics_process(delta: float) -> void:
 	if estado == "estadio":
 		_mover_en_estadio(delta)
 		return
+	if estado == "interior":
+		_mover_en_interior(delta)
+		return
 	if estado == "puerta":
 		_andar_solo(delta)
 		return
@@ -529,6 +532,12 @@ func _colocar_camara(delta: float) -> void:
 		var l_lon := clampf(rel.dot(_anden_lon), -29.0, 29.0)
 		deseo = _anden_c + _anden_lat * l_lat + _anden_lon * l_lon
 		deseo.y = minf(cuerpo.position.y + alto, MetroCiudad.PROF_TUNEL + 5.6)
+	elif estado == "interior" and is_instance_valid(_int):
+		## Dentro de la sala la cámara no sale de las paredes ni pasa del techo.
+		var t := _int.tam_sala()
+		deseo.x = clampf(deseo.x, _INT_ORIGEN.x - t.x * 0.5 + 0.3, _INT_ORIGEN.x + t.x * 0.5 - 0.3)
+		deseo.z = clampf(deseo.z, _INT_ORIGEN.z - t.z * 0.5 + 0.3, _INT_ORIGEN.z + t.z * 0.5 - 0.3)
+		deseo.y = minf(deseo.y, _INT_ORIGEN.y + t.y - 0.3)
 	elif estado == "calle":
 		## La cámara no se mete dentro de los edificios: si el punto de detrás
 		## cae en una huella, se acerca al personaje hasta el último sitio libre
@@ -634,6 +643,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 		_ventana = not _ventana
 
 func _usar() -> void:
+	if estado == "interior":
+		_salir_del_edificio()   ## E dentro de un edificio: salir a la calle
+		return
 	if estado == "estadio":
 		if is_instance_valid(_menu_asc):
 			return
@@ -682,6 +694,9 @@ func _usar() -> void:
 		return
 	if _cerca.is_empty():
 		return
+	if _cerca["tipo"] == "lugar" and String(_cerca["k"]).begins_with("edificio_") and modo == "pie":
+		_entrar_en_edificio(String(_cerca["k"]))
+		return
 	if _cerca["tipo"] == "metro":
 		_entrar_al_anden(_cerca["acc"])
 		return
@@ -703,6 +718,85 @@ func _usar() -> void:
 	else:
 		interactuar.emit(String(_cerca["k"]))
 
+
+## ============================================================ ENTRAR EN UN EDIFICIO
+## La sala se levanta bajo el mapa (`_INT_ORIGEN`); el personaje camina dentro
+## en tercera o primera persona y sale por la puerta (o con E).
+const _INT_ORIGEN := Vector3(0.0, -400.0, 0.0)
+var _int: InteriorInstalacion = null
+var _int_raiz: Node3D = null
+var _calle_pos := Vector3.ZERO
+var _calle_rumbo := 0.0
+
+func _entrar_en_edificio(k: String) -> void:
+	_fundido()
+	_int_raiz = Node3D.new()
+	_int_raiz.name = "InteriorPaseo"
+	_int_raiz.position = _INT_ORIGEN
+	cb.add_child(_int_raiz)
+	_int = InteriorInstalacion.en_mundo(_int_raiz, k, null)
+	if _int == null:
+		_int_raiz.queue_free()
+		return
+	_capa.add_child(_int)   ## (oculto: solo para que la gente se mueva)
+	_calle_pos = cuerpo.position
+	_calle_rumbo = rumbo
+	estado = "interior"
+	_bajo_tierra(true)
+	_vel_pie = 0.0
+	var t := _int.tam_sala()
+	cuerpo.position = _INT_ORIGEN + Vector3(0, 0.05, t.z * 0.5 - 1.6)
+	rumbo = PI
+	cuerpo.rotation.y = rumbo
+	cuerpo.visible = not primera_persona
+	_cerca = {}
+	_aviso.text = ""
+	_colocar_camara(1.0)
+
+func _mover_en_interior(delta: float) -> void:
+	if not is_instance_valid(_int):
+		_salir_del_edificio()
+		return
+	var e := _entrada()
+	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	var objetivo := (3.4 if corre else 1.6) * clampf(e.y, -0.5, 1.0)
+	_vel_pie = move_toward(_vel_pie, objetivo, (7.0 if absf(objetivo) > absf(_vel_pie) else 12.0) * delta)
+	vel = _vel_pie
+	rumbo -= e.x * delta * 2.6
+	var t := _int.tam_sala()
+	var rel := cuerpo.position - _INT_ORIGEN
+	var nueva := rel + Vector3(sin(rumbo), 0, cos(rumbo)) * vel * delta
+	## La puerta: pasar de la línea del hueco (|x| < 1,4) sale a la calle.
+	if nueva.z > t.z * 0.5 - 0.2 and absf(nueva.x) < 1.4:
+		_salir_del_edificio()
+		return
+	nueva.x = clampf(nueva.x, -t.x * 0.5 + 0.7, t.x * 0.5 - 0.7)
+	nueva.z = clampf(nueva.z, -t.z * 0.5 + 0.7, t.z * 0.5 - 0.7)
+	cuerpo.position = _INT_ORIGEN + Vector3(nueva.x, 0.05, nueva.z)
+	cuerpo.rotation.y = rumbo
+	if _es_dt:
+		_animar_dt(vel)
+	elif _anim != null:
+		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
+	_colocar_camara(delta)
+	_hud.text = "🏠 %s  ·  W/S/A/D para moverte · V: vista · E o la puerta: salir" % String(_int.call("_sala_nombre"))
+
+func _salir_del_edificio() -> void:
+	_fundido()
+	if is_instance_valid(_int):
+		_int.queue_free()
+	if is_instance_valid(_int_raiz):
+		_int_raiz.queue_free()
+	_int = null
+	_int_raiz = null
+	estado = "calle"
+	_bajo_tierra(false)
+	_vel_pie = 0.0
+	cuerpo.visible = not primera_persona
+	cuerpo.position = _calle_pos
+	rumbo = _calle_rumbo
+	cuerpo.rotation.y = rumbo
+	_colocar_camara(1.0)
 
 ## UNA CONVERSACIÓN CON UN VECINO (13-10-2026): tiene un OFICIO, habla en tres
 ## turnos (saludo según el ánimo del club, charla de su oficio, despedida), se
