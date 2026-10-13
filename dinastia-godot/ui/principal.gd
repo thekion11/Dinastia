@@ -4145,6 +4145,11 @@ func _pintar_decision(e: Dictionary) -> void:
 	v.add_child(fila)
 	_boton(String(e.get("opcion_a", "Sí")), func() -> void: _resolver("a"), fila)
 	_boton(String(e.get("opcion_b", "No")), func() -> void: _resolver("b"), fila)
+	## Respuestas con el estilo de los diálogos (13-10-2026).
+	for b in fila.get_children():
+		if b is Button:
+			CuadroDialogo.respuesta(b as Button)
+			(b as Button).add_theme_font_size_override("font_size", 16)
 	var clave := "%s|%s" % [String(e.get("id", "")), pid]
 	if clave != _decision_mostrada:
 		_decision_mostrada = clave
