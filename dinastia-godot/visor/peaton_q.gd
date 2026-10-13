@@ -72,7 +72,13 @@ static func terminar(d: Dictionary) -> void:
 		"bot": {"mod": "clasico", "c1": zapatilla, "c2": zapatilla, "c3": "eeeeee"},
 		"acc": {},
 		"civil": true,
+		## Manga corta y algún tatuaje, con un azar aparte (no cambia lo demás).
+		"manga_corta": absi(int(d["semilla"])) % 100 < 35,
+		"tatuaje": 1 + absi(int(d["semilla"]) / 100) % 3 if absi(int(d["semilla"]) / 7) % 100 < 9 else 0,
 	}
+	## Las rayas, con la forma del cuerpo de mujer, se deformaban como cebra.
+	if mujer and String(kit["dis"]) == "franjas_finas":
+		kit["dis"] = "liso"
 	VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo_col, pant, pant, true, kit, 0)
 	var corte: String = CORTES_M[rng.randi() % CORTES_M.size()] if mujer else CORTES_H[rng.randi() % CORTES_H.size()]
 	PeloQ.poner(d, corte, pelo_col, not mujer and rng.randf() < 0.35)
