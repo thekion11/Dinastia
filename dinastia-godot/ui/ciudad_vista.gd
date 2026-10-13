@@ -382,14 +382,15 @@ func _aplicar_hora() -> void:
 		_sol.transform.basis = base
 		var sol_dia := Color(1.0, 0.97, 0.90)
 		var sol_rasante := Color(1.0, 0.62, 0.34)
-		var luna := Color(0.55, 0.66, 1.0)
+		## Luna fría pero no azul eléctrico (13-10-2026: teñía aceras y calles).
+		var luna := Color(0.66, 0.72, 0.9)
 		var col: Color = sol_dia.lerp(sol_rasante, rasante)
 		_sol.light_color = luna.lerp(col, clampf(dia + rasante * 0.8, 0.0, 1.0))
 		## 1,15 y no 1,45: a pleno día con 1,45 el césped y los campos salían
 		## lavados, casi blancos. El sol de mediodía quema, pero la cámara de
 		## este juego no es una cámara real sin diafragma. Y 0,30 de noche, no
 		## 0,06: con 0,06 no se veía el suelo.
-		_sol.light_energy = lerpf(0.30, 1.15, dia)
+		_sol.light_energy = lerpf(0.24, 1.15, dia)
 		_sol.shadow_enabled = dia > 0.05
 
 	if _cielo != null:
@@ -423,9 +424,11 @@ func _aplicar_hora() -> void:
 		## ambiente va como color, el del cielo de esa hora.
 		if Calidad.es_compatibilidad():
 			_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-			_env.ambient_light_color = Color(0.16, 0.18, 0.26).lerp(Color(0.62, 0.68, 0.74), dia)
+			## De noche, el reflejo cálido de las farolas sobre la ciudad (como el
+			## sodio de una ciudad real), no un azul puro que lo tiñe todo.
+			_env.ambient_light_color = Color(0.24, 0.21, 0.22).lerp(Color(0.62, 0.68, 0.74), dia)
 		if _env.fog_enabled:
-			_env.fog_light_color = Color(0.10, 0.12, 0.18).lerp(Color(0.78, 0.80, 0.84), dia)
+			_env.fog_light_color = Color(0.16, 0.13, 0.14).lerp(Color(0.78, 0.80, 0.84), dia)
 
 	## Y las luces de la ciudad: farolas y ventanas encendidas cuando cae el sol.
 	if _ciudad != null:
