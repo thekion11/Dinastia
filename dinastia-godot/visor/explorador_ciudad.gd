@@ -694,7 +694,9 @@ func _usar() -> void:
 		return
 	if _cerca.is_empty():
 		return
-	if _cerca["tipo"] == "lugar" and String(_cerca["k"]).begins_with("edificio_") and modo == "pie":
+	if _cerca["tipo"] == "lugar" and modo == "pie" and (String(_cerca["k"]).begins_with("edificio_") \
+			or (InteriorInstalacion.tiene(String(_cerca["k"])) and not Instalaciones.CATALOGO.has(String(_cerca["k"])) \
+				and MinijuegosCiudad.juego_de(String(_cerca["k"])) == "")):
 		_entrar_en_edificio(String(_cerca["k"]))
 		return
 	if _cerca["tipo"] == "metro":
@@ -725,6 +727,7 @@ func _usar() -> void:
 const _INT_ORIGEN := Vector3(0.0, -400.0, 0.0)
 var _int: InteriorInstalacion = null
 var _int_raiz: Node3D = null
+var _int_circulos := PackedVector3Array()
 var _calle_pos := Vector3.ZERO
 var _calle_rumbo := 0.0
 
@@ -739,6 +742,9 @@ func _entrar_en_edificio(k: String) -> void:
 		_int_raiz.queue_free()
 		return
 	_capa.add_child(_int)   ## (oculto: solo para que la gente se mueva)
+	## El mobiliario es sólido: círculos sacados de la propia sala (mesas, sofás,
+	## mostradores, estanterías...), sin paredes ni suelo.
+	_int_circulos = Optimizar.obstaculos(_int_raiz, [] as Array[Rect2], 0.4, 0.5)
 	_calle_pos = cuerpo.position
 	_calle_rumbo = rumbo
 	estado = "interior"
@@ -772,6 +778,15 @@ func _mover_en_interior(delta: float) -> void:
 		return
 	nueva.x = clampf(nueva.x, -t.x * 0.5 + 0.7, t.x * 0.5 - 0.7)
 	nueva.z = clampf(nueva.z, -t.z * 0.5 + 0.7, t.z * 0.5 - 0.7)
+	## Contra el mobiliario: se desliza por ejes, como en la calle.
+	if _choca_mueble(nueva):
+		if not _choca_mueble(Vector3(nueva.x, 0, rel.z)):
+			nueva.z = rel.z
+		elif not _choca_mueble(Vector3(rel.x, 0, nueva.z)):
+			nueva.x = rel.x
+		else:
+			nueva = rel
+			_vel_pie = 0.0
 	cuerpo.position = _INT_ORIGEN + Vector3(nueva.x, 0.05, nueva.z)
 	cuerpo.rotation.y = rumbo
 	if _es_dt:
@@ -780,6 +795,16 @@ func _mover_en_interior(delta: float) -> void:
 		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 	_colocar_camara(delta)
 	_hud.text = "🏠 %s  ·  W/S/A/D para moverte · V: vista · E o la puerta: salir" % String(_int.call("_sala_nombre"))
+
+func _choca_mueble(rel: Vector3) -> bool:
+	var p := _INT_ORIGEN + rel
+	for c: Vector3 in _int_circulos:
+		var dx := p.x - c.x
+		var dz := p.z - c.y
+		var rr := c.z + 0.35
+		if dx * dx + dz * dz < rr * rr:
+			return true
+	return false
 
 func _salir_del_edificio() -> void:
 	_fundido()

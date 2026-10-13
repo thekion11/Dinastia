@@ -377,7 +377,7 @@ static func _tris(m: Mesh) -> int:
 ## apoya en el suelo, mide más de 0,9 m de alto y cabe en 8 m de lado, y no
 ## cae dentro de un rectángulo ya sólido, pasa a ser un círculo [x, z, radio].
 ## Se llama ANTES de `agrupar` (después las piezas ya no son nodos sueltos).
-static func obstaculos(raiz: Node3D, rects: Array[Rect2]) -> PackedVector3Array:
+static func obstaculos(raiz: Node3D, rects: Array[Rect2], min_alto := 0.9, max_base := 0.9) -> PackedVector3Array:
 	var sal := PackedVector3Array()
 	var rej := _rejilla(rects)
 	for n in raiz.find_children("*", "MeshInstance3D", true, false):
@@ -389,7 +389,8 @@ static func obstaculos(raiz: Node3D, rects: Array[Rect2]) -> PackedVector3Array:
 		var caja := mi.global_transform * mi.get_aabb()
 		var sx := caja.size.x
 		var sz := caja.size.z
-		if caja.size.y < 0.9 or caja.position.y > 0.9 or maxf(sx, sz) > 8.0 or minf(sx, sz) < 0.08:
+		var base_y := caja.position.y - raiz.global_position.y
+		if caja.size.y < min_alto or base_y > max_base or maxf(sx, sz) > 8.0 or minf(sx, sz) < 0.08:
 			continue
 		var c := caja.get_center()
 		if _en_rejilla(rej, c.x, c.z):
@@ -417,7 +418,7 @@ static func obstaculos(raiz: Node3D, rects: Array[Rect2]) -> PackedVector3Array:
 		var nodo_t := mmi.global_transform
 		for i in mm.instance_count:
 			var caja := nodo_t * mm.get_instance_transform(i) * base
-			if caja.size.y < 0.9 or caja.position.y > 0.9 or maxf(caja.size.x, caja.size.z) > 8.0 or minf(caja.size.x, caja.size.z) < 0.08:
+			if caja.size.y < min_alto or caja.position.y - raiz.global_position.y > max_base or maxf(caja.size.x, caja.size.z) > 8.0 or minf(caja.size.x, caja.size.z) < 0.08:
 				continue
 			var c := caja.get_center()
 			if not _en_rejilla(rej, c.x, c.z):
