@@ -70,6 +70,7 @@ static func _deportista(padre: Node3D, rng: RandomNumberGenerator, pos: Vector3,
 	if d.is_empty():
 		return d
 	var nodo: Node3D = d["nodo"]
+	nodo.set_meta("mujer", false)   ## para que al charlar tenga nombre y oficio de hombre
 	padre.add_child(nodo)
 	nodo.position = pos
 	FutbolistaQ.terminar(d, true)

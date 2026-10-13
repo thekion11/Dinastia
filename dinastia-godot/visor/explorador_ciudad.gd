@@ -53,6 +53,7 @@ var _burbuja: Label3D
 var _t_burbuja := 0.0
 var _cuadro: CuadroDialogo
 var _hablando_con: Node3D
+var _int_cerca: Dictionary = {}   ## alguien de la sala a mano para charlar
 var _t_gente := -1000.0   ## < -100: aún no se llenó el entorno
 ## Nombres de pila ficticios para los vecinos.
 const NOMBRES_M := ["Marta", "Lucía", "Carmen", "Elena", "Paula", "Rosa", "Inés", "Julia", "Nuria", "Teresa", "Alba", "Sara"]
@@ -583,7 +584,7 @@ func _colocar_camara(delta: float) -> void:
 	## PLANO DE CONVERSACIÓN (13-10-2026): mientras alguien te habla, la cámara
 	## se pone tras tu hombro y encuadra su cara (antes tu espalda la tapaba).
 	if _hablando_con != null and is_instance_valid(_hablando_con) and _t_burbuja > 0.0 \
-			and estado == "calle" and modo != "coche" and not primera_persona:
+			and estado in ["calle", "interior"] and modo != "coche" and not primera_persona:
 		var yo := cuerpo.position
 		var el := _hablando_con.global_position
 		var dir := Vector3(el.x - yo.x, 0, el.z - yo.z)
@@ -730,6 +731,10 @@ func _unhandled_input(ev: InputEvent) -> void:
 
 func _usar() -> void:
 	if estado == "interior":
+		## E junto a alguien que trabaja ahí: charlar (13-10-2026); si no, salir.
+		if not _int_cerca.is_empty():
+			_hablar_con_vecino(_int_cerca)
+			return
 		_salir_del_edificio()   ## E dentro de un edificio: salir a la calle
 		return
 	if estado == "estadio":
@@ -881,6 +886,28 @@ func _mover_en_interior(delta: float) -> void:
 		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 	_colocar_camara(delta)
 	_hud.text = "🏠 %s  ·  W/S/A/D para moverte · V: vista · E o la puerta: salir" % String(_int.call("_sala_nombre"))
+	## ¿Alguien de la sala a mano para charlar?
+	_int_cerca = {}
+	var mejor := 1.9
+	for lista: Array in [_int.get("_fijos"), _int.get("_caminantes")]:
+		for f: Dictionary in lista:
+			var d: Dictionary = f["d"]
+			var n: Node3D = d.get("nodo")
+			if n == null or not is_instance_valid(n):
+				continue
+			var dist := Vector2(n.global_position.x - cuerpo.position.x, n.global_position.z - cuerpo.position.z).length()
+			if dist < mejor:
+				mejor = dist
+				if not f.has("charla"):
+					f["charla"] = {"nodo": n}
+				_int_cerca = f["charla"]
+	_aviso.text = Idiomas.t("E: charlar") if not _int_cerca.is_empty() else ""
+	if _t_burbuja > 0.0:
+		_t_burbuja -= delta
+		if _t_burbuja <= 0.0:
+			_burbuja.visible = false
+			if _cuadro != null:
+				_cuadro.cerrar()
 
 func _choca_mueble(rel: Vector3) -> bool:
 	var p := _INT_ORIGEN + rel
@@ -931,6 +958,15 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 		var semilla := absi(hash(String(nodo.name)) + int(nodo.position.x * 7.0))
 		var mujer := bool(nodo.get_meta("mujer", semilla % 2 == 0))
 		var lista: Array = ["panadera", "estudiante", "kiosquera", "enfermera"] if mujer else ["jubilado", "taxista", "hincha", "barrendero", "repartidor"]
+		## Dentro de un edificio, un oficio que pegue con el sitio.
+		if estado == "interior" and is_instance_valid(_int):
+			var sala := String(_int.call("_sala_nombre")).to_lower()
+			if sala.contains("hospital") or sala.contains("clínica"):
+				lista = ["enfermera"] if mujer else ["repartidor"]
+			elif sala.contains("panader"):
+				lista = ["panadera"] if mujer else ["repartidor"]
+			else:
+				lista = ["estudiante", "kiosquera"] if mujer else ["hincha", "repartidor"]
 		v["oficio"] = String(lista[semilla % lista.size()])
 		var nombres: Array = NOMBRES_M if mujer else NOMBRES_H
 		v["nombre"] = String(nombres[(semilla / 7) % nombres.size()])
