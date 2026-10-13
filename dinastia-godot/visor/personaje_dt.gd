@@ -216,19 +216,25 @@ static func _ojos_vivos(d: Dictionary, piel: Color, iris := Color(0.24, 0.16, 0.
 				mi.set_surface_override_material(s, copia)
 				continue
 			VestidorQ._con_reposo_simple(mi)
-			mi.set_surface_override_material(s, material_ojos(piel, iris))
+			var mujer := (d["nodo"] as Node).find_child("Superhero_Female", true, false) != null
+			mi.set_surface_override_material(s, material_ojos(piel, iris, mujer))
 
 ## Un material de ojos por par piel/iris, compartido (peatones incluidos).
 ## `Expresion` hace su copia propia cuando alguien gesticula.
 static var _mats_ojos := {}
-static func material_ojos(piel: Color, iris: Color) -> ShaderMaterial:
-	var k := piel.to_html(false) + iris.to_html(false)
+static func material_ojos(piel: Color, iris: Color, mujer := false) -> ShaderMaterial:
+	var k := piel.to_html(false) + iris.to_html(false) + ("m" if mujer else "")
 	if _mats_ojos.has(k):
 		return _mats_ojos[k]
 	var mo := ShaderMaterial.new()
 	mo.shader = load(Expresion.SHADER_OJOS)
 	mo.set_shader_parameter("iris", iris)
 	mo.set_shader_parameter("piel", piel)
+	## Los ojos del cuerpo de mujer están más abajo (medido en su malla: ±0,0345
+	## y 1,6559). Con los del hombre, los párpados le tapaban el ojo entero.
+	if mujer:
+		mo.set_shader_parameter("centro_neg", Vector2(-0.0345, 1.6559))
+		mo.set_shader_parameter("centro_pos", Vector2(0.0345, 1.6559))
 	_mats_ojos[k] = mo
 	return mo
 

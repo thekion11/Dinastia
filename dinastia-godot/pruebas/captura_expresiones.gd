@@ -31,7 +31,7 @@ func _ready() -> void:
 			"ropa": OS.get_environment("ROPA") if OS.get_environment("ROPA") != "" else "polo",
 			"manga_corta": OS.get_environment("CORTA") != "", "tatuaje": int(OS.get_environment("TATUAJE"))}, true)
 	if OS.get_environment("MUJER") != "":
-		asp.merge({"cuerpo": "female", "pelo": "melena", "altura": 1.68, "barba": false, "piel": "e0b08a", "c_ropa": "6e2a33"}, true)
+		asp.merge({"cuerpo": "female", "pelo": "melena", "altura": 1.68, "barba": false, "piel": OS.get_environment("PIEL") if OS.get_environment("PIEL") != "" else "e0b08a", "c_ropa": "6e2a33", "color_pelo": "2a1c12"}, true)
 	PersonajeDT.crear(_raiz, asp)
 	var cam := Camera3D.new()
 	cam.fov = 18
