@@ -1446,7 +1446,8 @@
 		"¡Me voy, míster! ¡A ganar el sábado!": "I'm off, boss! Win on Saturday!",
 		"Llevo pedidos al estadio cada semana: botellas de agua, vendas, de todo.": "I deliver to the stadium every week: water bottles, bandages, everything.",
 		"En moto conozco cada atajo de la ciudad. El metro va bien, pero yo llego antes.": "On my bike I know every shortcut in town. The metro's fine, but I get there first.",
-		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "I play football with my workmates on Thursdays. Badly, but with lots of heart."
+		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "I play football with my workmates on Thursdays. Badly, but with lots of heart.",
+		"E: charlar": "E: chat"
 	},
 	"pt": {
 		"Historia": "História",
@@ -2895,7 +2896,8 @@
 		"¡Me voy, míster! ¡A ganar el sábado!": "Vou andando, mister! Ganhe no sábado!",
 		"Llevo pedidos al estadio cada semana: botellas de agua, vendas, de todo.": "Levo encomendas ao estádio todas as semanas: garrafas de água, ligaduras, de tudo.",
 		"En moto conozco cada atajo de la ciudad. El metro va bien, pero yo llego antes.": "De mota conheço todos os atalhos da cidade. O metro é bom, mas eu chego antes.",
-		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Jogo futebol com os colegas às quintas. Mal, mas com muito coração."
+		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Jogo futebol com os colegas às quintas. Mal, mas com muito coração.",
+		"E: charlar": "E: conversar"
 	},
 	"patrones": [
 		[
@@ -4843,7 +4845,8 @@
 		"¡Me voy, míster! ¡A ganar el sábado!": "J'y vais, coach ! Gagnez samedi !",
 		"Llevo pedidos al estadio cada semana: botellas de agua, vendas, de todo.": "Je livre au stade chaque semaine : bouteilles d'eau, bandages, de tout.",
 		"En moto conozco cada atajo de la ciudad. El metro va bien, pero yo llego antes.": "En scooter, je connais chaque raccourci de la ville. Le métro, c'est bien, mais j'arrive avant.",
-		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Je joue au foot avec les collègues le jeudi. Mal, mais avec beaucoup de cœur."
+		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Je joue au foot avec les collègues le jeudi. Mal, mais avec beaucoup de cœur.",
+		"E: charlar": "E : discuter"
 	},
 	"it": {
 		"Historia": "Storia",
@@ -6163,7 +6166,8 @@
 		"¡Me voy, míster! ¡A ganar el sábado!": "Vado, mister! Vinca sabato!",
 		"Llevo pedidos al estadio cada semana: botellas de agua, vendas, de todo.": "Porto ordini allo stadio ogni settimana: bottiglie d'acqua, bende, di tutto.",
 		"En moto conozco cada atajo de la ciudad. El metro va bien, pero yo llego antes.": "In moto conosco ogni scorciatoia della città. La metro va bene, ma io arrivo prima.",
-		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Gioco a calcio con i colleghi il giovedì. Male, ma con tanto cuore."
+		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Gioco a calcio con i colleghi il giovedì. Male, ma con tanto cuore.",
+		"E: charlar": "E: chiacchierare"
 	},
 	"de": {
 		"Historia": "Geschichte",
@@ -7483,7 +7487,8 @@
 		"¡Me voy, míster! ¡A ganar el sábado!": "Ich muss los, Trainer! Gewinnen Sie am Samstag!",
 		"Llevo pedidos al estadio cada semana: botellas de agua, vendas, de todo.": "Ich liefere jede Woche ans Stadion: Wasserflaschen, Bandagen, alles Mögliche.",
 		"En moto conozco cada atajo de la ciudad. El metro va bien, pero yo llego antes.": "Mit dem Roller kenne ich jede Abkürzung der Stadt. Die U-Bahn ist gut, aber ich bin schneller.",
-		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Donnerstags spiele ich mit Kollegen Fußball. Schlecht, aber mit viel Herz."
+		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Donnerstags spiele ich mit Kollegen Fußball. Schlecht, aber mit viel Herz.",
+		"E: charlar": "E: plaudern"
 	},
 	"ca": {
 		"Historia": "Història",
@@ -8803,7 +8808,8 @@
 		"¡Me voy, míster! ¡A ganar el sábado!": "Me'n vaig, míster! A guanyar dissabte!",
 		"Llevo pedidos al estadio cada semana: botellas de agua, vendas, de todo.": "Porto comandes a l'estadi cada setmana: ampolles d'aigua, benes, de tot.",
 		"En moto conozco cada atajo de la ciudad. El metro va bien, pero yo llego antes.": "En moto conec cada drecera de la ciutat. El metro va bé, però jo hi arribo abans.",
-		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Jugo a futbol amb els companys els dijous. Malament, però amb molt de cor."
+		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Jugo a futbol amb els companys els dijous. Malament, però amb molt de cor.",
+		"E: charlar": "E: xerrar"
 	},
 	"pl": {
 		"Club": "Klub",
@@ -10420,7 +10426,8 @@
 		"¡Me voy, míster! ¡A ganar el sábado!": "Lecę, trenerze! Proszę wygrać w sobotę!",
 		"Llevo pedidos al estadio cada semana: botellas de agua, vendas, de todo.": "Co tydzień wożę zamówienia na stadion: wodę, bandaże, wszystko.",
 		"En moto conozco cada atajo de la ciudad. El metro va bien, pero yo llego antes.": "Na skuterze znam każdy skrót w mieście. Metro jest w porządku, ale ja jestem szybszy.",
-		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "W czwartki gram w piłkę z kolegami. Słabo, ale z sercem."
+		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "W czwartki gram w piłkę z kolegami. Słabo, ale z sercem.",
+		"E: charlar": "E: porozmawiaj"
 	},
 	"tr": {
 		"Club": "Kulüp",
@@ -12037,6 +12044,7 @@
 		"¡Me voy, míster! ¡A ganar el sábado!": "Ben kaçtım hocam! Cumartesi kazanın!",
 		"Llevo pedidos al estadio cada semana: botellas de agua, vendas, de todo.": "Her hafta stadyuma sipariş götürüyorum: su şişeleri, bandaj, her şey.",
 		"En moto conozco cada atajo de la ciudad. El metro va bien, pero yo llego antes.": "Motorla şehrin her kestirmesini bilirim. Metro iyi ama ben daha önce varırım.",
-		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Perşembeleri arkadaşlarla top oynuyorum. Kötü ama çok yürekten."
+		"Juego al fútbol con los compañeros los jueves. Mal, pero con mucho corazón.": "Perşembeleri arkadaşlarla top oynuyorum. Kötü ama çok yürekten.",
+		"E: charlar": "E: sohbet et"
 	}
 }
