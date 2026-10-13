@@ -31,11 +31,29 @@ const SALAS := {
 	"resid": ["comedor", "Residencia de canteranos"], "guarderia": ["aula", "Guardería y zona familiar"],
 }
 
+## EDIFICIOS DE LA CIUDAD (etapa 6, 13-10-2026): casas, bares, panaderías...
+## no son «instalaciones», pero también se entra. La clave lleva el nombre
+## propio del sitio tras una barra: «edificio_bar|Bar El Rincón».
+const SALAS_EDIFICIO := {
+	"edificio_vivienda": ["vivienda", "Vivienda"], "edificio_bar": ["bar", "Bar"],
+	"edificio_panaderia": ["panaderia", "Panadería"], "edificio_peluqueria": ["peluqueria", "Peluquería"],
+	"edificio_libreria": ["libreria", "Librería"], "edificio_taller": ["taller", "Taller mecánico"],
+	"edificio_oficina": ["oficina", "Oficinas"],
+}
+
+static func _sala_de(clave: String) -> Array:
+	var base := clave.get_slice("|", 0)
+	var fila: Array = (SALAS[base] if SALAS.has(base) else SALAS_EDIFICIO[base]).duplicate()
+	if clave.contains("|"):
+		fila[1] = clave.get_slice("|", 1)
+	return fila
+
 static func tiene(clave: String) -> bool:
-	return SALAS.has(clave)
+	var base := clave.get_slice("|", 0)
+	return SALAS.has(base) or SALAS_EDIFICIO.has(base)
 
 static func abrir(padre: Control, clave: String, club: Club = null, minijuego: Callable = Callable()) -> InteriorInstalacion:
-	if not SALAS.has(clave):
+	if not tiene(clave):
 		return null
 	var n := InteriorInstalacion.new()
 	n.clave = clave
@@ -69,7 +87,8 @@ var _gente := 0
 
 func _montar() -> void:
 	_rng.seed = hash(clave) + Time.get_ticks_msec()
-	var sala: Array = SALAS[clave]
+	## (la base de la clave decide qué sala; lo que va tras «|» es solo el nombre)
+	var sala: Array = _sala_de(clave)
 	tipo = String(sala[0])
 	if club != null:
 		_c1 = Color(club.color1)
@@ -104,6 +123,12 @@ func _montar() -> void:
 		"prensa": _prensa()
 		"museo": _museo()
 		"piscina": _piscina()
+		"vivienda": _vivienda()
+		"bar": _bar()
+		"panaderia": _panaderia()
+		"peluqueria": _peluqueria()
+		"libreria": _libreria()
+		"taller": _taller()
 	_interfaz(String(sala[1]))
 	_colocar_camara()
 
@@ -491,7 +516,7 @@ func _aula() -> void:
 	if peques:
 		for k in 6:
 			Mini3D.esfera(_raiz, Vector3(-11.5 + float(k) * 0.6, 0.25, 7.0), 0.25, Mini3D.mat(Color.from_hsv(float(k) / 6.0, 0.7, 0.95), 0.4))
-	_cartel("🎓 " + String(SALAS[clave][1]).to_upper(), Vector3(0, 5.2, -8.7), 56)
+	_cartel("🎓 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 5.2, -8.7), 56)
 
 func _estacion() -> void:
 	_sala(Vector3(40, 10, 24), Color(0.62, 0.58, 0.52), Color(0.82, 0.76, 0.66))
@@ -565,7 +590,7 @@ func _tienda() -> void:
 	for k in 4:
 		var z := 1.0 + float(k) * 1.3
 		_caminante([Vector3(-12, 0, z), Vector3(6, 0, z), Vector3(6, 0, -5.5), Vector3(-12, 0, -5.5)])
-	_cartel("🛍️ " + String(SALAS[clave][1]).to_upper(), Vector3(0, 5.2, -9.7), 56)
+	_cartel("🛍️ " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 5.2, -9.7), 56)
 
 func _gimnasio() -> void:
 	_sala(Vector3(30, 7.5, 20), Color(0.25, 0.25, 0.28), Color(0.85, 0.85, 0.88))
@@ -593,7 +618,7 @@ func _gimnasio() -> void:
 	## El preparador físico, que va de máquina en máquina.
 	_caminante([Vector3(-10, 0, -4.5), Vector3(10, 0, -4.5), Vector3(10, 0, 0), Vector3(-10, 0, 0)], [Color(0.15, 0.15, 0.18), Color(0.15, 0.15, 0.18), true])
 	Mini3D.caja(_raiz, Vector3(14.8, 3.0, 0), Vector3(0.05, 4.0, 14.0), Mini3D.mat(Color(0.75, 0.85, 0.95), 0.05))
-	_cartel("💪 " + String(SALAS[clave][1]).to_upper(), Vector3(0, 5.6, -9.7), 56)
+	_cartel("💪 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 5.6, -9.7), 56)
 
 func _analisis() -> void:
 	_sala(Vector3(24, 6, 16), Color(0.18, 0.18, 0.22), Color(0.3, 0.32, 0.38))
@@ -606,7 +631,7 @@ func _analisis() -> void:
 			_silla(p + Vector3(0, 0, 0.8), PI)
 			_trabajador(p + Vector3(0, 0, 0.95), PI, true, [], [_c1, _c2] if clave == "esports" else [])
 	_caminante([Vector3(-8, 0, -6), Vector3(8, 0, -6)])
-	_cartel("📊 " + String(SALAS[clave][1]).to_upper(), Vector3(0, 5.4, -7.8), 44)
+	_cartel("📊 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 5.4, -7.8), 44)
 
 func _comedor() -> void:
 	_sala(Vector3(30, 7, 20), Color(0.7, 0.62, 0.5), Color(0.95, 0.92, 0.85))
@@ -628,7 +653,7 @@ func _comedor() -> void:
 					Mini3D.cilindro(_raiz, ps + Vector3(0, 0.78, -lado * 0.6), 0.18, 0.03, Mini3D.mat(Color.WHITE, 0.4))
 					if _rng.randf() < 0.6:
 						_trabajador(ps + Vector3(0, 0, lado * 0.2), 0.0 if lado > 0.0 else PI, true, [], [_c1, _c2])
-	_cartel("🥗 " + String(SALAS[clave][1]).to_upper(), Vector3(0, 5.2, -9.7), 52)
+	_cartel("🥗 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 5.2, -9.7), 52)
 
 func _prensa() -> void:
 	_sala(Vector3(26, 6.5, 18), Color(0.2, 0.22, 0.3), Color(0.25, 0.3, 0.45))
@@ -698,3 +723,122 @@ func _piscina() -> void:
 	for k in 4:
 		Mini3D.caja(_raiz, Vector3(-9.0 + float(k) * 6.0, 0.4, 7.5), Vector3(1.8, 0.15, 0.7), Mini3D.mat(Color(0.95, 0.95, 0.95), 0.6))
 	_cartel("🏊 PISCINA DE RECUPERACIÓN", Vector3(0, 5.6, -10.7))
+
+# ------------------------------------------------- edificios de la ciudad
+
+## Una vivienda: salón con sofá y tele, cocina al fondo, mesa de comer, y una
+## familia que vive allí (alguien cocina, alguien ve la tele, alguien va y viene).
+func _vivienda() -> void:
+	_sala(Vector3(22, 5.5, 16), Color(0.62, 0.45, 0.3), Color(0.93, 0.88, 0.8))
+	var tela := Mini3D.mat(Color(0.35, 0.45, 0.6), 0.9)
+	## Sofá y mesa baja mirando a la tele.
+	Mini3D.caja(_raiz, Vector3(-5.5, 0.4, 2.5), Vector3(4.0, 0.8, 1.2), tela)
+	Mini3D.caja(_raiz, Vector3(-5.5, 1.0, 3.0), Vector3(4.0, 0.9, 0.3), tela)
+	Mini3D.caja(_raiz, Vector3(-5.5, 0.25, 0.4), Vector3(2.2, 0.5, 1.0), Mini3D.mat(Color(0.5, 0.35, 0.22), 0.6))
+	Mini3D.caja(_raiz, Vector3(-5.5, 0.55, -3.2), Vector3(3.2, 0.9, 0.5), Mini3D.mat(Color(0.2, 0.2, 0.22), 0.5))
+	Mini3D.caja(_raiz, Vector3(-5.5, 1.5, -3.15), Vector3(2.6, 1.3, 0.06), Mini3D.mat(Color(0.05, 0.08, 0.12), 0.2, 0.6))
+	## Alfombra y estantería.
+	Mini3D.caja(_raiz, Vector3(-5.5, 0.01, 0.8), Vector3(4.5, 0.02, 3.0), Mini3D.mat(Color(0.7, 0.3, 0.25), 0.95))
+	_estanteria(Vector3(-10.0, 0, -1.0), PI * 0.5, Color(0.8, 0.7, 0.4))
+	## Cocina: encimera con fogones y nevera.
+	_mostrador(Vector3(6.0, 0, -7.2), 9.0, 0.0, Color(0.85, 0.85, 0.82))
+	Mini3D.caja(_raiz, Vector3(10.0, 1.0, -7.2), Vector3(1.1, 2.0, 0.9), Mini3D.mat(Color(0.88, 0.9, 0.92), 0.3))
+	for k in 3:
+		Mini3D.cilindro(_raiz, Vector3(4.0 + float(k) * 1.4, 1.2, -7.2), 0.25, 0.3, Mini3D.mat(Color(0.5, 0.5, 0.52), 0.2))
+	## Mesa de comer con cuatro sillas.
+	Mini3D.caja(_raiz, Vector3(6.0, 0.74, -1.0), Vector3(3.2, 0.06, 1.6), Mini3D.mat(Color(0.55, 0.4, 0.28), 0.6))
+	for k in 2:
+		_silla(Vector3(5.2 + float(k) * 1.6, 0, -2.1), 0.0)
+		_silla(Vector3(5.2 + float(k) * 1.6, 0, 0.1), PI)
+	_trabajador(Vector3(6.0, 0, -6.3), 0.0, false, ["charla", "brazos_jarra"], [Color(0.9, 0.85, 0.7), Color(0.3, 0.3, 0.35), true])
+	_trabajador(Vector3(-5.5, 0.4, 2.5), PI, true, ["charla", "aplaudir"], [Color(0.3, 0.6, 0.4), Color(0.2, 0.2, 0.3)])
+	_caminante([Vector3(0, 0, 4.0), Vector3(8, 0, 4.0), Vector3(8, 0, 1.0), Vector3(0, 0, 1.0)])
+	_cartel("🏠 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 4.5, -7.8), 40)
+
+## Un bar: barra larga con taburetes, mesas, camarero y clientes que charlan.
+func _bar() -> void:
+	_sala(Vector3(24, 5.5, 16), Color(0.28, 0.2, 0.15), Color(0.5, 0.3, 0.2))
+	_mostrador(Vector3(0, 0, -4.0), 14.0, 0.0, Color(0.4, 0.26, 0.16))
+	for k in 6:
+		Mini3D.cilindro(_raiz, Vector3(-5.5 + float(k) * 2.2, 0.35, -3.0), 0.25, 0.7, Mini3D.mat(Color(0.15, 0.15, 0.17), 0.4))
+	## Botellas en los estantes de detrás.
+	Mini3D.caja(_raiz, Vector3(0, 2.0, -7.7), Vector3(14.0, 0.06, 0.4), Mini3D.mat(Color(0.35, 0.23, 0.14), 0.6))
+	for k in 20:
+		Mini3D.cilindro(_raiz, Vector3(-6.5 + float(k) * 0.68, 2.3, -7.7), 0.07, 0.5, Mini3D.mat(Color.from_hsv(_rng.randf(), 0.6, 0.7), 0.2))
+	_trabajador(Vector3(-2.0, 0, -5.4), 0.0, false, ["charla", "brazos_jarra", "saludo_mano"], [Color(0.95, 0.95, 0.95), Color(0.15, 0.15, 0.18), true])
+	for k in 3:
+		_trabajador(Vector3(-4.4 + float(k) * 4.4, 0, -2.2), PI, false, ["charla", "aplaudir", "brazos_jarra"], [Color.from_hsv(_rng.randf(), 0.5, 0.7), Color(0.2, 0.22, 0.3)])
+	for i in 2:
+		for j in 3:
+			var p := Vector3(-8.0 + float(j) * 7.0, 0, 1.5 + float(i) * 3.8)
+			Mini3D.cilindro(_raiz, p + Vector3(0, 0.38, 0), 0.7, 0.76, Mini3D.mat(Color(0.5, 0.35, 0.22), 0.6))
+			_silla(p + Vector3(-1.0, 0, 0), PI * 0.5)
+			_silla(p + Vector3(1.0, 0, 0), -PI * 0.5)
+			if _rng.randf() < 0.7:
+				_trabajador(p + Vector3(-1.0, 0.0, 0), PI * 0.5, true, ["charla", "aplaudir"], [Color.from_hsv(_rng.randf(), 0.5, 0.7), Color(0.25, 0.25, 0.3)])
+	_caminante([Vector3(-10, 0, 6.5), Vector3(10, 0, 6.5), Vector3(10, 0, 0.5), Vector3(-10, 0, 0.5)])
+	_cartel("🍺 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 4.6, -7.8), 44)
+
+## Una panadería: vitrina, cestas de pan, el panadero y la cola de clientes.
+func _panaderia() -> void:
+	_sala(Vector3(20, 5.0, 14), Color(0.85, 0.8, 0.7), Color(0.98, 0.93, 0.8))
+	_mostrador(Vector3(0, 0, -2.0), 12.0, 0.0, Color(0.7, 0.5, 0.3))
+	Mini3D.caja(_raiz, Vector3(0, 1.45, -2.0), Vector3(12.0, 0.7, 0.6), Mini3D.mat(Color(0.8, 0.9, 1.0), 0.05, 0.1))
+	for k in 12:
+		Mini3D.caja(_raiz, Vector3(-5.5 + float(k) * 1.0, 1.25, -2.0), Vector3(0.6, 0.2, 0.4), Mini3D.mat(Color(0.8, 0.55, 0.25).lerp(Color(0.6, 0.4, 0.2), _rng.randf()), 0.8))
+	for k in 5:
+		_estanteria(Vector3(-8.0 + float(k) * 4.0, 0, -6.4), 0.0, Color(0.85, 0.6, 0.3))
+	_trabajador(Vector3(-2.0, 0, -3.3), 0.0, false, ["charla", "brazos_jarra"], [Color.WHITE, Color(0.3, 0.3, 0.3), true])
+	_trabajador(Vector3(3.0, 0, -3.3), 0.0, false, ["saludo_mano", "charla"], [Color.WHITE, Color(0.3, 0.3, 0.3), true])
+	for k in 3:
+		_trabajador(Vector3(-3.0 + float(k) * 3.0, 0, 0.0), PI, false, ["charla"], [Color.from_hsv(_rng.randf(), 0.5, 0.7), Color(0.25, 0.25, 0.3)])
+	_cartel("🥖 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 4.2, -6.7), 44)
+
+## Una peluquería: sillones frente a espejos, secadores y gente esperando.
+func _peluqueria() -> void:
+	_sala(Vector3(20, 5.0, 14), Color(0.9, 0.88, 0.9), Color(0.75, 0.85, 0.9))
+	for k in 4:
+		var x := -6.0 + float(k) * 4.0
+		Mini3D.caja(_raiz, Vector3(x, 1.6, -6.7), Vector3(2.2, 1.8, 0.05), Mini3D.mat(Color(0.8, 0.9, 1.0), 0.05, 0.15))
+		_silla(Vector3(x, 0.1, -5.2), 0.0, Color(0.15, 0.15, 0.18))
+		_trabajador(Vector3(x, 0.0, -5.2), 0.0, true, [], [Color.from_hsv(_rng.randf(), 0.5, 0.7), Color(0.25, 0.25, 0.3)])
+		_trabajador(Vector3(x, 0, -3.9), PI, false, ["charla", "brazos_jarra"], [Color(0.1, 0.1, 0.12), Color(0.1, 0.1, 0.12), true])
+	for k in 3:
+		_silla(Vector3(-5.0 + float(k) * 1.2, 0, 3.5), PI, Color(0.5, 0.2, 0.3))
+	_mostrador(Vector3(5.5, 0, 3.2), 4.0, 0.0, Color(0.9, 0.9, 0.92))
+	_cartel("✂️ " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 4.2, -6.7), 44)
+
+## Una librería: estanterías llenas, mesa de novedades y lectores.
+func _libreria() -> void:
+	_sala(Vector3(22, 5.5, 14), Color(0.5, 0.38, 0.28), Color(0.85, 0.8, 0.7))
+	for k in 8:
+		_estanteria(Vector3(-9.0 + float(k) * 2.5, 0, -6.4), 0.0, Color.from_hsv(float(k) / 8.0, 0.5, 0.7))
+	for k in 2:
+		_estanteria(Vector3(-9.0 + float(k) * 4.0, 0, 0.5), 0.0, Color.from_hsv(0.1 + float(k) * 0.3, 0.5, 0.7))
+	Mini3D.caja(_raiz, Vector3(4.0, 0.5, 1.5), Vector3(4.0, 1.0, 2.0), Mini3D.mat(Color(0.35, 0.25, 0.18), 0.6))
+	for k in 6:
+		Mini3D.caja(_raiz, Vector3(2.5 + float(k % 3) * 1.4, 1.08, 1.0 + float(k / 3) * 1.0), Vector3(1.0, 0.1, 0.7), Mini3D.mat(Color.from_hsv(_rng.randf(), 0.6, 0.8), 0.7))
+	_mostrador(Vector3(8.0, 0, 4.5), 4.0, PI * 0.5, Color(0.3, 0.22, 0.16))
+	_trabajador(Vector3(9.0, 0, 4.5), -PI * 0.5, false, ["saludo_mano", "charla"], [Color(0.4, 0.25, 0.2), Color(0.2, 0.2, 0.25)])
+	_caminante([Vector3(-8, 0, -2.5), Vector3(0, 0, -2.5), Vector3(0, 0, 3.5), Vector3(-8, 0, 3.5)])
+	_caminante([Vector3(10, 0, -3.0), Vector3(2, 0, -3.0)])
+	_cartel("📚 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 4.5, -6.7), 44)
+
+## Un taller: coche en el elevador, banco de trabajo, herramientas y mecánicos.
+func _taller() -> void:
+	_sala(Vector3(24, 6.0, 16), Color(0.32, 0.32, 0.34), Color(0.7, 0.72, 0.75))
+	Mini3D.caja(_raiz, Vector3(-4.0, 0.9, -2.0), Vector3(1.0, 1.8, 0.4), Mini3D.mat(Color(0.2, 0.2, 0.22), 0.4))
+	Mini3D.caja(_raiz, Vector3(-4.0, 2.1, -2.0), Vector3(4.2, 1.0, 2.0), Mini3D.mat(Color(0.75, 0.15, 0.12), 0.35))
+	Mini3D.caja(_raiz, Vector3(-4.0, 2.7, -2.0), Vector3(2.4, 0.6, 1.7), Mini3D.mat(Color(0.7, 0.85, 0.95), 0.1))
+	for lado: float in [-1.0, 1.0]:
+		for fb: float in [-1.0, 1.0]:
+			Mini3D.cilindro(_raiz, Vector3(-4.0 + fb * 1.4, 1.5, -2.0 + lado * 1.05), 0.4, 0.3, Mini3D.mat(Color(0.08, 0.08, 0.08), 0.8))
+	## Banco de trabajo con herramientas colgadas.
+	Mini3D.caja(_raiz, Vector3(7.0, 0.5, -7.2), Vector3(7.0, 1.0, 0.9), Mini3D.mat(Color(0.35, 0.3, 0.25), 0.6))
+	Mini3D.caja(_raiz, Vector3(7.0, 2.2, -7.7), Vector3(7.0, 1.8, 0.05), Mini3D.mat(Color(0.5, 0.5, 0.52), 0.4))
+	for k in 12:
+		Mini3D.caja(_raiz, Vector3(3.8 + float(k) * 0.55, 2.2, -7.6), Vector3(0.08, 0.8, 0.04), Mini3D.mat(Color(0.1, 0.1, 0.12), 0.3))
+	_trabajador(Vector3(-2.0, 0, -0.5), PI, false, ["charla", "brazos_jarra"], [Color(0.15, 0.3, 0.6), Color(0.15, 0.3, 0.6), true])
+	_trabajador(Vector3(7.0, 0, -6.2), 0.0, false, ["charla", "pedir_calma"], [Color(0.15, 0.3, 0.6), Color(0.15, 0.3, 0.6), true])
+	_caminante([Vector3(2, 0, 3), Vector3(10, 0, 3), Vector3(10, 0, -3), Vector3(2, 0, -3)])
+	_cartel("🔧 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 5.0, -7.8), 44)
