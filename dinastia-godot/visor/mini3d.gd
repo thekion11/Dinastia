@@ -38,6 +38,10 @@ static func vista(padre: Control, momento: int = Calidad.DIA) -> Dictionary:
 	cam.current = true
 	return {"cont": cont, "vp": vp, "raiz": raiz, "cam": cam, "sol": sol}
 
+## ¿La sala es de deporte (gimnasio, piscina)? Fuera de ella, la ropa corta
+## pedida se viste de calle con manga corta, no de fútbol.
+static var sala_deportiva := true
+
 ## Un vecino animado. `deporte` lo viste de corto con los colores dados (el
 ## portero, los chicos del barrio); si no, ropa de calle.
 static func persona(padre: Node3D, rng: RandomNumberGenerator, pos: Vector3, deporte: Array = []) -> Dictionary:
@@ -78,7 +82,22 @@ static func _deportista(padre: Node3D, rng: RandomNumberGenerator, pos: Vector3,
 	var c2: Color = deporte[1]
 	var piel := Color(String(PeatonQ.PIELES[rng.randi() % PeatonQ.PIELES.size()]))
 	var pelo: Color = PeatonQ.PELOS[rng.randi() % PeatonQ.PELOS.size()]
-	VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo, c2, c1, deporte.size() > 2 and bool(deporte[2]))
+	var largo := deporte.size() > 2 and bool(deporte[2])
+	if largo or not sala_deportiva:
+		## Manga larga = ropa de TRABAJO (panaderos, médicos, bomberos,
+		## camareros…): ropa de calle lisa del color pedido, no una camiseta
+		## de fútbol con su dibujo y sus medias (13-10-2026).
+		var kit := {"dis": "liso", "cols": [c1.to_html(false), c1.to_html(false), c1.darkened(0.15).to_html(false), "ffffff", "111111"],
+			"trim": 0, "cuello": 1,
+			"pant": {"dis": "liso", "c1": c2.to_html(false), "c2": c2.to_html(false)},
+			"med": {"dis": "lisas", "c1": c2.to_html(false), "c2": c2.to_html(false)},
+			"bot": {"mod": "clasico", "c1": "1c1c1e", "c2": "1c1c1e", "c3": "eeeeee"}, "acc": {}, "civil": true}
+		if not largo:
+			kit["manga_corta"] = true
+		VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo, c2, c2, true, kit, 0)
+		PersonajeDT.adelgazar(d, false)
+	else:
+		VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo, c2, c1, false)
 	PeloQ.poner(d, String(PeatonQ.CORTES_H[rng.randi() % PeatonQ.CORTES_H.size()]), pelo, rng.randf() < 0.3)
 	anim(d, "parado")
 	return d
