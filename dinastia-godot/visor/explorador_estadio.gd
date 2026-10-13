@@ -255,11 +255,15 @@ func _rotulos() -> void:
 	_hud.text = "📍 %s · %s %d  ·  %s" % [Idiomas.t(nombre), Idiomas.t("Planta"), planta, Idiomas.t("W/S/A/D o mando · Mayús: correr · E: usar · Esc: salir")]
 
 func _unhandled_input(ev: InputEvent) -> void:
+	if ev is InputEventMouseMotion and primera_persona and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		rumbo -= (ev as InputEventMouseMotion).relative.x * 0.003
+		return
 	if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		salir.emit()
 	elif ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_V:
 		primera_persona = not primera_persona
+		_raton_en_primera_persona()
 	elif (ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_E) \
 			or (ev is InputEventJoypadButton and ev.pressed and ev.button_index == JOY_BUTTON_X):
 		get_viewport().set_input_as_handled()
@@ -267,6 +271,10 @@ func _unhandled_input(ev: InputEvent) -> void:
 
 ## Sentado en la grada: dónde y hacia dónde se mira.
 var sentado := false
+## Captura el cursor en primera persona (para mirar con el ratón) y lo suelta fuera.
+func _raton_en_primera_persona() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if primera_persona and DisplayServer.get_name() != "headless" else Input.MOUSE_MODE_VISIBLE
+
 ## Visión en primera persona (tecla V).
 var primera_persona := false
 var _de_pie := Vector3.ZERO
@@ -352,3 +360,6 @@ func _colocar_camara(delta: float) -> void:
 		deseo.y = minf(deseo.y, RecorridoClub.y_de(planta) + float(z["techo"]) - 0.25)
 	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
 	camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 3.0, Vector3.UP)
+
+func _exit_tree() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
