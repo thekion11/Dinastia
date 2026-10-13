@@ -3488,7 +3488,11 @@ func _pintar_clubes() -> void:
 				_pintar_clubes())
 			g.add_child(b)
 			for clave in ["pj", "g", "e", "p", "pts"]:
-				_celda(g, str(int(fila.get(clave, 0))), COL_TEXTO if clave == "pts" else COL_SUAVE, true, 11)
+				var txt := str(int(fila.get(clave, 0)))
+				## Los puntos quitados por sanción, a la vista (−3 en rojo).
+				if clave == "pts" and int(fila.get("sancion", 0)) > 0:
+					txt += " (−%d)" % int(fila["sancion"])
+				_celda(g, txt, COL_TEXTO if clave == "pts" else COL_SUAVE, true, 11)
 			puesto += 1
 		_lista_clubes.add_child(HSeparator.new())
 
