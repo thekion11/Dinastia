@@ -224,7 +224,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 					superficie = s
 					es_mujer = m.resource_name == "MI_Superhero_Female"
 				MATERIAL_CEJAS, "MI_Hair_2":  # el cuerpo de mujer trae sus cejas con MI_Hair_2
-					mi.set_surface_override_material(s, _material_liso(pelo, 0.9))
+					mi.set_surface_override_material(s, _material_liso(PeloQ.color_cejas(pelo), 0.9))
 				MATERIAL_OJOS:
 					## Las texturas de ojos del pack no vinieron en el repo:
 					## sin esto, blanco puro de fábrica y mirada de maniquí.

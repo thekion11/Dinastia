@@ -34,6 +34,13 @@ func _ready() -> void:
 	cam.fov = 30
 	add_child(cam)
 	cam.look_at_from_position(Vector3(0, 1.05, 4.6), Vector3(0, 1.0, 0))
+	## CARA=i: primer plano de la cara del peatón i (ojos, cejas, pestañas).
+	if OS.get_environment("CARA") != "":
+		var i := int(OS.get_environment("CARA"))
+		var x := (i - 3.5) * 0.95
+		var alto := 1.55 if bool(_ds[mini(i, _ds.size() - 1)]["mujer"]) else 1.66
+		cam.fov = 12
+		cam.look_at_from_position(Vector3(x, alto, 1.6), Vector3(x, alto, 0))
 
 func _process(_d: float) -> void:
 	_n += 1
