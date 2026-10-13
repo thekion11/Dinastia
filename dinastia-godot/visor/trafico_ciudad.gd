@@ -132,7 +132,14 @@ func agregar_vehiculo(nodo: Node3D, ruta: int, s: float, vel: float,
 		"nodo": nodo, "ruta": ruta, "s": s, "vel": vel,
 		"alto": alto, "giro": giro_base,
 	})
+	## Los peatones (alto bajo) se anotan por ruta para no atravesarse.
+	if alto > 0.05 and alto < 0.3:
+		if not _peatones_ruta.has(ruta):
+			_peatones_ruta[ruta] = []
+		(_peatones_ruta[ruta] as Array).append(_vehiculos[_vehiculos.size() - 1])
 	_colocar(_vehiculos[_vehiculos.size() - 1])
+
+var _peatones_ruta := {}        ## ruta -> [peatones]
 
 ## Quién camina o conduce por la ciudad (lo pone `ExploradorCiudad`): todos le
 ## ceden el paso.
@@ -169,6 +176,15 @@ func _process(delta: float) -> void:
 				var d3 := fposmod(float(o["s"]) - s0, largo)
 				if d3 < 9.0:
 					avance = minf(avance, maxf(0.0, d3 - 8.0))
+		## Un peatón no atraviesa al que va delante en su ruta: si le alcanza a menos
+		## de 0,9 m, se queda detrás (adelantar queda para una próxima pasada).
+		if _peatones_ruta.has(ruta) and float(v["alto"]) > 0.05 and float(v["alto"]) < 0.3:
+			for o: Dictionary in _peatones_ruta[ruta]:
+				if o == v:
+					continue
+				var d4 := fposmod(float(o["s"]) - s0, largo)
+				if d4 < 0.9 + avance:
+					avance = minf(avance, maxf(0.0, d4 - 0.9))
 		## CEDER EL PASO AL JUGADOR (etapa 5): un peatón se detiene si estás
 		## delante a menos de 1,6 m; un coche, a menos de 7 m. Solo se mira a los
 		## que están a menos de 14 m (barato) y solo hacia dónde van.
