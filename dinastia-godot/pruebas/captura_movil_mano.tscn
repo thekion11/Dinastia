@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://pruebas/captura_movil_mano.gd" id="1"]
+
+[node name="CapturaMovilMano" type="Node"]
+script = ExtResource("1")

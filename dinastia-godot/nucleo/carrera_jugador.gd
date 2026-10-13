@@ -676,6 +676,11 @@ func pasar_a_entrenador(m: Mundo, club_dt: Club) -> bool:
 	m.tomar_el_mando(club_dt.id)
 	if m.roles != null:
 		m.roles.arrancar("dt", j.nombre)
+	## LA DINASTÍA (fase 5): tu jugador queda en el libro de leyendas como
+	## «propio»: en unos años su hijo llega a la cantera que dirijas.
+	if m.cantera != null:
+		m.cantera.leyendas.append({"nombre": j.nombre, "club_id": club_dt.id, "pos": j.pos,
+			"nivel": maxi(j.ovr, 70), "anio_hijo": m.anio + 4, "usado": false, "propio": true})
 	historial.append({"anio": m.anio, "semana": m.semana, "titulo": "Retiro",
 		"eleccion": "Cuelga las botas tras %d partidos y %d goles; dirige a %s" % [pj_carrera, goles_carrera, club_dt.nombre]})
 	return true

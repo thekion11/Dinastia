@@ -18,6 +18,11 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 10:
+		## Con personaje creado, para ver al DT 3D en el atril.
+		if OS.get_environment("SIN_PERSONAJE") == "":
+			var rng := RandomNumberGenerator.new()
+			rng.seed = 5
+			PersonajeDT.del_usuario = PersonajeDT.aleatorio(rng)
 		var mun = _pantalla.get("mundo")
 		mun.prensa.abrir_rueda(true, false)
 		_pantalla.call("_abrir_rueda_pantalla_completa", mun.prensa.entrevista)

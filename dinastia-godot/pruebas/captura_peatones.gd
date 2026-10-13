@@ -1,53 +1,50 @@
 extends Node
-## LOS PEATONES DE LA CIUDAD (26-9-2026), a ras de la acera del anillo.
-##   godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_peatones.tscn
-## Por fotogramas: sin tarjeta gráfica cada uno tarda casi medio segundo.
-const RING_X_CAP := 205.0
+## Fila de peatones de cerca, de frente y de espalda (etapa 4: complexión y
+## accesorios). Salida: pruebas/capturas/peatones_fila.png
+##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x700 res://pruebas/captura_peatones.tscn
 var _n := 0
-var _p: Node
-var _v: VistaCiudad
+var _cam: Camera3D
 
 func _ready() -> void:
-	_p = load("res://escenas/principal.tscn").instantiate()
-	add_child(_p)
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var we := WorldEnvironment.new()
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0.55, 0.65, 0.78)
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.8, 0.82, 0.9)
+	env.ambient_light_energy = 0.6
+	we.environment = env
+	raiz.add_child(we)
+	var sol := DirectionalLight3D.new()
+	sol.rotation_degrees = Vector3(-45, 30, 0)
+	raiz.add_child(sol)
+	var suelo := MeshInstance3D.new()
+	var pm := PlaneMesh.new()
+	pm.size = Vector2(40, 20)
+	suelo.mesh = pm
+	raiz.add_child(suelo)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(OS.get_environment("SEMILLA")) if OS.get_environment("SEMILLA") != "" else 77
+	var ds: Array = []
+	for fila in 2:
+		for i in 8:
+			var d := PeatonQ.crear(rng)
+			var nodo: Node3D = d["nodo"]
+			nodo.position = Vector3((i - 3.5) * 1.5, 0, fila * 3.0 - 1.5)
+			nodo.rotation.y = PI if fila == 1 else 0.0
+			raiz.add_child(nodo)
+			PeatonQ.terminar(d)
+			ds.append(d)
+	_cam = Camera3D.new()
+	_cam.fov = 40
+	raiz.add_child(_cam)
+	_cam.position = Vector3(0, 1.5, float(OS.get_environment("DIST")) if OS.get_environment("DIST") != "" else 11.0)
+	_cam.look_at(Vector3(0, 0.95, 0))
 
 func _process(_d: float) -> void:
 	_n += 1
-	if _n == 6:
-		var m: Mundo = _p.get("mundo")
-		var c := m.mi_club()
-		c.saldo = 900000000
-		for k: String in ["ct", "acad", "med", "gim", "resid", "com"]:
-			m.obras.niveles[k] = 2
-		m.obras.iniciar("piscina", c)
-		m.obras.iniciar("trib", c)
-		_p.call("_ver_ciudad_propia")
-		for h in _p.get_children():
-			if h is VistaCiudad:
-				_v = h
-		_v.dia_partido = true
-		_v.call("_reconstruir")
-		_v.set("_girando", false)
-		_v.set("_ciclo_activo", false)
-		_v.set("_hora", 13.0)
-		_v.call("_aplicar_hora")
 	if _n == 12:
-		## Al ras de la acera del anillo, para ver a los peatones.
-		var cam: Camera3D = _v.get("_camara")
-		_v.set_process(false)
-		cam.position = Vector3(RING_X_CAP + 20.0, 4.0, 30.0)
-		cam.look_at(Vector3(RING_X_CAP + 10.0, 1.2, 0.0), Vector3.UP)
-	if _n == 18:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ciudad_peatones.png")
-		var cam2: Camera3D = _v.get("_camara")
-		cam2.position = Vector3(120.0, 70.0, 230.0)
-		cam2.look_at(Vector3(230.0, 0.0, 330.0), Vector3.UP)
-	if _n == 24:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ciudad_calles.png")
-		## Los frentes urbanos de la calle sur, a la altura de un segundo piso.
-		var cam3: Camera3D = _v.get("_camara")
-		cam3.position = Vector3(60.0, 9.0, 350.0)
-		cam3.look_at(Vector3(140.0, 6.0, 368.0), Vector3.UP)
-	if _n == 30:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/ciudad_frentes.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/peatones_fila.png")
 		get_tree().quit()

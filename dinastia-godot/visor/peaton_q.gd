@@ -17,14 +17,22 @@ extends RefCounted
 ## Lejos de la cámara se dejan de dibujar (`visibility_range_end`): la ciudad
 ## puede tener decenas sin notarse en los fotogramas.
 
-const PIELES := ["f1c7a5", "e0b08a", "c68d68", "a86b45", "7a4e32", "5a3a26"]
+const PIELES := ["f1c7a5", "e0b08a", "c68d68", "a86b45", "8d5e40", "77503a"]
 const PELOS := [Color(0.08, 0.06, 0.05), Color(0.25, 0.16, 0.09), Color(0.45, 0.3, 0.16), Color(0.7, 0.55, 0.3), Color(0.55, 0.55, 0.55), Color(0.85, 0.85, 0.82)]
-const CORTES_H := ["corto", "fade", "tupe", "flequillo", "rizado", "largo", "coleta", "rapado"]
-const CORTES_M := ["largo", "melena", "coleta", "trenzas", "corto"]
+## Peinados de calle (13-10-2026): el moño doble era casi la mitad de las
+## mujeres y la coleta de samurái salía en hombres; ahora pesan lo que en la calle.
+const CORTES_H := ["corto", "corto", "fade", "fade", "tupe", "flequillo", "rizado", "rapado", "largo"]
+const CORTES_M := ["largo", "largo", "melena", "melena", "trenzas", "corto", "coleta"]
 ## [diseño, nombre]: lo que se ve por la calle.
-const PRENDAS := ["liso", "liso", "liso", "franjas_finas", "aros_finos", "cuadros_chicos", "tartan", "mangas_contraste", "canesu"]
-const PANTALONES := ["274472", "1f2f4f", "3a3a3a", "c2b280", "5a4a3a", "111111", "6b6b70"]
-const ROPA := ["ffffff", "111111", "c62828", "1565c0", "2e7d32", "f9a825", "6a1b9a", "455a64", "8d6e63", "ec407a", "00838f", "ef6c00", "9e9e9e"]
+## 13-10-2026: ropa de calle de verdad. Sobre todo liso; rayas finas y cuadros
+## pequeños de vez en cuando; nada de dibujos de equipación (arlequín, canesú,
+## mangas de contraste) ni colores de camiseta de fútbol.
+const PRENDAS := ["liso", "liso", "liso", "liso", "liso", "franjas", "cuadros_chicos"]
+## Vaqueros (tres lavados), chinos, gris, negro, verde oliva.
+const PANTALONES := ["2c3e5c", "3b5577", "1e2a3d", "b8a27a", "4a4a4e", "1b1b1d", "55583f"]
+## Colores apagados de calle: blanco roto, gris, negro, azul marino, burdeos,
+## verde botella, mostaza apagado, camel, crudo, azul grisáceo, teja.
+const ROPA := ["ecebe6", "8f9296", "2b2c30", "26324a", "6e2a33", "2f4a3c", "b5913f", "a67b55", "d9cfbd", "5f7486", "9c5a3c", "46494f", "c9c3b6"]
 
 ## Crea el peatón (sin terminar: `terminar()` cuando ya esté en el árbol).
 static func crear(rng: RandomNumberGenerator) -> Dictionary:
@@ -34,6 +42,7 @@ static func crear(rng: RandomNumberGenerator) -> Dictionary:
 		return d
 	d["mujer"] = mujer
 	d["semilla"] = rng.randi()
+	(d["nodo"] as Node).set_meta("mujer", mujer)
 	return d
 
 ## Lo arma cuando ya está en el árbol: medidas, ropa, pelo y paso.
@@ -46,16 +55,21 @@ static func terminar(d: Dictionary) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(d["semilla"])
 	FutbolistaQ.terminar(d, false)
+	## Sin el cuerpo de culturista del modelo (sin coste por fotograma).
+	PersonajeDT.adelgazar(d, false)
 	var mujer: bool = d["mujer"]
 	var c1 := Color(String(ROPA[rng.randi() % ROPA.size()]))
 	var c2 := Color(String(ROPA[rng.randi() % ROPA.size()]))
 	var pant := Color(String(PANTALONES[rng.randi() % PANTALONES.size()]))
 	var piel := Color(String(PIELES[rng.randi() % PIELES.size()]))
 	var pelo_col: Color = PELOS[rng.randi() % PELOS.size()]
-	var zapatilla: String = ["ffffff", "111111", "8d6e63", "1565c0"][rng.randi() % 4]
+	## Sin marrón oscuro: con pieles oscuras parecía que iban descalzos.
+	var zapatilla: String = ["e8e6e0", "1c1c1e", "26324a", "4a4d52"][rng.randi() % 4]
 	var kit := {
 		"dis": String(PRENDAS[rng.randi() % PRENDAS.size()]),
-		"cols": [c1.to_html(false), c2.to_html(false), c2.darkened(0.3).to_html(false), "ffffff", "111111"],
+		## El segundo color, cerca del primero: las rayas y los cuadros de calle
+		## son de tonos suaves, no de camiseta de fútbol.
+		"cols": [c1.to_html(false), c1.lerp(c2, 0.4).to_html(false), c2.darkened(0.3).to_html(false), "ffffff", "111111"],
 		"trim": 1 if rng.randf() < 0.5 else 0,
 		"cuello": 1 if rng.randf() < 0.7 else 2,
 		"pant": {"dis": "liso", "c1": pant.to_html(false), "c2": pant.to_html(false)},
@@ -63,10 +77,27 @@ static func terminar(d: Dictionary) -> void:
 		"bot": {"mod": "clasico", "c1": zapatilla, "c2": zapatilla, "c3": "eeeeee"},
 		"acc": {},
 		"civil": true,
+		## Manga corta y algún tatuaje, con un azar aparte (no cambia lo demás).
+		"manga_corta": absi(int(d["semilla"])) % 100 < 35,
+		"tatuaje": 1 + absi(int(d["semilla"]) / 100) % 3 if absi(int(d["semilla"]) / 7) % 100 < 9 else 0,
 	}
+	## Las rayas, con la forma del cuerpo de mujer, se deformaban como cebra.
+	if mujer and String(kit["dis"]) == "franjas":
+		kit["dis"] = "liso"
 	VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo_col, pant, pant, true, kit, 0)
 	var corte: String = CORTES_M[rng.randi() % CORTES_M.size()] if mujer else CORTES_H[rng.randi() % CORTES_H.size()]
 	PeloQ.poner(d, corte, pelo_col, not mujer and rng.randf() < 0.35)
+	## Cara de la biblioteca modular para los hombres (13-10-2026): mezclas de
+	## varias caras, nunca la de nadie; sin ella todos tenían la mandíbula del
+	## modelo de superhéroe. (Las mezclas salen de hombres: en mujer no van.)
+	if not mujer and BibliotecaCaras.hay() and OS.get_environment("SIN_CARAS_PEATON") == "":
+		var bib := BibliotecaCaras.para(str(d["semilla"]), piel, pelo_col)
+		if not bib.is_empty():
+			bib["pelo"] = ""
+			VestidorQ.poner_cara(d, {"look": {}, "foto": "", "biblio": bib}, piel)
+	_variedad(d, rng, mujer, pelo_col)
+	## Ojos de verdad (iris y párpados), con el material compartido (13-10-2026).
+	PersonajeDT._ojos_vivos(d, piel, Color(String(PersonajeDT.OJOS[rng.randi() % PersonajeDT.OJOS.size()])), false)
 	var ap: AnimationPlayer = d["anim"]
 	if ap.has_animation("caminar"):
 		ap.play("caminar")
@@ -74,5 +105,123 @@ static func terminar(d: Dictionary) -> void:
 		ap.speed_scale = rng.randf_range(0.9, 1.1)
 	## Lejos de la cámara no se dibuja (ni su sombra).
 	for mi in nodo.find_children("*", "MeshInstance3D", true, false):
-		(mi as MeshInstance3D).visibility_range_end = 220.0
+		(mi as MeshInstance3D).visibility_range_end = 120.0
 		(mi as MeshInstance3D).visibility_range_end_margin = 20.0
+
+
+## COMPLEXIÓN Y ACCESORIOS (etapa 4, 12-10-2026). Todos los peatones eran el
+## mismo cuerpo con distinta ropa. Ahora cambian de ANCHURA (de delgado a
+## robusto) y llevan, según el azar, mochila, bolso, móvil en la mano, gafas de
+## sol o gorra. Piezas de pocos polígonos, colgadas del hueso, que comparten
+## materiales (una sola caja de cada color en toda la ciudad). El azar sale de
+## `rng` DESPUÉS de todo lo ya sorteado: la ropa de cada peatón no cambia.
+static var _mats := {}
+
+static func _m(c: Color, rug := 0.7) -> StandardMaterial3D:
+	var k := "%s|%.2f" % [c.to_html(false), rug]
+	if not _mats.has(k):
+		var m := StandardMaterial3D.new()
+		m.albedo_color = c
+		m.roughness = rug
+		_mats[k] = m
+	return _mats[k]
+
+static func _pieza(padre: Node3D, malla: Mesh, mat: Material, pos: Vector3, giro := Vector3.ZERO) -> void:
+	var mi := MeshInstance3D.new()
+	mi.mesh = malla
+	mi.material_override = mat
+	mi.position = pos
+	mi.rotation_degrees = giro
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.visibility_range_end = 40.0
+	padre.add_child(mi)
+
+static func _caja(t: Vector3) -> BoxMesh:
+	var b := BoxMesh.new()
+	b.size = t
+	return b
+
+static func _en_hueso(esq: Skeleton3D, hueso: String, k: float) -> Node3D:
+	if esq.find_bone(hueso) < 0:
+		return null
+	var ba := BoneAttachment3D.new()
+	ba.bone_name = hueso
+	esq.add_child(ba)
+	var n := Node3D.new()
+	n.scale = Vector3.ONE * k
+	ba.add_child(n)
+	return n
+
+static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pelo_col: Color) -> void:
+	var modelo: Node3D = d["modelo"]
+	## Complexión: más o menos ancho (y algo de fondo), sin cambiar la estatura.
+	## Más esbeltos que el modelo base de culturista (13-10-2026).
+	var ancho := rng.randf_range(0.84, 1.06)
+	modelo.scale = Vector3(modelo.scale.x * ancho, modelo.scale.y, modelo.scale.z * lerpf(1.0, ancho, 0.6))
+	var esq: Skeleton3D = d["esqueleto"]
+	var k := 1.0 / maxf(modelo.scale.y, 0.01)
+	var acc := rng.randf()
+	var col := Color(String(ROPA[rng.randi() % ROPA.size()])).darkened(0.25)
+	if acc < 0.28:
+		## Mochila a la espalda (el pecho mira a +Z en el hueso de la columna).
+		var h := _en_hueso(esq, "spine_03", k)
+		if h != null:
+			_pieza(h, _caja(Vector3(0.26, 0.32, 0.13)), _m(col), Vector3(0, 0.02, -0.16))
+			_pieza(h, _caja(Vector3(0.22, 0.14, 0.05)), _m(col.darkened(0.2)), Vector3(0, -0.06, -0.25))
+	elif acc < 0.42:
+		## Bolso colgado de la cadera.
+		var h2 := _en_hueso(esq, "hand_r" if rng.randf() < 0.5 else "hand_l", k)
+		if h2 != null:
+			## Bolsa con asa, colgando BAJO la mano (+Y del hueso = hacia los dedos).
+			var bolsa := col if rng.randf() < 0.6 else Color(0.78, 0.66, 0.48)
+			_pieza(h2, _caja(Vector3(0.26, 0.22, 0.09)), _m(bolsa, 0.6), Vector3(0, 0.24, 0))
+			var asa := TorusMesh.new()
+			asa.inner_radius = 0.045
+			asa.outer_radius = 0.055
+			asa.rings = 10
+			asa.ring_segments = 6
+			_pieza(h2, asa, _m(bolsa.darkened(0.35), 0.5), Vector3(0, 0.1, 0), Vector3(0, 0, 90))
+	elif acc < 0.62:
+		## Móvil en la mano: un rectángulo oscuro con la pantalla clara.
+		var h3 := _en_hueso(esq, "hand_r", k)
+		if h3 != null:
+			_pieza(h3, _caja(Vector3(0.07, 0.14, 0.012)), _m(Color(0.05, 0.05, 0.06), 0.3), Vector3(0, 0.05, 0.05))
+	var cab_extra := rng.randf()
+	var cab := _en_hueso(esq, "Head", k)
+	if cab != null:
+		if cab_extra < 0.2:
+			## Gafas de sol.
+			var lente := SphereMesh.new()
+			lente.radius = 0.024
+			lente.height = 0.02
+			lente.radial_segments = 10
+			lente.rings = 4
+			## En la cabeza de mujer los ojos quedan más arriba: con la altura
+			## del hombre las gafas tapaban la mejilla y asomaba el ojo encima.
+			var gy := 0.118 if mujer else 0.1
+			for sx in [-1.0, 1.0]:
+				_pieza(cab, lente, _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0.034 * sx, gy, 0.1))
+			_pieza(cab, _caja(Vector3(0.03, 0.005, 0.005)), _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0, gy + 0.005, 0.108))
+		elif cab_extra < 0.34:
+			## Gorra: casquete y visera.
+			var gm := _m(col.lightened(0.1))
+			## Bajo la gorra, el pelo largo o alto asomaba: se esconde.
+			var pelo_n := esq.get_node_or_null("Pelo")
+			if pelo_n != null:
+				for mp: Node in pelo_n.get_children():
+					if mp is MeshInstance3D and not String(mp.name).begins_with("Eyebrows") and not String(mp.name).contains("Beard"):
+						(mp as MeshInstance3D).visible = String(mp.name) == "Hair_Buzzed"
+			var copa := SphereMesh.new()
+			## Algo más grande que la cabeza con pelo: si no, el pelo asomaba.
+			copa.radius = 0.118
+			copa.height = 0.15
+			copa.radial_segments = 14
+			copa.rings = 6
+			copa.is_hemisphere = true
+			_pieza(cab, copa, gm, Vector3(0, 0.15, -0.01))
+			var visera := CylinderMesh.new()
+			visera.top_radius = 0.075
+			visera.bottom_radius = 0.075
+			visera.height = 0.01
+			visera.radial_segments = 12
+			_pieza(cab, visera, _m(col.darkened(0.15)), Vector3(0, 0.16, 0.11), Vector3(-8, 0, 0))
