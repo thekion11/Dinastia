@@ -205,6 +205,40 @@ func _choca_moviles(p: Vector3, radio: float) -> bool:
 func libre_total(p: Vector3, radio: float) -> bool:
 	return libre(p, radio, obstaculos) and not _choca_circulos(p, radio) and not _choca_moviles(p, radio)
 
+## Tipos de edificio con sala propia, con su peso y sus nombres.
+const EDIFICIOS := [
+	["edificio_vivienda", 40, ["Casa de la familia %s"], ["Ortega", "Salas", "Núñez", "Ibarra", "Campos", "Rivas", "Lagos", "Vidal", "Peña", "Soto"]],
+	["edificio_bar", 15, ["Bar %s"], ["El Rincón", "La Esquina", "El Gol", "Los Amigos", "La Tertulia", "El Faro"]],
+	["edificio_panaderia", 12, ["Panadería %s"], ["La Espiga", "Pan Nuestro", "El Horno", "Doña Rosa", "La Hogaza"]],
+	["edificio_peluqueria", 9, ["Peluquería %s"], ["Estilo", "Corte Fino", "Tijeras", "Nuevo Look", "Mechones"]],
+	["edificio_libreria", 8, ["Librería %s"], ["El Capítulo", "Página Uno", "La Tinta", "Letra Viva", "El Marcapáginas"]],
+	["edificio_taller", 8, ["Taller %s"], ["Motor", "Hermanos Paz", "El Pistón", "AutoRepara", "Tuercas"]],
+	["edificio_oficina", 8, ["Oficinas %s"], ["Delta", "Norte", "Grupo Álamo", "Cima", "Vértice"]],
+]
+
+## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la
+## clave de la sala con el nombre propio, o vacío.
+func edificio_en(p: Vector3) -> Dictionary:
+	if cb == null:
+		return {}
+	for r: Rect2 in cb._frentes:
+		var dx := maxf(maxf(r.position.x - p.x, 0.0), p.x - r.end.x)
+		var dz := maxf(maxf(r.position.y - p.z, 0.0), p.z - r.end.y)
+		if dx * dx + dz * dz > 3.2 * 3.2:
+			continue
+		var h := absi(hash(Vector3i(floori(p.x / 14.0), 0, floori(p.z / 14.0))) + hash(r.position))
+		var total := 0
+		for e: Array in EDIFICIOS:
+			total += int(e[1])
+		var tiro := h % total
+		for e: Array in EDIFICIOS:
+			tiro -= int(e[1])
+			if tiro < 0:
+				var nombres: Array = e[3]
+				var nombre: String = String((e[2] as Array)[0]) % String(nombres[(h / 7) % nombres.size()])
+				return {"k": "%s|%s" % [e[0], nombre], "n": nombre}
+	return {}
+
 static func en_rio(x: float, z: float) -> bool:
 	return absf(x - CityBuilder.RIO_X) < 50.0 and absf(z) < 1360.0
 
@@ -553,6 +587,12 @@ func _buscar_cerca() -> void:
 			if d < mejor:
 				mejor = d
 				_cerca = {"tipo": "lugar", "k": String(pc["k"]), "n": String(pc["n"])}
+	## Cualquier fachada de manzana: se puede entrar (etapa 6). El tipo y el
+	## nombre salen del tramo de calle, así que son siempre los mismos.
+	if _cerca.is_empty() and modo == "pie":
+		var ed := edificio_en(p)
+		if not ed.is_empty():
+			_cerca = {"tipo": "lugar", "k": String(ed["k"]), "n": String(ed["n"])}
 	if _cerca.is_empty():
 		_aviso.text = ""
 	elif _cerca["tipo"] == "peaton":
