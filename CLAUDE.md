@@ -339,4 +339,12 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   Alternativas: clip corto en la rama o capturas en el chat.
 - 13-10: plataforma Aura (tryaura.dev): solo Unreal/Unity, sin Godot → NO se usa. No hace
   falta conector ni nivel especial de modelo; lo que falta es ver el vídeo.
+- 13-10 (noche) VÍDEO DE FC 26 VISTO segundo a segundo (red ya abierta; descarga por
+  drive.usercontent.google.com con el id del MP4, 67 MB, vertical 576x1024, 13:45).
+  Informe en `dinastia-godot/COMPARACION_FC26_VIDEO.md` (presentación, entorno, animaciones,
+  cámaras, interfaz, transiciones, ritmo, física y orden de 8 pasadas). Datos clave: reloj
+  FC 26 ≈ 11 s/s (partido de 8-10 min) vs Dinastía ≈ 54 s/s a ×1; 16 % del partido son
+  cinemáticas; presentación de ~180 s. El usuario aclaró: «no es solo el partido, es todo:
+  animaciones, visualización, entorno». Esperar su visto bueno del orden antes de empezar
+  la pasada 1 (preset de ritmo «Realista»). Todo con marcas y nombres ficticios.
 
