@@ -366,6 +366,7 @@ func _tab_ropa() -> Control:
 	_muestras(vb, "Color secundario (camisa, detalles)", "c_ropa2",
 		["f2f2f2", "cfe0f5", "e8e0d0", "ffc9c9", "d9d9d9", "111111", _c2.to_html(false)])
 	_interruptor(vb, "Corbata (con traje o abrigo)", "corbata")
+	_interruptor(vb, "Manga corta (polo, camisa, rayas, jersey)", "manga_corta")
 	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "El chándal usa siempre los colores del club.")
 	vb.add_child(nota)
 	return vb.get_parent()
@@ -379,6 +380,7 @@ func _tab_accesorios() -> Control:
 	_interruptor(vb, "Reloj", "reloj")
 	_interruptor(vb, "Pendientes", "pendiente")
 	_interruptor(vb, "Cadena al cuello", "cadena")
+	_opciones(vb, "Tatuaje", "tatuaje", PersonajeDT.TATUAJES)
 	return vb.get_parent()
 
 ## Hasta cinco conjuntos guardados con nombre: para cambiar de traje de gala a

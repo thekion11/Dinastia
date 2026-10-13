@@ -29,6 +29,7 @@ const BASE := {
 	"gafas": "", "gorra": false, "auriculares": false, "bufanda": false, "reloj": true,
 	## 13-10-2026: más personalización.
 	"ojos": "3d2a1a", "pendiente": false, "cadena": false,
+	"manga_corta": false, "tatuaje": 0,
 }
 const PIELES := ["f6dccb", "f3d2b8", "f1c7a5", "e8bc96", "e0b08a", "d29f78", "c68d68", "b57a55",
 	"a86b45", "8a5536", "7a4a2e", "6b4028", "4a2c1c", "3a2216"]
@@ -41,6 +42,7 @@ const CORTES := ["corto", "fade", "tupe", "flequillo", "ondulado", "rizado", "af
 const ROPAS := [["traje", "Traje"], ["chandal", "Chándal del club"], ["polo", "Polo"],
 	["camisa", "Camisa"], ["sudadera", "Sudadera"], ["abrigo", "Abrigo largo"],
 	["cuero", "Chaqueta de cuero"], ["rayas", "Camisa a rayas"], ["vaqueros", "Jersey y vaqueros"]]
+const TATUAJES := [[0, "Sin tatuaje"], [1, "Antebrazo"], [2, "Los dos antebrazos"], [3, "Brazo entero"]]
 const GAFAS := [["", "Sin gafas"], ["ver", "De ver"], ["sol", "De sol"], ["redondas", "Redondas"], ["deportivas", "Deportivas"]]
 
 ## El personaje del usuario y su club, para la banda de los partidos (lo fija
@@ -161,6 +163,8 @@ static func aleatorio(rng: RandomNumberGenerator) -> Dictionary:
 	a["ojos"] = OJOS[rng.randi() % OJOS.size()]
 	a["pendiente"] = rng.randf() < 0.12
 	a["cadena"] = rng.randf() < 0.1
+	a["manga_corta"] = rng.randf() < 0.3
+	a["tatuaje"] = 0 if rng.randf() < 0.85 else 1 + rng.randi() % 3
 	a["auriculares"] = false
 	return a
 
@@ -416,6 +420,8 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 		"med": {"dis": "lisas", "c1": pant.darkened(0.2).to_html(false), "c2": pant.to_html(false)},
 		"bot": {"mod": "clasico", "c1": zapato, "c2": zapato, "c3": "222222"},
 		"acc": {}, "civil": true,
+		"manga_corta": bool(a.get("manga_corta", false)) and String(a["ropa"]) in ["polo", "camisa", "rayas", "vaqueros"],
+		"tatuaje": int(a.get("tatuaje", 0)),
 	}
 	var antes := VestidorQ.ropa_aparte
 	VestidorQ.ropa_aparte = false

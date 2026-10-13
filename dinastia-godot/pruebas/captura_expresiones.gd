@@ -28,13 +28,17 @@ func _ready() -> void:
 	if OS.get_environment("ACCESORIOS") != "":
 		asp.merge({"gafas": OS.get_environment("ACCESORIOS") if OS.get_environment("ACCESORIOS") != "1" else "redondas",
 			"pendiente": true, "cadena": true, "ojos": "3f6a9a",
-			"ropa": OS.get_environment("ROPA") if OS.get_environment("ROPA") != "" else "polo"}, true)
+			"ropa": OS.get_environment("ROPA") if OS.get_environment("ROPA") != "" else "polo",
+			"manga_corta": OS.get_environment("CORTA") != "", "tatuaje": int(OS.get_environment("TATUAJE"))}, true)
 	PersonajeDT.crear(_raiz, asp)
 	var cam := Camera3D.new()
 	cam.fov = 18
 	add_child(cam)
 	var lejos := 2.4 if OS.get_environment("ACCESORIOS") != "" else 1.4
-	cam.look_at_from_position(Vector3(0, 1.62, lejos), Vector3(0, 1.6, 0))
+	if OS.get_environment("LEJOS") != "":
+		lejos = float(OS.get_environment("LEJOS"))
+	var alto_m := 1.62 if lejos < 3.0 else 1.3
+	cam.look_at_from_position(Vector3(0, alto_m, lejos), Vector3(0, alto_m - 0.02, 0))
 
 func _process(_d: float) -> void:
 	_n += 1
