@@ -563,7 +563,9 @@ static func _nueva(dur: float, bucle: bool) -> Animation:
 ## para las que SI tienen equivalente real.
 const CLIP_REAL := {
 	"parado": "Idle",
-	"caminar": "Walk",
+	## 13-10-2026: el paso «formal» (brazos cerca del cuerpo, erguido) en vez
+	## del paso de superhéroe.
+	"caminar": "Walk_Formal",
 	"trotar": "Jog_Fwd",
 	"correr": "Sprint",
 }
@@ -860,7 +862,7 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 		"correr": correr(esq, prefijo, 0.52, 1.0),
 	}
 	for clave in a_mano:
-		var real: Animation = cargar_real(CLIP_REAL[clave], prefijo)
+		var real: Animation = cargar_real(String(CLIP_REAL[clave]), prefijo)
 		## Manos relajadas (13-10-2026): los clips llevan el puño cerrado de
 		## superhéroe; parado y andando, los dedos van a medio cerrar.
 		if real != null:
