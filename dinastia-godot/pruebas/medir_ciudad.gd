@@ -97,6 +97,15 @@ func _process(_d: float) -> void:
 		_res["a_pie"] = _media(_m)
 		var ex: ExploradorCiudad = _v.get("_explorador")
 		_res["circulos"] = ex.cb.circulos.size()
+		var tipos := {}
+		var n_fach := 0
+		for r: Rect2 in ex.cb._frentes:
+			var e := ex.edificio_en(Vector3(r.position.x - 1.0, 0, r.get_center().y))
+			if not e.is_empty():
+				n_fach += 1
+				var base := String(e["k"]).get_slice("|", 0)
+				tipos[base] = int(tipos.get(base, 0)) + 1
+		_res["fachadas"] = "%d de %d: %s" % [n_fach, ex.cb._frentes.size(), JSON.stringify(tipos)]
 		var ok := 0
 		var n_prueba := mini(40, ex.cb.circulos.size())
 		for i in n_prueba:
