@@ -603,7 +603,8 @@ func abrir_ficha(k: String) -> void:
 ## Vuelve a levantar la ciudad con los datos de ahora (tras construir o al
 ## cambiar el día de partido).
 func _saturacion_animo() -> float:
-	return {"euforia": 1.3, "bien": 1.22, "mal": 1.0, "crisis": 0.72}.get(String(animo.get("estado", "")), 1.16)
+	## Sin pasarse (13-10-2026): con 1,3 la euforia quemaba los colores.
+	return {"euforia": 1.14, "bien": 1.09, "mal": 0.96, "crisis": 0.8}.get(String(animo.get("estado", "")), 1.05)
 
 func _reconstruir() -> void:
 	if _env != null:
