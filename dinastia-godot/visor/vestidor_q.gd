@@ -271,6 +271,8 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("color_medias", medias)
 		mat.set_shader_parameter("estilo", i_estilo)
 		mat.set_shader_parameter("tinte_piel", _tinte(piel))
+		var pl := piel.srgb_to_linear()
+		mat.set_shader_parameter("piel_obj", Vector3(pl.r, pl.g, pl.b))
 		mat.set_shader_parameter("largo", largo)
 		mat.set_shader_parameter("usa_reposo", (cuerpo.mesh as ArrayMesh) != null and cuerpo.mesh.has_meta("con_reposo"))
 		var un := DisenosKit.uniforms(kit, dorsal)
@@ -747,7 +749,9 @@ static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Arr
 				vecinos[w].append(u)
 	## Taubin: un paso que encoge (lambda) y otro que infla (mu).
 	var p := unicos.duplicate()
-	for it in 24:
+	## 13-10-2026: 24 → 64 pasos; con 24 la camiseta aún marcaba abdominales.
+	var t0 := Time.get_ticks_msec()
+	for it in 64:
 		var f: float = 0.55 if it % 2 == 0 else -0.58
 		var q := p.duplicate()
 		for i in m:
@@ -760,6 +764,7 @@ static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Arr
 			media /= float(vs.size())
 			q[i] = p[i] + (media - p[i]) * f
 		p = q
+	print_verbose("alisado: %d ms" % (Time.get_ticks_msec() - t0))
 	## Normales de la superficie alisada.
 	var ns := PackedVector3Array()
 	ns.resize(m)
