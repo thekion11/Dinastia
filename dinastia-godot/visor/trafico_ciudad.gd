@@ -149,6 +149,16 @@ func _process(delta: float) -> void:
 	for v in _vehiculos:
 		if float(v.get("espera", 0.0)) > 0.0:
 			v["espera"] = float(v["espera"]) - delta
+			if float(v["espera"]) <= 0.0 and v.has("pausa"):
+				v.erase("pausa")
+				_animar(v, "caminar")
+			continue
+		## NPCs CON VIDA (etapa 1): de vez en cuando un peatón se detiene a mirar
+		## el móvil o a descansar y luego sigue su camino.
+		if float(v["alto"]) > 0.05 and float(v["alto"]) < 0.3 and randf() < 0.0004 * delta * 60.0:
+			v["espera"] = randf_range(3.0, 9.0)
+			v["pausa"] = true
+			_animar(v, "parado")
 			continue
 		var avance := float(v["vel"]) * delta
 		var ruta := int(v["ruta"])
@@ -201,6 +211,15 @@ func _process(delta: float) -> void:
 						avance = 0.0
 		v["s"] = s0 + avance
 		_colocar(v)
+
+## Pone una animación al peatón `v` (si su cuerpo la tiene).
+func _animar(v: Dictionary, anim: String) -> void:
+	var nodo: Node3D = v["nodo"]
+	if not is_instance_valid(nodo):
+		return
+	for ap: AnimationPlayer in nodo.find_children("*", "AnimationPlayer", true, false):
+		if ap.has_animation(anim):
+			ap.play(anim, 0.3)
 
 func _colocar(v: Dictionary) -> void:
 	var nodo: Node3D = v["nodo"]

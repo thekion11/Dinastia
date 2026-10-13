@@ -35,6 +35,10 @@ var camara: Camera3D
 var rumbo := 0.0        ## ángulo en Y (0 = mirando a +Z)
 var vel := 0.0
 var obstaculos: Array[Rect2] = []
+## Captura el cursor en primera persona (para mirar con el ratón) y lo suelta fuera.
+func _raton_en_primera_persona() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if primera_persona and DisplayServer.get_name() != "headless" else Input.MOUSE_MODE_VISIBLE
+
 ## Visión en primera persona (tecla V).
 var primera_persona := false
 func _sentado_fp() -> bool:
@@ -607,6 +611,10 @@ func _buscar_cerca() -> void:
 		_aviso.text = "E: %s" % _cerca["n"]
 
 func _unhandled_input(ev: InputEvent) -> void:
+	## En primera persona el ratón mira (cursor capturado).
+	if ev is InputEventMouseMotion and primera_persona and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		rumbo -= (ev as InputEventMouseMotion).relative.x * 0.003
+		return
 	if not (ev is InputEventKey) or not (ev as InputEventKey).pressed or (ev as InputEventKey).echo:
 		if ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed and (ev as InputEventJoypadButton).button_index == JOY_BUTTON_X:
 			_usar()
@@ -620,6 +628,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 		_usar()
 	elif k == KEY_V:
 		primera_persona = not primera_persona
+		_raton_en_primera_persona()
 		_aviso.text = "Primera persona" if primera_persona else "Tercera persona"
 	elif k == KEY_C and estado == "tren":
 		_ventana = not _ventana
@@ -1169,6 +1178,7 @@ func _bajo_tierra(si: bool) -> void:
 		_env_guardado = {}
 
 func _exit_tree() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if trafico != null and is_instance_valid(trafico):
 		trafico.jugador = null
 	_bajo_tierra(false)
