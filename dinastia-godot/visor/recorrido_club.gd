@@ -132,6 +132,16 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 			else:
 				dice.text = "«%s»" % Idiomas.t("Charla corta. Te escucha, asiente y sigue con lo suyo."))
 		fila.add_child(bc)
+	## UNA PREGUNTA DE SU OFICIO (13-10-2026): cada uno sabe algo del club que
+	## le sirve al míster, con datos de verdad de la partida.
+	var pregunta := PREGUNTA_OFICIO.get(clave, "") as String
+	if pregunta != "" and m != null:
+		var bq := Button.new()
+		bq.text = "❓ " + Idiomas.t(pregunta)
+		bq.pressed.connect(func() -> void:
+			CuadroDialogo.escribir(dice, "«%s»" % respuesta_oficio(clave, m))
+			bq.disabled = true)
+		fila.add_child(bq)
 	var adios := Button.new()
 	adios.text = Idiomas.t("Adiós")
 	adios.pressed.connect(cerrar)
@@ -140,6 +150,67 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 		CuadroDialogo.respuesta(b as Button)
 	capa.add_child(panel)
 	return panel
+
+const PREGUNTA_OFICIO := {
+	"medico": "¿Cómo está la enfermería?",
+	"cocinera": "¿Cómo ves al grupo?",
+	"jardinero": "¿Cómo está el césped?",
+	"secretaria": "¿Cómo va la caja?",
+	"utilero": "¿Quién está más fino esta semana?",
+	"ojeador": "¿Algún chico de la cantera que valga?",
+}
+
+## Lo que contesta, sacado de la partida.
+static func respuesta_oficio(clave: String, m: Mundo) -> String:
+	var c := m.mi_club()
+	if c == null:
+		return Idiomas.t("Hoy no sé qué decirle, míster.")
+	match clave:
+		"medico":
+			var fuera: Array = []
+			for j: Jugador in c.plantilla:
+				if j.lesion > 0:
+					fuera.append("%s (%d sem.)" % [Nombres.visible(j.nombre), j.lesion])
+			if fuera.is_empty():
+				return Idiomas.t("Enfermería vacía, míster. Que siga así.")
+			return Idiomas.t("Tengo a %s. Paciencia con ellos.") % ", ".join(fuera.slice(0, 3))
+		"cocinera":
+			var suma := 0
+			for j: Jugador in c.plantilla:
+				suma += j.moral
+			var media := suma / maxi(1, c.plantilla.size())
+			if media >= 75:
+				return Idiomas.t("Comen con hambre y se ríen en la mesa. El grupo está bien.")
+			if media >= 55:
+				return Idiomas.t("Normal, míster. Algunos callados, nada raro.")
+			return Idiomas.t("Están apagados. Ni el postre les levanta el ánimo.")
+		"jardinero":
+			var cesped := m.ciudad.cesped if m.ciudad != null else 100
+			if cesped >= 85:
+				return Idiomas.t("Como una alfombra. Que no me lo pisen en los rondos.")
+			if cesped >= 60:
+				return Idiomas.t("Aguanta, pero hay calvas en las áreas. Riego cada noche.")
+			return Idiomas.t("Sufre, míster. Necesita descanso o una inversión.")
+		"secretaria":
+			var sem := int(c.saldo / maxi(1, c.masa_salarial())) if c.saldo > 0 else 0
+			return Idiomas.t("En caja hay para %d semanas de sueldos. El presidente pregunta a menudo.") % sem
+		"utilero":
+			var mejor: Jugador = null
+			for j: Jugador in c.plantilla:
+				if j.lesion == 0 and (mejor == null or j.forma > mejor.forma):
+					mejor = j
+			if mejor == null:
+				return Idiomas.t("Todos regulares, míster.")
+			return Idiomas.t("%s. Llega el primero y se va el último.") % Nombres.visible(mejor.nombre)
+		"ojeador":
+			var joven: Jugador = null
+			for j: Jugador in c.plantilla:
+				if j.edad <= 20 and (joven == null or j.pot > joven.pot):
+					joven = j
+			if joven == null:
+				return Idiomas.t("En el primer equipo no hay chicos. Mire la academia.")
+			return Idiomas.t("%s, %d años. Tiene techo de %d. No lo queme.") % [Nombres.visible(joven.nombre), joven.edad, joven.pot]
+	return Idiomas.t("Hoy no sé qué decirle, míster.")
 
 ## Lo que cuenta el portero si le preguntas (gente ficticia del club).
 const NOVEDADES_PORTERO := [

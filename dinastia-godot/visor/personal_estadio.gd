@@ -61,10 +61,21 @@ func _ready() -> void:
 		if nombre == "":
 			nombre = _nombre_de_respaldo(clave)
 		var puesto := _puesto(clave)
+		## El cargo en femenino si es una mujer.
+		if PersonalEstadio.nombre_de_mujer(nombre):
+			puesto = FEMENINO.get(puesto, puesto)
 		var raiz := Node3D.new()
 		raiz.position = ruta[0]
 		add_child(raiz)
 		var asp := PersonajeDT.aleatorio(_rng(semilla))
+		## El cuerpo sigue al nombre (13-10-2026: «Marta Soler» salía hombre).
+		var mujer := PersonalEstadio.nombre_de_mujer(nombre)
+		if (String(asp["cuerpo"]) == "female") != mujer:
+			asp["cuerpo"] = "female" if mujer else "male"
+			asp["barba"] = asp["barba"] and not mujer
+			asp["altura"] = clampf(float(asp["altura"]), 1.6, 1.74) if mujer else maxf(float(asp["altura"]), 1.68)
+			if mujer and String(asp["pelo"]) in ["calvo", "rapado", "fade", "samurai"]:
+				asp["pelo"] = "melena"
 		asp["ropa"] = String(p[2])
 		asp["c_ropa"] = _hex(String(p[3]))
 		asp["c_ropa2"] = _hex(String(p[4]))
@@ -87,6 +98,26 @@ func _ready() -> void:
 		raiz.add_child(et)
 		gente.append({"clave": clave, "nombre": nombre, "puesto": puesto, "planta": int(p[0]), "nodo": raiz,
 			"anim": d.get("anim"), "ruta": ruta, "i": 0, "dir": 1, "espera": 4.0 + float(semilla % 13), "quieto": false})
+
+const FEMENINO := {"Médico veterano": "Médica veterana", "Utilero": "Utilera", "Jefe de cancha": "Jefa de cancha",
+	"Conserje del estadio": "Conserje del estadio", "Chófer del bus": "Chófer del bus",
+	"Encargado de prensa": "Encargada de prensa", "Ojeador jubilado": "Ojeadora jubilada",
+	"Portero del club": "Portera del club", "Presidente": "Presidenta"}
+
+## Por el nombre de pila (español): «Doña», o el primer nombre acabado en -a
+## salvo excepciones de hombre (Borja, Luca…).
+static func nombre_de_mujer(nombre: String) -> bool:
+	var partes := nombre.strip_edges().split(" ", false)
+	if partes.is_empty():
+		return false
+	var p0 := partes[0].to_lower()
+	if p0 in ["doña", "dña.", "la", "sra.", "señora", "doctora"]:
+		return true
+	if p0 in ["don", "el", "sr.", "señor", "doctor"]:
+		return false
+	if p0 in ["borja", "luca", "andrea", "nicola", "joshua", "jota", "garcía"]:
+		return false
+	return p0.ends_with("a") or p0 in ["inés", "carmen", "pilar", "raquel", "isabel", "rocío", "consuelo", "mercedes", "beatriz", "maribel", "nieves", "luz", "sol", "chelo", "rosario", "belén"]
 
 func _rng(s: int) -> RandomNumberGenerator:
 	var r := RandomNumberGenerator.new()
@@ -112,7 +143,7 @@ func _puesto(clave: String) -> String:
 
 func _nombre_de_respaldo(clave: String) -> String:
 	var nombres := ["Rosa Medina", "Tito Barrios", "Chela Ruiz", "Don Aurelio", "Marta Soler", "Pancho Vidal",
-		"Doctor Olmos", "El Negro Paz", "Lalo Ferro", "Don Ernesto", "Amalia Rey"]
+		"Doctor Olmos", "Tano Paz", "Lalo Ferro", "Don Ernesto", "Amalia Rey"]
 	if clave == "portero":
 		return "Don Ramiro"
 	return nombres[absi(clave.hash()) % nombres.size()]
