@@ -127,6 +127,7 @@ func build(d: Dictionary) -> void:
 		c.free()
 	etiquetas.clear()
 	circulos = PackedVector3Array()
+	_mats_torre.clear()
 	puntos_clic.clear()
 	_rotulos = Node3D.new()
 	_rotulos.name = "Rotulos"
@@ -197,6 +198,14 @@ func build(d: Dictionary) -> void:
 	## Etapa 3: primitivas con el detalle justo y butacas livianas (el estadio
 	## se ve de lejos; al entrar a pie vuelven las buenas).
 	## (SIN_OPTIMIZAR=1 lo apaga, para comparar capturas antes/después.)
+	var n_torres := vestir_todas_las_torres()
+	if _medir_tiempos:
+		var nombres := {}
+		for mi in find_children("*", "MeshInstance3D", true, false):
+			var m4 := (mi as MeshInstance3D).mesh
+			if m4 is ArrayMesh and Optimizar._tris(m4) > 1500:
+				nombres[m4.resource_name] = int(nombres.get(m4.resource_name, 0)) + 1
+		print("TORRES vestidas ", n_torres, "  mallas pesadas: ", nombres)
 	if OS.get_environment("SIN_OPTIMIZAR") == "":
 		Optimizar.primitivas(self)
 		Optimizar.trocear(self)
@@ -221,6 +230,8 @@ func encender_luces(noche: float) -> void:
 	if expansion != null:
 		expansion.encender(noche)
 	var f: float = clampf(noche, 0.0, 1.0)
+	for mt in _mats_torre:
+		mt.set_shader_parameter("noche", f)
 	for l in _farolas_luz:
 		if is_instance_valid(l):
 			## 5,4 y no 2,4: se midió que a 2,4 las farolas SÍ estaban
@@ -1170,6 +1181,41 @@ func _vidrio_oscuro() -> StandardMaterial3D:
 const TINTES := [Color(1.0, 0.86, 0.72), Color(0.86, 0.93, 1.0), Color(0.9, 1.0, 0.88), Color(1.0, 0.82, 0.8),
 	Color(1.0, 0.95, 0.75), Color(0.92, 0.86, 1.0), Color(0.95, 0.78, 0.62), Color(0.82, 0.9, 0.9)]
 var _cache_tintes := {}
+
+## FACHADAS DE TORRE (etapa 6): el kit de rascacielos trae una textura de
+## cuadros azules borrosos. Se cambia por `fachada_torre.gdshader`, con seis
+## tonos de pared, y de noche las ventanas se encienden (`encender_luces`).
+var _mats_torre: Array[ShaderMaterial] = []
+const TONOS_TORRE := [Color(0.80, 0.82, 0.86), Color(0.86, 0.80, 0.72), Color(0.74, 0.78, 0.82), Color(0.84, 0.84, 0.80), Color(0.70, 0.74, 0.70), Color(0.88, 0.84, 0.86)]
+
+## Recorre TODO lo construido y viste los rascacielos y bloques simples del
+## kit, sea quien sea el que los puso (se reconocen por el nombre de la malla).
+func vestir_todas_las_torres() -> int:
+	var cuenta := 0
+	for mi in find_children("*", "MeshInstance3D", true, false):
+		var m3 := mi as MeshInstance3D
+		if m3.mesh == null or m3.material_override != null:
+			continue
+		var nombre := m3.mesh.resource_name
+		if nombre.begins_with("building-skyscraper") or nombre.begins_with("low-detail-building"):
+			vestir_torre(m3, hash(Vector2(m3.global_position.x, m3.global_position.z)))
+			cuenta += 1
+	return cuenta
+
+func vestir_torre(n: Node, semilla: int) -> void:
+	if _mats_torre.is_empty():
+		var sh := load("res://visor/fachada_torre.gdshader") as Shader
+		for i in TONOS_TORRE.size():
+			var m := ShaderMaterial.new()
+			m.shader = sh
+			m.set_shader_parameter("pared", TONOS_TORRE[i])
+			m.set_shader_parameter("vidrio", Color(0.2, 0.34, 0.5).lerp(Color(0.3, 0.45, 0.4), float(i % 3) * 0.3))
+			_mats_torre.append(m)
+	var mat := _mats_torre[absi(semilla) % _mats_torre.size()]
+	if n is MeshInstance3D:
+		(n as MeshInstance3D).material_override = mat
+	for mi in n.find_children("*", "MeshInstance3D", true, false):
+		(mi as MeshInstance3D).material_override = mat
 
 func tenir(n: Node, semilla: int) -> void:
 	var t: int = absi(semilla) % TINTES.size()
@@ -3474,6 +3520,7 @@ func _zona_industrial() -> void:
 	## salía del terreno por el fondo).
 	for i in range(mini(naves.size(), 6)):
 		var nave: Node3D = (naves[(i * 5 + 2) % naves.size()] as PackedScene).instantiate()
+		vestir_torre(nave, int(nave.get_instance_id()))
 		nave.scale = Vector3.ONE * 7.0
 		nave.position = base + Vector3(-32.0 + (i % 2) * 58.0, 0, -46.0 + (i / 2) * 56.0)
 		nave.rotation.y = PI * 0.5
@@ -3810,6 +3857,7 @@ func _manzana(c: Vector3, comercial: Array[PackedScene], naves: Array[PackedScen
 			u += ancho + rng.randf_range(0.3, 2.0)
 	if not naves.is_empty() and rng.randf() < 0.85:
 		var b: Node3D = naves[rng.randi() % naves.size()].instantiate()
+		vestir_torre(b, int(b.get_instance_id()))
 		var sb: float = 5.5 * rng.randf_range(0.9, 1.2)
 		b.scale = Vector3.ONE * sb
 		b.rotation.y = float(rng.randi() % 4) * PI * 0.5
@@ -3823,6 +3871,7 @@ func _torre_distrito(esc: PackedScene, c: Vector3, rng: RandomNumberGenerator) -
 	t.scale = Vector3.ONE * s
 	t.rotation.y = float(rng.randi() % 4) * PI * 0.5
 	t.position = Vector3(c.x, altura_en(c.x, c.z) - 0.1, c.z)
+	vestir_torre(t, hash(Vector2(c.x, c.z)))
 	add_child(t)
 	var caja := _caja_de(t)
 	_frentes.append(Rect2(c.x - caja.size.x * s * 0.5, c.z - caja.size.z * s * 0.5, caja.size.x * s, caja.size.z * s))
@@ -3878,6 +3927,7 @@ func _fila_urbana(calle: Vector3, dir: Vector3, afuera: Vector3, medio_largo: fl
 		## encima de la fachada como en cualquier centro.
 		if not bloques.is_empty() and rng.randf() < 0.8:
 			var b: Node3D = bloques[rng.randi() % bloques.size()].instantiate()
+			vestir_torre(b, int(b.get_instance_id()))
 			if rng.randf() < 0.45:
 				tenir(b, rng.randi())
 			var sb: float = 6.0 * rng.randf_range(0.9, 1.2)

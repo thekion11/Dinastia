@@ -679,7 +679,12 @@ func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: fl
 
 func _kit(esc: PackedScene, pos: Vector3, escala: Vector3, giro: float, azotea_plana := false) -> Node3D:
 	var n: Node3D = esc.instantiate()
-	if _rng.randf() < 0.45:
+	if azotea_plana:
+		## Torre: fachada con ventanas de verdad (el tono sale de la posición).
+		b.vestir_torre(n, hash(Vector2(pos.x, pos.z)))
+		if _rng.randf() < 0.45:
+			_rng.randi()   ## (se consume igual que antes para no mover el resto)
+	elif _rng.randf() < 0.45:
 		b.tenir(n, _rng.randi())
 	n.scale = escala
 	n.rotation.y = giro
@@ -797,7 +802,7 @@ func _fachadas(r: Rect2, con_nave: bool) -> void:
 		if not _altos.is_empty() and _rng.randf() < 0.6:
 			_kit(_altos[_rng.randi() % _altos.size()], c + Vector3(0, 0.2, 0), Vector3.ONE * _rng.randf_range(3.2, 4.4), float(_rng.randi() % 4) * PI * 0.5)
 		else:
-			_kit(_naves[_rng.randi() % _naves.size()], c + Vector3(0, 0.2, 0), Vector3.ONE * s2 * 1.2, float(_rng.randi() % 4) * PI * 0.5)
+			_kit(_naves[_rng.randi() % _naves.size()], c + Vector3(0, 0.2, 0), Vector3.ONE * s2 * 1.2, float(_rng.randi() % 4) * PI * 0.5, true)
 
 ## LOS COMERCIOS (7-10-2026, «agrega cosas que tiene una ciudad real»): un
 ## rótulo sobre la planta baja de las fachadas que dan a la calle. La farmacia
@@ -867,7 +872,7 @@ func _pisos(r: Rect2) -> void:
 			if not _altos.is_empty() and (k + int(fila > 0.0)) % 2 == 0:
 				_kit(_altos[_rng.randi() % _altos.size()], pos_p, Vector3.ONE * _rng.randf_range(2.8, 3.6), 0.0 if fila > 0.0 else PI, true)
 			else:
-				_kit(_naves[_rng.randi() % _naves.size()], pos_p, Vector3.ONE * s * 1.15, 0.0 if fila > 0.0 else PI)
+				_kit(_naves[_rng.randi() % _naves.size()], pos_p, Vector3.ONE * s * 1.15, 0.0 if fila > 0.0 else PI, true)
 	## El patio entre las dos hileras: césped, un camino y árboles.
 	_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(r.size.x * 0.82, 0.06, r.size.y * 0.2))
 	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(r.size.x * 0.82, 0.06, 2.4))
@@ -1574,7 +1579,7 @@ func encender(noche: float) -> void:
 	if _farola_cono != null:
 		_farola_cono.albedo_color.a = lerpf(0.0, 0.035, noche)
 	if _ventanas_lejanas != null:
-		_ventanas_lejanas.emission_energy_multiplier = lerpf(0.0, 0.35, noche)
+		_ventanas_lejanas.set_shader_parameter("noche", noche)
 
 ## OBRAS EN LA CALLE: media calzada cortada con conos, vallas y una zanja.
 ## Una ciudad de verdad siempre tiene alguna calle levantada.
@@ -1762,23 +1767,16 @@ func _edificios_lejanos() -> void:
 			var h := _rng.randf_range(14.0, 48.0)
 			ts.append(Transform3D(Basis.from_scale(Vector3(w, h, f)), Vector3(r.get_center().x + o.x, h * 0.5, r.get_center().y + o.y)))
 			cs.append([Color(0.85, 0.83, 0.8), Color(0.75, 0.78, 0.82), Color(0.88, 0.8, 0.7), Color(0.7, 0.72, 0.75)][_rng.randi() % 4])
-	var mat := StandardMaterial3D.new()
-	mat.albedo_texture = _textura_ventanas()
-	mat.vertex_color_use_as_albedo = true
-	mat.uv1_triplanar = true
-	mat.uv1_world_triplanar = true
-	mat.uv1_scale = Vector3(1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0)
-	mat.roughness = 0.7
-	## De noche se encienden las ventanas (la misma rejilla, en cálido).
-	mat.emission_enabled = true
-	mat.emission_texture = _textura_ventanas(true)
-	mat.emission = Color(1.0, 0.82, 0.5)
-	mat.emission_energy_multiplier = 0.0
+	## Fachada de verdad (etapa 6): ventanas con marco y de noche encendidas.
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://visor/fachada_torre.gdshader") as Shader
+	mat.set_shader_parameter("pared_de_instancia", true)
+	mat.set_shader_parameter("celda", Vector2(3.0, 3.6))
 	_ventanas_lejanas = mat
 	_multimesh(BoxMesh.new(), mat, ts, Vector3.ONE, cs)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + ts.size()
 
-var _ventanas_lejanas: StandardMaterial3D
+var _ventanas_lejanas: ShaderMaterial
 
 ## `luz`: la máscara de las ventanas encendidas (blanco = ventana, unas sí y
 ## otras no) para la emisión nocturna.
