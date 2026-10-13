@@ -1480,6 +1480,8 @@ func encender(noche: float) -> void:
 		_farola_luz.emission_energy_multiplier = lerpf(0.0, 2.6, noche)
 	if _farola_charco != null:
 		_farola_charco.albedo_color.a = lerpf(0.0, 0.55, noche)
+	if _farola_cono != null:
+		_farola_cono.albedo_color.a = lerpf(0.0, 0.035, noche)
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.emission_energy_multiplier = lerpf(0.0, 0.35, noche)
 
@@ -1592,6 +1594,7 @@ func _farolas() -> void:
 	var postes: Array[Transform3D] = []
 	var cabezas: Array[Transform3D] = []
 	var charcos: Array[Transform3D] = []
+	var conos: Array[Transform3D] = []
 	for t: Dictionary in tramos:
 		if bool(t["puente"]):
 			continue
@@ -1610,6 +1613,8 @@ func _farolas() -> void:
 			var hacia := (Vector3(-lado, 0, 0) if vertical else Vector3(0, 0, -lado)) * 1.4
 			cabezas.append(Transform3D(Basis.from_scale(Vector3(0.9, 0.3, 0.9)), base + Vector3(0, 8.0, 0) + hacia))
 			charcos.append(Transform3D(Basis.from_scale(Vector3(13.0, 1.0, 13.0)), base + hacia * 2.0 + Vector3(0, 0.3, 0)))
+			## Cono de luz: del farol al suelo, ancho abajo (10 m de diámetro).
+			conos.append(Transform3D(Basis.from_scale(Vector3(10.0, 7.7, 10.0)), base + hacia * 1.2 + Vector3(0, 4.1, 0)))
 	var gris := b._mat_simple(Color(0.25, 0.26, 0.27), 0.5)
 	_multimesh(CylinderMesh.new(), gris, postes, Vector3.ONE)
 	_multimesh(BoxMesh.new(), _mat_luz_farola(), cabezas, Vector3.ONE)
@@ -1622,7 +1627,23 @@ func _farolas() -> void:
 	var pl := PlaneMesh.new()
 	pl.size = Vector2(1, 1)
 	_multimesh(pl, _farola_charco, charcos, Vector3.ONE)
+	## Los conos de luz: visibles solo al caer la noche (`encender`).
+	var cono := CylinderMesh.new()
+	cono.top_radius = 0.04
+	cono.bottom_radius = 0.5
+	cono.height = 1.0
+	cono.cap_top = false
+	cono.cap_bottom = false
+	_farola_cono = StandardMaterial3D.new()
+	_farola_cono.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_farola_cono.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	_farola_cono.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	_farola_cono.cull_mode = BaseMaterial3D.CULL_DISABLED
+	_farola_cono.albedo_color = Color(1.0, 0.8, 0.5, 0.0)
+	_multimesh(cono, _farola_cono, conos, Vector3.ONE)
 	cuenta["farolas"] = postes.size()
+
+var _farola_cono: StandardMaterial3D = null
 
 func _textura_charco() -> ImageTexture:
 	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
