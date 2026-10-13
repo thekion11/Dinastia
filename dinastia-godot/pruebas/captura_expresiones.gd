@@ -23,11 +23,17 @@ func _ready() -> void:
 	add_child(_raiz)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7
-	PersonajeDT.crear(_raiz, PersonajeDT.aleatorio(rng))
+	var asp := PersonajeDT.aleatorio(rng)
+	## ACCESORIOS=1: gafas redondas, pendientes, cadena y ojos azules.
+	if OS.get_environment("ACCESORIOS") != "":
+		asp.merge({"gafas": OS.get_environment("ACCESORIOS") if OS.get_environment("ACCESORIOS") != "1" else "redondas",
+			"pendiente": true, "cadena": true, "ojos": "3f6a9a", "ropa": "polo"}, true)
+	PersonajeDT.crear(_raiz, asp)
 	var cam := Camera3D.new()
 	cam.fov = 18
 	add_child(cam)
-	cam.look_at_from_position(Vector3(0, 1.68, 1.4), Vector3(0, 1.66, 0))
+	var lejos := 2.4 if OS.get_environment("ACCESORIOS") != "" else 1.4
+	cam.look_at_from_position(Vector3(0, 1.62, lejos), Vector3(0, 1.6, 0))
 
 func _process(_d: float) -> void:
 	_n += 1

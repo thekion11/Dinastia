@@ -27,15 +27,20 @@ const BASE := {
 	"cara": -1, "corte_med": "",
 	"ropa": "traje", "c_ropa": "1f2a44", "c_ropa2": "f2f2f2", "corbata": true,
 	"gafas": "", "gorra": false, "auriculares": false, "bufanda": false, "reloj": true,
+	## 13-10-2026: más personalización.
+	"ojos": "3d2a1a", "pendiente": false, "cadena": false,
 }
-const PIELES := ["f3d2b8", "f1c7a5", "e0b08a", "c68d68", "a86b45", "8a5536", "6b4028", "4a2c1c"]
+const PIELES := ["f6dccb", "f3d2b8", "f1c7a5", "e8bc96", "e0b08a", "d29f78", "c68d68", "b57a55",
+	"a86b45", "8a5536", "7a4a2e", "6b4028", "4a2c1c", "3a2216"]
+## Color de iris: castaño oscuro, castaño, avellana, verde, gris, azul, negro.
+const OJOS := ["3d2a1a", "5a3a22", "7a5a2a", "4a6a3a", "6a7480", "3f6a9a", "181210"]
 const COLORES_PELO := ["0e0b09", "2a1c12", "4a3020", "7a5230", "b08050", "d8b878", "9a9a9a", "e8e8e4", "8a2a12"]
 const CORTES := ["corto", "fade", "tupe", "flequillo", "ondulado", "rizado", "afro", "largo", "melena",
 	"coleta", "samurai", "rastas", "rapado", "calvo"]
 ## [clave, nombre]
 const ROPAS := [["traje", "Traje"], ["chandal", "Chándal del club"], ["polo", "Polo"],
 	["camisa", "Camisa"], ["sudadera", "Sudadera"], ["abrigo", "Abrigo largo"]]
-const GAFAS := [["", "Sin gafas"], ["ver", "De ver"], ["sol", "De sol"]]
+const GAFAS := [["", "Sin gafas"], ["ver", "De ver"], ["sol", "De sol"], ["redondas", "Redondas"], ["deportivas", "Deportivas"]]
 
 ## El personaje del usuario y su club, para la banda de los partidos (lo fija
 ## `Principal._refrescar()`; la vista del estadio no tiene el mundo delante).
@@ -152,6 +157,9 @@ static func aleatorio(rng: RandomNumberGenerator) -> Dictionary:
 	a["gorra"] = rng.randf() < 0.1
 	a["bufanda"] = rng.randf() < 0.2
 	a["reloj"] = rng.randf() < 0.6
+	a["ojos"] = OJOS[rng.randi() % OJOS.size()]
+	a["pendiente"] = rng.randf() < 0.12
+	a["cadena"] = rng.randf() < 0.1
 	a["auriculares"] = false
 	return a
 
@@ -175,7 +183,7 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 		corte = "corto"
 	PeloQ.poner(d, corte, Color(String(a["color_pelo"])), bool(a["barba"]) and String(a["cuerpo"]) == "male")
 	_cara_biblioteca(d, a)
-	_ojos_vivos(d, Color(String(a["piel"])))
+	_ojos_vivos(d, Color(String(a["piel"])), Color(String(a.get("ojos", "3d2a1a"))))
 	_accesorios(d, a, c1, c2)
 	var ap: AnimationPlayer = d["anim"]
 	if ap.has_animation("parado"):
@@ -185,19 +193,25 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 ## OJOS DE VERDAD también con la cara clásica (13-10-2026): eran ranuras
 ## blancas. El shader de ojos (iris, párpados de su piel) y, con él, el
 ## parpadeo y las expresiones (`Expresion`).
-static func _ojos_vivos(d: Dictionary, piel: Color) -> void:
+static func _ojos_vivos(d: Dictionary, piel: Color, iris := Color(0.24, 0.16, 0.1)) -> void:
 	for mi: MeshInstance3D in (d["nodo"] as Node).find_children("*", "MeshInstance3D", true, false):
 		if mi.mesh == null:
 			continue
 		for s in mi.mesh.get_surface_count():
 			var base := mi.mesh.surface_get_material(s)
 			var actual := mi.get_surface_override_material(s)
-			if base == null or base.resource_name != VestidorQ.MATERIAL_OJOS or actual is ShaderMaterial:
+			if base == null or base.resource_name != VestidorQ.MATERIAL_OJOS:
+				continue
+			if actual is ShaderMaterial:
+				## Cara de biblioteca: ya tiene el shader (compartido); uno propio con tu iris.
+				var propio := (actual as ShaderMaterial).duplicate() as ShaderMaterial
+				propio.set_shader_parameter("iris", iris)
+				mi.set_surface_override_material(s, propio)
 				continue
 			VestidorQ._con_reposo_simple(mi)
 			var mo := ShaderMaterial.new()
 			mo.shader = load(Expresion.SHADER_OJOS)
-			mo.set_shader_parameter("iris", Color(0.24, 0.16, 0.1))
+			mo.set_shader_parameter("iris", iris)
 			mo.set_shader_parameter("piel", piel)
 			mi.set_surface_override_material(s, mo)
 
@@ -408,13 +422,24 @@ static func _accesorios(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> v
 	var ojo_z := 0.095 if not mujer else 0.09
 	var cabeza := _pegar(esq, "Head")
 	var gafas := String(a["gafas"])
-	if gafas != "":
+	if gafas == "deportivas":
+		## Lente envolvente espejada en dos mitades que siguen la curva de la cara.
+		var espejo := _mat(Color(0.05, 0.07, 0.1, 0.94), 0.05, 0.94)
+		espejo.metallic = 0.6
+		for s2 in [-1.0, 1.0]:
+			var mitad := _caja(cabeza, Vector3(0.03 * s2, ojo_y + 0.002, ojo_z + 0.002), Vector3(0.062, 0.027, 0.005), espejo)
+			mitad.rotation_degrees.y = -14.0 * s2
+			mitad.rotation_degrees.z = 4.0 * s2
+			_caja(cabeza, Vector3(0.066 * s2, ojo_y + 0.006, ojo_z - 0.05), Vector3(0.005, 0.006, 0.1), _mat(Color(0.08, 0.08, 0.09), 0.3))
+		_caja(cabeza, Vector3(0, ojo_y + 0.016, ojo_z + 0.006), Vector3(0.12, 0.005, 0.006), _mat(Color(0.08, 0.08, 0.09), 0.3))
+	elif gafas != "":
 		var marco := _mat(Color(0.06, 0.06, 0.07), 0.3)
 		for s in [-1.0, 1.0]:
 			var aro := MeshInstance3D.new()
 			var tm := TorusMesh.new()
-			tm.inner_radius = 0.018
-			tm.outer_radius = 0.023
+			var rg := 1.18 if gafas == "redondas" else 1.0
+			tm.inner_radius = 0.018 * rg
+			tm.outer_radius = 0.0215 * rg if gafas == "redondas" else 0.023
 			tm.rings = 16
 			aro.mesh = tm
 			aro.material_override = marco
@@ -469,6 +494,28 @@ static func _accesorios(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> v
 			copa2.position = Vector3(0.1 * s, cab_y - 0.025, -0.01)
 			copa2.rotation_degrees.z = 90.0
 			cabeza.add_child(copa2)
+	if bool(a.get("pendiente", false)):
+		var oro := _mat(Color(0.95, 0.8, 0.4), 0.2)
+		oro.metallic = 0.35
+		oro.emission_enabled = true
+		oro.emission = Color(0.35, 0.27, 0.1)
+		for s3 in [-1.0, 1.0]:
+			_esfera(cabeza, Vector3(0.078 * s3, ojo_y - 0.045, -0.005), 0.0055, oro)
+	if bool(a.get("cadena", false)):
+		var cuello_c := _pegar(esq, "neck_01")
+		var plata := _mat(Color(0.85, 0.85, 0.88), 0.25)
+		plata.metallic = 0.35
+		var cad := MeshInstance3D.new()
+		var tmc := TorusMesh.new()
+		tmc.inner_radius = 0.074
+		tmc.outer_radius = 0.079
+		tmc.rings = 24
+		cad.mesh = tmc
+		cad.material_override = plata
+		cad.position = Vector3(0, (1.455 if not mujer else 1.415), 0.045)
+		cad.rotation_degrees.x = 38.0
+		cad.scale = Vector3(1.0, 1.0, 0.85)
+		cuello_c.add_child(cad)
 	if bool(a["bufanda"]):
 		var cuello := _pegar(esq, "neck_01")
 		var lana1 := _mat(c1, 0.95)
