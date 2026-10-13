@@ -19,7 +19,9 @@ const GUION := [
 	[7.3, "mensajes", ""], [7.5, "chat", ""], [7.9, "", "mensajes"],
 	[8.1, "ajustes", ""], [8.5, "", "ajustes"],
 	[8.7, "calendario", ""], [9.1, "", "calendario"],
-	[9.3, "fin", ""],
+	[9.3, "noticias", ""], [9.7, "", "noticias"],
+	[9.9, "banco", ""], [10.3, "", "banco"],
+	[10.5, "fin", ""],
 ]
 var _t := -1.0
 var _hecho := 0
@@ -63,6 +65,8 @@ func _process(_d: float) -> void:
 				_tel.abrir_app("mensajes")
 			"ajustes": _tel.abrir_app("ajustes")
 			"calendario": _tel.abrir_app("calendario")
+			"noticias": _tel.abrir_app("noticias")
+			"banco": _tel.abrir_app("banco")
 			"fin": get_tree().quit()
 		if String(g[2]) != "" and String(g[1]) == "":
 			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/telefono_%s.png" % String(g[2]))
