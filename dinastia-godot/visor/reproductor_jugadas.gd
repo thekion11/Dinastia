@@ -13,7 +13,15 @@ var codigo_actual := ""
 var _tiempo_fase: float = 0.0
 var _fase_actual: int = 0
 var _datos: Dictionary = {}
-var _playback: MatchPlayback
+## El reproductor lo posee el `MatchPlayback`, así que la vuelta es DÉBIL: con
+## una referencia fuerte los dos se mantenían vivos mutuamente y quedaban
+## sin soltar al cerrar el estadio (fuga medida el 13-10-2026).
+var _pb_ref: WeakRef = null
+var _playback: MatchPlayback:
+	get:
+		return (_pb_ref.get_ref() as MatchPlayback) if _pb_ref != null else null
+	set(v):
+		_pb_ref = weakref(v) if v != null else null
 var _balon: Balon3D
 var _es_local := true
 var _impulso_consumido: Array[bool] = []

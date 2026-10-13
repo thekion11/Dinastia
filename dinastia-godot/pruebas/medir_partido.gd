@@ -36,7 +36,11 @@ func _ready() -> void:
 	add_child(_vista)
 	_vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
 
+var _fin := false
+
 func _process(_d: float) -> void:
+	if _fin:
+		return
 	_n += 1
 	if _n == 5:
 		(_vista.get("_rig") as CameraRig).switch_to(0)
@@ -50,6 +54,7 @@ func _process(_d: float) -> void:
 	_objetos.append(Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME))
 	_proceso.append(Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0)
 	if _llamadas.size() >= MUESTRAS:
+		_fin = true
 		if OS.get_environment("FOTO") != "":
 			get_viewport().get_texture().get_image().save_png(OS.get_environment("FOTO"))
 		print("MEDICION calidad=%d  llamadas=%.0f  triangulos=%.0f  objetos=%.0f  fotograma=%.2f ms (peor %.2f)  vram=%.0f MB" % [
@@ -59,6 +64,10 @@ func _process(_d: float) -> void:
 		if OS.get_environment("DETALLE") != "":
 			for f: Dictionary in Optimizar.informe(_vista, 25):
 				print("DETALLE tris=%d piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
+		if OS.get_environment("CERRAR") != "":
+			## Cierre normal: se suelta la vista y se espera antes de salir.
+			_vista.queue_free()
+			await get_tree().create_timer(1.0).timeout
 		get_tree().quit()
 
 func _media(a: Array[float]) -> float:
