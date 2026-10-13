@@ -4597,6 +4597,21 @@ func _fundido_entrada() -> void:
 	tw.tween_property(velo, "modulate:a", 0.0, 0.5)
 	tw.tween_callback(capa.queue_free)
 
+## Con pantalla de carga y consejos: se pinta ANTES de empezar a construir.
+func _ver_estadio_con_carga() -> void:
+	var carga := PantallaCarga.mostrar(self, Idiomas.t("Levantando el estadio…"))
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_ver_estadio_propio()
+	carga.cerrar()
+
+func _ver_ciudad_con_carga() -> void:
+	var carga := PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_ver_ciudad_propia()
+	carga.cerrar()
+
 func _ver_estadio_propio() -> void:
 	_fundido_entrada()
 	var c := mundo.mi_club()
@@ -4685,7 +4700,7 @@ func _pintar_estadio(c: Club) -> void:
 	var ver3d := Button.new()
 	ver3d.text = "👁️ Ver mi estadio en 3D"
 	ver3d.add_theme_font_size_override("font_size", 11)
-	ver3d.pressed.connect(_ver_estadio_propio)
+	ver3d.pressed.connect(_ver_estadio_con_carga)
 	fila_n.add_child(ver3d)
 	_ui_club_estadio._pintar_estilos_estadio(c)
 	## LA HINCHADA. `Prensa.animo` y `Prensa.funa` se mueven solos desde hace
@@ -4942,7 +4957,7 @@ func _pintar_ciudad(c: Club) -> void:
 	var ver3d := Button.new()
 	ver3d.text = "🏙️ Ver la ciudad en 3D"
 	ver3d.add_theme_font_size_override("font_size", 11)
-	ver3d.pressed.connect(_ver_ciudad_propia)
+	ver3d.pressed.connect(_ver_ciudad_con_carga)
 	_lista_ciudad.add_child(ver3d)
 	_ui_ciudad._pintar_luces_ciudad(ci)
 
