@@ -40,7 +40,7 @@ func _ready() -> void:
 	_cam = Camera3D.new()
 	_cam.fov = 40
 	raiz.add_child(_cam)
-	_cam.position = Vector3(0, 1.3, 11)
+	_cam.position = Vector3(0, 1.5, float(OS.get_environment("DIST")) if OS.get_environment("DIST") != "" else 11.0)
 	_cam.look_at(Vector3(0, 0.95, 0))
 
 func _process(_d: float) -> void:
