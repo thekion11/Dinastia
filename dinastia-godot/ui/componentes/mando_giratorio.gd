@@ -26,7 +26,7 @@ var _piezas := {}            ## nombre -> {"nodo", "mats": [...], "ancla": Vecto
 var _iconos := {}            ## cache de texturas
 var _fuente: Font
 var _yaw := 0.0
-var _pitch := 0.85
+var _pitch := 1.28
 var _vel := Vector2.ZERO
 var _arrastrando := false
 var _ocioso := 0.0
@@ -34,7 +34,7 @@ var _zoom := 1.0
 var _dispositivo_montado := ""
 
 const YAW0 := 0.0
-const PITCH0 := 0.85
+const PITCH0 := 1.28
 
 # ------------------------------------------------------------------ montaje
 
@@ -78,13 +78,30 @@ func _ready() -> void:
 	_vp.add_child(_cam)
 	resized.connect(_ajustar_camara)
 	_ajustar_camara()
+	## Atajos de vista: arriba (botones), atrás (gatillos y bumpers) y de lado.
+	var fila := HBoxContainer.new()
+	fila.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	fila.offset_top = -62
+	fila.offset_bottom = -26
+	fila.offset_left = 8
+	fila.offset_right = -8
+	fila.alignment = BoxContainer.ALIGNMENT_CENTER
+	fila.add_theme_constant_override("separation", 6)
+	add_child(fila)
+	for v: Array in [["⬆ Arriba: botones", YAW0, PITCH0], ["↻ Atrás: gatillos y bumpers", PI, 0.3]]:
+		var b := Button.new()
+		b.text = Idiomas.t(String(v[0]))
+		b.add_theme_font_size_override("font_size", 12)
+		b.focus_mode = Control.FOCUS_NONE
+		b.pressed.connect(mirar.bind(float(v[1]), float(v[2])))
+		fila.add_child(b)
 	_construir(dispositivo)
 
 ## La cámara se aleja lo justo para que el mando entre entre las dos columnas
 ## de etiquetas (que ocupan ~100 px a cada lado) y no se corte al girarlo.
 func _ajustar_camara() -> void:
 	_vp.size = Vector2i(maxi(int(size.x), 16), maxi(int(size.y), 16))
-	var libre := maxf(size.x - 190.0, 120.0)
+	var libre := maxf(size.x - 215.0, 120.0)
 	var ancho_modelo := 19.0
 	var visible_ancho := ancho_modelo * size.x / libre
 	var aspecto := maxf(size.x / maxf(size.y, 1.0), 0.5)
@@ -210,9 +227,9 @@ func _construir(disp: String) -> void:
 		var bump := _material(c_tapa, 0.35, 0.3)
 		var trig := _material(c_mando, 0.5, 0.2)
 		var mb := _malla(_modelo, _esfera(), bump, Vector3(s * 5.4, 0.55, -4.15), Vector3(2.3, 0.5, 0.85), Vector3(0, -s * 5.0, 0))
-		_registrar(String(lado[0]) + "B", mb, [bump], Vector3(s * 5.4, 1.1, -4.15), Vector3.UP)
+		_registrar(String(lado[0]) + "B", mb, [bump], Vector3(s * 5.4, 1.1, -4.15), Vector3(0, 0.3, -0.95).normalized())
 		var mt := _malla(_modelo, _esfera(), trig, Vector3(s * 5.4, -0.2, -5.1), Vector3(2.1, 0.95, 0.9), Vector3(-18, -s * 5.0, 0))
-		_registrar(String(lado[0]) + "T", mt, [trig], Vector3(s * 5.4, 0.35, -5.5), Vector3(0, 0.5, -1).normalized())
+		_registrar(String(lado[0]) + "T", mt, [trig], Vector3(s * 5.4, 0.35, -5.5), Vector3(0, -0.05, -1).normalized())
 		_icono_sobre(String(lado[0]) + "B", Vector3(s * 5.4, 1.12, -4.15), 1.7, disp)
 		_icono_sobre(String(lado[0]) + "T", Vector3(s * 5.4, 0.62, -5.35), 1.5, disp, Vector3(-18, 0, 0))
 	## Sticks.
@@ -386,6 +403,7 @@ func _draw() -> void:
 	var disp := dispositivo
 	## Dónde cae cada pieza en pantalla, y si da la cara a la cámara.
 	var vistos: Array = []
+	var ocultas := 0
 	for k: String in etiquetas:
 		if not _piezas.has(k):
 			continue
@@ -396,6 +414,9 @@ func _draw() -> void:
 		var n: Vector3 = (_pivote.global_basis * (pz["normal"] as Vector3)).normalized()
 		var a_camara := (_cam.global_position - mundo).normalized()
 		var cara := n.dot(a_camara)
+		if smoothstep(0.42, 0.7, cara) < 0.03:
+			ocultas += 1
+			continue
 		vistos.append({"k": k, "p": _cam.unproject_position(mundo), "cara": cara})
 	var izq: Array = []
 	var der: Array = []
@@ -409,38 +430,44 @@ func _draw() -> void:
 	## La ayuda para el ratón.
 	var txt := Idiomas.t("Arrastra para girarlo · rueda: zoom · doble clic: vista inicial")
 	draw_string(_fuente, Vector2(8, size.y - 8), txt, HORIZONTAL_ALIGNMENT_LEFT, size.x - 16, 11, Color(1, 1, 1, 0.5))
+	if ocultas > 0:
+		var aviso := Idiomas.t("Desde aquí no se ven %d botones: gira el mando o cambia de vista") % ocultas
+		draw_string(_fuente, Vector2(8, 18), aviso, HORIZONTAL_ALIGNMENT_LEFT, size.x - 16, 12, Color(1.0, 0.82, 0.25, 0.8))
 
 func _columna(lista: Array, izquierda: bool, disp: String) -> void:
 	if lista.is_empty():
 		return
-	var alto := size.y - 50.0
+	var alto := size.y - 100.0
 	var paso := minf(46.0, alto / float(lista.size()))
-	var y0 := (size.y - paso * float(lista.size() - 1)) * 0.5 - 8.0
+	var y0 := (size.y - 60.0 - paso * float(lista.size() - 1)) * 0.5 + 24.0
 	var x_borde := 4.0 if izquierda else size.x - 4.0
 	var carpeta := "playstation" if disp == "ps" else "xbox"
 	for i in lista.size():
 		var v: Dictionary = lista[i]
 		var k: String = v["k"]
 		var punto: Vector2 = v["p"]
-		var visible_cara := float(v["cara"]) > -0.1
 		var activa := iluminadas.has(k)
-		var a := 1.0 if visible_cara else 0.25
+		## Solo se ve la etiqueta de lo que da la cara a la cámara: arriba desde
+		## arriba, los gatillos y bumpers desde el lado en que están.
+		var a := smoothstep(0.42, 0.7, float(v["cara"]))
+		if a < 0.03:
+			continue
 		var col := Color(1.0, 0.82, 0.25, a) if activa else Color(1, 1, 1, 0.45 * a + 0.1)
 		var y := y0 + paso * float(i)
-		var ancla := Vector2(x_borde + (78.0 if izquierda else -78.0), y)
+		## Primero el texto (para saber dónde termina) y luego la línea hasta él.
+		var tex := _icono(carpeta, nombre_icono(k, disp))
+		var que := _cortar(String(etiquetas[k]), 12, 104.0)
+		var w := _fuente.get_string_size(que, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
+		var x_ico := x_borde if izquierda else size.x - 4.0 - 28.0
+		var x_txt := x_ico + 31.0 if izquierda else x_ico - 3.0 - w
+		var ancla := Vector2((x_txt + w + 5.0) if izquierda else (x_txt - 5.0), y)
 		var codo := Vector2(lerpf(punto.x, ancla.x, 0.6), y)
 		draw_line(punto, codo, col, 1.3, true)
 		draw_line(codo, ancla, col, 1.3, true)
 		draw_circle(punto, 3.0, col)
-		## El icono de Kenney y lo que hace.
-		var tex := _icono(carpeta, nombre_icono(k, disp))
-		var que := _cortar(String(etiquetas[k]), 12, 100.0)
-		var x_ico := x_borde if izquierda else size.x - 4.0 - 28.0
 		if tex != null:
 			draw_texture_rect(tex, Rect2(Vector2(x_ico, y - 14.0), Vector2(28, 28)), false, Color(1, 1, 1, a))
-		var w := _fuente.get_string_size(que, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
-		var x_txt := x_ico + 31.0 if izquierda else x_ico - 3.0 - w
-		draw_string(_fuente, Vector2(x_txt, y + 4.0), que, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE if activa else Color(1, 1, 1, 0.82 * a))
+		draw_string(_fuente, Vector2(x_txt, y + 4.0), que, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE if activa else Color(1, 1, 1, 0.85 * a))
 
 func _cortar(txt: String, tam: int, ancho: float) -> String:
 	if _fuente.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tam).x <= ancho:
