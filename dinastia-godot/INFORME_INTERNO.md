@@ -1,6 +1,9 @@
 # INFORME INTERNO DE AUDITORÍA — Dinastía
 
 Documento de trabajo (no para publicar). Se actualiza en cada pasada de auditoría.
+**Los 442 puntos de mejora, uno por uno, están en `INFORME_MEJORAS.md`** (este documento tiene
+los hallazgos medidos y los errores).
+
 Regla del usuario (14-10-2026): **los errores se arreglan; los puntos de mejora se
 registran** aquí con *qué falta* y *cómo solucionarlo*.
 
@@ -43,7 +46,7 @@ Prioridad: P0 rompe algo · P1 se nota mucho · P2 pulido · P3 futuro.
 | Archivos de `pruebas/` | 342 (14 `prueba_*`, 242 `captura_*`, sondas y auditorías) |
 | Archivo más grande | `pruebas/banco.gd` 8.029 líneas; en juego: `ui/principal.gd` 6.655 |
 | Funciones > 120 líneas (fuera de pruebas) | 64 (la mayor: `Sonido._sintetizar` 1.000; `Principal._conectar_noticias` 543; `Mundo.avanzar_semana` 532) |
-| `TODO/FIXME/HACK` | 65 |
+| Marcadores `TODO/FIXME/HACK` reales | 0 (el «65» de la primera versión eran palabras «todo» en español) |
 | `print()` fuera de pruebas | 16 |
 | Referencias `res://` a recursos que no existen (código de juego) | **0** (de 1.138) |
 | Assets | 260 MB (`assets/`) + 230 MB (`recursos/`), 200 `.glb` |
@@ -303,7 +306,7 @@ Medido (`datos/idiomas_extra.json`):
 - **Q-02 (P2, 💡) `pruebas/banco.gd` 8.029 líneas en un solo archivo**: un error de
   sintaxis lo deja colgado (ver CLAUDE.md). *Cómo*: dividir por tandas con un
   `banco.sh` que compruebe la sintaxis (`--check-only`) antes de lanzar.
-- **Q-03 (P2, 🔴) 16 `print()` fuera de pruebas** y 65 `TODO`: revisar y limpiar.
+- **Q-03 (P2, 🔴) 16 `print()` fuera de pruebas**: sustituir por un registro con niveles. (No hay `TODO` reales.)
 - **Q-04 (P2, 💡) Sin análisis estático**: añadir `gdlint`/`gdformat` al flujo.
 - **Q-05 (P1, ✅) Avisos del banco**: ver E-01 y E-02.
 
