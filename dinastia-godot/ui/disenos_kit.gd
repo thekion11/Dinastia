@@ -264,6 +264,9 @@ static func kit_de_club(c: Club) -> Dictionary:
 	for z: String in base.get("sp_ocultar", []):
 		sp.erase(z)
 	base["sp"] = sp
+	## EL ESCUDO DEL CLUB EN LA CAMISETA (14-10-2026): el mismo escudo que se ve en
+	## las fichas, no un escudete genérico.
+	base["escudo_tex"] = Escudo.textura(c, 64)
 	return base
 
 static func _col(hexa: Variant) -> Color:
@@ -987,6 +990,11 @@ static func uniforms(kit: Dictionary, dorsal: int) -> Dictionary:
 	for a: Array in ACCESORIOS:
 		var k := String(a[0])
 		u["acc_" + k] = _col(acc[k]) if acc.has(k) else Color(0, 0, 0, 0)
+	if kit.get("escudo_tex") is Texture2D:
+		u["hay_escudo"] = true
+		u["escudo_tex"] = kit["escudo_tex"]
+	else:
+		u["hay_escudo"] = false
 	## Los patrocinadores (pecho, manga, espalda y pantalón).
 	var sp: Dictionary = kit.get("sp", {})
 	for z: String in ["pecho", "manga", "espalda", "short"]:
