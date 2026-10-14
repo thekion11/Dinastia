@@ -1314,6 +1314,9 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 func _ia_portero(p: Dictionary) -> Vector3:
 	var b := balon.position
 	var arco := _arco_propio(p)
+	## En plena estirada sigue hacia donde se tiró (sin teletransportes).
+	if float(p.get("gesto_hasta", 0.0)) > t and p.has("objetivo"):
+		return p["objetivo"]
 	p["correr"] = false
 	if poseedor == p:
 		## Sale con el balón: lo pasa a un defensa libre o despeja largo.
@@ -1344,9 +1347,14 @@ func _ia_portero(p: Dictionary) -> Vector3:
 				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, 0.3, 1.0)
 				if cruce.y > 1.8:
 					alcance *= 0.85
-				var lat := absf(cruce.x - pos(p).x)
+				## El alcance se mide donde está ÉL (adelantado tapa más ángulo),
+				## no en la línea de gol.
+				var tg := clampf((pos(p).z - b.z) / vel_balon.z, 0.0, tz)
+				var cruce_gk := b + vel_balon * tg
+				cruce_gk.y = b.y + vel_balon.y * tg - 0.5 * G * tg * tg
+				var lat := absf(cruce_gk.x - pos(p).x)
 				if lat < alcance and _rng.randf() < 0.47 + float(p["attr"]["ref"]) * 0.42:
-					_parada(p, cruce, lat > 1.2)
+					_parada(p, cruce_gk, lat > 1.2)
 					return pos(p)
 	## Balón suelto en su área y él llega antes: sale a por él.
 	if poseedor.is_empty() and _en_su_area(p, b) and b.y < 2.0:
@@ -1357,12 +1365,62 @@ func _ia_portero(p: Dictionary) -> Vector3:
 		if suyo:
 			p["correr"] = true
 			return b
-	## Colocación: en la línea balón-arco, más adelantado cuanto más lejos.
-	var dist := b.distance_to(arco)
-	var sale := clampf(dist * 0.12, 0.8, 5.5)
-	var obj := arco + (Vector3(b.x, 0, b.z) - arco).normalized() * sale
-	obj.x = clampf(obj.x, -PALO - 1.0, PALO + 1.0)
+	## Mano a mano: un rival con el balón entra solo por el centro del área y
+	## no hay defensa en medio -> sale a achicar, a unos metros de él.
+	if not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
+		var pr := pos(poseedor)
+		var d_arco := pr.distance_to(arco)
+		if d_arco < 15.0 and absf(pr.x) < 12.0 and not _hay_defensa_entre(p, pr, arco):
+			p["correr"] = true
+			return pr + (arco - pr).normalized() * clampf(d_arco * 0.25, 1.8, 3.2)
+	return colocacion_portero(b, arco, _tac(bool(p["es_local"]), "linea"))
+
+## LA COLOCACIÓN DEL PORTERO (14-10-2026). Antes iba por la línea balón-centro
+## del arco a 0,8-5,5 m, y con el balón en una banda dejaba el primer palo
+## abierto. Ahora se pone en la BISECTRIZ del ángulo que forman el balón y los
+## dos palos (tapa lo mismo a cada lado) y adelanta según dónde esté el balón:
+## lejos, de líbero a 8-12 m (más con la línea alta); en tres cuartos, a 4-8;
+## en el área, a 1,5-4; y nunca fuera del ancho del arco con margen.
+static func colocacion_portero(b: Vector3, arco: Vector3, linea := 1) -> Vector3:
+	var hacia := signf(arco.z)
+	var bb := Vector3(b.x, 0, b.z)
+	var dist := bb.distance_to(arco)
+	var prof: float
+	if dist > 45.0:
+		prof = 8.0 + 2.0 * float(linea) + clampf((dist - 45.0) * 0.05, 0.0, 1.0)
+	elif dist > 25.0:
+		prof = lerpf(4.5, 8.0 + float(linea), (dist - 25.0) / 20.0)
+	elif dist > 11.0:
+		prof = lerpf(1.6, 4.5, (dist - 11.0) / 14.0)
+	else:
+		prof = lerpf(0.9, 1.6, dist / 11.0)
+	var p1 := Vector3(-PALO, 0, arco.z)
+	var p2 := Vector3(PALO, 0, arco.z)
+	var bis := ((p1 - bb).normalized() + (p2 - bb).normalized()).normalized()
+	var z_obj := arco.z - hacia * prof
+	var obj := Vector3(0, 0, z_obj)
+	## Con el balón por delante, en la bisectriz; si está por detrás de la
+	## línea del portero (casi en el córner), pegado al primer palo.
+	if absf(bis.z) > 0.05 and (z_obj - bb.z) * hacia > 0.0:
+		var u := (z_obj - bb.z) / bis.z
+		obj.x = bb.x + bis.x * u
+	else:
+		obj.x = signf(bb.x) * PALO * 0.8
+	obj.x = clampf(obj.x, -PALO - 0.6, PALO + 0.6)
 	return obj
+
+## ¿Hay un defensa del portero entre el rival y el arco?
+func _hay_defensa_entre(gk: Dictionary, desde: Vector3, arco: Vector3) -> bool:
+	var linea := arco - desde
+	var largo := linea.length()
+	for q: Dictionary in jugadores:
+		if q == gk or bool(q["es_local"]) != bool(gk["es_local"]) or bool(q["por"]):
+			continue
+		var r := pos(q) - desde
+		var u := r.dot(linea) / maxf(largo * largo, 0.01)
+		if u > 0.05 and u < 0.95 and (r - linea * u).length() < 2.2:
+			return true
+	return false
 
 ## El portero se estira: atrapa si puede, si no la desvía.
 func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
@@ -1371,7 +1429,11 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	var altura := "baja" if cruce.y < 0.7 else ("media" if cruce.y < 1.6 else "alta")
 	var anim := ("estirada_%s_%s" % [altura, lado]) if estirada else ("atajar_bajo" if cruce.y < 0.6 else ("blocaje_alto" if cruce.y > 1.6 else "atajar"))
 	_anim(p, anim, true)
-	(p["node"] as Node3D).position.x = move_toward(pos(p).x, cruce.x, 1.6 if estirada else 0.8)
+	## Se tira de verdad: un impulso lateral que la inercia gasta (antes se
+	## teletransportaba 1,6 m de un fotograma a otro).
+	var hacia_x := clampf(cruce.x - pos(p).x, -2.2, 2.2)
+	p["vel"] = Vector3(hacia_x * (3.4 if estirada else 2.0), 0, 0)
+	p["objetivo"] = Vector3(pos(p).x + hacia_x, 0, pos(p).z)
 	var fuerza := vel_balon.length()
 	if not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9:
 		_tomar(p)
@@ -2186,6 +2248,9 @@ func _mover_jugadores(delta: float) -> void:
 				and vel.normalized().dot(hacia_b.normalized()) < -0.35:
 			atras = true
 			n.rotation.y = rotate_toward(n.rotation.y, atan2(hacia_b.x, hacia_b.z), 7.0 * delta)
+		elif bool(p["por"]) and poseedor != p and sp < 6.0 and hacia_b.length() > 0.5:
+			## El portero no da la espalda al balón: se mueve de lado o atrás.
+			n.rotation.y = rotate_toward(n.rotation.y, atan2(hacia_b.x, hacia_b.z), 8.0 * delta)
 		elif sp > 0.4:
 			n.rotation.y = rotate_toward(n.rotation.y, atan2(vel.x, vel.z), 9.0 * delta)
 		elif poseedor != p:
@@ -2212,12 +2277,22 @@ func _mover_jugadores(delta: float) -> void:
 			anim = "trotar_atras"
 		elif sp < 0.5 and bool(p["por"]) and hacia_b.length() < 32.0:
 			anim = "portero_listo"
+		elif bool(p["por"]) and poseedor != p and sp >= 0.5 and sp < 6.0:
+			var fr := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
+			var der := Vector3(-fr.z, 0, fr.x)
+			var lat := vel.dot(der)
+			var fon := vel.dot(fr)
+			if absf(lat) >= absf(fon) * 0.8:
+				anim = "portero_lateral_der" if lat > 0.0 else "portero_lateral_izq"
+			elif fon < 0.0:
+				anim = "trotar_atras"
 		elif sp < 0.5 and cansancio_real and forma_fisica(p) < 0.6:
 			anim = "cansado"
 		_anim(p, anim, false)
 		var ap: AnimationPlayer = p.get("anim")
 		if is_instance_valid(ap):
-			var ciclo := {"trotar": 3.4, "correr": 7.0, "conducir": 3.6, "trotar_atras": 2.6}
+			var ciclo := {"trotar": 3.4, "correr": 7.0, "conducir": 3.6, "trotar_atras": 2.6,
+				"portero_lateral_der": 2.0, "portero_lateral_izq": 2.0}
 			ap.speed_scale = clampf(sp / float(ciclo[anim]), 0.7, 1.4) if ciclo.has(anim) else 1.0
 
 ## EL ÁRBITRO SIGUE LA JUGADA (29-9-2026). El principal va en diagonal, unos

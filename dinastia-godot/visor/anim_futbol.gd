@@ -428,6 +428,23 @@ static func estirada(esq: Skeleton3D, pre: String, lado: float, alto: float) -> 
 		{"t": 1.5, "p": [der, -0.78, 0.15], "g": [0, rueda * 0.95, 0], "pd": L(40, 60), "pi": L(30, 50), "bi": [50, 60, 60], "bd": [50, 60, 60]},
 	])
 
+## EL PASO LATERAL DEL PORTERO (14-10-2026, «¿qué le pasa al portero?»): antes
+## se movía corriendo de espaldas al balón, como un jugador de campo. Un
+## portero de verdad se desplaza de lado, en guardia, sin cruzar las piernas:
+## abre una, cierra la otra, siempre de cara al juego. `lado` +1 a su derecha.
+## En bucle; el que lo lleva por el campo es el motor.
+static func portero_lateral(esq: Skeleton3D, pre: String, lado: float) -> Animation:
+	var abre := "pd" if lado > 0 else "pi"
+	var cierra := "pi" if lado > 0 else "pd"
+	var brazos := [30, 28, 45]
+	var k0 := {"t": 0.0, "p": [0.0, -0.15, 0.0], "tr": [16, 0, 0], abre: L(26, 48, 0, 8), cierra: L(26, 48, 0, 8), "bd": brazos, "bi": brazos}
+	var k1 := {"t": 0.13, "p": [0.03 * lado, -0.12, 0.0], abre: L(32, 58, 5, 24), cierra: L(25, 46, 0, 6)}
+	var k2 := {"t": 0.26, "p": [0.06 * lado, -0.17, 0.0], "tr": [16, 3 * lado, 0], abre: L(24, 44, 0, 18), cierra: L(28, 50, 0, 14)}
+	var k3 := {"t": 0.39, "p": [0.03 * lado, -0.13, 0.0], abre: L(25, 46, 0, 10), cierra: L(33, 58, 5, 0)}
+	var k4 := k0.duplicate()
+	k4["t"] = 0.52
+	return armar(esq, pre, 0.52, true, [k0, k1, k2, k3, k4])
+
 static func blocaje_alto(esq: Skeleton3D, pre: String) -> Animation:
 	return armar(esq, pre, 1.1, false, [
 		{"t": 0.0, "pd": L(20, 40), "pi": L(20, 40), "p": [0.0, -0.1, 0.0], "bi": [25, 30, 40], "bd": [25, 30, 40]},
@@ -685,7 +702,8 @@ static func familias() -> Dictionary:
 		f["barrida"].append(t[0])
 	f["barrida"].append_array(["entrada_de_pie", "entrada_lateral_pie", "carga_hombro", "entrada_cuerpo", "anticipacion", "zancadilla", "entrada_tijera", "barrida_rodilla"])
 	f["atajada"] = ["estirada_alta_izq", "estirada_alta_der", "estirada_baja_izq", "estirada_baja_der", "estirada_media_izq", "estirada_media_der",
-		"blocaje_alto", "punos", "achique", "blocaje_rasante", "parada_pie", "salida_aerea", "mano_cambiada"]
+		"blocaje_alto", "punos", "achique", "blocaje_rasante", "parada_pie", "salida_aerea", "mano_cambiada",
+		"portero_lateral_der", "portero_lateral_izq"]
 	for t: Array in regates():
 		f["regate"].append(t[0])
 	for t: Array in expresivos():
@@ -736,6 +754,8 @@ static func todas(esq: Skeleton3D, pre: String) -> Dictionary:
 	r["parada_pie"] = parada_pie(esq, pre)
 	r["salida_aerea"] = salida_aerea(esq, pre)
 	r["mano_cambiada"] = mano_cambiada(esq, pre)
+	r["portero_lateral_der"] = portero_lateral(esq, pre, 1.0)
+	r["portero_lateral_izq"] = portero_lateral(esq, pre, -1.0)
 	for t: Array in regates():
 		r[t[0]] = regate(esq, pre, float(t[1]), t[2])
 	for lista: Array in [expresivos(), lesiones(), arbitro()]:
