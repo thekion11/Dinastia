@@ -167,12 +167,8 @@ static func silueta(forma: String) -> String:
 ## [forma, patrón] del escudo del club real al que representa (tabla ESTADIO_CLUB,
 ## campo «escudo», `herramientas/estadios_reales.py`), o [].
 static func _rasgo_real(c: Club) -> Array:
-	var t: Variant = Datos.tabla("ESTADIO_CLUB")
-	if t is Dictionary and (t as Dictionary).has(c.nombre):
-		var r: Variant = (t as Dictionary)[c.nombre].get("escudo", [])
-		if r is Array:
-			return r
-	return []
+	var r: Variant = c.fila_estadio_real().get("escudo", [])
+	return r if r is Array else []
 
 ## djb2 sobre el id, el mismo hash que usa el resto del proyecto para que un
 ## club dé siempre lo mismo.

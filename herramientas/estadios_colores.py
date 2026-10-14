@@ -19,6 +19,8 @@ def parchear(ruta, clave_de):
             n += 1
         if real in er.ESCUDOS:
             fila["escudo"] = list(er.ESCUDOS[real])
+        if real in er.CAMISETAS:
+            fila["camiseta"] = er.CAMISETAS[real]
     json.dump(d, open(ruta, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     print(ruta, n, "estadios con colores propios")
 
