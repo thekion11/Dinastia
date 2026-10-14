@@ -239,7 +239,9 @@ func _es_puesto_portero_str(puesto: String) -> bool:
 ## Y el tamaño manda sobre el gusto: un club de 8.000 butacas no puede tener tres
 ## bandejas por mucha reputación que tenga.
 const _FORMAS := ["cuenco", "ingles", "oval", "herradura", "rect"]
-const _CESPED := ["rayas", "damero", "circulos", "liso"]
+## Los diseños de corte que sortean los clubes (14-10-2026: antes solo eran 4 y se
+## repetían; los 12 existen y el diseñador del estadio los ofrece todos).
+const _CESPED := ["rayas", "rayasH", "damero", "circulos", "diagonal", "rayas", "damGrande", "rombos", "liso", "rayas", "espiga", "abanico"]
 const _ASIENTOS := ["franjas", "liso", "moteado", "degradado"]
 
 func perfil_estadio() -> Dictionary:
