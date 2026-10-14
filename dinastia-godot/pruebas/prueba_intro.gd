@@ -12,7 +12,16 @@ func _ok(c: bool, t: String) -> void:
 	if not c:
 		_fallos += 1
 
+func _pref_ceremonia(v: bool) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "ceremonia", v)
+	cfg.save(CajonAjustes.RUTA)
+
 func _ready() -> void:
+	## Desde el 13-10 la CEREMONIA sustituye al vuelo corto; esta prueba es del vuelo
+	## corto, así que apaga la ceremonia mientras corre (auditoría 14-10).
+	_pref_ceremonia(false)
 	var mundo := Mundo.new()
 	mundo.generar(["CHI"], 4711)
 	mundo.mi_club_id = mundo.ligas[0].clubes[0].id
@@ -43,7 +52,9 @@ func _process(_d: float) -> void:
 			hoja.blit_rect(_imgs[1], Rect2i(0, 0, 640, 360), Vector2i(640, 0))
 			hoja.save_png("res://pruebas/capturas/intro_partido.png")
 		print("===== INTRO: %d fallos =====" % _fallos)
+		_pref_ceremonia(true)
 		get_tree().quit()
 	if _n > 5000:
 		print("no terminó")
+		_pref_ceremonia(true)
 		get_tree().quit()
