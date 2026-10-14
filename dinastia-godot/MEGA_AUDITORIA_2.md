@@ -53,15 +53,13 @@ NO se logró**. Las cifras salen de herramientas del repositorio (se pueden repe
    los builds públicos; el derecho de imagen lo decide el dueño (ya avisado).
 7. **Pruebas**: 14 `prueba_*` automáticas vs 242 capturas. Faltan pruebas
    automáticas para ciudad (conducción), minijuegos 3D y menús (solo hay capturas).
-8. **Cobertura de idiomas**: 9 idiomas, pero las frases nuevas de hoy (menús de
-   Ciudad/Editar, caminatas, minijuegos) están solo en español: hay que pasarlas por
-   `Idiomas.t` y traducirlas.
+8. **Cobertura de idiomas**: 9 idiomas; los menús nuevos y «Mi caminata» YA están traducidos (20 frases × 8 idiomas); faltan las cadenas dibujadas a mano de los minijuegos nuevos.
 
 ## 4. Lo que sigue (orden propuesto)
 
 1. LOD de ojos/pestañas + pelo a distancia → medir de nuevo (objetivo real de §14).
 2. Anulación de goles por VAR y duelos con consecuencias (física, #5 y #7).
-3. Traducir las frases nuevas (8 idiomas).
+3. Traducir las cadenas de los minijuegos nuevos (los menús ya están).
 4. Personas del club/ciudad en las primeras filas y NPC en andenes.
 5. Probar losetas Kenney en una calle de prueba (sin tocar la red principal).
 
