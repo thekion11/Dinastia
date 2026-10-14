@@ -39,6 +39,8 @@ func _process(_d: float) -> void:
 	for k in 2:
 		motor.paso(1.0 / 60.0)
 	if _n >= 60 and (_n - 60) % 6 == 0 and _fotos.size() < 12:
+		var cc := get_viewport().get_camera_3d()
+		print("CAMARA activa %s pos %s fov %.0f" % [cc.name if cc else "-", str(cc.global_position.snapped(Vector3.ONE * 0.1)) if cc else "", cc.fov if cc else 0.0])
 		var img := get_viewport().get_texture().get_image()
 		img.resize(640, 360)
 		_fotos.append(img)
