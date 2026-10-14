@@ -376,6 +376,7 @@ func construir() -> void:
 	_placas_de_calle()
 	_orillas_nucleo()
 	_obras_en_calle()
+	_kenney_calles()
 	cuenta["autopista"] = Autopista.montar(b)
 	_parque_eolico()
 	_deposito_agua()
@@ -1608,9 +1609,84 @@ func _obras_en_calle() -> void:
 			var f := float(k) / 6.0 - 0.5
 			var p := centro + (Vector3(-lado * 0.9, 0, f * 20.0) if vertical else Vector3(f * 20.0, 0, -lado * 0.9))
 			_kit(cono, p + Vector3(0, 0.14, 0), Vector3.ONE * 2.0, 0.0)
-		b._caja_en(centro + Vector3(0, 0.6, 0) + (Vector3(0, 0, 10.5) if vertical else Vector3(10.5, 0, 0)), Vector3(3.2, 1.0, 0.2) if vertical else Vector3(0.2, 1.0, 3.2), valla)
+		var pv := centro + (Vector3(0, 0, 10.5) if vertical else Vector3(10.5, 0, 0))
+		if _prop_kenney("construction-barrier", pv + Vector3(0, 0.14, 0), 0.0 if vertical else PI * 0.5, 14.0) == null:
+			b._caja_en(pv + Vector3(0, 0.6, 0), Vector3(3.2, 1.0, 0.2) if vertical else Vector3(0.2, 1.0, 3.2), valla)
+		_prop_kenney("construction-light", pv + (Vector3(1.6, 0.14, 0) if vertical else Vector3(0, 0.14, 1.6)), 0.0, 14.0)
+		for k2 in 2:
+			_prop_kenney("construction-fence", centro + (Vector3(1.8, 0.14, (float(k2) - 0.5) * 9.0) if vertical else Vector3((float(k2) - 0.5) * 9.0, 0.14, 1.8)), 0.0 if vertical else PI * 0.5, 12.0)
 		n += 1
 	cuenta["obras_calle"] = n
+
+## LA CARRETERA DE KENNEY EN USO (14-10-2026, «usar la carretera»). El kit City
+## Kit Roads (CC0, `assets/ciudad/kenney_roads/`) son piezas de 1 unidad: aquí se
+## amplían (×12) y se usan las que le faltaban a la calle: postes de luz con
+## cable en las calles de barrio, brazos de farola curva en las avenidas,
+## carteles colgantes en los cruces con semáforo y las vallas, luces y conos de
+## las obras. Un generador de azar aparte: la ciudad no se mueve de sitio.
+const KENNEY := "res://assets/ciudad/kenney_roads/"
+const KENNEY_ESC := 12.0
+
+var _kenney_cache := {}
+
+func _prop_kenney(nombre: String, pos: Vector3, giro: float, esc: float = KENNEY_ESC) -> Node3D:
+	var e: PackedScene = _kenney_cache.get(nombre)
+	if e == null:
+		e = load(KENNEY + nombre + ".glb")
+		_kenney_cache[nombre] = e
+	if e == null:
+		return null
+	var n: Node3D = e.instantiate()
+	n.scale = Vector3.ONE * esc
+	n.rotation.y = giro
+	n.position = pos
+	b.add_child(n)
+	return n
+
+func _kenney_calles() -> void:
+	var r := RandomNumberGenerator.new()
+	r.seed = 20261014
+	var postes := 0
+	var brazos := 0
+	var carteles := 0
+	for t: Dictionary in tramos:
+		if bool(t["puente"]):
+			continue
+		var a: Vector3 = t["a"]
+		var c: Vector3 = t["b"]
+		var vertical := absf(a.x - c.x) < 0.1
+		var largo := a.distance_to(c)
+		var ancho: float = t["ancho"]
+		var m := (a + c) * 0.5
+		if bool(t["av"]):
+			## Avenidas: un brazo de farola curva cada ~48 m, alternando lados.
+			var n := int((largo - ancho) / 48.0)
+			for q in n:
+				var f := (float(q) + 0.5) / float(maxi(1, n))
+				var p := a.lerp(c, f)
+				var lado := 1.0 if q % 2 == 0 else -1.0
+				var off := (ancho * 0.5 + ACERA * 0.6) * lado
+				var pos := p + (Vector3(off, 0.24, 0) if vertical else Vector3(0, 0.24, off))
+				## El brazo (+Z local del modelo) apunta hacia la calzada.
+				var giro := (PI * 0.5 if lado > 0.0 else -PI * 0.5) if vertical else (PI if lado > 0.0 else 0.0)
+				if _prop_kenney("light-curved", pos, giro, 9.0) != null:
+					brazos += 1
+		elif r.randf() < 0.22 and largo > 60.0:
+			## Calles de barrio: un poste con cable a un lado.
+			var lado2 := 1.0 if r.randf() < 0.5 else -1.0
+			var off2 := (ancho * 0.5 + ACERA * 0.8) * lado2
+			var pos2 := m + (Vector3(off2, 0.24, 0) if vertical else Vector3(0, 0.24, off2))
+			var giro2 := 0.0 if vertical else PI * 0.5
+			if _prop_kenney("electricity-pole", pos2, giro2, 9.0) != null:
+				postes += 1
+	## Carteles colgantes sobre la calzada en cada cruce con semáforo.
+	for p: Vector3 in cruces_semaforo:
+		var esq := p + Vector3(ANCHO_AV * 0.5 + ACERA * 0.6, 0.24, -ANCHO_AV * 0.5 - ACERA * 0.6)
+		if _prop_kenney("road-sign-empty-hanging", esq, PI * 0.5, 12.0) != null:
+			carteles += 1
+	cuenta["kenney_brazos"] = brazos
+	cuenta["kenney_postes"] = postes
+	cuenta["kenney_carteles"] = carteles
 
 ## EL PARQUE EÓLICO en las lomas del noroeste, fuera de la autopista: diez
 ## molinos de 45 m con las aspas girando (cada uno a su ritmo).
