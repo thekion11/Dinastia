@@ -452,3 +452,18 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   regresión en `prueba_control_equipo.tscn` («césped: las capas de volumen existen»). REGLA: tras tocar
   algo visual, comprobarlo con la CÁMARA DE TRANSMISIÓN del partido real, no solo de cerca; y no
   quitar ni apagar nada sin decirlo (si algo cambia de sitio o se pierde, avisar).
+- **14-10 PEDIDO GRANDE «MEGA AUDITORÍA 2» (palabras del usuario, EN ORDEN DE TRABAJO)**: «lo que nos falta es seguir
+  MEJORANDO LO QUE TENEMOS, solo eso; dejar de lado por ahora el PLAN DE RUTA». Lista: (1) NOMBRE y CARA de cada
+  jugador deben corresponder al jugador real (enlace nombre↔cara↔ficha) y NO deben existir otras caras que no sean
+  las versiones 3D (nada de retratos 2D sueltos: todo es el render del modelo 3D); (2) el PÚBLICO del estadio =
+  PERSONAS REALES (modelos 3D de gente, optimizado, incluso personas del club o de la ciudad); (3) CAMISETAS y
+  ESCUDOS de los clubes repasados para parecerse más a los reales; (4) cada MOVIMIENTO CON EL BALÓN ligado a los
+  controles, analizado y creado POR CÓDIGO; (5) mejor FÍSICA del partido y HITBOX; (6) más MODELOS 3D de fuera y
+  más ANIMACIONES; distintos tipos de CAMINATA del personaje; (7) INTELIGENCIA de los jugadores; (8) efectos de
+  CÁMARA, CELEBRACIONES, que se NOTEN los BOTINES, que el VAR se USE; (9) AUDITORÍA REAL de cada parte del juego
+  (qué falta y puntos de mejora); (10) CONDUCCIÓN de vehículos mejorada + CÁMARA POR DENTRO; (11) MENÚS incompletos
+  (ciudad, personalizar); (12) más MINI ANIMACIONES y MÁS JUEGOS dentro del juego; (13) USAR LA CARRETERA
+  (Kenney City Kit Roads, ya en assets/ciudad/kenney_roads) y mejorar objetos MUEBLES e INMUEBLES; (14) OPTIMIZAR
+  el juego como MÍNIMO un 50 %; (15) otra MEGA AUDITORÍA de todo → anotar puntos débiles → volver a hacer un VÍDEO
+  tipo gameplay y SUBIRLO AL DRIVE. Trabajar por bloques con commit y push, banco en 0 fallos, y verificar con la
+  CÁMARA REAL del partido (no solo de cerca). Documento: `dinastia-godot/MEGA_AUDITORIA_2.md`.
