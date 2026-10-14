@@ -477,3 +477,6 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   recortado a la silueta, cuello, puños, costuras, sombra de tela, marca y escudo en el pecho) y
   `Escudo.svg_de` con aro de borde (`_borde_de`) y sombra. Hoja: `pruebas/captura_camisetas_escudos.tscn`.
   Pendiente: revisar la camiseta procedural del 3D (`KitTextureFactory`) con el mismo criterio.
+- 14-10 MEGA AUD. 2, puntos 8 (parcial): VAR en el 3D con motor (1 de 5 goles con VAR en la liga abre
+  la sala VAR y pausa el motor; el gol siempre se confirma) y botines variados por jugador sin diseño de
+  club (`VestidorQ._botin_de`). Pendiente de 4-8: caminatas del personaje, IA, efectos de cámara.
