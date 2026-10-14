@@ -21,9 +21,9 @@ func _ready() -> void:
 
 func _poner(n: int) -> void:
 	if n == 0:
-		_cam.position = Vector3(-4.0, 2.4, 44.0)
-		_cam.look_at(Vector3(10.0, 3.0, 56.0), Vector3.UP)
-		_cam.fov = 30.0
+		_cam.position = Vector3(-4.0, 2.0, 44.0)
+		_cam.look_at(Vector3(4.0, 2.8, 56.0), Vector3.UP)
+		_cam.fov = 22.0
 	else:
 		_cam.position = Vector3(-60.0, 24.0, 0.0)
 		_cam.look_at(Vector3(20.0, 4.0, 55.0), Vector3.UP)

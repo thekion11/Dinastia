@@ -1,31 +1,39 @@
 extends SceneTree
 ## HORNEA LAS PERSONAS DEL PÚBLICO (14-10-2026, pedido: «el público del estadio
-## deben ser personas reales, optimizadas»). Toma el mismo modelo humano que juega
-## (FutbolistaQ), lo pone en varias poses reales (de pie con los brazos caídos,
-## aplaudiendo, celebrando, señalando…), hornea cada pose a una malla ESTÁTICA, la
-## corta a la altura de la cadera (el resto lo tapan la butaca y la fila de
-## delante) y la simplifica con el simplificador de mallas del motor a dos niveles:
-## «cerca» (~400 vértices) y «medio» (~140). Guarda un recurso por pose y nivel en
-## `assets/ciudad/publico/`, con las alturas del cuello y del pelo en sus metadatos
-## para el shader `hinchada.gdshader`.
+## deben ser personas reales, optimizadas»; 2.ª versión tras «no se ven tan bien»).
+## Toma el mismo modelo humano que juega (FutbolistaQ), lo pone en poses de
+## aficionado SENTADO (sentado, charla, aplauso, puño, pulgar, brazos cruzados,
+## manos a la cabeza…), hornea cada pose a una malla ESTÁTICA con la piel puesta a
+## mano (el motor no deja hornear aquí), la corta en la cadera con el borde plano
+## (la butaca y la fila de delante tapan el resto) y la simplifica a dos niveles:
+## «cerca» (~450 vértices) y «medio» (~160). Guarda un recurso por pose y nivel en
+## `assets/ciudad/publico/` con las alturas del cuello y del pelo MEDIDAS en los
+## huesos Head y pelvis (metadatos para `hinchada.gdshader`).
 ##
 ##   godot --headless --path . -s res://herramientas/hornear_publico.gd
-##
-## (Se corre una vez y se sube el resultado: el juego no hornea nada al arrancar.)
 
+## [clave, animación, fracción de la animación]
 const POSES := [
-	["quieto", "parado", 0.30],
+	["quieto", "sentado", 0.5],
+	["charla", "sentado_charla", 0.4],
 	["aplaude", "aplaudir", 0.45],
-	["celebra", "celebrar", 0.50],
-	["puno", "puno_al_aire", 0.40],
-	["senala", "senalar_cielo", 0.50],
-	["saluda", "saludar_publico", 0.60],
+	["aplaude_arriba", "aplauso_arriba", 0.4],
+	["puno", "puno_al_aire", 0.45],
+	["pulgar", "pulgar_arriba", 0.5],
+	["cruzados", "cruzar_brazos", 0.6],
+	["cabeza", "manos_cabeza", 0.6],
 ]
-const OBJETIVOS := {"cerca": 420, "medio": 150}
+const OBJETIVOS := {"cerca": 450, "medio": 160, "lejos": 70}
 const SALIDA := "res://assets/ciudad/publico/"
+const ESCALA := 0.96
 
 func _init() -> void:
 	DirAccess.make_dir_recursive_absolute(SALIDA)
+	## Fuera las mallas de la versión anterior (otras claves de pose).
+	var dir := DirAccess.open(SALIDA)
+	for f in dir.get_files():
+		if f.begins_with("hincha_"):
+			dir.remove(f)
 	var d := FutbolistaQ.crear(1.78, "male")
 	var raiz: Node3D = d["nodo"]
 	root.add_child(raiz)
@@ -35,17 +43,12 @@ func _init() -> void:
 	for mi in raiz.find_children("*", "MeshInstance3D", true, false):
 		if mi.name == "SuperHero_Male":
 			cuerpo = mi
-	if cuerpo == null:
-		push_error("no hay cuerpo")
-		quit(1)
-		return
-	var esq: Skeleton3D = cuerpo.get_parent() as Skeleton3D
+	var esq: Skeleton3D = cuerpo.get_parent() as Skeleton3D if cuerpo != null else null
 	if esq == null:
-		push_error("el cuerpo no cuelga del esqueleto")
+		push_error("no hay cuerpo con esqueleto")
 		quit(1)
 		return
 	var total := 0
-	var altura_ref := -1.0
 	for pose: Array in POSES:
 		var nombre: String = pose[0]
 		var anim: String = pose[1]
@@ -58,16 +61,10 @@ func _init() -> void:
 		await process_frame
 		await process_frame
 		var arr: Array = _vestir(cuerpo, esq)
-		if altura_ref < 0.0:
-			var lo := 1e9
-			var hi := -1e9
-			for v: Vector3 in arr[Mesh.ARRAY_VERTEX]:
-				lo = minf(lo, v.y)
-				hi = maxf(hi, v.y)
-			altura_ref = hi - lo
-			print("altura del modelo en esta pose: ", altura_ref)
+		var pelvis_y := esq.get_bone_global_pose(esq.find_bone("pelvis")).origin.y
+		var cabeza_y := esq.get_bone_global_pose(esq.find_bone("Head")).origin.y
 		for nivel: String in OBJETIVOS:
-			var r := _preparar(arr, int(OBJETIVOS[nivel]))
+			var r := _preparar(arr, int(OBJETIVOS[nivel]), pelvis_y, cabeza_y)
 			if r.is_empty():
 				continue
 			var mesh: ArrayMesh = r["mesh"]
@@ -75,16 +72,13 @@ func _init() -> void:
 			mesh.set_meta("cuello_hasta", r["cuello_hasta"])
 			mesh.set_meta("pelo_desde", r["pelo_desde"])
 			mesh.set_meta("alto", r["alto"])
-			var ruta := "%shincha_%s_%s.res" % [SALIDA, nombre, nivel]
-			ResourceSaver.save(mesh, ruta)
+			ResourceSaver.save(mesh, "%shincha_%s_%s.res" % [SALIDA, nombre, nivel])
 			total += 1
-			print("%s %-7s %4d vértices, alto %.2f, cuello %.2f, pelo %.2f" % [nombre, nivel, r["vertices"], r["alto"], r["cuello_desde"], r["pelo_desde"]])
+			print("%s %-7s %4d vértices, cuello %.2f, pelo %.2f, alto %.2f" % [nombre, nivel, r["vertices"], r["cuello_desde"], r["pelo_desde"], r["alto"]])
 	print("HORNEADO ", total, " mallas")
 	quit()
 
-## Piel por CPU: el motor no deja hornear aquí (la referencia de la piel solo
-## existe con pantalla), así que se aplica a mano: matriz del hueso en la pose
-## actual por la pose de enlace de la piel.
+## Piel por CPU: matriz del hueso en la pose actual por la pose de enlace.
 func _vestir(mi: MeshInstance3D, esq: Skeleton3D) -> Array:
 	var arr: Array = mi.mesh.surface_get_arrays(0).duplicate(true)
 	var vs: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
@@ -115,26 +109,18 @@ func _vestir(mi: MeshInstance3D, esq: Skeleton3D) -> Array:
 	arr[Mesh.ARRAY_NORMAL] = ns
 	return arr
 
-## Corta por la cadera, centra y simplifica a ~`objetivo` vértices.
-func _preparar(arr: Array, objetivo: int) -> Dictionary:
+## Corta en la cadera (borde plano), centra y simplifica a ~`objetivo` vértices.
+func _preparar(arr: Array, objetivo: int, pelvis_y: float, cabeza_y: float) -> Dictionary:
 	var vs: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
 	var idx: PackedInt32Array = arr[Mesh.ARRAY_INDEX]
-	var alto_modelo := -1e9
-	var bajo := 1e9
-	for v in vs:
-		alto_modelo = maxf(alto_modelo, v.y)
-		bajo = minf(bajo, v.y)
-	## La cadera, al ~53 % de la altura de pie (la pose puede subir los brazos: se
-	## mide con la altura del tronco, no con el máximo).
-	var altura_pie := 1.78
-	var cadera := bajo + altura_pie * 0.52
-	## Sin las piernas: solo triángulos enteros por encima de la cadera.
+	var normales: PackedVector3Array = arr[Mesh.ARRAY_NORMAL]
+	var corte := pelvis_y - 0.02
 	var usados := {}
 	var tris: Array[int] = []
 	for t in range(0, idx.size(), 3):
 		var ok := true
 		for k in 3:
-			if vs[idx[t + k]].y < cadera:
+			if vs[idx[t + k]].y < corte - 0.1:
 				ok = false
 		if ok:
 			for k in 3:
@@ -142,32 +128,28 @@ func _preparar(arr: Array, objetivo: int) -> Dictionary:
 				usados[idx[t + k]] = true
 	if tris.is_empty():
 		return {}
-	## Se recompacta: solo los vértices usados, centrados y con la cadera a +0,12.
 	var mapa := {}
 	var pos := PackedVector3Array()
 	var nor := PackedVector3Array()
-	var normales: PackedVector3Array = arr[Mesh.ARRAY_NORMAL]
 	var cx := 0.0
 	var cz := 0.0
-	var n := 0
 	for i in usados:
 		cx += vs[i].x
 		cz += vs[i].z
-		n += 1
-	cx /= float(n)
-	cz /= float(n)
-	var escala := 0.96
+	cx /= float(usados.size())
+	cz /= float(usados.size())
 	var max_y := -1e9
 	for i in usados.keys():
 		mapa[i] = pos.size()
 		var p := vs[i]
-		pos.append(Vector3((p.x - cx) * escala, (p.y - cadera) * escala + 0.12, (p.z - cz) * escala))
-		nor.append(normales[i])
+		## Borde plano: lo que baja de la cadera se aplasta en el plano de corte.
+		var y := maxf(p.y, corte)
+		pos.append(Vector3((p.x - cx) * ESCALA, (y - pelvis_y) * ESCALA + 0.12, (p.z - cz) * ESCALA))
+		nor.append(normales[i] if p.y >= corte else Vector3.DOWN)
 		max_y = maxf(max_y, pos[pos.size() - 1].y)
 	var ind := PackedInt32Array()
 	for i in tris:
 		ind.append(mapa[i])
-	## Simplificar: ImporterMesh genera niveles de detalle con meshoptimizer.
 	var im := ImporterMesh.new()
 	var a2 := []
 	a2.resize(Mesh.ARRAY_MAX)
@@ -189,7 +171,6 @@ func _preparar(arr: Array, objetivo: int) -> Dictionary:
 		if dif < mejor_dif:
 			mejor_dif = dif
 			mejor_ind = c
-	## Recompactar otra vez con el nivel elegido.
 	var m2 := {}
 	var pos2 := PackedVector3Array()
 	var nor2 := PackedVector3Array()
@@ -207,10 +188,9 @@ func _preparar(arr: Array, objetivo: int) -> Dictionary:
 	a3[Mesh.ARRAY_INDEX] = ind2
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, a3)
-	## Alturas para el shader: la cabeza mide ~0,23 de la altura de pie y el cuello
-	## queda a ~0,86 de ella; se miden en el modelo en reposo (escala incluida).
-	var h_pie := altura_pie * escala
-	var y_cabeza_base := (altura_pie * 0.86 - altura_pie * 0.52) * escala + 0.12
+	## El hueso Head está en la base del cráneo: el cuello acaba ~6 cm por debajo
+	## y el pelo empieza ~12 cm por encima.
+	var y_cabeza := (cabeza_y - pelvis_y) * ESCALA + 0.12
 	return {"mesh": mesh, "vertices": pos2.size(), "alto": max_y,
-		"cuello_desde": y_cabeza_base - 0.06, "cuello_hasta": y_cabeza_base + 0.02,
-		"pelo_desde": y_cabeza_base + h_pie * 0.085}
+		"cuello_desde": y_cabeza - 0.04, "cuello_hasta": y_cabeza + 0.03,
+		"pelo_desde": y_cabeza + 0.115}
