@@ -2340,11 +2340,14 @@ func _control_usuario(delta: float) -> void:
 	_tacticas_rapidas()
 	_seguir_pared()
 	_seguir_portero_mandado()
-	## L3 + R3 a la vez: bloquear (o soltar) al jugador que manejas.
-	if (Input.is_action_just_pressed("jugar_pedir") and Input.is_action_pressed("jugar_sombrero")) \
-			or (Input.is_action_just_pressed("jugar_sombrero") and Input.is_action_pressed("jugar_pedir")):
+	## L3 + R3 a la vez: bloquear (o soltar) al jugador que manejas. Se cambia
+	## al PULSAR la pareja (flanco), no en cada fotograma que siga pulsada.
+	var pareja := Input.is_action_pressed("jugar_pedir") and Input.is_action_pressed("jugar_sombrero")
+	if pareja and not _pareja_bloqueo:
 		bloqueo = not bloqueo
 		aviso.emit("🔒 Jugador bloqueado" if bloqueo else "🔓 Bloqueo quitado")
+	_pareja_bloqueo = pareja
+	if pareja:
 		return
 	var con_balon := poseedor == p
 	var fwd := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
@@ -2710,6 +2713,7 @@ func _seguir_pared() -> void:
 
 var lento := 0.0
 var bloqueo := false
+var _pareja_bloqueo := false
 var _error_extra := 1.0
 var _presion_doble := false
 var _rb_ultimo := -9.0
