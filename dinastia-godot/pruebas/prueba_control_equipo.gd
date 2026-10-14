@@ -47,6 +47,14 @@ func _process(_d: float) -> void:
 		_ok(false, "hay motor real")
 		_fin()
 		return
+	if _t == 3 and not _dato.has("cesped_ok"):
+		## EL VOLUMEN DEL CÉSPED NO SE PIERDE EN SILENCIO (14-10-2026): en calidad
+		## ALTO/ULTRA el partido tiene sus capas de hierba y se dibujan.
+		_dato["cesped_ok"] = true
+		var capas := _vista.find_child("CespedCapas", true, false)
+		var esperado := CespedCapas.capas_por_calidad()
+		_ok((esperado == 0) or (capas != null and (capas as MeshInstance3D).mesh != null and (capas as MeshInstance3D).mesh.get_surface_count() > 0),
+			"césped: las capas de volumen existen en el partido (%d capas por calidad)" % esperado)
 	match _paso:
 		0:
 			_vista.call("_alternar_control_motor")

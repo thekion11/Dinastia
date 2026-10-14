@@ -445,3 +445,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   «rayas» más frecuente). BUG propio de ese día: `cesped.gdshader` leía el dibujo con mipmaps y de lejos
   se fundía en dos bloques → ahora `filter_nearest` + `textureLod` (`cesped_comun.gdshaderinc`); verde de
   transmisión más profundo (brillo 0,64 y saturación). Revisión: `pruebas/captura_disenos_cesped.tscn`.
+- 14-10: el usuario se molestó: «¿no le habías puesto volumen al césped? Siento que pierdes cosas del
+  juego». Causa: las capas (`CespedCapas`) solo se veían a <18 m y la cámara de transmisión está a
+  25-50 m, y el detalle del shader se apagaba a 25-70 m. Ahora capas hasta 46 m (parche 80 m, ALTO 8 /
+  ULTRA 12) + mechones de 30-60 cm y parches grandes que no se apagan (`cesped.gdshader`). Prueba de
+  regresión en `prueba_control_equipo.tscn` («césped: las capas de volumen existen»). REGLA: tras tocar
+  algo visual, comprobarlo con la CÁMARA DE TRANSMISIÓN del partido real, no solo de cerca; y no
+  quitar ni apagar nada sin decirlo (si algo cambia de sitio o se pierde, avisar).

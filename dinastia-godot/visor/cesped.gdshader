@@ -23,20 +23,26 @@ void fragment() {
 	vec2 w = v_mundo.xz;
 	vec3 cam = (INV_VIEW_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
 	vec3 base = cesped_color(w, UV, v_mundo, cam);
-	// Brizna fina (se apaga a lo lejos para no hacer muaré).
+	// Brizna fina (cerca) + MECHONES de tamaño medio (30-60 cm) que SÍ se ven desde
+	// la cámara de transmisión (14-10-2026, «el césped sigue plano»): antes todo el
+	// detalle se apagaba a 25-70 m, justo donde está la cámara de la tele.
 	float dist = length(cam - v_mundo);
-	// (Más menuda que antes -9 y 23 por metro hacían ondas de 10 cm que de
-	// cerca parecían agua-.)
-	float fino = mix(ruido(w * 31.0) * 0.5 + ruido(w * 67.0) * 0.3 + ruido(w * 9.0) * 0.2, 0.5, smoothstep(25.0, 70.0, dist));
-	base *= 0.92 + 0.16 * fino;
+	float cerca_f = 1.0 - smoothstep(25.0, 70.0, dist);
+	float fino = mix(0.5, ruido(w * 31.0) * 0.5 + ruido(w * 67.0) * 0.3 + ruido(w * 9.0) * 0.2, cerca_f);
+	float mechon = fbm(w * 2.6 + 3.0);
+	float parche = fbm(w * 0.55 + 11.0);
+	base *= (0.92 + 0.16 * fino) * (0.86 + 0.28 * mechon) * (0.93 + 0.14 * parche);
 	ALBEDO = base;
 	ROUGHNESS = 0.96 - 0.06 * fino;
 	SPECULAR = 0.08;
-	// Relieve de la brizna: fino (de 18 a 55 por metro), que a 18 hacía
-	// ondas de 5 cm que de cerca parecían charcos; y se apaga lejos.
+	// Relieve: brizna fina cerca y mechones a media y larga distancia (sin apagarse).
 	float e = 0.008;
 	float hx = ruido((w + vec2(e, 0.0)) * 55.0) - ruido(w * 55.0);
 	float hz = ruido((w + vec2(0.0, e)) * 55.0) - ruido(w * 55.0);
-	NORMAL_MAP = normalize(vec3(-hx * 3.0, -hz * 3.0, 1.0)) * 0.5 + 0.5;
-	NORMAL_MAP_DEPTH = 0.45 * (1.0 - smoothstep(20.0, 60.0, dist));
+	float e2 = 0.06;
+	float mx = fbm((w + vec2(e2, 0.0)) * 2.6 + 3.0) - mechon;
+	float mz = fbm((w + vec2(0.0, e2)) * 2.6 + 3.0) - mechon;
+	vec2 g = vec2(hx, hz) * 3.0 * cerca_f + vec2(mx, mz) * 5.0;
+	NORMAL_MAP = normalize(vec3(-g.x, -g.y, 1.0)) * 0.5 + 0.5;
+	NORMAL_MAP_DEPTH = 0.6;
 }
