@@ -56,6 +56,9 @@ const NOMBRES := ["silbato", "gol", "gol_rival", "roja", "amarilla",
 	"lesion", "cambio", "fichaje", "ascenso", "descenso", "logro",
 	## La segunda tanda: la interfaz, el campo, la grada y la gestion.
 	"clic_suave", "abrir", "cerrar", "error", "aviso", "correo", "guardado",
+	## Los del menú de controles (14-10-2026): moverse, aceptar, volver,
+	## cambiar un ajuste y pasar de sección.
+	"menu_mover", "menu_aceptar", "menu_atras", "menu_cambio", "menu_seccion",
 	"telefono", "saque_inicial", "penal", "penal_fallado", "travesano",
 	"remate_fuera", "var", "segunda_amarilla", "fuera_de_juego",
 	"tambor", "trompeta", "abucheo", "aplauso", "cantico", "bengala",
@@ -347,6 +350,31 @@ func _sintetizar(nombre: String, sal: float) -> AudioStreamWAV:
 		## LA REGLA DE LA INTERFAZ. Todo lo que va al bus INTERFAZ dura menos de
 		## 0,2 s y suena bajo. Un clic que se oye es un clic que molesta a la
 		## tercera vez, y en este juego se hacen miles.
+		"menu_mover":
+			## Un tic claro y corto, como el cursor de un menú de consola.
+			m = _tono(1500.0 * tono, 0.035, 0.105, "seno")
+			_mezclar(m, _tono(2250.0 * tono, 0.02, 0.038, "seno"))
+		"menu_aceptar":
+			## Dos notas que suben, brillantes.
+			m.resize(int(0.16 * float(FRECUENCIA)))
+			_mezclar(m, _tono(880.0 * tono, 0.06, 0.120, "seno"))
+			_mezclar(m, _tono(1320.0 * tono, 0.09, 0.112, "seno"), 0.05)
+		"menu_atras":
+			## Las mismas, bajando y más apagadas.
+			m.resize(int(0.16 * float(FRECUENCIA)))
+			_mezclar(m, _tono(1100.0 * tono, 0.06, 0.098, "seno"))
+			_mezclar(m, _tono(740.0 * tono, 0.09, 0.090, "seno"), 0.05)
+		"menu_cambio":
+			## Un ajuste que cambia: tres notas rápidas y un brillo.
+			m.resize(int(0.26 * float(FRECUENCIA)))
+			_mezclar(m, _tono(988.0 * tono, 0.05, 0.098, "seno"))
+			_mezclar(m, _tono(1319.0 * tono, 0.05, 0.098, "seno"), 0.05)
+			_mezclar(m, _tono(1976.0 * tono, 0.12, 0.075, "seno"), 0.1)
+		"menu_seccion":
+			## Pasar de sección: un soplido corto que sube y una nota.
+			m.resize(int(0.2 * float(FRECUENCIA)))
+			_mezclar(m, _ruido(0.12, 600.0, 3200.0, 0.05))
+			_mezclar(m, _tono(1175.0 * tono, 0.08, 0.090, "seno"), 0.07)
 		"clic_suave":
 			## El clic de las pestañas: más apagado que "clic", porque cambiar de
 			## pantalla se hace veinte veces por minuto.
