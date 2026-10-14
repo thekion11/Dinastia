@@ -80,19 +80,19 @@ func _tocar() -> void:
 		return
 	## El pie alcanza si el balón está bajo (0,72–0,95) y encima.
 	if _y < 0.72 or _y > 0.96:
-		_aviso("¡Muy pronto!" if _y < 0.72 else "", 0.5)
+		_aviso(Idiomas.t("¡Muy pronto!") if _y < 0.72 else "", 0.5)
 		return
 	if absf(_x - _pie) > 0.09:
-		_aviso("¡Lejos del pie!", 0.6)
+		_aviso(Idiomas.t("¡Lejos del pie!"), 0.6)
 		return
 	var precisión := 1.0 - absf(_y - 0.85) / 0.12
 	var extra := 0
 	if precisión > 0.8:
 		extra = 2
-		_aviso("¡PERFECTO!", 0.7)
+		_aviso(Idiomas.t("¡PERFECTO!"), 0.7)
 	elif precisión > 0.45:
 		extra = 1
-		_aviso("¡Bien!", 0.5)
+		_aviso(Idiomas.t("¡Bien!"), 0.5)
 	_toques += 1
 	_puntos += 1 + extra
 	_g = 1.1 + float(_toques) * 0.05
@@ -112,9 +112,9 @@ func _terminar() -> void:
 		cf.load(ARCHIVO)
 		cf.set_value("malabares", "record", record)
 		cf.save(ARCHIVO)
-		_msg = "¡NUEVO RÉCORD!"
+		_msg = Idiomas.t("¡NUEVO RÉCORD!")
 	else:
-		_msg = "Se cayó"
+		_msg = Idiomas.t("Se cayó")
 	_msg_t = 99.0
 
 func _reiniciar() -> void:
@@ -134,8 +134,8 @@ func _draw() -> void:
 	draw_rect(Rect2(0, 0, w, h), Color(0.05, 0.1, 0.07, 0.97))
 	draw_rect(Rect2(0, h * 0.93, w, h * 0.07), Color(0.12, 0.38, 0.17))
 	var f := ThemeDB.fallback_font
-	draw_string(f, Vector2(30, 50), "MALABARES · puntos %d · toques %d · récord %d" % [_puntos, _toques, record], HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(1, 0.9, 0.5))
-	draw_string(f, Vector2(30, 82), "A/D o ←/→ para moverte · ESPACIO o clic para tocar · Esc sale", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.85, 0.9))
+	draw_string(f, Vector2(30, 50), Idiomas.t("MALABARES · puntos %d · toques %d · récord %d") % [_puntos, _toques, record], HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(1, 0.9, 0.5))
+	draw_string(f, Vector2(30, 82), Idiomas.t("A/D o ←/→ para moverte · ESPACIO o clic para tocar · Esc sale"), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.85, 0.9))
 	var bx := w * lerpf(0.08, 0.92, _x)
 	var by := h * lerpf(0.12, 0.9, _y)
 	var px := w * lerpf(0.08, 0.92, _pie)
@@ -152,4 +152,4 @@ func _draw() -> void:
 	if _msg_t > 0.0 and _msg != "":
 		draw_string(f, Vector2(w * 0.5 - 150, h * 0.38), _msg, HORIZONTAL_ALIGNMENT_CENTER, 300, 40, Color(1, 0.95, 0.4))
 	if _fin:
-		draw_string(f, Vector2(w * 0.5 - 220, h * 0.5), "Toca ESPACIO para volver a intentarlo", HORIZONTAL_ALIGNMENT_CENTER, 440, 22, Color(0.9, 0.9, 1))
+		draw_string(f, Vector2(w * 0.5 - 220, h * 0.5), Idiomas.t("Toca ESPACIO para volver a intentarlo"), HORIZONTAL_ALIGNMENT_CENTER, 440, 22, Color(0.9, 0.9, 1))
