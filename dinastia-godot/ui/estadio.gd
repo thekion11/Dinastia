@@ -952,6 +952,7 @@ func _process(delta: float) -> void:
 	if is_instance_valid(_ceremonia) and _ceremonia.activa:
 		return
 	if _motor != null:
+		_cine_paso(delta)
 		_paso_motor(delta)
 		return
 	if _destacado_hasta_ms > 0 and Time.get_ticks_msec() >= _destacado_hasta_ms:
@@ -1082,7 +1083,7 @@ var _rotulo_repe: PanelContainer
 func _repetir_gol() -> void:
 	if _repe == null or not _pref("repeticiones", true) or partido == null or partido.terminado_ya:
 		return
-	if _repe.reproducir(9.0):
+	if _repe.reproducir(6.0 if _motor != null else 9.0):
 		if _rotulo_repe == null:
 			_rotulo_repe = PanelContainer.new()
 			var st := Tema.caja(Color(0.55, 0.08, 0.08, 0.9), Tema.RADIO_CHICO, Color(1, 1, 1, 0.2))
@@ -1098,7 +1099,11 @@ func _repetir_gol() -> void:
 
 func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) -> void:
 	var a_favor := c == club
-	get_tree().create_timer(SEG_ANTES_REPETICION).timeout.connect(_repetir_gol)
+	if _motor != null:
+		## Con el motor real: la secuencia de cámaras y, al final, la repetición.
+		_cine_gol(c, autor)
+	else:
+		get_tree().create_timer(SEG_ANTES_REPETICION).timeout.connect(_repetir_gol)
 	_suceso({
 		"min": minuto, "t": "golMi" if a_favor else "golR",
 		"equipo": "local" if a_favor else "visita",
@@ -1138,12 +1143,14 @@ func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) ->
 	if _pantalla != null:
 		_pantalla.al_gol(c, autor, minuto)
 	_vallas_evento(["¡GOOOL!", c.nombre.to_upper()], c)
-	_seguir_jugada_gol(autor)
+	if _motor == null:
+		_seguir_jugada_gol(autor)
 	## EL BANQUILLO REACCIONA (22-9-2026). `a_favor` aquí es "el dueño de este
 	## estadio anotó", no necesariamente el club local en la cancha -mismo
 	## matiz que ya advierte el comentario del sonido, un poco más arriba-,
 	## así que el lado que festeja es el de `c`, no el de `a_favor` a secas.
-	_banca_celebra(c == club)
+	if _motor == null:
+		_banca_celebra(c == club)
 
 ## CÁMARA (18-9-2026): "no se ve la jugada planificada" -con razón: la cámara
 ## seguía al balón, no al jugador, y en el instante del gol el balón ya viaja
@@ -1423,6 +1430,7 @@ func _montar_motor() -> void:
 	_motor.set_physics_process(false)
 	_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(ritmo_partido(), 4.0))
 	_motor.cansancio_real = true
+	_motor.duracion_gol = 7.6
 	_motor.tarjetas_reales = true
 	_motor.autopiloto = true
 	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": false}
@@ -1686,3 +1694,117 @@ func _unhandled_input(e: InputEvent) -> void:
 func _exit_tree() -> void:
 	if partido != null and _motor != null:
 		partido.motor_externo = false
+
+
+# --- la secuencia del gol (motor real) -------------------------------------
+
+## LA REALIZACIÓN DEL GOL (13-10-2026, como en el vídeo de FC 26): el goleador
+## corriendo a celebrar de cerca, corte al banquillo que salta, la grada, un
+## barrido con el escudo y la repetición. Mientras, el motor alarga la
+## celebración (`duracion_gol`) y el reloj no corre.
+var _cam_cine: Camera3D
+var _cine_t := -1.0
+var _cine_club: Club
+var _cine_autor_id := ""
+var _cine_previa: Camera3D
+
+func _cine_gol(c: Club, autor: Jugador) -> void:
+	if _raiz3d == null:
+		return
+	_cine_club = c
+	_cine_autor_id = autor.id if autor != null else ""
+	if _cam_cine == null:
+		_cam_cine = Camera3D.new()
+		_cam_cine.fov = 38.0
+		_cam_cine.far = 700.0
+		_raiz3d.add_child(_cam_cine)
+	_cine_previa = get_viewport().get_camera_3d()
+	if _cine_previa == _cam_cine:
+		_cine_previa = null
+	_cam_cine.current = true
+	_cine_t = 0.0
+	## La repetición debe acabar en el gol, no en la celebración: se deja de
+	## grabar hasta que termine.
+	if _repe != null:
+		_repe.congelar = true
+
+func _nodo_de(id: String) -> Node3D:
+	for p: Dictionary in _en_campo:
+		if String(p.get("id", "")) == id and is_instance_valid(p.get("node")):
+			return p["node"]
+	return null
+
+## Se llama desde `_process` (antes del paso del motor).
+func _cine_paso(delta: float) -> void:
+	if _cine_t < 0.0 or _cam_cine == null:
+		return
+	_cine_t += delta
+	var autor := _nodo_de(_cine_autor_id)
+	if _cine_t < 3.4:
+		## 1) El goleador, de cerca, a la altura del pecho, siguiéndolo.
+		if autor != null:
+			var a := autor.global_position
+			var fwd := Vector3(sin(autor.global_rotation.y), 0, cos(autor.global_rotation.y))
+			var deseo := a + fwd * 6.8 + Vector3(fwd.z, 0, -fwd.x) * 2.2 + Vector3(0, 1.9, 0)
+			_cam_cine.global_position = _cam_cine.global_position.lerp(deseo, clampf(delta * 3.0, 0, 1)) if _cine_t > 0.05 else deseo
+			_cam_cine.look_at(a + Vector3(0, 1.3, 0), Vector3.UP)
+	elif _cine_t < 5.4:
+		## 2) El banquillo del que marcó (de pie, saltando).
+		if _cine_t - delta < 3.4:
+			_barrido(_cine_club, 0.35)
+			## El banquillo salta justo cuando entra su plano.
+			_banca_celebra(_cine_club == club)
+		var es_local := _cine_club == club
+		var z := (-1.0 if es_local else 1.0) * 14.0
+		_cam_cine.global_position = Vector3(27.5, 2.0, z + (-5.0 if es_local else 5.0))
+		_cam_cine.look_at(Vector3(34.6, 1.3, z), Vector3.UP)
+	elif _cine_t < 7.0:
+		## 3) La grada: un paneo lento por la tribuna.
+		if _cine_t - delta < 5.4:
+			_barrido(_cine_club, 0.35)
+		var f := (_cine_t - 5.4) / 1.6
+		var g := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+		_cam_cine.global_position = Vector3(-float(g["dx"]) * 0.42, 2.6, lerpf(-14.0, 14.0, f))
+		_cam_cine.look_at(Vector3(-float(g["dx"]), 8.5, lerpf(-18.0, 18.0, f)), Vector3.UP)
+	else:
+		_cine_t = -1.0
+		_barrido(_cine_club, 0.5)
+		if is_instance_valid(_cine_previa):
+			_cine_previa.current = true
+		_repetir_gol()
+		if _repe != null:
+			if _repe.reproduciendo:
+				_repe.terminada.connect(func() -> void: _repe.congelar = false, CONNECT_ONE_SHOT)
+			else:
+				_repe.congelar = false
+
+## EL BARRIDO DE MARCA: una franja inclinada con el color y el escudo del club
+## que cruza la pantalla (como la estrella girando de la transmisión del vídeo,
+## pero nuestra).
+func _barrido(c: Club, seg: float) -> void:
+	if c == null:
+		return
+	var vp := get_viewport().get_visible_rect().size
+	var banda := Panel.new()
+	var st := StyleBoxFlat.new()
+	st.bg_color = Color(c.color1)
+	st.border_color = Color(c.color2)
+	st.border_width_left = 14
+	st.border_width_right = 14
+	st.skew = Vector2(0.35, 0)
+	banda.add_theme_stylebox_override("panel", st)
+	banda.size = Vector2(vp.x * 0.7, vp.y + 40.0)
+	banda.position = Vector2(-banda.size.x - 200.0, -20.0)
+	banda.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	banda.z_index = 140
+	var esc := TextureRect.new()
+	esc.texture = Escudo.textura(c, 256)
+	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	esc.size = Vector2(220, 220)
+	esc.position = Vector2(banda.size.x * 0.5 - 110.0, banda.size.y * 0.5 - 110.0)
+	banda.add_child(esc)
+	add_child(banda)
+	var tw := banda.create_tween()
+	tw.tween_property(banda, "position:x", vp.x + 200.0, seg).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_callback(banda.queue_free)
