@@ -374,3 +374,13 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   Pendiente de esta línea: cámara TV inteligente (zoom al área), estadísticas a
   pedido, disputas cuerpo a cuerpo, más pulido visual del entorno.
 
+- 14-10 PEDIDO: «la prioridad es lo visual, las físicas, ver jugar a la CPU y poder jugar
+  en serio el partido, como en el vídeo» → motor real en el partido del DT (acta = césped),
+  cámara «Transmisión», `visor/cesped.gdshader`, inercia y conducción por toques,
+  ceremonia, cine de gol, panel de táctica/cambios. Prueba: `prueba_control_equipo.tscn`.
+- 14-10 PEDIDO (hecho): «el control debe ser configurable» → `nucleo/mando.gd`
+  (esquemas wasd/clásico, reasignar teclas y botones, ayudas pase/tiro/cambio/dirección,
+  `user://controles.cfg`) + `ui/componentes/panel_controles.gd` (⚙ del estadio, pausa
+  de la Carrera de Jugador y Ajustes). La guía en pantalla usa `Mando.corto_de`.
+  SIGUE: duelos/contacto, más animaciones, CPU vs CPU creíble, misma ceremonia y gol
+  en la Carrera de Jugador.

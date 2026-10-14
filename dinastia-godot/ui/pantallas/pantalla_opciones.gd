@@ -495,6 +495,21 @@ func _pintar_dispositivo() -> void:
 			p._refrescar())
 		fila_cf.add_child(b_cf)
 
+	## CONTROLES DEL PARTIDO (14-10-2026): teclas, mando y ayudas, los mismos
+	## que se abren desde el ⚙ del estadio y la pausa de la Carrera de Jugador.
+	var fila_ct := HBoxContainer.new()
+	fila_ct.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila_ct)
+	var et_ct := p._texto(12, Principal.COL_TEXTO)
+	et_ct.text = "Controles del partido"
+	et_ct.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	et_ct.tooltip_text = "Esquema de teclado, cada tecla y botón del mando, y las ayudas de pase, tiro y cambio de jugador."
+	fila_ct.add_child(et_ct)
+	var b_ct := Button.new()
+	b_ct.text = "🎮 Configurar"
+	b_ct.pressed.connect(func() -> void: PanelControles.abrir(p))
+	fila_ct.add_child(b_ct)
+
 	## CALIDAD GRÁFICA. Manda en el visor 3D del estadio, que es lo único del
 	## juego que puede ir lento: la interfaz son etiquetas y no cuesta nada.
 	## `Calidad` ya tenía los tres niveles montados desde el porte del visor.
