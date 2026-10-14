@@ -55,9 +55,20 @@ func _ready() -> void:
 	cont.add_child(_vp)
 	var env := Environment.new()
 	env.background_mode = Environment.BG_CLEAR_COLOR
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.62, 0.66, 0.74)
-	env.ambient_light_energy = 0.75
+	## Un cielo de estudio (claro arriba, oscuro abajo) solo para los reflejos y
+	## la luz ambiente: es lo que da brillo de plástico al cuerpo.
+	var cielo := Sky.new()
+	var pm := ProceduralSkyMaterial.new()
+	pm.sky_top_color = Color(0.85, 0.9, 1.0)
+	pm.sky_horizon_color = Color(0.55, 0.6, 0.68)
+	pm.ground_horizon_color = Color(0.3, 0.32, 0.36)
+	pm.ground_bottom_color = Color(0.08, 0.09, 0.1)
+	pm.sun_angle_max = 25.0
+	cielo.sky_material = pm
+	env.sky = cielo
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
+	env.ambient_light_energy = 0.9
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	var we := WorldEnvironment.new()
 	we.environment = env
@@ -101,7 +112,7 @@ func _ready() -> void:
 ## de etiquetas (que ocupan ~100 px a cada lado) y no se corte al girarlo.
 func _ajustar_camara() -> void:
 	_vp.size = Vector2i(maxi(int(size.x), 16), maxi(int(size.y), 16))
-	var libre := maxf(size.x - 215.0, 120.0)
+	var libre := maxf(size.x - 170.0, 120.0)
 	var ancho_modelo := 19.0
 	var visible_ancho := ancho_modelo * size.x / libre
 	var aspecto := maxf(size.x / maxf(size.y, 1.0), 0.5)
@@ -157,6 +168,10 @@ func _material(color: Color, rug := 0.45, met := 0.1) -> StandardMaterial3D:
 	m.albedo_color = color
 	m.roughness = rug
 	m.metallic = met
+	m.metallic_specular = 0.7
+	m.clearcoat_enabled = true
+	m.clearcoat = 0.55
+	m.clearcoat_roughness = 0.25
 	m.emission_enabled = true
 	m.emission = Color(1.0, 0.8, 0.2)
 	m.emission_energy_multiplier = 0.0
@@ -188,11 +203,80 @@ func _cilindro(r: float, h: float) -> CylinderMesh:
 	c.radial_segments = 40
 	return c
 
-## Altura de la superficie del cuerpo (un elipsoide) en (x, z).
-const SEMI := Vector3(8.4, 2.0, 5.0)
+## EL CUERPO: una malla suave que une tres elipsoides (el centro y las dos
+## empuñaduras) con una norma-p, de modo que se funden sin costuras, y que cae
+## hacia abajo y hacia delante en las empuñaduras como un mando de verdad.
+## `[cx, cz, a, c, b, giro]` por elipsoide (semiejes a, c en x y z; b = alto).
+const ELIPSOIDES := [
+	[0.0, -0.2, 7.7, 4.5, 1.95, 0.0],
+	[-6.3, 2.7, 3.0, 5.3, 2.15, 0.22],
+	[6.3, 2.7, 3.0, 5.3, 2.15, -0.22],
+]
+const P_FUSION := 3.0
+
+static func _semialtura(x: float, z: float) -> float:
+	var suma := 0.0
+	for e: Array in ELIPSOIDES:
+		var dx := x - float(e[0])
+		var dz := z - float(e[1])
+		var g := float(e[5])
+		var lx := dx * cos(g) - dz * sin(g)
+		var lz := dx * sin(g) + dz * cos(g)
+		var f := 1.0 - (lx / float(e[2])) * (lx / float(e[2])) - (lz / float(e[3])) * (lz / float(e[3]))
+		if f > 0.0:
+			suma += pow(float(e[4]) * pow(f, 0.62), P_FUSION)
+	return pow(suma, 1.0 / P_FUSION)
+
+## Cuánto se hunde el mando en las empuñaduras (y hacia delante).
+static func _caida(x: float, z: float) -> float:
+	return -0.05 * pow(maxf(absf(x) - 4.2, 0.0), 2.0) - 0.035 * pow(maxf(z - 1.2, 0.0), 2.0)
+
 static func _y_cuerpo(x: float, z: float) -> float:
-	var f := 1.0 - (x / SEMI.x) * (x / SEMI.x) - (z / SEMI.z) * (z / SEMI.z)
-	return SEMI.y * sqrt(maxf(f, 0.05))
+	return _caida(x, z) + _semialtura(x, z)
+
+func _malla_cuerpo(mat: Material) -> MeshInstance3D:
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var paso := 0.12
+	var x0 := -11.0
+	var z0 := -6.4
+	var nx := int(22.0 / paso) + 1
+	var nz := int(14.2 / paso) + 1
+	## Arriba (índice 0..) y abajo, compartiendo el borde (altura 0).
+	for capa in 2:
+		for j in nz:
+			for i in nx:
+				var x := x0 + float(i) * paso
+				var z := z0 + float(j) * paso
+				var h := _semialtura(x, z)
+				var y := _caida(x, z) + (h if capa == 0 else -h * 0.9)
+				st.set_uv(Vector2(float(i) / float(nx), float(j) / float(nz)))
+				st.add_vertex(Vector3(x, y, z))
+	var base_abajo := nx * nz
+	for capa in 2:
+		for j in nz - 1:
+			for i in nx - 1:
+				var a := j * nx + i + capa * base_abajo
+				var b := a + 1
+				var c := a + nx
+				var d := c + 1
+				## Fuera del cuerpo (altura 0 en las cuatro esquinas) no hay malla.
+				var x := x0 + float(i) * paso
+				var z := z0 + float(j) * paso
+				if _semialtura(x, z) <= 0.0 and _semialtura(x + paso, z) <= 0.0 and _semialtura(x, z + paso) <= 0.0 and _semialtura(x + paso, z + paso) <= 0.0:
+					continue
+				if capa == 0:
+					for idx in [a, c, b, b, c, d]:
+						st.add_index(idx)
+				else:
+					for idx in [a, b, c, b, d, c]:
+						st.add_index(idx)
+	st.generate_normals()
+	var mi := MeshInstance3D.new()
+	mi.mesh = st.commit()
+	mi.material_override = mat
+	_modelo.add_child(mi)
+	return mi
 
 func _construir(disp: String) -> void:
 	_dispositivo_montado = disp
@@ -206,17 +290,17 @@ func _construir(disp: String) -> void:
 	var c_empu := Color("d3d6de") if ps else Color("23262d")
 	var c_mando := Color("1b1d22") if ps else Color("15171b")
 	var c_tapa := Color("20232a") if ps else Color("3c414c")
-	var m_cuerpo := _material(c_cuerpo, 0.38, 0.05)
+	var m_cuerpo := _material(c_cuerpo, 0.3, 0.0)
 	var m_empu := _material(c_empu, 0.42, 0.05)
 	var m_negro := _material(c_mando, 0.5, 0.2)
-	## Cuerpo y empuñaduras.
-	_malla(_modelo, _esfera(), m_cuerpo, Vector3.ZERO, SEMI)
-	for lado in [-1.0, 1.0]:
-		_malla(_modelo, _esfera(), m_empu, Vector3(lado * 6.3, -1.1, 2.6), Vector3(2.9, 2.5, 4.9), Vector3(0, -lado * 14.0, lado * 8.0))
+	## Cuerpo y empuñaduras: una sola malla suave.
+	_malla_cuerpo(m_cuerpo)
+	## El borde de las empuñaduras, en un tono distinto (como las piezas de un mando).
+	_malla(_modelo, _esfera(), m_empu, Vector3(0, -0.4, -3.9), Vector3(5.2, 0.5, 0.7))
 	if ps:
 		## Panel táctil y barra de luz.
-		_malla(_modelo, _esfera(), m_negro, Vector3(0, 1.55, -1.7), Vector3(2.9, 0.42, 1.5))
-		_malla(_modelo, _esfera(), _material(Color("5aa0ff"), 0.3), Vector3(0, 0.6, -4.7), Vector3(2.4, 0.18, 0.16), Vector3(-15, 0, 0))
+		_malla(_modelo, _esfera(), m_negro, Vector3(0, _y_cuerpo(0, -1.5) - 0.05, -1.5), Vector3(2.9, 0.32, 1.5))
+		_malla(_modelo, _esfera(), _material(Color("5aa0ff"), 0.3), Vector3(0, 0.15, -4.75), Vector3(2.4, 0.16, 0.14), Vector3(-15, 0, 0))
 	else:
 		## El botón de guía de Xbox.
 		_malla(_modelo, _cilindro(0.55, 0.2), _material(Color("e9ecf0"), 0.3, 0.3), Vector3(0, _y_cuerpo(0, -2.4) + 0.05, -2.4))
@@ -226,12 +310,13 @@ func _construir(disp: String) -> void:
 		var s: float = lado[1]
 		var bump := _material(c_tapa, 0.35, 0.3)
 		var trig := _material(c_mando, 0.5, 0.2)
-		var mb := _malla(_modelo, _esfera(), bump, Vector3(s * 5.4, 0.55, -4.15), Vector3(2.3, 0.5, 0.85), Vector3(0, -s * 5.0, 0))
-		_registrar(String(lado[0]) + "B", mb, [bump], Vector3(s * 5.4, 1.1, -4.15), Vector3(0, 0.3, -0.95).normalized())
-		var mt := _malla(_modelo, _esfera(), trig, Vector3(s * 5.4, -0.2, -5.1), Vector3(2.1, 0.95, 0.9), Vector3(-18, -s * 5.0, 0))
-		_registrar(String(lado[0]) + "T", mt, [trig], Vector3(s * 5.4, 0.35, -5.5), Vector3(0, -0.05, -1).normalized())
-		_icono_sobre(String(lado[0]) + "B", Vector3(s * 5.4, 1.12, -4.15), 1.7, disp)
-		_icono_sobre(String(lado[0]) + "T", Vector3(s * 5.4, 0.62, -5.35), 1.5, disp, Vector3(-18, 0, 0))
+		var yb := _y_cuerpo(s * 5.4, -3.6) + 0.05
+		var mb := _malla(_modelo, _esfera(), bump, Vector3(s * 5.4, yb, -4.25), Vector3(2.5, 0.42, 0.95), Vector3(-6, -s * 7.0, 0))
+		_registrar(String(lado[0]) + "B", mb, [bump], Vector3(s * 5.4, yb + 0.5, -4.25), Vector3(0, 0.3, -0.95).normalized())
+		var mt := _malla(_modelo, _esfera(), trig, Vector3(s * 5.4, yb - 0.45, -5.15), Vector3(2.2, 0.9, 0.95), Vector3(-22, -s * 7.0, 0))
+		_registrar(String(lado[0]) + "T", mt, [trig], Vector3(s * 5.4, yb - 0.1, -5.6), Vector3(0, -0.05, -1).normalized())
+		_icono_sobre(String(lado[0]) + "B", Vector3(s * 5.4, yb + 0.43, -4.25), 1.7, disp, Vector3(-6, 0, 0))
+		_icono_sobre(String(lado[0]) + "T", Vector3(s * 5.4, yb - 0.15, -5.55), 1.5, disp, Vector3(-22, 0, 0))
 	## Sticks.
 	for k: String in ["LS", "RS"]:
 		var p: Vector3 = pos_t[k]
@@ -347,7 +432,7 @@ func _process(delta: float) -> void:
 	for k: String in _piezas:
 		var on := iluminadas.has(k)
 		for m: StandardMaterial3D in _piezas[k]["mats"]:
-			m.emission_energy_multiplier = (0.35 + 0.75 * latido) if on else 0.0
+			m.emission_energy_multiplier = (0.15 + 0.35 * latido) if on else 0.0
 	queue_redraw()
 
 func _gui_input(ev: InputEvent) -> void:
