@@ -2139,7 +2139,7 @@ static func _malla_hincha_minima() -> Mesh:
 ## (`herramientas/hornear_publico.gd`). Devuelve las 6 mallas del nivel o [] si
 ## faltan (entonces se usa el maniquí de siempre).
 static var _hornead := {}
-const POSES_PUBLICO := ["quieto", "aplaude", "celebra", "puno", "senala", "saluda"]
+const POSES_PUBLICO := ["quieto", "charla", "aplaude", "aplaude_arriba", "puno", "pulgar", "cruzados", "cabeza"]
 
 static func _hinchas_horneados(nivel: String) -> Array:
 	if _hornead.has(nivel):
@@ -2162,21 +2162,23 @@ static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: 
 		grupos.append([])
 	for k in xfs.size():
 		grupos[(k * 7919 + int(xfs[k].origin.x * 3.0) + int(xfs[k].origin.z * 5.0)) % mallas.size()].append(k)
-	var mat := ShaderMaterial.new()
-	mat.shader = load("res://visor/hinchada.gdshader")
-	mat.set_shader_parameter("cuello_desde", 0.70)
-	mat.set_shader_parameter("cuello_hasta", 0.73)
-	mat.set_shader_parameter("pelo_desde", 0.86)
-	mat.set_shader_parameter("lado_max", 0.14)
-	mat.set_shader_parameter("amplitud", 0.03)
 	for g in mallas.size():
 		var ids: Array = grupos[g]
 		if ids.is_empty():
 			continue
+		## Alturas de cuello y pelo medidas al hornear esta pose (metadatos de la malla).
+		var mat := ShaderMaterial.new()
+		mat.shader = load("res://visor/hinchada.gdshader")
+		var malla: Mesh = mallas[g]
+		mat.set_shader_parameter("cuello_desde", float(malla.get_meta("cuello_desde", 0.70)))
+		mat.set_shader_parameter("cuello_hasta", float(malla.get_meta("cuello_hasta", 0.73)))
+		mat.set_shader_parameter("pelo_desde", float(malla.get_meta("pelo_desde", 0.86)))
+		mat.set_shader_parameter("lado_max", 0.14)
+		mat.set_shader_parameter("amplitud", 0.03)
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.use_colors = true
-		mm.mesh = mallas[g]
+		mm.mesh = malla
 		mm.instance_count = ids.size()
 		for n in ids.size():
 			mm.set_instance_transform(n, xfs[ids[n]])
@@ -2485,8 +2487,9 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var c2 := Color(str(est.get("asiento2", "#e8e8e8")))
 	## Paleta de ropa de hincha: neutros de siempre + los dos colores del club
 	## para que se lea "hinchada local", no una multitud generica.
-	var colores_hincha := [Color(0.85, 0.85, 0.88), Color(0.15, 0.16, 0.2), c1, c2,
-		Color(0.7, 0.2, 0.2), Color(0.2, 0.3, 0.7)]
+	var colores_hincha := [Color(0.85, 0.85, 0.88), Color(0.15, 0.16, 0.2), c1, c2, c1, c2,
+		Color(0.7, 0.2, 0.2), Color(0.2, 0.3, 0.7), Color(0.45, 0.5, 0.55), Color(0.78, 0.7, 0.45),
+		Color(0.25, 0.5, 0.35), Color(0.55, 0.35, 0.25), Color(0.9, 0.55, 0.2), Color(0.35, 0.4, 0.6)]
 	var hinchas_xf: Array[Transform3D] = []
 	var hinchas_col: Array[Color] = []
 	var det_xf: Array[Transform3D] = []
@@ -2594,6 +2597,13 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	else:
 		hinchas_xf.append_array(med_xf)
 		hinchas_col.append_array(med_col)
+	## EL RESTO DE LAS FILAS (14-10-2026, «¿y qué hacemos con el resto de las
+	## filas?»): también personas reales, con la malla «lejos» (~60 vértices, las
+	## mismas poses). El maniquí de 26 triángulos queda solo para calidad MEDIO.
+	var reales_lejos := _hinchas_horneados("lejos")
+	if not reales_lejos.is_empty() and not hinchas_xf.is_empty() and Calidad.elegida >= Calidad.ALTO:
+		_montar_horneados(deck, "PersonasLejos", reales_lejos, hinchas_xf, hinchas_col)
+		return
 	if not det_xf.is_empty():
 		var mmd := MultiMesh.new()
 		mmd.transform_format = MultiMesh.TRANSFORM_3D
