@@ -410,12 +410,16 @@ func _cerrar_tiro(tipo: String) -> void:
 ## al siguiente más cercano y durante un momento manda tu elección.
 func _control_de_equipo() -> void:
 	var mio := control_equipo == 0
-	if not poseedor.is_empty() and bool(poseedor["es_local"]) == mio:
+	if not poseedor.is_empty() and bool(poseedor["es_local"]) == mio and not (bloqueo and poseedor != usuario and not usuario.is_empty()):
 		if poseedor != usuario:
 			_poner_usuario(poseedor)
 		return
 	var pedir := Input.is_action_just_pressed("jugar_cambiar")
+	## BLOQUEO DE JUGADOR (L3 + R3): te quedas con el mismo hasta quitarlo.
+	if bloqueo and not usuario.is_empty() and not pedir:
+		return
 	if pedir:
+		bloqueo = false
 		_manual_hasta = t + 1.5
 	var cand := _mio_mas_cercano(mio, usuario if pedir else {})
 	if cand.is_empty():
@@ -440,7 +444,7 @@ func _control_de_equipo() -> void:
 func _poner_usuario(q: Dictionary) -> void:
 	## El que dejas de manejar vuelve a su paso normal.
 	if not usuario.is_empty() and usuario != q:
-		for k: String in ["freno", "jockey", "protege", "toque_corto"]:
+		for k: String in ["freno", "jockey", "protege", "toque_corto", "giro_firme"]:
 			usuario.erase(k)
 	usuario = q
 	q["manual"] = Vector3.ZERO
@@ -513,6 +517,10 @@ func _physics_process(delta: float) -> void:
 func paso(delta: float) -> void:
 	if estado == "fin":
 		return
+	## CÁMARA LENTA del tiro potente (FC 26): medio segundo real a un tercio.
+	if lento > 0.0:
+		lento -= delta
+		delta *= 0.35
 	_t_estado += delta
 	_mover_arbitros(delta)
 	match estado:
@@ -1196,6 +1204,9 @@ func _ia_equipos(delta: float) -> void:
 			continue
 		var eq := 0 if bool(p["es_local"]) else 1
 		if bool(p["por"]):
+			## Si lo manejas con R3 (o lo mandaste al palo largo), manda tu orden.
+			if float(p.get("mandado_hasta", 0.0)) > t:
+				continue
 			p["objetivo"] = _ia_portero(p)
 			continue
 		if p == poseedor:
@@ -1667,7 +1678,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 	destino += guia
 	## Nadie pasa perfecto: el error crece con la distancia, con la presión y
 	## cuanto peor es el pase del que la toca.
-	var error := (1.0 - float(p["attr"]["pas"])) * dist * 0.22 + (1.2 if _presion(p) < 2.0 else 0.0) * (1.4 - float(p["attr"]["pas"]))
+	var error := ((1.0 - float(p["attr"]["pas"])) * dist * 0.22 + (1.2 if _presion(p) < 2.0 else 0.0) * (1.4 - float(p["attr"]["pas"]))) * _error_extra
 	destino += Vector3(_rng.randf_range(-error, error), 0, _rng.randf_range(-error, error))
 	## POR ABAJO SIEMPRE QUE SE PUEDA (13-10-2026): con «cualquier rival cerca
 	## de la línea = por arriba» la sonda medía el balón en el aire el 64 % del
@@ -1723,7 +1734,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	## El error crece con la distancia: desde 25 m se falla mucho más que
 	## dentro del área (la sonda medía 8 de cada 10 tiros entre los palos).
 	var lejos := Vector2(pos(p).x - arco.x, pos(p).z - arco.z).length()
-	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0)
+	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0) * _error_extra
 	var x := clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
 	var y := clampf(0.35 + fuerza * 1.2 + apunte_.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)
 	var destino := Vector3(x, y, arco.z + signf(arco.z) * 0.3)
@@ -1859,6 +1870,8 @@ func _empezar_saque(tipo: String, saca_local: bool, lugar: Vector3) -> void:
 	balon.position = lugar
 	var lanzador := _elegir_lanzador(tipo, saca_local, lugar)
 	saque = {"tipo": tipo, "local": saca_local, "lugar": lugar, "lanzador": lanzador}
+	_receptor_i = -1
+	_receptor_marcado = {}
 	if tipo == "corner":
 		corners[0 if saca_local else 1] += 1
 	apuntando = false
@@ -2036,6 +2049,9 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 	_reanudar()
 
 func _reanudar() -> void:
+	_receptor_marcado = {}
+	_dibujar_receptor()
+	_anillo_serenidad(false)
 	estado = "juego"
 	_t_estado = 0.0
 	apuntando = false
@@ -2049,6 +2065,24 @@ func _reanudar() -> void:
 func _apuntar_usuario(delta: float) -> void:
 	var tipo := String(saque["tipo"])
 	var mv := Mando.movimiento()
+	_anillo_serenidad(tipo == "penal")
+	_dibujar_receptor()
+	## SAQUE DE BANDA (FC 26): A en corto al elegido, Y al espacio, X largo;
+	## LB cambia de receptor y el stick derecho apunta.
+	if tipo == "banda":
+		_saque_banda_usuario()
+		return
+	if tipo in ["corner", "falta"]:
+		## LB: el receptor dentro del área (el apunte va hacia él).
+		if Input.is_action_just_pressed("jugar_cambiar"):
+			_siguiente_receptor()
+		## RB / LT: segundo y tercer lanzador (jugada ensayada).
+		if Input.is_action_just_pressed("jugar_mod"):
+			_otro_lanzador(1)
+			return
+		if Input.is_action_just_pressed("jugar_regate"):
+			_otro_lanzador(2)
+			return
 	if tipo == "penal":
 		apunte["x"] = clampf(float(apunte["x"]) + mv.x * delta * 1.4, -1.0, 1.0)
 		apunte["y"] = clampf(float(apunte["y"]) - mv.y * delta * 1.2, 0.0, 1.0)
@@ -2070,9 +2104,173 @@ func _apuntar_usuario(delta: float) -> void:
 			_mods_carga = "rosca"
 	elif cargando:
 		cargando = false
+		## Penal: cuanto más chico el círculo de serenidad, más preciso.
+		if tipo == "penal":
+			_error_extra = lerpf(0.4, 1.7, serenidad())
 		_lanzar_usuario(float(apunte["fuerza"]))
+		_error_extra = 1.0
 	elif Input.is_action_just_pressed("jugar_pase"):
 		_lanzar_usuario(0.45)
+
+## EL CÍRCULO DE SERENIDAD del penal: late entre grande (1) y chico (0).
+func serenidad() -> float:
+	return 0.5 + 0.5 * cos(_t_estado * 3.4)
+
+## Un aro alrededor del balón mientras apuntas un penal: verde cuando es chico.
+func _anillo_serenidad(ver: bool) -> void:
+	if not ver:
+		if is_instance_valid(_anillo):
+			_anillo.visible = false
+		return
+	if not is_instance_valid(_anillo) and balon != null and balon.get_parent() != null:
+		_anillo = MeshInstance3D.new()
+		var tm := TorusMesh.new()
+		tm.inner_radius = 0.42
+		tm.outer_radius = 0.5
+		tm.rings = 40
+		_anillo.mesh = tm
+		var m := StandardMaterial3D.new()
+		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		m.no_depth_test = true
+		_anillo.material_override = m
+		_anillo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		balon.get_parent().add_child(_anillo)
+	if not is_instance_valid(_anillo):
+		return
+	var s := serenidad()
+	_anillo.visible = true
+	_anillo.global_position = balon.global_position + Vector3(0, 0.02 - R, 0)
+	_anillo.scale = Vector3.ONE * (0.6 + s * 1.6) * Vector3(1, 0.05, 1)
+	(_anillo.material_override as StandardMaterial3D).albedo_color = Color(0.3, 1.0, 0.45, 0.9) if s < 0.22 else Color(1.0, 0.85, 0.3, 0.75)
+
+## Los compañeros dentro (o cerca) del área rival, para elegir receptor.
+func _receptores(p: Dictionary, lugar: Vector3, radio := 60.0) -> Array:
+	var lista: Array = []
+	for q: Dictionary in jugadores:
+		if q == p or bool(q["por"]) or bool(q["es_local"]) != bool(p["es_local"]):
+			continue
+		if pos(q).distance_to(lugar) < radio:
+			lista.append(q)
+	lista.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return pos(a).x < pos(b).x)
+	return lista
+
+## LB en córner o falta: el siguiente receptor; el apunte gira hacia él.
+func _siguiente_receptor() -> void:
+	var p := usuario
+	var lugar: Vector3 = saque["lugar"]
+	var arco := _arco_rival(p)
+	var lista := _receptores(p, Vector3(0, 0, arco.z - signf(arco.z) * 9.0), 20.0)
+	if lista.is_empty():
+		return
+	_receptor_i = (_receptor_i + 1) % lista.size()
+	var q: Dictionary = lista[_receptor_i]
+	var base := (arco - lugar).normalized()
+	var hacia := (pos(q) - lugar)
+	hacia.y = 0.0
+	apunte["ang"] = clampf(-base.signed_angle_to(hacia.normalized(), Vector3.UP), -1.2, 1.2)
+	apunte["fuerza"] = clampf((hacia.length() - 12.0) / 38.0, 0.2, 1.0)
+	_marcar_receptor(q)
+	aviso.emit("🎯 Receptor: %s" % String((q.get("jugador", {}) as Dictionary).get("nombre", "")))
+
+func _marcar_receptor(q: Dictionary) -> void:
+	_receptor_marcado = q
+
+var _receptor_marcado: Dictionary = {}
+var _flecha_receptor: MeshInstance3D
+
+## Una flecha amarilla sobre el receptor elegido (córner, falta o banda).
+func _dibujar_receptor() -> void:
+	if _receptor_marcado.is_empty() or not is_instance_valid(_receptor_marcado.get("node")):
+		if is_instance_valid(_flecha_receptor):
+			_flecha_receptor.visible = false
+		return
+	if not is_instance_valid(_flecha_receptor) and balon != null and balon.get_parent() != null:
+		_flecha_receptor = MeshInstance3D.new()
+		var pm := PrismMesh.new()
+		pm.size = Vector3(0.36, 0.36, 0.1)
+		_flecha_receptor.mesh = pm
+		_flecha_receptor.rotation.x = PI
+		var m := StandardMaterial3D.new()
+		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		m.albedo_color = Color("ffd23f")
+		m.no_depth_test = true
+		_flecha_receptor.material_override = m
+		balon.get_parent().add_child(_flecha_receptor)
+	if is_instance_valid(_flecha_receptor):
+		_flecha_receptor.visible = true
+		_flecha_receptor.global_position = (_receptor_marcado["node"] as Node3D).global_position + Vector3(0, 2.4 + sin(t * 6.0) * 0.08, 0)
+
+## RB / LT en balón parado: llama a otro lanzador (el 2.º o el 3.º mejor
+## pateador) y pasas a manejarlo a él.
+func _otro_lanzador(k: int) -> void:
+	var p := usuario
+	var lugar: Vector3 = saque["lugar"]
+	var cand: Array = []
+	for q: Dictionary in jugadores:
+		if bool(q["por"]) or bool(q["es_local"]) != bool(p["es_local"]):
+			continue
+		cand.append(q)
+	cand.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a["attr"]["tir"]) + float(a["attr"]["pas"]) > float(b["attr"]["tir"]) + float(b["attr"]["pas"]))
+	var elegidos: Array = []
+	for q: Dictionary in cand:
+		if q != saque.get("lanzador", {}):
+			elegidos.append(q)
+	if elegidos.size() < k:
+		return
+	var nuevo: Dictionary = elegidos[k - 1]
+	var viejo: Dictionary = saque.get("lanzador", {})
+	saque["lanzador"] = nuevo
+	(nuevo["node"] as Node3D).position = lugar + (lugar - _arco_rival(nuevo)).normalized() * 0.6
+	if not viejo.is_empty():
+		(viejo["node"] as Node3D).position = lugar + (lugar - _arco_rival(viejo)).normalized() * 2.5 + Vector3(1.5, 0, 0)
+	_poner_usuario(nuevo)
+	aviso.emit("%s lanzador: %s" % ["Segundo" if k == 1 else "Tercer", String((nuevo.get("jugador", {}) as Dictionary).get("nombre", ""))])
+
+## Saque de banda manejado por ti.
+func _saque_banda_usuario() -> void:
+	var p := usuario
+	var lugar: Vector3 = saque["lugar"]
+	var d := dir_ataque(bool(p["es_local"]))
+	var rs := Input.get_vector("jugar_fili_izquierda", "jugar_fili_derecha", "jugar_fili_arriba", "jugar_fili_abajo", Mando.ZONA_MUERTA)
+	var mv := Mando.movimiento()
+	var lista := _receptores(p, lugar, 30.0)
+	if lista.is_empty():
+		return
+	if _receptor_i < 0 or _receptor_i >= lista.size():
+		_receptor_i = 0
+	if Input.is_action_just_pressed("jugar_cambiar"):
+		_receptor_i = (_receptor_i + 1) % lista.size()
+	## El stick derecho (o el izquierdo) apunta al compañero.
+	var apunta := rs if rs.length() > 0.5 else mv
+	if apunta.length() > 0.5:
+		var q_dir := _companero_en_direccion(p, _a_mundo(apunta, d), true)
+		var i := lista.find(q_dir)
+		if i >= 0:
+			_receptor_i = i
+	var q: Dictionary = lista[_receptor_i]
+	_receptor_marcado = q
+	var hacer := ""
+	if Input.is_action_just_pressed("jugar_pase"):
+		hacer = "corto"
+	elif Input.is_action_just_pressed("jugar_filtrado"):
+		hacer = "espacio"
+	elif Input.is_action_just_pressed("jugar_centro"):
+		hacer = "largo"
+	if hacer == "":
+		return
+	_anim(p, "saque_banda", true, 0.8)
+	match hacer:
+		"corto":
+			_patear(p, pos(q) + Vector3(0, 1.0, 0), clampf(pos(q).distance_to(lugar) * 0.9 + 4.0, 7.0, 15.0), 1.0, 0.0, "saque_banda")
+		"espacio":
+			var hueco := pos(q) + Vector3(0, 0, d * 6.0)
+			_patear(p, hueco, clampf(hueco.distance_to(lugar) * 0.8 + 5.0, 8.0, 16.0), 1.5, 0.0, "saque_banda")
+		"largo":
+			_patear(p, pos(q) + Vector3(0, 0.5, d * 3.0), clampf(pos(q).distance_to(lugar) * 0.55 + 7.0, 10.0, 19.0), 3.5, 0.0, "saque_banda")
+	pase_a = q
+	_receptor_marcado = {}
+	_reanudar()
 
 ## La dirección de apunte en el campo (para la flecha de la interfaz).
 func direccion_apunte() -> Vector3:
@@ -2132,6 +2330,7 @@ func _control_usuario(delta: float) -> void:
 	p["freno"] = 1.0
 	p["protege"] = false
 	p["toque_corto"] = false
+	p["giro_firme"] = false
 	if mundo.length() > 0.1:
 		p["objetivo"] = pos(p) + mundo.normalized() * 3.0
 		p["manual"] = mundo.normalized()
@@ -2140,6 +2339,13 @@ func _control_usuario(delta: float) -> void:
 		p["manual"] = Vector3.ZERO
 	_tacticas_rapidas()
 	_seguir_pared()
+	_seguir_portero_mandado()
+	## L3 + R3 a la vez: bloquear (o soltar) al jugador que manejas.
+	if (Input.is_action_just_pressed("jugar_pedir") and Input.is_action_pressed("jugar_sombrero")) \
+			or (Input.is_action_just_pressed("jugar_sombrero") and Input.is_action_pressed("jugar_pedir")):
+		bloqueo = not bloqueo
+		aviso.emit("🔒 Jugador bloqueado" if bloqueo else "🔓 Bloqueo quitado")
+		return
 	var con_balon := poseedor == p
 	var fwd := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
 	## El stick derecho en el plano del jugador (x a su derecha, y adelante).
@@ -2149,15 +2355,46 @@ func _control_usuario(delta: float) -> void:
 	var rel := Vector2(rs_mundo.dot(der), rs_mundo.dot(fwd))
 	if con_balon:
 		var dir_mira := mundo.normalized() if mundo.length() > 0.1 else fwd
-		## Mantener RB: regate técnico; LB: regate ágil; LT: proteger.
-		if lt:
+		## EL PORTERO CON EL BALÓN EN LAS MANOS: X saque largo (de volea),
+		## A pase corto con la mano.
+		if bool(p["por"]):
+			if Input.is_action_just_pressed("jugar_centro"):
+				var lejos := pos(p) + Vector3(-mv.x * d * 12.0, 0, d * 46.0)
+				lejos.x = clampf(lejos.x, -ANCHO + 4.0, ANCHO - 4.0)
+				_patear(p, lejos, 22.0, 6.0, 0.0, "patear")
+				return
+			if Input.is_action_just_pressed("jugar_pase"):
+				var qm := _companero_en_direccion(p, dir_mira)
+				if not qm.is_empty():
+					_pasar_a(p, qm)
+					_anim(p, "saque_banda", true, 0.6)
+				return
+		## PASE ELEGANTE (LT + A o X): de tacón, rabona o exterior. Bonito y
+		## algo menos preciso.
+		if lt and (Input.is_action_just_pressed("jugar_pase") or Input.is_action_just_pressed("jugar_centro")):
+			var largo_e := Input.is_action_just_pressed("jugar_centro")
+			var qe := _companero_en_direccion(p, dir_mira)
+			if not qe.is_empty():
+				_error_extra = 1.35
+				_pasar_a(p, qe, largo_e)
+				_error_extra = 1.0
+				var ops: Array = ["taconazo", "pase_rabona", "pase_exterior"] if not largo_e else ["pase_rabona", "trivela"]
+				_anim(p, String(ops[_rng.randi() % ops.size()]), true)
+				aviso.emit("🎩 Pase elegante")
+			return
+		## Mantener RB: regate técnico; LB: regate ágil; LT: proteger; RB + LT:
+		## cambios de dirección firmes.
+		if lt and rb:
+			p["giro_firme"] = true
+			p["freno"] = 0.75
+		elif lt:
 			p["protege"] = true
 			p["freno"] = 0.55
 		elif (rb or lb) and not cargando and mundo.length() > 0.1:
 			p["toque_corto"] = true
 			p["freno"] = 0.8 if rb else 0.9
 		## Filigranas del stick derecho (y R3, y LB+RB atrás).
-		var fil := _gestos.leer(rel, t, lb, lt, rb) if float(p.get("gesto_hasta", 0.0)) < t else {}
+		var fil := _gestos.leer(rel, t, lb, lt, rb, sprint) if float(p.get("gesto_hasta", 0.0)) < t else {}
 		if Input.is_action_just_pressed("jugar_sombrero"):
 			fil = {"id": "sombrero_corto", "lado": 1.0}
 		if lb and rb and mundo.length() > 0.5 and mundo.normalized().dot(fwd) < -0.6 and float(p.get("gesto_hasta", 0.0)) < t:
@@ -2195,6 +2432,8 @@ func _control_usuario(delta: float) -> void:
 			else:
 				_manual_tiro = true
 			_mod_tiro = _mods_carga
+			if _mods_carga == "potente":
+				lento = 0.5
 			_tirar(p, ap_tiro, carga)
 			_mod_tiro = ""
 			_manual_tiro = false
@@ -2273,13 +2512,40 @@ func _control_usuario(delta: float) -> void:
 			p["correr"] = rp.distance_to(pos(p)) > 4.0
 			p["jockey"] = true
 		## RB mantenido: el compañero más cercano va a presionar al que la lleva.
+		## Doble toque y mantener: van DOS (el segundo tapa al receptor más
+		## cercano).
+		if Input.is_action_just_pressed("jugar_mod"):
+			_presion_doble = t - _rb_ultimo < 0.3
+			_rb_ultimo = t
 		if rb and rival_con_balon:
 			var ayuda := _segundo_presionador(p)
 			if not ayuda.is_empty():
 				ayuda["objetivo"] = pos(poseedor)
 				ayuda["correr"] = true
-		## Y mantenido: sale el portero.
-		if Input.is_action_pressed("jugar_filtrado") and (rival_con_balon or poseedor.is_empty()):
+				if _presion_doble:
+					var receptor := _rival_mas_cercano(poseedor)
+					var tercero := _segundo_presionador(p, ayuda)
+					if not receptor.is_empty() and not tercero.is_empty():
+						tercero["objetivo"] = pos(receptor).lerp(pos(poseedor), 0.35)
+						tercero["correr"] = true
+		elif not rb:
+			_presion_doble = false
+		## R3 mantenido + stick izquierdo: mueves al PORTERO a mano.
+		if Input.is_action_pressed("jugar_sombrero"):
+			var gk_m := _mi_portero(p)
+			if not gk_m.is_empty() and mundo.length() > 0.1:
+				gk_m["objetivo"] = pos(gk_m) + mundo.normalized() * 2.0
+				gk_m["mandado_hasta"] = t + 0.15
+				p["objetivo"] = pos(p)
+				p["manual"] = Vector3.ZERO
+			return
+		## Y: mantener = sale el portero; doble toque = se va al palo largo.
+		if Input.is_action_just_pressed("jugar_filtrado"):
+			if t - _y_ultimo < 0.3:
+				_palo_largo_hasta = t + 3.0
+				aviso.emit("🧤 Portero al palo largo")
+			_y_ultimo = t
+		if Input.is_action_pressed("jugar_filtrado") and t >= _palo_largo_hasta and (rival_con_balon or poseedor.is_empty()):
 			for gk: Dictionary in jugadores:
 				if bool(gk["por"]) and bool(gk["es_local"]) == bool(p["es_local"]) and gk != p:
 					gk["objetivo"] = balon.position
@@ -2349,7 +2615,7 @@ func _filigrana(p: Dictionary, id: String, lado: float) -> void:
 	var mis := ControlFC.estrellas(reg)
 	var necesita := int(f[1])
 	var ap: AnimationPlayer = p["anim"]
-	var nom := String(f[3])
+	var nom := String(f[4])
 	if is_instance_valid(ap) and lado < 0.0 and ap.has_animation(nom + "_espejo"):
 		nom += "_espejo"
 	_anim(p, nom, true, 0.9)
@@ -2365,9 +2631,9 @@ func _filigrana(p: Dictionary, id: String, lado: float) -> void:
 		return
 	filigrana.emit(String(f[0]), necesita, true)
 	var sp := (p["vel"] as Vector3).length()
-	match String(f[4]):
+	match String(f[5]):
 		"lateral", "lateral_lento":
-			var fuerza := 3.2 if String(f[4]) == "lateral" else 2.0
+			var fuerza := 3.2 if String(f[5]) == "lateral" else 2.0
 			p["vel"] = der * lado * fuerza + fwd * sp * 0.5
 			balon.position = n.position + (der * lado * 0.7 + fwd * 0.45) + Vector3(0, R, 0)
 			vel_balon = der * lado * fuerza + fwd * sp * 0.5
@@ -2442,14 +2708,42 @@ func _seguir_pared() -> void:
 	de["objetivo"] = pos(de) + Vector3(0, 0, dd * 8.0)
 	de["correr"] = true
 
+var lento := 0.0
+var bloqueo := false
+var _error_extra := 1.0
+var _presion_doble := false
+var _rb_ultimo := -9.0
+var _y_ultimo := -9.0
+var _palo_largo_hasta := 0.0
+var _receptor_i := -1
+var _anillo: MeshInstance3D
+
+func _mi_portero(p: Dictionary) -> Dictionary:
+	for q: Dictionary in jugadores:
+		if bool(q["por"]) and bool(q["es_local"]) == bool(p["es_local"]):
+			return q
+	return {}
+
+## El portero que mandas con R3 o con el doble toque de Y (palo largo).
+func _seguir_portero_mandado() -> void:
+	if usuario.is_empty():
+		return
+	var gk := _mi_portero(usuario)
+	if gk.is_empty() or gk == usuario or gk == poseedor:
+		return
+	if t < _palo_largo_hasta:
+		var arco := _arco_propio(gk)
+		var largo := -signf(balon.position.x + 0.01)
+		gk["objetivo"] = Vector3(largo * PALO * 0.55, 0, arco.z - signf(arco.z) * 0.8)
+
 ## El compañero que sale a presionar con RB: el más cercano al rival.
-func _segundo_presionador(p: Dictionary) -> Dictionary:
+func _segundo_presionador(p: Dictionary, menos: Dictionary = {}) -> Dictionary:
 	var mejor: Dictionary = {}
 	if poseedor.is_empty():
 		return mejor
 	var md := 999.0
 	for q: Dictionary in jugadores:
-		if q == p or bool(q["por"]) or bool(q["es_local"]) != bool(p["es_local"]):
+		if q == p or q == menos or bool(q["por"]) or bool(q["es_local"]) != bool(p["es_local"]):
 			continue
 		var dd := pos(q).distance_to(pos(poseedor))
 		if dd < md:
@@ -2560,6 +2854,9 @@ func _mover_jugadores(delta: float) -> void:
 			var dir1 := deseada / sp_des
 			var ang := dir0.signed_angle_to(dir1, Vector3.UP)
 			var giro_max := lerpf(9.0, 2.6, clampf(sp0 / 8.0, 0.0, 1.0)) * delta
+			## RB + LT: cambios de dirección firmes (gira cerrado sin frenar tanto).
+			if bool(p.get("giro_firme", false)):
+				giro_max *= 2.4
 			var dir := dir0.rotated(Vector3.UP, clampf(ang, -giro_max, giro_max))
 			## Giro brusco: se frena para girar (cambio de dirección real).
 			var objetivo_sp := sp_des * (1.0 - 0.6 * clampf((absf(ang) - 0.5) / 2.0, 0.0, 1.0))
