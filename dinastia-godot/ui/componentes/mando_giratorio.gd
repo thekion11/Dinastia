@@ -17,6 +17,7 @@ var dispositivo := "xbox"
 var etiquetas := {}
 var iluminadas: Array = []
 
+var _sombra: TextureRect
 var _vp: SubViewport
 var _cam: Camera3D
 var _pivote: Node3D
@@ -46,6 +47,23 @@ func _ready() -> void:
 	cont.stretch = true
 	cont.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	cont.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	## Sombra suave de apoyo debajo del mando (una elipse difusa que no gira).
+	_sombra = TextureRect.new()
+	var gt := GradientTexture2D.new()
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.5)
+	gt.fill_to = Vector2(1.0, 0.5)
+	var gr := Gradient.new()
+	gr.offsets = PackedFloat32Array([0.0, 0.55, 1.0])
+	gr.colors = PackedColorArray([Color(0, 0, 0, 0.5), Color(0, 0, 0, 0.18), Color(0, 0, 0, 0.0)])
+	gt.gradient = gr
+	gt.width = 128
+	gt.height = 128
+	_sombra.texture = gt
+	_sombra.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_sombra.stretch_mode = TextureRect.STRETCH_SCALE
+	_sombra.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_sombra)
 	add_child(cont)
 	_vp = SubViewport.new()
 	_vp.own_world_3d = true
@@ -68,18 +86,33 @@ func _ready() -> void:
 	env.sky = cielo
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
-	env.ambient_light_energy = 0.9
+	env.ambient_light_energy = 0.62
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	## Oclusión ambiental: las junturas, los botones y las empuñaduras se oscurecen
+	## donde se tocan (solo en el renderizador completo; en móvil no hace nada).
+	env.ssao_enabled = true
+	env.ssao_radius = 1.2
+	env.ssao_intensity = 2.4
+	env.ssao_power = 1.6
 	var we := WorldEnvironment.new()
 	we.environment = env
 	_vp.add_child(we)
 	_luz = DirectionalLight3D.new()
 	_luz.rotation_degrees = Vector3(-50, 25, 0)
 	_luz.light_energy = 1.25
+	_luz.shadow_enabled = true
+	_luz.shadow_bias = 0.03
+	_luz.directional_shadow_max_distance = 60.0
 	_vp.add_child(_luz)
 	var relleno := DirectionalLight3D.new()
 	relleno.rotation_degrees = Vector3(-25, 205, 0)
-	relleno.light_energy = 0.55
+	relleno.light_energy = 0.4
+	## Luz de contorno fría desde atrás: separa la silueta del fondo.
+	var contorno := DirectionalLight3D.new()
+	contorno.rotation_degrees = Vector3(-35, -150, 0)
+	contorno.light_color = Color(0.7, 0.85, 1.0)
+	contorno.light_energy = 0.9
+	_vp.add_child(contorno)
 	_vp.add_child(relleno)
 	_pivote = Node3D.new()
 	_vp.add_child(_pivote)
@@ -112,6 +145,10 @@ func _ready() -> void:
 ## de etiquetas (que ocupan ~100 px a cada lado) y no se corte al girarlo.
 func _ajustar_camara() -> void:
 	_vp.size = Vector2i(maxi(int(size.x), 16), maxi(int(size.y), 16))
+	if _sombra != null:
+		var ancho := minf(size.x * 0.82, 520.0)
+		_sombra.size = Vector2(ancho, ancho * 0.36)
+		_sombra.position = Vector2((size.x - ancho) * 0.5, size.y * 0.5 + ancho * 0.1)
 	var libre := maxf(size.x - 170.0, 120.0)
 	var ancho_modelo := 19.0
 	var visible_ancho := ancho_modelo * size.x / libre
@@ -276,6 +313,14 @@ func _malla_cuerpo(mat: Material) -> MeshInstance3D:
 				var z := centro.y + sin(ang) * rr
 				var h := _semialtura(x, z) if j < anillos else 0.0
 				var y := _caida(x, z) + (h if capa == 0 else -h * 0.85)
+				## Color de vértice (se multiplica por el del material): más claro en
+				## la meseta, más oscuro hacia los bordes y por debajo, goma oscura en
+				## las empuñaduras y una junta negra entre las dos mitades de la carcasa.
+				var tono := lerpf(0.74, 1.0, smoothstep(0.0, 1.2, h)) if capa == 0 else 0.6
+				if absf(x) > 3.7 and z > 0.4:
+					tono *= 0.8
+				tono = lerpf(0.2, tono, smoothstep(0.1, 0.34, h))
+				st.set_color(Color(tono, tono, tono))
 				st.add_vertex(Vector3(x, y, z))
 	var base_abajo := (anillos + 1) * n
 	## Un vértice del anillo `j` de la capa: el borde es el mismo arriba y abajo.
@@ -322,7 +367,8 @@ func _construir(disp: String) -> void:
 	var c_empu := Color("d3d6de") if ps else Color("23262d")
 	var c_mando := Color("1b1d22") if ps else Color("15171b")
 	var c_tapa := Color("20232a") if ps else Color("3c414c")
-	var m_cuerpo := _material(c_cuerpo, 0.52, 0.0)
+	var m_cuerpo := _material(c_cuerpo, 0.5, 0.0)
+	m_cuerpo.vertex_color_use_as_albedo = true
 	var m_empu := _material(c_empu, 0.6, 0.0)
 	var m_negro := _material(c_mando, 0.5, 0.2)
 	## Cuerpo y empuñaduras: una sola malla suave.
@@ -342,15 +388,15 @@ func _construir(disp: String) -> void:
 		var nt: String = String(lado[0]) + "T"
 		var bump := _material(c_tapa, 0.45, 0.1)
 		var trig := _material(c_mando, 0.55, 0.1)
-		var yb := _y_cuerpo(s * 5.3, -3.5) - 0.05
-		var mb := _malla(_modelo, _esfera(), bump, Vector3(s * 5.3, yb, -4.15), Vector3(2.2, 0.34, 0.85), Vector3(-8, -s * 7.0, 0))
-		_registrar(nb, mb, [bump], Vector3(s * 5.3, yb + 0.45, -4.15), Vector3(0, 0.3, -0.95).normalized())
-		_tira(mb, Vector3(0, 0.3, -0.5), Vector3(1.6, 0.06, 0.12), ControlFC.color_pieza(nb, disp))
-		var mt := _malla(_modelo, _esfera(), trig, Vector3(s * 5.3, yb - 0.4, -5.0), Vector3(1.9, 0.62, 0.8), Vector3(-24, -s * 7.0, 0))
-		_registrar(nt, mt, [trig], Vector3(s * 5.3, yb - 0.1, -5.45), Vector3(0, -0.05, -1).normalized())
-		_tira(mt, Vector3(0, 0.0, -0.95), Vector3(1.5, 0.3, 0.06), ControlFC.color_pieza(nt, disp))
-		_icono_sobre(nb, Vector3(s * 5.3, yb + 0.33, -4.12), 1.45, disp, Vector3(-8, 0, 0))
-		_icono_sobre(nt, Vector3(s * 5.3, yb - 0.12, -5.35), 1.3, disp, Vector3(-24, 0, 0))
+		var yb := _y_cuerpo(s * 5.0, -3.3) + 0.1
+		var mb := _malla(_modelo, _esfera(), bump, Vector3(s * 5.0, yb, -3.95), Vector3(1.9, 0.3, 0.62), Vector3(-10, -s * 8.0, 0))
+		_registrar(nb, mb, [bump], Vector3(s * 5.0, yb + 0.4, -3.95), Vector3(0, 0.3, -0.95).normalized())
+		_tira(mb, Vector3(0, 0.55, -0.35), Vector3(1.5, 0.12, 0.1), ControlFC.color_pieza(nb, disp))
+		var mt := _malla(_modelo, _esfera(), trig, Vector3(s * 5.0, yb - 0.3, -4.55), Vector3(1.7, 0.5, 0.6), Vector3(-26, -s * 8.0, 0))
+		_registrar(nt, mt, [trig], Vector3(s * 5.0, yb - 0.05, -4.95), Vector3(0, -0.05, -1).normalized())
+		_tira(mt, Vector3(0, 0.1, -0.9), Vector3(1.3, 0.22, 0.08), ControlFC.color_pieza(nt, disp))
+		_icono_sobre(nb, Vector3(s * 5.0, yb + 0.31, -3.92), 1.2, disp, Vector3(-10, 0, 0))
+		_icono_sobre(nt, Vector3(s * 5.0, yb - 0.1, -4.85), 1.1, disp, Vector3(-26, 0, 0))
 	## Sticks: base hundida, vástago y capuchón, con un aro de su color.
 	for k: String in ["LS", "RS"]:
 		var p: Vector3 = pos_t[k]
@@ -381,12 +427,12 @@ func _construir(disp: String) -> void:
 	_malla(dp, BoxMesh.new(), m_dp, Vector3(0, 0.12, 0), Vector3(2.1, 0.26, 0.7))
 	_malla(dp, BoxMesh.new(), m_dp, Vector3(0, 0.12, 0), Vector3(0.7, 0.26, 2.1))
 	_registrar("DPAD", dp, [m_dp], Vector3(pd.x, yd + 1.0, pd.z), Vector3.UP)
-	_icono_sobre("DPAD", Vector3(pd.x, yd + 0.27, pd.z), 1.9, disp)
 	## Los cuatro botones: discos bajos con el aro del color de su mando.
 	for k: String in ["A", "B", "X", "Y"]:
 		var p2: Vector3 = pos_t[k]
 		var y2 := _y_cuerpo(p2.x, p2.z)
 		var mb2 := _material(Color("1a1c21"), 0.5, 0.0)
+		_hueco(Vector3(p2.x, y2 + 0.005, p2.z), 0.78)
 		var bt := _malla(_modelo, _cilindro(0.56, 0.22), mb2, Vector3(p2.x, y2 + 0.02, p2.z))
 		_aro(_modelo, Vector3(p2.x, y2 + 0.1, p2.z), 0.6, ControlFC.color_pieza(k, disp))
 		_registrar(k, bt, [mb2], Vector3(p2.x, y2 + 0.8, p2.z), Vector3.UP)
@@ -396,11 +442,20 @@ func _construir(disp: String) -> void:
 		var p3: Vector3 = pos_t[k]
 		var y3 := _y_cuerpo(p3.x, p3.z)
 		var m3 := _material(Color("3a3e47") if not ps else Color("aeb2be"), 0.5, 0.0)
+		_hueco(Vector3(p3.x, y3 + 0.005, p3.z), 0.46)
 		var b3 := _malla(_modelo, _cilindro(0.3, 0.14), m3, Vector3(p3.x, y3 + 0.0, p3.z))
 		_aro(_modelo, Vector3(p3.x, y3 + 0.07, p3.z), 0.3, ControlFC.color_pieza(k, disp))
 		_registrar(k, b3, [m3], Vector3(p3.x, y3 + 0.7, p3.z), Vector3.UP)
 		_icono_sobre(k, Vector3(p3.x, y3 + 0.1, p3.z), 0.62, disp)
 	_aplicar_rotacion()
+
+## El hueco oscuro donde se asienta un botón (como el borde de goma de un mando).
+func _hueco(pos: Vector3, radio: float) -> void:
+	var m := StandardMaterial3D.new()
+	m.albedo_color = Color(0.03, 0.03, 0.035)
+	m.roughness = 0.9
+	var mi := _malla(_modelo, _cilindro(radio, 0.04), m, pos)
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 ## Un aro plano de color (brilla sin sombra) alrededor de un botón.
 func _aro(padre: Node3D, pos: Vector3, radio: float, color: Color) -> void:
@@ -412,7 +467,16 @@ func _aro(padre: Node3D, pos: Vector3, radio: float, color: Color) -> void:
 	var m := StandardMaterial3D.new()
 	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	m.albedo_color = color
-	var mi := _malla(padre, t, m, pos + Vector3(0, 0.12, 0), Vector3(1, 0.4, 1))
+	## El aro va plano y por encima del punto MÁS ALTO del cuerpo bajo él (la
+	## superficie sube hacia las empuñaduras y se lo comía por un lado).
+	var origen := padre.position if padre != _modelo else Vector3.ZERO
+	var c := origen + pos
+	var ymax := -9.0
+	for k in 16:
+		var a := TAU * float(k) / 16.0
+		ymax = maxf(ymax, _y_cuerpo(c.x + cos(a) * radio * 1.2, c.z + sin(a) * radio * 1.2))
+	var local_y := maxf(ymax + 0.06 - origen.y, pos.y)
+	var mi := _malla(padre, t, m, Vector3(pos.x, local_y, pos.z), Vector3(1, 0.4, 1))
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 ## Una tira de color pegada a un bumper o un gatillo.
