@@ -1503,6 +1503,11 @@ func _montar_motor() -> void:
 	_motor.tarjeta.connect(func(id: String, roja: bool, _l: bool) -> void:
 		partido.tarjeta_externa(id, roja))
 	_motor.aviso.connect(_al_aviso_motor)
+	_motor.tactica_rapida.connect(func(eq: int, clave: String, valor: int) -> void:
+		var c: Club = partido.local if eq == 0 else partido.visita
+		if c != null and c.tactica != null:
+			c.tactica.set(clave, valor)
+			partido.invalidar_fuerza())
 	_actualizar_tacticas()
 	## La transmisión, como en el vídeo: cámara alta que sigue el balón y la
 	## pantalla limpia (sin nombres sobre los 22 ni la pantalla gigante en la
@@ -1776,10 +1781,10 @@ static func texto_controles() -> String:
 	var mover := "%s%s%s%s" % [Mando.corto_de("jugar_arriba").get_slice("/", 0),
 		Mando.corto_de("jugar_izquierda").get_slice("/", 0), Mando.corto_de("jugar_abajo").get_slice("/", 0),
 		Mando.corto_de("jugar_derecha").get_slice("/", 0)]
-	partes.append(Idiomas.t("%s/stick mover") % mover)
+	partes.append(Idiomas.t("%s mover") % mover)
 	for par: Array in [["jugar_sprint", "sprint"], ["jugar_pase", "pase"], ["jugar_tiro", "tiro (mantén)"],
-			["jugar_centro", "centro"], ["jugar_filtrado", "al hueco"], ["jugar_regate", "regate"],
-			["jugar_cambiar", "cambiar de jugador"], ["jugar_pausa", "táctica y cambios"]]:
+			["jugar_centro", "centro"], ["jugar_filtrado", "al hueco"], ["jugar_mod", "rosca/tenso"],
+			["jugar_regate", "proteger"], ["jugar_cambiar", "cambiar"], ["jugar_pausa", "táctica y cambios"]]:
 		partes.append("%s %s" % [Mando.corto_de(String(par[0])), Idiomas.t(String(par[1]))])
 	return " · ".join(partes)
 

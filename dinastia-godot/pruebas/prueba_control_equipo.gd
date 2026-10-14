@@ -120,10 +120,148 @@ func _process(_d: float) -> void:
 				_pulsar("jugar_tiro", false)
 			if _t == 24:
 				_ok(int(_motor.tiros[0]) > int(_dato["tiros"]), "al soltar, tira")
-				_fin()
+				_probar_reconocedor()
+				_paso = 5
+				_t = 0
+		5:
+			_paso_fc()
+
+## LAS FILIGRANAS DEL STICK DERECHO (FC 26): el reconocedor de gestos.
+func _probar_reconocedor() -> void:
+	var r := func(seq: Array, lb := false, lt := false, rb := false) -> String:
+		return String(ControlFC.reconocer(seq, lb, lt, rb).get("id", ""))
+	_ok(r.call(["F", "FR", "R"]) == "bicicleta", "FC: un cuarto de vuelta desde adelante = bicicleta")
+	_ok(r.call(["R", "FR", "F", "FL", "L"]) == "elastica", "FC: media luna por delante = elástica")
+	_ok(r.call(["B", "BL", "L", "FL", "F", "FR", "R"]) == "ruleta", "FC: tres cuartos desde atrás = ruleta")
+	_ok(r.call(["F", "N", "R"]) == "giro_berba", "FC: toque adelante y a un lado = giro de Berba")
+	_ok(r.call(["B", "N", "F"]) == "sombrero", "FC: atrás y adelante = sombrerito")
+	_ok(r.call(["L"]) == "finta_cuerpo", "FC: toque a un lado = finta de cuerpo")
+	_ok(r.call(["F", "N", "B"], true) == "tacon_rodado", "FC: LB + adelante y atrás = tacón con balón rodado")
+	_ok(ControlFC.estrellas(0.92) == 5 and ControlFC.estrellas(0.3) == 2, "FC: estrellas de filigrana según el regate")
+	_ok(ControlFC.FILIGRANAS.size() >= 20 and ControlFC.COMBINACIONES.size() >= 30, "FC: %d filigranas y %d combinaciones" % [ControlFC.FILIGRANAS.size(), ControlFC.COMBINACIONES.size()])
+
+## Pone el balón en los pies del jugador que manejas, en (x, z).
+func _balon_a_usuario(x: float, z: float) -> Dictionary:
+	var u: Dictionary = _motor.usuario
+	_motor.estado = "juego"
+	(u["node"] as Node3D).position = Vector3(x, 0, z)
+	_motor.set("_tiro_vivo", {})
+	_motor.set("_offside", {})
+	u["vel"] = Vector3.ZERO
+	_motor.balon.position = Vector3(x, 0.11, z + 0.4)
+	_motor.vel_balon = Vector3.ZERO
+	_motor.poseedor = {}
+	_motor.call("_tomar", u)
+	return u
+
+func _balon_a_rival() -> Dictionary:
+	for q: Dictionary in _motor.jugadores:
+		if not bool(q["es_local"]) and not bool(q["por"]):
+			_motor.estado = "juego"
+			(q["node"] as Node3D).position = Vector3(0, 0, -10)
+			## Sin tiro ni fuera de juego pendientes del paso anterior.
+			_motor.set("_tiro_vivo", {})
+			_motor.set("_offside", {})
+			_motor.balon.position = Vector3(0, 0.11, -9.6)
+			_motor.poseedor = {}
+			_motor.call("_tomar", q)
+			## Que no la suelte ni se la roben mientras se prueba la defensa.
+			_motor.set("_decision_en", _motor.t + 30.0)
+			for o: Dictionary in _motor.jugadores:
+				if bool(o["es_local"]):
+					o["enfriar"] = 3.0
+			return q
+	return {}
+
+## Las combinaciones del manual, una por fotograma (lo que se pulsa vale en el
+## fotograma en que se pulsa).
+func _paso_fc() -> void:
+	match _t:
+		1:
+			## RB + B (tiro con rosca) mantenido unos fotogramas.
+			_balon_a_usuario(8.0, 30.0)
+			_dato["tiros"] = int(_motor.tiros[0])
+			_pulsar("jugar_mod", true)
+			_pulsar("jugar_tiro", true)
+			_avanzar(1)
+		2, 3, 4, 5, 6, 7, 8, 9, 10:
+			_avanzar(1)
+		11:
+			_ok(_motor._mods_carga == "rosca", "FC: RB + Tiro = tiro con rosca")
+			_pulsar("jugar_tiro", false)
+			_pulsar("jugar_mod", false)
+			_avanzar(1)
+		12:
+			_ok(int(_motor.tiros[0]) > int(_dato["tiros"]), "FC: el tiro con rosca sale")
+			## LB + B: vaselina, que sube.
+			_balon_a_usuario(0.0, 36.0)
+			_pulsar("jugar_cambiar", true)
+			_pulsar("jugar_tiro", true)
+			_avanzar(1)
+		13, 14, 15, 16, 17, 18:
+			_avanzar(1)
+		19:
+			_pulsar("jugar_tiro", false)
+			_avanzar(1)
+			_pulsar("jugar_cambiar", false)
+			_ok(_motor.vel_balon.y > 2.5, "FC: LB + Tiro = vaselina (sube a %.1f m/s)" % _motor.vel_balon.y)
+		20:
+			## LB + A: la pared.
+			_avanzar(30)
+			_balon_a_usuario(0.0, 0.0)
+			_pulsar("jugar_cambiar", true)
+			_pulsar("jugar_pase", true)
+			_avanzar(1)
+		21:
+			_pulsar("jugar_pase", false)
+			_pulsar("jugar_cambiar", false)
+			_avanzar(1)
+			_ok(not _motor._pared.is_empty(), "FC: LB + Pase = pared (el que la da pide la devolución)")
+		22:
+			## A mantenido sin balón: contener (entre el rival y el arco).
+			_avanzar(30)
+			var r := _balon_a_rival()
+			_dato["rival"] = r
+			_pulsar("jugar_pase", true)
+			_avanzar(1)
+		23:
+			_avanzar(1)
+			var u: Dictionary = _motor.usuario
+			var r: Dictionary = _dato["rival"]
+			var obj: Vector3 = u.get("objetivo", Vector3.ZERO)
+			var arco: Vector3 = _motor.call("_arco_propio", u)
+			_ok(obj.distance_to(_motor.pos(r)) < 2.0 and obj.distance_to(arco) < _motor.pos(r).distance_to(arco), "FC: Pase mantenido sin balón = contener (entre el rival y tu arco)")
+			_pulsar("jugar_pase", false)
+			## RB mantenido: presiona el segundo jugador.
+			_pulsar("jugar_mod", true)
+			_avanzar(1)
+		24:
+			var u: Dictionary = _motor.usuario
+			var ayuda: Dictionary = _motor.call("_segundo_presionador", u)
+			_ok(not ayuda.is_empty() and (ayuda.get("objetivo", Vector3.ZERO) as Vector3).distance_to(_motor.pos(_dato["rival"])) < 0.5, "FC: RB mantenido = el compañero más cercano presiona")
+			_pulsar("jugar_mod", false)
+			## Cruceta arriba: más ofensiva.
+			_dato["ment"] = int((_motor.tacticas[0] as Dictionary).get("mentalidad", 1))
+			_pulsar("jugar_tac_arriba", true)
+			_avanzar(1)
+		25:
+			_pulsar("jugar_tac_arriba", false)
+			_avanzar(1)
+			_ok(int((_motor.tacticas[0] as Dictionary).get("mentalidad", 1)) == mini(int(_dato["ment"]) + 1, 3), "FC: cruceta arriba = mentalidad más ofensiva")
+			## Una filigrana que el jugador domina y otra que le queda grande.
+			var u := _balon_a_usuario(0.0, 0.0)
+			u["attr"]["reg"] = 0.95
+			_motor.call("_filigrana", u, "bicicleta", 1.0)
+			_ok(_motor.poseedor == u and float(u["regate_hasta"]) > _motor.t, "FC: la bicicleta sale con 5★ (sigue con el balón)")
+			_avanzar(60)
+			u = _balon_a_usuario(0.0, 0.0)
+			u["attr"]["reg"] = 0.3
+			_motor.call("_filigrana", u, "elastica", 1.0)
+			_ok(_motor.poseedor != u, "FC: la elástica (5★) le queda grande a un jugador de 2★: pierde el balón")
+			_fin()
 
 func _fin() -> void:
-	for a in ["jugar_arriba", "jugar_pase", "jugar_cambiar", "jugar_tiro"]:
+	for a in ["jugar_arriba", "jugar_pase", "jugar_cambiar", "jugar_tiro", "jugar_mod", "jugar_tac_arriba"]:
 		Input.action_release(a)
 	var cfg := ConfigFile.new()
 	cfg.load(CajonAjustes.RUTA)
@@ -145,7 +283,7 @@ func _probar_panel_controles() -> void:
 	var antes_esq := Mando.esquema
 	var antes_ay: Dictionary = Mando.ayudas.duplicate()
 	var panel := PanelControles.abrir(self)
-	_ok(panel._lista.get_child_count() == Mando.MAPA.size(), "controles: una fila por acción")
+	_ok(panel.filas_de_acciones() == Mando.MAPA.size(), "controles: una fila por acción (%d)" % panel.filas_de_acciones())
 	panel._escuchando = "jugar_pase"
 	var ev := InputEventKey.new()
 	ev.keycode = KEY_G
