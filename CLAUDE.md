@@ -439,3 +439,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   Diagnóstico del «se ve mal»: era modelo Y ensamblaje (bordes dentados de la cuadrícula, cuerpo globo,
   botones flotantes). Ahora el cuerpo es una malla polar con silueta exacta (`_malla_cuerpo`), mate, con
   meseta y borde redondeado. Revisión: `pruebas/captura_mando_grande.tscn` (DISP=ps|xbox).
+- 14-10: «¿se perdieron los diseños de pasto?» NO: los 12 (rayas, rayasH, damero, damGrande, circulos,
+  diagonal, espiga, cruz, abanico, rombos, mitades, liso) siguen en `StadiumBuilder._make_grass_texture`
+  y en el diseñador (EST_CESPED); el sorteo de clubes solo usaba 4 → ahora 12 (`Club._CESPED`, con
+  «rayas» más frecuente). BUG propio de ese día: `cesped.gdshader` leía el dibujo con mipmaps y de lejos
+  se fundía en dos bloques → ahora `filter_nearest` + `textureLod` (`cesped_comun.gdshaderinc`); verde de
+  transmisión más profundo (brillo 0,64 y saturación). Revisión: `pruebas/captura_disenos_cesped.tscn`.

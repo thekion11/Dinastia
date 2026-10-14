@@ -5,7 +5,9 @@
 // SIN `source_color` a propósito: en Compatibility (móvil, web) no se pasaba a
 // lineal y el césped salía verde menta. La máscara se compara en sRGB (los
 // valores crudos del dibujo) y los colores llegan YA en lineal desde GDScript.
-uniform sampler2D dibujo : filter_linear_mipmap, repeat_disable;
+// Sin mipmaps (14-10-2026): de lejos se promediaban las franjas a un gris medio
+// y las ~20 franjas de corte se fundían en dos bloques enormes.
+uniform sampler2D dibujo : filter_nearest, repeat_disable;
 uniform vec3 claro_s = vec3(0.5, 0.75, 0.55);
 uniform vec3 oscuro_s = vec3(0.4, 0.65, 0.45);
 uniform vec3 claro = vec3(0.21, 0.52, 0.26);
@@ -14,7 +16,7 @@ uniform vec2 tam_campo = vec2(80.0, 117.0);
 uniform float fuerza_franjas = 1.0;
 uniform float desgaste = 1.0;
 // Multiplicador general (el césped de la tele es un verde hondo, no pastel).
-uniform float brillo = 0.72;
+uniform float brillo = 0.64;
 
 float h21(vec2 p) {
 	p = fract(p * vec2(123.34, 456.21));
@@ -41,7 +43,7 @@ float fbm(vec2 p) {
 
 // Máscara de la franja del dibujo (1 = la clara).
 float cesped_mascara(vec2 uv) {
-	vec3 d = texture(dibujo, uv).rgb;
+	vec3 d = textureLod(dibujo, uv, 0.0).rgb;
 	return step(0.5, dot(d - oscuro_s, claro_s - oscuro_s) / max(dot(claro_s - oscuro_s, claro_s - oscuro_s), 0.0001));
 }
 
@@ -66,5 +68,9 @@ vec3 cesped_color(vec2 w, vec2 uv, vec3 mundo, vec3 cam) {
 	gast = max(gast, 0.45 * (1.0 - smoothstep(0.5, 3.0, length(w))));
 	gast *= desgaste * (0.55 + 0.45 * fbm(w * 0.7));
 	base = mix(base, base * vec3(0.95, 0.78, 0.45) + vec3(0.03, 0.02, 0.0), gast * 0.55);
+	// Verde de transmisión: más profundo y saturado (el claro salía menta lavado).
+	float gris = dot(base, vec3(0.30, 0.59, 0.11));
+	base = mix(vec3(gris), base, 1.15);
+	base *= vec3(0.94, 0.99, 0.92);
 	return base;
 }
