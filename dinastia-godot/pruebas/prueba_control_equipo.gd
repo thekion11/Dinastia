@@ -358,6 +358,16 @@ func _probar_panel_controles() -> void:
 	Mando.restaurar()
 	_ok(Mando.esquema == "wasd" and Mando.teclas_de("jugar_tiro").has(KEY_K) and Mando.ayuda("pase") == "asistido",
 		"controles: restaurar de fábrica")
+	## El mando 3D: los iconos de Kenney de cada pieza existen (PlayStation y Xbox).
+	var faltan: Array = []
+	for disp: String in ["ps", "xbox"]:
+		for pieza: String in ["A", "B", "X", "Y", "LB", "RB", "LT", "RT", "LS", "RS", "DPAD", "START", "BACK"]:
+			var nombre := MandoGiratorio.nombre_icono(pieza, disp)
+			var ruta := "res://assets/iconos_botones/%s/%s.png" % ["playstation" if disp == "ps" else "xbox", nombre]
+			if nombre == "" or not ResourceLoader.exists(ruta):
+				faltan.append(ruta)
+	_ok(faltan.is_empty(), "mando 3D: están los iconos de cada botón %s" % str(faltan))
+	_ok(panel._mando != null and panel._mando._giratorio != null, "mando 3D: el widget giratorio existe")
 	panel.cerrar()
 	Mando.propio = antes_propio
 	Mando.esquema = antes_esq

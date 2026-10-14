@@ -340,7 +340,7 @@ func _montar_centro(cuerpo: HBoxContainer) -> void:
 
 func _montar_mando(cuerpo: HBoxContainer) -> void:
 	var caja := PanelContainer.new()
-	caja.custom_minimum_size = Vector2(430, 0)
+	caja.custom_minimum_size = Vector2(450, 0)
 	caja.add_theme_stylebox_override("panel", _estilo(Color(Tema.PANEL, 0.7), Tema.RADIO_GRANDE))
 	cuerpo.add_child(caja)
 	var v := VBoxContainer.new()
@@ -350,7 +350,7 @@ func _montar_mando(cuerpo: HBoxContainer) -> void:
 	_mando.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_mando.custom_minimum_size = Vector2(400, 300)
 	v.add_child(_mando)
-	var leyenda := Tema.etiqueta(12, Tema.SUAVE, Idiomas.t("En dorado, los botones de la combinación elegida."))
+	var leyenda := Tema.etiqueta(12, Tema.SUAVE, Idiomas.t("Gíralo con el ratón. En dorado, los botones de la combinación elegida."))
 	leyenda.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(leyenda)
 
@@ -510,16 +510,16 @@ func _pintar_parte(i: int) -> void:
 	var parte: Array = ControlFC.MANUAL[i]
 	_titulo.text = "%s  %s. %s" % [String(parte[1]), str(i + 1), Idiomas.t(String(parte[0]))]
 	_subtitulo.text = Idiomas.t("Comando y botones en PlayStation, Xbox y teclado. Elige una fila para verla en el mando.")
-	_cabecera_tabla([["COMANDO / ACCIÓN", 0, false], ["PLAYSTATION", 112, _col_disp("ps")], ["XBOX", 112, _col_disp("xbox")], ["TECLADO", 104, _col_disp("teclado")]])
+	_cabecera_tabla([["COMANDO / ACCIÓN", 0, false], ["PLAYSTATION", 100, _col_disp("ps")], ["XBOX", 100, _col_disp("xbox")], ["TECLADO", 100, _col_disp("teclado")]])
 	for f: Array in parte[2]:
 		var fichas: Array = f[1]
 		var accion := Idiomas.t(String(f[0]))
 		if String(f[2]) != "":
 			accion += "  ·  " + Idiomas.t(String(f[2]))
 		_fila([[accion, 0, 13, Tema.TEXTO],
-			[ControlFC.texto_fichas(fichas, "ps"), 112, 13, Color("ffd23f") if _col_disp("ps") else Color(1, 1, 1, 0.55)],
-			[ControlFC.texto_fichas(fichas, "xbox"), 112, 13, Color("ffd23f") if _col_disp("xbox") else Color(1, 1, 1, 0.55)],
-			[ControlFC.texto_fichas(fichas, "teclado"), 104, 13, Color("ffd23f") if _col_disp("teclado") else Color(1, 1, 1, 0.55)]], fichas)
+			[ControlFC.texto_fichas(fichas, "ps"), 100, 13, Color("ffd23f") if _col_disp("ps") else Color(1, 1, 1, 0.55)],
+			[ControlFC.texto_fichas(fichas, "xbox"), 100, 13, Color("ffd23f") if _col_disp("xbox") else Color(1, 1, 1, 0.55)],
+			[ControlFC.texto_fichas(fichas, "teclado"), 100, 13, Color("ffd23f") if _col_disp("teclado") else Color(1, 1, 1, 0.55)]], fichas)
 
 func _pintar_filigranas() -> void:
 	_titulo.text = "✨  7. " + Idiomas.t("Filigranas (skills)")

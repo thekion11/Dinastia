@@ -421,3 +421,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   manual (R3), saque de manos, receptor/2.º/3.er lanzador, círculo de serenidad, saques de
   banda del usuario, cámara lenta del tiro potente. Vídeo: `pruebas/video_controles.tscn`
   (--write-movie) → `pruebas/capturas/controles_video.mp4` (ffmpeg de imageio-ffmpeg).
+- 14-10 PEDIDO: «el modelo del control es básico, te adjunto uno [Kenney Input Prompts 1.5]; la idea
+  es poder girarlo como un globo terráqueo; la caja guárdala en el repositorio». HECHO: el zip son
+  ICONOS 2D (CC0), no un modelo 3D; se guardaron los PNG de Xbox, PlayStation y teclado en
+  `dinastia-godot/assets/iconos_botones/` (+ licencia; el .zip NO se sube: *.zip va a LFS y LFS
+  está prohibido). Mando 3D procedural `ui/componentes/mando_giratorio.gd` (PS o Xbox, iconos de
+  Kenney en cada botón y etiqueta, arrastrar = girar con inercia, rueda = zoom, doble clic =
+  vista inicial, se mece solo, piezas elegidas laten en dorado, etiquetas con línea que se apagan
+  si quedan de espaldas). `DibujoMando` lo contiene; el teclado sigue en 2D.
