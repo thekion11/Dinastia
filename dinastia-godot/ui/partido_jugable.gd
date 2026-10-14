@@ -364,11 +364,21 @@ func _process(delta: float) -> void:
 		_barra.value = motor.carga
 	else:
 		_barra.visible = false
-		_ayuda.text = ("CON BALÓN: Espacio/A pase · K/B tiro (mantén) · L/X centro · I/Y largo · U/RB al hueco · E/LT regate · Shift/RT sprint" if con_balon
-			else "SIN BALÓN: Espacio/A presionar · K/B entrada · L/X barrida · R/L3 pedir el balón · Shift/RT sprint · Esc pausa")
+		_ayuda.text = _guia_controles(con_balon)
 	_actualizar_apunte()
-	if Input.is_action_just_pressed("jugar_pausa") and motor.estado != "fin":
+	if Input.is_action_just_pressed("jugar_pausa") and motor.estado != "fin" and _controles == null:
 		_alternar_pausa()
+
+## La guía con las teclas que el jugador haya configurado (Mando).
+func _guia_controles(con_balon: bool) -> String:
+	var c := func(a: String) -> String: return Mando.corto_de(a)
+	if con_balon:
+		return Idiomas.t("CON BALÓN: %s pase · %s tiro (mantén) · %s centro · %s largo · %s al hueco · %s regate · %s sprint") % [
+			c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_pase_largo"),
+			c.call("jugar_filtrado"), c.call("jugar_regate"), c.call("jugar_sprint")]
+	return Idiomas.t("SIN BALÓN: %s presionar · %s entrada · %s barrida · %s pedir el balón · %s sprint · %s pausa") % [
+		c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_pedir"),
+		c.call("jugar_sprint"), c.call("jugar_pausa")]
 
 func _abrev(nombre: String) -> String:
 	var n := Nombres.visible(nombre)
@@ -450,6 +460,8 @@ func _al_gol(de_local: bool, autor: String, _asist: String) -> void:
 
 # ---------------------------------------------------------------- pausa y final
 
+var _controles: PanelControles
+
 func _alternar_pausa() -> void:
 	if _pausa != null:
 		_pausa.queue_free()
@@ -459,6 +471,10 @@ func _alternar_pausa() -> void:
 	motor.set_physics_process(false)
 	_pausa = _caja_centro("PAUSA", [
 		["▶  Seguir jugando", _alternar_pausa],
+		["🎮  Controles", func() -> void:
+			if _controles == null:
+				_controles = PanelControles.abrir(self)
+				_controles.cerrado.connect(func() -> void: _controles = null)],
 		["⏩  Simular lo que queda", _simular_resto],
 	])
 

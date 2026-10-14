@@ -94,6 +94,7 @@ var _t_tactica := 0.0
 var _cursor: Node3D
 var _ayuda_control: Label
 var _panel_dt: PanelDTPartido
+var _panel_controles: PanelControles
 ## Lo que el DT rival cambia en vivo (sin tocar la táctica guardada de su club).
 var _ajuste_rival := [{}, {}]
 var _final_motor := false
@@ -315,6 +316,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_cajon.seccion("Partido")
 		_btn_modo = _cajon.boton("🎮 Controlar a mi equipo: NO", _alternar_modo_control)
 		_cajon.boton("📋 Táctica y cambios (Esc)", _abrir_panel_dt)
+		_cajon.boton("🎮 Controles: teclas, mando y ayudas", abrir_controles)
 		_cajon.interruptor("⚽ Motor real: el resultado se juega en el césped", _pref("motor_real", true), func(si: bool) -> void:
 			_guardar_pref("motor_real", si))
 		_cajon.fila([["⏩ Partido corto", func() -> void: _fijar_ritmo("rapido")],
@@ -1474,6 +1476,9 @@ func _montar_motor() -> void:
 	_nombres_globales = PlayerSpawner.mostrar_nombres
 	if not _pref("nombres_motor", false):
 		_mostrar_nombres(false)
+	## Si jugaste tú el último partido, vuelves a jugar (se recuerda).
+	if _pref("control_equipo", false) and _mi_lado >= 0:
+		_alternar_control_motor.call_deferred()
 	if _mini_pantalla != null and not _pref("pantalla_esquina_motor", false):
 		_mini_pantalla.visible = false
 
@@ -1510,7 +1515,7 @@ func _actualizar_tacticas() -> void:
 		_motor.tacticas[i] = t
 
 func _paso_motor(delta: float) -> void:
-	if _panel_dt != null:
+	if _panel_dt != null or _panel_controles != null:
 		return
 	var mult := _juego.velocidad() if _juego != null else 1.0
 	_acum_motor = minf(_acum_motor + delta * mult, DT_MOTOR * 16.0)
@@ -1525,6 +1530,7 @@ func _paso_motor(delta: float) -> void:
 		return
 	_refrescar_marcador()
 	_mover_cursor()
+	_hud_juego()
 	if _motor.estado == "fin" and not _final_motor:
 		_final_motor = true
 		var mio_gana := (partido.goles_local > partido.goles_visita and _mi_lado == 0) or (partido.goles_visita > partido.goles_local and _mi_lado == 1)
@@ -1639,6 +1645,7 @@ func _alternar_control_motor() -> void:
 		_mostrar_banner_gol(Idiomas.t("Este partido no es de tu club: solo puedes mirarlo."), false)
 		return
 	var activo := _motor.control_equipo < 0
+	_guardar_pref("control_equipo", activo)
 	_motor.control_equipo = _mi_lado if activo else -1
 	_motor.autopiloto = not activo
 	_motor.camara = get_viewport().get_camera_3d() if activo else null
@@ -1678,6 +1685,18 @@ func _crear_cursor() -> void:
 	aro.position = Vector3(0, 0.04, 0)
 	aro.material_override = mat
 	_cursor.add_child(aro)
+	## El nombre y la energía del que manejas, como en FC.
+	var et := Label3D.new()
+	et.name = "Nombre"
+	et.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	et.no_depth_test = true
+	et.fixed_size = true
+	et.pixel_size = 0.0011
+	et.font_size = 30
+	et.outline_size = 8
+	et.modulate = Color("ffe680")
+	et.position = Vector3(0, 2.75, 0)
+	_cursor.add_child(et)
 	_cursor.visible = false
 
 func _mover_cursor() -> void:
@@ -1687,6 +1706,13 @@ func _mover_cursor() -> void:
 	if u.is_empty() or not is_instance_valid(u.get("node")):
 		return
 	_cursor.global_position = (u["node"] as Node3D).global_position
+	var et := _cursor.get_node_or_null("Nombre") as Label3D
+	if et != null:
+		var jd: Dictionary = u.get("jugador", {})
+		var e := _motor.forma_fisica(u)
+		var barras := int(round(e * 8.0))
+		et.text = "%s\n%s" % [Nombres.visible(String(jd.get("nombre", ""))).get_slice(" ", Nombres.visible(String(jd.get("nombre", ""))).get_slice_count(" ") - 1),
+			"▮".repeat(barras) + "▯".repeat(8 - barras)]
 	var f := _cursor.get_node_or_null("Flecha") as Node3D
 	if f != null:
 		f.position.y = 2.35 + sin(Time.get_ticks_msec() * 0.006) * 0.08
@@ -1705,11 +1731,37 @@ func _mostrar_ayuda_control() -> void:
 		_ayuda_control.offset_left = -560
 		_ayuda_control.offset_right = 560
 		add_child(_ayuda_control)
-	_ayuda_control.text = Idiomas.t("WASD/stick mover · Shift/RT sprint · Espacio/A pase · K/B tiro (mantén) · L/X centro · U/RB al hueco · E regate · Q/LB cambiar de jugador · Esc táctica y cambios")
+	_ayuda_control.text = texto_controles()
 	_ayuda_control.modulate.a = 1.0
 	var tw := create_tween()
 	tw.tween_interval(7.0)
 	tw.tween_property(_ayuda_control, "modulate:a", 0.0, 0.8)
+
+## La guía con las teclas REALES (las que el jugador haya configurado).
+static func texto_controles() -> String:
+	Mando.registrar()
+	var partes: Array[String] = []
+	var mover := "%s%s%s%s" % [Mando.corto_de("jugar_arriba").get_slice("/", 0),
+		Mando.corto_de("jugar_izquierda").get_slice("/", 0), Mando.corto_de("jugar_abajo").get_slice("/", 0),
+		Mando.corto_de("jugar_derecha").get_slice("/", 0)]
+	partes.append(Idiomas.t("%s/stick mover") % mover)
+	for par: Array in [["jugar_sprint", "sprint"], ["jugar_pase", "pase"], ["jugar_tiro", "tiro (mantén)"],
+			["jugar_centro", "centro"], ["jugar_filtrado", "al hueco"], ["jugar_regate", "regate"],
+			["jugar_cambiar", "cambiar de jugador"], ["jugar_pausa", "táctica y cambios"]]:
+		partes.append("%s %s" % [Mando.corto_de(String(par[0])), Idiomas.t(String(par[1]))])
+	return " · ".join(partes)
+
+## La pantalla de controles: el partido se para mientras está abierta.
+func abrir_controles() -> void:
+	if _panel_controles != null:
+		return
+	if _cajon != null and _cajon.abierto:
+		_cajon.cerrar()
+	_panel_controles = PanelControles.abrir(self)
+	_panel_controles.cerrado.connect(func() -> void:
+		_panel_controles = null
+		if _ayuda_control != null and _motor != null and _motor.control_equipo >= 0:
+			_mostrar_ayuda_control())
 
 func _abrir_panel_dt() -> void:
 	if _motor == null or _panel_dt != null or partido == null or partido.terminado_ya:
@@ -1724,7 +1776,7 @@ func _abrir_panel_dt() -> void:
 		_actualizar_tacticas())
 
 func _unhandled_input(e: InputEvent) -> void:
-	if _motor != null and _panel_dt == null and e.is_action_pressed("jugar_pausa"):
+	if _motor != null and _panel_dt == null and _panel_controles == null and e.is_action_pressed("jugar_pausa"):
 		if _cajon != null and _cajon.abierto:
 			return
 		get_viewport().set_input_as_handled()
@@ -1850,3 +1902,66 @@ func _barrido(c: Club, seg: float) -> void:
 	var tw := banda.create_tween()
 	tw.tween_property(banda, "position:x", vp.x + 200.0, seg).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_callback(banda.queue_free)
+
+
+## LA BARRA DE POTENCIA Y LA FLECHA DE APUNTE (jugando tú, como en FC): al
+## cargar un tiro o un balón parado, la barra abajo al centro; en córners y
+## faltas, una flecha en el césped hacia donde apuntas.
+var _barra_pot: ProgressBar
+var _flecha_apunte: MeshInstance3D
+
+func _hud_juego() -> void:
+	if _motor == null or _motor.control_equipo < 0:
+		if _barra_pot != null:
+			_barra_pot.visible = false
+		if _flecha_apunte != null:
+			_flecha_apunte.visible = false
+		return
+	if _barra_pot == null:
+		_barra_pot = ProgressBar.new()
+		_barra_pot.show_percentage = false
+		_barra_pot.max_value = 1.0
+		_barra_pot.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+		_barra_pot.offset_left = -200
+		_barra_pot.offset_right = 200
+		_barra_pot.offset_top = -96
+		_barra_pot.offset_bottom = -80
+		var fondo := StyleBoxFlat.new()
+		fondo.bg_color = Color(0, 0, 0, 0.55)
+		fondo.set_corner_radius_all(6)
+		var lleno := StyleBoxFlat.new()
+		lleno.bg_color = Color("ffd23f")
+		lleno.set_corner_radius_all(6)
+		_barra_pot.add_theme_stylebox_override("background", fondo)
+		_barra_pot.add_theme_stylebox_override("fill", lleno)
+		add_child(_barra_pot)
+	_barra_pot.visible = _motor.cargando or _motor.apuntando
+	if _motor.apuntando:
+		_barra_pot.value = float(_motor.apunte.get("fuerza", 0.0))
+	else:
+		_barra_pot.value = _motor.carga
+	## Rojo si te pasas de fuerza (el tiro se va alto).
+	var lleno_st := _barra_pot.get_theme_stylebox("fill") as StyleBoxFlat
+	if lleno_st != null:
+		lleno_st.bg_color = Color("ff5a4a") if _barra_pot.value > 0.85 else Color("ffd23f")
+	if _flecha_apunte == null:
+		_flecha_apunte = MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = Vector3(0.35, 0.04, 1.0)
+		_flecha_apunte.mesh = bm
+		var mat := StandardMaterial3D.new()
+		mat.albedo_color = Color("ffd23f")
+		mat.emission_enabled = true
+		mat.emission = Color("ffd23f")
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_flecha_apunte.material_override = mat
+		_raiz3d.add_child(_flecha_apunte)
+	var tipo := String(_motor.saque.get("tipo", ""))
+	_flecha_apunte.visible = _motor.apuntando and tipo != "penal"
+	if _flecha_apunte.visible:
+		var lugar: Vector3 = _motor.saque["lugar"]
+		var dir := _motor.direccion_apunte()
+		var largo := 3.0 + float(_motor.apunte.get("fuerza", 0.0)) * 10.0
+		_flecha_apunte.scale = Vector3(1, 1, largo)
+		_flecha_apunte.position = lugar + dir * (largo * 0.5 + 0.6) + Vector3(0, 0.05 + float(_motor.apunte.get("loft", 0.0)) * 0.5, 0)
+		_flecha_apunte.rotation.y = atan2(dir.x, dir.z)
