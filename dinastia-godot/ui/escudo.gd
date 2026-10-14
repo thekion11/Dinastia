@@ -164,6 +164,16 @@ static var _cache: Dictionary = {}
 static func silueta(forma: String) -> String:
 	return String(SILUETAS.get(forma, SILUETAS["clasico"]))
 
+## [forma, patrón] del escudo del club real al que representa (tabla ESTADIO_CLUB,
+## campo «escudo», `herramientas/estadios_reales.py`), o [].
+static func _rasgo_real(c: Club) -> Array:
+	var t: Variant = Datos.tabla("ESTADIO_CLUB")
+	if t is Dictionary and (t as Dictionary).has(c.nombre):
+		var r: Variant = (t as Dictionary)[c.nombre].get("escudo", [])
+		if r is Array:
+			return r
+	return []
+
 ## djb2 sobre el id, el mismo hash que usa el resto del proyecto para que un
 ## club dé siempre lo mismo.
 static func _hash(s: String) -> int:
@@ -178,11 +188,17 @@ static func _hash(s: String) -> int:
 static func forma_de(c: Club) -> String:
 	if c.esc_forma != "" and FORMAS.has(c.esc_forma):
 		return c.esc_forma
+	var real := _rasgo_real(c)
+	if real.size() >= 2 and FORMAS.has(String(real[0])):
+		return String(real[0])
 	return FORMAS[_hash(c.id) % FORMAS.size()]
 
 static func patron_de(c: Club) -> String:
 	if c.esc_patron != "" and PATRONES.has(c.esc_patron):
 		return c.esc_patron
+	var real := _rasgo_real(c)
+	if real.size() >= 2 and PATRONES.has(String(real[1])):
+		return String(real[1])
 	return PATRONES[(_hash(c.id) >> 4) % PATRONES.size()]
 
 ## El símbolo del escudo -un emoji, "ESC_SIM" del HTML-, no una forma dibujada.
@@ -410,7 +426,8 @@ static func svg_de(c: Club) -> String:
 <g clip-path="url(#cl)">%s<path d="%s" fill="none" stroke="%s" stroke-width="5.5"/><path d="%s" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="7.5"/></g>
 <path d="%s" fill="url(#br)"/>
 <path d="%s" fill="none" stroke="#00000055" stroke-width="1.4"/>
-</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2()), d, _borde_de(c), d, d, d]
+<path d="%s" transform="translate(32 35) scale(.86) translate(-32 -35)" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="1.1"/>
+</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2()), d, _borde_de(c), d, d, d, d]
 
 ## El escudo ya rasterizado, listo para meter en un TextureRect.
 ##
