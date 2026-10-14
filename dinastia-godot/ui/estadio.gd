@@ -97,6 +97,7 @@ var _panel_dt: PanelDTPartido
 ## Lo que el DT rival cambia en vivo (sin tocar la táctica guardada de su club).
 var _ajuste_rival := [{}, {}]
 var _final_motor := false
+var _anadido_avisado := {}
 const DT_MOTOR := 1.0 / 60.0
 ## Segundos reales por minuto de partido con el motor real.
 const SEG_POR_MINUTO := {"rapido": 2.7, "normal": 4.0, "largo": 6.0}
@@ -992,6 +993,20 @@ func _process(delta: float) -> void:
 func _refrescar_marcador() -> void:
 	if _marcador == null:
 		return
+	if _motor != null:
+		## El reloj de la transmisión: 45' +2 en el añadido, y el cartel del
+		## cuarto árbitro cuando empieza.
+		var seg := _motor.segundos_anadidos()
+		var reloj := "%d'" % _motor.minuto()
+		if seg >= 0.0:
+			reloj = "%d' +%d:%02d" % [45 if _motor.mitad == 1 else 90, int(seg) / 60, int(seg) % 60]
+			if not _anadido_avisado.has(_motor.mitad):
+				_anadido_avisado[_motor.mitad] = true
+				_mostrar_rotulo_suceso("⏱ %s: +%d" % [Idiomas.t("Tiempo añadido"), _motor.minutos_anadidos()])
+				Sonido.toca("descuento_anunciado")
+		_marcador.text = "%s  %d - %d  %s      %s" % [_corto(partido.local.nombre), partido.goles_local,
+			partido.goles_visita, _corto(partido.visita.nombre), reloj]
+		return
 	_marcador.text = "%s  %d - %d  %s      %d'" % [
 		_corto(partido.local.nombre), partido.goles_local,
 		partido.goles_visita, _corto(partido.visita.nombre),
@@ -1436,6 +1451,7 @@ func _montar_motor() -> void:
 	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": false}
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
+	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
 	_motor.gol.connect(func(de_local: bool, autor: String, asist: String) -> void:
 		partido.gol_externo(de_local, autor, asist))
@@ -1516,7 +1532,17 @@ func _paso_motor(delta: float) -> void:
 ## El reloj del acta sigue al del césped. Devuelve true si la vista se cierra
 ## (descanso: el camarín).
 func _sincronizar_partido() -> bool:
+	## En el añadido el acta se queda en el 44'/89' hasta que de verdad se
+	## pita: así un gol en el descuento sigue contando y el descanso no se
+	## adelanta.
 	var objetivo := 90 if _motor.estado == "fin" else _motor.minuto()
+	if _motor.estado != "fin":
+		if _motor.mitad == 1 and _motor.estado != "descanso":
+			objetivo = mini(objetivo, 44)
+		elif _motor.mitad == 2:
+			objetivo = mini(objetivo, 89)
+		if _motor.estado == "descanso" or (_motor.mitad == 2 and partido.minuto < 45):
+			objetivo = maxi(objetivo, 45)
 	while partido.minuto < objetivo and not partido.terminado_ya:
 		partido.simular_minuto()
 		partido.fijar_estadisticas(float(_motor.posesion_local()), _motor.corners, _motor.faltas)

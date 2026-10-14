@@ -156,6 +156,10 @@ var _ctx_golpeo := ""
 ## Lo que dura la celebración antes del saque (el partido del DT la alarga para
 ## su secuencia de cámaras) y quién marcó.
 var duracion_gol := 3.2
+## TIEMPO AÑADIDO (13-10-2026): segundos de motor que se juegan después del
+## 45' y del 90' (0 = nada, como en la Carrera de Jugador). El reloj se queda
+## en 45/90 y se cuenta el «+».
+var anadido := [0.0, 0.0]
 var _goleador: Dictionary = {}
 var _celebra_anim := "celebrar"
 
@@ -469,7 +473,24 @@ func pos(p: Dictionary) -> Vector3:
 	return (p["node"] as Node3D).position
 
 func minuto() -> int:
-	return int(t / duracion_mitad * 45.0) + (45 if mitad == 2 else 0)
+	return int(minf(t, duracion_mitad) / duracion_mitad * 45.0) + (45 if mitad == 2 else 0)
+
+## Segundos de partido jugados en el añadido (-1 si no se está en él).
+func segundos_anadidos() -> float:
+	if t <= duracion_mitad:
+		return -1.0
+	return (t - duracion_mitad) / duracion_mitad * 45.0 * 60.0
+
+## Los minutos de añadido que enseña el cuarto árbitro en esta mitad.
+func minutos_anadidos() -> int:
+	return int(ceil(float(anadido[mitad - 1]) / duracion_mitad * 45.0))
+
+## Sortea el añadido: 1-3' la primera parte y 2-5' la segunda, más con goles,
+## cambios o faltas (aquí, simple y con la semilla del partido).
+func sortear_anadido() -> void:
+	var m1 := float(_rng.randi_range(1, 3))
+	var m2 := float(_rng.randi_range(2, 5))
+	anadido = [m1 / 45.0 * duracion_mitad, m2 / 45.0 * duracion_mitad]
 
 # ---------------------------------------------------------------- bucle
 
@@ -492,7 +513,7 @@ func paso(delta: float) -> void:
 				var due := entra_usuario_min if entra_usuario_min >= 0 else 60
 				if minuto() >= due + 3:
 					_revisar_cambio(true)
-			if t >= duracion_mitad:
+			if t >= duracion_mitad + float(anadido[mitad - 1]):
 				_fin_de_mitad()
 				return
 			if not poseedor.is_empty():

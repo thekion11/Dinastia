@@ -347,4 +347,30 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   cinemáticas; presentación de ~180 s. El usuario aclaró: «no es solo el partido, es todo:
   animaciones, visualización, entorno». Esperar su visto bueno del orden antes de empezar
   la pasada 1 (preset de ritmo «Realista»). Todo con marcas y nombres ficticios.
+- 13/14-10 PEDIDO (Opus alto, «sorpréndeme»): «ya no solo jugadas predeterminadas, que
+  cambios y tácticas cambien el resultado, controlar a mis jugadores como en el vídeo, y
+  todo lo visual (animaciones, entorno)». HECHO:
+  · MOTOR REAL en el partido del DT (`MotorJugable` + `Partido.motor_externo`, ajuste
+    «⚽ Motor real» en ⚙, por defecto SÍ): el acta sale del césped (`gol_externo`,
+    `remate_externo`, `tarjeta_externa`, `fijar_estadisticas`); al salir del 3D el
+    Partido vuelve a sortear solo. Calibrado con `pruebas/sonda_motor_dt.tscn`
+    (ESCENARIO=calidad|tactica|cambios|simetria|diag, N, MITAD): ~2,5 goles, ~80 %
+    de pases, calidad gana (mejor de local 9/1/2), pizarra ofensiva 6/3/1 vs
+    defensiva 2/3/5. Arreglos clave: formaciones invertidas (`_orientar_formaciones`),
+    césped que frenaba de más, pase al hueco y regate de la IA, portero que decide
+    UNA vez por tiro, atributos con contraste. Prueba del acta:
+    `pruebas/prueba_partido_motor.tscn`.
+  · Panel «Táctica y cambios» en pausa (Esc) `ui/componentes/panel_dt_partido.gd`;
+    DT rival que cambia cansados (60/70/80') y ajusta pizarra; ritmo corto/normal/
+    largo (2,7/4/6 s por minuto); control de todo el equipo como en FC (Q cambia,
+    cursor amarillo, stick relativo a la cámara de TV).
+  · Animaciones según la jugada (`_golpeo_anim`: 333 clips disponibles), conducir,
+    recorrer atrás, portero en guardia, controles con pecho/pie.
+  · CEREMONIA (`visor/ceremonia_partido.gd`): filas con niños de la mano, mascota,
+    lona con escudo, cartas de alineación, himno. Capturas `captura_ceremonia`.
+  · REALIZACIÓN DEL GOL: carrera al córner y abrazo, goleador/banquillo/grada,
+    barrido con escudo, repetición que acaba en el gol (`Repeticion.congelar`).
+    Captura `captura_gol_motor`. Tiempo añadido real (45' +1:23).
+  Pendiente de esta línea: cámara TV inteligente (zoom al área), estadísticas a
+  pedido, disputas cuerpo a cuerpo, más pulido visual del entorno.
 
