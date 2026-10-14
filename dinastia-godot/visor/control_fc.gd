@@ -143,6 +143,36 @@ const PIEZA_BOTON := {JOY_BUTTON_A: "A", JOY_BUTTON_B: "B", JOY_BUTTON_X: "X", J
 	JOY_BUTTON_RIGHT_STICK: "RS", JOY_BUTTON_START: "START", JOY_BUTTON_BACK: "BACK",
 	JOY_BUTTON_DPAD_UP: "DPAD", JOY_BUTTON_DPAD_DOWN: "DPAD", JOY_BUTTON_DPAD_LEFT: "DPAD", JOY_BUTTON_DPAD_RIGHT: "DPAD"}
 
+## EL COLOR DE CADA BOTÓN (14-10-2026, pedido: «asociarlo con los colores, un color
+## por botón, asociado con el indicativo»). Los cuatro botones de la cara llevan
+## los colores de su mando (Xbox: A verde, B rojo, X azul, Y amarillo; PlayStation:
+## ✖ azul, ◯ rojo, ▢ rosa, △ verde) y al resto se les da uno propio, distinto. El
+## mismo color sale en el aro del botón del mando 3D, en la línea y el icono de su
+## etiqueta y en las fichas de cada fila de la tabla.
+const COLOR_PIEZA := {
+	"LS": Color("2fd4e8"), "RS": Color("ff8a3d"), "DPAD": Color("b78cff"),
+	"LB": Color("30c9a0"), "RB": Color("f06ad8"), "LT": Color("8fa8ff"), "RT": Color("ffb86b"),
+	"START": Color("e6e6e6"), "BACK": Color("b9bdc8"),
+}
+const COLOR_CARA_XBOX := {"A": Color("5cc85c"), "B": Color("e8504a"), "X": Color("3f8fe8"), "Y": Color("f2c230")}
+const COLOR_CARA_PS := {"A": Color("6ea8ff"), "B": Color("ff6b6b"), "X": Color("f29ad8"), "Y": Color("5fe0b0")}
+
+static func color_pieza(pieza: String, disp: String) -> Color:
+	if COLOR_PIEZA.has(pieza):
+		return COLOR_PIEZA[pieza]
+	var t: Dictionary = COLOR_CARA_PS if disp == "ps" else COLOR_CARA_XBOX
+	return t.get(pieza, Color(1, 1, 1))
+
+## Los colores (sin repetir) de las piezas que toca una combinación.
+static func colores_de(fichas: Array, disp: String) -> Array:
+	var r: Array = []
+	for f: String in fichas:
+		for pz: String in piezas_de(f):
+			var c := color_pieza(pz, disp)
+			if pz != "" and not r.has(c):
+				r.append(c)
+	return r
+
 ## El mando que se usa: "ps" si el nombre del enchufado suena a Sony.
 static func dispositivo_detectado() -> String:
 	for id in Input.get_connected_joypads():

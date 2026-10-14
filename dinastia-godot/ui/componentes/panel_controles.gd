@@ -447,6 +447,10 @@ func _cabecera_tabla(cols: Array) -> void:
 	marg.add_theme_constant_override("margin_right", 8)
 	marg.add_child(cab)
 	_contenido.add_child(marg)
+	## El hueco de las fichas de color de cada fila.
+	var hueco := Control.new()
+	hueco.custom_minimum_size = Vector2(40, 0)
+	cab.add_child(hueco)
 	for par: Array in cols:
 		var l := Tema.etiqueta(11, Color("ffd23f") if bool(par[2]) else Tema.SUAVE, Idiomas.t(String(par[0])))
 		l.custom_minimum_size = Vector2(float(par[1]), 0)
@@ -474,6 +478,25 @@ func _fila(cols: Array, fichas: Array, al_pulsar: Callable = Callable()) -> Pane
 	h.add_theme_constant_override("separation", 10)
 	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(h)
+	## Los colores de los botones de la fila (los mismos del mando 3D y de sus
+	## etiquetas): hasta tres fichas, con un hueco fijo para que las columnas alineen.
+	var colores := ControlFC.colores_de(fichas, "ps" if dispositivo == "ps" else "xbox")
+	var fichas_color := HBoxContainer.new()
+	fichas_color.custom_minimum_size = Vector2(40, 0)
+	fichas_color.add_theme_constant_override("separation", 3)
+	fichas_color.alignment = BoxContainer.ALIGNMENT_BEGIN
+	fichas_color.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for col: Color in colores.slice(0, 3):
+		var punto := Panel.new()
+		var es := StyleBoxFlat.new()
+		es.bg_color = col
+		es.set_corner_radius_all(7)
+		punto.add_theme_stylebox_override("panel", es)
+		punto.custom_minimum_size = Vector2(13, 13)
+		punto.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		punto.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fichas_color.add_child(punto)
+	h.add_child(fichas_color)
 	for c: Array in cols:
 		var l := Tema.etiqueta(int(c[2]), c[3], String(c[0]))
 		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER

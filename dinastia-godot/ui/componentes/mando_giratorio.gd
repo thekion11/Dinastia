@@ -168,10 +168,10 @@ func _material(color: Color, rug := 0.45, met := 0.1) -> StandardMaterial3D:
 	m.albedo_color = color
 	m.roughness = rug
 	m.metallic = met
-	m.metallic_specular = 0.7
+	m.metallic_specular = 0.45
 	m.clearcoat_enabled = true
-	m.clearcoat = 0.55
-	m.clearcoat_roughness = 0.25
+	m.clearcoat = 0.12
+	m.clearcoat_roughness = 0.5
 	m.emission_enabled = true
 	m.emission = Color(1.0, 0.8, 0.2)
 	m.emission_energy_multiplier = 0.0
@@ -208,9 +208,9 @@ func _cilindro(r: float, h: float) -> CylinderMesh:
 ## hacia abajo y hacia delante en las empuñaduras como un mando de verdad.
 ## `[cx, cz, a, c, b, giro]` por elipsoide (semiejes a, c en x y z; b = alto).
 const ELIPSOIDES := [
-	[0.0, -0.2, 7.7, 4.5, 1.95, 0.0],
-	[-6.3, 2.7, 3.0, 5.3, 2.15, 0.22],
-	[6.3, 2.7, 3.0, 5.3, 2.15, -0.22],
+	[0.0, -0.3, 6.9, 4.3, 1.35, 0.0],
+	[-5.6, 2.8, 2.35, 4.7, 1.65, 0.1],
+	[5.6, 2.8, 2.35, 4.7, 1.65, -0.1],
 ]
 const P_FUSION := 3.0
 
@@ -224,47 +224,72 @@ static func _semialtura(x: float, z: float) -> float:
 		var lz := dx * sin(g) + dz * cos(g)
 		var f := 1.0 - (lx / float(e[2])) * (lx / float(e[2])) - (lz / float(e[3])) * (lz / float(e[3]))
 		if f > 0.0:
-			suma += pow(float(e[4]) * pow(f, 0.62), P_FUSION)
+			## Cara casi plana con un borde redondeado (cuarto de círculo), no un
+			## globo: g = 1 en la meseta y baja a 0 en el borde.
+			var meseta := clampf(f / 0.42, 0.0, 1.0)
+			suma += pow(float(e[4]) * sqrt(1.0 - (1.0 - meseta) * (1.0 - meseta)), P_FUSION)
 	return pow(suma, 1.0 / P_FUSION)
 
 ## Cuánto se hunde el mando en las empuñaduras (y hacia delante).
 static func _caida(x: float, z: float) -> float:
-	return -0.05 * pow(maxf(absf(x) - 4.2, 0.0), 2.0) - 0.035 * pow(maxf(z - 1.2, 0.0), 2.0)
+	return -0.03 * pow(maxf(absf(x) - 4.5, 0.0), 2.0) - 0.03 * pow(maxf(z - 1.5, 0.0), 2.0)
 
 static func _y_cuerpo(x: float, z: float) -> float:
 	return _caida(x, z) + _semialtura(x, z)
 
 func _malla_cuerpo(mat: Material) -> MeshInstance3D:
+	## La silueta se saca EXACTA por rayos desde el centro (bisección en el borde)
+	## y la malla se reparte en anillos (más densos hacia el borde): así no hay
+	## bordes dentados como con una cuadrícula.
+	var n := 200
+	var anillos := 56
+	var centro := Vector2(0.0, 0.4)
+	var radios: Array[float] = []
+	for i in n:
+		var ang := TAU * float(i) / float(n)
+		var d := Vector2(cos(ang), sin(ang))
+		var r := 0.0
+		while r < 14.0 and _semialtura(centro.x + d.x * (r + 0.1), centro.y + d.y * (r + 0.1)) > 0.0:
+			r += 0.1
+		var lo := r
+		var hi := r + 0.1
+		for _k in 14:
+			var mid := (lo + hi) * 0.5
+			if _semialtura(centro.x + d.x * mid, centro.y + d.y * mid) > 0.0:
+				lo = mid
+			else:
+				hi = mid
+		radios.append(lo)
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var paso := 0.12
-	var x0 := -11.0
-	var z0 := -6.4
-	var nx := int(22.0 / paso) + 1
-	var nz := int(14.2 / paso) + 1
-	## Arriba (índice 0..) y abajo, compartiendo el borde (altura 0).
+	## Vértices: arriba (anillos 0..anillos) y abajo (anillos 0..anillos-1); el
+	## borde (anillo `anillos`) lo comparten.
 	for capa in 2:
-		for j in nz:
-			for i in nx:
-				var x := x0 + float(i) * paso
-				var z := z0 + float(j) * paso
-				var h := _semialtura(x, z)
-				var y := _caida(x, z) + (h if capa == 0 else -h * 0.9)
-				st.set_uv(Vector2(float(i) / float(nx), float(j) / float(nz)))
+		var hasta := anillos if capa == 0 else anillos - 1
+		for j in hasta + 1:
+			var u := float(j) / float(anillos)
+			var t := 1.0 - (1.0 - u) * (1.0 - u) * (1.0 - u)
+			for i in n:
+				var ang := TAU * float(i) / float(n)
+				var rr := radios[i] * t
+				var x := centro.x + cos(ang) * rr
+				var z := centro.y + sin(ang) * rr
+				var h := _semialtura(x, z) if j < anillos else 0.0
+				var y := _caida(x, z) + (h if capa == 0 else -h * 0.85)
 				st.add_vertex(Vector3(x, y, z))
-	var base_abajo := nx * nz
+	var base_abajo := (anillos + 1) * n
+	## Un vértice del anillo `j` de la capa: el borde es el mismo arriba y abajo.
+	var vid := func(capa: int, j: int, i: int) -> int:
+		if capa == 0 or j == anillos:
+			return j * n + (i % n)
+		return base_abajo + j * n + (i % n)
 	for capa in 2:
-		for j in nz - 1:
-			for i in nx - 1:
-				var a := j * nx + i + capa * base_abajo
-				var b := a + 1
-				var c := a + nx
-				var d := c + 1
-				## Fuera del cuerpo (altura 0 en las cuatro esquinas) no hay malla.
-				var x := x0 + float(i) * paso
-				var z := z0 + float(j) * paso
-				if _semialtura(x, z) <= 0.0 and _semialtura(x + paso, z) <= 0.0 and _semialtura(x, z + paso) <= 0.0 and _semialtura(x + paso, z + paso) <= 0.0:
-					continue
+		for j in anillos:
+			for i in n:
+				var a: int = vid.call(capa, j, i)
+				var b: int = vid.call(capa, j, i + 1)
+				var c: int = vid.call(capa, j + 1, i)
+				var d: int = vid.call(capa, j + 1, i + 1)
 				if capa == 0:
 					for idx in [a, c, b, b, c, d]:
 						st.add_index(idx)
@@ -275,6 +300,13 @@ func _malla_cuerpo(mat: Material) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.mesh = st.commit()
 	mi.material_override = mat
+	## El ordenamiento de los triángulos depende del sentido del ángulo: si salió
+	## del revés, se invierte el culling en vez de recalcular la malla.
+	var m: StandardMaterial3D = mat
+	var primero: Vector3 = mi.mesh.surface_get_arrays(0)[Mesh.ARRAY_NORMAL][0]
+	var cima: Array = mi.mesh.surface_get_arrays(0)[Mesh.ARRAY_NORMAL]
+	if m != null and (cima[0] as Vector3).y < 0.0 and primero.y < 0.0:
+		m.cull_mode = BaseMaterial3D.CULL_FRONT
 	_modelo.add_child(mi)
 	return mi
 
@@ -290,13 +322,11 @@ func _construir(disp: String) -> void:
 	var c_empu := Color("d3d6de") if ps else Color("23262d")
 	var c_mando := Color("1b1d22") if ps else Color("15171b")
 	var c_tapa := Color("20232a") if ps else Color("3c414c")
-	var m_cuerpo := _material(c_cuerpo, 0.3, 0.0)
-	var m_empu := _material(c_empu, 0.42, 0.05)
+	var m_cuerpo := _material(c_cuerpo, 0.52, 0.0)
+	var m_empu := _material(c_empu, 0.6, 0.0)
 	var m_negro := _material(c_mando, 0.5, 0.2)
 	## Cuerpo y empuñaduras: una sola malla suave.
 	_malla_cuerpo(m_cuerpo)
-	## El borde de las empuñaduras, en un tono distinto (como las piezas de un mando).
-	_malla(_modelo, _esfera(), m_empu, Vector3(0, -0.4, -3.9), Vector3(5.2, 0.5, 0.7))
 	if ps:
 		## Panel táctil y barra de luz.
 		_malla(_modelo, _esfera(), m_negro, Vector3(0, _y_cuerpo(0, -1.5) - 0.05, -1.5), Vector3(2.9, 0.32, 1.5))
@@ -304,67 +334,93 @@ func _construir(disp: String) -> void:
 	else:
 		## El botón de guía de Xbox.
 		_malla(_modelo, _cilindro(0.55, 0.2), _material(Color("e9ecf0"), 0.3, 0.3), Vector3(0, _y_cuerpo(0, -2.4) + 0.05, -2.4))
-	## Gatillos y bumpers: delante de todo.
+	## Gatillos y bumpers: en el borde de delante, asentados en el cuerpo.
 	var pos_t := _posiciones(disp)
 	for lado: Array in [["L", -1.0], ["R", 1.0]]:
 		var s: float = lado[1]
-		var bump := _material(c_tapa, 0.35, 0.3)
-		var trig := _material(c_mando, 0.5, 0.2)
-		var yb := _y_cuerpo(s * 5.4, -3.6) + 0.05
-		var mb := _malla(_modelo, _esfera(), bump, Vector3(s * 5.4, yb, -4.25), Vector3(2.5, 0.42, 0.95), Vector3(-6, -s * 7.0, 0))
-		_registrar(String(lado[0]) + "B", mb, [bump], Vector3(s * 5.4, yb + 0.5, -4.25), Vector3(0, 0.3, -0.95).normalized())
-		var mt := _malla(_modelo, _esfera(), trig, Vector3(s * 5.4, yb - 0.45, -5.15), Vector3(2.2, 0.9, 0.95), Vector3(-22, -s * 7.0, 0))
-		_registrar(String(lado[0]) + "T", mt, [trig], Vector3(s * 5.4, yb - 0.1, -5.6), Vector3(0, -0.05, -1).normalized())
-		_icono_sobre(String(lado[0]) + "B", Vector3(s * 5.4, yb + 0.43, -4.25), 1.7, disp, Vector3(-6, 0, 0))
-		_icono_sobre(String(lado[0]) + "T", Vector3(s * 5.4, yb - 0.15, -5.55), 1.5, disp, Vector3(-22, 0, 0))
-	## Sticks.
+		var nb: String = String(lado[0]) + "B"
+		var nt: String = String(lado[0]) + "T"
+		var bump := _material(c_tapa, 0.45, 0.1)
+		var trig := _material(c_mando, 0.55, 0.1)
+		var yb := _y_cuerpo(s * 5.3, -3.5) - 0.05
+		var mb := _malla(_modelo, _esfera(), bump, Vector3(s * 5.3, yb, -4.15), Vector3(2.2, 0.34, 0.85), Vector3(-8, -s * 7.0, 0))
+		_registrar(nb, mb, [bump], Vector3(s * 5.3, yb + 0.45, -4.15), Vector3(0, 0.3, -0.95).normalized())
+		_tira(mb, Vector3(0, 0.3, -0.5), Vector3(1.6, 0.06, 0.12), ControlFC.color_pieza(nb, disp))
+		var mt := _malla(_modelo, _esfera(), trig, Vector3(s * 5.3, yb - 0.4, -5.0), Vector3(1.9, 0.62, 0.8), Vector3(-24, -s * 7.0, 0))
+		_registrar(nt, mt, [trig], Vector3(s * 5.3, yb - 0.1, -5.45), Vector3(0, -0.05, -1).normalized())
+		_tira(mt, Vector3(0, 0.0, -0.95), Vector3(1.5, 0.3, 0.06), ControlFC.color_pieza(nt, disp))
+		_icono_sobre(nb, Vector3(s * 5.3, yb + 0.33, -4.12), 1.45, disp, Vector3(-8, 0, 0))
+		_icono_sobre(nt, Vector3(s * 5.3, yb - 0.12, -5.35), 1.3, disp, Vector3(-24, 0, 0))
+	## Sticks: base hundida, vástago y capuchón, con un aro de su color.
 	for k: String in ["LS", "RS"]:
 		var p: Vector3 = pos_t[k]
 		var y := _y_cuerpo(p.x, p.z)
-		var base := _material(Color("0f1013"), 0.6, 0.1)
-		var tapa := _material(Color("2a2d34") if not ps else Color("3a3e47"), 0.5, 0.2)
+		var base := _material(Color("0f1013"), 0.7, 0.0)
+		var tapa := _material(Color("30333b") if not ps else Color("43474f"), 0.8, 0.0)
 		var raiz := Node3D.new()
 		raiz.position = Vector3(p.x, y, p.z)
 		_modelo.add_child(raiz)
-		_malla(raiz, _cilindro(1.05, 0.34), base, Vector3(0, 0.06, 0))
-		_malla(raiz, _cilindro(0.42, 0.7), tapa, Vector3(0, 0.45, 0))
-		var cabeza := _malla(raiz, _cilindro(0.98, 0.42), tapa, Vector3(0, 0.95, 0))
-		var anillo := TorusMesh.new()
-		anillo.inner_radius = 0.82
-		anillo.outer_radius = 0.98
-		var ma := _malla(raiz, anillo, base, Vector3(0, 1.17, 0), Vector3(1, 0.5, 1))
-		_registrar(k, raiz, [tapa, base], Vector3(p.x, y + 1.7, p.z), Vector3.UP)
-		_icono_sobre(k, Vector3(p.x, y + 1.19, p.z), 1.35, disp)
-		cabeza.set_meta("sin_uso", true)
-		ma.set_meta("sin_uso", true)
-	## Cruceta.
+		_malla(raiz, _cilindro(1.0, 0.16), base, Vector3(0, -0.02, 0))
+		_aro(raiz, Vector3(0, 0.07, 0), 1.0, ControlFC.color_pieza(k, disp))
+		_malla(raiz, _cilindro(0.34, 0.5), tapa, Vector3(0, 0.25, 0))
+		_malla(raiz, _cilindro(0.78, 0.3), tapa, Vector3(0, 0.55, 0))
+		var rodete := TorusMesh.new()
+		rodete.inner_radius = 0.62
+		rodete.outer_radius = 0.78
+		_malla(raiz, rodete, base, Vector3(0, 0.7, 0), Vector3(1, 0.45, 1))
+		_registrar(k, raiz, [tapa, base], Vector3(p.x, y + 1.5, p.z), Vector3.UP)
+		_icono_sobre(k, Vector3(p.x, y + 0.71, p.z), 1.15, disp)
+	## Cruceta: una cruz baja sobre un disco de su color.
 	var pd: Vector3 = pos_t["DPAD"]
 	var yd := _y_cuerpo(pd.x, pd.z)
-	var m_dp := _material(Color("14161a"), 0.5, 0.15)
+	var m_dp := _material(Color("14161a"), 0.6, 0.0)
 	var dp := Node3D.new()
 	dp.position = Vector3(pd.x, yd, pd.z)
 	_modelo.add_child(dp)
-	_malla(dp, BoxMesh.new(), m_dp, Vector3(0, 0.15, 0), Vector3(2.6, 0.45, 0.85))
-	_malla(dp, BoxMesh.new(), m_dp, Vector3(0, 0.15, 0), Vector3(0.85, 0.45, 2.6))
+	_aro(dp, Vector3(0, 0.04, 0), 1.45, ControlFC.color_pieza("DPAD", disp))
+	_malla(dp, BoxMesh.new(), m_dp, Vector3(0, 0.12, 0), Vector3(2.1, 0.26, 0.7))
+	_malla(dp, BoxMesh.new(), m_dp, Vector3(0, 0.12, 0), Vector3(0.7, 0.26, 2.1))
 	_registrar("DPAD", dp, [m_dp], Vector3(pd.x, yd + 1.0, pd.z), Vector3.UP)
-	_icono_sobre("DPAD", Vector3(pd.x, yd + 0.4, pd.z), 2.5, disp)
-	## Los cuatro botones.
+	_icono_sobre("DPAD", Vector3(pd.x, yd + 0.27, pd.z), 1.9, disp)
+	## Los cuatro botones: discos bajos con el aro del color de su mando.
 	for k: String in ["A", "B", "X", "Y"]:
 		var p2: Vector3 = pos_t[k]
 		var y2 := _y_cuerpo(p2.x, p2.z)
-		var mb2 := _material(Color("16181d"), 0.4, 0.2)
-		var bt := _malla(_modelo, _cilindro(0.72, 0.5), mb2, Vector3(p2.x, y2 + 0.05, p2.z))
+		var mb2 := _material(Color("1a1c21"), 0.5, 0.0)
+		var bt := _malla(_modelo, _cilindro(0.56, 0.22), mb2, Vector3(p2.x, y2 + 0.02, p2.z))
+		_aro(_modelo, Vector3(p2.x, y2 + 0.1, p2.z), 0.6, ControlFC.color_pieza(k, disp))
 		_registrar(k, bt, [mb2], Vector3(p2.x, y2 + 0.8, p2.z), Vector3.UP)
-		_icono_sobre(k, Vector3(p2.x, y2 + 0.32, p2.z), 1.5, disp)
+		_icono_sobre(k, Vector3(p2.x, y2 + 0.14, p2.z), 1.05, disp)
 	## Menú y Vista (o Options y Create).
 	for k: String in ["START", "BACK"]:
 		var p3: Vector3 = pos_t[k]
 		var y3 := _y_cuerpo(p3.x, p3.z)
-		var m3 := _material(Color("4a4f5a") if not ps else Color("b9bdc8"), 0.4, 0.2)
-		var b3 := _malla(_modelo, _cilindro(0.34, 0.2), m3, Vector3(p3.x, y3 + 0.02, p3.z))
+		var m3 := _material(Color("3a3e47") if not ps else Color("aeb2be"), 0.5, 0.0)
+		var b3 := _malla(_modelo, _cilindro(0.3, 0.14), m3, Vector3(p3.x, y3 + 0.0, p3.z))
+		_aro(_modelo, Vector3(p3.x, y3 + 0.07, p3.z), 0.3, ControlFC.color_pieza(k, disp))
 		_registrar(k, b3, [m3], Vector3(p3.x, y3 + 0.7, p3.z), Vector3.UP)
-		_icono_sobre(k, Vector3(p3.x, y3 + 0.14, p3.z), 0.85, disp)
+		_icono_sobre(k, Vector3(p3.x, y3 + 0.1, p3.z), 0.62, disp)
 	_aplicar_rotacion()
+
+## Un aro plano de color (brilla sin sombra) alrededor de un botón.
+func _aro(padre: Node3D, pos: Vector3, radio: float, color: Color) -> void:
+	var t := TorusMesh.new()
+	t.inner_radius = radio * 1.02
+	t.outer_radius = radio * 1.2
+	t.rings = 32
+	t.ring_segments = 8
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.albedo_color = color
+	var mi := _malla(padre, t, m, pos + Vector3(0, 0.12, 0), Vector3(1, 0.4, 1))
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+## Una tira de color pegada a un bumper o un gatillo.
+func _tira(padre: Node3D, pos: Vector3, tam: Vector3, color: Color) -> void:
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.albedo_color = color
+	_malla(padre, BoxMesh.new(), m, pos, tam)
 
 ## Dónde va cada pieza (x, z sobre el cuerpo) según el mando.
 func _posiciones(disp: String) -> Dictionary:
@@ -537,7 +593,8 @@ func _columna(lista: Array, izquierda: bool, disp: String) -> void:
 		var a := smoothstep(0.42, 0.7, float(v["cara"]))
 		if a < 0.03:
 			continue
-		var col := Color(1.0, 0.82, 0.25, a) if activa else Color(1, 1, 1, 0.45 * a + 0.1)
+		var cp := ControlFC.color_pieza(k, disp)
+		var col := Color(cp, a)
 		var y := y0 + paso * float(i)
 		## Primero el texto (para saber dónde termina) y luego la línea hasta él.
 		var tex := _icono(carpeta, nombre_icono(k, disp))
@@ -547,9 +604,13 @@ func _columna(lista: Array, izquierda: bool, disp: String) -> void:
 		var x_txt := x_ico + 31.0 if izquierda else x_ico - 3.0 - w
 		var ancla := Vector2((x_txt + w + 5.0) if izquierda else (x_txt - 5.0), y)
 		var codo := Vector2(lerpf(punto.x, ancla.x, 0.6), y)
-		draw_line(punto, codo, col, 1.3, true)
-		draw_line(codo, ancla, col, 1.3, true)
-		draw_circle(punto, 3.0, col)
+		var gr := 2.6 if activa else 1.4
+		draw_line(punto, codo, col, gr, true)
+		draw_line(codo, ancla, col, gr, true)
+		draw_circle(punto, 4.0 if activa else 3.0, col)
+		## Una placa del color del botón detrás del icono.
+		draw_rect(Rect2(Vector2(x_ico - 2.0, y - 16.0), Vector2(32, 32)), Color(cp, 0.28 * a), true)
+		draw_rect(Rect2(Vector2(x_ico - 2.0, y - 16.0), Vector2(32, 32)), Color(cp, 0.9 * a), false, 1.5)
 		if tex != null:
 			draw_texture_rect(tex, Rect2(Vector2(x_ico, y - 14.0), Vector2(28, 28)), false, Color(1, 1, 1, a))
 		draw_string(_fuente, Vector2(x_txt, y + 4.0), que, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE if activa else Color(1, 1, 1, 0.85 * a))
