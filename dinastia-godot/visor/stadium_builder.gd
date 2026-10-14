@@ -393,6 +393,8 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	pitch.material_override = sm
 	pitch.name = "Cesped"
 	root.add_child(pitch)
+	## De cerca, hierba con volumen (`CespedCapas`).
+	CespedCapas.montar(root, sm, pm.size)
 
 	var line_mat := StandardMaterial3D.new()
 	line_mat.albedo_color = _c(est.get("lineaCol"), "#ffffff")

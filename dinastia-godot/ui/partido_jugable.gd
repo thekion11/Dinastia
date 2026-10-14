@@ -21,6 +21,7 @@ var carrera: CarreraJugador
 var local: Club
 var visita: Club
 var motor: MotorJugable
+var _camarografos: CamarografosSiguen
 var _raiz: Node3D
 var _cam: Camera3D
 var _vp: SubViewport
@@ -88,7 +89,7 @@ func _montar(duracion_mitad: float) -> void:
 	if String(perfil.get("techo", "")) != "retractil":
 		Precipitacion.montar(_raiz, String(perfil.get("clima", "noche")), float(gp["dx"]), float(gp["dz"]), Calidad.elegida)
 	_montar_pantalla(perfil)
-	VistaEstadio.poner_personal(_raiz)
+	_camarografos = VistaEstadio.poner_personal(_raiz)
 	## Los 22.
 	var yo := carrera.jugador(mundo) if carrera != null else null
 	_es_local_usuario = yo != null and yo.club_id == local.id
@@ -116,6 +117,8 @@ func _montar(duracion_mitad: float) -> void:
 	if String(perfil.get("clima", "")) == "nieve":
 		cb = [Color("#ff7a1a"), Color("#1a1a1a"), "moderno"]
 	var balon := StadiumBuilder.spawn_ball(_raiz, Vector3(0, 0.11, 0), cb)
+	if _camarografos != null:
+		_camarografos.balon = balon
 	motor = MotorJugable.new()
 	add_child(motor)
 	motor.duracion_mitad = duracion_mitad
