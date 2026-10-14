@@ -184,8 +184,8 @@ func _cortar(i: int) -> void:
 	_plano = i
 	var pl: Array = PLANOS[i]
 	_cam.fov = float(pl[2])
-	_cam.position = pl[0]
-	_cam.look_at(pl[1])
+	## `look_at_from_position` vale también con la escena aún fuera del árbol.
+	_cam.look_at_from_position(pl[0], pl[1])
 
 # --- el decorado --------------------------------------------------------------
 
@@ -621,6 +621,10 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	var pivote := Node3D.new()
 	add_child(pivote)
 	malla.get_parent().remove_child(malla)
+	## Sin el dueño del .glb: si no, `add_child` avisa de dueño inconsistente (banco).
+	malla.owner = null
+	for h in malla.find_children("*", "", true, true):
+		h.owner = null
 	movil.queue_free()
 	pivote.add_child(malla)
 	## Medido en la malla: largo en X (1,84), grosor en Y (-0,106..0, la

@@ -292,9 +292,8 @@ func perfil_estadio() -> Dictionary:
 	## -forma, bandejas, techo, pista, focos y fachada-, gane o no reputación.
 	## La caldera de tres bandejas, el óvalo con pista, la herradura al cerro,
 	## el techo retráctil... Los demás siguen con los estilos genéricos.
-	var reales: Variant = Datos.tabla("ESTADIO_CLUB")
-	if reales is Dictionary and (reales as Dictionary).has(nombre):
-		var r: Dictionary = (reales as Dictionary)[nombre]
+	var r: Dictionary = fila_estadio_real()
+	if not r.is_empty():
 		for k in ["forma", "niveles", "techo", "pista", "focos", "fachada", "rasgo"]:
 			if r.has(k):
 				p[k] = r[k]
@@ -309,6 +308,22 @@ func perfil_estadio() -> Dictionary:
 		if ap != "":
 			p["apodo"] = ap
 	return p
+
+## La fila de ESTADIO_CLUB de este club (estadio, colores y escudo del real), o {}.
+## BUSCA TAMBIÉN POR EL NOMBRE LIMPIO (14-10-2026, auditoría por club): en la base
+## real 4 clubes («Audax Italiano», «D. Iquique», «Osasuna», «Orlando Pirates»)
+## tienen la clave sin la cubierta de leetspeak y se quedaban sin su estadio.
+func fila_estadio_real() -> Dictionary:
+	var t: Variant = Datos.tabla("ESTADIO_CLUB")
+	if not (t is Dictionary):
+		return {}
+	var d := t as Dictionary
+	if d.has(nombre):
+		return d[nombre]
+	var limpio := Nombres.limpiar(nombre)
+	if d.has(limpio):
+		return d[limpio]
+	return {}
 
 ## djb2, el mismo que usa el HTML para que un club dé siempre el mismo recinto.
 func _hash_id() -> int:
