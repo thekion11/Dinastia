@@ -271,15 +271,43 @@ ESCUDOS = {
     "Atlético Madrid": ("clasico", "franjas"), "Sevilla": ("circulo", "aro"),
     "Ath. Bilbao": ("clasico", "franjas"), "Real Sociedad": ("clasico", "franjas"),
     "Betis": ("circulo", "banda"), "Juventus": ("ovalo", "franjas"),
-    "Milan": ("escudo", "franjas"), "Inter": ("circulo", "aro"),
-    "Napoli": ("circulo", "aro"), "Lazio": ("circulo", "aro"), "Roma": ("clasico", "mitad"),
-    "Bayern Múnich": ("circulo", "rombos"), "City de Manch.": ("circulo", "aro"),
-    "Tottenham": ("ovalo", "liso"), "Marsella": ("circulo", "aro"), "Lyon": ("escudo", "liso"),
+    "Milan": ("escudo", "franjas"), "Inter": ("circulo", "anillos"),
+    "Napoli": ("redondeado", "aro"), "Lazio": ("ovalo", "aro"), "Roma": ("clasico", "mitad"),
+    "Bayern Múnich": ("circulo", "rombos"), "City de Manch.": ("octogono", "aro"),
+    "Tottenham": ("ovalo", "liso"), "Marsella": ("circulo", "interior"), "Lyon": ("escudo", "liso"),
     "River Plate": ("clasico", "banda"), "Racing Club": ("escudo", "franjas"),
     "Estudiantes": ("clasico", "franjas"), "Newell's": ("circulo", "mitad"),
     "Peñarol": ("escudo", "franjas"), "Cerro Porteño": ("clasico", "franjas"),
-    "Al-Hilal": ("circulo", "aro"), "Al-Nassr": ("circulo", "aro"),
+    "Al-Hilal": ("hex", "aro"), "Al-Nassr": ("circulo", "sol"),
 }
 for _k, _v in ESCUDOS.items():
     if _k in ESTADIOS:
         ESTADIOS[_k]["escudo"] = list(_v)
+
+
+# ---------------------------------------------------------------------------
+# LA CAMISETA SE PARECE A LA REAL (14-10-2026, «cada club debe tener una camiseta
+# parecida al equipo real»). Diseño de la camiseta (nombres de `Jersey.KITS`) de los
+# clubes cuyo uniforme real es reconocible por su estampado; los colores ya vienen
+# del club. Los demás siguen con el diseño por hash.
+CAMISETAS = {
+    "Real Madrid": "liso", "Barcelona": "franjas", "Atlético Madrid": "franjas", "Sevilla": "liso",
+    "Ath. Bilbao": "franjas", "Real Sociedad": "franjas", "Betis": "franjas", "Valencia": "liso",
+    "Villarreal": "liso", "Juventus": "franjas", "Milan": "franjas", "Inter": "franjas",
+    "Napoli": "liso", "Roma": "liso", "Lazio": "liso", "Bayern Múnich": "liso", "Dortmund": "liso",
+    "Leverkusen": "liso", "City de Manch.": "liso", "Manchester Utd": "liso", "Liverpool": "liso",
+    "Arsenal": "hombros", "Chelsea": "liso", "Tottenham": "liso", "Newcastle": "franjas",
+    "West Ham": "hombros", "Aston Villa": "hombros", "Marsella": "liso", "Lyon": "liso",
+    "Boca Juniors": "banda", "River Plate": "sash", "Racing Club": "franjas", "Independiente": "liso",
+    "San Lorenzo": "franjas", "Estudiantes": "franjas", "Newell's": "mitad", "Peñarol": "franjas",
+    "Nacional": "liso", "Colo-Colo": "liso", "U. de Chile": "liso", "Flamengo": "aros",
+    "Fluminense": "vertical3", "Botafogo": "franjas", "Vasco": "sash", "Gremio": "vertical3",
+    "Atl. Mineiro": "franjas", "Corinthians": "liso", "Palmeiras": "liso", "Santos": "liso",
+    "Sao Paulo": "aros", "Cerro Porteño": "mitad", "Olimpia": "liso", "Universitario": "liso",
+    "Alianza Lima": "franjas", "Sporting Cristal": "liso", "Cruz Azul": "liso", "America": "liso",
+    "Guadalajara": "franjas", "Monterrey": "franjas", "Tigres UANL": "liso", "Al-Hilal": "liso",
+    "Al-Nassr": "liso", "Al Ahly": "liso",
+}
+for _k, _v in CAMISETAS.items():
+    if _k in ESTADIOS:
+        ESTADIOS[_k]["camiseta"] = _v
