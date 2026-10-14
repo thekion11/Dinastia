@@ -539,12 +539,7 @@ func _physics_process(delta: float) -> void:
 	_cerrar_puerta_si_lejos()
 	var e := _entrada()
 	if modo == "coche":
-		var acel := e.y * 14.0
-		if e.y == 0.0:
-			vel = move_toward(vel, 0.0, 6.0 * delta)
-		else:
-			vel = clampf(vel + acel * delta, -8.0, VEL_COCHE)
-		rumbo -= e.x * delta * 1.9 * clampf(absf(vel) / 8.0, 0.0, 1.0) * signf(vel if vel != 0.0 else 1.0)
+		_conducir(e, delta)
 	else:
 		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 		## Aceleración y frenada suaves: arrancar y parar no es instantáneo.
@@ -581,6 +576,9 @@ func _physics_process(delta: float) -> void:
 	else:
 		vel *= -0.25 if modo == "coche" else 0.0
 	cuerpo.rotation.y = rumbo
+	if modo == "coche":
+		cuerpo.rotation.x = _cabeceo
+		cuerpo.rotation.z = _balanceo
 	_colocar_camara(delta)
 	_buscar_cerca()
 	## Gente alrededor: los peatones lejanos reaparecen cerca (a la espalda).
@@ -609,6 +607,78 @@ func _physics_process(delta: float) -> void:
 			if _cuadro != null:
 				_cuadro.cerrar()
 
+## CONDUCCIÓN (14-10-2026, «conducción mejorada»): la potencia cae al acercarse a
+## la punta (curva en vez de una rampa), S frena fuerte si vas hacia delante y
+## marcha atrás si ya estás parado, ESPACIO es el freno de mano (frena y deja el
+## coche girar más cerrado, como al derrapar), el volante se mueve suave y la
+## carrocería se inclina en curvas y al acelerar o frenar.
+var _volante := 0.0
+var _ui_volante: Control
+var _cabeceo := 0.0
+var _balanceo := 0.0
+var cam_coche := 0     ## 0 tercera persona, 1 capó, 2 interior
+
+func _conducir(e: Vector2, delta: float) -> void:
+	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+	_volante = lerpf(_volante, e.x, clampf(delta * 6.0, 0.0, 1.0))
+	if e.y > 0.0:
+		var potencia := 15.0 * (1.0 - clampf(maxf(vel, 0.0) / VEL_COCHE, 0.0, 1.0) * 0.82) + 2.0
+		vel = clampf(vel + e.y * potencia * delta, -8.0, VEL_COCHE)
+	elif e.y < 0.0:
+		if vel > 0.5:
+			vel = maxf(vel - 24.0 * absf(e.y) * delta, 0.0)
+		else:
+			vel = clampf(vel + e.y * 7.0 * delta, -8.0, VEL_COCHE)
+	else:
+		vel = move_toward(vel, 0.0, (4.0 + absf(vel) * 0.12) * delta)
+	if freno_mano:
+		vel = move_toward(vel, 0.0, 20.0 * delta)
+	var giro := 1.9 * (1.6 if freno_mano and absf(vel) > 4.0 else 1.0)
+	## A más velocidad el volante gira menos (no se vuelca a 90 km/h).
+	var cierre := clampf(absf(vel) / 8.0, 0.0, 1.0) * (1.0 - clampf(absf(vel) / VEL_COCHE, 0.0, 1.0) * 0.45)
+	rumbo -= _volante * delta * giro * cierre * signf(vel if vel != 0.0 else 1.0)
+	var acel_real := e.y if absf(vel) < VEL_COCHE else 0.0
+	_cabeceo = lerpf(_cabeceo, clampf(-acel_real * 0.035 - (0.03 if freno_mano else 0.0), -0.06, 0.06), clampf(delta * 4.0, 0.0, 1.0))
+	_balanceo = lerpf(_balanceo, clampf(_volante * absf(vel) * 0.0035, -0.07, 0.07), clampf(delta * 5.0, 0.0, 1.0))
+
+## El salpicadero y el volante (solo en la cámara interior): dibujos 2D sobre la
+## pantalla; el volante gira con la dirección.
+func _volante_ui(ver: bool = true) -> void:
+	var quiero := ver and modo == "coche" and cam_coche == 2
+	if not quiero:
+		if _ui_volante != null:
+			_ui_volante.visible = false
+		return
+	if _ui_volante == null:
+		_ui_volante = VolanteUI.new()
+		_ui_volante.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_ui_volante.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_capa.add_child(_ui_volante)
+		_ui_volante.move_to_front()
+	_ui_volante.visible = true
+	_ui_volante.set("giro", _volante)
+	_ui_volante.set("kmh", absf(vel) * 3.6)
+	_ui_volante.queue_redraw()
+
+class VolanteUI extends Control:
+	var giro := 0.0
+	var kmh := 0.0
+	func _draw() -> void:
+		var w := size.x
+		var h := size.y
+		draw_rect(Rect2(0, h * 0.8, w, h * 0.2), Color(0.06, 0.06, 0.07, 0.96))
+		draw_rect(Rect2(0, h * 0.8, w, 3), Color(0.35, 0.35, 0.4, 0.9))
+		var c := Vector2(w * 0.38, h * 0.93)
+		var r := h * 0.19
+		draw_set_transform(c, giro * 1.2, Vector2.ONE)
+		draw_arc(Vector2.ZERO, r, PI, TAU, 40, Color(0.24, 0.24, 0.27), 16.0, true)
+		draw_arc(Vector2.ZERO, r, PI * 1.02, TAU * 0.99, 40, Color(0.28, 0.28, 0.32, 0.8), 3.0, true)
+		draw_line(Vector2(-r, 0), Vector2(r, 0), Color(0.24, 0.24, 0.27), 12.0, true)
+		draw_line(Vector2.ZERO, Vector2(0, -r), Color(0.24, 0.24, 0.27), 12.0, true)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		var f := ThemeDB.fallback_font
+		draw_string(f, Vector2(w * 0.56, h * 0.9), "%d km/h" % int(kmh), HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(0.7, 1.0, 0.85))
+
 func _colocar_camara(delta: float) -> void:
 	## PLANO DE CONVERSACIÓN (13-10-2026): mientras alguien te habla, la cámara
 	## se pone tras tu hombro y encuadra su cara (antes tu espalda la tapaba).
@@ -627,6 +697,24 @@ func _colocar_camara(delta: float) -> void:
 			## y el cuadro de diálogo no la tapa.
 			camara.look_at(el + Vector3(0, 1.2, 0) - lado * 0.25, Vector3.UP)
 			return
+	## EN COCHE (V cambia): 1 = capó, 2 = interior con volante dibujado.
+	if modo == "coche" and cam_coche > 0:
+		var dir_c := Vector3(sin(rumbo), 0, cos(rumbo))
+		var der := Vector3(cos(rumbo), 0, -sin(rumbo))
+		if cam_coche == 1:
+			camara.position = cuerpo.position + Vector3(0, 1.25, 0) + dir_c * 2.15
+			cuerpo.visible = true
+		else:
+			camara.position = cuerpo.position + Vector3(0, 1.18, 0) + dir_c * 0.15 + der * 0.32
+			cuerpo.visible = false
+		var mira_dir := dir_c.rotated(Vector3.UP, -_volante * 0.18)
+		camara.look_at(camara.position + mira_dir * 8.0 + Vector3(0, -0.2, 0), Vector3.UP)
+		camara.rotate_object_local(Vector3.FORWARD, -_balanceo * 0.6)
+		_volante_ui()
+		return
+	_volante_ui(false)
+	if modo == "coche" and not cuerpo.visible:
+		cuerpo.visible = true
 	## PRIMERA PERSONA (V): la cámara en los ojos, el cuerpo escondido.
 	if primera_persona and (modo != "coche"):
 		var dir_fp := Vector3(sin(rumbo), 0, cos(rumbo))
@@ -751,6 +839,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 	elif k == KEY_E:
 		get_viewport().set_input_as_handled()
 		_usar()
+	elif k == KEY_V and modo == "coche" and estado == "calle":
+		cam_coche = (cam_coche + 1) % 3
+		_aviso.text = ["Cámara: tercera persona", "Cámara: capó", "Cámara: interior"][cam_coche]
 	elif k == KEY_V:
 		primera_persona = not primera_persona
 		_raton_en_primera_persona()
