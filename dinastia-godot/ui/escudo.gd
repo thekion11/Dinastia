@@ -380,6 +380,16 @@ static func _patron_svg(p: String, c2: String) -> String:
 			return '<path d="M32 4 A30 30 0 1 0 32 64 A22 26 0 1 1 32 4 Z" fill="%s" opacity=".9"/>' % c2
 	return ""
 
+## El BORDE de un escudo de verdad (14-10-2026): un aro del color que contrasta con
+## el campo -el secundario, o blanco/oscuro si los dos colores se parecen-, y por
+## fuera una línea de sombra que lo separa del fondo.
+static func _borde_de(c: Club) -> String:
+	var a := Color(c.color_escudo1())
+	var b := Color(c.color_escudo2())
+	if absf(a.get_luminance() - b.get_luminance()) > 0.25:
+		return c.color_escudo2()
+	return "#f4f1e6" if a.get_luminance() < 0.55 else "#1a1d22"
+
 ## El SVG completo del escudo, sin texto.
 static func svg_de(c: Club) -> String:
 	var f := forma_de(c)
@@ -397,10 +407,10 @@ static func svg_de(c: Club) -> String:
 <stop offset="1" stop-color="#000000" stop-opacity=".34"/></linearGradient>
 </defs>
 <path d="%s" fill="%s"/>
-<g clip-path="url(#cl)">%s</g>
+<g clip-path="url(#cl)">%s<path d="%s" fill="none" stroke="%s" stroke-width="5.5"/><path d="%s" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="7.5"/></g>
 <path d="%s" fill="url(#br)"/>
 <path d="%s" fill="none" stroke="#00000055" stroke-width="1.4"/>
-</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2()), d, d]
+</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2()), d, _borde_de(c), d, d, d]
 
 ## El escudo ya rasterizado, listo para meter en un TextureRect.
 ##
