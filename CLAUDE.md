@@ -434,3 +434,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   AÚN SIN USAR: cuando lo pida, integrarlo a la red vial de la ciudad (`ciudad_expansion.gd`).
 - 14-10: el usuario dijo que el mando 3D «se ve mal estéticamente»: el cuerpo pasó de elipsoides a una
   malla fusionada con norma-p (`_malla_cuerpo` en `mando_giratorio.gd`) con barniz y cielo de estudio.
+- 14-10: «asociarlo con los colores» (hecho): un color por botón (`ControlFC.color_pieza`; ABXY con los
+  de su mando), en el aro del botón 3D, en la línea y placa de su etiqueta y en las fichas de cada fila.
+  Diagnóstico del «se ve mal»: era modelo Y ensamblaje (bordes dentados de la cuadrícula, cuerpo globo,
+  botones flotantes). Ahora el cuerpo es una malla polar con silueta exacta (`_malla_cuerpo`), mate, con
+  meseta y borde redondeado. Revisión: `pruebas/captura_mando_grande.tscn` (DISP=ps|xbox).
