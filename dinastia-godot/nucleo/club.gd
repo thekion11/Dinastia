@@ -299,6 +299,11 @@ func perfil_estadio() -> Dictionary:
 			if r.has(k):
 				p[k] = r[k]
 		p["real"] = true
+		## LOS COLORES DE SU ESTADIO (14-10-2026): las butacas del real, que no
+		## siempre son las del uniforme (Bombonera azul y oro, Maracanã azul...).
+		if r.has("asientos") and (r["asientos"] as Array).size() >= 2:
+			p["asiento1"] = String(r["asientos"][0])
+			p["asiento2"] = String(r["asientos"][1])
 		## El apodo del estadio (genérico, nunca el oficial): sale en el rótulo.
 		var ap := GuinosEstadio.apodo(p)
 		if ap != "":
