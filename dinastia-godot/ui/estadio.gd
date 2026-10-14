@@ -351,6 +351,8 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_guardar_pref("pie", si))
 	_cajon.interruptor("🎬 Presentación antes del partido", _pref("intro", true), func(si: bool) -> void:
 		_guardar_pref("intro", si))
+	_cajon.interruptor("🧒 Ceremonia completa (niños, mascota, alineaciones)", _pref("ceremonia", true), func(si: bool) -> void:
+		_guardar_pref("ceremonia", si))
 	_cajon.interruptor("🔁 Repetición de los goles", _pref("repeticiones", true), func(si: bool) -> void:
 		_guardar_pref("repeticiones", si))
 	_cajon.interruptor("⚡ Calidad automática", Calidad.adaptativa, func(si: bool) -> void:
@@ -780,9 +782,16 @@ func _arrancar_partido() -> void:
 	if _pref("intro", true) and partido.minuto == 0:
 		var gi := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
 		var nombre_est := club.estadio_nombre if club.estadio_nombre != "" else "Estadio de %s" % club.nombre
-		_intro = IntroPartido.iniciar(self, float(gi["dx"]), float(gi["dz"]), 20.0,
-			"%s  vs  %s" % [club.nombre, visitante.nombre],
-			"%s  ·  %s butacas" % [nombre_est, _miles(club.estadio_aforo)])
+		## LA CEREMONIA (13-10-2026): salida con niños, mascota, lona y
+		## alineaciones. Con el ajuste «ceremonia» apagado, el vuelo corto.
+		if _pref("ceremonia", true):
+			## Se monta al final de `_arrancar_partido`, cuando el motor ya colocó
+			## a todos para el saque (si no, los recolocaba encima).
+			_ceremonia_pendiente = nombre_est
+		else:
+			_intro = IntroPartido.iniciar(self, float(gi["dx"]), float(gi["dz"]), 20.0,
+				"%s  vs  %s" % [club.nombre, visitante.nombre],
+				"%s  ·  %s butacas" % [nombre_est, _miles(club.estadio_aforo)])
 	var clima := String(_perfil.get("clima", "noche"))
 	var por_clima := {"lluvia": "lluvia_ambiente", "tormenta": "trueno", "niebla": "niebla_ambiente",
 		"nieve": "frio_extremo", "noche": "noche_estadio", "dia": "dia_soleado", "tarde": "eco_estadio"}
@@ -842,6 +851,24 @@ func _arrancar_partido() -> void:
 
 	_crear_banner_gol()
 	_crear_rotulo_jugada()
+	if _ceremonia_pendiente != "":
+		var gc := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+		_ceremonia = CeremoniaPartido.iniciar(self, _raiz3d, _en_campo, partido.local, partido.visita, _ceremonia_pendiente,
+			float(gc["dx"]), float(gc["dz"]), StadiumBuilder.tunel_x(_perfil))
+		_ceremonia_pendiente = ""
+		## La pantalla limpia mientras dura: sin marcador, radar ni nombres.
+		var ocultos: Array = []
+		for c: Control in [_caja_marcador, _mini_pantalla, _radar]:
+			if c != null and c.visible:
+				c.visible = false
+				ocultos.append(c)
+		var nombres_antes := PlayerSpawner.mostrar_nombres
+		_mostrar_nombres(false)
+		_ceremonia.terminada.connect(func() -> void:
+			for c: Control in ocultos:
+				if is_instance_valid(c):
+					c.visible = true
+			_mostrar_nombres(nombres_antes))
 
 ## EL RÓTULO DE LA JUGADA (25-9-2026): como en la tele, cuando un equipo
 ## construye una jugada del catálogo aparece su nombre debajo del marcador
@@ -921,6 +948,8 @@ func _process(delta: float) -> void:
 	if _repe != null and _repe.reproduciendo:
 		return
 	if _intro != null and _intro.activa:
+		return
+	if is_instance_valid(_ceremonia) and _ceremonia.activa:
 		return
 	if _motor != null:
 		_paso_motor(delta)
@@ -1046,6 +1075,8 @@ func _corto(n: String) -> String:
 const SEG_ANTES_REPETICION := 6.0
 var _repe: Repeticion
 var _intro: IntroPartido
+var _ceremonia: CeremoniaPartido
+var _ceremonia_pendiente := ""
 var _rotulo_repe: PanelContainer
 
 func _repetir_gol() -> void:
