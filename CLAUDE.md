@@ -500,3 +500,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (`ui/componentes/minijuego_malabares.gd`) y REFLEJOS DEL PORTERO (`minijuego_reflejos.gd`), récords en
   `user://minijuegos.cfg`. Prueba: `prueba_minijuegos_nuevos`. Tras crear clases nuevas: `godot --headless
   --import` para refrescar la caché de clases.
+- 14-10 MEGA AUD. 2 punto 8 (más): efectos de cámara (`CameraRig.impacto` = sacudida, `golpe_de_zoom`;
+  gol/tarjeta/remate en `Estadio._montar_motor`). Optimización: se probó bajar cortes/distancia de sombra
+  en ALTO → sin ahorro medible de triángulos (revertido); `medir_partido` ganó ARBOL=1 y lista de luces.
+  Cifra honesta: partido ALTO ≈2,3 M tris/700 llamadas bajo llvmpipe; el ≥50 % NO está demostrado.
