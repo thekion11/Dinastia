@@ -2493,7 +2493,8 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var det_col: Array[Color] = []
 	var med_xf: Array[Transform3D] = []
 	var med_col: Array[Color] = []
-	var filas_detalle: int = 6 if Calidad.elegida >= Calidad.ALTO else 3
+	var filas_medio := 8
+	var filas_detalle: int = (6 if Calidad.elegida >= Calidad.ULTRA else 4) if Calidad.elegida >= Calidad.ALTO else 3
 	## Un hincha por asiento ocupado: tres por grupo (dos en calidad Media).
 	var por_grupo: int = 3 if Calidad.elegida >= Calidad.ALTO else 2
 	var eje_largo := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
