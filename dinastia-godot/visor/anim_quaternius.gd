@@ -570,6 +570,13 @@ const CLIP_REAL := {
 	"correr": "Sprint",
 }
 
+## Pasos extra para elegir «mi caminata» (ver `ExploradorCiudad.ESTILOS_CAMINATA`).
+const CLIP_CAMINATA := {
+	"caminar_normal": "Walk",
+	"caminar_agachado": "Crouch_Fwd",
+	"caminar_trote": "Jog_Fwd",
+}
+
 ## Mapa animacion-nuestra -> clip del mocap de futbol real (Anderson Rohr,
 ## ver `cargar_futbol()`). `cabezazo` se queda a mano: el pack gratis no trae
 ## cabezazo, solo pateo/penal/festejo/atajada/tarjeta/regate/entrada.
@@ -870,6 +877,12 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 			if clave == "parado":
 				real = _brazos_al_cuerpo(real, -0.2)
 		lib.add_animation(clave, real if real != null else a_mano[clave])
+	## TIPOS DE CAMINATA (14-10-2026): los otros pasos reales del pack, para que
+	## el personaje del jugador pueda andar «normal», agachado o a trote.
+	for clave: String in CLIP_CAMINATA:
+		var extra: Animation = cargar_real(String(CLIP_CAMINATA[clave]), prefijo)
+		if extra != null:
+			lib.add_animation(clave, _relajar_dedos(extra, esq, 0.5))
 	## "sentado" no tiene equivalente en la Universal Animation Library
 	## (ninguno de los 43 clips gratis es una pose sentada) -se queda a mano,
 	## sin intentar `cargar_real()` primero.

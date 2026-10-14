@@ -335,6 +335,19 @@ func _sonar_pasos(v: float) -> void:
 		_hasta_paso = 1.1 if absf(v) > 3.0 else 0.7
 		Sonido.toca("paso", Sonido.Bus.EFECTOS)
 
+## MI CAMINATA (14-10-2026): estilo elegido en ⚙ Ajustes de la ciudad. Cada uno
+## es [clip, velocidad de reproducción]. Correr y quieto no cambian.
+const ESTILOS_CAMINATA := {
+	"formal": ["caminar", 1.0],
+	"normal": ["caminar_normal", 1.0],
+	"animado": ["caminar_normal", 1.3],
+	"cansado": ["caminar", 0.72],
+	"agachado": ["caminar_agachado", 1.0],
+	"trote": ["caminar_trote", 1.0],
+}
+static func estilo_caminata() -> String:
+	return String(AjustesCiudad.valor("caminata", "formal"))
+
 func _animar_dt(v: float) -> void:
 	_sonar_pasos(v)
 	if not _es_dt or _anim == null:
@@ -348,11 +361,14 @@ func _animar_dt(v: float) -> void:
 	var quiere := "parado"
 	if absf(v) > 3.0 and _anim.has_animation("correr"):
 		quiere = "correr"
-	elif absf(v) > 0.05 and _anim.has_animation("caminar"):
-		quiere = "caminar"
+	var vel_anim := 1.0
+	if quiere == "parado" and absf(v) > 0.05 and _anim.has_animation("caminar"):
+		var est: Array = ESTILOS_CAMINATA.get(estilo_caminata(), ESTILOS_CAMINATA["formal"])
+		quiere = String(est[0]) if _anim.has_animation(String(est[0])) else "caminar"
+		vel_anim = float(est[1])
 	if _anim.current_animation != quiere and _anim.has_animation(quiere):
 		_anim.play(quiere, 0.25)
-	_anim.speed_scale = 1.0
+	_anim.speed_scale = vel_anim
 
 func _buscar_anim(n: Node) -> AnimationPlayer:
 	if n is AnimationPlayer:

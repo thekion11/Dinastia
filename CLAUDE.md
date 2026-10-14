@@ -480,3 +480,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 14-10 MEGA AUD. 2, puntos 8 (parcial): VAR en el 3D con motor (1 de 5 goles con VAR en la liga abre
   la sala VAR y pausa el motor; el gol siempre se confirma) y botines variados por jugador sin diseño de
   club (`VestidorQ._botin_de`). Pendiente de 4-8: caminatas del personaje, IA, efectos de cámara.
+- 14-10 MEGA AUD. 2 punto 6 (parcial): «MI CAMINATA» (formal/normal/animado/cansado/agachado/trote; clips
+  Walk/Crouch_Fwd/Jog_Fwd en `AnimQuaternius.CLIP_CAMINATA`, selector en ⚙ Ajustes de la ciudad,
+  `ExploradorCiudad.ESTILOS_CAMINATA`). Medido con `medir_partido` (ALTO): público real +440k tris
+  → recortado a 4 filas cerca + 8 medio (2,41 M vs 2,23 M sin ellas). Pendiente: más modelos 3D externos
+  (la red bloquea descargas: pedir permiso de red) y más animaciones.
