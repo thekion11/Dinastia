@@ -268,6 +268,7 @@ func _paso_fc() -> void:
 			## L3 + R3 a la vez: bloqueo de jugador.
 			_avanzar(30)
 			_balon_a_usuario(0.0, 0.0)
+			_avanzar(3)
 			_pulsar("jugar_pedir", true)
 			_pulsar("jugar_sombrero", true)
 			_avanzar(1)
@@ -275,7 +276,7 @@ func _paso_fc() -> void:
 			_pulsar("jugar_pedir", false)
 			_pulsar("jugar_sombrero", false)
 			_avanzar(1)
-			_ok(_motor.bloqueo, "FC: L3 + R3 = bloqueo de jugador")
+			_ok(_motor.bloqueo or not _motor.usuario.is_empty() and _motor.bloqueo, "FC: L3 + R3 = bloqueo de jugador")
 			_motor.bloqueo = false
 			## LB + RB + B: tiro potente con cámara lenta.
 			_balon_a_usuario(4.0, 28.0)
