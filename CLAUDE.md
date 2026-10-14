@@ -489,3 +489,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   fuerte/marcha atrás, ESPACIO freno de mano, volante suave, cabeceo y balanceo) y cámaras de coche con
   V (tercera / capó / interior con volante y cuentakilómetros `VolanteUI`). Captura:
   `pruebas/captura_conduccion.tscn`.
+- 14-10 MEGA AUD. 2 punto 13 (parcial): carretera Kenney EN USO como accesorios (`CiudadExpansion._kenney_calles`:
+  brazos de farola curva en avenidas, postes con cable en barrios, carteles colgantes en cruces, vallas/luces/
+  vallado de las obras), ×9–14. NO se sustituyeron las calzadas (siguen siendo lotes de asfalto con marcas
+  propias) — decisión consciente por riesgo con semáforos/tráfico. Pendiente: pilares de puente, rotondas.
