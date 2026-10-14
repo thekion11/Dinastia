@@ -429,3 +429,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   Kenney en cada botón y etiqueta, arrastrar = girar con inercia, rueda = zoom, doble clic =
   vista inicial, se mece solo, piezas elegidas laten en dorado, etiquetas con línea que se apagan
   si quedan de espaldas). `DibujoMando` lo contiene; el teclado sigue en 2D.
+- 14-10: el usuario dio OTRO REGALO «para después»: Kenney City Kit Roads 2.2 (CC0), guardado en
+  `dinastia-godot/assets/ciudad/kenney_roads/` (95 GLB + texturas, sin LFS, regla en .gitattributes).
+  AÚN SIN USAR: cuando lo pida, integrarlo a la red vial de la ciudad (`ciudad_expansion.gd`).
+- 14-10: el usuario dijo que el mando 3D «se ve mal estéticamente»: el cuerpo pasó de elipsoides a una
+  malla fusionada con norma-p (`_malla_cuerpo` en `mando_giratorio.gd`) con barniz y cielo de estudio.
