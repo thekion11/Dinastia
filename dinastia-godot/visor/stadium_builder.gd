@@ -372,6 +372,26 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	gmat.metallic = 0.0
 	gmat.metallic_specular = 0.18
 	pitch.material_override = gmat
+	## EL CÉSPED DE TRANSMISIÓN (14-10-2026): franjas que brillan según el
+	## ángulo, brizna, manchas y desgaste (`visor/cesped.gdshader`). El dibujo
+	## del club sigue saliendo de la misma textura.
+	var sm := ShaderMaterial.new()
+	sm.shader = load("res://visor/cesped.gdshader")
+	sm.set_shader_parameter("dibujo", gmat.albedo_texture)
+	var c0: Color = tonos[0]
+	var c1: Color = tonos[1]
+	sm.set_shader_parameter("claro_s", Vector3(c0.r, c0.g, c0.b))
+	sm.set_shader_parameter("oscuro_s", Vector3(c1.r, c1.g, c1.b))
+	## En Compatibility (móvil y web) el sombreado no pasa a lineal: ahí van los
+	## colores tal cual (si no, verde neón y franjas negras).
+	var compat := String(ProjectSettings.get_setting("rendering/renderer/rendering_method", "")) == "gl_compatibility" \
+		or RenderingServer.get_current_rendering_method() == "gl_compatibility"
+	var l0 := c0 if compat else c0.srgb_to_linear()
+	var l1 := c1 if compat else c1.srgb_to_linear()
+	sm.set_shader_parameter("claro", Vector3(l0.r, l0.g, l0.b))
+	sm.set_shader_parameter("oscuro", Vector3(l1.r, l1.g, l1.b))
+	pitch.material_override = sm
+	pitch.name = "Cesped"
 	root.add_child(pitch)
 
 	var line_mat := StandardMaterial3D.new()

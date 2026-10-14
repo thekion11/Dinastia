@@ -23,6 +23,9 @@ func _process(_d: float) -> void:
 	var intro: Variant = _vista.get("_intro")
 	if intro != null and is_instance_valid(intro) and intro.activa:
 		intro.terminar()
+	var cer: Variant = _vista.get("_ceremonia")
+	if cer != null and is_instance_valid(cer) and cer.activa:
+		cer.terminar()
 	var motor: MotorJugable = _vista.get("_motor")
 	if motor == null:
 		return
@@ -31,6 +34,7 @@ func _process(_d: float) -> void:
 		var i := rig.camera_names.find(OS.get_environment("CAMARA") if OS.get_environment("CAMARA") != "" else "Tele Dinámica")
 		if i >= 0:
 			rig.switch_to(i)
+		print("CAM dist_tele %.1f dx %.1f dz %.1f alto %.1f" % [float(rig.get("_dist_tele")), float(rig.get("_dx")), float(rig.get("_dz")), float(rig.get("_alto"))])
 	## Avanza a un ritmo fijo: 1/30 s de juego por fotograma.
 	for k in 2:
 		motor.paso(1.0 / 60.0)
