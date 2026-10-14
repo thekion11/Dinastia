@@ -485,3 +485,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   `ExploradorCiudad.ESTILOS_CAMINATA`). Medido con `medir_partido` (ALTO): público real +440k tris
   → recortado a 4 filas cerca + 8 medio (2,41 M vs 2,23 M sin ellas). Pendiente: más modelos 3D externos
   (la red bloquea descargas: pedir permiso de red) y más animaciones.
+- 14-10 MEGA AUD. 2 punto 10 HECHO: conducción (`ExploradorCiudad._conducir`: curva de potencia, S frena
+  fuerte/marcha atrás, ESPACIO freno de mano, volante suave, cabeceo y balanceo) y cámaras de coche con
+  V (tercera / capó / interior con volante y cuentakilómetros `VolanteUI`). Captura:
+  `pruebas/captura_conduccion.tscn`.
