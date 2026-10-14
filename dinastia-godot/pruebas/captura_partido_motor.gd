@@ -36,7 +36,10 @@ func _process(_d: float) -> void:
 			get_tree().quit()
 		return
 	## Para no esperar en tiempo real: unos pasos extra por fotograma.
-	if _n < 200:
+	var cer: Variant = _vista.get("_ceremonia")
+	if cer != null and is_instance_valid(cer) and cer.activa:
+		cer.terminar()
+	if _n < 200 and not (_n >= 128 and _n <= 132):
 		for i in 6:
 			motor.paso(1.0 / 60.0)
 	if _n == 60:
@@ -52,7 +55,18 @@ func _process(_d: float) -> void:
 		var p: Node = _vista.get("_panel_dt")
 		if p != null:
 			p.call("cerrar")
+	if _n == 130:
+		## Cargando un tiro: la barra de potencia.
+		motor.cargando = true
+		motor.carga = 0.6
+	if _n == 132:
+		_foto("motor_5")
+		motor.cargando = false
 	if _n == 180:
 		_foto("motor_4")
+		var cfg := ConfigFile.new()
+		cfg.load(CajonAjustes.RUTA)
+		cfg.set_value(CajonAjustes.SECCION, "control_equipo", false)
+		cfg.save(CajonAjustes.RUTA)
 		print("ESTADO motor %s minuto %d · pases %s ok %s · tiros %s" % [motor.estado, motor.minuto(), str(motor.pases), str(motor.pases_ok), str(motor.tiros)])
 		get_tree().quit()

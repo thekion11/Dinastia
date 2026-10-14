@@ -149,6 +149,7 @@ var _manual_hasta := 0.0
 var _tiro_vivo: Dictionary = {}
 var _t_attr := 0.0
 var _eligiendo := false
+var _manual_tiro := false
 ## Cuántas veces se ha pateado el balón: el portero decide UNA vez por disparo.
 var _n_patada := 0
 ## Qué clase de golpeo es el próximo `_patear` (lo fija quien patea).
@@ -424,8 +425,13 @@ func _control_de_equipo() -> void:
 		return
 	if t < _manual_hasta:
 		return
+	var modo_cambio := Mando.ayuda("cambio")
+	if modo_cambio == "manual":
+		return
 	if not pase_a.is_empty() and bool(pase_a["es_local"]) == mio and pase_a != usuario:
 		_poner_usuario(pase_a)
+		return
+	if modo_cambio == "semi":
 		return
 	var b := balon.position
 	if cand != usuario and pos(usuario).distance_to(b) - pos(cand).distance_to(b) > 5.0:
@@ -535,6 +541,13 @@ func paso(delta: float) -> void:
 		"saque":
 			if _t_estado <= delta * 1.5:
 				_revisar_cambio()
+			## Con el equipo en tus manos ya manejas a alguien durante el saque
+			## (si no, el cursor no aparecía hasta que se reanudaba el juego).
+			if control_equipo >= 0 and not autopiloto and usuario.is_empty():
+				var lz: Dictionary = saque.get("lanzador", {})
+				var cand := _mio_mas_cercano(control_equipo == 0, {} if bool(lanza_usuario.get(String(saque.get("tipo", "")), false)) else lz)
+				if not cand.is_empty():
+					_poner_usuario(cand)
 			_colocar_saque(delta)
 		"gol", "descanso":
 			_mover_balon(delta)
@@ -1632,7 +1645,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	## El error crece con la distancia: desde 25 m se falla mucho más que
 	## dentro del área (la sonda medía 8 de cada 10 tiros entre los palos).
 	var lejos := Vector2(pos(p).x - arco.x, pos(p).z - arco.z).length()
-	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0)
+	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0)
 	var x := clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
 	var y := clampf(0.35 + fuerza * 1.2 + apunte_.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)
 	var destino := Vector3(x, y, arco.z + signf(arco.z) * 0.3)
@@ -1991,7 +2004,7 @@ func _control_usuario(delta: float) -> void:
 	## Con la cámara detrás del jugador mirando al arco rival: arriba en la
 	## pantalla es hacia el arco, la derecha de la pantalla es -X al atacar +Z.
 	var mundo := Vector3(-mv.x * d, 0, -mv.y * d)
-	if camara != null and is_instance_valid(camara):
+	if camara != null and is_instance_valid(camara) and Mando.ayuda("direccion") == "camara":
 		var f := -camara.global_basis.z
 		f.y = 0.0
 		var r := camara.global_basis.x
@@ -2008,14 +2021,21 @@ func _control_usuario(delta: float) -> void:
 		p["manual"] = Vector3.ZERO
 	var con_balon := poseedor == p
 	if con_balon:
-		if Input.is_action_just_pressed("jugar_pase"):
-			var q := _companero_en_direccion(p, mundo if mundo.length() > 0.1 else Vector3(sin(n.rotation.y), 0, cos(n.rotation.y)))
+		var dir_mira := mundo.normalized() if mundo.length() > 0.1 else Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
+		if Input.is_action_just_pressed("jugar_pase") and Mando.ayuda("pase") == "manual":
+			## PASE MANUAL: al punto exacto hacia donde apuntas (12 m), sin
+			## buscar compañero; el que esté cerca corre a por él.
+			_pase_manual(p, dir_mira, 12.0, false)
+		elif Input.is_action_just_pressed("jugar_pase"):
+			var q := _companero_en_direccion(p, dir_mira)
 			if not q.is_empty():
 				_pasar_a(p, q)
 		elif Input.is_action_just_pressed("jugar_filtrado"):
 			var q2 := _companero_en_direccion(p, mundo if mundo.length() > 0.1 else Vector3(0, 0, d))
 			if not q2.is_empty():
 				_pasar_a(p, q2, false, true)
+		elif Input.is_action_just_pressed("jugar_pase_largo") and Mando.ayuda("pase") == "manual":
+			_pase_manual(p, dir_mira, 28.0, true)
 		elif Input.is_action_just_pressed("jugar_pase_largo"):
 			var q3 := _companero_en_direccion(p, mundo if mundo.length() > 0.1 else Vector3(0, 0, d))
 			if not q3.is_empty():
@@ -2038,7 +2058,16 @@ func _control_usuario(delta: float) -> void:
 			cargando = true
 		elif cargando:
 			cargando = false
-			_tirar(p, Vector2(-mv.x * d, -mv.y * 0.5), carga)
+			var ap_tiro := Vector2(-mv.x * d, -mv.y * 0.5)
+			if Mando.ayuda("tiro") == "asistido":
+				## Asistido: al palo largo, abajo, con un toque del stick.
+				## (`_tirar` recibe la X del mundo: el palo largo es el del lado contrario.)
+				var largo := -signf(pos(p).x + 0.01)
+				ap_tiro = Vector2(clampf(largo * 0.75 + ap_tiro.x * 0.35, -1.0, 1.0), -0.35 + ap_tiro.y * 0.3)
+			else:
+				_manual_tiro = true
+			_tirar(p, ap_tiro, carga)
+			_manual_tiro = false
 			carga = 0.0
 	else:
 		cargando = false
@@ -2069,6 +2098,21 @@ func _control_usuario(delta: float) -> void:
 			pedido_hasta = t + 2.5
 			aviso.emit("🙋 ¡Pide el balón!")
 			_anim(p, "pedir_balon", true)
+
+## El pase manual: al punto, raso o por arriba, sin elegir receptor.
+func _pase_manual(p: Dictionary, dir: Vector3, dist: float, por_arriba: bool) -> void:
+	var destino := pos(p) + dir.normalized() * dist
+	destino.x = clampf(destino.x, -ANCHO + 0.5, ANCHO - 0.5)
+	destino.z = clampf(destino.z, -LARGO + 0.5, LARGO - 0.5)
+	if por_arriba:
+		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 2.0, 0.0, "pase")
+	else:
+		_patear(p, destino, clampf(velocidad_para(dist, 4.0), 7.0, 24.0), 0.0, 0.0, "pase")
+	pase_a = _companero_cerca(p, destino)
+	_pase_eq = 0 if bool(p["es_local"]) else 1
+	pases[_pase_eq] += 1
+	stats["pases"] += 1
+	_pase_usuario_vivo = true
 
 func _companero_en_direccion(p: Dictionary, dir: Vector3) -> Dictionary:
 	var mejor: Dictionary = {}
