@@ -25,6 +25,7 @@ func _ready() -> void:
 		var c_est_real := 0
 		var c_est_col := 0
 		var c_esc_ok := 0
+		var c_esc_real := 0
 		var c_kit_foto := 0
 		var c_kit_dis := 0
 		var c_sp := 0
@@ -36,18 +37,20 @@ func _ready() -> void:
 		for c: Club in m.clubes.values():
 			n += 1
 			var p := c.perfil_estadio()
-			var est_real := bool(p.get("real", false))
-			var est_col := est_real and Datos.tabla("ESTADIO_CLUB").has(c.nombre) and (Datos.tabla("ESTADIO_CLUB")[c.nombre] as Dictionary).has("asientos")
+			var est_real: bool = bool(p.get("real", false))
+			var est_col: bool = est_real and Datos.tabla("ESTADIO_CLUB").has(c.nombre) and (Datos.tabla("ESTADIO_CLUB")[c.nombre] as Dictionary).has("asientos")
 			if est_real:
 				c_est_real += 1
 			else:
 				sin_est.append(c.nombre)
 			if est_col:
 				c_est_col += 1
-			var esc_ok := c.color_escudo1() == c.color1 or c.color_escudo2() == c.color1 or c.color_escudo1() == c.color2
+			var esc_ok: bool = c.color_escudo1() == c.color1 or c.color_escudo2() == c.color1 or c.color_escudo1() == c.color2
 			if esc_ok:
 				c_esc_ok += 1
-			var foto := Jersey.fichero_real(c) != ""
+			if not Escudo._rasgo_real(c).is_empty():
+				c_esc_real += 1
+			var foto: bool = Jersey.fichero_real(c) != ""
 			if foto:
 				c_kit_foto += 1
 			var kx := DisenosKit.kit_de_club(c)
@@ -70,15 +73,15 @@ func _ready() -> void:
 					fijos += 1
 				if Cara.ruta_foto(j) != "":
 					jug_retrato += 1
-			var plantel_real := fijos >= 11
+			var plantel_real: bool = fijos >= 11
 			if plantel_real:
 				c_plantel_real += 1
 			csv += "%s,\"%s\",%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%d,\"%s\",%s,%d,%s,%d\n" % [base, c.nombre, c.pais, c.rep, est_real, p.get("forma", ""), est_col,
 				Escudo.forma_de(c), Escudo.patron_de(c), esc_ok, foto, dis, sp.size(), "|".join(marcas), sp_dato, c.plantel().size(), plantel_real, jug_retrato]
-		md += "## Base %s — %d clubes\n\n| Aspecto | Clubes | % |\n|---|---|---|\n" % [base, n]
+		md += "## Base %s — %d clubes\n\n| Aspecto | Clubes | Porcentaje |\n|---|---|---|\n" % [base, n]
 		var filas := [
 			["Estadio con la arquitectura del real", c_est_real], ["Estadio con colores propios de butacas", c_est_col],
-			["Escudo con los colores del club", c_esc_ok], ["Camiseta con foto real de la equipación", c_kit_foto],
+			["Escudo con los colores del club", c_esc_ok], ["Escudo con rasgos del escudo real", c_esc_real], ["Camiseta con foto real de la equipación", c_kit_foto],
 			["Camiseta con diseño propio (no liso)", c_kit_dis], ["Con patrocinador en la camiseta", c_sp],
 			["Patrocinador tomado de un dato del club real", c_sp_real], ["Plantilla fija (≥11 jugadores reales)", c_plantel_real]]
 		for f: Array in filas:

@@ -257,3 +257,29 @@ ASIENTOS = {
 for _k, _c in ASIENTOS.items():
     if _k in ESTADIOS:
         ESTADIOS[_k]["asientos"] = list(_c)
+
+
+# ---------------------------------------------------------------------------
+# EL ESCUDO SE PARECE AL REAL (14-10-2026, «los escudos deben parecerse más»).
+# [forma, patrón] del escudo de los clubes cuyo escudo real tiene un rasgo
+# fácil de reconocer con las formas y patrones del generador (rayas verticales,
+# banda diagonal, círculo con aro, rombos bávaros, corona...). Nunca el dibujo
+# ni el nombre del real: solo su silueta y su estampado. Los demás clubes siguen
+# con el escudo por hash.
+ESCUDOS = {
+    "Real Madrid": ("circulo", "corona2"), "Barcelona": ("escudo", "franjas"),
+    "Atlético Madrid": ("clasico", "franjas"), "Sevilla": ("circulo", "aro"),
+    "Ath. Bilbao": ("clasico", "franjas"), "Real Sociedad": ("clasico", "franjas"),
+    "Betis": ("circulo", "banda"), "Juventus": ("ovalo", "franjas"),
+    "Milan": ("escudo", "franjas"), "Inter": ("circulo", "aro"),
+    "Napoli": ("circulo", "aro"), "Lazio": ("circulo", "aro"), "Roma": ("clasico", "mitad"),
+    "Bayern Múnich": ("circulo", "rombos"), "City de Manch.": ("circulo", "aro"),
+    "Tottenham": ("ovalo", "liso"), "Marsella": ("circulo", "aro"), "Lyon": ("escudo", "liso"),
+    "River Plate": ("clasico", "banda"), "Racing Club": ("escudo", "franjas"),
+    "Estudiantes": ("clasico", "franjas"), "Newell's": ("circulo", "mitad"),
+    "Peñarol": ("escudo", "franjas"), "Cerro Porteño": ("clasico", "franjas"),
+    "Al-Hilal": ("circulo", "aro"), "Al-Nassr": ("circulo", "aro"),
+}
+for _k, _v in ESCUDOS.items():
+    if _k in ESTADIOS:
+        ESTADIOS[_k]["escudo"] = list(_v)

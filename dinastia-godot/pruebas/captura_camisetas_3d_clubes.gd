@@ -4,6 +4,7 @@ extends Node3D
 ##   godot --path . --rendering-driver opengl3 res://pruebas/captura_camisetas_3d_clubes.tscn
 var _n := 0
 func _ready() -> void:
+	VestidorQ.ropa_aparte = OS.get_environment("APARTE") != ""
 	var m := Mundo.new()
 	m.generar(["CHI", "ESP", "ARG", "GER", "ITA", "ENG"], 77)
 	var e := Environment.new()
@@ -37,6 +38,6 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 12:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/camisetas_3d_clubes.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/camisetas_3d_clubes%s.png" % ("_aparte" if OS.get_environment("APARTE") != "" else ""))
 		print("FIN. 0 fallos")
 		get_tree().quit()

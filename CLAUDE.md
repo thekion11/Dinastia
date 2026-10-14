@@ -508,3 +508,13 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   optimización NO está demostrado). Vídeo de novedades (≈40 s, 8 MB) entregado por el chat; NO se subió al Drive:
   el conector exige el archivo en base64 dentro de la llamada y 8 MB no caben. Guion `pruebas/video_novedades.gd`,
   montaje `herramientas/montar_novedades.py` (los .avi/.mp4 nunca al repo).
+- 14-10 PEDIDOS (tras MEGA AUD. 2): «¿qué hacemos con el resto de las filas?» → personas reales en TODAS las filas
+  (poses sentadas, 8 poses × 3 niveles cerca/medio/lejos; `herramientas/hornear_publico.gd`). Fondo del menú Ciudad
+  3D rehecho (`fondo_menu.gdshader` estilo 7). «Compara qué se respeta con cada club» → `pruebas/auditoria_clubes.tscn`
+  (AUDITORIA_CLUBES.md/.csv): estadio real 46 %, colores de estadio 12 %, escudo con rasgos reales 7 %, foto de
+  equipación 37 % (solo base real), diseño propio 91 %, patrocinador del club real 0 % (los de la IA salen del azar
+  determinista: PENDIENTE), retrato real 13 % (base real). HECHO: escudo REAL del club en la camiseta 3D (uniform
+  `escudo_tex`), colores de butacas de 47 estadios y rasgos de escudo de 26 clubes (`estadios_reales.py` ASIENTOS/
+  ESCUDOS → `estadios_colores.py` parchea los JSON), retratos con la camiseta de volumen (`VestidorQ.ropa_aparte`).
+  El «modelo» de camiseta = la ropa Peasant (RopaSeparada), apagada en partido por coste. Pendiente: estadios por
+  fuera son cajas grises (tribunas «falsas»), patrocinadores reales, más escudos.
