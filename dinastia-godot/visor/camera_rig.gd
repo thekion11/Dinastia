@@ -200,6 +200,45 @@ func _process(delta: float) -> void:
 			var pos_atras := t_pos - fwd2 * 4.2 + Vector3(0, 2.2, 0)
 			cam.global_position = cam.global_position.lerp(pos_atras, 6.0 * delta)
 			cam.look_at(t_pos + fwd2 * 8.0 + Vector3(0, 1.2, 0), Vector3.UP)
+	_efectos(delta)
+
+## EFECTOS DE CÁMARA (14-10-2026): `impacto()` sacude la cámara (goles, entradas
+## fuertes, tarjetas) y `golpe_de_zoom()` cierra el plano un instante (remates,
+## goles). Se aplican al final de cada fotograma, encima de cualquier plano.
+var _sacudida := 0.0
+var _sacudida_dur := 0.01
+var _zoom_t := 0.0
+var _zoom_dur := 0.01
+var _zoom_fuerza := 0.0
+var _fov_base_golpe := -1.0
+
+func impacto(fuerza: float, dur: float = 0.5) -> void:
+	_sacudida = maxf(_sacudida, clampf(fuerza, 0.0, 1.5))
+	_sacudida_dur = maxf(dur, 0.05)
+
+func golpe_de_zoom(grados: float, dur: float = 0.6) -> void:
+	_zoom_fuerza = grados
+	_zoom_t = dur
+	_zoom_dur = maxf(dur, 0.05)
+
+func _efectos(delta: float) -> void:
+	if cameras.is_empty():
+		return
+	var cam: Camera3D = cameras[current_index]
+	if _zoom_t > 0.0:
+		_zoom_t = maxf(_zoom_t - delta, 0.0)
+		## Sube rápido y se suelta despacio (curva de ataque corto).
+		var k := _zoom_t / _zoom_dur
+		cam.fov = maxf(cam.fov - _zoom_fuerza * k * k, 10.0)
+	## Solo en los planos que reencuadran cada fotograma (el temblor no se acumula).
+	var reencuadra := current_name() in ["Transmisión", "Tele Dinámica", "Pro (Tercera Persona)", "Primera Persona (POV)", "Desde la grada (sancionado)"]
+	if _sacudida > 0.001 and reencuadra:
+		var a := _sacudida * 0.012
+		var t := Time.get_ticks_msec() * 0.001
+		cam.rotate_object_local(Vector3.RIGHT, sin(t * 47.0) * a)
+		cam.rotate_object_local(Vector3.UP, sin(t * 39.0 + 1.3) * a)
+		cam.rotate_object_local(Vector3.FORWARD, sin(t * 53.0 + 2.1) * a * 0.5)
+		_sacudida = maxf(_sacudida - delta * _sacudida / maxf(_sacudida_dur * 0.5, 0.05) - delta * 0.15, 0.0)
 
 func switch_to(idx: int) -> void:
 	if idx < 0 or idx >= cameras.size():

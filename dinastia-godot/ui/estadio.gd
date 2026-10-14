@@ -1498,6 +1498,9 @@ func _montar_motor() -> void:
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
 	_motor.gol.connect(func(de_local: bool, autor: String, asist: String) -> void:
 		partido.gol_externo(de_local, autor, asist)
+		if _rig != null:
+			_rig.impacto(0.9, 0.7)
+			_rig.golpe_de_zoom(5.0, 1.2)
 		## EL VAR SE USA (14-10-2026): con VAR en la liga, uno de cada cinco goles
 		## se revisa en la sala (el partido espera y el gol se confirma).
 		if Partido.ctx_factor_tarjetas < 1.0 and Azar.suerte(0.2):
@@ -1505,9 +1508,13 @@ func _montar_motor() -> void:
 				if is_instance_valid(self) and _motor != null:
 					_a_la_revision_var(partido.minuto, "Revisión del gol: posible fuera de juego")))
 	_motor.remate.connect(func(de_local: bool, autor: String, tipo: String) -> void:
-		partido.remate_externo(de_local, autor, tipo))
+		partido.remate_externo(de_local, autor, tipo)
+		if _rig != null:
+			_rig.golpe_de_zoom(2.0, 0.5))
 	_motor.tarjeta.connect(func(id: String, roja: bool, _l: bool) -> void:
-		partido.tarjeta_externa(id, roja))
+		partido.tarjeta_externa(id, roja)
+		if _rig != null:
+			_rig.impacto(0.45 if roja else 0.25, 0.4))
 	_motor.aviso.connect(_al_aviso_motor)
 	_motor.tactica_rapida.connect(func(eq: int, clave: String, valor: int) -> void:
 		var c: Club = partido.local if eq == 0 else partido.visita
