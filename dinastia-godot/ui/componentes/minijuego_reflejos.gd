@@ -77,11 +77,11 @@ func _resolver(eleccion: int) -> void:
 		var rapidez := 1.0 - _t / _limite
 		var ganado := 10 + int(rapidez * 10.0)
 		_puntos += ganado
-		_msg = "¡PARADÓN! +%d" % ganado
+		_msg = Idiomas.t("¡PARADÓN! +%d") % ganado
 		_limite = maxf(_limite * 0.93, 0.32)
 		Sonido.toca("paso", Sonido.Bus.EFECTOS)
 	else:
-		_msg = "¡Gol!" if eleccion >= 0 else "¡Tarde!"
+		_msg = Idiomas.t("¡Gol!") if eleccion >= 0 else Idiomas.t("¡Tarde!")
 	_msg_t = 0.8
 	_lado = -1
 	_espera = _rng.randf_range(0.5, 1.2)
@@ -93,7 +93,7 @@ func _resolver(eleccion: int) -> void:
 			cf.load(ARCHIVO)
 			cf.set_value("reflejos", "record", record)
 			cf.save(ARCHIVO)
-			_msg = "¡NUEVO RÉCORD! %d" % _puntos
+			_msg = Idiomas.t("¡NUEVO RÉCORD! %d") % _puntos
 		_msg_t = 99.0
 
 func _reiniciar() -> void:
@@ -111,8 +111,8 @@ func _draw() -> void:
 	var h := size.y
 	draw_rect(Rect2(0, 0, w, h), Color(0.04, 0.07, 0.1, 0.97))
 	var f := ThemeDB.fallback_font
-	draw_string(f, Vector2(30, 50), "REFLEJOS · paradas %d/%d · puntos %d · récord %d" % [_paradas, _n, _puntos, record], HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(0.6, 0.9, 1))
-	draw_string(f, Vector2(30, 82), "←/A izquierda · ↓/S centro · →/D derecha · Esc sale", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.85, 0.9))
+	draw_string(f, Vector2(30, 50), Idiomas.t("REFLEJOS · paradas %d/%d · puntos %d · récord %d") % [_paradas, _n, _puntos, record], HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(0.6, 0.9, 1))
+	draw_string(f, Vector2(30, 82), Idiomas.t("←/A izquierda · ↓/S centro · →/D derecha · Esc sale"), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.85, 0.9))
 	## El arco.
 	var ax := w * 0.5
 	var ancho := w * 0.6
@@ -132,4 +132,4 @@ func _draw() -> void:
 	if _msg_t > 0.0 and _msg != "":
 		draw_string(f, Vector2(w * 0.5 - 200, h * 0.2), _msg, HORIZONTAL_ALIGNMENT_CENTER, 400, 36, Color(1, 0.95, 0.4))
 	if _fin:
-		draw_string(f, Vector2(w * 0.5 - 220, h * 0.9), "ESPACIO para otra tanda", HORIZONTAL_ALIGNMENT_CENTER, 440, 22, Color(0.9, 0.9, 1))
+		draw_string(f, Vector2(w * 0.5 - 220, h * 0.9), Idiomas.t("ESPACIO para otra tanda"), HORIZONTAL_ALIGNMENT_CENTER, 440, 22, Color(0.9, 0.9, 1))

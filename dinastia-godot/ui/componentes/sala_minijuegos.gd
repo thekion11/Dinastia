@@ -44,8 +44,8 @@ func _montar(p: Control, mundo: Mundo) -> void:
 	var juegos := [
 		["🎯", "Tanda de penales", "Cinco penales contra un portero que aprende.", func() -> void: MinijuegoPenales.mostrar(p, mundo)],
 		["🧱", "Tiros libres", "Barrera, rosca y una barra de potencia.\nRécord: %d de 5" % MinijuegoTiroLibre.record, func() -> void: MinijuegoTiroLibre.mostrar(p, mundo)],
-		["⚽", "Malabares", "Mantén el balón en el aire: muévete, toca a tiempo y que no caiga.\nRécord: %d" % _rec_malabares(), func() -> void: MinijuegoMalabares.mostrar(p, mundo)],
-		["🧤", "Reflejos del portero", "Doce disparos, cada vez más rápidos: tírate al lado correcto.\nRécord: %d" % _rec_reflejos(), func() -> void: MinijuegoReflejos.mostrar(p, mundo)],
+		["⚽", Idiomas.t("Malabares"), Idiomas.t("Mantén el balón en el aire: muévete, toca a tiempo y que no caiga.") + "\n" + Idiomas.t("Récord: %d") % _rec_malabares(), func() -> void: MinijuegoMalabares.mostrar(p, mundo)],
+		["🧤", Idiomas.t("Reflejos del portero"), Idiomas.t("Doce disparos, cada vez más rápidos: tírate al lado correcto.") + "\n" + Idiomas.t("Récord: %d") % _rec_reflejos(), func() -> void: MinijuegoReflejos.mostrar(p, mundo)],
 		["🧠", "Trivia del club", "Preguntas sobre tu propio plantel y tu estadio.\nRécord: %d" % TriviaClub.record, func() -> void: TriviaClub.mostrar(p, mundo)],
 	]
 	for j: Array in juegos:
