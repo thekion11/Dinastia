@@ -384,3 +384,25 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   de la Carrera de Jugador y Ajustes). La guía en pantalla usa `Mando.corto_de`.
   SIGUE: duelos/contacto, más animaciones, CPU vs CPU creíble, misma ceremonia y gol
   en la Carrera de Jugador.
+- 14-10 PEDIDO (hecho): «¿qué le pasa al portero?», «el césped no debería ser plano»,
+  «los NPC cámaras deberían seguir la jugada», barra de energía y nombres como FC, «carta
+  con la cara del modelo 3D al marcar» y CONTROLES FC 26 según el manual que pasó (todas las
+  combinaciones + filigranas; menú mejor y con sonido al recorrer/aceptar). HECHO:
+  · Portero: `MotorJugable.colocacion_portero` (bisectriz, profundidad por distancia),
+    achique en el mano a mano, `portero_lateral_der/izq` (AnimFutbol), estirada sin
+    teletransporte. Sonda: ~2,9 goles y 71 % de paradas. Captura `captura_portero.tscn`.
+  · Césped con volumen: `visor/cesped_capas.gdshader` + `CespedCapas` (ULTRA 14 capas,
+    ALTO 10, MEDIO 0; sigue a la cámara, se apaga a 18 m); color común en
+    `cesped_comun.gdshaderinc`. Captura `captura_cesped.tscn`.
+  · `visor/camarografos_siguen.gd` (giran con el balón; el de la banda camina).
+  · `ui/componentes/indicador_fc.gd` (nombre, barra fina, triángulo) y barras continuas
+    en los rótulos (`PlayerSpawner.poner_energia`). `ui/componentes/carta_goleador.gd`
+    (banda + escudo + retrato 3D en SubViewport), sustituye al cartel «GOL DE» con motor.
+  · Controles FC: `nucleo/mando.gd` (RB `jugar_mod`, filigranas stick der./numpad,
+    R3 sombrero, cruceta/F1-F4 tácticas rápidas), `visor/control_fc.gd` (21 filigranas
+    con estrellas, reconocedor de gestos, 35+ combinaciones), motor: rosca/vaselina/
+    potente, pase tenso, pared, bombeados, centros, contener, 2.º presiona, falta táctica,
+    salida del portero, jockey, proteger, cambio con stick der., panenka. Tácticas rápidas
+    escriben en la pizarra del club (`tactica_rapida`). Pantalla de controles con
+    pestañas (Botones/Ayudas/Combinaciones/Filigranas). Sonido en TODOS los botones al
+    pasar y pulsar (`BotonFx._sonar`). Prueba: `prueba_control_equipo.tscn`.

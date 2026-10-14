@@ -11,20 +11,30 @@ extends RefCounted
 
 ## acción: [descripción, [teclas], [botones del mando], eje (-1 si ninguno), signo del eje]
 const MAPA := {
-	"jugar_arriba": ["Mover arriba", [KEY_W, KEY_UP], [JOY_BUTTON_DPAD_UP], JOY_AXIS_LEFT_Y, -1.0],
-	"jugar_abajo": ["Mover abajo", [KEY_S, KEY_DOWN], [JOY_BUTTON_DPAD_DOWN], JOY_AXIS_LEFT_Y, 1.0],
-	"jugar_izquierda": ["Mover a la izquierda", [KEY_A, KEY_LEFT], [JOY_BUTTON_DPAD_LEFT], JOY_AXIS_LEFT_X, -1.0],
-	"jugar_derecha": ["Mover a la derecha", [KEY_D, KEY_RIGHT], [JOY_BUTTON_DPAD_RIGHT], JOY_AXIS_LEFT_X, 1.0],
-	"jugar_pase": ["Pase / presionar", [KEY_SPACE, KEY_J], [JOY_BUTTON_A], -1, 0.0],
-	"jugar_tiro": ["Tiro / entrada / despeje", [KEY_K], [JOY_BUTTON_B], -1, 0.0],
-	"jugar_centro": ["Centro / barrida", [KEY_L], [JOY_BUTTON_X], -1, 0.0],
-	"jugar_pase_largo": ["Pase largo / salida del portero", [KEY_I], [JOY_BUTTON_Y], -1, 0.0],
-	"jugar_filtrado": ["Pase al hueco", [KEY_U], [JOY_BUTTON_RIGHT_SHOULDER], -1, 0.0],
-	"jugar_cambiar": ["Cambiar de jugador", [KEY_Q], [JOY_BUTTON_LEFT_SHOULDER], -1, 0.0],
+	"jugar_arriba": ["Mover arriba", [KEY_W, KEY_UP], [], JOY_AXIS_LEFT_Y, -1.0],
+	"jugar_abajo": ["Mover abajo", [KEY_S, KEY_DOWN], [], JOY_AXIS_LEFT_Y, 1.0],
+	"jugar_izquierda": ["Mover a la izquierda", [KEY_A, KEY_LEFT], [], JOY_AXIS_LEFT_X, -1.0],
+	"jugar_derecha": ["Mover a la derecha", [KEY_D, KEY_RIGHT], [], JOY_AXIS_LEFT_X, 1.0],
+	"jugar_pase": ["Pase raso · contener", [KEY_SPACE, KEY_J], [JOY_BUTTON_A], -1, 0.0],
+	"jugar_tiro": ["Tiro · entrada · despeje", [KEY_K], [JOY_BUTTON_B], -1, 0.0],
+	"jugar_centro": ["Centro · pase largo · barrida", [KEY_L], [JOY_BUTTON_X], -1, 0.0],
+	"jugar_filtrado": ["Pase al hueco · salida del portero", [KEY_U], [JOY_BUTTON_Y], -1, 0.0],
+	"jugar_cambiar": ["Cambiar de jugador · modificador LB (vaselina, bombeado, pared)", [KEY_Q], [JOY_BUTTON_LEFT_SHOULDER], -1, 0.0],
+	"jugar_mod": ["Modificador RB (rosca, tenso, potente) · 2.º jugador presiona · regate técnico", [KEY_CTRL], [JOY_BUTTON_RIGHT_SHOULDER], -1, 0.0],
 	"jugar_sprint": ["Sprint", [KEY_SHIFT], [], JOY_AXIS_TRIGGER_RIGHT, 1.0],
-	"jugar_regate": ["Regate / proteger", [KEY_E], [JOY_BUTTON_RIGHT_STICK], JOY_AXIS_TRIGGER_LEFT, 1.0],
-	"jugar_pedir": ["Pedir el balón / desmarque", [KEY_R], [JOY_BUTTON_LEFT_STICK], -1, 0.0],
-	"jugar_pausa": ["Pausa / táctica rápida", [KEY_ESCAPE, KEY_P], [JOY_BUTTON_START], -1, 0.0],
+	"jugar_regate": ["Proteger el balón · bregar (jockey)", [KEY_E], [], JOY_AXIS_TRIGGER_LEFT, 1.0],
+	"jugar_pase_largo": ["Pase largo (teclado)", [KEY_I], [], -1, 0.0],
+	"jugar_pedir": ["Pedir el balón · desmarque", [KEY_R], [JOY_BUTTON_LEFT_STICK], -1, 0.0],
+	"jugar_sombrero": ["Autopase elevado (sombrero)", [KEY_KP_5], [JOY_BUTTON_RIGHT_STICK], -1, 0.0],
+	"jugar_fili_arriba": ["Filigrana: stick derecho arriba", [KEY_KP_8], [], JOY_AXIS_RIGHT_Y, -1.0],
+	"jugar_fili_abajo": ["Filigrana: stick derecho abajo", [KEY_KP_2], [], JOY_AXIS_RIGHT_Y, 1.0],
+	"jugar_fili_izquierda": ["Filigrana: stick derecho izquierda", [KEY_KP_4], [], JOY_AXIS_RIGHT_X, -1.0],
+	"jugar_fili_derecha": ["Filigrana: stick derecho derecha", [KEY_KP_6], [], JOY_AXIS_RIGHT_X, 1.0],
+	"jugar_tac_arriba": ["Táctica rápida: más ofensiva", [KEY_F1], [JOY_BUTTON_DPAD_UP], -1, 0.0],
+	"jugar_tac_abajo": ["Táctica rápida: más defensiva", [KEY_F2], [JOY_BUTTON_DPAD_DOWN], -1, 0.0],
+	"jugar_tac_izquierda": ["Táctica rápida: presión de equipo", [KEY_F3], [JOY_BUTTON_DPAD_LEFT], -1, 0.0],
+	"jugar_tac_derecha": ["Táctica rápida: laterales al ataque", [KEY_F4], [JOY_BUTTON_DPAD_RIGHT], -1, 0.0],
+	"jugar_pausa": ["Pausa / táctica y cambios", [KEY_ESCAPE, KEY_P], [JOY_BUTTON_START], -1, 0.0],
 }
 
 ## Qué acción del catálogo sale de cada botón, con balón y sin balón.
@@ -53,8 +63,8 @@ const ESQUEMAS := {
 	"clasico": {"nombre": "Clásico de PC: flechas + A/S/D/W",
 		"jugar_arriba": [KEY_UP], "jugar_abajo": [KEY_DOWN], "jugar_izquierda": [KEY_LEFT], "jugar_derecha": [KEY_RIGHT],
 		"jugar_pase": [KEY_S], "jugar_tiro": [KEY_D], "jugar_centro": [KEY_A], "jugar_pase_largo": [KEY_Z],
-		"jugar_filtrado": [KEY_W], "jugar_cambiar": [KEY_Q], "jugar_sprint": [KEY_E], "jugar_regate": [KEY_C],
-		"jugar_pedir": [KEY_X], "jugar_pausa": [KEY_ESCAPE, KEY_P]},
+		"jugar_filtrado": [KEY_W], "jugar_cambiar": [KEY_Q], "jugar_mod": [KEY_SHIFT], "jugar_sprint": [KEY_E],
+		"jugar_regate": [KEY_C], "jugar_pedir": [KEY_X], "jugar_pausa": [KEY_ESCAPE, KEY_P]},
 }
 ## Las ayudas, con sus opciones (la primera es la de fábrica).
 const AYUDAS := {
@@ -199,6 +209,8 @@ static func _gatillo(accion: String) -> String:
 	match int(MAPA[accion][3]):
 		JOY_AXIS_TRIGGER_RIGHT: return "RT"
 		JOY_AXIS_TRIGGER_LEFT: return "LT"
+		JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y: return "Stick izq."
+		JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y: return "Stick der."
 	return ""
 
 const NOMBRE_BOTON := {JOY_BUTTON_A: "A", JOY_BUTTON_B: "B", JOY_BUTTON_X: "X", JOY_BUTTON_Y: "Y",

@@ -376,11 +376,11 @@ func _process(delta: float) -> void:
 func _guia_controles(con_balon: bool) -> String:
 	var c := func(a: String) -> String: return Mando.corto_de(a)
 	if con_balon:
-		return Idiomas.t("CON BALÓN: %s pase · %s tiro (mantén) · %s centro · %s largo · %s al hueco · %s regate · %s sprint") % [
-			c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_pase_largo"),
-			c.call("jugar_filtrado"), c.call("jugar_regate"), c.call("jugar_sprint")]
-	return Idiomas.t("SIN BALÓN: %s presionar · %s entrada · %s barrida · %s pedir el balón · %s sprint · %s pausa") % [
-		c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_pedir"),
+		return Idiomas.t("CON BALÓN: %s pase · %s tiro (mantén) · %s centro · %s al hueco · %s rosca/tenso · %s vaselina/pared · %s proteger · %s sprint · stick der. filigranas") % [
+			c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_filtrado"),
+			c.call("jugar_mod"), c.call("jugar_cambiar"), c.call("jugar_regate"), c.call("jugar_sprint")]
+	return Idiomas.t("SIN BALÓN: %s contener · %s entrada · %s barrida · %s bregar · %s pedir el balón · %s sprint · %s pausa") % [
+		c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_regate"), c.call("jugar_pedir"),
 		c.call("jugar_sprint"), c.call("jugar_pausa")]
 
 func _abrev(nombre: String) -> String:
