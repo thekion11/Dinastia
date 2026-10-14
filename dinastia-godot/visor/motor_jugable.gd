@@ -163,6 +163,8 @@ var duracion_gol := 3.2
 ## en 45/90 y se cuenta el «+».
 var anadido := [0.0, 0.0]
 var _goleador: Dictionary = {}
+## Fintas que la IA ha intentado (para pruebas y estadísticas).
+var regates_ia := 0
 var _celebra_anim := "celebrar"
 
 # ---------------------------------------------------------------- montaje
@@ -1533,6 +1535,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## regate intenta irse con una finta (antes solo el jugador humano podía).
 	if presion < 1.8 and t > float(p["regate_hasta"]) and _rng.randf() < float(p["attr"]["reg"]) * 0.45:
 		p["regate_hasta"] = t + 0.7
+		regates_ia += 1
 		var lado := Vector3(d, 0, 0) * (1.0 if _rng.randf() < 0.5 else -1.0)
 		(p["node"] as Node3D).position += lado * 0.8
 		## El repertorio crece con el regate: los buenos sacan bicicletas,

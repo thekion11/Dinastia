@@ -324,10 +324,32 @@ Medido (`datos/idiomas_extra.json`):
 
 ---
 
-## 14. Pasada 2 (nueva auditoría) — ver abajo, se rellena al terminar
+## 14. Pasadas 2 y 3 (nuevas auditorías) — hallazgos
 
-(Se añaden aquí los hallazgos de la prueba larga, de la comprobación de escenas/shaders
-y de la revisión del exterior de estadios.)
+**Pasada 2 (prueba larga y datos).** `prueba_larga` (10 temporadas × 3 semillas, 218 s):
+0 errores. `auditoria_datos`: 0 hallazgos. Sondas del motor: ver §6.
+
+**Pasada 3 (14-10-2026, «dale auditoría»).** Herramientas nuevas:
+`pruebas/auditoria_tecnica.tscn` (shaders, escenas, nodos huérfanos) y la comprobación
+estática «claves de `Idiomas.t` sin traducción».
+
+| Id | Gravedad | Hallazgo | Estado |
+|---|---|---|---|
+| E-06 | P1 | **69 textos con `Idiomas.t` sin traducción en NINGÚN idioma**: la pantalla de controles (manual, ayudas, filigranas, diálogos de guardar), el panel de táctica y cambios, la ceremonia («En vivo desde», «Cualquier tecla para saltar»), la carta del goleador (GOLES/TIROS), la galería del club y el tutorial de la ciudad salían en español en los 8 idiomas | ✅ 69 × 8 idiomas = 552 traducciones añadidas |
+| E-07 | P2 | `prueba_intro` obsoleta: desde el 13-10 la **ceremonia** sustituye al vuelo corto, así que «arranca la presentación» fallaba | ✅ la prueba apaga la ceremonia mientras corre (no verificada de extremo a extremo: tarda > 7 min en software) |
+| E-08 | P2 | `prueba_regates` obsoleta: miraba a `MatchPlayback` (que con el motor real no mueve a nadie) y la ceremonia retenía el partido | ✅ ahora mira a `MotorJugable` y apaga la ceremonia: «conduce con el mocap de regate» pasa (198 fotogramas) |
+| E-09 | P2 | `prueba_repeticion` obsoleta (4,2 s grabados por la ceremonia) y con `resize` sobre imagen nula en `--headless` | ✅ ceremonia apagada y guarda contra imagen nula (no verificada, lenta) |
+| E-10 | P3 | Las pruebas que apagan la ceremonia escriben en `user://ajustes.cfg`: si se matan a medias (timeout) el ajuste queda en `false` (me pasó una vez y lo restauré) | 🟡 ver M-455 (config de pruebas aparte) |
+| H-11 | P1 | **La IA no amaga**: 0 fintas en un partido de prueba completo; la condición exige un rival a < 1,8 m y llega tarde en la cadena de decisiones | 🔴 registrado como M-443; la prueba lo avisa («AVISO») en vez de fallar |
+| H-12 | P3 | `prueba_carrera_flujo` termina con «Texture with GL ID … leaked» (≈ 350 kB × 2) al cerrar | 🔴 M-444 |
+| H-13 | P3 | `prueba_descanso_3d` se cuelga en `--headless` (necesita pantalla) y `prueba_intro/regates/repeticion` no caben en 5 min con render por software | 🔴 M-445 |
+| H-14 | — | Sin hallazgos: 19 shaders cargan, 0 nodos huérfanos tras 3 aperturas/cierres de la pantalla principal, 0 avisos/errores en un partido real con gol | ✅ |
+
+Estado de las 14 pruebas sueltas (`prueba_*`) tras la pasada: ✅ `modos`, `motor_jugable`,
+`partido_motor`, `control_equipo`, `dominadas`, `ciudad_modelos`, `menu_ciudad_pie`,
+`minijuegos_nuevos`, `carrera_flujo` (con la fuga GL al salir), `larga`; 🟡 `regates`
+(pasa conducir y dominadas; el amague queda como aviso); ⚠ sin verificar por lentitud:
+`intro`, `repeticion`; ⚠ `descanso_3d` (cuelga en headless).
 
 ---
 

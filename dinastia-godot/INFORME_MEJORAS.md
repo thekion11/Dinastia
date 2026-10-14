@@ -886,16 +886,82 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 - **M-442 · P2 · I** Mando: botones reasignables guardados pero sin perfiles múltiples.
   *Cómo*: perfiles.
 
+## R. Pasada 3 (M-443 … M-470)
+
+- **M-443 · P1 · M** La IA del motor no amaga (0 en un partido de prueba). *Falta*: fintas de
+  la IA visibles. *Cómo*: subir el umbral de `presion < 1.8` a ~2,6 m, probar antes de pasar
+  si hay rival al frente y repetir la sonda de calidad (N ≥ 8) para no romper la calibración.
+- **M-444 · P2 · M** Fuga de texturas GL al cerrar `prueba_carrera_flujo`. *Cómo*: liberar
+  `Retrato3D`/`Portada` (cachés estáticas) al salir con `NOTIFICATION_WM_CLOSE_REQUEST`.
+- **M-445 · P2 · M** Pruebas que no caben en 5 min con render por software (`intro`,
+  `regates`, `repeticion`) o se cuelgan en headless (`descanso_3d`). *Cómo*: modo «rápido»
+  del arnés (menos fotogramas, tiempo simulado) y marcar las que exigen pantalla.
+- **M-446 · P1 · M** 69 claves nuevas sin traducir (✅ arregladas); el patrón se repetirá con
+  cada pantalla nueva. *Cómo*: **prueba del banco** que extraiga las claves de `Idiomas.t(` del
+  código y falle si falta en algún idioma (el script de la pasada 3 ya lo hace).
+- **M-447 · P1 · I** Las 274 cadenas en español escritas directo en `ui/` (I-02) siguen
+  pendientes; la prueba anterior solo cubre las que ya pasan por `Idiomas.t`. *Cómo*: ídem,
+  buscar `.text = "…"` con tildes y exigir envoltorio.
+- **M-448 · P2 · M** `auditoria_clubes` tarda ~8 min y `auditoria_datos` ~1 min. *Cómo*:
+  ejecutar con una muestra (`N` clubes) en el banco y completa solo de noche.
+- **M-449 · P2 · I** Los informes (`AUDITORIA_CLUBES.csv`) se regeneran a mano. *Cómo*: tarea
+  de CI nocturna que los publique como artefacto y abra una incidencia si empeora un %.
+- **M-450 · P2 · M** `pruebas/prueba_*` no tienen un índice de «qué cubre cada una». *Cómo*:
+  cabecera estándar (módulo, modo headless sí/no, duración) y tabla generada en `LEEME`.
+- **M-451 · P2 · I** Duplicación del arnés (`_ok`, `_fallos`) en decenas de pruebas. *Cómo*:
+  clase base `PruebaBase` con `_ok`, resumen y salida con código.
+- **M-452 · P2 · I** Salida de pruebas sin código de retorno uniforme (algunas `quit(0)` con
+  fallos). *Cómo*: `quit(_fallos > 0 ? 1 : 0)` en todas para que CI las use.
+- **M-453 · P2 · I** Pruebas ligadas al azar sin semilla fija en algunos casos (la IA usa `_rng`).
+  *Cómo*: semilla por prueba y registro de la semilla al fallar.
+- **M-454 · P2 · I** Capturas que cambian el estado de la máquina (ajustes de ceremonia, intro).
+  *Cómo*: restaurar en `_exit_tree`.
+- **M-455 · P2 · M** Pruebas que escriben en `user://ajustes.cfg` real (E-10). *Cómo*: ruta de
+  ajustes inyectable (`CajonAjustes.RUTA` sobreescribible) y una carpeta `user://pruebas/`.
+- **M-456 · P2 · I** `auditoria_tecnica` solo carga las escenas de `escenas/` y `ui/` (4).
+  *Cómo*: recorrer también las que crean pantallas en código (instanciar cada `PanelX.abrir`).
+- **M-457 · P2 · I** Los nodos huérfanos se miden solo en la pantalla principal. *Cómo*: medir
+  tras abrir y cerrar el estadio 3D, la ciudad, la casa y el teléfono (los más pesados).
+- **M-458 · P2 · I** Sin comprobación de que cada `Label` traducible esté dentro de un árbol
+  que se pasa por `traducir_arbol`. *Cómo*: recorrido de pantallas en un idioma ajeno que
+  busque textos con tilde del español.
+- **M-459 · P2 · I** Cinco idiomas de los nueve nacieron con frases que luego se añadieron
+  solo a algunos (en/pt/pl/tr). *Cómo*: un único flujo (`herramientas/extraer…` → traducir →
+  `montar…`) para todas las frases nuevas.
+- **M-460 · P2 · I** Las traducciones nuevas (552) están hechas a mano sin revisión nativa.
+  *Cómo*: marcar con fecha/«auto» y pedir revisión (especialmente fr/it/de/pl/tr).
+- **M-461 · P2 · I** Las cadenas con `%s`/`%d` dependen del orden de argumentos; en algunos
+  idiomas el orden natural cambia. *Cómo*: placeholders con nombre (`{club}`) en las frases
+  con más de un argumento.
+- **M-462 · P2 · I** Etiquetas de botón con emoji/caracteres (💾 ↺ ● ✔ ▸ ◯) pueden no estar en
+  todas las fuentes. *Cómo*: prueba de glifos por idioma y sustitutos.
+- **M-463 · P2 · I** `Idiomas.t` devuelve la clave si falta (silencioso). *Cómo*: en modo
+  depuración, registrar la clave faltante una vez.
+- **M-464 · P2 · I** No existe un informe de «frases por pantalla»: no se sabe qué pantalla
+  está más sin traducir. *Cómo*: contar claves y literales por archivo (ya calculado para `ui/`).
+- **M-465 · P3 · I** Sin pruebas de rendimiento de la carga de idiomas (`idiomas.gd` 655
+  líneas, `idiomas_extra.json` ~1 MB). *Cómo*: carga perezosa por idioma.
+- **M-466 · P2 · M** `datos/idiomas_extra.json` se reescribe entero con cada ampliación (diffs
+  grandes). *Cómo*: un archivo por idioma.
+- **M-467 · P2 · I** Falta un chequeo de longitud de texto (alemán/finés largo) en botones.
+  *Cómo*: capturas en de/pl con comprobación de recorte.
+- **M-468 · P2 · I** Plurales y géneros en las 69 frases nuevas (p. ej. «%d botones») no están
+  tratados. *Cómo*: formas con regla de plural (`patrones`).
+- **M-469 · P3 · I** Falta documentación del flujo de pruebas para colaboradores. *Cómo*:
+  sección en `LEEME.md` con el orden (import → banco → auditorías → capturas).
+- **M-470 · P2 · I** El banco no ejecuta `auditoria_tecnica`, `auditoria_datos` ni las pruebas
+  nuevas. *Cómo*: añadirlas como tandas rápidas (datos ≈ 1 min, técnica ≈ 20 s).
+
 ---
 
-**Total de puntos registrados: 442** (M-001 … M-442), más los 40 de `INFORME_INTERNO.md`.
+**Total de puntos registrados: 470** (M-001 … M-470), más los 40 de `INFORME_INTERNO.md`.
 
 ### Cómo se priorizaron
 
 1. **P0** (2): exterior de estadio (M-001) y perfil en hardware real (M-337).
-2. **P1** (72): lo que se nota a simple vista o afecta a la coherencia (idiomas,
+2. **P1** (75): lo que se nota a simple vista o afecta a la coherencia (idiomas,
    patrocinio, escudos y camisetas, sesgo de local, retratos reales, cobertura de pruebas).
-3. **P2/P3** (358 y 10): pulido y futuro.
+3. **P2/P3** (381 y 12): pulido y futuro.
 
 ### Hallazgos que desmienten supuestos (importante)
 
@@ -909,4 +975,4 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 
 ### Reparto por evidencia
 
-Medido (M): 43 · Código revisado (C): 39 · Visto en captura (V): 8 · Inferido (I): 352. Los **inferidos** deben comprobarse antes de tocar nada.
+Medido (M): 51 · Código revisado (C): 39 · Visto en captura (V): 8 · Inferido (I): 372. Los **inferidos** deben comprobarse antes de tocar nada.
