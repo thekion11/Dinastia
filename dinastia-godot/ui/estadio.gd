@@ -92,6 +92,10 @@ var _mi_lado := -1
 var _acum_motor := 0.0
 var _t_tactica := 0.0
 var _cursor: Node3D
+var _indicador: IndicadorFC
+var _tiros_de := {}
+var _goles_de := {}
+var _carta_mostrada := false
 var _ayuda_control: Label
 var _panel_dt: PanelDTPartido
 var _panel_controles: PanelControles
@@ -437,7 +441,7 @@ func _escalar_rotulos() -> void:
 			var rot := n.get_node(PlayerSpawner.ROTULO) as Label3D
 			rot.pixel_size = tam
 			if rot.has_node(PlayerSpawner.BARRA):
-				(rot.get_node(PlayerSpawner.BARRA) as Label3D).pixel_size = tam
+				rot.get_node(PlayerSpawner.BARRA).set("pixel_size", tam)
 
 ## RÓTULOS SIN AMONTONAR (MEGAPLAN fase 1): en las jugadas de área los
 ## nombres se pisaban. Cada décima de segundo se proyectan a la pantalla y, si
@@ -464,7 +468,22 @@ func _actualizar_barras() -> void:
 	for f: Dictionary in _en_campo:
 		var n: Node3D = f.get("node")
 		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO + "/" + PlayerSpawner.BARRA):
-			PlayerSpawner.actualizar_barra(n.get_node(PlayerSpawner.ROTULO + "/" + PlayerSpawner.BARRA) as Label3D, _minuto_barras)
+			var bar := n.get_node(PlayerSpawner.ROTULO + "/" + PlayerSpawner.BARRA) as Node3D
+			## Con el motor real, la energía de verdad del que corre.
+			var real := _energia_motor(f)
+			if real >= 0.0:
+				PlayerSpawner.poner_energia(bar, real * 100.0)
+			else:
+				PlayerSpawner.actualizar_barra(bar, _minuto_barras)
+
+func _energia_motor(f: Dictionary) -> float:
+	if _motor == null:
+		return -1.0
+	var id := String(f.get("id", ""))
+	for p: Dictionary in _motor.jugadores:
+		if p.get("node") == f.get("node") or (id != "" and String(p.get("id", "")) == id):
+			return _motor.forma_fisica(p)
+	return -1.0
 
 func _mostrar_nombres(si: bool) -> void:
 	PlayerSpawner.mostrar_nombres = si
@@ -601,13 +620,19 @@ static func poner_banca_de(raiz: Node3D, sp: PlayerSpawner, c: Club, once_c: Arr
 ## y se pone una persona entera detrás de la cámara. Y seis guardias de
 ## seguridad detrás de las vallas, de espaldas al juego, mirando a la grada.
 func _poner_personal() -> void:
-	VistaEstadio.poner_personal(_raiz3d)
+	var sig := VistaEstadio.poner_personal(_raiz3d)
+	if sig != null:
+		sig.balon = _balon
 
-static func poner_personal(raiz: Node3D) -> void:
+## Devuelve quién mueve a los camarógrafos: hay que darle el balón.
+static func poner_personal(raiz: Node3D) -> CamarografosSiguen:
 	if raiz == null:
-		return
+		return null
 	var _raiz3d := raiz
 	var i := 0
+	var sig := CamarografosSiguen.new()
+	sig.name = "CamarografosSiguen"
+	raiz.add_child(sig)
 	for cam in _raiz3d.find_children("Camarografo*", "Node3D", true, false):
 		var base := cam as Node3D
 		var d := PersonajeDT.personal_estadio(_raiz3d, "prensa", base.position - base.basis.z * 0.12, base.rotation.y, 700 + i)
@@ -615,6 +640,9 @@ static func poner_personal(raiz: Node3D) -> void:
 			for mi in base.find_children("*", "MeshInstance3D", false, false):
 				if mi.has_meta("cuerpo"):
 					(mi as Node3D).visible = false
+			## El operador va DENTRO del puesto: gira y camina con su cámara.
+			(d["nodo"] as Node3D).reparent(base, true)
+			sig.agregar(base, d)
 		i += 1
 	var puestos := [
 		[Vector3(-38.8, 0, -36.0), -PI * 0.5], [Vector3(-38.8, 0, -12.0), -PI * 0.5],
@@ -624,6 +652,7 @@ static func poner_personal(raiz: Node3D) -> void:
 	for k in puestos.size():
 		## El giro es hacia FUERA del campo: la persona mira a +Z sin girar.
 		PersonajeDT.personal_estadio(_raiz3d, "seguridad", puestos[k][0], puestos[k][1], 900 + k)
+	return sig
 
 ## Dónde se sienta el DT sancionado: la grada de los banquillos, a la altura
 ## de su banquillo (estadio 2.0, fase 3).
@@ -769,6 +798,14 @@ func _arrancar_partido() -> void:
 	partido.tarjeta.connect(_a_la_tarjeta)
 	partido.cambio_hecho.connect(_al_cambio)
 	partido.remate.connect(_al_remate)
+	## Tiros y goles de cada uno, para la carta del goleador.
+	partido.remate.connect(func(_c: Club, a: Jugador, _t: String, _m: int) -> void:
+		if a != null:
+			_tiros_de[a.id] = int(_tiros_de.get(a.id, 0)) + 1)
+	partido.gol.connect(func(_c: Club, a: Jugador, _m: int, _as: Jugador) -> void:
+		if a != null:
+			_tiros_de[a.id] = int(_tiros_de.get(a.id, 0)) + 1
+			_goles_de[a.id] = int(_goles_de.get(a.id, 0)) + 1)
 	partido.lesion.connect(_a_la_lesion)
 	partido.decision_arbitral.connect(_a_la_decision_arbitral)
 	## Saque inicial + murmullo de fondo: lo mismo que ya sonaba en la pantalla
@@ -1154,7 +1191,10 @@ func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) ->
 		Sonido.toca("gol_" + estilo if Sonido.catalogo().has("gol_" + estilo) else "gol")
 	else:
 		Sonido.toca("gol_rival")
-	_mostrar_banner_gol("⚽ GOL DE %s" % (autor.nombre.to_upper() if autor else "?"), a_favor)
+	## Con el motor real lo dice la carta del goleador (como en FC); el cartel
+	## queda para el gol en propia puerta y el partido sin motor.
+	if _motor == null or autor == null:
+		_mostrar_banner_gol("⚽ GOL DE %s" % (autor.nombre.to_upper() if autor else "?"), a_favor)
 	_animar_marcador_gol()
 	## La pantalla gigante corta a "¡GOOOL!" a pantalla completa y vuelve sola
 	## a su rotación a los 6,5 s -igual que la de un estadio de verdad-.
@@ -1659,63 +1699,55 @@ func _alternar_control_motor() -> void:
 	if activo:
 		_mostrar_ayuda_control()
 
+## El jugador que manejas: el indicador de FC (`IndicadorFC`, en pantalla) y
+## un aro muy discreto en el suelo para ubicarlo en las cámaras lejanas.
 func _crear_cursor() -> void:
 	_cursor = Node3D.new()
 	_raiz3d.add_child(_cursor)
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color("ffd23f")
-	mat.emission_enabled = true
-	mat.emission = Color("ffd23f")
-	mat.emission_energy_multiplier = 1.6
+	mat.albedo_color = Color(0.18, 0.6, 1.0, 0.55)
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	var flecha := MeshInstance3D.new()
-	var pm := PrismMesh.new()
-	pm.size = Vector3(0.42, 0.42, 0.12)
-	flecha.mesh = pm
-	flecha.rotation.x = PI
-	flecha.position = Vector3(0, 2.35, 0)
-	flecha.material_override = mat
-	flecha.name = "Flecha"
-	_cursor.add_child(flecha)
 	var aro := MeshInstance3D.new()
 	var tm := TorusMesh.new()
-	tm.inner_radius = 0.5
-	tm.outer_radius = 0.6
+	tm.inner_radius = 0.55
+	tm.outer_radius = 0.62
+	tm.rings = 32
 	aro.mesh = tm
-	aro.position = Vector3(0, 0.04, 0)
+	aro.scale = Vector3(1, 0.05, 1)
+	aro.position = Vector3(0, 0.03, 0)
 	aro.material_override = mat
+	aro.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_cursor.add_child(aro)
-	## El nombre y la energía del que manejas, como en FC.
-	var et := Label3D.new()
-	et.name = "Nombre"
-	et.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	et.no_depth_test = true
-	et.fixed_size = true
-	et.pixel_size = 0.0011
-	et.font_size = 30
-	et.outline_size = 8
-	et.modulate = Color("ffe680")
-	et.position = Vector3(0, 2.75, 0)
-	_cursor.add_child(et)
+	_indicador = IndicadorFC.new()
+	_indicador.z_index = 5
+	add_child(_indicador)
 	_cursor.visible = false
 
 func _mover_cursor() -> void:
-	if _cursor == null or not _cursor.visible:
+	if _cursor == null:
+		return
+	if _indicador != null:
+		_indicador.visible = _cursor.visible
+	if not _cursor.visible:
 		return
 	var u: Dictionary = _motor.usuario
 	if u.is_empty() or not is_instance_valid(u.get("node")):
+		if _indicador != null:
+			_indicador.visible = false
 		return
-	_cursor.global_position = (u["node"] as Node3D).global_position
-	var et := _cursor.get_node_or_null("Nombre") as Label3D
-	if et != null:
+	var n := u["node"] as Node3D
+	_cursor.global_position = n.global_position
+	var cam := get_viewport().get_camera_3d()
+	if _indicador != null and cam != null:
+		var cabeza := n.global_position + Vector3(0, 2.05, 0)
+		if cam.is_position_behind(cabeza):
+			_indicador.visible = false
+			return
 		var jd: Dictionary = u.get("jugador", {})
-		var e := _motor.forma_fisica(u)
-		var barras := int(round(e * 8.0))
-		et.text = "%s\n%s" % [Nombres.visible(String(jd.get("nombre", ""))).get_slice(" ", Nombres.visible(String(jd.get("nombre", ""))).get_slice_count(" ") - 1),
-			"▮".repeat(barras) + "▯".repeat(8 - barras)]
-	var f := _cursor.get_node_or_null("Flecha") as Node3D
-	if f != null:
-		f.position.y = 2.35 + sin(Time.get_ticks_msec() * 0.006) * 0.08
+		var nom := Nombres.visible(String(jd.get("nombre", "")))
+		_indicador.colocar(cam.unproject_position(cabeza), nom.get_slice(" ", nom.get_slice_count(" ") - 1).to_upper(),
+			int(jd.get("dorsal", 0)), _motor.forma_fisica(u))
 
 ## La guía de controles: aparece al empezar a controlar y se va sola (y está
 ## en el cajón ⚙ siempre que haga falta).
@@ -1817,6 +1849,7 @@ func _cine_gol(c: Club, autor: Jugador) -> void:
 		_cine_previa = null
 	_cam_cine.current = true
 	_cine_t = 0.0
+	_carta_mostrada = false
 	## La repetición debe acabar en el gol, no en la celebración: se deja de
 	## grabar hasta que termine.
 	if _repe != null:
@@ -1834,6 +1867,12 @@ func _cine_paso(delta: float) -> void:
 		return
 	_cine_t += delta
 	var autor := _nodo_de(_cine_autor_id)
+	## La carta del goleador, en cuanto el plano lo encuadra.
+	if not _carta_mostrada and _cine_t > 0.7 and _cine_autor_id != "":
+		_carta_mostrada = true
+		var j := partido._por_id(_cine_autor_id) if partido != null else null
+		if j != null:
+			CartaGoleador.mostrar(self, _cine_club, j.dorsal, j.nombre, int(_tiros_de.get(j.id, 1)), int(_goles_de.get(j.id, 1)), autor)
 	if _cine_t < 3.4:
 		## 1) El goleador, de cerca, a la altura del pecho, siguiéndolo.
 		if autor != null:
