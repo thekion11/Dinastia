@@ -4632,6 +4632,13 @@ func _ver_ciudad_con_carga() -> void:
 	_ver_ciudad_propia()
 	carga.cerrar()
 
+## Abre la ciudad y arranca directamente el paseo ("pie") o la conducción ("coche").
+func _ver_ciudad_explorando(modo: String) -> void:
+	await _ver_ciudad_con_carga()
+	for h in get_children():
+		if h is VistaCiudad:
+			(h as VistaCiudad).explorar(modo)
+
 func _ver_estadio_propio() -> void:
 	_fundido_entrada()
 	var c := mundo.mi_club()
