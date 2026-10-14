@@ -184,8 +184,8 @@ func _cortar(i: int) -> void:
 	_plano = i
 	var pl: Array = PLANOS[i]
 	_cam.fov = float(pl[2])
-	_cam.position = pl[0]
-	_cam.look_at(pl[1])
+	## En local: `look_at` falla si la escena aún no está en el árbol.
+	_cam.transform = Transform3D(Basis.looking_at(Vector3(pl[1]) - Vector3(pl[0])), pl[0])
 
 # --- el decorado --------------------------------------------------------------
 
