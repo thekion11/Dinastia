@@ -5,15 +5,15 @@ extends MeshInstance3D
 ## mira la cámara. Lejos no se dibuja (desde la cámara alta de la tele la
 ## brizna no se distingue y no se paga). ULTRA 14 capas, ALTO 10, MEDIO nada.
 
-const LADO := 36.0
+const LADO := 80.0
 var _mat: ShaderMaterial
 
 static func capas_por_calidad() -> int:
 	if Calidad.motor_ligero:
 		return 0
 	match Calidad.elegida:
-		Calidad.ULTRA: return 14
-		Calidad.ALTO: return 10
+		Calidad.ULTRA: return 12
+		Calidad.ALTO: return 8
 	return 0
 
 ## `base`: el material del campo, del que se copian el dibujo y los verdes.
@@ -55,7 +55,7 @@ func _process(_d: float) -> void:
 		visible = false
 		return
 	var cp := cam.global_position
-	visible = cp.y < 18.0
+	visible = cp.y < 40.0 and capas_por_calidad() > 0
 	if not visible:
 		return
 	var fw := -cam.global_basis.z
@@ -63,8 +63,8 @@ func _process(_d: float) -> void:
 	if plano.length() > 0.01:
 		plano = plano.normalized()
 	## Hasta donde llega el rayo de la cámara al suelo, sin pasar de 12 m.
-	var hasta := 12.0
+	var hasta := 30.0
 	if fw.y < -0.05:
-		hasta = minf(cp.y / -fw.y, 12.0)
-	var foco := Vector2(cp.x, cp.z) + plano * hasta * 0.6
+		hasta = minf(cp.y / -fw.y, 40.0)
+	var foco := Vector2(cp.x, cp.z) + plano * hasta * 0.55
 	global_position = Vector3(foco.x, 0.0, foco.y)

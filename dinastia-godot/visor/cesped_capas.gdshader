@@ -12,8 +12,8 @@ render_mode diffuse_lambert, specular_schlick_ggx, cull_back;
 
 uniform vec2 tam_plano = vec2(80.0, 117.0);
 uniform float altura = 0.032;
-uniform float densidad = 70.0;
-uniform float lejos = 18.0;
+uniform float densidad = 48.0;
+uniform float lejos = 46.0;
 
 varying vec3 v_mundo;
 varying float v_capa;
