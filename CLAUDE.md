@@ -504,3 +504,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   gol/tarjeta/remate en `Estadio._montar_motor`). Optimización: se probó bajar cortes/distancia de sombra
   en ALTO → sin ahorro medible de triángulos (revertido); `medir_partido` ganó ARBOL=1 y lista de luces.
   Cifra honesta: partido ALTO ≈2,3 M tris/700 llamadas bajo llvmpipe; el ≥50 % NO está demostrado.
+- 14-10 MEGA AUD. 2 puntos 9 y 15: `dinastia-godot/MEGA_AUDITORIA_2.md` (estado real de los 15 puntos; el ≥50 % de
+  optimización NO está demostrado). Vídeo de novedades (≈40 s, 8 MB) entregado por el chat; NO se subió al Drive:
+  el conector exige el archivo en base64 dentro de la llamada y 8 MB no caben. Guion `pruebas/video_novedades.gd`,
+  montaje `herramientas/montar_novedades.py` (los .avi/.mp4 nunca al repo).
