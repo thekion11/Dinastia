@@ -124,6 +124,10 @@ func _diag() -> void:
 	var total := 0.0
 	var estados := {}
 	var sueltos := {}
+	var largo_b := [0.0, 0.0]
+	var ancho_b := [0.0, 0.0]
+	var presion_t := 0.0
+	var t_pos := 0.0
 	var cerca_suelto := 0.0
 	var t_suelto := 0.0
 	var dt := 1.0 / 30.0
@@ -152,15 +156,38 @@ func _diag() -> void:
 					md = minf(md, Vector2(motor.pos(q).x - ball.position.x, motor.pos(q).z - ball.position.z).length())
 				cerca_suelto += md * dt
 				t_suelto += dt
+		## Compacidad: largo y ancho de cada bloque (sin porteros) y lo cerca
+		## que está el defensor más próximo del que lleva el balón.
+		for eqc in 2:
+			var zs: Array = []
+			var xs: Array = []
+			for q: Dictionary in motor.jugadores:
+				if (0 if bool(q["es_local"]) else 1) == eqc and not bool(q["por"]):
+					zs.append(motor.pos(q).z)
+					xs.append(motor.pos(q).x)
+			if zs.size() > 2:
+				zs.sort()
+				xs.sort()
+				largo_b[eqc] += float(zs[-1] - zs[0]) * dt
+				ancho_b[eqc] += float(xs[-1] - xs[0]) * dt
+		if not motor.poseedor.is_empty():
+			var mdp := 99.0
+			for q: Dictionary in motor.jugadores:
+				if bool(q["es_local"]) != bool(motor.poseedor["es_local"]):
+					mdp = minf(mdp, motor.pos(q).distance_to(motor.pos(motor.poseedor)))
+			presion_t += mdp * dt
+			t_pos += dt
 		if ball.position.z > 17.5:
 			tercio[0] += dt
 		elif ball.position.z < -17.5:
 			tercio[1] += dt
 	print("DIAG goles %s tiros %s faltas %s córners %s" % [str(motor.goles), str(motor.tiros), str(motor.faltas), str(motor.corners)])
+	print("DIAG por el aire: %s" % str(motor.cuenta_aire))
 	print("DIAG pases %s llegaron %s despejes %s" % [str(motor.pases), str(motor.pases_ok), str(motor.despejes)])
 	print("DIAG tiempo por estado %s" % str(estados))
 	print("DIAG en juego %.0f s, con dueño %.0f %%, cambios de posesión %d (%.1f por minuto de juego)" % [total, 100.0 * con_dueno / total, cambios_pos, cambios_pos / (total / 60.0)])
 	print("DIAG balón suelto por tipo (s): %s ; distancia media del más cercano al balón quieto/lento: %.1f m" % [str(sueltos), cerca_suelto / maxf(t_suelto, 0.01)])
+	print("DIAG bloque largo %.0f/%.0f m, ancho %.0f/%.0f m; rival más cercano al poseedor %.1f m" % [largo_b[0] / total, largo_b[1] / total, ancho_b[0] / total, ancho_b[1] / total, presion_t / maxf(t_pos, 0.01)])
 	print("DIAG balón en el último tercio: local ataca %.0f %%, visita ataca %.0f %%" % [100.0 * tercio[0] / total, 100.0 * tercio[1] / total])
 
 func _resumen(nombre: String, res: Array) -> void:

@@ -154,7 +154,9 @@ func _process(delta: float) -> void:
 				vel_b = Vector3.ZERO
 			## El plano se adelanta un poco hacia donde va el balón.
 			var guia := Vector3(vel_b.x, 0, vel_b.z) * 0.35
-			var foco := Vector3(clampf(b.x * 0.55 + guia.x, -20.0, 20.0), 0.0, clampf(b.z + guia.z, -47.0, 47.0))
+			## Por la banda de la cámara el foco no se acerca más de la mitad
+			## del campo (si no, plano cenital encima de los jugadores).
+			var foco := Vector3(clampf(b.x * 0.45 + guia.x, -18.0, 4.0), 0.0, clampf(b.z + guia.z, -47.0, 47.0))
 			_trans_foco = _trans_foco.lerp(foco, clampf(2.6 * delta, 0.0, 1.0))
 			## La cámara se desliza por la tribuna (algo menos que el balón) y,
 			## cerca de un área, cierra el plano.

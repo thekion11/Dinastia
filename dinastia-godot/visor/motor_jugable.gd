@@ -153,6 +153,7 @@ var _eligiendo := false
 var _n_patada := 0
 ## Qué clase de golpeo es el próximo `_patear` (lo fija quien patea).
 var _ctx_golpeo := ""
+var cuenta_aire := {}
 ## Lo que dura la celebración antes del saque (el partido del DT la alarga para
 ## su secuencia de cámaras) y quién marcó.
 var duracion_gol := 3.2
@@ -565,16 +566,47 @@ func _fin_de_mitad() -> void:
 
 func _mover_balon(delta: float) -> void:
 	if not poseedor.is_empty():
-		## Conducción: el balón va unos palmos por delante, con toques.
 		var n: Node3D = poseedor["node"]
 		var fwd := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
 		var sp := (poseedor["vel"] as Vector3).length()
-		var toque := 0.45 + minf(sp, 7.0) * 0.07 + 0.08 * sin(t * 9.0)
-		var destino := n.position + fwd * toque
-		destino.y = R
 		var previa := balon.position
-		vel_balon = (destino - balon.position) / maxf(delta, 0.001)
-		balon.position = destino
+		if sp < 2.2 or bool(poseedor["por"]) or estado != "juego":
+			## Parado o al paso: el balón pegado al pie, protegido.
+			var destino := n.position + fwd * (0.45 + minf(sp, 7.0) * 0.07)
+			destino.y = R
+			balon.position = balon.position.lerp(destino, clampf(delta * 14.0, 0.0, 1.0))
+			vel_balon = (balon.position - previa) / maxf(delta, 0.001)
+		else:
+			## CONDUCCIÓN A TOQUES (14-10-2026): el balón ya no va pegado como un
+			## imán. El jugador lo empuja por delante, lo alcanza y lo vuelve a
+			## tocar; con más regate, toques más cortos y controlados. Si se le
+			## va largo, cualquiera puede llegar antes (ver `_disputas`).
+			var rel := balon.position - n.position
+			rel.y = 0.0
+			var adelante := rel.dot(fwd)
+			var reg := float(poseedor["attr"]["reg"])
+			if rel.length() < 0.6 or adelante < 0.15:
+				var empuje := sp * (1.25 - reg * 0.25) + 0.6
+				var lateral := Vector3(fwd.z, 0, -fwd.x) * _rng.randf_range(-0.25, 0.25) * (1.2 - reg)
+				var dir_t := (fwd + lateral).normalized()
+				## Pegado a la banda, el toque va hacia dentro (antes se salía solo).
+				if absf(n.position.x) > ANCHO - 4.0 and dir_t.x * signf(n.position.x) > 0.0:
+					dir_t.x *= -0.3
+					dir_t = dir_t.normalized()
+				vel_balon = dir_t * empuje
+				balon.position = n.position + fwd * 0.55 + Vector3(0, R, 0)
+				poseedor["toques"] = int(poseedor.get("toques", 0)) + 1
+			var h := Vector3(vel_balon.x, 0, vel_balon.z)
+			var v := h.length()
+			if v > 0.0:
+				h = h / v * maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * delta)
+			vel_balon = Vector3(h.x, 0.0, h.z)
+			balon.position += vel_balon * delta
+			balon.position.y = R
+			## Se le fue: balón suelto.
+			if rel.length() > 3.2:
+				poseedor["enfriar"] = 0.25
+				poseedor = {}
 		## Conduciendo también se puede meter gol o sacar el balón del campo.
 		if estado == "juego":
 			_palos_y_lineas(previa)
@@ -734,6 +766,9 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 	giro_balon = Vector3(0, efecto, 0)
 	if depurar:
 		print("PATADA %s(%s) desde %s a %s vh %.1f loft %.1f vel %s" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", str(b), str(destino), vh, loft, str(vel_balon)])
+	if OS.get_environment("DEPURAR_AIRE") != "" and vy > 2.0:
+		var clave := "%s/%s" % [_ctx_golpeo if _ctx_golpeo != "" else anim, estado]
+		cuenta_aire[clave] = int(cuenta_aire.get(clave, 0)) + 1
 	_foto_offside(p)
 	penultimo_toque = ultimo_toque
 	ultimo_toque = p
@@ -962,7 +997,18 @@ func _disputas(delta: float) -> void:
 			var control: float = float(mejor["attr"]["reg"]) * 0.5 + 0.5
 			if bool(mejor["por"]):
 				control = float(mejor["attr"]["par"]) * 0.6 + 0.35
-			if rapido < 14.0 or _rng.randf() < control:
+			## CORTAR UN PASE TENSO (14-10-2026): el rival que se cruza en la
+			## línea de un pase rápido no siempre lo controla: a veces lo
+			## desvía y a veces se le cuela entre las piernas.
+			var corta := not pase_a.is_empty() and mejor != pase_a and bool(mejor["es_local"]) != bool(pase_a["es_local"])
+			if corta and rapido > 8.0 and _rng.randf() > clampf(1.25 - rapido / 15.0, 0.18, 1.0) * control:
+				mejor["enfriar"] = 0.35
+				if _rng.randf() < 0.45:
+					vel_balon = Vector3(vel_balon.x * 0.4 + _rng.randf_range(-3, 3), _rng.randf_range(0.3, 1.5), vel_balon.z * 0.4)
+					penultimo_toque = ultimo_toque
+					ultimo_toque = mejor
+					pase_a = {}
+			elif rapido < 14.0 or _rng.randf() < control:
 				_tomar(mejor)
 			else:
 				## Rechace.
@@ -986,6 +1032,19 @@ func _disputas(delta: float) -> void:
 	## Al portero con el balón en las manos no se le entra.
 	if bool(poseedor["por"]):
 		return
+	## El toque largo: si el balón va suelto por delante y un rival llega
+	## antes, se lo lleva sin entrada.
+	var lejos_dueno := Vector2(b.x - pos(poseedor).x, b.z - pos(poseedor).z).length()
+	if lejos_dueno > 1.4:
+		for q: Dictionary in jugadores:
+			if bool(q["es_local"]) == bool(poseedor["es_local"]) or float(q["enfriar"]) > 0.0 or (q == usuario and not autopiloto):
+				continue
+			var dq := Vector2(b.x - pos(q).x, b.z - pos(q).z).length()
+			if dq < 0.6 and dq < lejos_dueno * 0.6:
+				poseedor["enfriar"] = 0.4
+				poseedor = {}
+				_tomar(q)
+				return
 	for p: Dictionary in jugadores:
 		if bool(p["es_local"]) == bool(poseedor["es_local"]) or p == usuario and not autopiloto:
 			continue
@@ -1012,7 +1071,7 @@ func _cabezazo(p: Dictionary) -> void:
 		var fwd := Vector3(_rng.randf_range(-8, 8), 0, dir_ataque(bool(p["es_local"])) * 14.0)
 		var q := _companero_cerca(p, pos(p) + fwd)
 		var destino := pos(q) if not q.is_empty() and pos(q).distance_to(pos(p)) < 22.0 else pos(p) + fwd
-		_patear(p, destino, 10.0, 0.6, 0.0, "cabezazo")
+		_patear(p, destino, 11.0, 0.0, 0.0, "cabezazo")
 		if not q.is_empty():
 			pase_a = q
 
@@ -1273,7 +1332,7 @@ func _ia_portero(p: Dictionary) -> Vector3:
 				if cruce.y > 1.8:
 					alcance *= 0.85
 				var lat := absf(cruce.x - pos(p).x)
-				if lat < alcance and _rng.randf() < 0.4 + float(p["attr"]["ref"]) * 0.42:
+				if lat < alcance and _rng.randf() < 0.47 + float(p["attr"]["ref"]) * 0.42:
 					_parada(p, cruce, lat > 1.2)
 					return pos(p)
 	## Balón suelto en su área y él llega antes: sale a por él.
@@ -1339,7 +1398,10 @@ func _ia_portador(p: Dictionary) -> void:
 		return
 	## Conduce algo más antes de decidir (antes se la quitaba de encima en
 	## medio segundo: el balón en los pies solo el 24 % del tiempo).
-	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1))
+	## Con espacio se conduce más (1 a 1,6 s): en un partido de verdad el balón
+	## pasa más tiempo en los pies que viajando.
+	var holgura := 1.7 if presion > 6.0 else (1.0 if presion > 3.5 else 0.5)
+	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura)
 	if OS.get_environment("DEPURAR_PORTADOR") != "" and dist_arco < 40.0:
 		print("PORTADOR %s(%s) a %.0f m del arco, x %.0f, presión %.1f" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", dist_arco, yo.x, presion])
 	## En su propio campo y apretado: despeje, lejos y hacia fuera si hace falta.
@@ -1356,7 +1418,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## Se tira también desde la frontal (hasta ~27 m), como en un partido de
 	## verdad; con más pegada, desde más lejos.
 	var ganas_tiro := (1.0 - dist_arco / 34.0) * (0.7 + float(p["attr"]["tir"]) * 0.6) - angulo * 0.25
-	if dist_arco < 30.0 and ganas_tiro > 0.13 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * 0.24:
+	if dist_arco < 30.0 and ganas_tiro > 0.07 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * 0.24:
 		## A un palo, abajo o arriba (antes se apuntaba al azar por el centro
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
 		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.55, 0.95)
@@ -1489,7 +1551,7 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 			var cerca := Geometry3D.get_closest_point_to_segment(pos(r), yo, qp)
 			var dl := cerca.distance_to(pos(r))
 			if dl < 2.2:
-				riesgo += (2.2 - dl) * 1.4
+				riesgo += (2.2 - dl) * 2.4
 		var nota := progreso * (0.08 + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) \
 			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
@@ -1526,13 +1588,15 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false) -
 	## tiempo (pelotazo y cabezazo). Ahora por arriba solo el envío largo o el
 	## que está tapado y lejos, y a media altura.
 	_ctx_golpeo = "filtrado" if al_hueco else ""
-	var elevado := largo or dist > 32.0 or (dist > 15.0 and _linea_tapada(pos(p), destino, bool(p["es_local"])))
+	var tapada := dist > 9.0 and _linea_tapada(pos(p), destino, bool(p["es_local"]))
+	var elevado := largo or dist > 36.0 or tapada
 	if elevado:
-		## Envío por arriba: vuela despacio y cae cerca del compañero.
-		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 0.9 if dist < 25.0 else 2.0, 0.0, "pase")
+		## Envío por arriba: el tapado, picado por encima del defensor (bajo);
+		## el largo, con más vuelo.
+		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 0.25 if (tapada and dist < 25.0) else 2.0, 0.0, "pase")
 	else:
 		## Con pace: el balón llega al compañero con fuerza, no muriéndose.
-		_patear(p, destino, clampf(velocidad_para(dist, 2.5 + dist * 1.2), 6.0, 26.0), 0.0, 0.0, "pase")
+		_patear(p, destino, clampf(velocidad_para(dist, 4.0 + dist * 1.5), 7.0, 26.0), 0.0, 0.0, "pase")
 	pase_a = q
 	_pase_eq = 0 if bool(p["es_local"]) else 1
 	pases[_pase_eq] += 1
@@ -2044,7 +2108,25 @@ func _mover_jugadores(delta: float) -> void:
 		if dist > 0.25:
 			deseada = dif / dist * minf(tope, dist * 2.5)
 		var vel: Vector3 = p["vel"]
-		vel = vel.move_toward(deseada, 9.0 * delta)
+		## INERCIA DE VERDAD (14-10-2026): antes la velocidad saltaba a la
+		## nueva dirección en dos décimas, como un patinador. Ahora el rumbo
+		## gira con un tope que baja con la velocidad (a toda carrera se abre
+		## la curva) y, si el giro es grande, primero frena; frena (11 m/s²)
+		## más rápido de lo que acelera (6 m/s², 8 con buen ritmo).
+		var sp0 := vel.length()
+		var sp_des := deseada.length()
+		if sp0 > 0.6 and sp_des > 0.1:
+			var dir0 := vel / sp0
+			var dir1 := deseada / sp_des
+			var ang := dir0.signed_angle_to(dir1, Vector3.UP)
+			var giro_max := lerpf(9.0, 2.6, clampf(sp0 / 8.0, 0.0, 1.0)) * delta
+			var dir := dir0.rotated(Vector3.UP, clampf(ang, -giro_max, giro_max))
+			## Giro brusco: se frena para girar (cambio de dirección real).
+			var objetivo_sp := sp_des * (1.0 - 0.6 * clampf((absf(ang) - 0.5) / 2.0, 0.0, 1.0))
+			var acel := (6.0 + rit * 2.0) if objetivo_sp > sp0 else 11.0
+			vel = dir * move_toward(sp0, objetivo_sp, acel * delta)
+		else:
+			vel = vel.move_toward(deseada, (6.0 + rit * 2.0) * delta if sp_des > sp0 else 11.0 * delta)
 		p["vel"] = vel
 		n.position += vel * delta
 		n.position.x = clampf(n.position.x, -ANCHO - 2.0, ANCHO + 2.0)
