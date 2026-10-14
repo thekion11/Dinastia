@@ -29,9 +29,18 @@ func _ready() -> void:
 	_fila(panel, 3)
 	await _esperar(20)
 	_foto("controles")
+	## Girado con el ratón: de lado y por encima, y de espaldas.
+	var g: MandoGiratorio = panel._mando._giratorio
+	g.mirar(0.9, 0.85)
+	await _esperar(40)
+	_foto("controles_giro")
+	g.mirar(PI, 0.4)
+	await _esperar(40)
+	_foto("controles_giro_atras")
+	g.mirar(0.0, 0.85)
 	panel.dispositivo = "ps"
 	panel._pintar()
-	await _esperar(20)
+	await _esperar(30)
 	_fila(panel, 1)
 	await _esperar(20)
 	_foto("controles_ps")
