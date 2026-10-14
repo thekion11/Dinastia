@@ -473,3 +473,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   en la bandeja baja (cerca = filas de detalle, medio = resto de bandeja 0 en ALTO); el resto sigue con
   el maniquí barato. `hinchada.gdshader` ganó `lado_max` (piel/pelo solo cerca del eje de la cabeza).
   Captura: `pruebas/captura_publico_real.tscn`. Pendiente: NPC del club/ciudad en primeras filas.
+- 14-10 MEGA AUDITORÍA 2, punto 3 (camisetas/escudos) HECHO en 2D: `Jersey.svg_de` rehecho (estampado
+  recortado a la silueta, cuello, puños, costuras, sombra de tela, marca y escudo en el pecho) y
+  `Escudo.svg_de` con aro de borde (`_borde_de`) y sombra. Hoja: `pruebas/captura_camisetas_escudos.tscn`.
+  Pendiente: revisar la camiseta procedural del 3D (`KitTextureFactory`) con el mismo criterio.
