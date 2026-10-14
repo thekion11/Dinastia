@@ -1491,7 +1491,7 @@ func _montar_motor() -> void:
 	_motor.duracion_gol = 7.6
 	_motor.tarjetas_reales = true
 	_motor.autopiloto = true
-	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": false}
+	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": true}
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()

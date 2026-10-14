@@ -406,3 +406,18 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
     escriben en la pizarra del club (`tactica_rapida`). Pantalla de controles con
     pestañas (Botones/Ayudas/Combinaciones/Filigranas). Sonido en TODOS los botones al
     pasar y pulsar (`BotonFx._sonar`). Prueba: `prueba_control_equipo.tscn`.
+- 14-10 VEREDICTO: la pantalla de controles «sigue siendo muy básica» (pequeña, sin colores
+  del juego, sin animación al bajar/subir ni al cambiar, sin sonido, sin «¿seguro que quieres
+  guardar?», sin fondo animado) + «¿viste la nueva estructura de los controles?» (su manual
+  de FC 26 en 7 partes, PS/Xbox) + «que esté dibujado el mando y qué parte es cada una».
+  HECHO (2.ª versión): `ui/componentes/panel_controles.gd` a pantalla completa con fondo vivo
+  (shader + FondoParticulas), menú lateral con las 7 partes (+ Asignar, Ayudas), tabla
+  PlayStation/Xbox/Teclado, selector dorado que se desliza, filas escalonadas, destello al
+  cambiar, diálogos de guardar/descartar/restaurar, sonidos `menu_*` (Sonido), navegación con
+  mando (LB/RB secciones). `ui/componentes/dibujo_mando.gd` (mando PS/Xbox o teclado con
+  etiquetas y botones que laten). `visor/control_fc.gd`: MANUAL por partes con «fichas»,
+  25 filigranas (McGeady, knock-on, flair rainbow, heel lane change…). Motor: cambios firmes,
+  bloqueo L3+R3, pase elegante, presión de dos (doble RB), portero palo largo (doble Y) y
+  manual (R3), saque de manos, receptor/2.º/3.er lanzador, círculo de serenidad, saques de
+  banda del usuario, cámara lenta del tiro potente. Vídeo: `pruebas/video_controles.tscn`
+  (--write-movie) → `pruebas/capturas/controles_video.mp4` (ffmpeg de imageio-ffmpeg).

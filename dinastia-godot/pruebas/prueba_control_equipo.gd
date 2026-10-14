@@ -138,7 +138,14 @@ func _probar_reconocedor() -> void:
 	_ok(r.call(["L"]) == "finta_cuerpo", "FC: toque a un lado = finta de cuerpo")
 	_ok(r.call(["F", "N", "B"], true) == "tacon_rodado", "FC: LB + adelante y atrás = tacón con balón rodado")
 	_ok(ControlFC.estrellas(0.92) == 5 and ControlFC.estrellas(0.3) == 2, "FC: estrellas de filigrana según el regate")
-	_ok(ControlFC.FILIGRANAS.size() >= 20 and ControlFC.COMBINACIONES.size() >= 30, "FC: %d filigranas y %d combinaciones" % [ControlFC.FILIGRANAS.size(), ControlFC.COMBINACIONES.size()])
+	var filas := 0
+	for parte: Array in ControlFC.MANUAL:
+		filas += (parte[2] as Array).size()
+	_ok(ControlFC.FILIGRANAS.size() >= 24 and ControlFC.MANUAL.size() == 6 and filas >= 55, "FC: %d filigranas y %d combinaciones en las partes del manual" % [ControlFC.FILIGRANAS.size(), filas])
+	_ok(r.call(["F"], false, false, false) == "" and String(ControlFC.reconocer(["F"], false, false, false, true).get("id", "")) == "adelantar", "FC: corriendo, toque adelante = adelantar el balón")
+	_ok(String(ControlFC.reconocer(["F", "N", "R"], false, false, false, true).get("id", "")) == "mcgeady", "FC: corriendo, adelante y a un lado = McGeady")
+	_ok(r.call(["B", "N", "F", "N", "F"]) == "sombrerito_flair", "FC: atrás, arriba, arriba = amago de sombrerito")
+	_ok(ControlFC.texto_fichas(["jugar_mod", "jugar_tiro"], "ps") == "R1 + ◯" and ControlFC.texto_fichas(["jugar_mod", "jugar_tiro"], "xbox") == "RB + B", "FC: las combinaciones se escriben en PlayStation y en Xbox")
 
 ## Pone el balón en los pies del jugador que manejas, en (x, z).
 func _balon_a_usuario(x: float, z: float) -> Dictionary:
@@ -258,10 +265,57 @@ func _paso_fc() -> void:
 			u["attr"]["reg"] = 0.3
 			_motor.call("_filigrana", u, "elastica", 1.0)
 			_ok(_motor.poseedor != u, "FC: la elástica (5★) le queda grande a un jugador de 2★: pierde el balón")
+			## L3 + R3 a la vez: bloqueo de jugador.
+			_avanzar(30)
+			_balon_a_usuario(0.0, 0.0)
+			_pulsar("jugar_pedir", true)
+			_pulsar("jugar_sombrero", true)
+			_avanzar(1)
+		26:
+			_pulsar("jugar_pedir", false)
+			_pulsar("jugar_sombrero", false)
+			_avanzar(1)
+			_ok(_motor.bloqueo, "FC: L3 + R3 = bloqueo de jugador")
+			_motor.bloqueo = false
+			## LB + RB + B: tiro potente con cámara lenta.
+			_balon_a_usuario(4.0, 28.0)
+			_pulsar("jugar_cambiar", true)
+			_pulsar("jugar_mod", true)
+			_pulsar("jugar_tiro", true)
+			_avanzar(1)
+		27, 28, 29, 30, 31, 32:
+			_avanzar(1)
+		33:
+			_pulsar("jugar_tiro", false)
+			_avanzar(1)
+			_pulsar("jugar_cambiar", false)
+			_pulsar("jugar_mod", false)
+			_ok(_motor.lento > 0.0, "FC: LB + RB + Tiro = tiro potente con cámara lenta")
+			var sv: Array = []
+			for k in 20:
+				_motor.set("_t_estado", float(k) * 0.1)
+				sv.append(_motor.serenidad())
+			_ok(sv.min() < 0.05 and sv.max() > 0.95, "FC: el círculo de serenidad del penal late entre grande y chico")
+		34:
+			## Doble toque de Y sin balón: el portero al palo largo.
+			_avanzar(30)
+			_balon_a_rival()
+			_pulsar("jugar_filtrado", true)
+			_avanzar(1)
+		35:
+			_pulsar("jugar_filtrado", false)
+			_avanzar(1)
+		36:
+			_pulsar("jugar_filtrado", true)
+			_avanzar(1)
+		37:
+			_pulsar("jugar_filtrado", false)
+			_avanzar(1)
+			_ok(float(_motor.get("_palo_largo_hasta")) > _motor.t, "FC: doble toque de Y = portero al palo largo")
 			_fin()
 
 func _fin() -> void:
-	for a in ["jugar_arriba", "jugar_pase", "jugar_cambiar", "jugar_tiro", "jugar_mod", "jugar_tac_arriba"]:
+	for a in ["jugar_arriba", "jugar_pase", "jugar_cambiar", "jugar_tiro", "jugar_mod", "jugar_tac_arriba", "jugar_pedir", "jugar_sombrero", "jugar_filtrado"]:
 		Input.action_release(a)
 	var cfg := ConfigFile.new()
 	cfg.load(CajonAjustes.RUTA)
