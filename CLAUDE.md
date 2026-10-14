@@ -496,3 +496,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 14-10 MEGA AUD. 2 punto 11 HECHO: menús «Ciudad 3D» (volar, pasear a pie, conducir, entrar al estadio) y
   «Editar» (mundo, mi personaje, identidad, equipación, estadio, casa) completados en `MenuLateral.MENUS`;
   acciones `ciudad_pie/ciudad_coche` (`Principal._ver_ciudad_explorando`). Prueba: `prueba_menu_ciudad_pie`.
+- 14-10 MEGA AUD. 2 punto 12 (parcial): 2 minijuegos nuevos en la Sala (Mi Vida → Minijuegos): MALABARES
+  (`ui/componentes/minijuego_malabares.gd`) y REFLEJOS DEL PORTERO (`minijuego_reflejos.gd`), récords en
+  `user://minijuegos.cfg`. Prueba: `prueba_minijuegos_nuevos`. Tras crear clases nuevas: `godot --headless
+  --import` para refrescar la caché de clases.
