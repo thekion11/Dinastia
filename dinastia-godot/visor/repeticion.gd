@@ -21,6 +21,8 @@ const SEGUNDOS_GUARDADOS := 12.0
 const VELOCIDAD := 0.5
 
 var reproduciendo := false
+## Sin grabar (la celebración del motor real): la repetición termina en el gol.
+var congelar := false
 var _jugadores: Array = []     ## los diccionarios de `_en_campo` (node, anim)
 var _balon: Node3D
 var _cuadros: Array = []       ## [{t, j: [[Transform3D, anim, pos]], b: Transform3D}]
@@ -40,6 +42,8 @@ func setup(jugadores: Array, balon: Node3D) -> void:
 func _process(delta: float) -> void:
 	if reproduciendo:
 		_avanzar_repeticion(delta)
+		return
+	if congelar:
 		return
 	_t += delta
 	if _t < _prox:

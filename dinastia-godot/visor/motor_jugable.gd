@@ -153,6 +153,11 @@ var _eligiendo := false
 var _n_patada := 0
 ## Qué clase de golpeo es el próximo `_patear` (lo fija quien patea).
 var _ctx_golpeo := ""
+## Lo que dura la celebración antes del saque (el partido del DT la alarga para
+## su secuencia de cámaras) y quién marcó.
+var duracion_gol := 3.2
+var _goleador: Dictionary = {}
+var _celebra_anim := "celebrar"
 
 # ---------------------------------------------------------------- montaje
 
@@ -512,7 +517,7 @@ func paso(delta: float) -> void:
 		"gol", "descanso":
 			_mover_balon(delta)
 			_ia_celebracion(delta)
-			if _t_estado > 3.2:
+			if _t_estado > (duracion_gol if estado == "gol" else 3.2):
 				if estado == "descanso":
 					mitad = 2
 					t = 0.0
@@ -648,13 +653,16 @@ func _gol(en_arco_visita: bool) -> void:
 	saque = {"gol_local": de_local}
 	gol.emit(de_local, autor_id, asist_id)
 	cambio_estado.emit(estado)
-	## El goleador celebra según su carácter.
+	## El goleador celebra según su carácter: primero corre al córner (o a la
+	## banda) y allí hace lo suyo; los compañeros llegan a abrazarlo.
+	for q: Dictionary in jugadores:
+		q["gesto_hasta"] = 0.0
+	_goleador = autor if autor_id != "" else {}
 	if not autor.is_empty() and autor_id != "":
 		var ap: AnimationPlayer = autor.get("anim")
 		var jd: Dictionary = autor.get("jugador", {})
 		if is_instance_valid(ap):
-			var c := AnimExtra.celebracion(ap, String(jd.get("rasgo", "")), autor_id, not de_local, _rng)
-			_anim(autor, c, true)
+			_celebra_anim = AnimExtra.celebracion(ap, String(jd.get("rasgo", "")), autor_id, not de_local, _rng)
 
 ## Cuánto rueda un balón raso que sale a `v0`: con frenado dv/dt = -(k·v + c),
 ## x = v0/k - c/k²·ln(1 + k·v0/c).
@@ -1610,10 +1618,39 @@ func _aplicar_fase() -> void:
 	_jugada["pase_a"] = String(fase.get("pase_a", ""))
 
 func _ia_celebracion(_delta: float) -> void:
+	var g := _goleador
+	var hay := estado == "gol" and not g.is_empty() and jugadores.has(g)
+	var esquina := Vector3.ZERO
+	if hay:
+		var gp := pos(g)
+		esquina = Vector3(signf(gp.x + 0.01) * (ANCHO - 2.5), 0, clampf(gp.z, -LARGO + 3.0, LARGO - 3.0) * 0.85)
 	for p: Dictionary in jugadores:
-		if p != usuario or autopiloto:
-			p["objetivo"] = _forma(p, false)
-			p["correr"] = false
+		if p == usuario and not autopiloto:
+			continue
+		if hay and p == g:
+			var lejos := pos(p).distance_to(esquina)
+			p["objetivo"] = esquina
+			p["correr"] = lejos > 1.5
+			if lejos <= 1.5 and float(p.get("gesto_hasta", 0.0)) <= t:
+				## Llegó: su celebración (y se queda en ella).
+				_anim(p, _celebra_anim, true, 99.0)
+			continue
+		if hay and bool(p["es_local"]) == bool(g["es_local"]) and not bool(p["por"]) and _t_estado > 0.8 \
+				and pos(p).distance_to(pos(g)) < 34.0:
+			## A abrazarlo: alrededor de él, sin meterse encima.
+			var lado := Vector3(sin(float(absi(String(p.get("id", "")).hash()) % 628) / 100.0), 0,
+				cos(float(absi(String(p.get("id", "")).hash()) % 628) / 100.0))
+			p["objetivo"] = pos(g) + lado * 1.0
+			p["correr"] = true
+			if pos(p).distance_to(pos(g)) < 1.7 and float(p.get("gesto_hasta", 0.0)) <= t:
+				_anim(p, "celebrar" if _rng.randf() < 0.5 else "aplauso_arriba", true, 99.0)
+			continue
+		p["objetivo"] = _forma(p, false)
+		p["correr"] = false
+		## El que encajó: lamento.
+		if hay and bool(p["es_local"]) != bool(g["es_local"]) and _t_estado < 0.1:
+			if _rng.randf() < 0.4:
+				_anim(p, ["lamento", "manos_cabeza", "cuclillas_lamento", "brazos_jarra"][_rng.randi() % 4], true, 99.0)
 
 # ---------------------------------------------------------------- balón parado
 
@@ -1637,9 +1674,11 @@ func _empezar_saque(tipo: String, saca_local: bool, lugar: Vector3) -> void:
 	cambio_estado.emit("saque_" + tipo)
 
 func _saque_de_centro(saca_local: bool) -> void:
+	_goleador = {}
 	for p: Dictionary in jugadores:
 		(p["node"] as Node3D).position = p["base_pos"]
 		p["vel"] = Vector3.ZERO
+		p["gesto_hasta"] = 0.0
 	_empezar_saque("centro", saca_local, Vector3(0, R, 0))
 
 ## Quién lo lanza. El usuario, si es de su equipo y le toca: los córners y las
