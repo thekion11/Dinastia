@@ -98,6 +98,7 @@ var _panel_dt: PanelDTPartido
 var _ajuste_rival := [{}, {}]
 var _final_motor := false
 var _anadido_avisado := {}
+var _nombres_globales := true
 const DT_MOTOR := 1.0 / 60.0
 ## Segundos reales por minuto de partido con el motor real.
 const SEG_POR_MINUTO := {"rapido": 2.7, "normal": 4.0, "largo": 6.0}
@@ -1461,6 +1462,20 @@ func _montar_motor() -> void:
 		partido.tarjeta_externa(id, roja))
 	_motor.aviso.connect(_al_aviso_motor)
 	_actualizar_tacticas()
+	## La transmisión, como en el vídeo: cámara alta que sigue el balón y la
+	## pantalla limpia (sin nombres sobre los 22 ni la pantalla gigante en la
+	## esquina; se pueden encender en ⚙).
+	if _rig != null:
+		var it := _rig.camera_names.find("Transmisión")
+		if it >= 0 and not (PersonajeDT.sancionado and _rig.current_name().begins_with("Desde la grada")):
+			_rig.switch_to(it)
+			if _btn_camara != null:
+				_btn_camara.text = "📷 Cámara: " + _rig.current_name()
+	_nombres_globales = PlayerSpawner.mostrar_nombres
+	if not _pref("nombres_motor", false):
+		_mostrar_nombres(false)
+	if _mini_pantalla != null and not _pref("pantalla_esquina_motor", false):
+		_mini_pantalla.visible = false
 
 ## Los avisos del motor que merecen rótulo (los goles ya tienen el suyo).
 func _al_aviso_motor(texto: String) -> void:
@@ -1720,6 +1735,7 @@ func _unhandled_input(e: InputEvent) -> void:
 func _exit_tree() -> void:
 	if partido != null and _motor != null:
 		partido.motor_externo = false
+		PlayerSpawner.mostrar_nombres = _nombres_globales
 
 
 # --- la secuencia del gol (motor real) -------------------------------------
