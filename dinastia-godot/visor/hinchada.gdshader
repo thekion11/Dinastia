@@ -34,9 +34,14 @@ uniform vec3 piel_oscura : source_color = vec3(0.40, 0.27, 0.19);
 // Desde qué altura la cabeza es pelo (29-9-2026, malla de las primeras filas).
 // 9.0 = sin pelo, que es lo que usa la malla barata.
 uniform float pelo_desde = 9.0;
+// Las mallas HORNEADAS de personas reales (herramientas/hornear_publico.gd) tienen
+// brazos que suben por encima del cuello: piel y pelo solo valen cerca del eje de
+// la cabeza. 9.0 = sin límite (las mallas de mentira).
+uniform float lado_max = 9.0;
 
 varying float v_alto;
 varying float v_azar;
+varying float v_lado;
 
 // Ruido de un solo valor, estable: la misma entrada da siempre la misma salida,
 // así que un hincha no cambia de tono de piel de un cuadro a otro.
@@ -51,6 +56,7 @@ void vertex() {
 	float fase = origen.x * 1.73 + origen.z * 2.31 + origen.y * 0.9;
 	v_azar = azar(fase);
 	v_alto = VERTEX.y;
+	v_lado = abs(VERTEX.x);
 	float t = TIME * velocidad + fase;
 	// 0 en los pies, 1 de los hombros para arriba.
 	float peso = clamp(VERTEX.y / 0.7, 0.0, 1.0);
@@ -66,13 +72,14 @@ void vertex() {
 void fragment() {
 	vec3 ropa = COLOR.rgb;
 	vec3 piel = mix(piel_clara, piel_oscura, v_azar);
-	vec3 color = mix(ropa, piel, smoothstep(cuello_desde, cuello_hasta, v_alto));
+	float cab = step(v_lado, lado_max);
+	vec3 color = mix(ropa, piel, smoothstep(cuello_desde, cuello_hasta, v_alto) * cab);
 	// Pelo: negro, castaño, rubio o canoso, según el mismo azar del hincha;
 	// uno de cada seis, calvo o con gorro del color de la ropa.
 	float r = fract(v_azar * 7.31);
 	vec3 pelo = r < 0.35 ? vec3(0.05, 0.04, 0.035) : (r < 0.65 ? vec3(0.22, 0.13, 0.07) : (r < 0.8 ? vec3(0.72, 0.58, 0.32) : (r < 0.86 ? vec3(0.62, 0.62, 0.6) : ropa * 0.9)));
 	if (r < 0.94) {
-		color = mix(color, pelo, smoothstep(pelo_desde, pelo_desde + 0.01, v_alto));
+		color = mix(color, pelo, smoothstep(pelo_desde, pelo_desde + 0.01, v_alto) * cab);
 	}
 	ALBEDO = color;
 	ROUGHNESS = 0.85;

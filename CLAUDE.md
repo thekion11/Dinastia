@@ -467,3 +467,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   el juego como MÍNIMO un 50 %; (15) otra MEGA AUDITORÍA de todo → anotar puntos débiles → volver a hacer un VÍDEO
   tipo gameplay y SUBIRLO AL DRIVE. Trabajar por bloques con commit y push, banco en 0 fallos, y verificar con la
   CÁMARA REAL del partido (no solo de cerca). Documento: `dinastia-godot/MEGA_AUDITORIA_2.md`.
+- 14-10 MEGA AUDITORÍA 2, punto 2 (público = personas reales) HECHO: `herramientas/hornear_publico.gd`
+  hornea el modelo humano del juego en 6 poses (piel por CPU, cortado en cadera, 2 niveles) →
+  `assets/ciudad/publico/hincha_<pose>_<cerca|medio>.res`; `StadiumBuilder._montar_horneados` los usa
+  en la bandeja baja (cerca = filas de detalle, medio = resto de bandeja 0 en ALTO); el resto sigue con
+  el maniquí barato. `hinchada.gdshader` ganó `lado_max` (piel/pelo solo cerca del eje de la cabeza).
+  Captura: `pruebas/captura_publico_real.tscn`. Pendiente: NPC del club/ciudad en primeras filas.

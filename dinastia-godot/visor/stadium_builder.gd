@@ -2133,6 +2133,61 @@ static func _malla_hincha_minima() -> Mesh:
 	_malla_hincha_min = st.commit()
 	return _malla_hincha_min
 
+## PERSONAS REALES EN LA GRADA (14-10-2026). Las mallas de `assets/ciudad/publico/`
+## son el MISMO modelo humano que juega, horneado en 6 poses (quieto, aplaude,
+## celebra, puño, señala, saluda) y cortado en la cadera, a dos niveles de detalle
+## (`herramientas/hornear_publico.gd`). Devuelve las 6 mallas del nivel o [] si
+## faltan (entonces se usa el maniquí de siempre).
+static var _hornead := {}
+const POSES_PUBLICO := ["quieto", "aplaude", "celebra", "puno", "senala", "saluda"]
+
+static func _hinchas_horneados(nivel: String) -> Array:
+	if _hornead.has(nivel):
+		return _hornead[nivel]
+	var l: Array = []
+	for pz in POSES_PUBLICO:
+		var ruta := "res://assets/ciudad/publico/hincha_%s_%s.res" % [pz, nivel]
+		if not ResourceLoader.exists(ruta):
+			l = []
+			break
+		l.append(load(ruta))
+	_hornead[nivel] = l
+	return l
+
+## Un MultiMesh por pose con su shader de hinchada; `xfs`/`cols` se reparten
+## entre las poses por un hash estable (la misma grada sale siempre igual).
+static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color]) -> void:
+	var grupos: Array = []
+	for _p in mallas.size():
+		grupos.append([])
+	for k in xfs.size():
+		grupos[(k * 7919 + int(xfs[k].origin.x * 3.0) + int(xfs[k].origin.z * 5.0)) % mallas.size()].append(k)
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://visor/hinchada.gdshader")
+	mat.set_shader_parameter("cuello_desde", 0.70)
+	mat.set_shader_parameter("cuello_hasta", 0.73)
+	mat.set_shader_parameter("pelo_desde", 0.86)
+	mat.set_shader_parameter("lado_max", 0.14)
+	mat.set_shader_parameter("amplitud", 0.03)
+	for g in mallas.size():
+		var ids: Array = grupos[g]
+		if ids.is_empty():
+			continue
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_colors = true
+		mm.mesh = mallas[g]
+		mm.instance_count = ids.size()
+		for n in ids.size():
+			mm.set_instance_transform(n, xfs[ids[n]])
+			mm.set_instance_color(n, cols[ids[n]])
+		var mmi := MultiMeshInstance3D.new()
+		mmi.multimesh = mm
+		mmi.material_override = mat
+		mmi.name = "%s_%s" % [nombre, POSES_PUBLICO[g]]
+		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		deck.add_child(mmi)
+
 ## EL HINCHA DE LAS PRIMERAS FILAS (29-9-2026). Pedido del usuario al ver el
 ## partido jugable de la Carrera de Jugador ("ese público se ve horrible"):
 ## ahí la cámara va a ras de césped y las primeras filas quedan a pocos metros.
@@ -2436,6 +2491,8 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var hinchas_col: Array[Color] = []
 	var det_xf: Array[Transform3D] = []
 	var det_col: Array[Color] = []
+	var med_xf: Array[Transform3D] = []
+	var med_col: Array[Color] = []
 	var filas_detalle: int = 6 if Calidad.elegida >= Calidad.ALTO else 3
 	## Un hincha por asiento ocupado: tres por grupo (dos en calidad Media).
 	var por_grupo: int = 3 if Calidad.elegida >= Calidad.ALTO else 2
@@ -2523,6 +2580,19 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mi)
 
+	## Personas reales (mallas horneadas) en la bandeja baja; el maniquí queda para
+	## el resto y como respaldo si faltan los recursos.
+	var reales_cerca := _hinchas_horneados("cerca")
+	var reales_medio := _hinchas_horneados("medio")
+	if not reales_cerca.is_empty() and not det_xf.is_empty():
+		_montar_horneados(deck, "PersonasCerca", reales_cerca, det_xf, det_col)
+		det_xf.clear()
+		det_col.clear()
+	if not reales_medio.is_empty() and not med_xf.is_empty():
+		_montar_horneados(deck, "PersonasMedio", reales_medio, med_xf, med_col)
+	else:
+		hinchas_xf.append_array(med_xf)
+		hinchas_col.append_array(med_col)
 	if not det_xf.is_empty():
 		var mmd := MultiMesh.new()
 		mmd.transform_format = MultiMesh.TRANSFORM_3D
