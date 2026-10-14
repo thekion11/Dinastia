@@ -240,13 +240,22 @@ static func indice_de(tabla: Array, clave: String) -> int:
 			return i
 	return 0
 
+## El diseño de la camiseta: el que eligió el jugador; si no, el del club real al
+## que representa (tabla ESTADIO_CLUB, campo «camiseta»); si no, el del hash.
+static func _diseno_de(c: Club) -> String:
+	if c.kit_estilo == "":
+		var real := String(c.fila_estadio_real().get("camiseta", ""))
+		if real != "":
+			return real
+	return Jersey.kit_de(c, c.kit_estilo)
+
 ## La equipación completa de un club: la guardada (`kit_x`) sobre los valores
 ## que salen de sus colores de siempre.
 static func kit_de_club(c: Club) -> Dictionary:
 	var c1 := c.color_kit1()
 	var c2 := c.color_kit2()
 	var base := {
-		"dis": Jersey.kit_de(c, c.kit_estilo),
+		"dis": _diseno_de(c),
 		"cols": [c1, c2, Color(c2).darkened(0.35).to_html(false), "ffffff", "111111"],
 		"trim": 1,
 		"num": Jersey._lum_tx(c1).trim_prefix("#"),
