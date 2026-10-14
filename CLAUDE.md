@@ -493,3 +493,6 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   brazos de farola curva en avenidas, postes con cable en barrios, carteles colgantes en cruces, vallas/luces/
   vallado de las obras), ×9–14. NO se sustituyeron las calzadas (siguen siendo lotes de asfalto con marcas
   propias) — decisión consciente por riesgo con semáforos/tráfico. Pendiente: pilares de puente, rotondas.
+- 14-10 MEGA AUD. 2 punto 11 HECHO: menús «Ciudad 3D» (volar, pasear a pie, conducir, entrar al estadio) y
+  «Editar» (mundo, mi personaje, identidad, equipación, estadio, casa) completados en `MenuLateral.MENUS`;
+  acciones `ciudad_pie/ciudad_coche` (`Principal._ver_ciudad_explorando`). Prueba: `prueba_menu_ciudad_pie`.
