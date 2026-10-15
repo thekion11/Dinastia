@@ -27,7 +27,7 @@ Prioridad: P0 rompe algo · P1 se nota mucho · P2 pulido · P3 futuro.
    reales encontrados auditando (E-01, E-02, E-03).
 3. **Lo más débil hoy** (por impacto): (a) el **exterior de los estadios** (cajas grises
    con torres) y la poca variedad de formas (6); (b) **idiomas**: los 6 idiomas extra no
-   tienen las mismas frases (§9); (c) **rendimiento no demostrado** sin GPU real (§8);
+   tenían las mismas frases (§9; ✅ igualados el 15-10, con prueba en el banco); (c) **rendimiento no demostrado** sin GPU real (§8);
    (d) **sesgo de local** en el motor de partido (§6); (e) **patrocinio** concentrado en
    4 marcas y 16 % de clubes grandes sin camiseta patrocinada (§5); (f) **plantillas
    idénticas en tamaño** (25 en todos los clubes).
@@ -240,7 +240,7 @@ Medido con `pruebas/sonda_motor_dt.tscn` y `sonda_fisica_partido.tscn`:
 
 ## 9. Idiomas
 
-Medido (`datos/idiomas_extra.json`):
+Medido el día del informe (solo `datos/idiomas_extra.json`):
 
 | Idioma | Frases | Faltan respecto a la unión (1.699) |
 |---|---|---|
@@ -248,12 +248,34 @@ Medido (`datos/idiomas_extra.json`):
 | fr, it, de, ca | 1.402 | 297 |
 | pl, tr | 1.699 | 0 |
 
-- **I-01 (P1, 🔴) Los idiomas no tienen las mismas frases.** Las 129 que faltan a
-  fr/it/de/ca son los titulares de eventos («Apelación ACOGIDA», «Asado del club»…) y
-  hay 168 más que en/pt no tienen. Una frase sin traducir se ve en español dentro de un
-  menú en francés. *Cómo*: generar la lista de faltantes por idioma
-  (`herramientas/extraer_narracion.py` ya extrae plantillas) y traducirlas; añadir una
-  **prueba que falle si un idioma tiene menos claves** que la unión.
+**Remedido el 15-10-2026 con TODOS los catálogos** que usa `Idiomas.t`: la tabla del
+esqueleto (`Idiomas.TABLA`, 309 filas con columna para en…ca), `idiomas_extra.json`
+(con los diálogos de la ciudad que mete `herramientas/dialogos_ciudad.py`), las
+directas y los patrones de la narración (`datos/narracion.json`) y los patrones
+numéricos. Contar solo `idiomas_extra.json` engañaba: a en/pt «les faltaban» las
+filas que tienen en `TABLA`, y a fr…tr los titulares con icono que ya estaban en
+la narración. La diferencia REAL era menor:
+
+| Catálogo | Frases castellanas | Faltaban (antes) | Faltan (ahora) |
+|---|---|---|---|
+| Frases fijas (unión de TABLA + extra + narración) | 2.573 → 2.574 | fr/it/de/ca/pl/tr: **36** cada uno; en/pt: 0 | **0** en los 8 |
+| Patrones (`idiomas_extra` 58 + narración 313 → 315) | 371 → 373 | fr/it/de/ca/pl/tr: **2** cada uno | **0** |
+| Narración, plantillas del extractor (1.104) | — | **17** «sin traducir» en los 8 (`montar_narracion.py`) | **0** (2 reales traducidas, 15 que no se muestran o son nombres propios, ahora declaradas) |
+| `Idiomas.t("…")` escritas en el código | 258 | 0 | 0 |
+| Diálogos de vecinos (`DialogosCiudad`) | 72 | 0 | 0 |
+
+- **I-01 (✅ 15-10) Los idiomas tienen las mismas frases.** Lo que faltaba: 36 títulos de
+  evento SIN icono («Asado del club», «Moción de censura», «Tope salarial»,
+  «Representantes»…; con icono ya estaban en la narración, pero `t()` busca también la
+  forma sin icono), los patrones «Representantes: …» y «… cuelga las botas…», y en la
+  narración «{1} {2} (moral %+d).» (el extractor no entendía `%+d`) y «Colonia {1} {2}».
+  Traducido a los 8 idiomas; «Terapia deportiva» añadida para los gastos (se traduce por
+  tramos « · »). **Prueba**: `_probar_paridad_idiomas` en el banco falla si un idioma
+  tiene menos frases que la unión castellana, si un patrón no tiene plantilla en los 8,
+  si una frase de `Idiomas.t("…")` del código queda sin traducir (M-446) o si una
+  traducción pierde un `%s`/`%d`; con los datos de antes daba 7 fallos.
+  Queda (no es paridad): revisión nativa (M-332) y los textos escritos sin `Idiomas.t`
+  (I-02).
 - **I-02 (P1, 🔴) 274 textos en español escritos directamente en `ui/`** (`.text = "…"`
   con tilde, sin `Idiomas.t`): `pantalla_club_vida` 28, `principal` 25, `pantalla_plantel`
   22, `pantalla_cantera` 19, `pantalla_legado` 18, `pantalla_opciones` 15… Se ven en
@@ -262,7 +284,9 @@ Medido (`datos/idiomas_extra.json`):
   tildes; envolver con `Idiomas.t`.
 - **I-03 (✅) Menús nuevos y minijuegos** de hoy traducidos en 8 idiomas.
 - **I-04 (P2, 🔴) `CLAUDE.md` dice «1.402 frases cada idioma»**: ya no es cierto
-  (ver tabla); actualizar cuando se resuelva I-01.
+  (ver tabla); I-01 está resuelta: la cifra real es 2.574 frases fijas + 373 patrones
+  en cada uno de los 8 idiomas. Falta cambiar la línea de `CLAUDE.md` (memoria del
+  usuario: se deja a la sesión principal).
 
 ---
 
