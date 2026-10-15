@@ -29,3 +29,5 @@ dinastia-godot/assets/ciudad/kenney_comercial_extra/*.glb -filter -diff -merge b
 # El resto del Car Kit de Kenney (CC0): archivos normales.
 dinastia-godot/assets/ciudad/kenney_cars_extra/*.glb -filter -diff -merge binary
 dinastia-godot/assets/objetos/*.glb -filter -diff -merge binary
+# City Kit Roads de Kenney (CC0, 1,7 MB): archivos normales. GUARDADO PARA DESPUÉS (14-10-2026, regalo del usuario); aún sin usar.
+dinastia-godot/assets/ciudad/kenney_roads/*.glb -filter -diff -merge binary

@@ -128,17 +128,16 @@ static func poner_rotulo(n: Node3D, jug: Dictionary, es_local: bool = true) -> v
 	## ocho segmentos con la energía que le queda. Va colgada del rótulo, así
 	## que se oculta y se escala con él; `offset` está en píxeles del propio
 	## rótulo, y con `fixed_size` queda siempre a la misma distancia del texto.
-	var b := Label3D.new()
+	## (14-10-2026) Como en FC: una barra FINA y continua, no cuadraditos.
+	var b := Sprite3D.new()
 	b.name = BARRA
 	b.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	b.fixed_size = true
 	b.pixel_size = TAM_ROTULO
-	b.font_size = 22
-	b.outline_size = 8
-	b.outline_modulate = Color(0, 0, 0, 0.85)
 	b.no_depth_test = true
 	b.render_priority = 2
-	b.offset = Vector2(0, -34)
+	b.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	b.offset = Vector2(0, -26)
 	b.set_meta("fisico", float(jug.get("fisico", 100)))
 	b.set_meta("forma", float(jug.get("forma", 60)))
 	r.add_child(b)
@@ -185,11 +184,30 @@ static func energia(fisico: float, forma: float, minuto: int) -> float:
 	var ritmo := 0.40 - clampf(forma, 0.0, 100.0) * 0.0025
 	return clampf(fisico - float(minuto) * ritmo, 0.0, 100.0)
 
-static func actualizar_barra(b: Label3D, minuto: int) -> void:
-	var e := energia(float(b.get_meta("fisico", 100.0)), float(b.get_meta("forma", 60.0)), minuto)
-	var llenos := clampi(int(ceil(e / 12.5)), 0, 8)
-	b.text = "▰".repeat(llenos) + "▱".repeat(8 - llenos)
-	b.modulate = Color("5fd35f") if e >= 65.0 else (Color("f0c040") if e >= 40.0 else Color("e5534b"))
+static func actualizar_barra(b: Node3D, minuto: int) -> void:
+	poner_energia(b, energia(float(b.get_meta("fisico", 100.0)), float(b.get_meta("forma", 60.0)), minuto))
+
+## La barra con la energía `e` (0-100): verde, amarilla o roja, sobre fondo
+## oscuro. Las texturas se guardan por nivel (hay 29), no se crean cada vez.
+static var _texturas_barra := {}
+const BARRA_ANCHO := 104
+const BARRA_ALTO := 9
+
+static func poner_energia(b: Node3D, e: float) -> void:
+	var s := b as Sprite3D
+	if s == null:
+		return
+	var nivel := clampi(int(round(e / 100.0 * 28.0)), 0, 28)
+	if not _texturas_barra.has(nivel):
+		var img := Image.create(BARRA_ANCHO, BARRA_ALTO, false, Image.FORMAT_RGBA8)
+		img.fill(Color(0, 0, 0, 0.62))
+		var ee := float(nivel) / 28.0
+		var col := Color("52e07a") if ee >= 0.65 else (Color("f5d33b") if ee >= 0.4 else Color("ff5a3c"))
+		var lleno := int(round(float(BARRA_ANCHO - 4) * ee))
+		if lleno > 0:
+			img.fill_rect(Rect2i(2, 2, lleno, BARRA_ALTO - 4), col)
+		_texturas_barra[nivel] = ImageTexture.create_from_image(img)
+	s.texture = _texturas_barra[nivel]
 
 func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dictionary,
 		es_local: bool, kit: Dictionary, kit_portero: Dictionary = {}) -> Array:

@@ -13,7 +13,16 @@ func _ok(c: bool, t: String) -> void:
 	if not c:
 		_fallos += 1
 
+func _pref_ceremonia(v: bool) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "ceremonia", v)
+	cfg.save(CajonAjustes.RUTA)
+
 func _ready() -> void:
+	## Sin la ceremonia de salida (que retiene el partido) el reloj corre desde el
+	## primer fotograma (auditoría 14-10: daba 4,2 s grabados a los 600 fotogramas).
+	_pref_ceremonia(false)
 	var mundo := Mundo.new()
 	mundo.generar(["CHI"], 4711)
 	mundo.mi_club_id = mundo.ligas[0].clubes[0].id
@@ -38,6 +47,8 @@ func _process(_d: float) -> void:
 		if frac < (0.25 if _imgs.is_empty() else 0.75):
 			return
 		var img := get_viewport().get_texture().get_image()
+		if img == null:
+			return   ## sin pantalla (--headless) no hay imagen que guardar
 		img.resize(640, 360)
 		_imgs.append(img)
 	if _n == 600 + 5 and repe.reproduciendo:
@@ -64,7 +75,9 @@ func _process(_d: float) -> void:
 			hoja.blit_rect(_imgs[1], Rect2i(0, 0, 640, 360), Vector2i(640, 0))
 			hoja.save_png("res://pruebas/capturas/repeticion_gol.png")
 		print("===== REPETICIÓN: %d fallos =====" % _fallos)
+		_pref_ceremonia(true)
 		get_tree().quit()
 	if _n > 3000:
 		print("no terminó la repetición")
+		_pref_ceremonia(true)
 		get_tree().quit()

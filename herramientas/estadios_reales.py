@@ -219,3 +219,95 @@ ESTADIOS = {
     "Orlando City": e("rect", 2, "anillo", False, "halo", "metal", ""),
     "FC Cincinnati": e("rect", 2, "anillo", False, "halo", "metal", ""),
 }
+
+
+# ---------------------------------------------------------------------------
+# LOS COLORES DEL ESTADIO (14-10-2026, «los estadios en la vida real tienen sus
+# propios colores»). Colores de las butacas [principal, secundario] de los
+# estadios cuyo aspecto es conocido y NO coincide con el uniforme del club (o
+# se comparte, como San Siro o el Maracanã). Los clubes que no están aquí
+# siguen con los colores del club, que en la mayoría de estadios es lo real.
+ASIENTOS = {
+    "Real Madrid": ("#f4f4f6", "#c9d3e8"), "Barcelona": ("#004d98", "#a50044"),
+    "Atlético Madrid": ("#cb3524", "#ffffff"), "Sevilla": ("#d4202c", "#ffffff"),
+    "Valencia": ("#f2f2f2", "#f08a00"), "Villarreal": ("#f5d800", "#1b5aa8"),
+    "Ath. Bilbao": ("#d3202b", "#ffffff"), "Real Sociedad": ("#1b5aa8", "#ffffff"),
+    "Betis": ("#0a7d3a", "#ffffff"), "Manchester Utd": ("#da291c", "#f2f2f2"),
+    "City de Manch.": ("#6cabdd", "#ffffff"), "Liverpool": ("#c8102e", "#ffffff"),
+    "Arsenal": ("#ef0107", "#ffffff"), "Chelsea": ("#034694", "#ffffff"),
+    "Tottenham": ("#f5f5f5", "#132257"), "Newcastle": ("#1a1a1a", "#f5f5f5"),
+    "Juventus": ("#111111", "#f2f2f2"), "Milan": ("#d4202c", "#1d3f8a"),
+    "Inter": ("#d4202c", "#1d3f8a"), "Napoli": ("#12a0d7", "#ffffff"),
+    "Bayern Múnich": ("#dc052d", "#ffffff"), "Dortmund": ("#fde100", "#111111"),
+    "Boca Juniors": ("#0d3b8e", "#f5c400"), "River Plate": ("#f5f5f5", "#d4202c"),
+    "Racing Club": ("#74acdf", "#ffffff"),
+    "Flamengo": ("#1f5fa8", "#f2f2f2"), "Fluminense": ("#1f5fa8", "#f2f2f2"),
+    "Botafogo": ("#1f5fa8", "#f2f2f2"), "Vasco": ("#1f5fa8", "#f2f2f2"),
+    "Peñarol": ("#fcd116", "#111111"), "Nacional": ("#1f3f8a", "#f2f2f2"),
+    "Colo-Colo": ("#f2f2f2", "#1a1a1a"), "U. de Chile": ("#1b4fa0", "#f2f2f2"),
+    "U. Católica": ("#1b5aa8", "#f2f2f2"),
+    "Paris SG": ("#004170", "#da291c"), "Marsella": ("#2faee0", "#ffffff"),
+    "Lyon": ("#1b3f8a", "#da291c"), "Lens": ("#f5c400", "#d4202c"),
+    "Al-Hilal": ("#005eb8", "#ffffff"), "Al-Nassr": ("#ffd400", "#00378f"),
+    "Al Ahly": ("#d4202c", "#ffffff"), "Zamalek": ("#f2f2f2", "#d4202c"),
+    "Orlando Pirates": ("#d9822b", "#6b3e1f"), "Kaizer Chiefs": ("#d9822b", "#6b3e1f"),
+    "Guadalajara": ("#d4202c", "#ffffff"), "Tigres UANL": ("#f5c400", "#1b3f8a"),
+    "Monterrey": ("#1b3f8a", "#ffffff"),
+}
+for _k, _c in ASIENTOS.items():
+    if _k in ESTADIOS:
+        ESTADIOS[_k]["asientos"] = list(_c)
+
+
+# ---------------------------------------------------------------------------
+# EL ESCUDO SE PARECE AL REAL (14-10-2026, «los escudos deben parecerse más»).
+# [forma, patrón] del escudo de los clubes cuyo escudo real tiene un rasgo
+# fácil de reconocer con las formas y patrones del generador (rayas verticales,
+# banda diagonal, círculo con aro, rombos bávaros, corona...). Nunca el dibujo
+# ni el nombre del real: solo su silueta y su estampado. Los demás clubes siguen
+# con el escudo por hash.
+ESCUDOS = {
+    "Real Madrid": ("circulo", "corona2"), "Barcelona": ("escudo", "franjas"),
+    "Atlético Madrid": ("clasico", "franjas"), "Sevilla": ("circulo", "aro"),
+    "Ath. Bilbao": ("clasico", "franjas"), "Real Sociedad": ("clasico", "franjas"),
+    "Betis": ("circulo", "banda"), "Juventus": ("ovalo", "franjas"),
+    "Milan": ("escudo", "franjas"), "Inter": ("circulo", "anillos"),
+    "Napoli": ("redondeado", "aro"), "Lazio": ("ovalo", "aro"), "Roma": ("clasico", "mitad"),
+    "Bayern Múnich": ("circulo", "rombos"), "City de Manch.": ("octogono", "aro"),
+    "Tottenham": ("ovalo", "liso"), "Marsella": ("circulo", "interior"), "Lyon": ("escudo", "liso"),
+    "River Plate": ("clasico", "banda"), "Racing Club": ("escudo", "franjas"),
+    "Estudiantes": ("clasico", "franjas"), "Newell's": ("circulo", "mitad"),
+    "Peñarol": ("escudo", "franjas"), "Cerro Porteño": ("clasico", "franjas"),
+    "Al-Hilal": ("hex", "aro"), "Al-Nassr": ("circulo", "sol"),
+}
+for _k, _v in ESCUDOS.items():
+    if _k in ESTADIOS:
+        ESTADIOS[_k]["escudo"] = list(_v)
+
+
+# ---------------------------------------------------------------------------
+# LA CAMISETA SE PARECE A LA REAL (14-10-2026, «cada club debe tener una camiseta
+# parecida al equipo real»). Diseño de la camiseta (nombres de `Jersey.KITS`) de los
+# clubes cuyo uniforme real es reconocible por su estampado; los colores ya vienen
+# del club. Los demás siguen con el diseño por hash.
+CAMISETAS = {
+    "Real Madrid": "liso", "Barcelona": "franjas", "Atlético Madrid": "franjas", "Sevilla": "liso",
+    "Ath. Bilbao": "franjas", "Real Sociedad": "franjas", "Betis": "franjas", "Valencia": "liso",
+    "Villarreal": "liso", "Juventus": "franjas", "Milan": "franjas", "Inter": "franjas",
+    "Napoli": "liso", "Roma": "liso", "Lazio": "liso", "Bayern Múnich": "liso", "Dortmund": "liso",
+    "Leverkusen": "liso", "City de Manch.": "liso", "Manchester Utd": "liso", "Liverpool": "liso",
+    "Arsenal": "hombros", "Chelsea": "liso", "Tottenham": "liso", "Newcastle": "franjas",
+    "West Ham": "hombros", "Aston Villa": "hombros", "Marsella": "liso", "Lyon": "liso",
+    "Boca Juniors": "banda", "River Plate": "sash", "Racing Club": "franjas", "Independiente": "liso",
+    "San Lorenzo": "franjas", "Estudiantes": "franjas", "Newell's": "mitad", "Peñarol": "franjas",
+    "Nacional": "liso", "Colo-Colo": "liso", "U. de Chile": "liso", "Flamengo": "aros",
+    "Fluminense": "vertical3", "Botafogo": "franjas", "Vasco": "sash", "Gremio": "vertical3",
+    "Atl. Mineiro": "franjas", "Corinthians": "liso", "Palmeiras": "liso", "Santos": "liso",
+    "Sao Paulo": "aros", "Cerro Porteño": "mitad", "Olimpia": "liso", "Universitario": "liso",
+    "Alianza Lima": "franjas", "Sporting Cristal": "liso", "Cruz Azul": "liso", "America": "liso",
+    "Guadalajara": "franjas", "Monterrey": "franjas", "Tigres UANL": "liso", "Al-Hilal": "liso",
+    "Al-Nassr": "liso", "Al Ahly": "liso",
+}
+for _k, _v in CAMISETAS.items():
+    if _k in ESTADIOS:
+        ESTADIOS[_k]["camiseta"] = _v

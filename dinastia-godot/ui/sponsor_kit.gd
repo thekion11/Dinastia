@@ -101,8 +101,13 @@ static func de_club(c: Club, mundo: Mundo = null) -> Dictionary:
 		## Nadie vende la manga sin haber vendido el pecho.
 		if i > 0 and not r.has("pecho"):
 			break
-		if float((h >> (i * 5)) % 100) / 100.0 < float(z[1]):
-			var m: Array = marcas[(h / (i + 3) + i * 7) % marcas.size()]
+		## UN CLUB GRANDE SIEMPRE LLEVA PATROCINADOR EN EL PECHO (auditoría 14-10-2026:
+		## el 16 % de los clubes, de reputación media 72, salía sin ninguno).
+		var vende: bool = float((h >> (i * 5)) % 100) / 100.0 < float(z[1]) or (i == 0 and c.rep >= 70)
+		if vende:
+			## La marca sale de un hash propio por zona (antes de `h / (i + 3)`, que
+			## repartía muy mal: 4 marcas de 30 cubrían más de la mitad).
+			var m: Array = marcas[Marca._hash("%s|marca|%d" % [c.id, i]) % marcas.size()]
 			r[String(z[0])] = {"marca": Nombres.limpiar(String(m[0])), "color": String(m[1]) if m.size() > 1 else "#e8b13a"}
 	return r
 

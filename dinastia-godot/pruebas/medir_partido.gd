@@ -51,6 +51,9 @@ func _process(_d: float) -> void:
 	if OS.get_environment("PARTES") != "":
 		_partes()
 		return
+	if OS.get_environment("ARBOL") != "":
+		_arbol()
+		return
 	_llamadas.append(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 	_triangulos.append(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
 	_objetos.append(Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME))
@@ -63,6 +66,9 @@ func _process(_d: float) -> void:
 			Calidad.elegida, _media(_llamadas), _media(_triangulos), _media(_objetos),
 			_media(_proceso), _proceso.max(),
 			Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0])
+		for l in _vista.find_children("*", "Light3D", true, false):
+			var dl := l as DirectionalLight3D
+			print("LUZ %s sombra=%s%s" % [l.name, (l as Light3D).shadow_enabled, "" if dl == null else " cortes=%d dist=%.0f" % [dl.directional_shadow_mode, dl.directional_shadow_max_distance]])
 		if OS.get_environment("DETALLE") != "":
 			for f: Dictionary in Optimizar.informe(_vista, 25):
 				print("DETALLE tris=%d piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
@@ -131,3 +137,41 @@ func _partes() -> void:
 		_ocultos = _de_grupo(GRUPOS[_parte])
 		for g in _ocultos:
 			g.visible = false
+
+## Con ARBOL=1: apaga cada hijo directo de la raíz 3D (y los hijos de los grandes)
+## y mira cuántos triángulos y llamadas se ahorran con la cámara de TV.
+var _cola_arbol: Array = []
+var _prev: Node3D = null
+var _base_a := Vector2.ZERO
+var _paso_a := 0
+
+func _arbol() -> void:
+	var raiz: Node3D = _vista.get("_raiz3d")
+	var m := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
+	_paso_a += 1
+	if _paso_a % 4 != 0:
+		return
+	if _prev != null:
+		print("ARBOL sin %-34s -%7d tris  -%4d llamadas" % [_prev.get_path().get_concatenated_names().right(40), _base_a.x - m.x, _base_a.y - m.y])
+		_prev.visible = true
+		_prev = null
+		return
+	if _cola_arbol.is_empty():
+		if _base_a == Vector2.ZERO:
+			_base_a = m
+			print("ARBOL base tris=%d llamadas=%d" % [m.x, m.y])
+			for c in raiz.get_children():
+				if c is Node3D:
+					_cola_arbol.append(c)
+			var extra: Array = []
+			for c in _cola_arbol:
+				if c.get_child_count() > 6:
+					for g in c.get_children():
+						if g is Node3D:
+							extra.append(g)
+			_cola_arbol.append_array(extra)
+			return
+		get_tree().quit()
+		return
+	_prev = _cola_arbol.pop_front()
+	_prev.visible = false
