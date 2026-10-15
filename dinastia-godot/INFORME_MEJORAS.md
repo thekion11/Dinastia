@@ -658,11 +658,17 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 
 ## K. Idiomas y textos (M-325 … M-336)
 
-- **M-325 · P1 · M** Frases distintas por idioma (I-01): en/pt 1.531, fr/it/de/ca 1.402,
-  pl/tr 1.699. *Cómo*: completar a la unión (1.699) y prueba que falle por menos claves.
-- **M-326 · P1 · M** 297 frases faltan en fr/it/de/ca (incluye 129 titulares). *Cómo*: traducir
-  por lotes con revisión.
-- **M-327 · P2 · M** 168 frases faltan en en/pt. *Cómo*: traducir.
+- **M-325 · P1 · M ✅ (15-10)** Frases distintas por idioma (I-01): en/pt 1.531, fr/it/de/ca 1.402,
+  pl/tr 1.699 contando solo `idiomas_extra.json`. Remedido con todos los catálogos (TABLA +
+  extra + narración + diálogos de la ciudad): unión de 2.574 frases fijas y 373 patrones;
+  ahora **los 8 idiomas tienen las 2.574 y los 373**. Prueba: `_probar_paridad_idiomas` en
+  el banco (falla por una sola frase o patrón de menos; con los datos de antes, 7 fallos).
+- **M-326 · P1 · M ✅ (15-10)** «297 frases faltan en fr/it/de/ca»: en realidad faltaban **36
+  frases + 2 patrones** en cada uno de fr/it/de/ca/pl/tr (los titulares sin icono; con
+  icono ya los traducía la narración). Traducidas; además 2 plantillas reales de la
+  narración que faltaban en los 8 («(moral %+d)», «Colonia …») y «Terapia deportiva».
+- **M-327 · P2 · M ✅ (15-10)** «168 frases faltan en en/pt»: no faltaba ninguna (estaban en
+  `Idiomas.TABLA`, que el recuento no miraba).
 - **M-328 · P2 · C** Patrones numéricos (`patrones` 58) con plurales simples. *Cómo*: reglas de
   plural por idioma (pl y tr difieren).
 - **M-329 · P2 · I** Sin género gramatical (entrenadora/jugadora) en todos los idiomas. *Cómo*:
@@ -678,7 +684,9 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
   añadir ar.
 - **M-335 · P2 · I** Fuentes: cobertura de glifos para pl/tr/ar. *Cómo*: prueba con
   cadenas de cada idioma.
-- **M-336 · P2 · I** `CLAUDE.md` afirma «1.402 frases c/u» (I-04). *Cómo*: actualizar.
+- **M-336 · P2 · I** `CLAUDE.md` afirma «1.402 frases c/u» (I-04). *Cómo*: actualizar a la
+  cifra real (15-10: 2.574 frases fijas + 373 patrones en cada idioma; pendiente de que la
+  sesión principal toque la memoria).
 
 ## L. Rendimiento y optimización (M-337 … M-358)
 
@@ -899,6 +907,8 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 - **M-446 · P1 · M** 69 claves nuevas sin traducir (✅ arregladas); el patrón se repetirá con
   cada pantalla nueva. *Cómo*: **prueba del banco** que extraiga las claves de `Idiomas.t(` del
   código y falle si falta en algún idioma (el script de la pasada 3 ya lo hace).
+  ✅ (15-10) Hecho dentro de `_probar_paridad_idiomas`: las 258 frases de `Idiomas.t("…")`
+  de `ui/`, `visor/` y `nucleo/` se comprueban en los 8 idiomas (0 sin traducir).
 - **M-447 · P1 · I** Las 274 cadenas en español escritas directo en `ui/` (I-02) siguen
   pendientes; la prueba anterior solo cubre las que ya pasan por `Idiomas.t`. *Cómo*: ídem,
   buscar `.text = "…"` con tildes y exigir envoltorio.
@@ -969,7 +979,8 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 - «Los ojos pesan mucho» (pasada anterior): **sobrestimado**; un ojo tiene ~768 triángulos y
   22 jugadores son ~17 k; el coste del pelo/pestañas por capas y el césped en capas es
   mayor (M-339, M-340).
-- «Cada idioma tiene 1.402 frases»: **falso** (I-01).
+- «Cada idioma tiene 1.402 frases»: **falso** (I-01). Desde el 15-10 cada idioma tiene las
+  2.574 frases fijas y los 373 patrones (comprobado en el banco).
 - «Los patrocinadores no coinciden con los reales»: **no es defecto** (decisión del usuario),
   pero sí lo eran el reparto sesgado y los clubes grandes sin patrocinio (✅ corregidos).
 
