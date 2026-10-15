@@ -272,6 +272,9 @@ func explorar(modo: String) -> void:
 	_explorador.iniciar(_ciudad, modo, desde, club.nombre if club != null else "", String(animo.get("estado", "normal")))
 	_explorador.salir.connect(_dejar_de_explorar)
 	_explorador.interactuar.connect(_interactuar_en_ciudad)
+	## A pie o en coche, fuera los rótulos del MAPA (nombres flotantes de parques,
+	## solares...): a ras de calle se veían repetidos sobre los carteles de verdad.
+	_ciudad.mostrar_rotulos(false)
 	for h in get_children():
 		if h is Control and (h as Control).visible and h != _ficha:
 			(h as Control).visible = false
@@ -283,6 +286,7 @@ func _dejar_de_explorar() -> void:
 	_explorador.queue_free()
 	_explorador = null
 	_camara.make_current()
+	_ciudad.mostrar_rotulos(_rotulos_visibles)
 	for h in _barra_mapa:
 		if is_instance_valid(h):
 			h.visible = true
@@ -616,5 +620,5 @@ func _reconstruir() -> void:
 	if _env != null:
 		_env.adjustment_saturation = _saturacion_animo()
 	_ciudad.build(_datos_de(club, _obras, _ciudad_datos, _perfil))
-	_ciudad.mostrar_rotulos(_rotulos_visibles)
+	_ciudad.mostrar_rotulos(_rotulos_visibles and _explorador == null)
 	_aplicar_hora()
