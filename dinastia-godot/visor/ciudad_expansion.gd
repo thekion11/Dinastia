@@ -1224,7 +1224,7 @@ func _industrial(r: Rect2) -> void:
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
 
 ## Giro de los puestos de feria para que el mostrador dé al paseo (+Z del parque).
-const GIRO_PUESTO := 0.0
+const GIRO_PUESTO := PI   ## el mostrador del modelo mira a −Z (comprobado en captura)
 
 ## La escala para que el ancho (X) de la pieza mida `metros`.
 func _escala_ancho(ruta: String, metros: float) -> float:
