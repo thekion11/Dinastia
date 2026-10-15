@@ -80,6 +80,7 @@ var _luz_cam: OmniLight3D
 ## (en coordenadas del estadio, que está en `CityBuilder.ESTADIO_EN`).
 var _est: Dictionary = {}
 var _zona_est := ""
+var _aviso_hablar := false
 var _planta := 0
 var _menu_asc: PanelContainer
 var _sentado := false
@@ -853,7 +854,7 @@ func _buscar_cerca() -> void:
 	if _cerca.is_empty():
 		_aviso.text = ""
 	elif _cerca["tipo"] == "peaton":
-		_aviso.text = "E: hablar con %s" % _cerca["n"]
+		_aviso.text = Idiomas.t("E: hablar con %s") % _cerca["n"]
 	else:
 		_aviso.text = "E: %s" % _cerca["n"]
 
@@ -1417,10 +1418,14 @@ func _mover_en_estadio(delta: float) -> void:
 	if not g.is_empty():
 		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
 		_zona_est = nombre
+		_aviso_hablar = true
 	elif RecorridoClub.junto_a_la_grada(cuerpo.position - CityBuilder.ESTADIO_EN, _planta):
 		_aviso.text = Idiomas.t("E: sentarse en la grada")
 		_zona_est = "·grada"
-	elif nombre != _zona_est or _aviso.text.begins_with("E: hablar"):
+	elif nombre != _zona_est or _aviso_hablar:
+		## Antes se miraba si el texto empezaba por «E: hablar»: en otro idioma
+		## nunca coincidía y el aviso de hablar se quedaba pegado.
+		_aviso_hablar = false
 		_zona_est = nombre
 		_aviso.text = RecorridoClub.aviso_de(nombre)
 		if RecorridoClub.sala_decorable(nombre):
