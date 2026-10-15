@@ -1223,6 +1223,16 @@ func _industrial(r: Rect2) -> void:
 			b._cil_en(c + Vector3(-r.size.x * 0.38, 14.0, r.size.y * 0.3), 1.4, 28.0, b._mat_simple(Color(0.55, 0.3, 0.25), 0.8))
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
 
+## Giro de los puestos de feria para que el mostrador dé al paseo (+Z del parque).
+const GIRO_PUESTO := 0.0
+
+## La escala para que el ancho (X) de la pieza mida `metros`.
+func _escala_ancho(ruta: String, metros: float) -> float:
+	var k := _malla_kit(ruta)
+	if k.is_empty():
+		return 1.0
+	return metros / maxf((k["caja"] as AABB).size.x, 0.01)
+
 ## La escala para que el lado largo de la pieza mida `metros`.
 func _escala_largo(ruta: String, metros: float) -> float:
 	var k := _malla_kit(ruta)
@@ -1378,6 +1388,16 @@ func _detalles_parque(r: Rect2, c: Vector3, nombre: String, lago: bool) -> void:
 	var zj := c + Vector3(-r.size.x * 0.27, 0, -r.size.y * 0.27)
 	if lago:
 		zj = c + Vector3(-r.size.x * 0.27, 0, r.size.y * 0.27)
+	## Puestos de la feria (15-10-2026, kit de la montaña rusa de Kenney): comida,
+	## bebidas e información en fila junto al paseo, en el cuadrante opuesto a
+	## los juegos y mirando al camino. El surtido sale de la posición del parque.
+	var lado_p := -1.0 if lago else 1.0
+	var surtido := ["stall-food", "stall-drinks", "stall-information", "stall-food", "stall-drinks"]
+	var hp := absi(hash(Vector2(c.x, c.z)))
+	for k in 3:
+		var ruta_p := "res://assets/kenney/montana_rusa/%s.glb" % surtido[(hp + k) % surtido.size()]
+		var pp := c + Vector3(r.size.x * (0.17 + 0.09 * float(k)), 0.12, -lado_p * 8.5)
+		_pieza_kit(ruta_p, pp, _escala_ancho(ruta_p, 3.2), GIRO_PUESTO if lado_p > 0.0 else GIRO_PUESTO + PI)
 	b._caja_en(zj + Vector3(0, 0.12, 0), Vector3(14.0, 0.24, 10.0), b._mat_simple(Color(0.86, 0.78, 0.58), 0.95))
 	var rojo := b._mat_simple(Color(0.85, 0.2, 0.15), 0.5)
 	var amarillo := b._mat_simple(Color(0.98, 0.8, 0.15), 0.5)
