@@ -27,7 +27,10 @@ func _process(d: float) -> void:
 	if _int == null or _t > 2.0:
 		if _int != null:
 			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/interior_%s%s.png" % [PREFIJO, String(CLAVES[_i]).get_slice("|", 0)])
-			print("FOTO ", CLAVES[_i])
+			print("FOTO %s · %d triángulos · %d llamadas · %d nodos" % [CLAVES[_i],
+				RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME),
+				RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
+				_int.find_children("*", "", true, false).size()])
 			_int.queue_free()
 			_int = null
 		_i += 1
