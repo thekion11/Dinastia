@@ -4659,8 +4659,8 @@ func _ver_estadio_propio() -> void:
 	## cuáles estaban visibles, no asumiendo que todos lo estaban-.
 	var ocultados: Array = []
 	for h in get_children():
-		if h is Control and (h as Control).visible:
-			(h as Control).visible = false
+		if h is CanvasItem and (h as CanvasItem).visible:
+			(h as CanvasItem).visible = false
 			ocultados.append(h)
 	var vista := VistaEstadio.new()
 	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
@@ -4674,7 +4674,7 @@ func _ver_estadio_propio() -> void:
 		vista.queue_free()
 		for h in ocultados:
 			if is_instance_valid(h):
-				(h as Control).visible = true)
+				(h as CanvasItem).visible = true)
 
 ## Qué tribuna se está editando cuando "Personalizar cada tribuna" está activo.
 ## Solo estado de interfaz -no se guarda, como `_secc_ajustes`-: al volver a
@@ -5044,8 +5044,8 @@ func _ver_ciudad_propia() -> void:
 		return
 	var ocultados: Array = []
 	for h in get_children():
-		if h is Control and (h as Control).visible:
-			(h as Control).visible = false
+		if h is CanvasItem and (h as CanvasItem).visible:
+			(h as CanvasItem).visible = false
 			ocultados.append(h)
 	var vista := VistaCiudad.new()
 	add_child(vista)
@@ -5059,7 +5059,7 @@ func _ver_ciudad_propia() -> void:
 		vista.queue_free()
 		for h in ocultados:
 			if is_instance_valid(h):
-				(h as Control).visible = true
+				(h as CanvasItem).visible = true
 		_refrescar())
 	## Clic en el estadio, o el botón "Editar mi estadio": mismo cierre que
 	## "Volver" -devuelve la pestaña de Club, que quedaba oculta- y además
@@ -5069,7 +5069,7 @@ func _ver_ciudad_propia() -> void:
 		vista.queue_free()
 		for h in ocultados:
 			if is_instance_valid(h):
-				(h as Control).visible = true
+				(h as CanvasItem).visible = true
 		_ir_a_pestana("Estadio")
 		_pintar_estadio(c))
 
