@@ -77,14 +77,21 @@ func _process(_d: float) -> void:
 		if not _dist.is_empty():
 			print("  portador %d fotogramas; rival más cercano: min %.1f  mediana %.1f" % [_dist.size(), _dist[0], _dist[_dist.size() / 2]])
 		_ok(_conduciendo > 30, "alguien conduce el balón con el mocap de regate (%d fotogramas)" % _conduciendo)
-		var motor_regates: int = (_vista.get("_motor") as MotorJugable).regates_ia if _vista.get("_motor") != null else 0
-		## HALLAZGO ABIERTO (auditoría 14-10, INFORME_MEJORAS M-443): la IA del motor real casi
-		## no amaga (la finta solo se intenta con un rival a menos de 1,8 m). Se avisa
-		## en vez de fallar hasta decidir el ajuste (cambiaría la calibración de goles).
-		if juego.regates_hechos > 0 or _amagues > 0 or motor_regates > 0:
-			print("  ok    hay amagues ante un rival (%d)" % maxi(juego.regates_hechos, maxi(_amagues, motor_regates)))
+		## LOS AMAGOS DE LA IA (H-11 / M-443, 15-10-2026): antes era solo un
+		## AVISO (0 fintas). Ahora la IA amaga al ver venir al defensor, una
+		## vez por duelo; se comprueba que pase, que no sea un festival y que
+		## alguno engañe de verdad al defensor.
+		var mot: MotorJugable = _vista.get("_motor")
+		if mot != null:
+			var jugado := float(mot.mitad - 1) * mot.duracion_mitad + mot.t
+			var por_min := float(mot.regates_ia) / maxf(jugado / mot.duracion_mitad * 45.0, 1.0)
+			print("  motor: %.0f s jugados (minuto %d), %d fintas de la IA (%d engañan), %.2f por minuto de partido" % [
+				jugado, mot.minuto(), mot.regates_ia, mot.regates_ia_ok, por_min])
+			_ok(mot.regates_ia > 0 or _amagues > 0, "hay amagues de la IA ante un rival (%d)" % maxi(mot.regates_ia, _amagues))
+			_ok(mot.regates_ia_ok > 0, "alguna finta de la IA deja clavado al defensor (%d)" % mot.regates_ia_ok)
+			_ok(por_min < 1.2, "sin festival de fintas (%.2f por minuto de partido)" % por_min)
 		else:
-			print("  AVISO 0 amagues de la IA en el partido (hallazgo abierto M-443)")
+			_ok(juego.regates_hechos > 0 or _amagues > 0, "hay amagues ante un rival (%d)" % maxi(juego.regates_hechos, _amagues))
 		var con_balon := 0
 		for f: Dictionary in _vista.get("_en_banca"):
 			var n: Node3D = f.get("node")
