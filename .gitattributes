@@ -31,3 +31,14 @@ dinastia-godot/assets/ciudad/kenney_cars_extra/*.glb -filter -diff -merge binary
 dinastia-godot/assets/objetos/*.glb -filter -diff -merge binary
 # City Kit Roads de Kenney (CC0, 1,7 MB): archivos normales. GUARDADO PARA DESPUÉS (14-10-2026, regalo del usuario); aún sin usar.
 dinastia-godot/assets/ciudad/kenney_roads/*.glb -filter -diff -merge binary
+# 10 kits 3D de Kenney (CC0, ~30 MB): archivos normales. GUARDADOS PARA DESPUÉS (15-10-2026, regalo del usuario); aún sin usar. Ver assets/kenney/INVENTARIO.md.
+dinastia-godot/assets/kenney/muebles/*.glb -filter -diff -merge binary
+dinastia-godot/assets/kenney/edificios_modulares/*.glb -filter -diff -merge binary
+dinastia-godot/assets/kenney/mini_arcade/*.glb -filter -diff -merge binary
+dinastia-godot/assets/kenney/comida/*.glb -filter -diff -merge binary
+dinastia-godot/assets/kenney/kit_edificios/*.glb -filter -diff -merge binary
+dinastia-godot/assets/kenney/montana_rusa/*.glb -filter -diff -merge binary
+dinastia-godot/assets/kenney/tren/*.glb -filter -diff -merge binary
+dinastia-godot/assets/kenney/suburbano/*.glb -filter -diff -merge binary
+dinastia-godot/assets/kenney/mini_mercado/*.glb -filter -diff -merge binary
+dinastia-godot/assets/kenney/industrial/*.glb -filter -diff -merge binary
