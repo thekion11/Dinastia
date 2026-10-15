@@ -8,6 +8,11 @@ extends Node3D
 ##   ESCENARIO=cambios   con cansancio real: un equipo mete 3 cambios frescos al
 ##                       60' y el otro no
 ##   godot --headless --path . res://pruebas/sonda_motor_dt.tscn   (N=partidos)
+##   ESCENARIO=simetria  el mismo once a los dos lados (sesgo de local). Para
+##                       cazar sesgos hace falta N grande: N=25 en 4 procesos con
+##                       SEMILLA0=400/500/600/700 y MITAD=120 (≈11 min); la línea
+##                       LADOS da goles/tiros/córners/faltas/fueras/despejes L-V.
+##   SEMILLA0=primera semilla, MITAD=segundos de motor por tiempo (240).
 var _m: Mundo
 var remates := {}
 ## Totales de todos los partidos: pases [L, V], pases buenos, fintas de la IA

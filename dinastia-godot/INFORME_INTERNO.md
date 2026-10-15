@@ -28,7 +28,7 @@ Prioridad: P0 rompe algo · P1 se nota mucho · P2 pulido · P3 futuro.
 3. **Lo más débil hoy** (por impacto): (a) el **exterior de los estadios** (cajas grises
    con torres) y la poca variedad de formas (6); (b) **idiomas**: los 6 idiomas extra no
    tienen las mismas frases (§9); (c) **rendimiento no demostrado** sin GPU real (§8);
-   (d) **sesgo de local** en el motor de partido (§6); (e) **patrocinio** concentrado en
+   (d) ~~sesgo de local~~ (§6: medido con N=100, no existe; ✅ 15-10); (e) **patrocinio** concentrado en
    4 marcas y 16 % de clubes grandes sin camiseta patrocinada (§5); (f) **plantillas
    idénticas en tamaño** (25 en todos los clubes).
 4. **Lo que ya respeta al club real** (medido): estadio con la arquitectura del real 46 %,
@@ -166,15 +166,19 @@ Medido con `pruebas/sonda_motor_dt.tscn` y `sonda_fisica_partido.tscn`:
 |---|---|
 | Calidad (N=4) | mejor de local 1,75–1,00 (tiros 9,8–4,8); peor de local 0,50–4,25 → **gana el mejor** |
 | Táctica (N=3) | ofensiva 1,67–0,33 (tiros 7,0–2,3); defensiva 1,00–0,67 (tiros 2,7–12,3) → **la pizarra cambia los tiros** |
-| Simetría (N=6, mismo once) | **2,00–1,33 a favor del local** |
+| Simetría (N=6, mismo once) | ~~2,00–1,33 a favor del local~~ → era ruido de muestra: con N=100 (15-10) **0,63–0,67** antes y **0,68–0,71** después |
 | Física (240 fotogramas) | solapes 0,12 %; balón hundido 0; balón atravesando cuerpo 0; **68 teletransportes** del balón y 465 giros > 720°/s |
 
-- **M-01 (P1, 🔴) Sesgo de local**: con el mismo once a los dos lados el local mete
-  +0,67 goles y +1,6 tiros (N pequeña, pero repetido en táctica: 2,33–0,33 con pizarras
-  iguales). *Cómo*: ampliar la sonda (N ≥ 30, semillas distintas); revisar
-  `_orientar_formaciones`, el saque inicial (¿siempre saca el local?) y la posición de la
-  cámara/césped que favorezca el sentido de ataque; luego calibrar con ventaja de campo
-  explícita (≈ +0,2 goles) y no implícita.
+- **M-01 (P1, ✅ 15-10) Sesgo de local**: el «+0,67 goles» salía de N=6. La sonda ahora
+  reparte semillas en procesos (`SEMILLA0`, `MITAD`) e imprime `LADOS` (goles, tiros,
+  córners, faltas, fueras, despejes por lado). Con el mismo once, **N=100** (MITAD=120):
+  **antes 0,63–0,67 goles, tiros 3,4–3,4, G/E/P local 28/39/33**; **después 0,68–0,71,
+  tiros 3,0–3,1, 29/39/32**. No había ventaja de local medible. Sí había dos asimetrías
+  reales en el código, corregidas: el **efecto (Magnus) de centros y córners** era el mismo
+  giro absoluto para los dos (un equipo centraba abriéndose y el otro cerrándose hacia el
+  arco) y las **zonas del área en balón parado** no se reflejaban con el sentido del ataque.
+  `_orientar_formaciones`, saques de centro, catálogo de jugadas y fuera de juego se
+  revisaron: simétricos. Si se quiere ventaja de campo, que sea explícita (no hay).
 - **M-02 (P1, 🔴) Teletransportes y giros bruscos**: los 68 «saltos» del balón y los giros
   de 720°/s suelen ser reposiciones (saque de centro, gol) mezcladas con movimiento real.
   *Cómo*: que la sonda excluya los fotogramas de estado `gol/saque`; limitar giro por
@@ -340,7 +344,7 @@ estática «claves de `Idiomas.t` sin traducción».
 | E-08 | P2 | `prueba_regates` obsoleta: miraba a `MatchPlayback` (que con el motor real no mueve a nadie) y la ceremonia retenía el partido | ✅ ahora mira a `MotorJugable` y apaga la ceremonia: «conduce con el mocap de regate» pasa (198 fotogramas) |
 | E-09 | P2 | `prueba_repeticion` obsoleta (4,2 s grabados por la ceremonia) y con `resize` sobre imagen nula en `--headless` | ✅ ceremonia apagada y guarda contra imagen nula (no verificada, lenta) |
 | E-10 | P3 | Las pruebas que apagan la ceremonia escriben en `user://ajustes.cfg`: si se matan a medias (timeout) el ajuste queda en `false` (me pasó una vez y lo restauré) | 🟡 ver M-455 (config de pruebas aparte) |
-| H-11 | P1 | **La IA no amaga**: 0 fintas en un partido de prueba completo; la condición exige un rival a < 1,8 m y llega tarde en la cadena de decisiones | 🔴 registrado como M-443; la prueba lo avisa («AVISO») en vez de fallar |
+| H-11 | P1 | **La IA no amaga**: 0 fintas en un partido de prueba completo; la condición exige un rival a < 1,8 m y llega tarde en la cadena de decisiones | ✅ 15-10: `MotorJugable._intentar_regate` (al ver venir al defensor, una tirada por duelo, según regate y zona) + finta de último recurso sin teletransporte (`_finta_ia`); si el defensor pica queda clavado y el atacante arranca. Sonda: ~21 fintas por partido, 45-50 % engañan. `prueba_regates` ya falla de verdad (fintas en el partido, engaño a veces, defensor clavado, sin saltos, sin festival) |
 | H-12 | P3 | `prueba_carrera_flujo` termina con «Texture with GL ID … leaked» (≈ 350 kB × 2) al cerrar | 🔴 M-444 |
 | H-13 | P3 | `prueba_descanso_3d` se cuelga en `--headless` (necesita pantalla) y `prueba_intro/regates/repeticion` no caben en 5 min con render por software | 🔴 M-445 |
 | H-14 | — | Sin hallazgos: 19 shaders cargan, 0 nodos huérfanos tras 3 aperturas/cierres de la pantalla principal, 0 avisos/errores en un partido real con gol | ✅ |

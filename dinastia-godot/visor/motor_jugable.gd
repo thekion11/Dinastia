@@ -1541,6 +1541,17 @@ func _ia_portador(p: Dictionary) -> void:
 		_patear(p, destino, 17.0, 0.0, -signf(yo.x) * 6.0 * -d, "pase")
 		pase_a = _companero_cerca(p, destino)
 		return
+	## LA FINTA DE ÚLTIMO RECURSO (13-10, rehecha el 15-10): con el defensor ya
+	## encima (< 1,8 m), el que tiene regate intenta irse antes de soltarla. Antes
+	## se teletransportaba 0,8 m de lado; ahora es un empujón con inercia.
+	if presion < 1.8 and t > float(p["regate_hasta"]) + 0.6 and _rng.randf() < float(p["attr"]["reg"]) * 0.45:
+		var n_f: Node3D = p["node"]
+		var fwd_f := Vector3(sin(n_f.rotation.y), 0, cos(n_f.rotation.y))
+		var lado_f := -signf(Vector3(fwd_f.z, 0, -fwd_f.x).dot(pos(rival) - yo)) if not rival.is_empty() else 1.0
+		if lado_f == 0.0:
+			lado_f = 1.0
+		_finta_ia(p, rival, fwd_f, lado_f, maxf((p["vel"] as Vector3).length(), 2.0))
+		return
 	## EL PASE AL HUECO (13-10-2026). La IA nunca filtraba: los ataques
 	## morían a 30 m de la portería tocando atrás (la sonda: 5 tiros en 8
 	## minutos). Si un delantero o un extremo habilitado ataca la espalda de la
@@ -1605,7 +1616,6 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 		ganas *= 1.25
 	if _rng.randf() >= ganas:
 		return false
-	regates_ia += 1
 	## Sale por el lado contrario al que tapa el defensor (y hacia dentro si
 	## va pegado a la banda).
 	var der := Vector3(fwd.z, 0, -fwd.x)
@@ -1614,6 +1624,16 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 		lado = 1.0 if _rng.randf() < 0.5 else -1.0
 	if absf(yo.x) > ANCHO - 6.0 and (der * lado).x * signf(yo.x) > 0.0 and _rng.randf() < 0.7:
 		lado = -lado
+	_finta_ia(p, rival, fwd, lado, sp)
+	return true
+
+## La finta en sí (la de antes del duelo y la de último recurso, pegado al
+## defensor): gesto del repertorio según el regate, empujón lateral de
+## verdad y, si el defensor pica, queda clavado y el atacante arranca.
+func _finta_ia(p: Dictionary, rival: Dictionary, fwd: Vector3, lado: float, sp: float) -> void:
+	regates_ia += 1
+	var reg := float(p["attr"]["reg"])
+	var der := Vector3(fwd.z, 0, -fwd.x)
 	var salida := (fwd * 0.55 + der * lado).normalized()
 	p["regate_dir"] = (fwd * 0.8 + der * lado * 0.6).normalized()
 	p["regate_hasta"] = t + 0.75
@@ -1631,16 +1651,19 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 		nom += "_espejo"
 	_anim(p, nom, true, 0.8)
 	## ¿Pica el defensor? Regate contra defensa, con algo de suerte.
-	var engano := clampf(0.4 + (reg - float(rival["attr"]["def"])) * 1.1, 0.12, 0.8)
-	if _rng.randf() < engano:
-		regates_ia_ok += 1
-		rival["enfriar"] = maxf(float(rival["enfriar"]), 0.7)
-		## Se va hacia el lado equivocado: frena y se le va el cuerpo.
-		rival["vel"] = (rival["vel"] as Vector3) * 0.25 - der * lado * 1.6
-		_anim(rival, "marcar", true, 0.6)
+	if not rival.is_empty():
+		var engano := clampf(0.4 + (reg - float(rival["attr"]["def"])) * 1.1, 0.12, 0.8)
+		if _rng.randf() < engano:
+			regates_ia_ok += 1
+			rival["enfriar"] = maxf(float(rival["enfriar"]), 0.9)
+			## Se va hacia el lado equivocado: frena y se le va el cuerpo; el
+			## atacante sale disparado por el otro lado, ya mirando al frente.
+			rival["vel"] = (rival["vel"] as Vector3) * 0.25 - der * lado * 1.6
+			_anim(rival, "marcar", true, 0.6)
+			p["vel"] = salida * clampf(sp * 1.05, 4.5, 6.5)
+			p["regate_dir"] = (fwd + der * lado * 0.35).normalized()
 	## Tras la finta decide con calma (no la suelta en mitad del gesto).
 	_decision_en = maxf(_decision_en, t + 0.45)
-	return true
 
 ## Un compañero de ataque, habilitado, cerca de la última línea rival y por
 ## delante del balón, con el pasillo hacia el espacio a su espalda limpio.
