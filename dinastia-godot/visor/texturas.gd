@@ -158,6 +158,9 @@ static func asfalto(tinte: Color = Color(0.17, 0.175, 0.185), semilla: int = 23)
 	m.roughness = 0.82
 	m.roughness_texture = _tex_ruido(0.03, semilla + 9, false, 3)
 	m.metallic = 0.0
+	## El asfalto casi no refleja: con el especular por defecto (0,5), en Forward+
+	## la calzada a contraluz se quemaba en blanco (15-10-2026).
+	m.metallic_specular = 0.08
 	m.uv1_triplanar = true
 	m.uv1_world_triplanar = true
 	m.uv1_scale = Vector3(0.25, 0.25, 0.25)
