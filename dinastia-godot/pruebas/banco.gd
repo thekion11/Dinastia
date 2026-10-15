@@ -16,7 +16,114 @@ extends Node
 ##
 ## Devuelve 0 si todo va bien y 1 si algo falla, para poder encadenarlo.
 
+const SECCIONES := [
+	"_probar_carga_de_ui",
+	"_probar_datos",
+	"_probar_repetibilidad",
+	"_probar_mundo",
+	"_probar_reales",
+	"_probar_base_ficticia",
+	"_probar_cubierta_nombres",
+	"_probar_calendario",
+	"_probar_partidos",
+	"_probar_previa",
+	"_probar_arbitros",
+	"_probar_pie_habil",
+	"_probar_banquillo",
+	"_probar_finanzas",
+	"_probar_mercado",
+	"_probar_notas",
+	"_probar_directiva",
+	"_probar_banco",
+	"_probar_staff",
+	"_probar_obras",
+	"_probar_roles_y_federacion",
+	"_probar_estadio",
+	"_probar_puente3d",
+	"_probar_tactica_en_movimiento",
+	"_probar_copa",
+	"_probar_continental",
+	"_probar_selecciones",
+	"_probar_pulso_de_roles",
+	"_probar_cantera",
+	"_probar_cesiones",
+	"_probar_desafios",
+	"_probar_fundar_club",
+	"_probar_logros",
+	"_probar_ascensos",
+	"_probar_vender",
+	"_probar_ojeadores",
+	"_probar_negociacion",
+	"_probar_consejeros",
+	"_probar_bilbao_solo_local",
+	"_probar_guardado",
+	"_probar_temporadas",
+	"_probar_economia",
+	"_probar_sala_de_prensa",
+	"_probar_auspicio",
+	"_probar_eras_y_precios",
+	"_probar_analitica_y_academias",
+	"_probar_habilidades",
+	"_probar_carrera_por_dentro",
+	"_probar_editor",
+	"_probar_ciudad",
+	"_probar_ideas_del_documento",
+	"_probar_aspecto_y_audio",
+	"_probar_marca",
+	"_probar_tutorial",
+	"_probar_moneda",
+	"_probar_academia",
+	"_probar_modos_simulacion",
+	"_probar_presets_exportacion",
+	"_probar_tema_y_ortografia",
+	"_probar_eventos_nuevos",
+	"_probar_entrevistas",
+	"_probar_estadio_b6",
+	"_probar_ciudad_b7",
+	"_probar_coherencia_c1",
+	"_probar_portadas_c20",
+	"_probar_cantera_c3",
+	"_probar_instituciones_c5_c8",
+	"_probar_charlas_c6_c7",
+	"_probar_licencia_c7",
+	"_probar_tanda_c",
+	"_probar_calendario_c13",
+	"_probar_politica_c15",
+	"_probar_historia_c4",
+	"_probar_contratos_c9",
+	"_probar_vida_dt",
+	"_probar_maestrias",
+	"_probar_habilidades_en_resultados",
+	"_probar_motor_libre",
+	"_probar_portafolio_futbol",
+	"_probar_jugadores_fijos",
+	"_probar_disenos_kit",
+	"_probar_guinos_estadio",
+	"_probar_plantillas_fijas",
+	"_probar_mesa_agente",
+	"_probar_ciudad_animo",
+	"_probar_ciudad_grande",
+	"_probar_minijuegos",
+	"_probar_leyes_pais",
+	"_probar_incumplir_ley",
+	"_probar_b6_formas_led",
+	"_probar_region_reales",
+	"_probar_tunel_navegable",
+	"_probar_edificio_club",
+	"_probar_personal_estadio",
+	"_probar_sancion_dt",
+	"_probar_interiores_club",
+	"_probar_galeria_club",
+	"_probar_reforma_con_obra",
+	"_probar_optimizacion",
+	"_probar_dinastias",
+	"_probar_documental",
+	"_probar_tribuna_real",
+	"_probar_narracion_traducida",
+]
+
 var _fallos: Array[String] = []
+var _tiempos: Array = []
 var _lineas: Array[String] = []
 
 func _ready() -> void:
@@ -35,110 +142,56 @@ func _ready() -> void:
 	## PRIMERO, Y BARATO: que las tres escenas raíz compilen. Si algo rompió la
 	## interfaz -el error exacto que costó un juego que no arrancaba el 25-9-,
 	## mejor saberlo en el primer segundo que después de 15 minutos de banco.
-	_probar_carga_de_ui()
-	_probar_datos()
-	_probar_repetibilidad()
-	_probar_mundo()
-	_probar_reales()
-	_probar_base_ficticia()
-	_probar_cubierta_nombres()
-	_probar_calendario()
-	_probar_partidos()
-	_probar_previa()
-	_probar_arbitros()
-	_probar_pie_habil()
-	_probar_banquillo()
-	_probar_finanzas()
-	_probar_mercado()
-	_probar_notas()
-	_probar_directiva()
-	_probar_banco()
-	_probar_staff()
-	_probar_obras()
-	_probar_roles_y_federacion()
-	_probar_estadio()
-	_probar_puente3d()
-	_probar_tactica_en_movimiento()
-	_probar_copa()
-	_probar_continental()
-	_probar_selecciones()
-	_probar_pulso_de_roles()
-	_probar_cantera()
-	_probar_cesiones()
-	_probar_desafios()
-	_probar_fundar_club()
-	_probar_logros()
-	_probar_ascensos()
-	_probar_vender()
-	_probar_ojeadores()
-	_probar_negociacion()
-	_probar_consejeros()
-	_probar_bilbao_solo_local()
-	_probar_guardado()
-	_probar_temporadas()
-	_probar_economia()
-	_probar_sala_de_prensa()
-	_probar_auspicio()
-	_probar_eras_y_precios()
-	_probar_analitica_y_academias()
-	_probar_habilidades()
-	_probar_carrera_por_dentro()
-	_probar_editor()
-	_probar_ciudad()
-	_probar_ideas_del_documento()
-	_probar_aspecto_y_audio()
-	_probar_marca()
-	_probar_tutorial()
-	_probar_moneda()
-	_probar_academia()
-	_probar_modos_simulacion()
-	_probar_presets_exportacion()
-	_probar_tema_y_ortografia()
-	_probar_eventos_nuevos()
-	_probar_entrevistas()
-	_probar_estadio_b6()
-	_probar_ciudad_b7()
-	_probar_coherencia_c1()
-	_probar_portadas_c20()
-	_probar_cantera_c3()
-	_probar_instituciones_c5_c8()
-	_probar_charlas_c6_c7()
-	_probar_licencia_c7()
-	_probar_tanda_c()
-	_probar_calendario_c13()
-	_probar_politica_c15()
-	_probar_historia_c4()
-	_probar_contratos_c9()
-	_probar_vida_dt()
-	_probar_maestrias()
-	_probar_habilidades_en_resultados()
-	_probar_motor_libre()
-	_probar_portafolio_futbol()
-	_probar_jugadores_fijos()
-	_probar_disenos_kit()
-	_probar_guinos_estadio()
-	_probar_plantillas_fijas()
-	_probar_mesa_agente()
-	_probar_ciudad_animo()
-	_probar_ciudad_grande()
-	_probar_minijuegos()
-	_probar_leyes_pais()
-	_probar_incumplir_ley()
-	_probar_b6_formas_led()
-	_probar_region_reales()
-	_probar_tunel_navegable()
-	_probar_edificio_club()
-	_probar_personal_estadio()
-	_probar_sancion_dt()
-	_probar_interiores_club()
-	_probar_galeria_club()
-	_probar_reforma_con_obra()
-	_probar_optimizacion()
-	_probar_dinastias()
-	_probar_documental()
-	_probar_tribuna_real()
-	_probar_narracion_traducida()
+	## Cada sección se cronometra (el resumen sale al final) y, con
+	## BANCO_PARTE=i/N, este proceso corre solo su parte: `herramientas/banco.sh`
+	## lanza N a la vez (uno por núcleo) y junta los resultados.
+	var parte := OS.get_environment("BANCO_PARTE")
+	var mia := 0
+	var total := 1
+	if parte.contains("/"):
+		mia = int(parte.get_slice("/", 0))
+		total = maxi(1, int(parte.get_slice("/", 1)))
+	for i in SECCIONES.size():
+		## La carga de la interfaz va en todas: es barata y si falla, mejor saberlo ya.
+		if i > 0 and _parte_de(i, total) != mia:
+			continue
+		var t0 := Time.get_ticks_msec()
+		call(SECCIONES[i])
+		_tiempos.append([Time.get_ticks_msec() - t0, SECCIONES[i]])
 	_cerrar()
+
+## Segundos medidos (15-10-2026) de las secciones lentas; el resto cuenta 0,4 s.
+## Si una sección se alarga mucho, actualizar con el resumen TIEMPOS del final.
+const COSTES := {
+	"_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
+	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
+	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
+}
+var _reparto: Array = []
+
+## Reparto entre procesos equilibrado por tiempo: la sección más lenta que
+## queda va al proceso con menos carga. Determinista: todos los procesos
+## calculan el mismo reparto.
+func _parte_de(i: int, total: int) -> int:
+	if _reparto.size() != SECCIONES.size():
+		_reparto.resize(SECCIONES.size())
+		var orden: Array = range(1, SECCIONES.size())
+		orden.sort_custom(func(a: int, b: int) -> bool:
+			var ca := float(COSTES.get(SECCIONES[a], 0.4))
+			var cb := float(COSTES.get(SECCIONES[b], 0.4))
+			return ca > cb if ca != cb else a < b)
+		var carga: Array = []
+		carga.resize(total)
+		carga.fill(0.0)
+		for j: int in orden:
+			var menos := 0
+			for k in total:
+				if float(carga[k]) < float(carga[menos]):
+					menos = k
+			_reparto[j] = menos
+			carga[menos] = float(carga[menos]) + float(COSTES.get(SECCIONES[j], 0.4))
+	return int(_reparto[i])
 
 func _titulo(t: String) -> void:
 	_linea("")
@@ -5428,6 +5481,15 @@ func _dinero(n: int) -> String:
 	return "%dk EUR" % int(euros / 1000.0)
 
 func _cerrar() -> void:
+	## Las secciones más lentas, para saber dónde mirar si el banco se alarga.
+	_tiempos.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) > int(b[0]))
+	var suma := 0
+	for tt: Array in _tiempos:
+		suma += int(tt[0])
+	_linea("")
+	_linea("TIEMPOS: %d secciones, %.1f s" % [_tiempos.size(), suma / 1000.0])
+	for tt: Array in _tiempos.slice(0, 12):
+		_linea("  %6.1f s  %s" % [int(tt[0]) / 1000.0, String(tt[1])])
 	_linea("")
 	if _fallos.is_empty():
 		_linea("===== FIN. 0 fallos =====")
@@ -5435,7 +5497,10 @@ func _cerrar() -> void:
 		_linea("===== FIN. %d FALLOS =====" % _fallos.size())
 		for f in _fallos:
 			_linea("  - %s" % f)
-	var salida := FileAccess.open("res://pruebas/ultimo_resultado.txt", FileAccess.WRITE)
+	## Por partes, cada proceso deja la suya en `user://` (aislado) y `banco.sh` las junta.
+	var ruta_res := "user://banco_resultado.txt" if OS.get_environment("BANCO_PARTE") != "" \
+		else "res://pruebas/ultimo_resultado.txt"
+	var salida := FileAccess.open(ruta_res, FileAccess.WRITE)
 	if salida != null:
 		salida.store_string("\n".join(_lineas))
 		salida.close()

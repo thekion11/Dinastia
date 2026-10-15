@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dnh1yjvuq7h0w"
-path="res://.godot/imported/nubes2k.jpg-886077890c580050e1b81b44591d8de1.ctex"
+path.s3tc="res://.godot/imported/nubes2k.jpg-886077890c580050e1b81b44591d8de1.s3tc.ctex"
+path.etc2="res://.godot/imported/nubes2k.jpg-886077890c580050e1b81b44591d8de1.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://recursos/tierra/nubes2k.jpg"
-dest_files=["res://.godot/imported/nubes2k.jpg-886077890c580050e1b81b44591d8de1.ctex"]
+dest_files=["res://.godot/imported/nubes2k.jpg-886077890c580050e1b81b44591d8de1.s3tc.ctex", "res://.godot/imported/nubes2k.jpg-886077890c580050e1b81b44591d8de1.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
