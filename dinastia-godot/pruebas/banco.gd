@@ -121,6 +121,7 @@ const SECCIONES := [
 	"_probar_tribuna_real",
 	"_probar_narracion_traducida",
 	"_probar_rotulo_y_sala",
+	"_probar_paridad_idiomas",
 ]
 
 var _fallos: Array[String] = []
@@ -5120,6 +5121,84 @@ func _probar_narracion_traducida() -> void:
 		_comprobar(Idiomas.t("Se retira una figura") != "Se retira una figura", "titular fijo en %s" % k)
 	Idiomas.idioma = antes
 	Idiomas._cache.clear()
+
+## LOS 8 IDIOMAS CON LAS MISMAS FRASES (15-10-2026, INFORME_INTERNO §9 / I-01).
+## Las frases castellanas son la UNIÓN de todos los catálogos: la tabla del
+## esqueleto (`Idiomas.TABLA`), `datos/idiomas_extra.json` de cada idioma (con
+## los diálogos de la ciudad dentro) y las directas de la narración. Ningún
+## idioma puede tener menos que esa unión; los patrones (con números o nombres)
+## tienen que tener plantilla en los 8, y las frases de `DialogosCiudad`
+## (generado por `herramientas/dialogos_ciudad.py`) tienen que estar en todos.
+func _probar_paridad_idiomas() -> void:
+	_titulo("IDIOMAS: LOS 8 TIENEN LAS MISMAS FRASES QUE EL CASTELLANO")
+	var antes := Idiomas.idioma
+	var castellano := {}
+	for k: String in Idiomas.TABLA:
+		castellano[k] = true
+	for idi: String in Idiomas.ORDEN:
+		for k: String in (Idiomas._extra.get(idi, {}) as Dictionary):
+			castellano[k] = true
+	## Las frases de los vecinos, sacadas del propio script generado.
+	var re := RegEx.new()
+	re.compile('Idiomas\\.t\\("((?:[^"\\\\]|\\\\.)*)"\\)')
+	var vecinos := 0
+	for m in re.search_all(FileAccess.get_file_as_string("res://nucleo/dialogos_ciudad.gd")):
+		castellano[m.get_string(1).c_unescape()] = true
+		vecinos += 1
+	_comprobar(vecinos >= 72, "los diálogos de la ciudad aportan sus frases (%d)" % vecinos)
+	_comprobar(castellano.size() > 2500, "frases castellanas en los catálogos: %d" % castellano.size())
+	for idi: String in Idiomas.ORDEN:
+		Idiomas.idioma = idi
+		var faltan: Array[String] = []
+		for k: String in castellano:
+			if Idiomas._directa(k) == "":
+				faltan.append(k)
+		_comprobar(faltan.is_empty(), "«%s» tiene las %d frases (faltan %d%s)" % [idi, castellano.size(),
+			faltan.size(), "" if faltan.is_empty() else ": " + ", ".join(faltan.slice(0, 6))])
+	var cortos := {}
+	for par: Array in Idiomas._patrones:
+		for idi: String in Idiomas.ORDEN:
+			if String((par[1] as Dictionary).get(idi, "")) == "":
+				cortos[idi] = int(cortos.get(idi, 0)) + 1
+	_comprobar(cortos.is_empty(), "los %d patrones tienen plantilla en los 8 idiomas %s" % [Idiomas._patrones.size(),
+		"" if cortos.is_empty() else str(cortos)])
+	## Cada `Idiomas.t("…")` escrito en el código (M-446): traducido en los 8.
+	## Lo mismo que `pruebas/frases_sin_traducir.gd`, pero aquí falla.
+	var del_codigo := {}
+	for dir: String in ["res://ui", "res://visor", "res://nucleo"]:
+		_frases_de_idiomas_t(dir, re, del_codigo)
+	var sin: Array[String] = []
+	for f: String in del_codigo:
+		if f.strip_edges() == "%s":
+			continue
+		for idi: String in Idiomas.ORDEN:
+			Idiomas.idioma = idi
+			if Idiomas._directa(f) == "" and Idiomas._t(f, 0) == f:
+				sin.append("%s: %s" % [idi, f])
+	_comprobar(del_codigo.size() > 200 and sin.is_empty(), "las %d frases de Idiomas.t(\"…\") del código, en los 8 idiomas (%d sin traducir%s)" % [
+		del_codigo.size(), sin.size(), "" if sin.is_empty() else ": " + ", ".join(sin.slice(0, 6))])
+	## Y los marcadores no se pierden al traducir: lo que lleva %s/%d en
+	## castellano lo lleva igual en cada idioma (si no, el `%` revienta).
+	var huecos := RegEx.new()
+	huecos.compile("%[+-]?(?:\\.\\d+)?[sd]")
+	var malos: Array[String] = []
+	for idi: String in Idiomas.ORDEN:
+		var ex: Dictionary = Idiomas._extra.get(idi, {})
+		for k: String in ex:
+			if huecos.search_all(k).size() != huecos.search_all(String(ex[k])).size():
+				malos.append("%s: %s" % [idi, k])
+	_comprobar(malos.is_empty(), "los %%s y %%d se conservan en cada idioma (%d mal%s)" % [malos.size(),
+		"" if malos.is_empty() else ": " + ", ".join(malos.slice(0, 4))])
+	Idiomas.idioma = antes
+	Idiomas._cache.clear()
+
+func _frases_de_idiomas_t(dir: String, re: RegEx, frases: Dictionary) -> void:
+	for f in DirAccess.get_files_at(dir):
+		if f.ends_with(".gd"):
+			for m in re.search_all(FileAccess.get_file_as_string(dir + "/" + f)):
+				frases[m.get_string(1).c_unescape()] = true
+	for d in DirAccess.get_directories_at(dir):
+		_frases_de_idiomas_t(dir + "/" + d, re, frases)
 
 ## LA TRIBUNA COMO TERMÓMETRO (fase 5): los hinchas citan jugadas reales.
 func _probar_tribuna_real() -> void:

@@ -8678,5 +8678,21 @@
   "ca": "Has complert la sanció: el proper partit el dirigeixes des de la banqueta.",
   "pl": "Odbyłeś karę: następny mecz poprowadzisz z ławki.",
   "tr": "Cezanı tamamladın: bir sonraki maçı kulübeden yöneteceksin."
+ },
+ "{1} {2} (moral {3}).": {
+  "fr": "{1} {2} (moral {3}).",
+  "it": "{1} {2} (morale {3}).",
+  "de": "{1} {2} (Moral {3}).",
+  "ca": "{1} {2} (moral {3}).",
+  "pl": "{1} {2} (morale {3}).",
+  "tr": "{1} {2} (moral {3})."
+ },
+ "Colonia {1} {2}": {
+  "fr": "Colonie {1} {2}",
+  "it": "Colonia {1} {2}",
+  "de": "Kolonie {1} {2}",
+  "ca": "Colònia {1} {2}",
+  "pl": "Kolonia {1} {2}",
+  "tr": "{1} {2} kolonisi"
  }
 }
