@@ -64,6 +64,17 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | Animaciones base | `assets/characters/quaternius/anims/UAL1_Standard.glb` | Quaternius "Universal Animation Library" | 🟢 CC0 (`_extraido_universal_animation_library/.../License.txt`) |
 | Ropa del jugador | `assets/characters/quaternius/ropa/` | Quaternius "Modular Character Outfits - Fantasy" | 🟢 CC0 |
 | Edificios, coches y comercio de la ciudad | `assets/ciudad/kenney_*` | Kenney City Kit / Car Kit | 🟢 CC0 |
+| Furniture Kit 2.0 (140 muebles; guardado, aún sin usar) | `assets/kenney/muebles/` | Kenney | 🟢 CC0 (`assets/kenney/muebles/License.txt`) |
+| Modular Buildings 2.1 (108 piezas; guardado, aún sin usar) | `assets/kenney/edificios_modulares/` | Kenney | 🟢 CC0 (`assets/kenney/edificios_modulares/License.txt`) |
+| Building Kit 1.0 (79 piezas; guardado, aún sin usar) | `assets/kenney/kit_edificios/` | Kenney | 🟢 CC0 (`assets/kenney/kit_edificios/License.txt`) |
+| City Kit Suburban 2.0 (40 piezas; guardado, aún sin usar) | `assets/kenney/suburbano/` | Kenney | 🟢 CC0 (`assets/kenney/suburbano/License.txt`) |
+| City Kit Industrial 2.0 (37 piezas; guardado, aún sin usar) | `assets/kenney/industrial/` | Kenney | 🟢 CC0 (`assets/kenney/industrial/License.txt`) |
+| Train Kit 1.1 (103 piezas; guardado, aún sin usar) | `assets/kenney/tren/` | Kenney | 🟢 CC0 (`assets/kenney/tren/License.txt`) |
+| Coaster Kit 1.0 (183 piezas; guardado, aún sin usar) | `assets/kenney/montana_rusa/` | Kenney | 🟢 CC0 (`assets/kenney/montana_rusa/License.txt`) |
+| Mini Market 1.0 (20 piezas; guardado, aún sin usar) | `assets/kenney/mini_mercado/` | Kenney | 🟢 CC0 (`assets/kenney/mini_mercado/License.txt`) |
+| Food Kit 2.0 (200 piezas; guardado, aún sin usar) | `assets/kenney/comida/` | Kenney | 🟢 CC0 (`assets/kenney/comida/License.txt`) |
+| Mini Arcade 1.2 (20 piezas; guardado, aún sin usar) | `assets/kenney/mini_arcade/` | Kenney | 🟢 CC0 (`assets/kenney/mini_arcade/License.txt`) |
+| City Kit Roads (95 piezas; guardado, aún sin usar) | `assets/ciudad/kenney_roads/` | Kenney | 🟢 CC0 (`assets/ciudad/kenney_roads/LICENCIA_Kenney_CC0.txt`) |
 | 21 animaciones de fútbol (mocap) | `assets/characters/quaternius/anims_futbol/` | "Free mocap pack 05: Soccer", Anderson Rohr (Gumroad) | 🟡 `LEEME.md` dice "uso comercial libre", pero el zip no trae licencia. **Guardar una captura de la página de Gumroad con los términos.** |
 | Coches `coche1.fbx`, `coche2.fbx` | `assets/ciudad/` | Probablemente `recursos/modelos3d/gt-racing-2-montreal.zip` (Sketchfab). El nombre apunta a un modelo sacado de un juego comercial | 🔴 ya no se usan (el aparcamiento es solo Kenney) y están excluidos |
 | `estadio.obj`, `farola.obj`, `vagabond.obj` (el velero) | `assets/ciudad/` | sin anotar | 🟡 confirmar |
