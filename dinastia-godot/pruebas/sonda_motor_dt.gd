@@ -10,6 +10,10 @@ extends Node3D
 ##   godot --headless --path . res://pruebas/sonda_motor_dt.tscn   (N=partidos)
 var _m: Mundo
 var remates := {}
+## Totales de todos los partidos: pases [L, V], pases buenos, fintas de la IA
+## (intentadas, logradas), posesión en segundos [L, V] y partidos jugados.
+var extra := {"pases": [0, 0], "pases_ok": [0, 0], "fintas": 0, "fintas_ok": 0, "posesion": [0.0, 0.0], "partidos": 0,
+	"faltas": [0, 0], "corners": [0, 0], "fueras": [0, 0], "despejes": [0, 0], "goles": [0, 0], "tiros": [0, 0]}
 
 func _ready() -> void:
 	_m = Mundo.new()
@@ -30,11 +34,28 @@ func _ready() -> void:
 		print("===== SIMETRÍA: %s contra sí mismo =====" % a.nombre)
 		var r: Array = []
 		for i in n:
-			r.append(_jugar(a, a, int(OS.get_environment("SEMILLA0")) + i if OS.get_environment("SEMILLA0") != "" else 400 + i))
+			r.append(_jugar(a, a, _s0(400) + i))
 		_resumen("mismo once a los dos lados", r)
 	print("REMATES (todos los partidos): %s" % str(remates))
+	var np := float(maxi(int(extra["partidos"]), 1))
+	var pt: Array = extra["pases"]
+	var po: Array = extra["pases_ok"]
+	var ps: Array = extra["posesion"]
+	print("PASES buenos L %.0f %%  V %.0f %%  | POSESIÓN L %.0f %% | FINTAS IA %.1f por partido (%.0f %% logradas)" % [
+		100.0 * po[0] / maxf(pt[0], 1.0), 100.0 * po[1] / maxf(pt[1], 1.0), 100.0 * ps[0] / maxf(ps[0] + ps[1], 0.01),
+		float(extra["fintas"]) / np, 100.0 * float(extra["fintas_ok"]) / maxf(float(extra["fintas"]), 1.0)])
+	## Lado a lado (L-V) por partido: para cazar sesgos de campo.
+	var lado := ""
+	for k: String in ["goles", "tiros", "corners", "faltas", "fueras", "despejes"]:
+		lado += "%s %.2f-%.2f  " % [k, float(extra[k][0]) / np, float(extra[k][1]) / np]
+	print("LADOS " + lado)
 	print("===== FIN SONDA MOTOR DT =====")
 	get_tree().quit()
+
+## Primera semilla: SEMILLA0 (para repartir una sonda larga en varios procesos)
+## o la de siempre del escenario.
+func _s0(por_defecto: int) -> int:
+	return int(OS.get_environment("SEMILLA0")) if OS.get_environment("SEMILLA0") != "" else por_defecto
 
 func _clubes_por_media() -> Array:
 	var cl: Array = _m.ligas[0].clubes.duplicate()
@@ -93,6 +114,20 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 				if not nuevos.is_empty() and motor.reemplazar(String(peor["id"]), nuevos[0]):
 					k += 1
 	var r := [motor.goles[0], motor.goles[1], motor.tiros[0], motor.tiros[1]]
+	for k in 2:
+		extra["pases"][k] += int(motor.pases[k])
+		extra["pases_ok"][k] += int(motor.pases_ok[k])
+		extra["posesion"][k] += float(motor.posesion[k])
+		extra["faltas"][k] += int(motor.faltas[k])
+		extra["corners"][k] += int(motor.corners[k])
+		extra["fueras"][k] += int(motor.fueras_de_juego[k])
+		extra["despejes"][k] += int(motor.despejes[k])
+		extra["goles"][k] += int(motor.goles[k])
+		extra["tiros"][k] += int(motor.tiros[k])
+	extra["fintas"] += int(motor.regates_ia)
+	var ok_f: Variant = motor.get("regates_ia_ok")
+	extra["fintas_ok"] += int(ok_f) if ok_f != null else 0
+	extra["partidos"] += 1
 	raiz.queue_free()
 	return r
 
@@ -208,8 +243,8 @@ func _calidad(n: int) -> void:
 	var r1: Array = []
 	var r2: Array = []
 	for i in n:
-		r1.append(_jugar(mejor, peor, 100 + i))
-		r2.append(_jugar(peor, mejor, 100 + i))
+		r1.append(_jugar(mejor, peor, _s0(100) + i))
+		r2.append(_jugar(peor, mejor, _s0(100) + i))
 	_resumen("el mejor de local", r1)
 	_resumen("el peor de local", r2)
 
@@ -224,9 +259,9 @@ func _tactica(n: int) -> void:
 	var r1: Array = []
 	var r2: Array = []
 	for i in n:
-		r0.append(_jugar(a, b, 200 + i))
-		r1.append(_jugar(a, b, 200 + i, [ofe, {}]))
-		r2.append(_jugar(a, b, 200 + i, [defe, {}]))
+		r0.append(_jugar(a, b, _s0(200) + i))
+		r1.append(_jugar(a, b, _s0(200) + i, [ofe, {}]))
+		r2.append(_jugar(a, b, _s0(200) + i, [defe, {}]))
 	_resumen("los dos con la pizarra media", r0)
 	_resumen("local ofensivo, presión y línea altas", r1)
 	_resumen("local defensivo, presión y línea bajas", r2)
