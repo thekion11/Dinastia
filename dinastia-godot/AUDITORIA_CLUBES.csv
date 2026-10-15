@@ -1,0 +1,769 @@
+base,club,pais,rep,estadio_real,estadio_forma,estadio_colores_propios,escudo_forma,escudo_patron,escudo_colores_club,camiseta_foto_real,camiseta_diseno,sponsor_zonas,sponsor_marcas,sponsor_dato_real,plantel,plantilla_real_fija,jugadores_con_retrato
+ficticia,"Lautaro FC",CHI,88,true,oval,true,banda_cinta,corona2,true,false,hombros,3,"Pizzería La Nonna|Banco Austral|Aseguradora Vida Eterna",false,25,true,0
+ficticia,"U. Andina",CHI,86,true,oval,true,estandarte,corona2,true,false,aros,1,"Gimnasios Mamoth",false,25,true,0
+ficticia,"Precordillera",CHI,84,true,herradura,true,doblepunta,corona2,true,false,diagonal,2,"Cementos Roca|Lácteos del Sur",false,25,true,0
+ficticia,"Puerto Coquimbo",CHI,78,true,rect,false,geometrico,corona2,true,false,cuadros,3,"Banco Austral|Podcast «Fútbol y Terapia»|Streaming FutbolPlay+",false,25,false,0
+ficticia,"Cobre Atacama",CHI,76,true,rect,false,coronadoble,corona2,true,false,vertical3,1,"Pizzería La Nonna",false,25,false,0
+ficticia,"Levantino SC",CHI,74,true,rect,false,ovalo,corona2,true,false,degrade,1,"Gimnasios Mamoth",false,25,false,0
+ficticia,"Hispania SC",CHI,74,true,ingles,false,redondeado,corona2,true,false,sash,0,"",false,25,false,0
+ficticia,"Itálica FC",CHI,73,true,rect,false,trianguloesc,corona2,true,false,arlequin,2,"Banco Austral|Turismo Volcán Tour",false,25,false,0
+ficticia,"Acero Talcahuano",CHI,73,true,ingles,false,cruzesc,corona2,true,false,liso,2,"Pizzería La Nonna|Gimnasios Mamoth",false,25,false,0
+ficticia,"Chillán Rojo",CHI,72,true,rect,false,rombo,florlis,true,false,hombros,2,"Streaming FutbolPlay+|Streaming FutbolPlay+",false,25,false,0
+ficticia,"Rancagua Celeste",CHI,72,true,rect,false,hex,florlis,true,false,aros,3,"Alimento para gatos Miau|Empanadas Doña Tere|Gimnasios Mamoth",false,25,false,0
+ficticia,"Viña Marina",CHI,71,true,cuenco,false,escudo,florlis,true,false,diagonal,2,"Ópticas Mirador|Neumáticos Rueda Firme",false,25,false,0
+ficticia,"Iquique Celeste",CHI,70,true,rect,false,cruzado,florlis,true,false,cuadros,1,"TecnoMovil",false,25,false,0
+ficticia,"Cemento Calera",CHI,70,false,oval,false,banderin,florlis,true,false,vertical3,2,"Streaming FutbolPlay+|App de Citas Match2",false,25,false,0
+ficticia,"Elqui FC",CHI,69,true,rect,false,ojiva,trebol,true,false,degrade,2,"Alimento para gatos Miau|Pañales Bebé Feliz",false,25,false,0
+ficticia,"Marga Marga FC",CHI,67,false,rect,false,octogono,trebol,true,false,sash,0,"",false,25,false,0
+ficticia,"Calama Naranja",CHI,70,true,rect,false,corona,trebol,true,false,arlequin,2,"TecnoMovil|Ferretería El Tornillo",false,25,false,0
+ficticia,"Porteño FC",CHI,69,true,rect,false,laurel,trebol,true,false,liso,1,"Streaming FutbolPlay+",false,25,false,0
+ficticia,"U. Penquista",CHI,68,true,rect,false,frances,trebol,true,false,franjas,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,false,0
+ficticia,"Talca Rojinegra",CHI,66,true,oval,false,ojiva,medialuna,true,false,aros,0,"",false,25,false,0
+ficticia,"Academia SC",CHI,66,false,ingles,false,octogono,medialuna,true,false,diagonal,1,"Ópticas Mirador",false,25,false,0
+ficticia,"Mataquito FC",CHI,65,false,caldera,false,corona,medialuna,true,false,cuadros,4,"TecnoMovil|App de Citas Match2|Pañales Bebé Feliz|AeroCondor",false,25,false,0
+ficticia,"Norte Grande",CHI,65,true,rect,false,laurel,medialuna,true,false,vertical3,3,"Streaming FutbolPlay+|TecnoMovil|App de Citas Match2",false,25,false,0
+ficticia,"Concepción Lila",CHI,65,true,rect,false,frances,medialuna,true,false,degrade,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,false,0
+ficticia,"Stgo. Aurora",CHI,63,false,rect,false,curvo,medialuna,true,false,sash,0,"",false,25,false,0
+ficticia,"Quillota Canaria",CHI,63,false,cuenco,false,arco3,liso,true,false,arlequin,3,"TecnoMovil|Escuela de Manejo Veloz|Pañales Bebé Feliz",false,25,false,0
+ficticia,"Cautín FC",CHI,63,true,rect,false,hexalgo,liso,true,false,liso,3,"Streaming FutbolPlay+|Ópticas Mirador|Energética Relampago",false,25,false,0
+ficticia,"Atacama León",CHI,62,false,ingles,false,rombolgo,liso,true,false,franjas,0,"",false,25,false,0
+ficticia,"Arica Morro",CHI,61,false,herradura,false,banda_cinta,liso,true,false,banda,2,"Ópticas Mirador|Escuela de Manejo Veloz",false,25,false,0
+ficticia,"Patronato SC",CHI,60,false,ingles,false,curvo,banda,true,false,diagonal,2,"Ópticas Mirador|Neumáticos Rueda Firme",false,25,false,0
+ficticia,"Colchagua FC",CHI,60,false,caldera,false,arco3,banda,true,false,cuadros,1,"TecnoMovil",false,25,false,0
+ficticia,"Reloncaví FC",CHI,60,false,oval,false,hexalgo,banda,true,false,vertical3,0,"",false,25,false,0
+ficticia,"Riachuelo AC",ARG,90,true,caldera,true,rombolgo,banda,true,false,degrade,1,"Alimento para gatos Miau",false,25,true,0
+ficticia,"Núñez Athletic",ARG,90,true,oval,true,clasico,banda,true,false,sash,3,"Ópticas Mirador|Bebida Guarana|Empanadas Doña Tere",false,25,true,0
+ficticia,"Avellaneda Cel.",ARG,82,true,cuenco,true,escudo,franjas,true,false,arlequin,0,"",false,25,false,0
+ficticia,"Boedo AC",ARG,80,true,rect,false,doblepunta,banda,true,false,liso,3,"Streaming FutbolPlay+|Ópticas Mirador|Repuestos Chinos Express",false,25,false,0
+ficticia,"Avellaneda Rojo",ARG,81,true,cuenco,false,geometrico,franjas,true,false,franjas,2,"Alimento para gatos Miau|Ópticas Mirador",false,25,false,0
+ficticia,"Diagonal FC",ARG,80,true,rect,false,clasico,franjas,true,false,banda,2,"Ópticas Mirador|Ferretería El Tornillo",false,25,false,0
+ficticia,"Villa Luro FC",ARG,79,true,rect,false,ovalo,franjas,true,false,mitad,3,"TecnoMovil|Energética Relampago|Pañales Bebé Feliz",false,25,false,0
+ficticia,"Parque Patricios",ARG,75,true,rect,false,estandarte,mitad,true,false,cuadros,1,"TecnoMovil",false,25,true,0
+ficticia,"Arroyito FC",ARG,78,true,rect,false,doblepunta,mitad,true,false,vertical3,2,"Streaming FutbolPlay+|TecnoMovil",false,25,false,0
+ficticia,"Parque Rosario",ARG,77,true,rect,false,circulo,mitad,true,false,degrade,3,"Alimento para gatos Miau|Pañales Bebé Feliz|Gimnasios Mamoth",false,25,true,0
+ficticia,"Granate Sur",ARG,76,true,rect,false,coronadoble,mitad,true,false,sash,2,"Ópticas Mirador|Bebida Guarana",false,25,true,0
+ficticia,"Jardín Córdoba",ARG,78,true,oval,false,ovalo,mitad,true,false,arlequin,1,"TecnoMovil",false,25,true,0
+ficticia,"Lomas Verdes",ARG,72,false,oval,false,redondeado,mitad,true,false,liso,3,"Streaming FutbolPlay+|Ópticas Mirador|App de Citas Match2",false,25,true,0
+ficticia,"Mendoza Andes",ARG,73,true,oval,false,trianguloesc,mitad,true,false,franjas,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,true,0
+ficticia,"Costanera SF",ARG,71,false,herradura,false,cruzesc,mitad,true,false,banda,0,"",false,25,true,0
+ficticia,"Litoral SF",ARG,71,false,cuenco,false,clasico,cuartos,true,false,mitad,1,"TecnoMovil",false,25,true,0
+ficticia,"Gávea RJ",BRA,91,true,oval,true,circulo,cuartos,true,false,hombros,1,"Streaming FutbolPlay+",false,25,true,0
+ficticia,"Pompeia SC",BRA,90,true,rect,false,redondeado,aro,true,false,vertical3,4,"Streaming FutbolPlay+|TecnoMovil|Repuestos Chinos Express|App de Citas Match2",false,25,false,0
+ficticia,"Morumbi FC",BRA,86,true,oval,false,trianguloesc,aro,true,false,degrade,3,"Alimento para gatos Miau|Pañales Bebé Feliz|Snacks Papas Locas",false,25,false,0
+ficticia,"Azenha FC",BRA,84,true,rect,false,cruzesc,aro,true,false,sash,2,"Ópticas Mirador|Autos Kalpa",false,25,false,0
+ficticia,"São Jorge SP",BRA,86,true,rect,false,clasico,aro,true,false,arlequin,4,"TecnoMovil|Escuela de Manejo Veloz|Pañales Bebé Feliz|Pañales Bebé Feliz",false,25,false,0
+ficticia,"Baixada FC",BRA,81,true,ingles,false,circulo,aro,true,false,liso,3,"Streaming FutbolPlay+|Ópticas Mirador|Energética Relampago",false,25,true,0
+ficticia,"Laranjeiras FC",BRA,83,true,oval,true,penta,aro,true,false,franjas,3,"Alimento para gatos Miau|Snacks Papas Locas|Empanadas Doña Tere",false,25,false,0
+ficticia,"Estrela Rio",BRA,82,true,oval,true,rombo,aro,true,false,banda,3,"Ópticas Mirador|Alimento para gatos Miau|Escuela de Manejo Veloz",false,25,false,0
+ficticia,"Barro Preto FC",BRA,81,true,oval,false,hex,aro,true,false,mitad,3,"TecnoMovil|Energética Relampago|AeroCondor",false,25,false,0
+ficticia,"Belo Horizonte",BRA,83,true,rect,false,escudo,aro,true,false,hombros,3,"Streaming FutbolPlay+|Alimento para gatos Miau|App de Citas Match2",false,25,false,0
+ficticia,"Guaíba FC",BRA,82,true,cuenco,false,cruzado,estrella,true,false,aros,4,"Alimento para gatos Miau|AeroCondor|Gimnasios Mamoth|Snacks Papas Locas",false,25,false,0
+ficticia,"Almirante RJ",BRA,78,true,herradura,true,penta,ondas,true,false,degrade,2,"Alimento para gatos Miau|Pañales Bebé Feliz",false,25,true,0
+ficticia,"Itapuã FC",BRA,77,true,herradura,false,rombo,ondas,true,false,sash,3,"Ópticas Mirador|Bebida Guarana|Pizzería La Nonna",false,25,true,0
+ficticia,"Pici FC",BRA,79,true,cuenco,false,hex,ondas,true,false,arlequin,3,"TecnoMovil|Escuela de Manejo Veloz|Ferretería El Tornillo",false,25,true,0
+ficticia,"Araucária PR",BRA,78,true,rect,false,escudo,ondas,true,false,liso,1,"Streaming FutbolPlay+",false,25,true,0
+ficticia,"Serrinha FC",BRA,73,false,ingles,false,cruzado,ondas,true,false,franjas,2,"Alimento para gatos Miau|Escuela de Manejo Veloz",false,25,true,0
+ficticia,"Ferroviario UY",URU,83,true,rect,true,escudo,franjas,true,false,banda,2,"Ópticas Mirador|Ferretería El Tornillo",false,25,true,0
+ficticia,"Tricolor MVD",URU,82,true,ingles,true,ojiva,ondas,true,false,mitad,0,"",false,25,true,0
+ficticia,"Punta Carretas",URU,73,true,rect,false,octogono,ondas,true,false,hombros,2,"Streaming FutbolPlay+|Repuestos Chinos Express",false,25,true,0
+ficticia,"Maroñas FC",URU,72,false,herradura,false,corona,ondas,true,false,aros,1,"Alimento para gatos Miau",false,25,true,0
+ficticia,"Prado FC",URU,70,false,rect,false,laurel,ondas,true,false,diagonal,2,"Ópticas Mirador|Repuestos Chinos Express",false,25,true,0
+ficticia,"Belvedere FC",URU,73,false,rect,false,banderin,sol,true,false,sash,0,"",false,25,true,0
+ficticia,"Capurro FC",URU,68,false,cuenco,false,ojiva,sol,true,false,arlequin,1,"TecnoMovil",false,25,true,0
+ficticia,"Villa del Cerro",URU,67,false,oval,false,octogono,sol,true,false,liso,2,"Streaming FutbolPlay+|Ópticas Mirador",false,25,true,0
+ficticia,"Sayago FC",URU,67,false,ingles,false,corona,sol,true,false,franjas,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,true,0
+ficticia,"Aguada FC",URU,66,false,herradura,false,laurel,sol,true,false,banda,1,"Ópticas Mirador",false,25,true,0
+ficticia,"La Teja FC",URU,66,false,cuenco,false,frances,sol,true,false,mitad,0,"",false,25,true,0
+ficticia,"Violeta MVD",URU,66,false,oval,false,curvo,sol,true,false,hombros,2,"Streaming FutbolPlay+|Alimento para gatos Miau",false,25,true,0
+ficticia,"Sacramento FC",URU,65,false,herradura,false,arco3,sol,true,false,aros,2,"Alimento para gatos Miau|AeroCondor",false,25,true,0
+ficticia,"Malvín FC",URU,68,false,rect,false,hexalgo,sol,true,false,diagonal,0,"",false,25,true,0
+ficticia,"Las Piedras FC",URU,64,false,cuenco,false,rombolgo,sol,true,false,cuadros,1,"TecnoMovil",false,25,true,0
+ficticia,"Cerrito FC",URU,64,false,cuenco,false,frances,rombos,true,false,arlequin,3,"TecnoMovil|Escuela de Manejo Veloz|Pañales Bebé Feliz",false,25,true,0
+ficticia,"Franja FC",PAR,79,true,rect,false,curvo,rombos,true,false,liso,4,"Streaming FutbolPlay+|Ópticas Mirador|Repuestos Chinos Express|Energética Relampago",false,25,true,0
+ficticia,"Barrio Obrero",PAR,79,true,caldera,false,clasico,franjas,true,false,franjas,0,"",false,25,true,0
+ficticia,"Tuyucuá FC",PAR,78,true,rect,false,hexalgo,rombos,true,false,banda,2,"Ópticas Mirador|Escuela de Manejo Veloz",false,25,true,0
+ficticia,"Dos Bocas FC",PAR,74,false,cuenco,false,rombolgo,rombos,true,false,mitad,4,"TecnoMovil|Energética Relampago|Pañales Bebé Feliz|AeroCondor",false,25,true,0
+ficticia,"Tricolor ASU",PAR,70,false,oval,false,banda_cinta,rombos,true,false,hombros,2,"Streaming FutbolPlay+|Alimento para gatos Miau",false,25,true,0
+ficticia,"Villa Elisa FC",PAR,68,false,herradura,false,estandarte,rombos,true,false,aros,1,"Alimento para gatos Miau",false,25,true,0
+ficticia,"Luque FC",PAR,68,false,rect,false,doblepunta,rombos,true,false,diagonal,1,"Ópticas Mirador",false,25,true,0
+ficticia,"Itauguá FC",PAR,65,false,cuenco,false,geometrico,rombos,true,false,cuadros,2,"TecnoMovil|Autos Kalpa",false,25,true,0
+ficticia,"Tacumbú FC",PAR,64,false,oval,false,coronadoble,rombos,true,false,vertical3,2,"Streaming FutbolPlay+|Streaming FutbolPlay+",false,25,true,0
+ficticia,"Alto Paraná FC",PAR,63,false,oval,false,banda_cinta,estrella6,true,false,liso,1,"Streaming FutbolPlay+",false,25,true,0
+ficticia,"Tembetary FC",PAR,66,false,ingles,false,estandarte,estrella6,true,false,franjas,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,true,0
+ficticia,"Santísima FC",PAR,65,false,herradura,false,doblepunta,estrella6,true,false,banda,3,"Ópticas Mirador|Ferretería El Tornillo|Pizzería La Nonna",false,25,true,0
+ficticia,"Pedro Juan FC",PAR,63,false,cuenco,false,geometrico,estrella6,true,false,mitad,1,"TecnoMovil",false,25,true,0
+ficticia,"Ñu Guasu FC",PAR,62,false,oval,false,coronadoble,estrella6,true,false,hombros,0,"",false,25,true,0
+ficticia,"Ypacaraí FC",PAR,63,false,herradura,false,ovalo,estrella6,true,false,aros,3,"Alimento para gatos Miau|AeroCondor|Escuela de Manejo Veloz",false,25,true,0
+ficticia,"Mburicaó FC",PAR,62,false,rect,false,redondeado,estrella6,true,false,diagonal,2,"Ópticas Mirador|Repuestos Chinos Express",false,25,true,0
+ficticia,"Antioquia Verde",COL,83,true,oval,false,trianguloesc,estrella6,true,false,cuadros,0,"",false,25,true,0
+ficticia,"Bogotá Azul",COL,79,true,rect,false,cruzesc,estrella6,true,false,vertical3,2,"Streaming FutbolPlay+|Repuestos Chinos Express",false,25,true,0
+ficticia,"Cali Escarlata",COL,78,true,oval,false,clasico,estrella6,true,false,degrade,1,"Alimento para gatos Miau",false,25,true,0
+ficticia,"Curramba FC",COL,78,true,oval,false,laurel,barras,true,false,hombros,3,"Barbería Los Bigotes|AeroCondor|Banco Austral",false,25,true,0
+ficticia,"Cardenal Bogotá",COL,76,true,rect,false,frances,barras,true,false,aros,0,"",false,25,true,0
+ficticia,"Azucarero FC",COL,75,true,rect,false,curvo,barras,true,false,diagonal,3,"Cripto Winner|App de Citas Match2|Pizzería La Nonna",false,25,true,0
+ficticia,"Pijao FC",COL,74,false,caldera,false,arco3,barras,true,false,cuadros,4,"Lácteos del Sur|Banco Austral|TecnoMovil|Lácteos del Sur",false,25,true,0
+ficticia,"Medellín Rojo",COL,74,true,oval,false,hexalgo,barras,true,false,vertical3,2,"Barbería Los Bigotes|Gimnasios Mamoth",false,25,true,0
+ficticia,"Manizales FC",COL,70,false,caldera,false,rombolgo,barras,true,false,degrade,2,"Yerba Mate El Sapo|Barbería Los Bigotes",false,25,true,0
+ficticia,"Santander FC",COL,70,false,rect,false,banda_cinta,barras,true,false,sash,4,"Cripto Winner|Escuela de Manejo Veloz|Cerveza Andina|Cementos Roca",false,25,true,0
+ficticia,"Matecaña FC",COL,69,false,cuenco,false,estandarte,barras,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Yerba Mate El Sapo",false,25,true,0
+ficticia,"Bogotá Verde",COL,67,false,oval,false,doblepunta,barras,true,false,liso,1,"Barbería Los Bigotes",false,25,true,0
+ficticia,"Aburrá FC",COL,65,false,ingles,false,geometrico,barras,true,false,franjas,0,"",false,25,true,0
+ficticia,"Cesar FC",COL,64,false,cuenco,false,rombolgo,escalera,true,false,aros,2,"Yerba Mate El Sapo|Neumáticos Rueda Firme",false,25,true,0
+ficticia,"Sabana FC",COL,63,false,ingles,false,banda_cinta,escalera,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,0
+ficticia,"Tunja FC",COL,64,false,caldera,false,estandarte,escalera,true,false,cuadros,1,"Lácteos del Sur",false,25,true,0
+ficticia,"Lima Crema",PER,78,true,cuenco,false,doblepunta,escalera,true,false,vertical3,2,"Barbería Los Bigotes|Pañales Bebé Feliz",false,25,true,0
+ficticia,"La Victoria FC",PER,78,true,rect,false,geometrico,escalera,true,false,degrade,3,"Yerba Mate El Sapo|Bebida Guarana|Bebida Guarana",false,25,true,0
+ficticia,"Rímac FC",PER,77,true,oval,false,coronadoble,escalera,true,false,sash,2,"Cripto Winner|Escuela de Manejo Veloz",false,25,true,0
+ficticia,"Misti FC",PER,74,true,oval,false,ovalo,escalera,true,false,arlequin,0,"",false,25,true,0
+ficticia,"Imperial CUS",PER,70,false,oval,false,redondeado,escalera,true,false,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|AeroCondor",false,25,true,0
+ficticia,"Callao Rosado",PER,67,false,ingles,false,trianguloesc,escalera,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,true,0
+ficticia,"Cercado FC",PER,66,false,herradura,false,cruzesc,escalera,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,0
+ficticia,"Qosqo FC",PER,68,false,ingles,false,coronadoble,estrella8,true,false,diagonal,0,"",false,25,true,0
+ficticia,"Moche FC",PER,68,false,caldera,false,ovalo,estrella8,true,false,cuadros,2,"Lácteos del Sur|Banco Austral",false,25,true,0
+ficticia,"Tallán FC",PER,66,false,oval,false,redondeado,estrella8,true,false,vertical3,3,"Barbería Los Bigotes|Pañales Bebé Feliz|Ópticas Mirador",false,25,true,0
+ficticia,"Wiracocha FC",PER,67,false,caldera,false,trianguloesc,estrella8,true,false,degrade,1,"Yerba Mate El Sapo",false,25,true,0
+ficticia,"Andino Tarma",PER,64,false,rect,false,cruzesc,estrella8,true,false,sash,1,"Cripto Winner",false,25,true,0
+ficticia,"Cajamarca FC",PER,64,false,cuenco,false,clasico,estrella8,true,false,arlequin,0,"",false,25,true,0
+ficticia,"Titicaca FC",PER,64,false,oval,false,circulo,estrella8,true,false,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,true,0
+ficticia,"Huamanga FC",PER,63,false,ingles,false,penta,estrella8,true,false,franjas,1,"Yerba Mate El Sapo",false,25,true,0
+ficticia,"Andahuaylas FC",PER,62,false,herradura,false,rombo,estrella8,true,false,banda,0,"",false,25,true,0
+ficticia,"Ponceano FC",ECU,80,true,rect,false,hex,estrella8,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,0
+ficticia,"Torero GYE",ECU,79,true,cuenco,false,clasico,florlis,true,false,cuadros,3,"Lácteos del Sur|Banco Austral|Lácteos del Sur",false,25,true,0
+ficticia,"Eléctrico FC",ECU,76,true,rect,false,circulo,florlis,true,false,vertical3,3,"Barbería Los Bigotes|AeroCondor|Gimnasios Mamoth",false,25,true,0
+ficticia,"Sangolquí FC",ECU,79,true,rect,false,penta,florlis,true,false,degrade,0,"",false,25,true,0
+ficticia,"Chillogallo FC",ECU,72,false,rect,false,rombo,florlis,true,false,sash,2,"Cripto Winner|Escuela de Manejo Veloz",false,25,true,0
+ficticia,"Criollos UIO",ECU,70,false,cuenco,false,hex,florlis,true,false,arlequin,2,"Lácteos del Sur|Cementos Roca",false,25,true,0
+ficticia,"Manabí FC",ECU,68,false,oval,false,escudo,florlis,true,false,liso,1,"Barbería Los Bigotes",false,25,true,0
+ficticia,"Chimbacalle FC",ECU,68,false,ingles,false,cruzado,florlis,true,false,franjas,1,"Yerba Mate El Sapo",false,25,true,0
+ficticia,"Oro Machala",ECU,66,false,herradura,false,banderin,florlis,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,0
+ficticia,"Tungurahua FC",ECU,64,false,cuenco,false,ojiva,florlis,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,0
+ficticia,"Runa Andina",ECU,63,false,oval,false,octogono,florlis,true,false,hombros,2,"Barbería Los Bigotes|Ópticas Mirador",false,25,true,0
+ficticia,"Ambato Celeste",ECU,63,false,oval,false,escudo,medialuna,true,false,vertical3,2,"Barbería Los Bigotes|Pañales Bebé Feliz",false,25,true,0
+ficticia,"Salado FC",ECU,62,false,caldera,false,cruzado,medialuna,true,false,degrade,2,"Yerba Mate El Sapo|Bebida Guarana",false,25,true,0
+ficticia,"Tumbaco FC",ECU,61,false,rect,false,banderin,medialuna,true,false,sash,2,"Cripto Winner|Autos Kalpa",false,25,true,0
+ficticia,"Ibarra FC",ECU,61,false,cuenco,false,ojiva,medialuna,true,false,arlequin,1,"Lácteos del Sur",false,25,true,0
+ficticia,"Malecón GYE",ECU,62,false,oval,false,octogono,medialuna,true,false,liso,0,"",false,25,true,0
+ficticia,"Castellana CF",ESP,94,true,rect,true,circulo,corona2,true,false,franjas,3,"Yerba Mate El Sapo|Ferretería El Tornillo|Bebida Guarana",false,25,true,0
+ficticia,"Comtal FC",ESP,93,true,cuenco,true,escudo,franjas,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,0
+ficticia,"Neptuno AC",ESP,89,true,cuenco,true,clasico,franjas,true,false,mitad,1,"Lácteos del Sur",false,25,true,0
+ficticia,"Nervión FC",ESP,83,true,cuenco,true,circulo,aro,true,false,hombros,3,"Barbería Los Bigotes|AeroCondor|AeroCondor",false,25,false,0
+ficticia,"Turia CF",ESP,81,true,rect,true,arco3,medialuna,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,false,0
+ficticia,"Madrigal CF",ESP,82,true,rect,true,corona,banda,true,false,degrade,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,0
+ficticia,"Abando AC",ESP,83,true,rect,true,clasico,franjas,true,false,sash,0,"",false,25,true,0
+ficticia,"Anoeta CF",ESP,83,true,rect,true,clasico,franjas,true,false,arlequin,2,"Lácteos del Sur|Cementos Roca",false,25,false,0
+ficticia,"Heliópolis CF",ESP,81,true,rect,true,circulo,banda,true,false,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Ópticas Mirador",false,25,true,0
+ficticia,"Olívico CF",ESP,78,true,rect,false,arco3,banda,true,false,franjas,1,"Yerba Mate El Sapo",false,25,false,0
+ficticia,"Alhóndiga CF",ESP,76,false,herradura,false,hexalgo,banda,true,false,banda,1,"Cripto Winner",false,25,false,0
+ficticia,"Iruña CF",ESP,77,true,rect,false,rombolgo,banda,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Cecinas Don Vito",false,25,false,0
+ficticia,"Onyar CF",ESP,79,false,oval,false,banda_cinta,banda,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,0
+ficticia,"Balear CF",ESP,76,false,herradura,false,estandarte,banda,true,false,aros,1,"Yerba Mate El Sapo",false,25,false,0
+ficticia,"Sarrià CE",ESP,75,true,cuenco,false,doblepunta,banda,true,false,diagonal,0,"",false,25,false,0
+ficticia,"Vallecas Franja",ESP,75,true,herradura,false,hexalgo,franjas,true,false,sash,2,"Cripto Winner|Escuela de Manejo Veloz",false,25,false,0
+ficticia,"Trafford Reds",ENG,88,true,ingles,true,rombolgo,mitad,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Yerba Mate El Sapo",false,25,true,0
+ficticia,"Eastlands FC",ENG,93,true,cuenco,true,circulo,aro,true,false,liso,3,"Barbería Los Bigotes|AeroCondor|Banco Austral",false,25,true,0
+ficticia,"Mersey Reds",ENG,92,true,ingles,true,estandarte,mitad,true,false,franjas,3,"Yerba Mate El Sapo|Ferretería El Tornillo|Cripto Winner",false,25,true,0
+ficticia,"Islington FC",ENG,91,true,cuenco,true,doblepunta,mitad,true,false,banda,4,"Cripto Winner|Energética Relampago|Ferretería El Tornillo|Pizzería La Nonna",false,25,true,0
+ficticia,"Kensington FC",ENG,87,true,ingles,true,geometrico,mitad,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|TecnoMovil",false,25,true,0
+ficticia,"Lilywhite FC",ENG,86,true,ingles,true,ovalo,liso,true,false,hombros,1,"Barbería Los Bigotes",false,25,true,0
+ficticia,"Tyneside FC",ENG,85,true,ingles,true,ovalo,mitad,true,false,aros,3,"Yerba Mate El Sapo|Repuestos Chinos Express|Empanadas Doña Tere",false,25,true,0
+ficticia,"Holte FC",ENG,84,true,ingles,false,redondeado,mitad,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,0
+ficticia,"Upton FC",ENG,81,true,oval,false,trianguloesc,mitad,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,0
+ficticia,"Mersey Blues",ENG,79,true,rect,false,geometrico,cuartos,true,false,arlequin,0,"",false,25,false,0
+ficticia,"Sussex FC",ENG,81,true,cuenco,false,coronadoble,cuartos,true,false,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,false,0
+ficticia,"Black Country",ENG,79,true,ingles,false,ovalo,aro,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,0
+ficticia,"Selhurst FC",ENG,79,true,ingles,false,redondeado,aro,true,false,banda,2,"Cripto Winner|Autos Kalpa",false,25,false,0
+ficticia,"Putney FC",ENG,78,true,ingles,false,trianguloesc,aro,true,false,mitad,1,"Lácteos del Sur",false,25,false,0
+ficticia,"Griffin FC",ENG,78,true,rect,false,cruzesc,aro,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,0
+ficticia,"Trent Reds",ENG,78,true,ingles,false,clasico,aro,true,false,aros,3,"Yerba Mate El Sapo|Repuestos Chinos Express|Bebida Guarana",false,25,false,0
+ficticia,"Piemonte FC",ITA,88,true,rect,true,ovalo,franjas,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,0
+ficticia,"Navigli FC",ITA,88,true,cuenco,true,escudo,franjas,true,false,cuadros,0,"",false,25,false,0
+ficticia,"Duomo FC",ITA,90,true,cuenco,true,circulo,aro,true,false,vertical3,3,"Barbería Los Bigotes|Empanadas Doña Tere|AeroCondor",false,25,true,0
+ficticia,"Partenope FC",ITA,87,true,oval,true,circulo,aro,true,false,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,true,0
+ficticia,"Capitolina",ITA,84,true,oval,false,clasico,mitad,true,false,franjas,3,"Yerba Mate El Sapo|Empanadas Doña Tere|Cripto Winner",false,25,false,0
+ficticia,"Tevere FC",ITA,83,true,oval,false,circulo,aro,true,false,banda,0,"",false,25,false,0
+ficticia,"Orobica FC",ITA,85,true,rect,false,penta,ondas,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Lácteos del Sur",false,25,false,0
+ficticia,"Arno FC",ITA,81,true,oval,false,rombo,ondas,true,false,hombros,4,"Barbería Los Bigotes|AeroCondor|Ópticas Mirador|Gimnasios Mamoth",false,25,false,0
+ficticia,"Superga FC",ITA,78,true,oval,false,hex,ondas,true,false,aros,2,"Yerba Mate El Sapo|Barbería Los Bigotes",false,25,true,0
+ficticia,"Felsinea FC",ITA,80,true,oval,false,escudo,ondas,true,false,diagonal,2,"Cripto Winner|Cementos Roca",false,25,true,0
+ficticia,"Friuli FC",ITA,76,true,rect,false,cruzado,ondas,true,false,cuadros,4,"Lácteos del Sur|Pizzería La Nonna|Cecinas Don Vito|Yerba Mate El Sapo",false,25,true,0
+ficticia,"Ligure Blu",ITA,74,true,ingles,false,banderin,ondas,true,false,vertical3,3,"Barbería Los Bigotes|Empanadas Doña Tere|Banco Austral",false,25,true,0
+ficticia,"Zena FC",ITA,76,true,ingles,false,ojiva,ondas,true,false,degrade,2,"Yerba Mate El Sapo|Cripto Winner",false,25,true,0
+ficticia,"Secchia FC",ITA,74,false,ingles,false,hex,chevron,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,true,0
+ficticia,"Brianza FC",ITA,75,false,herradura,false,escudo,chevron,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,0
+ficticia,"Salento FC",ITA,74,true,oval,false,cruzado,chevron,true,false,mitad,2,"Lácteos del Sur|App de Citas Match2",false,25,true,0
+ficticia,"Isar FC",GER,93,true,cuenco,true,circulo,rombos,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,true,0
+ficticia,"Borsigplatz FC",GER,88,true,ingles,true,ojiva,sol,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,true,0
+ficticia,"Pleiße FC",GER,86,true,cuenco,false,octogono,sol,true,false,diagonal,3,"Cripto Winner|Autos Kalpa|Ferretería El Tornillo",false,25,false,0
+ficticia,"Wupper FC",GER,88,true,rect,false,corona,sol,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,0
+ficticia,"Main FC",GER,83,true,rect,false,laurel,sol,true,false,vertical3,1,"Barbería Los Bigotes",false,25,false,0
+ficticia,"Aller FC",GER,79,true,rect,false,frances,sol,true,false,degrade,3,"Yerba Mate El Sapo|Neumáticos Rueda Firme|Empanadas Doña Tere",false,25,true,0
+ficticia,"Niederrhein",GER,80,true,rect,false,curvo,sol,true,false,sash,2,"Cripto Winner|App de Citas Match2",false,25,true,0
+ficticia,"Breisgau FC",GER,80,true,rect,false,corona,barras,true,false,aros,4,"Yerba Mate El Sapo|Neumáticos Rueda Firme|Energética Relampago|Cripto Winner",false,25,true,0
+ficticia,"Neckar FC",GER,82,true,oval,false,laurel,barras,true,false,diagonal,2,"Cripto Winner|Pizzería La Nonna",false,25,false,0
+ficticia,"Kraichgau FC",GER,78,false,caldera,false,frances,barras,true,false,cuadros,4,"Lácteos del Sur|Banco Austral|Cecinas Don Vito|Lácteos del Sur",false,25,true,0
+ficticia,"Köpenick FC",GER,79,true,ingles,false,curvo,barras,true,false,vertical3,3,"Barbería Los Bigotes|Pañales Bebé Feliz|Gimnasios Mamoth",false,25,true,0
+ficticia,"Rheinhessen",GER,76,false,caldera,false,arco3,barras,true,false,degrade,0,"",false,25,true,0
+ficticia,"Domstadt FC",GER,76,true,rect,false,hexalgo,barras,true,false,sash,3,"Cripto Winner|Autos Kalpa|Cementos Roca",false,25,true,0
+ficticia,"Weser FC",GER,77,true,cuenco,false,rombolgo,barras,true,false,arlequin,2,"Lácteos del Sur|Yerba Mate El Sapo",false,25,true,0
+ficticia,"Ruhrpott FC",GER,74,false,oval,false,banda_cinta,barras,true,false,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Banco Austral",false,25,true,0
+ficticia,"Lech FC",GER,75,false,ingles,false,estandarte,barras,true,false,franjas,4,"Yerba Mate El Sapo|Ferretería El Tornillo|Bebida Guarana|Cripto Winner",false,25,true,0
+ficticia,"Lutèce FC",FRA,92,true,cuenco,true,doblepunta,barras,true,false,banda,3,"Cripto Winner|Energética Relampago|Pizzería La Nonna",false,25,true,0
+ficticia,"Massilia FC",FRA,84,true,cuenco,true,circulo,aro,true,false,diagonal,2,"Cripto Winner|App de Citas Match2",false,25,false,0
+ficticia,"Lugdunum FC",FRA,82,true,rect,true,escudo,liso,true,false,cuadros,3,"Lácteos del Sur|Banco Austral|TecnoMovil",false,25,false,0
+ficticia,"Rocher FC",FRA,84,true,rect,false,banda_cinta,escalera,true,false,vertical3,2,"Barbería Los Bigotes|Pañales Bebé Feliz",false,25,false,0
+ficticia,"Flandres FC",FRA,82,true,rect,false,estandarte,escalera,true,false,degrade,1,"Yerba Mate El Sapo",false,25,false,0
+ficticia,"Nikaïa FC",FRA,80,true,rect,false,doblepunta,escalera,true,false,sash,3,"Cripto Winner|Escuela de Manejo Veloz|Cerveza Andina",false,25,true,0
+ficticia,"Vilaine FC",FRA,80,false,cuenco,false,geometrico,escalera,true,false,arlequin,2,"Lácteos del Sur|Cementos Roca",false,25,true,0
+ficticia,"Artois FC",FRA,81,true,ingles,true,coronadoble,escalera,true,false,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Ópticas Mirador",false,25,false,0
+ficticia,"Loire FC",FRA,77,true,oval,false,ovalo,escalera,true,false,franjas,1,"Yerba Mate El Sapo",false,25,true,0
+ficticia,"Alsace FC",FRA,76,false,herradura,false,redondeado,escalera,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,0
+ficticia,"Garonne FC",FRA,76,false,cuenco,false,trianguloesc,escalera,true,false,mitad,0,"",false,25,true,0
+ficticia,"Hérault FC",FRA,76,false,caldera,false,geometrico,estrella8,true,false,cuadros,0,"",false,25,true,0
+ficticia,"Finistère FC",FRA,76,false,oval,false,coronadoble,estrella8,true,false,vertical3,2,"Barbería Los Bigotes|Pañales Bebé Feliz",false,25,true,0
+ficticia,"Champagne FC",FRA,75,false,caldera,false,ovalo,estrella8,true,false,degrade,3,"Yerba Mate El Sapo|Bebida Guarana|Bebida Guarana",false,25,true,0
+ficticia,"Morbihan FC",FRA,73,false,rect,false,redondeado,estrella8,true,false,sash,0,"",false,25,true,0
+ficticia,"Yonne FC",FRA,73,false,cuenco,false,trianguloesc,estrella8,true,false,arlequin,1,"Lácteos del Sur",false,25,true,0
+ficticia,"Celeste La Paz",BOL,76,true,oval,false,cruzesc,estrella8,true,false,liso,2,"Barbería Los Bigotes|AeroCondor",false,25,true,0
+ficticia,"Achumani FC",BOL,75,true,oval,false,clasico,estrella8,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,true,0
+ficticia,"Altiplano FC",BOL,71,false,herradura,false,circulo,estrella8,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,0
+ficticia,"Piraí FC",BOL,69,false,cuenco,false,penta,estrella8,true,false,mitad,0,"",false,25,true,0
+ficticia,"Chiquitano FC",BOL,68,false,oval,false,rombo,estrella8,true,false,hombros,1,"Barbería Los Bigotes",false,25,true,0
+ficticia,"Aviador FC",BOL,69,false,oval,false,cruzesc,florlis,true,false,vertical3,4,"Barbería Los Bigotes|Pañales Bebé Feliz|Ópticas Mirador|Gimnasios Mamoth",false,25,true,0
+ficticia,"Oruro FC",BOL,64,false,caldera,false,clasico,florlis,true,false,degrade,2,"Yerba Mate El Sapo|Barbería Los Bigotes",false,25,true,0
+ficticia,"Montero FC",BOL,63,false,rect,false,circulo,florlis,true,false,sash,0,"",false,25,true,0
+ficticia,"Tarija FC",BOL,62,false,cuenco,false,penta,florlis,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Cecinas Don Vito",false,25,true,0
+ficticia,"Cerro Rico FC",BOL,63,false,oval,false,rombo,florlis,true,false,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,true,0
+ficticia,"Tunari FC",BOL,62,false,ingles,false,hex,florlis,true,false,franjas,0,"",false,25,true,0
+ficticia,"Chuquisaca FC",BOL,63,false,herradura,false,escudo,florlis,true,false,banda,2,"Cripto Winner|Autos Kalpa",false,25,true,0
+ficticia,"Guapay FC",BOL,61,false,cuenco,false,cruzado,florlis,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,0
+ficticia,"Quillacollo FC",BOL,60,false,oval,false,banderin,florlis,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,true,0
+ficticia,"Cobija FC",BOL,59,false,herradura,false,ojiva,florlis,true,false,aros,1,"Yerba Mate El Sapo",false,25,true,0
+ficticia,"Valle Alto FC",BOL,59,false,caldera,false,hex,medialuna,true,false,degrade,2,"Yerba Mate El Sapo|Bebida Guarana",false,25,true,0
+ficticia,"Tamagawa FC",JPN,81,true,oval,false,escudo,medialuna,true,false,sash,3,"Cripto Winner|Escuela de Manejo Veloz|Ferretería El Tornillo",false,25,false,0
+ficticia,"Yokohama Bay",JPN,81,true,oval,false,cruzado,medialuna,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|TecnoMovil",false,25,false,0
+ficticia,"Ibaraki FC",JPN,80,true,rect,false,banderin,medialuna,true,false,liso,1,"Barbería Los Bigotes",false,25,false,0
+ficticia,"Saitama Red",JPN,80,true,rect,false,ojiva,medialuna,true,false,franjas,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,0
+ficticia,"Rokko FC",JPN,79,true,rect,false,octogono,medialuna,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,false,0
+ficticia,"Suita FC",JPN,78,false,cuenco,false,corona,medialuna,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,false,0
+ficticia,"Musashi FC",JPN,77,true,oval,false,laurel,medialuna,true,false,hombros,0,"",false,25,false,0
+ficticia,"Setouchi FC",JPN,77,false,herradura,false,frances,medialuna,true,false,aros,1,"Yerba Mate El Sapo",false,25,false,0
+ficticia,"Naniwa FC",JPN,76,false,rect,false,curvo,medialuna,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,false,0
+ficticia,"Owari FC",JPN,76,false,rect,false,octogono,banda,true,false,sash,2,"Cripto Winner|Autos Kalpa",false,25,false,0
+ficticia,"Ishikari FC",JPN,74,false,cuenco,false,corona,banda,true,false,arlequin,0,"",false,25,false,0
+ficticia,"Hakata FC",JPN,73,false,oval,false,laurel,banda,true,false,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,false,0
+ficticia,"Kanmon FC",JPN,71,false,ingles,false,frances,banda,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,0
+ficticia,"Kamo FC",JPN,71,false,herradura,false,curvo,banda,true,false,banda,0,"",false,25,false,0
+ficticia,"Shinano FC",JPN,70,false,cuenco,false,arco3,banda,true,false,mitad,1,"Lácteos del Sur",false,25,false,0
+ficticia,"Sagami FC",JPN,69,false,oval,false,hexalgo,banda,true,false,hombros,1,"Barbería Los Bigotes",false,25,false,0
+ficticia,"Taehwa FC",KOR,80,true,cuenco,false,rombolgo,banda,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,false,0
+ficticia,"Honam FC",KOR,80,true,cuenco,false,banda_cinta,banda,true,false,diagonal,3,"Cripto Winner|Autos Kalpa|Ferretería El Tornillo",false,25,false,0
+ficticia,"Hyeongsan FC",KOR,77,false,cuenco,false,estandarte,banda,true,false,cuadros,1,"Lácteos del Sur",false,25,false,0
+ficticia,"Hangang FC",KOR,77,true,rect,false,arco3,mitad,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Yerba Mate El Sapo",false,25,false,0
+ficticia,"Wolmi FC",KOR,73,false,oval,false,hexalgo,mitad,true,false,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Ópticas Mirador",false,25,false,0
+ficticia,"Gapcheon FC",KOR,73,false,ingles,false,rombolgo,mitad,true,false,franjas,1,"Yerba Mate El Sapo",false,25,false,0
+ficticia,"Seorak FC",KOR,72,false,herradura,false,banda_cinta,mitad,true,false,banda,0,"",false,25,false,0
+ficticia,"Paldal FC",KOR,72,false,cuenco,false,estandarte,mitad,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Cecinas Don Vito",false,25,false,0
+ficticia,"Mudeung FC",KOR,73,false,oval,false,doblepunta,mitad,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,0
+ficticia,"Halla FC",KOR,72,false,herradura,false,geometrico,mitad,true,false,aros,0,"",false,25,false,0
+ficticia,"Palgong FC",KOR,71,false,rect,false,coronadoble,mitad,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,false,0
+ficticia,"Jikji FC",KOR,70,false,cuenco,false,ovalo,mitad,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,0
+ficticia,"Namhan FC",KOR,69,false,oval,false,redondeado,mitad,true,false,vertical3,2,"Barbería Los Bigotes|Empanadas Doña Tere",false,25,false,0
+ficticia,"Haeundae FC",KOR,68,false,oval,false,doblepunta,cuartos,true,false,liso,0,"",false,25,false,0
+ficticia,"Sihwa FC",KOR,66,false,ingles,false,geometrico,aro,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,0
+ficticia,"Chungnam FC",KOR,65,false,herradura,false,coronadoble,aro,true,false,banda,3,"Cripto Winner|Energética Relampago|Ferretería El Tornillo",false,25,false,0
+ficticia,"Al-Qamar",KSA,88,true,oval,true,circulo,aro,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,false,0
+ficticia,"Al-Fawz",KSA,86,true,oval,true,circulo,aro,true,false,hombros,1,"Barbería Los Bigotes",false,25,false,0
+ficticia,"Al-Jeddawi",KSA,85,true,cuenco,false,trianguloesc,aro,true,false,aros,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,0
+ficticia,"Al-Balad",KSA,84,true,cuenco,false,cruzesc,aro,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,false,0
+ficticia,"Al-Fityan",KSA,78,false,cuenco,false,clasico,aro,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,0
+ficticia,"Al-Khobar",KSA,76,false,oval,false,circulo,aro,true,false,vertical3,0,"",false,25,false,0
+ficticia,"Al-Qassim",KSA,74,false,cuenco,false,penta,aro,true,false,degrade,1,"Yerba Mate El Sapo",false,25,false,0
+ficticia,"Al-Majmaah",KSA,73,false,ingles,false,trianguloesc,estrella,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,0
+ficticia,"Buraidah FC",KSA,72,false,herradura,false,cruzesc,estrella,true,false,banda,1,"Cripto Winner",false,25,false,0
+ficticia,"Al-Ahsa",KSA,73,false,cuenco,false,clasico,ondas,true,false,mitad,0,"",false,25,false,0
+ficticia,"Asir FC",KSA,71,false,oval,false,circulo,ondas,true,false,hombros,3,"Barbería Los Bigotes|AeroCondor|Salsa Picante Volcán",false,25,false,0
+ficticia,"Saihat FC",KSA,71,false,herradura,false,penta,ondas,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,false,0
+ficticia,"Umm Al-Qura",KSA,70,false,rect,false,rombo,ondas,true,false,diagonal,0,"",false,25,false,0
+ficticia,"Najran FC",KSA,68,false,cuenco,false,hex,ondas,true,false,cuadros,3,"Lácteos del Sur|App de Citas Match2|Yerba Mate El Sapo",false,25,false,0
+ficticia,"Al-Diriyah",KSA,68,false,oval,false,escudo,ondas,true,false,vertical3,3,"Barbería Los Bigotes|Empanadas Doña Tere|Banco Austral",false,25,false,0
+ficticia,"Al-Rass",KSA,66,false,cuenco,false,cruzado,ondas,true,false,degrade,3,"Yerba Mate El Sapo|Neumáticos Rueda Firme|Cripto Winner",false,25,false,0
+ficticia,"Al-Nil SC",EGY,86,true,oval,true,banderin,ondas,true,false,sash,4,"Cripto Winner|App de Citas Match2|Ferretería El Tornillo|Pizzería La Nonna",false,25,false,0
+ficticia,"Mit Oqba SC",EGY,83,true,oval,true,rombo,chevron,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,false,0
+ficticia,"Sphinx FC",EGY,79,false,cuenco,false,hex,chevron,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,false,0
+ficticia,"Timsah FC",EGY,74,false,oval,false,escudo,chevron,true,false,hombros,3,"Barbería Los Bigotes|AeroCondor|Ópticas Mirador",false,25,false,0
+ficticia,"Port Said FC",EGY,74,false,herradura,false,cruzado,sol,true,false,aros,1,"Yerba Mate El Sapo",false,25,false,0
+ficticia,"Ramadan City",EGY,72,false,rect,false,banderin,sol,true,false,diagonal,0,"",false,25,false,0
+ficticia,"New Cairo SC",EGY,71,false,cuenco,false,ojiva,sol,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,0
+ficticia,"Treasury SC",EGY,70,false,oval,false,octogono,sol,true,false,vertical3,2,"Barbería Los Bigotes|Empanadas Doña Tere",false,25,false,0
+ficticia,"Petrol Cairo",EGY,70,false,cuenco,false,corona,sol,true,false,degrade,0,"",false,25,false,0
+ficticia,"Borg Arab SC",EGY,69,false,ingles,false,laurel,sol,true,false,sash,1,"Cripto Winner",false,25,false,0
+ficticia,"Montaza SC",EGY,69,false,caldera,false,frances,sol,true,false,arlequin,2,"Lácteos del Sur|Banco Austral",false,25,false,0
+ficticia,"Hurghada SC",EGY,68,false,ingles,false,octogono,barras,true,false,diagonal,2,"Cripto Winner|App de Citas Match2",false,25,false,0
+ficticia,"Delta SC",EGY,67,false,caldera,false,corona,barras,true,false,cuadros,1,"Lácteos del Sur",false,25,false,0
+ficticia,"Vanguard SC",EGY,66,false,oval,false,laurel,barras,true,false,vertical3,3,"Barbería Los Bigotes|AeroCondor|Gimnasios Mamoth",false,25,false,0
+ficticia,"Builders SC",EGY,66,false,caldera,false,frances,barras,true,false,degrade,3,"Yerba Mate El Sapo|Bebida Guarana|Barbería Los Bigotes",false,25,false,0
+ficticia,"Zayed SC",EGY,65,false,rect,false,curvo,barras,true,false,sash,0,"",false,25,false,0
+ficticia,"Anfa FC",MAR,82,true,oval,false,arco3,barras,true,false,arlequin,4,"Lácteos del Sur|Cementos Roca|TecnoMovil|Yerba Mate El Sapo",false,25,false,0
+ficticia,"Derb FC",MAR,82,true,oval,false,hexalgo,barras,true,false,liso,2,"Barbería Los Bigotes|Banco Austral",false,25,false,0
+ficticia,"Chellah FC",MAR,76,false,ingles,false,rombolgo,barras,true,false,franjas,0,"",false,25,false,0
+ficticia,"Moulouya FC",MAR,78,false,herradura,false,banda_cinta,barras,true,false,banda,4,"Cripto Winner|Energética Relampago|Cerveza Andina|Pizzería La Nonna",false,25,false,0
+ficticia,"Médina Fès",MAR,73,false,cuenco,false,estandarte,borde,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Lácteos del Sur",false,25,false,0
+ficticia,"Oujda FC",MAR,71,false,caldera,false,arco3,escalera,true,false,cuadros,3,"Lácteos del Sur|Banco Austral|Cecinas Don Vito",false,25,false,0
+ficticia,"Oudayas FC",MAR,72,false,oval,false,hexalgo,escalera,true,false,vertical3,0,"",false,25,false,0
+ficticia,"Souss FC",MAR,70,false,caldera,false,rombolgo,escalera,true,false,degrade,2,"Yerba Mate El Sapo|Bebida Guarana",false,25,false,0
+ficticia,"Atlantique Safi",MAR,70,false,rect,false,banda_cinta,escalera,true,false,sash,2,"Cripto Winner|Autos Kalpa",false,25,false,0
+ficticia,"Atlas FC",MAR,69,false,cuenco,false,estandarte,escalera,true,false,arlequin,1,"Lácteos del Sur",false,25,false,0
+ficticia,"Berrechid FC",MAR,68,false,oval,false,doblepunta,escalera,true,false,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,false,0
+ficticia,"Fedala FC",MAR,67,false,ingles,false,geometrico,escalera,true,false,franjas,0,"",false,25,false,0
+ficticia,"Détroit FC",MAR,68,false,herradura,false,coronadoble,escalera,true,false,banda,1,"Cripto Winner",false,25,false,0
+ficticia,"Doukkala FC",MAR,66,false,cuenco,false,ovalo,escalera,true,false,mitad,1,"Lácteos del Sur",false,25,false,0
+ficticia,"Mechouar FC",MAR,65,false,oval,false,redondeado,escalera,true,false,hombros,0,"",false,25,false,0
+ficticia,"Volubilis FC",MAR,65,false,oval,false,doblepunta,estrella8,true,false,vertical3,0,"",false,25,false,0
+ficticia,"Tshwane FC",RSA,82,true,rect,false,geometrico,estrella8,true,false,degrade,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,0
+ficticia,"Jozi Corsairs",RSA,79,true,cuenco,true,coronadoble,estrella8,true,false,sash,2,"Cripto Winner|Escuela de Manejo Veloz",false,25,false,0
+ficticia,"Naturena FC",RSA,78,true,cuenco,true,ovalo,estrella8,true,false,arlequin,0,"",false,25,false,0
+ficticia,"Winelands FC",RSA,74,false,oval,false,redondeado,estrella8,true,false,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Ópticas Mirador",false,25,false,0
+ficticia,"Groblersdal FC",RSA,71,false,ingles,false,trianguloesc,estrella8,true,false,franjas,1,"Yerba Mate El Sapo",false,25,false,0
+ficticia,"Table Bay FC",RSA,72,false,herradura,false,cruzesc,estrella8,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,false,0
+ficticia,"Atteridgeville",RSA,73,false,cuenco,false,clasico,estrella8,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Cecinas Don Vito",false,25,false,0
+ficticia,"Zululand FC",RSA,69,false,oval,false,circulo,estrella8,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,0
+ficticia,"Lamontville FC",RSA,69,false,herradura,false,penta,estrella8,true,false,aros,1,"Yerba Mate El Sapo",false,25,false,0
+ficticia,"Pietersburg FC",RSA,68,false,caldera,false,trianguloesc,florlis,true,false,degrade,4,"Yerba Mate El Sapo|Bebida Guarana|Bebida Guarana|Barbería Los Bigotes",false,25,false,0
+ficticia,"Gqeberha FC",RSA,67,false,rect,false,cruzesc,florlis,true,false,sash,3,"Cripto Winner|Escuela de Manejo Veloz|Cementos Roca",false,25,false,0
+ficticia,"Umgeni FC",RSA,68,false,cuenco,false,clasico,florlis,true,false,arlequin,2,"Lácteos del Sur|Yerba Mate El Sapo",false,25,false,0
+ficticia,"Venda FC",RSA,66,false,oval,false,circulo,florlis,true,false,liso,2,"Barbería Los Bigotes|Banco Austral",false,25,false,0
+ficticia,"Msunduzi FC",RSA,66,false,ingles,false,penta,florlis,true,false,franjas,3,"Yerba Mate El Sapo|Ferretería El Tornillo|Cripto Winner",false,25,false,0
+ficticia,"Mpumalanga FC",RSA,64,false,herradura,false,rombo,florlis,true,false,banda,0,"",false,25,false,0
+ficticia,"Mankweng FC",RSA,63,false,cuenco,false,hex,florlis,true,false,mitad,2,"Lácteos del Sur|Lácteos del Sur",false,25,false,0
+ficticia,"Yarra FC",AUS,76,true,rect,false,escudo,florlis,true,false,hombros,2,"Barbería Los Bigotes|Gimnasios Mamoth",false,25,false,0
+ficticia,"Harbour FC",AUS,76,true,rect,false,cruzado,florlis,true,false,aros,0,"",false,25,false,0
+ficticia,"Port Phillip",AUS,75,true,rect,false,banderin,florlis,true,false,diagonal,3,"Cripto Winner|Autos Kalpa|Cementos Roca",false,25,false,0
+ficticia,"Gosford FC",AUS,73,false,rect,false,rombo,medialuna,true,false,sash,1,"Cripto Winner",false,25,false,0
+ficticia,"Parramatta FC",AUS,73,false,cuenco,false,hex,medialuna,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Cecinas Don Vito",false,25,false,0
+ficticia,"Torrens FC",AUS,72,false,oval,false,escudo,medialuna,true,false,liso,0,"",false,25,false,0
+ficticia,"Moreton FC",AUS,71,false,ingles,false,cruzado,medialuna,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,0
+ficticia,"Strait FC",AUS,71,false,herradura,false,banderin,medialuna,true,false,banda,2,"Cripto Winner|Autos Kalpa",false,25,false,0
+ficticia,"Campbelltown FC",AUS,70,false,cuenco,false,ojiva,medialuna,true,false,mitad,1,"Lácteos del Sur",false,25,false,0
+ficticia,"Hunter FC",AUS,69,false,oval,false,octogono,medialuna,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,0
+ficticia,"Swan FC",AUS,69,false,herradura,false,corona,medialuna,true,false,aros,0,"",false,25,false,0
+ficticia,"Wyndham FC",AUS,68,false,rect,false,laurel,medialuna,true,false,diagonal,1,"Cripto Winner",false,25,false,0
+ficticia,"Waitematā FC",AUS,70,false,cuenco,false,frances,medialuna,true,false,cuadros,1,"Lácteos del Sur",false,25,false,0
+ficticia,"Molonglo FC",AUS,65,false,cuenco,false,ojiva,banda,true,false,arlequin,2,"Lácteos del Sur|Cementos Roca",false,25,false,0
+ficticia,"Corio FC",AUS,64,false,oval,false,octogono,banda,true,false,liso,0,"",false,25,false,0
+ficticia,"Top End FC",AUS,62,false,ingles,false,corona,banda,true,false,franjas,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,0
+ficticia,"Coapa FC",MEX,86,true,cuenco,false,laurel,banda,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,0
+ficticia,"San Nicolás FC",MEX,85,true,cuenco,true,frances,banda,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,0
+ficticia,"Cerro Silla FC",MEX,85,true,rect,true,curvo,banda,true,false,hombros,3,"Barbería Los Bigotes|AeroCondor|Ópticas Mirador",false,25,true,0
+ficticia,"Occidente FC",MEX,83,true,cuenco,true,arco3,banda,true,false,aros,1,"Yerba Mate El Sapo",false,25,true,0
+ficticia,"La Noria FC",MEX,83,true,cuenco,false,hexalgo,banda,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,0
+ficticia,"Hidalgo FC",MEX,81,true,rect,false,rombolgo,banda,true,false,cuadros,3,"Lácteos del Sur|Pizzería La Nonna|Cecinas Don Vito",false,25,true,0
+ficticia,"Nevado FC",MEX,80,true,rect,false,banda_cinta,banda,true,false,vertical3,2,"Barbería Los Bigotes|Empanadas Doña Tere",false,25,true,0
+ficticia,"Comarca FC",MEX,78,true,rect,false,curvo,mitad,true,false,liso,4,"Barbería Los Bigotes|Snacks Papas Locas|Salsa Picante Volcán|Banco Austral",false,25,true,0
+ficticia,"Pedregal FC",MEX,78,true,oval,false,arco3,mitad,true,false,franjas,3,"Yerba Mate El Sapo|Ferretería El Tornillo|Cripto Winner",false,25,true,0
+ficticia,"Bajío FC",MEX,79,false,herradura,false,hexalgo,mitad,true,false,banda,3,"Cripto Winner|Energética Relampago|Pizzería La Nonna",false,25,true,0
+ficticia,"Colomos FC",MEX,76,false,cuenco,false,rombolgo,mitad,true,false,mitad,3,"Lácteos del Sur|App de Citas Match2|Lácteos del Sur",false,25,true,0
+ficticia,"Hidrocálido FC",MEX,74,false,oval,false,banda_cinta,mitad,true,false,hombros,2,"Barbería Los Bigotes|Gimnasios Mamoth",false,25,true,0
+ficticia,"Angelópolis",MEX,73,false,herradura,false,estandarte,mitad,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,true,0
+ficticia,"Frontera FC",MEX,74,false,rect,false,doblepunta,mitad,true,false,diagonal,0,"",false,25,true,0
+ficticia,"Bernal FC",MEX,72,false,cuenco,false,geometrico,mitad,true,false,cuadros,1,"Lácteos del Sur",false,25,true,0
+ficticia,"Sinaloa FC",MEX,71,false,oval,false,coronadoble,mitad,true,false,vertical3,1,"Barbería Los Bigotes",false,25,true,0
+ficticia,"Biscayne FC",USA,84,true,rect,false,ovalo,mitad,true,false,degrade,0,"",false,25,true,0
+ficticia,"Figueroa FC",USA,82,true,rect,false,estandarte,aro,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,true,0
+ficticia,"Puget FC",USA,80,true,rect,false,doblepunta,aro,true,false,banda,1,"Cripto Winner",false,25,true,0
+ficticia,"Scioto FC",USA,80,true,rect,false,geometrico,aro,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Cecinas Don Vito",false,25,true,0
+ficticia,"Keystone FC",USA,79,false,oval,false,coronadoble,aro,true,false,hombros,0,"",false,25,true,0
+ficticia,"Peachtree FC",USA,78,true,cuenco,false,ovalo,aro,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,true,0
+ficticia,"Carson FC",USA,78,true,rect,false,redondeado,aro,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,0
+ficticia,"Hudson FC",USA,77,false,cuenco,false,trianguloesc,aro,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,true,0
+ficticia,"Bay State FC",USA,75,false,oval,false,cruzesc,aro,true,false,vertical3,3,"Barbería Los Bigotes|Empanadas Doña Tere|Salsa Picante Volcán",false,25,true,0
+ficticia,"Hill Country",USA,76,false,cuenco,false,clasico,aro,true,false,degrade,2,"Yerba Mate El Sapo|Neumáticos Rueda Firme",false,25,true,0
+ficticia,"Willamette FC",USA,76,true,ingles,false,circulo,aro,true,false,sash,1,"Cripto Winner",false,25,true,0
+ficticia,"Citrus FC",USA,77,true,rect,false,redondeado,estrella,true,false,banda,3,"Cripto Winner|Energética Relampago|Ferretería El Tornillo",false,25,true,0
+ficticia,"Riverfront FC",USA,78,true,rect,false,trianguloesc,ondas,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,0
+ficticia,"Cumberland FC",USA,75,false,oval,false,cruzesc,ondas,true,false,hombros,1,"Barbería Los Bigotes",false,25,true,0
+ficticia,"Gateway FC",USA,74,false,herradura,false,clasico,ondas,true,false,aros,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,true,0
+ficticia,"Piedmont FC",USA,73,false,rect,false,circulo,ondas,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,0
+real,"C0lo-C0lo",CHI,88,true,oval,true,banda_cinta,corona2,true,true,hombros,3,"Pizzería La Nonna|Banco Austral|Aseguradora Vida Eterna",false,25,true,10
+real,"U. de Ch1le",CHI,86,true,oval,true,estandarte,corona2,true,true,aros,1,"Gimnasios Mamoth",false,25,true,19
+real,"U. Catól1ca",CHI,84,true,herradura,true,doblepunta,corona2,true,true,diagonal,2,"Cementos Roca|Lácteos del Sur",false,25,true,23
+real,"C0quimbo Un1do",CHI,78,true,rect,false,geometrico,corona2,true,true,cuadros,3,"Banco Austral|Podcast «Fútbol y Terapia»|Streaming FutbolPlay+",false,25,false,31
+real,"C0bresal",CHI,76,true,rect,false,coronadoble,corona2,true,true,vertical3,1,"Pizzería La Nonna",false,25,false,36
+real,"Palest1no",CHI,74,true,rect,false,ovalo,corona2,true,true,degrade,1,"Gimnasios Mamoth",false,25,false,40
+real,"Un1ón Española",CHI,74,true,ingles,false,redondeado,corona2,true,true,sash,0,"",false,25,false,44
+real,"Audax 1tali4no",CHI,73,false,cuenco,false,trianguloesc,corona2,true,false,arlequin,2,"Banco Austral|Turismo Volcán Tour",false,25,false,44
+real,"Huach1pato",CHI,73,true,ingles,false,cruzesc,corona2,true,true,liso,2,"Pizzería La Nonna|Gimnasios Mamoth",false,25,false,49
+real,"Ñubl3nse",CHI,72,true,rect,false,rombo,florlis,true,true,hombros,2,"Streaming FutbolPlay+|Streaming FutbolPlay+",false,25,false,55
+real,"O'H1ggins",CHI,72,true,rect,false,hex,florlis,true,true,aros,3,"Alimento para gatos Miau|Empanadas Doña Tere|Gimnasios Mamoth",false,25,false,58
+real,"Evert0n",CHI,71,true,cuenco,false,escudo,florlis,true,true,diagonal,2,"Ópticas Mirador|Neumáticos Rueda Firme",false,25,false,62
+real,"D. Iquiqu3",CHI,70,false,caldera,false,cruzado,florlis,true,true,cuadros,1,"TecnoMovil",false,25,false,66
+real,"U. La C4lera",CHI,70,false,oval,false,banderin,florlis,true,true,vertical3,2,"Streaming FutbolPlay+|App de Citas Match2",false,25,false,70
+real,"La S3rena",CHI,69,true,rect,false,ojiva,trebol,true,true,degrade,2,"Alimento para gatos Miau|Pañales Bebé Feliz",false,25,false,74
+real,"D. L1mache",CHI,67,false,rect,false,octogono,trebol,true,true,sash,0,"",false,25,false,80
+real,"C0breloa",CHI,70,true,rect,false,corona,trebol,true,false,arlequin,2,"TecnoMovil|Ferretería El Tornillo",false,25,false,80
+real,"S. Wander3rs",CHI,69,true,rect,false,laurel,trebol,true,false,liso,1,"Streaming FutbolPlay+",false,25,false,80
+real,"U. de C0ncepción",CHI,68,true,rect,false,frances,trebol,true,true,franjas,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,false,80
+real,"Rang3rs",CHI,66,true,oval,false,ojiva,medialuna,true,false,aros,0,"",false,25,false,80
+real,"Magallan3s",CHI,66,false,ingles,false,octogono,medialuna,true,false,diagonal,1,"Ópticas Mirador",false,25,false,80
+real,"Curicó Un1do",CHI,65,false,caldera,false,corona,medialuna,true,false,cuadros,4,"TecnoMovil|App de Citas Match2|Pañales Bebé Feliz|AeroCondor",false,25,false,80
+real,"Antofag4sta",CHI,65,true,rect,false,laurel,medialuna,true,false,vertical3,3,"Streaming FutbolPlay+|TecnoMovil|App de Citas Match2",false,25,false,80
+real,"D. C0ncepción",CHI,65,true,rect,false,frances,medialuna,true,false,degrade,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,false,80
+real,"Stgo. M0rning",CHI,63,false,rect,false,curvo,medialuna,true,false,sash,0,"",false,25,false,80
+real,"San Lu1s",CHI,63,false,cuenco,false,arco3,liso,true,false,arlequin,3,"TecnoMovil|Escuela de Manejo Veloz|Pañales Bebé Feliz",false,25,false,80
+real,"D. T3muco",CHI,63,true,rect,false,hexalgo,liso,true,false,liso,3,"Streaming FutbolPlay+|Ópticas Mirador|Energética Relampago",false,25,false,80
+real,"D. C0piapó",CHI,62,false,ingles,false,rombolgo,liso,true,false,franjas,0,"",false,25,false,80
+real,"San Marc0s",CHI,61,false,herradura,false,banda_cinta,liso,true,false,banda,2,"Ópticas Mirador|Escuela de Manejo Veloz",false,25,false,80
+real,"Rec0leta",CHI,60,false,ingles,false,curvo,banda,true,false,diagonal,2,"Ópticas Mirador|Neumáticos Rueda Firme",false,25,false,80
+real,"Sant4 Cruz",CHI,60,false,caldera,false,arco3,banda,true,false,cuadros,1,"TecnoMovil",false,25,false,80
+real,"Pto. M0ntt",CHI,60,false,oval,false,hexalgo,banda,true,false,vertical3,0,"",false,25,false,80
+real,"B0ca Juni0rs",ARG,90,true,caldera,true,rombolgo,banda,true,true,degrade,1,"Alimento para gatos Miau",false,25,true,84
+real,"R1ver Plate",ARG,90,true,oval,true,clasico,banda,true,true,sash,3,"Ópticas Mirador|Bebida Guarana|Empanadas Doña Tere",false,25,true,91
+real,"Rac1ng Club",ARG,82,true,cuenco,true,escudo,franjas,true,true,arlequin,0,"",false,25,false,97
+real,"San L0renzo",ARG,80,true,rect,false,doblepunta,banda,true,true,liso,3,"Streaming FutbolPlay+|Ópticas Mirador|Repuestos Chinos Express",false,25,false,100
+real,"Ind3pendiente",ARG,81,true,cuenco,false,geometrico,franjas,true,true,franjas,2,"Alimento para gatos Miau|Ópticas Mirador",false,25,false,102
+real,"Estud1antes",ARG,80,true,rect,false,clasico,franjas,true,true,banda,2,"Ópticas Mirador|Ferretería El Tornillo",false,25,false,105
+real,"Vél3z",ARG,79,true,rect,false,ovalo,franjas,true,true,mitad,3,"TecnoMovil|Energética Relampago|Pañales Bebé Feliz",false,25,false,106
+real,"Hurac4n",ARG,75,true,rect,false,estandarte,mitad,true,true,cuadros,1,"TecnoMovil",false,25,true,111
+real,"R0sario Central",ARG,78,true,rect,false,doblepunta,mitad,true,true,vertical3,2,"Streaming FutbolPlay+|TecnoMovil",false,25,false,115
+real,"New3ll's",ARG,77,true,rect,false,circulo,mitad,true,false,degrade,3,"Alimento para gatos Miau|Pañales Bebé Feliz|Gimnasios Mamoth",false,25,true,116
+real,"Lanú5",ARG,76,true,rect,false,coronadoble,mitad,true,true,sash,2,"Ópticas Mirador|Bebida Guarana",false,25,true,117
+real,"Taller3s",ARG,78,true,oval,false,ovalo,mitad,true,true,arlequin,1,"TecnoMovil",false,25,true,119
+real,"Banf1eld",ARG,72,false,oval,false,redondeado,mitad,true,true,liso,3,"Streaming FutbolPlay+|Ópticas Mirador|App de Citas Match2",false,25,true,119
+real,"G0doy Cruz",ARG,73,true,oval,false,trianguloesc,mitad,true,true,franjas,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,true,120
+real,"C0lón",ARG,71,false,herradura,false,cruzesc,mitad,true,false,banda,0,"",false,25,true,121
+real,"Un1ón SF",ARG,71,false,cuenco,false,clasico,cuartos,true,true,mitad,1,"TecnoMovil",false,25,true,123
+real,"Flam3ngo",BRA,91,true,oval,true,circulo,cuartos,true,true,hombros,1,"Streaming FutbolPlay+",false,25,true,133
+real,"Palme1ras",BRA,90,true,rect,false,redondeado,aro,true,true,vertical3,4,"Streaming FutbolPlay+|TecnoMovil|Repuestos Chinos Express|App de Citas Match2",false,25,false,140
+real,"Sa0 Paulo",BRA,86,true,oval,false,trianguloesc,aro,true,false,degrade,3,"Alimento para gatos Miau|Pañales Bebé Feliz|Snacks Papas Locas",false,25,false,144
+real,"Gr3mio",BRA,84,true,rect,false,cruzesc,aro,true,false,sash,2,"Ópticas Mirador|Autos Kalpa",false,25,false,145
+real,"C0rinthians",BRA,86,true,rect,false,clasico,aro,true,true,arlequin,4,"TecnoMovil|Escuela de Manejo Veloz|Pañales Bebé Feliz|Pañales Bebé Feliz",false,25,false,151
+real,"Sant0s",BRA,81,true,ingles,false,circulo,aro,true,true,liso,3,"Streaming FutbolPlay+|Ópticas Mirador|Energética Relampago",false,25,true,155
+real,"Flum1nense",BRA,83,true,oval,true,penta,aro,true,true,franjas,3,"Alimento para gatos Miau|Snacks Papas Locas|Empanadas Doña Tere",false,25,false,160
+real,"B0tafogo",BRA,82,true,oval,true,rombo,aro,true,true,banda,3,"Ópticas Mirador|Alimento para gatos Miau|Escuela de Manejo Veloz",false,25,false,166
+real,"Cruze1ro",BRA,81,true,oval,false,hex,aro,true,true,mitad,3,"TecnoMovil|Energética Relampago|AeroCondor",false,25,false,170
+real,"Atl. M1neiro",BRA,83,true,rect,false,escudo,aro,true,false,hombros,3,"Streaming FutbolPlay+|Alimento para gatos Miau|App de Citas Match2",false,25,false,174
+real,"Internaci0nal",BRA,82,true,cuenco,false,cruzado,estrella,true,false,aros,4,"Alimento para gatos Miau|AeroCondor|Gimnasios Mamoth|Snacks Papas Locas",false,25,false,177
+real,"Vasc0",BRA,78,true,herradura,true,penta,ondas,true,false,degrade,2,"Alimento para gatos Miau|Pañales Bebé Feliz",false,25,true,181
+real,"Bah1a",BRA,77,true,herradura,false,rombo,ondas,true,true,sash,3,"Ópticas Mirador|Bebida Guarana|Pizzería La Nonna",false,25,true,182
+real,"F0rtaleza",BRA,79,true,cuenco,false,hex,ondas,true,true,arlequin,3,"TecnoMovil|Escuela de Manejo Veloz|Ferretería El Tornillo",false,25,true,185
+real,"Athl3tico PR",BRA,78,true,rect,false,escudo,ondas,true,false,liso,1,"Streaming FutbolPlay+",false,25,true,185
+real,"G0iás",BRA,73,false,ingles,false,cruzado,ondas,true,false,franjas,2,"Alimento para gatos Miau|Escuela de Manejo Veloz",false,25,true,191
+real,"Peñar0l",URU,83,true,rect,true,escudo,franjas,true,false,banda,2,"Ópticas Mirador|Ferretería El Tornillo",false,25,true,198
+real,"Naci0nal",URU,82,true,ingles,true,ojiva,ondas,true,true,mitad,0,"",false,25,true,202
+real,"Def3nsor",URU,73,true,rect,false,octogono,ondas,true,false,hombros,2,"Streaming FutbolPlay+|Repuestos Chinos Express",false,25,true,205
+real,"Danub1o",URU,72,false,herradura,false,corona,ondas,true,false,aros,1,"Alimento para gatos Miau",false,25,true,206
+real,"Wander3rs",URU,70,false,rect,false,laurel,ondas,true,false,diagonal,2,"Ópticas Mirador|Repuestos Chinos Express",false,25,true,207
+real,"Liverp00l M.",URU,73,false,rect,false,banderin,sol,true,true,sash,0,"",false,25,true,210
+real,"R1ver (U)",URU,68,false,cuenco,false,ojiva,sol,true,false,arlequin,1,"TecnoMovil",false,25,true,212
+real,"Cerr0 (U)",URU,67,false,oval,false,octogono,sol,true,false,liso,2,"Streaming FutbolPlay+|Ópticas Mirador",false,25,true,213
+real,"B0ston River",URU,67,false,ingles,false,corona,sol,true,false,franjas,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,true,213
+real,"Rac1ng (U)",URU,66,false,herradura,false,laurel,sol,true,true,banda,1,"Ópticas Mirador",false,25,true,215
+real,"Progr3so",URU,66,false,cuenco,false,frances,sol,true,false,mitad,0,"",false,25,true,215
+real,"Fén1x",URU,66,false,oval,false,curvo,sol,true,false,hombros,2,"Streaming FutbolPlay+|Alimento para gatos Miau",false,25,true,215
+real,"Plaza C0lonia",URU,65,false,herradura,false,arco3,sol,true,false,aros,2,"Alimento para gatos Miau|AeroCondor",false,25,true,216
+real,"M0ntevideo C.",URU,68,false,rect,false,hexalgo,sol,true,false,diagonal,0,"",false,25,true,218
+real,"Juv3ntud",URU,64,false,cuenco,false,rombolgo,sol,true,false,cuadros,1,"TecnoMovil",false,25,true,220
+real,"Rent1stas",URU,64,false,cuenco,false,frances,rombos,true,false,arlequin,3,"TecnoMovil|Escuela de Manejo Veloz|Pañales Bebé Feliz",false,25,true,220
+real,"Ol1mpia",PAR,79,true,rect,false,curvo,rombos,true,false,liso,4,"Streaming FutbolPlay+|Ópticas Mirador|Repuestos Chinos Express|Energética Relampago",false,25,true,222
+real,"C3rro Porteño",PAR,79,true,caldera,false,clasico,franjas,true,false,franjas,0,"",false,25,true,224
+real,"Libert4d",PAR,78,true,rect,false,hexalgo,rombos,true,true,banda,2,"Ópticas Mirador|Escuela de Manejo Veloz",false,25,true,229
+real,"Guaran1",PAR,74,false,cuenco,false,rombolgo,rombos,true,false,mitad,4,"TecnoMovil|Energética Relampago|Pañales Bebé Feliz|AeroCondor",false,25,true,231
+real,"Naci0nal (P)",PAR,70,false,oval,false,banda_cinta,rombos,true,true,hombros,2,"Streaming FutbolPlay+|Alimento para gatos Miau",false,25,true,237
+real,"S0l de América",PAR,68,false,herradura,false,estandarte,rombos,true,false,aros,1,"Alimento para gatos Miau",false,25,true,238
+real,"Luqu3ño",PAR,68,false,rect,false,doblepunta,rombos,true,false,diagonal,1,"Ópticas Mirador",false,25,true,244
+real,"D0ce de Octubre",PAR,65,false,cuenco,false,geometrico,rombos,true,false,cuadros,2,"TecnoMovil|Autos Kalpa",false,25,true,245
+real,"Tacuar1",PAR,64,false,oval,false,coronadoble,rombos,true,false,vertical3,2,"Streaming FutbolPlay+|Streaming FutbolPlay+",false,25,true,251
+real,"Gral. Caball3ro",PAR,63,false,oval,false,banda_cinta,estrella6,true,false,liso,1,"Streaming FutbolPlay+",false,25,true,252
+real,"Amel1ano",PAR,66,false,ingles,false,estandarte,estrella6,true,false,franjas,2,"Alimento para gatos Miau|Snacks Papas Locas",false,25,true,258
+real,"Trinid3nse",PAR,65,false,herradura,false,doblepunta,estrella6,true,false,banda,3,"Ópticas Mirador|Ferretería El Tornillo|Pizzería La Nonna",false,25,true,259
+real,"2 de May0",PAR,63,false,cuenco,false,geometrico,estrella6,true,false,mitad,1,"TecnoMovil",false,25,true,265
+real,"Rub1o Ñu",PAR,62,false,oval,false,coronadoble,estrella6,true,false,hombros,0,"",false,25,true,266
+real,"F3rnando Mora",PAR,63,false,herradura,false,ovalo,estrella6,true,false,aros,3,"Alimento para gatos Miau|AeroCondor|Escuela de Manejo Veloz",false,25,true,272
+real,"R3sistencia",PAR,62,false,rect,false,redondeado,estrella6,true,false,diagonal,2,"Ópticas Mirador|Repuestos Chinos Express",false,25,true,273
+real,"Atl. Naci0nal",COL,83,true,oval,false,trianguloesc,estrella6,true,true,cuadros,0,"",false,25,true,275
+real,"Mill0narios",COL,79,true,rect,false,cruzesc,estrella6,true,false,vertical3,2,"Streaming FutbolPlay+|Repuestos Chinos Express",false,25,true,279
+real,"Am3rica de Cali",COL,78,true,oval,false,clasico,estrella6,true,false,degrade,1,"Alimento para gatos Miau",false,25,true,283
+real,"Juni0r",COL,78,true,oval,false,laurel,barras,true,false,hombros,3,"Barbería Los Bigotes|AeroCondor|Banco Austral",false,25,true,286
+real,"Santa F3",COL,76,true,rect,false,frances,barras,true,false,aros,0,"",false,25,true,288
+real,"Dep. Cal1",COL,75,true,rect,false,curvo,barras,true,false,diagonal,3,"Cripto Winner|App de Citas Match2|Pizzería La Nonna",false,25,true,289
+real,"T0lima",COL,74,false,caldera,false,arco3,barras,true,false,cuadros,4,"Lácteos del Sur|Banco Austral|TecnoMovil|Lácteos del Sur",false,25,true,289
+real,"DIM Medell1n",COL,74,true,oval,false,hexalgo,barras,true,false,vertical3,2,"Barbería Los Bigotes|Gimnasios Mamoth",false,25,true,291
+real,"Once C4ldas",COL,70,false,caldera,false,rombolgo,barras,true,false,degrade,2,"Yerba Mate El Sapo|Barbería Los Bigotes",false,25,true,292
+real,"Buc4ramanga",COL,70,false,rect,false,banda_cinta,barras,true,false,sash,4,"Cripto Winner|Escuela de Manejo Veloz|Cerveza Andina|Cementos Roca",false,25,true,294
+real,"Pere1ra",COL,69,false,cuenco,false,estandarte,barras,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Yerba Mate El Sapo",false,25,true,295
+real,"La Equ1dad",COL,67,false,oval,false,doblepunta,barras,true,false,liso,1,"Barbería Los Bigotes",false,25,true,295
+real,"Env1gado",COL,65,false,ingles,false,geometrico,barras,true,false,franjas,0,"",false,25,true,295
+real,"Al1anza FC",COL,64,false,cuenco,false,rombolgo,escalera,true,false,aros,2,"Yerba Mate El Sapo|Neumáticos Rueda Firme",false,25,true,296
+real,"F0rtaleza C.",COL,63,false,ingles,false,banda_cinta,escalera,true,true,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,297
+real,"B0yacá Chicó",COL,64,false,caldera,false,estandarte,escalera,true,false,cuadros,1,"Lácteos del Sur",false,25,true,298
+real,"Univers1tario",PER,78,true,cuenco,false,doblepunta,escalera,true,true,vertical3,2,"Barbería Los Bigotes|Pañales Bebé Feliz",false,25,true,302
+real,"Al1anza Lima",PER,78,true,rect,false,geometrico,escalera,true,true,degrade,3,"Yerba Mate El Sapo|Bebida Guarana|Bebida Guarana",false,25,true,306
+real,"Sport1ng Cristal",PER,77,true,oval,false,coronadoble,escalera,true,true,sash,2,"Cripto Winner|Escuela de Manejo Veloz",false,25,true,314
+real,"M3lgar",PER,74,true,oval,false,ovalo,escalera,true,true,arlequin,0,"",false,25,true,315
+real,"Cienc1ano",PER,70,false,oval,false,redondeado,escalera,true,true,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|AeroCondor",false,25,true,317
+real,"Sp0rt Boys",PER,67,false,ingles,false,trianguloesc,escalera,true,true,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,true,319
+real,"Munic1pal",PER,66,false,herradura,false,cruzesc,escalera,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,322
+real,"Cusc0 FC",PER,68,false,ingles,false,coronadoble,estrella8,true,true,diagonal,0,"",false,25,true,327
+real,"C. Vall3jo",PER,68,false,caldera,false,ovalo,estrella8,true,false,cuadros,2,"Lácteos del Sur|Banco Austral",false,25,true,329
+real,"Atl. Gr4u",PER,66,false,oval,false,redondeado,estrella8,true,true,vertical3,3,"Barbería Los Bigotes|Pañales Bebé Feliz|Ópticas Mirador",false,25,true,330
+real,"Garc1laso",PER,67,false,caldera,false,trianguloesc,estrella8,true,true,degrade,1,"Yerba Mate El Sapo",false,25,true,333
+real,"AD Tarm4",PER,64,false,rect,false,cruzesc,estrella8,true,false,sash,1,"Cripto Winner",false,25,true,333
+real,"UTC Cajam4rca",PER,64,false,cuenco,false,clasico,estrella8,true,true,arlequin,0,"",false,25,true,336
+real,"B1nacional",PER,64,false,oval,false,circulo,estrella8,true,true,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,true,337
+real,"Ayacuch0",PER,63,false,ingles,false,penta,estrella8,true,true,franjas,1,"Yerba Mate El Sapo",false,25,true,338
+real,"Chank4s",PER,62,false,herradura,false,rombo,estrella8,true,true,banda,0,"",false,25,true,340
+real,"LDU Qu1to",ECU,80,true,rect,false,hex,estrella8,true,true,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,343
+real,"Barcel0na SC",ECU,79,true,cuenco,false,clasico,florlis,true,true,cuadros,3,"Lácteos del Sur|Banco Austral|Lácteos del Sur",false,25,true,347
+real,"Emel3c",ECU,76,true,rect,false,circulo,florlis,true,true,vertical3,3,"Barbería Los Bigotes|AeroCondor|Gimnasios Mamoth",false,25,true,348
+real,"I. del Vall3",ECU,79,true,rect,false,penta,florlis,true,false,degrade,0,"",false,25,true,350
+real,"Auc4s",ECU,72,false,rect,false,rombo,florlis,true,true,sash,2,"Cripto Winner|Escuela de Manejo Veloz",false,25,true,357
+real,"El Naci0nal",ECU,70,false,cuenco,false,hex,florlis,true,true,arlequin,2,"Lácteos del Sur|Cementos Roca",false,25,true,361
+real,"Delf1n",ECU,68,false,oval,false,escudo,florlis,true,true,liso,1,"Barbería Los Bigotes",false,25,true,367
+real,"U. Catól1ca (E)",ECU,68,false,ingles,false,cruzado,florlis,true,true,franjas,1,"Yerba Mate El Sapo",false,25,true,370
+real,"Oren5e",ECU,66,false,herradura,false,banderin,florlis,true,true,banda,2,"Cripto Winner|Energética Relampago",false,25,true,375
+real,"Técnic0 U.",ECU,64,false,cuenco,false,ojiva,florlis,true,true,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,379
+real,"Mushuc Run4",ECU,63,false,oval,false,octogono,florlis,true,true,hombros,2,"Barbería Los Bigotes|Ópticas Mirador",false,25,true,384
+real,"Macar4",ECU,63,false,oval,false,escudo,medialuna,true,true,vertical3,2,"Barbería Los Bigotes|Pañales Bebé Feliz",false,25,true,387
+real,"Guayaqu1l C.",ECU,62,false,caldera,false,cruzado,medialuna,true,false,degrade,2,"Yerba Mate El Sapo|Bebida Guarana",false,25,true,393
+real,"Cumbay4",ECU,61,false,rect,false,banderin,medialuna,true,false,sash,2,"Cripto Winner|Autos Kalpa",false,25,true,396
+real,"Imbabur4",ECU,61,false,cuenco,false,ojiva,medialuna,true,false,arlequin,1,"Lácteos del Sur",false,25,true,401
+real,"9 de Octu8re",ECU,62,false,oval,false,octogono,medialuna,true,false,liso,0,"",false,25,true,405
+real,"R3al Madrid",ESP,94,true,rect,true,circulo,corona2,true,true,franjas,3,"Yerba Mate El Sapo|Ferretería El Tornillo|Bebida Guarana",false,25,true,417
+real,"B4rcelona",ESP,93,true,cuenco,true,escudo,franjas,true,true,banda,2,"Cripto Winner|Energética Relampago",false,25,true,427
+real,"Atlét1co Madrid",ESP,89,true,cuenco,true,clasico,franjas,true,true,mitad,1,"Lácteos del Sur",false,25,true,435
+real,"Sev1lla",ESP,83,true,cuenco,true,circulo,aro,true,true,hombros,3,"Barbería Los Bigotes|AeroCondor|AeroCondor",false,25,false,440
+real,"Val3ncia",ESP,81,true,rect,true,arco3,medialuna,true,true,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,false,444
+real,"V1llarreal",ESP,82,true,rect,true,corona,banda,true,true,degrade,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,452
+real,"Ath. B1lbao",ESP,83,true,rect,true,clasico,franjas,true,false,sash,0,"",false,25,true,460
+real,"R3al Sociedad",ESP,83,true,rect,true,clasico,franjas,true,true,arlequin,2,"Lácteos del Sur|Cementos Roca",false,25,false,467
+real,"Bet1s",ESP,81,true,rect,true,circulo,banda,true,true,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Ópticas Mirador",false,25,true,475
+real,"Celta V1go",ESP,78,true,rect,false,arco3,banda,true,true,franjas,1,"Yerba Mate El Sapo",false,25,false,481
+real,"Getaf3",ESP,76,false,herradura,false,hexalgo,banda,true,true,banda,1,"Cripto Winner",false,25,false,483
+real,"Os4suna",ESP,77,false,cuenco,false,rombolgo,banda,true,true,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Cecinas Don Vito",false,25,false,485
+real,"G1rona",ESP,79,false,oval,false,banda_cinta,banda,true,true,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,488
+real,"Mall0rca",ESP,76,false,herradura,false,estandarte,banda,true,true,aros,1,"Yerba Mate El Sapo",false,25,false,490
+real,"Espany0l",ESP,75,true,cuenco,false,doblepunta,banda,true,false,diagonal,0,"",false,25,false,491
+real,"Ray0 Vallecano",ESP,75,true,herradura,false,hexalgo,franjas,true,true,sash,2,"Cripto Winner|Escuela de Manejo Veloz",false,25,false,495
+real,"Manch3ster Utd",ENG,88,true,ingles,true,rombolgo,mitad,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Yerba Mate El Sapo",false,25,true,507
+real,"C1ty de Manch.",ENG,93,true,cuenco,true,circulo,aro,true,false,liso,3,"Barbería Los Bigotes|AeroCondor|Banco Austral",false,25,true,520
+real,"L1verpool",ENG,92,true,ingles,true,estandarte,mitad,true,true,franjas,3,"Yerba Mate El Sapo|Ferretería El Tornillo|Cripto Winner",false,25,true,531
+real,"Ars3nal",ENG,91,true,cuenco,true,doblepunta,mitad,true,true,banda,4,"Cripto Winner|Energética Relampago|Ferretería El Tornillo|Pizzería La Nonna",false,25,true,542
+real,"Ch3lsea",ENG,87,true,ingles,true,geometrico,mitad,true,true,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|TecnoMovil",false,25,true,553
+real,"T0ttenham",ENG,86,true,ingles,true,ovalo,liso,true,true,hombros,1,"Barbería Los Bigotes",false,25,true,565
+real,"Newc4stle",ENG,85,true,ingles,true,ovalo,mitad,true,true,aros,3,"Yerba Mate El Sapo|Repuestos Chinos Express|Empanadas Doña Tere",false,25,true,573
+real,"Ast0n Villa",ENG,84,true,ingles,false,redondeado,mitad,true,true,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,583
+real,"West H4m",ENG,81,true,oval,false,trianguloesc,mitad,true,true,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,590
+real,"Ev3rton FC",ENG,79,true,rect,false,geometrico,cuartos,true,true,arlequin,0,"",false,25,false,596
+real,"Br1ghton",ENG,81,true,cuenco,false,coronadoble,cuartos,true,true,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,false,604
+real,"W0lves",ENG,79,true,ingles,false,ovalo,aro,true,true,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,606
+real,"Cr1stal Palace",ENG,79,true,ingles,false,redondeado,aro,true,false,banda,2,"Cripto Winner|Autos Kalpa",false,25,false,615
+real,"Fulh4m",ENG,78,true,ingles,false,trianguloesc,aro,true,true,mitad,1,"Lácteos del Sur",false,25,false,621
+real,"Br3ntford",ENG,78,true,rect,false,cruzesc,aro,true,true,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,626
+real,"N0ttingham F.",ENG,78,true,ingles,false,clasico,aro,true,false,aros,3,"Yerba Mate El Sapo|Repuestos Chinos Express|Bebida Guarana",false,25,false,634
+real,"Juv3ntus",ITA,88,true,rect,true,ovalo,franjas,true,true,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,642
+real,"M1lan",ITA,88,true,cuenco,true,escudo,franjas,true,true,cuadros,0,"",false,25,false,651
+real,"Int3r",ITA,90,true,cuenco,true,circulo,aro,true,false,vertical3,3,"Barbería Los Bigotes|Empanadas Doña Tere|AeroCondor",false,25,true,661
+real,"N4poli",ITA,87,true,oval,true,circulo,aro,true,true,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,true,671
+real,"R0ma",ITA,84,true,oval,false,clasico,mitad,true,true,franjas,3,"Yerba Mate El Sapo|Empanadas Doña Tere|Cripto Winner",false,25,false,680
+real,"Laz1o",ITA,83,true,oval,false,circulo,aro,true,true,banda,0,"",false,25,false,686
+real,"Atal4nta",ITA,85,true,rect,false,penta,ondas,true,true,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Lácteos del Sur",false,25,false,696
+real,"F1orentina",ITA,81,true,oval,false,rombo,ondas,true,true,hombros,4,"Barbería Los Bigotes|AeroCondor|Ópticas Mirador|Gimnasios Mamoth",false,25,false,703
+real,"T0rino",ITA,78,true,oval,false,hex,ondas,true,true,aros,2,"Yerba Mate El Sapo|Barbería Los Bigotes",false,25,true,712
+real,"B0logna",ITA,80,true,oval,false,escudo,ondas,true,true,diagonal,2,"Cripto Winner|Cementos Roca",false,25,true,722
+real,"Ud1nese",ITA,76,true,rect,false,cruzado,ondas,true,true,cuadros,4,"Lácteos del Sur|Pizzería La Nonna|Cecinas Don Vito|Yerba Mate El Sapo",false,25,true,728
+real,"S4mpdoria",ITA,74,true,ingles,false,banderin,ondas,true,true,vertical3,3,"Barbería Los Bigotes|Empanadas Doña Tere|Banco Austral",false,25,true,729
+real,"G3noa",ITA,76,true,ingles,false,ojiva,ondas,true,true,degrade,2,"Yerba Mate El Sapo|Cripto Winner",false,25,true,737
+real,"S4ssuolo",ITA,74,false,ingles,false,hex,chevron,true,true,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,true,744
+real,"M0nza",ITA,75,false,herradura,false,escudo,chevron,true,true,banda,2,"Cripto Winner|Energética Relampago",false,25,true,748
+real,"L3cce",ITA,74,true,oval,false,cruzado,chevron,true,true,mitad,2,"Lácteos del Sur|App de Citas Match2",false,25,true,752
+real,"B4yern Múnich",GER,93,true,cuenco,true,circulo,rombos,true,true,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,true,765
+real,"D0rtmund",GER,88,true,ingles,true,ojiva,sol,true,true,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,true,772
+real,"Le1pzig",GER,86,true,cuenco,false,octogono,sol,true,true,diagonal,3,"Cripto Winner|Autos Kalpa|Ferretería El Tornillo",false,25,false,778
+real,"Lev3rkusen",GER,88,true,rect,false,corona,sol,true,true,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,786
+real,"Fr4nkfurt",GER,83,true,rect,false,laurel,sol,true,true,vertical3,1,"Barbería Los Bigotes",false,25,false,791
+real,"W0lfsburgo",GER,79,true,rect,false,frances,sol,true,false,degrade,3,"Yerba Mate El Sapo|Neumáticos Rueda Firme|Empanadas Doña Tere",false,25,true,798
+real,"Gl4dbach",GER,80,true,rect,false,curvo,sol,true,true,sash,2,"Cripto Winner|App de Citas Match2",false,25,true,806
+real,"Fr1burgo",GER,80,true,rect,false,corona,barras,true,false,aros,4,"Yerba Mate El Sapo|Neumáticos Rueda Firme|Energética Relampago|Cripto Winner",false,25,true,813
+real,"Stuttg4rt",GER,82,true,oval,false,laurel,barras,true,true,diagonal,2,"Cripto Winner|Pizzería La Nonna",false,25,false,820
+real,"H0ffenheim",GER,78,false,caldera,false,frances,barras,true,true,cuadros,4,"Lácteos del Sur|Banco Austral|Cecinas Don Vito|Lácteos del Sur",false,25,true,828
+real,"Un1ón Berlín",GER,79,true,ingles,false,curvo,barras,true,true,vertical3,3,"Barbería Los Bigotes|Pañales Bebé Feliz|Gimnasios Mamoth",false,25,true,840
+real,"Ma1nz",GER,76,false,caldera,false,arco3,barras,true,true,degrade,0,"",false,25,true,850
+real,"C0lonia",GER,76,true,rect,false,hexalgo,barras,true,false,sash,3,"Cripto Winner|Autos Kalpa|Cementos Roca",false,25,true,858
+real,"Br3men",GER,77,true,cuenco,false,rombolgo,barras,true,true,arlequin,2,"Lácteos del Sur|Yerba Mate El Sapo",false,25,true,868
+real,"B0chum",GER,74,false,oval,false,banda_cinta,barras,true,true,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Banco Austral",false,25,true,873
+real,"Augsburg0",GER,75,false,ingles,false,estandarte,barras,true,false,franjas,4,"Yerba Mate El Sapo|Ferretería El Tornillo|Bebida Guarana|Cripto Winner",false,25,true,880
+real,"Par1s SG",FRA,92,true,cuenco,true,doblepunta,barras,true,true,banda,3,"Cripto Winner|Energética Relampago|Pizzería La Nonna",false,25,true,893
+real,"M4rsella",FRA,84,true,cuenco,true,circulo,aro,true,false,diagonal,2,"Cripto Winner|App de Citas Match2",false,25,false,902
+real,"Ly0n",FRA,82,true,rect,true,escudo,liso,true,true,cuadros,3,"Lácteos del Sur|Banco Austral|TecnoMovil",false,25,false,909
+real,"M0naco",FRA,84,true,rect,false,banda_cinta,escalera,true,true,vertical3,2,"Barbería Los Bigotes|Pañales Bebé Feliz",false,25,false,918
+real,"L1lle",FRA,82,true,rect,false,estandarte,escalera,true,true,degrade,1,"Yerba Mate El Sapo",false,25,false,923
+real,"N1za",FRA,80,true,rect,false,doblepunta,escalera,true,false,sash,3,"Cripto Winner|Escuela de Manejo Veloz|Cerveza Andina",false,25,true,931
+real,"R3nnes",FRA,80,false,cuenco,false,geometrico,escalera,true,true,arlequin,2,"Lácteos del Sur|Cementos Roca",false,25,true,938
+real,"L3ns",FRA,81,true,ingles,true,coronadoble,escalera,true,true,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Ópticas Mirador",false,25,false,944
+real,"N4ntes",FRA,77,true,oval,false,ovalo,escalera,true,true,franjas,1,"Yerba Mate El Sapo",false,25,true,952
+real,"Estrasburg0",FRA,76,false,herradura,false,redondeado,escalera,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,962
+real,"T0ulouse",FRA,76,false,cuenco,false,trianguloesc,escalera,true,true,mitad,0,"",false,25,true,970
+real,"M0ntpellier",FRA,76,false,caldera,false,geometrico,estrella8,true,true,cuadros,0,"",false,25,true,978
+real,"Br3st",FRA,76,false,oval,false,coronadoble,estrella8,true,true,vertical3,2,"Barbería Los Bigotes|Pañales Bebé Feliz",false,25,true,987
+real,"R3ims",FRA,75,false,caldera,false,ovalo,estrella8,true,true,degrade,3,"Yerba Mate El Sapo|Bebida Guarana|Bebida Guarana",false,25,true,995
+real,"L0rient",FRA,73,false,rect,false,redondeado,estrella8,true,true,sash,0,"",false,25,true,1000
+real,"Auxerr3",FRA,73,false,cuenco,false,trianguloesc,estrella8,true,true,arlequin,1,"Lácteos del Sur",false,25,true,1008
+real,"Bol1var",BOL,76,true,oval,false,cruzesc,estrella8,true,false,liso,2,"Barbería Los Bigotes|AeroCondor",false,25,true,1014
+real,"The Str0ngest",BOL,75,true,oval,false,clasico,estrella8,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,true,1017
+real,"Alw4ys Ready",BOL,71,false,herradura,false,circulo,estrella8,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,1020
+real,"Bl00ming",BOL,69,false,cuenco,false,penta,estrella8,true,false,mitad,0,"",false,25,true,1022
+real,"Ori3nte P.",BOL,68,false,oval,false,rombo,estrella8,true,false,hombros,1,"Barbería Los Bigotes",false,25,true,1023
+real,"W1lstermann",BOL,69,false,oval,false,cruzesc,florlis,true,false,vertical3,4,"Barbería Los Bigotes|Pañales Bebé Feliz|Ópticas Mirador|Gimnasios Mamoth",false,25,true,1026
+real,"San J0sé",BOL,64,false,caldera,false,clasico,florlis,true,false,degrade,2,"Yerba Mate El Sapo|Barbería Los Bigotes",false,25,true,1026
+real,"Guabir4",BOL,63,false,rect,false,circulo,florlis,true,false,sash,0,"",false,25,true,1029
+real,"T0mayapo",BOL,62,false,cuenco,false,penta,florlis,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Cecinas Don Vito",false,25,true,1029
+real,"Nac. Pot0sí",BOL,63,false,oval,false,rombo,florlis,true,true,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,true,1032
+real,"Aur0ra",BOL,62,false,ingles,false,hex,florlis,true,false,franjas,0,"",false,25,true,1032
+real,"Indep. Petrol3ro",BOL,63,false,herradura,false,escudo,florlis,true,false,banda,2,"Cripto Winner|Autos Kalpa",false,25,true,1035
+real,"R. Sant4 Cruz",BOL,61,false,cuenco,false,cruzado,florlis,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,1035
+real,"Palmafl0r",BOL,60,false,oval,false,banderin,florlis,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,true,1038
+real,"Vaca D1ez",BOL,59,false,herradura,false,ojiva,florlis,true,false,aros,1,"Yerba Mate El Sapo",false,25,true,1038
+real,"Univ. de V1nto",BOL,59,false,caldera,false,hex,medialuna,true,false,degrade,2,"Yerba Mate El Sapo|Bebida Guarana",false,25,true,1041
+real,"Kaw4saki F.",JPN,81,true,oval,false,escudo,medialuna,true,false,sash,3,"Cripto Winner|Escuela de Manejo Veloz|Ferretería El Tornillo",false,25,false,1041
+real,"Y0kohama FM",JPN,81,true,oval,false,cruzado,medialuna,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|TecnoMovil",false,25,false,1041
+real,"Kash1ma A.",JPN,80,true,rect,false,banderin,medialuna,true,false,liso,1,"Barbería Los Bigotes",false,25,false,1041
+real,"Urawa R3ds",JPN,80,true,rect,false,ojiva,medialuna,true,false,franjas,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,1041
+real,"V1ssel Kobe",JPN,79,true,rect,false,octogono,medialuna,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,false,1041
+real,"G4mba Osaka",JPN,78,false,cuenco,false,corona,medialuna,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,false,1041
+real,"FC T0kio",JPN,77,true,oval,false,laurel,medialuna,true,false,hombros,0,"",false,25,false,1041
+real,"Sanfr3cce H.",JPN,77,false,herradura,false,frances,medialuna,true,false,aros,1,"Yerba Mate El Sapo",false,25,false,1041
+real,"C3rezo Osaka",JPN,76,false,rect,false,curvo,medialuna,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,false,1041
+real,"Nag0ya G.",JPN,76,false,rect,false,octogono,banda,true,false,sash,2,"Cripto Winner|Autos Kalpa",false,25,false,1041
+real,"K0nsadole S.",JPN,74,false,cuenco,false,corona,banda,true,false,arlequin,0,"",false,25,false,1041
+real,"Av1spa F.",JPN,73,false,oval,false,laurel,banda,true,false,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,false,1041
+real,"Sh1monoseki",JPN,71,false,ingles,false,frances,banda,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,1041
+real,"Kyot0 S.",JPN,71,false,herradura,false,curvo,banda,true,false,banda,0,"",false,25,false,1041
+real,"Alb1rex N.",JPN,70,false,cuenco,false,arco3,banda,true,false,mitad,1,"Lácteos del Sur",false,25,false,1041
+real,"Sh0nan B.",JPN,69,false,oval,false,hexalgo,banda,true,false,hombros,1,"Barbería Los Bigotes",false,25,false,1041
+real,"Ul5an HD",KOR,80,true,cuenco,false,rombolgo,banda,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,false,1041
+real,"J3onbuk M.",KOR,80,true,cuenco,false,banda_cinta,banda,true,false,diagonal,3,"Cripto Winner|Autos Kalpa|Ferretería El Tornillo",false,25,false,1041
+real,"P0hang S.",KOR,77,false,cuenco,false,estandarte,banda,true,false,cuadros,1,"Lácteos del Sur",false,25,false,1041
+real,"FC S3oul",KOR,77,true,rect,false,arco3,mitad,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Yerba Mate El Sapo",false,25,false,1041
+real,"Inche0n Utd",KOR,73,false,oval,false,hexalgo,mitad,true,false,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Ópticas Mirador",false,25,false,1041
+real,"Daej3on H.",KOR,73,false,ingles,false,rombolgo,mitad,true,false,franjas,1,"Yerba Mate El Sapo",false,25,false,1041
+real,"Gangw0n FC",KOR,72,false,herradura,false,banda_cinta,mitad,true,false,banda,0,"",false,25,false,1041
+real,"Su0n FC",KOR,72,false,cuenco,false,estandarte,mitad,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Cecinas Don Vito",false,25,false,1041
+real,"Gwan9ju FC",KOR,73,false,oval,false,doblepunta,mitad,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,1041
+real,"Jeju Un1ted",KOR,72,false,herradura,false,geometrico,mitad,true,false,aros,0,"",false,25,false,1041
+real,"Dae9u FC",KOR,71,false,rect,false,coronadoble,mitad,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,false,1041
+real,"G1mcheon",KOR,70,false,cuenco,false,ovalo,mitad,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,1041
+real,"S3ongnam",KOR,69,false,oval,false,redondeado,mitad,true,false,vertical3,2,"Barbería Los Bigotes|Empanadas Doña Tere",false,25,false,1041
+real,"Bus4n IPark",KOR,68,false,oval,false,doblepunta,cuartos,true,false,liso,0,"",false,25,false,1041
+real,"Ans4n G.",KOR,66,false,ingles,false,geometrico,aro,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,1041
+real,"Ch. Cit1zen",KOR,65,false,herradura,false,coronadoble,aro,true,false,banda,3,"Cripto Winner|Energética Relampago|Ferretería El Tornillo",false,25,false,1041
+real,"Al-H1lal",KSA,88,true,oval,true,circulo,aro,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,false,1041
+real,"Al-N4ssr",KSA,86,true,oval,true,circulo,aro,true,false,hombros,1,"Barbería Los Bigotes",false,25,false,1041
+real,"Al-1ttihad",KSA,85,true,cuenco,false,trianguloesc,aro,true,false,aros,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,1041
+real,"Al-4hli SA",KSA,84,true,cuenco,false,cruzesc,aro,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,false,1041
+real,"Al-Sh4bab",KSA,78,false,cuenco,false,clasico,aro,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,1041
+real,"Al-Ett1faq",KSA,76,false,oval,false,circulo,aro,true,false,vertical3,0,"",false,25,false,1041
+real,"Al-T4awoun",KSA,74,false,cuenco,false,penta,aro,true,false,degrade,1,"Yerba Mate El Sapo",false,25,false,1041
+real,"Al-F41ha",KSA,73,false,ingles,false,trianguloesc,estrella,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,1041
+real,"Al-R4ed",KSA,72,false,herradura,false,cruzesc,estrella,true,false,banda,1,"Cripto Winner",false,25,false,1041
+real,"Al-F4teh",KSA,73,false,cuenco,false,clasico,ondas,true,false,mitad,0,"",false,25,false,1041
+real,"Damm4c",KSA,71,false,oval,false,circulo,ondas,true,false,hombros,3,"Barbería Los Bigotes|AeroCondor|Salsa Picante Volcán",false,25,false,1041
+real,"Al-Kh4leej",KSA,71,false,herradura,false,penta,ondas,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,false,1041
+real,"Al-W3hda",KSA,70,false,rect,false,rombo,ondas,true,false,diagonal,0,"",false,25,false,1041
+real,"Al-Ok9dood",KSA,68,false,cuenco,false,hex,ondas,true,false,cuadros,3,"Lácteos del Sur|App de Citas Match2|Yerba Mate El Sapo",false,25,false,1041
+real,"Al-R1yadh",KSA,68,false,oval,false,escudo,ondas,true,false,vertical3,3,"Barbería Los Bigotes|Empanadas Doña Tere|Banco Austral",false,25,false,1041
+real,"Al-H4zem",KSA,66,false,cuenco,false,cruzado,ondas,true,false,degrade,3,"Yerba Mate El Sapo|Neumáticos Rueda Firme|Cripto Winner",false,25,false,1041
+real,"Al Ahly",EGY,86,true,oval,true,banderin,ondas,true,false,sash,4,"Cripto Winner|App de Citas Match2|Ferretería El Tornillo|Pizzería La Nonna",false,25,false,1041
+real,"Z4malek",EGY,83,true,oval,true,rombo,chevron,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,false,1041
+real,"Pyram1ds",EGY,79,false,cuenco,false,hex,chevron,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,false,1041
+real,"Ismai1y",EGY,74,false,oval,false,escudo,chevron,true,false,hombros,3,"Barbería Los Bigotes|AeroCondor|Ópticas Mirador",false,25,false,1041
+real,"Al M4sry",EGY,74,false,herradura,false,cruzado,sol,true,false,aros,1,"Yerba Mate El Sapo",false,25,false,1041
+real,"Ceram1ca C.",EGY,72,false,rect,false,banderin,sol,true,false,diagonal,0,"",false,25,false,1041
+real,"Fut. R1se",EGY,71,false,cuenco,false,ojiva,sol,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,false,1041
+real,"Nati0nal Bank",EGY,70,false,oval,false,octogono,sol,true,false,vertical3,2,"Barbería Los Bigotes|Empanadas Doña Tere",false,25,false,1041
+real,"ENPP1",EGY,70,false,cuenco,false,corona,sol,true,false,degrade,0,"",false,25,false,1041
+real,"Pharc0",EGY,69,false,ingles,false,laurel,sol,true,false,sash,1,"Cripto Winner",false,25,false,1041
+real,"Smouh4",EGY,69,false,caldera,false,frances,sol,true,false,arlequin,2,"Lácteos del Sur|Banco Austral",false,25,false,1041
+real,"El G0una",EGY,68,false,ingles,false,octogono,barras,true,false,diagonal,2,"Cripto Winner|App de Citas Match2",false,25,false,1041
+real,"Baladiy4t",EGY,67,false,caldera,false,corona,barras,true,false,cuadros,1,"Lácteos del Sur",false,25,false,1041
+real,"Tal43a",EGY,66,false,oval,false,laurel,barras,true,false,vertical3,3,"Barbería Los Bigotes|AeroCondor|Gimnasios Mamoth",false,25,false,1041
+real,"Al M0kawloon",EGY,66,false,caldera,false,frances,barras,true,false,degrade,3,"Yerba Mate El Sapo|Bebida Guarana|Barbería Los Bigotes",false,25,false,1041
+real,"ZED FC",EGY,65,false,rect,false,curvo,barras,true,false,sash,0,"",false,25,false,1041
+real,"W. C4sablanca",MAR,82,true,oval,false,arco3,barras,true,false,arlequin,4,"Lácteos del Sur|Cementos Roca|TecnoMovil|Yerba Mate El Sapo",false,25,false,1041
+real,"R4ja C.",MAR,82,true,oval,false,hexalgo,barras,true,false,liso,2,"Barbería Los Bigotes|Banco Austral",false,25,false,1041
+real,"AS F4R",MAR,76,false,ingles,false,rombolgo,barras,true,false,franjas,0,"",false,25,false,1041
+real,"RS B3rkane",MAR,78,false,herradura,false,banda_cinta,barras,true,false,banda,4,"Cripto Winner|Energética Relampago|Cerveza Andina|Pizzería La Nonna",false,25,false,1041
+real,"Ma9hreb Fès",MAR,73,false,cuenco,false,estandarte,borde,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Lácteos del Sur",false,25,false,1041
+real,"MC Oujda",MAR,71,false,caldera,false,arco3,escalera,true,false,cuadros,3,"Lácteos del Sur|Banco Austral|Cecinas Don Vito",false,25,false,1041
+real,"FUS R4bat",MAR,72,false,oval,false,hexalgo,escalera,true,false,vertical3,0,"",false,25,false,1041
+real,"Hass4nia A.",MAR,70,false,caldera,false,rombolgo,escalera,true,false,degrade,2,"Yerba Mate El Sapo|Bebida Guarana",false,25,false,1041
+real,"Olympic 5afi",MAR,70,false,rect,false,banda_cinta,escalera,true,false,sash,2,"Cripto Winner|Autos Kalpa",false,25,false,1041
+real,"Chab4b MA",MAR,69,false,cuenco,false,estandarte,escalera,true,false,arlequin,1,"Lácteos del Sur",false,25,false,1041
+real,"Jeun3sse S.",MAR,68,false,oval,false,doblepunta,escalera,true,false,liso,2,"Barbería Los Bigotes|Snacks Papas Locas",false,25,false,1041
+real,"SCC M0hammédia",MAR,67,false,ingles,false,geometrico,escalera,true,false,franjas,0,"",false,25,false,1041
+real,"Ittih4d Tanger",MAR,68,false,herradura,false,coronadoble,escalera,true,false,banda,1,"Cripto Winner",false,25,false,1041
+real,"Ren4issance Z.",MAR,66,false,cuenco,false,ovalo,escalera,true,false,mitad,1,"Lácteos del Sur",false,25,false,1041
+real,"Un1ón Touarga",MAR,65,false,oval,false,redondeado,escalera,true,true,hombros,0,"",false,25,false,1041
+real,"COD M3knès",MAR,65,false,oval,false,doblepunta,estrella8,true,false,vertical3,0,"",false,25,false,1041
+real,"Mam3lodi S.",RSA,82,true,rect,false,geometrico,estrella8,true,false,degrade,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,1041
+real,"Orland0 Pirat3s",RSA,79,false,rect,false,coronadoble,estrella8,true,false,sash,2,"Cripto Winner|Escuela de Manejo Veloz",false,25,false,1041
+real,"K4izer Chiefs",RSA,78,true,cuenco,true,ovalo,estrella8,true,false,arlequin,0,"",false,25,false,1041
+real,"Steller1bosch",RSA,74,false,oval,false,redondeado,estrella8,true,false,liso,3,"Barbería Los Bigotes|Snacks Papas Locas|Ópticas Mirador",false,25,false,1041
+real,"S3khukhune",RSA,71,false,ingles,false,trianguloesc,estrella8,true,false,franjas,1,"Yerba Mate El Sapo",false,25,false,1041
+real,"Cape T0wn City",RSA,72,false,herradura,false,cruzesc,estrella8,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,false,1041
+real,"Supersp0rt Utd",RSA,73,false,cuenco,false,clasico,estrella8,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Cecinas Don Vito",false,25,false,1041
+real,"Rich4rds Bay",RSA,69,false,oval,false,circulo,estrella8,true,false,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,1041
+real,"G0lden Arrows",RSA,69,false,herradura,false,penta,estrella8,true,false,aros,1,"Yerba Mate El Sapo",false,25,false,1041
+real,"P0lokwane",RSA,68,false,caldera,false,trianguloesc,florlis,true,false,degrade,4,"Yerba Mate El Sapo|Bebida Guarana|Bebida Guarana|Barbería Los Bigotes",false,25,false,1041
+real,"Chipp4 Utd",RSA,67,false,rect,false,cruzesc,florlis,true,false,sash,3,"Cripto Winner|Escuela de Manejo Veloz|Cementos Roca",false,25,false,1041
+real,"AmaZ4lu",RSA,68,false,cuenco,false,clasico,florlis,true,false,arlequin,2,"Lácteos del Sur|Yerba Mate El Sapo",false,25,false,1041
+real,"Ts. Galax1e",RSA,66,false,oval,false,circulo,florlis,true,false,liso,2,"Barbería Los Bigotes|Banco Austral",false,25,false,1041
+real,"Mar1tzburg",RSA,66,false,ingles,false,penta,florlis,true,false,franjas,3,"Yerba Mate El Sapo|Ferretería El Tornillo|Cripto Winner",false,25,false,1041
+real,"Casr1c Stars",RSA,64,false,herradura,false,rombo,florlis,true,false,banda,0,"",false,25,false,1041
+real,"Mag3si FC",RSA,63,false,cuenco,false,hex,florlis,true,false,mitad,2,"Lácteos del Sur|Lácteos del Sur",false,25,false,1041
+real,"M3lbourne City",AUS,76,true,rect,false,escudo,florlis,true,false,hombros,2,"Barbería Los Bigotes|Gimnasios Mamoth",false,25,false,1041
+real,"S1dney FC",AUS,76,true,rect,false,cruzado,florlis,true,false,aros,0,"",false,25,false,1041
+real,"M3lbourne V.",AUS,75,true,rect,false,banderin,florlis,true,false,diagonal,3,"Cripto Winner|Autos Kalpa|Cementos Roca",false,25,false,1041
+real,"C. C0ast M.",AUS,73,false,rect,false,rombo,medialuna,true,false,sash,1,"Cripto Winner",false,25,false,1041
+real,"W. S1dney W.",AUS,73,false,cuenco,false,hex,medialuna,true,false,arlequin,3,"Lácteos del Sur|Cementos Roca|Cecinas Don Vito",false,25,false,1041
+real,"Ad3laide Utd",AUS,72,false,oval,false,escudo,medialuna,true,false,liso,0,"",false,25,false,1041
+real,"Br1sbane R.",AUS,71,false,ingles,false,cruzado,medialuna,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,false,1041
+real,"W3llington P.",AUS,71,false,herradura,false,banderin,medialuna,true,false,banda,2,"Cripto Winner|Autos Kalpa",false,25,false,1041
+real,"Mac4rthur FC",AUS,70,false,cuenco,false,ojiva,medialuna,true,false,mitad,1,"Lácteos del Sur",false,25,false,1041
+real,"N3wcastle J.",AUS,69,false,oval,false,octogono,medialuna,true,true,hombros,2,"Barbería Los Bigotes|AeroCondor",false,25,false,1041
+real,"P3rth Glory",AUS,69,false,herradura,false,corona,medialuna,true,false,aros,0,"",false,25,false,1041
+real,"W. Un1ted",AUS,68,false,rect,false,laurel,medialuna,true,false,diagonal,1,"Cripto Winner",false,25,false,1041
+real,"Auckl4nd FC",AUS,70,false,cuenco,false,frances,medialuna,true,false,cuadros,1,"Lácteos del Sur",false,25,false,1041
+real,"Canb3rra Utd",AUS,65,false,cuenco,false,ojiva,banda,true,false,arlequin,2,"Lácteos del Sur|Cementos Roca",false,25,false,1041
+real,"Ge3long FC",AUS,64,false,oval,false,octogono,banda,true,false,liso,0,"",false,25,false,1041
+real,"Darw1n City",AUS,62,false,ingles,false,corona,banda,true,false,franjas,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,false,1041
+real,"Am3rica",MEX,86,true,cuenco,false,laurel,banda,true,false,banda,2,"Cripto Winner|Energética Relampago",false,25,true,1049
+real,"Tigr3s UANL",MEX,85,true,cuenco,true,frances,banda,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,1055
+real,"M0nterrey",MEX,85,true,rect,true,curvo,banda,true,false,hombros,3,"Barbería Los Bigotes|AeroCondor|Ópticas Mirador",false,25,true,1060
+real,"Guadalaj4ra",MEX,83,true,cuenco,true,arco3,banda,true,false,aros,1,"Yerba Mate El Sapo",false,25,true,1069
+real,"Cruz Azul",MEX,83,true,cuenco,false,hexalgo,banda,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,1073
+real,"Pachuc4",MEX,81,true,rect,false,rombolgo,banda,true,false,cuadros,3,"Lácteos del Sur|Pizzería La Nonna|Cecinas Don Vito",false,25,true,1079
+real,"T0luca",MEX,80,true,rect,false,banda_cinta,banda,true,false,vertical3,2,"Barbería Los Bigotes|Empanadas Doña Tere",false,25,true,1084
+real,"Sant0s Laguna",MEX,78,true,rect,false,curvo,mitad,true,true,liso,4,"Barbería Los Bigotes|Snacks Papas Locas|Salsa Picante Volcán|Banco Austral",false,25,true,1086
+real,"Pum4s UNAM",MEX,78,true,oval,false,arco3,mitad,true,false,franjas,3,"Yerba Mate El Sapo|Ferretería El Tornillo|Cripto Winner",false,25,true,1090
+real,"Le0n",MEX,79,false,herradura,false,hexalgo,mitad,true,false,banda,3,"Cripto Winner|Energética Relampago|Pizzería La Nonna",false,25,true,1097
+real,"Atl4s",MEX,76,false,cuenco,false,rombolgo,mitad,true,false,mitad,3,"Lácteos del Sur|App de Citas Match2|Lácteos del Sur",false,25,true,1100
+real,"N3caxa",MEX,74,false,oval,false,banda_cinta,mitad,true,false,hombros,2,"Barbería Los Bigotes|Gimnasios Mamoth",false,25,true,1101
+real,"Puebl4",MEX,73,false,herradura,false,estandarte,mitad,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,true,1103
+real,"Tijuan4",MEX,74,false,rect,false,doblepunta,mitad,true,false,diagonal,0,"",false,25,true,1106
+real,"Quer3taro",MEX,72,false,cuenco,false,geometrico,mitad,true,false,cuadros,1,"Lácteos del Sur",false,25,true,1110
+real,"Maz4tlán",MEX,71,false,oval,false,coronadoble,mitad,true,false,vertical3,1,"Barbería Los Bigotes",false,25,true,1113
+real,"Inter M14mi",USA,84,true,rect,false,ovalo,mitad,true,false,degrade,0,"",false,25,true,1121
+real,"LAFC",USA,82,true,rect,false,estandarte,aro,true,false,franjas,2,"Yerba Mate El Sapo|Ferretería El Tornillo",false,25,true,1129
+real,"S3attle S.",USA,80,true,rect,false,doblepunta,aro,true,false,banda,1,"Cripto Winner",false,25,true,1139
+real,"Columbus Cr3w",USA,80,true,rect,false,geometrico,aro,true,false,mitad,3,"Lácteos del Sur|Gimnasios Mamoth|Cecinas Don Vito",false,25,true,1147
+real,"Ph1ladelphia U.",USA,79,false,oval,false,coronadoble,aro,true,true,hombros,0,"",false,25,true,1156
+real,"Atl4nta Utd",USA,78,true,cuenco,false,ovalo,aro,true,false,aros,2,"Yerba Mate El Sapo|Repuestos Chinos Express",false,25,true,1164
+real,"LA G4laxy",USA,78,true,rect,false,redondeado,aro,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,1171
+real,"NY C1ty FC",USA,77,false,cuenco,false,trianguloesc,aro,true,false,cuadros,2,"Lácteos del Sur|Pizzería La Nonna",false,25,true,1181
+real,"N. Engl4nd R.",USA,75,false,oval,false,cruzesc,aro,true,false,vertical3,3,"Barbería Los Bigotes|Empanadas Doña Tere|Salsa Picante Volcán",false,25,true,1189
+real,"Aust1n FC",USA,76,false,cuenco,false,clasico,aro,true,false,degrade,2,"Yerba Mate El Sapo|Neumáticos Rueda Firme",false,25,true,1197
+real,"P0rtland T.",USA,76,true,ingles,false,circulo,aro,true,false,sash,1,"Cripto Winner",false,25,true,1206
+real,"Orland0 City",USA,77,true,rect,false,redondeado,estrella,true,false,banda,3,"Cripto Winner|Energética Relampago|Ferretería El Tornillo",false,25,true,1211
+real,"FC C1ncinnati",USA,78,true,rect,false,trianguloesc,ondas,true,false,mitad,2,"Lácteos del Sur|Gimnasios Mamoth",false,25,true,1219
+real,"Nashv1lle SC",USA,75,false,oval,false,cruzesc,ondas,true,false,hombros,1,"Barbería Los Bigotes",false,25,true,1228
+real,"St. L0uis City",USA,74,false,herradura,false,clasico,ondas,true,false,aros,2,"Yerba Mate El Sapo|Empanadas Doña Tere",false,25,true,1234
+real,"Ch4rlotte FC",USA,73,false,rect,false,circulo,ondas,true,false,diagonal,2,"Cripto Winner|Autos Kalpa",false,25,true,1242
