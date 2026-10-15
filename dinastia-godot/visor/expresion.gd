@@ -12,6 +12,9 @@ const GESTOS := {"neutral": 1.0, "alegre": 0.62, "sorpresa": 1.3, "enfado": 0.55
 
 var _mats: Array[ShaderMaterial] = []
 var _base: Array[float] = []
+## La apertura que se puso por última vez (leerla del material daba null si el
+## shader no la tenía asignada, y además es más lento cada fotograma).
+var _actual: Array[float] = []
 var _gesto := "neutral"
 var _t_gesto := 0.0
 var _t_parpadeo := 2.0
@@ -43,6 +46,7 @@ func _buscar(nodo: Node) -> void:
 			_mats.append(propio)
 			var a: Variant = propio.get_shader_parameter("apertura")
 			_base.append(float(a) if a != null else 1.0)
+			_actual.append(_base[_base.size() - 1])
 
 func tiene_ojos() -> bool:
 	return not _mats.is_empty()
@@ -81,5 +85,5 @@ func _process(delta: float) -> void:
 	var k: float = GESTOS[_gesto]
 	for i in _mats.size():
 		var obj := _base[i] * k * (1.0 - _parpado * 0.95)
-		var actual := float(_mats[i].get_shader_parameter("apertura"))
-		_mats[i].set_shader_parameter("apertura", lerpf(actual, obj, minf(1.0, delta * 14.0)) if _parpado < 0.5 else obj)
+		_actual[i] = lerpf(_actual[i], obj, minf(1.0, delta * 14.0)) if _parpado < 0.5 else obj
+		_mats[i].set_shader_parameter("apertura", _actual[i])
