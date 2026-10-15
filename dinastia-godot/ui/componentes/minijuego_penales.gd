@@ -98,7 +98,7 @@ func _montar() -> void:
 	for z in ZONAS.size():
 		var b := Button.new()
 		b.flat = true
-		b.tooltip_text = "Patear " + NOMBRE_ZONA[z]
+		b.tooltip_text = Idiomas.t("Patear ") + NOMBRE_ZONA[z]
 		b.pressed.connect(_patear.bind(z))
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = Color(1, 1, 1, 0.12)
@@ -115,7 +115,7 @@ func _montar() -> void:
 	ayuda.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	add_child(ayuda)
 	var salir := Button.new()
-	salir.text = "Volver"
+	salir.text = Idiomas.t("Volver")
 	salir.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	salir.offset_left = -120
 	salir.offset_right = -20
@@ -153,7 +153,7 @@ func _colocar_inicio() -> void:
 		Mini3D.anim(_pateador, "parado", "")
 
 func _pintar_marcador() -> void:
-	_marcador.text = "Tiro %d de %d  ·  Goles: %d" % [mini(_tiros + 1, TIROS), TIROS, _goles]
+	_marcador.text = Idiomas.t("Tiro %d de %d  ·  Goles: %d") % [mini(_tiros + 1, TIROS), TIROS, _goles]
 
 ## Adónde se tira el portero: si ya pateaste dos veces a la misma zona, se
 ## tira ahí; si no, al azar local.

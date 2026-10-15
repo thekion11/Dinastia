@@ -919,27 +919,27 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 	acciones.offset_bottom = -84
 	pop.add_child(acciones)
 	var b_cafe := Button.new()
-	b_cafe.text = "☕ Tomar un café"
+	b_cafe.text = Idiomas.t("☕ Tomar un café")
 	b_cafe.pressed.connect(escena.tomar_cafe)
 	acciones.add_child(b_cafe)
 	var b_mirar := Button.new()
-	b_mirar.text = "🌅 Mirar el paisaje"
+	b_mirar.text = Idiomas.t("🌅 Mirar el paisaje")
 	b_mirar.pressed.connect(escena.mirar_paisaje)
 	acciones.add_child(b_mirar)
 	var b_cam := Button.new()
-	b_cam.text = "🎥 Cámara libre"
+	b_cam.text = Idiomas.t("🎥 Cámara libre")
 	b_cam.toggle_mode = true
 	b_cam.toggled.connect(func(si: bool) -> void:
 		escena.libre = si
-		b_cam.text = "🎬 Planos de cine" if si else "🎥 Cámara libre")
+		b_cam.text = Idiomas.t("🎬 Planos de cine") if si else Idiomas.t("🎥 Cámara libre"))
 	acciones.add_child(b_cam)
 	var b_hora := Button.new()
-	b_hora.text = "🌙 Atardecer"
+	b_hora.text = Idiomas.t("🌙 Atardecer")
 	b_hora.pressed.connect(func() -> void:
-		b_hora.text = "☀️ De día" if escena.alternar_hora() else "🌙 Atardecer")
+		b_hora.text = Idiomas.t("☀️ De día") if escena.alternar_hora() else Idiomas.t("🌙 Atardecer"))
 	acciones.add_child(b_hora)
 	var b_foto := Button.new()
-	b_foto.text = "📷 Foto"
+	b_foto.text = Idiomas.t("📷 Foto")
 	b_foto.pressed.connect(func() -> void: ModoFoto.abrir(pop, m.mi_club(), "en casa"))
 	acciones.add_child(b_foto)
 	## El móvil de verdad: Tribuna, interactivo (publicar, responder, me gusta).
@@ -953,7 +953,7 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 		tel.offset_bottom = -24
 		pop.add_child(tel)
 	var cerrar := Button.new()
-	cerrar.text = "✕ Volver"
+	cerrar.text = Idiomas.t("✕ Volver")
 	cerrar.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	cerrar.offset_left = -130
 	cerrar.offset_right = -30

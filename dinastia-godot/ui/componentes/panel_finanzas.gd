@@ -30,7 +30,7 @@ static func pintar_balance_y_caja(lista: VBoxContainer, c: Club, mundo: Mundo,
 		proy: Dictionary, paleta: Dictionary) -> void:
 	lista.add_child(HSeparator.new())
 	var t := _texto(11, paleta["suave"], paleta)
-	t.text = "BALANCE"
+	t.text = Idiomas.t("BALANCE")
 	lista.add_child(t)
 	var valor_plantel := 0
 	for j in c.plantilla:
@@ -54,15 +54,15 @@ static func pintar_balance_y_caja(lista: VBoxContainer, c: Club, mundo: Mundo,
 		paleta["oro"] if activo - pasivo >= 0 else paleta["rojo"], paleta)
 	var nota := _texto(10, paleta["suave"], paleta)
 	if pasivo > 0:
-		nota.text = "El pasivo es lo que queda por devolver de tus %d línea(s) de crédito. El patrimonio neto es lo que quedaría si hoy se liquidara todo." % mundo.banco.prestamos.size()
+		nota.text = Idiomas.t("El pasivo es lo que queda por devolver de tus %d línea(s) de crédito. El patrimonio neto es lo que quedaría si hoy se liquidara todo.") % mundo.banco.prestamos.size()
 	else:
-		nota.text = "Sin créditos abiertos: el activo entero es patrimonio. Pedir uno cambia esta línea al día siguiente."
+		nota.text = Idiomas.t("Sin créditos abiertos: el activo entero es patrimonio. Pedir uno cambia esta línea al día siguiente.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(nota)
 
 	lista.add_child(HSeparator.new())
 	var tf := _texto(11, paleta["suave"], paleta)
-	tf.text = "FLUJO DE CAJA A 12 MESES"
+	tf.text = Idiomas.t("FLUJO DE CAJA A 12 MESES")
 	lista.add_child(tf)
 	var mensual := int(proy["resultado"]) / 12
 	var saldo := c.saldo
@@ -78,7 +78,7 @@ static func pintar_balance_y_caja(lista: VBoxContainer, c: Club, mundo: Mundo,
 		paleta["rojo"] if minimo < 0 else paleta["texto"], paleta)
 	if minimo < 0:
 		var av := _texto(11, paleta["rojo"], paleta)
-		av.text = "La caja se queda en negativo en el mes %d. Hay que vender, recortar sueldos o subir ingresos antes de llegar ahí." % mes_minimo
+		av.text = Idiomas.t("La caja se queda en negativo en el mes %d. Hay que vender, recortar sueldos o subir ingresos antes de llegar ahí.") % mes_minimo
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lista.add_child(av)
 	var gastos := int(proy["total_gastos"])
@@ -96,7 +96,7 @@ static func pintar_auspicio(lista: VBoxContainer, c: Club, mundo: Mundo,
 		return
 	lista.add_child(HSeparator.new())
 	var t := _texto(11, paleta["suave"], paleta)
-	t.text = "👕 LA MARCA DEL PECHO"
+	t.text = Idiomas.t("👕 LA MARCA DEL PECHO")
 	lista.add_child(t)
 
 	if not a.contrato.is_empty():
@@ -116,23 +116,23 @@ static func pintar_auspicio(lista: VBoxContainer, c: Club, mundo: Mundo,
 		var puesto := _puesto_en_liga(c, mundo)
 		var cumple := puesto > 0 and puesto <= pedido
 		_dato(lista, "Exigencia contractual", "terminar top %d de la liga" % pedido, paleta["texto"], paleta)
-		_dato(lista, "Ahora mismo vas", "%d.º — %s" % [puesto, "cumpliendo" if cumple else "por debajo"],
+		_dato(lista, "Ahora mismo vas", "%d.º — %s" % [puesto, "cumpliendo" if cumple else Idiomas.t("por debajo")],
 			paleta["verde"] if cumple else paleta["rojo"], paleta)
 		var av := _texto(10, paleta["suave"], paleta)
-		av.text = "Si no cumples la exigencia, las ofertas del próximo año llegan un 30% más flacas."
+		av.text = Idiomas.t("Si no cumples la exigencia, las ofertas del próximo año llegan un 30% más flacas.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lista.add_child(av)
 		return
 
 	if a.ofertas.is_empty():
 		var vac := _texto(11, paleta["suave"], paleta)
-		vac.text = "Sin auspiciador esta temporada. Las marcas vuelven a golpear la puerta en la pretemporada."
+		vac.text = Idiomas.t("Sin auspiciador esta temporada. Las marcas vuelven a golpear la puerta en la pretemporada.")
 		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lista.add_child(vac)
 		return
 
 	var ex := _texto(10, paleta["suave"], paleta)
-	ex.text = "Tres marcas sobre la mesa. La que más paga suele ser también la que más pide, y solo se luce una: al firmar, las otras se retiran."
+	ex.text = Idiomas.t("Tres marcas sobre la mesa. La que más paga suele ser también la que más pide, y solo se luce una: al firmar, las otras se retiran.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(ex)
 	for i in a.ofertas.size():
@@ -146,18 +146,18 @@ static func pintar_auspicio(lista: VBoxContainer, c: Club, mundo: Mundo,
 		n2.text = String(o.get("marca", ""))
 		n2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		n2.clip_text = true
-		n2.tooltip_text = "Exigencia: terminar top %d de la liga" % int(o.get("exig_pos", 0))
+		n2.tooltip_text = Idiomas.t("Exigencia: terminar top %d de la liga") % int(o.get("exig_pos", 0))
 		fila.add_child(n2)
 		var m2 := _texto(12, paleta["texto"], paleta)
 		m2.text = _dinero(int(o.get("monto", 0)))
 		m2.custom_minimum_size = Vector2(96, 0)
 		fila.add_child(m2)
 		var e2 := _texto(11, paleta["suave"], paleta)
-		e2.text = "top %d" % int(o.get("exig_pos", 0))
+		e2.text = Idiomas.t("top %d") % int(o.get("exig_pos", 0))
 		e2.custom_minimum_size = Vector2(52, 0)
 		fila.add_child(e2)
 		var b := Button.new()
-		b.text = "Firmar"
+		b.text = Idiomas.t("Firmar")
 		b.add_theme_font_size_override("font_size", 11)
 		b.custom_minimum_size = Vector2(80, 0)
 		b.pressed.connect(func() -> void: al_firmar.call(idx))
@@ -169,16 +169,16 @@ static func pintar_patrocinio(lista: VBoxContainer, c: Club, mundo: Mundo,
 		paleta: Dictionary, al_lanzar_campana: Callable, al_ir_a_por_marca: Callable) -> void:
 	lista.add_child(HSeparator.new())
 	var t := _texto(11, paleta["suave"], paleta)
-	t.text = "📣 CAMPAÑAS PUBLICITARIAS"
+	t.text = Idiomas.t("📣 CAMPAÑAS PUBLICITARIAS")
 	lista.add_child(t)
 	var ex := _texto(10, paleta["suave"], paleta)
-	ex.text = "Una por temporada. No dan dinero directo: mueven socios, ánimo y seguidores."
+	ex.text = Idiomas.t("Una por temporada. No dan dinero directo: mueven socios, ánimo y seguidores.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(ex)
 	if mundo.campana_lanzada_este_anio():
 		var d := Finanzas.def_campana(String(mundo.campana.get("clave", "")))
 		var ya := _texto(12, paleta["verde"], paleta)
-		ya.text = "✔ Ya lanzada este año: %s. La próxima, la temporada que viene." % (String(d[1]) if not d.is_empty() else "")
+		ya.text = Idiomas.t("✔ Ya lanzada este año: %s. La próxima, la temporada que viene.") % (String(d[1]) if not d.is_empty() else "")
 		ya.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lista.add_child(ya)
 	else:
@@ -205,10 +205,10 @@ static func pintar_patrocinio(lista: VBoxContainer, c: Club, mundo: Mundo,
 	if rival == null:
 		return
 	var tg := _texto(11, paleta["rojo"], paleta)
-	tg.text = "⚔️ GUERRA DE MARCAS"
+	tg.text = Idiomas.t("⚔️ GUERRA DE MARCAS")
 	lista.add_child(tg)
 	var dg := _texto(11, paleta["suave"], paleta)
-	dg.text = "Puedes ir a por el patrocinador de %s. Si sale, firmas mejor y a ellos les duele. Si falla, pierdes el dinero y se enteran igual." % rival.nombre
+	dg.text = Idiomas.t("Puedes ir a por el patrocinador de %s. Si sale, firmas mejor y a ellos les duele. Si falla, pierdes el dinero y se enteran igual.") % rival.nombre
 	dg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(dg)
 	var coste_g := mundo.coste_guerra_marcas()
@@ -216,12 +216,12 @@ static func pintar_patrocinio(lista: VBoxContainer, c: Club, mundo: Mundo,
 	_dato(lista, "Probabilidad estimada", "%d%%" % int(round(mundo.probabilidad_guerra_marcas() * 100.0)),
 		paleta["texto"], paleta)
 	var bg := Button.new()
-	bg.text = "⚔️ Ir a por su patrocinador"
+	bg.text = Idiomas.t("⚔️ Ir a por su patrocinador")
 	bg.disabled = c.saldo < coste_g
 	bg.pressed.connect(al_ir_a_por_marca)
 	lista.add_child(bg)
 	var np := _texto(10, paleta["suave"], paleta)
-	np.text = "Un palco mejor sube tus opciones: ahí es donde se cierran estas cosas."
+	np.text = Idiomas.t("Un palco mejor sube tus opciones: ahí es donde se cierran estas cosas.")
 	np.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(np)
 
@@ -252,12 +252,12 @@ static func pintar_banco(lista: VBoxContainer, c: Club, mundo: Mundo, paleta: Di
 
 	if not b.prestamos.is_empty():
 		var tv := _texto(11, paleta["suave"], paleta)
-		tv.text = "CRÉDITOS VIGENTES  ·  %d de %d" % [b.prestamos.size(), Banco.MAX_PRESTAMOS]
+		tv.text = Idiomas.t("CRÉDITOS VIGENTES  ·  %d de %d") % [b.prestamos.size(), Banco.MAX_PRESTAMOS]
 		lista.add_child(tv)
 		for i in b.prestamos.size():
 			var p: Dictionary = b.prestamos[i]
 			var l := _texto(12, paleta["texto"], paleta)
-			l.text = "%s  ·  cuota %s/sem  ·  %d restantes  ·  debes %s" % [
+			l.text = Idiomas.t("%s  ·  cuota %s/sem  ·  %d restantes  ·  debes %s") % [
 				String(p["banco"]), _dinero(int(p["cuota"])), int(p["restan"]), _dinero(int(p["deuda"]))]
 			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			lista.add_child(l)
@@ -266,14 +266,14 @@ static func pintar_banco(lista: VBoxContainer, c: Club, mundo: Mundo, paleta: Di
 			lista.add_child(fila)
 			var idx := i
 			var bp := Button.new()
-			bp.text = "Prepagar  %s" % _dinero(int(p["deuda"]))
+			bp.text = Idiomas.t("Prepagar  %s") % _dinero(int(p["deuda"]))
 			bp.add_theme_font_size_override("font_size", 11)
 			bp.disabled = c.saldo < int(p["deuda"])
 			bp.pressed.connect(func() -> void: al_prepagar.call(idx))
 			fila.add_child(bp)
 			if not bool(p["renegociado"]):
 				var br := Button.new()
-				br.text = "Renegociar (baja la cuota, sube la tasa)"
+				br.text = Idiomas.t("Renegociar (baja la cuota, sube la tasa)")
 				br.add_theme_font_size_override("font_size", 11)
 				br.clip_text = true
 				br.custom_minimum_size = Vector2(150, 0)
@@ -281,7 +281,7 @@ static func pintar_banco(lista: VBoxContainer, c: Club, mundo: Mundo, paleta: Di
 				fila.add_child(br)
 
 	var tl := _texto(11, paleta["suave"], paleta)
-	tl.text = "LÍNEAS DISPONIBLES"
+	tl.text = Idiomas.t("LÍNEAS DISPONIBLES")
 	lista.add_child(tl)
 	for i2 in Banco.BANCOS.size():
 		var f: Array = Banco.BANCOS[i2]
@@ -291,33 +291,33 @@ static func pintar_banco(lista: VBoxContainer, c: Club, mundo: Mundo, paleta: Di
 		fila2.add_theme_constant_override("separation", 6)
 		lista.add_child(fila2)
 		var n := _texto(12, paleta["texto"], paleta)
-		n.text = "%s  ·  %s  ·  %d cuotas de %s  ·  %.1f%%/sem" % [
+		n.text = Idiomas.t("%s  ·  %s  ·  %d cuotas de %s  ·  %.1f%%/sem") % [
 			String(f[0]), _dinero(monto), int(f[2]), _dinero(cuota), float(f[1]) * 100.0]
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		n.clip_text = true
 		fila2.add_child(n)
 		var idx2 := i2
 		var bt := Button.new()
-		bt.text = "Tomar"
+		bt.text = Idiomas.t("Tomar")
 		bt.add_theme_font_size_override("font_size", 11)
 		bt.disabled = b.prestamos.size() >= Banco.MAX_PRESTAMOS or b.en_mora()
 		bt.custom_minimum_size = Vector2(80, 0)
 		bt.pressed.connect(func() -> void: al_pedir_credito.call(idx2))
 		fila2.add_child(bt)
 	var nota := _texto(10, paleta["suave"], paleta)
-	nota.text = "La cuota se descuenta sola cada semana, llueva o truene. Dos créditos como mucho, y en mora no hay ventanilla."
+	nota.text = Idiomas.t("La cuota se descuenta sola cada semana, llueva o truene. Dos créditos como mucho, y en mora no hay ventanilla.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(nota)
 
 	var tb := _texto(11, paleta["acento"], paleta)
-	tb.text = "🎗️ BONO SOCIAL"
+	tb.text = Idiomas.t("🎗️ BONO SOCIAL")
 	lista.add_child(tb)
 	var db := _texto(10, paleta["suave"], paleta)
-	db.text = "La hinchada compra deuda del club a tasa baja, incluso en mora. Más barato que un banco, pero si el club se liquida sin pagarlo, la afición no lo olvida."
+	db.text = Idiomas.t("La hinchada compra deuda del club a tasa baja, incluso en mora. Más barato que un banco, pero si el club se liquida sin pagarlo, la afición no lo olvida.")
 	db.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(db)
 	var bb := Button.new()
-	bb.text = "Emitir bono social"
+	bb.text = Idiomas.t("Emitir bono social")
 	bb.disabled = b.prestamos.size() >= Banco.MAX_PRESTAMOS
 	bb.pressed.connect(al_emitir_bono)
 	lista.add_child(bb)

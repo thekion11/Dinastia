@@ -277,7 +277,7 @@ func _tab_camiseta() -> Control:
 	of.selected = _filtro
 	filtros.add_child(of)
 	var busca := LineEdit.new()
-	busca.placeholder_text = "🔎 Buscar diseño…"
+	busca.placeholder_text = Idiomas.t("🔎 Buscar diseño…")
 	busca.custom_minimum_size = Vector2(240, 0)
 	busca.text = _busqueda
 	filtros.add_child(busca)
@@ -301,7 +301,7 @@ func _tab_camiseta() -> Control:
 		b.custom_minimum_size = Vector2(72, 58)
 		b.ignore_texture_size = true
 		b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		b.tooltip_text = "%s · usa %d color%s" % [String(d[1]), int(d[7]), "" if int(d[7]) == 1 else "es"]
+		b.tooltip_text = (Idiomas.t("%s · usa %d color") if int(d[7]) == 1 else Idiomas.t("%s · usa %d colores")) % [String(d[1]), int(d[7])]
 		var clave := String(d[0])
 		b.pressed.connect(func() -> void:
 			_kit["dis"] = clave
@@ -507,7 +507,7 @@ func _tab_numeros() -> Control:
 	vb.add_child(rapidos)
 	for i in 5:
 		var b := Button.new()
-		b.text = "Igual al color %d" % (i + 1)
+		b.text = Idiomas.t("Igual al color %d") % (i + 1)
 		var idx := i
 		b.pressed.connect(func() -> void:
 			_kit["num"] = String((_kit["cols"] as Array)[idx])
@@ -571,7 +571,7 @@ func _tab_sponsors() -> Control:
 		marca.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila.add_child(marca)
 		var cb := CheckBox.new()
-		cb.text = "Estampar"
+		cb.text = Idiomas.t("Estampar")
 		cb.button_pressed = not ocultos.has(zona)
 		cb.toggled.connect(func(on: bool) -> void:
 			var lista: Array = _kit.get("sp_ocultar", []).duplicate()
