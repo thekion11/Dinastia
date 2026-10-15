@@ -37,6 +37,9 @@ func _ready() -> void:
 	add_child(_vista)
 	_vista.abrir(par[0], 0.85, par[1], partido)
 	_vista.get("_juego").vel_idx = 3
+	## El motor real corre al reloj: x3 para que entren ~20 minutos de partido
+	## (con 6' salía 0 o 1 finta por puro azar); sigue hasta ver 3 fintas o 300 s.
+	Engine.time_scale = 3.0
 
 func _process(_d: float) -> void:
 	_frame += 1
@@ -69,7 +72,11 @@ func _process(_d: float) -> void:
 			_dist.append(dd)
 	if not juego._presionador.is_empty():
 		_pres.append((juego._presionador["node"] as Node3D).position.distance_to(juego.ball.position))
-	if _frame >= 2400:
+	var mot_t: MotorJugable = _vista.get("_motor")
+	var jugado_t := (float(mot_t.mitad - 1) * mot_t.duracion_mitad + mot_t.t) if mot_t != null else 999.0
+	var fintas_t: int = mot_t.regates_ia if mot_t != null else 99
+	if _frame >= 2400 and ((jugado_t >= 100.0 and fintas_t >= 3) or jugado_t >= 300.0 or _frame >= 30000):
+		Engine.time_scale = 1.0
 		_pres.sort()
 		if not _pres.is_empty():
 			print("  presionador %d fotogramas; distancia al balón mediana %.1f" % [_pres.size(), _pres[_pres.size() / 2]])
@@ -87,9 +94,9 @@ func _process(_d: float) -> void:
 			var por_min := float(mot.regates_ia) / maxf(jugado / mot.duracion_mitad * 45.0, 1.0)
 			print("  motor: %.0f s jugados (minuto %d), %d fintas de la IA (%d engañan), %.2f por minuto de partido" % [
 				jugado, mot.minuto(), mot.regates_ia, mot.regates_ia_ok, por_min])
-			_ok(mot.regates_ia > 0 or _amagues > 0, "hay amagues de la IA ante un rival (%d)" % maxi(mot.regates_ia, _amagues))
-			_ok(mot.regates_ia_ok > 0, "alguna finta de la IA deja clavado al defensor (%d)" % mot.regates_ia_ok)
+			_ok(mot.regates_ia > 0, "hay amagues de la IA ante un rival (%d fintas, %d fotogramas en finta)" % [mot.regates_ia, _amagues])
 			_ok(por_min < 1.2, "sin festival de fintas (%.2f por minuto de partido)" % por_min)
+			_probar_finta(mot)
 		else:
 			_ok(juego.regates_hechos > 0 or _amagues > 0, "hay amagues ante un rival (%d)" % maxi(juego.regates_hechos, _amagues))
 		var con_balon := 0
@@ -101,3 +108,34 @@ func _process(_d: float) -> void:
 		print("===== REGATES: %d fallos =====" % _fallos)
 		_pref_ceremonia(true)
 		get_tree().quit(0)
+
+## La finta en sí, con el motor del partido: un regateador en carrera contra
+## un defensor delante. Que a veces pique (queda clavado: no puede entrar) y
+## que nadie se teletransporte (antes la IA saltaba 0,8 m de lado).
+func _probar_finta(mot: MotorJugable) -> void:
+	var at: Dictionary = {}
+	var df: Dictionary = {}
+	for q: Dictionary in mot.jugadores:
+		if bool(q["por"]):
+			continue
+		if bool(q["es_local"]) and (at.is_empty() or float(q["attr"]["reg"]) > float(at["attr"]["reg"])):
+			at = q
+		elif not bool(q["es_local"]) and df.is_empty():
+			df = q
+	var ok_antes := mot.regates_ia_ok
+	var saltos := 0
+	var clavado := true
+	for i in 40:
+		df["enfriar"] = 0.0
+		var antes := mot.pos(at)
+		var ok_i := mot.regates_ia_ok
+		mot._finta_ia(at, df, Vector3(0, 0, 1), 1.0 if i % 2 == 0 else -1.0, 5.0)
+		if mot.pos(at).distance_to(antes) > 0.01:
+			saltos += 1
+		if mot.regates_ia_ok > ok_i and float(df["enfriar"]) <= 0.0:
+			clavado = false
+	var picaron := mot.regates_ia_ok - ok_antes
+	print("  finta de prueba: %d de 40 pican (regate %.2f contra defensa %.2f)" % [picaron, float(at["attr"]["reg"]), float(df["attr"]["def"])])
+	_ok(picaron > 0 and picaron < 40, "la finta engaña a veces, no siempre (%d de 40)" % picaron)
+	_ok(clavado, "el defensor que pica queda clavado (no puede entrar)")
+	_ok(saltos == 0, "la finta no teletransporta al jugador (%d saltos)" % saltos)
