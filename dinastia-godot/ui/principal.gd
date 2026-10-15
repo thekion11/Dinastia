@@ -1604,6 +1604,7 @@ func _bloque(padre: VBoxContainer, titulo: String, ratio: float) -> VBoxContaine
 	v.offset_left = 12; v.offset_top = 10; v.offset_right = -12; v.offset_bottom = -10
 	caja.add_child(v)
 	var t := _texto(11, COL_SUAVE); t.text = titulo
+	t.set_meta("titulo_bloque", true)
 	v.add_child(t)
 	return v
 
@@ -3572,7 +3573,7 @@ func _ver_ficha(j: Jugador) -> void:
 	## no, al abrirla. Era 0,3-0,5 s en cada clic de la ficha.
 	_perezoso(_lista_entren, _ui_club_vida._pintar_entrenamiento.bind(mundo.mi_club()))
 	for n in _ficha.get_children():
-		if n is Label and n.text == "FICHA DEL JUGADOR":
+		if n.has_meta("titulo_bloque"):
 			continue
 		_ficha.remove_child(n)
 		n.queue_free()
@@ -4622,7 +4623,10 @@ func _ver_estadio_con_carga() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_ver_estadio_propio()
-	carga.cerrar()
+	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
+	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
+	if is_instance_valid(carga):
+		carga.cerrar()
 
 func _ver_ciudad_con_carga() -> void:
 	PantallaCarga.club = mundo.mi_club() if mundo != null else null
@@ -4630,7 +4634,10 @@ func _ver_ciudad_con_carga() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_ver_ciudad_propia()
-	carga.cerrar()
+	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
+	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
+	if is_instance_valid(carga):
+		carga.cerrar()
 
 ## Abre la ciudad y arranca directamente el paseo ("pie") o la conducción ("coche").
 func _ver_ciudad_explorando(modo: String) -> void:

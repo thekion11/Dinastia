@@ -2346,7 +2346,8 @@
   "Vestimenta": "Clothing",
   "🏃 Carrera": "🏃 Running",
   "🚇 Metro": "🚇 Metro",
-  "📸 Guardada: ": "📸 Saved: "
+  "📸 Guardada: ": "📸 Saved: ",
+  "E: hablar con %s": "E: talk to %s"
  },
  "pt": {
   "Historia": "História",
@@ -4695,7 +4696,8 @@
   "Vestimenta": "Vestimenta",
   "🏃 Carrera": "🏃 Correndo",
   "🚇 Metro": "🚇 Metrô",
-  "📸 Guardada: ": "📸 Salva: "
+  "📸 Guardada: ": "📸 Salva: ",
+  "E: hablar con %s": "E: falar com %s"
  },
  "patrones": [
   [
@@ -7591,7 +7593,8 @@
   "Vestimenta": "Tenue",
   "🏃 Carrera": "🏃 Course",
   "🚇 Metro": "🚇 Métro",
-  "📸 Guardada: ": "📸 Enregistrée : "
+  "📸 Guardada: ": "📸 Enregistrée : ",
+  "E: hablar con %s": "E : parler à %s"
  },
  "it": {
   "Historia": "Storia",
@@ -9847,7 +9850,8 @@
   "Vestimenta": "Abbigliamento",
   "🏃 Carrera": "🏃 Corsa",
   "🚇 Metro": "🚇 Metro",
-  "📸 Guardada: ": "📸 Salvata: "
+  "📸 Guardada: ": "📸 Salvata: ",
+  "E: hablar con %s": "E: parla con %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12103,7 +12107,8 @@
   "Vestimenta": "Kleidung",
   "🏃 Carrera": "🏃 Laufen",
   "🚇 Metro": "🚇 U-Bahn",
-  "📸 Guardada: ": "📸 Gespeichert: "
+  "📸 Guardada: ": "📸 Gespeichert: ",
+  "E: hablar con %s": "E: mit %s sprechen"
  },
  "ca": {
   "Historia": "Història",
@@ -14359,7 +14364,8 @@
   "Vestimenta": "Vestimenta",
   "🏃 Carrera": "🏃 Cursa",
   "🚇 Metro": "🚇 Metro",
-  "📸 Guardada: ": "📸 Desada: "
+  "📸 Guardada: ": "📸 Desada: ",
+  "E: hablar con %s": "E: parlar amb %s"
  },
  "pl": {
   "Club": "Klub",
@@ -16912,7 +16918,8 @@
   "Vestimenta": "Ubiór",
   "🏃 Carrera": "🏃 Bieg",
   "🚇 Metro": "🚇 Metro",
-  "📸 Guardada: ": "📸 Zapisano: "
+  "📸 Guardada: ": "📸 Zapisano: ",
+  "E: hablar con %s": "E: porozmawiaj z %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -19465,6 +19472,7 @@
   "Vestimenta": "Kıyafet",
   "🏃 Carrera": "🏃 Koşu",
   "🚇 Metro": "🚇 Metro",
-  "📸 Guardada: ": "📸 Kaydedildi: "
+  "📸 Guardada: ": "📸 Kaydedildi: ",
+  "E: hablar con %s": "E: %s ile konuş"
  }
 }
