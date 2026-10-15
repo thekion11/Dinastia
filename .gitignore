@@ -21,3 +21,6 @@ desktop.ini
 dinastia-godot/export_credentials.cfg
 dinastia-godot/pruebas/capturas/promo/
 dinastia-godot/pruebas/capturas/lotes/
+
+# Copias de trabajo de agentes de Claude Code
+.claude/worktrees/
