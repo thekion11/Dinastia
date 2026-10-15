@@ -159,6 +159,11 @@ func montar(exp: CiudadExpansion) -> void:
 			else:
 				_estacion_subterranea(p, dir, col, String(nombres[i]), String(l["nombre"]), i)
 			_decorar_estacion(p, dir, col, String(nombres[i]), bool(l["elevada"]))
+			## Las pantallas colgadas del andén, a su línea y su estación.
+			for pa: Dictionary in _paneles:
+				if pa.has("pantalla") and not pa.has("linea"):
+					pa["linea"] = l
+					pa["s"] = est_s[i]
 			_panel(p, l, est_s[i])
 		var trenes: Array = []
 		var nodos: Array = []
@@ -253,6 +258,7 @@ func alternar_rayos_x() -> bool:
 	return _xray.visible
 
 func _process(delta: float) -> void:
+	_gente_cerca(delta)
 	for l: Dictionary in lineas:
 		var a: Vector3 = l["a"]
 		var dir: Vector3 = l["dir"]
@@ -276,12 +282,19 @@ func _process(delta: float) -> void:
 			for t: Tren in (pa["linea"] as Dictionary)["trenes"]:
 				mejor = minf(mejor, t.eta(float(pa["s"])))
 			var lab: Label3D = pa["label"]
-			lab.text = "%s · próximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), "llegando" if mejor < 20.0 else "%d min" % int(ceil(mejor / 60.0))]
+			var cuando := "llegando" if mejor < 20.0 else "%d min" % int(ceil(mejor / 60.0))
+			if pa.has("pantalla"):
+				lab.text = "%s · %s\nPróximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), String(pa["est"]), cuando]
+			else:
+				lab.text = "%s · próximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), cuando]
 		for l: Dictionary in lineas:
 			for k in (l["trenes"] as Array).size():
-				var led: Label3D = (l["nodos"][k] as Node3D).get_meta("led", null)
-				if led != null:
-					led.text = "%s  ▸  Próxima: %s" % [String(l["nombre"]), proxima_de(String(l["nombre"]), k)]
+				## Parado en una estación dice dónde está (antes decía «Próxima:
+				## Cine» estando ya en Cine).
+				var aqui := estacion_del_tren(String(l["nombre"]), k)
+				var txt := "%s\n%s" % [String(l["nombre"]), ("Estación: %s" % String(NOMBRES[l["nombre"]][aqui])) if aqui >= 0 else ("Próxima: %s" % proxima_de(String(l["nombre"]), k))]
+				for led: Label3D in (l["nodos"][k] as Node3D).get_meta("leds", []):
+					led.text = txt
 
 ## Abre o cierra las puertas (paneles que se deslizan a lo largo del coche).
 func _puertas(n: Node3D, abiertas: bool) -> void:
@@ -355,9 +368,7 @@ func _estacion_elevada(p: Vector3, dir: Vector3, col: Color, nombre: String, lin
 		_caja(self, c + Vector3(0, suelo - 0.5, 0), (Vector3(ANDEN_ANCHO, 1.0, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 1.0, ANDEN_ANCHO)), losa)
 		## Franja amarilla del borde del andén.
 		_caja(self, c - lat * lado * (ANDEN_ANCHO * 0.5 - 0.25) + Vector3(0, suelo + 0.01, 0), (Vector3(0.4, 0.02, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 0.02, 0.4)), borde)
-		for k in 3:
-			var f := (float(k) - 1.0) * 18.0
-			_banco(c + lon * f + lat * lado * 1.2 + Vector3(0, suelo, 0), vertical)
+		## Los bancos, papeleras y máquinas los pone `_amueblar_anden` (kit de Kenney).
 	var vidrio := StandardMaterial3D.new()
 	vidrio.albedo_color = Color(0.7, 0.85, 0.95, 0.4)
 	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -399,7 +410,9 @@ func _estacion_elevada(p: Vector3, dir: Vector3, col: Color, nombre: String, lin
 	l.modulate = Color.WHITE
 	l.outline_size = 8
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	l.position = p + Vector3(0, suelo + 7.5, 0)
+	## Por encima del panel del próximo tren (ALTO_VIADUCTO + 8,6): a +7,5 los
+	## dos rótulos se pisaban.
+	l.position = p + Vector3(0, suelo + 9.4, 0)
 	add_child(l)
 
 ## LA DECORACIÓN DE CADA ESTACIÓN (7-10-2026, «el metro debe tener
@@ -441,10 +454,15 @@ func _decorar_estacion(p: Vector3, dir: Vector3, col: Color, nombre: String, ele
 			var c := fondo + lon * (float(k) - 1.0) * 16.0 + Vector3(0, y + (1.7 if elevada else 2.4), 0)
 			_caja(self, c, (Vector3(0.12, 2.6 if elevada else 3.2, 10.0) if vertical else Vector3(10.0, 2.6 if elevada else 3.2, 0.12)), _mat(tcol, 0.6, 0.15))
 			var ico := Label3D.new()
-			ico.text = String(tema[0]) if k != 1 else "%s\n%s" % [nombre, String(tema[2])]
+			## Los paneles de los lados repiten el NOMBRE (como en un metro de
+			## verdad, se lee desde la ventana del tren); el icono-emoji no se
+			## dibujaba (la fuente no lo tiene) y el panel quedaba vacío.
+			ico.text = ("Ⓜ %s" % nombre) if k != 1 else "%s\n%s" % [nombre, String(tema[2])]
 			## Más contenido: con 0,011 el lema llenaba la ventana del tren.
-			ico.font_size = 120 if k != 1 else 54
-			ico.pixel_size = 0.009 if k != 1 else 0.0075
+			ico.font_size = 64 if k != 1 else 54
+			ico.pixel_size = 0.0085 if k != 1 else 0.0075
+			ico.width = 1000.0
+			ico.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			ico.outline_size = 10
 			ico.outline_modulate = tcol.darkened(0.5)
 			ico.position = c + hacia * 0.1
@@ -468,26 +486,9 @@ func _decorar_estacion(p: Vector3, dir: Vector3, col: Color, nombre: String, ele
 		plano.rotation.y = atan2(hacia.x, hacia.z)
 		plano.visibility_range_end = 40.0
 		add_child(plano)
-		## Máquinas de billetes y una expendedora junto al plano.
-		for k in 2:
-			var mq := fondo + lon * (-24.0 - float(k) * 1.4) + hacia * 0.5 + Vector3(0, y + 0.9, 0)
-			_caja(self, mq, Vector3(0.7, 1.8, 1.0) if vertical else Vector3(1.0, 1.8, 0.7), _mat(Color(0.2, 0.22, 0.25), 0.4))
-			_caja(self, mq + hacia * 0.36 + Vector3(0, 0.3, 0), Vector3(0.02, 0.5, 0.6) if vertical else Vector3(0.6, 0.5, 0.02), _mat(Color(0.3, 0.7, 1.0), 0.2, 1.2))
-		var exp_c := fondo + lon * -28.0 + hacia * 0.5 + Vector3(0, y + 0.95, 0)
-		_caja(self, exp_c, Vector3(0.8, 1.9, 1.1) if vertical else Vector3(1.1, 1.9, 0.8), _mat(Color(0.8, 0.12, 0.12), 0.4))
-		_caja(self, exp_c + hacia * 0.41 + Vector3(0, 0.2, 0), Vector3(0.02, 1.1, 0.8) if vertical else Vector3(0.8, 1.1, 0.02), _mat(Color(0.95, 0.9, 0.6), 0.2, 0.6))
-		## Jardineras y papeleras a lo largo del andén.
-		for k in 4:
-			var jd := fondo + lon * ((float(k) - 1.5) * 13.0 + 6.0) + hacia * 0.7 + Vector3(0, y + 0.35, 0)
-			_caja(self, jd, Vector3(0.9, 0.7, 0.9), _mat(Color(0.45, 0.42, 0.4), 0.8))
-			var mata := MeshInstance3D.new()
-			var sm := SphereMesh.new()
-			sm.radius = 0.6
-			sm.height = 1.0
-			mata.mesh = sm
-			mata.material_override = _mat(Color(0.2, 0.5, 0.22), 0.9)
-			mata.position = jd + Vector3(0, 0.75, 0)
-			add_child(mata)
+		## Máquinas, bancos, papeleras, plantas y pantallas (kit de Kenney), y
+		## los sitios donde espera la gente.
+		_amueblar_anden(p, fondo, hacia, lon, y, nombre, col, elevada)
 		## El reloj de la estación, colgado.
 		var rl := fondo + lon * 8.0 + hacia * 1.5 + Vector3(0, y + 3.3, 0)
 		var reloj := MeshInstance3D.new()
@@ -516,9 +517,234 @@ func _totem(pie: Vector3, nombre: String, col: Color) -> void:
 	l.visibility_range_end = 220.0
 	add_child(l)
 
-func _banco(p: Vector3, vertical: bool) -> void:
-	var madera := _mat(Color(0.5, 0.35, 0.2), 0.7)
-	_caja(self, p + Vector3(0, 0.45, 0), Vector3(0.5, 0.1, 2.2) if vertical else Vector3(2.2, 0.1, 0.5), madera)
+# ------------------------------------------------- andenes vivos (15-10-2026)
+## «A ese nivel debe estar todo en la ciudad» (los kits de Kenney): los andenes
+## estaban vacíos (un banco-tabla y jardineras de caja con una esfera). Ahora
+## llevan piezas del kit (CC0) a escala real y GENTE ESPERANDO, de pie y
+## sentada. La gente solo existe en la estación junto a la cámara (`_process`).
+
+const KENNEY := "res://assets/kenney/"
+## pieza -> escala (medidas en EVALUACION_KENNEY_CIUDAD.md: arcade ×2,4-2,5;
+## muebles ×2; montaña rusa ×2-2,2).
+const PIEZAS_ANDEN := {
+	"expendedora": ["mini_arcade/vending-machine", 2.5],     ## 1,25 × 1,9 m
+	"billetes": ["mini_arcade/ticket-machine", 2.0],         ## 0,8 × 1,85 m
+	"banco": ["montana_rusa/bench", 2.0],                    ## 1,6 m de largo
+	"papelera": ["montana_rusa/trash", 1.9],                 ## 0,8 m de alto
+	"planta": ["muebles/pottedPlant", 2.6],                  ## 1,7 m de alto
+}
+## Altura y fondo del asiento del banco a la escala de arriba (medidos en la
+## captura: asiento a 0,45 m; el centro del asiento, 0,1 m por delante del origen).
+const BANCO_ASIENTO := 0.45
+const BANCO_FONDO := 0.15
+const RADIO_GENTE := 75.0   ## a esta distancia de la cámara se llena el andén
+
+static var _escenas := {}
+var _sitios: Array = []     ## [{centro, clave, sitios: [{p, giro, sentado, pareja}]}]
+var _gente_clave := ""
+var _gente: Node3D
+var _cola_gente: Array = []
+var _fijos_gente: Array = []
+var _t_gente := 0.0
+var _rng_gente := RandomNumberGenerator.new()
+
+## Una pieza del kit, a escala, mirando hacia `mira` (su +Z), y con
+## distancia de dibujo para no cargar la ciudad.
+func _kenney(clave: String, pos: Vector3, mira: Vector3, padre: Node3D = null, rango: float = 140.0) -> Node3D:
+	var info: Array = PIEZAS_ANDEN[clave]
+	var ruta := KENNEY + String(info[0]) + ".glb"
+	if not _escenas.has(ruta):
+		_escenas[ruta] = load(ruta) if ResourceLoader.exists(ruta) else null
+	var ps: PackedScene = _escenas[ruta]
+	if ps == null:
+		return null
+	var n: Node3D = ps.instantiate()
+	n.scale = Vector3.ONE * float(info[1])
+	n.position = pos
+	n.rotation.y = atan2(mira.x, mira.z)
+	for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
+		mi.visibility_range_end = rango
+	(padre if padre != null else self).add_child(n)
+	return n
+
+## Amuebla un andén. `fondo`: punto de la pared del fondo a la altura 0;
+## `hacia`: de la pared hacia la vía; `y`: altura del suelo del andén.
+## Medidas (desde la pared): bancos a 0,6 m, papeleras y plantas a 0,5 m; la
+## gente de pie, a 1,8-2,6 m de la franja amarilla. Nada en los pilares de la
+## marquesina (±9 y ±27 a lo largo) ni en la llegada de la escalera (+25..+30).
+func _amueblar_anden(p: Vector3, fondo: Vector3, hacia: Vector3, lon: Vector3, y: float, nombre: String, col: Color, elevada: bool) -> void:
+	var base := fondo + Vector3(0, y, 0)
+	var en := func(db: float, f: float) -> Vector3: return base + hacia * db + lon * f
+	## Hasta el borde del andén (franja amarilla incluida).
+	var ancho := (ANDEN_ANCHO - 0.15) if elevada else (2.0 + 8.0 - 0.45 - 2.0)
+	var sitios: Array = []
+	## Máquinas de billetes y expendedora, al lado del plano de la red.
+	_kenney("expendedora", en.call(0.65, -25.6), hacia)
+	_kenney("billetes", en.call(0.5, -23.6), hacia)
+	_kenney("billetes", en.call(0.5, -22.6), hacia)
+	## Bancos de espaldas a la pared, papeleras entre ellos y plantas grandes.
+	for f: float in [-12.0, -4.0, 4.0, 12.0]:
+		## El banco del kit mira a su -Z (el respaldo queda en +Z): de espaldas a
+		## la pared hay que girarlo hacia la pared.
+		_kenney("banco", en.call(0.6, f), -hacia)
+		for s: float in [-0.42, 0.42]:
+			sitios.append({"p": en.call(0.6 + BANCO_FONDO, f + s), "giro": atan2(hacia.x, hacia.z), "sentado": true})
+	for f: float in [-8.0, 8.0]:
+		_kenney("papelera", en.call(0.45, f), hacia)
+	for f: float in [-19.6, 19.6]:
+		_kenney("planta", en.call(0.45, f), hacia)
+	if not elevada:
+		_kenney("planta", en.call(0.45, -29.0), hacia)
+		_kenney("papelera", en.call(0.45, 27.0), hacia)
+	## Pantallas del próximo tren colgadas del techo, de dos caras (una mira a
+	## cada punta del andén).
+	var techo := (y + 4.35) if elevada else (PROF_TUNEL + 6.2)
+	for f: float in [-6.0, 14.0]:
+		var c: Vector3 = en.call(ancho * 0.45, f)
+		var alto_p := y + 2.75
+		## Caja negra con dos pantallas (la tele del kit traía su pie de mesa).
+		_caja(self, Vector3(c.x, alto_p + 0.45, c.z), _tam_lon(lon, Vector3(1.5, 0.82, 0.16)), _mat(Color(0.08, 0.08, 0.09), 0.4))
+		for s: float in [-1.0, 1.0]:
+			_caja(self, Vector3(c.x, alto_p + 0.45, c.z) + lon * s * 0.085, _tam_lon(lon, Vector3(1.36, 0.68, 0.01)), _mat(Color(0.05, 0.1, 0.22), 0.2, 0.6))
+			var lab := Label3D.new()
+			lab.font_size = 28
+			lab.pixel_size = 0.0042
+			lab.modulate = Color(1.0, 0.78, 0.25)
+			lab.outline_size = 0
+			lab.double_sided = false
+			lab.width = 300.0
+			lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			lab.position = Vector3(c.x, alto_p + 0.45, c.z) + lon * s * 0.1
+			lab.rotation.y = atan2(lon.x * s, lon.z * s)
+			lab.visibility_range_end = 60.0
+			add_child(lab)
+			_paneles.append({"label": lab, "linea_n": "", "s": 0.0, "pantalla": true, "est": nombre, "elevada": elevada})
+		## Las varillas que la cuelgan.
+		for s2: float in [-0.45, 0.45]:
+			var lado_v := hacia.cross(Vector3.UP).normalized()
+			var largo_v := techo - (alto_p + 0.86)
+			_caja(self, Vector3(c.x, alto_p + 0.86 + largo_v * 0.5, c.z) + lado_v * s2, Vector3(0.04, largo_v, 0.04), _mat(Color(0.3, 0.3, 0.32), 0.4))
+	## Gente de pie esperando: cerca del borde (sin pisar la franja), unos
+	## sueltos mirando a la vía y algunas parejas charlando.
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(nombre) + (7 if elevada else 0) + int(absf(fondo.x) + absf(fondo.z))
+	var usados: Array = []
+	for k in 7:
+		var f := rng.randf_range(-24.0, 22.0)
+		for _intento in 6:
+			var libre := true
+			for u: float in usados:
+				if absf(u - f) < 2.2:
+					libre = false
+			if libre:
+				break
+			f = rng.randf_range(-24.0, 22.0)
+		usados.append(f)
+		## Ni delante de la escalera ni pegados a las pantallas.
+		var db := ancho - rng.randf_range(1.0, 1.9)
+		var giro := atan2(hacia.x, hacia.z) + rng.randf_range(-0.5, 0.5)
+		if k % 3 == 2:
+			## Pareja: dos de cara, a 0,9 m.
+			var g2 := atan2(lon.x, lon.z)
+			sitios.append({"p": en.call(db, f - 0.45), "giro": g2, "sentado": false, "charla": true})
+			sitios.append({"p": en.call(db, f + 0.45), "giro": g2 + PI, "sentado": false, "charla": true})
+		else:
+			sitios.append({"p": en.call(db, f), "giro": giro, "sentado": false})
+	_sitios.append({"centro": base + hacia * (ancho * 0.5), "clave": "%s|%s|%d" % [nombre, str(elevada), int(fondo.x + fondo.z)],
+		"sitios": sitios, "elevada": elevada, "col": col, "p": p})
+
+## Una caja de tamaño `t` (x = ancho, z = grosor) puesta de cara a lo largo de `lon`.
+static func _tam_lon(lon: Vector3, t: Vector3) -> Vector3:
+	return t if absf(lon.z) > 0.5 else Vector3(t.z, t.y, t.x)
+
+## Altura de la pelvis de pie (pose de reposo) respecto al origen de la
+## persona (misma medida que `InteriorInstalacion._altura_cadera`).
+static func altura_cadera(nodo: Node3D) -> float:
+	var esqueletos := nodo.find_children("*", "Skeleton3D", true, false)
+	if esqueletos.is_empty():
+		return 0.0
+	var sk: Skeleton3D = esqueletos[0]
+	var b := sk.find_bone("pelvis")
+	if b < 0:
+		b = sk.find_bone("Hips")
+	if b < 0:
+		return 0.0
+	var t := sk.get_bone_global_rest(b)
+	var n: Node = sk
+	while n != null and n != nodo:
+		if n is Node3D:
+			t = (n as Node3D).transform * t
+		n = n.get_parent()
+	return t.origin.y
+
+## Llena (o vacía) los andenes según dónde esté la cámara. Un andén elevado
+## tiene dos lados: se llenan los dos de esa estación.
+func _gente_cerca(delta: float) -> void:
+	## Se crea una persona por fotograma (crear muchas de golpe da tirones).
+	if not _cola_gente.is_empty() and _gente != null:
+		_crear_persona(_cola_gente.pop_front())
+	for f: Dictionary in _fijos_gente:
+		if not bool(f["charla"]):
+			continue
+		f["t"] = float(f["t"]) - delta
+		if float(f["t"]) <= 0.0:
+			f["t"] = _rng_gente.randf_range(4.0, 9.0)
+			Mini3D.anim(f["d"], "charla" if _rng_gente.randf() < 0.7 else "parado", "")
+	_t_gente -= delta
+	if _t_gente > 0.0:
+		return
+	_t_gente = 0.5
+	var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
+	if cam == null:
+		return
+	var yo := cam.global_position
+	var mejor: Dictionary = {}
+	var dmin := RADIO_GENTE
+	for e: Dictionary in _sitios:
+		var d := yo.distance_to(e["centro"])
+		if d < dmin:
+			dmin = d
+			mejor = e
+	## La estación (los dos andenes de la elevada).
+	var clave := "" if mejor.is_empty() else "%s" % str(mejor["p"])
+	if clave == _gente_clave:
+		return
+	_gente_clave = clave
+	if _gente != null:
+		_gente.queue_free()
+		_gente = null
+	_cola_gente.clear()
+	_fijos_gente.clear()
+	if clave == "":
+		return
+	_gente = Node3D.new()
+	_gente.name = "GenteAnden"
+	add_child(_gente)
+	_rng_gente.seed = hash(clave)
+	for e: Dictionary in _sitios:
+		if str(e["p"]) == clave:
+			for s: Dictionary in e["sitios"]:
+				## No todos los asientos ocupados.
+				if bool(s["sentado"]) and _rng_gente.randf() < 0.45:
+					continue
+				_cola_gente.append(s)
+
+func _crear_persona(s: Dictionary) -> void:
+	var p: Vector3 = s["p"]
+	var d := Mini3D.persona(_gente, _rng_gente, p)
+	if d.is_empty():
+		return
+	var n: Node3D = d["nodo"]
+	n.rotation.y = float(s["giro"])
+	var sentado := bool(s["sentado"])
+	if sentado:
+		var cadera := altura_cadera(n)
+		if cadera > 0.0:
+			n.position.y = p.y + BANCO_ASIENTO + 0.08 - cadera * 0.99
+	var charla := bool(s.get("charla", false))
+	Mini3D.anim(d, "sentado" if sentado else ("charla" if charla else "parado"), "")
+	(d["anim"] as AnimationPlayer).seek(_rng_gente.randf() * 0.8, true)
+	_fijos_gente.append({"d": d, "charla": charla, "t": _rng_gente.randf_range(2.0, 8.0)})
 
 ## El túnel de la línea subterránea: cerrado (suelo, paredes, techo) para que
 ## desde dentro no se vea el cielo, con luces cada 30 m. Se corta en las
@@ -598,8 +824,7 @@ func _estacion_subterranea(p: Vector3, dir: Vector3, col: Color, nombre: String,
 	var ca := p + lat * ANDEN_LAT * 1.6
 	_caja(self, ca + Vector3(0, y + PISO_COCHE - 0.5, 0), (Vector3(ANDEN_ANCHO * 2.2, 1.0, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 1.0, ANDEN_ANCHO * 2.2)), _mat(Color(0.56, 0.55, 0.52), 0.75))
 	_caja(self, p + lat * (ANDEN_LAT * 1.6 - ANDEN_ANCHO * 1.1 + 0.25) + Vector3(0, y + PISO_COCHE + 0.01, 0), (Vector3(0.4, 0.02, ANDEN_LARGO) if vertical else Vector3(ANDEN_LARGO, 0.02, 0.4)), _mat(Color(0.95, 0.8, 0.1), 0.5))
-	for k in 3:
-		_banco(ca + lon * (float(k) - 1.0) * 18.0 + lat * 3.0 + Vector3(0, y + PISO_COCHE, 0), vertical)
+	## Bancos y demás: `_amueblar_anden`.
 	## Luces del vestíbulo: tiras y dos focos de verdad.
 	for k in 4:
 		_caja(self, c + lon * (float(k) - 1.5) * 15.0 + Vector3(0, y + 6.1, 0), Vector3(1.2, 0.1, 6.0) if vertical else Vector3(6.0, 0.1, 1.2), _mat(Color(1, 0.97, 0.9), 0.3, 2.5))
@@ -637,6 +862,9 @@ func _panel(p: Vector3, linea: Dictionary, s: float) -> void:
 	l.outline_size = 6
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	l.position = p + Vector3(0, ALTO_VIADUCTO + 8.6, 0)
+	## Es para verlo desde la calle; en el andén ya están las pantallas colgadas
+	## (desde allí quedaba cortado detrás del tren).
+	l.visibility_range_begin = 30.0
 	add_child(l)
 	_paneles.append({"label": l, "linea": linea, "s": s})
 
@@ -662,12 +890,20 @@ func _tren_real(col: Color) -> Node3D:
 	vidrio.albedo_color = Color(0.6, 0.75, 0.85, 0.22)
 	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	vidrio.roughness = 0.05
+	## Después de los rótulos (Label3D, también transparentes): si no, el
+	## motor dibujaba el cartel del andén ENCIMA del cristal y desde dentro
+	## parecía pegado a la ventana, sin el tinte del vidrio.
+	vidrio.render_priority = 1
 	var asiento := _mat(col.darkened(0.3), 0.7)
 	var metal := _mat(Color(0.75, 0.76, 0.78), 0.25)
 	metal.metallic = 0.8
 	var luz := _mat(Color(1, 0.97, 0.9), 0.3, 1.1)
 	var suelo := _mat(Color(0.3, 0.3, 0.32), 0.9)
 	var puerta_m := _mat(Color(0.82, 0.84, 0.86), 0.3)
+	var oscuro := _mat(Color(0.06, 0.06, 0.07), 0.5)
+	var cabina := _mat(Color(0.08, 0.12, 0.16), 0.08)
+	cabina.metallic = 0.4
+	var leds: Array = []
 	var puertas: Array = []
 	var f := PISO_COCHE
 	for k in 3:
@@ -710,15 +946,55 @@ func _tren_real(col: Color) -> Node3D:
 		## Testeros con ventana (los extremos del coche).
 		for e: float in [-1.0, 1.0]:
 			_caja(n, Vector3(0, f + 1.3, z + e * 8.0), Vector3(3.0, 2.6, 0.1), blanco)
-	## Panel LED en el testero delantero del primer coche.
-	var led := Label3D.new()
-	led.font_size = 36
-	led.pixel_size = 0.006
-	led.modulate = Color(1.0, 0.6, 0.1)
-	led.position = Vector3(0, f + 2.25, 16.6 + 7.9)
-	led.rotation.y = PI
-	n.add_child(led)
-	n.set_meta("led", led)
+		## Panel LED en el testero de cada coche, mirando dentro. FALLO (15-10-2026):
+		## era un solo Label3D de una línea («Línea 1 ▸ Próxima: Mercado Este»)
+		## de ~4,5 m de ancho en un coche de 3 m: atravesaba las paredes y desde
+		## el andén se veía el final del cartel saliendo por los lados del tren.
+		## Ahora: dos líneas con ancho fijo dentro de una caja negra, de una sola
+		## cara, y sin pasar de 2,2 m.
+		var cz := z + 7.9
+		_caja(n, Vector3(0, f + 2.2, cz - 0.02), Vector3(2.3, 0.42, 0.06), oscuro)
+		var led := Label3D.new()
+		led.font_size = 28
+		led.pixel_size = 0.0055
+		led.modulate = Color(1.0, 0.6, 0.1)
+		led.outline_size = 0
+		led.double_sided = false
+		led.position = Vector3(0, f + 2.2, cz - 0.06)
+		led.rotation.y = PI
+		led.visibility_range_end = 40.0
+		n.add_child(led)
+		leds.append(led)
+		## Fuelle entre coches: tapaba el hueco por donde se veía la vía.
+		if k < 2:
+			_caja(n, Vector3(0, f + 1.25, z + 8.3), Vector3(2.2, 2.5, 0.62), oscuro)
+	## LAS CABEZAS (15-10-2026): por fuera el tren era una caja blanca lisa.
+	## Ahora cada punta lleva parabrisas oscuro, faros, franja de la línea y el
+	## letrero de destino.
+	var faro := _mat(Color(1.0, 0.97, 0.85), 0.2, 2.5)
+	var piloto := _mat(Color(0.9, 0.1, 0.08), 0.3, 1.5)
+	for e: float in [-1.0, 1.0]:
+		var zc := e * (16.6 + 8.0)
+		_caja(n, Vector3(0, f + 1.15, zc + e * 0.1), Vector3(2.9, 2.0, 0.12), blanco)
+		_caja(n, Vector3(0, f + 1.75, zc + e * 0.17), Vector3(2.3, 0.95, 0.04), cabina)
+		_caja(n, Vector3(0, f + 0.55, zc + e * 0.17), Vector3(2.95, 0.22, 0.04), franja)
+		_caja(n, Vector3(0, f + 2.42, zc + e * 0.17), Vector3(1.6, 0.26, 0.04), oscuro)
+		for xs: float in [-1.0, 1.0]:
+			_caja(n, Vector3(xs * 1.1, f + 0.85, zc + e * 0.18), Vector3(0.32, 0.14, 0.04), faro)
+			_caja(n, Vector3(xs * 0.7, f + 0.85, zc + e * 0.18), Vector3(0.16, 0.1, 0.04), piloto)
+		var dest := Label3D.new()
+		dest.font_size = 24
+		dest.pixel_size = 0.0045
+		dest.modulate = Color(1.0, 0.6, 0.1)
+		dest.outline_size = 0
+		dest.double_sided = false
+		dest.position = Vector3(0, f + 2.42, zc + e * 0.2)
+		dest.rotation.y = 0.0 if e > 0.0 else PI
+		dest.visibility_range_end = 90.0
+		n.add_child(dest)
+		leds.append(dest)
+	n.set_meta("led", leds[0])
+	n.set_meta("leds", leds)
 	n.set_meta("puertas", puertas)
 	return n
 
