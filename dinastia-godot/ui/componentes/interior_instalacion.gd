@@ -317,14 +317,42 @@ func _pantalla(p: Vector3, tam: Vector2, col: Color, giro: float = 0.0) -> MeshI
 # ------------------------------------------------------------------ gente
 
 ## Alguien en su puesto: quieto (o sentado) y de vez en cuando un gesto.
-func _trabajador(p: Vector3, giro: float, sentado: bool, gestos: Array = ["charla", "saludo_mano", "brazos_jarra", "pedir_calma"], deporte: Array = []) -> void:
+## Sentado: `p` es el CENTRO DEL ASIENTO a ras del suelo del mueble y `asiento`
+## su altura. El clip «sentado» dobla las piernas pero deja la cadera a la altura
+## de estar de pie (medido: la de la pose de reposo ×0,99), así que hay que bajar a cada uno
+## según su esqueleto; antes se colocaban a ojo y quedaban sentados en el aire.
+func _trabajador(p: Vector3, giro: float, sentado: bool, gestos: Array = ["charla", "saludo_mano", "brazos_jarra", "pedir_calma"], deporte: Array = [], asiento: float = 0.45) -> void:
 	var d := Mini3D.persona(_raiz, _rng, p, deporte)
 	if d.is_empty():
 		return
 	(d["nodo"] as Node3D).rotation.y = giro
+	if sentado:
+		var cadera := _altura_cadera(d["nodo"])
+		if cadera > 0.0:
+			(d["nodo"] as Node3D).position.y = p.y + asiento + 0.08 - cadera * 0.99
 	Mini3D.anim(d, "sentado" if sentado else "parado", "")
 	(d["anim"] as AnimationPlayer).seek(_rng.randf() * 0.5, true)
 	_fijos.append({"d": d, "gestos": [] if sentado else gestos, "t": _rng.randf_range(1.0, 5.0), "base": "sentado" if sentado else "parado"})
+
+## Altura de la pelvis de pie (pose de reposo) respecto al origen de la persona,
+## con las escalas de todos los nodos de por medio. 0 si no se encuentra.
+static func _altura_cadera(nodo: Node3D) -> float:
+	var esqueletos := nodo.find_children("*", "Skeleton3D", true, false)
+	if esqueletos.is_empty():
+		return 0.0
+	var sk: Skeleton3D = esqueletos[0]
+	var b := sk.find_bone("pelvis")
+	if b < 0:
+		b = sk.find_bone("Hips")
+	if b < 0:
+		return 0.0
+	var t := sk.get_bone_global_rest(b)
+	var n: Node = sk
+	while n != null and n != nodo:
+		if n is Node3D:
+			t = (n as Node3D).transform * t
+		n = n.get_parent()
+	return t.origin.y
 
 ## Alguien que va y viene entre varios puntos de la sala.
 func _caminante(puntos: Array, deporte: Array = [], correr: bool = false) -> void:
@@ -457,7 +485,7 @@ func _oficina() -> void:
 	for k in 4:
 		var x := -4.5 + float(k) * 3.0
 		_silla(Vector3(x, 0, -6.6), 0.0)
-		_trabajador(Vector3(x, 0, -6.4), 0.0, true)
+		_trabajador(Vector3(x, 0, -6.55), 0.0, true)
 		Mini3D.caja(_raiz, Vector3(x, 1.25, -5.4), Vector3(0.5, 0.3, 0.04), Mini3D.mat(Color(0.3, 0.6, 0.95), 0.2, 0.9))
 	## La cola de vecinos y el ordenanza que pasea.
 	for k in 4:
@@ -471,7 +499,7 @@ func _oficina() -> void:
 	_cartel("🏛️ ATENCIÓN AL VECINO", Vector3(0, 3.0, -9.7))
 	for k in 3:
 		_escritorio(Vector3(-11.0, 0, -4.0 + float(k) * 3.0), PI * 0.5)
-		_trabajador(Vector3(-12.0, 0, -4.0 + float(k) * 3.0), PI * 0.5, true)
+		_trabajador(Vector3(-12.05, 0, -4.0 + float(k) * 3.0), PI * 0.5, true)
 		_silla(Vector3(-12.1, 0, -4.0 + float(k) * 3.0), PI * 0.5)
 
 func _hospital() -> void:
@@ -479,7 +507,8 @@ func _hospital() -> void:
 	for k in 6:
 		var x := -12.0 + float(k) * 4.8
 		_cama(Vector3(x, 0, -6.5), 0.0)
-		_trabajador(Vector3(x - 0.2, 0.3, -6.9), PI, true)
+		## Sentado en el borde de la cama, de lado, con los pies colgando.
+		_trabajador(Vector3(x - 0.3, 0, -6.3), -PI * 0.5, true, ["charla"], [], 0.65)
 		## Cortinas entre camas.
 		Mini3D.caja(_raiz, Vector3(x + 2.4, 1.3, -6.5), Vector3(0.04, 2.2, 2.6), Mini3D.mat(Color(0.6, 0.8, 0.85, 0.8), 0.8))
 	_mostrador(Vector3(6, 0, 3.0), 6.0, 0.0, Color(0.3, 0.55, 0.6))
@@ -500,7 +529,7 @@ func _hospital() -> void:
 	for k in 4:
 		_silla(Vector3(-8.0 + float(k) * 1.2, 0, 4.5), PI)
 		if k % 2 == 0:
-			_trabajador(Vector3(-8.0 + float(k) * 1.2, 0, 4.3), PI, true)
+			_trabajador(Vector3(-8.0 + float(k) * 1.2, 0, 4.45), PI, true)
 
 func _comisaria() -> void:
 	_sala(Vector3(28, 6.5, 18), Color(0.4, 0.42, 0.46), Color(0.78, 0.82, 0.86))
@@ -508,7 +537,7 @@ func _comisaria() -> void:
 		var x := -9.0 + float(k) * 4.0
 		_escritorio(Vector3(x, 0, -3.0), 0.0)
 		_silla(Vector3(x, 0, -3.9), 0.0)
-		_trabajador(Vector3(x, 0, -3.7), 0.0, true, [], [Color(0.1, 0.18, 0.35), Color(0.1, 0.12, 0.2), true])
+		_trabajador(Vector3(x, 0, -3.85), 0.0, true, [], [Color(0.1, 0.18, 0.35), Color(0.1, 0.12, 0.2), true])
 	## La celda: rejas en una esquina.
 	for k in 12:
 		Mini3D.cilindro(_raiz, Vector3(7.0 + float(k) * 0.55, 1.6, -4.5), 0.04, 3.2, Mini3D.mat(Color(0.3, 0.3, 0.32), 0.3))
@@ -572,7 +601,7 @@ func _aula() -> void:
 			_escritorio(p, PI, false)
 			_silla(p + Vector3(0, 0, 0.75), PI, Color(0.2, 0.35, 0.65) if peques else Color(0.25, 0.25, 0.28))
 			if _rng.randf() < 0.8:
-				_trabajador(p + Vector3(0, 0, 0.9), PI, true)
+				_trabajador(p + Vector3(0, 0, 0.7), PI, true)
 	for k in 3:
 		_estanteria(Vector3(12.5, 0, -6.0 + float(k) * 2.4), -PI * 0.5, Color(0.6, 0.4, 0.3))
 	if peques:
@@ -588,13 +617,13 @@ func _estacion() -> void:
 	## Taquillas, bancos y el reloj.
 	_mostrador(Vector3(-12, 0, -8.0), 8.0, 0.0, Color(0.35, 0.25, 0.18))
 	for k in 3:
-		_trabajador(Vector3(-14.5 + float(k) * 2.5, 0, -8.9), 0.0, true)
+		_trabajador(Vector3(-14.5 + float(k) * 2.5, 0, -9.05), 0.0, true)
 		_silla(Vector3(-14.5 + float(k) * 2.5, 0, -9.1), 0.0)
 	for k in 4:
 		var bp := Vector3(-6.0 + float(k) * 6.0, 0, 3.0)
 		Mini3D.caja(_raiz, bp + Vector3(0, 0.45, 0), Vector3(3.0, 0.1, 0.6), Mini3D.mat(Color(0.5, 0.35, 0.2), 0.6))
 		if k % 2 == 0:
-			_trabajador(bp + Vector3(0.5, 0, 0.1), PI, true)
+			_trabajador(bp + Vector3(0.5, 0, -0.05), PI, true, ["charla"], [], 0.5)
 	var reloj := Mini3D.cilindro(_raiz, Vector3(14, 6.5, -11.6), 1.2, 0.15, Mini3D.mat(Color.WHITE, 0.4, 0.4))
 	reloj.rotation.x = PI * 0.5
 	## Viajeros que van y vienen con prisa.
@@ -632,7 +661,7 @@ func _cine() -> void:
 			var p := Vector3(-10.0 + float(j) * 2.2, y, -3.0 + float(i) * 2.0)
 			_silla(p, PI, Color(0.6, 0.1, 0.12))
 			if _rng.randf() < 0.45:
-				_trabajador(p + Vector3(0, 0, 0.2), PI, true)
+				_trabajador(p + Vector3(0, 0, -0.05), PI, true)
 	_caminante([Vector3(-12.5, 0, 10), Vector3(-12.5, 0, -8), Vector3(12.5, 0, -8), Vector3(12.5, 0, 10)])
 
 func _tienda() -> void:
@@ -691,7 +720,7 @@ func _analisis() -> void:
 			var p := Vector3(-6.0 + float(j) * 4.0, 0, -2.5 + float(i) * 3.2)
 			_escritorio(p, 0.0)
 			_silla(p + Vector3(0, 0, 0.8), PI)
-			_trabajador(p + Vector3(0, 0, 0.95), PI, true, [], [_c1, _c2] if clave == "esports" else [])
+			_trabajador(p + Vector3(0, 0, 0.75), PI, true, [], [_c1, _c2] if clave == "esports" else [])
 	_caminante([Vector3(-8, 0, -6), Vector3(8, 0, -6)])
 	_cartel("📊 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 5.4, -7.8), 44)
 
@@ -711,10 +740,11 @@ func _comedor() -> void:
 			for q in 3:
 				for lado: float in [-1.0, 1.0]:
 					var ps := p + Vector3(-1.3 + float(q) * 1.3, 0, lado * 1.05)
-					_silla(ps, 0.0 if lado > 0.0 else PI)
+					## Respaldo lejos de la mesa: se sientan mirando a su plato.
+					_silla(ps, PI if lado > 0.0 else 0.0)
 					Mini3D.cilindro(_raiz, ps + Vector3(0, 0.78, -lado * 0.6), 0.18, 0.03, Mini3D.mat(Color.WHITE, 0.4))
 					if _rng.randf() < 0.6:
-						_trabajador(ps + Vector3(0, 0, lado * 0.2), 0.0 if lado > 0.0 else PI, true, [], [_c1, _c2])
+						_trabajador(ps - Vector3(0, 0, lado * 0.05), PI if lado > 0.0 else 0.0, true, [], [_c1, _c2])
 	_cartel("🥗 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 5.2, -9.7), 52)
 
 func _prensa() -> void:
@@ -736,7 +766,7 @@ func _prensa() -> void:
 		for j in 6:
 			var p := Vector3(-6.25 + float(j) * 2.5, 0, -1.5 + float(i) * 2.2)
 			_silla(p, PI, Color(0.2, 0.2, 0.25))
-			_trabajador(p + Vector3(0, 0, 0.2), PI, true)
+			_trabajador(p + Vector3(0, 0, -0.05), PI, true)
 	for k in 3:
 		var cp := Vector3(-5.0 + float(k) * 5.0, 0, 6.5)
 		Mini3D.cilindro(_raiz, cp + Vector3(0, 0.75, 0), 0.04, 1.5, Mini3D.mat(Color(0.2, 0.2, 0.2), 0.4))
@@ -813,7 +843,7 @@ func _vivienda() -> void:
 		_silla(Vector3(5.2 + float(k) * 1.6, 0, -2.1), 0.0)
 		_silla(Vector3(5.2 + float(k) * 1.6, 0, 0.1), PI)
 	_trabajador(Vector3(6.0, 0, -6.3), 0.0, false, ["charla", "brazos_jarra"], [Color(0.9, 0.85, 0.7), Color(0.3, 0.3, 0.35), true])
-	_trabajador(Vector3(-5.5, 0.4, 2.5), PI, true, ["charla", "aplaudir"], [Color(0.3, 0.6, 0.4), Color(0.2, 0.2, 0.3)])
+	_trabajador(Vector3(-5.5, 0, 2.5), PI, true, ["charla", "aplaudir"], [Color(0.3, 0.6, 0.4), Color(0.2, 0.2, 0.3)], 0.8)
 	_caminante([Vector3(0, 0, 4.0), Vector3(8, 0, 4.0), Vector3(8, 0, 1.0), Vector3(0, 0, 1.0)])
 	_cartel("🏠 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 4.5, -7.8), 40)
 
@@ -837,7 +867,7 @@ func _bar() -> void:
 			_silla(p + Vector3(-1.0, 0, 0), PI * 0.5)
 			_silla(p + Vector3(1.0, 0, 0), -PI * 0.5)
 			if _rng.randf() < 0.7:
-				_trabajador(p + Vector3(-1.0, 0.0, 0), PI * 0.5, true, ["charla", "aplaudir"], [Color.from_hsv(_rng.randf(), 0.5, 0.7), Color(0.25, 0.25, 0.3)])
+				_trabajador(p + Vector3(-0.95, 0.0, 0), PI * 0.5, true, ["charla", "aplaudir"], [Color.from_hsv(_rng.randf(), 0.5, 0.7), Color(0.25, 0.25, 0.3)])
 	_caminante([Vector3(-10, 0, 6.5), Vector3(10, 0, 6.5), Vector3(10, 0, 0.5), Vector3(-10, 0, 0.5)])
 	_cartel("🍺 " + String(_sala_de(clave)[1]).to_upper(), Vector3(0, 4.6, -7.8), 44)
 
@@ -863,7 +893,7 @@ func _peluqueria() -> void:
 		var x := -6.0 + float(k) * 4.0
 		Mini3D.caja(_raiz, Vector3(x, 1.6, -6.7), Vector3(2.2, 1.8, 0.05), Mini3D.mat(Color(0.8, 0.9, 1.0), 0.05, 0.15))
 		_silla(Vector3(x, 0.1, -5.2), 0.0, Color(0.15, 0.15, 0.18))
-		_trabajador(Vector3(x, 0.0, -5.2), 0.0, true, [], [Color.from_hsv(_rng.randf(), 0.5, 0.7), Color(0.25, 0.25, 0.3)])
+		_trabajador(Vector3(x, 0.0, -5.15), 0.0, true, [], [Color.from_hsv(_rng.randf(), 0.5, 0.7), Color(0.25, 0.25, 0.3)], 0.55)
 		_trabajador(Vector3(x, 0, -3.9), PI, false, ["charla", "brazos_jarra"], [Color(0.1, 0.1, 0.12), Color(0.1, 0.1, 0.12), true])
 	for k in 3:
 		_silla(Vector3(-5.0 + float(k) * 1.2, 0, 3.5), PI, Color(0.5, 0.2, 0.3))

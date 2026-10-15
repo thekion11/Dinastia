@@ -17,6 +17,8 @@ const PARADAS := [
 ]
 
 func _ready() -> void:
+	## Sin el tutorial de la ciudad tapando el tercio de abajo de cada foto.
+	AjustesCiudad.guardar("tutorial_visto", true)
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 
