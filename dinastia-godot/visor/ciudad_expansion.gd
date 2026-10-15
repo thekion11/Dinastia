@@ -400,7 +400,7 @@ func _cargar_modelos() -> void:
 			_altos.append(e3)
 
 func _materiales() -> void:
-	var asf: StandardMaterial3D = Texturas.asfalto(Color(0.24, 0.235, 0.23)).duplicate()
+	var asf: StandardMaterial3D = Texturas.asfalto(Color(0.3, 0.295, 0.29)).duplicate()
 	asf.roughness = 0.85
 	_mat["asfalto"] = asf
 	## Etapa 4: acera de baldosa con juntas y solar de hormigón, no colores lisos.
@@ -907,6 +907,13 @@ func _patio_de_manzana(r: Rect2, c: Vector3) -> void:
 	_arboles_en(pts, 0.85)
 
 ## Viviendas con jardín: se guardan y se dibujan todas juntas (MultiMesh).
+## CASAS DE KENNEY (15-10-2026, «a ese nivel debe estar todo en la ciudad»): el
+## City Kit Suburban en lugar de las cajas. Se registran en `_casas` y se dibujan
+## en `_casas_multimesh`, un MultiMesh por modelo con `casa_kenney.gdshader`. Si los
+## modelos no cargan, se dibujan las cajas de antes.
+const MODELOS_CASA := ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"]
+const ESCALA_CASA := 5.6
+var _kenney_casas: Array = []
 var _casas_t: Array[Transform3D] = []
 var _casas_col: Array[Color] = []
 var _techos_t: Array[Transform3D] = []
@@ -970,6 +977,10 @@ func _casas(r: Rect2) -> void:
 			if _rng.randf() < 0.6:
 				_chimeneas_t.append(Transform3D(Basis.from_scale(Vector3(0.8, 2.6, 0.8)), Vector3(x + ancho * 0.28, alto + 2.0, z - lado * fondo * 0.15)))
 			_detalle_casa(hr, arq, x, z, zf, ancho, fondo, alto, lado, paso_x, col, tejado)
+			## El modelo del kit suburbano: por un hash propio de la posición, para no
+			## tocar la secuencia de `_rng` ni de `hr` (todo lo demás sigue en su sitio).
+			_kenney_casas.append({"m": absi(hash(Vector2(x, z) + Vector2(1.0, 7.0))) % MODELOS_CASA.size(),
+				"x": x, "zf": zf, "lado": lado, "ancho_max": paso_x * 0.8, "col": col, "tejado": tejado})
 			## Cada casa es un sitio al que entrar, con la familia que vive allí.
 			var fam: String = String(APELLIDOS[hr.randi() % APELLIDOS.size()])
 			b.puntos_clic.append({"k": "edificio_vivienda|Casa de la familia %s" % fam, "n": "Casa de la familia %s" % fam,
@@ -1055,20 +1066,80 @@ func _detalle_casa(hr: RandomNumberGenerator, arq: int, x: float, z: float, zf: 
 func _casas_multimesh() -> void:
 	if _casas_t.is_empty():
 		return
+	## Jardín: setos, camino y buzón, con casa de Kenney o con las cajas.
+	_multimesh(BoxMesh.new(), _mat["hoja"], _setos_t, Vector3.ONE)
+	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.7, 0.66, 0.6), 0.9), _caminos_t, Vector3.ONE)
+	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.15, 0.3, 0.55), 0.5), _buzones_t, Vector3.ONE)
+	if _casas_kenney():
+		return
 	_multimesh(BoxMesh.new(), null, _casas_t, Vector3.ONE, _casas_col)
 	var prisma := PrismMesh.new()
 	_multimesh(prisma, null, _techos_t, Vector3.ONE, _techos_col)
-	_multimesh(BoxMesh.new(), _mat["hoja"], _setos_t, Vector3.ONE)
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.36, 0.22, 0.14), 0.7), _puertas_t, Vector3.ONE)
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.96, 0.96, 0.94), 0.6), _marcos_t, Vector3.ONE)
 	var vid := b._mat_simple(Color(0.2, 0.28, 0.36), 0.12)
 	vid.metallic = 0.6
 	_multimesh(BoxMesh.new(), vid, _vidrios_t, Vector3.ONE)
-	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.7, 0.66, 0.6), 0.9), _caminos_t, Vector3.ONE)
-	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.15, 0.3, 0.55), 0.5), _buzones_t, Vector3.ONE)
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.55, 0.3, 0.24), 0.8), _chimeneas_t, Vector3.ONE)
 	if not _det_t.is_empty():
 		_multimesh(BoxMesh.new(), null, _det_t, Vector3.ONE, _det_c)
+
+## Las casas del kit suburbano: la fachada del modelo mira a −Z; se gira para que
+## dé a la calle y se apoya con el frente en `zf`, centrada en `x`. Devuelve false
+## si los modelos no cargan (y entonces se dibujan las cajas).
+func _casas_kenney() -> bool:
+	var mallas: Array = []
+	for letra: String in MODELOS_CASA:
+		var ps := load("res://assets/kenney/suburbano/building-type-%s.glb" % letra) as PackedScene
+		if ps == null:
+			return false
+		var inst := ps.instantiate()
+		var mis := inst.find_children("*", "MeshInstance3D", true, false)
+		var malla: Mesh = (mis[0] as MeshInstance3D).mesh if not mis.is_empty() else null
+		inst.free()
+		if malla == null:
+			return false
+		mallas.append(malla)
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://visor/casa_kenney.gdshader")
+	mat.set_shader_parameter("paleta", load("res://assets/kenney/suburbano/Textures/colormap.png"))
+	var grupos: Array = []
+	for i in mallas.size():
+		grupos.append([])
+	for c: Dictionary in _kenney_casas:
+		(grupos[int(c["m"])] as Array).append(c)
+	for i in mallas.size():
+		var lista: Array = grupos[i]
+		if lista.is_empty():
+			continue
+		var malla: Mesh = mallas[i]
+		var caja := malla.get_aabb()
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_colors = true
+		mm.use_custom_data = true
+		mm.mesh = malla
+		mm.instance_count = lista.size()
+		for k in lista.size():
+			var c: Dictionary = lista[k]
+			var s := minf(ESCALA_CASA, float(c["ancho_max"]) / maxf(caja.size.x, 0.01))
+			var giro := PI if float(c["lado"]) > 0.0 else 0.0
+			var base := Basis(Vector3.UP, giro).scaled(Vector3.ONE * s)
+			## El punto de abajo, en el centro del frente, cae en la línea de fachada.
+			var frente := Vector3(caja.get_center().x, caja.position.y, caja.position.z)
+			var pos := Vector3(float(c["x"]), 0.1, float(c["zf"])) - base * frente
+			mm.set_instance_transform(k, Transform3D(base, pos))
+			## Pasteles algo apagados: con los de `COLORES_CASA` tal cual, a pleno
+			## sol las fachadas se quemaban en blanco.
+			## El shader recibe estos colores tal cual (en lineal): se convierten,
+			## o el tejado de teja salía rosa pálido.
+			mm.set_instance_color(k, (c["col"] as Color).lerp(Color(0.72, 0.7, 0.66), 0.25).srgb_to_linear())
+			mm.set_instance_custom_data(k, (c["tejado"] as Color).srgb_to_linear())
+		var mi := MultiMeshInstance3D.new()
+		mi.multimesh = mm
+		mi.material_override = mat
+		b.add_child(mi)
+	return true
 
 func _industrial(r: Rect2) -> void:
 	b._caja_en(Vector3(r.get_center().x, 0.06, r.get_center().y), Vector3(r.size.x, 0.12, r.size.y), b._mat_simple(Color(0.42, 0.42, 0.41), 0.9))
