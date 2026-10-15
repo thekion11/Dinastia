@@ -107,7 +107,7 @@ func poner(modo: String, km_h: float, maxima: float, calle: String, metros: floa
 	_vel.text = str(int(round(km_h)))
 	_barra.max_value = maxima
 	_barra.value = km_h
-	_icono.text = {"correr": "🏃 Carrera", "coche": "🚗 Conduciendo", "tren": "🚇 Metro"}.get(modo, "🚶 A pie")
+	_icono.text = Idiomas.t({"correr": "🏃 Carrera", "coche": "🚗 Conduciendo", "tren": "🚇 Metro"}.get(modo, "🚶 A pie"))
 	_calle.text = ("📍 " + calle) if calle != "" else ""
 	_recorrido += metros
 	_dist.text = "%.2f km" % (_recorrido / 1000.0) if _recorrido >= 100.0 else "%d m" % int(_recorrido)

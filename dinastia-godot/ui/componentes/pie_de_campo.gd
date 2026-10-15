@@ -66,7 +66,7 @@ func _montar(e: Dictionary, gane: bool, empate: bool) -> void:
 		b.pressed.connect(_elegir.bind(i))
 		v.add_child(b)
 	var saltar := Button.new()
-	saltar.text = "Seguir caminando" if e.has("rotulo") else "Pasar de largo"
+	saltar.text = Idiomas.t("Seguir caminando") if e.has("rotulo") else Idiomas.t("Pasar de largo")
 	saltar.flat = true
 	saltar.add_theme_color_override("font_color", Tema.SUAVE)
 	saltar.pressed.connect(_elegir.bind(-1))

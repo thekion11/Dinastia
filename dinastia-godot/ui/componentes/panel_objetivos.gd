@@ -118,7 +118,7 @@ func _montar() -> void:
 	add_child(h)
 	_pestana = Button.new()
 	_pestana.flat = true
-	_pestana.tooltip_text = "Mostrar u ocultar los objetivos"
+	_pestana.tooltip_text = Idiomas.t("Mostrar u ocultar los objetivos")
 	_pestana.pressed.connect(func() -> void:
 		_plegado = not _plegado
 		_escribir("plegado_v2", _plegado)
@@ -129,15 +129,15 @@ func _montar() -> void:
 	_cuerpo.add_theme_constant_override("separation", 6)
 	h.add_child(_cuerpo)
 	var cabeza := Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, "🎯 OBJETIVOS   ✥")
-	cabeza.tooltip_text = "Arrástralo para ponerlo donde quieras"
+	cabeza.tooltip_text = Idiomas.t("Arrástralo para ponerlo donde quieras")
 	cabeza.mouse_filter = Control.MOUSE_FILTER_PASS
 	_cuerpo.add_child(cabeza)
 	_lista = VBoxContainer.new()
 	_lista.add_theme_constant_override("separation", 4)
 	_cuerpo.add_child(_lista)
 	var tut := Button.new()
-	tut.text = "🧭 Hablar con el mentor"
-	tut.tooltip_text = "Vuelve a abrir el recorrido guiado de tu modo"
+	tut.text = Idiomas.t("🧭 Hablar con el mentor")
+	tut.tooltip_text = Idiomas.t("Vuelve a abrir el recorrido guiado de tu modo")
 	tut.pressed.connect(func() -> void:
 		if _principal != null and _principal.has_method("abrir_tutorial"):
 			_principal.call("abrir_tutorial", _modo))
@@ -211,7 +211,7 @@ func refrescar() -> void:
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.custom_minimum_size = Vector2(ANCHO, 0)
 		_lista.add_child(l)
-	_pestana.tooltip_text = "Objetivos (%d pendientes)" % pendientes
+	_pestana.tooltip_text = Idiomas.t("Objetivos (%d pendientes)") % pendientes
 	_pendientes = pendientes
 	if _plegado:
 		_pestana.text = ("🎯\n%d\n◂" % _pendientes) if _pendientes > 0 else "🎯\n◂"
