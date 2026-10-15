@@ -63,7 +63,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 
 ## Hecho el 29-9 (tarde)
 - Butacas 3D en toda la grada, mirando al campo (ambos modos).
-- 9 idiomas: es, en, pt, fr, it, de, ca + polaco y turco nuevos (1402 frases c/u).
+- 9 idiomas: es, en, pt, fr, it, de, ca + polaco y turco nuevos (1402 frases c/u el 29-9; el 15-10: 2.574 frases fijas y 373 patrones en los 9, con la prueba `_probar_paridad_idiomas`).
 
 ## Pendientes
 - Hecho 29-9: limpieza (capturas en pruebas/capturas), COMPARACION_INFORME.md (≈71/100),
