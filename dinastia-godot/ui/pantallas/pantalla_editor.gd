@@ -15,11 +15,11 @@ func _pintar_editor() -> void:
 	p._limpiar(p._lista_editor)
 	var ed := p._ui_ciudad._editor_de()
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🛠️ EDITOR"
+	t.text = Idiomas.t("🛠️ EDITOR")
 	p._lista_editor.add_child(t)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Renombra, repinta y reconstruye el mundo del juego: clubes, escudos, plantillas, atributos, puestos y caras. Los cambios van al guardado como cualquier otra cosa."
+		ex.text = Idiomas.t("Renombra, repinta y reconstruye el mundo del juego: clubes, escudos, plantillas, atributos, puestos y caras. Los cambios van al guardado como cualquier otra cosa.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_editor.add_child(ex)
 
@@ -37,7 +37,7 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 		return
 	p._lista_editor.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "COMPETICIONES"
+	t.text = Idiomas.t("COMPETICIONES")
 	p._lista_editor.add_child(t)
 	for l: Liga in p.mundo.ligas:
 		if l.pais != mio.pais:
@@ -112,11 +112,11 @@ func _texto_con(tam: int, col: Color, txt: String) -> Label:
 func _pintar_editor_clubes(ed: Editor) -> void:
 	p._lista_editor.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "CLUBES"
+	t.text = Idiomas.t("CLUBES")
 	p._lista_editor.add_child(t)
 	var busca := LineEdit.new()
 	busca.text = p._ed_filtro
-	busca.placeholder_text = "Buscar en todo el mundo… (vacío: los de tu país)"
+	busca.placeholder_text = Idiomas.t("Buscar en todo el mundo… (vacío: los de tu país)")
 	busca.add_theme_font_size_override("font_size", 12)
 	busca.text_submitted.connect(func(x: String) -> void:
 		p._ed_filtro = x.strip_edges()
@@ -146,7 +146,7 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 		esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		fila.add_child(esc)
 		var b := Button.new()
-		b.text = "%s%s  ·  %s D%d  ·  rep %d" % ["▾ " if abierto else "▸ ",
+		b.text = Idiomas.t("%s%s  ·  %s D%d  ·  rep %d") % ["▾ " if abierto else "▸ ",
 			c2.nombre, c2.pais, c2.division, c2.rep]
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -195,7 +195,7 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 			func(d: int) -> void: ed.mover_aforo(c2, d * 5000), p._lista_editor)
 		var br := Button.new()
 		var pidiendo := p._ed_confirmar_regen == c2.id
-		br.text = "¿SEGURO? Se pierde la plantilla entera" if pidiendo else "🎲 Regenerar plantel"
+		br.text = Idiomas.t("¿SEGURO? Se pierde la plantilla entera") if pidiendo else Idiomas.t("🎲 Regenerar plantel")
 		br.add_theme_font_size_override("font_size", 11)
 		br.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_ROJO if pidiendo else Principal.COL_TEXTO))
 		br.pressed.connect(func() -> void:
@@ -218,13 +218,13 @@ func _pintar_editor_jugadores(ed: Editor) -> void:
 		return
 	p._lista_editor.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "JUGADORES DE TU PLANTEL"
+	t.text = Idiomas.t("JUGADORES DE TU PLANTEL")
 	p._lista_editor.add_child(t)
 	for j: Jugador in c.plantilla:
 		var quien := j
 		var abierto := p._ed_jugador == j.id
 		var b := Button.new()
-		b.text = "%s%s  ·  %s  ·  %d años  ·  media %d" % ["▾ " if abierto else "▸ ",
+		b.text = Idiomas.t("%s%s  ·  %s  ·  %d años  ·  media %d") % ["▾ " if abierto else "▸ ",
 			j.nombre, j.pos_e, j.edad, j.ovr]
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -274,7 +274,7 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 		func(v: String) -> void: ed.fijar_campo(j, "pais", v))
 
 	var ta := p._texto(10, Principal.COL_SUAVE)
-	ta.text = "Atributos  ·  la media se recalcula sola"
+	ta.text = Idiomas.t("Atributos  ·  la media se recalcula sola")
 	p._lista_editor.add_child(ta)
 	for k: String in j.atributos:
 		var clave := k
@@ -285,7 +285,7 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 	## se toquen, y solo esos. Es lo que permite arreglar una cara sin tener que
 	## redefinirla entera.
 	var tl := p._texto(10, Principal.COL_SUAVE)
-	tl.text = "Aspecto"
+	tl.text = Idiomas.t("Aspecto")
 	p._lista_editor.add_child(tl)
 	var look := Cara.look_de(j)
 	_rejilla_colores_editor(ed, j, "piel", Cara.PIELES, String(look["piel"]))
@@ -324,9 +324,9 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 		fila_s.add_child(bs)
 
 	var b_azar := Button.new()
-	b_azar.text = "🎲 Aleatorio"
+	b_azar.text = Idiomas.t("🎲 Aleatorio")
 	b_azar.add_theme_font_size_override("font_size", 11)
-	b_azar.tooltip_text = "Un aspecto entero nuevo de una sola vez, no rasgo a rasgo."
+	b_azar.tooltip_text = Idiomas.t("Un aspecto entero nuevo de una sola vez, no rasgo a rasgo.")
 	b_azar.pressed.connect(func() -> void:
 		ed.aleatorizar_look(j)
 		p._refrescar())
@@ -427,10 +427,10 @@ func _rejilla_colores_editor(ed: Editor, j: Jugador, clave: String, colores: Arr
 func _pintar_editor_csv(ed: Editor) -> void:
 	p._lista_editor.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "IMPORTAR UNA BASE (CSV)"
+	t.text = Idiomas.t("IMPORTAR UNA BASE (CSV)")
 	p._lista_editor.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "Una línea por futbolista: Club;Nombre;POS;Edad;Media[;País;Proyección;Pie]. POS admite grupos (POR/DEF/MED/DEL) o puestos concretos. Con %d filas o más de un mismo club, se REEMPLAZA su plantilla; con menos, se añaden." % Editor.FILAS_PARA_REEMPLAZAR
+	ex.text = Idiomas.t("Una línea por futbolista: Club;Nombre;POS;Edad;Media[;País;Proyección;Pie]. POS admite grupos (POR/DEF/MED/DEL) o puestos concretos. Con %d filas o más de un mismo club, se REEMPLAZA su plantilla; con menos, se añaden.") % Editor.FILAS_PARA_REEMPLAZAR
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_editor.add_child(ex)
 
@@ -438,9 +438,9 @@ func _pintar_editor_csv(ed: Editor) -> void:
 	fila.add_theme_constant_override("separation", 8)
 	p._lista_editor.add_child(fila)
 	var etc := p._texto(11, Principal.COL_TEXTO)
-	etc.text = "Censurar los nombres importados"
+	etc.text = Idiomas.t("Censurar los nombres importados")
 	etc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	etc.tooltip_text = "Sustituye algunas letras por números, como hace el resto del juego con los nombres generados."
+	etc.tooltip_text = Idiomas.t("Sustituye algunas letras por números, como hace el resto del juego con los nombres generados.")
 	fila.add_child(etc)
 	var bc := Button.new()
 	bc.text = "SÍ" if p._ed_censura else "NO"
@@ -451,7 +451,7 @@ func _pintar_editor_csv(ed: Editor) -> void:
 
 	var caja := TextEdit.new()
 	caja.text = p._ed_csv
-	caja.placeholder_text = "C0lo-C0lo;Arturo Vidal;MED;38;79\nB0ca Juni0rs;Edinson Cavani;DEL;39;80;URU;80"
+	caja.placeholder_text = Idiomas.t("C0lo-C0lo;Arturo Vidal;MED;38;79\nB0ca Juni0rs;Edinson Cavani;DEL;39;80;URU;80")
 	caja.custom_minimum_size = Vector2(0, 120)
 	caja.add_theme_font_size_override("font_size", 11)
 	caja.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
@@ -459,12 +459,12 @@ func _pintar_editor_csv(ed: Editor) -> void:
 	p._lista_editor.add_child(caja)
 
 	var bi := Button.new()
-	bi.text = "📥 Importar"
+	bi.text = Idiomas.t("📥 Importar")
 	bi.add_theme_font_size_override("font_size", 11)
 	bi.pressed.connect(func() -> void: _importar_csv(ed))
 	p._lista_editor.add_child(bi)
 	var bp := Button.new()
-	bp.text = "📋 Pegar desde el portapapeles"
+	bp.text = Idiomas.t("📋 Pegar desde el portapapeles")
 	bp.add_theme_font_size_override("font_size", 11)
 	bp.pressed.connect(func() -> void:
 		p._ed_csv = DisplayServer.clipboard_get()
@@ -473,22 +473,22 @@ func _pintar_editor_csv(ed: Editor) -> void:
 
 	p._lista_editor.add_child(HSeparator.new())
 	var te := p._texto(11, p.COL_ACENTO)
-	te.text = "EXPORTAR LA BASE (CSV)"
+	te.text = Idiomas.t("EXPORTAR LA BASE (CSV)")
 	p._lista_editor.add_child(te)
 	var ee := p._texto(10, Principal.COL_SUAVE)
-	ee.text = "Mismo formato que el importador, con el pie hábil de regalo -no se puede reimportar, es calculado, no guardado- y sin habilidades -esas viven en el árbol de entrenamiento de cada club, no en el jugador-. Se copia al portapapeles."
+	ee.text = Idiomas.t("Mismo formato que el importador, con el pie hábil de regalo -no se puede reimportar, es calculado, no guardado- y sin habilidades -esas viven en el árbol de entrenamiento de cada club, no en el jugador-. Se copia al portapapeles.")
 	ee.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_editor.add_child(ee)
 	var fila_ex := HBoxContainer.new()
 	fila_ex.add_theme_constant_override("separation", 8)
 	p._lista_editor.add_child(fila_ex)
 	var b_mi := Button.new()
-	b_mi.text = "Mi liga"
+	b_mi.text = Idiomas.t("Mi liga")
 	b_mi.add_theme_font_size_override("font_size", 11)
 	b_mi.pressed.connect(func() -> void: _exportar_csv(ed, true))
 	fila_ex.add_child(b_mi)
 	var b_todo := Button.new()
-	b_todo.text = "Todo el mundo"
+	b_todo.text = Idiomas.t("Todo el mundo")
 	b_todo.add_theme_font_size_override("font_size", 11)
 	b_todo.pressed.connect(func() -> void: _exportar_csv(ed, false))
 	fila_ex.add_child(b_todo)

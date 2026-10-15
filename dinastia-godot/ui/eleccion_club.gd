@@ -63,10 +63,10 @@ func _construir() -> void:
 	add_child(raiz)
 
 	var t := _texto(20, COL_TEXTO)
-	t.text = "¿DÓNDE EMPIEZAS?"
+	t.text = Idiomas.t("¿DÓNDE EMPIEZAS?")
 	raiz.add_child(t)
 	var sub := _texto(12, COL_SUAVE)
-	sub.text = "El mundo ya está generado entero -las 24 ligas-, esto solo elige a quién diriges."
+	sub.text = Idiomas.t("El mundo ya está generado entero -las 24 ligas-, esto solo elige a quién diriges.")
 	raiz.add_child(sub)
 
 	## El globo: "Arrastra el globo con el dedo para girarlo", igual que en el
@@ -76,7 +76,7 @@ func _construir() -> void:
 	_globo.custom_minimum_size = Vector2(0, 250)
 	raiz.add_child(_globo)
 	var pista := _texto(11, COL_SUAVE)
-	pista.text = "Arrastra el globo para girarlo, o haz clic en el pin de un país."
+	pista.text = Idiomas.t("Arrastra el globo para girarlo, o haz clic en el pin de un país.")
 	pista.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(pista)
 	_globo.pais_tocado.connect(_elegir_pais)
@@ -149,42 +149,42 @@ func _construir_fundar(raiz: VBoxContainer) -> void:
 	fila.add_theme_constant_override("separation", 8)
 	caja.add_child(fila)
 	var t := _texto(11, COL_SUAVE)
-	t.text = "FUNDAR TU CLUB"
+	t.text = Idiomas.t("FUNDAR TU CLUB")
 	t.custom_minimum_size = Vector2(110, 0)
 	t.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila.add_child(t)
 	_campo_nombre_club = LineEdit.new()
-	_campo_nombre_club.placeholder_text = "Nombre de tu club"
+	_campo_nombre_club.placeholder_text = Idiomas.t("Nombre de tu club")
 	_campo_nombre_club.custom_minimum_size = Vector2(220, 32)
 	fila.add_child(_campo_nombre_club)
 	## Colores y estadio del club nuevo (26-9-2026).
 	_col1 = ColorPickerButton.new()
 	_col1.color = Color("1e4030")
 	_col1.custom_minimum_size = Vector2(40, 32)
-	_col1.tooltip_text = "Color principal"
+	_col1.tooltip_text = Idiomas.t("Color principal")
 	fila.add_child(_col1)
 	_col2 = ColorPickerButton.new()
 	_col2.color = Color("c9a227")
 	_col2.custom_minimum_size = Vector2(40, 32)
-	_col2.tooltip_text = "Color secundario"
+	_col2.tooltip_text = Idiomas.t("Color secundario")
 	fila.add_child(_col2)
 	_campo_estadio = LineEdit.new()
-	_campo_estadio.placeholder_text = "Nombre del estadio"
+	_campo_estadio.placeholder_text = Idiomas.t("Nombre del estadio")
 	_campo_estadio.custom_minimum_size = Vector2(170, 32)
 	fila.add_child(_campo_estadio)
 	if Principal.fundar_pedido:
 		e.border_color = COL_ACENTO
 		e.set_border_width_all(2)
-		t.text = "🛠️ FUNDA TU CLUB"
+		t.text = Idiomas.t("🛠️ FUNDA TU CLUB")
 		t.add_theme_color_override("font_color", COL_ACENTO)
 		_campo_nombre_club.call_deferred("grab_focus")
 	var b := Button.new()
-	b.text = "Fundar en el país elegido"
+	b.text = Idiomas.t("Fundar en el país elegido")
 	b.custom_minimum_size = Vector2(0, 32)
 	b.pressed.connect(_fundar)
 	fila.add_child(b)
 	var nota := _texto(11, COL_SUAVE)
-	nota.text = "Reemplaza al colista de Ascenso (o de su única división fuera de Chile). Reputación 58, plantel nuevo."
+	nota.text = Idiomas.t("Reemplaza al colista de Ascenso (o de su única división fuera de Chile). Reputación 58, plantel nuevo.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	fila.add_child(nota)
 	nota.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -222,7 +222,7 @@ func _construir_desafios(raiz: VBoxContainer) -> void:
 	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
 	var t := _texto(11, COL_SUAVE)
-	t.text = "DESAFÍOS (OPCIONAL)  ·  reglas extra que multiplican el puntaje final"
+	t.text = Idiomas.t("DESAFÍOS (OPCIONAL)  ·  reglas extra que multiplican el puntaje final")
 	v.add_child(t)
 	_fila_desafios = HFlowContainer.new()
 	_fila_desafios.add_theme_constant_override("h_separation", 6)
@@ -240,7 +240,7 @@ func _construir_desafios(raiz: VBoxContainer) -> void:
 			b.pressed.connect(func() -> void: _alternar_desafio(k))
 			_fila_desafios.add_child(b)
 	_etiqueta_mult = _texto(11, COL_ACENTO)
-	_etiqueta_mult.text = "Multiplicador total: ×1"
+	_etiqueta_mult.text = Idiomas.t("Multiplicador total: ×1")
 	v.add_child(_etiqueta_mult)
 
 func _alternar_desafio(k: String) -> void:
@@ -254,7 +254,7 @@ func _alternar_desafio(k: String) -> void:
 		for fila: Array in (tabla as Array):
 			if _desafios.has(String(fila[0])):
 				mult *= float(fila[4])
-	_etiqueta_mult.text = "Multiplicador total: ×%.2f" % mult
+	_etiqueta_mult.text = Idiomas.t("Multiplicador total: ×%.2f") % mult
 
 func _texto(tam: int, color: Color) -> Label:
 	var l := Label.new()
@@ -280,7 +280,7 @@ func _elegir_pais(p: String) -> void:
 		total_clubes += l.clubes.size()
 	if _ficha_pais != null:
 		_ficha_pais.text = ficha_pais(p, ligas_del_pais, total_clubes)
-	_titulo_liga.text = "%s  ·  %d clubes" % [
+	_titulo_liga.text = Idiomas.t("%s  ·  %d clubes") % [
 		", ".join(ligas_del_pais.map(func(l: Liga) -> String: return l.nombre)), total_clubes]
 	_limpiar(_lista_clubes)
 	for l: Liga in ligas_del_pais:
@@ -315,19 +315,19 @@ func _fila_club(c: Club, l: Liga) -> Control:
 	fila.add_child(escudo_caja)
 
 	var nom := _texto(13, COL_TEXTO)
-	nom.text = "%s%s" % [c.nombre, "  ·  Ascenso" if l.division() == 2 else ""]
+	nom.text = "%s%s" % [c.nombre, Idiomas.t("  ·  Ascenso") if l.division() == 2 else ""]
 	nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nom.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila.add_child(nom)
 
 	var rep := _texto(12, COL_SUAVE)
-	rep.text = "rep %d" % c.rep
+	rep.text = Idiomas.t("rep %d") % c.rep
 	rep.custom_minimum_size = Vector2(60, 0)
 	rep.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila.add_child(rep)
 
 	var b := Button.new()
-	b.text = "Dirigir"
+	b.text = Idiomas.t("Dirigir")
 	b.custom_minimum_size = Vector2(80, 30)
 	b.pressed.connect(func() -> void: _elegir_club(c))
 	fila.add_child(b)

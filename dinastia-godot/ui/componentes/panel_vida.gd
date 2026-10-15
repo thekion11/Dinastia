@@ -138,7 +138,7 @@ static func _opciones(lista: VBoxContainer, p: Control, titulo: String, tabla: D
 			vb.add_child(ya)
 		else:
 			var b := Button.new()
-			b.text = "Elegir"
+			b.text = Idiomas.t("Elegir")
 			b.add_theme_font_size_override("font_size", 12)
 			var clave := k
 			b.pressed.connect(func() -> void: al_elegir.call(clave))
@@ -148,13 +148,13 @@ static func _hogar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	var v := mundo.vida
 	## Tu casa en 3D, con tu DT en la terraza mirando las redes (28-9-2026).
 	var ver := Button.new()
-	ver.text = "🏡 Ver tu casa"
+	ver.text = Idiomas.t("🏡 Ver tu casa")
 	ver.custom_minimum_size = Vector2(0, 34)
 	ver.pressed.connect(func() -> void: CasaEscena3D.abrir(p, mundo, p.get("_bandeja")))
 	lista.add_child(ver)
 	var movil := Button.new()
 	var pend := mundo.redes.pendientes() if mundo.redes != null else 0
-	movil.text = "📱 Abrir el móvil (Tribuna)" + ("  · %d comentarios sin responder" % pend if pend > 0 else "")
+	movil.text = Idiomas.t("📱 Abrir el móvil (Tribuna)") + (Idiomas.t("  · %d comentarios sin responder") % pend if pend > 0 else "")
 	movil.custom_minimum_size = Vector2(0, 34)
 	movil.pressed.connect(func() -> void: Telefono.abrir(p, mundo))
 	lista.add_child(movil)
@@ -261,7 +261,7 @@ static func _bienestar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	expl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vb.add_child(expl)
 	var explicar := func(x: float) -> void:
-		expl.text = "Trabajo al %d%%: preparación +%.1f%%, estrés %s por semana, familia %s." % [int(x),
+		expl.text = Idiomas.t("Trabajo al %d%%: preparación +%.1f%%, estrés %s por semana, familia %s.") % [int(x),
 			float(clampi(int(x) - 50, 0, 50)) * 0.06,
 			("%+d" % int((x - 50.0) / 8.0)) if absf(x - 50.0) >= 8.0 else "±0",
 			("%+d" % -int((x - 55.0) / 6.0)) if absf(x - 55.0) >= 6.0 else "±0"]
@@ -279,8 +279,8 @@ static func _bienestar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	for k: String in VidaDT.OCIO:
 		var o: Array = VidaDT.OCIO[k]
 		var b := Button.new()
-		b.text = "%s  %s\n%s · estrés %d%s" % [String(o[4]), String(o[0]), Cesiones.dinero(v.precio(int(o[1]))) if int(o[1]) > 0 else "gratis",
-			int(o[2]), (" · familia +%d" % int(o[3])) if int(o[3]) > 0 else ""]
+		b.text = Idiomas.t("%s  %s\n%s · estrés %d%s") % [String(o[4]), String(o[0]), Cesiones.dinero(v.precio(int(o[1]))) if int(o[1]) > 0 else Idiomas.t("gratis"),
+			int(o[2]), (Idiomas.t(" · familia +%d") % int(o[3])) if int(o[3]) > 0 else ""]
 		b.custom_minimum_size = Vector2(168, 52)
 		b.disabled = ya
 		b.add_theme_font_size_override("font_size", 12)

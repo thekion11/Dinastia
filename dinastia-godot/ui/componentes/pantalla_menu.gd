@@ -81,7 +81,7 @@ func _montar() -> void:
 	cab.add_theme_constant_override("separation", 16)
 	_raiz.add_child(cab)
 	var volver := _boton_plano("◂  Volver", 16)
-	volver.tooltip_text = "Volver al menú central (Esc)"
+	volver.tooltip_text = Idiomas.t("Volver al menú central (Esc)")
 	volver.custom_minimum_size = Vector2(118, 44)
 	volver.pressed.connect(cerrar)
 	cab.add_child(volver)
@@ -273,7 +273,7 @@ func _tarjeta(sub: Dictionary, i: int) -> Button:
 	fila.add_child(ic)
 	if sub.has("accion"):
 		var tag := Label.new()
-		tag.text = "▶ ABRIR"
+		tag.text = Idiomas.t("▶ ABRIR")
 		tag.add_theme_font_size_override("font_size", 11)
 		tag.add_theme_color_override("font_color", _color(2).lightened(0.3))
 		fila.add_child(tag)
