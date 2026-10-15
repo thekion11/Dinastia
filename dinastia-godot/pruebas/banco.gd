@@ -6840,7 +6840,12 @@ func _probar_tanda_c() -> void:
 		_comprobar(mr.roles.nombre == "Prueba Veterano" and mr.roles.rol == Roles.DT, "el entrenador eres tú, con tu nombre de jugador")
 	## LAS BUTACAS DE LOS RIVALES, de los colores de su club (no el verde del visor).
 	var riv_b: Club = mf.ligas[0].clubes[1]
-	_comprobar(String(riv_b.perfil_estadio().get("asiento1", "")) == riv_b.color1, "las butacas de un rival llevan los colores de su club")
+	## Las del club, salvo que su estadio real tenga colores propios (`asientos`).
+	var tab_est: Variant = Datos.tabla("ESTADIO_CLUB")
+	var propios: bool = tab_est is Dictionary and (tab_est as Dictionary).has(riv_b.nombre) and ((tab_est as Dictionary)[riv_b.nombre] as Dictionary).has("asientos")
+	_comprobar(propios or String(riv_b.perfil_estadio().get("asiento1", "")) == riv_b.color1, "las butacas de un rival llevan los colores de su club (o los de su estadio real)")
+	if propios:
+		_comprobar(String(riv_b.perfil_estadio().get("asiento1", "")) == String(((tab_est as Dictionary)[riv_b.nombre] as Dictionary)["asientos"][0]), "el estadio con colores propios los aplica")
 	## LOS OBJETIVOS EN EL BORDE: directiva, confianza, próximo partido y misiones del mentor.
 	PanelObjetivos.ruta = "user://objetivos_banco.cfg"
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(PanelObjetivos.ruta))

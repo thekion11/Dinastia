@@ -21,6 +21,29 @@ static func _nuevo(n: Node) -> void:
 		b.mouse_exited.connect(_a.bind(b, Color.WHITE, Vector2.ONE))
 		b.button_down.connect(_a.bind(b, Color(0.88, 0.88, 0.88), Vector2(0.97, 0.97)))
 		b.button_up.connect(_arriba.bind(b))
+		## SONIDO AL RECORRER Y AL ACEPTAR (14-10-2026, pedido: «que al ir
+		## bajando o aceptando tenga sonido»): un tic suave al pasar por un
+		## botón -con el ratón o con el mando/teclado- y el clic al pulsarlo.
+		if not n.has_meta("sin_sonido"):
+			b.focus_entered.connect(_sonar.bind("clic_suave"))
+			b.mouse_entered.connect(_sonar.bind("clic_suave"))
+			b.pressed.connect(_sonar.bind("clic"))
+
+static var _ultimo_ms := {}
+
+## Con tope: un mismo sonido no se repite en menos de 60 ms (pasar el ratón
+## por una lista no hace una ráfaga).
+static func _sonar(nombre: String) -> void:
+	var ahora := Time.get_ticks_msec()
+	if ahora - int(_ultimo_ms.get(nombre, -1000)) < 60:
+		return
+	_ultimo_ms[nombre] = ahora
+	var arbol := Engine.get_main_loop() as SceneTree
+	if arbol == null:
+		return
+	var s := arbol.root.get_node_or_null("Sonido")
+	if s != null and s.has_method("toca"):
+		s.call("toca", nombre, 2)
 
 static func _arriba(b: BaseButton) -> void:
 	_a(b, Color(1.14, 1.14, 1.14) if b.is_hovered() else Color.WHITE, Vector2.ONE)
