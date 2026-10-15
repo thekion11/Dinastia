@@ -339,4 +339,182 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   Alternativas: clip corto en la rama o capturas en el chat.
 - 13-10: plataforma Aura (tryaura.dev): solo Unreal/Unity, sin Godot → NO se usa. No hace
   falta conector ni nivel especial de modelo; lo que falta es ver el vídeo.
+- 13-10 (noche) VÍDEO DE FC 26 VISTO segundo a segundo (red ya abierta; descarga por
+  drive.usercontent.google.com con el id del MP4, 67 MB, vertical 576x1024, 13:45).
+  Informe en `dinastia-godot/COMPARACION_FC26_VIDEO.md` (presentación, entorno, animaciones,
+  cámaras, interfaz, transiciones, ritmo, física y orden de 8 pasadas). Datos clave: reloj
+  FC 26 ≈ 11 s/s (partido de 8-10 min) vs Dinastía ≈ 54 s/s a ×1; 16 % del partido son
+  cinemáticas; presentación de ~180 s. El usuario aclaró: «no es solo el partido, es todo:
+  animaciones, visualización, entorno». Esperar su visto bueno del orden antes de empezar
+  la pasada 1 (preset de ritmo «Realista»). Todo con marcas y nombres ficticios.
+- 13/14-10 PEDIDO (Opus alto, «sorpréndeme»): «ya no solo jugadas predeterminadas, que
+  cambios y tácticas cambien el resultado, controlar a mis jugadores como en el vídeo, y
+  todo lo visual (animaciones, entorno)». HECHO:
+  · MOTOR REAL en el partido del DT (`MotorJugable` + `Partido.motor_externo`, ajuste
+    «⚽ Motor real» en ⚙, por defecto SÍ): el acta sale del césped (`gol_externo`,
+    `remate_externo`, `tarjeta_externa`, `fijar_estadisticas`); al salir del 3D el
+    Partido vuelve a sortear solo. Calibrado con `pruebas/sonda_motor_dt.tscn`
+    (ESCENARIO=calidad|tactica|cambios|simetria|diag, N, MITAD): ~2,5 goles, ~80 %
+    de pases, calidad gana (mejor de local 9/1/2), pizarra ofensiva 6/3/1 vs
+    defensiva 2/3/5. Arreglos clave: formaciones invertidas (`_orientar_formaciones`),
+    césped que frenaba de más, pase al hueco y regate de la IA, portero que decide
+    UNA vez por tiro, atributos con contraste. Prueba del acta:
+    `pruebas/prueba_partido_motor.tscn`.
+  · Panel «Táctica y cambios» en pausa (Esc) `ui/componentes/panel_dt_partido.gd`;
+    DT rival que cambia cansados (60/70/80') y ajusta pizarra; ritmo corto/normal/
+    largo (2,7/4/6 s por minuto); control de todo el equipo como en FC (Q cambia,
+    cursor amarillo, stick relativo a la cámara de TV).
+  · Animaciones según la jugada (`_golpeo_anim`: 333 clips disponibles), conducir,
+    recorrer atrás, portero en guardia, controles con pecho/pie.
+  · CEREMONIA (`visor/ceremonia_partido.gd`): filas con niños de la mano, mascota,
+    lona con escudo, cartas de alineación, himno. Capturas `captura_ceremonia`.
+  · REALIZACIÓN DEL GOL: carrera al córner y abrazo, goleador/banquillo/grada,
+    barrido con escudo, repetición que acaba en el gol (`Repeticion.congelar`).
+    Captura `captura_gol_motor`. Tiempo añadido real (45' +1:23).
+  Pendiente de esta línea: cámara TV inteligente (zoom al área), estadísticas a
+  pedido, disputas cuerpo a cuerpo, más pulido visual del entorno.
 
+- 14-10 PEDIDO: «la prioridad es lo visual, las físicas, ver jugar a la CPU y poder jugar
+  en serio el partido, como en el vídeo» → motor real en el partido del DT (acta = césped),
+  cámara «Transmisión», `visor/cesped.gdshader`, inercia y conducción por toques,
+  ceremonia, cine de gol, panel de táctica/cambios. Prueba: `prueba_control_equipo.tscn`.
+- 14-10 PEDIDO (hecho): «el control debe ser configurable» → `nucleo/mando.gd`
+  (esquemas wasd/clásico, reasignar teclas y botones, ayudas pase/tiro/cambio/dirección,
+  `user://controles.cfg`) + `ui/componentes/panel_controles.gd` (⚙ del estadio, pausa
+  de la Carrera de Jugador y Ajustes). La guía en pantalla usa `Mando.corto_de`.
+  SIGUE: duelos/contacto, más animaciones, CPU vs CPU creíble, misma ceremonia y gol
+  en la Carrera de Jugador.
+- 14-10 PEDIDO (hecho): «¿qué le pasa al portero?», «el césped no debería ser plano»,
+  «los NPC cámaras deberían seguir la jugada», barra de energía y nombres como FC, «carta
+  con la cara del modelo 3D al marcar» y CONTROLES FC 26 según el manual que pasó (todas las
+  combinaciones + filigranas; menú mejor y con sonido al recorrer/aceptar). HECHO:
+  · Portero: `MotorJugable.colocacion_portero` (bisectriz, profundidad por distancia),
+    achique en el mano a mano, `portero_lateral_der/izq` (AnimFutbol), estirada sin
+    teletransporte. Sonda: ~2,9 goles y 71 % de paradas. Captura `captura_portero.tscn`.
+  · Césped con volumen: `visor/cesped_capas.gdshader` + `CespedCapas` (ULTRA 14 capas,
+    ALTO 10, MEDIO 0; sigue a la cámara, se apaga a 18 m); color común en
+    `cesped_comun.gdshaderinc`. Captura `captura_cesped.tscn`.
+  · `visor/camarografos_siguen.gd` (giran con el balón; el de la banda camina).
+  · `ui/componentes/indicador_fc.gd` (nombre, barra fina, triángulo) y barras continuas
+    en los rótulos (`PlayerSpawner.poner_energia`). `ui/componentes/carta_goleador.gd`
+    (banda + escudo + retrato 3D en SubViewport), sustituye al cartel «GOL DE» con motor.
+  · Controles FC: `nucleo/mando.gd` (RB `jugar_mod`, filigranas stick der./numpad,
+    R3 sombrero, cruceta/F1-F4 tácticas rápidas), `visor/control_fc.gd` (21 filigranas
+    con estrellas, reconocedor de gestos, 35+ combinaciones), motor: rosca/vaselina/
+    potente, pase tenso, pared, bombeados, centros, contener, 2.º presiona, falta táctica,
+    salida del portero, jockey, proteger, cambio con stick der., panenka. Tácticas rápidas
+    escriben en la pizarra del club (`tactica_rapida`). Pantalla de controles con
+    pestañas (Botones/Ayudas/Combinaciones/Filigranas). Sonido en TODOS los botones al
+    pasar y pulsar (`BotonFx._sonar`). Prueba: `prueba_control_equipo.tscn`.
+- 14-10 VEREDICTO: la pantalla de controles «sigue siendo muy básica» (pequeña, sin colores
+  del juego, sin animación al bajar/subir ni al cambiar, sin sonido, sin «¿seguro que quieres
+  guardar?», sin fondo animado) + «¿viste la nueva estructura de los controles?» (su manual
+  de FC 26 en 7 partes, PS/Xbox) + «que esté dibujado el mando y qué parte es cada una».
+  HECHO (2.ª versión): `ui/componentes/panel_controles.gd` a pantalla completa con fondo vivo
+  (shader + FondoParticulas), menú lateral con las 7 partes (+ Asignar, Ayudas), tabla
+  PlayStation/Xbox/Teclado, selector dorado que se desliza, filas escalonadas, destello al
+  cambiar, diálogos de guardar/descartar/restaurar, sonidos `menu_*` (Sonido), navegación con
+  mando (LB/RB secciones). `ui/componentes/dibujo_mando.gd` (mando PS/Xbox o teclado con
+  etiquetas y botones que laten). `visor/control_fc.gd`: MANUAL por partes con «fichas»,
+  25 filigranas (McGeady, knock-on, flair rainbow, heel lane change…). Motor: cambios firmes,
+  bloqueo L3+R3, pase elegante, presión de dos (doble RB), portero palo largo (doble Y) y
+  manual (R3), saque de manos, receptor/2.º/3.er lanzador, círculo de serenidad, saques de
+  banda del usuario, cámara lenta del tiro potente. Vídeo: `pruebas/video_controles.tscn`
+  (--write-movie) → `pruebas/capturas/controles_video.mp4` (ffmpeg de imageio-ffmpeg).
+- 14-10 PEDIDO: «el modelo del control es básico, te adjunto uno [Kenney Input Prompts 1.5]; la idea
+  es poder girarlo como un globo terráqueo; la caja guárdala en el repositorio». HECHO: el zip son
+  ICONOS 2D (CC0), no un modelo 3D; se guardaron los PNG de Xbox, PlayStation y teclado en
+  `dinastia-godot/assets/iconos_botones/` (+ licencia; el .zip NO se sube: *.zip va a LFS y LFS
+  está prohibido). Mando 3D procedural `ui/componentes/mando_giratorio.gd` (PS o Xbox, iconos de
+  Kenney en cada botón y etiqueta, arrastrar = girar con inercia, rueda = zoom, doble clic =
+  vista inicial, se mece solo, piezas elegidas laten en dorado, etiquetas con línea que se apagan
+  si quedan de espaldas). `DibujoMando` lo contiene; el teclado sigue en 2D.
+- 14-10: el usuario dio OTRO REGALO «para después»: Kenney City Kit Roads 2.2 (CC0), guardado en
+  `dinastia-godot/assets/ciudad/kenney_roads/` (95 GLB + texturas, sin LFS, regla en .gitattributes).
+  AÚN SIN USAR: cuando lo pida, integrarlo a la red vial de la ciudad (`ciudad_expansion.gd`).
+- 14-10: el usuario dijo que el mando 3D «se ve mal estéticamente»: el cuerpo pasó de elipsoides a una
+  malla fusionada con norma-p (`_malla_cuerpo` en `mando_giratorio.gd`) con barniz y cielo de estudio.
+- 14-10: «asociarlo con los colores» (hecho): un color por botón (`ControlFC.color_pieza`; ABXY con los
+  de su mando), en el aro del botón 3D, en la línea y placa de su etiqueta y en las fichas de cada fila.
+  Diagnóstico del «se ve mal»: era modelo Y ensamblaje (bordes dentados de la cuadrícula, cuerpo globo,
+  botones flotantes). Ahora el cuerpo es una malla polar con silueta exacta (`_malla_cuerpo`), mate, con
+  meseta y borde redondeado. Revisión: `pruebas/captura_mando_grande.tscn` (DISP=ps|xbox).
+- 14-10: «¿se perdieron los diseños de pasto?» NO: los 12 (rayas, rayasH, damero, damGrande, circulos,
+  diagonal, espiga, cruz, abanico, rombos, mitades, liso) siguen en `StadiumBuilder._make_grass_texture`
+  y en el diseñador (EST_CESPED); el sorteo de clubes solo usaba 4 → ahora 12 (`Club._CESPED`, con
+  «rayas» más frecuente). BUG propio de ese día: `cesped.gdshader` leía el dibujo con mipmaps y de lejos
+  se fundía en dos bloques → ahora `filter_nearest` + `textureLod` (`cesped_comun.gdshaderinc`); verde de
+  transmisión más profundo (brillo 0,64 y saturación). Revisión: `pruebas/captura_disenos_cesped.tscn`.
+- 14-10: el usuario se molestó: «¿no le habías puesto volumen al césped? Siento que pierdes cosas del
+  juego». Causa: las capas (`CespedCapas`) solo se veían a <18 m y la cámara de transmisión está a
+  25-50 m, y el detalle del shader se apagaba a 25-70 m. Ahora capas hasta 46 m (parche 80 m, ALTO 8 /
+  ULTRA 12) + mechones de 30-60 cm y parches grandes que no se apagan (`cesped.gdshader`). Prueba de
+  regresión en `prueba_control_equipo.tscn` («césped: las capas de volumen existen»). REGLA: tras tocar
+  algo visual, comprobarlo con la CÁMARA DE TRANSMISIÓN del partido real, no solo de cerca; y no
+  quitar ni apagar nada sin decirlo (si algo cambia de sitio o se pierde, avisar).
+- **14-10 PEDIDO GRANDE «MEGA AUDITORÍA 2» (palabras del usuario, EN ORDEN DE TRABAJO)**: «lo que nos falta es seguir
+  MEJORANDO LO QUE TENEMOS, solo eso; dejar de lado por ahora el PLAN DE RUTA». Lista: (1) NOMBRE y CARA de cada
+  jugador deben corresponder al jugador real (enlace nombre↔cara↔ficha) y NO deben existir otras caras que no sean
+  las versiones 3D (nada de retratos 2D sueltos: todo es el render del modelo 3D); (2) el PÚBLICO del estadio =
+  PERSONAS REALES (modelos 3D de gente, optimizado, incluso personas del club o de la ciudad); (3) CAMISETAS y
+  ESCUDOS de los clubes repasados para parecerse más a los reales; (4) cada MOVIMIENTO CON EL BALÓN ligado a los
+  controles, analizado y creado POR CÓDIGO; (5) mejor FÍSICA del partido y HITBOX; (6) más MODELOS 3D de fuera y
+  más ANIMACIONES; distintos tipos de CAMINATA del personaje; (7) INTELIGENCIA de los jugadores; (8) efectos de
+  CÁMARA, CELEBRACIONES, que se NOTEN los BOTINES, que el VAR se USE; (9) AUDITORÍA REAL de cada parte del juego
+  (qué falta y puntos de mejora); (10) CONDUCCIÓN de vehículos mejorada + CÁMARA POR DENTRO; (11) MENÚS incompletos
+  (ciudad, personalizar); (12) más MINI ANIMACIONES y MÁS JUEGOS dentro del juego; (13) USAR LA CARRETERA
+  (Kenney City Kit Roads, ya en assets/ciudad/kenney_roads) y mejorar objetos MUEBLES e INMUEBLES; (14) OPTIMIZAR
+  el juego como MÍNIMO un 50 %; (15) otra MEGA AUDITORÍA de todo → anotar puntos débiles → volver a hacer un VÍDEO
+  tipo gameplay y SUBIRLO AL DRIVE. Trabajar por bloques con commit y push, banco en 0 fallos, y verificar con la
+  CÁMARA REAL del partido (no solo de cerca). Documento: `dinastia-godot/MEGA_AUDITORIA_2.md`.
+- 14-10 MEGA AUDITORÍA 2, punto 2 (público = personas reales) HECHO: `herramientas/hornear_publico.gd`
+  hornea el modelo humano del juego en 6 poses (piel por CPU, cortado en cadera, 2 niveles) →
+  `assets/ciudad/publico/hincha_<pose>_<cerca|medio>.res`; `StadiumBuilder._montar_horneados` los usa
+  en la bandeja baja (cerca = filas de detalle, medio = resto de bandeja 0 en ALTO); el resto sigue con
+  el maniquí barato. `hinchada.gdshader` ganó `lado_max` (piel/pelo solo cerca del eje de la cabeza).
+  Captura: `pruebas/captura_publico_real.tscn`. Pendiente: NPC del club/ciudad en primeras filas.
+- 14-10 MEGA AUDITORÍA 2, punto 3 (camisetas/escudos) HECHO en 2D: `Jersey.svg_de` rehecho (estampado
+  recortado a la silueta, cuello, puños, costuras, sombra de tela, marca y escudo en el pecho) y
+  `Escudo.svg_de` con aro de borde (`_borde_de`) y sombra. Hoja: `pruebas/captura_camisetas_escudos.tscn`.
+  Pendiente: revisar la camiseta procedural del 3D (`KitTextureFactory`) con el mismo criterio.
+- 14-10 MEGA AUD. 2, puntos 8 (parcial): VAR en el 3D con motor (1 de 5 goles con VAR en la liga abre
+  la sala VAR y pausa el motor; el gol siempre se confirma) y botines variados por jugador sin diseño de
+  club (`VestidorQ._botin_de`). Pendiente de 4-8: caminatas del personaje, IA, efectos de cámara.
+- 14-10 MEGA AUD. 2 punto 6 (parcial): «MI CAMINATA» (formal/normal/animado/cansado/agachado/trote; clips
+  Walk/Crouch_Fwd/Jog_Fwd en `AnimQuaternius.CLIP_CAMINATA`, selector en ⚙ Ajustes de la ciudad,
+  `ExploradorCiudad.ESTILOS_CAMINATA`). Medido con `medir_partido` (ALTO): público real +440k tris
+  → recortado a 4 filas cerca + 8 medio (2,41 M vs 2,23 M sin ellas). Pendiente: más modelos 3D externos
+  (la red bloquea descargas: pedir permiso de red) y más animaciones.
+- 14-10 MEGA AUD. 2 punto 10 HECHO: conducción (`ExploradorCiudad._conducir`: curva de potencia, S frena
+  fuerte/marcha atrás, ESPACIO freno de mano, volante suave, cabeceo y balanceo) y cámaras de coche con
+  V (tercera / capó / interior con volante y cuentakilómetros `VolanteUI`). Captura:
+  `pruebas/captura_conduccion.tscn`.
+- 14-10 MEGA AUD. 2 punto 13 (parcial): carretera Kenney EN USO como accesorios (`CiudadExpansion._kenney_calles`:
+  brazos de farola curva en avenidas, postes con cable en barrios, carteles colgantes en cruces, vallas/luces/
+  vallado de las obras), ×9–14. NO se sustituyeron las calzadas (siguen siendo lotes de asfalto con marcas
+  propias) — decisión consciente por riesgo con semáforos/tráfico. Pendiente: pilares de puente, rotondas.
+- 14-10 MEGA AUD. 2 punto 11 HECHO: menús «Ciudad 3D» (volar, pasear a pie, conducir, entrar al estadio) y
+  «Editar» (mundo, mi personaje, identidad, equipación, estadio, casa) completados en `MenuLateral.MENUS`;
+  acciones `ciudad_pie/ciudad_coche` (`Principal._ver_ciudad_explorando`). Prueba: `prueba_menu_ciudad_pie`.
+- 14-10 MEGA AUD. 2 punto 12 (parcial): 2 minijuegos nuevos en la Sala (Mi Vida → Minijuegos): MALABARES
+  (`ui/componentes/minijuego_malabares.gd`) y REFLEJOS DEL PORTERO (`minijuego_reflejos.gd`), récords en
+  `user://minijuegos.cfg`. Prueba: `prueba_minijuegos_nuevos`. Tras crear clases nuevas: `godot --headless
+  --import` para refrescar la caché de clases.
+- 14-10 MEGA AUD. 2 punto 8 (más): efectos de cámara (`CameraRig.impacto` = sacudida, `golpe_de_zoom`;
+  gol/tarjeta/remate en `Estadio._montar_motor`). Optimización: se probó bajar cortes/distancia de sombra
+  en ALTO → sin ahorro medible de triángulos (revertido); `medir_partido` ganó ARBOL=1 y lista de luces.
+  Cifra honesta: partido ALTO ≈2,3 M tris/700 llamadas bajo llvmpipe; el ≥50 % NO está demostrado.
+- 14-10 MEGA AUD. 2 puntos 9 y 15: `dinastia-godot/MEGA_AUDITORIA_2.md` (estado real de los 15 puntos; el ≥50 % de
+  optimización NO está demostrado). Vídeo de novedades (≈40 s, 8 MB) entregado por el chat; NO se subió al Drive:
+  el conector exige el archivo en base64 dentro de la llamada y 8 MB no caben. Guion `pruebas/video_novedades.gd`,
+  montaje `herramientas/montar_novedades.py` (los .avi/.mp4 nunca al repo).
+- 14-10 PEDIDOS (tras MEGA AUD. 2): «¿qué hacemos con el resto de las filas?» → personas reales en TODAS las filas
+  (poses sentadas, 8 poses × 3 niveles cerca/medio/lejos; `herramientas/hornear_publico.gd`). Fondo del menú Ciudad
+  3D rehecho (`fondo_menu.gdshader` estilo 7). «Compara qué se respeta con cada club» → `pruebas/auditoria_clubes.tscn`
+  (AUDITORIA_CLUBES.md/.csv): estadio real 46 %, colores de estadio 12 %, escudo con rasgos reales 7 %, foto de
+  equipación 37 % (solo base real), diseño propio 91 %, patrocinador del club real 0 % (los de la IA salen del azar
+  determinista: PENDIENTE), retrato real 13 % (base real). HECHO: escudo REAL del club en la camiseta 3D (uniform
+  `escudo_tex`), colores de butacas de 47 estadios y rasgos de escudo de 26 clubes (`estadios_reales.py` ASIENTOS/
+  ESCUDOS → `estadios_colores.py` parchea los JSON), retratos con la camiseta de volumen (`VestidorQ.ropa_aparte`).
+  El «modelo» de camiseta = la ropa Peasant (RopaSeparada), apagada en partido por coste. Pendiente: estadios por
+  fuera son cajas grises (tribunas «falsas»), patrocinadores reales, más escudos.

@@ -26,6 +26,13 @@ var _cara_z: float = 62.5
 var _y_principal: float = 11.5
 var _foco_tele: Vector3 = Vector3.ZERO
 const FOV_TELE := 21.0
+const FOV_TRANSMISION := 33.0
+const ALTURA_TRANSMISION := 17.0
+var _trans_foco := Vector3.ZERO
+var _trans_z := 0.0
+var _trans_fov := FOV_TRANSMISION
+## La velocidad del balón (para adelantar el plano a la jugada).
+var _bola_antes := Vector3.ZERO
 const ALTURA_TELE := 36.0
 ## Era una constante de 46 m (23-9-2026). En la forma mas chica ("ingles",
 ## dx=45) eso deja la camara FUERA del muro exterior del estadio, y con el
@@ -59,6 +66,11 @@ func build_for(dx: float, dz: float, alto: float) -> void:
 	var centro := Vector3(0, 1.4, 0)
 	_y_principal = minf(alto * 0.55 + 4.0, alto - 1.5)
 	_dist_tele = minf(DISTANCIA_TELE_X_MAX, dx - 7.0)
+
+	# 0. TRANSMISIÓN (13-10-2026, comparada con el vídeo de FC 26): alta, desde
+	# la tribuna principal, siguiendo el balón a lo largo del campo y cerrando
+	# el plano cerca del área. Es la cámara del partido con el motor real.
+	_add("Transmisión", Vector3(_dist_tele, ALTURA_TRANSMISION, 0.0), Vector3(0, 0, 0), FOV_TRANSMISION)
 
 	# 1. Principal (TV Broadcast clásico)
 	_add("Principal (TV)", Vector3(_cara_x - 2.0, _y_principal, 7.0), centro, 46)
@@ -132,6 +144,28 @@ func _process(delta: float) -> void:
 		return
 
 	match c_name:
+		"Transmisión":
+			## Sigue al BALÓN aunque haya un jugador elegido (como en FC: el plano
+			## es de la jugada, no del que manejas).
+			var b := balon_ref.global_position if is_instance_valid(balon_ref) else t_pos
+			var vel_b := (b - _bola_antes) / maxf(delta, 0.001)
+			_bola_antes = b
+			if vel_b.length() > 60.0:
+				vel_b = Vector3.ZERO
+			## El plano se adelanta un poco hacia donde va el balón.
+			var guia := Vector3(vel_b.x, 0, vel_b.z) * 0.35
+			## Por la banda de la cámara el foco no se acerca más de la mitad
+			## del campo (si no, plano cenital encima de los jugadores).
+			var foco := Vector3(clampf(b.x * 0.45 + guia.x, -18.0, 4.0), 0.0, clampf(b.z + guia.z, -47.0, 47.0))
+			_trans_foco = _trans_foco.lerp(foco, clampf(2.6 * delta, 0.0, 1.0))
+			## La cámara se desliza por la tribuna (algo menos que el balón) y,
+			## cerca de un área, cierra el plano.
+			_trans_z = lerpf(_trans_z, clampf(_trans_foco.z * 0.78, -38.0, 38.0), clampf(1.8 * delta, 0.0, 1.0))
+			var area := clampf((absf(_trans_foco.z) - 26.0) / 16.0, 0.0, 1.0)
+			_trans_fov = lerpf(_trans_fov, FOV_TRANSMISION - area * 5.0, clampf(1.5 * delta, 0.0, 1.0))
+			cam.global_position = Vector3(_dist_tele, ALTURA_TRANSMISION - area * 2.0, _trans_z)
+			cam.fov = _trans_fov
+			cam.look_at(_trans_foco, Vector3.UP)
 		"Desde la grada (sancionado)":
 			## El DT sancionado sigue el partido con la cabeza desde su butaca.
 			_mira_grada = _mira_grada.lerp(t_pos + Vector3(0, 0.4, 0), 3.0 * delta)
@@ -166,6 +200,45 @@ func _process(delta: float) -> void:
 			var pos_atras := t_pos - fwd2 * 4.2 + Vector3(0, 2.2, 0)
 			cam.global_position = cam.global_position.lerp(pos_atras, 6.0 * delta)
 			cam.look_at(t_pos + fwd2 * 8.0 + Vector3(0, 1.2, 0), Vector3.UP)
+	_efectos(delta)
+
+## EFECTOS DE CÁMARA (14-10-2026): `impacto()` sacude la cámara (goles, entradas
+## fuertes, tarjetas) y `golpe_de_zoom()` cierra el plano un instante (remates,
+## goles). Se aplican al final de cada fotograma, encima de cualquier plano.
+var _sacudida := 0.0
+var _sacudida_dur := 0.01
+var _zoom_t := 0.0
+var _zoom_dur := 0.01
+var _zoom_fuerza := 0.0
+var _fov_base_golpe := -1.0
+
+func impacto(fuerza: float, dur: float = 0.5) -> void:
+	_sacudida = maxf(_sacudida, clampf(fuerza, 0.0, 1.5))
+	_sacudida_dur = maxf(dur, 0.05)
+
+func golpe_de_zoom(grados: float, dur: float = 0.6) -> void:
+	_zoom_fuerza = grados
+	_zoom_t = dur
+	_zoom_dur = maxf(dur, 0.05)
+
+func _efectos(delta: float) -> void:
+	if cameras.is_empty():
+		return
+	var cam: Camera3D = cameras[current_index]
+	if _zoom_t > 0.0:
+		_zoom_t = maxf(_zoom_t - delta, 0.0)
+		## Sube rápido y se suelta despacio (curva de ataque corto).
+		var k := _zoom_t / _zoom_dur
+		cam.fov = maxf(cam.fov - _zoom_fuerza * k * k, 10.0)
+	## Solo en los planos que reencuadran cada fotograma (el temblor no se acumula).
+	var reencuadra := current_name() in ["Transmisión", "Tele Dinámica", "Pro (Tercera Persona)", "Primera Persona (POV)", "Desde la grada (sancionado)"]
+	if _sacudida > 0.001 and reencuadra:
+		var a := _sacudida * 0.012
+		var t := Time.get_ticks_msec() * 0.001
+		cam.rotate_object_local(Vector3.RIGHT, sin(t * 47.0) * a)
+		cam.rotate_object_local(Vector3.UP, sin(t * 39.0 + 1.3) * a)
+		cam.rotate_object_local(Vector3.FORWARD, sin(t * 53.0 + 2.1) * a * 0.5)
+		_sacudida = maxf(_sacudida - delta * _sacudida / maxf(_sacudida_dur * 0.5, 0.05) - delta * 0.15, 0.0)
 
 func switch_to(idx: int) -> void:
 	if idx < 0 or idx >= cameras.size():

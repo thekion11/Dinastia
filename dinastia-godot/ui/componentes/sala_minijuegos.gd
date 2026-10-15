@@ -14,6 +14,14 @@ static func abrir(p: Control, mundo: Mundo) -> SalaMinijuegos:
 	s._montar(p, mundo)
 	return s
 
+static func _rec_malabares() -> int:
+	MinijuegoMalabares.cargar_record()
+	return MinijuegoMalabares.record
+
+static func _rec_reflejos() -> int:
+	MinijuegoReflejos.cargar_record()
+	return MinijuegoReflejos.record
+
 func _montar(p: Control, mundo: Mundo) -> void:
 	var fondo := ColorRect.new()
 	fondo.color = Color(0.04, 0.05, 0.08, 0.96)
@@ -36,11 +44,13 @@ func _montar(p: Control, mundo: Mundo) -> void:
 	var juegos := [
 		["🎯", "Tanda de penales", "Cinco penales contra un portero que aprende.", func() -> void: MinijuegoPenales.mostrar(p, mundo)],
 		["🧱", "Tiros libres", "Barrera, rosca y una barra de potencia.\nRécord: %d de 5" % MinijuegoTiroLibre.record, func() -> void: MinijuegoTiroLibre.mostrar(p, mundo)],
+		["⚽", Idiomas.t("Malabares"), Idiomas.t("Mantén el balón en el aire: muévete, toca a tiempo y que no caiga.") + "\n" + Idiomas.t("Récord: %d") % _rec_malabares(), func() -> void: MinijuegoMalabares.mostrar(p, mundo)],
+		["🧤", Idiomas.t("Reflejos del portero"), Idiomas.t("Doce disparos, cada vez más rápidos: tírate al lado correcto.") + "\n" + Idiomas.t("Récord: %d") % _rec_reflejos(), func() -> void: MinijuegoReflejos.mostrar(p, mundo)],
 		["🧠", "Trivia del club", "Preguntas sobre tu propio plantel y tu estadio.\nRécord: %d" % TriviaClub.record, func() -> void: TriviaClub.mostrar(p, mundo)],
 	]
 	for j: Array in juegos:
 		var caja := PanelContainer.new()
-		caja.custom_minimum_size = Vector2(250, 230)
+		caja.custom_minimum_size = Vector2(205, 230)
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = Color(0.1, 0.12, 0.18)
 		sb.border_color = Color(0.35, 0.55, 0.9)

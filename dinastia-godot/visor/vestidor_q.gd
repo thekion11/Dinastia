@@ -62,6 +62,17 @@ static var _packed_male: Array = []
 ## barrido de 16M pixeles por cada jugador del mismo club.
 static var _cache_textura := {}
 
+## LOS BOTINES SE NOTAN (14-10-2026): sin diseño de club todos llevaban el negro
+## clásico. Ahora cada jugador (dorsal + color de su club) calza uno de una
+## docena de modelos, la mayoría de colores vivos; porteros y árbitro, negro.
+const BOTINES_VARIADOS := ["clasico", "blanco", "rayo", "fuego", "hielo", "neon", "talon_rojo",
+	"punta_plata", "coral", "solar", "glaciar", "clasico", "blanco", "esmeralda"]
+
+static func _botin_de(dorsal: int, c1: Color) -> String:
+	if dorsal <= 0:
+		return "clasico"
+	return BOTINES_VARIADOS[absi(dorsal * 31 + int(c1.r8) * 7 + int(c1.b8)) % BOTINES_VARIADOS.size()]
+
 static func _cargar_male() -> Array:
 	if _packed_male.is_empty():
 		for ruta in PIEZAS_MALE:
@@ -252,7 +263,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 			"trim": 1, "num": "ffffff",
 			"pant": {"dis": "liso", "c1": pantalon.to_html(false), "c2": c1.to_html(false)},
 			"med": {"dis": "lisas", "c1": medias.to_html(false), "c2": c2.to_html(false)},
-			"bot": {"mod": "clasico"}, "acc": {}}
+			"bot": {"mod": _botin_de(dorsal, c1)}, "acc": {}}
 	var clave := "%s|%s|%d|%s|%s|%s|%s|%d|%d" % [c1.to_html(false), c2.to_html(false), i_estilo,
 		pantalon.to_html(false), medias.to_html(false), _piel_cuantizada(piel), largo, hash(kit), dorsal]
 	## Cuerpo de mujer y de hombre NO comparten material (13-10-2026): su

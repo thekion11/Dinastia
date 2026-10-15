@@ -28,29 +28,55 @@ static func _lum_tx(c1: String) -> String:
 	var lum := 0.299 * col.r + 0.587 * col.g + 0.114 * col.b
 	return "#0c130e" if lum > 0.6 else "#ffffff"
 
-## El SVG de la camiseta procedural. `num` es el dorsal (0 = sin dorsal),
-## `sp` el nombre del sponsor a pecho (vacío = sin banda).
-static func svg_de(c1: String, c2: String, estilo: String, num: int = 0, sp: String = "") -> String:
-	var deco := ""
+## EL SVG DE LA CAMISETA (rehecho el 14-10-2026, «las camisetas deben parecerse
+## más a las reales»). Antes era una silueta de cinco trazos con el estampado
+## recortado a mano y mangas lisas. Ahora: el estampado se RECORTA a la silueta
+## (cubre cuerpo y mangas, como una camiseta de verdad), con cuello en el color
+## secundario, puños, costuras laterales, sombra de tela (más oscura en los
+## costados y el bajo) y la marca del fabricante y el escudo del club en el pecho.
+## `num` y `sp` no se dibujan aquí: van encima como etiquetas de Godot.
+const _CUERPO := "M33 5 L11 16 L2 43 L18 50 L24 41 L24 91 Q50 96 76 91 L76 41 L82 50 L98 43 L89 16 L67 5 Q50 21 33 5 Z"
+
+static func _estampado(estilo: String, c2: String) -> String:
 	match estilo:
-		"franjas": deco = '<path d="M22 8h8v38h-8zM38 8h8v38h-8z" fill="%s"/>' % c2
-		"banda": deco = '<path d="M12 12 52 34v9L12 21z" fill="%s"/>' % c2
-		"mitad": deco = '<path d="M32 4h12l6 4-4 12v26H32z" fill="%s"/>' % c2
-		"hombros": deco = '<path d="M20 4 8 10l4 10 6-3v3h4V6zM44 4l12 6-4 10-6-3v3h-4V6z" fill="%s"/>' % c2
-		"aros": deco = '<path d="M18 14h28v6H18zM18 26h28v6H18zM18 38h28v6H18z" fill="%s"/>' % c2
-		"diagonal": deco = '<path d="M18 46 46 8h8L26 46z" fill="%s"/>' % c2
-		"cuadros": deco = '<path d="M18 8h7v9h-7zM32 8h7v9h-7zM25 17h7v9h-7zM39 17h7v9h-7zM18 26h7v9h-7zM32 26h7v9h-7zM25 35h7v9h-7zM39 35h7v9h-7z" fill="%s" opacity=".85"/>' % c2
-		"vertical3": deco = '<path d="M20 8h5v38h-5zM29.5 8h5v38h-5zM39 8h5v38h-5z" fill="%s"/>' % c2
-		"degrade": deco = '<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s" stop-opacity="0"/><stop offset="1" stop-color="%s" stop-opacity=".95"/></linearGradient></defs><path d="M18 8h28v38H18z" fill="url(#dg)"/>' % [c2, c2]
-		"sash": deco = '<path d="M16 10 48 40v6h-4L14 18z" fill="%s"/>' % c2
-		"arlequin": deco = '<path d="M32 8h14v19H32zM18 27h14v19H18z" fill="%s"/>' % c2
+		"franjas":
+			return '<path d="M12.5 0h12.5v100H12.5zM37.5 0H50v100H37.5zM62.5 0H75v100H62.5zM87.5 0H100v100H87.5z" fill="%s"/>' % c2
+		"banda": return '<path d="M0 36H100V52H0z" fill="%s"/>' % c2
+		"mitad": return '<path d="M50 0H100V100H50z" fill="%s"/>' % c2
+		"hombros": return '<path d="M0 0H100V22L76 26V100H100V0zM0 0V100H24V26L0 22z" fill="%s"/><path d="M0 0H100V20Q50 34 0 20z" fill="%s"/>' % [c2, c2]
+		"aros": return '<path d="M0 14H100V24H0zM0 34H100V44H0zM0 54H100V64H0zM0 74H100V84H0z" fill="%s"/>' % c2
+		"diagonal": return '<path d="M14 100 64 0H82L32 100z" fill="%s"/>' % c2
+		"cuadros":
+			var d := ""
+			for r in 8:
+				for c in 5:
+					if (r + c) % 2 == 0:
+						d += "M%.1f %.1fh10v11.5h-10z" % [25.0 + c * 10.0, 6.0 + r * 11.5]
+			return '<path d="%s" fill="%s"/>' % [d, c2]
+		"vertical3": return '<path d="M32 0h9v100h-9zM45.5 0h9v100h-9zM59 0h9v100h-9z" fill="%s"/>' % c2
+		"degrade": return '<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset=".25" stop-color="%s" stop-opacity="0"/><stop offset="1" stop-color="%s" stop-opacity=".95"/></linearGradient></defs><path d="M0 0H100V100H0z" fill="url(#dg)"/>' % [c2, c2]
+		"sash": return '<path d="M16 8 54 8 84 100 56 100z" fill="%s" transform="skewX(0)"/>' % c2
+		"arlequin": return '<path d="M50 6 76 30 50 54 24 30zM50 54 76 78 50 102 24 78zM24 30 0 54 24 78 48 54zM76 30 100 54 76 78 52 54z" fill="%s" opacity=".95"/>' % c2
+	return ""
+
+static func svg_de(c1: String, c2: String, estilo: String, num: int = 0, sp: String = "") -> String:
 	var tx := _lum_tx(c1)
-	## El texto del sponsor y el numero no se dibujan aqui -el rasterizador de
-	## Godot no pinta <text>, la misma limitacion de siempre-: van encima como
-	## etiquetas de Godot, y por eso svg_de() no los recibe.
-	return ('<svg width="64" height="52" viewBox="0 0 64 52" xmlns="http://www.w3.org/2000/svg">' +
-		'<path d="M20 4 8 10l4 10 6-3v29h28V17l6 3 4-10L44 4l-6 3h-12z" fill="%s" stroke="#000a" stroke-width="2.5" stroke-linejoin="round"/>' +
-		'%s<path d="M26 4h12l-6 6z" fill="%s" stroke="#0006"/></svg>') % [c1, deco, c2]
+	var cuello := c2 if estilo != "hombros" else c1
+	var p := (
+		'<svg width="64" height="62" viewBox="0 0 100 97" xmlns="http://www.w3.org/2000/svg">' +
+		'<defs><clipPath id="cp"><path d="%s"/></clipPath>' +
+		'<linearGradient id="sh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".30"/><stop offset=".22" stop-color="#000" stop-opacity=".04"/><stop offset=".5" stop-color="#fff" stop-opacity=".07"/><stop offset=".78" stop-color="#000" stop-opacity=".04"/><stop offset="1" stop-color="#000" stop-opacity=".30"/></linearGradient>' +
+		'<linearGradient id="sv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".10"/><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient></defs>' +
+		'<path d="%s" fill="%s"/>' +
+		'<g clip-path="url(#cp)">%s<path d="M0 0H100V100H0z" fill="url(#sh)"/><path d="M0 0H100V100H0z" fill="url(#sv)"/>' +
+		'<path d="M24 41V91M76 41V91" stroke="#000" stroke-opacity=".18" stroke-width="1"/>' +
+		'<path d="M2 43 18 50M98 43 82 50" stroke="%s" stroke-width="5"/></g>' +
+		'<path d="%s" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="1.6" stroke-linejoin="round"/>' +
+		'<path d="M33 5Q50 24 67 5L62.5 4Q50 15 37.5 4Z" fill="%s" stroke="#000" stroke-opacity=".35" stroke-width=".8"/>' +
+		'<circle cx="39" cy="30" r="4.2" fill="%s" fill-opacity=".85" stroke="%s" stroke-opacity=".6" stroke-width=".8"/>' +
+		'<path d="M60 27l4 4M60 31l4 4" stroke="%s" stroke-opacity=".8" stroke-width="1.6" stroke-linecap="round"/>' +
+		'</svg>') % [_CUERPO, _CUERPO, c1, _estampado(estilo, c2), c2, _CUERPO, cuello, tx, tx, tx]
+	return p
 
 static var _cache_svg: Dictionary = {}
 

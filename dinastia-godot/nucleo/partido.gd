@@ -89,6 +89,13 @@ var remates_local: int = 0
 var remates_visita: int = 0
 var minuto: int = 0
 var terminado_ya: bool = false
+## EL PARTIDO LO JUEGA EL MOTOR (13-10-2026). Con esto encendido, los goles,
+## los remates, las tarjetas y la posesión NO se sortean aquí: los manda el
+## motor real del 3D (`MotorJugable`) con `gol_externo()`, `remate_externo()`,
+## `tarjeta_externa()` y `fijar_posesion()`. El reloj, las lesiones, los
+## planes y todo lo demás siguen siendo de este objeto, que es el que va a
+## la tabla.
+var motor_externo := false
 ## Si ya se aplicó el plan del minuto 60. Ver `simular_minuto()`.
 var _plan_aplicado: bool = false
 
@@ -452,16 +459,99 @@ func simular_minuto() -> void:
 	if Azar.suerte(0.05):
 		fueras_visita += 1
 
-	if Azar.suerte(p_l):
-		_atacar(local, once_local, true)
-	if Azar.suerte(p_v):
-		_atacar(visita, once_visita, false)
+	if not motor_externo:
+		if Azar.suerte(p_l):
+			_atacar(local, once_local, true)
+		if Azar.suerte(p_v):
+			_atacar(visita, once_visita, false)
 
 	_incidencias()
 	minuto_jugado.emit(minuto)
 	if minuto >= MINUTOS:
 		terminado_ya = true
 		terminado.emit(goles_local, goles_visita)
+
+# ---------------------------------------------------------------------------
+#  LO QUE MANDA EL MOTOR REAL
+# ---------------------------------------------------------------------------
+
+func _por_id(id: String) -> Jugador:
+	for j in once_local:
+		if j.id == id:
+			return j
+	for j in once_visita:
+		if j.id == id:
+			return j
+	for j in _todos:
+		if j.id == id:
+			return j
+	return null
+
+## Un gol que pasó en el césped. `autor_id` vacío = en propia puerta.
+func gol_externo(es_local: bool, autor_id: String, asist_id: String) -> void:
+	if terminado_ya:
+		return
+	var c := local if es_local else visita
+	var autor := _por_id(autor_id) if autor_id != "" else null
+	var asistente := _por_id(asist_id) if asist_id != "" else null
+	if es_local:
+		goles_local += 1
+		remates_local += 1
+		tiros_puerta_local += 1
+		xg_local += 0.3
+	else:
+		goles_visita += 1
+		remates_visita += 1
+		tiros_puerta_visita += 1
+		xg_visita += 0.3
+	peor_diferencia_local = mini(peor_diferencia_local, goles_local - goles_visita)
+	peor_diferencia_visita = mini(peor_diferencia_visita, goles_visita - goles_local)
+	if autor != null:
+		autor.anotar()
+		_notas[autor.id] = minf(float(_notas.get(autor.id, 6.0)) + 1.1, 10.0)
+	cronica.append({"min": minuto, "tipo": "gol", "club": c.id, "autor": autor.nombre if autor else "en propia puerta"})
+	_momentum_push(2, es_local)
+	gol.emit(c, autor, minuto, asistente)
+
+## Un remate que no fue gol: "atajada", "poste" o "fallo".
+func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
+	if terminado_ya:
+		return
+	var c := local if es_local else visita
+	if es_local:
+		remates_local += 1
+		xg_local += 0.09
+		if tipo == "atajada":
+			tiros_puerta_local += 1
+	else:
+		remates_visita += 1
+		xg_visita += 0.09
+		if tipo == "atajada":
+			tiros_puerta_visita += 1
+	_momentum_push(1, es_local)
+	remate.emit(c, _por_id(autor_id), tipo, minuto)
+
+## Una tarjeta que sacó el árbitro del 3D. La roja deja al equipo con uno menos
+## también aquí (sale del once: la fuerza se vuelve a medir).
+func tarjeta_externa(jugador_id: String, roja: bool) -> void:
+	var j := _por_id(jugador_id)
+	if j == null:
+		return
+	j.amarillas += 1
+	if roja:
+		j.suspension = maxi(j.suspension, 1)
+		once_local.erase(j)
+		once_visita.erase(j)
+		invalidar_fuerza()
+	tarjeta.emit(j, roja, minuto)
+
+## Posesión, córners y faltas medidos en el césped.
+func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array) -> void:
+	posesion_local = clampf(pos_local, 0.0, 100.0)
+	corners_local = int(corners[0])
+	corners_visita = int(corners[1])
+	faltas_local = int(faltas_[0])
+	faltas_visita = int(faltas_[1])
 
 func _probabilidad(ata: float, def_rival: float) -> float:
 	## REALISMO (13-10-2026): con la fórmula vieja un once de media 86 contra
@@ -669,7 +759,7 @@ func _incidencias() -> void:
 	## que no leia nadie: la asamblea podia votar el videoarbitraje y en el campo
 	## se sacaban exactamente las mismas amarillas. Con video se protesta menos y
 	## se inventan menos faltas, que es justo lo que el HTML llamaba `_fVAR`.
-	if Azar.suerte(0.031 * ctx_factor_tarjetas):
+	if Azar.suerte(0.031 * ctx_factor_tarjetas) and not motor_externo:
 		var l := _alguien(_todos)
 		if l != null:
 			l.amarillas += 1

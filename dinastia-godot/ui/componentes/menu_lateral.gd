@@ -66,7 +66,12 @@ const MENUS := [
 	{"id": "editar", "icono": "✏️", "nombre": "Editar", "estilo": 5, "ficha": false,
 		"lema": "El mundo a tu medida: ligas, clubes y jugadores.",
 		"colores": ["#06162e", "#0b2447", "#8fd3ff"], "subs": [
-		{"tab": "Editor", "label": "Editor del mundo", "icono": "🛠️", "desc": "Competiciones, clubes, jugadores y CSV."}]},
+		{"tab": "Editor", "label": "Editor del mundo", "icono": "🛠️", "desc": "Competiciones, clubes, jugadores y CSV."},
+		{"accion": "mi_personaje", "label": "Mi personaje", "icono": "🧍", "desc": "Cara, pelo, ropa y tu forma de caminar."},
+		{"tab": "Gente", "secc": "identidad", "label": "Identidad visual", "icono": "🎨", "desc": "Colores, escudo, apodo y tipografía."},
+		{"tab": "Gente", "secc": "kits", "label": "Equipación", "icono": "👕", "desc": "Camiseta, pantalón, medias y botines del club."},
+		{"tab": "Estadio", "label": "Diseño del estadio", "icono": "📐", "desc": "Estilos completos y colores por sección."},
+		{"accion": "casa", "label": "Decorar mi casa", "icono": "🛋️", "desc": "Muebles y rincones de tu hogar en 3D."}]},
 	{"id": "ajustes", "icono": "⚙️", "nombre": "Ajustes", "estilo": 6, "ficha": false,
 		"lema": "Cómo se ve, cómo suena y cómo se juega.",
 		"colores": ["#0c0e12", "#171b22", "#a8b4c8"], "subs": [
@@ -77,7 +82,10 @@ const MENUS := [
 		"lema": "La ciudad que rodea tu estadio.",
 		"colores": ["#070a16", "#141a33", "#ffd27a"], "subs": [
 		{"tab": "Ciudad", "label": "Diseño de la ciudad", "icono": "🗺️", "desc": "Terrenos, negocios, conciertos y el municipio."},
-		{"accion": "ver_ciudad", "label": "Recorrerla en 3D", "icono": "🚗", "desc": "Vuela sobre tu ciudad, de día o de noche."}]},
+		{"accion": "ver_ciudad", "label": "Volar sobre ella", "icono": "🛰️", "desc": "La ciudad desde el aire, de día o de noche."},
+		{"accion": "ciudad_pie", "label": "Pasear a pie", "icono": "🚶", "desc": "Calles, parques, edificios por dentro y vecinos con quien charlar."},
+		{"accion": "ciudad_coche", "label": "Conducir", "icono": "🚗", "desc": "Tu coche, con cámara de capó e interior y freno de mano."},
+		{"accion": "ver_estadio", "label": "Entrar al estadio", "icono": "🏟️", "desc": "El mismo estadio que se juega, para recorrerlo."}]},
 	{"id": "estadio", "icono": "🏟️", "nombre": "Estadio 3D", "estilo": 8, "ficha": false,
 		"lema": "Tu casa: cada tribuna, cada foco, cada butaca.",
 		"colores": ["#060d09", "#1f6b38", "#e8f4ff"], "subs": [
@@ -151,6 +159,10 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			p._ver_estadio_con_carga()
 		"ver_ciudad":
 			p._ver_ciudad_con_carga()
+		"ciudad_pie", "ciudad_coche":
+			p._ver_ciudad_explorando("coche" if accion == "ciudad_coche" else "pie")
+		"mi_personaje":
+			CreadorPersonaje.abrir(p, p.mundo)
 		"album":
 			PanelMeta.abrir(p, p.mundo)
 		"minijuegos":

@@ -164,6 +164,12 @@ static var _cache: Dictionary = {}
 static func silueta(forma: String) -> String:
 	return String(SILUETAS.get(forma, SILUETAS["clasico"]))
 
+## [forma, patrón] del escudo del club real al que representa (tabla ESTADIO_CLUB,
+## campo «escudo», `herramientas/estadios_reales.py`), o [].
+static func _rasgo_real(c: Club) -> Array:
+	var r: Variant = c.fila_estadio_real().get("escudo", [])
+	return r if r is Array else []
+
 ## djb2 sobre el id, el mismo hash que usa el resto del proyecto para que un
 ## club dé siempre lo mismo.
 static func _hash(s: String) -> int:
@@ -178,11 +184,17 @@ static func _hash(s: String) -> int:
 static func forma_de(c: Club) -> String:
 	if c.esc_forma != "" and FORMAS.has(c.esc_forma):
 		return c.esc_forma
+	var real := _rasgo_real(c)
+	if real.size() >= 2 and FORMAS.has(String(real[0])):
+		return String(real[0])
 	return FORMAS[_hash(c.id) % FORMAS.size()]
 
 static func patron_de(c: Club) -> String:
 	if c.esc_patron != "" and PATRONES.has(c.esc_patron):
 		return c.esc_patron
+	var real := _rasgo_real(c)
+	if real.size() >= 2 and PATRONES.has(String(real[1])):
+		return String(real[1])
 	return PATRONES[(_hash(c.id) >> 4) % PATRONES.size()]
 
 ## El símbolo del escudo -un emoji, "ESC_SIM" del HTML-, no una forma dibujada.
@@ -380,6 +392,16 @@ static func _patron_svg(p: String, c2: String) -> String:
 			return '<path d="M32 4 A30 30 0 1 0 32 64 A22 26 0 1 1 32 4 Z" fill="%s" opacity=".9"/>' % c2
 	return ""
 
+## El BORDE de un escudo de verdad (14-10-2026): un aro del color que contrasta con
+## el campo -el secundario, o blanco/oscuro si los dos colores se parecen-, y por
+## fuera una línea de sombra que lo separa del fondo.
+static func _borde_de(c: Club) -> String:
+	var a := Color(c.color_escudo1())
+	var b := Color(c.color_escudo2())
+	if absf(a.get_luminance() - b.get_luminance()) > 0.25:
+		return c.color_escudo2()
+	return "#f4f1e6" if a.get_luminance() < 0.55 else "#1a1d22"
+
 ## El SVG completo del escudo, sin texto.
 static func svg_de(c: Club) -> String:
 	var f := forma_de(c)
@@ -397,10 +419,11 @@ static func svg_de(c: Club) -> String:
 <stop offset="1" stop-color="#000000" stop-opacity=".34"/></linearGradient>
 </defs>
 <path d="%s" fill="%s"/>
-<g clip-path="url(#cl)">%s</g>
+<g clip-path="url(#cl)">%s<path d="%s" fill="none" stroke="%s" stroke-width="5.5"/><path d="%s" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="7.5"/></g>
 <path d="%s" fill="url(#br)"/>
 <path d="%s" fill="none" stroke="#00000055" stroke-width="1.4"/>
-</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2()), d, d]
+<path d="%s" transform="translate(32 35) scale(.86) translate(-32 -35)" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="1.1"/>
+</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2()), d, _borde_de(c), d, d, d, d]
 
 ## El escudo ya rasterizado, listo para meter en un TextureRect.
 ##

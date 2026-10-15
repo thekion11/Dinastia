@@ -60,6 +60,8 @@ uniform vec3 piel_obj = vec3(-1.0);
 // Patrocinadores (`SponsorKit`): logo + palabra en el pecho y la espalda, solo
 // logo en la manga y el pantalón.
 uniform bool hay_sp_pecho = false;
+uniform sampler2D escudo_tex : source_color, filter_linear_mipmap, repeat_disable;
+uniform bool hay_escudo = false;
 uniform sampler2D sp_pecho : source_color, filter_linear_mipmap, repeat_disable;
 uniform bool hay_sp_manga = false;
 uniform sampler2D sp_manga : source_color, filter_linear_mipmap, repeat_disable;
@@ -511,8 +513,17 @@ void fragment() {
 		float ancho_e = e.y > 0.0 ? 1.0 : sqrt(max(0.0, 1.0 - e.y * e.y));
 		float cuerpo_e = (1.0 - smoothstep(ancho_e - 0.08, ancho_e, abs(e.x))) * step(-1.0, e.y) * (1.0 - smoothstep(0.92, 1.0, e.y));
 		float borde_e = cuerpo_e * smoothstep(ancho_e - 0.3, ancho_e - 0.2, abs(e.x) + max(0.0, e.y - 0.7) * 0.8);
-		camiseta = mix(camiseta, C(1), cuerpo_e);
-		camiseta = mix(camiseta, trim_col, borde_e);
+		if (hay_escudo) {
+			// El escudo REAL del club, encajado en el pecho (izquierda del jugador).
+			vec2 ue = vec2((x - 0.095) / 0.088 + 0.5, 1.0 - (y - 1.352) / 0.104);
+			if (ue.x > 0.0 && ue.x < 1.0 && ue.y > 0.0 && ue.y < 1.0) {
+				vec4 ec = texture(escudo_tex, ue);
+				camiseta = mix(camiseta, ec.rgb, ec.a);
+			}
+		} else {
+			camiseta = mix(camiseta, C(1), cuerpo_e);
+			camiseta = mix(camiseta, trim_col, borde_e);
+		}
 		// Marca: una curva tipo "ala" en el color de ribete.
 		vec2 mk = vec2((x + 0.095) / 0.045, (y - 1.41) / 0.03);
 		float ala = step(abs(mk.x), 1.0) * step(abs(mk.y - (mk.x * mk.x * 0.6 - 0.2)), 0.22 - mk.x * 0.08);
