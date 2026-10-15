@@ -160,7 +160,7 @@ static func asfalto(tinte: Color = Color(0.17, 0.175, 0.185), semilla: int = 23)
 	m.metallic = 0.0
 	## El asfalto casi no refleja: con el especular por defecto (0,5), en Forward+
 	## la calzada a contraluz se quemaba en blanco (15-10-2026).
-	m.metallic_specular = 0.08
+	m.metallic_specular = 0.2
 	m.uv1_triplanar = true
 	m.uv1_world_triplanar = true
 	m.uv1_scale = Vector3(0.25, 0.25, 0.25)
