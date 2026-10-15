@@ -165,6 +165,8 @@ var anadido := [0.0, 0.0]
 var _goleador: Dictionary = {}
 ## Fintas que la IA ha intentado (para pruebas y estadísticas).
 var regates_ia := 0
+## Fintas de la IA en las que el defensor picó.
+var regates_ia_ok := 0
 var _celebra_anim := "celebrar"
 
 # ---------------------------------------------------------------- montaje
@@ -1490,8 +1492,13 @@ func _ia_portador(p: Dictionary) -> void:
 	if not rival.is_empty() and pos(rival).distance_to(yo) < 4.0:
 		var esquiva := (yo - pos(rival)).normalized()
 		hacia = (hacia + esquiva * 0.8).normalized()
+	## Durante la finta sigue la salida que eligió (no se lo come de nuevo).
+	if t < float(p["regate_hasta"]) and p.has("regate_dir"):
+		hacia = p["regate_dir"]
 	p["objetivo"] = yo + hacia * 6.0
 	p["correr"] = dist_arco < 35.0 or presion < 4.0
+	if _intentar_regate(p, rival, dist_arco):
+		return
 	if t < _decision_en:
 		return
 	## Conduce algo más antes de decidir (antes se la quitaba de encima en
@@ -1528,29 +1535,11 @@ func _ia_portador(p: Dictionary) -> void:
 		var err_c := (1.0 - float(p["attr"]["pas"])) * 7.0
 		var destino := Vector3(_rng.randf_range(-4, 4) + _rng.randf_range(-err_c, err_c), 1.6, arco.z - d * _rng.randf_range(4, 10))
 		_ctx_golpeo = "centro"
-		_patear(p, destino, 17.0, 0.0, -signf(yo.x) * 6.0, "pase")
+		## El efecto se da EN EL SENTIDO DEL ATAQUE (`* -d`): antes era el mismo
+		## giro absoluto para los dos y, con el Magnus, el local centraba
+		## abriéndose y el visitante cerrándose hacia el arco (sesgo de lado).
+		_patear(p, destino, 17.0, 0.0, -signf(yo.x) * 6.0 * -d, "pase")
 		pase_a = _companero_cerca(p, destino)
-		return
-	## EL REGATE DE LA IA (13-10-2026): con el defensor encima, el que tiene
-	## regate intenta irse con una finta (antes solo el jugador humano podía).
-	if presion < 1.8 and t > float(p["regate_hasta"]) and _rng.randf() < float(p["attr"]["reg"]) * 0.45:
-		p["regate_hasta"] = t + 0.7
-		regates_ia += 1
-		var lado := Vector3(d, 0, 0) * (1.0 if _rng.randf() < 0.5 else -1.0)
-		(p["node"] as Node3D).position += lado * 0.8
-		## El repertorio crece con el regate: los buenos sacan bicicletas,
-		## elásticas, ruletas y caños.
-		var reg_a := float(p["attr"]["reg"])
-		var fintas := ["regate_finta", "recorte_interior", "recorte_exterior", "amague_cuerpo", "finta_hombro"]
-		if reg_a > 0.7:
-			fintas.append_array(["bicicleta", "cola_de_vaca", "giro_cruyff", "pisada_lateral"])
-		if reg_a > 0.82:
-			fintas.append_array(["elastica", "ruleta", "cano", "croqueta", "sombrero"])
-		var nom: String = fintas[_rng.randi() % fintas.size()]
-		var ap_r: AnimationPlayer = p["anim"]
-		if is_instance_valid(ap_r) and lado.x * d < 0.0 and ap_r.has_animation(nom + "_espejo"):
-			nom += "_espejo"
-		_anim(p, nom, true)
 		return
 	## EL PASE AL HUECO (13-10-2026). La IA nunca filtraba: los ataques
 	## morían a 30 m de la portería tocando atrás (la sonda: 5 tiros en 8
@@ -1570,6 +1559,88 @@ func _ia_portador(p: Dictionary) -> void:
 		var conduce := dist_arco < 34.0 and presion > 3.0
 		if hay_prisa or float(mejor.get("_nota", 0.0)) > 1.5 or (not conduce and _rng.randf() < 0.15):
 			_pasar_a(p, mejor)
+
+## EL REGATE DE LA IA (15-10-2026, H-11 / M-443). Antes la finta solo se
+## probaba con un rival a menos de 1,8 m y DESPUÉS de tirar, centrar o pasar,
+## y con la entrada saltando a 1,25 m casi nunca llegaba: 0 en un partido. Ahora
+## se decide al VER venir al defensor: en carrera, con un rival delante a 1,5-3,6
+## m, una sola tirada por duelo (no cada fotograma). Las ganas crecen con el
+## regate (nada por debajo de 35, ~2 de cada 5 duelos con 65 y 3 de cada 5
+## con 85 o más) y bajan en el propio tercio. La salida es hacia el lado
+## contrario del defensor, con un empujón lateral de verdad (velocidad, no
+## teletransporte); el defensor se la come según regate contra defensa y, si
+## pica, queda clavado un momento (no puede entrar). Si no pica, la entrada
+## normal decide (con la bonificación de `regate_hasta`).
+func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> bool:
+	if rival.is_empty() or bool(p["por"]) or t < float(p["regate_hasta"]) + 0.6:
+		return false
+	if float(p.get("duelo_hasta", 0.0)) > t and String(p.get("duelo_con", "")) == String(rival.get("id", "")):
+		return false
+	var yo := pos(p)
+	var rp := pos(rival)
+	var hacia_r := rp - yo
+	hacia_r.y = 0.0
+	var dr := hacia_r.length()
+	if dr < 1.3 or dr > 3.6:
+		return false
+	var vel: Vector3 = p["vel"]
+	var sp := Vector2(vel.x, vel.z).length()
+	## En carrera; casi parado solo si el defensor ya está encima.
+	if sp < 1.2 or (sp < 2.4 and dr > 2.2):
+		return false
+	var fwd := Vector3(vel.x, 0, vel.z) / sp
+	## El defensor tiene que estar DELANTE (cerrándole el paso), no detrás.
+	if fwd.dot(hacia_r / dr) < 0.35:
+		return false
+	## Una tirada por duelo: hasta que se separen o pase un rato no se repite.
+	p["duelo_con"] = String(rival.get("id", ""))
+	p["duelo_hasta"] = t + 2.2
+	var reg := float(p["attr"]["reg"])
+	var ganas := clampf((reg - 0.35) * 1.3, 0.0, 0.6)
+	## En su propio tercio, se arriesga mucho menos; cerca del área rival, más.
+	var en_su_tercio := dist_arco > 70.0
+	if en_su_tercio:
+		ganas *= 0.3
+	elif dist_arco < 32.0:
+		ganas *= 1.25
+	if _rng.randf() >= ganas:
+		return false
+	regates_ia += 1
+	## Sale por el lado contrario al que tapa el defensor (y hacia dentro si
+	## va pegado a la banda).
+	var der := Vector3(fwd.z, 0, -fwd.x)
+	var lado := -signf(der.dot(hacia_r))
+	if lado == 0.0:
+		lado = 1.0 if _rng.randf() < 0.5 else -1.0
+	if absf(yo.x) > ANCHO - 6.0 and (der * lado).x * signf(yo.x) > 0.0 and _rng.randf() < 0.7:
+		lado = -lado
+	var salida := (fwd * 0.55 + der * lado).normalized()
+	p["regate_dir"] = (fwd * 0.8 + der * lado * 0.6).normalized()
+	p["regate_hasta"] = t + 0.75
+	p["vel"] = salida * clampf(sp * 0.8, 3.0, 5.5)
+	## El repertorio crece con el regate: los buenos sacan bicicletas,
+	## elásticas, ruletas y caños.
+	var fintas := ["regate_finta", "recorte_interior", "recorte_exterior", "amague_cuerpo", "finta_hombro"]
+	if reg > 0.7:
+		fintas.append_array(["bicicleta", "cola_de_vaca", "giro_cruyff", "pisada_lateral"])
+	if reg > 0.82:
+		fintas.append_array(["elastica", "ruleta", "cano", "croqueta"])
+	var nom: String = fintas[_rng.randi() % fintas.size()]
+	var ap_r: AnimationPlayer = p["anim"]
+	if is_instance_valid(ap_r) and lado < 0.0 and ap_r.has_animation(nom + "_espejo"):
+		nom += "_espejo"
+	_anim(p, nom, true, 0.8)
+	## ¿Pica el defensor? Regate contra defensa, con algo de suerte.
+	var engano := clampf(0.4 + (reg - float(rival["attr"]["def"])) * 1.1, 0.12, 0.8)
+	if _rng.randf() < engano:
+		regates_ia_ok += 1
+		rival["enfriar"] = maxf(float(rival["enfriar"]), 0.7)
+		## Se va hacia el lado equivocado: frena y se le va el cuerpo.
+		rival["vel"] = (rival["vel"] as Vector3) * 0.25 - der * lado * 1.6
+		_anim(rival, "marcar", true, 0.6)
+	## Tras la finta decide con calma (no la suelta en mitad del gesto).
+	_decision_en = maxf(_decision_en, t + 0.45)
+	return true
 
 ## Un compañero de ataque, habilitado, cerca de la última línea rival y por
 ## delante del balón, con el pasillo hacia el espacio a su espalda limpio.
@@ -1995,9 +2066,12 @@ func _fuera_del_area(p: Dictionary) -> Vector3:
 func _pos_balon_parado(p: Dictionary, lugar: Vector3, saca_local: bool) -> Vector3:
 	var ataca := bool(p["es_local"]) == saca_local
 	var arco_z := LARGO * dir_ataque(saca_local)
-	var zonas := [Vector3(-2.5, 0, arco_z - signf(arco_z) * 5.0), Vector3(3.0, 0, arco_z - signf(arco_z) * 6.5),
-		Vector3(0, 0, arco_z - signf(arco_z) * 11.0), Vector3(-6.0, 0, arco_z - signf(arco_z) * 9.0),
-		Vector3(6.5, 0, arco_z - signf(arco_z) * 10.0), Vector3(0, 0, arco_z - signf(arco_z) * 18.0)]
+	## Las x se escriben para atacar hacia -Z y se reflejan para +Z (como el
+	## catálogo de jugadas): los dos equipos ocupan el área igual.
+	var ex := -signf(arco_z)
+	var zonas := [Vector3(-2.5 * ex, 0, arco_z - signf(arco_z) * 5.0), Vector3(3.0 * ex, 0, arco_z - signf(arco_z) * 6.5),
+		Vector3(0, 0, arco_z - signf(arco_z) * 11.0), Vector3(-6.0 * ex, 0, arco_z - signf(arco_z) * 9.0),
+		Vector3(6.5 * ex, 0, arco_z - signf(arco_z) * 10.0), Vector3(0, 0, arco_z - signf(arco_z) * 18.0)]
 	var i := absi(String(p.get("id", "")).hash()) % zonas.size()
 	if ataca:
 		if _rol(p) in ["DFC", "DC", "ED", "EI", "MC"]:
@@ -2010,15 +2084,18 @@ func _pos_balon_parado(p: Dictionary, lugar: Vector3, saca_local: bool) -> Vecto
 		var lado := Vector3(hacia.z, 0, -hacia.x)
 		var k := float(i % 4) - 1.5
 		return lugar + hacia * 9.15 + lado * k * 0.7
-	return zonas[i] + Vector3(0.8, 0, 0)
+	return zonas[i] + Vector3(0.8 * ex, 0, 0)
 
 func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 	var arco := _arco_rival(p)
 	match tipo:
 		"corner":
-			var destino := Vector3(_rng.randf_range(-3, 4), 1.7, arco.z - signf(arco.z) * _rng.randf_range(5, 9))
+			## Todo en el sentido del ataque (antes el mismo giro absoluto daba
+			## córners cerrados a un equipo y abiertos al otro).
+			var sa := signf(arco.z)
+			var destino := Vector3(_rng.randf_range(-3, 4) * -sa, 1.7, arco.z - sa * _rng.randf_range(5, 9))
 			_ctx_golpeo = "centro"
-			_patear(p, destino, 18.0, 0.0, -signf(lugar.x) * 8.0, "pase")
+			_patear(p, destino, 18.0, 0.0, -signf(lugar.x) * 8.0 * -sa, "pase")
 			pase_a = _companero_cerca(p, destino)
 		"penal":
 			_tirar(p, Vector2(_rng.randf_range(-1, 1), _rng.randf_range(-0.3, 0.4)), 0.7)
@@ -2684,7 +2761,7 @@ func _filigrana(p: Dictionary, id: String, lado: float) -> void:
 func _centro_usuario(p: Dictionary, arco: Vector3, d: float, lb: bool, rb: bool) -> void:
 	var destino := Vector3(_rng.randf_range(-3, 3), 1.6, arco.z - d * 7.0)
 	var vh := 17.0
-	var efecto := -signf(pos(p).x) * 6.0
+	var efecto := -signf(pos(p).x) * 6.0 * -d
 	if lb:
 		destino.y = 2.2
 		destino.z = arco.z - d * 9.0
