@@ -352,7 +352,7 @@ func _process(delta: float) -> void:
 	_marcador.text = "%s  %d - %d  %s" % [_abrev(local.nombre), motor.goles[0], motor.goles[1], _abrev(visita.nombre)]
 	_reloj.text = "%d'" % motor.minuto()
 	var s := motor.stats
-	_mis_stats.text = "⚽ %d   🅰 %d   🎯 %d/%d   ✔ %d/%d pases   ⭐ %.1f" % [s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], motor.nota_usuario()]
+	_mis_stats.text = Idiomas.t("⚽ %d   🅰 %d   🎯 %d/%d   ✔ %d/%d pases   ⭐ %.1f") % [s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], motor.nota_usuario()]
 	if not yo.is_empty():
 		_aguante.value = motor.forma_fisica(yo)
 		if motor.estado == "juego":
@@ -361,7 +361,7 @@ func _process(delta: float) -> void:
 	if motor.apuntando:
 		_barra.visible = true
 		_barra.value = float(motor.apunte["fuerza"])
-		_ayuda.text = "APUNTAR: ◀ ▶ dirección · ▲ ▼ altura · mantén TIRO para cargar y suelta · PASE: a ras"
+		_ayuda.text = Idiomas.t("APUNTAR: ◀ ▶ dirección · ▲ ▼ altura · mantén TIRO para cargar y suelta · PASE: a ras")
 	elif motor.cargando:
 		_barra.visible = true
 		_barra.value = motor.carga
@@ -529,7 +529,7 @@ func _al_terminar() -> void:
 		["Continuar", _cerrar]])
 	var caja: VBoxContainer = _resumen.find_children("*", "VBoxContainer", true, false)[0]
 	var linea := _etiqueta(17, Color.WHITE)
-	linea.text = "%s\nGoles %d · Asistencias %d · Tiros %d (%d a puerta) · Pases %d/%d · Entradas %d/%d\nNota: %.1f   ·   Posesión %d%%" % [
+	linea.text = Idiomas.t("%s\nGoles %d · Asistencias %d · Tiros %d (%d a puerta) · Pases %d/%d · Entradas %d/%d\nNota: %.1f   ·   Posesión %d%%") % [
 		yo.nombre if yo != null else "", s["goles"], s["asist"], s["tiros"], s["a_puerta"], s["pases_ok"], s["pases"],
 		s["entradas_ok"], s["entradas"], motor.nota_usuario(), motor.posesion_local() if _es_local_usuario else 100 - motor.posesion_local()]
 	caja.add_child(linea)

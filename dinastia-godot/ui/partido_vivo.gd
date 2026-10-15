@@ -243,20 +243,20 @@ func _construir() -> void:
 	raiz.add_child(barra)
 	_btn_vel_actual = Button.new()
 	_btn_vel_actual.custom_minimum_size = Vector2(120, 30)
-	_btn_vel_actual.tooltip_text = "Pulsa para cambiar la velocidad"
+	_btn_vel_actual.tooltip_text = Idiomas.t("Pulsa para cambiar la velocidad")
 	_btn_vel_actual.pressed.connect(func() -> void: _poner_velocidad((_velocidad + 1) % VELOCIDADES.size()))
 	barra.add_child(_btn_vel_actual)
 	## El estadio en 3D del club que hace de local. Se abre encima del partido y
 	## el reloj se para solo mientras se mira.
 	var ver3d := Button.new()
-	ver3d.text = "Ver en 3D"
+	ver3d.text = Idiomas.t("Ver en 3D")
 	ver3d.custom_minimum_size = Vector2(110, 30)
 	ver3d.pressed.connect(_ver_estadio)
 	barra.add_child(ver3d)
 	## `saltarAlGol()` del HTML: avanza sin pausas hasta el próximo gol -de
 	## cualquiera de los dos-, o hasta el final si no llega ninguno.
 	var saltar_gol := Button.new()
-	saltar_gol.text = "Al próximo gol"
+	saltar_gol.text = Idiomas.t("Al próximo gol")
 	saltar_gol.custom_minimum_size = Vector2(100, 30)
 	saltar_gol.pressed.connect(_hasta_el_proximo_gol)
 	barra.add_child(saltar_gol)
@@ -266,7 +266,7 @@ func _construir() -> void:
 	## la pantalla se quedaba ahí para siempre. Se crea una vez, oculta, y
 	## `_al_final()` la muestra.
 	_btn_volver = Button.new()
-	_btn_volver.text = "Volver al club"
+	_btn_volver.text = Idiomas.t("Volver al club")
 	_btn_volver.custom_minimum_size = Vector2(110, 30)
 	_btn_volver.visible = false
 	_btn_volver.pressed.connect(func() -> void: cerrado.emit())
@@ -691,11 +691,11 @@ func _escribir(bbcode: String) -> void:
 func _refrescar() -> void:
 	_marcador.text = "%s   %d - %d   %s" % [
 		partido.local.nombre, partido.goles_local, partido.goles_visita, partido.visita.nombre]
-	_reloj.text = "%d'" % partido.minuto if not partido.terminado_ya else "FINAL"
+	_reloj.text = "%d'" % partido.minuto if not partido.terminado_ya else Idiomas.t("FINAL")
 	## La línea de arriba, en vivo: lo que se mira de reojo mientras corre el
 	## reloj. El desglose completo -xG, córners, faltas, fueras- va al final, en
 	## la crónica, que es donde el HTML lo pone (`vPost`).
-	_estadisticas.text = "Posesión  %d%% - %d%%      Remates  %d - %d      Al arco  %d - %d      Cambios  %d - %d de %d" % [
+	_estadisticas.text = Idiomas.t("Posesión  %d%% - %d%%      Remates  %d - %d      Al arco  %d - %d      Cambios  %d - %d de %d") % [
 		int(round(partido.posesion_local)), 100 - int(round(partido.posesion_local)),
 		partido.remates_local, partido.remates_visita,
 		partido.tiros_puerta_local, partido.tiros_puerta_visita,
@@ -734,7 +734,7 @@ func _pintar_campo() -> void:
 	_limpiar(_campo)
 	if _en_palco():
 		var av := _texto(11, COL_SUAVE)
-		av.text = "🥂 Dirige %s desde el banquillo. Los cambios y la charla son cosa suya." % roles.dt_nombre()
+		av.text = Idiomas.t("🥂 Dirige %s desde el banquillo. Los cambios y la charla son cosa suya.") % roles.dt_nombre()
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_campo.add_child(av)
 		for j in _mi_once():
@@ -743,7 +743,7 @@ func _pintar_campo() -> void:
 			_campo.add_child(l)
 		return
 	var ayuda := _texto(11, COL_SUAVE)
-	ayuda.text = "Pulsa a quién sacas." if _saliendo == null else "Ahora, quién entra."
+	ayuda.text = Idiomas.t("Pulsa a quién sacas.") if _saliendo == null else Idiomas.t("Ahora, quién entra.")
 	ayuda.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_campo.add_child(ayuda)
 	## LAS ARENGAS. Gritarle a uno desde la banda: le sube la moral y rinde un
@@ -751,7 +751,7 @@ func _pintar_campo() -> void:
 	## ilimitadas se arengaría a los once en el minuto uno y dejaría de ser una
 	## decisión sobre A QUIÉN levantar.
 	var ta := _texto(11, COL_ORO)
-	ta.text = "📣 ARENGAS  ·  te quedan %d" % _arengas
+	ta.text = Idiomas.t("📣 ARENGAS  ·  te quedan %d") % _arengas
 	_campo.add_child(ta)
 	for j in _mi_once():
 		var fila := HBoxContainer.new()
@@ -774,7 +774,7 @@ func _pintar_campo() -> void:
 		fila.add_child(b)
 		var ba := Button.new()
 		ba.text = "📣"
-		ba.tooltip_text = "Arengarle: le sube la moral y rinde un 12% más durante 18 minutos."
+		ba.tooltip_text = Idiomas.t("Arengarle: le sube la moral y rinde un 12% más durante 18 minutos.")
 		ba.add_theme_font_size_override("font_size", 11)
 		ba.custom_minimum_size = Vector2(34, 0)
 		ba.disabled = partido.terminado_ya or _arengas <= 0 or encendido
@@ -794,18 +794,18 @@ func _pintar_camarin() -> void:
 	if v == null:
 		return
 	var t := _texto(13, COL_ORO)
-	t.text = "🔵 CAMARÍN — ENTRETIEMPO"
+	t.text = Idiomas.t("🔵 CAMARÍN — ENTRETIEMPO")
 	_banquillo.add_child(t)
 	## Desde el palco no se habla en el camarín -es cosa de tu DT empleado-,
 	## pero el partido tiene que poder seguir: la única puerta es salir a la
 	## segunda parte.
 	if _en_palco():
 		var ap := _texto(11, COL_SUAVE)
-		ap.text = "%s da la charla. No es cosa tuya." % roles.dt_nombre()
+		ap.text = Idiomas.t("%s da la charla. No es cosa tuya.") % roles.dt_nombre()
 		ap.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_banquillo.add_child(ap)
 		var salir_p := Button.new()
-		salir_p.text = "▶️  Salir a la segunda parte"
+		salir_p.text = Idiomas.t("▶️  Salir a la segunda parte")
 		salir_p.custom_minimum_size = Vector2(0, 30)
 		salir_p.pressed.connect(_salir_segunda)
 		_banquillo.add_child(salir_p)
@@ -813,12 +813,12 @@ func _pintar_camarin() -> void:
 		return
 	if _charla_dada:
 		var ya := _texto(11, COL_SUAVE)
-		ya.text = "Ya has hablado. Puedes hacer cambios y mover la pizarra antes de salir."
+		ya.text = Idiomas.t("Ya has hablado. Puedes hacer cambios y mover la pizarra antes de salir.")
 		ya.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_banquillo.add_child(ya)
 	else:
 		var ay := _texto(11, COL_SUAVE)
-		ay.text = "A un líder o a una muralla les va la exigencia; a un frágil o a un cerebro, el elogio."
+		ay.text = Idiomas.t("A un líder o a una muralla les va la exigencia; a un frágil o a un cerebro, el elogio.")
 		ay.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_banquillo.add_child(ay)
 		var rej := GridContainer.new()
@@ -829,7 +829,7 @@ func _pintar_camarin() -> void:
 			var b := Button.new()
 			b.text = "%s %s" % [String(fila[1]), String(fila[0])]
 			b.add_theme_font_size_override("font_size", 11)
-			b.tooltip_text = "Efecto en la moral: de %d a %d. Ansiedad: %+d." % [int(fila[2]), int(fila[3]), int(fila[4])]
+			b.tooltip_text = Idiomas.t("Efecto en la moral: de %d a %d. Ansiedad: %+d.") % [int(fila[2]), int(fila[3]), int(fila[4])]
 			var k := clave
 			b.pressed.connect(func() -> void: _dar_charla(k))
 			rej.add_child(b)
@@ -837,12 +837,12 @@ func _pintar_camarin() -> void:
 		## barato del sistema y lo que más mete en el papel — decir "así no,
 		## señores" y ver que el equipo lo acusa vale más que elegir de una lista.
 		_texto_charla = LineEdit.new()
-		_texto_charla.placeholder_text = "…o díselo con tus palabras y pulsa Enter"
+		_texto_charla.placeholder_text = Idiomas.t("…o díselo con tus palabras y pulsa Enter")
 		_texto_charla.add_theme_font_size_override("font_size", 12)
 		_texto_charla.text_submitted.connect(_charla_libre)
 		_banquillo.add_child(_texto_charla)
 	var salir := Button.new()
-	salir.text = "▶️  Salir a la segunda parte"
+	salir.text = Idiomas.t("▶️  Salir a la segunda parte")
 	salir.custom_minimum_size = Vector2(0, 30)
 	salir.pressed.connect(_salir_segunda)
 	_banquillo.add_child(salir)
@@ -904,12 +904,12 @@ func _pintar_banquillo() -> void:
 	## tocara.
 	_banquillo.add_child(HSeparator.new())
 	var ti := _texto(11, COL_SUAVE)
-	ti.text = "INSTRUCCIONES EN VIVO"
+	ti.text = Idiomas.t("INSTRUCCIONES EN VIVO")
 	_banquillo.add_child(ti)
 	var fi := HFlowContainer.new()
 	_banquillo.add_child(fi)
 	var br := Button.new()
-	br.text = "%s Todo al ataque" % ("✅" if partido.instr_riesgo else "⬜")
+	br.text = Idiomas.t("%s Todo al ataque") % ("✅" if partido.instr_riesgo else "⬜")
 	br.disabled = partido.terminado_ya
 	br.pressed.connect(func() -> void:
 		partido.instr_riesgo = not partido.instr_riesgo
@@ -918,7 +918,7 @@ func _pintar_banquillo() -> void:
 		_refrescar())
 	fi.add_child(br)
 	var bt := Button.new()
-	bt.text = "%s Perder tiempo" % ("✅" if partido.instr_tiempo else "⬜")
+	bt.text = Idiomas.t("%s Perder tiempo") % ("✅" if partido.instr_tiempo else "⬜")
 	bt.disabled = partido.terminado_ya
 	bt.pressed.connect(func() -> void:
 		partido.instr_tiempo = not partido.instr_tiempo
@@ -927,7 +927,7 @@ func _pintar_banquillo() -> void:
 		_refrescar())
 	fi.add_child(bt)
 	var bb := Button.new()
-	bb.text = "🗣️ Gritar desde la banda"
+	bb.text = Idiomas.t("🗣️ Gritar desde la banda")
 	bb.disabled = partido.terminado_ya or _expulsado_banda
 	bb.pressed.connect(_gritar_desde_la_banda)
 	fi.add_child(bb)
@@ -935,7 +935,7 @@ func _pintar_banquillo() -> void:
 	var sep := HSeparator.new()
 	_banquillo.add_child(sep)
 	var t := _texto(11, COL_SUAVE)
-	t.text = "SUPLENTES  (%d de %d cambios usados)" % [_mis_cambios(), Partido.MAX_CAMBIOS]
+	t.text = Idiomas.t("SUPLENTES  (%d de %d cambios usados)") % [_mis_cambios(), Partido.MAX_CAMBIOS]
 	_banquillo.add_child(t)
 
 	var en_campo := _mi_once()
@@ -943,7 +943,7 @@ func _pintar_banquillo() -> void:
 		if en_campo.has(j):
 			continue
 		var b := Button.new()
-		b.text = "%s  %s  %d%s" % [j.pos_e, j.nombre, j.ovr, "" if j.disponible() else "  (fuera)"]
+		b.text = "%s  %s  %d%s" % [j.pos_e, j.nombre, j.ovr, "" if j.disponible() else Idiomas.t("  (fuera)")]
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_font_size_override("font_size", 12)
@@ -960,11 +960,11 @@ func _pintar_banquillo() -> void:
 ## borde del campo a presionar.
 func _pintar_palco() -> void:
 	var t := _texto(11, COL_SUAVE)
-	t.text = "🥂 PALCO PRESIDENCIAL"
+	t.text = Idiomas.t("🥂 PALCO PRESIDENCIAL")
 	_banquillo.add_child(t)
 	var cargo := roles.nombre_del_cargo() if roles != null else "directivo"
 	var p := _texto(11, COL_SUAVE)
-	p.text = "Dirige %s. Los cambios, la charla y las instrucciones son cosa suya: tú solo puedes mirar… o hacerte notar." % (roles.dt_nombre() if roles != null else "tu DT")
+	p.text = Idiomas.t("Dirige %s. Los cambios, la charla y las instrucciones son cosa suya: tú solo puedes mirar… o hacerte notar.") % (roles.dt_nombre() if roles != null else "tu DT")
 	p.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_banquillo.add_child(p)
 	if roles != null and not roles.dt_empleado.is_empty():
@@ -972,13 +972,13 @@ func _pintar_palco() -> void:
 		_dato_banquillo("Sintonía con %s" % roles.dt_nombre(), "%d/100" % sin,
 			COL_VERDE if sin >= 50 else COL_ROJO)
 	var bp := Button.new()
-	bp.text = "😠 Bajar al borde del campo"
+	bp.text = Idiomas.t("😠 Bajar al borde del campo")
 	bp.disabled = partido.terminado_ya or _palco_usado
 	bp.pressed.connect(_presionar_desde_el_palco)
 	_banquillo.add_child(bp)
 	_banquillo.add_child(HSeparator.new())
 	var t2 := _texto(11, COL_SUAVE)
-	t2.text = "%s  (cargo: %s)" % ["EL ONCE", cargo]
+	t2.text = Idiomas.t("%s  (cargo: %s)") % [Idiomas.t("EL ONCE"), cargo]
 	_banquillo.add_child(t2)
 	for j in _mi_once():
 		var l := _texto(12, COL_TEXTO)
@@ -1197,10 +1197,10 @@ func _pintar_estadisticas_vivo() -> void:
 	if xg_mio >= 1.0 or goles_mios > 0:
 		var l := _texto(10, COL_SUAVE)
 		if float(goles_mios) < xg_mio - 0.9:
-			l.text = "Generas más de lo que metes: es cuestión de que entre una."
+			l.text = Idiomas.t("Generas más de lo que metes: es cuestión de que entre una.")
 		elif float(goles_mios) > xg_mio + 0.9:
-			l.text = "Vas por delante de lo que has generado. Ojo con confiarse."
+			l.text = Idiomas.t("Vas por delante de lo que has generado. Ojo con confiarse.")
 		else:
-			l.text = "El marcador se parece a lo que has hecho."
+			l.text = Idiomas.t("El marcador se parece a lo que has hecho.")
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_panel_stats.add_child(l)

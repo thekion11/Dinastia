@@ -210,7 +210,7 @@ func _construir() -> void:
 	_construir_datos_dt(raiz)
 
 	var titulo := _texto(20, COL_TEXTO)
-	titulo.text = "ELIGE TU CAMINO"
+	titulo.text = Idiomas.t("ELIGE TU CAMINO")
 	raiz.add_child(titulo)
 
 	var secciones: Variant = Datos.tabla("MODO_SECCIONES")
@@ -299,13 +299,13 @@ func _construir_banner(raiz: VBoxContainer) -> void:
 	textos.add_theme_constant_override("separation", 2)
 	_banner.add_child(textos)
 	_lbl_sub = _texto(13, COL_ACENTO)
-	_lbl_sub.text = "FÚTBOL MANAGER"
+	_lbl_sub.text = Idiomas.t("FÚTBOL MANAGER")
 	textos.add_child(_lbl_sub)
 	_lbl_titulo = _texto(48, COL_TEXTO)
-	_lbl_titulo.text = "DINASTÍA"
+	_lbl_titulo.text = Idiomas.t("DINASTÍA")
 	textos.add_child(_lbl_titulo)
 	_lbl_claim = _texto(13, Color("c3d2c7"))
-	_lbl_claim.text = "Forma juveniles, gana la liga, conquista el continente… y algún día verás llegar a la cantera a los hijos de tus leyendas."
+	_lbl_claim.text = Idiomas.t("Forma juveniles, gana la liga, conquista el continente… y algún día verás llegar a la cantera a los hijos de tus leyendas.")
 	_lbl_claim.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_lbl_claim.custom_minimum_size = Vector2(560, 0)
 	textos.add_child(_lbl_claim)
@@ -342,21 +342,21 @@ func _construir_datos_dt(raiz: VBoxContainer) -> void:
 	fila_nombre.add_theme_constant_override("separation", 8)
 	raiz.add_child(fila_nombre)
 	var ln := _texto(12, COL_SUAVE)
-	ln.text = "Tu nombre"
+	ln.text = Idiomas.t("Tu nombre")
 	ln.custom_minimum_size = Vector2(90, 0)
 	ln.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila_nombre.add_child(ln)
 	_campo_nombre = LineEdit.new()
-	_campo_nombre.text = "Míster"
+	_campo_nombre.text = Idiomas.t("Míster")
 	_campo_nombre.custom_minimum_size = Vector2(240, 32)
-	_campo_nombre.placeholder_text = "Nombre del entrenador"
+	_campo_nombre.placeholder_text = Idiomas.t("Nombre del entrenador")
 	fila_nombre.add_child(_campo_nombre)
 
 	var fila_dif := HBoxContainer.new()
 	fila_dif.add_theme_constant_override("separation", 8)
 	raiz.add_child(fila_dif)
 	var ld := _texto(12, COL_SUAVE)
-	ld.text = "Dificultad"
+	ld.text = Idiomas.t("Dificultad")
 	ld.custom_minimum_size = Vector2(90, 0)
 	ld.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila_dif.add_child(ld)
@@ -387,13 +387,13 @@ func _construir_meta(raiz: VBoxContainer) -> void:
 	raiz.add_child(fila)
 	var d := Meta.leer()
 	var b := Button.new()
-	b.text = "📒 Álbum y museo  ·  %d cromos, %d títulos" % [(d["cromos"] as Dictionary).size(), (d["museo"] as Array).size()]
+	b.text = Idiomas.t("📒 Álbum y museo  ·  %d cromos, %d títulos") % [(d["cromos"] as Dictionary).size(), (d["museo"] as Array).size()]
 	b.pressed.connect(func() -> void: PanelMeta.abrir(self))
 	fila.add_child(b)
 	if Meta.hay_legado():
 		var leg: Dictionary = d["legado"]
 		var h := CheckButton.new()
-		h.text = "🌍 Heredar el mundo de tu última partida (temporada %d)" % int(leg.get("anio", 0))
+		h.text = Idiomas.t("🌍 Heredar el mundo de tu última partida (temporada %d)") % int(leg.get("anio", 0))
 		h.button_pressed = Meta.heredar_proximo
 		h.toggled.connect(func(si: bool) -> void: Meta.heredar_proximo = si)
 		fila.add_child(h)
@@ -403,7 +403,7 @@ func _construir_selector_base(raiz: VBoxContainer) -> void:
 	fila.add_theme_constant_override("separation", 8)
 	raiz.add_child(fila)
 	var lb := _texto(12, COL_SUAVE)
-	lb.text = "Base de datos"
+	lb.text = Idiomas.t("Base de datos")
 	lb.custom_minimum_size = Vector2(90, 0)
 	lb.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila.add_child(lb)
@@ -412,12 +412,12 @@ func _construir_selector_base(raiz: VBoxContainer) -> void:
 	fila.add_child(_fila_base)
 	for real: bool in [false, true]:
 		var b := Button.new()
-		b.text = "Ficticia" if not real else "Real (pack)"
+		b.text = Idiomas.t("Ficticia") if not real else Idiomas.t("Real (pack)")
 		b.toggle_mode = true
 		b.custom_minimum_size = Vector2(110, 28)
 		if real and not Datos.hay_pack_real():
 			b.disabled = true
-			b.tooltip_text = "No hay ningún pack real instalado. Copia un archivo pack_real.json en:\n%s" \
+			b.tooltip_text = Idiomas.t("No hay ningún pack real instalado. Copia un archivo pack_real.json en:\n%s") \
 				% ProjectSettings.globalize_path("user://")
 		b.pressed.connect(func() -> void: _elegir_base(real))
 		_fila_base.add_child(b)
@@ -435,9 +435,9 @@ func _pintar_base() -> void:
 	for i in _fila_base.get_child_count():
 		(_fila_base.get_child(i) as Button).button_pressed = (i == 1) == Datos.base_real
 	if Datos.base_real:
-		_lbl_base.text = "Clubes, ligas y jugadores reales de «%s», con sus caras y con los nombres cubiertos (C0lo-C0lo). Solo para uso privado." % Datos.nombre_pack()
+		_lbl_base.text = Idiomas.t("Clubes, ligas y jugadores reales de «%s», con sus caras y con los nombres cubiertos (C0lo-C0lo). Solo para uso privado.") % Datos.nombre_pack()
 	else:
-		_lbl_base.text = "384 clubes y 24 ligas inventados, con jugadores generados. Es la base de la versión publicada."
+		_lbl_base.text = Idiomas.t("384 clubes y 24 ligas inventados, con jugadores generados. Es la base de la versión publicada.")
 
 ## Una tarjeta del menú de modos -`tarjetaModo()`/`dibujarPortadaModo()` del
 ## HTML-: la carátula con degradado, el título y el subtítulo. Las que hoy no
@@ -473,7 +473,7 @@ func _tarjeta(m: Dictionary) -> Control:
 	v.add_child(cubierta)
 	if cat == "proximo":
 		var badge := _texto(9, Color("0c1510"))
-		badge.text = "  EN DESARROLLO  "
+		badge.text = Idiomas.t("  EN DESARROLLO  ")
 		var fondo_badge := PanelContainer.new()
 		var eb := StyleBoxFlat.new()
 		eb.bg_color = COL_ORO
@@ -520,7 +520,7 @@ func _construir_selector_portada(raiz: VBoxContainer) -> void:
 	v.add_theme_constant_override("separation", 8)
 	panel_picker.add_child(v)
 	var t := _texto(11, COL_SUAVE)
-	t.text = "PORTADA DEL JUEGO"
+	t.text = Idiomas.t("PORTADA DEL JUEGO")
 	v.add_child(t)
 	_fila_picker = HBoxContainer.new()
 	_fila_picker.add_theme_constant_override("separation", 6)
@@ -740,7 +740,7 @@ func _actualizar_continuar() -> void:
 	v.add_theme_constant_override("separation", 2)
 	fila.add_child(v)
 	var et := _texto(9, COL_ACENTO)
-	et.text = "PARTIDA EN CURSO"
+	et.text = Idiomas.t("PARTIDA EN CURSO")
 	v.add_child(et)
 	var nom := _texto(15, COL_TEXTO)
 	nom.text = c.nombre
@@ -757,7 +757,7 @@ func _actualizar_continuar() -> void:
 				break
 	var resumen := _texto(11, COL_SUAVE)
 	var trofeos := _mundo_guardado.directiva.trofeos.size() if _mundo_guardado.directiva != null else 0
-	resumen.text = "Año %d · %dº con %d pts · Caja %s · %d título(s)" % [
+	resumen.text = Idiomas.t("Año %d · %dº con %d pts · Caja %s · %d título(s)") % [
 		_mundo_guardado.anio, puesto, pts, _dinero(c.saldo), trofeos]
 	resumen.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(resumen)
@@ -766,7 +766,7 @@ func _actualizar_continuar() -> void:
 	botones.add_theme_constant_override("separation", 8)
 	fila.add_child(botones)
 	var bc := Button.new()
-	bc.text = "▶ Continuar"
+	bc.text = Idiomas.t("▶ Continuar")
 	bc.custom_minimum_size = Vector2(110, 32)
 	bc.pressed.connect(_continuar)
 	botones.add_child(bc)
@@ -864,7 +864,7 @@ func _elegir_reto() -> void:
 	v.add_child(nota)
 	for r: Array in Retos.LISTA:
 		var b := Button.new()
-		b.text = "%s  %s\n%s\nMeta: %s" % [String(r[1]), String(r[2]), String(r[3]), String(r[4])]
+		b.text = Idiomas.t("%s  %s\n%s\nMeta: %s") % [String(r[1]), String(r[2]), String(r[3]), String(r[4])]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.custom_minimum_size = Vector2(0, 76)
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -878,6 +878,6 @@ func _elegir_reto() -> void:
 			get_tree().change_scene_to_file("res://escenas/eleccion_club.tscn"))
 		v.add_child(b)
 	var cerrar := Button.new()
-	cerrar.text = "Volver"
+	cerrar.text = Idiomas.t("Volver")
 	cerrar.pressed.connect(capa.queue_free)
 	v.add_child(cerrar)

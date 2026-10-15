@@ -38,7 +38,7 @@ static func pintar(lista: VBoxContainer, m: Mundo, al_cambiar: Callable) -> void
 			et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila.add_child(et)
 			var bv := Button.new()
-			bv.text = "Vender todo"
+			bv.text = Idiomas.t("Vender todo")
 			bv.pressed.connect(func() -> void:
 				var r := f.vender(m, c, 1.0)
 				aviso.text = r
