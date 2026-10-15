@@ -39,6 +39,8 @@ const SALAS_EDIFICIO := {
 	"edificio_panaderia": ["panaderia", "Panadería"], "edificio_peluqueria": ["peluqueria", "Peluquería"],
 	"edificio_libreria": ["libreria", "Librería"], "edificio_taller": ["taller", "Taller mecánico"],
 	"edificio_oficina": ["oficina", "Oficinas"],
+	## Para los rótulos de comercio que no tienen sala propia (farmacia, súper...).
+	"edificio_tienda": ["tienda", "Tienda"], "edificio_mercado": ["mercado", "Supermercado"],
 }
 
 static func _sala_de(clave: String) -> Array:
@@ -675,7 +677,10 @@ func _tienda() -> void:
 		var p := Vector3(-6.0 + float(k) * 6.0, 0, -2.5)
 		Mini3D.caja(_raiz, p + Vector3(0, 0.5, 0), Vector3(3.0, 1.0, 1.6), Mini3D.mat(Color(0.35, 0.35, 0.38), 0.5))
 		for q in 5:
-			Mini3D.caja(_raiz, p + Vector3(-1.2 + float(q) * 0.6, 1.1, 0), Vector3(0.5, 0.15, 0.6), Mini3D.mat(_c1 if q % 2 == 0 else _c2, 0.7))
+			## Camisetas del club solo en la tienda oficial; en las de la calle
+			## (farmacia, deportes, ferretería...), productos de colores varios.
+			var col_q: Color = (_c1 if q % 2 == 0 else _c2) if clave == "com" else Color.from_hsv(_rng.randf(), 0.45, 0.8)
+			Mini3D.caja(_raiz, p + Vector3(-1.2 + float(q) * 0.6, 1.1, 0), Vector3(0.5, 0.15, 0.6), Mini3D.mat(col_q, 0.7))
 	_mostrador(Vector3(10, 0, 4.0), 5.0, PI * 0.5, Color(0.25, 0.25, 0.28))
 	_trabajador(Vector3(11.0, 0, 4.0), -PI * 0.5, false, ["saludo_mano", "charla"])
 	for k in 4:

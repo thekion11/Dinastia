@@ -228,6 +228,33 @@ const EDIFICIOS := [
 	["edificio_oficina", 8, ["Oficinas %s"], ["Delta", "Norte", "Grupo Álamo", "Cima", "Vértice"]],
 ]
 
+## La sala de cada rótulo de comercio (`CiudadExpansion.COMERCIOS`): al entrar
+## por una puerta con rótulo, lo de dentro tiene que ser lo que dice fuera
+## (antes el rótulo y la sala se sorteaban por separado: una «Farmacia» podía
+## abrir un taller).
+const SALA_DE_ROTULO := {
+	"Farmacia": "edificio_tienda", "Cafetería": "edificio_bar", "Panadería": "edificio_panaderia",
+	"Banco": "edificio_oficina", "Correos": "edificio_oficina", "Peluquería": "edificio_peluqueria",
+	"Librería": "edificio_libreria", "Supermercado": "edificio_mercado", "Pizzería": "edificio_bar",
+	"Hotel": "edificio_oficina", "Deportes": "edificio_tienda", "Bar": "edificio_bar",
+	"Floristería": "edificio_tienda", "Ferretería": "edificio_tienda", "Peña del club": "edificio_bar",
+	"Heladería": "edificio_panaderia",
+}
+
+## El rótulo de comercio cuya fachada está junto a `p`, o vacío.
+func _rotulo_en(p: Vector3) -> Dictionary:
+	if cb == null or cb.expansion == null:
+		return {}
+	var mejor: Dictionary = {}
+	var md := INF
+	for r: Dictionary in cb.expansion.rotulos:
+		var q: Vector3 = r["pos"]
+		var d := Vector2(q.x - p.x, q.z - p.z).length()
+		if d < float(r["ancho"]) * 0.5 + 2.5 and d < md:
+			md = d
+			mejor = r
+	return mejor
+
 ## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la
 ## clave de la sala con el nombre propio, o vacío.
 func edificio_en(p: Vector3) -> Dictionary:
@@ -244,6 +271,13 @@ func edificio_en(p: Vector3) -> Dictionary:
 		var dz := maxf(maxf(r.position.y - p.z, 0.0), p.z - r.end.y)
 		if dx * dx + dz * dz > 3.2 * 3.2:
 			continue
+		var rot := _rotulo_en(p)
+		if not rot.is_empty():
+			## «💊 Farmacia» -> «Farmacia»: el nombre sin el icono.
+			var texto := String(rot["texto"])
+			var nombre_r := texto.substr(texto.find(" ") + 1)
+			if SALA_DE_ROTULO.has(nombre_r):
+				return {"k": "%s|%s" % [SALA_DE_ROTULO[nombre_r], nombre_r], "n": nombre_r}
 		var h := absi(hash(Vector3i(floori(p.x / 14.0), 0, floori(p.z / 14.0))) + hash(r.position))
 		var total := 0
 		for e: Array in EDIFICIOS:
