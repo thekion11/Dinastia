@@ -1811,7 +1811,9 @@ func _kenney_calles() -> void:
 		var m := (a + c) * 0.5
 		if bool(t["av"]):
 			## Avenidas: un brazo de farola curva cada ~48 m, alternando lados.
-			var n := int((largo - ancho) / 48.0)
+			## (Desde el 15-10-2026 todas las farolas son la curva de Kenney, en
+			## `_farolas`; esto solo queda si el modelo no carga.)
+			var n := int((largo - ancho) / 48.0) if _malla_kit("res://assets/ciudad/kenney_roads/light-curved.glb").is_empty() else 0
 			for q in n:
 				var f := (float(q) + 0.5) / float(maxi(1, n))
 				var p := a.lerp(c, f)
@@ -1922,6 +1924,16 @@ func _farolas() -> void:
 	var cabezas: Array[Transform3D] = []
 	var charcos: Array[Transform3D] = []
 	var conos: Array[Transform3D] = []
+	## FAROLA CURVA DE KENNEY (15-10-2026): antes, un cilindro con una losa amarilla
+	## encima. El brazo (+Z del modelo) da a la calzada; la luz, el charco y el cono
+	## van en la punta del brazo, medida con la caja del modelo.
+	var kf := _malla_kit("res://assets/ciudad/kenney_roads/light-curved.glb")
+	var farolas_k: Array[Transform3D] = []
+	var punta := Vector3(0, 8.0, 1.4)
+	if not kf.is_empty():
+		var cf: AABB = kf["caja"]
+		var ef := 8.4 / maxf(cf.size.y, 0.01)
+		punta = Vector3(0, cf.end.y * ef - 0.35, cf.end.z * ef * 0.88)
 	for t: Dictionary in tramos:
 		if bool(t["puente"]):
 			continue
@@ -1936,14 +1948,24 @@ func _farolas() -> void:
 			var lado := 1.0 if q % 2 == 0 else -1.0
 			var off := (ancho * 0.5 + 0.8) * lado
 			var base := p + (Vector3(off, 0, 0) if vertical else Vector3(0, 0, off))
-			postes.append(Transform3D(Basis.from_scale(Vector3(0.16, 8.0, 0.16)), base + Vector3(0, 4.0, 0)))
-			var hacia := (Vector3(-lado, 0, 0) if vertical else Vector3(0, 0, -lado)) * 1.4
-			cabezas.append(Transform3D(Basis.from_scale(Vector3(0.9, 0.3, 0.9)), base + Vector3(0, 8.0, 0) + hacia))
-			charcos.append(Transform3D(Basis.from_scale(Vector3(13.0, 1.0, 13.0)), base + hacia * 2.0 + Vector3(0, 0.3, 0)))
+			var dir := Vector3(-lado, 0, 0) if vertical else Vector3(0, 0, -lado)
+			if kf.is_empty():
+				postes.append(Transform3D(Basis.from_scale(Vector3(0.16, 8.0, 0.16)), base + Vector3(0, 4.0, 0)))
+			else:
+				var cf2: AABB = kf["caja"]
+				var ef2 := 8.4 / maxf(cf2.size.y, 0.01)
+				## Girar +Z del modelo hacia `dir`.
+				var bas := Basis(Vector3.UP, atan2(dir.x, dir.z)).scaled(Vector3.ONE * ef2)
+				farolas_k.append(Transform3D(bas, base + Vector3(0, 0.2, 0) - bas * Vector3(0, cf2.position.y, 0)))
+			var luz := base + dir * punta.z + Vector3(0, punta.y, 0)
+			cabezas.append(Transform3D(Basis.from_scale(Vector3(0.55, 0.12, 0.55)), luz))
+			charcos.append(Transform3D(Basis.from_scale(Vector3(13.0, 1.0, 13.0)), Vector3(luz.x, 0.3, luz.z) + dir * 0.6))
 			## Cono de luz: del farol al suelo, ancho abajo (10 m de diámetro).
-			conos.append(Transform3D(Basis.from_scale(Vector3(10.0, 7.7, 10.0)), base + hacia * 1.2 + Vector3(0, 4.1, 0)))
+			conos.append(Transform3D(Basis.from_scale(Vector3(10.0, luz.y - 0.3, 10.0)), Vector3(luz.x, luz.y * 0.5 + 0.1, luz.z)))
 	var gris := b._mat_simple(Color(0.25, 0.26, 0.27), 0.5)
 	_multimesh(CylinderMesh.new(), gris, postes, Vector3.ONE)
+	if not farolas_k.is_empty():
+		_multimesh(kf["malla"], null, farolas_k, Vector3.ONE)
 	_multimesh(BoxMesh.new(), _mat_luz_farola(), cabezas, Vector3.ONE)
 	_farola_charco = StandardMaterial3D.new()
 	_farola_charco.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
