@@ -21,6 +21,7 @@ var carrera: CarreraJugador
 var local: Club
 var visita: Club
 var motor: MotorJugable
+var _camarografos: CamarografosSiguen
 var _raiz: Node3D
 var _cam: Camera3D
 var _vp: SubViewport
@@ -88,7 +89,7 @@ func _montar(duracion_mitad: float) -> void:
 	if String(perfil.get("techo", "")) != "retractil":
 		Precipitacion.montar(_raiz, String(perfil.get("clima", "noche")), float(gp["dx"]), float(gp["dz"]), Calidad.elegida)
 	_montar_pantalla(perfil)
-	VistaEstadio.poner_personal(_raiz)
+	_camarografos = VistaEstadio.poner_personal(_raiz)
 	## Los 22.
 	var yo := carrera.jugador(mundo) if carrera != null else null
 	_es_local_usuario = yo != null and yo.club_id == local.id
@@ -116,6 +117,8 @@ func _montar(duracion_mitad: float) -> void:
 	if String(perfil.get("clima", "")) == "nieve":
 		cb = [Color("#ff7a1a"), Color("#1a1a1a"), "moderno"]
 	var balon := StadiumBuilder.spawn_ball(_raiz, Vector3(0, 0.11, 0), cb)
+	if _camarografos != null:
+		_camarografos.balon = balon
 	motor = MotorJugable.new()
 	add_child(motor)
 	motor.duracion_mitad = duracion_mitad
@@ -364,11 +367,21 @@ func _process(delta: float) -> void:
 		_barra.value = motor.carga
 	else:
 		_barra.visible = false
-		_ayuda.text = ("CON BALÓN: Espacio/A pase · K/B tiro (mantén) · L/X centro · I/Y largo · U/RB al hueco · E/LT regate · Shift/RT sprint" if con_balon
-			else "SIN BALÓN: Espacio/A presionar · K/B entrada · L/X barrida · R/L3 pedir el balón · Shift/RT sprint · Esc pausa")
+		_ayuda.text = _guia_controles(con_balon)
 	_actualizar_apunte()
-	if Input.is_action_just_pressed("jugar_pausa") and motor.estado != "fin":
+	if Input.is_action_just_pressed("jugar_pausa") and motor.estado != "fin" and _controles == null:
 		_alternar_pausa()
+
+## La guía con las teclas que el jugador haya configurado (Mando).
+func _guia_controles(con_balon: bool) -> String:
+	var c := func(a: String) -> String: return Mando.corto_de(a)
+	if con_balon:
+		return Idiomas.t("CON BALÓN: %s pase · %s tiro (mantén) · %s centro · %s al hueco · %s rosca/tenso · %s vaselina/pared · %s proteger · %s sprint · stick der. filigranas") % [
+			c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_filtrado"),
+			c.call("jugar_mod"), c.call("jugar_cambiar"), c.call("jugar_regate"), c.call("jugar_sprint")]
+	return Idiomas.t("SIN BALÓN: %s contener · %s entrada · %s barrida · %s bregar · %s pedir el balón · %s sprint · %s pausa") % [
+		c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_regate"), c.call("jugar_pedir"),
+		c.call("jugar_sprint"), c.call("jugar_pausa")]
 
 func _abrev(nombre: String) -> String:
 	var n := Nombres.visible(nombre)
@@ -450,6 +463,8 @@ func _al_gol(de_local: bool, autor: String, _asist: String) -> void:
 
 # ---------------------------------------------------------------- pausa y final
 
+var _controles: PanelControles
+
 func _alternar_pausa() -> void:
 	if _pausa != null:
 		_pausa.queue_free()
@@ -459,6 +474,10 @@ func _alternar_pausa() -> void:
 	motor.set_physics_process(false)
 	_pausa = _caja_centro("PAUSA", [
 		["▶  Seguir jugando", _alternar_pausa],
+		["🎮  Controles", func() -> void:
+			if _controles == null:
+				_controles = PanelControles.abrir(self)
+				_controles.cerrado.connect(func() -> void: _controles = null)],
 		["⏩  Simular lo que queda", _simular_resto],
 	])
 
