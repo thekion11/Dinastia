@@ -14,6 +14,16 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - «Ejecuta las tareas en primer plano»: comandos cortos y en pasos separados, no
   cadenas largas en segundo plano.
 - El banco `pruebas/banco.gd` debe terminar en «FIN. 0 fallos» antes de subir.
+  Lanzarlo con `herramientas/banco.sh` (código 0 = ok; corta en errores de sintaxis,
+  cuelgues y «SCRIPT ERROR»).
+- (15-10) Lo visual se revisa en FORWARD+, que es lo que ve el jugador de PC: capturas
+  con `herramientas/captura.sh res://pruebas/captura_x.tscn` (Forward+ por defecto,
+  `--compat` solo para móvil/web/motor ligero; sin GPU necesita
+  `apt-get install -y mesa-vulkan-drivers`). Las capturas nuevas se guardan en JPG
+  (el script las convierte; `--png` para no hacerlo).
+- Contenedor nuevo: `git lfs pull --include="dinastia-godot/**"` ANTES de abrir Godot;
+  si se importa con punteros LFS, los modelos quedan `valid=false` (restaurar esos
+  `.import`, borrar `.godot/imported` y reimportar).
 
 ## Lo que pidió en sus últimos mensajes (29-9-2026)
 1. Terminar el plan en orden: traducción EN/PT (hecha) → más idiomas → limpieza →
