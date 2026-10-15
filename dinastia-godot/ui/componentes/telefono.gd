@@ -392,7 +392,7 @@ func _tribuna() -> void:
 	quien.clip_text = true
 	cab.add_child(quien)
 	var cambiar := Button.new()
-	cambiar.text = "⇄ Cuenta"
+	cambiar.text = Idiomas.t("⇄ Cuenta")
 	cambiar.add_theme_font_size_override("font_size", 11)
 	cambiar.pressed.connect(_cerrar_sesion_animado)
 	cab.add_child(cambiar)
@@ -456,16 +456,16 @@ func _login() -> void:
 	_cuerpo.add_child(logo)
 	_cuerpo.add_child(_nota("Inicia sesión"))
 	var usuario := LineEdit.new()
-	usuario.placeholder_text = "Usuario (@...)"
+	usuario.placeholder_text = Idiomas.t("Usuario (@...)")
 	usuario.name = "Usuario"
 	_cuerpo.add_child(usuario)
 	var clave := LineEdit.new()
-	clave.placeholder_text = "Clave"
+	clave.placeholder_text = Idiomas.t("Clave")
 	clave.secret = true
 	clave.name = "Clave"
 	_cuerpo.add_child(clave)
 	var entrar := Button.new()
-	entrar.text = "Entrar"
+	entrar.text = Idiomas.t("Entrar")
 	entrar.custom_minimum_size = Vector2(0, 40)
 	entrar.pressed.connect(func() -> void: _entrar(usuario.text, clave.text))
 	_cuerpo.add_child(entrar)
@@ -474,20 +474,20 @@ func _login() -> void:
 	_cuerpo.add_child(_nota("Cuentas guardadas en este móvil"))
 	## Tu cuenta: un toque (la clave está recordada).
 	var yo := Button.new()
-	yo.text = "%s  (tu cuenta)" % String(r.cuentas["dt"]["usuario"])
+	yo.text = Idiomas.t("%s  (tu cuenta)") % String(r.cuentas["dt"]["usuario"])
 	yo.pressed.connect(func() -> void:
 		_escribir_animado(usuario, String(r.cuentas["dt"]["usuario"]), func() -> void:
 			_escribir_animado(clave, "••••••••", func() -> void: _entrar(usuario.text, "", true))))
 	_cuerpo.add_child(yo)
 	var del_club := Button.new()
-	del_club.text = "%s  %s" % [String(r.cuentas["club"]["usuario"]), "(la clave está en Mensajes)" if r.acceso_club else "🔒 no es tuya"]
+	del_club.text = "%s  %s" % [String(r.cuentas["club"]["usuario"]), Idiomas.t("(la clave está en Mensajes)") if r.acceso_club else Idiomas.t("🔒 no es tuya")]
 	del_club.disabled = not r.acceso_club
 	del_club.pressed.connect(func() -> void:
 		_escribir_animado(usuario, String(r.cuentas["club"]["usuario"]), func() -> void: clave.grab_focus()))
 	_cuerpo.add_child(del_club)
 	if r.acceso_club:
 		var usar := Button.new()
-		usar.text = "🔑 Usar la clave guardada"
+		usar.text = Idiomas.t("🔑 Usar la clave guardada")
 		usar.pressed.connect(func() -> void: entrar_con_clave_guardada())
 		_cuerpo.add_child(usar)
 	else:
@@ -651,7 +651,7 @@ func _tarjeta(p: Dictionary) -> PanelContainer:
 			sin_resp += 1
 	var ver := Button.new()
 	ver.flat = true
-	ver.text = "💬 %d" % cs.size() + (("  · %d sin responder" % sin_resp) if mia and sin_resp > 0 else "")
+	ver.text = "💬 %d" % cs.size() + ((Idiomas.t("  · %d sin responder") % sin_resp) if mia and sin_resp > 0 else "")
 	ver.pressed.connect(func() -> void:
 		_abiertos[id] = not bool(_abiertos.get(id, false))
 		abrir_app("tribuna"))
@@ -778,7 +778,7 @@ func _publicar() -> void:
 			efecto += " · ⚠️ puede hacerse polémica"
 	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, efecto))
 	var pub := Button.new()
-	pub.text = "Publicar como " + String(r.cuentas[r.sesion]["usuario"])
+	pub.text = Idiomas.t("Publicar como ") + String(r.cuentas[r.sesion]["usuario"])
 	pub.custom_minimum_size = Vector2(0, 40)
 	pub.pressed.connect(func() -> void:
 		var res := r.publicar(m, _tipo_elegido, _tags_elegidos)
@@ -1127,14 +1127,14 @@ func _ajustes() -> void:
 	var botones := VBoxContainer.new()
 	fila.add_child(botones)
 	var retrato := Button.new()
-	retrato.text = "🧑 Usar mi personaje"
+	retrato.text = Idiomas.t("🧑 Usar mi personaje")
 	retrato.pressed.connect(func() -> void:
 		mv.foto_perfil = "retrato"
 		estetica_cambiada.emit()
 		abrir_app("ajustes"))
 	botones.add_child(retrato)
 	var galeria := Button.new()
-	galeria.text = "🖼️ Elegir de mi galería"
+	galeria.text = Idiomas.t("🖼️ Elegir de mi galería")
 	galeria.pressed.connect(_elegir_de_galeria)
 	botones.add_child(galeria)
 
@@ -1161,7 +1161,7 @@ func _elegir_de_galeria() -> void:
 	fd.access = FileDialog.ACCESS_FILESYSTEM
 	fd.use_native_dialog = true
 	fd.filters = PackedStringArray(["*.png, *.jpg, *.jpeg, *.webp ; Imágenes"])
-	fd.title = "Elige tu foto de perfil"
+	fd.title = Idiomas.t("Elige tu foto de perfil")
 	get_tree().root.add_child(fd)
 	fd.file_selected.connect(func(ruta: String) -> void:
 		var error := m.movil.usar_foto_de_galeria(ruta)
@@ -1194,7 +1194,7 @@ static func abrir(p: Control, mundo: Mundo) -> Control:
 	tel.custom_minimum_size = Vector2(ANCHO, clampf(alto - 40.0, 420.0, 780.0))
 	centro.add_child(tel)
 	var cerrar := Button.new()
-	cerrar.text = "✕ Guardar el móvil"
+	cerrar.text = Idiomas.t("✕ Guardar el móvil")
 	cerrar.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	cerrar.offset_left = -200
 	cerrar.offset_right = -30

@@ -3282,7 +3282,7 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 		_box(ext, Vector3(x, 1.5, z + 1.22), Vector3(1.8, 0.9, 0.05), ventanilla)
 		_box(ext, Vector3(x, 2.75, z + 0.5), Vector3(3.8, 0.15, 3.6), losa)
 	var rot := Label3D.new()
-	rot.text = "TAQUILLAS"
+	rot.text = Idiomas.t("TAQUILLAS")
 	rot.font_size = 96
 	rot.pixel_size = 0.012
 	rot.modulate = Color(1, 1, 1)
@@ -3301,7 +3301,7 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 	franja.emission_energy_multiplier = 0.4
 	_box(ext, tienda_pos + Vector3(0, 5.0, 5.1), Vector3(18.0, 1.2, 0.1), franja)
 	var r_tienda := Label3D.new()
-	r_tienda.text = "TIENDA OFICIAL" if mi == null else "TIENDA %s" % Nombres.visible(mi.nombre).to_upper()
+	r_tienda.text = Idiomas.t("TIENDA OFICIAL") if mi == null else Idiomas.t("TIENDA %s") % Nombres.visible(mi.nombre).to_upper()
 	r_tienda.font_size = 80
 	r_tienda.pixel_size = 0.012
 	r_tienda.outline_size = 10

@@ -24,7 +24,7 @@ static func abrir(p: Control, m: Mundo = null) -> Control:
 	tit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(tit)
 	var cerrar := Button.new()
-	cerrar.text = "✕ Cerrar"
+	cerrar.text = Idiomas.t("✕ Cerrar")
 	cerrar.pressed.connect(pop.queue_free)
 	cab.add_child(cerrar)
 	var tabs := TabContainer.new()
@@ -58,10 +58,10 @@ static func _pintar_album(album: VBoxContainer, m: Mundo) -> void:
 	for r: Array in Meta.RAREZAS:
 		fila.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Color(String(r[3])), "%s: %d" % [String(r[1]), int(cuenta.get(String(r[0]), 0))]))
 	var abrir := Button.new()
-	abrir.text = "🎁 Abrir sobre (%d)" % int(d["sobres"])
+	abrir.text = Idiomas.t("🎁 Abrir sobre (%d)") % int(d["sobres"])
 	abrir.disabled = m == null or int(d["sobres"]) <= 0
 	if m == null:
-		abrir.tooltip_text = "Los sobres se abren con una partida en marcha: los cromos salen de tu mundo."
+		abrir.tooltip_text = Idiomas.t("Los sobres se abren con una partida en marcha: los cromos salen de tu mundo.")
 	fila.add_child(abrir)
 	var recien := HFlowContainer.new()
 	recien.add_theme_constant_override("h_separation", 10)
