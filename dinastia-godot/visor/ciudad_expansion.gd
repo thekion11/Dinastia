@@ -1691,6 +1691,9 @@ func _guirnaldas() -> void:
 	for _c in colores:
 		por_color.append([] as Array[Transform3D])
 	var n := 0
+	## Cable y postes (15-10-2026): antes las bombillas flotaban sueltas en el aire.
+	var cables: Array[Transform3D] = []
+	var postes_g: Array[Transform3D] = []
 	for t: Dictionary in tramos:
 		var a: Vector3 = t["a"]
 		var c: Vector3 = t["b"]
@@ -1704,11 +1707,18 @@ func _guirnaldas() -> void:
 			var p := a.lerp(c, (float(q) + 0.5) / 4.0)
 			var e0 := p + (Vector3(-ancho * 0.5 - 1.0, 0, 0) if vertical else Vector3(0, 0, -ancho * 0.5 - 1.0))
 			var e1 := p + (Vector3(ancho * 0.5 + 1.0, 0, 0) if vertical else Vector3(0, 0, ancho * 0.5 + 1.0))
+			var prev := Vector3.ZERO
 			for s in 12:
 				var f := float(s) / 11.0
 				var pos := e0.lerp(e1, f) + Vector3(0, 7.5 - 1.6 * sin(f * PI), 0)
-				(por_color[s % colores.size()] as Array).append(Transform3D(Basis.from_scale(Vector3.ONE * 0.35), pos))
+				if s > 0:
+					cables.append(_tramo_cable(prev, pos, 0.025))
+				prev = pos
+				## La bombilla cuelga justo bajo el cable.
+				(por_color[s % colores.size()] as Array).append(Transform3D(Basis.from_scale(Vector3.ONE * 0.24), pos - Vector3(0, 0.16, 0)))
 				n += 1
+			for e: Vector3 in [e0, e1]:
+				postes_g.append(Transform3D(Basis.from_scale(Vector3(0.09, 7.7, 0.09)), e + Vector3(0, 3.85, 0)))
 	for k in colores.size():
 		var mat := StandardMaterial3D.new()
 		mat.albedo_color = colores[k]
@@ -1722,7 +1732,19 @@ func _guirnaldas() -> void:
 		var lista: Array[Transform3D] = []
 		lista.assign(por_color[k])
 		_multimesh(esf, mat, lista, Vector3.ONE)
+	var oscuro := b._mat_simple(Color(0.12, 0.12, 0.13), 0.6)
+	_multimesh(CylinderMesh.new(), oscuro, cables, Vector3.ONE)
+	_multimesh(CylinderMesh.new(), oscuro, postes_g, Vector3.ONE)
 	cuenta["bombillas"] = n
+
+## Un tramo de cable (cilindro de altura 1 a lo largo de su eje Y) de `a` a `c`.
+static func _tramo_cable(a: Vector3, c: Vector3, grosor: float) -> Transform3D:
+	var d := c - a
+	var largo := maxf(d.length(), 0.001)
+	var y := d / largo
+	var x := y.cross(Vector3.UP if absf(y.y) < 0.99 else Vector3.RIGHT).normalized()
+	var z := x.cross(y)
+	return Transform3D(Basis(x * grosor * 2.0, y * largo, z * grosor * 2.0), (a + c) * 0.5)
 
 ## 0 de día, 1 de noche: guirnaldas, farolas y ventanas lejanas.
 func encender(noche: float) -> void:
