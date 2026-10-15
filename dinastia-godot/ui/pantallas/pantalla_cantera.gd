@@ -22,7 +22,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 	if not s.mundial.is_empty():
 		p._lista_seleccion.add_child(HSeparator.new())
 		var t := p._texto(11, Principal.COL_SUAVE)
-		t.text = "COPA DEL MUNDO"
+		t.text = Idiomas.t("COPA DEL MUNDO")
 		p._lista_seleccion.add_child(t)
 		p._dato("Último campeón", "%s (%d)" % [String(s.mundial.get("campeon", "—")), int(s.mundial.get("anio", 0))],
 			Principal.COL_ORO, p._lista_seleccion)
@@ -30,7 +30,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 	if not s.mundial_clubes.is_empty():
 		p._lista_seleccion.add_child(HSeparator.new())
 		var t2 := p._texto(11, Principal.COL_SUAVE)
-		t2.text = "MUNDIAL DE CLUBES"
+		t2.text = Idiomas.t("MUNDIAL DE CLUBES")
 		p._lista_seleccion.add_child(t2)
 		var mio := bool(s.mundial_clubes.get("mio", false))
 		p._dato("Campeón", "%s (%d)" % [String(s.mundial_clubes.get("campeon", "—")), int(s.mundial_clubes.get("anio", 0))],
@@ -45,10 +45,10 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 	if not s.campeones_continentales.is_empty():
 		p._lista_seleccion.add_child(HSeparator.new())
 		var t3 := p._texto(11, Principal.COL_SUAVE)
-		t3.text = "CAMPEONES CONTINENTALES"
+		t3.text = Idiomas.t("CAMPEONES CONTINENTALES")
 		p._lista_seleccion.add_child(t3)
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Son los que se clasifican al Mundial de Clubes del año siguiente."
+		ex.text = Idiomas.t("Son los que se clasifican al Mundial de Clubes del año siguiente.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_seleccion.add_child(ex)
 		var mi_id := p.mundo.mi_club_id
@@ -64,7 +64,7 @@ func _pintar_seleccion(c: Club) -> void:
 		return
 	_pintar_palmares_mundial(s)
 	var t := p._texto(13, Principal.COL_ORO)
-	t.text = "%s  ·  fuerza %d" % [s.nombre_seleccion(), s.fuerza(s.nombre_seleccion())]
+	t.text = Idiomas.t("%s  ·  fuerza %d") % [s.nombre_seleccion(), s.fuerza(s.nombre_seleccion())]
 	p._lista_seleccion.add_child(t)
 
 	## Lo tuyo primero: la nómina si ya está cerrada, si no la prenómina, si no
@@ -76,7 +76,7 @@ func _pintar_seleccion(c: Club) -> void:
 		var nombres: Array[String] = []
 		for j: Jugador in mios_nomina:
 			nombres.append("%s (%d caps)" % [j.nombre, s.caps_de(j)])
-		l.text = "Convocados ahora: " + ", ".join(nombres)
+		l.text = Idiomas.t("Convocados ahora: ") + ", ".join(nombres)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_seleccion.add_child(l)
 	elif not mios_pre.is_empty():
@@ -84,12 +84,12 @@ func _pintar_seleccion(c: Club) -> void:
 		var nombres2: Array[String] = []
 		for j: Jugador in mios_pre:
 			nombres2.append(j.nombre)
-		l2.text = "En la prenómina: " + ", ".join(nombres2)
+		l2.text = Idiomas.t("En la prenómina: ") + ", ".join(nombres2)
 		l2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_seleccion.add_child(l2)
 	else:
 		var vacio := p._texto(12, Principal.COL_SUAVE)
-		vacio.text = "Nadie de tu club convocado en este momento."
+		vacio.text = Idiomas.t("Nadie de tu club convocado en este momento.")
 		p._lista_seleccion.add_child(vacio)
 
 
@@ -107,11 +107,11 @@ func _pintar_seleccion(c: Club) -> void:
 			pedibles.append(j2)
 	if not pedibles.is_empty():
 		var td := p._texto(11, Principal.COL_SUAVE)
-		td.text = "PEDIR DESCANSO"
+		td.text = Idiomas.t("PEDIR DESCANSO")
 		p._lista_seleccion.add_child(td)
 		if not p._modo_experto:
 			var ed := p._texto(10, Principal.COL_SUAVE)
-			ed.text = "Le pides a la federación que no se lo lleve. No siempre te hacen caso, y al jugador no le suele gustar que decidas por él."
+			ed.text = Idiomas.t("Le pides a la federación que no se lo lleve. No siempre te hacen caso, y al jugador no le suele gustar que decidas por él.")
 			ed.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_seleccion.add_child(ed)
 		for jd: Jugador in pedibles:
@@ -123,12 +123,12 @@ func _pintar_seleccion(c: Club) -> void:
 			var n := p._texto(12, Principal.COL_ORO if pedido else Principal.COL_TEXTO)
 			var nac := s.nacionalidad_deportiva(jd)
 			n.text = "%s  ·  %s%s" % [jd.nombre, jd.pais,
-				"  (nacionalizado %s)" % nac if nac != "" else ""]
+				Idiomas.t("  (nacionalizado %s)") % nac if nac != "" else ""]
 			n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			n.clip_text = true
 			fila.add_child(n)
 			var b := Button.new()
-			b.text = "Pedido" if pedido else "Pedir descanso"
+			b.text = Idiomas.t("Pedido") if pedido else Idiomas.t("Pedir descanso")
 			b.add_theme_font_size_override("font_size", 11)
 			b.disabled = pedido
 			b.custom_minimum_size = Vector2(120, 0)
@@ -143,7 +143,7 @@ func _pintar_seleccion(c: Club) -> void:
 	if not s.resultados.is_empty():
 		p._lista_seleccion.add_child(HSeparator.new())
 		var tr := p._texto(11, Principal.COL_SUAVE)
-		tr.text = "ÚLTIMOS RESULTADOS"
+		tr.text = Idiomas.t("ÚLTIMOS RESULTADOS")
 		p._lista_seleccion.add_child(tr)
 		for linea: String in s.resultados:
 			var lr := p._texto(12, Principal.COL_TEXTO)
@@ -156,7 +156,7 @@ func _pintar_seleccion(c: Club) -> void:
 	if not candidatos.is_empty():
 		p._lista_seleccion.add_child(HSeparator.new())
 		var tn := p._texto(11, Principal.COL_SUAVE)
-		tn.text = "NACIONALIZACIÓN DEPORTIVA"
+		tn.text = Idiomas.t("NACIONALIZACIÓN DEPORTIVA")
 		p._lista_seleccion.add_child(tn)
 		for fila: Dictionary in candidatos:
 			var j: Jugador = fila["jugador"]
@@ -164,12 +164,12 @@ func _pintar_seleccion(c: Club) -> void:
 			fila_h.add_theme_constant_override("separation", 8)
 			p._lista_seleccion.add_child(fila_h)
 			var nom := p._texto(12, Principal.COL_TEXTO)
-			nom.text = "%s  ·  %d temporadas en el país" % [j.nombre, int(fila["temporadas"])]
+			nom.text = Idiomas.t("%s  ·  %d temporadas en el país") % [j.nombre, int(fila["temporadas"])]
 			nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila_h.add_child(nom)
 			var costo := s.costo_nacionalizacion(j)
 			var b := Button.new()
-			b.text = "Nacionalizar  %s" % p._dinero(costo)
+			b.text = Idiomas.t("Nacionalizar  %s") % p._dinero(costo)
 			b.add_theme_font_size_override("font_size", 11)
 			b.disabled = costo > c.saldo
 			b.pressed.connect(func() -> void: _nacionalizar(j))
@@ -177,18 +177,18 @@ func _pintar_seleccion(c: Club) -> void:
 
 	p._lista_seleccion.add_child(HSeparator.new())
 	var tm := p._texto(11, Principal.COL_SUAVE)
-	tm.text = "MÁS INTERNACIONALES DEL MUNDO"
+	tm.text = Idiomas.t("MÁS INTERNACIONALES DEL MUNDO")
 	p._lista_seleccion.add_child(tm)
 	for fila2: Dictionary in s.mas_convocados(8):
 		var j2: Jugador = fila2["jugador"]
 		var col := p.COL_ACENTO if j2.club_id == c.id else Principal.COL_TEXTO
 		var lm := p._texto(12, col)
-		lm.text = "%s  ·  %d caps" % [j2.nombre, int(fila2["caps"])]
+		lm.text = Idiomas.t("%s  ·  %d caps") % [j2.nombre, int(fila2["caps"])]
 		p._lista_seleccion.add_child(lm)
 
 	p._lista_seleccion.add_child(HSeparator.new())
 	var te := p._texto(11, Principal.COL_SUAVE)
-	te.text = "ESCALAFÓN MUNDIAL"
+	te.text = Idiomas.t("ESCALAFÓN MUNDIAL")
 	p._lista_seleccion.add_child(te)
 	for fila3: Dictionary in s.ranking(14):
 		var propia := String(fila3["nombre"]) == s.nombre_seleccion()
@@ -223,11 +223,11 @@ func _pintar_fondos(c: Club) -> void:
 		return
 	p._lista_cantera.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "💸 FONDOS DE INVERSIÓN"
+	t.text = Idiomas.t("💸 FONDOS DE INVERSIÓN")
 	p._lista_cantera.add_child(t)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Compran un porcentaje del PRÓXIMO traspaso de un chico y te lo pagan hoy. Pagan por debajo de lo que vale porque asumen el riesgo, y el día que lo vendas ese porcentaje ya no es tuyo. Como mucho el %d%% de cada jugador." % Cesiones.PCT_MAX
+		ex.text = Idiomas.t("Compran un porcentaje del PRÓXIMO traspaso de un chico y te lo pagan hoy. Pagan por debajo de lo que vale porque asumen el riesgo, y el día que lo vendas ese porcentaje ya no es tuyo. Como mucho el %d%% de cada jugador.") % Cesiones.PCT_MAX
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_cantera.add_child(ex)
 
@@ -238,7 +238,7 @@ func _pintar_fondos(c: Club) -> void:
 	jovenes.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.valor > b.valor)
 	if jovenes.is_empty():
 		var vac := p._texto(10, Principal.COL_SUAVE)
-		vac.text = "No tienes ningún futbolista de 23 años o menos: los fondos solo compran derechos de jóvenes."
+		vac.text = Idiomas.t("No tienes ningún futbolista de 23 años o menos: los fondos solo compran derechos de jóvenes.")
 		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_cantera.add_child(vac)
 		return
@@ -250,13 +250,13 @@ func _pintar_fondos(c: Club) -> void:
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_cantera.add_child(fila)
 		var n := p._texto(12, Principal.COL_ORO if vendido > 0 else Principal.COL_TEXTO)
-		n.text = "%s  ·  %d años  ·  %s" % [j2.nombre, j2.edad, p._dinero(j2.valor)]
+		n.text = Idiomas.t("%s  ·  %d años  ·  %s") % [j2.nombre, j2.edad, p._dinero(j2.valor)]
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		n.clip_text = true
 		fila.add_child(n)
 		if vendido > 0:
 			var v := p._texto(11, Principal.COL_ROJO)
-			v.text = "%d%% vendido" % vendido
+			v.text = Idiomas.t("%d%% vendido") % vendido
 			v.custom_minimum_size = Vector2(90, 0)
 			fila.add_child(v)
 		if vendido >= Cesiones.PCT_MAX:
@@ -269,7 +269,7 @@ func _pintar_fondos(c: Club) -> void:
 			b.text = "%s  %s" % [String(f[1]).split(" ")[0], p._dinero(ce.oferta_de_fondo(j2, clave, 25))]
 			b.add_theme_font_size_override("font_size", 10)
 			b.clip_text = true
-			b.tooltip_text = "%s  ·  vende el 25%% del próximo traspaso de %s" % [String(f[3]), j2.nombre]
+			b.tooltip_text = Idiomas.t("%s  ·  vende el 25%% del próximo traspaso de %s") % [String(f[3]), j2.nombre]
 			b.custom_minimum_size = Vector2(120, 0)
 			b.pressed.connect(func() -> void:
 				var p_local := ce.vender_participacion(j2, clave, 25, p.mundo.mi_club())
@@ -291,11 +291,11 @@ func _pintar_mapa_del_talento() -> void:
 	var mapa := p.mundo.eras.mapa_del_talento(p.mundo.anio)
 	p._lista_cantera.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🌍 EL MAPA DEL TALENTO"
+	t.text = Idiomas.t("🌍 EL MAPA DEL TALENTO")
 	p._lista_cantera.add_child(t)
 	if mapa.is_empty():
 		var vac := p._texto(11, Principal.COL_SUAVE)
-		vac.text = "Ningún país atraviesa hoy una época marcada. Las generaciones irrepetibles aparecen solas, cada varios años, y duran lo que duran."
+		vac.text = Idiomas.t("Ningún país atraviesa hoy una época marcada. Las generaciones irrepetibles aparecen solas, cada varios años, y duran lo que duran.")
 		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_cantera.add_child(vac)
 		return
@@ -303,12 +303,11 @@ func _pintar_mapa_del_talento() -> void:
 		var dorada := bool(e["dorada"])
 		var n := p._texto(12, Principal.COL_ORO if dorada else Principal.COL_ROJO)
 		n.text = "%s %s  ·  %s" % ["✨" if dorada else "🥀", String(e["pais"]),
-			"Época dorada" if dorada else "Decadencia"]
+			Idiomas.t("Época dorada") if dorada else Idiomas.t("Decadencia")]
 		p._lista_cantera.add_child(n)
 		var d := p._texto(10, Principal.COL_SUAVE)
-		d.text = "%d–%d (quedan %d año%s)  ·  %s  %s" % [
+		d.text = (Idiomas.t("%d–%d (queda %d año)  ·  %s  %s") if int(e["quedan"]) == 1 else Idiomas.t("%d–%d (quedan %d años)  ·  %s  %s")) % [
 			int(e["desde"]), int(e["hasta"]), int(e["quedan"]),
-			"" if int(e["quedan"]) == 1 else "s",
 			String(e["texto"]), String(e["consejo"])]
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_cantera.add_child(d)
@@ -333,7 +332,7 @@ func _pintar_linaje(c: Club) -> void:
 		return
 	p._lista_cantera.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "ÁRBOL GENEALÓGICO  ·  %d familia(s) en el plantel" % mias.size()
+	t.text = Idiomas.t("ÁRBOL GENEALÓGICO  ·  %d familia(s) en el plantel") % mias.size()
 	p._lista_cantera.add_child(t)
 	for clave: String in mias:
 		var titulo := ""
@@ -360,7 +359,7 @@ func _pintar_linaje(c: Club) -> void:
 			b.pressed.connect(func() -> void: p._ver_ficha(j))
 			fila.add_child(b)
 			var d := p._texto(11, Principal.COL_SUAVE)
-			d.text = "%d años  ·  %s  ·  media %d" % [j.edad, j.pos_e, j.ovr]
+			d.text = Idiomas.t("%d años  ·  %s  ·  media %d") % [j.edad, j.pos_e, j.ovr]
 			fila.add_child(d)
 			## EL APELLIDO QUE PESA. `Cantera` le cuelga una etiqueta al hijo de
 			## una leyenda y cada semana mide si está a la altura: si rinde lo
@@ -371,8 +370,8 @@ func _pintar_linaje(c: Club) -> void:
 			if not et.is_empty():
 				var presion := int(et.get("presion", 0))
 				var e2 := p._texto(11, Principal.COL_ROJO if presion >= 4 else (Principal.COL_VERDE if int(et.get("cumple", 0)) >= 4 else Principal.COL_SUAVE))
-				e2.text = "«el nuevo %s»  ·  presión %d/6" % [String(et.get("ref", "—")), presion]
-				e2.tooltip_text = "La prensa lo compara con su padre en cada partido. A las seis semanas malas le pasa factura; a los ocho aciertos se lo quitan de encima para siempre."
+				e2.text = Idiomas.t("«el nuevo %s»  ·  presión %d/6") % [String(et.get("ref", "—")), presion]
+				e2.tooltip_text = Idiomas.t("La prensa lo compara con su padre en cada partido. A las seis semanas malas le pasa factura; a los ocho aciertos se lo quitan de encima para siempre.")
 				fila.add_child(e2)
 
 func _pintar_cantera(c: Club) -> void:
@@ -400,13 +399,13 @@ func _pintar_cantera(c: Club) -> void:
 			leyendas_del_club.append(l)
 	if not leyendas_del_club.is_empty():
 		var tley := p._texto(11, Principal.COL_ORO)
-		tley.text = "LEYENDAS DEL CLUB"
+		tley.text = Idiomas.t("LEYENDAS DEL CLUB")
 		p._lista_cantera.add_child(tley)
 		for l: Dictionary in leyendas_del_club:
 			var lf := p._texto(12, Principal.COL_SUAVE if bool(l.get("usado", false)) else Principal.COL_TEXTO)
-			lf.text = "%s  ·  %s  ·  nivel %d%s" % [
+			lf.text = Idiomas.t("%s  ·  %s  ·  nivel %d%s") % [
 				String(l.get("nombre", "")), String(l.get("pos", "")), int(l.get("nivel", 0)),
-				"  · su hijo ya debutó" if bool(l.get("usado", false)) else "  · puede tener un hijo en %d" % int(l.get("anio_hijo", 0))]
+				Idiomas.t("  · su hijo ya debutó") if bool(l.get("usado", false)) else Idiomas.t("  · puede tener un hijo en %d") % int(l.get("anio_hijo", 0))]
 			lf.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_cantera.add_child(lf)
 		p._lista_cantera.add_child(HSeparator.new())
@@ -414,7 +413,7 @@ func _pintar_cantera(c: Club) -> void:
 	var camada := ct.camada_actual()
 	if not camada.is_empty():
 		var tc := p._texto(11, Principal.COL_ORO)
-		tc.text = "LA CAMADA DE ESTE AÑO"
+		tc.text = Idiomas.t("LA CAMADA DE ESTE AÑO")
 		p._lista_cantera.add_child(tc)
 		for j: Jugador in camada:
 			p._lista_cantera.add_child(_fila_canterano(j, ct, c))
@@ -423,7 +422,7 @@ func _pintar_cantera(c: Club) -> void:
 	var listos := ct.candidatos_a_debutar()
 	if not listos.is_empty():
 		var tl := p._texto(11, Principal.COL_VERDE)
-		tl.text = "LISTOS PARA DEBUTAR"
+		tl.text = Idiomas.t("LISTOS PARA DEBUTAR")
 		p._lista_cantera.add_child(tl)
 		var nombres: Array[String] = []
 		for j: Jugador in listos:
@@ -457,7 +456,7 @@ func _fila_canterano(j: Jugador, ct: Cantera, c: Club) -> HBoxContainer:
 	var nom := p._texto(12, Principal.COL_VERDE if listo else Principal.COL_TEXTO)
 	var linaje: Dictionary = ct.linaje_de(j)
 	var etiqueta := (" · hijo de %s" % String(linaje.get("padre", ""))) if not linaje.is_empty() else ""
-	nom.text = "%s  ·  %d años  ·  %d/%d%s" % [j.nombre, j.edad, j.ovr, j.pot, etiqueta]
+	nom.text = Idiomas.t("%s  ·  %d años  ·  %d/%d%s") % [j.nombre, j.edad, j.ovr, j.pot, etiqueta]
 	nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	fila.add_child(nom)
@@ -482,18 +481,18 @@ func _fila_canterano(j: Jugador, ct: Cantera, c: Club) -> HBoxContainer:
 	var fuga := ct.riesgo_fuga(j)
 	if fuga > 0.0:
 		var rf := p._texto(11, Principal.COL_ROJO if fuga >= 0.05 else Principal.COL_SUAVE)
-		rf.text = "fuga %.1f%%" % (fuga * 100.0)
-		rf.tooltip_text = "Probabilidad de que se lo lleve otro club esta semana. La beca la baja, y las instalaciones de cantera también."
+		rf.text = Idiomas.t("fuga %.1f%%") % (fuga * 100.0)
+		rf.tooltip_text = Idiomas.t("Probabilidad de que se lo lleve otro club esta semana. La beca la baja, y las instalaciones de cantera también.")
 		rf.custom_minimum_size = Vector2(64, 0)
 		fila.add_child(rf)
 	if ct.tiene_beca(j):
 		var tag := p._texto(11, Principal.COL_VERDE)
-		tag.text = "becado"
+		tag.text = Idiomas.t("becado")
 		fila.add_child(tag)
 	else:
 		var costo := ct.coste_beca()
 		var b := Button.new()
-		b.text = "Becar  %s" % p._dinero(costo)
+		b.text = Idiomas.t("Becar  %s") % p._dinero(costo)
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = costo > c.saldo
 		b.pressed.connect(func() -> void: _becar(j))
@@ -530,10 +529,10 @@ func _pintar_roles_prometidos(c: Club) -> void:
 	if tabla.is_empty():
 		return
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "ROLES PROMETIDOS"
+	t.text = Idiomas.t("ROLES PROMETIDOS")
 	p._lista_contratos.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "Lo que le has prometido a cada uno. Bajarle el escalafón cuesta moral en el acto; subírselo la sube. Y prometer sin cumplir se paga después."
+	ex.text = Idiomas.t("Lo que le has prometido a cada uno. Bajarle el escalafón cuesta moral en el acto; subírselo la sube. Y prometer sin cumplir se paga después.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_contratos.add_child(ex)
 	var plantel := c.plantilla.duplicate()
@@ -573,7 +572,7 @@ func _pintar_roles_prometidos(c: Club) -> void:
 		var def := v.def_rol(actual)
 		if not def.is_empty():
 			var mn := p._texto(11, Principal.COL_SUAVE)
-			mn.text = "%d%% min." % int(def[3])
+			mn.text = Idiomas.t("%d%% min.") % int(def[3])
 			mn.custom_minimum_size = Vector2(56, 0)
 			fila.add_child(mn)
 	p._lista_contratos.add_child(HSeparator.new())
@@ -598,10 +597,10 @@ func _pintar_agencias(c: Club) -> void:
 	if lista.is_empty():
 		return
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🕴️ AGENCIAS DEL PLANTEL"
+	t.text = Idiomas.t("🕴️ AGENCIAS DEL PLANTEL")
 	p._lista_contratos.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "Un representante con dos o más clientes tuyos tiene con qué apretarte. Aquí se ve quién los tiene."
+	ex.text = Idiomas.t("Un representante con dos o más clientes tuyos tiene con qué apretarte. Aquí se ve quién los tiene.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_contratos.add_child(ex)
 	for f: Dictionary in lista:
@@ -612,7 +611,7 @@ func _pintar_agencias(c: Club) -> void:
 		## exactamente el umbral que usa el sorteo semanal.
 		var peligro := jugadores.size() >= 2
 		var l := p._texto(12, Principal.COL_ROJO if peligro and conf < 45 else Principal.COL_TEXTO)
-		l.text = "%s  ·  %s  ·  %d jugador(es)  ·  confianza %d" % [
+		l.text = Idiomas.t("%s  ·  %s  ·  %d jugador(es)  ·  confianza %d") % [
 			String(ag.get("nombre", "un representante")), String(ag.get("perfil", "")),
 			jugadores.size(), conf]
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -638,7 +637,7 @@ func _pintar_contratos(c: Club) -> void:
 	if not fuera.is_empty():
 		var tf := p._texto(11, Principal.COL_SUAVE)
 		var ahorro := ce.ahorro_salarial(c.id)
-		tf.text = "CEDIDOS FUERA  ·  te ahorras %s/semana" % p._dinero(ahorro)
+		tf.text = Idiomas.t("CEDIDOS FUERA  ·  te ahorras %s/semana") % p._dinero(ahorro)
 		p._lista_contratos.add_child(tf)
 		for fila: Dictionary in fuera:
 			var j: Jugador = fila["jugador"]
@@ -648,7 +647,7 @@ func _pintar_contratos(c: Club) -> void:
 			var letra := "opción de compra" if tipo == Cesiones.CESION_OPCION \
 				else ("obligación de compra" if tipo == Cesiones.CESION_OBLIGA else "préstamo simple")
 			var l := p._texto(12, Principal.COL_TEXTO)
-			l.text = "%s  ·  en %s  ·  %s  ·  vuelve en %d" % [j.nombre, destino.nombre, letra, int(d.get("vuelve", 0))]
+			l.text = Idiomas.t("%s  ·  en %s  ·  %s  ·  vuelve en %d") % [j.nombre, destino.nombre, letra, int(d.get("vuelve", 0))]
 			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_contratos.add_child(l)
 		p._lista_contratos.add_child(HSeparator.new())
@@ -669,14 +668,14 @@ func _pintar_contratos(c: Club) -> void:
 		p._lista_contratos.add_child(HSeparator.new())
 	elif not candidatos_prestamo.is_empty() or not candidatos_venta.is_empty():
 		var tc := p._texto(11, Principal.COL_SUAVE)
-		tc.text = "A QUIÉN CEDER"
+		tc.text = Idiomas.t("A QUIÉN CEDER")
 		p._lista_contratos.add_child(tc)
 		for j: Jugador in candidatos_prestamo:
 			var fila2 := HBoxContainer.new()
 			fila2.add_theme_constant_override("separation", 8)
 			p._lista_contratos.add_child(fila2)
 			var nom := p._texto(12, Principal.COL_TEXTO)
-			nom.text = "%s  ·  %d años  ·  cantera" % [j.nombre, j.edad]
+			nom.text = Idiomas.t("%s  ·  %d años  ·  cantera") % [j.nombre, j.edad]
 			nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila2.add_child(nom)
 			p._boton("Ceder a préstamo", func() -> void: p._ui_finanzas._ceder_canterano(j), fila2)
@@ -685,7 +684,7 @@ func _pintar_contratos(c: Club) -> void:
 			fila3.add_theme_constant_override("separation", 6)
 			p._lista_contratos.add_child(fila3)
 			var nom2 := p._texto(12, Principal.COL_SUAVE)
-			nom2.text = "%s  ·  %d años  ·  0 partidos" % [j.nombre, j.edad]
+			nom2.text = Idiomas.t("%s  ·  %d años  ·  0 partidos") % [j.nombre, j.edad]
 			nom2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila3.add_child(nom2)
 			p._boton("Con opción", func() -> void: p._ui_finanzas._ceder_con_opcion(j, Cesiones.CESION_OPCION), fila3)
@@ -702,11 +701,11 @@ func _pintar_contratos(c: Club) -> void:
 	if ce != null and p.mundo.cantera != null and puede_ceder:
 		var por_renovar := c.plantilla.filter(func(j: Jugador) -> bool: return j.anios_contrato <= 1)
 		var tr := p._texto(11, Principal.COL_SUAVE)
-		tr.text = "RENOVACIONES  ·  último año de contrato"
+		tr.text = Idiomas.t("RENOVACIONES  ·  último año de contrato")
 		p._lista_contratos.add_child(tr)
 		if por_renovar.is_empty():
 			var sin := p._texto(12, Principal.COL_SUAVE)
-			sin.text = "Nadie termina contrato esta temporada."
+			sin.text = Idiomas.t("Nadie termina contrato esta temporada.")
 			p._lista_contratos.add_child(sin)
 		for j: Jugador in por_renovar:
 			var pide := p.mundo.cantera.pide_para_renovar(j)
@@ -714,7 +713,7 @@ func _pintar_contratos(c: Club) -> void:
 			fila_r.add_theme_constant_override("separation", 6)
 			p._lista_contratos.add_child(fila_r)
 			var nr := p._texto(12, Principal.COL_TEXTO)
-			nr.text = "%s  ·  %d años  ·  media %d  ·  cobra %s → pide %s" % [
+			nr.text = Idiomas.t("%s  ·  %d años  ·  media %d  ·  cobra %s → pide %s") % [
 				j.nombre, j.edad, j.ovr, p._dinero(j.sueldo), p._dinero(pide)]
 			nr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila_r.add_child(nr)
@@ -727,7 +726,7 @@ func _pintar_contratos(c: Club) -> void:
 	## Las cláusulas de tu plantel: la protección va al revés que un fichaje, se
 	## paga para que NADIE pueda llevarse a tu figura por la puerta de atrás.
 	var tcl := p._texto(11, Principal.COL_SUAVE)
-	tcl.text = "CLÁUSULAS DE RESCISIÓN"
+	tcl.text = Idiomas.t("CLÁUSULAS DE RESCISIÓN")
 	p._lista_contratos.add_child(tcl)
 	var orden := c.plantilla.duplicate()
 	orden.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
@@ -737,11 +736,11 @@ func _pintar_contratos(c: Club) -> void:
 		fila4.add_theme_constant_override("separation", 8)
 		p._lista_contratos.add_child(fila4)
 		var nom3 := p._texto(12, Principal.COL_TEXTO if clau > 0 else Principal.COL_SUAVE)
-		nom3.text = "%s  ·  %s" % [j.nombre, p._dinero(clau) if clau > 0 else "sin cláusula"]
+		nom3.text = "%s  ·  %s" % [j.nombre, p._dinero(clau) if clau > 0 else Idiomas.t("sin cláusula")]
 		nom3.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila4.add_child(nom3)
 		var b := Button.new()
-		b.text = "Blindar" if clau > 0 else "Pactar cláusula"
+		b.text = Idiomas.t("Blindar") if clau > 0 else Idiomas.t("Pactar cláusula")
 		b.add_theme_font_size_override("font_size", 11)
 		b.pressed.connect(func() -> void: p._ui_finanzas._pactar_clausula_propia(j))
 		fila4.add_child(b)
@@ -771,7 +770,7 @@ func _pintar_comparar() -> void:
 
 	if jugadores.is_empty():
 		var vacio := p._texto(12, Principal.COL_SUAVE)
-		vacio.text = "Abre la ficha de cualquier jugador y pulsa «Comparar» para ponerlo aquí. Puedes enfrentar hasta tres a la vez, de tu club o de cualquier otro."
+		vacio.text = Idiomas.t("Abre la ficha de cualquier jugador y pulsa «Comparar» para ponerlo aquí. Puedes enfrentar hasta tres a la vez, de tu club o de cualquier otro.")
 		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_comparar.add_child(vacio)
 		return
@@ -841,7 +840,7 @@ func _pintar_comparar() -> void:
 	if p.mundo.entrenamiento != null:
 		p._lista_comparar.add_child(HSeparator.new())
 		var th := p._texto(11, Principal.COL_SUAVE)
-		th.text = "HABILIDADES"
+		th.text = Idiomas.t("HABILIDADES")
 		p._lista_comparar.add_child(th)
 		for j in jugadores:
 			var claves_hab: Array = p.mundo.entrenamiento.habilidades(j)
@@ -929,7 +928,7 @@ func _alternar_comparar(j: Jugador) -> void:
 func _pintar_informe() -> void:
 	var lineas := p.mundo.informe_de_gestion()
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "📋 INFORME DE LA SEMANA"
+	t.text = Idiomas.t("📋 INFORME DE LA SEMANA")
 	p._lista_inicio.add_child(t)
 	for f: Dictionary in lineas:
 		var grave := bool(f["grave"])

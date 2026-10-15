@@ -36,7 +36,7 @@ func _pintar_libres(c: Club) -> void:
 	if p.mundo.libres.is_empty():
 		p.mundo.generar_libres()
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "MERCADO DE AGENTES LIBRES  ·  sin traspaso, solo prima de fichaje y sueldo"
+	t.text = Idiomas.t("MERCADO DE AGENTES LIBRES  ·  sin traspaso, solo prima de fichaje y sueldo")
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_libres.add_child(t)
 
@@ -47,7 +47,7 @@ func _pintar_libres(c: Club) -> void:
 	filtros.add_theme_constant_override("v_separation", 6)
 	p._lista_libres.add_child(filtros)
 	var b_todos := Button.new()
-	b_todos.text = "Todos"
+	b_todos.text = Idiomas.t("Todos")
 	b_todos.toggle_mode = true
 	b_todos.button_pressed = p._libres_filtro == "todos"
 	b_todos.pressed.connect(func() -> void: p._libres_filtro = "todos"; _pintar_libres(c))
@@ -72,7 +72,7 @@ func _pintar_libres(c: Club) -> void:
 		return p._libres_filtro == "todos" or j.pos_e == p._libres_filtro)
 	if lista.is_empty():
 		var nada := p._texto(12, Principal.COL_SUAVE)
-		nada.text = "No hay agentes libres de ese puesto ahora mismo."
+		nada.text = Idiomas.t("No hay agentes libres de ese puesto ahora mismo.")
 		p._lista_libres.add_child(nada)
 		return
 	for j: Jugador in lista:
@@ -101,14 +101,14 @@ func _pintar_libres(c: Club) -> void:
 		med.text = "%d / %d" % [j.ovr, j.pot]
 		fila.add_child(med)
 		var boton := Button.new()
-		boton.text = "Ofrecer contrato"
+		boton.text = Idiomas.t("Ofrecer contrato")
 		boton.disabled = motivo_bloqueo != "" or prima > c.saldo
 		boton.pressed.connect(func() -> void: _fichar_libre(j))
 		fila.add_child(boton)
 		var det := p._texto(11, Principal.COL_SUAVE)
-		det.text = "%d años · %s · pide %s/sem · prima %s%s" % [
+		det.text = Idiomas.t("%d años · %s · pide %s/sem · prima %s%s") % [
 			j.edad, j.pais, p._dinero(j.sueldo), p._dinero(prima),
-			"  ·  ya dijo que no una vez" if j.rechazos_libre > 0 else ""]
+			Idiomas.t("  ·  ya dijo que no una vez") if j.rechazos_libre > 0 else ""]
 		p._lista_libres.add_child(det)
 		if j.motivo_libre != "":
 			var mot := p._texto(11, Principal.COL_SUAVE)
@@ -149,7 +149,7 @@ func _pintar_pizarron(c: Club) -> void:
 
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "En rojo, el que juega fuera de su puesto: rinde por debajo aunque su media diga otra cosa."
+		ex.text = Idiomas.t("En rojo, el que juega fuera de su puesto: rinde por debajo aunque su media diga otra cosa.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_tactica.add_child(ex)
 	p._lista_tactica.add_child(HSeparator.new())
@@ -163,11 +163,11 @@ func _pintar_pizarron(c: Club) -> void:
 func _pintar_balon_parado(c: Club) -> void:
 	var once := c.once()
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "BALÓN PARADO"
+	t.text = Idiomas.t("BALÓN PARADO")
 	p._lista_tactica.add_child(t)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "El número es cuánto le va esa jugada a ESTE once: depende de si tienes gente con las habilidades que pide."
+		ex.text = Idiomas.t("El número es cuánto le va esa jugada a ESTE once: depende de si tienes gente con las habilidades que pide.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_tactica.add_child(ex)
 
@@ -211,11 +211,11 @@ func _pintar_balon_parado(c: Club) -> void:
 	## En el 60 y no antes: cambiar el plan en el 20 no es un plan, es
 	## nerviosismo.
 	var tp := p._texto(11, p.COL_ACENTO)
-	tp.text = "PLANES SEGÚN EL MARCADOR"
+	tp.text = Idiomas.t("PLANES SEGÚN EL MARCADOR")
 	p._lista_tactica.add_child(tp)
 	if not p._modo_experto:
 		var ep := p._texto(10, Principal.COL_SUAVE)
-		ep.text = "Se aplican solos en el minuto 60, sin que tengas que estar mirando."
+		ep.text = Idiomas.t("Se aplican solos en el minuto 60, sin que tengas que estar mirando.")
 		ep.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_tactica.add_child(ep)
 	for par in [["Si voy perdiendo", "plan_perdiendo"], ["Si voy ganando", "plan_ganando"]]:
@@ -251,7 +251,7 @@ func _pintar_roles_tacticos(c: Club) -> void:
 	if once.is_empty():
 		return
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "ROLES DEL ONCE"
+	t.text = Idiomas.t("ROLES DEL ONCE")
 	p._lista_tactica.add_child(t)
 	var tabla := v.tabla_roles_tacticos()
 	for j: Jugador in once:
@@ -297,7 +297,7 @@ func _pintar_roles_tacticos(c: Club) -> void:
 	## resumen, esa consecuencia no se ve en ninguna parte.
 	var b: Dictionary = v.bonus_roles(once)
 	var res := p._texto(11, Principal.COL_SUAVE)
-	res.text = "Efecto sobre el equipo:  ataque ×%.3f   ·   defensa ×%.3f" % [float(b["att"]), float(b["def"])]
+	res.text = Idiomas.t("Efecto sobre el equipo:  ataque ×%.3f   ·   defensa ×%.3f") % [float(b["att"]), float(b["def"])]
 	p._lista_tactica.add_child(res)
 	p._lista_tactica.add_child(HSeparator.new())
 
@@ -330,7 +330,7 @@ func _pintar_moda_tactica(c: Club) -> void:
 		return
 	p._lista_tactica.add_child(HSeparator.new())
 	var tr := p._texto(11, Principal.COL_SUAVE)
-	tr.text = "📊 LO QUE TE HA FUNCIONADO"
+	tr.text = Idiomas.t("📊 LO QUE TE HA FUNCIONADO")
 	p._lista_tactica.add_child(tr)
 	var g := GridContainer.new()
 	g.columns = 5
@@ -349,7 +349,7 @@ func _pintar_moda_tactica(c: Club) -> void:
 			Principal.COL_VERDE if float(fila["ppp"]) >= 1.7 else (Principal.COL_ROJO if float(fila["ppp"]) < 1.0 else Principal.COL_TEXTO), true)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Puntos por partido con cada dibujo, desde que llevas el club. No dice cuál es el mejor del juego: dice cuál le sienta bien a ESTA plantilla."
+		ex.text = Idiomas.t("Puntos por partido con cada dibujo, desde que llevas el club. No dice cuál es el mejor del juego: dice cuál le sienta bien a ESTA plantilla.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_tactica.add_child(ex)
 
@@ -360,7 +360,7 @@ func _pintar_tactica(c: Club) -> void:
 	## domingo.
 	_pintar_pizarron(c)
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "FORMACIÓN"
+	t.text = Idiomas.t("FORMACIÓN")
 	p._lista_tactica.add_child(t)
 	var forms: Dictionary = Datos.tabla("FORMS")
 	var fila_f: HBoxContainer = null
@@ -393,7 +393,7 @@ func _pintar_tactica(c: Club) -> void:
 		["Amplitud", "amplitud", ["Estrecha", "Media", "Abierta"]],
 	]
 	var tp := p._texto(11, Principal.COL_SUAVE)
-	tp.text = "PIZARRA"
+	tp.text = Idiomas.t("PIZARRA")
 	p._lista_tactica.add_child(tp)
 	for p_local: Array in perillas:
 		var fila := HBoxContainer.new()
@@ -447,7 +447,7 @@ func _pintar_tactica(c: Club) -> void:
 	## son decisiones del mismo tipo -cómo se dirige al grupo- y ninguna de las
 	## dos daba para pestaña propia.
 	var tn := p._texto(11, Principal.COL_SUAVE)
-	tn.text = "REGLAMENTO INTERNO"
+	tn.text = Idiomas.t("REGLAMENTO INTERNO")
 	p._lista_tactica.add_child(tn)
 	for norma: Array in Mundo.NORMAS_DEF:
 		var clave := String(norma[0])
@@ -477,9 +477,9 @@ func _pintar_tactica(c: Club) -> void:
 	## vuelve al automático solo -su propia red de seguridad-, así que aquí no
 	## hace falta impedir nada, solo contarlo.
 	var to := p._texto(11, Principal.COL_SUAVE)
-	to.text = "EL ONCE  ·  %d de 11 elegidos%s" % [
+	to.text = Idiomas.t("EL ONCE  ·  %d de 11 elegidos%s") % [
 		c.once_elegido.size(),
-		"" if c.once_elegido.size() == 11 else "   (con menos de once manda el automático)"]
+		"" if c.once_elegido.size() == 11 else Idiomas.t("   (con menos de once manda el automático)")]
 	p._lista_tactica.add_child(to)
 	var fila_b := HBoxContainer.new()
 	fila_b.add_theme_constant_override("separation", 6)
@@ -538,18 +538,18 @@ func _pintar_desafios() -> void:
 	p._limpiar(p._lista_desafios)
 	var p_local := p.mundo.puntaje_carrera()
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "PUNTAJE DE CARRERA"
+	t.text = Idiomas.t("PUNTAJE DE CARRERA")
 	p._lista_desafios.add_child(t)
 	var total := p._texto(22, Principal.COL_ORO)
 	total.text = p._miles(int(p_local["total"]))
 	p._lista_desafios.add_child(total)
 	var mult := p._texto(12, Principal.COL_SUAVE)
-	mult.text = "%s de base  ×  %.2f de multiplicador" % [p._miles(int(p_local["base"])), float(p_local["multiplicador"])]
+	mult.text = Idiomas.t("%s de base  ×  %.2f de multiplicador") % [p._miles(int(p_local["base"])), float(p_local["multiplicador"])]
 	p._lista_desafios.add_child(mult)
 	p._lista_desafios.add_child(HSeparator.new())
 
 	var td := p._texto(11, Principal.COL_SUAVE)
-	td.text = "DE DÓNDE SALE"
+	td.text = Idiomas.t("DE DÓNDE SALE")
 	p._lista_desafios.add_child(td)
 	p._dato("Títulos  (× 1.000)", "%d  →  %s" % [int(p_local["titulos"]), p._miles(int(p_local["titulos"]) * 1000)], Principal.COL_TEXTO, p._lista_desafios)
 	p._dato("Prestigio  (× 40)", "%d  →  %s" % [int(p_local["prestigio"]), p._miles(int(p_local["prestigio"]) * 40)], Principal.COL_TEXTO, p._lista_desafios)
@@ -558,7 +558,7 @@ func _pintar_desafios() -> void:
 	p._lista_desafios.add_child(HSeparator.new())
 
 	var tt := p._texto(11, Principal.COL_SUAVE)
-	tt.text = "LOS OCHO DESAFÍOS"
+	tt.text = Idiomas.t("LOS OCHO DESAFÍOS")
 	p._lista_desafios.add_child(tt)
 	var tabla: Variant = Datos.tabla("DESAFIOS")
 	if not (tabla is Array):
@@ -570,7 +570,7 @@ func _pintar_desafios() -> void:
 		fila_ui.add_theme_constant_override("separation", 8)
 		p._lista_desafios.add_child(fila_ui)
 		var nom := p._texto(12, Principal.COL_VERDE if activo else Principal.COL_SUAVE)
-		nom.text = "%s %s%s" % [String(fila[2]), String(fila[1]), "   ✓ activo" if activo else ""]
+		nom.text = "%s %s%s" % [String(fila[2]), String(fila[1]), Idiomas.t("   ✓ activo") if activo else ""]
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila_ui.add_child(nom)
 		var x := p._texto(12, Principal.COL_ORO if activo else Principal.COL_SUAVE)
@@ -583,7 +583,7 @@ func _pintar_desafios() -> void:
 	if not p.mundo.fin_partida.is_empty():
 		p._lista_desafios.add_child(HSeparator.new())
 		var fin := p._texto(12, Principal.COL_ROJO)
-		fin.text = "💀 Partida marcada como terminada: cayó la primera derrota con el desafío del invicto activo (semana %d de %d). Puedes seguir jugando, pero el desafío está perdido." % [
+		fin.text = Idiomas.t("💀 Partida marcada como terminada: cayó la primera derrota con el desafío del invicto activo (semana %d de %d). Puedes seguir jugando, pero el desafío está perdido.") % [
 			int(p.mundo.fin_partida.get("semana", 0)), int(p.mundo.fin_partida.get("anio", 0))]
 		fin.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_desafios.add_child(fin)
@@ -603,10 +603,10 @@ func _pintar_rivalidades() -> void:
 		return
 	p._lista_clubes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🔥 MAPA DE RIVALIDADES"
+	t.text = Idiomas.t("🔥 MAPA DE RIVALIDADES")
 	p._lista_clubes.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "La rivalidad no se declara: se construye. Sube con cada cruce y, sobre todo, con cada derrota."
+	ex.text = Idiomas.t("La rivalidad no se declara: se construye. Sube con cada cruce y, sobre todo, con cada derrota.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_clubes.add_child(ex)
 	for i in mini(8, lista.size()):
@@ -653,7 +653,7 @@ func _historia_de(club: Club) -> Dictionary:
 
 func _pintar_ficha_club(club: Club) -> void:
 	var t := p._texto(13, Principal.COL_ORO)
-	t.text = "%s  ·  reputación %d  ·  aforo %s" % [club.nombre, club.rep, p._miles(club.estadio_aforo)]
+	t.text = Idiomas.t("%s  ·  reputación %d  ·  aforo %s") % [club.nombre, club.rep, p._miles(club.estadio_aforo)]
 	p._lista_clubes.add_child(t)
 	var hi_c := _historia_de(club)
 	for linea: String in ["📜 " + HistoriaClub.resumen(hi_c), HistoriaClub.texto_historia(hi_c), HistoriaClub.texto_clasicos(hi_c)]:
@@ -664,7 +664,7 @@ func _pintar_ficha_club(club: Club) -> void:
 		hist.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_clubes.add_child(hist)
 	var sub := p._texto(11, Principal.COL_SUAVE)
-	sub.text = "%d jugadores  ·  media %.1f  ·  masa salarial %s/sem" % [
+	sub.text = Idiomas.t("%d jugadores  ·  media %.1f  ·  masa salarial %s/sem") % [
 		club.plantilla.size(), club.media(), p._dinero(club.masa_salarial())]
 	p._lista_clubes.add_child(sub)
 	## LO QUE FALTABA DE `vFichaClub()`: la media del MEJOR ONCE, la forma, quién
@@ -684,7 +684,7 @@ func _pintar_ficha_club(club: Club) -> void:
 	## presión- y por eso tiene que verse aquí y no solo el día del choque.
 	if club != p.mundo.mi_club() and p.mundo.es_clasico(p.mundo.mi_club(), club):
 		var cl := p._texto(12, Principal.COL_ORO)
-		cl.text = "⚔️  %s: estadio lleno, prensa encima y el doble de presión." % _frase_clasico(p.mundo.mi_club(), club)
+		cl.text = Idiomas.t("⚔️  %s: estadio lleno, prensa encima y el doble de presión.") % _frase_clasico(p.mundo.mi_club(), club)
 		cl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_clubes.add_child(cl)
 	var g := GridContainer.new()
@@ -722,11 +722,11 @@ func _pintar_goleadores(pais: String) -> void:
 				if j.goles > 0:
 					todos.append(j)
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "GOLEADORES  ·  %s" % pais
+	t.text = Idiomas.t("GOLEADORES  ·  %s") % pais
 	p._lista_clubes.add_child(t)
 	if todos.is_empty():
 		var nada := p._texto(12, Principal.COL_SUAVE)
-		nada.text = "Todavía no hay goles en esta liga."
+		nada.text = Idiomas.t("Todavía no hay goles en esta liga.")
 		p._lista_clubes.add_child(nada)
 		return
 	todos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.goles > b.goles)
@@ -763,20 +763,20 @@ func _pintar_premios() -> void:
 	var lg := p.mundo.logros
 	if lg == null or lg.premios.is_empty():
 		var vacio := p._texto(12, Principal.COL_SUAVE)
-		vacio.text = "Las galas se celebran al cerrar cada temporada. Todavía no hay ninguna."
+		vacio.text = Idiomas.t("Las galas se celebran al cerrar cada temporada. Todavía no hay ninguna.")
 		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_premios.add_child(vacio)
 		return
 	for acta: Dictionary in lg.premios:
 		var t := p._texto(13, Principal.COL_ORO)
-		t.text = "GALA %d" % int(acta.get("anio", 0))
+		t.text = Idiomas.t("GALA %d") % int(acta.get("anio", 0))
 		p._lista_premios.add_child(t)
 		## Lo que se llevó TU club va primero y en verde: es lo que el jugador
 		## viene a mirar. Si no ganó nada, se dice, en vez de dejar un hueco.
 		var ganados: Array = acta.get("ganados", [])
 		if ganados.is_empty():
 			var nada := p._texto(12, Principal.COL_SUAVE)
-			nada.text = "Tu club se fue de vacío esta temporada."
+			nada.text = Idiomas.t("Tu club se fue de vacío esta temporada.")
 			p._lista_premios.add_child(nada)
 		else:
 			for premio in ganados:
@@ -793,7 +793,7 @@ func _pintar_premios() -> void:
 		p._dato("📣 Mejor hinchada", str(acta.get("hinchada", "—")), Principal.COL_VERDE if bool(acta.get("hinchada_es_mia", false)) else Principal.COL_TEXTO, p._lista_premios)
 		p._dato("🏟️ Mejor estadio", str(acta.get("estadio", "—")), Principal.COL_VERDE if bool(acta.get("estadio_es_mio", false)) else Principal.COL_TEXTO, p._lista_premios)
 		var ti := p._texto(11, Principal.COL_SUAVE)
-		ti.text = "EQUIPO IDEAL"
+		ti.text = Idiomas.t("EQUIPO IDEAL")
 		p._lista_premios.add_child(ti)
 		var ideal := p._texto(12, Principal.COL_TEXTO)
 		## `acta["ideal"]` es un ARRAY de nombres, no un texto: `String()` de un
@@ -827,7 +827,7 @@ func _pintar_juegos_mentales(rival: Club) -> void:
 	if not p_local.dato_del_rival and not p_local.presion_prometida and not por_arbol:
 		return
 	var t := p._texto(11, Principal.COL_ORO)
-	t.text = "🎭 JUEGOS MENTALES"
+	t.text = Idiomas.t("🎭 JUEGOS MENTALES")
 	p._lista_partido.add_child(t)
 	if p_local.dato_del_rival or por_arbol:
 		## El informe del rival: el once que va a sacar y sus dos bajas. Se
@@ -835,7 +835,7 @@ func _pintar_juegos_mentales(rival: Club) -> void:
 		## antes de decidir tu alineación, y si se gastara al pitido inicial
 		## llegaría tarde para lo único que sirve.
 		var e := p._texto(12, Principal.COL_VERDE)
-		e.text = "📄 Informe reservado: sabes con qué sale %s." % rival.nombre
+		e.text = Idiomas.t("📄 Informe reservado: sabes con qué sale %s.") % rival.nombre
 		p._lista_partido.add_child(e)
 		var once := rival.once()
 		var media := 0.0
@@ -895,7 +895,7 @@ func _pintar_juegos_mentales(rival: Club) -> void:
 		p_local.consumir_dato_del_rival()
 	if p_local.presion_prometida:
 		var pr := p._texto(12, Principal.COL_ORO)
-		pr.text = "🗣️ Prometiste ganar en rueda de prensa. Si no ganas, la hinchada te lo va a cobrar."
+		pr.text = Idiomas.t("🗣️ Prometiste ganar en rueda de prensa. Si no ganas, la hinchada te lo va a cobrar.")
 		pr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_partido.add_child(pr)
 	p._lista_partido.add_child(HSeparator.new())
@@ -904,7 +904,7 @@ func _pintar_partido(c: Club) -> void:
 	p._limpiar(p._lista_partido)
 	if not p.mundo.temporada_en_curso():
 		var fin := p._texto(13, Principal.COL_SUAVE)
-		fin.text = "La temporada está terminada. Pulsa «Temporada siguiente»."
+		fin.text = Idiomas.t("La temporada está terminada. Pulsa «Temporada siguiente».")
 		p._lista_partido.add_child(fin)
 		return
 	var par := p.mundo.partido_de_copa()
@@ -913,7 +913,7 @@ func _pintar_partido(c: Club) -> void:
 		par = p.mundo.proximo_partido()
 	if par.is_empty():
 		var descansa := p._texto(13, Principal.COL_SUAVE)
-		descansa.text = "Tu club descansa esta jornada."
+		descansa.text = Idiomas.t("Tu club descansa esta jornada.")
 		p._lista_partido.add_child(descansa)
 		return
 
@@ -923,19 +923,19 @@ func _pintar_partido(c: Club) -> void:
 	var rival: Club = visita if de_local else local
 
 	var cab := p._texto(11, Principal.COL_SUAVE)
-	cab.text = p.mundo.copa.nombre.to_upper() if es_copa else "JORNADA %d  ·  %s" % [
+	cab.text = p.mundo.copa.nombre.to_upper() if es_copa else Idiomas.t("JORNADA %d  ·  %s") % [
 		p._liga_de(c).jornada_actual, p._liga_de(c).nombre]
 	p._lista_partido.add_child(cab)
 	var vs := p._texto(17, Principal.COL_TEXTO)
 	vs.text = "%s   vs   %s" % [local.nombre, visita.nombre]
 	p._lista_partido.add_child(vs)
 	var donde := p._texto(12, Principal.COL_SUAVE)
-	donde.text = "Juegas de %s  ·  %s" % ["LOCAL" if de_local else "VISITA", rival.nombre]
+	donde.text = Idiomas.t("Juegas de %s  ·  %s") % [Idiomas.t("LOCAL") if de_local else Idiomas.t("VISITA"), rival.nombre]
 	p._lista_partido.add_child(donde)
 	if p.mundo.es_clasico(c, rival):
 		var clasico := p._texto(13, Principal.COL_ORO)
 		var nom_cl := HistoriaClub.nombre_clasico(c.nombre, rival.nombre)
-		clasico.text = "🔥 ¡%s!" % (nom_cl.to_upper() if nom_cl != "" else "ES CLÁSICO")
+		clasico.text = "🔥 ¡%s!" % (nom_cl.to_upper() if nom_cl != "" else Idiomas.t("ES CLÁSICO"))
 		p._lista_partido.add_child(clasico)
 	## LA FRASE DE LA PARED, justo antes de salir. Es lo que el HTML prometia
 	## en la pantalla del club por dentro -"se lee en el tunel antes de cada
@@ -947,7 +947,7 @@ func _pintar_partido(c: Club) -> void:
 		fr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		p._lista_partido.add_child(fr)
 		var fr2 := p._texto(10, Principal.COL_SUAVE)
-		fr2.text = "En la pared del túnel"
+		fr2.text = Idiomas.t("En la pared del túnel")
 		fr2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		p._lista_partido.add_child(fr2)
 	p._lista_partido.add_child(HSeparator.new())
@@ -971,14 +971,14 @@ func _pintar_partido(c: Club) -> void:
 	var f_mia: Dictionary = f_local if de_local else f_visita
 	var f_suya: Dictionary = f_visita if de_local else f_local
 	var ti := p._texto(11, Principal.COL_SUAVE)
-	ti.text = "INFORME"
+	ti.text = Idiomas.t("INFORME")
 	p._lista_partido.add_child(ti)
 	p._dato("Tu ataque vs su defensa", "%d / %d" % [int(round(f_mia["ata"])), int(round(f_suya["def"]))], Principal.COL_TEXTO, p._lista_partido)
 	p._dato("Tu defensa vs su ataque", "%d / %d" % [int(round(f_mia["def"])), int(round(f_suya["ata"]))], Principal.COL_TEXTO, p._lista_partido)
 
 	var cuo := Previa.cuotas(f_mia, f_suya, de_local)
 	var tc := p._texto(11, Principal.COL_SUAVE)
-	tc.text = "🎰 CASA DE APUESTAS"
+	tc.text = Idiomas.t("🎰 CASA DE APUESTAS")
 	p._lista_partido.add_child(tc)
 	p._dato("Ganas tú", "%.2f" % float(cuo["cuota_gano"]), Principal.COL_TEXTO, p._lista_partido)
 	p._dato("Empate", "%.2f" % float(cuo["cuota_empate"]), Principal.COL_SUAVE, p._lista_partido)
@@ -988,11 +988,11 @@ func _pintar_partido(c: Club) -> void:
 	var p_pierdo: float = cuo["p_pierdo"]
 	var p_empate: float = cuo["p_empate"]
 	if p_gano > p_pierdo + 0.08 and p_gano > p_empate:
-		lectura.text = "Las cuotas te tienen como favorito: si el resultado no acompaña, la prensa y la hinchada lo van a leer peor de lo normal."
+		lectura.text = Idiomas.t("Las cuotas te tienen como favorito: si el resultado no acompaña, la prensa y la hinchada lo van a leer peor de lo normal.")
 	elif p_pierdo > p_gano + 0.08 and p_pierdo > p_empate:
-		lectura.text = "Vas de underdog en las apuestas: sumar acá se festeja como una machada."
+		lectura.text = Idiomas.t("Vas de underdog en las apuestas: sumar acá se festeja como una machada.")
 	else:
-		lectura.text = "Cuotas parejas: partido de pronóstico cerrado, sin favorito claro para las casas."
+		lectura.text = Idiomas.t("Cuotas parejas: partido de pronóstico cerrado, sin favorito claro para las casas.")
 	lectura.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_partido.add_child(lectura)
 
@@ -1003,10 +1003,10 @@ func _pintar_partido(c: Club) -> void:
 	if p.mundo.obras.lectura_del_rival() > 0:
 		p._lista_partido.add_child(HSeparator.new())
 		var tv := p._texto(11, Principal.COL_SUAVE)
-		tv.text = "👁️ INFORME DEL RIVAL  (sala de vídeo)"
+		tv.text = Idiomas.t("👁️ INFORME DEL RIVAL  (sala de vídeo)")
 		p._lista_partido.add_child(tv)
 		p._dato("Sistema previsto", rival.tactica.formacion, Principal.COL_TEXTO, p._lista_partido)
-		p._dato("Mentalidad", ["Defensiva", "Equilibrada", "Ofensiva"][rival.tactica.mentalidad], Principal.COL_TEXTO, p._lista_partido)
+		p._dato("Mentalidad", [Idiomas.t("Defensiva"), Idiomas.t("Equilibrada"), Idiomas.t("Ofensiva")][rival.tactica.mentalidad], Principal.COL_TEXTO, p._lista_partido)
 		p._dato("Punto débil", "la última línea" if f_suya["def"] < f_suya["ata"] else "la generación de juego", Principal.COL_TEXTO, p._lista_partido)
 
 	## `vAlineacion()` del HTML: los dos onces tal como van a salir, con su
@@ -1015,7 +1015,7 @@ func _pintar_partido(c: Club) -> void:
 	## que enseñarlos no cuesta ni un cálculo más.
 	p._lista_partido.add_child(HSeparator.new())
 	var ta := p._texto(11, Principal.COL_SUAVE)
-	ta.text = "LOS ONCES"
+	ta.text = Idiomas.t("LOS ONCES")
 	p._lista_partido.add_child(ta)
 	var g := GridContainer.new()
 	g.columns = 4
@@ -1056,7 +1056,7 @@ func _pintar_partido(c: Club) -> void:
 ## y el gran torneo del año, si lo hay.
 func _pintar_proximas_fechas(c: Club) -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "PRÓXIMAS FECHAS EN %s" % c.pais
+	t.text = Idiomas.t("PRÓXIMAS FECHAS EN %s") % c.pais
 	p._lista_calendario.add_child(t)
 	for f: Dictionary in Calendario.proximas(c.pais, p.mundo.anio, p.mundo.semana, 5):
 		var l := p._texto(12, Principal.COL_ROJO if String(f["tipo"]) == "memoria" else Principal.COL_TEXTO)
@@ -1065,16 +1065,16 @@ func _pintar_proximas_fechas(c: Club) -> void:
 		## "11 de septiembre" ya es la fecha: no repetirla.
 		var nom := String(f["nombre"])
 		l.text = "%s %s%s  (%s)" % [Calendario.icono(String(f["tipo"])), cuando,
-			"" if nom == cuando else " · " + nom, "esta semana" if faltan < 7 else "en %d días" % faltan]
+			"" if nom == cuando else " · " + nom, Idiomas.t("esta semana") if faltan < 7 else Idiomas.t("en %d días") % faltan]
 		l.tooltip_text = String(f["texto"])
 		l.mouse_filter = Control.MOUSE_FILTER_PASS
 		p._lista_calendario.add_child(l)
 	for tor: Dictionary in Calendario.torneos(p.mundo.anio):
 		var sedes: Array = tor["sedes"]
 		var l2 := p._texto(12, Principal.COL_ORO)
-		l2.text = "🌍 %s %d: del %d/%d al %d/%d%s" % [String(tor["nombre"]), p.mundo.anio,
+		l2.text = Idiomas.t("🌍 %s %d: del %d/%d al %d/%d%s") % [String(tor["nombre"]), p.mundo.anio,
 			int(tor["desde"][1]), int(tor["desde"][0]), int(tor["hasta"][1]), int(tor["hasta"][0]),
-			(" · sede: " + ", ".join(sedes)) if not sedes.is_empty() else ""]
+			(Idiomas.t(" · sede: ") + ", ".join(sedes)) if not sedes.is_empty() else ""]
 		p._lista_calendario.add_child(l2)
 	p._lista_calendario.add_child(HSeparator.new())
 
@@ -1082,7 +1082,7 @@ func _pintar_calendario(c: Club) -> void:
 	p._limpiar(p._lista_calendario)
 	if not p.mundo.temporada_en_curso():
 		var fin := p._texto(13, Principal.COL_SUAVE)
-		fin.text = "La temporada está terminada. Pulsa «Temporada siguiente»."
+		fin.text = Idiomas.t("La temporada está terminada. Pulsa «Temporada siguiente».")
 		p._lista_calendario.add_child(fin)
 		return
 
@@ -1091,7 +1091,7 @@ func _pintar_calendario(c: Club) -> void:
 	## liga-: mostrar aquí un partido distinto del que se juega al pulsar el
 	## botón sería peor que no mostrar nada.
 	var tp := p._texto(11, Principal.COL_SUAVE)
-	tp.text = "PRÓXIMO PARTIDO"
+	tp.text = Idiomas.t("PRÓXIMO PARTIDO")
 	p._lista_calendario.add_child(tp)
 	var par := p.mundo.partido_de_copa()
 	var es_copa := not par.is_empty()
@@ -1099,7 +1099,7 @@ func _pintar_calendario(c: Club) -> void:
 		par = p.mundo.proximo_partido()
 	if par.is_empty():
 		var descansa := p._texto(13, Principal.COL_SUAVE)
-		descansa.text = "Tu club descansa esta jornada."
+		descansa.text = Idiomas.t("Tu club descansa esta jornada.")
 		p._lista_calendario.add_child(descansa)
 	else:
 		var local: Club = par[0]
@@ -1119,7 +1119,7 @@ func _pintar_calendario(c: Club) -> void:
 		var sub := p._texto(11, Principal.COL_SUAVE)
 		sub.text = "%s  ·  %s" % [
 			p.mundo.copa.nombre if es_copa else p._liga_de(c).nombre,
-			"Local" if de_local else "Visitante"]
+			Idiomas.t("Local") if de_local else Idiomas.t("Visitante")]
 		info.add_child(sub)
 		## Si además hay ronda continental esta misma semana -`CONTI_EN` no
 		## evita que caiga junto a una jornada normal, ver nota en el LEEME-,
@@ -1129,13 +1129,13 @@ func _pintar_calendario(c: Club) -> void:
 		var mi_conti := p.mundo.mi_continental()
 		if Continental.toca_ronda(p.mundo.semana) >= 0 and mi_conti != null and mi_conti.en_curso():
 			var av := p._texto(10, Principal.COL_ORO)
-			av.text = "También hay ronda de %s esta semana." % Continental.nombre_conti(mi_conti.clave)
+			av.text = Idiomas.t("También hay ronda de %s esta semana.") % Continental.nombre_conti(mi_conti.clave)
 			av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			info.add_child(av)
 		if p.mundo.es_clasico(c, rival):
 			var clasico := p._texto(12, Principal.COL_ORO)
 			var nom_cl2 := HistoriaClub.nombre_clasico(c.nombre, rival.nombre)
-			clasico.text = "🔥 ¡%s!" % (nom_cl2 if nom_cl2 != "" else "Es clásico")
+			clasico.text = "🔥 ¡%s!" % (nom_cl2 if nom_cl2 != "" else Idiomas.t("Es clásico"))
 			p._lista_calendario.add_child(clasico)
 		var filab := HBoxContainer.new()
 		filab.add_theme_constant_override("separation", 6)
@@ -1155,7 +1155,7 @@ func _pintar_calendario(c: Club) -> void:
 	## visible.
 	var liga := p._liga_de(c)
 	var tl := p._texto(11, Principal.COL_SUAVE)
-	tl.text = "CALENDARIO DE %s" % liga.nombre.to_upper()
+	tl.text = Idiomas.t("CALENDARIO DE %s") % liga.nombre.to_upper()
 	p._lista_calendario.add_child(tl)
 	for i in range(liga.jornada_actual, liga.calendario.size()):
 		var jornada: Array = liga.calendario[i]
@@ -1220,15 +1220,15 @@ func _pintar_copa(mio: Club) -> void:
 	p._limpiar(p._lista_copa)
 	if p.mundo.copa == null:
 		var vacio := p._texto(12, Principal.COL_SUAVE)
-		vacio.text = "La copa se sortea al empezar la temporada."
+		vacio.text = Idiomas.t("La copa se sortea al empezar la temporada.")
 		p._lista_copa.add_child(vacio)
 		return
 	var c := p.mundo.copa
 	var cab := p._texto(14, Principal.COL_ORO)
 	if c.campeon != null:
-		cab.text = "%s — campeón: %s" % [c.nombre, c.campeon.nombre]
+		cab.text = Idiomas.t("%s — campeón: %s") % [c.nombre, c.campeon.nombre]
 	elif c.en_curso():
-		cab.text = "%s — %s  (%d equipos vivos)" % [c.nombre, c.nombre_de_ronda(), c.vivos.size()]
+		cab.text = Idiomas.t("%s — %s  (%d equipos vivos)") % [c.nombre, c.nombre_de_ronda(), c.vivos.size()]
 	else:
 		cab.text = c.nombre
 	p._lista_copa.add_child(cab)
@@ -1237,9 +1237,9 @@ func _pintar_copa(mio: Club) -> void:
 		var cruce := c.emparejamiento_de(mio)
 		var estado := p._texto(12, Principal.COL_VERDE if not cruce.is_empty() else Principal.COL_ROJO)
 		if not cruce.is_empty():
-			estado.text = "Te toca: %s  vs  %s" % [cruce[0].nombre, cruce[1].nombre]
+			estado.text = Idiomas.t("Te toca: %s  vs  %s") % [cruce[0].nombre, cruce[1].nombre]
 		else:
-			estado.text = "%s ya está eliminado." % mio.nombre
+			estado.text = Idiomas.t("%s ya está eliminado.") % mio.nombre
 		p._lista_copa.add_child(estado)
 
 	for i in range(c.historial.size() - 1, -1, -1):

@@ -23,7 +23,7 @@ func _editor_de() -> Editor:
 ## quiere algo que quede bien, y un selector libre para el que quiere el suyo.
 func _pintar_luces_ciudad(ci: Ciudad) -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "💡 ALUMBRADO PÚBLICO"
+	t.text = Idiomas.t("💡 ALUMBRADO PÚBLICO")
 	p._lista_ciudad.add_child(t)
 	var flow := HFlowContainer.new()
 	flow.add_theme_constant_override("h_separation", 5)
@@ -43,7 +43,7 @@ func _pintar_luces_ciudad(ci: Ciudad) -> void:
 	fila.add_theme_constant_override("separation", 6)
 	p._lista_ciudad.add_child(fila)
 	var et := p._texto(11, Principal.COL_TEXTO)
-	et.text = "O elige el tuyo"
+	et.text = Idiomas.t("O elige el tuyo")
 	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(et)
 	var cp := ColorPickerButton.new()
@@ -57,7 +57,7 @@ func _pintar_luces_ciudad(ci: Ciudad) -> void:
 func _pintar_terrenos(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "🗺️ TERRENOS"
+	t.text = Idiomas.t("🗺️ TERRENOS")
 	p._lista_ciudad.add_child(t)
 	for f: Array in Ciudad.lista_terrenos():
 		var clave := String(f[0])
@@ -73,7 +73,7 @@ func _pintar_terrenos(ci: Ciudad, c: Club) -> void:
 		fila.add_child(n)
 		var b := Button.new()
 		var precio := ci.precio_terreno(clave, c)
-		b.text = "Tuyo" if mio else p._dinero(precio)
+		b.text = Idiomas.t("Tuyo") if mio else p._dinero(precio)
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = mio or c.saldo < precio
 		b.custom_minimum_size = Vector2(110, 0)
@@ -92,11 +92,11 @@ func _pintar_terrenos(ci: Ciudad, c: Club) -> void:
 func _pintar_negocios(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "🏗️ NEGOCIOS ANEXOS"
+	t.text = Idiomas.t("🏗️ NEGOCIOS ANEXOS")
 	p._lista_ciudad.add_child(t)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Ingresan todas las semanas del año, jueguen o no. Es lo que separa a un club que sobrevive de uno que crece."
+		ex.text = Idiomas.t("Ingresan todas las semanas del año, jueguen o no. Es lo que separa a un club que sobrevive de uno que crece.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ciudad.add_child(ex)
 	for f: Array in Ciudad.lista_negocios():
@@ -114,12 +114,12 @@ func _pintar_negocios(ci: Ciudad, c: Club) -> void:
 		n.tooltip_text = String(f[4])
 		fila.add_child(n)
 		var r := p._texto(11, Principal.COL_ORO)
-		r.text = "+%s/sem" % p._dinero(Eco.escalar(Ciudad.RENTA_NEGOCIO_BASE * float(f[5]), float(c.rep)))
+		r.text = Idiomas.t("+%s/sem") % p._dinero(Eco.escalar(Ciudad.RENTA_NEGOCIO_BASE * float(f[5]), float(c.rep)))
 		r.custom_minimum_size = Vector2(96, 0)
 		fila.add_child(r)
 		var b := Button.new()
 		var coste := Eco.escalar(float(f[2]), float(c.rep))
-		b.text = "Operando" if hecho else p._dinero(coste)
+		b.text = Idiomas.t("Operando") if hecho else p._dinero(coste)
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = hecho or falta or c.saldo < coste
 		b.custom_minimum_size = Vector2(110, 0)
@@ -132,7 +132,7 @@ func _pintar_negocios(ci: Ciudad, c: Club) -> void:
 		if falta:
 			var dt := Ciudad.def_terreno(String(terr))
 			var av := p._texto(10, Principal.COL_ORO)
-			av.text = "     Requiere antes: %s" % (String(dt[1]) if not dt.is_empty() else String(terr))
+			av.text = Idiomas.t("     Requiere antes: %s") % (String(dt[1]) if not dt.is_empty() else String(terr))
 			p._lista_ciudad.add_child(av)
 
 ## LOS CONCIERTOS. La decisión más honesta de la pantalla: dinero hoy contra
@@ -140,13 +140,13 @@ func _pintar_negocios(ci: Ciudad, c: Club) -> void:
 func _pintar_conciertos(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "🎤 EVENTOS NO DEPORTIVOS"
+	t.text = Idiomas.t("🎤 EVENTOS NO DEPORTIVOS")
 	p._lista_ciudad.add_child(t)
 	p._dato("Conciertos realizados", str(ci.conciertos), Principal.COL_TEXTO, p._lista_ciudad)
 	var bruto := int(round(float(c.estadio_aforo) * Finanzas.ingreso_por_espectador(9.0) * 1.8))
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Un concierto llena la caja de golpe (%s) pero destroza el campo y molesta al barrio. Con el césped por debajo de %d, tus jugadores pierden precisión." % [
+		ex.text = Idiomas.t("Un concierto llena la caja de golpe (%s) pero destroza el campo y molesta al barrio. Con el césped por debajo de %d, tus jugadores pierden precisión.") % [
 			p._dinero(bruto), Ciudad.CESPED_MINIMO_CONCIERTO]
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ciudad.add_child(ex)
@@ -154,7 +154,7 @@ func _pintar_conciertos(ci: Ciudad, c: Club) -> void:
 	fila.add_theme_constant_override("separation", 6)
 	p._lista_ciudad.add_child(fila)
 	var b := Button.new()
-	b.text = "🎤 Arrendar para un concierto"
+	b.text = Idiomas.t("🎤 Arrendar para un concierto")
 	b.add_theme_font_size_override("font_size", 11)
 	b.clip_text = true
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -166,7 +166,7 @@ func _pintar_conciertos(ci: Ciudad, c: Club) -> void:
 		p._refrescar())
 	fila.add_child(b)
 	var br := Button.new()
-	br.text = "🌱 Resembrar  ·  %s" % p._dinero(ci.coste_resiembra(c))
+	br.text = Idiomas.t("🌱 Resembrar  ·  %s") % p._dinero(ci.coste_resiembra(c))
 	br.add_theme_font_size_override("font_size", 11)
 	br.clip_text = true
 	br.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -181,15 +181,15 @@ func _pintar_conciertos(ci: Ciudad, c: Club) -> void:
 func _pintar_municipalidad(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "🏛️ MUNICIPALIDAD Y VECINOS"
+	t.text = Idiomas.t("🏛️ MUNICIPALIDAD Y VECINOS")
 	p._lista_ciudad.add_child(t)
 	var lectura := p._texto(11, Principal.COL_SUAVE)
 	if ci.vecinos < 35:
-		lectura.text = "El barrio está en pie de guerra: cualquier permiso te lo van a tumbar."
+		lectura.text = Idiomas.t("El barrio está en pie de guerra: cualquier permiso te lo van a tumbar.")
 	elif ci.vecinos > 70:
-		lectura.text = "El barrio te quiere: los permisos salen casi solos."
+		lectura.text = Idiomas.t("El barrio te quiere: los permisos salen casi solos.")
 	else:
-		lectura.text = "Relación tibia con el vecindario."
+		lectura.text = Idiomas.t("Relación tibia con el vecindario.")
 	lectura.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ciudad.add_child(lectura)
 	var fila := HBoxContainer.new()
@@ -213,22 +213,22 @@ func _pintar_municipalidad(ci: Ciudad, c: Club) -> void:
 		fila.add_child(b)
 	if not p._modo_experto:
 		var eg := p._texto(10, Principal.COL_SUAVE)
-		eg.text = "Una gestión al mes. La reunión es gratis y puede salir mal: es la única de las tres que se puede volver en contra."
+		eg.text = Idiomas.t("Una gestión al mes. La reunión es gratis y puede salir mal: es la única de las tres que se puede volver en contra.")
 		eg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ciudad.add_child(eg)
 
 	var tp := p._texto(10, Principal.COL_SUAVE)
-	tp.text = "Ampliación del estadio"
+	tp.text = Idiomas.t("Ampliación del estadio")
 	p._lista_ciudad.add_child(tp)
 	if ci.permiso_ok:
 		p._dato("Permiso municipal", "vigente ✔", Principal.COL_VERDE, p._lista_ciudad)
 	else:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Para pasar del nivel 5 de tribunas hace falta permiso municipal. Hoy no lo tienes."
+		ex.text = Idiomas.t("Para pasar del nivel 5 de tribunas hace falta permiso municipal. Hoy no lo tienes.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ciudad.add_child(ex)
 		var b := Button.new()
-		b.text = "🏛️ Solicitar permiso  ·  %s" % p._dinero(Eco.escalar(Ciudad.COSTE_PERMISO, float(c.rep)))
+		b.text = Idiomas.t("🏛️ Solicitar permiso  ·  %s") % p._dinero(Eco.escalar(Ciudad.COSTE_PERMISO, float(c.rep)))
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = not ci.permiso.is_empty()
 		b.pressed.connect(func() -> void:
@@ -242,7 +242,7 @@ func _pintar_municipalidad(ci: Ciudad, c: Club) -> void:
 func _pintar_sostenibilidad(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "🌿 SOSTENIBILIDAD"
+	t.text = Idiomas.t("🌿 SOSTENIBILIDAD")
 	p._lista_ciudad.add_child(t)
 	p._dato("Cubierta solar", "%s%s" % ["●".repeat(ci.paneles), "○".repeat(Ciudad.PANELES_MAX - ci.paneles)],
 		Principal.COL_VERDE if ci.paneles > 0 else Principal.COL_SUAVE, p._lista_ciudad)
@@ -254,7 +254,7 @@ func _pintar_sostenibilidad(ci: Ciudad, c: Club) -> void:
 	fila.add_theme_constant_override("separation", 6)
 	p._lista_ciudad.add_child(fila)
 	var bp := Button.new()
-	bp.text = "☀️ Paneles solares" if ci.paneles >= Ciudad.PANELES_MAX else \
+	bp.text = Idiomas.t("☀️ Paneles solares") if ci.paneles >= Ciudad.PANELES_MAX else \
 		"☀️ Paneles  ·  %s" % p._dinero(Eco.escalar(Ciudad.COSTE_PANELES, float(c.rep)) * (ci.paneles + 1))
 	bp.add_theme_font_size_override("font_size", 11)
 	bp.clip_text = true
@@ -267,7 +267,7 @@ func _pintar_sostenibilidad(ci: Ciudad, c: Club) -> void:
 		p._refrescar())
 	fila.add_child(bp)
 	var bc := Button.new()
-	bc.text = "🌿 Certificar  ·  %s" % p._dinero(Eco.escalar(Ciudad.COSTE_CERTIFICACION, float(c.rep)))
+	bc.text = Idiomas.t("🌿 Certificar  ·  %s") % p._dinero(Eco.escalar(Ciudad.COSTE_CERTIFICACION, float(c.rep)))
 	bc.add_theme_font_size_override("font_size", 11)
 	bc.clip_text = true
 	bc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -282,7 +282,7 @@ func _pintar_sostenibilidad(ci: Ciudad, c: Club) -> void:
 func _pintar_seguridad(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "🛡️ SEGURIDAD DEL ESTADIO"
+	t.text = Idiomas.t("🛡️ SEGURIDAD DEL ESTADIO")
 	p._lista_ciudad.add_child(t)
 	for op: Array in [["privada", "Seguridad privada", ci.seg_privada],
 			["camaras", "Cámaras y protocolo", ci.seg_camaras]]:
@@ -298,7 +298,7 @@ func _pintar_seguridad(ci: Ciudad, c: Club) -> void:
 		fila.add_child(n)
 		var b := Button.new()
 		var coste := Eco.escalar(200000.0 if que == "privada" else 260000.0, float(c.rep)) * (niv + 1)
-		b.text = "MÁX" if niv >= Ciudad.SEGURIDAD_MAX else p._dinero(coste)
+		b.text = Idiomas.t("MÁX") if niv >= Ciudad.SEGURIDAD_MAX else p._dinero(coste)
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = niv >= Ciudad.SEGURIDAD_MAX or c.saldo < coste
 		b.custom_minimum_size = Vector2(110, 0)
@@ -315,6 +315,6 @@ func _pintar_seguridad(ci: Ciudad, c: Club) -> void:
 		Principal.COL_ROJO if riesgo > 0.08 else Principal.COL_SUAVE, p._lista_ciudad)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Un incidente grave cuesta puertas cerradas o aforo reducido, y eso es taquilla que no vuelve. Sube con el mal ambiente y la funa."
+		ex.text = Idiomas.t("Un incidente grave cuesta puertas cerradas o aforo reducido, y eso es taquilla que no vuelve. Sube con el mal ambiente y la funa.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ciudad.add_child(ex)
