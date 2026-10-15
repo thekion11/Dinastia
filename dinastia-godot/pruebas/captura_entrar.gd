@@ -11,6 +11,8 @@ var _pos_calle := Vector3.ZERO
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.MEDIO
+	## Sin el tutorial de la ciudad tapando el tercio de abajo de cada foto.
+	AjustesCiudad.guardar("tutorial_visto", true)
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 
