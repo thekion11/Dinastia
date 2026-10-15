@@ -289,7 +289,7 @@ func _pintar_ficha() -> void:
 		return
 	var motivo := _e.dt_motivo(_elegida)
 	var b := Button.new()
-	b.text = "Aprender" if motivo == "" else motivo
+	b.text = Idiomas.t("Aprender") if motivo == "" else motivo
 	b.disabled = motivo != ""
 	b.custom_minimum_size = Vector2(180, 44)
 	var k := _elegida
@@ -328,7 +328,7 @@ static func abrir_en_grande(padre: Control, e: Entrenamiento, al_cerrar: Callabl
 	var pts := Tema.etiqueta(Tema.TAM_DESTACADO + 2, Tema.ORO if e.dt_puntos > 0 else Tema.SUAVE, "")
 	cab.add_child(pts)
 	var cerrar := Button.new()
-	cerrar.text = "✕ Cerrar"
+	cerrar.text = Idiomas.t("✕ Cerrar")
 	cerrar.custom_minimum_size = Vector2(120, 40)
 	cab.add_child(cerrar)
 	var arbol := ArbolHabilidades.crear(e)
@@ -336,7 +336,7 @@ static func abrir_en_grande(padre: Control, e: Entrenamiento, al_cerrar: Callabl
 	vb.add_child(arbol)
 	vb.add_child(arbol.ficha())
 	var poner_puntos := func() -> void:
-		pts.text = "%d punto%s por gastar   " % [e.dt_puntos, "" if e.dt_puntos == 1 else "s"]
+		pts.text = (Idiomas.t("%d punto por gastar   ") if e.dt_puntos == 1 else Idiomas.t("%d puntos por gastar   ")) % e.dt_puntos
 	poner_puntos.call()
 	arbol.aprendida.connect(func(_k: String) -> void:
 		poner_puntos.call()

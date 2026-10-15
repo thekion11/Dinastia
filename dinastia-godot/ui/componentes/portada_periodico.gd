@@ -200,16 +200,16 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	fila.position = Vector2(-ANCHO * ESCALA / 2.0, ALTO * ESCALA / 2.0 - 10.0)
 	add_child(fila)
 	var guardar := Button.new()
-	guardar.text = "📸 Guardar imagen"
-	guardar.pressed.connect(func() -> void: guardar.text = "📸 Guardada: " + guardar_png())
+	guardar.text = Idiomas.t("📸 Guardar imagen")
+	guardar.pressed.connect(func() -> void: guardar.text = Idiomas.t("📸 Guardada: ") + guardar_png())
 	fila.add_child(guardar)
 	var auto_cb := CheckBox.new()
-	auto_cb.text = "Abrir sola tras cada partido"
+	auto_cb.text = Idiomas.t("Abrir sola tras cada partido")
 	auto_cb.button_pressed = auto()
 	auto_cb.toggled.connect(func(si: bool) -> void: fijar_auto(si))
 	fila.add_child(auto_cb)
 	var b := Button.new()
-	b.text = "Cerrar"
+	b.text = Idiomas.t("Cerrar")
 	b.pressed.connect(_cerrar)
 	fila.add_child(b)
 	_hoja.pivot_offset = _hoja.size / 2.0

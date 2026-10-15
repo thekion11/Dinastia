@@ -276,12 +276,26 @@ la narración. La diferencia REAL era menor:
   traducción pierde un `%s`/`%d`; con los datos de antes daba 7 fallos.
   Queda (no es paridad): revisión nativa (M-332) y los textos escritos sin `Idiomas.t`
   (I-02).
-- **I-02 (P1, 🔴) 274 textos en español escritos directamente en `ui/`** (`.text = "…"`
-  con tilde, sin `Idiomas.t`): `pantalla_club_vida` 28, `principal` 25, `pantalla_plantel`
-  22, `pantalla_cantera` 19, `pantalla_legado` 18, `pantalla_opciones` 15… Se ven en
-  español en cualquier idioma (a veces `traducir_arbol` los recoge, a veces no).
-  *Cómo*: auditar cada uno con una prueba que cambie el idioma y busque Labels con
-  tildes; envolver con `Idiomas.t`.
+- **I-02 (P1, 🟡 casi cerrado, 15-10) Textos en español escritos directamente en `ui/` y `visor/`.**
+  *Antes*: 573 líneas `.text = "…"` con tilde sin `Idiomas.t` en `ui/` (con el criterio ampliado
+  —`text`, `tooltip_text`, `placeholder_text`, `title`, `dialog_text`, `_boton/_dato/Tema.rotulo/
+  add_item`— 1.136 líneas en `ui/`+`visor/`); 1.071 textos distintos, de los que **732 no tenían
+  traducción** en algún idioma (721 en ninguno). La cifra de 274 era la de una medición anterior.
+  *Hecho*: 1.132 textos envueltos en `Idiomas.t(…)` en 64 archivos (las plantillas con `%s/%d` se
+  traducen enteras: `Idiomas.t("Jornada %d") % n`), y **746 frases nuevas × 8 idiomas** en
+  `datos/idiomas_extra.json` (se comprobó el orden de los marcadores `%s/%d/%.1f/%%` en cada una).
+  Los plurales «semana%s», «punto%s», «jugador%s»… pasaron a dos frases (singular/plural), que en
+  castellano se leen igual. *Después*: con el criterio del informe quedan 86 líneas y con el
+  ampliado 146; casi todas son datos (`String(dic["nombre"])`, titulares, nombres de clubes) que
+  pasan por el traductor de pantalla o la narración, no textos fijos. `_probar_paridad_idiomas`:
+  1.338 frases de `Idiomas.t("…")` en el código, 0 sin traducir.
+  *Pendiente*: 15 textos fijos en archivos que otras sesiones estaban tocando (`ui/ciudad_vista.gd`
+  8, `ui/componentes/interior_instalacion.gd` 3, `visor/metro_ciudad.gd` 3,
+  `visor/ciudad_expansion.gd` 1); `visor/explorador_ciudad.gd:856` («E: hablar con %s») no se
+  envolvió porque la línea 1423 compara `_aviso.text.begins_with("E: hablar")` (las líneas 810 y
+  1418 ya salen traducidas, así que esa comparación falla fuera del castellano: bug aparte); y
+  `principal.gd:3575` compara una etiqueta con «FICHA DEL JUGADOR» (mismo problema si el
+  traductor de pantalla la cambia).
 - **I-03 (✅) Menús nuevos y minijuegos** de hoy traducidos en 8 idiomas.
 - **I-04 (P2, 🔴) `CLAUDE.md` dice «1.402 frases cada idioma»**: ya no es cierto
   (ver tabla); I-01 está resuelta: la cifra real es 2.574 frases fijas + 373 patrones

@@ -19,17 +19,17 @@ static func pintar(lista: VBoxContainer, mundo: Mundo, paleta: Dictionary, al_ca
 	if a == null:
 		return
 	var tit := _texto(11, paleta["oro"], paleta)
-	tit.text = "ACADEMIA · CHICOS DE %d A %d AÑOS" % [Academia.EDAD_MIN, Academia.EDAD_ENTREGA]
+	tit.text = Idiomas.t("ACADEMIA · CHICOS DE %d A %d AÑOS") % [Academia.EDAD_MIN, Academia.EDAD_ENTREGA]
 	lista.add_child(tit)
 	var ex := _texto(11, paleta["suave"], paleta)
-	ex.text = "Todavía no son jugadores: viven en la residencia. Tú decides cómo entrenan, qué comen y cuánto estudian, y moldeas su carácter. A los %d pasan al primer equipo, y llegan como los hayas formado. %d/%d plazas · %s por semana." % [
+	ex.text = Idiomas.t("Todavía no son jugadores: viven en la residencia. Tú decides cómo entrenan, qué comen y cuánto estudian, y moldeas su carácter. A los %d pasan al primer equipo, y llegan como los hayas formado. %d/%d plazas · %s por semana.") % [
 		Academia.EDAD_ENTREGA, a.chicos.size(), Academia.CUPO, Eco.dinero(a.coste_semanal())]
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(ex)
 	## VISITAR EL ENTRENAMIENTO (C11): una vez por semana, los chicos lo notan.
 	if mundo.eventos_cantera != null:
 		var visita := Button.new()
-		visita.text = "👀 Visitar el entrenamiento de la academia (una vez por semana)"
+		visita.text = Idiomas.t("👀 Visitar el entrenamiento de la academia (una vez por semana)")
 		visita.add_theme_font_size_override("font_size", 11)
 		visita.pressed.connect(func() -> void:
 			al_cambiar.call(mundo.eventos_cantera.visitar(a, mundo.anio, mundo.semana)))
@@ -42,11 +42,11 @@ static func pintar(lista: VBoxContainer, mundo: Mundo, paleta: Dictionary, al_ca
 
 	lista.add_child(HSeparator.new())
 	var tc := _texto(11, paleta["oro"], paleta)
-	tc.text = "CAPTACIÓN DE ESTA TEMPORADA"
+	tc.text = Idiomas.t("CAPTACIÓN DE ESTA TEMPORADA")
 	lista.add_child(tc)
 	if a.candidatos.is_empty():
 		var nadie := _texto(11, paleta["suave"], paleta)
-		nadie.text = "Ya no quedan candidatos: la próxima tanda llega con la temporada nueva."
+		nadie.text = Idiomas.t("Ya no quedan candidatos: la próxima tanda llega con la temporada nueva.")
 		lista.add_child(nadie)
 	for i in a.candidatos.size():
 		var ch: Dictionary = a.candidatos[i]
@@ -54,11 +54,11 @@ static func pintar(lista: VBoxContainer, mundo: Mundo, paleta: Dictionary, al_ca
 		fila.add_theme_constant_override("separation", 10)
 		var t := _texto(12, paleta["texto"], paleta)
 		var r := a.proyeccion(ch)
-		t.text = "%s  ·  %d años  ·  %s  ·  proyección %d-%d" % [ch["nombre"], int(ch["edad"]), ch["pos_e"], r.x, r.y]
+		t.text = Idiomas.t("%s  ·  %d años  ·  %s  ·  proyección %d-%d") % [ch["nombre"], int(ch["edad"]), ch["pos_e"], r.x, r.y]
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila.add_child(t)
 		var b := Button.new()
-		b.text = "Captar · %s" % Eco.dinero(a.coste_captacion(ch))
+		b.text = Idiomas.t("Captar · %s") % Eco.dinero(a.coste_captacion(ch))
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = a.chicos.size() >= Academia.CUPO
 		var indice := i
@@ -75,13 +75,13 @@ static func _tarjeta_chico(ch: Dictionary, a: Academia, paleta: Dictionary, al_c
 	caja.add_child(cab)
 	var n := _texto(13, paleta["texto"], paleta)
 	var lesion := "  🩹 %d sem." % int(ch["lesion"]) if int(ch["lesion"]) > 0 else ""
-	n.text = "%s  ·  %d años  ·  %s%s" % [ch["nombre"], int(ch["edad"]), ch["pos_e"], lesion]
+	n.text = Idiomas.t("%s  ·  %d años  ·  %s%s") % [ch["nombre"], int(ch["edad"]), ch["pos_e"], lesion]
 	n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(n)
 	if int(ch["edad"]) >= Academia.EDAD_ENTREGA_ANTICIPADA:
 		var e := Button.new()
-		e.text = "Entregar al DT"
-		e.tooltip_text = "Sube ya al primer equipo, sin esperar a los %d." % Academia.EDAD_ENTREGA
+		e.text = Idiomas.t("Entregar al DT")
+		e.tooltip_text = Idiomas.t("Sube ya al primer equipo, sin esperar a los %d.") % Academia.EDAD_ENTREGA
 		e.add_theme_font_size_override("font_size", 11)
 		var id := String(ch["id"])
 		e.pressed.connect(func() -> void: al_cambiar.call(a.entregar(id)))
@@ -91,7 +91,7 @@ static func _tarjeta_chico(ch: Dictionary, a: Academia, paleta: Dictionary, al_c
 	var nota := float(ch["nota"])
 	var dom := a.rasgo_dominante(ch)
 	var datos := _texto(11, paleta["suave"], paleta)
-	datos.text = "nivel %d  ·  proyección %d-%d  ·  físico %d  ·  nota %.1f  ·  ánimo %d%s" % [
+	datos.text = Idiomas.t("nivel %d  ·  proyección %d-%d  ·  físico %d  ·  nota %.1f  ·  ánimo %d%s") % [
 		int(round(float(ch["nivel"]))), r.x, r.y, int(round(float(ch["fisico"]))), nota,
 		int(round(float(ch["animo"]))),
 		("  ·  ✦ " + String(Academia.PERSONALIDAD[dom]["nombre"])) if dom != "" else ""]

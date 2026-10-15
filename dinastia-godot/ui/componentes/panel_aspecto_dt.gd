@@ -18,13 +18,13 @@ extends RefCounted
 static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dictionary,
 		al_cambiar: Callable, abrir_creador: Callable = Callable()) -> void:
 	var t: Label = texto.call(11, colores["acento"])
-	t.text = "🧑‍💼 TU ASPECTO"
+	t.text = Idiomas.t("🧑‍💼 TU ASPECTO")
 	lista.add_child(t)
 	## EL PERSONAJE EN 3D (26-9-2026): el creador a pantalla completa. El
 	## retrato 2D de abajo sigue siendo el de las fichas y la prensa.
 	if abrir_creador.is_valid():
 		var b3 := Button.new()
-		b3.text = "🧍 Crear y vestir mi personaje 3D"
+		b3.text = Idiomas.t("🧍 Crear y vestir mi personaje 3D")
 		b3.custom_minimum_size = Vector2(0, 40)
 		b3.add_theme_font_size_override("font_size", 13)
 		b3.pressed.connect(func() -> void: abrir_creador.call())
@@ -42,7 +42,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 	img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	previa.add_child(img)
 	var b_azar := Button.new()
-	b_azar.text = "🎲 Aleatorio"
+	b_azar.text = Idiomas.t("🎲 Aleatorio")
 	b_azar.add_theme_font_size_override("font_size", 11)
 	b_azar.pressed.connect(func() -> void:
 		r.look = CaraDT.look_aleatorio()
@@ -76,7 +76,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 	lista.add_child(fila_mod)
 	var vol_box := VBoxContainer.new()
 	fila_mod.add_child(vol_box)
-	var vol_et: Label = texto.call(10, colores["suave"]); vol_et.text = "Volumen"
+	var vol_et: Label = texto.call(10, colores["suave"]); vol_et.text = Idiomas.t("Volumen")
 	vol_box.add_child(vol_et)
 	var vol_fila := HBoxContainer.new()
 	vol_box.add_child(vol_fila)
@@ -94,7 +94,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 		vol_fila.add_child(bv)
 	var raya_box := VBoxContainer.new()
 	fila_mod.add_child(raya_box)
-	var raya_et: Label = texto.call(10, colores["suave"]); raya_et.text = "Raya"
+	var raya_et: Label = texto.call(10, colores["suave"]); raya_et.text = Idiomas.t("Raya")
 	raya_box.add_child(raya_et)
 	var raya_fila := HBoxContainer.new()
 	raya_box.add_child(raya_fila)
@@ -111,7 +111,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 			al_cambiar.call())
 		raya_fila.add_child(br)
 	var lados_b := Button.new()
-	lados_b.text = "Rapar sienes"
+	lados_b.text = Idiomas.t("Rapar sienes")
 	lados_b.add_theme_font_size_override("font_size", 10)
 	lados_b.toggle_mode = true
 	lados_b.button_pressed = bool(l.get("lados", false))
@@ -122,14 +122,14 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 	fila_mod.add_child(lados_b)
 
 	## Barba: 0 a 7, mismo catálogo que el HTML -sin nombres, son formas-.
-	var barba_et: Label = texto.call(10, colores["suave"]); barba_et.text = "Barba"
+	var barba_et: Label = texto.call(10, colores["suave"]); barba_et.text = Idiomas.t("Barba")
 	lista.add_child(barba_et)
 	var barba_fila := HFlowContainer.new()
 	barba_fila.add_theme_constant_override("h_separation", 4)
 	lista.add_child(barba_fila)
 	for bd in 8:
 		var bb := Button.new()
-		bb.text = "Sin barba" if bd == 0 else str(bd)
+		bb.text = Idiomas.t("Sin barba") if bd == 0 else str(bd)
 		bb.add_theme_font_size_override("font_size", 10)
 		bb.toggle_mode = true
 		bb.button_pressed = int(l.get("barba", 0)) == bd
@@ -143,7 +143,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 
 	## El traje: el mismo catálogo de `DT_TRAJES` que ya vivía en la tabla sin
 	## que nadie lo mostrara.
-	var traje_et: Label = texto.call(10, colores["suave"]); traje_et.text = "Vestimenta"
+	var traje_et: Label = texto.call(10, colores["suave"]); traje_et.text = Idiomas.t("Vestimenta")
 	lista.add_child(traje_et)
 	var traje_fila := HFlowContainer.new()
 	traje_fila.add_theme_constant_override("h_separation", 4)
@@ -196,7 +196,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 			al_cambiar.call())
 		col_box.add_child(cp)
 	var gafas_b := Button.new()
-	gafas_b.text = "👓 Gafas"
+	gafas_b.text = Idiomas.t("👓 Gafas")
 	gafas_b.add_theme_font_size_override("font_size", 10)
 	gafas_b.toggle_mode = true
 	gafas_b.button_pressed = bool(l.get("gafas", false))

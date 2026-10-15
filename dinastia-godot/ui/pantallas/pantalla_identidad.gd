@@ -61,7 +61,7 @@ func _rejilla_identidad(c: Club, prop: String, opciones: Array, titulo: String) 
 	for op: Variant in ([""] + Array(opciones)):
 		var clave := String(op)
 		var b := Button.new()
-		b.text = clave if clave != "" else "por sorteo"
+		b.text = clave if clave != "" else Idiomas.t("por sorteo")
 		b.add_theme_font_size_override("font_size", 10)
 		b.toggle_mode = true
 		b.button_pressed = actual == clave
@@ -85,11 +85,11 @@ func _rejilla_especiales(c: Club) -> void:
 	var desbloqueados: Array = Escudo.especiales_desbloqueados()
 	var total: int = Escudo.ESPECIALES.size()
 	var lt := p._texto(11, p.COL_ACENTO)
-	lt.text = "Escudo especial (coleccionable)"
+	lt.text = Idiomas.t("Escudo especial (coleccionable)")
 	p._lista_gente.add_child(lt)
 	if not p._modo_experto:
 		var info := p._texto(10, Principal.COL_SUAVE)
-		info.text = "%d de %d desbloqueados según tu nivel de perfil de gestor -suben solos jugando temporadas y ganando títulos-. No reemplazan al generador de arriba: son una alternativa que podés elegir o no." % [desbloqueados.size(), total]
+		info.text = Idiomas.t("%d de %d desbloqueados según tu nivel de perfil de gestor -suben solos jugando temporadas y ganando títulos-. No reemplazan al generador de arriba: son una alternativa que podés elegir o no.") % [desbloqueados.size(), total]
 		info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_gente.add_child(info)
 	var flow := HFlowContainer.new()
@@ -98,7 +98,7 @@ func _rejilla_especiales(c: Club) -> void:
 	p._lista_gente.add_child(flow)
 
 	var b_ninguno := Button.new()
-	b_ninguno.text = "Ninguno\n(procedural)"
+	b_ninguno.text = Idiomas.t("Ninguno\n(procedural)")
 	b_ninguno.add_theme_font_size_override("font_size", 9)
 	b_ninguno.toggle_mode = true
 	b_ninguno.button_pressed = c.esc_especial == ""
@@ -157,7 +157,7 @@ func _pintar_comercial(c: Club) -> void:
 		return
 	p._lista_gente.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "💰 EXPLOTACIÓN COMERCIAL"
+	t.text = Idiomas.t("💰 EXPLOTACIÓN COMERCIAL")
 	p._lista_gente.add_child(t)
 	p._dato("Entra cada semana", p._dinero(co.renta_semanal(c)), Principal.COL_VERDE, p._lista_gente)
 
@@ -174,7 +174,7 @@ func _pintar_comercial(c: Club) -> void:
 ## el campo tiene que distinguirse de las otras veintiuna.
 func _pintar_kits(co: Comercial, c: Club) -> void:
 	var tk := p._texto(11, p.COL_ACENTO)
-	tk.text = "👕 LAS TRES CAMISETAS"
+	tk.text = Idiomas.t("👕 LAS TRES CAMISETAS")
 	p._lista_gente.add_child(tk)
 	var muestras := HBoxContainer.new()
 	muestras.add_theme_constant_override("separation", 12)
@@ -187,7 +187,7 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 		img.custom_minimum_size = Vector2(56, 56)
 		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		img.tooltip_text = {"titular": "Titular", "alt": "Alternativa", "por": "De arquero"}[cual]
+		img.tooltip_text = Idiomas.t({"titular": "Titular", "alt": "Alternativa", "por": "De arquero"}[cual])
 		muestras.add_child(img)
 	for par: Array in [["titular", "Titular"], ["alt", "Alternativa"], ["por", "De arquero"]]:
 		var cual2 := String(par[0])
@@ -200,7 +200,7 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 			fila.add_theme_constant_override("separation", 6)
 			p._lista_gente.add_child(fila)
 			var et := p._texto(11, Principal.COL_TEXTO)
-			et.text = "Color %d" % num
+			et.text = Idiomas.t("Color %d") % num
 			et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila.add_child(et)
 			var cp := ColorPickerButton.new()
@@ -232,7 +232,7 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 	## MEDIAS, SHORT Y TIPOGRAFÍA. No salen en ninguna miniatura y salen en el
 	## campo: es donde de verdad se ven.
 	var tm := p._texto(10, Principal.COL_SUAVE)
-	tm.text = "Medias, short y tipografía de los dorsales"
+	tm.text = Idiomas.t("Medias, short y tipografía de los dorsales")
 	p._lista_gente.add_child(tm)
 	for par2: Array in [["medias", "Color de las medias"], ["pantalon", "Color del short"]]:
 		var prop := String(par2[0])
@@ -272,7 +272,7 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 ## opción del club que no quiere deberle nada a nadie.
 func _pintar_proveedor(co: Comercial, c: Club) -> void:
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "🏭 PROVEEDOR DE INDUMENTARIA"
+	t.text = Idiomas.t("🏭 PROVEEDOR DE INDUMENTARIA")
 	p._lista_gente.add_child(t)
 	p._dato("Aporta al año", p._dinero(co.renta_proveedor(c)), Principal.COL_VERDE, p._lista_gente)
 	for f: Array in Comercial.proveedores():
@@ -292,7 +292,7 @@ func _pintar_proveedor(co: Comercial, c: Club) -> void:
 		m.custom_minimum_size = Vector2(50, 0)
 		fila.add_child(m)
 		var b := Button.new()
-		b.text = "Firmado" if elegido else "Firmar"
+		b.text = Idiomas.t("Firmado") if elegido else Idiomas.t("Firmar")
 		b.disabled = elegido
 		b.add_theme_font_size_override("font_size", 11)
 		b.custom_minimum_size = Vector2(84, 0)
@@ -305,7 +305,7 @@ func _pintar_proveedor(co: Comercial, c: Club) -> void:
 ## es exactamente por qué las camisetas modernas están como están.
 func _pintar_zonas(co: Comercial, c: Club) -> void:
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "💸 PATROCINIOS POR ZONA"
+	t.text = Idiomas.t("💸 PATROCINIOS POR ZONA")
 	p._lista_gente.add_child(t)
 	p._dato("Total de las zonas", "%s/semana" % p._dinero(co.renta_zonas()), Principal.COL_VERDE, p._lista_gente)
 	for z: Array in Comercial.zonas():
@@ -319,15 +319,15 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 			n.text = "%s  ·  %s" % [String(f["marca"]), String(z[1])]
 			n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			n.clip_text = true
-			n.tooltip_text = "%s al año, firmado en %d por %d temporada(s)" % [
+			n.tooltip_text = Idiomas.t("%s al año, firmado en %d por %d temporada(s)") % [
 				p._dinero(int(f["monto"])), int(f["desde"]), int(f["anios"])]
 			fila.add_child(n)
 			var mm := p._texto(11, Principal.COL_VERDE)
-			mm.text = "%s/año" % p._dinero(int(f["monto"]))
+			mm.text = Idiomas.t("%s/año") % p._dinero(int(f["monto"]))
 			mm.custom_minimum_size = Vector2(90, 0)
 			fila.add_child(mm)
 			var br := Button.new()
-			br.text = "Romper"
+			br.text = Idiomas.t("Romper")
 			br.add_theme_font_size_override("font_size", 10)
 			br.custom_minimum_size = Vector2(72, 0)
 			br.pressed.connect(func() -> void:
@@ -338,7 +338,7 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 			fila.add_child(br)
 			continue
 		var libre := p._texto(11, Principal.COL_SUAVE)
-		libre.text = "%s  ·  libre" % String(z[1])
+		libre.text = Idiomas.t("%s  ·  libre") % String(z[1])
 		p._lista_gente.add_child(libre)
 		for i in (co.ofertas_zona.get(clave, []) as Array).size():
 			var idx := i
@@ -347,12 +347,12 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 			fila2.add_theme_constant_override("separation", 6)
 			p._lista_gente.add_child(fila2)
 			var n2 := p._texto(11, Color(String(o.get("color", "#e8b13a"))))
-			n2.text = "     %s  ·  %d año(s)" % [String(o["marca"]), int(o["anios"])]
+			n2.text = Idiomas.t("     %s  ·  %d año(s)") % [String(o["marca"]), int(o["anios"])]
 			n2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			n2.clip_text = true
 			fila2.add_child(n2)
 			var b2 := Button.new()
-			b2.text = "%s/año" % p._dinero(int(o["monto"]))
+			b2.text = Idiomas.t("%s/año") % p._dinero(int(o["monto"]))
 			b2.add_theme_font_size_override("font_size", 10)
 			b2.custom_minimum_size = Vector2(110, 0)
 			b2.pressed.connect(func() -> void:
@@ -362,7 +362,7 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 				p._refrescar())
 			fila2.add_child(b2)
 	var bb := Button.new()
-	bb.text = "🔄 Salir a buscar ofertas"
+	bb.text = Idiomas.t("🔄 Salir a buscar ofertas")
 	bb.add_theme_font_size_override("font_size", 11)
 	bb.pressed.connect(func() -> void:
 		co.generar_ofertas_zona(p.mundo.mi_club(), p.mundo.roles.multiplicador_sponsor() if p.mundo.roles != null else 1.0)
@@ -373,7 +373,7 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 ## en ánimo el día que se firma.
 func _pintar_naming(co: Comercial, c: Club) -> void:
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "🏟️ NOMBRE DEL ESTADIO"
+	t.text = Idiomas.t("🏟️ NOMBRE DEL ESTADIO")
 	p._lista_gente.add_child(t)
 	if not co.naming.is_empty():
 		var n := p._texto(13, Color(String(co.naming.get("color", "#e8b13a"))))
@@ -383,7 +383,7 @@ func _pintar_naming(co: Comercial, c: Club) -> void:
 			p._dinero(int(co.naming["monto"])), int(co.naming["anios"]), int(co.naming["desde"])],
 			Principal.COL_VERDE, p._lista_gente)
 		var br := Button.new()
-		br.text = "Recuperar el nombre  ·  %s" % p._dinero(int(round(float(int(co.naming["monto"])) * 0.6)))
+		br.text = Idiomas.t("Recuperar el nombre  ·  %s") % p._dinero(int(round(float(int(co.naming["monto"])) * 0.6)))
 		br.add_theme_font_size_override("font_size", 11)
 		br.pressed.connect(func() -> void:
 			var p_local := co.romper_naming(p.mundo.mi_club())
@@ -394,12 +394,12 @@ func _pintar_naming(co: Comercial, c: Club) -> void:
 		return
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Vender el nombre del estadio es de lo más rentable que existe… y de lo que más duele a la hinchada."
+		ex.text = Idiomas.t("Vender el nombre del estadio es de lo más rentable que existe… y de lo que más duele a la hinchada.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_gente.add_child(ex)
 	if co.ofertas_naming.is_empty():
 		var bb := Button.new()
-		bb.text = "Escuchar ofertas por el nombre"
+		bb.text = Idiomas.t("Escuchar ofertas por el nombre")
 		bb.add_theme_font_size_override("font_size", 11)
 		bb.pressed.connect(func() -> void:
 			co.generar_ofertas_naming(p.mundo.mi_club())
@@ -413,12 +413,12 @@ func _pintar_naming(co: Comercial, c: Club) -> void:
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_gente.add_child(fila)
 		var n2 := p._texto(12, Color(String(o.get("color", "#e8b13a"))))
-		n2.text = "%s  ·  %d años" % [String(o["nombre"]), int(o["anios"])]
+		n2.text = Idiomas.t("%s  ·  %d años") % [String(o["nombre"]), int(o["anios"])]
 		n2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		n2.clip_text = true
 		fila.add_child(n2)
 		var b := Button.new()
-		b.text = "%s/año" % p._dinero(int(o["monto"]))
+		b.text = Idiomas.t("%s/año") % p._dinero(int(o["monto"]))
 		b.add_theme_font_size_override("font_size", 10)
 		b.custom_minimum_size = Vector2(110, 0)
 		b.pressed.connect(func() -> void:
@@ -432,7 +432,7 @@ func _pintar_naming(co: Comercial, c: Club) -> void:
 ## techo salva la taquilla cuando llueve y las luces suben el ambiente de verdad.
 func _pintar_premium(co: Comercial, c: Club) -> void:
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "✨ ESTADIO PREMIUM"
+	t.text = Idiomas.t("✨ ESTADIO PREMIUM")
 	p._lista_gente.add_child(t)
 	for f: Array in Comercial.premium():
 		var clave := String(f[0])
@@ -450,7 +450,7 @@ func _pintar_premium(co: Comercial, c: Club) -> void:
 		var b := Button.new()
 		var lleno := niv >= tope
 		var coste := co.coste_premium(clave, c)
-		b.text = "MÁX" if lleno else p._dinero(coste)
+		b.text = Idiomas.t("MÁX") if lleno else p._dinero(coste)
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = lleno or c.saldo < coste
 		b.custom_minimum_size = Vector2(110, 0)
@@ -471,11 +471,11 @@ func _pintar_premium(co: Comercial, c: Club) -> void:
 ## todos juntos al final: son las cosas que hacen que el club sea ESE club.
 func _pintar_detalles(co: Comercial, c: Club) -> void:
 	var t := p._texto(11, p.COL_ACENTO)
-	t.text = "🎺 DETALLES DEL CLUB"
+	t.text = Idiomas.t("🎺 DETALLES DEL CLUB")
 	p._lista_gente.add_child(t)
 	var campo := LineEdit.new()
 	campo.text = co.lema
-	campo.placeholder_text = "Lema del club. Ej: «Nunca caminarás solo»"
+	campo.placeholder_text = Idiomas.t("Lema del club. Ej: «Nunca caminarás solo»")
 	campo.max_length = 60
 	campo.add_theme_font_size_override("font_size", 12)
 	campo.text_submitted.connect(func(x: String) -> void:
@@ -492,7 +492,7 @@ func _pintar_detalles(co: Comercial, c: Club) -> void:
 	fila.add_theme_constant_override("separation", 6)
 	p._lista_gente.add_child(fila)
 	var et := p._texto(11, Principal.COL_TEXTO)
-	et.text = "Color del bus del equipo"
+	et.text = Idiomas.t("Color del bus del equipo")
 	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(et)
 	var cp := ColorPickerButton.new()
@@ -507,9 +507,9 @@ func _pintar_detalles(co: Comercial, c: Club) -> void:
 	fila2.add_theme_constant_override("separation", 6)
 	p._lista_gente.add_child(fila2)
 	var et2 := p._texto(11, Principal.COL_TEXTO)
-	et2.text = "Avión propio para giras"
+	et2.text = Idiomas.t("Avión propio para giras")
 	et2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	et2.tooltip_text = "El plantel deja de volar en línea regular: menos fatiga en los viajes largos."
+	et2.tooltip_text = Idiomas.t("El plantel deja de volar en línea regular: menos fatiga en los viajes largos.")
 	fila2.add_child(et2)
 	var b := Button.new()
 	b.text = "SÍ" if co.avion else p._dinero(Eco.escalar(Comercial.COSTE_AVION, float(c.rep)))

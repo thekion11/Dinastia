@@ -32,10 +32,10 @@ func _pintar_glosario() -> void:
 func _pintar_idioma() -> void:
 	p._lista_ajustes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "IDIOMA"
+	t.text = Idiomas.t("IDIOMA")
 	p._lista_ajustes.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "Están traducidos los menús, las pestañas, los botones y los títulos. Las noticias, las preguntas de la prensa y los diálogos del vestuario siguen en castellano: son varios miles de frases y traducirlas a medias se lee peor que no traducirlas."
+	ex.text = Idiomas.t("Están traducidos los menús, las pestañas, los botones y los títulos. Las noticias, las preguntas de la prensa y los diálogos del vestuario siguen en castellano: son varios miles de frases y traducirlas a medias se lee peor que no traducirlas.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(ex)
 	var flow := HFlowContainer.new()
@@ -52,7 +52,7 @@ func _pintar_idioma() -> void:
 		b.button_pressed = Idiomas.idioma == clave
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(150, 26)
-		b.tooltip_text = "Idioma original, sin traducir nada." if clave == "es" else "%d frases de interfaz traducidas." % Idiomas.cobertura(clave)
+		b.tooltip_text = Idiomas.t("Idioma original, sin traducir nada.") if clave == "es" else Idiomas.t("%d frases de interfaz traducidas.") % Idiomas.cobertura(clave)
 		b.pressed.connect(func() -> void:
 			Idiomas.idioma = clave
 			p._refrescar())
@@ -63,10 +63,10 @@ func _pintar_idioma() -> void:
 func _pintar_moneda() -> void:
 	p._lista_ajustes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "MONEDA"
+	t.text = Idiomas.t("MONEDA")
 	p._lista_ajustes.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "Cambia cómo se muestra el dinero en todo el juego. Es un tipo de cambio fijo: tu caja y el valor de tu plantel no suben ni bajan por elegir otra."
+	ex.text = Idiomas.t("Cambia cómo se muestra el dinero en todo el juego. Es un tipo de cambio fijo: tu caja y el valor de tu plantel no suben ni bajan por elegir otra.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(ex)
 	var flow := HFlowContainer.new()
@@ -91,11 +91,11 @@ func _pintar_musica() -> void:
 
 	p._lista_ajustes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "MÚSICA"
+	t.text = Idiomas.t("MÚSICA")
 	p._lista_ajustes.add_child(t)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Compuesta por el juego, no grabada: por eso cambia con lo que pasa —hay una pieza para los últimos minutos y otra para la vuelta olímpica— y por eso no pesa nada."
+		ex.text = Idiomas.t("Compuesta por el juego, no grabada: por eso cambia con lo que pasa —hay una pieza para los últimos minutos y otra para la vuelta olímpica— y por eso no pesa nada.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ajustes.add_child(ex)
 
@@ -103,7 +103,7 @@ func _pintar_musica() -> void:
 	f1.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(f1)
 	var e1 := p._texto(12, Principal.COL_TEXTO)
-	e1.text = "Música"
+	e1.text = Idiomas.t("Música")
 	e1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	f1.add_child(e1)
 	var b1 := Button.new()
@@ -121,7 +121,7 @@ func _pintar_musica() -> void:
 	f2.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(f2)
 	var e2 := p._texto(12, Principal.COL_TEXTO if Musica.encendida else Principal.COL_SUAVE)
-	e2.text = "Volumen"
+	e2.text = Idiomas.t("Volumen")
 	e2.custom_minimum_size = Vector2(70, 0)
 	f2.add_child(e2)
 	var sl := HSlider.new()
@@ -147,9 +147,9 @@ func _pintar_musica() -> void:
 	f3.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(f3)
 	var e3 := p._texto(12, Principal.COL_TEXTO if Musica.encendida else Principal.COL_SUAVE)
-	e3.text = "Que la elija el juego"
+	e3.text = Idiomas.t("Que la elija el juego")
 	e3.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	e3.tooltip_text = "Encendido, la pieza cambia con lo que pasa: oficina en los menús, tensión en los últimos minutos, gloria al levantar algo. Apagado, suena siempre la que elijas."
+	e3.tooltip_text = Idiomas.t("Encendido, la pieza cambia con lo que pasa: oficina en los menús, tensión en los últimos minutos, gloria al levantar algo. Apagado, suena siempre la que elijas.")
 	f3.add_child(e3)
 	var b3 := Button.new()
 	b3.text = "SÍ" if Musica.automatica else "NO"
@@ -247,7 +247,7 @@ func _pintar_mezclador() -> void:
 func _pintar_penas_y_ramas(c: Club, h: Hinchada) -> void:
 	p._lista_estadio.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🧣 PEÑAS  ·  %d" % h.penas.size()
+	t.text = Idiomas.t("🧣 PEÑAS  ·  %d") % h.penas.size()
 	p._lista_estadio.add_child(t)
 	if not h.penas.is_empty():
 		var nombres: Array[String] = []
@@ -259,17 +259,17 @@ func _pintar_penas_y_ramas(c: Club, h: Hinchada) -> void:
 		p._lista_estadio.add_child(l)
 	var coste_p := Eco.escalar(Hinchada.COSTE_PENA, float(c.rep))
 	var bp := Button.new()
-	bp.text = "Fundar una peña  ·  %s" % p._dinero(coste_p)
+	bp.text = Idiomas.t("Fundar una peña  ·  %s") % p._dinero(coste_p)
 	bp.disabled = c.saldo < coste_p
 	bp.pressed.connect(func() -> void: _fundar_pena(c))
 	p._lista_estadio.add_child(bp)
 
 	var tr := p._texto(11, Principal.COL_SUAVE)
-	tr.text = "🏛️ RAMAS DEL CLUB  ·  cuestan %s/mes" % p._dinero(h.coste_ramas(c))
+	tr.text = Idiomas.t("🏛️ RAMAS DEL CLUB  ·  cuestan %s/mes") % p._dinero(h.coste_ramas(c))
 	p._lista_estadio.add_child(tr)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "No dan dinero: dan reputación. Sostenerlas cuando aprieta la caja es una decisión de verdad."
+		ex.text = Idiomas.t("No dan dinero: dan reputación. Sostenerlas cuando aprieta la caja es una decisión de verdad.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_estadio.add_child(ex)
 	for f: Array in Hinchada.RAMAS:
@@ -284,16 +284,16 @@ func _pintar_penas_y_ramas(c: Club, h: Hinchada) -> void:
 		n.tooltip_text = String(f[7])
 		fila.add_child(n)
 		var rep := p._texto(11, Principal.COL_ORO)
-		rep.text = ("%d temp." % int(h.anios_rama.get(clave, 0))) if abierta else "+%d rep" % int(f[5])
+		rep.text = (Idiomas.t("%d temp.") % int(h.anios_rama.get(clave, 0))) if abierta else Idiomas.t("+%d rep") % int(f[5])
 		rep.custom_minimum_size = Vector2(58, 0)
 		fila.add_child(rep)
 		var mens := p._texto(11, Principal.COL_SUAVE)
-		mens.text = "%s/mes" % p._dinero(Eco.escalar(float(f[4]), float(c.rep)))
+		mens.text = Idiomas.t("%s/mes") % p._dinero(Eco.escalar(float(f[4]), float(c.rep)))
 		mens.custom_minimum_size = Vector2(80, 0)
 		fila.add_child(mens)
 		var b := Button.new()
 		var coste_r := Eco.escalar(float(f[3]), float(c.rep))
-		b.text = "Cerrar" if abierta else p._dinero(coste_r)
+		b.text = Idiomas.t("Cerrar") if abierta else p._dinero(coste_r)
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = not abierta and c.saldo < coste_r
 		b.custom_minimum_size = Vector2(96, 0)
@@ -312,11 +312,11 @@ func _pintar_palmares_ramas(h: Hinchada) -> void:
 	if h.palmares_ramas.is_empty():
 		return
 	var t := p._texto(11, Principal.COL_ORO)
-	t.text = "🏅 PALMARÉS DE LAS RAMAS"
+	t.text = Idiomas.t("🏅 PALMARÉS DE LAS RAMAS")
 	p._lista_estadio.add_child(t)
 	for d: Dictionary in h.palmares_ramas.slice(0, 8):
 		var l := p._texto(11, Principal.COL_TEXTO)
-		l.text = "%d · %s · %s" % [int(d["anio"]), String(d["rama"]), "🏆 Campeón" if int(d["puesto"]) == 1 else "🥉 Podio (%d.º)" % int(d["puesto"])]
+		l.text = "%d · %s · %s" % [int(d["anio"]), String(d["rama"]), Idiomas.t("🏆 Campeón") if int(d["puesto"]) == 1 else Idiomas.t("🥉 Podio (%d.º)") % int(d["puesto"])]
 		p._lista_estadio.add_child(l)
 
 func _fundar_pena(c: Club) -> void:
@@ -358,7 +358,7 @@ func _organizar_dia_hincha(c: Club) -> void:
 func _pintar_atajos() -> void:
 	p._lista_ajustes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "ATAJOS DE TECLADO Y MANDO"
+	t.text = Idiomas.t("ATAJOS DE TECLADO Y MANDO")
 	p._lista_ajustes.add_child(t)
 	for fila_a: Array in [
 			["Cambiar de chip (dentro del bloque)", "Q  /  E", "L1  /  R1"],
@@ -383,20 +383,20 @@ func _pintar_atajos() -> void:
 		man.custom_minimum_size = Vector2(120, 0)
 		f.add_child(man)
 	var nota := p._texto(10, Principal.COL_SUAVE)
-	nota.text = "En pantalla táctil, un desliz horizontal largo también cambia de bloque maestro."
+	nota.text = Idiomas.t("En pantalla táctil, un desliz horizontal largo también cambia de bloque maestro.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(nota)
 
 func _pintar_dispositivo() -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "PANTALLA Y DISPOSITIVO"
+	t.text = Idiomas.t("PANTALLA Y DISPOSITIVO")
 	p._lista_ajustes.add_child(t)
 
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila)
 	var et := p._texto(12, Principal.COL_TEXTO)
-	et.text = "Pantalla completa"
+	et.text = Idiomas.t("Pantalla completa")
 	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(et)
 	var completa := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
@@ -412,7 +412,7 @@ func _pintar_dispositivo() -> void:
 	fila2.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila2)
 	var et2 := p._texto(12, Principal.COL_TEXTO)
-	et2.text = "Tamaño de la interfaz"
+	et2.text = Idiomas.t("Tamaño de la interfaz")
 	et2.custom_minimum_size = Vector2(150, 0)
 	fila2.add_child(et2)
 	var sl := HSlider.new()
@@ -434,7 +434,7 @@ func _pintar_dispositivo() -> void:
 	fila2.add_child(sl)
 	fila2.add_child(pct)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "No se guarda con la partida: es de esta máquina, no de este club."
+	ex.text = Idiomas.t("No se guarda con la partida: es de esta máquina, no de este club.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(ex)
 
@@ -445,9 +445,9 @@ func _pintar_dispositivo() -> void:
 	fila_tv.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila_tv)
 	var et_tv := p._texto(12, Principal.COL_TEXTO)
-	et_tv.text = "Modo televisión"
+	et_tv.text = Idiomas.t("Modo televisión")
 	et_tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	et_tv.tooltip_text = "Para HDMI y pantallas grandes: todo más grande, pensado para mirarse desde lejos."
+	et_tv.tooltip_text = Idiomas.t("Para HDMI y pantallas grandes: todo más grande, pensado para mirarse desde lejos.")
 	fila_tv.add_child(et_tv)
 	var b_tv := Button.new()
 	b_tv.text = "SÍ" if p._modo_tv else "NO"
@@ -464,9 +464,9 @@ func _pintar_dispositivo() -> void:
 	fila_ra.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila_ra)
 	var et_ra := p._texto(12, Principal.COL_TEXTO)
-	et_ra.text = "Ropa 3D en piezas separadas"
+	et_ra.text = Idiomas.t("Ropa 3D en piezas separadas")
 	et_ra.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	et_ra.tooltip_text = "La equipación con volumen propio (más realista). Cuesta tres mallas más por jugador en el partido."
+	et_ra.tooltip_text = Idiomas.t("La equipación con volumen propio (más realista). Cuesta tres mallas más por jugador en el partido.")
 	fila_ra.add_child(et_ra)
 	var b_ra := Button.new()
 	b_ra.text = "SÍ" if VestidorQ.ropa_aparte else "NO"
@@ -483,12 +483,12 @@ func _pintar_dispositivo() -> void:
 		fila_cf.add_theme_constant_override("separation", 8)
 		p._lista_ajustes.add_child(fila_cf)
 		var et_cf := p._texto(12, Principal.COL_TEXTO)
-		et_cf.text = "Caras reales"
+		et_cf.text = Idiomas.t("Caras reales")
 		et_cf.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		et_cf.tooltip_text = "FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador."
+		et_cf.tooltip_text = Idiomas.t("FOTO: la foto libre (Wikimedia Commons) en la ficha y en el 3D. RECREACIÓN: una cara dibujada con la piel, el pelo y la barba del jugador.")
 		fila_cf.add_child(et_cf)
 		var b_cf := Button.new()
-		b_cf.text = "FOTO" if Cara.usar_fotos else "RECREACIÓN"
+		b_cf.text = Idiomas.t("FOTO") if Cara.usar_fotos else Idiomas.t("RECREACIÓN")
 		b_cf.pressed.connect(func() -> void:
 			Cara.usar_fotos = not Cara.usar_fotos
 			p._guardar_preferencias()
@@ -501,12 +501,12 @@ func _pintar_dispositivo() -> void:
 	fila_ct.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila_ct)
 	var et_ct := p._texto(12, Principal.COL_TEXTO)
-	et_ct.text = "Controles del partido"
+	et_ct.text = Idiomas.t("Controles del partido")
 	et_ct.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	et_ct.tooltip_text = "Esquema de teclado, cada tecla y botón del mando, y las ayudas de pase, tiro y cambio de jugador."
+	et_ct.tooltip_text = Idiomas.t("Esquema de teclado, cada tecla y botón del mando, y las ayudas de pase, tiro y cambio de jugador.")
 	fila_ct.add_child(et_ct)
 	var b_ct := Button.new()
-	b_ct.text = "🎮 Configurar"
+	b_ct.text = Idiomas.t("🎮 Configurar")
 	b_ct.pressed.connect(func() -> void: PanelControles.abrir(p))
 	fila_ct.add_child(b_ct)
 
@@ -514,7 +514,7 @@ func _pintar_dispositivo() -> void:
 	## juego que puede ir lento: la interfaz son etiquetas y no cuesta nada.
 	## `Calidad` ya tenía los tres niveles montados desde el porte del visor.
 	var tc := p._texto(10, Principal.COL_SUAVE)
-	tc.text = "Calidad gráfica del estadio en 3D"
+	tc.text = Idiomas.t("Calidad gráfica del estadio en 3D")
 	p._lista_ajustes.add_child(tc)
 	var fila_c := HBoxContainer.new()
 	fila_c.add_theme_constant_override("separation", 4)
@@ -539,8 +539,8 @@ func _pintar_dispositivo() -> void:
 			p._refrescar())
 		fila_c.add_child(b_c)
 	var ad := CheckButton.new()
-	ad.text = "Ajustar sola para mantener 40 FPS en el partido"
-	ad.tooltip_text = "Si tu equipo no llega a 40 FPS, el partido apaga por escalones la oclusión ambiental, acorta las sombras y baja la resolución del 3D."
+	ad.text = Idiomas.t("Ajustar sola para mantener 40 FPS en el partido")
+	ad.tooltip_text = Idiomas.t("Si tu equipo no llega a 40 FPS, el partido apaga por escalones la oclusión ambiental, acorta las sombras y baja la resolución del 3D.")
 	ad.button_pressed = Calidad.adaptativa
 	ad.add_theme_font_size_override("font_size", 11)
 	ad.toggled.connect(func(si: bool) -> void:
@@ -550,8 +550,8 @@ func _pintar_dispositivo() -> void:
 	## MOTOR GRÁFICO (etapa 3): el ligero (OpenGL) para gráficas integradas
 	## viejas. Hay que reiniciar el juego: se ofrece hacerlo en el momento.
 	var ml := CheckButton.new()
-	ml.text = "Motor gráfico ligero (para equipos modestos; reinicia el juego)"
-	ml.tooltip_text = "Usa el renderizador de compatibilidad (OpenGL). En gráficas integradas antiguas va más fluido; se pierden algunos efectos de luz."
+	ml.text = Idiomas.t("Motor gráfico ligero (para equipos modestos; reinicia el juego)")
+	ml.tooltip_text = Idiomas.t("Usa el renderizador de compatibilidad (OpenGL). En gráficas integradas antiguas va más fluido; se pierden algunos efectos de luz.")
 	ml.button_pressed = Calidad.motor_ligero
 	ml.disabled = not Calidad.puede_relanzar()
 	ml.add_theme_font_size_override("font_size", 11)
@@ -560,7 +560,7 @@ func _pintar_dispositivo() -> void:
 		Calidad.guardar()
 		if Calidad.es_compatibilidad() != si and Calidad.puede_relanzar():
 			var dlg := ConfirmationDialog.new()
-			dlg.dialog_text = "El cambio de motor se aplica al reiniciar. ¿Reiniciar ahora? (la partida guardada se conserva)"
+			dlg.dialog_text = Idiomas.t("El cambio de motor se aplica al reiniciar. ¿Reiniciar ahora? (la partida guardada se conserva)")
 			dlg.confirmed.connect(func() -> void:
 				if p.get("mundo") != null:
 					p.call("_guardar")
@@ -570,7 +570,7 @@ func _pintar_dispositivo() -> void:
 	p._lista_ajustes.add_child(ml)
 	if not p._modo_experto:
 		var ec := p._texto(10, Principal.COL_SUAVE)
-		ec.text = "Si el estadio en 3D se siente lento, baja la calidad. La interfaz no cambia: son etiquetas y no cuestan nada."
+		ec.text = Idiomas.t("Si el estadio en 3D se siente lento, baja la calidad. La interfaz no cambia: son etiquetas y no cuestan nada.")
 		ec.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ajustes.add_child(ec)
 	p._lista_ajustes.add_child(HSeparator.new())
@@ -582,7 +582,7 @@ func _pintar_dispositivo() -> void:
 func _pintar_velocidad_partido() -> void:
 	p._lista_ajustes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "VELOCIDAD DE PARTIDO POR DEFECTO"
+	t.text = Idiomas.t("VELOCIDAD DE PARTIDO POR DEFECTO")
 	p._lista_ajustes.add_child(t)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 6)
@@ -604,15 +604,15 @@ func _pintar_velocidad_partido() -> void:
 
 func _pintar_qol() -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "LA INTERFAZ A TU MEDIDA"
+	t.text = Idiomas.t("LA INTERFAZ A TU MEDIDA")
 	p._lista_ajustes.add_child(t)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila)
 	var et := p._texto(12, Principal.COL_TEXTO)
-	et.text = "Modo experto"
+	et.text = Idiomas.t("Modo experto")
 	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	et.tooltip_text = "Oculta las explicaciones y los consejos de todas las pantallas. No quita ninguna función."
+	et.tooltip_text = Idiomas.t("Oculta las explicaciones y los consejos de todas las pantallas. No quita ninguna función.")
 	fila.add_child(et)
 	var b := Button.new()
 	b.text = "SÍ" if p._modo_experto else "NO"
@@ -622,7 +622,7 @@ func _pintar_qol() -> void:
 	fila.add_child(b)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Con el modo experto encendido desaparecen las notas explicativas como esta."
+		ex.text = Idiomas.t("Con el modo experto encendido desaparecen las notas explicativas como esta.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ajustes.add_child(ex)
 
@@ -632,9 +632,9 @@ func _pintar_qol() -> void:
 	fila_an.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila_an)
 	var et_an := p._texto(12, Principal.COL_TEXTO)
-	et_an.text = "Animaciones reducidas"
+	et_an.text = Idiomas.t("Animaciones reducidas")
 	et_an.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	et_an.tooltip_text = "Sin entradas escalonadas, cifras que cuentan ni latidos: todo aparece al instante."
+	et_an.tooltip_text = Idiomas.t("Sin entradas escalonadas, cifras que cuentan ni latidos: todo aparece al instante.")
 	fila_an.add_child(et_an)
 	var b_an := Button.new()
 	b_an.text = "SÍ" if Animar.reducidas() else "NO"
@@ -650,9 +650,9 @@ func _pintar_qol() -> void:
 	fila_vc.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila_vc)
 	var et_vc := p._texto(12, Principal.COL_TEXTO)
-	et_vc.text = "Vista compacta"
+	et_vc.text = Idiomas.t("Vista compacta")
 	et_vc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	et_vc.tooltip_text = "Filas más juntas: cabe más información en pantalla."
+	et_vc.tooltip_text = Idiomas.t("Filas más juntas: cabe más información en pantalla.")
 	fila_vc.add_child(et_vc)
 	var b_vc := Button.new()
 	b_vc.text = "SÍ" if p._vista_compacta else "NO"
@@ -668,28 +668,28 @@ func _pintar_qol() -> void:
 	fila_dh.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila_dh)
 	var et_dh := p._texto(12, Principal.COL_TEXTO)
-	et_dh.text = "Deshacer la última decisión"
+	et_dh.text = Idiomas.t("Deshacer la última decisión")
 	et_dh.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	et_dh.tooltip_text = "Se guarda la partida entera antes de vender o rescindir. Como mucho tres pasos atrás."
+	et_dh.tooltip_text = Idiomas.t("Se guarda la partida entera antes de vender o rescindir. Como mucho tres pasos atrás.")
 	fila_dh.add_child(et_dh)
 	var b_dh := Button.new()
-	b_dh.text = "↩ Deshacer (%d)" % p._pila_deshacer.size() if not p._pila_deshacer.is_empty() else "↩ Nada que deshacer"
+	b_dh.text = Idiomas.t("↩ Deshacer (%d)") % p._pila_deshacer.size() if not p._pila_deshacer.is_empty() else Idiomas.t("↩ Nada que deshacer")
 	b_dh.disabled = p._pila_deshacer.is_empty()
 	b_dh.pressed.connect(func() -> void: p._deshacer())
 	fila_dh.add_child(b_dh)
 	if not p._pila_deshacer.is_empty() and not p._modo_experto:
 		var ed := p._texto(10, Principal.COL_SUAVE)
-		ed.text = "Lo último: %s." % String((p._pila_deshacer[p._pila_deshacer.size() - 1] as Dictionary)["motivo"])
+		ed.text = Idiomas.t("Lo último: %s.") % String((p._pila_deshacer[p._pila_deshacer.size() - 1] as Dictionary)["motivo"])
 		ed.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ajustes.add_child(ed)
 
 	## LOS FAVORITOS. Seis atajos a las pestañas que más usas, que salen en la
 	## portada del club. Seis y no doce: si caben todas deja de ser una elección.
 	var tf := p._texto(11, Principal.COL_SUAVE)
-	tf.text = "⭐ ACCESOS RÁPIDOS  ·  %d de %d" % [p._favoritos.size(), Principal.FAVORITOS_MAX]
+	tf.text = Idiomas.t("⭐ ACCESOS RÁPIDOS  ·  %d de %d") % [p._favoritos.size(), Principal.FAVORITOS_MAX]
 	p._lista_ajustes.add_child(tf)
 	var ef := p._texto(10, Principal.COL_SUAVE)
-	ef.text = "Aparecen en Inicio. Marca aquí las pestañas a las que más vuelves."
+	ef.text = Idiomas.t("Aparecen en Inicio. Marca aquí las pestañas a las que más vuelves.")
 	ef.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(ef)
 	var rej := GridContainer.new()

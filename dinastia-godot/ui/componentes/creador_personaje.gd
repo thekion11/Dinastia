@@ -391,11 +391,11 @@ func _tab_conjuntos() -> Control:
 	var fila := HBoxContainer.new()
 	vb.add_child(fila)
 	var nombre := LineEdit.new()
-	nombre.placeholder_text = "Nombre (p. ej. Gala, Entrenamiento)"
+	nombre.placeholder_text = Idiomas.t("Nombre (p. ej. Gala, Entrenamiento)")
 	nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(nombre)
 	var bg := Button.new()
-	bg.text = "Guardar conjunto"
+	bg.text = Idiomas.t("Guardar conjunto")
 	fila.add_child(bg)
 	var conjuntos: Array = _mundo.roles.look.get("p3d_conjuntos", [])
 	bg.pressed.connect(func() -> void:
@@ -418,7 +418,7 @@ func _tab_conjuntos() -> Control:
 		et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		f.add_child(et)
 		var bp := Button.new()
-		bp.text = "Ponérmelo"
+		bp.text = Idiomas.t("Ponérmelo")
 		bp.pressed.connect(func() -> void:
 			_historial.append(_asp.duplicate())
 			_asp = PersonajeDT.aspecto(cj.get("a", {}))

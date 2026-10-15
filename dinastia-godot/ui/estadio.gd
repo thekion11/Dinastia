@@ -297,7 +297,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## derecha al pulsarlo (`CajonAjustes`).
 	_cajon = CajonAjustes.crear(self, "partido3d")
 	var volver := Button.new()
-	volver.text = "Volver"
+	volver.text = Idiomas.t("Volver")
 	volver.focus_mode = Control.FOCUS_NONE
 	add_child(volver)
 	volver.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
@@ -532,9 +532,9 @@ func _rotar_camara() -> void:
 	if _rig != null:
 		_rig.cycle()
 		if _btn_camara != null:
-			_btn_camara.text = "📷 Cámara: " + _rig.current_name()
+			_btn_camara.text = Idiomas.t("📷 Cámara: ") + _rig.current_name()
 		if _pie != null:
-			_pie.text = _pie_base + "  ·  cámara: " + _rig.current_name()
+			_pie.text = _pie_base + Idiomas.t("  ·  cámara: ") + _rig.current_name()
 
 func _actualizar_pie(perfil: Dictionary, aforo: int, ocupacion: float) -> void:
 	## El aforo es el OFICIAL del club (el mismo que en la presentación y en
@@ -1363,11 +1363,11 @@ func _alternar_modo_control() -> void:
 		return
 	_control.alternar_modo()
 	if _control.activo:
-		_btn_modo.text = "🎮 Modo: Jugador (FC)"
+		_btn_modo.text = Idiomas.t("🎮 Modo: Jugador (FC)")
 		if _control.jugador_activo.has("node") and is_instance_valid(_control.jugador_activo["node"]):
 			_rig.objetivo_seguimiento = _control.jugador_activo["node"]
 	else:
-		_btn_modo.text = "🎮 Modo: Manager"
+		_btn_modo.text = Idiomas.t("🎮 Modo: Manager")
 		_rig.objetivo_seguimiento = null
 
 
@@ -1530,7 +1530,7 @@ func _montar_motor() -> void:
 		if it >= 0 and not (PersonajeDT.sancionado and _rig.current_name().begins_with("Desde la grada")):
 			_rig.switch_to(it)
 			if _btn_camara != null:
-				_btn_camara.text = "📷 Cámara: " + _rig.current_name()
+				_btn_camara.text = Idiomas.t("📷 Cámara: ") + _rig.current_name()
 	_nombres_globales = PlayerSpawner.mostrar_nombres
 	if not _pref("nombres_motor", false):
 		_mostrar_nombres(false)
@@ -1710,7 +1710,7 @@ func _alternar_control_motor() -> void:
 	if not activo:
 		_motor.usuario = {}
 	if _btn_modo != null:
-		_btn_modo.text = "🎮 Controlar a mi equipo: " + ("SÍ" if activo else "NO")
+		_btn_modo.text = Idiomas.t("🎮 Controlar a mi equipo: ") + ("SÍ" if activo else "NO")
 	if _cursor == null:
 		_crear_cursor()
 	_cursor.visible = activo

@@ -69,7 +69,7 @@ func _montar() -> void:
 	fila.add_theme_constant_override("separation", 16)
 	barra.add_child(fila)
 	_rotulo = Label.new()
-	_rotulo.text = "🖥️  REVISIÓN VAR  ·  %d'  ·  %s" % [_minuto, _motivo]
+	_rotulo.text = Idiomas.t("🖥️  REVISIÓN VAR  ·  %d'  ·  %s") % [_minuto, _motivo]
 	_rotulo.add_theme_font_size_override("font_size", 26)
 	_rotulo.add_theme_color_override("font_color", Color("e8f4ff"))
 	_rotulo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -91,7 +91,7 @@ func _montar() -> void:
 	_decision.visible = false
 	add_child(_decision)
 	var ld := Label.new()
-	ld.text = "✔  DECISIÓN: SE MANTIENE LO DECIDIDO EN EL CAMPO"
+	ld.text = Idiomas.t("✔  DECISIÓN: SE MANTIENE LO DECIDIDO EN EL CAMPO")
 	ld.add_theme_font_size_override("font_size", 30)
 	ld.add_theme_color_override("font_color", Color.WHITE)
 	_decision.add_child(ld)
@@ -130,7 +130,7 @@ func _sala() -> void:
 	raiz.add_child(luz)
 	## Rótulo VAR.
 	var var_rot := Label3D.new()
-	var_rot.text = "VAR"
+	var_rot.text = Idiomas.t("VAR")
 	var_rot.font_size = 160
 	var_rot.pixel_size = 0.004
 	var_rot.modulate = Color("3fa9f5")
@@ -213,7 +213,7 @@ func _monitor(raiz: Node3D, pos: Vector3, tam: Vector2, tex: Texture2D, i: int) 
 	mi.position = pos
 	raiz.add_child(mi)
 	var et := Label3D.new()
-	et.text = ["CÁMARA 1 · JUGADA", "CÁMARA 2 · LÍNEA", "CÁMARA 3 · CENITAL", "CÁMARA 4 · CONTRA"][i]
+	et.text = [Idiomas.t("CÁMARA 1 · JUGADA"), Idiomas.t("CÁMARA 2 · LÍNEA"), Idiomas.t("CÁMARA 3 · CENITAL"), Idiomas.t("CÁMARA 4 · CONTRA")][i]
 	et.font_size = 28
 	et.pixel_size = 0.0035
 	et.modulate = Color(0.85, 0.92, 1.0)

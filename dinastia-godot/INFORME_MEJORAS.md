@@ -909,9 +909,13 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
   código y falle si falta en algún idioma (el script de la pasada 3 ya lo hace).
   ✅ (15-10) Hecho dentro de `_probar_paridad_idiomas`: las 258 frases de `Idiomas.t("…")`
   de `ui/`, `visor/` y `nucleo/` se comprueban en los 8 idiomas (0 sin traducir).
-- **M-447 · P1 · I** Las 274 cadenas en español escritas directo en `ui/` (I-02) siguen
-  pendientes; la prueba anterior solo cubre las que ya pasan por `Idiomas.t`. *Cómo*: ídem,
-  buscar `.text = "…"` con tildes y exigir envoltorio.
+- **M-447 · P1 · I · ✅ (15-10, salvo 15 textos)** Las cadenas en español escritas directo en `ui/`
+  (I-02): antes 573 `.text = "…"` con tilde sin envolver (1.136 líneas con el criterio ampliado,
+  732 textos sin traducción); ahora 1.132 envueltos en `Idiomas.t` en 64 archivos y 746 frases
+  nuevas en los 8 idiomas, de modo que la prueba de paridad (que solo mira `Idiomas.t("…")`) ya
+  las cubre: 1.338 frases, 0 sin traducir. Quedan 15 en `ciudad_vista`, `interior_instalacion`,
+  `metro_ciudad` y `ciudad_expansion` (otras sesiones) y un `begins_with("E: hablar")` en
+  `explorador_ciudad.gd` que hay que arreglar antes de envolver su texto.
 - **M-448 · P2 · M** `auditoria_clubes` tarda ~8 min y `auditoria_datos` ~1 min. *Cómo*:
   ejecutar con una muestra (`N` clubes) en el banco y completa solo de noche.
 - **M-449 · P2 · I** Los informes (`AUDITORIA_CLUBES.csv`) se regeneran a mano. *Cómo*: tarea
