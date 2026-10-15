@@ -51,7 +51,7 @@ func _montar() -> void:
 	offset_left = -320
 	offset_right = 320
 	offset_top = -200
-	offset_bottom = 170
+	offset_bottom = 250
 	add_theme_stylebox_override("panel", CuadroDialogo.estilo_panel())
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 8)
@@ -95,6 +95,18 @@ func _montar() -> void:
 			if _al_cambiar.is_valid():
 				_al_cambiar.call())
 		v.add_child(cb)
+	v.add_child(CuadroDialogo.placa(Idiomas.t("Mi caminata")))
+	var sel := OptionButton.new()
+	var estilos := ["formal", "normal", "animado", "cansado", "agachado", "trote"]
+	var nombres := ["Formal (erguido)", "Normal", "Animado", "Cansado", "Agachado", "A trote"]
+	for i in estilos.size():
+		sel.add_item(Idiomas.t(nombres[i]), i)
+	sel.select(maxi(0, estilos.find(String(valor("caminata", "formal")))))
+	sel.item_selected.connect(func(i: int) -> void:
+		guardar("caminata", estilos[i])
+		if _al_cambiar.is_valid():
+			_al_cambiar.call())
+	v.add_child(sel)
 	var tut := CuadroDialogo.respuesta(Button.new())
 	tut.text = "🎓 " + Idiomas.t("Ver el tutorial de la ciudad")
 	tut.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN

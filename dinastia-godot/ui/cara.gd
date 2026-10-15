@@ -405,6 +405,15 @@ static func svg_de(j: Jugador, k1: String = "#2b6b45", k2: String = "#ffffff") -
 ## siempre, tenga o no `j.real`: no hay nada que fingir mientras la búsqueda
 ## en segundo plano no le haya encontrado nada.
 static func textura(j: Jugador, k1: String, k2: String, alto_px: int = 40) -> Texture2D:
+	## EL RETRATO ES EL MODELO 3D (14-10-2026): la cara que sale en cualquier lista
+	## o ficha es el busto del mismo modelo que juega (`Retrato3D`). Sin pantalla
+	## (pruebas headless) se cae al retrato de siempre.
+	if Retrato3D.disponible():
+		return Retrato3D.textura(j, k1, k2, alto_px)
+	return textura_2d(j, k1, k2, alto_px)
+
+## El retrato 2D antiguo (SVG o foto): solo para pruebas sin pantalla.
+static func textura_2d(j: Jugador, k1: String, k2: String, alto_px: int = 40) -> Texture2D:
 	var foto := foto_real(j)
 	if foto != null:
 		return foto
