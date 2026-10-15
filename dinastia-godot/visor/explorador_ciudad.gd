@@ -530,7 +530,7 @@ func _tactil(capa: CanvasLayer) -> void:
 	der.add_child(be)
 	_boton_e = be
 	var bs := Button.new()
-	bs.text = "Salir"
+	bs.text = Idiomas.t("Salir")
 	bs.custom_minimum_size = Vector2(tam * 1.6, tam)
 	bs.modulate = Color(1, 1, 1, 0.75)
 	bs.pressed.connect(func() -> void: salir.emit())
@@ -627,8 +627,8 @@ func _physics_process(delta: float) -> void:
 	var corriendo := modo != "coche" and absf(vel) > VEL_PIE * 1.15
 	_actualizar_mano("coche" if modo == "coche" else ("correr" if corriendo else "pie"), absf(vel) * 3.6,
 		VEL_COCHE * 3.6 if modo == "coche" else VEL_CORRER * 3.6, absf(vel) * delta)
-	_hud.text = ("🚗 Conduciendo" if modo == "coche" else "🚶 A pie") + "  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa" % [
-		int(absf(vel) * 3.6), "" if modo == "coche" else "Mayús: correr · V: vista · "]
+	_hud.text = (Idiomas.t("🚗 Conduciendo") if modo == "coche" else Idiomas.t("🚶 A pie")) + Idiomas.t("  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa") % [
+		int(absf(vel) * 3.6), "" if modo == "coche" else Idiomas.t("Mayús: correr · V: vista · ")]
 	## Dónde estás: el nombre de la calle (o el cruce).
 	if cb != null and cb.expansion != null:
 		var calle := cb.expansion.nombre_calle_en(cuerpo.position)
@@ -825,7 +825,7 @@ func _buscar_cerca() -> void:
 			var q: Vector3 = a["pie"]
 			if Vector2(q.x - p.x, q.z - p.z).length() < 4.0:
 				_cerca = {"tipo": "metro", "acc": a, "n": "Ⓜ %s · %s" % [a["linea"], a["nombre"]]}
-				_aviso.text = "E: entrar al metro (%s, estación %s)" % [a["linea"], a["nombre"]]
+				_aviso.text = Idiomas.t("E: entrar al metro (%s, estación %s)") % [a["linea"], a["nombre"]]
 				return
 	if modo == "pie" and trafico != null:
 		for v: Dictionary in trafico._vehiculos:
@@ -875,11 +875,11 @@ func _unhandled_input(ev: InputEvent) -> void:
 		_usar()
 	elif k == KEY_V and modo == "coche" and estado == "calle":
 		cam_coche = (cam_coche + 1) % 3
-		_aviso.text = ["Cámara: tercera persona", "Cámara: capó", "Cámara: interior"][cam_coche]
+		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: interior")][cam_coche]
 	elif k == KEY_V:
 		primera_persona = not primera_persona
 		_raton_en_primera_persona()
-		_aviso.text = "Primera persona" if primera_persona else "Tercera persona"
+		_aviso.text = Idiomas.t("Primera persona") if primera_persona else Idiomas.t("Tercera persona")
 	elif k == KEY_C and estado == "tren":
 		_ventana = not _ventana
 
@@ -1039,7 +1039,7 @@ func _mover_en_interior(delta: float) -> void:
 	elif _anim != null:
 		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 	_colocar_camara(delta)
-	_hud.text = "🏠 %s  ·  W/S/A/D para moverte · V: vista · E o la puerta: salir" % String(_int.call("_sala_nombre"))
+	_hud.text = Idiomas.t("🏠 %s  ·  W/S/A/D para moverte · V: vista · E o la puerta: salir") % String(_int.call("_sala_nombre"))
 	## ¿Alguien de la sala a mano para charlar?
 	_int_cerca = {}
 	var mejor := 1.9
@@ -1502,12 +1502,12 @@ func _mover_en_anden(delta: float) -> void:
 	var k := metro.tren_parado_en(_linea, _idx)
 	var eta := metro.eta_minima(_linea, _idx)
 	var nombre := String(MetroCiudad.NOMBRES[_linea][_idx])
-	_hud.text = "Ⓜ %s · estación %s  ·  W/A/S/D · Mayús: correr · E: %s · Esc: mapa" % [
-		_linea, nombre, "subir al tren" if k >= 0 else "salir a la calle"]
+	_hud.text = Idiomas.t("Ⓜ %s · estación %s  ·  W/A/S/D · Mayús: correr · E: %s · Esc: mapa") % [
+		_linea, nombre, Idiomas.t("subir al tren") if k >= 0 else Idiomas.t("salir a la calle")]
 	if k >= 0:
-		_aviso.text = "🚇 Tren en el andén, puertas abiertas · E para subir"
+		_aviso.text = Idiomas.t("🚇 Tren en el andén, puertas abiertas · E para subir")
 	else:
-		_aviso.text = "Próximo tren: %s · E: salir a la calle" % ("llegando" if eta < 20.0 else "%d s" % int(eta))
+		_aviso.text = Idiomas.t("Próximo tren: %s · E: salir a la calle") % ("llegando" if eta < 20.0 else "%d s" % int(eta))
 
 func _usar_en_anden() -> void:
 	var k := metro.tren_parado_en(_linea, _idx)
@@ -1551,13 +1551,13 @@ func _viajar(delta: float) -> void:
 		_bajar_del_tren()
 		return
 	var prox := metro.proxima_de(_linea, _tren_k)
-	_hud.text = "🚇 %s · %s · %d km/h  ·  C: %s · Esc: mapa" % [_linea,
-		("parado en %s" % String(MetroCiudad.NOMBRES[_linea][parada])) if parada >= 0 else ("próxima: %s" % prox),
-		int(t.v * 3.6), "mirar al frente" if _ventana else "mirar por la ventana"]
+	_hud.text = Idiomas.t("🚇 %s · %s · %d km/h  ·  C: %s · Esc: mapa") % [_linea,
+		(Idiomas.t("parado en %s") % String(MetroCiudad.NOMBRES[_linea][parada])) if parada >= 0 else (Idiomas.t("próxima: %s") % prox),
+		int(t.v * 3.6), Idiomas.t("mirar al frente") if _ventana else Idiomas.t("mirar por la ventana")]
 	if parada >= 0:
-		_aviso.text = "Puertas abiertas en %s · E: bajar aquí" % String(MetroCiudad.NOMBRES[_linea][parada])
+		_aviso.text = Idiomas.t("Puertas abiertas en %s · E: bajar aquí") % String(MetroCiudad.NOMBRES[_linea][parada])
 	else:
-		_aviso.text = "Próxima estación: %s · E: %s" % [prox, "no bajar" if _bajar_en_proxima else "bajar en la próxima"]
+		_aviso.text = Idiomas.t("Próxima estación: %s · E: %s") % [prox, Idiomas.t("no bajar") if _bajar_en_proxima else Idiomas.t("bajar en la próxima")]
 
 func _bajar_del_tren() -> void:
 	var parada := metro.estacion_del_tren(_linea, _tren_k)

@@ -182,7 +182,7 @@ func _construir() -> void:
 	_capa.add_child(_rotulo)
 
 	_pie = Label.new()
-	_pie.text = "ESC o «Saltar» para ir directo al cuadro"
+	_pie.text = Idiomas.t("ESC o «Saltar» para ir directo al cuadro")
 	_pie.add_theme_font_size_override("font_size", 12)
 	_pie.add_theme_color_override("font_color", COL_SUAVE)
 	_pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -191,7 +191,7 @@ func _construir() -> void:
 	_capa.add_child(_pie)
 
 	var saltar := Button.new()
-	saltar.text = "Saltar  ▸"
+	saltar.text = Idiomas.t("Saltar  ▸")
 	saltar.custom_minimum_size = Vector2(130, 34)
 	saltar.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	saltar.offset_left = -160; saltar.offset_top = 24; saltar.offset_right = -30
@@ -346,7 +346,7 @@ func _mostrar_cuadro() -> void:
 		_cuadro_de_cruces(raiz)
 
 	var seguir := Button.new()
-	seguir.text = "Continuar"
+	seguir.text = Idiomas.t("Continuar")
 	seguir.custom_minimum_size = Vector2(0, 38)
 	seguir.pressed.connect(func() -> void: terminado.emit())
 	raiz.add_child(seguir)
@@ -373,7 +373,7 @@ func _cuadro_de_grupos(raiz: VBoxContainer) -> void:
 		col.add_theme_constant_override("separation", 4)
 		rej.add_child(col)
 		var et := Label.new()
-		et.text = "GRUPO %s" % char(65 + i)
+		et.text = Idiomas.t("GRUPO %s") % char(65 + i)
 		et.add_theme_font_size_override("font_size", 14)
 		et.add_theme_color_override("font_color", Color(String(_paleta()["acento"])))
 		col.add_child(et)

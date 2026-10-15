@@ -34,7 +34,7 @@ func _montar(p: Control, mundo: Mundo) -> void:
 	v.add_theme_constant_override("separation", 16)
 	centro.add_child(v)
 	var t := Label.new()
-	t.text = "🎮 MINIJUEGOS"
+	t.text = Idiomas.t("🎮 MINIJUEGOS")
 	t.add_theme_font_size_override("font_size", 30)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
@@ -82,7 +82,7 @@ func _montar(p: Control, mundo: Mundo) -> void:
 		d.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		cv.add_child(d)
 		var b := Button.new()
-		b.text = "Jugar"
+		b.text = Idiomas.t("Jugar")
 		b.custom_minimum_size = Vector2(0, 40)
 		var accion: Callable = j[3]
 		b.pressed.connect(func() -> void:
@@ -90,6 +90,6 @@ func _montar(p: Control, mundo: Mundo) -> void:
 			accion.call())
 		cv.add_child(b)
 	var cerrar := Button.new()
-	cerrar.text = "Volver"
+	cerrar.text = Idiomas.t("Volver")
 	cerrar.pressed.connect(queue_free)
 	v.add_child(cerrar)

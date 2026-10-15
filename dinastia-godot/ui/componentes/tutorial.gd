@@ -486,7 +486,7 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	var lugar := Label.new()
 	lugar.text = String(_guion.get("lugar", "")).to_upper()
 	if int(ctx["anio"]) > 0:
-		lugar.text += "  ·  TEMPORADA %d" % int(ctx["anio"])
+		lugar.text += Idiomas.t("  ·  TEMPORADA %d") % int(ctx["anio"])
 	lugar.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lugar.add_theme_font_size_override("font_size", 13)
 	lugar.add_theme_color_override("font_color", COL_ORO)
@@ -507,13 +507,13 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	fila.add_theme_constant_override("separation", 14)
 	v.add_child(fila)
 	var saltar := Button.new()
-	saltar.text = "Saltar tutorial"
+	saltar.text = Idiomas.t("Saltar tutorial")
 	saltar.flat = true
 	saltar.add_theme_color_override("font_color", COL_SUAVE)
 	saltar.pressed.connect(func() -> void: _terminar(false))
 	fila.add_child(saltar)
 	_btn_prologo = Button.new()
-	_btn_prologo.text = "Entrar ▸"
+	_btn_prologo.text = Idiomas.t("Entrar ▸")
 	_btn_prologo.custom_minimum_size = Vector2(150, 40)
 	_btn_prologo.add_theme_font_size_override("font_size", 16)
 	_btn_prologo.pressed.connect(pulsar_prologo)
@@ -604,7 +604,7 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 		var editar := Button.new()
 		editar.text = "✎"
 		editar.flat = true
-		editar.tooltip_text = "Cambiar el aspecto de %s" % _guion["mentor"]["nombre"]
+		editar.tooltip_text = Idiomas.t("Cambiar el aspecto de %s") % _guion["mentor"]["nombre"]
 		editar.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 		editar.pressed.connect(func() -> void: _panel_aspecto.visible = not _panel_aspecto.visible)
 		cab.add_child(editar)
@@ -652,7 +652,7 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	botones.add_theme_constant_override("separation", 8)
 	v.add_child(botones)
 	var saltar := Button.new()
-	saltar.text = "Saltar"
+	saltar.text = Idiomas.t("Saltar")
 	saltar.flat = true
 	saltar.add_theme_color_override("font_color", COL_SUAVE)
 	saltar.pressed.connect(func() -> void: _terminar(false))
@@ -661,11 +661,11 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	empuje.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	botones.add_child(empuje)
 	_btn_mostrar = Button.new()
-	_btn_mostrar.text = "Muéstramelo"
+	_btn_mostrar.text = Idiomas.t("Muéstramelo")
 	_btn_mostrar.pressed.connect(_hacer_por_mi)
 	botones.add_child(_btn_mostrar)
 	_btn_extra = Button.new()
-	_btn_extra.text = "Ir al partido ▸"
+	_btn_extra.text = Idiomas.t("Ir al partido ▸")
 	_btn_extra.visible = false
 	_btn_extra.pressed.connect(func() -> void:
 		_accion("tab:Partido")
@@ -673,7 +673,7 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	botones.add_child(_btn_extra)
 	_btn_atras = Button.new()
 	_btn_atras.text = "◂"
-	_btn_atras.tooltip_text = "Paso anterior"
+	_btn_atras.tooltip_text = Idiomas.t("Paso anterior")
 	_btn_atras.pressed.connect(func() -> void: _mostrar(_i - 1))
 	botones.add_child(_btn_atras)
 	_btn_sig = Button.new()
@@ -791,7 +791,7 @@ func _mostrar(i: int) -> void:
 	_escribir(_lbl_texto, texto)
 	_lbl_progreso.text = "" if final else "%d / %d" % [_i + 1, _pasos.size() - 1]
 	_btn_atras.visible = _i > 0 and not final
-	_btn_sig.text = "¡A jugar!" if final else "Siguiente ▸"
+	_btn_sig.text = Idiomas.t("¡A jugar!") if final else Idiomas.t("Siguiente ▸")
 	_btn_extra.visible = final and _puede_dirigir()
 	_hecho_al_entrar = _hecho(paso)
 	_t_cumplida = -1.0
@@ -819,10 +819,10 @@ func _pintar_mision() -> void:
 			if k <= _i:
 				n = misiones
 	if _cumplidas.has(_i):
-		_lbl_mision.text = "✔  MISIÓN %d/%d · %s  —  ¡hecho!" % [n, misiones, paso["mision"]]
+		_lbl_mision.text = Idiomas.t("✔  MISIÓN %d/%d · %s  —  ¡hecho!") % [n, misiones, paso["mision"]]
 		_lbl_mision.add_theme_color_override("font_color", COL_HECHO)
 	else:
-		_lbl_mision.text = "🎯  MISIÓN %d/%d · %s" % [n, misiones, paso["mision"]]
+		_lbl_mision.text = Idiomas.t("🎯  MISIÓN %d/%d · %s") % [n, misiones, paso["mision"]]
 		_lbl_mision.add_theme_color_override("font_color", COL_ORO)
 
 func _resumen_misiones() -> String:
@@ -908,7 +908,7 @@ func _process(delta: float) -> void:
 			if lbl.visible_characters >= total:
 				_completar_escritura()
 	if _fase == "prologo":
-		_btn_prologo.text = "▸▸" if _escribiendo else "Entrar ▸"
+		_btn_prologo.text = "▸▸" if _escribiendo else Idiomas.t("Entrar ▸")
 		return
 	var paso := paso_actual()
 	## La misión se cumple cuando el jugador HACE la cosa: el paso pasa de

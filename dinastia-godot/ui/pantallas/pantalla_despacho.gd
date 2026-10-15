@@ -53,7 +53,7 @@ func _pintar_despacho() -> void:
 	fila.add_theme_constant_override("separation", 6)
 	p._despacho.add_child(fila)
 	var cab := p._texto(11, Principal.COL_SUAVE)
-	cab.text = "🔔 %d asunto%s" % [asuntos.size(), "" if asuntos.size() == 1 else "s"]
+	cab.text = (Idiomas.t("🔔 %d asunto") if asuntos.size() == 1 else Idiomas.t("🔔 %d asuntos")) % asuntos.size()
 	fila.add_child(cab)
 	for i in asuntos.size():
 		var a: Dictionary = asuntos[i]
@@ -271,10 +271,10 @@ func _pintar_sin_banco() -> void:
 	var r := p.mundo.roles
 	var v := _marco_aviso(Principal.COL_ROJO)
 	var t := p._texto(11, Principal.COL_ROJO)
-	t.text = "ESTÁS SIN BANCO"
+	t.text = Idiomas.t("ESTÁS SIN BANCO")
 	v.add_child(t)
 	var txt := p._texto(13, Principal.COL_TEXTO)
-	txt.text = "Te quedaste sin club. Elige dónde seguir tu carrera: el prestigio y la vitrina te acompañan, lo que construiste en el club anterior se queda allí."
+	txt.text = Idiomas.t("Te quedaste sin club. Elige dónde seguir tu carrera: el prestigio y la vitrina te acompañan, lo que construiste en el club anterior se queda allí.")
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(txt)
 	for c in r.ofertas_trabajo():
@@ -288,11 +288,11 @@ func _pintar_sin_banco() -> void:
 		## La reputación del club contra la tuya es LA decisión: firmar por
 		## encima de tu prestigio es un salto, por debajo es un refugio.
 		var salto := "  ·  por encima de tu prestigio" if c.rep > r.prestigio else ""
-		nom.text = "%s  ·  división %d  ·  reputación %d%s" % [c.nombre, c.division, c.rep, salto]
+		nom.text = Idiomas.t("%s  ·  división %d  ·  reputación %d%s") % [c.nombre, c.division, c.rep, salto]
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila.add_child(nom)
 		var b := Button.new()
-		b.text = "Firmar"
+		b.text = Idiomas.t("Firmar")
 		b.add_theme_font_size_override("font_size", 11)
 		var id := c.id
 		b.pressed.connect(func() -> void: _aceptar_trabajo(id))
@@ -311,7 +311,7 @@ func _aceptar_trabajo(club_id: String) -> void:
 func _pintar_exigencia_agente(e: Dictionary) -> void:
 	var v := _marco_aviso(Principal.COL_VERDE)
 	var t := p._texto(11, Principal.COL_VERDE)
-	t.text = "UN REPRESENTANTE PRESIONA"
+	t.text = Idiomas.t("UN REPRESENTANTE PRESIONA")
 	v.add_child(t)
 	var txt := p._texto(13, Principal.COL_TEXTO)
 	txt.text = String(e.get("txt", ""))
@@ -401,10 +401,10 @@ func _pintar_solicitud_plantel() -> void:
 		return
 	var marco := _marco_aviso(Principal.COL_VERDE)
 	var t := p._texto(11, Principal.COL_VERDE)
-	t.text = "TE BUSCA UN JUGADOR"
+	t.text = Idiomas.t("TE BUSCA UN JUGADOR")
 	marco.add_child(t)
 	var txt := p._texto(13, Principal.COL_TEXTO)
-	txt.text = "%s (%d años, media %d) %s" % [j.nombre, j.edad, j.ovr, String(d[1]).to_lower()]
+	txt.text = Idiomas.t("%s (%d años, media %d) %s") % [j.nombre, j.edad, j.ovr, String(d[1]).to_lower()]
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	marco.add_child(txt)
 	var fila := HBoxContainer.new()
@@ -459,12 +459,12 @@ func _fila_texto_libre() -> HBoxContainer:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 6)
 	var campo := LineEdit.new()
-	campo.placeholder_text = "…o responde con tus propias palabras"
+	campo.placeholder_text = Idiomas.t("…o responde con tus propias palabras")
 	campo.max_length = 120
 	campo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(campo)
 	var b := Button.new()
-	b.text = "Responder"
+	b.text = Idiomas.t("Responder")
 	fila.add_child(b)
 	var enviar := func(_t: String = "") -> void:
 		if campo.text.strip_edges() != "":
@@ -482,7 +482,7 @@ func _fila_posturas() -> HBoxContainer:
 	var posturas := HBoxContainer.new()
 	posturas.add_theme_constant_override("separation", 6)
 	var et := p._texto(11, Principal.COL_SUAVE)
-	et.text = "Cómo lo dices:"
+	et.text = Idiomas.t("Cómo lo dices:")
 	et.custom_minimum_size = Vector2(96, 0)
 	posturas.add_child(et)
 	var lista_cuerpos: Dictionary = p.mundo.prensa.cuerpos()
