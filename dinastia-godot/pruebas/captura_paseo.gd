@@ -7,7 +7,7 @@ var _p: Node
 var _v: VistaCiudad
 var _e: ExploradorCiudad
 ## [nombre, posición, rumbo]
-const PARADAS := [
+const PARADAS_BASE := [
 	["paseo_1_avenida", Vector3(990.0 + 15.0, 0, -500.0), PI],
 	["paseo_2_casas", Vector3(120.0, 0, 1150.0), -PI * 0.5],
 	["paseo_3_parque", Vector3(-605.0, 0, 432.0), PI],
@@ -15,6 +15,18 @@ const PARADAS := [
 	["paseo_5_cruce", Vector3(345.0, 0, -658.0), PI * 0.75],
 	["paseo_6_calle", Vector3(-224.0, 0, -880.0), PI * 0.5],
 ]
+## PARADAS="nombre:x:z:rumbo;nombre2:..." para fotografiar otros sitios.
+var PARADAS: Array = _paradas()
+
+static func _paradas() -> Array:
+	var txt := OS.get_environment("PARADAS")
+	if txt == "":
+		return PARADAS_BASE
+	var r: Array = []
+	for t: String in txt.split(";"):
+		var q := t.split(":")
+		r.append([q[0], Vector3(float(q[1]), 0, float(q[2])), float(q[3])])
+	return r
 
 func _ready() -> void:
 	## Sin el tutorial de la ciudad tapando el tercio de abajo de cada foto.

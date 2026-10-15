@@ -1141,27 +1141,103 @@ func _casas_kenney() -> bool:
 		b.add_child(mi)
 	return true
 
+## Mallas de los kits de Kenney, cargadas una vez: {malla, caja}. Vacío si no hay.
+var _mallas_kit := {}
+
+func _malla_kit(ruta: String) -> Dictionary:
+	if _mallas_kit.has(ruta):
+		return _mallas_kit[ruta]
+	var r := {}
+	var ps := load(ruta) as PackedScene
+	if ps != null:
+		var inst := ps.instantiate()
+		var mis := inst.find_children("*", "MeshInstance3D", true, false)
+		if not mis.is_empty() and (mis[0] as MeshInstance3D).mesh != null:
+			var m: Mesh = (mis[0] as MeshInstance3D).mesh
+			r = {"malla": m, "caja": m.get_aabb()}
+		inst.free()
+	_mallas_kit[ruta] = r
+	return r
+
+## Una pieza de kit apoyada en el suelo, centrada en `centro`, girada y a escala.
+func _pieza_kit(ruta: String, centro: Vector3, escala: float, giro: float, tinte := 0) -> MeshInstance3D:
+	var k := _malla_kit(ruta)
+	if k.is_empty():
+		return null
+	var caja: AABB = k["caja"]
+	var base := Basis(Vector3.UP, giro).scaled(Vector3.ONE * escala)
+	## Dentro de un nodo: `tenir` tiñe las mallas HIJAS del nodo que recibe.
+	var n := Node3D.new()
+	n.transform = Transform3D(base, centro - base * Vector3(caja.get_center().x, caja.position.y, caja.get_center().z))
+	var mi := MeshInstance3D.new()
+	mi.mesh = k["malla"]
+	n.add_child(mi)
+	b.add_child(n)
+	if tinte != 0:
+		b.tenir(n, tinte)
+	return mi
+
+## POLÍGONO (15-10-2026): naves, contenedores y chimeneas del kit industrial de
+## Kenney en lugar de la caja con dientes de sierra. Las llamadas a `_rng` son las
+## mismas que antes (el resto de la ciudad no se mueve).
+const NAVES := ["a", "c", "e", "f", "l", "m", "q", "r", "t"]
+const RUTA_IND := "res://assets/kenney/industrial/"
+
 func _industrial(r: Rect2) -> void:
 	b._caja_en(Vector3(r.get_center().x, 0.06, r.get_center().y), Vector3(r.size.x, 0.12, r.size.y), b._mat_simple(Color(0.42, 0.42, 0.41), 0.9))
 	var c := Vector3(r.get_center().x, 0, r.get_center().y)
-	## Una nave grande con cubierta en diente de sierra y contenedores.
-	var nave := b._mat_simple([Color(0.62, 0.64, 0.66), Color(0.55, 0.5, 0.42), Color(0.5, 0.56, 0.6)][_rng.randi() % 3], 0.6)
+	var color_nave: Color = [Color(0.62, 0.64, 0.66), Color(0.55, 0.5, 0.42), Color(0.5, 0.56, 0.6)][_rng.randi() % 3]
 	var w := r.size.x * 0.62
 	var f := r.size.y * 0.55
-	b._caja_en(c + Vector3(-r.size.x * 0.12, 5.0, -r.size.y * 0.1), Vector3(w, 10.0, f), nave)
-	for k in 5:
-		var d := b._caja_en(c + Vector3(-r.size.x * 0.12 - w * 0.4 + float(k) * w * 0.2, 11.2, -r.size.y * 0.1), Vector3(w * 0.18, 2.4, f), b._mat_simple(Color(0.4, 0.42, 0.45), 0.5))
-		d.rotation.z = 0.35
-	var cont: Array[Transform3D] = []
-	var colc: Array[Color] = []
+	var centro_nave := c + Vector3(-r.size.x * 0.12, 0.12, -r.size.y * 0.1)
+	var h := absi(hash(Vector2(c.x, c.z)))
+	var ruta_nave := RUTA_IND + "building-%s.glb" % NAVES[h % NAVES.size()]
+	var kn := _malla_kit(ruta_nave)
+	if kn.is_empty():
+		## Sin el kit: la nave de cajas de antes.
+		var nave := b._mat_simple(color_nave, 0.6)
+		b._caja_en(c + Vector3(-r.size.x * 0.12, 5.0, -r.size.y * 0.1), Vector3(w, 10.0, f), nave)
+		for k in 5:
+			var d := b._caja_en(c + Vector3(-r.size.x * 0.12 - w * 0.4 + float(k) * w * 0.2, 11.2, -r.size.y * 0.1), Vector3(w * 0.18, 2.4, f), b._mat_simple(Color(0.4, 0.42, 0.45), 0.5))
+			d.rotation.z = 0.35
+	else:
+		var caja: AABB = kn["caja"]
+		## Que quepa en la parcela de la nave, sin pasar de ×10 (medida real).
+		var esc := minf(10.0, minf(w / maxf(caja.size.x, 0.01), f / maxf(caja.size.z, 0.01)))
+		## Sin `tenir`: está hecho para la paleta del kit comercial y en la del
+		## industrial pintaba las naves de bloques de colores sin sentido.
+		_pieza_kit(ruta_nave, centro_nave, esc, PI if h % 2 == 0 else 0.0)
+	## Contenedores: tres pisos en tres filas, como antes.
 	for k in 10:
-		var p := c + Vector3(r.size.x * 0.32, 1.3 + float(k % 3) * 2.6, -r.size.y * 0.35 + float(k / 3) * 6.5)
-		cont.append(Transform3D(Basis.from_scale(Vector3(2.5, 2.6, 6.0)), p))
-		colc.append([Color(0.75, 0.2, 0.15), Color(0.15, 0.35, 0.7), Color(0.2, 0.55, 0.3), Color(0.85, 0.6, 0.15)][_rng.randi() % 4])
-	_multimesh(BoxMesh.new(), null, cont, Vector3.ONE, colc)
+		var p := c + Vector3(r.size.x * 0.32, 0.12 + float(k % 3) * 2.6, -r.size.y * 0.35 + float(k / 3) * 6.5)
+		var tipo := _rng.randi() % 4
+		var ruta_c := RUTA_IND + "shipping-container-%s.glb" % ["a", "b", "c", "a"][tipo]
+		## Medida real: 6 m de largo (a ×7,4, como se propuso, salían bloques de 15 m
+		## que parecían edificios con tuberías).
+		if _pieza_kit(ruta_c, p, _escala_largo(ruta_c, 6.0), PI * 0.5 if _es_largo_x(ruta_c) else 0.0) == null:
+			b._caja_en(p + Vector3(0, 1.18, 0), Vector3(2.5, 2.6, 6.0), b._mat_simple([Color(0.75, 0.2, 0.15), Color(0.15, 0.35, 0.7), Color(0.2, 0.55, 0.3), Color(0.85, 0.6, 0.15)][tipo], 0.6))
 	if _rng.randf() < 0.5:
-		b._cil_en(c + Vector3(-r.size.x * 0.38, 14.0, r.size.y * 0.3), 1.4, 28.0, b._mat_simple(Color(0.55, 0.3, 0.25), 0.8))
+		var pc := c + Vector3(-r.size.x * 0.38, 0.12, r.size.y * 0.3)
+		## ×4: a ×9 parecía una torre de refrigeración de 25 m de ancho.
+		if _pieza_kit(RUTA_IND + "chimney-large.glb", pc, 4.0, 0.0) == null:
+			b._cil_en(c + Vector3(-r.size.x * 0.38, 14.0, r.size.y * 0.3), 1.4, 28.0, b._mat_simple(Color(0.55, 0.3, 0.25), 0.8))
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
+
+## La escala para que el lado largo de la pieza mida `metros`.
+func _escala_largo(ruta: String, metros: float) -> float:
+	var k := _malla_kit(ruta)
+	if k.is_empty():
+		return 1.0
+	var caja: AABB = k["caja"]
+	return metros / maxf(maxf(caja.size.x, caja.size.z), 0.01)
+
+## ¿La pieza es más larga en X que en Z? (para girar los contenedores a lo largo de Z).
+func _es_largo_x(ruta: String) -> bool:
+	var k := _malla_kit(ruta)
+	if k.is_empty():
+		return false
+	var caja: AABB = k["caja"]
+	return caja.size.x > caja.size.z
 
 func _paseo_rio(r: Rect2) -> void:
 	## Las orillas son paseo arbolado; el agua la pone `_rio_largo` de una vez.
