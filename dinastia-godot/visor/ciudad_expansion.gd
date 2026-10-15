@@ -67,6 +67,9 @@ var nodos := {}            ## Vector2i -> Vector3
 var tramos: Array = []     ## {a: Vector3, b: Vector3, av: bool, puente: bool, ancho: float}
 var vecinos := {}          ## Vector2i -> Array[Vector2i] (el grafo, para recorrerlo)
 var cruces_semaforo: Array = []    ## [Vector3]
+## Rótulos de comercio puestos: {pos, ancho, texto}. `ExploradorCiudad.edificio_en`
+## los usa para que al entrar por esa puerta la sala sea la del rótulo.
+var rotulos: Array = []
 var bloques: Array = []    ## {rect: Rect2, celda: Vector2i, zona: String, uso: String}
 var lineas_metro: Array = []       ## [{nombre, color, estaciones: [Vector3]}]
 var lineas_bus: Array = []         ## [{nombre, puntos: PackedVector3Array, paradas: [Vector3]}]
@@ -821,6 +824,7 @@ const COMERCIOS := [["💊 Farmacia", Color(0.1, 0.55, 0.25)], ["☕ Cafetería"
 
 func _rotulo_comercio(frente: Vector3, giro: float, ancho: float) -> void:
 	var com: Array = COMERCIOS[_rng.randi() % COMERCIOS.size()]
+	rotulos.append({"pos": frente, "ancho": ancho, "texto": String(com[0])})
 	var col: Color = com[1]
 	if String(com[0]).contains("Peña"):
 		col = b._color_club("c1", col)

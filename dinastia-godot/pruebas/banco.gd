@@ -120,6 +120,7 @@ const SECCIONES := [
 	"_probar_documental",
 	"_probar_tribuna_real",
 	"_probar_narracion_traducida",
+	"_probar_rotulo_y_sala",
 ]
 
 var _fallos: Array[String] = []
@@ -5241,6 +5242,32 @@ func _probar_minijuegos() -> void:
 	_comprobar(ok_cap, "la respuesta del capitán es el capitán de verdad (%s)" % cap)
 
 ## LA CIUDAD GRANDE (7-10-2026): red vial en datos, semáforos, transporte.
+func _probar_rotulo_y_sala() -> void:
+	## 15-10-2026: el rótulo de la fachada y la sala de dentro se sorteaban por
+	## separado («Farmacia» que abría un taller). Ahora manda el rótulo.
+	_titulo("CIUDAD: LO QUE DICE EL RÓTULO ES LO QUE HAY DENTRO")
+	var sin_sala: Array = []
+	for com: Array in CiudadExpansion.COMERCIOS:
+		var texto := String(com[0])
+		var nombre := texto.substr(texto.find(" ") + 1)
+		var k := String(ExploradorCiudad.SALA_DE_ROTULO.get(nombre, ""))
+		if k == "" or not InteriorInstalacion.tiene(k):
+			sin_sala.append(nombre)
+	_comprobar(sin_sala.is_empty(), "los %d comercios tienen una sala que existe %s" % [CiudadExpansion.COMERCIOS.size(), str(sin_sala)])
+	var cb := CityBuilder.new()
+	cb.expansion = CiudadExpansion.new(cb)
+	cb.expansion.rotulos = [
+		{"pos": Vector3(100, 0, 50), "ancho": 8.0, "texto": "💊 Farmacia"},
+		{"pos": Vector3(110, 0, 50), "ancho": 8.0, "texto": "🥖 Panadería"},
+	]
+	var ex := ExploradorCiudad.new()
+	ex.cb = cb
+	_comprobar(String(ex._rotulo_en(Vector3(101, 0, 51)).get("texto", "")) == "💊 Farmacia", "la puerta de la farmacia es la de la farmacia")
+	_comprobar(String(ex._rotulo_en(Vector3(109, 0, 51)).get("texto", "")) == "🥖 Panadería", "y la de al lado, la de la panadería")
+	_comprobar(ex._rotulo_en(Vector3(140, 0, 50)).is_empty(), "lejos de los rótulos no hay rótulo")
+	ex.free()
+	cb.free()
+
 func _probar_ciudad_grande() -> void:
 	_titulo("LA CIUDAD GRANDE: RED VIAL, SEMÁFOROS Y TRANSPORTE")
 	var cb := CityBuilder.new()
