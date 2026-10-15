@@ -9371,6 +9371,19 @@
    }
   ],
   [
+   "^(.+?)\\ (.+?)\\ \\(moral\\ (.+?)\\)\\.$",
+   {
+    "en": "$1 $2 (morale $3).",
+    "pt": "$1 $2 (moral $3).",
+    "fr": "$1 $2 (moral $3).",
+    "it": "$1 $2 (morale $3).",
+    "de": "$1 $2 (Moral $3).",
+    "ca": "$1 $2 (moral $3).",
+    "pl": "$1 $2 (morale $3).",
+    "tr": "$1 $2 (moral $3)."
+   }
+  ],
+  [
    "^🌍\\ Vitrina\\ mundialista:\\ (.+?)$",
    {
     "en": "🌍 World Cup showcase: $1",
@@ -10057,6 +10070,19 @@
     "ca": "Embolic nocturn: $1",
     "pl": "Nocny wybryk: $1",
     "tr": "Gece skandalı: $1"
+   }
+  ],
+  [
+   "^Colonia\\ (.+?)\\ (.+?)$",
+   {
+    "en": "$1 $2 contingent",
+    "pt": "Colônia $1 $2",
+    "fr": "Colonie $1 $2",
+    "it": "Colonia $1 $2",
+    "de": "Kolonie $1 $2",
+    "ca": "Colònia $1 $2",
+    "pl": "Kolonia $1 $2",
+    "tr": "$1 $2 kolonisi"
    }
   ],
   [
