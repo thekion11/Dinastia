@@ -48,7 +48,7 @@ static func crear(padre: Control, clave_pantalla: String) -> CajonAjustes:
 func _montar() -> void:
 	boton_engranaje = Button.new()
 	boton_engranaje.text = "⚙"
-	boton_engranaje.tooltip_text = "Ajustes"
+	boton_engranaje.tooltip_text = Idiomas.t("Ajustes")
 	boton_engranaje.add_theme_font_size_override("font_size", 20)
 	boton_engranaje.custom_minimum_size = Vector2(40, 40)
 	boton_engranaje.focus_mode = Control.FOCUS_NONE

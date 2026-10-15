@@ -16,10 +16,10 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 		return
 	raiz.add_child(HSeparator.new())
 	var t: Label = texto.call(11, colores["suave"])
-	t.text = "🚪 EL CLUB POR DENTRO"
+	t.text = Idiomas.t("🚪 EL CLUB POR DENTRO")
 	raiz.add_child(t)
 	var intro: Label = texto.call(10, colores["suave"])
-	intro.text = "Lo que no sale en la tabla: dónde se cambian, dónde te preguntan y dónde se sientan los que firman los cheques."
+	intro.text = Idiomas.t("Lo que no sale en la tabla: dónde se cambian, dónde te preguntan y dónde se sientan los que firman los cheques.")
 	intro.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	raiz.add_child(intro)
 
@@ -58,7 +58,7 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 			bono.custom_minimum_size = Vector2(34, 0)
 			fila.add_child(bono)
 			var b := Button.new()
-			b.text = "Puesto" if tengo else (Eco.dinero(Eco.escalar(float(f[3]), float(c.rep))) if int(f[3]) > 0 else "gratis")
+			b.text = Idiomas.t("Puesto") if tengo else (Eco.dinero(Eco.escalar(float(f[3]), float(c.rep))) if int(f[3]) > 0 else "gratis")
 			b.add_theme_font_size_override("font_size", 11)
 			b.disabled = tengo
 			b.custom_minimum_size = Vector2(96, 0)
@@ -66,10 +66,10 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 			fila.add_child(b)
 
 	var td: Label = texto.call(11, colores["acento"])
-	td.text = "📱 LO DIGITAL"
+	td.text = Idiomas.t("📱 LO DIGITAL")
 	raiz.add_child(td)
 	var dd: Label = texto.call(10, colores["suave"])
-	dd.text = "Crecen solas cada semana -más rápido si vienes ganando en liga- y lo que dejan entra directo a la caja."
+	dd.text = Idiomas.t("Crecen solas cada semana -más rápido si vienes ganando en liga- y lo que dejan entra directo a la caja.")
 	dd.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	raiz.add_child(dd)
 	## App
@@ -83,18 +83,18 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 		na.clip_text = true
 		fa.add_child(na)
 		var ra: Label = texto.call(11, colores["suave"])
-		ra.text = "%s subs" % miles.call(int(cd.app["subs"]))
+		ra.text = Idiomas.t("%s subs") % miles.call(int(cd.app["subs"]))
 		ra.custom_minimum_size = Vector2(96, 0)
 		fa.add_child(ra)
 	else:
 		var ta: Label = texto.call(11, colores["texto"])
-		ta.text = "📱 App oficial del club"
+		ta.text = Idiomas.t("📱 App oficial del club")
 		raiz.add_child(ta)
 		var fila_a := HBoxContainer.new()
 		fila_a.add_theme_constant_override("separation", 6)
 		raiz.add_child(fila_a)
 		var campo_a := LineEdit.new()
-		campo_a.placeholder_text = "%s Oficial" % c.nombre
+		campo_a.placeholder_text = Idiomas.t("%s Oficial") % c.nombre
 		campo_a.max_length = 28
 		campo_a.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila_a.add_child(campo_a)
@@ -115,12 +115,12 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 		nw.clip_text = true
 		fw.add_child(nw)
 		var rw: Label = texto.call(11, colores["suave"])
-		rw.text = "%s vis." % miles.call(int(cd.web["visitas"]))
+		rw.text = Idiomas.t("%s vis.") % miles.call(int(cd.web["visitas"]))
 		rw.custom_minimum_size = Vector2(96, 0)
 		fw.add_child(rw)
 	else:
 		var tw: Label = texto.call(11, colores["texto"])
-		tw.text = "🌐 Sitio web del club"
+		tw.text = Idiomas.t("🌐 Sitio web del club")
 		raiz.add_child(tw)
 		var fila_w := HBoxContainer.new()
 		fila_w.add_theme_constant_override("separation", 6)
@@ -141,7 +141,7 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 	## todos los domingos: es de esas cosas que hacen que el club sea tuyo.
 	raiz.add_child(HSeparator.new())
 	var tct: Label = texto.call(11, colores["acento"])
-	tct.text = "👔 UNIFORME DEL CUERPO TÉCNICO"
+	tct.text = Idiomas.t("👔 UNIFORME DEL CUERPO TÉCNICO")
 	raiz.add_child(tct)
 	var muestra := TextureRect.new()
 	muestra.texture = Jersey.textura_procedural(cd.color_ct1(c), cd.color_ct2(c), "liso", 72)
@@ -186,7 +186,7 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 				cd.ct_color2 = "#" + nuevo.to_html(false))
 		fila_col.add_child(pk)
 	var b_igual := Button.new()
-	b_igual.text = "Igualar a los colores del club"
+	b_igual.text = Idiomas.t("Igualar a los colores del club")
 	b_igual.add_theme_font_size_override("font_size", 11)
 	b_igual.pressed.connect(func() -> void:
 		cd.ct_color1 = ""
@@ -199,11 +199,11 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 	## la previa, que es el único sitio donde esa promesa significa algo.
 	raiz.add_child(HSeparator.new())
 	var tfr: Label = texto.call(11, colores["acento"])
-	tfr.text = "🧱 FRASE EN LA PARED DEL VESTUARIO"
+	tfr.text = Idiomas.t("🧱 FRASE EN LA PARED DEL VESTUARIO")
 	raiz.add_child(tfr)
 	var campo_fr := LineEdit.new()
 	campo_fr.text = cd.frase
-	campo_fr.placeholder_text = "Lo que quieres que lean antes de salir"
+	campo_fr.placeholder_text = Idiomas.t("Lo que quieres que lean antes de salir")
 	campo_fr.max_length = ClubDentro.FRASE_MAX
 	campo_fr.add_theme_font_size_override("font_size", 12)
 	campo_fr.text_submitted.connect(func(t: String) -> void:
@@ -213,7 +213,7 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 		cd.escribir_frase(campo_fr.text))
 	raiz.add_child(campo_fr)
 	var vista_fr: Label = texto.call(13, Color(cd.color_ct2(c)) if cd.frase != "" else colores["suave"])
-	vista_fr.text = "«%s»" % cd.frase if cd.frase != "" else "Se lee en el túnel antes de cada partido."
+	vista_fr.text = "«%s»" % cd.frase if cd.frase != "" else Idiomas.t("Se lee en el túnel antes de cada partido.")
 	vista_fr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vista_fr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(vista_fr)

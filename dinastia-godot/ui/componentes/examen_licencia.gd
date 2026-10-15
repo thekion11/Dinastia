@@ -58,7 +58,7 @@ func _pintar() -> void:
 				f.custom_minimum_size = Vector2(580, 0)
 				_caja.add_child(f)
 		var b := Button.new()
-		b.text = "Cerrar"
+		b.text = Idiomas.t("Cerrar")
 		b.pressed.connect(func() -> void:
 			cerrado.emit()
 			queue_free())

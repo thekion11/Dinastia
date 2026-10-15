@@ -92,7 +92,7 @@ func _montar() -> void:
 	_aviso.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
 	add_child(_aviso)
 	var salir := Button.new()
-	salir.text = "Salir"
+	salir.text = Idiomas.t("Salir")
 	salir.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	salir.offset_left = -110
 	salir.offset_right = -20
@@ -183,7 +183,7 @@ var _prox_hincha := 0.0
 func _autografos_empezar() -> void:
 	_t = 30.0
 	_activo = true
-	_aviso.text = "¡Toca a los hinchas que levantan la mano antes de que se vayan! (clic, toque o E)"
+	_aviso.text = Idiomas.t("¡Toca a los hinchas que levantan la mano antes de que se vayan! (clic, toque o E)")
 	## La plaza: adoquín, el círculo central, la fuente, bancos y farolas.
 	Mini3D.caja(_raiz, Vector3(0, -0.1, 0), Vector3(140, 0.2, 140), Mini3D.mat(Color(0.5, 0.45, 0.4), 0.9))
 	## Adoquines en damero suave y el círculo central de piedra más oscura.
@@ -292,11 +292,11 @@ func _autografos(delta: float) -> void:
 	if not _activo:
 		return
 	_t -= delta
-	_titulo.text = "✍️ Autógrafos en la Plaza Mayor  ·  %d s  ·  firmados: %d  ·  récord: %d" % [int(ceil(_t)), _puntos, records["autografos"]]
+	_titulo.text = Idiomas.t("✍️ Autógrafos en la Plaza Mayor  ·  %d s  ·  firmados: %d  ·  récord: %d") % [int(ceil(_t)), _puntos, records["autografos"]]
 	if _t <= 0.0:
 		_activo = false
 		records["autografos"] = maxi(int(records["autografos"]), _puntos)
-		_aviso.text = "¡Firmaste %d autógrafos! %s" % [_puntos, "La plaza entera coreó tu nombre." if _puntos >= 14 else "La gente se fue contenta."]
+		_aviso.text = Idiomas.t("¡Firmaste %d autógrafos! %s") % [_puntos, Idiomas.t("La plaza entera coreó tu nombre.") if _puntos >= 14 else Idiomas.t("La gente se fue contenta.")]
 		Mini3D.anim(_yo, "celebrar" if _puntos >= 14 else "aplaudir", "parado")
 		for h: Dictionary in _hinchas:
 			if String(h["estado"]) in ["llega", "espera"]:
@@ -499,7 +499,7 @@ func _pesca_empezar() -> void:
 	_cam.position = Vector3(3.6, 3.1, 3.4)
 	_cam.look_at(Vector3(-0.4, 0.4, -7.5), Vector3.UP)
 	var tirar := Button.new()
-	tirar.text = "¡TIRAR! (espacio)"
+	tirar.text = Idiomas.t("¡TIRAR! (espacio)")
 	tirar.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	tirar.offset_top = -120
 	tirar.offset_bottom = -80
@@ -513,12 +513,12 @@ func _nueva_lanzada() -> void:
 	if _lanzadas >= 6:
 		_estado_pesca = "fin"
 		records["pesca"] = maxi(int(records["pesca"]), _puntos)
-		_aviso.text = "Fin de la pesca: %d puntos. %s" % [_puntos, ", ".join(_capturas) if not _capturas.is_empty() else "Hoy no picó nada."]
+		_aviso.text = Idiomas.t("Fin de la pesca: %d puntos. %s") % [_puntos, ", ".join(_capturas) if not _capturas.is_empty() else Idiomas.t("Hoy no picó nada.")]
 		_corcho.visible = false
 		Mini3D.anim(_yo, "celebrar" if _puntos >= 10 else "parado", "parado")
 		return
 	_estado_pesca = "lanzando"
-	_aviso.text = "Lanzada %d de 6…" % (_lanzadas + 1)
+	_aviso.text = Idiomas.t("Lanzada %d de 6…") % (_lanzadas + 1)
 	_corcho_base = Vector3(_rng.randf_range(-1.6, 2.4), 0.0, _rng.randf_range(-11.5, -8.5))
 	## La caña va atrás y sale disparada; el corcho vuela en arco al agua.
 	var tw := create_tween()
@@ -537,7 +537,7 @@ func _nueva_lanzada() -> void:
 		_salpicar(_corcho_base, 0.6)
 		_estado_pesca = "espera"
 		_t = _rng.randf_range(1.5, 4.5)
-		_aviso.text = "Lanzada %d de 6. Espera a que pique…" % (_lanzadas + 1))
+		_aviso.text = Idiomas.t("Lanzada %d de 6. Espera a que pique…") % (_lanzadas + 1))
 
 ## Salpicadura: un anillo que se abre en el agua y gotas que saltan.
 func _salpicar(p: Vector3, fuerza: float) -> void:
@@ -563,7 +563,7 @@ func _salpicar(p: Vector3, fuerza: float) -> void:
 		tg.tween_callback(g.queue_free)
 
 func _pesca(delta: float) -> void:
-	_titulo.text = "🎣 Pesca en el puerto fluvial  ·  puntos: %d  ·  récord: %d" % [_puntos, records["pesca"]]
+	_titulo.text = Idiomas.t("🎣 Pesca en el puerto fluvial  ·  puntos: %d  ·  récord: %d") % [_puntos, records["pesca"]]
 	var ms := Time.get_ticks_msec()
 	if _bote != null:
 		_bote.rotation.z = sin(ms * 0.0011) * 0.05
@@ -583,11 +583,11 @@ func _pesca(delta: float) -> void:
 	if _estado_pesca == "espera" and _t <= 0.0:
 		_estado_pesca = "pica"
 		_t = 0.75
-		_aviso.text = "¡¡PICA!!"
+		_aviso.text = Idiomas.t("¡¡PICA!!")
 		_salpicar(_corcho_base, 0.8)
 	elif _estado_pesca == "pica" and _t <= 0.0:
 		_lanzadas += 1
-		_aviso.text = "Se escapó… demasiado lento."
+		_aviso.text = Idiomas.t("Se escapó… demasiado lento.")
 		Mini3D.anim(_yo, "manos_cabeza", "brazos_al_frente")
 		_recoger(1.4)
 
@@ -621,7 +621,7 @@ func _tirar() -> void:
 		var pez: Array = PECES[_rng.randi() % PECES.size()]
 		_puntos += int(pez[1])
 		_capturas.append(String(pez[0]).split(" ", true, 1)[0])
-		_aviso.text = "¡Sacaste %s! (+%d)" % [pez[0], pez[1]]
+		_aviso.text = Idiomas.t("¡Sacaste %s! (+%d)") % [pez[0], pez[1]]
 		_lanzadas += 1
 		_estado_pesca = "sacando"
 		_cana.rotation.x = 0.9
@@ -630,7 +630,7 @@ func _tirar() -> void:
 		Mini3D.anim(_yo, "puno_al_aire" if int(pez[1]) > 0 else "manos_cabeza", "brazos_al_frente")
 		_recoger(1.8)
 	elif _estado_pesca == "espera":
-		_aviso.text = "Tiraste antes de tiempo: se espantó el pez."
+		_aviso.text = Idiomas.t("Tiraste antes de tiempo: se espantó el pez.")
 		_lanzadas += 1
 		Mini3D.anim(_yo, "cabeza_gacha", "brazos_al_frente")
 		_recoger(1.2)
@@ -780,7 +780,7 @@ func _kart_empezar() -> void:
 		Mini3D.caja(_raiz, Vector3(0.5, 2.6, z), Vector3(0.4, 5.2, 0.4), portico)
 	Mini3D.caja(_raiz, Vector3(0.5, 5.4, RADIO), Vector3(0.6, 0.9, ANCHO_PISTA + 2.6), portico)
 	var cartel := Label3D.new()
-	cartel.text = "🏁 META"
+	cartel.text = Idiomas.t("🏁 META")
 	cartel.font_size = 96
 	cartel.pixel_size = 0.012
 	cartel.position = Vector3(-0.1, 5.4, RADIO)
@@ -813,7 +813,7 @@ func _kart_empezar() -> void:
 	_semaforo.add_theme_constant_override("outline_size", 12)
 	_semaforo.add_theme_color_override("font_outline_color", Color.BLACK)
 	add_child(_semaforo)
-	_aviso.text = "Flechas o WASD. Tres vueltas. ¡Que no se te vaya del asfalto!"
+	_aviso.text = Idiomas.t("Flechas o WASD. Tres vueltas. ¡Que no se te vaya del asfalto!")
 	_colocar_kart(1.0)
 
 func _suelo_verde() -> MeshInstance3D:
@@ -947,7 +947,7 @@ func _kart(delta: float) -> void:
 	if _paso_arriba and _kp.z > 0.0 and antes.x < 0.5 and _kp.x >= 0.5:
 		_vueltas += 1
 		_paso_arriba = false
-	_titulo.text = "🏎️ Karting · vuelta %d de 3 · %.1f s · posición %d.º de 4 · récord: %s" % [mini(_vueltas + 1, 3), _crono, delante + 1,
+	_titulo.text = Idiomas.t("🏎️ Karting · vuelta %d de 3 · %.1f s · posición %d.º de 4 · récord: %s") % [mini(_vueltas + 1, 3), _crono, delante + 1,
 		("%.1f s" % records["karting"]) if float(records["karting"]) > 0.0 else "—"]
 	if _vueltas >= 3:
 		_fin_kart = true
@@ -955,9 +955,9 @@ func _kart(delta: float) -> void:
 		var puesto := "¡Ganaste la carrera!" if delante == 0 else "Llegaste %d.º." % (delante + 1)
 		if mejor <= 0.0 or _crono < mejor:
 			records["karting"] = _crono
-			_aviso.text = "%s ¡Nuevo récord del circuito: %.1f s!" % [puesto, _crono]
+			_aviso.text = Idiomas.t("%s ¡Nuevo récord del circuito: %.1f s!") % [puesto, _crono]
 		else:
-			_aviso.text = "%s Tiempo: %.1f s (récord %.1f s)." % [puesto, _crono, mejor]
+			_aviso.text = Idiomas.t("%s Tiempo: %.1f s (récord %.1f s).") % [puesto, _crono, mejor]
 
 ## Lo recorrido en la vuelta (para la posición).
 func _progreso(p: Vector3) -> float:

@@ -186,11 +186,11 @@ func _montar() -> void:
 	fila.add_theme_constant_override("separation", 8)
 	add_child(fila)
 	var sig := Button.new()
-	sig.text = "Siguiente ▶"
+	sig.text = Idiomas.t("Siguiente ▶")
 	sig.pressed.connect(_siguiente)
 	fila.add_child(sig)
 	var salir := Button.new()
-	salir.text = "Saltar ✕"
+	salir.text = Idiomas.t("Saltar ✕")
 	salir.pressed.connect(queue_free)
 	fila.add_child(salir)
 	_siguiente()
@@ -206,7 +206,7 @@ func _siguiente() -> void:
 	_texto.text = String(cap["texto"])
 	_texto.visible_ratio = 0.0
 	_escribiendo = 0.0
-	_puntos.text = "🎬 DOCUMENTAL  ·  %d / %d" % [_i + 1, _caps.size()]
+	_puntos.text = Idiomas.t("🎬 DOCUMENTAL  ·  %d / %d") % [_i + 1, _caps.size()]
 	for h in _imagen.get_children():
 		h.queue_free()
 	var tex: Texture2D = null

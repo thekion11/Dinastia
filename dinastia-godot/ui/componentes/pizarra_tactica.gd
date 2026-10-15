@@ -108,7 +108,7 @@ static func _ficha_jugador(j: Jugador, puesto: String, natural: bool, c: Club, f
 	b.flat = true
 	b.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	b.tooltip_text = "%s · %s · media %d%s" % [j.nombre, j.pos_e, j.ovr, "" if natural else " · FUERA DE SU PUESTO"]
+	b.tooltip_text = Idiomas.t("%s · %s · media %d%s") % [j.nombre, j.pos_e, j.ovr, "" if natural else Idiomas.t(" · FUERA DE SU PUESTO")]
 	if ficha.is_valid():
 		b.pressed.connect(func() -> void: ficha.call(j))
 	var raiz := Control.new()

@@ -98,7 +98,7 @@ func _construir() -> void:
 	raiz.offset_top = 40
 	raiz.offset_bottom = -30
 	var tit := _texto(12, COL_SUAVE)
-	tit.text = "RESUMEN DEL PARTIDO" if _animado else "RESULTADO"
+	tit.text = Idiomas.t("RESUMEN DEL PARTIDO") if _animado else Idiomas.t("RESULTADO")
 	tit.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(tit)
 	_marcador = _texto(38, COL_TEXTO)
@@ -120,12 +120,12 @@ func _construir() -> void:
 	fila.add_theme_constant_override("separation", 10)
 	raiz.add_child(fila)
 	_btn_saltar = Button.new()
-	_btn_saltar.text = "⏭ Saltar"
+	_btn_saltar.text = Idiomas.t("⏭ Saltar")
 	_btn_saltar.custom_minimum_size = Vector2(140, 36)
 	_btn_saltar.pressed.connect(_mostrar_todo)
 	fila.add_child(_btn_saltar)
 	_btn_seguir = Button.new()
-	_btn_seguir.text = "Continuar ▶"
+	_btn_seguir.text = Idiomas.t("Continuar ▶")
 	_btn_seguir.custom_minimum_size = Vector2(160, 36)
 	_btn_seguir.visible = false
 	_btn_seguir.pressed.connect(func() -> void: cerrado.emit())
@@ -192,23 +192,23 @@ func _mostrar_todo() -> void:
 	var suyos := partido.goles_visita if mio_local else partido.goles_local
 	var fin := "VICTORIA" if mios > suyos else ("DERROTA" if mios < suyos else "EMPATE")
 	var col := COL_BIEN if mios > suyos else (COL_MAL if mios < suyos else COL_SUAVE)
-	_reloj.text = "FINAL · " + fin
+	_reloj.text = Idiomas.t("FINAL · ") + fin
 	_reloj.add_theme_color_override("font_color", col)
 	if not _penales.is_empty():
 		var pase_local := int(_penales[0]) > int(_penales[1])
 		var l := _texto(15, COL_ORO)
-		l.text = "Penales %d - %d: %s" % [int(_penales[0]), int(_penales[1]),
-			"pasas de ronda" if pase_local == mio_local else "quedas eliminado"]
+		l.text = Idiomas.t("Penales %d - %d: %s") % [int(_penales[0]), int(_penales[1]),
+			Idiomas.t("pasas de ronda") if pase_local == mio_local else Idiomas.t("quedas eliminado")]
 		_lista.add_child(l)
 	if _momentos.is_empty():
 		var nada := _texto(14, COL_SUAVE)
-		nada.text = "Un partido sin grandes ocasiones."
+		nada.text = Idiomas.t("Un partido sin grandes ocasiones.")
 		_lista.add_child(nada)
 	## Los números del partido, los mismos que da la crónica en vivo.
 	var sep := HSeparator.new()
 	_lista.add_child(sep)
 	var stats := _texto(14, COL_SUAVE)
-	stats.text = "Posesión %d%% - %d%%   ·   Remates %d - %d   ·   Al arco %d - %d   ·   xG %.2f - %.2f" % [
+	stats.text = Idiomas.t("Posesión %d%% - %d%%   ·   Remates %d - %d   ·   Al arco %d - %d   ·   xG %.2f - %.2f") % [
 		int(round(partido.posesion_local)), 100 - int(round(partido.posesion_local)),
 		partido.remates_local, partido.remates_visita,
 		partido.tiros_puerta_local, partido.tiros_puerta_visita,

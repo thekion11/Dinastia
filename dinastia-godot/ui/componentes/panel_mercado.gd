@@ -102,22 +102,22 @@ func _pintar_estado_ventana() -> void:
 	if _mundo.roles != null:
 		if _mundo.roles.emergencia_activa():
 			var e := _lbl(11, COL_ORO)
-			e.text = "📋 Ventana de emergencia: puedes cerrar UN fichaje aunque el mercado esté cerrado."
+			e.text = Idiomas.t("📋 Ventana de emergencia: puedes cerrar UN fichaje aunque el mercado esté cerrado.")
 			e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			add_child(e)
 		var bloqueo := _mundo.roles.mercado_bloqueado()
 		if bloqueo != "":
 			var b := _lbl(11, COL_ROJO)
 			if bloqueo == "interinato":
-				b.text = "Estás de interino: no fichas hasta que se resuelva. Te quedan %d fecha(s)." \
+				b.text = Idiomas.t("Estás de interino: no fichas hasta que se resuelva. Te quedan %d fecha(s).") \
 					% _mundo.roles.fechas_interinato_restantes()
 			else:
-				b.text = "Eres ayudante: los fichajes los firma tu jefe. Puedes proponer, no comprar."
+				b.text = Idiomas.t("Eres ayudante: los fichajes los firma tu jefe. Puedes proponer, no comprar.")
 			b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			add_child(b)
 
 	var nota := _lbl(10, COL_SUAVE)
-	nota.text = "Ventanas de pases: semanas 1–6 y 18–24. Libres y precontratos funcionan todo el año."
+	nota.text = Idiomas.t("Ventanas de pases: semanas 1–6 y 18–24. Libres y precontratos funcionan todo el año.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(nota)
 	add_child(HSeparator.new())
@@ -126,7 +126,7 @@ func _pintar_estado_ventana() -> void:
 func _pintar_mesa_negociacion(n: Negociacion) -> void:
 	var vendedor: Club = _mundo.clubes.get(n.club_vendedor_id)
 	var t := _lbl(11, COL_ORO)
-	t.text = "MESA DE NEGOCIACIÓN  ·  %s  (%s)  ·  ronda %d" % [
+	t.text = Idiomas.t("MESA DE NEGOCIACIÓN  ·  %s  (%s)  ·  ronda %d") % [
 		n.jugador.nombre if n.jugador else "—",
 		vendedor.nombre if vendedor else "?",
 		n.ronda
@@ -135,7 +135,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 
 	if n.rival_id != "":
 		var av := _lbl(11, COL_ROJO)
-		av.text = "Otro club anda detrás de él: cuanto más se alargue la mesa, más riesgo de perderlo."
+		av.text = Idiomas.t("Otro club anda detrás de él: cuanto más se alargue la mesa, más riesgo de perderlo.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		add_child(av)
 
@@ -146,7 +146,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 
 	# ── CON EL CLUB ───────────────────────────────────────────────────────
 	var tc := _lbl(11, COL_SUAVE)
-	tc.text = "CON EL CLUB"
+	tc.text = Idiomas.t("CON EL CLUB")
 	add_child(tc)
 	var gc := GridContainer.new()
 	gc.columns = 4
@@ -160,7 +160,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 
 	# ── PARTE DE PAGO: uno de los tuyos ──────────────────────────────────
 	var ti := _lbl(11, COL_SUAVE)
-	ti.text = "PARTE DE PAGO: UNO DE LOS TUYOS"
+	ti.text = Idiomas.t("PARTE DE PAGO: UNO DE LOS TUYOS")
 	add_child(ti)
 	var mio_neg := _mundo.mi_club()
 	if mio_neg != null:
@@ -175,7 +175,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 		add_child(flow_ic)
 		if candidatos.is_empty():
 			var vac := _lbl(11, COL_SUAVE)
-			vac.text = "Nadie de tu plantel se acerca a su nivel."
+			vac.text = Idiomas.t("Nadie de tu plantel se acerca a su nivel.")
 			flow_ic.add_child(vac)
 		for x: Jugador in candidatos.slice(0, 8):
 			var bi := Button.new()
@@ -188,7 +188,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 
 	# ── CON ÉL (rol prometido + condiciones) ─────────────────────────────
 	var tj := _lbl(11, COL_SUAVE)
-	tj.text = "CON ÉL"
+	tj.text = Idiomas.t("CON ÉL")
 	add_child(tj)
 	var flow := HFlowContainer.new()
 	flow.add_theme_constant_override("h_separation", 6)
@@ -213,7 +213,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 	_fila_ajuste(gj, "Prima de fichaje",  _dinero(n.firma),   n, "firma")
 
 	var bcl := Button.new()
-	bcl.text = "Cláusula: sí" if n.clausula else "Cláusula: no"
+	bcl.text = Idiomas.t("Cláusula: sí") if n.clausula else Idiomas.t("Cláusula: no")
 	bcl.add_theme_font_size_override("font_size", 11)
 	bcl.pressed.connect(func() -> void: rol_ajustado.emit("__clausula__"))
 	add_child(bcl)
@@ -223,7 +223,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 		var tipo := String(_ultimo_resultado.get("tipo", ""))
 		if tipo == "jugador_no":
 			var lr := _lbl(12, COL_SUAVE)
-			lr.text = "Le quedan reuniones de paciencia. %s" % String(_ultimo_resultado.get("motivo", ""))
+			lr.text = Idiomas.t("Le quedan reuniones de paciencia. %s") % String(_ultimo_resultado.get("motivo", ""))
 			lr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			add_child(lr)
 
@@ -233,12 +233,12 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 	add_child(fbot)
 
 	var benv := Button.new()
-	benv.text = "Enviar oferta"
+	benv.text = Idiomas.t("Enviar oferta")
 	benv.pressed.connect(func() -> void: oferta_enviada.emit())
 	fbot.add_child(benv)
 
 	var bcan := Button.new()
-	bcan.text = "Levantarse de la mesa"
+	bcan.text = Idiomas.t("Levantarse de la mesa")
 	bcan.pressed.connect(func() -> void: negociacion_cancelada.emit())
 	fbot.add_child(bcan)
 
@@ -269,7 +269,7 @@ func _fila_ajuste(g: GridContainer, etiqueta: String, valor_txt: String,
 # ── OFERTAS RECIBIDAS ─────────────────────────────────────────────────────
 func _pintar_ofertas_recibidas(mio: Club) -> void:
 	var t := _lbl(11, COL_SUAVE)
-	t.text = "OFERTAS RECIBIDAS"
+	t.text = Idiomas.t("OFERTAS RECIBIDAS")
 	add_child(t)
 
 	var puede_vender := _mundo.roles == null or _mundo.roles.puede_vender_jugadores()
@@ -285,11 +285,11 @@ func _pintar_ofertas_recibidas(mio: Club) -> void:
 		add_child(fila)
 
 		var l := _lbl(12, COL_TEXTO)
-		l.text = "%s — %s ofrece %s%s" % [
+		l.text = Idiomas.t("%s — %s ofrece %s%s") % [
 			jo.nombre,
 			co.nombre,
 			_dinero(int(o["monto"])),
-			"  (cláusula: no se puede rechazar)" if es_clausula else ""
+			Idiomas.t("  (cláusula: no se puede rechazar)") if es_clausula else ""
 		]
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -300,22 +300,22 @@ func _pintar_ofertas_recibidas(mio: Club) -> void:
 			var neto := _mundo.cesiones.neto_de_venta(jo, int(o["monto"]))
 			if neto < int(o["monto"]):
 				var ln := _lbl(10, COL_ROJO)
-				ln.text = "   de eso, el club se queda %s: hay un fondo con parte de su pase" % _dinero(neto)
+				ln.text = Idiomas.t("   de eso, el club se queda %s: hay un fondo con parte de su pase") % _dinero(neto)
 				add_child(ln)
 
 		var idx := i
 		if es_clausula:
 			var ba := Button.new()
-			ba.text = "Aceptar"
+			ba.text = Idiomas.t("Aceptar")
 			ba.pressed.connect(func() -> void: oferta_respondida.emit(idx, true))
 			fila.add_child(ba)
 		elif puede_vender:
 			var ba := Button.new()
-			ba.text = "Aceptar"
+			ba.text = Idiomas.t("Aceptar")
 			ba.pressed.connect(func() -> void: oferta_respondida.emit(idx, true))
 			fila.add_child(ba)
 			var br := Button.new()
-			br.text = "Rechazar"
+			br.text = Idiomas.t("Rechazar")
 			br.pressed.connect(func() -> void: oferta_respondida.emit(idx, false))
 			fila.add_child(br)
 		else:
@@ -326,7 +326,7 @@ func _pintar_ofertas_recibidas(mio: Club) -> void:
 # ── FILTROS ───────────────────────────────────────────────────────────────
 func _pintar_filtros(mio: Club) -> void:
 	var t := _lbl(11, COL_SUAVE)
-	t.text = "FILTRAR"
+	t.text = Idiomas.t("FILTRAR")
 	add_child(t)
 
 	var fila := HBoxContainer.new()
@@ -335,7 +335,7 @@ func _pintar_filtros(mio: Club) -> void:
 
 	# Buscador por nombre
 	var buscar := LineEdit.new()
-	buscar.placeholder_text = "Buscar por nombre…"
+	buscar.placeholder_text = Idiomas.t("Buscar por nombre…")
 	buscar.text = _filtro_texto
 	buscar.custom_minimum_size = Vector2(190, 0)
 	buscar.add_theme_font_size_override("font_size", 11)
@@ -362,7 +362,7 @@ func _pintar_filtros(mio: Club) -> void:
 
 	# Filtro de presupuesto
 	var bp := Button.new()
-	bp.text = "Solo lo que puedo pagar"
+	bp.text = Idiomas.t("Solo lo que puedo pagar")
 	bp.toggle_mode = true
 	bp.button_pressed = _filtro_pagables
 	bp.add_theme_font_size_override("font_size", 11)
