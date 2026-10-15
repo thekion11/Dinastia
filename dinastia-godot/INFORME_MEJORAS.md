@@ -257,7 +257,9 @@ palabras «TODO» en español, «todos»). Marcadores de trabajo pendiente reale
 
 ## E. Partido: física, IA, controles, cámara, presentación (M-113 … M-166)
 
-- **M-113 · P1 · M** Sesgo de local (M-01). *Cómo*: sonda N≥30 y calibración explícita.
+- **M-113 · P1 · M** ✅ (15-10) Sesgo de local (M-01): con N=100 no existe (antes 0,63–0,67,
+  después 0,68–0,71 goles con el mismo once); corregidas dos asimetrías reales (efecto de
+  centros/córners y zonas de balón parado sin reflejar). Ver INFORME_INTERNO §6.
 - **M-114 · P1 · M** Teletransportes del balón en sonda (M-02). *Cómo*: separar reposiciones.
 - **M-115 · P1 · M** Giros >720°/s (465). *Cómo*: limitar velocidad angular y suavizar.
 - **M-116 · P1 · C** Sin duelos con contacto (M-03). *Cómo*: zonas de contacto y empuje.
@@ -896,9 +898,12 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 
 ## R. Pasada 3 (M-443 … M-470)
 
-- **M-443 · P1 · M** La IA del motor no amaga (0 en un partido de prueba). *Falta*: fintas de
-  la IA visibles. *Cómo*: subir el umbral de `presion < 1.8` a ~2,6 m, probar antes de pasar
-  si hay rival al frente y repetir la sonda de calidad (N ≥ 8) para no romper la calibración.
+- **M-443 · P1 · M** ✅ (15-10) La IA del motor no amaga (0 en un partido de prueba). Hecho:
+  amago al ver venir al defensor (1,3-3,6 m delante, en carrera, una tirada por duelo, ganas
+  por regate y zona) + finta de último recurso con inercia (sin el salto de 0,8 m). Sonda
+  (N=12-24): ~21 fintas por partido, 45-50 % engañan; goles 2,6-2,8, pases 68-71 %,
+  paradas 69-75 %; el mejor gana (8/3/1 de local) y la pizarra pesa más (ofensiva 5/1/2,
+  defensiva 0/1/7). Pendiente: en el partido 3D la tasa medida es menor (~6 por 90').
 - **M-444 · P2 · M** Fuga de texturas GL al cerrar `prueba_carrera_flujo`. *Cómo*: liberar
   `Retrato3D`/`Portada` (cachés estáticas) al salir con `NOTIFICATION_WM_CLOSE_REQUEST`.
 - **M-445 · P2 · M** Pruebas que no caben en 5 min con render por software (`intro`,
