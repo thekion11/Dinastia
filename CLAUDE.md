@@ -15,7 +15,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   cadenas largas en segundo plano.
 - El banco `pruebas/banco.gd` debe terminar en «FIN. 0 fallos» antes de subir.
   Lanzarlo con `herramientas/banco.sh` (código 0 = ok; corta en errores de sintaxis,
-  cuelgues y «SCRIPT ERROR»).
+  cuelgues y «SCRIPT ERROR»). Corre EN PARALELO (4 procesos, `BANCO_PARTE=i/N`,
+  reparto por `COSTES` en banco.gd): 162 s → ~83 s. `BANCO_PARTES=1` = en serie. Al
+  final muestra las secciones más lentas; si una crece mucho, actualizar `COSTES`.
+  Sección nueva en banco.gd = añadirla a `SECCIONES`.
 - (15-10) Lo visual se revisa en FORWARD+, que es lo que ve el jugador de PC: capturas
   con `herramientas/captura.sh res://pruebas/captura_x.tscn` (Forward+ por defecto,
   `--compat` solo para móvil/web/motor ligero; sin GPU necesita
@@ -549,3 +552,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
     escenarios fijos, COMPRIMIR TEXTURAS (3087 de 3149 sin comprimir), y C++/GDExtension
     solo si tras medir hace falta. Python solo se usa en herramientas, no en el juego.
   · Orden vigente sigue siendo la MEGA AUDITORÍA 2 (mejorar lo que hay).
+  · HALLAZGO (no arreglado): en `_probar_motor_libre`, «con el bono del club se generan
+    más ocasiones» solo pasa porque los jugadores llegan con estado de los partidos
+    anteriores de la misma sección; con jugadores frescos da xG 56,0 vs 59,6 (falla).
+    `MotorLibre` es el prototipo (el juego usa `MotorJugable`); la prueba no se tocó.
