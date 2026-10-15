@@ -65,6 +65,10 @@ func _process(_d: float) -> void:
 			var u: Dictionary = _motor.usuario
 			_motor.estado = "juego"
 			_motor.poseedor = {}
+			## Desde el centro: «arriba» va según la cámara de TV (hacia una
+			## banda) y desde su puesto se salía del campo antes de acabar.
+			var nodo_u := u["node"] as Node3D
+			nodo_u.position = Vector3(0.0, nodo_u.position.y, nodo_u.position.z)
 			_motor.balon.position = _motor.pos(u) + Vector3(0, 0.11, 0.3)
 			_motor.vel_balon = Vector3.ZERO
 			_motor.call("_tomar", u)
@@ -93,13 +97,10 @@ func _process(_d: float) -> void:
 				_avanzar(90)
 				## Cambiar de jugador con Q (como en FC, cuando defiendes: el
 				## balón lo tiene un rival).
+				## Con el helper: deja el partido en juego (si el pase acabó
+				## fuera, en «saque» Q no hace nada).
+				_balon_a_rival()
 				_dato["antes"] = _motor.usuario
-				for q: Dictionary in _motor.jugadores:
-					if not bool(q["es_local"]) and not bool(q["por"]):
-						_motor.balon.position = _motor.pos(q) + Vector3(0, 0.11, 0.3)
-						_motor.poseedor = {}
-						_motor.call("_tomar", q)
-						break
 				_pulsar("jugar_cambiar", true)
 				_avanzar(1)
 				_paso = 3
@@ -114,6 +115,8 @@ func _process(_d: float) -> void:
 				(u2["node"] as Node3D).position = Vector3(0, 0, 30.0)
 				_motor.balon.position = Vector3(0, 0.11, 30.4)
 				_motor.vel_balon = Vector3.ZERO
+				## Si quedó un saque pendiente, el tiro no se puede cargar.
+				_motor.estado = "juego"
 				_motor.poseedor = {}
 				_motor.call("_tomar", u2)
 				_dato["tiros"] = int(_motor.tiros[0])
