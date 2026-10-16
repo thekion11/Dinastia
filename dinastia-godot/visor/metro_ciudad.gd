@@ -259,6 +259,7 @@ func alternar_rayos_x() -> bool:
 
 func _process(delta: float) -> void:
 	_gente_cerca(delta)
+	_embarques(delta)
 	for l: Dictionary in lineas:
 		var a: Vector3 = l["a"]
 		var dir: Vector3 = l["dir"]
@@ -650,8 +651,11 @@ func _amueblar_anden(p: Vector3, fondo: Vector3, hacia: Vector3, lon: Vector3, y
 			sitios.append({"p": en.call(db, f + 0.45), "giro": g2 + PI, "sentado": false, "charla": true})
 		else:
 			sitios.append({"p": en.call(db, f), "giro": giro, "sentado": false})
-	_sitios.append({"centro": base + hacia * (ancho * 0.5), "clave": "%s|%s|%d" % [nombre, str(elevada), int(fondo.x + fondo.z)],
-		"sitios": sitios, "elevada": elevada, "col": col, "p": p})
+	## La salida del andén (la llegada de la escalera, +25..+30 a lo largo):
+	## por ahí se van los que bajan del tren y llegan los que vienen a esperar.
+	var centro: Vector3 = base + hacia * (ancho * 0.5)
+	_sitios.append({"centro": centro, "clave": "%s|%s|%d" % [nombre, str(elevada), int(fondo.x + fondo.z)],
+		"sitios": sitios, "elevada": elevada, "col": col, "p": p, "salida": centro + lon * 27.5})
 
 ## Una caja de tamaño `t` (x = ancho, z = grosor) puesta de cara a lo largo de `lon`.
 static func _tam_lon(lon: Vector3, t: Vector3) -> Vector3:
@@ -683,6 +687,8 @@ func _gente_cerca(delta: float) -> void:
 	## Se crea una persona por fotograma (crear muchas de golpe da tirones).
 	if not _cola_gente.is_empty() and _gente != null:
 		_crear_persona(_cola_gente.pop_front())
+	if not _cola_pas.is_empty() and _pas_nodo != null and is_instance_valid(_pas_nodo):
+		_crear_pasajero(_cola_pas.pop_front())
 	for f: Dictionary in _fijos_gente:
 		if not bool(f["charla"]):
 			continue
@@ -690,6 +696,12 @@ func _gente_cerca(delta: float) -> void:
 		if float(f["t"]) <= 0.0:
 			f["t"] = _rng_gente.randf_range(4.0, 9.0)
 			Mini3D.anim(f["d"], "charla" if _rng_gente.randf() < 0.7 else "parado", "")
+	## En pasos cortos: con fotogramas lentos, un paso de un metro de golpe hacía
+	## que el esquive rebotara y la gente se quedara clavada.
+	var pasos := mini(20, ceili(delta / 0.05))
+	for _i in pasos:
+		_mover_caminantes(delta / float(pasos))
+	_llegadas(delta)
 	_t_gente -= delta
 	if _t_gente > 0.0:
 		return
@@ -698,6 +710,7 @@ func _gente_cerca(delta: float) -> void:
 	if cam == null:
 		return
 	var yo := cam.global_position
+	_pasajeros_cerca(yo)
 	var mejor: Dictionary = {}
 	var dmin := RADIO_GENTE
 	for e: Dictionary in _sitios:
@@ -715,6 +728,12 @@ func _gente_cerca(delta: float) -> void:
 		_gente = null
 	_cola_gente.clear()
 	_fijos_gente.clear()
+	_caminantes.clear()
+	_embarque.clear()
+	_huecos.clear()
+	_gente_linea = ""
+	_gente_idx = -1
+	_gente_lados.clear()
 	if clave == "":
 		return
 	_gente = Node3D.new()
@@ -723,18 +742,50 @@ func _gente_cerca(delta: float) -> void:
 	_rng_gente.seed = hash(clave)
 	for e: Dictionary in _sitios:
 		if str(e["p"]) == clave:
+			_gente_lados.append(e)
 			for s: Dictionary in e["sitios"]:
 				## No todos los asientos ocupados.
 				if bool(s["sentado"]) and _rng_gente.randf() < 0.45:
 					continue
-				_cola_gente.append(s)
+				_cola_gente.append({"tipo": "sitio", "s": s, "e": e})
+	## Qué línea y qué estación es (para saber cuándo para su tren).
+	for l: Dictionary in lineas:
+		if bool(l["elevada"]) != bool(mejor["elevada"]):
+			continue
+		for i in (l["estaciones"] as Array).size():
+			if (l["estaciones"][i] as Vector3).distance_to(mejor["p"]) < 0.5:
+				_gente_linea = String(l["nombre"])
+				_gente_idx = i
 
-func _crear_persona(s: Dictionary) -> void:
+func _crear_persona(item: Dictionary) -> void:
+	match String(item["tipo"]):
+		"sitio":
+			var s: Dictionary = item["s"]
+			var d := Mini3D.persona(_gente, _rng_gente, s["p"])
+			if d.is_empty():
+				return
+			_asentar(d, s, item["e"])
+		"bajar":
+			var ruta: Array = item["ruta"]
+			var d2 := Mini3D.persona(_gente, _rng_gente, ruta[0])
+			if d2.is_empty():
+				return
+			(d2["nodo"] as Node3D).rotation.y = atan2((ruta[1] - ruta[0]).x, (ruta[1] - ruta[0]).z)
+			_caminantes.append({"d": d2, "ruta": ruta.slice(1), "fin": "salir", "tren": item["tren"],
+				"suelta": 1, "espera": float(item["espera"]), "andando": false})
+		"llegar":
+			var e: Dictionary = item["e"]
+			var d3 := Mini3D.persona(_gente, _rng_gente, e["salida"])
+			if d3.is_empty():
+				return
+			_caminantes.append({"d": d3, "ruta": [(item["s"] as Dictionary)["p"]], "fin": "sitio", "s": item["s"], "e": e,
+				"tren": -1, "suelta": 99, "espera": 0.0, "andando": false})
+
+## Deja a una persona en su sitio: sentada en el banco o de pie esperando.
+func _asentar(d: Dictionary, s: Dictionary, e: Dictionary) -> void:
 	var p: Vector3 = s["p"]
-	var d := Mini3D.persona(_gente, _rng_gente, p)
-	if d.is_empty():
-		return
 	var n: Node3D = d["nodo"]
+	n.position = p
 	n.rotation.y = float(s["giro"])
 	var sentado := bool(s["sentado"])
 	if sentado:
@@ -744,7 +795,351 @@ func _crear_persona(s: Dictionary) -> void:
 	var charla := bool(s.get("charla", false))
 	Mini3D.anim(d, "sentado" if sentado else ("charla" if charla else "parado"), "")
 	(d["anim"] as AnimationPlayer).seek(_rng_gente.randf() * 0.8, true)
-	_fijos_gente.append({"d": d, "charla": charla, "t": _rng_gente.randf_range(2.0, 8.0)})
+	_fijos_gente.append({"d": d, "charla": charla, "t": _rng_gente.randf_range(2.0, 8.0), "s": s, "e": e})
+
+# ------------------------------------- subir y bajar del tren (16-10-2026)
+## Pedido: «nadie sube ni baja del tren». Cuando el tren para en la estación
+## con gente, algunos de los que esperan caminan hasta la puerta más cercana y
+## entran; otros salen del tren y se van hacia la escalera. El tren NO arranca
+## hasta que terminan (como mucho `RETENCION_MAX` s más). Los sitios que dejan
+## los que suben se vuelven a ocupar con gente que llega por la escalera.
+const RETENCION_MAX := 10.0
+const VEL_GENTE := 1.35
+const RADIO_PERSONA := 0.3
+var _gente_linea := ""
+var _gente_idx := -1
+var _gente_lados: Array = []
+var _caminantes: Array = []   ## [{d, ruta, fin, tren, suelta, espera, andando, s?, e?}]
+var _embarque := {}           ## k del tren -> {t}
+var _huecos: Array = []       ## [{s, e, t}] sitios libres que se volverán a ocupar
+
+## La posición (en el espacio del metro) de un punto del coche: `x` lateral, `z` a lo largo.
+static func _en_tren(tren: Transform3D, x: float, z: float) -> Vector3:
+	return tren * Vector3(x, PISO_COCHE, z)
+
+## Dónde está el tren según su lógica (el nodo se mueve más tarde en el
+## fotograma: con su posición vieja la gente iba a la puerta de otro sitio).
+static func transform_tren(l: Dictionary, t: Tren) -> Transform3D:
+	var a: Vector3 = l["a"]
+	var dir: Vector3 = l["dir"]
+	var y := ALTO_VIADUCTO + 0.6 if bool(l["elevada"]) else PROF_TUNEL
+	var giro := atan2(dir.x, dir.z) + (0.0 if t.sentido > 0.0 else PI)
+	return Transform3D(Basis(Vector3.UP, giro), a + dir * t.s + Vector3(0, y, 0))
+
+## La puerta del tren más cercana a `p` (en coordenadas del coche): [lado, z].
+static func puerta_cercana(tren: Transform3D, p: Vector3) -> Array:
+	var local := tren.affine_inverse() * p
+	var mejor_z := 0.0
+	var dmin := INF
+	for k in 3:
+		for dz: float in [-3.5, 3.5]:
+			var z := (float(k) - 1.0) * 16.6 + dz
+			if absf(z - local.z) < dmin:
+				dmin = absf(z - local.z)
+				mejor_z = z
+	return [signf(local.x) if absf(local.x) > 0.01 else 1.0, mejor_z]
+
+## Los trenes que paran (o arrancan) en la estación con gente.
+func _embarques(delta: float) -> void:
+	if _gente_linea == "" or _gente == null:
+		return
+	var l := linea(_gente_linea)
+	var s_est := float(l["est_s"][_gente_idx])
+	for k in (l["trenes"] as Array).size():
+		var t: Tren = l["trenes"][k]
+		var en_estacion := absf(t.s - s_est) < 1.0
+		if en_estacion and t.espera > 0.0 and not _embarque.has(k):
+			_embarque[k] = {"t": 0.0}
+			_planear_embarque(k, transform_tren(l, t))
+		elif _embarque.has(k):
+			if not en_estacion:
+				## Ya se fue: los que no llegaron a la puerta se quedan esperando.
+				_embarque.erase(k)
+				for c: Dictionary in _caminantes:
+					if int(c["tren"]) == k and String(c["fin"]) == "subir":
+						c["fin"] = "sitio"
+						c["tren"] = -1
+						c["ruta"] = [(c["s"] as Dictionary)["p"]]
+				continue
+			var emb: Dictionary = _embarque[k]
+			emb["t"] = float(emb["t"]) + delta
+			## Retener el tren mientras alguien está entrando o saliendo por la puerta.
+			var ocupado := false
+			for c: Dictionary in _caminantes:
+				if int(c["tren"]) == k and (c["ruta"] as Array).size() > int(c["suelta"]):
+					ocupado = true
+					break
+			if not ocupado:
+				for it: Dictionary in _cola_gente:
+					if String(it["tipo"]) == "bajar" and int(it["tren"]) == k:
+						ocupado = true
+						break
+			if ocupado and float(emb["t"]) < PARADA + RETENCION_MAX:
+				t.espera = maxf(t.espera, 1.0 + delta)
+
+## Elige quién sube (de los que esperan) y crea a los que bajan.
+func _planear_embarque(k: int, tren: Transform3D) -> void:
+	var suben := 0
+	var quedan: Array = []
+	for f: Dictionary in _fijos_gente:
+		var s: Dictionary = f["s"]
+		var prob := 0.18 if bool(s["sentado"]) else (0.3 if bool(f["charla"]) else 0.55)
+		if suben >= 5 or _rng_gente.randf() > prob:
+			quedan.append(f)
+			continue
+		suben += 1
+		var d: Dictionary = f["d"]
+		var n: Node3D = d["nodo"]
+		var pos := n.position
+		pos.y = (s["p"] as Vector3).y
+		n.position = pos
+		var pu := puerta_cercana(tren, pos)
+		var lado := float(pu[0])
+		var z := float(pu[1]) + _rng_gente.randf_range(-0.25, 0.25)
+		## Primero hacia la puerta por el andén, luego dentro del coche.
+		var ruta: Array = [_en_tren(tren, lado * 2.7, z), _en_tren(tren, lado * 1.75, z),
+			_en_tren(tren, lado * 0.8, z + _rng_gente.randf_range(-0.6, 0.6))]
+		_caminantes.append({"d": d, "ruta": ruta, "fin": "subir", "tren": k, "suelta": -1,
+			"espera": _rng_gente.randf_range(0.3, 1.8), "andando": false, "s": s, "e": f["e"]})
+	_fijos_gente = quedan
+	## Los que bajan: 1-3 por cada andén de la estación, escalonados.
+	var retraso := 0.4
+	for e: Dictionary in _gente_lados:
+		var lado_e := float(puerta_cercana(tren, e["centro"])[0])
+		for _q in _rng_gente.randi_range(1, 3):
+			var coche := _rng_gente.randi_range(0, 2)
+			var z := (float(coche) - 1.0) * 16.6 + (3.5 if _rng_gente.randf() < 0.5 else -3.5)
+			var salida: Vector3 = e["salida"]
+			var fuera := _en_tren(tren, lado_e * 3.2, z + _rng_gente.randf_range(-0.8, 0.8))
+			_cola_gente.append({"tipo": "bajar", "tren": k, "espera": retraso,
+				"ruta": [_en_tren(tren, lado_e * 0.7, z), _en_tren(tren, lado_e * 1.8, z), fuera,
+					Vector3(salida.x, fuera.y, salida.z)]})
+			retraso += _rng_gente.randf_range(0.5, 1.1)
+
+## Camina a cada uno hacia su siguiente punto, sin atravesar a los demás.
+func _mover_caminantes(delta: float) -> void:
+	if _caminantes.is_empty():
+		return
+	var quedan: Array = []
+	for c: Dictionary in _caminantes:
+		var d: Dictionary = c["d"]
+		var n: Node3D = d["nodo"]
+		if not is_instance_valid(n):
+			continue
+		if float(c["espera"]) > 0.0:
+			c["espera"] = float(c["espera"]) - delta
+			quedan.append(c)
+			continue
+		if not bool(c["andando"]):
+			c["andando"] = true
+			Mini3D.anim(d, "caminar", "")
+		var ruta: Array = c["ruta"]
+		var obj: Vector3 = ruta[0]
+		var hacia := Vector3(obj.x - n.position.x, 0, obj.z - n.position.z)
+		var dist := hacia.length()
+		var paso := VEL_GENTE * delta
+		## Los puntos de paso no hace falta pisarlos exactos (si alguien espera
+		## justo ahí, se quedaba atascado empujándolo); el último sí.
+		var tolerancia := 0.12 if ruta.size() == 1 else 0.45
+		if dist <= maxf(paso, tolerancia):
+			if ruta.size() == 1:
+				n.position = obj
+			ruta.pop_front()
+			if ruta.is_empty():
+				_fin_caminante(c)
+				continue
+			quedan.append(c)
+			continue
+		var dir := hacia / dist
+		var antes := n.position
+		var p := n.position + dir * paso
+		## Al cruzar la puerta ya no se esquiva (dentro del coche no hay nadie del
+		## andén); y quien lleva un rato atascado pasa rozando (el tren espera).
+		var atasco := float(c.get("atasco", 0.0))
+		if (ruta.size() > 1 or String(c["fin"]) != "subir") and atasco < 1.2:
+			p = _apartar_de_otros(p, n, dir, paso)
+		var avance := Vector2(p.x - antes.x, p.z - antes.z).dot(Vector2(dir.x, dir.z))
+		if avance < paso * 0.3:
+			c["atasco"] = atasco + delta
+		elif atasco >= 1.2:
+			c["atasco"] = atasco + delta if atasco < 2.5 else 0.0
+		else:
+			c["atasco"] = 0.0
+		p.y = lerpf(n.position.y, obj.y, minf(1.0, delta * 6.0))
+		n.position = p
+		n.rotation.y = lerp_angle(n.rotation.y, atan2(dir.x, dir.z), minf(1.0, delta * 8.0))
+		quedan.append(c)
+	_caminantes = quedan
+
+func _fin_caminante(c: Dictionary) -> void:
+	var d: Dictionary = c["d"]
+	match String(c["fin"]):
+		"subir":
+			(d["nodo"] as Node3D).queue_free()
+			_huecos.append({"s": c["s"], "e": c["e"], "t": _rng_gente.randf_range(8.0, 22.0)})
+		"salir":
+			(d["nodo"] as Node3D).queue_free()
+		"sitio":
+			_asentar(d, c["s"], c["e"])
+
+## Los sitios que quedaron libres se vuelven a ocupar al rato.
+func _llegadas(delta: float) -> void:
+	if _huecos.is_empty() or _gente == null:
+		return
+	var quedan: Array = []
+	for h: Dictionary in _huecos:
+		h["t"] = float(h["t"]) - delta
+		if float(h["t"]) <= 0.0:
+			_cola_gente.append({"tipo": "llegar", "s": h["s"], "e": h["e"]})
+		else:
+			quedan.append(h)
+	_huecos = quedan
+
+## Separa `p` de la gente del andén (salvo `yo`): círculos de `RADIO_PERSONA`.
+## Si el otro está delante (según `dir`), además se da un paso al costado para
+## rodearlo (de frente, el empuje solo lo dejaba parado).
+func _apartar_de_otros(p: Vector3, yo: Node3D, dir: Vector3, paso: float) -> Vector3:
+	var minimo := RADIO_PERSONA * 2.0
+	for o: Node3D in _cuerpos_gente():
+		if o == yo:
+			continue
+		var dx := p.x - o.position.x
+		var dz := p.z - o.position.z
+		var d2 := dx * dx + dz * dz
+		if d2 < minimo * minimo and d2 > 0.0001:
+			var d := sqrt(d2)
+			p.x = o.position.x + dx / d * minimo
+			p.z = o.position.z + dz / d * minimo
+			if -(dx * dir.x + dz * dir.z) > 0.0:
+				var lado := Vector3(-dir.z, 0, dir.x)
+				if lado.x * dx + lado.z * dz < 0.0:
+					lado = -lado
+				p += lado * paso * 0.8
+	return p
+
+## Los cuerpos de la gente del andén (esperando y caminando).
+func _cuerpos_gente() -> Array:
+	var r: Array = []
+	for f: Dictionary in _fijos_gente:
+		var n: Node3D = f["d"]["nodo"]
+		if is_instance_valid(n):
+			r.append(n)
+	for c: Dictionary in _caminantes:
+		var n2: Node3D = c["d"]["nodo"]
+		if is_instance_valid(n2):
+			r.append(n2)
+	return r
+
+## EL PERSONAJE NO ATRAVIESA A LA GENTE DEL ANDÉN (16-10-2026): lo usa el
+## explorador en el andén. Devuelve `p` empujado fuera de cada persona
+## (círculos), así el personaje se desliza a su alrededor en vez de cruzarla.
+func apartar(p: Vector3, radio: float) -> Vector3:
+	if _gente == null:
+		return p
+	var minimo := radio + RADIO_PERSONA
+	for _vuelta in 2:
+		for o: Node3D in _cuerpos_gente():
+			if absf(o.position.y - p.y) > 1.5:
+				continue
+			var dx := p.x - o.position.x
+			var dz := p.z - o.position.z
+			var d2 := dx * dx + dz * dz
+			if d2 < minimo * minimo:
+				var d := sqrt(d2)
+				if d < 0.0001:
+					dx = 1.0
+					dz = 0.0
+					d = 1.0
+				p.x = o.position.x + dx / d * minimo
+				p.z = o.position.z + dz / d * minimo
+	return p
+
+## Para las pruebas: cuánta gente hay y qué hace.
+func estado_gente() -> Dictionary:
+	var suben := 0
+	var bajan := 0
+	var llegan := 0
+	for c: Dictionary in _caminantes:
+		match String(c["fin"]):
+			"subir": suben += 1
+			"salir": bajan += 1
+			"sitio": llegan += 1
+	var pas := 0
+	if _pas_nodo != null and is_instance_valid(_pas_nodo):
+		pas = _pas_nodo.get_child_count()
+	return {"esperando": _fijos_gente.size(), "suben": suben, "bajan": bajan, "llegan": llegan,
+		"retenidos": _embarque.size(), "pasajeros": pas}
+
+## Posiciones de la gente del andén (para las pruebas).
+func posiciones_gente() -> Array:
+	var r: Array = []
+	for n: Node3D in _cuerpos_gente():
+		r.append(n.position)
+	return r
+
+# ------------------------------------------- pasajeros dentro del coche
+## Solo en el tren más cercano a la cámara (a menos de 45 m): unos sentados y
+## alguno de pie junto a las barras. Se crean de uno en uno.
+var _pas_tren: Node3D
+var _pas_nodo: Node3D
+var _cola_pas: Array = []
+
+func _pasajeros_cerca(yo: Vector3) -> void:
+	var mejor: Node3D = null
+	var dmin := 45.0
+	for l: Dictionary in lineas:
+		for n: Node3D in l["nodos"]:
+			var d := n.position.distance_to(yo)
+			if d < dmin:
+				dmin = d
+				mejor = n
+	if mejor == _pas_tren:
+		return
+	_pas_tren = mejor
+	if _pas_nodo != null and is_instance_valid(_pas_nodo):
+		_pas_nodo.queue_free()
+	_pas_nodo = null
+	_cola_pas.clear()
+	if mejor == null:
+		return
+	_pas_nodo = Node3D.new()
+	_pas_nodo.name = "Pasajeros"
+	mejor.add_child(_pas_nodo)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = mejor.get_instance_id()
+	## Asientos (en coordenadas del coche): los mismos de `_interior_coche`.
+	var libres: Array = []
+	for k in 3:
+		for lado: float in [-1.0, 1.0]:
+			for tramo: Array in TRAMOS_ASIENTO:
+				var n_as := int(float(tramo[1]) / PASO_ASIENTO)
+				for q in n_as:
+					var z := (float(k) - 1.0) * 16.6 + float(tramo[0]) + (float(q) - float(n_as - 1) * 0.5) * PASO_ASIENTO
+					libres.append(Vector3(lado, 0, z))
+	for _i in 8:
+		var a: Vector3 = libres.pop_at(rng.randi() % libres.size())
+		## No delante de la cámara del viajero (coche central, z ≈ -5).
+		if a.z > -7.0 and a.z < -3.0:
+			continue
+		_cola_pas.append({"pos": Vector3(a.x * 1.04, PISO_COCHE, a.z), "giro": atan2(-a.x, 0.0), "sentado": true})
+	## De pie, junto a las barras del centro.
+	for z2: float in [0.0, -16.6, 22.6]:
+		_cola_pas.append({"pos": Vector3(rng.randf_range(0.25, 0.45) * (1.0 if rng.randf() < 0.5 else -1.0), PISO_COCHE, z2 + 0.35), "giro": rng.randf_range(-PI, PI), "sentado": false})
+
+func _crear_pasajero(item: Dictionary) -> void:
+	var d := Mini3D.persona(_pas_nodo, _rng_gente, item["pos"])
+	if d.is_empty():
+		return
+	var n: Node3D = d["nodo"]
+	n.rotation.y = float(item["giro"])
+	if bool(item["sentado"]):
+		var cadera := altura_cadera(n)
+		if cadera > 0.0:
+			n.position.y = PISO_COCHE + ALTO_ASIENTO + 0.08 - cadera * 0.99
+		Mini3D.anim(d, "sentado", "")
+	else:
+		Mini3D.anim(d, "parado", "")
+	(d["anim"] as AnimationPlayer).seek(_rng_gente.randf() * 0.8, true)
 
 ## El túnel de la línea subterránea: cerrado (suelo, paredes, techo) para que
 ## desde dentro no se vea el cielo, con luces cada 30 m. Se corta en las
@@ -879,6 +1274,157 @@ func _tunel_xray(a: Vector3, b: Vector3, col: Color) -> void:
 	var vertical := absf(a.x - b.x) < 0.1
 	_caja(_xray, (a + b) * 0.5 + Vector3(0, 0.6, 0), Vector3(10.0, 0.4, largo) if vertical else Vector3(largo, 0.4, 10.0), m)
 
+## Tramos de pared entre puertas (z desde-hasta, coordenadas del coche): las
+## puertas están en ±3,5 y miden 1,5 m.
+const TRAMOS_PARED := [[-8.0, -4.25], [-2.75, 2.75], [4.25, 8.0]]
+## Tramos de asientos (centro, largo) y paso entre asientos.
+const TRAMOS_ASIENTO := [[-6.1, 3.3], [0.0, 5.0], [6.1, 3.3]]
+const PASO_ASIENTO := 0.55
+const ALTO_ASIENTO := 0.47   ## altura del cojín sobre el suelo del coche
+## Anuncios del vagón (marcas inventadas).
+const ANUNCIOS := [
+	"LECHE LA PRADERA\nfresca cada mañana", "MUSEO DEL FÚTBOL\nabierto todos los días",
+	"BANCO HORIZONTE\ntu primera cuenta", "ZAPATILLAS VELOZ\ncorre más lejos",
+	"FESTIVAL DEL RÍO\nmúsica en la ribera", "PANADERÍA EL TRIGAL\npan de leña",
+	"ESCUELA DE IDIOMAS\naprende en 3 meses", "CINE AURORA\nestrenos los viernes",
+	"SEGUROS LA BRÚJULA\nviaja tranquilo", "AGUA MANANTIAL\nde la sierra",
+]
+const COLORES_ANUNCIO := [Color(0.85, 0.25, 0.2), Color(0.15, 0.45, 0.75), Color(0.95, 0.7, 0.15),
+	Color(0.2, 0.6, 0.35), Color(0.55, 0.25, 0.6), Color(0.1, 0.12, 0.18)]
+
+static var _mallas_interior := {}
+static var _mat_int: StandardMaterial3D
+
+static func _mat_interior() -> StandardMaterial3D:
+	if _mat_int == null:
+		_mat_int = StandardMaterial3D.new()
+		_mat_int.vertex_color_use_as_albedo = true
+		_mat_int.vertex_color_is_srgb = true
+		_mat_int.roughness = 0.8
+		_mat_int.cull_mode = BaseMaterial3D.CULL_DISABLED
+	return _mat_int
+
+## Una caja en la malla de colores de vértice.
+static func _caja_st(st: SurfaceTool, c: Vector3, t: Vector3, color: Color) -> void:
+	var h := t * 0.5
+	st.set_color(color)
+	for eje in 3:
+		for s: float in [-1.0, 1.0]:
+			var nrm := Vector3.ZERO
+			nrm[eje] = s
+			var u := Vector3.ZERO
+			var v := Vector3.ZERO
+			u[(eje + 1) % 3] = 1.0
+			v[(eje + 2) % 3] = 1.0
+			var o := c + nrm * h[eje]
+			var du := u * h[(eje + 1) % 3]
+			var dv := v * h[(eje + 2) % 3]
+			var q := [o - du - dv, o + du - dv, o + du + dv, o - du + dv]
+			st.set_normal(nrm)
+			for i: int in [0, 1, 2, 0, 2, 3]:
+				st.add_vertex(q[i])
+
+## La malla del interior de los tres coches (forros, asientos, marcos, asideros,
+## fondos de anuncio y planos de línea), una por color de línea.
+static func _interior_malla(col: Color) -> ArrayMesh:
+	var clave := col.to_html()
+	if _mallas_interior.has(clave):
+		return _mallas_interior[clave]
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var f := PISO_COCHE
+	var suelo := Color(0.23, 0.25, 0.29)
+	var pasillo := Color(0.3, 0.32, 0.36)
+	var amarillo := Color(0.93, 0.72, 0.12)
+	var pared_baja := Color(0.5, 0.54, 0.6)
+	var pared_alta := Color(0.8, 0.79, 0.75)
+	var techo := Color(0.72, 0.72, 0.7)
+	var marco := Color(0.42, 0.44, 0.48)
+	var base_asiento := Color(0.3, 0.31, 0.35)
+	var cojin := Color(col.r * 0.8, col.g * 0.8, col.b * 0.8).lerp(Color(0.3, 0.3, 0.35), 0.15)
+	var cojin_b := cojin.darkened(0.3)
+	var preferente := Color(0.95, 0.55, 0.12)
+	var correa := Color(0.12, 0.12, 0.14)
+	var asa := col.lightened(0.25)
+	var metal := Color(0.72, 0.73, 0.76)
+	var blanco := Color(0.95, 0.95, 0.93)
+	for k in 3:
+		var z := (float(k) - 1.0) * 16.6
+		## Suelo, pasillo y franjas amarillas de las puertas.
+		_caja_st(st, Vector3(0, f + 0.035, z), Vector3(2.84, 0.03, 15.9), suelo)
+		_caja_st(st, Vector3(0, f + 0.052, z), Vector3(0.6, 0.004, 15.6), pasillo)
+		## Techo forrado (antes, el blanco del exterior quemado por la luz).
+		_caja_st(st, Vector3(0, f + 2.565, z), Vector3(2.8, 0.02, 15.9), techo)
+		for lado: float in [-1.0, 1.0]:
+			for dz: float in [-3.5, 3.5]:
+				_caja_st(st, Vector3(lado * 1.2, f + 0.054, z + dz), Vector3(0.36, 0.006, 1.5), amarillo)
+				## Dintel de la puerta y plano de la línea encima.
+				_caja_st(st, Vector3(lado * 1.4, f + 2.25, z + dz), Vector3(0.06, 0.08, 1.56), marco)
+				_caja_st(st, Vector3(lado * 1.37, f + 2.4, z + dz), Vector3(0.012, 0.2, 1.3), blanco)
+				_caja_st(st, Vector3(lado * 1.364, f + 2.4, z + dz), Vector3(0.012, 0.025, 1.18), col)
+				for e in 7:
+					_caja_st(st, Vector3(lado * 1.36, f + 2.4, z + dz + (float(e) - 3.0) * 0.19), Vector3(0.014, 0.06, 0.06), Color(0.1, 0.1, 0.12) if e != 3 else amarillo)
+			## Forro de la pared alta (encima de las ventanas, donde van los anuncios).
+			_caja_st(st, Vector3(lado * 1.385, f + 2.38, z), Vector3(0.02, 0.36, 15.9), pared_alta)
+			for tr: Array in TRAMOS_PARED:
+				var z0 := z + float(tr[0])
+				var z1 := z + float(tr[1])
+				var lz := z1 - z0
+				var zc := (z0 + z1) * 0.5
+				## Forro bajo, alféizar y marco de arriba de la ventana.
+				_caja_st(st, Vector3(lado * 1.385, f + 0.475, zc), Vector3(0.02, 0.85, lz), pared_baja)
+				_caja_st(st, Vector3(lado * 1.37, f + 0.91, zc), Vector3(0.08, 0.04, lz), marco)
+				_caja_st(st, Vector3(lado * 1.39, f + 2.19, zc), Vector3(0.06, 0.04, lz), marco)
+				## Montantes: en las puntas del tramo y cada ~1,9 m.
+				var n_m := maxi(1, int(round(lz / 1.9)))
+				for q in n_m + 1:
+					var zm := z0 + lz * float(q) / float(n_m)
+					zm = clampf(zm, z0 + 0.05, z1 - 0.05)
+					_caja_st(st, Vector3(lado * 1.4, f + 1.55, zm), Vector3(0.07, 1.3, 0.1), marco)
+			## Asientos uno a uno, con base, cojín, respaldo y reposacabezas.
+			for ti in TRAMOS_ASIENTO.size():
+				var tramo: Array = TRAMOS_ASIENTO[ti]
+				var tc := z + float(tramo[0])
+				var tl := float(tramo[1])
+				_caja_st(st, Vector3(lado * 1.12, f + 0.21, tc), Vector3(0.48, 0.36, tl), base_asiento)
+				var n_as := int(tl / PASO_ASIENTO)
+				for q in n_as:
+					var zs := tc + (float(q) - float(n_as - 1) * 0.5) * PASO_ASIENTO
+					var pref := ti != 1 and (q == 0 or q == n_as - 1) and absf(absf(zs - z) - 3.5) < 2.0
+					var c1 := preferente if pref else (cojin if q % 2 == 0 else cojin.lerp(cojin_b, 0.35))
+					_caja_st(st, Vector3(lado * 1.1, f + ALTO_ASIENTO - 0.045, zs), Vector3(0.5, 0.09, PASO_ASIENTO - 0.05), c1)
+					_caja_st(st, Vector3(lado * 1.33, f + 0.8, zs), Vector3(0.08, 0.6, PASO_ASIENTO - 0.05), c1.darkened(0.12))
+					_caja_st(st, Vector3(lado * 1.32, f + 1.13, zs), Vector3(0.09, 0.1, PASO_ASIENTO - 0.08), cojin_b)
+				## Mamparas y barras en las puntas que dan a las puertas.
+				for s: float in [-1.0, 1.0]:
+					var ze := tc + s * (tl * 0.5 + 0.06)
+					if absf(absf(ze - z) - 3.5) > 1.2:
+						continue
+					## Mampara de tubo (una placa opaca tapaba la vista del pasillo).
+					_caja_st(st, Vector3(lado * 0.86, f + 1.12, ze), Vector3(0.045, 2.2, 0.045), metal)
+					for yb: float in [0.62, 1.18]:
+						_caja_st(st, Vector3(lado * 1.11, f + yb, ze), Vector3(0.5, 0.04, 0.04), metal)
+				## Fondo del anuncio sobre el tramo (el texto es un Label3D).
+				var c_ad: Color = COLORES_ANUNCIO[(k * 3 + ti + (0 if lado > 0.0 else 2)) % COLORES_ANUNCIO.size()]
+				_caja_st(st, Vector3(lado * 1.37, f + 2.38, tc), Vector3(0.012, 0.3, 1.55), c_ad)
+				_caja_st(st, Vector3(lado * 1.372, f + 2.38, tc), Vector3(0.01, 0.34, 1.6), marco)
+			## Asideros colgados de las barras del techo.
+			for q in 21:
+				var za := z - 7.0 + float(q) * 0.7
+				if absf(absf(za - z) - 3.5) < 0.5:
+					continue
+				_caja_st(st, Vector3(lado * 0.55, f + 2.14, za), Vector3(0.02, 0.2, 0.03), correa)
+				_caja_st(st, Vector3(lado * 0.55, f + 2.02, za), Vector3(0.02, 0.035, 0.1), asa)
+		## Testeros: forro y puerta de paso al coche de al lado.
+		for e: float in [-1.0, 1.0]:
+			_caja_st(st, Vector3(0, f + 1.3, z + e * 7.93), Vector3(2.76, 2.5, 0.02), pared_alta)
+			_caja_st(st, Vector3(0, f + 1.0, z + e * 7.92), Vector3(0.95, 1.9, 0.02), Color(0.28, 0.3, 0.34))
+			_caja_st(st, Vector3(0, f + 1.35, z + e * 7.915), Vector3(0.6, 0.7, 0.01), Color(0.12, 0.16, 0.2))
+	st.index()
+	var m := st.commit()
+	_mallas_interior[clave] = m
+	return m
+
 ## El tren de verdad: tres coches HUECOS con su interior (asientos, barras,
 ## asideros, luces, ventanas, puertas que se abren) y un panel LED con la
 ## próxima estación. Se ve desde fuera por las ventanas y se puede viajar dentro.
@@ -894,11 +1440,9 @@ func _tren_real(col: Color) -> Node3D:
 	## motor dibujaba el cartel del andén ENCIMA del cristal y desde dentro
 	## parecía pegado a la ventana, sin el tinte del vidrio.
 	vidrio.render_priority = 1
-	var asiento := _mat(col.darkened(0.3), 0.7)
 	var metal := _mat(Color(0.75, 0.76, 0.78), 0.25)
 	metal.metallic = 0.8
-	var luz := _mat(Color(1, 0.97, 0.9), 0.3, 1.1)
-	var suelo := _mat(Color(0.3, 0.3, 0.32), 0.9)
+	var luz := _mat(Color(1, 0.96, 0.86), 0.3, 0.6)
 	var puerta_m := _mat(Color(0.82, 0.84, 0.86), 0.3)
 	var oscuro := _mat(Color(0.06, 0.06, 0.07), 0.5)
 	var cabina := _mat(Color(0.08, 0.12, 0.16), 0.08)
@@ -906,23 +1450,46 @@ func _tren_real(col: Color) -> Node3D:
 	var leds: Array = []
 	var puertas: Array = []
 	var f := PISO_COCHE
+	## EL INTERIOR (16-10-2026, «se ve casi blanco»): suelo, forros de pared y
+	## techo, asientos uno a uno, marcos, asideros, anuncios y planos de línea
+	## en UNA malla con colores de vértice (compartida por los trenes de la línea).
+	var interior := MeshInstance3D.new()
+	interior.name = "Interior"
+	interior.mesh = _interior_malla(col)
+	interior.material_override = _mat_interior()
+	interior.visibility_range_end = 120.0
+	n.add_child(interior)
 	for k in 3:
 		var z := (float(k) - 1.0) * 16.6
 		_caja(n, Vector3(0, f - 0.3, z), Vector3(3.0, 0.6, 16.0), blanco)          ## bastidor
-		_caja(n, Vector3(0, f + 0.02, z), Vector3(2.9, 0.04, 15.9), suelo)
 		_caja(n, Vector3(0, f + 2.65, z), Vector3(3.0, 0.15, 16.0), blanco)        ## techo
 		for lado: float in [-1.0, 1.0]:
 			var x := lado * 1.45
-			_caja(n, Vector3(x, f + 0.45, z), Vector3(0.1, 0.9, 16.0), blanco)       ## panel bajo
-			_caja(n, Vector3(x * 1.04, f + 0.35, z), Vector3(0.02, 0.25, 16.0), franja)
 			_caja(n, Vector3(x, f + 2.4, z), Vector3(0.1, 0.4, 16.0), blanco)        ## sobre ventanas
-			_caja(n, Vector3(x, f + 1.55, z), Vector3(0.04, 1.3, 16.0), vidrio)      ## ventanas
-			for q in 8:
-				_caja(n, Vector3(x, f + 1.55, z - 7.0 + float(q) * 2.0), Vector3(0.12, 1.3, 0.18), blanco)
-			## Asientos laterales entre puertas, con respaldo.
-			for tramo: Array in [[-6.0, 3.0], [0.0, 5.0], [6.0, 3.0]]:
-				_caja(n, Vector3(lado * 1.1, f + 0.45, z + float(tramo[0])), Vector3(0.55, 0.12, float(tramo[1])), asiento)
-				_caja(n, Vector3(lado * 1.35, f + 0.8, z + float(tramo[0])), Vector3(0.1, 0.6, float(tramo[1])), asiento)
+			## Entre puertas: panel bajo, franja y ventana. Antes iban de punta a
+			## punta y tapaban la parte baja de las puertas abiertas.
+			for tr: Array in TRAMOS_PARED:
+				var zc := z + (float(tr[0]) + float(tr[1])) * 0.5
+				var lz := float(tr[1]) - float(tr[0])
+				_caja(n, Vector3(x, f + 0.45, zc), Vector3(0.1, 0.9, lz), blanco)       ## panel bajo
+				_caja(n, Vector3(x * 1.04, f + 0.35, zc), Vector3(0.02, 0.25, lz), franja)
+				_caja(n, Vector3(x, f + 1.55, zc), Vector3(0.04, 1.3, lz), vidrio)      ## ventanas
+			## Anuncios sobre las ventanas (el fondo de color va en la malla).
+			for q in TRAMOS_ASIENTO.size():
+				var ad := Label3D.new()
+				var texto: String = ANUNCIOS[(k * 6 + q * 2 + (0 if lado > 0.0 else 1)) % ANUNCIOS.size()]
+				ad.text = texto
+				ad.font_size = 30
+				ad.pixel_size = 0.0033
+				ad.outline_size = 5
+				ad.outline_modulate = Color(0, 0, 0, 0.6)
+				ad.width = 440.0
+				ad.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				ad.double_sided = false
+				ad.position = Vector3(lado * 1.355, f + 2.38, z + float(TRAMOS_ASIENTO[q][0]))
+				ad.rotation.y = atan2(-lado, 0.0)
+				ad.visibility_range_end = 18.0
+				n.add_child(ad)
 			## Puertas: dos por lado; se deslizan al abrir.
 			for dz: float in [-3.5, 3.5]:
 				for hoja: float in [-1.0, 1.0]:
@@ -942,7 +1509,7 @@ func _tren_real(col: Color) -> Node3D:
 			n.add_child(b)
 		for lado3: float in [-0.55, 0.55]:
 			_caja(n, Vector3(lado3, f + 2.25, z), Vector3(0.04, 0.04, 15.0), metal)
-		_caja(n, Vector3(0, f + 2.55, z), Vector3(0.5, 0.05, 15.0), luz)
+		_caja(n, Vector3(0, f + 2.535, z), Vector3(0.26, 0.03, 15.0), luz)
 		## Testeros con ventana (los extremos del coche).
 		for e: float in [-1.0, 1.0]:
 			_caja(n, Vector3(0, f + 1.3, z + e * 8.0), Vector3(3.0, 2.6, 0.1), blanco)
