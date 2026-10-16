@@ -41,6 +41,8 @@ const SALAS_EDIFICIO := {
 	"edificio_oficina": ["oficina", "Oficinas"],
 	## Para los rótulos de comercio que no tienen sala propia (farmacia, súper...).
 	"edificio_tienda": ["tienda", "Tienda"], "edificio_mercado": ["mercado", "Supermercado"],
+	## La sala de recreativos del parque de atracciones (16-10-2026).
+	"edificio_recreativos": ["recreativos", "Recreativos"],
 }
 
 static func _sala_de(clave: String) -> Array:
@@ -215,6 +217,7 @@ func _construir_sala() -> void:
 		"peluqueria": _peluqueria()
 		"libreria": _libreria()
 		"taller": _taller()
+		"recreativos": _recreativos()
 	_vaciar_lotes()
 	## De vuelta al valor de siempre: los minijuegos y la ciudad lo usan.
 	Mini3D.sala_deportiva = true
@@ -1096,6 +1099,69 @@ func _bar() -> void:
 	_planta(Vector3(6.5, 0, 4.4))
 	_ventana(-1.0, -0.6, 1.6, false)
 	_caminante([Vector3(-6.4, 0, 2.1), Vector3(5.8, 0, 2.1), Vector3(5.8, 0, -0.7), Vector3(-6.4, 0, -0.7)], [Color(0.95, 0.95, 0.95), Color(0.15, 0.15, 0.18), true])
+
+## SALA DE RECREATIVOS (16-10-2026, kit Mini Arcade de Kenney a ×2,4): 16 × 12 m,
+## moqueta oscura y neones. Fila de máquinas en el fondo, pinballs a la izquierda,
+## grúas, rueda de premios y la taquilla a la derecha, dos mesas de air hockey en
+## medio y las máquinas de baile junto a la entrada. Las máquinas miran a +Z
+## local (como en el bar); quien juega se pone delante, mirando a la pantalla.
+func _recreativos() -> void:
+	_sala(Vector3(16, 3.6, 12), Color(0.16, 0.1, 0.22), Color(0.2, 0.17, 0.28), "moqueta", Color(0.1, 0.08, 0.14))
+	var ropa := [Color(0.85, 0.15, 0.45), Color(0.12, 0.12, 0.16), true]
+	## Fondo: siete máquinas de pantalla y dos canastas.
+	for k in 7:
+		var x := -6.4 + float(k) * 1.12
+		_poner("mini_arcade/arcade-machine", Vector3(x, 0, -5.3), 0.0)
+		if k in [0, 2, 3, 5]:
+			_trabajador(Vector3(x, 0, -4.15), PI, false, ["charla"], _calle())
+	for x: float in [3.2, 5.2]:
+		_poner("mini_arcade/basketball-game", Vector3(x, 0, -4.7), 0.0)
+	_trabajador(Vector3(3.2, 0, -3.05), PI, false, ["aplaudir", "charla"], _calle())
+	## Izquierda: pinballs contra la pared, mirando a la sala.
+	for k in 4:
+		var z := -2.6 + float(k) * 1.35
+		_poner("mini_arcade/pinball", Vector3(-7.05, 0, z), PI * 0.5)
+		if k % 2 == 0:
+			_trabajador(Vector3(-5.9, 0, z), -PI * 0.5, false, ["charla"], _calle())
+	## Derecha: grúas, rueda de premios y máquina de tickets.
+	for k in 3:
+		var z2 := -4.4 + float(k) * 1.7
+		_poner("mini_arcade/claw-machine", Vector3(7.1, 0, z2), -PI * 0.5)
+	_trabajador(Vector3(5.8, 0, -2.7), PI * 0.5, false, ["charla", "aplaudir"], _calle())
+	_poner("mini_arcade/prize-wheel", Vector3(7.55, 0, 0.6), -PI * 0.5)
+	_poner("mini_arcade/ticket-machine", Vector3(7.45, 0, 1.75), -PI * 0.5)
+	## La taquilla de premios junto a la entrada, con su empleada.
+	_poner("mini_arcade/cash-register", Vector3(5.6, 0, 3.9), -PI * 0.5)
+	_poner("mini_arcade/prizes", Vector3(7.5, 0, 4.3), -PI * 0.5)
+	_poner("mini_arcade/prizes", Vector3(5.6, 0, 5.5), PI)
+	_trabajador(Vector3(6.75, 0, 3.6), -PI * 0.5, false, ["saludo_mano", "charla"], ropa)
+	_trabajador(Vector3(4.2, 0, 3.9), PI * 0.5, false, ["charla", "brazos_jarra"], _calle())
+	## En medio, dos mesas de air hockey con una pareja jugando en cada una.
+	for x2: float in [-2.6, 1.4]:
+		_poner("mini_arcade/air-hockey", Vector3(x2, 0, 0.2), 0.0)
+		if x2 < 0.0 or _rng.randf() < 0.7:
+			for s: float in [-1.0, 1.0]:
+				_trabajador(Vector3(x2 + s * 1.65, 0, 0.2), -s * PI * 0.5, false, ["aplaudir", "charla", "brazos_jarra"], _calle())
+	## Junto a la entrada: dos máquinas de baile, una con alguien encima.
+	for k in 2:
+		var z3 := 2.6 + float(k) * 1.9
+		_poner("mini_arcade/dance-machine", Vector3(-6.7, 0, z3), PI * 0.5)
+	_trabajador(Vector3(-6.0, 0.1, 2.6), -PI * 0.5, false, ["aplaudir", "saludo_mano"], _calle())
+	_poner("mini_arcade/vending-machine", Vector3(-3.2, 0, 5.4), PI)
+	_poner("mini_arcade/vending-machine", Vector3(-2.0, 0, 5.4), PI)
+	## Neones a lo largo de las paredes y carteles luminosos.
+	var neones := [Mini3D.mat(Color(1.0, 0.2, 0.7), 0.4, 3.0), Mini3D.mat(Color(0.2, 0.85, 1.0), 0.4, 3.0)]
+	Mini3D.caja(_raiz, Vector3(0, 3.25, -5.97), Vector3(15.6, 0.06, 0.04), neones[0])
+	Mini3D.caja(_raiz, Vector3(0, 0.25, -5.97), Vector3(15.6, 0.04, 0.04), neones[1])
+	for lado: float in [-1.0, 1.0]:
+		Mini3D.caja(_raiz, Vector3(lado * 7.97, 3.25, 0), Vector3(0.04, 0.06, 11.6), neones[1 if lado < 0.0 else 0])
+	_cartel("🕹️ " + _sala_nombre().to_upper(), Vector3(-2.6, 2.75, -5.9), 40, Color(1.0, 0.5, 0.9))
+	_cartel("★ RÉCORDS ★", Vector3(4.2, 2.6, -5.9), 22, Color(0.5, 0.95, 1.0))
+	_cuadro(Vector3(4.2, 1.95, -5.95), Vector2(2.2, 0.8), Color(0.1, 0.1, 0.25))
+	## Gente que va de máquina en máquina.
+	for k in 3:
+		var z4 := -1.9 + float(k) * 2.6
+		_caminante([Vector3(-4.6, 0, z4), Vector3(4.4, 0, z4), Vector3(4.4, 0, z4 + 1.2), Vector3(-4.6, 0, z4 + 1.2)], _calle())
 
 ## Oficinas y Ayuntamiento (16 × 12 m): mostrador de atención con sus puestos,
 ## sillas para el público, mesa de reuniones (oficina) o banderas (ayuntamiento).
