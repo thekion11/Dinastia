@@ -5363,6 +5363,17 @@ func _probar_ciudad_grande() -> void:
 			puentes += 1
 	_comprobar(puentes >= 15, "%d tramos cruzan el río por puente" % puentes)
 	_comprobar(e.cruces_semaforo.size() >= 40, "%d cruces con semáforo" % e.cruces_semaforo.size())
+	## Marcas y aceras coherentes en los cruces (16-10-2026).
+	var cruce_ca := Vector3(550, 0, -660)    ## calle (x=550) que cruza una avenida (z=-660)
+	_comprobar(is_equal_approx(e.medio_cruce(cruce_ca, Vector3(0, 0, 1)), CiudadExpansion.ANCHO_AV * 0.5), "la calle sabe que la cruza una avenida de 24 m")
+	_comprobar(e._fin_acera(cruce_ca, Vector3(0, 0, -1), Vector3(1, 0, 0), CiudadExpansion.ANCHO_CALLE, false) >= CiudadExpansion.ANCHO_AV * 0.5,
+		"la acera de la calle no entra en la calzada de la avenida")
+	var mal_rayas := 0
+	for p: Vector3 in e.cruces_semaforo:
+		for d: Vector3 in [Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)]:
+			if e.ancho_brazo(p, d) > 0.0 and not e.es_puente(p, d) and e._libre_de_marcas(p, d) < e.linea_detencion(e.medio_cruce(p, d)):
+				mal_rayas += 1
+	_comprobar(mal_rayas == 0, "las rayas del centro no pisan cruces ni cebras (%d mal)" % mal_rayas)
 	var camino := e.camino_entre(Vector2i(-12, -12), Vector2i(12, 12))
 	_comprobar(camino.size() >= 25, "la red está conectada: de una esquina a la otra en %d cruces" % camino.size())
 	var camino2 := e.camino_entre(Vector2i(-9, 0), Vector2i(9, 0))
