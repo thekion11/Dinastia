@@ -323,6 +323,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_cajon.seccion("Partido")
 		_btn_modo = _cajon.boton("🎮 Controlar a mi equipo: NO", _alternar_modo_control)
 		_cajon.boton("📋 Táctica y cambios (Esc)", _abrir_panel_dt)
+		_cajon.boton("📊 Estadísticas del partido", abrir_estadisticas)
 		_cajon.boton("🎮 Controles: teclas, mando y ayudas", abrir_controles)
 		_cajon.interruptor("⚽ Motor real: el resultado se juega en el césped", _pref("motor_real", true), func(si: bool) -> void:
 			_guardar_pref("motor_real", si))
@@ -1870,7 +1871,7 @@ func _rotulo_automatico() -> void:
 ## ESTADÍSTICAS A PEDIDO: su botón (`jugar_estadisticas`) o desde la pausa. El
 ## partido espera mientras se miran.
 func abrir_estadisticas() -> void:
-	if _motor == null or _panel_stats != null or partido == null:
+	if _panel_stats != null or partido == null:
 		return
 	if _cajon != null and _cajon.abierto:
 		_cajon.cerrar()
@@ -1878,7 +1879,7 @@ func abrir_estadisticas() -> void:
 	_panel_stats.cerrado.connect(func() -> void: _panel_stats = null)
 
 func _unhandled_input(e: InputEvent) -> void:
-	if _motor != null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_estadisticas"):
+	if partido != null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_estadisticas"):
 		get_viewport().set_input_as_handled()
 		abrir_estadisticas()
 		return

@@ -125,9 +125,12 @@ func n_tiros(local: bool) -> int:
 ## (lo que va a la ficha) con lo que se midió en el césped.
 func resumen(p: Partido, motor: MotorJugable) -> Array:
 	var filas: Array = []
+	## Lo que el motor mide al momento (posesión, córners, faltas) se lee de
+	## él: el acta solo lo copia una vez por minuto.
+	var pos_l := float(motor.posesion_local()) if motor != null else (p.posesion_local if p != null else 50.0)
+	if p != null or motor != null:
+		filas.append(["Posesión", "%d%%" % int(round(pos_l)), "%d%%" % int(round(100.0 - pos_l)), pos_l, 100.0 - pos_l])
 	if p != null:
-		filas.append(["Posesión", "%d%%" % int(round(p.posesion_local)), "%d%%" % int(round(100.0 - p.posesion_local)),
-			p.posesion_local, 100.0 - p.posesion_local])
 		filas.append(["Tiros", str(p.remates_local), str(p.remates_visita), float(p.remates_local), float(p.remates_visita)])
 		filas.append(["Tiros a puerta", str(p.tiros_puerta_local), str(p.tiros_puerta_visita),
 			float(p.tiros_puerta_local), float(p.tiros_puerta_visita)])
@@ -144,9 +147,11 @@ func resumen(p: Partido, motor: MotorJugable) -> Array:
 		var al := 100.0 * float(motor.pases_ok[0]) / float(pl) if pl > 0 else 0.0
 		var av := 100.0 * float(motor.pases_ok[1]) / float(pv) if pv > 0 else 0.0
 		filas.append(["Precisión de pase", "%d%%" % int(round(al)), "%d%%" % int(round(av)), al, av])
-	if p != null:
-		filas.append(["Córners", str(p.corners_local), str(p.corners_visita), float(p.corners_local), float(p.corners_visita)])
-		filas.append(["Faltas", str(p.faltas_local), str(p.faltas_visita), float(p.faltas_local), float(p.faltas_visita)])
+	var co: Array = motor.corners if motor != null else ([p.corners_local, p.corners_visita] if p != null else [])
+	var fa: Array = motor.faltas if motor != null else ([p.faltas_local, p.faltas_visita] if p != null else [])
+	if not co.is_empty():
+		filas.append(["Córners", str(co[0]), str(co[1]), float(co[0]), float(co[1])])
+		filas.append(["Faltas", str(fa[0]), str(fa[1]), float(fa[0]), float(fa[1])])
 	if motor != null:
 		filas.append(["Fueras de juego", str(motor.fueras_de_juego[0]), str(motor.fueras_de_juego[1]),
 			float(motor.fueras_de_juego[0]), float(motor.fueras_de_juego[1])])
