@@ -45,10 +45,14 @@ var _dx := 49.0
 var _dz := 68.0
 var _x_boca := 0.0
 var _rng := RandomNumberGenerator.new()
+## La estética de quien la usa (16-10-2026: la Carrera de Jugador la pinta con
+## su negro, lima y fucsia): {fondo, acento, borde}. Vacío = la del entrenador.
+var _estilo := {}
 
 static func iniciar(ui: Control, raiz: Node3D, en_campo: Array, local: Club, visita: Club, estadio: String,
-		dx: float, dz: float, x_boca: float) -> CeremoniaPartido:
+		dx: float, dz: float, x_boca: float, estilo: Dictionary = {}) -> CeremoniaPartido:
 	var n := CeremoniaPartido.new()
+	n._estilo = estilo
 	ui.add_child(n)
 	n._ui = ui
 	n._raiz = raiz
@@ -67,7 +71,9 @@ static func iniciar(ui: Control, raiz: Node3D, en_campo: Array, local: Club, vis
 func _montar() -> void:
 	activa = true
 	_rng.seed = hash(_local.id + _visita.id)
-	_previa = get_viewport().get_camera_3d()
+	## La cámara del mundo del partido (puede vivir en un SubViewport, como en
+	## la Carrera de Jugador: la del `ui` sería otra).
+	_previa = _raiz.get_viewport().get_camera_3d()
 	_cam = Camera3D.new()
 	_cam.fov = 50.0
 	_cam.far = 900.0
@@ -287,7 +293,7 @@ func _camara(fase: int) -> void:
 
 func _rotulo_partido() -> Control:
 	var caja := PanelContainer.new()
-	caja.add_theme_stylebox_override("panel", Tema.caja(Color(0.03, 0.05, 0.12, 0.88), Tema.RADIO_GRANDE, Color(1, 1, 1, 0.18)))
+	caja.add_theme_stylebox_override("panel", Tema.caja(_estilo.get("fondo", Color(0.03, 0.05, 0.12, 0.88)), Tema.RADIO_GRANDE, _estilo.get("borde", Color(1, 1, 1, 0.18))))
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 22)
 	h.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -299,7 +305,7 @@ func _rotulo_partido() -> Control:
 	var t := Tema.etiqueta(30, Tema.TEXTO, "%s  vs  %s" % [Nombres.visible(_local.nombre), Nombres.visible(_visita.nombre)])
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
-	var s := Tema.etiqueta(15, Tema.ORO, Idiomas.t("En vivo desde") + " " + _nombre_estadio)
+	var s := Tema.etiqueta(15, _estilo.get("acento", Tema.ORO), Idiomas.t("En vivo desde") + " " + _nombre_estadio)
 	s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(s)
 	var salta := Tema.etiqueta(11, Tema.SUAVE, Idiomas.t("Cualquier tecla para saltar"))
@@ -332,7 +338,7 @@ func _escudo(c: Club, tam: int) -> TextureRect:
 ## titular en su sitio, como en una transmisión.
 func _carta_alineacion(c: Club, es_local: bool) -> Control:
 	var caja := PanelContainer.new()
-	caja.add_theme_stylebox_override("panel", Tema.caja(Color(0.04, 0.06, 0.16, 0.9), Tema.RADIO_GRANDE, Color(c.color1).lightened(0.2)))
+	caja.add_theme_stylebox_override("panel", Tema.caja(_estilo.get("fondo", Color(0.04, 0.06, 0.16, 0.9)), Tema.RADIO_GRANDE, Color(c.color1).lightened(0.2)))
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 18)
 	caja.add_child(h)
@@ -345,7 +351,7 @@ func _carta_alineacion(c: Club, es_local: bool) -> Control:
 	nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	izq.add_child(nom)
-	var dib := Tema.etiqueta(14, Tema.ORO, c.tactica.formacion)
+	var dib := Tema.etiqueta(14, _estilo.get("acento", Tema.ORO), c.tactica.formacion)
 	dib.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	izq.add_child(dib)
 	## El campo con los once.
@@ -407,7 +413,8 @@ func _anim_de(ap: Variant, nombre: String) -> void:
 			(ap as AnimationPlayer).speed_scale = 1.0
 
 func _unhandled_input(e: InputEvent) -> void:
-	if activa and ((e is InputEventMouseButton and (e as InputEventMouseButton).pressed) or (e is InputEventKey and (e as InputEventKey).pressed)):
+	if activa and ((e is InputEventMouseButton and (e as InputEventMouseButton).pressed) or (e is InputEventKey and (e as InputEventKey).pressed)
+			or (e is InputEventJoypadButton and (e as InputEventJoypadButton).pressed)):
 		get_viewport().set_input_as_handled()
 		terminar()
 
