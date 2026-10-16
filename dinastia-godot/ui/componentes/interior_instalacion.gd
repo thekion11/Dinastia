@@ -594,6 +594,93 @@ func _vaciar_lotes() -> void:
 			mmi.multimesh = mm
 			_raiz.add_child(mmi)
 	_lotes.clear()
+	for k: String in _prims:
+		var lista: Array = _prims[k]
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_colors = true
+		mm.mesh = _malla_prim(k.get_slice("|", 0))
+		mm.instance_count = lista.size()
+		for i in lista.size():
+			mm.set_instance_transform(i, lista[i][0])
+			mm.set_instance_color(i, lista[i][1])
+		var mmi := MultiMeshInstance3D.new()
+		mmi.name = "Prim_" + k.replace("|", "_")
+		mmi.multimesh = mm
+		mmi.material_override = _mat_prim(k.get_slice("|", 1))
+		_raiz.add_child(mmi)
+	_prims.clear()
+
+# ------------------------------------- primitivas en lote (16-10-2026)
+## Cajas, cilindros y esferas de cualquier color que se dibujan juntas: un
+## MultiMesh por forma y acabado, con el color por instancia. Para el equipo de
+## gimnasio (cientos de discos, mancuernas, losetas...) a pocas llamadas.
+## `tam`: caja = medidas; cilindro = (diámetro, alto, diámetro); esfera = diámetro.
+## `base`: el marco del aparato (posición y giro); `p` y `rot` van en local.
+var _prims := {}
+static var _mallas_prim := {}
+static var _mats_prim := {}
+
+func _prim(forma: String, p: Vector3, tam: Vector3, col: Color, acabado: String = "mate", rot: Vector3 = Vector3.ZERO, base: Transform3D = Transform3D.IDENTITY) -> void:
+	var k := forma + "|" + acabado
+	if not _prims.has(k):
+		_prims[k] = []
+	(_prims[k] as Array).append([base * Transform3D(Basis.from_euler(rot) * Basis.from_scale(tam), p), col])
+
+static func _malla_prim(forma: String) -> Mesh:
+	if _mallas_prim.has(forma):
+		return _mallas_prim[forma]
+	var m: Mesh
+	match forma:
+		"cil":
+			var c := CylinderMesh.new()
+			c.top_radius = 0.5
+			c.bottom_radius = 0.5
+			c.height = 1.0
+			c.radial_segments = 14
+			c.rings = 1
+			m = c
+		"cono":
+			var c := CylinderMesh.new()
+			c.top_radius = 0.08
+			c.bottom_radius = 0.5
+			c.height = 1.0
+			c.radial_segments = 12
+			c.rings = 1
+			m = c
+		"esf":
+			var s := SphereMesh.new()
+			s.radius = 0.5
+			s.height = 1.0
+			s.radial_segments = 14
+			s.rings = 7
+			m = s
+		_:
+			m = BoxMesh.new()
+	_mallas_prim[forma] = m
+	return m
+
+static func _mat_prim(acabado: String) -> StandardMaterial3D:
+	if _mats_prim.has(acabado):
+		return _mats_prim[acabado]
+	var m := StandardMaterial3D.new()
+	m.vertex_color_use_as_albedo = true
+	m.vertex_color_is_srgb = true
+	match acabado:
+		"metal":
+			m.metallic = 0.75
+			m.roughness = 0.3
+		"goma":
+			m.roughness = 0.55
+		"luz":
+			m.roughness = 0.2
+			m.emission_enabled = true
+			m.emission = Color(0.9, 0.95, 1.0)
+			m.emission_energy_multiplier = 0.35
+		_:
+			m.roughness = 0.85
+	_mats_prim[acabado] = m
+	return m
 
 ## Un asiento del kit con gente: `plazas` son los desplazamientos laterales (m)
 ## de quien se sienta (vacío = libre). La persona queda en el centro del
@@ -1621,57 +1708,351 @@ func _cine() -> void:
 		_cartel("SALIDA", Vector3(s * 8.93, 2.4, 7.4), 20, Color.WHITE, -s * PI * 0.5)
 	_caminante([Vector3(-7.6, 0, 7.5), Vector3(-7.6, 0, -5.5), Vector3(7.6, 0, -5.5), Vector3(7.6, 0, 7.5)])
 
-## Gimnasio (16 × 12 m): cintas, bancos de pesas, mancuernas, colchonetas,
-## espejo, altavoces y la nevera de bebidas.
+## Gimnasio y recuperación (16 × 12 m, 16-10-2026: «que parezca el gimnasio de
+## un club de verdad y lleno de vida»). Zonas sobre suelo de goma: cardio al
+## fondo (cintas y bicis ante el espejo, teles con datos), pista de césped con
+## escalera de agilidad y conos, zona de fuerza a la derecha (poleas, rack de
+## mancuernas, bancos, jaula de sentadillas, kettlebells), zona funcional en el
+## centro (cajones, balones medicinales, fitballs), estiramientos y camilla del
+## fisio a la izquierda, y delante el banco de vestuario y la mesa del
+## preparador con la pantalla de GPS. Casi todo el equipo va en lotes
+## (`_prim`, `_poner`): cientos de piezas a pocas llamadas de dibujo.
 func _gimnasio() -> void:
-	_sala(Vector3(16, 4.2, 12), Color(0.22, 0.22, 0.25), Color(0.86, 0.86, 0.89), "moqueta", Color(0.25, 0.25, 0.28))
+	_tonos_sala = _MADERA_CLARA
+	var goma := Color(0.17, 0.17, 0.19)
+	_sala(Vector3(16, 4.2, 12), goma, Color(0.88, 0.88, 0.9), "moqueta", _c1.darkened(0.55))
 	var dep := [_c1, _c2]
-	## Cintas de correr con jugadores trotando en el sitio.
-	for k in 4:
-		var p := Vector3(-6.4 + float(k) * 1.9, 0, -4.4)
-		Mini3D.caja(_raiz, p + Vector3(0, 0.15, 0), Vector3(0.9, 0.3, 2.0), Mini3D.mat(Color(0.15, 0.15, 0.17), 0.4))
-		Mini3D.caja(_raiz, p + Vector3(0, 0.31, 0.1), Vector3(0.6, 0.02, 1.7), Mini3D.mat(Color(0.05, 0.05, 0.06), 0.9))
-		for s: float in [-1.0, 1.0]:
-			Mini3D.caja(_raiz, p + Vector3(s * 0.42, 0.75, -0.85), Vector3(0.06, 1.0, 0.06), Mini3D.mat(Color(0.6, 0.6, 0.62), 0.3))
-		Mini3D.caja(_raiz, p + Vector3(0, 1.25, -0.9), Vector3(0.9, 0.35, 0.12), Mini3D.mat(Color(0.2, 0.2, 0.22), 0.4))
-		var d := Mini3D.persona(_raiz, _rng, p + Vector3(0, 0.32, 0.15), dep)
-		if not d.is_empty():
-			(d["nodo"] as Node3D).rotation.y = PI
-			Mini3D.anim(d, "trotar", "")
-	## Bancos de pesas con barra y discos.
+	var hierro := Color(0.12, 0.12, 0.13)
+	var cromo := Color(0.78, 0.79, 0.82)
+	var acero := Color(0.42, 0.44, 0.47)
+	var blanco := Color(0.94, 0.94, 0.95)
+	## --- Suelo por zonas: losetas de cardio, pista de césped, damero de
+	## fuerza y la zona funcional con su borde del color del club.
+	_prim("caja", Vector3(-2.2, 0.005, -4.7), Vector3(11.2, 0.01, 2.6), Color(0.22, 0.24, 0.29))
+	for i in 11:
+		_prim("caja", Vector3(-7.8 + float(i) * 1.12, 0.012, -4.7), Vector3(0.02, 0.005, 2.6), Color(0.13, 0.14, 0.17))
+	_prim("caja", Vector3(-2.2, 0.006, -2.15), Vector3(11.2, 0.012, 1.7), Color(0.2, 0.42, 0.2))
+	for z: float in [-2.97, -1.33]:
+		_prim("caja", Vector3(-2.2, 0.014, z), Vector3(11.2, 0.006, 0.05), blanco)
+	for i in 6:
+		_prim("caja", Vector3(-7.4 + float(i) * 2.0, 0.014, -2.15), Vector3(0.05, 0.006, 1.6), blanco)
+	for i in 4:
+		for j in 9:
+			var claro := (i + j) % 2 == 0
+			_prim("caja", Vector3(4.1 + float(i) * 1.0, 0.007, -5.45 + float(j) * 1.0), Vector3(0.98, 0.014, 0.98),
+				Color(0.26, 0.26, 0.28) if claro else Color(0.2, 0.2, 0.22))
+	_prim("caja", Vector3(0.7, 0.006, 1.05), Vector3(5.2, 0.012, 3.7), Color(0.3, 0.31, 0.33))
+	for s: float in [-1.0, 1.0]:
+		_prim("caja", Vector3(0.7, 0.014, 1.05 + s * 1.82), Vector3(5.2, 0.006, 0.06), _c1)
+		_prim("caja", Vector3(0.7 + s * 2.57, 0.014, 1.05), Vector3(0.06, 0.006, 3.7), _c1)
+	## --- Paredes: franja del club, espejo largo, teles y altavoces.
+	for z: float in [-5.99]:
+		_prim("caja", Vector3(0, 2.75, z), Vector3(16, 0.18, 0.02), _c1)
+	for s: float in [-1.0, 1.0]:
+		_prim("caja", Vector3(s * 7.99, 2.75, 0), Vector3(0.02, 0.18, 12), _c1)
+	Mini3D.caja(_raiz, Vector3(-2.2, 1.35, -5.98), Vector3(10.8, 2.1, 0.02), Mini3D.mat(Color(0.62, 0.68, 0.74), 0.04, 0.08))
+	_prim("caja", Vector3(-2.2, 0.27, -5.97), Vector3(10.9, 0.06, 0.04), cromo, "metal")
+	_prim("caja", Vector3(-2.2, 2.43, -5.97), Vector3(10.9, 0.06, 0.04), cromo, "metal")
+	var datos_tv := ["RITMO  5:12 /km\nFC  152 ppm", "CARGA  ▲ 8 %\nRPE  6,4", "SPRINTS  118\nVEL. MÁX  33,1"]
 	for k in 3:
-		var p := Vector3(1.4 + float(k) * 2.1, 0, -4.0)
-		Mini3D.caja(_raiz, p + Vector3(0, 0.45, 0), Vector3(0.4, 0.1, 1.5), Mini3D.mat(Color(0.12, 0.12, 0.14), 0.5))
-		Mini3D.caja(_raiz, p + Vector3(0, 0.22, 0), Vector3(0.1, 0.44, 1.2), Mini3D.mat(Color(0.5, 0.5, 0.52), 0.3))
-		for s: float in [-1.0, 1.0]:
-			Mini3D.cilindro(_raiz, p + Vector3(s * 0.45, 0.6, -0.55), 0.03, 1.2, Mini3D.mat(Color(0.6, 0.6, 0.62), 0.3))
-		Mini3D.cilindro(_raiz, p + Vector3(0, 1.15, -0.55), 0.02, 1.8, Mini3D.mat(Color(0.75, 0.75, 0.78), 0.2)).rotation.z = PI * 0.5
-		for s: float in [-1.0, 1.0]:
-			Mini3D.cilindro(_raiz, p + Vector3(s * 0.75, 1.15, -0.55), 0.22, 0.06, Mini3D.mat(Color(0.08, 0.08, 0.09), 0.5)).rotation.z = PI * 0.5
-	## Mancuernas en su soporte.
-	Mini3D.caja(_raiz, Vector3(7.5, 0.4, -1.0), Vector3(0.6, 0.8, 3.0), Mini3D.mat(Color(0.2, 0.2, 0.22), 0.4))
-	for k in 8:
-		var m := Mini3D.cilindro(_raiz, Vector3(7.5, 0.86, -2.3 + float(k) * 0.37), 0.06 + float(k) * 0.006, 0.36, Mini3D.mat(Color(0.1, 0.1, 0.11), 0.4))
-		m.rotation.z = PI * 0.5
-	## Colchonetas y los que hacen ejercicio.
+		var x := -6.0 + float(k) * 3.0
+		_pantalla(Vector3(x, 3.25, -5.95), Vector2(1.3, 0.72), Color(0.12, 0.3, 0.5))
+		_cartel(String(datos_tv[k]), Vector3(x, 3.25, -5.9), 16, Color(0.85, 1.0, 0.9))
+	for p: Vector3 in [Vector3(-7.72, 3.2, -5.72), Vector3(7.72, 3.2, -5.72), Vector3(-7.72, 3.2, 5.6), Vector3(7.72, 3.2, 5.6)]:
+		_prim("caja", p + Vector3(0, -0.06, 0), Vector3(0.25, 0.04, 0.25), hierro)
+		_poner("speakerSmall", p, atan2(-p.x, -p.z))
+	_cartel("💪 " + _sala_nombre().to_upper(), Vector3(4.6, 3.55, -5.95), 34)
+	_cartel("ESFUERZO · EQUIPO · VICTORIA", Vector3(-7.96, 3.2, 1.2), 30, _c1.lightened(0.25), PI * 0.5)
+	## --- Cardio: cuatro cintas (tres en marcha) y tres bicis.
 	for k in 4:
-		Mini3D.caja(_raiz, Vector3(-5.8 + float(k) * 1.9, 0.03, 0.8), Vector3(1.7, 0.06, 0.95), Mini3D.mat(_c1.lightened(0.15), 0.85))
-	_trabajador(Vector3(-5.0, 0, 1.6), PI, false, ["dominadas", "saltar_inicio", "cansado"], dep)
-	_trabajador(Vector3(-1.2, 0, 1.6), PI, false, ["dominadas", "aplaudir"], dep)
-	_trabajador(Vector3(3.4, 0, -2.6), PI * 0.8, false, ["aplaudir", "charla"], dep)
-	## Espejo, altavoces, nevera de bebidas y bancos.
-	Mini3D.caja(_raiz, Vector3(-3.4, 1.6, -5.98), Vector3(7.5, 2.0, 0.02), Mini3D.mat(Color(0.55, 0.62, 0.68), 0.05, 0.05))
-	for x: float in [-7.5, 7.5]:
-		_poner("speaker", Vector3(x, 0, -5.6), -signf(x) * 0.6)
-	_poner("kitchenFridgeSmall", Vector3(-7.65, 0, 3.0), PI * 0.5)
-	_asiento("benchCushionLow", Vector3(3.2, 0, 3.2), PI, [0.0], dep, 2.4, {"carpet": _c1.darkened(0.2)})
-	_asiento("benchCushionLow", Vector3(5.6, 0, 3.2), PI, [], [], 2.4, {"carpet": _c1.darkened(0.2)})
-	_planta(Vector3(7.4, 0, 5.4))
-	_planta(Vector3(-7.4, 0, 5.4))
-	_ventana(1.0, 2.0, 2.4, false)
-	## El preparador físico, que va de máquina en máquina.
-	_caminante([Vector3(-6.5, 0, -2.4), Vector3(6.4, 0, -2.4), Vector3(6.4, 0, -0.3), Vector3(-6.5, 0, -0.3)], [Color(0.15, 0.15, 0.18), Color(0.15, 0.15, 0.18), true])
-	_cartel("💪 " + _sala_nombre().to_upper(), Vector3(4.0, 3.5, -5.95), 40)
+		var t := Transform3D(Basis.IDENTITY, Vector3(-7.0 + float(k) * 1.4, 0, -4.6))
+		_cinta(t, hierro, acero)
+		if k != 2:
+			var d := Mini3D.persona(_raiz, _rng, t.origin + Vector3(0, 0.25, 0.15), dep)
+			if not d.is_empty():
+				(d["nodo"] as Node3D).rotation.y = PI
+				Mini3D.anim(d, "trotar", "")
+				(d["anim"] as AnimationPlayer).seek(_rng.randf(), true)
+	_prim("caja", Vector3(-4.2 + 0.42, 1.38, -5.4), Vector3(0.5, 0.05, 0.3), blanco, "mate", Vector3(0, 0, 0.1))
+	for k in 3:
+		var t := Transform3D(Basis.IDENTITY, Vector3(-0.9 + float(k) * 1.25, 0, -4.75))
+		var sillin := _bici(t, hierro, acero)
+		if k != 1:
+			_trabajador(Vector3(sillin.x, 0, sillin.z - 0.05), PI, true, [], dep, sillin.y)
+	## --- Fuerza: poleas al fondo a la derecha con alguien haciendo press.
+	_poleas(Transform3D(Basis.IDENTITY, Vector3(6.0, 0, -5.45)), hierro, acero, cromo)
+	_trabajador(Vector3(6.0, 0, -4.55), 0.0, false, ["empujar", "empujar", "cansado"], dep)
+	## Rack de mancuernas contra la pared derecha y su par de bancos.
+	_rack_mancuernas(Transform3D(Basis(Vector3.UP, -PI * 0.5), Vector3(7.5, 0, -1.6)), hierro, cromo)
+	for z: float in [-2.6, -0.6]:
+		_banco_pesas(Transform3D(Basis.IDENTITY, Vector3(5.3, 0, z)), hierro, acero)
+	_trabajador(Vector3(5.3, 0, -2.6), PI * 0.5, true, [], dep, 0.46)
+	_trabajador(Vector3(4.4, 0, -0.4), PI * 0.5, false, ["charla", "brazos_jarra", "pedir_calma"], dep)
+	_poner("trashcan", Vector3(4.2, 0, -3.35), 0.0, 1.4)
+	## Jaula de sentadillas con su barra, el árbol de discos y las kettlebells.
+	_jaula(Transform3D(Basis.IDENTITY, Vector3(5.3, 0, 1.9)), hierro, cromo)
+	var colores_kb := [Color(0.85, 0.3, 0.5), Color(0.25, 0.45, 0.85), Color(0.95, 0.8, 0.2), Color(0.55, 0.3, 0.7), Color(0.3, 0.7, 0.35), Color(0.9, 0.5, 0.15)]
+	for k in 6:
+		var r := 0.17 + float(k) * 0.018
+		var p := Vector3(7.45, 0, 0.45 + float(k) * 0.33)
+		_prim("esf", p + Vector3(0, r * 0.5, 0), Vector3.ONE * r, colores_kb[k], "goma")
+		_prim("caja", p + Vector3(0, r * 1.0 + 0.04, 0), Vector3(0.03, 0.03, r * 0.75), hierro)
+		for s: float in [-1.0, 1.0]:
+			_prim("caja", p + Vector3(0, r * 0.9, s * r * 0.36), Vector3(0.03, 0.12, 0.03), hierro)
+	_trabajador(Vector3(6.75, 0, 1.3), PI * 0.5, false, ["recoger_balon", "parado", "cansado"], dep)
+	## --- Pista de césped: escalera de agilidad, conos y alguien que esprinta.
+	for i in 12:
+		_prim("caja", Vector3(-6.6 + float(i) * 0.42, 0.02, -2.15), Vector3(0.04, 0.012, 0.5), Color(0.98, 0.85, 0.1))
+	for s: float in [-1.0, 1.0]:
+		_prim("caja", Vector3(-6.6 + 11.0 * 0.21, 0.018, -2.15 + s * 0.25), Vector3(4.66, 0.008, 0.025), Color(0.98, 0.85, 0.1))
+	for k in 6:
+		var p := Vector3(-1.4 + float(k) * 0.8, 0, -2.15 + (0.52 if k % 2 == 0 else -0.52))
+		_prim("cono", p + Vector3(0, 0.12, 0), Vector3(0.2, 0.24, 0.2), Color(1.0, 0.45, 0.08), "goma")
+		_prim("caja", p + Vector3(0, 0.008, 0), Vector3(0.24, 0.016, 0.24), Color(1.0, 0.45, 0.08))
+	_caminante([Vector3(-7.2, 0, -2.15), Vector3(2.8, 0, -2.15)], dep, true)
+	if not _caminantes.is_empty():
+		## Por el centro de la pista, sin el desvío al azar: entre los conos.
+		_caminantes[-1]["puntos"] = [Vector3(-7.2, 0, -2.15), Vector3(2.8, 0, -2.15)]
+		(_caminantes[-1]["d"]["nodo"] as Node3D).position.z = -2.15
+	## --- Zona funcional: cajones pliométricos, balones medicinales y fitballs.
+	var altos := [0.3, 0.5, 0.75]
+	for k in 3:
+		var p := Vector3(-1.2 + float(k) * 1.0, 0, -0.25)
+		var h: float = altos[k]
+		_prim("caja", p + Vector3(0, h * 0.5, 0), Vector3(0.75, h, 0.6), Color(0.62, 0.45, 0.3) if k != 1 else Color(0.15, 0.15, 0.17))
+		_prim("caja", p + Vector3(0, h + 0.004, 0), Vector3(0.7, 0.01, 0.55), Color(0.2, 0.2, 0.22))
+		_prim("caja", p + Vector3(0, h * 0.5, 0.302), Vector3(0.3, 0.12, 0.004), _c1)
+	_trabajador(Vector3(-0.2, 0, 0.55), PI, false, ["saltar_inicio", "caer_salto", "saltar_inicio", "cansado"], dep)
+	_estante_balones(Transform3D(Basis(Vector3.UP, PI), Vector3(2.75, 0, -0.35)), hierro)
+	_prim("esf", Vector3(2.0, 0.13, 0.35), Vector3.ONE * 0.26, Color(0.75, 0.2, 0.15), "goma")
+	var fit := [Color(0.25, 0.45, 0.8), _c1, Color(0.55, 0.57, 0.6), Color(0.25, 0.45, 0.8)]
+	var sitios_fit := [Vector3(0.3, 0, 2.3), Vector3(1.35, 0, 2.55), Vector3(2.4, 0, 2.1), Vector3(2.75, 0, 1.2)]
+	for k in 4:
+		var dm := 0.65 if k != 3 else 0.55
+		_prim("esf", (sitios_fit[k] as Vector3) + Vector3(0, dm * 0.5, 0), Vector3.ONE * dm, fit[k], "goma")
+	_trabajador(Vector3(1.35, 0, 2.6), 0.0, true, [], dep, 0.6)
+	## --- Estiramientos (izquierda): colchonetas, rulos y gomas.
+	var mats := [Vector3(-5.3, 0, 0.4), Vector3(-3.4, 0, 0.4), Vector3(-5.3, 0, 2.0), Vector3(-3.4, 0, 2.0)]
+	for k in 4:
+		var p: Vector3 = mats[k]
+		_prim("caja", p + Vector3(0, 0.02, 0), Vector3(1.8, 0.04, 0.85), _c1.darkened(0.15) if k % 2 == 0 else Color(0.25, 0.3, 0.38), "goma")
+		_prim("cil", p + Vector3(0.75, 0.1, -0.3), Vector3(0.15, 0.6, 0.15), [Color(0.2, 0.2, 0.22), Color(0.3, 0.55, 0.85)][k % 2], "goma", Vector3(PI * 0.5, 0, 0))
+	_prim("caja", Vector3(-3.0, 0.045, 0.62), Vector3(0.7, 0.01, 0.05), Color(0.9, 0.3, 0.3))
+	_prim("caja", Vector3(-4.9, 0.045, 2.25), Vector3(0.6, 0.01, 0.05), Color(0.3, 0.75, 0.4))
+	_trabajador(Vector3(-5.6, 0.04, 0.4), 0.0, false, ["agachado", "parado", "agachado", "agachado"], dep)
+	_trabajador(Vector3(-3.3, 0.04, 0.35), PI * 0.3, false, ["atarse_botin"], dep)
+	_tumbado(Vector3(-5.3, 0.04, 2.0), PI * 0.5, dep)
+	_trabajador(Vector3(-3.6, 0.04, 2.0), PI * 0.15, false, ["brazos_al_frente", "cansado", "charla", "aplaudir"], dep)
+	## --- Recuperación: fuente de agua, toallero, la camilla con el fisio.
+	_fuente_agua(Vector3(-7.72, 0, -0.55), acero, cromo)
+	_toallero(Vector3(-7.62, 0, 1.15))
+	_prim("caja", Vector3(-6.8, 0.37, 3.7), Vector3(0.7, 0.06, 1.95), acero, "metal")
+	for x: float in [-7.08, -6.52]:
+		for z: float in [2.9, 4.5]:
+			_prim("caja", Vector3(x, 0.18, z), Vector3(0.05, 0.36, 0.05), acero, "metal")
+	_prim("caja", Vector3(-6.8, 0.48, 3.7), Vector3(0.72, 0.16, 1.95), Color(0.15, 0.2, 0.3), "goma")
+	_prim("caja", Vector3(-6.8, 0.565, 4.45), Vector3(0.5, 0.01, 0.4), blanco)
+	_tumbado(Vector3(-6.8, 0.56, 3.7), 0.0, dep)
+	_trabajador(Vector3(-6.0, 0, 3.4), -PI * 0.5, false, ["charla", "pedir_calma", "brazos_jarra"], [Color(0.95, 0.95, 0.97), Color(0.14, 0.18, 0.32), true])
+	_prim("caja", Vector3(-7.6, 0.4, 5.1), Vector3(0.5, 0.8, 0.45), blanco)
+	_prim("caja", Vector3(-7.36, 0.6, 5.1), Vector3(0.02, 0.08, 0.08), Color(0.85, 0.15, 0.15))
+	_planta(Vector3(-7.3, 0, 5.6))
+	## --- Delante a la derecha: banco de vestuario, mochilas, la mesa del
+	## preparador con su portátil y la pantalla de GPS.
+	_asiento("benchCushionLow", Vector3(3.8, 0, 5.35), PI, [0.4], dep, Vector3(4.8, 2.2, 2.2), {"carpet": _c1.darkened(0.35), "wood": Color(0.62, 0.48, 0.32)})
+	for k in 3:
+		_prim("caja", Vector3(3.0 + float(k) * 0.35, 0.47, 5.35), Vector3(0.3, 0.05, 0.36), blanco if k != 1 else _c1)
+	for k in 2:
+		var p := Vector3(2.7 + float(k) * 2.1, 0, 4.95)
+		_prim("caja", p + Vector3(0, 0.16, 0), Vector3(0.55, 0.32, 0.28), [Color(0.1, 0.1, 0.12), _c1.darkened(0.3)][k], "goma")
+		_prim("cil", p + Vector3(0.38, 0.12, 0), Vector3(0.08, 0.24, 0.08), Color(0.25, 0.55, 0.9), "goma")
+	var mesa_esc := 2.5
+	_poner("kitchenBar", Vector3(6.5, 0, 4.82), -PI * 0.5, mesa_esc)
+	_poner("kitchenBar", Vector3(6.5, 0, 3.75), -PI * 0.5, mesa_esc)
+	var tope := _alto("kitchenBar", mesa_esc)
+	_poner("laptop", Vector3(6.4, tope, 4.15), PI * 0.5, 2.0)
+	_poner("comida/cup-coffee", Vector3(6.55, tope, 4.75), 0.3)
+	_prim("caja", Vector3(6.5, tope + 0.01, 3.6), Vector3(0.22, 0.02, 0.3), blanco)
+	_pantalla(Vector3(7.96, 2.0, 4.0), Vector2(2.2, 1.25), Color(0.08, 0.16, 0.22), -PI * 0.5)
+	_cartel("GPS · SESIÓN DE HOY\nDistancia  6,8 km\nAlta intensidad  1.240 m\nSprints  22   ·   FC media  148", Vector3(7.9, 2.0, 4.0), 17, Color(0.6, 1.0, 0.75), -PI * 0.5)
+	_trabajador(Vector3(5.7, 0, 4.2), PI * 0.5, false, ["senalar_adelante", "charla", "brazos_jarra", "aplaudir"], [_c1.darkened(0.5), Color(0.12, 0.12, 0.15), true])
+	_poner("mini_arcade/vending-machine", Vector3(5.6, 0, 5.45), PI, 2.2)
+	_planta(Vector3(2.6, 0, 5.6))
+	_planta(Vector3(-2.6, 0, 5.6), false)
+	_ventana(-1.0, -2.2, 2.0, false)
+
+## Persona tumbada boca arriba (la caída del pack, congelada en su último fotograma).
+func _tumbado(p: Vector3, giro: float, deporte: Array) -> void:
+	var d := Mini3D.persona(_raiz, _rng, p, deporte)
+	if d.is_empty():
+		return
+	(d["nodo"] as Node3D).rotation.y = giro
+	Mini3D.anim(d, "caida_lesion", "", 0.0)
+	var ap: AnimationPlayer = d["anim"]
+	ap.seek(ap.current_animation_length, true)
+	## El clip acaba con el cuerpo lejos de su origen y girado: se mide dónde
+	## quedan la cabeza y los pies y se recoloca para que el cuerpo quede
+	## centrado en `p` con la cabeza hacia `giro`.
+	var nodo: Node3D = d["nodo"]
+	var esq: Array = nodo.find_children("*", "Skeleton3D", true, false)
+	if esq.is_empty():
+		return
+	var sk: Skeleton3D = esq[0]
+	var cab := _hueso_local(nodo, sk, "Head")
+	var pies := (_hueso_local(nodo, sk, "foot_l") + _hueso_local(nodo, sk, "foot_r")) * 0.5
+	var eje := cab - pies
+	if Vector2(eje.x, eje.z).length() < 0.3:
+		return
+	var th := giro - atan2(eje.x, eje.z)
+	var mitad := (cab + pies) * 0.5
+	mitad.y = 0.0
+	nodo.rotation.y = th
+	nodo.position = p - Basis(Vector3.UP, th) * mitad
+
+## Posición de un hueso (pose actual) en el espacio de `nodo`.
+static func _hueso_local(nodo: Node3D, sk: Skeleton3D, hueso: String) -> Vector3:
+	var b := sk.find_bone(hueso)
+	if b < 0:
+		return Vector3.ZERO
+	var t := sk.get_bone_global_pose(b)
+	var n: Node = sk
+	while n != null and n != nodo:
+		if n is Node3D:
+			t = (n as Node3D).transform * t
+		n = n.get_parent()
+	return t.origin
+
+## Cinta de correr; quien corre mira a −Z local (consola).
+func _cinta(t: Transform3D, hierro: Color, acero: Color) -> void:
+	_prim("caja", Vector3(0, 0.11, 0.05), Vector3(0.82, 0.22, 1.95), hierro, "goma", Vector3.ZERO, t)
+	_prim("caja", Vector3(0, 0.225, 0.1), Vector3(0.52, 0.012, 1.7), Color(0.05, 0.05, 0.06), "goma", Vector3.ZERO, t)
+	for s: float in [-1.0, 1.0]:
+		_prim("caja", Vector3(s * 0.34, 0.23, 0.1), Vector3(0.14, 0.02, 1.7), acero, "metal", Vector3.ZERO, t)
+		_prim("caja", Vector3(s * 0.36, 0.72, -0.78), Vector3(0.06, 1.0, 0.07), acero, "metal", Vector3(0.18, 0, 0), t)
+		_prim("caja", Vector3(s * 0.36, 1.12, -0.5), Vector3(0.05, 0.05, 0.55), Color(0.2, 0.2, 0.22), "goma", Vector3.ZERO, t)
+	_prim("caja", Vector3(0, 1.3, -0.82), Vector3(0.8, 0.32, 0.1), Color(0.2, 0.2, 0.22), "mate", Vector3(-0.5, 0, 0), t)
+	_prim("caja", Vector3(0, 1.31, -0.77), Vector3(0.5, 0.2, 0.01), Color(0.2, 0.55, 0.85), "luz", Vector3(-0.5, 0, 0), t)
+
+## Bici estática mirando a −Z local; devuelve el centro del sillín (global).
+func _bici(t: Transform3D, hierro: Color, acero: Color) -> Vector3:
+	_prim("caja", Vector3(0, 0.04, 0), Vector3(0.5, 0.08, 1.2), hierro, "goma", Vector3.ZERO, t)
+	_prim("cil", Vector3(0, 0.33, -0.55), Vector3(0.5, 0.08, 0.5), acero, "metal", Vector3(0, 0, PI * 0.5), t)
+	_prim("caja", Vector3(0, 0.33, -0.55), Vector3(0.1, 0.3, 0.3), Color(0.8, 0.15, 0.12), "goma", Vector3.ZERO, t)
+	_prim("caja", Vector3(0, 0.45, -0.1), Vector3(0.08, 0.08, 0.9), hierro, "goma", Vector3(0.35, 0, 0), t)
+	_prim("caja", Vector3(0, 0.55, 0.3), Vector3(0.07, 0.6, 0.07), hierro, "goma", Vector3(-0.25, 0, 0), t)
+	_prim("caja", Vector3(0, 0.82, 0.38), Vector3(0.24, 0.07, 0.3), Color(0.08, 0.08, 0.09), "goma", Vector3.ZERO, t)
+	_prim("caja", Vector3(0, 0.72, -0.38), Vector3(0.07, 0.75, 0.07), hierro, "goma", Vector3(0.3, 0, 0), t)
+	_prim("caja", Vector3(0, 1.08, -0.28), Vector3(0.55, 0.05, 0.1), Color(0.2, 0.2, 0.22), "goma", Vector3.ZERO, t)
+	for s: float in [-1.0, 1.0]:
+		_prim("caja", Vector3(s * 0.25, 1.1, -0.18), Vector3(0.05, 0.05, 0.22), Color(0.2, 0.2, 0.22), "goma", Vector3.ZERO, t)
+	_prim("caja", Vector3(0, 1.2, -0.38), Vector3(0.24, 0.15, 0.04), Color(0.2, 0.55, 0.85), "luz", Vector3(-0.4, 0, 0), t)
+	_prim("cil", Vector3(0, 0.36, -0.05), Vector3(0.16, 0.06, 0.16), acero, "metal", Vector3(0, 0, PI * 0.5), t)
+	for s: float in [-1.0, 1.0]:
+		_prim("caja", Vector3(s * 0.14, 0.3, -0.05), Vector3(0.08, 0.025, 0.14), Color(0.08, 0.08, 0.09), "goma", Vector3.ZERO, t)
+	return t * Vector3(0, 0.86, 0.38)
+
+## Máquina de poleas: dos torres con su pila de placas, travesaño de dominadas
+## y los cables con sus agarres.
+func _poleas(t: Transform3D, hierro: Color, acero: Color, cromo: Color) -> void:
+	for s: float in [-1.0, 1.0]:
+		var x := s * 1.3
+		for dx: float in [-0.22, 0.22]:
+			_prim("caja", Vector3(x + dx, 1.15, 0), Vector3(0.08, 2.3, 0.08), hierro, "goma", Vector3.ZERO, t)
+		_prim("caja", Vector3(x, 0.03, 0), Vector3(0.6, 0.06, 0.5), hierro, "goma", Vector3.ZERO, t)
+		for k in 12:
+			_prim("caja", Vector3(x, 0.1 + float(k) * 0.055, 0), Vector3(0.34, 0.05, 0.2), Color(0.25, 0.25, 0.27) if k % 2 == 0 else Color(0.3, 0.3, 0.32), "metal", Vector3.ZERO, t)
+		_prim("caja", Vector3(x, 1.2, 0.0), Vector3(0.02, 1.8, 0.02), cromo, "metal", Vector3.ZERO, t)
+		_prim("cil", Vector3(x - s * 0.22, 2.0, 0.1), Vector3(0.14, 0.04, 0.14), acero, "metal", Vector3(PI * 0.5, 0, 0), t)
+		_prim("caja", Vector3(x - s * 0.35, 1.6, 0.25), Vector3(0.012, 0.85, 0.012), Color(0.1, 0.1, 0.1), "goma", Vector3(0.4, 0, -s * 0.15), t)
+		_prim("caja", Vector3(x - s * 0.45, 1.2, 0.42), Vector3(0.14, 0.03, 0.03), Color(0.12, 0.12, 0.12), "goma", Vector3.ZERO, t)
+	_prim("caja", Vector3(0, 2.3, 0), Vector3(3.1, 0.1, 0.1), hierro, "goma", Vector3.ZERO, t)
+	_prim("cil", Vector3(0, 2.15, 0.15), Vector3(0.035, 1.6, 0.035), cromo, "metal", Vector3(0, 0, PI * 0.5), t)
+	_prim("caja", Vector3(0, 2.3, 0.06), Vector3(1.2, 0.08, 0.01), _c1, "mate", Vector3.ZERO, t)
+
+## Rack de mancuernas de dos baldas inclinadas (frente hacia +Z local), con
+## diez pares de peso creciente.
+func _rack_mancuernas(t: Transform3D, hierro: Color, cromo: Color) -> void:
+	var largo := 3.2
+	for x: float in [-largo * 0.5, 0.0, largo * 0.5]:
+		_prim("caja", Vector3(x, 0.4, 0), Vector3(0.06, 0.8, 0.55), hierro, "goma", Vector3.ZERO, t)
+	for b in 2:
+		var y := 0.42 + float(b) * 0.36
+		var z := 0.1 - float(b) * 0.2
+		_prim("caja", Vector3(0, y, z), Vector3(largo, 0.04, 0.32), hierro, "goma", Vector3(0.2, 0, 0), t)
+		for k in 10:
+			var x := -largo * 0.5 + 0.17 + float(k) * 0.32
+			var peso := float(k) / 9.0
+			var r := 0.085 + peso * 0.05 - float(b) * 0.015
+			_prim("cil", Vector3(x, y + r + 0.02, z), Vector3(0.035, 0.32, 0.035), cromo, "metal", Vector3(PI * 0.5, 0, 0), t)
+			for s: float in [-1.0, 1.0]:
+				_prim("cil", Vector3(x, y + r + 0.02, z + s * (0.12 + peso * 0.03)), Vector3(r * 2.0, 0.07 + peso * 0.04, r * 2.0), Color(0.1, 0.1, 0.11), "goma", Vector3(PI * 0.5, 0, 0), t)
+	_prim("caja", Vector3(0, 0.95, -0.25), Vector3(largo, 0.1, 0.03), _c1, "mate", Vector3.ZERO, t)
+
+## Banco plano de pesas, a lo largo de Z local.
+func _banco_pesas(t: Transform3D, hierro: Color, acero: Color) -> void:
+	_prim("caja", Vector3(0, 0.42, 0), Vector3(0.3, 0.08, 1.15), Color(0.1, 0.1, 0.12), "goma", Vector3.ZERO, t)
+	for z: float in [-0.45, 0.45]:
+		_prim("caja", Vector3(0, 0.19, z), Vector3(0.08, 0.38, 0.08), acero, "metal", Vector3.ZERO, t)
+		_prim("caja", Vector3(0, 0.02, z), Vector3(0.45, 0.04, 0.08), acero, "metal", Vector3.ZERO, t)
+
+## Jaula de sentadillas (frente +Z local) con la barra cargada en los ganchos
+## y el árbol de discos al lado.
+func _jaula(t: Transform3D, hierro: Color, cromo: Color) -> void:
+	for x: float in [-0.6, 0.6]:
+		for z: float in [-0.55, 0.55]:
+			_prim("caja", Vector3(x, 1.15, z), Vector3(0.08, 2.3, 0.08), hierro, "goma", Vector3.ZERO, t)
+		_prim("caja", Vector3(x, 2.28, 0), Vector3(0.08, 0.08, 1.18), hierro, "goma", Vector3.ZERO, t)
+		_prim("caja", Vector3(x, 0.03, 0), Vector3(0.1, 0.06, 1.3), hierro, "goma", Vector3.ZERO, t)
+	for z: float in [-0.55, 0.55]:
+		_prim("caja", Vector3(0, 2.28, z), Vector3(1.28, 0.08, 0.08), hierro, "goma", Vector3.ZERO, t)
+	_prim("caja", Vector3(0, 0.005, 0), Vector3(1.2, 0.01, 1.1), Color(0.45, 0.33, 0.22), "mate", Vector3.ZERO, t)
+	_prim("cil", Vector3(0, 1.38, 0.55), Vector3(0.03, 2.2, 0.03), cromo, "metal", Vector3(0, 0, PI * 0.5), t)
+	for s: float in [-1.0, 1.0]:
+		for k in 2:
+			_prim("cil", Vector3(s * (0.78 + float(k) * 0.06), 1.38, 0.55), Vector3(0.45 - float(k) * 0.12, 0.05, 0.45 - float(k) * 0.12),
+				[Color(0.75, 0.15, 0.15), Color(0.2, 0.4, 0.8)][k], "goma", Vector3(0, 0, PI * 0.5), t)
+	## Árbol de discos.
+	var arbol := Vector3(-1.2, 0, -0.3)
+	_prim("caja", arbol + Vector3(0, 0.55, 0), Vector3(0.06, 1.1, 0.06), hierro, "goma", Vector3.ZERO, t)
+	_prim("caja", arbol + Vector3(0, 0.02, 0), Vector3(0.5, 0.04, 0.5), hierro, "goma", Vector3.ZERO, t)
+	for k in 3:
+		for s: float in [-1.0, 1.0]:
+			var dm := 0.45 - float(k) * 0.1
+			_prim("cil", arbol + Vector3(0, 0.3 + float(k) * 0.3, s * 0.08), Vector3(dm, 0.05, dm),
+				[Color(0.75, 0.15, 0.15), Color(0.2, 0.4, 0.8), Color(0.9, 0.75, 0.15)][k], "goma", Vector3(PI * 0.5, 0, 0), t)
+
+## Estantería en A con dos baldas de balones medicinales (frente +Z local).
+func _estante_balones(t: Transform3D, hierro: Color) -> void:
+	for x: float in [-0.7, 0.7]:
+		_prim("caja", Vector3(x, 0.5, 0), Vector3(0.05, 1.0, 0.5), hierro, "goma", Vector3.ZERO, t)
+	var cols := [Color(0.75, 0.2, 0.15), Color(0.2, 0.2, 0.22), Color(0.25, 0.45, 0.8), Color(0.9, 0.7, 0.15), Color(0.3, 0.6, 0.3)]
+	for b in 2:
+		var y := 0.25 + float(b) * 0.45
+		_prim("caja", Vector3(0, y, 0), Vector3(1.4, 0.03, 0.4), hierro, "goma", Vector3.ZERO, t)
+		for k in 5:
+			var dm := 0.24 + float(k % 3) * 0.02
+			_prim("esf", Vector3(-0.54 + float(k) * 0.27, y + 0.015 + dm * 0.5, 0), Vector3.ONE * dm, cols[(k + b * 2) % cols.size()], "goma", Vector3.ZERO, t)
+
+## Fuente de agua contra la pared izquierda con su garrafa y vasos.
+func _fuente_agua(p: Vector3, acero: Color, cromo: Color) -> void:
+	_prim("caja", p + Vector3(0, 0.5, 0), Vector3(0.36, 1.0, 0.36), Color(0.88, 0.88, 0.9))
+	_prim("caja", p + Vector3(0.05, 0.85, 0), Vector3(0.3, 0.12, 0.3), acero, "metal")
+	_prim("cil", p + Vector3(0, 1.22, 0), Vector3(0.28, 0.42, 0.28), Color(0.45, 0.68, 0.95), "luz")
+	_prim("cil", p + Vector3(0, 1.0, 0), Vector3(0.1, 0.04, 0.1), Color(0.3, 0.5, 0.85))
+	_prim("caja", p + Vector3(0.2, 0.92, 0), Vector3(0.04, 0.04, 0.04), cromo, "metal")
+	_prim("cil", p + Vector3(0.05, 0.95, 0.35), Vector3(0.08, 0.3, 0.08), Color(0.92, 0.92, 0.94))
+
+## Estantería abierta con toallas dobladas (blancas y del club).
+func _toallero(p: Vector3) -> void:
+	var madera := Color(0.62, 0.48, 0.32)
+	for z: float in [-0.6, 0.6]:
+		_prim("caja", p + Vector3(0, 0.8, z), Vector3(0.4, 1.6, 0.04), madera)
+	for b in 4:
+		var y := 0.15 + float(b) * 0.45
+		_prim("caja", p + Vector3(0, y, 0), Vector3(0.4, 0.03, 1.2), madera)
+		for k in 3:
+			for n in 3 - (b + k) % 2:
+				_prim("caja", p + Vector3(0.02, y + 0.05 + float(n) * 0.075, -0.38 + float(k) * 0.38), Vector3(0.3, 0.07, 0.32), Color(0.95, 0.95, 0.96) if (k + b) % 3 != 1 else _c1)
 
 ## Sala de vídeo / e-sports (14 × 10 m): ocho puestos mirando a la pantalla
 ## grande; en la de e-sports, además, máquinas recreativas y un sofá.
