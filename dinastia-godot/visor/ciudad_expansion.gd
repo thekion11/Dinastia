@@ -1427,6 +1427,8 @@ const PUERTAS_MOD := ["building-door-window", "building-window-door-window", "bu
 
 var _mod_t := {}       ## ruta -> {t: Array[Transform3D], c: Array[Color], d: Array[Color]}
 var _mod_cajas_t: Array[Transform3D] = []
+## Las puertas de los bloques modulares: las farolas se apartan de ellas.
+var _puertas_mod: Array[Vector3] = []
 var _mod_cajas_c: Array[Color] = []
 
 ## ¿Está el kit? (si no, los bloques de siempre).
@@ -1532,6 +1534,7 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 	_mod_caja(puerta + rot * Vector3(0, 0, 0.55) + Vector3(0, 0.08, 0), Vector3(2.6, 0.16, 1.1), rot, Color(0.62, 0.6, 0.56))
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
 	cuenta["bloques_modulares"] = int(cuenta.get("bloques_modulares", 0)) + 1
+	_puertas_mod.append(puerta)
 	return puerta
 
 ## Dibuja los bloques modulares: un MultiMesh por pieza, color de pared en
@@ -1606,10 +1609,20 @@ func _feria(r: Rect2) -> void:
 	_pieza_kit(ruta_e, puerta, _escala_ancho(ruta_e, 9.0), 0.0)
 	var ruta_i := RUTA_FERIA + "stall-information.glb"
 	_pieza_kit(ruta_i, Vector3(c.x + 8.5, 0.12, r.position.y + 5.0), _escala_ancho(ruta_i, 3.2), -PI * 0.5)
+	var tex_franjas := _franjas_club()
 	for sx: float in [-1.0, 1.0]:
 		var mastil := Vector3(c.x + sx * 6.5, 0, r.position.y + 1.5)
 		b._cil_en(mastil + Vector3(0, 4.0, 0), 0.08, 8.0, _mat_det("feria_mastil", Color(0.85, 0.85, 0.86), 0.4))
-		b._caja_en(mastil + Vector3(sx * 0.7, 7.1, 0), Vector3(1.4, 0.9, 0.04), b._mat_simple(b._color_club("c1" if sx < 0.0 else "c2", Color(0.9, 0.2, 0.2)), 0.7))
+		## (16-10-2026) Antes, una caja plana de 1,4 × 0,9 m de un solo color del
+		## club: con un club de negro, la del mástil derecho era un CUADRADO NEGRO
+		## flotando junto a la noria. Ahora es una bandera de tela que ondea, con
+		## las tres franjas del club (el color claro fuera, el oscuro en medio).
+		var bnd := StadiumBuilder._bandera_ondeante(b, mastil + Vector3(0, 7.4, 0), Vector2(1.6, 1.0),
+			Color.WHITE, 0.0 if sx > 0.0 else PI, 0.4 if sx > 0.0 else 1.3)
+		var mb := bnd.material_override as ShaderMaterial
+		mb.set_shader_parameter("dibujo", tex_franjas)
+		mb.set_shader_parameter("usa_dibujo", true)
+		mb.set_shader_parameter("espejo", sx < 0.0)
 	b._rotulo(Vector3(c.x, 30.0, c.z), "🎡 Parque de atracciones", Color(1.0, 0.85, 0.55), 22)
 	feria["puerta"] = puerta
 	_noria(c + Vector3(-hx * 0.55, 0, -hz * 0.42))
@@ -1619,6 +1632,21 @@ func _feria(r: Rect2) -> void:
 	_guirnaldas_feria(c, r)
 	_jardines_feria(c, r)
 	cuenta["instalaciones"] = int(cuenta.get("instalaciones", 0)) + 1
+
+## La tela de las banderas de la feria: tres franjas horizontales con los dos
+## colores del club, el más claro fuera (si los dos son oscuros, fuera va blanco).
+func _franjas_club() -> ImageTexture:
+	var c1 := b._color_club("c1", Color(0.9, 0.2, 0.2))
+	var c2 := b._color_club("c2", Color(0.95, 0.95, 0.92))
+	var claro := c1 if c1.get_luminance() >= c2.get_luminance() else c2
+	var oscuro := c2 if claro == c1 else c1
+	if claro.get_luminance() < 0.25:
+		claro = Color(0.95, 0.95, 0.92)
+	var img := Image.create(4, 24, false, Image.FORMAT_RGB8)
+	for y in 24:
+		for x in 4:
+			img.set_pixel(x, y, oscuro if y >= 8 and y < 16 else claro)
+	return ImageTexture.create_from_image(img)
 
 ## La valla: postes y dos barras alrededor, con la entrada abierta al norte.
 func _valla_feria(r: Rect2) -> void:
@@ -2949,6 +2977,16 @@ func _farolas() -> void:
 			var lado := 1.0 if q % 2 == 0 else -1.0
 			var off := (ancho * 0.5 + 0.6) * lado
 			var base := p + (Vector3(off, 0, 0) if vertical else Vector3(0, 0, off))
+			## Nunca plantada delante de un portal (16-10-2026: en los bloques
+			## modulares del este una farola caía justo ante la puerta).
+			for pm: Vector3 in _puertas_mod:
+				var rel := pm - base
+				var a_lo_largo := rel.dot(dd)
+				if absf(a_lo_largo) < 3.2 and (rel - dd * a_lo_largo).length() < 12.0:
+					var corre := (3.4 - absf(a_lo_largo)) * (-1.0 if a_lo_largo >= 0.0 else 1.0)
+					p += dd * corre
+					base += dd * corre
+					break
 			var dir := Vector3(-lado, 0, 0) if vertical else Vector3(0, 0, -lado)
 			if kf.is_empty():
 				postes.append(Transform3D(Basis.from_scale(Vector3(0.16, 8.0, 0.16)), base + Vector3(0, 4.0, 0)))
