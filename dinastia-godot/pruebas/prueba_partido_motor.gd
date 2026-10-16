@@ -44,6 +44,26 @@ func _ready() -> void:
 			en_cronica += 1
 	_ok(en_cronica == partido.goles_local + partido.goles_visita, "la crónica tiene todos los goles")
 	_ok(cambios[0] >= 1, "el DT de la IA hace cambios con los cansados (%d)" % cambios[0])
+	## LAS ESTADÍSTICAS EN VIVO (16-10-2026): ven los mismos remates que el acta.
+	var st: EstadisticasVivo = vista.get("_stats")
+	_ok(st != null, "hay estadísticas en vivo")
+	if st != null:
+		var vistos := st.n_tiros(true) + st.n_tiros(false)
+		var acta := partido.remates_local + partido.remates_visita
+		var goles_st := 0
+		for t: Dictionary in st.tiros:
+			if String(t["res"]) == "gol":
+				goles_st += 1
+		print("ESTADÍSTICAS tiros %d (acta %d) · xG %.2f-%.2f · goles en el mapa %d" % [vistos, acta, st.xg(true), st.xg(false), goles_st])
+		_ok(vistos == acta, "el mapa de tiros tiene los remates del acta (%d vs %d)" % [vistos, acta])
+		_ok(goles_st == partido.goles_local + partido.goles_visita, "cada gol está en el mapa de tiros")
+		var muestras := 0
+		for eq in 2:
+			for n: int in (st.calor[eq] as PackedInt32Array):
+				muestras += n
+		_ok(muestras > 1000, "el mapa de calor tiene muestras de todo el partido (%d)" % muestras)
+		var filas := st.resumen(partido, motor)
+		_ok(filas.size() >= 10, "el panel tiene %d filas de estadísticas" % filas.size())
 	vista.queue_free()
 	await get_tree().process_frame
 	_ok(not partido.motor_externo, "al cerrar el 3D el partido vuelve a jugarse solo")

@@ -84,7 +84,9 @@ func anotar_calor(eq: int, pos: Vector2) -> void:
 	calor[eq] = a
 
 ## Cómo acabó el último remate de ese equipo que aún no tenía resultado.
-func cerrar_tiro(local: bool, res: String, pos_balon: Vector3 = Vector3.ZERO) -> void:
+## `pos_tirador`: dónde estaba quien remató, por si el remate empezó y acabó en
+## el mismo paso del motor (un tiro bloqueado a bocajarro) y no se llegó a ver.
+func cerrar_tiro(local: bool, res: String, pos_balon: Vector3 = Vector3.ZERO, pos_tirador: Vector3 = Vector3.INF) -> void:
 	for i in range(tiros.size() - 1, -1, -1):
 		var t: Dictionary = tiros[i]
 		if bool(t["local"]) == local and String(t["res"]) == "":
@@ -94,6 +96,9 @@ func cerrar_tiro(local: bool, res: String, pos_balon: Vector3 = Vector3.ZERO) ->
 	if res == "gol":
 		anotar_tiro(local, Vector2(pos_balon.x, pos_balon.z), -1)
 		(tiros[-1] as Dictionary)["res"] = "gol"
+	elif pos_tirador != Vector3.INF:
+		anotar_tiro(local, Vector2(pos_tirador.x, pos_tirador.z), -1)
+		(tiros[-1] as Dictionary)["res"] = res
 
 func tarjeta(local: bool, roja: bool) -> void:
 	var i := 0 if local else 1
