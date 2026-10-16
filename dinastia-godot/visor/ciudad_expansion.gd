@@ -80,7 +80,6 @@ var metro: MetroCiudad
 var cuenta := {}           ## lo que se levantó, para las pruebas y el rótulo
 
 var _rng := RandomNumberGenerator.new()
-var _antes := OS.get_environment("CIUDAD_ANTES") != ""   ## TEMPORAL (captura antes)
 var _comercial: Array[PackedScene] = []
 var _naves: Array[PackedScene] = []
 var _altos: Array[PackedScene] = []
@@ -642,11 +641,7 @@ func _puente(a: Vector3, c: Vector3, ancho: float) -> void:
 	## Tablero sobre el agua.
 	_lote("asfalto", Vector3(rx, PUENTE_ALTO, z), Vector3(agua1 - agua0, 0.6, ancho))
 	b._caja_en(Vector3(rx, PUENTE_ALTO - 0.8, z), Vector3(agua1 - agua0, 1.0, ancho + 1.0), hormigon)
-	if not _antes:
-		_apoyos_puente(rx, z, ancho, agua0, agua1, rampa)
-	else:
-		for px: float in [agua0 + 6.0, rx, agua1 - 6.0]:
-			b._caja_en(Vector3(px, PUENTE_ALTO * 0.5 - 0.6, z), Vector3(2.2, PUENTE_ALTO, ancho * 0.7), hormigon)
+	_apoyos_puente(rx, z, ancho, agua0, agua1, rampa)
 	_adornar_puente(rx, z, ancho, agua0, agua1, rampa)
 	cuenta["puentes"] = int(cuenta.get("puentes", 0)) + 1
 
@@ -743,7 +738,7 @@ func _adornar_puente(rx: float, z: float, ancho: float, agua0: float, agua1: flo
 	for px: float in pilares:
 		for lado: float in [-1.0, 1.0]:
 			## (fuera de la pila, que ahora ocupa todo el ancho del puente)
-			var t := b._caja_en(Vector3(px, PUENTE_ALTO * 0.35, z + lado * ((ancho * 0.35 + 0.8) if _antes else (ancho * 0.5 + 1.3))), Vector3(1.6, PUENTE_ALTO * 0.7, 1.6), piedra)
+			var t := b._caja_en(Vector3(px, PUENTE_ALTO * 0.35, z + lado * (ancho * 0.5 + 1.3)), Vector3(1.6, PUENTE_ALTO * 0.7, 1.6), piedra)
 			t.rotation.y = PI * 0.25
 	## Cornisa a lo largo del tablero.
 	for lado: float in [-1.0, 1.0]:
@@ -862,9 +857,8 @@ func _dibujar_bloque(bl: Dictionary) -> void:
 			## Antes era una manzana lejana: se sigue apuntando para que el azar de
 			## `_edificios_lejanos` se consuma igual (no se mueve nada más).
 			_lejanos.append(r)
-			if not _antes:
-				_sin_lejano.append(r)
-				_feria(r)
+			_sin_lejano.append(r)
+			_feria(r)
 		_:
 			_acera_bloque(r)
 			_instalacion(uso, r)
@@ -1078,7 +1072,7 @@ func _pisos(r: Rect2) -> void:
 	if _naves.is_empty():
 		return
 	var c := Vector3(r.get_center().x, 0.2, r.get_center().y)
-	var modular := c.x > 0.0 and not _mallas_mod().is_empty() and not _antes
+	var modular := c.x > 0.0 and not _mallas_mod().is_empty()
 	for fila: float in [-1.0, 1.0]:
 		for k in 3:
 			var x := c.x + (float(k) - 1.0) * r.size.x * 0.3
@@ -1478,7 +1472,7 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 		tienda = bool(forzar["tienda"])
 	## Pared un poco apagada (a pleno sol los pastel se queman) y en lineal: el
 	## shader la multiplica por el gris de la paleta.
-	var pared := (col[0] as Color).lerp(Color(0.72, 0.7, 0.66), 0.18).srgb_to_linear()
+	var pared := (col[0] as Color).lerp(Color(0.72, 0.7, 0.66), 0.1).srgb_to_linear()
 	var rem := (col[1] as Color).srgb_to_linear()
 	var extra := Color(rem.r, rem.g, rem.b, float(toldo) / 4.0)
 	var puerta_i := w / 2
@@ -1743,10 +1737,10 @@ func _jardines_feria(c: Vector3, r: Rect2) -> void:
 	var ruta_p := RUTA_FERIA + "trash.glb"
 	var ruta_f := RUTA_FERIA + "flowers.glb"
 	## Bancos a los dos lados del paseo, entre los postes de las guirnaldas,
-	## mirando al paseo (el frente del modelo, como el de los puestos, es −Z).
+	## mirando al paseo (el frente del banco es +Z, al revés que los puestos).
 	for z: float in [-26.0, -19.0]:
 		for sx: float in [-1.0, 1.0]:
-			_pieza_kit(ruta_b, c + Vector3(sx * 5.0, 0.12, z), _escala_ancho(ruta_b, 1.9), PI * 0.5 * sx)
+			_pieza_kit(ruta_b, c + Vector3(sx * 5.0, 0.12, z), _escala_ancho(ruta_b, 1.9), -PI * 0.5 * sx)
 	for sx: float in [-1.0, 1.0]:
 		_pieza_kit(ruta_p, c + Vector3(sx * 4.6, 0.12, -hz + 8.0), 2.2, 0.0)
 		for q in 2:
