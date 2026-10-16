@@ -421,7 +421,10 @@ func _transmision(cam: Camera3D, b: Vector3, delta: float) -> void:
 	if trans_cerca > 0.0:
 		var arco_z := signf(pista_ataca if pista_ataca != 0.0 else b.z) * 50.0
 		foco.z = lerpf(foco.z, (foco.z + arco_z) * 0.5, 0.35 * trans_cerca)
-	foco.x = clampf(foco.x, -18.0, 4.0)
+	## Por la banda de la cámara el foco no pasa de x=4 (si no, plano cenital
+	## encima de los jugadores); con el plano cerrado se deja llegar a x=10
+	## para que un córner o un centro desde esa banda no quede en el borde.
+	foco.x = clampf(foco.x, -18.0, lerpf(4.0, 10.0, trans_cerca))
 	foco.z = clampf(foco.z, -47.0, 47.0)
 	if not _trans_ini:
 		_trans_ini = true
