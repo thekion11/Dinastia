@@ -105,6 +105,7 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	trafico = cb.get_node_or_null("Trafico") as TraficoCiudad
 	metro = cb.expansion.metro if cb.expansion != null else null
 	obstaculos = construir_obstaculos(cb)
+	_indexar_obstaculos()
 	_indexar_circulos()
 	var perfil: Dictionary = cb.datos.get("perfil_estadio", {})
 	if not perfil.is_empty():
@@ -173,6 +174,37 @@ static func libre(p: Vector3, radio: float, obst: Array[Rect2]) -> bool:
 			return false
 	return true
 
+## Las huellas de las manzanas, también por celdas (15-10-2026): `libre` las
+## recorría TODAS en cada consulta (~190 µs) y el paseo hace de 3 a 20 consultas
+## por fotograma (moverse, deslizar, la cámara que no atraviesa paredes). Cada
+## huella se apunta en las celdas que toca, ensanchada `MARGEN_OBST` para que
+## baste mirar la celda del punto (radios de hasta 3 m: pie 0,5, coche 2,2).
+const CELDA_OBST := 32.0
+const MARGEN_OBST := 3.0
+var _rej_obst := {}
+var _t_cerca := 0.0
+var _moviles_fotograma := -1
+var _moviles_cerca := PackedVector3Array()
+var _p_cerca := Vector3.INF
+
+func _indexar_obstaculos() -> void:
+	_rej_obst.clear()
+	for r: Rect2 in obstaculos:
+		var a := r.grow(MARGEN_OBST)
+		for i in range(floori(a.position.x / CELDA_OBST), floori(a.end.x / CELDA_OBST) + 1):
+			for j in range(floori(a.position.y / CELDA_OBST), floori(a.end.y / CELDA_OBST) + 1):
+				var k := Vector2i(i, j)
+				if not _rej_obst.has(k):
+					_rej_obst[k] = [] as Array[Rect2]
+				(_rej_obst[k] as Array[Rect2]).append(r)
+
+## Igual que `libre(p, radio, obstaculos)`, pero mirando solo la celda de `p`.
+func libre_obst(p: Vector3, radio: float) -> bool:
+	if radio > MARGEN_OBST:
+		return libre(p, radio, obstaculos)
+	var celda: Array[Rect2] = _rej_obst.get(Vector2i(floori(p.x / CELDA_OBST), floori(p.z / CELDA_OBST)), [] as Array[Rect2])
+	return libre(p, radio, celda)
+
 ## Círculos sólidos (farolas, troncos, coches aparcados...) por celdas de 8 m.
 const CELDA_CIRC := 8.0
 var _rej_circ := {}
@@ -205,18 +237,43 @@ func _choca_circulos(p: Vector3, radio: float) -> bool:
 func _choca_moviles(p: Vector3, radio: float) -> bool:
 	if trafico == null:
 		return false
-	for v: Dictionary in trafico._vehiculos:
-		var n: Node3D = v["nodo"]
-		if not is_instance_valid(n):
-			continue
-		var d := Vector2(n.global_position.x - p.x, n.global_position.z - p.z).length()
-		if d < radio + (0.45 if float(v["alto"]) < 0.3 else 1.7):
+	## Una vez por fotograma de física se apuntan los móviles a menos de 30 m del
+	## personaje (x, z, radio); las 3-20 consultas del fotograma miran solo esos
+	## (15-10-2026: antes cada consulta recorría los ~300 coches y vecinos y pedía
+	## su `global_position`; el tráfico cuelga de la ciudad, que está en el origen).
+	var f := Engine.get_physics_frames()
+	if f != _moviles_fotograma:
+		_moviles_fotograma = f
+		_moviles_cerca.clear()
+		var c := cuerpo.position if cuerpo != null else p
+		for v: Dictionary in trafico._vehiculos:
+			var n: Node3D = v["nodo"]
+			if not is_instance_valid(n):
+				continue
+			var q := n.position
+			if absf(q.x - c.x) < 30.0 and absf(q.z - c.z) < 30.0:
+				_moviles_cerca.append(Vector3(q.x, q.z, 0.45 if float(v["alto"]) < 0.3 else 1.7))
+	var c0 := cuerpo.position if cuerpo != null else p
+	if absf(p.x - c0.x) > 25.0 or absf(p.z - c0.z) > 25.0:
+		## Lejos del personaje (buscar un sitio libre al aparecer): todos.
+		for v: Dictionary in trafico._vehiculos:
+			var n: Node3D = v["nodo"]
+			if is_instance_valid(n):
+				var rr0 := radio + (0.45 if float(v["alto"]) < 0.3 else 1.7)
+				if Vector2(n.position.x - p.x, n.position.z - p.z).length_squared() < rr0 * rr0:
+					return true
+		return false
+	for m: Vector3 in _moviles_cerca:
+		var dx := m.x - p.x
+		var dz := m.y - p.z
+		var rr := radio + m.z
+		if dx * dx + dz * dz < rr * rr:
 			return true
 	return false
 
 ## Manzanas, río, círculos y móviles: todo lo que impide estar en `p`.
 func libre_total(p: Vector3, radio: float) -> bool:
-	return libre(p, radio, obstaculos) and not _choca_circulos(p, radio) and not _choca_moviles(p, radio)
+	return libre_obst(p, radio) and not _choca_circulos(p, radio) and not _choca_moviles(p, radio)
 
 ## Tipos de edificio con sala propia, con su peso y sus nombres.
 const EDIFICIOS := [
@@ -615,7 +672,13 @@ func _physics_process(delta: float) -> void:
 		cuerpo.rotation.x = _cabeceo
 		cuerpo.rotation.z = _balanceo
 	_colocar_camara(delta)
-	_buscar_cerca()
+	## Qué hay cerca (puertas, metro, vecinos, fachadas): ~370 µs por búsqueda;
+	## basta unas 8 veces por segundo o al dar medio metro (15-10-2026).
+	_t_cerca -= delta
+	if _t_cerca <= 0.0 or cuerpo.position.distance_squared_to(_p_cerca) > 0.25:
+		_t_cerca = 0.12
+		_p_cerca = cuerpo.position
+		_buscar_cerca()
 	## Gente alrededor: los peatones lejanos reaparecen cerca (a la espalda).
 	_t_gente -= delta
 	if _t_gente <= 0.0 and trafico != null and estado == "calle":
@@ -784,12 +847,12 @@ func _colocar_camara(delta: float) -> void:
 		var desde := cuerpo.position + Vector3(0, alto, 0)
 		var paso := (deseo - desde)
 		var largo := paso.length()
-		if largo > 0.01 and not libre(deseo, 0.3, obstaculos):
+		if largo > 0.01 and not libre_obst(deseo, 0.3):
 			var bueno := desde
 			var k := 0.5
 			while k <= largo:
 				var q := desde + paso / largo * k
-				if not libre(q, 0.3, obstaculos):
+				if not libre_obst(q, 0.3):
 					break
 				bueno = q
 				k += 0.5
@@ -833,7 +896,7 @@ func _buscar_cerca() -> void:
 			var n: Node3D = v["nodo"]
 			if not is_instance_valid(n) or float(v["alto"]) < 0.1 or float(v["alto"]) > 0.3:
 				continue
-			if n.global_position.distance_to(p) < 3.5:
+			if n.position.distance_to(p) < 3.5:
 				_cerca = {"tipo": "peaton", "v": v, "n": "un vecino"}
 				break
 	if _cerca.is_empty():
