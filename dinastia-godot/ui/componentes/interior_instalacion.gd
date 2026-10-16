@@ -312,6 +312,71 @@ func _cartel(texto: String, pos: Vector3, tam: int = 64, col: Color = Color.WHIT
 	l.position = pos
 	_raiz.add_child(l)
 
+## Texto de pantalla o rótulo (sin contorno si `contorno` es false), de una sola
+## cara (para poner dos espaldas con espaldas) y con su alineación. Lo devuelve
+## por si hay que tumbarlo (marcas del suelo).
+func _texto(texto: String, pos: Vector3, tam: int, col: Color, giro: float = 0.0, contorno: bool = true,
+		alinear: HorizontalAlignment = HORIZONTAL_ALIGNMENT_CENTER) -> Label3D:
+	var l := Label3D.new()
+	l.rotation.y = giro
+	l.text = texto
+	l.font_size = tam
+	l.pixel_size = 0.01
+	l.modulate = col
+	l.double_sided = false
+	l.horizontal_alignment = alinear
+	if contorno:
+		l.outline_size = 6
+		l.outline_modulate = Color(0, 0, 0, 0.6)
+	else:
+		l.outline_size = 0
+	l.position = pos
+	_raiz.add_child(l)
+	return l
+
+## Maleta en el suelo: cuerpo, asa y, si es de ruedas, el tirador y las ruedas.
+func _maleta(p: Vector3, giro: float, col: Color, ruedas: bool) -> void:
+	var t := Transform3D(Basis(Vector3.UP, giro), p)
+	var oscuro := col.darkened(0.45)
+	var alto := 0.62 if ruedas else 0.42
+	_prim("caja", Vector3(0, alto * 0.5 + 0.05, 0), Vector3(0.42, alto, 0.24), col, "goma", Vector3.ZERO, t)
+	for k in 3:
+		_prim("caja", Vector3(-0.12 + float(k) * 0.12, alto * 0.5 + 0.05, 0.122), Vector3(0.025, alto - 0.04, 0.008), oscuro, "mate", Vector3.ZERO, t)
+	if ruedas:
+		for s: float in [-1.0, 1.0]:
+			_prim("cil", Vector3(s * 0.16, 0.035, -0.08), Vector3(0.06, 0.04, 0.06), Color(0.08, 0.08, 0.09), "goma", Vector3(0, 0, PI * 0.5), t)
+			_prim("cil", Vector3(s * 0.08, alto + 0.25, -0.1), Vector3(0.02, 0.42, 0.02), Color(0.6, 0.62, 0.65), "metal", Vector3.ZERO, t)
+		_prim("caja", Vector3(0, alto + 0.46, -0.1), Vector3(0.2, 0.03, 0.03), Color(0.1, 0.1, 0.11), "goma", Vector3.ZERO, t)
+	else:
+		_prim("caja", Vector3(0, alto + 0.09, 0), Vector3(0.16, 0.03, 0.03), oscuro, "goma", Vector3.ZERO, t)
+
+## Maleta de ruedas que lleva alguien que camina: va colgada de su nodo, a su
+## lado y un poco detrás, inclinada como cuando se arrastra.
+func _maleta_de(nodo: Node3D, col: Color) -> void:
+	var n := Node3D.new()
+	n.position = Vector3(-0.26, 0.05, -0.5)
+	n.rotation.x = 0.45
+	nodo.add_child(n)
+	var m := Mini3D.mat(col, 0.55)
+	Mini3D.caja(n, Vector3(0, 0.36, 0), Vector3(0.24, 0.6, 0.4), m)
+	Mini3D.caja(n, Vector3(0, 0.84, 0.12), Vector3(0.02, 0.4, 0.02), Mini3D.mat(Color(0.6, 0.62, 0.65), 0.3))
+	Mini3D.caja(n, Vector3(0, 0.04, -0.15), Vector3(0.2, 0.06, 0.06), Mini3D.mat(Color(0.08, 0.08, 0.09), 0.6))
+
+## Esfera de reloj (de pared o colgado) en el marco `t` (mira a +Z local), de
+## `radio` m, con sus doce marcas y las agujas a la `hora` dada (10,5 = 10:30).
+func _reloj(t: Transform3D, radio: float, hora: float) -> void:
+	var negro := Color(0.08, 0.08, 0.1)
+	_prim("cil", Vector3(0, 0, 0.005), Vector3(radio * 2.0, 0.02, radio * 2.0), Color(0.97, 0.96, 0.92), "luz", Vector3(PI * 0.5, 0, 0), t)
+	for k in 12:
+		var a := float(k) / 12.0 * TAU
+		var largo := 0.14 if k % 3 == 0 else 0.07
+		_prim("caja", Vector3(sin(a), cos(a), 0) * radio * (0.86 - largo * 0.5) + Vector3(0, 0, 0.02), Vector3(0.025 if k % 3 else 0.04, radio * largo, 0.01), negro, "mate", Vector3(0, 0, -a), t)
+	var a_h := fmod(hora, 12.0) / 12.0 * TAU
+	var a_m := fmod(hora, 1.0) * TAU
+	_prim("caja", Vector3(sin(a_h), cos(a_h), 0) * radio * 0.25 + Vector3(0, 0, 0.03), Vector3(0.05, radio * 0.5, 0.01), negro, "mate", Vector3(0, 0, -a_h), t)
+	_prim("caja", Vector3(sin(a_m), cos(a_m), 0) * radio * 0.36 + Vector3(0, 0, 0.035), Vector3(0.035, radio * 0.75, 0.01), negro, "mate", Vector3(0, 0, -a_m), t)
+	_prim("cil", Vector3(0, 0, 0.04), Vector3(0.05, 0.01, 0.05), Color(0.75, 0.15, 0.12), "mate", Vector3(PI * 0.5, 0, 0), t)
+
 ## Un cuadro en la pared del fondo (lámina de color con marco).
 func _cuadro(p: Vector3, tam: Vector2, col: Color) -> void:
 	Mini3D.caja(_raiz, p, Vector3(tam.x + 0.08, tam.y + 0.08, 0.04), Mini3D.mat(Color(0.25, 0.18, 0.12), 0.5))
@@ -1611,78 +1676,249 @@ func _aula() -> void:
 	_poner("trashcan", Vector3(-6.5, 0, 5.0), 0.0, 1.4)
 	_cartel("🎓 " + _sala_nombre().to_upper(), Vector3(0, 2.85, -5.45), 32)
 
-## Estación (24 × 15 m, vestíbulo de 7 m): panel de salidas, taquillas, bancos,
-## quiosco, máquinas, el reloj y los viajeros con prisa.
+## Estación (24 × 15 m, vestíbulo de 7 m; 16-10-2026: «a la altura del
+## gimnasio»). Suelo de piedra con su rosa de los vientos, columnas con
+## capitel, lámparas colgadas y el reloj de doble esfera sobre el pasillo. Al
+## fondo, el gran panel de salidas, las tres bocas de los andenes con su
+## pantalla y la línea de tornos (dos abiertos, por donde pasa la gente); a la
+## izquierda las taquillas con su fila de cintas, las máquinas de billetes y la
+## consigna; a la derecha el quiosco, las máquinas de bebidas y la cafetería
+## con su barra, la cafetera, la vitrina y las mesas altas. Viajeros con
+## maleta, gente en los bancos, el vigilante y los que van y vienen con prisa.
+## Casi todo en lotes (`_prim`, `_poner`).
 func _estacion() -> void:
 	_tonos_sala = _MADERA_OSCURA
-	_sala(Vector3(24, 7.0, 15), Color(0.7, 0.66, 0.6), Color(0.86, 0.8, 0.7), "losa", Color(0.5, 0.4, 0.32))
-	Mini3D.caja(_raiz, Vector3(0, 4.3, -7.38), Vector3(8.0, 2.4, 0.2), Mini3D.mat(Color(0.05, 0.05, 0.06), 0.4))
-	_cartel("SALIDAS\n10:15  Puerto      vía 2\n10:22  Alto Norte  vía 1\n10:30  Ribera      vía 3", Vector3(0, 4.3, -7.25), 38, Color(1.0, 0.8, 0.2))
-	## Taquillas: tres puestos tras un cristal.
+	_sala(Vector3(24, 7.0, 15), Color(0.74, 0.7, 0.63), Color(0.88, 0.83, 0.74), "losa", Color(0.5, 0.4, 0.32))
+	var hierro := Color(0.16, 0.16, 0.18)
+	var acero := Color(0.68, 0.7, 0.73)
+	var laton := Color(0.78, 0.62, 0.3)
+	var crema := Color(0.9, 0.86, 0.78)
+	var oscuro := Color(0.06, 0.07, 0.09)
+	var ambar := Color(1.0, 0.78, 0.22)
+	var azul_rotulo := Color(0.12, 0.24, 0.48)
+	## --- Suelo: cenefa oscura junto a las paredes y la rosa de los vientos.
+	for s: float in [-1.0, 1.0]:
+		_prim("caja", Vector3(0, 0.005, s * 7.0), Vector3(23.0, 0.01, 0.35), Color(0.42, 0.36, 0.3))
+		_prim("caja", Vector3(s * 11.5, 0.005, 0), Vector3(0.35, 0.01, 14.0), Color(0.42, 0.36, 0.3))
+	var rosa := Vector3(0, 0, 1.2)
+	_prim("cil", rosa + Vector3(0, 0.004, 0), Vector3(2.8, 0.008, 2.8), Color(0.3, 0.33, 0.3))
+	_prim("cil", rosa + Vector3(0, 0.008, 0), Vector3(2.5, 0.008, 2.5), Color(0.86, 0.82, 0.72))
+	for k in 8:
+		var largo := 2.3 if k % 2 == 0 else 1.5
+		_prim("caja", rosa + Vector3(0, 0.012, 0), Vector3(0.16, 0.006, largo), Color(0.55, 0.18, 0.14) if k % 2 == 0 else Color(0.2, 0.2, 0.22), "mate", Vector3(0, float(k) * PI * 0.25, 0))
+	_prim("cil", rosa + Vector3(0, 0.016, 0), Vector3(0.36, 0.006, 0.36), laton, "metal")
+	## --- Columnas con basa, anillo de latón y capitel.
+	for p: Vector3 in [Vector3(-8.4, 0, -2.6), Vector3(-3.2, 0, -2.6), Vector3(3.2, 0, -2.6), Vector3(8.4, 0, -2.6), Vector3(-3.2, 0, 3.4), Vector3(3.2, 0, 3.4)]:
+		_prim("caja", p + Vector3(0, 0.2, 0), Vector3(0.95, 0.4, 0.95), Color(0.62, 0.58, 0.52))
+		_prim("cil", p + Vector3(0, 3.2, 0), Vector3(0.62, 5.6, 0.62), crema)
+		_prim("cil", p + Vector3(0, 2.3, 0), Vector3(0.68, 0.08, 0.68), laton, "metal")
+		_prim("caja", p + Vector3(0, 6.12, 0), Vector3(0.82, 0.24, 0.82), crema)
+		_prim("caja", p + Vector3(0, 6.35, 0), Vector3(1.0, 0.22, 1.0), Color(0.8, 0.76, 0.68))
+	## --- Lámparas colgadas: cable, campana de latón y globo encendido.
+	for p: Vector3 in [Vector3(-6.0, 0, -0.6), Vector3(6.0, 0, -0.6), Vector3(-6.0, 0, 4.6), Vector3(6.0, 0, 4.6), Vector3(0, 0, 4.8)]:
+		_prim("cil", p + Vector3(0, 6.2, 0), Vector3(0.025, 1.6, 0.025), hierro)
+		_prim("cono", p + Vector3(0, 5.3, 0), Vector3(0.5, 0.22, 0.5), laton, "metal")
+		_prim("esf", p + Vector3(0, 5.0, 0), Vector3.ONE * 0.62, Color(1.0, 0.95, 0.82), "luz")
+	## --- El fondo: panel de salidas, las bocas de los andenes y los tornos.
+	_prim("caja", Vector3(0, 5.0, -7.42), Vector3(9.4, 2.5, 0.12), Color(0.3, 0.3, 0.33), "metal")
+	_prim("caja", Vector3(0, 5.0, -7.36), Vector3(9.0, 2.2, 0.04), oscuro)
+	_texto("SALIDAS", Vector3(-4.2, 5.88, -7.32), 26, Color(1.0, 1.0, 1.0), 0.0, false, HORIZONTAL_ALIGNMENT_LEFT)
+	for col: Array in [["HORA", -4.2], ["DESTINO", -2.9], ["VÍA", 0.75], ["OBSERVACIONES", 1.75]]:
+		_texto(String(col[0]), Vector3(float(col[1]), 5.55, -7.32), 15, Color(0.7, 0.75, 0.8), 0.0, false, HORIZONTAL_ALIGNMENT_LEFT)
+	_texto("10:15\n10:22\n10:30\n10:41\n10:55", Vector3(-4.2, 4.62, -7.32), 21, ambar, 0.0, false, HORIZONTAL_ALIGNMENT_LEFT)
+	_texto("PUERTO\nALTO NORTE\nRIBERA\nAEROPUERTO\nCOSTA AZUL", Vector3(-2.9, 4.62, -7.32), 21, ambar, 0.0, false, HORIZONTAL_ALIGNMENT_LEFT)
+	_texto("2\n1\n3\n1\n2", Vector3(0.75, 4.62, -7.32), 21, ambar, 0.0, false, HORIZONTAL_ALIGNMENT_LEFT)
+	_texto("A TIEMPO\nEMBARCANDO\nRETRASO 5'\nA TIEMPO\nA TIEMPO", Vector3(1.75, 4.62, -7.32), 21, Color(0.55, 1.0, 0.6), 0.0, false, HORIZONTAL_ALIGNMENT_LEFT)
+	var vias := ["VÍA 1 · 10:22 ALTO NORTE", "VÍA 2 · 10:15 PUERTO", "VÍA 3 · 10:30 RIBERA"]
 	for k in 3:
-		var x := -9.6 + float(k) * 2.4
-		_puesto(Vector3(x, 0, -6.0), 0.0)
-		Mini3D.caja(_raiz, Vector3(x, 1.45, -5.55), Vector3(2.3, 1.3, 0.03), Mini3D.mat(Color(0.8, 0.9, 1.0, 0.25), 0.05))
-	Mini3D.caja(_raiz, Vector3(-7.2, 0.38, -5.55), Vector3(7.2, 0.76, 0.1), Mini3D.mat(Color(0.35, 0.25, 0.18), 0.6))
-	Mini3D.caja(_raiz, Vector3(-7.2, 2.3, -5.55), Vector3(7.2, 0.5, 0.12), Mini3D.mat(Color(0.2, 0.3, 0.5), 0.6))
-	_cartel("BILLETES", Vector3(-7.2, 2.3, -5.48), 32)
-	for k in 2:
-		_trabajador(Vector3(-8.4 + float(k) * 2.4, 0, -4.6), PI, false, ["charla", "brazos_jarra"], _calle())
-	## Bancos de espera, espalda con espalda.
-	for x: float in [-5.0, 0.0, 5.0]:
+		var x := -2.6 + float(k) * 2.6
+		## La boca del andén (oscura, con el andén iluminado al fondo) y su marco.
+		_prim("caja", Vector3(x, 1.5, -7.47), Vector3(2.0, 3.0, 0.03), Color(0.16, 0.17, 0.21))
+		_prim("caja", Vector3(x, 2.75, -7.452), Vector3(1.9, 0.05, 0.01), Color(0.95, 0.95, 0.88), "luz")
+		_prim("caja", Vector3(x, 1.25, -7.452), Vector3(1.9, 0.3, 0.01), Color(0.75, 0.75, 0.78))
+		_prim("caja", Vector3(x, 1.1, -7.451), Vector3(1.9, 0.04, 0.01), Color(0.85, 0.15, 0.15))
+		_prim("caja", Vector3(x, 0.35, -7.455), Vector3(2.0, 0.7, 0.01), Color(0.32, 0.33, 0.36))
+		_prim("caja", Vector3(x, 0.72, -7.45), Vector3(2.0, 0.05, 0.01), Color(0.95, 0.8, 0.15))
 		for s: float in [-1.0, 1.0]:
-			for k in 4:
-				var p := Vector3(x - 1.2 + float(k) * 0.8, 0, 0.2 + s * 0.24)
-				_asiento("bench", p, 0.0 if s > 0.0 else PI, [0.0] if _rng.randf() < 0.35 else [], _calle())
-	## Viajeros con maleta mirando el panel.
-	var maleta := Mini3D.mat(Color(0.2, 0.25, 0.35), 0.5)
+			_prim("caja", Vector3(x + s * 1.05, 1.55, -7.42), Vector3(0.1, 3.1, 0.12), acero, "metal")
+		_prim("caja", Vector3(x, 3.08, -7.42), Vector3(2.2, 0.12, 0.12), acero, "metal")
+		_prim("caja", Vector3(x, 3.42, -7.4), Vector3(2.0, 0.42, 0.1), oscuro)
+		_texto(String(vias[k]), Vector3(x, 3.42, -7.34), 15, Color(0.55, 1.0, 0.6), 0.0, false)
+	## Tornos: cinco cuerpos de acero; los dos del centro abiertos (por ahí pasa
+	## la gente), el resto con sus aletas de cristal cerradas.
+	var zt := -4.6
+	for k in 5:
+		var x := -3.0 + float(k) * 1.5
+		_prim("caja", Vector3(x, 0.5, zt), Vector3(0.28, 1.0, 1.25), acero, "metal")
+		_prim("caja", Vector3(x, 1.02, zt), Vector3(0.32, 0.05, 1.28), Color(0.14, 0.14, 0.16))
+		_prim("caja", Vector3(x, 1.055, zt + 0.38), Vector3(0.18, 0.02, 0.16), Color(0.3, 0.95, 0.4), "luz")
+		_prim("caja", Vector3(x, 1.055, zt - 0.38), Vector3(0.18, 0.02, 0.16), Color(0.95, 0.3, 0.25), "luz")
+		for s: float in [-1.0, 1.0]:
+			var paso := x + s * 0.75
+			if absf(paso) < 1.0 or absf(paso) > 3.5:
+				continue
+			_prim("caja", Vector3(x + s * 0.37, 0.72, zt), Vector3(0.46, 0.62, 0.025), Color(0.7, 0.8, 0.88), "luz")
+	for s: float in [-1.0, 1.0]:
+		_prim("caja", Vector3(s * 3.9, 0.55, zt), Vector3(1.1, 0.04, 0.04), acero, "metal")
+		for x: float in [3.4, 4.4]:
+			_prim("cil", Vector3(s * x, 0.55, zt), Vector3(0.06, 1.1, 0.06), acero, "metal")
+	_prim("caja", Vector3(0, 0.006, zt + 0.95), Vector3(7.0, 0.012, 0.3), Color(0.95, 0.8, 0.15))
+	_trabajador(Vector3(4.1, 0, -3.9), PI * 0.85, false, ["brazos_jarra", "charla", "senalar_adelante"], [Color(0.12, 0.14, 0.22), Color(0.12, 0.14, 0.22), true])
+	_cartel("🚉 " + _sala_nombre().to_upper(), Vector3(0, 6.55, -7.4), 52)
+	## --- Taquillas (fondo a la izquierda): tres puestos tras el cristal, el
+	## mostrador, el rótulo y la fila con sus postes de cinta.
 	for k in 3:
-		var p := Vector3(-1.6 + float(k) * 1.5, 0, -3.6 + float(k % 2) * 0.5)
-		_trabajador(p, PI, false, ["charla", "brazos_jarra", "senalar_cielo"], _calle())
-		Mini3D.caja(_raiz, p + Vector3(0.45, 0.32, 0.1), Vector3(0.4, 0.64, 0.22), maleta)
-	## Quiosco a la derecha.
+		_puesto(Vector3(-9.6 + float(k) * 2.4, 0, -6.0), 0.0)
+	for k in 4:
+		_prim("caja", Vector3(-10.8 + float(k) * 2.4, 1.45, -5.55), Vector3(0.08, 1.4, 0.12), Color(0.35, 0.25, 0.18))
+	Mini3D.caja(_raiz, Vector3(-7.2, 1.45, -5.55), Vector3(7.2, 1.3, 0.03), Mini3D.mat(Color(0.8, 0.9, 1.0, 0.25), 0.05))
+	_prim("caja", Vector3(-7.2, 0.38, -5.55), Vector3(7.3, 0.76, 0.12), Color(0.35, 0.25, 0.18))
+	_prim("caja", Vector3(-7.2, 0.78, -5.42), Vector3(7.3, 0.04, 0.3), Color(0.5, 0.36, 0.24))
+	_prim("caja", Vector3(-7.2, 2.4, -5.55), Vector3(7.3, 0.55, 0.14), azul_rotulo)
+	_cartel("BILLETES · INFORMACIÓN", Vector3(-7.2, 2.4, -5.47), 30)
+	for x: float in [-7.5, -5.9]:
+		for k in 4:
+			var p := Vector3(x, 0, -4.4 + float(k) * 0.7)
+			_prim("cil", p + Vector3(0, 0.47, 0), Vector3(0.05, 0.94, 0.05), acero, "metal")
+			_prim("cil", p + Vector3(0, 0.015, 0), Vector3(0.3, 0.03, 0.3), hierro, "metal")
+			if k < 3:
+				_prim("caja", p + Vector3(0, 0.86, 0.35), Vector3(0.02, 0.06, 0.7), Color(0.6, 0.12, 0.14), "goma")
+	_trabajador(Vector3(-9.6, 0, -4.95), PI, false, ["charla", "brazos_jarra"], _calle())
+	_trabajador(Vector3(-7.2, 0, -4.95), PI, false, ["charla", "saludo_mano"], _calle())
+	for z: float in [-3.75, -3.0]:
+		_trabajador(Vector3(-6.7, 0, z), PI, false, ["brazos_jarra", "charla", "parado"], _calle())
+	_maleta(Vector3(-6.35, 0, -3.0), 0.3, Color(0.55, 0.15, 0.18), true)
+	## Máquinas de billetes y la consigna (pared izquierda).
+	_poner("mini_arcade/ticket-machine", Vector3(-11.5, 0, -1.6), PI * 0.5)
+	_poner("mini_arcade/ticket-machine", Vector3(-11.5, 0, -0.6), PI * 0.5)
+	for i in 4:
+		for j in 3:
+			var p := Vector3(-11.72, 0.42 + float(j) * 0.62, 1.7 + float(i) * 0.62)
+			_prim("caja", p, Vector3(0.55, 0.6, 0.6), Color(0.42, 0.45, 0.5), "metal")
+			_prim("caja", p + Vector3(0.28, 0, 0), Vector3(0.01, 0.52, 0.52), Color(0.78, 0.6, 0.2) if (i + j) % 4 == 1 else Color(0.62, 0.66, 0.7))
+			_prim("caja", p + Vector3(0.29, 0.12, 0.17), Vector3(0.01, 0.08, 0.1), Color(0.3, 0.9, 0.4), "luz")
+	_prim("caja", Vector3(-11.72, 2.2, 2.63), Vector3(0.56, 0.06, 2.6), hierro)
+	_cartel("CONSIGNA", Vector3(-11.9, 2.6, 2.63), 30, Color.WHITE, PI * 0.5)
+	## --- Quiosco (fondo a la derecha): mostrador con prensa y golosinas.
 	var ancho := _medida("kitchenBar", 2.5).x
 	for k in 3:
 		_poner("kitchenBar", Vector3(6.2 + float(k) * ancho, 0, -4.8), 0.0, 2.5)
-	for k in 10:
-		_poner("books", Vector3(5.9 + float(k) * 0.28, _alto("kitchenBar", 2.5), -4.8), _rng.randf_range(-0.2, 0.2), 1.8)
+	var tope := _alto("kitchenBar", 2.5)
+	for k in 8:
+		_poner("books", Vector3(5.9 + float(k) * 0.28, tope, -4.8), _rng.randf_range(-0.2, 0.2), 1.8)
+	for k in 4:
+		_poner(["comida/chocolate", "comida/candy-bar", "comida/soda-can", "comida/lollypop"][k], Vector3(8.3 + float(k) * 0.22, tope, -4.75), _rng.randf() * TAU)
 	for x: float in [6.6, 7.4, 8.2]:
 		_poner("bookcaseOpen", Vector3(x, 0, -7.25), 0.0)
 		for b in 3:
 			_poner("books", Vector3(x, 0.42 + float(b) * 0.5, -7.25), 0.0)
+	_prim("caja", Vector3(7.5, 2.6, -4.55), Vector3(3.6, 0.45, 0.1), Color(0.62, 0.12, 0.14))
+	_cartel("PRENSA · REVISTAS", Vector3(7.5, 2.6, -4.48), 26)
 	_trabajador(Vector3(7.2, 0, -5.8), 0.0, false, ["saludo_mano", "charla"], _calle())
+	_trabajador(Vector3(6.9, 0, -3.95), PI, false, ["charla", "brazos_jarra"], _calle())
 	for z: float in [-1.8, -0.7]:
 		_poner("mini_arcade/vending-machine", Vector3(11.45, 0, z), -PI * 0.5, 2.2)
-	_poner("mini_arcade/ticket-machine", Vector3(-11.5, 0, -1.6), PI * 0.5)
-	_poner("mini_arcade/ticket-machine", Vector3(-11.5, 0, -0.6), PI * 0.5)
+	## --- Cafetería (delante a la derecha): barra, cafetera, vitrina, carta y
+	## mesas altas con gente tomando algo.
+	var bar_ancho := _medida("kitchenBar", 2.5).x
+	for k in 3:
+		_poner("kitchenBar", Vector3(9.7, 0, 2.2 + float(k) * bar_ancho), -PI * 0.5, 2.5, {"wood": Color(0.42, 0.26, 0.16), "woodDark": Color(0.3, 0.18, 0.1)})
+	var tope_bar := _alto("kitchenBar", 2.5)
+	var z_fin := 2.2 + 2.0 * bar_ancho
+	for k in 3:
+		_poner("kitchenCabinet", Vector3(11.65, 0, 2.3 + float(k) * 1.0), -PI * 0.5)
+	var tope_mueble := _alto("kitchenCabinet")
+	_poner("kitchenCoffeeMachine", Vector3(11.65, tope_mueble, 2.4), -PI * 0.5)
+	_poner("kitchenCoffeeMachine", Vector3(11.65, tope_mueble, 3.2), -PI * 0.5)
+	for k in 6:
+		_poner("comida/cup-saucer", Vector3(11.6, tope_mueble, 3.9 + float(k % 3) * 0.14), 0.0)
+	## Vitrina de bollería sobre la barra.
+	_prim("caja", Vector3(9.7, tope_bar + 0.2, z_fin - 0.3), Vector3(0.5, 0.4, 1.0), Color(0.82, 0.9, 0.95), "luz")
+	for k in 6:
+		_poner(["comida/croissant", "comida/donut-sprinkles", "comida/muffin"][k % 3], Vector3(9.7 + (0.1 if k < 3 else -0.1), tope_bar + 0.02, z_fin - 0.65 + float(k % 3) * 0.3), 0.0)
+	for k in 3:
+		_poner("comida/cup-coffee", Vector3(9.55, tope_bar, 2.4 + float(k) * 0.5), _rng.randf() * TAU)
+	_prim("caja", Vector3(11.96, 3.1, 3.4), Vector3(0.04, 1.3, 2.6), oscuro)
+	_texto("☕ CAFETERÍA\nCafé  1,20 · Cortado  1,40\nCroissant  1,50 · Bocadillo  3,50", Vector3(11.92, 3.1, 3.4), 22, Color(1.0, 0.92, 0.75), -PI * 0.5, false)
+	_trabajador(Vector3(10.85, 0, 3.0), -PI * 0.5, false, ["charla", "saludo_mano", "brazos_jarra"], [Color(0.95, 0.95, 0.93), Color(0.15, 0.12, 0.1), true])
+	_asiento("stoolBar", Vector3(8.95, 0, 4.0), PI * 0.5, [0.0], _calle())
+	_poner("stoolBar", Vector3(8.95, 0, 3.1), PI * 0.5)
+	for z: float in [2.4, 4.8]:
+		var p := Vector3(7.3, 0, z)
+		_prim("cil", p + Vector3(0, 0.015, 0), Vector3(0.5, 0.03, 0.5), hierro, "metal")
+		_prim("cil", p + Vector3(0, 0.55, 0), Vector3(0.07, 1.08, 0.07), hierro, "metal")
+		_prim("cil", p + Vector3(0, 1.1, 0), Vector3(0.75, 0.04, 0.75), Color(0.85, 0.82, 0.76))
+		_poner("comida/cup-coffee", p + Vector3(0.12, 1.12, 0.05), _rng.randf() * TAU)
+		_poner("comida/croissant", p + Vector3(-0.12, 1.12, -0.08), _rng.randf() * TAU)
+	_trabajador(Vector3(6.75, 0, 2.4), PI * 0.5, false, ["charla", "brazos_jarra", "saludo_mano"], _calle())
+	_trabajador(Vector3(7.8, 0, 2.55), -PI * 0.5, false, ["charla", "pedir_calma"], _calle())
+	_trabajador(Vector3(7.35, 0, 5.3), PI, false, ["charla", "parado"], _calle())
+	## --- Bancos de espera, espalda con espalda, con alguna maleta al lado.
+	for x: float in [-5.9, 5.9]:
+		for s: float in [-1.0, 1.0]:
+			for k in 4:
+				var p := Vector3(x - 1.2 + float(k) * 0.8, 0, 0.3 + s * 0.24)
+				_asiento("bench", p, 0.0 if s > 0.0 else PI, [0.0] if _rng.randf() < 0.4 else [], _calle())
+	_maleta(Vector3(-7.45, 0, 1.2), 0.2, Color(0.2, 0.3, 0.45), true)
+	_maleta(Vector3(4.35, 0, -0.55), -0.4, Color(0.12, 0.12, 0.14), false)
+	_maleta(Vector3(7.5, 0, 1.15), 1.4, Color(0.75, 0.55, 0.2), true)
+	## Viajeros con maleta mirando el panel.
+	var cols_maleta := [Color(0.2, 0.25, 0.35), Color(0.6, 0.12, 0.15), Color(0.25, 0.45, 0.35)]
+	for k in 3:
+		var p: Vector3 = [Vector3(-2.3, 0, -3.3), Vector3(2.2, 0, -3.2), Vector3(5.5, 0, -2.9)][k]
+		_trabajador(p, PI + float(k - 1) * 0.25, false, ["charla", "brazos_jarra", "senalar_cielo"], _calle())
+		_maleta(p + Vector3(0.42, 0, 0.12), 0.1 * float(k), cols_maleta[k], k != 1)
+	## --- Reloj de doble esfera colgado sobre el vestíbulo (a un lado: en medio
+	## tapaba el panel de salidas desde la puerta).
+	var pr := Vector3(-5.8, 4.3, -1.0)
+	_prim("cil", pr + Vector3(0, 1.7, 0), Vector3(0.05, 2.6, 0.05), hierro, "metal")
+	_prim("cil", pr, Vector3(1.3, 0.2, 1.3), Color(0.2, 0.2, 0.22), "metal", Vector3(PI * 0.5, 0, 0))
+	_reloj(Transform3D(Basis.IDENTITY, pr + Vector3(0, 0, 0.1)), 0.58, 10.27)
+	_reloj(Transform3D(Basis(Vector3.UP, PI), pr - Vector3(0, 0, 0.1)), 0.58, 10.27)
+	## Cartel de dirección colgado: andenes hacia el fondo, salida hacia la puerta.
+	var pc := Vector3(0, 3.3, 3.0)
+	for s: float in [-1.0, 1.0]:
+		_prim("cil", pc + Vector3(s * 1.3, 1.9, 0), Vector3(0.02, 3.4, 0.02), hierro)
+	_prim("caja", pc, Vector3(3.6, 0.6, 0.08), azul_rotulo)
+	_prim("caja", pc, Vector3(3.7, 0.68, 0.06), Color(0.9, 0.9, 0.92))
+	_texto("↑  ANDENES · VÍAS 1-3", pc + Vector3(0, 0, 0.05), 30, Color.WHITE, 0.0, false)
+	_texto("↓  SALIDA · TAXI · BUS", pc - Vector3(0, 0, 0.05), 30, Color.WHITE, PI, false)
+	## Anuncios iluminados en las paredes laterales.
+	for s: float in [-1.0, 1.0]:
+		var p := Vector3(s * 11.95, 3.6, -3.8)
+		_prim("caja", p, Vector3(0.08, 1.8, 2.9), Color(0.25, 0.25, 0.27), "metal")
+		_prim("caja", p - Vector3(s * 0.05, 0, 0), Vector3(0.02, 1.6, 2.7), Color(0.35, 0.6, 0.85) if s < 0.0 else Color(0.9, 0.55, 0.25), "luz")
+	_texto("VISITA LA COSTA\nen tren, sin prisas", Vector3(-11.88, 3.6, -3.8), 30, Color.WHITE, PI * 0.5)
+	_texto("NUEVO AEROPUERTO\nun tren cada 15'", Vector3(11.88, 3.6, -3.8), 30, Color.WHITE, -PI * 0.5)
+	## --- Plantas, papeleras y la gente que va y viene.
 	for p: Vector3 in [Vector3(-11.2, 0, 6.7), Vector3(11.2, 0, 6.7), Vector3(-11.2, 0, -6.9), Vector3(11.2, 0, -6.9)]:
 		_planta(p)
-	for x: float in [-7.6, 7.6]:
-		_poner("trashcan", Vector3(x, 0, 1.6), 0.0, 1.4)
-	## El reloj de la estación, con sus agujas.
-	var reloj := Mini3D.cilindro(_raiz, Vector3(9.0, 4.6, -7.42), 0.8, 0.1, Mini3D.mat(Color(0.97, 0.97, 0.95), 0.4, 0.3))
-	reloj.rotation.x = PI * 0.5
-	var aro := MeshInstance3D.new()
-	var tm := TorusMesh.new()
-	tm.inner_radius = 0.78
-	tm.outer_radius = 0.86
-	aro.mesh = tm
-	aro.material_override = Mini3D.mat(Color(0.15, 0.15, 0.17), 0.3)
-	aro.position = Vector3(9.0, 4.6, -7.4)
-	aro.rotation.x = PI * 0.5
-	_raiz.add_child(aro)
-	var aguja := Mini3D.mat(Color(0.08, 0.08, 0.1), 0.4)
-	var h := Mini3D.caja(_raiz, Vector3(9.0, 4.6, -7.35), Vector3(0.06, 0.45, 0.02), aguja)
-	h.position += Vector3(sin(-0.6), cos(-0.6), 0) * 0.2
-	h.rotation.z = 0.6
-	var mn := Mini3D.caja(_raiz, Vector3(9.0, 4.6, -7.34), Vector3(0.04, 0.65, 0.02), aguja)
-	mn.position += Vector3(sin(1.6), cos(1.6), 0) * 0.3
-	mn.rotation.z = -1.6
-	## Viajeros que van y vienen con prisa.
-	for k in 5:
-		var z := -2.4 + float(k) * 0.7 + (2.4 if k > 2 else 0.0)
-		_caminante([Vector3(-10.5, 0, z), Vector3(10.5, 0, z + _rng.randf_range(-0.4, 0.4))], _calle(), k % 3 == 0)
-	_cartel("🚉 " + _sala_nombre().to_upper(), Vector3(0, 6.1, -7.4), 60)
+	for p: Vector3 in [Vector3(-4.4, 0, -2.6), Vector3(4.4, 0, -2.6), Vector3(-2.4, 0, 3.4)]:
+		_poner("trashcan", p, 0.0, 1.4)
+	## Rutas fijas (sin desvío): a los tornos abiertos y de vuelta, cruzando el
+	## vestíbulo entre las columnas y los bancos, y de la puerta a la cafetería.
+	var rutas := [
+		[Vector3(-0.75, 0, 6.2), Vector3(-0.75, 0, -6.3)],
+		[Vector3(0.75, 0, -6.3), Vector3(0.75, 0, 6.2)],
+		[Vector3(-10.4, 0, -1.4), Vector3(10.2, 0, -1.4)],
+		[Vector3(9.8, 0, -1.25), Vector3(-10.2, 0, -1.25)],
+		[Vector3(-7.6, 0, 2.15), Vector3(-1.6, 0, 5.6), Vector3(1.6, 0, 5.6), Vector3(5.4, 0, 2.15)],
+		[Vector3(1.4, 0, 6.0), Vector3(5.6, 0, 3.6), Vector3(5.6, 0, 6.2)],
+	]
+	for k in rutas.size():
+		var ruta: Array = rutas[k]
+		_caminante(ruta, _calle(), k == 2)
+		if _caminantes.is_empty():
+			continue
+		var c: Dictionary = _caminantes[-1]
+		c["puntos"] = ruta
+		var a: Vector3 = ruta[0]
+		var b: Vector3 = ruta[1]
+		(c["d"]["nodo"] as Node3D).position = a.lerp(b, _rng.randf_range(0.15, 0.85))
+		c["i"] = 1
+		## Algunos tiran de su maleta de ruedas.
+		if k == 1 or k == 3:
+			_maleta_de(c["d"]["nodo"], cols_maleta[k % 3])
 
 ## Cine (18 × 18 m): pantalla, gradas con butacas tapizadas y el público.
 func _cine() -> void:
@@ -2171,40 +2407,256 @@ func _museo() -> void:
 	_trabajador(Vector3(10.2, 0, 3.6), -PI * 0.5, false, ["charla", "saludo_mano"], [Color(0.15, 0.15, 0.2), Color(0.15, 0.15, 0.2), true])
 	_cartel("🏆 " + _sala_nombre().to_upper(), Vector3(0, 4.3, -6.95), 56, Color(1.0, 0.85, 0.4))
 
-## Piscina de recuperación (22 × 14 m): el vaso con su borde y sus calles,
-## jugadores en el agua, tumbonas y el fisio en el borde.
+## Piscina de recuperación (22 × 14 m, 5,5 m de alto; 16-10-2026: «a la altura
+## del gimnasio»). El vaso de 14 × 7 m con fondo de gresite, calles pintadas,
+## corcheras de flotadores, rebosadero con su rejilla, poyetes de salida y
+## banderines de espalda. En el agua: dos corriendo por la calle (aquajogging),
+## uno flotando boca arriba con su churro, otro con ejercicios de brazos y otro
+## agarrado al borde con el fisio agachado al lado. A la derecha el jacuzzi con
+## burbujas, las bañeras de hielo y la sauna acristalada; a la izquierda las
+## duchas, el toallero y la fuente; delante las tumbonas, la silla del
+## socorrista, el material (churros, tablas, pull-buoys) y la nevera. En las
+## paredes, azulejo con la franja del club, el reloj, la pantalla de la sesión
+## y el salvavidas. Casi todo en lotes (`_prim`, `_poner`).
 func _piscina() -> void:
-	_sala(Vector3(22, 5.5, 14), Color(0.86, 0.89, 0.9), Color(0.76, 0.88, 0.92), "losa")
-	var largo := 15.0
+	_sala(Vector3(22, 5.5, 14), Color(0.86, 0.89, 0.9), Color(0.82, 0.9, 0.93), "losa", Color(0.32, 0.58, 0.72))
+	var dep := [_c1, _c2]
+	var bata := [Color(0.95, 0.95, 0.97), Color(0.14, 0.18, 0.32), true]
+	var acero := Color(0.7, 0.72, 0.75)
+	var cromo := Color(0.86, 0.87, 0.89)
+	var blanco := Color(0.95, 0.95, 0.96)
+	var gresite := Color(0.28, 0.6, 0.8)
+	var madera := Color(0.74, 0.52, 0.32)
+	## --- El vaso: fondo de gresite con su cuadrícula y las calles pintadas.
+	var c := Vector3(-1.5, 0, -1.8)
+	var largo := 14.0
 	var ancho := 7.0
-	var agua := Mini3D.caja(_raiz, Vector3(0, 0.02, -2.0), Vector3(largo, 0.05, ancho), Mini3D.mat(Color(0.2, 0.6, 0.85, 0.9), 0.05, 0.25))
+	var hx := largo * 0.5
+	var hz := ancho * 0.5
+	_prim("caja", c + Vector3(0, 0.003, 0), Vector3(largo, 0.006, ancho), gresite)
+	for i in 15:
+		_prim("caja", c + Vector3(-hx + float(i), 0.007, 0), Vector3(0.025, 0.002, ancho), gresite.lightened(0.22))
+	for j in 8:
+		_prim("caja", c + Vector3(0, 0.007, -hz + float(j)), Vector3(largo, 0.002, 0.025), gresite.lightened(0.22))
+	var calles: Array[float] = []
+	for i in 4:
+		var zl := c.z - hz + 0.875 + float(i) * 1.75
+		calles.append(zl)
+		_prim("caja", Vector3(c.x, 0.01, zl), Vector3(largo - 2.0, 0.003, 0.25), Color(0.08, 0.16, 0.35))
+		for s: float in [-1.0, 1.0]:
+			_prim("caja", Vector3(c.x + s * (hx - 1.0), 0.01, zl), Vector3(0.25, 0.003, 1.0), Color(0.08, 0.16, 0.35))
+	var agua := Mini3D.caja(_raiz, c + Vector3(0, 0.03, 0), Vector3(largo, 0.04, ancho), Mini3D.mat(Color(0.3, 0.68, 0.86, 0.5), 0.03, 0.12))
 	agua.name = "Agua"
-	var borde := Mini3D.mat(Color(0.95, 0.95, 0.94), 0.5)
+	## Rebosadero (rejilla oscura con sus lamas) y el borde blanco alrededor.
+	var rejilla := Color(0.32, 0.38, 0.42)
 	for s: float in [-1.0, 1.0]:
-		Mini3D.caja(_raiz, Vector3(0, 0.06, -2.0 + s * (ancho * 0.5 + 0.2)), Vector3(largo + 0.8, 0.08, 0.4), borde)
-		Mini3D.caja(_raiz, Vector3(s * (largo * 0.5 + 0.2), 0.06, -2.0), Vector3(0.4, 0.08, ancho), borde)
+		_prim("caja", c + Vector3(0, 0.05, s * (hz + 0.09)), Vector3(largo + 0.36, 0.1, 0.18), rejilla)
+		_prim("caja", c + Vector3(s * (hx + 0.09), 0.05, 0), Vector3(0.18, 0.1, ancho), rejilla)
+		_prim("caja", c + Vector3(0, 0.06, s * (hz + 0.43)), Vector3(largo + 1.36, 0.12, 0.5), blanco)
+		_prim("caja", c + Vector3(s * (hx + 0.43), 0.06, 0), Vector3(0.5, 0.12, ancho + 0.36), blanco)
+		for i in int((largo + 0.36) / 0.12):
+			_prim("caja", c + Vector3(-hx - 0.12 + float(i) * 0.12, 0.102, s * (hz + 0.09)), Vector3(0.03, 0.004, 0.15), Color(0.85, 0.88, 0.9))
+		for j in int(ancho / 0.12):
+			_prim("caja", c + Vector3(s * (hx + 0.09), 0.102, -hz + 0.06 + float(j) * 0.12), Vector3(0.15, 0.004, 0.03), Color(0.85, 0.88, 0.9))
+	## Profundidad pintada en el borde.
 	for k in 3:
-		Mini3D.caja(_raiz, Vector3(0, 0.06, -2.0 - ancho * 0.5 + float(k + 1) * ancho * 0.25), Vector3(largo, 0.03, 0.06), Mini3D.mat(Color(0.95, 0.85, 0.2), 0.5))
-	## Escalerilla.
-	var metal := Mini3D.mat(Color(0.85, 0.86, 0.88), 0.2)
-	metal.metallic = 0.8
+		var x := c.x - hx + 2.0 + float(k) * 5.0
+		var l := _texto(String(["1,20 m", "1,60 m", "2,00 m"][k]), Vector3(x, 0.125, c.z + hz + 0.43), 26, Color(0.1, 0.2, 0.45), 0.0, false)
+		l.rotation.x = -PI * 0.5
+	## Corcheras: flotadores rojos en los 5 m de cada extremo, azules y blancos
+	## en medio.
+	for i in 3:
+		var zb := c.z - hz + 1.75 * float(i + 1)
+		var n := int((largo - 0.2) / 0.14)
+		for k in n:
+			var x := c.x - hx + 0.1 + float(k) * 0.14
+			var cerca := absf(x - c.x) > hx - 5.0
+			var col := Color(0.85, 0.15, 0.12) if cerca else (Color(0.15, 0.35, 0.8) if k % 2 == 0 else blanco)
+			_prim("cil", Vector3(x, 0.055, zb), Vector3(0.1, 0.12, 0.1), col, "goma", Vector3(0, 0, PI * 0.5))
+	## Banderines de espalda a 5 m de cada pared.
 	for s: float in [-1.0, 1.0]:
-		Mini3D.cilindro(_raiz, Vector3(largo * 0.5 - 1.0 + s * 0.3, 0.45, -2.0 + ancho * 0.5 + 0.15), 0.03, 0.9, metal)
+		var x := c.x + s * (hx - 5.0)
+		for t: float in [-1.0, 1.0]:
+			_prim("cil", Vector3(x, 0.95, c.z + t * (hz + 0.55)), Vector3(0.05, 1.9, 0.05), acero, "metal")
+		_prim("caja", Vector3(x, 1.82, c.z), Vector3(0.015, 0.015, ancho + 1.1), Color(0.2, 0.2, 0.22))
+		for k in int(ancho / 0.35):
+			_prim("caja", Vector3(x, 1.73, c.z - hz + 0.2 + float(k) * 0.35), Vector3(0.004, 0.16, 0.13), [Color(0.85, 0.15, 0.12), blanco, Color(0.15, 0.35, 0.8)][k % 3])
+	## Poyetes de salida (lado izquierdo), con su número.
+	for i in 4:
+		var p := Vector3(c.x - hx - 0.45, 0, calles[i])
+		_prim("caja", p + Vector3(0, 0.3, 0), Vector3(0.45, 0.6, 0.5), Color(0.2, 0.22, 0.26))
+		_prim("caja", p + Vector3(0.04, 0.64, 0), Vector3(0.6, 0.05, 0.55), blanco, "goma", Vector3(0, 0, -0.12))
+		_prim("caja", p + Vector3(-0.2, 0.75, 0), Vector3(0.04, 0.04, 0.45), cromo, "metal")
+		_texto(str(i + 1), p + Vector3(-0.232, 0.32, 0), 40, blanco, -PI * 0.5, false)
+	## Escalerillas en el extremo derecho, a los dos lados.
+	for s: float in [-1.0, 1.0]:
+		var z := c.z + s * (hz + 0.12)
+		for dx: float in [-0.25, 0.25]:
+			var x := c.x + hx - 1.3 + dx
+			_prim("cil", Vector3(x, 0.5, z + s * 0.1), Vector3(0.045, 1.0, 0.045), cromo, "metal")
+			_prim("cil", Vector3(x, 1.0, z - s * 0.12), Vector3(0.045, 0.45, 0.045), cromo, "metal", Vector3(PI * 0.5, 0, 0))
+			_prim("cil", Vector3(x, 0.5, z - s * 0.34), Vector3(0.045, 1.0, 0.045), cromo, "metal")
+	## --- Paredes: franja del club, rótulos, reloj, pantalla y salvavidas.
+	_prim("caja", Vector3(0, 3.0, -6.99), Vector3(22, 0.22, 0.02), _c1)
+	for s: float in [-1.0, 1.0]:
+		_prim("caja", Vector3(s * 10.99, 3.0, 0), Vector3(0.02, 0.22, 14), _c1)
+	_cartel("🏊 " + _sala_nombre().to_upper(), Vector3(-1.5, 4.2, -6.95), 44)
+	_cartel("AGUA · CALMA · RECUPERACIÓN", Vector3(-10.96, 3.6, 0.6), 30, _c1.lightened(0.25), PI * 0.5)
+	_reloj(Transform3D(Basis.IDENTITY, Vector3(-6.0, 2.35, -6.97)), 0.5, 10.75)
+	_prim("cil", Vector3(-6.0, 2.35, -6.985), Vector3(1.12, 0.03, 1.12), Color(0.2, 0.2, 0.22), "metal", Vector3(PI * 0.5, 0, 0))
+	_pantalla(Vector3(4.2, 2.3, -6.95), Vector2(2.4, 1.3), Color(0.06, 0.18, 0.28))
+	_texto("SESIÓN DE RECUPERACIÓN\nAgua  30 °C   ·   Jacuzzi  37 °C\nHielo  10 °C   ·   Sauna  80 °C\nAquajogging 20'  ·  Estiramientos 15'", Vector3(4.2, 2.3, -6.89), 17, Color(0.6, 1.0, 0.8), 0.0, false)
+	var aro := MeshInstance3D.new()
+	var tm := TorusMesh.new()
+	tm.inner_radius = 0.24
+	tm.outer_radius = 0.38
+	tm.rings = 20
+	tm.ring_segments = 10
+	aro.mesh = tm
+	aro.material_override = Mini3D.mat(Color(0.95, 0.4, 0.1), 0.6)
+	aro.position = Vector3(-9.6, 1.75, -6.9)
+	aro.rotation.x = PI * 0.5
+	_raiz.add_child(aro)
 	for k in 4:
-		var d := Mini3D.persona(_raiz, _rng, Vector3(-5.0 + float(k) * 3.4, -0.9, -3.4 + float(k % 2) * 2.4), [_c1, _c2])
-		if not d.is_empty():
-			Mini3D.anim(d, ["caminar", "parado", "saltar_inicio", "caminar"][k], "")
-	_trabajador(Vector3(0, 0, 2.8), PI, false, ["aplaudir", "charla", "pedir_calma"], [Color.WHITE, Color(0.2, 0.4, 0.7), true])
-	for k in 4:
-		_asiento("loungeChairRelax", Vector3(-8.0 + float(k) * 1.6, 0, 4.4), PI, [0.0] if k == 1 else [], [_c1, _c2], null, {"carpet": Color(0.95, 0.95, 0.95), "wood": Color(0.7, 0.72, 0.75)})
-	_poner("kitchenFridgeSmall", Vector3(10.65, 0, 4.0), -PI * 0.5)
+		var a := float(k) * PI * 0.5 + PI * 0.25
+		_prim("caja", Vector3(-9.6 + cos(a) * 0.31, 1.75 + sin(a) * 0.31, -6.84), Vector3(0.16, 0.08, 0.05), blanco, "mate", Vector3(0, 0, a + PI * 0.5))
+	_prim("caja", Vector3(-8.5, 1.55, -6.95), Vector3(0.45, 0.4, 0.1), blanco)
+	_prim("caja", Vector3(-8.5, 1.55, -6.895), Vector3(0.18, 0.05, 0.01), Color(0.8, 0.12, 0.12))
+	_prim("caja", Vector3(-8.5, 1.55, -6.895), Vector3(0.05, 0.18, 0.01), Color(0.8, 0.12, 0.12))
+	_ventana(-1.0, -4.4, 3.0, false)
+	_ventana(1.0, -4.4, 3.0, false)
+	## --- La gente en el agua (el suelo tapa lo que queda bajo la superficie).
+	for i: int in [0, 2]:
+		var a := Vector3(c.x - hx + 1.3, -0.95, calles[i])
+		var b := Vector3(c.x + hx - 1.3, -0.95, calles[i])
+		_caminante([a, b], dep)
+		if not _caminantes.is_empty():
+			var cm: Dictionary = _caminantes[-1]
+			cm["puntos"] = [a, b]
+			cm["i"] = 1 if i == 0 else 0
+			cm["vel"] = 0.55
+			(cm["d"]["nodo"] as Node3D).position = a.lerp(b, 0.3 if i == 0 else 0.65)
+	_tumbado(Vector3(c.x + 1.2, -0.13, calles[1]), PI * 0.5, dep)
+	_prim("cil", Vector3(c.x + 2.05, 0.05, calles[1]), Vector3(0.1, 1.5, 0.1), Color(1.0, 0.55, 0.1), "goma", Vector3(PI * 0.5, 0, 0))
+	_trabajador(Vector3(c.x - 1.2, -0.95, calles[3] - 0.2), 0.0, false, ["brazos_al_frente", "charla", "brazos_al_frente", "pedir_calma"], dep)
+	_trabajador(Vector3(c.x - 4.6, -0.95, c.z + hz - 0.35), 0.0, false, ["parado", "charla", "cansado"], dep)
+	_trabajador(Vector3(c.x - 4.6, 0.12, c.z + hz + 0.55), PI, false, ["agachado"], bata)
+	if not _fijos.is_empty():
+		_fijos[-1]["base"] = "agachado"
+		Mini3D.anim(_fijos[-1]["d"], "agachado", "")
+	_prim("caja", Vector3(c.x - 3.9, 0.07, c.z + hz - 0.6), Vector3(0.45, 0.04, 0.3), Color(0.98, 0.8, 0.15), "goma")
+	## En el borde: el preparador y el socorrista en su silla alta.
+	_trabajador(Vector3(c.x + 2.6, 0, c.z + hz + 1.1), PI, false, ["senalar_adelante", "aplaudir", "charla", "brazos_jarra"], [_c1.darkened(0.5), Color(0.12, 0.12, 0.15), true])
+	var silla := Vector3(c.x + 5.6, 0, c.z + hz + 1.15)
+	for dx: float in [-0.28, 0.28]:
+		for dz: float in [-0.22, 0.22]:
+			_prim("cil", silla + Vector3(dx, 0.75, dz), Vector3(0.05, 1.5, 0.05), blanco, "metal")
+		for y: float in [0.35, 0.75, 1.1]:
+			_prim("caja", silla + Vector3(dx, y, 0.22), Vector3(0.04, 0.04, 0.04), blanco)
+	for y: float in [0.35, 0.75, 1.1]:
+		_prim("caja", silla + Vector3(0, y, 0.24), Vector3(0.6, 0.035, 0.08), blanco)
+	_prim("caja", silla + Vector3(0, 1.5, 0), Vector3(0.66, 0.06, 0.56), Color(0.85, 0.15, 0.12))
+	_prim("caja", silla + Vector3(0, 1.85, 0.27), Vector3(0.66, 0.5, 0.05), Color(0.85, 0.15, 0.12))
+	_prim("caja", silla + Vector3(0, 0.95, -0.3), Vector3(0.5, 0.04, 0.2), blanco)
+	_trabajador(silla + Vector3(0, 0, 0.04), PI, true, [], [Color(0.85, 0.12, 0.12), Color(0.95, 0.85, 0.2)], 1.53)
+	## --- Jacuzzi: vaso redondo elevado, agua con burbujas y dos dentro.
+	var jc := Vector3(8.7, 0, -4.4)
+	_prim("cil", jc + Vector3(0, 0.275, 0), Vector3(3.0, 0.55, 3.0), Color(0.9, 0.93, 0.95))
+	_prim("cil", jc + Vector3(0, 0.552, 0), Vector3(2.66, 0.004, 2.66), gresite)
+	_prim("cil", jc + Vector3(0, 0.3, 1.6), Vector3(0.9, 0.04, 0.5), Color(0.8, 0.84, 0.86))
 	for k in 3:
-		Mini3D.caja(_raiz, Vector3(8.4 + float(k) * 0.05, 0.05 + float(k) * 0.08, 5.6), Vector3(0.6, 0.08, 0.4), Mini3D.mat([Color.WHITE, _c1, _c2][k], 0.9))
-	for p: Vector3 in [Vector3(10.4, 0, 6.4), Vector3(-10.4, 0, 6.4)]:
-		_planta(p)
-	_ventana(-1.0, -2.0, 4.0, false)
-	_ventana(1.0, -2.0, 4.0, false)
-	_cartel("🏊 " + _sala_nombre().to_upper(), Vector3(0, 4.3, -6.95), 44)
+		_prim("caja", jc + Vector3(-0.9 + float(k) * 0.9, 0.555, 1.38), Vector3(0.05, 0.02, 0.05), Color(0.6, 0.9, 1.0), "luz")
+	var agua_j := Mini3D.cilindro(_raiz, jc + Vector3(0, 0.565, 0), 1.33, 0.02, Mini3D.mat(Color(0.45, 0.8, 0.92, 0.55), 0.03, 0.25))
+	agua_j.name = "AguaJacuzzi"
+	for k in 26:
+		var a := _rng.randf() * TAU
+		var r := sqrt(_rng.randf()) * 1.2
+		_prim("esf", jc + Vector3(cos(a) * r, 0.58, sin(a) * r), Vector3.ONE * _rng.randf_range(0.04, 0.1), Color(0.95, 0.98, 1.0), "luz")
+	for a: float in [PI * 0.75, -PI * 0.2]:
+		var dir := Vector3(sin(a), 0, cos(a))
+		_trabajador(jc + dir * 0.95, atan2(-dir.x, -dir.z), true, [], dep, 0.2)
+	_cartel("HIDROMASAJE 37 °C", Vector3(8.7, 2.3, -6.95), 26, Color(0.9, 0.97, 1.0))
+	## --- Bañeras de hielo (crioterapia), una ocupada, y el fisio con el crono.
+	for k in 2:
+		var p := Vector3(7.9 + float(k) * 1.5, 0, -1.0)
+		_prim("caja", p + Vector3(0, 0.35, 0), Vector3(0.95, 0.7, 1.8), acero, "metal")
+		_prim("caja", p + Vector3(0, 0.705, 0), Vector3(0.83, 0.01, 1.68), Color(0.72, 0.9, 0.97), "luz")
+		for q in 9:
+			_prim("caja", p + Vector3(_rng.randf_range(-0.33, 0.33), 0.72, _rng.randf_range(-0.7, 0.7)), Vector3.ONE * 0.07, Color(0.88, 0.96, 1.0), "luz", Vector3(0, _rng.randf() * TAU, 0))
+		_prim("caja", p + Vector3(0, 0.74, -0.86), Vector3(0.95, 0.08, 0.08), acero.darkened(0.2), "metal")
+	_trabajador(Vector3(7.9, 0, -1.45), 0.0, true, [], dep, 0.25)
+	_trabajador(Vector3(8.65, 0, 0.55), PI * 0.85, false, ["charla", "senalar_adelante", "brazos_jarra"], bata)
+	_texto("CRIOTERAPIA 10 °C", Vector3(10.96, 2.2, -1.0), 24, Color(0.75, 0.92, 1.0), -PI * 0.5)
+	## --- Sauna acristalada, contra la pared derecha.
+	var x0 := 8.8
+	for z: float in [2.0, 5.0]:
+		_prim("caja", Vector3(9.9, 1.15, z), Vector3(2.2, 2.3, 0.08), madera)
+		for k in 15:
+			_prim("caja", Vector3(9.9, 0.1 + float(k) * 0.15, z + (0.045 if z > 3.0 else -0.045)), Vector3(2.2, 0.01, 0.01), madera.darkened(0.25))
+	_prim("caja", Vector3(9.9, 2.33, 2.0), Vector3(2.2, 0.08, 0.12), madera.darkened(0.15))
+	_prim("caja", Vector3(9.9, 2.33, 5.0), Vector3(2.2, 0.08, 0.12), madera.darkened(0.15))
+	_prim("caja", Vector3(x0, 2.33, 3.5), Vector3(0.12, 0.08, 3.0), madera.darkened(0.15))
+	for z: float in [2.0, 2.85, 5.0]:
+		_prim("caja", Vector3(x0, 1.15, z), Vector3(0.1, 2.3, 0.1), madera.darkened(0.2))
+	Mini3D.caja(_raiz, Vector3(x0, 1.15, 3.92), Vector3(0.02, 2.2, 2.1), Mini3D.mat(Color(0.75, 0.6, 0.4, 0.3), 0.05))
+	Mini3D.caja(_raiz, Vector3(x0, 1.05, 2.43), Vector3(0.03, 2.0, 0.8), Mini3D.mat(Color(0.75, 0.6, 0.4, 0.35), 0.05))
+	_prim("caja", Vector3(x0 - 0.04, 1.05, 2.75), Vector3(0.04, 0.3, 0.03), cromo, "metal")
+	for g: Array in [[10.6, 0.9, 0.5], [10.05, 0.45, 0.55]]:
+		_prim("caja", Vector3(float(g[0]), float(g[1]) * 0.5, 3.5), Vector3(float(g[2]), float(g[1]), 2.9), madera)
+		for k in 4:
+			_prim("caja", Vector3(float(g[0]), float(g[1]) + 0.005, 2.2 + float(k) * 0.85), Vector3(float(g[2]), 0.01, 0.02), madera.darkened(0.3))
+	_prim("caja", Vector3(9.3, 0.35, 4.55), Vector3(0.5, 0.7, 0.5), Color(0.2, 0.2, 0.22), "metal")
+	for k in 9:
+		_prim("esf", Vector3(9.3 + _rng.randf_range(-0.16, 0.16), 0.75, 4.55 + _rng.randf_range(-0.16, 0.16)), Vector3.ONE * 0.11, Color(0.4, 0.38, 0.36))
+	_prim("cil", Vector3(9.75, 0.13, 4.6), Vector3(0.25, 0.26, 0.25), madera.darkened(0.35))
+	_prim("caja", Vector3(10.94, 1.9, 3.5), Vector3(0.04, 0.12, 0.4), Color(1.0, 0.75, 0.4), "luz")
+	_trabajador(Vector3(10.55, 0, 3.9), -PI * 0.5, true, [], dep, 0.9)
+	_trabajador(Vector3(10.0, 0, 2.7), -PI * 0.5, true, [], dep, 0.45)
+	_texto("SAUNA  80 °C", Vector3(x0 - 0.06, 2.45, 3.5), 26, Color(1.0, 0.85, 0.6), -PI * 0.5)
+	## --- Duchas en la pared izquierda (mamparas, platos y una abierta).
+	for k in 3:
+		var z := -0.6 + float(k) * 1.2
+		_prim("caja", Vector3(-10.5, 0.004, z), Vector3(0.95, 0.008, 1.1), Color(0.55, 0.6, 0.64))
+		_prim("cil", Vector3(-10.5, 0.01, z), Vector3(0.1, 0.005, 0.1), Color(0.2, 0.2, 0.22), "metal")
+		_prim("cil", Vector3(-10.93, 1.15, z), Vector3(0.05, 2.3, 0.05), cromo, "metal")
+		_prim("caja", Vector3(-10.75, 2.25, z), Vector3(0.36, 0.035, 0.035), cromo, "metal")
+		_prim("cono", Vector3(-10.56, 2.18, z), Vector3(0.18, 0.1, 0.18), cromo, "metal")
+		_prim("cil", Vector3(-10.92, 1.05, z + 0.12), Vector3(0.07, 0.06, 0.07), cromo, "metal", Vector3(0, 0, PI * 0.5))
+	for k in 4:
+		Mini3D.caja(_raiz, Vector3(-10.5, 1.0, -1.2 + float(k) * 1.2), Vector3(0.95, 2.0, 0.02), Mini3D.mat(Color(0.85, 0.93, 1.0, 0.25), 0.05))
+	var chorro := Mini3D.cilindro(_raiz, Vector3(-10.56, 1.15, 0.6), 0.09, 2.0, Mini3D.mat(Color(0.8, 0.92, 1.0, 0.3), 0.05, 0.3), 0.04)
+	chorro.name = "Chorro"
+	_trabajador(Vector3(-10.45, 0, 0.6), -PI * 0.5, false, ["parado", "cansado", "parado"], dep)
+	_toallero(Vector3(-10.62, 0, 4.6))
+	_fuente_agua(Vector3(-10.72, 0, 6.0), acero, cromo)
+	## --- Delante: tumbonas con sus toallas, mesitas y bebidas.
+	for k in 4:
+		var x := -8.6 + float(k) * 1.6
+		_asiento("loungeChairRelax", Vector3(x, 0, 5.1), PI, [0.0] if k % 2 == 1 else [], dep, null, {"carpet": Color(0.95, 0.95, 0.95), "wood": Color(0.7, 0.72, 0.75)})
+		if k % 2 == 0:
+			_prim("caja", Vector3(x, 0.42, 5.4), Vector3(0.5, 0.03, 0.9), _c1 if k == 0 else blanco)
+		if k < 3:
+			_prim("cil", Vector3(x + 0.8, 0.22, 5.6), Vector3(0.36, 0.44, 0.36), blanco)
+			_poner("comida/glass", Vector3(x + 0.8, 0.44, 5.6), 0.0)
+	## Material: churros, tablas, pull-buoys, la nevera y una planta.
+	_prim("caja", Vector3(4.6, 0.04, 6.4), Vector3(1.3, 0.08, 0.4), acero, "metal")
+	for k in 9:
+		_prim("cil", Vector3(4.05 + float(k) * 0.135, 0.8, 6.4), Vector3(0.09, 1.5, 0.09), [Color(1.0, 0.55, 0.1), Color(0.2, 0.6, 0.95), Color(0.95, 0.2, 0.5), Color(0.3, 0.85, 0.4)][k % 4], "goma")
+	for k in 10:
+		_prim("caja", Vector3(5.9, 0.02 + float(k) * 0.035, 6.35), Vector3(0.45, 0.03, 0.3), [Color(0.2, 0.45, 0.9), Color(0.98, 0.8, 0.15)][k % 2], "goma", Vector3(0, float(k % 3) * 0.06, 0))
+	_prim("cil", Vector3(6.75, 0.22, 6.3), Vector3(0.5, 0.44, 0.5), Color(0.3, 0.32, 0.35))
+	for k in 6:
+		_prim("caja", Vector3(6.75 + _rng.randf_range(-0.12, 0.12), 0.48, 6.3 + _rng.randf_range(-0.12, 0.12)), Vector3(0.1, 0.08, 0.18), [_c1, Color(0.2, 0.45, 0.9)][k % 2], "goma", Vector3(0, _rng.randf() * TAU, 0))
+	_poner("kitchenFridgeSmall", Vector3(10.65, 0, 6.2), -PI * 0.5)
+	_planta(Vector3(7.8, 0, 6.5))
+	_planta(Vector3(-10.4, 0, -6.4))
+	## Uno que vuelve de nadar por el borde de delante.
+	var ida := Vector3(-7.6, 0, 3.55)
+	var vuelta := Vector3(6.4, 0, 3.55)
+	_caminante([ida, vuelta], dep)
+	if not _caminantes.is_empty():
+		_caminantes[-1]["puntos"] = [ida, vuelta]
+		(_caminantes[-1]["d"]["nodo"] as Node3D).position = ida.lerp(vuelta, 0.35)
 
 ## Parque de bomberos (24 × 16 m, 7 m de alto): las dos autobombas, taquillas,
 ## la barra para bajar, mangueras y los bomberos.
