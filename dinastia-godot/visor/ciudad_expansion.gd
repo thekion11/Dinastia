@@ -60,6 +60,8 @@ const ESPECIALES := {
 	Vector2i(-7, -2): "gasolinera", Vector2i(-6, 3): "parque", Vector2i(9, -6): "parque",
 	Vector2i(6, 4): "parque", Vector2i(-3, -9): "parque",
 	Vector2i(4, 8): "villa_moderna", Vector2i(-8, 1): "desguace", Vector2i(-2, 9): "granja",
+	## El parque de atracciones (16-10-2026), junto a la universidad, en las afueras.
+	Vector2i(5, 9): "feria",
 }
 
 var b: CityBuilder
@@ -78,6 +80,7 @@ var metro: MetroCiudad
 var cuenta := {}           ## lo que se levantó, para las pruebas y el rótulo
 
 var _rng := RandomNumberGenerator.new()
+var _antes := OS.get_environment("CIUDAD_ANTES") != ""   ## TEMPORAL (captura antes)
 var _comercial: Array[PackedScene] = []
 var _naves: Array[PackedScene] = []
 var _altos: Array[PackedScene] = []
@@ -443,6 +446,7 @@ func construir() -> void:
 		_dibujar_bloque(bl)
 	_edificios_lejanos()
 	_casas_multimesh()
+	_modular_multimesh()
 	metro = MetroCiudad.new()
 	metro.name = "Metro"
 	b.add_child(metro)
@@ -622,6 +626,13 @@ func _puente(a: Vector3, c: Vector3, ancho: float) -> void:
 		_lote("asfalto", Vector3((x0 + agua0 - rampa) * 0.5, 0.07, z), Vector3(agua0 - rampa - x0, 0.12, ancho))
 	if x1 > agua1 + rampa:
 		_lote("asfalto", Vector3((agua1 + rampa + x1) * 0.5, 0.07, z), Vector3(x1 - agua1 - rampa, 0.12, ancho))
+	## Cada cruce del río son DOS tramos de la red (a un lado y otro del nodo del
+	## medio): el puente en sí se levanta una sola vez (16-10-2026; antes salía
+	## dos veces, una encima de la otra).
+	var clave_p := Vector2i(roundi(z), roundi(ancho))
+	if _puentes_hechos.has(clave_p):
+		return
+	_puentes_hechos[clave_p] = true
 	## Rampas inclinadas.
 	for lado: float in [-1.0, 1.0]:
 		var xa := agua0 - rampa if lado < 0.0 else agua1
@@ -631,10 +642,57 @@ func _puente(a: Vector3, c: Vector3, ancho: float) -> void:
 	## Tablero sobre el agua.
 	_lote("asfalto", Vector3(rx, PUENTE_ALTO, z), Vector3(agua1 - agua0, 0.6, ancho))
 	b._caja_en(Vector3(rx, PUENTE_ALTO - 0.8, z), Vector3(agua1 - agua0, 1.0, ancho + 1.0), hormigon)
-	for px: float in [agua0 + 6.0, rx, agua1 - 6.0]:
-		b._caja_en(Vector3(px, PUENTE_ALTO * 0.5 - 0.6, z), Vector3(2.2, PUENTE_ALTO, ancho * 0.7), hormigon)
+	if not _antes:
+		_apoyos_puente(rx, z, ancho, agua0, agua1, rampa)
+	else:
+		for px: float in [agua0 + 6.0, rx, agua1 - 6.0]:
+			b._caja_en(Vector3(px, PUENTE_ALTO * 0.5 - 0.6, z), Vector3(2.2, PUENTE_ALTO, ancho * 0.7), hormigon)
 	_adornar_puente(rx, z, ancho, agua0, agua1, rampa)
 	cuenta["puentes"] = int(cuenta.get("puentes", 0)) + 1
+
+var _puentes_hechos := {}
+
+## LOS APOYOS DEL PUENTE (16-10-2026, «los tableros flotan o tienen apoyos
+## pobres»). Antes: tres machones de hormigón de solo el 70 % del ancho, así que
+## los arcos de piedra de las dos caras nacían en el aire, y bajo las rampas no
+## había nada (una losa inclinada sobre el paseo). Ahora:
+##  · PILAS de sillería a TODO el ancho del tablero (las roscas de los arcos
+##    apoyan en ellas), con zarpa ancha bajo el agua, imposta en el arranque de
+##    los arcos y un capitel corrido bajo el tablero;
+##  · ESTRIBOS en las dos orillas, donde el tablero acaba sobre tierra;
+##  · TERRAPLÉN bajo cada rampa: muro de piedra en cuña que llena el hueco
+##    (la rampa ya no es una losa colgada).
+func _apoyos_puente(rx: float, z: float, ancho: float, agua0: float, agua1: float, rampa: float) -> void:
+	var sillar := _mat_det("puente_sillar", Color(0.74, 0.67, 0.56), 0.9)
+	var sillar_osc := _mat_det("puente_sillar_osc", Color(0.55, 0.49, 0.41), 0.95)
+	var fondo := ancho + 1.4      ## de cara a cara del puente (los arcos están a ±(ancho/2 + 0,2))
+	var bajo := PUENTE_ALTO - 1.3   ## cara de abajo del tablero
+	for px: float in [agua0 + 6.0, rx, agua1 - 6.0]:
+		## Zarpa (bajo el agua), fuste a todo el ancho, imposta y capitel.
+		b._caja_en(Vector3(px, -0.35, z), Vector3(3.6, 1.3, fondo + 1.2), sillar_osc)
+		b._caja_en(Vector3(px, (bajo + 0.3) * 0.5 - 0.3, z), Vector3(2.4, bajo + 0.6, fondo), sillar)
+		b._caja_en(Vector3(px, 0.55, z), Vector3(2.8, 0.3, fondo + 0.3), sillar_osc)
+		b._caja_en(Vector3(px, bajo - 0.15, z), Vector3(2.9, 0.3, fondo + 0.4), sillar_osc)
+	## Estribos: un macizo en cada orilla bajo el final del tablero.
+	for lado: float in [-1.0, 1.0]:
+		var xe := agua0 + 1.5 if lado < 0.0 else agua1 - 1.5
+		b._caja_en(Vector3(xe, bajo * 0.5, z), Vector3(4.2, bajo + 0.2, fondo + 0.6), sillar)
+		b._caja_en(Vector3(xe, 0.35, z), Vector3(4.8, 0.7, fondo + 1.0), sillar_osc)
+	## Terraplén bajo cada rampa: una cuña de piedra (prisma rectángulo) que sube
+	## con ella hasta el estribo.
+	for lado: float in [-1.0, 1.0]:
+		var cuna := PrismMesh.new()
+		cuna.left_to_right = 1.0 if lado < 0.0 else 0.0
+		cuna.size = Vector3(rampa, PUENTE_ALTO - 0.35, fondo - 0.2)
+		var mi := MeshInstance3D.new()
+		mi.mesh = cuna
+		mi.material_override = sillar
+		var xa := agua0 - rampa if lado < 0.0 else agua1
+		mi.position = Vector3(xa + rampa * 0.5, (PUENTE_ALTO - 0.35) * 0.5, z)
+		b.add_child(mi)
+		## Zócalo del terraplén.
+		b._caja_en(Vector3(xa + rampa * 0.5, 0.3, z), Vector3(rampa, 0.6, fondo + 0.2), sillar_osc)
+	cuenta["pilas_puente"] = int(cuenta.get("pilas_puente", 0)) + 3
 
 ## EL PUENTE MÁS BONITO (7-10-2026, «el puente puede quedar más bonito»):
 ## arcos de piedra entre los pilares, tajamares, cornisa, balaustrada de
@@ -684,7 +742,8 @@ func _adornar_puente(rx: float, z: float, ancho: float, agua0: float, agua1: flo
 	## Tajamares: proas de piedra en los pilares, río arriba y río abajo.
 	for px: float in pilares:
 		for lado: float in [-1.0, 1.0]:
-			var t := b._caja_en(Vector3(px, PUENTE_ALTO * 0.35, z + lado * (ancho * 0.35 + 0.8)), Vector3(1.6, PUENTE_ALTO * 0.7, 1.6), piedra)
+			## (fuera de la pila, que ahora ocupa todo el ancho del puente)
+			var t := b._caja_en(Vector3(px, PUENTE_ALTO * 0.35, z + lado * ((ancho * 0.35 + 0.8) if _antes else (ancho * 0.5 + 1.3))), Vector3(1.6, PUENTE_ALTO * 0.7, 1.6), piedra)
 			t.rotation.y = PI * 0.25
 	## Cornisa a lo largo del tablero.
 	for lado: float in [-1.0, 1.0]:
@@ -799,12 +858,19 @@ func _dibujar_bloque(bl: Dictionary) -> void:
 			_casas(r)
 		"lejano":
 			_lejanos.append(r)
+		"feria":
+			## Antes era una manzana lejana: se sigue apuntando para que el azar de
+			## `_edificios_lejanos` se consuma igual (no se mueve nada más).
+			_lejanos.append(r)
+			if not _antes:
+				_sin_lejano.append(r)
+				_feria(r)
 		_:
 			_acera_bloque(r)
 			_instalacion(uso, r)
 	cuenta[uso] = int(cuenta.get(uso, 0)) + 1
 	## Para que el resto de la ciudad (árboles, ánimo) sepa que aquí hay algo.
-	if not (uso in ["rio", "parque", "parque_lago", "lejano"]):
+	if not (uso in ["rio", "parque", "parque_lago", "lejano", "feria"]):
 		b._frentes.append(r)
 
 func _acera_bloque(r: Rect2) -> void:
@@ -1007,19 +1073,32 @@ func _torres(r: Rect2) -> void:
 
 func _pisos(r: Rect2) -> void:
 	## Bloques de viviendas: el kit «de poco detalle» alto, en dos hileras con
-	## patio en medio.
+	## patio en medio. Al este (16-10-2026) son BLOQUES MODULARES armados pieza a
+	## pieza, cada uno distinto (`_bloque_modular`).
 	if _naves.is_empty():
 		return
 	var c := Vector3(r.get_center().x, 0.2, r.get_center().y)
+	var modular := c.x > 0.0 and not _mallas_mod().is_empty() and not _antes
 	for fila: float in [-1.0, 1.0]:
 		for k in 3:
 			var x := c.x + (float(k) - 1.0) * r.size.x * 0.3
 			var s := 5.6 * _rng.randf_range(0.9, 1.1)
 			var pos_p := Vector3(x, 0.2, c.z + fila * r.size.y * 0.27)
-			if not _altos.is_empty() and (k + int(fila > 0.0)) % 2 == 0:
-				_kit(_altos[_rng.randi() % _altos.size()], pos_p, Vector3.ONE * _rng.randf_range(2.8, 3.6), 0.0 if fila > 0.0 else PI, true)
+			## El azar se consume en el mismo orden que antes (modelo, escala y el
+			## tinte de `_kit`), haya bloque modular o no: no se mueve nada más.
+			var alto := not _altos.is_empty() and (k + int(fila > 0.0)) % 2 == 0
+			var esc: PackedScene = _altos[_rng.randi() % _altos.size()] if alto else _naves[_rng.randi() % _naves.size()]
+			var tam := Vector3.ONE * (_rng.randf_range(2.8, 3.6) if alto else s * 1.15)
+			if modular:
+				if _rng.randf() < 0.45:
+					_rng.randi()
+				var zf := r.end.y - 1.4 if fila > 0.0 else r.position.y + 1.4
+				var puerta := _bloque_modular(Vector3(x, 0.24, zf), 0.0 if fila > 0.0 else PI, hash(Vector2(x, zf)), r.size.x * 0.3 - 4.0, r.size.y * 0.5 - 8.0)
+				var fam: String = String(APELLIDOS[absi(hash(puerta)) % APELLIDOS.size()])
+				b.puntos_clic.append({"k": "edificio_vivienda|Piso de la familia %s" % fam, "n": "Piso de la familia %s" % fam,
+					"pos": Vector3(puerta.x, 0, zf + fila * 2.6), "estado": "ciudad", "radio": 6.0})
 			else:
-				_kit(_naves[_rng.randi() % _naves.size()], pos_p, Vector3.ONE * s * 1.15, 0.0 if fila > 0.0 else PI, true)
+				_kit(esc, pos_p, tam, 0.0 if fila > 0.0 else PI, true)
 	## El patio entre las dos hileras: césped, un camino y árboles.
 	_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(r.size.x * 0.82, 0.06, r.size.y * 0.2))
 	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(r.size.x * 0.82, 0.06, 2.4))
@@ -1314,6 +1393,748 @@ func _pieza_kit(ruta: String, centro: Vector3, escala: float, giro: float, tinte
 	if tinte != 0:
 		b.tenir(n, tinte)
 	return mi
+
+# ============================================================================
+#  BLOQUES DE PISOS MODULARES (16-10-2026)
+# ============================================================================
+## Pedido: «bloques de pisos modulares… que cada bloque sea distinto (alturas,
+## colores, balcones), con puerta a la calle». Con el kit Modular Buildings de
+## Kenney: cada pieza es un cubo de 1 × 0,62 × 1 (un piso) con la fachada en +Z.
+## A ×4,8 → módulos de 4,8 m y pisos de 2,98 m. Cada bloque se arma pieza a pieza
+## (fachada, laterales y trasera), con su número de módulos, de pisos, color de
+## pared y de remates, toldos de los comercios y estilo de ventanas (balcones,
+## alféizares, arcos, ventanales), todo sacado de la POSICIÓN (no de `_rng`).
+## Se dibujan juntos, un MultiMesh por pieza (`_modular_multimesh`), con
+## `bloque_modular.gdshader`, que tiñe la pared, los remates y los toldos de cada
+## instancia y oscurece el cristal (el azul cielo del kit parecía de juguete).
+const RUTA_MOD := "res://assets/kenney/edificios_modulares/"
+const ESC_MOD := 4.8
+const PISO_MOD := 0.62 * ESC_MOD
+## [pared, remates] de cada bloque (sRGB).
+const COLORES_PISOS := [
+	[Color(0.84, 0.6, 0.45), Color(0.93, 0.9, 0.84)], [Color(0.93, 0.85, 0.66), Color(0.6, 0.56, 0.5)],
+	[Color(0.78, 0.79, 0.8), Color(0.34, 0.35, 0.38)], [Color(0.95, 0.93, 0.88), Color(0.58, 0.4, 0.3)],
+	[Color(0.7, 0.47, 0.38), Color(0.92, 0.88, 0.8)], [Color(0.66, 0.74, 0.68), Color(0.94, 0.93, 0.9)],
+	[Color(0.9, 0.76, 0.6), Color(0.45, 0.36, 0.3)], [Color(0.62, 0.68, 0.8), Color(0.94, 0.94, 0.93)],
+	[Color(0.93, 0.77, 0.7), Color(0.6, 0.34, 0.3)], [Color(0.98, 0.9, 0.62), Color(0.42, 0.4, 0.38)],
+]
+## Estilos de fachada: la pieza de los módulos pares y la de los impares.
+const ESTILOS_MOD := [
+	["building-windows-sills", "building-windows-sills"],
+	["building-window-balcony", "building-window-sill"],
+	["building-windows-sills-round", "building-windows-round"],
+	["building-window-wide-sill", "building-window-wide-sill"],
+	["building-window-balcony", "building-window-balcony"],
+	["building-window-sill", "building-window-large"],
+	["building-windows-sills", "building-window-balcony"],
+]
+## Planta baja: con comercios (toldos o escaparates) o de viviendas.
+const PUERTAS_MOD := ["building-door-window", "building-window-door-window", "building-window-door-window-round", "building-door"]
+
+var _mod_t := {}       ## ruta -> {t: Array[Transform3D], c: Array[Color], d: Array[Color]}
+var _mod_cajas_t: Array[Transform3D] = []
+var _mod_cajas_c: Array[Color] = []
+
+## ¿Está el kit? (si no, los bloques de siempre).
+func _mallas_mod() -> Dictionary:
+	return _malla_kit(RUTA_MOD + "building-window.glb")
+
+func _mod(pieza: String, t: Transform3D, pared: Color, extra: Color) -> void:
+	var ruta := RUTA_MOD + pieza + ".glb"
+	if not _mod_t.has(ruta):
+		_mod_t[ruta] = {"t": [] as Array[Transform3D], "c": [] as Array[Color], "d": [] as Array[Color]}
+	var g: Dictionary = _mod_t[ruta]
+	(g["t"] as Array[Transform3D]).append(t)
+	(g["c"] as Array[Color]).append(pared)
+	(g["d"] as Array[Color]).append(extra)
+
+func _mod_caja(centro: Vector3, tam: Vector3, base: Basis, col: Color) -> void:
+	_mod_cajas_t.append(Transform3D(base * Basis.from_scale(tam), centro))
+	_mod_cajas_c.append(col)
+
+## Un bloque de pisos. `frente`: centro de la fachada a ras de suelo; `giro`:
+## hacia dónde mira (0 → +Z). `ancho_max`/`fondo_max`: lo que cabe en la parcela.
+## Devuelve el punto de la puerta (en la línea de fachada).
+func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: float, fondo_max: float,
+		forzar := {}) -> Vector3:
+	var hr := RandomNumberGenerator.new()
+	hr.seed = semilla
+	var s := ESC_MOD
+	var w := 4 if ancho_max >= 4.0 * s and hr.randf() < 0.6 else 3
+	var d := 3 if fondo_max >= 3.0 * s and hr.randf() < 0.55 else 2
+	var pisos := hr.randi_range(3, 7)
+	var col: Array = COLORES_PISOS[hr.randi() % COLORES_PISOS.size()]
+	var toldo := hr.randi() % 5
+	var estilo: Array = ESTILOS_MOD[hr.randi() % ESTILOS_MOD.size()]
+	var tienda := hr.randf() < 0.55
+	var escaparate := hr.randf() < 0.35
+	var puerta_pieza: String = PUERTAS_MOD[hr.randi() % PUERTAS_MOD.size()]
+	w = int(forzar.get("w", w))
+	d = int(forzar.get("d", d))
+	pisos = int(forzar.get("pisos", pisos))
+	if forzar.has("color"):
+		col = forzar["color"]
+	if forzar.has("tienda"):
+		tienda = bool(forzar["tienda"])
+	## Pared un poco apagada (a pleno sol los pastel se queman) y en lineal: el
+	## shader la multiplica por el gris de la paleta.
+	var pared := (col[0] as Color).lerp(Color(0.72, 0.7, 0.66), 0.18).srgb_to_linear()
+	var rem := (col[1] as Color).srgb_to_linear()
+	var extra := Color(rem.r, rem.g, rem.b, float(toldo) / 4.0)
+	var puerta_i := w / 2
+	var rot := Basis(Vector3.UP, giro)
+	for p in pisos:
+		for i in w:
+			for j in d:
+				var al_frente := j == d - 1
+				var detras := j == 0
+				var al_lado := i == 0 or i == w - 1
+				if not (al_frente or detras or al_lado):
+					continue
+				var lx := (float(i) - float(w - 1) * 0.5) * s
+				var lz := -(float(d - 1 - j) + 0.5) * s
+				var pieza := "building-block"
+				var g := 0.0
+				if al_frente:
+					if p == 0:
+						if i == puerta_i:
+							pieza = puerta_pieza
+						elif tienda:
+							pieza = "building-window-large" if escaparate else "building-window-awnings"
+						else:
+							pieza = "building-window-sill"
+					else:
+						pieza = String(estilo[(i + p) % 2])
+				elif detras:
+					g = PI
+					pieza = "building-window" if p == 0 else ("building-window-sill" if (i + p) % 3 == 0 else "building-windows")
+				else:
+					g = -PI * 0.5 if i == 0 else PI * 0.5
+					pieza = "building-block" if p == 0 else "building-window"
+				var t := Transform3D(rot * Basis(Vector3.UP, g) * Basis.from_scale(Vector3.ONE * s),
+					frente + rot * Vector3(lx, float(p) * PISO_MOD, lz))
+				_mod(pieza, t, pared, extra)
+	## Azotea: cornisa con parapeto, el suelo de grava, equipos de aire y la
+	## caseta de la escalera.
+	var ancho := float(w) * s
+	var fondo := float(d) * s
+	var alto := float(pisos) * PISO_MOD
+	var centro := frente + rot * Vector3(0, 0, -fondo * 0.5)
+	var remate_srgb: Color = col[1]
+	_mod_caja(centro + Vector3(0, alto + 0.12, 0), Vector3(ancho + 0.5, 0.24, fondo + 0.5), rot, remate_srgb)
+	for sz: float in [-1.0, 1.0]:
+		_mod_caja(centro + rot * Vector3(0, 0, sz * (fondo * 0.5 + 0.1)) + Vector3(0, alto + 0.6, 0), Vector3(ancho + 0.4, 0.75, 0.3), rot, remate_srgb)
+	for sx: float in [-1.0, 1.0]:
+		_mod_caja(centro + rot * Vector3(sx * (ancho * 0.5 + 0.1), 0, 0) + Vector3(0, alto + 0.6, 0), Vector3(0.3, 0.75, fondo), rot, remate_srgb)
+	_mod_caja(centro + Vector3(0, alto + 0.26, 0), Vector3(ancho - 0.2, 0.06, fondo - 0.2), rot, Color(0.46, 0.45, 0.43))
+	var caseta := rot * Vector3((hr.randf() - 0.5) * ancho * 0.4, 0, (hr.randf() - 0.5) * fondo * 0.3)
+	_mod_caja(centro + caseta + Vector3(0, alto + 1.4, 0), Vector3(2.6, 2.4, 2.6), rot, (col[0] as Color).darkened(0.08))
+	_mod_caja(centro + caseta + Vector3(0, alto + 2.68, 0), Vector3(3.0, 0.16, 3.0), rot, remate_srgb)
+	for k in 1 + hr.randi() % 3:
+		var q := rot * Vector3((hr.randf() - 0.5) * (ancho - 3.0), 0, (hr.randf() - 0.5) * (fondo - 3.0))
+		_mod("detail-ac-a" if k % 2 == 0 else "detail-ac-b", Transform3D(rot * Basis.from_scale(Vector3.ONE * ESC_MOD), centro + q + Vector3(0, alto + 0.28, 0)), pared, extra)
+	## Escalón y felpudo de piedra ante la puerta.
+	var puerta := frente + rot * Vector3((float(puerta_i) - float(w - 1) * 0.5) * s, 0, 0)
+	_mod_caja(puerta + rot * Vector3(0, 0, 0.55) + Vector3(0, 0.08, 0), Vector3(2.6, 0.16, 1.1), rot, Color(0.62, 0.6, 0.56))
+	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
+	cuenta["bloques_modulares"] = int(cuenta.get("bloques_modulares", 0)) + 1
+	return puerta
+
+## Dibuja los bloques modulares: un MultiMesh por pieza, color de pared en
+## COLOR y remates + toldo en CUSTOM; las cajas de las azoteas, en otro.
+func _modular_multimesh() -> void:
+	if _mod_t.is_empty():
+		return
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://visor/bloque_modular.gdshader")
+	mat.set_shader_parameter("paleta", load(RUTA_MOD + "Textures/colormap.png"))
+	for ruta: String in _mod_t:
+		var k := _malla_kit(ruta)
+		if k.is_empty():
+			continue
+		var g: Dictionary = _mod_t[ruta]
+		var ts: Array[Transform3D] = g["t"]
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_colors = true
+		mm.use_custom_data = true
+		mm.mesh = k["malla"]
+		mm.instance_count = ts.size()
+		for i in ts.size():
+			mm.set_instance_transform(i, ts[i])
+			mm.set_instance_color(i, (g["c"] as Array[Color])[i])
+			mm.set_instance_custom_data(i, (g["d"] as Array[Color])[i])
+		var mi := MultiMeshInstance3D.new()
+		mi.name = "Modular"
+		mi.multimesh = mm
+		mi.material_override = mat
+		b.add_child(mi)
+		cuenta["piezas_modulares"] = int(cuenta.get("piezas_modulares", 0)) + ts.size()
+	_multimesh(BoxMesh.new(), null, _mod_cajas_t, Vector3.ONE, _mod_cajas_c)
+	_mod_t.clear()
+
+# ============================================================================
+#  EL PARQUE DE ATRACCIONES (16-10-2026)
+# ============================================================================
+## Pedido: «parque de atracciones pequeño con montaña rusa, puestos, noria,
+## vallas, entrada, en un solar libre coherente». En la manzana (5, 9), en las
+## afueras junto a la universidad y frente a la avenida z = 990: entrada con el
+## pórtico del Coaster Kit de Kenney y su taquilla, valla alrededor, paseo
+## central con guirnaldas y puestos (comida, bebidas, información, aseos), la
+## NORIA al noroeste, la sala de RECREATIVOS al noreste (se entra: su interior es
+## `InteriorInstalacion._recreativos`, con el Mini Arcade) y la MONTAÑA RUSA
+## en la mitad sur: un circuito cerrado de piezas de acero del kit (cuesta de
+## subida, recta alta, curvas y bajada) sobre pilares, con su estación y un tren
+## de tres vagones que da vueltas (animación con la velocidad de la caída).
+## Nada usa `_rng`: el azar es de la posición.
+const RUTA_FERIA := "res://assets/kenney/montana_rusa/"
+const ESC_RUSA := 3.0      ## piezas de vía de 4 unidades → tramos de 12 m
+const BASE_RUSA := 1.3     ## altura de la vía en la estación
+
+var feria := {}            ## lo que se levantó (para las pruebas): centro, rect, puerta…
+
+func _feria(r: Rect2) -> void:
+	var c := Vector3(r.get_center().x, 0, r.get_center().y)
+	var hx := r.size.x * 0.5
+	var hz := r.size.y * 0.5
+	feria = {"rect": r, "centro": c}
+	## Suelo: césped, paseo central norte-sur, paseo este-oeste y la explanada
+	## de la entrada.
+	_lote("cesped", Vector3(c.x, 0.05, c.z), Vector3(r.size.x, 0.1, r.size.y))
+	_lote("acera", Vector3(c.x, 0.11, c.z - 4.0), Vector3(7.0, 0.1, r.size.y - 8.0))
+	_lote("acera", Vector3(c.x, 0.11, c.z - 8.0), Vector3(r.size.x - 8.0, 0.1, 6.0))
+	_lote("acera", Vector3(c.x, 0.11, r.position.y + 7.0), Vector3(24.0, 0.1, 14.0))
+	_lote("acera", Vector3(c.x, 0.11, c.z + 26.0), Vector3(40.0, 0.1, 24.0))
+	_valla_feria(r)
+	## El pórtico de entrada, la taquilla y los mástiles con los colores del club.
+	var puerta := Vector3(c.x, 0.12, r.position.y + 2.2)
+	var ruta_e := RUTA_FERIA + "park-entrance.glb"
+	_pieza_kit(ruta_e, puerta, _escala_ancho(ruta_e, 9.0), 0.0)
+	var ruta_i := RUTA_FERIA + "stall-information.glb"
+	_pieza_kit(ruta_i, Vector3(c.x + 8.5, 0.12, r.position.y + 5.0), _escala_ancho(ruta_i, 3.2), -PI * 0.5)
+	for sx: float in [-1.0, 1.0]:
+		var mastil := Vector3(c.x + sx * 6.5, 0, r.position.y + 1.5)
+		b._cil_en(mastil + Vector3(0, 4.0, 0), 0.08, 8.0, _mat_det("feria_mastil", Color(0.85, 0.85, 0.86), 0.4))
+		b._caja_en(mastil + Vector3(sx * 0.7, 7.1, 0), Vector3(1.4, 0.9, 0.04), b._mat_simple(b._color_club("c1" if sx < 0.0 else "c2", Color(0.9, 0.2, 0.2)), 0.7))
+	b._rotulo(Vector3(c.x, 30.0, c.z), "🎡 Parque de atracciones", Color(1.0, 0.85, 0.55), 22)
+	feria["puerta"] = puerta
+	_noria(c + Vector3(-hx * 0.55, 0, -hz * 0.42))
+	_recreativos(c, r)
+	_puestos_feria(c)
+	_montana_rusa(c + Vector3(-18.0, 0, 14.0))
+	_guirnaldas_feria(c, r)
+	_jardines_feria(c, r)
+	cuenta["instalaciones"] = int(cuenta.get("instalaciones", 0)) + 1
+
+## La valla: postes y dos barras alrededor, con la entrada abierta al norte.
+func _valla_feria(r: Rect2) -> void:
+	var postes: Array[Transform3D] = []
+	var barras: Array[Transform3D] = []
+	var m := 0.6
+	var esquinas := [Vector3(r.position.x + m, 0, r.position.y + m), Vector3(r.end.x - m, 0, r.position.y + m),
+		Vector3(r.end.x - m, 0, r.end.y - m), Vector3(r.position.x + m, 0, r.end.y - m)]
+	var cx := r.get_center().x
+	for k in 4:
+		var a: Vector3 = esquinas[k]
+		var e: Vector3 = esquinas[(k + 1) % 4]
+		var tramos_v: Array = [[a, e]]
+		if k == 0:   ## lado norte: hueco de 10 m para la entrada
+			tramos_v = [[a, Vector3(cx - 5.0, 0, a.z)], [Vector3(cx + 5.0, 0, a.z), e]]
+		for tv: Array in tramos_v:
+			var p0: Vector3 = tv[0]
+			var p1: Vector3 = tv[1]
+			var largo := p0.distance_to(p1)
+			var n := maxi(1, int(largo / 2.4))
+			for q in n + 1:
+				postes.append(Transform3D(Basis.from_scale(Vector3(0.12, 1.3, 0.12)), p0.lerp(p1, float(q) / float(n)) + Vector3(0, 0.65, 0)))
+			var dir := (p1 - p0).normalized()
+			var base := Basis(Vector3.UP, atan2(dir.x, dir.z))
+			for y: float in [0.55, 1.2]:
+				barras.append(Transform3D(base * Basis.from_scale(Vector3(0.07, 0.07, largo)), (p0 + p1) * 0.5 + Vector3(0, y, 0)))
+			## La valla no se salta: una huella fina a lo largo de cada tramo.
+			b.huellas.append(Rect2(minf(p0.x, p1.x) - 0.15, minf(p0.z, p1.z) - 0.15, absf(p1.x - p0.x) + 0.3, absf(p1.z - p0.z) + 0.3))
+	var verde := _mat_det("feria_valla", Color(0.12, 0.3, 0.2), 0.5)
+	_multimesh(BoxMesh.new(), verde, postes, Vector3.ONE)
+	_multimesh(BoxMesh.new(), _mat_det("feria_barra", Color(0.92, 0.9, 0.84), 0.5), barras, Vector3.ONE)
+
+## Puestos a los dos lados del paseo central, mirando al paseo, y los aseos.
+func _puestos_feria(c: Vector3) -> void:
+	var surtido := ["stall-food", "stall-drinks", "stall-food", "stall-drinks", "stall-information", "stall-food"]
+	var h := absi(hash(Vector2(c.x, c.z)))
+	var k := 0
+	for z: float in [-1.0, 5.5]:
+		for sx: float in [-1.0, 1.0]:
+			var ruta := RUTA_FERIA + "%s.glb" % surtido[(h + k) % surtido.size()]
+			## El mostrador del modelo mira a −Z: −π/2 lo vuelve hacia +X.
+			_pieza_kit(ruta, c + Vector3(sx * 7.8, 0.12, z), _escala_ancho(ruta, 3.4), -PI * 0.5 * -sx)
+			k += 1
+	var ruta_a := RUTA_FERIA + "stall-toilets.glb"
+	_pieza_kit(ruta_a, c + Vector3(30.0, 0.12, -1.0), _escala_ancho(ruta_a, 3.6), PI * 0.5)
+	## Mesas con sombrilla entre los puestos (como las terrazas de la ciudad).
+	var tela := [Color(0.85, 0.2, 0.2), Color(0.95, 0.8, 0.2), Color(0.2, 0.5, 0.85), Color(0.25, 0.65, 0.35)]
+	var palos: Array[Transform3D] = []
+	var lonas: Array[Transform3D] = []
+	var lonas_c: Array[Color] = []
+	var mesas: Array[Transform3D] = []
+	for q in 4:
+		var p := c + Vector3(-14.0 + float(q % 2) * 28.0, 0.12, -1.0 + float(q / 2) * 7.0)
+		palos.append(Transform3D(Basis.from_scale(Vector3(0.06, 2.4, 0.06)), p + Vector3(0, 1.2, 0)))
+		lonas.append(Transform3D(Basis.from_scale(Vector3(2.6, 0.5, 2.6)), p + Vector3(0, 2.45, 0)))
+		lonas_c.append(tela[(h + q) % tela.size()])
+		mesas.append(Transform3D(Basis.from_scale(Vector3(1.0, 0.06, 1.0)), p + Vector3(0, 0.74, 0)))
+	_multimesh(CylinderMesh.new(), _mat_det("feria_mastil", Color(0.85, 0.85, 0.86), 0.4), palos, Vector3.ONE)
+	var cono := CylinderMesh.new()
+	cono.top_radius = 0.0
+	cono.bottom_radius = 0.5
+	cono.height = 1.0
+	cono.radial_segments = 8
+	_multimesh(cono, null, lonas, Vector3.ONE, lonas_c)
+	_multimesh(CylinderMesh.new(), _mat_det("feria_mesa", Color(0.95, 0.95, 0.93), 0.5), mesas, Vector3.ONE)
+
+## Guirnaldas de bombillas sobre el paseo central (se encienden de noche).
+func _guirnaldas_feria(c: Vector3, r: Rect2) -> void:
+	var colores := [Color(1, 0.35, 0.3), Color(1, 0.85, 0.3), Color(0.35, 0.8, 1), Color(1, 0.5, 0.9)]
+	var por_color: Array = [[] as Array[Transform3D], [] as Array[Transform3D], [] as Array[Transform3D], [] as Array[Transform3D]]
+	var cables: Array[Transform3D] = []
+	var postes: Array[Transform3D] = []
+	var z := r.position.y + 12.0
+	while z < c.z + 10.0:
+		var e0 := Vector3(c.x - 4.6, 0, z)
+		var e1 := Vector3(c.x + 4.6, 0, z)
+		var prev := Vector3.ZERO
+		for s in 10:
+			var f := float(s) / 9.0
+			var pos := e0.lerp(e1, f) + Vector3(0, 5.4 - 0.9 * sin(f * PI), 0)
+			if s > 0:
+				cables.append(_tramo_cable(prev, pos, 0.02))
+			prev = pos
+			(por_color[s % colores.size()] as Array).append(Transform3D(Basis.from_scale(Vector3.ONE * 0.22), pos - Vector3(0, 0.14, 0)))
+		for e: Vector3 in [e0, e1]:
+			postes.append(Transform3D(Basis.from_scale(Vector3(0.08, 5.6, 0.08)), e + Vector3(0, 2.8, 0)))
+		z += 7.0
+	for k in colores.size():
+		var mat := StandardMaterial3D.new()
+		mat.albedo_color = colores[k]
+		mat.emission_enabled = true
+		mat.emission = colores[k]
+		mat.emission_energy_multiplier = 0.2
+		_bombillas.append(mat)
+		var esf := SphereMesh.new()
+		esf.radial_segments = 6
+		esf.rings = 3
+		var lista: Array[Transform3D] = []
+		lista.assign(por_color[k])
+		_multimesh(esf, mat, lista, Vector3.ONE)
+	var oscuro := _mat_det("feria_cable", Color(0.12, 0.12, 0.13), 0.6)
+	_multimesh(CylinderMesh.new(), oscuro, cables, Vector3.ONE)
+	_multimesh(CylinderMesh.new(), oscuro, postes, Vector3.ONE)
+
+## Árboles, bancos, papeleras y parterres del kit, lejos de los caminos.
+func _jardines_feria(c: Vector3, r: Rect2) -> void:
+	var hx := r.size.x * 0.5
+	var hz := r.size.y * 0.5
+	var arboles := [Vector3(-hx + 4.0, 0, -hz + 6.0), Vector3(-hx + 4.0, 0, 2.0), Vector3(hx - 4.0, 0, 6.0),
+		Vector3(hx - 4.0, 0, -hz + 6.0), Vector3(-15.5, 0, -hz + 5.0), Vector3(15.5, 0, -hz + 4.5),
+		Vector3(-hx + 4.0, 0, 9.0), Vector3(hx - 4.5, 0, 10.0), Vector3(-24.0, 0, 4.0)]
+	for k in arboles.size():
+		var ruta := RUTA_FERIA + ("tree-large.glb" if k % 3 == 0 else "tree.glb")
+		_pieza_kit(ruta, c + (arboles[k] as Vector3) + Vector3(0, 0.1, 0), 4.2 if k % 3 == 0 else 5.0, float(k) * 1.3)
+	var ruta_b := RUTA_FERIA + "bench.glb"
+	var ruta_p := RUTA_FERIA + "trash.glb"
+	var ruta_f := RUTA_FERIA + "flowers.glb"
+	## Bancos a los dos lados del paseo, entre los postes de las guirnaldas,
+	## mirando al paseo (el frente del modelo, como el de los puestos, es −Z).
+	for z: float in [-26.0, -19.0]:
+		for sx: float in [-1.0, 1.0]:
+			_pieza_kit(ruta_b, c + Vector3(sx * 5.0, 0.12, z), _escala_ancho(ruta_b, 1.9), PI * 0.5 * sx)
+	for sx: float in [-1.0, 1.0]:
+		_pieza_kit(ruta_p, c + Vector3(sx * 4.6, 0.12, -hz + 8.0), 2.2, 0.0)
+		for q in 2:
+			_pieza_kit(ruta_f, c + Vector3(sx * (14.5 + float(q) * 3.0), 0.12, -hz + 9.0), 3.0, float(q))
+
+## LA NORIA: 20 m de diámetro, dieciséis barquillas que se mantienen
+## colgadas mientras la rueda gira (una vuelta por minuto) y bombillas en los
+## aros. Hecha a mano: el kit no trae noria. `p`: pie, en el centro.
+func _noria(p: Vector3) -> void:
+	var radio := 10.0
+	var eje_y := radio + 3.4
+	var acero := _mat_det("noria_acero", Color(0.92, 0.92, 0.94), 0.35)
+	acero.metallic = 0.4
+	## Huella de la plataforma: no se atraviesa a pie.
+	b.huellas.append(Rect2(p.x - 4.0, p.z - 3.5, 8.0, 7.0))
+	var raiz := Node3D.new()
+	raiz.name = "Noria"
+	raiz.position = p
+	raiz.add_to_group("feria_animada")
+	b.add_child(raiz)
+	## Plataforma de embarque con escalera y la caseta del operario.
+	Mini3D.caja(raiz, Vector3(0, 0.3, 0), Vector3(8.0, 0.6, 7.0), _mat_det("feria_plataforma", Color(0.55, 0.5, 0.46), 0.85))
+	Mini3D.caja(raiz, Vector3(5.2, 1.3, 1.6), Vector3(2.0, 2.6, 2.0), _mat_det("feria_caseta", Color(0.95, 0.85, 0.4), 0.6))
+	Mini3D.caja(raiz, Vector3(5.2, 2.7, 1.6), Vector3(2.4, 0.2, 2.4), _mat_det("feria_tejado", Color(0.8, 0.2, 0.18), 0.6))
+	## Las dos patas en A a cada lado de la rueda y el eje.
+	for sz: float in [-1.0, 1.0]:
+		for sx: float in [-1.0, 1.0]:
+			var pie := Vector3(sx * 5.5, 0.6, sz * 2.3)
+			var arriba := Vector3(0, eje_y, sz * 1.5)
+			var mi := MeshInstance3D.new()
+			var cm := CylinderMesh.new()
+			cm.top_radius = 0.22
+			cm.bottom_radius = 0.32
+			cm.height = 1.0
+			mi.mesh = cm
+			mi.material_override = acero
+			mi.transform = _tramo_cable(pie, arriba, 0.25)
+			raiz.add_child(mi)
+	var eje := MeshInstance3D.new()
+	var cme := CylinderMesh.new()
+	cme.top_radius = 0.45
+	cme.bottom_radius = 0.45
+	cme.height = 3.6
+	eje.mesh = cme
+	eje.material_override = acero
+	eje.rotation.x = PI * 0.5
+	eje.position = Vector3(0, eje_y, 0)
+	raiz.add_child(eje)
+	## La rueda: dos aros, radios y bombillas (giran juntos).
+	var rueda := Node3D.new()
+	rueda.name = "Rueda"
+	rueda.position = Vector3(0, eje_y, 0)
+	raiz.add_child(rueda)
+	for sz: float in [-1.2, 1.2]:
+		var aro := MeshInstance3D.new()
+		var tm := TorusMesh.new()
+		tm.inner_radius = radio - 0.18
+		tm.outer_radius = radio + 0.18
+		tm.rings = 48
+		tm.ring_segments = 6
+		aro.mesh = tm
+		aro.material_override = acero
+		aro.rotation.x = PI * 0.5
+		aro.position.z = sz
+		rueda.add_child(aro)
+		var aro2 := MeshInstance3D.new()
+		var tm2 := TorusMesh.new()
+		tm2.inner_radius = radio * 0.55 - 0.1
+		tm2.outer_radius = radio * 0.55 + 0.1
+		tm2.rings = 32
+		tm2.ring_segments = 5
+		aro2.mesh = tm2
+		aro2.material_override = acero
+		aro2.rotation.x = PI * 0.5
+		aro2.position.z = sz
+		rueda.add_child(aro2)
+	var n := 16
+	var radios: Array[Transform3D] = []
+	var luces: Array[Transform3D] = []
+	for k in n:
+		var a := TAU * float(k) / float(n)
+		var dir := Vector3(cos(a), sin(a), 0)
+		for sz: float in [-1.2, 1.2]:
+			radios.append(_tramo_cable(Vector3(0, 0, sz * 0.4), dir * radio + Vector3(0, 0, sz), 0.07))
+		for q in 3:
+			var a2 := a + TAU / float(n) * float(q) / 3.0
+			for sz: float in [-1.25, 1.25]:
+				luces.append(Transform3D(Basis.from_scale(Vector3.ONE * 0.2), Vector3(cos(a2), sin(a2), 0) * (radio + 0.25) + Vector3(0, 0, sz)))
+	var mmr := MultiMesh.new()
+	mmr.transform_format = MultiMesh.TRANSFORM_3D
+	mmr.mesh = CylinderMesh.new()
+	mmr.instance_count = radios.size()
+	for i in radios.size():
+		mmr.set_instance_transform(i, radios[i])
+	var mir := MultiMeshInstance3D.new()
+	mir.multimesh = mmr
+	mir.material_override = acero
+	rueda.add_child(mir)
+	var bombilla := StandardMaterial3D.new()
+	bombilla.albedo_color = Color(1.0, 0.9, 0.6)
+	bombilla.emission_enabled = true
+	bombilla.emission = Color(1.0, 0.85, 0.5)
+	bombilla.emission_energy_multiplier = 0.2
+	_bombillas.append(bombilla)
+	var mml := MultiMesh.new()
+	mml.transform_format = MultiMesh.TRANSFORM_3D
+	var esf := SphereMesh.new()
+	esf.radial_segments = 6
+	esf.rings = 3
+	mml.mesh = esf
+	mml.instance_count = luces.size()
+	for i in luces.size():
+		mml.set_instance_transform(i, luces[i])
+	var mil := MultiMeshInstance3D.new()
+	mil.multimesh = mml
+	mil.material_override = bombilla
+	rueda.add_child(mil)
+	## Las barquillas: cuelgan de un pivote en el aro y la animación las gira al
+	## revés que la rueda, así que siempre quedan derechas.
+	var colores := [Color(0.85, 0.2, 0.2), Color(0.98, 0.78, 0.2), Color(0.2, 0.5, 0.88), Color(0.3, 0.7, 0.4)]
+	var barquillas: Array[Node3D] = []
+	for k in n:
+		var a := TAU * float(k) / float(n)
+		var piv := Node3D.new()
+		piv.name = "Barquilla%d" % k
+		piv.position = Vector3(cos(a), sin(a), 0) * radio
+		rueda.add_child(piv)
+		var mc := _mat_det("noria_barquilla_%d" % (k % colores.size()), colores[k % colores.size()], 0.5)
+		Mini3D.caja(piv, Vector3(0, -0.5, 0), Vector3(0.12, 1.0, 0.12), acero)
+		Mini3D.caja(piv, Vector3(0, -1.55, 0), Vector3(1.6, 1.1, 1.8), mc)
+		Mini3D.caja(piv, Vector3(0, -0.92, 0), Vector3(1.9, 0.14, 2.1), mc)
+		Mini3D.caja(piv, Vector3(0, -1.35, 0), Vector3(1.62, 0.5, 1.5), _mat_det("noria_cristal", Color(0.15, 0.2, 0.26), 0.15))
+		barquillas.append(piv)
+	## La animación: una vuelta por minuto.
+	var anim := Animation.new()
+	anim.length = 60.0
+	anim.loop_mode = Animation.LOOP_LINEAR
+	var t0 := anim.add_track(Animation.TYPE_VALUE)
+	anim.track_set_path(t0, NodePath("Rueda:rotation:z"))
+	anim.track_insert_key(t0, 0.0, 0.0)
+	anim.track_insert_key(t0, 60.0, -TAU)
+	for k in n:
+		var tk := anim.add_track(Animation.TYPE_VALUE)
+		anim.track_set_path(tk, NodePath("Rueda/Barquilla%d:rotation:z" % k))
+		anim.track_insert_key(tk, 0.0, 0.0)
+		anim.track_insert_key(tk, 60.0, TAU)
+	_animar(raiz, anim, "gira")
+	feria["noria"] = raiz
+
+func _animar(raiz: Node3D, anim: Animation, nombre: String) -> void:
+	var lib := AnimationLibrary.new()
+	lib.add_animation(nombre, anim)
+	var ap := AnimationPlayer.new()
+	ap.name = "Anim"
+	ap.add_animation_library("", lib)
+	ap.autoplay = nombre
+	raiz.add_child(ap)
+
+## LA SALA DE RECREATIVOS: un edificio modular de dos plantas en el noreste,
+## mirando al paseo central (al oeste), con rótulo de neón; con E en la puerta se
+## entra (sala «recreativos» de `InteriorInstalacion`).
+func _recreativos(c: Vector3, r: Rect2) -> void:
+	var nombre := "Recreativos Galaxia"
+	var frente := Vector3(c.x + 9.5, 0.12, r.position.y + 20.0)
+	var puerta := _bloque_modular(frente, -PI * 0.5, 77, 4.0 * ESC_MOD, 3.0 * ESC_MOD,
+		{"w": 4, "d": 3, "pisos": 2, "tienda": true, "color": [Color(0.42, 0.3, 0.6), Color(0.95, 0.9, 0.98)]})
+	## Huella maciza (no se atraviesa a pie).
+	b.huellas.append(Rect2(frente.x, frente.z - 2.0 * ESC_MOD, 3.0 * ESC_MOD, 4.0 * ESC_MOD))
+	## Rótulo de neón sobre la puerta y marquesina.
+	var neon := b._mat_simple(Color(1.0, 0.3, 0.8), 0.4, 2.2)
+	var placa := b._caja_en(Vector3(frente.x - 0.25, PISO_MOD * 2.0 - 0.6, puerta.z), Vector3(0.2, 1.1, 9.0), b._mat_simple(Color(0.1, 0.08, 0.16), 0.5))
+	placa.name = "RotuloRecreativos"
+	b._caja_en(Vector3(frente.x - 0.36, PISO_MOD * 2.0 - 0.02, puerta.z), Vector3(0.06, 0.07, 9.0), neon)
+	b._caja_en(Vector3(frente.x - 0.36, PISO_MOD * 2.0 - 1.18, puerta.z), Vector3(0.06, 0.07, 9.0), neon)
+	var l := Label3D.new()
+	l.text = "🕹️ " + nombre
+	l.font_size = 64
+	l.pixel_size = 0.012
+	l.modulate = Color(1.0, 0.75, 0.95)
+	l.outline_size = 10
+	l.outline_modulate = Color(0.45, 0.05, 0.35)
+	l.position = Vector3(frente.x - 0.4, PISO_MOD * 2.0 - 0.6, puerta.z)
+	l.rotation.y = -PI * 0.5
+	l.visibility_range_end = 160.0
+	b.add_child(l)
+	b.puntos_clic.append({"k": "edificio_recreativos|" + nombre, "n": nombre,
+		"pos": Vector3(puerta.x - 2.6, 0, puerta.z), "estado": "ciudad", "radio": 6.0})
+	feria["recreativos"] = puerta
+
+## LA MONTAÑA RUSA. El circuito, en unidades del kit y con `o` como origen
+## (sale hacia +X del mundo): cuesta arriba dos tramos (+2 unidades = 6 m),
+## recta alta, dos curvas, bajada de dos tramos, recta de la estación y dos
+## curvas que cierran el óvalo. Mide 61 × 26 m.
+const CIRCUITO_RUSA := ["sube", "sube", "recta", "curva", "curva", "baja", "baja", "recta", "curva", "curva"]
+
+func _montana_rusa(o: Vector3) -> void:
+	var e := ESC_RUSA
+	## El kit va hacia +Z; el circuito, hacia +X del mundo: giro de +π/2.
+	var base := Basis(Vector3.UP, PI * 0.5)
+	var origen := o + Vector3(0, BASE_RUSA, 0)
+	var piezas := {}    ## ruta -> Array[Transform3D]
+	var pilares: Array[Transform3D] = []
+	var pos := Vector3.ZERO
+	var rumbo := 0.0
+	var h := 0.0
+	var camino: Array = []    ## [punto (local, en unidades), rumbo] cada poco, para el tren
+	for seg: String in CIRCUITO_RUSA:
+		var dir := Vector3(sin(rumbo), 0, cos(rumbo))
+		var ruta := RUTA_FERIA + "coaster-steel-straight.glb"
+		var t_local := Transform3D(Basis(Vector3.UP, rumbo), pos + Vector3(0, h, 0))
+		var pasos := 8
+		match seg:
+			"recta":
+				for q in pasos:
+					camino.append([pos + dir * (4.0 * float(q) / float(pasos)) + Vector3(0, h, 0), rumbo, 0.0])
+				pos += dir * 4.0
+			"sube":
+				ruta = RUTA_FERIA + "coaster-steel-straight-hill-complete.glb"
+				for q in pasos:
+					var f := float(q) / float(pasos)
+					camino.append([pos + dir * (4.0 * f) + Vector3(0, h + smoothstep(0.0, 1.0, f), 0), rumbo, 1.0])
+				pos += dir * 4.0
+				h += 1.0
+			"baja":
+				ruta = RUTA_FERIA + "coaster-steel-straight-hill-complete.glb"
+				var fin := pos + dir * 4.0
+				t_local = Transform3D(Basis(Vector3.UP, rumbo + PI), fin + Vector3(0, h - 1.0, 0))
+				for q in pasos:
+					var f := float(q) / float(pasos)
+					camino.append([pos + dir * (4.0 * f) + Vector3(0, h - smoothstep(0.0, 1.0, f), 0), rumbo, -1.0])
+				pos = fin
+				h -= 1.0
+			"curva":
+				ruta = RUTA_FERIA + "coaster-steel-corner-large.glb"
+				var bas := Basis(Vector3.UP, rumbo)
+				var centro := pos + bas * Vector3(-4.0, 0, 0)
+				for q in pasos * 2:
+					var th := PI * 0.5 * float(q) / float(pasos * 2)
+					camino.append([centro + bas * Vector3(4.0 * cos(th), 0, 4.0 * sin(th)) + Vector3(0, h, 0), rumbo - th, 0.0])
+				pos = centro + bas * Vector3(0, 0, 4.0)
+				rumbo -= PI * 0.5
+		if not piezas.has(ruta):
+			piezas[ruta] = [] as Array[Transform3D]
+		var t_mundo := Transform3D(base * t_local.basis * Basis.from_scale(Vector3.ONE * e), origen + base * (t_local.origin * e))
+		(piezas[ruta] as Array[Transform3D]).append(t_mundo)
+	feria["cierre_rusa"] = pos.length()    ## 0 si el circuito cierra
+	## Pilares bajo la vía: uno cada ~6 m de recorrido, de la vía al suelo.
+	for k in range(0, camino.size(), 4):
+		var q: Vector3 = (camino[k] as Array)[0]
+		var pm := origen + base * (q * e)
+		var alto := pm.y - 0.15
+		## Sobre el paseo central la vía pasa alta y sin pilar (el paseo sigue).
+		var sobre_paseo := absf(pm.x - (feria["centro"] as Vector3).x) < 4.5
+		if alto > 0.4 and not sobre_paseo:
+			pilares.append(Transform3D(Basis.from_scale(Vector3(2.4, alto, 2.4)), Vector3(pm.x, 0.0, pm.z)))
+	for ruta: String in piezas:
+		var k := _malla_kit(ruta)
+		if k.is_empty():
+			return
+		var lista: Array[Transform3D] = []
+		lista.assign(piezas[ruta])
+		_multimesh(k["malla"], null, lista, Vector3.ONE)
+	var kp := _malla_kit(RUTA_FERIA + "support-large.glb")
+	if not kp.is_empty():
+		_multimesh(kp["malla"], null, pilares, Vector3.ONE)
+	feria["pilares_rusa"] = pilares.size()
+	_estacion_rusa(origen, base, e)
+	_tren_rusa(origen, base, e, camino)
+
+## La estación: andén cubierto junto a la recta baja, con escalera, valla y la
+## cola con sus vallas del kit.
+func _estacion_rusa(origen: Vector3, base: Basis, e: float) -> void:
+	## La recta de la estación va de (−8, 0, 4) a (−8, 0, 0) en unidades del kit.
+	var a := origen + base * (Vector3(-8.0, 0, 4.0) * e)
+	var c2 := origen + base * (Vector3(-8.0, 0, 0.0) * e)
+	var mitad := (a + c2) * 0.5
+	var largo := a.distance_to(c2)
+	## Andén por dentro del óvalo (hacia el norte en el mundo).
+	var anden := Vector3(mitad.x, 0, mitad.z - 2.6)
+	var piedra := _mat_det("rusa_anden", Color(0.62, 0.58, 0.54), 0.85)
+	b._caja_en(Vector3(anden.x, BASE_RUSA * 0.5, anden.z), Vector3(largo, BASE_RUSA, 3.2), piedra)
+	b.huellas.append(Rect2(anden.x - largo * 0.5, anden.z - 1.6, largo, 3.2))
+	var techo := _mat_det("rusa_techo", Color(0.15, 0.4, 0.75), 0.5)
+	var poste := _mat_det("rusa_poste", Color(0.9, 0.9, 0.92), 0.4)
+	for sx: float in [-1.0, 1.0]:
+		for sz: float in [-1.0, 1.0]:
+			b._cil_en(Vector3(anden.x + sx * (largo * 0.5 - 0.6), BASE_RUSA + 1.7, anden.z + sz * 1.3 + 1.0), 0.12, 3.4, poste)
+	b._caja_en(Vector3(anden.x, BASE_RUSA + 3.5, anden.z + 1.0), Vector3(largo + 1.0, 0.25, 6.4), techo)
+	b._caja_en(Vector3(anden.x, BASE_RUSA + 3.75, anden.z + 1.0), Vector3(largo + 1.4, 0.25, 0.4), _mat_det("rusa_cenefa", Color(0.98, 0.8, 0.2), 0.5))
+	## Escalera de subida desde el paseo (al norte del andén).
+	for k in 4:
+		var alto := BASE_RUSA * float(k + 1) / 4.0
+		b._caja_en(Vector3(anden.x - largo * 0.25, alto * 0.5, anden.z - 1.6 - 0.35 - float(3 - k) * 0.4), Vector3(3.0, alto, 0.4), piedra)
+	var ruta_q := RUTA_FERIA + "ride-entrance.glb"
+	_pieza_kit(ruta_q, Vector3(anden.x - largo * 0.25, 0.12, anden.z - 4.6), _escala_ancho(ruta_q, 3.0), PI)
+	var ruta_v := RUTA_FERIA + "queue-straight.glb"
+	for k in 3:
+		_pieza_kit(ruta_v, Vector3(anden.x - largo * 0.25 + 3.0 + float(k) * 2.5, 0.12, anden.z - 4.6), 2.5, PI * 0.5)
+	b._rotulo(Vector3(anden.x, BASE_RUSA + 5.2, anden.z), "🎢 Montaña rusa", Color(1.0, 0.9, 0.5), 18)
+	feria["estacion"] = anden
+
+## El tren: tres vagones que recorren el circuito, despacio en la cuesta de
+## subida (la cadena) y más rápido según bajan (v² = v0² + 2·g·caída). Las
+## claves salen de simular el recorrido; cada vagón va a su distancia del
+## primero sobre la vía.
+func _tren_rusa(origen: Vector3, base: Basis, e: float, camino: Array) -> void:
+	var raiz := Node3D.new()
+	raiz.name = "TrenRusa"
+	raiz.add_to_group("feria_animada")
+	b.add_child(raiz)
+	## Recorrido en el mundo, con su distancia acumulada.
+	var pts := PackedVector3Array()
+	var tipo := PackedFloat32Array()
+	for q: Array in camino:
+		pts.append(origen + base * ((q[0] as Vector3) * e) + Vector3(0, 0.3 * e - 0.15, 0))
+		tipo.append(float(q[2]))
+	pts.append(pts[0])
+	tipo.append(tipo[0])
+	var acum := PackedFloat32Array([0.0])
+	for i in range(1, pts.size()):
+		acum.append(acum[i - 1] + pts[i].distance_to(pts[i - 1]))
+	var total: float = acum[acum.size() - 1]
+	var y_max := 0.0
+	for p in pts:
+		y_max = maxf(y_max, p.y)
+	var vagones := ["coaster-train-front", "coaster-train", "coaster-train"]
+	var nodos: Array[Node3D] = []
+	for k in vagones.size():
+		var kv := _malla_kit(RUTA_FERIA + vagones[k] + ".glb")
+		if kv.is_empty():
+			return
+		var n := Node3D.new()
+		n.name = "Vagon%d" % k
+		raiz.add_child(n)
+		var mi := MeshInstance3D.new()
+		mi.mesh = kv["malla"]
+		mi.scale = Vector3.ONE * e
+		n.add_child(mi)
+		nodos.append(n)
+	## Simulación: la distancia del primer vagón en cada instante.
+	var dt := 0.1
+	var s := 0.0
+	var tiempos: Array[float] = [0.0]
+	var distancias: Array[float] = [0.0]
+	var t := 0.0
+	var i_seg := 0
+	while s < total and t < 200.0:
+		while i_seg < acum.size() - 2 and acum[i_seg + 1] < s:
+			i_seg += 1
+		var y := pts[i_seg].y
+		var v := 3.0 if tipo[i_seg] > 0.5 else 4.0 + sqrt(maxf(2.0 * 9.8 * (y_max - y), 0.0)) * 0.8
+		s += v * dt
+		t += dt
+		tiempos.append(t)
+		distancias.append(minf(s, total))
+	var largo_anim := t
+	var anim := Animation.new()
+	anim.length = largo_anim
+	anim.loop_mode = Animation.LOOP_LINEAR
+	var hueco := 1.45 * e
+	for k in nodos.size():
+		var tp := anim.add_track(Animation.TYPE_POSITION_3D)
+		var tr := anim.add_track(Animation.TYPE_ROTATION_3D)
+		anim.track_set_path(tp, NodePath("Vagon%d" % k))
+		anim.track_set_path(tr, NodePath("Vagon%d" % k))
+		for j in tiempos.size():
+			var sk := fposmod(distancias[j] - float(k) * hueco, total)
+			if j == tiempos.size() - 1:
+				sk = fposmod(-float(k) * hueco, total)
+			var punto := _en_recorrido(pts, acum, sk)
+			anim.position_track_insert_key(tp, tiempos[j], punto[0])
+			anim.rotation_track_insert_key(tr, tiempos[j], punto[1])
+	_animar(raiz, anim, "vueltas")
+	feria["vuelta_rusa"] = largo_anim
+	feria["largo_rusa"] = total
+
+## Punto y orientación (mirando hacia donde avanza) a `s` metros del recorrido.
+static func _en_recorrido(pts: PackedVector3Array, acum: PackedFloat32Array, s: float) -> Array:
+	var i := acum.bsearch(s) - 1
+	i = clampi(i, 0, pts.size() - 2)
+	var largo := maxf(acum[i + 1] - acum[i], 0.001)
+	var f := clampf((s - acum[i]) / largo, 0.0, 1.0)
+	var p := pts[i].lerp(pts[i + 1], f)
+	var d := (pts[i + 1] - pts[i]).normalized()
+	if d.length() < 0.5:
+		d = Vector3(0, 0, 1)
+	var q := Basis.looking_at(-d, Vector3.UP).get_rotation_quaternion()
+	return [p, q]
 
 ## POLÍGONO (15-10-2026): naves, contenedores y chimeneas del kit industrial de
 ## Kenney en lugar de la caja con dientes de sierra. Las llamadas a `_rng` son las
@@ -2197,6 +3018,8 @@ func _textura_charco() -> ImageTexture:
 
 ## Los edificios lejanos: cajas con ventanas en un solo MultiMesh.
 var _lejanos: Array[Rect2] = []
+## Manzanas que antes eran lejanas y ahora tienen otra cosa (la feria).
+var _sin_lejano: Array[Rect2] = []
 
 func _edificios_lejanos() -> void:
 	if _lejanos.is_empty():
@@ -2204,12 +3027,17 @@ func _edificios_lejanos() -> void:
 	var ts: Array[Transform3D] = []
 	var cs: Array[Color] = []
 	for r in _lejanos:
-		_lote("acera", Vector3(r.get_center().x, 0.12, r.get_center().y), Vector3(r.size.x, 0.24, r.size.y))
+		var libre := r in _sin_lejano
+		if not libre:
+			_lote("acera", Vector3(r.get_center().x, 0.12, r.get_center().y), Vector3(r.size.x, 0.24, r.size.y))
 		for k in 4:
 			var o := Vector2((float(k % 2) - 0.5) * r.size.x * 0.5, (float(k / 2) - 0.5) * r.size.y * 0.5)
 			var w := r.size.x * _rng.randf_range(0.32, 0.42)
 			var f := r.size.y * _rng.randf_range(0.32, 0.42)
 			var h := _rng.randf_range(14.0, 48.0)
+			if libre:
+				_rng.randi()   ## (el color, consumido igual)
+				continue
 			ts.append(Transform3D(Basis.from_scale(Vector3(w, h, f)), Vector3(r.get_center().x + o.x, h * 0.5, r.get_center().y + o.y)))
 			cs.append([Color(0.85, 0.83, 0.8), Color(0.75, 0.78, 0.82), Color(0.88, 0.8, 0.7), Color(0.7, 0.72, 0.75)][_rng.randi() % 4])
 	## Fachada de verdad (etapa 6): ventanas con marco y de noche encendidas.
