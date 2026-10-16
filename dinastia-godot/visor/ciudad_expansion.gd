@@ -197,7 +197,7 @@ func armar_red() -> void:
 ## Aquí se anota, por cruce, qué calles salen y de qué ancho: [+X, -X, +Z, -Z].
 var brazos := {}
 var _con_semaforo := {}
-var _punta_puente := {}     ## cruces donde empieza un puente: ahí manda el puente
+var _punta_puente := {}     ## cruce -> {índice del brazo que es puente: true}
 
 static func clave_cruce(p: Vector3) -> Vector2i:
 	return Vector2i(roundi(p.x), roundi(p.z))
@@ -209,10 +209,13 @@ func _armar_brazos() -> void:
 	for t: Dictionary in tramos:
 		var a: Vector3 = t["a"]
 		var c: Vector3 = t["b"]
-		if bool(t["puente"]):
-			_punta_puente[clave_cruce(a)] = true
-			_punta_puente[clave_cruce(c)] = true
 		var d := (c - a).normalized()
+		if bool(t["puente"]):
+			for par: Array in [[a, d], [c, -d]]:
+				var kp := clave_cruce(par[0])
+				if not _punta_puente.has(kp):
+					_punta_puente[kp] = {}
+				_punta_puente[kp][_indice_brazo(par[1])] = true
 		_sumar_brazo(a, d, float(t["ancho"]))
 		_sumar_brazo(c, -d, float(t["ancho"]))
 	for p: Vector3 in cruces_semaforo:
@@ -242,6 +245,11 @@ func ancho_brazo(p: Vector3, d: Vector3) -> float:
 func medio_cruce(p: Vector3, d: Vector3) -> float:
 	var lat := Vector3(-d.z, 0, d.x)
 	return maxf(ancho_brazo(p, lat), ancho_brazo(p, -lat)) * 0.5
+
+## ¿El brazo de `p` hacia `d` es un puente? (allí mandan sus rampas)
+func es_puente(p: Vector3, d: Vector3) -> bool:
+	var k := clave_cruce(p)
+	return _punta_puente.has(k) and (_punta_puente[k] as Dictionary).has(_indice_brazo(d))
 
 func tiene_semaforo(p: Vector3) -> bool:
 	return _con_semaforo.has(clave_cruce(p))
@@ -546,7 +554,7 @@ func _dibujar_calles() -> void:
 	for p: Vector3 in cruces_semaforo:
 		for dir: Vector3 in [Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)]:
 			var w := ancho_brazo(p, dir)
-			if w <= 0.0:
+			if w <= 0.0 or es_puente(p, dir):
 				continue
 			var medio := medio_cruce(p, dir)
 			var en_x := absf(dir.x) > 0.5
@@ -570,7 +578,7 @@ func _dibujar_calles() -> void:
 ## (`d` apunta del cruce al tramo).
 func _libre_de_marcas(nodo: Vector3, d: Vector3) -> float:
 	var medio := medio_cruce(nodo, d)
-	if _punta_puente.has(clave_cruce(nodo)) or brazos.get(clave_cruce(nodo), [0.0, 0.0, 0.0, 0.0]).count(0.0) == 3:
+	if es_puente(nodo, d) or brazos.get(clave_cruce(nodo), [0.0, 0.0, 0.0, 0.0]).count(0.0) == 3:
 		## Punta sin cruce de la red (llega a una calle del núcleo): como antes.
 		return ancho_brazo(nodo, d) * 0.6
 	if medio <= 0.0:
@@ -590,7 +598,7 @@ func _fin_acera(nodo: Vector3, u: Vector3, lat: Vector3, ancho: float, horizonta
 	var w_lado := ancho_brazo(nodo, lat)
 	var w_sigue := ancho_brazo(nodo, u)
 	var w_otro := ancho_brazo(nodo, -lat)
-	if _punta_puente.has(clave_cruce(nodo)) or (w_lado <= 0.0 and w_sigue <= 0.0 and w_otro <= 0.0):
+	if es_puente(nodo, -u) or es_puente(nodo, u) or (w_lado <= 0.0 and w_sigue <= 0.0 and w_otro <= 0.0):
 		return ancho * 0.5
 	if w_lado > 0.0:
 		return w_lado * 0.5 if horizontal else w_lado * 0.5 + ACERA
