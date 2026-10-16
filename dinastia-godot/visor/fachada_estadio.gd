@@ -98,7 +98,7 @@ static func montar(root: Node3D, est: Dictionary, caras: Array, seed_val: int, n
 	var detalle := _Malla.new()
 	var ctx := {"estilo": estilo, "h": h, "p": p, "grande": grande, "detalle": detalle,
 		"nodo": nodo, "puerta": 0, "escudo": escudo, "escudo_puesto": false}
-	## Las caras más largas primero: ahí van las puertas con número bajo.
+	## Las puertas se numeran en el orden de las caras (tribunas y luego esquinas).
 	for c: Dictionary in caras:
 		if float(c["L"]) < 2.0 or float(c["H"]) < 2.0:
 			continue
@@ -729,13 +729,18 @@ class _Malla:
 		if nrm.length_squared() < 1e-12:
 			return
 		nrm = nrm.normalized()
-		if fuera != Vector3.ZERO and nrm.dot(fuera) < 0.0:
-			var t := b
-			b = d
-			d = t
+		var vuelta := fuera != Vector3.ZERO and nrm.dot(fuera) < 0.0
+		if vuelta:
 			nrm = -nrm
-		tri(k, [a, b, cc], nrm)
-		if d != a and d != cc:
+		## d == a: es un triángulo (los abanicos de los arcos).
+		if d.is_equal_approx(a):
+			tri(k, [a, cc, b] if vuelta else [a, b, cc], nrm)
+			return
+		if vuelta:
+			tri(k, [a, d, cc], nrm)
+			tri(k, [a, cc, b], nrm)
+		else:
+			tri(k, [a, b, cc], nrm)
 			tri(k, [a, cc, d], nrm)
 
 	## Un triángulo ya ordenado, con su normal (o las de cada vértice).
