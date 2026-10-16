@@ -68,7 +68,8 @@ func _foto(motor: MotorJugable) -> void:
 	var img := get_viewport().get_texture().get_image()
 	var a: Dictionary = _pend["a"]
 	var b: Dictionary = _pend["b"]
-	var medio := (motor.pos(a) + motor.pos(b)) * 0.5 + Vector3(0, 0.9, 0)
+	## Posición GLOBAL (los nodos cuelgan de la raíz del estadio).
+	var medio := ((a["node"] as Node3D).global_position + (b["node"] as Node3D).global_position) * 0.5 + Vector3(0, 0.9, 0)
 	var en_pantalla := cam != null and not cam.is_position_behind(medio)
 	var pt := cam.unproject_position(medio) if en_pantalla else Vector2(img.get_width() / 2.0, img.get_height() / 2.0)
 	var w := img.get_width()

@@ -188,6 +188,11 @@ func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: i
 		if String(p.get("id", "")) == jugador_usuario_id:
 			usuario = p
 	balon = ball
+	## Para las sondas que montan el estadio entero (como DEPURAR_PASES).
+	if OS.get_environment("SIN_DUELOS") != "":
+		duelos_activos = false
+	if OS.get_environment("SIN_CUERPOS") != "":
+		cuerpos_activos = false
 	_orientar_formaciones()
 	Mando.registrar()
 	_saque_de_centro(true)
