@@ -41,12 +41,22 @@ static func colores_equipos(local: Club, visita: Club) -> Array:
 		cv = Color(visita.color_kit2())
 	if _parecidos(cl, cv):
 		cv = Color("e9eeea") if cl.get_luminance() < 0.6 else Color("2a3a8f")
-	## Muy oscuros no se ven sobre el panel: se aclaran.
-	if cl.get_luminance() < 0.18:
-		cl = cl.lerp(Color.WHITE, 0.35)
-	if cv.get_luminance() < 0.18:
-		cv = cv.lerp(Color.WHITE, 0.35)
+	## Muy oscuros no se ven sobre el panel (negro, azul marino): se aclaran
+	## hacia un tono vivo; si así quedan iguales, la visita va en dorado.
+	if cl.get_luminance() < 0.3:
+		cl = _aclarar(cl)
+	if cv.get_luminance() < 0.3:
+		cv = _aclarar(cv)
+	if _parecidos(cl, cv):
+		cv = Tema.ORO
 	return [cl, cv]
+
+static func _aclarar(c: Color) -> Color:
+	## Un color sin tinte (negro, gris oscuro) pasa a gris claro; uno con
+	## tinte conserva el tono y gana luz.
+	if c.s < 0.2:
+		return Color(0.78, 0.8, 0.82)
+	return Color.from_hsv(c.h, minf(c.s, 0.85), maxf(c.v, 0.85))
 
 static func _parecidos(a: Color, b: Color) -> bool:
 	return Vector3(a.r - b.r, a.g - b.g, a.b - b.b).length() < 0.28
