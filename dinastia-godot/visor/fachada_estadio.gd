@@ -126,7 +126,7 @@ static func _paleta(est: Dictionary, estilo: String, h: int) -> Dictionary:
 		"clasico":
 			## Piedra clara para pilastras y cornisas, sobre el ladrillo o el
 			## hormigón del muro.
-			estructura = Color(0.84, 0.80, 0.71)
+			estructura = Color(0.88, 0.78, 0.62)
 			luz = Color(1.0, 0.78, 0.48)
 		"membrana":
 			estructura = Color(0.93, 0.94, 0.95)
@@ -172,14 +172,14 @@ static func _material(clave: String, p: Dictionary) -> StandardMaterial3D:
 			m.roughness = 0.55
 		K_VIDRIO:
 			m = StandardMaterial3D.new()
-			m.albedo_color = Color(0.07, 0.085, 0.1)
-			m.metallic = 0.35
-			m.roughness = 0.2
-			m.metallic_specular = 0.7
+			m.albedo_color = Color(0.035, 0.04, 0.05)
+			m.metallic = 0.0
+			m.roughness = 0.3
+			m.metallic_specular = 0.55
 			## Algo de luz dentro: vestíbulos y escaleras encendidas.
 			m.emission_enabled = true
 			m.emission = Color(1.0, 0.86, 0.62)
-			m.emission_energy_multiplier = 0.55 if p["noche"] == "noche" else 0.08
+			m.emission_energy_multiplier = 0.55 if p["noche"] == "noche" else 0.0
 		K_LUZ:
 			m = StandardMaterial3D.new()
 			m.albedo_color = p["luz"]
@@ -433,7 +433,7 @@ static func _celosia(ctx: Dictionary, c: Dictionary) -> void:
 	var k0 := int(floor(-alto / d)) - 1
 	var k1 := int(ceil(L / d)) + 1
 	for k in range(k0, k1 + 1):
-		for sentido in [1.0, -1.0]:
+		for sentido: float in [1.0, -1.0]:
 			## s = s_ini + sentido*(y - y0); se recorta a [0, L].
 			var s_ini: float = float(k) * d if sentido > 0.0 else float(k) * d + alto
 			var ta := 0.0
@@ -590,7 +590,7 @@ static func _escaleras(ctx: Dictionary, c: Dictionary) -> void:
 	var w0 := 1.45 if ctx["estilo"] in ["lamas", "celosia"] else 0.75
 	var tramo := 6.0
 	var sube := 3.0
-	for frac in [0.2, 0.8]:
+	for frac: float in [0.2, 0.8]:
 		var s_c: float = L * frac
 		if not _libre(c, s_c - tramo * 0.5 - 1.6, s_c + tramo * 0.5 + 1.6):
 			continue
@@ -609,7 +609,7 @@ static func _escaleras(ctx: Dictionary, c: Dictionary) -> void:
 			g.bloque(c, K_ESTRUCTURA, s1 - 1.4 if not ida else s1, s1 if not ida else s1 + 1.4, y - 0.2, y, w0, w0 + 2.4)
 			ida = not ida
 		## Los dos pilares que la sostienen.
-		for s_p in [a - 1.2, b + 1.2]:
+		for s_p: float in [a - 1.2, b + 1.2]:
 			g.bloque(c, K_ESTRUCTURA, s_p - 0.15, s_p + 0.15, 0.0, y + 1.0, w0 + 2.1, w0 + 2.4)
 
 ## La cubierta vista desde fuera: canto, y mástiles con tirantes o cerchas.
@@ -632,7 +632,7 @@ static func _cubierta(ctx: Dictionary, c: Dictionary) -> void:
 					continue
 				var cima := Vector3(s, y_t + 10.0, 0.6)
 				g.barra(c, K_ESTRUCTURA, Vector3(s, H - 2.0, 1.0), cima, 0.5, 0.5)
-				for f in [0.45, 0.95]:
+				for f: float in [0.45, 0.95]:
 					g.barra(c, K_ESTRUCTURA, cima, Vector3(s, y_t + 0.05, -fondo * f), 0.09, 0.09)
 				g.barra(c, K_ESTRUCTURA, cima, Vector3(s, H - 4.0, 4.5), 0.08, 0.08)
 		"porticos":
@@ -651,7 +651,7 @@ static func _cubierta(ctx: Dictionary, c: Dictionary) -> void:
 				var cima := Vector3(s, y_t + alto_c, -fondo * 0.3)
 				for par: Array in [[a, cima], [cima, b], [a, b]]:
 					g.barra(c, K_ESTRUCTURA, par[0], par[1], 0.16, 0.16)
-				for f in [0.1, 0.2, 0.45, 0.7]:
+				for f: float in [0.1, 0.2, 0.45, 0.7]:
 					var pz := a.lerp(b, f)
 					var arriba := a.lerp(cima, f / 0.3) if f < 0.3 else cima.lerp(b, (f - 0.3) / 0.7)
 					g.barra(c, K_ESTRUCTURA, pz, arriba, 0.1, 0.1)
