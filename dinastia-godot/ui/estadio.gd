@@ -1513,7 +1513,8 @@ func _montar_motor() -> void:
 				if is_instance_valid(self) and _motor != null:
 					_a_la_revision_var(partido.minuto, "Revisión del gol: posible fuera de juego")))
 	_motor.remate.connect(func(de_local: bool, autor: String, tipo: String) -> void:
-		_stats.cerrar_tiro(de_local, tipo)
+		var tirador := _nodo_de(autor)
+		_stats.cerrar_tiro(de_local, tipo, Vector3.ZERO, tirador.position if tirador != null else (_balon.position if is_instance_valid(_balon) else Vector3.ZERO))
 		partido.remate_externo(de_local, autor, tipo)
 		if _rig != null:
 			_rig.golpe_de_zoom(2.0, 0.5))
@@ -1697,6 +1698,8 @@ func _simular_resto_motor() -> void:
 	var pasos := 0
 	while _motor.estado != "fin" and pasos < 60 * 3600:
 		_motor.paso(1.0 / 20.0)
+		if _stats != null:
+			_stats.muestrear(_motor, 1.0 / 20.0)
 		pasos += 1
 		if pasos % 20 == 0:
 			_t_tactica = 0.0
