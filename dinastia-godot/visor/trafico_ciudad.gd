@@ -242,10 +242,9 @@ var _cuadro := 0
 
 func _process(delta_real: float) -> void:
 	## RENDIMIENTO (15-10-2026, medido con pruebas/sonda_explorador: 3,4 ms por
-	## fotograma con ~310 coches y vecinos). Los que están a más de 150 m de la
-	## cámara no se ven (o apenas) y se mueven 1 fotograma de cada 4 con el
-	## tiempo acumulado; la posición del jugador se pide una vez, no dos por
-	## vehículo.
+	## fotograma con ~310 coches y vecinos, y solo ~25 cerca). Los lejanos se
+	## mueven menos a menudo con el tiempo acumulado (niveles abajo); la
+	## posición del jugador se pide una vez, no dos por vehículo.
 	_cuadro += 1
 	var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
 	var ojo := cam.global_position if cam != null else Vector3.INF
@@ -254,17 +253,22 @@ func _process(delta_real: float) -> void:
 	var idx := -1
 	for v in _vehiculos:
 		idx += 1
-		var delta := delta_real
+		## Nivel de detalle: 0 = cerca (cada fotograma), 1 = se ve de lejos
+		## (150-260 m: 1 de cada 3), 2 = fuera de la vista (más de 260 m, que es
+		## donde dejan de dibujarse: 1 de cada 12). El nivel se recalcula cuando
+		## le toca moverse, así los que se saltan no cuestan casi nada.
+		var nivel := int(v.get("lod", 0))
+		if nivel > 0 and (idx + _cuadro) % (3 if nivel == 1 else 12) != 0:
+			v["dt"] = float(v.get("dt", 0.0)) + delta_real
+			continue
+		var delta := delta_real + float(v.get("dt", 0.0))
+		v["dt"] = 0.0
 		if ojo != Vector3.INF:
 			var nv: Node3D = v["nodo"]
 			if is_instance_valid(nv):
 				var q := nv.position
-				if absf(q.x - ojo.x) > 150.0 or absf(q.z - ojo.z) > 150.0:
-					if (idx + _cuadro) % 4 != 0:
-						v["dt"] = float(v.get("dt", 0.0)) + delta_real
-						continue
-					delta = delta_real + float(v.get("dt", 0.0))
-					v["dt"] = 0.0
+				var lejos := maxf(absf(q.x - ojo.x), absf(q.z - ojo.z))
+				v["lod"] = 0 if lejos < 150.0 else (1 if lejos < 260.0 else 2)
 		if float(v.get("espera", 0.0)) > 0.0:
 			v["espera"] = float(v["espera"]) - delta
 			if float(v["espera"]) <= 0.0 and v.has("pausa"):
