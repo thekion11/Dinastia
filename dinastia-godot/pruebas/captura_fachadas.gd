@@ -2,12 +2,12 @@ extends Node
 ## LAS FACHADAS DE LOS ESTADIOS, VISTAS DESDE FUERA (16-10-2026).
 ##
 ##   herramientas/captura.sh res://pruebas/captura_fachadas.tscn
-##   (SALIDA=antes|despues, por defecto «despues»; SOLO=0,2 para elegir estadios)
+##   (SALIDA=antes|despues, por defecto «despues»; SOLO=0,2 elige estadios; PLANOS=calle,dron)
 ##
 ## Seis estadios de estilos distintos (ladrillo, membrana, vidrio, hormigón,
 ## barrio y chapa) y tres planos de cada uno: aéreo desde la esquina, a pie de
 ## calle frente a una tribuna y la cámara de TRANSMISIÓN del partido (la que se
-## ve en el plano general). Deja `pruebas/capturas/fachada_<SALIDA>_<n>_<plano>`.
+## ve en el plano general) y el «Dron orbital». Deja `pruebas/capturas/fachada_<SALIDA>_<n>_<plano>`.
 
 ## [nombre, índice en PRESETS_B6 (-1 = perfil de un club chico), clima, niveles, aforo, cambios]
 const ESTADIOS := [
@@ -18,7 +18,7 @@ const ESTADIOS := [
 	["barrio", -1, "dia", 1, 9000, {"forma": "ingles", "techo": "parcial", "fachada": "hormigon"}],
 	["chapa", 5, "noche", 3, 66000, {}],
 ]
-const PLANOS := ["aereo", "calle", "tv"]
+var PLANOS := ["aereo", "calle", "tv", "dron"]
 
 var _mundo: Mundo
 var _cam: Camera3D
@@ -33,6 +33,8 @@ var _geo := {}
 func _ready() -> void:
 	if OS.get_environment("SALIDA") != "":
 		_salida = OS.get_environment("SALIDA")
+	if OS.get_environment("PLANOS") != "":
+		PLANOS = Array(OS.get_environment("PLANOS").split(","))
 	if OS.get_environment("SOLO") != "":
 		for s in OS.get_environment("SOLO").split(","):
 			_solo.append(int(s))
@@ -107,6 +109,11 @@ func _encuadre() -> void:
 		"tv":
 			_cam.fov = CameraRig.FOV_TRANSMISION
 			_cam.position = Vector3(minf(CameraRig.DISTANCIA_TELE_X_MAX, float(_geo["dx"]) - 7.0), CameraRig.ALTURA_TRANSMISION, 0.0)
+			_cam.look_at(Vector3(0, 0, 0), Vector3.UP)
+		"dron":
+			## El «Dron orbital» del partido: el plano general desde arriba.
+			_cam.fov = 48.0
+			_cam.position = Vector3(0, alto + 28.0, 60.0)
 			_cam.look_at(Vector3(0, 0, 0), Vector3.UP)
 
 func _process(_d: float) -> void:
