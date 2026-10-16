@@ -8,6 +8,8 @@ var _ui: CarreraJugadorUI
 var _pj: PartidoJugable
 
 func _ready() -> void:
+	## Estas fotos son del juego, no de la ceremonia (la hay desde el 16-10).
+	PartidoJugable.con_ceremonia = false
 	CarreraJugadorUI.mundo = null
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
 	add_child(_ui)
