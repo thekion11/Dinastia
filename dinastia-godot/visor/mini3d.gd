@@ -54,6 +54,8 @@ static func persona(padre: Node3D, rng: RandomNumberGenerator, pos: Vector3, dep
 	padre.add_child(nodo)
 	nodo.position = pos
 	PeatonQ.terminar(d)
+	## Zapatillas de verdad: de cerca y sentados, la pintada parecía un pie descalzo.
+	PeatonQ.calzar(d)
 	_todas_las_animaciones(d)
 	for mi in nodo.find_children("*", "MeshInstance3D", true, false):
 		(mi as MeshInstance3D).visibility_range_end = 0.0
@@ -96,6 +98,7 @@ static func _deportista(padre: Node3D, rng: RandomNumberGenerator, pos: Vector3,
 			kit["manga_corta"] = true
 		VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo, c2, c2, true, kit, 0)
 		PersonajeDT.adelgazar(d, false)
+		PeatonQ.calzar(d, "1c1c1e")
 	else:
 		VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo, c2, c1, false)
 	PeloQ.poner(d, String(PeatonQ.CORTES_H[rng.randi() % PeatonQ.CORTES_H.size()]), pelo, rng.randf() < 0.3)
