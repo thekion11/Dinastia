@@ -188,6 +188,82 @@ func armar_red() -> void:
 			cruces_semaforo.append(p)
 	cuenta["tramos"] = tramos.size()
 	cuenta["semaforos"] = cruces_semaforo.size()
+	_armar_brazos()
+
+## LOS BRAZOS DE CADA CRUCE (16-10-2026). Hasta hoy cada tramo se dibujaba
+## mirando solo su propio ancho: las líneas del centro entraban en el cruce y
+## pisaban la cebra, las aceras de una calle se metían 5 m en la calzada de la
+## avenida que cruzaba y las esquinas entre dos avenidas quedaban sin acera.
+## Aquí se anota, por cruce, qué calles salen y de qué ancho: [+X, -X, +Z, -Z].
+var brazos := {}
+var _con_semaforo := {}
+var _punta_puente := {}     ## cruce -> {índice del brazo que es puente: true}
+
+static func clave_cruce(p: Vector3) -> Vector2i:
+	return Vector2i(roundi(p.x), roundi(p.z))
+
+func _armar_brazos() -> void:
+	brazos.clear()
+	_con_semaforo.clear()
+	_punta_puente.clear()
+	for t: Dictionary in tramos:
+		var a: Vector3 = t["a"]
+		var c: Vector3 = t["b"]
+		var d := (c - a).normalized()
+		if bool(t["puente"]):
+			for par: Array in [[a, d], [c, -d]]:
+				var kp := clave_cruce(par[0])
+				if not _punta_puente.has(kp):
+					_punta_puente[kp] = {}
+				_punta_puente[kp][_indice_brazo(par[1])] = true
+		_sumar_brazo(a, d, float(t["ancho"]))
+		_sumar_brazo(c, -d, float(t["ancho"]))
+	for p: Vector3 in cruces_semaforo:
+		_con_semaforo[clave_cruce(p)] = true
+
+static func _indice_brazo(d: Vector3) -> int:
+	if absf(d.x) > absf(d.z):
+		return 0 if d.x > 0.0 else 1
+	return 2 if d.z > 0.0 else 3
+
+func _sumar_brazo(p: Vector3, d: Vector3, ancho: float) -> void:
+	var k := clave_cruce(p)
+	if not brazos.has(k):
+		brazos[k] = [0.0, 0.0, 0.0, 0.0]
+	var i := _indice_brazo(d)
+	brazos[k][i] = maxf(float(brazos[k][i]), ancho)
+
+## Ancho de la calle que sale del cruce `p` hacia `d` (0 si no sale ninguna).
+func ancho_brazo(p: Vector3, d: Vector3) -> float:
+	var k := clave_cruce(p)
+	if not brazos.has(k):
+		return 0.0
+	return float(brazos[k][_indice_brazo(d)])
+
+## Medio ancho de la calle que CRUZA en `p` a una que llega con dirección `d`
+## (0 si en ese cruce no la cruza ninguna: sigue recta o termina).
+func medio_cruce(p: Vector3, d: Vector3) -> float:
+	var lat := Vector3(-d.z, 0, d.x)
+	return maxf(ancho_brazo(p, lat), ancho_brazo(p, -lat)) * 0.5
+
+## ¿El brazo de `p` hacia `d` es un puente? (allí mandan sus rampas)
+func es_puente(p: Vector3, d: Vector3) -> bool:
+	var k := clave_cruce(p)
+	return _punta_puente.has(k) and (_punta_puente[k] as Dictionary).has(_indice_brazo(d))
+
+func tiene_semaforo(p: Vector3) -> bool:
+	return _con_semaforo.has(clave_cruce(p))
+
+## Desde el centro de un cruce con semáforo: dónde empieza la cebra, cuánto
+## mide y dónde va la línea de detención (todo a partir del borde de la calle
+## que cruza). Los coches paran DETRÁS de la línea, nunca encima de la cebra.
+const CEBRA_HUECO := 1.0
+const CEBRA_LARGO := 3.2
+const LINEA_DETENCION := 1.0
+func fin_de_cebra(medio: float) -> float:
+	return medio + CEBRA_HUECO + CEBRA_LARGO
+func linea_detencion(medio: float) -> float:
+	return fin_de_cebra(medio) + LINEA_DETENCION
 
 func _es_borde(p: Vector3) -> bool:
 	return absf(p.x - NUC_X0) < 0.1 or absf(p.x - NUC_X1) < 0.1 or absf(p.z - NUC_Z0) < 0.1 or absf(p.z - NUC_Z1) < 0.1
@@ -429,44 +505,106 @@ func _dibujar_calles() -> void:
 		var vertical := absf(a.x - c.x) < 0.1
 		var largo := a.distance_to(c)
 		var m := (a + c) * 0.5
+		var d := (c - a).normalized()
 		var tam := Vector3(ancho, 0.12, largo + ancho) if vertical else Vector3(largo + ancho, 0.12, ancho)
 		if bool(t["puente"]):
 			_puente(a, c, ancho)
 			continue
 		_lote("asfalto", Vector3(m.x, 0.07, m.z), tam)
-		## Aceras a los dos lados (más altas que la calzada).
+		## Aceras a los dos lados (más altas que la calzada). Cada punta llega
+		## hasta el BORDE de la calle que cruza (no hasta su propio medio ancho,
+		## que metía la acera de una calle 5 m dentro de la avenida), y la
+		## esquina la pone el tramo horizontal (`_fin_acera`).
 		for lado: float in [-1.0, 1.0]:
-			var off := (ancho * 0.5 + ACERA * 0.5) * lado
-			var p := Vector3(m.x + off, 0.12, m.z) if vertical else Vector3(m.x, 0.12, m.z + off)
-			var ta := Vector3(ACERA, 0.24, largo - ancho) if vertical else Vector3(largo - ancho, 0.24, ACERA)
-			_lote("acera", p, ta)
-		## Línea discontinua al centro (doble y continua en las avenidas).
-		var paso := 9.0
-		var n := int((largo - ancho) / paso)
-		for q in n:
-			var f := (float(q) + 0.5) / float(maxi(1, n))
-			var p2 := a.lerp(c, f)
-			if absf(p2.distance_to(a)) < ancho * 0.6 or absf(p2.distance_to(c)) < ancho * 0.6:
+			var lat := Vector3(-d.z, 0, d.x) * lado
+			var xa := _fin_acera(a, -d, lat, ancho, not vertical)
+			var xc := _fin_acera(c, d, lat, ancho, not vertical)
+			var l_acera := largo - xa - xc
+			if l_acera < 0.5:
 				continue
-			var esc := Vector3(0.25, 1.0, 4.0) if vertical else Vector3(4.0, 1.0, 0.25)
-			if bool(t["av"]):
-				for dl: float in [-0.35, 0.35]:
-					var pp := p2 + (Vector3(dl, 0, 0) if vertical else Vector3(0, 0, dl))
-					marcas.append(Transform3D(Basis.from_scale(esc * Vector3(1, 1, 2.2) if vertical else esc * Vector3(2.2, 1, 1)), pp + Vector3(0, 0.14, 0)))
-			else:
-				marcas.append(Transform3D(Basis.from_scale(esc), p2 + Vector3(0, 0.14, 0)))
-	## Pasos de cebra en los cruces con semáforo.
+			var off := ancho * 0.5 + ACERA * 0.5
+			var p := a + d * (xa + l_acera * 0.5) + lat * off
+			p.y = 0.12
+			var ta := Vector3(ACERA, 0.24, l_acera) if vertical else Vector3(l_acera, 0.24, ACERA)
+			_lote("acera", p, ta)
+		## Línea discontinua al centro (doble en las avenidas). Las rayas no
+		## entran en el cruce ni pisan la cebra: se reparten solo por el tramo
+		## libre entre las dos líneas de detención.
+		var paso := 12.2 if bool(t["av"]) else 11.0
+		var largo_raya := 8.8 if bool(t["av"]) else 4.0
+		var la := _libre_de_marcas(a, d)
+		var lc := _libre_de_marcas(c, -d)
+		var util := largo - la - lc
+		var n := int((util + paso - largo_raya) / paso)
+		if n > 0:
+			var sobra := util - (float(n - 1) * paso + largo_raya)
+			for q in n:
+				var dist := la + sobra * 0.5 + largo_raya * 0.5 + float(q) * paso
+				var p2 := a + d * dist
+				var esc := Vector3(0.25, 1.0, largo_raya) if vertical else Vector3(largo_raya, 1.0, 0.25)
+				if bool(t["av"]):
+					for dl: float in [-0.35, 0.35]:
+						var pp := p2 + (Vector3(dl, 0, 0) if vertical else Vector3(0, 0, dl))
+						marcas.append(Transform3D(Basis.from_scale(esc), pp + Vector3(0, 0.14, 0)))
+				else:
+					marcas.append(Transform3D(Basis.from_scale(esc), p2 + Vector3(0, 0.14, 0)))
+	## Pasos de cebra en los cruces con semáforo: solo en los brazos que
+	## existen, a todo el ancho de la calle, justo pasado el borde de la que
+	## cruza, y detrás la línea de detención en los carriles que llegan.
 	for p: Vector3 in cruces_semaforo:
-		for eje in 4:
-			var dir := [Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)][eje] as Vector3
-			var base := p + dir * (ANCHO_AV * 0.5 + 2.5)
-			for s in 6:
-				var lat := (float(s) - 2.5) * 1.6
-				var pos := base + (Vector3(0, 0, lat) if absf(dir.x) > 0.5 else Vector3(lat, 0, 0))
-				var esc2 := Vector3(3.2, 1.0, 0.8) if absf(dir.x) > 0.5 else Vector3(0.8, 1.0, 3.2)
+		for dir: Vector3 in [Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)]:
+			var w := ancho_brazo(p, dir)
+			if w <= 0.0 or es_puente(p, dir):
+				continue
+			var medio := medio_cruce(p, dir)
+			var en_x := absf(dir.x) > 0.5
+			var base := p + dir * (medio + CEBRA_HUECO + CEBRA_LARGO * 0.5)
+			var franjas := int((w - 2.0) / 1.6)
+			for s in franjas:
+				var lat := (float(s) - float(franjas - 1) * 0.5) * 1.6
+				var pos := base + (Vector3(0, 0, lat) if en_x else Vector3(lat, 0, 0))
+				var esc2 := Vector3(CEBRA_LARGO, 1.0, 0.8) if en_x else Vector3(0.8, 1.0, CEBRA_LARGO)
 				marcas.append(Transform3D(Basis.from_scale(esc2), pos + Vector3(0, 0.14, 0)))
+			## Línea de detención: se circula por la derecha, así que los que
+			## llegan al cruce (van hacia -dir) ocupan el lado (-dir) x arriba.
+			var llega := (-dir).cross(Vector3.UP)
+			var pl := p + dir * (linea_detencion(medio) - 0.25) + llega * (w * 0.25)
+			var esc3 := Vector3(0.5, 1.0, w * 0.5 - 0.6) if en_x else Vector3(w * 0.5 - 0.6, 1.0, 0.5)
+			marcas.append(Transform3D(Basis.from_scale(esc3), pl + Vector3(0, 0.14, 0)))
 	_multimesh(BoxMesh.new(), _mat["linea"], marcas, Vector3(1, 0.02, 1))
 	cuenta["marcas"] = marcas.size()
+
+## Hasta dónde no se pintan rayas desde el cruce `nodo` hacia dentro del tramo
+## (`d` apunta del cruce al tramo).
+func _libre_de_marcas(nodo: Vector3, d: Vector3) -> float:
+	var medio := medio_cruce(nodo, d)
+	if es_puente(nodo, d) or brazos.get(clave_cruce(nodo), [0.0, 0.0, 0.0, 0.0]).count(0.0) == 3:
+		## Punta sin cruce de la red (llega a una calle del núcleo): como antes.
+		return ancho_brazo(nodo, d) * 0.6
+	if medio <= 0.0:
+		return 0.0
+	if tiene_semaforo(nodo):
+		return linea_detencion(medio) + 1.0
+	return medio + 2.0
+
+## Cuánto se queda corta la acera de un lado (`lat`) antes del cruce `nodo`
+## (`u` apunta del tramo al cruce). Negativo = pasa del centro del cruce.
+##  · Si por ese lado sale otra calle, la acera acaba en su borde; la esquina
+##    (el cuadrado entre las dos aceras) la pone el tramo horizontal.
+##  · Si la calle sigue recta, llega al centro y empalma con la siguiente.
+##  · Si no (esquina exterior de una L o de una T), da la vuelta a la esquina.
+##  · Punta suelta (solo este brazo): como antes, a medio ancho.
+func _fin_acera(nodo: Vector3, u: Vector3, lat: Vector3, ancho: float, horizontal: bool) -> float:
+	var w_lado := ancho_brazo(nodo, lat)
+	var w_sigue := ancho_brazo(nodo, u)
+	var w_otro := ancho_brazo(nodo, -lat)
+	if es_puente(nodo, -u) or es_puente(nodo, u) or (w_lado <= 0.0 and w_sigue <= 0.0 and w_otro <= 0.0):
+		return ancho * 0.5
+	if w_lado > 0.0:
+		return w_lado * 0.5 if horizontal else w_lado * 0.5 + ACERA
+	if w_sigue > 0.0:
+		return 0.0
+	return -(w_otro * 0.5 + ACERA) if horizontal else -(w_otro * 0.5)
 
 ## Un puente: tablero sobre pilares, con barandillas, más alto sobre el agua
 ## para que pase el bote, y rampas hasta las orillas.
@@ -1985,10 +2123,16 @@ func _farolas() -> void:
 		var vertical := absf(a.x - c.x) < 0.1
 		var largo := a.distance_to(c)
 		var n := maxi(1, int(largo / 33.0))
+		## (16-10-2026) Repartidas por el tramo libre entre cruces (antes la de la
+		## punta caía junto a los bolardos de la esquina), en la franja del
+		## bordillo para dejar libre el paso.
+		var dd := (c - a).normalized()
+		var la := _libre_farola(a, dd)
+		var util := largo - la - _libre_farola(c, -dd)
 		for q in n:
-			var p := a.lerp(c, (float(q) + 0.5) / float(n))
+			var p := a + dd * (la + util * (float(q) + 0.5) / float(n))
 			var lado := 1.0 if q % 2 == 0 else -1.0
-			var off := (ancho * 0.5 + 0.8) * lado
+			var off := (ancho * 0.5 + 0.6) * lado
 			var base := p + (Vector3(off, 0, 0) if vertical else Vector3(0, 0, off))
 			var dir := Vector3(-lado, 0, 0) if vertical else Vector3(0, 0, -lado)
 			if kf.is_empty():
@@ -2035,6 +2179,12 @@ func _farolas() -> void:
 	cuenta["farolas"] = postes.size()
 
 var _farola_cono: StandardMaterial3D = null
+
+func _libre_farola(nodo: Vector3, d: Vector3) -> float:
+	var mc := medio_cruce(nodo, d)
+	if mc <= 0.0:
+		return 0.0
+	return (fin_de_cebra(mc) if tiene_semaforo(nodo) else mc) + 5.0
 
 func _textura_charco() -> ImageTexture:
 	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
@@ -2185,7 +2335,11 @@ func _mobiliario_urbano() -> void:
 		var lat := Vector3(-dir.z, 0, dir.x)
 		var giro := atan2(dir.x, dir.z)
 		var rot := Basis(Vector3.UP, giro)
-		var acera := ancho * 0.5 + 2.6
+		## ACERA CON PASO LIBRE (16-10-2026): lo que se pone en la acera va
+		## pegado al bordillo (≤1 m) o a la fachada (≥3 m); el medio (1,2-3 m) queda
+		## libre para caminar y para la cámara de tercera persona, que va 5,5 m
+		## detrás del personaje por la misma línea.
+		var acera := ancho * 0.5 + 3.4
 		## Alcantarillas: en el centro de cada carril, cada ~45 m.
 		var n := int(largo / 45.0)
 		for q in n:
@@ -2201,13 +2355,13 @@ func _mobiliario_urbano() -> void:
 		## En la acera: papelera, banco e hidrante, alternando lados.
 		n = int(largo / 55.0)
 		for q in n:
-			var f := (float(q) + 0.25) / float(maxi(n, 1))
+			var f := (float(q) + 0.3) / float(maxi(n, 1))
 			var lado := 1.0 if (q + k_tramo) % 2 == 0 else -1.0
 			var p := a + dir * (largo * f) + lat * lado * acera
 			papeleras.append(Transform3D(Basis.from_scale(Vector3(0.5, 0.95, 0.5)), p + Vector3(0, 0.75, 0)))
 			tapas_pap.append(Transform3D(Basis.from_scale(Vector3(0.56, 0.08, 0.56)), p + Vector3(0, 1.26, 0)))
 			if q % 2 == 1:
-				var pb := a + dir * (largo * (f + 0.12)) + lat * lado * (acera + 0.6)
+				var pb := a + dir * (largo * (f + 0.12)) + lat * lado * (ancho * 0.5 + 3.2)
 				var rb := Basis(Vector3.UP, giro + (PI * 0.5 if lado > 0.0 else -PI * 0.5))
 				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.08, 0.5)), pb + Vector3(0, 0.75, 0)))
 				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.45, 0.07)), pb + Vector3(0, 1.0, 0) + lat * lado * 0.25))
@@ -2227,15 +2381,27 @@ func _mobiliario_urbano() -> void:
 				contenedores.append(Transform3D(rot * Basis.from_scale(Vector3(1.5, 1.5, 1.4)), pc + dir * (float(i) - 1.5) * 1.7 + Vector3(0, 1.05, 0)))
 				cont_col.append(colores[i])
 		## Las esquinas: bolardos en el borde de la acera.
-		for extremo: Vector3 in [a + dir * (ancho * 0.5 + 9.0), c - dir * (ancho * 0.5 + 9.0)]:
+		## (16-10-2026) Pasada la cebra, no donde la gente baja de ella.
+		for punta: Array in [[a, dir], [c, -dir]]:
+			var pn: Vector3 = punta[0]
+			var hd: Vector3 = punta[1]
+			var mc := medio_cruce(pn, hd)
+			if mc <= 0.0:
+				continue
+			var extremo := pn + hd * ((fin_de_cebra(mc) if tiene_semaforo(pn) else mc) + 2.8)
 			for lado: float in [-1.0, 1.0]:
 				for i in 3:
-					bolardos.append(Transform3D(Basis.from_scale(Vector3(0.22, 0.9, 0.22)), extremo + lat * lado * (ancho * 0.5 + 0.45) + dir * (float(i) - 1.0) * 1.3 + Vector3(0, 0.75, 0)))
+					bolardos.append(Transform3D(Basis.from_scale(Vector3(0.22, 0.9, 0.22)), extremo + lat * lado * (ancho * 0.5 + 0.45) + hd * (float(i) - 1.0) * 1.3 + Vector3(0, 0.75, 0)))
 		## Señal al final de las calles sin semáforo: STOP o ceda el paso.
-		if not bool(t["av"]):
-			var ps := c - dir * (ancho * 0.5 + 12.0) + lat * (ancho * 0.5 + 0.9)
+		## (16-10-2026) Antes salía también en los cruces CON semáforo; ahora va en
+		## la punta sin semáforo y en el lado derecho de quien llega a ella.
+		var punta_sin := c if not tiene_semaforo(c) else (a if not tiene_semaforo(a) else Vector3.INF)
+		if not bool(t["av"]) and punta_sin != Vector3.INF:
+			var hacia := (punta_sin - (c if punta_sin == a else a)).normalized()
+			var der := hacia.cross(Vector3.UP)
+			var ps := punta_sin - hacia * (medio_cruce(punta_sin, hacia) + 7.0) + der * (ancho * 0.5 + 0.6)
 			postes.append(Transform3D(Basis.from_scale(Vector3(0.08, 2.6, 0.08)), ps + Vector3(0, 1.6, 0)))
-			var placa := Transform3D(Basis(Vector3.UP, giro) * Basis(Vector3.RIGHT, PI * 0.5) * Basis.from_scale(Vector3(0.75, 0.05, 0.75)), ps + Vector3(0, 2.95, 0) - dir * 0.06)
+			var placa := Transform3D(Basis(Vector3.UP, atan2(hacia.x, hacia.z)) * Basis(Vector3.RIGHT, PI * 0.5) * Basis.from_scale(Vector3(0.75, 0.05, 0.75)), ps + Vector3(0, 2.95, 0) - hacia * 0.06)
 			if k_tramo % 3 == 0:
 				stops.append(placa)
 			else:
@@ -2243,7 +2409,7 @@ func _mobiliario_urbano() -> void:
 		## Terrazas de bar en las avenidas: mesas con sombrilla en la acera.
 		if bool(t["av"]) and largo > 90.0 and k_tramo % 3 == 0:
 			for i in 4:
-				var pt := a + dir * (largo * 0.2 + float(i) * 3.2) - lat * (ancho * 0.5 + 2.6)
+				var pt := a + dir * (largo * 0.2 + float(i) * 3.2) - lat * (ancho * 0.5 + 2.8)
 				mesas.append(Transform3D(Basis.from_scale(Vector3(0.9, 0.05, 0.9)), pt + Vector3(0, 0.95, 0)))
 				patas.append(Transform3D(Basis.from_scale(Vector3(0.08, 0.7, 0.08)), pt + Vector3(0, 0.6, 0)))
 				sombrillas.append(Transform3D(Basis.from_scale(Vector3(2.6, 0.5, 2.6)), pt + Vector3(0, 2.6, 0)))
@@ -2258,11 +2424,11 @@ func _mobiliario_urbano() -> void:
 			valla_col.append(Color.from_hsv(fmod(float(k_tramo) * 0.13, 1.0), 0.6, 0.85))
 		## En las avenidas: un kiosco y un aparcabicis por tramo largo.
 		if bool(t["av"]) and largo > 90.0:
-			var pk := a + dir * (largo * 0.4) + lat * (ancho * 0.5 + 2.4)
+			var pk := a + dir * (largo * 0.4) + lat * (ancho * 0.5 + 2.75)
 			kioscos.append(Transform3D(rot * Basis.from_scale(Vector3(2.4, 2.6, 2.0)), pk + Vector3(0, 1.6, 0)))
-			techos_k.append(Transform3D(rot * Basis.from_scale(Vector3(3.2, 0.25, 2.8)), pk + Vector3(0, 3.05, 0)))
+			techos_k.append(Transform3D(rot * Basis.from_scale(Vector3(2.6, 0.25, 2.8)), pk + Vector3(0, 3.05, 0)))
 			for i in 5:
-				bicis.append(Transform3D(rot * Basis.from_scale(Vector3(0.06, 0.8, 0.9)), a + dir * (largo * 0.7 + float(i) * 0.7) - lat * (ancho * 0.5 + 1.6) + Vector3(0, 0.7, 0)))
+				bicis.append(Transform3D(rot * Basis.from_scale(Vector3(0.06, 0.8, 0.9)), a + dir * (largo * 0.7 + float(i) * 0.7) - lat * (ancho * 0.5 + 0.7) + Vector3(0, 0.7, 0)))
 	var hierro := b._mat_simple(Color(0.14, 0.14, 0.15), 0.45)
 	hierro.metallic = 0.6
 	_multimesh(cil, hierro, tapas, Vector3.ONE)
@@ -2320,7 +2486,10 @@ func _placas_de_calle() -> void:
 				hay_col = true
 		var ax := (ANCHO_AV if k.x % 3 == 0 else ANCHO_CALLE) * 0.5 + 1.0
 		var az := (ANCHO_AV if k.y % 3 == 0 else ANCHO_CALLE) * 0.5 + 1.0
-		var esquina := p + Vector3(ax, 0, az)
+		## En los cruces con semáforo la esquina +X+Z ya tiene el poste del
+		## semáforo (13,2 m): la placa se va a la esquina -X+Z.
+		var sx := -1.0 if tiene_semaforo(p) else 1.0
+		var esquina := p + Vector3(ax * sx, 0, az)
 		postes.append(Transform3D(Basis.from_scale(Vector3(0.09, 3.4, 0.09)), esquina + Vector3(0, 1.9, 0)))
 		for cual in 2:
 			if (cual == 0 and not hay_fila) or (cual == 1 and not hay_col):
@@ -2329,7 +2498,7 @@ func _placas_de_calle() -> void:
 			## La placa de la fila mira a lo largo de la fila (se lee desde la calle).
 			var giro := 0.0 if cual == 0 else PI * 0.5
 			var alto := 3.3 if cual == 0 else 2.75
-			var centro := esquina + Vector3(0, alto, 0) + (Vector3(-1.2, 0, 0) if cual == 0 else Vector3(0, 0, -1.2))
+			var centro := esquina + Vector3(0, alto, 0) + (Vector3(-1.2 * sx, 0, 0) if cual == 0 else Vector3(0, 0, -1.2))
 			placas.append(Transform3D(Basis(Vector3.UP, giro) * Basis.from_scale(Vector3(2.4, 0.46, 0.05)), centro))
 			for cara: float in [1.0, -1.0]:
 				var l := Label3D.new()
@@ -2532,4 +2701,9 @@ func _controles_de(t: TraficoCiudad, id: int) -> void:
 			continue
 		var dir: Vector3 = r_en[1]
 		var eje := 0 if absf(dir.z) > absf(dir.x) else 1
-		t.agregar_control(id, s - (ANCHO_AV * 0.5 + 3.0), eje)
+		## El coche (su centro: medio coche, ~2,4 m) para DETRÁS de la línea de
+		## detención; antes paraba a 15 m del centro, encima de la cebra.
+		var medio := medio_cruce(p, -dir)
+		if medio <= 0.0:
+			medio = ANCHO_AV * 0.5
+		t.agregar_control(id, s - (linea_detencion(medio) + 2.8), eje)
