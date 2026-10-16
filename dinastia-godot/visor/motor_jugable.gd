@@ -1670,8 +1670,13 @@ func _finta_ia(p: Dictionary, rival: Dictionary, fwd: Vector3, lado: float, sp: 
 			rival["enfriar"] = maxf(float(rival["enfriar"]), 0.9)
 			## Se va hacia el lado equivocado: frena y se le va el cuerpo; el
 			## atacante sale disparado por el otro lado, ya mirando al frente.
-			rival["vel"] = (rival["vel"] as Vector3) * 0.25 - der * lado * 1.6
-			_anim(rival, "marcar", true, 0.6)
+			var se_va := -der * lado
+			rival["vel"] = (rival["vel"] as Vector3) * 0.25 + se_va * 2.0
+			## Se le va el cuerpo hacia ese lado (`AnimFutbol.defensor_pica`); la
+			## derecha del modelo, que mira a +Z, es -X.
+			var n_r: Node3D = rival["node"]
+			var der_r := Vector3(-cos(n_r.rotation.y), 0, sin(n_r.rotation.y))
+			_anim(rival, "defensor_pica_der" if se_va.dot(der_r) >= 0.0 else "defensor_pica_izq", true, 0.85)
 			p["vel"] = salida * clampf(sp * 1.05, 4.5, 6.5)
 			p["regate_dir"] = (fwd + der * lado * 0.35).normalized()
 	## Tras la finta decide con calma (no la suelta en mitad del gesto).
