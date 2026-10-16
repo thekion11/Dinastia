@@ -462,6 +462,58 @@ static func defensor_pica(esq: Skeleton3D, pre: String, lado: float) -> Animatio
 		abre: L(25, 45, 0, 8), cierra: L(25, 45), "bd": [20, 30, 40], "bi": [20, 30, 40]}
 	return armar(esq, pre, 0.9, false, [k0, k1, k2, k3])
 
+## LOS DUELOS CUERPO A CUERPO (16-10-2026, «duelos/contacto»). Cuatro gestos
+## para que desde la cámara de transmisión se lea quién gana el contacto:
+##   - `duelo_hombro`: en carrera, mete el hombro hacia el rival que va a su
+##     `lado` (+1 = a su derecha): tronco inclinado, cadera que empuja, el
+##     brazo de ese lado pegado al cuerpo; las piernas siguen la zancada.
+##   - `duelo_empujado`: el que pierde el choque trastabilla hacia `lado`,
+##     abre el brazo para no caerse y cruza la pierna; luego se recompone.
+##   - `duelo_agarron`: el defensor estira el brazo y tira de la camiseta.
+##   - `duelo_forcejeo`: el que lleva el balón se inclina y aparta el brazo
+##     del rival hacia atrás para zafarse.
+static func duelo_hombro(esq: Skeleton3D, pre: String, lado: float) -> Animation:
+	var pega := "bd" if lado > 0 else "bi"
+	var libre := "bi" if lado > 0 else "bd"
+	return armar(esq, pre, 0.6, false, [
+		{"t": 0.0, "pd": L(35, 50), "pi": L(-10, 25), "p": [0.0, -0.04, 0.0], "tr": [8, 0, 0]},
+		{"t": 0.18, "p": [0.09 * lado, -0.09, 0.04], "g": [0, 7 * lado, 0], "tr": [12, 17 * lado, -8 * lado],
+			pega: [-5, 16, 75], libre: [28, 32, 55], "pi": L(35, 50), "pd": L(-10, 25)},
+		{"t": 0.38, "p": [0.10 * lado, -0.08, 0.06], "tr": [12, 15 * lado, -6 * lado], "pd": L(35, 50), "pi": L(-10, 25)},
+		{"t": 0.6, "p": [0.02 * lado, -0.04, 0.0], "g": [0, 0, 0], "tr": [8, 0, 0], pega: [10, 12, 40], libre: [10, 12, 40], "pi": L(30, 45), "pd": L(-5, 25)},
+	])
+
+static func duelo_empujado(esq: Skeleton3D, pre: String, lado: float) -> Animation:
+	var abre := "pd" if lado > 0 else "pi"
+	var cruza := "pi" if lado > 0 else "pd"
+	var b_abre := "bd" if lado > 0 else "bi"
+	var b_otro := "bi" if lado > 0 else "bd"
+	return armar(esq, pre, 0.75, false, [
+		{"t": 0.0, "pd": L(25, 35), "pi": L(20, 30), "p": [0.0, -0.05, 0.0], "tr": [8, 0, 0]},
+		{"t": 0.15, "p": [0.18 * lado, -0.12, 0.0], "g": [0, 8 * lado, 0], "tr": [10, 20 * lado, 4 * lado], "cu": [4, -8 * lado],
+			abre: L(20, 40, 0, 26), cruza: L(18, 22, 0, -14), b_abre: [12, 72, 18], b_otro: [35, 45, 45]},
+		{"t": 0.38, "p": [0.26 * lado, -0.16, 0.04], "g": [0, 10 * lado, 0], "tr": [14, 12 * lado, 0], "cu": [6, -4 * lado],
+			abre: L(28, 48, 0, 18), cruza: L(30, 40, 0, -6), b_abre: [20, 80, 10], b_otro: [40, 55, 40]},
+		{"t": 0.75, "p": [0.10 * lado, -0.05, 0.08], "g": [0, 0, 0], "tr": [6, 0, 0], "cu": [0, 0],
+			abre: L(22, 32), cruza: L(18, 28), b_abre: [10, 15, 30], b_otro: [10, 15, 30]},
+	])
+
+static func duelo_agarron(esq: Skeleton3D, pre: String) -> Animation:
+	return armar(esq, pre, 0.9, false, [
+		{"t": 0.0, "pd": L(25, 35), "pi": L(10, 25), "p": [0.0, -0.05, 0.0], "tr": [10, 0, 0]},
+		{"t": 0.2, "p": [0.0, -0.1, -0.04], "tr": [20, 0, -12], "bd": [78, 8, 12], "bi": [25, 35, 55], "pd": L(32, 42), "pi": L(8, 22), "cu": [-4, 6]},
+		{"t": 0.5, "p": [0.0, -0.12, -0.08], "tr": [14, 0, -6], "bd": [62, 10, 45], "bi": [30, 40, 50], "pd": L(18, 30), "pi": L(30, 45)},
+		{"t": 0.9, "p": [0.0, -0.04, 0.0], "tr": [8, 0, 0], "bd": [12, 12, 30], "bi": [12, 12, 30], "pd": L(25, 35), "pi": L(10, 25), "cu": [0, 0]},
+	])
+
+static func duelo_forcejeo(esq: Skeleton3D, pre: String) -> Animation:
+	return armar(esq, pre, 0.8, false, [
+		{"t": 0.0, "pd": L(35, 50), "pi": L(-8, 25), "p": [0.0, -0.05, 0.0], "tr": [10, 0, 0]},
+		{"t": 0.2, "p": [0.0, -0.1, 0.06], "tr": [22, -6, 14], "bi": [-35, 38, 28], "bd": [30, 30, 60], "pi": L(38, 55), "pd": L(-10, 25), "cu": [-6, -10]},
+		{"t": 0.45, "p": [0.0, -0.09, 0.08], "tr": [20, -4, 10], "bi": [-28, 45, 20], "pd": L(38, 55), "pi": L(-10, 25)},
+		{"t": 0.8, "p": [0.0, -0.04, 0.04], "tr": [10, 0, 0], "bi": [10, 12, 35], "bd": [10, 12, 35], "pd": L(30, 45), "pi": L(-5, 25), "cu": [0, 0]},
+	])
+
 static func blocaje_alto(esq: Skeleton3D, pre: String) -> Animation:
 	return armar(esq, pre, 1.1, false, [
 		{"t": 0.0, "pd": L(20, 40), "pi": L(20, 40), "p": [0.0, -0.1, 0.0], "bi": [25, 30, 40], "bd": [25, 30, 40]},
@@ -775,6 +827,12 @@ static func todas(esq: Skeleton3D, pre: String) -> Dictionary:
 	r["portero_lateral_izq"] = portero_lateral(esq, pre, -1.0)
 	r["defensor_pica_der"] = defensor_pica(esq, pre, 1.0)
 	r["defensor_pica_izq"] = defensor_pica(esq, pre, -1.0)
+	r["duelo_hombro_der"] = duelo_hombro(esq, pre, 1.0)
+	r["duelo_hombro_izq"] = duelo_hombro(esq, pre, -1.0)
+	r["duelo_empujado_der"] = duelo_empujado(esq, pre, 1.0)
+	r["duelo_empujado_izq"] = duelo_empujado(esq, pre, -1.0)
+	r["duelo_agarron"] = duelo_agarron(esq, pre)
+	r["duelo_forcejeo"] = duelo_forcejeo(esq, pre)
 	for t: Array in regates():
 		r[t[0]] = regate(esq, pre, float(t[1]), t[2])
 	for lista: Array in [expresivos(), lesiones(), arbitro()]:
