@@ -125,6 +125,7 @@ func _probar_finta(mot: MotorJugable) -> void:
 	var ok_antes := mot.regates_ia_ok
 	var saltos := 0
 	var clavado := true
+	var se_tira := 0
 	for i in 40:
 		df["enfriar"] = 0.0
 		var antes := mot.pos(at)
@@ -134,8 +135,12 @@ func _probar_finta(mot: MotorJugable) -> void:
 			saltos += 1
 		if mot.regates_ia_ok > ok_i and float(df["enfriar"]) <= 0.0:
 			clavado = false
+		if mot.regates_ia_ok > ok_i and String(df.get("anim_actual", "")).begins_with("defensor_pica"):
+			se_tira += 1
 	var picaron := mot.regates_ia_ok - ok_antes
 	print("  finta de prueba: %d de 40 pican (regate %.2f contra defensa %.2f)" % [picaron, float(at["attr"]["reg"]), float(df["attr"]["def"])])
 	_ok(picaron > 0 and picaron < 40, "la finta engaña a veces, no siempre (%d de 40)" % picaron)
 	_ok(clavado, "el defensor que pica queda clavado (no puede entrar)")
+	## Que se VEA: el que pica se tira hacia el lado del amago (16-10-2026).
+	_ok(picaron > 0 and se_tira == picaron, "el defensor que pica se tira hacia el lado del amago (%d de %d)" % [se_tira, picaron])
 	_ok(saltos == 0, "la finta no teletransporta al jugador (%d saltos)" % saltos)
