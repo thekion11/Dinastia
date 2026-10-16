@@ -39,10 +39,10 @@ void fragment() {
 		esp = 0.7;
 		met = 0.2;
 	} else if (s.r > 0.8 && s.r >= s.g - 0.02 && s.g >= s.b - 0.02) {
-		if (s.b > s.r * 0.71) {
-			// Pared: el kit la pinta con un degradado de blanco a crema; se tiñe
-			// toda con el color del bloque y se conserva solo la mitad del
-			// degradado (si no, cada piso salía a franjas blanca y de color).
+		if (s.b > s.r * 0.55) {
+			// Pared: el kit la pinta con un degradado de blanco a crema y
+			// melocotón; se tiñe toda con el color del bloque y se conserva solo
+			// la mitad del degradado (si no, cada piso salía a franjas).
 			c = COLOR.rgb * mix(1.0, lum / 0.908, 0.5);
 		} else {
 			// Remates: cornisas, zócalo, marcos (salmón y melocotón).
