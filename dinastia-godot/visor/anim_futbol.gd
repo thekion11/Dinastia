@@ -445,6 +445,23 @@ static func portero_lateral(esq: Skeleton3D, pre: String, lado: float) -> Animat
 	k4["t"] = 0.52
 	return armar(esq, pre, 0.52, true, [k0, k1, k2, k3, k4])
 
+## EL DEFENSOR QUE PICA (16-10-2026): se tira hacia el lado del amago, la
+## cadera baja y se va de lado, el tronco se le inclina, abre la pierna de
+## ese lado y mira hacia atrás cómo se le escapa; luego se recompone. Antes
+## el que picaba solo ponía la guardia de «marcar» y desde la cámara de
+## transmisión no se notaba que lo habían engañado. `lado` 1 = a su derecha.
+static func defensor_pica(esq: Skeleton3D, pre: String, lado: float) -> Animation:
+	var abre := "pd" if lado > 0 else "pi"
+	var cierra := "pi" if lado > 0 else "pd"
+	var k0 := {"t": 0.0, "p": [0.0, -0.12, 0.0], "tr": [18, 0, 0], abre: L(25, 45), cierra: L(25, 45), "bd": [20, 30, 40], "bi": [20, 30, 40]}
+	var k1 := {"t": 0.18, "p": [0.24 * lado, -0.22, 0.0], "g": [0, 12 * lado, 8 * lado], "tr": [24, 20 * lado, 6 * lado],
+		abre: L(38, 64, 0, 30), cierra: L(6, 12, 10, 14), "bd": [10, 75, 25] if lado > 0 else [30, 25, 60], "bi": [30, 25, 60] if lado > 0 else [10, 75, 25]}
+	var k2 := {"t": 0.45, "p": [0.30 * lado, -0.24, -0.05], "g": [0, 14 * lado, 22 * lado], "tr": [28, 24 * lado, 18 * lado], "cu": [8, -30 * lado],
+		abre: L(42, 70, 0, 26), cierra: L(4, 10, 15, 10)}
+	var k3 := {"t": 0.8, "p": [0.10 * lado, -0.12, 0.0], "g": [0, 4 * lado, 10 * lado], "tr": [18, 6 * lado, 8 * lado], "cu": [0, -10 * lado],
+		abre: L(25, 45, 0, 8), cierra: L(25, 45), "bd": [20, 30, 40], "bi": [20, 30, 40]}
+	return armar(esq, pre, 0.9, false, [k0, k1, k2, k3])
+
 static func blocaje_alto(esq: Skeleton3D, pre: String) -> Animation:
 	return armar(esq, pre, 1.1, false, [
 		{"t": 0.0, "pd": L(20, 40), "pi": L(20, 40), "p": [0.0, -0.1, 0.0], "bi": [25, 30, 40], "bd": [25, 30, 40]},
@@ -756,6 +773,8 @@ static func todas(esq: Skeleton3D, pre: String) -> Dictionary:
 	r["mano_cambiada"] = mano_cambiada(esq, pre)
 	r["portero_lateral_der"] = portero_lateral(esq, pre, 1.0)
 	r["portero_lateral_izq"] = portero_lateral(esq, pre, -1.0)
+	r["defensor_pica_der"] = defensor_pica(esq, pre, 1.0)
+	r["defensor_pica_izq"] = defensor_pica(esq, pre, -1.0)
 	for t: Array in regates():
 		r[t[0]] = regate(esq, pre, float(t[1]), t[2])
 	for lista: Array in [expresivos(), lesiones(), arbitro()]:
