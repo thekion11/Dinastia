@@ -2156,7 +2156,7 @@ static func _hinchas_horneados(nivel: String) -> Array:
 
 ## Un MultiMesh por pose con su shader de hinchada; `xfs`/`cols` se reparten
 ## entre las poses por un hash estable (la misma grada sale siempre igual).
-static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color]) -> void:
+static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color], desde := 0.0, hasta := 0.0) -> void:
 	var grupos: Array = []
 	for _p in mallas.size():
 		grupos.append([])
@@ -2188,7 +2188,48 @@ static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: 
 		mmi.material_override = mat
 		mmi.name = "%s_%s" % [nombre, POSES_PUBLICO[g]]
 		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mmi.visibility_range_begin = desde
+		mmi.visibility_range_end = hasta
 		deck.add_child(mmi)
+
+## DETALLE SEGÚN LA DISTANCIA (16-10-2026, `pruebas/medir_partido` con ARBOL=1:
+## el público de la bandeja baja de la tribuna de enfrente eran 808.000 de los
+## 1,16 M de triángulos del plano de TV, con mallas «cerca» de ~620 triángulos
+## vistas a 80-100 m). La bandeja se parte en 3 tramos a lo largo; cada tramo
+## lleva su versión de detalle (visible a menos de `LOD_PUBLICO` m del centro
+## del tramo: primeros planos, celebraciones, Carrera de Jugador) y una
+## suplente con la malla «lejos» en 2 poses (más allá). Godot mide la distancia
+## al centro de cada MultiMesh, por eso los tramos.
+const LOD_PUBLICO := 55.0
+const TRAMOS_PUBLICO := 3
+
+static func _montar_publico_lod(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color]) -> void:
+	var lejos := _hinchas_horneados("lejos")
+	## SIN_LOD_PUBLICO=1: el montaje de antes (para medir antes/después).
+	if lejos.is_empty() or xfs.is_empty() or OS.get_environment("SIN_LOD_PUBLICO") != "":
+		_montar_horneados(deck, nombre, mallas, xfs, cols)
+		return
+	var suplentes: Array = [lejos[0], lejos[mini(2, lejos.size() - 1)]]
+	## Eje largo de la bandeja (en su espacio local).
+	var lo := xfs[0].origin
+	var hi := xfs[0].origin
+	for t in xfs:
+		lo = lo.min(t.origin)
+		hi = hi.max(t.origin)
+	var eje := 0 if (hi.x - lo.x) >= (hi.z - lo.z) else 2
+	var largo := maxf(hi[eje] - lo[eje], 0.001)
+	for k in TRAMOS_PUBLICO:
+		var tx: Array[Transform3D] = []
+		var tc: Array[Color] = []
+		for i in xfs.size():
+			var f := clampi(int((xfs[i].origin[eje] - lo[eje]) / largo * TRAMOS_PUBLICO), 0, TRAMOS_PUBLICO - 1)
+			if f == k:
+				tx.append(xfs[i])
+				tc.append(cols[i])
+		if tx.is_empty():
+			continue
+		_montar_horneados(deck, "%s%d" % [nombre, k], mallas, tx, tc, 0.0, LOD_PUBLICO)
+		_montar_horneados(deck, "%s%d_lejos" % [nombre, k], suplentes, tx, tc, LOD_PUBLICO, 0.0)
 
 ## EL HINCHA DE LAS PRIMERAS FILAS (29-9-2026). Pedido del usuario al ver el
 ## partido jugable de la Carrera de Jugador ("ese público se ve horrible"):
@@ -2589,11 +2630,11 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var reales_cerca := _hinchas_horneados("cerca")
 	var reales_medio := _hinchas_horneados("medio")
 	if not reales_cerca.is_empty() and not det_xf.is_empty():
-		_montar_horneados(deck, "PersonasCerca", reales_cerca, det_xf, det_col)
+		_montar_publico_lod(deck, "PersonasCerca", reales_cerca, det_xf, det_col)
 		det_xf.clear()
 		det_col.clear()
 	if not reales_medio.is_empty() and not med_xf.is_empty():
-		_montar_horneados(deck, "PersonasMedio", reales_medio, med_xf, med_col)
+		_montar_publico_lod(deck, "PersonasMedio", reales_medio, med_xf, med_col)
 	else:
 		hinchas_xf.append_array(med_xf)
 		hinchas_col.append_array(med_col)
