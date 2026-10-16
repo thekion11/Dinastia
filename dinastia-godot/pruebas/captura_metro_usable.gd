@@ -20,6 +20,9 @@ func _ready() -> void:
 	add_child(_p)
 
 func _foto(n: String) -> void:
+	if DisplayServer.get_name() == "headless":
+		print("FOTO ", n, " (sin imagen: headless)")
+		return
 	get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % n.replace("metro", OS.get_environment("PREFIJO") if OS.has_environment("PREFIJO") else "metro"))
 	print("FOTO ", n, " estado=", _e.estado if _e else "-")
 
@@ -101,8 +104,14 @@ func _suben_y_bajan(m: int) -> void:
 		for g: Vector3 in gente2:
 			dmin = minf(dmin, Vector2(g.x - _e.cuerpo.position.x, g.z - _e.cuerpo.position.z).length())
 		print("CHOQUE distancia mínima personaje-gente = %.2f m (%s)" % [dmin, "ok" if dmin >= 0.55 else "FALLO"])
+		## (Con la gente ya llena del andén, el personaje se ha puesto encima de
+		## alguien en m == 0: si sigue a menos de 0,55 m, lo atraviesa.)
 	if m in [4, 10, 16, 22, 28, 34, 40]:
 		print("ANDEN t.espera=%.1f %s" % [t.espera, str(_e.metro.estado_gente())])
+		if OS.has_environment("DEPURAR"):
+			for c: Dictionary in _e.metro.get("_caminantes"):
+				var nn: Node3D = c["d"]["nodo"]
+				print("   ", c["fin"], " pos=", nn.position, " ruta=", c["ruta"], " espera=", c["espera"], " atasco=", c.get("atasco", 0.0))
 	if m == 8:
 		_foto("metro_2f_suben")
 	if m == 16:
@@ -112,6 +121,9 @@ func _suben_y_bajan(m: int) -> void:
 	if m == 30:
 		_foto("metro_2h_hacia_escalera")
 	if m == 43:
+		if OS.has_environment("SOLO_ANDEN"):
+			get_tree().quit()
+			return
 		Engine.time_scale = 1.0
 		## La cámara de la foto 2d, como estaba.
 		_fijar(_en_anden(1.9, -16.0, 1.6), _en_anden(3.4, -26.0, 1.0))

@@ -696,7 +696,11 @@ func _gente_cerca(delta: float) -> void:
 		if float(f["t"]) <= 0.0:
 			f["t"] = _rng_gente.randf_range(4.0, 9.0)
 			Mini3D.anim(f["d"], "charla" if _rng_gente.randf() < 0.7 else "parado", "")
-	_mover_caminantes(delta)
+	## En pasos cortos: con fotogramas lentos, un paso de un metro de golpe hacía
+	## que el esquive rebotara y la gente se quedara clavada.
+	var pasos := mini(20, ceili(delta / 0.05))
+	for _i in pasos:
+		_mover_caminantes(delta / float(pasos))
 	_llegadas(delta)
 	_t_gente -= delta
 	if _t_gente > 0.0:
@@ -810,12 +814,21 @@ var _embarque := {}           ## k del tren -> {t}
 var _huecos: Array = []       ## [{s, e, t}] sitios libres que se volverán a ocupar
 
 ## La posición (en el espacio del metro) de un punto del coche: `x` lateral, `z` a lo largo.
-static func _en_tren(tren: Node3D, x: float, z: float) -> Vector3:
-	return tren.transform * Vector3(x, PISO_COCHE, z)
+static func _en_tren(tren: Transform3D, x: float, z: float) -> Vector3:
+	return tren * Vector3(x, PISO_COCHE, z)
+
+## Dónde está el tren según su lógica (el nodo se mueve más tarde en el
+## fotograma: con su posición vieja la gente iba a la puerta de otro sitio).
+static func transform_tren(l: Dictionary, t: Tren) -> Transform3D:
+	var a: Vector3 = l["a"]
+	var dir: Vector3 = l["dir"]
+	var y := ALTO_VIADUCTO + 0.6 if bool(l["elevada"]) else PROF_TUNEL
+	var giro := atan2(dir.x, dir.z) + (0.0 if t.sentido > 0.0 else PI)
+	return Transform3D(Basis(Vector3.UP, giro), a + dir * t.s + Vector3(0, y, 0))
 
 ## La puerta del tren más cercana a `p` (en coordenadas del coche): [lado, z].
-static func puerta_cercana(tren: Node3D, p: Vector3) -> Array:
-	var local := tren.transform.affine_inverse() * p
+static func puerta_cercana(tren: Transform3D, p: Vector3) -> Array:
+	var local := tren.affine_inverse() * p
 	var mejor_z := 0.0
 	var dmin := INF
 	for k in 3:
@@ -837,7 +850,7 @@ func _embarques(delta: float) -> void:
 		var en_estacion := absf(t.s - s_est) < 1.0
 		if en_estacion and t.espera > 0.0 and not _embarque.has(k):
 			_embarque[k] = {"t": 0.0}
-			_planear_embarque(k, l["nodos"][k])
+			_planear_embarque(k, transform_tren(l, t))
 		elif _embarque.has(k):
 			if not en_estacion:
 				## Ya se fue: los que no llegaron a la puerta se quedan esperando.
@@ -865,7 +878,7 @@ func _embarques(delta: float) -> void:
 				t.espera = maxf(t.espera, 1.0 + delta)
 
 ## Elige quién sube (de los que esperan) y crea a los que bajan.
-func _planear_embarque(k: int, tren: Node3D) -> void:
+func _planear_embarque(k: int, tren: Transform3D) -> void:
 	var suben := 0
 	var quedan: Array = []
 	for f: Dictionary in _fijos_gente:
