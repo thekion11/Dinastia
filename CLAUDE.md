@@ -395,8 +395,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (esquemas wasd/clásico, reasignar teclas y botones, ayudas pase/tiro/cambio/dirección,
   `user://controles.cfg`) + `ui/componentes/panel_controles.gd` (⚙ del estadio, pausa
   de la Carrera de Jugador y Ajustes). La guía en pantalla usa `Mando.corto_de`.
-  SIGUE: duelos/contacto, más animaciones, CPU vs CPU creíble, misma ceremonia y gol
-  en la Carrera de Jugador.
+  SIGUE: duelos/contacto, más animaciones, CPU vs CPU creíble. HECHO 16-10: misma
+  ceremonia y gol en la Carrera de Jugador (`visor/cine_gol.gd` compartido con el DT,
+  `CeremoniaPartido` con estilo; `PartidoJugable.con_ceremonia`; prueba
+  `pruebas/prueba_carrera_ceremonia.tscn`, con pantalla saca las fotos).
 - 14-10 PEDIDO (hecho): «¿qué le pasa al portero?», «el césped no debería ser plano»,
   «los NPC cámaras deberían seguir la jugada», barra de energía y nombres como FC, «carta
   con la cara del modelo 3D al marcar» y CONTROLES FC 26 según el manual que pasó (todas las
