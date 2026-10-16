@@ -1560,6 +1560,8 @@ func _mover_en_anden(delta: float) -> void:
 	_sonar_pasos(vel)
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var p := cuerpo.position + adelante * vel * delta
+	## No se atraviesa a la gente del andén: se la rodea (círculos, 16-10-2026).
+	p = metro.apartar(p, 0.3)
 	## Dentro del andén: ni a la vía ni fuera de la estación.
 	var rel := p - _anden_c
 	var la := clampf(rel.dot(_anden_lat), -_anden_medio.x, _anden_medio.x)
