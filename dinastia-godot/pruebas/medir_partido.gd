@@ -144,21 +144,34 @@ var _cola_arbol: Array = []
 var _prev: Node3D = null
 var _base_a := Vector2.ZERO
 var _paso_a := 0
+var _arbol_listo := false
 
 func _arbol() -> void:
+	## 16-10-2026: el partido se congela (la cámara de TV seguía al balón y la
+	## base cambiaba sola: salían ahorros negativos) y cada parte se compara con
+	## una base tomada JUSTO antes de apagarla.
+	Engine.time_scale = 0.0
 	var raiz: Node3D = _vista.get("_raiz3d")
 	var m := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 	_paso_a += 1
 	if _paso_a % 4 != 0:
 		return
 	if _prev != null:
-		print("ARBOL sin %-34s -%7d tris  -%4d llamadas" % [_prev.get_path().get_concatenated_names().right(40), _base_a.x - m.x, _base_a.y - m.y])
+		var pista := ""
+		if _prev is MeshInstance3D and (_prev as MeshInstance3D).mesh != null:
+			var mm := (_prev as MeshInstance3D).mesh
+			pista = "%s %s" % [mm.get_class(), str(mm.get_aabb().size.round())]
+		elif _prev is MultiMeshInstance3D and (_prev as MultiMeshInstance3D).multimesh != null:
+			pista = "MultiMesh x%d" % (_prev as MultiMeshInstance3D).multimesh.instance_count
+		else:
+			pista = "%d hijos" % _prev.get_child_count()
+		print("ARBOL sin %-34s %8d tris  %5d llamadas  (%s)" % [_prev.get_path().get_concatenated_names().right(40), _base_a.x - m.x, _base_a.y - m.y, pista])
 		_prev.visible = true
 		_prev = null
 		return
-	if _cola_arbol.is_empty():
-		if _base_a == Vector2.ZERO:
-			_base_a = m
+	if _cola_arbol.is_empty() and _paso_a > 4:
+		if not _arbol_listo:
+			_arbol_listo = true
 			print("ARBOL base tris=%d llamadas=%d" % [m.x, m.y])
 			for c in raiz.get_children():
 				if c is Node3D:
@@ -173,5 +186,8 @@ func _arbol() -> void:
 			return
 		get_tree().quit()
 		return
+	if _cola_arbol.is_empty():
+		return
+	_base_a = m
 	_prev = _cola_arbol.pop_front()
 	_prev.visible = false
