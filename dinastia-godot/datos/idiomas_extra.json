@@ -2347,7 +2347,8 @@
   "🏃 Carrera": "🏃 Running",
   "🚇 Metro": "🚇 Metro",
   "📸 Guardada: ": "📸 Saved: ",
-  "E: hablar con %s": "E: talk to %s"
+  "E: hablar con %s": "E: talk to %s",
+  "PUERTA %d": "GATE %d"
  },
  "pt": {
   "Historia": "História",
@@ -4697,7 +4698,8 @@
   "🏃 Carrera": "🏃 Correndo",
   "🚇 Metro": "🚇 Metrô",
   "📸 Guardada: ": "📸 Salva: ",
-  "E: hablar con %s": "E: falar com %s"
+  "E: hablar con %s": "E: falar com %s",
+  "PUERTA %d": "PORTÃO %d"
  },
  "patrones": [
   [
@@ -7594,7 +7596,8 @@
   "🏃 Carrera": "🏃 Course",
   "🚇 Metro": "🚇 Métro",
   "📸 Guardada: ": "📸 Enregistrée : ",
-  "E: hablar con %s": "E : parler à %s"
+  "E: hablar con %s": "E : parler à %s",
+  "PUERTA %d": "PORTE %d"
  },
  "it": {
   "Historia": "Storia",
@@ -9851,7 +9854,8 @@
   "🏃 Carrera": "🏃 Corsa",
   "🚇 Metro": "🚇 Metro",
   "📸 Guardada: ": "📸 Salvata: ",
-  "E: hablar con %s": "E: parla con %s"
+  "E: hablar con %s": "E: parla con %s",
+  "PUERTA %d": "INGRESSO %d"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12108,7 +12112,8 @@
   "🏃 Carrera": "🏃 Laufen",
   "🚇 Metro": "🚇 U-Bahn",
   "📸 Guardada: ": "📸 Gespeichert: ",
-  "E: hablar con %s": "E: mit %s sprechen"
+  "E: hablar con %s": "E: mit %s sprechen",
+  "PUERTA %d": "TOR %d"
  },
  "ca": {
   "Historia": "Història",
@@ -14365,7 +14370,8 @@
   "🏃 Carrera": "🏃 Cursa",
   "🚇 Metro": "🚇 Metro",
   "📸 Guardada: ": "📸 Desada: ",
-  "E: hablar con %s": "E: parlar amb %s"
+  "E: hablar con %s": "E: parlar amb %s",
+  "PUERTA %d": "PORTA %d"
  },
  "pl": {
   "Club": "Klub",
@@ -16919,7 +16925,8 @@
   "🏃 Carrera": "🏃 Bieg",
   "🚇 Metro": "🚇 Metro",
   "📸 Guardada: ": "📸 Zapisano: ",
-  "E: hablar con %s": "E: porozmawiaj z %s"
+  "E: hablar con %s": "E: porozmawiaj z %s",
+  "PUERTA %d": "BRAMA %d"
  },
  "tr": {
   "Club": "Kulüp",
@@ -19473,6 +19480,7 @@
   "🏃 Carrera": "🏃 Koşu",
   "🚇 Metro": "🚇 Metro",
   "📸 Guardada: ": "📸 Kaydedildi: ",
-  "E: hablar con %s": "E: %s ile konuş"
+  "E: hablar con %s": "E: %s ile konuş",
+  "PUERTA %d": "KAPI %d"
  }
 }
