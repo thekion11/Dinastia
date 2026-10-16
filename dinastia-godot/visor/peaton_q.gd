@@ -65,6 +65,7 @@ static func terminar(d: Dictionary) -> void:
 	var pelo_col: Color = PELOS[rng.randi() % PELOS.size()]
 	## Sin marrón oscuro: con pieles oscuras parecía que iban descalzos.
 	var zapatilla: String = ["e8e6e0", "1c1c1e", "26324a", "4a4d52"][rng.randi() % 4]
+	d["zapatilla"] = zapatilla
 	var kit := {
 		"dis": String(PRENDAS[rng.randi() % PRENDAS.size()]),
 		## El segundo color, cerca del primero: las rayas y los cuadros de calle
@@ -151,6 +152,97 @@ static func _en_hueso(esq: Skeleton3D, hueso: String, k: float) -> Node3D:
 	n.scale = Vector3.ONE * k
 	ba.add_child(n)
 	return n
+
+## ZAPATILLAS DE VERDAD (16-10-2026, pedido: «el pasajero del metro va
+## descalzo»). Pintadas sobre la malla del pie se veían los dedos y el arco: de
+## lejos pasaba, pero sentado (la suela y el empeine a la vista) parecía un pie
+## descalzo o un calcetín. Aquí cada pie lleva una zapatilla de verdad: suela
+## clara ovalada, cuerpo del color de la zapatilla y puntera redondeada, en UNA malla
+## por pie (una sola llamada de dibujo) colgada del hueso del pie. Medida con
+## los huesos de reposo (tobillo, bola y punta) de cada esqueleto, así vale para
+## hombre y mujer. Solo para la gente de cerca (`Mini3D.persona`: interiores,
+## metro, minijuegos); los peatones de la calle siguen con la pintada.
+static var _zapatillas := {}
+static var _mat_zapatilla: StandardMaterial3D
+
+static func calzar(d: Dictionary, color_hex: String = "") -> void:
+	if d.is_empty() or bool(d.get("calzado", false)):
+		return
+	var esq: Skeleton3D = d.get("esqueleto")
+	if esq == null:
+		return
+	d["calzado"] = true
+	var col := Color(color_hex if color_hex != "" else String(d.get("zapatilla", "1c1c1e")))
+	if _mat_zapatilla == null:
+		_mat_zapatilla = StandardMaterial3D.new()
+		_mat_zapatilla.vertex_color_use_as_albedo = true
+		_mat_zapatilla.vertex_color_is_srgb = true
+		_mat_zapatilla.roughness = 0.65
+	for lado: String in ["l", "r"]:
+		var i_pie := esq.find_bone("foot_" + lado)
+		var i_bola := esq.find_bone("ball_" + lado)
+		var i_punta := esq.find_bone("ball_leaf_" + lado)
+		if i_pie < 0 or i_bola < 0 or i_punta < 0:
+			continue
+		var rest_pie := esq.get_bone_global_rest(i_pie)
+		var a := rest_pie.origin
+		var b := esq.get_bone_global_rest(i_bola).origin
+		var t := esq.get_bone_global_rest(i_punta).origin
+		var k := "%s|%.3f|%.3f|%.3f|%.3f|%.3f|%s" % [lado, a.y, b.y, t.y, b.z - a.z, t.z - a.z, col.to_html(false)]
+		if not _zapatillas.has(k):
+			_zapatillas[k] = _malla_zapatilla(rest_pie, b, t, col)
+		var ba := BoneAttachment3D.new()
+		ba.name = "Zapatilla_" + lado
+		ba.bone_name = "foot_" + lado
+		esq.add_child(ba)
+		var mi := MeshInstance3D.new()
+		mi.mesh = _zapatillas[k]
+		mi.material_override = _mat_zapatilla
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mi.visibility_range_end = 40.0
+		ba.add_child(mi)
+
+## La malla de una zapatilla en el espacio del hueso del pie.
+static func _malla_zapatilla(rest_pie: Transform3D, b: Vector3, t: Vector3, col: Color) -> Mesh:
+	var a := rest_pie.origin
+	var f := Vector3(t.x - a.x, 0, t.z - a.z).normalized()
+	var suelo := minf(t.y, b.y) - 0.015
+	## La malla del pie es ~1,5 cm más ancha hacia fuera que el hueso (medido:
+	## de x 0,076 a 0,187 con el tobillo en 0,114) y llega 5,5 cm tras el tobillo.
+	var talon := Vector3(a.x + signf(a.x) * 0.015, suelo, a.z) - f * 0.058
+	var marco := rest_pie.affine_inverse() * Transform3D(Basis.looking_at(-f, Vector3.UP), talon)
+	var zb := (b - talon).dot(f)
+	var largo := (t - talon).dot(f) + 0.01
+	var suela := Color(0.92, 0.91, 0.88)
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var caja := BoxMesh.new()
+	var bola := SphereMesh.new()
+	bola.radial_segments = 14
+	bola.rings = 7
+	## [malla, centro, medidas, color] en el marco del talón (z hacia la punta).
+	var disco := CylinderMesh.new()
+	disco.radial_segments = 16
+	disco.rings = 1
+	## [malla, centro, medidas, color] en el marco del talón (z hacia la punta):
+	## suela ovalada (cilindro aplastado), cuerpo y puntera (elipsoides).
+	var piezas := [
+		[disco, Vector3(0, 0.012, largo * 0.5), Vector3(0.132, 0.024, largo + 0.005), suela],
+		[caja, Vector3(0, 0.04, zb * 0.42), Vector3(0.108, 0.04, zb * 0.8), col],
+		[bola, Vector3(0, 0.06, zb * 0.5), Vector3(0.12, 0.08, zb * 1.1), col],
+		[bola, Vector3(0, 0.035, zb - 0.02), Vector3(0.126, 0.07, (largo - zb) * 2.0 + 0.02), col],
+	]
+	for p: Array in piezas:
+		var arr: Array = (p[0] as PrimitiveMesh).get_mesh_arrays()
+		var n := (arr[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+		var cols := PackedColorArray()
+		cols.resize(n)
+		cols.fill(p[3])
+		arr[Mesh.ARRAY_COLOR] = cols
+		var tmp := ArrayMesh.new()
+		tmp.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
+		st.append_from(tmp, 0, marco * Transform3D(Basis.from_scale(p[2]), p[1]))
+	return st.commit()
 
 static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pelo_col: Color) -> void:
 	var modelo: Node3D = d["modelo"]
