@@ -42,11 +42,11 @@ func _ready() -> void:
 	var cam := get_viewport().get_camera_3d()
 	var cerca := 0
 	var peat := 0
-	for v: Dictionary in e.trafico._vehiculos:
-		var q: Vector3 = (v["nodo"] as Node3D).position
+	for mv: Dictionary in e.trafico._vehiculos:
+		var q: Vector3 = (mv["nodo"] as Node3D).position
 		if absf(q.x - cam.global_position.x) <= 150.0 and absf(q.z - cam.global_position.z) <= 150.0:
 			cerca += 1
-			if float(v["alto"]) > 0.05 and float(v["alto"]) < 0.3:
+			if float(mv["alto"]) > 0.05 and float(mv["alto"]) < 0.3:
 				peat += 1
 	print("SONDA móviles a <150 m de la cámara: %d (%d peatones)" % [cerca, peat])
 	## La rejilla de huellas tiene que decir lo mismo que recorrerlas todas.
