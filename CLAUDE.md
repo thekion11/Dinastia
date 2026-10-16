@@ -384,8 +384,15 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   · REALIZACIÓN DEL GOL: carrera al córner y abrazo, goleador/banquillo/grada,
     barrido con escudo, repetición que acaba en el gol (`Repeticion.congelar`).
     Captura `captura_gol_motor`. Tiempo añadido real (45' +1:23).
-  Pendiente de esta línea: cámara TV inteligente (zoom al área), estadísticas a
-  pedido, disputas cuerpo a cuerpo, más pulido visual del entorno.
+  Pendiente de esta línea: disputas cuerpo a cuerpo, más pulido visual del entorno.
+  HECHO 16-10: TRANSMISIÓN INTELIGENTE (`CameraRig._transmision`: cierra en área/
+  ocasión/córner, abre en contras y balones largos, anticipa, zona muerta,
+  amortiguador crítico con topes; pistas que pone `VistaEstadio._pistas_camara`
+  leyendo el motor) y ESTADÍSTICAS A PEDIDO (`jugar_estadisticas` = T / Select,
+  `PanelEstadisticas` con mapa de tiros y de calor, botón en la pausa y en ⚙;
+  `EstadisticasVivo` = tiros con xG, tarjetas, calor; `RotuloEstadisticas` en
+  17'/descanso/65'). Prueba en banco `_probar_transmision_y_estadisticas` y en
+  `prueba_partido_motor`; captura `pruebas/captura_camara_tv.tscn`.
 
 - 14-10 PEDIDO: «la prioridad es lo visual, las físicas, ver jugar a la CPU y poder jugar
   en serio el partido, como en el vídeo» → motor real en el partido del DT (acta = césped),
