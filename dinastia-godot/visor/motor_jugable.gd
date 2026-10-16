@@ -65,6 +65,10 @@ var usuario: Dictionary = {}
 ## Sin usuario (o en las pruebas), también tu jugador lo maneja la IA.
 var autopiloto := false
 var duracion_mitad := 240.0   ## segundos reales por tiempo
+## La mitad con la que se calibró la IA en `sonda_motor_dt` (240 s). Las
+## decisiones que se tiran «por duelo» (la finta) se escalan con ella para que
+## salgan las mismas POR PARTIDO con cualquier ritmo (ver `_escala_ritmo`).
+const MITAD_CALIBRADA := 240.0
 var t := 0.0
 var mitad := 1
 var goles := [0, 0]            ## [local, visita]
@@ -1544,7 +1548,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## LA FINTA DE ÚLTIMO RECURSO (13-10, rehecha el 15-10): con el defensor ya
 	## encima (< 1,8 m), el que tiene regate intenta irse antes de soltarla. Antes
 	## se teletransportaba 0,8 m de lado; ahora es un empujón con inercia.
-	if presion < 1.8 and t > float(p["regate_hasta"]) + 0.6 and _rng.randf() < float(p["attr"]["reg"]) * 0.45:
+	if presion < 1.8 and t > float(p["regate_hasta"]) + 0.6 and _rng.randf() < minf(float(p["attr"]["reg"]) * 0.45 * _escala_ritmo(), 0.9):
 		var n_f: Node3D = p["node"]
 		var fwd_f := Vector3(sin(n_f.rotation.y), 0, cos(n_f.rotation.y))
 		var lado_f := -signf(Vector3(fwd_f.z, 0, -fwd_f.x).dot(pos(rival) - yo)) if not rival.is_empty() else 1.0
@@ -1614,7 +1618,7 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 		ganas *= 0.3
 	elif dist_arco < 32.0:
 		ganas *= 1.25
-	if _rng.randf() >= ganas:
+	if _rng.randf() >= minf(ganas * _escala_ritmo(), 0.95):
 		return false
 	## Sale por el lado contrario al que tapa el defensor (y hacia dentro si
 	## va pegado a la banda).
@@ -1626,6 +1630,14 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 		lado = -lado
 	_finta_ia(p, rival, fwd, lado, sp)
 	return true
+
+## EL RITMO NO QUITA FINTAS (16-10-2026). Los duelos ocurren por segundo de
+## césped, no por minuto del acta: con el ritmo «normal» del partido (4 s por
+## minuto = 180 s la mitad) había 3/4 de los duelos de la sonda (240 s) y la IA
+## amagaba ~13 veces por partido en vez de ~20. Las ganas de cada duelo se
+## multiplican por lo que falta de césped para que salgan las mismas por 90'.
+func _escala_ritmo() -> float:
+	return clampf(MITAD_CALIBRADA / maxf(duracion_mitad, 1.0), 0.6, 2.0)
 
 ## La finta en sí (la de antes del duelo y la de último recurso, pegado al
 ## defensor): gesto del repertorio según el regate, empujón lateral de
