@@ -37,6 +37,7 @@ const K_ACENTO := "acento"
 const K_VIDRIO := "vidrio"
 const K_LUZ := "luz"
 const K_METAL := "metal"
+const K_PANEL := "panel"
 
 ## ---------------------------------------------------------------------------
 ## EL ESTILO
@@ -139,7 +140,7 @@ static func _paleta(est: Dictionary, estilo: String, h: int) -> Dictionary:
 				revest = StadiumBuilder._c(fcol, "#c9a227")
 		"porticos":
 			estructura = StadiumBuilder._c(fcol, "#8d8f8f") if fcol != "" else Color(0.62, 0.62, 0.6)
-			estructura = estructura.lerp(Color(0.66, 0.65, 0.62), 0.5)
+			estructura = estructura.lerp(Color(0.78, 0.77, 0.73), 0.5)
 		_:  # barrio
 			estructura = Color(0.36, 0.38, 0.41) if h % 2 == 0 else c2.lerp(Color(0.4, 0.42, 0.45), 0.6)
 			revest = c1.lerp(Color(0.72, 0.73, 0.74), 0.25)
@@ -173,6 +174,10 @@ static func _material(clave: String, p: Dictionary) -> StandardMaterial3D:
 				m.albedo_color = p["revest"]
 				m.roughness = 0.5
 				m.metallic = 0.25 if estilo in ["celosia", "barrio"] else 0.05
+		K_PANEL:
+			## Hormigón prefabricado más claro que la estructura (se lee el
+			## despiece aunque la cara quede a la sombra).
+			m = Texturas.hormigon((p["estructura"] as Color).lerp(Color(0.93, 0.92, 0.88), 0.55), 29).duplicate()
 		K_ACENTO:
 			m = StandardMaterial3D.new()
 			m.albedo_color = p["acento"]
@@ -229,6 +234,7 @@ static func _vestir(ctx: Dictionary, c: Dictionary) -> void:
 		var y := StadiumBuilder.ALTURA_PIE + float(k) * paso_piso - StadiumBuilder.FRENTE_BANDEJA * 0.5
 		if y < H - 2.5:
 			pisos.append(y)
+	ctx["vanos"] = []
 	## Zócalo común: todos los estadios se apoyan en algo.
 	_tramos(c, 0.0, L, func(a: float, b: float) -> void:
 		g.bloque(c, K_ESTRUCTURA, a, b, 0.0, 0.7, 0.0, 0.3))
@@ -250,7 +256,9 @@ static func _vestir(ctx: Dictionary, c: Dictionary) -> void:
 	else:
 		_escudo_fachada(ctx, c)
 		var n_puertas := _puertas(ctx, c)
-		if estilo in ["porticos", "barrio", "lamas", "celosia"] and L > 50.0 and H > 8.0:
+		## (Los pórticos ya suben por sus rampas entre contrafuertes: una escalera
+		## más se cruzaba con los pilares.)
+		if estilo in ["barrio", "lamas", "celosia"] and L > 50.0 and H > 8.0:
 			## Entre puertas, nunca delante de una.
 			var fr: Array = [0.2, 0.8] if n_puertas <= 1 else []
 			for k in range(1, n_puertas):
@@ -483,6 +491,29 @@ static func _porticos(ctx: Dictionary, c: Dictionary, pisos: Array) -> void:
 			g.bloque(c, K_ESTRUCTURA, a, b, y - 0.45, y + 0.45, 0.0, 1.0)
 		g.bloque(c, K_REVEST, a, b, H - 1.1, H + 0.2, 0.0, 0.9)
 		g.bloque(c, K_ACENTO, a, b, H - 1.3, H - 1.1, 0.0, 0.92))
+	## PANELES PREFABRICADOS (16-10-2026): entre contrafuertes se veía el muro
+	## liso de la tribuna (el material oscuro de las gradas) y con la luz de la
+	## tarde la fachada entera era un agujero marrón. Ahora cada vano se cierra
+	## con paneles de hormigón claro, con una banda de ventanas bajo cada forjado.
+	var bandas: Array = [0.7]
+	for y: float in pisos:
+		bandas.append(y)
+	bandas.append(H - 1.3)
+	for i in ejes.size() - 1:
+		var a: float = ejes[i] + 0.65
+		var b: float = ejes[i + 1] - 0.65
+		_tramos(c, a, b, func(a2: float, b2: float) -> void:
+			g.bloque(c, K_PANEL, a2, b2, 0.7, H - 1.3, 0.0, 0.22)
+			for k in range(1, bandas.size() - 1):
+				var yv: float = bandas[k]
+				if yv - 2.0 > float(bandas[k - 1]) + 0.6:
+					g.bloque(c, K_VIDRIO, a2 + 0.5, b2 - 0.5, yv - 1.75, yv - 0.6, 0.0, 0.3))
+	## Las puertas van al centro de un vano: entre dos contrafuertes y nunca
+	## detrás de uno (antes un pilar tapaba medio rótulo «PUERTA 6»).
+	var vanos: Array = []
+	for i in ejes.size() - 1:
+		vanos.append(Vector2(float(ejes[i]), float(ejes[i + 1])))
+	ctx["vanos"] = vanos
 	if c["tipo"] != "tribuna" or H < 9.0:
 		return
 	## Las rampas en zigzag entre contrafuertes, en vanos alternos.
@@ -492,6 +523,7 @@ static func _porticos(ctx: Dictionary, c: Dictionary, pisos: Array) -> void:
 		var b: float = ejes[i + 1] - 0.8
 		if not _libre(c, a, b):
 			continue
+		(ctx["vanos"] as Array).erase(Vector2(float(ejes[i]), float(ejes[i + 1])))
 		var y := 0.6
 		var ida := true
 		while y + subida < H - 1.6:
@@ -560,6 +592,20 @@ static func _puertas(ctx: Dictionary, c: Dictionary) -> int:
 		while not _libre(c, s - 3.2, s + 3.2) and tope < 12:
 			s += 4.0 if s < L * 0.5 else -4.0
 			tope += 1
+		var vanos: Array = ctx.get("vanos", [])
+		if not vanos.is_empty():
+			## Al centro del vano libre más cercano (y lo gasta).
+			var mejor := -1
+			for k in vanos.size():
+				var v: Vector2 = vanos[k]
+				var m := (v.x + v.y) * 0.5
+				if v.y - v.x < 7.2 or not _libre(c, m - 3.2, m + 3.2):
+					continue
+				if mejor < 0 or absf(m - s) < absf((vanos[mejor].x + vanos[mejor].y) * 0.5 - s):
+					mejor = k
+			if mejor >= 0:
+				s = (vanos[mejor].x + vanos[mejor].y) * 0.5
+				vanos.remove_at(mejor)
 		if not _libre(c, s - 3.2, s + 3.2):
 			continue
 		ctx["puerta"] = int(ctx["puerta"]) + 1
