@@ -60,6 +60,9 @@ var _cine: CineGol
 var _repe: Repeticion
 var _rotulo_repe: PanelContainer
 var _hud: Array[Control] = []
+## Tu ficha y la ayuda de abajo: fuera en la realización del gol (ahí sale la
+## carta del goleador) y en la repetición.
+var _hud_abajo: Array[Control] = []
 var _simulando := false
 var _rotulos_fuera := false
 ## La tecla que salta la ceremonia no abre además la pausa.
@@ -197,7 +200,9 @@ func _pref(k: String, por_defecto: bool) -> bool:
 
 func _empezar_ceremonia() -> void:
 	var gc := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
-	var nombre := String(_perfil.get("nombre", local.estadio_nombre))
+	var nombre := String(_perfil.get("nombre", ""))
+	if nombre == "":
+		nombre = local.estadio_nombre if local.estadio_nombre != "" else "Estadio de %s" % Nombres.visible(local.nombre)
 	## El motor espera: la ceremonia mueve a los 22 y los devuelve a su sitio.
 	motor.set_physics_process(false)
 	_ceremonia = CeremoniaPartido.iniciar(self, _raiz, _en_campo, local, visita, nombre,
@@ -252,11 +257,19 @@ func _ver_hud(si: bool) -> void:
 			c.visible = si
 	_ver_rotulos(si)
 
+func _ver_hud_abajo(si: bool) -> void:
+	for c: Control in _hud_abajo:
+		if is_instance_valid(c):
+			c.visible = si
+
 func _ver_rotulos(si: bool) -> void:
 	_rotulos_fuera = not si
 	if motor == null:
 		return
-	for f: Dictionary in motor.jugadores:
+	var filas: Array = motor.jugadores.duplicate()
+	if not motor.extra.is_empty():
+		filas.append(motor.extra)   ## el que espera en la banda para entrar
+	for f: Dictionary in filas:
 		var n: Node3D = f.get("node")
 		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO):
 			(n.get_node(PlayerSpawner.ROTULO) as Node3D).visible = si and PlayerSpawner.mostrar_nombres
@@ -404,6 +417,7 @@ func _montar_hud() -> void:
 	caja3.offset_right = 360
 	add_child(caja3)
 	_hud.append(caja3)
+	_hud_abajo.append(caja3)
 	var v := VBoxContainer.new()
 	caja3.add_child(v)
 	var yo := carrera.jugador(mundo) if carrera != null else null
@@ -455,6 +469,7 @@ func _montar_hud() -> void:
 	_ayuda.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(_ayuda)
 	_hud.append(_ayuda)
+	_hud_abajo.append(_ayuda)
 	## La mira del penal.
 	_mira = _etiqueta(40, FUCSIA)
 	_mira.text = "◎"
@@ -617,6 +632,7 @@ func _cine_gol(de_local: bool, autor_id: String) -> void:
 	var gc := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
 	_cine = CineGol.iniciar(self, _raiz, club_gol, de_local, nodo, carta, float(gc["dx"]))
 	_ver_rotulos(false)
+	_ver_hud_abajo(false)
 	_flecha.visible = false
 	_cine.terminado.connect(_fin_cine)
 
@@ -627,6 +643,7 @@ func _fin_cine() -> void:
 	if motor == null or motor.estado == "fin" or not _pref("repeticiones", true) or not _repe.reproducir(6.0):
 		_repe.congelar = false
 		_ver_rotulos(true)
+		_ver_hud_abajo(true)
 		return
 	## Mientras se repite, el partido espera.
 	motor.set_physics_process(false)
@@ -650,6 +667,7 @@ func _fin_repeticion() -> void:
 	if is_instance_valid(_cam):
 		_cam.current = true
 	_ver_rotulos(true)
+	_ver_hud_abajo(true)
 	if motor != null and motor.estado != "fin" and _pausa == null and not _simulando:
 		motor.set_physics_process(true)
 
@@ -731,6 +749,7 @@ func _al_terminar() -> void:
 		if is_instance_valid(_cam):
 			_cam.current = true
 	_ver_rotulos(true)
+	_ver_hud_abajo(true)
 	var s := motor.stats
 	var yo := carrera.jugador(mundo) if carrera != null else null
 	_resumen = _caja_centro("FINAL  %s %d - %d %s" % [Nombres.visible(local.nombre), motor.goles[0], motor.goles[1], Nombres.visible(visita.nombre)], [
