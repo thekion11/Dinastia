@@ -161,6 +161,13 @@ static func _material(clave: String, p: Dictionary) -> StandardMaterial3D:
 		K_REVEST:
 			if estilo == "membrana":
 				m = Texturas.tela(p["revest"], 0.6).duplicate()
+				## La trama a escala de lona (las UV van a 4 m por unidad).
+				m.uv1_scale = Vector3(4.0, 4.0, 1.0)
+				## De noche la membrana se enciende por dentro, como las de verdad.
+				if p["noche"] == "noche":
+					m.emission_enabled = true
+					m.emission = (p["luz"] as Color).lerp(Color.WHITE, 0.5)
+					m.emission_energy_multiplier = 0.35
 			else:
 				m = StandardMaterial3D.new()
 				m.albedo_color = p["revest"]
@@ -242,9 +249,13 @@ static func _vestir(ctx: Dictionary, c: Dictionary) -> void:
 		_torre_esquina(ctx, c)
 	else:
 		_escudo_fachada(ctx, c)
-		_puertas(ctx, c)
+		var n_puertas := _puertas(ctx, c)
 		if estilo in ["porticos", "barrio", "lamas", "celosia"] and L > 50.0 and H > 8.0:
-			_escaleras(ctx, c)
+			## Entre puertas, nunca delante de una.
+			var fr: Array = [0.2, 0.8] if n_puertas <= 1 else []
+			for k in range(1, n_puertas):
+				fr.append(float(k) / float(n_puertas))
+			_escaleras(ctx, c, fr.slice(0, 2))
 	if bool(c["techo"]):
 		_cubierta(ctx, c)
 
@@ -537,7 +548,7 @@ static func _torre_esquina(ctx: Dictionary, c: Dictionary) -> void:
 ## ---------------------------------------------------------------------------
 ## LO COMÚN: PUERTAS, ESCALERAS, CUBIERTA Y ESCUDO
 ## ---------------------------------------------------------------------------
-static func _puertas(ctx: Dictionary, c: Dictionary) -> void:
+static func _puertas(ctx: Dictionary, c: Dictionary) -> int:
 	var L: float = c["L"]
 	var g: _Malla = ctx["grande"]
 	var d: _Malla = ctx["detalle"]
@@ -580,9 +591,10 @@ static func _puertas(ctx: Dictionary, c: Dictionary) -> void:
 		r.position = _punto(c, s, 4.72, 2.62)
 		r.rotation.y = atan2(n_v.x, n_v.z)
 		(ctx["nodo"] as Node3D).add_child(r)
+	return n
 
 ## Escaleras exteriores: tramos en zigzag hasta el último piso.
-static func _escaleras(ctx: Dictionary, c: Dictionary) -> void:
+static func _escaleras(ctx: Dictionary, c: Dictionary, fracciones: Array) -> void:
 	var g: _Malla = ctx["grande"]
 	var d: _Malla = ctx["detalle"]
 	var L: float = c["L"]
@@ -590,7 +602,7 @@ static func _escaleras(ctx: Dictionary, c: Dictionary) -> void:
 	var w0 := 1.45 if ctx["estilo"] in ["lamas", "celosia"] else 0.75
 	var tramo := 6.0
 	var sube := 3.0
-	for frac: float in [0.2, 0.8]:
+	for frac: float in fracciones:
 		var s_c: float = L * frac
 		if not _libre(c, s_c - tramo * 0.5 - 1.6, s_c + tramo * 0.5 + 1.6):
 			continue
