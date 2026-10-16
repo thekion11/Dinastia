@@ -95,7 +95,6 @@ var _cursor: Node3D
 var _indicador: IndicadorFC
 var _tiros_de := {}
 var _goles_de := {}
-var _carta_mostrada := false
 var _ayuda_control: Label
 var _panel_dt: PanelDTPartido
 var _panel_controles: PanelControles
@@ -1846,32 +1845,37 @@ func _exit_tree() -> void:
 ## corriendo a celebrar de cerca, corte al banquillo que salta, la grada, un
 ## barrido con el escudo y la repetición. Mientras, el motor alarga la
 ## celebración (`duracion_gol`) y el reloj no corre.
-var _cam_cine: Camera3D
-var _cine_t := -1.0
-var _cine_club: Club
-var _cine_autor_id := ""
-var _cine_previa: Camera3D
+## La secuencia vive en `CineGol` (compartida con la Carrera de Jugador).
+var _cine: CineGol
+var _cine_t: float:
+	get:
+		return _cine.t if is_instance_valid(_cine) else -1.0
 
 func _cine_gol(c: Club, autor: Jugador) -> void:
 	if _raiz3d == null:
 		return
-	_cine_club = c
-	_cine_autor_id = autor.id if autor != null else ""
-	if _cam_cine == null:
-		_cam_cine = Camera3D.new()
-		_cam_cine.fov = 38.0
-		_cam_cine.far = 700.0
-		_raiz3d.add_child(_cam_cine)
-	_cine_previa = get_viewport().get_camera_3d()
-	if _cine_previa == _cam_cine:
-		_cine_previa = null
-	_cam_cine.current = true
-	_cine_t = 0.0
-	_carta_mostrada = false
+	if is_instance_valid(_cine):
+		_cine.cortar()
 	## La repetición debe acabar en el gol, no en la celebración: se deja de
 	## grabar hasta que termine.
 	if _repe != null:
 		_repe.congelar = true
+	var autor_id := autor.id if autor != null else ""
+	var g := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+	var carta := func() -> Dictionary:
+		var j := partido._por_id(autor_id) if partido != null and autor_id != "" else null
+		if j == null:
+			return {}
+		return {"dorsal": j.dorsal, "nombre": j.nombre, "tiros": int(_tiros_de.get(j.id, 1)), "goles": int(_goles_de.get(j.id, 1))}
+	_cine = CineGol.iniciar(self, _raiz3d, c, c == club, _nodo_de(autor_id), carta, float(g["dx"]))
+	_cine.banquillo.connect(func() -> void: _banca_celebra(c == club))
+	_cine.terminado.connect(func() -> void:
+		_repetir_gol()
+		if _repe != null:
+			if _repe.reproduciendo:
+				_repe.terminada.connect(func() -> void: _repe.congelar = false, CONNECT_ONE_SHOT)
+			else:
+				_repe.congelar = false)
 
 func _nodo_de(id: String) -> Node3D:
 	for p: Dictionary in _en_campo:
@@ -1881,84 +1885,8 @@ func _nodo_de(id: String) -> Node3D:
 
 ## Se llama desde `_process` (antes del paso del motor).
 func _cine_paso(delta: float) -> void:
-	if _cine_t < 0.0 or _cam_cine == null:
-		return
-	_cine_t += delta
-	var autor := _nodo_de(_cine_autor_id)
-	## La carta del goleador, en cuanto el plano lo encuadra.
-	if not _carta_mostrada and _cine_t > 0.7 and _cine_autor_id != "":
-		_carta_mostrada = true
-		var j := partido._por_id(_cine_autor_id) if partido != null else null
-		if j != null:
-			CartaGoleador.mostrar(self, _cine_club, j.dorsal, j.nombre, int(_tiros_de.get(j.id, 1)), int(_goles_de.get(j.id, 1)), autor)
-	if _cine_t < 3.4:
-		## 1) El goleador, de cerca, a la altura del pecho, siguiéndolo.
-		if autor != null:
-			var a := autor.global_position
-			var fwd := Vector3(sin(autor.global_rotation.y), 0, cos(autor.global_rotation.y))
-			var deseo := a + fwd * 6.8 + Vector3(fwd.z, 0, -fwd.x) * 2.2 + Vector3(0, 1.9, 0)
-			_cam_cine.global_position = _cam_cine.global_position.lerp(deseo, clampf(delta * 3.0, 0, 1)) if _cine_t > 0.05 else deseo
-			_cam_cine.look_at(a + Vector3(0, 1.3, 0), Vector3.UP)
-	elif _cine_t < 5.4:
-		## 2) El banquillo del que marcó (de pie, saltando).
-		if _cine_t - delta < 3.4:
-			_barrido(_cine_club, 0.35)
-			## El banquillo salta justo cuando entra su plano.
-			_banca_celebra(_cine_club == club)
-		var es_local := _cine_club == club
-		var z := (-1.0 if es_local else 1.0) * 14.0
-		_cam_cine.global_position = Vector3(27.5, 2.0, z + (-5.0 if es_local else 5.0))
-		_cam_cine.look_at(Vector3(34.6, 1.3, z), Vector3.UP)
-	elif _cine_t < 7.0:
-		## 3) La grada: un paneo lento por la tribuna.
-		if _cine_t - delta < 5.4:
-			_barrido(_cine_club, 0.35)
-		var f := (_cine_t - 5.4) / 1.6
-		var g := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
-		_cam_cine.global_position = Vector3(-float(g["dx"]) * 0.42, 2.6, lerpf(-14.0, 14.0, f))
-		_cam_cine.look_at(Vector3(-float(g["dx"]), 8.5, lerpf(-18.0, 18.0, f)), Vector3.UP)
-	else:
-		_cine_t = -1.0
-		_barrido(_cine_club, 0.5)
-		if is_instance_valid(_cine_previa):
-			_cine_previa.current = true
-		_repetir_gol()
-		if _repe != null:
-			if _repe.reproduciendo:
-				_repe.terminada.connect(func() -> void: _repe.congelar = false, CONNECT_ONE_SHOT)
-			else:
-				_repe.congelar = false
-
-## EL BARRIDO DE MARCA: una franja inclinada con el color y el escudo del club
-## que cruza la pantalla (como la estrella girando de la transmisión del vídeo,
-## pero nuestra).
-func _barrido(c: Club, seg: float) -> void:
-	if c == null:
-		return
-	var vp := get_viewport().get_visible_rect().size
-	var banda := Panel.new()
-	var st := StyleBoxFlat.new()
-	st.bg_color = Color(c.color1)
-	st.border_color = Color(c.color2)
-	st.border_width_left = 14
-	st.border_width_right = 14
-	st.skew = Vector2(0.35, 0)
-	banda.add_theme_stylebox_override("panel", st)
-	banda.size = Vector2(vp.x * 0.7, vp.y + 40.0)
-	banda.position = Vector2(-banda.size.x - 200.0, -20.0)
-	banda.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	banda.z_index = 140
-	var esc := TextureRect.new()
-	esc.texture = Escudo.textura(c, 256)
-	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	esc.size = Vector2(220, 220)
-	esc.position = Vector2(banda.size.x * 0.5 - 110.0, banda.size.y * 0.5 - 110.0)
-	banda.add_child(esc)
-	add_child(banda)
-	var tw := banda.create_tween()
-	tw.tween_property(banda, "position:x", vp.x + 200.0, seg).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tw.tween_callback(banda.queue_free)
+	if is_instance_valid(_cine):
+		_cine.paso(delta)
 
 
 ## LA BARRA DE POTENCIA Y LA FLECHA DE APUNTE (jugando tú, como en FC): al

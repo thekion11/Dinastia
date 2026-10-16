@@ -45,6 +45,32 @@ var entra_al := -1
 ## El equipo del usuario cuando no es su club (la selección).
 var equipo_usuario: Club = null
 
+## LA MISMA CEREMONIA Y EL MISMO GOL QUE EL PARTIDO DEL DT (16-10-2026,
+## pendiente de la Carrera de Jugador). Se reutilizan los componentes del modo
+## entrenador, con los colores de este modo: `CeremoniaPartido` antes del saque
+## inicial (se salta con «Saltar», cualquier tecla o botón), y en cada gol
+## `CineGol` (goleador -que ya corre al córner y lo abrazan en el motor-,
+## banquillo, grada, barridos y `CartaGoleador`) y la `Repeticion`, que acaba
+## en el gol. Las capturas sin ceremonia la apagan con `con_ceremonia = false`.
+static var con_ceremonia := true
+var _en_campo: Array = []
+var _ceremonia: CeremoniaPartido
+var _btn_saltar: Button
+var _cine: CineGol
+var _repe: Repeticion
+var _rotulo_repe: PanelContainer
+var _hud: Array[Control] = []
+## Tu ficha y la ayuda de abajo: fuera en la realización del gol (ahí sale la
+## carta del goleador) y en la repetición.
+var _hud_abajo: Array[Control] = []
+var _simulando := false
+var _rotulos_fuera := false
+## La tecla que salta la ceremonia no abre además la pausa.
+var _cuadro_fin_ceremonia := -1
+var _tiros_de := {}
+var _goles_de := {}
+var _perfil := {}
+
 static func abrir(padre: Node, m: Mundo, c: CarreraJugador, l: Club, v: Club, duracion_mitad := 240.0,
 		entra_al_minuto := -1, equipo: Club = null) -> PartidoJugable:
 	var n := PartidoJugable.new()
@@ -80,6 +106,7 @@ func _montar(duracion_mitad: float) -> void:
 	_vp.add_child(_raiz)
 	## El estadio del local, el que se juega.
 	var perfil := mundo.perfil_estadio_de(local).duplicate() if mundo != null and equipo_usuario == null else local.perfil_estadio()
+	_perfil = perfil
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
 	StadiumBuilder.build_pitch(_raiz, perfil, local)
 	StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
@@ -109,6 +136,7 @@ func _montar(duracion_mitad: float) -> void:
 	var lista: Array = []
 	lista.append_array(sp.spawn_team(_raiz, l["xi"], l["jugadores"], Puente3D.formacion(local.tactica.formacion), true, Puente3D.kit(local), Puente3D.kit_portero(local)))
 	lista.append_array(sp.spawn_team(_raiz, v["xi"], v["jugadores"], Puente3D.formacion(visita.tactica.formacion), false, Puente3D.kit_visita(local, visita), Puente3D.kit_portero(visita)))
+	_en_campo = lista.duplicate()
 	## Árbitros, suplentes y los dos DT en la banda, como en el modo entrenador.
 	lista.append_array(sp.spawn_arbitros(_raiz))
 	VistaEstadio.poner_banca_de(_raiz, sp, local, once_l, true)
@@ -129,6 +157,17 @@ func _montar(duracion_mitad: float) -> void:
 			"falta": bool(carrera.lanzador.get("faltas", false)), "penal": bool(carrera.lanzador.get("penales", false)), "banda": false}
 	motor.aviso.connect(_mostrar_banner)
 	motor.gol.connect(_al_gol)
+	## La celebración dura lo que la realización del gol (como en el modo DT).
+	motor.duracion_gol = CineGol.DURACION + 0.6
+	motor.remate.connect(func(_l: bool, autor: String, _t: String) -> void:
+		if autor != "":
+			_tiros_de[autor] = int(_tiros_de.get(autor, 0)) + 1)
+	## La repetición graba siempre los últimos segundos (dentro del mundo 3D:
+	## sus cámaras son del SubViewport).
+	_repe = Repeticion.new()
+	_raiz.add_child(_repe)
+	_repe.setup(motor.jugadores, balon)
+	_repe.terminada.connect(_fin_repeticion)
 	motor.terminado.connect(_al_terminar)
 	## La cámara, detrás de tu jugador.
 	_cam = Camera3D.new()
@@ -141,7 +180,99 @@ func _montar(duracion_mitad: float) -> void:
 	_montar_hud()
 	if _banner_pendiente != "":
 		_mostrar_banner.call_deferred(_banner_pendiente)
+	if con_ceremonia and entra_al < 0 and motor.minuto() == 0 and _pref("ceremonia", true):
+		_empezar_ceremonia()
+	else:
+		_silbato()
+
+func _silbato() -> void:
 	Sonido.toca("silbato" if Sonido.NOMBRES.has("silbato") else "clic", Sonido.Bus.INTERFAZ)
+
+## Las preferencias del partido son las del modo entrenador (⚙ del estadio):
+## «Ceremonia» y «Repetición de los goles» valen para los dos modos.
+func _pref(k: String, por_defecto: bool) -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.load(CajonAjustes.RUTA) != OK:
+		return por_defecto
+	return bool(cfg.get_value(CajonAjustes.SECCION, k, por_defecto))
+
+# ---------------------------------------------------------------- ceremonia
+
+func _empezar_ceremonia() -> void:
+	var gc := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+	var nombre := String(_perfil.get("nombre", ""))
+	if nombre == "":
+		nombre = local.estadio_nombre if local.estadio_nombre != "" else "Estadio de %s" % Nombres.visible(local.nombre)
+	## El motor espera: la ceremonia mueve a los 22 y los devuelve a su sitio.
+	motor.set_physics_process(false)
+	_ceremonia = CeremoniaPartido.iniciar(self, _raiz, _en_campo, local, visita, nombre,
+		float(gc["dx"]), float(gc["dz"]), StadiumBuilder.tunel_x(_perfil),
+		{"fondo": NEGRO, "acento": LIMA, "borde": FUCSIA})
+	_ver_hud(false)
+	_btn_saltar = Button.new()
+	_btn_saltar.text = Idiomas.t("Saltar  ▸")
+	_btn_saltar.focus_mode = Control.FOCUS_NONE
+	_btn_saltar.add_theme_font_size_override("font_size", 18)
+	_btn_saltar.add_theme_color_override("font_color", NEGRO)
+	_btn_saltar.add_theme_color_override("font_hover_color", NEGRO)
+	_btn_saltar.add_theme_color_override("font_pressed_color", NEGRO)
+	for estado: String in ["normal", "hover", "pressed"]:
+		var st := _panel(FUCSIA)
+		st.bg_color = LIMA if estado != "hover" else LIMA.lightened(0.25)
+		_btn_saltar.add_theme_stylebox_override(estado, st)
+	add_child(_btn_saltar)
+	_btn_saltar.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	_btn_saltar.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_btn_saltar.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	_btn_saltar.offset_right = -32
+	_btn_saltar.offset_bottom = -28
+	_btn_saltar.pressed.connect(saltar_ceremonia)
+	_ceremonia.terminada.connect(_fin_ceremonia)
+
+func ceremonia_activa() -> bool:
+	return is_instance_valid(_ceremonia) and _ceremonia.activa
+
+func saltar_ceremonia() -> void:
+	if ceremonia_activa():
+		_ceremonia.terminar()
+
+func _fin_ceremonia() -> void:
+	_ceremonia = null
+	_cuadro_fin_ceremonia = Engine.get_process_frames()
+	if is_instance_valid(_btn_saltar):
+		_btn_saltar.queue_free()
+	_btn_saltar = null
+	_ver_hud(true)
+	if is_instance_valid(_cam):
+		_cam.current = true
+	if motor != null and motor.estado != "fin" and _pausa == null:
+		motor.set_physics_process(true)
+	_silbato()
+
+## Marcador, números, aguante y ayuda fuera durante la ceremonia; los nombres
+## sobre los jugadores, fuera también en la realización del gol.
+func _ver_hud(si: bool) -> void:
+	for c: Control in _hud:
+		if is_instance_valid(c):
+			c.visible = si
+	_ver_rotulos(si)
+
+func _ver_hud_abajo(si: bool) -> void:
+	for c: Control in _hud_abajo:
+		if is_instance_valid(c):
+			c.visible = si
+
+func _ver_rotulos(si: bool) -> void:
+	_rotulos_fuera = not si
+	if motor == null:
+		return
+	var filas: Array = motor.jugadores.duplicate()
+	if not motor.extra.is_empty():
+		filas.append(motor.extra)   ## el que espera en la banda para entrar
+	for f: Dictionary in filas:
+		var n: Node3D = f.get("node")
+		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO):
+			(n.get_node(PlayerSpawner.ROTULO) as Node3D).visible = si and PlayerSpawner.mostrar_nombres
 
 ## La pantalla gigante del estadio, como en `VistaEstadio._montar_pantalla`
 ## (sin `Partido`: rota bienvenida, tabla y goleadores).
@@ -257,6 +388,7 @@ func _montar_hud() -> void:
 	caja.add_theme_stylebox_override("panel", _panel(LIMA))
 	caja.position = Vector2(24, 18)
 	add_child(caja)
+	_hud.append(caja)
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 14)
 	caja.add_child(h)
@@ -272,6 +404,7 @@ func _montar_hud() -> void:
 	caja2.offset_right = -24
 	caja2.offset_top = 18
 	add_child(caja2)
+	_hud.append(caja2)
 	_mis_stats = _etiqueta(15, Color.WHITE)
 	caja2.add_child(_mis_stats)
 	## Tu jugador y su aguante, abajo a la izquierda.
@@ -283,6 +416,8 @@ func _montar_hud() -> void:
 	caja3.offset_bottom = -20
 	caja3.offset_right = 360
 	add_child(caja3)
+	_hud.append(caja3)
+	_hud_abajo.append(caja3)
 	var v := VBoxContainer.new()
 	caja3.add_child(v)
 	var yo := carrera.jugador(mundo) if carrera != null else null
@@ -333,6 +468,8 @@ func _montar_hud() -> void:
 	_ayuda.offset_bottom = -20
 	_ayuda.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(_ayuda)
+	_hud.append(_ayuda)
+	_hud_abajo.append(_ayuda)
 	## La mira del penal.
 	_mira = _etiqueta(40, FUCSIA)
 	_mira.text = "◎"
@@ -342,7 +479,9 @@ func _montar_hud() -> void:
 func _process(delta: float) -> void:
 	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
 	_t_rotulos -= delta
-	if _t_rotulos <= 0.0 and motor != null:
+	if is_instance_valid(_cine) and _pausa == null:
+		_cine.paso(delta)
+	if _t_rotulos <= 0.0 and motor != null and not _rotulos_fuera:
 		_t_rotulos = 0.1
 		PlayerSpawner.despejar_rotulos(motor.jugadores, _cam, motor.balon.position, _vp.size.y if _vp != null else 900.0)
 	if motor == null:
@@ -369,7 +508,9 @@ func _process(delta: float) -> void:
 		_barra.visible = false
 		_ayuda.text = _guia_controles(con_balon)
 	_actualizar_apunte()
-	if Input.is_action_just_pressed("jugar_pausa") and motor.estado != "fin" and _controles == null:
+	if Input.is_action_just_pressed("jugar_pausa") and motor.estado != "fin" and _controles == null \
+			and not ceremonia_activa() and not (_repe != null and _repe.reproduciendo) \
+			and Engine.get_process_frames() != _cuadro_fin_ceremonia:
 		_alternar_pausa()
 
 ## La guía con las teclas que el jugador haya configurado (Mando).
@@ -460,6 +601,79 @@ func _al_gol(de_local: bool, autor: String, _asist: String) -> void:
 	else:
 		_mostrar_banner("¡GOL de %s!" % (Nombres.visible(local.nombre) if de_local else Nombres.visible(visita.nombre)))
 	Sonido.toca("gol" if de_local == _es_local_usuario else "gol_rival", Sonido.Bus.INTERFAZ)
+	if autor != "":
+		_tiros_de[autor] = int(_tiros_de.get(autor, 0)) + 1
+		_goles_de[autor] = int(_goles_de.get(autor, 0)) + 1
+	if not _simulando:
+		_cine_gol(de_local, autor)
+
+## LA REALIZACIÓN DEL GOL, la del modo entrenador (`CineGol`): el motor alarga
+## la celebración (`duracion_gol`) y al final se repite la jugada.
+func _cine_gol(de_local: bool, autor_id: String) -> void:
+	if _raiz == null or motor == null:
+		return
+	if is_instance_valid(_cine):
+		_cine.cortar()
+	var nodo: Node3D = null
+	var jd: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if String(p.get("id", "")) == autor_id and is_instance_valid(p.get("node")):
+			nodo = p["node"]
+			jd = p.get("jugador", {})
+			break
+	## La repetición debe acabar en el gol, no en la celebración.
+	_repe.congelar = true
+	var club_gol := local if de_local else visita
+	var carta := func() -> Dictionary:
+		if jd.is_empty():
+			return {}
+		return {"dorsal": int(jd.get("dorsal", 0)), "nombre": String(jd.get("nombre", "")),
+			"tiros": int(_tiros_de.get(autor_id, 1)), "goles": int(_goles_de.get(autor_id, 1))}
+	var gc := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+	_cine = CineGol.iniciar(self, _raiz, club_gol, de_local, nodo, carta, float(gc["dx"]))
+	_ver_rotulos(false)
+	_ver_hud_abajo(false)
+	_flecha.visible = false
+	_cine.terminado.connect(_fin_cine)
+
+func _fin_cine() -> void:
+	_cine = null
+	if is_instance_valid(_cam):
+		_cam.current = true
+	if motor == null or motor.estado == "fin" or not _pref("repeticiones", true) or not _repe.reproducir(6.0):
+		_repe.congelar = false
+		_ver_rotulos(true)
+		_ver_hud_abajo(true)
+		return
+	## Mientras se repite, el partido espera.
+	motor.set_physics_process(false)
+	if _rotulo_repe == null:
+		_rotulo_repe = PanelContainer.new()
+		_rotulo_repe.add_theme_stylebox_override("panel", _panel(LIMA))
+		var l := _etiqueta(18, FUCSIA)
+		l.text = Idiomas.t("⟲  REPETICIÓN")
+		_rotulo_repe.add_child(l)
+		add_child(_rotulo_repe)
+		_rotulo_repe.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+		_rotulo_repe.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		_rotulo_repe.offset_top = 70
+	_rotulo_repe.visible = true
+	Animar.aparecer(_rotulo_repe)
+
+func _fin_repeticion() -> void:
+	_repe.congelar = false
+	if _rotulo_repe != null:
+		_rotulo_repe.visible = false
+	if is_instance_valid(_cam):
+		_cam.current = true
+	_ver_rotulos(true)
+	_ver_hud_abajo(true)
+	if motor != null and motor.estado != "fin" and _pausa == null and not _simulando:
+		motor.set_physics_process(true)
+
+## Para las pruebas: si hay realización o repetición en marcha.
+func realizando_gol() -> bool:
+	return is_instance_valid(_cine) or (_repe != null and _repe.reproduciendo)
 
 # ---------------------------------------------------------------- pausa y final
 
@@ -514,15 +728,28 @@ func _simular_resto() -> void:
 	if _pausa != null:
 		_pausa.queue_free()
 		_pausa = null
+	saltar_ceremonia()
+	if is_instance_valid(_cine):
+		_cine.cortar()
+		_cine = null
+	_simulando = true
 	motor.autopiloto = true
 	var pasos := 0
 	while motor.estado != "fin" and pasos < 60 * 1200:
 		motor.paso(1.0 / 20.0)
 		pasos += 1
+	_simulando = false
 	motor.set_physics_process(false)
 
 func _al_terminar() -> void:
 	motor.set_physics_process(false)
+	if is_instance_valid(_cine):
+		_cine.cortar()
+		_cine = null
+		if is_instance_valid(_cam):
+			_cam.current = true
+	_ver_rotulos(true)
+	_ver_hud_abajo(true)
 	var s := motor.stats
 	var yo := carrera.jugador(mundo) if carrera != null else null
 	_resumen = _caja_centro("FINAL  %s %d - %d %s" % [Nombres.visible(local.nombre), motor.goles[0], motor.goles[1], Nombres.visible(visita.nombre)], [
