@@ -1132,6 +1132,10 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	## Defensa contra regate al cuadrado: el buen defensor roba bastante más
 	## que el malo (antes la proporción lineal igualaba a todos).
 	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32)
+	## La entrada de pie también es cuerpo: el fuerte se impone al débil (y
+	## el que tiene equilibrio aguanta). De media no cambia nada.
+	if not barrida:
+		exito *= clampf(1.0 + (_fuerza(p) - (_fuerza(victima) * 0.6 + float(victima.get("equilibrio", 0.6)) * 0.4)) * 0.7, 0.6, 1.45)
 	## Protegiendo el balón (LT) cuesta mucho más quitárselo de pie.
 	if bool(victima.get("protege", false)) and not barrida:
 		exito *= 0.55
@@ -1273,7 +1277,7 @@ func _duelos() -> void:
 				continue
 			var rel := _plano(pos(c) - pos(a))
 			var d := rel.length()
-			if d > 1.2:
+			if d > 1.3:
 				continue
 			if _duelo_hombro(a, c, rel, d) or _duelo_agarron(a, c, d):
 				if estado != "juego":
@@ -1318,7 +1322,7 @@ func _duelo_dividido() -> void:
 	var nota := [0.0, 0.0]
 	for k in 2:
 		var p: Dictionary = cand[k]
-		nota[k] = -float(eta[k]) * 1.3 + _fuerza(p) * 0.45 + float(p["equilibrio"]) * 0.2 + float(p["attr"]["reg"]) * 0.1 + _rng.randf_range(-0.15, 0.15)
+		nota[k] = -float(eta[k]) * 1.3 + _fuerza(p) * 0.4 + float(p["equilibrio"]) * 0.2 + float(p["attr"]["reg"]) * 0.1 + _rng.randf_range(-0.28, 0.28)
 	var gana := 0 if float(nota[0]) >= float(nota[1]) else 1
 	var w: Dictionary = cand[gana]
 	var l: Dictionary = cand[1 - gana]
@@ -1356,7 +1360,10 @@ func _duelo_dividido() -> void:
 ## con el balón de por medio (uno lo lleva, va a recibirlo o va suelto por
 ## delante de los dos).
 func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool:
-	if d < 0.45 or d > 1.15:
+	## Con el balón de por medio se busca antes el hombro (si no, la entrada
+	## de `_disputas`, que salta a 1,25 m, se adelantaba siempre).
+	var con_balon := poseedor == a or poseedor == c
+	if d < 0.45 or d > (1.3 if con_balon else 1.15):
 		return false
 	var va := _plano(a["vel"])
 	var vc := _plano(c["vel"])
@@ -1381,8 +1388,8 @@ func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool
 	a["contacto_hasta"] = t + 1.3
 	c["contacto_hasta"] = t + 1.3
 	## El que va medio cuerpo por delante tiene ventaja de posición.
-	var na := _fuerza(a) * 0.55 + float(a["equilibrio"]) * 0.25 + sa / 8.0 * 0.2 - adelante * 0.15 + _rng.randf_range(-0.12, 0.12)
-	var nc := _fuerza(c) * 0.55 + float(c["equilibrio"]) * 0.25 + sc / 8.0 * 0.2 + adelante * 0.15 + _rng.randf_range(-0.12, 0.12)
+	var na := _fuerza(a) * 0.4 + float(a["equilibrio"]) * 0.2 + sa / 8.0 * 0.2 - adelante * 0.15 + _rng.randf_range(-0.3, 0.3)
+	var nc := _fuerza(c) * 0.4 + float(c["equilibrio"]) * 0.2 + sc / 8.0 * 0.2 + adelante * 0.15 + _rng.randf_range(-0.3, 0.3)
 	var w := a if na >= nc else c
 	var l := c if na >= nc else a
 	var m := absf(na - nc)
@@ -1394,6 +1401,8 @@ func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool
 	_empujar(l, fuera, 1.2 + m * 3.0, clampf(0.85 - m * 0.6, 0.5, 0.9), 0.55)
 	_empujar(w, -fuera, 0.4, 0.96, 0.3)
 	var era_suyo := poseedor == l
+	if era_suyo or poseedor == w:
+		duelos["hombro_con_balon"] = int(duelos.get("hombro_con_balon", 0)) + 1
 	if era_suyo:
 		if _rng.randf() < clampf(0.25 + m * 1.6, 0.0, 0.85):
 			## Se le va el balón: sigue rodando por delante, libre.
@@ -1446,8 +1455,8 @@ func _duelo_agarron(a: Dictionary, c: Dictionary, d: float) -> bool:
 	duelos["agarron"] += 1
 	_anim(ag, "duelo_agarron", true, 0.8)
 	_anim(obj, "duelo_forcejeo", true, 0.7)
-	var no := _fuerza(obj) * 0.5 + float(obj["equilibrio"]) * 0.35 + _rng.randf_range(-0.15, 0.15)
-	var ng := _fuerza(ag) * 0.6 + agr * 0.15 + _rng.randf_range(-0.15, 0.15)
+	var no := _fuerza(obj) * 0.45 + float(obj["equilibrio"]) * 0.3 + _rng.randf_range(-0.25, 0.25)
+	var ng := _fuerza(ag) * 0.55 + agr * 0.15 + _rng.randf_range(-0.25, 0.25)
 	if no >= ng:
 		_ganador(obj, ag)
 	else:
