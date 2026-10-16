@@ -90,7 +90,7 @@ func _process(delta: float) -> void:
 		1:
 			## Un poco de juego (que la repetición tenga qué grabar) y un gol
 			## del jugador, cerca del área.
-			if _t > 2.5:
+			if _t > (8.0 if _con_fotos else 2.5):
 				var m := _pj.motor
 				var yo := m.usuario
 				_ok(not yo.is_empty(), "el jugador del usuario está en el campo")
@@ -102,6 +102,13 @@ func _process(delta: float) -> void:
 				_ok(_pj.realizando_gol(), "el gol lanza la realización")
 				_ok(_pj._repe.congelar, "la repetición deja de grabar en el gol")
 				_ok(int(m.stats["goles"]) == 1, "el gol cuenta para el jugador")
+				_ok(not _pj._hud_abajo[0].visible, "tu ficha de abajo deja sitio a la carta del goleador")
+				var rot_fuera := true
+				for f: Dictionary in m.jugadores + ([m.extra] if not m.extra.is_empty() else []):
+					var n: Node3D = f.get("node")
+					if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO) and (n.get_node(PlayerSpawner.ROTULO) as Node3D).visible:
+						rot_fuera = false
+				_ok(rot_fuera, "sin nombres sobre los jugadores en la realización")
 				_paso = 2
 				_t = 0.0
 		2:
@@ -129,6 +136,7 @@ func _process(delta: float) -> void:
 				_ok(not _pj._repe.congelar, "la repetición vuelve a grabar")
 				_ok(_pj.motor.is_physics_processing(), "el partido sigue tras la repetición")
 				_ok(_pj._cam.current, "vuelve la cámara del jugador tras el gol")
+				_ok(_pj._hud_abajo[0].visible, "vuelve tu ficha de abajo")
 				_paso = 4
 				_t = 0.0
 		4:
