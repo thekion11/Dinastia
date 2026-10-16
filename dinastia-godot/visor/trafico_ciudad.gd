@@ -237,8 +237,34 @@ func reciclar_peatones(centro: Vector3, mira: Vector3, lejos := 95.0, tope := 3,
 ## ceden el paso.
 var jugador: Node3D = null
 
-func _process(delta: float) -> void:
+## Fotograma propio para repartir los lejanos (ver `_process`).
+var _cuadro := 0
+
+func _process(delta_real: float) -> void:
+	## RENDIMIENTO (15-10-2026, medido con pruebas/sonda_explorador: 3,4 ms por
+	## fotograma con ~310 coches y vecinos). Los que están a más de 150 m de la
+	## cámara no se ven (o apenas) y se mueven 1 fotograma de cada 4 con el
+	## tiempo acumulado; la posición del jugador se pide una vez, no dos por
+	## vehículo.
+	_cuadro += 1
+	var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
+	var ojo := cam.global_position if cam != null else Vector3.INF
+	var hay_jugador := jugador != null and is_instance_valid(jugador)
+	var pj := jugador.global_position if hay_jugador else Vector3.ZERO
+	var idx := -1
 	for v in _vehiculos:
+		idx += 1
+		var delta := delta_real
+		if ojo != Vector3.INF:
+			var nv: Node3D = v["nodo"]
+			if is_instance_valid(nv):
+				var q := nv.position
+				if absf(q.x - ojo.x) > 150.0 or absf(q.z - ojo.z) > 150.0:
+					if (idx + _cuadro) % 4 != 0:
+						v["dt"] = float(v.get("dt", 0.0)) + delta_real
+						continue
+					delta = delta_real + float(v.get("dt", 0.0))
+					v["dt"] = 0.0
 		if float(v.get("espera", 0.0)) > 0.0:
 			v["espera"] = float(v["espera"]) - delta
 			if float(v["espera"]) <= 0.0 and v.has("pausa"):
@@ -294,10 +320,10 @@ func _process(delta: float) -> void:
 		## CEDER EL PASO AL JUGADOR (etapa 5): un peatón se detiene si estás
 		## delante a menos de 1,6 m; un coche, a menos de 7 m. Solo se mira a los
 		## que están a menos de 14 m (barato) y solo hacia dónde van.
-		if jugador != null and is_instance_valid(jugador) and avance > 0.0:
+		if hay_jugador and avance > 0.0:
 			var nodo_v: Node3D = v["nodo"]
 			if is_instance_valid(nodo_v):
-				var rel := Vector3(jugador.global_position.x - nodo_v.position.x, 0, jugador.global_position.z - nodo_v.position.z)
+				var rel := Vector3(pj.x - nodo_v.position.x, 0, pj.z - nodo_v.position.z)
 				var dist := rel.length()
 				if dist < 14.0:
 					var dir_v: Vector3 = (_rutas[ruta] as Ruta).en(s0)[1]
