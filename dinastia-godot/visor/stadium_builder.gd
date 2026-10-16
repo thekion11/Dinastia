@@ -1056,6 +1056,9 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	var ang := deg_to_rad(RAKE_GRADOS)
 	var subida_b := subida_bandeja()
 
+	## LAS CARAS DE FUERA (16-10-2026): cada tribuna y cada torre de esquina
+	## deja aquí su paño exterior y `FachadaEstadio` lo viste al final.
+	var caras_fachada: Array = []
 	for s in stands:
 		if s["i"] in abiertas:
 			continue
@@ -1305,6 +1308,24 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## cual, igual que antes de esta fase.
 			var roof_mat_i := roof_mat if techo_i == techo else _techo_mat(techo_i, techo_col)
 			marcar_techo(_box(root, pos + cara * (vuelo / 2.0) + Vector3(0, alto_s / 2.0 + 0.4, 0), rs, roof_mat_i), -cara)
+		## El paño de fuera de esta tribuna. En la del túnel, el vestuario y el
+		## edificio del club ocupan su tramo: ahí no se viste nada.
+		var n_fuera: Vector3 = -cara
+		var largo_f: float = size.z if lateral else size.x
+		var pie_f := Vector3(pos.x, 0.0, pos.z) + n_fuera * (fondo_s / 2.0)
+		var cara_f := FachadaEstadio.cara(pie_f, n_fuera, largo_f, alto_s, "tribuna", quiere_techo,
+			fondo_s + (7.0 if techo_i == "total" else (4.0 if techo_i == "anillo" else 2.0)), niv_s)
+		var o_f: Vector3 = cara_f["o"]
+		var u_f: Vector3 = cara_f["u"]
+		if int(s["i"]) == 0:
+			var tx_v := tunel_x(est)
+			var s_a := (Vector3(tx_v - TunelVestuario.VEST_MEDIO - 0.8, 0, pie_f.z) - o_f).dot(u_f)
+			var s_b := (Vector3(tx_v + TunelVestuario.VEST_MEDIO + 0.8, 0, pie_f.z) - o_f).dot(u_f)
+			cara_f["excluir"] = [Vector2(minf(s_a, s_b), maxf(s_a, s_b))]
+			## El escudo, al oeste del edificio del club: sobre las taquillas.
+			cara_f["escudo"] = true
+			cara_f["escudo_s"] = (Vector3(tx_v - TunelVestuario.VEST_MEDIO - 9.0, 0, pie_f.z) - o_f).dot(u_f)
+		caras_fachada.append(cara_f)
 
 	## LAS ESQUINAS TAMBIÉN LLEVAN GENTE (22-9-2026). "Falta un tramo" -el
 	## usuario lo vio de inmediato justo después de la ronda de las butacas
@@ -1356,6 +1377,8 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 				_esquina_grada(root, sx, sz, dx, dz, alto, niveles,
 					esquina_mat, stand_mat, ang, est, ocupacion, seed_val,
 					techo in ["anillo", "total", "membrana", "retractil"])
+				caras_fachada.append_array(_caras_esquina(sx, sz, dx, dz, alto, niveles,
+					techo in ["anillo", "total", "membrana", "retractil"]))
 
 	# vallas perimetrales, siempre por dentro de la cara interior de la tribuna
 	_tm("esquinas")
@@ -1394,13 +1417,52 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	_tm("exterior")
 	_pantallas(root, str(est.get("pantalla", "dos")), dz, alto, est, mi, abierta, abiertas)
 	_tm("pantallas")
+	## LA FACHADA DE VERDAD (16-10-2026, `FachadaEstadio`): estructura, piel,
+	## puertas, escaleras y cubierta vista desde fuera, según el estilo del estadio.
+	var donde_escudo := str(est.get("escudoDonde", "sin"))
+	var tex_escudo: Texture2D = null
+	if mi != null and donde_escudo in ["fachada", "todo"]:
+		tex_escudo = Escudo.textura(mi, 256)
+	if not caras_fachada.is_empty():
+		## La primera cara con tribuna lleva el escudo si la del túnel no existe.
+		var con_escudo := false
+		for cf: Dictionary in caras_fachada:
+			con_escudo = con_escudo or bool(cf.get("escudo", false))
+		if not con_escudo:
+			for cf: Dictionary in caras_fachada:
+				if cf["tipo"] == "tribuna":
+					cf["escudo"] = true
+					break
+	var fachada := FachadaEstadio.montar(root, est, caras_fachada, seed_val, niveles, tex_escudo)
+	_tm("fachada")
 	if mi != null:
-		_escudo_tribuna(root, mi, str(est.get("escudoDonde", "sin")), dx, dz, alto)
+		_escudo_tribuna(root, mi, donde_escudo, dx, dz, alto, fachada.find_child("EscudoFachada", false, false) != null)
 	## Obras con andamios y grúa, palcos, prensa, museo, tienda y la mascota
 	## (26-9-2026, `EstadioExtras`).
 	_tm("club")
 	EstadioExtras.construir(root, est, dx, dz, alto, niveles, mi)
 	_tm("extras")
+
+## Los paños de fuera de la torre de una esquina (el bloque que cierra la
+## grada en diagonal, ver `_esquina_grada`): la cara del fondo y los dos
+## costados, sin el tramo de dentro de los costados (ahí se junta con las
+## tribunas). Mismas cuentas que `_esquina_grada`.
+static func _caras_esquina(sx: float, sz: float, dx: float, dz: float, alto: float,
+		niveles: int, techo: bool) -> Array:
+	var dir := Vector3(sx, 0.0, sz).normalized()
+	var p0 := Vector3(sx * (dx - FRENTE_TRIBUNA), 0.0, sz * (dz - FRENTE_TRIBUNA))
+	var masa := fondo_tribuna(niveles)
+	var centro := p0 + dir * (masa * 1.5)
+	var sal: Array = [FachadaEstadio.cara(centro + dir * (masa * 0.5), dir, masa, alto, "esquina", techo, masa, niveles)]
+	var perp := Vector3(-dir.z, 0.0, dir.x)
+	for lado in [1.0, -1.0]:
+		var n: Vector3 = perp * lado
+		var cf := FachadaEstadio.cara(centro + n * (masa * 0.5), n, masa, alto, "esquina", techo, masa, niveles)
+		var dentro := centro - dir * (masa * 0.5) + n * (masa * 0.5)
+		var s_in: float = (dentro - (cf["o"] as Vector3)).dot(cf["u"] as Vector3)
+		cf["excluir"] = [Vector2(s_in - 0.5, s_in + masa * 0.4) if s_in < masa * 0.5 else Vector2(s_in - masa * 0.4, s_in + 0.5)]
+		sal.append(cf)
+	return sal
 
 ## LA ESQUINA, COMO GRADA DE VERDAD (23-9-2026).
 ##
@@ -1511,7 +1573,8 @@ static func _esquina_grada(root: Node3D, sx: float, sz: float, dx: float, dz: fl
 ## `build_pitch()` (ver `_escudo_cancha()` para "cancha"/"todo"). Uno solo por
 ## posicion, en la tribuna principal (la que da a la camara "Principal (TV)"),
 ## que es donde de verdad se ve -repetirlo en las 4 tribunas seria ruido.
-static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, dx: float, dz: float, alto: float) -> void:
+static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, dx: float, dz: float, alto: float,
+		fachada_puesta := false) -> void:
 	if donde not in ["grada", "fachada", "techo", "todo"]:
 		return
 	var tex := Escudo.textura(mi, 256)
@@ -1548,7 +1611,8 @@ static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, dx: float, dz
 	## opción más cara del catálogo pintaba cancha + grada + techo y **nunca la
 	## fachada** -justo lo contrario de lo que dice el comentario de esta misma
 	## función-.
-	if donde == "fachada" or donde == "todo":
+	## 16-10-2026: si `FachadaEstadio` ya lo colgó en su paño, no se repite aquí.
+	if (donde == "fachada" or donde == "todo") and not fachada_puesta:
 		var tam_f: float = clampf(alto * 0.45, 3.0, 8.0)
 		var quad := MeshInstance3D.new()
 		var qm := QuadMesh.new()
