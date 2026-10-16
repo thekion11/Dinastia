@@ -98,6 +98,10 @@ var _goles_de := {}
 var _ayuda_control: Label
 var _panel_dt: PanelDTPartido
 var _panel_controles: PanelControles
+## Estadísticas a pedido y rótulos de la tele (16-10-2026).
+var _stats: EstadisticasVivo
+var _panel_stats: PanelEstadisticas
+var _rotulos_hechos := {}
 ## Lo que el DT rival cambia en vivo (sin tocar la táctica guardada de su club).
 var _ajuste_rival := [{}, {}]
 var _final_motor := false
@@ -1495,7 +1499,9 @@ func _montar_motor() -> void:
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
+	_stats = EstadisticasVivo.new()
 	_motor.gol.connect(func(de_local: bool, autor: String, asist: String) -> void:
+		_stats.cerrar_tiro(de_local, "gol", _balon.position if is_instance_valid(_balon) else Vector3.ZERO)
 		partido.gol_externo(de_local, autor, asist)
 		if _rig != null:
 			_rig.impacto(0.9, 0.7)
@@ -1507,10 +1513,12 @@ func _montar_motor() -> void:
 				if is_instance_valid(self) and _motor != null:
 					_a_la_revision_var(partido.minuto, "Revisión del gol: posible fuera de juego")))
 	_motor.remate.connect(func(de_local: bool, autor: String, tipo: String) -> void:
+		_stats.cerrar_tiro(de_local, tipo)
 		partido.remate_externo(de_local, autor, tipo)
 		if _rig != null:
 			_rig.golpe_de_zoom(2.0, 0.5))
-	_motor.tarjeta.connect(func(id: String, roja: bool, _l: bool) -> void:
+	_motor.tarjeta.connect(func(id: String, roja: bool, de_local: bool) -> void:
+		_stats.tarjeta(de_local, roja)
 		partido.tarjeta_externa(id, roja)
 		if _rig != null:
 			_rig.impacto(0.45 if roja else 0.25, 0.4))
@@ -1572,13 +1580,18 @@ func _actualizar_tacticas() -> void:
 		_motor.tacticas[i] = t
 
 func _paso_motor(delta: float) -> void:
-	if _panel_dt != null or _panel_controles != null or _sala_var != null:
+	if _panel_dt != null or _panel_controles != null or _sala_var != null or _panel_stats != null:
 		return
 	var mult := _juego.velocidad() if _juego != null else 1.0
 	_acum_motor = minf(_acum_motor + delta * mult, DT_MOTOR * 16.0)
 	while _acum_motor >= DT_MOTOR:
 		_motor.paso(DT_MOTOR)
 		_acum_motor -= DT_MOTOR
+		## Cada paso: así no se pierde un remate que empieza y acaba en el mismo fotograma.
+		if _stats != null:
+			_stats.muestrear(_motor, DT_MOTOR)
+	_pistas_camara()
+	_rotulo_automatico()
 	_t_tactica -= delta
 	if _t_tactica <= 0.0:
 		_t_tactica = 1.0
@@ -1819,13 +1832,54 @@ func _abrir_panel_dt() -> void:
 		_mostrar_banner_gol(Idiomas.t("Este partido no es de tu club: solo puedes mirarlo."), false)
 		return
 	var mio: Club = partido.local if _mi_lado == 0 else partido.visita
-	_panel_dt = PanelDTPartido.abrir(self, partido, mio, _motor)
+	_panel_dt = PanelDTPartido.abrir(self, partido, mio, _motor, abrir_estadisticas)
 	_panel_dt.cerrado.connect(func() -> void:
 		_panel_dt = null
 		_actualizar_tacticas())
 
+## LAS PISTAS DE LA TRANSMISIÓN: el realizador (la cámara) sabe qué pasa en el
+## césped leyendo el motor -sin tocarlo-: quién ataca, si hay un tiro en el
+## aire, qué saque se va a lanzar.
+func _pistas_camara() -> void:
+	if _rig == null or _motor == null:
+		return
+	_rig.pista_estado = _motor.estado
+	var dueno: Dictionary = _motor.poseedor if not _motor.poseedor.is_empty() else _motor.ultimo_toque
+	if _motor.estado == "saque" and not _motor.saque.is_empty() and _motor.saque.has("local"):
+		_rig.pista_ataca = MotorJugable.dir_ataque(bool(_motor.saque["local"]))
+	elif not dueno.is_empty():
+		_rig.pista_ataca = MotorJugable.dir_ataque(bool(dueno.get("es_local", true)))
+	_rig.pista_saque = String(_motor.saque.get("tipo", "")) if _motor.estado == "saque" else ""
+	var tv: Variant = _motor.get("_tiro_vivo")
+	if tv is Dictionary and not (tv as Dictionary).is_empty():
+		_rig.pista_ocasion = maxf(_rig.pista_ocasion, 1.4)
+
+## Los rótulos de estadísticas de la tele en los momentos muertos.
+func _rotulo_automatico() -> void:
+	if _stats == null or not _pref("rotulos", true) or is_instance_valid(_cine):
+		return
+	var cual := RotuloEstadisticas.cuando(_motor.minuto(), _motor.estado, _motor.mitad, _rotulos_hechos)
+	if cual == "":
+		return
+	_rotulos_hechos[cual] = true
+	RotuloEstadisticas.mostrar(self, cual, partido, _motor, _stats)
+
+## ESTADÍSTICAS A PEDIDO: su botón (`jugar_estadisticas`) o desde la pausa. El
+## partido espera mientras se miran.
+func abrir_estadisticas() -> void:
+	if _motor == null or _panel_stats != null or partido == null:
+		return
+	if _cajon != null and _cajon.abierto:
+		_cajon.cerrar()
+	_panel_stats = PanelEstadisticas.abrir(self, partido, _motor, _stats)
+	_panel_stats.cerrado.connect(func() -> void: _panel_stats = null)
+
 func _unhandled_input(e: InputEvent) -> void:
-	if _motor != null and _panel_dt == null and _panel_controles == null and e.is_action_pressed("jugar_pausa"):
+	if _motor != null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_estadisticas"):
+		get_viewport().set_input_as_handled()
+		abrir_estadisticas()
+		return
+	if _motor != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_pausa"):
 		if _cajon != null and _cajon.abierto:
 			return
 		get_viewport().set_input_as_handled()
