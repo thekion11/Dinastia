@@ -1208,6 +1208,9 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 ##     agresividad; frena al atacante y, si lo retiene, el árbitro pita.
 ## Los atributos que deciden salen de la ficha (`_rasgos_duelo`). Contadores
 ## en `duelos` (sondas y `pruebas/prueba_duelos.tscn`).
+## Interruptores (para las sondas: medir qué cambia cada parte).
+var duelos_activos := true
+var cuerpos_activos := true
 var duelos := {"hombro": 0, "dividido": 0, "agarron": 0, "faltas": 0, "balon_perdido": 0, "rebote": 0}
 const RADIO_CUERPO := 0.31
 
@@ -1261,7 +1264,7 @@ func _libre_para_duelo(p: Dictionary) -> bool:
 ## Busca y resuelve los duelos del fotograma (antes de `_disputas`, para que
 ## el balón dividido se decida antes de que «el más cercano» lo controle).
 func _duelos() -> void:
-	if estado != "juego" or balon == null:
+	if not duelos_activos or estado != "juego" or balon == null:
 		return
 	_duelo_dividido()
 	if estado != "juego":
@@ -1486,6 +1489,8 @@ func _duelo_agarron(a: Dictionary, c: Dictionary, d: float) -> bool:
 ## radios de hombro se aparta por la línea que los une, el débil más que el
 ## fuerte (masa = fuerza), y se les quita la velocidad con que chocaban.
 func _cuerpos() -> void:
+	if not cuerpos_activos:
+		return
 	var minimo := RADIO_CUERPO * 2.0
 	var n := jugadores.size()
 	for i in n:
