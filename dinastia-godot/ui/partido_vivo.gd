@@ -595,36 +595,44 @@ func _escribir_goles() -> void:
 ## había que ir jugador por jugador a su ficha para saber quién había jugado
 ## bien. Es de las cosas que más se miran al pitido final.
 func _escribir_notas() -> void:
-	var once := _mi_once()
-	if once.is_empty():
+	## 17-10-2026 (M-141): las notas salen de `Partido.valoraciones()`. Antes se
+	## leía la última de `Jugador.notas`, pero en un partido mirado (en vivo o
+	## en 3D) esa nota no se cierra hasta avanzar la semana: se enseñaba la del
+	## partido ANTERIOR. Y el mejor del partido es el de los dos equipos.
+	var vals := partido.valoraciones()
+	if vals.is_empty():
 		return
-	var mejor: Jugador = null
-	var peor: Jugador = null
-	for j in once:
-		if j.notas.is_empty():
-			continue
-		var n := float(j.notas[j.notas.size() - 1])
-		if mejor == null or n > float(mejor.notas[mejor.notas.size() - 1]):
-			mejor = j
-		if peor == null or n < float(peor.notas[peor.notas.size() - 1]):
-			peor = j
-	if mejor != null:
-		_escribir("")
+	var mvp: Dictionary = vals[0]
+	var mj: Jugador = mvp["jugador"]
+	var club_mvp: Club = partido.local if bool(mvp["local"]) else partido.visita
+	_escribir("")
+	_escribir("[color=#c9a227][b]%s:[/b][/color] [b]%s[/b] (%s)  [color=#c9a227][b]%.1f[/b][/color]" % [
+		Idiomas.t("⭐ MEJOR DEL PARTIDO"), mj.nombre, club_mvp.nombre, float(mvp["nota"])])
+	var mio_local := partido.local == mi_club
+	var mias: Array = []
+	for v: Dictionary in vals:
+		if bool(v["local"]) == mio_local:
+			mias.append(v)
+	if mias.is_empty():
+		return
+	var mejor: Dictionary = mias[0]
+	var peor: Dictionary = mias[mias.size() - 1]
+	if mejor != mvp:
 		_escribir("[color=#c9a227][b]🏅 Figura del partido:[/b][/color] %s (%.1f)" % [
-			mejor.nombre, float(mejor.notas[mejor.notas.size() - 1])])
+			(mejor["jugador"] as Jugador).nombre, float(mejor["nota"])])
 	## El aviso del peor solo si de verdad fue mal: por debajo de 5,6, que es el
 	## umbral del HTML. Señalar al menos bueno de un partido bueno es ruido.
-	if peor != null and float(peor.notas[peor.notas.size() - 1]) < 5.6:
+	if float(peor["nota"]) < 5.6:
 		_escribir("[color=#8ea595]⚠️ %s terminó con %.1f: conviene revisar su puesto o darle descanso.[/color]" % [
-			peor.nombre, float(peor.notas[peor.notas.size() - 1])])
+			(peor["jugador"] as Jugador).nombre, float(peor["nota"])])
 	_escribir("")
-	_escribir("[color=#8ea595]NOTAS DEL EQUIPO[/color]")
-	for j in once:
-		if j.notas.is_empty():
-			continue
-		var n2 := float(j.notas[j.notas.size() - 1])
+	_escribir("[color=#8ea595]%s[/color]" % Idiomas.t("VALORACIONES"))
+	for v: Dictionary in mias:
+		var j: Jugador = v["jugador"]
+		var n2 := float(v["nota"])
 		var col := "#4caf6d" if n2 >= 7.5 else ("#e05555" if n2 < 5.5 else "#e9eeea")
-		_escribir("[color=#8ea595]  %s[/color] %s   [color=%s][b]%.1f[/b][/color]" % [j.pos_e, j.nombre, col, n2])
+		_escribir("[color=#8ea595]  %s[/color] %s%s   [color=%s][b]%.1f[/b][/color]" % [
+			j.pos_e, ("⭐ " if v == mvp else ""), j.nombre, col, n2])
 
 ## El cuadro de "ESTADÍSTICAS DEL PARTIDO" de `vPost()`, en texto: siete filas
 ## con el tuyo primero, ganes o pierdas, seas local o visitante -leer tu propia
