@@ -7,6 +7,9 @@ extends Node3D
 ## pocos segundos lo baja y se va (el nodo se borra solo): fuera de ese rato
 ## no hay ni un triángulo más en el partido.
 ##   CuartoArbitro.levantar(raiz, spawner, minutos, kit_arbitro)
+## EL CAMBIO (17-10-2026, M-104): el mismo cartel con los dos dorsales, el que
+## entra en verde (arriba) y el que sale en rojo (abajo), como en la tele:
+##   CuartoArbitro.levantar_cambio(raiz, spawner, dorsal_sale, dorsal_entra, kit)
 
 const X_BANDA := 35.3        ## a 1,3 m de la línea, entre los banquillos
 const DURACION := 7.5
@@ -20,6 +23,19 @@ var _persona: Dictionary = {}
 static func levantar(raiz: Node3D, spawner: PlayerSpawner, minutos: int, kit: Dictionary = {}) -> CuartoArbitro:
 	if raiz == null or minutos <= 0:
 		return null
+	return _salir(raiz, spawner, kit, cartel(minutos))
+
+static func levantar_cambio(raiz: Node3D, spawner: PlayerSpawner, dorsal_sale: int, dorsal_entra: int, kit: Dictionary = {}) -> CuartoArbitro:
+	if raiz == null:
+		return null
+	return _salir(raiz, spawner, kit, cartel_lineas([
+		[str(dorsal_entra) if dorsal_entra > 0 else "--", VERDE],
+		[str(dorsal_sale) if dorsal_sale > 0 else "--", ROJO]]))
+
+const VERDE := Color(0.35, 1.0, 0.45)
+const ROJO := Color(1.0, 0.25, 0.2)
+
+static func _salir(raiz: Node3D, spawner: PlayerSpawner, kit: Dictionary, el_cartel: Node3D) -> CuartoArbitro:
 	## Uno a la vez (si ya está en la banda, se reutiliza el cartel).
 	var viejo := raiz.get_node_or_null("CuartoArbitro")
 	if viejo != null:
@@ -40,13 +56,17 @@ static func levantar(raiz: Node3D, spawner: PlayerSpawner, minutos: int, kit: Di
 			var ap: AnimationPlayer = c._persona.get("anim")
 			if is_instance_valid(ap) and ap.has_animation("arbitro_tiempo_anadido"):
 				ap.play("arbitro_tiempo_anadido")
-	c._cartel = cartel(minutos)
+	c._cartel = el_cartel
 	c.add_child(c._cartel)
 	c._cartel.position = Vector3(0, ALTO_ABAJO, 0.32)
 	return c
 
 ## El cartel: caja negra con marco, panel de LED y el número por las dos caras.
 static func cartel(minutos: int) -> Node3D:
+	return cartel_lineas([["+%d" % minutos, VERDE]])
+
+## El mismo cartel con una o dos líneas de LED ([texto, color] cada una).
+static func cartel_lineas(lineas: Array) -> Node3D:
 	var raiz := Node3D.new()
 	raiz.name = "Cartel"
 	var caja := MeshInstance3D.new()
@@ -72,18 +92,21 @@ static func cartel(minutos: int) -> Node3D:
 		panel.position = Vector3(0, 0, 0.031 * lado)
 		panel.rotation.y = 0.0 if lado > 0.0 else PI
 		raiz.add_child(panel)
-		var l := Label3D.new()
-		l.text = "+%d" % minutos
-		l.font_size = 150
-		l.pixel_size = 0.0021
-		l.outline_size = 0
-		l.modulate = Color(0.35, 1.0, 0.45)
-		l.shaded = false
-		l.double_sided = false
-		l.no_depth_test = false
-		l.position = Vector3(0, 0, 0.034 * lado)
-		l.rotation.y = 0.0 if lado > 0.0 else PI
-		raiz.add_child(l)
+		var n := lineas.size()
+		for i in n:
+			var l := Label3D.new()
+			l.text = String(lineas[i][0])
+			l.font_size = 150 if n == 1 else 92
+			l.pixel_size = 0.0021
+			l.outline_size = 0
+			l.modulate = lineas[i][1]
+			l.shaded = false
+			l.double_sided = false
+			l.no_depth_test = false
+			var y := 0.0 if n == 1 else 0.085 - 0.17 * float(i)
+			l.position = Vector3(0, y, 0.034 * lado)
+			l.rotation.y = 0.0 if lado > 0.0 else PI
+			raiz.add_child(l)
 	return raiz
 
 func _process(delta: float) -> void:
