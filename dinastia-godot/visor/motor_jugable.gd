@@ -188,6 +188,11 @@ func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: i
 		if String(p.get("id", "")) == jugador_usuario_id:
 			usuario = p
 	balon = ball
+	## Para las sondas que montan el estadio entero (como DEPURAR_PASES).
+	if OS.get_environment("SIN_DUELOS") != "":
+		duelos_activos = false
+	if OS.get_environment("SIN_CUERPOS") != "":
+		cuerpos_activos = false
 	_orientar_formaciones()
 	Mando.registrar()
 	_saque_de_centro(true)
@@ -249,6 +254,7 @@ func _preparar_uno(p: Dictionary) -> void:
 	p["regate_hasta"] = 0.0
 	p["anim_actual"] = ""
 	p["por"] = String(p.get("slot_code", "")) == "POR"
+	_rasgos_duelo(p, jd)
 
 ## El que espera en la banda. Si es el usuario, entra en `minuto_entrada`.
 func poner_extra(p: Dictionary, es_usuario: bool, minuto_entrada: int = -1) -> void:
@@ -546,6 +552,11 @@ func paso(delta: float) -> void:
 			if not poseedor.is_empty():
 				posesion[0 if bool(poseedor["es_local"]) else 1] += delta
 			_mover_balon(delta)
+			_duelos()
+			if estado != "juego":
+				_mover_jugadores(delta)
+				_actualizar_balon_visual(delta)
+				return
 			_disputas(delta)
 			if control_equipo >= 0 and not autopiloto:
 				_control_de_equipo()
@@ -581,6 +592,8 @@ func paso(delta: float) -> void:
 					var saca_local: bool = not bool(saque.get("gol_local", true))
 					_saque_de_centro(saca_local)
 	_mover_jugadores(delta)
+	if estado == "juego":
+		_cuerpos()
 	_actualizar_balon_visual(delta)
 
 func _fin_de_mitad() -> void:
@@ -1124,6 +1137,10 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	## Defensa contra regate al cuadrado: el buen defensor roba bastante más
 	## que el malo (antes la proporción lineal igualaba a todos).
 	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32)
+	## La entrada de pie también es cuerpo: el fuerte se impone al débil (y
+	## el que tiene equilibrio aguanta). De media no cambia nada.
+	if not barrida:
+		exito *= clampf(1.0 + (_fuerza(p) - (_fuerza(victima) * 0.6 + float(victima.get("equilibrio", 0.6)) * 0.4)) * 0.7, 0.6, 1.45)
 	## Protegiendo el balón (LT) cuesta mucho más quitárselo de pie.
 	if bool(victima.get("protege", false)) and not barrida:
 		exito *= 0.55
@@ -1148,16 +1165,19 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	elif r < exito + (0.18 if barrida else 0.07):
 		_falta(p, victima)
 
-func _falta(infractor: Dictionary, victima: Dictionary) -> void:
+func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "") -> void:
 	if infractor == usuario:
 		stats["faltas"] += 1
+	if motivo != "":
+		duelos["faltas"] += 1
+		duelos["faltas_" + motivo] = int(duelos.get("faltas_" + motivo, 0)) + 1
 	var lugar := pos(victima)
 	var atacante_local := bool(victima["es_local"])
 	var arco := _arco_rival(victima)
 	var en_area := absf(lugar.x) < AREA_X and absf(lugar.z - arco.z) < AREA_Z
 	var nombre := String((infractor.get("jugador", {}) as Dictionary).get("nombre", "Un defensor"))
 	faltas[0 if bool(infractor["es_local"]) else 1] += 1
-	if _rng.randf() < 0.25 or _falta_tactica:
+	if _rng.randf() < prob_tarjeta or _falta_tactica:
 		if tarjetas_reales:
 			infractor["amarillas"] = int(infractor.get("amarillas", 0)) + 1
 			var roja := int(infractor["amarillas"]) >= 2
@@ -1173,6 +1193,339 @@ func _falta(infractor: Dictionary, victima: Dictionary) -> void:
 	else:
 		aviso.emit("Falta de %s" % nombre)
 		_empezar_saque("falta", atacante_local, Vector3(lugar.x, R, lugar.z))
+
+# ---------------------------------------------------------------- duelos
+
+## LOS DUELOS CUERPO A CUERPO (16-10-2026, pendiente «duelos/contacto»). Antes
+## los cuerpos del motor ni siquiera chocaban (el `_resolver_choques` de
+## `MatchPlayback` no corre con el motor real) y una entrada era solo una
+## tirada de dados con un gesto. Ahora hay contacto de verdad:
+##   - CUERPOS: nadie atraviesa a nadie; al chocar, el más fuerte aparta más
+##     al débil (masa = fuerza) y se pierde la velocidad del choque.
+##   - HOMBRO CON HOMBRO: dos rivales corriendo juntos tras el balón (o uno
+##     llevándolo) se cargan; gana la posición el de más fuerza, equilibrio y
+##     carrera; el que pierde trastabilla de lado, frena y, si llevaba el
+##     balón, muchas veces se le escapa.
+##   - BALÓN DIVIDIDO: dos que llegan casi a la vez a un balón suelto; se lo
+##     queda el que llega antes y aguanta el choque; si empatan, rebota.
+##   - AGARRÓN: el defensor que llega por detrás del que lleva el balón (o
+##     del que va a recibir) puede tirarle de la camiseta según su
+##     agresividad; frena al atacante y, si lo retiene, el árbitro pita.
+## Los atributos que deciden salen de la ficha (`_rasgos_duelo`). Contadores
+## en `duelos` (sondas y `pruebas/prueba_duelos.tscn`).
+## Interruptores (para las sondas: medir qué cambia cada parte).
+var duelos_activos := true
+var cuerpos_activos := true
+var duelos := {"hombro": 0, "dividido": 0, "agarron": 0, "faltas": 0, "balon_perdido": 0, "rebote": 0}
+const RADIO_CUERPO := 0.31
+
+## Fuerza, equilibrio y agresividad de 0 a 1. La ficha no tiene agresividad:
+## sale de la defensa y el físico (los que van al choque), del rasgo
+## («muralla» más, «cerebro» menos) y de un carácter fijo por jugador.
+func _rasgos_duelo(p: Dictionary, jd: Dictionary) -> void:
+	var a: Dictionary = p["attr"]
+	var fis := float(a["fis"])
+	p["fuerza"] = clampf(fis * 0.8 + float(a["def"]) * 0.2, 0.1, 1.0)
+	p["equilibrio"] = clampf(fis * 0.5 + float(a["reg"]) * 0.5, 0.1, 1.0)
+	var caracter := float(absi(hash(String(p.get("id", "")) + "genio")) % 1000) / 1000.0 - 0.5
+	var rasgo := String(jd.get("rasgo", ""))
+	var agr := 0.2 + float(a["def"]) * 0.35 + fis * 0.15 + caracter * 0.3
+	agr += 0.12 if rasgo == "muralla" else (0.05 if rasgo == "lider" else (-0.08 if rasgo == "cerebro" else 0.0))
+	p["agresividad"] = clampf(agr, 0.05, 1.0)
+	p["duelos_g"] = 0
+	p["duelos_p"] = 0
+
+## La fuerza que pone en el choque ahora (el cansado empuja menos).
+func _fuerza(p: Dictionary) -> float:
+	return float(p.get("fuerza", 0.6)) * (0.75 + 0.25 * float(p.get("aguante", 1.0)))
+
+## Las faltas de duelo se reparten por segundo de césped: con partidos más
+## cortos hay menos choques y cada uno pesa más (como las fintas).
+func _escala_falta() -> float:
+	return _escala_ritmo()
+
+## La derecha del modelo (mira a +Z con rotación 0, su derecha es -X).
+func _derecha(p: Dictionary) -> Vector3:
+	var ry := (p["node"] as Node3D).rotation.y
+	return Vector3(-cos(ry), 0, sin(ry))
+
+func _plano(v: Vector3) -> Vector3:
+	return Vector3(v.x, 0.0, v.z)
+
+func _empujar(p: Dictionary, dir: Vector3, fuerza: float, freno: float, dur: float) -> void:
+	var d := _plano(dir)
+	if d.length() > 0.001 and fuerza > 0.0:
+		p["empujon_obj"] = d.normalized() * fuerza
+	p["freno_duelo"] = freno
+	p["freno_duelo_hasta"] = t + dur
+
+func _ganador(w: Dictionary, l: Dictionary) -> void:
+	w["duelos_g"] = int(w.get("duelos_g", 0)) + 1
+	l["duelos_p"] = int(l.get("duelos_p", 0)) + 1
+
+func _libre_para_duelo(p: Dictionary) -> bool:
+	return not bool(p["por"]) and float(p.get("contacto_hasta", 0.0)) <= t and float(p.get("gesto_hasta", 0.0)) <= t + 0.15
+
+## Busca y resuelve los duelos del fotograma (antes de `_disputas`, para que
+## el balón dividido se decida antes de que «el más cercano» lo controle).
+func _duelos() -> void:
+	if not duelos_activos or estado != "juego" or balon == null:
+		return
+	_duelo_dividido()
+	if estado != "juego":
+		return
+	var n := jugadores.size()
+	for i in n:
+		var a: Dictionary = jugadores[i]
+		if not _libre_para_duelo(a):
+			continue
+		for j in range(i + 1, n):
+			var c: Dictionary = jugadores[j]
+			if bool(a["es_local"]) == bool(c["es_local"]) or not _libre_para_duelo(c):
+				continue
+			var rel := _plano(pos(c) - pos(a))
+			var d := rel.length()
+			if d > 1.3:
+				continue
+			if _duelo_hombro(a, c, rel, d) or _duelo_agarron(a, c, d):
+				if estado != "juego":
+					return
+				break
+
+## BALÓN DIVIDIDO: el más cercano de cada equipo, los dos a menos de 1,7 m de
+## un balón suelto y raso, llegando con menos de 0,35 s de diferencia.
+func _duelo_dividido() -> void:
+	if not poseedor.is_empty() or balon.position.y > 1.0 or _plano(vel_balon).length() > 10.0:
+		return
+	var b := _plano(balon.position)
+	var cand := [{}, {}]
+	var dist := [99.0, 99.0]
+	for p: Dictionary in jugadores:
+		if float(p["enfriar"]) > 0.0 or not _libre_para_duelo(p):
+			continue
+		var d := _plano(pos(p)).distance_to(b)
+		var eq := 0 if bool(p["es_local"]) else 1
+		if d < float(dist[eq]):
+			dist[eq] = d
+			cand[eq] = p
+	if (cand[0] as Dictionary).is_empty() or (cand[1] as Dictionary).is_empty():
+		return
+	if maxf(dist[0], dist[1]) > 1.7 or minf(dist[0], dist[1]) > 1.1:
+		return
+	var eta := [0.0, 0.0]
+	for k in 2:
+		var p: Dictionary = cand[k]
+		var hacia := b - _plano(pos(p))
+		var acerca := (p["vel"] as Vector3).dot(hacia.normalized()) if hacia.length() > 0.01 else 3.0
+		eta[k] = float(dist[k]) / maxf(acerca, 2.0)
+		if p == pase_a:
+			eta[k] = float(eta[k]) - 0.12
+	if absf(float(eta[0]) - float(eta[1])) > 0.35:
+		return
+	var a: Dictionary = cand[0]
+	var c: Dictionary = cand[1]
+	duelos["dividido"] += 1
+	a["contacto_hasta"] = t + 1.1
+	c["contacto_hasta"] = t + 1.1
+	var nota := [0.0, 0.0]
+	for k in 2:
+		var p: Dictionary = cand[k]
+		nota[k] = -float(eta[k]) * 1.3 + _fuerza(p) * 0.4 + float(p["equilibrio"]) * 0.2 + float(p["attr"]["reg"]) * 0.1 + _rng.randf_range(-0.28, 0.28)
+	var gana := 0 if float(nota[0]) >= float(nota[1]) else 1
+	var w: Dictionary = cand[gana]
+	var l: Dictionary = cand[1 - gana]
+	var m := absf(float(nota[0]) - float(nota[1]))
+	var entre := _plano(pos(l) - pos(w))
+	if entre.length() < 0.01:
+		entre = _derecha(w)
+	if m < 0.05:
+		## Llegan a la vez y chocan: el balón sale rebotado entre los dos.
+		duelos["rebote"] += 1
+		var lado := Vector3(-entre.z, 0, entre.x).normalized() * (1.0 if _rng.randf() < 0.5 else -1.0)
+		vel_balon = lado * _rng.randf_range(2.5, 5.0) + Vector3(0, _rng.randf_range(0.8, 2.2), 0)
+		penultimo_toque = ultimo_toque
+		ultimo_toque = w
+		pase_a = {}
+		for p: Dictionary in cand:
+			p["enfriar"] = maxf(float(p["enfriar"]), 0.3)
+		_anim(w, "duelo_hombro_der" if _derecha(w).dot(entre) > 0.0 else "duelo_hombro_izq", true, 0.6)
+		_anim(l, "duelo_hombro_der" if _derecha(l).dot(-entre) > 0.0 else "duelo_hombro_izq", true, 0.6)
+		return
+	_ganador(w, l)
+	l["enfriar"] = maxf(float(l["enfriar"]), 0.55)
+	_empujar(l, entre, 1.0 + m * 3.0, clampf(0.85 - m, 0.5, 0.9), 0.5)
+	_anim(w, "duelo_hombro_der" if _derecha(w).dot(entre) > 0.0 else "duelo_hombro_izq", true, 0.6)
+	## Llegar tarde con mal genio: entrada al tobillo y falta.
+	var tarde := float(eta[1 - gana]) - float(eta[gana])
+	if tarde > 0.1 and _rng.randf() < float(l["agresividad"]) * 0.2 * _escala_falta():
+		_anim(l, "zancadilla" if _rng.randf() < 0.5 else "entrada_lateral_pie", true)
+		_anim(w, "caida_fea", true, 1.2)
+		_falta(l, w, 0.15 + float(l["agresividad"]) * 0.2, "dividido")
+		return
+	_anim(l, "duelo_empujado_der" if _derecha(l).dot(entre) > 0.0 else "duelo_empujado_izq", true, 0.7)
+
+## HOMBRO CON HOMBRO: corren juntos (rumbos parecidos), uno al lado del otro,
+## con el balón de por medio (uno lo lleva, va a recibirlo o va suelto por
+## delante de los dos).
+func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool:
+	## Con el balón de por medio se busca antes el hombro (si no, la entrada
+	## de `_disputas`, que salta a 1,25 m, se adelantaba siempre).
+	var con_balon := poseedor == a or poseedor == c
+	if d < 0.45 or d > (1.3 if con_balon else 1.15):
+		return false
+	var va := _plano(a["vel"])
+	var vc := _plano(c["vel"])
+	var sa := va.length()
+	var sc := vc.length()
+	if sa < 3.0 or sc < 3.0:
+		return false
+	if (va / sa).dot(vc / sc) < 0.55:
+		return false
+	var rumbo := (va / sa + vc / sc).normalized()
+	var adelante := rel.dot(rumbo)
+	var lateral := rel - rumbo * adelante
+	if lateral.length() < 0.3:
+		return false
+	var implicado := poseedor == a or poseedor == c or pase_a == a or pase_a == c
+	if not implicado and poseedor.is_empty():
+		var hacia := _plano(balon.position - (pos(a) + pos(c)) * 0.5)
+		implicado = hacia.length() < 9.0 and hacia.normalized().dot(rumbo) > 0.5
+	if not implicado:
+		return false
+	duelos["hombro"] += 1
+	a["contacto_hasta"] = t + 1.3
+	c["contacto_hasta"] = t + 1.3
+	## El que va medio cuerpo por delante tiene ventaja de posición.
+	var na := _fuerza(a) * 0.4 + float(a["equilibrio"]) * 0.2 + sa / 8.0 * 0.2 - adelante * 0.15 + _rng.randf_range(-0.3, 0.3)
+	var nc := _fuerza(c) * 0.4 + float(c["equilibrio"]) * 0.2 + sc / 8.0 * 0.2 + adelante * 0.15 + _rng.randf_range(-0.3, 0.3)
+	var w := a if na >= nc else c
+	var l := c if na >= nc else a
+	var m := absf(na - nc)
+	_ganador(w, l)
+	var fuera := _plano(pos(l) - pos(w))
+	fuera = (fuera - rumbo * fuera.dot(rumbo)).normalized()
+	_anim(w, "duelo_hombro_der" if _derecha(w).dot(fuera) > 0.0 else "duelo_hombro_izq", true, 0.6)
+	_anim(l, "duelo_empujado_der" if _derecha(l).dot(fuera) > 0.0 else "duelo_empujado_izq", true, 0.7)
+	_empujar(l, fuera, 1.2 + m * 3.0, clampf(0.85 - m * 0.6, 0.5, 0.9), 0.55)
+	_empujar(w, -fuera, 0.4, 0.96, 0.3)
+	var era_suyo := poseedor == l
+	if era_suyo or poseedor == w:
+		duelos["hombro_con_balon"] = int(duelos.get("hombro_con_balon", 0)) + 1
+	if era_suyo:
+		if _rng.randf() < clampf(0.25 + m * 1.6, 0.0, 0.85):
+			## Se le va el balón: sigue rodando por delante, libre.
+			duelos["balon_perdido"] += 1
+			l["enfriar"] = maxf(float(l["enfriar"]), 0.6)
+			poseedor = {}
+			_jugada = {}
+			ultimo_toque = l
+			vel_balon = rumbo * maxf(_plano(l["vel"]).length() * 0.9, 4.0) + fuera * 0.8
+		else:
+			w["enfriar"] = maxf(float(w["enfriar"]), 0.4)
+	elif poseedor == w or poseedor.is_empty() or pase_a == w:
+		l["enfriar"] = maxf(float(l["enfriar"]), 0.45)
+	## Ganar el choque con los brazos o por detrás contra el que lleva el balón.
+	if era_suyo and _rng.randf() < (0.02 + float(w["agresividad"]) * 0.06 + m * 0.08) * _escala_falta():
+		_anim(l, "caida_fea", true, 1.2)
+		_falta(w, l, 0.06 + float(w["agresividad"]) * 0.1, "hombro")
+	return true
+
+## AGARRÓN: el defensor llega por detrás (o pegado al costado de atrás) del
+## que lleva el balón o va a recibirlo, a menos de 1 m. Una tirada por
+## encuentro según su agresividad; si agarra, forcejean.
+func _duelo_agarron(a: Dictionary, c: Dictionary, d: float) -> bool:
+	if d > 1.0:
+		return false
+	var obj: Dictionary = {}
+	var ag: Dictionary = {}
+	if poseedor == a or pase_a == a:
+		obj = a
+		ag = c
+	elif poseedor == c or pase_a == c:
+		obj = c
+		ag = a
+	else:
+		return false
+	if ag == usuario and not autopiloto:
+		return false
+	var vo := _plano(obj["vel"])
+	var so := vo.length()
+	if so < 2.0:
+		return false
+	var rel := _plano(pos(ag) - pos(obj))
+	if rel.dot(vo / so) > -0.15:
+		return false
+	obj["contacto_hasta"] = t + 1.6
+	ag["contacto_hasta"] = t + 1.6
+	var agr := float(ag["agresividad"])
+	if _rng.randf() >= 0.12 + agr * 0.5:
+		return false
+	duelos["agarron"] += 1
+	_anim(ag, "duelo_agarron", true, 0.8)
+	_anim(obj, "duelo_forcejeo", true, 0.7)
+	var no := _fuerza(obj) * 0.45 + float(obj["equilibrio"]) * 0.3 + _rng.randf_range(-0.25, 0.25)
+	var ng := _fuerza(ag) * 0.55 + agr * 0.15 + _rng.randf_range(-0.25, 0.25)
+	if no >= ng:
+		_ganador(obj, ag)
+	else:
+		_ganador(ag, obj)
+	var frena := clampf(0.6 + (no - ng) * 0.9, 0.35, 0.95)
+	_empujar(obj, -rel, 0.0, frena, 0.7)
+	_empujar(ag, rel, 0.0, 0.8, 0.7)
+	ag["enfriar"] = maxf(float(ag["enfriar"]), 0.5)
+	## Cuanto más lo retiene, más fácil que pite.
+	if _rng.randf() < (0.06 + agr * 0.16 + (1.0 - frena) * 0.35) * _escala_falta():
+		if _rng.randf() < 0.35:
+			_anim(obj, "caida_fea", true, 1.2)
+		_falta(ag, obj, 0.08 + agr * 0.2, "agarron")
+		return true
+	## Sin falta, si lo frena del todo le roba la cartera.
+	if poseedor == obj and ng > no + 0.2:
+		duelos["balon_perdido"] += 1
+		obj["enfriar"] = maxf(float(obj["enfriar"]), 0.6)
+		poseedor = {}
+		_jugada = {}
+		ultimo_toque = obj
+		vel_balon = vo.normalized() * 2.5
+		ag["enfriar"] = 0.0
+	return true
+
+## CUERPOS QUE NO SE ATRAVIESAN en el motor real: cada par a menos de dos
+## radios de hombro se aparta por la línea que los une, el débil más que el
+## fuerte (masa = fuerza), y se les quita la velocidad con que chocaban.
+func _cuerpos() -> void:
+	if not cuerpos_activos:
+		return
+	var minimo := RADIO_CUERPO * 2.0
+	var n := jugadores.size()
+	for i in n:
+		var pa: Dictionary = jugadores[i]
+		var a: Node3D = pa["node"]
+		if not is_instance_valid(a):
+			continue
+		for j in range(i + 1, n):
+			var pb: Dictionary = jugadores[j]
+			var b: Node3D = pb["node"]
+			if not is_instance_valid(b):
+				continue
+			var dx := b.position.x - a.position.x
+			var dz := b.position.z - a.position.z
+			var d2 := dx * dx + dz * dz
+			if d2 >= minimo * minimo:
+				continue
+			var d := sqrt(d2)
+			var nrm := Vector3(dx, 0, dz) / d if d > 0.001 else Vector3(1, 0, 0).rotated(Vector3.UP, float(i * 7 + j))
+			var ma := 0.6 + _fuerza(pa) * 0.8
+			var mb := 0.6 + _fuerza(pb) * 0.8
+			var hueco := minimo - d
+			a.position -= nrm * hueco * mb / (ma + mb)
+			b.position += nrm * hueco * ma / (ma + mb)
+			var va: Vector3 = pa["vel"]
+			var vb: Vector3 = pb["vel"]
+			var acerca := (va - vb).dot(nrm)
+			if acerca > 0.0:
+				pa["vel"] = va - nrm * acerca * mb / (ma + mb)
+				pb["vel"] = vb + nrm * acerca * ma / (ma + mb)
 
 # ---------------------------------------------------------------- IA
 
@@ -2962,6 +3315,9 @@ func _mover_jugadores(delta: float) -> void:
 			tope *= 0.88
 		## Regate técnico, proteger o bregar: más despacio (lo pone el control).
 		tope *= float(p.get("freno", 1.0))
+		## Tras un choque o con un rival agarrándolo, va más despacio un rato.
+		if float(p.get("freno_duelo_hasta", 0.0)) > t:
+			tope *= float(p.get("freno_duelo", 1.0))
 		var deseada := Vector3.ZERO
 		if dist > 0.25:
 			deseada = dif / dist * minf(tope, dist * 2.5)
@@ -2990,6 +3346,15 @@ func _mover_jugadores(delta: float) -> void:
 			vel = vel.move_toward(deseada, (6.0 + rit * 2.0) * delta if sp_des > sp0 else 11.0 * delta)
 		p["vel"] = vel
 		n.position += vel * delta
+		## EL EMPUJÓN DEL DUELO: un desplazamiento lateral que sube en una
+		## décima y se apaga solo (sin saltos: tope de 22 m/s²).
+		var emp_obj: Vector3 = p.get("empujon_obj", Vector3.ZERO)
+		var emp: Vector3 = p.get("empujon", Vector3.ZERO)
+		if emp_obj != Vector3.ZERO or emp != Vector3.ZERO:
+			emp = emp.move_toward(emp_obj, 22.0 * delta)
+			p["empujon_obj"] = emp_obj * exp(-7.0 * delta) if emp_obj.length() > 0.05 else Vector3.ZERO
+			p["empujon"] = emp if emp.length() > 0.02 or emp_obj != Vector3.ZERO else Vector3.ZERO
+			n.position += emp * delta
 		n.position.x = clampf(n.position.x, -ANCHO - 2.0, ANCHO + 2.0)
 		n.position.z = clampf(n.position.z, -LARGO - 2.0, LARGO + 2.0)
 		var sp := vel.length()
