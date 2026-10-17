@@ -271,6 +271,37 @@ func _choca_moviles(p: Vector3, radio: float) -> bool:
 			return true
 	return false
 
+## Un trozo de movimiento con sus choques. Devuelve false si chocó de frente.
+func _mover_un_trozo(paso: Vector3, r: float) -> bool:
+	var pos := cuerpo.position
+	## Si ya estás dentro de algo FIJO (al salir del metro, por ejemplo), se te
+	## deja andar para salir. Si lo que tienes encima es un MÓVIL (un coche que
+	## se te mete), se ignoran los móviles pero NO las paredes: antes, con un
+	## coche encima, se podía entrar caminando en los edificios (17-10).
+	var libre_fijo := func(q: Vector3) -> bool: return libre_obst(q, r) and not _choca_circulos(q, r)
+	var dentro_fijo: bool = not libre_fijo.call(pos)
+	var solo_movil: bool = not dentro_fijo and _choca_moviles(pos, r)
+	var vale := func(q: Vector3) -> bool:
+		if dentro_fijo:
+			return true
+		if solo_movil:
+			return libre_fijo.call(q)
+		return libre_total(q, r)
+	if vale.call(pos + paso):
+		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z + paso.z), pos.z + paso.z)
+		return true
+	if vale.call(pos + Vector3(paso.x, 0, 0)):
+		## Choque en diagonal: se desliza por la pared en vez de pararse en seco.
+		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z), pos.z)
+		vel *= 0.92
+		return true
+	if vale.call(pos + Vector3(0, 0, paso.z)):
+		cuerpo.position = Vector3(pos.x, altura_suelo(pos.x, pos.z + paso.z), pos.z + paso.z)
+		vel *= 0.92
+		return true
+	vel *= -0.25 if modo == "coche" else 0.0
+	return false
+
 ## Manzanas, río, círculos y móviles: todo lo que impide estar en `p`.
 func libre_total(p: Vector3, radio: float) -> bool:
 	return libre_obst(p, radio) and not _choca_circulos(p, radio) and not _choca_moviles(p, radio)
@@ -671,22 +702,13 @@ func _physics_process(delta: float) -> void:
 			_sonar_pasos(vel)
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
-	var paso := adelante * vel * delta
-	var pos := cuerpo.position
-	## Si ya estás dentro de algo (al salir del metro, por ejemplo), se te deja
-	## andar para salir en vez de quedarte atrapado.
-	var atrapado := not libre_total(pos, r)
-	if atrapado or libre_total(pos + paso, r):
-		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z + paso.z), pos.z + paso.z)
-	elif libre_total(pos + Vector3(paso.x, 0, 0), r):
-		## Choque en diagonal: se desliza por la pared en vez de pararse en seco.
-		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z), pos.z)
-		vel *= 0.92
-	elif libre_total(pos + Vector3(0, 0, paso.z), r):
-		cuerpo.position = Vector3(pos.x, altura_suelo(pos.x, pos.z + paso.z), pos.z + paso.z)
-		vel *= 0.92
-	else:
-		vel *= -0.25 if modo == "coche" else 0.0
+	## En pasos de 30 cm como mucho (17-10, caza de bugs): con un tirón de
+	## fotogramas el coche avanzaba metros de golpe y se saltaba vallas finas.
+	var paso_total := adelante * vel * delta
+	var trozos := maxi(1, ceili(paso_total.length() / 0.3))
+	for _k in trozos:
+		if not _mover_un_trozo(paso_total / float(trozos), r):
+			break
 	cuerpo.rotation.y = rumbo
 	if modo == "coche":
 		cuerpo.rotation.x = _cabeceo

@@ -128,6 +128,7 @@ const SECCIONES := [
 	"_probar_informe_rival",
 	"_probar_porque_moral",
 	"_probar_partido_abandonado",
+	"_probar_no_atravesar_paredes",
 	"_probar_paridad_idiomas",
 ]
 
@@ -8713,4 +8714,35 @@ func _probar_partido_abandonado() -> void:
 	d["minuto"] = 90
 	var r3 := PartidoPendiente.resolver(m, d)
 	_comprobar(r3 != null and r3.goles_local == 0 and r3.goles_visita == 2, "si ya se había pitado el final, queda el resultado tal cual")
+
+## NO SE ATRAVIESAN PAREDES (17-10-2026, caza de bugs): con un coche del
+## tráfico encima, antes se podía entrar caminando en un edificio.
+class _ExpPared extends ExploradorCiudad:
+	var pared_x := 5.0
+	var movil_encima := false
+	func libre_obst(p: Vector3, radio: float) -> bool:
+		return p.x + radio < pared_x
+	func _choca_moviles(_p: Vector3, _radio: float) -> bool:
+		return movil_encima
+	func _choca_circulos(_p: Vector3, _radio: float) -> bool:
+		return false
+
+func _probar_no_atravesar_paredes() -> void:
+	_titulo("CIUDAD: NO SE ATRAVIESAN PAREDES")
+	var ex := _ExpPared.new()
+	ex.cuerpo = Node3D.new()
+	ex.modo = "pie"
+	ex.cuerpo.position = Vector3(4.0, 0, 0)
+	ex.movil_encima = true
+	for i in 40:
+		ex._mover_un_trozo(Vector3(0.3, 0, 0), 0.4)
+	_comprobar(ex.cuerpo.position.x + 0.4 <= ex.pared_x + 0.001, "con un coche encima no se entra en el edificio (x=%.2f, pared en %.1f)" % [ex.cuerpo.position.x, ex.pared_x])
+	ex._mover_un_trozo(Vector3(-0.3, 0, 0), 0.4)
+	_comprobar(ex.cuerpo.position.x < 4.3, "pero sí se puede salir de debajo del coche hacia la calle")
+	ex.movil_encima = false
+	ex.cuerpo.position = Vector3(5.5, 0, 0)
+	ex._mover_un_trozo(Vector3(-0.3, 0, 0), 0.4)
+	_comprobar(ex.cuerpo.position.x < 5.5, "si ya estás dentro de algo fijo (al salir del metro) se te deja salir")
+	ex.cuerpo.free()
+	ex.free()
 
