@@ -48,6 +48,13 @@ func _process(_d: float) -> void:
 		(_vista.get("_rig") as CameraRig).switch_to(0)
 	if _n < CALENTAR:
 		return
+	if _n == CALENTAR and OS.get_environment("OCULTAR") != "":
+		## OCULTAR=Cuero,Eyes (17-10-2026): esconde las piezas con ese nombre
+		## para medir lo que de verdad cuestan en pantalla (con LOD y recorte).
+		var nombres := OS.get_environment("OCULTAR").split(",")
+		for g in _vista.find_children("*", "GeometryInstance3D", true, false):
+			if String(g.name).rstrip("0123456789@") in nombres:
+				g.visible = false
 	if OS.get_environment("PARTES") != "":
 		_partes()
 		return
@@ -72,11 +79,39 @@ func _process(_d: float) -> void:
 		if OS.get_environment("DETALLE") != "":
 			for f: Dictionary in Optimizar.informe(_vista, 25):
 				print("DETALLE tris=%d piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
+		if OS.get_environment("NODOS") != "":
+			_por_nodo()
 		if OS.get_environment("CERRAR") != "":
 			## Cierre normal: se suelta la vista y se espera antes de salir.
 			_vista.queue_free()
 			await get_tree().create_timer(1.0).timeout
 		get_tree().quit()
+
+## Con NODOS=1 (17-10-2026): suma triángulos por NOMBRE de nodo de las piezas de
+## los personajes (hijos del esqueleto y del pelo), con la distancia a la cámara:
+## `DETALLE` agrupa por malla y junta todas las piezas sin nombre de recurso.
+func _por_nodo() -> void:
+	var cam := get_viewport().get_camera_3d()
+	var suma := {}
+	for n in _vista.find_children("*", "MeshInstance3D", true, false):
+		var g := n as MeshInstance3D
+		if not g.is_visible_in_tree() or g.mesh == null:
+			continue
+		var p := g.get_parent()
+		if not (p is Skeleton3D or p is BoneAttachment3D or String(p.name) == "PeloCapas" or (p.get_parent() != null and p.get_parent() is Skeleton3D)):
+			continue
+		var clave := String(g.name).rstrip("0123456789@").left(30)
+		if not suma.has(clave):
+			suma[clave] = {"tris": 0, "piezas": 0, "lejos": 0, "corte": g.visibility_range_end}
+		var t: int = Optimizar._tris(g.mesh)
+		suma[clave]["tris"] += t
+		suma[clave]["piezas"] += 1
+		if cam != null and g.global_position.distance_to(cam.global_position) > 25.0:
+			suma[clave]["lejos"] += 1
+	var lista := suma.keys()
+	lista.sort_custom(func(a, b): return suma[a]["tris"] > suma[b]["tris"])
+	for k in lista:
+		print("NODO %-30s tris=%7d piezas=%3d a>25m=%3d corte=%.0f" % [k, suma[k]["tris"], suma[k]["piezas"], suma[k]["lejos"], suma[k]["corte"]])
 
 func _media(a: Array[float]) -> float:
 	var s := 0.0
