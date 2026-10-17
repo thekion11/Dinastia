@@ -16,6 +16,12 @@ const SHADER_PESTANAS := "res://visor/pestanas.gdshader"
 const CAPAS_CUERO := 14
 const CAPAS_BARBA := 10
 const CAPAS_CEJAS := 5
+## Detalle según la distancia a la cámara (17-10-2026): ver `poner`. Los
+## primeros planos, la carta del goleador, el retrato y la ceremonia están por
+## debajo de estas distancias y se ven con todo.
+const CAPAS_LEJOS := 4
+const DIST_CUERO := 22.0
+const DIST_PESTANAS := 20.0
 ## Párpado de arriba (MediaPipe), de fuera hacia dentro, en cada ojo.
 const PARPADO_DER := [33, 246, 161, 160, 159, 158, 157, 173, 133]
 const PARPADO_IZQ := [263, 466, 388, 387, 386, 385, 384, 398, 362]
@@ -144,7 +150,27 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	## esconde igual.
 	if calvo:
 		return true
-	_colgar(anc, al_hueso, cuero, mat3, "Cuero")
+	var cerca := _colgar(anc, al_hueso, cuero, mat3, "Cuero")
+	## DETALLE SEGÚN LA DISTANCIA (17-10-2026, MEGA AUDITORÍA 2 punto 14): las
+	## 15 capas costaban 14 mil triángulos por cabeza (≈180 mil en el plano de
+	## TV, donde una cabeza mide 20-30 píxeles). Desde `DIST_CUERO` m se cambia
+	## a la misma forma con `CAPAS_LEJOS` capas: igual de alta (la capa de
+	## arriba no se mueve) y del mismo color; solo se pierde la separación
+	## entre capas, que de lejos no llega a un píxel.
+	var capas_cerca := int(CAPAS_CUERO * reduce)
+	if capas_cerca > CAPAS_LEJOS:
+		var clave_l := "%s|%d|%d|%d" % [String(cuerpo.get("id", "")), hash(hd), hash(pos), CAPAS_LEJOS]
+		var lejos: ArrayMesh = _cache_cuero.get(clave_l)
+		if lejos == null:
+			lejos = _cuero(cuerpo, pos, datos, hd, CAPAS_LEJOS)
+			if lejos != null:
+				_cache_cuero[clave_l] = lejos
+		if lejos != null:
+			cerca.visibility_range_end = DIST_CUERO
+			cerca.visibility_range_end_margin = 2.0
+			var mi_l := _colgar(anc, al_hueso, lejos, mat3, "CueroLejos")
+			mi_l.visibility_range_begin = DIST_CUERO
+			mi_l.visibility_range_begin_margin = 2.0
 	## Melena (llega a la mandíbula o más): quien llama pone además el peinado
 	## largo del pack encima (el pelo por capas no cuelga).
 	return float(hd.get("largo", 0.0)) < LARGO_MELENA or corte == "melena_rizada"
@@ -166,7 +192,7 @@ static func _material(p: Dictionary) -> ShaderMaterial:
 		m.set_shader_parameter(k, p[k])
 	return m
 
-static func _colgar(anc: Node3D, t: Transform3D, malla: Mesh, mat: Material, nombre: String) -> void:
+static func _colgar(anc: Node3D, t: Transform3D, malla: Mesh, mat: Material, nombre: String) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.name = nombre
 	mi.mesh = malla
@@ -174,6 +200,12 @@ static func _colgar(anc: Node3D, t: Transform3D, malla: Mesh, mat: Material, nom
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.transform = t
 	anc.add_child(mi)
+	if nombre == "Pestanas":
+		## Tiras de 1-2 mm: a más de `DIST_PESTANAS` m no llegan a un píxel y
+		## solo costaban una llamada de dibujo por jugador.
+		mi.visibility_range_end = DIST_PESTANAS
+		mi.visibility_range_end_margin = 2.0
+	return mi
 
 static func _densidades(b64: String, n: int) -> PackedFloat32Array:
 	var out := PackedFloat32Array()
