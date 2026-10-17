@@ -1453,14 +1453,14 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 ## los monitores mostrando la jugada desde cuatro cámaras, y se sigue.
 var _sala_var: SalaVAR = null
 
-func _a_la_revision_var(minuto: int, motivo: String, anular := false, al_anular := Callable()) -> void:
+func _a_la_revision_var(minuto: int, motivo: String, anular := false, al_anular := Callable(), lineas := {}) -> void:
 	if _sala_var != null or _raiz3d == null:
 		return
 	var vel_antes := _juego.vel_idx if _juego != null else 2
 	if _juego != null:
 		_juego.vel_idx = 0
 	var foco := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
-	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo, anular)
+	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo, anular, lineas)
 	_sala_var.terminada.connect(func() -> void:
 		_sala_var = null
 		if anular and al_anular.is_valid():
@@ -1570,8 +1570,12 @@ func _montar_motor() -> void:
 			var motivo := "Revisión del gol: posible fuera de juego" if ajustado else "Revisión del gol: posible falta previa"
 			get_tree().create_timer(2.2).timeout.connect(func() -> void:
 				if is_instance_valid(self) and _motor != null:
+					## Con la línea del fuera de juego en el monitor (M-118).
+					var lineas := _motor.lineas_gol.duplicate() if ajustado else {}
+					if not lineas.is_empty():
+						lineas["margen"] = m
 					_a_la_revision_var(partido.minuto, motivo, anula, func() -> void:
-						_anular_gol_motor(de_local, autor))))
+						_anular_gol_motor(de_local, autor), lineas)))
 	_motor.remate.connect(func(de_local: bool, autor: String, tipo: String) -> void:
 		var tirador := _nodo_de(autor)
 		_stats.cerrar_tiro(de_local, tipo, Vector3.ZERO, tirador.position if tirador != null else (_balon.position if is_instance_valid(_balon) else Vector3.ZERO))

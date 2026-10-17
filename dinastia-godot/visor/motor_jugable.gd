@@ -125,6 +125,10 @@ var _offside_previo := {}
 var _margenes_pase := {}
 var _margen_recepcion := {}
 var margen_gol := INF
+## Las dos líneas del fuera de juego en el pase del gol, en Z del mundo (M-118):
+## {"linea": la del penúltimo defensor (o el balón), "atacante": el goleador}.
+## Vacío si no hubo pase medible. La sala VAR las dibuja en su monitor.
+var lineas_gol := {}
 var _ultima_anim := ""
 var _jugada := {}             ## la jugada prehecha que guía el ataque del poseedor
 var _decision_en := 0.0
@@ -1160,8 +1164,11 @@ func _gol(en_arco_visita: bool) -> void:
 	_t_estado = 0.0
 	saque = {"gol_local": de_local}
 	margen_gol = INF
+	lineas_gol = {}
 	if autor_id != "" and String(_margen_recepcion.get("id", "")) == autor_id and t - float(_margen_recepcion.get("t", -99.0)) < 12.0:
 		margen_gol = float(_margen_recepcion["m"])
+		if _margen_recepcion.has("linea"):
+			lineas_gol = {"linea": float(_margen_recepcion["linea"]), "atacante": float(_margen_recepcion["z"])}
 	_margen_recepcion = {}
 	gol.emit(de_local, autor_id, asist_id)
 	cambio_estado.emit(estado)
@@ -1324,13 +1331,14 @@ func _foto_offside(p: Dictionary) -> void:
 	var penultimo: float = prof[prof.size() - 2]
 	var balon_prof := balon.position.z * d
 	var ids := {}
-	_margenes_pase = {"local": local, "m": {}}
+	_margenes_pase = {"local": local, "m": {}, "z": {}, "linea": maxf(balon_prof, penultimo) * d}
 	for q: Dictionary in jugadores:
 		if q == p or bool(q["es_local"]) != local:
 			continue
 		var z := pos(q).z * d
 		if z > 0.0:
 			_margenes_pase["m"][String(q.get("id", ""))] = z - maxf(balon_prof, penultimo)
+			_margenes_pase["z"][String(q.get("id", ""))] = pos(q).z
 		## En campo rival, por delante del balón y del penúltimo (con 30 cm de
 		## tolerancia: la línea la marca el cuerpo, no los pies).
 		if z > 0.0 and z > balon_prof + 0.3 and z > penultimo + 0.3:
@@ -1408,7 +1416,8 @@ func _tomar(p: Dictionary) -> void:
 	if not _margenes_pase.is_empty() and bool(_margenes_pase["local"]) == bool(p["es_local"]):
 		var mid := String(p.get("id", ""))
 		if (_margenes_pase["m"] as Dictionary).has(mid):
-			_margen_recepcion = {"id": mid, "m": float(_margenes_pase["m"][mid]), "t": t}
+			_margen_recepcion = {"id": mid, "m": float(_margenes_pase["m"][mid]), "t": t,
+				"linea": float(_margenes_pase.get("linea", 0.0)), "z": float((_margenes_pase.get("z", {}) as Dictionary).get(mid, 0.0))}
 	_margenes_pase = {}
 	## Tu pase llegó si lo controla uno de los tuyos.
 	if _pase_usuario_vivo and not usuario.is_empty() and p != usuario and bool(p["es_local"]) == bool(usuario["es_local"]):
