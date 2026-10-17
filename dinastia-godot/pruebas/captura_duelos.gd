@@ -71,11 +71,14 @@ func _foto(motor: MotorJugable) -> void:
 	## Posición GLOBAL (los nodos cuelgan de la raíz del estadio).
 	var medio := ((a["node"] as Node3D).global_position + (b["node"] as Node3D).global_position) * 0.5 + Vector3(0, 0.9, 0)
 	var en_pantalla := cam != null and not cam.is_position_behind(medio)
-	var pt := cam.unproject_position(medio) if en_pantalla else Vector2(img.get_width() / 2.0, img.get_height() / 2.0)
 	var w := img.get_width()
 	var h := img.get_height()
-	var cw := w / 4
-	var ch := h / 4
+	## `unproject_position` da coordenadas del viewport lógico (1280×720 con
+	## stretch «canvas_items»); la imagen sale a la resolución de la ventana.
+	var escala := float(w) / maxf(get_viewport().get_visible_rect().size.x, 1.0)
+	var pt := cam.unproject_position(medio) * escala if en_pantalla else Vector2(w / 2.0, h / 2.0)
+	var cw := w / 5
+	var ch := h / 5
 	var rx := clampi(int(pt.x) - cw / 2, 0, w - cw)
 	var ry := clampi(int(pt.y) - ch / 2, 0, h - ch)
 	var recorte := img.get_region(Rect2i(rx, ry, cw, ch))
