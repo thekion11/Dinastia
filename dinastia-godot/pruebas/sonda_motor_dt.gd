@@ -14,6 +14,7 @@ extends Node3D
 ##                       LADOS da goles/tiros/córners/faltas/fueras/despejes L-V.
 ##   SEMILLA0=primera semilla, MITAD=segundos de motor por tiempo (240).
 var _m: Mundo
+var duelos_tot := {}
 var remates := {}
 ## Totales de todos los partidos: pases [L, V], pases buenos, fintas de la IA
 ## (intentadas, logradas), posesión en segundos [L, V] y partidos jugados.
@@ -54,6 +55,10 @@ func _ready() -> void:
 	for k: String in ["goles", "tiros", "corners", "faltas", "fueras", "despejes"]:
 		lado += "%s %.2f-%.2f  " % [k, float(extra[k][0]) / np, float(extra[k][1]) / np]
 	print("LADOS " + lado)
+	var du_txt := ""
+	for k: String in duelos_tot:
+		du_txt += "%s %.1f  " % [k, float(duelos_tot[k]) / np]
+	print("DUELOS por partido: " + du_txt)
 	print("===== FIN SONDA MOTOR DT =====")
 	get_tree().quit()
 
@@ -94,6 +99,9 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 	motor.cansancio_real = cansancio
 	motor.tarjetas_reales = true
 	motor.preparar(lista, ball, "", semilla)
+	## SIN_DUELOS=1 / SIN_CUERPOS=1: para medir qué cambia cada parte.
+	motor.duelos_activos = OS.get_environment("SIN_DUELOS") == ""
+	motor.cuerpos_activos = OS.get_environment("SIN_CUERPOS") == ""
 	motor.remate.connect(func(_l: bool, _a: String, tipo: String) -> void: remates[tipo] = int(remates.get(tipo, 0)) + 1)
 	motor.gol.connect(func(_l: bool, _a: String, _s: String) -> void: remates["gol"] = int(remates.get("gol", 0)) + 1)
 	var hechos := false
@@ -129,6 +137,11 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 		extra["despejes"][k] += int(motor.despejes[k])
 		extra["goles"][k] += int(motor.goles[k])
 		extra["tiros"][k] += int(motor.tiros[k])
+	## Los duelos cuerpo a cuerpo (16-10-2026).
+	var du: Variant = motor.get("duelos")
+	if du is Dictionary:
+		for k: String in du:
+			duelos_tot[k] = int(duelos_tot.get(k, 0)) + int(du[k])
 	extra["fintas"] += int(motor.regates_ia)
 	var ok_f: Variant = motor.get("regates_ia_ok")
 	extra["fintas_ok"] += int(ok_f) if ok_f != null else 0
