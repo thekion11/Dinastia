@@ -98,7 +98,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
-| M-051 | P1 | El escudo en la camiseta mide ~8 cm y es plano | PENDIENTE | escudo de 8,8 cm plano en `equipacion_q.gdshader` (l.629) |
+| M-051 | P1 | El escudo en la camiseta mide ~8 cm y es plano | HECHO | 17-10: 10,4 cm de ancho (+18 % de lado, ≈ +40 % de superficie), algo más arriba, y bordado de ~0,7 mm con normal falsa por derivadas (`h_escudo` en `equipacion_q.gdshader`), solo de cerca |
 | M-052 | P1 | Camiseta pintada sin tejido | HECHO | tela satinada y micro relieve del tejido (`equipacion_q.gdshader`, 17-10) |
 | M-053 | P1 | Cuello y puños sólo por color | HECHO | cuello pico/redondo/polo/mao con ribete y puños (`equipacion_q.gdshader`, 17-10; por shader, no geometría) |
 | M-054 | P1 | Ropa con volumen sólo en retratos (K-02) | PENDIENTE | `VestidorQ.ropa_aparte` sigue apagado en partido por coste |
@@ -156,7 +156,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-101 | P2 | Celebraciones por rasgo (ya) pero sólo 2/3 propias | PARCIAL | carrera al córner y abrazo (`_ia_celebracion`); sin 10 por rasgo ni coreografías |
 | M-102 | P2 | Sin reacciones de banquillo coordinadas | PARCIAL | el banquillo celebra el gol (`ui/estadio.gd` `_banca_celebra`); sin tarjeta/lesión |
 | M-103 | P2 | Lesiones sin animación específica | PARCIAL | clip de dolor (`AnimQuaternius`); sin camilla ni médicos en campo |
-| M-104 | P2 | Cambios de jugador sin animación (entra/sale) | PENDIENTE | sin animación ni cartel de cambio |
+| M-104 | P2 | Cambios de jugador sin animación (entra/sale) | HECHO | 17-10, con motor: cartel LED del cuarto árbitro con los dos dorsales (`CuartoArbitro.levantar_cambio`), el que entra espera en la banda, el que sale camina hasta él, palmada (`chocar_mano`) y se va (`visor/escena_cambio.gd`). Falta en la Carrera de Jugador |
 | M-105 | P2 | Sin tarjetas con ceremonia de árbitro detallada | PARCIAL | clips de protesta/discutir árbitro en `AnimExtra`; sin protesta enlazada a las tarjetas del motor real |
 | M-106 | P1 | Árbitro con sólo gestos básicos | HECHO | 17-10: en el motor real pita, señala la falta, ventaja de verdad, habla y enseña la tarjeta (cartulina en la mano), penal, córner, saque de puerta, añadido y final (`MotorJugable._gesto_arbitro`) |
 | M-107 | P2 | Asistentes de línea sin carrera real | PARCIAL | los jueces siguen la z del balón (`_mover_arbitros`), no al penúltimo defensor |
@@ -198,7 +198,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-138 | P1 | Ritmo del partido ≈ 54 s/s vs 11 s/s (M-07) | HECHO | ritmo corto/normal/largo (2,7/4/6 s por minuto) en el partido del DT |
 | M-139 | P2 | Tiempo añadido con base real pero sin descuentos por lesión visibles | PARCIAL | 17-10: cartel 3D del cuarto árbitro (`CuartoArbitro`); el añadido aún no suma lesiones |
 | M-140 | P2 | Descanso: charla de medio tiempo con opciones; sin vestuario 3D… | PENDIENTE | el descanso vuelve al camarín 2D (`prueba_descanso_3d`); sin cinemática de vestuario |
-| M-141 | P2 | Resumen de partido sin mapa de calor ni valoraciones por jugador… | PARCIAL | momentos clave en `ResumenPartido`; sin valoraciones por jugador |
+| M-141 | P2 | Resumen de partido sin mapa de calor ni valoraciones por jugador… | HECHO | 17-10: `Partido.valoraciones()` (determinista, sin `Azar`) en `ResumenPartido` (mejor del partido en franja dorada + dos columnas) y al final de `PartidoVivo`. OJO (hallazgo): en un partido mirado `_cerrar_notas()` no se llama nunca (solo `simular()`), así que `Jugador.notas`/forma no reciben ese partido; no se tocó (cambiaría el azar de la partida) |
 | M-142 | P2 | Rueda de prensa posterior no enlazada con incidentes del partido | SIN VERIFICAR | no se encontró tema de árbitro/VAR en `Prensa.resolver` |
 | M-143 | P2 | Sin clima dinámico durante el partido (tormenta repentina) | PENDIENTE | sin cambio de clima en vivo |
 | M-144 | P2 | Campo se desgasta (barro) sin visualización | PARCIAL | desgaste fijo en áreas y punto de penal (`cesped.gdshader`); no evoluciona |
@@ -217,7 +217,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-157 | P2 | Sin cantos/anuncios del estadio (megafonía con alineaciones) | PENDIENTE | sin megafonía |
 | M-158 | P2 | Presentación: 180 s en FC; aquí variable | HECHO | ajustes «Presentación antes del partido» y «Ceremonia completa» (`ui/estadio.gd` l.364-366) |
 | M-159 | P2 | Sin himno por país con partitura procedural | PARCIAL | un motivo genérico «himno» sintetizado; no por país |
-| M-160 | P2 | Sin saludo protocolar/pre-partido (capitanes, sorteo de campo) | PENDIENTE | sin sorteo con moneda |
+| M-160 | P2 | Sin saludo protocolar/pre-partido (capitanes, sorteo de campo) | HECHO | 17-10: fase final de `CeremoniaPartido` (4,2 s): árbitro y capitanes en el centro, moneda que gira, «X elige campo» y apretón de manos (`dar_mano`); se salta con la ceremonia |
 | M-161 | P2 | Sin mini-partidos de selección con identidad | PENDIENTE | sin identidad de selección en el 3D |
 | M-162 | P2 | Estadísticas del motor (tiros, pases) sin exportar | PENDIENTE | el motor no exporta CSV |
 | M-163 | P2 | Sin modo «Director técnico automático» configurable (IA del usuario) | PARCIAL | `MotorJugable.autopiloto`; sin perfil configurable |
@@ -305,7 +305,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-235 | P1 | Lesiones: duración y recaídas ok; sin prevención visible (carga… | PARCIAL | carga y riesgo en `Medico` (l.244-254); indicador por jugador sin confirmar |
 | M-236 | P2 | Vestuario 1.436 líneas con grupos; sin conflictos con… | PENDIENTE | sin discusiones visibles en partido |
 | M-237 | P2 | Capitanías: elección sin votación | PENDIENTE | capitán sin votación |
-| M-238 | P1 | Directiva: objetivos con confianza; despido sin cinemática | PENDIENTE | despido sin escena |
+| M-238 | P1 | Directiva: objetivos con confianza; despido sin cinemática | HECHO | 17-10: `EscenaDespido` (presidente en 3D con traje vía `PersonajeDT.crear`, diálogo en `CuadroDialogo`, resumen de la etapa y «Ver ofertas de otros clubes»); en `Principal` al emitirse `Directiva.despedido` |
 | M-239 | P2 | Junta/accionistas: sin asambleas jugables | PARCIAL | asamblea en insolvencia/federación; no jugable |
 | M-240 | P2 | `Politica` ficticia (decisión legal): mantener sin real | PENDIENTE | sin lista de palabras prohibidas en pruebas |
 | M-241 | P1 | Prensa 2.541 líneas (la mayor del núcleo): `resolver` 476 líneas | PENDIENTE | `Prensa.resolver` sigue en una función |
@@ -665,13 +665,13 @@ Sin lo del dueño. **Impacto** = cuánto lo nota el jugador (3 alto, 2 medio, 1 
 | 4 | M-050 | Confeti, bengalas y humo de color en goles y salida | 2 | 1 | `GPUParticles3D` ya se usa en `Precipitacion`; engancharlo a la señal `gol` |
 | 5 | M-149 | Red del arco que se ondula al gol | 2 | 1 | shader de vértice en la malla de la red, con impulso en el punto de entrada |
 | 6 | M-118 | Línea de fuera de juego visible en la sala VAR | 2 | 1 | `margen_gol` ya da la posición; dibujar dos líneas en `SalaVAR` |
-| 7 | M-051 | Escudo de la camiseta más grande (9-10 cm) y con relieve | 2 | 1 | cambiar el rectángulo de `escudo_tex` y añadir normal en `equipacion_q.gdshader` |
-| 8 | M-141 | Valoraciones por jugador en el resumen del partido | 2 | 1 | el motor ya cuenta pases, entradas y remates por jugador |
+| 7 | ~~M-051~~ HECHO 17-10 | Escudo de la camiseta más grande (9-10 cm) y con relieve | 2 | 1 | cambiar el rectángulo de `escudo_tex` y añadir normal en `equipacion_q.gdshader` |
+| 8 | ~~M-141~~ HECHO 17-10 | Valoraciones por jugador en el resumen del partido | 2 | 1 | el motor ya cuenta pases, entradas y remates por jugador |
 | 9 | M-434 | Vibración del mando en gol, choque y entrada | 2 | 1 | `Input.start_joy_vibration` en las señales del motor |
-| 10 | M-104 | Cambio de jugador con cartel y palmada | 2 | 1 | los cambios ya existen en el motor (`sale_id`); solo falta la escena |
-| 11 | M-160 | Sorteo de campo con moneda y saludo de capitanes en la ceremonia | 2 | 1 | encaja en `CeremoniaPartido` |
+| 10 | ~~M-104~~ HECHO 17-10 | Cambio de jugador con cartel y palmada | 2 | 1 | los cambios ya existen en el motor (`sale_id`); solo falta la escena |
+| 11 | ~~M-160~~ HECHO 17-10 | Sorteo de campo con moneda y saludo de capitanes en la ceremonia | 2 | 1 | encaja en `CeremoniaPartido` |
 | 12 | M-057 | Fabricantes de ropa inventados con logo propio por club | 2 | 1 | hoy una sola «ala» genérica en el shader |
-| 13 | M-238 | Escena de despido del DT | 2 | 1 | la señal `Directiva.despedido` ya existe |
+| 13 | ~~M-238~~ HECHO 17-10 | Escena de despido del DT | 2 | 1 | la señal `Directiva.despedido` ya existe |
 | 14 | ~~M-165~~ HECHO 17-10 | Prórroga y tanda de penales jugables en el 3D | 3 | 2 | lo que más se nota en copas (COMPARACION_JUEGOS_2 §6) |
 | 15 | M-123 | Línea defensiva común: subir/bajar y trampa del fuera de juego | 3 | 2 | último 40 % del punto 7 de la MEGA AUD. 2 |
 | 16 | M-114 | Separar reposiciones y suavizar giros bruscos del balón y los cuerpos (con M-115) | 3 | 2 | la sonda ya mide los dos problemas |
@@ -684,6 +684,8 @@ Sin lo del dueño. **Impacto** = cuánto lo nota el jugador (3 alto, 2 medio, 1 
 | 23 | M-178 | Minimapa y GPS hacia el club en la ciudad (con M-179) | 2 | 2 | `camino_entre` ya calcula rutas |
 | 24 | M-130 | Modo práctica / entrenamiento libre para aprender los controles FC (con M-152) | 2 | 2 | 65+ combinaciones sin lugar donde probarlas |
 | 25 | M-275 | Quitar el país «XXX» del rival en la Carrera de Jugador | 1 | 1 | una línea (`carrera_jugador.gd:620`) y comprobar banderas |
+
+**2.ª tanda (17-10)**: M-104, M-160, M-141, M-051 y M-238 hechos, más los operadores de la sala VAR (polo, pelo, complexión normal y silla, como la gente de la ciudad). Coste del partido (`medir_partido`, ALTO, lavapipe): 632 llamadas y 761.687 triángulos, frente a 632 y 761.462 con el shader anterior (+0,03 %). Capturas `pruebas/capturas/top25b_*` (con `_antes`), banco `_probar_tanda_top25b`.
 
 Fuera del TOP por ser del dueño: perfil de FPS en hardware real (M-337, M-341), narración por voz (M-317), música (M-323), historial/LFS, derechos de imagen y keystore (M-419, M-421, M-423, M-428).
 

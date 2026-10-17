@@ -578,6 +578,8 @@ void fragment() {
 	// laterales y de hombro un poco más oscuras, escudo del club (izquierda
 	// del pecho) y una marca de ropa inventada (derecha).
 	bool frente = z > 0.55;
+	// Altura del bordado del escudo (0-1), para su relieve al final (M-051).
+	float h_escudo = 0.0;
 	if (ribete_cuello >= 0.0 && !manga) {
 		// Canalé del cuello: costillas a lo largo del borde (alrededor del
 		// cuello), canto enrollado algo más oscuro y costura al pie del ribete.
@@ -618,22 +620,27 @@ void fragment() {
 	if (manga && abs(abs(x) - 0.222) < 0.005) camiseta *= 0.82;
 	if (!manga && y > 1.005 && y < 1.02) camiseta *= 0.85;
 	if (familia >= 0 && frente && !manga && !civil) {
-		// Escudo: un escudete con borde del color de ribete.
-		vec2 e = vec2((x - 0.095) / 0.042, (y - 1.405) / 0.05);
+		// Escudo: un escudete con borde del color de ribete. 17-10-2026
+		// (M-051): un 18 % más grande de lado (≈ +40 % de superficie, de
+		// 8,8 a 10,4 cm de ancho) y un poco más arriba, lejos del patrocinador.
+		vec2 e = vec2((x - 0.095) / 0.0496, (y - 1.42) / 0.059);
 		// Escudete: arriba recto, abajo en punta redondeada.
 		float ancho_e = e.y > 0.0 ? 1.0 : sqrt(max(0.0, 1.0 - e.y * e.y));
 		float cuerpo_e = (1.0 - smoothstep(ancho_e - 0.08, ancho_e, abs(e.x))) * step(-1.0, e.y) * (1.0 - smoothstep(0.92, 1.0, e.y));
 		float borde_e = cuerpo_e * smoothstep(ancho_e - 0.3, ancho_e - 0.2, abs(e.x) + max(0.0, e.y - 0.7) * 0.8);
 		if (hay_escudo) {
 			// El escudo REAL del club, encajado en el pecho (izquierda del jugador).
-			vec2 ue = vec2((x - 0.095) / 0.088 + 0.5, 1.0 - (y - 1.352) / 0.104);
+			vec2 ue = vec2((x - 0.095) / 0.104 + 0.5, 1.0 - (y - 1.3585) / 0.123);
 			if (ue.x > 0.0 && ue.x < 1.0 && ue.y > 0.0 && ue.y < 1.0) {
 				vec4 ec = texture(escudo_tex, ue);
 				camiseta = mix(camiseta, ec.rgb, ec.a);
+				// Bordado: lo claro del escudo, algo más alto que lo oscuro.
+				h_escudo = ec.a * (0.65 + 0.35 * dot(ec.rgb, vec3(0.299, 0.587, 0.114)));
 			}
 		} else {
 			camiseta = mix(camiseta, C(1), cuerpo_e);
 			camiseta = mix(camiseta, trim_col, borde_e);
+			h_escudo = cuerpo_e * 0.7 + borde_e * 0.3;
 		}
 		// Marca: una curva tipo "ala" en el color de ribete.
 		vec2 mk = vec2((x + 0.095) / 0.045, (y - 1.41) / 0.03);
@@ -953,6 +960,24 @@ void fragment() {
 		nm.x += cos(ang_m * 6.2832) * fade_m * 0.07 * m.b;
 	}
 	NORMAL_MAP = nm;
+	// RELIEVE DEL ESCUDO (17-10-2026, M-051): un bordado de ~0,7 mm sin textura
+	// nueva. Normal falsa a partir de las derivadas en pantalla de la altura
+	// (bump «sin parametrizar» de Mikkelsen); solo de cerca (se apaga entre 3 y
+	// 7 m: de lejos el borde de un píxel parpadearía).
+	vec3 dpx = dFdx(VERTEX);
+	vec3 dpy = dFdy(VERTEX);
+	float dhx = dFdx(h_escudo) * 0.0007;
+	float dhy = dFdy(h_escudo) * 0.0007;
+	float k_esc = 1.0 - smoothstep(3.0, 7.0, length(VERTEX));
+	if ((dhx != 0.0 || dhy != 0.0) && k_esc > 0.0) {
+		vec3 r1 = cross(dpy, NORMAL);
+		vec3 r2 = cross(NORMAL, dpx);
+		float det = dot(dpx, r1);
+		vec3 n_esc = abs(det) * NORMAL - sign(det) * (dhx * r1 + dhy * r2);
+		if (dot(n_esc, n_esc) > 1e-20) {
+			NORMAL = normalize(mix(NORMAL, normalize(n_esc), k_esc));
+		}
+	}
 	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
 	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.06 : 0.6) : 0.45, tela) : 0.6 * tela;
 	RIM = borde;

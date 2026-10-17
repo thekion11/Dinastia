@@ -1351,13 +1351,19 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 		var viejo: Node3D = f["node"]
 		var pos: Vector3 = viejo.position
 		var es_local: bool = f["es_local"]
-		viejo.queue_free()
+		## Con el motor real el que sale NO desaparece: camina a la banda y
+		## choca la mano con el que entra (`EscenaCambio`, M-104).
+		var escena := _motor != null and is_instance_valid(viejo)
+		if not escena:
+			viejo.queue_free()
 		var equipo := club if es_local else visitante
 		var d := Puente3D.jugador(entra)
 		var nuevos := _spawner.spawn_team(_raiz3d, [entra.id], {entra.id: d},
 			{"s": [[f["slot_code"], 50, 50]]}, es_local,
 			Puente3D.kit(equipo), Puente3D.kit_portero(equipo))
 		if nuevos.is_empty():
+			if escena:
+				viejo.queue_free()
 			_en_campo.remove_at(i)
 			return
 		var nf: Dictionary = nuevos[0]
@@ -1368,6 +1374,8 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 		_en_campo[i] = nf
 		if _motor != null:
 			_motor.reemplazar(sale.id, nf)
+			if escena:
+				EscenaCambio.iniciar(_raiz3d, _spawner, _motor, viejo, f.get("anim"), nf, sale.dorsal, entra.dorsal, _kit_arbitro)
 			_mostrar_banner_gol("🔁 %s  ⬆ %s   ⬇ %s" % [Idiomas.t("CAMBIO"), Nombres.visible(entra.nombre), Nombres.visible(sale.nombre)],
 				equipo.id == Partido.ctx_club_id)
 		_fov_rotulos = -1.0
