@@ -8,7 +8,7 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 | Qué | Dónde está | Estado | Cómo se fusiona |
 |---|---|---|---|
 | Todo lo hecho desde el 14-10 (≈140 commits: VAR que anula, duelos, faltas, optimización −58 %, camiseta 3D, prórroga y penales, informe del rival, moral del Camarín, árbitros, GPS, etc.) | rama `claude/godot-project-review-o1dvr1` (en GitHub) | subido, banco en 0 fallos | **a `main` con un PR nuevo** cuando el dueño lo pida (el último fusionado fue el PR #6, 14-10) |
-| Tanda 2 del TOP 25: cambio de jugador con cartel y palmada (M-104), sorteo con moneda (M-160), notas por jugador y mejor del partido (M-141), escudo más grande con relieve (M-051), operadores del VAR con ropa normal, escena de despido del DT (M-238, a medias) | worktree local del agente (`worktree-agent-a703e0231e5d8e3ed`, **solo en este contenedor**) | 6 commits + cambios sin confirmar; el agente seguía trabajando | **Respaldo en el repo**: `parches_pendientes/tanda2_top25_commits.patch` (los 6 commits) y `parches_pendientes/tanda2_top25_sin_confirmar.patch` (lo de después, sin imágenes). Si se pierde el contenedor: `git am parches_pendientes/tanda2_top25_commits.patch` y luego `git apply parches_pendientes/tanda2_top25_sin_confirmar.patch`, `godot --headless --import`, banco en 0 fallos y terminar el despido (M-238). Si el agente termina antes: unir su rama con merge y borrar estos parches |
+| Tanda 2 del TOP 25 (M-104, M-160, M-141, M-051, M-238 y operadores del VAR) | rama del agente (`worktree-agent-a703e0231e5d8e3ed`), **ya unida por merge con `claude/godot-project-review-o1dvr1`**; parches de respaldo borrados | terminada: banco 0 fallos, `prueba_partido_motor` 0 fallos | traer esa rama a `claude/godot-project-review-o1dvr1` con merge (ya la contiene: sin conflictos) |
 
 ## 2. Qué falta HACER (por orden) y CÓMO
 
@@ -17,7 +17,6 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 ### 2.1 Del TOP 25 que queda
 | Id | Qué | Cómo |
 |---|---|---|
-| M-238 | Despido del DT (si el respaldo no lo trae terminado) | pantalla con el presidente (cara 3D `Tutorial._cara_mentor`), `CuadroDialogo`, resumen de la etapa, opciones existentes para seguir |
 | M-057 | Fabricantes de ropa inventados con logo por club | lista de marcas ficticias + logo procedural; uniform en `equipacion_q.gdshader` (hoy una sola «ala») |
 | M-123 | Línea defensiva común y trampa del fuera de juego | en `MotorJugable`: la línea de 4 se mueve junta según `tactica.linea`/`fuera_de_juego`; medir con `sonda_motor_dt` (fueras de juego por partido) |
 | M-114/115 | Reposiciones del balón y giros bruscos | `pruebas/sonda_fisica_partido.tscn` ya los mide; separar teletransportes de saques y limitar giro °/s |
