@@ -58,10 +58,12 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - Metro: E en marcha = «bajar en la próxima»; no se puede salir en el túnel. Correcto.
 - Esc bajo tierra (metro/galería): el entorno se restaura en `_exit_tree`. Correcto.
 - **MENÚS A VELOCIDAD SOBREHUMANA** (`pruebas/estres_menus.tscn`, 400 fotogramas, 2-6 acciones por fotograma):
-  · El contenedor de pestañas `_pestanas` acaba LIBERADO (se «muda» a una PantallaMenu y se borra con ella):
+  · ~~Pestañas liberadas~~ HECHO: `MenuLateral.abrir_menu` reutilizaba una pantalla que se estaba cerrando
+    (fundido de 0,15 s) y le volvía a meter las pestañas, que se borraban con ella. Ahora una pantalla que
+    se cierra no coge contenido (`PantallaMenu.cerrando()`). Antes: (se «muda» a una PantallaMenu y se borra con ella):
     luego `get_tab_count` sobre instancia liberada (1001 veces), y el juego queda sin pantallas (1282 → 497 nodos).
   · `_perezoso` (Principal), `pintar` y `PantallaMenu._mudar` reciben nodos ya liberados.
-  · `BotonFx`: 177 000 avisos «signal already connected» (`_sonar`, `_a`, `_arriba`): se conecta dos veces el mismo botón.
+  · ~~`BotonFx` conectado varias veces~~ HECHO: `node_added` salta en cada cambio de padre; ahora marca `_fx`. Antes: «signal already connected» (`_sonar`, `_a`, `_arriba`): se conecta dos veces el mismo botón.
 
 ### 2.4 Pedidos del dueño en espera
 - **Vídeo gameplay** (punto 15 de la MEGA AUDITORÍA 2): pausado por el dueño el 17-10.
