@@ -282,7 +282,7 @@ func _aporte_tarjeta(j: Jugador, roja: bool, _m: int) -> void:
 ## jugaron, como en los diarios, de mejor a peor:
 ##   [{jugador, nota, local, titular}]
 ## La base es la nota del partido (6 + goles), más lo apuntado en `_aportes`,
-## el resultado del equipo (±0,4), la portería a cero o los goles encajados
+## el resultado del equipo (+0,4 / −0,3), la portería a cero o los goles encajados
 ## (porteros y defensas) y un poco de la calidad del jugador. Los que entraron
 ## de cambio se mueven menos (jugaron menos). Determinista, sin `Azar`: se
 ## puede pedir las veces que haga falta y no cambia nada del partido.
@@ -293,7 +293,7 @@ func valoraciones() -> Array:
 		var es_local := local.plantilla.has(j)
 		var n := float(_notas.get(j.id, 6.0)) + float(_aportes.get(j.id, 0.0))
 		if not empate:
-			n += 0.4 if (goles_local > goles_visita) == es_local else -0.4
+			n += 0.4 if (goles_local > goles_visita) == es_local else -0.3
 		var encajados := goles_visita if es_local else goles_local
 		if j.pos == "POR" or j.pos == "DEF":
 			var k := 1.3 if j.pos == "POR" else 1.0
