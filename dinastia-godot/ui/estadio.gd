@@ -31,6 +31,8 @@ var _rig: CameraRig
 var _pie: Label
 var _pie_base := ""
 var _spawner: PlayerSpawner
+## La camiseta del trío arbitral de este partido (también la del cuarto árbitro).
+var _kit_arbitro: Dictionary = {}
 var _en_campo: Array = []
 ## Los suplentes de pie junto al banquillo (22-9-2026, "efecto banquillo").
 ## Aparte de `_en_campo`: `MatchPlayback.tick()` solo mueve lo que hay en esa
@@ -588,8 +590,8 @@ func _sacar_los_22() -> void:
 	_en_campo.append_array(_spawner.spawn_team(_raiz3d, v["xi"], v["jugadores"],
 		Puente3D.formacion(visitante.tactica.formacion), false, kit_v, por_v))
 	## El trío de la camiseta que mejor se distingue de los dos (M-072).
-	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d,
-		Puente3D.kit_arbitro(kit_l, kit_v, hash(club.id + "|" + visitante.id), [por_l, por_v])))
+	_kit_arbitro = Puente3D.kit_arbitro(kit_l, kit_v, hash(club.id + "|" + visitante.id), [por_l, por_v])
+	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d, _kit_arbitro))
 	_poner_banca(once_local, once_visita)
 	_poner_personal()
 	_purgar_nodos_fantasma()
@@ -1061,6 +1063,8 @@ func _refrescar_marcador() -> void:
 				_anadido_avisado[_motor.mitad] = true
 				_mostrar_rotulo_suceso("⏱ %s: +%d" % [Idiomas.t("Tiempo añadido"), _motor.minutos_anadidos()])
 				Sonido.toca("descuento_anunciado")
+				## Y el cuarto árbitro levanta el cartel en la banda (M-139).
+				CuartoArbitro.levantar(_raiz3d, _spawner, _motor.minutos_anadidos(), _kit_arbitro)
 		_marcador.text = "%s  %d - %d  %s      %s" % [_corto(partido.local.nombre), partido.goles_local,
 			partido.goles_visita, _corto(partido.visita.nombre), reloj]
 		return
