@@ -856,8 +856,10 @@ func _cabina_3d(ver: bool) -> void:
 		_cabina_kmh.pixel_size = 0.0012
 		_cabina_kmh.modulate = Color(0.55, 0.95, 0.75)
 		_cabina_kmh.outline_size = 0
-		_cabina_kmh.position = Vector3(0.0, -0.19, -0.66)
-		_cabina_kmh.rotation_degrees = Vector3(-15, 0, 0)
+		## En la consola del centro (tras el volante quedaba tapado).
+		_cabina_kmh.position = Vector3(0.3, -0.13, -0.66)
+		_cabina_kmh.rotation_degrees = Vector3(-35, -18, 0)
+		_cabina_kmh.pixel_size = 0.0010
 		_cabina_kmh.no_depth_test = false
 		_cabina.add_child(_cabina_kmh)
 		for h in _cabina.find_children("*", "GeometryInstance3D", true, false):

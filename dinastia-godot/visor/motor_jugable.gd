@@ -961,10 +961,11 @@ func _vuelo_tanda() -> void:
 		if not gk.is_empty() and absf(b.x) < PALO + 0.2 and b.y < LARGUERO:
 			var alcance := 1.4 + (float(gk["attr"]["div"]) + float(gk["attr"]["ref"])) * 0.6
 			if lado == 0:
-				para = absf(b.x) < 0.9 and b.y < 2.0
+				para = absf(b.x) < 1.1 and b.y < 2.0
 			elif signf(b.x) == float(lado):
 				var dentro := absf(b.x) > 0.3 and absf(b.x) < alcance and b.y < (1.6 if absf(b.x) > 2.3 else 2.1)
-				para = dentro and _rng.randf() < 0.5 + float(gk["attr"]["ref"]) * 0.35
+				## 17-10: entraban ~9 de cada 10; con esto, ~3 de cada 4 (como en la realidad).
+				para = dentro and _rng.randf() < 0.62 + float(gk["attr"]["ref"]) * 0.3
 		if para:
 			vel_balon = Vector3(signf(b.x + 0.01) * _rng.randf_range(3, 7), _rng.randf_range(1, 3), -absf(vel_balon.z) * 0.3)
 			_resultado_tanda(false, "¡Qué parada!")
@@ -2950,7 +2951,8 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 			_patear(p, destino, 18.0, 0.0, -signf(lugar.x) * 8.0 * -sa, "pase")
 			pase_a = _companero_cerca(p, destino)
 		"penal":
-			_tirar(p, Vector2(_rng.randf_range(-1, 1), _rng.randf_range(-0.3, 0.4)), 0.7)
+			## Algún penal se va fuera o al palo (antes el apunte nunca salía del arco).
+			_tirar(p, Vector2(_rng.randf_range(-1.06, 1.06), _rng.randf_range(-0.3, 0.45)), 0.7)
 		"falta":
 			var dist := Vector2(lugar.x - arco.x, lugar.z - arco.z).length()
 			if dist < 30.0:
