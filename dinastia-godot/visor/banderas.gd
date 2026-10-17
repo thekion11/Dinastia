@@ -165,6 +165,44 @@ static func _pintar(img: Image, codigo: String) -> void:
 			for fy in 5:
 				for fx in 6:
 					_disco(img, 4.0 + fx * 6.5, 4.0 + fy * 6.5, 1.2, B)
+		## Las selecciones rivales sin liga en el mundo (17-10-2026).
+		"POR":
+			_franjas(img, [Color("046a38"), Color("da291c")], true, [2, 3])
+			_disco(img, ANCHO * 0.4, ALTO * 0.5, 11.0, amarillo)
+		"NED":
+			_franjas(img, [Color("ae1c28"), B, Color("21468b")])
+		"BEL":
+			_franjas(img, [negro, Color("fdda24"), Color("ef3340")], true)
+		"CRO":
+			_franjas(img, [Color("ff0000"), B, Color("171796")])
+			for i in 3:
+				for k in 2:
+					_rect(img, ANCHO / 2 - 9 + i * 6, ALTO / 2 - 9 + k * 6, 6, 6, Color("ff0000") if (i + k) % 2 == 0 else B)
+		"DEN":
+			_franjas(img, [Color("c8102e")])
+			_rect(img, 0, ALTO / 2 - 5, ANCHO, 10, B)
+			_rect(img, ANCHO / 3 - 5, 0, 10, ALTO, B)
+		"SEN":
+			_franjas(img, [Color("00853f"), Color("fdef42"), Color("e31b23")], true)
+			_estrella(img, ANCHO / 2.0, ALTO / 2.0, 9.0, Color("00853f"))
+		"NGA":
+			_franjas(img, [Color("008751"), B, Color("008751")], true)
+		"CMR":
+			_franjas(img, [Color("007a5e"), Color("ce1126"), Color("fcd116")], true)
+			_estrella(img, ANCHO / 2.0, ALTO / 2.0, 9.0, Color("fcd116"))
+		"IRN":
+			_franjas(img, [Color("239f40"), B, Color("da0000")])
+		"CRC":
+			_franjas(img, [Color("002b7f"), B, Color("ce1126"), B, Color("002b7f")], false, [1, 1, 2, 1, 1])
+		"CAN":
+			_franjas(img, [Color("d52b1e"), B, Color("d52b1e")], true, [1, 2, 1])
+			_estrella(img, ANCHO / 2.0, ALTO / 2.0, 12.0, Color("d52b1e"))
+		"NZL":
+			_franjas(img, [Color("012169")])
+			for e in [[0.72, 0.3], [0.62, 0.5], [0.82, 0.48], [0.72, 0.75]]:
+				_estrella(img, ANCHO * float(e[0]), ALTO * float(e[1]), 5.0, Color("c8102e"))
+		"QAT":
+			_franjas(img, [B, Color("8a1538")], true, [1, 2])
 		_:
 			## Sin dibujo propio: dos franjas con colores sacados del código.
 			var h := absi(codigo.hash())
