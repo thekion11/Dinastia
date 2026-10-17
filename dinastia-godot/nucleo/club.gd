@@ -191,7 +191,15 @@ func once(f: String = "") -> Array[Jugador]:
 			var encaja := 1.0
 			if j.pos_e != puesto:
 				encaja = 0.94 if j.pos_sec.has(puesto) else 0.86
-			var v := float(j.media_en(puesto)) * encaja * (0.7 + 0.003 * j.forma) * (0.9 + 0.002 * j.moral)
+				## Cambiar de LÍNEA (un delantero de lateral, un central de
+				## extremo) cuesta más que moverse dentro de ella (17-10: el
+				## informe del rival enseñaba DC jugando de LI).
+				if not j.pos_sec.has(puesto) and _grupo_de(puesto) != _grupo_de(j.pos_e):
+					encaja = 0.62
+			## Fuera de su puesto no rinde más que en el suyo (los atributos de un
+			## delantero rápido daban 76 de lateral con 74 de media).
+			var en_puesto := j.media_en(puesto) if j.pos_e == puesto else mini(j.media_en(puesto), j.ovr)
+			var v := float(en_puesto) * encaja * (0.7 + 0.003 * j.forma) * (0.9 + 0.002 * j.moral)
 			if v > mejor_v:
 				mejor_v = v
 				mejor = j
@@ -214,6 +222,10 @@ func once(f: String = "") -> Array[Jugador]:
 			elegidos.append(asignado[i])
 	## Las reglas de la liga de este club (cupo en cancha, juveniles).
 	return LeyesPais.ajustar_once(self, elegidos)
+
+static func _grupo_de(puesto: String) -> String:
+	var posd: Dictionary = Datos.tabla("POSD")
+	return String((posd.get(puesto, {}) as Dictionary).get("g", ""))
 
 func _es_puesto_portero(ranura: Variant) -> bool:
 	return _es_puesto_portero_str(String(ranura[0]))
