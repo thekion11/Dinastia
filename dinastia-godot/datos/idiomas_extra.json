@@ -2462,7 +2462,8 @@
   "HABILITADO %d cm": "ONSIDE BY %d cm",
   "Vibración del mando": "Controller vibration",
   "Suave": "Soft",
-  "Sin vibración": "No vibration"
+  "Sin vibración": "No vibration",
+  "Cámara: primera persona": "Camera: first person"
  },
  "pt": {
   "Historia": "História",
@@ -4927,7 +4928,8 @@
   "HABILITADO %d cm": "EM POSIÇÃO LEGAL POR %d cm",
   "Vibración del mando": "Vibração do controle",
   "Suave": "Suave",
-  "Sin vibración": "Sem vibração"
+  "Sin vibración": "Sem vibração",
+  "Cámara: primera persona": "Câmera: primeira pessoa"
  },
  "patrones": [
   [
@@ -7961,7 +7963,8 @@
   "HABILITADO %d cm": "EN JEU DE %d cm",
   "Vibración del mando": "Vibration de la manette",
   "Suave": "Douce",
-  "Sin vibración": "Sans vibration"
+  "Sin vibración": "Sans vibration",
+  "Cámara: primera persona": "Caméra : première personne"
  },
  "it": {
   "Historia": "Storia",
@@ -10333,7 +10336,8 @@
   "HABILITADO %d cm": "IN GIOCO DI %d cm",
   "Vibración del mando": "Vibrazione del controller",
   "Suave": "Leggera",
-  "Sin vibración": "Senza vibrazione"
+  "Sin vibración": "Senza vibrazione",
+  "Cámara: primera persona": "Telecamera: prima persona"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12705,7 +12709,8 @@
   "HABILITADO %d cm": "%d cm KEIN ABSEITS",
   "Vibración del mando": "Controller-Vibration",
   "Suave": "Sanft",
-  "Sin vibración": "Ohne Vibration"
+  "Sin vibración": "Ohne Vibration",
+  "Cámara: primera persona": "Kamera: Ego-Perspektive"
  },
  "ca": {
   "Historia": "Història",
@@ -15077,7 +15082,8 @@
   "HABILITADO %d cm": "HABILITAT PER %d cm",
   "Vibración del mando": "Vibració del comandament",
   "Suave": "Suau",
-  "Sin vibración": "Sense vibració"
+  "Sin vibración": "Sense vibració",
+  "Cámara: primera persona": "Càmera: primera persona"
  },
  "pl": {
   "Club": "Klub",
@@ -17744,7 +17750,8 @@
   "HABILITADO %d cm": "BEZ SPALONEGO O %d cm",
   "Vibración del mando": "Wibracje kontrolera",
   "Suave": "Delikatna",
-  "Sin vibración": "Bez wibracji"
+  "Sin vibración": "Bez wibracji",
+  "Cámara: primera persona": "Kamera: pierwsza osoba"
  },
  "tr": {
   "Club": "Kulüp",
@@ -20411,6 +20418,7 @@
   "HABILITADO %d cm": "%d cm OFSAYT DEĞİL",
   "Vibración del mando": "Kol titreşimi",
   "Suave": "Hafif",
-  "Sin vibración": "Titreşim yok"
+  "Sin vibración": "Titreşim yok",
+  "Cámara: primera persona": "Kamera: birinci şahıs"
  }
 }

@@ -5,7 +5,7 @@ extends Control
 ## como una app de carrera. Al andar o pararse vuelve a bajar.
 
 const ANCHO := 150.0
-const ALTO := 370.0
+const ALTO := 250.0
 
 var _vel: Label
 var _unidad: Label
@@ -16,10 +16,6 @@ var _barra: ProgressBar
 var _mostrar := false
 var _t := 0.0
 var _recorrido := 0.0
-## El GPS (17-10-2026): mapa con la ruta al estadio. Con M se saca el móvil
-## también andando (`gps_fijo`).
-var mapa: MapaMovil
-var gps_fijo := false
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -90,8 +86,6 @@ func _init() -> void:
 	v.add_child(_calle)
 	_dist = _l(12, Color(1, 0.85, 0.45))
 	v.add_child(_dist)
-	mapa = MapaMovil.new()
-	v.add_child(mapa)
 	modulate.a = 0.0
 
 func _l(tam: int, col: Color) -> Label:
@@ -109,7 +103,7 @@ static func _caja(col: Color, r: int) -> StyleBoxFlat:
 
 ## `modo`: "pie", "correr", "coche", "tren". `maxima`: para la barra.
 func poner(modo: String, km_h: float, maxima: float, calle: String, metros: float) -> void:
-	_mostrar = modo in ["correr", "coche", "tren"] or gps_fijo
+	_mostrar = modo in ["correr", "coche", "tren"]
 	_vel.text = str(int(round(km_h)))
 	_barra.max_value = maxima
 	_barra.value = km_h
