@@ -784,6 +784,14 @@ func _paso_tanda(delta: float) -> void:
 	var fase := String(tanda["fase"])
 	var lz: Dictionary = tanda["lanzador"]
 	var gk: Dictionary = tanda["portero"]
+	## Un cambio durante la tanda (el lanzador o el portero ya no están): ese
+	## penal se vuelve a preparar con el que toque.
+	if fase in ["preparar", "apuntar"] and ((not lz.is_empty() and not jugadores.has(lz)) or (not gk.is_empty() and not jugadores.has(gk))):
+		usuario = {}
+		apuntando = false
+		cargando = false
+		_siguiente_penal()
+		return
 	var detras := TANDA_PUNTO + Vector3(0, -R, -0.9)
 	for p: Dictionary in jugadores:
 		if p == lz and fase in ["preparar", "apuntar"]:
@@ -854,6 +862,9 @@ func _paso_tanda(delta: float) -> void:
 
 func _siguiente_penal() -> void:
 	var eq := tanda_turno()
+	## El orden se rehace cada vez: un cambio de última hora deja fuera al que
+	## salió (su nodo ya no existe) y mete al que entró en su sitio por tiro.
+	tanda["orden"] = [_orden_tanda(true), _orden_tanda(false)]
 	var orden: Array = tanda["orden"][eq]
 	var hechos: int = (tanda["tiros"][eq] as Array).size()
 	var lz: Dictionary = orden[hechos % orden.size()] if not orden.is_empty() else {}
@@ -864,7 +875,7 @@ func _siguiente_penal() -> void:
 	## El lanzador anterior vuelve al círculo y el portero que deja de
 	## defender, a su sitio de espera.
 	for antes: Dictionary in [tanda["lanzador"], tanda["portero"]]:
-		if not antes.is_empty() and antes != gk and antes != lz:
+		if not antes.is_empty() and antes != gk and antes != lz and jugadores.has(antes):
 			(antes["node"] as Node3D).position = _sitio_tanda(antes)
 			antes["vel"] = Vector3.ZERO
 			antes["gesto_hasta"] = 0.0
@@ -968,7 +979,7 @@ func _resultado_tanda(marcado: bool, texto: String) -> void:
 	(tanda["tiros"][eq] as Array).append(marcado)
 	tanda["fase"] = "resultado"
 	_t_estado = 0.0
-	if not lz.is_empty():
+	if not lz.is_empty() and jugadores.has(lz):
 		_anim(lz, "celebrar" if marcado else ["lamento", "manos_cabeza"][_rng.randi() % 2], true, 2.0)
 	aviso.emit(texto)
 	tanda_tiro.emit(eq, String(lz.get("id", "")), marcado)
@@ -3842,6 +3853,16 @@ func _mover_arbitros(delta: float) -> void:
 				obj = Vector3(-36.5, 0, clampf(b.z, -50.0, 0.0))
 			_:
 				obj = Vector3(36.5, 0, clampf(b.z, 0.0, 50.0))
+		## En la tanda: el principal al borde del área chica y un asistente en la
+		## línea de gol (fuera del plano del lanzador).
+		if estado == "tanda":
+			match String(a.get("id", "")):
+				"arbitro":
+					obj = Vector3(-7.5, 0, LARGO - 12.0)
+				"linea_a":
+					obj = Vector3(-36.5, 0, 0.0)
+				_:
+					obj = Vector3(PALO + 2.2, 0, LARGO - 0.3)
 		var hacia := obj - n.position
 		hacia.y = 0.0
 		var v := minf(hacia.length() * 1.6, 6.5)

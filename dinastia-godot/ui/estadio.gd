@@ -1048,7 +1048,8 @@ func _refrescar_marcador() -> void:
 		var seg := _motor.segundos_anadidos()
 		var reloj := "%d'" % _motor.minuto()
 		if _motor.estado == "tanda" or not _motor.tanda.is_empty():
-			reloj = "%s %d-%d" % [Idiomas.t("PEN."), _motor.goles_tanda(0), _motor.goles_tanda(1)]
+			## El detalle va en el marcador de la tanda (el de arriba no da para más).
+			reloj = Idiomas.t("PEN.")
 			seg = -1.0
 		elif seg >= 0.0:
 			reloj = "%d' +%d:%02d" % [_motor.minuto_base() + int(_motor.minutos_de_mitad()), int(seg) / 60, int(seg) % 60]
