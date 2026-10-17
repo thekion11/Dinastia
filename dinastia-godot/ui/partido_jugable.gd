@@ -134,11 +134,17 @@ func _montar(duracion_mitad: float) -> void:
 	var l := Puente3D.once(once_l)
 	var v := Puente3D.once(once_v)
 	var lista: Array = []
-	lista.append_array(sp.spawn_team(_raiz, l["xi"], l["jugadores"], Puente3D.formacion(local.tactica.formacion), true, Puente3D.kit(local), Puente3D.kit_portero(local)))
-	lista.append_array(sp.spawn_team(_raiz, v["xi"], v["jugadores"], Puente3D.formacion(visita.tactica.formacion), false, Puente3D.kit_visita(local, visita), Puente3D.kit_portero(visita)))
+	var kit_l := Puente3D.kit(local)
+	var kit_v := Puente3D.kit_visita(local, visita)
+	var por_l := Puente3D.kit_portero(local)
+	var por_v := Puente3D.kit_portero(visita)
+	lista.append_array(sp.spawn_team(_raiz, l["xi"], l["jugadores"], Puente3D.formacion(local.tactica.formacion), true, kit_l, por_l))
+	lista.append_array(sp.spawn_team(_raiz, v["xi"], v["jugadores"], Puente3D.formacion(visita.tactica.formacion), false, kit_v, por_v))
 	_en_campo = lista.duplicate()
 	## Árbitros, suplentes y los dos DT en la banda, como en el modo entrenador.
-	lista.append_array(sp.spawn_arbitros(_raiz))
+	## El trío, de la camiseta que contrasta con los dos equipos (M-072).
+	lista.append_array(sp.spawn_arbitros(_raiz, Puente3D.kit_arbitro(kit_l, kit_v,
+		hash(local.id + "|" + visita.id), [por_l, por_v])))
 	VistaEstadio.poner_banca_de(_raiz, sp, local, once_l, true)
 	VistaEstadio.poner_banca_de(_raiz, sp, visita, once_v, false)
 	var cb := Comercial.color_balon(mundo.comercial.balon, local) if mundo != null and mundo.comercial != null else []
