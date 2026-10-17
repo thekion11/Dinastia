@@ -4,8 +4,8 @@ extends Node3D
 ## que salía desaparecía de golpe y el que entraba aparecía en la banda. Ahora:
 ##   1. El cuarto árbitro levanta el cartel LED con los dos dorsales (el que
 ##      entra en verde, el que sale en rojo), reutilizando `CuartoArbitro`.
-##   2. El que entra espera en la banda, junto al cuarto árbitro (el motor lo
-##      sujeta con `freno_duelo` = 0: el equipo juega con diez, como en la
+##   2. El que entra espera en la banda, junto al cuarto árbitro (sujeto en su
+##      sitio y con `freno_duelo` = 0: el equipo juega con diez, como en la
 ##      realidad, hasta que se cruzan).
 ##   3. El que sale trota y, al acercarse, camina hasta la banda; se chocan la
 ##      mano (`chocar_mano`, los dos) y el que entra arranca hacia su sitio.
@@ -36,6 +36,7 @@ var _t_motor := 0.0
 var _t_palmada := 0.0
 var _punto := Vector3.ZERO
 var _anim_actual := ""
+var _sujeto := true
 
 static func iniciar(raiz: Node3D, spawner: PlayerSpawner, motor: MotorJugable, nodo_sale: Node3D, anim_sale: AnimationPlayer,
 		entra: Dictionary, dorsal_sale: int, dorsal_entra: int, kit: Dictionary = {}) -> EscenaCambio:
@@ -76,6 +77,7 @@ func _poner_anim(nombre: String) -> void:
 
 ## Suelta al que entra (el motor vuelve a moverlo).
 func _soltar() -> void:
+	_sujeto = false
 	if not _entra.is_empty():
 		_entra["freno_duelo_hasta"] = 0.0
 		_entra["freno_duelo"] = 1.0
@@ -91,6 +93,14 @@ func _process(_delta: float) -> void:
 		_soltar()
 		queue_free()
 		return
+	## Mientras espera, quieto en su sitio: el freno no basta si el motor
+	## recoloca a todos (un saque) o lo empuja; esto corre después del paso
+	## del motor (hijo de la raíz 3D, que es hija de la vista).
+	if _sujeto and _motor.poseedor == _entra:
+		_soltar()
+	if _sujeto and is_instance_valid(entra_nodo):
+		entra_nodo.position = _punto
+		_entra["vel"] = Vector3.ZERO
 	match fase:
 		"acude":
 			## Al lado del que entra, por el lado del campo.
