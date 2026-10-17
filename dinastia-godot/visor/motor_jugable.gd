@@ -385,6 +385,7 @@ static func tactica_desde(tc: Tactica, riesgo := false, tiempo := false) -> Dict
 ## Un cambio en pleno partido: `entra` (un diccionario de `PlayerSpawner`) ocupa
 ## el sitio táctico de `sale_id` y aparece en la banda, a la altura del medio.
 func reemplazar(sale_id: String, entra: Dictionary) -> bool:
+	_sumar_anadido(0.5)
 	var i := -1
 	for k in jugadores.size():
 		if String(jugadores[k].get("id", "")) == sale_id:
@@ -413,6 +414,7 @@ func reemplazar(sale_id: String, entra: Dictionary) -> bool:
 
 ## La roja: sale del campo y el equipo sigue con uno menos.
 func _expulsar(p: Dictionary) -> void:
+	_sumar_anadido(0.5)
 	jugadores.erase(p)
 	expulsados.append(p)
 	var n: Node3D = p["node"]
@@ -555,6 +557,14 @@ func tiempo_jugado() -> float:
 
 func _anadido_de(m: int) -> float:
 	return float(anadido[m - 1]) if anadido.size() >= m else 0.0
+
+## El añadido crece con lo que se pierde en el tiempo reglamentario (17-10):
+## goles, cambios, expulsiones. Solo antes de que empiece y con tope.
+func _sumar_anadido(minutos: float) -> void:
+	if mitad < 1 or anadido.size() < mitad or t > dur_mitad():
+		return
+	var tope := (4.0 if mitad == 1 else (7.0 if mitad == 2 else 3.0)) / minutos_de_mitad() * dur_mitad()
+	anadido[mitad - 1] = minf(float(anadido[mitad - 1]) + minutos / minutos_de_mitad() * dur_mitad(), tope)
 
 ## Segundos de partido jugados en el añadido (-1 si no se está en él).
 func segundos_anadidos() -> float:
@@ -1165,6 +1175,7 @@ func _gol(en_arco_visita: bool) -> void:
 	_t_estado = 0.0
 	saque = {"gol_local": de_local}
 	margen_gol = INF
+	_sumar_anadido(0.75)
 	lineas_gol = {}
 	if autor_id != "" and String(_margen_recepcion.get("id", "")) == autor_id and t - float(_margen_recepcion.get("t", -99.0)) < 12.0:
 		margen_gol = float(_margen_recepcion["m"])
