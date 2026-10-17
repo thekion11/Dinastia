@@ -1817,9 +1817,14 @@ func _conectar_noticias() -> void:
 			_escribir("[color=#e05555][b]ESTÁS DESPEDIDO.[/b][/color] La directiva pierde la paciencia (%s) y te destituye a mitad de temporada. Elige tu próximo club entre las ofertas de abajo." % motivo)
 			_anotar("ESTÁS DESPEDIDO.", "La directiva pierde la paciencia (%s) y te destituye a mitad de temporada." % motivo)
 			## El momento más definitivo del juego: si algo merece interrumpir,
-			## es que te acaben de echar.
-			Aviso.mostrar(self, "alerta", "🚪", "ESTÁS DESPEDIDO",
-				"La directiva te destituye tras la %s. Elige tu próximo club entre las ofertas de abajo." % motivo, "despido")
+			## es que te acaben de echar. Con pantalla, en persona: el presidente
+			## te lo dice en su despacho (`EscenaDespido`, M-238); sin pantalla
+			## (banco) sigue el aviso de siempre.
+			if DisplayServer.get_name() != "headless":
+				EscenaDespido.mostrar(self, mundo, motivo)
+			else:
+				Aviso.mostrar(self, "alerta", "🚪", "ESTÁS DESPEDIDO",
+					"La directiva te destituye tras la %s. Elige tu próximo club entre las ofertas de abajo." % motivo, "despido")
 			## `Roles.gd` lo deja escrito en su propio comentario -"lo llama quien
 			## atienda `Directiva.despedido`, DESPUÉS de comprobar
 			## `le_pueden_echar()`"- y nadie lo llamaba NUNCA, ni siquiera al
