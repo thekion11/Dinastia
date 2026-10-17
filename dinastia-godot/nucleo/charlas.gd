@@ -88,7 +88,7 @@ func hablar(j: Jugador, tema: String, anio: int, semana: int) -> Dictionary:
 	if repetido:
 		d = int(float(d) / 2.0) if d > 0 else d
 		resp = "«Otra vez con lo mismo, míster…» " + resp
-	j.moral = clampi(j.moral + d, 10, 99)
+	j.cambiar_moral(d, "Charlas del entrenador")
 	var efecto := ("moral %+d" % d) if d != 0 else "sin cambios"
 	return {"respuesta": resp, "efecto": efecto, "moral": d, "repetido": repetido}
 
@@ -105,13 +105,13 @@ func semana(c: Club, anio: int, sem: int) -> void:
 		for j: Jugador in c.plantilla:
 			if j.id == id:
 				if j.partidos - int(p["pj0"]) < PARTIDOS_PROMESA:
-					j.moral = clampi(j.moral - 8, 10, 99)
+					j.cambiar_moral(-8, "Charlas del entrenador")
 					for otro: Jugador in c.plantilla:
-						otro.moral = clampi(otro.moral - 1, 10, 99)
+						otro.cambiar_moral(-1, "Charlas del entrenador")
 					noticia.emit("🗣️ Promesa incumplida",
 						"%s cuenta en el vestuario que le prometiste minutos y no llegaron. El grupo toma nota." % j.nombre)
 				else:
-					j.moral = clampi(j.moral + 3, 10, 99)
+					j.cambiar_moral(3, "Charlas del entrenador")
 					noticia.emit("🤝 Promesa cumplida", "%s tuvo sus minutos, como le dijiste." % j.nombre)
 
 func a_dic() -> Dictionary:

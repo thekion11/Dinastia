@@ -178,7 +178,7 @@ func semana(c: Club, prensa) -> void:
 	var b := bono_vestuario()
 	if b > 0:
 		for j in c.plantilla:
-			j.moral = clampi(j.moral + (1 if Azar.suerte(float(b) * 0.12) else 0), 10, 99)
+			j.cambiar_moral((1 if Azar.suerte(float(b) * 0.12) else 0), "Instalaciones")
 	if prensa != null and bono_prensa() > 0 and prensa.funa > 0:
 		prensa.funa = maxi(0, prensa.funa - (1 if Azar.suerte(float(bono_prensa()) * 0.1) else 0))
 

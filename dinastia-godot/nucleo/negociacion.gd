@@ -167,7 +167,7 @@ func enviar_oferta() -> Dictionary:
 				rc.mover_saldo(-precio)
 				club.mover_saldo(precio)
 				jugador.club_id = rc.id
-				jugador.moral = clampi(jugador.moral - 6, 10, 99)
+				jugador.cambiar_moral(-6, "Mercado y contratos")
 				estado = "rota"
 				return {"tipo": "rival_firma", "club": rc, "precio": precio}
 		var r := _respuesta_del_jugador(m)
@@ -191,7 +191,7 @@ func enviar_oferta() -> Dictionary:
 			rc2.mover_saldo(-precio2)
 			club.mover_saldo(precio2)
 			jugador.club_id = rc2.id
-			jugador.moral = clampi(jugador.moral - 6, 10, 99)
+			jugador.cambiar_moral(-6, "Mercado y contratos")
 			estado = "rota"
 			return {"tipo": "rival_traspaso", "club": rc2, "precio": precio2}
 

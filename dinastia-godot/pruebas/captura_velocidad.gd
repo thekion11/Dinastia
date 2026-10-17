@@ -19,6 +19,7 @@ func _process(_d: float) -> void:
 		_guardar("res://pruebas/capturas/pantalla_velocidad_ajustes.png")
 		## Elegir "Rápido" (índice 3) y comprobar que un partido nuevo arranca ahí.
 		_pantalla.set("_velocidad_partido", 3)
+		InformeRival.activo = false
 		_pantalla.call("_dirigir")
 	if _n == 16:
 		var vivo: PartidoVivo = null
