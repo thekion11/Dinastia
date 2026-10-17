@@ -205,11 +205,11 @@ func semana(c: Club, roles: Roles, anio: int, sem: int, resultado: int) -> void:
 	if sem % 4 == 0:
 		if estres >= 70:
 			for j: Jugador in c.plantilla:
-				j.moral = clampi(j.moral - 1, 10, 99)
+				j.cambiar_moral(-1, "Tu estado de ánimo")
 			noticia.emit("😬 Te notan tenso", "El plantel nota tu estrés en los entrenamientos (moral −1).")
 		elif estres <= 30:
 			for j: Jugador in c.plantilla:
-				j.moral = clampi(j.moral + 1, 10, 99)
+				j.cambiar_moral(1, "Tu estado de ánimo")
 	## Asuntos de la vida.
 	if pendiente.is_empty():
 		_sortear_asunto(anio, sem)

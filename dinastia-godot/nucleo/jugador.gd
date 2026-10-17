@@ -74,6 +74,31 @@ func registrar_temporada(anio: int, club_nombre: String) -> void:
 
 var forma: int = 60
 var moral: int = 70
+## POR QUÉ SUBE O BAJA LA MORAL (17-10-2026): los últimos cambios con su motivo
+## y la semana, [{"s": semana, "m": motivo, "d": delta}] (los del mismo motivo en
+## la misma semana se suman). Lo lee el Camarín.
+var historial_moral: Array = []
+## La semana del juego, que pone el mundo al avanzar (el jugador no la conoce).
+static var semana_global := 0
+const HISTORIAL_MORAL_MAX := 12
+
+## Cambia la moral (entre 10 y 99) y anota el motivo.
+func cambiar_moral(d: int, motivo: String) -> void:
+	var antes := moral
+	moral = clampi(moral + d, 10, 99)
+	anotar_moral(moral - antes, motivo)
+
+func anotar_moral(real: int, motivo: String) -> void:
+	if real == 0:
+		return
+	if not historial_moral.is_empty():
+		var u: Dictionary = historial_moral[-1]
+		if int(u["s"]) == semana_global and String(u["m"]) == motivo:
+			u["d"] = int(u["d"]) + real
+			return
+	historial_moral.append({"s": semana_global, "m": motivo, "d": real})
+	if historial_moral.size() > HISTORIAL_MORAL_MAX:
+		historial_moral.pop_front()
 var fisico: int = 100
 var lesion: int = 0            ## semanas que le quedan fuera
 var suspension: int = 0

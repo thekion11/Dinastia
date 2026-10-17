@@ -306,8 +306,7 @@ func listar_transferible(j: Jugador) -> void:
 	if j.transferible:
 		return
 	j.transferible = true
-	j.moral = clampi(j.moral - 8, 10, 99)
-
+	j.cambiar_moral(-8, "Mercado y contratos")
 ## Una vez por semana, puede llegar una oferta por un jugador tuyo. Los que
 ## están en la lista de transferibles entran TRES veces en la bolsa -dos más
 ## que el resto de tu plantel con media 68+-, que es justo lo que el propio
@@ -402,8 +401,7 @@ func responder_oferta(idx: int, acepta: bool) -> void:
 				m2.roles.anotar_reputacion("negociador", d, "Venta de %s por el %d %% de su valor" % [j.nombre, int(razon * 100.0)])
 		traspaso.emit(j, vendedor, comprador, monto)
 	elif Azar.suerte(0.40):
-		j.moral = clampi(j.moral - 10, 10, 99)
-
+		j.cambiar_moral(-10, "Mercado y contratos")
 ## `ofertas_recibidas` guarda objetos (`Jugador`/`Club`) directos, no ids -no
 ## hacía falta buscarlos porque ninguno de los dos apunta de vuelta al Mundo-,
 ## pero un guardado es texto, así que aquí sí hay que pasar por su id.

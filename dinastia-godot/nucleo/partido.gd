@@ -183,7 +183,7 @@ func arengar(j: Jugador) -> String:
 	if int(impulsos.get(j.id, -1)) > minuto:
 		return "%s ya está encendido" % j.nombre
 	impulsos[j.id] = minuto + ARENGA_MINUTOS
-	j.moral = clampi(j.moral + 3, 10, 99)
+	j.cambiar_moral(3, "Partido")
 	## Invalidar la fuerza o el subidón no llegaría al marcador hasta el
 	## siguiente cambio: sería un botón decorativo.
 	invalidar_fuerza()
@@ -1041,5 +1041,5 @@ func chequear_invasion(animo: int, soy_local: bool, voy_perdiendo: bool) -> bool
 	## parados con la policía en el campo no distingue de camisetas.
 	for j in _todos:
 		j.fisico = clampi(j.fisico - Azar.ent(3, 8), 10, 100)
-		j.moral = clampi(j.moral - Azar.ent(2, 6), 10, 99)
+		j.cambiar_moral(-(Azar.ent(2, 6)), "Partido")
 	return true
