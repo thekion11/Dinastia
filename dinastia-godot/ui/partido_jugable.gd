@@ -162,6 +162,10 @@ func _montar(duracion_mitad: float) -> void:
 		motor.lanza_usuario = {"corner": bool(carrera.lanzador.get("corners", true)),
 			"falta": bool(carrera.lanzador.get("faltas", false)), "penal": bool(carrera.lanzador.get("penales", false)), "banda": false}
 	motor.aviso.connect(_mostrar_banner)
+	## El silbato con el gesto del árbitro (M-106).
+	motor.gesto_arbitro.connect(func(g: String) -> void:
+		if g == "silbato":
+			Sonido.toca("silbato"))
 	motor.gol.connect(_al_gol)
 	## La celebración dura lo que la realización del gol (como en el modo DT).
 	motor.duracion_gol = CineGol.DURACION + 0.6
