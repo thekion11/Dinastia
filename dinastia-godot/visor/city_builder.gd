@@ -2638,6 +2638,7 @@ const RUTAS_SERVICIO := [
 ## que se puede ir: sin calles, una parcela a 300 m del estadio parece un error
 ## de colocación, no un terreno del otro lado de la calle.
 func _calles() -> void:
+	vias_mapa.clear()
 	## La red de calles entera -el anillo completo mas los ramales a cada
 	## parcela, la mayor superficie de asfalto del mapa- tambien conecta
 	## `Texturas.asfalto()` (17-9-2026).
@@ -2783,7 +2784,12 @@ static var _mat_tapa: StandardMaterial3D = null
 ## su bordillo y su acera como un fondo de saco de verdad.
 var _vias: Array[Dictionary] = []
 
+## Las calles del núcleo como rectángulos (centro xz, tamaño): las lee el GPS
+## (`MinimapaCiudad`), que antes solo dibujaba la red de fuera.
+static var vias_mapa: Array[Rect2] = []
+
 func _via(centro: Vector3, tam: Vector2, mat_asfalto: Material, _mat_linea: Material, horizontal: bool) -> void:
+	vias_mapa.append(Rect2(Vector2(centro.x, centro.z) - tam * 0.5, tam))
 	var m := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = Vector3(tam.x, 0.12, tam.y)
