@@ -173,7 +173,10 @@ const COSTES := {
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
-	"_probar_prorroga_y_penales": 0.6,
+	## Coste mínimo a propósito: va la última en el reparto y no mueve a las demás
+	## (`_probar_motor_libre` depende del estado que dejan las secciones previas de
+	## su proceso; ver el HALLAZGO en CLAUDE.md). Mide ~0,5 s.
+	"_probar_prorroga_y_penales": 0.01,
 }
 var _reparto: Array = []
 
