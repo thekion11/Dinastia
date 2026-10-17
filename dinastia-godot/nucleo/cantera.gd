@@ -665,7 +665,7 @@ func becar(j: Jugador) -> String:
 	mio.mover_saldo(-coste)
 	movimiento.emit("Beca deportiva: %s" % j.nombre, -coste)
 	_ficha(j.id)["beca"] = true
-	j.moral = clampi(j.moral + 14, 10, 99)
+	j.cambiar_moral(14, "Cantera")
 	noticia.emit("Beca para %s" % j.nombre,
 		"El club le paga estudios, alojamiento y comida. Se queda tranquilo y es mucho más difícil que se lo lleven.")
 	return ""
@@ -763,8 +763,7 @@ func etiquetar_promesa(j: Jugador, referencia: String) -> void:
 	f["etiqueta"] = {"ref": referencia, "desde": m.anio, "cumple": 0, "presion": 0, "libre": false}
 	## La etiqueta llega con un golpe de moral: el chico se entera el mismo día
 	## que la prensa, y a los diecisiete eso no es un halago.
-	j.moral = clampi(j.moral - 6, 10, 99)
-
+	j.cambiar_moral(-6, "Cantera")
 func etiqueta_de(j: Jugador) -> Dictionary:
 	return _fichas.get(j.id, {}).get("etiqueta", {}) if j != null else {}
 
@@ -788,7 +787,9 @@ func _proceso_etiquetas() -> Array[Dictionary]:
 		elif anios >= 1 and j.partidos >= 6:
 			e["presion"] = int(e.get("presion", 0)) + 1
 		if int(e["presion"]) == 6:
+			var _m0 := j.moral
 			j.moral = clampi(j.moral - 14, 5, 99)
+			j.anotar_moral(j.moral - _m0, "Cantera")
 			etiqueta_pesa.emit(j, String(e.get("ref", "")))
 			noticia.emit("El peso de un apellido",
 				"La prensa se cansó de esperar a %s. «El nuevo %s no aparece», titulan hoy. El chico entrenó cabizbajo toda la semana: la etiqueta que le pusieron a los diecisiete le pesa como una mochila de piedras." % [
@@ -796,7 +797,9 @@ func _proceso_etiquetas() -> Array[Dictionary]:
 			sucesos.append({"tipo": "etiqueta_pesa", "jugador": j})
 		if int(e.get("cumple", 0)) >= 8:
 			e["libre"] = true
+			var _m0 := j.moral
 			j.moral = clampi(j.moral + 12, 5, 99)
+			j.anotar_moral(j.moral - _m0, "Cantera")
 			etiqueta_superada.emit(j, String(e.get("ref", "")))
 			noticia.emit("Ya no es «el nuevo» nadie",
 				"%s se sacó la etiqueta de encima a fuerza de partidos. Hoy la prensa escribe su nombre solo, sin compararlo con %s." % [
@@ -904,7 +907,7 @@ func chequeo_promesas() -> Array[Dictionary]:
 				cumplida = true
 				break
 		if cumplida:
-			j.moral = clampi(j.moral + 8, 10, 99)
+			j.cambiar_moral(8, "Cantera")
 			noticia.emit("Promesa cumplida: %s" % j.nombre,
 				"Le prometiste traer a alguien de su país y ahora tiene con quién hablar en su idioma. Se le nota en el ánimo.")
 		else:
@@ -912,7 +915,7 @@ func chequeo_promesas() -> Array[Dictionary]:
 			## quedo sin compatriota se siente solo pero no se hunde, y sobre todo no
 			## pide salir: es exactamente para lo que se le paga.
 			var amortigua := m.staff.adaptacion_extranjeros() if m.staff != null else 1.0
-			j.moral = clampi(j.moral - int(round(16.0 * amortigua)), 10, 99)
+			j.cambiar_moral(-(int(round(16.0 * amortigua))), "Cantera")
 			j.pide_salir = amortigua > 0.5
 			noticia.emit("Promesa incumplida: %s" % j.nombre,
 				"Pasó la temporada y nunca llegó ese compatriota que le prometiste. Se siente solo, la moral se le cayó y ya pidió salir.")
@@ -990,7 +993,7 @@ func renovar(j: Jugador, con_clausula: bool = false) -> Dictionary:
 	## contento: el mismo +3 de moral que el HTML.
 	var ag := agente_de(j)
 	if String(ag.get("perfil", "")) == "mediatico":
-		j.moral = clampi(j.moral + 3, 10, 99)
+		j.cambiar_moral(3, "Cantera")
 	noticia.emit("Renovado: %s" % Nombres.visible(j.nombre),
 		"Firma por %d temporadas a %d/sem%s. Negoció su agente %s (%s)." % [
 			j.anios_contrato, j.sueldo,
@@ -1039,7 +1042,7 @@ func ofrecer_fidelidad(j: Jugador, c: Club) -> String:
 		return "caja insuficiente: cuesta %d" % costo
 	c.mover_saldo(-costo)
 	j.fidelidad_hasta = (m.anio if m != null else 0) + 3
-	j.moral = clampi(j.moral + 14, 10, 99)
+	j.cambiar_moral(14, "Cantera")
 	noticia.emit("Prima de fidelidad: %s" % Nombres.visible(j.nombre),
 		"Firma su cláusula de fidelidad hasta %d: no pedirá salir mientras siga vigente." % j.fidelidad_hasta)
 	return ""
@@ -1174,7 +1177,7 @@ func resolver_agente(op: String, f: float = 1.0, se_fue: bool = false) -> Dictio
 			var j := _jugador(mio, String(exigencia.get("pid", "")))
 			if acepta and j != null:
 				j.sueldo = int(round(float(j.sueldo) * (1.0 + 0.3 * f)))
-				j.moral = clampi(j.moral + int(round(14.0 * f)), 10, 99)
+				j.cambiar_moral(int(round(14.0 * f)), "Cantera")
 				j.anios_contrato = maxi(j.anios_contrato, 3)
 				_mover_confianza(nombre, 1 if f >= 0.6 else 0)
 				## El resto del vestuario mira de reojo la escala salarial: no es
@@ -1182,7 +1185,7 @@ func resolver_agente(op: String, f: float = 1.0, se_fue: bool = false) -> Dictio
 				## de su nivel se enteran.
 				for x in mio.plantilla:
 					if f > 0.6 and x.id != j.id and x.ovr >= j.ovr - 3:
-						x.moral = clampi(x.moral - Azar.ent(1, 5), 10, 99)
+						x.cambiar_moral(-(Azar.ent(1, 5)), "Cantera")
 				cuerpo = "%s firma la mejora. El resto del vestuario mira de reojo la escala salarial." % j.nombre
 			else:
 				_mover_confianza(nombre, -2)
@@ -1236,9 +1239,7 @@ func _castigar_clientes(m: Mundo, castigo: int) -> void:
 	for id: String in exigencia.get("ids", []):
 		var x := _jugador(mio, id)
 		if x != null:
-			x.moral = clampi(x.moral - castigo, 10, 99)
-
-
+			x.cambiar_moral(-castigo, "Cantera")
 # ===========================================================================
 #  AUXILIARES
 # ===========================================================================
