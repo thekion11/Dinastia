@@ -22,8 +22,10 @@ func _process(_d: float) -> void:
 		_v.call("_aplicar_hora")
 		_v.explorar("coche")
 		_e = _v.get("_explorador")
-		_e.cuerpo.position = Vector3(990.0 + 15.0, 0, -500.0)
-		_e.cuerpo.position.y = _e.altura_suelo(1005.0, -500.0)
+		## NUCLEO=1: dentro del núcleo del club (para ver sus calles en el GPS).
+		var en := Vector3(CityBuilder.RING_X, 0, 60.0) if OS.get_environment("NUCLEO") != "" else Vector3(1005.0, 0, -500.0)
+		_e.cuerpo.position = en
+		_e.cuerpo.position.y = _e.altura_suelo(en.x, en.z)
 		_e.set("rumbo", PI)
 	if _n >= 8:
 		var fase := (_n - 8) / 12
@@ -34,7 +36,7 @@ func _process(_d: float) -> void:
 			_e.set("_balanceo", 0.04)
 			_e.call("_colocar_camara", 1.0)
 			if (_n - 8) % 12 == 10:
-				var nom := "res://pruebas/capturas/conduccion_%d.png" % fase
+				var nom := ("res://pruebas/capturas/conduccion_nucleo_%d.png" if OS.get_environment("NUCLEO") != "" else "res://pruebas/capturas/conduccion_%d.png") % fase
 				get_viewport().get_texture().get_image().save_png(nom)
 				print("FOTO ", nom)
 		else:

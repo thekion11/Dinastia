@@ -341,6 +341,8 @@ func abrir_menu(id: String, sub: int = -1) -> PantallaMenu:
 		return null
 	var subs: Array = m["subs"]
 	var es_accion: bool = sub >= 0 and sub < subs.size() and (subs[sub] as Dictionary).has("accion")
+	if is_instance_valid(pantalla_abierta) and pantalla_abierta.cerrando():
+		pantalla_abierta = null
 	if is_instance_valid(pantalla_abierta) and String(pantalla_abierta.get_meta("id", "")) == id:
 		if sub < 0:
 			pantalla_abierta.portada()

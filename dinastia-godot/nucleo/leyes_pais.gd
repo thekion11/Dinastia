@@ -159,6 +159,27 @@ static func ajustar_once(c: Club, once: Array[Jugador], clubes: Dictionary = {})
 				hay = true
 		if hay:
 			continue
+		## 17-10: primero se busca un juvenil que entre por alguien de SU línea
+		## (antes un delantero joven acababa de lateral izquierdo).
+		var cambiado := false
+		var jovenes: Array[Jugador] = banca.filter(func(j: Jugador) -> bool: return j.edad <= edad and not j.es_portero())
+		jovenes.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
+		for jv: Jugador in jovenes:
+			var sale_l: Jugador = null
+			for j: Jugador in res:
+				if j.es_portero() or j.edad <= edad or j.pos != jv.pos:
+					continue
+				if ocupa_cupo(jv, c.pais, clubes) and not ocupa_cupo(j, c.pais, clubes):
+					continue
+				if sale_l == null or j.ovr < sale_l.ovr:
+					sale_l = j
+			if sale_l != null:
+				res[res.find(sale_l)] = jv
+				banca.erase(jv)
+				cambiado = true
+				break
+		if cambiado:
+			continue
 		## Sale el peor de campo que no sea portero ni juvenil.
 		var peor: Jugador = null
 		for j: Jugador in res:

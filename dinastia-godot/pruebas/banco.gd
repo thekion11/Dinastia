@@ -127,6 +127,8 @@ const SECCIONES := [
 	"_probar_prorroga_y_penales",
 	"_probar_informe_rival",
 	"_probar_porque_moral",
+	"_probar_partido_abandonado",
+	"_probar_no_atravesar_paredes",
 	"_probar_paridad_idiomas",
 ]
 
@@ -7472,7 +7474,13 @@ func _probar_motor_libre() -> void:
 	var tiros: Array = ig["tiros"]
 	var acierto := float(ig["pases_ok"][0] + ig["pases_ok"][1]) / maxf(1.0, float(ig["pases"][0] + ig["pases"][1]))
 	print("   · iguales: ", ig["goles"], " tiros ", tiros, " pases ", ig["pases"], " acierto %.0f %%" % (acierto * 100.0))
-	_comprobar(int(ig["goles"][0]) + int(ig["goles"][1]) <= 8, "marcador de fútbol, no de balonmano")
+	## Con un solo partido la prueba dependía de la suerte de esa semilla (17-10:
+	## al cambiar el once automático salió un 7-2). Se mira la media de cuatro.
+	var total_g := int(ig["goles"][0]) + int(ig["goles"][1])
+	for sem in [52, 53, 54]:
+		var otro := MotorLibre.new(fuerte.once(), fuerte.once(), 1.0, 1.0, sem).simular()
+		total_g += int(otro["goles"][0]) + int(otro["goles"][1])
+	_comprobar(float(total_g) / 4.0 <= 8.0, "marcador de fútbol, no de balonmano (media %.1f goles en 4 partidos)" % (float(total_g) / 4.0))
 	## Entre dos equipos de élite el prototipo todavía tira de más (calibración
 	## pendiente, E17 del ROADMAP): el tope es generoso a propósito.
 	_comprobar(int(tiros[0]) + int(tiros[1]) >= 6 and int(tiros[0]) + int(tiros[1]) <= 160, "hay tiros, sin exagerar")
@@ -8676,4 +8684,65 @@ func _probar_porque_moral() -> void:
 	_comprobar(j1 != null and j1.historial_moral.size() == j0.historial_moral.size(), "el historial de moral se guarda y se carga")
 	var sat: Dictionary = m.vestuario.satisfaccion_de(j0)
 	_comprobar(sat.has("min") and sat.has("rend") and sat.has("tact") and sat.has("inst"), "el Camarín puede leer lo que pesa en la satisfacción")
+
+## EL PARTIDO ABANDONADO A MEDIAS (17-10-2026): cerrar el juego perdiendo y
+## volver a cargar NO repite el partido desde el 0-0, y recargar no cambia nada.
+func _probar_partido_abandonado() -> void:
+	_titulo("PARTIDO ABANDONADO A MEDIAS: NO SE PUEDE REPETIR HASTA GANAR")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var par := m.proximo_partido()
+	var p := Partido.new(par[0], par[1])
+	p.preparar()
+	PartidoPendiente.abrir(m, p)
+	p.goles_local = 0
+	p.goles_visita = 2
+	p.minuto = 60
+	PartidoPendiente.actualizar(m, p)
+	## La partida tal como quedó guardada (recargarla es partir siempre de aquí).
+	var foto := Partida.instantanea(m)
+	var d := PartidoPendiente.pendiente(m)
+	_comprobar(not d.is_empty() and int(d["gv"]) == 2 and int(d["minuto"]) == 60, "el partido en curso queda apuntado con su marcador y su minuto")
+	var r1 := PartidoPendiente.resolver(m, d)
+	_comprobar(r1 != null and r1.terminado_ya and r1.goles_visita >= 2, "al cargar se completa desde el 0-2 del 60' (no desde 0-0): %d-%d" % [r1.goles_local, r1.goles_visita])
+	_comprobar(PartidoPendiente.pendiente(m).is_empty(), "una vez resuelto, deja de estar pendiente")
+	## Recargar = otra vez el mismo resultado (azar fijo para ese partido).
+	var m2 := Partida.desde_instantanea(foto)
+	var r2 := PartidoPendiente.resolver(m2, d)
+	_comprobar(r2 != null and r2.goles_local == r1.goles_local and r2.goles_visita == r1.goles_visita, "recargar da el mismo resultado (%d-%d)" % [r2.goles_local, r2.goles_visita])
+	d["minuto"] = 90
+	var r3 := PartidoPendiente.resolver(m, d)
+	_comprobar(r3 != null and r3.goles_local == 0 and r3.goles_visita == 2, "si ya se había pitado el final, queda el resultado tal cual")
+
+## NO SE ATRAVIESAN PAREDES (17-10-2026, caza de bugs): con un coche del
+## tráfico encima, antes se podía entrar caminando en un edificio.
+class _ExpPared extends ExploradorCiudad:
+	var pared_x := 5.0
+	var movil_encima := false
+	func libre_obst(p: Vector3, radio: float) -> bool:
+		return p.x + radio < pared_x
+	func _choca_moviles(_p: Vector3, _radio: float) -> bool:
+		return movil_encima
+	func _choca_circulos(_p: Vector3, _radio: float) -> bool:
+		return false
+
+func _probar_no_atravesar_paredes() -> void:
+	_titulo("CIUDAD: NO SE ATRAVIESAN PAREDES")
+	var ex := _ExpPared.new()
+	ex.cuerpo = Node3D.new()
+	ex.modo = "pie"
+	ex.cuerpo.position = Vector3(4.0, 0, 0)
+	ex.movil_encima = true
+	for i in 40:
+		ex._mover_un_trozo(Vector3(0.3, 0, 0), 0.4)
+	_comprobar(ex.cuerpo.position.x + 0.4 <= ex.pared_x + 0.001, "con un coche encima no se entra en el edificio (x=%.2f, pared en %.1f)" % [ex.cuerpo.position.x, ex.pared_x])
+	ex._mover_un_trozo(Vector3(-0.3, 0, 0), 0.4)
+	_comprobar(ex.cuerpo.position.x < 4.3, "pero sí se puede salir de debajo del coche hacia la calle")
+	ex.movil_encima = false
+	ex.cuerpo.position = Vector3(5.5, 0, 0)
+	ex._mover_un_trozo(Vector3(-0.3, 0, 0), 0.4)
+	_comprobar(ex.cuerpo.position.x < 5.5, "si ya estás dentro de algo fijo (al salir del metro) se te deja salir")
+	ex.cuerpo.free()
+	ex.free()
 

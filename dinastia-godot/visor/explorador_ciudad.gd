@@ -271,6 +271,37 @@ func _choca_moviles(p: Vector3, radio: float) -> bool:
 			return true
 	return false
 
+## Un trozo de movimiento con sus choques. Devuelve false si chocó de frente.
+func _mover_un_trozo(paso: Vector3, r: float) -> bool:
+	var pos := cuerpo.position
+	## Si ya estás dentro de algo FIJO (al salir del metro, por ejemplo), se te
+	## deja andar para salir. Si lo que tienes encima es un MÓVIL (un coche que
+	## se te mete), se ignoran los móviles pero NO las paredes: antes, con un
+	## coche encima, se podía entrar caminando en los edificios (17-10).
+	var libre_fijo := func(q: Vector3) -> bool: return libre_obst(q, r) and not _choca_circulos(q, r)
+	var dentro_fijo: bool = not libre_fijo.call(pos)
+	var solo_movil: bool = not dentro_fijo and _choca_moviles(pos, r)
+	var vale := func(q: Vector3) -> bool:
+		if dentro_fijo:
+			return true
+		if solo_movil:
+			return libre_fijo.call(q)
+		return libre_total(q, r)
+	if vale.call(pos + paso):
+		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z + paso.z), pos.z + paso.z)
+		return true
+	if vale.call(pos + Vector3(paso.x, 0, 0)):
+		## Choque en diagonal: se desliza por la pared en vez de pararse en seco.
+		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z), pos.z)
+		vel *= 0.92
+		return true
+	if vale.call(pos + Vector3(0, 0, paso.z)):
+		cuerpo.position = Vector3(pos.x, altura_suelo(pos.x, pos.z + paso.z), pos.z + paso.z)
+		vel *= 0.92
+		return true
+	vel *= -0.25 if modo == "coche" else 0.0
+	return false
+
 ## Manzanas, río, círculos y móviles: todo lo que impide estar en `p`.
 func libre_total(p: Vector3, radio: float) -> bool:
 	return libre_obst(p, radio) and not _choca_circulos(p, radio) and not _choca_moviles(p, radio)
@@ -671,22 +702,13 @@ func _physics_process(delta: float) -> void:
 			_sonar_pasos(vel)
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
-	var paso := adelante * vel * delta
-	var pos := cuerpo.position
-	## Si ya estás dentro de algo (al salir del metro, por ejemplo), se te deja
-	## andar para salir en vez de quedarte atrapado.
-	var atrapado := not libre_total(pos, r)
-	if atrapado or libre_total(pos + paso, r):
-		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z + paso.z), pos.z + paso.z)
-	elif libre_total(pos + Vector3(paso.x, 0, 0), r):
-		## Choque en diagonal: se desliza por la pared en vez de pararse en seco.
-		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z), pos.z)
-		vel *= 0.92
-	elif libre_total(pos + Vector3(0, 0, paso.z), r):
-		cuerpo.position = Vector3(pos.x, altura_suelo(pos.x, pos.z + paso.z), pos.z + paso.z)
-		vel *= 0.92
-	else:
-		vel *= -0.25 if modo == "coche" else 0.0
+	## En pasos de 30 cm como mucho (17-10, caza de bugs): con un tirón de
+	## fotogramas el coche avanzaba metros de golpe y se saltaba vallas finas.
+	var paso_total := adelante * vel * delta
+	var trozos := maxi(1, ceili(paso_total.length() / 0.3))
+	for _k in trozos:
+		if not _mover_un_trozo(paso_total / float(trozos), r):
+			break
 	cuerpo.rotation.y = rumbo
 	if modo == "coche":
 		cuerpo.rotation.x = _cabeceo
@@ -783,6 +805,12 @@ var _t_cabina := 0.0
 var _cabina: Node3D
 var _cabina_volante: Node3D
 var _cabina_kmh: Label3D
+## Los brazos del conductor (17-10-2026): las manos van en el aro a las diez y
+## diez y giran con él; el antebrazo va del hombro a la mano.
+var _cabina_manos: Array[MeshInstance3D] = []
+var _cabina_brazos: Array[MeshInstance3D] = []
+const _MANO_EN_ARO := [Vector3(-0.156, 0.02, -0.09), Vector3(0.156, 0.02, -0.09)]
+const _HOMBRO := [Vector3(-0.3, -0.42, 0.1), Vector3(0.3, -0.42, 0.1)]
 
 func _fov_hacia(f: float, delta: float) -> void:
 	camara.fov = lerpf(camara.fov, f, clampf(delta * 3.0, 0.0, 1.0)) if delta < 1.0 else f
@@ -850,14 +878,45 @@ func _cabina_3d(ver: bool) -> void:
 		buje.mesh = cm
 		buje.material_override = gris
 		_cabina_volante.add_child(buje)
+		## Los brazos: manga oscura y mano color piel.
+		var manga := StandardMaterial3D.new()
+		manga.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		manga.albedo_color = Color(0.16, 0.2, 0.3)
+		var mano_m := StandardMaterial3D.new()
+		mano_m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mano_m.albedo_color = Color(0.8, 0.6, 0.47)
+		for i in 2:
+			var br := MeshInstance3D.new()
+			var cm2 := CylinderMesh.new()
+			cm2.top_radius = 0.034
+			cm2.bottom_radius = 0.042
+			cm2.height = 1.0
+			cm2.radial_segments = 10
+			br.mesh = cm2
+			br.material_override = manga
+			_cabina.add_child(br)
+			_cabina_brazos.append(br)
+			var mn := MeshInstance3D.new()
+			var sm2 := SphereMesh.new()
+			sm2.radius = 0.045
+			sm2.height = 0.08
+			sm2.radial_segments = 10
+			sm2.rings = 6
+			mn.mesh = sm2
+			mn.material_override = mano_m
+			mn.scale = Vector3(1.0, 0.8, 1.35)
+			_cabina.add_child(mn)
+			_cabina_manos.append(mn)
 		## El velocímetro, en el cuadro tras el volante.
 		_cabina_kmh = Label3D.new()
 		_cabina_kmh.font_size = 48
 		_cabina_kmh.pixel_size = 0.0012
 		_cabina_kmh.modulate = Color(0.55, 0.95, 0.75)
 		_cabina_kmh.outline_size = 0
-		_cabina_kmh.position = Vector3(0.0, -0.19, -0.66)
-		_cabina_kmh.rotation_degrees = Vector3(-15, 0, 0)
+		## En la consola del centro (tras el volante quedaba tapado).
+		_cabina_kmh.position = Vector3(0.3, -0.13, -0.66)
+		_cabina_kmh.rotation_degrees = Vector3(-35, -18, 0)
+		_cabina_kmh.pixel_size = 0.0010
 		_cabina_kmh.no_depth_test = false
 		_cabina.add_child(_cabina_kmh)
 		for h in _cabina.find_children("*", "GeometryInstance3D", true, false):
@@ -865,6 +924,28 @@ func _cabina_3d(ver: bool) -> void:
 	_cabina.visible = true
 	## El aro mira al conductor (eje inclinado hacia atrás) y gira sobre su eje.
 	_cabina_volante.basis = Basis(Vector3.RIGHT, deg_to_rad(70.0)) * Basis(Vector3.UP, _volante * 2.6)
+	## Manos en el aro (giran con él) y antebrazos del hombro a la mano; el
+	## cuerpo se inclina un poco hacia el lado al que giras.
+	var lean := Vector3(-_volante * 0.04, 0, 0)
+	for i in mini(2, _cabina_manos.size()):
+		## Las manos acompañan el aro hasta ~35° y ahí resbalan (no se cruzan
+		## ni bajan tras la consola en los giros fuertes).
+		var giro_mano := clampf(_volante * 2.6, -0.6, 0.6)
+		var base_mano := Basis(Vector3.RIGHT, deg_to_rad(70.0)) * Basis(Vector3.UP, giro_mano)
+		var mano: Vector3 = _cabina_volante.position + base_mano * (_MANO_EN_ARO[i] as Vector3)
+		_cabina_manos[i].position = mano
+		_cabina_manos[i].basis = base_mano.scaled(Vector3(1.0, 0.8, 1.35))
+		var hombro: Vector3 = (_HOMBRO[i] as Vector3) + lean
+		var eje := mano - hombro
+		var largo := eje.length()
+		if largo < 0.01:
+			continue
+		var y := eje / largo
+		var x := y.cross(Vector3.FORWARD)
+		if x.length() < 0.01:
+			x = y.cross(Vector3.RIGHT)
+		x = x.normalized()
+		_cabina_brazos[i].transform = Transform3D(Basis(x, y * largo, x.cross(y)), (hombro + mano) * 0.5)
 	_cabina_kmh.text = "%d km/h" % int(round(absf(vel) * 3.6))
 
 ## Una barra de `a` a `b` (pilares y techo).

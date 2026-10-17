@@ -15,8 +15,11 @@ static func activar(arbol: SceneTree) -> void:
 	arbol.node_added.connect(_nuevo)
 
 static func _nuevo(n: Node) -> void:
-	if n is BaseButton and not n.has_meta("sin_fx"):
+	## `node_added` vuelve a saltar al cambiar un nodo de padre (los menús laterales
+	## «mudan» las pestañas): cada botón se conecta UNA vez.
+	if n is BaseButton and not n.has_meta("sin_fx") and not n.has_meta("_fx"):
 		var b := n as BaseButton
+		b.set_meta("_fx", true)
 		b.mouse_entered.connect(_a.bind(b, Color(1.14, 1.14, 1.14), Vector2.ONE))
 		b.mouse_exited.connect(_a.bind(b, Color.WHITE, Vector2.ONE))
 		b.button_down.connect(_a.bind(b, Color(0.88, 0.88, 0.88), Vector2(0.97, 0.97)))
