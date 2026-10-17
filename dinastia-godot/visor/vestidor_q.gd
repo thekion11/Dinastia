@@ -236,6 +236,8 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 					es_mujer = m.resource_name == "MI_Superhero_Female"
 				MATERIAL_CEJAS, "MI_Hair_2":  # el cuerpo de mujer trae sus cejas con MI_Hair_2
 					mi.set_surface_override_material(s, _material_liso(PeloQ.color_cejas(pelo), 0.9))
+					if String(mi.name).begins_with("Eyebrows"):
+						PeloQ.sin_lejos(mi)
 				MATERIAL_OJOS:
 					## Las texturas de ojos del pack no vinieron en el repo:
 					## sin esto, blanco puro de fábrica y mirada de maniquí.
@@ -632,6 +634,39 @@ static func _afin_foto(p: Array) -> Array:
 	var f: float = destino[0].y - (dd * origen[0].x + e * origen[0].y)
 	return [Vector3(a, b, c), Vector3(dd, e, f)]
 
+## LOS NIVELES DE DETALLE DE LA MALLA ORIGINAL (17-10-2026, MEGA AUDITORÍA 2
+## punto 14). El importador genera para el cuerpo 8 versiones más livianas (de
+## 12.566 triángulos a 48) y Godot elige la que toca según lo que mide en
+## pantalla. Al rehacer la malla con `add_surface_from_arrays(..., {}, ...)` se
+## perdían: los 22 jugadores, árbitros y banquillo se dibujaban SIEMPRE
+## completos, también a 50 m (≈1 M de los 1,8 M de triángulos del partido). Los
+## índices de cada nivel se copian tal cual: los vértices no cambian de orden.
+static func lods_de(original: ArrayMesh, s: int) -> Dictionary:
+	var r := {}
+	var d := RenderingServer.mesh_get_surface(original.get_rid(), s)
+	var lods: Array = d.get("lods", [])
+	if lods.is_empty():
+		return r
+	var n_idx := int(d.get("index_count", 0))
+	var bytes_idx: PackedByteArray = d.get("index_data", PackedByteArray())
+	if n_idx <= 0 or bytes_idx.is_empty():
+		return r
+	var ancho := bytes_idx.size() / n_idx  # 2 (16 bits) o 4 (32 bits)
+	for l: Dictionary in lods:
+		var datos: PackedByteArray = l.get("index_data", PackedByteArray())
+		var idx := PackedInt32Array()
+		if ancho == 2:
+			var u16 := PackedInt32Array()
+			u16.resize(datos.size() / 2)
+			for i in u16.size():
+				u16[i] = datos.decode_u16(i * 2)
+			idx = u16
+		else:
+			idx = datos.to_int32_array()
+		if idx.size() >= 3:
+			r[float(l.get("edge_length", 0.0))] = idx
+	return r
+
 ## Como `_con_reposo` pero sin el alisado: solo la pose de reposo (UV2 = x,y;
 ## COLOR.r = z) en todas las superficies. Para los ojos.
 static func _con_reposo_simple(mi: MeshInstance3D) -> void:
@@ -666,7 +701,7 @@ static func _con_reposo_simple(mi: MeshInstance3D) -> void:
 			var shift: int = Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT + c * Mesh.ARRAY_FORMAT_CUSTOM_BITS
 			banderas |= fmt & (Mesh.ARRAY_FORMAT_CUSTOM_MASK << shift)
 		nueva.add_surface_from_arrays(original.surface_get_primitive_type(s), arr, original.surface_get_blend_shape_arrays(s),
-			{}, banderas)
+			lods_de(original, s), banderas)
 		if nueva.get_surface_count() <= s:
 			return
 		nueva.surface_set_material(s, original.surface_get_material(s))
@@ -714,7 +749,7 @@ static func _con_reposo(mi: MeshInstance3D, superficie: int) -> void:
 		if s == superficie:
 			banderas = (Mesh.ARRAY_CUSTOM_RGBA_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT) \
 				| (Mesh.ARRAY_CUSTOM_RGB_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM1_SHIFT)
-		nueva.add_surface_from_arrays(original.surface_get_primitive_type(s), arr, formas, {}, banderas)
+		nueva.add_surface_from_arrays(original.surface_get_primitive_type(s), arr, formas, lods_de(original, s), banderas)
 		## Sin pantalla (banco headless) el servidor falso no guarda superficies.
 		if nueva.get_surface_count() <= s:
 			return
