@@ -183,10 +183,21 @@ Medido con `pruebas/sonda_motor_dt.tscn` y `sonda_fisica_partido.tscn`:
   de 720°/s suelen ser reposiciones (saque de centro, gol) mezcladas con movimiento real.
   *Cómo*: que la sonda excluya los fotogramas de estado `gol/saque`; limitar giro por
   fotograma en `_aplicar_movimiento` (inercia angular) y suavizar el cambio de objetivo.
-- **M-03 (P1, 🔴) Duelos sin consecuencias**: las entradas son animaciones; no hay
-  contacto con empuje, faltas por contacto real ni balón dividido. *Cómo*: zona de
-  contacto (círculo de 0,8 m), probabilidad de pérdida por fuerza/agilidad, falta si la
-  entrada llega por detrás.
+- **M-03 (P1, ✅ 16-10) Duelos sin consecuencias**: ~~las entradas son animaciones; no hay
+  contacto con empuje, faltas por contacto real ni balón dividido~~. Hecho en
+  `MotorJugable` (sección «duelos»): cuerpos que no se atraviesan con masa según la
+  fuerza (`_cuerpos`; antes el motor real NO tenía choques: `_resolver_choques` solo
+  corre en `MatchPlayback`), hombro con hombro (`_duelo_hombro`), balón dividido
+  (`_duelo_dividido`) y agarrón (`_duelo_agarron`) con fuerza, equilibrio y una
+  agresividad derivada (defensa, físico, rasgo y carácter fijo); faltas y tarjetas por
+  duelo; la fuerza pesa también en la entrada de pie. Gestos nuevos en `AnimFutbol`:
+  `duelo_hombro_der/izq`, `duelo_empujado_der/izq`, `duelo_agarron`, `duelo_forcejeo`.
+  Sonda simetría (N=60, MITAD=120): ~15 cargas, ~3 divididos, ~2,5 agarrones y ~1,9
+  faltas de duelo por partido; goles 1,0 (con todo apagado y la misma semilla 0,95),
+  tiros 6,3, pases 73 %, fintas 18 (46 %), paradas 76 %. `pruebas/prueba_duelos.tscn`
+  (el fuerte se queda el balón en ~90 % de las carreras 0,8 contra 0,4 y gana ~75 % de
+  los duelos de un partido) y `pruebas/captura_duelos.tscn` (cámara de transmisión).
+  Interruptores para medir: `SIN_DUELOS=1` / `SIN_CUERPOS=1`.
 - **M-04 (P2, 💡) IA**: apoyos y marcaje correctos pero sin *trampa de fuera de juego* de
   la línea defensiva, ni coberturas, ni basculación del bloque. *Cómo*: nivel de línea
   (`tactica.linea`) que sube/baja con el balón; defensores comparten la misma Z.
