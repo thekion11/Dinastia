@@ -507,6 +507,10 @@ func _montar_hud() -> void:
 	## tutorial de la ciudad; la velocidad, en el móvil que sacas al correr.
 	_movil = MovilMano.new()
 	capa.add_child(_movil)
+	_minimapa = MinimapaCiudad.new()
+	capa.add_child(_minimapa)
+	if DisplayServer.is_touchscreen_available():
+		_minimapa.arriba()
 	var engranaje := CuadroDialogo.respuesta(Button.new())
 	engranaje.text = "⚙"
 	engranaje.add_theme_font_size_override("font_size", 22)
@@ -530,6 +534,8 @@ var _boton_e: Button
 var _ayudas := false
 var _con_movil := true
 var _m_antes := false
+var _gps_oculto := false
+var _minimapa: MinimapaCiudad
 
 func _aplicar_ajustes() -> void:
 	_ayudas = bool(AjustesCiudad.valor("ayudas", false))
@@ -544,15 +550,17 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 		if cb != null and cb.expansion != null and estado == "calle":
 			calle = cb.expansion.nombre_calle_en(cuerpo.position)
 		_movil.poner(modo_mano if _con_movil else "pie", km_h, maxima, calle, metros)
-		## El GPS: M saca o guarda el móvil también andando.
+	## EL GPS ESTILO GTA (17-10-2026): M lo esconde o lo vuelve a mostrar.
+	if _minimapa != null:
 		if Input.is_physical_key_pressed(KEY_M) != _m_antes:
 			_m_antes = not _m_antes
 			if _m_antes:
-				_movil.gps_fijo = not _movil.gps_fijo
-		if _movil.visible and estado == "calle":
-			if _movil.mapa.red == null and cb != null:
-				_movil.mapa.red = cb.expansion
-			_movil.mapa.poner(cuerpo.position, rumbo if modo == "coche" else cuerpo.rotation.y, get_physics_process_delta_time())
+				_gps_oculto = not _gps_oculto
+		_minimapa.visible = estado == "calle" and not _gps_oculto
+		if _minimapa.visible:
+			if _minimapa.red == null and cb != null:
+				_minimapa.red = cb.expansion
+			_minimapa.poner(cuerpo.position, rumbo if modo == "coche" else cuerpo.rotation.y, get_physics_process_delta_time())
 	if _boton_e != null:
 		var hay := _aviso.text.strip_edges() != ""
 		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
@@ -568,6 +576,8 @@ func _tactil(capa: CanvasLayer) -> void:
 	base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	base.offset_left = 24
 	base.offset_top = -tam * 3.0 - 24
+	## Solo en pantallas táctiles (en PC ocupaba el rincón del GPS).
+	base.visible = DisplayServer.is_touchscreen_available() or OS.get_environment("TACTIL") != ""
 	capa.add_child(base)
 	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
 			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
@@ -768,6 +778,120 @@ func _volante_ui(ver: bool = true) -> void:
 	_ui_volante.set("kmh", absf(vel) * 3.6)
 	_ui_volante.queue_redraw()
 
+var _cam_yaw := 0.0
+var _t_cabina := 0.0
+var _cabina: Node3D
+var _cabina_volante: Node3D
+var _cabina_kmh: Label3D
+
+func _fov_hacia(f: float, delta: float) -> void:
+	camara.fov = lerpf(camara.fov, f, clampf(delta * 3.0, 0.0, 1.0)) if delta < 1.0 else f
+
+## La cabina del coche en primera persona: piezas sencillas hijas de la cámara.
+func _cabina_3d(ver: bool) -> void:
+	if not ver:
+		if _cabina != null:
+			_cabina.visible = false
+		return
+	if _cabina == null:
+		_cabina = Node3D.new()
+		_cabina.name = "Cabina"
+		camara.add_child(_cabina)
+		var oscuro := StandardMaterial3D.new()
+		oscuro.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		oscuro.albedo_color = Color(0.2, 0.21, 0.23)
+		oscuro.roughness = 0.85
+		var gris := StandardMaterial3D.new()
+		gris.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		gris.albedo_color = Color(0.36, 0.37, 0.4)
+		gris.roughness = 0.6
+		var piel := StandardMaterial3D.new()
+		piel.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		piel.albedo_color = Color(0.07, 0.07, 0.08)
+		piel.roughness = 0.5
+		## Medidas desde los ojos (x a la derecha, y arriba, -z adelante): el
+		## conductor va 0,34 m a la izquierda del centro, el coche mide 1,8 m.
+		## El salpicadero: su borde de arriba queda 17 cm bajo los ojos.
+		_caja_cabina(Vector3(1.8, 0.3, 0.6), Vector3(0.34, -0.32, -0.88), Vector3.ZERO, oscuro)
+		_caja_cabina(Vector3(0.34, 0.2, 0.5), Vector3(0.34, -0.42, -0.5), Vector3.ZERO, gris)
+		## Los pilares delanteros, del salpicadero al techo, y el borde del techo.
+		_barra_cabina(Vector3(-0.52, -0.17, -0.95), Vector3(-0.47, 0.3, -0.38), 0.07, oscuro)
+		_barra_cabina(Vector3(1.2, -0.17, -0.95), Vector3(1.15, 0.3, -0.38), 0.07, oscuro)
+		_barra_cabina(Vector3(-0.5, 0.36, -0.38), Vector3(1.18, 0.36, -0.38), 0.04, oscuro)
+		## El retrovisor, arriba al centro del parabrisas.
+		_caja_cabina(Vector3(0.15, 0.045, 0.02), Vector3(0.36, 0.3, -0.48), Vector3(0, -12, 0), gris)
+		## El volante: aro, buje y radios; gira con `_volante`.
+		_cabina_volante = Node3D.new()
+		_cabina_volante.position = Vector3(0.0, -0.3, -0.5)
+		_cabina.add_child(_cabina_volante)
+		var aro := MeshInstance3D.new()
+		var tm := TorusMesh.new()
+		tm.inner_radius = 0.165
+		tm.outer_radius = 0.195
+		tm.rings = 24
+		tm.ring_segments = 8
+		aro.mesh = tm
+		aro.material_override = piel
+		_cabina_volante.add_child(aro)
+		for ang: float in [0.0, 120.0, 240.0]:
+			var radio := MeshInstance3D.new()
+			var bm := BoxMesh.new()
+			bm.size = Vector3(0.025, 0.02, 0.17)
+			radio.mesh = bm
+			radio.material_override = gris
+			radio.rotation_degrees = Vector3(0, ang, 0)
+			radio.position = Vector3(sin(deg_to_rad(ang)), 0, cos(deg_to_rad(ang))) * 0.085
+			_cabina_volante.add_child(radio)
+		var buje := MeshInstance3D.new()
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.05
+		cm.bottom_radius = 0.05
+		cm.height = 0.04
+		buje.mesh = cm
+		buje.material_override = gris
+		_cabina_volante.add_child(buje)
+		## El velocímetro, en el cuadro tras el volante.
+		_cabina_kmh = Label3D.new()
+		_cabina_kmh.font_size = 48
+		_cabina_kmh.pixel_size = 0.0012
+		_cabina_kmh.modulate = Color(0.55, 0.95, 0.75)
+		_cabina_kmh.outline_size = 0
+		_cabina_kmh.position = Vector3(0.0, -0.19, -0.66)
+		_cabina_kmh.rotation_degrees = Vector3(-15, 0, 0)
+		_cabina_kmh.no_depth_test = false
+		_cabina.add_child(_cabina_kmh)
+		for h in _cabina.find_children("*", "GeometryInstance3D", true, false):
+			(h as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_cabina.visible = true
+	## El aro mira al conductor (eje inclinado hacia atrás) y gira sobre su eje.
+	_cabina_volante.basis = Basis(Vector3.RIGHT, deg_to_rad(70.0)) * Basis(Vector3.UP, _volante * 2.6)
+	_cabina_kmh.text = "%d km/h" % int(round(absf(vel) * 3.6))
+
+## Una barra de `a` a `b` (pilares y techo).
+func _barra_cabina(a: Vector3, b: Vector3, grosor: float, mat: Material) -> void:
+	var m := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(grosor, a.distance_to(b), grosor)
+	m.mesh = bm
+	m.material_override = mat
+	var eje := (b - a).normalized()
+	var lado := eje.cross(Vector3.FORWARD)
+	if lado.length() < 0.01:
+		lado = eje.cross(Vector3.RIGHT)
+	lado = lado.normalized()
+	m.transform = Transform3D(Basis(lado, eje, lado.cross(eje)), (a + b) * 0.5)
+	_cabina.add_child(m)
+
+func _caja_cabina(tam: Vector3, en: Vector3, giro: Vector3, mat: Material) -> void:
+	var m := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = tam
+	m.mesh = bm
+	m.material_override = mat
+	m.position = en
+	m.rotation_degrees = giro
+	_cabina.add_child(m)
+
 class VolanteUI extends Control:
 	var giro := 0.0
 	var kmh := 0.0
@@ -813,13 +937,21 @@ func _colocar_camara(delta: float) -> void:
 			camara.position = cuerpo.position + Vector3(0, 1.25, 0) + dir_c * 2.15
 			cuerpo.visible = true
 		else:
-			camara.position = cuerpo.position + Vector3(0, 1.18, 0) + dir_c * 0.15 + der * 0.32
+			## PRIMERA PERSONA (17-10-2026): los ojos del conductor dentro de una
+			## cabina 3D (salpicadero, volante que gira, pilares, retrovisor) que
+			## va pegada a la cámara; con la velocidad, un leve temblor.
+			var tiembla := Vector3(0, sin(_t_cabina * 23.0) * 0.004 * clampf(absf(vel) / 20.0, 0.0, 1.0), 0)
+			camara.position = cuerpo.position + Vector3(0, 1.12, 0) + dir_c * 0.05 + der * 0.34 + tiembla
 			cuerpo.visible = false
-		var mira_dir := dir_c.rotated(Vector3.UP, -_volante * 0.18)
+		var mira_dir := dir_c.rotated(Vector3.UP, -_volante * (0.18 if cam_coche == 1 else 0.28))
 		camara.look_at(camara.position + mira_dir * 8.0 + Vector3(0, -0.2, 0), Vector3.UP)
 		camara.rotate_object_local(Vector3.FORWARD, -_balanceo * 0.6)
-		_volante_ui()
+		_t_cabina += delta if delta < 1.0 else 0.0
+		_cabina_3d(cam_coche == 2)
+		_fov_hacia(70.0 if cam_coche == 2 else 68.0, delta)
+		_volante_ui(false)
 		return
+	_cabina_3d(false)
 	_volante_ui(false)
 	if modo == "coche" and not cuerpo.visible:
 		cuerpo.visible = true
@@ -832,9 +964,21 @@ func _colocar_camara(delta: float) -> void:
 		return
 	if modo != "coche" and not cuerpo.visible and not _sentado_fp():
 		cuerpo.visible = true
-	var atras := 13.0 if modo == "coche" else 5.5
-	var alto := 5.5 if modo == "coche" else 2.6
+	var atras := 5.5
+	var alto := 2.6
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
+	## EN COCHE, CÁMARA DE PERSECUCIÓN (17-10-2026): sigue al coche con retraso
+	## en el giro (en las curvas se ve el costado), se aleja y abre el ángulo
+	## con la velocidad, y mira por delante del capó.
+	if modo == "coche":
+		var rapidez := clampf(absf(vel) / 25.0, 0.0, 1.0)
+		_cam_yaw = lerp_angle(_cam_yaw, rumbo, clampf(delta * (2.2 + rapidez * 1.5), 0.0, 1.0)) if delta < 1.0 else rumbo
+		adelante = Vector3(sin(_cam_yaw), 0, cos(_cam_yaw))
+		atras = lerpf(8.0, 11.5, rapidez)
+		alto = lerpf(3.0, 3.8, rapidez)
+		_fov_hacia(lerpf(66.0, 80.0, rapidez), delta)
+	else:
+		_fov_hacia(65.0, delta)
 	var deseo := cuerpo.position - adelante * atras + Vector3(0, alto, 0)
 	if estado == "anden" and not _acc.is_empty() and not bool(_acc["elevada"]):
 		## BAJO TIERRA la cámara no puede salirse del vestíbulo: se queda entre
@@ -867,8 +1011,11 @@ func _colocar_camara(delta: float) -> void:
 				bueno = q
 				k += 0.5
 			deseo = bueno
-	camara.position = camara.position.lerp(deseo, clampf(delta * 5.0, 0.0, 1.0)) if delta < 1.0 else deseo
-	camara.look_at(cuerpo.position + Vector3(0, 1.6 if modo == "coche" else 1.4, 0) + adelante * 4.0, Vector3.UP)
+	camara.position = camara.position.lerp(deseo, clampf(delta * (8.0 if modo == "coche" else 5.0), 0.0, 1.0)) if delta < 1.0 else deseo
+	if modo == "coche":
+		camara.look_at(cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * (5.0 + absf(vel) * 0.25), Vector3.UP)
+	else:
+		camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 4.0, Vector3.UP)
 
 ## Lo que hay al alcance de la E: un peatón (a pie) o un lugar.
 func _buscar_cerca() -> void:
@@ -949,7 +1096,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 		_usar()
 	elif k == KEY_V and modo == "coche" and estado == "calle":
 		cam_coche = (cam_coche + 1) % 3
-		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: interior")][cam_coche]
+		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: primera persona")][cam_coche]
 	elif k == KEY_V:
 		primera_persona = not primera_persona
 		_raton_en_primera_persona()
