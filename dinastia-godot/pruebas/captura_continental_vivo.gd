@@ -28,6 +28,7 @@ func _process(_d: float) -> void:
 		print("semana=%d torneo=%s ronda=%s grupos=%s" % [
 			mundo.semana, t.clave, t.nombre_de_ronda(), t.en_fase_de_grupos()])
 		print("emparejamiento_continental=%s vs %s" % [par_conti[0].nombre, par_conti[1].nombre])
+		InformeRival.activo = false
 		_pantalla.call("_dirigir")
 		var vivo: PartidoVivo = null
 		for h in _pantalla.get_children():
