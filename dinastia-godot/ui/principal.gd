@@ -482,6 +482,7 @@ func _ready() -> void:
 		_escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [
 			mundo.mi_club().nombre, mundo.anio, mundo.semana])
 		_refrescar()
+		_resolver_partido_abandonado()
 	elif Principal.mundo_pregenerado != null:
 		var m := Principal.mundo_pregenerado
 		Principal.mundo_pregenerado = null
@@ -2611,6 +2612,7 @@ func _dirigir() -> void:
 	if modo == "instantaneo" or modo == "resumen":
 		p.preparar()
 		p.fijar_hinchada(mundo.mi_club(), mundo.prensa.animo if mundo.prensa != null else 60)
+		_apuntar_partido_en_curso(p)
 		var res := ResumenPartido.mostrar(self, p, mundo.mi_club(), es_eliminatoria, modo == "resumen")
 		res.cerrado.connect(func() -> void:
 			res.queue_free()
@@ -2622,6 +2624,7 @@ func _dirigir() -> void:
 		var inf := InformeRival.mostrar(self, p, mundo.mi_club(), mundo.liga_de(p.visita if p.local == mundo.mi_club() else p.local), mundo)
 		await inf.cerrado
 		inf.queue_free()
+	_apuntar_partido_en_curso(p)
 	var vivo := PartidoVivo.new()
 	vivo.con_3d = modo != "vivo"
 	vivo.destacados = modo == "destacados"
@@ -2655,6 +2658,7 @@ func _perfil_con_clima(p: Partido) -> Dictionary:
 ## él, la jornada se volvería a simular por dentro y en la tabla aparecería un
 ## marcador distinto del que se acaba de ver. Lo usan todos los modos.
 func _cerrar_partido_dirigido(p: Partido) -> void:
+	PartidoPendiente.actualizar(mundo, p)
 	## A PIE DE CAMPO (B5): antes de volver al despacho, una pregunta con el
 	## partido todavía caliente. No en "instantáneo": quien lo eligió quiere el
 	## resultado y nada más.
@@ -2668,11 +2672,24 @@ func _cerrar_partido_dirigido(p: Partido) -> void:
 		return
 	_seguir_tras_partido(p)
 
+## Apunta el partido dirigido y lo pone al día (goles y cada 5'): si se cierra
+## el juego a medias, al cargar se completa desde ahí (`PartidoPendiente`).
+func _apuntar_partido_en_curso(p: Partido) -> void:
+	PartidoPendiente.abrir(mundo, p)
+	p.gol.connect(func(_c: Club, _a: Jugador, _m: int, _s: Jugador) -> void: PartidoPendiente.actualizar(mundo, p))
+	p.minuto_jugado.connect(func(mi: int) -> void:
+		if mi % 5 == 0:
+			PartidoPendiente.actualizar(mundo, p))
+
 func _seguir_tras_partido(p: Partido) -> void:
+	PartidoPendiente.cerrar()
 	mundo.avanzar_semana(p)
 	_escribir("[color=#3fa06a]J%d  %s %d-%d %s[/color]" % [
 		mundo.liga_de(mundo.mi_club()).jornada_actual,
 		p.local.nombre, p.goles_local, p.goles_visita, p.visita.nombre])
+	## (17-10: tras un partido dirigido no se autoguardaba; ahora sí, como al
+	## avanzar la semana sin jugarlo.)
+	_autoguardar_si_toca()
 	_refrescar()
 
 ## LOS CINCO MODOS DE MIRAR UN PARTIDO (plan maestro B2): [clave, rótulo, qué es].
@@ -2921,6 +2938,23 @@ func _cargar() -> void:
 	_escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [
 		mundo.mi_club().nombre, mundo.anio, mundo.semana])
 	_refrescar()
+	_resolver_partido_abandonado()
+
+## Si la última vez se cerró el juego con un partido dirigido a medias, se
+## completa desde el marcador que había (sin repetirlo desde el 0-0).
+func _resolver_partido_abandonado() -> void:
+	var d := PartidoPendiente.pendiente(mundo)
+	if d.is_empty():
+		return
+	var mio := mundo.mi_club()
+	if mio == null or (String(d["local"]) != mio.id and String(d["visita"]) != mio.id):
+		PartidoPendiente.cerrar()
+		return
+	var p := PartidoPendiente.resolver(mundo, d)
+	if p == null:
+		return
+	_escribir("[color=#c9a227]%s[/color]" % (Idiomas.t("El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.") % [int(d["gl"]), int(d["gv"]), int(d["minuto"])]))
+	_seguir_tras_partido(p)
 
 func _liga_de(c: Club) -> Liga:
 	for l in mundo.ligas:
@@ -5565,6 +5599,7 @@ func _cargar_de(nombre: String) -> void:
 	_conectar_noticias()
 	_escribir("[color=#4caf6d]Partida cargada de %s.[/color]" % nombre)
 	_refrescar()
+	_resolver_partido_abandonado()
 
 
 # ---------------------------------------------------------------------------
