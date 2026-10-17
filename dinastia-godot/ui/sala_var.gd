@@ -310,8 +310,16 @@ func _cinta(raiz: Node3D, centro: Vector3, a: Vector2, b: Vector2, col: Color) -
 	mi.rotation.z = atan2(b.y - a.y, b.x - a.x)
 	raiz.add_child(mi)
 
+## UN OPERADOR DEL VAR (17-10-2026): antes era el futbolista del partido con
+## la equipación pintada de oscuro (calvo, de culturista y con ropa de juego).
+## Ahora se arma como la gente de la ciudad (`PeatonQ`): complexión normal
+## (`adelgazar`), polo de árbitro con el cuello celeste del VAR y pantalón de
+## vestir (ropa de calle del `VestidorQ`), pelo (`PeloQ`), cara de la
+## biblioteca modular y ojos de verdad; sentado en una silla de oficina.
 func _operador(raiz: Node3D, pos: Vector3, lado: float) -> void:
-	var d := FutbolistaQ.crear(1.78, "male")
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7741 + (1 if lado > 0.0 else 0)
+	var d := FutbolistaQ.crear(rng.randf_range(1.72, 1.84), "male")
 	if d.is_empty():
 		return
 	var nodo: Node3D = d["nodo"]
@@ -319,14 +327,56 @@ func _operador(raiz: Node3D, pos: Vector3, lado: float) -> void:
 	nodo.rotation_degrees.y = 180.0
 	raiz.add_child(nodo)
 	FutbolistaQ.terminar(d, false)
-	VestidorQ.vestir_equipacion(d, Color("1b1f27"), Color("3fa9f5"), "liso", Color("b98a66") if lado < 0 else Color("7a5238"),
-		Color(0.1, 0.08, 0.06), Color("22252c"), Color("111111"))
+	PersonajeDT.adelgazar(d, false)
+	var piel := Color("b98a66") if lado < 0 else Color("7a5238")
+	var pelo_col: Color = PeatonQ.PELOS[rng.randi() % 3]
+	var polo := Color("1b1f27")
+	var ribete := Color("3fa9f5")
+	var pant := Color("22252c")
+	var kit := {
+		"dis": "liso",
+		"cols": [polo.to_html(false), polo.to_html(false), ribete.to_html(false), "ffffff", "111111"],
+		"trim": 1, "cuello": 2, "manga_corta": true,
+		"pant": {"dis": "liso", "c1": pant.to_html(false), "c2": pant.to_html(false)},
+		"med": {"dis": "lisas", "c1": "15161a", "c2": "15161a"},
+		"bot": {"mod": "clasico", "c1": "111214", "c2": "111214", "c3": "222222"},
+		"acc": {}, "civil": true,
+	}
+	VestidorQ.vestir_equipacion(d, polo, ribete, "liso", piel, pelo_col, pant, pant, true, kit, 0)
+	PeloQ.poner(d, ["corto", "fade", "flequillo"][rng.randi() % 3] if lado < 0 else "rapado", pelo_col, rng.randf() < 0.5)
+	if BibliotecaCaras.hay():
+		var bib := BibliotecaCaras.para("var_%d" % rng.seed, piel, pelo_col)
+		if not bib.is_empty():
+			bib["pelo"] = ""
+			VestidorQ.poner_cara(d, {"look": {}, "foto": "", "biblio": bib}, piel)
+	PersonajeDT._ojos_vivos(d, piel, Color(String(PersonajeDT.OJOS[rng.randi() % PersonajeDT.OJOS.size()])), false)
 	var ap: AnimationPlayer = d["anim"]
 	if ap.has_animation("sentado"):
 		ap.play("sentado")
-	## Auriculares: una diadema y dos cascos.
+	## Sentado de verdad: la cadera sobre el asiento (como en los bancos del
+	## metro, `MetroCiudad.altura_cadera`), no flotando a la altura de pie.
+	const ASIENTO := 0.48
+	var cadera := MetroCiudad.altura_cadera(nodo)
+	if cadera > 0.0:
+		nodo.position.y = pos.y + ASIENTO + 0.08 - cadera * 0.99
+	## La silla de oficina: asiento, respaldo (detrás: el operador mira a −Z),
+	## pie y base.
+	var gris := Color(0.12, 0.12, 0.14)
+	_caja(raiz, pos + Vector3(0, ASIENTO - 0.03, 0.02), Vector3(0.5, 0.07, 0.48), gris, 0.0)
+	_caja(raiz, pos + Vector3(0, ASIENTO + 0.36, 0.27), Vector3(0.46, 0.62, 0.06), gris, 0.0)
+	_caja(raiz, pos + Vector3(0, ASIENTO * 0.5 - 0.02, 0.02), Vector3(0.06, ASIENTO - 0.06, 0.06), Color(0.3, 0.3, 0.32), 0.0)
+	_caja(raiz, pos + Vector3(0, 0.03, 0.02), Vector3(0.56, 0.04, 0.56), Color(0.2, 0.2, 0.22), 0.0)
+	## Auriculares: una diadema y dos cascos, en su cabeza (hueso Head de la
+	## pose de reposo: la postura sentada no mueve la cadera, ver arriba).
+	var alto_cabeza := 1.62
+	var esqs := nodo.find_children("*", "Skeleton3D", true, false)
+	if not esqs.is_empty():
+		var sk: Skeleton3D = esqs[0]
+		var hb := sk.find_bone("Head")
+		if hb >= 0:
+			alto_cabeza = (sk.global_transform * sk.get_bone_global_rest(hb)).origin.y - nodo.global_position.y + 0.1
 	var cab := Node3D.new()
-	cab.position = pos + Vector3(0, 1.28, 0.05)
+	cab.position = Vector3(pos.x, nodo.position.y + alto_cabeza, pos.z + 0.02)
 	raiz.add_child(cab)
 	for s: float in [-1.0, 1.0]:
 		var casco := MeshInstance3D.new()
