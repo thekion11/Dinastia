@@ -37,6 +37,7 @@ var _t_palmada := 0.0
 var _punto := Vector3.ZERO
 var _anim_actual := ""
 var _sujeto := true
+var _fuera := Vector3.INF
 
 static func iniciar(raiz: Node3D, spawner: PlayerSpawner, motor: MotorJugable, nodo_sale: Node3D, anim_sale: AnimationPlayer,
 		entra: Dictionary, dorsal_sale: int, dorsal_entra: int, kit: Dictionary = {}) -> EscenaCambio:
@@ -130,8 +131,10 @@ func _process(_delta: float) -> void:
 				fase = "se_va"
 		"se_va":
 			## Fuera del campo, hacia la banda (y se borra al salir).
-			var fuera := Vector3(X_LINEA + 4.0, 0, _sale.position.z - 2.0)
-			var dif2 := fuera - _sale.position
+			## (El destino se fija una vez: recalculado cada fotograma, se alejaba.)
+			if _fuera == Vector3.INF:
+				_fuera = Vector3(X_LINEA + 4.0, 0, _sale.position.z - 2.0)
+			var dif2 := _fuera - _sale.position
 			dif2.y = 0.0
 			_poner_anim("caminar")
 			if dif2.length() < 0.2 or _t > DURACION_MAX:
