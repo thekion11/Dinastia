@@ -1617,6 +1617,10 @@ func _montar_motor() -> void:
 ## LA TANDA EN PANTALLA: el marcador de círculos arriba al centro y la
 ## cámara detrás del lanzador.
 func _al_empezar_tanda() -> void:
+	## El rótulo de estadísticas de la tele no puede taparle el marcador de la tanda.
+	for h in get_children():
+		if h is RotuloEstadisticas:
+			h.queue_free()
 	if _marcador_tanda == null:
 		_marcador_tanda = MarcadorTanda.crear(self)
 	_pintar_tanda()

@@ -430,7 +430,20 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 		_rect_outline(root, Vector3(0, 0, sgn * (PITCH_LEN / 2.0 - 8.25)), 40.3, 16.5, 0.2, 0.02, line_mat)
 		_rect_outline(root, Vector3(0, 0, sgn * (PITCH_LEN / 2.0 - 2.75)), 18.3, 5.5, 0.2, 0.02, line_mat)
 		## El penal, a 11 m de la linea de gol como manda el reglamento.
-		_box(root, Vector3(0, 0.02, sgn * (PITCH_LEN / 2.0 - 11.0)), Vector3(0.35, 0.03, 0.35), line_mat)
+		## Un disco de 22 cm, como el reglamentario (17-10: antes era un
+		## cuadrado de 35 cm que de cerca, en la tanda, parecía una losa).
+		var punto_penal := MeshInstance3D.new()
+		var disco := CylinderMesh.new()
+		disco.top_radius = 0.11
+		disco.bottom_radius = 0.11
+		disco.height = 0.02
+		disco.radial_segments = 20
+		disco.rings = 1
+		punto_penal.mesh = disco
+		punto_penal.material_override = line_mat
+		punto_penal.position = Vector3(0, 0.012, sgn * (PITCH_LEN / 2.0 - 11.0))
+		punto_penal.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		root.add_child(punto_penal)
 
 	var center := MeshInstance3D.new()
 	var cmesh := TorusMesh.new()
