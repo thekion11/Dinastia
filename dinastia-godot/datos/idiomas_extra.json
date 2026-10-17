@@ -2456,7 +2456,10 @@
   "¡Fallado!": "Missed!",
   "¡Fuera!": "Wide!",
   "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Your penalty: aim with the stick and hold SHOOT for power",
-  "Tu portero: elige el lado con el stick antes del disparo": "Your goalkeeper: pick the side with the stick before the kick"
+  "Tu portero: elige el lado con el stick antes del disparo": "Your goalkeeper: pick the side with the stick before the kick",
+  "Ventaja": "Advantage",
+  "ADELANTADO %d cm": "OFFSIDE BY %d cm",
+  "HABILITADO %d cm": "ONSIDE BY %d cm"
  },
  "pt": {
   "Historia": "História",
@@ -4915,7 +4918,10 @@
   "¡Fallado!": "Perdeu!",
   "¡Fuera!": "Para fora!",
   "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Seu pênalti: mire com o analógico e segure CHUTE para a força",
-  "Tu portero: elige el lado con el stick antes del disparo": "Seu goleiro: escolha o lado com o analógico antes do chute"
+  "Tu portero: elige el lado con el stick antes del disparo": "Seu goleiro: escolha o lado com o analógico antes do chute",
+  "Ventaja": "Vantagem",
+  "ADELANTADO %d cm": "ADIANTADO %d cm",
+  "HABILITADO %d cm": "EM POSIÇÃO LEGAL POR %d cm"
  },
  "patrones": [
   [
@@ -7943,7 +7949,10 @@
   "¡Fallado!": "Manqué !",
   "¡Fuera!": "À côté !",
   "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Ton penalty : vise avec le stick et maintiens TIR pour la puissance",
-  "Tu portero: elige el lado con el stick antes del disparo": "Ton gardien : choisis le côté avec le stick avant le tir"
+  "Tu portero: elige el lado con el stick antes del disparo": "Ton gardien : choisis le côté avec le stick avant le tir",
+  "Ventaja": "Avantage",
+  "ADELANTADO %d cm": "HORS-JEU DE %d cm",
+  "HABILITADO %d cm": "EN JEU DE %d cm"
  },
  "it": {
   "Historia": "Storia",
@@ -10309,7 +10318,10 @@
   "¡Fallado!": "Sbagliato!",
   "¡Fuera!": "Fuori!",
   "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Il tuo rigore: mira con lo stick e tieni premuto TIRO per la potenza",
-  "Tu portero: elige el lado con el stick antes del disparo": "Il tuo portiere: scegli il lato con lo stick prima del tiro"
+  "Tu portero: elige el lado con el stick antes del disparo": "Il tuo portiere: scegli il lato con lo stick prima del tiro",
+  "Ventaja": "Vantaggio",
+  "ADELANTADO %d cm": "FUORIGIOCO DI %d cm",
+  "HABILITADO %d cm": "IN GIOCO DI %d cm"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12675,7 +12687,10 @@
   "¡Fallado!": "Verschossen!",
   "¡Fuera!": "Daneben!",
   "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Dein Elfmeter: mit dem Stick zielen und SCHUSS für die Kraft halten",
-  "Tu portero: elige el lado con el stick antes del disparo": "Dein Torwart: wähle vor dem Schuss mit dem Stick die Ecke"
+  "Tu portero: elige el lado con el stick antes del disparo": "Dein Torwart: wähle vor dem Schuss mit dem Stick die Ecke",
+  "Ventaja": "Vorteil",
+  "ADELANTADO %d cm": "%d cm IM ABSEITS",
+  "HABILITADO %d cm": "%d cm KEIN ABSEITS"
  },
  "ca": {
   "Historia": "Història",
@@ -15041,7 +15056,10 @@
   "¡Fallado!": "Fallat!",
   "¡Fuera!": "Fora!",
   "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "El teu penal: apunta amb l'estic i mantén XUT per a la força",
-  "Tu portero: elige el lado con el stick antes del disparo": "El teu porter: tria el costat amb l'estic abans del xut"
+  "Tu portero: elige el lado con el stick antes del disparo": "El teu porter: tria el costat amb l'estic abans del xut",
+  "Ventaja": "Avantatge",
+  "ADELANTADO %d cm": "AVANÇAT %d cm",
+  "HABILITADO %d cm": "HABILITAT PER %d cm"
  },
  "pl": {
   "Club": "Klub",
@@ -17702,7 +17720,10 @@
   "¡Fallado!": "Pudło!",
   "¡Fuera!": "Obok!",
   "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Twój karny: celuj gałką i przytrzymaj STRZAŁ, by nadać siłę",
-  "Tu portero: elige el lado con el stick antes del disparo": "Twój bramkarz: wybierz stronę gałką przed strzałem"
+  "Tu portero: elige el lado con el stick antes del disparo": "Twój bramkarz: wybierz stronę gałką przed strzałem",
+  "Ventaja": "Korzyść",
+  "ADELANTADO %d cm": "SPALONY O %d cm",
+  "HABILITADO %d cm": "BEZ SPALONEGO O %d cm"
  },
  "tr": {
   "Club": "Kulüp",
@@ -20363,6 +20384,9 @@
   "¡Fallado!": "Kaçtı!",
   "¡Fuera!": "Dışarı!",
   "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Senin penaltın: çubukla nişan al ve güç için ŞUT'u basılı tut",
-  "Tu portero: elige el lado con el stick antes del disparo": "Kalecin: şuttan önce çubukla tarafı seç"
+  "Tu portero: elige el lado con el stick antes del disparo": "Kalecin: şuttan önce çubukla tarafı seç",
+  "Ventaja": "Avantaj",
+  "ADELANTADO %d cm": "%d cm OFSAYT",
+  "HABILITADO %d cm": "%d cm OFSAYT DEĞİL"
  }
 }

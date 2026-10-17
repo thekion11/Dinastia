@@ -28,10 +28,18 @@ var _minuto := 0
 var _mundo_partido: World3D
 var _foco := Vector3.ZERO
 var _monitores: Array = []
+## LA LÍNEA DEL FUERA DE JUEGO EN EL MONITOR (17-10-2026, M-118): con
+## {"linea": z del penúltimo defensor, "atacante": z del goleador, "margen": m}
+## (lo que mide el motor en el pase, `MotorJugable.lineas_gol`), la cámara 2 se
+## pone en alto de lado mirando a esa zona y se dibujan encima las dos líneas
+## de lado a lado del campo, como en la tele: roja la del defensor, azul la del
+## atacante, y el margen en metros.
+var lineas: Dictionary = {}
 
-static func abrir(padre: Control, mundo_partido: World3D, foco: Vector3, minuto: int, motivo: String, anular := false) -> SalaVAR:
+static func abrir(padre: Control, mundo_partido: World3D, foco: Vector3, minuto: int, motivo: String, anular := false, lineas_off := {}) -> SalaVAR:
 	var s := SalaVAR.new()
 	s.anula = anular
+	s.lineas = lineas_off
 	s._mundo_partido = mundo_partido
 	s._foco = foco
 	s._minuto = minuto
@@ -147,6 +155,12 @@ func _sala() -> void:
 		[Vector3(_foco.x, 45.0, _foco.z + 0.1), _foco, 45.0],                                 ## cenital
 		[Vector3(-30.0, 14.0, _foco.z * 0.6), _foco, 28.0],                                   ## tele contraria
 	]
+	var hay_lineas := lineas.has("linea") and lineas.has("atacante")
+	if hay_lineas:
+		## Alto y de lado, en diagonal sobre la zona de las dos líneas.
+		var zl := (float(lineas["linea"]) + float(lineas["atacante"])) * 0.5
+		var hacia := signf(_foco.z + 0.01)
+		angulos[1] = [Vector3(44.0, 17.0, zl - hacia * 12.0), Vector3(0.0, 0.0, zl + hacia * 2.0), 38.0]
 	var pos_mon := [Vector3(-1.1, 1.75, -3.1), Vector3(1.1, 1.75, -3.1), Vector3(-3.3, 1.75, -3.1), Vector3(3.3, 1.75, -3.1)]
 	var tam_mon := [Vector2(2.0, 1.12), Vector2(2.0, 1.12), Vector2(1.6, 0.9), Vector2(1.6, 0.9)]
 	for i in 4:
@@ -167,6 +181,8 @@ func _sala() -> void:
 			tex = sv.get_texture()
 			_monitores.append(c)
 		_monitor(raiz, pos_mon[i], tam_mon[i], tex, i)
+		if i == 1 and hay_lineas and _monitores.size() > 1:
+			_dibujar_lineas(raiz, _monitores[1], Vector2(480, 270), pos_mon[i], tam_mon[i])
 	## Dos puestos con su operador (auriculares y polo oscuro).
 	for lado: float in [-1.0, 1.0]:
 		var mesa_x := 1.6 * lado
@@ -222,6 +238,77 @@ func _monitor(raiz: Node3D, pos: Vector3, tam: Vector2, tex: Texture2D, i: int) 
 	et.modulate = Color(0.85, 0.92, 1.0)
 	et.position = pos + Vector3(-tam.x * 0.5 + 0.35, tam.y * 0.5 - 0.07, 0.01)
 	raiz.add_child(et)
+
+## Las dos líneas, proyectadas con la cámara del monitor y dibujadas sobre su
+## pantalla (finas cintas que brillan), recortadas al borde del monitor.
+func _dibujar_lineas(raiz: Node3D, cam: Camera3D, px: Vector2, centro: Vector3, tam: Vector2) -> void:
+	var pares := [[float(lineas["linea"]), Color(1.0, 0.18, 0.2)], [float(lineas["atacante"]), Color(0.25, 0.6, 1.0)]]
+	for par: Array in pares:
+		var z: float = par[0]
+		var a3 := Vector3(-34.0, 0.03, z)
+		var b3 := Vector3(34.0, 0.03, z)
+		if cam.is_position_behind(a3) or cam.is_position_behind(b3):
+			continue
+		var a := _a_monitor(cam.unproject_position(a3), px, tam)
+		var b := _a_monitor(cam.unproject_position(b3), px, tam)
+		var rec := _recortar(a, b, tam * 0.5)
+		if rec.is_empty():
+			continue
+		_cinta(raiz, centro, rec[0], rec[1], par[1])
+	## El margen medido, abajo del monitor.
+	var m := float(lineas.get("margen", 0.0))
+	var et := Label3D.new()
+	var cm := absf(m) * 100.0
+	et.text = (Idiomas.t("ADELANTADO %d cm") if m > 0.0 else Idiomas.t("HABILITADO %d cm")) % int(round(cm))
+	et.font_size = 34
+	et.pixel_size = 0.0035
+	et.outline_size = 6
+	et.modulate = Color(1.0, 0.35, 0.35) if m > 0.0 else Color(0.5, 0.85, 1.0)
+	## Arriba a la derecha (abajo lo tapa la cabeza del operador).
+	et.position = centro + Vector3(tam.x * 0.5 - 0.42, tam.y * 0.5 - 0.08, 0.012)
+	raiz.add_child(et)
+
+## Píxel de la cámara del monitor -> punto (x, y) sobre la pantalla del monitor.
+func _a_monitor(p: Vector2, px: Vector2, tam: Vector2) -> Vector2:
+	return Vector2((p.x / px.x - 0.5) * tam.x, (0.5 - p.y / px.y) * tam.y)
+
+## Liang-Barsky: el tramo a-b dentro del rectángulo ±medio.
+func _recortar(a: Vector2, b: Vector2, medio: Vector2) -> Array:
+	var t0 := 0.0
+	var t1 := 1.0
+	var d := b - a
+	var p := [-d.x, d.x, -d.y, d.y]
+	var q := [a.x + medio.x, medio.x - a.x, a.y + medio.y, medio.y - a.y]
+	for k in 4:
+		if absf(float(p[k])) < 0.000001:
+			if float(q[k]) < 0.0:
+				return []
+			continue
+		var r := float(q[k]) / float(p[k])
+		if float(p[k]) < 0.0:
+			t0 = maxf(t0, r)
+		else:
+			t1 = minf(t1, r)
+		if t0 > t1:
+			return []
+	return [a + d * t0, a + d * t1]
+
+func _cinta(raiz: Node3D, centro: Vector3, a: Vector2, b: Vector2, col: Color) -> void:
+	var largo := a.distance_to(b)
+	if largo < 0.01:
+		return
+	var mi := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(largo, 0.012, 0.002)
+	mi.mesh = bm
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.albedo_color = col
+	mi.material_override = m
+	var medio := (a + b) * 0.5
+	mi.position = centro + Vector3(medio.x, medio.y, 0.008)
+	mi.rotation.z = atan2(b.y - a.y, b.x - a.x)
+	raiz.add_child(mi)
 
 func _operador(raiz: Node3D, pos: Vector3, lado: float) -> void:
 	var d := FutbolistaQ.crear(1.78, "male")
