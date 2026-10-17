@@ -22,6 +22,7 @@ var _vista_hija: Node = null
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 12:
+		InformeRival.activo = false
 		_pantalla.call("_dirigir")
 		for h in _pantalla.get_children():
 			if h is PartidoVivo:
