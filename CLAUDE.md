@@ -565,3 +565,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
     más ocasiones» solo pasa porque los jugadores llegan con estado de los partidos
     anteriores de la misma sección; con jugadores frescos da xG 56,0 vs 59,6 (falla).
     `MotorLibre` es el prototipo (el juego usa `MotorJugable`); la prueba no se tocó.
+- 17-10: VAR que ANULA goles (1 de cada 3 revisados: `Partido.anular_gol_externo`, `MotorJugable.anular_gol`,
+  `EstadisticasVivo.anular_gol`, panel rojo en `SalaVAR`). OPTIMIZACIÓN del partido: 1,80 M → 0,76 M tris
+  (−58 %), 690 → 630 llamadas. REGLA: al rehacer una malla (`VestidorQ._con_reposo*`) copiar sus LOD con
+  `VestidorQ.lods_de()`. AVISO dado: a >30 m no se dibujan cejas 3D y a >20 m las pestañas (también peatones).
