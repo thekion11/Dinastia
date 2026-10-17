@@ -347,7 +347,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-272 | P2 | Fuera de juego, cambios, selección ✅; sin protestas/tarjetas del… | PENDIENTE | sin expediente disciplinario |
 | M-273 | P2 | Rivales NPC por `Fama`; sin rivalidades nominales | PENDIENTE | sin rival de posición |
 | M-274 | P2 | Sin vida privada coherente con regla (no romances de reales) | HECHO | regla mantenida (solo ficticios) |
-| M-275 | P2 | `carrera_jugador.gd` usa país «XXX» para el rival (línea 620) | PENDIENTE | `rival.pais = "XXX"` sigue en `carrera_jugador.gd:620` |
+| M-275 | P2 | `carrera_jugador.gd` usa país «XXX» para el rival (línea 620) | HECHO | 17-10: país real por nombre (`CODIGO_SELECCION`) y 13 banderas nuevas en `Banderas` |
 | M-276 | P2 | Pruebas: modo cubierto en `prueba_modos`; faltan casos extremos… | SIN VERIFICAR | no se comprobaron los casos extremos en `prueba_modos` |
 
 ### I. Interfaz, menús, accesibilidad (M-277 … M-312) · HECHO 6 · PARCIAL 14 · PENDIENTE 15 · SIN VERIFICAR 1
