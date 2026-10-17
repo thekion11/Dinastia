@@ -9,6 +9,9 @@ const DURA := 7.0
 
 ## Qué rótulo toca ahora ("" = ninguno). `hechos` guarda los ya mostrados.
 static func cuando(minuto: int, estado: String, mitad: int, hechos: Dictionary) -> String:
+	## En la prórroga y la tanda no (el descanso de la prórroga no es «el descanso»).
+	if mitad > 2 or estado == "tanda":
+		return ""
 	if estado == "descanso" and not hechos.has("descanso"):
 		return "descanso"
 	if estado != "saque":
