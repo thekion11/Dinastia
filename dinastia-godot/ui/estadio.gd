@@ -1539,6 +1539,9 @@ func _montar_motor() -> void:
 	_motor.gol.connect(func(de_local: bool, autor: String, asist: String) -> void:
 		_stats.cerrar_tiro(de_local, "gol", _balon.position if is_instance_valid(_balon) else Vector3.ZERO)
 		partido.gol_externo(de_local, autor, asist)
+		## La red se abomba donde entró el balón (M-149).
+		if is_instance_valid(_balon):
+			RedArco.golpe(_raiz3d, _balon.global_position)
 		if _rig != null:
 			_rig.impacto(0.9, 0.7)
 			_rig.golpe_de_zoom(5.0, 1.2)
