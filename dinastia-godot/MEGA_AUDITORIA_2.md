@@ -44,8 +44,8 @@ NO se logró**. Las cifras salen de herramientas del repositorio (se pueden repe
    eran los cuerpos sin LOD (≈1 M de triángulos) y el cuero por capas (≈180 mil);
    ver #14. Queda: llamadas de dibujo por jugador (≈8 piezas por cabeza+cuerpo).
 2. **Física/animación del partido**: reposiciones del balón y giros bruscos (ver #5).
-   HECHO 17-10: duelos cuerpo a cuerpo con consecuencias. Quedan: cargas al conductor
-   poco frecuentes y ~3 faltas por partido (en la realidad, 20-25).
+   HECHO 17-10: duelos cuerpo a cuerpo con consecuencias. Faltas: de ~3,8 a ~8,8 por partido
+   (17-10; partido comprimido, goles iguales, el mejor sigue ganando 9 de 12).
 3. **Público**: la mayoría del estadio sigue siendo muñeco de 26 triángulos; solo
    la bandeja baja usa personas reales. No hay «personas del club» sentadas.
 4. **VAR**: HECHO 17-10, ya anula goles. Queda: que la decisión salga de la jugada real
