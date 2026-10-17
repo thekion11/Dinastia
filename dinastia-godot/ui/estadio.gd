@@ -1436,18 +1436,35 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 ## los monitores mostrando la jugada desde cuatro cámaras, y se sigue.
 var _sala_var: SalaVAR = null
 
-func _a_la_revision_var(minuto: int, motivo: String) -> void:
+func _a_la_revision_var(minuto: int, motivo: String, anular := false, al_anular := Callable()) -> void:
 	if _sala_var != null or _raiz3d == null:
 		return
 	var vel_antes := _juego.vel_idx if _juego != null else 2
 	if _juego != null:
 		_juego.vel_idx = 0
 	var foco := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
-	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo)
+	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo, anular)
 	_sala_var.terminada.connect(func() -> void:
 		_sala_var = null
+		if anular and al_anular.is_valid():
+			al_anular.call()
 		if _juego != null:
 			_juego.vel_idx = maxi(vel_antes, 1))
+
+## El gol que el VAR anula: acta, motor y marcador, con aviso y reacción.
+func _anular_gol_motor(de_local: bool, autor: String) -> void:
+	if _motor == null or partido == null:
+		return
+	partido.anular_gol_externo(de_local, autor)
+	_motor.anular_gol(de_local)
+	if _stats != null:
+		_stats.anular_gol(de_local)
+	_refrescar_marcador()
+	_mostrar_rotulo_suceso("🖥️ " + Idiomas.t("VAR: GOL ANULADO"))
+	var mio := _mi_lado >= 0 and (_mi_lado == 0) == de_local
+	Sonido.toca("abucheo" if mio or _mi_lado < 0 and de_local else "festejo_hinchada_extra")
+	if _rig != null:
+		_rig.impacto(0.35, 0.4)
 
 func _a_la_decision_arbitral(texto: String, minuto: int) -> void:
 	if _juego == null:
@@ -1508,11 +1525,16 @@ func _montar_motor() -> void:
 			_rig.impacto(0.9, 0.7)
 			_rig.golpe_de_zoom(5.0, 1.2)
 		## EL VAR SE USA (14-10-2026): con VAR en la liga, uno de cada cinco goles
-		## se revisa en la sala (el partido espera y el gol se confirma).
+		## se revisa en la sala (el partido espera). Desde el 17-10 uno de cada
+		## tres revisados se ANULA: el marcador, el acta y el goleador vuelven
+		## atrás y la grada lo nota.
 		if Partido.ctx_factor_tarjetas < 1.0 and Azar.suerte(0.2):
+			var anula := Azar.suerte(0.33)
+			var motivo := "Revisión del gol: posible fuera de juego" if Azar.suerte(0.6) else "Revisión del gol: posible falta previa"
 			get_tree().create_timer(2.2).timeout.connect(func() -> void:
 				if is_instance_valid(self) and _motor != null:
-					_a_la_revision_var(partido.minuto, "Revisión del gol: posible fuera de juego")))
+					_a_la_revision_var(partido.minuto, motivo, anula, func() -> void:
+						_anular_gol_motor(de_local, autor))))
 	_motor.remate.connect(func(de_local: bool, autor: String, tipo: String) -> void:
 		var tirador := _nodo_de(autor)
 		_stats.cerrar_tiro(de_local, tipo, Vector3.ZERO, tirador.position if tirador != null else (_balon.position if is_instance_valid(_balon) else Vector3.ZERO))

@@ -730,6 +730,12 @@ func _palos_y_lineas(antes: Vector3) -> void:
 		var local_saca := ultimo_toque.is_empty() or not bool(ultimo_toque["es_local"])
 		_empezar_saque("banda", local_saca, Vector3(signf(p.x) * (ANCHO - 0.2), R, clampf(p.z, -LARGO + 1.0, LARGO - 1.0)))
 
+## El VAR anula un gol ya celebrado: solo el marcador del motor (el acta la
+## corrige `Partido.anular_gol_externo`).
+func anular_gol(de_local: bool) -> void:
+	var i := 0 if de_local else 1
+	goles[i] = maxi(goles[i] - 1, 0)
+
 func _gol(en_arco_visita: bool) -> void:
 	## El arco de +Z es el de la visita: gol del local.
 	var de_local := en_arco_visita

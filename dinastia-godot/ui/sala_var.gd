@@ -22,13 +22,16 @@ var _rotulo: Label
 var _reloj: Label
 var _decision: PanelContainer
 var _motivo := ""
+## Si la revisión acaba anulando lo decidido en el campo (el gol).
+var anula := false
 var _minuto := 0
 var _mundo_partido: World3D
 var _foco := Vector3.ZERO
 var _monitores: Array = []
 
-static func abrir(padre: Control, mundo_partido: World3D, foco: Vector3, minuto: int, motivo: String) -> SalaVAR:
+static func abrir(padre: Control, mundo_partido: World3D, foco: Vector3, minuto: int, motivo: String, anular := false) -> SalaVAR:
 	var s := SalaVAR.new()
+	s.anula = anular
 	s._mundo_partido = mundo_partido
 	s._foco = foco
 	s._minuto = minuto
@@ -69,7 +72,7 @@ func _montar() -> void:
 	fila.add_theme_constant_override("separation", 16)
 	barra.add_child(fila)
 	_rotulo = Label.new()
-	_rotulo.text = Idiomas.t("🖥️  REVISIÓN VAR  ·  %d'  ·  %s") % [_minuto, _motivo]
+	_rotulo.text = Idiomas.t("🖥️  REVISIÓN VAR  ·  %d'  ·  %s") % [_minuto, Idiomas.t(_motivo)]
 	_rotulo.add_theme_font_size_override("font_size", 26)
 	_rotulo.add_theme_color_override("font_color", Color("e8f4ff"))
 	_rotulo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -80,7 +83,7 @@ func _montar() -> void:
 	fila.add_child(_reloj)
 	_decision = PanelContainer.new()
 	var sd := StyleBoxFlat.new()
-	sd.bg_color = Color(0.05, 0.35, 0.15, 0.95)
+	sd.bg_color = Color(0.45, 0.06, 0.06, 0.95) if anula else Color(0.05, 0.35, 0.15, 0.95)
 	sd.set_corner_radius_all(10)
 	sd.content_margin_left = 40
 	sd.content_margin_right = 40
@@ -91,7 +94,7 @@ func _montar() -> void:
 	_decision.visible = false
 	add_child(_decision)
 	var ld := Label.new()
-	ld.text = Idiomas.t("✔  DECISIÓN: SE MANTIENE LO DECIDIDO EN EL CAMPO")
+	ld.text = Idiomas.t("✖  DECISIÓN: GOL ANULADO") if anula else Idiomas.t("✔  DECISIÓN: SE MANTIENE LO DECIDIDO EN EL CAMPO")
 	ld.add_theme_font_size_override("font_size", 30)
 	ld.add_theme_color_override("font_color", Color.WHITE)
 	_decision.add_child(ld)

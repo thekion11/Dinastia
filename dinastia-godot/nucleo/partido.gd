@@ -513,6 +513,31 @@ func gol_externo(es_local: bool, autor_id: String, asist_id: String) -> void:
 	_momentum_push(2, es_local)
 	gol.emit(c, autor, minuto, asistente)
 
+## EL VAR ANULA (17-10-2026): deshace el último gol de ese equipo (marcador,
+## goles del autor, nota y crónica, que lo deja como "gol_anulado").
+func anular_gol_externo(es_local: bool, autor_id: String) -> void:
+	if terminado_ya:
+		return
+	var c := local if es_local else visita
+	if es_local:
+		if goles_local <= 0:
+			return
+		goles_local -= 1
+	else:
+		if goles_visita <= 0:
+			return
+		goles_visita -= 1
+	var autor := _por_id(autor_id) if autor_id != "" else null
+	if autor != null:
+		autor.goles = maxi(autor.goles - 1, 0)
+		_notas[autor.id] = maxf(float(_notas.get(autor.id, 6.0)) - 1.1, 1.0)
+	for i in range(cronica.size() - 1, -1, -1):
+		var e: Dictionary = cronica[i]
+		if String(e.get("tipo", "")) == "gol" and String(e.get("club", "")) == c.id:
+			e["tipo"] = "gol_anulado"
+			break
+	_momentum_push(1, not es_local)
+
 ## Un remate que no fue gol: "atajada", "poste" o "fallo".
 func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
 	if terminado_ya:

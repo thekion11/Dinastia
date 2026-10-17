@@ -100,6 +100,14 @@ func cerrar_tiro(local: bool, res: String, pos_balon: Vector3 = Vector3.ZERO, po
 		anotar_tiro(local, Vector2(pos_tirador.x, pos_tirador.z), -1)
 		(tiros[-1] as Dictionary)["res"] = res
 
+## El VAR anula: el último gol de ese equipo pasa a "anulado" en el mapa.
+func anular_gol(local: bool) -> void:
+	for i in range(tiros.size() - 1, -1, -1):
+		var t: Dictionary = tiros[i]
+		if bool(t["local"]) == local and String(t["res"]) == "gol":
+			t["res"] = "anulado"
+			return
+
 func tarjeta(local: bool, roja: bool) -> void:
 	var i := 0 if local else 1
 	if roja:

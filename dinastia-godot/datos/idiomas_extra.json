@@ -2371,7 +2371,11 @@
   "ESTADÍSTICAS": "STATS",
   "DESCANSO · ESTADÍSTICAS": "HALF-TIME · STATS",
   "📊 Estadísticas": "📊 Stats",
-  "Estadísticas del partido": "Match stats"
+  "Estadísticas del partido": "Match stats",
+  "✖  DECISIÓN: GOL ANULADO": "✖  DECISION: GOAL DISALLOWED",
+  "VAR: GOL ANULADO": "VAR: GOAL DISALLOWED",
+  "Revisión del gol: posible fuera de juego": "Goal check: possible offside",
+  "Revisión del gol: posible falta previa": "Goal check: possible foul in the build-up"
  },
  "pt": {
   "Historia": "História",
@@ -4745,7 +4749,11 @@
   "ESTADÍSTICAS": "ESTATÍSTICAS",
   "DESCANSO · ESTADÍSTICAS": "INTERVALO · ESTATÍSTICAS",
   "📊 Estadísticas": "📊 Estatísticas",
-  "Estadísticas del partido": "Estatísticas da partida"
+  "Estadísticas del partido": "Estatísticas da partida",
+  "✖  DECISIÓN: GOL ANULADO": "✖  DECISÃO: GOL ANULADO",
+  "VAR: GOL ANULADO": "VAR: GOL ANULADO",
+  "Revisión del gol: posible fuera de juego": "Revisão do gol: possível impedimento",
+  "Revisión del gol: posible falta previa": "Revisão do gol: possível falta anterior"
  },
  "patrones": [
   [
@@ -7666,7 +7674,11 @@
   "ESTADÍSTICAS": "STATISTIQUES",
   "DESCANSO · ESTADÍSTICAS": "MI-TEMPS · STATISTIQUES",
   "📊 Estadísticas": "📊 Statistiques",
-  "Estadísticas del partido": "Statistiques du match"
+  "Estadísticas del partido": "Statistiques du match",
+  "✖  DECISIÓN: GOL ANULADO": "✖  DÉCISION : BUT REFUSÉ",
+  "VAR: GOL ANULADO": "VAR : BUT REFUSÉ",
+  "Revisión del gol: posible fuera de juego": "Vérification du but : hors-jeu possible",
+  "Revisión del gol: posible falta previa": "Vérification du but : faute possible avant"
  },
  "it": {
   "Historia": "Storia",
@@ -9947,7 +9959,11 @@
   "ESTADÍSTICAS": "STATISTICHE",
   "DESCANSO · ESTADÍSTICAS": "INTERVALLO · STATISTICHE",
   "📊 Estadísticas": "📊 Statistiche",
-  "Estadísticas del partido": "Statistiche della partita"
+  "Estadísticas del partido": "Statistiche della partita",
+  "✖  DECISIÓN: GOL ANULADO": "✖  DECISIONE: GOL ANNULLATO",
+  "VAR: GOL ANULADO": "VAR: GOL ANNULLATO",
+  "Revisión del gol: posible fuera de juego": "Revisione del gol: possibile fuorigioco",
+  "Revisión del gol: posible falta previa": "Revisione del gol: possibile fallo precedente"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12228,7 +12244,11 @@
   "ESTADÍSTICAS": "STATISTIK",
   "DESCANSO · ESTADÍSTICAS": "HALBZEIT · STATISTIK",
   "📊 Estadísticas": "📊 Statistik",
-  "Estadísticas del partido": "Spielstatistik"
+  "Estadísticas del partido": "Spielstatistik",
+  "✖  DECISIÓN: GOL ANULADO": "✖  ENTSCHEIDUNG: TOR ABERKANNT",
+  "VAR: GOL ANULADO": "VAR: TOR ABERKANNT",
+  "Revisión del gol: posible fuera de juego": "Torüberprüfung: mögliches Abseits",
+  "Revisión del gol: posible falta previa": "Torüberprüfung: mögliches Foul davor"
  },
  "ca": {
   "Historia": "Història",
@@ -14509,7 +14529,11 @@
   "ESTADÍSTICAS": "ESTADÍSTIQUES",
   "DESCANSO · ESTADÍSTICAS": "DESCANS · ESTADÍSTIQUES",
   "📊 Estadísticas": "📊 Estadístiques",
-  "Estadísticas del partido": "Estadístiques del partit"
+  "Estadísticas del partido": "Estadístiques del partit",
+  "✖  DECISIÓN: GOL ANULADO": "✖  DECISIÓ: GOL ANUL·LAT",
+  "VAR: GOL ANULADO": "VAR: GOL ANUL·LAT",
+  "Revisión del gol: posible fuera de juego": "Revisió del gol: possible fora de joc",
+  "Revisión del gol: posible falta previa": "Revisió del gol: possible falta prèvia"
  },
  "pl": {
   "Club": "Klub",
@@ -17087,7 +17111,11 @@
   "ESTADÍSTICAS": "STATYSTYKI",
   "DESCANSO · ESTADÍSTICAS": "PRZERWA · STATYSTYKI",
   "📊 Estadísticas": "📊 Statystyki",
-  "Estadísticas del partido": "Statystyki meczu"
+  "Estadísticas del partido": "Statystyki meczu",
+  "✖  DECISIÓN: GOL ANULADO": "✖  DECYZJA: GOL ANULOWANY",
+  "VAR: GOL ANULADO": "VAR: GOL ANULOWANY",
+  "Revisión del gol: posible fuera de juego": "Weryfikacja gola: możliwy spalony",
+  "Revisión del gol: posible falta previa": "Weryfikacja gola: możliwy wcześniejszy faul"
  },
  "tr": {
   "Club": "Kulüp",
@@ -19665,6 +19693,10 @@
   "ESTADÍSTICAS": "İSTATİSTİKLER",
   "DESCANSO · ESTADÍSTICAS": "DEVRE ARASI · İSTATİSTİKLER",
   "📊 Estadísticas": "📊 İstatistikler",
-  "Estadísticas del partido": "Maç istatistikleri"
+  "Estadísticas del partido": "Maç istatistikleri",
+  "✖  DECISIÓN: GOL ANULADO": "✖  KARAR: GOL İPTAL",
+  "VAR: GOL ANULADO": "VAR: GOL İPTAL",
+  "Revisión del gol: posible fuera de juego": "Gol incelemesi: olası ofsayt",
+  "Revisión del gol: posible falta previa": "Gol incelemesi: öncesinde olası faul"
  }
 }

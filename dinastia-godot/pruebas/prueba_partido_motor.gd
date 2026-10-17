@@ -35,7 +35,11 @@ func _ready() -> void:
 		partido.remates_local, partido.remates_visita, partido.posesion_local, partido.corners_local, partido.corners_visita, cambios[0]])
 	_ok(partido.terminado_ya and partido.minuto >= 90, "el partido termina en el 90'")
 	_ok(partido.goles_local == int(motor.goles[0]) and partido.goles_visita == int(motor.goles[1]), "el marcador del acta es el del césped")
-	_ok(goles_ev[0] == partido.goles_local + partido.goles_visita, "cada gol se anota una vez")
+	var anulados := 0
+	for e: Dictionary in partido.cronica:
+		if String(e.get("tipo", "")) == "gol_anulado":
+			anulados += 1
+	_ok(goles_ev[0] == partido.goles_local + partido.goles_visita + anulados, "cada gol se anota una vez (%d anulados por el VAR)" % anulados)
 	_ok(partido.remates_local >= partido.goles_local and partido.remates_visita >= partido.goles_visita, "los remates incluyen los goles")
 	_ok(partido.remates_local + partido.remates_visita >= 4, "hay remates de verdad (%d)" % (partido.remates_local + partido.remates_visita))
 	var en_cronica := 0
@@ -64,6 +68,17 @@ func _ready() -> void:
 		_ok(muestras > 1000, "el mapa de calor tiene muestras de todo el partido (%d)" % muestras)
 		var filas := st.resumen(partido, motor)
 		_ok(filas.size() >= 10, "el panel tiene %d filas de estadísticas" % filas.size())
+	## EL VAR ANULA (17-10-2026): el gol vuelve atrás en acta, goleador y crónica.
+	var p2 := Partido.new(par[0], par[1])
+	var autor: Jugador = p2.local.plantilla[0] if not p2.local.plantilla.is_empty() else null
+	var g0 := autor.goles if autor != null else 0
+	p2.gol_externo(true, autor.id if autor != null else "", "")
+	p2.anular_gol_externo(true, autor.id if autor != null else "")
+	var marcado := false
+	for e: Dictionary in p2.cronica:
+		if String(e.get("tipo", "")) == "gol_anulado":
+			marcado = true
+	_ok(p2.goles_local == 0 and (autor == null or autor.goles == g0) and marcado, "el VAR anula el gol en el acta, el goleador y la crónica")
 	vista.queue_free()
 	await get_tree().process_frame
 	_ok(not partido.motor_externo, "al cerrar el 3D el partido vuelve a jugarse solo")
