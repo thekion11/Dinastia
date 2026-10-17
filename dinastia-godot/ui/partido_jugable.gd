@@ -611,6 +611,9 @@ func _al_gol(de_local: bool, autor: String, _asist: String) -> void:
 	else:
 		_mostrar_banner("¡GOL de %s!" % (Nombres.visible(local.nombre) if de_local else Nombres.visible(visita.nombre)))
 	Sonido.toca("gol" if de_local == _es_local_usuario else "gol_rival", Sonido.Bus.INTERFAZ)
+	## La red se abomba donde entró el balón (M-149).
+	if motor.balon != null:
+		RedArco.golpe(_raiz, motor.balon.global_position)
 	if autor != "":
 		_tiros_de[autor] = int(_tiros_de.get(autor, 0)) + 1
 		_goles_de[autor] = int(_goles_de.get(autor, 0)) + 1

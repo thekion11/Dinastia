@@ -291,10 +291,20 @@ static func _add_goal(root: Node3D, z: float, poste: Material, red_col: Color, r
 	techo_red.mesh = q_techo
 	techo_red.rotation.x = PI / 2.0
 	techo_red.position = Vector3(0, height - 0.01, z - inward * (depth_top / 2.0))
-	var m_techo: StandardMaterial3D = mat_red.duplicate()
-	m_techo.uv1_scale = Vector3(32, 6, 1)
-	techo_red.material_override = m_techo
+	## El techo y el fondo, subdivididos y con el shader de la onda (M-149):
+	## la red se abomba al gol. Mismo dibujo y mismo cordel que antes.
+	var tex_red: Texture2D = mat_red.albedo_texture
+	var onda := RedArco.new()
+	onda.name = "RedArco"
+	q_techo.subdivide_width = 18
+	q_techo.subdivide_depth = 3
+	techo_red.name = "RedTecho"
+	## En un grupo: así `Optimizar.agrupar` no la funde con otras piezas quietas
+	## (perdería su material propio y la onda).
+	techo_red.add_to_group("red_arco")
+	techo_red.material_override = _mat_red_onda(tex_red, Vector2(32, 6), Vector2(width, depth_top) * 0.5)
 	goal_root.add_child(techo_red)
+	onda.panos.append(techo_red)
 
 	# Fondo de red inclinado (desde depth_top a depth_bottom en el suelo)
 	var fondo_red := MeshInstance3D.new()
@@ -305,10 +315,14 @@ static func _add_goal(root: Node3D, z: float, poste: Material, red_col: Color, r
 	var ang_fondo := atan2(depth_bottom - depth_top, height)
 	fondo_red.rotation.x = -inward * ang_fondo
 	fondo_red.position = Vector3(0, height / 2.0, z - inward * ((depth_top + depth_bottom) / 2.0))
-	var m_fondo: StandardMaterial3D = mat_red.duplicate()
-	m_fondo.uv1_scale = Vector3(32, 14, 1)
-	fondo_red.material_override = m_fondo
+	q_fondo.subdivide_width = 24
+	q_fondo.subdivide_depth = 9
+	fondo_red.name = "RedFondo"
+	fondo_red.add_to_group("red_arco")
+	fondo_red.material_override = _mat_red_onda(tex_red, Vector2(32, 14), Vector2(width, alto_fondo) * 0.5)
 	goal_root.add_child(fondo_red)
+	onda.panos.append(fondo_red)
+	goal_root.add_child(onda)
 
 	# Laterales de red
 	for side in [-1.0, 1.0]:
@@ -322,6 +336,18 @@ static func _add_goal(root: Node3D, z: float, poste: Material, red_col: Color, r
 		m_lat.uv1_scale = Vector3(12, 10, 1)
 		lat_red.material_override = m_lat
 		goal_root.add_child(lat_red)
+
+## El material de los paños que se ondulan (`red_arco.gdshader`).
+static var _shader_red: Shader = null
+static func _mat_red_onda(tex: Texture2D, escala: Vector2, medio: Vector2) -> ShaderMaterial:
+	if _shader_red == null:
+		_shader_red = load("res://visor/red_arco.gdshader")
+	var m := ShaderMaterial.new()
+	m.shader = _shader_red
+	m.set_shader_parameter("textura", tex)
+	m.set_shader_parameter("escala_uv", escala)
+	m.set_shader_parameter("medio_tam", medio)
+	return m
 
 ## `mi` (16-9-2026, Fase 2 "Componentes"): opcional, solo hace falta para
 ## pintar el escudo en el cesped cuando `escudoDonde` lo pide. `null` -el caso
