@@ -1571,6 +1571,13 @@ func _montar_motor() -> void:
 		if _rig != null:
 			_rig.impacto(0.45 if roja else 0.25, 0.4))
 	_motor.aviso.connect(_al_aviso_motor)
+	## El silbato del árbitro con su gesto (M-106). El final del partido ya
+	## tiene su pitido (resumen); aquí, el del descanso y cada falta.
+	_motor.gesto_arbitro.connect(func(g: String) -> void:
+		if g == "silbato":
+			Sonido.toca("silbato")
+		elif g == "fin" and _motor.estado == "descanso":
+			Sonido.toca("pitido_final"))
 	## PRÓRROGA Y PENALES (17-10-2026): el acta sigue hasta el 120' y guarda la
 	## tanda del césped (nadie la vuelve a sortear).
 	_motor.prorroga_empieza.connect(func() -> void:
@@ -1645,7 +1652,7 @@ func _al_aviso_motor(texto: String) -> void:
 		var partes := texto.split(":", true, 1)
 		_mostrar_rotulo_suceso("🥅 %s %s:%s" % [Idiomas.t("Penal"), partes[0].trim_prefix("🥅 Penal "), partes[1]])
 		return
-	for clave in ["Córner", "Penal", "PENAL", "Fuera de juego", "Roja", "PALO", "LARGUERO", "parada", "Atajada", "Dentro", "Fallado", "¡Fuera!", "Cambio de campo"]:
+	for clave in ["Córner", "Penal", "PENAL", "Fuera de juego", "Roja", "PALO", "LARGUERO", "parada", "Atajada", "Dentro", "Fallado", "¡Fuera!", "Cambio de campo", "Ventaja"]:
 		if texto.contains(clave):
 			_mostrar_rotulo_suceso(Idiomas.t(texto))
 			return
