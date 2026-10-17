@@ -265,7 +265,14 @@ func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dicti
 ## en diagonal por el centro y cada juez de linea en su banda, en su mitad.
 ## Devuelve la misma estructura que spawn_team para que MatchPlayback los mueva
 ## igual que a los demas.
-func spawn_arbitros(root: Node3D) -> Array:
+##
+## `kit` (17-10-2026, M-072): la camiseta del trío que eligió
+## `Puente3D.kit_arbitro` para que contraste con los dos equipos. Vacío = de
+## negro, como siempre.
+func spawn_arbitros(root: Node3D, kit: Dictionary = {}) -> Array:
+	var camiseta := Color(String(kit.get("c1", "#111216")))
+	var ribete := Color(String(kit.get("c2", "#e6d91a")))
+	var pantalon := Color(String(kit.get("pantalon", "#121217")))
 	var puestos := [
 		{"id": "arbitro", "pos": Vector3(6.0, 0, 8.0), "rot": -0.6, "alto": 1.80},
 		{"id": "linea_a", "pos": Vector3(-36.5, 0, -22.0), "rot": PI * 0.5, "alto": 1.78},
@@ -273,9 +280,9 @@ func spawn_arbitros(root: Node3D) -> Array:
 	]
 	var out: Array = []
 	for p in puestos:
-		var d := _crear_jugador(root, str(p["id"]), "ARB", "", Color(0.06, 0.06, 0.08),
-			Color(0.9, 0.85, 0.1), "liso", 0, Color(0.82, 0.63, 0.5), Color(0.16, 0.12, 0.09), 0,
-			Color(0.07, 0.07, 0.09, 1.0))
+		var d := _crear_jugador(root, str(p["id"]), "ARB", "", camiseta,
+			ribete, "liso", 0, Color(0.82, 0.63, 0.5), Color(0.16, 0.12, 0.09), 0,
+			Color(pantalon, 1.0))
 		if d.is_empty():
 			continue
 		var n: Node3D = d["nodo"]

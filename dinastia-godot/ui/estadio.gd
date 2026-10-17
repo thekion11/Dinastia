@@ -579,13 +579,17 @@ func _sacar_los_22() -> void:
 	var v := Puente3D.once(once_visita)
 	## El local ataca hacia un lado y el visitante hacia el otro: `spawn_team` lo
 	## resuelve con `es_local`, que además le da la vuelta al jugador.
+	var kit_l := Puente3D.kit(club)
+	var kit_v := Puente3D.kit_visita(club, visitante)
+	var por_l := Puente3D.kit_portero(club)
+	var por_v := Puente3D.kit_portero(visitante)
 	_en_campo.append_array(_spawner.spawn_team(_raiz3d, l["xi"], l["jugadores"],
-		Puente3D.formacion(club.tactica.formacion), true,
-		Puente3D.kit(club), Puente3D.kit_portero(club)))
+		Puente3D.formacion(club.tactica.formacion), true, kit_l, por_l))
 	_en_campo.append_array(_spawner.spawn_team(_raiz3d, v["xi"], v["jugadores"],
-		Puente3D.formacion(visitante.tactica.formacion), false,
-		Puente3D.kit_visita(club, visitante), Puente3D.kit_portero(visitante)))
-	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d))
+		Puente3D.formacion(visitante.tactica.formacion), false, kit_v, por_v))
+	## El trío de la camiseta que mejor se distingue de los dos (M-072).
+	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d,
+		Puente3D.kit_arbitro(kit_l, kit_v, hash(club.id + "|" + visitante.id), [por_l, por_v])))
 	_poner_banca(once_local, once_visita)
 	_poner_personal()
 	_purgar_nodos_fantasma()
