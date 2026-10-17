@@ -42,3 +42,6 @@ dinastia-godot/assets/kenney/tren/*.glb -filter -diff -merge binary
 dinastia-godot/assets/kenney/suburbano/*.glb -filter -diff -merge binary
 dinastia-godot/assets/kenney/mini_mercado/*.glb -filter -diff -merge binary
 dinastia-godot/assets/kenney/industrial/*.glb -filter -diff -merge binary
+
+# Muebles de Quaternius (CC0), regalo del usuario el 15-10-2026: archivos normales.
+dinastia-godot/assets/quaternius_muebles/*.glb -filter -diff -merge binary

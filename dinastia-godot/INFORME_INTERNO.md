@@ -27,8 +27,8 @@ Prioridad: P0 rompe algo · P1 se nota mucho · P2 pulido · P3 futuro.
    reales encontrados auditando (E-01, E-02, E-03).
 3. **Lo más débil hoy** (por impacto): (a) el **exterior de los estadios** (cajas grises
    con torres) y la poca variedad de formas (6); (b) **idiomas**: los 6 idiomas extra no
-   tienen las mismas frases (§9); (c) **rendimiento no demostrado** sin GPU real (§8);
-   (d) **sesgo de local** en el motor de partido (§6); (e) **patrocinio** concentrado en
+   tenían las mismas frases (§9; ✅ igualados el 15-10, con prueba en el banco); (c) **rendimiento no demostrado** sin GPU real (§8);
+   (d) ~~sesgo de local~~ (§6: medido con N=100, no existe; ✅ 15-10); (e) **patrocinio** concentrado en
    4 marcas y 16 % de clubes grandes sin camiseta patrocinada (§5); (f) **plantillas
    idénticas en tamaño** (25 en todos los clubes).
 4. **Lo que ya respeta al club real** (medido): estadio con la arquitectura del real 46 %,
@@ -166,23 +166,38 @@ Medido con `pruebas/sonda_motor_dt.tscn` y `sonda_fisica_partido.tscn`:
 |---|---|
 | Calidad (N=4) | mejor de local 1,75–1,00 (tiros 9,8–4,8); peor de local 0,50–4,25 → **gana el mejor** |
 | Táctica (N=3) | ofensiva 1,67–0,33 (tiros 7,0–2,3); defensiva 1,00–0,67 (tiros 2,7–12,3) → **la pizarra cambia los tiros** |
-| Simetría (N=6, mismo once) | **2,00–1,33 a favor del local** |
+| Simetría (N=6, mismo once) | ~~2,00–1,33 a favor del local~~ → era ruido de muestra: con N=100 (15-10) **0,63–0,67** antes y **0,68–0,71** después |
 | Física (240 fotogramas) | solapes 0,12 %; balón hundido 0; balón atravesando cuerpo 0; **68 teletransportes** del balón y 465 giros > 720°/s |
 
-- **M-01 (P1, 🔴) Sesgo de local**: con el mismo once a los dos lados el local mete
-  +0,67 goles y +1,6 tiros (N pequeña, pero repetido en táctica: 2,33–0,33 con pizarras
-  iguales). *Cómo*: ampliar la sonda (N ≥ 30, semillas distintas); revisar
-  `_orientar_formaciones`, el saque inicial (¿siempre saca el local?) y la posición de la
-  cámara/césped que favorezca el sentido de ataque; luego calibrar con ventaja de campo
-  explícita (≈ +0,2 goles) y no implícita.
+- **M-01 (P1, ✅ 15-10) Sesgo de local**: el «+0,67 goles» salía de N=6. La sonda ahora
+  reparte semillas en procesos (`SEMILLA0`, `MITAD`) e imprime `LADOS` (goles, tiros,
+  córners, faltas, fueras, despejes por lado). Con el mismo once, **N=100** (MITAD=120):
+  **antes 0,63–0,67 goles, tiros 3,4–3,4, G/E/P local 28/39/33**; **después 0,68–0,71,
+  tiros 3,0–3,1, 29/39/32**. No había ventaja de local medible. Sí había dos asimetrías
+  reales en el código, corregidas: el **efecto (Magnus) de centros y córners** era el mismo
+  giro absoluto para los dos (un equipo centraba abriéndose y el otro cerrándose hacia el
+  arco) y las **zonas del área en balón parado** no se reflejaban con el sentido del ataque.
+  `_orientar_formaciones`, saques de centro, catálogo de jugadas y fuera de juego se
+  revisaron: simétricos. Si se quiere ventaja de campo, que sea explícita (no hay).
 - **M-02 (P1, 🔴) Teletransportes y giros bruscos**: los 68 «saltos» del balón y los giros
   de 720°/s suelen ser reposiciones (saque de centro, gol) mezcladas con movimiento real.
   *Cómo*: que la sonda excluya los fotogramas de estado `gol/saque`; limitar giro por
   fotograma en `_aplicar_movimiento` (inercia angular) y suavizar el cambio de objetivo.
-- **M-03 (P1, 🔴) Duelos sin consecuencias**: las entradas son animaciones; no hay
-  contacto con empuje, faltas por contacto real ni balón dividido. *Cómo*: zona de
-  contacto (círculo de 0,8 m), probabilidad de pérdida por fuerza/agilidad, falta si la
-  entrada llega por detrás.
+- **M-03 (P1, ✅ 16-10) Duelos sin consecuencias**: ~~las entradas son animaciones; no hay
+  contacto con empuje, faltas por contacto real ni balón dividido~~. Hecho en
+  `MotorJugable` (sección «duelos»): cuerpos que no se atraviesan con masa según la
+  fuerza (`_cuerpos`; antes el motor real NO tenía choques: `_resolver_choques` solo
+  corre en `MatchPlayback`), hombro con hombro (`_duelo_hombro`), balón dividido
+  (`_duelo_dividido`) y agarrón (`_duelo_agarron`) con fuerza, equilibrio y una
+  agresividad derivada (defensa, físico, rasgo y carácter fijo); faltas y tarjetas por
+  duelo; la fuerza pesa también en la entrada de pie. Gestos nuevos en `AnimFutbol`:
+  `duelo_hombro_der/izq`, `duelo_empujado_der/izq`, `duelo_agarron`, `duelo_forcejeo`.
+  Sonda simetría (N=60, MITAD=120): ~15 cargas, ~3 divididos, ~2,5 agarrones y ~1,9
+  faltas de duelo por partido; goles 1,0 (con todo apagado y la misma semilla 0,95),
+  tiros 6,3, pases 73 %, fintas 18 (46 %), paradas 76 %. `pruebas/prueba_duelos.tscn`
+  (el fuerte se queda el balón en ~90 % de las carreras 0,8 contra 0,4 y gana ~75 % de
+  los duelos de un partido) y `pruebas/captura_duelos.tscn` (cámara de transmisión).
+  Interruptores para medir: `SIN_DUELOS=1` / `SIN_CUERPOS=1`.
 - **M-04 (P2, 💡) IA**: apoyos y marcaje correctos pero sin *trampa de fuera de juego* de
   la línea defensiva, ni coberturas, ni basculación del bloque. *Cómo*: nivel de línea
   (`tactica.linea`) que sube/baja con el balón; defensores comparten la misma Z.
@@ -240,7 +255,7 @@ Medido con `pruebas/sonda_motor_dt.tscn` y `sonda_fisica_partido.tscn`:
 
 ## 9. Idiomas
 
-Medido (`datos/idiomas_extra.json`):
+Medido el día del informe (solo `datos/idiomas_extra.json`):
 
 | Idioma | Frases | Faltan respecto a la unión (1.699) |
 |---|---|---|
@@ -248,21 +263,59 @@ Medido (`datos/idiomas_extra.json`):
 | fr, it, de, ca | 1.402 | 297 |
 | pl, tr | 1.699 | 0 |
 
-- **I-01 (P1, 🔴) Los idiomas no tienen las mismas frases.** Las 129 que faltan a
-  fr/it/de/ca son los titulares de eventos («Apelación ACOGIDA», «Asado del club»…) y
-  hay 168 más que en/pt no tienen. Una frase sin traducir se ve en español dentro de un
-  menú en francés. *Cómo*: generar la lista de faltantes por idioma
-  (`herramientas/extraer_narracion.py` ya extrae plantillas) y traducirlas; añadir una
-  **prueba que falle si un idioma tiene menos claves** que la unión.
-- **I-02 (P1, 🔴) 274 textos en español escritos directamente en `ui/`** (`.text = "…"`
-  con tilde, sin `Idiomas.t`): `pantalla_club_vida` 28, `principal` 25, `pantalla_plantel`
-  22, `pantalla_cantera` 19, `pantalla_legado` 18, `pantalla_opciones` 15… Se ven en
-  español en cualquier idioma (a veces `traducir_arbol` los recoge, a veces no).
-  *Cómo*: auditar cada uno con una prueba que cambie el idioma y busque Labels con
-  tildes; envolver con `Idiomas.t`.
+**Remedido el 15-10-2026 con TODOS los catálogos** que usa `Idiomas.t`: la tabla del
+esqueleto (`Idiomas.TABLA`, 309 filas con columna para en…ca), `idiomas_extra.json`
+(con los diálogos de la ciudad que mete `herramientas/dialogos_ciudad.py`), las
+directas y los patrones de la narración (`datos/narracion.json`) y los patrones
+numéricos. Contar solo `idiomas_extra.json` engañaba: a en/pt «les faltaban» las
+filas que tienen en `TABLA`, y a fr…tr los titulares con icono que ya estaban en
+la narración. La diferencia REAL era menor:
+
+| Catálogo | Frases castellanas | Faltaban (antes) | Faltan (ahora) |
+|---|---|---|---|
+| Frases fijas (unión de TABLA + extra + narración) | 2.573 → 2.574 | fr/it/de/ca/pl/tr: **36** cada uno; en/pt: 0 | **0** en los 8 |
+| Patrones (`idiomas_extra` 58 + narración 313 → 315) | 371 → 373 | fr/it/de/ca/pl/tr: **2** cada uno | **0** |
+| Narración, plantillas del extractor (1.104) | — | **17** «sin traducir» en los 8 (`montar_narracion.py`) | **0** (2 reales traducidas, 15 que no se muestran o son nombres propios, ahora declaradas) |
+| `Idiomas.t("…")` escritas en el código | 258 | 0 | 0 |
+| Diálogos de vecinos (`DialogosCiudad`) | 72 | 0 | 0 |
+
+- **I-01 (✅ 15-10) Los idiomas tienen las mismas frases.** Lo que faltaba: 36 títulos de
+  evento SIN icono («Asado del club», «Moción de censura», «Tope salarial»,
+  «Representantes»…; con icono ya estaban en la narración, pero `t()` busca también la
+  forma sin icono), los patrones «Representantes: …» y «… cuelga las botas…», y en la
+  narración «{1} {2} (moral %+d).» (el extractor no entendía `%+d`) y «Colonia {1} {2}».
+  Traducido a los 8 idiomas; «Terapia deportiva» añadida para los gastos (se traduce por
+  tramos « · »). **Prueba**: `_probar_paridad_idiomas` en el banco falla si un idioma
+  tiene menos frases que la unión castellana, si un patrón no tiene plantilla en los 8,
+  si una frase de `Idiomas.t("…")` del código queda sin traducir (M-446) o si una
+  traducción pierde un `%s`/`%d`; con los datos de antes daba 7 fallos.
+  Queda (no es paridad): revisión nativa (M-332) y los textos escritos sin `Idiomas.t`
+  (I-02).
+- **I-02 (P1, 🟡 casi cerrado, 15-10) Textos en español escritos directamente en `ui/` y `visor/`.**
+  *Antes*: 573 líneas `.text = "…"` con tilde sin `Idiomas.t` en `ui/` (con el criterio ampliado
+  —`text`, `tooltip_text`, `placeholder_text`, `title`, `dialog_text`, `_boton/_dato/Tema.rotulo/
+  add_item`— 1.136 líneas en `ui/`+`visor/`); 1.071 textos distintos, de los que **732 no tenían
+  traducción** en algún idioma (721 en ninguno). La cifra de 274 era la de una medición anterior.
+  *Hecho*: 1.132 textos envueltos en `Idiomas.t(…)` en 64 archivos (las plantillas con `%s/%d` se
+  traducen enteras: `Idiomas.t("Jornada %d") % n`), y **746 frases nuevas × 8 idiomas** en
+  `datos/idiomas_extra.json` (se comprobó el orden de los marcadores `%s/%d/%.1f/%%` en cada una).
+  Los plurales «semana%s», «punto%s», «jugador%s»… pasaron a dos frases (singular/plural), que en
+  castellano se leen igual. *Después*: con el criterio del informe quedan 86 líneas y con el
+  ampliado 146; casi todas son datos (`String(dic["nombre"])`, titulares, nombres de clubes) que
+  pasan por el traductor de pantalla o la narración, no textos fijos. `_probar_paridad_idiomas`:
+  1.338 frases de `Idiomas.t("…")` en el código, 0 sin traducir.
+  *Pendiente*: 15 textos fijos en archivos que otras sesiones estaban tocando (`ui/ciudad_vista.gd`
+  8, `ui/componentes/interior_instalacion.gd` 3, `visor/metro_ciudad.gd` 3,
+  `visor/ciudad_expansion.gd` 1); `visor/explorador_ciudad.gd:856` («E: hablar con %s») no se
+  envolvió porque la línea 1423 compara `_aviso.text.begins_with("E: hablar")` (las líneas 810 y
+  1418 ya salen traducidas, así que esa comparación falla fuera del castellano: bug aparte); y
+  `principal.gd:3575` compara una etiqueta con «FICHA DEL JUGADOR» (mismo problema si el
+  traductor de pantalla la cambia).
 - **I-03 (✅) Menús nuevos y minijuegos** de hoy traducidos en 8 idiomas.
 - **I-04 (P2, 🔴) `CLAUDE.md` dice «1.402 frases cada idioma»**: ya no es cierto
-  (ver tabla); actualizar cuando se resuelva I-01.
+  (ver tabla); I-01 está resuelta: la cifra real es 2.574 frases fijas + 373 patrones
+  en cada uno de los 8 idiomas. Falta cambiar la línea de `CLAUDE.md` (memoria del
+  usuario: se deja a la sesión principal).
 
 ---
 
@@ -340,7 +393,7 @@ estática «claves de `Idiomas.t` sin traducción».
 | E-08 | P2 | `prueba_regates` obsoleta: miraba a `MatchPlayback` (que con el motor real no mueve a nadie) y la ceremonia retenía el partido | ✅ ahora mira a `MotorJugable` y apaga la ceremonia: «conduce con el mocap de regate» pasa (198 fotogramas) |
 | E-09 | P2 | `prueba_repeticion` obsoleta (4,2 s grabados por la ceremonia) y con `resize` sobre imagen nula en `--headless` | ✅ ceremonia apagada y guarda contra imagen nula (no verificada, lenta) |
 | E-10 | P3 | Las pruebas que apagan la ceremonia escriben en `user://ajustes.cfg`: si se matan a medias (timeout) el ajuste queda en `false` (me pasó una vez y lo restauré) | 🟡 ver M-455 (config de pruebas aparte) |
-| H-11 | P1 | **La IA no amaga**: 0 fintas en un partido de prueba completo; la condición exige un rival a < 1,8 m y llega tarde en la cadena de decisiones | 🔴 registrado como M-443; la prueba lo avisa («AVISO») en vez de fallar |
+| H-11 | P1 | **La IA no amaga**: 0 fintas en un partido de prueba completo; la condición exige un rival a < 1,8 m y llega tarde en la cadena de decisiones | ✅ 15-10: `MotorJugable._intentar_regate` (al ver venir al defensor, una tirada por duelo, según regate y zona) + finta de último recurso sin teletransporte (`_finta_ia`); si el defensor pica queda clavado y el atacante arranca. Sonda: ~21 fintas por partido, 45-50 % engañan. `prueba_regates` ya falla de verdad (fintas en el partido, engaño a veces, defensor clavado, sin saltos, sin festival) |
 | H-12 | P3 | `prueba_carrera_flujo` termina con «Texture with GL ID … leaked» (≈ 350 kB × 2) al cerrar | 🔴 M-444 |
 | H-13 | P3 | `prueba_descanso_3d` se cuelga en `--headless` (necesita pantalla) y `prueba_intro/regates/repeticion` no caben en 5 min con render por software | 🔴 M-445 |
 | H-14 | — | Sin hallazgos: 19 shaders cargan, 0 nodos huérfanos tras 3 aperturas/cierres de la pantalla principal, 0 avisos/errores en un partido real con gol | ✅ |

@@ -56,6 +56,7 @@ const NOMBRES_AYUDA := {
 	"tiro": ["Tiros", {"asistido": "Asistido (al palo largo)", "manual": "Manual (apuntas tú)"}],
 	"cambio": ["Cambio de jugador", {"auto": "Automático", "semi": "Semi (al recibir)", "manual": "Manual (solo con el botón)"}],
 	"direccion": ["Dirección del stick", {"camara": "Según la cámara", "campo": "Según el campo"}],
+	"vibracion": ["Vibración del mando", {"normal": "Normal", "suave": "Suave", "no": "Sin vibración"}],
 }
 
 ## Las acciones reasignables por grupos (sección «Asignar botones»).
@@ -65,7 +66,7 @@ const GRUPOS := [
 	["Modificadores", ["jugar_cambiar", "jugar_mod"]],
 	["Filigranas (stick derecho)", ["jugar_fili_arriba", "jugar_fili_abajo", "jugar_fili_izquierda", "jugar_fili_derecha", "jugar_sombrero"]],
 	["Tácticas rápidas (cruceta)", ["jugar_tac_arriba", "jugar_tac_abajo", "jugar_tac_izquierda", "jugar_tac_derecha"]],
-	["Partido", ["jugar_pausa"]],
+	["Partido", ["jugar_pausa", "jugar_estadisticas"]],
 ]
 
 ## El fondo vivo: degradado del juego, franjas de luz que cruzan en diagonal,

@@ -53,6 +53,8 @@ var _sub: Label
 var _marca: Label
 
 func _ready() -> void:
+	## Estas fotos son del juego, no de la ceremonia (la hay desde el 16-10).
+	PartidoJugable.con_ceremonia = false
 	_tramo = OS.get_environment("PROMO_TRAMO")
 	if not TRAMOS.has(_tramo):
 		_tramo = "portada"
