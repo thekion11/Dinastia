@@ -24,10 +24,10 @@ NO se logró**. Las cifras salen de herramientas del repositorio (se pueden repe
 | 2 | Público = personas reales, optimizado | **Hecho (parcial)** | `herramientas/hornear_publico.gd` hornea el MISMO modelo humano en 6 poses y 2 niveles (≈420 y ≈150 vértices); bandeja baja: 4 filas cerca + 8 medio. El resto de la grada (lejos, 26 triángulos) sigue siendo maniquí: a 30+ m no se distingue. Coste medido: +8 % de triángulos (2,41 M vs 2,23 M). **Falta**: personas del club/ciudad en las primeras filas (pendiente), y que cada hincha tenga su propia ropa/pelo (hoy: color por instancia + shader por altura). |
 | 3 | Camisetas y escudos más reales | **Hecho en 2D** | `Jersey.svg_de` rehecho (estampado recortado a la silueta, cuello, puños, costuras, sombra de tela, marca y escudo) y `Escudo.svg_de` con aro de borde. Hoja: `pruebas/captura_camisetas_escudos.tscn`. **Falta**: revisar la camiseta procedural del 3D (`equipacion_q.gdshader`) con el mismo criterio; las fotos reales de equipaciones siguen mandando cuando existen. |
 | 4 | Cada movimiento con balón ↔ controles, por código | **Hecho en la sesión anterior** | `MotorJugable` + `ControlFC` (pases, tiros, filigranas, combinaciones), `prueba_control_equipo` (verde). No se reabrió hoy. |
-| 5 | Mejor física y hitbox | **No avanzado hoy** | La sonda `sonda_fisica_partido` mide 0,12 % de solapes, 0 balones hundidos y 0 balones atravesando cuerpos; pero marca 68 teletransportes del balón y giros > 720°/s en 465 fotogramas (parte son saques de centro y reposiciones). Pendiente real: separar reposiciones de movimiento y suavizar giros. |
+| 5 | Mejor física y hitbox | **Parcial (17-10: duelos)** | 17-10: cuerpos con hitbox que se empujan y DUELOS con consecuencias (`MotorJugable._cuerpos`, `_duelo_hombro`, `_duelo_dividido`, `_duelo_agarron`, 6 gestos en `AnimFutbol`); 32 partidos: 2,56 goles (2,81 sin duelos), mejor local 16/0/0, 73 % de pases. Prueba `prueba_duelos`, captura `duelos.jpg`. Antes: La sonda `sonda_fisica_partido` mide 0,12 % de solapes, 0 balones hundidos y 0 balones atravesando cuerpos; pero marca 68 teletransportes del balón y giros > 720°/s en 465 fotogramas (parte son saques de centro y reposiciones). Pendiente real: separar reposiciones de movimiento y suavizar giros. |
 | 6 | Más modelos 3D externos, más animaciones, **caminatas distintas** | **Parcial** | «Mi caminata» (formal, normal, animado, cansado, agachado, trote) elegible en ⚙ Ajustes de la ciudad. Modelos externos: **no** se descargó ninguno (la red bloquea polyhaven/quaternius; el usuario puede permitir esos dominios). |
-| 7 | Inteligencia de los jugadores | **No avanzado hoy** | La IA existente (apoyos, marcaje, presión, portero) se revisó y es coherente; no se tocó. Idea medible para después: cobertura de espacios y trampa de fuera de juego de la línea defensiva. |
-| 8 | Efectos de cámara, celebraciones, botines visibles, VAR usado | **Hecho** | Cámara: `CameraRig.impacto/golpe_de_zoom` (gol, tarjeta, remate). Botines variados por jugador (`VestidorQ._botin_de`). VAR: 1 de 5 goles con VAR en la liga abre la sala VAR y pausa el motor (el gol siempre se confirma: **no hay anulaciones por VAR todavía**). Celebraciones: ya existían (carrera al córner, abrazo, repetición). Límite: los botines miden unos píxeles desde la cámara de TV. |
+| 7 | Inteligencia de los jugadores | **Parcial** | 17-10: la IA disputa el balón con el cuerpo (duelos de hombro, balón dividido, agarrón) y el DT rival cambia cansados y ajusta la pizarra. Antes: La IA existente (apoyos, marcaje, presión, portero) se revisó y es coherente; no se tocó. Idea medible para después: cobertura de espacios y trampa de fuera de juego de la línea defensiva. |
+| 8 | Efectos de cámara, celebraciones, botines visibles, VAR usado | **Hecho** | Cámara: `CameraRig.impacto/golpe_de_zoom` (gol, tarjeta, remate). Botines variados por jugador (`VestidorQ._botin_de`). VAR: 1 de 5 goles con VAR en la liga abre la sala VAR y pausa el motor y desde el 17-10 **1 de cada 3 revisados se ANULA** (fuera de juego o falta previa): acta, goleador, crónica, motor y mapa de tiros vuelven atrás (`Partido.anular_gol_externo`); panel rojo en `SalaVAR`, prueba en `prueba_partido_motor`. Cámara de transmisión inteligente (`CameraRig._transmision`) y estadísticas a pedido (T / Select). Celebraciones: ya existían (carrera al córner, abrazo, repetición). Límite: los botines miden unos píxeles desde la cámara de TV. |
 | 9 | Auditoría real de cada parte | **Este documento** | Ver §3. |
 | 10 | Conducción mejorada + cámara interior | **Hecho** | `ExploradorCiudad._conducir` (curva de potencia, freno, marcha atrás, freno de mano, volante suave, inclinación); V cambia tercera / capó / interior con volante y cuentakilómetros. Captura: `captura_conduccion.tscn`. Límite: el coche no tiene interior modelado (se dibuja un salpicadero 2D). |
 | 11 | Menús incompletos (ciudad, personalizar) | **Hecho** | «Ciudad 3D»: 4 tarjetas (volar, pasear, conducir, entrar al estadio). «Editar»: 6 (mundo, mi personaje, identidad, equipación, estadio, casa). Prueba: `prueba_menu_ciudad_pie`. |
@@ -44,10 +44,12 @@ NO se logró**. Las cifras salen de herramientas del repositorio (se pueden repe
    eran los cuerpos sin LOD (≈1 M de triángulos) y el cuero por capas (≈180 mil);
    ver #14. Queda: llamadas de dibujo por jugador (≈8 piezas por cabeza+cuerpo).
 2. **Física/animación del partido**: reposiciones del balón y giros bruscos (ver #5).
-   No hay duelos cuerpo a cuerpo con consecuencias; las entradas son animaciones.
+   HECHO 17-10: duelos cuerpo a cuerpo con consecuencias. Quedan: cargas al conductor
+   poco frecuentes y ~3 faltas por partido (en la realidad, 20-25).
 3. **Público**: la mayoría del estadio sigue siendo muñeco de 26 triángulos; solo
    la bandeja baja usa personas reales. No hay «personas del club» sentadas.
-4. **VAR**: dramatiza, no decide. Falta anular goles por fuera de juego/mano.
+4. **VAR**: HECHO 17-10, ya anula goles. Queda: que la decisión salga de la jugada real
+   (posición del atacante en el pase), no del azar.
 5. **Ciudad**: calzadas aún propias (no Kenney); sin interior real en los coches;
    metro y galería funcionales pero con poca vida (NPC en andenes).
 6. **Contenido legal**: las caras reales (Wikipedia/MediaPipe) están excluidas de
@@ -59,7 +61,7 @@ NO se logró**. Las cifras salen de herramientas del repositorio (se pueden repe
 ## 4. Lo que sigue (orden propuesto)
 
 1. ~~LOD de ojos/pestañas + pelo a distancia~~ HECHO 17-10 (−58 % triángulos). Siguiente: bajar llamadas (juntar ojos/cejas en la malla de la cara a distancia).
-2. Anulación de goles por VAR y duelos con consecuencias (física, #5 y #7).
+2. ~~Anulación de goles por VAR y duelos con consecuencias~~ HECHO 17-10. Siguiente: más faltas y fuera de juego real decidiendo el VAR.
 3. Traducir las cadenas de los minijuegos nuevos (los menús ya están).
 4. Personas del club/ciudad en las primeras filas y NPC en andenes.
 5. Probar losetas Kenney en una calle de prueba (sin tocar la red principal).
