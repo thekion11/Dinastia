@@ -120,6 +120,60 @@ static func kit_portero(c: Club) -> Dictionary:
 			mejor = hex
 	return {"c1": mejor, "c2": "#101010", "estilo": "liso"}
 
+## EL ÁRBITRO SE VISTE PARA QUE SE LE VEA (17-10-2026, M-072). Antes iba
+## siempre de negro: contra un equipo de negro o azul marino no se distinguía
+## desde la cámara alta. Como en las ligas de verdad, el trío tiene varias
+## camisetas y se pone la que más contrasta con las de LOS DOS equipos (la peor
+## de las dos distancias manda) y, de segundo, con los porteros. Entre las que
+## quedan casi empatadas decide la semilla del partido, así que el mismo partido
+## siempre sale igual y no todos los partidos con blancos y rojos son iguales.
+## Devuelve {c1: camiseta, c2: ribete, pantalon, nombre}.
+const PALETA_ARBITRO := [
+	{"nombre": "negro", "c1": "#111216", "c2": "#e2c62a", "pantalon": "#0e0e12"},
+	{"nombre": "amarillo", "c1": "#f2dc1e", "c2": "#141414", "pantalon": "#121214"},
+	{"nombre": "rojo", "c1": "#c8202a", "c2": "#141414", "pantalon": "#121214"},
+	{"nombre": "celeste", "c1": "#6fc3ea", "c2": "#10233a", "pantalon": "#10141c"},
+	{"nombre": "lima", "c1": "#a6e22e", "c2": "#141414", "pantalon": "#121214"},
+	{"nombre": "rosa", "c1": "#f06bb0", "c2": "#141414", "pantalon": "#121214"},
+	{"nombre": "naranja", "c1": "#f28a1a", "c2": "#141414", "pantalon": "#121214"},
+	{"nombre": "gris", "c1": "#7d838c", "c2": "#141414", "pantalon": "#121214"},
+]
+
+## Distancia «de ojo» entre dos colores: la media ponderada de rojo (redmean)
+## más la diferencia de luz, que es lo que separa dos camisetas de lejos.
+static func contraste_camiseta(a: Color, b: Color) -> float:
+	var rm := (a.r + b.r) * 0.5
+	var dr := a.r - b.r
+	var dg := a.g - b.g
+	var db := a.b - b.b
+	var rgb := sqrt((2.0 + rm) * dr * dr + 4.0 * dg * dg + (3.0 - rm) * db * db) / 3.0
+	return rgb + absf(a.get_luminance() - b.get_luminance()) * 0.8
+
+static func kit_arbitro(kit_local: Dictionary, kit_visita: Dictionary, semilla: int, porteros: Array = []) -> Dictionary:
+	var cl := Color(String(kit_local.get("c1", "#ffffff")))
+	var cv := Color(String(kit_visita.get("c1", "#ffffff")))
+	var notas: Array[float] = []
+	var mejor := 0.0
+	for k: Dictionary in PALETA_ARBITRO:
+		var c := Color(String(k["c1"]))
+		var nota := minf(contraste_camiseta(c, cl), contraste_camiseta(c, cv))
+		for kp in porteros:
+			if kp is Dictionary and (kp as Dictionary).has("c1"):
+				nota = minf(nota, 0.35 + contraste_camiseta(c, Color(String(kp["c1"]))))
+		## El negro es el de siempre: un poco de preferencia si contrasta igual.
+		if String(k["nombre"]) == "negro":
+			nota += 0.04
+		notas.append(nota)
+		mejor = maxf(mejor, nota)
+	var validas: Array[int] = []
+	for i in notas.size():
+		if notas[i] >= mejor * 0.88:
+			validas.append(i)
+	var r := RandomNumberGenerator.new()
+	r.seed = semilla
+	var elegido: Dictionary = PALETA_ARBITRO[validas[r.randi() % validas.size()]]
+	return elegido.duplicate()
+
 static func _distancia(a: Color, b: Color) -> float:
 	return absf(a.r - b.r) + absf(a.g - b.g) + absf(a.b - b.b)
 
