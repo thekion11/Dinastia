@@ -33,15 +33,16 @@ NO se logró**. Las cifras salen de herramientas del repositorio (se pueden repe
 | 11 | Menús incompletos (ciudad, personalizar) | **Hecho** | «Ciudad 3D»: 4 tarjetas (volar, pasear, conducir, entrar al estadio). «Editar»: 6 (mundo, mi personaje, identidad, equipación, estadio, casa). Prueba: `prueba_menu_ciudad_pie`. |
 | 12 | Más mini-animaciones y juegos | **Parcial** | +2 minijuegos (Malabares, Reflejos del portero) con récord; prueba `prueba_minijuegos_nuevos`. Mini-animaciones nuevas: solo las caminatas. |
 | 13 | Usar la carretera Kenney; mejorar muebles e inmuebles | **Parcial** | Piezas en uso: farolas curvas (avenidas), postes con cable (barrios), carteles colgantes (cruces con semáforo), vallas/luces/vallado de las obras. **No se sustituyeron las calzadas** por las losetas (riesgo con semáforos y tráfico). |
-| 14 | Optimizar ≥ 50 % | **NO demostrado** | Se probó recortar cortes/distancia de sombra: el contador de triángulos no cambió, se revertió. Lo único medido: el público real costó +8 % y se compensó recortando filas. Las mejoras grandes ya estaban hechas en la etapa 3 (ciudad 30 M → 3 M, partido 3,1 M → 2,3 M). Sin una GPU real no hay cifra honesta de fotogramas. Herramienta nueva: `medir_partido` con `ARBOL=1` (lectura ruidosa) y lista de luces. |
+| 14 | Optimizar ≥ 50 % | **Triángulos −58 %; llamadas −9 %** | 17-10: `medir_partido` (ALTO, Forward+, cámara de TV): **1.797.365 → 760.733 triángulos**, 690 → 630 llamadas, 816 → 749 objetos (fotograma bajo lavapipe 954 → 794 ms: no es una cifra de FPS). Causa principal: al rehacer la malla del cuerpo (`VestidorQ._con_reposo`) se perdían los 8 LOD del importador y los ~80 cuerpos se dibujaban siempre con 12.566 triángulos; ahora se copian (`VestidorQ.lods_de`). Cabeza según la distancia: cuero cabelludo de 15 capas → 5 desde 22 m (`PeloCapas.DIST_CUERO`), pestañas hasta 20 m, cejas 3D hasta 30 m (`PeloQ.DIST_CEJAS`); ojos con su LOD. De cerca, igual. Capturas `pruebas/capturas/lod_cabeza_*.jpg`. Herramientas: `NODOS=1` y `OCULTAR=a,b` en `medir_partido`. Las llamadas siguen altas (ojos, cara real y cuero = 1 llamada por pieza y jugador). |
 | 15 | Otra mega auditoría + vídeo estilo gameplay al Drive | **Ver §5** | |
 
 ## 3. Auditoría por partes (puntos débiles reales)
 
 1. **Rendimiento**: sin GPU real no se puede prometer FPS. El sospechoso principal
    es el coste de pintar la grada y los 22 jugadores con pelo/pestañas/ojos de alta
-   densidad (los ojos tienen 768 triángulos por pieza). Siguiente paso concreto:
-   LOD de ojos/pestañas/cejas a más de 25 m y «apagar» pestañas en el plano de TV.
+   densidad (los ojos tienen 768 triángulos por pieza). HECHO 17-10: el gasto real
+   eran los cuerpos sin LOD (≈1 M de triángulos) y el cuero por capas (≈180 mil);
+   ver #14. Queda: llamadas de dibujo por jugador (≈8 piezas por cabeza+cuerpo).
 2. **Física/animación del partido**: reposiciones del balón y giros bruscos (ver #5).
    No hay duelos cuerpo a cuerpo con consecuencias; las entradas son animaciones.
 3. **Público**: la mayoría del estadio sigue siendo muñeco de 26 triángulos; solo
@@ -57,7 +58,7 @@ NO se logró**. Las cifras salen de herramientas del repositorio (se pueden repe
 
 ## 4. Lo que sigue (orden propuesto)
 
-1. LOD de ojos/pestañas + pelo a distancia → medir de nuevo (objetivo real de §14).
+1. ~~LOD de ojos/pestañas + pelo a distancia~~ HECHO 17-10 (−58 % triángulos). Siguiente: bajar llamadas (juntar ojos/cejas en la malla de la cara a distancia).
 2. Anulación de goles por VAR y duelos con consecuencias (física, #5 y #7).
 3. Traducir las cadenas de los minijuegos nuevos (los menús ya están).
 4. Personas del club/ciudad en las primeras filas y NPC en andenes.

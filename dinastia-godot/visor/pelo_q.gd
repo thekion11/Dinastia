@@ -120,6 +120,17 @@ static func color_cejas(pelo: Color) -> Color:
 	var lum := pelo.get_luminance()
 	return pelo.darkened(0.55 if lum > 0.55 else (0.35 if lum > 0.35 else 0.15))
 
+## CEJAS 3D SOLO DE CERCA (17-10-2026, MEGA AUDITORÍA 2 punto 14): una ceja
+## mide 1-1,5 cm de alto; con la cámara de TV a más de `DIST_CEJAS` m es menos de
+## un píxel y la piel replicada ya trae su sombra. Se dejan de dibujar (una
+## llamada de dibujo menos por cabeza); retrato, carta del goleador, ceremonia
+## y primeros planos están más cerca y no cambian.
+const DIST_CEJAS := 30.0
+
+static func sin_lejos(mi: GeometryInstance3D, distancia := DIST_CEJAS) -> void:
+	mi.visibility_range_end = distancia
+	mi.visibility_range_end_margin = 3.0
+
 ## Pone pelo, barba (si `barba`) y cejas a un jugador de `FutbolistaQ.crear()`.
 ## `corte`: uno de `Cara.CORTES`. Devuelve el nodo del que cuelga todo.
 static func poner(d: Dictionary, corte: String, color: Color, barba: bool) -> Node3D:
@@ -153,6 +164,8 @@ static func poner(d: Dictionary, corte: String, color: Color, barba: bool) -> No
 		mi.mesh = malla
 		mi.material_override = _material(color_cejas(color) if String(p[0]).begins_with("Eyebrows") else color, 2 if String(p[0]) in TEXTURA_2 else 1)
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if String(p[0]).begins_with("Eyebrows"):
+			sin_lejos(mi)
 		var t := desde_cabeza
 		if String(p[0]) in DE_CUERPO_FEMENINO:
 			var rf: Variant = _reposo_cabeza_femenina()
