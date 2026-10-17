@@ -84,7 +84,7 @@ Estimación honesta (100 % = lo pedido hecho y comprobado con prueba o captura):
 | 5 | 70 | reposiciones del balón y giros bruscos (`sonda_fisica_partido`) |
 | 6 | 60 | modelos 3D externos (la red bloquea las descargas) |
 | 7 | 60 | trampa del fuera de juego y cobertura de espacios de la defensa |
-| 8 | 95 | que el VAR decida con la posición real, no con azar |
+| 8 | 100 | — (17-10: el VAR decide el fuera de juego con la posición real del goleador en el pase, `MotorJugable.margen_gol`) |
 | 9 | 100 | — |
 | 10 | 95 | interior del coche modelado (hoy, salpicadero 2D) |
 | 11 | 100 | — |
