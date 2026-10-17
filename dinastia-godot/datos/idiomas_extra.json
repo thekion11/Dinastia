@@ -2481,7 +2481,8 @@
   "Balance (G-E-P)": "Record (W-D-L)",
   "Puesto en liga": "League position",
   "Títulos": "Trophies",
-  "Confianza final": "Final confidence"
+  "Confianza final": "Final confidence",
+  "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "The match was left unfinished (%d-%d at %d'): it was completed from that score."
  },
  "pt": {
   "Historia": "História",
@@ -4965,7 +4966,8 @@
   "Balance (G-E-P)": "Balanço (V-E-D)",
   "Puesto en liga": "Posição na liga",
   "Títulos": "Títulos",
-  "Confianza final": "Confiança final"
+  "Confianza final": "Confiança final",
+  "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "A partida ficou pela metade (%d-%d aos %d'): foi completada a partir desse placar."
  },
  "patrones": [
   [
@@ -8018,7 +8020,8 @@
   "Balance (G-E-P)": "Bilan (V-N-D)",
   "Puesto en liga": "Classement",
   "Títulos": "Titres",
-  "Confianza final": "Confiance finale"
+  "Confianza final": "Confiance finale",
+  "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "Le match est resté inachevé (%d-%d à la %d') : il a été terminé à partir de ce score."
  },
  "it": {
   "Historia": "Storia",
@@ -10409,7 +10412,8 @@
   "Balance (G-E-P)": "Bilancio (V-N-P)",
   "Puesto en liga": "Posizione in campionato",
   "Títulos": "Titoli",
-  "Confianza final": "Fiducia finale"
+  "Confianza final": "Fiducia finale",
+  "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "La partita è rimasta a metà (%d-%d al %d'): è stata completata da quel risultato."
  },
  "de": {
   "Historia": "Geschichte",
@@ -12800,7 +12804,8 @@
   "Balance (G-E-P)": "Bilanz (S-U-N)",
   "Puesto en liga": "Tabellenplatz",
   "Títulos": "Titel",
-  "Confianza final": "Vertrauen am Ende"
+  "Confianza final": "Vertrauen am Ende",
+  "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "Das Spiel blieb unvollendet (%d-%d in der %d.): es wurde ab diesem Stand zu Ende gespielt."
  },
  "ca": {
   "Historia": "Història",
@@ -15191,7 +15196,8 @@
   "Balance (G-E-P)": "Balanç (G-E-P)",
   "Puesto en liga": "Posició a la lliga",
   "Títulos": "Títols",
-  "Confianza final": "Confiança final"
+  "Confianza final": "Confiança final",
+  "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "El partit va quedar a mitges (%d-%d al %d'): s'ha completat des d'aquest marcador."
  },
  "pl": {
   "Club": "Klub",
@@ -17877,7 +17883,8 @@
   "Balance (G-E-P)": "Bilans (Z-R-P)",
   "Puesto en liga": "Miejsce w lidze",
   "Títulos": "Trofea",
-  "Confianza final": "Końcowe zaufanie"
+  "Confianza final": "Końcowe zaufanie",
+  "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "Mecz został przerwany (%d-%d w %d'): dokończono go od tego wyniku."
  },
  "tr": {
   "Club": "Kulüp",
@@ -20563,6 +20570,7 @@
   "Balance (G-E-P)": "Bilanço (G-B-M)",
   "Puesto en liga": "Ligdeki sıra",
   "Títulos": "Kupalar",
-  "Confianza final": "Son güven"
+  "Confianza final": "Son güven",
+  "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "Maç yarım kaldı (%d-%d, %d'): o skordan tamamlandı."
  }
 }

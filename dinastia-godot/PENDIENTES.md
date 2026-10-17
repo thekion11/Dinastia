@@ -7,15 +7,14 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 
 | Qué | Dónde está | Estado | Cómo se fusiona |
 |---|---|---|---|
-| Todo lo hecho desde el 14-10 (≈140 commits: VAR que anula, duelos, faltas, optimización −58 %, camiseta 3D, prórroga y penales, informe del rival, moral del Camarín, árbitros, GPS, etc.) | rama `claude/godot-project-review-o1dvr1` (en GitHub) | subido, banco en 0 fallos | **a `main` con un PR nuevo** cuando el dueño lo pida (el último fusionado fue el PR #6, 14-10) |
-| Tanda 2 del TOP 25 (M-104, M-160, M-141, M-051, M-238 y operadores del VAR) | **unida a `claude/godot-project-review-o1dvr1` el 17-10** (subida) | banco 0 fallos | ya no queda nada fuera de la rama: solo falta el PR a `main` |
+| Todo lo hecho del 14 al 17-10 | `main` | **FUSIONADO el 17-10 con el PR #7** | nada pendiente; lo nuevo que se haga va en la rama y se pasa con otro PR cuando el dueño lo pida |
+| Tanda 2 del TOP 25, mejoras del coche/GPS y caza de bugs del 17-10 | `main` | **fusionado el 17-10 con el PR #8** (pedido del dueño) | nada pendiente |
 
 ## 1.b Hecho en la última tanda (17-10, ya en la rama)
 GPS 2D estilo GTA (`ui/componentes/minimapa_ciudad.gd`: gira con el rumbo, ruta morada al estadio,
 marcas de estadio y casa, N; M lo esconde), cámara de persecución del coche (retraso en curvas, FOV con
 la velocidad) y primera persona con cabina 3D (`ExploradorCiudad._cabina_3d`); D-pad táctil solo en
-pantallas táctiles. Pendiente fino: velocímetro 3D de la cabina queda tapado por el volante (la velocidad
-se ve en el móvil); el minimapa no dibuja las calles del núcleo del club (solo la zona).
+pantallas táctiles. Velocímetro de la cabina movido a la consola y brazos del conductor que giran el volante (17-10). El minimapa dibuja también las calles del núcleo y, dentro de él, la ruta va directa al estadio (17-10).
 
 ## 2. Qué falta HACER (por orden) y CÓMO
 
@@ -42,14 +41,31 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - Narración por voz: 🔒 dueño (audios).
 
 ### 2.3 Detectados en las últimas pruebas (no están en el informe)
-- **Penales**: entran ~9 de 10 y el tiro del usuario sin apuntar va al centro y marca si el portero se tira → calibrar con más partidos (`pruebas/prueba_prorroga_penales.tscn`).
-- **Añadido**: no suma el tiempo de lesiones (M-139 PARCIAL).
-- **Once automático de la IA**: a veces pone delanteros de lateral (se ve en rojo en el informe del rival) → revisar `Club.once()` (peso de `encaja`).
+- ~~**Penales**: entraban ~9 de 10~~ HECHO 17-10: portero que acierta el lado para más y algún tiro se va fuera (~3 de cada 4 por cálculo; medir con más tandas si se nota).
+- ~~**Añadido**~~ HECHO 17-10: suma 45 s por gol y 30 s por cambio o expulsión, con tope (`MotorJugable._sumar_anadido`).
+- ~~**Once automático de la IA**: delanteros de lateral~~ HECHO 17-10: fuera de su puesto nadie rinde más que su media y cambiar de línea cuesta más (`Club.once`); el juvenil obligatorio (CHI/BOL) entra por alguien de su línea (`LeyesPais.ajustar_once`). Ojo: el prototipo `MotorLibre` (no usado por el juego) da ~7,6 goles de media con onces bien armados.
 - **Notas de los partidos mirados** (en vivo/3D) no se cierran en `Jugador.notas` (solo en `simular()`); arreglarlo cambia el azar (anotado en M-141).
 - **Cambio con cartel y palmada**: solo en el partido del DT, falta en la Carrera de Jugador.
 - **Prueba frágil** `_probar_motor_libre` («bono del club»): pasa o falla según qué secciones corren antes en su proceso; la de prórroga va con coste 0.01 para no moverla. Arreglo real: que esa sección cree jugadores frescos y mida con más partidos.
 - **Optimización**: los triángulos bajaron −66 % pero las llamadas de dibujo solo −11 % → juntar ojos/cejas/cuero en la cara a distancia.
-- **Red del arco y cartel del cuarto árbitro**: se notan poco desde la cámara de TV.
+- **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: sigue notándose poco desde la TV.
+
+### 2.5 Caza de bugs del 17-10 (estrés pedido por el dueño) — se registra todo al encontrarlo
+- ~~Partido dirigido: cerrar el juego perdiendo permitía repetirlo hasta ganar~~ HECHO (`PartidoPendiente`).
+- ~~Atravesar paredes con un coche encima o con un tirón de fotogramas~~ HECHO (`_mover_un_trozo`).
+- Atropellar peatones: el coche rebota (son obstáculos móviles). No hay daño ni reacción del peatón: sin arreglar (diseño).
+- Coches del tráfico y autobús: E no hace nada (no se pueden robar ni subir al bus). Inofensivo; posible mejora.
+- Metro: E en marcha = «bajar en la próxima»; no se puede salir en el túnel. Correcto.
+- Esc bajo tierra (metro/galería): el entorno se restaura en `_exit_tree`. Correcto.
+- IDEAS registradas (el dueño dijo que NO por ahora, 17-10): subir al autobús, tomar coches del tráfico,
+  reacción del peatón al atropello.
+- **MENÚS A VELOCIDAD SOBREHUMANA** (`pruebas/estres_menus.tscn`, 400 fotogramas, 2-6 acciones por fotograma):
+  · ~~Pestañas liberadas~~ HECHO: `MenuLateral.abrir_menu` reutilizaba una pantalla que se estaba cerrando
+    (fundido de 0,15 s) y le volvía a meter las pestañas, que se borraban con ella. Ahora una pantalla que
+    se cierra no coge contenido (`PantallaMenu.cerrando()`). Antes: (se «muda» a una PantallaMenu y se borra con ella):
+    luego `get_tab_count` sobre instancia liberada (1001 veces), y el juego queda sin pantallas (1282 → 497 nodos).
+  · `_perezoso` (Principal), `pintar` y `PantallaMenu._mudar` reciben nodos ya liberados.
+  · ~~`BotonFx` conectado varias veces~~ HECHO: `node_added` salta en cada cambio de padre; ahora marca `_fx`. Antes: «signal already connected» (`_sonar`, `_a`, `_arriba`): se conecta dos veces el mismo botón.
 
 ### 2.4 Pedidos del dueño en espera
 - **Vídeo gameplay** (punto 15 de la MEGA AUDITORÍA 2): pausado por el dueño el 17-10.

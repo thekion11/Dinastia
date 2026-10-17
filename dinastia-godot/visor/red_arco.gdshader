@@ -18,7 +18,8 @@ void vertex() {
 	vec2 p = VERTEX.xy;
 	float d = distance(p, impacto);
 	// La onda: bulto principal donde pegó + anillos que se alejan.
-	float bulto = exp(-d * d / 0.9) * exp(-edad * 2.2);
+	// (17-10: más ancho y más lento, para que se vea desde la cámara de TV.)
+	float bulto = exp(-d * d / 1.6) * exp(-edad * 1.6);
 	float anillo = sin(d * 4.5 - edad * 11.0) * exp(-d * 0.55) * exp(-edad * 1.8) * 0.35;
 	// Atada al marco: nada en los bordes del paño.
 	vec2 borde = clamp((medio_tam - abs(p)) / 0.45, 0.0, 1.0);
