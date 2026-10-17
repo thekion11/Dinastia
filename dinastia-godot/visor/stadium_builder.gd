@@ -291,10 +291,20 @@ static func _add_goal(root: Node3D, z: float, poste: Material, red_col: Color, r
 	techo_red.mesh = q_techo
 	techo_red.rotation.x = PI / 2.0
 	techo_red.position = Vector3(0, height - 0.01, z - inward * (depth_top / 2.0))
-	var m_techo: StandardMaterial3D = mat_red.duplicate()
-	m_techo.uv1_scale = Vector3(32, 6, 1)
-	techo_red.material_override = m_techo
+	## El techo y el fondo, subdivididos y con el shader de la onda (M-149):
+	## la red se abomba al gol. Mismo dibujo y mismo cordel que antes.
+	var tex_red: Texture2D = mat_red.albedo_texture
+	var onda := RedArco.new()
+	onda.name = "RedArco"
+	q_techo.subdivide_width = 18
+	q_techo.subdivide_depth = 3
+	techo_red.name = "RedTecho"
+	## En un grupo: así `Optimizar.agrupar` no la funde con otras piezas quietas
+	## (perdería su material propio y la onda).
+	techo_red.add_to_group("red_arco")
+	techo_red.material_override = _mat_red_onda(tex_red, Vector2(32, 6), Vector2(width, depth_top) * 0.5)
 	goal_root.add_child(techo_red)
+	onda.panos.append(techo_red)
 
 	# Fondo de red inclinado (desde depth_top a depth_bottom en el suelo)
 	var fondo_red := MeshInstance3D.new()
@@ -305,10 +315,14 @@ static func _add_goal(root: Node3D, z: float, poste: Material, red_col: Color, r
 	var ang_fondo := atan2(depth_bottom - depth_top, height)
 	fondo_red.rotation.x = -inward * ang_fondo
 	fondo_red.position = Vector3(0, height / 2.0, z - inward * ((depth_top + depth_bottom) / 2.0))
-	var m_fondo: StandardMaterial3D = mat_red.duplicate()
-	m_fondo.uv1_scale = Vector3(32, 14, 1)
-	fondo_red.material_override = m_fondo
+	q_fondo.subdivide_width = 24
+	q_fondo.subdivide_depth = 9
+	fondo_red.name = "RedFondo"
+	fondo_red.add_to_group("red_arco")
+	fondo_red.material_override = _mat_red_onda(tex_red, Vector2(32, 14), Vector2(width, alto_fondo) * 0.5)
 	goal_root.add_child(fondo_red)
+	onda.panos.append(fondo_red)
+	goal_root.add_child(onda)
 
 	# Laterales de red
 	for side in [-1.0, 1.0]:
@@ -322,6 +336,18 @@ static func _add_goal(root: Node3D, z: float, poste: Material, red_col: Color, r
 		m_lat.uv1_scale = Vector3(12, 10, 1)
 		lat_red.material_override = m_lat
 		goal_root.add_child(lat_red)
+
+## El material de los paños que se ondulan (`red_arco.gdshader`).
+static var _shader_red: Shader = null
+static func _mat_red_onda(tex: Texture2D, escala: Vector2, medio: Vector2) -> ShaderMaterial:
+	if _shader_red == null:
+		_shader_red = load("res://visor/red_arco.gdshader")
+	var m := ShaderMaterial.new()
+	m.shader = _shader_red
+	m.set_shader_parameter("textura", tex)
+	m.set_shader_parameter("escala_uv", escala)
+	m.set_shader_parameter("medio_tam", medio)
+	return m
 
 ## `mi` (16-9-2026, Fase 2 "Componentes"): opcional, solo hace falta para
 ## pintar el escudo en el cesped cuando `escudoDonde` lo pide. `null` -el caso
@@ -430,7 +456,20 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 		_rect_outline(root, Vector3(0, 0, sgn * (PITCH_LEN / 2.0 - 8.25)), 40.3, 16.5, 0.2, 0.02, line_mat)
 		_rect_outline(root, Vector3(0, 0, sgn * (PITCH_LEN / 2.0 - 2.75)), 18.3, 5.5, 0.2, 0.02, line_mat)
 		## El penal, a 11 m de la linea de gol como manda el reglamento.
-		_box(root, Vector3(0, 0.02, sgn * (PITCH_LEN / 2.0 - 11.0)), Vector3(0.35, 0.03, 0.35), line_mat)
+		## Un disco de 22 cm, como el reglamentario (17-10: antes era un
+		## cuadrado de 35 cm que de cerca, en la tanda, parecía una losa).
+		var punto_penal := MeshInstance3D.new()
+		var disco := CylinderMesh.new()
+		disco.top_radius = 0.11
+		disco.bottom_radius = 0.11
+		disco.height = 0.02
+		disco.radial_segments = 20
+		disco.rings = 1
+		punto_penal.mesh = disco
+		punto_penal.material_override = line_mat
+		punto_penal.position = Vector3(0, 0.012, sgn * (PITCH_LEN / 2.0 - 11.0))
+		punto_penal.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		root.add_child(punto_penal)
 
 	var center := MeshInstance3D.new()
 	var cmesh := TorusMesh.new()
@@ -1056,6 +1095,9 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	var ang := deg_to_rad(RAKE_GRADOS)
 	var subida_b := subida_bandeja()
 
+	## LAS CARAS DE FUERA (16-10-2026): cada tribuna y cada torre de esquina
+	## deja aquí su paño exterior y `FachadaEstadio` lo viste al final.
+	var caras_fachada: Array = []
 	for s in stands:
 		if s["i"] in abiertas:
 			continue
@@ -1305,6 +1347,24 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			## cual, igual que antes de esta fase.
 			var roof_mat_i := roof_mat if techo_i == techo else _techo_mat(techo_i, techo_col)
 			marcar_techo(_box(root, pos + cara * (vuelo / 2.0) + Vector3(0, alto_s / 2.0 + 0.4, 0), rs, roof_mat_i), -cara)
+		## El paño de fuera de esta tribuna. En la del túnel, el vestuario y el
+		## edificio del club ocupan su tramo: ahí no se viste nada.
+		var n_fuera: Vector3 = -cara
+		var largo_f: float = size.z if lateral else size.x
+		var pie_f := Vector3(pos.x, 0.0, pos.z) + n_fuera * (fondo_s / 2.0)
+		var cara_f := FachadaEstadio.cara(pie_f, n_fuera, largo_f, alto_s, "tribuna", quiere_techo,
+			fondo_s + (7.0 if techo_i == "total" else (4.0 if techo_i == "anillo" else 2.0)), niv_s)
+		var o_f: Vector3 = cara_f["o"]
+		var u_f: Vector3 = cara_f["u"]
+		if int(s["i"]) == 0:
+			var tx_v := tunel_x(est)
+			var s_a := (Vector3(tx_v - TunelVestuario.VEST_MEDIO - 0.8, 0, pie_f.z) - o_f).dot(u_f)
+			var s_b := (Vector3(tx_v + TunelVestuario.VEST_MEDIO + 0.8, 0, pie_f.z) - o_f).dot(u_f)
+			cara_f["excluir"] = [Vector2(minf(s_a, s_b), maxf(s_a, s_b))]
+			## El escudo, al oeste del edificio del club: sobre las taquillas.
+			cara_f["escudo"] = true
+			cara_f["escudo_s"] = (Vector3(tx_v - TunelVestuario.VEST_MEDIO - 9.0, 0, pie_f.z) - o_f).dot(u_f)
+		caras_fachada.append(cara_f)
 
 	## LAS ESQUINAS TAMBIÉN LLEVAN GENTE (22-9-2026). "Falta un tramo" -el
 	## usuario lo vio de inmediato justo después de la ronda de las butacas
@@ -1356,6 +1416,8 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 				_esquina_grada(root, sx, sz, dx, dz, alto, niveles,
 					esquina_mat, stand_mat, ang, est, ocupacion, seed_val,
 					techo in ["anillo", "total", "membrana", "retractil"])
+				caras_fachada.append_array(_caras_esquina(sx, sz, dx, dz, alto, niveles,
+					techo in ["anillo", "total", "membrana", "retractil"]))
 
 	# vallas perimetrales, siempre por dentro de la cara interior de la tribuna
 	_tm("esquinas")
@@ -1394,13 +1456,126 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	_tm("exterior")
 	_pantallas(root, str(est.get("pantalla", "dos")), dz, alto, est, mi, abierta, abiertas)
 	_tm("pantallas")
+	## LA FACHADA DE VERDAD (16-10-2026, `FachadaEstadio`): estructura, piel,
+	## puertas, escaleras y cubierta vista desde fuera, según el estilo del estadio.
+	var donde_escudo := str(est.get("escudoDonde", "sin"))
+	var tex_escudo: Texture2D = null
+	if mi != null and donde_escudo in ["fachada", "todo"]:
+		tex_escudo = Escudo.textura(mi, 256)
+	if not caras_fachada.is_empty():
+		## La primera cara con tribuna lleva el escudo si la del túnel no existe.
+		var con_escudo := false
+		for cf: Dictionary in caras_fachada:
+			con_escudo = con_escudo or bool(cf.get("escudo", false))
+		if not con_escudo:
+			for cf: Dictionary in caras_fachada:
+				if cf["tipo"] == "tribuna":
+					cf["escudo"] = true
+					break
+	var fachada := FachadaEstadio.montar(root, est, caras_fachada, seed_val, niveles, tex_escudo)
+	_tm("fachada")
 	if mi != null:
-		_escudo_tribuna(root, mi, str(est.get("escudoDonde", "sin")), dx, dz, alto)
+		_escudo_tribuna(root, mi, donde_escudo, dx, dz, alto, fachada.find_child("EscudoFachada", false, false) != null)
 	## Obras con andamios y grúa, palcos, prensa, museo, tienda y la mascota
 	## (26-9-2026, `EstadioExtras`).
 	_tm("club")
 	EstadioExtras.construir(root, est, dx, dz, alto, niveles, mi)
 	_tm("extras")
+	if OS.get_environment("SIN_SOMBRA_UNICA") == "":
+		_sombra_unica(root)
+		_tm("sombra")
+
+## UNA SOLA MALLA PARA LAS SOMBRAS (16-10-2026, `pruebas/medir_partido` con
+## ARBOL=1: el sol eran ~190 de las ~450 llamadas del plano de TV). Cada pieza
+## fija del estadio que proyecta sombra se dibujaba otra vez en cada una de las
+## 4 cascadas. Aquí se juntan todas en una malla invisible que SOLO proyecta
+## sombra (misma forma, mismo sitio: la sombra no cambia) y las piezas dejan de
+## proyectarla. Fuera: lo que se mueve (cualquier antepasado con script o con
+## AnimationPlayer), lo que deforma su forma en el shader (banderas) y lo que
+## tiene distancia de dibujo propia. SIN_SOMBRA_UNICA=1 lo apaga para medir.
+static func _sombra_unica(root: Node3D) -> void:
+	const SECTORES := 8
+	var caras: Array = []
+	for _k in SECTORES:
+		caras.append(PackedVector3Array())
+	for n in root.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.mesh == null or not mi.visible or mi.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_ON:
+			continue
+		if mi.visibility_range_end > 0.0 or mi.visibility_range_begin > 0.0 or mi.skin != null:
+			continue
+		if mi.material_override is ShaderMaterial or (mi.mesh.get_surface_count() > 0 and mi.get_active_material(0) is ShaderMaterial):
+			continue
+		var fijo := true
+		var t := Transform3D.IDENTITY
+		var q: Node = mi
+		while q != null and q != root:
+			if q.get_script() != null or q is Skeleton3D or (q is Node3D and not (q as Node3D).visible):
+				fijo = false
+				break
+			for h in q.get_children():
+				if h is AnimationPlayer:
+					fijo = false
+			if not fijo:
+				break
+			if q is Node3D:
+				t = (q as Node3D).transform * t
+			q = q.get_parent()
+		if not fijo or q != root:
+			continue
+		## Lo que está a ras de suelo (césped, explanada, líneas) no da sombra
+		## que se vea y, metido aquí, se la daba a sí mismo (césped más oscuro).
+		var caja := t * mi.get_aabb()
+		if caja.end.y < 0.4:
+			continue
+		## Sector por el ángulo del centro de la pieza: cada cascada del sol
+		## recorta los sectores que no ve, como hacía con las piezas sueltas.
+		var c := caja.get_center()
+		var k := int(floor((atan2(c.z, c.x) + PI) / TAU * SECTORES)) % SECTORES
+		var f := mi.mesh.get_faces()
+		var dest: PackedVector3Array = caras[k]
+		for v in f:
+			dest.append(t * v)
+		caras[k] = dest
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	## Una cara, como las piezas originales (con doble cara los techos planos
+	## daban sombra que antes no daban y el césped salía más oscuro).
+	var m := StandardMaterial3D.new()
+	for k in SECTORES:
+		if (caras[k] as PackedVector3Array).is_empty():
+			continue
+		var am := ArrayMesh.new()
+		var arr := []
+		arr.resize(Mesh.ARRAY_MAX)
+		arr[Mesh.ARRAY_VERTEX] = caras[k]
+		am.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
+		var sombra := MeshInstance3D.new()
+		sombra.name = "SombraUnica%d" % k
+		sombra.mesh = am
+		sombra.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+		sombra.material_override = m
+		root.add_child(sombra)
+
+## Los paños de fuera de la torre de una esquina (el bloque que cierra la
+## grada en diagonal, ver `_esquina_grada`): la cara del fondo y los dos
+## costados, sin el tramo de dentro de los costados (ahí se junta con las
+## tribunas). Mismas cuentas que `_esquina_grada`.
+static func _caras_esquina(sx: float, sz: float, dx: float, dz: float, alto: float,
+		niveles: int, techo: bool) -> Array:
+	var dir := Vector3(sx, 0.0, sz).normalized()
+	var p0 := Vector3(sx * (dx - FRENTE_TRIBUNA), 0.0, sz * (dz - FRENTE_TRIBUNA))
+	var masa := fondo_tribuna(niveles)
+	var centro := p0 + dir * (masa * 1.5)
+	var sal: Array = [FachadaEstadio.cara(centro + dir * (masa * 0.5), dir, masa, alto, "esquina", techo, masa, niveles)]
+	var perp := Vector3(-dir.z, 0.0, dir.x)
+	for lado in [1.0, -1.0]:
+		var n: Vector3 = perp * lado
+		var cf := FachadaEstadio.cara(centro + n * (masa * 0.5), n, masa, alto, "esquina", techo, masa, niveles)
+		var dentro := centro - dir * (masa * 0.5) + n * (masa * 0.5)
+		var s_in: float = (dentro - (cf["o"] as Vector3)).dot(cf["u"] as Vector3)
+		cf["excluir"] = [Vector2(s_in - 0.5, s_in + masa * 0.4) if s_in < masa * 0.5 else Vector2(s_in - masa * 0.4, s_in + 0.5)]
+		sal.append(cf)
+	return sal
 
 ## LA ESQUINA, COMO GRADA DE VERDAD (23-9-2026).
 ##
@@ -1511,7 +1686,8 @@ static func _esquina_grada(root: Node3D, sx: float, sz: float, dx: float, dz: fl
 ## `build_pitch()` (ver `_escudo_cancha()` para "cancha"/"todo"). Uno solo por
 ## posicion, en la tribuna principal (la que da a la camara "Principal (TV)"),
 ## que es donde de verdad se ve -repetirlo en las 4 tribunas seria ruido.
-static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, dx: float, dz: float, alto: float) -> void:
+static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, dx: float, dz: float, alto: float,
+		fachada_puesta := false) -> void:
 	if donde not in ["grada", "fachada", "techo", "todo"]:
 		return
 	var tex := Escudo.textura(mi, 256)
@@ -1548,7 +1724,8 @@ static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, dx: float, dz
 	## opción más cara del catálogo pintaba cancha + grada + techo y **nunca la
 	## fachada** -justo lo contrario de lo que dice el comentario de esta misma
 	## función-.
-	if donde == "fachada" or donde == "todo":
+	## 16-10-2026: si `FachadaEstadio` ya lo colgó en su paño, no se repite aquí.
+	if (donde == "fachada" or donde == "todo") and not fachada_puesta:
 		var tam_f: float = clampf(alto * 0.45, 3.0, 8.0)
 		var quad := MeshInstance3D.new()
 		var qm := QuadMesh.new()
@@ -2156,7 +2333,7 @@ static func _hinchas_horneados(nivel: String) -> Array:
 
 ## Un MultiMesh por pose con su shader de hinchada; `xfs`/`cols` se reparten
 ## entre las poses por un hash estable (la misma grada sale siempre igual).
-static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color]) -> void:
+static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color], desde := 0.0, hasta := 0.0) -> void:
 	var grupos: Array = []
 	for _p in mallas.size():
 		grupos.append([])
@@ -2188,7 +2365,48 @@ static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: 
 		mmi.material_override = mat
 		mmi.name = "%s_%s" % [nombre, POSES_PUBLICO[g]]
 		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mmi.visibility_range_begin = desde
+		mmi.visibility_range_end = hasta
 		deck.add_child(mmi)
+
+## DETALLE SEGÚN LA DISTANCIA (16-10-2026, `pruebas/medir_partido` con ARBOL=1:
+## el público de la bandeja baja de la tribuna de enfrente eran 808.000 de los
+## 1,16 M de triángulos del plano de TV, con mallas «cerca» de ~620 triángulos
+## vistas a 80-100 m). La bandeja se parte en 3 tramos a lo largo; cada tramo
+## lleva su versión de detalle (visible a menos de `LOD_PUBLICO` m del centro
+## del tramo: primeros planos, celebraciones, Carrera de Jugador) y una
+## suplente con la malla «lejos» en 2 poses (más allá). Godot mide la distancia
+## al centro de cada MultiMesh, por eso los tramos.
+const LOD_PUBLICO := 55.0
+const TRAMOS_PUBLICO := 3
+
+static func _montar_publico_lod(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color]) -> void:
+	var lejos := _hinchas_horneados("lejos")
+	## SIN_LOD_PUBLICO=1: el montaje de antes (para medir antes/después).
+	if lejos.is_empty() or xfs.is_empty() or OS.get_environment("SIN_LOD_PUBLICO") != "":
+		_montar_horneados(deck, nombre, mallas, xfs, cols)
+		return
+	var suplentes: Array = [lejos[0], lejos[mini(2, lejos.size() - 1)]]
+	## Eje largo de la bandeja (en su espacio local).
+	var lo := xfs[0].origin
+	var hi := xfs[0].origin
+	for t in xfs:
+		lo = lo.min(t.origin)
+		hi = hi.max(t.origin)
+	var eje := 0 if (hi.x - lo.x) >= (hi.z - lo.z) else 2
+	var largo := maxf(hi[eje] - lo[eje], 0.001)
+	for k in TRAMOS_PUBLICO:
+		var tx: Array[Transform3D] = []
+		var tc: Array[Color] = []
+		for i in xfs.size():
+			var f := clampi(int((xfs[i].origin[eje] - lo[eje]) / largo * TRAMOS_PUBLICO), 0, TRAMOS_PUBLICO - 1)
+			if f == k:
+				tx.append(xfs[i])
+				tc.append(cols[i])
+		if tx.is_empty():
+			continue
+		_montar_horneados(deck, "%s%d" % [nombre, k], mallas, tx, tc, 0.0, LOD_PUBLICO)
+		_montar_horneados(deck, "%s%d_lejos" % [nombre, k], suplentes, tx, tc, LOD_PUBLICO, 0.0)
 
 ## EL HINCHA DE LAS PRIMERAS FILAS (29-9-2026). Pedido del usuario al ver el
 ## partido jugable de la Carrera de Jugador ("ese público se ve horrible"):
@@ -2589,11 +2807,11 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var reales_cerca := _hinchas_horneados("cerca")
 	var reales_medio := _hinchas_horneados("medio")
 	if not reales_cerca.is_empty() and not det_xf.is_empty():
-		_montar_horneados(deck, "PersonasCerca", reales_cerca, det_xf, det_col)
+		_montar_publico_lod(deck, "PersonasCerca", reales_cerca, det_xf, det_col)
 		det_xf.clear()
 		det_col.clear()
 	if not reales_medio.is_empty() and not med_xf.is_empty():
-		_montar_horneados(deck, "PersonasMedio", reales_medio, med_xf, med_col)
+		_montar_publico_lod(deck, "PersonasMedio", reales_medio, med_xf, med_col)
 	else:
 		hinchas_xf.append_array(med_xf)
 		hinchas_col.append_array(med_col)
@@ -3282,7 +3500,7 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 		_box(ext, Vector3(x, 1.5, z + 1.22), Vector3(1.8, 0.9, 0.05), ventanilla)
 		_box(ext, Vector3(x, 2.75, z + 0.5), Vector3(3.8, 0.15, 3.6), losa)
 	var rot := Label3D.new()
-	rot.text = "TAQUILLAS"
+	rot.text = Idiomas.t("TAQUILLAS")
 	rot.font_size = 96
 	rot.pixel_size = 0.012
 	rot.modulate = Color(1, 1, 1)
@@ -3301,7 +3519,7 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 	franja.emission_energy_multiplier = 0.4
 	_box(ext, tienda_pos + Vector3(0, 5.0, 5.1), Vector3(18.0, 1.2, 0.1), franja)
 	var r_tienda := Label3D.new()
-	r_tienda.text = "TIENDA OFICIAL" if mi == null else "TIENDA %s" % Nombres.visible(mi.nombre).to_upper()
+	r_tienda.text = Idiomas.t("TIENDA OFICIAL") if mi == null else Idiomas.t("TIENDA %s") % Nombres.visible(mi.nombre).to_upper()
 	r_tienda.font_size = 80
 	r_tienda.pixel_size = 0.012
 	r_tienda.outline_size = 10

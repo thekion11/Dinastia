@@ -109,12 +109,12 @@ func _ready() -> void:
 	_pintar()
 
 func _pintar() -> void:
-	_pide.text = "Pide: %d %%  (%s)" % [mesa.pide, mesa.detalle(mesa.pide)] if mesa.estado == "abierta" else _final_corto()
+	_pide.text = Idiomas.t("Pide: %d %%  (%s)") % [mesa.pide, mesa.detalle(mesa.pide)] if mesa.estado == "abierta" else _final_corto()
 	_pide.add_theme_font_size_override("font_size", 15 if mesa.estado == "abierta" else 18)
 	_barra.value = mesa.pide if mesa.estado == "abierta" else float(mesa.acordado)
 	_tazas.text = "☕".repeat(maxi(0, mesa.paciencia)) + "·".repeat(maxi(0, mesa.paciencia_max - maxi(0, mesa.paciencia)))
-	_tazas.tooltip_text = "Paciencia: cada ronda gasta una taza"
-	_ronda.text = "Ronda %d" % mesa.ronda if mesa.ronda > 0 else "Primera ronda: tú mueves"
+	_tazas.tooltip_text = Idiomas.t("Paciencia: cada ronda gasta una taza")
+	_ronda.text = Idiomas.t("Ronda %d") % mesa.ronda if mesa.ronda > 0 else Idiomas.t("Primera ronda: tú mueves")
 	_dice.text = mesa.ultima
 	for h in _jugadas.get_children():
 		h.queue_free()

@@ -80,13 +80,13 @@ func _montar(de: Club) -> void:
 	v.add_child(ficha)
 	var coste := coste_estadio(mio)
 	var b1 := Button.new()
-	b1.text = "🏟️ Presentarlo en el estadio, con la hinchada  ·  %s" % Cesiones.dinero(coste)
+	b1.text = Idiomas.t("🏟️ Presentarlo en el estadio, con la hinchada  ·  %s") % Cesiones.dinero(coste)
 	b1.disabled = coste > mio.saldo
 	b1.custom_minimum_size = Vector2(0, 40)
 	b1.pressed.connect(_presentar.bind(true))
 	v.add_child(b1)
 	var b2 := Button.new()
-	b2.text = "🎙️ Presentación sencilla en la sala de prensa"
+	b2.text = Idiomas.t("🎙️ Presentación sencilla en la sala de prensa")
 	b2.custom_minimum_size = Vector2(0, 40)
 	b2.pressed.connect(_presentar.bind(false))
 	v.add_child(b2)

@@ -98,7 +98,7 @@ def trozos_nivel_cero(expr, sep):
 
 
 LITERAL = re.compile(r'^"((?:[^"\\]|\\.)*)"$')
-FORMATO = re.compile(r"%(?:\.\d+)?[sdf]|%%")
+FORMATO = re.compile(r"%[+-]?(?:\.\d+)?[sdf]|%%")
 
 
 def des_escapar(s):

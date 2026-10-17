@@ -831,6 +831,21 @@ func _satisfaccion(j: Jugador, slots: Dictionary) -> Dictionary:
 		"total": total,
 	}
 
+## Qué parte de la satisfacción explica el cambio, en palabras del vestuario.
+static func motivo_satisfaccion(sat: Dictionary, baja: bool) -> String:
+	var claves := ["min", "rend", "tact", "inst"]
+	var elegida: String = claves[0]
+	for k: String in claves:
+		if (baja and int(sat[k]) < int(sat[elegida])) or (not baja and int(sat[k]) > int(sat[elegida])):
+			elegida = k
+	if baja:
+		return {"min": "Pocos minutos de juego", "rend": "Su mal rendimiento", "tact": "Juega fuera de su puesto", "inst": "Instalaciones pobres"}[elegida]
+	return {"min": "Minutos de juego", "rend": "Su buen rendimiento", "tact": "Cómodo en su puesto", "inst": "Buenas instalaciones"}[elegida]
+
+## Lo que pesa en la satisfacción de un jugador (para el Camarín).
+func satisfaccion_de(j: Jugador) -> Dictionary:
+	return _satisfaccion(j, _slots_del_once())
+
 ## La moral deriva hacia el nivel de satisfacción, un 6% por semana. Es lenta a
 ## propósito: un plantel descontento se desinfla en un mes, no en un domingo.
 func _proceso_satisfaccion() -> void:
@@ -839,8 +854,14 @@ func _proceso_satisfaccion() -> void:
 		return
 	var slots := _slots_del_once()
 	for j in c.plantilla:
-		var s: int = _satisfaccion(j, slots)["total"]
+		var sat := _satisfaccion(j, slots)
+		var s: int = sat["total"]
+		var antes := j.moral
 		j.moral = clampi(int(round(float(j.moral) + (float(s) - float(j.moral)) * 0.06)), 10, 99)
+		## El motivo: lo que más le tira para abajo si baja, o lo que más le
+		## anima si sube (17-10-2026, el Camarín lo explica).
+		if j.moral != antes:
+			j.anotar_moral(j.moral - antes, motivo_satisfaccion(sat, j.moral < antes))
 
 # ---------------------------------------------------------------------------
 #  4 · LO QUE LLEGA AL MARCADOR
@@ -1207,8 +1228,7 @@ func _tiene(texto: String, claves: Array) -> bool:
 	return false
 
 func _mover_moral(j: Jugador, d: int) -> void:
-	j.moral = clampi(j.moral + d, 10, 99)
-
+	j.cambiar_moral(d, "Vida del vestuario")
 func _mover_ansiedad(j: Jugador, d: int) -> void:
 	var f := mente(j)
 	f["ansiedad"] = clampi(int(f["ansiedad"]) + d, 0, 100)
@@ -1382,7 +1402,7 @@ func _suceso_lio(m: Mundo, mio: Club) -> Dictionary:
 	var lista := _con_rasgo(mio, "polemico")
 	var j: Jugador = lista[Azar.ent(0, lista.size() - 1)]
 	for x: Jugador in mio.plantilla:
-		x.moral = clampi(x.moral - 2, 10, 99)
+		x.cambiar_moral(-2, "Vida del vestuario")
 	var extra := ""
 	var multa := 0
 	if bool(m.normas.get("multas", false)):
@@ -1393,7 +1413,7 @@ func _suceso_lio(m: Mundo, mio: Club) -> Dictionary:
 		else:
 			extra = " El club aplicó la multa del reglamento interno: %s." % Cesiones.dinero(multa)
 		mio.mover_saldo(multa)
-		j.moral = clampi(j.moral - 3, 10, 99)
+		j.cambiar_moral(-3, "Vida del vestuario")
 	noticia.emit("Lío nocturno: %s" % j.nombre,
 		"Fotos del jugador de fiesta a mitad de semana. El camarín queda tocado y la prensa afila el lápiz.%s" % extra)
 	if m.prensa != null:
@@ -1404,7 +1424,7 @@ func _suceso_arenga(mio: Club) -> Dictionary:
 	var lista := _con_rasgo(mio, "lider")
 	var j: Jugador = lista[Azar.ent(0, lista.size() - 1)]
 	for x: Jugador in mio.plantilla:
-		x.moral = clampi(x.moral + 3, 10, 99)
+		x.cambiar_moral(3, "Vida del vestuario")
 	noticia.emit("Arenga de %s" % j.nombre,
 		"Reunió al plantel a puertas cerradas: «aquí nadie se esconde». El grupo sale enchufado.")
 	return {"tipo": "arenga", "jugador": j}
@@ -1428,8 +1448,8 @@ func _suceso_joya(mio: Club) -> Dictionary:
 func _suceso_cumple(mio: Club) -> Dictionary:
 	var j: Jugador = mio.plantilla[Azar.ent(0, mio.plantilla.size() - 1)]
 	for x: Jugador in mio.plantilla:
-		x.moral = clampi(x.moral + 1, 10, 99)
-	j.moral = clampi(j.moral + 4, 10, 99)
+		x.cambiar_moral(1, "Vida del vestuario")
+	j.cambiar_moral(4, "Vida del vestuario")
 	noticia.emit("Cumpleaños en el camarín",
 		"El plantel sorprendió a %s con torta y bromas. Buen ambiente." % j.nombre)
 	return {"tipo": "cumple", "jugador": j}

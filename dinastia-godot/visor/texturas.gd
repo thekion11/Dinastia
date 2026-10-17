@@ -158,6 +158,9 @@ static func asfalto(tinte: Color = Color(0.17, 0.175, 0.185), semilla: int = 23)
 	m.roughness = 0.82
 	m.roughness_texture = _tex_ruido(0.03, semilla + 9, false, 3)
 	m.metallic = 0.0
+	## El asfalto casi no refleja: con el especular por defecto (0,5), en Forward+
+	## la calzada a contraluz se quemaba en blanco (15-10-2026).
+	m.metallic_specular = 0.2
 	m.uv1_triplanar = true
 	m.uv1_world_triplanar = true
 	m.uv1_scale = Vector3(0.25, 0.25, 0.25)
@@ -192,9 +195,11 @@ static func _imagen_asfalto(tinte: Color, semilla: int) -> ImageTexture:
 				v -= 0.22
 			else:
 				v += (rng.randf() - 0.5) * 0.1
-			## Grietas finas (los bordes de las celdas).
-			if img_c.get_pixel(x, y).r < 0.035:
-				v -= 0.28
+			## Grietas finas (los bordes de las celdas), SOLO en las zonas
+			## gastadas (15-10-2026): en toda la superficie formaban una red
+			## continua de polígonos y la calzada parecía adoquinada.
+			if img_c.get_pixel(x, y).r < 0.03 and g > 0.6:
+				v -= 0.2 * clampf((g - 0.6) / 0.08, 0.0, 1.0)
 			var c := Color(tinte.r * v, tinte.g * v, tinte.b * v)
 			img.set_pixel(x, y, c)
 	img.generate_mipmaps()

@@ -2,7 +2,9 @@ extends Node
 ## Entrar a un edificio y pasearlo (etapa 6): bar, casa y taller en tercera y
 ## primera persona, y la salida a la calle. Salida: pruebas/capturas/entrar_N.png
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_entrar.tscn
-const CLAVES := ["ciudad_hospital", "edificio_bar|Bar El Rincón", "edificio_vivienda|Casa de la familia Ortega"]
+const CLAVES_BASE := ["ciudad_hospital", "edificio_bar|Bar El Rincón", "edificio_vivienda|Casa de la familia Ortega"]
+## SALAS="clave1,clave2" para entrar en otras (p. ej. «edificio_tienda|Farmacia»).
+var CLAVES: Array = Array(OS.get_environment("SALAS").split(",")) if OS.get_environment("SALAS") != "" else CLAVES_BASE
 var _p: Node
 var _v: VistaCiudad
 var _e: ExploradorCiudad
@@ -11,6 +13,8 @@ var _pos_calle := Vector3.ZERO
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.MEDIO
+	## Sin el tutorial de la ciudad tapando el tercio de abajo de cada foto.
+	AjustesCiudad.guardar("tutorial_visto", true)
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 

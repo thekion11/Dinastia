@@ -171,13 +171,13 @@ func _montar() -> void:
 	_aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(_aviso)
 	var cerrar := Button.new()
-	cerrar.text = "Salir"
+	cerrar.text = Idiomas.t("Salir")
 	cerrar.pressed.connect(func() -> void:
 		cerrado.emit()
 		queue_free())
 	v.add_child(cerrar)
 	if _preguntas.is_empty():
-		_pregunta.text = "Hace falta un club con plantel para jugar la trivia."
+		_pregunta.text = Idiomas.t("Hace falta un club con plantel para jugar la trivia.")
 		return
 	_siguiente()
 
@@ -195,7 +195,7 @@ func _siguiente() -> void:
 		_fin()
 		return
 	var pr: Dictionary = _preguntas[_i]
-	_rotulo.text = "TRIVIA DEL CLUB  ·  pregunta %d de %d  ·  aciertos: %d  ·  récord: %d" % [_i + 1, _preguntas.size(), _aciertos, record]
+	_rotulo.text = Idiomas.t("TRIVIA DEL CLUB  ·  pregunta %d de %d  ·  aciertos: %d  ·  récord: %d") % [_i + 1, _preguntas.size(), _aciertos, record]
 	_pregunta.text = String(pr["q"])
 	for k in (pr["opciones"] as Array).size():
 		var b := Button.new()
@@ -223,19 +223,19 @@ func _responder(k: int) -> void:
 	var buena := int(pr["correcta"])
 	if k == buena:
 		_aciertos += 1
-		_aviso.text = "✅ ¡Correcto!"
+		_aviso.text = Idiomas.t("✅ ¡Correcto!")
 	else:
-		_aviso.text = ("⏱️ Se acabó el tiempo. " if k < 0 else "❌ No. ") + "Era: %s." % String(pr["opciones"][buena])
+		_aviso.text = (Idiomas.t("⏱️ Se acabó el tiempo. ") if k < 0 else Idiomas.t("❌ No. ")) + Idiomas.t("Era: %s.") % String(pr["opciones"][buena])
 	_i += 1
 	get_tree().create_timer(1.3).timeout.connect(_siguiente)
 
 func _fin() -> void:
 	record = maxi(record, _aciertos)
-	_rotulo.text = "TRIVIA DEL CLUB  ·  récord: %d" % record
-	_pregunta.text = "%d aciertos de %d." % [_aciertos, _preguntas.size()]
+	_rotulo.text = Idiomas.t("TRIVIA DEL CLUB  ·  récord: %d") % record
+	_pregunta.text = Idiomas.t("%d aciertos de %d.") % [_aciertos, _preguntas.size()]
 	if _aciertos >= 6 and _mundo != null and _mundo.directiva != null:
 		var marca := _mundo.anio * 60 + _mundo.semana
 		if marca != _premio_semana:
 			_premio_semana = marca
 			_mundo.directiva.mover_confianza(1, "conoce la casa")
-			_aviso.text = "La directiva aprecia que conozcas el club (+1 de confianza)."
+			_aviso.text = Idiomas.t("La directiva aprecia que conozcas el club (+1 de confianza).")

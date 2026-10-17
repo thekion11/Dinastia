@@ -63,13 +63,13 @@ func _pintar_club(c: Club) -> void:
 func _club_directorio(c: Club) -> void:
 	var d := p.mundo.directiva
 	if d != null:
-		var t := p._texto(11, Principal.COL_SUAVE); t.text = "LA DIRECTIVA"
+		var t := p._texto(11, Principal.COL_SUAVE); t.text = Idiomas.t("LA DIRECTIVA")
 		p._lista_club.add_child(t)
 		var obj := p._texto(15, Principal.COL_ORO); obj.text = d.objetivo
 		obj.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_club.add_child(obj)
 		var meta := p._texto(12, Principal.COL_SUAVE)
-		meta.text = "Te piden acabar %s.º o mejor." % d.meta_puesto
+		meta.text = Idiomas.t("Te piden acabar %s.º o mejor.") % d.meta_puesto
 		p._lista_club.add_child(meta)
 
 		## La confianza en barra, no en número: "34" no le dice nada a nadie, y
@@ -87,7 +87,7 @@ func _club_directorio(c: Club) -> void:
 		p._lista_club.add_child(humor)
 		if not d.trofeos.is_empty():
 			var tr := p._texto(12, Principal.COL_ORO)
-			tr.text = "Vitrina: " + ", ".join(d.trofeos)
+			tr.text = Idiomas.t("Vitrina: ") + ", ".join(d.trofeos)
 			p._lista_club.add_child(tr)
 		p._lista_club.add_child(HSeparator.new())
 		_pintar_consejeros(d, c)
@@ -97,13 +97,13 @@ func _club_directorio(c: Club) -> void:
 ## academias. Todo lo que se paga en nómina y no juega.
 func _club_staff(c: Club) -> void:
 	var t2 := p._texto(11, Principal.COL_SUAVE)
-	t2.text = "CUERPO TÉCNICO  ·  nómina %s/semana" % p._dinero(p.mundo.staff.sueldo_semanal(c.rep))
+	t2.text = Idiomas.t("CUERPO TÉCNICO  ·  nómina %s/semana") % p._dinero(p.mundo.staff.sueldo_semanal(c.rep))
 	p._lista_club.add_child(t2)
 	## C9: la jornada legal del personal del país, con su norma.
 	var jl := p._texto(11, Principal.COL_SUAVE)
 	var fe := Contratos.factor_estructura(c.pais, p.mundo.anio, p.mundo.semana)
-	jl.text = "⚖️ Jornada legal del personal: %s%s" % [Contratos.texto_jornada(c.pais, p.mundo.anio, p.mundo.semana),
-		"" if is_equal_approx(fe, 1.0) else "  (la estructura cuesta un %+d%%)" % int(round((fe - 1.0) * 100.0))]
+	jl.text = Idiomas.t("⚖️ Jornada legal del personal: %s%s") % [Contratos.texto_jornada(c.pais, p.mundo.anio, p.mundo.semana),
+		"" if is_equal_approx(fe, 1.0) else Idiomas.t("  (la estructura cuesta un %+d%%)") % int(round((fe - 1.0) * 100.0))]
 	jl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_club.add_child(jl)
 	## El bono de productividad: una vez por temporada, sube la moral de TODO el
@@ -115,12 +115,12 @@ func _club_staff(c: Club) -> void:
 		p._lista_club.add_child(fila_bono)
 		var ya := p.mundo.staff.anio_bono == p.mundo.anio
 		var lb := p._texto(12, Principal.COL_SUAVE)
-		lb.text = "Bono de productividad" if not ya else "Bono de productividad  ·  ya repartido este año"
+		lb.text = Idiomas.t("Bono de productividad") if not ya else Idiomas.t("Bono de productividad  ·  ya repartido este año")
 		lb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila_bono.add_child(lb)
 		var coste_bono := p.mundo.staff.coste_bono(c.rep)
 		var bb := Button.new()
-		bb.text = "Repartir  %s" % p._dinero(coste_bono)
+		bb.text = Idiomas.t("Repartir  %s") % p._dinero(coste_bono)
 		bb.add_theme_font_size_override("font_size", 11)
 		bb.disabled = ya or coste_bono > c.saldo
 		bb.pressed.connect(func() -> void: p._ui_club_vida._bono_staff(c))
@@ -138,12 +138,12 @@ func _club_staff(c: Club) -> void:
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila.add_child(nom)
 		if n >= Staff.NIVEL_MAX:
-			var tope := p._texto(11, Principal.COL_VERDE); tope.text = "al máximo"
+			var tope := p._texto(11, Principal.COL_VERDE); tope.text = Idiomas.t("al máximo")
 			fila.add_child(tope)
 		else:
 			var coste := p.mundo.staff.coste_subir(puesto, c.rep)
 			var b := Button.new()
-			b.text = "Contratar  %s" % p._dinero(coste)
+			b.text = Idiomas.t("Contratar  %s") % p._dinero(coste)
 			b.add_theme_font_size_override("font_size", 11)
 			b.disabled = coste > c.saldo or (p.mundo.roles != null and not p.mundo.roles.puede_contratar_staff())
 			b.pressed.connect(func() -> void: _contratar(puesto))
@@ -160,7 +160,7 @@ func _club_staff(c: Club) -> void:
 ## vez, con un costo de entrada y un honorario semanal.
 func _pintar_consejeros(d: Directiva, _c: Club) -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "CONSEJEROS DEL DIRECTORIO  ·  %d de %d  ·  %s/semana en honorarios" % [
+	t.text = Idiomas.t("CONSEJEROS DEL DIRECTORIO  ·  %d de %d  ·  %s/semana en honorarios") % [
 		d.consejeros.size(), Directiva.MAX_CONSEJEROS, p._dinero(d.honorarios_semanales())]
 	p._lista_club.add_child(t)
 	for k: String in Directiva.CONSEJEROS:
@@ -172,7 +172,7 @@ func _pintar_consejeros(d: Directiva, _c: Club) -> void:
 		var nom := p._texto(12, Principal.COL_VERDE if contratado else Principal.COL_TEXTO)
 		if contratado:
 			var o: Dictionary = d.consejeros[k]
-			nom.text = "%s  ·  %s (%d años)" % [String(info["nombre"]), String(o["nombre"]), int(o["edad"])]
+			nom.text = Idiomas.t("%s  ·  %s (%d años)") % [String(info["nombre"]), String(o["nombre"]), int(o["edad"])]
 		else:
 			nom.text = String(info["nombre"])
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -180,9 +180,9 @@ func _pintar_consejeros(d: Directiva, _c: Club) -> void:
 		var b := Button.new()
 		b.add_theme_font_size_override("font_size", 11)
 		if contratado:
-			b.text = "Cesar"
+			b.text = Idiomas.t("Cesar")
 		else:
-			b.text = "Contratar  %s" % p._dinero(Directiva.COSTO_CONTRATAR_CONSEJERO)
+			b.text = Idiomas.t("Contratar  %s") % p._dinero(Directiva.COSTO_CONTRATAR_CONSEJERO)
 			b.disabled = d.consejeros.size() >= Directiva.MAX_CONSEJEROS or _c.saldo < Directiva.COSTO_CONTRATAR_CONSEJERO
 		b.pressed.connect(func() -> void: _alternar_consejero(k))
 		fila.add_child(b)
@@ -204,7 +204,7 @@ func _alternar_consejero(k: String) -> void:
 ## reutiliza los mismos datos que ya guardaba `Cantera.leyendas` para el
 ## linaje; aquí solo hacía falta la pantalla.
 func _pintar_embajador(d: Directiva) -> void:
-	var t := p._texto(11, Principal.COL_SUAVE); t.text = "EMBAJADOR DEL CLUB"
+	var t := p._texto(11, Principal.COL_SUAVE); t.text = Idiomas.t("EMBAJADOR DEL CLUB")
 	p._lista_club.add_child(t)
 	if not d.embajador.is_empty():
 		var e: Dictionary = d.embajador
@@ -212,7 +212,7 @@ func _pintar_embajador(d: Directiva) -> void:
 		fila.add_theme_constant_override("separation", 8)
 		p._lista_club.add_child(fila)
 		var nom := p._texto(12, Principal.COL_VERDE)
-		nom.text = "⭐ %s  ·  ídolo · %s · %s/semana · la hinchada suma socios" % [
+		nom.text = Idiomas.t("⭐ %s  ·  ídolo · %s · %s/semana · la hinchada suma socios") % [
 			String(e.get("nombre", "")), String(e.get("pos", "")), p._dinero(int(e.get("sueldo", 0)))]
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -223,14 +223,14 @@ func _pintar_embajador(d: Directiva) -> void:
 		var candidatas: Array[Dictionary] = Directiva.candidatas_embajador(cantera.leyendas, p.mundo.anio) if cantera != null else []
 		if candidatas.is_empty():
 			var av := p._texto(11, Principal.COL_SUAVE)
-			av.text = "Sin leyendas disponibles todavía."
+			av.text = Idiomas.t("Sin leyendas disponibles todavía.")
 			p._lista_club.add_child(av)
 		for l: Dictionary in candidatas:
 			var fila2 := HBoxContainer.new()
 			fila2.add_theme_constant_override("separation", 8)
 			p._lista_club.add_child(fila2)
 			var nom2 := p._texto(12, Principal.COL_TEXTO)
-			nom2.text = "⭐ %s  ·  %s · nivel %d en su época" % [
+			nom2.text = Idiomas.t("⭐ %s  ·  %s · nivel %d en su época") % [
 				String(l.get("nombre", "")), String(l.get("pos", "")), int(l.get("nivel", 80))]
 			nom2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila2.add_child(nom2)
@@ -271,7 +271,7 @@ func _pintar_ojeadores(c: Club) -> void:
 	if not seguidos.is_empty():
 		p._lista_club.add_child(HSeparator.new())
 		var ts := p._texto(11, Principal.COL_SUAVE)
-		ts.text = "👁️ EN SEGUIMIENTO  ·  %d" % seguidos.size()
+		ts.text = Idiomas.t("👁️ EN SEGUIMIENTO  ·  %d") % seguidos.size()
 		p._lista_club.add_child(ts)
 		for j: Jugador in seguidos:
 			var suyo: Club = p.mundo.clubes.get(j.club_id)
@@ -280,7 +280,7 @@ func _pintar_ojeadores(c: Club) -> void:
 			p._lista_club.add_child(fila)
 			fila.add_child(p._retrato(j, 22))
 			var b := Button.new()
-			b.text = "%s  ·  %d años  ·  %s" % [j.nombre, j.edad, suyo.nombre if suyo else "libre"]
+			b.text = Idiomas.t("%s  ·  %d años  ·  %s") % [j.nombre, j.edad, suyo.nombre if suyo else "libre"]
 			b.flat = true
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			b.clip_text = true
@@ -301,7 +301,7 @@ func _pintar_ojeadores(c: Club) -> void:
 			fila.add_child(pide)
 	p._lista_club.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "RED DE OJEADORES  ·  %d de %d países  ·  presupuesto %s" % [oj.red.size(), oj.max_paises(), p._dinero(oj.presupuesto)]
+	t.text = Idiomas.t("RED DE OJEADORES  ·  %d de %d países  ·  presupuesto %s") % [oj.red.size(), oj.max_paises(), p._dinero(oj.presupuesto)]
 	p._lista_club.add_child(t)
 	## "MERCADO A CIEGAS": tenía el MISMO interruptor duplicado aquí y en
 	## Ajustes → Accesibilidad -mismo booleano, `oj.modo_ciego`, dos pantallas
@@ -313,11 +313,11 @@ func _pintar_ojeadores(c: Club) -> void:
 	fila_ciego.add_theme_constant_override("separation", 8)
 	p._lista_club.add_child(fila_ciego)
 	var txt_ciego := p._texto(11, Principal.COL_TEXTO)
-	txt_ciego.text = "Mercado a ciegas: %s." % ("activado" if oj.modo_ciego else "desactivado")
+	txt_ciego.text = Idiomas.t("Mercado a ciegas: %s.") % ("activado" if oj.modo_ciego else "desactivado")
 	txt_ciego.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila_ciego.add_child(txt_ciego)
 	var b_ciego := Button.new()
-	b_ciego.text = "Ir a Ajustes"
+	b_ciego.text = Idiomas.t("Ir a Ajustes")
 	b_ciego.add_theme_font_size_override("font_size", 11)
 	b_ciego.pressed.connect(func() -> void:
 		p._secc_ajustes = "acceso"
@@ -325,7 +325,7 @@ func _pintar_ojeadores(c: Club) -> void:
 	fila_ciego.add_child(b_ciego)
 	if oj.max_paises() <= 0:
 		var av := p._texto(11, Principal.COL_SUAVE)
-		av.text = "Contrata un jefe de ojeadores para poder cubrir países."
+		av.text = Idiomas.t("Contrata un jefe de ojeadores para poder cubrir países.")
 		p._lista_club.add_child(av)
 	for pais: String in oj.ojeadores:
 		var o: Dictionary = oj.ojeadores[pais]
@@ -334,7 +334,7 @@ func _pintar_ojeadores(c: Club) -> void:
 		fila.add_theme_constant_override("separation", 8)
 		p._lista_club.add_child(fila)
 		var nom := p._texto(12, Principal.COL_TEXTO)
-		nom.text = "%s  ·  %s  ·  %s  ·  precisión %d/3  ·  humor %d" % [
+		nom.text = Idiomas.t("%s  ·  %s  ·  %s  ·  precisión %d/3  ·  humor %d") % [
 			String(o["nombre"]), pais, String(s["nombre"]), int(o["precision"]), int(o["humor"])]
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -371,19 +371,19 @@ func _pintar_analitica(c: Club) -> void:
 		return
 	p._lista_club.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "📊 DEPARTAMENTO DE ANÁLISIS DE DATOS"
+	t.text = Idiomas.t("📊 DEPARTAMENTO DE ANÁLISIS DE DATOS")
 	p._lista_club.add_child(t)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	p._lista_club.add_child(fila)
 	var l := p._texto(12, Principal.COL_TEXTO)
-	l.text = "Modelo propio  ·  nivel %d de %d" % [oj.analitica_nivel, Ojeadores.ANALITICA_MAX]
+	l.text = Idiomas.t("Modelo propio  ·  nivel %d de %d") % [oj.analitica_nivel, Ojeadores.ANALITICA_MAX]
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	l.tooltip_text = "Cruza minutos, duelos y distancia recorrida para encontrar lo que el ojo no ve."
+	l.tooltip_text = Idiomas.t("Cruza minutos, duelos y distancia recorrida para encontrar lo que el ojo no ve.")
 	fila.add_child(l)
 	var b := Button.new()
 	var tope := oj.analitica_nivel >= Ojeadores.ANALITICA_MAX
-	b.text = "AL MÁXIMO" if tope else "Ampliar · %s" % p._dinero(oj.coste_analitica(c))
+	b.text = Idiomas.t("AL MÁXIMO") if tope else Idiomas.t("Ampliar · %s") % p._dinero(oj.coste_analitica(c))
 	b.add_theme_font_size_override("font_size", 11)
 	b.disabled = tope or c.saldo < oj.coste_analitica(c)
 	b.clip_text = true
@@ -399,12 +399,12 @@ func _pintar_analitica(c: Club) -> void:
 	if vivos.is_empty():
 		if not p._modo_experto:
 			var vac := p._texto(10, Principal.COL_SUAVE)
-			vac.text = "El modelo todavía no ha señalado a nadie. Necesita al menos un nivel y unas semanas de datos."
+			vac.text = Idiomas.t("El modelo todavía no ha señalado a nadie. Necesita al menos un nivel y unas semanas de datos.")
 			vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_club.add_child(vac)
 	else:
 		var th := p._texto(10, Principal.COL_SUAVE)
-		th.text = "Últimos hallazgos del modelo:"
+		th.text = Idiomas.t("Últimos hallazgos del modelo:")
 		p._lista_club.add_child(th)
 		for h: Dictionary in vivos:
 			var j: Jugador = h["jugador"]
@@ -413,7 +413,7 @@ func _pintar_analitica(c: Club) -> void:
 			fh.add_theme_constant_override("separation", 6)
 			p._lista_club.add_child(fh)
 			var bj := Button.new()
-			bj.text = "%s  ·  %s, %d años" % [j.nombre, suyo.nombre if suyo else "libre", j.edad]
+			bj.text = Idiomas.t("%s  ·  %s, %d años") % [j.nombre, suyo.nombre if suyo else "libre", j.edad]
 			bj.flat = true
 			bj.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			bj.add_theme_font_size_override("font_size", 12)
@@ -435,11 +435,11 @@ func _pintar_academias(c: Club) -> void:
 		return
 	p._lista_club.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🏫 ACADEMIAS INTERNACIONALES  ·  %d de %d" % [oj.academias.size(), Ojeadores.ACADEMIAS_MAX]
+	t.text = Idiomas.t("🏫 ACADEMIAS INTERNACIONALES  ·  %d de %d") % [oj.academias.size(), Ojeadores.ACADEMIAS_MAX]
 	p._lista_club.add_child(t)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Construir cuesta %s y mantenerla %s a la semana por sede. Cada pretemporada llega una joya local con proyección alta, directa a tu plantel." % [
+		ex.text = Idiomas.t("Construir cuesta %s y mantenerla %s a la semana por sede. Cada pretemporada llega una joya local con proyección alta, directa a tu plantel.") % [
 			p._dinero(Eco.escalar(Ojeadores.COSTE_ACADEMIA, float(c.rep))),
 			p._dinero(Eco.escalar(Ojeadores.MANTENCION_ACADEMIA, float(c.rep)))]
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

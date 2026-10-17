@@ -20,6 +20,21 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 IDIOMAS = ["en", "pt", "fr", "it", "de", "ca", "pl", "tr"]
 
+## Muestras que el extractor saca pero que NO se traducen a propósito (15-10-2026),
+## para que «sin traducir» cuente solo lo que de verdad falta:
+NO_SE_TRADUCEN = {
+    ## palabras clave con las que `Prensa` lee el tono de lo que escribe el
+    ## jugador (`_EVASIVAS`, `_SOBERBIAS`): no se muestran nunca;
+    "no voy a", "no tengo nada", "ya lo dije", "somos los mejores", "que se preparen",
+    "vamos a ganar", "no me importa",
+    ## nombres propios de medios ficticios (`MEDIOS_NUEVOS`, `PREGUNTAS_AL_PASO`);
+    "Kike en Directo", "El Vestuario Pod", "La Previa Live", "Diario La Banda",
+    "Podcast Fuera de Juego",
+    ## concepto de gasto: se traduce por tramos « · » («Terapia deportiva» está
+    ## en `datos/idiomas_extra.json`) y el nombre queda como está.
+    "Terapia deportiva · ",
+}
+
 
 def main():
     plantillas = json.load(open(os.path.join(RAIZ, "datos/narracion_plantillas.json"), encoding="utf-8"))
@@ -43,6 +58,12 @@ def main():
         if len(re.findall(r"[A-Za-zÁÉÍÓÚáéíóúñÑ]", fijo)) < 3:
             continue   ## «{1} {2}»: encajaría con cualquier frase
         vistas.add(es)
+        if es in NO_SE_TRADUCEN:
+            continue
+        ## Trozo que se pega delante de un nombre («Descanso mental para » +
+        ## nombre): ya lo cubre la plantilla entera con hueco («… para {1}»).
+        if es.endswith(" ") and es not in trad and any(k.startswith(es + "{") for k in trad):
+            continue
         if es not in trad:
             faltan.append(es)
             continue

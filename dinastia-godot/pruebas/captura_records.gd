@@ -26,6 +26,7 @@ func _process(_d: float) -> void:
 			if not mundo0.temporada_en_curso():
 				_pantalla.call("_nueva_temporada")
 				continue
+			InformeRival.activo = false
 			_pantalla.call("_dirigir")
 			var v := _pantalla.get_children().filter(func(n): return n is PartidoVivo)
 			if not v.is_empty():

@@ -92,7 +92,7 @@ func _montar() -> void:
 	_aviso.add_theme_color_override("font_color", Color(1, 0.95, 0.7))
 	_aviso.add_theme_color_override("font_outline_color", Color.BLACK)
 	_aviso.add_theme_constant_override("outline_size", 6)
-	_aviso.text = "📷 Modo foto · mueve la cámara como siempre y elige un filtro"
+	_aviso.text = Idiomas.t("📷 Modo foto · mueve la cámara como siempre y elige un filtro")
 	add_child(_aviso)
 	_cambiar(0)
 
@@ -139,7 +139,7 @@ func _crear_marco() -> Control:
 		esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		c.add_child(esc)
 	var pie := Label.new()
-	pie.text = "%s  ·  %s  ·  %s" % [_club.nombre if _club != null else "Dinastía", _lugar, Time.get_date_string_from_system()]
+	pie.text = "%s  ·  %s  ·  %s" % [_club.nombre if _club != null else Idiomas.t("Dinastía"), _lugar, Time.get_date_string_from_system()]
 	pie.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	pie.offset_left = 100
 	pie.offset_top = -62
@@ -165,7 +165,7 @@ func _disparar() -> void:
 	DirAccess.make_dir_recursive_absolute(CARPETA)
 	var nombre := "%s/foto_%s.png" % [CARPETA, Time.get_datetime_string_from_system().replace(":", "-")]
 	var err := img.save_png(nombre)
-	_aviso.text = "📸 Guardada en tus fotos del móvil" if err == OK else "No se pudo guardar la foto"
+	_aviso.text = Idiomas.t("📸 Guardada en tus fotos del móvil") if err == OK else Idiomas.t("No se pudo guardar la foto")
 	var flash := ColorRect.new()
 	flash.color = Color(1, 1, 1, 0.8)
 	flash.set_anchors_preset(Control.PRESET_FULL_RECT)

@@ -625,7 +625,7 @@ func _construir() -> void:
 	## que ya conoces, que es para lo unico que servia.
 	var b_mapa := Button.new()
 	b_mapa.text = "🌎"
-	b_mapa.tooltip_text = "Elegir club con el mapa: países, escudos y datos de cada equipo"
+	b_mapa.tooltip_text = Idiomas.t("Elegir club con el mapa: países, escudos y datos de cada equipo")
 	b_mapa.custom_minimum_size = Vector2(34, 34)
 	b_mapa.pressed.connect(_abrir_elegir_club)
 	_botones.add_child(b_mapa)
@@ -636,10 +636,10 @@ func _construir() -> void:
 	## desplegable libera cuatro anchos de golpe y de paso les da la casa que
 	## pedía: "un menú que sea el de calendario".
 	var menu_calendario := MenuButton.new()
-	menu_calendario.text = "📅 Calendario"
+	menu_calendario.text = Idiomas.t("📅 Calendario")
 	menu_calendario.custom_minimum_size = Vector2(0, 32)
 	menu_calendario.clip_text = true
-	menu_calendario.tooltip_text = "Jugar el partido, avanzar semana, jugar la temporada o pasar a la siguiente"
+	menu_calendario.tooltip_text = Idiomas.t("Jugar el partido, avanzar semana, jugar la temporada o pasar a la siguiente")
 	menu_calendario.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	menu_calendario.size_flags_stretch_ratio = 1.3
 	var pop_calendario := menu_calendario.get_popup()
@@ -653,8 +653,8 @@ func _construir() -> void:
 	## acción que más se repite en un manager -pasar el rato hasta el sábado-
 	## y esconderla tras dos clics la volvería incómoda. Pedido del usuario.
 	var b_dia := Button.new()
-	b_dia.text = "⏭ Un día"
-	b_dia.tooltip_text = "Avanza un día del calendario. Al pasar el domingo corre la semana entera."
+	b_dia.text = Idiomas.t("⏭ Un día")
+	b_dia.tooltip_text = Idiomas.t("Avanza un día del calendario. Al pasar el domingo corre la semana entera.")
 	b_dia.custom_minimum_size = Vector2(84, 32)
 	b_dia.pressed.connect(_avanzar_dia)
 	_botones.add_child(b_dia)
@@ -666,14 +666,14 @@ func _construir() -> void:
 	## que da.
 	var b_hub_partido := Button.new()
 	b_hub_partido.text = "⚽"
-	b_hub_partido.tooltip_text = "Partido y calendario"
+	b_hub_partido.tooltip_text = Idiomas.t("Partido y calendario")
 	b_hub_partido.custom_minimum_size = Vector2(34, 32)
 	b_hub_partido.pressed.connect(func() -> void: _abrir_hub("partido"))
 	_botones.add_child(b_hub_partido)
 	_tut_nodos["partido"] = b_hub_partido
 	var b_hub_dinero := Button.new()
 	b_hub_dinero.text = "💰"
-	b_hub_dinero.tooltip_text = "Finanzas, mercado y agentes libres"
+	b_hub_dinero.tooltip_text = Idiomas.t("Finanzas, mercado y agentes libres")
 	b_hub_dinero.custom_minimum_size = Vector2(34, 32)
 	b_hub_dinero.pressed.connect(func() -> void: _abrir_hub("dinero"))
 	_botones.add_child(b_hub_dinero)
@@ -686,8 +686,8 @@ func _construir() -> void:
 	_buscador = LineEdit.new()
 	## "Buscar jugador o club…" no entraba en 150 px y se leía "Buscar jugador
 	## o clu" (lo notó el análisis externo). El texto largo va al tooltip.
-	_buscador.placeholder_text = "🔎 Buscar…"
-	_buscador.tooltip_text = "Buscar un jugador o un club por nombre (Enter para abrir su ficha)"
+	_buscador.placeholder_text = Idiomas.t("🔎 Buscar…")
+	_buscador.tooltip_text = Idiomas.t("Buscar un jugador o un club por nombre (Enter para abrir su ficha)")
 	## 150 y no 210: cada píxel de esta fila sale del ancho de las tres columnas
 	## de abajo, y a 210 volvía a cortarse la ficha del jugador por el borde.
 	_buscador.custom_minimum_size = Vector2(150, 32)
@@ -738,7 +738,7 @@ func _construir() -> void:
 	## que más gente quiere mirar con calma, así que se le da una salida.
 	var abrir_comp := Button.new()
 	abrir_comp.flat = true
-	abrir_comp.text = "Ver la competición  ▸"
+	abrir_comp.text = Idiomas.t("Ver la competición  ▸")
 	abrir_comp.add_theme_font_size_override("font_size", 11)
 	abrir_comp.add_theme_color_override("font_color", _color_de_paleta(COL_ACENTO))
 	abrir_comp.pressed.connect(_abrir_competicion)
@@ -749,7 +749,7 @@ func _construir() -> void:
 	## permiten que el nivel 1 se quede en seis bloques.
 	var abrir_hub_comp := Button.new()
 	abrir_hub_comp.flat = true
-	abrir_hub_comp.text = "🏆 Todas las competiciones  ▸"
+	abrir_hub_comp.text = Idiomas.t("🏆 Todas las competiciones  ▸")
 	abrir_hub_comp.add_theme_font_size_override("font_size", 11)
 	abrir_hub_comp.add_theme_color_override("font_color", _color_de_paleta(COL_ORO))
 	abrir_hub_comp.pressed.connect(func() -> void: _abrir_hub("competiciones"))
@@ -870,7 +870,7 @@ func _construir() -> void:
 	## camarín, cantera, contratos-, en vez de tener siete pestañas más
 	## arriba. Es la idea que pidió el usuario mirando FC26.
 	var b_plantel := Button.new()
-	b_plantel.text = "👔 Plantel y cuerpo del equipo  ▸"
+	b_plantel.text = Idiomas.t("👔 Plantel y cuerpo del equipo  ▸")
 	b_plantel.flat = true
 	b_plantel.add_theme_font_size_override("font_size", 11)
 	b_plantel.add_theme_color_override("font_color", _color_de_paleta(COL_ACENTO))
@@ -1365,7 +1365,7 @@ func _abrir_hub(clave: String) -> void:
 			_refrescar())
 		flow.add_child(b)
 	var cerrar := Button.new()
-	cerrar.text = "✕  Cerrar"
+	cerrar.text = Idiomas.t("✕  Cerrar")
 	cerrar.custom_minimum_size = Vector2(0, 34)
 	cerrar.pressed.connect(func() -> void: capa.queue_free())
 	caja.add_child(cerrar)
@@ -1604,6 +1604,7 @@ func _bloque(padre: VBoxContainer, titulo: String, ratio: float) -> VBoxContaine
 	v.offset_left = 12; v.offset_top = 10; v.offset_right = -12; v.offset_bottom = -10
 	caja.add_child(v)
 	var t := _texto(11, COL_SUAVE); t.text = titulo
+	t.set_meta("titulo_bloque", true)
 	v.add_child(t)
 	return v
 
@@ -1816,9 +1817,14 @@ func _conectar_noticias() -> void:
 			_escribir("[color=#e05555][b]ESTÁS DESPEDIDO.[/b][/color] La directiva pierde la paciencia (%s) y te destituye a mitad de temporada. Elige tu próximo club entre las ofertas de abajo." % motivo)
 			_anotar("ESTÁS DESPEDIDO.", "La directiva pierde la paciencia (%s) y te destituye a mitad de temporada." % motivo)
 			## El momento más definitivo del juego: si algo merece interrumpir,
-			## es que te acaben de echar.
-			Aviso.mostrar(self, "alerta", "🚪", "ESTÁS DESPEDIDO",
-				"La directiva te destituye tras la %s. Elige tu próximo club entre las ofertas de abajo." % motivo, "despido")
+			## es que te acaben de echar. Con pantalla, en persona: el presidente
+			## te lo dice en su despacho (`EscenaDespido`, M-238); sin pantalla
+			## (banco) sigue el aviso de siempre.
+			if DisplayServer.get_name() != "headless":
+				EscenaDespido.mostrar(self, mundo, motivo)
+			else:
+				Aviso.mostrar(self, "alerta", "🚪", "ESTÁS DESPEDIDO",
+					"La directiva te destituye tras la %s. Elige tu próximo club entre las ofertas de abajo." % motivo, "despido")
 			## `Roles.gd` lo deja escrito en su propio comentario -"lo llama quien
 			## atienda `Directiva.despedido`, DESPUÉS de comprobar
 			## `le_pueden_echar()`"- y nadie lo llamaba NUNCA, ni siquiera al
@@ -2353,7 +2359,7 @@ func _abrir_elegir_club() -> void:
 			_dlg_club.get_parent().remove_child(_dlg_club)
 		_dlg_club.queue_free()
 	_dlg_club = Window.new()
-	_dlg_club.title = "Elegir club"
+	_dlg_club.title = Idiomas.t("Elegir club")
 	_dlg_club.size = Vector2i(880, 620)
 	_dlg_club.transient = true
 	_dlg_club.exclusive = true
@@ -2384,7 +2390,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 		h.queue_free()
 
 	var t := _texto(14, COL_ACENTO)
-	t.text = "¿DÓNDE QUIERES EMPEZAR?"
+	t.text = Idiomas.t("¿DÓNDE QUIERES EMPEZAR?")
 	col.add_child(t)
 
 	## Los países que tienen liga, con cuántos clubes hay en cada uno.
@@ -2460,7 +2466,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 		lienzo.add_child(borde)
 	else:
 		var sin := _texto(10, COL_SUAVE)
-		sin.text = "(sin silueta para este país)"
+		sin.text = Idiomas.t("(sin silueta para este país)")
 		colm.add_child(sin)
 
 	## LOS CLUBES DEL PAÍS, con lo que de verdad se compara al elegir: escudo,
@@ -2504,7 +2510,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 			_tomar_club(club.id))
 		f.add_child(b2)
 		var d := _texto(11, COL_SUAVE)
-		d.text = "D%d  ·  rep %d  ·  %s butacas" % [club.division, club.rep, _miles(club.estadio_aforo)]
+		d.text = Idiomas.t("D%d  ·  rep %d  ·  %s butacas") % [club.division, club.rep, _miles(club.estadio_aforo)]
 		d.custom_minimum_size = Vector2(190, 0)
 		f.add_child(d)
 
@@ -2610,6 +2616,12 @@ func _dirigir() -> void:
 			res.queue_free()
 			_cerrar_partido_dirigido(p))
 		return
+	## EL INFORME DEL RIVAL (17-10-2026) antes de salir a jugar, como en FM/FC.
+	## Sin pantalla (banco) o con SIN_INFORME_RIVAL no se enseña.
+	if InformeRival.activo and DisplayServer.get_name() != "headless" and OS.get_environment("SIN_INFORME_RIVAL") == "":
+		var inf := InformeRival.mostrar(self, p, mundo.mi_club(), mundo.liga_de(p.visita if p.local == mundo.mi_club() else p.local), mundo)
+		await inf.cerrado
+		inf.queue_free()
 	var vivo := PartidoVivo.new()
 	vivo.con_3d = modo != "vivo"
 	vivo.destacados = modo == "destacados"
@@ -2703,7 +2715,7 @@ func _selector_modo_partido(padre: Node) -> void:
 	var comp := _competicion_de_la_semana()
 	var nombre_comp: String = {"copa": "la copa", "conti": "el torneo continental", "liga": "la liga"}[comp]
 	var t := _texto(11, COL_SUAVE)
-	t.text = "CÓMO QUIERES VER LOS PARTIDOS DE %s" % nombre_comp.to_upper()
+	t.text = Idiomas.t("CÓMO QUIERES VER LOS PARTIDOS DE %s") % nombre_comp.to_upper()
 	padre.add_child(t)
 	var fila := HFlowContainer.new()
 	fila.add_theme_constant_override("h_separation", 6)
@@ -3153,8 +3165,8 @@ func _refrescar() -> void:
 	else:
 		_lbl_caja.text = _dinero(c.saldo)
 	_saldo_mostrado = c.saldo
-	_lbl_fecha.text = "%s  ·  semana %d" % [fecha_larga(), mundo.semana]
-	_sub.text = "%s  ·  Jornada %d de %d  ·  Sueldos %s/sem  ·  Media %.1f%s" % [
+	_lbl_fecha.text = Idiomas.t("%s  ·  semana %d") % [fecha_larga(), mundo.semana]
+	_sub.text = Idiomas.t("%s  ·  Jornada %d de %d  ·  Sueldos %s/sem  ·  Media %.1f%s") % [
 		liga.nombre, liga.jornada_actual, liga.jornadas(),
 		_dinero(c.masa_salarial()), c.media(), dir_txt]
 	## El desafío invicto no bloquea nada por dentro -se puede seguir jugando,
@@ -3437,7 +3449,7 @@ func _pintar_clubes() -> void:
 			paises.append(l.pais)
 	paises.sort()
 	var t := _texto(11, COL_SUAVE)
-	t.text = "LIGAS DEL MUNDO"
+	t.text = Idiomas.t("LIGAS DEL MUNDO")
 	_lista_clubes.add_child(t)
 	## Los países no caben en una fila: se reparten en filas de ocho.
 	var fila_pais: HBoxContainer = null
@@ -3572,13 +3584,13 @@ func _ver_ficha(j: Jugador) -> void:
 	## no, al abrirla. Era 0,3-0,5 s en cada clic de la ficha.
 	_perezoso(_lista_entren, _ui_club_vida._pintar_entrenamiento.bind(mundo.mi_club()))
 	for n in _ficha.get_children():
-		if n is Label and n.text == "FICHA DEL JUGADOR":
+		if n.has_meta("titulo_bloque"):
 			continue
 		_ficha.remove_child(n)
 		n.queue_free()
 	if j == null:
 		var vacio := _texto(12, COL_SUAVE)
-		vacio.text = "Pulsa un jugador de la lista para ver su ficha."
+		vacio.text = Idiomas.t("Pulsa un jugador de la lista para ver su ficha.")
 		_ficha.add_child(vacio)
 		return
 
@@ -3603,9 +3615,9 @@ func _ver_ficha(j: Jugador) -> void:
 	nom.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	cab.add_child(nom)
 	var det := _texto(12, COL_SUAVE)
-	det.text = "%s · %d años · %s · %s" % [
-		j.pos_e, j.edad, suyo.nombre if suyo else "sin club",
-		Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, ["sin rasgo"])[0])) if j.rasgo != "" else "sin rasgo"]
+	det.text = Idiomas.t("%s · %d años · %s · %s") % [
+		j.pos_e, j.edad, suyo.nombre if suyo else Idiomas.t("sin club"),
+		Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, [Idiomas.t("sin rasgo")])[0])) if j.rasgo != "" else Idiomas.t("sin rasgo")]
 	_ficha.add_child(det)
 	var credito := Cara.credito_foto(j)
 	if credito != "":
@@ -3684,7 +3696,7 @@ func _ver_ficha(j: Jugador) -> void:
 		if pct > 0.0:
 			var formador: Club = mundo.clubes.get(j.club_formacion)
 			_dato("Derechos de formación", "%d%% para %s" % [
-				int(round(pct * 100.0)), formador.nombre if formador else "su club formador"],
+				int(round(pct * 100.0)), formador.nombre if formador else Idiomas.t("su club formador")],
 				COL_ORO)
 	_dato("Sueldo actual", _dinero(j.sueldo) + " / semana", COL_TEXTO)
 	## El detalle de la baja -antes solo decía "lesión, N semanas" o
@@ -3713,7 +3725,7 @@ func _ver_ficha(j: Jugador) -> void:
 	if not propio and mundo.ojeadores != null and not mundo.ojeados.has(j.id):
 		var costo_oj := mundo.ojeadores.costo_informe()
 		var bo := Button.new()
-		bo.text = "Pedir informe de ojeo  %s" % _dinero(costo_oj)
+		bo.text = Idiomas.t("Pedir informe de ojeo  %s") % _dinero(costo_oj)
 		bo.disabled = costo_oj > mundo.ojeadores.presupuesto and (mio == null or costo_oj > mio.saldo)
 		bo.pressed.connect(func() -> void: _ui_ficha._pedir_informe_ojeo(j))
 		_ficha.add_child(bo)
@@ -3722,7 +3734,7 @@ func _ver_ficha(j: Jugador) -> void:
 	## ajeno -por eso va aquí, antes de que la ficha se bifurque-.
 	var en_comparador := _comparar_ids.has(j.id)
 	var bc2 := Button.new()
-	bc2.text = "Quitar del comparador" if en_comparador else "Comparar"
+	bc2.text = Idiomas.t("Quitar del comparador") if en_comparador else Idiomas.t("Comparar")
 	bc2.disabled = not en_comparador and _comparar_ids.size() >= 3
 	bc2.pressed.connect(func() -> void: _ui_cantera._alternar_comparar(j))
 	_ficha.add_child(bc2)
@@ -3765,7 +3777,7 @@ func _ver_ficha(j: Jugador) -> void:
 	if mundo.ojeadores != null:
 		var sigo := mundo.ojeadores.sigue(j)
 		var bs := Button.new()
-		bs.text = "👁️ Dejar de seguir" if sigo else "👁️ Seguir"
+		bs.text = Idiomas.t("👁️ Dejar de seguir") if sigo else Idiomas.t("👁️ Seguir")
 		bs.pressed.connect(func() -> void:
 			mundo.ojeadores.alternar_seguimiento(j)
 			_refrescar()
@@ -3780,7 +3792,7 @@ func _ver_ficha(j: Jugador) -> void:
 	## Las tres puertas del fichaje.
 	_ficha.add_child(HSeparator.new())
 	var t := _texto(11, COL_SUAVE)
-	t.text = "PARA FICHARLO"
+	t.text = Idiomas.t("PARA FICHARLO")
 	_ficha.add_child(t)
 	var pedido := mundo.mercado.valor_pedido(j)
 	var d: Dictionary = mundo.mercado.deseo_de_venir(j, mio)
@@ -3821,13 +3833,13 @@ func _ver_ficha(j: Jugador) -> void:
 			var coste := mundo.cesiones.coste_de_clausula(j)
 			_ficha.add_child(HSeparator.new())
 			var tc := _texto(11, COL_ORO)
-			tc.text = "TIENE CLÁUSULA DE RESCISIÓN"
+			tc.text = Idiomas.t("TIENE CLÁUSULA DE RESCISIÓN")
 			_ficha.add_child(tc)
 			_dato("Cláusula", _dinero(clau), COL_TEXTO)
 			_dato("Comisión del agente", _dinero(int(coste["comision"])), COL_SUAVE)
 			var total := int(coste["total"])
 			var bc := Button.new()
-			bc.text = "Pagar la cláusula  %s" % _dinero(total)
+			bc.text = Idiomas.t("Pagar la cláusula  %s") % _dinero(total)
 			bc.disabled = total > mio.saldo
 			bc.pressed.connect(func() -> void: _ui_ficha._pagar_clausula(j))
 			_ficha.add_child(bc)
@@ -3841,14 +3853,14 @@ func _ver_ficha(j: Jugador) -> void:
 		if ya_tiene:
 			var inf: Dictionary = mundo.medico.informe_de(j)
 			var tm := _texto(11, COL_SUAVE)
-			tm.text = "INFORME MÉDICO"
+			tm.text = Idiomas.t("INFORME MÉDICO")
 			_ficha.add_child(tm)
 			_dato("Riesgo declarado", String(inf.get("riesgo", "?")), COL_TEXTO)
 			_dato("Lesiones graves en su historial", str(int(inf.get("graves", 0))), COL_TEXTO)
 		else:
 			var costo := mundo.medico.costo_informe(j, mio.rep)
 			var bm := Button.new()
-			bm.text = "Pedir informe médico  %s" % _dinero(costo)
+			bm.text = Idiomas.t("Pedir informe médico  %s") % _dinero(costo)
 			bm.disabled = costo > mio.saldo
 			bm.pressed.connect(func() -> void: _pedir_informe_medico(j))
 			_ficha.add_child(bm)
@@ -3862,7 +3874,7 @@ func _ver_ficha(j: Jugador) -> void:
 		if ya_pers:
 			var infp: Dictionary = mundo.ojeadores.informe_personalidad_de(j)
 			var tp := _texto(11, COL_SUAVE)
-			tp.text = "INFORME DE PERSONALIDAD"
+			tp.text = Idiomas.t("INFORME DE PERSONALIDAD")
 			_ficha.add_child(tp)
 			_dato("Profesionalidad", "%d/100" % int(infp.get("prof", 0)), COL_TEXTO)
 			_dato("En el vestuario", String(infp.get("vestuario", "?")), COL_TEXTO)
@@ -3870,7 +3882,7 @@ func _ver_ficha(j: Jugador) -> void:
 		else:
 			var costo_p := mundo.ojeadores.costo_informe_personalidad(mio.rep)
 			var bp := Button.new()
-			bp.text = "Pedir informe de personalidad  %s" % _dinero(costo_p)
+			bp.text = Idiomas.t("Pedir informe de personalidad  %s") % _dinero(costo_p)
 			bp.disabled = costo_p > mio.saldo
 			bp.pressed.connect(func() -> void:
 				var problema := mundo.ojeadores.informe_personalidad(j, mio)
@@ -4117,7 +4129,7 @@ var _decision_mostrada := ""
 func _pintar_decision(e: Dictionary) -> void:
 	var v := _ui_despacho._marco_aviso(COL_ORO)
 	var t := _texto(11, COL_ORO)
-	t.text = "HAY QUE DECIDIR"
+	t.text = Idiomas.t("HAY QUE DECIDIR")
 	v.add_child(t)
 	var fila_cuerpo := HBoxContainer.new()
 	fila_cuerpo.add_theme_constant_override("separation", 12)
@@ -4208,7 +4220,7 @@ func _abrir_rueda_pantalla_completa(e: Dictionary) -> void:
 	pop.add_child(raiz)
 
 	var t := _texto(13, COL_ACENTO)
-	t.text = "🎙️ RUEDA DE PRENSA"
+	t.text = Idiomas.t("🎙️ RUEDA DE PRENSA")
 	raiz.add_child(t)
 
 	## EL PLATÓ 3D. Con pantalla completa ya no hace falta encogerlo a 220 px
@@ -4370,11 +4382,11 @@ func _pintar_museo(lg: Logros) -> void:
 	var piezas := lg.piezas_del_museo()
 	_lista_logros.add_child(HSeparator.new())
 	var t := _texto(11, COL_SUAVE)
-	t.text = "🏛️ MUSEO DEL CLUB  ·  nivel %d  ·  %d pieza(s)" % [mundo.obras.nivel("museo"), piezas.size()]
+	t.text = Idiomas.t("🏛️ MUSEO DEL CLUB  ·  nivel %d  ·  %d pieza(s)") % [mundo.obras.nivel("museo"), piezas.size()]
 	_lista_logros.add_child(t)
 	if piezas.is_empty():
 		var vac := _texto(11, COL_SUAVE)
-		vac.text = "El museo está construido pero las vitrinas están vacías. Gana algo y se irán llenando solas."
+		vac.text = Idiomas.t("El museo está construido pero las vitrinas están vacías. Gana algo y se irán llenando solas.")
 		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_logros.add_child(vac)
 	else:
@@ -4394,7 +4406,7 @@ func _pintar_museo(lg: Logros) -> void:
 	if comp.is_empty():
 		return
 	var tc := _texto(11, COL_SUAVE)
-	tc.text = "⚖️ AQUEL EQUIPO Y ESTE"
+	tc.text = Idiomas.t("⚖️ AQUEL EQUIPO Y ESTE")
 	_lista_logros.add_child(tc)
 	_dato("Tu mejor plantilla", "%d  ·  quedó %d.º  ·  figura: %s" % [
 		int(comp["anio"]), int(comp["puesto"]), String(comp["mvp"])], COL_ORO, _lista_logros)
@@ -4480,18 +4492,18 @@ func _pintar_federacion(c: Club) -> void:
 	if not f.presidente.is_empty():
 		var ag: Array = Federacion.AGENDAS[String(f.presidente["agenda"])]
 		var tp := _texto(12, COL_ORO)
-		tp.text = "🏛️ Presidente: %s · corriente %s · mandato hasta %d" % [String(f.presidente["nombre"]), String(ag[0]).to_lower(), int(f.presidente["hasta"])]
+		tp.text = Idiomas.t("🏛️ Presidente: %s · corriente %s · mandato hasta %d") % [String(f.presidente["nombre"]), String(ag[0]).to_lower(), int(f.presidente["hasta"])]
 		tp.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_fed.add_child(tp)
 		var lema := _texto(11, COL_SUAVE)
-		lema.text = String(ag[2]) + " Sus propuestas salen antes en la asamblea y hace campaña por ellas."
+		lema.text = String(ag[2]) + Idiomas.t(" Sus propuestas salen antes en la asamblea y hace campaña por ellas.")
 		lema.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_fed.add_child(lema)
 	_ui_club_vida._pintar_gobierno(c)
 	_ui_club_vida._pintar_licencia_y_tribunal(c, f)
 	_ui_club_vida._pintar_historial_federacion(f)
 	var t := _texto(11, COL_SUAVE)
-	t.text = "REGLAMENTO VIGENTE"
+	t.text = Idiomas.t("REGLAMENTO VIGENTE")
 	_lista_fed.add_child(t)
 	for regla in f.reglas_vigentes(c.pais if c != null else ""):
 		var l := _texto(12, COL_TEXTO)
@@ -4503,8 +4515,8 @@ func _pintar_federacion(c: Club) -> void:
 	if c != null:
 		var inf: Dictionary = f.infracciones_de(mundo.anio)
 		var est := _texto(12, COL_SUAVE)
-		est.text = "Política con el reglamento: %s · esta temporada: %d semana(s) con el plantel fuera de cupo, %d alineación(es) indebida(s)" % [
-			"CUMPLIR (el once se corrige solo)" if c.ley_politica == "cumplir" else "INCUMPLIR (pagas multas; a la tercera alineación indebida, 3 puntos menos cada vez)",
+		est.text = Idiomas.t("Política con el reglamento: %s · esta temporada: %d semana(s) con el plantel fuera de cupo, %d alineación(es) indebida(s)") % [
+			Idiomas.t("CUMPLIR (el once se corrige solo)") if c.ley_politica == "cumplir" else Idiomas.t("INCUMPLIR (pagas multas; a la tercera alineación indebida, 3 puntos menos cada vez)"),
 			int(inf.get("plantel", 0)), int(inf.get("alin", 0))]
 		est.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_fed.add_child(est)
@@ -4525,7 +4537,7 @@ func _pintar_federacion(c: Club) -> void:
 	if f.voto_pendiente.is_empty():
 		_lista_fed.add_child(HSeparator.new())
 		var nada := _texto(12, COL_SUAVE)
-		nada.text = "No hay ninguna votación abierta. La federación convoca cada tanto."
+		nada.text = Idiomas.t("No hay ninguna votación abierta. La federación convoca cada tanto.")
 		nada.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_fed.add_child(nada)
 		return
@@ -4536,7 +4548,7 @@ func _pintar_federacion(c: Club) -> void:
 	_lista_fed.add_child(HSeparator.new())
 	var v: Dictionary = f.voto_pendiente
 	var t2 := _texto(11, COL_ORO)
-	t2.text = "VOTACIÓN ABIERTA"
+	t2.text = Idiomas.t("VOTACIÓN ABIERTA")
 	_lista_fed.add_child(t2)
 	var q := _texto(13, COL_TEXTO)
 	## La tabla VOTACIONES guarda el título en "t", no en "titulo" -esa clave
@@ -4622,7 +4634,10 @@ func _ver_estadio_con_carga() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_ver_estadio_propio()
-	carga.cerrar()
+	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
+	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
+	if is_instance_valid(carga):
+		carga.cerrar()
 
 func _ver_ciudad_con_carga() -> void:
 	PantallaCarga.club = mundo.mi_club() if mundo != null else null
@@ -4630,7 +4645,10 @@ func _ver_ciudad_con_carga() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_ver_ciudad_propia()
-	carga.cerrar()
+	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
+	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
+	if is_instance_valid(carga):
+		carga.cerrar()
 
 ## Abre la ciudad y arranca directamente el paseo ("pie") o la conducción ("coche").
 func _ver_ciudad_explorando(modo: String) -> void:
@@ -4659,8 +4677,8 @@ func _ver_estadio_propio() -> void:
 	## cuáles estaban visibles, no asumiendo que todos lo estaban-.
 	var ocultados: Array = []
 	for h in get_children():
-		if h is Control and (h as Control).visible:
-			(h as Control).visible = false
+		if h is CanvasItem and (h as CanvasItem).visible:
+			(h as CanvasItem).visible = false
 			ocultados.append(h)
 	var vista := VistaEstadio.new()
 	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
@@ -4674,7 +4692,7 @@ func _ver_estadio_propio() -> void:
 		vista.queue_free()
 		for h in ocultados:
 			if is_instance_valid(h):
-				(h as Control).visible = true)
+				(h as CanvasItem).visible = true)
 
 ## Qué tribuna se está editando cuando "Personalizar cada tribuna" está activo.
 ## Solo estado de interfaz -no se guarda, como `_secc_ajustes`-: al volver a
@@ -4693,7 +4711,7 @@ func _pintar_estadio(c: Club) -> void:
 	if e.en_obras():
 		var ob := _texto(12, Color(1.0, 0.8, 0.3))
 		ob.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		ob.text = "🏗️ Reforma en obras: faltan %d de %d semanas. Aquí ves el proyecto; en la ciudad y en los partidos sigue el estadio de siempre, con andamios." % [
+		ob.text = Idiomas.t("🏗️ Reforma en obras: faltan %d de %d semanas. Aquí ves el proyecto; en la ciudad y en los partidos sigue el estadio de siempre, con andamios.") % [
 			int(e.obra["semanas"]), int(e.obra["total"])]
 		_lista_estadio.add_child(ob)
 	## PONERLE NOMBRE AL ESTADIO, de `vEstadio()`. Es lo más barato que puede
@@ -4703,7 +4721,7 @@ func _pintar_estadio(c: Club) -> void:
 	fila_n.add_theme_constant_override("separation", 6)
 	_lista_estadio.add_child(fila_n)
 	var campo_nombre := LineEdit.new()
-	campo_nombre.placeholder_text = "Ponle nombre al estadio…"
+	campo_nombre.placeholder_text = Idiomas.t("Ponle nombre al estadio…")
 	campo_nombre.text = c.estadio_nombre
 	campo_nombre.add_theme_font_size_override("font_size", 11)
 	campo_nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -4712,7 +4730,7 @@ func _pintar_estadio(c: Club) -> void:
 		_refrescar())
 	fila_n.add_child(campo_nombre)
 	var bn := Button.new()
-	bn.text = "Guardar"
+	bn.text = Idiomas.t("Guardar")
 	bn.add_theme_font_size_override("font_size", 11)
 	bn.pressed.connect(func() -> void:
 		c.estadio_nombre = campo_nombre.text.strip_edges()
@@ -4725,7 +4743,7 @@ func _pintar_estadio(c: Club) -> void:
 	## mismo visor sirve vacío -`abrir(club)`, su primer modo, pensado para
 	## justo esto- así que se engancha aquí también, sin duplicar nada.
 	var ver3d := Button.new()
-	ver3d.text = "👁️ Ver mi estadio en 3D"
+	ver3d.text = Idiomas.t("👁️ Ver mi estadio en 3D")
 	ver3d.add_theme_font_size_override("font_size", 11)
 	ver3d.pressed.connect(_ver_estadio_con_carga)
 	fila_n.add_child(ver3d)
@@ -4744,25 +4762,25 @@ func _pintar_estadio(c: Club) -> void:
 				COL_ROJO if funa > 55 else COL_SUAVE, _lista_estadio)
 		var lectura := _texto(11, COL_SUAVE)
 		if animo >= 82:
-			lectura.text = "El estadio empuja: a este nivel salen banderazos antes de los partidos."
+			lectura.text = Idiomas.t("El estadio empuja: a este nivel salen banderazos antes de los partidos.")
 		elif animo <= 22:
-			lectura.text = "Ambiente enrarecido: a este nivel aparecen lienzos en contra."
+			lectura.text = Idiomas.t("Ambiente enrarecido: a este nivel aparecen lienzos en contra.")
 		else:
-			lectura.text = "La gente responde a los resultados. Ganar en casa y no subir la entrada es lo que más lo mueve."
+			lectura.text = Idiomas.t("La gente responde a los resultados. Ganar en casa y no subir la entrada es lo que más lo mueve.")
 		lectura.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_estadio.add_child(lectura)
 	_dato("Socios", _miles(c.socios), COL_TEXTO, _lista_estadio)
 	_ui_club_vida._pintar_hinchada(c)
 	_lista_estadio.add_child(HSeparator.new())
 	var sub := _texto(12, COL_SUAVE)
-	sub.text = "%s de %d bandeja%s  ·  techo %s  ·  %s butacas  ·  ambiente %d" % [
+	sub.text = Idiomas.t("%s de %d bandeja%s  ·  techo %s  ·  %s butacas  ·  ambiente %d") % [
 		String(p.get("forma", "?")).capitalize(), int(p.get("niveles", 1)),
 		"" if int(p.get("niveles", 1)) == 1 else "s", String(p.get("techo", "?")),
 		_miles(int(p.get("aforo", 0))), e.ambiente()]
 	sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_lista_estadio.add_child(sub)
 	var nota := _texto(11, COL_SUAVE)
-	nota.text = "Las bandejas y el aforo se amplían construyendo tribunas en Club → Obras. Aquí se decide cómo SE VE."
+	nota.text = Idiomas.t("Las bandejas y el aforo se amplían construyendo tribunas en Club → Obras. Aquí se decide cómo SE VE.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_lista_estadio.add_child(nota)
 	_lista_estadio.add_child(HSeparator.new())
@@ -4795,7 +4813,7 @@ func _pintar_estadio(c: Club) -> void:
 	## "quiero decidir esto tribuna por tribuna" y por eso cuesta.
 	_lista_estadio.add_child(HSeparator.new())
 	var tt := _texto(11, COL_ACENTO)
-	tt.text = "LAS TRIBUNAS"
+	tt.text = Idiomas.t("LAS TRIBUNAS")
 	_lista_estadio.add_child(tt)
 	_ui_club_estadio._fila_interruptor_estadio(e.ajustes, "personalizar_bandejas", "Personalizar cada tribuna",
 		"Cada una de las 4 tribunas con su propio patrón, colores de butaca y techo, en vez de un solo estilo para todo el recinto.")
@@ -4804,7 +4822,7 @@ func _pintar_estadio(c: Club) -> void:
 		fila_lado.add_theme_constant_override("separation", 6)
 		_lista_estadio.add_child(fila_lado)
 		var l_lado := _texto(11, COL_SUAVE)
-		l_lado.text = "Tribuna"
+		l_lado.text = Idiomas.t("Tribuna")
 		l_lado.custom_minimum_size = Vector2(130, 0)
 		fila_lado.add_child(l_lado)
 		var sel_lado := OptionButton.new()
@@ -4845,7 +4863,7 @@ func _pintar_estadio(c: Club) -> void:
 		fila_lado_t.add_theme_constant_override("separation", 6)
 		_lista_estadio.add_child(fila_lado_t)
 		var l_lado_t := _texto(11, COL_SUAVE)
-		l_lado_t.text = "Tribuna"
+		l_lado_t.text = Idiomas.t("Tribuna")
 		l_lado_t.custom_minimum_size = Vector2(130, 0)
 		fila_lado_t.add_child(l_lado_t)
 		var sel_lado_t := OptionButton.new()
@@ -4872,7 +4890,7 @@ func _pintar_estadio(c: Club) -> void:
 	## tocarlos.
 	_lista_estadio.add_child(HSeparator.new())
 	var ti := _texto(11, COL_ACENTO)
-	ti.text = "EL RECINTO"
+	ti.text = Idiomas.t("EL RECINTO")
 	_lista_estadio.add_child(ti)
 	_ui_club_estadio._fila_interruptor_estadio(e.ajustes, "pista", "Pista de atletismo",
 		"Aleja la grada del campo: -3,5 de ambiente.")
@@ -4976,13 +4994,13 @@ func _pintar_ciudad(c: Club) -> void:
 		return
 	_limpiar(_lista_ciudad)
 	var t := _texto(11, COL_SUAVE)
-	t.text = "🏙️ EL CLUB Y SU CIUDAD"
+	t.text = Idiomas.t("🏙️ EL CLUB Y SU CIUDAD")
 	_lista_ciudad.add_child(t)
 	## EL VISOR 3D DE LA CIUDAD DEPORTIVA, por fin alcanzable desde el juego
 	## (12-9-2026): `CityBuilder` llevaba desde el 2-09-2026 viviendo solo en
 	## el proyecto viejo, nunca portado. Mismo patrón que el botón de estadio.
 	var ver3d := Button.new()
-	ver3d.text = "🏙️ Ver la ciudad en 3D"
+	ver3d.text = Idiomas.t("🏙️ Ver la ciudad en 3D")
 	ver3d.add_theme_font_size_override("font_size", 11)
 	ver3d.pressed.connect(_ver_ciudad_con_carga)
 	_lista_ciudad.add_child(ver3d)
@@ -5002,7 +5020,7 @@ func _pintar_ciudad(c: Club) -> void:
 		COL_ROJO if ci.cesped < Ciudad.CESPED_MINIMO_CONCIERTO else COL_VERDE, _lista_ciudad)
 	if not ci.sancion.is_empty():
 		var av := _texto(12, COL_ROJO)
-		av.text = "🚫 Próximo partido a puertas cerradas." if String(ci.sancion["tipo"]) == "cerradas" \
+		av.text = Idiomas.t("🚫 Próximo partido a puertas cerradas.") if String(ci.sancion["tipo"]) == "cerradas" \
 			else "🚧 Aforo reducido al 40%% durante %d semana(s)." % int(ci.sancion["semanas"])
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_ciudad.add_child(av)
@@ -5044,8 +5062,8 @@ func _ver_ciudad_propia() -> void:
 		return
 	var ocultados: Array = []
 	for h in get_children():
-		if h is Control and (h as Control).visible:
-			(h as Control).visible = false
+		if h is CanvasItem and (h as CanvasItem).visible:
+			(h as CanvasItem).visible = false
 			ocultados.append(h)
 	var vista := VistaCiudad.new()
 	add_child(vista)
@@ -5059,7 +5077,7 @@ func _ver_ciudad_propia() -> void:
 		vista.queue_free()
 		for h in ocultados:
 			if is_instance_valid(h):
-				(h as Control).visible = true
+				(h as CanvasItem).visible = true
 		_refrescar())
 	## Clic en el estadio, o el botón "Editar mi estadio": mismo cierre que
 	## "Volver" -devuelve la pestaña de Club, que quedaba oculta- y además
@@ -5069,7 +5087,7 @@ func _ver_ciudad_propia() -> void:
 		vista.queue_free()
 		for h in ocultados:
 			if is_instance_valid(h):
-				(h as Control).visible = true
+				(h as CanvasItem).visible = true
 		_ir_a_pestana("Estadio")
 		_pintar_estadio(c))
 
@@ -5346,7 +5364,7 @@ func _fuente_de(clave: String) -> Font:
 
 func _pintar_tipografia() -> void:
 	var lt := _texto(10, COL_SUAVE)
-	lt.text = "Tipografia"
+	lt.text = Idiomas.t("Tipografia")
 	_lista_ajustes.add_child(lt)
 	var flow := HFlowContainer.new()
 	flow.add_theme_constant_override("h_separation", 4)
@@ -5490,10 +5508,10 @@ func _alternar_favorito(tab: String) -> void:
 
 func _pintar_ranuras() -> void:
 	var t := _texto(11, COL_SUAVE)
-	t.text = "RANURAS DE GUARDADO"
+	t.text = Idiomas.t("RANURAS DE GUARDADO")
 	_lista_ajustes.add_child(t)
 	var ex := _texto(10, COL_SUAVE)
-	ex.text = "Aparte del autoguardado. Sirven para dejar una copia antes de una decisión de la que no se vuelve."
+	ex.text = Idiomas.t("Aparte del autoguardado. Sirven para dejar una copia antes de una decisión de la que no se vuelve.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_lista_ajustes.add_child(ex)
 	## Se lista una vez y se busca en memoria: `Partida.listar()` abre y lee la
@@ -5509,21 +5527,21 @@ func _pintar_ranuras() -> void:
 		fila.add_theme_constant_override("separation", 6)
 		_lista_ajustes.add_child(fila)
 		var et := _texto(12, COL_TEXTO if not hay.is_empty() else COL_SUAVE)
-		et.text = "Ranura %d" % (i + 1)
+		et.text = Idiomas.t("Ranura %d") % (i + 1)
 		et.custom_minimum_size = Vector2(70, 0)
 		fila.add_child(et)
 		var desc := _texto(11, COL_SUAVE)
-		desc.text = "%s · %d, semana %d" % [String(hay.get("club", "")), int(hay.get("anio", 0)), int(hay.get("semana", 0))] if not hay.is_empty() else "vacía"
+		desc.text = Idiomas.t("%s · %d, semana %d") % [String(hay.get("club", "")), int(hay.get("anio", 0)), int(hay.get("semana", 0))] if not hay.is_empty() else Idiomas.t("vacía")
 		desc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		desc.clip_text = true
 		fila.add_child(desc)
 		var bg := Button.new()
-		bg.text = "Guardar"
+		bg.text = Idiomas.t("Guardar")
 		bg.add_theme_font_size_override("font_size", 11)
 		bg.pressed.connect(func() -> void: _guardar_en(nombre))
 		fila.add_child(bg)
 		var bc := Button.new()
-		bc.text = "Cargar"
+		bc.text = Idiomas.t("Cargar")
 		bc.add_theme_font_size_override("font_size", 11)
 		bc.disabled = hay.is_empty()
 		bc.pressed.connect(func() -> void: _cargar_de(nombre))
@@ -6045,7 +6063,7 @@ func _pintar_identidad(c: Club) -> void:
 	## EL DISEÑADOR DE EQUIPACIÓN (26-9-2026): 70 diseños, 5 colores, pantalón,
 	## medias, 30 botines, accesorios y color de números, con vista 3D.
 	var bd := Button.new()
-	bd.text = "🎽  Abrir el diseñador de equipación"
+	bd.text = Idiomas.t("🎽  Abrir el diseñador de equipación")
 	bd.custom_minimum_size = Vector2(0, 44)
 	bd.add_theme_font_size_override("font_size", 16)
 	bd.pressed.connect(func() -> void:
@@ -6054,11 +6072,11 @@ func _pintar_identidad(c: Club) -> void:
 	_lista_gente.add_child(bd)
 	_lista_gente.add_child(HSeparator.new())
 	var t := _texto(11, COL_SUAVE)
-	t.text = "🎨 IDENTIDAD VISUAL"
+	t.text = Idiomas.t("🎨 IDENTIDAD VISUAL")
 	_lista_gente.add_child(t)
 	if not _modo_experto:
 		var ex := _texto(10, COL_SUAVE)
-		ex.text = "Cada cosa se pinta por separado: el uniforme no arrastra el color del menú ni el del escudo. Lo que no toques, lo hereda del club."
+		ex.text = Idiomas.t("Cada cosa se pinta por separado: el uniforme no arrastra el color del menú ni el del escudo. Lo que no toques, lo hereda del club.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_gente.add_child(ex)
 
@@ -6099,7 +6117,7 @@ func _pintar_identidad(c: Club) -> void:
 	_ui_identidad._fila_color_identidad(c, "1 · Color secundario del club", "color2")
 
 	var tk := _texto(11, COL_ACENTO)
-	tk.text = "2 · UNIFORME%s" % ("" if c.kit_color1 == "" and c.kit_color2 == "" else "  ·  propio")
+	tk.text = Idiomas.t("2 · UNIFORME%s") % ("" if c.kit_color1 == "" and c.kit_color2 == "" else Idiomas.t("  ·  propio"))
 	_lista_gente.add_child(tk)
 	_ui_identidad._fila_color_identidad(c, "Color 1 de la camiseta", "kit_color1")
 	_ui_identidad._fila_color_identidad(c, "Color 2 de la camiseta", "kit_color2")
@@ -6107,7 +6125,7 @@ func _pintar_identidad(c: Club) -> void:
 	_ui_identidad._boton_heredar(c, ["kit_color1", "kit_color2"], "Volver a los colores del club")
 
 	var te := _texto(11, COL_ACENTO)
-	te.text = "3 · ESCUDO%s" % ("" if c.esc_color1 == "" and c.esc_color2 == "" else "  ·  propio")
+	te.text = Idiomas.t("3 · ESCUDO%s") % ("" if c.esc_color1 == "" and c.esc_color2 == "" else Idiomas.t("  ·  propio"))
 	_lista_gente.add_child(te)
 	_ui_identidad._fila_color_identidad(c, "Fondo del escudo", "esc_color1")
 	_ui_identidad._fila_color_identidad(c, "Borde y patrón", "esc_color2")
@@ -6123,20 +6141,20 @@ func _pintar_identidad(c: Club) -> void:
 		lista_sim.slice(1) if lista_sim != null and lista_sim.size() > 1 else [], "Símbolo (reemplaza las iniciales)")
 	if not _modo_experto:
 		var ee := _texto(10, COL_SUAVE)
-		ee.text = "Veintiseis formas × treinta patrones × dos colores: miles de escudos distintos."
+		ee.text = Idiomas.t("Veintiseis formas × treinta patrones × dos colores: miles de escudos distintos.")
 		ee.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_gente.add_child(ee)
 	_ui_identidad._boton_heredar(c, ["esc_color1", "esc_color2"], "Volver a los colores del club")
 	_ui_identidad._rejilla_especiales(c)
 
 	var tu := _texto(11, COL_ACENTO)
-	tu.text = "4 · INTERFAZ%s" % ("" if c.ui_acento == "" else "  ·  propia")
+	tu.text = Idiomas.t("4 · INTERFAZ%s") % ("" if c.ui_acento == "" else Idiomas.t("  ·  propia"))
 	_lista_gente.add_child(tu)
 	_ui_identidad._fila_color_identidad(c, "Color de acento (botones y menú)", "ui_acento")
 	_ui_identidad._boton_heredar(c, ["ui_acento"], "Usar el color del club")
 
 	var b_todo := Button.new()
-	b_todo.text = "🎨 Igualar todo a los colores del club"
+	b_todo.text = Idiomas.t("🎨 Igualar todo a los colores del club")
 	b_todo.add_theme_font_size_override("font_size", 11)
 	b_todo.pressed.connect(func() -> void:
 		c.igualar_identidad()
@@ -6226,7 +6244,7 @@ func _pintar_finanzas(c: Club) -> void:
 	## palanca de gestión real, escrita y funcionando, que el jugador no podía
 	## mover. Va arriba del todo porque es una decisión, no un dato.
 	var tp := _texto(11, COL_SUAVE)
-	tp.text = "PRECIO DE LA ENTRADA"
+	tp.text = Idiomas.t("PRECIO DE LA ENTRADA")
 	_lista_finanzas.add_child(tp)
 	var fila_p := HBoxContainer.new()
 	fila_p.add_theme_constant_override("separation", 8)
@@ -6263,7 +6281,7 @@ func _pintar_finanzas(c: Club) -> void:
 	## Depende de los SOCIOS y del ÁNIMO de la hinchada: rinde cuando el equipo
 	## ilusiona, que es lo que la hace una decisión y no un grifo abierto.
 	var tt := _texto(11, COL_SUAVE)
-	tt.text = "TIENDA DEL CLUB  ·  rinde %s/mes" % _dinero(mundo.ingreso_tienda(c))
+	tt.text = Idiomas.t("TIENDA DEL CLUB  ·  rinde %s/mes") % _dinero(mundo.ingreso_tienda(c))
 	_lista_finanzas.add_child(tt)
 	for clave: String in Mundo.TIENDA:
 		var linea: Dictionary = Mundo.TIENDA[clave]
@@ -6272,11 +6290,11 @@ func _pintar_finanzas(c: Club) -> void:
 		fila_t.add_theme_constant_override("separation", 8)
 		_lista_finanzas.add_child(fila_t)
 		var nt := _texto(12, COL_TEXTO if activa else COL_SUAVE)
-		nt.text = "%s%s" % [String(linea["nombre"]), "   ·   a la venta" if activa else ""]
+		nt.text = "%s%s" % [String(linea["nombre"]), Idiomas.t("   ·   a la venta") if activa else ""]
 		nt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila_t.add_child(nt)
 		var bt := Button.new()
-		bt.text = "Retirar" if activa else "Lanzar  %s" % _dinero(Eco.escalar(int(linea["montaje"]), c.rep))
+		bt.text = Idiomas.t("Retirar") if activa else Idiomas.t("Lanzar  %s") % _dinero(Eco.escalar(int(linea["montaje"]), c.rep))
 		bt.add_theme_font_size_override("font_size", 11)
 		bt.pressed.connect(func() -> void:
 			var err := mundo.alternar_tienda(clave, c)
@@ -6293,7 +6311,7 @@ func _pintar_finanzas(c: Club) -> void:
 	var partidos_casa := int(_liga_de(c).jornadas() / 2)
 	var proy := f_sim.proyeccion_anual(partidos_casa, mundo.ingreso_tienda(c))
 	var tc2 := _texto(11, COL_SUAVE)
-	tc2.text = "EJERCICIO %d  ·  PROYECCIÓN ANUAL" % mundo.anio
+	tc2.text = Idiomas.t("EJERCICIO %d  ·  PROYECCIÓN ANUAL") % mundo.anio
 	_lista_finanzas.add_child(tc2)
 	var res: int = proy["resultado"]
 	_dato("Ingresos previstos", _dinero(int(proy["total_ingresos"])), COL_VERDE, _lista_finanzas)
@@ -6307,11 +6325,11 @@ func _pintar_finanzas(c: Club) -> void:
 		COL_ROJO if pct > 70 else (COL_ORO if pct > 55 else COL_VERDE), _lista_finanzas)
 	if pct > 70:
 		var av := _texto(11, COL_ROJO)
-		av.text = "Los sueldos se comen más del 70% de lo que entra. Así no se sostiene una temporada mala."
+		av.text = Idiomas.t("Los sueldos se comen más del 70% de lo que entra. Así no se sostiene una temporada mala.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_finanzas.add_child(av)
 	var te := _texto(11, COL_SUAVE)
-	te.text = "ESTADO DE RESULTADOS"
+	te.text = Idiomas.t("ESTADO DE RESULTADOS")
 	_lista_finanzas.add_child(te)
 	for k: String in proy["ingresos"]:
 		_dato(k, _dinero(int(proy["ingresos"][k])), COL_VERDE, _lista_finanzas)
@@ -6332,7 +6350,7 @@ func _pintar_finanzas(c: Club) -> void:
 	_lista_finanzas.add_child(HSeparator.new())
 
 	var t := _texto(11, COL_SUAVE)
-	t.text = "RESUMEN"
+	t.text = Idiomas.t("RESUMEN")
 	_lista_finanzas.add_child(t)
 	_dato("Caja", _dinero(c.saldo), COL_VERDE if c.saldo >= 0 else COL_ROJO, _lista_finanzas)
 	_dato("Sueldos del plantel", _dinero(c.masa_salarial()) + "/semana", COL_TEXTO, _lista_finanzas)
@@ -6345,7 +6363,7 @@ func _pintar_finanzas(c: Club) -> void:
 	## guardaste al vender no aparecía en ningún sitio hasta que se cobraba solo.
 	if mundo.cesiones != null and not mundo.cesiones.plusvalias.is_empty():
 		var tpv := _texto(11, COL_SUAVE)
-		tpv.text = "PLUSVALÍAS PENDIENTES"
+		tpv.text = Idiomas.t("PLUSVALÍAS PENDIENTES")
 		_lista_finanzas.add_child(tpv)
 		for pv: Dictionary in mundo.cesiones.plusvalias:
 			if String(pv.get("beneficiario", "")) != c.id:
@@ -6360,11 +6378,11 @@ func _pintar_finanzas(c: Club) -> void:
 
 	var libro := mundo.libro_financiero
 	var tm := _texto(11, COL_SUAVE)
-	tm.text = "LIBRO DE MOVIMIENTOS  ·  últimos %d" % libro.size()
+	tm.text = Idiomas.t("LIBRO DE MOVIMIENTOS  ·  últimos %d") % libro.size()
 	_lista_finanzas.add_child(tm)
 	if libro.is_empty():
 		var vacio := _texto(12, COL_SUAVE)
-		vacio.text = "Todavía no hay movimientos aparte de la taquilla y los sueldos. Ficha, cede, contrata staff o levanta un título: todo lo que mueve la caja por fuera de la semana normal queda anotado aquí."
+		vacio.text = Idiomas.t("Todavía no hay movimientos aparte de la taquilla y los sueldos. Ficha, cede, contrata staff o levanta un título: todo lo que mueve la caja por fuera de la semana normal queda anotado aquí.")
 		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_finanzas.add_child(vacio)
 		return
@@ -6395,6 +6413,115 @@ func _pintar_finanzas(c: Club) -> void:
 ## juego que la enseñara: la nota de esta sesión que decía "la ansiedad no
 ## está portada" (escrita al tocar Ojeadores y la mesa de negociación) estaba
 ## mal -no se había mirado con suficiente cuidado-, y queda corregida aquí.
+## POR QUÉ SUBE O BAJA LA MORAL (17-10-2026, lo pedía el informe y lo hace FM):
+## los motivos de las últimas semanas sumados por el plantel, lo que pesa en la
+## satisfacción de media y los tres más tocados con su motivo.
+func _pintar_porque_moral(c: Club) -> void:
+	var v := mundo.vestuario
+	var pl := c.plantilla
+	if pl.is_empty():
+		return
+	var t := _texto(11, COL_SUAVE)
+	t.text = Idiomas.t("📈 POR QUÉ SUBE O BAJA LA MORAL")
+	_lista_camarin.add_child(t)
+	## Las cuatro últimas semanas con algún cambio.
+	var semanas := {}
+	for j in pl:
+		for e: Dictionary in j.historial_moral:
+			semanas[int(e["s"])] = true
+	var orden: Array = semanas.keys()
+	orden.sort()
+	var desde: int = orden[maxi(orden.size() - 4, 0)] if not orden.is_empty() else 0
+	var por_motivo := {}
+	for j in pl:
+		for e: Dictionary in j.historial_moral:
+			if int(e["s"]) >= desde:
+				por_motivo[String(e["m"])] = float(por_motivo.get(String(e["m"]), 0.0)) + float(e["d"])
+	var motivos: Array = por_motivo.keys()
+	motivos.sort_custom(func(a: String, b: String) -> bool: return absf(float(por_motivo[a])) > absf(float(por_motivo[b])))
+	if motivos.is_empty():
+		var nada := _texto(12, COL_SUAVE)
+		nada.text = Idiomas.t("Todavía no hay cambios de moral que explicar (empieza a jugar semanas).")
+		_lista_camarin.add_child(nada)
+	else:
+		var sub := _texto(10, COL_SUAVE)
+		sub.text = Idiomas.t("Últimas semanas, media por jugador:")
+		_lista_camarin.add_child(sub)
+		for mo: String in motivos.slice(0, 6):
+			var media := float(por_motivo[mo]) / float(pl.size())
+			if absf(media) < 0.05:
+				continue
+			var fila := HBoxContainer.new()
+			fila.add_theme_constant_override("separation", 8)
+			_lista_camarin.add_child(fila)
+			var n := _texto(12, COL_TEXTO)
+			n.text = Idiomas.t(mo)
+			n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			fila.add_child(n)
+			var dv := _texto(12, COL_VERDE if media > 0 else COL_ROJO)
+			dv.text = "%+.1f" % media
+			fila.add_child(dv)
+	## Lo que pesa en la satisfacción, de media: hacia ahí va la moral cada semana.
+	if v != null and v.has_method("satisfaccion_de"):
+		var suma := {"min": 0.0, "rend": 0.0, "tact": 0.0, "inst": 0.0}
+		for j in pl:
+			var sat: Dictionary = v.satisfaccion_de(j)
+			for k: String in suma:
+				suma[k] = float(suma[k]) + float(sat[k])
+		var sub2 := _texto(10, COL_SUAVE)
+		sub2.text = Idiomas.t("Hacia dónde tira la satisfacción (la moral se acerca a ella cada semana):")
+		_lista_camarin.add_child(sub2)
+		var peor := "min"
+		for k: String in suma:
+			if float(suma[k]) < float(suma[peor]):
+				peor = k
+		var nombres := {"min": "Minutos de juego", "rend": "Rendimiento", "tact": "Comodidad en su puesto", "inst": "Instalaciones"}
+		for k: String in ["min", "rend", "tact", "inst"]:
+			var val := float(suma[k]) / float(pl.size())
+			var fila2 := HBoxContainer.new()
+			fila2.add_theme_constant_override("separation", 8)
+			_lista_camarin.add_child(fila2)
+			var et := _texto(12, COL_ROJO if k == peor else COL_TEXTO)
+			et.text = Idiomas.t(nombres[k])
+			et.custom_minimum_size = Vector2(190, 0)
+			fila2.add_child(et)
+			var barra := ProgressBar.new()
+			barra.max_value = 100
+			barra.value = val
+			barra.show_percentage = false
+			barra.custom_minimum_size = Vector2(160, 10)
+			barra.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			fila2.add_child(barra)
+			var num := _texto(12, COL_SUAVE)
+			num.text = str(roundi(val))
+			fila2.add_child(num)
+		var consejo := {"min": "Reparte minutos: los que no juegan son los que más tiran la moral abajo.",
+			"rend": "El equipo no rinde: la moral sube sola cuando llegan buenas notas.",
+			"tact": "Hay jugadores fuera de su puesto: revisa la alineación o reconviértelos.",
+			"inst": "Mejorar ciudad deportiva, médicos, gimnasio y cocina sube la moral de todos."}
+		var tip := _texto(12, COL_ORO)
+		tip.text = "💡 " + Idiomas.t(consejo[peor])
+		tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_lista_camarin.add_child(tip)
+	## Los tres más tocados y su motivo.
+	var bajos: Array = pl.duplicate()
+	bajos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.moral < b.moral)
+	var sub3 := _texto(10, COL_SUAVE)
+	sub3.text = Idiomas.t("Los más tocados:")
+	_lista_camarin.add_child(sub3)
+	for j: Jugador in bajos.slice(0, 3):
+		var mot := ""
+		for k in range(j.historial_moral.size() - 1, -1, -1):
+			if int(j.historial_moral[k]["d"]) < 0:
+				mot = Idiomas.t(String(j.historial_moral[k]["m"]))
+				break
+		if mot == "" and v != null and v.has_method("satisfaccion_de"):
+			mot = Idiomas.t(Vestuario.motivo_satisfaccion(v.satisfaccion_de(j), true))
+		var fj := _texto(12, COL_ROJO if j.moral < 40 else COL_TEXTO)
+		fj.text = "%s  ·  %s %d  ·  %s" % [j.nombre, Idiomas.t("moral"), j.moral, mot]
+		_lista_camarin.add_child(fj)
+	_lista_camarin.add_child(HSeparator.new())
+
 func _pintar_camarin(c: Club) -> void:
 	_limpiar(_lista_camarin)
 	var v := mundo.vestuario
@@ -6405,7 +6532,7 @@ func _pintar_camarin(c: Club) -> void:
 	## parecerían salidas de la nada.
 	if mundo.prensa != null and mundo.prensa.hay_camaras():
 		var cam := _texto(12, COL_ORO)
-		cam.text = "🎥 Hay cámaras en el vestuario %d semana(s) más. A los más sensibles del plantel les incomoda." % mundo.prensa.semanas_documental
+		cam.text = Idiomas.t("🎥 Hay cámaras en el vestuario %d semana(s) más. A los más sensibles del plantel les incomoda.") % mundo.prensa.semanas_documental
 		cam.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_lista_camarin.add_child(cam)
 	var pl := c.plantilla
@@ -6426,7 +6553,7 @@ func _pintar_camarin(c: Club) -> void:
 			break
 
 	var t := _texto(11, COL_SUAVE)
-	t.text = "CLIMA DEL VESTUARIO"
+	t.text = Idiomas.t("CLIMA DEL VESTUARIO")
 	_lista_camarin.add_child(t)
 	var gr := GridContainer.new()
 	gr.columns = 4
@@ -6443,13 +6570,14 @@ func _pintar_camarin(c: Club) -> void:
 		va.text = String(par[1])
 		col.add_child(va)
 	_lista_camarin.add_child(HSeparator.new())
+	_pintar_porque_moral(c)
 
 	var tc := _texto(11, COL_SUAVE)
-	tc.text = "CLANES Y CAMARILLAS"
+	tc.text = Idiomas.t("CLANES Y CAMARILLAS")
 	_lista_camarin.add_child(tc)
 	if v.camarillas.is_empty():
 		var vc := _texto(12, COL_SUAVE)
-		vc.text = "Todavía no hay grupos definidos en el vestuario."
+		vc.text = Idiomas.t("Todavía no hay grupos definidos en el vestuario.")
 		_lista_camarin.add_child(vc)
 	for cl: Dictionary in v.camarillas:
 		var humor := int(cl.get("humor", 0))
@@ -6471,14 +6599,14 @@ func _pintar_camarin(c: Club) -> void:
 		cab.add_theme_constant_override("separation", 8)
 		fila.add_child(cab)
 		var nom := _texto(12, COL_TEXTO)
-		nom.text = "%s  ·  %d jugador%s" % [String(cl.get("nombre", "")), en_mi_club, "" if en_mi_club == 1 else "es"]
+		nom.text = (Idiomas.t("%s  ·  %d jugador") if en_mi_club == 1 else Idiomas.t("%s  ·  %d jugadores")) % [String(cl.get("nombre", "")), en_mi_club]
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		cab.add_child(nom)
 		var et2 := _texto(11, estado_col)
 		et2.text = estado_txt
 		cab.add_child(et2)
 		var lid := _texto(11, COL_SUAVE)
-		lid.text = "Líder: %s  ·  %s" % [lider.nombre if lider else "—", ", ".join(nombres)]
+		lid.text = Idiomas.t("Líder: %s  ·  %s") % [lider.nombre if lider else "—", ", ".join(nombres)]
 		lid.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		fila.add_child(lid)
 		if humor < -10:
@@ -6492,11 +6620,11 @@ func _pintar_camarin(c: Club) -> void:
 			en_riesgo.append(j)
 	en_riesgo.sort_custom(func(a: Jugador, b: Jugador) -> bool: return v.ansiedad(a) > v.ansiedad(b))
 	var tm := _texto(11, COL_SUAVE)
-	tm.text = "🧠 SALUD MENTAL"
+	tm.text = Idiomas.t("🧠 SALUD MENTAL")
 	_lista_camarin.add_child(tm)
 	if en_riesgo.is_empty():
 		var vm := _texto(12, COL_SUAVE)
-		vm.text = "Nadie está pasándolo mal ahora mismo."
+		vm.text = Idiomas.t("Nadie está pasándolo mal ahora mismo.")
 		_lista_camarin.add_child(vm)
 	for j: Jugador in en_riesgo:
 		var est: Dictionary = v.estado_mental(j)
@@ -6504,7 +6632,7 @@ func _pintar_camarin(c: Club) -> void:
 		filaj.add_theme_constant_override("separation", 8)
 		_lista_camarin.add_child(filaj)
 		var nomj := _texto(12, COL_TEXTO)
-		nomj.text = "%s  ·  %s  ·  %d años" % [j.nombre, j.pos_e, j.edad]
+		nomj.text = Idiomas.t("%s  ·  %s  ·  %d años") % [j.nombre, j.pos_e, j.edad]
 		nomj.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		filaj.add_child(nomj)
 		var etj := _texto(11, Color(String(est.get("color", "#8ea595"))))
@@ -6515,7 +6643,7 @@ func _pintar_camarin(c: Club) -> void:
 	_lista_camarin.add_child(HSeparator.new())
 
 	var th := _texto(11, COL_SUAVE)
-	th.text = "JERARQUÍA INTERNA"
+	th.text = Idiomas.t("JERARQUÍA INTERNA")
 	_lista_camarin.add_child(th)
 	var jerarquia := pl.duplicate()
 	jerarquia.sort_custom(func(a: Jugador, b: Jugador) -> bool:
@@ -6534,7 +6662,7 @@ func _pintar_camarin(c: Club) -> void:
 func _pintar_equipacion(c: Club) -> void:
 	_lista_club.add_child(HSeparator.new())
 	var t := _texto(11, COL_SUAVE)
-	t.text = "EQUIPACIÓN"
+	t.text = Idiomas.t("EQUIPACIÓN")
 	_lista_club.add_child(t)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 14)
@@ -6579,11 +6707,11 @@ func _pintar_equipacion(c: Club) -> void:
 			logo.offset_top = 3.0; logo.offset_bottom = 18.0
 			caja.add_child(logo)
 		var et := _texto(10, COL_SUAVE)
-		et.text = "Titular" if cual == 0 else "Alternativa"
+		et.text = Idiomas.t("Titular") if cual == 0 else Idiomas.t("Alternativa")
 		et.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		col.add_child(et)
 	var nota := _texto(11, COL_SUAVE if hay_real else COL_BORDE)
-	nota.text = "Foto real del club." if hay_real else "Sin foto real para este club: dibujo por color y estampado (%s)." % Jersey.kit_de(c)
+	nota.text = Idiomas.t("Foto real del club.") if hay_real else Idiomas.t("Sin foto real para este club: dibujo por color y estampado (%s).") % Jersey.kit_de(c)
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_lista_club.add_child(nota)
 	## Aquí solo se MIRA. El editor de verdad -diseño, colores, tela- vive en
@@ -6591,7 +6719,7 @@ func _pintar_equipacion(c: Club) -> void:
 	## sin relación bajo "Comercial", movida el 10-9-2026 para que quien busque
 	## "cambiar la camiseta" la encuentre en un solo sitio.
 	var ir := Button.new()
-	ir.text = "🎨 Editar en Identidad"
+	ir.text = Idiomas.t("🎨 Editar en Identidad")
 	ir.add_theme_font_size_override("font_size", 11)
 	ir.pressed.connect(func() -> void:
 		_secc_gente = "identidad"
