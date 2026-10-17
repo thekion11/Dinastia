@@ -240,8 +240,8 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-175 | P2 | Sin faros ni luces de freno encendidos por hora | PENDIENTE | sin faros ni luces de freno en vehículos |
 | M-176 | P2 | Sin tipos de vehículo (moto, bus conducible, camión) | PENDIENTE | solo coche conducible |
 | M-177 | P2 | Sin gasolinera/aparcamiento/lavado | PENDIENTE | sin gasolinera/lavado |
-| M-178 | P2 | Sin minimapa | PENDIENTE | sin minimapa en la ciudad (el radar es del partido) |
-| M-179 | P2 | GPS/ruta al club | PENDIENTE | sin GPS |
+| M-178 | P2 | Sin minimapa | HECHO | 17-10: GPS dentro del móvil en la mano (`MapaMovil`), M lo saca andando |
+| M-179 | P2 | GPS/ruta al club | HECHO | 17-10: ruta dorada al estadio por las calles (`MapaMovil.ruta_al_estadio`) |
 | M-180 | P2 | Metro: sin vendedores/música/anuncios | PARCIAL | anuncios en el vagón (`MetroCiudad.ANUNCIOS`); sin vendedores ni música |
 | M-181 | P2 | Sin pasajeros que suben/bajan reales en tren | HECHO | gente que sube y baja por sub-pasos y puertas (`metro_ciudad.gd`, 16-10) |
 | M-182 | P2 | Sin tarjeta de transporte ni coste | PENDIENTE | máquinas de billetes decorativas; sin coste |
