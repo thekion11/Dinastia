@@ -8,7 +8,14 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 | Qué | Dónde está | Estado | Cómo se fusiona |
 |---|---|---|---|
 | Todo lo hecho desde el 14-10 (≈140 commits: VAR que anula, duelos, faltas, optimización −58 %, camiseta 3D, prórroga y penales, informe del rival, moral del Camarín, árbitros, GPS, etc.) | rama `claude/godot-project-review-o1dvr1` (en GitHub) | subido, banco en 0 fallos | **a `main` con un PR nuevo** cuando el dueño lo pida (el último fusionado fue el PR #6, 14-10) |
-| Tanda 2 del TOP 25 (M-104, M-160, M-141, M-051, M-238 y operadores del VAR) | rama del agente (`worktree-agent-a703e0231e5d8e3ed`), **ya unida por merge con `claude/godot-project-review-o1dvr1`**; parches de respaldo borrados | terminada: banco 0 fallos, `prueba_partido_motor` 0 fallos | traer esa rama a `claude/godot-project-review-o1dvr1` con merge (ya la contiene: sin conflictos) |
+| Tanda 2 del TOP 25 (M-104, M-160, M-141, M-051, M-238 y operadores del VAR) | **unida a `claude/godot-project-review-o1dvr1` el 17-10** (subida) | banco 0 fallos | ya no queda nada fuera de la rama: solo falta el PR a `main` |
+
+## 1.b Hecho en la última tanda (17-10, ya en la rama)
+GPS 2D estilo GTA (`ui/componentes/minimapa_ciudad.gd`: gira con el rumbo, ruta morada al estadio,
+marcas de estadio y casa, N; M lo esconde), cámara de persecución del coche (retraso en curvas, FOV con
+la velocidad) y primera persona con cabina 3D (`ExploradorCiudad._cabina_3d`); D-pad táctil solo en
+pantallas táctiles. Pendiente fino: velocímetro 3D de la cabina queda tapado por el volante (la velocidad
+se ve en el móvil); el minimapa no dibuja las calles del núcleo del club (solo la zona).
 
 ## 2. Qué falta HACER (por orden) y CÓMO
 
@@ -38,6 +45,8 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - **Penales**: entran ~9 de 10 y el tiro del usuario sin apuntar va al centro y marca si el portero se tira → calibrar con más partidos (`pruebas/prueba_prorroga_penales.tscn`).
 - **Añadido**: no suma el tiempo de lesiones (M-139 PARCIAL).
 - **Once automático de la IA**: a veces pone delanteros de lateral (se ve en rojo en el informe del rival) → revisar `Club.once()` (peso de `encaja`).
+- **Notas de los partidos mirados** (en vivo/3D) no se cierran en `Jugador.notas` (solo en `simular()`); arreglarlo cambia el azar (anotado en M-141).
+- **Cambio con cartel y palmada**: solo en el partido del DT, falta en la Carrera de Jugador.
 - **Prueba frágil** `_probar_motor_libre` («bono del club»): pasa o falla según qué secciones corren antes en su proceso; la de prórroga va con coste 0.01 para no moverla. Arreglo real: que esa sección cree jugadores frescos y mida con más partidos.
 - **Optimización**: los triángulos bajaron −66 % pero las llamadas de dibujo solo −11 % → juntar ojos/cejas/cuero en la cara a distancia.
 - **Red del arco y cartel del cuarto árbitro**: se notan poco desde la cámara de TV.
