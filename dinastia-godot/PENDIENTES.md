@@ -14,7 +14,7 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 GPS 2D estilo GTA (`ui/componentes/minimapa_ciudad.gd`: gira con el rumbo, ruta morada al estadio,
 marcas de estadio y casa, N; M lo esconde), cámara de persecución del coche (retraso en curvas, FOV con
 la velocidad) y primera persona con cabina 3D (`ExploradorCiudad._cabina_3d`); D-pad táctil solo en
-pantallas táctiles. Velocímetro de la cabina movido a la consola (17-10). El minimapa dibuja también las calles del núcleo y, dentro de él, la ruta va directa al estadio (17-10).
+pantallas táctiles. Velocímetro de la cabina movido a la consola y brazos del conductor que giran el volante (17-10). El minimapa dibuja también las calles del núcleo y, dentro de él, la ruta va directa al estadio (17-10).
 
 ## 2. Qué falta HACER (por orden) y CÓMO
 

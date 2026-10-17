@@ -783,6 +783,12 @@ var _t_cabina := 0.0
 var _cabina: Node3D
 var _cabina_volante: Node3D
 var _cabina_kmh: Label3D
+## Los brazos del conductor (17-10-2026): las manos van en el aro a las diez y
+## diez y giran con él; el antebrazo va del hombro a la mano.
+var _cabina_manos: Array[MeshInstance3D] = []
+var _cabina_brazos: Array[MeshInstance3D] = []
+const _MANO_EN_ARO := [Vector3(-0.156, 0.02, -0.09), Vector3(0.156, 0.02, -0.09)]
+const _HOMBRO := [Vector3(-0.3, -0.42, 0.1), Vector3(0.3, -0.42, 0.1)]
 
 func _fov_hacia(f: float, delta: float) -> void:
 	camara.fov = lerpf(camara.fov, f, clampf(delta * 3.0, 0.0, 1.0)) if delta < 1.0 else f
@@ -850,6 +856,35 @@ func _cabina_3d(ver: bool) -> void:
 		buje.mesh = cm
 		buje.material_override = gris
 		_cabina_volante.add_child(buje)
+		## Los brazos: manga oscura y mano color piel.
+		var manga := StandardMaterial3D.new()
+		manga.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		manga.albedo_color = Color(0.16, 0.2, 0.3)
+		var mano_m := StandardMaterial3D.new()
+		mano_m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mano_m.albedo_color = Color(0.8, 0.6, 0.47)
+		for i in 2:
+			var br := MeshInstance3D.new()
+			var cm2 := CylinderMesh.new()
+			cm2.top_radius = 0.034
+			cm2.bottom_radius = 0.042
+			cm2.height = 1.0
+			cm2.radial_segments = 10
+			br.mesh = cm2
+			br.material_override = manga
+			_cabina.add_child(br)
+			_cabina_brazos.append(br)
+			var mn := MeshInstance3D.new()
+			var sm2 := SphereMesh.new()
+			sm2.radius = 0.045
+			sm2.height = 0.08
+			sm2.radial_segments = 10
+			sm2.rings = 6
+			mn.mesh = sm2
+			mn.material_override = mano_m
+			mn.scale = Vector3(1.0, 0.8, 1.35)
+			_cabina.add_child(mn)
+			_cabina_manos.append(mn)
 		## El velocímetro, en el cuadro tras el volante.
 		_cabina_kmh = Label3D.new()
 		_cabina_kmh.font_size = 48
@@ -867,6 +902,28 @@ func _cabina_3d(ver: bool) -> void:
 	_cabina.visible = true
 	## El aro mira al conductor (eje inclinado hacia atrás) y gira sobre su eje.
 	_cabina_volante.basis = Basis(Vector3.RIGHT, deg_to_rad(70.0)) * Basis(Vector3.UP, _volante * 2.6)
+	## Manos en el aro (giran con él) y antebrazos del hombro a la mano; el
+	## cuerpo se inclina un poco hacia el lado al que giras.
+	var lean := Vector3(-_volante * 0.04, 0, 0)
+	for i in mini(2, _cabina_manos.size()):
+		## Las manos acompañan el aro hasta ~35° y ahí resbalan (no se cruzan
+		## ni bajan tras la consola en los giros fuertes).
+		var giro_mano := clampf(_volante * 2.6, -0.6, 0.6)
+		var base_mano := Basis(Vector3.RIGHT, deg_to_rad(70.0)) * Basis(Vector3.UP, giro_mano)
+		var mano: Vector3 = _cabina_volante.position + base_mano * (_MANO_EN_ARO[i] as Vector3)
+		_cabina_manos[i].position = mano
+		_cabina_manos[i].basis = base_mano.scaled(Vector3(1.0, 0.8, 1.35))
+		var hombro: Vector3 = (_HOMBRO[i] as Vector3) + lean
+		var eje := mano - hombro
+		var largo := eje.length()
+		if largo < 0.01:
+			continue
+		var y := eje / largo
+		var x := y.cross(Vector3.FORWARD)
+		if x.length() < 0.01:
+			x = y.cross(Vector3.RIGHT)
+		x = x.normalized()
+		_cabina_brazos[i].transform = Transform3D(Basis(x, y * largo, x.cross(y)), (hombro + mano) * 0.5)
 	_cabina_kmh.text = "%d km/h" % int(round(absf(vel) * 3.6))
 
 ## Una barra de `a` a `b` (pilares y techo).
