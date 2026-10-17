@@ -237,6 +237,12 @@ var _todos: Array[Jugador] = []
 ## raso- y se mueve con lo que va haciendo: un gol sube, una roja hunde. Al
 ## acabar se cierra con el resultado del equipo y pasa al historial.
 var _notas: Dictionary = {}
+## LO QUE SUMA A LA VALORACIÓN (17-10-2026, M-141), aparte de la nota que mueve
+## el resultado: asistencias, remates al arco o al palo, paradas del portero y
+## tarjetas. Se apunta escuchando las propias señales del partido (sirve igual
+## con el motor real y con la simulación) y NO usa `Azar`.
+var _aportes: Dictionary = {}
+var _titulares: Dictionary = {}
 
 ## `Previa.arbitro_de()`: {"nombre", "perfil", "descripcion"}. Se calcula UNA
 ## vez en `preparar()`, no en cada minuto -el hash es el mismo durante los
@@ -247,6 +253,67 @@ func _init(_local: Club, _visita: Club, _neutral: bool = false) -> void:
 	local = _local
 	visita = _visita
 	neutral = _neutral
+	gol.connect(_aporte_gol)
+	remate.connect(_aporte_remate)
+	tarjeta.connect(_aporte_tarjeta)
+
+func _aporte(j: Jugador, v: float) -> void:
+	if j != null:
+		_aportes[j.id] = float(_aportes.get(j.id, 0.0)) + v
+
+func _aporte_gol(_c: Club, _autor: Jugador, _m: int, asis: Jugador) -> void:
+	_aporte(asis, 0.6)
+
+func _aporte_remate(c: Club, autor: Jugador, tipo: String, _m: int) -> void:
+	if tipo == "atajada":
+		_aporte(autor, 0.2)
+		## La parada, para el portero del otro.
+		for j in (once_visita if c == local else once_local):
+			if j.es_portero():
+				_aporte(j, 0.2)
+				break
+	elif tipo == "poste":
+		_aporte(autor, 0.15)
+
+func _aporte_tarjeta(j: Jugador, roja: bool, _m: int) -> void:
+	_aporte(j, -1.4 if roja else -0.35)
+
+## LAS VALORACIONES DEL PARTIDO (M-141): la nota de cada uno de los que
+## jugaron, como en los diarios, de mejor a peor:
+##   [{jugador, nota, local, titular}]
+## La base es la nota del partido (6 + goles), más lo apuntado en `_aportes`,
+## el resultado del equipo (±0,4), la portería a cero o los goles encajados
+## (porteros y defensas) y un poco de la calidad del jugador. Los que entraron
+## de cambio se mueven menos (jugaron menos). Determinista, sin `Azar`: se
+## puede pedir las veces que haga falta y no cambia nada del partido.
+func valoraciones() -> Array:
+	var r: Array = []
+	var empate := goles_local == goles_visita
+	for j in _todos:
+		var es_local := local.plantilla.has(j)
+		var n := float(_notas.get(j.id, 6.0)) + float(_aportes.get(j.id, 0.0))
+		if not empate:
+			n += 0.4 if (goles_local > goles_visita) == es_local else -0.4
+		var encajados := goles_visita if es_local else goles_local
+		if j.pos == "POR" or j.pos == "DEF":
+			var k := 1.3 if j.pos == "POR" else 1.0
+			n += (0.6 * k) if encajados == 0 else -0.25 * k * float(mini(encajados, 4))
+		n += clampf(float(j.ovr - 65) * 0.02, -0.3, 0.3)
+		var titular := _titulares.has(j.id)
+		if not titular:
+			n = 6.0 + (n - 6.0) * 0.75
+		n = clampf(round(n * 10.0) / 10.0, 3.0, 10.0)
+		r.append({"jugador": j, "nota": n, "local": es_local, "titular": titular})
+	r.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if float(a["nota"]) != float(b["nota"]):
+			return float(a["nota"]) > float(b["nota"])
+		return int((a["jugador"] as Jugador).ovr) > int((b["jugador"] as Jugador).ovr))
+	return r
+
+## El mejor del partido (el primero de `valoraciones()`), o {} si no jugó nadie.
+func mejor_del_partido() -> Dictionary:
+	var v := valoraciones()
+	return v[0] if not v.is_empty() else {}
 
 func preparar() -> void:
 	if clima_info.is_empty():
@@ -296,8 +363,11 @@ func preparar() -> void:
 	cronica.clear()
 	_todos = once_local + once_visita
 	_notas.clear()
+	_aportes.clear()
+	_titulares.clear()
 	for j in _todos:
 		_notas[j.id] = 6.0
+		_titulares[j.id] = true
 	invalidar_fuerza()
 
 ## Vuelve a medir los dos onces. Hay que llamarla si cambia alguno.

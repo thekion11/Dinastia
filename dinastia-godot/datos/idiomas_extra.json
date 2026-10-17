@@ -2461,7 +2461,9 @@
   "ADELANTADO %d cm": "OFFSIDE BY %d cm",
   "HABILITADO %d cm": "ONSIDE BY %d cm",
   "SORTEO DE CAMPO": "COIN TOSS",
-  "%s elige campo": "%s chooses ends"
+  "%s elige campo": "%s chooses ends",
+  "⭐ MEJOR DEL PARTIDO": "⭐ PLAYER OF THE MATCH",
+  "VALORACIONES": "PLAYER RATINGS"
  },
  "pt": {
   "Historia": "História",
@@ -4925,7 +4927,9 @@
   "ADELANTADO %d cm": "ADIANTADO %d cm",
   "HABILITADO %d cm": "EM POSIÇÃO LEGAL POR %d cm",
   "SORTEO DE CAMPO": "SORTEIO DE CAMPO",
-  "%s elige campo": "%s escolhe o campo"
+  "%s elige campo": "%s escolhe o campo",
+  "⭐ MEJOR DEL PARTIDO": "⭐ MELHOR EM CAMPO",
+  "VALORACIONES": "NOTAS DOS JOGADORES"
  },
  "patrones": [
   [
@@ -7958,7 +7962,9 @@
   "ADELANTADO %d cm": "HORS-JEU DE %d cm",
   "HABILITADO %d cm": "EN JEU DE %d cm",
   "SORTEO DE CAMPO": "TIRAGE AU SORT",
-  "%s elige campo": "%s choisit son camp"
+  "%s elige campo": "%s choisit son camp",
+  "⭐ MEJOR DEL PARTIDO": "⭐ HOMME DU MATCH",
+  "VALORACIONES": "NOTES DES JOUEURS"
  },
  "it": {
   "Historia": "Storia",
@@ -10329,7 +10335,9 @@
   "ADELANTADO %d cm": "FUORIGIOCO DI %d cm",
   "HABILITADO %d cm": "IN GIOCO DI %d cm",
   "SORTEO DE CAMPO": "SORTEGGIO DEL CAMPO",
-  "%s elige campo": "%s sceglie il campo"
+  "%s elige campo": "%s sceglie il campo",
+  "⭐ MEJOR DEL PARTIDO": "⭐ MIGLIORE IN CAMPO",
+  "VALORACIONES": "PAGELLE"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12700,7 +12708,9 @@
   "ADELANTADO %d cm": "%d cm IM ABSEITS",
   "HABILITADO %d cm": "%d cm KEIN ABSEITS",
   "SORTEO DE CAMPO": "SEITENWAHL",
-  "%s elige campo": "%s wählt die Seite"
+  "%s elige campo": "%s wählt die Seite",
+  "⭐ MEJOR DEL PARTIDO": "⭐ SPIELER DES SPIELS",
+  "VALORACIONES": "SPIELERNOTEN"
  },
  "ca": {
   "Historia": "Història",
@@ -15071,7 +15081,9 @@
   "ADELANTADO %d cm": "AVANÇAT %d cm",
   "HABILITADO %d cm": "HABILITAT PER %d cm",
   "SORTEO DE CAMPO": "SORTEIG DE CAMP",
-  "%s elige campo": "%s tria camp"
+  "%s elige campo": "%s tria camp",
+  "⭐ MEJOR DEL PARTIDO": "⭐ MILLOR DEL PARTIT",
+  "VALORACIONES": "VALORACIONS"
  },
  "pl": {
   "Club": "Klub",
@@ -17737,7 +17749,9 @@
   "ADELANTADO %d cm": "SPALONY O %d cm",
   "HABILITADO %d cm": "BEZ SPALONEGO O %d cm",
   "SORTEO DE CAMPO": "LOSOWANIE STRON",
-  "%s elige campo": "%s wybiera stronę"
+  "%s elige campo": "%s wybiera stronę",
+  "⭐ MEJOR DEL PARTIDO": "⭐ ZAWODNIK MECZU",
+  "VALORACIONES": "OCENY ZAWODNIKÓW"
  },
  "tr": {
   "Club": "Kulüp",
@@ -20403,6 +20417,8 @@
   "ADELANTADO %d cm": "%d cm OFSAYT",
   "HABILITADO %d cm": "%d cm OFSAYT DEĞİL",
   "SORTEO DE CAMPO": "YAZI TURA",
-  "%s elige campo": "%s sahayı seçiyor"
+  "%s elige campo": "%s sahayı seçiyor",
+  "⭐ MEJOR DEL PARTIDO": "⭐ MAÇIN OYUNCUSU",
+  "VALORACIONES": "OYUNCU NOTLARI"
  }
 }
