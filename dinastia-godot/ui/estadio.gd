@@ -17,6 +17,11 @@ signal cerrado
 ## Lo pide el partido en vivo dirigido: al 45 se cierra para abrir el camarín.
 var parar_en_descanso := false
 var _descanso_hecho := false
+## Eliminación directa (copa, cruces continentales): con el motor real, si
+## acaba empatado hay prórroga y tanda de penales en el césped. Lo pone quien
+## abre la vista (`PartidoVivo`), antes de `abrir()`.
+var eliminatoria := false
+var _marcador_tanda: MarcadorTanda
 
 var _mini_pantalla: TextureRect
 var club: Club
@@ -1042,9 +1047,12 @@ func _refrescar_marcador() -> void:
 		## cuarto árbitro cuando empieza.
 		var seg := _motor.segundos_anadidos()
 		var reloj := "%d'" % _motor.minuto()
-		if seg >= 0.0:
-			reloj = "%d' +%d:%02d" % [45 if _motor.mitad == 1 else 90, int(seg) / 60, int(seg) % 60]
-			if not _anadido_avisado.has(_motor.mitad):
+		if _motor.estado == "tanda" or not _motor.tanda.is_empty():
+			reloj = "%s %d-%d" % [Idiomas.t("PEN."), _motor.goles_tanda(0), _motor.goles_tanda(1)]
+			seg = -1.0
+		elif seg >= 0.0:
+			reloj = "%d' +%d:%02d" % [_motor.minuto_base() + int(_motor.minutos_de_mitad()), int(seg) / 60, int(seg) % 60]
+			if not _anadido_avisado.has(_motor.mitad) and _motor.minutos_anadidos() > 0:
 				_anadido_avisado[_motor.mitad] = true
 				_mostrar_rotulo_suceso("⏱ %s: +%d" % [Idiomas.t("Tiempo añadido"), _motor.minutos_anadidos()])
 				Sonido.toca("descuento_anunciado")
@@ -1513,6 +1521,7 @@ func _montar_motor() -> void:
 	_motor.tarjetas_reales = true
 	_motor.autopiloto = true
 	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": true}
+	_motor.eliminatoria = eliminatoria
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
@@ -1557,6 +1566,29 @@ func _montar_motor() -> void:
 		if _rig != null:
 			_rig.impacto(0.45 if roja else 0.25, 0.4))
 	_motor.aviso.connect(_al_aviso_motor)
+	## PRÓRROGA Y PENALES (17-10-2026): el acta sigue hasta el 120' y guarda la
+	## tanda del césped (nadie la vuelve a sortear).
+	_motor.prorroga_empieza.connect(func() -> void:
+		partido.prorroga_externa()
+		_mostrar_banner_gol("⏱ %s  %d - %d" % [Idiomas.t("PRÓRROGA"), partido.goles_local, partido.goles_visita], false)
+		Sonido.toca("pitido_final"))
+	_motor.tanda_empieza.connect(_al_empezar_tanda)
+	_motor.cambio_estado.connect(func(e: String) -> void:
+		if e != "tanda_penal" or _motor.tanda_equipo_usuario() < 0:
+			return
+		_pintar_tanda()
+		if _motor.tanda_turno() == _motor.tanda_equipo_usuario():
+			_mostrar_rotulo_suceso(Idiomas.t("Tu penal: apunta con el stick y mantén TIRO para la fuerza"))
+		else:
+			_mostrar_rotulo_suceso(Idiomas.t("Tu portero: elige el lado con el stick antes del disparo")))
+	_motor.tanda_tiro.connect(func(_eq: int, _id: String, marcado: bool) -> void:
+		_pintar_tanda()
+		Sonido.toca("gol" if marcado else "ocasion", Sonido.Bus.AMBIENTE)
+		if _rig != null and marcado:
+			_rig.impacto(0.35, 0.4))
+	_motor.tanda_terminada.connect(func(gl: int, gv: int) -> void:
+		partido.penales_externos(gl, gv)
+		_pintar_tanda())
 	_motor.tactica_rapida.connect(func(eq: int, clave: String, valor: int) -> void:
 		var c: Club = partido.local if eq == 0 else partido.visita
 		if c != null and c.tactica != null:
@@ -1581,9 +1613,30 @@ func _montar_motor() -> void:
 	if _mini_pantalla != null and not _pref("pantalla_esquina_motor", false):
 		_mini_pantalla.visible = false
 
+## LA TANDA EN PANTALLA: el marcador de círculos arriba al centro y la
+## cámara detrás del lanzador.
+func _al_empezar_tanda() -> void:
+	if _marcador_tanda == null:
+		_marcador_tanda = MarcadorTanda.crear(self)
+	_pintar_tanda()
+	_mostrar_banner_gol("🥅 " + Idiomas.t("TANDA DE PENALES"), false)
+	if _rig != null:
+		_rig.plano_tanda = true
+
+func _pintar_tanda() -> void:
+	if _marcador_tanda == null or _motor == null or _motor.tanda.is_empty():
+		return
+	var turno := -1 if String(_motor.tanda.get("fase", "")) == "fin" else _motor.tanda_turno()
+	_marcador_tanda.pintar(_corto(partido.local.nombre), _corto(partido.visita.nombre), _motor.tanda["tiros"], turno)
+
 ## Los avisos del motor que merecen rótulo (los goles ya tienen el suyo).
 func _al_aviso_motor(texto: String) -> void:
-	for clave in ["Córner", "Penal", "PENAL", "Fuera de juego", "Roja", "PALO", "LARGUERO", "parada", "Atajada"]:
+	## En la tanda: «Penal 3: Nombre» lleva el nombre (no se traduce entero).
+	if texto.begins_with("🥅 Penal ") and texto.contains(":"):
+		var partes := texto.split(":", true, 1)
+		_mostrar_rotulo_suceso("🥅 %s %s:%s" % [Idiomas.t("Penal"), partes[0].trim_prefix("🥅 Penal "), partes[1]])
+		return
+	for clave in ["Córner", "Penal", "PENAL", "Fuera de juego", "Roja", "PALO", "LARGUERO", "parada", "Atajada", "Dentro", "Fallado", "¡Fuera!", "Cambio de campo"]:
 		if texto.contains(clave):
 			_mostrar_rotulo_suceso(Idiomas.t(texto))
 			return
@@ -1638,8 +1691,14 @@ func _paso_motor(delta: float) -> void:
 	if _motor.estado == "fin" and not _final_motor:
 		_final_motor = true
 		var mio_gana := (partido.goles_local > partido.goles_visita and _mi_lado == 0) or (partido.goles_visita > partido.goles_local and _mi_lado == 1)
-		_mostrar_banner_gol("🏁 %s  %s %d - %d %s" % [Idiomas.t("FINAL"), Nombres.visible(partido.local.nombre),
-			partido.goles_local, partido.goles_visita, Nombres.visible(partido.visita.nombre)], mio_gana)
+		var pen := ""
+		if not _motor.tanda.is_empty():
+			var gl := _motor.goles_tanda(0)
+			var gv := _motor.goles_tanda(1)
+			pen = "  (%s %d-%d)" % [Idiomas.t("pen."), gl, gv]
+			mio_gana = (gl > gv and _mi_lado == 0) or (gv > gl and _mi_lado == 1)
+		_mostrar_banner_gol("🏁 %s  %s %d - %d %s%s" % [Idiomas.t("FINAL"), Nombres.visible(partido.local.nombre),
+			partido.goles_local, partido.goles_visita, Nombres.visible(partido.visita.nombre), pen], mio_gana)
 		get_tree().create_timer(5.0).timeout.connect(func() -> void:
 			if is_instance_valid(self):
 				cerrado.emit())
@@ -1660,12 +1719,21 @@ func _sincronizar_partido() -> bool:
 	## En el añadido el acta se queda en el 44'/89' hasta que de verdad se
 	## pita: así un gol en el descuento sigue contando y el descanso no se
 	## adelanta.
-	var objetivo := 90 if _motor.estado == "fin" else _motor.minuto()
+	## En la prórroga igual: 104' y 119' hasta que se pita; durante la tanda
+	## el acta espera en el 119' (el pitido final llega con los penales ya
+	## guardados, para que `penales()` dé los del césped).
+	var objetivo := partido.minutos_fin if _motor.estado == "fin" else _motor.minuto()
 	if _motor.estado != "fin":
-		if _motor.mitad == 1 and _motor.estado != "descanso":
+		if _motor.estado == "tanda":
+			objetivo = mini(objetivo, partido.minutos_fin - 1)
+		elif _motor.mitad == 1 and _motor.estado != "descanso":
 			objetivo = mini(objetivo, 44)
 		elif _motor.mitad == 2:
 			objetivo = mini(objetivo, 89)
+		elif _motor.mitad == 3:
+			objetivo = mini(objetivo, 104)
+		elif _motor.mitad == 4:
+			objetivo = mini(objetivo, 119)
 		if _motor.estado == "descanso" or (_motor.mitad == 2 and partido.minuto < 45):
 			objetivo = maxi(objetivo, 45)
 	while partido.minuto < objetivo and not partido.terminado_ya:
@@ -1692,7 +1760,8 @@ func _dt_rival(minuto: int) -> void:
 			_ajuste_rival[i] = {"mentalidad": 3, "presion": 2, "linea": 2}
 		elif minuto == 80 and mios == suyos + 1:
 			_ajuste_rival[i] = {"mentalidad": 0, "linea": 0}
-		if minuto in [60, 70, 80]:
+		## En la prórroga, otro al 95' y al 106' (hay un cambio más).
+		if minuto in [60, 70, 80, 95, 106]:
 			_cambio_ia(c, i == 0)
 
 func _cambio_ia(c: Club, es_local: bool) -> void:

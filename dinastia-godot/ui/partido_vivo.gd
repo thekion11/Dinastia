@@ -1114,6 +1114,8 @@ func _ver_estadio() -> void:
 	## pase ahi es lo que va a la tabla. El reloj de esta pantalla queda parado
 	## mientras tanto — manda el de la vista 3D, para que no haya dos relojes.
 	vista.parar_en_descanso = not _entretiempo_hecho
+	## Eliminatoria: con el motor real, prórroga y penales se juegan en el 3D.
+	vista.eliminatoria = es_eliminatoria
 	vista.abrir(partido.local, clampf(gente, 0.05, 1.0), partido.visita, partido, perfil_estadio, colores_balon)
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
