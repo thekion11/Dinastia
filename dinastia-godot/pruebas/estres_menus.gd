@@ -43,6 +43,11 @@ func _process(_d: float) -> void:
 	if _n < 12:
 		return
 	if _n < 12 + _total:
+		## Cada 40 fotogramas: medida intermedia (si crece sin parar, es una fuga).
+		if (_n - 12) % 40 == 39:
+			_cerrar_todo()
+			print("ESTRÉS: tramo %d, nodos %d" % [(_n - 12) / 40, _contar(_p)])
+			return
 		for _k in randi_range(2, 6):
 			_accion()
 		return
