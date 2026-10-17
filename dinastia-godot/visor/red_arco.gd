@@ -9,7 +9,7 @@ const DURA := 2.4
 var panos: Array[MeshInstance3D] = []
 var _edad := 99.0
 
-static func golpe(raiz: Node, pos_balon: Vector3, fuerza := 0.7) -> bool:
+static func golpe(raiz: Node, pos_balon: Vector3, fuerza := 1.0) -> bool:
 	if raiz == null:
 		return false
 	var mejor: RedArco = null
@@ -40,7 +40,7 @@ func _lanzar(pos_balon: Vector3, fuerza: float) -> void:
 		## Hacia fuera del arco = del lado contrario al balón respecto del paño.
 		var signo := -1.0 if l.z > 0.0 else 1.0
 		## El paño de fondo recibe el golpe entero; el techo, un tercio.
-		var k := 1.0 if String(m.name) == "RedFondo" else 0.35
+		var k := 1.0 if String(m.name) == "RedFondo" else 0.15
 		sm.set_shader_parameter("impacto", Vector2(l.x, l.y))
 		sm.set_shader_parameter("fuerza", fuerza * k * signo)
 		sm.set_shader_parameter("edad", 0.0)

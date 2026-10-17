@@ -48,7 +48,7 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - **Cambio con cartel y palmada**: solo en el partido del DT, falta en la Carrera de Jugador.
 - **Prueba frágil** `_probar_motor_libre` («bono del club»): pasa o falla según qué secciones corren antes en su proceso; la de prórroga va con coste 0.01 para no moverla. Arreglo real: que esa sección cree jugadores frescos y mida con más partidos.
 - **Optimización**: los triángulos bajaron −66 % pero las llamadas de dibujo solo −11 % → juntar ojos/cejas/cuero en la cara a distancia.
-- **Red del arco y cartel del cuarto árbitro**: se notan poco desde la cámara de TV.
+- **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: sigue notándose poco desde la TV.
 
 ### 2.4 Pedidos del dueño en espera
 - **Vídeo gameplay** (punto 15 de la MEGA AUDITORÍA 2): pausado por el dueño el 17-10.
