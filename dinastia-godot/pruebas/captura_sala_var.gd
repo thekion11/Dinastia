@@ -49,7 +49,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 5:
-		var sv := SalaVAR.abrir(self, _mundo.get_world_3d(), Vector3(0, 0, 31), 67, "Posible fuera de juego en el gol")
+		var sv := SalaVAR.abrir(self, _mundo.get_world_3d(), Vector3(0, 0, 31), 67, "Revisión del gol: posible fuera de juego", OS.get_environment("ANULA") == "1")
 		set_meta("sv", sv)
 	if _n > 5 and has_meta("sv"):
 		var sv2: Variant = get_meta("sv")
@@ -60,5 +60,5 @@ func _process(_d: float) -> void:
 				get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/sala_var.png")
 			if t > 5.6 and not has_meta("dos"):
 				set_meta("dos", true)
-				get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/sala_var_decision.png")
+				get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/sala_var_%s.png" % ("anulado" if OS.get_environment("ANULA") == "1" else "decision"))
 				get_tree().quit()

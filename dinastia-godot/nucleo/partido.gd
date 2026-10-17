@@ -43,6 +43,11 @@ signal remate(club: Club, autor: Jugador, tipo: String, minuto: int)
 signal decision_arbitral(texto: String, minuto: int)
 
 const MINUTOS := 90
+## LA PRÓRROGA (17-10-2026). Solo la juega el motor real del 3D en una
+## eliminatoria empatada: `prorroga_externa()` lleva el final al 120' y da un
+## cambio más (como el reglamento). Sin motor el empate va directo a penales.
+var minutos_fin := MINUTOS
+var cambios_extra := 0
 const BASE_ATAQUE := 0.048
 const EXPONENTE := 1.6
 const REPARTO := 1.9
@@ -183,7 +188,7 @@ func arengar(j: Jugador) -> String:
 	if int(impulsos.get(j.id, -1)) > minuto:
 		return "%s ya está encendido" % j.nombre
 	impulsos[j.id] = minuto + ARENGA_MINUTOS
-	j.moral = clampi(j.moral + 3, 10, 99)
+	j.cambiar_moral(3, "Partido")
 	## Invalidar la fuerza o el subidón no llegaría al marcador hasta el
 	## siguiente cambio: sería un botón decorativo.
 	invalidar_fuerza()
@@ -232,6 +237,12 @@ var _todos: Array[Jugador] = []
 ## raso- y se mueve con lo que va haciendo: un gol sube, una roja hunde. Al
 ## acabar se cierra con el resultado del equipo y pasa al historial.
 var _notas: Dictionary = {}
+## LO QUE SUMA A LA VALORACIÓN (17-10-2026, M-141), aparte de la nota que mueve
+## el resultado: asistencias, remates al arco o al palo, paradas del portero y
+## tarjetas. Se apunta escuchando las propias señales del partido (sirve igual
+## con el motor real y con la simulación) y NO usa `Azar`.
+var _aportes: Dictionary = {}
+var _titulares: Dictionary = {}
 
 ## `Previa.arbitro_de()`: {"nombre", "perfil", "descripcion"}. Se calcula UNA
 ## vez en `preparar()`, no en cada minuto -el hash es el mismo durante los
@@ -242,6 +253,67 @@ func _init(_local: Club, _visita: Club, _neutral: bool = false) -> void:
 	local = _local
 	visita = _visita
 	neutral = _neutral
+	gol.connect(_aporte_gol)
+	remate.connect(_aporte_remate)
+	tarjeta.connect(_aporte_tarjeta)
+
+func _aporte(j: Jugador, v: float) -> void:
+	if j != null:
+		_aportes[j.id] = float(_aportes.get(j.id, 0.0)) + v
+
+func _aporte_gol(_c: Club, _autor: Jugador, _m: int, asis: Jugador) -> void:
+	_aporte(asis, 0.6)
+
+func _aporte_remate(c: Club, autor: Jugador, tipo: String, _m: int) -> void:
+	if tipo == "atajada":
+		_aporte(autor, 0.2)
+		## La parada, para el portero del otro.
+		for j in (once_visita if c == local else once_local):
+			if j.es_portero():
+				_aporte(j, 0.2)
+				break
+	elif tipo == "poste":
+		_aporte(autor, 0.15)
+
+func _aporte_tarjeta(j: Jugador, roja: bool, _m: int) -> void:
+	_aporte(j, -1.4 if roja else -0.35)
+
+## LAS VALORACIONES DEL PARTIDO (M-141): la nota de cada uno de los que
+## jugaron, como en los diarios, de mejor a peor:
+##   [{jugador, nota, local, titular}]
+## La base es la nota del partido (6 + goles), más lo apuntado en `_aportes`,
+## el resultado del equipo (+0,4 / −0,3), la portería a cero o los goles encajados
+## (porteros y defensas) y un poco de la calidad del jugador. Los que entraron
+## de cambio se mueven menos (jugaron menos). Determinista, sin `Azar`: se
+## puede pedir las veces que haga falta y no cambia nada del partido.
+func valoraciones() -> Array:
+	var r: Array = []
+	var empate := goles_local == goles_visita
+	for j in _todos:
+		var es_local := local.plantilla.has(j)
+		var n := float(_notas.get(j.id, 6.0)) + float(_aportes.get(j.id, 0.0))
+		if not empate:
+			n += 0.4 if (goles_local > goles_visita) == es_local else -0.3
+		var encajados := goles_visita if es_local else goles_local
+		if j.pos == "POR" or j.pos == "DEF":
+			var k := 1.3 if j.pos == "POR" else 1.0
+			n += (0.6 * k) if encajados == 0 else -0.25 * k * float(mini(encajados, 4))
+		n += clampf(float(j.ovr - 65) * 0.02, -0.3, 0.3)
+		var titular := _titulares.has(j.id)
+		if not titular:
+			n = 6.0 + (n - 6.0) * 0.75
+		n = clampf(round(n * 10.0) / 10.0, 3.0, 10.0)
+		r.append({"jugador": j, "nota": n, "local": es_local, "titular": titular})
+	r.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if float(a["nota"]) != float(b["nota"]):
+			return float(a["nota"]) > float(b["nota"])
+		return int((a["jugador"] as Jugador).ovr) > int((b["jugador"] as Jugador).ovr))
+	return r
+
+## El mejor del partido (el primero de `valoraciones()`), o {} si no jugó nadie.
+func mejor_del_partido() -> Dictionary:
+	var v := valoraciones()
+	return v[0] if not v.is_empty() else {}
 
 func preparar() -> void:
 	if clima_info.is_empty():
@@ -285,12 +357,17 @@ func preparar() -> void:
 	cambios_local = 0
 	cambios_visita = 0
 	minuto = 0
+	minutos_fin = MINUTOS
+	cambios_extra = 0
 	terminado_ya = false
 	cronica.clear()
 	_todos = once_local + once_visita
 	_notas.clear()
+	_aportes.clear()
+	_titulares.clear()
 	for j in _todos:
 		_notas[j.id] = 6.0
+		_titulares[j.id] = true
 	invalidar_fuerza()
 
 ## Vuelve a medir los dos onces. Hay que llamarla si cambia alguno.
@@ -467,7 +544,7 @@ func simular_minuto() -> void:
 
 	_incidencias()
 	minuto_jugado.emit(minuto)
-	if minuto >= MINUTOS:
+	if minuto >= minutos_fin:
 		terminado_ya = true
 		terminado.emit(goles_local, goles_visita)
 
@@ -512,6 +589,31 @@ func gol_externo(es_local: bool, autor_id: String, asist_id: String) -> void:
 	cronica.append({"min": minuto, "tipo": "gol", "club": c.id, "autor": autor.nombre if autor else "en propia puerta"})
 	_momentum_push(2, es_local)
 	gol.emit(c, autor, minuto, asistente)
+
+## EL VAR ANULA (17-10-2026): deshace el último gol de ese equipo (marcador,
+## goles del autor, nota y crónica, que lo deja como "gol_anulado").
+func anular_gol_externo(es_local: bool, autor_id: String) -> void:
+	if terminado_ya:
+		return
+	var c := local if es_local else visita
+	if es_local:
+		if goles_local <= 0:
+			return
+		goles_local -= 1
+	else:
+		if goles_visita <= 0:
+			return
+		goles_visita -= 1
+	var autor := _por_id(autor_id) if autor_id != "" else null
+	if autor != null:
+		autor.goles = maxi(autor.goles - 1, 0)
+		_notas[autor.id] = maxf(float(_notas.get(autor.id, 6.0)) - 1.1, 1.0)
+	for i in range(cronica.size() - 1, -1, -1):
+		var e: Dictionary = cronica[i]
+		if String(e.get("tipo", "")) == "gol" and String(e.get("club", "")) == c.id:
+			e["tipo"] = "gol_anulado"
+			break
+	_momentum_push(1, not es_local)
 
 ## Un remate que no fue gol: "atajada", "poste" o "fallo".
 func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
@@ -812,7 +914,7 @@ func cambiar(sale: Jugador, entra: Jugador) -> String:
 	if not es_local and not once_visita.has(sale):
 		return "%s no está en el campo" % sale.nombre
 	var hechos := cambios_local if es_local else cambios_visita
-	if hechos >= MAX_CAMBIOS:
+	if hechos >= MAX_CAMBIOS + cambios_extra:
 		return "ya no quedan cambios"
 	if not entra.disponible():
 		return "%s no está en condiciones de entrar" % entra.nombre
@@ -843,6 +945,23 @@ func cambiar(sale: Jugador, entra: Jugador) -> String:
 ## ganador que la tabla de la copa contradecía al ratito: el mismo bug que ya
 ## costó una depuración con `Liga.jugar_jornada(ya_jugado)`.
 var _penales: Array = []
+## true si la tanda se jugó en el césped (motor real): nadie la vuelve a sortear.
+var penales_en_cesped := false
+
+## La tanda que se jugó en el 3D. Va ANTES del pitido final del acta: quien
+## escuche `terminado` y pida `penales()` recibe la del césped.
+func penales_externos(l: int, v: int) -> void:
+	_penales = [l, v]
+	penales_en_cesped = true
+	cronica.append({"min": minuto, "tipo": "penales", "local": l, "visita": v})
+
+## El motor real decidió ir a la prórroga: el acta sigue hasta el 120'.
+func prorroga_externa() -> void:
+	if terminado_ya or minutos_fin > MINUTOS:
+		return
+	minutos_fin = MINUTOS + 30
+	cambios_extra = 1
+	cronica.append({"min": minuto, "tipo": "prorroga"})
 
 func penales() -> Array:
 	if not _penales.is_empty():
@@ -1016,5 +1135,5 @@ func chequear_invasion(animo: int, soy_local: bool, voy_perdiendo: bool) -> bool
 	## parados con la policía en el campo no distingue de camisetas.
 	for j in _todos:
 		j.fisico = clampi(j.fisico - Azar.ent(3, 8), 10, 100)
-		j.moral = clampi(j.moral - Azar.ent(2, 6), 10, 99)
+		j.cambiar_moral(-(Azar.ent(2, 6)), "Partido")
 	return true

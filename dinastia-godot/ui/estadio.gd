@@ -17,6 +17,11 @@ signal cerrado
 ## Lo pide el partido en vivo dirigido: al 45 se cierra para abrir el camarín.
 var parar_en_descanso := false
 var _descanso_hecho := false
+## Eliminación directa (copa, cruces continentales): con el motor real, si
+## acaba empatado hay prórroga y tanda de penales en el césped. Lo pone quien
+## abre la vista (`PartidoVivo`), antes de `abrir()`.
+var eliminatoria := false
+var _marcador_tanda: MarcadorTanda
 
 var _mini_pantalla: TextureRect
 var club: Club
@@ -26,6 +31,8 @@ var _rig: CameraRig
 var _pie: Label
 var _pie_base := ""
 var _spawner: PlayerSpawner
+## La camiseta del trío arbitral de este partido (también la del cuarto árbitro).
+var _kit_arbitro: Dictionary = {}
 var _en_campo: Array = []
 ## Los suplentes de pie junto al banquillo (22-9-2026, "efecto banquillo").
 ## Aparte de `_en_campo`: `MatchPlayback.tick()` solo mueve lo que hay en esa
@@ -95,10 +102,13 @@ var _cursor: Node3D
 var _indicador: IndicadorFC
 var _tiros_de := {}
 var _goles_de := {}
-var _carta_mostrada := false
 var _ayuda_control: Label
 var _panel_dt: PanelDTPartido
 var _panel_controles: PanelControles
+## Estadísticas a pedido y rótulos de la tele (16-10-2026).
+var _stats: EstadisticasVivo
+var _panel_stats: PanelEstadisticas
+var _rotulos_hechos := {}
 ## Lo que el DT rival cambia en vivo (sin tocar la táctica guardada de su club).
 var _ajuste_rival := [{}, {}]
 var _final_motor := false
@@ -297,7 +307,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## derecha al pulsarlo (`CajonAjustes`).
 	_cajon = CajonAjustes.crear(self, "partido3d")
 	var volver := Button.new()
-	volver.text = "Volver"
+	volver.text = Idiomas.t("Volver")
 	volver.focus_mode = Control.FOCUS_NONE
 	add_child(volver)
 	volver.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
@@ -320,6 +330,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_cajon.seccion("Partido")
 		_btn_modo = _cajon.boton("🎮 Controlar a mi equipo: NO", _alternar_modo_control)
 		_cajon.boton("📋 Táctica y cambios (Esc)", _abrir_panel_dt)
+		_cajon.boton("📊 Estadísticas del partido", abrir_estadisticas)
 		_cajon.boton("🎮 Controles: teclas, mando y ayudas", abrir_controles)
 		_cajon.interruptor("⚽ Motor real: el resultado se juega en el césped", _pref("motor_real", true), func(si: bool) -> void:
 			_guardar_pref("motor_real", si))
@@ -532,9 +543,9 @@ func _rotar_camara() -> void:
 	if _rig != null:
 		_rig.cycle()
 		if _btn_camara != null:
-			_btn_camara.text = "📷 Cámara: " + _rig.current_name()
+			_btn_camara.text = Idiomas.t("📷 Cámara: ") + _rig.current_name()
 		if _pie != null:
-			_pie.text = _pie_base + "  ·  cámara: " + _rig.current_name()
+			_pie.text = _pie_base + Idiomas.t("  ·  cámara: ") + _rig.current_name()
 
 func _actualizar_pie(perfil: Dictionary, aforo: int, ocupacion: float) -> void:
 	## El aforo es el OFICIAL del club (el mismo que en la presentación y en
@@ -570,13 +581,17 @@ func _sacar_los_22() -> void:
 	var v := Puente3D.once(once_visita)
 	## El local ataca hacia un lado y el visitante hacia el otro: `spawn_team` lo
 	## resuelve con `es_local`, que además le da la vuelta al jugador.
+	var kit_l := Puente3D.kit(club)
+	var kit_v := Puente3D.kit_visita(club, visitante)
+	var por_l := Puente3D.kit_portero(club)
+	var por_v := Puente3D.kit_portero(visitante)
 	_en_campo.append_array(_spawner.spawn_team(_raiz3d, l["xi"], l["jugadores"],
-		Puente3D.formacion(club.tactica.formacion), true,
-		Puente3D.kit(club), Puente3D.kit_portero(club)))
+		Puente3D.formacion(club.tactica.formacion), true, kit_l, por_l))
 	_en_campo.append_array(_spawner.spawn_team(_raiz3d, v["xi"], v["jugadores"],
-		Puente3D.formacion(visitante.tactica.formacion), false,
-		Puente3D.kit_visita(club, visitante), Puente3D.kit_portero(visitante)))
-	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d))
+		Puente3D.formacion(visitante.tactica.formacion), false, kit_v, por_v))
+	## El trío de la camiseta que mejor se distingue de los dos (M-072).
+	_kit_arbitro = Puente3D.kit_arbitro(kit_l, kit_v, hash(club.id + "|" + visitante.id), [por_l, por_v])
+	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d, _kit_arbitro))
 	_poner_banca(once_local, once_visita)
 	_poner_personal()
 	_purgar_nodos_fantasma()
@@ -1038,12 +1053,18 @@ func _refrescar_marcador() -> void:
 		## cuarto árbitro cuando empieza.
 		var seg := _motor.segundos_anadidos()
 		var reloj := "%d'" % _motor.minuto()
-		if seg >= 0.0:
-			reloj = "%d' +%d:%02d" % [45 if _motor.mitad == 1 else 90, int(seg) / 60, int(seg) % 60]
-			if not _anadido_avisado.has(_motor.mitad):
+		if _motor.estado == "tanda" or not _motor.tanda.is_empty():
+			## El detalle va en el marcador de la tanda (el de arriba no da para más).
+			reloj = Idiomas.t("PEN.")
+			seg = -1.0
+		elif seg >= 0.0:
+			reloj = "%d' +%d:%02d" % [_motor.minuto_base() + int(_motor.minutos_de_mitad()), int(seg) / 60, int(seg) % 60]
+			if not _anadido_avisado.has(_motor.mitad) and _motor.minutos_anadidos() > 0:
 				_anadido_avisado[_motor.mitad] = true
 				_mostrar_rotulo_suceso("⏱ %s: +%d" % [Idiomas.t("Tiempo añadido"), _motor.minutos_anadidos()])
 				Sonido.toca("descuento_anunciado")
+				## Y el cuarto árbitro levanta el cartel en la banda (M-139).
+				CuartoArbitro.levantar(_raiz3d, _spawner, _motor.minutos_anadidos(), _kit_arbitro)
 		_marcador.text = "%s  %d - %d  %s      %s" % [_corto(partido.local.nombre), partido.goles_local,
 			partido.goles_visita, _corto(partido.visita.nombre), reloj]
 		return
@@ -1330,13 +1351,19 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 		var viejo: Node3D = f["node"]
 		var pos: Vector3 = viejo.position
 		var es_local: bool = f["es_local"]
-		viejo.queue_free()
+		## Con el motor real el que sale NO desaparece: camina a la banda y
+		## choca la mano con el que entra (`EscenaCambio`, M-104).
+		var escena := _motor != null and is_instance_valid(viejo)
+		if not escena:
+			viejo.queue_free()
 		var equipo := club if es_local else visitante
 		var d := Puente3D.jugador(entra)
 		var nuevos := _spawner.spawn_team(_raiz3d, [entra.id], {entra.id: d},
 			{"s": [[f["slot_code"], 50, 50]]}, es_local,
 			Puente3D.kit(equipo), Puente3D.kit_portero(equipo))
 		if nuevos.is_empty():
+			if escena:
+				viejo.queue_free()
 			_en_campo.remove_at(i)
 			return
 		var nf: Dictionary = nuevos[0]
@@ -1347,6 +1374,8 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 		_en_campo[i] = nf
 		if _motor != null:
 			_motor.reemplazar(sale.id, nf)
+			if escena:
+				EscenaCambio.iniciar(_raiz3d, _spawner, _motor, viejo, f.get("anim"), nf, sale.dorsal, entra.dorsal, _kit_arbitro)
 			_mostrar_banner_gol("🔁 %s  ⬆ %s   ⬇ %s" % [Idiomas.t("CAMBIO"), Nombres.visible(entra.nombre), Nombres.visible(sale.nombre)],
 				equipo.id == Partido.ctx_club_id)
 		_fov_rotulos = -1.0
@@ -1363,11 +1392,11 @@ func _alternar_modo_control() -> void:
 		return
 	_control.alternar_modo()
 	if _control.activo:
-		_btn_modo.text = "🎮 Modo: Jugador (FC)"
+		_btn_modo.text = Idiomas.t("🎮 Modo: Jugador (FC)")
 		if _control.jugador_activo.has("node") and is_instance_valid(_control.jugador_activo["node"]):
 			_rig.objetivo_seguimiento = _control.jugador_activo["node"]
 	else:
-		_btn_modo.text = "🎮 Modo: Manager"
+		_btn_modo.text = Idiomas.t("🎮 Modo: Manager")
 		_rig.objetivo_seguimiento = null
 
 
@@ -1432,18 +1461,35 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 ## los monitores mostrando la jugada desde cuatro cámaras, y se sigue.
 var _sala_var: SalaVAR = null
 
-func _a_la_revision_var(minuto: int, motivo: String) -> void:
+func _a_la_revision_var(minuto: int, motivo: String, anular := false, al_anular := Callable(), lineas := {}) -> void:
 	if _sala_var != null or _raiz3d == null:
 		return
 	var vel_antes := _juego.vel_idx if _juego != null else 2
 	if _juego != null:
 		_juego.vel_idx = 0
 	var foco := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
-	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo)
+	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo, anular, lineas)
 	_sala_var.terminada.connect(func() -> void:
 		_sala_var = null
+		if anular and al_anular.is_valid():
+			al_anular.call()
 		if _juego != null:
 			_juego.vel_idx = maxi(vel_antes, 1))
+
+## El gol que el VAR anula: acta, motor y marcador, con aviso y reacción.
+func _anular_gol_motor(de_local: bool, autor: String) -> void:
+	if _motor == null or partido == null:
+		return
+	partido.anular_gol_externo(de_local, autor)
+	_motor.anular_gol(de_local)
+	if _stats != null:
+		_stats.anular_gol(de_local)
+	_refrescar_marcador()
+	_mostrar_rotulo_suceso("🖥️ " + Idiomas.t("VAR: GOL ANULADO"))
+	var mio := _mi_lado >= 0 and (_mi_lado == 0) == de_local
+	Sonido.toca("abucheo" if mio or _mi_lado < 0 and de_local else "festejo_hinchada_extra")
+	if _rig != null:
+		_rig.impacto(0.35, 0.4)
 
 func _a_la_decision_arbitral(texto: String, minuto: int) -> void:
 	if _juego == null:
@@ -1492,30 +1538,97 @@ func _montar_motor() -> void:
 	_motor.tarjetas_reales = true
 	_motor.autopiloto = true
 	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": true}
+	_motor.eliminatoria = eliminatoria
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
+	## La salida de los equipos: papelitos y bengalas de la hinchada (M-050).
+	if partido.minuto == 0 and partido.goles_local + partido.goles_visita == 0:
+		FestejoGrada.lanzar(_raiz3d, Color(partido.local.color1), Color(partido.local.color2), "salida")
+	_stats = EstadisticasVivo.new()
 	_motor.gol.connect(func(de_local: bool, autor: String, asist: String) -> void:
+		_stats.cerrar_tiro(de_local, "gol", _balon.position if is_instance_valid(_balon) else Vector3.ZERO)
 		partido.gol_externo(de_local, autor, asist)
+		## La red se abomba donde entró el balón (M-149).
+		if is_instance_valid(_balon):
+			RedArco.golpe(_raiz3d, _balon.global_position)
+		## Confeti, bengalas y humo de la hinchada local (M-050).
+		if de_local:
+			FestejoGrada.lanzar(_raiz3d, Color(partido.local.color1), Color(partido.local.color2), "gol")
+		Mando.vibrar(1.0 if (_mi_lado == 0) == de_local else 0.35, 0.6)
 		if _rig != null:
 			_rig.impacto(0.9, 0.7)
 			_rig.golpe_de_zoom(5.0, 1.2)
 		## EL VAR SE USA (14-10-2026): con VAR en la liga, uno de cada cinco goles
-		## se revisa en la sala (el partido espera y el gol se confirma).
-		if Partido.ctx_factor_tarjetas < 1.0 and Azar.suerte(0.2):
+		## se revisa en la sala (el partido espera). Desde el 17-10 uno de cada
+		## tres revisados se ANULA: el marcador, el acta y el goleador vuelven
+		## atrás y la grada lo nota.
+		## Desde el 17-10 el fuera de juego sale de la JUGADA: el motor mide cuánto
+		## estaba el goleador por delante de la línea en el pase (`margen_gol`);
+		## si fue ajustado se revisa siempre, y se anula si de verdad estaba
+		## adelantado (lo que el juez de línea dejó pasar, hasta 30 cm). La falta
+		## previa sigue siendo rara y al azar.
+		var m := _motor.margen_gol
+		## Medido con la sonda (17-10): la mayoría de goles tras pase llegan con
+		## el goleador 1-2 m en línea; se revisan los de menos de 1 m y, a veces,
+		## los de hasta 1,8 m. Solo se anula si estaba de verdad adelantado.
+		var ajustado := m <= 0.3 and (m > -1.0 or (m > -1.8 and Azar.suerte(0.35)))
+		if Partido.ctx_factor_tarjetas < 1.0 and (ajustado or Azar.suerte(0.08)):
+			var anula := m > 0.0 if ajustado else Azar.suerte(0.25)
+			var motivo := "Revisión del gol: posible fuera de juego" if ajustado else "Revisión del gol: posible falta previa"
 			get_tree().create_timer(2.2).timeout.connect(func() -> void:
 				if is_instance_valid(self) and _motor != null:
-					_a_la_revision_var(partido.minuto, "Revisión del gol: posible fuera de juego")))
+					## Con la línea del fuera de juego en el monitor (M-118).
+					var lineas := _motor.lineas_gol.duplicate() if ajustado else {}
+					if not lineas.is_empty():
+						lineas["margen"] = m
+					_a_la_revision_var(partido.minuto, motivo, anula, func() -> void:
+						_anular_gol_motor(de_local, autor), lineas)))
 	_motor.remate.connect(func(de_local: bool, autor: String, tipo: String) -> void:
+		var tirador := _nodo_de(autor)
+		_stats.cerrar_tiro(de_local, tipo, Vector3.ZERO, tirador.position if tirador != null else (_balon.position if is_instance_valid(_balon) else Vector3.ZERO))
 		partido.remate_externo(de_local, autor, tipo)
+		Mando.vibrar(0.3, 0.15)
 		if _rig != null:
 			_rig.golpe_de_zoom(2.0, 0.5))
-	_motor.tarjeta.connect(func(id: String, roja: bool, _l: bool) -> void:
+	_motor.tarjeta.connect(func(id: String, roja: bool, de_local: bool) -> void:
+		_stats.tarjeta(de_local, roja)
 		partido.tarjeta_externa(id, roja)
+		Mando.vibrar(0.6 if roja else 0.35, 0.3)
 		if _rig != null:
 			_rig.impacto(0.45 if roja else 0.25, 0.4))
 	_motor.aviso.connect(_al_aviso_motor)
+	## El silbato del árbitro con su gesto (M-106). El final del partido ya
+	## tiene su pitido (resumen); aquí, el del descanso y cada falta.
+	_motor.gesto_arbitro.connect(func(g: String) -> void:
+		if g == "silbato":
+			Sonido.toca("silbato")
+		elif g == "fin" and _motor.estado == "descanso":
+			Sonido.toca("pitido_final"))
+	## PRÓRROGA Y PENALES (17-10-2026): el acta sigue hasta el 120' y guarda la
+	## tanda del césped (nadie la vuelve a sortear).
+	_motor.prorroga_empieza.connect(func() -> void:
+		partido.prorroga_externa()
+		_mostrar_banner_gol("⏱ %s  %d - %d" % [Idiomas.t("PRÓRROGA"), partido.goles_local, partido.goles_visita], false)
+		Sonido.toca("pitido_final"))
+	_motor.tanda_empieza.connect(_al_empezar_tanda)
+	_motor.cambio_estado.connect(func(e: String) -> void:
+		if e != "tanda_penal" or _motor.tanda_equipo_usuario() < 0:
+			return
+		_pintar_tanda()
+		if _motor.tanda_turno() == _motor.tanda_equipo_usuario():
+			_mostrar_rotulo_suceso(Idiomas.t("Tu penal: apunta con el stick y mantén TIRO para la fuerza"))
+		else:
+			_mostrar_rotulo_suceso(Idiomas.t("Tu portero: elige el lado con el stick antes del disparo")))
+	_motor.tanda_tiro.connect(func(_eq: int, _id: String, marcado: bool) -> void:
+		_pintar_tanda()
+		Sonido.toca("gol" if marcado else "ocasion", Sonido.Bus.AMBIENTE)
+		if _rig != null and marcado:
+			_rig.impacto(0.35, 0.4))
+	_motor.tanda_terminada.connect(func(gl: int, gv: int) -> void:
+		partido.penales_externos(gl, gv)
+		_pintar_tanda())
 	_motor.tactica_rapida.connect(func(eq: int, clave: String, valor: int) -> void:
 		var c: Club = partido.local if eq == 0 else partido.visita
 		if c != null and c.tactica != null:
@@ -1530,7 +1643,7 @@ func _montar_motor() -> void:
 		if it >= 0 and not (PersonajeDT.sancionado and _rig.current_name().begins_with("Desde la grada")):
 			_rig.switch_to(it)
 			if _btn_camara != null:
-				_btn_camara.text = "📷 Cámara: " + _rig.current_name()
+				_btn_camara.text = Idiomas.t("📷 Cámara: ") + _rig.current_name()
 	_nombres_globales = PlayerSpawner.mostrar_nombres
 	if not _pref("nombres_motor", false):
 		_mostrar_nombres(false)
@@ -1540,9 +1653,34 @@ func _montar_motor() -> void:
 	if _mini_pantalla != null and not _pref("pantalla_esquina_motor", false):
 		_mini_pantalla.visible = false
 
+## LA TANDA EN PANTALLA: el marcador de círculos arriba al centro y la
+## cámara detrás del lanzador.
+func _al_empezar_tanda() -> void:
+	## El rótulo de estadísticas de la tele no puede taparle el marcador de la tanda.
+	for h in get_children():
+		if h is RotuloEstadisticas:
+			h.queue_free()
+	if _marcador_tanda == null:
+		_marcador_tanda = MarcadorTanda.crear(self)
+	_pintar_tanda()
+	_mostrar_banner_gol("🥅 " + Idiomas.t("TANDA DE PENALES"), false)
+	if _rig != null:
+		_rig.plano_tanda = true
+
+func _pintar_tanda() -> void:
+	if _marcador_tanda == null or _motor == null or _motor.tanda.is_empty():
+		return
+	var turno := -1 if String(_motor.tanda.get("fase", "")) == "fin" else _motor.tanda_turno()
+	_marcador_tanda.pintar(_corto(partido.local.nombre), _corto(partido.visita.nombre), _motor.tanda["tiros"], turno)
+
 ## Los avisos del motor que merecen rótulo (los goles ya tienen el suyo).
 func _al_aviso_motor(texto: String) -> void:
-	for clave in ["Córner", "Penal", "PENAL", "Fuera de juego", "Roja", "PALO", "LARGUERO", "parada", "Atajada"]:
+	## En la tanda: «Penal 3: Nombre» lleva el nombre (no se traduce entero).
+	if texto.begins_with("🥅 Penal ") and texto.contains(":"):
+		var partes := texto.split(":", true, 1)
+		_mostrar_rotulo_suceso("🥅 %s %s:%s" % [Idiomas.t("Penal"), partes[0].trim_prefix("🥅 Penal "), partes[1]])
+		return
+	for clave in ["Córner", "Penal", "PENAL", "Fuera de juego", "Roja", "PALO", "LARGUERO", "parada", "Atajada", "Dentro", "Fallado", "¡Fuera!", "Cambio de campo", "Ventaja"]:
 		if texto.contains(clave):
 			_mostrar_rotulo_suceso(Idiomas.t(texto))
 			return
@@ -1573,13 +1711,18 @@ func _actualizar_tacticas() -> void:
 		_motor.tacticas[i] = t
 
 func _paso_motor(delta: float) -> void:
-	if _panel_dt != null or _panel_controles != null or _sala_var != null:
+	if _panel_dt != null or _panel_controles != null or _sala_var != null or _panel_stats != null:
 		return
 	var mult := _juego.velocidad() if _juego != null else 1.0
 	_acum_motor = minf(_acum_motor + delta * mult, DT_MOTOR * 16.0)
 	while _acum_motor >= DT_MOTOR:
 		_motor.paso(DT_MOTOR)
 		_acum_motor -= DT_MOTOR
+		## Cada paso: así no se pierde un remate que empieza y acaba en el mismo fotograma.
+		if _stats != null:
+			_stats.muestrear(_motor, DT_MOTOR)
+	_pistas_camara()
+	_rotulo_automatico()
 	_t_tactica -= delta
 	if _t_tactica <= 0.0:
 		_t_tactica = 1.0
@@ -1592,8 +1735,14 @@ func _paso_motor(delta: float) -> void:
 	if _motor.estado == "fin" and not _final_motor:
 		_final_motor = true
 		var mio_gana := (partido.goles_local > partido.goles_visita and _mi_lado == 0) or (partido.goles_visita > partido.goles_local and _mi_lado == 1)
-		_mostrar_banner_gol("🏁 %s  %s %d - %d %s" % [Idiomas.t("FINAL"), Nombres.visible(partido.local.nombre),
-			partido.goles_local, partido.goles_visita, Nombres.visible(partido.visita.nombre)], mio_gana)
+		var pen := ""
+		if not _motor.tanda.is_empty():
+			var gl := _motor.goles_tanda(0)
+			var gv := _motor.goles_tanda(1)
+			pen = "  (%s %d-%d)" % [Idiomas.t("pen."), gl, gv]
+			mio_gana = (gl > gv and _mi_lado == 0) or (gv > gl and _mi_lado == 1)
+		_mostrar_banner_gol("🏁 %s  %s %d - %d %s%s" % [Idiomas.t("FINAL"), Nombres.visible(partido.local.nombre),
+			partido.goles_local, partido.goles_visita, Nombres.visible(partido.visita.nombre), pen], mio_gana)
 		get_tree().create_timer(5.0).timeout.connect(func() -> void:
 			if is_instance_valid(self):
 				cerrado.emit())
@@ -1614,12 +1763,21 @@ func _sincronizar_partido() -> bool:
 	## En el añadido el acta se queda en el 44'/89' hasta que de verdad se
 	## pita: así un gol en el descuento sigue contando y el descanso no se
 	## adelanta.
-	var objetivo := 90 if _motor.estado == "fin" else _motor.minuto()
+	## En la prórroga igual: 104' y 119' hasta que se pita; durante la tanda
+	## el acta espera en el 119' (el pitido final llega con los penales ya
+	## guardados, para que `penales()` dé los del césped).
+	var objetivo := partido.minutos_fin if _motor.estado == "fin" else _motor.minuto()
 	if _motor.estado != "fin":
-		if _motor.mitad == 1 and _motor.estado != "descanso":
+		if _motor.estado == "tanda":
+			objetivo = mini(objetivo, partido.minutos_fin - 1)
+		elif _motor.mitad == 1 and _motor.estado != "descanso":
 			objetivo = mini(objetivo, 44)
 		elif _motor.mitad == 2:
 			objetivo = mini(objetivo, 89)
+		elif _motor.mitad == 3:
+			objetivo = mini(objetivo, 104)
+		elif _motor.mitad == 4:
+			objetivo = mini(objetivo, 119)
 		if _motor.estado == "descanso" or (_motor.mitad == 2 and partido.minuto < 45):
 			objetivo = maxi(objetivo, 45)
 	while partido.minuto < objetivo and not partido.terminado_ya:
@@ -1646,7 +1804,8 @@ func _dt_rival(minuto: int) -> void:
 			_ajuste_rival[i] = {"mentalidad": 3, "presion": 2, "linea": 2}
 		elif minuto == 80 and mios == suyos + 1:
 			_ajuste_rival[i] = {"mentalidad": 0, "linea": 0}
-		if minuto in [60, 70, 80]:
+		## En la prórroga, otro al 95' y al 106' (hay un cambio más).
+		if minuto in [60, 70, 80, 95, 106]:
 			_cambio_ia(c, i == 0)
 
 func _cambio_ia(c: Club, es_local: bool) -> void:
@@ -1685,6 +1844,8 @@ func _simular_resto_motor() -> void:
 	var pasos := 0
 	while _motor.estado != "fin" and pasos < 60 * 3600:
 		_motor.paso(1.0 / 20.0)
+		if _stats != null:
+			_stats.muestrear(_motor, 1.0 / 20.0)
 		pasos += 1
 		if pasos % 20 == 0:
 			_t_tactica = 0.0
@@ -1710,7 +1871,7 @@ func _alternar_control_motor() -> void:
 	if not activo:
 		_motor.usuario = {}
 	if _btn_modo != null:
-		_btn_modo.text = "🎮 Controlar a mi equipo: " + ("SÍ" if activo else "NO")
+		_btn_modo.text = Idiomas.t("🎮 Controlar a mi equipo: ") + ("SÍ" if activo else "NO")
 	if _cursor == null:
 		_crear_cursor()
 	_cursor.visible = activo
@@ -1820,13 +1981,54 @@ func _abrir_panel_dt() -> void:
 		_mostrar_banner_gol(Idiomas.t("Este partido no es de tu club: solo puedes mirarlo."), false)
 		return
 	var mio: Club = partido.local if _mi_lado == 0 else partido.visita
-	_panel_dt = PanelDTPartido.abrir(self, partido, mio, _motor)
+	_panel_dt = PanelDTPartido.abrir(self, partido, mio, _motor, abrir_estadisticas)
 	_panel_dt.cerrado.connect(func() -> void:
 		_panel_dt = null
 		_actualizar_tacticas())
 
+## LAS PISTAS DE LA TRANSMISIÓN: el realizador (la cámara) sabe qué pasa en el
+## césped leyendo el motor -sin tocarlo-: quién ataca, si hay un tiro en el
+## aire, qué saque se va a lanzar.
+func _pistas_camara() -> void:
+	if _rig == null or _motor == null:
+		return
+	_rig.pista_estado = _motor.estado
+	var dueno: Dictionary = _motor.poseedor if not _motor.poseedor.is_empty() else _motor.ultimo_toque
+	if _motor.estado == "saque" and not _motor.saque.is_empty() and _motor.saque.has("local"):
+		_rig.pista_ataca = MotorJugable.dir_ataque(bool(_motor.saque["local"]))
+	elif not dueno.is_empty():
+		_rig.pista_ataca = MotorJugable.dir_ataque(bool(dueno.get("es_local", true)))
+	_rig.pista_saque = String(_motor.saque.get("tipo", "")) if _motor.estado == "saque" else ""
+	var tv: Variant = _motor.get("_tiro_vivo")
+	if tv is Dictionary and not (tv as Dictionary).is_empty():
+		_rig.pista_ocasion = maxf(_rig.pista_ocasion, 1.4)
+
+## Los rótulos de estadísticas de la tele en los momentos muertos.
+func _rotulo_automatico() -> void:
+	if _stats == null or not _pref("rotulos", true) or is_instance_valid(_cine):
+		return
+	var cual := RotuloEstadisticas.cuando(_motor.minuto(), _motor.estado, _motor.mitad, _rotulos_hechos)
+	if cual == "":
+		return
+	_rotulos_hechos[cual] = true
+	RotuloEstadisticas.mostrar(self, cual, partido, _motor, _stats)
+
+## ESTADÍSTICAS A PEDIDO: su botón (`jugar_estadisticas`) o desde la pausa. El
+## partido espera mientras se miran.
+func abrir_estadisticas() -> void:
+	if _panel_stats != null or partido == null:
+		return
+	if _cajon != null and _cajon.abierto:
+		_cajon.cerrar()
+	_panel_stats = PanelEstadisticas.abrir(self, partido, _motor, _stats)
+	_panel_stats.cerrado.connect(func() -> void: _panel_stats = null)
+
 func _unhandled_input(e: InputEvent) -> void:
-	if _motor != null and _panel_dt == null and _panel_controles == null and e.is_action_pressed("jugar_pausa"):
+	if partido != null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_estadisticas"):
+		get_viewport().set_input_as_handled()
+		abrir_estadisticas()
+		return
+	if _motor != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_pausa"):
 		if _cajon != null and _cajon.abierto:
 			return
 		get_viewport().set_input_as_handled()
@@ -1846,32 +2048,37 @@ func _exit_tree() -> void:
 ## corriendo a celebrar de cerca, corte al banquillo que salta, la grada, un
 ## barrido con el escudo y la repetición. Mientras, el motor alarga la
 ## celebración (`duracion_gol`) y el reloj no corre.
-var _cam_cine: Camera3D
-var _cine_t := -1.0
-var _cine_club: Club
-var _cine_autor_id := ""
-var _cine_previa: Camera3D
+## La secuencia vive en `CineGol` (compartida con la Carrera de Jugador).
+var _cine: CineGol
+var _cine_t: float:
+	get:
+		return _cine.t if is_instance_valid(_cine) else -1.0
 
 func _cine_gol(c: Club, autor: Jugador) -> void:
 	if _raiz3d == null:
 		return
-	_cine_club = c
-	_cine_autor_id = autor.id if autor != null else ""
-	if _cam_cine == null:
-		_cam_cine = Camera3D.new()
-		_cam_cine.fov = 38.0
-		_cam_cine.far = 700.0
-		_raiz3d.add_child(_cam_cine)
-	_cine_previa = get_viewport().get_camera_3d()
-	if _cine_previa == _cam_cine:
-		_cine_previa = null
-	_cam_cine.current = true
-	_cine_t = 0.0
-	_carta_mostrada = false
+	if is_instance_valid(_cine):
+		_cine.cortar()
 	## La repetición debe acabar en el gol, no en la celebración: se deja de
 	## grabar hasta que termine.
 	if _repe != null:
 		_repe.congelar = true
+	var autor_id := autor.id if autor != null else ""
+	var g := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+	var carta := func() -> Dictionary:
+		var j := partido._por_id(autor_id) if partido != null and autor_id != "" else null
+		if j == null:
+			return {}
+		return {"dorsal": j.dorsal, "nombre": j.nombre, "tiros": int(_tiros_de.get(j.id, 1)), "goles": int(_goles_de.get(j.id, 1))}
+	_cine = CineGol.iniciar(self, _raiz3d, c, c == club, _nodo_de(autor_id), carta, float(g["dx"]))
+	_cine.banquillo.connect(func() -> void: _banca_celebra(c == club))
+	_cine.terminado.connect(func() -> void:
+		_repetir_gol()
+		if _repe != null:
+			if _repe.reproduciendo:
+				_repe.terminada.connect(func() -> void: _repe.congelar = false, CONNECT_ONE_SHOT)
+			else:
+				_repe.congelar = false)
 
 func _nodo_de(id: String) -> Node3D:
 	for p: Dictionary in _en_campo:
@@ -1881,84 +2088,8 @@ func _nodo_de(id: String) -> Node3D:
 
 ## Se llama desde `_process` (antes del paso del motor).
 func _cine_paso(delta: float) -> void:
-	if _cine_t < 0.0 or _cam_cine == null:
-		return
-	_cine_t += delta
-	var autor := _nodo_de(_cine_autor_id)
-	## La carta del goleador, en cuanto el plano lo encuadra.
-	if not _carta_mostrada and _cine_t > 0.7 and _cine_autor_id != "":
-		_carta_mostrada = true
-		var j := partido._por_id(_cine_autor_id) if partido != null else null
-		if j != null:
-			CartaGoleador.mostrar(self, _cine_club, j.dorsal, j.nombre, int(_tiros_de.get(j.id, 1)), int(_goles_de.get(j.id, 1)), autor)
-	if _cine_t < 3.4:
-		## 1) El goleador, de cerca, a la altura del pecho, siguiéndolo.
-		if autor != null:
-			var a := autor.global_position
-			var fwd := Vector3(sin(autor.global_rotation.y), 0, cos(autor.global_rotation.y))
-			var deseo := a + fwd * 6.8 + Vector3(fwd.z, 0, -fwd.x) * 2.2 + Vector3(0, 1.9, 0)
-			_cam_cine.global_position = _cam_cine.global_position.lerp(deseo, clampf(delta * 3.0, 0, 1)) if _cine_t > 0.05 else deseo
-			_cam_cine.look_at(a + Vector3(0, 1.3, 0), Vector3.UP)
-	elif _cine_t < 5.4:
-		## 2) El banquillo del que marcó (de pie, saltando).
-		if _cine_t - delta < 3.4:
-			_barrido(_cine_club, 0.35)
-			## El banquillo salta justo cuando entra su plano.
-			_banca_celebra(_cine_club == club)
-		var es_local := _cine_club == club
-		var z := (-1.0 if es_local else 1.0) * 14.0
-		_cam_cine.global_position = Vector3(27.5, 2.0, z + (-5.0 if es_local else 5.0))
-		_cam_cine.look_at(Vector3(34.6, 1.3, z), Vector3.UP)
-	elif _cine_t < 7.0:
-		## 3) La grada: un paneo lento por la tribuna.
-		if _cine_t - delta < 5.4:
-			_barrido(_cine_club, 0.35)
-		var f := (_cine_t - 5.4) / 1.6
-		var g := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
-		_cam_cine.global_position = Vector3(-float(g["dx"]) * 0.42, 2.6, lerpf(-14.0, 14.0, f))
-		_cam_cine.look_at(Vector3(-float(g["dx"]), 8.5, lerpf(-18.0, 18.0, f)), Vector3.UP)
-	else:
-		_cine_t = -1.0
-		_barrido(_cine_club, 0.5)
-		if is_instance_valid(_cine_previa):
-			_cine_previa.current = true
-		_repetir_gol()
-		if _repe != null:
-			if _repe.reproduciendo:
-				_repe.terminada.connect(func() -> void: _repe.congelar = false, CONNECT_ONE_SHOT)
-			else:
-				_repe.congelar = false
-
-## EL BARRIDO DE MARCA: una franja inclinada con el color y el escudo del club
-## que cruza la pantalla (como la estrella girando de la transmisión del vídeo,
-## pero nuestra).
-func _barrido(c: Club, seg: float) -> void:
-	if c == null:
-		return
-	var vp := get_viewport().get_visible_rect().size
-	var banda := Panel.new()
-	var st := StyleBoxFlat.new()
-	st.bg_color = Color(c.color1)
-	st.border_color = Color(c.color2)
-	st.border_width_left = 14
-	st.border_width_right = 14
-	st.skew = Vector2(0.35, 0)
-	banda.add_theme_stylebox_override("panel", st)
-	banda.size = Vector2(vp.x * 0.7, vp.y + 40.0)
-	banda.position = Vector2(-banda.size.x - 200.0, -20.0)
-	banda.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	banda.z_index = 140
-	var esc := TextureRect.new()
-	esc.texture = Escudo.textura(c, 256)
-	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	esc.size = Vector2(220, 220)
-	esc.position = Vector2(banda.size.x * 0.5 - 110.0, banda.size.y * 0.5 - 110.0)
-	banda.add_child(esc)
-	add_child(banda)
-	var tw := banda.create_tween()
-	tw.tween_property(banda, "position:x", vp.x + 200.0, seg).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tw.tween_callback(banda.queue_free)
+	if is_instance_valid(_cine):
+		_cine.paso(delta)
 
 
 ## LA BARRA DE POTENCIA Y LA FLECHA DE APUNTE (jugando tú, como en FC): al

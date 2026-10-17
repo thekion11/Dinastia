@@ -272,6 +272,9 @@ func explorar(modo: String) -> void:
 	_explorador.iniciar(_ciudad, modo, desde, club.nombre if club != null else "", String(animo.get("estado", "normal")))
 	_explorador.salir.connect(_dejar_de_explorar)
 	_explorador.interactuar.connect(_interactuar_en_ciudad)
+	## A pie o en coche, fuera los rótulos del MAPA (nombres flotantes de parques,
+	## solares...): a ras de calle se veían repetidos sobre los carteles de verdad.
+	_ciudad.mostrar_rotulos(false)
 	for h in get_children():
 		if h is Control and (h as Control).visible and h != _ficha:
 			(h as Control).visible = false
@@ -283,6 +286,7 @@ func _dejar_de_explorar() -> void:
 	_explorador.queue_free()
 	_explorador = null
 	_camara.make_current()
+	_ciudad.mostrar_rotulos(_rotulos_visibles)
 	for h in _barra_mapa:
 		if is_instance_valid(h):
 			h.visible = true
@@ -422,11 +426,17 @@ func _aplicar_hora() -> void:
 		## propio no da luz ambiente: lo que queda a la sombra -la espalda de la
 		## grada, la copa de los árboles- salía NEGRO a mediodía. Ahí la luz
 		## ambiente va como color, el del cielo de esa hora.
+		## De noche, el reflejo cálido de las farolas sobre la ciudad (como el
+		## sodio de una ciudad real), no un azul puro que lo tiñe todo.
+		_env.ambient_light_color = Color(0.24, 0.21, 0.22).lerp(Color(0.62, 0.68, 0.74), dia)
 		if Calidad.es_compatibilidad():
 			_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-			## De noche, el reflejo cálido de las farolas sobre la ciudad (como el
-			## sodio de una ciudad real), no un azul puro que lo tiñe todo.
-			_env.ambient_light_color = Color(0.24, 0.21, 0.22).lerp(Color(0.62, 0.68, 0.74), dia)
+		else:
+			## Forward+ (15-10-2026): todo el ambiente salía del cielo, que es
+			## azul, y lo que quedaba a la sombra (aceras, calzada, fachadas)
+			## se teñía de azul. Un 30 % cielo y el resto, el color neutro de arriba.
+			_env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+			_env.ambient_light_sky_contribution = 0.3
 		if _env.fog_enabled:
 			_env.fog_light_color = Color(0.16, 0.13, 0.14).lerp(Color(0.78, 0.80, 0.84), dia)
 
@@ -610,5 +620,5 @@ func _reconstruir() -> void:
 	if _env != null:
 		_env.adjustment_saturation = _saturacion_animo()
 	_ciudad.build(_datos_de(club, _obras, _ciudad_datos, _perfil))
-	_ciudad.mostrar_rotulos(_rotulos_visibles)
+	_ciudad.mostrar_rotulos(_rotulos_visibles and _explorador == null)
 	_aplicar_hora()

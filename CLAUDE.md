@@ -63,7 +63,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 
 ## Hecho el 29-9 (tarde)
 - Butacas 3D en toda la grada, mirando al campo (ambos modos).
-- 9 idiomas: es, en, pt, fr, it, de, ca + polaco y turco nuevos (1402 frases c/u).
+- 9 idiomas: es, en, pt, fr, it, de, ca + polaco y turco nuevos (1402 frases c/u el 29-9; el 15-10: 2.574 frases fijas y 373 patrones en los 9, con la prueba `_probar_paridad_idiomas`).
 
 ## Pendientes
 - Hecho 29-9: limpieza (capturas en pruebas/capturas), COMPARACION_INFORME.md (≈71/100),
@@ -384,8 +384,15 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   · REALIZACIÓN DEL GOL: carrera al córner y abrazo, goleador/banquillo/grada,
     barrido con escudo, repetición que acaba en el gol (`Repeticion.congelar`).
     Captura `captura_gol_motor`. Tiempo añadido real (45' +1:23).
-  Pendiente de esta línea: cámara TV inteligente (zoom al área), estadísticas a
-  pedido, disputas cuerpo a cuerpo, más pulido visual del entorno.
+  Pendiente de esta línea: disputas cuerpo a cuerpo, más pulido visual del entorno.
+  HECHO 16-10: TRANSMISIÓN INTELIGENTE (`CameraRig._transmision`: cierra en área/
+  ocasión/córner, abre en contras y balones largos, anticipa, zona muerta,
+  amortiguador crítico con topes; pistas que pone `VistaEstadio._pistas_camara`
+  leyendo el motor) y ESTADÍSTICAS A PEDIDO (`jugar_estadisticas` = T / Select,
+  `PanelEstadisticas` con mapa de tiros y de calor, botón en la pausa y en ⚙;
+  `EstadisticasVivo` = tiros con xG, tarjetas, calor; `RotuloEstadisticas` en
+  17'/descanso/65'). Prueba en banco `_probar_transmision_y_estadisticas` y en
+  `prueba_partido_motor`; captura `pruebas/captura_camara_tv.tscn`.
 
 - 14-10 PEDIDO: «la prioridad es lo visual, las físicas, ver jugar a la CPU y poder jugar
   en serio el partido, como en el vídeo» → motor real en el partido del DT (acta = césped),
@@ -395,8 +402,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (esquemas wasd/clásico, reasignar teclas y botones, ayudas pase/tiro/cambio/dirección,
   `user://controles.cfg`) + `ui/componentes/panel_controles.gd` (⚙ del estadio, pausa
   de la Carrera de Jugador y Ajustes). La guía en pantalla usa `Mando.corto_de`.
-  SIGUE: duelos/contacto, más animaciones, CPU vs CPU creíble, misma ceremonia y gol
-  en la Carrera de Jugador.
+  SIGUE: duelos/contacto, más animaciones, CPU vs CPU creíble. HECHO 16-10: misma
+  ceremonia y gol en la Carrera de Jugador (`visor/cine_gol.gd` compartido con el DT,
+  `CeremoniaPartido` con estilo; `PartidoJugable.con_ceremonia`; prueba
+  `pruebas/prueba_carrera_ceremonia.tscn`, con pantalla saca las fotos).
 - 14-10 PEDIDO (hecho): «¿qué le pasa al portero?», «el césped no debería ser plano»,
   «los NPC cámaras deberían seguir la jugada», barra de energía y nombres como FC, «carta
   con la cara del modelo 3D al marcar» y CONTROLES FC 26 según el manual que pasó (todas las
@@ -556,3 +565,18 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
     más ocasiones» solo pasa porque los jugadores llegan con estado de los partidos
     anteriores de la misma sección; con jugadores frescos da xG 56,0 vs 59,6 (falla).
     `MotorLibre` es el prototipo (el juego usa `MotorJugable`); la prueba no se tocó.
+- 17-10: VAR que ANULA goles (1 de cada 3 revisados: `Partido.anular_gol_externo`, `MotorJugable.anular_gol`,
+  `EstadisticasVivo.anular_gol`, panel rojo en `SalaVAR`). OPTIMIZACIÓN del partido: 1,80 M → 0,76 M tris
+  (−58 %), 690 → 630 llamadas. REGLA: al rehacer una malla (`VestidorQ._con_reposo*`) copiar sus LOD con
+  `VestidorQ.lods_de()`. AVISO dado: a >30 m no se dibujan cejas 3D y a >20 m las pestañas (también peatones).
+- 17-10 (tarde): hechos prórroga+tanda 3D, informe del rival (2.ª versión con estética, formación,
+  nota media y cara del mentor), moral explicada en el Camarín, VAR con fuera de juego real,
+  arreglos del partido (árbitros de color, gestos, cuarto árbitro, red, confeti, línea VAR),
+  vibración del mando, país real de la selección rival, GPS en el móvil. ESTADO REAL de las 470
+  mejoras y las 300 ideas en `dinastia-godot/ESTADO_MEJORAS.md` (con TOP 25). Comparación con
+  otros juegos: `COMPARACION_JUEGOS_2.md`.
+  USO: el 17-10 el usuario enseñó su límite semanal al 86 % (se restablece el viernes 00:00):
+  AHORRAR — sin agentes nuevos, trabajo pequeño y solo lo pedido hasta el restablecimiento.
+  TRASPASO: `dinastia-godot/PENDIENTES.md` (qué falta, cómo, y qué falta fusionar; respaldos en
+  `dinastia-godot/parches_pendientes/`). Mantenerlo al día en cada bloque.
+

@@ -392,7 +392,9 @@ func comentar_jugador(m: Mundo, pub_id: int, tono: String) -> String:
 	(p["comentarios"] as Array).push_front({"autor": String(cuentas["dt"]["usuario"]), "texto": String(d[2]), "tono": "tuyo", "respuesta": "-"})
 	var delta := int(d[4]) if String(p.get("animo", "")) == "molesto" else int(d[3])
 	if j != null:
+		var _m0 := j.moral
 		j.moral = clampi(j.moral + delta, 0, 100)
+		j.anotar_moral(j.moral - _m0, "Redes sociales")
 		if tono == "cortante" and m.prensa != null:
 			noticia.emit("🧊 Mensaje en público", "Le contestaste a %s en redes delante de todos. El vestuario lo comenta." % j.nombre)
 		return "%s %s (moral %+d)." % [String(d[0]), j.nombre, delta]

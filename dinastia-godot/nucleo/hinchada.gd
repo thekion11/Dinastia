@@ -194,7 +194,7 @@ func dia_del_hincha(c: Club, prensa) -> String:
 	if prensa != null:
 		prensa.mover_animo(Azar.ent(8, 15))
 	for j in c.plantilla:
-		j.moral = clampi(j.moral + 3, 10, 99)
+		j.cambiar_moral(3, "Afición")
 	return ""
 
 # ---------------------------------------------------------------------------

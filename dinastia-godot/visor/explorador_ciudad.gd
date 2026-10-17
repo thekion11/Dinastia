@@ -80,6 +80,7 @@ var _luz_cam: OmniLight3D
 ## (en coordenadas del estadio, que está en `CityBuilder.ESTADIO_EN`).
 var _est: Dictionary = {}
 var _zona_est := ""
+var _aviso_hablar := false
 var _planta := 0
 var _menu_asc: PanelContainer
 var _sentado := false
@@ -104,6 +105,7 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	trafico = cb.get_node_or_null("Trafico") as TraficoCiudad
 	metro = cb.expansion.metro if cb.expansion != null else null
 	obstaculos = construir_obstaculos(cb)
+	_indexar_obstaculos()
 	_indexar_circulos()
 	var perfil: Dictionary = cb.datos.get("perfil_estadio", {})
 	if not perfil.is_empty():
@@ -172,6 +174,37 @@ static func libre(p: Vector3, radio: float, obst: Array[Rect2]) -> bool:
 			return false
 	return true
 
+## Las huellas de las manzanas, también por celdas (15-10-2026): `libre` las
+## recorría TODAS en cada consulta (~190 µs) y el paseo hace de 3 a 20 consultas
+## por fotograma (moverse, deslizar, la cámara que no atraviesa paredes). Cada
+## huella se apunta en las celdas que toca, ensanchada `MARGEN_OBST` para que
+## baste mirar la celda del punto (radios de hasta 3 m: pie 0,5, coche 2,2).
+const CELDA_OBST := 32.0
+const MARGEN_OBST := 3.0
+var _rej_obst := {}
+var _t_cerca := 0.0
+var _moviles_fotograma := -1
+var _moviles_cerca := PackedVector3Array()
+var _p_cerca := Vector3.INF
+
+func _indexar_obstaculos() -> void:
+	_rej_obst.clear()
+	for r: Rect2 in obstaculos:
+		var a := r.grow(MARGEN_OBST)
+		for i in range(floori(a.position.x / CELDA_OBST), floori(a.end.x / CELDA_OBST) + 1):
+			for j in range(floori(a.position.y / CELDA_OBST), floori(a.end.y / CELDA_OBST) + 1):
+				var k := Vector2i(i, j)
+				if not _rej_obst.has(k):
+					_rej_obst[k] = [] as Array[Rect2]
+				(_rej_obst[k] as Array[Rect2]).append(r)
+
+## Igual que `libre(p, radio, obstaculos)`, pero mirando solo la celda de `p`.
+func libre_obst(p: Vector3, radio: float) -> bool:
+	if radio > MARGEN_OBST:
+		return libre(p, radio, obstaculos)
+	var celda: Array[Rect2] = _rej_obst.get(Vector2i(floori(p.x / CELDA_OBST), floori(p.z / CELDA_OBST)), [] as Array[Rect2])
+	return libre(p, radio, celda)
+
 ## Círculos sólidos (farolas, troncos, coches aparcados...) por celdas de 8 m.
 const CELDA_CIRC := 8.0
 var _rej_circ := {}
@@ -204,18 +237,43 @@ func _choca_circulos(p: Vector3, radio: float) -> bool:
 func _choca_moviles(p: Vector3, radio: float) -> bool:
 	if trafico == null:
 		return false
-	for v: Dictionary in trafico._vehiculos:
-		var n: Node3D = v["nodo"]
-		if not is_instance_valid(n):
-			continue
-		var d := Vector2(n.global_position.x - p.x, n.global_position.z - p.z).length()
-		if d < radio + (0.45 if float(v["alto"]) < 0.3 else 1.7):
+	## Una vez por fotograma de física se apuntan los móviles a menos de 30 m del
+	## personaje (x, z, radio); las 3-20 consultas del fotograma miran solo esos
+	## (15-10-2026: antes cada consulta recorría los ~300 coches y vecinos y pedía
+	## su `global_position`; el tráfico cuelga de la ciudad, que está en el origen).
+	var f := Engine.get_physics_frames()
+	if f != _moviles_fotograma:
+		_moviles_fotograma = f
+		_moviles_cerca.clear()
+		var c := cuerpo.position if cuerpo != null else p
+		for v: Dictionary in trafico._vehiculos:
+			var n: Node3D = v["nodo"]
+			if not is_instance_valid(n):
+				continue
+			var q := n.position
+			if absf(q.x - c.x) < 30.0 and absf(q.z - c.z) < 30.0:
+				_moviles_cerca.append(Vector3(q.x, q.z, 0.45 if float(v["alto"]) < 0.3 else 1.7))
+	var c0 := cuerpo.position if cuerpo != null else p
+	if absf(p.x - c0.x) > 25.0 or absf(p.z - c0.z) > 25.0:
+		## Lejos del personaje (buscar un sitio libre al aparecer): todos.
+		for v: Dictionary in trafico._vehiculos:
+			var n: Node3D = v["nodo"]
+			if is_instance_valid(n):
+				var rr0 := radio + (0.45 if float(v["alto"]) < 0.3 else 1.7)
+				if Vector2(n.position.x - p.x, n.position.z - p.z).length_squared() < rr0 * rr0:
+					return true
+		return false
+	for m: Vector3 in _moviles_cerca:
+		var dx := m.x - p.x
+		var dz := m.y - p.z
+		var rr := radio + m.z
+		if dx * dx + dz * dz < rr * rr:
 			return true
 	return false
 
 ## Manzanas, río, círculos y móviles: todo lo que impide estar en `p`.
 func libre_total(p: Vector3, radio: float) -> bool:
-	return libre(p, radio, obstaculos) and not _choca_circulos(p, radio) and not _choca_moviles(p, radio)
+	return libre_obst(p, radio) and not _choca_circulos(p, radio) and not _choca_moviles(p, radio)
 
 ## Tipos de edificio con sala propia, con su peso y sus nombres.
 const EDIFICIOS := [
@@ -227,6 +285,33 @@ const EDIFICIOS := [
 	["edificio_taller", 8, ["Taller %s"], ["Motor", "Hermanos Paz", "El Pistón", "AutoRepara", "Tuercas"]],
 	["edificio_oficina", 8, ["Oficinas %s"], ["Delta", "Norte", "Grupo Álamo", "Cima", "Vértice"]],
 ]
+
+## La sala de cada rótulo de comercio (`CiudadExpansion.COMERCIOS`): al entrar
+## por una puerta con rótulo, lo de dentro tiene que ser lo que dice fuera
+## (antes el rótulo y la sala se sorteaban por separado: una «Farmacia» podía
+## abrir un taller).
+const SALA_DE_ROTULO := {
+	"Farmacia": "edificio_tienda", "Cafetería": "edificio_bar", "Panadería": "edificio_panaderia",
+	"Banco": "edificio_oficina", "Correos": "edificio_oficina", "Peluquería": "edificio_peluqueria",
+	"Librería": "edificio_libreria", "Supermercado": "edificio_mercado", "Pizzería": "edificio_bar",
+	"Hotel": "edificio_oficina", "Deportes": "edificio_tienda", "Bar": "edificio_bar",
+	"Floristería": "edificio_tienda", "Ferretería": "edificio_tienda", "Peña del club": "edificio_bar",
+	"Heladería": "edificio_panaderia",
+}
+
+## El rótulo de comercio cuya fachada está junto a `p`, o vacío.
+func _rotulo_en(p: Vector3) -> Dictionary:
+	if cb == null or cb.expansion == null:
+		return {}
+	var mejor: Dictionary = {}
+	var md := INF
+	for r: Dictionary in cb.expansion.rotulos:
+		var q: Vector3 = r["pos"]
+		var d := Vector2(q.x - p.x, q.z - p.z).length()
+		if d < float(r["ancho"]) * 0.5 + 2.5 and d < md:
+			md = d
+			mejor = r
+	return mejor
 
 ## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la
 ## clave de la sala con el nombre propio, o vacío.
@@ -244,6 +329,13 @@ func edificio_en(p: Vector3) -> Dictionary:
 		var dz := maxf(maxf(r.position.y - p.z, 0.0), p.z - r.end.y)
 		if dx * dx + dz * dz > 3.2 * 3.2:
 			continue
+		var rot := _rotulo_en(p)
+		if not rot.is_empty():
+			## «💊 Farmacia» -> «Farmacia»: el nombre sin el icono.
+			var texto := String(rot["texto"])
+			var nombre_r := texto.substr(texto.find(" ") + 1)
+			if SALA_DE_ROTULO.has(nombre_r):
+				return {"k": "%s|%s" % [SALA_DE_ROTULO[nombre_r], nombre_r], "n": nombre_r}
 		var h := absi(hash(Vector3i(floori(p.x / 14.0), 0, floori(p.z / 14.0))) + hash(r.position))
 		var total := 0
 		for e: Array in EDIFICIOS:
@@ -415,6 +507,10 @@ func _montar_hud() -> void:
 	## tutorial de la ciudad; la velocidad, en el móvil que sacas al correr.
 	_movil = MovilMano.new()
 	capa.add_child(_movil)
+	_minimapa = MinimapaCiudad.new()
+	capa.add_child(_minimapa)
+	if DisplayServer.is_touchscreen_available():
+		_minimapa.arriba()
 	var engranaje := CuadroDialogo.respuesta(Button.new())
 	engranaje.text = "⚙"
 	engranaje.add_theme_font_size_override("font_size", 22)
@@ -437,6 +533,9 @@ var _movil: MovilMano
 var _boton_e: Button
 var _ayudas := false
 var _con_movil := true
+var _m_antes := false
+var _gps_oculto := false
+var _minimapa: MinimapaCiudad
 
 func _aplicar_ajustes() -> void:
 	_ayudas = bool(AjustesCiudad.valor("ayudas", false))
@@ -451,6 +550,17 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 		if cb != null and cb.expansion != null and estado == "calle":
 			calle = cb.expansion.nombre_calle_en(cuerpo.position)
 		_movil.poner(modo_mano if _con_movil else "pie", km_h, maxima, calle, metros)
+	## EL GPS ESTILO GTA (17-10-2026): M lo esconde o lo vuelve a mostrar.
+	if _minimapa != null:
+		if Input.is_physical_key_pressed(KEY_M) != _m_antes:
+			_m_antes = not _m_antes
+			if _m_antes:
+				_gps_oculto = not _gps_oculto
+		_minimapa.visible = estado == "calle" and not _gps_oculto
+		if _minimapa.visible:
+			if _minimapa.red == null and cb != null:
+				_minimapa.red = cb.expansion
+			_minimapa.poner(cuerpo.position, rumbo if modo == "coche" else cuerpo.rotation.y, get_physics_process_delta_time())
 	if _boton_e != null:
 		var hay := _aviso.text.strip_edges() != ""
 		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
@@ -466,6 +576,8 @@ func _tactil(capa: CanvasLayer) -> void:
 	base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	base.offset_left = 24
 	base.offset_top = -tam * 3.0 - 24
+	## Solo en pantallas táctiles (en PC ocupaba el rincón del GPS).
+	base.visible = DisplayServer.is_touchscreen_available() or OS.get_environment("TACTIL") != ""
 	capa.add_child(base)
 	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
 			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
@@ -496,7 +608,7 @@ func _tactil(capa: CanvasLayer) -> void:
 	der.add_child(be)
 	_boton_e = be
 	var bs := Button.new()
-	bs.text = "Salir"
+	bs.text = Idiomas.t("Salir")
 	bs.custom_minimum_size = Vector2(tam * 1.6, tam)
 	bs.modulate = Color(1, 1, 1, 0.75)
 	bs.pressed.connect(func() -> void: salir.emit())
@@ -580,7 +692,13 @@ func _physics_process(delta: float) -> void:
 		cuerpo.rotation.x = _cabeceo
 		cuerpo.rotation.z = _balanceo
 	_colocar_camara(delta)
-	_buscar_cerca()
+	## Qué hay cerca (puertas, metro, vecinos, fachadas): ~370 µs por búsqueda;
+	## basta unas 8 veces por segundo o al dar medio metro (15-10-2026).
+	_t_cerca -= delta
+	if _t_cerca <= 0.0 or cuerpo.position.distance_squared_to(_p_cerca) > 0.25:
+		_t_cerca = 0.12
+		_p_cerca = cuerpo.position
+		_buscar_cerca()
 	## Gente alrededor: los peatones lejanos reaparecen cerca (a la espalda).
 	_t_gente -= delta
 	if _t_gente <= 0.0 and trafico != null and estado == "calle":
@@ -593,8 +711,8 @@ func _physics_process(delta: float) -> void:
 	var corriendo := modo != "coche" and absf(vel) > VEL_PIE * 1.15
 	_actualizar_mano("coche" if modo == "coche" else ("correr" if corriendo else "pie"), absf(vel) * 3.6,
 		VEL_COCHE * 3.6 if modo == "coche" else VEL_CORRER * 3.6, absf(vel) * delta)
-	_hud.text = ("🚗 Conduciendo" if modo == "coche" else "🚶 A pie") + "  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa" % [
-		int(absf(vel) * 3.6), "" if modo == "coche" else "Mayús: correr · V: vista · "]
+	_hud.text = (Idiomas.t("🚗 Conduciendo") if modo == "coche" else Idiomas.t("🚶 A pie")) + Idiomas.t("  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa") % [
+		int(absf(vel) * 3.6), "" if modo == "coche" else Idiomas.t("Mayús: correr · V: vista · ")]
 	## Dónde estás: el nombre de la calle (o el cruce).
 	if cb != null and cb.expansion != null:
 		var calle := cb.expansion.nombre_calle_en(cuerpo.position)
@@ -660,6 +778,120 @@ func _volante_ui(ver: bool = true) -> void:
 	_ui_volante.set("kmh", absf(vel) * 3.6)
 	_ui_volante.queue_redraw()
 
+var _cam_yaw := 0.0
+var _t_cabina := 0.0
+var _cabina: Node3D
+var _cabina_volante: Node3D
+var _cabina_kmh: Label3D
+
+func _fov_hacia(f: float, delta: float) -> void:
+	camara.fov = lerpf(camara.fov, f, clampf(delta * 3.0, 0.0, 1.0)) if delta < 1.0 else f
+
+## La cabina del coche en primera persona: piezas sencillas hijas de la cámara.
+func _cabina_3d(ver: bool) -> void:
+	if not ver:
+		if _cabina != null:
+			_cabina.visible = false
+		return
+	if _cabina == null:
+		_cabina = Node3D.new()
+		_cabina.name = "Cabina"
+		camara.add_child(_cabina)
+		var oscuro := StandardMaterial3D.new()
+		oscuro.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		oscuro.albedo_color = Color(0.2, 0.21, 0.23)
+		oscuro.roughness = 0.85
+		var gris := StandardMaterial3D.new()
+		gris.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		gris.albedo_color = Color(0.36, 0.37, 0.4)
+		gris.roughness = 0.6
+		var piel := StandardMaterial3D.new()
+		piel.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		piel.albedo_color = Color(0.07, 0.07, 0.08)
+		piel.roughness = 0.5
+		## Medidas desde los ojos (x a la derecha, y arriba, -z adelante): el
+		## conductor va 0,34 m a la izquierda del centro, el coche mide 1,8 m.
+		## El salpicadero: su borde de arriba queda 17 cm bajo los ojos.
+		_caja_cabina(Vector3(1.8, 0.3, 0.6), Vector3(0.34, -0.32, -0.88), Vector3.ZERO, oscuro)
+		_caja_cabina(Vector3(0.34, 0.2, 0.5), Vector3(0.34, -0.42, -0.5), Vector3.ZERO, gris)
+		## Los pilares delanteros, del salpicadero al techo, y el borde del techo.
+		_barra_cabina(Vector3(-0.52, -0.17, -0.95), Vector3(-0.47, 0.3, -0.38), 0.07, oscuro)
+		_barra_cabina(Vector3(1.2, -0.17, -0.95), Vector3(1.15, 0.3, -0.38), 0.07, oscuro)
+		_barra_cabina(Vector3(-0.5, 0.36, -0.38), Vector3(1.18, 0.36, -0.38), 0.04, oscuro)
+		## El retrovisor, arriba al centro del parabrisas.
+		_caja_cabina(Vector3(0.15, 0.045, 0.02), Vector3(0.36, 0.3, -0.48), Vector3(0, -12, 0), gris)
+		## El volante: aro, buje y radios; gira con `_volante`.
+		_cabina_volante = Node3D.new()
+		_cabina_volante.position = Vector3(0.0, -0.3, -0.5)
+		_cabina.add_child(_cabina_volante)
+		var aro := MeshInstance3D.new()
+		var tm := TorusMesh.new()
+		tm.inner_radius = 0.165
+		tm.outer_radius = 0.195
+		tm.rings = 24
+		tm.ring_segments = 8
+		aro.mesh = tm
+		aro.material_override = piel
+		_cabina_volante.add_child(aro)
+		for ang: float in [0.0, 120.0, 240.0]:
+			var radio := MeshInstance3D.new()
+			var bm := BoxMesh.new()
+			bm.size = Vector3(0.025, 0.02, 0.17)
+			radio.mesh = bm
+			radio.material_override = gris
+			radio.rotation_degrees = Vector3(0, ang, 0)
+			radio.position = Vector3(sin(deg_to_rad(ang)), 0, cos(deg_to_rad(ang))) * 0.085
+			_cabina_volante.add_child(radio)
+		var buje := MeshInstance3D.new()
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.05
+		cm.bottom_radius = 0.05
+		cm.height = 0.04
+		buje.mesh = cm
+		buje.material_override = gris
+		_cabina_volante.add_child(buje)
+		## El velocímetro, en el cuadro tras el volante.
+		_cabina_kmh = Label3D.new()
+		_cabina_kmh.font_size = 48
+		_cabina_kmh.pixel_size = 0.0012
+		_cabina_kmh.modulate = Color(0.55, 0.95, 0.75)
+		_cabina_kmh.outline_size = 0
+		_cabina_kmh.position = Vector3(0.0, -0.19, -0.66)
+		_cabina_kmh.rotation_degrees = Vector3(-15, 0, 0)
+		_cabina_kmh.no_depth_test = false
+		_cabina.add_child(_cabina_kmh)
+		for h in _cabina.find_children("*", "GeometryInstance3D", true, false):
+			(h as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_cabina.visible = true
+	## El aro mira al conductor (eje inclinado hacia atrás) y gira sobre su eje.
+	_cabina_volante.basis = Basis(Vector3.RIGHT, deg_to_rad(70.0)) * Basis(Vector3.UP, _volante * 2.6)
+	_cabina_kmh.text = "%d km/h" % int(round(absf(vel) * 3.6))
+
+## Una barra de `a` a `b` (pilares y techo).
+func _barra_cabina(a: Vector3, b: Vector3, grosor: float, mat: Material) -> void:
+	var m := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(grosor, a.distance_to(b), grosor)
+	m.mesh = bm
+	m.material_override = mat
+	var eje := (b - a).normalized()
+	var lado := eje.cross(Vector3.FORWARD)
+	if lado.length() < 0.01:
+		lado = eje.cross(Vector3.RIGHT)
+	lado = lado.normalized()
+	m.transform = Transform3D(Basis(lado, eje, lado.cross(eje)), (a + b) * 0.5)
+	_cabina.add_child(m)
+
+func _caja_cabina(tam: Vector3, en: Vector3, giro: Vector3, mat: Material) -> void:
+	var m := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = tam
+	m.mesh = bm
+	m.material_override = mat
+	m.position = en
+	m.rotation_degrees = giro
+	_cabina.add_child(m)
+
 class VolanteUI extends Control:
 	var giro := 0.0
 	var kmh := 0.0
@@ -705,13 +937,21 @@ func _colocar_camara(delta: float) -> void:
 			camara.position = cuerpo.position + Vector3(0, 1.25, 0) + dir_c * 2.15
 			cuerpo.visible = true
 		else:
-			camara.position = cuerpo.position + Vector3(0, 1.18, 0) + dir_c * 0.15 + der * 0.32
+			## PRIMERA PERSONA (17-10-2026): los ojos del conductor dentro de una
+			## cabina 3D (salpicadero, volante que gira, pilares, retrovisor) que
+			## va pegada a la cámara; con la velocidad, un leve temblor.
+			var tiembla := Vector3(0, sin(_t_cabina * 23.0) * 0.004 * clampf(absf(vel) / 20.0, 0.0, 1.0), 0)
+			camara.position = cuerpo.position + Vector3(0, 1.12, 0) + dir_c * 0.05 + der * 0.34 + tiembla
 			cuerpo.visible = false
-		var mira_dir := dir_c.rotated(Vector3.UP, -_volante * 0.18)
+		var mira_dir := dir_c.rotated(Vector3.UP, -_volante * (0.18 if cam_coche == 1 else 0.28))
 		camara.look_at(camara.position + mira_dir * 8.0 + Vector3(0, -0.2, 0), Vector3.UP)
 		camara.rotate_object_local(Vector3.FORWARD, -_balanceo * 0.6)
-		_volante_ui()
+		_t_cabina += delta if delta < 1.0 else 0.0
+		_cabina_3d(cam_coche == 2)
+		_fov_hacia(70.0 if cam_coche == 2 else 68.0, delta)
+		_volante_ui(false)
 		return
+	_cabina_3d(false)
 	_volante_ui(false)
 	if modo == "coche" and not cuerpo.visible:
 		cuerpo.visible = true
@@ -724,9 +964,21 @@ func _colocar_camara(delta: float) -> void:
 		return
 	if modo != "coche" and not cuerpo.visible and not _sentado_fp():
 		cuerpo.visible = true
-	var atras := 13.0 if modo == "coche" else 5.5
-	var alto := 5.5 if modo == "coche" else 2.6
+	var atras := 5.5
+	var alto := 2.6
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
+	## EN COCHE, CÁMARA DE PERSECUCIÓN (17-10-2026): sigue al coche con retraso
+	## en el giro (en las curvas se ve el costado), se aleja y abre el ángulo
+	## con la velocidad, y mira por delante del capó.
+	if modo == "coche":
+		var rapidez := clampf(absf(vel) / 25.0, 0.0, 1.0)
+		_cam_yaw = lerp_angle(_cam_yaw, rumbo, clampf(delta * (2.2 + rapidez * 1.5), 0.0, 1.0)) if delta < 1.0 else rumbo
+		adelante = Vector3(sin(_cam_yaw), 0, cos(_cam_yaw))
+		atras = lerpf(8.0, 11.5, rapidez)
+		alto = lerpf(3.0, 3.8, rapidez)
+		_fov_hacia(lerpf(66.0, 80.0, rapidez), delta)
+	else:
+		_fov_hacia(65.0, delta)
 	var deseo := cuerpo.position - adelante * atras + Vector3(0, alto, 0)
 	if estado == "anden" and not _acc.is_empty() and not bool(_acc["elevada"]):
 		## BAJO TIERRA la cámara no puede salirse del vestíbulo: se queda entre
@@ -749,18 +1001,21 @@ func _colocar_camara(delta: float) -> void:
 		var desde := cuerpo.position + Vector3(0, alto, 0)
 		var paso := (deseo - desde)
 		var largo := paso.length()
-		if largo > 0.01 and not libre(deseo, 0.3, obstaculos):
+		if largo > 0.01 and not libre_obst(deseo, 0.3):
 			var bueno := desde
 			var k := 0.5
 			while k <= largo:
 				var q := desde + paso / largo * k
-				if not libre(q, 0.3, obstaculos):
+				if not libre_obst(q, 0.3):
 					break
 				bueno = q
 				k += 0.5
 			deseo = bueno
-	camara.position = camara.position.lerp(deseo, clampf(delta * 5.0, 0.0, 1.0)) if delta < 1.0 else deseo
-	camara.look_at(cuerpo.position + Vector3(0, 1.6 if modo == "coche" else 1.4, 0) + adelante * 4.0, Vector3.UP)
+	camara.position = camara.position.lerp(deseo, clampf(delta * (8.0 if modo == "coche" else 5.0), 0.0, 1.0)) if delta < 1.0 else deseo
+	if modo == "coche":
+		camara.look_at(cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * (5.0 + absf(vel) * 0.25), Vector3.UP)
+	else:
+		camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 4.0, Vector3.UP)
 
 ## Lo que hay al alcance de la E: un peatón (a pie) o un lugar.
 func _buscar_cerca() -> void:
@@ -791,14 +1046,14 @@ func _buscar_cerca() -> void:
 			var q: Vector3 = a["pie"]
 			if Vector2(q.x - p.x, q.z - p.z).length() < 4.0:
 				_cerca = {"tipo": "metro", "acc": a, "n": "Ⓜ %s · %s" % [a["linea"], a["nombre"]]}
-				_aviso.text = "E: entrar al metro (%s, estación %s)" % [a["linea"], a["nombre"]]
+				_aviso.text = Idiomas.t("E: entrar al metro (%s, estación %s)") % [a["linea"], a["nombre"]]
 				return
 	if modo == "pie" and trafico != null:
 		for v: Dictionary in trafico._vehiculos:
 			var n: Node3D = v["nodo"]
 			if not is_instance_valid(n) or float(v["alto"]) < 0.1 or float(v["alto"]) > 0.3:
 				continue
-			if n.global_position.distance_to(p) < 3.5:
+			if n.position.distance_to(p) < 3.5:
 				_cerca = {"tipo": "peaton", "v": v, "n": "un vecino"}
 				break
 	if _cerca.is_empty():
@@ -819,7 +1074,7 @@ func _buscar_cerca() -> void:
 	if _cerca.is_empty():
 		_aviso.text = ""
 	elif _cerca["tipo"] == "peaton":
-		_aviso.text = "E: hablar con %s" % _cerca["n"]
+		_aviso.text = Idiomas.t("E: hablar con %s") % _cerca["n"]
 	else:
 		_aviso.text = "E: %s" % _cerca["n"]
 
@@ -841,11 +1096,11 @@ func _unhandled_input(ev: InputEvent) -> void:
 		_usar()
 	elif k == KEY_V and modo == "coche" and estado == "calle":
 		cam_coche = (cam_coche + 1) % 3
-		_aviso.text = ["Cámara: tercera persona", "Cámara: capó", "Cámara: interior"][cam_coche]
+		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: primera persona")][cam_coche]
 	elif k == KEY_V:
 		primera_persona = not primera_persona
 		_raton_en_primera_persona()
-		_aviso.text = "Primera persona" if primera_persona else "Tercera persona"
+		_aviso.text = Idiomas.t("Primera persona") if primera_persona else Idiomas.t("Tercera persona")
 	elif k == KEY_C and estado == "tren":
 		_ventana = not _ventana
 
@@ -1005,7 +1260,7 @@ func _mover_en_interior(delta: float) -> void:
 	elif _anim != null:
 		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 	_colocar_camara(delta)
-	_hud.text = "🏠 %s  ·  W/S/A/D para moverte · V: vista · E o la puerta: salir" % String(_int.call("_sala_nombre"))
+	_hud.text = Idiomas.t("🏠 %s  ·  W/S/A/D para moverte · V: vista · E o la puerta: salir") % String(_int.call("_sala_nombre"))
 	## ¿Alguien de la sala a mano para charlar?
 	_int_cerca = {}
 	var mejor := 1.9
@@ -1383,10 +1638,14 @@ func _mover_en_estadio(delta: float) -> void:
 	if not g.is_empty():
 		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
 		_zona_est = nombre
+		_aviso_hablar = true
 	elif RecorridoClub.junto_a_la_grada(cuerpo.position - CityBuilder.ESTADIO_EN, _planta):
 		_aviso.text = Idiomas.t("E: sentarse en la grada")
 		_zona_est = "·grada"
-	elif nombre != _zona_est or _aviso.text.begins_with("E: hablar"):
+	elif nombre != _zona_est or _aviso_hablar:
+		## Antes se miraba si el texto empezaba por «E: hablar»: en otro idioma
+		## nunca coincidía y el aviso de hablar se quedaba pegado.
+		_aviso_hablar = false
 		_zona_est = nombre
 		_aviso.text = RecorridoClub.aviso_de(nombre)
 		if RecorridoClub.sala_decorable(nombre):
@@ -1458,6 +1717,8 @@ func _mover_en_anden(delta: float) -> void:
 	_sonar_pasos(vel)
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
 	var p := cuerpo.position + adelante * vel * delta
+	## No se atraviesa a la gente del andén: se la rodea (círculos, 16-10-2026).
+	p = metro.apartar(p, 0.3)
 	## Dentro del andén: ni a la vía ni fuera de la estación.
 	var rel := p - _anden_c
 	var la := clampf(rel.dot(_anden_lat), -_anden_medio.x, _anden_medio.x)
@@ -1468,12 +1729,12 @@ func _mover_en_anden(delta: float) -> void:
 	var k := metro.tren_parado_en(_linea, _idx)
 	var eta := metro.eta_minima(_linea, _idx)
 	var nombre := String(MetroCiudad.NOMBRES[_linea][_idx])
-	_hud.text = "Ⓜ %s · estación %s  ·  W/A/S/D · Mayús: correr · E: %s · Esc: mapa" % [
-		_linea, nombre, "subir al tren" if k >= 0 else "salir a la calle"]
+	_hud.text = Idiomas.t("Ⓜ %s · estación %s  ·  W/A/S/D · Mayús: correr · E: %s · Esc: mapa") % [
+		_linea, nombre, Idiomas.t("subir al tren") if k >= 0 else Idiomas.t("salir a la calle")]
 	if k >= 0:
-		_aviso.text = "🚇 Tren en el andén, puertas abiertas · E para subir"
+		_aviso.text = Idiomas.t("🚇 Tren en el andén, puertas abiertas · E para subir")
 	else:
-		_aviso.text = "Próximo tren: %s · E: salir a la calle" % ("llegando" if eta < 20.0 else "%d s" % int(eta))
+		_aviso.text = Idiomas.t("Próximo tren: %s · E: salir a la calle") % ("llegando" if eta < 20.0 else "%d s" % int(eta))
 
 func _usar_en_anden() -> void:
 	var k := metro.tren_parado_en(_linea, _idx)
@@ -1517,13 +1778,13 @@ func _viajar(delta: float) -> void:
 		_bajar_del_tren()
 		return
 	var prox := metro.proxima_de(_linea, _tren_k)
-	_hud.text = "🚇 %s · %s · %d km/h  ·  C: %s · Esc: mapa" % [_linea,
-		("parado en %s" % String(MetroCiudad.NOMBRES[_linea][parada])) if parada >= 0 else ("próxima: %s" % prox),
-		int(t.v * 3.6), "mirar al frente" if _ventana else "mirar por la ventana"]
+	_hud.text = Idiomas.t("🚇 %s · %s · %d km/h  ·  C: %s · Esc: mapa") % [_linea,
+		(Idiomas.t("parado en %s") % String(MetroCiudad.NOMBRES[_linea][parada])) if parada >= 0 else (Idiomas.t("próxima: %s") % prox),
+		int(t.v * 3.6), Idiomas.t("mirar al frente") if _ventana else Idiomas.t("mirar por la ventana")]
 	if parada >= 0:
-		_aviso.text = "Puertas abiertas en %s · E: bajar aquí" % String(MetroCiudad.NOMBRES[_linea][parada])
+		_aviso.text = Idiomas.t("Puertas abiertas en %s · E: bajar aquí") % String(MetroCiudad.NOMBRES[_linea][parada])
 	else:
-		_aviso.text = "Próxima estación: %s · E: %s" % [prox, "no bajar" if _bajar_en_proxima else "bajar en la próxima"]
+		_aviso.text = Idiomas.t("Próxima estación: %s · E: %s") % [prox, Idiomas.t("no bajar") if _bajar_en_proxima else Idiomas.t("bajar en la próxima")]
 
 func _bajar_del_tren() -> void:
 	var parada := metro.estacion_del_tren(_linea, _tren_k)

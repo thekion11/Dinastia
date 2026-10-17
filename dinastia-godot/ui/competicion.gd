@@ -71,7 +71,7 @@ func _construir() -> void:
 	hueco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(hueco)
 	var cerrar := Button.new()
-	cerrar.text = "Cerrar"
+	cerrar.text = Idiomas.t("Cerrar")
 	cerrar.custom_minimum_size = Vector2(110, 34)
 	cerrar.pressed.connect(func() -> void: cerrado.emit())
 	cab.add_child(cerrar)
@@ -181,7 +181,7 @@ func _pintar_proximos(mio: Club) -> void:
 	var hasta: int = mini(_liga.jornada_actual + 3, _liga.calendario.size())
 	for j in range(_liga.jornada_actual, hasta):
 		var et := Label.new()
-		et.text = "Jornada %d" % (j + 1)
+		et.text = Idiomas.t("Jornada %d") % (j + 1)
 		et.add_theme_font_size_override("font_size", 10)
 		et.add_theme_color_override("font_color", COL_ORO)
 		_lista.add_child(et)

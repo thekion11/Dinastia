@@ -201,7 +201,7 @@ func semana(c: Club, obras: Instalaciones, anio: int, sem: int, prensa: Prensa) 
 		## Los dos caracteres con evento propio.
 		if car == "carismatico" and r < 0.012:
 			for j: Jugador in c.plantilla:
-				j.moral = clampi(j.moral + 2, 10, 99)
+				j.cambiar_moral(2, "Cuerpo técnico")
 			noticia.emit("🍖 Asado del club", "%s (%s) organiza un asado con el plantel. Buen ambiente." % [String(t0["nombre"]), String(t0["puesto"]).to_lower()])
 			pasado.append({"clave": clave, "tipo": "carisma"})
 			continue
@@ -398,7 +398,7 @@ func resolver(op: String, c: Club, obras: Instalaciones, prensa: Prensa) -> Dict
 			else:
 				t["moral"] = mini(99, int(t["moral"]) + 15)
 				for j: Jugador in c.plantilla:
-					j.moral = clampi(j.moral + 1, 10, 99)
+					j.cambiar_moral(1, "Cuerpo técnico")
 				out = {"titulo": "Homenaje en el vestuario", "cuerpo": "Tarta, camiseta firmada y abrazos para %s." % nombre}
 	if obras != null:
 		obras.factor_personal[clave] = factor(clave)
@@ -443,7 +443,7 @@ func _aplicar(c: Club, efecto: String, valor: int, prensa: Prensa, concepto: Str
 			movimiento.emit(concepto, monto)
 		"moral":
 			for j: Jugador in c.plantilla:
-				j.moral = clampi(j.moral + valor, 10, 99)
+				j.cambiar_moral(valor, "Cuerpo técnico")
 		"forma":
 			for j: Jugador in c.plantilla:
 				j.forma = clampi(j.forma + valor, 10, 99)

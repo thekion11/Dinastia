@@ -17,6 +17,8 @@ var _estado: Label
 var _col_campo: VBoxContainer
 var _col_banco: VBoxContainer
 var _filas_tac: Dictionary = {}
+## Abre el panel de estadísticas encima (lo pasa `VistaEstadio`).
+var ver_estadisticas: Callable = Callable()
 
 const OPCIONES := {
 	"mentalidad": ["🛡 Defensiva", "⚖ Equilibrada", "⚔ Ofensiva"],
@@ -25,8 +27,9 @@ const OPCIONES := {
 	"ritmo": ["Ritmo lento", "Ritmo medio", "Ritmo alto"],
 }
 
-static func abrir(padre: Control, p: Partido, club: Club, m: MotorJugable) -> PanelDTPartido:
+static func abrir(padre: Control, p: Partido, club: Club, m: MotorJugable, estadisticas: Callable = Callable()) -> PanelDTPartido:
 	var n := PanelDTPartido.new()
+	n.ver_estadisticas = estadisticas
 	n.partido = p
 	n.mi_club = club
 	n.motor = m
@@ -101,12 +104,24 @@ func _montar() -> void:
 	_estado = Tema.etiqueta(13, Tema.SUAVE, "")
 	_estado.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(_estado)
+	var botones := HBoxContainer.new()
+	botones.add_theme_constant_override("separation", 8)
+	v.add_child(botones)
+	## Las estadísticas del partido (el panel de la tele), sin salir de la pausa.
+	if ver_estadisticas.is_valid():
+		var stats := Button.new()
+		stats.text = Idiomas.t("📊 Estadísticas") + "  (" + Mando.corto_de("jugar_estadisticas") + ")"
+		stats.custom_minimum_size = Vector2(240, 36)
+		stats.add_theme_font_size_override("font_size", 15)
+		stats.pressed.connect(func() -> void: ver_estadisticas.call())
+		botones.add_child(stats)
 	var seguir := Button.new()
 	seguir.text = Idiomas.t("▶  Seguir jugando")
 	seguir.custom_minimum_size = Vector2(0, 36)
+	seguir.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	seguir.add_theme_font_size_override("font_size", 17)
 	seguir.pressed.connect(cerrar)
-	v.add_child(seguir)
+	botones.add_child(seguir)
 	_pintar_cambios()
 
 func _fijar(k: String, i: int) -> void:

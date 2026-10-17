@@ -120,6 +120,14 @@ const SECCIONES := [
 	"_probar_documental",
 	"_probar_tribuna_real",
 	"_probar_narracion_traducida",
+	"_probar_rotulo_y_sala",
+	"_probar_transmision_y_estadisticas",
+	"_probar_arreglos_partido_motor",
+	"_probar_tanda_top25b",
+	"_probar_prorroga_y_penales",
+	"_probar_informe_rival",
+	"_probar_porque_moral",
+	"_probar_paridad_idiomas",
 ]
 
 var _fallos: Array[String] = []
@@ -167,6 +175,10 @@ const COSTES := {
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
+	## Coste mínimo a propósito: va la última en el reparto y no mueve a las demás
+	## (`_probar_motor_libre` depende del estado que dejan las secciones previas de
+	## su proceso; ver el HALLAZGO en CLAUDE.md). Mide ~0,5 s.
+	"_probar_prorroga_y_penales": 0.01,
 }
 var _reparto: Array = []
 
@@ -5120,6 +5132,84 @@ func _probar_narracion_traducida() -> void:
 	Idiomas.idioma = antes
 	Idiomas._cache.clear()
 
+## LOS 8 IDIOMAS CON LAS MISMAS FRASES (15-10-2026, INFORME_INTERNO §9 / I-01).
+## Las frases castellanas son la UNIÓN de todos los catálogos: la tabla del
+## esqueleto (`Idiomas.TABLA`), `datos/idiomas_extra.json` de cada idioma (con
+## los diálogos de la ciudad dentro) y las directas de la narración. Ningún
+## idioma puede tener menos que esa unión; los patrones (con números o nombres)
+## tienen que tener plantilla en los 8, y las frases de `DialogosCiudad`
+## (generado por `herramientas/dialogos_ciudad.py`) tienen que estar en todos.
+func _probar_paridad_idiomas() -> void:
+	_titulo("IDIOMAS: LOS 8 TIENEN LAS MISMAS FRASES QUE EL CASTELLANO")
+	var antes := Idiomas.idioma
+	var castellano := {}
+	for k: String in Idiomas.TABLA:
+		castellano[k] = true
+	for idi: String in Idiomas.ORDEN:
+		for k: String in (Idiomas._extra.get(idi, {}) as Dictionary):
+			castellano[k] = true
+	## Las frases de los vecinos, sacadas del propio script generado.
+	var re := RegEx.new()
+	re.compile('Idiomas\\.t\\("((?:[^"\\\\]|\\\\.)*)"\\)')
+	var vecinos := 0
+	for m in re.search_all(FileAccess.get_file_as_string("res://nucleo/dialogos_ciudad.gd")):
+		castellano[m.get_string(1).c_unescape()] = true
+		vecinos += 1
+	_comprobar(vecinos >= 72, "los diálogos de la ciudad aportan sus frases (%d)" % vecinos)
+	_comprobar(castellano.size() > 2500, "frases castellanas en los catálogos: %d" % castellano.size())
+	for idi: String in Idiomas.ORDEN:
+		Idiomas.idioma = idi
+		var faltan: Array[String] = []
+		for k: String in castellano:
+			if Idiomas._directa(k) == "":
+				faltan.append(k)
+		_comprobar(faltan.is_empty(), "«%s» tiene las %d frases (faltan %d%s)" % [idi, castellano.size(),
+			faltan.size(), "" if faltan.is_empty() else ": " + ", ".join(faltan.slice(0, 6))])
+	var cortos := {}
+	for par: Array in Idiomas._patrones:
+		for idi: String in Idiomas.ORDEN:
+			if String((par[1] as Dictionary).get(idi, "")) == "":
+				cortos[idi] = int(cortos.get(idi, 0)) + 1
+	_comprobar(cortos.is_empty(), "los %d patrones tienen plantilla en los 8 idiomas %s" % [Idiomas._patrones.size(),
+		"" if cortos.is_empty() else str(cortos)])
+	## Cada `Idiomas.t("…")` escrito en el código (M-446): traducido en los 8.
+	## Lo mismo que `pruebas/frases_sin_traducir.gd`, pero aquí falla.
+	var del_codigo := {}
+	for dir: String in ["res://ui", "res://visor", "res://nucleo"]:
+		_frases_de_idiomas_t(dir, re, del_codigo)
+	var sin: Array[String] = []
+	for f: String in del_codigo:
+		if f.strip_edges() == "%s":
+			continue
+		for idi: String in Idiomas.ORDEN:
+			Idiomas.idioma = idi
+			if Idiomas._directa(f) == "" and Idiomas._t(f, 0) == f:
+				sin.append("%s: %s" % [idi, f])
+	_comprobar(del_codigo.size() > 200 and sin.is_empty(), "las %d frases de Idiomas.t(\"…\") del código, en los 8 idiomas (%d sin traducir%s)" % [
+		del_codigo.size(), sin.size(), "" if sin.is_empty() else ": " + ", ".join(sin.slice(0, 6))])
+	## Y los marcadores no se pierden al traducir: lo que lleva %s/%d en
+	## castellano lo lleva igual en cada idioma (si no, el `%` revienta).
+	var huecos := RegEx.new()
+	huecos.compile("%[+-]?(?:\\.\\d+)?[sd]")
+	var malos: Array[String] = []
+	for idi: String in Idiomas.ORDEN:
+		var ex: Dictionary = Idiomas._extra.get(idi, {})
+		for k: String in ex:
+			if huecos.search_all(k).size() != huecos.search_all(String(ex[k])).size():
+				malos.append("%s: %s" % [idi, k])
+	_comprobar(malos.is_empty(), "los %%s y %%d se conservan en cada idioma (%d mal%s)" % [malos.size(),
+		"" if malos.is_empty() else ": " + ", ".join(malos.slice(0, 4))])
+	Idiomas.idioma = antes
+	Idiomas._cache.clear()
+
+func _frases_de_idiomas_t(dir: String, re: RegEx, frases: Dictionary) -> void:
+	for f in DirAccess.get_files_at(dir):
+		if f.ends_with(".gd"):
+			for m in re.search_all(FileAccess.get_file_as_string(dir + "/" + f)):
+				frases[m.get_string(1).c_unescape()] = true
+	for d in DirAccess.get_directories_at(dir):
+		_frases_de_idiomas_t(dir + "/" + d, re, frases)
+
 ## LA TRIBUNA COMO TERMÓMETRO (fase 5): los hinchas citan jugadas reales.
 func _probar_tribuna_real() -> void:
 	_titulo("TRIBUNA: LOS HINCHAS CITAN JUGADAS REALES (FASE 5)")
@@ -5241,6 +5331,32 @@ func _probar_minijuegos() -> void:
 	_comprobar(ok_cap, "la respuesta del capitán es el capitán de verdad (%s)" % cap)
 
 ## LA CIUDAD GRANDE (7-10-2026): red vial en datos, semáforos, transporte.
+func _probar_rotulo_y_sala() -> void:
+	## 15-10-2026: el rótulo de la fachada y la sala de dentro se sorteaban por
+	## separado («Farmacia» que abría un taller). Ahora manda el rótulo.
+	_titulo("CIUDAD: LO QUE DICE EL RÓTULO ES LO QUE HAY DENTRO")
+	var sin_sala: Array = []
+	for com: Array in CiudadExpansion.COMERCIOS:
+		var texto := String(com[0])
+		var nombre := texto.substr(texto.find(" ") + 1)
+		var k := String(ExploradorCiudad.SALA_DE_ROTULO.get(nombre, ""))
+		if k == "" or not InteriorInstalacion.tiene(k):
+			sin_sala.append(nombre)
+	_comprobar(sin_sala.is_empty(), "los %d comercios tienen una sala que existe %s" % [CiudadExpansion.COMERCIOS.size(), str(sin_sala)])
+	var cb := CityBuilder.new()
+	cb.expansion = CiudadExpansion.new(cb)
+	cb.expansion.rotulos = [
+		{"pos": Vector3(100, 0, 50), "ancho": 8.0, "texto": "💊 Farmacia"},
+		{"pos": Vector3(110, 0, 50), "ancho": 8.0, "texto": "🥖 Panadería"},
+	]
+	var ex := ExploradorCiudad.new()
+	ex.cb = cb
+	_comprobar(String(ex._rotulo_en(Vector3(101, 0, 51)).get("texto", "")) == "💊 Farmacia", "la puerta de la farmacia es la de la farmacia")
+	_comprobar(String(ex._rotulo_en(Vector3(109, 0, 51)).get("texto", "")) == "🥖 Panadería", "y la de al lado, la de la panadería")
+	_comprobar(ex._rotulo_en(Vector3(140, 0, 50)).is_empty(), "lejos de los rótulos no hay rótulo")
+	ex.free()
+	cb.free()
+
 func _probar_ciudad_grande() -> void:
 	_titulo("LA CIUDAD GRANDE: RED VIAL, SEMÁFOROS Y TRANSPORTE")
 	var cb := CityBuilder.new()
@@ -5257,6 +5373,17 @@ func _probar_ciudad_grande() -> void:
 			puentes += 1
 	_comprobar(puentes >= 15, "%d tramos cruzan el río por puente" % puentes)
 	_comprobar(e.cruces_semaforo.size() >= 40, "%d cruces con semáforo" % e.cruces_semaforo.size())
+	## Marcas y aceras coherentes en los cruces (16-10-2026).
+	var cruce_ca := Vector3(550, 0, -660)    ## calle (x=550) que cruza una avenida (z=-660)
+	_comprobar(is_equal_approx(e.medio_cruce(cruce_ca, Vector3(0, 0, 1)), CiudadExpansion.ANCHO_AV * 0.5), "la calle sabe que la cruza una avenida de 24 m")
+	_comprobar(e._fin_acera(cruce_ca, Vector3(0, 0, -1), Vector3(1, 0, 0), CiudadExpansion.ANCHO_CALLE, false) >= CiudadExpansion.ANCHO_AV * 0.5,
+		"la acera de la calle no entra en la calzada de la avenida")
+	var mal_rayas := 0
+	for p: Vector3 in e.cruces_semaforo:
+		for d: Vector3 in [Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)]:
+			if e.ancho_brazo(p, d) > 0.0 and not e.es_puente(p, d) and e._libre_de_marcas(p, d) < e.linea_detencion(e.medio_cruce(p, d)):
+				mal_rayas += 1
+	_comprobar(mal_rayas == 0, "las rayas del centro no pisan cruces ni cebras (%d mal)" % mal_rayas)
 	var camino := e.camino_entre(Vector2i(-12, -12), Vector2i(12, 12))
 	_comprobar(camino.size() >= 25, "la red está conectada: de una esquina a la otra en %d cruces" % camino.size())
 	var camino2 := e.camino_entre(Vector2i(-9, 0), Vector2i(9, 0))
@@ -8091,3 +8218,462 @@ func _probar_optimizacion() -> void:
 		Calidad.guardar()
 	else:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(Calidad.ARCHIVO))
+
+## LA TRANSMISIÓN INTELIGENTE Y LAS ESTADÍSTICAS A PEDIDO (16-10-2026).
+## La cámara se prueba sin pintar nada: se le dan balones sintéticos a 60 Hz y
+## se mide lo que hace (dónde está, cuánto corre, cuánto cierra o abre).
+## LOS ARREGLOS RÁPIDOS DEL PARTIDO CON MOTOR (17-10-2026): árbitro que
+## contrasta (M-072), gestos y tarjeta en la mano (M-106), cartel del cuarto
+## árbitro (M-139), red que se ondula (M-149), festejo de la grada (M-050) y
+## líneas del fuera de juego en la sala VAR (M-118).
+func _probar_arreglos_partido_motor() -> void:
+	_titulo("PARTIDO 3D: ÁRBITRO, CARTEL, RED, FESTEJO Y LÍNEA VAR")
+	## M-072: contra un equipo de negro el árbitro no va de negro; estable.
+	var kn := {"c1": "#101010"}
+	var kr := {"c1": "#d01818"}
+	var a1 := Puente3D.kit_arbitro(kn, kr, 77)
+	_comprobar(String(a1["nombre"]) != "negro", "árbitro: contra negro y rojo no va de negro (%s)" % a1["nombre"])
+	_comprobar(Puente3D.kit_arbitro(kn, kr, 77)["nombre"] == a1["nombre"], "árbitro: la misma camiseta para el mismo partido")
+	var cl := Color(String(a1["c1"]))
+	var peor := minf(Puente3D.contraste_camiseta(cl, Color("#101010")), Puente3D.contraste_camiseta(cl, Color("#d01818")))
+	_comprobar(peor > Puente3D.contraste_camiseta(Color("#111216"), Color("#101010")) + 0.3, "árbitro: contrasta más que el negro de siempre (%.2f)" % peor)
+	var a2 := Puente3D.kit_arbitro({"c1": "#f4f4f4"}, {"c1": "#2a9a3a"}, 5)
+	_comprobar(String(a2["nombre"]) in ["negro", "rojo", "rosa", "naranja"], "árbitro: contra blanco y verde, uno oscuro o vivo (%s)" % a2["nombre"])
+	## M-106: los gestos del árbitro en el motor real (cola con reloj propio).
+	var motor := MotorJugable.new()
+	add_child(motor)
+	motor.set_physics_process(false)
+	var arb_nodo := Node3D.new()
+	add_child(arb_nodo)
+	var ap := AnimationPlayer.new()
+	arb_nodo.add_child(ap)
+	var lib := AnimationLibrary.new()
+	for clip in ["parado", "trotar", "correr", "arbitro_silbato", "senalar_falta", "mostrar_tarjeta", "arbitro_amonestar_hablar", "arbitro_tiempo_anadido"]:
+		var an := Animation.new()
+		an.length = 1.0
+		lib.add_animation(clip, an)
+	ap.add_animation_library("", lib)
+	motor.arbitros = [{"id": "arbitro", "node": arb_nodo, "anim": ap, "arbitro": true}]
+	var bal := Node3D.new()
+	add_child(bal)
+	motor.balon = bal
+	var gestos: Array = []
+	motor.gesto_arbitro.connect(func(g: String) -> void: gestos.append(g))
+	motor.call("_gesto_arbitro", "arbitro_silbato", 0.0, 0.9)
+	motor.call("_gesto_arbitro", "mostrar_tarjeta", 1.0, 1.5, {"tarjeta": "amarilla"})
+	for i in 40:
+		motor.call("_mover_arbitros", 0.05)
+	_comprobar(gestos.has("silbato") and gestos.has("mostrar_tarjeta"), "árbitro: pita y enseña la tarjeta (%s)" % str(gestos))
+	_comprobar(String(motor.arbitros[0].get("anim_actual", "")) == "mostrar_tarjeta", "árbitro: está con el gesto de la tarjeta")
+	motor.queue_free()
+	arb_nodo.queue_free()
+	bal.queue_free()
+	## M-139: el cartel lleva los minutos por las dos caras.
+	var cartel := CuartoArbitro.cartel(4)
+	var textos := 0
+	for l in cartel.find_children("*", "Label3D", true, false):
+		if (l as Label3D).text == "+4":
+			textos += 1
+	_comprobar(textos == 2, "cuarto árbitro: «+4» por las dos caras (%d)" % textos)
+	cartel.free()
+	## M-149: la red se abomba hacia fuera desde donde entra el balón.
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var poste := StandardMaterial3D.new()
+	StadiumBuilder._add_goal(raiz, 52.5, poste, Color.WHITE)
+	StadiumBuilder._add_goal(raiz, -52.5, poste, Color.WHITE)
+	_comprobar(RedArco.golpe(raiz, Vector3(1.0, 1.2, 53.3)), "red: el gol encuentra su arco")
+	var fondo: MeshInstance3D = null
+	for m in raiz.find_children("RedFondo", "MeshInstance3D", true, false):
+		if (m as MeshInstance3D).global_position.z > 0.0:
+			fondo = m
+	var fz := float((fondo.material_override as ShaderMaterial).get_shader_parameter("fuerza")) if fondo != null else 0.0
+	_comprobar(fz > 0.3, "red: el paño de fondo recibe la onda (fuerza %.2f)" % fz)
+	_comprobar((fondo.mesh as QuadMesh).subdivide_width >= 16 if fondo != null else false, "red: el paño está subdividido para ondularse")
+	raiz.queue_free()
+	## M-118: el tramo de la línea se recorta al monitor.
+	var sala := SalaVAR.new()
+	var rec: Array = sala.call("_recortar", Vector2(-3, 0), Vector2(3, 0.2), Vector2(1, 0.5))
+	_comprobar(rec.size() == 2 and absf((rec[0] as Vector2).x + 1.0) < 0.01 and absf((rec[1] as Vector2).x - 1.0) < 0.01, "VAR: la línea se recorta al borde del monitor")
+	_comprobar((sala.call("_recortar", Vector2(-3, 2), Vector2(3, 2), Vector2(1, 0.5)) as Array).is_empty(), "VAR: una línea fuera del monitor no se dibuja")
+	sala.free()
+	## M-050: con el motor ligero no hay festejo.
+	var ligero := Calidad.motor_ligero
+	Calidad.motor_ligero = true
+	_comprobar(not FestejoGrada.activo(), "festejo: apagado con el motor ligero")
+	Calidad.motor_ligero = ligero
+
+func _probar_tanda_top25b() -> void:
+	_titulo("TOP 25 (2.ª TANDA): CAMBIO, SORTEO, VALORACIONES, ESCUDO, DESPIDO")
+	## M-104: el cartel del cambio, con los dos dorsales por las dos caras.
+	var cartel := CuartoArbitro.cartel_lineas([["9", CuartoArbitro.VERDE], ["17", CuartoArbitro.ROJO]])
+	var nueves := 0
+	var diecisiete := 0
+	for l in cartel.find_children("*", "Label3D", true, false):
+		nueves += 1 if (l as Label3D).text == "9" else 0
+		diecisiete += 1 if (l as Label3D).text == "17" and (l as Label3D).modulate == CuartoArbitro.ROJO else 0
+	_comprobar(nueves == 2 and diecisiete == 2, "cambio: cartel con el que entra (verde) y el que sale (rojo) por las dos caras")
+	cartel.free()
+	## M-104: la escena (el que entra espera sujeto, palmada, se suelta, se va).
+	var motor := MotorJugable.new()
+	add_child(motor)
+	motor.set_physics_process(false)
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var sale := Node3D.new()
+	raiz.add_child(sale)
+	sale.position = Vector3(30.0, 0, 2.0)
+	var en_nodo := Node3D.new()
+	raiz.add_child(en_nodo)
+	en_nodo.position = Vector3(10.0, 0, 0)
+	var entra := {"node": en_nodo, "vel": Vector3.ONE}
+	var esc := EscenaCambio.iniciar(raiz, null, motor, sale, null, entra, 17, 9)
+	_comprobar(esc != null and raiz.get_node_or_null("CuartoArbitro") != null, "cambio: sale el cuarto árbitro con el cartel")
+	var fases: Array = []
+	var quieto := true
+	for i in 120:
+		motor.t += 0.1
+		en_nodo.position += Vector3(-0.3, 0, 0)   ## como si el motor lo moviera
+		if is_instance_valid(esc):
+			esc._process(0.1)
+			if not fases.has(esc.fase):
+				fases.append(esc.fase)
+			if esc.fase == "acude" and en_nodo.position.distance_to(Vector3(EscenaCambio.X_LINEA, 0, EscenaCambio.Z_ESPERA)) > 0.01:
+				quieto = false
+	_comprobar(quieto, "cambio: el que entra espera en la banda hasta la palmada")
+	_comprobar(fases.has("palmada") and fases.has("se_va"), "cambio: se chocan la mano y el que sale se va (%s)" % str(fases))
+	_comprobar(float(entra.get("freno_duelo", 0.0)) == 1.0, "cambio: el que entra queda suelto después")
+	_comprobar(not is_instance_valid(esc) or esc.is_queued_for_deletion(), "cambio: la escena se borra sola")
+	motor.queue_free()
+	raiz.queue_free()
+	## M-160 y clips: el sorteo cabe en la ceremonia; los gestos existen.
+	_comprobar(CeremoniaPartido.T_FIN >= CeremoniaPartido.T_VUELO + CeremoniaPartido.T_SALIDA + CeremoniaPartido.T_FILA * 2.0 + 3.5
+		and CeremoniaPartido.T_SORTEO <= 5.0, "sorteo: ≈4 s al final de la ceremonia")
+	var expr: Array = AnimFutbol.familias()["expresivo"]
+	_comprobar(expr.has("chocar_mano") and expr.has("dar_mano"), "clips nuevos: chocar_mano y dar_mano")
+	## M-141: valoraciones deterministas, ordenadas y sin tocar el resultado.
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	m.mi_club_id = m.ligas[0].clubes[0].id
+	var par := m.proximo_partido()
+	var p := Partido.new(par[0], par[1])
+	p.simular()
+	var v1 := p.valoraciones()
+	var v2 := p.valoraciones()
+	var orden := true
+	for i in range(1, v1.size()):
+		if float(v1[i]["nota"]) > float(v1[i - 1]["nota"]):
+			orden = false
+	_comprobar(v1.size() >= 22 and orden, "valoraciones: los 22, de mejor a peor (%d)" % v1.size())
+	var iguales := v1.size() == v2.size()
+	for i in mini(v1.size(), v2.size()):
+		iguales = iguales and float(v1[i]["nota"]) == float(v2[i]["nota"])
+	_comprobar(iguales, "valoraciones: pedirlas dos veces da lo mismo")
+	var rango := true
+	for x: Dictionary in v1:
+		rango = rango and float(x["nota"]) >= 3.0 and float(x["nota"]) <= 10.0
+	_comprobar(rango, "valoraciones: entre 3 y 10")
+	_comprobar(p.mejor_del_partido() == v1[0], "valoraciones: el mejor del partido es el primero")
+	## M-238: el resumen de la etapa del despido.
+	var filas := EscenaDespido.datos_etapa(m)
+	var claves: Array = []
+	for f: Array in filas:
+		claves.append(f[0])
+	_comprobar(claves.has("Temporadas") and claves.has("Títulos") and claves.has("Balance (G-E-P)"), "despido: resumen con temporadas, balance y títulos")
+	## M-051: el escudo, más grande y con relieve.
+	var sh := load("res://visor/equipacion_q.gdshader") as Shader
+	_comprobar(sh.code.contains("h_escudo") and sh.code.contains("/ 0.104 + 0.5"), "escudo: 10,4 cm de ancho y relieve en el shader")
+
+func _probar_transmision_y_estadisticas() -> void:
+	_titulo("PARTIDO 3D: CÁMARA DE TRANSMISIÓN INTELIGENTE Y ESTADÍSTICAS")
+	var dt := 1.0 / 60.0
+	## 1) En TODOS los estadios y alturas: dentro del cuenco, sin tirones.
+	var fuera: Array = []
+	var tirones: Array = []
+	var techo: Array = []
+	for forma: String in ["ingles", "rect", "herradura", "caldera", "oval", "dos", "principal", "cuenco"]:
+		var g := StadiumBuilder.geom_de_forma(forma)
+		for n in [1, 2, 3, 5]:
+			var alto := StadiumBuilder.ALTURA_PIE + float(n) * StadiumBuilder.subida_bandeja() + float(n - 1) * StadiumBuilder.FRENTE_BANDEJA
+			var rig := CameraRig.new()
+			add_child(rig)
+			rig.set_process(false)
+			rig.build_for(float(g["dx"]), float(g["dz"]), alto)
+			var cam: Camera3D = rig.cameras[0]
+			var antes := Vector3.INF
+			var fov_antes := -1.0
+			var max_v := 0.0
+			var max_fov := 0.0
+			for i in 1500:
+				var tt := float(i) * dt
+				## Un balón que va y viene de área a área, con un salto a mitad
+				## (saque de centro tras un gol) y una ocasión.
+				var b := Vector3(sin(tt * 0.7) * 30.0, 0.1, sin(tt * 0.45) * 50.0)
+				if i >= 700 and i < 760:
+					b = Vector3(0, 0.1, 0)
+				rig.pista_estado = "juego"
+				rig.pista_ataca = 1.0 if cos(tt * 0.45) >= 0.0 else -1.0
+				if i == 1000:
+					rig.pista_ocasion = 1.4
+				rig._transmision(cam, b, dt)
+				var p := cam.global_position
+				if p.x > float(g["dx"]) - 6.9 or absf(p.z) > CameraRig.CARRO_Z_MAX + 0.01 or p.y > 24.01 or p.y < 8.99:
+					fuera.append("%s/%d" % [forma, n])
+					break
+				var losa := alto + 0.4
+				if p.y > losa - 1.15 and p.y < losa + 1.6:
+					techo.append("%s/%d y=%.1f" % [forma, n, p.y])
+					break
+				if antes != Vector3.INF:
+					max_v = maxf(max_v, p.distance_to(antes) / dt)
+					max_fov = maxf(max_fov, absf(cam.fov - fov_antes) / dt)
+				antes = p
+				fov_antes = cam.fov
+			if max_v > CameraRig.CARRO_VMAX * 1.25 or max_fov > CameraRig.ZOOM_VMAX * 1.1:
+				tirones.append("%s/%d v=%.1f fov=%.1f" % [forma, n, max_v, max_fov])
+			rig.free()
+	_comprobar(fuera.is_empty(), "la transmisión no sale de su raíl en ningún estadio (x fija en el cuenco, |z| ≤ 38) %s" % str(fuera))
+	_comprobar(techo.is_empty(), "la cámara nunca queda a la altura de la losa del techo %s" % str(techo))
+	_comprobar(tirones.is_empty(), "sin tirones: el carro ≤ %.0f m/s y el zoom ≤ %.0f°/s, también tras un salto del balón %s" % [CameraRig.CARRO_VMAX * 1.25, CameraRig.ZOOM_VMAX * 1.1, str(tirones)])
+	## 2) Lo que lee de la jugada.
+	var rig2 := CameraRig.new()
+	add_child(rig2)
+	rig2.set_process(false)
+	rig2.build_for(49.0, 68.0, 13.0)
+	var c2: Camera3D = rig2.cameras[0]
+	rig2.pista_estado = "juego"
+	rig2.pista_ataca = 1.0
+	for i in 60:
+		rig2._transmision(c2, Vector3(0, 0.1, -5.0), dt)
+	var fov_medio := c2.fov
+	_comprobar(rig2.trans_plano == "normal" and absf(fov_medio - CameraRig.FOV_TRANSMISION) < 1.0, "en el medio del campo, plano normal (%s, %.1f°)" % [rig2.trans_plano, fov_medio])
+	for i in 240:
+		rig2._transmision(c2, Vector3(5.0, 0.1, 40.0), dt)
+	_comprobar(rig2.trans_plano == "area" and c2.fov < CameraRig.FOV_TRANSMISION - 4.0, "con la jugada en el área el plano se cierra (%s, %.1f°)" % [rig2.trans_plano, c2.fov])
+	rig2.pista_ocasion = 1.4
+	rig2._transmision(c2, Vector3(5.0, 0.1, 40.0), dt)
+	_comprobar(rig2.trans_plano == "ocasion", "un tiro en el aire es «ocasión» (%s)" % rig2.trans_plano)
+	## El foco no tiembla con el balón que se mueve dentro de la zona muerta.
+	var r_antes := CameraRig.new()
+	add_child(r_antes)
+	r_antes.set_process(false)
+	r_antes.build_for(49.0, 68.0, 13.0)
+	var c3: Camera3D = r_antes.cameras[0]
+	r_antes.pista_estado = "juego"
+	r_antes.pista_ataca = 1.0
+	for i in 200:
+		r_antes._transmision(c3, Vector3(0, 0.1, 0), dt)
+	var f0 := r_antes._trans_foco
+	var mov := 0.0
+	for i in 240:
+		r_antes._transmision(c3, Vector3(sin(i * 0.3) * 0.8, 0.1, cos(i * 0.21) * 1.2), dt)
+		mov = maxf(mov, r_antes._trans_foco.distance_to(f0))
+	_comprobar(mov < 0.6, "zona muerta: el balón que se mueve 1 m no mueve el plano (%.2f m)" % mov)
+	## Contraataque: el balón cruza el campo rápido hacia la portería rival.
+	var r4 := CameraRig.new()
+	add_child(r4)
+	r4.set_process(false)
+	r4.build_for(49.0, 68.0, 13.0)
+	var c4: Camera3D = r4.cameras[0]
+	r4.pista_estado = "juego"
+	r4.pista_ataca = 1.0
+	for i in 30:
+		r4._transmision(c4, Vector3(0, 0.1, -40.0), dt)
+	var abierto := false
+	var fov_max := 0.0
+	var adelanta := false
+	for i in 150:
+		var bz := -40.0 + 12.0 * float(i) * dt
+		r4._transmision(c4, Vector3(0, 0.1, bz), dt)
+		abierto = abierto or r4.trans_plano == "abierto"
+		fov_max = maxf(fov_max, c4.fov)
+		if i == 120:
+			adelanta = r4._trans_foco.z > bz
+	_comprobar(abierto and fov_max > CameraRig.FOV_TRANSMISION + 2.5, "en el contraataque el plano se abre (%.1f°)" % fov_max)
+	_comprobar(adelanta, "el plano se adelanta hacia donde va el balón")
+	_comprobar(CameraRig.lectura_jugada(Vector3(0, 0, 40), Vector3.ZERO, 1.0, false, "puerta", "saque").x == 0.0, "en un saque de puerta no se cierra el plano")
+	_comprobar(CameraRig.lectura_jugada(Vector3(30, 0, 52), Vector3.ZERO, 1.0, false, "corner", "saque").x == 1.0, "en un córner se cierra el plano")
+	var z0 := CameraRig.amortiguar(0.0, 10.0, 0.0, 0.5, 100.0, 1.0)
+	_comprobar(z0.x <= 10.0 and z0.x > 5.0, "el amortiguador no se pasa del objetivo con un fotograma largo (%.2f)" % z0.x)
+	rig2.free()
+	r_antes.free()
+	r4.free()
+	## 3) Las estadísticas.
+	var penal := EstadisticasVivo.xg_de(Vector2(0, 41.5), true)
+	var cerca := EstadisticasVivo.xg_de(Vector2(0, 46.5), true)
+	var lejos := EstadisticasVivo.xg_de(Vector2(0, 27.5), true)
+	var esquina := EstadisticasVivo.xg_de(Vector2(25, 50.0), true)
+	_comprobar(cerca > penal and penal > lejos and lejos < 0.06 and cerca > 0.4, "xG por distancia: 6 m %.2f > 11 m %.2f > 25 m %.2f" % [cerca, penal, lejos])
+	_comprobar(esquina < 0.05, "sin ángulo casi no hay xG (%.3f)" % esquina)
+	_comprobar(absf(EstadisticasVivo.xg_de(Vector2(0, -41.5), false) - penal) < 0.001, "la visita ataca hacia -Z con la misma vara")
+	var ev := EstadisticasVivo.new()
+	ev.anotar_tiro(true, Vector2(2, 38), 12)
+	ev.anotar_tiro(false, Vector2(-3, -30), 20)
+	ev.cerrar_tiro(true, "atajada")
+	ev.cerrar_tiro(false, "gol")
+	ev.cerrar_tiro(true, "gol", Vector3(0, 0, 50))
+	ev.tarjeta(true, false)
+	ev.tarjeta(false, true)
+	ev.anotar_calor(0, Vector2(0, 40))
+	ev.anotar_calor(0, Vector2(0, 41))
+	_comprobar(ev.n_tiros(true) == 2 and String(ev.tiros[0]["res"]) == "atajada" and String(ev.tiros[2]["res"]) == "gol",
+		"cada remate guarda cómo acabó (y un gol de rebote se apunta aparte)")
+	_comprobar(ev.amarillas == [1, 0] and ev.rojas == [0, 1], "tarjetas por equipo")
+	var celda := int((40.0 + 52.5) / 105.0 * EstadisticasVivo.COLS) + int(34.0 / 68.0 * EstadisticasVivo.FILAS) * EstadisticasVivo.COLS
+	_comprobar((ev.calor[0] as PackedInt32Array)[celda] == 2, "el mapa de calor cuenta por zonas")
+	var ca := Club.new()
+	ca.nombre = "Local de prueba"
+	var cb := Club.new()
+	cb.nombre = "Visita de prueba"
+	var pa := Partido.new(ca, cb)
+	pa.posesion_local = 58.0
+	pa.remates_local = 7
+	pa.tiros_puerta_local = 3
+	var filas := ev.resumen(pa, null)
+	var nombres: Array = filas.map(func(f: Array) -> String: return String(f[0]))
+	var faltan: Array = []
+	for k: String in ["Posesión", "Tiros", "Tiros a puerta", "Goles esperados (xG)", "Córners", "Faltas", "Tarjetas amarillas", "Tarjetas rojas"]:
+		if not k in nombres:
+			faltan.append(k)
+	_comprobar(faltan.is_empty() and String(filas[0][1]) == "58%", "el resumen tiene todas las filas %s" % str(faltan))
+	var hechos := {}
+	_comprobar(RotuloEstadisticas.cuando(10, "saque", 1, hechos) == "", "antes del 17' no hay rótulo")
+	_comprobar(RotuloEstadisticas.cuando(18, "juego", 1, hechos) == "", "con el balón en juego no hay rótulo")
+	_comprobar(RotuloEstadisticas.cuando(18, "saque", 1, hechos) == "primero", "en la primera pelota parada pasado el 17' sale el rótulo")
+	hechos["primero"] = true
+	_comprobar(RotuloEstadisticas.cuando(25, "saque", 1, hechos) == "" and RotuloEstadisticas.cuando(45, "descanso", 1, hechos) == "descanso"
+		and RotuloEstadisticas.cuando(66, "saque", 2, hechos) == "segundo", "uno por momento: 17', descanso y 65'")
+	## El panel se arma (tabla + dos campos) sin motor.
+	var raiz := Control.new()
+	add_child(raiz)
+	var panel := PanelEstadisticas.abrir(raiz, pa, null, ev)
+	_comprobar(panel != null and panel.get_child_count() > 0, "el panel de estadísticas se arma")
+	var rot := RotuloEstadisticas.mostrar(raiz, "descanso", pa, null, ev)
+	_comprobar(rot != null and rot.get_child_count() > 0, "el rótulo de la tele se arma")
+	raiz.free()
+	## El botón: configurable y sin pisar a nadie.
+	Mando.registrar()
+	_comprobar(InputMap.has_action("jugar_estadisticas"), "«Estadísticas del partido» tiene su acción en el InputMap")
+	var pisa: Array = []
+	for a: String in Mando.MAPA:
+		if a == "jugar_estadisticas":
+			continue
+		for k: int in Mando.teclas_de("jugar_estadisticas"):
+			if k in Mando.teclas_de(a):
+				pisa.append(a)
+		for b: int in Mando.botones_de("jugar_estadisticas"):
+			if b in Mando.botones_de(a):
+				pisa.append(a)
+	_comprobar(pisa.is_empty(), "su tecla y su botón no son de otra acción %s" % str(pisa))
+	var en_grupo := false
+	for gr: Array in PanelControles.GRUPOS:
+		en_grupo = en_grupo or "jugar_estadisticas" in (gr[1] as Array)
+	_comprobar(en_grupo, "se puede reasignar en la pantalla de controles")
+
+## PRÓRROGA Y PENALES (17-10-2026). Lo que no necesita el 3D: el acta que se
+## alarga al 120' con un cambio más, la tanda del césped que `penales()` ya no
+## vuelve a sortear (y la copa respeta), el reloj de la prórroga del motor y
+## cuándo está decidida una tanda. La prueba con el partido entero en el
+## césped es `pruebas/prueba_prorroga_penales.tscn`.
+func _probar_prorroga_y_penales() -> void:
+	_titulo("PRÓRROGA Y TANDA DE PENALES DEL MOTOR REAL")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	var a: Club = m.ligas[0].clubes[0]
+	var b: Club = m.ligas[0].clubes[1]
+	var p := Partido.new(a, b)
+	p.preparar()
+	p.motor_externo = true
+	while p.minuto < 89:
+		p.simular_minuto()
+	p.prorroga_externa()
+	p.simular_minuto()
+	_comprobar(not p.terminado_ya and p.minuto == 90 and p.minutos_fin == 120, "con prórroga el acta no termina en el 90'")
+	_comprobar(p.MAX_CAMBIOS + p.cambios_extra == 6, "en la prórroga hay un cambio más")
+	p.penales_externos(3, 4)
+	while not p.terminado_ya:
+		p.simular_minuto()
+	_comprobar(p.minuto == 120, "el acta termina en el 120'")
+	_comprobar(p.penales() == [3, 4] and p.penales() == [3, 4] and p.penales_en_cesped, "`penales()` devuelve la tanda del césped, siempre la misma")
+	var copa := Copa.new("Copa de prueba")
+	copa.vivos.assign([a, b])
+	p.goles_local = 1
+	p.goles_visita = 1
+	var res := copa.jugar_ronda(p)
+	_comprobar(not res.is_empty() and (res[0] as Dictionary)["pasa"] == b and (res[0] as Dictionary)["penales"] == [3, 4], "la copa clasifica al que ganó la tanda del césped")
+	var p2 := Partido.new(a, b)
+	p2.preparar()
+	while not p2.terminado_ya:
+		p2.simular_minuto()
+	_comprobar(p2.minuto == 90 and not p2.penales_en_cesped, "sin motor ni prórroga: termina en el 90' como siempre")
+	## El reloj del motor en la prórroga.
+	var mo := MotorJugable.new()
+	mo.duracion_mitad = 180.0
+	mo.sortear_anadido()
+	mo.mitad = 3
+	mo.t = 30.0
+	var m3 := mo.minuto()
+	mo.mitad = 4
+	mo.t = 59.0
+	var m4 := mo.minuto()
+	_comprobar(m3 == 97 and m4 == 119 and is_equal_approx(mo.dur_mitad(), 60.0), "prórroga de 15' (un tercio de la mitad): 97' y 119' (%d', %d')" % [m3, m4])
+	_comprobar(mo.anadido.size() == 4 and mo._anadido_de(4) > 0.0, "la prórroga tiene su añadido")
+	mo.free()
+	_comprobar(MotorJugable.tanda_decidida([[true, true, true], [false, false, false]]), "tanda: 3-0 tras tres cada uno está decidida")
+	_comprobar(not MotorJugable.tanda_decidida([[true, true, true, true, true], [true, true, true, true, true]]), "tanda: 5-5 sigue a muerte súbita")
+	_comprobar(MotorJugable.tanda_decidida([[true, true, true, true, true, false], [true, true, true, true, true, true]]), "tanda: 5-6 en la muerte súbita está decidida")
+	_comprobar(not MotorJugable.tanda_decidida([[true, true, true, true, true, true], [true, true, true, true, true]]), "tanda: en la muerte súbita el segundo aún tira")
+	var circ := MarcadorTanda.circulos([true, false], 5)
+	_comprobar(circ.count("●") == 2 and circ.count("○") == 3, "el marcador de la tanda pinta ●● y tres huecos")
+
+## EL INFORME DEL RIVAL (17-10-2026): sale de los datos reales del mundo.
+func _probar_informe_rival() -> void:
+	_titulo("INFORME DEL RIVAL ANTES DEL PARTIDO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	m.mi_club_id = m.ligas[0].clubes[0].id
+	for i in 6:
+		m.ligas[0].jugar_jornada()
+	var par := m.proximo_partido()
+	var p := Partido.new(par[0], par[1])
+	var rival: Club = p.visita if p.local == m.mi_club() else p.local
+	var d := InformeRival.datos(rival, m.mi_club(), m.liga_de(rival))
+	_comprobar(int(d["puesto"]) >= 1 and int(d["puesto"]) <= m.ligas[0].clubes.size(), "el informe dice el puesto del rival en la tabla (%d.º)" % int(d["puesto"]))
+	_comprobar((d["racha"] as Array).size() == 5, "la racha tiene los últimos 5 partidos del rival")
+	var mejor := 0
+	for j: Jugador in rival.once():
+		mejor = maxi(mejor, j.ovr)
+	_comprobar((d["mejores"] as Array).size() == 3 and (d["mejores"][0] as Jugador).ovr == mejor, "los más peligrosos empiezan por el mejor del once")
+	_comprobar(not (d["consejos"] as Array).is_empty(), "hay al menos un consejo del cuerpo técnico")
+	rival.tactica.presion = Tactica.Nivel.ALTO
+	var d2 := InformeRival.datos(rival, m.mi_club(), m.liga_de(rival))
+	_comprobar(str(d2["consejos"]).contains("Presionan arriba"), "si el rival presiona alto, el consejo lo dice")
+
+## POR QUÉ SUBE O BAJA LA MORAL (17-10-2026): cada cambio deja su motivo y se guarda.
+func _probar_porque_moral() -> void:
+	_titulo("CAMARÍN: POR QUÉ SUBE O BAJA LA MORAL")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	for i in 6:
+		m.avanzar_semana()
+	var c := m.mi_club()
+	var con := 0
+	var motivos := {}
+	for j in c.plantilla:
+		if not j.historial_moral.is_empty():
+			con += 1
+		for e: Dictionary in j.historial_moral:
+			motivos[String(e["m"])] = true
+	_comprobar(con >= c.plantilla.size() / 2, "tras 6 semanas la mayoría del plantel tiene motivos de moral anotados (%d de %d)" % [con, c.plantilla.size()])
+	_comprobar(not motivos.is_empty() and not motivos.has(""), "cada cambio tiene un motivo con nombre (%s)" % ", ".join(motivos.keys()))
+	var j0: Jugador = c.plantilla[0]
+	var antes := j0.moral
+	j0.cambiar_moral(5, "Prueba")
+	_comprobar(j0.moral == mini(antes + 5, 99) and String(j0.historial_moral[-1]["m"]) == "Prueba", "cambiar_moral sube la moral y anota el motivo")
+	var copia := Partida.desde_instantanea(Partida.instantanea(m))
+	var j1 := copia.jugador_por_id(j0.id)
+	_comprobar(j1 != null and j1.historial_moral.size() == j0.historial_moral.size(), "el historial de moral se guarda y se carga")
+	var sat: Dictionary = m.vestuario.satisfaccion_de(j0)
+	_comprobar(sat.has("min") and sat.has("rend") and sat.has("tact") and sat.has("inst"), "el Camarín puede leer lo que pesa en la satisfacción")
+

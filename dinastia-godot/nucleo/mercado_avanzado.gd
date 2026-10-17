@@ -155,11 +155,15 @@ func resolver(m: Mundo, op: String) -> Dictionary:
 				return {}
 			if op == "a":
 				j.sueldo = int(round(float(j.sueldo) * 1.15))
+				var _m0 := j.moral
 				j.moral = clampi(j.moral + 8, 0, 100)
+				j.anotar_moral(j.moral - _m0, "Mercado y contratos")
 				if r != null:
 					r.anotar_reputacion("negociador", -2, "Cediste ante el superagente %s" % superagente)
 				return {"titulo": "💰 Aumento para %s" % j.nombre, "cuerpo": "El agente se va contento. Los otros dos clientes ya saben que contigo funciona apretar."}
+			var _m0 := j.moral
 			j.moral = clampi(j.moral - 10, 0, 100)
+			j.anotar_moral(j.moral - _m0, "Mercado y contratos")
 			if _rng.randf() < 0.45:
 				j.pide_salir = true
 			if r != null:
@@ -184,7 +188,9 @@ func resolver(m: Mundo, op: String) -> Dictionary:
 				return {}
 			if op == "a":
 				j.suspension = maxi(j.suspension, 3)
+				var _m0 := j.moral
 				j.moral = clampi(j.moral - 12, 0, 100)
+				j.anotar_moral(j.moral - _m0, "Mercado y contratos")
 				if r != null:
 					r.anotar_reputacion("honesto", 3, "Sancionaste a %s por apostar" % j.nombre)
 				return {"titulo": "⚖️ %s, sancionado" % j.nombre, "cuerpo": "Tres partidos fuera. La prensa aplaude la decisión."}

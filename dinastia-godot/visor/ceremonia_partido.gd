@@ -11,7 +11,10 @@ extends Node
 ##      lona gigante con el escudo en el círculo central que ondea.
 ##   4. Las alineaciones: la carta de cada equipo (escudo, dibujo y nombres en
 ##      su sitio) mientras la cámara recorre su fila; suena el himno.
-##   5. Corte al saque.
+##   5. EL SORTEO DE CAMPO (17-10-2026, M-160): árbitro y capitanes en el
+##      círculo central, la moneda que gira en el aire, quién elige campo y el
+##      apretón de manos (≈4 s, se salta igual que el resto).
+##   6. Corte al saque.
 ## Se reutiliza todo lo que había: los 22 del partido (`_en_campo`), la
 ## mascota del club (`MascotaQ`), los cuerpos de los peatones para los niños,
 ## los escudos (`Escudo`) y las formaciones (`Datos.FORMS`). Todo ficticio.
@@ -21,7 +24,8 @@ signal terminada
 const T_VUELO := 4.5
 const T_SALIDA := 10.0
 const T_FILA := 5.0
-const T_FIN := T_VUELO + T_SALIDA + T_FILA * 2.0
+const T_SORTEO := 4.2
+const T_FIN := T_VUELO + T_SALIDA + T_FILA * 2.0 + T_SORTEO
 
 var activa := false
 var _ui: Control
@@ -45,10 +49,20 @@ var _dx := 49.0
 var _dz := 68.0
 var _x_boca := 0.0
 var _rng := RandomNumberGenerator.new()
+## La estética de quien la usa (16-10-2026: la Carrera de Jugador la pinta con
+## su negro, lima y fucsia): {fondo, acento, borde}. Vacío = la del entrenador.
+var _estilo := {}
+## El sorteo: el árbitro principal (de `en_campo`), los dos capitanes y la moneda.
+var _arbitro: Dictionary = {}
+var _capitanes: Array = []
+var _moneda: MeshInstance3D
+var _saludo_hecho := false
+var _gana_local := true
 
 static func iniciar(ui: Control, raiz: Node3D, en_campo: Array, local: Club, visita: Club, estadio: String,
-		dx: float, dz: float, x_boca: float) -> CeremoniaPartido:
+		dx: float, dz: float, x_boca: float, estilo: Dictionary = {}) -> CeremoniaPartido:
 	var n := CeremoniaPartido.new()
+	n._estilo = estilo
 	ui.add_child(n)
 	n._ui = ui
 	n._raiz = raiz
@@ -61,13 +75,17 @@ static func iniciar(ui: Control, raiz: Node3D, en_campo: Array, local: Club, vis
 	for p: Dictionary in en_campo:
 		if not bool(p.get("arbitro", false)) and is_instance_valid(p.get("node")):
 			n._jugadores.append(p)
+		elif String(p.get("id", "")) == "arbitro" and is_instance_valid(p.get("node")):
+			n._arbitro = p
 	n._montar()
 	return n
 
 func _montar() -> void:
 	activa = true
 	_rng.seed = hash(_local.id + _visita.id)
-	_previa = get_viewport().get_camera_3d()
+	## La cámara del mundo del partido (puede vivir en un SubViewport, como en
+	## la Carrera de Jugador: la del `ui` sería otra).
+	_previa = _raiz.get_viewport().get_camera_3d()
 	_cam = Camera3D.new()
 	_cam.fov = 50.0
 	_cam.far = 900.0
@@ -76,6 +94,8 @@ func _montar() -> void:
 	for p: Dictionary in _jugadores:
 		var nd: Node3D = p["node"]
 		_guardado.append([nd, nd.transform])
+	if not _arbitro.is_empty():
+		_guardado.append([_arbitro["node"], (_arbitro["node"] as Node3D).transform])
 	_preparar_salida()
 	_poner_mascota()
 	_poner_lona()
@@ -201,6 +221,8 @@ func _process(delta: float) -> void:
 		fase = 2
 	if _t >= T_VUELO + T_SALIDA + T_FILA:
 		fase = 3
+	if _t >= T_VUELO + T_SALIDA + T_FILA * 2.0:
+		fase = 4
 	if _t >= T_FIN:
 		terminar()
 		return
@@ -208,6 +230,8 @@ func _process(delta: float) -> void:
 		_entrar_en(fase)
 	_caminar(delta)
 	_camara(fase)
+	if fase == 4:
+		_sorteo()
 
 func _entrar_en(fase: int) -> void:
 	_fase = fase
@@ -223,6 +247,10 @@ func _entrar_en(fase: int) -> void:
 				_carta.queue_free()
 			_carta = _carta_alineacion(_visita, false)
 			Sonido.toca("aplauso", Sonido.Bus.AMBIENTE)
+		4:
+			if is_instance_valid(_carta):
+				_carta.queue_free()
+			_preparar_sorteo()
 
 ## Cada uno sigue su camino a paso de ceremonia; el niño va a su lado.
 func _caminar(delta: float) -> void:
@@ -276,6 +304,12 @@ func _camara(fase: int) -> void:
 			var foco := Vector3(lerpf(_x_boca, 11.0, f2), 1.4, lerpf(38.0, 8.0, f2))
 			_cam.global_position = foco + Vector3(9.0, 2.6, -7.0)
 			_cam.look_at(foco + Vector3(0, -0.2, 2.0), Vector3.UP)
+		4:
+			## Plano medio del círculo central, con un leve travelling.
+			var f4 := clampf((_t - T_VUELO - T_SALIDA - T_FILA * 2.0) / T_SORTEO, 0.0, 1.0)
+			_cam.fov = 38.0
+			_cam.global_position = Vector3(lerpf(4.6, 3.9, f4), 1.7, lerpf(1.3, 0.7, f4))
+			_cam.look_at(Vector3(0.0, 1.25, 0.0), Vector3.UP)
 		2, 3:
 			var lado := 1.0 if fase == 2 else -1.0
 			var f3 := clampf((_t - T_VUELO - T_SALIDA - (0.0 if fase == 2 else T_FILA)) / T_FILA, 0.0, 1.0)
@@ -283,11 +317,137 @@ func _camara(fase: int) -> void:
 			_cam.global_position = Vector3(17.0, 2.2, z + lado * 1.5)
 			_cam.look_at(Vector3(11.0, 1.35, z), Vector3.UP)
 
+# ---------------------------------------------------------------- el sorteo
+
+## El capitán de cada equipo (el del brazalete; si no hay, el de más media).
+func _capitan(es_local: bool) -> Dictionary:
+	var club: Club = _local if es_local else _visita
+	var mejor: Dictionary = {}
+	var mejor_ovr := -1
+	for p: Dictionary in _jugadores:
+		if bool(p["es_local"]) != es_local:
+			continue
+		var id := String(p.get("id", ""))
+		for j: Jugador in club.plantilla:
+			if j.id == id and j.capitan:
+				return p
+		var ovr := int((p.get("jugador", {}) as Dictionary).get("ovr", 0))
+		if ovr > mejor_ovr:
+			mejor_ovr = ovr
+			mejor = p
+	return mejor
+
+## Todos a su sitio de la fila (por si se saltó parte del paseo), y árbitro y
+## capitanes al centro: el árbitro mirando a la tribuna principal, cada capitán
+## frente a él desde su mitad.
+func _preparar_sorteo() -> void:
+	_quitar_rotulo()
+	_lona.visible = false
+	for p: Dictionary in _jugadores:
+		var nd: Node3D = p["node"]
+		var camino: Array = _destinos.get(nd, [])
+		if not camino.is_empty():
+			nd.position = camino[camino.size() - 1]
+			camino.clear()
+			nd.rotation.y = PI * 0.5
+			_anim_de(p.get("anim"), "parado")
+	for k: Dictionary in _ninos:
+		if is_instance_valid(k.get("nodo")):
+			(k["nodo"] as Node3D).visible = false
+	_gana_local = _rng.randf() < 0.5
+	_capitanes = []
+	for eq in 2:
+		var c := _capitan(eq == 0)
+		if c.is_empty():
+			continue
+		var nd: Node3D = c["node"]
+		var lado := 1.0 if eq == 0 else -1.0
+		nd.position = Vector3(-0.1, 0, lado * 0.58)
+		nd.rotation.y = PI if eq == 0 else 0.0
+		_anim_de(c.get("anim"), "parado")
+		_capitanes.append(c)
+	if not _arbitro.is_empty():
+		var na: Node3D = _arbitro["node"]
+		na.position = Vector3(-0.55, 0, 0.0)
+		na.rotation.y = PI * 0.5
+		_anim_de(_arbitro.get("anim"), "parado")
+	## La moneda: un disco dorado (algo mayor que una de verdad, para que se
+	## vea en el plano medio).
+	_moneda = MeshInstance3D.new()
+	var cm := CylinderMesh.new()
+	cm.top_radius = 0.04
+	cm.bottom_radius = 0.04
+	cm.height = 0.006
+	cm.radial_segments = 20
+	cm.rings = 1
+	_moneda.mesh = cm
+	var mm := StandardMaterial3D.new()
+	mm.albedo_color = Color(0.95, 0.78, 0.35)
+	mm.metallic = 0.9
+	mm.roughness = 0.3
+	mm.emission_enabled = true
+	mm.emission = Color(0.5, 0.38, 0.12)
+	_moneda.material_override = mm
+	_moneda.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_raiz.add_child(_moneda)
+	_moneda.position = Vector3(-0.3, 1.1, 0.0)
+	Sonido.toca("moneda")
+
+## La moneda sube girando y cae en la mano del árbitro; luego, el apretón.
+func _sorteo() -> void:
+	var s := _t - (T_VUELO + T_SALIDA + T_FILA * 2.0)
+	if is_instance_valid(_moneda):
+		var mano := Vector3(-0.3, 1.1, 0.0)
+		var u := clampf((s - 0.3) / 1.3, 0.0, 1.0)
+		_moneda.position = mano + Vector3(0, 4.0 * 0.95 * u * (1.0 - u), 0)
+		## Gira en el aire; al caer queda plana, de cara al cielo.
+		_moneda.rotation = Vector3(u * 22.0 * (1.0 if u < 1.0 else 0.0), 0.0, 0.0)
+		if s > 2.5:
+			_moneda.visible = false
+		if u >= 1.0 and not is_instance_valid(_carta):
+			var quien := _local if _gana_local else _visita
+			_carta = _rotulo_sorteo(quien)
+	if s >= 2.4 and not _saludo_hecho:
+		_saludo_hecho = true
+		for c: Dictionary in _capitanes:
+			_anim_gesto(c.get("anim"), "dar_mano")
+		_anim_gesto(_arbitro.get("anim"), "dar_mano")
+		## Se giran hacia el centro para el apretón.
+		for c: Dictionary in _capitanes:
+			var nd: Node3D = c["node"]
+			nd.rotation.y = atan2(-nd.position.x, -nd.position.z)
+
+func _anim_gesto(ap: Variant, nombre: String) -> void:
+	if ap is AnimationPlayer and is_instance_valid(ap) and (ap as AnimationPlayer).has_animation(nombre):
+		(ap as AnimationPlayer).play(nombre, 0.2)
+		(ap as AnimationPlayer).speed_scale = 1.0
+
+## El rótulo del sorteo: escudo y «elige campo».
+func _rotulo_sorteo(quien: Club) -> Control:
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(_estilo.get("fondo", Color(0.03, 0.05, 0.12, 0.88)), Tema.RADIO_GRANDE, _estilo.get("borde", Color(1, 1, 1, 0.18))))
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 14)
+	caja.add_child(h)
+	h.add_child(_escudo(quien, 48))
+	var v := VBoxContainer.new()
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_child(v)
+	v.add_child(Tema.etiqueta(13, _estilo.get("acento", Tema.ORO), Idiomas.t("SORTEO DE CAMPO")))
+	v.add_child(Tema.etiqueta(20, Tema.TEXTO, Idiomas.t("%s elige campo") % Nombres.visible(quien.nombre)))
+	_ui.add_child(caja)
+	caja.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	caja.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	caja.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	caja.offset_bottom = -54
+	Animar.aparecer(caja, 0.25, 0.3)
+	return caja
+
 # ---------------------------------------------------------------- la interfaz
 
 func _rotulo_partido() -> Control:
 	var caja := PanelContainer.new()
-	caja.add_theme_stylebox_override("panel", Tema.caja(Color(0.03, 0.05, 0.12, 0.88), Tema.RADIO_GRANDE, Color(1, 1, 1, 0.18)))
+	caja.add_theme_stylebox_override("panel", Tema.caja(_estilo.get("fondo", Color(0.03, 0.05, 0.12, 0.88)), Tema.RADIO_GRANDE, _estilo.get("borde", Color(1, 1, 1, 0.18))))
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 22)
 	h.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -299,7 +459,7 @@ func _rotulo_partido() -> Control:
 	var t := Tema.etiqueta(30, Tema.TEXTO, "%s  vs  %s" % [Nombres.visible(_local.nombre), Nombres.visible(_visita.nombre)])
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
-	var s := Tema.etiqueta(15, Tema.ORO, Idiomas.t("En vivo desde") + " " + _nombre_estadio)
+	var s := Tema.etiqueta(15, _estilo.get("acento", Tema.ORO), Idiomas.t("En vivo desde") + " " + _nombre_estadio)
 	s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(s)
 	var salta := Tema.etiqueta(11, Tema.SUAVE, Idiomas.t("Cualquier tecla para saltar"))
@@ -332,7 +492,7 @@ func _escudo(c: Club, tam: int) -> TextureRect:
 ## titular en su sitio, como en una transmisión.
 func _carta_alineacion(c: Club, es_local: bool) -> Control:
 	var caja := PanelContainer.new()
-	caja.add_theme_stylebox_override("panel", Tema.caja(Color(0.04, 0.06, 0.16, 0.9), Tema.RADIO_GRANDE, Color(c.color1).lightened(0.2)))
+	caja.add_theme_stylebox_override("panel", Tema.caja(_estilo.get("fondo", Color(0.04, 0.06, 0.16, 0.9)), Tema.RADIO_GRANDE, Color(c.color1).lightened(0.2)))
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 18)
 	caja.add_child(h)
@@ -345,7 +505,7 @@ func _carta_alineacion(c: Club, es_local: bool) -> Control:
 	nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	izq.add_child(nom)
-	var dib := Tema.etiqueta(14, Tema.ORO, c.tactica.formacion)
+	var dib := Tema.etiqueta(14, _estilo.get("acento", Tema.ORO), c.tactica.formacion)
 	dib.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	izq.add_child(dib)
 	## El campo con los once.
@@ -407,7 +567,8 @@ func _anim_de(ap: Variant, nombre: String) -> void:
 			(ap as AnimationPlayer).speed_scale = 1.0
 
 func _unhandled_input(e: InputEvent) -> void:
-	if activa and ((e is InputEventMouseButton and (e as InputEventMouseButton).pressed) or (e is InputEventKey and (e as InputEventKey).pressed)):
+	if activa and ((e is InputEventMouseButton and (e as InputEventMouseButton).pressed) or (e is InputEventKey and (e as InputEventKey).pressed)
+			or (e is InputEventJoypadButton and (e as InputEventJoypadButton).pressed)):
 		get_viewport().set_input_as_handled()
 		terminar()
 
@@ -430,6 +591,10 @@ func terminar() -> void:
 		_mascota.queue_free()
 	if is_instance_valid(_lona):
 		_lona.queue_free()
+	if is_instance_valid(_moneda):
+		_moneda.queue_free()
+	if not _arbitro.is_empty():
+		_anim_de(_arbitro.get("anim"), "parado")
 	_quitar_rotulo()
 	if is_instance_valid(_carta):
 		_carta.queue_free()

@@ -98,7 +98,7 @@ func _construir() -> void:
 	raiz.offset_top = 40
 	raiz.offset_bottom = -30
 	var tit := _texto(12, COL_SUAVE)
-	tit.text = "RESUMEN DEL PARTIDO" if _animado else "RESULTADO"
+	tit.text = Idiomas.t("RESUMEN DEL PARTIDO") if _animado else Idiomas.t("RESULTADO")
 	tit.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(tit)
 	_marcador = _texto(38, COL_TEXTO)
@@ -120,12 +120,12 @@ func _construir() -> void:
 	fila.add_theme_constant_override("separation", 10)
 	raiz.add_child(fila)
 	_btn_saltar = Button.new()
-	_btn_saltar.text = "⏭ Saltar"
+	_btn_saltar.text = Idiomas.t("⏭ Saltar")
 	_btn_saltar.custom_minimum_size = Vector2(140, 36)
 	_btn_saltar.pressed.connect(_mostrar_todo)
 	fila.add_child(_btn_saltar)
 	_btn_seguir = Button.new()
-	_btn_seguir.text = "Continuar ▶"
+	_btn_seguir.text = Idiomas.t("Continuar ▶")
 	_btn_seguir.custom_minimum_size = Vector2(160, 36)
 	_btn_seguir.visible = false
 	_btn_seguir.pressed.connect(func() -> void: cerrado.emit())
@@ -192,33 +192,107 @@ func _mostrar_todo() -> void:
 	var suyos := partido.goles_visita if mio_local else partido.goles_local
 	var fin := "VICTORIA" if mios > suyos else ("DERROTA" if mios < suyos else "EMPATE")
 	var col := COL_BIEN if mios > suyos else (COL_MAL if mios < suyos else COL_SUAVE)
-	_reloj.text = "FINAL · " + fin
+	_reloj.text = Idiomas.t("FINAL · ") + fin
 	_reloj.add_theme_color_override("font_color", col)
 	if not _penales.is_empty():
 		var pase_local := int(_penales[0]) > int(_penales[1])
 		var l := _texto(15, COL_ORO)
-		l.text = "Penales %d - %d: %s" % [int(_penales[0]), int(_penales[1]),
-			"pasas de ronda" if pase_local == mio_local else "quedas eliminado"]
+		l.text = Idiomas.t("Penales %d - %d: %s") % [int(_penales[0]), int(_penales[1]),
+			Idiomas.t("pasas de ronda") if pase_local == mio_local else Idiomas.t("quedas eliminado")]
 		_lista.add_child(l)
 	if _momentos.is_empty():
 		var nada := _texto(14, COL_SUAVE)
-		nada.text = "Un partido sin grandes ocasiones."
+		nada.text = Idiomas.t("Un partido sin grandes ocasiones.")
 		_lista.add_child(nada)
 	## Los números del partido, los mismos que da la crónica en vivo.
 	var sep := HSeparator.new()
 	_lista.add_child(sep)
 	var stats := _texto(14, COL_SUAVE)
-	stats.text = "Posesión %d%% - %d%%   ·   Remates %d - %d   ·   Al arco %d - %d   ·   xG %.2f - %.2f" % [
+	stats.text = Idiomas.t("Posesión %d%% - %d%%   ·   Remates %d - %d   ·   Al arco %d - %d   ·   xG %.2f - %.2f") % [
 		int(round(partido.posesion_local)), 100 - int(round(partido.posesion_local)),
 		partido.remates_local, partido.remates_visita,
 		partido.tiros_puerta_local, partido.tiros_puerta_visita,
 		partido.xg_local, partido.xg_visita]
 	stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_lista.add_child(stats)
+	_pintar_valoraciones()
 	_btn_saltar.visible = false
 	_btn_seguir.visible = true
 	Sonido.toca("pitido_final")
 	set_process(false)
+
+## LAS VALORACIONES (17-10-2026, M-141): el mejor del partido destacado en una
+## franja dorada y, debajo, la nota de cada uno en dos columnas (local y
+## visitante), con color: verde ≥ 7,5, rojo < 5,5.
+func _pintar_valoraciones() -> void:
+	var vals := partido.valoraciones()
+	if vals.is_empty():
+		return
+	_lista.add_child(HSeparator.new())
+	var mvp: Dictionary = vals[0]
+	var mj: Jugador = mvp["jugador"]
+	var franja := PanelContainer.new()
+	franja.name = "MejorDelPartido"
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(COL_ORO, 0.16)
+	sb.border_color = COL_ORO
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 14
+	sb.content_margin_right = 14
+	sb.content_margin_top = 6
+	sb.content_margin_bottom = 6
+	franja.add_theme_stylebox_override("panel", sb)
+	var hm := HBoxContainer.new()
+	hm.add_theme_constant_override("separation", 12)
+	hm.alignment = BoxContainer.ALIGNMENT_CENTER
+	franja.add_child(hm)
+	var et := _texto(13, COL_ORO)
+	et.text = Idiomas.t("⭐ MEJOR DEL PARTIDO")
+	hm.add_child(et)
+	var nm := _texto(18, COL_TEXTO)
+	nm.text = "%s  ·  %s" % [Nombres.visible(mj.nombre), Nombres.visible((partido.local if bool(mvp["local"]) else partido.visita).nombre)]
+	hm.add_child(nm)
+	var nn := _texto(22, COL_ORO)
+	nn.text = "%.1f" % float(mvp["nota"])
+	hm.add_child(nn)
+	_lista.add_child(franja)
+	var tit := _texto(12, COL_SUAVE)
+	tit.text = Idiomas.t("VALORACIONES")
+	tit.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_lista.add_child(tit)
+	var cols := HBoxContainer.new()
+	cols.name = "Valoraciones"
+	cols.add_theme_constant_override("separation", 40)
+	_lista.add_child(cols)
+	for lado_local: bool in [true, false]:
+		var col := VBoxContainer.new()
+		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		col.add_theme_constant_override("separation", 2)
+		cols.add_child(col)
+		var cab := _texto(13, COL_ORO)
+		cab.text = Nombres.visible((partido.local if lado_local else partido.visita).nombre)
+		col.add_child(cab)
+		for v: Dictionary in vals:
+			if bool(v["local"]) != lado_local:
+				continue
+			var j: Jugador = v["jugador"]
+			var n := float(v["nota"])
+			var fila := HBoxContainer.new()
+			fila.add_theme_constant_override("separation", 8)
+			var pe := _texto(12, COL_SUAVE)
+			pe.text = j.pos_e
+			pe.custom_minimum_size = Vector2(38, 0)
+			fila.add_child(pe)
+			var nom := _texto(14, COL_ORO if v == mvp else COL_TEXTO)
+			nom.text = ("⭐ " if v == mvp else "") + Nombres.visible(j.nombre) + ("" if bool(v["titular"]) else "  ↑")
+			nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			nom.clip_text = true
+			fila.add_child(nom)
+			var nl := _texto(14, COL_BIEN if n >= 7.5 else (COL_MAL if n < 5.5 else COL_TEXTO))
+			nl.text = "%.1f" % n
+			fila.add_child(nl)
+			col.add_child(fila)
 
 func _texto(tam: int, color: Color) -> Label:
 	var l := Label.new()

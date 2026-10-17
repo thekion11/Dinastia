@@ -73,21 +73,21 @@ func _pintar_directrices(r: Roles) -> void:
 	p._lista_club.add_child(HSeparator.new())
 	var es_ayudante := r.rol == Roles.AYUDANTE
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🧢 TRABAJAS PARA ÉL" if es_ayudante else "🪑 EL BANCO NO ES TUYO"
+	t.text = Idiomas.t("🧢 TRABAJAS PARA ÉL") if es_ayudante else Idiomas.t("🪑 EL BANCO NO ES TUYO")
 	p._lista_club.add_child(t)
 	var quien := p._texto(13, Principal.COL_TEXTO)
-	quien.text = "%s  ·  estilo %s" % [r.dt_nombre(), String(r.dt_empleado.get("estilo", ""))]
+	quien.text = Idiomas.t("%s  ·  estilo %s") % [r.dt_nombre(), String(r.dt_empleado.get("estilo", ""))]
 	p._lista_club.add_child(quien)
 	var sin := int(r.dt_empleado.get("confianza", 45)) if es_ayudante else int(r.dt_empleado.get("sintonia", 60))
 	p._dato("Confianza que tiene en ti" if es_ayudante else "Sintonía contigo", "%d / 100" % sin,
 		Principal.COL_ROJO if sin < 30 else (Principal.COL_ORO if sin < 60 else Principal.COL_VERDE), p._lista_club)
 	var aviso_caso := p._texto(11, Principal.COL_SUAVE)
-	aviso_caso.text = "Cada indicación que le das desgasta la relación. Con la sintonía baja, hace lo que le da la gana."
+	aviso_caso.text = Idiomas.t("Cada indicación que le das desgasta la relación. Con la sintonía baja, hace lo que le da la gana.")
 	aviso_caso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_club.add_child(aviso_caso)
 
 	var te := p._texto(11, Principal.COL_SUAVE)
-	te.text = "CÓMO QUIERES QUE JUEGUE"
+	te.text = Idiomas.t("CÓMO QUIERES QUE JUEGUE")
 	p._lista_club.add_child(te)
 	var fila_e := HBoxContainer.new()
 	fila_e.add_theme_constant_override("separation", 6)
@@ -135,7 +135,7 @@ func _pintar_rol() -> void:
 		return
 	_pintar_directrices(r)
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "TU CARGO"
+	t.text = Idiomas.t("TU CARGO")
 	p._lista_club.add_child(t)
 	var n := p._texto(14, Principal.COL_ORO)
 	n.text = r.nombre_del_cargo().capitalize()
@@ -177,10 +177,10 @@ func _pintar_carrera(r: Roles) -> void:
 	if p.mundo.fondo != null:
 		PanelFondo.pintar(p._lista_club, p.mundo, p._refrescar)
 	p._lista_club.add_child(HSeparator.new())
-	var t := p._texto(11, Principal.COL_SUAVE); t.text = "TU CARRERA"
+	var t := p._texto(11, Principal.COL_SUAVE); t.text = Idiomas.t("TU CARRERA")
 	p._lista_club.add_child(t)
 	var pres := p._texto(14, Principal.COL_ORO)
-	pres.text = "Prestigio %d/99  ·  %d trofeo(s)  ·  %d temporada(s)" % [r.prestigio, r.trofeos.size(), r.temporadas]
+	pres.text = Idiomas.t("Prestigio %d/99  ·  %d trofeo(s)  ·  %d temporada(s)") % [r.prestigio, r.trofeos.size(), r.temporadas]
 	p._lista_club.add_child(pres)
 	var barra := ProgressBar.new()
 	barra.min_value = 0
@@ -204,7 +204,7 @@ func _pintar_carrera(r: Roles) -> void:
 		var partes: Array[String] = []
 		for paso: Dictionary in r.historial:
 			partes.append("%s (hasta %s)" % [String(paso.get("club", "")), str(paso.get("hasta", ""))])
-		h.text = "Antes: " + ", ".join(partes)
+		h.text = Idiomas.t("Antes: ") + ", ".join(partes)
 		h.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_club.add_child(h)
 
@@ -216,19 +216,19 @@ func _pintar_carrera(r: Roles) -> void:
 		p._lista_club.add_child(fila)
 		var nom := p._texto(12, Principal.COL_TEXTO)
 		if r.es_ayudante():
-			nom.text = "Tu jefe: %s  ·  confianza en ti %d/100" % [r.jefe_nombre(), r.jefe_confianza()]
+			nom.text = Idiomas.t("Tu jefe: %s  ·  confianza en ti %d/100") % [r.jefe_nombre(), r.jefe_confianza()]
 		else:
 			## El HTML muestra la clave cruda ("estilo pizarron"), no la frase
 			## larga de `DT_ESTILOS` -esa es para otra pantalla-; se capitaliza
 			## igual que `nombre_del_cargo()` arriba, no se inventa una frase.
-			nom.text = "Entrenador del banco: %s  ·  estilo %s" % [
+			nom.text = Idiomas.t("Entrenador del banco: %s  ·  estilo %s") % [
 				r.dt_nombre(), String(r.dt_empleado.get("estilo", "")).capitalize()]
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		fila.add_child(nom)
 		if r.puede_contratar_dt():
 			var b := Button.new()
-			b.text = "Cambiar  %s" % p._dinero(int(Roles.COSTE_CAMBIAR_DT))
+			b.text = Idiomas.t("Cambiar  %s") % p._dinero(int(Roles.COSTE_CAMBIAR_DT))
 			b.add_theme_font_size_override("font_size", 11)
 			b.pressed.connect(_cambiar_dt)
 			fila.add_child(b)
@@ -236,14 +236,14 @@ func _pintar_carrera(r: Roles) -> void:
 	if r.puede_inyectar_capital():
 		var restantes := r.inyecciones_restantes()
 		var bi := Button.new()
-		bi.text = "💰 Inyectar %s de tu bolsillo (%d/%d esta temporada)" % [
+		bi.text = Idiomas.t("💰 Inyectar %s de tu bolsillo (%d/%d esta temporada)") % [
 			p._dinero(int(Roles.INYECCION)), Roles.INYECCIONES_POR_TEMPORADA - restantes, Roles.INYECCIONES_POR_TEMPORADA]
 		bi.disabled = restantes <= 0
 		bi.pressed.connect(_inyectar_capital)
 		p._lista_club.add_child(bi)
 	if r.puede_vender_club():
 		var bv := Button.new()
-		bv.text = "¿SEGURO? Vender el club" if p._confirmar_venta_club else "🏷️ Vender el club"
+		bv.text = Idiomas.t("¿SEGURO? Vender el club") if p._confirmar_venta_club else Idiomas.t("🏷️ Vender el club")
 		bv.pressed.connect(_vender_club)
 		p._lista_club.add_child(bv)
 

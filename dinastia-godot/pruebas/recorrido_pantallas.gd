@@ -42,6 +42,17 @@ func _process(_d: float) -> void:
 		_cola.append(["cerrar_menu"])
 		_cola.append(["ficha", "propia"])
 		_cola.append(["ficha", "rival"])
+		## RECORRIDO_SOLO=Ciudad,Editor (15-10-2026): solo los pasos cuyo texto
+		## contiene alguna de esas palabras (para aislar un fallo).
+		var solo := OS.get_environment("RECORRIDO_SOLO")
+		if solo != "":
+			var quedan: Array = []
+			for paso: Array in _cola:
+				for w in solo.split(","):
+					if str(paso).contains(w):
+						quedan.append(paso)
+						break
+			_cola = quedan
 		## RECORRIDO_TRAMO=i/n (29-9-2026): solo el tramo i de n, para que cada
 		## parte quepa en una ejecución corta y en primer plano.
 		var tramo := OS.get_environment("RECORRIDO_TRAMO")

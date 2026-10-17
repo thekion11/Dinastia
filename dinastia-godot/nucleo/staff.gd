@@ -116,7 +116,7 @@ func repartir_bono(c: Club, anio: int, puesto: int, equipos: int) -> Dictionary:
 	elif puesto <= int(ceil(float(equipos) / 2.0)):
 		sube = 3
 	for j in c.plantilla:
-		j.moral = clampi(j.moral + sube, 10, 99)
+		j.cambiar_moral(sube, "Cuerpo técnico")
 	return {"ok": true, "coste": coste, "moral": sube, "escalones": escalones_contratados()}
 
 ## EL DESCUENTO DEL CONTABLE viene de fuera: `Staff` no conoce el arbol del

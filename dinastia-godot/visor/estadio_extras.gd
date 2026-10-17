@@ -147,7 +147,7 @@ static func obras(root: Node3D, dx: float, dz: float, alto: float, niveles: int,
 			nombres.append(Idiomas.t("REFORMA DEL ESTADIO"))
 			continue
 		nombres.append(String((Instalaciones.CATALOGO.get(k, [k]) as Array)[0]).to_upper())
-	cartel.text = "EN OBRA: %s" % ", ".join(nombres)
+	cartel.text = Idiomas.t("EN OBRA: %s") % ", ".join(nombres)
 	cartel.font_size = 96
 	cartel.pixel_size = 0.02
 	cartel.modulate = Color(1, 0.85, 0.2)
@@ -250,7 +250,7 @@ static func instalaciones(root: Node3D, dx: float, alto: float, niveles: int, in
 		var z := -largo_fila * 0.5 + float(i) * ancho_palco
 		_caja(nodo, Vector3(x_p, y_p, z), Vector3(4.4, 2.6, 0.12), marco)                   ## separadores
 	var rot := Label3D.new()
-	rot.text = "PALCOS VIP"
+	rot.text = Idiomas.t("PALCOS VIP")
 	rot.font_size = 72
 	rot.pixel_size = 0.02
 	rot.modulate = Color(1, 0.9, 0.6)
@@ -264,7 +264,7 @@ static func instalaciones(root: Node3D, dx: float, alto: float, niveles: int, in
 		_caja(nodo, Vector3(x_p, y_p, zp), Vector3(4.4, 2.6, 7.0), _mat(Color(0.16, 0.18, 0.22), 0.5))
 		_caja(nodo, Vector3(x_p + 2.21, y_p + 0.3, zp), Vector3(0.05, 1.3, 6.2), _mat(Color(0.5, 0.75, 1.0), 0.1, 1.2))
 		var rp := Label3D.new()
-		rp.text = "PRENSA"
+		rp.text = Idiomas.t("PRENSA")
 		rp.font_size = 64
 		rp.pixel_size = 0.02
 		rp.outline_size = 8

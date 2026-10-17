@@ -17,7 +17,7 @@ func _pintar_estilos_estadio(c: Club) -> void:
 		return
 	p._lista_estadio.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "✨ ESTILOS COMPLETOS"
+	t.text = Idiomas.t("✨ ESTILOS COMPLETOS")
 	p._lista_estadio.add_child(t)
 	var flow := HFlowContainer.new()
 	flow.add_theme_constant_override("h_separation", 6)
@@ -37,33 +37,33 @@ func _pintar_estilos_estadio(c: Club) -> void:
 	fila.add_theme_constant_override("separation", 6)
 	p._lista_estadio.add_child(fila)
 	var sorpresa := Button.new()
-	sorpresa.text = "🎲 Sorpréndeme"
+	sorpresa.text = Idiomas.t("🎲 Sorpréndeme")
 	sorpresa.add_theme_font_size_override("font_size", 11)
 	sorpresa.pressed.connect(func() -> void:
 		p._propuesta_estadio = p.mundo.estadio.aleatorio(p.mundo.mi_club(), p.mundo.obras)
 		p._refrescar())
 	fila.add_child(sorpresa)
 	var fabrica := Button.new()
-	fabrica.text = "↺ Volver al estadio de fábrica"
+	fabrica.text = Idiomas.t("↺ Volver al estadio de fábrica")
 	fabrica.add_theme_font_size_override("font_size", 11)
 	fabrica.pressed.connect(_estadio_de_fabrica)
 	fila.add_child(fabrica)
 	if not p._propuesta_estadio.is_empty():
 		var coste_prop := e.presupuesto(c, p._propuesta_estadio, p.mundo.obras)
 		var prop := p._texto(11, Principal.COL_ORO)
-		prop.text = "Propuesta: %s. Coste %s." % [_resumen_propuesta(p._propuesta_estadio), p._dinero(coste_prop)]
+		prop.text = Idiomas.t("Propuesta: %s. Coste %s.") % [_resumen_propuesta(p._propuesta_estadio), p._dinero(coste_prop)]
 		prop.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_estadio.add_child(prop)
 		var fila2 := HBoxContainer.new()
 		fila2.add_theme_constant_override("separation", 6)
 		p._lista_estadio.add_child(fila2)
 		var si := Button.new()
-		si.text = "Construirla"
+		si.text = Idiomas.t("Construirla")
 		si.disabled = coste_prop > c.saldo
 		si.pressed.connect(_aplicar_propuesta_estadio)
 		fila2.add_child(si)
 		var no := Button.new()
-		no.text = "Descartar"
+		no.text = Idiomas.t("Descartar")
 		no.pressed.connect(func() -> void:
 			p._propuesta_estadio = {}
 			p._refrescar())
@@ -173,8 +173,8 @@ func _fila_diseno_estadio(e: EstadioPropio, p_local: Dictionary, campo: String) 
 	## menú con los ocho que solo los toca, sin comprar nada.
 	if campo == "sonidoGol":
 		var escuchar := MenuButton.new()
-		escuchar.text = "▶ Escuchar"
-		escuchar.tooltip_text = "Probar cualquier sonido de gol sin pagar la reforma"
+		escuchar.text = Idiomas.t("▶ Escuchar")
+		escuchar.tooltip_text = Idiomas.t("Probar cualquier sonido de gol sin pagar la reforma")
 		escuchar.add_theme_font_size_override("font_size", 11)
 		var pop := escuchar.get_popup()
 		for i in ops.size():

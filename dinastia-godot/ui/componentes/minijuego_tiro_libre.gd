@@ -166,14 +166,14 @@ func _montar() -> void:
 	justo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(justo)
 	_boton_patear = Button.new()
-	_boton_patear.text = "¡PATEAR! (espacio)"
+	_boton_patear.text = Idiomas.t("¡PATEAR! (espacio)")
 	_boton_patear.position = Vector2(tam.x - 470, tam.y - 92)
 	_boton_patear.size = Vector2(220, 44)
 	_boton_patear.disabled = true
 	_boton_patear.pressed.connect(_patear)
 	add_child(_boton_patear)
 	var cerrar := Button.new()
-	cerrar.text = "Salir"
+	cerrar.text = Idiomas.t("Salir")
 	cerrar.position = Vector2(tam.x - 120, 20)
 	cerrar.size = Vector2(96, 36)
 	cerrar.pressed.connect(func() -> void:
@@ -211,7 +211,7 @@ func _poner_balon() -> void:
 		Mini3D.anim(d, "muralla", "")
 
 func _pintar_marcador() -> void:
-	_marcador.text = "Tiros libres  ·  %d de %d  ·  goles: %d  ·  récord: %d" % [_tiros, TIROS, _goles, record]
+	_marcador.text = Idiomas.t("Tiros libres  ·  %d de %d  ·  goles: %d  ·  récord: %d") % [_tiros, TIROS, _goles, record]
 
 func _elegir(i: int) -> void:
 	if _ocupado or _tiros >= TIROS:
@@ -221,7 +221,7 @@ func _elegir(i: int) -> void:
 	_potencia = 0.0
 	_sube = true
 	_boton_patear.disabled = false
-	_aviso.text = "Apuntas a %s. ¡Frena la barra en la franja verde!" % NOMBRE_ZONA[i]
+	_aviso.text = Idiomas.t("Apuntas a %s. ¡Frena la barra en la franja verde!") % NOMBRE_ZONA[i]
 
 func _process(delta: float) -> void:
 	if _cam != null and _cam.is_inside_tree():

@@ -170,7 +170,7 @@ func _montar_rotulos(mio: Club, j: Jugador, de: Club) -> void:
 	cab.position = Vector2(28, 20)
 	add_child(cab)
 	var saltar := Button.new()
-	saltar.text = "⏭ Saltar"
+	saltar.text = Idiomas.t("⏭ Saltar")
 	saltar.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	saltar.offset_left = -130
 	saltar.offset_top = 16

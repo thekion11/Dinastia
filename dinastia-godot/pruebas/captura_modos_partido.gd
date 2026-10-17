@@ -31,6 +31,7 @@ func _process(_d: float) -> void:
 	if _n == ESPERA + 6:
 		_guardar("res://pruebas/capturas/modos_selector.png")
 		_pantalla.call("_fijar_modo_simulacion", _pantalla.call("_competicion_de_la_semana"), "resumen")
+		InformeRival.activo = false
 		_pantalla.call("_dirigir")
 		for h in _pantalla.get_children():
 			if h is ResumenPartido:

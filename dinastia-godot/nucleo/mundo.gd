@@ -1033,7 +1033,7 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		var mio_normas := mi_club()
 		if mio_normas != null:
 			for j in mio_normas.plantilla:
-				j.moral = clampi(j.moral - 1, 10, 99)
+				j.cambiar_moral(-1, "Normas y cuerpo técnico del club")
 	## LESIONES ABSURDAS FUERA DE LA CANCHA (C8): raras, cortas y noticia. El
 	## toque de queda evita las de noche. Sin `Azar`.
 	var absurda := LesionesAbsurdas.sortear(mi_club(), anio, semana, bool(normas.get("queda", false)))
@@ -1111,7 +1111,7 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		var util := staff.bono_utilero()
 		if util > 0:
 			for j in mi_club().plantilla:
-				j.moral = clampi(j.moral + util, 10, 99)
+				j.cambiar_moral(util, "Normas y cuerpo técnico del club")
 	## LOS DIAS SEÑALADOS y lo que dejan las figuras por su marca personal. Los
 	## dos son del HTML y no estaban portados: la temporada eran cuarenta y dos
 	## semanas iguales, y tener una estrella no daba un peso de mas.
@@ -1318,6 +1318,7 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		_rueda_de_eliminatoria(res_copa, "copa", copa.participantes)
 
 	semana += 1
+	Jugador.semana_global = anio * 100 + semana
 	semana_avanzada.emit(semana, anio)
 
 ## LA RUEDA DE PRENSA TAMBIÉN DESPUÉS DE LA COPA (26-9-2026, plan maestro C1).
@@ -1563,7 +1564,7 @@ func cerrar_temporada() -> Dictionary:
 			mio_p.mover_saldo(-prima_total)
 			_anotar_movimiento("Primas por objetivos al plantel", -prima_total)
 			for j in mio_p.plantilla:
-				j.moral = clampi(j.moral + 6, 10, 99)
+				j.cambiar_moral(6, "Normas y cuerpo técnico del club")
 			resumen["primas_pagadas"] = prima_total
 	## El pulso de la carrera: prestigio, ascensos, y si el interino no se
 	## resolvió por fechas (interinato de menos de cinco semanas jugadas al

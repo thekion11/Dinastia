@@ -69,10 +69,10 @@ static func _tarjeta(k: String, m: Maestria, mundo: Mundo, p: Control) -> PanelC
 	var b := Button.new()
 	b.add_theme_font_size_override("font_size", 12)
 	if n >= Maestria.NIVEL_MAX:
-		b.text = "✔ Maestría completa"
+		b.text = Idiomas.t("✔ Maestría completa")
 		b.disabled = true
 	else:
-		b.text = "Subir a %d · %d pto%s" % [n + 1, m.coste(k), "" if m.coste(k) == 1 else "s"]
+		b.text = (Idiomas.t("Subir a %d · %d pto") if m.coste(k) == 1 else Idiomas.t("Subir a %d · %d ptos")) % [n + 1, m.coste(k)]
 		b.disabled = m.puntos < m.coste(k)
 	b.pressed.connect(func() -> void:
 		var problema := m.subir(k, mundo.entrenamiento)

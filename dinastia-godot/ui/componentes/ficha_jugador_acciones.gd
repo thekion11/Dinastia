@@ -35,7 +35,7 @@ static func pintar_desarrollo(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 		return
 	var en_plan := mundo.entrenamiento.es_prioritario(j)
 	var b := Button.new()
-	b.text = "★ En el plan de desarrollo (quitar)" if en_plan else "Sumar al desarrollo prioritario"
+	b.text = Idiomas.t("★ En el plan de desarrollo (quitar)") if en_plan else Idiomas.t("Sumar al desarrollo prioritario")
 	b.pressed.connect(al_pulsar)
 	lista.add_child(b)
 
@@ -49,13 +49,13 @@ static func pintar_reconversion(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 		return
 	lista.add_child(HSeparator.new())
 	var t := _texto(11, paleta["suave"], paleta)
-	t.text = "🔁 POSICIÓN Y RECONVERSIÓN"
+	t.text = Idiomas.t("🔁 POSICIÓN Y RECONVERSIÓN")
 	lista.add_child(t)
 	_dato(lista, "Puesto natural", String((posd.get(j.pos_e, {}) as Dictionary).get("n", j.pos_e)), paleta["texto"], paleta)
 	if not j.pos_sec.is_empty():
 		_dato(lista, "También puede jugar de", ", ".join(j.pos_sec), paleta["suave"], paleta)
 	var nota := _texto(10, paleta["suave"], paleta)
-	nota.text = "Rendimiento estimado en cada puesto. Reconvertirlo es permanente y le cuesta unas semanas asentarse."
+	nota.text = Idiomas.t("Rendimiento estimado en cada puesto. Reconvertirlo es permanente y le cuesta unas semanas asentarse.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(nota)
 	var es_por := String((posd.get(j.pos_e, {}) as Dictionary).get("g", "")) == "POR"
@@ -95,8 +95,8 @@ static func pintar_marca(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 	elif j.edad >= 23 and j.ovr >= 66 and mundo.cantera != null:
 		var costo := int(round(float(j.sueldo) * 26.0))
 		var b := Button.new()
-		b.text = "Cláusula de fidelidad  %s" % _dinero(costo)
-		b.tooltip_text = "Prima ahora a cambio de tres años sin que pida salida."
+		b.text = Idiomas.t("Cláusula de fidelidad  %s") % _dinero(costo)
+		b.tooltip_text = Idiomas.t("Prima ahora a cambio de tres años sin que pida salida.")
 		b.disabled = costo > mio.saldo
 		b.pressed.connect(al_pedir_fidelidad)
 		lista.add_child(b)
@@ -123,13 +123,13 @@ static func pintar_similares(lista: VBoxContainer, j: Jugador, mio: Club, mundo:
 		return absi(a.ovr - j.ovr) * 2 + absi(a.edad - j.edad) < absi(b.ovr - j.ovr) * 2 + absi(b.edad - j.edad))
 	lista.add_child(HSeparator.new())
 	var t := _texto(11, paleta["suave"], paleta)
-	t.text = "JUGADORES SIMILARES"
+	t.text = Idiomas.t("JUGADORES SIMILARES")
 	lista.add_child(t)
 	for i in mini(6, candidatos.size()):
 		var s: Jugador = candidatos[i]
 		var club_s: Club = mundo.clubes.get(s.club_id)
 		var b := Button.new()
-		b.text = "%s  ·  %d años  ·  %s  ·  %s" % [
+		b.text = Idiomas.t("%s  ·  %d años  ·  %s  ·  %s") % [
 			s.nombre, s.edad, club_s.nombre if club_s else "libre",
 			mundo.ojeadores.ovr_texto(s) if mundo.ojeadores != null else str(s.ovr)]
 		b.add_theme_font_size_override("font_size", 11)
@@ -142,7 +142,7 @@ static func pintar_similares(lista: VBoxContainer, j: Jugador, mio: Club, mundo:
 		b.pressed.connect(func() -> void: al_elegir.call(quien))
 		lista.add_child(b)
 	var nota := _texto(10, paleta["suave"], paleta)
-	nota.text = "Mismo puesto, edad y nivel parecidos: por si se cae la operación o quieres comparar precio."
+	nota.text = Idiomas.t("Mismo puesto, edad y nivel parecidos: por si se cae la operación o quieres comparar precio.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(nota)
 
@@ -157,7 +157,7 @@ static func pintar_venta(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 		al_rescindir: Callable) -> void:
 	lista.add_child(HSeparator.new())
 	var t := _texto(11, paleta["suave"], paleta)
-	t.text = "VENDER"
+	t.text = Idiomas.t("VENDER")
 	lista.add_child(t)
 	var r := mundo.roles
 	var motivo_venta := "" if r == null or r.puede_vender_jugadores() else String(r.motivo_bloqueo("vender_jugadores"))
@@ -178,7 +178,7 @@ static func pintar_venta(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 		if not pv.is_empty() and int(pv.get("pct", 0)) > 0:
 			var club_pv: Club = mundo.clubes.get(String(pv.get("club", "")))
 			_dato(lista, "Porcentaje pactado de su próxima venta",
-				"%d%% para %s" % [int(pv["pct"]), club_pv.nombre if club_pv else "su club anterior"], paleta["rojo"], paleta)
+				"%d%% para %s" % [int(pv["pct"]), club_pv.nombre if club_pv else Idiomas.t("su club anterior")], paleta["rojo"], paleta)
 	## Negociación congelada tras romperse una mesa.
 	if j.no_negociar_hasta > 0 and mundo.semana < j.no_negociar_hasta:
 		_dato(lista, "Negociación congelada", "hasta la semana %d" % j.no_negociar_hasta, paleta["suave"], paleta)
@@ -187,7 +187,7 @@ static func pintar_venta(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 		return
 	lista.add_child(HSeparator.new())
 	var tr := _texto(11, paleta["suave"], paleta)
-	tr.text = "RESCINDIR CONTRATO"
+	tr.text = Idiomas.t("RESCINDIR CONTRATO")
 	lista.add_child(tr)
 	var motivo_resc := "" if r == null or r.puede_rescindir() else String(r.motivo_bloqueo("rescindir"))
 	if motivo_resc != "":
@@ -198,7 +198,7 @@ static func pintar_venta(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 		return
 	if mio.plantilla.size() <= 18:
 		var av := _texto(11, paleta["rojo"], paleta)
-		av.text = "Plantel muy corto: no puedes bajar de 18 fichas."
+		av.text = Idiomas.t("Plantel muy corto: no puedes bajar de 18 fichas.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lista.add_child(av)
 		return
@@ -208,7 +208,7 @@ static func pintar_venta(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 	_dato(lista, "Comisión de salida del agente", _dinero(int(coste["comision"])), paleta["suave"], paleta)
 	var confirmando := confirmando_id == j.id
 	var br := Button.new()
-	br.text = "¿Seguro? Pulsa de nuevo para confirmar" if confirmando else "Rescindir  %s" % _dinero(total)
+	br.text = Idiomas.t("¿Seguro? Pulsa de nuevo para confirmar") if confirmando else Idiomas.t("Rescindir  %s") % _dinero(total)
 	br.disabled = total > mio.saldo
 	br.pressed.connect(al_rescindir)
 	lista.add_child(br)
@@ -222,7 +222,7 @@ static func pintar_charla(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta
 		return
 	lista.add_child(HSeparator.new())
 	var t := _texto(11, paleta["suave"], paleta)
-	t.text = "💬 HABLAR CON %s" % j.nombre.to_upper()
+	t.text = Idiomas.t("💬 HABLAR CON %s") % j.nombre.to_upper()
 	lista.add_child(t)
 	var fila := HFlowContainer.new()
 	fila.add_theme_constant_override("h_separation", 6)
@@ -238,7 +238,7 @@ static func pintar_charla(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta
 		b.pressed.connect(func() -> void:
 			var r := mundo.charlas.hablar(j, tema, mundo.anio, mundo.semana)
 			resp.text = String(r.get("respuesta", ""))
-			efecto.text = "→ " + String(r.get("efecto", "")) + (" · se lo prometiste: en 4 semanas debe jugar al menos 2 partidos" if tema == "minutos" else "")
+			efecto.text = "→ " + String(r.get("efecto", "")) + (Idiomas.t(" · se lo prometiste: en 4 semanas debe jugar al menos 2 partidos") if tema == "minutos" else "")
 			Animar.aparecer(resp))
 		fila.add_child(b)
 	lista.add_child(resp)

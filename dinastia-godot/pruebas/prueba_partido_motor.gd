@@ -35,7 +35,11 @@ func _ready() -> void:
 		partido.remates_local, partido.remates_visita, partido.posesion_local, partido.corners_local, partido.corners_visita, cambios[0]])
 	_ok(partido.terminado_ya and partido.minuto >= 90, "el partido termina en el 90'")
 	_ok(partido.goles_local == int(motor.goles[0]) and partido.goles_visita == int(motor.goles[1]), "el marcador del acta es el del césped")
-	_ok(goles_ev[0] == partido.goles_local + partido.goles_visita, "cada gol se anota una vez")
+	var anulados := 0
+	for e: Dictionary in partido.cronica:
+		if String(e.get("tipo", "")) == "gol_anulado":
+			anulados += 1
+	_ok(goles_ev[0] == partido.goles_local + partido.goles_visita + anulados, "cada gol se anota una vez (%d anulados por el VAR)" % anulados)
 	_ok(partido.remates_local >= partido.goles_local and partido.remates_visita >= partido.goles_visita, "los remates incluyen los goles")
 	_ok(partido.remates_local + partido.remates_visita >= 4, "hay remates de verdad (%d)" % (partido.remates_local + partido.remates_visita))
 	var en_cronica := 0
@@ -44,6 +48,37 @@ func _ready() -> void:
 			en_cronica += 1
 	_ok(en_cronica == partido.goles_local + partido.goles_visita, "la crónica tiene todos los goles")
 	_ok(cambios[0] >= 1, "el DT de la IA hace cambios con los cansados (%d)" % cambios[0])
+	## LAS ESTADÍSTICAS EN VIVO (16-10-2026): ven los mismos remates que el acta.
+	var st: EstadisticasVivo = vista.get("_stats")
+	_ok(st != null, "hay estadísticas en vivo")
+	if st != null:
+		var vistos := st.n_tiros(true) + st.n_tiros(false)
+		var acta := partido.remates_local + partido.remates_visita
+		var goles_st := 0
+		for t: Dictionary in st.tiros:
+			if String(t["res"]) == "gol":
+				goles_st += 1
+		print("ESTADÍSTICAS tiros %d (acta %d) · xG %.2f-%.2f · goles en el mapa %d" % [vistos, acta, st.xg(true), st.xg(false), goles_st])
+		_ok(vistos == acta, "el mapa de tiros tiene los remates del acta (%d vs %d)" % [vistos, acta])
+		_ok(goles_st == partido.goles_local + partido.goles_visita, "cada gol está en el mapa de tiros")
+		var muestras := 0
+		for eq in 2:
+			for n: int in (st.calor[eq] as PackedInt32Array):
+				muestras += n
+		_ok(muestras > 1000, "el mapa de calor tiene muestras de todo el partido (%d)" % muestras)
+		var filas := st.resumen(partido, motor)
+		_ok(filas.size() >= 10, "el panel tiene %d filas de estadísticas" % filas.size())
+	## EL VAR ANULA (17-10-2026): el gol vuelve atrás en acta, goleador y crónica.
+	var p2 := Partido.new(par[0], par[1])
+	var autor: Jugador = p2.local.plantilla[0] if not p2.local.plantilla.is_empty() else null
+	var g0 := autor.goles if autor != null else 0
+	p2.gol_externo(true, autor.id if autor != null else "", "")
+	p2.anular_gol_externo(true, autor.id if autor != null else "")
+	var marcado := false
+	for e: Dictionary in p2.cronica:
+		if String(e.get("tipo", "")) == "gol_anulado":
+			marcado = true
+	_ok(p2.goles_local == 0 and (autor == null or autor.goles == g0) and marcado, "el VAR anula el gol en el acta, el goleador y la crónica")
 	vista.queue_free()
 	await get_tree().process_frame
 	_ok(not partido.motor_externo, "al cerrar el 3D el partido vuelve a jugarse solo")
