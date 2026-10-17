@@ -86,14 +86,16 @@ void fragment() {
 	var marco := PanelContainer.new()
 	marco.add_theme_stylebox_override("panel", Tema.caja(Color(0, 0, 0, 0.35), Tema.RADIO_GRANDE, Color(c2, 0.6)))
 	izq.add_child(marco)
-	var cara := TextureRect.new()
-	cara.name = "CaraPresidente"
-	cara.custom_minimum_size = Vector2(280, 280)
-	cara.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	cara.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	cara.texture = Tutorial._cara_mentor({"semilla": "presidente_" + _nombre_pres, "nombre": _nombre_pres, "canas": true},
-		{"c1": c1.to_html(false), "c2": c2.to_html(false)})
-	marco.add_child(cara)
+	if not _presidente_3d(marco, c1, c2):
+		## Sin modelo (no debería pasar): el busto 3D de los mentores.
+		var cara := TextureRect.new()
+		cara.name = "CaraPresidente"
+		cara.custom_minimum_size = Vector2(280, 280)
+		cara.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		cara.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		cara.texture = Tutorial._cara_mentor({"semilla": "presidente_" + _nombre_pres, "nombre": _nombre_pres, "canas": true},
+			{"c1": c1.to_html(false), "c2": c2.to_html(false)})
+		marco.add_child(cara)
 	var nom := Tema.etiqueta(22, Tema.TEXTO, _nombre_pres)
 	nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	izq.add_child(nom)
@@ -127,6 +129,62 @@ void fragment() {
 	create_tween().tween_property(self, "modulate:a", 1.0, 0.45)
 	Sonido.toca("despido")
 	_siguiente()
+
+## EL PRESIDENTE EN 3D, VIVO: el mismo creador de personajes que el DT
+## (`PersonajeDT.crear`) con traje oscuro, corbata y canas, en un pequeño
+## mundo propio (fondo con el color del club, dos luces), de pecho para arriba
+## y respirando (clip `parado`). Mismo aspecto siempre para el mismo nombre.
+func _presidente_3d(marco: Control, c1: Color, c2: Color) -> bool:
+	var cont := SubViewportContainer.new()
+	cont.name = "CaraPresidente"
+	cont.custom_minimum_size = Vector2(300, 330)
+	cont.stretch = true
+	marco.add_child(cont)
+	var vp := SubViewport.new()
+	vp.own_world_3d = true
+	vp.msaa_3d = Viewport.MSAA_2X
+	vp.size = Vector2i(300, 330)
+	cont.add_child(vp)
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = c1.lerp(Color(0.12, 0.13, 0.16), 0.7)
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.78, 0.8, 0.86)
+	env.ambient_light_energy = 0.6
+	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	var we := WorldEnvironment.new()
+	we.environment = env
+	vp.add_child(we)
+	var sol := DirectionalLight3D.new()
+	sol.rotation_degrees = Vector3(-25, 30, 0)
+	sol.light_energy = 1.15
+	vp.add_child(sol)
+	var relleno := DirectionalLight3D.new()
+	relleno.rotation_degrees = Vector3(-10, -140, 0)
+	relleno.light_energy = 0.4
+	relleno.light_color = c2.lerp(Color.WHITE, 0.6)
+	vp.add_child(relleno)
+	var raiz := Node3D.new()
+	vp.add_child(raiz)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("presidente_" + _nombre_pres)
+	var asp := PersonajeDT.aleatorio(rng)
+	asp.merge({"cuerpo": "male", "ropa": "traje", "c_ropa": "15171c", "c_ropa2": "f2f2f2", "corbata": true,
+		"color_pelo": ["9b9b98", "c8c8c4", "6e6a66"][rng.randi() % 3], "gorra": false, "bufanda": false,
+		"auriculares": false, "pendiente": false, "cadena": false, "manga_corta": false, "tatuaje": 0,
+		"pelo": ["corto", "calvo", "rapado"][rng.randi() % 3]}, true)
+	var d := PersonajeDT.crear(raiz, asp, c1, c2)
+	if d.is_empty():
+		cont.queue_free()
+		return false
+	var alto := float(asp["altura"])
+	var cam := Camera3D.new()
+	cam.fov = 24.0
+	vp.add_child(cam)
+	cam.position = Vector3(0.0, alto * 0.9, 1.75)
+	cam.look_at(Vector3(0.0, alto * 0.86, 0.0), Vector3.UP)
+	cam.current = true
+	return true
 
 func _panel_resumen() -> Control:
 	var caja := PanelContainer.new()
