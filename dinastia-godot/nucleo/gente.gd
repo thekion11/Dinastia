@@ -133,7 +133,7 @@ func charlar(clave: String) -> String:
 			return "Te da un nombre apuntado en una libreta que ya no usa nadie. Dice que lo mires."
 		"utilero":
 			for j3 in c.plantilla:
-				j3.moral = clampi(j3.moral + 1, 10, 99)
+				j3.cambiar_moral(1, "Entorno personal")
 			return "Se le nota que quiere al plantel. Algo de eso se contagia al vestuario."
 		"secretaria":
 			return "Te pone al día de los papeles que nadie mira hasta que estallan."

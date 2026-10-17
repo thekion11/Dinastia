@@ -389,7 +389,7 @@ func revisar_cupo_juvenil(mi: Club, once: Array) -> int:
 	mi.mover_saldo(bono)
 	movimiento.emit("Bonificación por minutos juveniles (%d)" % juveniles.size(), bono)
 	for j: Jugador in juveniles:
-		j.moral = clampi(j.moral + 2, 10, 99)
+		j.cambiar_moral(2, "Federación y sanciones")
 	return bono
 
 ## ¿Cabe este extranjero en el plantel? Devuelve "" si sí, o el motivo si no.
@@ -828,7 +828,7 @@ func control_antidopaje(mi: Club, anio: int, semana_n: int) -> Dictionary:
 
 	var fechas := Azar.ent(8, 24)
 	j.suspension = maxi(j.suspension, fechas)
-	j.moral = clampi(j.moral - 30, 10, 99)
+	j.cambiar_moral(-30, "Federación y sanciones")
 	escandalo.emit(Azar.ent(15, 28), "positivo por dopaje")
 	castigo_directiva.emit(-8, "positivo por dopaje en el plantel")
 	abrir_caso("dopaje", j, fechas, "control antidopaje con resultado adverso", anio, semana_n)

@@ -371,7 +371,7 @@ func _fecha_fifa(anio: int, semana_n: int) -> void:
 	var mios: Array[Jugador] = []
 	for j in convocados:
 		_caps[j.id] = caps_de(j) + 1
-		j.moral = clampi(j.moral + MORAL_CONVOCADO, 10, 99)
+		j.cambiar_moral(MORAL_CONVOCADO, "Selección nacional")
 		if mio == null or j.club_id != mio.id:
 			continue
 		mios.append(j)
@@ -670,7 +670,7 @@ func torneo_continental(anio: int) -> Dictionary:
 		else "Cierra el torneo de selecciones del verano.")
 	if puesto == 0:
 		for j in convocados():
-			j.moral = clampi(j.moral + MORAL_TITULO_CONTINENTAL, 10, 99)
+			j.cambiar_moral(MORAL_TITULO_CONTINENTAL, "Selección nacional")
 	torneo_de_selecciones.emit(torneo, puesto)
 	return {"torneo": torneo, "puesto": puesto, "seleccion": sel, "anio": anio}
 
