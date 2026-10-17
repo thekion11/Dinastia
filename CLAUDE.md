@@ -579,4 +579,4 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   AHORRAR — sin agentes nuevos, trabajo pequeño y solo lo pedido hasta el restablecimiento.
   TRASPASO: `dinastia-godot/PENDIENTES.md` (qué falta, cómo, y qué falta fusionar; respaldos en
   `dinastia-godot/parches_pendientes/`). Mantenerlo al día en cada bloque.
-
+- 17-10: TODO fusionado a `main` con el PR #7 (pedido del usuario). La revisión automática horaria quedó PAUSADA (pedido).

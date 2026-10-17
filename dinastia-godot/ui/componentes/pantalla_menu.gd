@@ -204,6 +204,8 @@ func _pestana(sub: Dictionary, i: int) -> Button:
 
 ## La portada: el lema del menú y una tarjeta grande por submenú.
 func portada() -> void:
+	if _cerrando:
+		return
 	_devolver_contenido()
 	_activo = -1
 	_titulo_sub.text = Idiomas.t(String(_menu.get("lema", "")))
@@ -310,6 +312,10 @@ func _tarjeta(sub: Dictionary, i: int) -> Button:
 ## Abre el submenú `i`: una sección (misma navegación que los chips de
 ## siempre) o una acción (ver el estadio en 3D, la casa, el móvil...).
 func elegir(i: int) -> void:
+	## Una pantalla que ya se está cerrando no vuelve a coger el contenido: se
+	## borraría con ella (estrés de menús, 17-10-2026).
+	if _cerrando:
+		return
 	var subs: Array = _menu["subs"]
 	if i < 0 or i >= subs.size():
 		return
@@ -380,8 +386,11 @@ func submenu_vecino(paso: int) -> void:
 			break
 	elegir(i)
 
+func cerrando() -> bool:
+	return _cerrando
+
 func _mudar(nodo: Control, a: Control) -> void:
-	if nodo == null or nodo.get_parent() == null:
+	if _cerrando or nodo == null or nodo.get_parent() == null:
 		return
 	var padre := nodo.get_parent()
 	_devolver.append([nodo, padre, nodo.get_index(), nodo.size_flags_horizontal, nodo.size_flags_stretch_ratio])
