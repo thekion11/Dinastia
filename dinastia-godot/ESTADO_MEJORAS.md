@@ -551,7 +551,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
 | M-433 | P1 | Controles táctiles sólo en la ciudad (cruceta/E) | PENDIENTE | táctil solo en ciudad/estadio a pie; el partido no |
-| M-434 | P2 | Sin vibración (rumble) en mando | PENDIENTE | sin vibración |
+| M-434 | P2 | Sin vibración (rumble) en mando | HECHO | 17-10: `Mando.vibrar` en gol, remate y tarjeta (DT y Carrera), ayuda «Vibración del mando» normal/suave/no |
 | M-435 | P2 | Sin gatillos analógicos para potencia de pase | PENDIENTE | sin gatillos analógicos |
 | M-436 | P2 | Sin giroscopio para cámara en primera persona (móvil) | PENDIENTE | sin giroscopio |
 | M-437 | P2 | Sin detección de dispositivo para cambiar iconos en tiempo real… | PARCIAL | `dispositivo_detectado` en panel de controles y `ControlFC`; guía del partido sin comprobar |
