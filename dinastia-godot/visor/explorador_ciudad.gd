@@ -529,6 +529,7 @@ var _movil: MovilMano
 var _boton_e: Button
 var _ayudas := false
 var _con_movil := true
+var _m_antes := false
 
 func _aplicar_ajustes() -> void:
 	_ayudas = bool(AjustesCiudad.valor("ayudas", false))
@@ -543,6 +544,15 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 		if cb != null and cb.expansion != null and estado == "calle":
 			calle = cb.expansion.nombre_calle_en(cuerpo.position)
 		_movil.poner(modo_mano if _con_movil else "pie", km_h, maxima, calle, metros)
+		## El GPS: M saca o guarda el móvil también andando.
+		if Input.is_physical_key_pressed(KEY_M) != _m_antes:
+			_m_antes = not _m_antes
+			if _m_antes:
+				_movil.gps_fijo = not _movil.gps_fijo
+		if _movil.visible and estado == "calle":
+			if _movil.mapa.red == null and cb != null:
+				_movil.mapa.red = cb.expansion
+			_movil.mapa.poner(cuerpo.position, rumbo if modo == "coche" else cuerpo.rotation.y, get_physics_process_delta_time())
 	if _boton_e != null:
 		var hay := _aviso.text.strip_edges() != ""
 		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
