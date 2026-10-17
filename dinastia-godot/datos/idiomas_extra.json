@@ -2403,7 +2403,12 @@
   "%s ya lleva %d goles: no le dejes rematar solo.": "%s already has %d goals: don't leave him unmarked.",
   "Tienen %d lesionados: su banco está más corto.": "They have %d injured: their bench is thinner.",
   "Llegan con malos resultados: un gol temprano los puede hundir.": "They arrive in poor form: an early goal could sink them.",
-  "Llegan en racha: cuidado con los primeros minutos.": "They are on a winning run: careful in the opening minutes."
+  "Llegan en racha: cuidado con los primeros minutos.": "They are on a winning run: careful in the opening minutes.",
+  "ONCE PROBABLE": "PROBABLE XI",
+  "Pos.": "Pos.",
+  "Jugador": "Player",
+  "Nota": "Avg. score",
+  "Nota media del once por partido: %.1f": "Starting XI average match score: %.1f"
  },
  "pt": {
   "Historia": "História",
@@ -4809,7 +4814,12 @@
   "%s ya lleva %d goles: no le dejes rematar solo.": "%s já tem %d gols: não o deixes finalizar sozinho.",
   "Tienen %d lesionados: su banco está más corto.": "Têm %d lesionados: o banco deles é mais curto.",
   "Llegan con malos resultados: un gol temprano los puede hundir.": "Chegam com maus resultados: um gol cedo pode afundá-los.",
-  "Llegan en racha: cuidado con los primeros minutos.": "Chegam embalados: cuidado com os primeiros minutos."
+  "Llegan en racha: cuidado con los primeros minutos.": "Chegam embalados: cuidado com os primeiros minutos.",
+  "ONCE PROBABLE": "ONZE PROVÁVEL",
+  "Pos.": "Pos.",
+  "Jugador": "Jogador",
+  "Nota": "Nota",
+  "Nota media del once por partido: %.1f": "Nota média do onze por jogo: %.1f"
  },
  "patrones": [
   [
@@ -7762,7 +7772,12 @@
   "%s ya lleva %d goles: no le dejes rematar solo.": "%s a déjà %d buts : ne le laissez pas seul.",
   "Tienen %d lesionados: su banco está más corto.": "Ils ont %d blessés : leur banc est plus court.",
   "Llegan con malos resultados: un gol temprano los puede hundir.": "Ils restent sur de mauvais résultats : un but rapide peut les couler.",
-  "Llegan en racha: cuidado con los primeros minutos.": "Ils sont en série : attention aux premières minutes."
+  "Llegan en racha: cuidado con los primeros minutos.": "Ils sont en série : attention aux premières minutes.",
+  "ONCE PROBABLE": "ONZE PROBABLE",
+  "Pos.": "Pos.",
+  "Jugador": "Joueur",
+  "Nota": "Note/match",
+  "Nota media del once por partido: %.1f": "Note moyenne du onze par match : %.1f"
  },
  "it": {
   "Historia": "Storia",
@@ -10075,7 +10090,12 @@
   "%s ya lleva %d goles: no le dejes rematar solo.": "%s ha già %d gol: non lasciarlo tirare da solo.",
   "Tienen %d lesionados: su banco está más corto.": "Hanno %d infortunati: la loro panchina è più corta.",
   "Llegan con malos resultados: un gol temprano los puede hundir.": "Arrivano da brutti risultati: un gol presto può affondarli.",
-  "Llegan en racha: cuidado con los primeros minutos.": "Arrivano in serie positiva: attenzione ai primi minuti."
+  "Llegan en racha: cuidado con los primeros minutos.": "Arrivano in serie positiva: attenzione ai primi minuti.",
+  "ONCE PROBABLE": "UNDICI PROBABILE",
+  "Pos.": "Pos.",
+  "Jugador": "Giocatore",
+  "Nota": "Voto",
+  "Nota media del once por partido: %.1f": "Voto medio dell'undici a partita: %.1f"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12388,7 +12408,12 @@
   "%s ya lleva %d goles: no le dejes rematar solo.": "%s hat schon %d Tore: lass ihn nicht frei abschließen.",
   "Tienen %d lesionados: su banco está más corto.": "Sie haben %d Verletzte: ihre Bank ist dünner.",
   "Llegan con malos resultados: un gol temprano los puede hundir.": "Sie kommen mit schlechten Ergebnissen: ein frühes Tor kann sie versenken.",
-  "Llegan en racha: cuidado con los primeros minutos.": "Sie sind in Form: Vorsicht in den ersten Minuten."
+  "Llegan en racha: cuidado con los primeros minutos.": "Sie sind in Form: Vorsicht in den ersten Minuten.",
+  "ONCE PROBABLE": "VORAUSSICHTLICHE ELF",
+  "Pos.": "Pos.",
+  "Jugador": "Spieler",
+  "Nota": "Note",
+  "Nota media del once por partido: %.1f": "Durchschnittsnote der Elf pro Spiel: %.1f"
  },
  "ca": {
   "Historia": "Història",
@@ -14701,7 +14726,12 @@
   "%s ya lleva %d goles: no le dejes rematar solo.": "%s ja porta %d gols: no el deixis rematar sol.",
   "Tienen %d lesionados: su banco está más corto.": "Tenen %d lesionats: la seva banqueta és més curta.",
   "Llegan con malos resultados: un gol temprano los puede hundir.": "Arriben amb mals resultats: un gol d'hora els pot enfonsar.",
-  "Llegan en racha: cuidado con los primeros minutos.": "Arriben en ratxa: compte amb els primers minuts."
+  "Llegan en racha: cuidado con los primeros minutos.": "Arriben en ratxa: compte amb els primers minuts.",
+  "ONCE PROBABLE": "ONZE PROBABLE",
+  "Pos.": "Pos.",
+  "Jugador": "Jugador",
+  "Nota": "Nota",
+  "Nota media del once por partido: %.1f": "Nota mitjana de l'onze per partit: %.1f"
  },
  "pl": {
   "Club": "Klub",
@@ -17311,7 +17341,12 @@
   "%s ya lleva %d goles: no le dejes rematar solo.": "%s ma już %d goli: nie zostawiaj go samego.",
   "Tienen %d lesionados: su banco está más corto.": "Mają %d kontuzjowanych: ich ławka jest krótsza.",
   "Llegan con malos resultados: un gol temprano los puede hundir.": "Przychodzą po słabych wynikach: szybki gol może ich pogrążyć.",
-  "Llegan en racha: cuidado con los primeros minutos.": "Są w serii: uważaj w pierwszych minutach."
+  "Llegan en racha: cuidado con los primeros minutos.": "Są w serii: uważaj w pierwszych minutach.",
+  "ONCE PROBABLE": "PRZEWIDYWANA JEDENASTKA",
+  "Pos.": "Poz.",
+  "Jugador": "Zawodnik",
+  "Nota": "Nota",
+  "Nota media del once por partido: %.1f": "Średnia nota jedenastki na mecz: %.1f"
  },
  "tr": {
   "Club": "Kulüp",
@@ -19921,6 +19956,11 @@
   "%s ya lleva %d goles: no le dejes rematar solo.": "%s şimdiden %d gol attı: onu boş bırakma.",
   "Tienen %d lesionados: su banco está más corto.": "%d sakatları var: yedek kulübeleri daha zayıf.",
   "Llegan con malos resultados: un gol temprano los puede hundir.": "Kötü sonuçlarla geliyorlar: erken bir gol onları yıkabilir.",
-  "Llegan en racha: cuidado con los primeros minutos.": "Seri halindeler: ilk dakikalara dikkat."
+  "Llegan en racha: cuidado con los primeros minutos.": "Seri halindeler: ilk dakikalara dikkat.",
+  "ONCE PROBABLE": "MUHTEMEL 11",
+  "Pos.": "Mevki",
+  "Jugador": "Oyuncu",
+  "Nota": "Puan",
+  "Nota media del once por partido: %.1f": "İlk 11'in maç başı ortalama puanı: %.1f"
  }
 }
