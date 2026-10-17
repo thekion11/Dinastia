@@ -383,7 +383,7 @@ func _aplicar_efectos(mio: Club) -> void:
 		match String(e["id"]):
 			"vestuario_tenso":
 				for x: Jugador in mio.plantilla:
-					x.moral = clampi(x.moral - 1, 10, 99)
+					x.cambiar_moral(-1, "Prensa y declaraciones")
 			"eco_viral":
 				mover_animo(-1)
 			"posicion_nueva":
@@ -392,7 +392,7 @@ func _aplicar_efectos(mio: Club) -> void:
 					j.forma = clampi(j.forma - 1, 10, 99)
 			"calendario_pagos":
 				for x: Jugador in mio.plantilla:
-					x.moral = clampi(x.moral - 2, 10, 99)
+					x.cambiar_moral(-2, "Prensa y declaraciones")
 		e["semanas"] = int(e["semanas"]) - 1
 		if int(e["semanas"]) > 0:
 			siguen.append(e)
@@ -406,7 +406,7 @@ func _fin_de_efecto(id: String, j: Jugador) -> void:
 			noticia.emit("El vestuario se calma", "Pasaron las semanas de tensión con el capitán. El grupo vuelve a remar.")
 		"posicion_nueva":
 			if j != null:
-				j.moral = clampi(j.moral + 5, 10, 99)
+				j.cambiar_moral(5, "Prensa y declaraciones")
 				noticia.emit("%s ya es de su nueva posición" % j.nombre, "Terminó de adaptarse y está feliz con el cambio.")
 		"calendario_pagos":
 			noticia.emit("Atrasos saldados", "Se cumplió el calendario de pagos. El plantel vuelve a entrenar sin carteles.")
@@ -455,7 +455,7 @@ func resolver(op: String) -> Dictionary:
 			## hace que este evento se recuerde.
 			if si and j != null:
 				if Azar.suerte(0.6):
-					j.moral = clampi(j.moral - 8, 10, 99)
+					j.cambiar_moral(-8, "Prensa y declaraciones")
 					salida = {"titulo": "Se queda hasta junio",
 						"cuerpo": "%s acepta terminar la temporada antes de retirarse. Juega, pero ya no está aquí del todo." % j.nombre}
 				else:
@@ -497,7 +497,7 @@ func resolver(op: String) -> Dictionary:
 					"cuerpo": "Diste la cara y sonaste firme, pero el tema aguanta una semana más en todos los programas."}
 			else:
 				for x: Jugador in mio.plantilla:
-					x.moral = clampi(x.moral - 2, 10, 99)
+					x.cambiar_moral(-2, "Prensa y declaraciones")
 				if m != null and m.directiva != null:
 					m.directiva.mover_confianza(-4, "los correos filtrados")
 				salida = {"titulo": "Silencio",
@@ -546,11 +546,11 @@ func resolver(op: String) -> Dictionary:
 				pass
 			elif si:
 				j.sueldo = int(round(float(j.sueldo) * 1.25))
-				j.moral = clampi(j.moral + 10, 10, 99)
+				j.cambiar_moral(10, "Prensa y declaraciones")
 				salida = {"titulo": "Renovación mejorada",
 					"cuerpo": "%s firma feliz. El camarín toma nota de quién paga." % j.nombre}
 			else:
-				j.moral = clampi(j.moral - 9, 10, 99)
+				j.cambiar_moral(-9, "Prensa y declaraciones")
 				salida = {"titulo": "Portazo en la gerencia",
 					"cuerpo": "Le recordaste que un contrato se respeta. %s entrena en silencio." % j.nombre}
 
@@ -558,7 +558,7 @@ func resolver(op: String) -> Dictionary:
 			if si:
 				for x in mio.plantilla:
 					x.fisico = clampi(x.fisico - 6, 10, 100)
-					x.moral = clampi(x.moral + 3, 10, 99)
+					x.cambiar_moral(3, "Prensa y declaraciones")
 				rep_entrenador = clampi(rep_entrenador + 1, 1, 99)
 				salida = {"titulo": "Aplausos de pie",
 					"cuerpo": "El amistoso benéfico llenó el estadio chico. La ciudad habla bien del club."}
@@ -599,7 +599,7 @@ func resolver(op: String) -> Dictionary:
 			else:
 				oferta_forzada = j.id
 				for x in mio.plantilla:
-					x.moral = clampi(x.moral - 1, 10, 99)
+					x.cambiar_moral(-1, "Prensa y declaraciones")
 				salida = {"titulo": "Puerta entreabierta",
 					"cuerpo": "Dejaste correr el rumor: llegará una oferta grande por %s. El camarín murmura." % j.nombre}
 
@@ -624,7 +624,7 @@ func resolver(op: String) -> Dictionary:
 				## vestuario lo ven, y la moral de un líder pesa en la cancha.
 				for x in mio.plantilla:
 					if x.rasgo == "lider":
-						x.moral = clampi(x.moral + 3, 10, 99)
+						x.cambiar_moral(3, "Prensa y declaraciones")
 				salida = {"titulo": "Juego limpio",
 					"cuerpo": "Rechazaste el sobre. En el camarín, los referentes toman nota del gesto."}
 
@@ -654,19 +654,19 @@ func resolver(op: String) -> Dictionary:
 				_pagar(mio, -Eco.escalar(100000.0, rep), "Bono al plantel")
 				primas_activas = true
 				for x in mio.plantilla:
-					x.moral = clampi(x.moral + 4, 10, 99)
+					x.cambiar_moral(4, "Prensa y declaraciones")
 				salida = {"titulo": "Gesto al camarín",
 					"cuerpo": "Bono entregado y primas por objetivos activadas en las normas. El plantel responde en la cancha."}
 			else:
 				for x in mio.plantilla:
-					x.moral = clampi(x.moral - 3, 10, 99)
+					x.cambiar_moral(-3, "Prensa y declaraciones")
 				salida = {"titulo": "Sin bonos",
 					"cuerpo": "\"El sueldo ya es el bono\". Caras largas en la práctica."}
 
 		"tunel":
 			if si:
 				for x: Jugador in mio.plantilla:
-					x.moral = clampi(x.moral + 3, 10, 99)
+					x.cambiar_moral(3, "Prensa y declaraciones")
 				if Azar.suerte(0.3):
 					_mover_funa(6)
 					salida = {"titulo": "La provocación se filtra",
@@ -688,7 +688,7 @@ func resolver(op: String) -> Dictionary:
 		"viral":
 			if si:
 				if j != null:
-					j.moral = clampi(j.moral - 6, 10, 99)
+					j.cambiar_moral(-6, "Prensa y declaraciones")
 					j.suspension = maxi(j.suspension, 1)
 				_mover_funa(-5)
 				if m != null and m.directiva != null:
@@ -697,7 +697,7 @@ func resolver(op: String) -> Dictionary:
 					"cuerpo": "Un partido fuera y multa interna. La directiva aplaude; el jugador, no."}
 			else:
 				if j != null:
-					j.moral = clampi(j.moral + 4, 10, 99)
+					j.cambiar_moral(4, "Prensa y declaraciones")
 				_mover_funa(10)
 				_efecto("eco_viral", 2)
 				salida = {"titulo": "Lo defiendes",
@@ -706,13 +706,13 @@ func resolver(op: String) -> Dictionary:
 		"capitan":
 			if si:
 				for x: Jugador in mio.plantilla:
-					x.moral = clampi(x.moral + 3, 10, 99)
+					x.cambiar_moral(3, "Prensa y declaraciones")
 				rep_entrenador = clampi(rep_entrenador - 2, 0, 100)
 				salida = {"titulo": "Carga más liviana",
 					"cuerpo": "Aflojas los entrenamientos una semana. El grupo sonríe; algún periodista dice que el capitán manda más que tú."}
 			else:
 				if j != null:
-					j.moral = clampi(j.moral - 8, 10, 99)
+					j.cambiar_moral(-8, "Prensa y declaraciones")
 				rep_entrenador = clampi(rep_entrenador + 3, 0, 100)
 				_efecto("vestuario_tenso", 3)
 				salida = {"titulo": "\"Aquí mando yo\"",
@@ -735,13 +735,13 @@ func resolver(op: String) -> Dictionary:
 			if si and j != null:
 				if not j.pos_sec.has(nueva):
 					j.pos_sec.append(nueva)
-				j.moral = clampi(j.moral + 6, 10, 99)
+				j.cambiar_moral(6, "Prensa y declaraciones")
 				_efecto("posicion_nueva", 3, j.id)
 				salida = {"titulo": "%s, de %s" % [j.nombre, nueva],
 					"cuerpo": "Ya figura como %s en su ficha. Unas semanas de adaptación y veremos si tenía razón." % nueva}
 			else:
 				if j != null:
-					j.moral = clampi(j.moral - 6, 10, 99)
+					j.cambiar_moral(-6, "Prensa y declaraciones")
 				salida = {"titulo": "Cada uno en su sitio",
 					"cuerpo": "Le dices que no. Lo entiende, pero se le nota en la cara."}
 
@@ -762,7 +762,7 @@ func resolver(op: String) -> Dictionary:
 			if si:
 				if j != null:
 					j.suspension = maxi(j.suspension, 3)
-					j.moral = clampi(j.moral - 8, 10, 99)
+					j.cambiar_moral(-8, "Prensa y declaraciones")
 				salida = {"titulo": "Apartado mientras se investiga",
 					"cuerpo": "Tres partidos fuera por decisión del club. Si sale limpio, habrá que pedirle perdón."}
 			else:
@@ -777,13 +777,12 @@ func resolver(op: String) -> Dictionary:
 					salida = {"titulo": "Se archiva",
 						"cuerpo": "La fiscalía no encuentra nada. Tu respaldo fue polémico, pero el jugador no lo va a olvidar."}
 					if j != null:
-						j.moral = clampi(j.moral + 6, 10, 99)
-
+						j.cambiar_moral(6, "Prensa y declaraciones")
 		"huelga_impagos":
 			if si:
 				_pagar(mio, -mio.masa_salarial() * 2, "Atrasos al plantel")
 				for x: Jugador in mio.plantilla:
-					x.moral = clampi(x.moral + 2, 10, 99)
+					x.cambiar_moral(2, "Prensa y declaraciones")
 				salida = {"titulo": "Atrasos pagados",
 					"cuerpo": "Dos semanas de sueldo sobre la mesa. Se vuelve a entrenar mañana."}
 			else:
@@ -858,7 +857,7 @@ func resolver(op: String) -> Dictionary:
 					"cuerpo": "%s se va un año con minutos garantizados y %s para la caja. Vuelve hecho jugador." % [
 						j.nombre, _dinero(Eco.escalar(400000.0, rep))]}
 			else:
-				j.moral = clampi(j.moral + 4, 10, 99)
+				j.cambiar_moral(4, "Prensa y declaraciones")
 				salida = {"titulo": "La joya se queda",
 					"cuerpo": "%s agradece la confianza: \"quiero triunfar aquí\"." % j.nombre}
 
@@ -869,13 +868,13 @@ func resolver(op: String) -> Dictionary:
 				## Vuelve fundido (físico a 45) pero con un punto más de techo:
 				## el precio de crecer es una mala semana, no un mal año.
 				j.fisico = 45
-				j.moral = clampi(j.moral + 12, 10, 99)
+				j.cambiar_moral(12, "Prensa y declaraciones")
 				j.pot = clampi(j.pot + 1, j.ovr, 97)
 				j.tasar()
 				salida = {"titulo": "Orgullo de cantera",
 					"cuerpo": "%s se fue con la Sub-20. Vuelve fundido pero más jugador." % j.nombre}
 			else:
-				j.moral = clampi(j.moral - 7, 10, 99)
+				j.cambiar_moral(-7, "Prensa y declaraciones")
 				salida = {"titulo": "Retenido",
 					"cuerpo": "%s se queda entrenando con el primer equipo, con cara larga." % j.nombre}
 
@@ -1015,7 +1014,7 @@ func responder(i: int, segundos: float = -1.0) -> Dictionary:
 
 	if mio != null:
 		for j in mio.plantilla:
-			j.moral = clampi(j.moral + d_moral, 10, 99)
+			j.cambiar_moral(d_moral, "Prensa y declaraciones")
 		## Los socios se mueven en PORCENTAJE, no en número: una declaración
 		## afortunada le suma más gente a un club grande que a uno chico, que es
 		## lo que corresponde. El suelo de 500 impide que una mala racha deje al
@@ -1508,7 +1507,7 @@ func responder_pie(i: int) -> Dictionary:
 	var mio: Club = m.mi_club() if m != null else null
 	if dm != 0 and mio != null:
 		for j in mio.plantilla:
-			j.moral = clampi(j.moral + dm, 10, 99)
+			j.cambiar_moral(dm, "Prensa y declaraciones")
 	if bool(o.get("arbitros", false)):
 		enojo_arbitral += 1
 	var frase := String(o["txt"])
@@ -1599,7 +1598,7 @@ func semana() -> void:
 		if mio != null:
 			for j in mio.plantilla:
 				if j.rasgo == "fragil" or j.rasgo == "cerebro":
-					j.moral = clampi(j.moral - 1, 10, 99)
+					j.cambiar_moral(-1, "Prensa y declaraciones")
 	## EL PUNTO DE REPOSO NO ES 55 FIJO: lo mueve el AMBIENTE del estadio -la
 	## forma del recinto, el techo, la pista de atletismo, las banderas- y las
 	## luces y pantallas del estadio premium. `EstadioPropio.ambiente()` llevaba
@@ -1616,12 +1615,12 @@ func semana() -> void:
 		return
 	if animo > 82 and Azar.suerte(0.09):
 		for j in mio.plantilla:
-			j.moral = clampi(j.moral + 2, 10, 99)
+			j.cambiar_moral(2, "Prensa y declaraciones")
 		noticia.emit("Banderazo en la práctica",
 			"Cientos de hinchas coparon el entrenamiento con bombos y lienzos de aliento. El plantel se agranda.")
 	elif animo < 22 and Azar.suerte(0.14):
 		for j in mio.plantilla:
-			j.moral = clampi(j.moral - 2, 10, 99)
+			j.cambiar_moral(-2, "Prensa y declaraciones")
 		noticia.emit("Lienzos contra el club",
 			"Amanecieron rayados frente al estadio: 'jugadores sin sangre'. Semana tensa en la ciudad deportiva.")
 

@@ -404,7 +404,7 @@ func resolver(m: Mundo, indice: int, opcion: int) -> String:
 	energia = clampi(energia + int(ef.get("energia", 0)), 0, ENERGIA_MAX)
 	seguidores = maxi(0, seguidores + int(ef.get("seguidores", 0)))
 	if j != null:
-		j.moral = clampi(j.moral + int(ef.get("moral", 0)), 10, 99)
+		j.cambiar_moral(int(ef.get("moral", 0)), "Carrera")
 		for k: String in ef:
 			if k.begins_with("attr_") and j.atributos.has(k.substr(5)):
 				j.atributos[k.substr(5)] = mini(99, int(j.atributos[k.substr(5)]) + int(ef[k]))

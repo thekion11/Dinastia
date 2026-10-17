@@ -304,7 +304,7 @@ func semana(c: Club, anio: int, sem: int) -> Array:
 	## La memoria manda: con duelo no hay fiesta que valga.
 	if hubo_fiesta and not hubo_memoria:
 		for j: Jugador in c.plantilla:
-			j.moral = clampi(j.moral + 1, 10, 99)
+			j.cambiar_moral(1, "Calendario")
 	var t := torneo_en_curso(anio, sem)
 	if not t.is_empty():
 		var clave := "%s %d" % [String(t["nombre"]), anio]

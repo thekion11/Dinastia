@@ -410,7 +410,7 @@ func pagar_clausula(j: Jugador, comprador: Club) -> Dictionary:
 	quitar_clausula(j.id)
 	j.sueldo = int(round(float(j.sueldo) * 1.15))
 	j.anios_contrato = Contratos.ajustar_anios(j, Azar.ent(2, 4))
-	j.moral = clampi(j.moral + 6, 10, 99)
+	j.cambiar_moral(6, "Cesiones")
 	j.pide_salir = false
 	noticia.emit("¡Clausulazo!",
 		"Pagaste la cláusula de %s. Su agente %s se lleva %s. Bienvenido al club." % [j.nombre, ag, dinero(com)])
@@ -994,7 +994,7 @@ func presion_de_fondo() -> Dictionary:
 func rechazar_presion(j: Jugador) -> String:
 	if j == null:
 		return "no hay a quién retener"
-	j.moral = clampi(j.moral - Azar.ent(5, 12), 10, 99)
+	j.cambiar_moral(-(Azar.ent(5, 12)), "Cesiones")
 	if participaciones.has(j.id):
 		(participaciones[j.id] as Dictionary)["enfadado"] = true
 	noticia.emit("El fondo se lo toma mal",
