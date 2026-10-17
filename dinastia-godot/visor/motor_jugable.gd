@@ -1168,7 +1168,9 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		_offside = {}
 		vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)
 		victima["enfriar"] = 0.6
-	elif r < exito + (0.18 if barrida else 0.07):
+	## FALTAS (17-10-2026): había ~4 por partido; una entrada que no llega al
+	## balón acaba en falta más a menudo (sobre todo si el defensor es agresivo).
+	elif r < exito + (0.28 if barrida else 0.13) + float(p.get("agresividad", 0.5)) * 0.06:
 		_falta(p, victima)
 
 func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "") -> void:
@@ -1431,7 +1433,7 @@ func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool
 	elif poseedor == w or poseedor.is_empty() or pase_a == w:
 		l["enfriar"] = maxf(float(l["enfriar"]), 0.45)
 	## Ganar el choque con los brazos o por detrás contra el que lleva el balón.
-	if era_suyo and _rng.randf() < (0.02 + float(w["agresividad"]) * 0.06 + m * 0.08) * _escala_falta():
+	if era_suyo and _rng.randf() < (0.08 + float(w["agresividad"]) * 0.08 + m * 0.08) * _escala_falta():
 		_anim(l, "caida_fea", true, 1.2)
 		_falta(w, l, 0.06 + float(w["agresividad"]) * 0.1, "hombro")
 	return true
