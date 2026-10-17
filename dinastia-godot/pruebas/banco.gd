@@ -122,6 +122,7 @@ const SECCIONES := [
 	"_probar_narracion_traducida",
 	"_probar_rotulo_y_sala",
 	"_probar_transmision_y_estadisticas",
+	"_probar_arreglos_partido_motor",
 	"_probar_prorroga_y_penales",
 	"_probar_informe_rival",
 	"_probar_porque_moral",
@@ -8220,6 +8221,87 @@ func _probar_optimizacion() -> void:
 ## LA TRANSMISIÓN INTELIGENTE Y LAS ESTADÍSTICAS A PEDIDO (16-10-2026).
 ## La cámara se prueba sin pintar nada: se le dan balones sintéticos a 60 Hz y
 ## se mide lo que hace (dónde está, cuánto corre, cuánto cierra o abre).
+## LOS ARREGLOS RÁPIDOS DEL PARTIDO CON MOTOR (17-10-2026): árbitro que
+## contrasta (M-072), gestos y tarjeta en la mano (M-106), cartel del cuarto
+## árbitro (M-139), red que se ondula (M-149), festejo de la grada (M-050) y
+## líneas del fuera de juego en la sala VAR (M-118).
+func _probar_arreglos_partido_motor() -> void:
+	_titulo("PARTIDO 3D: ÁRBITRO, CARTEL, RED, FESTEJO Y LÍNEA VAR")
+	## M-072: contra un equipo de negro el árbitro no va de negro; estable.
+	var kn := {"c1": "#101010"}
+	var kr := {"c1": "#d01818"}
+	var a1 := Puente3D.kit_arbitro(kn, kr, 77)
+	_comprobar(String(a1["nombre"]) != "negro", "árbitro: contra negro y rojo no va de negro (%s)" % a1["nombre"])
+	_comprobar(Puente3D.kit_arbitro(kn, kr, 77)["nombre"] == a1["nombre"], "árbitro: la misma camiseta para el mismo partido")
+	var cl := Color(String(a1["c1"]))
+	var peor := minf(Puente3D.contraste_camiseta(cl, Color("#101010")), Puente3D.contraste_camiseta(cl, Color("#d01818")))
+	_comprobar(peor > Puente3D.contraste_camiseta(Color("#111216"), Color("#101010")) + 0.3, "árbitro: contrasta más que el negro de siempre (%.2f)" % peor)
+	var a2 := Puente3D.kit_arbitro({"c1": "#f4f4f4"}, {"c1": "#2a9a3a"}, 5)
+	_comprobar(String(a2["nombre"]) in ["negro", "rojo", "rosa", "naranja"], "árbitro: contra blanco y verde, uno oscuro o vivo (%s)" % a2["nombre"])
+	## M-106: los gestos del árbitro en el motor real (cola con reloj propio).
+	var motor := MotorJugable.new()
+	add_child(motor)
+	motor.set_physics_process(false)
+	var arb_nodo := Node3D.new()
+	add_child(arb_nodo)
+	var ap := AnimationPlayer.new()
+	arb_nodo.add_child(ap)
+	var lib := AnimationLibrary.new()
+	for clip in ["parado", "trotar", "correr", "arbitro_silbato", "senalar_falta", "mostrar_tarjeta", "arbitro_amonestar_hablar", "arbitro_tiempo_anadido"]:
+		var an := Animation.new()
+		an.length = 1.0
+		lib.add_animation(clip, an)
+	ap.add_animation_library("", lib)
+	motor.arbitros = [{"id": "arbitro", "node": arb_nodo, "anim": ap, "arbitro": true}]
+	var bal := Node3D.new()
+	add_child(bal)
+	motor.balon = bal
+	var gestos: Array = []
+	motor.gesto_arbitro.connect(func(g: String) -> void: gestos.append(g))
+	motor.call("_gesto_arbitro", "arbitro_silbato", 0.0, 0.9)
+	motor.call("_gesto_arbitro", "mostrar_tarjeta", 1.0, 1.5, {"tarjeta": "amarilla"})
+	for i in 40:
+		motor.call("_mover_arbitros", 0.05)
+	_comprobar(gestos.has("silbato") and gestos.has("mostrar_tarjeta"), "árbitro: pita y enseña la tarjeta (%s)" % str(gestos))
+	_comprobar(String(motor.arbitros[0].get("anim_actual", "")) == "mostrar_tarjeta", "árbitro: está con el gesto de la tarjeta")
+	motor.queue_free()
+	arb_nodo.queue_free()
+	bal.queue_free()
+	## M-139: el cartel lleva los minutos por las dos caras.
+	var cartel := CuartoArbitro.cartel(4)
+	var textos := 0
+	for l in cartel.find_children("*", "Label3D", true, false):
+		if (l as Label3D).text == "+4":
+			textos += 1
+	_comprobar(textos == 2, "cuarto árbitro: «+4» por las dos caras (%d)" % textos)
+	cartel.free()
+	## M-149: la red se abomba hacia fuera desde donde entra el balón.
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var poste := StandardMaterial3D.new()
+	StadiumBuilder._add_goal(raiz, 52.5, poste, Color.WHITE)
+	StadiumBuilder._add_goal(raiz, -52.5, poste, Color.WHITE)
+	_comprobar(RedArco.golpe(raiz, Vector3(1.0, 1.2, 53.3)), "red: el gol encuentra su arco")
+	var fondo: MeshInstance3D = null
+	for m in raiz.find_children("RedFondo", "MeshInstance3D", true, false):
+		if (m as MeshInstance3D).global_position.z > 0.0:
+			fondo = m
+	var fz := float((fondo.material_override as ShaderMaterial).get_shader_parameter("fuerza")) if fondo != null else 0.0
+	_comprobar(fz > 0.3, "red: el paño de fondo recibe la onda (fuerza %.2f)" % fz)
+	_comprobar((fondo.mesh as QuadMesh).subdivide_width >= 16 if fondo != null else false, "red: el paño está subdividido para ondularse")
+	raiz.queue_free()
+	## M-118: el tramo de la línea se recorta al monitor.
+	var sala := SalaVAR.new()
+	var rec: Array = sala.call("_recortar", Vector2(-3, 0), Vector2(3, 0.2), Vector2(1, 0.5))
+	_comprobar(rec.size() == 2 and absf((rec[0] as Vector2).x + 1.0) < 0.01 and absf((rec[1] as Vector2).x - 1.0) < 0.01, "VAR: la línea se recorta al borde del monitor")
+	_comprobar((sala.call("_recortar", Vector2(-3, 2), Vector2(3, 2), Vector2(1, 0.5)) as Array).is_empty(), "VAR: una línea fuera del monitor no se dibuja")
+	sala.free()
+	## M-050: con el motor ligero no hay festejo.
+	var ligero := Calidad.motor_ligero
+	Calidad.motor_ligero = true
+	_comprobar(not FestejoGrada.activo(), "festejo: apagado con el motor ligero")
+	Calidad.motor_ligero = ligero
+
 func _probar_transmision_y_estadisticas() -> void:
 	_titulo("PARTIDO 3D: CÁMARA DE TRANSMISIÓN INTELIGENTE Y ESTADÍSTICAS")
 	var dt := 1.0 / 60.0
