@@ -50,6 +50,19 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - **Optimización**: los triángulos bajaron −66 % pero las llamadas de dibujo solo −11 % → juntar ojos/cejas/cuero en la cara a distancia.
 - **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: sigue notándose poco desde la TV.
 
+### 2.5 Caza de bugs del 17-10 (estrés pedido por el dueño) — se registra todo al encontrarlo
+- ~~Partido dirigido: cerrar el juego perdiendo permitía repetirlo hasta ganar~~ HECHO (`PartidoPendiente`).
+- ~~Atravesar paredes con un coche encima o con un tirón de fotogramas~~ HECHO (`_mover_un_trozo`).
+- Atropellar peatones: el coche rebota (son obstáculos móviles). No hay daño ni reacción del peatón: sin arreglar (diseño).
+- Coches del tráfico y autobús: E no hace nada (no se pueden robar ni subir al bus). Inofensivo; posible mejora.
+- Metro: E en marcha = «bajar en la próxima»; no se puede salir en el túnel. Correcto.
+- Esc bajo tierra (metro/galería): el entorno se restaura en `_exit_tree`. Correcto.
+- **MENÚS A VELOCIDAD SOBREHUMANA** (`pruebas/estres_menus.tscn`, 400 fotogramas, 2-6 acciones por fotograma):
+  · El contenedor de pestañas `_pestanas` acaba LIBERADO (se «muda» a una PantallaMenu y se borra con ella):
+    luego `get_tab_count` sobre instancia liberada (1001 veces), y el juego queda sin pantallas (1282 → 497 nodos).
+  · `_perezoso` (Principal), `pintar` y `PantallaMenu._mudar` reciben nodos ya liberados.
+  · `BotonFx`: 177 000 avisos «signal already connected» (`_sonar`, `_a`, `_arriba`): se conecta dos veces el mismo botón.
+
 ### 2.4 Pedidos del dueño en espera
 - **Vídeo gameplay** (punto 15 de la MEGA AUDITORÍA 2): pausado por el dueño el 17-10.
 - **Reescribir el historial** para bajar el peso del repo (solo binarios viejos, nunca código), después de fusionar a main.
