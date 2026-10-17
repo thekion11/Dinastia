@@ -33,7 +33,8 @@ func _ready() -> void:
 	anchor_bottom = 0.0
 	offset_left = -190
 	offset_right = 190
-	offset_top = 12
+	## Debajo del marcador y de los rótulos de la tele (que van arriba).
+	offset_top = 74
 	grow_horizontal = Control.GROW_DIRECTION_BOTH
 	var caja := VBoxContainer.new()
 	caja.add_theme_constant_override("separation", 2)
