@@ -56,6 +56,7 @@ const NOMBRES_AYUDA := {
 	"tiro": ["Tiros", {"asistido": "Asistido (al palo largo)", "manual": "Manual (apuntas tú)"}],
 	"cambio": ["Cambio de jugador", {"auto": "Automático", "semi": "Semi (al recibir)", "manual": "Manual (solo con el botón)"}],
 	"direccion": ["Dirección del stick", {"camara": "Según la cámara", "campo": "Según el campo"}],
+	"vibracion": ["Vibración del mando", {"normal": "Normal", "suave": "Suave", "no": "Sin vibración"}],
 }
 
 ## Las acciones reasignables por grupos (sección «Asignar botones»).
