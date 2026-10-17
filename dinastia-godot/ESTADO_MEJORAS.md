@@ -240,8 +240,8 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-175 | P2 | Sin faros ni luces de freno encendidos por hora | PENDIENTE | sin faros ni luces de freno en vehículos |
 | M-176 | P2 | Sin tipos de vehículo (moto, bus conducible, camión) | PENDIENTE | solo coche conducible |
 | M-177 | P2 | Sin gasolinera/aparcamiento/lavado | PENDIENTE | sin gasolinera/lavado |
-| M-178 | P2 | Sin minimapa | PENDIENTE | sin minimapa en la ciudad (el radar es del partido) |
-| M-179 | P2 | GPS/ruta al club | PENDIENTE | sin GPS |
+| M-178 | P2 | Sin minimapa | HECHO | 17-10: GPS dentro del móvil en la mano (`MapaMovil`), M lo saca andando |
+| M-179 | P2 | GPS/ruta al club | HECHO | 17-10: ruta dorada al estadio por las calles (`MapaMovil.ruta_al_estadio`) |
 | M-180 | P2 | Metro: sin vendedores/música/anuncios | PARCIAL | anuncios en el vagón (`MetroCiudad.ANUNCIOS`); sin vendedores ni música |
 | M-181 | P2 | Sin pasajeros que suben/bajan reales en tren | HECHO | gente que sube y baja por sub-pasos y puertas (`metro_ciudad.gd`, 16-10) |
 | M-182 | P2 | Sin tarjeta de transporte ni coste | PENDIENTE | máquinas de billetes decorativas; sin coste |
@@ -347,7 +347,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-272 | P2 | Fuera de juego, cambios, selección ✅; sin protestas/tarjetas del… | PENDIENTE | sin expediente disciplinario |
 | M-273 | P2 | Rivales NPC por `Fama`; sin rivalidades nominales | PENDIENTE | sin rival de posición |
 | M-274 | P2 | Sin vida privada coherente con regla (no romances de reales) | HECHO | regla mantenida (solo ficticios) |
-| M-275 | P2 | `carrera_jugador.gd` usa país «XXX» para el rival (línea 620) | PENDIENTE | `rival.pais = "XXX"` sigue en `carrera_jugador.gd:620` |
+| M-275 | P2 | `carrera_jugador.gd` usa país «XXX» para el rival (línea 620) | HECHO | 17-10: país real por nombre (`CODIGO_SELECCION`) y 13 banderas nuevas en `Banderas` |
 | M-276 | P2 | Pruebas: modo cubierto en `prueba_modos`; faltan casos extremos… | SIN VERIFICAR | no se comprobaron los casos extremos en `prueba_modos` |
 
 ### I. Interfaz, menús, accesibilidad (M-277 … M-312) · HECHO 6 · PARCIAL 14 · PENDIENTE 15 · SIN VERIFICAR 1
@@ -551,7 +551,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
 | M-433 | P1 | Controles táctiles sólo en la ciudad (cruceta/E) | PENDIENTE | táctil solo en ciudad/estadio a pie; el partido no |
-| M-434 | P2 | Sin vibración (rumble) en mando | PENDIENTE | sin vibración |
+| M-434 | P2 | Sin vibración (rumble) en mando | HECHO | 17-10: `Mando.vibrar` en gol, remate y tarjeta (DT y Carrera), ayuda «Vibración del mando» normal/suave/no |
 | M-435 | P2 | Sin gatillos analógicos para potencia de pase | PENDIENTE | sin gatillos analógicos |
 | M-436 | P2 | Sin giroscopio para cámara en primera persona (móvil) | PENDIENTE | sin giroscopio |
 | M-437 | P2 | Sin detección de dispositivo para cambiar iconos en tiempo real… | PARCIAL | `dispositivo_detectado` en panel de controles y `ControlFC`; guía del partido sin comprobar |

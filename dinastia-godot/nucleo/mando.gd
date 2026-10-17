@@ -74,8 +74,9 @@ const AYUDAS := {
 	"tiro": ["asistido", "manual"],
 	"cambio": ["auto", "semi", "manual"],
 	"direccion": ["camara", "campo"],
+	"vibracion": ["normal", "suave", "no"],
 }
-static var ayudas := {"pase": "asistido", "tiro": "asistido", "cambio": "auto", "direccion": "camara"}
+static var ayudas := {"pase": "asistido", "tiro": "asistido", "cambio": "auto", "direccion": "camara", "vibracion": "normal"}
 static var esquema := "wasd"
 ## Lo que el jugador cambió a mano: acción -> {"teclas": [..], "botones": [..]}.
 static var propio := {}
@@ -104,6 +105,16 @@ static func guardar() -> void:
 	for k: String in ayudas:
 		cfg.set_value("ayudas", k, ayudas[k])
 	cfg.save(RUTA)
+
+## VIBRACIÓN DEL MANDO (17-10-2026, M-434): gol, choque, tarjeta, remate.
+## `fuerza` 0..1 y `dur` en segundos; respeta la ayuda «vibracion».
+static func vibrar(fuerza: float, dur: float) -> void:
+	var modo := ayuda("vibracion")
+	if modo == "no":
+		return
+	var f := clampf(fuerza * (0.5 if modo == "suave" else 1.0), 0.0, 1.0)
+	for id: int in Input.get_connected_joypads():
+		Input.start_joy_vibration(id, f * 0.7, f, dur)
 
 ## Las teclas que tiene ahora una acción (esquema + lo propio).
 static func teclas_de(accion: String) -> Array:

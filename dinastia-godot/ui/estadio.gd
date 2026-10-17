@@ -1556,6 +1556,7 @@ func _montar_motor() -> void:
 		## Confeti, bengalas y humo de la hinchada local (M-050).
 		if de_local:
 			FestejoGrada.lanzar(_raiz3d, Color(partido.local.color1), Color(partido.local.color2), "gol")
+		Mando.vibrar(1.0 if (_mi_lado == 0) == de_local else 0.35, 0.6)
 		if _rig != null:
 			_rig.impacto(0.9, 0.7)
 			_rig.golpe_de_zoom(5.0, 1.2)
@@ -1588,11 +1589,13 @@ func _montar_motor() -> void:
 		var tirador := _nodo_de(autor)
 		_stats.cerrar_tiro(de_local, tipo, Vector3.ZERO, tirador.position if tirador != null else (_balon.position if is_instance_valid(_balon) else Vector3.ZERO))
 		partido.remate_externo(de_local, autor, tipo)
+		Mando.vibrar(0.3, 0.15)
 		if _rig != null:
 			_rig.golpe_de_zoom(2.0, 0.5))
 	_motor.tarjeta.connect(func(id: String, roja: bool, de_local: bool) -> void:
 		_stats.tarjeta(de_local, roja)
 		partido.tarjeta_externa(id, roja)
+		Mando.vibrar(0.6 if roja else 0.35, 0.3)
 		if _rig != null:
 			_rig.impacto(0.45 if roja else 0.25, 0.4))
 	_motor.aviso.connect(_al_aviso_motor)

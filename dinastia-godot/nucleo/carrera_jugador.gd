@@ -561,6 +561,11 @@ func _club_extranjero(m: Mundo, j: Jugador) -> Club:
 # ---------------------------------------------------------------- selección
 
 ## Cupos por línea de una convocatoria (18 jugadores).
+## Selecciones rivales que no tienen liga en el mundo (y por eso no están en
+## PAIS_SELECCION): su código, para la bandera.
+const CODIGO_SELECCION := {"Portugal": "POR", "Holanda": "NED", "Bélgica": "BEL", "Croacia": "CRO",
+	"Dinamarca": "DEN", "Senegal": "SEN", "Nigeria": "NGA", "Camerún": "CMR", "Irán": "IRN",
+	"Costa Rica": "CRC", "Canadá": "CAN", "N. Zelanda": "NZL", "Catar": "QAT"}
 const CUPOS_SEL := {"POR": 2, "DEF": 6, "MED": 6, "DEL": 4}
 
 ## ¿Te convoca tu selección? Los mejores de tu país en tu línea, jueguen donde
@@ -617,7 +622,14 @@ func equipos_seleccion(m: Mundo) -> Array:
 	var rival := Club.new()
 	rival.id = "sel_rival"
 	rival.nombre = String(convocatoria["rival"])
-	rival.pais = "XXX"
+	## El país de la selección rival por su nombre (antes "XXX": sin bandera ni
+	## jugadores de ese país): la tabla del mundo o, si no está, `CODIGO_SELECCION`.
+	rival.pais = String(CODIGO_SELECCION.get(rival.nombre, ""))
+	var tabla_p := Selecciones._tabla_paises()
+	for cod: Variant in tabla_p:
+		if Nombres.limpiar(String(tabla_p[cod])) == Nombres.limpiar(rival.nombre):
+			rival.pais = String(cod)
+			break
 	rival.rep = clampi(m.selecciones.fuerza(rival.nombre), 62, 88) if m.selecciones != null else 75
 	rival.color1 = "#1d3c8f"
 	rival.color2 = "#f2c230"
