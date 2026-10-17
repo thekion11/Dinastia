@@ -43,6 +43,11 @@ signal remate(club: Club, autor: Jugador, tipo: String, minuto: int)
 signal decision_arbitral(texto: String, minuto: int)
 
 const MINUTOS := 90
+## LA PRÓRROGA (17-10-2026). Solo la juega el motor real del 3D en una
+## eliminatoria empatada: `prorroga_externa()` lleva el final al 120' y da un
+## cambio más (como el reglamento). Sin motor el empate va directo a penales.
+var minutos_fin := MINUTOS
+var cambios_extra := 0
 const BASE_ATAQUE := 0.048
 const EXPONENTE := 1.6
 const REPARTO := 1.9
@@ -285,6 +290,8 @@ func preparar() -> void:
 	cambios_local = 0
 	cambios_visita = 0
 	minuto = 0
+	minutos_fin = MINUTOS
+	cambios_extra = 0
 	terminado_ya = false
 	cronica.clear()
 	_todos = once_local + once_visita
@@ -467,7 +474,7 @@ func simular_minuto() -> void:
 
 	_incidencias()
 	minuto_jugado.emit(minuto)
-	if minuto >= MINUTOS:
+	if minuto >= minutos_fin:
 		terminado_ya = true
 		terminado.emit(goles_local, goles_visita)
 
@@ -837,7 +844,7 @@ func cambiar(sale: Jugador, entra: Jugador) -> String:
 	if not es_local and not once_visita.has(sale):
 		return "%s no está en el campo" % sale.nombre
 	var hechos := cambios_local if es_local else cambios_visita
-	if hechos >= MAX_CAMBIOS:
+	if hechos >= MAX_CAMBIOS + cambios_extra:
 		return "ya no quedan cambios"
 	if not entra.disponible():
 		return "%s no está en condiciones de entrar" % entra.nombre
@@ -868,6 +875,23 @@ func cambiar(sale: Jugador, entra: Jugador) -> String:
 ## ganador que la tabla de la copa contradecía al ratito: el mismo bug que ya
 ## costó una depuración con `Liga.jugar_jornada(ya_jugado)`.
 var _penales: Array = []
+## true si la tanda se jugó en el césped (motor real): nadie la vuelve a sortear.
+var penales_en_cesped := false
+
+## La tanda que se jugó en el 3D. Va ANTES del pitido final del acta: quien
+## escuche `terminado` y pida `penales()` recibe la del césped.
+func penales_externos(l: int, v: int) -> void:
+	_penales = [l, v]
+	penales_en_cesped = true
+	cronica.append({"min": minuto, "tipo": "penales", "local": l, "visita": v})
+
+## El motor real decidió ir a la prórroga: el acta sigue hasta el 120'.
+func prorroga_externa() -> void:
+	if terminado_ya or minutos_fin > MINUTOS:
+		return
+	minutos_fin = MINUTOS + 30
+	cambios_extra = 1
+	cronica.append({"min": minuto, "tipo": "prorroga"})
 
 func penales() -> Array:
 	if not _penales.is_empty():
