@@ -142,6 +142,10 @@ var depurar := false
 signal remate(es_local: bool, autor_id: String, tipo: String)
 ## Una tarjeta de verdad (con `tarjetas_reales`): la segunda amarilla expulsa.
 signal tarjeta(jugador_id: String, roja: bool, es_local: bool)
+## El árbitro hace un gesto (M-106): «arbitro_silbato», «senalar_falta»,
+## «mostrar_tarjeta», «arbitro_ventaja», «arbitro_penal», «fin»… La vista lo usa
+## para el silbato (el motor no toca sonidos: corre también en las sondas).
+signal gesto_arbitro(nombre: String)
 ## La pizarra de cada equipo: [local, visita], con "mentalidad" (0-3), "presion",
 ## "linea", "amplitud" y "ritmo" (0-2). 1 es el término medio y, con todo a 1,
 ## el motor juega EXACTAMENTE como antes.
@@ -655,6 +659,11 @@ func paso(delta: float) -> void:
 
 func _fin_de_mitad() -> void:
 	var empate := int(goles[0]) == int(goles[1])
+	## El silbato largo, con los brazos arriba (M-106).
+	## (El sonido sale ya: tras el final el motor deja de correr.)
+	gesto_arbitro.emit("fin")
+	_gesto_arbitro("arbitro_silbato", 0.0, 1.2, {"silbato": ""})
+	_gesto_arbitro("arbitro_tiempo_anadido", 1.2, 1.8)
 	if mitad == 1 or mitad == 3:
 		estado = "descanso"
 		_t_estado = 0.0
@@ -1366,6 +1375,8 @@ func _pitar_offside(p: Dictionary) -> bool:
 	var nombre := String((p.get("jugador", {}) as Dictionary).get("nombre", "un atacante"))
 	aviso.emit("🚩 Fuera de juego de %s" % nombre)
 	var lugar := pos(p)
+	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
+	_gesto_arbitro("senalar_falta", 0.9, 1.6, {"mira": lugar - Vector3(0, 0, dir_ataque(bool(p["es_local"])) * 10.0)})
 	_empezar_saque("falta", not bool(p["es_local"]), Vector3(clampf(lugar.x, -ANCHO + 1.0, ANCHO - 1.0), R,
 		clampf(lugar.z, -LARGO + 1.0, LARGO - 1.0)))
 	return true
@@ -1589,7 +1600,31 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	var en_area := absf(lugar.x) < AREA_X and absf(lugar.z - arco.z) < AREA_Z
 	var nombre := String((infractor.get("jugador", {}) as Dictionary).get("nombre", "Un defensor"))
 	faltas[0 if bool(infractor["es_local"]) else 1] += 1
-	if _rng.randf() < prob_tarjeta or _falta_tactica:
+	var con_tarjeta := _rng.randf() < prob_tarjeta or _falta_tactica
+	## LA VENTAJA (17-10-2026, M-106): una entrada que no llega, en campo
+	## rival, sin tarjeta y con la víctima todavía con el balón: el árbitro
+	## deja seguir con los dos brazos hacia delante. (Solo la entrada fallida:
+	## en el choque o el agarrón la víctima cae o pierde el balón.)
+	if motivo == "" and not con_tarjeta and not en_area and not _falta_tactica and poseedor == victima \
+			and lugar.z * dir_ataque(atacante_local) > 4.0 and _rng.randf() < 0.35:
+		aviso.emit("Ventaja")
+		_gesto_arbitro("arbitro_ventaja", 0.0, 1.6, {"mira": lugar})
+		return
+	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
+	var tras := 0.8
+	if con_tarjeta:
+		## Habla con el infractor y le enseña la tarjeta (con la cartulina en la mano).
+		var sera_roja := tarjetas_reales and int(infractor.get("amarillas", 0)) + 1 >= 2
+		_gesto_arbitro("arbitro_amonestar_hablar", 0.9, 1.5, {"mira_a": infractor})
+		_gesto_arbitro("mostrar_roja" if sera_roja else "mostrar_tarjeta", 2.4, 2.0,
+			{"mira_a": infractor, "tarjeta": "roja" if sera_roja else "amarilla"})
+		tras = 4.5
+	if en_area:
+		_gesto_arbitro("arbitro_penal", tras, 1.8, {"mira": arco})
+	else:
+		## Señala hacia donde se saca: de cara a la portería del que la recibe.
+		_gesto_arbitro("senalar_falta", tras, 1.6, {"mira": lugar + Vector3(0, 0, dir_ataque(atacante_local) * 10.0)})
+	if con_tarjeta:
 		if tarjetas_reales:
 			infractor["amarillas"] = int(infractor.get("amarillas", 0)) + 1
 			var roja := int(infractor["amarillas"]) >= 2
@@ -2753,6 +2788,9 @@ func _empezar_saque(tipo: String, saca_local: bool, lugar: Vector3) -> void:
 	_receptor_marcado = {}
 	if tipo == "corner":
 		corners[0 if saca_local else 1] += 1
+		_gesto_arbitro("arbitro_corner", 0.3, 1.6, {"mira": lugar})
+	elif tipo == "puerta":
+		_gesto_arbitro("arbitro_saque_meta", 0.3, 1.6, {"mira": lugar})
 	apuntando = false
 	cargando = false
 	if tipo != "centro":
@@ -3840,10 +3878,14 @@ func _mover_jugadores(delta: float) -> void:
 func _mover_arbitros(delta: float) -> void:
 	if balon == null:
 		return
+	_t_arb += delta
+	_revisar_anadido_arbitro()
 	var b := balon.position
 	for a: Dictionary in arbitros:
 		var n: Node3D = a.get("node")
 		if not is_instance_valid(n):
+			continue
+		if String(a.get("id", "")) == "arbitro" and _gestos_del_arbitro(a, delta):
 			continue
 		var obj: Vector3
 		match String(a.get("id", "")):
@@ -3876,6 +3918,119 @@ func _mover_arbitros(delta: float) -> void:
 		if mira.length() > 0.5:
 			n.rotation.y = lerp_angle(n.rotation.y, atan2(mira.x, mira.z), clampf(delta * 5.0, 0.0, 1.0))
 		_anim(a, "parado" if sp < 0.5 else ("trotar" if sp < 4.5 else "correr"), false)
+
+## LOS GESTOS DEL ÁRBITRO EN EL MOTOR REAL (17-10-2026, M-106). Hasta hoy los
+## clips `arbitro_*` solo los usaba `MatchPlayback`: con el motor el árbitro
+## caminaba y nada más. Ahora pita, señala la dirección de la falta, deja
+## seguir (ventaja), señala el penal, el córner y el saque de puerta, habla
+## con el amonestado y le ENSEÑA la tarjeta (una cartulina en la mano), y pita
+## el final de cada tiempo. Los gestos van en cola con su propio reloj
+## (`_t_arb`), porque `t` se para en los saques, que es justo cuando gesticula.
+var _t_arb := 0.0
+var _gestos_arb: Array = []     ## [cuándo, clip, duración, extra]
+var _arb_hasta := 0.0           ## hasta cuándo dura el gesto en curso
+var _tarjeta_arb: MeshInstance3D = null
+var _anadido_gesto := {}
+
+func _gesto_arbitro(nombre: String, retraso := 0.0, dur := 1.6, extra := {}) -> void:
+	if arbitros.is_empty() or estado == "tanda":
+		return
+	_gestos_arb.append([_t_arb + retraso, nombre, dur, extra])
+	## Un gesto nuevo «ahora» corta la cola vieja que ya no viene a cuento.
+	if retraso <= 0.0:
+		var vivos: Array = []
+		for g: Array in _gestos_arb:
+			if float(g[0]) >= _t_arb - 0.01:
+				vivos.append(g)
+		_gestos_arb = vivos
+
+## Devuelve true si el principal está gesticulando (no camina ese paso).
+func _gestos_del_arbitro(a: Dictionary, delta: float) -> bool:
+	var n: Node3D = a["node"]
+	var i := 0
+	while i < _gestos_arb.size():
+		var g: Array = _gestos_arb[i]
+		if float(g[0]) > _t_arb:
+			i += 1
+			continue
+		_gestos_arb.remove_at(i)
+		var extra: Dictionary = g[3]
+		a["mira_gesto"] = extra.get("mira", null)
+		a["mira_a"] = extra.get("mira_a", {})
+		var ap: AnimationPlayer = a.get("anim")
+		var clip := String(g[1])
+		if is_instance_valid(ap) and ap.has_animation(clip):
+			ap.play(clip, 0.15)
+			ap.speed_scale = 1.0
+			a["anim_actual"] = clip
+		_arb_hasta = _t_arb + float(g[2])
+		_poner_tarjeta(a, String(extra.get("tarjeta", "")))
+		if clip == "arbitro_silbato":
+			if String(extra.get("silbato", "silbato")) != "":
+				gesto_arbitro.emit(String(extra.get("silbato", "silbato")))
+		else:
+			gesto_arbitro.emit(clip)
+	if _t_arb >= _arb_hasta:
+		if _tarjeta_arb != null and _tarjeta_arb.visible:
+			_tarjeta_arb.visible = false
+		return false
+	## Mientras gesticula, de cara a lo que señala o a quien amonesta.
+	var mira = a.get("mira_gesto")
+	var quien: Dictionary = a.get("mira_a", {})
+	if not quien.is_empty() and is_instance_valid(quien.get("node")):
+		mira = (quien["node"] as Node3D).position
+	if mira is Vector3:
+		var d: Vector3 = (mira as Vector3) - n.position
+		d.y = 0.0
+		if d.length() > 0.3:
+			n.rotation.y = lerp_angle(n.rotation.y, atan2(d.x, d.z), clampf(delta * 6.0, 0.0, 1.0))
+	return true
+
+## La cartulina, en la mano derecha (se crea la primera vez que hace falta).
+func _poner_tarjeta(a: Dictionary, color: String) -> void:
+	if color == "":
+		if _tarjeta_arb != null:
+			_tarjeta_arb.visible = false
+		return
+	if _tarjeta_arb == null or not is_instance_valid(_tarjeta_arb):
+		_tarjeta_arb = null
+		var esqs := (a["node"] as Node).find_children("*", "Skeleton3D", true, false)
+		if esqs.is_empty():
+			return
+		var esq: Skeleton3D = esqs[0]
+		if esq.find_bone("hand_r") < 0:
+			return
+		var ba := BoneAttachment3D.new()
+		ba.bone_name = "hand_r"
+		esq.add_child(ba)
+		var k := 1.0 / maxf(esq.global_transform.basis.get_scale().y, 0.001) if esq.is_inside_tree() else 1.0
+		var caja := BoxMesh.new()
+		caja.size = Vector3(0.075, 0.105, 0.004)
+		_tarjeta_arb = MeshInstance3D.new()
+		_tarjeta_arb.name = "TarjetaArbitro"
+		_tarjeta_arb.mesh = caja
+		_tarjeta_arb.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		_tarjeta_arb.scale = Vector3.ONE * k
+		_tarjeta_arb.position = Vector3(0, 0.13, 0.02) * k
+		ba.add_child(_tarjeta_arb)
+	var m := StandardMaterial3D.new()
+	var c := Color(0.86, 0.08, 0.1) if color == "roja" else Color(1.0, 0.86, 0.1)
+	m.albedo_color = c
+	m.emission_enabled = true
+	m.emission = c
+	m.emission_energy_multiplier = 0.35
+	m.roughness = 0.6
+	_tarjeta_arb.material_override = m
+	_tarjeta_arb.visible = true
+
+## Al empezar el añadido, el principal lo indica con los brazos (y el cuarto
+## árbitro levanta el cartel: eso lo pone la vista).
+func _revisar_anadido_arbitro() -> void:
+	if estado != "juego" or _anadido_gesto.has(mitad) or anadido.is_empty():
+		return
+	if segundos_anadidos() >= 0.0 and minutos_anadidos() > 0:
+		_anadido_gesto[mitad] = true
+		_gesto_arbitro("arbitro_tiempo_anadido", 0.0, 1.8)
 
 func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
 	var ap: AnimationPlayer = p.get("anim")
