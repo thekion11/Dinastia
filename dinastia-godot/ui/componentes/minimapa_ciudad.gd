@@ -60,6 +60,11 @@ static func ruta_al_estadio(e: CiudadExpansion, p: Vector3) -> PackedVector2Arra
 	var meta := CityBuilder.ESTADIO_EN
 	if e == null or Vector2(p.x - meta.x, p.z - meta.z).length() < 120.0:
 		return r
+	## Dentro del núcleo del club la red de fuera no sirve: derecho al estadio.
+	if e.dentro_nucleo(p.x, p.z):
+		r.append(Vector2(p.x, p.z))
+		r.append(Vector2(meta.x, meta.z))
+		return r
 	var ka := _cruce_cercano(e, Vector2(p.x, p.z))
 	var kb := _cruce_cercano(e, Vector2(meta.x, meta.z))
 	r.append(Vector2(p.x, p.z))
@@ -122,6 +127,12 @@ func _pintar(l: Control) -> void:
 	l.draw_colored_polygon(_poligono_mundo(f.position.x, f.position.y, f.end.x, f.end.y), C_VERDE)
 	## El río (franja de norte a sur).
 	l.draw_colored_polygon(_poligono_mundo(CityBuilder.RIO_X - 70.0, pos.z - 2000.0, CityBuilder.RIO_X + 70.0, pos.z + 2000.0), C_AGUA)
+	## Las calles del núcleo del club (rectángulos de `CityBuilder`).
+	for r: Rect2 in CityBuilder.vias_mapa:
+		var pol := _poligono_mundo(r.position.x, r.position.y, r.end.x, r.end.y)
+		var borde := _poligono_mundo(r.position.x - 1.5, r.position.y - 1.5, r.end.x + 1.5, r.end.y + 1.5)
+		l.draw_colored_polygon(borde, C_BORDE_CALLE)
+		l.draw_colored_polygon(pol, C_CALLE)
 	## Las calles: primero el borde oscuro, luego el relleno claro.
 	if red != null:
 		var vis := caja.grow(30)
