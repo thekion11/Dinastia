@@ -7,7 +7,7 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 
 | Qué | Dónde está | Estado | Cómo se fusiona |
 |---|---|---|---|
-| Todo lo hecho desde el 14-10 (≈140 commits: VAR que anula, duelos, faltas, optimización −58 %, camiseta 3D, prórroga y penales, informe del rival, moral del Camarín, árbitros, GPS, etc.) | rama `claude/godot-project-review-o1dvr1` (en GitHub) | subido, banco en 0 fallos | **a `main` con un PR nuevo** cuando el dueño lo pida (el último fusionado fue el PR #6, 14-10) |
+| Todo lo hecho del 14 al 17-10 | `main` | **FUSIONADO el 17-10 con el PR #7** | nada pendiente; lo nuevo que se haga va en la rama y se pasa con otro PR cuando el dueño lo pida |
 | Tanda 2 del TOP 25 (M-104, M-160, M-141, M-051, M-238 y operadores del VAR) | **unida a `claude/godot-project-review-o1dvr1` el 17-10** (subida) | banco 0 fallos | ya no queda nada fuera de la rama: solo falta el PR a `main` |
 
 ## 1.b Hecho en la última tanda (17-10, ya en la rama)
