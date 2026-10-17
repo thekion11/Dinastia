@@ -50,9 +50,9 @@ a DT, VAR que decide con la posición real del goleador, 9 idiomas.
 
 ## 6. Orden propuesto (impacto ÷ coste)
 
-1. **Prórroga y tanda de penales en el 3D** (A/2): lo que más se nota en copas.
+1. ~~**Prórroga y tanda de penales en el 3D**~~ HECHO 17-10.
 2. ~~**Informe del rival** antes del partido~~ HECHO 17-10 (`ui/componentes/informe_rival.gd`).
-3. **Por qué sube o baja la moral** en el Camarín (M/1).
+3. ~~**Por qué sube o baja la moral** en el Camarín~~ HECHO 17-10.
 4. **Roles por jugador** con efecto en el motor (M/2).
 5. **Línea defensiva** que adelanta para dejar en fuera de juego (M/2).
 6. Radio del coche con sonidos propios (M/1, sin música con licencia).
