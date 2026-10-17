@@ -293,6 +293,15 @@ func spawn_arbitros(root: Node3D, kit: Dictionary = {}) -> Array:
 			"realista": d["realista"], "arbitro": true})
 	return out
 
+## EL CUARTO ÁRBITRO (17-10-2026, M-139): solo sale cuando hace falta (el
+## cartel del añadido), así no cuesta nada el resto del partido. Mismo modelo y
+## camiseta que el trío.
+func spawn_cuarto_arbitro(root: Node3D, kit: Dictionary = {}) -> Dictionary:
+	var d := _crear_jugador(root, "cuarto_arbitro", "ARB", "", Color(String(kit.get("c1", "#111216"))),
+		Color(String(kit.get("c2", "#e6d91a"))), "liso", 0, Color(0.74, 0.55, 0.42), Color(0.12, 0.1, 0.08), 0,
+		Color(Color(String(kit.get("pantalon", "#121217"))), 1.0))
+	return d
+
 ## LOS SUPLENTES, DE PIE EN LA ZONA TECNICA (22-9-2026, Fase 3 del ROADMAP:
 ## "efecto banquillo visual" / lenguaje corporal en la banda). Hasta hoy la
 ## banda estaba vacia -ni un solo suplente se veia en el visor 3D, solo el
