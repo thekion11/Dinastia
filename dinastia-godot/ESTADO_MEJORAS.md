@@ -92,7 +92,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-047 | P2 | Colores de hincha con 14 tonos (hoy) | PARCIAL | paleta con colores del club + neutros (`StadiumBuilder` l.2667); no 60 % club por tabla |
 | M-048 | P2 | Fotógrafos/camarógrafos pocos y repetidos | PARCIAL | `visor/camarografos_siguen.gd` (giran con el balón, uno camina); siguen siendo pocos |
 | M-049 | P2 | Sin aficionados que se levantan/siguen el balón con la cabeza | PENDIENTE | sin rotación de cabeza hacia el balón |
-| M-050 | P3 | Sin streamers de papel, confeti ni bengalas | PENDIENTE | sin partículas de confeti/bengalas en gol o saque |
+| M-050 | P3 | Sin streamers de papel, confeti ni bengalas | HECHO | 17-10: `FestejoGrada` (confeti con los colores del club + bengalas con humo sobre el público real) en goles del local y en la salida; apagado con motor ligero, MEDIO solo confeti |
 
 ### C. Camisetas, escudos y marcas (M-051 … M-078) · HECHO 2 · PARCIAL 5 · PENDIENTE 21
 
@@ -119,7 +119,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-069 | P2 | 12 diseños con reparto casi uniforme (C-06) | PENDIENTE | sin pesos en el reparto de diseños |
 | M-070 | P2 | Sin segunda/tercera camiseta con diseño propio | PENDIENTE | sin tercera equipación |
 | M-071 | P2 | Portero: color por contraste, sin diseño | PENDIENTE | portero solo por contraste; guantes como color de accesorio |
-| M-072 | P2 | Árbitros siempre iguales | PENDIENTE | árbitros siempre de negro (`PlayerSpawner.spawn_arbitros`) |
+| M-072 | P2 | Árbitros siempre iguales | HECHO | 17-10: `Puente3D.kit_arbitro` (8 camisetas; la que más contrasta con los dos equipos y los porteros, estable por partido) |
 | M-073 | P2 | Sin brazalete de capitán visible a distancia | PARCIAL | `acc_brazalete` existe en el shader; sin refuerzo de contraste a distancia |
 | M-074 | P2 | Medias/pantalón: diseño correcto pero sin franjas del fabricante | PENDIENTE | sin franjas del fabricante en medias/pantalón |
 | M-075 | P2 | Dorsal sin fuente propia por club | PENDIENTE | dorsal en siete segmentos, una sola fuente |
@@ -158,7 +158,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-103 | P2 | Lesiones sin animación específica | PARCIAL | clip de dolor (`AnimQuaternius`); sin camilla ni médicos en campo |
 | M-104 | P2 | Cambios de jugador sin animación (entra/sale) | PENDIENTE | sin animación ni cartel de cambio |
 | M-105 | P2 | Sin tarjetas con ceremonia de árbitro detallada | PARCIAL | clips de protesta/discutir árbitro en `AnimExtra`; sin protesta enlazada a las tarjetas del motor real |
-| M-106 | P1 | Árbitro con sólo gestos básicos | PARCIAL | gestos del árbitro solo en `MatchPlayback`; en el motor real `_mover_arbitros` solo camina |
+| M-106 | P1 | Árbitro con sólo gestos básicos | HECHO | 17-10: en el motor real pita, señala la falta, ventaja de verdad, habla y enseña la tarjeta (cartulina en la mano), penal, córner, saque de puerta, añadido y final (`MotorJugable._gesto_arbitro`) |
 | M-107 | P2 | Asistentes de línea sin carrera real | PARCIAL | los jueces siguen la z del balón (`_mover_arbitros`), no al penúltimo defensor |
 | M-108 | P2 | Mascotas con animación limitada | SIN VERIFICAR | `MascotaQ` tiene animaciones propias; no se comprobó si son 6 ni si hay rutas |
 | M-109 | P2 | Niños de ceremonia con una misma malla | PARCIAL | niños con cuerpos de peatones variados (`CeremoniaPartido`); sin comprobar variedad de malla |
@@ -175,7 +175,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-115 | P1 | Giros >720°/s (465) | PARCIAL | giro limitado al conducir (`giro_max`, l.3364); la sonda seguía marcando giros > 720°/s |
 | M-116 | P1 | Sin duelos con contacto (M-03) | HECHO | duelos de hombro, balón dividido y agarrón (`MotorJugable._duelo_*`, 17-10) |
 | M-117 | P1 | Faltas sin lógica de contacto real (sólo azar) | HECHO | faltas por entrada al tobillo/llegar tarde (`_falta`); ~8,8 por partido (17-10) |
-| M-118 | P1 | Fuera de juego sólo por posición en el instante (✅ base) | PARCIAL | el VAR decide con la posición real (`margen_gol`, 17-10); sin línea visible |
+| M-118 | P1 | Fuera de juego sólo por posición en el instante (✅ base) | HECHO | el VAR decide con la posición real (`margen_gol`) y desde el 17-10 dibuja las dos líneas y el margen en cm en el monitor de la sala (`lineas_gol`) |
 | M-119 | P1 | Penales: el portero «decide una vez» pero sin lectura del lanzador | PENDIENTE | sin lectura del lanzador en penales |
 | M-120 | P2 | Córners con 3 variantes | PARCIAL | receptor/2.º/3.er lanzador en córners (14-10); sin jugadas ensayadas de `CatalogoJugadas` |
 | M-121 | P2 | Tiros libres: barrera simple | PARCIAL | barrera de 4 a 9,15 m fija |
@@ -196,7 +196,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-136 | P2 | HUD del partido con FC-style indicadores; sin heatmap/estadísticas… | HECHO | `PanelEstadisticas` (T/Select) con mapa de tiros y de calor (16-10); falta mapa de pases |
 | M-137 | P2 | Sin xG ni xA | PARCIAL | xG por remate (`EstadisticasVivo.xg_de`); sin xA |
 | M-138 | P1 | Ritmo del partido ≈ 54 s/s vs 11 s/s (M-07) | HECHO | ritmo corto/normal/largo (2,7/4/6 s por minuto) en el partido del DT |
-| M-139 | P2 | Tiempo añadido con base real pero sin descuentos por lesión visibles | PENDIENTE | sin cartel del cuarto árbitro |
+| M-139 | P2 | Tiempo añadido con base real pero sin descuentos por lesión visibles | PARCIAL | 17-10: cartel 3D del cuarto árbitro (`CuartoArbitro`); el añadido aún no suma lesiones |
 | M-140 | P2 | Descanso: charla de medio tiempo con opciones; sin vestuario 3D… | PENDIENTE | el descanso vuelve al camarín 2D (`prueba_descanso_3d`); sin cinemática de vestuario |
 | M-141 | P2 | Resumen de partido sin mapa de calor ni valoraciones por jugador… | PARCIAL | momentos clave en `ResumenPartido`; sin valoraciones por jugador |
 | M-142 | P2 | Rueda de prensa posterior no enlazada con incidentes del partido | SIN VERIFICAR | no se encontró tema de árbitro/VAR en `Prensa.resolver` |
@@ -206,7 +206,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-146 | P2 | Balón con skins pero sin desgaste/mojado | PENDIENTE | balón sin desgaste/mojado |
 | M-147 | P1 | Hitbox del balón vs cuerpo: 0 casos atravesando (sonda); pero… | PARCIAL | balón con altura y cabezazo en el motor; colisión por distancia, sin cápsulas |
 | M-148 | P2 | Sin rebotes contra postes/larguero realistas con física propia | PARCIAL | poste y larguero detectados en el motor; rebote sin comprobar |
-| M-149 | P2 | Red del arco rígida | PENDIENTE | red rígida |
+| M-149 | P2 | Red del arco rígida | HECHO | 17-10: `red_arco.gdshader` (onda de vértice desde el punto de entrada, sin física); de frente se ve bien, desde la TV es sutil |
 | M-150 | P2 | Sin balones adicionales (calentamiento, reserva) | PENDIENTE | sin balones decorativos |
 | M-151 | P2 | Muro de pruebas: `sonda_fisica` no distingue reposiciones | PENDIENTE | la sonda no separa reposiciones ni está en el banco |
 | M-152 | P2 | Sin modo de entrenamiento libre (probar controles) | PENDIENTE | sin entrenamiento libre |
