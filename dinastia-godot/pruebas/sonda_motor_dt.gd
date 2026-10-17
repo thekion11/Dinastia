@@ -103,7 +103,15 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 	motor.duelos_activos = OS.get_environment("SIN_DUELOS") == ""
 	motor.cuerpos_activos = OS.get_environment("SIN_CUERPOS") == ""
 	motor.remate.connect(func(_l: bool, _a: String, tipo: String) -> void: remates[tipo] = int(remates.get(tipo, 0)) + 1)
-	motor.gol.connect(func(_l: bool, _a: String, _s: String) -> void: remates["gol"] = int(remates.get("gol", 0)) + 1)
+	motor.gol.connect(func(_l: bool, _a: String, _s: String) -> void:
+		remates["gol"] = int(remates.get("gol", 0)) + 1
+		## El VAR (17-10-2026): cuántos goles llegan tras un pase medible y
+		## cuántos con fuera de juego ajustado (revisión) o real (anulación).
+		var mg := motor.margen_gol
+		var k := "var_sin_pase" if mg == INF else ("var_anula" if mg > 0.0 and mg <= 0.3 else ("var_revisa" if mg > -1.0 and mg <= 0.0 else "var_claro"))
+		remates[k] = int(remates.get(k, 0)) + 1
+		if mg != INF and OS.get_environment("DEPURAR_VAR") != "":
+			print("MARGEN_GOL %.2f" % mg))
 	var hechos := false
 	var dt := 1.0 / 30.0
 	var pasos := 0
