@@ -127,6 +127,7 @@ const SECCIONES := [
 	"_probar_prorroga_y_penales",
 	"_probar_informe_rival",
 	"_probar_porque_moral",
+	"_probar_partido_abandonado",
 	"_probar_paridad_idiomas",
 ]
 
@@ -8682,4 +8683,34 @@ func _probar_porque_moral() -> void:
 	_comprobar(j1 != null and j1.historial_moral.size() == j0.historial_moral.size(), "el historial de moral se guarda y se carga")
 	var sat: Dictionary = m.vestuario.satisfaccion_de(j0)
 	_comprobar(sat.has("min") and sat.has("rend") and sat.has("tact") and sat.has("inst"), "el Camarín puede leer lo que pesa en la satisfacción")
+
+## EL PARTIDO ABANDONADO A MEDIAS (17-10-2026): cerrar el juego perdiendo y
+## volver a cargar NO repite el partido desde el 0-0, y recargar no cambia nada.
+func _probar_partido_abandonado() -> void:
+	_titulo("PARTIDO ABANDONADO A MEDIAS: NO SE PUEDE REPETIR HASTA GANAR")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var par := m.proximo_partido()
+	var p := Partido.new(par[0], par[1])
+	p.preparar()
+	PartidoPendiente.abrir(m, p)
+	p.goles_local = 0
+	p.goles_visita = 2
+	p.minuto = 60
+	PartidoPendiente.actualizar(m, p)
+	## La partida tal como quedó guardada (recargarla es partir siempre de aquí).
+	var foto := Partida.instantanea(m)
+	var d := PartidoPendiente.pendiente(m)
+	_comprobar(not d.is_empty() and int(d["gv"]) == 2 and int(d["minuto"]) == 60, "el partido en curso queda apuntado con su marcador y su minuto")
+	var r1 := PartidoPendiente.resolver(m, d)
+	_comprobar(r1 != null and r1.terminado_ya and r1.goles_visita >= 2, "al cargar se completa desde el 0-2 del 60' (no desde 0-0): %d-%d" % [r1.goles_local, r1.goles_visita])
+	_comprobar(PartidoPendiente.pendiente(m).is_empty(), "una vez resuelto, deja de estar pendiente")
+	## Recargar = otra vez el mismo resultado (azar fijo para ese partido).
+	var m2 := Partida.desde_instantanea(foto)
+	var r2 := PartidoPendiente.resolver(m2, d)
+	_comprobar(r2 != null and r2.goles_local == r1.goles_local and r2.goles_visita == r1.goles_visita, "recargar da el mismo resultado (%d-%d)" % [r2.goles_local, r2.goles_visita])
+	d["minuto"] = 90
+	var r3 := PartidoPendiente.resolver(m, d)
+	_comprobar(r3 != null and r3.goles_local == 0 and r3.goles_visita == 2, "si ya se había pitado el final, queda el resultado tal cual")
 
