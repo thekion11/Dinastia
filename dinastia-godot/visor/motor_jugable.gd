@@ -35,6 +35,11 @@ signal cambio_estado(estado: String)
 signal terminado
 ## Un cambio: quién sale, quién entra, de qué equipo (MEGAPLAN fase 3).
 signal sustitucion(sale: String, entra: String, es_local: bool)
+## PRÓRROGA Y PENALES (17-10-2026): solo con `eliminatoria` y empate.
+signal prorroga_empieza
+signal tanda_empieza
+signal tanda_tiro(equipo: int, jugador_id: String, marcado: bool)
+signal tanda_terminada(goles_local: int, goles_visita: int)
 
 const LARGO := 52.5
 const ANCHO := 34.0
@@ -65,10 +70,18 @@ var usuario: Dictionary = {}
 ## Sin usuario (o en las pruebas), también tu jugador lo maneja la IA.
 var autopiloto := false
 var duracion_mitad := 240.0   ## segundos reales por tiempo
+## La mitad con la que se calibró la IA en `sonda_motor_dt` (240 s). Las
+## decisiones que se tiran «por duelo» (la finta) se escalan con ella para que
+## salgan las mismas POR PARTIDO con cualquier ritmo (ver `_escala_ritmo`).
+const MITAD_CALIBRADA := 240.0
 var t := 0.0
 var mitad := 1
 var goles := [0, 0]            ## [local, visita]
-var estado := "saque"          ## juego | saque | gol | descanso | fin
+var estado := "saque"          ## juego | saque | gol | descanso | tanda | fin
+## Partido de eliminación directa: con empate al 90' hay prórroga (mitades 3 y
+## 4, de 15', un tercio de `duracion_mitad`) y, si sigue, tanda de penales.
+var eliminatoria := false
+var prorroga := false
 var poseedor: Dictionary = {}
 var ultimo_toque: Dictionary = {}
 var penultimo_toque: Dictionary = {}
@@ -105,6 +118,17 @@ var _cambio_decidido := false
 
 var fueras_de_juego := [0, 0]
 var _offside_previo := {}
+## EL VAR CON LA JUGADA REAL (17-10-2026): en cada pase, cuánto estaba cada
+## compañero por delante de la línea (m > 0 = adelantado; el juez solo pita
+## por encima de 0,3 m). Al recibir se guarda el del receptor, y el gol deja
+## en `margen_gol` el del goleador (INF si no hubo pase medible).
+var _margenes_pase := {}
+var _margen_recepcion := {}
+var margen_gol := INF
+## Las dos líneas del fuera de juego en el pase del gol, en Z del mundo (M-118):
+## {"linea": la del penúltimo defensor (o el balón), "atacante": el goleador}.
+## Vacío si no hubo pase medible. La sala VAR las dibuja en su monitor.
+var lineas_gol := {}
 var _ultima_anim := ""
 var _jugada := {}             ## la jugada prehecha que guía el ataque del poseedor
 var _decision_en := 0.0
@@ -122,6 +146,10 @@ var depurar := false
 signal remate(es_local: bool, autor_id: String, tipo: String)
 ## Una tarjeta de verdad (con `tarjetas_reales`): la segunda amarilla expulsa.
 signal tarjeta(jugador_id: String, roja: bool, es_local: bool)
+## El árbitro hace un gesto (M-106): «arbitro_silbato», «senalar_falta»,
+## «mostrar_tarjeta», «arbitro_ventaja», «arbitro_penal», «fin»… La vista lo usa
+## para el silbato (el motor no toca sonidos: corre también en las sondas).
+signal gesto_arbitro(nombre: String)
 ## La pizarra de cada equipo: [local, visita], con "mentalidad" (0-3), "presion",
 ## "linea", "amplitud" y "ritmo" (0-2). 1 es el término medio y, con todo a 1,
 ## el motor juega EXACTAMENTE como antes.
@@ -165,6 +193,8 @@ var anadido := [0.0, 0.0]
 var _goleador: Dictionary = {}
 ## Fintas que la IA ha intentado (para pruebas y estadísticas).
 var regates_ia := 0
+## Fintas de la IA en las que el defensor picó.
+var regates_ia_ok := 0
 var _celebra_anim := "celebrar"
 
 # ---------------------------------------------------------------- montaje
@@ -182,6 +212,11 @@ func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: i
 		if String(p.get("id", "")) == jugador_usuario_id:
 			usuario = p
 	balon = ball
+	## Para las sondas que montan el estadio entero (como DEPURAR_PASES).
+	if OS.get_environment("SIN_DUELOS") != "":
+		duelos_activos = false
+	if OS.get_environment("SIN_CUERPOS") != "":
+		cuerpos_activos = false
 	_orientar_formaciones()
 	Mando.registrar()
 	_saque_de_centro(true)
@@ -220,7 +255,8 @@ func _orientar_formaciones() -> void:
 func forma_fisica(p: Dictionary) -> float:
 	if p.is_empty():
 		return 1.0
-	var jugado := clampf((float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad), 0.0, 1.0)
+	## En la prórroga el cansancio sigue subiendo (hasta un tercio más).
+	var jugado := clampf(tiempo_jugado() / (2.0 * duracion_mitad), 0.0, 1.35)
 	var fis := float(p["attr"]["fis"]) if p.has("attr") else 0.6
 	var por_tiempo := jugado * 0.42 * (1.3 - fis)
 	## Quien entró desde el banco llega fresco: solo cuenta lo que jugó.
@@ -243,6 +279,7 @@ func _preparar_uno(p: Dictionary) -> void:
 	p["regate_hasta"] = 0.0
 	p["anim_actual"] = ""
 	p["por"] = String(p.get("slot_code", "")) == "POR"
+	_rasgos_duelo(p, jd)
 
 ## El que espera en la banda. Si es el usuario, entra en `minuto_entrada`.
 func poner_extra(p: Dictionary, es_usuario: bool, minuto_entrada: int = -1) -> void:
@@ -299,7 +336,7 @@ func _cambiar(sale: Dictionary, entra: Dictionary, entra_es_usuario: bool) -> vo
 	_cambio_hecho = true
 	## El que entra hereda el sitio táctico del que sale.
 	entra["slot_code"] = sale["slot_code"]
-	entra["entro_en"] = clampf((float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad), 0.0, 1.0)
+	entra["entro_en"] = clampf(tiempo_jugado() / (2.0 * duracion_mitad), 0.0, 1.0)
 	entra["base_pos"] = sale["base_pos"]
 	(entra["node"] as Node3D).position = Vector3(ANCHO - 0.5, 0, 0)
 	(entra["node"] as Node3D).visible = true
@@ -361,7 +398,7 @@ func reemplazar(sale_id: String, entra: Dictionary) -> bool:
 	entra["base_pos"] = sale["base_pos"]
 	entra["es_local"] = sale["es_local"]
 	entra["por"] = sale["por"]
-	entra["entro_en"] = clampf((float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad), 0.0, 1.0)
+	entra["entro_en"] = clampf(tiempo_jugado() / (2.0 * duracion_mitad), 0.0, 1.0)
 	var n: Node3D = entra["node"]
 	n.position = Vector3(signf(pos(sale).x + 0.01) * (ANCHO - 0.5), 0, clampf(pos(sale).z, -8.0, 8.0))
 	n.visible = true
@@ -481,33 +518,67 @@ static func dir_ataque(es_local: bool) -> float:
 	return 1.0 if es_local else -1.0
 
 func _arco_rival(p: Dictionary) -> Vector3:
+	if estado == "tanda":
+		return TANDA_ARCO
 	return Vector3(0, 0, LARGO * dir_ataque(bool(p["es_local"])))
 
 func _arco_propio(p: Dictionary) -> Vector3:
+	if estado == "tanda":
+		return TANDA_ARCO
 	return Vector3(0, 0, -LARGO * dir_ataque(bool(p["es_local"])))
 
 func pos(p: Dictionary) -> Vector3:
 	return (p["node"] as Node3D).position
 
 func minuto() -> int:
-	return int(minf(t, duracion_mitad) / duracion_mitad * 45.0) + (45 if mitad == 2 else 0)
+	var d := dur_mitad()
+	return int(minf(t, d) / d * minutos_de_mitad()) + minuto_base()
+
+## Segundos reales que dura la mitad `m` (la en curso por defecto): las dos de
+## la prórroga son de 15', un tercio de las normales.
+func dur_mitad(m := -1) -> float:
+	var mm := mitad if m < 0 else m
+	return duracion_mitad if mm <= 2 else duracion_mitad / 3.0
+
+func minutos_de_mitad(m := -1) -> float:
+	return 45.0 if (mitad if m < 0 else m) <= 2 else 15.0
+
+## El minuto en que empieza la mitad: 0, 45, 90 o 105.
+func minuto_base(m := -1) -> int:
+	return [0, 45, 90, 105][clampi((mitad if m < 0 else m) - 1, 0, 3)]
+
+## Lo jugado en segundos reales (sin añadidos), contando la prórroga.
+func tiempo_jugado() -> float:
+	if mitad <= 2:
+		return float(mitad - 1) * duracion_mitad + t
+	return 2.0 * duracion_mitad + float(mitad - 3) * duracion_mitad / 3.0 + t
+
+func _anadido_de(m: int) -> float:
+	return float(anadido[m - 1]) if anadido.size() >= m else 0.0
 
 ## Segundos de partido jugados en el añadido (-1 si no se está en él).
 func segundos_anadidos() -> float:
-	if t <= duracion_mitad:
+	var d := dur_mitad()
+	if t <= d:
 		return -1.0
-	return (t - duracion_mitad) / duracion_mitad * 45.0 * 60.0
+	return (t - d) / d * minutos_de_mitad() * 60.0
 
 ## Los minutos de añadido que enseña el cuarto árbitro en esta mitad.
 func minutos_anadidos() -> int:
-	return int(ceil(float(anadido[mitad - 1]) / duracion_mitad * 45.0))
+	return int(ceil(_anadido_de(mitad) / dur_mitad() * minutos_de_mitad()))
 
 ## Sortea el añadido: 1-3' la primera parte y 2-5' la segunda, más con goles,
-## cambios o faltas (aquí, simple y con la semilla del partido).
+## cambios o faltas (aquí, simple y con la semilla del partido). En la
+## prórroga, 0-1' y 1-2'.
 func sortear_anadido() -> void:
 	var m1 := float(_rng.randi_range(1, 3))
 	var m2 := float(_rng.randi_range(2, 5))
-	anadido = [m1 / 45.0 * duracion_mitad, m2 / 45.0 * duracion_mitad]
+	## Los de la prórroga salen de los otros, sin tirar más dados: así un
+	## partido de liga sigue la misma secuencia aleatoria que antes.
+	var m3 := float(int(m1 + m2) % 2)
+	var m4 := 1.0 + float(int(m2) % 2)
+	var d3 := duracion_mitad / 3.0
+	anadido = [m1 / 45.0 * duracion_mitad, m2 / 45.0 * duracion_mitad, m3 / 15.0 * d3, m4 / 15.0 * d3]
 
 # ---------------------------------------------------------------- bucle
 
@@ -534,12 +605,17 @@ func paso(delta: float) -> void:
 				var due := entra_usuario_min if entra_usuario_min >= 0 else 60
 				if minuto() >= due + 3:
 					_revisar_cambio(true)
-			if t >= duracion_mitad + float(anadido[mitad - 1]):
+			if t >= dur_mitad() + _anadido_de(mitad):
 				_fin_de_mitad()
 				return
 			if not poseedor.is_empty():
 				posesion[0 if bool(poseedor["es_local"]) else 1] += delta
 			_mover_balon(delta)
+			_duelos()
+			if estado != "juego":
+				_mover_jugadores(delta)
+				_actualizar_balon_visual(delta)
+				return
 			_disputas(delta)
 			if control_equipo >= 0 and not autopiloto:
 				_control_de_equipo()
@@ -563,31 +639,378 @@ func paso(delta: float) -> void:
 				if not cand.is_empty():
 					_poner_usuario(cand)
 			_colocar_saque(delta)
+		"tanda":
+			t += delta
+			_paso_tanda(delta)
+			return
 		"gol", "descanso":
 			_mover_balon(delta)
 			_ia_celebracion(delta)
-			if _t_estado > (duracion_gol if estado == "gol" else 3.2):
+			## Antes de la prórroga, un descanso corto algo más largo.
+			if _t_estado > (duracion_gol if estado == "gol" else (5.0 if mitad == 2 else 3.2)):
 				if estado == "descanso":
-					mitad = 2
+					## 2 = segunda parte (saca la visita), 3 y 4 = prórroga.
+					mitad += 1
 					t = 0.0
-					_saque_de_centro(false)
+					_saque_de_centro(mitad % 2 == 1)
 				else:
 					var saca_local: bool = not bool(saque.get("gol_local", true))
 					_saque_de_centro(saca_local)
 	_mover_jugadores(delta)
+	if estado == "juego":
+		_cuerpos()
 	_actualizar_balon_visual(delta)
 
 func _fin_de_mitad() -> void:
-	if mitad == 1:
+	var empate := int(goles[0]) == int(goles[1])
+	## El silbato largo, con los brazos arriba (M-106).
+	## (El sonido sale ya: tras el final el motor deja de correr.)
+	gesto_arbitro.emit("fin")
+	_gesto_arbitro("arbitro_silbato", 0.0, 1.2, {"silbato": ""})
+	_gesto_arbitro("arbitro_tiempo_anadido", 1.2, 1.8)
+	if mitad == 1 or mitad == 3:
 		estado = "descanso"
 		_t_estado = 0.0
-		aviso.emit("⏸ Descanso: %d-%d" % goles)
+		aviso.emit(("⏸ Descanso: %d-%d" if mitad == 1 else "⏱ Cambio de campo: %d-%d") % goles)
 		cambio_estado.emit(estado)
+	elif mitad == 2 and eliminatoria and empate:
+		## LA PRÓRROGA: descanso corto y dos tiempos de 15'.
+		estado = "descanso"
+		_t_estado = 0.0
+		prorroga = true
+		aviso.emit("⏱ Prórroga: %d-%d" % goles)
+		prorroga_empieza.emit()
+		cambio_estado.emit("prorroga")
+	elif mitad == 4 and empate:
+		_empezar_tanda()
 	else:
-		estado = "fin"
-		aviso.emit("🏁 Final: %d-%d" % goles)
-		cambio_estado.emit(estado)
-		terminado.emit()
+		_terminar()
+
+func _terminar() -> void:
+	estado = "fin"
+	aviso.emit("🏁 Final: %d-%d" % goles)
+	cambio_estado.emit(estado)
+	terminado.emit()
+
+# ---------------------------------------------------------------- penales
+
+## LA TANDA DE PENALES, EN EL CÉSPED (17-10-2026). Cinco por equipo y muerte
+## súbita, todos al mismo arco (+Z), los demás en el círculo central. Los
+## lanzadores van en orden (los de mejor tiro primero, el portero al final) y
+## cada penal reutiliza el de siempre: `_tirar` con su error, el apunte y la
+## carga del usuario (`_apuntar_usuario`) y el círculo de serenidad. Cuando
+## tu equipo defiende y lo manejas tú, eliges el lado del portero con el stick
+## antes del disparo. El resultado NO pasa por `gol`: va a `tanda_tiro` y, al
+## final, a `tanda_terminada` (el acta lo guarda con `penales_externos`).
+##   tanda = {tiros: [[bool…], [bool…]], orden: [[p…], [p…]], empieza,
+##            fase (entrar|preparar|apuntar|vuelo|resultado|fin), lanzador,
+##            portero, lado (-1 / 0 / 1 en X del mundo), cruzo}
+var tanda: Dictionary = {}
+const TANDA_ARCO := Vector3(0, 0, LARGO)
+const TANDA_PUNTO := Vector3(0, R, LARGO - PUNTO_PENAL)
+## Tu portero sin lado elegido: adivina como el de la IA.
+const SIN_ELEGIR := 99
+
+## El equipo que manejas en la tanda (-1 = la IA tira todo).
+func tanda_equipo_usuario() -> int:
+	return control_equipo if control_equipo >= 0 and not autopiloto else -1
+
+func goles_tanda(eq: int) -> int:
+	var n := 0
+	if tanda.is_empty():
+		return 0
+	for b: bool in tanda["tiros"][eq]:
+		if b:
+			n += 1
+	return n
+
+## El equipo que tira ahora.
+func tanda_turno() -> int:
+	if tanda.is_empty():
+		return -1
+	var hechos: int = (tanda["tiros"][0] as Array).size() + (tanda["tiros"][1] as Array).size()
+	return (int(tanda["empieza"]) + hechos) % 2
+
+## Orden de lanzadores: de mejor a peor tiro, el portero al final.
+func _orden_tanda(es_local: bool) -> Array:
+	var campo: Array = []
+	var porteros: Array = []
+	for p: Dictionary in jugadores:
+		if bool(p["es_local"]) != es_local:
+			continue
+		if bool(p["por"]):
+			porteros.append(p)
+		else:
+			campo.append(p)
+	campo.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a["attr"]["tir"]) > float(b["attr"]["tir"]))
+	return campo + porteros
+
+func _empezar_tanda() -> void:
+	estado = "tanda"
+	_t_estado = 0.0
+	poseedor = {}
+	pase_a = {}
+	_jugada = {}
+	_tiro_vivo = {}
+	vel_balon = Vector3.ZERO
+	apuntando = false
+	cargando = false
+	usuario = {}
+	tanda = {"tiros": [[], []], "orden": [_orden_tanda(true), _orden_tanda(false)],
+		"empieza": _rng.randi() % 2, "fase": "entrar", "lanzador": {}, "portero": {}, "lado": 0, "cruzo": false}
+	balon.position = TANDA_PUNTO
+	for p: Dictionary in jugadores:
+		p["gesto_hasta"] = 0.0
+	aviso.emit("🥅 Tanda de penales")
+	tanda_empieza.emit()
+	cambio_estado.emit("tanda")
+
+## ¿Ya está decidida? Cinco cada uno con cuentas imposibles, o muerte súbita.
+static func tanda_decidida(tiros_: Array) -> bool:
+	var na: int = (tiros_[0] as Array).size()
+	var nb: int = (tiros_[1] as Array).size()
+	var ga := 0
+	var gb := 0
+	for b: bool in tiros_[0]:
+		ga += 1 if b else 0
+	for b: bool in tiros_[1]:
+		gb += 1 if b else 0
+	if na <= 5 and nb <= 5:
+		if ga + (5 - na) < gb or gb + (5 - nb) < ga:
+			return true
+		return na == 5 and nb == 5 and ga != gb
+	return na == nb and ga != gb
+
+## Dónde espera cada uno: los de campo en el círculo central, en fila por
+## equipo; el portero que no defiende, junto al área.
+func _sitio_tanda(p: Dictionary) -> Vector3:
+	var eq := 0 if bool(p["es_local"]) else 1
+	if bool(p["por"]):
+		return Vector3(-9.0 if eq == 0 else 9.0, 0, LARGO - AREA_Z - 1.5)
+	var orden: Array = tanda["orden"][eq]
+	var i := maxi(orden.find(p), 0)
+	var lado := -1.0 if eq == 0 else 1.0
+	return Vector3(lado * (1.0 + float(i % 10) * 0.8), 0, 1.0)
+
+func _paso_tanda(delta: float) -> void:
+	var fase := String(tanda["fase"])
+	var lz: Dictionary = tanda["lanzador"]
+	var gk: Dictionary = tanda["portero"]
+	## Un cambio durante la tanda (el lanzador o el portero ya no están): ese
+	## penal se vuelve a preparar con el que toque.
+	if fase in ["preparar", "apuntar"] and ((not lz.is_empty() and not jugadores.has(lz)) or (not gk.is_empty() and not jugadores.has(gk))):
+		usuario = {}
+		apuntando = false
+		cargando = false
+		_siguiente_penal()
+		return
+	var detras := TANDA_PUNTO + Vector3(0, -R, -0.9)
+	for p: Dictionary in jugadores:
+		if p == lz and fase in ["preparar", "apuntar"]:
+			p["objetivo"] = detras
+			p["correr"] = false
+		elif p == gk:
+			if fase in ["preparar", "apuntar"]:
+				p["objetivo"] = TANDA_ARCO - Vector3(0, 0, 0.3)
+				p["correr"] = false
+		elif p == lz:
+			pass
+		else:
+			p["objetivo"] = _sitio_tanda(p)
+			p["correr"] = pos(p).distance_to(p["objetivo"]) > 12.0
+			## Desde el saque de la prórroga hasta el círculo: rápido, como en
+			## los saques (el juego está parado).
+			if fase == "entrar":
+				var n: Node3D = p["node"]
+				n.position = n.position.move_toward(p["objetivo"], 14.0 * delta)
+	_mover_jugadores(delta)
+	if fase in ["vuelo", "resultado"]:
+		_mover_balon(delta)
+	_actualizar_balon_visual(delta)
+	match fase:
+		"entrar":
+			if _t_estado > 2.5:
+				_siguiente_penal()
+		"preparar":
+			## El portero en la línea, mirando al lanzador.
+			if not gk.is_empty():
+				(gk["node"] as Node3D).rotation.y = PI
+			## Tu portero: el stick elige el lado (con la cámara detrás del
+			## lanzador, la derecha de la pantalla es -X).
+			var tu := tanda_equipo_usuario()
+			if tu >= 0 and tanda_turno() != tu:
+				var mx := Mando.movimiento().x
+				if absf(mx) > 0.3:
+					tanda["lado"] = -1 if mx > 0.0 else 1
+				elif Input.is_action_pressed("jugar_tiro"):
+					tanda["lado"] = 0
+			if lz.is_empty():
+				_resultado_tanda(false, "¡Fallado!")
+				return
+			if pos(lz).distance_to(detras) < 0.6 or _t_estado > 4.0:
+				var lanza_tu := tu >= 0 and tanda_turno() == tu
+				if lanza_tu and _t_estado > 1.0:
+					tanda["fase"] = "apuntar"
+					_t_estado = 0.0
+					usuario = lz
+					saque = {"tipo": "penal", "local": bool(lz["es_local"]), "lugar": TANDA_PUNTO, "lanzador": lz}
+					apuntando = true
+					apunte = {"ang": 0.0, "loft": 0.15, "fuerza": 0.0, "fase": 0.0, "x": 0.0, "y": 0.8}
+					cambio_estado.emit("apuntar_penal")
+				elif not lanza_tu and _t_estado > (2.8 if tu >= 0 else 1.6):
+					saque = {"tipo": "penal", "local": bool(lz["es_local"]), "lugar": TANDA_PUNTO, "lanzador": lz}
+					_ejecutar_saque_ia(lz, "penal", TANDA_PUNTO)
+		"apuntar":
+			(lz["node"] as Node3D).rotation.y = 0.0
+			_apuntar_usuario(delta)
+		"vuelo":
+			_vuelo_tanda()
+		"resultado":
+			if _t_estado > 2.0:
+				if tanda_decidida(tanda["tiros"]):
+					_cerrar_tanda()
+				else:
+					_siguiente_penal()
+
+func _siguiente_penal() -> void:
+	var eq := tanda_turno()
+	## El orden se rehace cada vez: un cambio de última hora deja fuera al que
+	## salió (su nodo ya no existe) y mete al que entró en su sitio por tiro.
+	tanda["orden"] = [_orden_tanda(true), _orden_tanda(false)]
+	var orden: Array = tanda["orden"][eq]
+	var hechos: int = (tanda["tiros"][eq] as Array).size()
+	var lz: Dictionary = orden[hechos % orden.size()] if not orden.is_empty() else {}
+	var gk: Dictionary = {}
+	for q: Dictionary in jugadores:
+		if bool(q["por"]) and bool(q["es_local"]) != (eq == 0):
+			gk = q
+	## El lanzador anterior vuelve al círculo y el portero que deja de
+	## defender, a su sitio de espera.
+	for antes: Dictionary in [tanda["lanzador"], tanda["portero"]]:
+		if not antes.is_empty() and antes != gk and antes != lz and jugadores.has(antes):
+			(antes["node"] as Node3D).position = _sitio_tanda(antes)
+			antes["vel"] = Vector3.ZERO
+			antes["gesto_hasta"] = 0.0
+	tanda["lanzador"] = lz
+	tanda["portero"] = gk
+	tanda["lado"] = SIN_ELEGIR
+	tanda["cruzo"] = false
+	tanda["fase"] = "preparar"
+	_t_estado = 0.0
+	usuario = {}
+	balon.position = TANDA_PUNTO
+	vel_balon = Vector3.ZERO
+	giro_balon = Vector3.ZERO
+	if not lz.is_empty():
+		## Sale del círculo: aparece camino del punto (sin cruzar medio campo).
+		(lz["node"] as Node3D).position = TANDA_PUNTO + Vector3(-2.2, -R, -5.5)
+		lz["vel"] = Vector3.ZERO
+		lz["gesto_hasta"] = 0.0
+	if not gk.is_empty():
+		(gk["node"] as Node3D).position = TANDA_ARCO - Vector3(0, 0, 0.3)
+		gk["vel"] = Vector3.ZERO
+		gk["gesto_hasta"] = 0.0
+	var nombre := String((lz.get("jugador", {}) as Dictionary).get("nombre", ""))
+	aviso.emit("🥅 Penal %d: %s" % [hechos + 1, nombre])
+	cambio_estado.emit("tanda_penal")
+
+## Tras el golpeo (desde `_reanudar`): el tiro no cuenta como remate del
+## partido y el portero se tira.
+func _tras_tiro_tanda() -> void:
+	var lz: Dictionary = tanda["lanzador"]
+	if not _tiro_vivo.is_empty():
+		var eq := 0 if bool(lz.get("es_local", true)) else 1
+		tiros[eq] = maxi(int(tiros[eq]) - 1, 0)
+	_tiro_vivo = {}
+	apuntando = false
+	cargando = false
+	_anillo_serenidad(false)
+	tanda["fase"] = "vuelo"
+	_t_estado = 0.0
+	var gk: Dictionary = tanda["portero"]
+	if gk.is_empty():
+		return
+	## El portero de la IA adivina (40 % a cada lado, 20 % se queda); el tuyo
+	## va donde dijiste.
+	var tu := tanda_equipo_usuario()
+	var lado: int = int(tanda["lado"])
+	if not (tu >= 0 and tanda_turno() != tu) or lado == SIN_ELEGIR:
+		var r := _rng.randf()
+		lado = -1 if r < 0.4 else (1 if r < 0.8 else 0)
+	tanda["lado"] = lado
+	var alto := "media" if _rng.randf() < 0.6 else "baja"
+	## Mirando a -Z, su izquierda es +X.
+	if lado != 0:
+		_anim(gk, "estirada_%s_%s" % [alto, "izq" if lado > 0 else "der"], true)
+		gk["vel"] = Vector3(float(lado) * 6.5, 0, 0)
+		gk["objetivo"] = TANDA_ARCO + Vector3(float(lado) * 2.2, 0, -0.3)
+	else:
+		_anim(gk, "atajar", true)
+
+## El balón en el aire: parada, palo, gol o fuera.
+func _vuelo_tanda() -> void:
+	var b := balon.position
+	var gk: Dictionary = tanda["portero"]
+	var lado: int = int(tanda["lado"])
+	if not bool(tanda["cruzo"]) and b.z >= LARGO - 0.8:
+		tanda["cruzo"] = true
+		## ¿Llega el portero? Tirado al lado bueno tapa hasta ~2,5 m del centro
+		## (menos arriba); quieto, solo lo que va al medio.
+		var para := false
+		if not gk.is_empty() and absf(b.x) < PALO + 0.2 and b.y < LARGUERO:
+			var alcance := 1.4 + (float(gk["attr"]["div"]) + float(gk["attr"]["ref"])) * 0.6
+			if lado == 0:
+				para = absf(b.x) < 0.9 and b.y < 2.0
+			elif signf(b.x) == float(lado):
+				var dentro := absf(b.x) > 0.3 and absf(b.x) < alcance and b.y < (1.6 if absf(b.x) > 2.3 else 2.1)
+				para = dentro and _rng.randf() < 0.5 + float(gk["attr"]["ref"]) * 0.35
+		if para:
+			vel_balon = Vector3(signf(b.x + 0.01) * _rng.randf_range(3, 7), _rng.randf_range(1, 3), -absf(vel_balon.z) * 0.3)
+			_resultado_tanda(false, "¡Qué parada!")
+			return
+	if b.z >= LARGO:
+		var dentro := absf(b.x) < PALO and b.y < LARGUERO
+		var palo := (absf(absf(b.x) - PALO) < 0.12 + R and b.y < LARGUERO + R) or (absf(b.x) < PALO and absf(b.y - LARGUERO) < 0.12 + R)
+		if palo:
+			vel_balon = Vector3(-signf(b.x) * 2.0, -absf(vel_balon.y) * 0.4, -vel_balon.z * 0.5)
+			balon.position.z = LARGO - 0.2
+			_resultado_tanda(false, "¡AL PALO!")
+		elif dentro:
+			vel_balon *= 0.2
+			_resultado_tanda(true, "⚽ ¡Dentro!")
+		else:
+			_resultado_tanda(false, "¡Fuera!")
+		return
+	## Se quedó corto: fallado.
+	if _t_estado > 3.0:
+		_resultado_tanda(false, "¡Fallado!")
+
+func _resultado_tanda(marcado: bool, texto: String) -> void:
+	var lz: Dictionary = tanda["lanzador"]
+	var eq := tanda_turno()
+	(tanda["tiros"][eq] as Array).append(marcado)
+	tanda["fase"] = "resultado"
+	_t_estado = 0.0
+	if not lz.is_empty() and jugadores.has(lz):
+		_anim(lz, "celebrar" if marcado else ["lamento", "manos_cabeza"][_rng.randi() % 2], true, 2.0)
+	aviso.emit(texto)
+	tanda_tiro.emit(eq, String(lz.get("id", "")), marcado)
+
+func _cerrar_tanda() -> void:
+	var gl := goles_tanda(0)
+	var gv := goles_tanda(1)
+	tanda["fase"] = "fin"
+	usuario = {}
+	aviso.emit("🥅 Penales: %d-%d" % [gl, gv])
+	tanda_terminada.emit(gl, gv)
+	var gana_local := gl > gv
+	for p: Dictionary in jugadores:
+		if bool(p["es_local"]) == gana_local:
+			_anim(p, "celebrar" if _rng.randf() < 0.6 else "aplauso_arriba", true, 99.0)
+		elif _rng.randf() < 0.5:
+			_anim(p, ["lamento", "manos_cabeza", "cuclillas_lamento", "brazos_jarra"][_rng.randi() % 4], true, 99.0)
+	_terminar()
 
 # ---------------------------------------------------------------- balón
 
@@ -711,6 +1134,12 @@ func _palos_y_lineas(antes: Vector3) -> void:
 		var local_saca := ultimo_toque.is_empty() or not bool(ultimo_toque["es_local"])
 		_empezar_saque("banda", local_saca, Vector3(signf(p.x) * (ANCHO - 0.2), R, clampf(p.z, -LARGO + 1.0, LARGO - 1.0)))
 
+## El VAR anula un gol ya celebrado: solo el marcador del motor (el acta la
+## corrige `Partido.anular_gol_externo`).
+func anular_gol(de_local: bool) -> void:
+	var i := 0 if de_local else 1
+	goles[i] = maxi(goles[i] - 1, 0)
+
 func _gol(en_arco_visita: bool) -> void:
 	## El arco de +Z es el de la visita: gol del local.
 	var de_local := en_arco_visita
@@ -734,6 +1163,13 @@ func _gol(en_arco_visita: bool) -> void:
 	estado = "gol"
 	_t_estado = 0.0
 	saque = {"gol_local": de_local}
+	margen_gol = INF
+	lineas_gol = {}
+	if autor_id != "" and String(_margen_recepcion.get("id", "")) == autor_id and t - float(_margen_recepcion.get("t", -99.0)) < 12.0:
+		margen_gol = float(_margen_recepcion["m"])
+		if _margen_recepcion.has("linea"):
+			lineas_gol = {"linea": float(_margen_recepcion["linea"]), "atacante": float(_margen_recepcion["z"])}
+	_margen_recepcion = {}
 	gol.emit(de_local, autor_id, asist_id)
 	cambio_estado.emit(estado)
 	## El goleador celebra según su carácter: primero corre al córner (o a la
@@ -879,6 +1315,7 @@ func _golpeo_anim(p: Dictionary, ap: AnimationPlayer, anim: String, destino: Vec
 ## de puerta no hay fuera de juego (regla 11).
 func _foto_offside(p: Dictionary) -> void:
 	_offside = {}
+	_margenes_pase = {}
 	if estado == "saque" and String(saque.get("tipo", "")) in ["banda", "corner", "puerta"]:
 		return
 	var local := bool(p["es_local"])
@@ -894,10 +1331,14 @@ func _foto_offside(p: Dictionary) -> void:
 	var penultimo: float = prof[prof.size() - 2]
 	var balon_prof := balon.position.z * d
 	var ids := {}
+	_margenes_pase = {"local": local, "m": {}, "z": {}, "linea": maxf(balon_prof, penultimo) * d}
 	for q: Dictionary in jugadores:
 		if q == p or bool(q["es_local"]) != local:
 			continue
 		var z := pos(q).z * d
+		if z > 0.0:
+			_margenes_pase["m"][String(q.get("id", ""))] = z - maxf(balon_prof, penultimo)
+			_margenes_pase["z"][String(q.get("id", ""))] = pos(q).z
 		## En campo rival, por delante del balón y del penúltimo (con 30 cm de
 		## tolerancia: la línea la marca el cuerpo, no los pies).
 		if z > 0.0 and z > balon_prof + 0.3 and z > penultimo + 0.3:
@@ -942,6 +1383,8 @@ func _pitar_offside(p: Dictionary) -> bool:
 	var nombre := String((p.get("jugador", {}) as Dictionary).get("nombre", "un atacante"))
 	aviso.emit("🚩 Fuera de juego de %s" % nombre)
 	var lugar := pos(p)
+	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
+	_gesto_arbitro("senalar_falta", 0.9, 1.6, {"mira": lugar - Vector3(0, 0, dir_ataque(bool(p["es_local"])) * 10.0)})
 	_empezar_saque("falta", not bool(p["es_local"]), Vector3(clampf(lugar.x, -ANCHO + 1.0, ANCHO - 1.0), R,
 		clampf(lugar.z, -LARGO + 1.0, LARGO - 1.0)))
 	return true
@@ -970,6 +1413,12 @@ func _tomar(p: Dictionary) -> void:
 		_pase_eq = -1
 	if _pitar_offside(p):
 		return
+	if not _margenes_pase.is_empty() and bool(_margenes_pase["local"]) == bool(p["es_local"]):
+		var mid := String(p.get("id", ""))
+		if (_margenes_pase["m"] as Dictionary).has(mid):
+			_margen_recepcion = {"id": mid, "m": float(_margenes_pase["m"][mid]), "t": t,
+				"linea": float(_margenes_pase.get("linea", 0.0)), "z": float((_margenes_pase.get("z", {}) as Dictionary).get(mid, 0.0))}
+	_margenes_pase = {}
 	## Tu pase llegó si lo controla uno de los tuyos.
 	if _pase_usuario_vivo and not usuario.is_empty() and p != usuario and bool(p["es_local"]) == bool(usuario["es_local"]):
 		stats["pases_ok"] += 1
@@ -1118,6 +1567,10 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	## Defensa contra regate al cuadrado: el buen defensor roba bastante más
 	## que el malo (antes la proporción lineal igualaba a todos).
 	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32)
+	## La entrada de pie también es cuerpo: el fuerte se impone al débil (y
+	## el que tiene equilibrio aguanta). De media no cambia nada.
+	if not barrida:
+		exito *= clampf(1.0 + (_fuerza(p) - (_fuerza(victima) * 0.6 + float(victima.get("equilibrio", 0.6)) * 0.4)) * 0.7, 0.6, 1.45)
 	## Protegiendo el balón (LT) cuesta mucho más quitárselo de pie.
 	if bool(victima.get("protege", false)) and not barrida:
 		exito *= 0.55
@@ -1139,19 +1592,48 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		_offside = {}
 		vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)
 		victima["enfriar"] = 0.6
-	elif r < exito + (0.18 if barrida else 0.07):
+	## FALTAS (17-10-2026): había ~4 por partido; una entrada que no llega al
+	## balón acaba en falta más a menudo (sobre todo si el defensor es agresivo).
+	elif r < exito + (0.28 if barrida else 0.13) + float(p.get("agresividad", 0.5)) * 0.06:
 		_falta(p, victima)
 
-func _falta(infractor: Dictionary, victima: Dictionary) -> void:
+func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "") -> void:
 	if infractor == usuario:
 		stats["faltas"] += 1
+	if motivo != "":
+		duelos["faltas"] += 1
+		duelos["faltas_" + motivo] = int(duelos.get("faltas_" + motivo, 0)) + 1
 	var lugar := pos(victima)
 	var atacante_local := bool(victima["es_local"])
 	var arco := _arco_rival(victima)
 	var en_area := absf(lugar.x) < AREA_X and absf(lugar.z - arco.z) < AREA_Z
 	var nombre := String((infractor.get("jugador", {}) as Dictionary).get("nombre", "Un defensor"))
 	faltas[0 if bool(infractor["es_local"]) else 1] += 1
-	if _rng.randf() < 0.25 or _falta_tactica:
+	var con_tarjeta := _rng.randf() < prob_tarjeta or _falta_tactica
+	## LA VENTAJA (17-10-2026, M-106): una entrada que no llega, en campo
+	## rival, sin tarjeta y con la víctima todavía con el balón: el árbitro
+	## deja seguir con los dos brazos hacia delante. (Solo la entrada fallida:
+	## en el choque o el agarrón la víctima cae o pierde el balón.)
+	if motivo == "" and not con_tarjeta and not en_area and not _falta_tactica and poseedor == victima \
+			and lugar.z * dir_ataque(atacante_local) > 4.0 and _rng.randf() < 0.35:
+		aviso.emit("Ventaja")
+		_gesto_arbitro("arbitro_ventaja", 0.0, 1.6, {"mira": lugar})
+		return
+	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
+	var tras := 0.8
+	if con_tarjeta:
+		## Habla con el infractor y le enseña la tarjeta (con la cartulina en la mano).
+		var sera_roja := tarjetas_reales and int(infractor.get("amarillas", 0)) + 1 >= 2
+		_gesto_arbitro("arbitro_amonestar_hablar", 0.9, 1.5, {"mira_a": infractor})
+		_gesto_arbitro("mostrar_roja" if sera_roja else "mostrar_tarjeta", 2.4, 2.0,
+			{"mira_a": infractor, "tarjeta": "roja" if sera_roja else "amarilla"})
+		tras = 4.5
+	if en_area:
+		_gesto_arbitro("arbitro_penal", tras, 1.8, {"mira": arco})
+	else:
+		## Señala hacia donde se saca: de cara a la portería del que la recibe.
+		_gesto_arbitro("senalar_falta", tras, 1.6, {"mira": lugar + Vector3(0, 0, dir_ataque(atacante_local) * 10.0)})
+	if con_tarjeta:
 		if tarjetas_reales:
 			infractor["amarillas"] = int(infractor.get("amarillas", 0)) + 1
 			var roja := int(infractor["amarillas"]) >= 2
@@ -1167,6 +1649,339 @@ func _falta(infractor: Dictionary, victima: Dictionary) -> void:
 	else:
 		aviso.emit("Falta de %s" % nombre)
 		_empezar_saque("falta", atacante_local, Vector3(lugar.x, R, lugar.z))
+
+# ---------------------------------------------------------------- duelos
+
+## LOS DUELOS CUERPO A CUERPO (16-10-2026, pendiente «duelos/contacto»). Antes
+## los cuerpos del motor ni siquiera chocaban (el `_resolver_choques` de
+## `MatchPlayback` no corre con el motor real) y una entrada era solo una
+## tirada de dados con un gesto. Ahora hay contacto de verdad:
+##   - CUERPOS: nadie atraviesa a nadie; al chocar, el más fuerte aparta más
+##     al débil (masa = fuerza) y se pierde la velocidad del choque.
+##   - HOMBRO CON HOMBRO: dos rivales corriendo juntos tras el balón (o uno
+##     llevándolo) se cargan; gana la posición el de más fuerza, equilibrio y
+##     carrera; el que pierde trastabilla de lado, frena y, si llevaba el
+##     balón, muchas veces se le escapa.
+##   - BALÓN DIVIDIDO: dos que llegan casi a la vez a un balón suelto; se lo
+##     queda el que llega antes y aguanta el choque; si empatan, rebota.
+##   - AGARRÓN: el defensor que llega por detrás del que lleva el balón (o
+##     del que va a recibir) puede tirarle de la camiseta según su
+##     agresividad; frena al atacante y, si lo retiene, el árbitro pita.
+## Los atributos que deciden salen de la ficha (`_rasgos_duelo`). Contadores
+## en `duelos` (sondas y `pruebas/prueba_duelos.tscn`).
+## Interruptores (para las sondas: medir qué cambia cada parte).
+var duelos_activos := true
+var cuerpos_activos := true
+var duelos := {"hombro": 0, "dividido": 0, "agarron": 0, "faltas": 0, "balon_perdido": 0, "rebote": 0}
+const RADIO_CUERPO := 0.31
+
+## Fuerza, equilibrio y agresividad de 0 a 1. La ficha no tiene agresividad:
+## sale de la defensa y el físico (los que van al choque), del rasgo
+## («muralla» más, «cerebro» menos) y de un carácter fijo por jugador.
+func _rasgos_duelo(p: Dictionary, jd: Dictionary) -> void:
+	var a: Dictionary = p["attr"]
+	var fis := float(a["fis"])
+	p["fuerza"] = clampf(fis * 0.8 + float(a["def"]) * 0.2, 0.1, 1.0)
+	p["equilibrio"] = clampf(fis * 0.5 + float(a["reg"]) * 0.5, 0.1, 1.0)
+	var caracter := float(absi(hash(String(p.get("id", "")) + "genio")) % 1000) / 1000.0 - 0.5
+	var rasgo := String(jd.get("rasgo", ""))
+	var agr := 0.2 + float(a["def"]) * 0.35 + fis * 0.15 + caracter * 0.3
+	agr += 0.12 if rasgo == "muralla" else (0.05 if rasgo == "lider" else (-0.08 if rasgo == "cerebro" else 0.0))
+	p["agresividad"] = clampf(agr, 0.05, 1.0)
+	p["duelos_g"] = 0
+	p["duelos_p"] = 0
+
+## La fuerza que pone en el choque ahora (el cansado empuja menos).
+func _fuerza(p: Dictionary) -> float:
+	return float(p.get("fuerza", 0.6)) * (0.75 + 0.25 * float(p.get("aguante", 1.0)))
+
+## Las faltas de duelo se reparten por segundo de césped: con partidos más
+## cortos hay menos choques y cada uno pesa más (como las fintas).
+func _escala_falta() -> float:
+	return _escala_ritmo()
+
+## La derecha del modelo (mira a +Z con rotación 0, su derecha es -X).
+func _derecha(p: Dictionary) -> Vector3:
+	var ry := (p["node"] as Node3D).rotation.y
+	return Vector3(-cos(ry), 0, sin(ry))
+
+func _plano(v: Vector3) -> Vector3:
+	return Vector3(v.x, 0.0, v.z)
+
+func _empujar(p: Dictionary, dir: Vector3, fuerza: float, freno: float, dur: float) -> void:
+	var d := _plano(dir)
+	if d.length() > 0.001 and fuerza > 0.0:
+		p["empujon_obj"] = d.normalized() * fuerza
+	p["freno_duelo"] = freno
+	p["freno_duelo_hasta"] = t + dur
+
+func _ganador(w: Dictionary, l: Dictionary) -> void:
+	w["duelos_g"] = int(w.get("duelos_g", 0)) + 1
+	l["duelos_p"] = int(l.get("duelos_p", 0)) + 1
+
+func _libre_para_duelo(p: Dictionary) -> bool:
+	return not bool(p["por"]) and float(p.get("contacto_hasta", 0.0)) <= t and float(p.get("gesto_hasta", 0.0)) <= t + 0.15
+
+## Busca y resuelve los duelos del fotograma (antes de `_disputas`, para que
+## el balón dividido se decida antes de que «el más cercano» lo controle).
+func _duelos() -> void:
+	if not duelos_activos or estado != "juego" or balon == null:
+		return
+	_duelo_dividido()
+	if estado != "juego":
+		return
+	var n := jugadores.size()
+	for i in n:
+		var a: Dictionary = jugadores[i]
+		if not _libre_para_duelo(a):
+			continue
+		for j in range(i + 1, n):
+			var c: Dictionary = jugadores[j]
+			if bool(a["es_local"]) == bool(c["es_local"]) or not _libre_para_duelo(c):
+				continue
+			var rel := _plano(pos(c) - pos(a))
+			var d := rel.length()
+			if d > 1.3:
+				continue
+			if _duelo_hombro(a, c, rel, d) or _duelo_agarron(a, c, d):
+				if estado != "juego":
+					return
+				break
+
+## BALÓN DIVIDIDO: el más cercano de cada equipo, los dos a menos de 1,7 m de
+## un balón suelto y raso, llegando con menos de 0,35 s de diferencia.
+func _duelo_dividido() -> void:
+	if not poseedor.is_empty() or balon.position.y > 1.0 or _plano(vel_balon).length() > 10.0:
+		return
+	var b := _plano(balon.position)
+	var cand := [{}, {}]
+	var dist := [99.0, 99.0]
+	for p: Dictionary in jugadores:
+		if float(p["enfriar"]) > 0.0 or not _libre_para_duelo(p):
+			continue
+		var d := _plano(pos(p)).distance_to(b)
+		var eq := 0 if bool(p["es_local"]) else 1
+		if d < float(dist[eq]):
+			dist[eq] = d
+			cand[eq] = p
+	if (cand[0] as Dictionary).is_empty() or (cand[1] as Dictionary).is_empty():
+		return
+	if maxf(dist[0], dist[1]) > 1.7 or minf(dist[0], dist[1]) > 1.1:
+		return
+	var eta := [0.0, 0.0]
+	for k in 2:
+		var p: Dictionary = cand[k]
+		var hacia := b - _plano(pos(p))
+		var acerca := (p["vel"] as Vector3).dot(hacia.normalized()) if hacia.length() > 0.01 else 3.0
+		eta[k] = float(dist[k]) / maxf(acerca, 2.0)
+		if p == pase_a:
+			eta[k] = float(eta[k]) - 0.12
+	if absf(float(eta[0]) - float(eta[1])) > 0.35:
+		return
+	var a: Dictionary = cand[0]
+	var c: Dictionary = cand[1]
+	duelos["dividido"] += 1
+	a["contacto_hasta"] = t + 1.1
+	c["contacto_hasta"] = t + 1.1
+	var nota := [0.0, 0.0]
+	for k in 2:
+		var p: Dictionary = cand[k]
+		nota[k] = -float(eta[k]) * 1.3 + _fuerza(p) * 0.4 + float(p["equilibrio"]) * 0.2 + float(p["attr"]["reg"]) * 0.1 + _rng.randf_range(-0.28, 0.28)
+	var gana := 0 if float(nota[0]) >= float(nota[1]) else 1
+	var w: Dictionary = cand[gana]
+	var l: Dictionary = cand[1 - gana]
+	var m := absf(float(nota[0]) - float(nota[1]))
+	var entre := _plano(pos(l) - pos(w))
+	if entre.length() < 0.01:
+		entre = _derecha(w)
+	if m < 0.05:
+		## Llegan a la vez y chocan: el balón sale rebotado entre los dos.
+		duelos["rebote"] += 1
+		var lado := Vector3(-entre.z, 0, entre.x).normalized() * (1.0 if _rng.randf() < 0.5 else -1.0)
+		vel_balon = lado * _rng.randf_range(2.5, 5.0) + Vector3(0, _rng.randf_range(0.8, 2.2), 0)
+		penultimo_toque = ultimo_toque
+		ultimo_toque = w
+		pase_a = {}
+		for p: Dictionary in cand:
+			p["enfriar"] = maxf(float(p["enfriar"]), 0.3)
+		_anim(w, "duelo_hombro_der" if _derecha(w).dot(entre) > 0.0 else "duelo_hombro_izq", true, 0.6)
+		_anim(l, "duelo_hombro_der" if _derecha(l).dot(-entre) > 0.0 else "duelo_hombro_izq", true, 0.6)
+		return
+	_ganador(w, l)
+	l["enfriar"] = maxf(float(l["enfriar"]), 0.55)
+	_empujar(l, entre, 1.0 + m * 3.0, clampf(0.85 - m, 0.5, 0.9), 0.5)
+	_anim(w, "duelo_hombro_der" if _derecha(w).dot(entre) > 0.0 else "duelo_hombro_izq", true, 0.6)
+	## Llegar tarde con mal genio: entrada al tobillo y falta.
+	var tarde := float(eta[1 - gana]) - float(eta[gana])
+	if tarde > 0.1 and _rng.randf() < float(l["agresividad"]) * 0.2 * _escala_falta():
+		_anim(l, "zancadilla" if _rng.randf() < 0.5 else "entrada_lateral_pie", true)
+		_anim(w, "caida_fea", true, 1.2)
+		_falta(l, w, 0.15 + float(l["agresividad"]) * 0.2, "dividido")
+		return
+	_anim(l, "duelo_empujado_der" if _derecha(l).dot(entre) > 0.0 else "duelo_empujado_izq", true, 0.7)
+
+## HOMBRO CON HOMBRO: corren juntos (rumbos parecidos), uno al lado del otro,
+## con el balón de por medio (uno lo lleva, va a recibirlo o va suelto por
+## delante de los dos).
+func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool:
+	## Con el balón de por medio se busca antes el hombro (si no, la entrada
+	## de `_disputas`, que salta a 1,25 m, se adelantaba siempre).
+	var con_balon := poseedor == a or poseedor == c
+	if d < 0.45 or d > (1.3 if con_balon else 1.15):
+		return false
+	var va := _plano(a["vel"])
+	var vc := _plano(c["vel"])
+	var sa := va.length()
+	var sc := vc.length()
+	if sa < 3.0 or sc < 3.0:
+		return false
+	if (va / sa).dot(vc / sc) < 0.55:
+		return false
+	var rumbo := (va / sa + vc / sc).normalized()
+	var adelante := rel.dot(rumbo)
+	var lateral := rel - rumbo * adelante
+	if lateral.length() < 0.3:
+		return false
+	var implicado := poseedor == a or poseedor == c or pase_a == a or pase_a == c
+	if not implicado and poseedor.is_empty():
+		var hacia := _plano(balon.position - (pos(a) + pos(c)) * 0.5)
+		implicado = hacia.length() < 9.0 and hacia.normalized().dot(rumbo) > 0.5
+	if not implicado:
+		return false
+	duelos["hombro"] += 1
+	a["contacto_hasta"] = t + 1.3
+	c["contacto_hasta"] = t + 1.3
+	## El que va medio cuerpo por delante tiene ventaja de posición.
+	var na := _fuerza(a) * 0.4 + float(a["equilibrio"]) * 0.2 + sa / 8.0 * 0.2 - adelante * 0.15 + _rng.randf_range(-0.3, 0.3)
+	var nc := _fuerza(c) * 0.4 + float(c["equilibrio"]) * 0.2 + sc / 8.0 * 0.2 + adelante * 0.15 + _rng.randf_range(-0.3, 0.3)
+	var w := a if na >= nc else c
+	var l := c if na >= nc else a
+	var m := absf(na - nc)
+	_ganador(w, l)
+	var fuera := _plano(pos(l) - pos(w))
+	fuera = (fuera - rumbo * fuera.dot(rumbo)).normalized()
+	_anim(w, "duelo_hombro_der" if _derecha(w).dot(fuera) > 0.0 else "duelo_hombro_izq", true, 0.6)
+	_anim(l, "duelo_empujado_der" if _derecha(l).dot(fuera) > 0.0 else "duelo_empujado_izq", true, 0.7)
+	_empujar(l, fuera, 1.2 + m * 3.0, clampf(0.85 - m * 0.6, 0.5, 0.9), 0.55)
+	_empujar(w, -fuera, 0.4, 0.96, 0.3)
+	var era_suyo := poseedor == l
+	if era_suyo or poseedor == w:
+		duelos["hombro_con_balon"] = int(duelos.get("hombro_con_balon", 0)) + 1
+	if era_suyo:
+		if _rng.randf() < clampf(0.25 + m * 1.6, 0.0, 0.85):
+			## Se le va el balón: sigue rodando por delante, libre.
+			duelos["balon_perdido"] += 1
+			l["enfriar"] = maxf(float(l["enfriar"]), 0.6)
+			poseedor = {}
+			_jugada = {}
+			ultimo_toque = l
+			vel_balon = rumbo * maxf(_plano(l["vel"]).length() * 0.9, 4.0) + fuera * 0.8
+		else:
+			w["enfriar"] = maxf(float(w["enfriar"]), 0.4)
+	elif poseedor == w or poseedor.is_empty() or pase_a == w:
+		l["enfriar"] = maxf(float(l["enfriar"]), 0.45)
+	## Ganar el choque con los brazos o por detrás contra el que lleva el balón.
+	if era_suyo and _rng.randf() < (0.08 + float(w["agresividad"]) * 0.08 + m * 0.08) * _escala_falta():
+		_anim(l, "caida_fea", true, 1.2)
+		_falta(w, l, 0.06 + float(w["agresividad"]) * 0.1, "hombro")
+	return true
+
+## AGARRÓN: el defensor llega por detrás (o pegado al costado de atrás) del
+## que lleva el balón o va a recibirlo, a menos de 1 m. Una tirada por
+## encuentro según su agresividad; si agarra, forcejean.
+func _duelo_agarron(a: Dictionary, c: Dictionary, d: float) -> bool:
+	if d > 1.0:
+		return false
+	var obj: Dictionary = {}
+	var ag: Dictionary = {}
+	if poseedor == a or pase_a == a:
+		obj = a
+		ag = c
+	elif poseedor == c or pase_a == c:
+		obj = c
+		ag = a
+	else:
+		return false
+	if ag == usuario and not autopiloto:
+		return false
+	var vo := _plano(obj["vel"])
+	var so := vo.length()
+	if so < 2.0:
+		return false
+	var rel := _plano(pos(ag) - pos(obj))
+	if rel.dot(vo / so) > -0.15:
+		return false
+	obj["contacto_hasta"] = t + 1.6
+	ag["contacto_hasta"] = t + 1.6
+	var agr := float(ag["agresividad"])
+	if _rng.randf() >= 0.12 + agr * 0.5:
+		return false
+	duelos["agarron"] += 1
+	_anim(ag, "duelo_agarron", true, 0.8)
+	_anim(obj, "duelo_forcejeo", true, 0.7)
+	var no := _fuerza(obj) * 0.45 + float(obj["equilibrio"]) * 0.3 + _rng.randf_range(-0.25, 0.25)
+	var ng := _fuerza(ag) * 0.55 + agr * 0.15 + _rng.randf_range(-0.25, 0.25)
+	if no >= ng:
+		_ganador(obj, ag)
+	else:
+		_ganador(ag, obj)
+	var frena := clampf(0.6 + (no - ng) * 0.9, 0.35, 0.95)
+	_empujar(obj, -rel, 0.0, frena, 0.7)
+	_empujar(ag, rel, 0.0, 0.8, 0.7)
+	ag["enfriar"] = maxf(float(ag["enfriar"]), 0.5)
+	## Cuanto más lo retiene, más fácil que pite.
+	if _rng.randf() < (0.06 + agr * 0.16 + (1.0 - frena) * 0.35) * _escala_falta():
+		if _rng.randf() < 0.35:
+			_anim(obj, "caida_fea", true, 1.2)
+		_falta(ag, obj, 0.08 + agr * 0.2, "agarron")
+		return true
+	## Sin falta, si lo frena del todo le roba la cartera.
+	if poseedor == obj and ng > no + 0.2:
+		duelos["balon_perdido"] += 1
+		obj["enfriar"] = maxf(float(obj["enfriar"]), 0.6)
+		poseedor = {}
+		_jugada = {}
+		ultimo_toque = obj
+		vel_balon = vo.normalized() * 2.5
+		ag["enfriar"] = 0.0
+	return true
+
+## CUERPOS QUE NO SE ATRAVIESAN en el motor real: cada par a menos de dos
+## radios de hombro se aparta por la línea que los une, el débil más que el
+## fuerte (masa = fuerza), y se les quita la velocidad con que chocaban.
+func _cuerpos() -> void:
+	if not cuerpos_activos:
+		return
+	var minimo := RADIO_CUERPO * 2.0
+	var n := jugadores.size()
+	for i in n:
+		var pa: Dictionary = jugadores[i]
+		var a: Node3D = pa["node"]
+		if not is_instance_valid(a):
+			continue
+		for j in range(i + 1, n):
+			var pb: Dictionary = jugadores[j]
+			var b: Node3D = pb["node"]
+			if not is_instance_valid(b):
+				continue
+			var dx := b.position.x - a.position.x
+			var dz := b.position.z - a.position.z
+			var d2 := dx * dx + dz * dz
+			if d2 >= minimo * minimo:
+				continue
+			var d := sqrt(d2)
+			var nrm := Vector3(dx, 0, dz) / d if d > 0.001 else Vector3(1, 0, 0).rotated(Vector3.UP, float(i * 7 + j))
+			var ma := 0.6 + _fuerza(pa) * 0.8
+			var mb := 0.6 + _fuerza(pb) * 0.8
+			var hueco := minimo - d
+			a.position -= nrm * hueco * mb / (ma + mb)
+			b.position += nrm * hueco * ma / (ma + mb)
+			var va: Vector3 = pa["vel"]
+			var vb: Vector3 = pb["vel"]
+			var acerca := (va - vb).dot(nrm)
+			if acerca > 0.0:
+				pa["vel"] = va - nrm * acerca * mb / (ma + mb)
+				pb["vel"] = vb + nrm * acerca * ma / (ma + mb)
 
 # ---------------------------------------------------------------- IA
 
@@ -1490,8 +2305,13 @@ func _ia_portador(p: Dictionary) -> void:
 	if not rival.is_empty() and pos(rival).distance_to(yo) < 4.0:
 		var esquiva := (yo - pos(rival)).normalized()
 		hacia = (hacia + esquiva * 0.8).normalized()
+	## Durante la finta sigue la salida que eligió (no se lo come de nuevo).
+	if t < float(p["regate_hasta"]) and p.has("regate_dir"):
+		hacia = p["regate_dir"]
 	p["objetivo"] = yo + hacia * 6.0
 	p["correr"] = dist_arco < 35.0 or presion < 4.0
+	if _intentar_regate(p, rival, dist_arco):
+		return
 	if t < _decision_en:
 		return
 	## Conduce algo más antes de decidir (antes se la quitaba de encima en
@@ -1528,29 +2348,22 @@ func _ia_portador(p: Dictionary) -> void:
 		var err_c := (1.0 - float(p["attr"]["pas"])) * 7.0
 		var destino := Vector3(_rng.randf_range(-4, 4) + _rng.randf_range(-err_c, err_c), 1.6, arco.z - d * _rng.randf_range(4, 10))
 		_ctx_golpeo = "centro"
-		_patear(p, destino, 17.0, 0.0, -signf(yo.x) * 6.0, "pase")
+		## El efecto se da EN EL SENTIDO DEL ATAQUE (`* -d`): antes era el mismo
+		## giro absoluto para los dos y, con el Magnus, el local centraba
+		## abriéndose y el visitante cerrándose hacia el arco (sesgo de lado).
+		_patear(p, destino, 17.0, 0.0, -signf(yo.x) * 6.0 * -d, "pase")
 		pase_a = _companero_cerca(p, destino)
 		return
-	## EL REGATE DE LA IA (13-10-2026): con el defensor encima, el que tiene
-	## regate intenta irse con una finta (antes solo el jugador humano podía).
-	if presion < 1.8 and t > float(p["regate_hasta"]) and _rng.randf() < float(p["attr"]["reg"]) * 0.45:
-		p["regate_hasta"] = t + 0.7
-		regates_ia += 1
-		var lado := Vector3(d, 0, 0) * (1.0 if _rng.randf() < 0.5 else -1.0)
-		(p["node"] as Node3D).position += lado * 0.8
-		## El repertorio crece con el regate: los buenos sacan bicicletas,
-		## elásticas, ruletas y caños.
-		var reg_a := float(p["attr"]["reg"])
-		var fintas := ["regate_finta", "recorte_interior", "recorte_exterior", "amague_cuerpo", "finta_hombro"]
-		if reg_a > 0.7:
-			fintas.append_array(["bicicleta", "cola_de_vaca", "giro_cruyff", "pisada_lateral"])
-		if reg_a > 0.82:
-			fintas.append_array(["elastica", "ruleta", "cano", "croqueta", "sombrero"])
-		var nom: String = fintas[_rng.randi() % fintas.size()]
-		var ap_r: AnimationPlayer = p["anim"]
-		if is_instance_valid(ap_r) and lado.x * d < 0.0 and ap_r.has_animation(nom + "_espejo"):
-			nom += "_espejo"
-		_anim(p, nom, true)
+	## LA FINTA DE ÚLTIMO RECURSO (13-10, rehecha el 15-10): con el defensor ya
+	## encima (< 1,8 m), el que tiene regate intenta irse antes de soltarla. Antes
+	## se teletransportaba 0,8 m de lado; ahora es un empujón con inercia.
+	if presion < 1.8 and t > float(p["regate_hasta"]) + 0.6 and _rng.randf() < minf(float(p["attr"]["reg"]) * 0.45 * _escala_ritmo(), 0.9):
+		var n_f: Node3D = p["node"]
+		var fwd_f := Vector3(sin(n_f.rotation.y), 0, cos(n_f.rotation.y))
+		var lado_f := -signf(Vector3(fwd_f.z, 0, -fwd_f.x).dot(pos(rival) - yo)) if not rival.is_empty() else 1.0
+		if lado_f == 0.0:
+			lado_f = 1.0
+		_finta_ia(p, rival, fwd_f, lado_f, maxf((p["vel"] as Vector3).length(), 2.0))
 		return
 	## EL PASE AL HUECO (13-10-2026). La IA nunca filtraba: los ataques
 	## morían a 30 m de la portería tocando atrás (la sonda: 5 tiros en 8
@@ -1570,6 +2383,113 @@ func _ia_portador(p: Dictionary) -> void:
 		var conduce := dist_arco < 34.0 and presion > 3.0
 		if hay_prisa or float(mejor.get("_nota", 0.0)) > 1.5 or (not conduce and _rng.randf() < 0.15):
 			_pasar_a(p, mejor)
+
+## EL REGATE DE LA IA (15-10-2026, H-11 / M-443). Antes la finta solo se
+## probaba con un rival a menos de 1,8 m y DESPUÉS de tirar, centrar o pasar,
+## y con la entrada saltando a 1,25 m casi nunca llegaba: 0 en un partido. Ahora
+## se decide al VER venir al defensor: en carrera, con un rival delante a 1,5-3,6
+## m, una sola tirada por duelo (no cada fotograma). Las ganas crecen con el
+## regate (nada por debajo de 35, ~2 de cada 5 duelos con 65 y 3 de cada 5
+## con 85 o más) y bajan en el propio tercio. La salida es hacia el lado
+## contrario del defensor, con un empujón lateral de verdad (velocidad, no
+## teletransporte); el defensor se la come según regate contra defensa y, si
+## pica, queda clavado un momento (no puede entrar). Si no pica, la entrada
+## normal decide (con la bonificación de `regate_hasta`).
+func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> bool:
+	if rival.is_empty() or bool(p["por"]) or t < float(p["regate_hasta"]) + 0.6:
+		return false
+	if float(p.get("duelo_hasta", 0.0)) > t and String(p.get("duelo_con", "")) == String(rival.get("id", "")):
+		return false
+	var yo := pos(p)
+	var rp := pos(rival)
+	var hacia_r := rp - yo
+	hacia_r.y = 0.0
+	var dr := hacia_r.length()
+	if dr < 1.3 or dr > 3.6:
+		return false
+	var vel: Vector3 = p["vel"]
+	var sp := Vector2(vel.x, vel.z).length()
+	## En carrera; casi parado solo si el defensor ya está encima.
+	if sp < 1.2 or (sp < 2.4 and dr > 2.2):
+		return false
+	var fwd := Vector3(vel.x, 0, vel.z) / sp
+	## El defensor tiene que estar DELANTE (cerrándole el paso), no detrás.
+	if fwd.dot(hacia_r / dr) < 0.35:
+		return false
+	## Una tirada por duelo: hasta que se separen o pase un rato no se repite.
+	p["duelo_con"] = String(rival.get("id", ""))
+	p["duelo_hasta"] = t + 2.2
+	var reg := float(p["attr"]["reg"])
+	var ganas := clampf((reg - 0.35) * 1.3, 0.0, 0.6)
+	## En su propio tercio, se arriesga mucho menos; cerca del área rival, más.
+	var en_su_tercio := dist_arco > 70.0
+	if en_su_tercio:
+		ganas *= 0.3
+	elif dist_arco < 32.0:
+		ganas *= 1.25
+	if _rng.randf() >= minf(ganas * _escala_ritmo(), 0.95):
+		return false
+	## Sale por el lado contrario al que tapa el defensor (y hacia dentro si
+	## va pegado a la banda).
+	var der := Vector3(fwd.z, 0, -fwd.x)
+	var lado := -signf(der.dot(hacia_r))
+	if lado == 0.0:
+		lado = 1.0 if _rng.randf() < 0.5 else -1.0
+	if absf(yo.x) > ANCHO - 6.0 and (der * lado).x * signf(yo.x) > 0.0 and _rng.randf() < 0.7:
+		lado = -lado
+	_finta_ia(p, rival, fwd, lado, sp)
+	return true
+
+## EL RITMO NO QUITA FINTAS (16-10-2026). Los duelos ocurren por segundo de
+## césped, no por minuto del acta: con el ritmo «normal» del partido (4 s por
+## minuto = 180 s la mitad) había 3/4 de los duelos de la sonda (240 s) y la IA
+## amagaba ~13 veces por partido en vez de ~20. Las ganas de cada duelo se
+## multiplican por lo que falta de césped para que salgan las mismas por 90'.
+func _escala_ritmo() -> float:
+	return clampf(MITAD_CALIBRADA / maxf(duracion_mitad, 1.0), 0.6, 2.0)
+
+## La finta en sí (la de antes del duelo y la de último recurso, pegado al
+## defensor): gesto del repertorio según el regate, empujón lateral de
+## verdad y, si el defensor pica, queda clavado y el atacante arranca.
+func _finta_ia(p: Dictionary, rival: Dictionary, fwd: Vector3, lado: float, sp: float) -> void:
+	regates_ia += 1
+	var reg := float(p["attr"]["reg"])
+	var der := Vector3(fwd.z, 0, -fwd.x)
+	var salida := (fwd * 0.55 + der * lado).normalized()
+	p["regate_dir"] = (fwd * 0.8 + der * lado * 0.6).normalized()
+	p["regate_hasta"] = t + 0.75
+	p["vel"] = salida * clampf(sp * 0.8, 3.0, 5.5)
+	## El repertorio crece con el regate: los buenos sacan bicicletas,
+	## elásticas, ruletas y caños.
+	var fintas := ["regate_finta", "recorte_interior", "recorte_exterior", "amague_cuerpo", "finta_hombro"]
+	if reg > 0.7:
+		fintas.append_array(["bicicleta", "cola_de_vaca", "giro_cruyff", "pisada_lateral"])
+	if reg > 0.82:
+		fintas.append_array(["elastica", "ruleta", "cano", "croqueta"])
+	var nom: String = fintas[_rng.randi() % fintas.size()]
+	var ap_r: AnimationPlayer = p["anim"]
+	if is_instance_valid(ap_r) and lado < 0.0 and ap_r.has_animation(nom + "_espejo"):
+		nom += "_espejo"
+	_anim(p, nom, true, 0.8)
+	## ¿Pica el defensor? Regate contra defensa, con algo de suerte.
+	if not rival.is_empty():
+		var engano := clampf(0.4 + (reg - float(rival["attr"]["def"])) * 1.1, 0.12, 0.8)
+		if _rng.randf() < engano:
+			regates_ia_ok += 1
+			rival["enfriar"] = maxf(float(rival["enfriar"]), 0.9)
+			## Se va hacia el lado equivocado: frena y se le va el cuerpo; el
+			## atacante sale disparado por el otro lado, ya mirando al frente.
+			var se_va := -der * lado
+			rival["vel"] = (rival["vel"] as Vector3) * 0.25 + se_va * 2.0
+			## Se le va el cuerpo hacia ese lado (`AnimFutbol.defensor_pica`); la
+			## derecha del modelo, que mira a +Z, es -X.
+			var n_r: Node3D = rival["node"]
+			var der_r := Vector3(-cos(n_r.rotation.y), 0, sin(n_r.rotation.y))
+			_anim(rival, "defensor_pica_der" if se_va.dot(der_r) >= 0.0 else "defensor_pica_izq", true, 0.85)
+			p["vel"] = salida * clampf(sp * 1.05, 4.5, 6.5)
+			p["regate_dir"] = (fwd + der * lado * 0.35).normalized()
+	## Tras la finta decide con calma (no la suelta en mitad del gesto).
+	_decision_en = maxf(_decision_en, t + 0.45)
 
 ## Un compañero de ataque, habilitado, cerca de la última línea rival y por
 ## delante del balón, con el pasillo hacia el espacio a su espalda limpio.
@@ -1877,6 +2797,9 @@ func _empezar_saque(tipo: String, saca_local: bool, lugar: Vector3) -> void:
 	_receptor_marcado = {}
 	if tipo == "corner":
 		corners[0 if saca_local else 1] += 1
+		_gesto_arbitro("arbitro_corner", 0.3, 1.6, {"mira": lugar})
+	elif tipo == "puerta":
+		_gesto_arbitro("arbitro_saque_meta", 0.3, 1.6, {"mira": lugar})
 	apuntando = false
 	cargando = false
 	if tipo != "centro":
@@ -1995,9 +2918,12 @@ func _fuera_del_area(p: Dictionary) -> Vector3:
 func _pos_balon_parado(p: Dictionary, lugar: Vector3, saca_local: bool) -> Vector3:
 	var ataca := bool(p["es_local"]) == saca_local
 	var arco_z := LARGO * dir_ataque(saca_local)
-	var zonas := [Vector3(-2.5, 0, arco_z - signf(arco_z) * 5.0), Vector3(3.0, 0, arco_z - signf(arco_z) * 6.5),
-		Vector3(0, 0, arco_z - signf(arco_z) * 11.0), Vector3(-6.0, 0, arco_z - signf(arco_z) * 9.0),
-		Vector3(6.5, 0, arco_z - signf(arco_z) * 10.0), Vector3(0, 0, arco_z - signf(arco_z) * 18.0)]
+	## Las x se escriben para atacar hacia -Z y se reflejan para +Z (como el
+	## catálogo de jugadas): los dos equipos ocupan el área igual.
+	var ex := -signf(arco_z)
+	var zonas := [Vector3(-2.5 * ex, 0, arco_z - signf(arco_z) * 5.0), Vector3(3.0 * ex, 0, arco_z - signf(arco_z) * 6.5),
+		Vector3(0, 0, arco_z - signf(arco_z) * 11.0), Vector3(-6.0 * ex, 0, arco_z - signf(arco_z) * 9.0),
+		Vector3(6.5 * ex, 0, arco_z - signf(arco_z) * 10.0), Vector3(0, 0, arco_z - signf(arco_z) * 18.0)]
 	var i := absi(String(p.get("id", "")).hash()) % zonas.size()
 	if ataca:
 		if _rol(p) in ["DFC", "DC", "ED", "EI", "MC"]:
@@ -2010,15 +2936,18 @@ func _pos_balon_parado(p: Dictionary, lugar: Vector3, saca_local: bool) -> Vecto
 		var lado := Vector3(hacia.z, 0, -hacia.x)
 		var k := float(i % 4) - 1.5
 		return lugar + hacia * 9.15 + lado * k * 0.7
-	return zonas[i] + Vector3(0.8, 0, 0)
+	return zonas[i] + Vector3(0.8 * ex, 0, 0)
 
 func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 	var arco := _arco_rival(p)
 	match tipo:
 		"corner":
-			var destino := Vector3(_rng.randf_range(-3, 4), 1.7, arco.z - signf(arco.z) * _rng.randf_range(5, 9))
+			## Todo en el sentido del ataque (antes el mismo giro absoluto daba
+			## córners cerrados a un equipo y abiertos al otro).
+			var sa := signf(arco.z)
+			var destino := Vector3(_rng.randf_range(-3, 4) * -sa, 1.7, arco.z - sa * _rng.randf_range(5, 9))
 			_ctx_golpeo = "centro"
-			_patear(p, destino, 18.0, 0.0, -signf(lugar.x) * 8.0, "pase")
+			_patear(p, destino, 18.0, 0.0, -signf(lugar.x) * 8.0 * -sa, "pase")
 			pase_a = _companero_cerca(p, destino)
 		"penal":
 			_tirar(p, Vector2(_rng.randf_range(-1, 1), _rng.randf_range(-0.3, 0.4)), 0.7)
@@ -2052,6 +2981,9 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 	_reanudar()
 
 func _reanudar() -> void:
+	if estado == "tanda":
+		_tras_tiro_tanda()
+		return
 	_receptor_marcado = {}
 	_dibujar_receptor()
 	_anillo_serenidad(false)
@@ -2294,7 +3226,9 @@ func _lanzar_usuario(fuerza: float) -> void:
 			aviso.emit("🎩 ¡A lo Panenka!")
 		else:
 			_mod_tiro = "rosca" if _mods_carga == "rosca" else ""
-			_tirar(p, Vector2(float(apunte["x"]) * dir_ataque(bool(p["es_local"])) * -1.0, float(apunte["y"]) - 0.4), fuerza)
+			## En la tanda todos tiran al arco de +Z.
+			var d_ap := 1.0 if estado == "tanda" else dir_ataque(bool(p["es_local"]))
+			_tirar(p, Vector2(float(apunte["x"]) * d_ap * -1.0, float(apunte["y"]) - 0.4), fuerza)
 		_mod_tiro = ""
 		_mods_carga = ""
 	else:
@@ -2684,7 +3618,7 @@ func _filigrana(p: Dictionary, id: String, lado: float) -> void:
 func _centro_usuario(p: Dictionary, arco: Vector3, d: float, lb: bool, rb: bool) -> void:
 	var destino := Vector3(_rng.randf_range(-3, 3), 1.6, arco.z - d * 7.0)
 	var vh := 17.0
-	var efecto := -signf(pos(p).x) * 6.0
+	var efecto := -signf(pos(p).x) * 6.0 * -d
 	if lb:
 		destino.y = 2.2
 		destino.z = arco.z - d * 9.0
@@ -2845,6 +3779,9 @@ func _mover_jugadores(delta: float) -> void:
 			tope *= 0.88
 		## Regate técnico, proteger o bregar: más despacio (lo pone el control).
 		tope *= float(p.get("freno", 1.0))
+		## Tras un choque o con un rival agarrándolo, va más despacio un rato.
+		if float(p.get("freno_duelo_hasta", 0.0)) > t:
+			tope *= float(p.get("freno_duelo", 1.0))
 		var deseada := Vector3.ZERO
 		if dist > 0.25:
 			deseada = dif / dist * minf(tope, dist * 2.5)
@@ -2873,6 +3810,15 @@ func _mover_jugadores(delta: float) -> void:
 			vel = vel.move_toward(deseada, (6.0 + rit * 2.0) * delta if sp_des > sp0 else 11.0 * delta)
 		p["vel"] = vel
 		n.position += vel * delta
+		## EL EMPUJÓN DEL DUELO: un desplazamiento lateral que sube en una
+		## décima y se apaga solo (sin saltos: tope de 22 m/s²).
+		var emp_obj: Vector3 = p.get("empujon_obj", Vector3.ZERO)
+		var emp: Vector3 = p.get("empujon", Vector3.ZERO)
+		if emp_obj != Vector3.ZERO or emp != Vector3.ZERO:
+			emp = emp.move_toward(emp_obj, 22.0 * delta)
+			p["empujon_obj"] = emp_obj * exp(-7.0 * delta) if emp_obj.length() > 0.05 else Vector3.ZERO
+			p["empujon"] = emp if emp.length() > 0.02 or emp_obj != Vector3.ZERO else Vector3.ZERO
+			n.position += emp * delta
 		n.position.x = clampf(n.position.x, -ANCHO - 2.0, ANCHO + 2.0)
 		n.position.z = clampf(n.position.z, -LARGO - 2.0, LARGO + 2.0)
 		var sp := vel.length()
@@ -2941,10 +3887,14 @@ func _mover_jugadores(delta: float) -> void:
 func _mover_arbitros(delta: float) -> void:
 	if balon == null:
 		return
+	_t_arb += delta
+	_revisar_anadido_arbitro()
 	var b := balon.position
 	for a: Dictionary in arbitros:
 		var n: Node3D = a.get("node")
 		if not is_instance_valid(n):
+			continue
+		if String(a.get("id", "")) == "arbitro" and _gestos_del_arbitro(a, delta):
 			continue
 		var obj: Vector3
 		match String(a.get("id", "")):
@@ -2954,6 +3904,16 @@ func _mover_arbitros(delta: float) -> void:
 				obj = Vector3(-36.5, 0, clampf(b.z, -50.0, 0.0))
 			_:
 				obj = Vector3(36.5, 0, clampf(b.z, 0.0, 50.0))
+		## En la tanda: el principal al borde del área chica y un asistente en la
+		## línea de gol (fuera del plano del lanzador).
+		if estado == "tanda":
+			match String(a.get("id", "")):
+				"arbitro":
+					obj = Vector3(-7.5, 0, LARGO - 12.0)
+				"linea_a":
+					obj = Vector3(-36.5, 0, 0.0)
+				_:
+					obj = Vector3(PALO + 2.2, 0, LARGO - 0.3)
 		var hacia := obj - n.position
 		hacia.y = 0.0
 		var v := minf(hacia.length() * 1.6, 6.5)
@@ -2967,6 +3927,120 @@ func _mover_arbitros(delta: float) -> void:
 		if mira.length() > 0.5:
 			n.rotation.y = lerp_angle(n.rotation.y, atan2(mira.x, mira.z), clampf(delta * 5.0, 0.0, 1.0))
 		_anim(a, "parado" if sp < 0.5 else ("trotar" if sp < 4.5 else "correr"), false)
+
+## LOS GESTOS DEL ÁRBITRO EN EL MOTOR REAL (17-10-2026, M-106). Hasta hoy los
+## clips `arbitro_*` solo los usaba `MatchPlayback`: con el motor el árbitro
+## caminaba y nada más. Ahora pita, señala la dirección de la falta, deja
+## seguir (ventaja), señala el penal, el córner y el saque de puerta, habla
+## con el amonestado y le ENSEÑA la tarjeta (una cartulina en la mano), y pita
+## el final de cada tiempo. Los gestos van en cola con su propio reloj
+## (`_t_arb`), porque `t` se para en los saques, que es justo cuando gesticula.
+var _t_arb := 0.0
+var _gestos_arb: Array = []     ## [cuándo, clip, duración, extra]
+var _arb_hasta := 0.0           ## hasta cuándo dura el gesto en curso
+var _tarjeta_arb: MeshInstance3D = null
+var _anadido_gesto := {}
+
+func _gesto_arbitro(nombre: String, retraso := 0.0, dur := 1.6, extra := {}) -> void:
+	if arbitros.is_empty() or estado == "tanda":
+		return
+	_gestos_arb.append([_t_arb + retraso, nombre, dur, extra])
+	## Un gesto nuevo «ahora» corta la cola vieja que ya no viene a cuento.
+	if retraso <= 0.0:
+		var vivos: Array = []
+		for g: Array in _gestos_arb:
+			if float(g[0]) >= _t_arb - 0.01:
+				vivos.append(g)
+		_gestos_arb = vivos
+
+## Devuelve true si el principal está gesticulando (no camina ese paso).
+func _gestos_del_arbitro(a: Dictionary, delta: float) -> bool:
+	var n: Node3D = a["node"]
+	var i := 0
+	while i < _gestos_arb.size():
+		var g: Array = _gestos_arb[i]
+		if float(g[0]) > _t_arb:
+			i += 1
+			continue
+		_gestos_arb.remove_at(i)
+		var extra: Dictionary = g[3]
+		a["mira_gesto"] = extra.get("mira", null)
+		a["mira_a"] = extra.get("mira_a", {})
+		var ap: AnimationPlayer = a.get("anim")
+		var clip := String(g[1])
+		if is_instance_valid(ap) and ap.has_animation(clip):
+			ap.play(clip, 0.15)
+			ap.speed_scale = 1.0
+			a["anim_actual"] = clip
+		_arb_hasta = _t_arb + float(g[2])
+		_poner_tarjeta(a, String(extra.get("tarjeta", "")))
+		if clip == "arbitro_silbato":
+			if String(extra.get("silbato", "silbato")) != "":
+				gesto_arbitro.emit(String(extra.get("silbato", "silbato")))
+		else:
+			gesto_arbitro.emit(clip)
+	if _t_arb >= _arb_hasta:
+		if _tarjeta_arb != null and _tarjeta_arb.visible:
+			_tarjeta_arb.visible = false
+		return false
+	## Mientras gesticula, de cara a lo que señala o a quien amonesta.
+	var mira = a.get("mira_gesto")
+	var quien: Dictionary = a.get("mira_a", {})
+	if not quien.is_empty() and is_instance_valid(quien.get("node")):
+		mira = (quien["node"] as Node3D).position
+	if mira is Vector3:
+		var d: Vector3 = (mira as Vector3) - n.position
+		d.y = 0.0
+		if d.length() > 0.3:
+			n.rotation.y = lerp_angle(n.rotation.y, atan2(d.x, d.z), clampf(delta * 6.0, 0.0, 1.0))
+	return true
+
+## La cartulina, en la mano que levanta el clip (la izquierda), creada la
+## primera vez que hace falta.
+func _poner_tarjeta(a: Dictionary, color: String) -> void:
+	if color == "":
+		if _tarjeta_arb != null:
+			_tarjeta_arb.visible = false
+		return
+	if _tarjeta_arb == null or not is_instance_valid(_tarjeta_arb):
+		_tarjeta_arb = null
+		var esqs := (a["node"] as Node).find_children("*", "Skeleton3D", true, false)
+		if esqs.is_empty():
+			return
+		var esq: Skeleton3D = esqs[0]
+		if esq.find_bone("hand_l") < 0:
+			return
+		var ba := BoneAttachment3D.new()
+		ba.bone_name = "hand_l"
+		esq.add_child(ba)
+		var k := 1.0 / maxf(esq.global_transform.basis.get_scale().y, 0.001) if esq.is_inside_tree() else 1.0
+		var caja := BoxMesh.new()
+		caja.size = Vector3(0.075, 0.105, 0.004)
+		_tarjeta_arb = MeshInstance3D.new()
+		_tarjeta_arb.name = "TarjetaArbitro"
+		_tarjeta_arb.mesh = caja
+		_tarjeta_arb.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		_tarjeta_arb.scale = Vector3.ONE * k
+		_tarjeta_arb.position = Vector3(0, 0.13, 0.02) * k
+		ba.add_child(_tarjeta_arb)
+	var m := StandardMaterial3D.new()
+	var c := Color(0.86, 0.08, 0.1) if color == "roja" else Color(1.0, 0.86, 0.1)
+	m.albedo_color = c
+	m.emission_enabled = true
+	m.emission = c
+	m.emission_energy_multiplier = 0.35
+	m.roughness = 0.6
+	_tarjeta_arb.material_override = m
+	_tarjeta_arb.visible = true
+
+## Al empezar el añadido, el principal lo indica con los brazos (y el cuarto
+## árbitro levanta el cartel: eso lo pone la vista).
+func _revisar_anadido_arbitro() -> void:
+	if estado != "juego" or _anadido_gesto.has(mitad) or anadido.is_empty():
+		return
+	if segundos_anadidos() >= 0.0 and minutos_anadidos() > 0:
+		_anadido_gesto[mitad] = true
+		_gesto_arbitro("arbitro_tiempo_anadido", 0.0, 1.8)
 
 func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
 	var ap: AnimationPlayer = p.get("anim")

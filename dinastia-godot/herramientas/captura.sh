@@ -40,7 +40,15 @@ else
   echo "Renderizador: FORWARD+ (PC)"
 fi
 MARCA=$(mktemp)
-xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . "${MOTOR[@]}" \
+# De una en una (15-10-2026): una captura de la ciudad en Forward+ ocupa ~7 GB de
+# RAM; dos a la vez en una máquina de 15 GB hacen que el sistema mate una (código
+# 137). El cerrojo es compartido por todas las sesiones de la máquina.
+CERROJO="${CAPTURA_CERROJO:-/tmp/claude-0/godot_captura.lock}"
+[ -d "$(dirname "$CERROJO")" ] || CERROJO=/tmp/dinastia_captura.lock
+# Quien ya lo envuelve en `flock` pone CAPTURA_SIN_CERROJO=1 (si no, se bloquearía).
+CANDADO=(flock -w 3600 "$CERROJO")
+[ -n "$CAPTURA_SIN_CERROJO" ] && CANDADO=()
+"${CANDADO[@]}" xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . "${MOTOR[@]}" \
   --resolution "${RESOLUCION:-1920x1080}" "$ESCENA"
 codigo=$?
 if [ "$PNG" = "0" ]; then

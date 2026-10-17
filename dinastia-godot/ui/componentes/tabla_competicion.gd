@@ -112,7 +112,7 @@ static func _pintar_cuadro(lista: VBoxContainer, vivos: Array, mi_par: Array,
 	if mi_par.size() == 2:
 		var rival: Club = mi_par[1] if mi_par[0] == mio else mi_par[0]
 		var t := _texto(11, paleta["oro"], paleta)
-		t.text = "TU PARTIDO" + ("  ·  EN CASA" if mi_par[0] == mio else "  ·  FUERA")
+		t.text = Idiomas.t("TU PARTIDO") + (Idiomas.t("  ·  EN CASA") if mi_par[0] == mio else Idiomas.t("  ·  FUERA"))
 		lista.add_child(t)
 		var fila := HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 8)
@@ -126,7 +126,7 @@ static func _pintar_cuadro(lista: VBoxContainer, vivos: Array, mi_par: Array,
 			paleta["rojo"] if rival.rep > mio.rep else paleta["verde"], paleta)
 		lista.add_child(HSeparator.new())
 	var te := _texto(11, paleta["suave"], paleta)
-	te.text = "SIGUEN VIVOS  (%d)" % vivos.size()
+	te.text = Idiomas.t("SIGUEN VIVOS  (%d)") % vivos.size()
 	lista.add_child(te)
 	for c in vivos:
 		var f2 := HBoxContainer.new()

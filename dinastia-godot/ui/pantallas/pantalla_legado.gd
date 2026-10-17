@@ -25,7 +25,7 @@ func _pintar_inicio(c: Club) -> void:
 	## usan: entras al club y saltas a lo tuyo sin recorrer seis grupos.
 	if not p._favoritos.is_empty():
 		var tfav := p._texto(11, Principal.COL_SUAVE)
-		tfav.text = "⭐ ACCESOS RÁPIDOS"
+		tfav.text = Idiomas.t("⭐ ACCESOS RÁPIDOS")
 		p._lista_inicio.add_child(tfav)
 		var rej := HBoxContainer.new()
 		rej.add_theme_constant_override("separation", 4)
@@ -45,7 +45,7 @@ func _pintar_inicio(c: Club) -> void:
 	## tanda que la pantalla de competición: antes el resultado viajaba en una
 	## señal y se perdía.
 	var tr := p._texto(11, Principal.COL_SUAVE)
-	tr.text = "ÚLTIMOS RESULTADOS"
+	tr.text = Idiomas.t("ÚLTIMOS RESULTADOS")
 	p._lista_inicio.add_child(tr)
 	var puestos := 0
 	for i in range(liga.historial.size() - 1, -1, -1):
@@ -64,18 +64,18 @@ func _pintar_inicio(c: Club) -> void:
 			puestos += 1
 	if puestos == 0:
 		var vac := p._texto(12, Principal.COL_SUAVE)
-		vac.text = "Aún sin partidos jugados."
+		vac.text = Idiomas.t("Aún sin partidos jugados.")
 		p._lista_inicio.add_child(vac)
 	p._lista_inicio.add_child(HSeparator.new())
 
 	## CORREO RECIENTE: los tres últimos de la bandeja, con el punto de "sin
 	## leer". Es el gancho para que el correo no se quede sin abrir nunca.
 	var tc := p._texto(11, Principal.COL_SUAVE)
-	tc.text = "CORREO RECIENTE"
+	tc.text = Idiomas.t("CORREO RECIENTE")
 	p._lista_inicio.add_child(tc)
 	if p._bandeja.is_empty():
 		var vac2 := p._texto(12, Principal.COL_SUAVE)
-		vac2.text = "Sin novedades."
+		vac2.text = Idiomas.t("Sin novedades.")
 		p._lista_inicio.add_child(vac2)
 	else:
 		for i in mini(3, p._bandeja.size()):
@@ -116,7 +116,7 @@ func _pintar_legado() -> void:
 	## C4: LA HISTORIA DEL CLUB, antes que la tuya.
 	var hi := p._ui_plantel._historia_de(p.mundo.mi_club())
 	var th := p._texto(11, Principal.COL_SUAVE)
-	th.text = "HISTORIA DEL CLUB"
+	th.text = Idiomas.t("HISTORIA DEL CLUB")
 	p._lista_legado.add_child(th)
 	for linea: String in [HistoriaClub.resumen(hi), HistoriaClub.texto_historia(hi), HistoriaClub.texto_clasicos(hi), String(hi["epoca"])]:
 		if linea.strip_edges() == "":
@@ -128,7 +128,7 @@ func _pintar_legado() -> void:
 	p._lista_legado.add_child(HSeparator.new())
 
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "TU LEGADO"
+	t.text = Idiomas.t("TU LEGADO")
 	p._lista_legado.add_child(t)
 	var g := GridContainer.new()
 	g.columns = 4
@@ -152,18 +152,18 @@ func _pintar_legado() -> void:
 			Principal.COL_VERDE, p._lista_legado)
 	if not r.filosofia.is_empty():
 		var fi := p._texto(12, p.COL_ACENTO)
-		fi.text = "📚 Tu escuela táctica: %s  (%s)" % [String(r.filosofia["nombre"]), String(r.filosofia.get("formacion", ""))]
+		fi.text = Idiomas.t("📚 Tu escuela táctica: %s  (%s)") % [String(r.filosofia["nombre"]), String(r.filosofia.get("formacion", ""))]
 		fi.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(fi)
 	p._lista_legado.add_child(HSeparator.new())
 
 	var tp := p._texto(11, Principal.COL_SUAVE)
-	tp.text = "PALMARÉS POR COMPETICIÓN"
+	tp.text = Idiomas.t("PALMARÉS POR COMPETICIÓN")
 	p._lista_legado.add_child(tp)
 	var palmares := r.palmares_por_tipo()
 	if palmares.is_empty():
 		var vac := p._texto(12, Principal.COL_SUAVE)
-		vac.text = "Sin títulos todavía."
+		vac.text = Idiomas.t("Sin títulos todavía.")
 		p._lista_legado.add_child(vac)
 	else:
 		for f: Dictionary in palmares:
@@ -171,7 +171,7 @@ func _pintar_legado() -> void:
 	p._lista_legado.add_child(HSeparator.new())
 
 	var tc := p._texto(11, Principal.COL_SUAVE)
-	tc.text = "📈 CARRERA PROFESIONAL"
+	tc.text = Idiomas.t("📈 CARRERA PROFESIONAL")
 	p._lista_legado.add_child(tc)
 	p._dato("Rol actual", r.nombre_del_cargo().capitalize(), Principal.COL_TEXTO, p._lista_legado)
 	## LA LICENCIA Y EL MINIJUEGO (C7).
@@ -204,7 +204,7 @@ func _pintar_legado() -> void:
 	if not r.oferta_de_club.is_empty():
 		p._lista_legado.add_child(HSeparator.new())
 		var to := p._texto(11, Principal.COL_ORO)
-		to.text = "☎️ TE QUIEREN EN OTRO CLUB"
+		to.text = Idiomas.t("☎️ TE QUIEREN EN OTRO CLUB")
 		p._lista_legado.add_child(to)
 		var no := p._texto(13, Principal.COL_ORO)
 		no.text = String(r.oferta_de_club["nombre"])
@@ -214,7 +214,7 @@ func _pintar_legado() -> void:
 		p._dato("Tu sueldo allí", "%s / semana" % p._dinero(int(r.oferta_de_club["sueldo"])),
 			Principal.COL_ORO, p._lista_legado)
 		var eo := p._texto(10, Principal.COL_SUAVE)
-		eo.text = "Aceptar cierra tu capítulo aquí y abre otro: el currículum se lo lleva todo. Rechazar sube la confianza de esta directiva, que se entera igual."
+		eo.text = Idiomas.t("Aceptar cierra tu capítulo aquí y abre otro: el currículum se lo lleva todo. Rechazar sube la confianza de esta directiva, que se entera igual.")
 		eo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(eo)
 		var fila_o := HBoxContainer.new()
@@ -253,17 +253,17 @@ func _pintar_legado() -> void:
 func _pintar_desgaste(r: Roles) -> void:
 	p._lista_legado.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🔥 DESGASTE EN EL CARGO"
+	t.text = Idiomas.t("🔥 DESGASTE EN EL CARGO")
 	p._lista_legado.add_child(t)
 	p._dato("Nivel", "%d de 100" % r.desgaste,
 		Principal.COL_ROJO if r.quemado() else (Principal.COL_ORO if r.desgaste >= 55 else Principal.COL_VERDE), p._lista_legado)
 	var d := p._texto(10, Principal.COL_ROJO if r.quemado() else Principal.COL_SUAVE)
 	if r.quemado():
-		d.text = "Estás quemado. Duermes mal y se te nota: lo que dices en rueda de prensa vale la mitad. Cambiar de aire lo arregla; seguir aquí, no."
+		d.text = Idiomas.t("Estás quemado. Duermes mal y se te nota: lo que dices en rueda de prensa vale la mitad. Cambiar de aire lo arregla; seguir aquí, no.")
 	elif r.desgaste >= 55:
-		d.text = "Se te empieza a notar el ciclo. Ganar descansa; la funa quema el doble."
+		d.text = Idiomas.t("Se te empieza a notar el ciclo. Ganar descansa; la funa quema el doble.")
 	else:
-		d.text = "Entero. Cada semana en el cargo cansa un poco; ganar lo compensa."
+		d.text = Idiomas.t("Entero. Cada semana en el cargo cansa un poco; ganar lo compensa.")
 	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_legado.add_child(d)
 
@@ -271,7 +271,7 @@ func _pintar_desgaste(r: Roles) -> void:
 		return
 	p._lista_legado.add_child(HSeparator.new())
 	var tc := p._texto(11, Principal.COL_SUAVE)
-	tc.text = "📄 CURRÍCULUM"
+	tc.text = Idiomas.t("📄 CURRÍCULUM")
 	p._lista_legado.add_child(tc)
 	for i in range(r.curriculum.size() - 1, -1, -1):
 		var c: Dictionary = r.curriculum[i]
@@ -282,7 +282,7 @@ func _pintar_desgaste(r: Roles) -> void:
 		p._lista_legado.add_child(l)
 		if hasta != 0:
 			var m := p._texto(10, Principal.COL_SUAVE)
-			m.text = "     %d título(s) al irte  ·  %s" % [int(c.get("trofeos", 0)), String(c.get("motivo", ""))]
+			m.text = Idiomas.t("     %d título(s) al irte  ·  %s") % [int(c.get("trofeos", 0)), String(c.get("motivo", ""))]
 			p._lista_legado.add_child(m)
 
 ## `vCarrera()`: EL RIVAL PERSONAL. No se elige y no se puede quitar: nace del
@@ -293,7 +293,7 @@ func _pintar_rival_dt(r: Roles) -> void:
 		return
 	p._lista_legado.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "👔 TU RIVAL"
+	t.text = Idiomas.t("👔 TU RIVAL")
 	p._lista_legado.add_child(t)
 	var c: Club = p.mundo.clubes.get(String(r.rival_dt.get("club_id", "")))
 	var n := p._texto(13, Principal.COL_ROJO)
@@ -313,7 +313,7 @@ func _pintar_rival_dt(r: Roles) -> void:
 		Principal.COL_ROJO if tension >= 80 else (Principal.COL_ORO if tension >= 60 else Principal.COL_SUAVE), p._lista_legado)
 	if tension >= 80 and not p._modo_experto:
 		var av := p._texto(10, Principal.COL_ROJO)
-		av.text = "Está a punto de salirse de la cancha. El próximo cruce puede acabar en el túnel y con los micrófonos abiertos."
+		av.text = Idiomas.t("Está a punto de salirse de la cancha. El próximo cruce puede acabar en el túnel y con los micrófonos abiertos.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(av)
 
@@ -322,7 +322,7 @@ func _pintar_rival_dt(r: Roles) -> void:
 func _pintar_leyenda_viva(r: Roles) -> void:
 	p._lista_legado.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🕰️ LEYENDA VIVA DEL CLUB"
+	t.text = Idiomas.t("🕰️ LEYENDA VIVA DEL CLUB")
 	p._lista_legado.add_child(t)
 	if not r.leyenda_viva.is_empty():
 		var n := p._texto(13, Principal.COL_ORO)
@@ -330,7 +330,7 @@ func _pintar_leyenda_viva(r: Roles) -> void:
 		p._lista_legado.add_child(n)
 		p._dato("Ligado al club desde", str(int(r.leyenda_viva.get("desde", 0))), Principal.COL_SUAVE, p._lista_legado)
 		var d := p._texto(10, Principal.COL_SUAVE)
-		d.text = "Cada seis semanas se sienta con un juvenil del plantel. Le sube la moral y a veces algo más."
+		d.text = Idiomas.t("Cada seis semanas se sienta con un juvenil del plantel. Le sube la moral y a veces algo más.")
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(d)
 		return
@@ -344,12 +344,12 @@ func _pintar_leyenda_viva(r: Roles) -> void:
 				candidatos.append(j)
 	if candidatos.is_empty():
 		var vac := p._texto(10, Principal.COL_SUAVE)
-		vac.text = "Todavía no hay a quién nombrar. Hace falta un veterano de 32 años o más formado en la casa."
+		vac.text = Idiomas.t("Todavía no hay a quién nombrar. Hace falta un veterano de 32 años o más formado en la casa.")
 		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(vac)
 		return
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "Nombrar a alguien lo liga al club de por vida. La hinchada lo agradece de inmediato."
+	ex.text = Idiomas.t("Nombrar a alguien lo liga al club de por vida. La hinchada lo agradece de inmediato.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_legado.add_child(ex)
 	for j: Jugador in candidatos:
@@ -358,12 +358,12 @@ func _pintar_leyenda_viva(r: Roles) -> void:
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_legado.add_child(fila)
 		var l := p._texto(12, Principal.COL_TEXTO)
-		l.text = "%s  ·  %s, %d años" % [j.nombre, j.pos_e, j.edad]
+		l.text = Idiomas.t("%s  ·  %s, %d años") % [j.nombre, j.pos_e, j.edad]
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.clip_text = true
 		fila.add_child(l)
 		var b := Button.new()
-		b.text = "Nombrar"
+		b.text = Idiomas.t("Nombrar")
 		b.add_theme_font_size_override("font_size", 11)
 		b.custom_minimum_size = Vector2(90, 0)
 		b.pressed.connect(func() -> void:
@@ -384,7 +384,7 @@ func _pintar_filiales(r: Roles) -> void:
 		return
 	p._lista_legado.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🏦 TUS CLUBES"
+	t.text = Idiomas.t("🏦 TUS CLUBES")
 	p._lista_legado.add_child(t)
 	if not r.filiales.is_empty():
 		for cid: String in r.filiales:
@@ -396,13 +396,13 @@ func _pintar_filiales(r: Roles) -> void:
 				Principal.COL_ORO, p._lista_legado)
 	if not puede:
 		var av := p._texto(10, Principal.COL_SUAVE)
-		av.text = "Para comprar un club hace falta la habilidad «Magnate» del árbol de entrenador."
+		av.text = Idiomas.t("Para comprar un club hace falta la habilidad «Magnate» del árbol de entrenador.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(av)
 		return
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Se compran con TU dinero, no con el del club. Cuesta tres veces la caja de referencia del club y devuelve dividendos cada tres meses."
+		ex.text = Idiomas.t("Se compran con TU dinero, no con el del club. Cuesta tres veces la caja de referencia del club y devuelve dividendos cada tres meses.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(ex)
 	## Los cinco más baratos que todavía no son tuyos: la lista entera serían
@@ -420,7 +420,7 @@ func _pintar_filiales(r: Roles) -> void:
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_legado.add_child(fila)
 		var l2 := p._texto(12, Principal.COL_TEXTO)
-		l2.text = "%s  ·  rep %d" % [c3.nombre, c3.rep]
+		l2.text = Idiomas.t("%s  ·  rep %d") % [c3.nombre, c3.rep]
 		l2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l2.clip_text = true
 		fila.add_child(l2)
@@ -444,20 +444,20 @@ func _pintar_sucesion(r: Roles) -> void:
 		return
 	p._lista_legado.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🪑 LA SUCESIÓN"
+	t.text = Idiomas.t("🪑 LA SUCESIÓN")
 	p._lista_legado.add_child(t)
 	if not r.sucesor.is_empty():
 		var n := p._texto(13, Principal.COL_ORO)
 		n.text = String(r.sucesor.get("nombre", ""))
 		p._lista_legado.add_child(n)
 		var d := p._texto(11, Principal.COL_SUAVE)
-		d.text = "%s El directorio le da un margen de %d partidos." % [
+		d.text = Idiomas.t("%s El directorio le da un margen de %d partidos.") % [
 			String(r.sucesor.get("desc", "")), int(r.sucesor.get("margen", 0))]
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(d)
 		return
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "Te retiraste. Lo último que decides es a quién le dejas el banquillo."
+	ex.text = Idiomas.t("Te retiraste. Lo último que decides es a quién le dejas el banquillo.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_legado.add_child(ex)
 	var lista := r.candidatos_sucesion()
@@ -468,13 +468,13 @@ func _pintar_sucesion(r: Roles) -> void:
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_legado.add_child(fila)
 		var l := p._texto(12, Principal.COL_TEXTO)
-		l.text = "%s  ·  margen %d partidos" % [String(cand["nombre"]), int(cand["margen"])]
+		l.text = Idiomas.t("%s  ·  margen %d partidos") % [String(cand["nombre"]), int(cand["margen"])]
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.clip_text = true
 		l.tooltip_text = String(cand["desc"])
 		fila.add_child(l)
 		var b := Button.new()
-		b.text = "Elegir"
+		b.text = Idiomas.t("Elegir")
 		b.add_theme_font_size_override("font_size", 11)
 		b.custom_minimum_size = Vector2(80, 0)
 		b.pressed.connect(func() -> void:
@@ -497,7 +497,7 @@ func _pintar_sucesion(r: Roles) -> void:
 func _pintar_patrimonio_dt(r: Roles) -> void:
 	p._lista_legado.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "💼 TU PATRIMONIO"
+	t.text = Idiomas.t("💼 TU PATRIMONIO")
 	p._lista_legado.add_child(t)
 	p._dato("Ahorros", p._dinero(r.patrimonio), Principal.COL_ORO, p._lista_legado)
 	p._dato("Tu sueldo", "%s / semana" % p._dinero(r.sueldo_semanal()), Principal.COL_TEXTO, p._lista_legado)
@@ -507,7 +507,7 @@ func _pintar_patrimonio_dt(r: Roles) -> void:
 		Principal.COL_VERDE if r.licencia > 0 else Principal.COL_SUAVE, p._lista_legado)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = "Es dinero TUYO, no del club. Lo que compres aquí te sigue cuando cambies de banquillo."
+		ex.text = Idiomas.t("Es dinero TUYO, no del club. Lo que compres aquí te sigue cuando cambies de banquillo.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(ex)
 	for f: Array in Roles.COMPRAS_DT:
@@ -523,7 +523,7 @@ func _pintar_patrimonio_dt(r: Roles) -> void:
 		n.tooltip_text = String(f[3])
 		fila.add_child(n)
 		var b := Button.new()
-		b.text = "Puesto" if tengo else p._dinero(int(f[2]))
+		b.text = Idiomas.t("Puesto") if tengo else p._dinero(int(f[2]))
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = tengo or r.patrimonio < int(f[2])
 		b.custom_minimum_size = Vector2(96, 0)
@@ -578,7 +578,7 @@ func _pintar_habilidades() -> void:
 	if e.dt_puntos > 0:
 		(func() -> void: Animar.pulso(pts, 1.15)).call_deferred()
 	var grande := Button.new()
-	grande.text = "⛶ En grande"
+	grande.text = Idiomas.t("⛶ En grande")
 	grande.pressed.connect(func() -> void: ArbolHabilidades.abrir_en_grande(p, e, p._refrescar))
 	cab.add_child(grande)
 	var arbol := ArbolHabilidades.crear(e)
@@ -596,7 +596,7 @@ func _pintar_acceso_arbol() -> void:
 	## El álbum de cromos y el museo de todas tus carreras (`Meta`).
 	var sobres := int(Meta.leer()["sobres"])
 	var alb := Button.new()
-	alb.text = "📒 Álbum de cromos y museo de tus carreras" + ("  ·  🎁 %d sobre%s" % [sobres, "" if sobres == 1 else "s"] if sobres > 0 else "")
+	alb.text = Idiomas.t("📒 Álbum de cromos y museo de tus carreras") + ((Idiomas.t("  ·  🎁 %d sobre") if sobres == 1 else Idiomas.t("  ·  🎁 %d sobres")) % sobres if sobres > 0 else "")
 	alb.pressed.connect(func() -> void: PanelMeta.abrir(p, p.mundo))
 	p._lista_legado.add_child(alb)
 	var e := p.mundo.entrenamiento
@@ -605,11 +605,11 @@ func _pintar_acceso_arbol() -> void:
 	var hb := HBoxContainer.new()
 	p._lista_legado.add_child(hb)
 	var t := p._texto(12, Principal.COL_ORO if e.dt_puntos > 0 else Principal.COL_SUAVE)
-	t.text = "🎓 Habilidades de entrenador · %d punto(s) por gastar" % e.dt_puntos
+	t.text = Idiomas.t("🎓 Habilidades de entrenador · %d punto(s) por gastar") % e.dt_puntos
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hb.add_child(t)
 	var b := Button.new()
-	b.text = "Ver el árbol"
+	b.text = Idiomas.t("Ver el árbol")
 	b.pressed.connect(func() -> void:
 		p._elegir_grupo("vida")
 		p._ir_a_chip({"tab": "Habilidades", "label": "Habilidades"}))
@@ -621,10 +621,10 @@ func _pintar_arbol_dt() -> void:
 	if e == null:
 		return
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🎓 TUS HABILIDADES DE ENTRENADOR"
+	t.text = Idiomas.t("🎓 TUS HABILIDADES DE ENTRENADOR")
 	p._lista_legado.add_child(t)
 	var pts := p._texto(14, Principal.COL_ORO if e.dt_puntos > 0 else Principal.COL_SUAVE)
-	pts.text = "%d punto(s) por gastar  ·  se gana uno cada %d semanas" % [
+	pts.text = Idiomas.t("%d punto(s) por gastar  ·  se gana uno cada %d semanas") % [
 		e.dt_puntos, Entrenamiento.SEMANAS_POR_PUNTO_DT]
 	p._lista_legado.add_child(pts)
 	for rama: String in e.dt_ramas():
@@ -656,7 +656,7 @@ func _pintar_arbol_dt() -> void:
 			## problemas distintos y el jugador tiene que poder distinguirlos.
 			var motivo := e.dt_motivo(clave)
 			var b := Button.new()
-			b.text = "%d pto(s)" % e.dt_coste(clave) if motivo == "" else motivo
+			b.text = Idiomas.t("%d pto(s)") % e.dt_coste(clave) if motivo == "" else motivo
 			b.add_theme_font_size_override("font_size", 10)
 			b.disabled = motivo != ""
 			b.custom_minimum_size = Vector2(140, 0)
@@ -677,7 +677,7 @@ func _aprender_dt(clave: String) -> void:
 ## propósito: homenajear en el Madrid a una leyenda del Boca no significa nada.
 func _pintar_homenajes(r: Roles) -> void:
 	var th := p._texto(11, Principal.COL_SUAVE)
-	th.text = "🎖️ HOMENAJES"
+	th.text = Idiomas.t("🎖️ HOMENAJES")
 	p._lista_legado.add_child(th)
 	var c := p.mundo.mi_club()
 	var mias: Array[Dictionary] = []
@@ -687,7 +687,7 @@ func _pintar_homenajes(r: Roles) -> void:
 				mias.append(l)
 	if mias.is_empty():
 		var vac := p._texto(12, Principal.COL_SUAVE)
-		vac.text = "Sin leyendas registradas en este club todavía."
+		vac.text = Idiomas.t("Sin leyendas registradas en este club todavía.")
 		p._lista_legado.add_child(vac)
 	else:
 		var coste := Eco.escalar(Roles.COSTE_HOMENAJE, c.rep)
@@ -696,35 +696,35 @@ func _pintar_homenajes(r: Roles) -> void:
 			fila.add_theme_constant_override("separation", 8)
 			p._lista_legado.add_child(fila)
 			var nom := p._texto(12, Principal.COL_TEXTO)
-			nom.text = "%s  ·  %s · nivel %d" % [String(l2.get("nombre", "")), String(l2.get("pos", "")), int(l2.get("nivel", 1))]
+			nom.text = Idiomas.t("%s  ·  %s · nivel %d") % [String(l2.get("nombre", "")), String(l2.get("pos", "")), int(l2.get("nivel", 1))]
 			nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila.add_child(nom)
 			var b := Button.new()
-			b.text = "Homenajear  %s" % p._dinero(coste)
+			b.text = Idiomas.t("Homenajear  %s") % p._dinero(coste)
 			b.add_theme_font_size_override("font_size", 11)
 			b.disabled = c.saldo < coste
 			var quien := String(l2.get("nombre", ""))
 			b.pressed.connect(func() -> void: _homenajear(quien))
 			fila.add_child(b)
 		var nota := p._texto(10, Principal.COL_SUAVE)
-		nota.text = "Un homenaje llena el estadio, sube el ánimo y la moral del plantel, y deja al club un poco más grande."
+		nota.text = Idiomas.t("Un homenaje llena el estadio, sube el ánimo y la moral del plantel, y deja al club un poco más grande.")
 		nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(nota)
 	p._lista_legado.add_child(HSeparator.new())
 
 func _pintar_fin_de_carrera(r: Roles) -> void:
 	var tf := p._texto(11, Principal.COL_SUAVE)
-	tf.text = "🏁 FIN DE CARRERA"
+	tf.text = Idiomas.t("🏁 FIN DE CARRERA")
 	p._lista_legado.add_child(tf)
 	if not r.retirado.is_empty():
 		var ya := p._texto(12, Principal.COL_ORO)
-		ya.text = "Te retiraste en %d con %d título(s) y %s puntos." % [
+		ya.text = Idiomas.t("Te retiraste en %d con %d título(s) y %s puntos.") % [
 			int(r.retirado.get("anio", 0)), r.trofeos.size(), p._miles(int(r.retirado.get("puntaje", 0)))]
 		ya.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(ya)
 	else:
 		var av := p._texto(11, Principal.COL_SUAVE)
-		av.text = "Cuando quieras cerrar la historia, puedes anunciar tu retirada y ver el balance completo de tu carrera. No se puede deshacer."
+		av.text = Idiomas.t("Cuando quieras cerrar la historia, puedes anunciar tu retirada y ver el balance completo de tu carrera. No se puede deshacer.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(av)
 		p._boton("¿SEGURO? Anunciar mi retirada" if p._confirmar_retiro else "🏁 Anunciar mi retirada",
@@ -738,7 +738,7 @@ func _pintar_epilogo(r: Roles) -> void:
 		return
 	p._lista_legado.add_child(HSeparator.new())
 	var te := p._texto(11, Principal.COL_SUAVE)
-	te.text = "📖 TU CARRERA HASTA AQUÍ"
+	te.text = Idiomas.t("📖 TU CARRERA HASTA AQUÍ")
 	p._lista_legado.add_child(te)
 	var invicto := int(p.mundo.logros.rachas.get("invicto_max", 0)) if p.mundo.logros != null else 0
 	## Los canteranos que DEBUTARON, no los que subieron a la lista: subir a un
@@ -830,7 +830,7 @@ func _pintar_records() -> void:
 		return
 
 	var tr := p._texto(11, Principal.COL_SUAVE)
-	tr.text = "RACHAS"
+	tr.text = Idiomas.t("RACHAS")
 	p._lista_records.add_child(tr)
 	var gr := GridContainer.new()
 	gr.columns = 4
@@ -853,7 +853,7 @@ func _pintar_records() -> void:
 	var rec: Dictionary = lg.rec
 	if rec.has("mayor_goleada"):
 		var tm := p._texto(11, Principal.COL_SUAVE)
-		tm.text = "MARCAS DEL CLUB"
+		tm.text = Idiomas.t("MARCAS DEL CLUB")
 		p._lista_records.add_child(tm)
 		var mg: Dictionary = rec["mayor_goleada"]
 		p._dato("Mayor goleada", "%s con %s (%d)" % [String(mg.get("marcador", "")), String(mg.get("rival", "")), int(mg.get("anio", 0))], Principal.COL_VERDE, p._lista_records)
@@ -875,7 +875,7 @@ func _pintar_records() -> void:
 	var fama := lg.salon_de_la_fama(12)
 	if not fama.is_empty():
 		var tf := p._texto(11, Principal.COL_SUAVE)
-		tf.text = "SALÓN DE LA FAMA DEL CLUB"
+		tf.text = Idiomas.t("SALÓN DE LA FAMA DEL CLUB")
 		p._lista_records.add_child(tf)
 		for i in fama.size():
 			var f3: Dictionary = fama[i]
@@ -887,7 +887,7 @@ func _pintar_records() -> void:
 	var goleadores := lg.goleadores_historicos(10)
 	if not goleadores.is_empty():
 		var tg := p._texto(11, Principal.COL_SUAVE)
-		tg.text = "GOLEADORES HISTÓRICOS DE TU ERA"
+		tg.text = Idiomas.t("GOLEADORES HISTÓRICOS DE TU ERA")
 		p._lista_records.add_child(tg)
 		for i in goleadores.size():
 			var f: Dictionary = goleadores[i]
@@ -897,7 +897,7 @@ func _pintar_records() -> void:
 	var mas_pj := lg.mas_partidos(10)
 	if not mas_pj.is_empty():
 		var tp := p._texto(11, Principal.COL_SUAVE)
-		tp.text = "MÁS PARTIDOS DISPUTADOS"
+		tp.text = Idiomas.t("MÁS PARTIDOS DISPUTADOS")
 		p._lista_records.add_child(tp)
 		for i in mas_pj.size():
 			var f2: Dictionary = mas_pj[i]
@@ -906,7 +906,7 @@ func _pintar_records() -> void:
 
 	if not lg.h2h.is_empty():
 		var th := p._texto(11, Principal.COL_SUAVE)
-		th.text = "CARA A CARA"
+		th.text = Idiomas.t("CARA A CARA")
 		p._lista_records.add_child(th)
 		var g2 := GridContainer.new()
 		g2.columns = 5
@@ -934,7 +934,7 @@ func _pintar_records() -> void:
 
 	if not lg.efemerides.is_empty():
 		var te := p._texto(11, Principal.COL_SUAVE)
-		te.text = "UN DÍA COMO HOY"
+		te.text = Idiomas.t("UN DÍA COMO HOY")
 		p._lista_records.add_child(te)
 		var efes: Array = lg.efemerides
 		for i in range(efes.size() - 1, maxi(-1, efes.size() - 11), -1):
@@ -947,11 +947,11 @@ func _pintar_records() -> void:
 
 	if not lg.planteles.is_empty():
 		var tpl := p._texto(11, Principal.COL_SUAVE)
-		tpl.text = "ARCHIVO DE PLANTELES"
+		tpl.text = Idiomas.t("ARCHIVO DE PLANTELES")
 		p._lista_records.add_child(tpl)
 		if not p._modo_experto:
 			var epl := p._texto(10, Principal.COL_SUAVE)
-			epl.text = "Pulsa un año para abrir aquel plantel entero: quién estaba, con qué dorsal, cuánto jugó y cuánto marcó."
+			epl.text = Idiomas.t("Pulsa un año para abrir aquel plantel entero: quién estaba, con qué dorsal, cuánto jugó y cuánto marcó.")
 			epl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_records.add_child(epl)
 		var pls: Array = lg.planteles
@@ -960,7 +960,7 @@ func _pintar_records() -> void:
 			var anio_p := int(p_local.get("anio", 0))
 			var abierto := p._plantel_abierto == anio_p
 			var bp := Button.new()
-			bp.text = "%s%d  ·  %dº  ·  MVP: %s" % ["▾ " if abierto else "▸ ", anio_p,
+			bp.text = Idiomas.t("%s%d  ·  %dº  ·  MVP: %s") % ["▾ " if abierto else "▸ ", anio_p,
 				int(p_local.get("puesto", 0)), String(p_local.get("mvp", "—"))]
 			bp.flat = true
 			bp.alignment = HORIZONTAL_ALIGNMENT_LEFT

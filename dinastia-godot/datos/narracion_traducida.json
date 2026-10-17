@@ -4338,5 +4338,13 @@
  "Cumpliste la sanción: el próximo partido lo diriges desde el banquillo.": [
   "You've served your ban: you'll lead the next match from the bench.",
   "Cumpriste a suspensão: o próximo jogo diriges do banco."
+ ],
+ "{1} {2} (moral {3}).": [
+  "{1} {2} (morale {3}).",
+  "{1} {2} (moral {3})."
+ ],
+ "Colonia {1} {2}": [
+  "{1} {2} contingent",
+  "Colônia {1} {2}"
  ]
 }

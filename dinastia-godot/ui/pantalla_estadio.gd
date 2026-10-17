@@ -294,9 +294,9 @@ func al_gol(club_gol: Club, autor: Jugador, minuto: int) -> void:
 	})
 	_repintar_goles()
 	if _lbl_gol_autor != null:
-		_lbl_gol_autor.text = (autor.nombre if autor != null else "GOL").to_upper()
+		_lbl_gol_autor.text = (autor.nombre if autor != null else Idiomas.t("GOL")).to_upper()
 	if _lbl_gol_min != null:
-		_lbl_gol_min.text = "MINUTO %d  ·  %s" % [minuto, abreviatura(club_gol)]
+		_lbl_gol_min.text = Idiomas.t("MINUTO %d  ·  %s") % [minuto, abreviatura(club_gol)]
 	if _lbl_gol_marcador != null and partido != null:
 		_lbl_gol_marcador.text = "%d - %d" % [partido.goles_local, partido.goles_visita]
 	if _fondo_gol != null:

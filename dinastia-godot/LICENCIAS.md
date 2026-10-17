@@ -63,6 +63,7 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | Cuerpo de jugador | `assets/characters/quaternius/*.gltf` | Quaternius "Universal Base Characters" | 🟢 CC0 |
 | Animaciones base | `assets/characters/quaternius/anims/UAL1_Standard.glb` | Quaternius "Universal Animation Library" | 🟢 CC0 (`_extraido_universal_animation_library/.../License.txt`) |
 | Ropa del jugador | `assets/characters/quaternius/ropa/` | Quaternius "Modular Character Outfits - Fantasy" | 🟢 CC0 |
+| Alfombra y cortinas dobles (interiores) | `assets/quaternius_muebles/` | Quaternius (CC0, regalo del usuario el 15-10-2026) | 🟢 CC0 |
 | Edificios, coches y comercio de la ciudad | `assets/ciudad/kenney_*` | Kenney City Kit / Car Kit | 🟢 CC0 |
 | Furniture Kit 2.0 (140 muebles; guardado, aún sin usar) | `assets/kenney/muebles/` | Kenney | 🟢 CC0 (`assets/kenney/muebles/License.txt`) |
 | Modular Buildings 2.1 (108 piezas; guardado, aún sin usar) | `assets/kenney/edificios_modulares/` | Kenney | 🟢 CC0 (`assets/kenney/edificios_modulares/License.txt`) |

@@ -49,10 +49,10 @@ func _pintar_gente_personas() -> void:
 	if g == null:
 		return
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "LA GENTE DEL CLUB"
+	t.text = Idiomas.t("LA GENTE DEL CLUB")
 	p._lista_gente.add_child(t)
 	var intro := p._texto(11, Principal.COL_SUAVE)
-	intro.text = "Llevan aquí más años que tú y seguirán cuando te vayas. Tratarlos bien no sale en ninguna estadística, pero se nota."
+	intro.text = Idiomas.t("Llevan aquí más años que tú y seguirán cuando te vayas. Tratarlos bien no sale en ninguna estadística, pero se nota.")
 	intro.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_gente.add_child(intro)
 	var media := g.confianza_media()
@@ -82,14 +82,14 @@ func _pintar_gente_personas() -> void:
 		cab.add_child(cf)
 		var b := Button.new()
 		var ya := g.hablado_esta_semana(clave)
-		b.text = "Ya hablasteis" if ya else "Charlar"
+		b.text = Idiomas.t("Ya hablasteis") if ya else Idiomas.t("Charlar")
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = ya or g.charlas_esta_semana >= Gente.CHARLAS_POR_SEMANA
 		b.custom_minimum_size = Vector2(110, 0)
 		b.pressed.connect(func() -> void: _charlar_con(clave))
 		cab.add_child(b)
 		var d := p._texto(10, Principal.COL_SUAVE)
-		d.text = "%d años  ·  %d en el club  ·  %s  ·  %s" % [
+		d.text = Idiomas.t("%d años  ·  %d en el club  ·  %s  ·  %s") % [
 			int(f.get("edad", 0)), int(f.get("anios", 0)), String(f.get("perfil", "")), String(fila[3])]
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_gente.add_child(d)
@@ -134,18 +134,18 @@ func _pintar_redes() -> void:
 		va.text = String(par[1])
 		col.add_child(va)
 	var estado := p._texto(11, Principal.COL_ROJO if p_local.funa > 60 else (Principal.COL_ORO if p_local.funa > 35 else Principal.COL_VERDE))
-	estado.text = ("⚠️ Campaña activa en tu contra: el directorio lo está mirando."
-		if p_local.funa > 60 else ("Hay ruido en redes, pero se aguanta."
-		if p_local.funa > 35 else "Ambiente tranquilo en las redes."))
+	estado.text = (Idiomas.t("⚠️ Campaña activa en tu contra: el directorio lo está mirando.")
+		if p_local.funa > 60 else (Idiomas.t("Hay ruido en redes, pero se aguanta.")
+		if p_local.funa > 35 else Idiomas.t("Ambiente tranquilo en las redes.")))
 	estado.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_redes.add_child(estado)
 	p._lista_redes.add_child(HSeparator.new())
 
 	var tg := p._texto(11, Principal.COL_SUAVE)
-	tg.text = "GABINETE DE COMUNICACIÓN"
+	tg.text = Idiomas.t("GABINETE DE COMUNICACIÓN")
 	p._lista_redes.add_child(tg)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "Apoyar calma la funa pero gasta un cartucho. Callar no cuesta nada hoy. Contestar es cara o cruz: apaga el fuego o lo dobla."
+	ex.text = Idiomas.t("Apoyar calma la funa pero gasta un cartucho. Callar no cuesta nada hoy. Contestar es cara o cruz: apaga el fuego o lo dobla.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_redes.add_child(ex)
 	var fila := HBoxContainer.new()
@@ -174,11 +174,11 @@ func _pintar_redes() -> void:
 	_pintar_ano_contado(p_local)
 
 	var tf := p._texto(11, Principal.COL_SUAVE)
-	tf.text = "LO QUE SE DICE"
+	tf.text = Idiomas.t("LO QUE SE DICE")
 	p._lista_redes.add_child(tf)
 	if p_local.posts.is_empty():
 		var vac := p._texto(12, Principal.COL_SUAVE)
-		vac.text = "Todavía nadie habla de ti. Gana o pierde algo y verás."
+		vac.text = Idiomas.t("Todavía nadie habla de ti. Gana o pierde algo y verás.")
 		p._lista_redes.add_child(vac)
 		return
 	for i in mini(25, p_local.posts.size()):
@@ -198,7 +198,7 @@ func _pintar_redes() -> void:
 func _pintar_periodistas(p_local: Prensa) -> void:
 	p._lista_redes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🎙️ LA PRENSA"
+	t.text = Idiomas.t("🎙️ LA PRENSA")
 	p._lista_redes.add_child(t)
 	var am := p_local.amortiguador_prensa()
 	p._dato("Cómo te trata la prensa", "×%.2f sobre el ruido" % am,
@@ -220,7 +220,7 @@ func _pintar_periodistas(p_local: Prensa) -> void:
 		r.custom_minimum_size = Vector2(32, 0)
 		fila.add_child(r)
 		var b := Button.new()
-		b.text = "Atender"
+		b.text = Idiomas.t("Atender")
 		b.add_theme_font_size_override("font_size", 11)
 		b.custom_minimum_size = Vector2(90, 0)
 		b.pressed.connect(func() -> void: _atender_periodista(clave))
@@ -232,10 +232,10 @@ func _pintar_medios_propios(p_local: Prensa) -> void:
 	var c := p.mundo.mi_club()
 	p._lista_redes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "📡 MEDIOS PROPIOS"
+	t.text = Idiomas.t("📡 MEDIOS PROPIOS")
 	p._lista_redes.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "Si no te gusta cómo lo cuentan, cuéntalo tú. Se pagan una vez y rentan todos los meses."
+	ex.text = Idiomas.t("Si no te gusta cómo lo cuentan, cuéntalo tú. Se pagan una vez y rentan todos los meses.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_redes.add_child(ex)
 	for f: Array in Prensa.MEDIOS_PROPIOS:
@@ -250,12 +250,12 @@ func _pintar_medios_propios(p_local: Prensa) -> void:
 		n.clip_text = true
 		fila.add_child(n)
 		var r := p._texto(11, Principal.COL_SUAVE)
-		r.text = "+%s/mes" % p._dinero(Eco.escalar(float(f[3]), float(c.rep)))
+		r.text = Idiomas.t("+%s/mes") % p._dinero(Eco.escalar(float(f[3]), float(c.rep)))
 		r.custom_minimum_size = Vector2(96, 0)
 		fila.add_child(r)
 		var b := Button.new()
 		var coste := Eco.escalar(float(f[2]), float(c.rep))
-		b.text = "Puesto" if tengo else p._dinero(coste)
+		b.text = Idiomas.t("Puesto") if tengo else p._dinero(coste)
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = tengo or c.saldo < coste
 		b.custom_minimum_size = Vector2(96, 0)
@@ -271,18 +271,18 @@ func _pintar_vocero(p_local: Prensa) -> void:
 		return
 	p._lista_redes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🎤 QUIÉN DA LA CARA"
+	t.text = Idiomas.t("🎤 QUIÉN DA LA CARA")
 	p._lista_redes.add_child(t)
 	var hay := not p_local.vocero.is_empty()
 	var ex := p._texto(11, Principal.COL_ORO if hay else Principal.COL_SUAVE)
 	if hay:
-		ex.text = "%s habla por ti. La rueda de prensa mueve la mitad: ni te luces ni te hundes." % String(p_local.vocero.get("nombre", ""))
+		ex.text = Idiomas.t("%s habla por ti. La rueda de prensa mueve la mitad: ni te luces ni te hundes.") % String(p_local.vocero.get("nombre", ""))
 	else:
-		ex.text = "Das tú la cara en cada rueda. Todo lo que digas cuenta el doble que con portavoz."
+		ex.text = Idiomas.t("Das tú la cara en cada rueda. Todo lo que digas cuenta el doble que con portavoz.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_redes.add_child(ex)
 	var b := Button.new()
-	b.text = "Quitar al portavoz" if hay else "Nombrar portavoz"
+	b.text = Idiomas.t("Quitar al portavoz") if hay else Idiomas.t("Nombrar portavoz")
 	b.add_theme_font_size_override("font_size", 11)
 	b.pressed.connect(func() -> void:
 		var msg := p_local.nombrar_vocero(p.mundo.mi_club())
@@ -305,10 +305,10 @@ func _pintar_derechos_tv(p_local: Prensa) -> void:
 		return
 	p._lista_redes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "📺 DERECHOS DE TELEVISIÓN"
+	t.text = Idiomas.t("📺 DERECHOS DE TELEVISIÓN")
 	p._lista_redes.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "En bloque cobras lo que reparte la liga. Por tu cuenta puedes ganar mucho más… si tu club vende. Y la asamblea te lo tiene en cuenta."
+	ex.text = Idiomas.t("En bloque cobras lo que reparte la liga. Por tu cuenta puedes ganar mucho más… si tu club vende. Y la asamblea te lo tiene en cuenta.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_redes.add_child(ex)
 	p._dato("Modelo actual", "Negociación individual" if p_local.tv_individual else "Reparto en bloque",
@@ -349,11 +349,11 @@ func _pintar_derechos_tv(p_local: Prensa) -> void:
 func _pintar_portadas(p_local: Prensa) -> void:
 	p._lista_redes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "🗞️ ARCHIVO DE PORTADAS"
+	t.text = Idiomas.t("🗞️ ARCHIVO DE PORTADAS")
 	p._lista_redes.add_child(t)
 	if p_local.portadas.is_empty():
 		var vac := p._texto(11, Principal.COL_SUAVE)
-		vac.text = "Las portadas se archivan solas después de cada partido."
+		vac.text = Idiomas.t("Las portadas se archivan solas después de cada partido.")
 		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_redes.add_child(vac)
 		return
@@ -368,7 +368,7 @@ func _pintar_portadas(p_local: Prensa) -> void:
 		tit.add_theme_font_size_override("font_size", 12)
 		tit.add_theme_color_override("font_color", Principal.COL_VERDE if tipo == "bien" else (Principal.COL_ROJO if tipo == "mal" else Principal.COL_TEXTO))
 		tit.text = "🗞 " + String(d.get("t", ""))
-		tit.tooltip_text = "Abrir la portada"
+		tit.tooltip_text = Idiomas.t("Abrir la portada")
 		tit.pressed.connect(func() -> void: PortadaPeriodico.mostrar(p, p.mundo, d))
 		p._lista_redes.add_child(tit)
 		var cu := p._texto(10, Principal.COL_SUAVE)
@@ -382,7 +382,7 @@ func _pintar_portadas(p_local: Prensa) -> void:
 func _pintar_ano_contado(p_local: Prensa) -> void:
 	p._lista_redes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "📖 EL AÑO CONTADO"
+	t.text = Idiomas.t("📖 EL AÑO CONTADO")
 	p._lista_redes.add_child(t)
 	var r := p._texto(12, Principal.COL_TEXTO)
 	r.text = p_local.narrador_temporada()
@@ -402,10 +402,10 @@ func _pintar_influencer(p_local: Prensa) -> void:
 	var c := p.mundo.mi_club()
 	p._lista_redes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "📱 LO QUE DICEN LOS QUE MUEVEN MASAS"
+	t.text = Idiomas.t("📱 LO QUE DICEN LOS QUE MUEVEN MASAS")
 	p._lista_redes.add_child(t)
 	var n := p._texto(12, Principal.COL_TEXTO)
-	n.text = "%s  ·  %s seguidores" % [String(op["nombre"]), String(op["seguidores"])]
+	n.text = Idiomas.t("%s  ·  %s seguidores") % [String(op["nombre"]), String(op["seguidores"])]
 	n.clip_text = true
 	p._lista_redes.add_child(n)
 	var tono := String(op["tono"])
@@ -414,7 +414,7 @@ func _pintar_influencer(p_local: Prensa) -> void:
 	q.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_redes.add_child(q)
 	var et := p._texto(10, Principal.COL_SUAVE)
-	et.text = "A favor" if tono == "bien" else ("En contra" if tono == "mal" else "Tibio")
+	et.text = Idiomas.t("A favor") if tono == "bien" else (Idiomas.t("En contra") if tono == "mal" else Idiomas.t("Tibio"))
 	p._lista_redes.add_child(et)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 6)
@@ -446,7 +446,7 @@ func _pintar_mesa_debate(p_local: Prensa) -> void:
 		return
 	p._lista_redes.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = "📺 MESA DE DEBATE"
+	t.text = Idiomas.t("📺 MESA DE DEBATE")
 	p._lista_redes.add_child(t)
 	for f: Dictionary in mesa:
 		var n := p._texto(12, Principal.COL_TEXTO)
@@ -465,10 +465,10 @@ func _pintar_mesa_debate(p_local: Prensa) -> void:
 	if rank.is_empty():
 		return
 	var tr := p._texto(11, Principal.COL_SUAVE)
-	tr.text = "🏅 RANKING DE ENTRENADORES"
+	tr.text = Idiomas.t("🏅 RANKING DE ENTRENADORES")
 	p._lista_redes.add_child(tr)
 	var ex := p._texto(10, Principal.COL_SUAVE)
-	ex.text = "No mide dónde acabas, sino cuánto le sacas a lo que tienes."
+	ex.text = Idiomas.t("No mide dónde acabas, sino cuánto le sacas a lo que tienes.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_redes.add_child(ex)
 	var mi_puesto := 0
@@ -483,7 +483,7 @@ func _pintar_mesa_debate(p_local: Prensa) -> void:
 			p.COL_ACENTO if bool(f2["mio"]) else Principal.COL_TEXTO, p._lista_redes)
 	if mi_puesto > 8:
 		var mp := p._texto(11, p.COL_ACENTO)
-		mp.text = "Tú vas %d.º de %d." % [mi_puesto, rank.size()]
+		mp.text = Idiomas.t("Tú vas %d.º de %d.") % [mi_puesto, rank.size()]
 		p._lista_redes.add_child(mp)
 
 func _atender_periodista(clave: String) -> void:
@@ -516,20 +516,20 @@ func _pintar_correo() -> void:
 	filtros.add_theme_constant_override("separation", 6)
 	p._lista_correo.add_child(filtros)
 	var b_todo := Button.new()
-	b_todo.text = "Todo (%d)" % p._bandeja.size()
+	b_todo.text = Idiomas.t("Todo (%d)") % p._bandeja.size()
 	b_todo.toggle_mode = true
 	b_todo.button_pressed = p._correo_filtro == "todo"
 	b_todo.pressed.connect(func() -> void: p._correo_filtro = "todo"; _pintar_correo())
 	filtros.add_child(b_todo)
 	var b_nuevas := Button.new()
-	b_nuevas.text = "Sin leer (%d)" % sin_leer
+	b_nuevas.text = Idiomas.t("Sin leer (%d)") % sin_leer
 	b_nuevas.toggle_mode = true
 	b_nuevas.button_pressed = p._correo_filtro == "nuevas"
 	b_nuevas.pressed.connect(func() -> void: p._correo_filtro = "nuevas"; _pintar_correo())
 	filtros.add_child(b_nuevas)
 	if sin_leer > 0:
 		var b_todas := Button.new()
-		b_todas.text = "✅ Marcar todo como leído"
+		b_todas.text = Idiomas.t("✅ Marcar todo como leído")
 		b_todas.pressed.connect(func() -> void:
 			for it2: Dictionary in p._bandeja:
 				it2["leida"] = true
@@ -539,7 +539,7 @@ func _pintar_correo() -> void:
 
 	if p._bandeja.is_empty():
 		var vacio := p._texto(12, Principal.COL_SUAVE)
-		vacio.text = "Bandeja vacía. Los avisos del club van llegando aquí solos."
+		vacio.text = Idiomas.t("Bandeja vacía. Los avisos del club van llegando aquí solos.")
 		p._lista_correo.add_child(vacio)
 		return
 	## Título en un botón plano -mismo truco que ya usa `_fila_jugador()` para
@@ -569,7 +569,7 @@ func _pintar_correo() -> void:
 		p._lista_correo.add_child(HSeparator.new())
 	if not alguna:
 		var nada := p._texto(12, Principal.COL_SUAVE)
-		nada.text = "No queda nada por leer."
+		nada.text = Idiomas.t("No queda nada por leer.")
 		p._lista_correo.add_child(nada)
 
 ## `G.libro` del HTML, hecho pestaña: siete clases llevan meses -algunas desde

@@ -257,7 +257,9 @@ palabras «TODO» en español, «todos»). Marcadores de trabajo pendiente reale
 
 ## E. Partido: física, IA, controles, cámara, presentación (M-113 … M-166)
 
-- **M-113 · P1 · M** Sesgo de local (M-01). *Cómo*: sonda N≥30 y calibración explícita.
+- **M-113 · P1 · M** ✅ (15-10) Sesgo de local (M-01): con N=100 no existe (antes 0,63–0,67,
+  después 0,68–0,71 goles con el mismo once); corregidas dos asimetrías reales (efecto de
+  centros/córners y zonas de balón parado sin reflejar). Ver INFORME_INTERNO §6.
 - **M-114 · P1 · M** Teletransportes del balón en sonda (M-02). *Cómo*: separar reposiciones.
 - **M-115 · P1 · M** Giros >720°/s (465). *Cómo*: limitar velocidad angular y suavizar.
 - **M-116 · P1 · C** Sin duelos con contacto (M-03). *Cómo*: zonas de contacto y empuje.
@@ -658,11 +660,17 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 
 ## K. Idiomas y textos (M-325 … M-336)
 
-- **M-325 · P1 · M** Frases distintas por idioma (I-01): en/pt 1.531, fr/it/de/ca 1.402,
-  pl/tr 1.699. *Cómo*: completar a la unión (1.699) y prueba que falle por menos claves.
-- **M-326 · P1 · M** 297 frases faltan en fr/it/de/ca (incluye 129 titulares). *Cómo*: traducir
-  por lotes con revisión.
-- **M-327 · P2 · M** 168 frases faltan en en/pt. *Cómo*: traducir.
+- **M-325 · P1 · M ✅ (15-10)** Frases distintas por idioma (I-01): en/pt 1.531, fr/it/de/ca 1.402,
+  pl/tr 1.699 contando solo `idiomas_extra.json`. Remedido con todos los catálogos (TABLA +
+  extra + narración + diálogos de la ciudad): unión de 2.574 frases fijas y 373 patrones;
+  ahora **los 8 idiomas tienen las 2.574 y los 373**. Prueba: `_probar_paridad_idiomas` en
+  el banco (falla por una sola frase o patrón de menos; con los datos de antes, 7 fallos).
+- **M-326 · P1 · M ✅ (15-10)** «297 frases faltan en fr/it/de/ca»: en realidad faltaban **36
+  frases + 2 patrones** en cada uno de fr/it/de/ca/pl/tr (los titulares sin icono; con
+  icono ya los traducía la narración). Traducidas; además 2 plantillas reales de la
+  narración que faltaban en los 8 («(moral %+d)», «Colonia …») y «Terapia deportiva».
+- **M-327 · P2 · M ✅ (15-10)** «168 frases faltan en en/pt»: no faltaba ninguna (estaban en
+  `Idiomas.TABLA`, que el recuento no miraba).
 - **M-328 · P2 · C** Patrones numéricos (`patrones` 58) con plurales simples. *Cómo*: reglas de
   plural por idioma (pl y tr difieren).
 - **M-329 · P2 · I** Sin género gramatical (entrenadora/jugadora) en todos los idiomas. *Cómo*:
@@ -678,7 +686,9 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
   añadir ar.
 - **M-335 · P2 · I** Fuentes: cobertura de glifos para pl/tr/ar. *Cómo*: prueba con
   cadenas de cada idioma.
-- **M-336 · P2 · I** `CLAUDE.md` afirma «1.402 frases c/u» (I-04). *Cómo*: actualizar.
+- **M-336 · P2 · I** `CLAUDE.md` afirma «1.402 frases c/u» (I-04). *Cómo*: actualizar a la
+  cifra real (15-10: 2.574 frases fijas + 373 patrones en cada idioma; pendiente de que la
+  sesión principal toque la memoria).
 
 ## L. Rendimiento y optimización (M-337 … M-358)
 
@@ -888,9 +898,12 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 
 ## R. Pasada 3 (M-443 … M-470)
 
-- **M-443 · P1 · M** La IA del motor no amaga (0 en un partido de prueba). *Falta*: fintas de
-  la IA visibles. *Cómo*: subir el umbral de `presion < 1.8` a ~2,6 m, probar antes de pasar
-  si hay rival al frente y repetir la sonda de calidad (N ≥ 8) para no romper la calibración.
+- **M-443 · P1 · M** ✅ (15-10) La IA del motor no amaga (0 en un partido de prueba). Hecho:
+  amago al ver venir al defensor (1,3-3,6 m delante, en carrera, una tirada por duelo, ganas
+  por regate y zona) + finta de último recurso con inercia (sin el salto de 0,8 m). Sonda
+  (N=12-24): ~21 fintas por partido, 45-50 % engañan; goles 2,6-2,8, pases 68-71 %,
+  paradas 69-75 %; el mejor gana (8/3/1 de local) y la pizarra pesa más (ofensiva 5/1/2,
+  defensiva 0/1/7). Pendiente: en el partido 3D la tasa medida es menor (~6 por 90').
 - **M-444 · P2 · M** Fuga de texturas GL al cerrar `prueba_carrera_flujo`. *Cómo*: liberar
   `Retrato3D`/`Portada` (cachés estáticas) al salir con `NOTIFICATION_WM_CLOSE_REQUEST`.
 - **M-445 · P2 · M** Pruebas que no caben en 5 min con render por software (`intro`,
@@ -899,9 +912,15 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 - **M-446 · P1 · M** 69 claves nuevas sin traducir (✅ arregladas); el patrón se repetirá con
   cada pantalla nueva. *Cómo*: **prueba del banco** que extraiga las claves de `Idiomas.t(` del
   código y falle si falta en algún idioma (el script de la pasada 3 ya lo hace).
-- **M-447 · P1 · I** Las 274 cadenas en español escritas directo en `ui/` (I-02) siguen
-  pendientes; la prueba anterior solo cubre las que ya pasan por `Idiomas.t`. *Cómo*: ídem,
-  buscar `.text = "…"` con tildes y exigir envoltorio.
+  ✅ (15-10) Hecho dentro de `_probar_paridad_idiomas`: las 258 frases de `Idiomas.t("…")`
+  de `ui/`, `visor/` y `nucleo/` se comprueban en los 8 idiomas (0 sin traducir).
+- **M-447 · P1 · I · ✅ (15-10, salvo 15 textos)** Las cadenas en español escritas directo en `ui/`
+  (I-02): antes 573 `.text = "…"` con tilde sin envolver (1.136 líneas con el criterio ampliado,
+  732 textos sin traducción); ahora 1.132 envueltos en `Idiomas.t` en 64 archivos y 746 frases
+  nuevas en los 8 idiomas, de modo que la prueba de paridad (que solo mira `Idiomas.t("…")`) ya
+  las cubre: 1.338 frases, 0 sin traducir. Quedan 15 en `ciudad_vista`, `interior_instalacion`,
+  `metro_ciudad` y `ciudad_expansion` (otras sesiones) y un `begins_with("E: hablar")` en
+  `explorador_ciudad.gd` que hay que arreglar antes de envolver su texto.
 - **M-448 · P2 · M** `auditoria_clubes` tarda ~8 min y `auditoria_datos` ~1 min. *Cómo*:
   ejecutar con una muestra (`N` clubes) en el banco y completa solo de noche.
 - **M-449 · P2 · I** Los informes (`AUDITORIA_CLUBES.csv`) se regeneran a mano. *Cómo*: tarea
@@ -969,7 +988,8 @@ Módulos revisados: `Mercado`, `MercadoAvanzado`, `Negociacion`, `Cesiones`, `Co
 - «Los ojos pesan mucho» (pasada anterior): **sobrestimado**; un ojo tiene ~768 triángulos y
   22 jugadores son ~17 k; el coste del pelo/pestañas por capas y el césped en capas es
   mayor (M-339, M-340).
-- «Cada idioma tiene 1.402 frases»: **falso** (I-01).
+- «Cada idioma tiene 1.402 frases»: **falso** (I-01). Desde el 15-10 cada idioma tiene las
+  2.574 frases fijas y los 373 patrones (comprobado en el banco).
 - «Los patrocinadores no coinciden con los reales»: **no es defecto** (decisión del usuario),
   pero sí lo eran el reparto sesgado y los clubes grandes sin patrocinio (✅ corregidos).
 

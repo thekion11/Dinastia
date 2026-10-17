@@ -123,7 +123,7 @@ func resolver(op: String, c: Club, directiva: Directiva, prensa: Prensa) -> Dict
 			if sube:
 				for j: Jugador in c.plantilla:
 					if j.edad <= 21:
-						j.moral = clampi(j.moral + 5, 10, 99)
+						j.cambiar_moral(5, "Directiva")
 				cuerpo = "Los chicos de casa se enteran y entrenan con otra cara."
 			else:
 				cuerpo = "Los de la academia leen la noticia y no les gusta."
