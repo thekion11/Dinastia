@@ -46,6 +46,10 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 5:
 		(_vista.get("_rig") as CameraRig).switch_to(0)
+	## FESTEJO=1 (17-10-2026): mide con el confeti y las bengalas de la grada
+	## encendidos durante toda la muestra (lo peor de un gol del local).
+	if _n == CALENTAR - 4 and OS.get_environment("FESTEJO") != "":
+		FestejoGrada.lanzar(_vista.get("_raiz3d"), Color(0.8, 0.1, 0.1), Color(1, 1, 1), "salida", 600.0)
 	if _n < CALENTAR:
 		return
 	if _n == CALENTAR and OS.get_environment("OCULTAR") != "":
