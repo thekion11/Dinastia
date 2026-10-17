@@ -3986,7 +3986,8 @@ func _gestos_del_arbitro(a: Dictionary, delta: float) -> bool:
 			n.rotation.y = lerp_angle(n.rotation.y, atan2(d.x, d.z), clampf(delta * 6.0, 0.0, 1.0))
 	return true
 
-## La cartulina, en la mano derecha (se crea la primera vez que hace falta).
+## La cartulina, en la mano que levanta el clip (la izquierda), creada la
+## primera vez que hace falta.
 func _poner_tarjeta(a: Dictionary, color: String) -> void:
 	if color == "":
 		if _tarjeta_arb != null:
@@ -3998,10 +3999,10 @@ func _poner_tarjeta(a: Dictionary, color: String) -> void:
 		if esqs.is_empty():
 			return
 		var esq: Skeleton3D = esqs[0]
-		if esq.find_bone("hand_r") < 0:
+		if esq.find_bone("hand_l") < 0:
 			return
 		var ba := BoneAttachment3D.new()
-		ba.bone_name = "hand_r"
+		ba.bone_name = "hand_l"
 		esq.add_child(ba)
 		var k := 1.0 / maxf(esq.global_transform.basis.get_scale().y, 0.001) if esq.is_inside_tree() else 1.0
 		var caja := BoxMesh.new()
