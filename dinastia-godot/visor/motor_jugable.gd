@@ -109,6 +109,13 @@ var _cambio_decidido := false
 
 var fueras_de_juego := [0, 0]
 var _offside_previo := {}
+## EL VAR CON LA JUGADA REAL (17-10-2026): en cada pase, cuánto estaba cada
+## compañero por delante de la línea (m > 0 = adelantado; el juez solo pita
+## por encima de 0,3 m). Al recibir se guarda el del receptor, y el gol deja
+## en `margen_gol` el del goleador (INF si no hubo pase medible).
+var _margenes_pase := {}
+var _margen_recepcion := {}
+var margen_gol := INF
 var _ultima_anim := ""
 var _jugada := {}             ## la jugada prehecha que guía el ataque del poseedor
 var _decision_en := 0.0
@@ -759,6 +766,10 @@ func _gol(en_arco_visita: bool) -> void:
 	estado = "gol"
 	_t_estado = 0.0
 	saque = {"gol_local": de_local}
+	margen_gol = INF
+	if autor_id != "" and String(_margen_recepcion.get("id", "")) == autor_id and t - float(_margen_recepcion.get("t", -99.0)) < 12.0:
+		margen_gol = float(_margen_recepcion["m"])
+	_margen_recepcion = {}
 	gol.emit(de_local, autor_id, asist_id)
 	cambio_estado.emit(estado)
 	## El goleador celebra según su carácter: primero corre al córner (o a la
@@ -904,6 +915,7 @@ func _golpeo_anim(p: Dictionary, ap: AnimationPlayer, anim: String, destino: Vec
 ## de puerta no hay fuera de juego (regla 11).
 func _foto_offside(p: Dictionary) -> void:
 	_offside = {}
+	_margenes_pase = {}
 	if estado == "saque" and String(saque.get("tipo", "")) in ["banda", "corner", "puerta"]:
 		return
 	var local := bool(p["es_local"])
@@ -919,10 +931,13 @@ func _foto_offside(p: Dictionary) -> void:
 	var penultimo: float = prof[prof.size() - 2]
 	var balon_prof := balon.position.z * d
 	var ids := {}
+	_margenes_pase = {"local": local, "m": {}}
 	for q: Dictionary in jugadores:
 		if q == p or bool(q["es_local"]) != local:
 			continue
 		var z := pos(q).z * d
+		if z > 0.0:
+			_margenes_pase["m"][String(q.get("id", ""))] = z - maxf(balon_prof, penultimo)
 		## En campo rival, por delante del balón y del penúltimo (con 30 cm de
 		## tolerancia: la línea la marca el cuerpo, no los pies).
 		if z > 0.0 and z > balon_prof + 0.3 and z > penultimo + 0.3:
@@ -995,6 +1010,11 @@ func _tomar(p: Dictionary) -> void:
 		_pase_eq = -1
 	if _pitar_offside(p):
 		return
+	if not _margenes_pase.is_empty() and bool(_margenes_pase["local"]) == bool(p["es_local"]):
+		var mid := String(p.get("id", ""))
+		if (_margenes_pase["m"] as Dictionary).has(mid):
+			_margen_recepcion = {"id": mid, "m": float(_margenes_pase["m"][mid]), "t": t}
+	_margenes_pase = {}
 	## Tu pase llegó si lo controla uno de los tuyos.
 	if _pase_usuario_vivo and not usuario.is_empty() and p != usuario and bool(p["es_local"]) == bool(usuario["es_local"]):
 		stats["pases_ok"] += 1
