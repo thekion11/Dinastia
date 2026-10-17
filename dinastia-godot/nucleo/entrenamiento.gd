@@ -320,8 +320,8 @@ func crear_mentoria(maestro: Jugador, pupilo: Jugador) -> String:
 	if not puede_ser_mentor(maestro) or not puede_ser_pupilo(pupilo):
 		return "esa pareja no vale"
 	mentorias.append({"maestro": maestro.id, "pupilo": pupilo.id, "semanas": 0, "subidas": 0})
-	maestro.moral = clampi(maestro.moral + 5, 10, 99)
-	pupilo.moral = clampi(pupilo.moral + 8, 10, 99)
+	maestro.cambiar_moral(5, "Entrenamiento")
+	pupilo.cambiar_moral(8, "Entrenamiento")
 	noticia.emit("Mentoría en la cantera",
 		"%s apadrina a %s. Entrenarán juntos y el chico va a aprender de alguien que ya lo vivió todo." % [
 			Nombres.visible(maestro.nombre), Nombres.visible(pupilo.nombre)])
@@ -361,8 +361,7 @@ func _procesar_mentorias(c: Club) -> void:
 			noticia.emit("El alumno sale al maestro",
 				"%s ha copiado el carácter de %s." % [
 					Nombres.visible(pupilo.nombre), Nombres.visible(maestro.nombre)])
-		pupilo.moral = clampi(pupilo.moral + 1, 10, 99)
-
+		pupilo.cambiar_moral(1, "Entrenamiento")
 func procesar_semana(c: Club, anio: int = 0, semana: int = 0) -> Dictionary:
 	var res := {"subieron": [], "bajaron": [], "aprendieron": [], "lesionados": [], "punto_dt": false}
 	if c == null:
@@ -423,8 +422,7 @@ func _sesion_general(j: Jugador, mult: float, ritmo: float, joven: float, res: D
 	## guardería: si el club los tiene, el vestuario va levantando el ánimo solo.
 	var calma := obras.calma_del_vestuario() if obras != null else 0
 	if calma > 0 and j.moral < 40 + 5 * calma:
-		j.moral = clampi(j.moral + 1, 10, 99)
-
+		j.cambiar_moral(1, "Entrenamiento")
 	## Progreso de los menores de 24. La probabilidad base es 0,10 y encima se
 	## multiplican intensidad, formador del DT, rasgo motor, plan prioritario,
 	## centro de entrenamiento y foco técnico. Todos son del HTML.
@@ -496,7 +494,7 @@ func _plan_por_dias(c: Club, carg: Dictionary, ritmo: float, res: Dictionary) ->
 	var gim := (1.0 + 0.08 * float(obras.nivel("gim"))) if obras != null else 1.0
 	for j in c.plantilla:
 		j.fisico = clampi(j.fisico + int(round(float(carg["fis"]) * gim * 0.55)), 10, 100)
-		j.moral = clampi(j.moral + int(round(float(carg["moral"]) * 0.4)), 10, 99)
+		j.cambiar_moral(int(round(float(carg["moral"]) * 0.4)), "Entrenamiento")
 		## El riesgo de romperse por acumulación NO se tira aquí: lo tira
 		## `Medico.chequeo_de_fatiga` con la carga que devuelve `carga_riesgo()`.
 		if j.edad < 24 and j.ovr < j.pot:
@@ -528,7 +526,7 @@ func _trabajo_individual(c: Club, res: Dictionary) -> void:
 		if hab == null:
 			## El plan de liderazgo no da habilidad: da peso en el vestuario y la
 			## cinta si no hay capitán.
-			j.moral = clampi(j.moral + 12, 10, 99)
+			j.cambiar_moral(12, "Entrenamiento")
 			if not _hay_capitan(c):
 				j.capitan = true
 			noticia.emit("%s crece como líder" % j.nombre,
@@ -777,7 +775,7 @@ func aprender(j: Jugador, clave: String) -> String:
 	var at := atributo_de(j, clave)
 	if j.atributos.has(at):
 		j.atributos[at] = clampi(int(j.atributos[at]) + 1, 1, 99)
-	j.moral = clampi(j.moral + 4, 10, 99)
+	j.cambiar_moral(4, "Entrenamiento")
 	_tasar(j)
 	habilidad_aprendida.emit(j, clave, nombre_habilidad(clave))
 	noticia.emit("Nueva habilidad: " + j.nombre,
