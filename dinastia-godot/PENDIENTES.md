@@ -14,8 +14,7 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 GPS 2D estilo GTA (`ui/componentes/minimapa_ciudad.gd`: gira con el rumbo, ruta morada al estadio,
 marcas de estadio y casa, N; M lo esconde), cámara de persecución del coche (retraso en curvas, FOV con
 la velocidad) y primera persona con cabina 3D (`ExploradorCiudad._cabina_3d`); D-pad táctil solo en
-pantallas táctiles. Pendiente fino: velocímetro 3D de la cabina queda tapado por el volante (la velocidad
-se ve en el móvil); el minimapa no dibuja las calles del núcleo del club (solo la zona).
+pantallas táctiles. Velocímetro de la cabina movido a la consola (17-10). Pendiente fino: el minimapa no dibuja las calles del núcleo del club (solo la zona).
 
 ## 2. Qué falta HACER (por orden) y CÓMO
 
@@ -42,7 +41,7 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - Narración por voz: 🔒 dueño (audios).
 
 ### 2.3 Detectados en las últimas pruebas (no están en el informe)
-- **Penales**: entran ~9 de 10 y el tiro del usuario sin apuntar va al centro y marca si el portero se tira → calibrar con más partidos (`pruebas/prueba_prorroga_penales.tscn`).
+- ~~**Penales**: entraban ~9 de 10~~ HECHO 17-10: portero que acierta el lado para más y algún tiro se va fuera (~3 de cada 4 por cálculo; medir con más tandas si se nota).
 - **Añadido**: no suma el tiempo de lesiones (M-139 PARCIAL).
 - **Once automático de la IA**: a veces pone delanteros de lateral (se ve en rojo en el informe del rival) → revisar `Club.once()` (peso de `encaja`).
 - **Notas de los partidos mirados** (en vivo/3D) no se cierran en `Jugador.notas` (solo en `simular()`); arreglarlo cambia el azar (anotado en M-141).
