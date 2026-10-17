@@ -2459,7 +2459,10 @@
   "Tu portero: elige el lado con el stick antes del disparo": "Your goalkeeper: pick the side with the stick before the kick",
   "Ventaja": "Advantage",
   "ADELANTADO %d cm": "OFFSIDE BY %d cm",
-  "HABILITADO %d cm": "ONSIDE BY %d cm"
+  "HABILITADO %d cm": "ONSIDE BY %d cm",
+  "Vibración del mando": "Controller vibration",
+  "Suave": "Soft",
+  "Sin vibración": "No vibration"
  },
  "pt": {
   "Historia": "História",
@@ -4921,7 +4924,10 @@
   "Tu portero: elige el lado con el stick antes del disparo": "Seu goleiro: escolha o lado com o analógico antes do chute",
   "Ventaja": "Vantagem",
   "ADELANTADO %d cm": "ADIANTADO %d cm",
-  "HABILITADO %d cm": "EM POSIÇÃO LEGAL POR %d cm"
+  "HABILITADO %d cm": "EM POSIÇÃO LEGAL POR %d cm",
+  "Vibración del mando": "Vibração do controle",
+  "Suave": "Suave",
+  "Sin vibración": "Sem vibração"
  },
  "patrones": [
   [
@@ -7952,7 +7958,10 @@
   "Tu portero: elige el lado con el stick antes del disparo": "Ton gardien : choisis le côté avec le stick avant le tir",
   "Ventaja": "Avantage",
   "ADELANTADO %d cm": "HORS-JEU DE %d cm",
-  "HABILITADO %d cm": "EN JEU DE %d cm"
+  "HABILITADO %d cm": "EN JEU DE %d cm",
+  "Vibración del mando": "Vibration de la manette",
+  "Suave": "Douce",
+  "Sin vibración": "Sans vibration"
  },
  "it": {
   "Historia": "Storia",
@@ -10321,7 +10330,10 @@
   "Tu portero: elige el lado con el stick antes del disparo": "Il tuo portiere: scegli il lato con lo stick prima del tiro",
   "Ventaja": "Vantaggio",
   "ADELANTADO %d cm": "FUORIGIOCO DI %d cm",
-  "HABILITADO %d cm": "IN GIOCO DI %d cm"
+  "HABILITADO %d cm": "IN GIOCO DI %d cm",
+  "Vibración del mando": "Vibrazione del controller",
+  "Suave": "Leggera",
+  "Sin vibración": "Senza vibrazione"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12690,7 +12702,10 @@
   "Tu portero: elige el lado con el stick antes del disparo": "Dein Torwart: wähle vor dem Schuss mit dem Stick die Ecke",
   "Ventaja": "Vorteil",
   "ADELANTADO %d cm": "%d cm IM ABSEITS",
-  "HABILITADO %d cm": "%d cm KEIN ABSEITS"
+  "HABILITADO %d cm": "%d cm KEIN ABSEITS",
+  "Vibración del mando": "Controller-Vibration",
+  "Suave": "Sanft",
+  "Sin vibración": "Ohne Vibration"
  },
  "ca": {
   "Historia": "Història",
@@ -15059,7 +15074,10 @@
   "Tu portero: elige el lado con el stick antes del disparo": "El teu porter: tria el costat amb l'estic abans del xut",
   "Ventaja": "Avantatge",
   "ADELANTADO %d cm": "AVANÇAT %d cm",
-  "HABILITADO %d cm": "HABILITAT PER %d cm"
+  "HABILITADO %d cm": "HABILITAT PER %d cm",
+  "Vibración del mando": "Vibració del comandament",
+  "Suave": "Suau",
+  "Sin vibración": "Sense vibració"
  },
  "pl": {
   "Club": "Klub",
@@ -17723,7 +17741,10 @@
   "Tu portero: elige el lado con el stick antes del disparo": "Twój bramkarz: wybierz stronę gałką przed strzałem",
   "Ventaja": "Korzyść",
   "ADELANTADO %d cm": "SPALONY O %d cm",
-  "HABILITADO %d cm": "BEZ SPALONEGO O %d cm"
+  "HABILITADO %d cm": "BEZ SPALONEGO O %d cm",
+  "Vibración del mando": "Wibracje kontrolera",
+  "Suave": "Delikatna",
+  "Sin vibración": "Bez wibracji"
  },
  "tr": {
   "Club": "Kulüp",
@@ -20387,6 +20408,9 @@
   "Tu portero: elige el lado con el stick antes del disparo": "Kalecin: şuttan önce çubukla tarafı seç",
   "Ventaja": "Avantaj",
   "ADELANTADO %d cm": "%d cm OFSAYT",
-  "HABILITADO %d cm": "%d cm OFSAYT DEĞİL"
+  "HABILITADO %d cm": "%d cm OFSAYT DEĞİL",
+  "Vibración del mando": "Kol titreşimi",
+  "Suave": "Hafif",
+  "Sin vibración": "Titreşim yok"
  }
 }
