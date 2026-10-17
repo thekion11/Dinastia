@@ -569,3 +569,14 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   `EstadisticasVivo.anular_gol`, panel rojo en `SalaVAR`). OPTIMIZACIÓN del partido: 1,80 M → 0,76 M tris
   (−58 %), 690 → 630 llamadas. REGLA: al rehacer una malla (`VestidorQ._con_reposo*`) copiar sus LOD con
   `VestidorQ.lods_de()`. AVISO dado: a >30 m no se dibujan cejas 3D y a >20 m las pestañas (también peatones).
+- 17-10 (tarde): hechos prórroga+tanda 3D, informe del rival (2.ª versión con estética, formación,
+  nota media y cara del mentor), moral explicada en el Camarín, VAR con fuera de juego real,
+  arreglos del partido (árbitros de color, gestos, cuarto árbitro, red, confeti, línea VAR),
+  vibración del mando, país real de la selección rival, GPS en el móvil. ESTADO REAL de las 470
+  mejoras y las 300 ideas en `dinastia-godot/ESTADO_MEJORAS.md` (con TOP 25). Comparación con
+  otros juegos: `COMPARACION_JUEGOS_2.md`.
+  USO: el 17-10 el usuario enseñó su límite semanal al 86 % (se restablece el viernes 00:00):
+  AHORRAR — sin agentes nuevos, trabajo pequeño y solo lo pedido hasta el restablecimiento.
+  TRASPASO: `dinastia-godot/PENDIENTES.md` (qué falta, cómo, y qué falta fusionar; respaldos en
+  `dinastia-godot/parches_pendientes/`). Mantenerlo al día en cada bloque.
+

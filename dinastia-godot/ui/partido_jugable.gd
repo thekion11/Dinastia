@@ -605,6 +605,7 @@ func _mostrar_banner(texto: String) -> void:
 	tw.tween_property(_banner, "modulate:a", 0.0, 0.5)
 
 func _al_gol(de_local: bool, autor: String, _asist: String) -> void:
+	Mando.vibrar(1.0, 0.6)
 	var yo_id := String(motor.usuario.get("id", ""))
 	if autor != "" and autor == yo_id:
 		_mostrar_banner("¡¡GOOOL TUYO!!")
