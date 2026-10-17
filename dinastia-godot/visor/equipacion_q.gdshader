@@ -135,6 +135,39 @@ uniform float escala_holgura = 0.3;
 uniform float alisar = 0.0;
 varying vec3 v_reposo;
 
+// EL ESCOTE DE VERDAD (17-10-2026). Antes la camiseta acababa en un plano
+// horizontal (y = 1,535) y el cuello era «todo lo que queda por encima de
+// 1,505»: ese plano corta el trapecio casi de canto y salía una franja blanca
+// ancha y dentada sobre los hombros. Ahora el borde rodea el cuello: dentro de
+// una elipse alrededor de su eje (medida en la malla: delante z = 0,02, detrás
+// z = -0,10, costados |x| = 0,065-0,08 entre y = 1,52 y 1,57) la tela acaba en
+// la base del cuello (más baja delante, más alta en la nuca); fuera de ella
+// llega hasta lo alto del hombro. Devuelve (tapa, ribete): cuánto tapa la
+// camiseta y cuánto es ribete del cuello (para el color, el canalé y el
+// relieve). zm = z en metros (-0,25 atrás .. 0,25 delante).
+vec2 escote(float x, float y, float zm) {
+	float t = clamp((zm + 0.04) / 0.068, -1.0, 1.0);
+	float q = length(vec2(x / 0.08, (zm + 0.04) / 0.068));
+	float y_n = 1.528 - 0.02 * max(t, 0.0) + 0.012 * max(-t, 0.0);
+	// Mao: cuello alto, sube por el cuello.
+	if (cuello == 3) y_n += 0.022;
+	float lim = mix(y_n, 1.575, smoothstep(1.0, 1.22, q));
+	float w = 0.0025;
+	float tapa = 1.0 - smoothstep(lim - w, lim + w, y);
+	float ancho = cuello == 3 ? 0.03 : 0.016;
+	float ribete = tapa * (1.0 - smoothstep(ancho - 0.003, ancho, lim - y)) * (1.0 - smoothstep(1.12, 1.32, q));
+	// Pico: la V del frente es piel, con ribete en sus dos lados.
+	if (cuello == 0) {
+		float delante = smoothstep(-0.005, 0.015, zm);
+		float bv = (y - 1.44) * 0.77;
+		float dentro = (1.0 - smoothstep(bv - w, bv + w, abs(x))) * smoothstep(1.438, 1.444, y) * delante;
+		tapa *= 1.0 - dentro;
+		float lado_v = (1.0 - smoothstep(0.011, 0.014, abs(x) - bv)) * step(bv, abs(x) + w) * smoothstep(1.43, 1.445, y) * delante;
+		ribete = max(ribete * (1.0 - dentro), lado_v * tapa);
+	}
+	return vec2(tapa, ribete);
+}
+
 void vertex() {
 	v_reposo = vec3(UV2.x, UV2.y, COLOR.r);
 	// LA ROPA SUELTA (26-9-2026, pedido: "están muy pegadas al cuerpo"): los
@@ -162,6 +195,25 @@ void vertex() {
 		float inflar = torso * holgura * (0.8 + 0.4 * smoothstep(1.35, 1.05, y))
 			+ manga * holgura * (0.5 + 1.1 * smoothstep(0.25, 0.43, ax))
 			+ pant * holgura * (0.75 + 0.85 * smoothstep(0.85, 0.63, y));
+		// EQUIPACIÓN DE JUEGO CON CAÍDA (17-10-2026, «el short y las medias
+		// parecen pintura»): el short se abre más hacia el bajo y la manga
+		// hacia el puño, y los dos cortan en seco (2 cm, no 5): queda un
+		// escalón que la luz marca como el borde de la tela. Las medias
+		// abultan un poco sobre la pierna y más en la vuelta de arriba, y el
+		// ribete del cuello sobresale. Todo proporcional a `holgura` (con la
+		// ropa aparte vale 0 y no se suma nada). Ropa de calle: como antes.
+		if (!civil && !largo) {
+			float k = holgura / 0.02;
+			float pant_j = (1.0 - brazo) * smoothstep(0.603, 0.622, y) * (1.0 - smoothstep(1.0, 1.04, y));
+			float manga_j = brazo * (1.0 - smoothstep(0.424, 0.438, ax));
+			inflar += pant_j * holgura * (0.35 + 1.5 * smoothstep(0.8, 0.625, y)) - pant * holgura * 0.4 * (1.0 - pant_j)
+				+ manga_j * holgura * 0.6 * smoothstep(0.3, 0.43, ax);
+			float media = (1.0 - brazo) * smoothstep(0.12, 0.14, y) * (1.0 - smoothstep(0.462, 0.474, y));
+			float vuelta = media * smoothstep(0.425, 0.44, y);
+			VERTEX += NORMAL * k * (media * 0.0035 + vuelta * 0.0025);
+			vec2 ec = escote(v_reposo.x, y, v_reposo.z * 0.5 - 0.25);
+			VERTEX += NORMAL * k * ec.y * (1.0 - brazo) * 0.0025;
+		}
 		// Pantalón y manga largos (ropa de calle, cuerpo técnico): la tela
 		// cae suelta hasta el tobillo y la muñeca, no como unas calzas.
 		if (largo) {
@@ -205,7 +257,10 @@ void vertex() {
 			float pant_l = (1.0 - brazo) * smoothstep(mix(0.58, 0.12, largas), mix(0.63, 0.16, largas), y) * (1.0 - smoothstep(1.0, 1.04, y));
 			// Ropa de calle: el zapato tampoco marca los dedos del pie.
 			float zapato = (civil && largo) ? (1.0 - brazo) * (1.0 - smoothstep(0.1, 0.13, y)) : 0.0;
-			float ropa = max(max(torso, zapato), max(manga_l, pant_l)) * alisar;
+			// Camiseta de juego: la tela tapa más el músculo (con 0,55 se leían
+			// los abdominales y el pectoral como pintados; 17-10-2026).
+			float alisar_ef = (civil || largo) ? alisar : max(alisar, 0.8);
+			float ropa = max(max(torso, zapato), max(manga_l, pant_l)) * alisar_ef;
 			VERTEX += NORMAL * zapato * 0.008;
 			vec3 a = normalize(CUSTOM1.xyz);
 			vec3 b = normalize(NORMAL);
@@ -398,6 +453,27 @@ float digito(int n, vec2 p) {
 	return on;
 }
 
+// PLIEGUES DE TELA (17-10-2026): altura de una arruga suave (-1..1) en la
+// pose de reposo. Torso: caída vertical bajo el pecho, más en los costados, y
+// tirantes del sobaco al pecho. Short: pliegues en V hacia la entrepierna.
+float pliegues(float x, float y) {
+	float ax = abs(x);
+	float t = smoothstep(1.34, 1.08, y) * step(1.0, y) * step(ax, 0.215);
+	float h = sin(x * 52.0 + ruido(vec2(x * 7.0, y * 2.5)) * 5.0) * t * (0.45 + 0.55 * smoothstep(0.06, 0.18, ax));
+	float sob = smoothstep(0.13, 0.2, ax) * smoothstep(1.2, 1.28, y) * (1.0 - smoothstep(1.38, 1.45, y)) * step(ax, 0.215);
+	h += sin((y + ax * 0.9) * 110.0) * sob * 0.55;
+	float p = step(0.6, y) * step(y, 1.0) * step(ax, 0.215);
+	h += sin((ax * 1.3 - y) * 48.0 + ruido(vec2(x * 6.0, y * 3.0)) * 2.5) * p * smoothstep(0.98, 0.72, y) * smoothstep(0.62, 0.7, y) * 0.3;
+	return h;
+}
+
+// Una línea fina (costura) a distancia d, que se apaga de lejos en vez de
+// parpadear.
+float linea(float d, float ancho) {
+	float fw = fwidth(d);
+	return (1.0 - smoothstep(ancho, ancho + fw * 1.5, abs(d))) * (1.0 - smoothstep(ancho * 1.5, ancho * 4.0, fw));
+}
+
 void fragment() {
 	vec3 piel = texture(piel_tex, UV).rgb;
 	vec4 m = texture(mascara, UV);
@@ -406,6 +482,9 @@ void fragment() {
 	float y = c.g * Y_MAX;
 	float z = c.b; // 0 atrás, 1 adelante (normalizada de -0,25 a 0,25 m)
 	bool cubierta = c.r + c.g + c.b > 0.001;
+	// < 0: el cuello de siempre (sin pose de reposo o ropa de calle).
+	float ribete_cuello = -1.0;
+	float tapa_arriba = 1.0;
 	if (usa_reposo) {
 		// Coordenadas exactas y cortes de prenda suaves (mismas zonas que
 		// `mascara_equipacion.py::zonas()`), con medio centímetro de borde.
@@ -420,6 +499,13 @@ void fragment() {
 		// el corte de camiseta de fútbol (1,535) asomaba media clavícula.
 		float tope_t = civil ? mix(1.552, 1.60, smoothstep(0.06, 0.085, ax)) + dy_cuerpo : 1.535;
 		float torso = smoothstep(1.0 - w, 1.0 + w, y) * (1.0 - smoothstep(tope_t - w, tope_t + w, y));
+		if (!civil) {
+			vec2 ec = escote(x, y, z * 0.5 - 0.25);
+			torso = smoothstep(1.0 - w, 1.0 + w, y) * ec.x;
+			ribete_cuello = ec.y;
+			// Medio centímetro más arriba: para el canto enrollado del cuello.
+			tapa_arriba = escote(x, y + 0.004, z * 0.5 - 0.25).x;
+		}
 		m.r = max(brazo * (1.0 - smoothstep(0.43 - w, 0.43 + w, ax)), (1.0 - brazo) * torso);
 		m.g = (1.0 - brazo) * smoothstep(0.62 - w, 0.62 + w, y) * (1.0 - smoothstep(1.0 - w, 1.0 + w, y));
 		m.b = (1.0 - brazo) * smoothstep(0.085 - w, 0.085 + w, y) * (1.0 - smoothstep(0.47 - w, 0.47 + w, y));
@@ -442,9 +528,17 @@ void fragment() {
 		float arruga = ruido(vec2(x * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2(x * 34.0, y * 11.0 + 7.0)) * 0.4;
 		float arr_x = ruido(vec2((x + 0.006) * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2((x + 0.006) * 34.0, y * 11.0 + 7.0)) * 0.4;
 		float arr_y = ruido(vec2(x * 16.0 + 3.0, (y + 0.012) * 5.0)) * 0.6 + ruido(vec2(x * 34.0, (y + 0.012) * 11.0 + 7.0)) * 0.4;
-		relieve_tela = vec2(arr_x - arruga, arr_y - arruga) * 5.0;
+		relieve_tela = vec2(arr_x - arruga, arr_y - arruga) * (civil ? 5.0 : 2.0);
+		if (!civil && !largo) {
+			float h0 = pliegues(x, y);
+			relieve_tela += vec2(pliegues(x + 0.004, y) - h0, pliegues(x, y + 0.004) - h0) * 1.6;
+			arruga += h0 * 0.18;
+		}
 		float lado_t = smoothstep(0.1, 0.2, abs(x)) * step(abs(x), 0.215);
-		pliegue = clamp(0.93 + lum * 0.12, 0.92, 1.05) * (1.0 - (arruga - 0.45) * (0.08 + lado_t * 0.1));
+		// Equipación de juego: casi nada de la sombra pintada de la piel
+		// (abdominales, ombligo y un parche claro en la cintura se veían a
+		// través de la tela).
+		pliegue = (civil ? clamp(0.93 + lum * 0.12, 0.92, 1.05) : clamp(0.985 + lum * 0.03, 0.98, 1.01)) * (1.0 - (arruga - 0.45) * (0.08 + lado_t * 0.1));
 		pliegue *= 1.0 - 0.18 * (1.0 - smoothstep(0.0, 0.05, abs(y - 1.26))) * smoothstep(0.17, 0.215, abs(x)) * step(abs(x), 0.25);
 		pliegue *= 1.0 - 0.12 * (1.0 - smoothstep(0.0, 0.025, abs(y - 1.0)));
 	}
@@ -474,18 +568,35 @@ void fragment() {
 	// Cuello y puños del color de ribete.
 	// En ropa de calle (civil) no hay cuello acanalado de fútbol: la franja
 	// ancha sobre los hombros delataba una camiseta de juego.
-	if ((!manga && y > 1.505 && !civil) || (manga && abs(x) > 0.405)) {
+	float rc = ribete_cuello >= 0.0 ? ribete_cuello : step(1.505, y);
+	if (!manga && !civil) {
+		camiseta = mix(camiseta, trim_col, rc);
+	} else if (manga && abs(x) > 0.405) {
 		camiseta = trim_col;
 	}
 	// DETALLES DE CONFECCIÓN (realismo): cuello y puños acanalados, costuras
 	// laterales y de hombro un poco más oscuras, escudo del club (izquierda
 	// del pecho) y una marca de ropa inventada (derecha).
 	bool frente = z > 0.55;
-	if ((!manga && y > 1.505 && !civil) || (manga && abs(x) > 0.405)) {
+	if (ribete_cuello >= 0.0 && !manga) {
+		// Canalé del cuello: costillas a lo largo del borde (alrededor del
+		// cuello), canto enrollado algo más oscuro y costura al pie del ribete.
+		float ang_c = atan(x, z * 0.5 - 0.25 + 0.04) * 26.0;
+		float fade_c = 1.0 - smoothstep(0.4, 1.2, fwidth(ang_c));
+		camiseta *= 1.0 - rc * (0.05 + 0.05 * sin(ang_c * 6.2832)) * fade_c;
+		camiseta *= 1.0 - 0.22 * (1.0 - tapa_arriba) * rc;
+		camiseta *= 1.0 - 0.3 * clamp(rc * (1.0 - rc) * 4.0, 0.0, 1.0);
+	} else if ((!manga && y > 1.505 && !civil) || (manga && abs(x) > 0.405)) {
 		camiseta *= 0.9 + 0.1 * step(0.5, fract((manga ? abs(x) : y) * 180.0));
 	}
+	if (usa_reposo && manga && !civil && !largo) {
+		// Puño: canto enrollado y costura donde empieza el ribete.
+		float hs = 0.43 - abs(x);
+		camiseta *= 1.0 - 0.2 * (1.0 - smoothstep(0.0, 0.005, hs));
+		camiseta *= 1.0 - 0.25 * linea(hs - 0.025, 0.0012);
+	}
 	if (familia >= 0 && !manga && frente) {
-		if (cuello == 0 && y > 1.44 && y < 1.51) {
+		if (cuello == 0 && y > 1.44 && y < 1.51 && ribete_cuello < 0.0) {
 			float borde_v = (y - 1.44) * 0.77;
 			// Civil (traje): dentro de la V asoma la camisa (color 3).
 			if (abs(x) < borde_v - 0.007) camiseta = civil ? C(2) : C(0) * 0.55;
@@ -495,7 +606,7 @@ void fragment() {
 			if (abs(x) < 0.004 && (abs(y - 1.46) < 0.004 || abs(y - 1.485) < 0.004)) camiseta = C(0) * 0.7;
 		}
 	}
-	if (familia >= 0 && !manga && cuello == 3 && y > 1.485) camiseta = civil ? camiseta * 0.82 : trim_col;
+	if (familia >= 0 && !manga && cuello == 3 && y > 1.485 && ribete_cuello < 0.0) camiseta = civil ? camiseta * 0.82 : trim_col;
 	// Ropa de calle: un ribete fino y del mismo color en el escote.
 	// Solo una franja de 1,2 cm pegada al borde del escote: con un rectángulo
 	// desde 1,53 se veía un babero oscuro en el pecho.
@@ -605,6 +716,26 @@ void fragment() {
 	else if (med_dis == 3) med = ((tm > 0.05 && tm < 0.12) || (tm > 0.17 && tm < 0.24)) ? med_c2.rgb : med;
 	else if (med_dis == 4) med = tm > 0.55 ? med_c2.rgb : med;
 	else if (med_dis == 5) med = (abs(fract(tm * 6.0) - 0.5) + abs(fract(x * 25.0) - 0.5) < 0.35) ? med_c2.rgb : med;
+	// CONFECCIÓN DEL SHORT Y LAS MEDIAS (17-10-2026). Short: dobladillo con el
+	// canto enrollado, costura a 1,6 cm y la sombra que deja el bajo de la
+	// camiseta en la cintura. Medias: canalé vertical alrededor de la pierna y
+	// vuelta de arriba más oscura con su canto.
+	float ang_m = 0.0;
+	float fade_m = 0.0;
+	if (usa_reposo && !civil && !largo) {
+		float hp = y - 0.62;
+		pant *= 1.0 - 0.2 * (1.0 - smoothstep(0.0, 0.005, hp));
+		pant *= 1.0 + 0.05 * smoothstep(0.004, 0.008, hp) * (1.0 - smoothstep(0.01, 0.014, hp));
+		pant *= 1.0 - 0.22 * linea(hp - 0.016, 0.0012);
+		pant *= 1.0 - 0.28 * (1.0 - smoothstep(0.0, 0.03, 1.0 - y));
+		ang_m = atan(z * 0.5 - 0.25 + 0.06, abs(x) - 0.122) * 22.0;
+		fade_m = 1.0 - smoothstep(0.35, 1.0, fwidth(ang_m));
+		med *= 1.0 + 0.07 * sin(ang_m * 6.2832) * fade_m;
+		float vuelta = smoothstep(0.425, 0.432, y);
+		med *= 1.0 - 0.1 * vuelta;
+		med *= 1.0 - 0.2 * (1.0 - smoothstep(0.0, 0.005, 0.47 - y));
+		med *= 1.0 - 0.25 * (1.0 - smoothstep(0.0, 0.006, abs(y - 0.428))) * step(0.12, y);
+	}
 	// Botines: dibujo del modelo, suela y cuello.
 	float bz = clamp((z - 0.22) / 0.53, 0.0, 1.0);
 	float balto = clamp(y / 0.115, 0.0, 1.0);
@@ -701,6 +832,17 @@ void fragment() {
 		// Hebilla del cinturón, al frente.
 		if (y > 0.958 && y < 0.993 && ax_t < 0.018 && z > 0.6) pant = vec3(0.55, 0.52, 0.45);
 	}
+	// SOMBRA DE LOS BORDES SOBRE LA PIEL (oclusión falsa, 17-10-2026): la tela
+	// tiene grosor y tapa la luz justo al lado del bajo del short, del puño de
+	// la manga, del cuello y de la media; sin eso la prenda parecía pintada.
+	if (usa_reposo && !civil && !largo) {
+		float ax_s = abs(x);
+		float bajo_s = (1.0 - smoothstep(0.0, 0.022, 0.62 - y)) * step(0.47, y) * step(y, 0.625) * step(ax_s, 0.215);
+		float puno_s = (1.0 - smoothstep(0.0, 0.02, ax_s - 0.43)) * step(0.215, ax_s) * step(1.22, y);
+		float cuello_s = y > 1.45 ? escote(x, y - 0.012, z * 0.5 - 0.25).x * (1.0 - tapa_arriba) : 0.0;
+		float media_s = (1.0 - smoothstep(0.0, 0.012, y - 0.47)) * step(y, 0.6) * step(ax_s, 0.215);
+		albedo *= 1.0 - 0.38 * max(bajo_s, puno_s) - 0.3 * cuello_s - 0.18 * media_s;
+	}
 	albedo = mix(albedo, camiseta * pliegue, m.r);
 	albedo = mix(albedo, pant * pliegue, m.g);
 	albedo = mix(albedo, med * pliegue, m.b);
@@ -776,8 +918,10 @@ void fragment() {
 	punto *= nitidez;
 	float es_camiseta = m.r * (1.0 - m.g);
 	ALBEDO *= 1.0 + punto * 0.035 * tela;
-	float rugo = mix(0.62, 0.5, es_camiseta);
-	rugo = mix(rugo, 0.55, m.g);
+	// Poliéster de juego: satinado, no charol (17-10-2026: con 0,5 la camiseta
+	// y el short brillaban como látex y marcaban cada músculo).
+	float rugo = mix(0.62, civil ? 0.5 : 0.68, es_camiseta);
+	rugo = mix(rugo, civil ? 0.55 : 0.68, m.g);
 	rugo = mix(rugo, 0.88, m.b);
 	rugo = mix(rugo, 0.28, m.a);
 	// Ropa de calle (traje, abrigo, polo): lana y algodón son MATES. Con la
@@ -789,14 +933,28 @@ void fragment() {
 		rugo = mix(rugo, 0.62, m.a);
 	}
 	ROUGHNESS = rugo + punto * 0.05 * tela;
-	SPECULAR = civil ? mix(0.3, 0.5, m.a) : mix(0.45, 0.55, clamp(es_camiseta + m.g + m.a, 0.0, 1.0));
+	SPECULAR = civil ? mix(0.3, 0.5, m.a) : mix(0.45, 0.42, clamp(es_camiseta + m.g, 0.0, 1.0)) + 0.1 * m.a;
+	if (!civil) {
+		// Brillo de tela deportiva: un satinado leve a contraluz, solo en la tela.
+		float roce = 1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0);
+		ALBEDO *= 1.0 + 0.1 * roce * roce * (tela - m.b * 0.7) * (1.0 - m.a);
+	}
 	vec3 nm = usa_normal ? texture(normal_tex, UV).rgb : vec3(0.5, 0.5, 1.0);
+	vec2 nm_cuerpo = nm.xy - 0.5;
 	// Micro relieve del tejido sobre el relieve del cuerpo.
-	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * 0.045 * tela * nitidez;
+	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * (usa_reposo && !civil ? 0.018 : 0.045) * tela * nitidez;
 	nm.xy += relieve_tela * tela;
+	// Equipación de juego (17-10-2026): el músculo se atenúa ANTES de sumar el
+	// relieve propio de la tela (arrugas, pliegues, canalé), y así la tela se
+	// puede marcar más sin que vuelvan los abdominales pintados.
+	bool juego = usa_reposo && !civil && usa_normal;
+	if (juego) {
+		nm.xy -= nm_cuerpo * 1.0 * tela;
+		nm.x += cos(ang_m * 6.2832) * fade_m * 0.07 * m.b;
+	}
 	NORMAL_MAP = nm;
 	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
-	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.06 : 0.22) : 0.45, tela) : 0.6 * tela;
+	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.06 : 0.6) : 0.45, tela) : 0.6 * tela;
 	RIM = borde;
 	RIM_TINT = 0.35;
 }
