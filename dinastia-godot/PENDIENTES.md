@@ -8,7 +8,7 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 | Qué | Dónde está | Estado | Cómo se fusiona |
 |---|---|---|---|
 | Todo lo hecho del 14 al 17-10 | `main` | **FUSIONADO el 17-10 con el PR #7** | nada pendiente; lo nuevo que se haga va en la rama y se pasa con otro PR cuando el dueño lo pida |
-| Tanda 2 del TOP 25 (M-104, M-160, M-141, M-051, M-238 y operadores del VAR) | **unida a `claude/godot-project-review-o1dvr1` el 17-10** (subida) | banco 0 fallos | ya no queda nada fuera de la rama: solo falta el PR a `main` |
+| Tanda 2 del TOP 25, mejoras del coche/GPS y caza de bugs del 17-10 | `main` | **fusionado el 17-10 con el PR #8** (pedido del dueño) | nada pendiente |
 
 ## 1.b Hecho en la última tanda (17-10, ya en la rama)
 GPS 2D estilo GTA (`ui/componentes/minimapa_ciudad.gd`: gira con el rumbo, ruta morada al estadio,
@@ -57,6 +57,8 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - Coches del tráfico y autobús: E no hace nada (no se pueden robar ni subir al bus). Inofensivo; posible mejora.
 - Metro: E en marcha = «bajar en la próxima»; no se puede salir en el túnel. Correcto.
 - Esc bajo tierra (metro/galería): el entorno se restaura en `_exit_tree`. Correcto.
+- IDEAS registradas (el dueño dijo que NO por ahora, 17-10): subir al autobús, tomar coches del tráfico,
+  reacción del peatón al atropello.
 - **MENÚS A VELOCIDAD SOBREHUMANA** (`pruebas/estres_menus.tscn`, 400 fotogramas, 2-6 acciones por fotograma):
   · ~~Pestañas liberadas~~ HECHO: `MenuLateral.abrir_menu` reutilizaba una pantalla que se estaba cerrando
     (fundido de 0,15 s) y le volvía a meter las pestañas, que se borraban con ella. Ahora una pantalla que
