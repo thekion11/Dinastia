@@ -131,6 +131,17 @@ func _process(delta: float) -> void:
 
 	var t_pos := target.global_position
 
+	## LA TANDA DE PENALES (17-10-2026): plano bajo detrás del punto de penal,
+	## mirando al arco de +Z (todos tiran ahí), con el lanzador y el portero en
+	## cuadro. Manda sobre cualquier cámara salvo la del DT sancionado.
+	if plano_tanda and c_name != "Desde la grada (sancionado)":
+		var pos_t := Vector3(0.0, 2.3, MotorJugable.LARGO - MotorJugable.PUNTO_PENAL - 7.5)
+		cam.global_position = cam.global_position.lerp(pos_t, clampf(3.0 * delta, 0.0, 1.0)) if cam.global_position.distance_to(pos_t) < 30.0 else pos_t
+		cam.fov = lerpf(cam.fov, 42.0, clampf(3.0 * delta, 0.0, 1.0))
+		cam.look_at(Vector3(0.0, 1.0, MotorJugable.LARGO), Vector3.UP)
+		_efectos(delta)
+		return
+
 	if c_name == "Árbitro (POV)":
 		if is_instance_valid(arbitro_ref) and is_instance_valid(balon_ref):
 			var ojos := arbitro_ref.global_position + Vector3(0, 1.72, 0)
@@ -311,6 +322,7 @@ func _unhandled_input(event: InputEvent) -> void:
 ##
 ## Las PISTAS las pone `VistaEstadio` leyendo el motor (sin tocarlo); sin motor
 ## la cámara se las arregla con el balón solo.
+var plano_tanda := false    ## la tanda de penales: cámara detrás del lanzador
 var pista_estado := ""      ## juego | saque | gol | descanso | fin ("" = sin motor)
 var pista_ataca := 0.0      ## +1 / -1: portería que ataca quien lleva el balón; 0 = nadie
 var pista_ocasion := 0.0    ## segundos de «ocasión» que quedan (tiro en el aire…)

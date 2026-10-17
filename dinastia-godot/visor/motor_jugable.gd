@@ -35,6 +35,11 @@ signal cambio_estado(estado: String)
 signal terminado
 ## Un cambio: quién sale, quién entra, de qué equipo (MEGAPLAN fase 3).
 signal sustitucion(sale: String, entra: String, es_local: bool)
+## PRÓRROGA Y PENALES (17-10-2026): solo con `eliminatoria` y empate.
+signal prorroga_empieza
+signal tanda_empieza
+signal tanda_tiro(equipo: int, jugador_id: String, marcado: bool)
+signal tanda_terminada(goles_local: int, goles_visita: int)
 
 const LARGO := 52.5
 const ANCHO := 34.0
@@ -72,7 +77,11 @@ const MITAD_CALIBRADA := 240.0
 var t := 0.0
 var mitad := 1
 var goles := [0, 0]            ## [local, visita]
-var estado := "saque"          ## juego | saque | gol | descanso | fin
+var estado := "saque"          ## juego | saque | gol | descanso | tanda | fin
+## Partido de eliminación directa: con empate al 90' hay prórroga (mitades 3 y
+## 4, de 15', un tercio de `duracion_mitad`) y, si sigue, tanda de penales.
+var eliminatoria := false
+var prorroga := false
 var poseedor: Dictionary = {}
 var ultimo_toque: Dictionary = {}
 var penultimo_toque: Dictionary = {}
@@ -238,7 +247,8 @@ func _orientar_formaciones() -> void:
 func forma_fisica(p: Dictionary) -> float:
 	if p.is_empty():
 		return 1.0
-	var jugado := clampf((float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad), 0.0, 1.0)
+	## En la prórroga el cansancio sigue subiendo (hasta un tercio más).
+	var jugado := clampf(tiempo_jugado() / (2.0 * duracion_mitad), 0.0, 1.35)
 	var fis := float(p["attr"]["fis"]) if p.has("attr") else 0.6
 	var por_tiempo := jugado * 0.42 * (1.3 - fis)
 	## Quien entró desde el banco llega fresco: solo cuenta lo que jugó.
@@ -318,7 +328,7 @@ func _cambiar(sale: Dictionary, entra: Dictionary, entra_es_usuario: bool) -> vo
 	_cambio_hecho = true
 	## El que entra hereda el sitio táctico del que sale.
 	entra["slot_code"] = sale["slot_code"]
-	entra["entro_en"] = clampf((float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad), 0.0, 1.0)
+	entra["entro_en"] = clampf(tiempo_jugado() / (2.0 * duracion_mitad), 0.0, 1.0)
 	entra["base_pos"] = sale["base_pos"]
 	(entra["node"] as Node3D).position = Vector3(ANCHO - 0.5, 0, 0)
 	(entra["node"] as Node3D).visible = true
@@ -380,7 +390,7 @@ func reemplazar(sale_id: String, entra: Dictionary) -> bool:
 	entra["base_pos"] = sale["base_pos"]
 	entra["es_local"] = sale["es_local"]
 	entra["por"] = sale["por"]
-	entra["entro_en"] = clampf((float(mitad - 1) * duracion_mitad + t) / (2.0 * duracion_mitad), 0.0, 1.0)
+	entra["entro_en"] = clampf(tiempo_jugado() / (2.0 * duracion_mitad), 0.0, 1.0)
 	var n: Node3D = entra["node"]
 	n.position = Vector3(signf(pos(sale).x + 0.01) * (ANCHO - 0.5), 0, clampf(pos(sale).z, -8.0, 8.0))
 	n.visible = true
@@ -500,33 +510,67 @@ static func dir_ataque(es_local: bool) -> float:
 	return 1.0 if es_local else -1.0
 
 func _arco_rival(p: Dictionary) -> Vector3:
+	if estado == "tanda":
+		return TANDA_ARCO
 	return Vector3(0, 0, LARGO * dir_ataque(bool(p["es_local"])))
 
 func _arco_propio(p: Dictionary) -> Vector3:
+	if estado == "tanda":
+		return TANDA_ARCO
 	return Vector3(0, 0, -LARGO * dir_ataque(bool(p["es_local"])))
 
 func pos(p: Dictionary) -> Vector3:
 	return (p["node"] as Node3D).position
 
 func minuto() -> int:
-	return int(minf(t, duracion_mitad) / duracion_mitad * 45.0) + (45 if mitad == 2 else 0)
+	var d := dur_mitad()
+	return int(minf(t, d) / d * minutos_de_mitad()) + minuto_base()
+
+## Segundos reales que dura la mitad `m` (la en curso por defecto): las dos de
+## la prórroga son de 15', un tercio de las normales.
+func dur_mitad(m := -1) -> float:
+	var mm := mitad if m < 0 else m
+	return duracion_mitad if mm <= 2 else duracion_mitad / 3.0
+
+func minutos_de_mitad(m := -1) -> float:
+	return 45.0 if (mitad if m < 0 else m) <= 2 else 15.0
+
+## El minuto en que empieza la mitad: 0, 45, 90 o 105.
+func minuto_base(m := -1) -> int:
+	return [0, 45, 90, 105][clampi((mitad if m < 0 else m) - 1, 0, 3)]
+
+## Lo jugado en segundos reales (sin añadidos), contando la prórroga.
+func tiempo_jugado() -> float:
+	if mitad <= 2:
+		return float(mitad - 1) * duracion_mitad + t
+	return 2.0 * duracion_mitad + float(mitad - 3) * duracion_mitad / 3.0 + t
+
+func _anadido_de(m: int) -> float:
+	return float(anadido[m - 1]) if anadido.size() >= m else 0.0
 
 ## Segundos de partido jugados en el añadido (-1 si no se está en él).
 func segundos_anadidos() -> float:
-	if t <= duracion_mitad:
+	var d := dur_mitad()
+	if t <= d:
 		return -1.0
-	return (t - duracion_mitad) / duracion_mitad * 45.0 * 60.0
+	return (t - d) / d * minutos_de_mitad() * 60.0
 
 ## Los minutos de añadido que enseña el cuarto árbitro en esta mitad.
 func minutos_anadidos() -> int:
-	return int(ceil(float(anadido[mitad - 1]) / duracion_mitad * 45.0))
+	return int(ceil(_anadido_de(mitad) / dur_mitad() * minutos_de_mitad()))
 
 ## Sortea el añadido: 1-3' la primera parte y 2-5' la segunda, más con goles,
-## cambios o faltas (aquí, simple y con la semilla del partido).
+## cambios o faltas (aquí, simple y con la semilla del partido). En la
+## prórroga, 0-1' y 1-2'.
 func sortear_anadido() -> void:
 	var m1 := float(_rng.randi_range(1, 3))
 	var m2 := float(_rng.randi_range(2, 5))
-	anadido = [m1 / 45.0 * duracion_mitad, m2 / 45.0 * duracion_mitad]
+	## Los de la prórroga salen de los otros, sin tirar más dados: así un
+	## partido de liga sigue la misma secuencia aleatoria que antes.
+	var m3 := float(int(m1 + m2) % 2)
+	var m4 := 1.0 + float(int(m2) % 2)
+	var d3 := duracion_mitad / 3.0
+	anadido = [m1 / 45.0 * duracion_mitad, m2 / 45.0 * duracion_mitad, m3 / 15.0 * d3, m4 / 15.0 * d3]
 
 # ---------------------------------------------------------------- bucle
 
@@ -553,7 +597,7 @@ func paso(delta: float) -> void:
 				var due := entra_usuario_min if entra_usuario_min >= 0 else 60
 				if minuto() >= due + 3:
 					_revisar_cambio(true)
-			if t >= duracion_mitad + float(anadido[mitad - 1]):
+			if t >= dur_mitad() + _anadido_de(mitad):
 				_fin_de_mitad()
 				return
 			if not poseedor.is_empty():
@@ -587,14 +631,20 @@ func paso(delta: float) -> void:
 				if not cand.is_empty():
 					_poner_usuario(cand)
 			_colocar_saque(delta)
+		"tanda":
+			t += delta
+			_paso_tanda(delta)
+			return
 		"gol", "descanso":
 			_mover_balon(delta)
 			_ia_celebracion(delta)
-			if _t_estado > (duracion_gol if estado == "gol" else 3.2):
+			## Antes de la prórroga, un descanso corto algo más largo.
+			if _t_estado > (duracion_gol if estado == "gol" else (5.0 if mitad == 2 else 3.2)):
 				if estado == "descanso":
-					mitad = 2
+					## 2 = segunda parte (saca la visita), 3 y 4 = prórroga.
+					mitad += 1
 					t = 0.0
-					_saque_de_centro(false)
+					_saque_de_centro(mitad % 2 == 1)
 				else:
 					var saca_local: bool = not bool(saque.get("gol_local", true))
 					_saque_de_centro(saca_local)
@@ -604,16 +654,339 @@ func paso(delta: float) -> void:
 	_actualizar_balon_visual(delta)
 
 func _fin_de_mitad() -> void:
-	if mitad == 1:
+	var empate := int(goles[0]) == int(goles[1])
+	if mitad == 1 or mitad == 3:
 		estado = "descanso"
 		_t_estado = 0.0
-		aviso.emit("⏸ Descanso: %d-%d" % goles)
+		aviso.emit(("⏸ Descanso: %d-%d" if mitad == 1 else "⏱ Cambio de campo: %d-%d") % goles)
 		cambio_estado.emit(estado)
+	elif mitad == 2 and eliminatoria and empate:
+		## LA PRÓRROGA: descanso corto y dos tiempos de 15'.
+		estado = "descanso"
+		_t_estado = 0.0
+		prorroga = true
+		aviso.emit("⏱ Prórroga: %d-%d" % goles)
+		prorroga_empieza.emit()
+		cambio_estado.emit("prorroga")
+	elif mitad == 4 and empate:
+		_empezar_tanda()
 	else:
-		estado = "fin"
-		aviso.emit("🏁 Final: %d-%d" % goles)
-		cambio_estado.emit(estado)
-		terminado.emit()
+		_terminar()
+
+func _terminar() -> void:
+	estado = "fin"
+	aviso.emit("🏁 Final: %d-%d" % goles)
+	cambio_estado.emit(estado)
+	terminado.emit()
+
+# ---------------------------------------------------------------- penales
+
+## LA TANDA DE PENALES, EN EL CÉSPED (17-10-2026). Cinco por equipo y muerte
+## súbita, todos al mismo arco (+Z), los demás en el círculo central. Los
+## lanzadores van en orden (los de mejor tiro primero, el portero al final) y
+## cada penal reutiliza el de siempre: `_tirar` con su error, el apunte y la
+## carga del usuario (`_apuntar_usuario`) y el círculo de serenidad. Cuando
+## tu equipo defiende y lo manejas tú, eliges el lado del portero con el stick
+## antes del disparo. El resultado NO pasa por `gol`: va a `tanda_tiro` y, al
+## final, a `tanda_terminada` (el acta lo guarda con `penales_externos`).
+##   tanda = {tiros: [[bool…], [bool…]], orden: [[p…], [p…]], empieza,
+##            fase (entrar|preparar|apuntar|vuelo|resultado|fin), lanzador,
+##            portero, lado (-1 / 0 / 1 en X del mundo), cruzo}
+var tanda: Dictionary = {}
+const TANDA_ARCO := Vector3(0, 0, LARGO)
+const TANDA_PUNTO := Vector3(0, R, LARGO - PUNTO_PENAL)
+## Tu portero sin lado elegido: adivina como el de la IA.
+const SIN_ELEGIR := 99
+
+## El equipo que manejas en la tanda (-1 = la IA tira todo).
+func tanda_equipo_usuario() -> int:
+	return control_equipo if control_equipo >= 0 and not autopiloto else -1
+
+func goles_tanda(eq: int) -> int:
+	var n := 0
+	if tanda.is_empty():
+		return 0
+	for b: bool in tanda["tiros"][eq]:
+		if b:
+			n += 1
+	return n
+
+## El equipo que tira ahora.
+func tanda_turno() -> int:
+	if tanda.is_empty():
+		return -1
+	var hechos: int = (tanda["tiros"][0] as Array).size() + (tanda["tiros"][1] as Array).size()
+	return (int(tanda["empieza"]) + hechos) % 2
+
+## Orden de lanzadores: de mejor a peor tiro, el portero al final.
+func _orden_tanda(es_local: bool) -> Array:
+	var campo: Array = []
+	var porteros: Array = []
+	for p: Dictionary in jugadores:
+		if bool(p["es_local"]) != es_local:
+			continue
+		if bool(p["por"]):
+			porteros.append(p)
+		else:
+			campo.append(p)
+	campo.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a["attr"]["tir"]) > float(b["attr"]["tir"]))
+	return campo + porteros
+
+func _empezar_tanda() -> void:
+	estado = "tanda"
+	_t_estado = 0.0
+	poseedor = {}
+	pase_a = {}
+	_jugada = {}
+	_tiro_vivo = {}
+	vel_balon = Vector3.ZERO
+	apuntando = false
+	cargando = false
+	usuario = {}
+	tanda = {"tiros": [[], []], "orden": [_orden_tanda(true), _orden_tanda(false)],
+		"empieza": _rng.randi() % 2, "fase": "entrar", "lanzador": {}, "portero": {}, "lado": 0, "cruzo": false}
+	balon.position = TANDA_PUNTO
+	for p: Dictionary in jugadores:
+		p["gesto_hasta"] = 0.0
+	aviso.emit("🥅 Tanda de penales")
+	tanda_empieza.emit()
+	cambio_estado.emit("tanda")
+
+## ¿Ya está decidida? Cinco cada uno con cuentas imposibles, o muerte súbita.
+static func tanda_decidida(tiros_: Array) -> bool:
+	var na: int = (tiros_[0] as Array).size()
+	var nb: int = (tiros_[1] as Array).size()
+	var ga := 0
+	var gb := 0
+	for b: bool in tiros_[0]:
+		ga += 1 if b else 0
+	for b: bool in tiros_[1]:
+		gb += 1 if b else 0
+	if na <= 5 and nb <= 5:
+		if ga + (5 - na) < gb or gb + (5 - nb) < ga:
+			return true
+		return na == 5 and nb == 5 and ga != gb
+	return na == nb and ga != gb
+
+## Dónde espera cada uno: los de campo en el círculo central, en fila por
+## equipo; el portero que no defiende, junto al área.
+func _sitio_tanda(p: Dictionary) -> Vector3:
+	var eq := 0 if bool(p["es_local"]) else 1
+	if bool(p["por"]):
+		return Vector3(-9.0 if eq == 0 else 9.0, 0, LARGO - AREA_Z - 1.5)
+	var orden: Array = tanda["orden"][eq]
+	var i := maxi(orden.find(p), 0)
+	var lado := -1.0 if eq == 0 else 1.0
+	return Vector3(lado * (1.0 + float(i % 10) * 0.8), 0, 1.0)
+
+func _paso_tanda(delta: float) -> void:
+	var fase := String(tanda["fase"])
+	var lz: Dictionary = tanda["lanzador"]
+	var gk: Dictionary = tanda["portero"]
+	var detras := TANDA_PUNTO + Vector3(0, -R, -0.9)
+	for p: Dictionary in jugadores:
+		if p == lz and fase in ["preparar", "apuntar"]:
+			p["objetivo"] = detras
+			p["correr"] = false
+		elif p == gk:
+			if fase in ["preparar", "apuntar"]:
+				p["objetivo"] = TANDA_ARCO - Vector3(0, 0, 0.3)
+				p["correr"] = false
+		elif p == lz:
+			pass
+		else:
+			p["objetivo"] = _sitio_tanda(p)
+			p["correr"] = pos(p).distance_to(p["objetivo"]) > 12.0
+			## Desde el saque de la prórroga hasta el círculo: rápido, como en
+			## los saques (el juego está parado).
+			if fase == "entrar":
+				var n: Node3D = p["node"]
+				n.position = n.position.move_toward(p["objetivo"], 14.0 * delta)
+	_mover_jugadores(delta)
+	if fase in ["vuelo", "resultado"]:
+		_mover_balon(delta)
+	_actualizar_balon_visual(delta)
+	match fase:
+		"entrar":
+			if _t_estado > 2.5:
+				_siguiente_penal()
+		"preparar":
+			## El portero en la línea, mirando al lanzador.
+			if not gk.is_empty():
+				(gk["node"] as Node3D).rotation.y = PI
+			## Tu portero: el stick elige el lado (con la cámara detrás del
+			## lanzador, la derecha de la pantalla es -X).
+			var tu := tanda_equipo_usuario()
+			if tu >= 0 and tanda_turno() != tu:
+				var mx := Mando.movimiento().x
+				if absf(mx) > 0.3:
+					tanda["lado"] = -1 if mx > 0.0 else 1
+				elif Input.is_action_pressed("jugar_tiro"):
+					tanda["lado"] = 0
+			if lz.is_empty():
+				_resultado_tanda(false, "¡Fallado!")
+				return
+			if pos(lz).distance_to(detras) < 0.6 or _t_estado > 4.0:
+				var lanza_tu := tu >= 0 and tanda_turno() == tu
+				if lanza_tu and _t_estado > 1.0:
+					tanda["fase"] = "apuntar"
+					_t_estado = 0.0
+					usuario = lz
+					saque = {"tipo": "penal", "local": bool(lz["es_local"]), "lugar": TANDA_PUNTO, "lanzador": lz}
+					apuntando = true
+					apunte = {"ang": 0.0, "loft": 0.15, "fuerza": 0.0, "fase": 0.0, "x": 0.0, "y": 0.8}
+					cambio_estado.emit("apuntar_penal")
+				elif not lanza_tu and _t_estado > (2.8 if tu >= 0 else 1.6):
+					saque = {"tipo": "penal", "local": bool(lz["es_local"]), "lugar": TANDA_PUNTO, "lanzador": lz}
+					_ejecutar_saque_ia(lz, "penal", TANDA_PUNTO)
+		"apuntar":
+			(lz["node"] as Node3D).rotation.y = 0.0
+			_apuntar_usuario(delta)
+		"vuelo":
+			_vuelo_tanda()
+		"resultado":
+			if _t_estado > 2.0:
+				if tanda_decidida(tanda["tiros"]):
+					_cerrar_tanda()
+				else:
+					_siguiente_penal()
+
+func _siguiente_penal() -> void:
+	var eq := tanda_turno()
+	var orden: Array = tanda["orden"][eq]
+	var hechos: int = (tanda["tiros"][eq] as Array).size()
+	var lz: Dictionary = orden[hechos % orden.size()] if not orden.is_empty() else {}
+	var gk: Dictionary = {}
+	for q: Dictionary in jugadores:
+		if bool(q["por"]) and bool(q["es_local"]) != (eq == 0):
+			gk = q
+	## El lanzador anterior vuelve al círculo y el portero que deja de
+	## defender, a su sitio de espera.
+	for antes: Dictionary in [tanda["lanzador"], tanda["portero"]]:
+		if not antes.is_empty() and antes != gk and antes != lz:
+			(antes["node"] as Node3D).position = _sitio_tanda(antes)
+			antes["vel"] = Vector3.ZERO
+			antes["gesto_hasta"] = 0.0
+	tanda["lanzador"] = lz
+	tanda["portero"] = gk
+	tanda["lado"] = SIN_ELEGIR
+	tanda["cruzo"] = false
+	tanda["fase"] = "preparar"
+	_t_estado = 0.0
+	usuario = {}
+	balon.position = TANDA_PUNTO
+	vel_balon = Vector3.ZERO
+	giro_balon = Vector3.ZERO
+	if not lz.is_empty():
+		## Sale del círculo: aparece camino del punto (sin cruzar medio campo).
+		(lz["node"] as Node3D).position = TANDA_PUNTO + Vector3(-2.2, -R, -5.5)
+		lz["vel"] = Vector3.ZERO
+		lz["gesto_hasta"] = 0.0
+	if not gk.is_empty():
+		(gk["node"] as Node3D).position = TANDA_ARCO - Vector3(0, 0, 0.3)
+		gk["vel"] = Vector3.ZERO
+		gk["gesto_hasta"] = 0.0
+	var nombre := String((lz.get("jugador", {}) as Dictionary).get("nombre", ""))
+	aviso.emit("🥅 Penal %d: %s" % [hechos + 1, nombre])
+	cambio_estado.emit("tanda_penal")
+
+## Tras el golpeo (desde `_reanudar`): el tiro no cuenta como remate del
+## partido y el portero se tira.
+func _tras_tiro_tanda() -> void:
+	var lz: Dictionary = tanda["lanzador"]
+	if not _tiro_vivo.is_empty():
+		var eq := 0 if bool(lz.get("es_local", true)) else 1
+		tiros[eq] = maxi(int(tiros[eq]) - 1, 0)
+	_tiro_vivo = {}
+	apuntando = false
+	cargando = false
+	_anillo_serenidad(false)
+	tanda["fase"] = "vuelo"
+	_t_estado = 0.0
+	var gk: Dictionary = tanda["portero"]
+	if gk.is_empty():
+		return
+	## El portero de la IA adivina (40 % a cada lado, 20 % se queda); el tuyo
+	## va donde dijiste.
+	var tu := tanda_equipo_usuario()
+	var lado: int = int(tanda["lado"])
+	if not (tu >= 0 and tanda_turno() != tu) or lado == SIN_ELEGIR:
+		var r := _rng.randf()
+		lado = -1 if r < 0.4 else (1 if r < 0.8 else 0)
+	tanda["lado"] = lado
+	var alto := "media" if _rng.randf() < 0.6 else "baja"
+	## Mirando a -Z, su izquierda es +X.
+	if lado != 0:
+		_anim(gk, "estirada_%s_%s" % [alto, "izq" if lado > 0 else "der"], true)
+		gk["vel"] = Vector3(float(lado) * 6.5, 0, 0)
+		gk["objetivo"] = TANDA_ARCO + Vector3(float(lado) * 2.2, 0, -0.3)
+	else:
+		_anim(gk, "atajar", true)
+
+## El balón en el aire: parada, palo, gol o fuera.
+func _vuelo_tanda() -> void:
+	var b := balon.position
+	var gk: Dictionary = tanda["portero"]
+	var lado: int = int(tanda["lado"])
+	if not bool(tanda["cruzo"]) and b.z >= LARGO - 0.8:
+		tanda["cruzo"] = true
+		## ¿Llega el portero? Tirado al lado bueno tapa hasta ~2,5 m del centro
+		## (menos arriba); quieto, solo lo que va al medio.
+		var para := false
+		if not gk.is_empty() and absf(b.x) < PALO + 0.2 and b.y < LARGUERO:
+			var alcance := 1.4 + (float(gk["attr"]["div"]) + float(gk["attr"]["ref"])) * 0.6
+			if lado == 0:
+				para = absf(b.x) < 0.9 and b.y < 2.0
+			elif signf(b.x) == float(lado):
+				var dentro := absf(b.x) > 0.3 and absf(b.x) < alcance and b.y < (1.6 if absf(b.x) > 2.3 else 2.1)
+				para = dentro and _rng.randf() < 0.5 + float(gk["attr"]["ref"]) * 0.35
+		if para:
+			vel_balon = Vector3(signf(b.x + 0.01) * _rng.randf_range(3, 7), _rng.randf_range(1, 3), -absf(vel_balon.z) * 0.3)
+			_resultado_tanda(false, "¡Qué parada!")
+			return
+	if b.z >= LARGO:
+		var dentro := absf(b.x) < PALO and b.y < LARGUERO
+		var palo := (absf(absf(b.x) - PALO) < 0.12 + R and b.y < LARGUERO + R) or (absf(b.x) < PALO and absf(b.y - LARGUERO) < 0.12 + R)
+		if palo:
+			vel_balon = Vector3(-signf(b.x) * 2.0, -absf(vel_balon.y) * 0.4, -vel_balon.z * 0.5)
+			balon.position.z = LARGO - 0.2
+			_resultado_tanda(false, "¡AL PALO!")
+		elif dentro:
+			vel_balon *= 0.2
+			_resultado_tanda(true, "⚽ ¡Dentro!")
+		else:
+			_resultado_tanda(false, "¡Fuera!")
+		return
+	## Se quedó corto: fallado.
+	if _t_estado > 3.0:
+		_resultado_tanda(false, "¡Fallado!")
+
+func _resultado_tanda(marcado: bool, texto: String) -> void:
+	var lz: Dictionary = tanda["lanzador"]
+	var eq := tanda_turno()
+	(tanda["tiros"][eq] as Array).append(marcado)
+	tanda["fase"] = "resultado"
+	_t_estado = 0.0
+	if not lz.is_empty():
+		_anim(lz, "celebrar" if marcado else ["lamento", "manos_cabeza"][_rng.randi() % 2], true, 2.0)
+	aviso.emit(texto)
+	tanda_tiro.emit(eq, String(lz.get("id", "")), marcado)
+
+func _cerrar_tanda() -> void:
+	var gl := goles_tanda(0)
+	var gv := goles_tanda(1)
+	tanda["fase"] = "fin"
+	usuario = {}
+	aviso.emit("🥅 Penales: %d-%d" % [gl, gv])
+	tanda_terminada.emit(gl, gv)
+	var gana_local := gl > gv
+	for p: Dictionary in jugadores:
+		if bool(p["es_local"]) == gana_local:
+			_anim(p, "celebrar" if _rng.randf() < 0.6 else "aplauso_arriba", true, 99.0)
+		elif _rng.randf() < 0.5:
+			_anim(p, ["lamento", "manos_cabeza", "cuclillas_lamento", "brazos_jarra"][_rng.randi() % 4], true, 99.0)
+	_terminar()
 
 # ---------------------------------------------------------------- balón
 
@@ -2550,6 +2923,9 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 	_reanudar()
 
 func _reanudar() -> void:
+	if estado == "tanda":
+		_tras_tiro_tanda()
+		return
 	_receptor_marcado = {}
 	_dibujar_receptor()
 	_anillo_serenidad(false)
@@ -2792,7 +3168,9 @@ func _lanzar_usuario(fuerza: float) -> void:
 			aviso.emit("🎩 ¡A lo Panenka!")
 		else:
 			_mod_tiro = "rosca" if _mods_carga == "rosca" else ""
-			_tirar(p, Vector2(float(apunte["x"]) * dir_ataque(bool(p["es_local"])) * -1.0, float(apunte["y"]) - 0.4), fuerza)
+			## En la tanda todos tiran al arco de +Z.
+			var d_ap := 1.0 if estado == "tanda" else dir_ataque(bool(p["es_local"]))
+			_tirar(p, Vector2(float(apunte["x"]) * d_ap * -1.0, float(apunte["y"]) - 0.4), fuerza)
 		_mod_tiro = ""
 		_mods_carga = ""
 	else:
