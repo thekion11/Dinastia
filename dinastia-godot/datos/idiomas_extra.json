@@ -2375,7 +2375,16 @@
   "✖  DECISIÓN: GOL ANULADO": "✖  DECISION: GOAL DISALLOWED",
   "VAR: GOL ANULADO": "VAR: GOAL DISALLOWED",
   "Revisión del gol: posible fuera de juego": "Goal check: possible offside",
-  "Revisión del gol: posible falta previa": "Goal check: possible foul in the build-up"
+  "Revisión del gol: posible falta previa": "Goal check: possible foul in the build-up",
+  "TANDA DE PENALES": "PENALTY SHOOTOUT",
+  "PRÓRROGA": "EXTRA TIME",
+  "PEN.": "PENS",
+  "pen.": "pens",
+  "⚽ ¡Dentro!": "⚽ Scored!",
+  "¡Fallado!": "Missed!",
+  "¡Fuera!": "Wide!",
+  "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Your penalty: aim with the stick and hold SHOOT for power",
+  "Tu portero: elige el lado con el stick antes del disparo": "Your goalkeeper: pick the side with the stick before the kick"
  },
  "pt": {
   "Historia": "História",
@@ -4753,7 +4762,16 @@
   "✖  DECISIÓN: GOL ANULADO": "✖  DECISÃO: GOL ANULADO",
   "VAR: GOL ANULADO": "VAR: GOL ANULADO",
   "Revisión del gol: posible fuera de juego": "Revisão do gol: possível impedimento",
-  "Revisión del gol: posible falta previa": "Revisão do gol: possível falta anterior"
+  "Revisión del gol: posible falta previa": "Revisão do gol: possível falta anterior",
+  "TANDA DE PENALES": "DISPUTA DE PÊNALTIS",
+  "PRÓRROGA": "PRORROGAÇÃO",
+  "PEN.": "PÊN.",
+  "pen.": "pên.",
+  "⚽ ¡Dentro!": "⚽ É gol!",
+  "¡Fallado!": "Perdeu!",
+  "¡Fuera!": "Para fora!",
+  "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Seu pênalti: mire com o analógico e segure CHUTE para a força",
+  "Tu portero: elige el lado con el stick antes del disparo": "Seu goleiro: escolha o lado com o analógico antes do chute"
  },
  "patrones": [
   [
@@ -5393,6 +5411,28 @@
    "Hi ha $1 marques esperant resposta per la samarreta.",
    "Marki czekające na odpowiedź w sprawie koszulki: $1.",
    "Forma için yanıt bekleyen $1 marka var."
+  ],
+  [
+   "^⏱ Cambio de campo: (\\d+)-(\\d+)$",
+   "⏱ Teams change ends: $1-$2",
+   "⏱ Troca de campo: $1-$2",
+   "⏱ Changement de côté : $1-$2",
+   "⏱ Cambio di campo: $1-$2",
+   "⏱ Seitenwechsel: $1-$2",
+   "⏱ Canvi de camp: $1-$2",
+   "⏱ Zmiana stron: $1-$2",
+   "⏱ Taraf değişimi: $1-$2"
+  ],
+  [
+   "^🥅 Penales: (\\d+)-(\\d+)$",
+   "🥅 Penalties: $1-$2",
+   "🥅 Pênaltis: $1-$2",
+   "🥅 Tirs au but : $1-$2",
+   "🥅 Rigori: $1-$2",
+   "🥅 Elfmeterschießen: $1-$2",
+   "🥅 Penals: $1-$2",
+   "🥅 Karne: $1-$2",
+   "🥅 Penaltılar: $1-$2"
   ]
  ],
  "fr": {
@@ -7678,7 +7718,16 @@
   "✖  DECISIÓN: GOL ANULADO": "✖  DÉCISION : BUT REFUSÉ",
   "VAR: GOL ANULADO": "VAR : BUT REFUSÉ",
   "Revisión del gol: posible fuera de juego": "Vérification du but : hors-jeu possible",
-  "Revisión del gol: posible falta previa": "Vérification du but : faute possible avant"
+  "Revisión del gol: posible falta previa": "Vérification du but : faute possible avant",
+  "TANDA DE PENALES": "SÉANCE DE TIRS AU BUT",
+  "PRÓRROGA": "PROLONGATION",
+  "PEN.": "TAB",
+  "pen.": "t.a.b.",
+  "⚽ ¡Dentro!": "⚽ Réussi !",
+  "¡Fallado!": "Manqué !",
+  "¡Fuera!": "À côté !",
+  "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Ton penalty : vise avec le stick et maintiens TIR pour la puissance",
+  "Tu portero: elige el lado con el stick antes del disparo": "Ton gardien : choisis le côté avec le stick avant le tir"
  },
  "it": {
   "Historia": "Storia",
@@ -9963,7 +10012,16 @@
   "✖  DECISIÓN: GOL ANULADO": "✖  DECISIONE: GOL ANNULLATO",
   "VAR: GOL ANULADO": "VAR: GOL ANNULLATO",
   "Revisión del gol: posible fuera de juego": "Revisione del gol: possibile fuorigioco",
-  "Revisión del gol: posible falta previa": "Revisione del gol: possibile fallo precedente"
+  "Revisión del gol: posible falta previa": "Revisione del gol: possibile fallo precedente",
+  "TANDA DE PENALES": "CALCI DI RIGORE",
+  "PRÓRROGA": "TEMPI SUPPLEMENTARI",
+  "PEN.": "RIG.",
+  "pen.": "rig.",
+  "⚽ ¡Dentro!": "⚽ Dentro!",
+  "¡Fallado!": "Sbagliato!",
+  "¡Fuera!": "Fuori!",
+  "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Il tuo rigore: mira con lo stick e tieni premuto TIRO per la potenza",
+  "Tu portero: elige el lado con el stick antes del disparo": "Il tuo portiere: scegli il lato con lo stick prima del tiro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12248,7 +12306,16 @@
   "✖  DECISIÓN: GOL ANULADO": "✖  ENTSCHEIDUNG: TOR ABERKANNT",
   "VAR: GOL ANULADO": "VAR: TOR ABERKANNT",
   "Revisión del gol: posible fuera de juego": "Torüberprüfung: mögliches Abseits",
-  "Revisión del gol: posible falta previa": "Torüberprüfung: mögliches Foul davor"
+  "Revisión del gol: posible falta previa": "Torüberprüfung: mögliches Foul davor",
+  "TANDA DE PENALES": "ELFMETERSCHIESSEN",
+  "PRÓRROGA": "VERLÄNGERUNG",
+  "PEN.": "I.E.",
+  "pen.": "i.E.",
+  "⚽ ¡Dentro!": "⚽ Drin!",
+  "¡Fallado!": "Verschossen!",
+  "¡Fuera!": "Daneben!",
+  "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Dein Elfmeter: mit dem Stick zielen und SCHUSS für die Kraft halten",
+  "Tu portero: elige el lado con el stick antes del disparo": "Dein Torwart: wähle vor dem Schuss mit dem Stick die Ecke"
  },
  "ca": {
   "Historia": "Història",
@@ -14533,7 +14600,16 @@
   "✖  DECISIÓN: GOL ANULADO": "✖  DECISIÓ: GOL ANUL·LAT",
   "VAR: GOL ANULADO": "VAR: GOL ANUL·LAT",
   "Revisión del gol: posible fuera de juego": "Revisió del gol: possible fora de joc",
-  "Revisión del gol: posible falta previa": "Revisió del gol: possible falta prèvia"
+  "Revisión del gol: posible falta previa": "Revisió del gol: possible falta prèvia",
+  "TANDA DE PENALES": "TANDA DE PENALS",
+  "PRÓRROGA": "PRÒRROGA",
+  "PEN.": "PEN.",
+  "pen.": "pen.",
+  "⚽ ¡Dentro!": "⚽ A dins!",
+  "¡Fallado!": "Fallat!",
+  "¡Fuera!": "Fora!",
+  "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "El teu penal: apunta amb l'estic i mantén XUT per a la força",
+  "Tu portero: elige el lado con el stick antes del disparo": "El teu porter: tria el costat amb l'estic abans del xut"
  },
  "pl": {
   "Club": "Klub",
@@ -17115,7 +17191,16 @@
   "✖  DECISIÓN: GOL ANULADO": "✖  DECYZJA: GOL ANULOWANY",
   "VAR: GOL ANULADO": "VAR: GOL ANULOWANY",
   "Revisión del gol: posible fuera de juego": "Weryfikacja gola: możliwy spalony",
-  "Revisión del gol: posible falta previa": "Weryfikacja gola: możliwy wcześniejszy faul"
+  "Revisión del gol: posible falta previa": "Weryfikacja gola: możliwy wcześniejszy faul",
+  "TANDA DE PENALES": "RZUTY KARNE",
+  "PRÓRROGA": "DOGRYWKA",
+  "PEN.": "K.",
+  "pen.": "k.",
+  "⚽ ¡Dentro!": "⚽ Trafiony!",
+  "¡Fallado!": "Pudło!",
+  "¡Fuera!": "Obok!",
+  "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Twój karny: celuj gałką i przytrzymaj STRZAŁ, by nadać siłę",
+  "Tu portero: elige el lado con el stick antes del disparo": "Twój bramkarz: wybierz stronę gałką przed strzałem"
  },
  "tr": {
   "Club": "Kulüp",
@@ -19697,6 +19782,15 @@
   "✖  DECISIÓN: GOL ANULADO": "✖  KARAR: GOL İPTAL",
   "VAR: GOL ANULADO": "VAR: GOL İPTAL",
   "Revisión del gol: posible fuera de juego": "Gol incelemesi: olası ofsayt",
-  "Revisión del gol: posible falta previa": "Gol incelemesi: öncesinde olası faul"
+  "Revisión del gol: posible falta previa": "Gol incelemesi: öncesinde olası faul",
+  "TANDA DE PENALES": "PENALTI ATIŞLARI",
+  "PRÓRROGA": "UZATMA",
+  "PEN.": "PEN.",
+  "pen.": "pen.",
+  "⚽ ¡Dentro!": "⚽ Gol!",
+  "¡Fallado!": "Kaçtı!",
+  "¡Fuera!": "Dışarı!",
+  "Tu penal: apunta con el stick y mantén TIRO para la fuerza": "Senin penaltın: çubukla nişan al ve güç için ŞUT'u basılı tut",
+  "Tu portero: elige el lado con el stick antes del disparo": "Kalecin: şuttan önce çubukla tarafı seç"
  }
 }
