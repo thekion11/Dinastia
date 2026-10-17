@@ -2614,7 +2614,7 @@ func _dirigir() -> void:
 	## EL INFORME DEL RIVAL (17-10-2026) antes de salir a jugar, como en FM/FC.
 	## Sin pantalla (banco) o con SIN_INFORME_RIVAL no se enseña.
 	if InformeRival.activo and DisplayServer.get_name() != "headless" and OS.get_environment("SIN_INFORME_RIVAL") == "":
-		var inf := InformeRival.mostrar(self, p, mundo.mi_club(), mundo.liga_de(p.visita if p.local == mundo.mi_club() else p.local))
+		var inf := InformeRival.mostrar(self, p, mundo.mi_club(), mundo.liga_de(p.visita if p.local == mundo.mi_club() else p.local), mundo)
 		await inf.cerrado
 		inf.queue_free()
 	var vivo := PartidoVivo.new()

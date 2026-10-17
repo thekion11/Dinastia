@@ -17,7 +17,7 @@ func _ready() -> void:
 	print("INFORME puesto %d racha %s mejores %d consejos %s -> %s" % [int(d["puesto"]), str(d["racha"]), (d["mejores"] as Array).size(), str(d["consejos"]), "ok" if ok else "FALLO"])
 	if DisplayServer.get_name() != "headless":
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		InformeRival.mostrar(self, p, m.mi_club(), m.liga_de(rival))
+		InformeRival.mostrar(self, p, m.mi_club(), m.liga_de(rival), m)
 		for i in 30:
 			await get_tree().process_frame
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/informe_rival.png")
