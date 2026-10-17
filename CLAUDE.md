@@ -577,4 +577,6 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   otros juegos: `COMPARACION_JUEGOS_2.md`.
   USO: el 17-10 el usuario enseñó su límite semanal al 86 % (se restablece el viernes 00:00):
   AHORRAR — sin agentes nuevos, trabajo pequeño y solo lo pedido hasta el restablecimiento.
+  TRASPASO: `dinastia-godot/PENDIENTES.md` (qué falta, cómo, y qué falta fusionar; respaldos en
+  `dinastia-godot/parches_pendientes/`). Mantenerlo al día en cada bloque.
 
