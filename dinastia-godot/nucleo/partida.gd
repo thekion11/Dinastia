@@ -191,6 +191,7 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.eras = Eras.new(m)
 	m.anio = int(datos["anio"])
 	m.semana = int(datos["semana"])
+	Jugador.semana_global = m.anio * 100 + m.semana
 	m.horario = String(datos.get("horario", "tarde"))
 	m.campana = (datos.get("campana", {}) as Dictionary).duplicate()
 	m.mi_club_id = String(datos["mi_club"])
@@ -306,6 +307,12 @@ static func _dic_a_club(d: Dictionary) -> Club:
 ## Las claves son cortas a propósito. Con 8.448 jugadores, escribir "atributos"
 ## en vez de "at" son 60 KB de más en cada guardado sin que nadie lo lea nunca.
 static func _jugador_a_dic(j: Jugador) -> Dictionary:
+	var d := _jugador_a_dic_base(j)
+	if not j.historial_moral.is_empty():
+		d["hm"] = j.historial_moral
+	return d
+
+static func _jugador_a_dic_base(j: Jugador) -> Dictionary:
 	return {
 		"i": j.id, "n": j.nombre, "p": j.pais, "rg": j.region, "c": j.club_id, "cf": j.club_formacion,
 		"g": j.pos, "pe": j.pos_e, "e": j.edad, "o": j.ovr, "t": j.pot,
@@ -332,6 +339,7 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	j.edad = int(d["e"]); j.ovr = int(d["o"]); j.pot = int(d["t"])
 	j.atributos = d["at"]; j.rasgo = String(d["r"])
 	j.forma = int(d["f"]); j.moral = int(d["m"]); j.fisico = int(d["fi"])
+	j.historial_moral = (d.get("hm", []) as Array).duplicate(true)
 	j.lesion = int(d["l"]); j.suspension = int(d["s"]); j.amarillas = int(d["a"])
 	j.goles = int(d["go"]); j.asistencias = int(d["as"]); j.partidos = int(d["pj"])
 	j.valor = int(d["v"]); j.sueldo = int(d["su"]); j.anios_contrato = int(d["an"])

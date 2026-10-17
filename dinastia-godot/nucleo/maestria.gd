@@ -127,7 +127,7 @@ func semana(c: Club, prensa: Prensa, academia: Academia, sem: int, resultado: in
 	if sem % 4 == 0 and nivel("liderazgo") > 0:
 		var sube := 1 + int(efectivo("liderazgo") / 20.0)
 		for j: Jugador in c.plantilla:
-			j.moral = clampi(j.moral + sube, 10, 99)
+			j.cambiar_moral(sube, "Entrenamiento")
 	if academia != null and nivel("formacion") > 0:
 		for ch: Dictionary in academia.chicos:
 			ch["nivel"] = float(ch["nivel"]) + efectivo("formacion") * 0.02

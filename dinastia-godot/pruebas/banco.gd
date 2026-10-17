@@ -123,6 +123,8 @@ const SECCIONES := [
 	"_probar_rotulo_y_sala",
 	"_probar_transmision_y_estadisticas",
 	"_probar_prorroga_y_penales",
+	"_probar_informe_rival",
+	"_probar_porque_moral",
 	"_probar_paridad_idiomas",
 ]
 
@@ -8456,3 +8458,55 @@ func _probar_prorroga_y_penales() -> void:
 	_comprobar(not MotorJugable.tanda_decidida([[true, true, true, true, true, true], [true, true, true, true, true]]), "tanda: en la muerte súbita el segundo aún tira")
 	var circ := MarcadorTanda.circulos([true, false], 5)
 	_comprobar(circ.count("●") == 2 and circ.count("○") == 3, "el marcador de la tanda pinta ●● y tres huecos")
+
+## EL INFORME DEL RIVAL (17-10-2026): sale de los datos reales del mundo.
+func _probar_informe_rival() -> void:
+	_titulo("INFORME DEL RIVAL ANTES DEL PARTIDO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	m.mi_club_id = m.ligas[0].clubes[0].id
+	for i in 6:
+		m.ligas[0].jugar_jornada()
+	var par := m.proximo_partido()
+	var p := Partido.new(par[0], par[1])
+	var rival: Club = p.visita if p.local == m.mi_club() else p.local
+	var d := InformeRival.datos(rival, m.mi_club(), m.liga_de(rival))
+	_comprobar(int(d["puesto"]) >= 1 and int(d["puesto"]) <= m.ligas[0].clubes.size(), "el informe dice el puesto del rival en la tabla (%d.º)" % int(d["puesto"]))
+	_comprobar((d["racha"] as Array).size() == 5, "la racha tiene los últimos 5 partidos del rival")
+	var mejor := 0
+	for j: Jugador in rival.once():
+		mejor = maxi(mejor, j.ovr)
+	_comprobar((d["mejores"] as Array).size() == 3 and (d["mejores"][0] as Jugador).ovr == mejor, "los más peligrosos empiezan por el mejor del once")
+	_comprobar(not (d["consejos"] as Array).is_empty(), "hay al menos un consejo del cuerpo técnico")
+	rival.tactica.presion = Tactica.Nivel.ALTO
+	var d2 := InformeRival.datos(rival, m.mi_club(), m.liga_de(rival))
+	_comprobar(str(d2["consejos"]).contains("Presionan arriba"), "si el rival presiona alto, el consejo lo dice")
+
+## POR QUÉ SUBE O BAJA LA MORAL (17-10-2026): cada cambio deja su motivo y se guarda.
+func _probar_porque_moral() -> void:
+	_titulo("CAMARÍN: POR QUÉ SUBE O BAJA LA MORAL")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	for i in 6:
+		m.avanzar_semana()
+	var c := m.mi_club()
+	var con := 0
+	var motivos := {}
+	for j in c.plantilla:
+		if not j.historial_moral.is_empty():
+			con += 1
+		for e: Dictionary in j.historial_moral:
+			motivos[String(e["m"])] = true
+	_comprobar(con >= c.plantilla.size() / 2, "tras 6 semanas la mayoría del plantel tiene motivos de moral anotados (%d de %d)" % [con, c.plantilla.size()])
+	_comprobar(not motivos.is_empty() and not motivos.has(""), "cada cambio tiene un motivo con nombre (%s)" % ", ".join(motivos.keys()))
+	var j0: Jugador = c.plantilla[0]
+	var antes := j0.moral
+	j0.cambiar_moral(5, "Prueba")
+	_comprobar(j0.moral == mini(antes + 5, 99) and String(j0.historial_moral[-1]["m"]) == "Prueba", "cambiar_moral sube la moral y anota el motivo")
+	var copia := Partida.desde_instantanea(Partida.instantanea(m))
+	var j1 := copia.jugador_por_id(j0.id)
+	_comprobar(j1 != null and j1.historial_moral.size() == j0.historial_moral.size(), "el historial de moral se guarda y se carga")
+	var sat: Dictionary = m.vestuario.satisfaccion_de(j0)
+	_comprobar(sat.has("min") and sat.has("rend") and sat.has("tact") and sat.has("inst"), "el Camarín puede leer lo que pesa en la satisfacción")
+

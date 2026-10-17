@@ -65,6 +65,7 @@ func _process(_d: float) -> void:
 		_guardar("res://pruebas/capturas/pantalla_mercado.png")
 		## Y el partido en directo, con el reloj corriendo y un titular ya
 		## senalado para el cambio: es el estado en el que de verdad se usa.
+		InformeRival.activo = false
 		_pantalla.call("_dirigir")
 		_vivo = _pantalla.get_children().filter(func(n): return n is PartidoVivo).front()
 		if _vivo != null:

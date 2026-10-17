@@ -1058,7 +1058,7 @@ func subir_al_primer_equipo(j: Jugador) -> String:
 		## El HTML le disparaba la ansiedad, que es un sistema que aquí no está
 		## portado. La moral es lo más parecido que existe hoy: un chico quemado
 		## rinde por debajo de su media, que es justo el castigo que tocaba.
-		j.moral = clampi(j.moral - Azar.ent(14, 26), 10, 99)
+		j.cambiar_moral(-(Azar.ent(14, 26)), "Directiva")
 		aviso.emit("Debut prematuro: %s" % j.nombre,
 			"Lo subiste antes de tiempo. Le queda grande y se le nota. A veces un año más abajo vale oro.")
 	return ""
@@ -1181,7 +1181,7 @@ func homenajear(nombre_leyenda: String) -> String:
 		m.prensa.animo = clampi(m.prensa.animo + Azar.ent(5, 11), 0, 100)
 	c.socios += Azar.ent(150, 600)
 	for j in c.plantel():
-		j.moral = clampi(j.moral + 3, 10, 99)
+		j.cambiar_moral(3, "Directiva")
 	homenaje_hecho.emit(nombre_leyenda)
 	aviso.emit("Homenaje a %s" % nombre_leyenda,
 		"Placa en el acceso principal, camiseta enmarcada y vuelta al campo antes del partido. La grada cantó su nombre durante diez minutos. El club recuerda de dónde viene.")
@@ -1771,7 +1771,7 @@ func semana_leyenda_viva() -> void:
 			jovenes.append(j)
 	if not jovenes.is_empty():
 		var chico: Jugador = jovenes[Azar.ent(0, jovenes.size() - 1)]
-		chico.moral = clampi(chico.moral + Azar.ent(4, 9), 10, 99)
+		chico.cambiar_moral(Azar.ent(4, 9), "Directiva")
 		if Azar.suerte(0.25) and chico.ovr < chico.pot:
 			chico.ajustar_media(1)
 		if Azar.suerte(0.3):
