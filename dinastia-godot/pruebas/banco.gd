@@ -122,6 +122,7 @@ const SECCIONES := [
 	"_probar_narracion_traducida",
 	"_probar_rotulo_y_sala",
 	"_probar_transmision_y_estadisticas",
+	"_probar_informe_rival",
 	"_probar_paridad_idiomas",
 ]
 
@@ -8398,3 +8399,27 @@ func _probar_transmision_y_estadisticas() -> void:
 	for gr: Array in PanelControles.GRUPOS:
 		en_grupo = en_grupo or "jugar_estadisticas" in (gr[1] as Array)
 	_comprobar(en_grupo, "se puede reasignar en la pantalla de controles")
+
+## EL INFORME DEL RIVAL (17-10-2026): sale de los datos reales del mundo.
+func _probar_informe_rival() -> void:
+	_titulo("INFORME DEL RIVAL ANTES DEL PARTIDO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	m.mi_club_id = m.ligas[0].clubes[0].id
+	for i in 6:
+		m.ligas[0].jugar_jornada()
+	var par := m.proximo_partido()
+	var p := Partido.new(par[0], par[1])
+	var rival: Club = p.visita if p.local == m.mi_club() else p.local
+	var d := InformeRival.datos(rival, m.mi_club(), m.liga_de(rival))
+	_comprobar(int(d["puesto"]) >= 1 and int(d["puesto"]) <= m.ligas[0].clubes.size(), "el informe dice el puesto del rival en la tabla (%d.º)" % int(d["puesto"]))
+	_comprobar((d["racha"] as Array).size() == 5, "la racha tiene los últimos 5 partidos del rival")
+	var mejor := 0
+	for j: Jugador in rival.once():
+		mejor = maxi(mejor, j.ovr)
+	_comprobar((d["mejores"] as Array).size() == 3 and (d["mejores"][0] as Jugador).ovr == mejor, "los más peligrosos empiezan por el mejor del once")
+	_comprobar(not (d["consejos"] as Array).is_empty(), "hay al menos un consejo del cuerpo técnico")
+	rival.tactica.presion = Tactica.Nivel.ALTO
+	var d2 := InformeRival.datos(rival, m.mi_club(), m.liga_de(rival))
+	_comprobar(str(d2["consejos"]).contains("Presionan arriba"), "si el rival presiona alto, el consejo lo dice")
+
