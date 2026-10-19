@@ -69,9 +69,16 @@ func _process(_d: float) -> void:
 		for g in _vista.find_children("*", "GeometryInstance3D", true, false):
 			if String(g.name).rstrip("0123456789@") in nombres:
 				g.visible = false
+	if _n == CALENTAR and OS.get_environment("SIN_SOMBRAS") != "":
+		## SIN_SOMBRAS=1 (19-10-2026): cuánto de lo dibujado son las sombras.
+		for l in _vista.find_children("*", "Light3D", true, false):
+			(l as Light3D).shadow_enabled = false
 	if _n == CALENTAR and OS.get_environment("LIVIANAS") != "":
 		## LIVIANAS=1 (19-10-2026): butacas cercanas con la malla de 60 triángulos.
 		Optimizar.butacas_livianas(_vista, true)
+	if OS.get_environment("POR_HIJOS") != "":
+		_por_hijos()
+		return
 	if OS.get_environment("PARTES") != "":
 		_partes()
 		return
@@ -243,3 +250,45 @@ func _arbol() -> void:
 	_base_a = m
 	_prev = _cola_arbol.pop_front()
 	_prev.visible = false
+
+
+## POR_HIJOS=1 (19-10-2026): esconde por turnos cada hijo de la raíz 3D (y los
+## nietos del que más pese) y dice cuántas llamadas y triángulos pone en pantalla.
+var _ph_lista: Array = []
+var _ph_i := -1
+var _ph_espera := 0
+var _ph_base := Vector2.ZERO
+var _ph_res: Array = []
+
+func _por_hijos() -> void:
+	var raiz: Node3D = _vista.get("_raiz3d")
+	var medida := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
+		Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
+	if _ph_lista.is_empty() and _ph_i == -1:
+		for h in raiz.get_children():
+			if h is Node3D and (h as Node3D).visible:
+				_ph_lista.append(h)
+				for nieto in h.get_children():
+					if nieto is Node3D and (nieto as Node3D).visible and nieto.get_child_count() > 0:
+						_ph_lista.append(nieto)
+		_ph_base = medida
+		_ph_i = 0
+		_ph_espera = 0
+		print("POR_HIJOS base llamadas=%d tris=%d (%d partes)" % [medida.x, medida.y, _ph_lista.size()])
+	if _ph_i >= _ph_lista.size():
+		_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return float(a[2]) > float(b[2]))
+		for r: Array in _ph_res.slice(0, 30):
+			print("HIJO %-50s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
+		_fin = true
+		get_tree().quit()
+		return
+	var n: Node3D = _ph_lista[_ph_i]
+	if _ph_espera == 0:
+		n.visible = false
+	_ph_espera += 1
+	if _ph_espera == 3:
+		_ph_res.append([str(n.get_path()).replace(str(raiz.get_path()), "").left(50), int(_ph_base.x - medida.x), int(_ph_base.y - medida.y)])
+		n.visible = true
+	if _ph_espera >= 5:
+		_ph_espera = 0
+		_ph_i += 1
