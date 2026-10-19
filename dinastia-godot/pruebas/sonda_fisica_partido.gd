@@ -65,6 +65,9 @@ func _process(_d: float) -> void:
 			_vmax = maxf(_vmax, vel)
 			if vel > 10.5:
 				_c["vel"] += 1
+				if OS.get_environment("DEPURAR_VEL") != "" and _c["vel"] <= 40:
+					var mo: Variant = _vista.get("_motor")
+					print("VEL %.1f m/s %s estado=%s" % [vel, a.name, String(mo.estado) if mo != null else "?"])
 			if _vprev.has(id):
 				var ac: float = (v - (_vprev[id] as Vector3)).length() / DT
 				_amax = maxf(_amax, ac)

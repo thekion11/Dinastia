@@ -1046,7 +1046,17 @@ func _mover_balon(delta: float) -> void:
 			rel.y = 0.0
 			var adelante := rel.dot(fwd)
 			var reg := float(poseedor["attr"]["reg"])
-			if rel.length() < 0.6 or adelante < 0.15:
+			## Se pasó del balón (le queda atrás o al lado y lejos del pie): lo
+			## recoge con el pie en vez de que el balón salte delante de él
+			## (antes: saltos de ~2 m en un fotograma, M-114).
+			if rel.length() >= 0.6 and adelante < 0.15:
+				var recoge := n.position + fwd * 0.45
+				recoge.y = R
+				balon.position = balon.position.lerp(recoge, clampf(delta * 9.0, 0.0, 1.0))
+				vel_balon = (balon.position - previa) / maxf(delta, 0.001)
+				_palos_y_lineas(previa)
+				return
+			if rel.length() < 0.6:
 				var empuje := sp * (1.25 - reg * 0.25) + 0.6
 				## Regate técnico o ágil (RB/LB mantenidos): toques más cortos.
 				if bool(poseedor.get("toque_corto", false)):
@@ -1253,7 +1263,9 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 	poseedor = {}
 	p["enfriar"] = 0.35
 	balon.position.y = maxf(balon.position.y, R + 0.01)
-	(p["node"] as Node3D).rotation.y = atan2(d.x, d.z)
+	## Se gira hacia el destino en un giro rápido pero continuo (M-115): antes
+	## se encaraba de golpe en un fotograma (giros de más de 720°/s).
+	_mirar(p, atan2(d.x, d.z), 0.35)
 	var ap: AnimationPlayer = p.get("anim")
 	if is_instance_valid(ap):
 		_anim(p, _golpeo_anim(p, ap, anim, destino, b, vh, loft, efecto), true)
@@ -2165,6 +2177,15 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 		obj.z = _linea_defensiva(bool(p["es_local"]))
 	return obj
 
+## GIRO RÁPIDO (M-115, 19-10-2026): ≈690°/s, lo más rápido que gira el cuerpo
+## de un futbolista al encararse a un pase (por debajo de los 720°/s que la
+## sonda de física marca como imposibles). `_mirar` lo deja pedido `dur` s.
+const GIRO_RAPIDO := 12.0
+
+func _mirar(p: Dictionary, rumbo: float, dur: float) -> void:
+	p["mirar"] = rumbo
+	p["mirar_hasta"] = t + dur
+
 ## LA LÍNEA DEFENSIVA COMÚN (M-123, 19-10-2026). Antes cada defensor marcaba a
 ## su delantero por separado y la línea se rompía: uno habilitaba a todos. Ahora
 ## los cuatro de atrás comparten una altura que sale de la pizarra y del balón:
@@ -2348,7 +2369,8 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	var fuerza := vel_balon.length()
 	if not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9:
 		_tomar(p)
-		balon.position = pos(p) + Vector3(0, 1.0, 0)
+		## El balón va a las manos desde donde estaba (antes saltaba a ellas
+		## en un fotograma: «teletransporte» de hasta 2 m en la sonda, M-114).
 		aviso.emit("¡Atajada!")
 	else:
 		## Rechace: hacia un lado y, la mitad de las veces, por detrás de la
@@ -2955,11 +2977,12 @@ func _colocar_saque(delta: float) -> void:
 			obj = _ia_portero_saque(p)
 		p["objetivo"] = obj
 		p["correr"] = true
-		## Se colocan rápido (en los saques el juego está parado).
+		## Se colocan rápido (en los saques el juego está parado), pero a paso
+		## de persona: la ayuda solo completa hasta un esprint de 9 m/s. Antes
+		## sumaba 14 m/s a su carrera y patinaban a 22 m/s (sonda de física).
 		var n: Node3D = p["node"]
-		if _t_estado < 0.1:
-			pass
-		n.position = n.position.move_toward(obj, 14.0 * delta)
+		var ayuda := maxf(0.0, 9.0 - (p["vel"] as Vector3).length())
+		n.position = n.position.move_toward(obj, ayuda * delta)
 	if lanzador.is_empty():
 		_reanudar()
 		return
@@ -2971,8 +2994,17 @@ func _colocar_saque(delta: float) -> void:
 		if apuntando:
 			_apuntar_usuario(delta)
 		return
-	if _t_estado > (1.4 if tipo != "centro" else 1.0):
+	## Se saca cuando están colocados (o, como mucho, 3 s después).
+	var espera := 1.4 if tipo != "centro" else 1.0
+	if _t_estado > espera and (_colocados() or _t_estado > espera + 3.0):
 		_ejecutar_saque_ia(lanzador, tipo, lugar)
+
+## ¿Están todos a menos de 3 m de su sitio del saque?
+func _colocados() -> bool:
+	for p: Dictionary in jugadores:
+		if p.has("objetivo") and pos(p).distance_to(p["objetivo"] as Vector3) > 3.0:
+			return false
+	return true
 
 func _ia_portero_saque(p: Dictionary) -> Vector3:
 	var arco := _arco_propio(p)
@@ -3654,12 +3686,12 @@ func _filigrana(p: Dictionary, id: String, lado: float) -> void:
 			vel_balon = der * lado * fuerza + fwd * sp * 0.5
 		"giro":
 			var nuevo := der * lado
-			n.rotation.y = atan2(nuevo.x, nuevo.z)
+			_mirar(p, atan2(nuevo.x, nuevo.z), 0.3)
 			p["vel"] = nuevo * 2.5
 			balon.position = n.position + nuevo * 0.6 + Vector3(0, R, 0)
 			vel_balon = nuevo * 3.0
 		"giro_atras":
-			n.rotation.y = atan2(-fwd.x, -fwd.z)
+			_mirar(p, atan2(-fwd.x, -fwd.z), 0.35)
 			p["vel"] = -fwd * 1.5
 			balon.position = n.position - fwd * 0.6 + Vector3(0, R, 0)
 			vel_balon = -fwd * 2.5
@@ -3902,7 +3934,10 @@ func _mover_jugadores(delta: float) -> void:
 		var hacia_b := balon.position - n.position
 		hacia_b.y = 0.0
 		var atras := false
-		if sp > 0.5 and sp < 4.2 and poseedor != p and not bool(p["por"]) and hacia_b.length() < 18.0 \
+		if float(p.get("mirar_hasta", 0.0)) > t:
+			## Un giro mandado (golpeo, filigrana): manda sobre todo lo demás.
+			n.rotation.y = rotate_toward(n.rotation.y, float(p["mirar"]), GIRO_RAPIDO * delta)
+		elif sp > 0.5 and sp < 4.2 and poseedor != p and not bool(p["por"]) and hacia_b.length() < 18.0 \
 				and not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]) \
 				and vel.normalized().dot(hacia_b.normalized()) < -0.35:
 			atras = true
