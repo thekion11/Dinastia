@@ -282,7 +282,12 @@ func _por_hijos() -> void:
 		_fin = true
 		get_tree().quit()
 		return
-	var n: Node3D = _ph_lista[_ph_i]
+	var nv: Variant = _ph_lista[_ph_i]
+	if not is_instance_valid(nv):
+		_ph_i += 1
+		_ph_espera = 0
+		return
+	var n := nv as Node3D
 	if _ph_espera == 0:
 		n.visible = false
 	_ph_espera += 1
