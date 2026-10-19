@@ -45,6 +45,7 @@ const COORDS := "res://assets/characters/quaternius/equipacion_coords.png"
 const MATERIAL_CUERPO := "MI_Superhero_Male"
 const MATERIAL_CEJAS := "MI_Hair_1"
 const MATERIAL_OJOS := "MI_Eyes"
+const DIST_OJOS := 35.0
 ## Tono medio de la piel de la textura original (sRGB), medido sobre los
 ## píxeles que no son prenda: para teñirla al tono de cada jugador.
 const PIEL_REF := Color(0.6456, 0.4475, 0.3127)
@@ -242,6 +243,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 					## Las texturas de ojos del pack no vinieron en el repo:
 					## sin esto, blanco puro de fábrica y mirada de maniquí.
 					mi.set_surface_override_material(s, _material_liso(Color(0.12, 0.09, 0.07), 0.3))
+					PeloQ.sin_lejos(mi, DIST_OJOS)
 	if cuerpo == null:
 		return false
 	## REALISMO (26-9-2026): la posición de reposo de cada vértice, escrita en
@@ -487,6 +489,10 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 				puesta = true
 			elif nombre == MATERIAL_OJOS and ResourceLoader.exists(SHADER_OJOS):
 				_con_reposo_simple(mi)
+				## OJOS SOLO DE CERCA (19-10-2026): a más de `DIST_OJOS` m un ojo
+				## mide como mucho 1,4 píxeles (zoom máximo de la transmisión) y
+				## costaba una llamada de dibujo por jugador: −43 en el partido.
+				PeloQ.sin_lejos(mi, DIST_OJOS)
 				if s >= mi.get_surface_override_material_count():
 					continue
 				## Con cara real: el iris medido en su foto, y los párpados los
