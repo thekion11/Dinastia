@@ -380,7 +380,7 @@ static func tactica_desde(tc: Tactica, riesgo := false, tiempo := false) -> Dict
 		return {}
 	var m := tc.mentalidad + (1 if riesgo else 0) - (1 if tiempo else 0)
 	return {"mentalidad": clampi(m, 0, 3), "presion": tc.presion, "linea": tc.linea,
-		"amplitud": tc.amplitud, "ritmo": tc.ritmo}
+		"amplitud": tc.amplitud, "ritmo": tc.ritmo, "trampa": 1 if tc.fuera_de_juego else 0}
 
 ## Un cambio en pleno partido: `entra` (un diccionario de `PlayerSpawner`) ocupa
 ## el sitio táctico de `sale_id` y aparece en la banda, a la altura del medio.
@@ -2159,7 +2159,67 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	if not rival.is_empty():
 		## Marca a distancia de zona: entre el rival y el arco, a 2,4 m.
 		obj = pos(rival) + (arco - pos(rival)).normalized() * 2.4
+	## La defensa no persigue a cada delantero hacia su arco: se queda en la
+	## línea común (M-123) y solo cierra por dentro hacia el que marca.
+	if _rol(p) in ["DFC", "LD", "LI"]:
+		obj.z = _linea_defensiva(bool(p["es_local"]))
 	return obj
+
+## LA LÍNEA DEFENSIVA COMÚN (M-123, 19-10-2026). Antes cada defensor marcaba a
+## su delantero por separado y la línea se rompía: uno habilitaba a todos. Ahora
+## los cuatro de atrás comparten una altura que sale de la pizarra y del balón:
+## - de base, la altura media de su forma (con la «línea» de la pizarra);
+## - si al portador nadie le aprieta y mira al arco, la línea recula (cubre la
+##   espalda); si está presionado o el balón va hacia atrás, sube;
+## - con la TRAMPA del fuera de juego sube más y más rápido, dejando atrás al
+##   delantero que se queda colgado;
+## - nunca se mete en su área chica ni pasa al balón.
+## Se calcula una vez por paso y se mueve suave (la línea va junta, sin saltos).
+var _linea_def := [INF, INF]
+var _linea_def_t := [-1.0, -1.0]
+
+func _linea_defensiva(local: bool) -> float:
+	var eq := 0 if local else 1
+	if _linea_def_t[eq] == t:
+		return _linea_def[eq]
+	var d := dir_ataque(local)
+	var b := balon.position
+	## Base: la forma de los defensores (z media), como hasta ahora.
+	var suma := 0.0
+	var n := 0
+	for q: Dictionary in jugadores:
+		if bool(q["es_local"]) == local and _rol(q) in ["DFC", "LD", "LI"]:
+			suma += _forma(q, false).z
+			n += 1
+	var z := suma / float(n) if n > 0 else -d * 30.0
+	var trampa := int((tacticas[eq] as Dictionary).get("trampa", 0)) == 1
+	## El portador rival: ¿libre y de cara, o apretado?
+	if not poseedor.is_empty() and bool(poseedor["es_local"]) != local:
+		var libre := _presion(poseedor) > 4.0
+		if libre:
+			z -= d * 4.0
+		elif trampa:
+			z += d * 3.0
+	## Balón que viaja hacia el campo del rival (pase atrás o despeje): se sube.
+	if poseedor.is_empty() and vel_balon.z * d > 3.0:
+		z += d * (5.0 if trampa else 2.5)
+	## Nunca por delante del balón (la línea no deja el balón a su espalda)…
+	var lim_balon := b.z - d * 1.5
+	if (z - lim_balon) * d > 0.0:
+		z = lim_balon
+	## …ni dentro del área chica.
+	var fondo := -d * (LARGO - 6.0)
+	if (z - fondo) * d < 0.0:
+		z = fondo
+	## Movimiento suave: sube despacio, recula rápido (como una defensa de verdad).
+	if _linea_def_t[eq] >= 0.0 and _linea_def[eq] != INF:
+		var dt_ := clampf(t - float(_linea_def_t[eq]), 0.0, 0.5)
+		var sube := (z - float(_linea_def[eq])) * d > 0.0
+		var vel := (6.0 if trampa else 4.0) if sube else 7.5
+		z = move_toward(float(_linea_def[eq]), z, vel * dt_)
+	_linea_def[eq] = z
+	_linea_def_t[eq] = t
+	return z
 
 func _ia_portero(p: Dictionary) -> Vector3:
 	var b := balon.position
@@ -2799,6 +2859,7 @@ func _empezar_saque(tipo: String, saca_local: bool, lugar: Vector3) -> void:
 	estado = "saque"
 	_t_estado = 0.0
 	poseedor = {}
+	_linea_def = [INF, INF]
 	pase_a = {}
 	_jugada = {}
 	vel_balon = Vector3.ZERO

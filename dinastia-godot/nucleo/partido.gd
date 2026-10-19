@@ -362,6 +362,7 @@ func preparar() -> void:
 	terminado_ya = false
 	cronica.clear()
 	_todos = once_local + once_visita
+	_notas_cerradas = false
 	_notas.clear()
 	_aportes.clear()
 	_titulares.clear()
@@ -1031,6 +1032,7 @@ func hubo_remontada_de(c: Club) -> bool:
 ## Se llama al terminar, no minuto a minuto: una nota a mitad de partido no
 ## significa nada y ademas el resultado todavia no se sabe.
 func _cerrar_notas() -> void:
+	_notas_cerradas = true
 	var gano_local := goles_local > goles_visita
 	var empate := goles_local == goles_visita
 	for j in _todos:
@@ -1040,6 +1042,23 @@ func _cerrar_notas() -> void:
 			bono = 0.6 if (gano_local == suyo) else -0.6
 		var n: float = clampf(float(_notas.get(j.id, 6.0)) + bono + Azar.f() * 1.4 - 0.7, 3.0, 10.0)
 		n = round(n * 10.0) / 10.0
+		j.anotar_nota(n)
+		j.forma = clampi(int(round(float(j.forma) * 0.7 + n * 10.0 * 0.3)), 20, 99)
+		j.partidos += 1
+
+## Cierra las notas de un partido MIRADO (en vivo o en 3D), que no pasa por
+## `simular()`. Usa `valoraciones()` (la misma nota que ve el jugador en el
+## resumen) y no tira del `Azar`, así no mueve el resto de la partida. Una sola
+## vez por partido.
+var _notas_cerradas := false
+
+func cerrar_notas_mirado() -> void:
+	if _notas_cerradas or not terminado_ya:
+		return
+	_notas_cerradas = true
+	for v: Dictionary in valoraciones():
+		var j: Jugador = v["jugador"]
+		var n := float(v["nota"])
 		j.anotar_nota(n)
 		j.forma = clampi(int(round(float(j.forma) * 0.7 + n * 10.0 * 0.3)), 20, 99)
 		j.partidos += 1

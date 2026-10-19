@@ -793,6 +793,10 @@ func jugador_por_id(id: String) -> Jugador:
 ## `ya_jugado` es el partido que el entrenador acaba de dirigir en directo: se
 ## anota su resultado en vez de volver a simularlo.
 func avanzar_semana(ya_jugado: Partido = null) -> void:
+	## El partido mirado no pasó por `simular()`: sus notas y la forma se
+	## cierran aquí (antes ese partido no contaba en `Jugador.notas`).
+	if ya_jugado != null:
+		ya_jugado.cerrar_notas_mirado()
 	## EL CONTEXTO DE LA SEMANA PARA TODOS LOS PARTIDOS que se van a jugar: el
 	## recorte de tarjetas por videoarbitraje -que vota la asamblea- y el parte
 	## medico de tu club. `Liga`, `Copa` y `Continental` crean sus partidos por
