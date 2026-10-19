@@ -8382,6 +8382,20 @@ func _probar_tanda_top25b() -> void:
 		rango = rango and float(x["nota"]) >= 3.0 and float(x["nota"]) <= 10.0
 	_comprobar(rango, "valoraciones: entre 3 y 10")
 	_comprobar(p.mejor_del_partido() == v1[0], "valoraciones: el mejor del partido es el primero")
+	## 19-10: un partido MIRADO (minuto a minuto, sin `simular()`) también
+	## cierra notas y forma, una sola vez y sin tocar el azar.
+	var par2 := m.proximo_partido()
+	var pm := Partido.new(par2[1], par2[0])
+	pm.preparar()
+	while not pm.terminado_ya:
+		pm.simular_minuto()
+	var j0: Jugador = pm.once_local[0]
+	var antes_n := j0.notas.size()
+	var antes_p := j0.partidos
+	pm.cerrar_notas_mirado()
+	pm.cerrar_notas_mirado()
+	_comprobar(j0.partidos == antes_p + 1 and (j0.notas.size() == antes_n + 1 or antes_n >= 8),
+		"partido mirado: cuenta en notas y partidos una sola vez")
 	## M-238: el resumen de la etapa del despido.
 	var filas := EscenaDespido.datos_etapa(m)
 	var claves: Array = []
