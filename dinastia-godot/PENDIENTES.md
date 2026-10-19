@@ -9,7 +9,7 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 |---|---|---|---|
 | Todo lo hecho del 14 al 17-10 | `main` | **FUSIONADO el 17-10 con el PR #7** | nada pendiente; lo nuevo que se haga va en la rama y se pasa con otro PR cuando el dueño lo pida |
 | Tanda 2 del TOP 25, mejoras del coche/GPS y caza de bugs del 17-10 | `main` | **fusionado el 17-10 con el PR #8** (pedido del dueño) | nada pendiente |
-| Línea defensiva (M-123), notas de partidos mirados, prueba del bono (19-10) | rama `ccr-54306f57-jlcywg` | sin fusionar | PR nuevo cuando el dueño lo pida |
+| Línea defensiva (M-123), notas de partidos mirados, prueba del bono, física M-114/115 (19-10) | rama `ccr-54306f57-jlcywg` | sin fusionar | PR nuevo cuando el dueño lo pida |
 
 ## 1.b Hecho en la última tanda (17-10, ya en la rama)
 GPS 2D estilo GTA (`ui/componentes/minimapa_ciudad.gd`: gira con el rumbo, ruta morada al estadio,
@@ -26,7 +26,7 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 |---|---|---|
 | M-057 | Fabricantes de ropa inventados con logo por club | lista de marcas ficticias + logo procedural; uniform en `equipacion_q.gdshader` (hoy una sola «ala») |
 | ~~M-123~~ | HECHO 19-10: línea defensiva común y trampa | `MotorJugable._linea_defensiva` (recula si el portador está libre, sube si está presionado o el balón va atrás; con la trampa sube más). Sonda (simetría, 12 partidos cortos): goles 1,83→1,50, tiros 9,7→8,5, fueras 0,8→1,2, pases 76→77 %. Con `TRAMPA=1` el rival cae en fuera de juego 0,42→0,75 por partido. `SIN_LINEA=1` vuelve a la defensa de antes (para comparar) |
-| M-114/115 | Reposiciones del balón y giros bruscos | `pruebas/sonda_fisica_partido.tscn` ya los mide; separar teletransportes de saques y limitar giro °/s |
+| ~~M-114/115~~ | HECHO 19-10 (casi): giros y saltos | Sonda de física (600 fotogramas de juego, ya sin la ceremonia): jugadores > 10,5 m/s 789 → 0 (eran los saques: se colocaban patinando a 22 m/s; ahora la ayuda completa hasta 9 m/s y el saque espera a que estén colocados, máx. 3 s), giros > 720°/s 3 → 0 (`_mirar`: al patear y en filigranas giran a ≈690°/s), balón saltando en juego 3 → 1 (conducción que recoge el balón en vez de teletransportarlo; atajada sin salto a las manos). PENDIENTE: aceleraciones > 15 m/s² siguen en ~1040 (empujones/choques/ayuda del saque) |
 | M-263 | Semana con agenda en la Carrera de Jugador | calendario entreno/descanso/vida social entre partidos en `carrera_jugador.gd` |
 | M-040 | Gente del club y de la ciudad en primeras filas | reutilizar `PeatonQ` horneados en las 2 primeras filas (`StadiumBuilder._montar_horneados`) |
 | M-033 | Variedad de ropa y pelo en hinchas | más variantes horneadas (`herramientas/hornear_publico.gd`) |
