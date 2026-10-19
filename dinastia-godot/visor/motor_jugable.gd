@@ -2181,6 +2181,8 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 ## de un futbolista al encararse a un pase (por debajo de los 720°/s que la
 ## sonda de física marca como imposibles). `_mirar` lo deja pedido `dur` s.
 const GIRO_RAPIDO := 12.0
+## Tope de aceleración total de un jugador (m/s²), ver `_mover_jugadores`.
+static var A_MAX := float(OS.get_environment("A_MAX")) if OS.get_environment("A_MAX") != "" else 18.0
 
 func _mirar(p: Dictionary, rumbo: float, dur: float) -> void:
 	p["mirar"] = rumbo
@@ -2981,8 +2983,16 @@ func _colocar_saque(delta: float) -> void:
 		## de persona: la ayuda solo completa hasta un esprint de 9 m/s. Antes
 		## sumaba 14 m/s a su carrera y patinaban a 22 m/s (sonda de física).
 		var n: Node3D = p["node"]
-		var ayuda := maxf(0.0, 9.0 - (p["vel"] as Vector3).length())
-		n.position = n.position.move_toward(obj, ayuda * delta)
+		## Y se apaga al acercarse (antes se cortaba de golpe al llegar: tirones
+		## de más de 100 m/s² en la sonda).
+		## La ayuda es una velocidad más, que crece suave (6 m/s²).
+		var ayuda := maxf(0.0, 9.0 - (p["vel"] as Vector3).length()) * clampf(n.position.distance_to(obj) / 6.0, 0.0, 1.0)
+		var hacia := obj - n.position
+		hacia.y = 0.0
+		var av_obj := hacia.normalized() * ayuda if hacia.length() > 0.05 else Vector3.ZERO
+		var av: Vector3 = (p.get("ayuda_v", Vector3.ZERO) as Vector3).move_toward(av_obj, 6.0 * delta)
+		p["ayuda_v"] = av
+		n.position += av * delta
 	if lanzador.is_empty():
 		_reanudar()
 		return
@@ -3094,6 +3104,8 @@ func _reanudar() -> void:
 	_receptor_marcado = {}
 	_dibujar_receptor()
 	_anillo_serenidad(false)
+	for q: Dictionary in jugadores:
+		q.erase("ayuda_v")
 	estado = "juego"
 	_t_estado = 0.0
 	apuntando = false
@@ -3904,10 +3916,11 @@ func _mover_jugadores(delta: float) -> void:
 			var dir0 := vel / sp0
 			var dir1 := deseada / sp_des
 			var ang := dir0.signed_angle_to(dir1, Vector3.UP)
-			var giro_max := lerpf(9.0, 2.6, clampf(sp0 / 8.0, 0.0, 1.0)) * delta
+			var giro_rad := lerpf(9.0, 2.6, clampf(sp0 / 8.0, 0.0, 1.0))
 			## RB + LT: cambios de dirección firmes (gira cerrado sin frenar tanto).
 			if bool(p.get("giro_firme", false)):
-				giro_max *= 2.4
+				giro_rad *= 2.4
+			var giro_max := giro_rad * delta
 			var dir := dir0.rotated(Vector3.UP, clampf(ang, -giro_max, giro_max))
 			## Giro brusco: se frena para girar (cambio de dirección real).
 			var objetivo_sp := sp_des * (1.0 - 0.6 * clampf((absf(ang) - 0.5) / 2.0, 0.0, 1.0))
@@ -3915,6 +3928,14 @@ func _mover_jugadores(delta: float) -> void:
 			vel = dir * move_toward(sp0, objetivo_sp, acel * delta)
 		else:
 			vel = vel.move_toward(deseada, (6.0 + rit * 2.0) * delta if sp_des > sp0 else 11.0 * delta)
+		## TOPE DE ACELERACIÓN TOTAL (19-10-2026): frenar, girar y arrancar a la
+		## vez no pasa de A_MAX m/s² (más con giro firme), lo que aguanta un
+		## cuerpo en un recorte. Antes la suma llegaba a 25-30 (tirones en la
+		## sonda). Con 14 el juego se quedaba sin chispa (la mitad de goles).
+		var a_max := (A_MAX * 1.35 if bool(p.get("giro_firme", false)) else A_MAX) * delta
+		var dv: Vector3 = vel - (p["vel"] as Vector3)
+		if dv.length() > a_max:
+			vel = (p["vel"] as Vector3) + dv.normalized() * a_max
 		p["vel"] = vel
 		n.position += vel * delta
 		## EL EMPUJÓN DEL DUELO: un desplazamiento lateral que sube en una
