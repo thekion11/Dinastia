@@ -43,6 +43,16 @@ var _fin := false
 func _process(_d: float) -> void:
 	if _fin:
 		return
+	## La intro y la ceremonia (filas, alineaciones, himno) se saltan: se mide
+	## el JUEGO con la cámara de TV. Hasta el 19-10 se medía la ceremonia.
+	var intro: Variant = _vista.get("_intro")
+	if intro != null and is_instance_valid(intro) and intro.activa:
+		intro.terminar()
+		return
+	var cer: Variant = _vista.get("_ceremonia")
+	if cer != null and is_instance_valid(cer) and cer.activa:
+		cer.terminar()
+		return
 	_n += 1
 	if _n == 5:
 		(_vista.get("_rig") as CameraRig).switch_to(0)
@@ -59,6 +69,9 @@ func _process(_d: float) -> void:
 		for g in _vista.find_children("*", "GeometryInstance3D", true, false):
 			if String(g.name).rstrip("0123456789@") in nombres:
 				g.visible = false
+	if _n == CALENTAR and OS.get_environment("LIVIANAS") != "":
+		## LIVIANAS=1 (19-10-2026): butacas cercanas con la malla de 60 triángulos.
+		Optimizar.butacas_livianas(_vista, true)
 	if OS.get_environment("PARTES") != "":
 		_partes()
 		return

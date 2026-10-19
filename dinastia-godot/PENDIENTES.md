@@ -48,7 +48,7 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - ~~**Notas de los partidos mirados**~~ HECHO 19-10: `Partido.cerrar_notas_mirado()` (desde `Mundo.avanzar_semana`), una vez, con la nota de `valoraciones()` y sin tocar el `Azar`.
 - **Cambio con cartel y palmada**: solo en el partido del DT, falta en la Carrera de Jugador.
 - ~~**Prueba frágil** `_probar_motor_libre` («bono del club»)~~ 19-10: con +20 % el efecto quedaba bajo el ruido de 12 partidos; ahora prueba la dirección con +35 %.
-- **Optimización**: los triángulos bajaron −66 % pero las llamadas de dibujo solo −11 % → juntar ojos/cejas/cuero en la cara a distancia.
+- **Optimización** (19-10, cifras CORREGIDAS): `medir_partido` medía la CEREMONIA (alineaciones), no el juego; ya la salta. En juego real con la cámara de TV (ALTO, Forward+): **532 llamadas y 1,34 M triángulos** (no 0,76 M). HECHO: ojos solo hasta 35 m (`VestidorQ.DIST_OJOS`) → 493 llamadas (−7 %), sin diferencia visible en la toma de TV (de cerca sí harían falta: la cuenca queda clara). Probado y descartado: butacas cercanas livianas (`LIVIANAS=1`): no bajan los triángulos (desde la TV casi no se ven). Pendiente: averiguar qué pone los 1,34 M en pantalla (cuerpos SuperHero ~12,5 mil por jugador, público) y si `CaraReal` puede tener un corte de lejos sin dejar la cara hundida.
 - **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: sigue notándose poco desde la TV.
 
 ### 2.5 Caza de bugs del 17-10 (estrés pedido por el dueño) — se registra todo al encontrarlo
