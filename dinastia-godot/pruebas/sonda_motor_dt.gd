@@ -12,6 +12,7 @@ extends Node3D
 ##                       cazar sesgos hace falta N grande: N=25 en 4 procesos con
 ##                       SEMILLA0=400/500/600/700 y MITAD=120 (≈11 min); la línea
 ##                       LADOS da goles/tiros/córners/faltas/fueras/despejes L-V.
+##   TRAMPA=1  la visita con la trampa del fuera de juego (fueras L-V en LADOS).
 ##   SEMILLA0=primera semilla, MITAD=segundos de motor por tiempo (240).
 var _m: Mundo
 var duelos_tot := {}
@@ -96,6 +97,10 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 	motor.autopiloto = true
 	motor.duracion_mitad = float(OS.get_environment("MITAD")) if OS.get_environment("MITAD") != "" else 240.0
 	motor.tacticas = tac
+	## TRAMPA=1: la visita juega con la trampa del fuera de juego (M-123).
+	if OS.get_environment("TRAMPA") != "":
+		motor.tacticas = [(tac[0] as Dictionary).duplicate() if tac.size() > 0 else {}, (tac[1] as Dictionary).duplicate() if tac.size() > 1 else {}]
+		motor.tacticas[1]["trampa"] = 1
 	motor.cansancio_real = cansancio
 	motor.tarjetas_reales = true
 	motor.preparar(lista, ball, "", semilla)

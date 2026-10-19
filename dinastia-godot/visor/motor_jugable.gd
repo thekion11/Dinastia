@@ -2161,7 +2161,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 		obj = pos(rival) + (arco - pos(rival)).normalized() * 2.4
 	## La defensa no persigue a cada delantero hacia su arco: se queda en la
 	## línea común (M-123) y solo cierra por dentro hacia el que marca.
-	if _rol(p) in ["DFC", "LD", "LI"]:
+	if _rol(p) in ["DFC", "LD", "LI"] and not _SIN_LINEA:
 		obj.z = _linea_defensiva(bool(p["es_local"]))
 	return obj
 
@@ -2176,6 +2176,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 ## - nunca se mete en su área chica ni pasa al balón.
 ## Se calcula una vez por paso y se mueve suave (la línea va junta, sin saltos).
 var _linea_def := [INF, INF]
+static var _SIN_LINEA := OS.get_environment("SIN_LINEA") != ""   ## (sondas: la defensa de antes)
 var _linea_def_t := [-1.0, -1.0]
 
 func _linea_defensiva(local: bool) -> float:

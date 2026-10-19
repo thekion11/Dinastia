@@ -7501,9 +7501,12 @@ func _probar_motor_libre() -> void:
 	## Dos clubes parecidos y DISTINTOS: el motor guarda estado en cada
 	## jugador, y un equipo contra sí mismo comparte los mismos objetos.
 	var debil2: Club = cl[cl.size() - 2]
+	## Con +20 % el efecto (≈6 puntos de calidad) quedaba por debajo del ruido
+	## de 12 partidos y la prueba pasaba o fallaba según el orden de las
+	## secciones (PENDIENTES, 17-10). Se prueba la DIRECCIÓN con +35 %.
 	for sem in 6:
-		var c1 := MotorLibre.new(debil.once(), debil2.once(), 1.2, 1.0, 3 + sem * 2).simular()
-		var c2 := MotorLibre.new(debil.once(), debil2.once(), 1.0, 1.2, 4 + sem * 2).simular()
+		var c1 := MotorLibre.new(debil.once(), debil2.once(), 1.35, 1.0, 3 + sem * 2).simular()
+		var c2 := MotorLibre.new(debil.once(), debil2.once(), 1.0, 1.35, 4 + sem * 2).simular()
 		xg_bono += float(c1["xg"][0]) + float(c2["xg"][1])
 		xg_sin += float(c1["xg"][1]) + float(c2["xg"][0])
 	_comprobar(xg_bono > xg_sin, "con el bono del club se generan más ocasiones (xG %.1f vs %.1f)" % [xg_bono, xg_sin])
