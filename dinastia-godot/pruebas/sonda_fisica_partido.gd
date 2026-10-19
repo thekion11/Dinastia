@@ -41,6 +41,11 @@ func _process(_d: float) -> void:
 	if intro != null and is_instance_valid(intro) and intro.activa:
 		intro.terminar()
 		return
+	## La ceremonia (filas, himno, sorteo) también se salta: se mide el juego.
+	var cer: Variant = _vista.get("_ceremonia")
+	if cer != null and is_instance_valid(cer) and cer.activa:
+		cer.terminar()
+		return
 	if _n < 60:
 		return
 	var gente: Array = []
@@ -81,7 +86,15 @@ func _process(_d: float) -> void:
 	if bal != null:
 		var pb := bal.global_position
 		if _bprev != Vector3.INF and pb.distance_to(_bprev) > 1.2:
-			_c["tele"] += 1
+			## Reposición (saque, gol, tanda: el balón se coloca) o salto en juego.
+			var mo: Variant = _vista.get("_motor")
+			var est := String(mo.estado) if mo != null and is_instance_valid(mo) else "?"
+			if est == "juego":
+				_c["tele"] += 1
+				if OS.get_environment("DEPURAR_TELE") != "":
+					print("TELE %.2f m en juego (dueño: %s)" % [pb.distance_to(_bprev), str(not (mo.poseedor as Dictionary).is_empty())])
+			else:
+				_c["repos"] = int(_c.get("repos", 0)) + 1
 		if pb.y < 0.08:
 			_c["hundido"] += 1
 		for a: Node3D in gente:
@@ -104,7 +117,7 @@ func _informe() -> void:
 	print("  velocidad > 10,5 m/s: %d   máx %.1f m/s" % [_c["vel"], _vmax])
 	print("  aceleración > 15 m/s²: %d   máx %.0f m/s²" % [_c["acel"], _amax])
 	print("  giros > 720°/s: %d" % _c["giro"])
-	print("  balón teletransportado (>1,2 m/fotograma): %d" % _c["tele"])
+	print("  balón teletransportado EN JUEGO (>1,2 m/fotograma): %d   reposiciones (saques): %d" % [_c["tele"], int(_c.get("repos", 0))])
 	print("  balón hundido en el césped: %d" % _c["hundido"])
 	print("  balón atravesando un cuerpo: %d" % _c["cuerpo"])
 	if not _tira.is_empty():
