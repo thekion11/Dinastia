@@ -1,7 +1,7 @@
 # PENDIENTES — qué falta, cómo se hará y qué falta fusionar
 
 Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde aquí se retoma.
-Última actualización: **17-10-2026**. Se actualiza en cada bloque de trabajo.
+Última actualización: **19-10-2026**. Se actualiza en cada bloque de trabajo.
 
 ## 1. Qué falta por FUSIONAR
 
@@ -9,6 +9,7 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 |---|---|---|---|
 | Todo lo hecho del 14 al 17-10 | `main` | **FUSIONADO el 17-10 con el PR #7** | nada pendiente; lo nuevo que se haga va en la rama y se pasa con otro PR cuando el dueño lo pida |
 | Tanda 2 del TOP 25, mejoras del coche/GPS y caza de bugs del 17-10 | `main` | **fusionado el 17-10 con el PR #8** (pedido del dueño) | nada pendiente |
+| Línea defensiva (M-123), notas de partidos mirados, prueba del bono (19-10) | rama `ccr-54306f57-jlcywg` | sin fusionar | PR nuevo cuando el dueño lo pida |
 
 ## 1.b Hecho en la última tanda (17-10, ya en la rama)
 GPS 2D estilo GTA (`ui/componentes/minimapa_ciudad.gd`: gira con el rumbo, ruta morada al estadio,
@@ -24,7 +25,7 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 | Id | Qué | Cómo |
 |---|---|---|
 | M-057 | Fabricantes de ropa inventados con logo por club | lista de marcas ficticias + logo procedural; uniform en `equipacion_q.gdshader` (hoy una sola «ala») |
-| M-123 | Línea defensiva común y trampa del fuera de juego | en `MotorJugable`: la línea de 4 se mueve junta según `tactica.linea`/`fuera_de_juego`; medir con `sonda_motor_dt` (fueras de juego por partido) |
+| ~~M-123~~ | HECHO 19-10: línea defensiva común y trampa | `MotorJugable._linea_defensiva` (recula si el portador está libre, sube si está presionado o el balón va atrás; con la trampa sube más). Sonda (simetría, 12 partidos cortos): goles 1,83→1,50, tiros 9,7→8,5, fueras 0,8→1,2, pases 76→77 %. Con `TRAMPA=1` el rival cae en fuera de juego 0,42→0,75 por partido. `SIN_LINEA=1` vuelve a la defensa de antes (para comparar) |
 | M-114/115 | Reposiciones del balón y giros bruscos | `pruebas/sonda_fisica_partido.tscn` ya los mide; separar teletransportes de saques y limitar giro °/s |
 | M-263 | Semana con agenda en la Carrera de Jugador | calendario entreno/descanso/vida social entre partidos en `carrera_jugador.gd` |
 | M-040 | Gente del club y de la ciudad en primeras filas | reutilizar `PeatonQ` horneados en las 2 primeras filas (`StadiumBuilder._montar_horneados`) |
@@ -44,9 +45,9 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - ~~**Penales**: entraban ~9 de 10~~ HECHO 17-10: portero que acierta el lado para más y algún tiro se va fuera (~3 de cada 4 por cálculo; medir con más tandas si se nota).
 - ~~**Añadido**~~ HECHO 17-10: suma 45 s por gol y 30 s por cambio o expulsión, con tope (`MotorJugable._sumar_anadido`).
 - ~~**Once automático de la IA**: delanteros de lateral~~ HECHO 17-10: fuera de su puesto nadie rinde más que su media y cambiar de línea cuesta más (`Club.once`); el juvenil obligatorio (CHI/BOL) entra por alguien de su línea (`LeyesPais.ajustar_once`). Ojo: el prototipo `MotorLibre` (no usado por el juego) da ~7,6 goles de media con onces bien armados.
-- **Notas de los partidos mirados** (en vivo/3D) no se cierran en `Jugador.notas` (solo en `simular()`); arreglarlo cambia el azar (anotado en M-141).
+- ~~**Notas de los partidos mirados**~~ HECHO 19-10: `Partido.cerrar_notas_mirado()` (desde `Mundo.avanzar_semana`), una vez, con la nota de `valoraciones()` y sin tocar el `Azar`.
 - **Cambio con cartel y palmada**: solo en el partido del DT, falta en la Carrera de Jugador.
-- **Prueba frágil** `_probar_motor_libre` («bono del club»): pasa o falla según qué secciones corren antes en su proceso; la de prórroga va con coste 0.01 para no moverla. Arreglo real: que esa sección cree jugadores frescos y mida con más partidos.
+- ~~**Prueba frágil** `_probar_motor_libre` («bono del club»)~~ 19-10: con +20 % el efecto quedaba bajo el ruido de 12 partidos; ahora prueba la dirección con +35 %.
 - **Optimización**: los triángulos bajaron −66 % pero las llamadas de dibujo solo −11 % → juntar ojos/cejas/cuero en la cara a distancia.
 - **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: sigue notándose poco desde la TV.
 
@@ -73,9 +74,9 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 - 🔒 Dueño: FPS en hardware real, builds, keystore, licencias, derechos de imagen, música, voz.
 
 ## 3. Cómo se trabaja (resumen de reglas, detalle en `CLAUDE.md`)
-- Rama `claude/godot-project-review-o1dvr1`; commit y push por bloque; sin identificadores de modelo.
+- Rama asignada de la sesión (19-10: `ccr-54306f57-jlcywg`); commit y push por bloque; sin identificadores de modelo.
 - Banco: `herramientas/banco.sh` → «FIN. 0 fallos» antes de subir. Prueba del acta: `pruebas/prueba_partido_motor.tscn`.
 - Lo visual en Forward+ con `herramientas/captura.sh` (JPG) y comprobado con la cámara de TV del partido.
-- Contenedor nuevo: `git lfs pull --include="dinastia-godot/**"` antes de abrir Godot; tras clases nuevas, `godot --headless --import`.
+- Contenedor nuevo: Godot 4.7.2 no viene instalado (bajarlo de godot-builds en GitHub); `git lfs pull --include="dinastia-godot/**"` antes de abrir Godot; tras clases nuevas, `godot --headless --import`.
 - Agentes: máximo 1-2; revisar su diff antes de unir; borrar el worktree al terminar.
 - **Uso**: el 17-10 el límite semanal estaba al 86 % (se restablece el viernes 00:00) → ahorrar hasta entonces.
