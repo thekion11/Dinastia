@@ -6,6 +6,12 @@ Repaso de los 470 puntos de `INFORME_MEJORAS.md` (14-10-2026) **contra el códig
 
 **Límites de esta pasada.** Es una verificación por lectura y búsqueda, sin abrir el juego. Un PENDIENTE significa «no se encontró»; el proyecto ya tuvo falsos negativos (ver LEEME, 13-9), así que antes de construir algo marcado así conviene un segundo grep. Dos puntos que el informe daba por faltantes ya existían antes del 14-10: `_probar_negociacion` (M-212) y `_probar_logros` (M-255).
 
+## 0. Pasada del 20-10-2026 (pedido: «pulir lo de los más de 300 puntos»)
+
+Estado contado sobre las filas de este documento tras la pasada: **HECHO 94 · PARCIAL 113 · PENDIENTE 245** (el 17-10: 49 · 119 · 284). La tabla de la sección 1 es la del 17-10 y se deja como referencia.
+
+Cerrados en esta pasada (cada uno con prueba o captura): público (M-034 piel por país, M-036 onda y ola, M-045 protesta, M-047 colores del club, M-049 siguen el balón), partido (M-119 lectura del lanzador en la tanda, parcial; M-127 gestión del tiempo; M-137 xA; M-139 añadido por entradas duras; M-162 CSV), gestión (M-224 camisetas del ídolo, M-227 mantenimiento, M-228 imprevistos de obra, M-237 capitán votado, M-246 alineación indebida), interfaz (M-288 fondos ligeros, M-301 autoguardado visible, M-309 créditos), textos y datos (M-240 política/religión, M-331 tocayos, M-335 glifos), código y pruebas (M-358 FPS, M-381 prints, M-389 reimportar, M-395 requirements, M-412 guardados estropeados). Ya hechos antes y marcados ahora: M-104, M-114, M-115, M-123, M-132, M-151.
+
 ## 1. Resumen en cifras
 
 | Sección | Puntos | HECHO | PARCIAL | PENDIENTE | 🔒 DUEÑO | SIN VERIF. |
@@ -483,7 +489,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 |---|---|---|---|---|
 | M-379 | P2 | 64 funciones > 120 líneas (Q-01): `Sonido._sintetizar` 1.000,… | PENDIENTE | funciones largas sin partir |
 | M-380 | P2 | `pruebas/banco.gd` 8.029 líneas | PENDIENTE | `banco.gd` con 8.454 líneas |
-| M-381 | P2 | 16 `print()` en código de juego | PARCIAL | 14 `print()` (antes 16) |
+| M-381 | P2 | 16 `print()` en código de juego | HECHO | 20-10: los que quedaban sin condición (`KitTextureFactory`) solo con `--verbose`; el resto ya iba detrás de interruptores de depuración |
 | M-382 | P2 | Sin análisis estático | PENDIENTE | sin gdlint |
 | M-383 | P2 | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | PENDIENTE | sin `JugadorMotor` tipado |
 | M-384 | P2 | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | PENDIENTE | sin extraer servicios |
