@@ -3585,6 +3585,13 @@ func _probar_dificultad_cpu() -> void:
 		"M-127: al %d' el que gana se toma su tiempo y el que pierde saca rápido" % motor.minuto())
 	motor.control_equipo = 0
 	_comprobar(is_equal_approx(motor._ritmo_de_saque(loc_p), 1.0), "M-127: el equipo del usuario no pierde tiempo solo")
+	## M-119: en la tanda el portero se tira más al lado natural del pie del que patea.
+	var cuenta := {-1: 0, 0: 0, 1: 0}
+	motor.vel_balon = Vector3.ZERO
+	for _i in 600:
+		cuenta[motor._lado_portero_tanda(loc_p, vis_p)] += 1
+	var nat := -1 if AnimExtra.es_zurdo(String(loc_p.get("id", ""))) else 1
+	_comprobar(int(cuenta[nat]) > int(cuenta[-nat]) and int(cuenta[0]) > 0, "M-119: el portero lee el pie del lanzador (%s, natural %d)" % [str(cuenta), nat])
 	raiz.queue_free()
 
 ## VALLAS LED EN MULTIMESH (20-10-2026): menos llamadas de dibujo y la misma
@@ -8882,6 +8889,17 @@ func _probar_transmision_y_estadisticas() -> void:
 	_comprobar(ev.n_tiros(true) == 2 and String(ev.tiros[0]["res"]) == "atajada" and String(ev.tiros[2]["res"]) == "gol",
 		"cada remate guarda cómo acabó (y un gol de rebote se apunta aparte)")
 	_comprobar(ev.amarillas == [1, 0] and ev.rojas == [0, 1], "tarjetas por equipo")
+	## M-137: xA = el xG de los remates que salieron de un pase.
+	(ev.tiros[0] as Dictionary)["asist"] = "pasador"
+	_comprobar(is_equal_approx(ev.xa(true), float(ev.tiros[0]["xg"])) and ev.xa(false) == 0.0
+		and is_equal_approx(float(ev.xa_por_jugador().get("pasador", 0.0)), float(ev.tiros[0]["xg"])), "xA: el pase previo se lleva el xG del remate")
+	## M-162: la tabla y los remates, a CSV.
+	var ruta_csv := ev.a_csv(null, null)
+	var txt_csv := FileAccess.get_file_as_string(ruta_csv) if ruta_csv != "" else ""
+	_comprobar(txt_csv.contains("remate;equipo;minuto") and txt_csv.contains(";pasador") and txt_csv.contains("Tarjetas rojas"),
+		"CSV: el partido se exporta con la tabla y cada remate")
+	if ruta_csv != "":
+		DirAccess.remove_absolute(ruta_csv)
 	var celda := int((40.0 + 52.5) / 105.0 * EstadisticasVivo.COLS) + int(34.0 / 68.0 * EstadisticasVivo.FILAS) * EstadisticasVivo.COLS
 	_comprobar((ev.calor[0] as PackedInt32Array)[celda] == 2, "el mapa de calor cuenta por zonas")
 	var ca := Club.new()

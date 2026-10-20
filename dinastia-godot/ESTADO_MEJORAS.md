@@ -176,7 +176,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-116 | P1 | Sin duelos con contacto (M-03) | HECHO | duelos de hombro, balón dividido y agarrón (`MotorJugable._duelo_*`, 17-10) |
 | M-117 | P1 | Faltas sin lógica de contacto real (sólo azar) | HECHO | faltas por entrada al tobillo/llegar tarde (`_falta`); ~8,8 por partido (17-10) |
 | M-118 | P1 | Fuera de juego sólo por posición en el instante (✅ base) | HECHO | el VAR decide con la posición real (`margen_gol`) y desde el 17-10 dibuja las dos líneas y el margen en cm en el monitor de la sala (`lineas_gol`) |
-| M-119 | P1 | Penales: el portero «decide una vez» pero sin lectura del lanzador | PENDIENTE | sin lectura del lanzador en penales |
+| M-119 | P1 | Penales: el portero «decide una vez» pero sin lectura del lanzador | PARCIAL | 20-10: en la TANDA el portero de la IA se tira más al lado natural del pie del lanzador (46/36/18) y, según sus reflejos (4-16 %), lee la carrera (`_lado_portero_tanda`); falta en los penales del partido |
 | M-120 | P2 | Córners con 3 variantes | PARCIAL | receptor/2.º/3.er lanzador en córners (14-10); sin jugadas ensayadas de `CatalogoJugadas` |
 | M-121 | P2 | Tiros libres: barrera simple | PARCIAL | barrera de 4 a 9,15 m fija |
 | M-122 | P2 | Sin saque de banda largo/estratégico | PARCIAL | saque de banda largo del usuario (X); sin atributo |
@@ -194,7 +194,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-134 | P2 | Sin cámaras de repetición cinematográficas (grúa, dron) | PARCIAL | cámaras «Dron orbital» y otras en el rig; la repetición no alterna planos |
 | M-135 | P2 | Sin cámara de gol del cuarto árbitro/línea | PENDIENTE | sin cámara de línea de gol |
 | M-136 | P2 | HUD del partido con FC-style indicadores; sin heatmap/estadísticas… | HECHO | `PanelEstadisticas` (T/Select) con mapa de tiros y de calor (16-10); falta mapa de pases |
-| M-137 | P2 | Sin xG ni xA | PARCIAL | xG por remate (`EstadisticasVivo.xg_de`); sin xA |
+| M-137 | P2 | Sin xG ni xA | HECHO | xG por remate (`EstadisticasVivo.xg_de`); 20-10: xA (el pase previo se lleva el xG del remate: `xa`, `xa_por_jugador`) y fila «Asistencias esperadas (xA)» en los 9 idiomas |
 | M-138 | P1 | Ritmo del partido ≈ 54 s/s vs 11 s/s (M-07) | HECHO | ritmo corto/normal/largo (2,7/4/6 s por minuto) en el partido del DT |
 | M-139 | P2 | Tiempo añadido con base real pero sin descuentos por lesión visibles | HECHO | 17-10: cartel 3D del cuarto árbitro (`CuartoArbitro`; 20-10 a tamaño real); 20-10: cada entrada dura (nivel de amarilla o más) suma medio minuto de atención (`MotorJugable._falta`), además de goles, cambios y expulsiones |
 | M-140 | P2 | Descanso: charla de medio tiempo con opciones; sin vestuario 3D… | PENDIENTE | el descanso vuelve al camarín 2D (`prueba_descanso_3d`); sin cinemática de vestuario |
@@ -219,7 +219,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-159 | P2 | Sin himno por país con partitura procedural | PARCIAL | un motivo genérico «himno» sintetizado; no por país |
 | M-160 | P2 | Sin saludo protocolar/pre-partido (capitanes, sorteo de campo) | HECHO | 17-10: fase final de `CeremoniaPartido` (4,2 s): árbitro y capitanes en el centro, moneda que gira, «X elige campo» y apretón de manos (`dar_mano`); se salta con la ceremonia |
 | M-161 | P2 | Sin mini-partidos de selección con identidad | PENDIENTE | sin identidad de selección en el 3D |
-| M-162 | P2 | Estadísticas del motor (tiros, pases) sin exportar | PENDIENTE | el motor no exporta CSV |
+| M-162 | P2 | Estadísticas del motor (tiros, pases) sin exportar | HECHO | 20-10: al terminar el partido con motor, `EstadisticasVivo.a_csv` guarda la tabla y cada remate (x, z, xG, resultado, pase) en `user://estadisticas/*.csv` |
 | M-163 | P2 | Sin modo «Director técnico automático» configurable (IA del usuario) | PARCIAL | `MotorJugable.autopiloto`; sin perfil configurable |
 | M-164 | P2 | Sin modo espectador con cámara libre | PENDIENTE | sin cámara libre en la UI |
 | M-165 | P2 | Sin reglas especiales (prórroga, penales, gol de oro por competición) | HECHO | 17-10: prórroga 2×15' y tanda jugable en el césped (`MotorJugable`, `MarcadorTanda`, `Partido.penales_externos`, prueba_prorroga_penales) |

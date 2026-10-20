@@ -1013,8 +1013,7 @@ func _tras_tiro_tanda() -> void:
 	var tu := tanda_equipo_usuario()
 	var lado: int = int(tanda["lado"])
 	if not (tu >= 0 and tanda_turno() != tu) or lado == SIN_ELEGIR:
-		var r := _rng.randf()
-		lado = -1 if r < 0.4 else (1 if r < 0.8 else 0)
+		lado = _lado_portero_tanda(lz, gk)
 	tanda["lado"] = lado
 	var alto := "media" if _rng.randf() < 0.6 else "baja"
 	## Mirando a -Z, su izquierda es +X.
@@ -1024,6 +1023,19 @@ func _tras_tiro_tanda() -> void:
 		gk["objetivo"] = TANDA_ARCO + Vector3(float(lado) * 2.2, 0, -0.3)
 	else:
 		_anim(gk, "atajar", true)
+
+## LA LECTURA DEL LANZADOR (M-119, 20-10): el portero de la IA se tira más al
+## lado natural del pie del que patea (el diestro, a su izquierda = +X; el
+## zurdo, al revés) y, según sus reflejos, a veces lee la carrera y va al lado
+## bueno. Antes adivinaba 40/40/20 a ciegas.
+func _lado_portero_tanda(lz: Dictionary, gk: Dictionary) -> int:
+	var ref := float((gk.get("attr", {}) as Dictionary).get("ref", 0.5))
+	if _rng.randf() < 0.04 + 0.12 * ref:
+		var x := vel_balon.x
+		return 0 if absf(x) < 0.6 else int(signf(x))
+	var natural := -1 if AnimExtra.es_zurdo(String(lz.get("id", ""))) else 1
+	var r := _rng.randf()
+	return natural if r < 0.46 else (-natural if r < 0.82 else 0)
 
 ## El balón en el aire: parada, palo, gol o fuera.
 func _vuelo_tanda() -> void:

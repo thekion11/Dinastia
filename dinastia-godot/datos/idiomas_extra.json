@@ -2492,7 +2492,8 @@
   "Semiprofesional": "Semi-Pro",
   "Profesional": "Professional",
   "Clase mundial": "World Class",
-  "Leyenda": "Legendary"
+  "Leyenda": "Legendary",
+  "Asistencias esperadas (xA)": "Expected assists (xA)"
  },
  "pt": {
   "Historia": "História",
@@ -4987,7 +4988,8 @@
   "Semiprofesional": "Semiprofissional",
   "Profesional": "Profissional",
   "Clase mundial": "Classe mundial",
-  "Leyenda": "Lenda"
+  "Leyenda": "Lenda",
+  "Asistencias esperadas (xA)": "Assistências esperadas (xA)"
  },
  "patrones": [
   [
@@ -8051,7 +8053,8 @@
   "Semiprofesional": "Semi-pro",
   "Profesional": "Professionnel",
   "Clase mundial": "Classe mondiale",
-  "Leyenda": "Légende"
+  "Leyenda": "Légende",
+  "Asistencias esperadas (xA)": "Passes décisives attendues (xA)"
  },
  "it": {
   "Historia": "Storia",
@@ -10453,7 +10456,8 @@
   "Semiprofesional": "Semi-pro",
   "Profesional": "Professionista",
   "Clase mundial": "Classe mondiale",
-  "Leyenda": "Leggenda"
+  "Leyenda": "Leggenda",
+  "Asistencias esperadas (xA)": "Assist attesi (xA)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12855,7 +12859,8 @@
   "Semiprofesional": "Halbprofi",
   "Profesional": "Profi",
   "Clase mundial": "Weltklasse",
-  "Leyenda": "Legende"
+  "Leyenda": "Legende",
+  "Asistencias esperadas (xA)": "Erwartete Vorlagen (xA)"
  },
  "ca": {
   "Historia": "Història",
@@ -15257,7 +15262,8 @@
   "Semiprofesional": "Semiprofessional",
   "Profesional": "Professional",
   "Clase mundial": "Classe mundial",
-  "Leyenda": "Llegenda"
+  "Leyenda": "Llegenda",
+  "Asistencias esperadas (xA)": "Assistències esperades (xA)"
  },
  "pl": {
   "Club": "Klub",
@@ -17954,7 +17960,8 @@
   "Semiprofesional": "Półprofesjonalny",
   "Profesional": "Profesjonalny",
   "Clase mundial": "Klasa światowa",
-  "Leyenda": "Legenda"
+  "Leyenda": "Legenda",
+  "Asistencias esperadas (xA)": "Oczekiwane asysty (xA)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -20651,6 +20658,7 @@
   "Semiprofesional": "Yarı profesyonel",
   "Profesional": "Profesyonel",
   "Clase mundial": "Dünya klasında",
-  "Leyenda": "Efsane"
+  "Leyenda": "Efsane",
+  "Asistencias esperadas (xA)": "Beklenen asistler (xA)"
  }
 }

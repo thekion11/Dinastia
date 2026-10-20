@@ -1811,6 +1811,9 @@ func _paso_motor(delta: float) -> void:
 	_hud_juego()
 	if _motor.estado == "fin" and not _final_motor:
 		_final_motor = true
+		## Las estadísticas del césped, a un CSV (M-162).
+		if _stats != null:
+			_stats.a_csv(partido, _motor)
 		var mio_gana := (partido.goles_local > partido.goles_visita and _mi_lado == 0) or (partido.goles_visita > partido.goles_local and _mi_lado == 1)
 		var pen := ""
 		if not _motor.tanda.is_empty():
