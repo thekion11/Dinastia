@@ -275,7 +275,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
 | M-207 | P1 | Plantillas de 25 en todos los clubes (C-05) | PENDIENTE | plantillas de 25 |
-| M-208 | P1 | Caja del club propio crece de forma casi monótona (prueba larga:… | PENDIENTE | sin costes de crecimiento ni crisis |
+| M-208 | P1 | Caja del club propio crece de forma casi monótona (prueba larga:… | PARCIAL | 20-10: el mantenimiento de instalaciones (M-227) es un coste que crece con el club; faltan crisis |
 | M-209 | P2 | La prueba larga sólo comprueba que no hay errores, no el equilibrio | PARCIAL | `prueba_larga` comprueba medias en rango; sin métricas de equilibrio |
 | M-210 | P1 | Mercado: precios por reputación sin burbujas ni crisis | PARCIAL | eras con precios (`Eras`, `_probar_eras_y_precios`); sin burbujas |
 | M-211 | P2 | Cláusulas de rescisión: sin «cláusulazo» automático de IA | PARCIAL | el mercado reconoce pagos de cláusula (`Mercado` l.345); sin «clausulazo» de IA deliberado |
@@ -294,8 +294,8 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-224 | P2 | Tienda/merchandising ligado a ventas de camisetas por ídolo | PENDIENTE | sin ventas por jugador estrella |
 | M-225 | P2 | `Comercial` zonas de patrocinio manual para el usuario; IA sin… | PENDIENTE | sin noticias de contratos comerciales de IA |
 | M-226 | P2 | Naming del estadio sin historia (renombrar cada contrato) | HECHO | naming con `nombre_viejo` (`Comercial.naming`) |
-| M-227 | P2 | Instalaciones: 19 obras; sin mantenimiento ni desgaste | PENDIENTE | sin conservación de instalaciones |
-| M-228 | P2 | Obras sin imprevistos (retrasos, sobrecostes, permisos) | PENDIENTE | obras sin imprevistos |
+| M-227 | P2 | Instalaciones: 19 obras; sin mantenimiento ni desgaste | HECHO | 20-10: `Instalaciones.mantenimiento_del_mes` (0,3 % al mes del valor de cada nivel, escalado con el club) cobrado en el cierre de mes con su movimiento «Mantenimiento de instalaciones» |
+| M-228 | P2 | Obras sin imprevistos (retrasos, sobrecostes, permisos) | HECHO | 20-10: `Instalaciones._imprevisto`: ~1 de cada 4 obras tiene uno (retraso de una semana o +8 % de coste), sin azar guardado (repetible al recargar), con noticia «🚧 Imprevisto en la obra» en los 9 idiomas |
 | M-229 | P2 | Academia: sin variedad de métodos pedagógicos | PENDIENTE | sin planes pedagógicos |
 | M-230 | P2 | Cantera 1.422 líneas con representantes; pocos hitos narrativos | PARCIAL | `EventosCantera`: torneo, dejarlo, padres, convocatoria; sin lesión/mudanza |
 | M-231 | P2 | Ojeadores con sesgo regional (ya) sin informes visuales (campo vs… | PARCIAL | ojeadores con personalidad que infla/recorta informes (`Ojeadores`); sin informe visual |
@@ -307,7 +307,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-237 | P2 | Capitanías: elección sin votación | PENDIENTE | capitán sin votación |
 | M-238 | P1 | Directiva: objetivos con confianza; despido sin cinemática | HECHO | 17-10: `EscenaDespido` (presidente en 3D con traje vía `PersonajeDT.crear`, diálogo en `CuadroDialogo`, resumen de la etapa y «Ver ofertas de otros clubes»); en `Principal` al emitirse `Directiva.despedido` |
 | M-239 | P2 | Junta/accionistas: sin asambleas jugables | PARCIAL | asamblea en insolvencia/federación; no jugable |
-| M-240 | P2 | `Politica` ficticia (decisión legal): mantener sin real | PENDIENTE | sin lista de palabras prohibidas en pruebas |
+| M-240 | P2 | `Politica` ficticia (decisión legal): mantener sin real | HECHO | 20-10: `_probar_palabras_prohibidas` revisa 263 archivos (código + narración + traducciones) contra políticos/partidos reales y religiones; el calendario (fechas como el Ramadán) es la única excepción |
 | M-241 | P1 | Prensa 2.541 líneas (la mayor del núcleo): `resolver` 476 líneas | PENDIENTE | `Prensa.resolver` sigue en una función |
 | M-242 | P2 | Titulares dinámicos: 129 sólo en EN/PT (I-01) | HECHO | titulares traducidos en los 9 idiomas (paridad 15-10) |
 | M-243 | P2 | Redes sociales: seguidores y comentarios; sin bots/trolls/tendencias | PARCIAL | tendencias y hashtags (`Redes.tendencia`); sin trolls |
