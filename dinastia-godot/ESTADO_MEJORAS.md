@@ -418,11 +418,11 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-328 | P2 | Patrones numéricos (`patrones` 58) con plurales simples | PENDIENTE | sin reglas de plural por idioma |
 | M-329 | P2 | Sin género gramatical (entrenadora/jugadora) en todos los idiomas | PARCIAL | `Genero` solo en español |
 | M-330 | P2 | Formatos de fecha/número por idioma | PENDIENTE | sin `Idiomas.fecha/numero` |
-| M-331 | P2 | Nombres de personas por país (bolsas) sin pruebas de duplicados… | PENDIENTE | sin estadística de nombres repetidos |
+| M-331 | P2 | Nombres de personas por país (bolsas) sin pruebas de duplicados… | HECHO | 20-10: `_probar_nombres_repetidos` lo destapó (10,1 % de tocayos, «Lucas Barbosa» ×5: bolsas de 14×14). Bolsas ampliadas (`datos/bolsas_nombres.json`, 16 países + general) y re-sorteo si el nombre ya existe (`Mundo._nombre_al_azar`): 1,1 % |
 | M-332 | P2 | Narración traducida (`narracion.json`) sin revisión nativa | PENDIENTE | sin revisión nativa |
 | M-333 | P2 | Texto en imágenes (carteles del 3D) sin traducir | PARCIAL | textos de `visor/` envueltos en `Idiomas.t` (15-10); carteles dibujados sin comprobar |
 | M-334 | P2 | Sin RTL (árabe, hebreo) aunque hay KSA/EGY/MAR | PENDIENTE | sin RTL |
-| M-335 | P2 | Fuentes: cobertura de glifos para pl/tr/ar | PENDIENTE | sin prueba de glifos |
+| M-335 | P2 | Fuentes: cobertura de glifos para pl/tr/ar | HECHO | 20-10: `_probar_glifos_idiomas` comprueba que la letra del juego tiene los 375 caracteres de las traducciones (pl, tr, ca…); el árabe no está entre los idiomas |
 | M-336 | P2 | `CLAUDE.md` afirma «1.402 frases c/u» (I-04) | HECHO | CLAUDE.md ya dice 2.574 frases + 373 patrones |
 
 ### L. Rendimiento y optimización (M-337 … M-358) · HECHO 2 · PARCIAL 6 · PENDIENTE 12 · DUEÑO 2
@@ -450,7 +450,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-355 | P2 | Sin modo batería/60→30 FPS en móvil | PARCIAL | límite de FPS 30/60/120 (`Principal.FPS_OPCIONES`); sin modo batería |
 | M-356 | P2 | Memoria de la ciudad ×4 (2.640 m) | PENDIENTE | sin streaming por celdas |
 | M-357 | P2 | Capturas pesadas en repo (`pruebas/capturas`) | PARCIAL | `.gitignore` de promo/lotes y JPG por defecto; resto en repo |
-| M-358 | P2 | Sin telemetría local de FPS por pantalla | PENDIENTE | sin overlay de FPS |
+| M-358 | P2 | Sin telemetría local de FPS por pantalla | HECHO | 20-10: «Mostrar contador de FPS» en Ajustes → Pantalla (`ContadorFps`, en la raíz: sigue en estadio, ciudad y Carrera; color por umbral); prueba `prueba_contador_fps`. De paso: «sin límite» de FPS ya no vuelve a 30 al recargar |
 
 ### M. Datos y contenido (M-359 … M-378) · HECHO 5 · PARCIAL 1 · PENDIENTE 13 · SIN VERIFICAR 1
 
@@ -491,13 +491,13 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-386 | P2 | Señales sin desconexión en liberación (posibles fugas) | PARCIAL | `auditoria_tecnica.gd` mide huérfanos en la pantalla principal |
 | M-387 | P2 | Mensajes de error silenciosos (`return` sin aviso) | PENDIENTE | sin registro de errores |
 | M-388 | P2 | Constantes mágicas (balance) dispersas | PENDIENTE | sin archivo de balance |
-| M-389 | P2 | `class_name` nuevos exigen `--import` (aprendido hoy) | PENDIENTE | `banco.sh` no hace `--import` |
+| M-389 | P2 | `class_name` nuevos exigen `--import` (aprendido hoy) | HECHO | 20-10: `banco.sh` y `mini_banco.sh` reimportan solos si hay un .gd más nuevo que la caché de clases |
 | M-390 | P2 | Un error de sintaxis deja el banco colgado | HECHO | `banco.sh` corta en errores de sintaxis, cuelgues y SCRIPT ERROR (14-10) |
 | M-391 | P2 | Duplicación entre `MatchPlayback` y `MotorJugable` | PENDIENTE | duplicación sin retirar |
-| M-392 | P2 | `MotorLibre` prototipo (546 líneas) sin uso claro | PENDIENTE | `MotorLibre` sigue (545 líneas) |
+| M-392 | P2 | `MotorLibre` prototipo (546 líneas) sin uso claro | PENDIENTE | `MotorLibre` sigue (545 líneas); 20-10: con la base ficticia da 12,5 goles de media entre iguales (su prueba fija ahora la base real para no depender del orden) |
 | M-393 | P2 | Código de pruebas mezclado con herramientas (`herramientas/*.ps1`) | PENDIENTE | sin separar |
 | M-394 | P2 | Herramientas `.exe`/`.cs` binarias en repo | PENDIENTE | `herramientas/*.exe` siguen en el repo |
-| M-395 | P2 | Scripts Python sin entorno declarado | PENDIENTE | sin requirements.txt |
+| M-395 | P2 | Scripts Python sin entorno declarado | HECHO | 20-10: `herramientas/requirements.txt` (Pillow, numpy, opencv, mediapipe, imageio-ffmpeg; `bpy` va con Blender) |
 | M-396 | P2 | Convenciones: mezcla de español/inglés en nombres | PENDIENTE | sin guía de estilo |
 | M-397 | P2 | Comentarios muy extensos (valioso pero ruidoso) | PENDIENTE | sin ADRs |
 | M-398 | P2 | Sin documentación de arquitectura actualizada (`LEEME.md`) | PENDIENTE | LEEME sin diagrama |
@@ -519,7 +519,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-409 | P2 | Sin pruebas de menús/UI de integración (abrir cada pantalla sin error) | PARCIAL | `_probar_carga_de_ui` en el banco; sin recorrido por pestañas |
 | M-410 | P2 | Sin pruebas de rendimiento con umbrales | PENDIENTE | sin umbrales de rendimiento |
 | M-411 | P2 | Sin pruebas de idioma (V. I-01) | HECHO | `_probar_paridad_idiomas` |
-| M-412 | P2 | Sin fuzzing de guardados | PENDIENTE | sin fuzzing |
+| M-412 | P2 | Sin fuzzing de guardados | HECHO | 20-10: `_probar_guardado_seguro` estropea un guardado de 40 maneras (bytes, cortes, cabecera, ceros) sin copia: cargar nunca revienta |
 | M-413 | P2 | `auditoria_clubes`/`auditoria_datos` no están en el banco | PENDIENTE | auditorías fuera del banco |
 | M-414 | P2 | Resultados de sondas (calidad/táctica/simetría) sin umbrales | PENDIENTE | sondas sin umbrales |
 | M-415 | P2 | Tiempo del banco largo y frágil al correr en paralelo | HECHO | banco en paralelo, 4 procesos equilibrados (15-10) |

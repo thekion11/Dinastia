@@ -7,6 +7,13 @@
 # Código 0 = «FIN. 0 fallos» y sin «SCRIPT ERROR» ni «SHADER ERROR». Antes de SUBIR, el banco
 # entero (herramientas/banco.sh) sigue siendo obligatorio.
 cd "$(dirname "$0")/.." || exit 1
+# M-389 (20-10): un `class_name` nuevo no existe para Godot hasta reimportar.
+# Si hay algún .gd más nuevo que la caché de clases, se reimporta antes.
+CACHE=.godot/global_script_class_cache.cfg
+if [ ! -f "$CACHE" ] || [ -n "$(find nucleo ui visor pruebas -name '*.gd' -newer "$CACHE" -print -quit)" ]; then
+  timeout 600 godot --headless --import --path . > /dev/null 2>&1
+  touch "$CACHE"
+fi
 if [ -z "$1" ]; then
   echo "Grupos:"; sed -n '/^const GRUPOS/,/^}/p' pruebas/banco.gd | grep -o '^	"[a-z_]*"' | tr -d '\t"' | sed 's/^/  /'
   exit 0

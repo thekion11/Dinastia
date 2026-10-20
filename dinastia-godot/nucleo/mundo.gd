@@ -641,8 +641,22 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 ## a pedido del usuario, mencionando el Athletic Club de Bilbao).
 ##
 ## Nunca devuelve el nombre de un futbolista real (`Nombres.vetado()`).
+## SIN TOCAYOS (M-331, 20-10): un mundo de tres ligas tenía un 10 % de nombres
+## repetidos («Lucas Barbosa» ×5). Ahora se vuelve a sortear (hasta 8 veces) si
+## el nombre ya existe; con bolsas muy chicas, alguno se puede repetir igual.
+var _nombres_usados: Dictionary = {}
 func _nombre_al_azar(pais: String = "", region: String = "") -> String:
-	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais, region))
+	if _nombres_usados.is_empty():
+		for c: Club in clubes.values():
+			for j: Jugador in c.plantilla:
+				_nombres_usados[j.nombre] = true
+	var nombre := ""
+	for _i in 8:
+		nombre = Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais, region))
+		if not _nombres_usados.has(nombre):
+			break
+	_nombres_usados[nombre] = true
+	return nombre
 
 func _sortear_nombre(pais: String, region: String = "") -> String:
 	var n: Array = Datos.tabla("NOMBRES")
@@ -666,7 +680,21 @@ func _sortear_nombre(pais: String, region: String = "") -> String:
 			a = ab
 	if n == null or a == null or n.is_empty() or a.is_empty():
 		return "Jugador %d" % _seq_jugador
+	## M-331: las bolsas de la base eran de 14×14; se suman las de
+	## `datos/bolsas_nombres.json` (la vasca se deja tal cual: es un sabor).
+	if region != "EUS":
+		var extra := _bolsa_extra(pais)
+		if not extra.is_empty():
+			n = n + (extra[0] as Array)
+			a = a + (extra[1] as Array)
 	return "%s %s" % [Azar.uno(n), Azar.uno(a)]
+
+static var _bolsas_extra: Dictionary = {}
+static func _bolsa_extra(pais: String) -> Array:
+	if _bolsas_extra.is_empty():
+		var j: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://datos/bolsas_nombres.json"))
+		_bolsas_extra = (j as Dictionary).get("bolsas", {"_": []}) if j is Dictionary else {"_": []}
+	return _bolsas_extra.get(pais, _bolsas_extra.get("_GENERAL", [])) if pais != "" else _bolsas_extra.get("_GENERAL", [])
 
 func _rasgo_al_azar() -> String:
 	## Que la mayoria no tenga rasgo es intencionado: si todos tienen uno, tener

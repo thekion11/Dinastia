@@ -472,6 +472,8 @@ func _ready() -> void:
 	## del fondo raiz y los FPS el limite del motor, y ambos se fijan ahi.
 	_cargar_preferencias()
 	Engine.max_fps = _fps_elegido
+	if ContadorFps.visible_pref:
+		ContadorFps.poner(get_tree(), true)
 	_construir()
 	if Principal.mundo_a_cargar != null:
 		mundo = Principal.mundo_a_cargar
@@ -6042,7 +6044,7 @@ func _guardar_preferencias() -> void:
 		_clima_interactivo, _marca_tarjeta, _tipografia, Idiomas.idioma,
 		Musica.encendida, Musica.volumen, Musica.pieza, Musica.automatica, _estilo_menu,
 		_velocidad_partido, _rotar_diseno]
-	firma += "|%s|%s" % [VestidorQ.ropa_aparte, Cara.usar_fotos]
+	firma += "|%s|%s|%s" % [VestidorQ.ropa_aparte, Cara.usar_fotos, ContadorFps.visible_pref]
 	if firma == _firma_prefs:
 		return
 	_firma_prefs = firma
@@ -6070,6 +6072,7 @@ func _guardar_preferencias() -> void:
 	cf.set_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte)
 	cf.set_value("pantalla", "caras_foto", Cara.usar_fotos)
 	cf.set_value("pantalla", "fps", _fps_elegido)
+	cf.set_value("pantalla", "contador_fps", ContadorFps.visible_pref)
 	cf.set_value("juego", "modo_experto", _modo_experto)
 	cf.set_value("sonido", "encendido", Sonido.encendido)
 	cf.save(PREFS)
@@ -6125,7 +6128,10 @@ func _cargar_preferencias() -> void:
 	_modo_tv = bool(cf.get_value("pantalla", "modo_tv", _modo_tv))
 	VestidorQ.ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte))
 	Cara.usar_fotos = bool(cf.get_value("pantalla", "caras_foto", Cara.usar_fotos))
-	_fps_elegido = clampi(int(cf.get_value("pantalla", "fps", _fps_elegido)), 30, 240)
+	## 0 = «sin límite» (antes el clampi lo volvía 30 al recargar).
+	var fps_g := int(cf.get_value("pantalla", "fps", _fps_elegido))
+	_fps_elegido = 0 if fps_g == 0 else clampi(fps_g, 30, 240)
+	ContadorFps.visible_pref = bool(cf.get_value("pantalla", "contador_fps", false))
 	_modo_experto = bool(cf.get_value("juego", "modo_experto", _modo_experto))
 	Sonido.encendido = bool(cf.get_value("sonido", "encendido", Sonido.encendido))
 
