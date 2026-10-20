@@ -491,6 +491,9 @@ func _contratar(puesto: String) -> void:
 	if problema != "":
 		p._escribir("[color=#e05555]No se puede contratar: %s.[/color]" % problema)
 		return
+	## `Staff.subir` reescribe solo su parte: se recombina todo (DT, maestrías,
+	## camarín) para no perderlo hasta la semana siguiente (20-10-2026).
+	p.mundo.aplicar_bonificadores()
 	var datos: Array = Staff.PUESTOS[puesto]
 	p._escribir("[color=#4caf6d]Contratado: %s, nivel %d.[/color] %s." % [
 		datos[0], p.mundo.staff.nivel(puesto), datos[1]])
