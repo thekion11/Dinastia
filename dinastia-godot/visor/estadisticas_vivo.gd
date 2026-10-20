@@ -17,7 +17,7 @@ const COLS := 12
 const FILAS := 8
 const CADA := 0.25   ## segundos de juego entre muestras
 
-## Cada remate: {"local": bool, "pos": Vector2(x, z), "min": int, "xg": float, "res": "gol|atajada|poste|fallo|"}
+## Cada remate: {"local": bool, "pos": Vector2(x, z), "min": int, "xg": float, "res": "gol|atajada|poste|fallo|", "asist": id del pase previo (si lo hubo)}
 var tiros: Array = []
 var amarillas := [0, 0]
 var rojas := [0, 0]
@@ -58,6 +58,11 @@ func muestrear(motor: MotorJugable, delta: float) -> void:
 		var donde: Vector3 = n.position if is_instance_valid(n) else motor.balon.position
 		var loc := bool(p.get("es_local", true))
 		anotar_tiro(loc, Vector2(donde.x, donde.z), motor.minuto())
+		## xA (M-137): el compañero que le dio el último pase se lleva el xG del
+		## remate como «asistencia esperada».
+		var pase: Dictionary = motor.penultimo_toque
+		if not pase.is_empty() and pase != p and bool(pase.get("es_local", not loc)) == loc:
+			(tiros[-1] as Dictionary)["asist"] = String(pase.get("id", ""))
 		## El penal tiene su propio xG (≈0,76), no el de un tiro a 11 m en juego.
 		if String(motor.saque.get("tipo", "")) == "penal" and absf(LARGO - absf(donde.z) - 11.0) < 2.0 and absf(donde.x) < 2.0:
 			(tiros[-1] as Dictionary)["xg"] = 0.76
@@ -122,6 +127,23 @@ func xg(local: bool) -> float:
 			s += float(t["xg"])
 	return s
 
+## Asistencias esperadas: el xG de los remates que salieron de un pase.
+func xa(local: bool) -> float:
+	var s := 0.0
+	for t: Dictionary in tiros:
+		if bool(t["local"]) == local and String(t.get("asist", "")) != "":
+			s += float(t["xg"])
+	return s
+
+## xA de cada jugador (id → xA), para la ficha del partido.
+func xa_por_jugador() -> Dictionary:
+	var d := {}
+	for t: Dictionary in tiros:
+		var a := String(t.get("asist", ""))
+		if a != "":
+			d[a] = float(d.get(a, 0.0)) + float(t["xg"])
+	return d
+
 func n_tiros(local: bool) -> int:
 	var n := 0
 	for t: Dictionary in tiros:
@@ -148,6 +170,10 @@ func resumen(p: Partido, motor: MotorJugable) -> Array:
 		xl = p.xg_local
 		xv = p.xg_visita
 	filas.append(["Goles esperados (xG)", "%.2f" % xl, "%.2f" % xv, xl, xv])
+	if not tiros.is_empty():
+		var al_ := xa(true)
+		var av_ := xa(false)
+		filas.append(["Asistencias esperadas (xA)", "%.2f" % al_, "%.2f" % av_, al_, av_])
 	if motor != null:
 		var pl := int(motor.pases[0])
 		var pv := int(motor.pases[1])
@@ -174,3 +200,30 @@ func para_rotulo(p: Partido, motor: MotorJugable, claves: Array) -> Array:
 		if String(f[0]) in claves:
 			sal.append(f)
 	return sal
+
+## EXPORTAR A CSV (M-162, 20-10-2026): al terminar un partido con motor, la
+## tabla y cada remate quedan en `user://estadisticas/` para mirarlos fuera
+## del juego (hoja de cálculo). Devuelve la ruta (o "" si no se pudo).
+func a_csv(p: Partido, motor: MotorJugable) -> String:
+	var l := PackedStringArray()
+	var loc := p.local.nombre if p != null and p.local != null else "Local"
+	var vis := p.visita.nombre if p != null and p.visita != null else "Visita"
+	l.append("dato;%s;%s" % [loc.replace(";", ","), vis.replace(";", ",")])
+	for f: Array in resumen(p, motor):
+		l.append("%s;%s;%s" % [f[0], f[1], f[2]])
+	l.append("")
+	l.append("remate;equipo;minuto;x;z;xg;resultado;pase_de")
+	for i in tiros.size():
+		var t: Dictionary = tiros[i]
+		var pos: Vector2 = t["pos"]
+		l.append("%d;%s;%d;%.1f;%.1f;%.3f;%s;%s" % [i + 1, "local" if bool(t["local"]) else "visita", int(t["min"]),
+			pos.x, pos.y, float(t["xg"]), String(t["res"]), String(t.get("asist", ""))])
+	DirAccess.make_dir_recursive_absolute("user://estadisticas")
+	var nombre := "user://estadisticas/%s_%s_%s.csv" % [Time.get_datetime_string_from_system().replace(":", "-"),
+		loc.to_snake_case().left(20), vis.to_snake_case().left(20)]
+	var f := FileAccess.open(nombre, FileAccess.WRITE)
+	if f == null:
+		return ""
+	f.store_string("\n".join(l) + "\n")
+	f.close()
+	return nombre
