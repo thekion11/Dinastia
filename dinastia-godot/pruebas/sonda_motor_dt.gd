@@ -20,7 +20,8 @@ var remates := {}
 ## Totales de todos los partidos: pases [L, V], pases buenos, fintas de la IA
 ## (intentadas, logradas), posesión en segundos [L, V] y partidos jugados.
 var extra := {"pases": [0, 0], "pases_ok": [0, 0], "fintas": 0, "fintas_ok": 0, "posesion": [0.0, 0.0], "partidos": 0,
-	"faltas": [0, 0], "corners": [0, 0], "fueras": [0, 0], "despejes": [0, 0], "goles": [0, 0], "tiros": [0, 0]}
+	"faltas": [0, 0], "corners": [0, 0], "fueras": [0, 0], "despejes": [0, 0], "goles": [0, 0], "tiros": [0, 0],
+	"amarillas": [0, 0], "rojas": [0, 0]}
 
 func _ready() -> void:
 	_m = Mundo.new()
@@ -53,7 +54,7 @@ func _ready() -> void:
 		float(extra["fintas"]) / np, 100.0 * float(extra["fintas_ok"]) / maxf(float(extra["fintas"]), 1.0)])
 	## Lado a lado (L-V) por partido: para cazar sesgos de campo.
 	var lado := ""
-	for k: String in ["goles", "tiros", "corners", "faltas", "fueras", "despejes"]:
+	for k: String in ["goles", "tiros", "corners", "faltas", "fueras", "despejes", "amarillas", "rojas"]:
 		lado += "%s %.2f-%.2f  " % [k, float(extra[k][0]) / np, float(extra[k][1]) / np]
 	print("LADOS " + lado)
 	var du_txt := ""
@@ -147,6 +148,8 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 		extra["faltas"][k] += int(motor.faltas[k])
 		extra["corners"][k] += int(motor.corners[k])
 		extra["fueras"][k] += int(motor.fueras_de_juego[k])
+		extra["amarillas"][k] += int(motor.tarjetas_motor[k][0])
+		extra["rojas"][k] += int(motor.tarjetas_motor[k][1])
 		extra["despejes"][k] += int(motor.despejes[k])
 		extra["goles"][k] += int(motor.goles[k])
 		extra["tiros"][k] += int(motor.tiros[k])

@@ -59,6 +59,7 @@ const SECCIONES := [
 	"_probar_guardado",
 	"_probar_guardado_seguro",
 	"_probar_fisica_motor",
+	"_probar_faltas_puntos",
 	"_probar_temporadas",
 	"_probar_economia",
 	"_probar_sala_de_prensa",
@@ -179,7 +180,7 @@ func _ready() -> void:
 ## Segundos medidos (15-10-2026) de las secciones lentas; el resto cuenta 0,4 s.
 ## Si una sección se alarga mucho, actualizar con el resumen TIEMPOS del final.
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -3487,8 +3488,9 @@ func _probar_bilbao_solo_local() -> void:
 ## medidos como la sonda de física (cada 1/30 s, dos pasos de 1/60). Guarda lo
 ## arreglado el 19-10: nadie a más de 10,5 m/s, ningún giro de más de 720°/s,
 ## casi ningún tirón > 25 m/s² y el balón sin saltos en juego.
-func _probar_fisica_motor() -> void:
-	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
+## Un motor real sin pantalla con dos equipos de la liga chilena, para las
+## pruebas del partido (mini bancos). Devuelve [motor, raíz, balón].
+func _motor_de_prueba(semilla := 7) -> Array:
 	var m := Mundo.new()
 	m.generar(["CHI"], 4711)
 	var a: Club = m.ligas[0].clubes[0]
@@ -3506,7 +3508,67 @@ func _probar_fisica_motor() -> void:
 	raiz.add_child(motor)
 	motor.set_physics_process(false)
 	motor.autopiloto = true
-	motor.preparar(lista, ball, "", 7)
+	motor.preparar(lista, ball, "", semilla)
+	return [motor, raiz, ball]
+
+## FALTAS POR PUNTOS (20-10-2026, vídeo del dueño): jugadas preparadas.
+func _probar_faltas_puntos() -> void:
+	_titulo("FALTAS POR PUNTOS")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var raiz: Node3D = r[1]
+	var loc: Array = []
+	var vis: Array = []
+	for p: Dictionary in motor.jugadores:
+		if bool(p["por"]):
+			continue
+		(loc if bool(p["es_local"]) else vis).append(p)
+	var atacante: Dictionary = loc[0]
+	var defensa: Dictionary = vis[0]
+	var arco := motor._arco_rival(atacante)
+	var d := signf(arco.z)
+	## Todos los demás lejos, a la espalda del atacante (no tapan el arco).
+	for i in range(1, loc.size()):
+		(loc[i]["node"] as Node3D).position = Vector3(-30 + i * 3, 0, -d * 45.0)
+	for i in range(1, vis.size()):
+		(vis[i]["node"] as Node3D).position = Vector3(-30 + i * 3, 0, -d * 48.0)
+	## 1) Mano a mano: el 9 corre hacia el arco a 20 m; el último defensa llega
+	## por detrás, lanzado, en plancha → roja directa.
+	(atacante["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 20.0)
+	atacante["vel"] = Vector3(0, 0, d * 7.0)
+	(defensa["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 21.5)
+	defensa["vel"] = Vector3(0, 0, d * 7.5)
+	var pf := motor.puntos_falta(defensa, atacante, "deslizante")
+	_comprobar((pf["factores"] as Array).has("por_detras") and (pf["factores"] as Array).has("gran_velocidad")
+		and (pf["factores"] as Array).has("profesional"), "por detrás + a gran velocidad + último hombre (%s)" % str(pf["factores"]))
+	_comprobar(float(pf["puntos"]) >= MotorJugable.UMBRAL_ROJA, "suma de roja directa (%.1f)" % float(pf["puntos"]))
+	## 2) De frente, sin velocidad y con compañeros cubriendo: carga de hombro.
+	(atacante["node"] as Node3D).position = Vector3(10, 0, 0)
+	atacante["vel"] = Vector3(0, 0, d * 2.0)
+	(defensa["node"] as Node3D).position = Vector3(10, 0, d * 1.0)
+	defensa["vel"] = Vector3(0, 0, -d * 1.0)
+	(vis[1]["node"] as Node3D).position = Vector3(10, 0, d * 12.0)
+	var pf2 := motor.puntos_falta(defensa, atacante, "hombro")
+	_comprobar(float(pf2["puntos"]) < MotorJugable.UMBRAL_AMARILLA, "carga de hombro de frente: solo falta (%.1f, %s)" % [float(pf2["puntos"]), str(pf2["factores"])])
+	## 3) La falta de verdad: con tarjetas reales, la roja directa expulsa.
+	motor.tarjetas_reales = true
+	(atacante["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 20.0)
+	atacante["vel"] = Vector3(0, 0, d * 7.0)
+	(defensa["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 21.5)
+	defensa["vel"] = Vector3(0, 0, d * 7.5)
+	(vis[1]["node"] as Node3D).position = Vector3(-30, 0, -d * 48.0)
+	var antes := motor.jugadores.size()
+	motor._falta(defensa, atacante, 0.25, "", "deslizante")
+	_comprobar(String(motor.ultima_falta.get("sancion", "")) == "roja", "se pita roja directa (%s)" % str(motor.ultima_falta))
+	_comprobar(motor.jugadores.size() == antes - 1 or bool(defensa.get("expulsado", false)), "y el infractor se va del campo")
+	raiz.queue_free()
+
+func _probar_fisica_motor() -> void:
+	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var raiz: Node3D = r[1]
+	var ball: Node3D = r[2]
 	var prev := {}
 	var vprev := {}
 	var rprev := {}
