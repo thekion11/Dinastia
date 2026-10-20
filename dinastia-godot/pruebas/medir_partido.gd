@@ -66,9 +66,10 @@ func _process(_d: float) -> void:
 		## OCULTAR=Cuero,Eyes (17-10-2026): esconde las piezas con ese nombre
 		## para medir lo que de verdad cuestan en pantalla (con LOD y recorte).
 		var nombres := OS.get_environment("OCULTAR").split(",")
-		for g in _vista.find_children("*", "GeometryInstance3D", true, false):
-			if String(g.name).rstrip("0123456789@") in nombres:
-				g.visible = false
+		## (20-10) También contenedores: cualquier Node3D con ese nombre.
+		for g in _vista.find_children("*", "Node3D", true, false):
+			if String(g.name).rstrip("0123456789@_") in nombres or String(g.name) in nombres:
+				(g as Node3D).visible = false
 	if _n == CALENTAR and OS.get_environment("SIN_SOMBRAS") != "":
 		## SIN_SOMBRAS=1 (19-10-2026): cuánto de lo dibujado son las sombras.
 		for l in _vista.find_children("*", "Light3D", true, false):
@@ -263,6 +264,7 @@ var _ph_espera := 0
 var _ph_base := Vector2.ZERO
 var _ph_res: Array = []
 var _ph_listo := false
+var _ph_estables := 0
 
 func _medida() -> Vector2:
 	return Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
@@ -279,6 +281,14 @@ func _por_hijos() -> void:
 		return
 	if _ph_espera < 0:
 		_ph_espera += 1
+		if OS.get_environment("ESTABILIDAD") != "":
+			print("ESTABLE llamadas=%d tris=%d" % [_medida().x, _medida().y])
+			if _ph_espera == 0:
+				_ph_espera = -20
+				_ph_estables += 1
+				if _ph_estables > 2:
+					get_tree().quit()
+			return
 		if _ph_espera == 0:
 			_ph_base = _medida()
 			for h in raiz.get_children():
