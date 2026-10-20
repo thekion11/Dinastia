@@ -88,6 +88,14 @@ func _process(_d: float) -> void:
 	if _motor == null or not is_instance_valid(_vista):
 		_informe("la vista del partido se cerró")
 		return
+	## SIN_MANDO=1: el mismo partido sin tocar el mando (la CPU juega los dos lados), para comparar.
+	if OS.get_environment("SIN_MANDO") != "":
+		if _t == 5 and _motor.control_equipo >= 0:
+			_vista.call("_alternar_control_motor")
+		var pa: Partido = _vista.get("partido")
+		if pa.terminado_ya or _motor.estado == "fin":
+			_informe("final (sin mando)")
+		return
 	if _t == 5 and _motor.control_equipo < 0:
 		_vista.call("_alternar_control_motor")
 	if _t < 10:

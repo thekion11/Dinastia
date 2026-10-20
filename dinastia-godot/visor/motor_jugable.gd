@@ -2279,6 +2279,12 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 ## de un futbolista al encararse a un pase (por debajo de los 720°/s que la
 ## sonda de física marca como imposibles). `_mirar` lo deja pedido `dur` s.
 const GIRO_RAPIDO := 12.0
+## El margen aleatorio del sorteo de tiro (menos = se tira más). Ver `_ia_portador`.
+static var CHISPA_TIRO := float(OS.get_environment("CHISPA_TIRO")) if OS.get_environment("CHISPA_TIRO") != "" else 0.16
+## Cuánto vale cada metro que avanza un pase al elegirlo (más = más vertical).
+static var CHISPA_AVANCE := float(OS.get_environment("CHISPA_AVANCE")) if OS.get_environment("CHISPA_AVANCE") != "" else 0.08
+## Multiplica lo que piensa el portador antes de decidir (menos = juego más rápido).
+static var CHISPA_PAUSA := float(OS.get_environment("CHISPA_PAUSA")) if OS.get_environment("CHISPA_PAUSA") != "" else 1.0
 ## Tope de aceleración total de un jugador (m/s²), ver `_mover_jugadores`.
 static var A_MAX := float(OS.get_environment("A_MAX")) if OS.get_environment("A_MAX") != "" else 18.0
 
@@ -2514,7 +2520,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## Con espacio se conduce más (1 a 1,6 s): en un partido de verdad el balón
 	## pasa más tiempo en los pies que viajando.
 	var holgura := 1.7 if presion > 6.0 else (1.0 if presion > 3.5 else 0.5)
-	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura)
+	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA
 	if OS.get_environment("DEPURAR_PORTADOR") != "" and dist_arco < 40.0:
 		print("PORTADOR %s(%s) a %.0f m del arco, x %.0f, presión %.1f" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", dist_arco, yo.x, presion])
 	## En su propio campo y apretado: despeje, lejos y hacia fuera si hace falta.
@@ -2531,7 +2537,10 @@ func _ia_portador(p: Dictionary) -> void:
 	## Se tira también desde la frontal (hasta ~27 m), como en un partido de
 	## verdad; con más pegada, desde más lejos.
 	var ganas_tiro := (1.0 - dist_arco / 34.0) * (0.7 + float(p["attr"]["tir"]) * 0.6) - angulo * 0.25
-	if dist_arco < 30.0 and ganas_tiro > 0.07 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * 0.24:
+	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se
+	## quedaba en ~0,8 tiros por minuto y equipo (FC ronda 1,5). Ahora se
+	## anima más desde la frontal; la calidad del tiro no cambia.
+	if dist_arco < 30.0 and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO:
 		## A un palo, abajo o arriba (antes se apuntaba al azar por el centro
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
 		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.55, 0.95)
@@ -2766,7 +2775,7 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 			var dl := cerca.distance_to(pos(r))
 			if dl < 2.2:
 				riesgo += (2.2 - dl) * 2.4
-		var nota := progreso * (0.08 + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) \
+		var nota := progreso * (CHISPA_AVANCE + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) \
 			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
 		## nunca se la da a un compañero adelantado.
@@ -3090,6 +3099,9 @@ func _colocar_saque(delta: float) -> void:
 		hacia.y = 0.0
 		var av_obj := hacia.normalized() * ayuda if hacia.length() > 0.05 else Vector3.ZERO
 		var av: Vector3 = (p.get("ayuda_v", Vector3.ZERO) as Vector3).move_toward(av_obj, 6.0 * delta)
+		## Nunca por encima de lo que le falta para el esprint (con los saques
+		## rápidos, la ayuda que iba con retraso se sumaba a la carrera: >10 m/s).
+		av = av.limit_length(maxf(0.0, 9.0 - (p["vel"] as Vector3).length()))
 		p["ayuda_v"] = av
 		n.position += av * delta
 	if lanzador.is_empty():
@@ -3103,9 +3115,12 @@ func _colocar_saque(delta: float) -> void:
 		if apuntando:
 			_apuntar_usuario(delta)
 		return
-	## Se saca cuando están colocados (o, como mucho, 3 s después).
-	var espera := 1.4 if tipo != "centro" else 1.0
-	if _t_estado > espera and (_colocados() or _t_estado > espera + 3.0):
+	## Se saca cuando están colocados (o, como mucho, 3 s después). El saque de
+	## banda y el de puerta son rápidos, como en el fútbol de verdad: no esperan
+	## a que todos lleguen (20-10-2026, más chispa: 1,6-1,9 s cada uno).
+	var espera: float = {"centro": 1.0, "banda": 0.8, "puerta": 1.1}.get(tipo, 1.4)
+	var rapido := tipo in ["banda", "puerta"]
+	if _t_estado > espera and (rapido or _colocados() or _t_estado > espera + 3.0):
 		_ejecutar_saque_ia(lanzador, tipo, lugar)
 
 ## ¿Están todos a menos de 3 m de su sitio del saque?
