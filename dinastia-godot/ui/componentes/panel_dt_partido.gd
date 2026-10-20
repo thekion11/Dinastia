@@ -19,6 +19,8 @@ var _col_banco: VBoxContainer
 var _filas_tac: Dictionary = {}
 ## Abre el panel de estadísticas encima (lo pasa `VistaEstadio`).
 var ver_estadisticas: Callable = Callable()
+## Repite los últimos segundos (lo pasa `VistaEstadio`); cierra la pausa antes.
+var ver_repeticion: Callable = Callable()
 
 const OPCIONES := {
 	"mentalidad": ["🛡 Defensiva", "⚖ Equilibrada", "⚔ Ofensiva"],
@@ -27,9 +29,10 @@ const OPCIONES := {
 	"ritmo": ["Ritmo lento", "Ritmo medio", "Ritmo alto"],
 }
 
-static func abrir(padre: Control, p: Partido, club: Club, m: MotorJugable, estadisticas: Callable = Callable()) -> PanelDTPartido:
+static func abrir(padre: Control, p: Partido, club: Club, m: MotorJugable, estadisticas: Callable = Callable(), repeticion: Callable = Callable()) -> PanelDTPartido:
 	var n := PanelDTPartido.new()
 	n.ver_estadisticas = estadisticas
+	n.ver_repeticion = repeticion
 	n.partido = p
 	n.mi_club = club
 	n.motor = m
@@ -115,6 +118,15 @@ func _montar() -> void:
 		stats.add_theme_font_size_override("font_size", 15)
 		stats.pressed.connect(func() -> void: ver_estadisticas.call())
 		botones.add_child(stats)
+	if ver_repeticion.is_valid():
+		var rep := Button.new()
+		rep.text = Idiomas.t("⟲ Repetición") + "  (" + Mando.corto_de("jugar_repeticion") + ")"
+		rep.custom_minimum_size = Vector2(200, 36)
+		rep.add_theme_font_size_override("font_size", 15)
+		rep.pressed.connect(func() -> void:
+			cerrar()
+			ver_repeticion.call())
+		botones.add_child(rep)
 	var seguir := Button.new()
 	seguir.text = Idiomas.t("▶  Seguir jugando")
 	seguir.custom_minimum_size = Vector2(0, 36)

@@ -1159,7 +1159,20 @@ var _rotulo_repe: PanelContainer
 func _repetir_gol() -> void:
 	if _repe == null or not _pref("repeticiones", true) or partido == null or partido.terminado_ya:
 		return
-	if _repe.reproducir(6.0 if _motor != null else 9.0):
+	_lanzar_repeticion(6.0 if _motor != null else 9.0)
+
+## REPETICIÓN A PEDIDO (20-10-2026, M-132): los últimos 10 s, con su botón
+## (`jugar_repeticion`) o desde la pausa. No en plena ceremonia ni con un panel
+## abierto; el partido espera mientras se ve.
+func repetir_jugada() -> void:
+	if _repe == null or partido == null or partido.terminado_ya or _repe.reproduciendo or _repe.congelar:
+		return
+	if (_intro != null and _intro.activa) or (is_instance_valid(_ceremonia) and _ceremonia.activa):
+		return
+	_lanzar_repeticion(10.0)
+
+func _lanzar_repeticion(segundos: float) -> void:
+	if _repe.reproducir(segundos):
 		if _rotulo_repe == null:
 			_rotulo_repe = PanelContainer.new()
 			var st := Tema.caja(Color(0.55, 0.08, 0.08, 0.9), Tema.RADIO_CHICO, Color(1, 1, 1, 0.2))
@@ -1981,7 +1994,7 @@ func _abrir_panel_dt() -> void:
 		_mostrar_banner_gol(Idiomas.t("Este partido no es de tu club: solo puedes mirarlo."), false)
 		return
 	var mio: Club = partido.local if _mi_lado == 0 else partido.visita
-	_panel_dt = PanelDTPartido.abrir(self, partido, mio, _motor, abrir_estadisticas)
+	_panel_dt = PanelDTPartido.abrir(self, partido, mio, _motor, abrir_estadisticas, repetir_jugada)
 	_panel_dt.cerrado.connect(func() -> void:
 		_panel_dt = null
 		_actualizar_tacticas())
@@ -2027,6 +2040,10 @@ func _unhandled_input(e: InputEvent) -> void:
 	if partido != null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_estadisticas"):
 		get_viewport().set_input_as_handled()
 		abrir_estadisticas()
+		return
+	if partido != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_repeticion"):
+		get_viewport().set_input_as_handled()
+		repetir_jugada()
 		return
 	if _motor != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_pausa"):
 		if _cajon != null and _cajon.abierto:
