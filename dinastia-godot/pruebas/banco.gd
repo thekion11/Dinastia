@@ -57,6 +57,7 @@ const SECCIONES := [
 	"_probar_consejeros",
 	"_probar_bilbao_solo_local",
 	"_probar_guardado",
+	"_probar_guardado_seguro",
 	"_probar_temporadas",
 	"_probar_economia",
 	"_probar_sala_de_prensa",
@@ -173,7 +174,7 @@ func _ready() -> void:
 ## Segundos medidos (15-10-2026) de las secciones lentas; el resto cuenta 0,4 s.
 ## Si una sección se alarga mucho, actualizar con el resumen TIEMPOS del final.
 const COSTES := {
-	"_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -3476,6 +3477,49 @@ func _probar_bilbao_solo_local() -> void:
 	_comprobar(extranjeros_despues <= extranjeros_antes,
 		"100 semanas de mercado IA no le suman extranjeros a Bilbao (antes %d, después %d)" % [
 			extranjeros_antes, extranjeros_despues])
+
+## GUARDADO SEGURO (20-10-2026): un guardado roto o a medias no pierde la
+## partida; se recupera del temporal o de la copia anterior.
+func _probar_guardado_seguro() -> void:
+	_titulo("GUARDADO SEGURO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 909)
+	m.tomar_el_mando(m.ligas[0].clubes[2].id)
+	var n := "__prueba_seguro__"
+	var ruta := Partida.ruta_de(n)
+	Partida.borrar(n)
+	_comprobar(Partida.guardar(m, n), "se guarda")
+	_comprobar(FileAccess.file_exists(ruta) and not FileAccess.file_exists(ruta + Partida.TEMPORAL), "queda el principal y no el temporal")
+	var semana1 := m.semana
+	m.semana += 3
+	_comprobar(Partida.guardar(m, n), "se guarda otra vez")
+	_comprobar(FileAccess.file_exists(ruta + Partida.RESPALDO), "la versión anterior queda como copia")
+	## Principal corrompido (basura): carga la copia y avisa.
+	var f := FileAccess.open(ruta, FileAccess.WRITE)
+	f.store_string("basura que no es una partida")
+	f.close()
+	var m2 := Partida.cargar(n)
+	_comprobar(m2 != null and m2.semana == semana1 and Partida.cargada_de_respaldo, "principal roto: se recupera la copia anterior")
+	## Principal truncado a 2 bytes: no revienta.
+	f = FileAccess.open(ruta, FileAccess.WRITE)
+	f.store_8(1)
+	f.store_8(2)
+	f.close()
+	_comprobar(Partida.cargar(n) != null, "principal truncado: tampoco se pierde")
+	## Sin principal: la ranura sigue en el menú.
+	DirAccess.remove_absolute(ruta)
+	var esta := false
+	for d: Dictionary in Partida.listar():
+		esta = esta or String(d.get("fichero", "")) == n
+	_comprobar(esta, "sin principal, la ranura sigue en la lista de partidas")
+	## Un temporal completo (corte entre escribir y mover) se aprovecha.
+	_comprobar(Partida.guardar(m, n), "se guarda de nuevo")
+	DirAccess.rename_absolute(ruta, ruta + Partida.TEMPORAL)
+	var m3 := Partida.cargar(n)
+	_comprobar(m3 != null and m3.semana == semana1 + 3, "un temporal entero se recupera (semana %d)" % (m3.semana if m3 != null else -1))
+	Partida.borrar(n)
+	_comprobar(not FileAccess.file_exists(ruta) and not FileAccess.file_exists(ruta + Partida.TEMPORAL)
+		and not FileAccess.file_exists(ruta + Partida.RESPALDO), "borrar quita principal, temporal y copia")
 
 func _probar_guardado() -> void:
 	_titulo("GUARDAR Y CARGAR")
