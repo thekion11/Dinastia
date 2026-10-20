@@ -2499,7 +2499,10 @@
   "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ ILLEGAL LINE-UP (%s rules): %s",
   "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ your assistant will swap whoever is needed (you follow the rules)",
   "→ saldrá así y la federación multará (decidiste incumplir)": "→ it will start like this and the federation will fine you (you chose to break the rules)",
-  "🗳️ El vestuario elige capitán": "🗳️ The dressing room picks its captain"
+  "🗳️ El vestuario elige capitán": "🗳️ The dressing room picks its captain",
+  "Partida guardada": "Game saved",
+  "CRÉDITOS Y LICENCIAS": "CREDITS AND LICENSES",
+  "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Photos of real footballers (private version only) show their author and license under the portrait, on the player's profile."
  },
  "pt": {
   "Historia": "História",
@@ -5001,7 +5004,10 @@
   "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ ESCALAÇÃO IRREGULAR (lei de %s): %s",
   "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ o auxiliar trocará quem for preciso (você cumpre a lei)",
   "→ saldrá así y la federación multará (decidiste incumplir)": "→ vai entrar assim e a federação vai multar (você decidiu descumprir)",
-  "🗳️ El vestuario elige capitán": "🗳️ O vestiário escolhe o capitão"
+  "🗳️ El vestuario elige capitán": "🗳️ O vestiário escolhe o capitão",
+  "Partida guardada": "Jogo salvo",
+  "CRÉDITOS Y LICENCIAS": "CRÉDITOS E LICENÇAS",
+  "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "As fotos de jogadores reais (só na versão privada) trazem o autor e a licença sob o retrato, na ficha do jogador."
  },
  "patrones": [
   [
@@ -8105,7 +8111,10 @@
   "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ ALIGNEMENT IRRÉGULIER (loi de %s) : %s",
   "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ l'adjoint changera qui il faut (vous respectez la loi)",
   "→ saldrá así y la federación multará (decidiste incumplir)": "→ elle jouera ainsi et la fédération sanctionnera (vous avez choisi d'enfreindre)",
-  "🗳️ El vestuario elige capitán": "🗳️ Le vestiaire élit son capitaine"
+  "🗳️ El vestuario elige capitán": "🗳️ Le vestiaire élit son capitaine",
+  "Partida guardada": "Partie sauvegardée",
+  "CRÉDITOS Y LICENCIAS": "CRÉDITS ET LICENCES",
+  "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Les photos de joueurs réels (version privée uniquement) indiquent leur auteur et leur licence sous le portrait, dans la fiche du joueur."
  },
  "it": {
   "Historia": "Storia",
@@ -10514,7 +10523,10 @@
   "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ FORMAZIONE IRREGOLARE (legge di %s): %s",
   "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ il vice cambierà chi serve (rispetti la legge)",
   "→ saldrá así y la federación multará (decidiste incumplir)": "→ scenderà così e la federazione multerà (hai deciso di non rispettarla)",
-  "🗳️ El vestuario elige capitán": "🗳️ Lo spogliatoio sceglie il capitano"
+  "🗳️ El vestuario elige capitán": "🗳️ Lo spogliatoio sceglie il capitano",
+  "Partida guardada": "Partita salvata",
+  "CRÉDITOS Y LICENCIAS": "CREDITI E LICENZE",
+  "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Le foto dei calciatori reali (solo nella versione privata) riportano autore e licenza sotto il ritratto, nella scheda del giocatore."
  },
  "de": {
   "Historia": "Geschichte",
@@ -12923,7 +12935,10 @@
   "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ UNZULÄSSIGE AUFSTELLUNG (Regel in %s): %s",
   "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ der Co-Trainer tauscht, wen es braucht (du hältst dich an die Regel)",
   "→ saldrá así y la federación multará (decidiste incumplir)": "→ sie spielt so und der Verband verhängt eine Strafe (du hast dich dagegen entschieden)",
-  "🗳️ El vestuario elige capitán": "🗳️ Die Kabine wählt den Kapitän"
+  "🗳️ El vestuario elige capitán": "🗳️ Die Kabine wählt den Kapitän",
+  "Partida guardada": "Spiel gespeichert",
+  "CRÉDITOS Y LICENCIAS": "CREDITS UND LIZENZEN",
+  "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Fotos echter Fußballer (nur in der privaten Version) zeigen Urheber und Lizenz unter dem Porträt im Spielerprofil."
  },
  "ca": {
   "Historia": "Història",
@@ -15332,7 +15347,10 @@
   "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ ALINEACIÓ INDEGUDA (llei de %s): %s",
   "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ l'ajudant canviarà qui calgui (compleixes la llei)",
   "→ saldrá así y la federación multará (decidiste incumplir)": "→ sortirà així i la federació multarà (has decidit incomplir)",
-  "🗳️ El vestuario elige capitán": "🗳️ El vestidor tria capità"
+  "🗳️ El vestuario elige capitán": "🗳️ El vestidor tria capità",
+  "Partida guardada": "Partida desada",
+  "CRÉDITOS Y LICENCIAS": "CRÈDITS I LLICÈNCIES",
+  "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Les fotos de futbolistes reals (només a la versió privada) porten l'autor i la llicència sota el retrat, a la fitxa del jugador."
  },
  "pl": {
   "Club": "Klub",
@@ -18036,7 +18054,10 @@
   "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ NIEPRAWIDŁOWY SKŁAD (przepisy %s): %s",
   "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ asystent zmieni, kogo trzeba (przestrzegasz przepisów)",
   "→ saldrá así y la federación multará (decidiste incumplir)": "→ zagra tak, a federacja nałoży karę (zdecydowałeś się złamać przepisy)",
-  "🗳️ El vestuario elige capitán": "🗳️ Szatnia wybiera kapitana"
+  "🗳️ El vestuario elige capitán": "🗳️ Szatnia wybiera kapitana",
+  "Partida guardada": "Gra zapisana",
+  "CRÉDITOS Y LICENCIAS": "AUTORZY I LICENCJE",
+  "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Zdjęcia prawdziwych piłkarzy (tylko w wersji prywatnej) mają autora i licencję pod portretem, w karcie zawodnika."
  },
  "tr": {
   "Club": "Kulüp",
@@ -20740,6 +20761,9 @@
   "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ KURALDIŞI KADRO (%s kuralı): %s",
   "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ yardımcın gerekeni değiştirecek (kurala uyuyorsun)",
   "→ saldrá así y la federación multará (decidiste incumplir)": "→ böyle çıkacak ve federasyon ceza verecek (kurala uymamayı seçtin)",
-  "🗳️ El vestuario elige capitán": "🗳️ Soyunma odası kaptanını seçti"
+  "🗳️ El vestuario elige capitán": "🗳️ Soyunma odası kaptanını seçti",
+  "Partida guardada": "Oyun kaydedildi",
+  "CRÉDITOS Y LICENCIAS": "EMEĞİ GEÇENLER VE LİSANSLAR",
+  "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Gerçek futbolcuların fotoğrafları (yalnızca özel sürümde) oyuncu kartında, portrenin altında yazar ve lisans bilgisiyle gösterilir."
  }
 }

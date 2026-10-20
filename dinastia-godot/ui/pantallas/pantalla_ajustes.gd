@@ -465,6 +465,20 @@ func _pintar_ajustes() -> void:
 			ac.text = Idiomas.t("DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y todos los efectos están sintetizados por el propio juego: no hay ni un fichero de audio.")
 			ac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_ajustes.add_child(ac)
+			## M-309: créditos y licencias de lo que no es propio.
+			p._lista_ajustes.add_child(HSeparator.new())
+			var t4 := p._texto(11, Principal.COL_SUAVE)
+			t4.text = Idiomas.t("CRÉDITOS Y LICENCIAS")
+			p._lista_ajustes.add_child(t4)
+			for linea: String in Creditos.lineas():
+				var cr := p._texto(10, Principal.COL_TEXTO)
+				cr.text = "· " + linea
+				cr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				p._lista_ajustes.add_child(cr)
+			var fotos := p._texto(10, Principal.COL_SUAVE)
+			fotos.text = Idiomas.t("Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.")
+			fotos.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			p._lista_ajustes.add_child(fotos)
 
 	## Esta pantalla se repinta sola al tocar una pestaña de sección, sin pasar
 	## por `_refrescar()`, asi que se traduce aqui tambien.
