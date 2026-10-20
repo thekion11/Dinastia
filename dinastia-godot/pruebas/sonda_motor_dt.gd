@@ -192,6 +192,8 @@ func _diag() -> void:
 	var con_dueno := 0.0
 	var total := 0.0
 	var estados := {}
+	var saques_n := {}
+	var saques_t := {}
 	var sueltos := {}
 	var largo_b := [0.0, 0.0]
 	var ancho_b := [0.0, 0.0]
@@ -203,6 +205,12 @@ func _diag() -> void:
 	while motor.estado != "fin":
 		motor.paso(dt)
 		estados[motor.estado] = float(estados.get(motor.estado, 0.0)) + dt
+		## Saques por tipo: cuántos y cuánto tiempo muerto cada uno (20-10-2026).
+		if motor.estado == "saque":
+			var tipo_s := String(motor.saque.get("tipo", "?"))
+			if motor._t_estado <= dt * 1.01:
+				saques_n[tipo_s] = int(saques_n.get(tipo_s, 0)) + 1
+			saques_t[tipo_s] = float(saques_t.get(tipo_s, 0.0)) + dt
 		if motor.estado != "juego":
 			continue
 		total += dt
@@ -254,6 +262,10 @@ func _diag() -> void:
 	print("DIAG por el aire: %s" % str(motor.cuenta_aire))
 	print("DIAG pases %s llegaron %s despejes %s" % [str(motor.pases), str(motor.pases_ok), str(motor.despejes)])
 	print("DIAG tiempo por estado %s" % str(estados))
+	var txt := ""
+	for k: String in saques_n:
+		txt += "%s %d (%.1f s c/u)  " % [k, saques_n[k], float(saques_t.get(k, 0.0)) / maxf(1.0, float(saques_n[k]))]
+	print("DIAG saques: " + txt)
 	print("DIAG en juego %.0f s, con dueño %.0f %%, cambios de posesión %d (%.1f por minuto de juego)" % [total, 100.0 * con_dueno / total, cambios_pos, cambios_pos / (total / 60.0)])
 	print("DIAG balón suelto por tipo (s): %s ; distancia media del más cercano al balón quieto/lento: %.1f m" % [str(sueltos), cerca_suelto / maxf(t_suelto, 0.01)])
 	print("DIAG bloque largo %.0f/%.0f m, ancho %.0f/%.0f m; rival más cercano al poseedor %.1f m" % [largo_b[0] / total, largo_b[1] / total, ancho_b[0] / total, ancho_b[1] / total, presion_t / maxf(t_pos, 0.01)])
