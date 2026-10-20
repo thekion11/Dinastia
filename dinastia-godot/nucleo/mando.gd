@@ -36,6 +36,7 @@ const MAPA := {
 	"jugar_tac_derecha": ["Táctica rápida: laterales al ataque", [KEY_F4], [JOY_BUTTON_DPAD_RIGHT], -1, 0.0],
 	"jugar_pausa": ["Pausa / táctica y cambios", [KEY_ESCAPE, KEY_P], [JOY_BUTTON_START], -1, 0.0],
 	"jugar_estadisticas": ["Estadísticas del partido", [KEY_T], [JOY_BUTTON_BACK], -1, 0.0],
+	"jugar_repeticion": ["Repetir la jugada (últimos 10 s)", [KEY_G], [JOY_BUTTON_MISC1], -1, 0.0],
 }
 
 ## Qué acción del catálogo sale de cada botón, con balón y sin balón.
@@ -66,7 +67,7 @@ const ESQUEMAS := {
 		"jugar_pase": [KEY_S], "jugar_tiro": [KEY_D], "jugar_centro": [KEY_A], "jugar_pase_largo": [KEY_Z],
 		"jugar_filtrado": [KEY_W], "jugar_cambiar": [KEY_Q], "jugar_mod": [KEY_SHIFT], "jugar_sprint": [KEY_E],
 		"jugar_regate": [KEY_C], "jugar_pedir": [KEY_X], "jugar_pausa": [KEY_ESCAPE, KEY_P],
-		"jugar_estadisticas": [KEY_T]},
+		"jugar_estadisticas": [KEY_T], "jugar_repeticion": [KEY_G]},
 }
 ## Las ayudas, con sus opciones (la primera es la de fábrica).
 const AYUDAS := {
