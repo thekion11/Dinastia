@@ -252,48 +252,71 @@ func _arbol() -> void:
 	_prev.visible = false
 
 
-## POR_HIJOS=1 (19-10-2026): esconde por turnos cada hijo de la raíz 3D (y los
-## nietos del que más pese) y dice cuántas llamadas y triángulos pone en pantalla.
-var _ph_lista: Array = []
-var _ph_i := -1
+## POR_HIJOS=1 (19-10/20-10-2026): con el partido CONGELADO (pausa total: el
+## mismo fotograma siempre) esconde por turnos cada parte del escenario y mide
+## cuántas llamadas y triángulos pone en pantalla. Baja de nivel en las partes
+## que pesan (más de 40 mil triángulos o 15 llamadas), hasta 4 niveles.
+## (El 19-10 se hizo sin congelar y no servía: la cámara se movía.)
+var _ph_cola: Array = []
+var _ph_actual: Variant = null
 var _ph_espera := 0
 var _ph_base := Vector2.ZERO
 var _ph_res: Array = []
+var _ph_listo := false
+
+func _medida() -> Vector2:
+	return Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
+		Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
 
 func _por_hijos() -> void:
 	var raiz: Node3D = _vista.get("_raiz3d")
-	var medida := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
-		Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
-	if _ph_lista.is_empty() and _ph_i == -1:
-		for h in raiz.get_children():
-			if h is Node3D and (h as Node3D).visible:
-				_ph_lista.append(h)
-				for nieto in h.get_children():
-					if nieto is Node3D and (nieto as Node3D).visible and nieto.get_child_count() > 0:
-						_ph_lista.append(nieto)
-		_ph_base = medida
-		_ph_i = 0
-		_ph_espera = 0
-		print("POR_HIJOS base llamadas=%d tris=%d (%d partes)" % [medida.x, medida.y, _ph_lista.size()])
-	if _ph_i >= _ph_lista.size():
-		_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return float(a[2]) > float(b[2]))
-		for r: Array in _ph_res.slice(0, 30):
-			print("HIJO %-50s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
-		_fin = true
-		get_tree().quit()
+	if not _ph_listo:
+		## Congelar: todo en pausa menos esta medición.
+		process_mode = Node.PROCESS_MODE_ALWAYS
+		get_tree().paused = true
+		_ph_listo = true
+		_ph_espera = -6
 		return
-	var nv: Variant = _ph_lista[_ph_i]
-	if not is_instance_valid(nv):
-		_ph_i += 1
+	if _ph_espera < 0:
+		_ph_espera += 1
+		if _ph_espera == 0:
+			_ph_base = _medida()
+			for h in raiz.get_children():
+				if h is Node3D and (h as Node3D).visible:
+					_ph_cola.append([h, 0])
+			print("POR_HIJOS (congelado) base llamadas=%d tris=%d" % [_ph_base.x, _ph_base.y])
+		return
+	if _ph_actual == null:
+		if _ph_cola.is_empty():
+			_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return float(a[2]) > float(b[2]))
+			for r: Array in _ph_res.slice(0, 40):
+				print("HIJO %-60s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
+			_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
+			for r: Array in _ph_res.slice(0, 25):
+				print("LLAMADAS %-56s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
+			_fin = true
+			get_tree().quit()
+			return
+		var sig: Array = _ph_cola.pop_front()
+		if not is_instance_valid(sig[0]):
+			return
+		_ph_actual = sig
+		(sig[0] as Node3D).visible = false
 		_ph_espera = 0
 		return
-	var n := nv as Node3D
-	if _ph_espera == 0:
-		n.visible = false
 	_ph_espera += 1
-	if _ph_espera == 3:
-		_ph_res.append([str(n.get_path()).replace(str(raiz.get_path()), "").left(50), int(_ph_base.x - medida.x), int(_ph_base.y - medida.y)])
-		n.visible = true
-	if _ph_espera >= 5:
-		_ph_espera = 0
-		_ph_i += 1
+	if _ph_espera < 3:
+		return
+	var n: Node3D = _ph_actual[0]
+	var nivel: int = _ph_actual[1]
+	var m := _medida()
+	var dl := int(_ph_base.x - m.x)
+	var dt := int(_ph_base.y - m.y)
+	var ruta := str(raiz.get_path_to(n))
+	_ph_res.append(["%s%s" % ["  ".repeat(nivel), ruta.right(56)], dl, dt])
+	n.visible = true
+	if nivel < 3 and (dt > 40000 or dl > 15):
+		for h in n.get_children():
+			if h is Node3D and (h as Node3D).visible:
+				_ph_cola.append([h, nivel + 1])
+	_ph_actual = null
