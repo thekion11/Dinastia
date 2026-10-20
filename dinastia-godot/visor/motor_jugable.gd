@@ -93,6 +93,9 @@ var cargando := false
 var carga := 0.0
 var pedido_hasta := 0.0        ## hasta cuándo vale que pediste el balón
 var _pase_usuario_vivo := false ## el balón en camino es un pase tuyo
+## Quién dio ese pase: con el control del equipo el mando salta al receptor, así
+## que «el que recibe no es `usuario`» dejaba sin contar casi todos (20-10-2026).
+var _pase_usuario_de: Dictionary = {}
 var stats := {"fueras_de_juego": 0, "goles": 0, "asist": 0, "pases": 0, "pases_ok": 0, "tiros": 0, "a_puerta": 0,
 	"entradas": 0, "entradas_ok": 0, "toques": 0, "faltas": 0}
 var posesion := [0.0, 0.0]
@@ -1455,7 +1458,7 @@ func _tomar(p: Dictionary) -> void:
 				"linea": float(_margenes_pase.get("linea", 0.0)), "z": float((_margenes_pase.get("z", {}) as Dictionary).get(mid, 0.0))}
 	_margenes_pase = {}
 	## Tu pase llegó si lo controla uno de los tuyos.
-	if _pase_usuario_vivo and not usuario.is_empty() and p != usuario and bool(p["es_local"]) == bool(usuario["es_local"]):
+	if _pase_usuario_vivo and not _pase_usuario_de.is_empty() and p != _pase_usuario_de and bool(p["es_local"]) == bool(_pase_usuario_de["es_local"]):
 		stats["pases_ok"] += 1
 	_pase_usuario_vivo = false
 	if poseedor.is_empty() or bool(poseedor["es_local"]) != bool(p["es_local"]):
@@ -2820,6 +2823,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 	if p == usuario:
 		stats["pases"] += 1
 		_pase_usuario_vivo = true
+		_pase_usuario_de = p
 
 func _linea_tapada(a: Vector3, c: Vector3, local: bool) -> bool:
 	for r: Dictionary in jugadores:
@@ -3847,6 +3851,7 @@ func _centro_usuario(p: Dictionary, arco: Vector3, d: float, lb: bool, rb: bool)
 	pase_a = _companero_cerca(p, destino)
 	stats["pases"] += 1
 	_pase_usuario_vivo = true
+	_pase_usuario_de = usuario
 
 ## La pared: el que la dio corre al espacio mientras dure.
 func _seguir_pared() -> void:
@@ -3955,6 +3960,7 @@ func _pase_manual(p: Dictionary, dir: Vector3, dist: float, por_arriba: bool) ->
 	pases[_pase_eq] += 1
 	stats["pases"] += 1
 	_pase_usuario_vivo = true
+	_pase_usuario_de = usuario
 
 ## `para_cambio`: el cambio manual con el stick derecho (vale cualquiera, cerca o lejos).
 func _companero_en_direccion(p: Dictionary, dir: Vector3, para_cambio := false) -> Dictionary:
@@ -3970,6 +3976,11 @@ func _companero_en_direccion(p: Dictionary, dir: Vector3, para_cambio := false) 
 			continue
 		var alineado := v.normalized().dot(dir.normalized())
 		var nota := alineado * 3.0 - dist * 0.03
+		## PASE ASISTIDO (20-10-2026, al jugarlo Claude: 4 de 26 pases llegaban):
+		## entre los que están hacia donde apuntas, mejor el que tiene la línea
+		## limpia, como hace la IA. Solo si está razonablemente en la dirección.
+		if not para_cambio and alineado > 0.5 and _linea_tapada(yo, pos(q), bool(p["es_local"])):
+			nota -= 1.2
 		if nota > mejor_nota:
 			mejor_nota = nota
 			mejor = q
