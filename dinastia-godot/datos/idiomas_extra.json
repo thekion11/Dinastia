@@ -2495,7 +2495,11 @@
   "Leyenda": "Legendary",
   "Asistencias esperadas (xA)": "Expected assists (xA)",
   "Mantenimiento de instalaciones": "Facilities maintenance",
-  "🚧 Imprevisto en la obra": "🚧 Setback on the works"
+  "🚧 Imprevisto en la obra": "🚧 Setback on the works",
+  "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ ILLEGAL LINE-UP (%s rules): %s",
+  "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ your assistant will swap whoever is needed (you follow the rules)",
+  "→ saldrá así y la federación multará (decidiste incumplir)": "→ it will start like this and the federation will fine you (you chose to break the rules)",
+  "🗳️ El vestuario elige capitán": "🗳️ The dressing room picks its captain"
  },
  "pt": {
   "Historia": "História",
@@ -4993,7 +4997,11 @@
   "Leyenda": "Lenda",
   "Asistencias esperadas (xA)": "Assistências esperadas (xA)",
   "Mantenimiento de instalaciones": "Manutenção das instalações",
-  "🚧 Imprevisto en la obra": "🚧 Imprevisto na obra"
+  "🚧 Imprevisto en la obra": "🚧 Imprevisto na obra",
+  "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ ESCALAÇÃO IRREGULAR (lei de %s): %s",
+  "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ o auxiliar trocará quem for preciso (você cumpre a lei)",
+  "→ saldrá así y la federación multará (decidiste incumplir)": "→ vai entrar assim e a federação vai multar (você decidiu descumprir)",
+  "🗳️ El vestuario elige capitán": "🗳️ O vestiário escolhe o capitão"
  },
  "patrones": [
   [
@@ -5677,6 +5685,17 @@
    "Obra «$1»: problemes als fonaments, costa un 8 % més.",
    "Budowa «$1»: problemy z fundamentami, kosztuje 8 % więcej.",
    "«$1» inşaatı: temelde sorunlar, %8 daha pahalı."
+  ],
+  [
+   "^(.+) lleva la cinta: (\\d+) votos de (\\d+)\\.$",
+   "$1 wears the armband: $2 votes out of $3.",
+   "$1 usa a braçadeira: $2 votos de $3.",
+   "$1 porte le brassard : $2 voix sur $3.",
+   "$1 indossa la fascia: $2 voti su $3.",
+   "$1 trägt die Binde: $2 von $3 Stimmen.",
+   "$1 porta el braçalet: $2 vots de $3.",
+   "$1 nosi opaskę: $2 głosów na $3.",
+   "Pazubandı $1 taşıyor: $3 oydan $2."
   ]
  ],
  "fr": {
@@ -8082,7 +8101,11 @@
   "Leyenda": "Légende",
   "Asistencias esperadas (xA)": "Passes décisives attendues (xA)",
   "Mantenimiento de instalaciones": "Entretien des installations",
-  "🚧 Imprevisto en la obra": "🚧 Imprévu sur le chantier"
+  "🚧 Imprevisto en la obra": "🚧 Imprévu sur le chantier",
+  "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ ALIGNEMENT IRRÉGULIER (loi de %s) : %s",
+  "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ l'adjoint changera qui il faut (vous respectez la loi)",
+  "→ saldrá así y la federación multará (decidiste incumplir)": "→ elle jouera ainsi et la fédération sanctionnera (vous avez choisi d'enfreindre)",
+  "🗳️ El vestuario elige capitán": "🗳️ Le vestiaire élit son capitaine"
  },
  "it": {
   "Historia": "Storia",
@@ -10487,7 +10510,11 @@
   "Leyenda": "Leggenda",
   "Asistencias esperadas (xA)": "Assist attesi (xA)",
   "Mantenimiento de instalaciones": "Manutenzione delle strutture",
-  "🚧 Imprevisto en la obra": "🚧 Imprevisto nel cantiere"
+  "🚧 Imprevisto en la obra": "🚧 Imprevisto nel cantiere",
+  "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ FORMAZIONE IRREGOLARE (legge di %s): %s",
+  "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ il vice cambierà chi serve (rispetti la legge)",
+  "→ saldrá así y la federación multará (decidiste incumplir)": "→ scenderà così e la federazione multerà (hai deciso di non rispettarla)",
+  "🗳️ El vestuario elige capitán": "🗳️ Lo spogliatoio sceglie il capitano"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12892,7 +12919,11 @@
   "Leyenda": "Legende",
   "Asistencias esperadas (xA)": "Erwartete Vorlagen (xA)",
   "Mantenimiento de instalaciones": "Instandhaltung der Anlagen",
-  "🚧 Imprevisto en la obra": "🚧 Panne auf der Baustelle"
+  "🚧 Imprevisto en la obra": "🚧 Panne auf der Baustelle",
+  "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ UNZULÄSSIGE AUFSTELLUNG (Regel in %s): %s",
+  "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ der Co-Trainer tauscht, wen es braucht (du hältst dich an die Regel)",
+  "→ saldrá así y la federación multará (decidiste incumplir)": "→ sie spielt so und der Verband verhängt eine Strafe (du hast dich dagegen entschieden)",
+  "🗳️ El vestuario elige capitán": "🗳️ Die Kabine wählt den Kapitän"
  },
  "ca": {
   "Historia": "Història",
@@ -15297,7 +15328,11 @@
   "Leyenda": "Llegenda",
   "Asistencias esperadas (xA)": "Assistències esperades (xA)",
   "Mantenimiento de instalaciones": "Manteniment de les instal·lacions",
-  "🚧 Imprevisto en la obra": "🚧 Imprevist a l'obra"
+  "🚧 Imprevisto en la obra": "🚧 Imprevist a l'obra",
+  "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ ALINEACIÓ INDEGUDA (llei de %s): %s",
+  "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ l'ajudant canviarà qui calgui (compleixes la llei)",
+  "→ saldrá así y la federación multará (decidiste incumplir)": "→ sortirà així i la federació multarà (has decidit incomplir)",
+  "🗳️ El vestuario elige capitán": "🗳️ El vestidor tria capità"
  },
  "pl": {
   "Club": "Klub",
@@ -17997,7 +18032,11 @@
   "Leyenda": "Legenda",
   "Asistencias esperadas (xA)": "Oczekiwane asysty (xA)",
   "Mantenimiento de instalaciones": "Utrzymanie obiektów",
-  "🚧 Imprevisto en la obra": "🚧 Niespodzianka na budowie"
+  "🚧 Imprevisto en la obra": "🚧 Niespodzianka na budowie",
+  "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ NIEPRAWIDŁOWY SKŁAD (przepisy %s): %s",
+  "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ asystent zmieni, kogo trzeba (przestrzegasz przepisów)",
+  "→ saldrá así y la federación multará (decidiste incumplir)": "→ zagra tak, a federacja nałoży karę (zdecydowałeś się złamać przepisy)",
+  "🗳️ El vestuario elige capitán": "🗳️ Szatnia wybiera kapitana"
  },
  "tr": {
   "Club": "Kulüp",
@@ -20697,6 +20736,10 @@
   "Leyenda": "Efsane",
   "Asistencias esperadas (xA)": "Beklenen asistler (xA)",
   "Mantenimiento de instalaciones": "Tesis bakımı",
-  "🚧 Imprevisto en la obra": "🚧 İnşaatta aksilik"
+  "🚧 Imprevisto en la obra": "🚧 İnşaatta aksilik",
+  "⚠ ALINEACIÓN INDEBIDA (ley de %s): %s": "⚠ KURALDIŞI KADRO (%s kuralı): %s",
+  "→ el ayudante cambiará a quien haga falta (cumples la ley)": "→ yardımcın gerekeni değiştirecek (kurala uyuyorsun)",
+  "→ saldrá así y la federación multará (decidiste incumplir)": "→ böyle çıkacak ve federasyon ceza verecek (kurala uymamayı seçtin)",
+  "🗳️ El vestuario elige capitán": "🗳️ Soyunma odası kaptanını seçti"
  }
 }
