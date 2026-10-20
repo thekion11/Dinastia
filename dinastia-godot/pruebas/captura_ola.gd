@@ -44,6 +44,7 @@ func _process(_d: float) -> void:
 			cam.fov = 70.0
 			cam.current = true
 		60:
+			OlaGrada.mirar(raiz, Vector3.ZERO, 0.0)
 			_foto("quieta")
 			_ola = OlaGrada.lanzar(raiz, "ola")
 			for m: ShaderMaterial in OlaGrada.materiales(raiz):
@@ -66,4 +67,26 @@ func _process(_d: float) -> void:
 			o._escribir(2.6)
 		70:
 			_foto("onda")
+			## De cerca: las cabezas hacia el balón (M-049) y la protesta (M-045).
+			var cam2 := Camera3D.new()
+			raiz.add_child(cam2)
+			cam2.global_position = Vector3(30, 4.5, 6)
+			cam2.look_at(Vector3(44, 5.5, 0))
+			cam2.fov = 55.0
+			cam2.current = true
+			## Que la vista no vuelva a escribir el balón de verdad encima.
+			_vista.set_process(false)
+		72:
+			OlaGrada.mirar(raiz, Vector3(0, 0, -60))
+		74:
+			_foto("mira_izq")
+			OlaGrada.mirar(raiz, Vector3(0, 0, 60))
+		76:
+			_foto("mira_der")
+			var p := OlaGrada.lanzar(raiz, "protesta")
+			p.set_process(false)
+			p.edad = 1.2
+			p._escribir(1.2)
+		78:
+			_foto("protesta")
 			get_tree().quit()

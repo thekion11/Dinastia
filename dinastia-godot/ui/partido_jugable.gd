@@ -110,6 +110,7 @@ func _montar(duracion_mitad: float) -> void:
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
 	StadiumBuilder.build_pitch(_raiz, perfil, local)
 	StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
+	OlaGrada.piel_de_pais(_raiz, local.pais)
 	## Lo que el modo entrenador ya tenía y aquí faltaba: la lluvia o la nieve,
 	## la pantalla gigante y camarógrafos/guardias de verdad en vez de maniquíes.
 	var gp := StadiumBuilder.geom_de_forma(String(perfil.get("forma", "oval")))
@@ -517,6 +518,9 @@ func _montar_hud() -> void:
 
 func _process(delta: float) -> void:
 	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
+	## La grada sigue el balón con la cabeza (M-049), como en el modo DT.
+	if Engine.get_process_frames() % 4 == 0 and motor != null and motor.balon != null:
+		OlaGrada.mirar(_raiz, motor.balon.global_position)
 	_t_rotulos -= delta
 	if is_instance_valid(_cine) and _pausa == null:
 		_cine.paso(delta)
