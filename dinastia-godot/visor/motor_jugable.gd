@@ -1630,9 +1630,67 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	## FALTAS (17-10-2026): había ~4 por partido; una entrada que no llega al
 	## balón acaba en falta más a menudo (sobre todo si el defensor es agresivo).
 	elif r < exito + (0.28 if barrida else 0.13) + float(p.get("agresividad", 0.5)) * 0.06:
-		_falta(p, victima)
+		_falta(p, victima, 0.25, "", "deslizante" if barrida else "de_pie")
 
-func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "") -> void:
+## FALTAS POR PUNTOS (20-10-2026, del vídeo que regaló el dueño): la sanción
+## sale de CÓMO fue la entrada, no de una tirada. Cada factor suma su peso y el
+## total decide: falta ≥ 1,0 · amarilla ≥ 4,0 · roja directa ≥ 7,0 (por detrás
+## + a gran velocidad + último hombre = 7,3 → roja).
+const PESO_FALTA := {"agarron": 1.4, "por_detras": 3.0, "empujon": 1.7, "gran_velocidad": 2.0,
+	"deslizante": 2.6, "profesional": 2.3, "de_pie": 1.2, "hombro": 0.9, "agresiva": 2.4}
+const UMBRAL_AMARILLA := 4.0
+const UMBRAL_ROJA := 7.0
+## La última falta pitada: {"puntos", "factores": [claves de PESO_FALTA], "sancion"}.
+var ultima_falta := {}
+## Tarjetas por partido: [amarillas, rojas directas] de cada equipo (para las sondas).
+var tarjetas_motor := [[0, 0], [0, 0]]
+
+## Los puntos de una falta de `infractor` sobre `victima` con una entrada `tipo`
+## (una clave de PESO_FALTA: de_pie, deslizante, hombro, agarron, empujon).
+func puntos_falta(infractor: Dictionary, victima: Dictionary, tipo: String) -> Dictionary:
+	var factores: Array = []
+	if PESO_FALTA.has(tipo):
+		factores.append(tipo)
+	var vi: Vector3 = _plano(victima.get("vel", Vector3.ZERO) as Vector3)
+	var vf: Vector3 = _plano(infractor.get("vel", Vector3.ZERO) as Vector3)
+	var desde := _plano(pos(victima) - pos(infractor))
+	## Por detrás: la víctima corre alejándose del que entra.
+	if vi.length() > 1.5 and desde.length() > 0.05 and vi.normalized().dot(desde.normalized()) > 0.6:
+		factores.append("por_detras")
+	## A gran velocidad: el infractor llega lanzado.
+	if vf.length() > 6.0:
+		factores.append("gran_velocidad")
+	## Agresiva: mal genio y entrada fuerte (barrida o empujón).
+	if float(infractor.get("agresividad", 0.5)) > 0.8 and tipo in ["deslizante", "empujon"]:
+		factores.append("agresiva")
+	## Falta profesional: corta una ocasión clara siendo el último hombre.
+	if _ocasion_clara(victima, infractor) or _falta_tactica:
+		factores.append("profesional")
+	var puntos := 0.0
+	for f: String in factores:
+		puntos += float(PESO_FALTA[f])
+	return {"puntos": puntos, "factores": factores}
+
+## ¿`victima` iba sola hacia el arco? Cerca del arco rival (35 m), de cara a él
+## y sin ningún defensor de campo (aparte de `menos`) entre ella y la portería.
+func _ocasion_clara(victima: Dictionary, menos: Dictionary) -> bool:
+	var arco := _arco_rival(victima)
+	var pv := pos(victima)
+	if pv.distance_to(arco) > 35.0:
+		return false
+	var hacia := _plano(arco - pv).normalized()
+	var vi := _plano(victima.get("vel", Vector3.ZERO) as Vector3)
+	if vi.length() > 1.0 and vi.normalized().dot(hacia) < 0.3:
+		return false
+	for q: Dictionary in jugadores:
+		if q == menos or bool(q["por"]) or bool(q["es_local"]) == bool(victima["es_local"]):
+			continue
+		var rq := _plano(pos(q) - pv)
+		if rq.dot(hacia) > 0.0 and rq.dot(hacia) < pv.distance_to(arco) and (rq - hacia * rq.dot(hacia)).length() < 9.0:
+			return false
+	return true
+
+func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> void:
 	if infractor == usuario:
 		stats["faltas"] += 1
 	if motivo != "":
@@ -1644,7 +1702,18 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	var en_area := absf(lugar.x) < AREA_X and absf(lugar.z - arco.z) < AREA_Z
 	var nombre := String((infractor.get("jugador", {}) as Dictionary).get("nombre", "Un defensor"))
 	faltas[0 if bool(infractor["es_local"]) else 1] += 1
-	var con_tarjeta := _rng.randf() < prob_tarjeta or _falta_tactica
+	## La sanción por puntos (con un margen de criterio del árbitro de ±0,4).
+	## `prob_tarjeta` queda solo para quien llame sin tipo (compatibilidad).
+	var pf := puntos_falta(infractor, victima, tipo)
+	var total := float(pf["puntos"]) + _rng.randf_range(-0.4, 0.4)
+	var roja_directa := total >= UMBRAL_ROJA
+	var con_tarjeta := total >= UMBRAL_AMARILLA or _falta_tactica
+	ultima_falta = {"puntos": total, "factores": pf["factores"], "sancion": "roja" if roja_directa else ("amarilla" if con_tarjeta else "falta")}
+	var eq_inf := 0 if bool(infractor["es_local"]) else 1
+	if roja_directa:
+		tarjetas_motor[eq_inf][1] += 1
+	elif con_tarjeta:
+		tarjetas_motor[eq_inf][0] += 1
 	## LA VENTAJA (17-10-2026, M-106): una entrada que no llega, en campo
 	## rival, sin tarjeta y con la víctima todavía con el balón: el árbitro
 	## deja seguir con los dos brazos hacia delante. (Solo la entrada fallida:
@@ -1658,7 +1727,7 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	var tras := 0.8
 	if con_tarjeta:
 		## Habla con el infractor y le enseña la tarjeta (con la cartulina en la mano).
-		var sera_roja := tarjetas_reales and int(infractor.get("amarillas", 0)) + 1 >= 2
+		var sera_roja := tarjetas_reales and (roja_directa or int(infractor.get("amarillas", 0)) + 1 >= 2)
 		_gesto_arbitro("arbitro_amonestar_hablar", 0.9, 1.5, {"mira_a": infractor})
 		_gesto_arbitro("mostrar_roja" if sera_roja else "mostrar_tarjeta", 2.4, 2.0,
 			{"mira_a": infractor, "tarjeta": "roja" if sera_roja else "amarilla"})
@@ -1669,7 +1738,11 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 		## Señala hacia donde se saca: de cara a la portería del que la recibe.
 		_gesto_arbitro("senalar_falta", tras, 1.6, {"mira": lugar + Vector3(0, 0, dir_ataque(atacante_local) * 10.0)})
 	if con_tarjeta:
-		if tarjetas_reales:
+		if tarjetas_reales and roja_directa:
+			aviso.emit("🟥 ¡Roja directa para %s! (%s)" % [nombre, _texto_factores(pf["factores"])])
+			tarjeta.emit(String(infractor.get("id", "")), true, bool(infractor["es_local"]))
+			_expulsar(infractor)
+		elif tarjetas_reales:
 			infractor["amarillas"] = int(infractor.get("amarillas", 0)) + 1
 			var roja := int(infractor["amarillas"]) >= 2
 			aviso.emit(("🟥 ¡Roja! Segunda amarilla para %s" if roja else "🟨 Amarilla para %s") % nombre)
@@ -1713,6 +1786,17 @@ const RADIO_CUERPO := 0.31
 ## Fuerza, equilibrio y agresividad de 0 a 1. La ficha no tiene agresividad:
 ## sale de la defensa y el físico (los que van al choque), del rasgo
 ## («muralla» más, «cerebro» menos) y de un carácter fijo por jugador.
+## Los factores de una falta, para que el jugador entienda la tarjeta.
+const NOMBRE_FACTOR := {"agarron": "agarrón", "por_detras": "por detrás", "empujon": "empujón",
+	"gran_velocidad": "a gran velocidad", "deslizante": "en plancha", "profesional": "último hombre",
+	"de_pie": "de pie", "hombro": "carga", "agresiva": "agresiva"}
+
+static func _texto_factores(f: Array) -> String:
+	var t: Array = []
+	for k: String in f:
+		t.append(String(NOMBRE_FACTOR.get(k, k)))
+	return ", ".join(t)
+
 func _rasgos_duelo(p: Dictionary, jd: Dictionary) -> void:
 	var a: Dictionary = p["attr"]
 	var fis := float(a["fis"])
@@ -1851,7 +1935,7 @@ func _duelo_dividido() -> void:
 	if tarde > 0.1 and _rng.randf() < float(l["agresividad"]) * 0.2 * _escala_falta():
 		_anim(l, "zancadilla" if _rng.randf() < 0.5 else "entrada_lateral_pie", true)
 		_anim(w, "caida_fea", true, 1.2)
-		_falta(l, w, 0.15 + float(l["agresividad"]) * 0.2, "dividido")
+		_falta(l, w, 0.15 + float(l["agresividad"]) * 0.2, "dividido", "de_pie")
 		return
 	_anim(l, "duelo_empujado_der" if _derecha(l).dot(entre) > 0.0 else "duelo_empujado_izq", true, 0.7)
 
@@ -1918,7 +2002,7 @@ func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool
 	## Ganar el choque con los brazos o por detrás contra el que lleva el balón.
 	if era_suyo and _rng.randf() < (0.08 + float(w["agresividad"]) * 0.08 + m * 0.08) * _escala_falta():
 		_anim(l, "caida_fea", true, 1.2)
-		_falta(w, l, 0.06 + float(w["agresividad"]) * 0.1, "hombro")
+		_falta(w, l, 0.06 + float(w["agresividad"]) * 0.1, "hombro", "empujon" if float(w["agresividad"]) > 0.7 else "hombro")
 	return true
 
 ## AGARRÓN: el defensor llega por detrás (o pegado al costado de atrás) del
@@ -1968,7 +2052,7 @@ func _duelo_agarron(a: Dictionary, c: Dictionary, d: float) -> bool:
 	if _rng.randf() < (0.06 + agr * 0.16 + (1.0 - frena) * 0.35) * _escala_falta():
 		if _rng.randf() < 0.35:
 			_anim(obj, "caida_fea", true, 1.2)
-		_falta(ag, obj, 0.08 + agr * 0.2, "agarron")
+		_falta(ag, obj, 0.08 + agr * 0.2, "agarron", "agarron")
 		return true
 	## Sin falta, si lo frena del todo le roba la cartera.
 	if poseedor == obj and ng > no + 0.2:
@@ -3570,7 +3654,7 @@ func _control_usuario(delta: float) -> void:
 		if rb and Input.is_action_just_pressed("jugar_pase") and rival_con_balon and pos(poseedor).distance_to(pos(p)) < 2.4:
 			_anim(p, "falta_empujon", true)
 			_falta_tactica = true
-			_falta(p, poseedor)
+			_falta(p, poseedor, 0.25, "", "agarron")
 			_falta_tactica = false
 			return
 		## A mantenido: CONTENER. Se pone entre el rival y su arco, a metro y
