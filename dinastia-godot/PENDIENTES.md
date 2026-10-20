@@ -95,6 +95,15 @@ que el dueño lo pida.
   El cuello de botella es DIBUJAR (llamadas, triángulos, sombras), que C++ no acelera. Conclusión:
   C++/GDExtension NO compensa hoy; reconsiderarlo solo si simular temporadas enteras se hace lento.
 
+### 2.8 Rendimiento del partido (20-10, medido con promedios de 120 fotogramas)
+- OJO: en este entorno el número de triángulos de UN fotograma salta entre 0,7 y 1,4 M aunque todo
+  esté en pausa (`ESTABILIDAD=1`): solo valen promedios (`medir_partido` normal + `OCULTAR=`).
+- Reparto de llamadas (base 504): mascota de la banda −106, vallas LED −80, fachada −21; guiños y
+  marcador ≈0. HECHO: mascota fundida por material y parte (`MascotaQ.fusionar`, se ve igual:
+  capturas `mascotas*.jpg`) → 450; cajas de las vallas sin sombra propia → **432 (−14 %)**.
+- Siguiente candidato: los 36 rótulos `Label3D` de las vallas (una llamada cada uno): un solo
+  `SubViewport` con todo el anillo de texto, o un atlas de anuncios en la textura de la caja.
+
 ### 2.4 Pedidos del dueño en espera
 - **Vídeo gameplay** (punto 15 de la MEGA AUDITORÍA 2): pausado por el dueño el 17-10.
 - **Reescribir el historial** para bajar el peso del repo (solo binarios viejos, nunca código), después de fusionar a main.
