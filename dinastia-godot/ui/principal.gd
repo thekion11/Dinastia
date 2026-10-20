@@ -481,6 +481,7 @@ func _ready() -> void:
 		_llenar_selector()
 		_escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [
 			mundo.mi_club().nombre, mundo.anio, mundo.semana])
+		_avisar_si_respaldo()
 		_refrescar()
 		_resolver_partido_abandonado()
 	elif Principal.mundo_pregenerado != null:
@@ -2937,8 +2938,16 @@ func _cargar() -> void:
 	_llenar_selector()
 	_escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [
 		mundo.mi_club().nombre, mundo.anio, mundo.semana])
+	_avisar_si_respaldo()
 	_refrescar()
 	_resolver_partido_abandonado()
+
+## Si el guardado principal estaba roto y se recuperó la copia (guardado
+## seguro, 20-10-2026), se le dice al jugador en vez de callarlo.
+func _avisar_si_respaldo() -> void:
+	if Partida.cargada_de_respaldo:
+		_escribir("[color=#c9a227]El último guardado estaba dañado: se recuperó la copia anterior.[/color]")
+		Partida.cargada_de_respaldo = false
 
 ## Si la última vez se cerró el juego con un partido dirigido a medias, se
 ## completa desde el marcador que había (sin repetirlo desde el 0-0).
@@ -5598,6 +5607,7 @@ func _cargar_de(nombre: String) -> void:
 	mundo = m
 	_conectar_noticias()
 	_escribir("[color=#4caf6d]Partida cargada de %s.[/color]" % nombre)
+	_avisar_si_respaldo()
 	_refrescar()
 	_resolver_partido_abandonado()
 
