@@ -66,9 +66,11 @@ static func dir_equipaciones() -> String:
 	for c in cands:
 		if DirAccess.dir_exists_absolute(c):
 			_dir_kits = c
-			print("KitTextureFactory: equipaciones reales en ", c)
+			if OS.is_stdout_verbose():
+				print("KitTextureFactory: equipaciones reales en ", c)
 			return c
-	print("KitTextureFactory: no encontre recursos/equipaciones, camisetas por color")
+	if OS.is_stdout_verbose():
+		print("KitTextureFactory: no encontre recursos/equipaciones, camisetas por color")
 	return ""
 
 ## Recorta el TORSO de la camiseta real (sin mangas) y lo deja del tamano del
@@ -84,7 +86,8 @@ static func _torso_de_camiseta(fichero: String) -> Image:
 		return null
 	var ruta := dir.path_join(fichero)
 	if not FileAccess.file_exists(ruta):
-		print("KitTextureFactory: falta la equipación ", fichero)
+		if OS.is_stdout_verbose():
+			print("KitTextureFactory: falta la equipación ", fichero)
 		_jersey_cache[fichero] = null
 		return null
 	var src := Image.load_from_file(ruta)
