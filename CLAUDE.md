@@ -587,3 +587,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   medían la CEREMONIA hasta el 19-10 (ya la saltan); en juego real: 493 llamadas, 1,34 M tris.
   Contenedor: Godot 4.7.2 hay que bajarlo. NO usar `pkill -f <patrón>` (mata la propia orden):
   matar por PID.
+- 20-10 VÍDEO REGALADO (faltas por puntos) — APRENDIDO, a implementar en el motor: cada factor de la
+  entrada suma (agarrón 1,4 · por detrás 3,0 · empujón 1,7 · a gran velocidad 2,0 · deslizante 2,6 ·
+  falta profesional/último hombre 2,3 · de pie 1,2 · carga de hombro 0,9 · agresiva 2,4) y la suma
+  decide: falta ≥ 1,0, amarilla ≥ 4,0, roja ≥ 7,0 (por detrás + rápida + profesional = 7,3 → roja).
+  Usa velocidad y posición reales de cada jugador (quién es el último defensor).
+- 20-10 PEDIDOS: (1) faltas por puntos; (2) mejorar el banco con MINI BANCOS por situación;
+  (3) pruebas especiales en las que YO JUEGO de verdad (inyectando el mando) como experimento;
+  (4) valorar C++ (GDExtension) para que el juego corra más rápido. Unreal 5: desaconsejado (explicado).
