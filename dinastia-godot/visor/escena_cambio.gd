@@ -27,6 +27,9 @@ var fase := "acude"            ## acude → palmada → se_va
 var entra_nodo: Node3D
 ## Para las capturas: congela la escena (el motor también se para aparte).
 var congelar := false
+## Carrera de Jugador: el nodo del que sale es del motor; al final se esconde
+## (no se borra) por si algo lo sigue mirando.
+var borrar_al_salir := true
 var _motor: MotorJugable
 var _sale: Node3D
 var _ap_sale: AnimationPlayer
@@ -138,7 +141,10 @@ func _process(_delta: float) -> void:
 			dif2.y = 0.0
 			_poner_anim("caminar")
 			if dif2.length() < 0.2 or _t > DURACION_MAX:
-				_sale.queue_free()
+				if borrar_al_salir:
+					_sale.queue_free()
+				else:
+					_sale.visible = false
 				queue_free()
 				return
 			_sale.position += dif2.normalized() * V_PASO * dt

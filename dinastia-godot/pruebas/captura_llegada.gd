@@ -37,7 +37,7 @@ func _process(_d: float) -> void:
 		var cerca := _motor.pos(due).distance_to(_motor._arco_rival(due)) < 28.0
 		_en_tercio = _en_tercio + 1 if cerca else 0
 	## Un segundo y medio atacando el último tercio: foto.
-	if _en_tercio == 45 or _n > 30 * 400:
+	if _en_tercio == 20 or _n > 1200:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/llegada%s.png" % ("_antes" if OS.get_environment("SIN_LLEGADA") != "" else ""))
-		print("FOTO en el minuto %d (%s)" % [_motor.minuto() if _motor != null else -1, "tercio" if _en_tercio >= 45 else "tope"])
+		print("FOTO en el minuto %d (%s)" % [_motor.minuto() if _motor != null else -1, "tercio" if _en_tercio >= 20 else "tope"])
 		get_tree().quit()
