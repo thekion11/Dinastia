@@ -1046,10 +1046,28 @@ func _process(delta: float) -> void:
 		_radar.actualizar_datos(_en_campo, _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO, pos_ctrl)
 
 
+## LA OLA (20-10-2026, M-044): una vez por partido, como mucho, la grada da la
+## vuelta al estadio. Con el partido decidido (dos goles o más) casi seguro
+## pasada la hora; si no, alguna vez en un rato tranquilo del segundo tiempo.
+var _ola_min := -1
+func _revisar_ola() -> void:
+	if _ola_min == 0 or _motor.estado != "juego":
+		return
+	if _ola_min < 0:
+		var azar := RandomNumberGenerator.new()
+		azar.seed = hash(partido.local.id + "|ola|" + partido.visita.id)
+		_ola_min = azar.randi_range(58, 82) if azar.randf() < 0.35 else 999
+	var m := _motor.minuto()
+	var decidido := absi(partido.goles_local - partido.goles_visita) >= 2 and m >= 62
+	if m >= _ola_min or decidido:
+		_ola_min = 0
+		OlaGrada.lanzar(_raiz3d, "ola")
+
 func _refrescar_marcador() -> void:
 	if _marcador == null:
 		return
 	if _motor != null:
+		_revisar_ola()
 		## El reloj de la transmisión: 45' +2 en el añadido, y el cartel del
 		## cuarto árbitro cuando empieza.
 		var seg := _motor.segundos_anadidos()
@@ -1600,6 +1618,9 @@ func _montar_motor() -> void:
 		## Confeti, bengalas y humo de la hinchada local (M-050).
 		if de_local:
 			FestejoGrada.lanzar(_raiz3d, Color(partido.local.color1), Color(partido.local.color2), "gol")
+			## Y la grada salta en onda desde el fondo donde entró (M-036).
+			var fondo := signf(_balon.position.z) if is_instance_valid(_balon) else 1.0
+			OlaGrada.lanzar(_raiz3d, "onda", Vector3(0, 0, fondo * 62.0))
 		Mando.vibrar(1.0 if (_mi_lado == 0) == de_local else 0.35, 0.6)
 		if _rig != null:
 			_rig.impacto(0.9, 0.7)

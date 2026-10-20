@@ -121,7 +121,7 @@ for i in $(seq 0 $((N - 1))); do
     fallos=$(( fallos + $(echo "$linea" | grep -oE '[0-9]+' | head -1) ))
   fi
 done
-errores=$(limpio "$LOG" | grep -c "^SCRIPT ERROR")
+errores=$(limpio "$LOG" | grep -c "^SCRIPT ERROR\|^SHADER ERROR")
 segundos=$(( $(date +%s) - INICIO ))
 {
   echo "BANCO EN $N PARTES · ${segundos} s · $(limpio "$LOG" | grep -c '^  ok ') comprobaciones"
@@ -144,8 +144,8 @@ fi
 cp "$TMP/resumen.txt" pruebas/ultimo_resultado.txt
 cat "$TMP/resumen.txt"
 if [ "$errores" -gt 0 ]; then
-  echo "AVISO: $errores «SCRIPT ERROR» durante el banco:"
-  limpio "$LOG" | grep -A1 "^SCRIPT ERROR" | head -10
+  echo "AVISO: $errores «SCRIPT ERROR» o «SHADER ERROR» durante el banco:"
+  limpio "$LOG" | grep -A1 "^SCRIPT ERROR\|^SHADER ERROR" | head -10
 fi
 rm -rf "$TMP"
 [ "$fallos" = "0" ] && [ "$errores" = "0" ] && exit 0

@@ -39,6 +39,21 @@ uniform float pelo_desde = 9.0;
 // la cabeza. 9.0 = sin límite (las mallas de mentira).
 uniform float lado_max = 9.0;
 
+// LA OLA Y LA ONDA (20-10-2026, M-036/044). Las pone `OlaGrada` mientras duran
+// (fuera de ese rato valen -1 y no cuestan nada):
+//   ola: la ola de toda la vida, que da la vuelta al estadio; cada hincha se
+//        pone de pie y levanta los brazos cuando le pasa el frente.
+//   onda: en un gol, la grada salta en un anillo que se abre desde un punto.
+uniform float ola_edad = -1.0;
+uniform float ola_vel = 0.55;       // radianes por segundo (≈11 s la vuelta)
+uniform float ola_ancho = 0.42;     // radianes de grada en pie a la vez
+uniform float ola_inicio = 0.0;     // ángulo donde arranca
+uniform float ola_vueltas = 2.0;
+uniform float onda_edad = -1.0;
+uniform vec3 onda_centro = vec3(0.0);
+uniform float onda_vel = 24.0;      // metros por segundo
+uniform float onda_ancho = 7.0;
+
 varying float v_alto;
 varying float v_azar;
 varying float v_lado;
@@ -67,6 +82,30 @@ void vertex() {
 	// por encima del umbral, así que salta una minoría en cada momento -que es
 	// lo que pasa en una grada de verdad, no una ola perfecta.
 	VERTEX.y += max(0.0, sin(t * 0.41 + v_azar * 6.28) - 0.86) * 1.1 * peso;
+	// No todos se suman (uno de cada ocho se queda sentado).
+	float se_suma = step(0.12, fract(v_azar * 3.7));
+	if (ola_edad >= 0.0) {
+		float ang = atan(origen.x, origen.z);
+		float d = mod(ang - ola_inicio, 6.2832);
+		float recorrido = ola_edad * ola_vel;
+		float k = recorrido - d + (v_azar - 0.5) * 0.12;
+		if (k >= 0.0 && recorrido < ola_vueltas * 6.2832 + d) {
+			float km = mod(k, 6.2832);
+			float h = km < ola_ancho ? sin(km / ola_ancho * 3.1416) : 0.0;
+			// De pie (todo el cuerpo sube) y los brazos/hombros, más.
+			VERTEX.y += h * se_suma * (0.5 + 0.6 * peso);
+		}
+	}
+	if (onda_edad >= 0.0) {
+		float r = length(origen.xz - onda_centro.xz);
+		float x = onda_edad * onda_vel - r;
+		// Saltan cuando les llega el frente y siguen saltando un rato detrás.
+		if (x > 0.0 && x < onda_ancho * 3.0) {
+			float apaga = 1.0 - x / (onda_ancho * 3.0);
+			float salto = abs(sin((onda_edad * 7.0) + v_azar * 6.28));
+			VERTEX.y += salto * apaga * se_suma * (0.25 + 0.2 * peso);
+		}
+	}
 }
 
 void fragment() {

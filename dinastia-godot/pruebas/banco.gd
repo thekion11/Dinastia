@@ -61,6 +61,7 @@ const SECCIONES := [
 	"_probar_fisica_motor",
 	"_probar_faltas_puntos",
 	"_probar_vallas_led",
+	"_probar_ola_grada",
 	"_probar_dificultad_cpu",
 	"_probar_temporadas",
 	"_probar_economia",
@@ -197,7 +198,7 @@ const GRUPOS := {
 		"_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
 	"estadio": ["_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
 		"_probar_edificio_club", "_probar_personal_estadio", "_probar_interiores_club", "_probar_galeria_club",
-		"_probar_reforma_con_obra", "_probar_guinos_estadio", "_probar_vallas_led"],
+		"_probar_reforma_con_obra", "_probar_guinos_estadio", "_probar_vallas_led", "_probar_ola_grada"],
 	"gestion": ["_probar_finanzas", "_probar_mercado", "_probar_directiva", "_probar_staff", "_probar_obras",
 		"_probar_cantera", "_probar_cesiones", "_probar_negociacion", "_probar_contratos_c9", "_probar_economia",
 		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
@@ -207,7 +208,7 @@ const GRUPOS := {
 }
 
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -3572,6 +3573,33 @@ func _probar_dificultad_cpu() -> void:
 
 ## VALLAS LED EN MULTIMESH (20-10-2026): menos llamadas de dibujo y la misma
 ## animación (anuncios que cambian y el anillo del gol).
+## M-036/044 (20-10): la ola y la onda escriben su reloj en el público y lo apagan.
+func _probar_ola_grada() -> void:
+	print("\n--- La ola y la onda de la grada ---")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var mmi := MultiMeshInstance3D.new()
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://visor/hinchada.gdshader")
+	mmi.material_override = mat
+	raiz.add_child(mmi)
+	var otro := MultiMeshInstance3D.new()
+	otro.material_override = mat
+	raiz.add_child(otro)
+	_comprobar(OlaGrada.materiales(raiz).size() == 1, "ola: el material compartido se cuenta una vez")
+	var ola := OlaGrada.lanzar(raiz, "ola")
+	_comprobar(ola != null and float(mat.get_shader_parameter("ola_edad")) == 0.0, "ola: arranca con el reloj en 0")
+	ola._process(1.5)
+	_comprobar(is_equal_approx(float(mat.get_shader_parameter("ola_edad")), 1.5), "ola: el reloj avanza en el material")
+	ola._process(OlaGrada.DURA_OLA)
+	_comprobar(float(mat.get_shader_parameter("ola_edad")) < 0.0, "ola: al terminar queda apagada (-1)")
+	var onda := OlaGrada.lanzar(raiz, "onda", Vector3(0, 0, 62))
+	_comprobar(onda != null and (mat.get_shader_parameter("onda_centro") as Vector3).z == 62.0, "onda: sale del fondo del gol")
+	onda.free()
+	_comprobar(float(mat.get_shader_parameter("onda_edad")) < 0.0, "onda: si se corta, también se apaga")
+	_comprobar(OlaGrada.lanzar(Node3D.new(), "ola") == null, "ola: sin público no hace nada")
+	raiz.free()
+
 func _probar_vallas_led() -> void:
 	_titulo("VALLAS LED EN MULTIMESH")
 	var raiz := Node3D.new()
