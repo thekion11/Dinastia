@@ -2266,6 +2266,13 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 			if lado == 0.0:
 				lado = 1.0
 			obj = pos(poseedor) + Vector3(lado * 9.0, 0, dir_ataque(bool(p["es_local"])) * 5.0)
+	## LLEGADA AL ÁREA (20-10-2026, más chispa): con el balón de un compañero
+	## en el último tercio, el ataque ocupa el área como en el fútbol de verdad
+	## (antes casi nadie pisaba el área y no había a quién centrar).
+	var zona := _zona_de_llegada(p)
+	if zona != Vector3.INF:
+		obj = zona
+		p["correr"] = true
 	## Los delanteros atacan el espacio a la espalda de la defensa.
 	var linea := _ultima_linea(not bool(p["es_local"]))
 	var dz := dir_ataque(bool(p["es_local"]))
@@ -2278,6 +2285,49 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 	if obj.z * dz > tope:
 		obj.z = tope * dz
 	return obj
+
+## Adónde va `p` cuando su equipo ataca el último tercio: primer palo, punto
+## de penal, segundo palo o frontal según su puesto y el lado del balón.
+## Vector3.INF = sigue con su forma (o no toca llegar).
+static var LLEGADA := OS.get_environment("SIN_LLEGADA") == ""
+
+func _zona_de_llegada(p: Dictionary) -> Vector3:
+	if not LLEGADA or poseedor.is_empty() or poseedor == p or bool(poseedor["es_local"]) != bool(p["es_local"]):
+		return Vector3.INF
+	var arco := _arco_rival(p)
+	var pb := pos(poseedor)
+	if pb.distance_to(arco) > 32.0:
+		return Vector3.INF
+	## Los dos apoyos cercanos siguen ofreciéndose al portador.
+	if pos(p).distance_to(pb) < 9.0:
+		return Vector3.INF
+	var dz := dir_ataque(bool(p["es_local"]))
+	var lado := signf(pb.x) if absf(pb.x) > 3.0 else 1.0
+	var rol := _rol(p)
+	var px := pos(p).x
+	match rol:
+		"DC":
+			## Con el balón en la banda, al primer palo; si no, al punto de penal.
+			if absf(pb.x) > 12.0:
+				return Vector3(lado * 3.5, 0, arco.z - dz * 6.5)
+			return Vector3(-lado * 1.5, 0, arco.z - dz * 10.5)
+		"ED", "EI":
+			## El extremo del lado contrario cierra al segundo palo; el del lado
+			## del balón se queda abierto (apoyo o centro).
+			if signf(px) != lado:
+				return Vector3(-lado * 5.0, 0, arco.z - dz * 7.5)
+			return Vector3.INF
+		"MC":
+			## Solo el más adelantado de los medios llega a la frontal.
+			var mas_adelantado := true
+			for q: Dictionary in jugadores:
+				if q != p and bool(q["es_local"]) == bool(p["es_local"]) and _rol(q) == "MC" \
+						and (pos(q).z - pos(p).z) * dz > 0.0:
+					mas_adelantado = false
+					break
+			if mas_adelantado:
+				return Vector3(-lado * 4.0, 0, arco.z - dz * 17.0)
+	return Vector3.INF
 
 ## La línea del último defensor (sin el portero) del equipo `local`.
 func _ultima_linea(local: bool) -> float:
