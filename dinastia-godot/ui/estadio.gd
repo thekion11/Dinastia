@@ -221,6 +221,8 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	StadiumBuilder.build_pitch(_raiz3d, perfil, club)
 	## La semilla sale del id del club: el mismo recinto siempre.
 	StadiumBuilder.build(_raiz3d, perfil, aforo, ocupacion, club._hash_id(), club)
+	## La piel de la grada, la del país del club de casa (M-034).
+	OlaGrada.piel_de_pais(_raiz3d, club.pais if club != null else "")
 	## LA PANTALLA GIGANTE (22-9-2026, rehecha el 23-9). Ahora se monta SIEMPRE,
 	## haya partido o no: sin partido enseña bienvenida + tabla + goleadores,
 	## que es lo que hace la pantalla de un estadio de verdad un día entre
@@ -996,6 +998,9 @@ func _frenar_destacado() -> void:
 
 func _process(delta: float) -> void:
 	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
+	## La grada sigue el balón con la cabeza (M-049), cada pocos fotogramas.
+	if Engine.get_process_frames() % 4 == 0 and is_instance_valid(_balon):
+		OlaGrada.mirar(_raiz3d, _balon.global_position)
 	_escalar_rotulos()
 	_despejar_rotulos(delta)
 	if _juego == null or partido == null:
@@ -1520,6 +1525,8 @@ func _anular_gol_motor(de_local: bool, autor: String) -> void:
 	_mostrar_rotulo_suceso("🖥️ " + Idiomas.t("VAR: GOL ANULADO"))
 	var mio := _mi_lado >= 0 and (_mi_lado == 0) == de_local
 	Sonido.toca("abucheo" if mio or _mi_lado < 0 and de_local else "festejo_hinchada_extra")
+	if de_local:
+		OlaGrada.lanzar(_raiz3d, "protesta")
 	if _rig != null:
 		_rig.impacto(0.35, 0.4)
 
@@ -1660,6 +1667,9 @@ func _montar_motor() -> void:
 	_motor.tarjeta.connect(func(id: String, roja: bool, de_local: bool) -> void:
 		_stats.tarjeta(de_local, roja)
 		partido.tarjeta_externa(id, roja)
+		## La grada de casa protesta la tarjeta a uno de los suyos (M-045).
+		if de_local:
+			OlaGrada.lanzar(_raiz3d, "protesta")
 		Mando.vibrar(0.6 if roja else 0.35, 0.3)
 		if _rig != null:
 			_rig.impacto(0.45 if roja else 0.25, 0.4))
