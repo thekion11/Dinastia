@@ -1017,6 +1017,12 @@ static func _tm(que: String) -> void:
 
 static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: float, seed_val: int, mi: Club = null) -> void:
 	_tm("")
+	## La ropa de la hinchada, de los colores del CLUB (M-047; antes salía de los
+	## de las butacas). Copia: el perfil del estadio no se toca.
+	if mi != null and not est.has("hincha1"):
+		est = est.duplicate()
+		est["hincha1"] = mi.color1
+		est["hincha2"] = mi.color2
 	_explanada_de_fondo(root)
 	var forma := str(est.get("forma", "cuenco"))
 	var g := geom_de_forma(forma)
@@ -2705,9 +2711,13 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var c2 := Color(str(est.get("asiento2", "#e8e8e8")))
 	## Paleta de ropa de hincha: neutros de siempre + los dos colores del club
 	## para que se lea "hinchada local", no una multitud generica.
-	var colores_hincha := [Color(0.85, 0.85, 0.88), Color(0.15, 0.16, 0.2), c1, c2, c1, c2,
-		Color(0.7, 0.2, 0.2), Color(0.2, 0.3, 0.7), Color(0.45, 0.5, 0.55), Color(0.78, 0.7, 0.45),
-		Color(0.25, 0.5, 0.35), Color(0.55, 0.35, 0.25), Color(0.9, 0.55, 0.2), Color(0.35, 0.4, 0.6)]
+	## M-047 (20-10): unos 6 de cada 10 con la camiseta del club (sus colores,
+	## no los de las butacas); el resto, ropa de calle.
+	var h1 := Color(str(est.get("hincha1", est.get("asiento1", "#1f5f3d"))))
+	var h2 := Color(str(est.get("hincha2", est.get("asiento2", "#e8e8e8"))))
+	var colores_hincha := [h1, h1, h1, h1, h1, h1, h2, h2, h2, h2,
+		Color(0.85, 0.85, 0.88), Color(0.15, 0.16, 0.2), Color(0.45, 0.5, 0.55), Color(0.78, 0.7, 0.45),
+		Color(0.2, 0.3, 0.7), Color(0.55, 0.35, 0.25), Color(0.25, 0.5, 0.35)]
 	var hinchas_xf: Array[Transform3D] = []
 	var hinchas_col: Array[Color] = []
 	var det_xf: Array[Transform3D] = []

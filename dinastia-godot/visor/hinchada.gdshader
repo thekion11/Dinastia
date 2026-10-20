@@ -53,6 +53,15 @@ uniform float onda_edad = -1.0;
 uniform vec3 onda_centro = vec3(0.0);
 uniform float onda_vel = 24.0;      // metros por segundo
 uniform float onda_ancho = 7.0;
+// LA PROTESTA (M-045): todos de pie un par de segundos, agitando los brazos
+// (tarjeta a uno de casa, gol anulado por el VAR).
+uniform float protesta_edad = -1.0;
+// SIGUEN EL BALÓN CON LA CABEZA (M-049): la vista escribe dónde está; 0 = quietos.
+uniform vec3 balon_pos = vec3(0.0);
+uniform float mira_balon = 0.0;
+// LA PIEL SEGÚN EL PAÍS DEL CLUB (M-034): la mezcla clara→oscura se eleva a esta
+// potencia (más alto = más pieles claras). 1 = reparto parejo, el de antes.
+uniform float piel_sesgo = 1.0;
 
 varying float v_alto;
 varying float v_azar;
@@ -96,6 +105,23 @@ void vertex() {
 			VERTEX.y += h * se_suma * (0.5 + 0.6 * peso);
 		}
 	}
+	if (protesta_edad >= 0.0) {
+		float env = smoothstep(0.0, 0.4, protesta_edad) * (1.0 - smoothstep(2.2, 3.0, protesta_edad));
+		float agita = 0.5 + 0.5 * sin(protesta_edad * 9.0 + v_azar * 6.28);
+		VERTEX.y += env * se_suma * (0.42 + peso * 0.25 * agita);
+		VERTEX.x += env * se_suma * peso * 0.06 * sin(protesta_edad * 11.0 + v_azar * 9.0);
+	}
+	if (mira_balon > 0.0 && VERTEX.y > cuello_desde - 0.04) {
+		// Hacia dónde queda el balón en el espacio del propio hincha (mira a +Z).
+		vec3 hacia = inverse(mat3(MODEL_MATRIX)) * (balon_pos - origen);
+		float giro = clamp(atan(hacia.x, hacia.z), -0.7, 0.7) * mira_balon;
+		// Gira la cabeza sobre su propio eje (y un poco los hombros, desde abajo).
+		float k = smoothstep(cuello_desde - 0.04, cuello_hasta, VERTEX.y);
+		float a = giro * k;
+		float c = cos(a);
+		float sn = sin(a);
+		VERTEX.xz = vec2(c * VERTEX.x + sn * VERTEX.z, -sn * VERTEX.x + c * VERTEX.z);
+	}
 	if (onda_edad >= 0.0) {
 		float r = length(origen.xz - onda_centro.xz);
 		float x = onda_edad * onda_vel - r;
@@ -110,7 +136,7 @@ void vertex() {
 
 void fragment() {
 	vec3 ropa = COLOR.rgb;
-	vec3 piel = mix(piel_clara, piel_oscura, v_azar);
+	vec3 piel = mix(piel_clara, piel_oscura, pow(v_azar, piel_sesgo));
 	float cab = step(v_lado, lado_max);
 	vec3 color = mix(ropa, piel, smoothstep(cuello_desde, cuello_hasta, v_alto) * cab);
 	// Pelo: negro, castaño, rubio o canoso, según el mismo azar del hincha;

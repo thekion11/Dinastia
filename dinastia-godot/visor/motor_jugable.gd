@@ -1775,6 +1775,10 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	var con_tarjeta := total >= UMBRAL_AMARILLA or _falta_tactica
 	ultima_falta = {"puntos": total, "factores": pf["factores"], "sancion": "roja" if roja_directa else ("amarilla" if con_tarjeta else "falta")}
 	var eq_inf := 0 if bool(infractor["es_local"]) else 1
+	## M-139 (20-10): una entrada dura (nivel de amarilla o más) deja al
+	## derribado en el suelo y lo atienden: medio minuto más de añadido.
+	if total >= UMBRAL_AMARILLA:
+		_sumar_anadido(0.5)
 	if roja_directa:
 		tarjetas_motor[eq_inf][1] += 1
 	elif con_tarjeta:
@@ -3232,8 +3236,26 @@ func _colocar_saque(delta: float) -> void:
 	## a que todos lleguen (20-10-2026, más chispa: 1,6-1,9 s cada uno).
 	var espera: float = {"centro": 1.0, "banda": 0.8, "puerta": 1.1}.get(tipo, 1.4)
 	var rapido := tipo in ["banda", "puerta"]
+	## GESTIÓN DEL TIEMPO (M-127, 20-10): desde el 75', el equipo de la CPU que
+	## gana se toma su tiempo en cada saque y el que pierde los saca rápido.
+	var ritmo := _ritmo_de_saque(lanzador)
+	if ritmo > 1.0:
+		rapido = false
+	espera *= ritmo
 	if _t_estado > espera and (rapido or _colocados() or _t_estado > espera + 3.0):
 		_ejecutar_saque_ia(lanzador, tipo, lugar)
+
+func _ritmo_de_saque(lanzador: Dictionary) -> float:
+	if lanzador.is_empty() or minuto() < 75 or sin_gestion_tiempo:
+		return 1.0
+	var eq := 0 if bool(lanzador["es_local"]) else 1
+	if eq == control_equipo:
+		return 1.0
+	var dif := int(goles[eq]) - int(goles[1 - eq])
+	return 2.2 if dif > 0 else (0.6 if dif < 0 else 1.0)
+
+## (Para las sondas que miden ritmo sin este efecto.)
+var sin_gestion_tiempo := false
 
 ## ¿Están todos a menos de 3 m de su sitio del saque?
 func _colocados() -> bool:

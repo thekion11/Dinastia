@@ -3569,6 +3569,22 @@ func _probar_dificultad_cpu() -> void:
 	_comprobar(float(cpu["attr"]["pas"]) < puro and motor._tac(false, "presion") == 0, "en Principiante, peor y presiona menos")
 	motor.fijar_dificultad("profesional")
 	_comprobar(is_equal_approx(float(cpu["attr"]["pas"]), puro) and motor._tac(false, "presion") == 1, "Profesional = el motor de siempre")
+	## M-127: gestión del tiempo al final (el que gana tarda, el que pierde corre).
+	motor.control_equipo = -1
+	motor.mitad = 2
+	motor.t = motor.dur_mitad() * 0.85
+	motor.goles = [1, 0]
+	var loc_p: Dictionary = {}
+	var vis_p: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if bool(p["es_local"]) and loc_p.is_empty():
+			loc_p = p
+		elif not bool(p["es_local"]) and vis_p.is_empty():
+			vis_p = p
+	_comprobar(motor.minuto() >= 75 and motor._ritmo_de_saque(loc_p) > 1.0 and motor._ritmo_de_saque(vis_p) < 1.0,
+		"M-127: al %d' el que gana se toma su tiempo y el que pierde saca rápido" % motor.minuto())
+	motor.control_equipo = 0
+	_comprobar(is_equal_approx(motor._ritmo_de_saque(loc_p), 1.0), "M-127: el equipo del usuario no pierde tiempo solo")
 	raiz.queue_free()
 
 ## VALLAS LED EN MULTIMESH (20-10-2026): menos llamadas de dibujo y la misma
@@ -3597,6 +3613,15 @@ func _probar_ola_grada() -> void:
 	_comprobar(onda != null and (mat.get_shader_parameter("onda_centro") as Vector3).z == 62.0, "onda: sale del fondo del gol")
 	onda.free()
 	_comprobar(float(mat.get_shader_parameter("onda_edad")) < 0.0, "onda: si se corta, también se apaga")
+	var pro := OlaGrada.lanzar(raiz, "protesta")
+	_comprobar(pro != null and float(mat.get_shader_parameter("protesta_edad")) == 0.0 and pro._dura == OlaGrada.DURA_PROTESTA, "protesta: de pie unos segundos")
+	pro.free()
+	OlaGrada.mirar(raiz, Vector3(3, 0, -7))
+	_comprobar((mat.get_shader_parameter("balon_pos") as Vector3) == Vector3(3, 0, -7) and float(mat.get_shader_parameter("mira_balon")) == 1.0, "grada: sigue el balón con la cabeza")
+	OlaGrada.piel_de_pais(raiz, "ARG")
+	var s_arg := float(mat.get_shader_parameter("piel_sesgo"))
+	OlaGrada.piel_de_pais(raiz, "BRA")
+	_comprobar(s_arg > float(mat.get_shader_parameter("piel_sesgo")), "grada: la piel depende del país (ARG más clara que BRA)")
 	_comprobar(OlaGrada.lanzar(Node3D.new(), "ola") == null, "ola: sin público no hace nada")
 	raiz.free()
 
@@ -3681,7 +3706,10 @@ func _probar_faltas_puntos() -> void:
 	defensa["vel"] = Vector3(0, 0, d * 7.5)
 	(vis[1]["node"] as Node3D).position = Vector3(-30, 0, -d * 48.0)
 	var antes := motor.jugadores.size()
+	var an0 := float(motor.anadido[motor.mitad - 1]) if motor.mitad >= 1 and motor.anadido.size() >= motor.mitad else -1.0
 	motor._falta(defensa, atacante, 0.25, "", "deslizante")
+	var an1 := float(motor.anadido[motor.mitad - 1]) if an0 >= 0.0 else -1.0
+	_comprobar(an0 >= 0.0 and an1 > an0, "M-139: la entrada dura suma añadido (%.2f → %.2f)" % [an0, an1])
 	_comprobar(String(motor.ultima_falta.get("sancion", "")) == "roja", "se pita roja directa (%s)" % str(motor.ultima_falta))
 	_comprobar(motor.jugadores.size() == antes - 1 or bool(defensa.get("expulsado", false)), "y el infractor se va del campo")
 	raiz.queue_free()

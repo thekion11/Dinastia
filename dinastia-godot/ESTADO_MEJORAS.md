@@ -76,9 +76,9 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
 | M-033 | P1 | Los hinchas comparten malla por pose; sólo cambia color de camiseta | PENDIENTE | el hincha sigue siendo color por instancia + shader por altura (MEGA_AUD_2 §2) |
-| M-034 | P1 | Pelo/piel por azar sin población real | PENDIENTE | piel del hincha por azar (`hinchada.gdshader`), sin tabla por país |
+| M-034 | P1 | Pelo/piel por azar sin población real | HECHO | 20-10: `OlaGrada.PIEL_SESGO` por país del club de casa (24 países) → `piel_sesgo` en `hinchada.gdshader` (DT y Carrera); aproximación, no dato por persona |
 | M-035 | P1 | Sin bufandas/banderas/camisetas del club en la mano | PARCIAL | banda de bufandas y tifo en grada (`StadiumBuilder` «bufandas»/«tifo»); sin mallas en la mano |
-| M-036 | P2 | Animación del público: balanceo uniforme + saltos | PENDIENTE | solo balanceo y saltos aleatorios (`hinchada.gdshader`); sin ola ni onda desde el sector del gol |
+| M-036 | P2 | Animación del público: balanceo uniforme + saltos | HECHO | 20-10: onda de saltos desde el fondo del gol local y la ola (`visor/ola_grada.gd`, uniformes en `hinchada.gdshader`); captura `captura_ola` |
 | M-037 | P2 | Sin sector «barra brava»/torcida con comportamiento diferente (de… | PENDIENTE | sin sector ultra con bengalas/humo |
 | M-038 | P2 | Hinchas sentados con piernas invisibles (se cortan en la cadera) | PENDIENTE | público horneado cortado en la cadera |
 | M-039 | P2 | Tres niveles de detalle; el salto «cerca→medio→lejos» puede verse | PARCIAL | detalle por distancia por tramos de grada (16-10, 2,24→1,72 M tris); sin mezcla por dithering |
@@ -86,12 +86,12 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-041 | P2 | Sin niños, familias ni asistentes en sillas de ruedas | PENDIENTE | sin niños/familias/sillas de ruedas en grada |
 | M-042 | P2 | Ocupación = reputación, no asistencia del partido | PARCIAL | ocupación = asistencia de `Finanzas` (depende del precio); no por sector |
 | M-043 | P2 | Sin diferencia de público por competición (final vs liga) | PENDIENTE | sin decoración especial en finales |
-| M-044 | P2 | Gol local: ceremonia de público única | PENDIENTE | sin variantes de celebración por sector |
-| M-045 | P2 | Sin reacción del público a decisiones (silbidos al árbitro, VAR) | PARCIAL | sonidos de abucheo/silbidos en `Sonido`; sin cambio de pose del público |
+| M-044 | P2 | Gol local: ceremonia de público única | PARCIAL | 20-10: además del confeti/bengalas, onda de saltos desde ese fondo, la ola con el partido decidido y la protesta; falta variar por sector |
+| M-045 | P2 | Sin reacción del público a decisiones (silbidos al árbitro, VAR) | HECHO | 20-10: «protesta» (todos de pie agitando los brazos 3 s) con tarjeta a uno de casa y gol local anulado por el VAR, además del abucheo de `Sonido` |
 | M-046 | P3 | Sin multitudes en accesos, tienda y museo del estadio | PENDIENTE | sin flujo de NPC antes/después del partido |
-| M-047 | P2 | Colores de hincha con 14 tonos (hoy) | PARCIAL | paleta con colores del club + neutros (`StadiumBuilder` l.2667); no 60 % club por tabla |
+| M-047 | P2 | Colores de hincha con 14 tonos (hoy) | HECHO | 20-10: ~6 de cada 10 con los colores del CLUB (`est.hincha1/2` desde `StadiumBuilder.build`; antes eran los de las butacas), resto ropa de calle |
 | M-048 | P2 | Fotógrafos/camarógrafos pocos y repetidos | PARCIAL | `visor/camarografos_siguen.gd` (giran con el balón, uno camina); siguen siendo pocos |
-| M-049 | P2 | Sin aficionados que se levantan/siguen el balón con la cabeza | PENDIENTE | sin rotación de cabeza hacia el balón |
+| M-049 | P2 | Sin aficionados que se levantan/siguen el balón con la cabeza | HECHO | 20-10: cabeza y hombros giran hacia el balón (`balon_pos`/`mira_balon` en `hinchada.gdshader`, `OlaGrada.mirar` cada 4 fotogramas en DT y Carrera); se levantan con la ola/onda/protesta |
 | M-050 | P3 | Sin streamers de papel, confeti ni bengalas | HECHO | 17-10: `FestejoGrada` (confeti con los colores del club + bengalas con humo sobre el público real) en goles del local y en la salida; apagado con motor ligero, MEDIO solo confeti |
 
 ### C. Camisetas, escudos y marcas (M-051 … M-078) · HECHO 2 · PARCIAL 5 · PENDIENTE 21
@@ -156,7 +156,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-101 | P2 | Celebraciones por rasgo (ya) pero sólo 2/3 propias | PARCIAL | carrera al córner y abrazo (`_ia_celebracion`); sin 10 por rasgo ni coreografías |
 | M-102 | P2 | Sin reacciones de banquillo coordinadas | PARCIAL | el banquillo celebra el gol (`ui/estadio.gd` `_banca_celebra`); sin tarjeta/lesión |
 | M-103 | P2 | Lesiones sin animación específica | PARCIAL | clip de dolor (`AnimQuaternius`); sin camilla ni médicos en campo |
-| M-104 | P2 | Cambios de jugador sin animación (entra/sale) | HECHO | 17-10, con motor: cartel LED del cuarto árbitro con los dos dorsales (`CuartoArbitro.levantar_cambio`), el que entra espera en la banda, el que sale camina hasta él, palmada (`chocar_mano`) y se va (`visor/escena_cambio.gd`). Falta en la Carrera de Jugador |
+| M-104 | P2 | Cambios de jugador sin animación (entra/sale) | HECHO | 17-10, con motor: cartel LED del cuarto árbitro con los dos dorsales (`CuartoArbitro.levantar_cambio`), el que entra espera en la banda, el que sale camina hasta él, palmada (`chocar_mano`) y se va (`visor/escena_cambio.gd`). 20-10: también en la Carrera de Jugador (`PartidoJugable._escena_cambio`) |
 | M-105 | P2 | Sin tarjetas con ceremonia de árbitro detallada | PARCIAL | clips de protesta/discutir árbitro en `AnimExtra`; sin protesta enlazada a las tarjetas del motor real |
 | M-106 | P1 | Árbitro con sólo gestos básicos | HECHO | 17-10: en el motor real pita, señala la falta, ventaja de verdad, habla y enseña la tarjeta (cartulina en la mano), penal, córner, saque de puerta, añadido y final (`MotorJugable._gesto_arbitro`) |
 | M-107 | P2 | Asistentes de línea sin carrera real | PARCIAL | los jueces siguen la z del balón (`_mover_arbitros`), no al penúltimo defensor |
@@ -171,8 +171,8 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
 | M-113 | P1 | Sesgo de local (M-01): con N=100 no existe (antes 0,63–0,67,… | HECHO | ✅ 15-10 (sesgo de local corregido) |
-| M-114 | P1 | Teletransportes del balón en sonda (M-02) | PENDIENTE | pendiente en MEGA_AUD_2 §6 (reposiciones del balón) |
-| M-115 | P1 | Giros >720°/s (465) | PARCIAL | giro limitado al conducir (`giro_max`, l.3364); la sonda seguía marcando giros > 720°/s |
+| M-114 | P1 | Teletransportes del balón en sonda (M-02) | HECHO | 19-10: conducción que recoge el balón (toque ≤ 0,25 m), atajada sin salto a las manos; sonda: balón saltando en juego 3 → 1 (PENDIENTES 2.1) |
+| M-115 | P1 | Giros >720°/s (465) | HECHO | 19-10: `_mirar` con `GIRO_RAPIDO` al patear y en filigranas, tope de aceleración `A_MAX`; sonda: giros > 720°/s 3 → 0; `_probar_fisica_motor` en el banco |
 | M-116 | P1 | Sin duelos con contacto (M-03) | HECHO | duelos de hombro, balón dividido y agarrón (`MotorJugable._duelo_*`, 17-10) |
 | M-117 | P1 | Faltas sin lógica de contacto real (sólo azar) | HECHO | faltas por entrada al tobillo/llegar tarde (`_falta`); ~8,8 por partido (17-10) |
 | M-118 | P1 | Fuera de juego sólo por posición en el instante (✅ base) | HECHO | el VAR decide con la posición real (`margen_gol`) y desde el 17-10 dibuja las dos líneas y el margen en cm en el monitor de la sala (`lineas_gol`) |
@@ -180,23 +180,23 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-120 | P2 | Córners con 3 variantes | PARCIAL | receptor/2.º/3.er lanzador en córners (14-10); sin jugadas ensayadas de `CatalogoJugadas` |
 | M-121 | P2 | Tiros libres: barrera simple | PARCIAL | barrera de 4 a 9,15 m fija |
 | M-122 | P2 | Sin saque de banda largo/estratégico | PARCIAL | saque de banda largo del usuario (X); sin atributo |
-| M-123 | P1 | IA: no hay trampa de fuera de juego, cobertura ni basculación (M-04) | PENDIENTE | sin trampa del fuera de juego ni basculación común |
+| M-123 | P1 | IA: no hay trampa de fuera de juego, cobertura ni basculación (M-04) | HECHO | 19-10: `_linea_defensiva` común (recula/sube) y trampa (`tactica.trampa`); con trampa el rival cae en fuera de juego 0,42 → 0,75 por partido |
 | M-124 | P1 | Pressing por zonas sin gatillos | PENDIENTE | sin gatillos de presión |
 | M-125 | P2 | Sin tácticas de medio campo (doble pivote, falso 9) | PENDIENTE | sin roles con comportamiento propio |
 | M-126 | P2 | Cambios de IA por cansancio (60/70/80') fijos | PARCIAL | DT rival cambia en 60/70/80' y ajusta la pizarra según marcador (`_dt_rival`); minutos fijos |
-| M-127 | P2 | Sin gestión de tiempo (perder tiempo, acelerar) | PENDIENTE | sin gestión del tiempo |
+| M-127 | P2 | Sin gestión de tiempo (perder tiempo, acelerar) | HECHO | 20-10: desde el 75' la CPU que gana tarda ×2,2 en cada saque (sin saques rápidos) y la que pierde saca ×0,6 (`_ritmo_de_saque`); el equipo del usuario no |
 | M-128 | P2 | Portero con salidas sólo en mano a mano | PARCIAL | colocación y achique del portero (14-10); sin salidas aéreas |
 | M-129 | P2 | Sin lanzamientos de larga distancia ni centros desde banda con… | PARCIAL | los atributos pesan en el motor (`_atributos`); sin parámetro de precisión por tipo de envío |
 | M-130 | P2 | Controles FC mapeados (65+ combinaciones) sin tutorial interactivo | PENDIENTE | sin modo práctica |
 | M-131 | P2 | Ayudas de asistencia (pase/tiro) con 3 niveles | PARCIAL | ayudas por pieza (asistido/manual, auto/semi/manual) en `Mando`; sin perfiles Arcade/Semi/Manual |
-| M-132 | P2 | Sin repetición manual del usuario | PENDIENTE | sin repetición manual |
+| M-132 | P2 | Sin repetición manual del usuario | HECHO | 20-10: G / Share (`jugar_repeticion`) y botón «⟲ Repetición» en la pausa (`VistaEstadio.repetir_jugada`, últimos 10 s) |
 | M-133 | P1 | Cámara TV sin zoom automático al área | HECHO | `CameraRig._transmision` cierra en área, ocasión y córner (16-10) |
 | M-134 | P2 | Sin cámaras de repetición cinematográficas (grúa, dron) | PARCIAL | cámaras «Dron orbital» y otras en el rig; la repetición no alterna planos |
 | M-135 | P2 | Sin cámara de gol del cuarto árbitro/línea | PENDIENTE | sin cámara de línea de gol |
 | M-136 | P2 | HUD del partido con FC-style indicadores; sin heatmap/estadísticas… | HECHO | `PanelEstadisticas` (T/Select) con mapa de tiros y de calor (16-10); falta mapa de pases |
 | M-137 | P2 | Sin xG ni xA | PARCIAL | xG por remate (`EstadisticasVivo.xg_de`); sin xA |
 | M-138 | P1 | Ritmo del partido ≈ 54 s/s vs 11 s/s (M-07) | HECHO | ritmo corto/normal/largo (2,7/4/6 s por minuto) en el partido del DT |
-| M-139 | P2 | Tiempo añadido con base real pero sin descuentos por lesión visibles | PARCIAL | 17-10: cartel 3D del cuarto árbitro (`CuartoArbitro`); el añadido aún no suma lesiones |
+| M-139 | P2 | Tiempo añadido con base real pero sin descuentos por lesión visibles | HECHO | 17-10: cartel 3D del cuarto árbitro (`CuartoArbitro`; 20-10 a tamaño real); 20-10: cada entrada dura (nivel de amarilla o más) suma medio minuto de atención (`MotorJugable._falta`), además de goles, cambios y expulsiones |
 | M-140 | P2 | Descanso: charla de medio tiempo con opciones; sin vestuario 3D… | PENDIENTE | el descanso vuelve al camarín 2D (`prueba_descanso_3d`); sin cinemática de vestuario |
 | M-141 | P2 | Resumen de partido sin mapa de calor ni valoraciones por jugador… | HECHO | 17-10: `Partido.valoraciones()` (determinista, sin `Azar`) en `ResumenPartido` (mejor del partido en franja dorada + dos columnas) y al final de `PartidoVivo`. OJO (hallazgo): en un partido mirado `_cerrar_notas()` no se llama nunca (solo `simular()`), así que `Jugador.notas`/forma no reciben ese partido; no se tocó (cambiaría el azar de la partida) |
 | M-142 | P2 | Rueda de prensa posterior no enlazada con incidentes del partido | SIN VERIFICAR | no se encontró tema de árbitro/VAR en `Prensa.resolver` |
@@ -208,7 +208,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-148 | P2 | Sin rebotes contra postes/larguero realistas con física propia | PARCIAL | poste y larguero detectados en el motor; rebote sin comprobar |
 | M-149 | P2 | Red del arco rígida | HECHO | 17-10: `red_arco.gdshader` (onda de vértice desde el punto de entrada, sin física); de frente se ve bien, desde la TV es sutil |
 | M-150 | P2 | Sin balones adicionales (calentamiento, reserva) | PENDIENTE | sin balones decorativos |
-| M-151 | P2 | Muro de pruebas: `sonda_fisica` no distingue reposiciones | PENDIENTE | la sonda no separa reposiciones ni está en el banco |
+| M-151 | P2 | Muro de pruebas: `sonda_fisica` no distingue reposiciones | HECHO | 19/20-10: la sonda separa tele/reposiciones y salta la ceremonia; `_probar_fisica_motor` en el banco (velocidad, giros, tirones, teletransportes) |
 | M-152 | P2 | Sin modo de entrenamiento libre (probar controles) | PENDIENTE | sin entrenamiento libre |
 | M-153 | P2 | Sin modo multijugador local | PENDIENTE | sin multijugador local |
 | M-154 | P3 | Sin online | PENDIENTE | fuera de alcance, sin documentar |
