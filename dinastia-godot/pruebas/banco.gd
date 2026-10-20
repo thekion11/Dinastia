@@ -61,6 +61,7 @@ const SECCIONES := [
 	"_probar_fisica_motor",
 	"_probar_faltas_puntos",
 	"_probar_vallas_led",
+	"_probar_dificultad_cpu",
 	"_probar_temporadas",
 	"_probar_economia",
 	"_probar_sala_de_prensa",
@@ -190,7 +191,7 @@ const GRUPOS := {
 	"partido": ["_probar_partidos", "_probar_previa", "_probar_arbitros", "_probar_tactica_en_movimiento",
 		"_probar_puente3d", "_probar_fisica_motor", "_probar_faltas_puntos", "_probar_transmision_y_estadisticas",
 		"_probar_arreglos_partido_motor", "_probar_prorroga_y_penales", "_probar_partido_abandonado", "_probar_tanda_c",
-		"_probar_notas"],
+		"_probar_notas", "_probar_dificultad_cpu"],
 	"guardado": ["_probar_guardado", "_probar_guardado_seguro", "_probar_partido_abandonado", "_probar_repetibilidad"],
 	"ciudad": ["_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
 		"_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
@@ -206,7 +207,7 @@ const GRUPOS := {
 }
 
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -3539,6 +3540,35 @@ func _motor_de_prueba(semilla := 7) -> Array:
 	motor.autopiloto = true
 	motor.preparar(lista, ball, "", semilla)
 	return [motor, raiz, ball]
+
+## DIFICULTAD DE LA CPU (20-10-2026): solo toca al equipo de la CPU, y
+## «profesional» deja el motor como siempre.
+func _probar_dificultad_cpu() -> void:
+	_titulo("DIFICULTAD DE LA CPU")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var raiz: Node3D = r[1]
+	var cpu: Dictionary = {}
+	var mio: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if not bool(p["por"]):
+			if bool(p["es_local"]) and mio.is_empty():
+				mio = p
+			elif not bool(p["es_local"]) and cpu.is_empty():
+				cpu = p
+	var puro := float(cpu["attr_puro"]["pas"])
+	_comprobar(motor.equipo_cpu() == -1 and is_equal_approx(float(cpu["attr"]["pas"]), puro), "sin nadie al mando no hay CPU que ajustar")
+	motor.control_equipo = 0
+	motor.fijar_dificultad("leyenda")
+	_comprobar(motor.equipo_cpu() == 1, "manejando al local, la CPU es la visita")
+	_comprobar(float(cpu["attr"]["pas"]) > puro, "en Leyenda la CPU pasa mejor (%.2f > %.2f)" % [float(cpu["attr"]["pas"]), puro])
+	_comprobar(is_equal_approx(float(mio["attr"]["pas"]), float(mio["attr_puro"]["pas"])), "y tus jugadores no cambian")
+	_comprobar(motor._tac(false, "presion") == 2, "y presiona más")
+	motor.fijar_dificultad("principiante")
+	_comprobar(float(cpu["attr"]["pas"]) < puro and motor._tac(false, "presion") == 0, "en Principiante, peor y presiona menos")
+	motor.fijar_dificultad("profesional")
+	_comprobar(is_equal_approx(float(cpu["attr"]["pas"]), puro) and motor._tac(false, "presion") == 1, "Profesional = el motor de siempre")
+	raiz.queue_free()
 
 ## VALLAS LED EN MULTIMESH (20-10-2026): menos llamadas de dibujo y la misma
 ## animación (anuncios que cambian y el anillo del gol).
