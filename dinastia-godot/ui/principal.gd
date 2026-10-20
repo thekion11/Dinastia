@@ -2809,8 +2809,34 @@ func _avanzar_semana() -> void:
 ## semana durante toda una carrera sería puro ruido en el registro-, en la
 ## misma ranura que ya usa el botón "Guardar" de arriba.
 func _autoguardar_si_toca() -> void:
-	if _autoguardado:
-		Partida.guardar(mundo, RANURA)
+	if _autoguardado and Partida.guardar(mundo, RANURA):
+		_indicador_guardado()
+
+## EL AUTOGUARDADO SE VE (M-301, 20-10): un «💾 Partida guardada» discreto arriba
+## a la derecha que se desvanece solo. Antes se guardaba sin que nadie lo supiera.
+var _ind_guardado: Label
+func _indicador_guardado() -> void:
+	if not is_inside_tree():
+		return
+	if not is_instance_valid(_ind_guardado):
+		_ind_guardado = Label.new()
+		_ind_guardado.name = "IndicadorGuardado"
+		_ind_guardado.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_ind_guardado.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+		_ind_guardado.offset_left = -240.0
+		_ind_guardado.offset_right = -20.0
+		_ind_guardado.offset_top = 62.0
+		_ind_guardado.offset_bottom = 84.0
+		_ind_guardado.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		_ind_guardado.add_theme_font_size_override("font_size", 13)
+		_ind_guardado.add_theme_color_override("font_color", Color(0.75, 0.9, 0.75))
+		_ind_guardado.z_index = 50
+		add_child(_ind_guardado)
+	_ind_guardado.text = "💾 " + Idiomas.t("Partida guardada")
+	_ind_guardado.modulate.a = 1.0
+	var tw := _ind_guardado.create_tween()
+	tw.tween_interval(1.4)
+	tw.tween_property(_ind_guardado, "modulate:a", 0.0, 0.8)
 
 func _jugar_temporada() -> void:
 	if not mundo.temporada_en_curso():

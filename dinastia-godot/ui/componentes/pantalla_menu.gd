@@ -63,7 +63,12 @@ func _montar() -> void:
 	mat.set_shader_parameter("c1", _color(0))
 	mat.set_shader_parameter("c2", _color(1))
 	mat.set_shader_parameter("c3", _color(2))
-	_fondo.material = mat
+	## M-288 (20-10): con el motor ligero (gama baja), fondo de color fijo: el
+	## shader usa TIME y obliga a redibujar la pantalla en cada fotograma.
+	if Calidad.motor_ligero:
+		_fondo.color = _color(1)
+	else:
+		_fondo.material = mat
 	add_child(_fondo)
 	resized.connect(_al_redimensionar)
 
@@ -415,7 +420,7 @@ func _devolver_contenido() -> void:
 	_devolver.clear()
 
 func _al_redimensionar() -> void:
-	if _fondo != null and size.y > 0.0:
+	if _fondo != null and _fondo.material != null and size.y > 0.0:
 		(_fondo.material as ShaderMaterial).set_shader_parameter("aspecto", Vector2(size.x / size.y, 1.0))
 
 func _unhandled_input(e: InputEvent) -> void:

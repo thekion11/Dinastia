@@ -38,7 +38,10 @@ func _ready() -> void:
 	mat.set_shader_parameter("c2", Color("0e1218"))
 	mat.set_shader_parameter("c3", LIMA)
 	mat.set_shader_parameter("aspecto", Vector2(1.78, 1.0))
-	fondo.material = mat
+	if Calidad.motor_ligero:
+		fondo.color = Color("0e1218")
+	else:
+		fondo.material = mat
 	add_child(fondo)
 	_cuerpo = Control.new()
 	_cuerpo.set_anchors_preset(Control.PRESET_FULL_RECT)

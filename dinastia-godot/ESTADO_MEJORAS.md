@@ -365,7 +365,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-285 | P2 | Navegación por mando en menús (panel de controles sí) | PARCIAL | navegación con mando en el panel de controles; no en todos los menús |
 | M-286 | P2 | Sin atajos de teclado documentados globalmente | HECHO | tabla de atajos (`pantalla_opciones.gd` `_pintar_atajos`) |
 | M-287 | P2 | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | PENDIENTE | sin medida de apertura de pantallas |
-| M-288 | P2 | Fondos animados únicos (9) con coste en GPU baja | PENDIENTE | sin fondo estático en motor ligero |
+| M-288 | P2 | Fondos animados únicos (9) con coste en GPU baja | HECHO | 20-10: con el motor ligero los fondos de menú son de color fijo (sin shader con TIME, que obliga a redibujar cada fotograma) y las partículas de fondo bajan a un tercio |
 | M-289 | P2 | Menú lateral con 9 menús; Ciudad/Editar completados; Ajustes sólo… | PENDIENTE | Ajustes sigue con 3 tarjetas (`MenuLateral`) |
 | M-290 | P2 | Tarjetas con dato vivo sólo en algunas (`Menu.dato`) | PARCIAL | `MenuLateral.dato` existe; no todas las tarjetas |
 | M-291 | P2 | Sin buscador global (jugadores, clubes, pantallas) | HECHO | buscador global en la cabecera (`principal.gd` l.587) |
@@ -378,7 +378,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-298 | P2 | Pantalla de carga con consejos (`consejos_carga.py`) | HECHO | consejos en `pantalla_carga.gd`, traducidos |
 | M-299 | P2 | Sin confirmaciones consistentes para acciones destructivas… | PARCIAL | `CuadroDialogo` en despacho/principal; no uniforme en vender/despedir |
 | M-300 | P2 | Sin deshacer en acciones de pizarra | PENDIENTE | sin deshacer en pizarra |
-| M-301 | P2 | Sin guardado automático visible | PARCIAL | autoguardado (`_autoguardar_si_toca`); sin indicador ni ranuras |
+| M-301 | P2 | Sin guardado automático visible | HECHO | 20-10: «💾 Partida guardada» arriba a la derecha tras cada autoguardado (`Principal._indicador_guardado`), en los 9 idiomas; captura `captura_guardado` |
 | M-302 | P2 | Sin tema claro/alto contraste | PENDIENTE | sin tema claro/alto contraste |
 | M-303 | P2 | Cursor/hover sin feedback sonoro consistente en todos los… | PARCIAL | `BotonFx` en todos los botones; pestañas/listas sin sonido |
 | M-304 | P2 | Animaciones de transición entre pantallas desiguales | PARCIAL | `Animar` en 16 archivos; sin sistema común de transición |
@@ -386,7 +386,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-306 | P2 | Sin glosario (términos de fútbol/gestión) | HECHO | pestaña Glosario |
 | M-307 | P2 | Resoluciones: pensado 1280×720–1600×900; sin pruebas en 4:3, 21:9… | PENDIENTE | sin capturas por aspecto |
 | M-308 | P2 | DPI alto: texto del `Label3D` en 3D no escala | PENDIENTE | `pixel_size` fijo |
-| M-309 | P2 | Sin pantalla de créditos/licencias dentro del juego | PENDIENTE | sin pantalla de créditos/licencias |
+| M-309 | P2 | Sin pantalla de créditos/licencias dentro del juego | HECHO | 20-10: Ajustes → Partida → «CRÉDITOS Y LICENCIAS» (`nucleo/creditos.gd`: Godot MIT, Quaternius y Kenney CC0, mocap, MediaPipe Apache 2.0, NASA, audio propio); captura `captura_creditos` |
 | M-310 | P2 | Sin pantalla «Novedades» tras actualizar | PENDIENTE | sin «Novedades» |
 | M-311 | P2 | Sin perfil de jugador (estadísticas globales) | PARCIAL | `PanelMeta` (álbum/museo global); sin perfil de estadísticas |
 | M-312 | P2 | Sin modo «streamer» (ocultar datos sensibles/real) | PARCIAL | ajuste «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`); sin modo streamer |
