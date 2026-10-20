@@ -580,3 +580,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   TRASPASO: `dinastia-godot/PENDIENTES.md` (qué falta, cómo, y qué falta fusionar; respaldos en
   `dinastia-godot/parches_pendientes/`). Mantenerlo al día en cada bloque.
 - 17-10: TODO fusionado a `main` con el PR #7 (pedido del usuario). La revisión automática horaria quedó PAUSADA (pedido).
+- 19/20-10: pidió revisar el avance («dale mejora», «sigue»). HECHO en la rama `ccr-54306f57-jlcywg`
+  (PR abierto el 20-10): línea defensiva común + trampa (M-123), notas de partidos mirados, prueba del
+  bono robusta, física M-114/115 (saques sin patinar, giros continuos, balón sin saltos, tope de
+  aceleración `MotorJugable.A_MAX`=18), ojos hasta 35 m. OJO: `medir_partido` y la sonda de física
+  medían la CEREMONIA hasta el 19-10 (ya la saltan); en juego real: 493 llamadas, 1,34 M tris.
+  Contenedor: Godot 4.7.2 hay que bajarlo. NO usar `pkill -f <patrón>` (mata la propia orden):
+  matar por PID.
