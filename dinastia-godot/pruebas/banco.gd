@@ -172,6 +172,9 @@ func _ready() -> void:
 		var solo := OS.get_environment("BANCO_SOLO")
 		if solo != "" and SECCIONES[i] != solo:
 			continue
+		var grupo := OS.get_environment("BANCO_GRUPO")
+		if grupo != "" and not (GRUPOS.get(grupo, []) as Array).has(SECCIONES[i]):
+			continue
 		var t0 := Time.get_ticks_msec()
 		call(SECCIONES[i])
 		_tiempos.append([Time.get_ticks_msec() - t0, SECCIONES[i]])
@@ -179,6 +182,28 @@ func _ready() -> void:
 
 ## Segundos medidos (15-10-2026) de las secciones lentas; el resto cuenta 0,4 s.
 ## Si una sección se alarga mucho, actualizar con el resumen TIEMPOS del final.
+## MINI BANCOS (20-10-2026): grupos de secciones por situación, para probar
+## solo lo que se tocó en segundos (`herramientas/mini_banco.sh <grupo>`, o
+## BANCO_GRUPO=<grupo>). Antes de SUBIR sigue mandando el banco entero.
+const GRUPOS := {
+	"partido": ["_probar_partidos", "_probar_previa", "_probar_arbitros", "_probar_tactica_en_movimiento",
+		"_probar_puente3d", "_probar_fisica_motor", "_probar_faltas_puntos", "_probar_transmision_y_estadisticas",
+		"_probar_arreglos_partido_motor", "_probar_prorroga_y_penales", "_probar_partido_abandonado", "_probar_tanda_c",
+		"_probar_notas"],
+	"guardado": ["_probar_guardado", "_probar_guardado_seguro", "_probar_partido_abandonado", "_probar_repetibilidad"],
+	"ciudad": ["_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
+		"_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
+	"estadio": ["_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
+		"_probar_edificio_club", "_probar_personal_estadio", "_probar_interiores_club", "_probar_galeria_club",
+		"_probar_reforma_con_obra", "_probar_guinos_estadio"],
+	"gestion": ["_probar_finanzas", "_probar_mercado", "_probar_directiva", "_probar_staff", "_probar_obras",
+		"_probar_cantera", "_probar_cesiones", "_probar_negociacion", "_probar_contratos_c9", "_probar_economia",
+		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
+	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
+		"_probar_ascensos", "_probar_temporadas"],
+	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui"],
+}
+
 const COSTES := {
 	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
@@ -1653,7 +1678,10 @@ func _probar_staff() -> void:
 	m.tomar_el_mando(c.id)
 	var s := m.staff
 
+	## Solo la parte del cuerpo técnico (el camarín ya suma desde el primer día).
+	s.aplicar(c)
 	_comprobar(is_equal_approx(c.bonus_ataque, 1.0), "sin staff, los bonificadores estan a uno")
+	m.aplicar_bonificadores()
 	var caja := c.saldo
 	var coste := s.coste_subir("ayudante", c.rep)
 	_comprobar(s.subir("ayudante", c) == "", "se contrata al ayudante de campo")
@@ -3615,6 +3643,13 @@ func _probar_guardado_seguro() -> void:
 	var m := Mundo.new()
 	m.generar(["CHI"], 909)
 	m.tomar_el_mando(m.ligas[0].clubes[2].id)
+	## 20-10: al empezar, tu club ya tiene sus bonificaciones (antes valían 1,0
+	## hasta la primera semana y solo al recargar salían bien).
+	var rec := Partida.desde_instantanea(Partida.instantanea(m))
+	_comprobar(absf(m.mi_club().bonus_ataque - rec.mi_club().bonus_ataque) < 0.0001
+		and absf(m.mi_club().bonus_defensa - rec.mi_club().bonus_defensa) < 0.0001,
+		"bonificaciones del club iguales en vivo y al recargar (%.3f/%.3f vs %.3f/%.3f)" % [
+		m.mi_club().bonus_ataque, m.mi_club().bonus_defensa, rec.mi_club().bonus_ataque, rec.mi_club().bonus_defensa])
 	var n := "__prueba_seguro__"
 	var ruta := Partida.ruta_de(n)
 	Partida.borrar(n)
