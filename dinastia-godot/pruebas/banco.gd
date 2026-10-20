@@ -58,6 +58,7 @@ const SECCIONES := [
 	"_probar_bilbao_solo_local",
 	"_probar_guardado",
 	"_probar_guardado_seguro",
+	"_probar_fisica_motor",
 	"_probar_temporadas",
 	"_probar_economia",
 	"_probar_sala_de_prensa",
@@ -166,6 +167,10 @@ func _ready() -> void:
 		## La carga de la interfaz va en todas: es barata y si falla, mejor saberlo ya.
 		if i > 0 and _parte_de(i, total) != mia:
 			continue
+		## BANCO_SOLO=_probar_x (20-10-2026): solo esa sección (para diagnosticar).
+		var solo := OS.get_environment("BANCO_SOLO")
+		if solo != "" and SECCIONES[i] != solo:
+			continue
 		var t0 := Time.get_ticks_msec()
 		call(SECCIONES[i])
 		_tiempos.append([Time.get_ticks_msec() - t0, SECCIONES[i]])
@@ -174,7 +179,7 @@ func _ready() -> void:
 ## Segundos medidos (15-10-2026) de las secciones lentas; el resto cuenta 0,4 s.
 ## Si una sección se alarga mucho, actualizar con el resumen TIEMPOS del final.
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -3477,6 +3482,69 @@ func _probar_bilbao_solo_local() -> void:
 	_comprobar(extranjeros_despues <= extranjeros_antes,
 		"100 semanas de mercado IA no le suman extranjeros a Bilbao (antes %d, después %d)" % [
 			extranjeros_antes, extranjeros_despues])
+
+## FÍSICA DEL MOTOR SIN PANTALLA (20-10-2026): 40 s de juego con el motor real,
+## medidos como la sonda de física (cada 1/30 s, dos pasos de 1/60). Guarda lo
+## arreglado el 19-10: nadie a más de 10,5 m/s, ningún giro de más de 720°/s,
+## casi ningún tirón > 25 m/s² y el balón sin saltos en juego.
+func _probar_fisica_motor() -> void:
+	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	var a: Club = m.ligas[0].clubes[0]
+	var b: Club = m.ligas[0].clubes[1]
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var sp := PlayerSpawner.new()
+	var lista: Array = []
+	var l := Puente3D.once(a.once())
+	var v := Puente3D.once(b.once())
+	lista.append_array(sp.spawn_team(raiz, l["xi"], l["jugadores"], Puente3D.formacion(a.tactica.formacion), true, Puente3D.kit(a), Puente3D.kit_portero(a)))
+	lista.append_array(sp.spawn_team(raiz, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
+	var ball := StadiumBuilder.spawn_ball(raiz, Vector3(0, 0.11, 0))
+	var motor := MotorJugable.new()
+	raiz.add_child(motor)
+	motor.set_physics_process(false)
+	motor.autopiloto = true
+	motor.preparar(lista, ball, "", 7)
+	var prev := {}
+	var vprev := {}
+	var rprev := {}
+	var bprev := Vector3.INF
+	var c := {"vel": 0, "giro": 0, "tiron": 0, "tele": 0, "muestras": 0}
+	var dt := 1.0 / 30.0
+	for _f in 1200:
+		motor.paso(dt * 0.5)
+		motor.paso(dt * 0.5)
+		for p: Dictionary in motor.jugadores:
+			var nd: Node3D = p["node"]
+			var id := nd.get_instance_id()
+			var pa := nd.position
+			c["muestras"] += 1
+			if prev.has(id):
+				var vel: Vector3 = (pa - prev[id]) / dt
+				vel.y = 0.0
+				if vel.length() > 10.5:
+					c["vel"] += 1
+				if vprev.has(id) and (vel - (vprev[id] as Vector3)).length() / dt > 25.0 and vel.length() < 10.5:
+					c["tiron"] += 1
+				vprev[id] = vel
+			if rprev.has(id) and absf(wrapf(nd.rotation.y - float(rprev[id]), -PI, PI)) / dt > deg_to_rad(720.0):
+				c["giro"] += 1
+			prev[id] = pa
+			rprev[id] = nd.rotation.y
+		var pb := ball.position
+		if bprev != Vector3.INF and pb.distance_to(bprev) > 1.2 and motor.estado == "juego":
+			c["tele"] += 1
+
+		bprev = pb
+	print("   · física: %s" % str(c))
+	_comprobar(motor.minuto() >= 3, "el partido avanzó (minuto %d)" % motor.minuto())
+	_comprobar(int(c["vel"]) == 0, "nadie corre a más de 10,5 m/s (%d)" % c["vel"])
+	_comprobar(int(c["giro"]) == 0, "ningún giro de más de 720°/s (%d)" % c["giro"])
+	_comprobar(float(c["tiron"]) / float(c["muestras"]) < 0.005, "tirones > 25 m/s² por debajo del 0,5 %% (%d de %d)" % [c["tiron"], c["muestras"]])
+	_comprobar(int(c["tele"]) <= 3, "el balón no salta en pleno juego (%d)" % c["tele"])
+	raiz.queue_free()
 
 ## GUARDADO SEGURO (20-10-2026): un guardado roto o a medias no pierde la
 ## partida; se recupera del temporal o de la copia anterior.

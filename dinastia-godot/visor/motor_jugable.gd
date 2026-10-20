@@ -1068,7 +1068,9 @@ func _mover_balon(delta: float) -> void:
 					dir_t.x *= -0.3
 					dir_t = dir_t.normalized()
 				vel_balon = dir_t * empuje
-				balon.position = n.position + fwd * 0.55 + Vector3(0, R, 0)
+				## El toque acerca el balón al pie como mucho 25 cm (antes lo
+				## recolocaba de golpe: saltos de hasta 1,1 m, 20-10-2026).
+				balon.position = balon.position.move_toward(n.position + fwd * 0.55 + Vector3(0, R, 0), 0.25)
 				poseedor["toques"] = int(poseedor.get("toques", 0)) + 1
 			var h := Vector3(vel_balon.x, 0, vel_balon.z)
 			var v := h.length()
