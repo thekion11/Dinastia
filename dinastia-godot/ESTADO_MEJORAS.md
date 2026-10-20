@@ -291,7 +291,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-221 | P2 | Impuestos y derechos de TV simplificados | SIN VERIFICAR | derechos de TV con multiplicador; no se comprobó el reparto por país |
 | M-222 | P2 | Venta de entradas: precio único | PARCIAL | precio único por partido; sin sectores ni precio por rival |
 | M-223 | P2 | Abonos/socios: modelo simple | PARCIAL | socios por temporada (`Reputacion`) y campaña de abonos (`Hinchada`); sin lista de espera |
-| M-224 | P2 | Tienda/merchandising ligado a ventas de camisetas por ídolo | PENDIENTE | sin ventas por jugador estrella |
+| M-224 | P2 | Tienda/merchandising ligado a ventas de camisetas por ídolo | HECHO | 20-10: `Instalaciones.factor_idolo` (la estrella del plantel: con 90 de media, +60 %) multiplica la «Tienda y museo» |
 | M-225 | P2 | `Comercial` zonas de patrocinio manual para el usuario; IA sin… | PENDIENTE | sin noticias de contratos comerciales de IA |
 | M-226 | P2 | Naming del estadio sin historia (renombrar cada contrato) | HECHO | naming con `nombre_viejo` (`Comercial.naming`) |
 | M-227 | P2 | Instalaciones: 19 obras; sin mantenimiento ni desgaste | HECHO | 20-10: `Instalaciones.mantenimiento_del_mes` (0,3 % al mes del valor de cada nivel, escalado con el club) cobrado en el cierre de mes con su movimiento «Mantenimiento de instalaciones» |
@@ -304,7 +304,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-234 | P2 | Maestrías con efecto en partido poco visible | PENDIENTE | maestrías sin registro en el resumen |
 | M-235 | P1 | Lesiones: duración y recaídas ok; sin prevención visible (carga… | PARCIAL | carga y riesgo en `Medico` (l.244-254); indicador por jugador sin confirmar |
 | M-236 | P2 | Vestuario 1.436 líneas con grupos; sin conflictos con… | PENDIENTE | sin discusiones visibles en partido |
-| M-237 | P2 | Capitanías: elección sin votación | PENDIENTE | capitán sin votación |
+| M-237 | P2 | Capitanías: elección sin votación | HECHO | 20-10: `Vestuario.votar_capitan` (veteranía, calidad, moral y voto en bloque de la camarilla); si el club se queda sin cinta, el vestuario vota esa semana y sale la noticia «🗳️ El vestuario elige capitán» |
 | M-238 | P1 | Directiva: objetivos con confianza; despido sin cinemática | HECHO | 17-10: `EscenaDespido` (presidente en 3D con traje vía `PersonajeDT.crear`, diálogo en `CuadroDialogo`, resumen de la etapa y «Ver ofertas de otros clubes»); en `Principal` al emitirse `Directiva.despedido` |
 | M-239 | P2 | Junta/accionistas: sin asambleas jugables | PARCIAL | asamblea en insolvencia/federación; no jugable |
 | M-240 | P2 | `Politica` ficticia (decisión legal): mantener sin real | HECHO | 20-10: `_probar_palabras_prohibidas` revisa 263 archivos (código + narración + traducciones) contra políticos/partidos reales y religiones; el calendario (fechas como el Ramadán) es la única excepción |
@@ -313,7 +313,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-243 | P2 | Redes sociales: seguidores y comentarios; sin bots/trolls/tendencias | PARCIAL | tendencias y hashtags (`Redes.tendencia`); sin trolls |
 | M-244 | P2 | Sin entrevistas en TV con escena 3D variada (existe rueda de… | PENDIENTE | un solo set de rueda de prensa |
 | M-245 | P2 | Federación 999 líneas con reglas; votaciones sin presentación | PARCIAL | votaciones con señales (`Federacion`); pantalla de sesión sin comprobar |
-| M-246 | P2 | `LeyesPais` (cupos) ok; sin visualización de «alineación indebida»… | PENDIENTE | sin aviso de alineación indebida en la pizarra |
+| M-246 | P2 | `LeyesPais` (cupos) ok; sin visualización de «alineación indebida»… | HECHO | 20-10: aviso rojo en la pizarra (`PantallaPlantel._pintar_tactica`) con la infracción y qué pasará (el ayudante corrige / la federación multa); prueba `prueba_alineacion_indebida.tscn` |
 | M-247 | P2 | Competiciones continentales (620 líneas) sin sorteo animado por fases | HECHO | cinemática del bombo para la fase de grupos (`Continental.sorteo_grupos` → `ui/sorteo.gd`) |
 | M-248 | P2 | Mundial de clubes/selecciones (1.012 líneas) con pocos modos | PARCIAL | convocatorias con efecto en el físico (`Selecciones`); sin concentraciones |
 | M-249 | P2 | Hinchada con segmentos; sin rivalidades por barrio | PARCIAL | clásico con incidentes (`Prensa`); sin rivalidades por barrio |
