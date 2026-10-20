@@ -92,11 +92,14 @@ static func crear(root: Node3D, c: Club, animal: String, pos: Vector3, giro_y: f
 
 	## Guantes y patas: lo primero que delata un traje de mascota.
 	var mat_guante := material_pelaje(Color(0.97, 0.97, 0.96) if animal in ["perro", "gato", "oso", "conejo", "mono", "leon"] else pelo.darkened(0.15), "")
+	var extremidades: Array = []
 	for lado in ["l", "r"]:
 		var mano := _pegar(esq, "hand_" + lado, k)
+		extremidades.append(mano)
 		_esf(mano, Vector3(0, 0.075, 0), 0.1, mat_guante, Vector3(1.0, 1.2, 0.9))
 		_cil(mano, Vector3(0, -0.01, 0), Vector3.ZERO, 0.07, 0.05, _mat(c2, 0.8))
 		var pie := _pegar(esq, "foot_" + lado, k)
+		extremidades.append(pie)
 		_esf(pie, Vector3(0, 0.02, 0.06), 0.12, mat_pelo, Vector3(1.0, 0.75, 1.35))
 		for dedo in [-1.0, 0.0, 1.0]:
 			_esf(pie, Vector3(dedo * 0.05, 0.0, 0.17), 0.04, mat_claro)
@@ -108,6 +111,12 @@ static func crear(root: Node3D, c: Club, animal: String, pos: Vector3, giro_y: f
 	nodo.add_child(cola)
 	_cola_de(cola, String(fila[3]), mat_pelo, mat_claro, c2)
 
+	## UNA MALLA POR PARTE (20-10-2026): cada adorno era una pieza con su
+	## llamada de dibujo (y otra para la sombra): la mascota de la banda costaba
+	## ~106 llamadas, como cinco jugadores. Se funden por material dentro de
+	## cada parte que se mueve junta; se ve igual.
+	for raiz_parte: Node3D in [cab, cola] + extremidades:
+		fusionar(raiz_parte)
 	var ctl := MascotaQ.new()
 	ctl.name = "Animador"
 	ctl._ap = d["anim"]
@@ -416,6 +425,52 @@ static func _mat(col: Color, rug: float = 0.7, emision: float = 0.0, alfa: float
 	if alfa < 1.0:
 		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	return m
+
+## Funde todas las mallas que cuelgan de `raiz` (a cualquier profundidad) en
+## una sola, con una superficie por material. Las piezas se quitan.
+static func fusionar(raiz: Node3D) -> MeshInstance3D:
+	if raiz == null:
+		return null
+	var piezas: Array = []
+	for n in raiz.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.mesh != null and mi.visible:
+			piezas.append(mi)
+	if piezas.size() < 2:
+		return null
+	var por_mat := {}
+	for mi: MeshInstance3D in piezas:
+		var rel := _rel(raiz, mi)
+		for sfc in mi.mesh.get_surface_count():
+			var mat: Material = mi.material_override if mi.material_override != null else mi.get_active_material(sfc)
+			if not por_mat.has(mat):
+				var st := SurfaceTool.new()
+				st.begin(Mesh.PRIMITIVE_TRIANGLES)
+				por_mat[mat] = st
+			(por_mat[mat] as SurfaceTool).append_from(mi.mesh, sfc, rel)
+	var am := ArrayMesh.new()
+	for mat: Material in por_mat:
+		var st: SurfaceTool = por_mat[mat]
+		st.commit(am)
+		am.surface_set_material(am.get_surface_count() - 1, mat)
+	for mi: MeshInstance3D in piezas:
+		mi.get_parent().remove_child(mi)
+		mi.queue_free()
+	var out := MeshInstance3D.new()
+	out.name = "Fundida"
+	out.mesh = am
+	raiz.add_child(out)
+	return out
+
+## La transformada de `n` respecto de `raiz` (sin depender de que estén en el árbol).
+static func _rel(raiz: Node3D, n: Node3D) -> Transform3D:
+	var t := Transform3D.IDENTITY
+	var x: Node = n
+	while x != null and x != raiz:
+		if x is Node3D:
+			t = (x as Node3D).transform * t
+		x = x.get_parent()
+	return t
 
 ## Un nodo pegado a un hueso, con la escala del modelo compensada: dentro,
 ## las medidas son metros reales.
