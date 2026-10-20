@@ -2493,7 +2493,9 @@
   "Profesional": "Professional",
   "Clase mundial": "World Class",
   "Leyenda": "Legendary",
-  "Asistencias esperadas (xA)": "Expected assists (xA)"
+  "Asistencias esperadas (xA)": "Expected assists (xA)",
+  "Mantenimiento de instalaciones": "Facilities maintenance",
+  "🚧 Imprevisto en la obra": "🚧 Setback on the works"
  },
  "pt": {
   "Historia": "História",
@@ -4989,7 +4991,9 @@
   "Profesional": "Profissional",
   "Clase mundial": "Classe mundial",
   "Leyenda": "Lenda",
-  "Asistencias esperadas (xA)": "Assistências esperadas (xA)"
+  "Asistencias esperadas (xA)": "Assistências esperadas (xA)",
+  "Mantenimiento de instalaciones": "Manutenção das instalações",
+  "🚧 Imprevisto en la obra": "🚧 Imprevisto na obra"
  },
  "patrones": [
   [
@@ -5651,6 +5655,28 @@
    "🥅 Penals: $1-$2",
    "🥅 Karne: $1-$2",
    "🥅 Penaltılar: $1-$2"
+  ],
+  [
+   "^Obra «(.+)»: se retrasa una semana por lluvias y un permiso que no llegó\\.$",
+   "Works «$1»: one week late because of rain and a permit that never came.",
+   "Obra «$1»: atrasa uma semana por chuvas e uma licença que não chegou.",
+   "Chantier «$1» : une semaine de retard à cause de la pluie et d'un permis qui n'est pas arrivé.",
+   "Cantiere «$1»: una settimana di ritardo per la pioggia e un permesso mai arrivato.",
+   "Baustelle «$1»: eine Woche Verzug wegen Regen und einer Genehmigung, die nicht kam.",
+   "Obra «$1»: s'endarrereix una setmana per les pluges i un permís que no va arribar.",
+   "Budowa «$1»: tydzień opóźnienia przez deszcze i pozwolenie, które nie przyszło.",
+   "«$1» inşaatı: yağmur ve gelmeyen bir izin yüzünden bir hafta gecikti."
+  ],
+  [
+   "^Obra «(.+)»: problemas en los cimientos, cuesta un 8 % más\\.$",
+   "Works «$1»: foundation problems, it costs 8% more.",
+   "Obra «$1»: problemas nas fundações, custa 8 % a mais.",
+   "Chantier «$1» : problèmes de fondations, il coûte 8 % de plus.",
+   "Cantiere «$1»: problemi alle fondamenta, costa l'8 % in più.",
+   "Baustelle «$1»: Probleme mit dem Fundament, sie kostet 8 % mehr.",
+   "Obra «$1»: problemes als fonaments, costa un 8 % més.",
+   "Budowa «$1»: problemy z fundamentami, kosztuje 8 % więcej.",
+   "«$1» inşaatı: temelde sorunlar, %8 daha pahalı."
   ]
  ],
  "fr": {
@@ -8054,7 +8080,9 @@
   "Profesional": "Professionnel",
   "Clase mundial": "Classe mondiale",
   "Leyenda": "Légende",
-  "Asistencias esperadas (xA)": "Passes décisives attendues (xA)"
+  "Asistencias esperadas (xA)": "Passes décisives attendues (xA)",
+  "Mantenimiento de instalaciones": "Entretien des installations",
+  "🚧 Imprevisto en la obra": "🚧 Imprévu sur le chantier"
  },
  "it": {
   "Historia": "Storia",
@@ -10457,7 +10485,9 @@
   "Profesional": "Professionista",
   "Clase mundial": "Classe mondiale",
   "Leyenda": "Leggenda",
-  "Asistencias esperadas (xA)": "Assist attesi (xA)"
+  "Asistencias esperadas (xA)": "Assist attesi (xA)",
+  "Mantenimiento de instalaciones": "Manutenzione delle strutture",
+  "🚧 Imprevisto en la obra": "🚧 Imprevisto nel cantiere"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12860,7 +12890,9 @@
   "Profesional": "Profi",
   "Clase mundial": "Weltklasse",
   "Leyenda": "Legende",
-  "Asistencias esperadas (xA)": "Erwartete Vorlagen (xA)"
+  "Asistencias esperadas (xA)": "Erwartete Vorlagen (xA)",
+  "Mantenimiento de instalaciones": "Instandhaltung der Anlagen",
+  "🚧 Imprevisto en la obra": "🚧 Panne auf der Baustelle"
  },
  "ca": {
   "Historia": "Història",
@@ -15263,7 +15295,9 @@
   "Profesional": "Professional",
   "Clase mundial": "Classe mundial",
   "Leyenda": "Llegenda",
-  "Asistencias esperadas (xA)": "Assistències esperades (xA)"
+  "Asistencias esperadas (xA)": "Assistències esperades (xA)",
+  "Mantenimiento de instalaciones": "Manteniment de les instal·lacions",
+  "🚧 Imprevisto en la obra": "🚧 Imprevist a l'obra"
  },
  "pl": {
   "Club": "Klub",
@@ -17961,7 +17995,9 @@
   "Profesional": "Profesjonalny",
   "Clase mundial": "Klasa światowa",
   "Leyenda": "Legenda",
-  "Asistencias esperadas (xA)": "Oczekiwane asysty (xA)"
+  "Asistencias esperadas (xA)": "Oczekiwane asysty (xA)",
+  "Mantenimiento de instalaciones": "Utrzymanie obiektów",
+  "🚧 Imprevisto en la obra": "🚧 Niespodzianka na budowie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -20659,6 +20695,8 @@
   "Profesional": "Profesyonel",
   "Clase mundial": "Dünya klasında",
   "Leyenda": "Efsane",
-  "Asistencias esperadas (xA)": "Beklenen asistler (xA)"
+  "Asistencias esperadas (xA)": "Beklenen asistler (xA)",
+  "Mantenimiento de instalaciones": "Tesis bakımı",
+  "🚧 Imprevisto en la obra": "🚧 İnşaatta aksilik"
  }
 }

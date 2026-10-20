@@ -95,6 +95,7 @@ const SECCIONES := [
 	"_probar_tanda_c",
 	"_probar_calendario_c13",
 	"_probar_politica_c15",
+	"_probar_palabras_prohibidas",
 	"_probar_historia_c4",
 	"_probar_contratos_c9",
 	"_probar_vida_dt",
@@ -204,11 +205,11 @@ const GRUPOS := {
 		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
 	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
 		"_probar_ascensos", "_probar_temporadas"],
-	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui"],
+	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas"],
 }
 
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -1907,9 +1908,14 @@ func _probar_obras() -> void:
 	_comprobar(o.nivel("cal") == 0, "la obra NO sube el nivel al momento")
 	_comprobar(o.en_obra("cal"), "queda constancia de que hay obra en marcha")
 	_comprobar(o.iniciar("cal", c) != "", "no se puede empezar dos veces la misma obra")
+	var retrasos := 0
 	for s in o.semanas_de("cal"):
 		o.avanzar_semana(c)
-	_comprobar(o.nivel("cal") == 1, "la obra termina en su plazo (%d semanas)" % o.semanas_de("cal"))
+		for t: String in o.ultimos_imprevistos:
+			retrasos += 1 if t.contains("retrasa") else 0
+	for s in retrasos:
+		o.avanzar_semana(c)
+	_comprobar(o.nivel("cal") == 1, "la obra termina en su plazo (%d semanas%s)" % [o.semanas_de("cal"), " + %d de retraso" % retrasos if retrasos > 0 else ""])
 	_comprobar(not o.en_obra("cal"), "y deja de estar en marcha")
 
 	## Y lo que de verdad importa: que se NOTE. Una obra que no mueve un numero
@@ -1944,6 +1950,23 @@ func _probar_obras() -> void:
 		_linea("  %s: %s al mes" % [String(i["concepto"]), _dinero(int(i["monto"]))])
 	_comprobar(ing.size() == 3, "la tienda, el museo y los estacionamientos dan ingresos")
 	_comprobar(total > 0, "y suman de verdad (%s)" % _dinero(total))
+	## M-227: lo construido se mantiene (cuesta cada mes, más cuanto más hay).
+	var mant := o.mantenimiento_del_mes(c.rep)
+	o.niveles["trib"] = 4
+	_comprobar(mant > 0 and o.mantenimiento_del_mes(c.rep) > mant, "el mantenimiento cuesta y crece con lo construido (%s → %s al mes)" % [_dinero(mant), _dinero(o.mantenimiento_del_mes(c.rep))])
+	_comprobar(mant < total * 3, "y no se come lo que rinden las obras (%s vs %s)" % [_dinero(mant), _dinero(total)])
+	## M-228: imprevistos — como mucho uno por obra, y repetibles al recargar.
+	var imp := Instalaciones.new()
+	imp.niveles = o.niveles.duplicate()
+	var hubo := 0
+	for clave: String in Instalaciones.CATALOGO:
+		if imp.nivel(clave) >= imp.maximo(clave):
+			continue
+		imp.obras[clave] = 6
+		for _s in 8:
+			imp.avanzar_semana(c)
+			hubo += imp.ultimos_imprevistos.size()
+	_comprobar(hubo > 0 and hubo <= Instalaciones.CATALOGO.size(), "algunas obras tienen un imprevisto, nunca más de uno (%d)" % hubo)
 
 	## Cada efecto tiene una puerta por la que entra al juego. Si alguna devuelve
 	## siempre lo mismo, esa instalacion no hace nada.
@@ -7535,6 +7558,44 @@ func _probar_calendario_c13() -> void:
 	cal2.desde_dic(dic)
 	_comprobar(cal2.explicadas.has("11 de septiembre"), "se guarda lo que el mentor ya explicó")
 	_comprobar(Calendario.proximas("CHI", 2026, 1, 5).size() == 5, "hay próximas fechas para el calendario")
+
+## M-240 (20-10): la política es ficticia y no se atribuye religión a nadie. Se
+## vigila que no se cuelen políticos o partidos reales ni religiones en los textos
+## del juego (código y narración). El calendario (fiestas como el Ramadán) es la
+## única excepción: habla de fechas, no de personas.
+const PROHIBIDAS_POLITICA := "PSOE|Bolsonaro|Trump|Biden|Boric|Milei|Lula|Macron|Pinochet|Maduro|peronismo|peronista|kirchnerismo|kirchnerista|franquismo|chavismo|chavista"
+const PROHIBIDAS_RELIGION := "católico|católica|musulmán|musulmana|evangélico|evangélica|judío|judía|protestante|budista|ateo|atea"
+func _probar_palabras_prohibidas() -> void:
+	_titulo("M-240: SIN POLÍTICA NI RELIGIÓN REAL EN LOS TEXTOS")
+	var re_pol := RegEx.create_from_string("(?i)\\b(" + PROHIBIDAS_POLITICA + ")\\b")
+	var re_rel := RegEx.create_from_string("(?i)(?<![\\wáéíóúñ])(" + PROHIBIDAS_RELIGION + ")(?![\\wáéíóúñ])")
+	var archivos: Array = []
+	for dir in ["res://nucleo", "res://ui", "res://visor"]:
+		_listar_gd(dir, archivos)
+	archivos.append_array(["res://datos/narracion.json", "res://datos/idiomas_extra.json"])
+	var malos: Array = []
+	for f: String in archivos:
+		if f.ends_with("calendario.gd"):
+			continue
+		var txt := FileAccess.get_file_as_string(f)
+		for r: RegEx in [re_pol, re_rel]:
+			var m := r.search(txt)
+			if m != null:
+				malos.append("%s: %s" % [f.get_file(), m.get_string()])
+	_comprobar(re_rel.search("un delantero Católico") != null and re_pol.search("votó a Trump") != null
+		and re_rel.search("catolicismo") == null, "el detector caza lo prohibido (y no palabras parecidas)")
+	_comprobar(archivos.size() > 100, "se revisan los textos de todo el juego (%d archivos)" % archivos.size())
+	_comprobar(malos.is_empty(), "ningún político, partido ni religión real (%s)" % str(malos))
+
+func _listar_gd(dir: String, out: Array) -> void:
+	var d := DirAccess.open(dir)
+	if d == null:
+		return
+	for f in d.get_files():
+		if f.ends_with(".gd"):
+			out.append(dir + "/" + f)
+	for sub in d.get_directories():
+		_listar_gd(dir + "/" + sub, out)
 
 func _probar_politica_c15() -> void:
 	_titulo("C15: POLÍTICA Y ESTADO (FICTICIA Y NEUTRAL)")
