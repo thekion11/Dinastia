@@ -108,6 +108,21 @@ que el dueño lo pida.
 - Siguiente candidato: los 36 rótulos `Label3D` de las vallas (una llamada cada uno): un solo
   `SubViewport` con todo el anillo de texto, o un atlas de anuncios en la textura de la caja.
 
+### 2.9 Más chispa en el partido (20-10, pedido del dueño)
+- Diagnóstico (`ESCENARIO=diag`, ahora con saques por tipo): 19 % del tiempo en saques (1,6-2,2 s
+  cada uno), 24 % del juego con el balón en el aire, ~20 % en el último tercio, ~0,8 tiros por
+  minuto y equipo (FC ≈ 1,5).
+- HECHO: sorteo de tiro menos conservador (`CHISPA_TIRO` 0,24 → 0,16) y saques de banda/puerta
+  rápidos que no esperan a todos. Medido con 48 partidos por versión (¡con 18 el ruido es ±25 %!):
+  tiros 7,9 → 8,7 (+10 %), goles 1,06 → 1,23, pases igual (~73 %); el mejor sigue ganando.
+- Probado y DESCARTADO: más peso al pase que avanza (`CHISPA_AVANCE` 0,12: más tiros pero peores,
+  menos goles) y decidir antes (`CHISPA_PAUSA` 0,7: menos tiros). Quedan como variables de la sonda.
+- El techo real: llegar al área. Con el ritmo «rápido» (4 min reales) salen ~6 tiros en total.
+  Siguiente paso, si el dueño quiere: más desmarques de ruptura y apoyos en el último tercio
+  (jugadas prehechas) — rediseño de IA, recalibrar con 48+ partidos por cambio.
+- Control de física en el banco cazó al instante un exceso (>10,5 m/s) de los saques rápidos:
+  arreglado (la ayuda nunca pasa del esprint).
+
 ### 2.4 Pedidos del dueño en espera
 - **Vídeo gameplay** (punto 15 de la MEGA AUDITORÍA 2): pausado por el dueño el 17-10.
 - **Reescribir el historial** para bajar el peso del repo (solo binarios viejos, nunca código), después de fusionar a main.
