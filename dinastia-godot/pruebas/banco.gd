@@ -3629,6 +3629,12 @@ func _probar_fisica_motor() -> void:
 
 		bprev = pb
 	print("   · física: %s" % str(c))
+	## Coste de CPU del motor (20-10-2026, para valorar C++): ms por paso.
+	var t0 := Time.get_ticks_usec()
+	for _k in 600:
+		motor.paso(dt * 0.5)
+	var us := float(Time.get_ticks_usec() - t0) / 600.0
+	print("   · motor: %.3f ms por paso de 1/60 s (%.1f %% de un fotograma de 60 fps)" % [us / 1000.0, us / 1000.0 / 16.67 * 100.0])
 	_comprobar(motor.minuto() >= 3, "el partido avanzó (minuto %d)" % motor.minuto())
 	_comprobar(int(c["vel"]) == 0, "nadie corre a más de 10,5 m/s (%d)" % c["vel"])
 	_comprobar(int(c["giro"]) == 0, "ningún giro de más de 720°/s (%d)" % c["giro"])
