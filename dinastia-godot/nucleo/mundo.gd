@@ -2038,6 +2038,10 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	## de verdad cuánto llevas echando raíces y no arrastre el contador del club
 	## anterior.
 	anios_en_club = 0
+	## Otra vez al final (20-10-2026): la llamada de arriba llega antes de que
+	## existan el camarín y los demás sistemas, y tu club jugaba la primera
+	## semana sin sus bonificaciones (al cargar la partida sí las tenía).
+	aplicar_bonificadores()
 	return directiva
 
 ## Sortea los torneos continentales con las plazas de cada pais.

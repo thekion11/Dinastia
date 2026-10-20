@@ -19,6 +19,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   reparto por `COSTES` en banco.gd): 162 s → ~83 s. `BANCO_PARTES=1` = en serie. Al
   final muestra las secciones más lentas; si una crece mucho, actualizar `COSTES`.
   Sección nueva en banco.gd = añadirla a `SECCIONES`.
+  MINI BANCOS (20-10): `herramientas/mini_banco.sh <grupo|_probar_x>` (grupos en `GRUPOS` de banco.gd:
+  partido, guardado, ciudad, estadio, gestion, competicion, textos; 7-30 s). Para probar lo tocado
+  mientras se trabaja; también cazan pruebas que dependen del orden. Antes de SUBIR, el banco entero.
 - (15-10) Lo visual se revisa en FORWARD+, que es lo que ve el jugador de PC: capturas
   con `herramientas/captura.sh res://pruebas/captura_x.tscn` (Forward+ por defecto,
   `--compat` solo para móvil/web/motor ligero; sin GPU necesita
