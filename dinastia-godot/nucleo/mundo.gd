@@ -964,6 +964,10 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 					if sube_tienda and String(ing["concepto"]) == "Tienda y museo":
 						monto = int(round(float(monto) * 1.1))
 					c.mover_saldo(monto)
+				var mant := obras.mantenimiento_del_mes(c.rep)
+				if mant > 0:
+					c.mover_saldo(-mant)
+					_anotar_movimiento("Mantenimiento de instalaciones", -mant)
 				var venta := ingreso_tienda(c)
 				if venta > 0:
 					c.mover_saldo(venta)
@@ -1060,6 +1064,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	if mio_obras != null:
 		for k in obras.avanzar_semana(mio_obras):
 			obra_lista.emit(k)
+		if prensa != null:
+			for txt: String in obras.ultimos_imprevistos:
+				prensa.noticia.emit("🚧 Imprevisto en la obra", txt)
 		## La reforma del diseñador del estadio también es obra.
 		if estadio != null and estadio.avanzar_semana():
 			obra_lista.emit("reforma_estadio")
