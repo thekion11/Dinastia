@@ -117,7 +117,12 @@ que el dueño lo pida.
   tiros 7,9 → 8,7 (+10 %), goles 1,06 → 1,23, pases igual (~73 %); el mejor sigue ganando.
 - Probado y DESCARTADO: más peso al pase que avanza (`CHISPA_AVANCE` 0,12: más tiros pero peores,
   menos goles) y decidir antes (`CHISPA_PAUSA` 0,7: menos tiros). Quedan como variables de la sonda.
-- El techo real: llegar al área. Con el ritmo «rápido» (4 min reales) salen ~6 tiros en total.
+- HECHO (20-10, tarde): LLEGADA AL ÁREA (`MotorJugable._zona_de_llegada`): con el balón de un
+  compañero a menos de 32 m del arco, el 9 va al primer palo o al punto de penal, el extremo del
+  lado contrario al segundo palo y el medio más adelantado a la frontal. 48 partidos con/sin:
+  goles 1,23 → 1,56 (+27 %), tiros 8,7 → 9,4, pases ~72 %; el mejor gana 14 de 24 y pierde 3.
+  Desde antes de la chispa: goles 1,06 → 1,56 (+47 %). `SIN_LLEGADA=1` para comparar.
+- El techo real (antes de la llegada): llegar al área. Con el ritmo «rápido» (4 min reales) salen ~6 tiros en total.
   Siguiente paso, si el dueño quiere: más desmarques de ruptura y apoyos en el último tercio
   (jugadas prehechas) — rediseño de IA, recalibrar con 48+ partidos por cambio.
 - Control de física en el banco cazó al instante un exceso (>10,5 m/s) de los saques rápidos:
