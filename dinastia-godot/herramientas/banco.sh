@@ -17,6 +17,13 @@
 # Código de salida: 0 = «FIN. 0 fallos» y sin errores de script;
 # 1 = fallos o errores de script; 2 = error de sintaxis; 3 = colgado o sin FIN.
 cd "$(dirname "$0")/.." || exit 1
+# M-389 (20-10): un `class_name` nuevo no existe para Godot hasta reimportar.
+# Si hay algún .gd más nuevo que la caché de clases, se reimporta antes.
+CACHE=.godot/global_script_class_cache.cfg
+if [ ! -f "$CACHE" ] || [ -n "$(find nucleo ui visor pruebas -name '*.gd' -newer "$CACHE" -print -quit)" ]; then
+  timeout 600 godot --headless --import --path . > /dev/null 2>&1
+  touch "$CACHE"
+fi
 LOG="${1:-/tmp/banco.txt}"
 SIN_AVANCE="${SIN_AVANCE:-240}"
 NUCLEOS=$(nproc 2>/dev/null || echo 1)

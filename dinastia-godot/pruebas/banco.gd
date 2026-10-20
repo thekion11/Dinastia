@@ -97,6 +97,8 @@ const SECCIONES := [
 	"_probar_politica_c15",
 	"_probar_palabras_prohibidas",
 	"_probar_capitan_votado",
+	"_probar_glifos_idiomas",
+	"_probar_nombres_repetidos",
 	"_probar_historia_c4",
 	"_probar_contratos_c9",
 	"_probar_vida_dt",
@@ -206,11 +208,11 @@ const GRUPOS := {
 		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
 	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
 		"_probar_ascensos", "_probar_temporadas"],
-	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas"],
+	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas", "_probar_glifos_idiomas"],
 }
 
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_capitan_votado": 2.0, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_capitan_votado": 2.0, "_probar_glifos_idiomas": 0.5, "_probar_nombres_repetidos": 2.0, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -3852,6 +3854,44 @@ func _probar_guardado_seguro() -> void:
 	DirAccess.rename_absolute(ruta, ruta + Partida.TEMPORAL)
 	var m3 := Partida.cargar(n)
 	_comprobar(m3 != null and m3.semana == semana1 + 3, "un temporal entero se recupera (semana %d)" % (m3.semana if m3 != null else -1))
+	## M-412 (20-10): GUARDADOS ESTROPEADOS AL AZAR. Se toma un guardado bueno y
+	## se rompe de 40 maneras (bytes cambiados, cortado, cabecera con un tamaño
+	## absurdo), sin copia de respaldo: cargar nunca revienta; o sale la partida
+	## o sale null (y el banco caza cualquier «SCRIPT ERROR» por el camino).
+	Partida.borrar(n)
+	_comprobar(Partida.guardar(m, n), "guardado bueno para estropear")
+	var bueno := FileAccess.get_file_as_bytes(ruta)
+	var az := RandomNumberGenerator.new()
+	az.seed = 412
+	var nulos := 0
+	var cargados := 0
+	for i in 40:
+		var malo := bueno.duplicate()
+		match i % 4:
+			0:
+				for _k in az.randi_range(1, 30):
+					var pos := az.randi_range(0, malo.size() - 1)
+					malo[pos] = az.randi_range(0, 255)
+			1:
+				malo.resize(az.randi_range(0, malo.size() - 1))
+			2:
+				for k in 4:
+					malo[k] = az.randi_range(0, 255)
+			3:
+				var desde := az.randi_range(4, malo.size() - 2)
+				for k in range(desde, mini(desde + 64, malo.size())):
+					malo[k] = 0
+		DirAccess.remove_absolute(ruta + Partida.RESPALDO)
+		var fm := FileAccess.open(ruta, FileAccess.WRITE)
+		fm.store_buffer(malo)
+		fm.close()
+		var mm := Partida.cargar(n)
+		if mm == null:
+			nulos += 1
+		else:
+			cargados += 1
+	Partida.cargada_de_respaldo = false
+	_comprobar(nulos + cargados == 40, "40 guardados estropeados: ninguno revienta (%d no cargan, %d sí)" % [nulos, cargados])
 	Partida.borrar(n)
 	_comprobar(not FileAccess.file_exists(ruta) and not FileAccess.file_exists(ruta + Partida.TEMPORAL)
 		and not FileAccess.file_exists(ruta + Partida.RESPALDO), "borrar quita principal, temporal y copia")
@@ -7605,6 +7645,53 @@ func _probar_capitan_votado() -> void:
 	m.vestuario.semana(2)
 	_comprobar(c.plantilla.filter(func(j: Jugador) -> bool: return j.capitan).size() == 1, "con capitán ya no se vuelve a votar")
 
+## M-335 (20-10): la letra del juego tiene TODOS los caracteres que usan las
+## traducciones (ą ł ż del polaco, ğ ş ı İ del turco, ç à del catalán...). Una
+## letra que falta sale como un cuadrado vacío.
+## M-331 (20-10): con las bolsas de nombres por país, un mundo no se llena de
+## tocayos. Se mide cuántos nombres completos se repiten en tres ligas.
+func _probar_nombres_repetidos() -> void:
+	_titulo("M-331: NOMBRES REPETIDOS EN UN MUNDO")
+	var m := Mundo.new()
+	m.generar(["CHI", "ESP", "BRA"], 331)
+	var vistos := {}
+	var total := 0
+	for l in m.ligas:
+		for c: Club in l.clubes:
+			for j: Jugador in c.plantilla:
+				total += 1
+				vistos[j.nombre] = int(vistos.get(j.nombre, 0)) + 1
+	var rep := 0
+	var peor := ""
+	for k: String in vistos:
+		rep += maxi(0, int(vistos[k]) - 1)
+		if peor == "" or int(vistos[k]) > int(vistos[peor]):
+			peor = k
+	var pct := 100.0 * float(rep) / float(maxi(total, 1))
+	_linea("  %d jugadores, %d nombres repetidos (%.1f %%); el más repetido: %s ×%d" % [total, rep, pct, peor, int(vistos.get(peor, 0))])
+	_comprobar(total > 500, "hay mundo que medir (%d jugadores)" % total)
+	_comprobar(pct < 3.0, "menos de un 3 %% de tocayos (%.1f %%)" % pct)
+	_comprobar(int(vistos.get(peor, 0)) <= 3, "nadie se llama igual que otros tres")
+
+func _probar_glifos_idiomas() -> void:
+	_titulo("M-335: GLIFOS DE LOS 9 IDIOMAS")
+	var fuente: Font = ThemeDB.fallback_font
+	var vistos := {}
+	for idi: String in Idiomas.ORDEN:
+		for v: Variant in (Idiomas._extra.get(idi, {}) as Dictionary).values():
+			for ch in String(v):
+				vistos[ch] = idi
+	var faltan: Array = []
+	for ch: String in vistos:
+		var cp := ch.unicode_at(0)
+		## Emojis y símbolos gráficos los pone la fuente de emojis del sistema.
+		if cp >= 0x2190 or cp < 0x20 or (cp >= 0x200B and cp <= 0x200F):
+			continue
+		if not fuente.has_char(cp):
+			faltan.append("%s (%s)" % [ch, vistos[ch]])
+	_comprobar(vistos.size() > 100, "caracteres distintos en las traducciones: %d" % vistos.size())
+	_comprobar(faltan.is_empty(), "la letra los tiene todos (faltan: %s)" % str(faltan.slice(0, 12)))
+
 func _probar_palabras_prohibidas() -> void:
 	_titulo("M-240: SIN POLÍTICA NI RELIGIÓN REAL EN LOS TEXTOS")
 	var re_pol := RegEx.create_from_string("(?i)\\b(" + PROHIBIDAS_POLITICA + ")\\b")
@@ -7893,6 +7980,13 @@ func _probar_habilidades_en_resultados() -> void:
 ## LA BASE DE LA IA QUE JUEGA Y DEL MANDO (26-9-2026).
 func _probar_motor_libre() -> void:
 	_titulo("IA LIBRE: ACCIONES, MOTOR SIN JUGADAS PREHECHAS Y MANDO")
+	## Siempre con la misma base (la real si está): según lo que corriera antes
+	## en el mismo proceso, el mundo salía con la ficticia y otro club era «el
+	## más fuerte» (20-10: con la ficticia, este prototipo da 12,5 goles de media;
+	## ver PENDIENTES, M-392: `MotorLibre` no se usa en el juego).
+	var base_antes := Datos.base_real
+	if Datos.hay_pack_real():
+		Datos.usar_base_real(true)
 	var m := Mundo.new()
 	m.generar(["CHI"], 777)
 	var cl: Array = m.ligas[0].clubes.duplicate()
@@ -7977,6 +8071,8 @@ func _probar_motor_libre() -> void:
 		if bt != "" and not Mando.MAPA.has(bt):
 			botones_catalogo.append(bt)
 	_comprobar(botones_catalogo.is_empty(), "cada botón del catálogo existe en el mapa del mando %s" % str(botones_catalogo))
+	if Datos.hay_pack_real():
+		Datos.usar_base_real(base_antes)
 
 ## EL PORTAFOLIO DE FÚTBOL (26-9-2026): cuántos de cada familia hay, que
 ## existan en la librería de un jugador y que el partido los use.
