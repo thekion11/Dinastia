@@ -61,6 +61,9 @@ func sembrar(anuncios: Array) -> void:
 ## qué anuncio arranca cada uno: si todos empezaran por el primero, el anillo
 ## entero diría lo mismo a la vez y se leería como una pancarta, no como LED.
 func registrar(caja: MeshInstance3D, label: Label3D, idx: int) -> void:
+	## Sin sombra propia (20-10-2026): 36 cajas de 1,1 m se volvían a dibujar en
+	## cada pasada de sombra del sol por un borde que desde la TV no se ve.
+	caja.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var p := {"caja": caja, "label": label, "fase": float(idx) * DESFASE, "ult": -1}
 	_paneles.append(p)
 	_pintar(p, idx)
