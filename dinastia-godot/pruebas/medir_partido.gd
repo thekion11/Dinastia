@@ -70,6 +70,27 @@ func _process(_d: float) -> void:
 		for g in _vista.find_children("*", "Node3D", true, false):
 			if String(g.name).rstrip("0123456789@_") in nombres or String(g.name) in nombres:
 				(g as Node3D).visible = false
+	if _n == CALENTAR and OS.get_environment("SIN_GENTE_FUERA") != "":
+		## SIN_GENTE_FUERA=1 (20-10-2026): esconde a toda persona con esqueleto que
+		## no está en el campo (suplentes, cuerpo técnico, camarógrafos,
+		## recogepelotas, mascota…) para medir cuánto cuestan.
+		var en_campo := {}
+		for f: Dictionary in _vista.get("_en_campo"):
+			if f.get("node") != null:
+				en_campo[f["node"]] = true
+		var ocultos := 0
+		for esq in _vista.find_children("*", "Skeleton3D", true, false):
+			var x: Node = esq
+			var es_campo := false
+			while x != null and x != _vista:
+				if en_campo.has(x):
+					es_campo = true
+					break
+				x = x.get_parent()
+			if not es_campo:
+				(esq as Node3D).visible = false
+				ocultos += 1
+		print("SIN_GENTE_FUERA: %d esqueletos ocultos" % ocultos)
 	if _n == CALENTAR and OS.get_environment("SIN_SOMBRAS") != "":
 		## SIN_SOMBRAS=1 (19-10-2026): cuánto de lo dibujado son las sombras.
 		for l in _vista.find_children("*", "Light3D", true, false):

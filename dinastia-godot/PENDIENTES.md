@@ -103,6 +103,8 @@ que el dueño lo pida.
   capturas `mascotas*.jpg`) → 450; cajas de las vallas sin sombra propia → **432 (−14 %)**.
 - HECHO: las 36 cajas de las vallas en 2 `MultiMesh` con color/brillo por instancia
   (`VallasLed._montar_multimesh`, prueba `_probar_vallas_led`) → **419 (−17 % desde 504)**.
+- Medido (`SIN_GENTE_FUERA=1`): las 34 personas fuera del campo cuestan 65 llamadas y ~100 mil
+  triángulos (~2 por persona: ya es poco; bajar más = quitar gente o sombras, se notaría).
 - Siguiente candidato: los 36 rótulos `Label3D` de las vallas (una llamada cada uno): un solo
   `SubViewport` con todo el anillo de texto, o un atlas de anuncios en la textura de la caja.
 
