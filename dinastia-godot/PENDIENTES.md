@@ -80,6 +80,21 @@ a la marcha de la víctima = «por detrás», velocidad del infractor, barrida, 
 con el arco libre?) y pasar la suma a `_falta`; la roja directa ya tiene `_expulsar`. Pendiente de
 que el dueño lo pida.
 
+### 2.7 Hecho el 20-10 (tarde) y lo aprendido
+- Faltas por puntos EN EL MOTOR (`MotorJugable.puntos_falta`, `PESO_FALTA`, umbrales 4/7, roja
+  directa con motivo en el aviso). Sonda: ≈1 amarilla por ≈4,5 faltas (22 %), rojas raras.
+- Mini bancos: `herramientas/mini_banco.sh <grupo|_probar_x>` (GRUPOS en banco.gd). Al correrlos
+  sueltos salieron 2 bugs reales: el club empezaba sin bonificaciones hasta la 1.ª semana, y
+  contratar personal borraba DT/maestrías/camarín hasta la semana siguiente. Arreglados.
+- CLAUDE JUEGA (`pruebas/claude_juega.tscn`, MITADES=1, SEMILLA=n): partido real manejado con el
+  mando. Encontró: el contador de pases buenos del jugador contaba 4 de 26 (eran 16 de 28; el mando
+  salta al receptor) y el pase asistido ignoraba si la línea estaba tapada. Arreglados. Queda: con
+  el ritmo «rápido» hay ~2 remates por equipo en 90' (equilibrio por decidir).
+- C++ (medido): el motor del partido gasta 0,7 ms por paso (4 % de un fotograma) y TODO el código del
+  partido < 4 ms por fotograma sin dibujar; avanzar una semana ≈ 147 ms (peor 298 ms, 6 ligas).
+  El cuello de botella es DIBUJAR (llamadas, triángulos, sombras), que C++ no acelera. Conclusión:
+  C++/GDExtension NO compensa hoy; reconsiderarlo solo si simular temporadas enteras se hace lento.
+
 ### 2.4 Pedidos del dueño en espera
 - **Vídeo gameplay** (punto 15 de la MEGA AUDITORÍA 2): pausado por el dueño el 17-10.
 - **Reescribir el historial** para bajar el peso del repo (solo binarios viejos, nunca código), después de fusionar a main.
