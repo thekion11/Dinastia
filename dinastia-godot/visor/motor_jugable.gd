@@ -112,6 +112,7 @@ var _offside := {}
 var extra: Dictionary = {}
 var entra_usuario_min := -1
 var usuario_sustituido := false
+var ultimo_cambio: Dictionary = {}   ## {sale, entra, pos} del último `_cambiar`
 var minutos_usuario := 0.0
 var _cambio_hecho := false
 ## El nivel de exigencia del DT para sacarte: con buena relación aguanta más.
@@ -349,6 +350,8 @@ func _cambiar(sale: Dictionary, entra: Dictionary, entra_es_usuario: bool) -> vo
 	(entra["node"] as Node3D).visible = true
 	jugadores[i] = entra
 	var ns: Node3D = sale["node"]
+	## Para la vista (cartel y palmada en la Carrera de Jugador): de dónde sale.
+	ultimo_cambio = {"sale": sale, "entra": entra, "pos": ns.position}
 	ns.position = Vector3(ANCHO + 2.5, 0, 4.0)
 	ns.visible = false
 	if poseedor == sale:
