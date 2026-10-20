@@ -117,6 +117,8 @@ var prob_cambio_extra := 0.0   ## (para las pruebas: 1 = seguro que te cambia)
 var _cambio_decidido := false
 
 var fueras_de_juego := [0, 0]
+## Fueras de juego que cazó la trampa de cada equipo (el que defiende).
+var trampa_cazados := [0, 0]
 var _offside_previo := {}
 ## EL VAR CON LA JUGADA REAL (17-10-2026): en cada pase, cuánto estaba cada
 ## compañero por delante de la línea (m > 0 = adelantado; el juez solo pita
@@ -1407,7 +1409,14 @@ func _pitar_offside(p: Dictionary) -> bool:
 	if p == usuario:
 		stats["fueras_de_juego"] += 1
 	var nombre := String((p.get("jugador", {}) as Dictionary).get("nombre", "un atacante"))
-	aviso.emit("🚩 Fuera de juego de %s" % nombre)
+	## Que se note la pizarra (20-10-2026): si la defensa juega con la trampa,
+	## el aviso lo dice y se cuenta para el resumen.
+	var defiende := 1 if bool(p["es_local"]) else 0
+	if int((tacticas[defiende] as Dictionary).get("trampa", 0)) == 1:
+		trampa_cazados[defiende] += 1
+		aviso.emit("🚩 Fuera de juego de %s: ¡la trampa funciona!" % nombre)
+	else:
+		aviso.emit("🚩 Fuera de juego de %s" % nombre)
 	var lugar := pos(p)
 	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
 	_gesto_arbitro("senalar_falta", 0.9, 1.6, {"mira": lugar - Vector3(0, 0, dir_ataque(bool(p["es_local"])) * 10.0)})

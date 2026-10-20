@@ -649,12 +649,17 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	tarjeta.emit(j, roja, minuto)
 
 ## Posesión, córners y faltas medidos en el césped.
-func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array) -> void:
+func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array, fueras_: Array = []) -> void:
 	posesion_local = clampf(pos_local, 0.0, 100.0)
 	corners_local = int(corners[0])
 	corners_visita = int(corners[1])
 	faltas_local = int(faltas_[0])
 	faltas_visita = int(faltas_[1])
+	## Los fueras de juego del césped (20-10-2026): antes el resumen mostraba
+	## los que sorteaba la simulación, no los que pitó el árbitro del 3D.
+	if fueras_.size() == 2:
+		fueras_local = int(fueras_[0])
+		fueras_visita = int(fueras_[1])
 
 func _probabilidad(ata: float, def_rival: float) -> float:
 	## REALISMO (13-10-2026): con la fórmula vieja un once de media 86 contra
