@@ -96,6 +96,7 @@ const SECCIONES := [
 	"_probar_calendario_c13",
 	"_probar_politica_c15",
 	"_probar_palabras_prohibidas",
+	"_probar_capitan_votado",
 	"_probar_historia_c4",
 	"_probar_contratos_c9",
 	"_probar_vida_dt",
@@ -200,7 +201,7 @@ const GRUPOS := {
 	"estadio": ["_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
 		"_probar_edificio_club", "_probar_personal_estadio", "_probar_interiores_club", "_probar_galeria_club",
 		"_probar_reforma_con_obra", "_probar_guinos_estadio", "_probar_vallas_led", "_probar_ola_grada"],
-	"gestion": ["_probar_finanzas", "_probar_mercado", "_probar_directiva", "_probar_staff", "_probar_obras",
+	"gestion": ["_probar_capitan_votado", "_probar_finanzas", "_probar_mercado", "_probar_directiva", "_probar_staff", "_probar_obras",
 		"_probar_cantera", "_probar_cesiones", "_probar_negociacion", "_probar_contratos_c9", "_probar_economia",
 		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
 	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
@@ -209,7 +210,7 @@ const GRUPOS := {
 }
 
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_capitan_votado": 2.0, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -1950,6 +1951,16 @@ func _probar_obras() -> void:
 		_linea("  %s: %s al mes" % [String(i["concepto"]), _dinero(int(i["monto"]))])
 	_comprobar(ing.size() == 3, "la tienda, el museo y los estacionamientos dan ingresos")
 	_comprobar(total > 0, "y suman de verdad (%s)" % _dinero(total))
+	## M-224: la estrella del plantel vende camisetas.
+	var mejor_j: Jugador = c.plantilla[0]
+	var ovr0 := mejor_j.ovr
+	for j: Jugador in c.plantilla:
+		j.ovr = mini(j.ovr, 74)
+	var tienda_normal := int(o.ingresos_del_mes(c)[0]["monto"])
+	mejor_j.ovr = 90
+	var tienda_crack := int(o.ingresos_del_mes(c)[0]["monto"])
+	mejor_j.ovr = ovr0
+	_comprobar(tienda_crack > tienda_normal * 1.5, "con un crack de 90 la tienda vende más camisetas (%s → %s)" % [_dinero(tienda_normal), _dinero(tienda_crack)])
 	## M-227: lo construido se mantiene (cuesta cada mes, más cuanto más hay).
 	var mant := o.mantenimiento_del_mes(c.rep)
 	o.niveles["trib"] = 4
@@ -7565,6 +7576,35 @@ func _probar_calendario_c13() -> void:
 ## única excepción: habla de fechas, no de personas.
 const PROHIBIDAS_POLITICA := "PSOE|Bolsonaro|Trump|Biden|Boric|Milei|Lula|Macron|Pinochet|Maduro|peronismo|peronista|kirchnerismo|kirchnerista|franquismo|chavismo|chavista"
 const PROHIBIDAS_RELIGION := "católico|católica|musulmán|musulmana|evangélico|evangélica|judío|judía|protestante|budista|ateo|atea"
+## M-237 (20-10): sin capitán, el vestuario vota la cinta.
+func _probar_capitan_votado() -> void:
+	_titulo("M-237: EL VESTUARIO VOTA AL CAPITÁN")
+	var m := Mundo.new()
+	m.generar(["CHI"], 3737)
+	var c: Club = m.ligas[0].clubes[0]
+	m.tomar_el_mando(c.id)
+	for j: Jugador in c.plantilla:
+		j.capitan = false
+	var noticias: Array = []
+	m.vestuario.noticia.connect(func(t: String, b: String) -> void: noticias.append([t, b]))
+	var v := m.vestuario.votar_capitan(c)
+	var g: Jugador = v.get("ganador")
+	var suma := 0
+	for n: int in (v["votos"] as Dictionary).values():
+		suma += n
+	_comprobar(g != null and suma == c.plantilla.size(), "votan todos (%d votos) y sale un ganador" % suma)
+	var mas_jovenes := 0
+	for j: Jugador in c.plantilla:
+		if j.edad < g.edad:
+			mas_jovenes += 1
+	_comprobar(mas_jovenes * 2 >= c.plantilla.size(), "gana alguien con peso: %s, %d años (mayor que la mitad del plantel)" % [g.nombre, g.edad])
+	m.vestuario.semana(1)
+	var capitanes := c.plantilla.filter(func(j: Jugador) -> bool: return j.capitan)
+	_comprobar(capitanes.size() == 1, "tras la semana hay exactamente un capitán")
+	_comprobar(noticias.any(func(x: Array) -> bool: return String(x[0]).contains("capitán")), "y sale la noticia de la votación")
+	m.vestuario.semana(2)
+	_comprobar(c.plantilla.filter(func(j: Jugador) -> bool: return j.capitan).size() == 1, "con capitán ya no se vuelve a votar")
+
 func _probar_palabras_prohibidas() -> void:
 	_titulo("M-240: SIN POLÍTICA NI RELIGIÓN REAL EN LOS TEXTOS")
 	var re_pol := RegEx.create_from_string("(?i)\\b(" + PROHIBIDAS_POLITICA + ")\\b")

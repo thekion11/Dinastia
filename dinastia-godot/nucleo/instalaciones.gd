@@ -238,7 +238,7 @@ func ingresos_del_mes(c: Club) -> Array[Dictionary]:
 	var salida: Array[Dictionary] = []
 	if nivel("com") > 0:
 		salida.append({"concepto": "Tienda y museo",
-			"monto": int(round(float(c.socios) * 0.6 * float(nivel("com"))))})
+			"monto": int(round(float(c.socios) * 0.6 * float(nivel("com")) * factor_idolo(c)))})
 	if nivel("museo") > 0:
 		salida.append({"concepto": "Museo y turismo deportivo",
 			"monto": int(round(float(c.socios) * 0.9 * float(nivel("museo"))))})
@@ -246,6 +246,15 @@ func ingresos_del_mes(c: Club) -> Array[Dictionary]:
 		salida.append({"concepto": "Estacionamientos",
 			"monto": int(round(float(ultima_asistencia) * 0.09 * float(nivel("park"))))})
 	return salida
+
+## LAS CAMISETAS DEL ÍDOLO (M-224, 20-10): la tienda vende más cuanto mejor es la
+## estrella del plantel (la de más media): con un 75 o menos, lo normal; con un
+## 90, un 60 % más. Así fichar a un crack también se nota en la caja.
+static func factor_idolo(c: Club) -> float:
+	var mejor := 0
+	for j: Jugador in c.plantilla:
+		mejor = maxi(mejor, j.ovr)
+	return 1.0 + clampf(float(mejor - 75) * 0.04, 0.0, 0.8)
 
 ## Semanas que se le quitan a una lesión. Se suman el centro médico y el de
 ## rehabilitación, y el gimnasio ayuda a partir del nivel 3.
