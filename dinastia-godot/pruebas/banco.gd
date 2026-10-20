@@ -60,6 +60,7 @@ const SECCIONES := [
 	"_probar_guardado_seguro",
 	"_probar_fisica_motor",
 	"_probar_faltas_puntos",
+	"_probar_vallas_led",
 	"_probar_temporadas",
 	"_probar_economia",
 	"_probar_sala_de_prensa",
@@ -195,7 +196,7 @@ const GRUPOS := {
 		"_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
 	"estadio": ["_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
 		"_probar_edificio_club", "_probar_personal_estadio", "_probar_interiores_club", "_probar_galeria_club",
-		"_probar_reforma_con_obra", "_probar_guinos_estadio"],
+		"_probar_reforma_con_obra", "_probar_guinos_estadio", "_probar_vallas_led"],
 	"gestion": ["_probar_finanzas", "_probar_mercado", "_probar_directiva", "_probar_staff", "_probar_obras",
 		"_probar_cantera", "_probar_cesiones", "_probar_negociacion", "_probar_contratos_c9", "_probar_economia",
 		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
@@ -205,7 +206,7 @@ const GRUPOS := {
 }
 
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -3538,6 +3539,42 @@ func _motor_de_prueba(semilla := 7) -> Array:
 	motor.autopiloto = true
 	motor.preparar(lista, ball, "", semilla)
 	return [motor, raiz, ball]
+
+## VALLAS LED EN MULTIMESH (20-10-2026): menos llamadas de dibujo y la misma
+## animación (anuncios que cambian y el anillo del gol).
+func _probar_vallas_led() -> void:
+	_titulo("VALLAS LED EN MULTIMESH")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var led := VallasLed.new()
+	raiz.add_child(led)
+	led.sembrar([{"texto": "UNO", "fondo": Color(0.9, 0.1, 0.1), "tinta": Color.WHITE},
+		{"texto": "DOS", "fondo": Color(0.1, 0.1, 0.9), "tinta": Color.WHITE}])
+	for i in 4:
+		var caja := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = Vector3(0.25, 1.1, 5.75) if i < 2 else Vector3(5.75, 1.1, 0.25)
+		caja.mesh = bm
+		caja.position = Vector3(i * 6.0, 0.55, 0)
+		led.add_child(caja)
+		var l := Label3D.new()
+		led.add_child(l)
+		led.registrar(caja, l, i)
+	led._process(0.016)
+	var mmis := led.find_children("Paneles*", "MultiMeshInstance3D", false, false)
+	_comprobar(mmis.size() == 2, "laterales y fondos en dos MultiMesh (%d)" % mmis.size())
+	var p0: Dictionary = led._paneles[0]
+	_comprobar(p0.has("mm") and p0.get("caja") == null, "las cajas sueltas se quitan")
+	var antes: Color = p0.get("color", Color.BLACK)
+	led._process(VallasLed.SEG + 0.1)
+	_comprobar(Color(p0.get("color", Color.BLACK)) != antes, "al cambiar el anuncio cambia el color del panel")
+	led.evento(["GOL"], Color(1, 0.8, 0), Color(0, 0.4, 0))
+	led._process(0.4)
+	var c: Color = p0.get("color", Color.BLACK)
+	var club := [Color(1, 0.8, 0).srgb_to_linear(), Color(0, 0.4, 0).srgb_to_linear()]
+	_comprobar(c.a > 0.3 and (Color(c.r, c.g, c.b).is_equal_approx(Color(club[0].r, club[0].g, club[0].b))
+		or Color(c.r, c.g, c.b).is_equal_approx(Color(club[1].r, club[1].g, club[1].b))), "en el gol el panel brilla con los colores del club (%s)" % str(c))
+	raiz.queue_free()
 
 ## FALTAS POR PUNTOS (20-10-2026, vídeo del dueño): jugadas preparadas.
 func _probar_faltas_puntos() -> void:
