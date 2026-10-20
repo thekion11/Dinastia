@@ -598,3 +598,6 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 20-10 PEDIDOS: (1) faltas por puntos; (2) mejorar el banco con MINI BANCOS por situación;
   (3) pruebas especiales en las que YO JUEGO de verdad (inyectando el mando) como experimento;
   (4) valorar C++ (GDExtension) para que el juego corra más rápido. Unreal 5: desaconsejado (explicado).
+- 20-10 HECHO: dificultad de la CPU en el partido 3D (6 niveles, botón en ⚙; ver PENDIENTES 2.10),
+  más chispa (+10 % tiros medido con 48 partidos; con 18 el ruido es ±25 %: medir siempre con muchos),
+  vallas LED en MultiMesh y mascota fundida (504 → 419 llamadas), «Claude juega» (`claude_juega.tscn`).

@@ -2484,7 +2484,15 @@
   "Confianza final": "Final confidence",
   "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "The match was left unfinished (%d-%d at %d'): it was completed from that score.",
   "⟲ Repetición": "⟲ Replay",
-  "Repetir la jugada (últimos 10 s)": "Replay the play (last 10 s)"
+  "Repetir la jugada (últimos 10 s)": "Replay the play (last 10 s)",
+  "🤖 Dificultad de la CPU: ": "🤖 CPU difficulty: ",
+  "CPU: ": "CPU: ",
+  "Principiante": "Beginner",
+  "Amateur": "Amateur",
+  "Semiprofesional": "Semi-Pro",
+  "Profesional": "Professional",
+  "Clase mundial": "World Class",
+  "Leyenda": "Legendary"
  },
  "pt": {
   "Historia": "História",
@@ -4971,7 +4979,15 @@
   "Confianza final": "Confiança final",
   "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "A partida ficou pela metade (%d-%d aos %d'): foi completada a partir desse placar.",
   "⟲ Repetición": "⟲ Replay",
-  "Repetir la jugada (últimos 10 s)": "Repetir a jogada (últimos 10 s)"
+  "Repetir la jugada (últimos 10 s)": "Repetir a jogada (últimos 10 s)",
+  "🤖 Dificultad de la CPU: ": "🤖 Dificuldade da CPU: ",
+  "CPU: ": "CPU: ",
+  "Principiante": "Iniciante",
+  "Amateur": "Amador",
+  "Semiprofesional": "Semiprofissional",
+  "Profesional": "Profissional",
+  "Clase mundial": "Classe mundial",
+  "Leyenda": "Lenda"
  },
  "patrones": [
   [
@@ -8027,7 +8043,15 @@
   "Confianza final": "Confiance finale",
   "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "Le match est resté inachevé (%d-%d à la %d') : il a été terminé à partir de ce score.",
   "⟲ Repetición": "⟲ Ralenti",
-  "Repetir la jugada (últimos 10 s)": "Revoir l'action (10 dernières s)"
+  "Repetir la jugada (últimos 10 s)": "Revoir l'action (10 dernières s)",
+  "🤖 Dificultad de la CPU: ": "🤖 Difficulté de l'IA : ",
+  "CPU: ": "IA : ",
+  "Principiante": "Débutant",
+  "Amateur": "Amateur",
+  "Semiprofesional": "Semi-pro",
+  "Profesional": "Professionnel",
+  "Clase mundial": "Classe mondiale",
+  "Leyenda": "Légende"
  },
  "it": {
   "Historia": "Storia",
@@ -10421,7 +10445,15 @@
   "Confianza final": "Fiducia finale",
   "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "La partita è rimasta a metà (%d-%d al %d'): è stata completata da quel risultato.",
   "⟲ Repetición": "⟲ Replay",
-  "Repetir la jugada (últimos 10 s)": "Rivedi l'azione (ultimi 10 s)"
+  "Repetir la jugada (últimos 10 s)": "Rivedi l'azione (ultimi 10 s)",
+  "🤖 Dificultad de la CPU: ": "🤖 Difficoltà CPU: ",
+  "CPU: ": "CPU: ",
+  "Principiante": "Principiante",
+  "Amateur": "Dilettante",
+  "Semiprofesional": "Semi-pro",
+  "Profesional": "Professionista",
+  "Clase mundial": "Classe mondiale",
+  "Leyenda": "Leggenda"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12815,7 +12847,15 @@
   "Confianza final": "Vertrauen am Ende",
   "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "Das Spiel blieb unvollendet (%d-%d in der %d.): es wurde ab diesem Stand zu Ende gespielt.",
   "⟲ Repetición": "⟲ Wiederholung",
-  "Repetir la jugada (últimos 10 s)": "Szene wiederholen (letzte 10 s)"
+  "Repetir la jugada (últimos 10 s)": "Szene wiederholen (letzte 10 s)",
+  "🤖 Dificultad de la CPU: ": "🤖 CPU-Schwierigkeit: ",
+  "CPU: ": "CPU: ",
+  "Principiante": "Anfänger",
+  "Amateur": "Amateur",
+  "Semiprofesional": "Halbprofi",
+  "Profesional": "Profi",
+  "Clase mundial": "Weltklasse",
+  "Leyenda": "Legende"
  },
  "ca": {
   "Historia": "Història",
@@ -15209,7 +15249,15 @@
   "Confianza final": "Confiança final",
   "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "El partit va quedar a mitges (%d-%d al %d'): s'ha completat des d'aquest marcador.",
   "⟲ Repetición": "⟲ Repetició",
-  "Repetir la jugada (últimos 10 s)": "Repetir la jugada (últims 10 s)"
+  "Repetir la jugada (últimos 10 s)": "Repetir la jugada (últims 10 s)",
+  "🤖 Dificultad de la CPU: ": "🤖 Dificultat de la CPU: ",
+  "CPU: ": "CPU: ",
+  "Principiante": "Principiant",
+  "Amateur": "Amateur",
+  "Semiprofesional": "Semiprofessional",
+  "Profesional": "Professional",
+  "Clase mundial": "Classe mundial",
+  "Leyenda": "Llegenda"
  },
  "pl": {
   "Club": "Klub",
@@ -17898,7 +17946,15 @@
   "Confianza final": "Końcowe zaufanie",
   "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "Mecz został przerwany (%d-%d w %d'): dokończono go od tego wyniku.",
   "⟲ Repetición": "⟲ Powtórka",
-  "Repetir la jugada (últimos 10 s)": "Powtórz akcję (ostatnie 10 s)"
+  "Repetir la jugada (últimos 10 s)": "Powtórz akcję (ostatnie 10 s)",
+  "🤖 Dificultad de la CPU: ": "🤖 Poziom trudności CPU: ",
+  "CPU: ": "CPU: ",
+  "Principiante": "Początkujący",
+  "Amateur": "Amator",
+  "Semiprofesional": "Półprofesjonalny",
+  "Profesional": "Profesjonalny",
+  "Clase mundial": "Klasa światowa",
+  "Leyenda": "Legenda"
  },
  "tr": {
   "Club": "Kulüp",
@@ -20587,6 +20643,14 @@
   "Confianza final": "Son güven",
   "El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.": "Maç yarım kaldı (%d-%d, %d'): o skordan tamamlandı.",
   "⟲ Repetición": "⟲ Tekrar",
-  "Repetir la jugada (últimos 10 s)": "Pozisyonu tekrarla (son 10 sn)"
+  "Repetir la jugada (últimos 10 s)": "Pozisyonu tekrarla (son 10 sn)",
+  "🤖 Dificultad de la CPU: ": "🤖 CPU zorluğu: ",
+  "CPU: ": "CPU: ",
+  "Principiante": "Başlangıç",
+  "Amateur": "Amatör",
+  "Semiprofesional": "Yarı profesyonel",
+  "Profesional": "Profesyonel",
+  "Clase mundial": "Dünya klasında",
+  "Leyenda": "Efsane"
  }
 }

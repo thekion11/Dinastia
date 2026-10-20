@@ -123,6 +123,19 @@ que el dueño lo pida.
 - Control de física en el banco cazó al instante un exceso (>10,5 m/s) de los saques rápidos:
   arreglado (la ayuda nunca pasa del esprint).
 
+### 2.10 Dificultad de la CPU en el partido 3D (20-10, pedido del dueño)
+- HECHO: 6 niveles como FC (`MotorJugable.DIFICULTADES`: Principiante, Amateur, Semiprofesional,
+  Profesional = el motor de siempre, Clase mundial, Leyenda). Solo afecta al equipo de la CPU frente
+  al tuyo (`equipo_cpu()`): calidad de sus jugadores (×0,75 … ×1,12) y presión (−1/+1). Botón
+  «🤖 Dificultad de la CPU» en ⚙ del partido (se guarda en ajustes, `dificultad_cpu`).
+- Medido (sonda `DIFICULTAD=`, 24-48 partidos, mismo once): contra Principiante el rival gana 44 %
+  y la CPU 10 %; contra Leyenda el rival gana 4 % y la CPU 29 % (muchos empates).
+- LECCIÓN: «pensar más con el balón» NO hace a la CPU más torpe: conduce más y tira más (jugando
+  contra Principiante con pausa ×1,5 la CPU tiró 7 veces). Por eso la dificultad no la usa.
+- Jugado por Claude: contra Principiante 2-0 (5 tiros contra 1); contra Leyenda 0-0.
+- Pendiente: la Carrera de Jugador no la usa aún (¡cuidado con ese modo!); la dificultad de la
+  carrera (fácil/normal/leyenda del inicio) sigue tocando solo el dinero.
+
 ### 2.4 Pedidos del dueño en espera
 - **Vídeo gameplay** (punto 15 de la MEGA AUDITORÍA 2): pausado por el dueño el 17-10.
 - **Reescribir el historial** para bajar el peso del repo (solo binarios viejos, nunca código), después de fusionar a main.

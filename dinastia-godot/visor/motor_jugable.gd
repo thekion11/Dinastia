@@ -277,7 +277,9 @@ func _preparar_uno(p: Dictionary) -> void:
 		var dia := 0.94 + 0.0006 * float(jd.get("forma", 60)) + 0.0002 * float(jd.get("moral", 70))
 		for k: String in p["attr"]:
 			p["attr"][k] = float(p["attr"][k]) * dia
+	p["attr_puro"] = (p["attr"] as Dictionary).duplicate()
 	p["attr_base"] = (p["attr"] as Dictionary).duplicate()
+	_dificultad_de(p)
 	p["vel"] = Vector3.ZERO
 	p["aguante"] = 1.0
 	p["enfriar"] = 0.0
@@ -373,10 +375,67 @@ func _atributos(at: Dictionary, ovr: int) -> Dictionary:
 		a[k] = clampf(0.62 + (crudo - 0.62) * 1.6, 0.15, 1.0)
 	return a
 
-## La perilla `k` del equipo (1 = término medio).
+## La perilla `k` del equipo (1 = término medio). La dificultad de la CPU
+## puede subir o bajar su presión.
 func _tac(local: bool, k: String) -> int:
 	var tc: Dictionary = tacticas[0 if local else 1]
-	return int(tc.get(k, 1))
+	var v := int(tc.get(k, 1))
+	if k == "presion" and equipo_cpu() == (0 if local else 1):
+		v = clampi(v + int(DIFICULTADES[dificultad_cpu]["presion"]), 0, 2)
+	return v
+
+# ---------------------------------------------------------------- dificultad
+## DIFICULTAD DE LA CPU (20-10-2026, pedido del dueño). Como en FC: solo toca al
+## equipo que maneja la CPU frente al tuyo. «profesional» es el motor de
+## siempre (todo lo calibrado). Cada nivel cambia la calidad de sus jugadores
+## (`attr`), lo que piensa el que lleva el balón (`pausa`) y la presión.
+## (La «pausa» del portador NO se usa como dificultad: pensar más con el balón
+## hace que conduzca más hasta el área y tire MÁS. Se probó jugando: contra
+## «Principiante» la CPU tiraba 7 veces. Queda en 1,0 para todos.)
+const DIFICULTADES := {
+	"principiante": {"nombre": "Principiante", "attr": 0.75, "pausa": 1.0, "presion": -1},
+	"amateur": {"nombre": "Amateur", "attr": 0.85, "pausa": 1.0, "presion": -1},
+	"semipro": {"nombre": "Semiprofesional", "attr": 0.94, "pausa": 1.0, "presion": 0},
+	"profesional": {"nombre": "Profesional", "attr": 1.0, "pausa": 1.0, "presion": 0},
+	"clase_mundial": {"nombre": "Clase mundial", "attr": 1.06, "pausa": 1.0, "presion": 1},
+	"leyenda": {"nombre": "Leyenda", "attr": 1.12, "pausa": 1.0, "presion": 1},
+}
+const ORDEN_DIFICULTAD := ["principiante", "amateur", "semipro", "profesional", "clase_mundial", "leyenda"]
+var dificultad_cpu := "profesional"
+## Qué equipo es la CPU (0 local, 1 visita). -1 = el contrario al que manejas
+## (si no manejas a nadie, ninguno: CPU contra CPU juegan igual).
+var equipo_cpu_fijo := -1
+
+func equipo_cpu() -> int:
+	if equipo_cpu_fijo >= 0:
+		return equipo_cpu_fijo
+	return 1 - control_equipo if control_equipo >= 0 else -1
+
+## Cambia la dificultad (o recalcula al cambiar quién maneja a quién).
+func fijar_dificultad(nivel: String) -> void:
+	if DIFICULTADES.has(nivel):
+		dificultad_cpu = nivel
+	for p: Dictionary in jugadores + ([extra] if not extra.is_empty() else []):
+		_dificultad_de(p)
+
+func _dificultad_de(p: Dictionary) -> void:
+	var puro: Dictionary = p.get("attr_puro", {})
+	if puro.is_empty():
+		return
+	var f := 1.0
+	if equipo_cpu() == (0 if bool(p["es_local"]) else 1):
+		f = float(DIFICULTADES[dificultad_cpu]["attr"])
+	var base := {}
+	for k: String in puro:
+		base[k] = clampf(float(puro[k]) * f, 0.1, 1.05)
+	p["attr_base"] = base
+	p["attr"] = base.duplicate()
+
+## Lo que piensa el portador de este equipo antes de decidir (por la dificultad).
+func _pausa_dificultad(p: Dictionary) -> float:
+	if equipo_cpu() == (0 if bool(p["es_local"]) else 1):
+		return float(DIFICULTADES[dificultad_cpu]["pausa"])
+	return 1.0
 
 ## La pizarra del club traducida al motor. «Ir a por todo» (`riesgo`) sube un
 ## punto la mentalidad y «cerrar el partido» (`tiempo`) la baja.
@@ -2520,7 +2579,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## Con espacio se conduce más (1 a 1,6 s): en un partido de verdad el balón
 	## pasa más tiempo en los pies que viajando.
 	var holgura := 1.7 if presion > 6.0 else (1.0 if presion > 3.5 else 0.5)
-	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA
+	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA * _pausa_dificultad(p)
 	if OS.get_environment("DEPURAR_PORTADOR") != "" and dist_arco < 40.0:
 		print("PORTADOR %s(%s) a %.0f m del arco, x %.0f, presión %.1f" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", dist_arco, yo.x, presion])
 	## En su propio campo y apretado: despeje, lejos y hacia fuera si hace falta.

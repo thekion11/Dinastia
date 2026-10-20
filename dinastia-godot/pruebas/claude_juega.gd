@@ -29,8 +29,11 @@ func _ready() -> void:
 	cfg.load(CajonAjustes.RUTA)
 	## Se apunta lo que había para dejarlo igual al terminar (las otras pruebas
 	## leen el mismo archivo: con el ritmo «rápido» la del acta fallaba).
-	for k in ["ceremonia", "intro", "ritmo_partido", "control_equipo"]:
+	for k in ["ceremonia", "intro", "ritmo_partido", "control_equipo", "dificultad_cpu"]:
 		_prefs_antes[k] = cfg.get_value(CajonAjustes.SECCION, k, null)
+	## DIFICULTAD=nivel: contra qué CPU juego (20-10-2026).
+	if OS.get_environment("DIFICULTAD") != "":
+		cfg.set_value(CajonAjustes.SECCION, "dificultad_cpu", OS.get_environment("DIFICULTAD"))
 	cfg.set_value(CajonAjustes.SECCION, "ceremonia", false)
 	cfg.set_value(CajonAjustes.SECCION, "intro", false)
 	cfg.set_value(CajonAjustes.SECCION, "ritmo_partido", "rapido")
@@ -45,7 +48,7 @@ func _ready() -> void:
 	add_child(_vista)
 	_vista.abrir(par[0], 0.8, par[1], partido)
 	_motor = _vista.get("_motor")
-	print("CLAUDE JUEGA: %s (yo) vs %s" % [par[0].nombre, par[1].nombre])
+	print("CLAUDE JUEGA: %s (yo) vs %s · CPU %s" % [par[0].nombre, par[1].nombre, VistaEstadio.dificultad_cpu_guardada()])
 
 ## Mantiene apretadas exactamente estas acciones (con su fuerza) y suelta el resto.
 func _mandos(quiero: Dictionary) -> void:

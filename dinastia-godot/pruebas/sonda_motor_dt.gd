@@ -98,6 +98,10 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 	motor.autopiloto = true
 	motor.duracion_mitad = float(OS.get_environment("MITAD")) if OS.get_environment("MITAD") != "" else 240.0
 	motor.tacticas = tac
+	## DIFICULTAD=nivel: la visita es «la CPU» con esa dificultad (20-10-2026).
+	if OS.get_environment("DIFICULTAD") != "":
+		motor.equipo_cpu_fijo = 1
+		motor.dificultad_cpu = OS.get_environment("DIFICULTAD")
 	## TRAMPA=1: la visita juega con la trampa del fuera de juego (M-123).
 	if OS.get_environment("TRAMPA") != "":
 		motor.tacticas = [(tac[0] as Dictionary).duplicate() if tac.size() > 0 else {}, (tac[1] as Dictionary).duplicate() if tac.size() > 1 else {}]
