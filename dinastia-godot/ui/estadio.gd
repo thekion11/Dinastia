@@ -337,6 +337,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_cajon.fila([["⏩ Partido corto", func() -> void: _fijar_ritmo("rapido")],
 			["⏯ Normal", func() -> void: _fijar_ritmo("normal")],
 			["🐢 Largo (FC)", func() -> void: _fijar_ritmo("largo")]])
+		_btn_dificultad = _cajon.boton(_texto_dificultad(), _ciclar_dificultad_cpu)
 		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
 		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
 		## simular el partido entero"). Existía en la pantalla de texto, que
@@ -1528,6 +1529,36 @@ static func ritmo_partido() -> String:
 	cfg.load(CajonAjustes.RUTA)
 	return String(cfg.get_value(CajonAjustes.SECCION, "ritmo_partido", "normal"))
 
+## DIFICULTAD DE LA CPU (20-10-2026): se guarda en los ajustes y vale para el
+## próximo partido; en el actual, al momento.
+static func dificultad_cpu_guardada() -> String:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	var d := String(cfg.get_value(CajonAjustes.SECCION, "dificultad_cpu", "profesional"))
+	return d if MotorJugable.DIFICULTADES.has(d) else "profesional"
+
+func _fijar_dificultad_cpu(nivel: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "dificultad_cpu", nivel)
+	cfg.save(CajonAjustes.RUTA)
+	if _motor != null:
+		_motor.fijar_dificultad(nivel)
+	if _btn_dificultad != null:
+		_btn_dificultad.text = _texto_dificultad()
+	_mostrar_banner_gol(Idiomas.t("CPU: ") + Idiomas.t(String(MotorJugable.DIFICULTADES[nivel]["nombre"])), true)
+
+func _texto_dificultad() -> String:
+	return Idiomas.t("🤖 Dificultad de la CPU: ") + Idiomas.t(String(MotorJugable.DIFICULTADES[dificultad_cpu_guardada()]["nombre"]))
+
+## Pasa al siguiente nivel (vuelve al primero tras «Leyenda»).
+func _ciclar_dificultad_cpu() -> void:
+	var orden: Array = MotorJugable.ORDEN_DIFICULTAD
+	var i := orden.find(dificultad_cpu_guardada())
+	_fijar_dificultad_cpu(String(orden[(i + 1) % orden.size()]))
+
+var _btn_dificultad: Button
+
 func _fijar_ritmo(r: String) -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(CajonAjustes.RUTA)
@@ -1660,6 +1691,8 @@ func _montar_motor() -> void:
 	_nombres_globales = PlayerSpawner.mostrar_nombres
 	if not _pref("nombres_motor", false):
 		_mostrar_nombres(false)
+	## La dificultad de la CPU (20-10-2026): la última elegida.
+	_motor.dificultad_cpu = dificultad_cpu_guardada()
 	## Si jugaste tú el último partido, vuelves a jugar (se recuerda).
 	if _pref("control_equipo", false) and _mi_lado >= 0:
 		_alternar_control_motor.call_deferred()
@@ -1853,6 +1886,7 @@ func _cambio_ia(c: Club, es_local: bool) -> void:
 func _simular_resto_motor() -> void:
 	_motor.autopiloto = true
 	_motor.control_equipo = -1
+	_motor.fijar_dificultad(_motor.dificultad_cpu)
 	_descanso_hecho = true
 	var pasos := 0
 	while _motor.estado != "fin" and pasos < 60 * 3600:
@@ -1880,6 +1914,7 @@ func _alternar_control_motor() -> void:
 	_guardar_pref("control_equipo", activo)
 	_motor.control_equipo = _mi_lado if activo else -1
 	_motor.autopiloto = not activo
+	_motor.fijar_dificultad(_motor.dificultad_cpu)
 	_motor.camara = get_viewport().get_camera_3d() if activo else null
 	if not activo:
 		_motor.usuario = {}
