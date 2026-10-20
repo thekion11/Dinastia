@@ -604,3 +604,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 20-10 PULIDO (pedido: «pulir lo que ya tenemos»): cartel del 4.º árbitro a tamaño real, cambio con
   cartel y palmada también en la Carrera (`PartidoJugable._escena_cambio`), la OLA y la ONDA de la grada
   (`visor/ola_grada.gd` + `hinchada.gdshader`). Los bancos cortan también con «SHADER ERROR».
+- 20-10 PEDIDO: «me interesa más pulir lo de los más de 300 puntos» (ESTADO_MEJORAS.md). HECHA una pasada
+  (sección 0 del documento): HECHO 49 → 94 filas. Bolsas de nombres en `datos/bolsas_nombres.json`
+  (tocayos 10 % → 1 %). Banco: 4 secciones nuevas (palabras prohibidas, capitán votado, glifos, tocayos).
+  OJO: `_probar_motor_libre` dependía de la base que dejaba la prueba anterior (ahora la fija).
+
