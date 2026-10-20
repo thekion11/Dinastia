@@ -9,7 +9,7 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 |---|---|---|---|
 | Todo lo hecho del 14 al 17-10 | `main` | **FUSIONADO el 17-10 con el PR #7** | nada pendiente; lo nuevo que se haga va en la rama y se pasa con otro PR cuando el dueño lo pida |
 | Tanda 2 del TOP 25, mejoras del coche/GPS y caza de bugs del 17-10 | `main` | **fusionado el 17-10 con el PR #8** (pedido del dueño) | nada pendiente |
-| Línea defensiva (M-123), notas de partidos mirados, prueba del bono, física M-114/115, tope de aceleración, ojos de lejos (19/20-10) | rama `ccr-54306f57-jlcywg` | **PR abierto el 20-10** (pedido del dueño) | fusionarlo |
+| Línea defensiva (M-123), notas de partidos mirados, prueba del bono, física M-114/115, tope de aceleración, ojos de lejos, guardado seguro, física en el banco, fueras del acta, repetición manual (19/20-10) | rama `ccr-54306f57-jlcywg` | **PR abierto el 20-10** (pedido del dueño) | fusionarlo |
 
 ## 1.b Hecho en la última tanda (17-10, ya en la rama)
 GPS 2D estilo GTA (`ui/componentes/minimapa_ciudad.gd`: gira con el rumbo, ruta morada al estadio,
@@ -31,7 +31,7 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
 | M-040 | Gente del club y de la ciudad en primeras filas | reutilizar `PeatonQ` horneados en las 2 primeras filas (`StadiumBuilder._montar_horneados`) |
 | M-033 | Variedad de ropa y pelo en hinchas | más variantes horneadas (`herramientas/hornear_publico.gd`) |
 | M-036/044 | Grada que reacciona en onda y la ola | uniformes de tiempo/origen en `hinchada.gdshader` |
-| M-132 | Repetición manual de los últimos 10 s | `Repeticion` ya graba; botón en la pausa |
+| ~~M-132~~ | HECHO 20-10: repetición manual de los últimos 10 s | tecla G / Share (`jugar_repeticion`), botón «⟲ Repetición» en la pausa y fila en el panel de controles (`VistaEstadio.repetir_jugada`) |
 | M-173 | Sonido del motor del coche con RPM y radio con sonidos propios | `AudioStreamGenerator` o muestras propias; sin música con licencia |
 | M-130/152 | Modo práctica de controles FC | campo vacío con el motor y retos por combinación |
 
@@ -67,6 +67,18 @@ Fuente completa: `ESTADO_MEJORAS.md` (470 puntos con su estado + TOP 25) y `COMP
     luego `get_tab_count` sobre instancia liberada (1001 veces), y el juego queda sin pantallas (1282 → 497 nodos).
   · `_perezoso` (Principal), `pintar` y `PantallaMenu._mudar` reciben nodos ya liberados.
   · ~~`BotonFx` conectado varias veces~~ HECHO: `node_added` salta en cada cambio de padre; ahora marca `_fx`. Antes: «signal already connected» (`_sonar`, `_a`, `_arriba`): se conecta dos veces el mismo botón.
+
+### 2.6 Idea del vídeo que regaló el dueño (20-10): FALTAS POR PUNTOS
+Un creador explica cómo decidir la sanción sumando el peso de cada factor de la entrada:
+agarrón 1,4 · por detrás 3,0 · empujón 1,7 · a gran velocidad 2,0 · deslizante 2,6 · falta
+profesional (último hombre, ocasión clara) 2,3 · de pie 1,2 · carga de hombro 0,9 · agresiva 2,4;
+y umbrales falta ≥ 1,0, amarilla ≥ 4,0, roja ≥ 7,0 (ej.: por detrás + a gran velocidad + profesional
+= 7,3 → roja). Usa la velocidad de cada jugador y su posición (quién es el último defensor).
+Hoy `MotorJugable._falta` decide la tarjeta con una tirada (`prob_tarjeta`) y solo hay roja por
+doble amarilla. CÓMO: en `_entrada`/`_duelo_*` sumar factores reales (ángulo de la entrada respecto
+a la marcha de la víctima = «por detrás», velocidad del infractor, barrida, ¿era el último defensor
+con el arco libre?) y pasar la suma a `_falta`; la roja directa ya tiene `_expulsar`. Pendiente de
+que el dueño lo pida.
 
 ### 2.4 Pedidos del dueño en espera
 - **Vídeo gameplay** (punto 15 de la MEGA AUDITORÍA 2): pausado por el dueño el 17-10.
