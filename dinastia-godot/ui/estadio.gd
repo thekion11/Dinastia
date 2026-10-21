@@ -629,6 +629,8 @@ func _poner_banca(once_local: Array[Jugador], once_visita: Array[Jugador]) -> vo
 		return
 	_poner_banca_de(club, once_local, true)
 	_poner_banca_de(visitante, once_visita, false)
+	if partido != null:
+		poner_directiva(_raiz3d, club, _perfil)
 
 ## Los primeros 7 disponibles, de pie; del 8 al 12, sentados en el banco
 ## simple de al lado (22-9-2026, "que los que no caben estén sentados").
@@ -707,6 +709,7 @@ static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int, per
 			var n: Node3D = d["nodo"]
 			n.position = butaca_sancion["pos"]
 			n.rotation.y = float(butaca_sancion["rumbo"])
+			_a_la_butaca(n)
 			var ap: AnimationPlayer = d.get("anim") as AnimationPlayer
 			if ap != null and ap.has_animation("sentado"):
 				ap.play("sentado")
@@ -714,6 +717,53 @@ static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int, per
 			RecorridoClub.despejar_hinchas(_raiz3d, _raiz3d.global_position + (butaca_sancion["pos"] as Vector3) + Vector3(0, 0.5, 0), 1.6)
 		return
 	PersonajeDT.poner_en_banda(_raiz3d, asp, Color(c.color1), Color(c.color2), Vector3(34.6, 0, z), -PI * 0.5)
+
+## Sentado DE VERDAD en la butaca (21-10-2026): la butaca da el suelo del
+## escalón y la animación de sentado espera el origen en el suelo con la silla
+## a ~0,45 m: se baja la cadera hasta el asiento (la misma cuenta que los bancos
+## del metro). Antes, el DT sancionado y la directiva flotaban medio metro.
+static func _a_la_butaca(n: Node3D) -> void:
+	var cadera := MetroCiudad.altura_cadera(n)
+	if cadera > 0.0:
+		n.position.y += MetroCiudad.BANCO_ASIENTO + 0.08 - cadera * 0.99
+
+## LA DIRECTIVA EN SU SITIO (21-10-2026, M-040): el presidente y dos directivos
+## del club de casa, de traje, sentados en la segunda fila de la tribuna
+## principal a la altura del medio campo (el palco). Con el mismo modelo y la
+## misma animación de sentado que el DT sancionado; caras fijas por club.
+static func poner_directiva(raiz: Node3D, c: Club, perfil: Dictionary) -> Array:
+	var gente: Array = []
+	if c == null or perfil.is_empty():
+		return gente
+	var trajes := ["15171c", "2b2f3a", "3a3328"]
+	for k in 3:
+		var rng := RandomNumberGenerator.new()
+		rng.seed = hash("directiva_%s_%d" % [c.id, k])
+		var asp := PersonajeDT.aleatorio(rng)
+		asp.merge({"cuerpo": "male", "ropa": "traje", "c_ropa": trajes[k], "c_ropa2": "f2f2f2", "corbata": true,
+			"gorra": false, "bufanda": k == 2, "auriculares": false, "pendiente": false, "cadena": false,
+			"manga_corta": false, "tatuaje": 0, "pelo": ["corto", "rapado", "corto", "calvo"][rng.randi() % 4]}, true)
+		if k == 0:
+			## El presidente: canas.
+			asp["color_pelo"] = ["9b9b98", "c8c8c4", "6e6a66"][rng.randi() % 3]
+		var b := RecorridoClub.butaca(perfil, 1.0, (float(k) - 1.0) * 1.15, 2, raiz)
+		var d := PersonajeDT.crear(raiz, asp, Color(c.color1), Color(c.color2))
+		if d.is_empty():
+			continue
+		var n: Node3D = d["nodo"]
+		n.name = "Directiva_%d" % k
+		n.position = b["pos"]
+		n.rotation.y = float(b["rumbo"])
+		_a_la_butaca(n)
+		## Zapatos de vestir (sin ellos, sentados se les veían los pies descalzos).
+		PeatonQ.calzar(d, "1c1c1e")
+		var ap: AnimationPlayer = d.get("anim") as AnimationPlayer
+		if ap != null and ap.has_animation("sentado"):
+			ap.play("sentado")
+			ap.seek(rng.randf() * 0.6, true)
+		RecorridoClub.despejar_hinchas(raiz, raiz.global_position + (b["pos"] as Vector3) + Vector3(0, 0.5, 0), 0.5)
+		gente.append(n)
+	return gente
 
 ## Mejores disponibles (sin lesión/sanción, no en el once) por media, para que
 ## la banca se vea como un banco de verdad y no como un sorteo cualquiera.
