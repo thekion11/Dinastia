@@ -5822,6 +5822,22 @@ func _probar_rotulo_y_sala() -> void:
 	OclusoresCiudad.activar(cbo, false)
 	_comprobar(not raiz_o.visible, "oclusión: se apaga al entrar en un edificio")
 	cbo.free()
+	## EL CHOQUE DEL COCHE (21-10-2026, M-172): golpe y multa contra otro coche.
+	var exc := ExploradorCiudad.new()
+	exc.modo = "coche"
+	exc._golpe_coche(12.0, false)
+	_comprobar(exc.multas == 1 and exc._sacudida_golpe > 0.0, "chocar a 43 km/h contra otro coche: golpe y multa")
+	exc._golpe_coche(12.0, false)
+	_comprobar(exc.multas == 1, "rozando no se multa en bucle (un golpe cada medio segundo)")
+	var exc2 := ExploradorCiudad.new()
+	exc2._golpe_coche(5.0, false)
+	var exc3 := ExploradorCiudad.new()
+	exc3._golpe_coche(12.0, true)
+	_comprobar(exc2.multas == 0 and exc3.multas == 0 and exc3._sacudida_golpe > 0.0, "despacio, o contra una pared, golpe sin multa")
+	exc.free()
+	exc2.free()
+	exc3.free()
+	_comprobar(Sonido.NOMBRES.has("choque_coche") and not Sonido._sintetizar("choque_coche", 1.0).data.is_empty(), "el choque de coche suena")
 
 func _probar_ciudad_grande() -> void:
 	_titulo("LA CIUDAD GRANDE: RED VIAL, SEMÁFOROS Y TRANSPORTE")
