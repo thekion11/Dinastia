@@ -56,6 +56,8 @@ static func jugador(j: Jugador) -> Dictionary:
 		"ovr": j.ovr,
 		"atributos": j.atributos.duplicate(),
 		"moral": j.moral,
+		## El brazalete (M-073, 21-10).
+		"capitan": j.capitan,
 	}
 
 ## El once entero: los ids en orden y el diccionario que los describe. El
@@ -64,9 +66,20 @@ static func jugador(j: Jugador) -> Dictionary:
 static func once(jugadores: Array[Jugador]) -> Dictionary:
 	var ids: Array = []
 	var mapa := {}
+	var con_cinta: Jugador = null
 	for j in jugadores:
 		ids.append(j.id)
 		mapa[j.id] = jugador(j)
+		if j.capitan:
+			con_cinta = j
+	## Si el capitán no juega, la cinta la lleva el veterano de más media del
+	## once (M-073, 21-10); nunca más de uno.
+	if con_cinta == null:
+		for j in jugadores:
+			if con_cinta == null or j.edad > con_cinta.edad + 2 or (absi(j.edad - con_cinta.edad) <= 2 and j.ovr > con_cinta.ovr):
+				con_cinta = j
+	for id: String in mapa:
+		(mapa[id] as Dictionary)["capitan"] = con_cinta != null and id == con_cinta.id
 	return {"xi": ids, "jugadores": mapa}
 
 ## La equipación de un club: sus dos colores de camiseta.
