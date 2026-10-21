@@ -1627,6 +1627,8 @@ func _montar_motor() -> void:
 	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": true}
 	_motor.eliminatoria = eliminatoria
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
+	## La cabeza de cada jugador sigue al balón (M-098).
+	MiradaBalon.poner(_motor.jugadores, _balon)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
