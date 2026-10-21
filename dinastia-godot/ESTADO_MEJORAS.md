@@ -64,7 +64,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-018 | P2 | Banquillos de un solo diseño por preset | PENDIENTE | `EST_BANQUILLOS` sin ampliar |
 | M-019 | P2 | Sin zona de prensa/cabinas de TV visibles en el graderío | PARCIAL | cabina de prensa en `estadio_extras.gd`; sin vidrio ni NPC de prensa dentro |
 | M-020 | P2 | Sin palcos reales (`palcos` existe como instalación) | PARCIAL | palcos como pieza de `estadio_extras.gd` y `ClubDentro.PALCO`; sin interior con personas |
-| M-021 | P2 | Sin zona de aficionados visitantes diferenciada | PENDIENTE | sin sector visitante diferenciado |
+| M-021 | P2 | Sin zona de aficionados visitantes diferenciada | HECHO | 21-10: en partido, un cuarto de la bandeja baja del fondo −Z con los colores del rival y una franja de butacas vacías que lo separa (`est.visita1/2`, `sector_visita`); captura `captura_sector_visita` |
 | M-022 | P2 | Sin sonido espacial por sector (cantos locales vs visitantes) | PENDIENTE | no existe ningún `AudioStreamPlayer3D` en el juego |
 | M-023 | P3 | Sin clima visible en el estadio más allá de lluvia/niebla (nieve,… | PARCIAL | nieve, lluvia y niebla (`Precipitacion`, `Clima`); sin calima/polvo ni charcos que reflejan |
 | M-024 | P2 | Sombras de la grada sobre el campo no cambian con la hora real del… | PARCIAL | `Ambience` usa la hora elegida para el estadio, no la hora/estación real del partido |
@@ -112,10 +112,10 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-056 | P2 | Sin sudor/barro/lluvia en la camiseta | PENDIENTE | sin uniform de barro/mojado |
 | M-057 | P1 | Marca de ropa genérica (tick) | PENDIENTE | una sola marca genérica («ala») en el shader |
 | M-058 | P1 | 30 marcas de patrocinio (K-03) | PARCIAL | 38 marcas en `Auspicio` (antes 30); meta 70 |
-| M-059 | P1 | Reparto de marcas sesgado (arreglado el hash hoy, ✅) | PARCIAL | hash arreglado (✅ 14-10); falta la prueba «ninguna marca > 2× la media» |
+| M-059 | P1 | Reparto de marcas sesgado (arreglado el hash hoy, ✅) | HECHO | 21-10: `_probar_marcas_y_escudos` en un mundo de 352 clubes: ninguna marca pasa del doble de la media (la que más, ×27 con media 20) |
 | M-060 | P2 | Patrocinio fijo por club entre temporadas, sin contratos de IA que… | PENDIENTE | sin renovación/cambio de patrocinador de clubes IA |
 | M-061 | P2 | Sin patrocinador en la parte trasera del pantalón ni en las medias | PENDIENTE | sin zonas `short_trasero`/`medias` |
-| M-062 | P1 | Escudos: 188 combinaciones únicas para 384 clubes (C-03) | PENDIENTE | sin comprobación de unicidad en `Escudo` |
+| M-062 | P1 | Escudos: 188 combinaciones únicas para 384 clubes (C-03) | HECHO | 21-10: comprobado en el banco: forma + dibujo + colores + iniciales/símbolo no se repiten en 352 clubes (la cuenta de 188 era sin colores) |
 | M-063 | P1 | Escudos reales sólo 26 (7 %) | PENDIENTE | `ESCUDOS` sigue con 26 clubes |
 | M-064 | P2 | Falta ornamento reconocible (león, águila, estrella, castillo,… | PENDIENTE | sin biblioteca de símbolos (solo el almenado) |
 | M-065 | P2 | Texto/iniciales ilegibles <24 px | PENDIENTE | sin prueba de legibilidad a 24 px |
@@ -143,7 +143,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-082 | P2 | Altura sólo por escala global | PENDIENTE | sin proporciones variables |
 | M-083 | P2 | Sin tatuajes/cicatrices por jugador salvo civiles | PARCIAL | tatuaje solo en ropa civil (`equipacion_q.gdshader` `tatuaje`); no en jugadores |
 | M-084 | P2 | Biblioteca de caras = 72 mezclas | PENDIENTE | biblioteca de 72 caras |
-| M-085 | P2 | Envejecimiento visual de jugadores (canas, arrugas) no ligado a `edad` | PENDIENTE | sin envejecimiento visual por edad |
+| M-085 | P2 | Envejecimiento visual de jugadores (canas, arrugas) no ligado a `edad` | PARCIAL | 21-10: canas desde los 32 en los inventados (`Cara.look_de`, a uno de cada cuatro casi nada); los reales llevan el color de su foto; arrugas pendientes |
 | M-086 | P2 | Expresiones faciales limitadas a `Expresion` básica | PENDIENTE | `Expresion` sin emociones nuevas |
 | M-087 | P2 | Sin parpadeo/respiración idle variados | PARCIAL | parpadeo en el DT/`Expresion`; sin respiración idle en jugadores |
 | M-088 | P1 | Pelo con 30 cortes pero poca variación de color/aspecto por país | PENDIENTE | sin tabla de pelo por país |
@@ -163,9 +163,9 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-102 | P2 | Sin reacciones de banquillo coordinadas | PARCIAL | el banquillo celebra el gol (`ui/estadio.gd` `_banca_celebra`); sin tarjeta/lesión |
 | M-103 | P2 | Lesiones sin animación específica | PARCIAL | clip de dolor (`AnimQuaternius`); sin camilla ni médicos en campo |
 | M-104 | P2 | Cambios de jugador sin animación (entra/sale) | HECHO | 17-10, con motor: cartel LED del cuarto árbitro con los dos dorsales (`CuartoArbitro.levantar_cambio`), el que entra espera en la banda, el que sale camina hasta él, palmada (`chocar_mano`) y se va (`visor/escena_cambio.gd`). 20-10: también en la Carrera de Jugador (`PartidoJugable._escena_cambio`) |
-| M-105 | P2 | Sin tarjetas con ceremonia de árbitro detallada | PARCIAL | clips de protesta/discutir árbitro en `AnimExtra`; sin protesta enlazada a las tarjetas del motor real |
+| M-105 | P2 | Sin tarjetas con ceremonia de árbitro detallada | HECHO | 21-10: con cada tarjeta el amonestado protesta mirando al árbitro (`discutir_arbitro`, `MotorJugable._protestar`) mientras este habla y enseña la cartulina |
 | M-106 | P1 | Árbitro con sólo gestos básicos | HECHO | 17-10: en el motor real pita, señala la falta, ventaja de verdad, habla y enseña la tarjeta (cartulina en la mano), penal, córner, saque de puerta, añadido y final (`MotorJugable._gesto_arbitro`) |
-| M-107 | P2 | Asistentes de línea sin carrera real | PARCIAL | los jueces siguen la z del balón (`_mover_arbitros`), no al penúltimo defensor |
+| M-107 | P2 | Asistentes de línea sin carrera real | HECHO | 21-10: cada juez de línea se coloca a la altura del penúltimo defensor o del balón si está más adelante (`MotorJugable.linea_fuera_de_juego`) |
 | M-108 | P2 | Mascotas con animación limitada | SIN VERIFICAR | `MascotaQ` tiene animaciones propias; no se comprobó si son 6 ni si hay rutas |
 | M-109 | P2 | Niños de ceremonia con una misma malla | PARCIAL | niños con cuerpos de peatones variados (`CeremoniaPartido`); sin comprobar variedad de malla |
 | M-110 | P2 | Sin voces/murmullos de jugadores | PENDIENTE | sin voces de jugadores |
@@ -243,7 +243,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-172 | P1 | Colisiones del coche del usuario con NPC/vehículos sólo círculos | PENDIENTE | choque solo desliza; sin daño ni multa |
 | M-173 | P2 | Sin sonido de motor/marchas/derrape | PENDIENTE | sin sonido de motor |
 | M-174 | P2 | Interior de coche sin modelo (salpicadero 2D) | PARCIAL | salpicadero y volante 2D (`VolanteUI`) |
-| M-175 | P2 | Sin faros ni luces de freno encendidos por hora | PENDIENTE | sin faros ni luces de freno en vehículos |
+| M-175 | P2 | Sin faros ni luces de freno encendidos por hora | HECHO | 21-10: faros blancos y traseras rojas que se encienden con la noche y se avivan al frenar en rojo (`TraficoCiudad.faros`, una malla por coche, hasta 220 m) |
 | M-176 | P2 | Sin tipos de vehículo (moto, bus conducible, camión) | PENDIENTE | solo coche conducible |
 | M-177 | P2 | Sin gasolinera/aparcamiento/lavado | PENDIENTE | sin gasolinera/lavado |
 | M-178 | P2 | Sin minimapa | HECHO | 17-10: GPS dentro del móvil en la mano (`MapaMovil`), M lo saca andando |
