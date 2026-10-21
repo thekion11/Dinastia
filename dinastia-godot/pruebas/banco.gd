@@ -101,6 +101,7 @@ const SECCIONES := [
 	"_probar_nombres_repetidos",
 	"_probar_marcas_y_escudos",
 	"_probar_faros_coches",
+	"_probar_modulos",
 	"_probar_historia_c4",
 	"_probar_contratos_c9",
 	"_probar_vida_dt",
@@ -200,7 +201,7 @@ const GRUPOS := {
 		"_probar_arreglos_partido_motor", "_probar_prorroga_y_penales", "_probar_partido_abandonado", "_probar_tanda_c",
 		"_probar_notas", "_probar_dificultad_cpu"],
 	"guardado": ["_probar_guardado", "_probar_guardado_seguro", "_probar_partido_abandonado", "_probar_repetibilidad"],
-	"ciudad": ["_probar_faros_coches", "_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
+	"ciudad": ["_probar_modulos", "_probar_faros_coches", "_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
 		"_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
 	"estadio": ["_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
 		"_probar_edificio_club", "_probar_personal_estadio", "_probar_interiores_club", "_probar_galeria_club",
@@ -214,7 +215,7 @@ const GRUPOS := {
 }
 
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_capitan_votado": 2.0, "_probar_glifos_idiomas": 0.5, "_probar_nombres_repetidos": 2.0, "_probar_marcas_y_escudos": 4.0, "_probar_faros_coches": 0.3, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_capitan_votado": 2.0, "_probar_glifos_idiomas": 0.5, "_probar_nombres_repetidos": 2.0, "_probar_marcas_y_escudos": 4.0, "_probar_faros_coches": 0.3, "_probar_modulos": 1.0, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -7698,6 +7699,48 @@ func _probar_capitan_votado() -> void:
 ## más del doble de la media, y los escudos (forma + dibujo + colores + iniciales
 ## o símbolo) no se repiten entre clubes.
 ## M-175 (20-10): de noche los coches llevan faros y se avivan al frenar.
+func _probar_modulos() -> void:
+	_titulo("PIEZAS MODULARES: RECICLAR, UNIR, SEPARAR Y GUARDAR")
+	_comprobar(Modulos.listar("muebles").size() >= 100, "el kit de muebles tiene %d piezas en el catálogo común" % Modulos.listar("muebles").size())
+	_comprobar(Modulos.listar("suburbano").has("suburbano/tree-large"), "las piezas de otros kits llevan el kit delante")
+	var silla := Modulos.tomar("chairDesk")
+	_comprobar(silla.has_meta("pieza") and silla.get_child(0).get_child_count() > 0, "una pieza sale con sus mallas")
+	_comprobar(absf((silla.get_meta("escala") as Vector3).x - 2.0) < 0.01, "los muebles salen a medidas reales (×2)")
+	Modulos.vaciar_reserva()
+	Modulos.devolver(silla)
+	_comprobar(Modulos.en_reserva("chairDesk") == 0, "una pieza teñida (silla de despacho) se guarda en su propio montón")
+	var mesa := Modulos.tomar("desk")
+	Modulos.devolver(mesa)
+	_comprobar(Modulos.en_reserva("desk") == 1, "devuelta, la mesa espera en la reserva")
+	var otra := Modulos.tomar("desk")
+	_comprobar(otra == mesa and otra.visible and Modulos.en_reserva("desk") == 0, "y la siguiente que se pide es la misma, reciclada")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	raiz.add_child(otra)
+	otra.position = Vector3(2, 0, 3)
+	var lampara := Modulos.tomar("lampRoundFloor")
+	raiz.add_child(lampara)
+	lampara.position = Vector3(3, 0, 3)
+	lampara.rotation.y = 1.0
+	var c := Modulos.unir([otra, lampara], "Rincon")
+	_comprobar(c.get_parent() == raiz and c.get_child_count() == 2, "unir: la mesa y la lámpara forman un conjunto")
+	_comprobar(lampara.global_position.distance_to(Vector3(3, 0, 3)) < 0.01, "unir no mueve las piezas de su sitio (%s)" % str(lampara.global_position))
+	var datos := Modulos.a_datos(c)
+	_comprobar(datos.size() == 2 and String(datos[1]["pieza"]) == "lampRoundFloor", "el conjunto se guarda como datos")
+	c.position += Vector3(10, 0, 0)
+	var sueltas := Modulos.separar(c)
+	_comprobar(sueltas.size() == 2 and sueltas[1].get_parent() == raiz and sueltas[1].global_position.distance_to(Vector3(13, 0, 3)) < 0.01, "separar: las piezas quedan sueltas donde estaban (movidas con el conjunto)")
+	var copia := Modulos.de_datos(JSON.parse_string(JSON.stringify(datos)))
+	_comprobar(copia.get_child_count() == 2 and absf((copia.get_child(1) as Node3D).rotation.y - 1.0) < 0.01, "y se rearma igual desde los datos guardados")
+	var deco := EdificioClub.datos_deco("tele")
+	_comprobar(deco.size() == 2 and float((deco[1]["p"] as Array)[1]) > 0.3, "la tele de la decoración va ENCIMA de su mueble")
+	for k: String in EdificioClub.DECO_MODULAR:
+		for d: Array in EdificioClub.DECO_MODULAR[k]:
+			_comprobar(Modulos.existe(String(d[0])), "la pieza %s de «%s» existe" % [d[0], k])
+	copia.free()
+	raiz.free()
+	Modulos.vaciar_reserva()
+
 func _probar_faros_coches() -> void:
 	_titulo("M-175: FAROS Y LUCES DE FRENO")
 	var t := TraficoCiudad.new()

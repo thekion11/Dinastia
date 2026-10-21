@@ -4,7 +4,10 @@ Regalo del usuario (15-10-2026). Todos son de **Kenney (www.kenney.nl), licencia
 uso libre, también comercial; acreditar no es obligatorio. Cada carpeta lleva su
 `License.txt` y una `Preview.png`.
 
-**Estado: GUARDADOS, AÚN SIN USAR.** Ningún script ni escena los carga todavía.
+**Estado (21-10-2026): EN USO** a través del catálogo común de piezas `visor/modulos.gd`
+(`Modulos.tomar/devolver/unir/separar/a_datos/de_datos/listar`): interiores de la ciudad,
+edificio del club (oficina del DT, despacho, sala de vídeo, sala de prensa, decoración),
+ciudad (casas del suburbano, edificios modulares, feria, industria) y el entorno del estadio.
 
 ## Cómo están guardados
 
