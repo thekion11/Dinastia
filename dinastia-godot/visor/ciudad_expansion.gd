@@ -2756,7 +2756,7 @@ func encender(noche: float) -> void:
 	if _farola_charco != null:
 		_farola_charco.albedo_color.a = lerpf(0.0, 0.55, noche)
 	if _farola_cono != null:
-		_farola_cono.albedo_color.a = lerpf(0.0, 0.035, noche)
+		_farola_cono.set_shader_parameter("fuerza", lerpf(0.0, 0.16, noche))
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.set_shader_parameter("noche", noche)
 
@@ -3022,16 +3022,13 @@ func _farolas() -> void:
 	cono.height = 1.0
 	cono.cap_top = false
 	cono.cap_bottom = false
-	_farola_cono = StandardMaterial3D.new()
-	_farola_cono.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	_farola_cono.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	_farola_cono.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
-	_farola_cono.cull_mode = BaseMaterial3D.CULL_DISABLED
-	_farola_cono.albedo_color = Color(1.0, 0.8, 0.5, 0.0)
+	## Haz con degradado y sin contorno (`cono_farola.gdshader`).
+	_farola_cono = ShaderMaterial.new()
+	_farola_cono.shader = load("res://visor/cono_farola.gdshader")
 	_multimesh(cono, _farola_cono, conos, Vector3.ONE)
 	cuenta["farolas"] = postes.size()
 
-var _farola_cono: StandardMaterial3D = null
+var _farola_cono: ShaderMaterial = null
 
 func _libre_farola(nodo: Vector3, d: Vector3) -> float:
 	var mc := medio_cruce(nodo, d)

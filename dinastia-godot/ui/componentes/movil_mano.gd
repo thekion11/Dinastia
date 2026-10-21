@@ -101,6 +101,14 @@ static func _caja(col: Color, r: int) -> StyleBoxFlat:
 	s.set_corner_radius_all(r)
 	return s
 
+## Un aviso en la pantalla del móvil durante unos segundos (la multa por
+## conducir a lo bestia, 21-10-2026), en lugar de la calle.
+var _nota := ""
+var _t_nota := 0.0
+func notificar(texto: String, segundos := 3.5) -> void:
+	_nota = texto
+	_t_nota = segundos
+
 ## `modo`: "pie", "correr", "coche", "tren". `maxima`: para la barra.
 func poner(modo: String, km_h: float, maxima: float, calle: String, metros: float) -> void:
 	_mostrar = modo in ["correr", "coche", "tren"]
@@ -109,11 +117,14 @@ func poner(modo: String, km_h: float, maxima: float, calle: String, metros: floa
 	_barra.value = km_h
 	_icono.text = Idiomas.t({"correr": "🏃 Carrera", "coche": "🚗 Conduciendo", "tren": "🚇 Metro"}.get(modo, "🚶 A pie"))
 	_calle.text = ("📍 " + calle) if calle != "" else ""
+	if _t_nota > 0.0:
+		_calle.text = _nota
 	_recorrido += metros
 	_dist.text = "%.2f km" % (_recorrido / 1000.0) if _recorrido >= 100.0 else "%d m" % int(_recorrido)
 
 func _process(delta: float) -> void:
 	_t += delta
+	_t_nota = maxf(_t_nota - delta, 0.0)
 	## Sube y baja suave, con un leve vaivén de la mano al correr.
 	var objetivo := 1.0 if _mostrar else 0.0
 	modulate.a = move_toward(modulate.a, objetivo, delta * 4.0)

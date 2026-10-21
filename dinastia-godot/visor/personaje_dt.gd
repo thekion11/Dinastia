@@ -344,6 +344,23 @@ static func adelgazar(d: Dictionary, con_guardian := true) -> void:
 
 const ASPECTO_NEUTRO := {"complexion": 0.0, "hombros": 0.0, "barriga": 0.0, "piernas": 0.0, "cabeza": 0.0}
 
+## CADA FUTBOLISTA CON SU CUERPO (21-10-2026, M-081): antes compartían todos el
+## mismo. La complexión y los hombros salen de su FÍSICO (los fuertes, más
+## anchos; los livianos, más finos) con un poco de variación fija por jugador.
+## Rangos cortos a propósito: es un futbolista, no un culturista.
+static func aspecto_futbolista(jug: Dictionary, jid: String) -> Dictionary:
+	var fis := float((jug.get("atributos", {}) as Dictionary).get("fis", 70))
+	var ruido := float(absi(hash(jid + "cuerpo")) % 1000) / 1000.0 - 0.5
+	var ruido2 := float(absi(hash(jid + "hombros")) % 1000) / 1000.0 - 0.5
+	return {"complexion": clampf((fis - 68.0) / 38.0 + ruido * 0.3, -0.45, 0.6),
+		"hombros": clampf((fis - 68.0) / 50.0 + ruido2 * 0.2, -0.3, 0.45),
+		"barriga": 0.0, "piernas": 0.0, "cabeza": 0.0}
+
+static func cuerpo_futbolista(d: Dictionary, jug: Dictionary, jid: String) -> void:
+	if not d.has("esqueleto") or not d.has("modelo"):
+		return
+	_cuerpo(d, aspecto_futbolista(jug, jid), true)
+
 class _Escalas extends Node:
 	var esq: Skeleton3D
 	var escalas: Dictionary
