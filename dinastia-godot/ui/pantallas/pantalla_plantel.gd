@@ -481,6 +481,21 @@ func _pintar_tactica(c: Club) -> void:
 		c.once_elegido.size(),
 		"" if c.once_elegido.size() == 11 else Idiomas.t("   (con menos de once manda el automático)")]
 	p._lista_tactica.add_child(to)
+	## ALINEACIÓN INDEBIDA A LA VISTA (M-246, 20-10): si el once elegido se salta
+	## la ley de cupos del país, se avisa aquí, en la pizarra, antes del partido
+	## (y no solo con la multa de la federación después).
+	var manual: Array[Jugador] = c._once_manual()
+	var infr: Array = LeyesPais.infracciones_once(c, manual) if manual.size() == 11 else []
+	if not infr.is_empty():
+		var partes: Array[String] = []
+		for i: Dictionary in infr:
+			partes.append(String(i["texto"]))
+		var av := p._texto(12, Color(1.0, 0.45, 0.35))
+		av.text = Idiomas.t("⚠ ALINEACIÓN INDEBIDA (ley de %s): %s") % [c.pais, "; ".join(partes)] + "\n" + Idiomas.t(
+			"→ el ayudante cambiará a quien haga falta (cumples la ley)" if c.ley_politica != "incumplir"
+			else "→ saldrá así y la federación multará (decidiste incumplir)")
+		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		p._lista_tactica.add_child(av)
 	var fila_b := HBoxContainer.new()
 	fila_b.add_theme_constant_override("separation", 6)
 	p._lista_tactica.add_child(fila_b)

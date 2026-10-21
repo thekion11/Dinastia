@@ -41,6 +41,8 @@ func _ready() -> void:
 			anulados += 1
 	_ok(goles_ev[0] == partido.goles_local + partido.goles_visita + anulados, "cada gol se anota una vez (%d anulados por el VAR)" % anulados)
 	_ok(partido.remates_local >= partido.goles_local and partido.remates_visita >= partido.goles_visita, "los remates incluyen los goles")
+	_ok(partido.fueras_local == int(motor.fueras_de_juego[0]) and partido.fueras_visita == int(motor.fueras_de_juego[1]),
+		"los fueras de juego del acta son los del césped (%d-%d)" % [partido.fueras_local, partido.fueras_visita])
 	_ok(partido.remates_local + partido.remates_visita >= 4, "hay remates de verdad (%d)" % (partido.remates_local + partido.remates_visita))
 	var en_cronica := 0
 	for e: Dictionary in partido.cronica:

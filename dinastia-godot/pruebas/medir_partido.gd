@@ -43,6 +43,16 @@ var _fin := false
 func _process(_d: float) -> void:
 	if _fin:
 		return
+	## La intro y la ceremonia (filas, alineaciones, himno) se saltan: se mide
+	## el JUEGO con la cámara de TV. Hasta el 19-10 se medía la ceremonia.
+	var intro: Variant = _vista.get("_intro")
+	if intro != null and is_instance_valid(intro) and intro.activa:
+		intro.terminar()
+		return
+	var cer: Variant = _vista.get("_ceremonia")
+	if cer != null and is_instance_valid(cer) and cer.activa:
+		cer.terminar()
+		return
 	_n += 1
 	if _n == 5:
 		(_vista.get("_rig") as CameraRig).switch_to(0)
@@ -56,9 +66,41 @@ func _process(_d: float) -> void:
 		## OCULTAR=Cuero,Eyes (17-10-2026): esconde las piezas con ese nombre
 		## para medir lo que de verdad cuestan en pantalla (con LOD y recorte).
 		var nombres := OS.get_environment("OCULTAR").split(",")
-		for g in _vista.find_children("*", "GeometryInstance3D", true, false):
-			if String(g.name).rstrip("0123456789@") in nombres:
-				g.visible = false
+		## (20-10) También contenedores: cualquier Node3D con ese nombre.
+		for g in _vista.find_children("*", "Node3D", true, false):
+			if String(g.name).rstrip("0123456789@_") in nombres or String(g.name) in nombres:
+				(g as Node3D).visible = false
+	if _n == CALENTAR and OS.get_environment("SIN_GENTE_FUERA") != "":
+		## SIN_GENTE_FUERA=1 (20-10-2026): esconde a toda persona con esqueleto que
+		## no está en el campo (suplentes, cuerpo técnico, camarógrafos,
+		## recogepelotas, mascota…) para medir cuánto cuestan.
+		var en_campo := {}
+		for f: Dictionary in _vista.get("_en_campo"):
+			if f.get("node") != null:
+				en_campo[f["node"]] = true
+		var ocultos := 0
+		for esq in _vista.find_children("*", "Skeleton3D", true, false):
+			var x: Node = esq
+			var es_campo := false
+			while x != null and x != _vista:
+				if en_campo.has(x):
+					es_campo = true
+					break
+				x = x.get_parent()
+			if not es_campo:
+				(esq as Node3D).visible = false
+				ocultos += 1
+		print("SIN_GENTE_FUERA: %d esqueletos ocultos" % ocultos)
+	if _n == CALENTAR and OS.get_environment("SIN_SOMBRAS") != "":
+		## SIN_SOMBRAS=1 (19-10-2026): cuánto de lo dibujado son las sombras.
+		for l in _vista.find_children("*", "Light3D", true, false):
+			(l as Light3D).shadow_enabled = false
+	if _n == CALENTAR and OS.get_environment("LIVIANAS") != "":
+		## LIVIANAS=1 (19-10-2026): butacas cercanas con la malla de 60 triángulos.
+		Optimizar.butacas_livianas(_vista, true)
+	if OS.get_environment("POR_HIJOS") != "":
+		_por_hijos()
+		return
 	if OS.get_environment("PARTES") != "":
 		_partes()
 		return
@@ -230,3 +272,82 @@ func _arbol() -> void:
 	_base_a = m
 	_prev = _cola_arbol.pop_front()
 	_prev.visible = false
+
+
+## POR_HIJOS=1 (19-10/20-10-2026): con el partido CONGELADO (pausa total: el
+## mismo fotograma siempre) esconde por turnos cada parte del escenario y mide
+## cuántas llamadas y triángulos pone en pantalla. Baja de nivel en las partes
+## que pesan (más de 40 mil triángulos o 15 llamadas), hasta 4 niveles.
+## (El 19-10 se hizo sin congelar y no servía: la cámara se movía.)
+var _ph_cola: Array = []
+var _ph_actual: Variant = null
+var _ph_espera := 0
+var _ph_base := Vector2.ZERO
+var _ph_res: Array = []
+var _ph_listo := false
+var _ph_estables := 0
+
+func _medida() -> Vector2:
+	return Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
+		Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
+
+func _por_hijos() -> void:
+	var raiz: Node3D = _vista.get("_raiz3d")
+	if not _ph_listo:
+		## Congelar: todo en pausa menos esta medición.
+		process_mode = Node.PROCESS_MODE_ALWAYS
+		get_tree().paused = true
+		_ph_listo = true
+		_ph_espera = -6
+		return
+	if _ph_espera < 0:
+		_ph_espera += 1
+		if OS.get_environment("ESTABILIDAD") != "":
+			print("ESTABLE llamadas=%d tris=%d" % [_medida().x, _medida().y])
+			if _ph_espera == 0:
+				_ph_espera = -20
+				_ph_estables += 1
+				if _ph_estables > 2:
+					get_tree().quit()
+			return
+		if _ph_espera == 0:
+			_ph_base = _medida()
+			for h in raiz.get_children():
+				if h is Node3D and (h as Node3D).visible:
+					_ph_cola.append([h, 0])
+			print("POR_HIJOS (congelado) base llamadas=%d tris=%d" % [_ph_base.x, _ph_base.y])
+		return
+	if _ph_actual == null:
+		if _ph_cola.is_empty():
+			_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return float(a[2]) > float(b[2]))
+			for r: Array in _ph_res.slice(0, 40):
+				print("HIJO %-60s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
+			_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
+			for r: Array in _ph_res.slice(0, 25):
+				print("LLAMADAS %-56s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
+			_fin = true
+			get_tree().quit()
+			return
+		var sig: Array = _ph_cola.pop_front()
+		if not is_instance_valid(sig[0]):
+			return
+		_ph_actual = sig
+		(sig[0] as Node3D).visible = false
+		_ph_espera = 0
+		return
+	_ph_espera += 1
+	if _ph_espera < 3:
+		return
+	var n: Node3D = _ph_actual[0]
+	var nivel: int = _ph_actual[1]
+	var m := _medida()
+	var dl := int(_ph_base.x - m.x)
+	var dt := int(_ph_base.y - m.y)
+	var ruta := str(raiz.get_path_to(n))
+	_ph_res.append(["%s%s" % ["  ".repeat(nivel), ruta.right(56)], dl, dt])
+	n.visible = true
+	if nivel < 3 and (dt > 40000 or dl > 15):
+		for h in n.get_children():
+			if h is Node3D and (h as Node3D).visible:
+				_ph_cola.append([h, nivel + 1])
+	_ph_actual = null

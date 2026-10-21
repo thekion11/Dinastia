@@ -98,6 +98,9 @@ func _init(tipo_: String = "motas") -> void:
 		_rampa([0.0, 0.12, 0.7, 1.0], [0.0, 0.7, 0.55, 0.0])
 		hue_variation_min = -0.06
 		hue_variation_max = 0.06
+	## M-288 (20-10): en gama baja (motor ligero), un tercio de las motas.
+	if Calidad.motor_ligero:
+		amount = maxi(4, int(amount / 3.0))
 
 func _curva_escala(puntos: Array) -> void:
 	var c := Curve.new()

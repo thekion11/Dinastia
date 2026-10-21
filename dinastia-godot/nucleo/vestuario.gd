@@ -1070,6 +1070,56 @@ func generar_hermanos() -> Jugador:
 ## Los grupos se redibujan cada seis semanas y no cada una: un plantel no cambia
 ## de camarillas todos los lunes, y rehacerlas cada semana borraba la cuenta de
 ## paciencia antes de que llegara a tres.
+## LA CINTA SE VOTA (M-237, 20-10): si el club se queda sin capitán (se vendió,
+## se retiró), el vestuario lo elige. Cada jugador vota al compañero que más
+## respeta: veteranía y calidad, con un plus si es de su camarilla (los grupos
+## votan en bloque) y un castigo si anda con la moral por el suelo.
+## Devuelve {ganador: Jugador, votos: {id: n}, total: n}.
+func votar_capitan(c: Club) -> Dictionary:
+	var votos := {}
+	var candidatos: Array[Jugador] = []
+	for j: Jugador in c.plantilla:
+		if j.edad >= 21:
+			candidatos.append(j)
+	if candidatos.is_empty():
+		candidatos.assign(c.plantilla)
+	if candidatos.is_empty():
+		return {}
+	for votante: Jugador in c.plantilla:
+		var mi_clan := String(_clan_de.get(votante.id, ""))
+		var mejor: Jugador = null
+		var mejor_nota := -INF
+		for cand: Jugador in candidatos:
+			if cand == votante:
+				continue
+			var nota := float(cand.edad) * 0.9 + float(cand.ovr) * 0.35 + float(cand.moral) * 0.05
+			if mi_clan != "" and String(_clan_de.get(cand.id, "")) == mi_clan:
+				nota += 6.0
+			if cand.moral < 35:
+				nota -= 8.0
+			if nota > mejor_nota:
+				mejor_nota = nota
+				mejor = cand
+		if mejor != null:
+			votos[mejor.id] = int(votos.get(mejor.id, 0)) + 1
+	var ganador: Jugador = null
+	for cand: Jugador in candidatos:
+		if votos.has(cand.id) and (ganador == null or int(votos[cand.id]) > int(votos[ganador.id])):
+			ganador = cand
+	return {"ganador": ganador, "votos": votos, "total": c.plantilla.size()}
+
+func _capitan_si_falta(c: Club) -> void:
+	for j: Jugador in c.plantilla:
+		if j.capitan:
+			return
+	var v := votar_capitan(c)
+	var g: Jugador = v.get("ganador")
+	if g == null:
+		return
+	g.capitan = true
+	_mover_moral(g, 8)
+	noticia.emit("🗳️ El vestuario elige capitán", "%s lleva la cinta: %d votos de %d." % [g.nombre, int((v["votos"] as Dictionary)[g.id]), int(v["total"])])
+
 func semana(sem: int) -> void:
 	var c := _club()
 	if c == null:
@@ -1077,6 +1127,7 @@ func semana(sem: int) -> void:
 	var once_ids: Array = []
 	for j: Jugador in c.once():
 		once_ids.append(j.id)
+	_capitan_si_falta(c)
 	_proceso_mental()
 	chequeo_clanes(once_ids)
 	_chequeo_roles(once_ids)

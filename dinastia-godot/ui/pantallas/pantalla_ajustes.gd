@@ -32,6 +32,16 @@ func _pintar_fotogramas() -> void:
 			Engine.max_fps = valor
 			p._refrescar())
 		fila.add_child(b)
+	## M-358: el contador de FPS en una esquina, en todas las escenas.
+	var bf := Button.new()
+	bf.text = Idiomas.t("Mostrar contador de FPS")
+	bf.toggle_mode = true
+	bf.button_pressed = ContadorFps.visible_pref
+	bf.add_theme_font_size_override("font_size", 11)
+	bf.toggled.connect(func(on: bool) -> void:
+		ContadorFps.poner(p.get_tree(), on)
+		p._guardar_preferencias())
+	p._lista_ajustes.add_child(bf)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
 		ex.text = Idiomas.t("Bajarlo alarga la batería del portátil y baja la temperatura. Para una interfaz, 30 se ve igual de bien; el estadio en 3D agradece 60.")
@@ -465,6 +475,20 @@ func _pintar_ajustes() -> void:
 			ac.text = Idiomas.t("DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y todos los efectos están sintetizados por el propio juego: no hay ni un fichero de audio.")
 			ac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_ajustes.add_child(ac)
+			## M-309: créditos y licencias de lo que no es propio.
+			p._lista_ajustes.add_child(HSeparator.new())
+			var t4 := p._texto(11, Principal.COL_SUAVE)
+			t4.text = Idiomas.t("CRÉDITOS Y LICENCIAS")
+			p._lista_ajustes.add_child(t4)
+			for linea: String in Creditos.lineas():
+				var cr := p._texto(10, Principal.COL_TEXTO)
+				cr.text = "· " + linea
+				cr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				p._lista_ajustes.add_child(cr)
+			var fotos := p._texto(10, Principal.COL_SUAVE)
+			fotos.text = Idiomas.t("Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.")
+			fotos.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			p._lista_ajustes.add_child(fotos)
 
 	## Esta pantalla se repinta sola al tocar una pestaña de sección, sin pasar
 	## por `_refrescar()`, asi que se traduce aqui tambien.

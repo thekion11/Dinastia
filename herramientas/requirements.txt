@@ -1,0 +1,11 @@
+# Dependencias de las herramientas en Python (M-395, 20-10-2026). Solo las usan
+# las herramientas de `herramientas/` y `dinastia-godot/herramientas/`: el
+# juego (Godot) no necesita Python. Instalar con:
+#   pip install -r herramientas/requirements.txt
+# `bpy` (Blender) no se instala con pip: esas herramientas se ejecutan dentro de
+# Blender (blender --background --python ...).
+Pillow>=10.0
+numpy>=1.24
+opencv-python>=4.8
+mediapipe>=0.10      # caras_reales_malla.py (Apache 2.0); el modelo se baja aparte
+imageio-ffmpeg>=0.4  # montaje de vídeos (montar_promo.py, montar_novedades.py)
