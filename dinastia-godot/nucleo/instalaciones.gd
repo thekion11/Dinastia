@@ -21,6 +21,10 @@ extends RefCounted
 
 signal obra_iniciada(clave: String, nivel: int, coste: int, semanas: int)
 signal obra_terminada(clave: String, nivel: int)
+## M-228 (20-10): lo que salió mal en una obra (retraso o sobrecoste), para la prensa.
+var ultimos_imprevistos: Array[String] = []
+## Las obras que ya tuvieron su imprevisto (uno como mucho por obra).
+var imprevistos: Dictionary = {}
 
 ## El nivel máximo de cada obra. Cinco es suficiente: con el coste creciendo al
 ## cuadrado, el quinto nivel de una tribuna ya es una decisión de club.
@@ -149,7 +153,9 @@ func iniciar(clave: String, c: Club) -> String:
 ## Avanza una semana de obra. Devuelve las que acaban de terminar.
 func avanzar_semana(c: Club) -> Array[String]:
 	var listas: Array[String] = []
+	ultimos_imprevistos.clear()
 	for clave: String in obras.keys():
+		_imprevisto(clave, c)
 		obras[clave] = int(obras[clave]) - 1
 		if int(obras[clave]) <= 0:
 			obras.erase(clave)
@@ -159,6 +165,41 @@ func avanzar_semana(c: Club) -> Array[String]:
 	if not listas.is_empty():
 		aplicar(c)
 	return listas
+
+## IMPREVISTOS DE OBRA (M-228, 20-10): como en las de verdad, alguna se
+## retrasa (lluvias, un permiso) o sale más cara (los cimientos). Uno como mucho
+## por obra, ~1 de cada 4 obras en total. Sin azar guardado: sale del nombre de
+## la obra, las semanas que le quedan y lo construido, así que cargar la partida
+## y volver a jugar la semana da lo mismo.
+func _imprevisto(clave: String, c: Club) -> void:
+	var marca := "%s_%d" % [clave, nivel(clave) + 1]
+	if imprevistos.has(marca) or int(obras[clave]) <= 1:
+		return
+	var h := absi(hash("%s|%d|%d" % [clave, int(obras[clave]), construido()])) % 100
+	if h >= 7:
+		return
+	imprevistos[marca] = true
+	var nombre := String(CATALOGO[clave][0]) if CATALOGO.has(clave) else clave
+	if h < 4:
+		obras[clave] = int(obras[clave]) + 1
+		ultimos_imprevistos.append("Obra «%s»: se retrasa una semana por lluvias y un permiso que no llegó." % nombre)
+	else:
+		var extra := int(round(float(maxi(coste(clave, c.rep), 0)) * 0.08 / 1000.0) * 1000.0)
+		if extra > 0:
+			c.mover_saldo(-extra)
+		ultimos_imprevistos.append("Obra «%s»: problemas en los cimientos, cuesta un 8 %% más." % nombre)
+
+## MANTENIMIENTO (M-227, 20-10): lo construido hay que cuidarlo. Cada mes se
+## paga un 0,3 % del valor de cada nivel levantado (escalado con el tamaño del
+## club, como el precio de la obra). Antes, una vez hecha, la obra no costaba
+## nada más y la caja del club propio solo crecía.
+func mantenimiento_del_mes(rep_club: int) -> int:
+	var mult: float = pow(Eco.factor_club(float(rep_club)), 0.62)
+	var total := 0.0
+	for k: String in niveles:
+		if CATALOGO.has(k):
+			total += float(CATALOGO[k][2]) * float(niveles[k]) * 0.003 * mult
+	return int(round(total / 100.0) * 100.0)
 
 ## Vuelca en el club lo que depende del ladrillo.
 ##
@@ -197,7 +238,7 @@ func ingresos_del_mes(c: Club) -> Array[Dictionary]:
 	var salida: Array[Dictionary] = []
 	if nivel("com") > 0:
 		salida.append({"concepto": "Tienda y museo",
-			"monto": int(round(float(c.socios) * 0.6 * float(nivel("com"))))})
+			"monto": int(round(float(c.socios) * 0.6 * float(nivel("com")) * factor_idolo(c)))})
 	if nivel("museo") > 0:
 		salida.append({"concepto": "Museo y turismo deportivo",
 			"monto": int(round(float(c.socios) * 0.9 * float(nivel("museo"))))})
@@ -205,6 +246,15 @@ func ingresos_del_mes(c: Club) -> Array[Dictionary]:
 		salida.append({"concepto": "Estacionamientos",
 			"monto": int(round(float(ultima_asistencia) * 0.09 * float(nivel("park"))))})
 	return salida
+
+## LAS CAMISETAS DEL ÍDOLO (M-224, 20-10): la tienda vende más cuanto mejor es la
+## estrella del plantel (la de más media): con un 75 o menos, lo normal; con un
+## 90, un 60 % más. Así fichar a un crack también se nota en la caja.
+static func factor_idolo(c: Club) -> float:
+	var mejor := 0
+	for j: Jugador in c.plantilla:
+		mejor = maxi(mejor, j.ovr)
+	return 1.0 + clampf(float(mejor - 75) * 0.04, 0.0, 0.8)
 
 ## Semanas que se le quitan a una lesión. Se suman el centro médico y el de
 ## rehabilitación, y el gimnasio ayuda a partir del nivel 3.
@@ -254,7 +304,7 @@ func construido() -> int:
 
 func a_dic() -> Dictionary:
 	return {"niveles": niveles, "obras": obras, "aforo_base": _aforo_original,
-		"ultima_asistencia": ultima_asistencia}
+		"ultima_asistencia": ultima_asistencia, "imprevistos": imprevistos}
 
 func desde_dic(d: Dictionary) -> void:
 	var n: Dictionary = d.get("niveles", {})
@@ -263,3 +313,4 @@ func desde_dic(d: Dictionary) -> void:
 	obras = d.get("obras", {}).duplicate()
 	_aforo_original = int(d.get("aforo_base", 0))
 	ultima_asistencia = int(d.get("ultima_asistencia", 0))
+	imprevistos = (d.get("imprevistos", {}) as Dictionary).duplicate()

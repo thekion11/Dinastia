@@ -220,7 +220,19 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 				_pie.text = _pie_base)
 	StadiumBuilder.build_pitch(_raiz3d, perfil, club)
 	## La semilla sale del id del club: el mismo recinto siempre.
-	StadiumBuilder.build(_raiz3d, perfil, aforo, ocupacion, club._hash_id(), club)
+	## M-021: los colores del rival para su sector de la grada (solo en partido).
+	var perfil_b := perfil
+	if visitante != null and visitante != club:
+		perfil_b = perfil.duplicate()
+		perfil_b["visita1"] = visitante.color1
+		perfil_b["visita2"] = visitante.color2
+	StadiumBuilder.build(_raiz3d, perfil_b, aforo, ocupacion, club._hash_id(), club)
+	## Lo que rodea al estadio: plaza, avenida, aparcamientos y la ciudad al fondo.
+	EntornoEstadio.montar(_raiz3d, perfil, StadiumBuilder.niveles_de(perfil, aforo))
+	## La piel de la grada, la del país del club de casa (M-034).
+	OlaGrada.piel_de_pais(_raiz3d, club.pais if club != null else "")
+	if club != null:
+		OlaGrada.colores_club(_raiz3d, Color(club.color1), Color(club.color2))
 	## LA PANTALLA GIGANTE (22-9-2026, rehecha el 23-9). Ahora se monta SIEMPRE,
 	## haya partido o no: sin partido enseña bienvenida + tabla + goleadores,
 	## que es lo que hace la pantalla de un estadio de verdad un día entre
@@ -337,6 +349,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_cajon.fila([["⏩ Partido corto", func() -> void: _fijar_ritmo("rapido")],
 			["⏯ Normal", func() -> void: _fijar_ritmo("normal")],
 			["🐢 Largo (FC)", func() -> void: _fijar_ritmo("largo")]])
+		_btn_dificultad = _cajon.boton(_texto_dificultad(), _ciclar_dificultad_cpu)
 		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
 		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
 		## simular el partido entero"). Existía en la pantalla de texto, que
@@ -995,6 +1008,9 @@ func _frenar_destacado() -> void:
 
 func _process(delta: float) -> void:
 	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
+	## La grada sigue el balón con la cabeza (M-049), cada pocos fotogramas.
+	if Engine.get_process_frames() % 4 == 0 and is_instance_valid(_balon):
+		OlaGrada.mirar(_raiz3d, _balon.global_position)
 	_escalar_rotulos()
 	_despejar_rotulos(delta)
 	if _juego == null or partido == null:
@@ -1045,10 +1061,28 @@ func _process(delta: float) -> void:
 		_radar.actualizar_datos(_en_campo, _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO, pos_ctrl)
 
 
+## LA OLA (20-10-2026, M-044): una vez por partido, como mucho, la grada da la
+## vuelta al estadio. Con el partido decidido (dos goles o más) casi seguro
+## pasada la hora; si no, alguna vez en un rato tranquilo del segundo tiempo.
+var _ola_min := -1
+func _revisar_ola() -> void:
+	if _ola_min == 0 or _motor.estado != "juego":
+		return
+	if _ola_min < 0:
+		var azar := RandomNumberGenerator.new()
+		azar.seed = hash(partido.local.id + "|ola|" + partido.visita.id)
+		_ola_min = azar.randi_range(58, 82) if azar.randf() < 0.35 else 999
+	var m := _motor.minuto()
+	var decidido := absi(partido.goles_local - partido.goles_visita) >= 2 and m >= 62
+	if m >= _ola_min or decidido:
+		_ola_min = 0
+		OlaGrada.lanzar(_raiz3d, "ola")
+
 func _refrescar_marcador() -> void:
 	if _marcador == null:
 		return
 	if _motor != null:
+		_revisar_ola()
 		## El reloj de la transmisión: 45' +2 en el añadido, y el cartel del
 		## cuarto árbitro cuando empieza.
 		var seg := _motor.segundos_anadidos()
@@ -1159,7 +1193,20 @@ var _rotulo_repe: PanelContainer
 func _repetir_gol() -> void:
 	if _repe == null or not _pref("repeticiones", true) or partido == null or partido.terminado_ya:
 		return
-	if _repe.reproducir(6.0 if _motor != null else 9.0):
+	_lanzar_repeticion(6.0 if _motor != null else 9.0)
+
+## REPETICIÓN A PEDIDO (20-10-2026, M-132): los últimos 10 s, con su botón
+## (`jugar_repeticion`) o desde la pausa. No en plena ceremonia ni con un panel
+## abierto; el partido espera mientras se ve.
+func repetir_jugada() -> void:
+	if _repe == null or partido == null or partido.terminado_ya or _repe.reproduciendo or _repe.congelar:
+		return
+	if (_intro != null and _intro.activa) or (is_instance_valid(_ceremonia) and _ceremonia.activa):
+		return
+	_lanzar_repeticion(10.0)
+
+func _lanzar_repeticion(segundos: float) -> void:
+	if _repe.reproducir(segundos):
 		if _rotulo_repe == null:
 			_rotulo_repe = PanelContainer.new()
 			var st := Tema.caja(Color(0.55, 0.08, 0.08, 0.9), Tema.RADIO_CHICO, Color(1, 1, 1, 0.2))
@@ -1277,6 +1324,14 @@ func _seguir_jugada_gol(autor: Jugador) -> void:
 ## hay otro gol antes de que termine el timer, simplemente se reinicia sobre
 ## la marcha, no hace falta encolar nada más elaborado para esto.
 func _banca_celebra(es_local: bool) -> void:
+	_banca_gesto(es_local, "celebrar", 3.0)
+
+## M-102 (21-10): el banquillo reacciona a la roja de uno de los suyos:
+## protestan los que están de pie (los sentados se quedan sentados, ver abajo).
+func _banca_protesta(es_local: bool) -> void:
+	_banca_gesto(es_local, "discutir_arbitro", 2.6, "protestar")
+
+func _banca_gesto(es_local: bool, clip: String, dura: float, otro := "") -> void:
 	for f: Dictionary in _en_banca:
 		if bool(f.get("es_local", false)) != es_local:
 			continue
@@ -1293,11 +1348,15 @@ func _banca_celebra(es_local: bool) -> void:
 		var n: Node3D = f.get("node")
 		if not is_instance_valid(ap) or not is_instance_valid(n):
 			continue
-		if ap.has_animation("celebrar"):
-			ap.play("celebrar")
+		if ap.has_animation(clip):
+			ap.play(clip)
+		elif otro != "" and ap.has_animation(otro):
+			ap.play(otro)
+		else:
+			continue
 		## Vuelve a lo suyo: "parado", o las dominadas si estaba calentando.
 		var reposo := String(f.get("reposo_anim", "parado"))
-		get_tree().create_timer(3.0).timeout.connect(func() -> void:
+		get_tree().create_timer(dura).timeout.connect(func() -> void:
 			if is_instance_valid(ap) and ap.has_animation(reposo):
 				ap.play(reposo))
 
@@ -1488,6 +1547,8 @@ func _anular_gol_motor(de_local: bool, autor: String) -> void:
 	_mostrar_rotulo_suceso("🖥️ " + Idiomas.t("VAR: GOL ANULADO"))
 	var mio := _mi_lado >= 0 and (_mi_lado == 0) == de_local
 	Sonido.toca("abucheo" if mio or _mi_lado < 0 and de_local else "festejo_hinchada_extra")
+	if de_local:
+		OlaGrada.lanzar(_raiz3d, "protesta")
 	if _rig != null:
 		_rig.impacto(0.35, 0.4)
 
@@ -1515,6 +1576,36 @@ static func ritmo_partido() -> String:
 	cfg.load(CajonAjustes.RUTA)
 	return String(cfg.get_value(CajonAjustes.SECCION, "ritmo_partido", "normal"))
 
+## DIFICULTAD DE LA CPU (20-10-2026): se guarda en los ajustes y vale para el
+## próximo partido; en el actual, al momento.
+static func dificultad_cpu_guardada() -> String:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	var d := String(cfg.get_value(CajonAjustes.SECCION, "dificultad_cpu", "profesional"))
+	return d if MotorJugable.DIFICULTADES.has(d) else "profesional"
+
+func _fijar_dificultad_cpu(nivel: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "dificultad_cpu", nivel)
+	cfg.save(CajonAjustes.RUTA)
+	if _motor != null:
+		_motor.fijar_dificultad(nivel)
+	if _btn_dificultad != null:
+		_btn_dificultad.text = _texto_dificultad()
+	_mostrar_banner_gol(Idiomas.t("CPU: ") + Idiomas.t(String(MotorJugable.DIFICULTADES[nivel]["nombre"])), true)
+
+func _texto_dificultad() -> String:
+	return Idiomas.t("🤖 Dificultad de la CPU: ") + Idiomas.t(String(MotorJugable.DIFICULTADES[dificultad_cpu_guardada()]["nombre"]))
+
+## Pasa al siguiente nivel (vuelve al primero tras «Leyenda»).
+func _ciclar_dificultad_cpu() -> void:
+	var orden: Array = MotorJugable.ORDEN_DIFICULTAD
+	var i := orden.find(dificultad_cpu_guardada())
+	_fijar_dificultad_cpu(String(orden[(i + 1) % orden.size()]))
+
+var _btn_dificultad: Button
+
 func _fijar_ritmo(r: String) -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(CajonAjustes.RUTA)
@@ -1540,6 +1631,8 @@ func _montar_motor() -> void:
 	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": true}
 	_motor.eliminatoria = eliminatoria
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
+	## La cabeza de cada jugador sigue al balón (M-098).
+	MiradaBalon.poner(_motor.jugadores, _balon)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
@@ -1556,6 +1649,9 @@ func _montar_motor() -> void:
 		## Confeti, bengalas y humo de la hinchada local (M-050).
 		if de_local:
 			FestejoGrada.lanzar(_raiz3d, Color(partido.local.color1), Color(partido.local.color2), "gol")
+			## Y la grada salta en onda desde el fondo donde entró (M-036).
+			var fondo := signf(_balon.position.z) if is_instance_valid(_balon) else 1.0
+			OlaGrada.lanzar(_raiz3d, "onda", Vector3(0, 0, fondo * 62.0))
 		Mando.vibrar(1.0 if (_mi_lado == 0) == de_local else 0.35, 0.6)
 		if _rig != null:
 			_rig.impacto(0.9, 0.7)
@@ -1595,6 +1691,11 @@ func _montar_motor() -> void:
 	_motor.tarjeta.connect(func(id: String, roja: bool, de_local: bool) -> void:
 		_stats.tarjeta(de_local, roja)
 		partido.tarjeta_externa(id, roja)
+		if roja:
+			_banca_protesta(de_local)
+		## La grada de casa protesta la tarjeta a uno de los suyos (M-045).
+		if de_local:
+			OlaGrada.lanzar(_raiz3d, "protesta")
 		Mando.vibrar(0.6 if roja else 0.35, 0.3)
 		if _rig != null:
 			_rig.impacto(0.45 if roja else 0.25, 0.4))
@@ -1647,6 +1748,8 @@ func _montar_motor() -> void:
 	_nombres_globales = PlayerSpawner.mostrar_nombres
 	if not _pref("nombres_motor", false):
 		_mostrar_nombres(false)
+	## La dificultad de la CPU (20-10-2026): la última elegida.
+	_motor.dificultad_cpu = dificultad_cpu_guardada()
 	## Si jugaste tú el último partido, vuelves a jugar (se recuerda).
 	if _pref("control_equipo", false) and _mi_lado >= 0:
 		_alternar_control_motor.call_deferred()
@@ -1734,6 +1837,9 @@ func _paso_motor(delta: float) -> void:
 	_hud_juego()
 	if _motor.estado == "fin" and not _final_motor:
 		_final_motor = true
+		## Las estadísticas del césped, a un CSV (M-162).
+		if _stats != null:
+			_stats.a_csv(partido, _motor)
 		var mio_gana := (partido.goles_local > partido.goles_visita and _mi_lado == 0) or (partido.goles_visita > partido.goles_local and _mi_lado == 1)
 		var pen := ""
 		if not _motor.tanda.is_empty():
@@ -1782,7 +1888,7 @@ func _sincronizar_partido() -> bool:
 			objetivo = maxi(objetivo, 45)
 	while partido.minuto < objetivo and not partido.terminado_ya:
 		partido.simular_minuto()
-		partido.fijar_estadisticas(float(_motor.posesion_local()), _motor.corners, _motor.faltas)
+		partido.fijar_estadisticas(float(_motor.posesion_local()), _motor.corners, _motor.faltas, _motor.fueras_de_juego)
 		_dt_rival(partido.minuto)
 		if parar_en_descanso and not _descanso_hecho and partido.minuto >= 45:
 			_descanso_hecho = true
@@ -1840,6 +1946,7 @@ func _cambio_ia(c: Club, es_local: bool) -> void:
 func _simular_resto_motor() -> void:
 	_motor.autopiloto = true
 	_motor.control_equipo = -1
+	_motor.fijar_dificultad(_motor.dificultad_cpu)
 	_descanso_hecho = true
 	var pasos := 0
 	while _motor.estado != "fin" and pasos < 60 * 3600:
@@ -1867,6 +1974,7 @@ func _alternar_control_motor() -> void:
 	_guardar_pref("control_equipo", activo)
 	_motor.control_equipo = _mi_lado if activo else -1
 	_motor.autopiloto = not activo
+	_motor.fijar_dificultad(_motor.dificultad_cpu)
 	_motor.camara = get_viewport().get_camera_3d() if activo else null
 	if not activo:
 		_motor.usuario = {}
@@ -1981,7 +2089,7 @@ func _abrir_panel_dt() -> void:
 		_mostrar_banner_gol(Idiomas.t("Este partido no es de tu club: solo puedes mirarlo."), false)
 		return
 	var mio: Club = partido.local if _mi_lado == 0 else partido.visita
-	_panel_dt = PanelDTPartido.abrir(self, partido, mio, _motor, abrir_estadisticas)
+	_panel_dt = PanelDTPartido.abrir(self, partido, mio, _motor, abrir_estadisticas, repetir_jugada)
 	_panel_dt.cerrado.connect(func() -> void:
 		_panel_dt = null
 		_actualizar_tacticas())
@@ -2027,6 +2135,10 @@ func _unhandled_input(e: InputEvent) -> void:
 	if partido != null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_estadisticas"):
 		get_viewport().set_input_as_handled()
 		abrir_estadisticas()
+		return
+	if partido != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_repeticion"):
+		get_viewport().set_input_as_handled()
+		repetir_jugada()
 		return
 	if _motor != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_pausa"):
 		if _cajon != null and _cajon.abierto:
