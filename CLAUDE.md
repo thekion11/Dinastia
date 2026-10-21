@@ -608,4 +608,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (sección 0 del documento): HECHO 49 → 94 filas. Bolsas de nombres en `datos/bolsas_nombres.json`
   (tocayos 10 % → 1 %). Banco: 4 secciones nuevas (palabras prohibidas, capitán votado, glifos, tocayos).
   OJO: `_probar_motor_libre` dependía de la base que dejaba la prueba anterior (ahora la fija).
+- 21-10 («Sigue»): 2.ª pasada de la lista (A-F). HECHO 94 → 102. Claves: `visor/mirada_balon.gd` (LookAt al balón,
+  eje +Z comprobado con `captura_mirada`), `PlayerSpawner.poner_brazalete` (copia del material), capitán en todos
+  los clubes al generar (`Mundo._capitan_si_falta`) y cinta heredada en `Puente3D.once`, sector visitante
+  (`est.visita1/2` → `sector_visita`), faros (`TraficoCiudad.faros`).
 
