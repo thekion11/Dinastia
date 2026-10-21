@@ -1305,6 +1305,11 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 					var rp := maxf(1.0, pz.y / 20.0)
 					(deck.material_override as StandardMaterial3D).uv1_scale.y = 2.0 * rp
 					(deck.material_override as StandardMaterial3D).uv1_offset.y = -rp
+				## EL SECTOR VISITANTE (M-021, 21-10): en la bandeja baja del fondo
+				## −Z (enfrente del túnel), una esquina con los colores del rival.
+				if est_b.has("visita1") and not lateral and pos.z < 0.0 and b == 0:
+					est_b = est_b.duplicate()
+					est_b["sector_visita"] = true
 				_butacas(deck, dm.size, lateral, est_b, ocupacion, alto_s, rake_firmado, b)
 				_telones(deck, dm.size, lateral, est_s, seed_val + int(s["i"]) * 31 + b * 7)
 			## El frente vertical bajo la bandeja: tapa el hueco que dejaria ver
@@ -2718,6 +2723,10 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var colores_hincha := [h1, h1, h1, h1, h1, h1, h2, h2, h2, h2,
 		Color(0.85, 0.85, 0.88), Color(0.15, 0.16, 0.2), Color(0.45, 0.5, 0.55), Color(0.78, 0.7, 0.45),
 		Color(0.2, 0.3, 0.7), Color(0.55, 0.35, 0.25), Color(0.25, 0.5, 0.35)]
+	var visita := bool(est.get("sector_visita", false))
+	var v1 := Color(str(est.get("visita1", "#ffffff")))
+	var v2 := Color(str(est.get("visita2", "#222222")))
+	var corte_visita := largo * 0.22
 	var hinchas_xf: Array[Transform3D] = []
 	var hinchas_col: Array[Color] = []
 	var det_xf: Array[Transform3D] = []
@@ -2773,6 +2782,13 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 				var xf := Transform3D(base_h, p + eje_largo * desp + jit + Vector3(0, 0.15, 0))
 				var col_h: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
 				col_h = col_h.darkened(rng.randf() * 0.15)
+				## El sector visitante: el último cuarto de la fila, con una franja
+				## de butacas vacías que lo separa. El azar se consume igual, así el
+				## resto de la grada sale idéntico con o sin rival.
+				if visita and l > corte_visita - 1.6:
+					if l < corte_visita + 1.6:
+						continue
+					col_h = (v1 if (int(l * 7.0 + float(f) * 3.0) % 5) < 3 else v2).darkened(rng.randf() * 0.12)
 				if cerca:
 					det_xf.append(xf)
 					det_col.append(col_h)

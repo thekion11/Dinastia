@@ -240,6 +240,81 @@ var jugador: Node3D = null
 ## Fotograma propio para repartir los lejanos (ver `_process`).
 var _cuadro := 0
 
+## FAROS Y LUCES DE FRENO (M-175, 20-10-2026). De noche los coches encienden
+## los faros (blancos delante, rojos detrás) y las de freno se avivan cuando
+## paran en un semáforo. Una sola malla por coche (4 cuadraditos con color por
+## vértice) y un material compartido: el brillo general es un uniforme y el
+## freno, un uniforme por instancia. Solo se dibujan a menos de 220 m.
+const SHADER_FAROS := """
+shader_type spatial;
+render_mode unshaded, cull_disabled;
+uniform float noche = 0.0;
+instance uniform float freno = 0.0;
+void fragment() {
+	bool trasera = COLOR.g < 0.5;
+	float k = trasera ? noche * (0.55 + 1.6 * freno) : noche * 2.4;
+	ALBEDO = COLOR.rgb * (0.25 + k);
+	ALPHA = 1.0;
+}
+"""
+var _mat_faros: ShaderMaterial
+var _faros_hechos := false
+var noche := 0.0
+
+func faros(n: float) -> void:
+	noche = clampf(n, 0.0, 1.0)
+	if noche > 0.05 and not _faros_hechos:
+		_faros_hechos = true
+		_mat_faros = ShaderMaterial.new()
+		var sh := Shader.new()
+		sh.code = SHADER_FAROS
+		_mat_faros.shader = sh
+		for v in _vehiculos:
+			if _es_coche(v):
+				_poner_faros(v)
+	if _mat_faros != null:
+		_mat_faros.set_shader_parameter("noche", noche)
+
+func _es_coche(v: Dictionary) -> bool:
+	return float(v["alto"]) < 0.05 and is_instance_valid(v["nodo"])
+
+func _poner_faros(v: Dictionary) -> void:
+	var nodo: Node3D = v["nodo"]
+	var caja := AABB()
+	var primera := true
+	var inv := nodo.global_transform.affine_inverse()
+	for mi in nodo.find_children("*", "MeshInstance3D", true, false):
+		var bb: AABB = (inv * (mi as MeshInstance3D).global_transform) * (mi as MeshInstance3D).get_aabb()
+		caja = bb if primera else caja.merge(bb)
+		primera = false
+	if primera or caja.size.z < 1.5:
+		return
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var y := caja.position.y + caja.size.y * 0.42
+	var lado := caja.size.x * 0.5 - 0.22
+	var cx := caja.get_center().x
+	for frente in [1.0, -1.0]:
+		var z: float = (caja.end.z + 0.03) if frente > 0.0 else (caja.position.z - 0.03)
+		var col := Color(1.0, 0.95, 0.82) if frente > 0.0 else Color(1.0, 0.08, 0.05)
+		for sx in [-1.0, 1.0]:
+			var c := Vector3(cx + sx * lado, y, z)
+			var w := 0.16
+			var h := 0.09
+			var q := [c + Vector3(-w, -h, 0), c + Vector3(w, -h, 0), c + Vector3(w, h, 0), c + Vector3(-w, h, 0)]
+			for i in [0, 1, 2, 0, 2, 3]:
+				st.set_color(col)
+				st.add_vertex(q[i])
+	var mi_f := MeshInstance3D.new()
+	mi_f.name = "Faros"
+	mi_f.mesh = st.commit()
+	mi_f.material_override = _mat_faros
+	mi_f.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi_f.visibility_range_end = 220.0
+	nodo.add_child(mi_f)
+	v["faros"] = mi_f
+	v["frena"] = false
+
 func _process(delta_real: float) -> void:
 	## RENDIMIENTO (15-10-2026, medido con pruebas/sonda_explorador: 3,4 ms por
 	## fotograma con ~310 coches y vecinos, y solo ~25 cerca). Los lejanos se
@@ -287,12 +362,19 @@ func _process(delta_real: float) -> void:
 		var s0 := float(v["s"])
 		var largo := (_rutas[ruta] as Ruta).largo
 		## En rojo (o ámbar), se detiene en la línea.
+		var frena := false
 		if semaforos != null and _controles.has(ruta):
 			for c: Dictionary in _controles[ruta]:
 				var d := fposmod(float(c["s"]) - s0, largo)
 				if d < avance + 0.5 and d < 12.0 and not semaforos.verde(int(c["eje"])):
 					avance = maxf(0.0, d - 0.3)
+					frena = true
 					break
+		if v.has("faros") and bool(v["frena"]) != frena:
+			v["frena"] = frena
+			var fm: MeshInstance3D = v["faros"]
+			if is_instance_valid(fm):
+				fm.set_instance_shader_parameter("freno", 1.0 if frena else 0.0)
 		## Las paradas del autobús.
 		if v.has("paradas"):
 			for ps: float in v["paradas"]:

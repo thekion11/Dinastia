@@ -1807,6 +1807,9 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
 	var tras := 0.8
 	if con_tarjeta:
+		## M-105 (20-10): el amonestado protesta mirando al árbitro (manos
+		## abiertas, «¿qué he hecho?») mientras este se acerca con la tarjeta.
+		_protestar(infractor)
 		## Habla con el infractor y le enseña la tarjeta (con la cartulina en la mano).
 		var sera_roja := tarjetas_reales and (roja_directa or int(infractor.get("amarillas", 0)) + 1 >= 2)
 		_gesto_arbitro("arbitro_amonestar_hablar", 0.9, 1.5, {"mira_a": infractor})
@@ -4282,6 +4285,18 @@ func _mover_jugadores(delta: float) -> void:
 ## EL ÁRBITRO SIGUE LA JUGADA (29-9-2026). El principal va en diagonal, unos
 ## metros por detrás y a un lado del balón, sin meterse en la línea de pase;
 ## los asistentes corren su banda a la altura del balón, cada uno en su mitad.
+## La z del penúltimo jugador del equipo que defiende la portería de ese lado
+## (`lado` = signo de su z): la línea del fuera de juego. Contando al portero.
+func linea_fuera_de_juego(lado: float) -> float:
+	var zs: Array[float] = []
+	for p: Dictionary in jugadores:
+		if signf(_arco_propio(p).z) == signf(lado):
+			zs.append(pos(p).z * signf(lado))
+	if zs.size() < 2:
+		return 0.0
+	zs.sort()
+	return zs[zs.size() - 2] * signf(lado)
+
 func _mover_arbitros(delta: float) -> void:
 	if balon == null:
 		return
@@ -4298,10 +4313,12 @@ func _mover_arbitros(delta: float) -> void:
 		match String(a.get("id", "")):
 			"arbitro":
 				obj = Vector3(clampf(b.x - 9.0 * signf(b.x + 0.01), -26.0, 26.0), 0, clampf(b.z - 6.0, -40.0, 40.0))
+			## M-107 (20-10): a la altura del PENÚLTIMO defensor (la línea del
+			## fuera de juego), o del balón si está más cerca de la portería.
 			"linea_a":
-				obj = Vector3(-36.5, 0, clampf(b.z, -50.0, 0.0))
+				obj = Vector3(-36.5, 0, clampf(minf(b.z, linea_fuera_de_juego(-1.0)), -50.0, 0.0))
 			_:
-				obj = Vector3(36.5, 0, clampf(b.z, 0.0, 50.0))
+				obj = Vector3(36.5, 0, clampf(maxf(b.z, linea_fuera_de_juego(1.0)), 0.0, 50.0))
 		## En la tanda: el principal al borde del área chica y un asistente en la
 		## línea de gol (fuera del plano del lanzador).
 		if estado == "tanda":
@@ -4439,6 +4456,17 @@ func _revisar_anadido_arbitro() -> void:
 	if segundos_anadidos() >= 0.0 and minutos_anadidos() > 0:
 		_anadido_gesto[mitad] = true
 		_gesto_arbitro("arbitro_tiempo_anadido", 0.0, 1.8)
+
+func _protestar(p: Dictionary) -> void:
+	var ap: AnimationPlayer = p.get("anim")
+	if not is_instance_valid(ap):
+		return
+	var clip := "discutir_arbitro" if ap.has_animation("discutir_arbitro") else "protestar"
+	_anim(p, clip, true, 2.4)
+	for a: Dictionary in arbitros:
+		if String(a.get("id", "")) == "arbitro" and is_instance_valid(a.get("node")):
+			var d := (a["node"] as Node3D).position - pos(p)
+			_mirar(p, atan2(d.x, d.z), 2.4)
 
 func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
 	var ap: AnimationPlayer = p.get("anim")

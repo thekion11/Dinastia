@@ -229,6 +229,10 @@ func build(d: Dictionary) -> void:
 func encender_luces(noche: float) -> void:
 	if expansion != null:
 		expansion.encender(noche)
+	## Los faros de los coches (M-175).
+	var traf := get_node_or_null("Trafico") as TraficoCiudad
+	if traf != null:
+		traf.faros(noche)
 	var f: float = clampf(noche, 0.0, 1.0)
 	for mt in _mats_torre:
 		mt.set_shader_parameter("noche", f)
