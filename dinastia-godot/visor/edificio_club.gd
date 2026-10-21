@@ -555,8 +555,10 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			var blanco := TunelVestuario._mat(Color(0.95, 0.96, 0.97), 0.6)
 			for k in camas:
 				var px := caja.position.x + 1.0 + k * (caja.size.x - 2.0) / maxf(1.0, float(camas - 1)) if camas > 1 else cx
-				TunelVestuario._caja(nodo, Vector3(px, y0 + 0.55, caja.position.y + 1.3), Vector3(0.9, 0.15, 2.0), blanco, true)
-				TunelVestuario._caja(nodo, Vector3(px, y0 + 0.25, caja.position.y + 1.3), Vector3(0.8, 0.5, 1.8), Texturas.metal(Color(0.65, 0.67, 0.7), 0.4), false)
+				## Camillas de verdad con su mesita (21-10-2026).
+				if _mod(nodo, "bedSingle", Vector3(px, y0, caja.position.y + 1.3), PI, true, null, {"carpet": Color(0.92, 0.94, 0.96)}) == null:
+					TunelVestuario._caja(nodo, Vector3(px, y0 + 0.55, caja.position.y + 1.3), Vector3(0.9, 0.15, 2.0), blanco, true)
+				_mod(nodo, "sideTableDrawers", Vector3(px + 0.75, y0, caja.position.y + 0.55), 0.0)
 			TunelVestuario._caja(nodo, Vector3(caja.end.x - 0.4, y0 + 1.0, caja.end.y - 0.8), Vector3(0.6, 2.0, 1.2), blanco, true)
 			TunelVestuario._rotulo(nodo, "✚", Vector3(cx, y0 + 2.4, caja.position.y + 0.05), 0.0, 120, Color(0.85, 0.15, 0.15))
 		"Vestuario visitante":
@@ -611,7 +613,7 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			for f in filas:
 				for k in int((caja.size.x - 1.0) / 0.8):
 					## Butacas de cine de verdad (antes, cubos del color del club).
-					if _mod(nodo, "loungeChair", Vector3(caja.position.x + 0.9 + k * 0.8, y0, caja.position.y + 2.2 + f * 1.1), PI, true, 1.25) == null:
+					if _mod(nodo, "loungeChair", Vector3(caja.position.x + 0.9 + k * 0.8, y0, caja.position.y + 2.2 + f * 1.1), PI, true, 1.25, {"carpet": c1.lerp(Color(0.12, 0.12, 0.14), 0.4)}) == null:
 						TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.9 + k * 0.8, y0 + 0.45, caja.position.y + 2.2 + f * 1.1), Vector3(0.6, 0.9, 0.6), club, true)
 		"Sala de prensa":
 			var tipo := String((ctx.get("dentro", {}) as Dictionary).get("sala_prensa", "mesa"))
@@ -631,10 +633,19 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 					TunelVestuario._caja(nodo, Vector3(caja.position.x + 1.5 + k * 2.2, y0 + 1.5, caja.end.y - 0.5), Vector3(0.4, 0.3, 0.6), oscuro, false)
 		"Comedor del plantel":
 			## Mesa larga con sillas, la barra con la comida y la campana.
-			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.75, cz + 0.4), Vector3(1.0, 0.08, caja.size.y - 2.4), madera, true)
-			for k in int((caja.size.y - 2.6) / 0.8):
-				for lado in [-1.0, 1.0]:
-					TunelVestuario._caja(nodo, Vector3(cx + lado * 0.75, y0 + 0.45, caja.position.y + 1.6 + k * 0.8), Vector3(0.45, 0.9, 0.45), club, false)
+			## (21-10-2026) Mesas y sillas de verdad, con platos y vasos; las sillas
+			## miran a la mesa (piezas del catálogo común).
+			var n_mesas := maxi(1, int((caja.size.y - 2.6) / 1.6))
+			for k in n_mesas:
+				var zm := caja.position.y + 2.0 + k * 1.6
+				if _mod(nodo, "table", Vector3(cx, y0, zm), PI * 0.5, true) == null:
+					TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.75, zm), Vector3(1.0, 0.08, 1.4), madera, true)
+				var arriba := y0 + _alto_mod("table")
+				for lado: float in [-1.0, 1.0]:
+					for f: float in [-0.35, 0.35]:
+						_mod(nodo, "chair", Vector3(cx + lado * 0.85, y0, zm + f), -lado * PI * 0.5, false, null, {"carpet": c1.lerp(Color(0.2, 0.2, 0.2), 0.3)})
+						_mod(nodo, "comida/plate", Vector3(cx + lado * 0.3, arriba, zm + f), 0.0)
+				_mod(nodo, "comida/glass", Vector3(cx, arriba, zm), 0.0)
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.5, caja.position.y + 0.4), Vector3(caja.size.x - 0.4, 1.0, 0.6), Texturas.metal(Color(0.75, 0.77, 0.8), 0.35), true)
 			for k in 4:
 				TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.6 + k * (caja.size.x - 1.2) / 3.0, y0 + 1.05, caja.position.y + 0.4),

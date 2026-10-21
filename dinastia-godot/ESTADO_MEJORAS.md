@@ -16,6 +16,10 @@ Cerrados en esta pasada (cada uno con prueba o captura): público (M-034 piel po
 
 Estado tras ella: **HECHO 102 · PARCIAL 111 · PENDIENTE 239**. Cerrados: M-021 sector visitante, M-059 reparto de marcas, M-062 escudos únicos, M-073 brazalete de capitán (no se ponía nunca y con la base real no había capitanes), M-098 la cabeza sigue al balón, M-105 protesta al ver tarjeta, M-107 jueces de línea con el penúltimo defensor, M-175 faros y luces de freno; parciales: M-085 canas, M-102 banquillo ante la roja, M-183 menos gente de madrugada.
 
+### Pasada del 21-10 (tercera: hallazgos del vídeo de gameplay, informe técnico y piezas modulares)
+
+Estado tras ella: **HECHO 104 · PARCIAL 114 · PENDIENTE 234** (contado fila a fila). Hallazgos del vídeo: pocas ocasiones (M-138: ritmos y `prisa`), controles táctiles en PC (M-433), el mentor tapaba la rueda de prensa (`MentorVoz` espera, grupo `no_tapar_mentor`), haces de farola en triángulo (M-014), malabares rehechos con racha ×2/×3/×4, manos del público del color de la ropa (`hinchada.gdshader`). Informe técnico: oclusión de la ciudad (M-344), panel de objetivos por señal (M-386), texturas revisadas (M-346). Pedido del dueño «reusar todos los objetos, separar y unir de forma modular»: `visor/modulos.gd` (reserva para reciclar, unir/separar conjuntos, guardarlos como datos, teñir por material) y el edificio del club amueblado con él (M-186), con 7 objetos de decoración nuevos.
+
 ## 1. Resumen en cifras
 
 | Sección | Puntos | HECHO | PARCIAL | PENDIENTE | 🔒 DUEÑO | SIN VERIF. |
@@ -61,7 +65,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-011 | P1 | Marcador/pantalla gigante estática | PENDIENTE | `StadiumBuilder._pantallas` usa una textura fija (`_pantalla_textura`): sin marcador ni repetición vivos |
 | M-012 | P2 | Vallas LED con la misma rotación de marcas inventadas (30) | PENDIENTE | `VallasLed` sin catálogo ampliado; `Auspicio` tiene 38 marcas |
 | M-013 | P2 | Banderas de esquina/córner genéricas | PARCIAL | banderines con tela y color del asiento del estadio (`_corners`); sin banderola del país ni viento |
-| M-014 | P1 | Sin diferencia día/noche en el aspecto de la iluminación… | PENDIENTE | sin conos volumétricos ni reflejo de focos |
+| M-014 | P1 | Sin diferencia día/noche en el aspecto de la iluminación… | PARCIAL | 21-10: el haz de cada farola de la ciudad es un cono volumétrico falso con degradado y sin contorno (`visor/cono_farola.gdshader`); sin haces de los focos del estadio |
 | M-015 | P2 | El césped usa 12 dibujos, asignación por hash | PENDIENTE | el dibujo de césped sigue por hash (`Club._CESPED`); no hay campo en estadios reales |
 | M-016 | P2 | Sin campo de entrenamiento/calentamiento visible fuera del estadio | PENDIENTE | sin campo anexo con calentamiento |
 | M-017 | P1 | Túnel de vestuario sólo en +Z | PENDIENTE | túnel fijo en la tribuna +Z (`tunel_x`) |
@@ -205,7 +209,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-135 | P2 | Sin cámara de gol del cuarto árbitro/línea | PENDIENTE | sin cámara de línea de gol |
 | M-136 | P2 | HUD del partido con FC-style indicadores; sin heatmap/estadísticas… | HECHO | `PanelEstadisticas` (T/Select) con mapa de tiros y de calor (16-10); falta mapa de pases |
 | M-137 | P2 | Sin xG ni xA | HECHO | xG por remate (`EstadisticasVivo.xg_de`); 20-10: xA (el pase previo se lleva el xG del remate: `xa`, `xa_por_jugador`) y fila «Asistencias esperadas (xA)» en los 9 idiomas |
-| M-138 | P1 | Ritmo del partido ≈ 54 s/s vs 11 s/s (M-07) | HECHO | ritmo corto/normal/largo (2,7/4/6 s por minuto) en el partido del DT |
+| M-138 | P1 | Ritmo del partido ≈ 54 s/s vs 11 s/s (M-07) | HECHO | 21-10: ritmos del DT a 4 / 5,5 / 7,5 s por minuto (el «normal» ≈ 10 min, como FC) y `MotorJugable.prisa()` compensa las mitades cortas: 247 s → 2,6 goles y 15 tiros (antes, a ritmo normal, 1,3 goles y el vídeo acabó 0-0) |
 | M-139 | P2 | Tiempo añadido con base real pero sin descuentos por lesión visibles | HECHO | 17-10: cartel 3D del cuarto árbitro (`CuartoArbitro`; 20-10 a tamaño real); 20-10: cada entrada dura (nivel de amarilla o más) suma medio minuto de atención (`MotorJugable._falta`), además de goles, cambios y expulsiones |
 | M-140 | P2 | Descanso: charla de medio tiempo con opciones; sin vestuario 3D… | PENDIENTE | el descanso vuelve al camarín 2D (`prueba_descanso_3d`); sin cinemática de vestuario |
 | M-141 | P2 | Resumen de partido sin mapa de calor ni valoraciones por jugador… | HECHO | 17-10: `Partido.valoraciones()` (determinista, sin `Azar`) en `ResumenPartido` (mejor del partido en franja dorada + dos columnas) y al final de `PartidoVivo`. OJO (hallazgo): en un partido mirado `_cerrar_notas()` no se llama nunca (solo `simular()`), así que `Jugador.notas`/forma no reciben ese partido; no se tocó (cambiaría el azar de la partida) |
@@ -258,7 +262,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-183 | P2 | Peatones: 34 máx; sin rutinas por hora | PARCIAL | 21-10: de madrugada queda en la calle un tercio de la gente (los ocultos tampoco se mueven: `TraficoCiudad.faros`); faltan rutinas por persona |
 | M-184 | P2 | Sin NPC con nombre y memoria (te reconocen) | PENDIENTE | sin vecinos con memoria |
 | M-185 | P2 | Diálogos por oficio (hecho) pero sin ramas ni consecuencias | PENDIENTE | diálogos sin consecuencias |
-| M-186 | P2 | Interiores: 15 salas; edificios entrables «la mayoría» sin… | PARCIAL | gimnasio, piscina, estación central, recreativos con muebles Kenney (15/16-10); sin 3 variantes por arquetipo |
+| M-186 | P2 | Interiores: 15 salas; edificios entrables «la mayoría» sin… | PARCIAL | gimnasio, piscina, estación central, recreativos con muebles Kenney (15/16-10); 21-10: edificio del club con muebles de verdad del catálogo común `Modulos` (oficina del DT, despacho, sala de vídeo, prensa, comedor, enfermería); sin 3 variantes por arquetipo |
 | M-187 | P2 | Casas sin habitantes ni rutinas | PARCIAL | vivienda con «la familia que vive allí» (`InteriorInstalacion` l.1057); sin horarios |
 | M-188 | P2 | Sin tiendas con compra real (ropa, balones) | PENDIENTE | sin compra en tiendas |
 | M-189 | P2 | Sin bares/restaurantes con minijuego | PENDIENTE | sin bar con minijuego |
@@ -446,9 +450,9 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-341 | P1 | Sombras: 4 cortes en ALTO; sin ahorro medible al bajar (probado),… | 🔒 DUEÑO | coste de sombras en GPU real |
 | M-342 | P1 | Público real +8 % de triángulos (S-03) | HECHO | LOD del público por tramos (16-10) |
 | M-343 | P2 | Draw calls 700 | PARCIAL | sombras en 8 mallas por sector (741→691) y 630 llamadas; sin atlas |
-| M-344 | P2 | Overdraw en grada por butacas y personas | PENDIENTE | sin `OccluderInstance3D` |
+| M-344 | P2 | Overdraw en grada por butacas y personas | PARCIAL | 21-10: oclusión en la CIUDAD (`OclusoresCiudad`, 1.120 paredes): −16 % de llamadas a pie de calle (12.128 → 10.192 en 4 calles, `medir_oclusion`); en la grada del estadio sigue sin `OccluderInstance3D` |
 | M-345 | P2 | Culling por trozos para MultiMesh grandes | PENDIENTE | sin culling por trozos de MultiMesh |
-| M-346 | P2 | Texturas con compresión (s3tc en PC); sin variantes móviles… | PENDIENTE | sin importación etc2/astc |
+| M-346 | P2 | Texturas con compresión (s3tc en PC); sin variantes móviles… | PARCIAL | 21-10: revisado: las texturas grandes de 3D ya están en VRAM (s3tc) y limitadas (ropa 4K → 1024); las 3.103 sin comprimir son caras reales, iconos 2D y paletas de Kenney, que se dejan sin pérdida a propósito; sin etc2/astc para móvil |
 | M-347 | P2 | VRAM 539 MB en partido | PARCIAL | texturas del globo comprimidas (72→13 MB); VRAM del partido sin remedir |
 | M-348 | P2 | Carga: `Precarga` existe; primera construcción de estadio larga | PENDIENTE | sin caché en disco de mallas generadas |
 | M-349 | P2 | Generación de `Mundo` (384 clubes) y `Reales.aplicar`: medir… | PENDIENTE | sin `WorkerThreadPool` |
@@ -498,7 +502,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-383 | P2 | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | PENDIENTE | sin `JugadorMotor` tipado |
 | M-384 | P2 | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | PENDIENTE | sin extraer servicios |
 | M-385 | P2 | Autoloads con globals (`Datos`, `Sonido`…) | PENDIENTE | sin documentar autoloads |
-| M-386 | P2 | Señales sin desconexión en liberación (posibles fugas) | PARCIAL | `auditoria_tecnica.gd` mide huérfanos en la pantalla principal |
+| M-386 | P2 | Señales sin desconexión en liberación (posibles fugas) | PARCIAL | `auditoria_tecnica.gd` mide huérfanos en la pantalla principal; 21-10: el panel de objetivos pasa a señal (`vista_cambiada`) y respaldo cada 3 s, sin fallar con las pestañas prestadas a un menú |
 | M-387 | P2 | Mensajes de error silenciosos (`return` sin aviso) | PENDIENTE | sin registro de errores |
 | M-388 | P2 | Constantes mágicas (balance) dispersas | PENDIENTE | sin archivo de balance |
 | M-389 | P2 | `class_name` nuevos exigen `--import` (aprendido hoy) | HECHO | 20-10: `banco.sh` y `mini_banco.sh` reimportan solos si hay un .gd más nuevo que la caché de clases |
@@ -560,7 +564,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
-| M-433 | P1 | Controles táctiles sólo en la ciudad (cruceta/E) | PENDIENTE | táctil solo en ciudad/estadio a pie; el partido no |
+| M-433 | P1 | Controles táctiles sólo en la ciudad (cruceta/E) | PARCIAL | 21-10: en PC ya no salen la cruceta ni «Salir» al pasear (estadio y ciudad) y la E solo aparece si hay algo con lo que interactuar (`ExploradorCiudad.es_tactil`); el partido sigue sin controles táctiles |
 | M-434 | P2 | Sin vibración (rumble) en mando | HECHO | 17-10: `Mando.vibrar` en gol, remate y tarjeta (DT y Carrera), ayuda «Vibración del mando» normal/suave/no |
 | M-435 | P2 | Sin gatillos analógicos para potencia de pase | PENDIENTE | sin gatillos analógicos |
 | M-436 | P2 | Sin giroscopio para cámara en primera persona (móvil) | PENDIENTE | sin giroscopio |
