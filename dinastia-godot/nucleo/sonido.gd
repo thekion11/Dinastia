@@ -49,7 +49,7 @@ func _ready() -> void:
 	_hilo = Thread.new()
 	_hilo.start(_generar_en_fondo, Thread.PRIORITY_LOW)
 
-## Los 205 sonidos del catálogo.
+## Los 207 sonidos del catálogo.
 const NOMBRES := ["silbato", "gol", "gol_rival", "roja", "amarilla",
 	"murmullo", "ovacion", "poste", "clic", "moneda", "pitido_final",
 	"ocasion", "atajada", "falta", "corner", "trofeo",
@@ -124,7 +124,9 @@ const NOMBRES := ["silbato", "gol", "gol_rival", "roja", "amarilla",
 	"paso_atras", "presion_alta", "contragolpe", "posesion_larga",
 	"cambio_ritmo",
 	## --- Recorridos a pie (etapa 1, 8-10-2026): se pedían y no existían ---
-	"puerta", "paso"]
+	"puerta", "paso",
+	## --- Coches (21-10-2026): el choque y el claxon de la ciudad ---
+	"choque_coche", "claxon"]
 
 
 ## Genera TODO de golpe, en el hilo que llama. Solo para pruebas y
@@ -245,6 +247,16 @@ func _sintetizar(nombre: String, sal: float) -> AudioStreamWAV:
 			## Golpe seco y metálico: un tono alto que se apaga en nada.
 			m = _tono(1180.0 * tono, 0.30 * largo, 0.20, "seno")
 			_mezclar(m, _tono(2360.0 * tono, 0.16 * largo, 0.08, "seno"))
+		"choque_coche":
+			## Golpe de chapa: un ruido grave y seco, el crujido de la carrocería y
+			## un tintineo metálico que se apaga.
+			m = _ruido(0.32 * largo, 60.0, 700.0, 0.55)
+			_mezclar(m, _ruido(0.18 * largo, 900.0, 3200.0, 0.18), 0.02)
+			_mezclar(m, _tono(420.0 * tono, 0.40 * largo, 0.10, "seno"), 0.05)
+		"claxon":
+			## Dos notas a la vez (la bocina de dos tonos de un coche).
+			m = _tono(415.0 * tono, 0.45 * largo, 0.16, "cuadrada")
+			_mezclar(m, _tono(523.0 * tono, 0.45 * largo, 0.12, "cuadrada"))
 		"clic":
 			m = _tono(880.0 * tono, 0.05, 0.05, "cuadrada")
 		"moneda":
