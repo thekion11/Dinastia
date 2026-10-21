@@ -612,4 +612,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   eje +Z comprobado con `captura_mirada`), `PlayerSpawner.poner_brazalete` (copia del material), capitán en todos
   los clubes al generar (`Mundo._capitan_si_falta`) y cinta heredada en `Puente3D.once`, sector visitante
   (`est.visita1/2` → `sector_visita`), faros (`TraficoCiudad.faros`).
+- 21-10 PEDIDO: «descarta la optimización (ya está bien); la tribuna sigue viéndose mal, ¿la estructura del estadio
+  es modular y navegable?, la gente no se ve tan real». HECHO: pasillos con escalera y barandilla en todas las
+  bandejas + escaleras de acceso desde el césped, cinta LED en el peto (`visor/cinta_led.gdshader`), público con
+  volumen/bufandas/gorras (`hinchada.gdshader`, `OlaGrada.colores_club`), nivel medio de personas que NUNCA se
+  llenaba (bloques sin cabeza desde la 5.ª fila), subir CAMINANDO a la butaca (`camino_a_butaca`). Revisión:
+  `pruebas/captura_diagnostico_grada.tscn` (6 tomas) y `captura_sentarse.tscn`. Pendiente: el exterior (cajas,
+  esquinas abiertas). OJO: sin pantalla, los MultiMesh no guardan posiciones (no probar eso en el banco).
 
