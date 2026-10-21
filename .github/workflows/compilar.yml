@@ -10,6 +10,9 @@ env:
   GODOT_VERSION: "4.7.2"
   GODOT_RELEASE: "stable"
 
+permissions:
+  contents: write
+
 jobs:
   export-windows:
     runs-on: ubuntu-latest
@@ -51,14 +54,30 @@ jobs:
           cd dinastia-godot
           godot --headless --import || true
 
-      - name: Build Windows Release
+      - name: Build Windows (ligero, publicable)
         run: |
           mkdir -p build/windows
           cd dinastia-godot
-          godot --headless --export-release "Windows Desktop" ../build/windows/Dinastia.exe
+          godot --headless --export-release "WindowsLigero" ../build/windows/DINASTIA.exe
+
+      - name: Zip
+        run: |
+          cd build/windows
+          zip -q -r ../DINASTIA-Windows.zip .
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Dinastia-Windows
-          path: build/windows
+          path: build/DINASTIA-Windows.zip
+
+      - name: Publicar release permanente "latest"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest build/DINASTIA-Windows.zip \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Dinastia - ultima version (Windows)" \
+            --notes "Compilacion automatica de la ultima subida. Rama: ${GITHUB_REF_NAME}. Commit: ${GITHUB_SHA}. Version ligera (sin caras ni datos reales). Descomprime y ejecuta DINASTIA.exe."
