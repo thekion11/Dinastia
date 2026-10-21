@@ -4,9 +4,10 @@ pruebas/video_partido.tscn y pruebas/video_gameplay.tscn (VG_TRAMO=...).
 
     python3 herramientas/montar_gameplay.py <carpeta_con_los_avi>
 
-Sale en dos partes de menos de 29 MB (el chat admite 30 MB por archivo):
+Sale en tres partes de menos de 29 MB (el chat admite 30 MB por archivo):
   dinastia_gameplay_1_partido.mp4  · el partido entero, jugado con el mando
   dinastia_gameplay_2_resto.mp4    · gestión, estadio a pie, ciudad, Carrera de Jugador, minijuegos
+  dinastia_gameplay_3_cpu.mp4      · otro partido, CPU contra CPU (primera parte)
 Cada tramo lleva delante una tarjeta de título. Sonido AAC (el de la grabación:
 música, grada y efectos). Los .avi y .mp4 NUNCA van al repositorio."""
 import os
@@ -42,6 +43,10 @@ PARTES = {
         ("t_mini", "5 · MINIJUEGOS", ["La sala de Mi Vida: malabares"]),
         ("mini", None, None),
         ("t_fin", "DINASTÍA", ["Fin del recorrido. Listo para evaluar."]),
+    ],
+    "3_cpu": [
+        ("t_cpu", "OTRO PARTIDO · CPU CONTRA CPU", ["Primera parte, sin tocar el mando: la IA juega los dos lados", "(con gol, su celebración y la repetición)"]),
+        ("cpu", None, None),
     ],
 }
 
@@ -89,6 +94,8 @@ def duracion(ruta):
 
 
 for parte, piezas in PARTES.items():
+    if len(sys.argv) > 2 and parte not in sys.argv[2:]:
+        continue
     trozos = [intermedio(n, t, l) for n, t, l in piezas if t is not None or os.path.exists(os.path.join(D, n + ".avi"))]
     lista = os.path.join(D, f"lista_{parte}.txt")
     with open(lista, "w") as f:
