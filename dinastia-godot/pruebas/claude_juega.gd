@@ -23,6 +23,9 @@ var _balon_quieto := 0
 var _fin := false
 var _apretadas: Dictionary = {}
 var _prefs_antes := {}
+## El vídeo de gameplay (21-10-2026) hereda de este guion: deja la ceremonia
+## (CEREMONIA=1), elige el ritmo (RITMO=rapido|normal|largo) y no cierra al final.
+var salir_al_terminar := true
 
 func _ready() -> void:
 	var cfg := ConfigFile.new()
@@ -30,13 +33,15 @@ func _ready() -> void:
 	## Se apunta lo que había para dejarlo igual al terminar (las otras pruebas
 	## leen el mismo archivo: con el ritmo «rápido» la del acta fallaba).
 	for k in ["ceremonia", "intro", "ritmo_partido", "control_equipo", "dificultad_cpu"]:
-		_prefs_antes[k] = cfg.get_value(CajonAjustes.SECCION, k, null)
+		_prefs_antes[k] = cfg.get_value(CajonAjustes.SECCION, k) if cfg.has_section_key(CajonAjustes.SECCION, k) else null
 	## DIFICULTAD=nivel: contra qué CPU juego (20-10-2026).
 	if OS.get_environment("DIFICULTAD") != "":
 		cfg.set_value(CajonAjustes.SECCION, "dificultad_cpu", OS.get_environment("DIFICULTAD"))
-	cfg.set_value(CajonAjustes.SECCION, "ceremonia", false)
-	cfg.set_value(CajonAjustes.SECCION, "intro", false)
-	cfg.set_value(CajonAjustes.SECCION, "ritmo_partido", "rapido")
+	var con_ceremonia := OS.get_environment("CEREMONIA") != ""
+	cfg.set_value(CajonAjustes.SECCION, "ceremonia", con_ceremonia)
+	cfg.set_value(CajonAjustes.SECCION, "intro", con_ceremonia)
+	var ritmo := OS.get_environment("RITMO")
+	cfg.set_value(CajonAjustes.SECCION, "ritmo_partido", ritmo if ritmo != "" else "rapido")
 	cfg.save(CajonAjustes.RUTA)
 	var m := Mundo.new()
 	m.generar(["CHI"], int(OS.get_environment("SEMILLA")) if OS.get_environment("SEMILLA") != "" else 4711)
@@ -273,4 +278,5 @@ func _informe(motivo: String) -> void:
 		else:
 			cfg.set_value(CajonAjustes.SECCION, k, _prefs_antes[k])
 	cfg.save(CajonAjustes.RUTA)
-	get_tree().quit()
+	if salir_al_terminar:
+		get_tree().quit()
