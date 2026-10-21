@@ -299,8 +299,32 @@ func _mover_un_trozo(paso: Vector3, r: float) -> bool:
 		cuerpo.position = Vector3(pos.x, altura_suelo(pos.x, pos.z + paso.z), pos.z + paso.z)
 		vel *= 0.92
 		return true
+	if modo == "coche":
+		_golpe_coche(absf(vel), not libre_fijo.call(pos + paso))
 	vel *= -0.25 if modo == "coche" else 0.0
 	return false
+
+## EL CHOQUE SE NOTA (21-10-2026, M-172): antes el coche se quedaba quieto en
+## silencio. Ahora, según la velocidad: el golpe de chapa, la sacudida de la
+## cámara y del mando y, contra otro coche o una persona a más de 25 km/h, la
+## multa (el móvil avisa y se apunta en `multas`). Un choque cada medio
+## segundo como mucho (al rozar una pared no suena en bucle).
+var multas := 0
+var _t_golpe := 0.0
+var _sacudida_golpe := 0.0
+func _golpe_coche(v: float, contra_fijo: bool) -> void:
+	var ahora := Time.get_ticks_msec() / 1000.0
+	if v < 2.5 or ahora - _t_golpe < 0.5:
+		return
+	_t_golpe = ahora
+	Sonido.toca("choque_coche")
+	_sacudida_golpe = clampf(v / 18.0, 0.15, 1.0)
+	Mando.vibrar(clampf(v / 20.0, 0.25, 1.0), 0.35)
+	if not contra_fijo and v * 3.6 > 25.0:
+		multas += 1
+		Sonido.toca("claxon", Sonido.Bus.AMBIENTE)
+		if _movil != null:
+			_movil.notificar(Idiomas.t("🚓 Multa por conducción temeraria (%d)") % multas)
 
 ## Manzanas, río, círculos y móviles: todo lo que impide estar en `p`.
 func libre_total(p: Vector3, radio: float) -> bool:
@@ -592,14 +616,25 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 			if _minimapa.red == null and cb != null:
 				_minimapa.red = cb.expansion
 			_minimapa.poner(cuerpo.position, rumbo if modo == "coche" else cuerpo.rotation.y, get_physics_process_delta_time())
+	## Las paredes de oclusión, solo en la calle: dentro de un edificio taparían
+	## lo que se ve por la puerta (`OclusoresCiudad`).
+	if cb != null:
+		OclusoresCiudad.activar(cb, estado == "calle")
 	if _boton_e != null:
 		var hay := _aviso.text.strip_edges() != ""
 		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
+		_boton_e.visible = hay or es_tactil()
 		_boton_e.tooltip_text = _aviso.text
 
 ## CONTROLES TÁCTILES (el juego también va en Android): cruceta abajo a la
 ## izquierda, «E» y «Salir» abajo a la derecha. Mantener pulsado = tecla.
 var _tactil_vec := Vector2.ZERO
+
+## ¿Pantalla táctil? En PC (21-10-2026, vídeo de gameplay) la cruceta, la E y
+## «Salir» tapaban la imagen: ahí se usan las teclas, y la E solo aparece,
+## brillando, cuando hay algo con lo que interactuar.
+static func es_tactil() -> bool:
+	return DisplayServer.is_touchscreen_available() or OS.get_environment("TACTIL") != ""
 
 func _tactil(capa: CanvasLayer) -> void:
 	var tam := 74.0
@@ -608,7 +643,7 @@ func _tactil(capa: CanvasLayer) -> void:
 	base.offset_left = 24
 	base.offset_top = -tam * 3.0 - 24
 	## Solo en pantallas táctiles (en PC ocupaba el rincón del GPS).
-	base.visible = DisplayServer.is_touchscreen_available() or OS.get_environment("TACTIL") != ""
+	base.visible = es_tactil()
 	capa.add_child(base)
 	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
 			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
@@ -643,6 +678,7 @@ func _tactil(capa: CanvasLayer) -> void:
 	bs.custom_minimum_size = Vector2(tam * 1.6, tam)
 	bs.modulate = Color(1, 1, 1, 0.75)
 	bs.pressed.connect(func() -> void: salir.emit())
+	bs.visible = es_tactil()
 	der.add_child(bs)
 
 func _entrada() -> Vector2:
@@ -758,7 +794,14 @@ var _cabeceo := 0.0
 var _balanceo := 0.0
 var cam_coche := 0     ## 0 tercera persona, 1 capó, 2 interior
 
+## El motor del coche suena con sus revoluciones y marchas (M-173).
+var _motor_sonido: MotorCocheSonido
+
 func _conducir(e: Vector2, delta: float) -> void:
+	if _motor_sonido == null:
+		_motor_sonido = MotorCocheSonido.new()
+		add_child(_motor_sonido)
+	_motor_sonido.poner(vel, maxf(e.y, 0.0))
 	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B)
 	_volante = lerpf(_volante, e.x, clampf(delta * 6.0, 0.0, 1.0))
 	if e.y > 0.0:
@@ -1095,6 +1138,10 @@ func _colocar_camara(delta: float) -> void:
 	camara.position = camara.position.lerp(deseo, clampf(delta * (8.0 if modo == "coche" else 5.0), 0.0, 1.0)) if delta < 1.0 else deseo
 	if modo == "coche":
 		camara.look_at(cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * (5.0 + absf(vel) * 0.25), Vector3.UP)
+		## La sacudida del choque (M-172), que se apaga en medio segundo.
+		if _sacudida_golpe > 0.0:
+			camara.position += Vector3(randf_range(-1.0, 1.0), randf_range(-0.5, 0.5), randf_range(-1.0, 1.0)) * _sacudida_golpe * 0.18
+			_sacudida_golpe = maxf(_sacudida_golpe - (delta if delta < 1.0 else 0.0) * 2.0, 0.0)
 	else:
 		camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 4.0, Vector3.UP)
 

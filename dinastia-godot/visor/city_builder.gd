@@ -218,6 +218,8 @@ func build(d: Dictionary) -> void:
 		_marca("opt_distancias")
 		circulos = Optimizar.obstaculos(self, ExploradorCiudad.construir_obstaculos(self))
 		_marca("obstaculos")
+		OclusoresCiudad.montar(self)
+		_marca("oclusores")
 		Optimizar.agrupar(self)
 		_marca("opt_agrupar")
 

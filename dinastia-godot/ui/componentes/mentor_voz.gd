@@ -13,6 +13,8 @@ const ANCHO := 420.0
 
 static var _cola: Array[Dictionary] = []
 static var _mostrando := false
+## Las pantallas que el mentor no debe tapar se meten en este grupo.
+const GRUPO_TAPA := "no_tapar_mentor"
 
 static func decir(padre: Control, mundo: Mundo, titulo: String, texto: String) -> void:
 	_cola.append({"padre": padre, "mundo": mundo, "titulo": titulo, "texto": texto})
@@ -29,6 +31,14 @@ static func _siguiente() -> void:
 		_siguiente()
 		return
 	_mostrando = true
+	## No por encima de una pantalla que pide atención (21-10-2026, vídeo de
+	## gameplay: el consejo del presidente tapaba las respuestas de la rueda de
+	## prensa). Espera a que se cierre y entonces asoma.
+	for n in padre.get_tree().get_nodes_in_group(GRUPO_TAPA):
+		if is_instance_valid(n) and (n as CanvasItem).is_visible_in_tree():
+			_cola.push_front(d)
+			padre.get_tree().create_timer(1.5).timeout.connect(_siguiente)
+			return
 	var v := MentorVoz.new()
 	padre.add_child(v)
 	v._montar(d["mundo"], String(d["titulo"]), String(d["texto"]))

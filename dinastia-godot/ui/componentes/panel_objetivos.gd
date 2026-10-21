@@ -217,13 +217,23 @@ func refrescar() -> void:
 		_pestana.text = ("🎯\n%d\n◂" % _pendientes) if _pendientes > 0 else "🎯\n◂"
 	reset_size()
 
-## Las misiones del mentor se cumplen haciéndolas, con o sin tutorial abierto:
-## se mira cada medio segundo si ya se hizo la pendiente.
+## Las misiones del mentor se cumplen haciéndolas, con o sin tutorial abierto.
+## POR EVENTOS (21-10-2026, informe técnico punto 9): antes rehacía el guion y
+## preguntaba a la pantalla principal cada medio segundo, siempre. Ahora mira
+## cuando la principal avisa de que cambió lo que se ve (`vista_cambiada`:
+## pestaña, ficha) y, de respaldo, cada 3 s.
+var _mirar_ya := true
+func _avisado() -> void:
+	_mirar_ya = true
+
 func _process(delta: float) -> void:
 	_t += delta
-	if _t < 0.5 or _principal == null or not _principal.has_method("tutorial_hecho"):
+	if _principal != null and _principal.has_signal("vista_cambiada") and not _principal.is_connected("vista_cambiada", _avisado):
+		_principal.connect("vista_cambiada", _avisado)
+	if (not _mirar_ya and _t < 3.0) or _principal == null or not _principal.has_method("tutorial_hecho"):
 		return
 	_t = 0.0
+	_mirar_ya = false
 	var mundo: Mundo = _principal.get("mundo")
 	if mundo == null:
 		return

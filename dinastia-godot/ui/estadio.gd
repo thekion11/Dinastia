@@ -116,7 +116,7 @@ var _anadido_avisado := {}
 var _nombres_globales := true
 const DT_MOTOR := 1.0 / 60.0
 ## Segundos reales por minuto de partido con el motor real.
-const SEG_POR_MINUTO := {"rapido": 2.7, "normal": 4.0, "largo": 6.0}
+const SEG_POR_MINUTO := {"rapido": 4.0, "normal": 5.5, "largo": 7.5}
 
 ## Tres modos, según lo que se le pase:
 ##
@@ -540,7 +540,14 @@ func _miles(n: int) -> String:
 
 ## Preferencias de lo que se ve sobre la transmisión, en el mismo archivo que
 ## el resto de ajustes (`user://ajustes.cfg`, sección `hud`).
+## PRÁCTICA LIBRE (M-130): sin ceremonia ni presentación, con el motor real.
+var practica := false
+
 func _pref(k: String, por_defecto: bool) -> bool:
+	if practica and k in ["intro", "ceremonia"]:
+		return false
+	if practica and k == "motor_real":
+		return true
 	var cfg := ConfigFile.new()
 	if cfg.load(CajonAjustes.RUTA) != OK:
 		return por_defecto
@@ -622,6 +629,8 @@ func _poner_banca(once_local: Array[Jugador], once_visita: Array[Jugador]) -> vo
 		return
 	_poner_banca_de(club, once_local, true)
 	_poner_banca_de(visitante, once_visita, false)
+	if partido != null:
+		poner_directiva(_raiz3d, club, _perfil)
 
 ## Los primeros 7 disponibles, de pie; del 8 al 12, sentados en el banco
 ## simple de al lado (22-9-2026, "que los que no caben estén sentados").
@@ -700,6 +709,7 @@ static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int, per
 			var n: Node3D = d["nodo"]
 			n.position = butaca_sancion["pos"]
 			n.rotation.y = float(butaca_sancion["rumbo"])
+			_a_la_butaca(n)
 			var ap: AnimationPlayer = d.get("anim") as AnimationPlayer
 			if ap != null and ap.has_animation("sentado"):
 				ap.play("sentado")
@@ -707,6 +717,53 @@ static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int, per
 			RecorridoClub.despejar_hinchas(_raiz3d, _raiz3d.global_position + (butaca_sancion["pos"] as Vector3) + Vector3(0, 0.5, 0), 1.6)
 		return
 	PersonajeDT.poner_en_banda(_raiz3d, asp, Color(c.color1), Color(c.color2), Vector3(34.6, 0, z), -PI * 0.5)
+
+## Sentado DE VERDAD en la butaca (21-10-2026): la butaca da el suelo del
+## escalón y la animación de sentado espera el origen en el suelo con la silla
+## a ~0,45 m: se baja la cadera hasta el asiento (la misma cuenta que los bancos
+## del metro). Antes, el DT sancionado y la directiva flotaban medio metro.
+static func _a_la_butaca(n: Node3D) -> void:
+	var cadera := MetroCiudad.altura_cadera(n)
+	if cadera > 0.0:
+		n.position.y += MetroCiudad.BANCO_ASIENTO + 0.08 - cadera * 0.99
+
+## LA DIRECTIVA EN SU SITIO (21-10-2026, M-040): el presidente y dos directivos
+## del club de casa, de traje, sentados en la segunda fila de la tribuna
+## principal a la altura del medio campo (el palco). Con el mismo modelo y la
+## misma animación de sentado que el DT sancionado; caras fijas por club.
+static func poner_directiva(raiz: Node3D, c: Club, perfil: Dictionary) -> Array:
+	var gente: Array = []
+	if c == null or perfil.is_empty():
+		return gente
+	var trajes := ["15171c", "2b2f3a", "3a3328"]
+	for k in 3:
+		var rng := RandomNumberGenerator.new()
+		rng.seed = hash("directiva_%s_%d" % [c.id, k])
+		var asp := PersonajeDT.aleatorio(rng)
+		asp.merge({"cuerpo": "male", "ropa": "traje", "c_ropa": trajes[k], "c_ropa2": "f2f2f2", "corbata": true,
+			"gorra": false, "bufanda": k == 2, "auriculares": false, "pendiente": false, "cadena": false,
+			"manga_corta": false, "tatuaje": 0, "pelo": ["corto", "rapado", "corto", "calvo"][rng.randi() % 4]}, true)
+		if k == 0:
+			## El presidente: canas.
+			asp["color_pelo"] = ["9b9b98", "c8c8c4", "6e6a66"][rng.randi() % 3]
+		var b := RecorridoClub.butaca(perfil, 1.0, (float(k) - 1.0) * 1.15, 2, raiz)
+		var d := PersonajeDT.crear(raiz, asp, Color(c.color1), Color(c.color2))
+		if d.is_empty():
+			continue
+		var n: Node3D = d["nodo"]
+		n.name = "Directiva_%d" % k
+		n.position = b["pos"]
+		n.rotation.y = float(b["rumbo"])
+		_a_la_butaca(n)
+		## Zapatos de vestir (sin ellos, sentados se les veían los pies descalzos).
+		PeatonQ.calzar(d, "1c1c1e")
+		var ap: AnimationPlayer = d.get("anim") as AnimationPlayer
+		if ap != null and ap.has_animation("sentado"):
+			ap.play("sentado")
+			ap.seek(rng.randf() * 0.6, true)
+		RecorridoClub.despejar_hinchas(raiz, raiz.global_position + (b["pos"] as Vector3) + Vector3(0, 0.5, 0), 0.5)
+		gente.append(n)
+	return gente
 
 ## Mejores disponibles (sin lesión/sanción, no en el once) por media, para que
 ## la banca se vea como un banco de verdad y no como un sorteo cualquiera.
@@ -1614,7 +1671,7 @@ func _fijar_ritmo(r: String) -> void:
 	if _motor != null:
 		## Se respeta el minuto en curso: solo cambia lo que dura cada minuto.
 		var frac := _motor.t / maxf(_motor.duracion_mitad, 1.0)
-		_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(r, 4.0))
+		_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(r, 5.5))
 		_motor.t = frac * _motor.duracion_mitad
 	_mostrar_banner_gol({"rapido": "⏩ Partido corto", "normal": "⏯ Ritmo normal", "largo": "🐢 Partido largo"}.get(r, r), true)
 
@@ -1623,7 +1680,7 @@ func _montar_motor() -> void:
 	_motor = MotorJugable.new()
 	add_child(_motor)
 	_motor.set_physics_process(false)
-	_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(ritmo_partido(), 4.0))
+	_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(ritmo_partido(), 5.5))
 	_motor.cansancio_real = true
 	_motor.duracion_gol = 7.6
 	_motor.tarjetas_reales = true
@@ -1636,6 +1693,9 @@ func _montar_motor() -> void:
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
+	if practica:
+		_motor.empezar_practica()
+		call_deferred("_empezar_practica")
 	## La salida de los equipos: papelitos y bengalas de la hinchada (M-050).
 	if partido.minuto == 0 and partido.goles_local + partido.goles_visita == 0:
 		FestejoGrada.lanzar(_raiz3d, Color(partido.local.color1), Color(partido.local.color2), "salida")
@@ -1751,7 +1811,7 @@ func _montar_motor() -> void:
 	## La dificultad de la CPU (20-10-2026): la última elegida.
 	_motor.dificultad_cpu = dificultad_cpu_guardada()
 	## Si jugaste tú el último partido, vuelves a jugar (se recuerda).
-	if _pref("control_equipo", false) and _mi_lado >= 0:
+	if _pref("control_equipo", false) and _mi_lado >= 0 and not practica:
 		_alternar_control_motor.call_deferred()
 	if _mini_pantalla != null and not _pref("pantalla_esquina_motor", false):
 		_mini_pantalla.visible = false
@@ -2265,3 +2325,34 @@ func _hud_juego() -> void:
 		_flecha_apunte.scale = Vector3(1, 1, largo)
 		_flecha_apunte.position = lugar + dir * (largo * 0.5 + 0.6) + Vector3(0, 0.05 + float(_motor.apunte.get("loft", 0.0)) * 0.5, 0)
 		_flecha_apunte.rotation.y = atan2(dir.x, dir.z)
+
+## La práctica: tomas el mando de tu equipo al momento y un aviso explica qué es.
+func _empezar_practica() -> void:
+	if _motor == null:
+		return
+	if _motor.control_equipo < 0:
+		_alternar_control_motor()
+	_mostrar_banner_gol(Idiomas.t("🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir."), true)
+
+## Abre la práctica libre con tu club contra un sparring de su liga.
+static func abrir_practica(padre: Node, m: Mundo) -> VistaEstadio:
+	var c := m.mi_club()
+	if c == null:
+		return null
+	var liga: Liga = null
+	for l: Liga in m.ligas:
+		if l.clubes.has(c):
+			liga = l
+	var rival: Club = null
+	for x: Club in (liga.clubes if liga != null else []):
+		if x != c:
+			rival = x
+			break
+	if rival == null:
+		return null
+	Partido.ctx_club_id = c.id
+	var v := VistaEstadio.new()
+	v.practica = true
+	padre.add_child(v)
+	v.abrir(c, 0.15, rival, Partido.new(c, rival), m.perfil_estadio_de(c))
+	return v

@@ -855,6 +855,8 @@ func _tabla(nombre_tabla: String) -> Array:
 const FORMAS_B6 := [
 	["dos", "Dos tribunas", "Solo las laterales; detrás de los arcos, cielo abierto. Barato y con poco ruido.", 3, "lados", 0.72],
 	["principal", "Tribuna de honor", "Cuatro tribunas y una principal con una bandeja más, la de los banquillos.", 6, "lados", 1.0],
+	["estrecho", "Caja inglesa", "Cuatro tribunas pegadas al césped: poco aforo y mucho ruido.", 4, "lados", 0.85],
+	["asimetrico", "Asimétrico", "Una tribuna de honor más alta y un fondo a cielo abierto.", 5, "lados", 0.92],
 ]
 
 ## Una fila del catálogo por su clave, con la primera como red de seguridad: es

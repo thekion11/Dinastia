@@ -66,6 +66,7 @@ uniform float piel_sesgo = 1.0;
 varying float v_alto;
 varying float v_azar;
 varying float v_lado;
+varying float v_x;
 
 // Ruido de un solo valor, estable: la misma entrada da siempre la misma salida,
 // así que un hincha no cambia de tono de piel de un cuadro a otro.
@@ -81,6 +82,7 @@ void vertex() {
 	v_azar = azar(fase);
 	v_alto = VERTEX.y;
 	v_lado = abs(VERTEX.x);
+	v_x = VERTEX.x;
 	float t = TIME * velocidad + fase;
 	// 0 en los pies, 1 de los hombros para arriba.
 	float peso = clamp(VERTEX.y / 0.7, 0.0, 1.0);
@@ -149,9 +151,30 @@ void fragment() {
 	ropa = clamp(ropa, vec3(0.06), vec3(0.86)) * (0.86 + 0.24 * fract(v_azar * 13.7));
 	// Volumen: la cintura en sombra, los hombros a la luz.
 	ropa *= mix(0.62, 1.0, smoothstep(cuello_desde * 0.35, cuello_desde * 0.95, v_alto));
+	// MÁS ROPA DISTINTA (21-10-2026, M-033), solo en el torso (entre cintura y
+	// cuello): uno de cada cinco lleva la camiseta del club a rayas, uno de cada
+	// siete una chaqueta abierta con la cremallera y la camiseta debajo, y uno de
+	// cada ocho sudadera con capucha (un reborde más oscuro bajo la nuca).
+	float torso = step(cuello_desde * 0.32, v_alto) * step(v_alto, cuello_desde - 0.075);
+	float rt = fract(v_azar * 3.91);
+	if (torso > 0.5 && rt < 0.2) {
+		ropa = mix(bufanda1, bufanda2, step(0.5, fract(v_x * 22.0 + 0.25))) * mix(0.62, 1.0, smoothstep(cuello_desde * 0.35, cuello_desde * 0.95, v_alto));
+	} else if (torso > 0.5 && rt < 0.34) {
+		float abierta = 1.0 - smoothstep(0.035, 0.05, abs(v_x));
+		ropa = mix(ropa, vec3(0.9, 0.9, 0.88) * 0.85, abierta);
+		ropa = mix(ropa, vec3(0.05), 1.0 - smoothstep(0.004, 0.008, abs(v_x)));
+	} else if (rt > 0.88 && v_alto > cuello_desde - 0.11 && v_alto < cuello_desde - 0.06) {
+		ropa *= 0.7;
+	}
 	vec3 piel = mix(piel_clara, piel_oscura, pow(v_azar, piel_sesgo));
 	float cab = step(v_lado, lado_max);
 	vec3 color = mix(ropa, piel, smoothstep(cuello_desde, cuello_hasta, v_alto) * cab);
+	// Los brazos en alto (21-10-2026, vista desde la butaca): por encima del
+	// cuello y lejos de la cabeza solo hay antebrazos y manos, que son piel.
+	// Antes salían del color de la ropa: manos azules y verdes, como guantes.
+	if (lado_max < 9.0 && v_lado > lado_max) {
+		color = mix(color, piel, smoothstep(cuello_desde - 0.02, cuello_hasta + 0.06, v_alto));
+	}
 	// Pelo: negro, castaño, rubio o canoso, según el mismo azar del hincha;
 	// uno de cada seis, calvo o con gorro del color de la ropa.
 	float r = fract(v_azar * 7.31);
