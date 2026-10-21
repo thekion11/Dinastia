@@ -18,7 +18,7 @@ Estado tras ella: **HECHO 102 · PARCIAL 111 · PENDIENTE 239**. Cerrados: M-021
 
 ### Pasada del 21-10 (tercera: hallazgos del vídeo de gameplay, informe técnico y piezas modulares)
 
-Estado tras ella: **HECHO 104 · PARCIAL 114 · PENDIENTE 234** (contado fila a fila); con la 4.ª (fabricantes M-057, motor del coche M-173, práctica libre M-130): **HECHO 106 · PARCIAL 115 · PENDIENTE 231**. Hallazgos del vídeo: pocas ocasiones (M-138: ritmos y `prisa`), controles táctiles en PC (M-433), el mentor tapaba la rueda de prensa (`MentorVoz` espera, grupo `no_tapar_mentor`), haces de farola en triángulo (M-014), malabares rehechos con racha ×2/×3/×4, manos del público del color de la ropa (`hinchada.gdshader`). Informe técnico: oclusión de la ciudad (M-344), panel de objetivos por señal (M-386), texturas revisadas (M-346). Pedido del dueño «reusar todos los objetos, separar y unir de forma modular»: `visor/modulos.gd` (reserva para reciclar, unir/separar conjuntos, guardarlos como datos, teñir por material) y el edificio del club amueblado con él (M-186), con 7 objetos de decoración nuevos.
+Estado tras ella: **HECHO 104 · PARCIAL 114 · PENDIENTE 234** (contado fila a fila); con la 4.ª (fabricantes M-057, motor del coche M-173, práctica libre M-130, ropa del público M-033, cuerpos M-081 y la pantalla gigante M-011, que ya estaba): **HECHO 109 · PARCIAL 115 · PENDIENTE 228**. Hallazgos del vídeo: pocas ocasiones (M-138: ritmos y `prisa`), controles táctiles en PC (M-433), el mentor tapaba la rueda de prensa (`MentorVoz` espera, grupo `no_tapar_mentor`), haces de farola en triángulo (M-014), malabares rehechos con racha ×2/×3/×4, manos del público del color de la ropa (`hinchada.gdshader`). Informe técnico: oclusión de la ciudad (M-344), panel de objetivos por señal (M-386), texturas revisadas (M-346). Pedido del dueño «reusar todos los objetos, separar y unir de forma modular»: `visor/modulos.gd` (reserva para reciclar, unir/separar conjuntos, guardarlos como datos, teñir por material) y el edificio del club amueblado con él (M-186), con 7 objetos de decoración nuevos.
 
 ## 1. Resumen en cifras
 
@@ -62,7 +62,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-008 | P2 | Tribunas «falsas» por falta de profundidad en el graderío | HECHO | vomitorios (`StadiumBuilder._vomitorios`); 21-10: pasillos con peldaños y barandilla cada 8 grupos de butacas (`_montar_pasillos`), escaleras de acceso desde el césped (`_escaleras_de_acceso`), cinta LED en el peto de la bandeja alta (`cinta_led.gdshader`); se sube caminando a la butaca (`RecorridoClub.camino_a_butaca`); capturas `captura_diagnostico_grada`, `captura_sentarse` |
 | M-009 | P2 | Sin voladizo/cubierta visible en estadios sin techo | PARCIAL | techo «visera» y cerchas vistas desde fuera (`FachadaEstadio`); sin visera parcial con estructura por sector |
 | M-010 | P2 | Sin carteles de pared (patrocinadores, fechas, escudo) fuera del campo | PENDIENTE | sin carteles en muros exteriores (la fachada tiene rótulos de puerta, no publicidad) |
-| M-011 | P1 | Marcador/pantalla gigante estática | PENDIENTE | `StadiumBuilder._pantallas` usa una textura fija (`_pantalla_textura`): sin marcador ni repetición vivos |
+| M-011 | P1 | Marcador/pantalla gigante estática | HECHO | revisado 21-10: era un falso pendiente: `VistaEstadio._montar_pantalla` pone en las pantallas el lienzo vivo de `ui/pantalla_estadio.gd` (marcador con escudos y abreviaturas, estadísticas, goleadores, tabla, pichichis en rotación y «¡GOL!» a pantalla completa); `_pantalla_textura` solo es el fondo hasta que se monta |
 | M-012 | P2 | Vallas LED con la misma rotación de marcas inventadas (30) | PENDIENTE | `VallasLed` sin catálogo ampliado; `Auspicio` tiene 38 marcas |
 | M-013 | P2 | Banderas de esquina/córner genéricas | PARCIAL | banderines con tela y color del asiento del estadio (`_corners`); sin banderola del país ni viento |
 | M-014 | P1 | Sin diferencia día/noche en el aspecto de la iluminación… | PARCIAL | 21-10: el haz de cada farola de la ciudad es un cono volumétrico falso con degradado y sin contorno (`visor/cono_farola.gdshader`); sin haces de los focos del estadio |
@@ -89,7 +89,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
-| M-033 | P1 | Los hinchas comparten malla por pose; sólo cambia color de camiseta | PENDIENTE | el hincha sigue siendo color por instancia + shader por altura (MEGA_AUD_2 §2) |
+| M-033 | P1 | Los hinchas comparten malla por pose; sólo cambia color de camiseta | HECHO | 21-10: además del color por instancia, bufandas a franjas y gorras: camiseta del club a rayas (1 de 5), chaqueta abierta con cremallera (1 de 7) y sudadera con capucha (1 de 8), pelo de 5 tonos y calvos (`hinchada.gdshader`); captura `captura_diagnostico_grada` |
 | M-034 | P1 | Pelo/piel por azar sin población real | HECHO | 20-10: `OlaGrada.PIEL_SESGO` por país del club de casa (24 países) → `piel_sesgo` en `hinchada.gdshader` (DT y Carrera); aproximación, no dato por persona |
 | M-035 | P1 | Sin bufandas/banderas/camisetas del club en la mano | PARCIAL | banda de bufandas y tifo en grada (`StadiumBuilder` «bufandas»/«tifo»); sin mallas en la mano |
 | M-036 | P2 | Animación del público: balanceo uniforme + saltos | HECHO | 20-10: onda de saltos desde el fondo del gol local y la ola (`visor/ola_grada.gd`, uniformes en `hinchada.gdshader`); captura `captura_ola` |
@@ -147,7 +147,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 |---|---|---|---|---|
 | M-079 | P1 | Retrato real 13 % (base real) | PENDIENTE | 13 % con retrato real; descarga bloqueada por la red |
 | M-080 | P2 | Fotos agachadas aún oscuras/deformadas | PENDIENTE | fotos agachadas sin re-detección (límite anotado en MOTOR_CARAS.md) |
-| M-081 | P1 | Todos con el mismo cuerpo base | PENDIENTE | somatotipos solo para el DT (`PersonajeDT`); los futbolistas comparten cuerpo |
+| M-081 | P1 | Todos con el mismo cuerpo base | HECHO | 21-10: cada futbolista con su complexión y hombros según su FÍSICO más una variación fija por jugador (`PersonajeDT.aspecto_futbolista` / `cuerpo_futbolista`, en `PlayerSpawner._crear_jugador`); estatura ya era la de su ficha; captura `captura_marcas` (del 89 al 33 de físico) |
 | M-082 | P2 | Altura sólo por escala global | PENDIENTE | sin proporciones variables |
 | M-083 | P2 | Sin tatuajes/cicatrices por jugador salvo civiles | PARCIAL | tatuaje solo en ropa civil (`equipacion_q.gdshader` `tatuaje`); no en jugadores |
 | M-084 | P2 | Biblioteca de caras = 72 mezclas | PENDIENTE | biblioteca de 72 caras |
