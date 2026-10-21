@@ -632,3 +632,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   del bot 0-0 con 1 tiro), controles táctiles visibles en PC al pasear, público de cerca como maniquíes,
   aviso del presidente tapa la prensa, malabares muy básico, de noche la calzada negra y conos de luz triangulares.
   ESPERANDO la evaluación del usuario.
+- 21-10 INFORME del usuario («Auditoría técnica estructural», 16 puntos, nota 74/100) ANALIZADO contra el código:
+  falso o ya resuelto: ciudad y partido NO conviven (cada visor se crea y se libera con queue_free al cerrar),
+  datos en `Mundo` + guardado JSON seguro, sin RigidBody (todo por código), 235 señales, sin NavMesh en el campo.
+  Útil y pendiente: oclusión en la ciudad (0 OccluderInstance3D), compresión de texturas (3103 sin comprimir,
+  17 imágenes >2048), medir FPS en hardware real con el profiler (lo maneja el dueño), .pck aparte para la
+  ciudad (builds = dueño), algún panel que sondea en `_process` (p. ej. panel_objetivos). «Feature creep»
+  de la ciudad = decisión de diseño del dueño. ESPERANDO qué quiere aplicar (había descartado optimizar).
