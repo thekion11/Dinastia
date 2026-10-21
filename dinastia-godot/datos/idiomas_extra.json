@@ -2503,7 +2503,8 @@
   "Partida guardada": "Game saved",
   "CRÉDITOS Y LICENCIAS": "CREDITS AND LICENSES",
   "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Photos of real footballers (private version only) show their author and license under the portrait, on the player's profile.",
-  "Mostrar contador de FPS": "Show FPS counter"
+  "Mostrar contador de FPS": "Show FPS counter",
+  "Subiendo a tu butaca…": "Climbing up to your seat…"
  },
  "pt": {
   "Historia": "História",
@@ -5009,7 +5010,8 @@
   "Partida guardada": "Jogo salvo",
   "CRÉDITOS Y LICENCIAS": "CRÉDITOS E LICENÇAS",
   "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "As fotos de jogadores reais (só na versão privada) trazem o autor e a licença sob o retrato, na ficha do jogador.",
-  "Mostrar contador de FPS": "Mostrar contador de FPS"
+  "Mostrar contador de FPS": "Mostrar contador de FPS",
+  "Subiendo a tu butaca…": "Subindo até sua cadeira…"
  },
  "patrones": [
   [
@@ -8117,7 +8119,8 @@
   "Partida guardada": "Partie sauvegardée",
   "CRÉDITOS Y LICENCIAS": "CRÉDITS ET LICENCES",
   "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Les photos de joueurs réels (version privée uniquement) indiquent leur auteur et leur licence sous le portrait, dans la fiche du joueur.",
-  "Mostrar contador de FPS": "Afficher le compteur d'IPS"
+  "Mostrar contador de FPS": "Afficher le compteur d'IPS",
+  "Subiendo a tu butaca…": "Vous montez à votre siège…"
  },
  "it": {
   "Historia": "Storia",
@@ -10530,7 +10533,8 @@
   "Partida guardada": "Partita salvata",
   "CRÉDITOS Y LICENCIAS": "CREDITI E LICENZE",
   "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Le foto dei calciatori reali (solo nella versione privata) riportano autore e licenza sotto il ritratto, nella scheda del giocatore.",
-  "Mostrar contador de FPS": "Mostra contatore FPS"
+  "Mostrar contador de FPS": "Mostra contatore FPS",
+  "Subiendo a tu butaca…": "Sali al tuo posto…"
  },
  "de": {
   "Historia": "Geschichte",
@@ -12943,7 +12947,8 @@
   "Partida guardada": "Spiel gespeichert",
   "CRÉDITOS Y LICENCIAS": "CREDITS UND LIZENZEN",
   "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Fotos echter Fußballer (nur in der privaten Version) zeigen Urheber und Lizenz unter dem Porträt im Spielerprofil.",
-  "Mostrar contador de FPS": "FPS-Anzeige einblenden"
+  "Mostrar contador de FPS": "FPS-Anzeige einblenden",
+  "Subiendo a tu butaca…": "Du gehst zu deinem Platz hinauf…"
  },
  "ca": {
   "Historia": "Història",
@@ -15356,7 +15361,8 @@
   "Partida guardada": "Partida desada",
   "CRÉDITOS Y LICENCIAS": "CRÈDITS I LLICÈNCIES",
   "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Les fotos de futbolistes reals (només a la versió privada) porten l'autor i la llicència sota el retrat, a la fitxa del jugador.",
-  "Mostrar contador de FPS": "Mostrar comptador de FPS"
+  "Mostrar contador de FPS": "Mostrar comptador de FPS",
+  "Subiendo a tu butaca…": "Pujant al teu seient…"
  },
  "pl": {
   "Club": "Klub",
@@ -18064,7 +18070,8 @@
   "Partida guardada": "Gra zapisana",
   "CRÉDITOS Y LICENCIAS": "AUTORZY I LICENCJE",
   "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Zdjęcia prawdziwych piłkarzy (tylko w wersji prywatnej) mają autora i licencję pod portretem, w karcie zawodnika.",
-  "Mostrar contador de FPS": "Pokaż licznik FPS"
+  "Mostrar contador de FPS": "Pokaż licznik FPS",
+  "Subiendo a tu butaca…": "Wchodzisz na swoje miejsce…"
  },
  "tr": {
   "Club": "Kulüp",
@@ -20772,6 +20779,7 @@
   "Partida guardada": "Oyun kaydedildi",
   "CRÉDITOS Y LICENCIAS": "EMEĞİ GEÇENLER VE LİSANSLAR",
   "Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.": "Gerçek futbolcuların fotoğrafları (yalnızca özel sürümde) oyuncu kartında, portrenin altında yazar ve lisans bilgisiyle gösterilir.",
-  "Mostrar contador de FPS": "FPS sayacını göster"
+  "Mostrar contador de FPS": "FPS sayacını göster",
+  "Subiendo a tu butaca…": "Koltuğuna çıkıyorsun…"
  }
 }

@@ -22,8 +22,17 @@ func _process(_d: float) -> void:
 	if _n == 14:
 		_e.cuerpo.position = Vector3(34.5, 0, 8.0)
 		_e.sentarse()
+		print("RUTA ", _e.get("_ruta"))
+	## Mientras sube por la escalera (cámara de detrás).
+	if _n == 40 or _n == 75:
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/sentarse_subiendo%s.png" % ("" if _n == 40 else "_2"))
+		print("FOTO subiendo en ", _e.cuerpo.position)
+	if _n > 75 and _n < 400 and not _e.sentado:
+		return
+	if _n > 75 and _n < 400:
+		_n = 400
 		print("SENTADO en ", _e.cuerpo.position)
-	if _n == 20:
+	if _n == 406:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/sentarse_vista.png")
 		print("FOTO vista")
 		## Desde fuera: una cámara en el campo mirando la butaca.
@@ -34,7 +43,7 @@ func _process(_d: float) -> void:
 		cam.fov = 45.0
 		cam.current = true
 		_e.cuerpo.visible = true
-	if _n == 24:
+	if _n == 410:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/sentarse_fuera.png")
 		print("FOTO fuera")
 		get_tree().quit()

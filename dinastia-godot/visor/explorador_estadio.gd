@@ -249,6 +249,9 @@ func paso(e: Vector2, corre: bool, delta: float) -> void:
 		else:
 			vel = 0.0
 	cuerpo.rotation.y = rumbo
+	_animar_paso()
+
+func _animar_paso() -> void:
 	if _es_dt and _anim != null:
 		var quiere := "correr" if absf(vel) > 3.0 else ("caminar" if absf(vel) > 0.05 else "parado")
 		if _anim.has_animation(quiere) and _anim.current_animation != quiere:
@@ -258,6 +261,10 @@ func paso(e: Vector2, corre: bool, delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
+		return
+	if not _ruta.is_empty():
+		_caminar_ruta(delta)
+		_colocar_camara(delta)
 		return
 	if sentado:
 		## Sentado: A/D giran la mirada (hasta 70° a cada lado).
@@ -270,6 +277,27 @@ func _physics_process(delta: float) -> void:
 	paso(_entrada(), corre, delta)
 	_colocar_camara(delta)
 	_rotulos()
+
+## Camina hacia el siguiente punto (1,5 m/s; en la escalera el paso sube solo).
+func _caminar_ruta(delta: float) -> void:
+	var meta: Vector3 = _ruta[0]
+	var d := meta - cuerpo.position
+	var plano := Vector2(d.x, d.z)
+	if d.length() < 0.12:
+		cuerpo.position = meta
+		_ruta.remove_at(0)
+		if _ruta.is_empty():
+			vel = 0.0
+			_animar_paso()
+			_sentar_en(_butaca)
+		return
+	var paso_m := minf(1.5 * delta, d.length())
+	cuerpo.position += d.normalized() * paso_m
+	if plano.length() > 0.05:
+		rumbo = lerp_angle(rumbo, atan2(plano.x, plano.y), clampf(delta * 8.0, 0.0, 1.0))
+		cuerpo.rotation.y = rumbo
+	vel = 1.5
+	_animar_paso()
 
 func _junto_a_la_persiana() -> bool:
 	var x0 := float(_datos.get("x0", 0.0))
@@ -336,10 +364,25 @@ var _de_pie := Vector3.ZERO
 var _mirada := 0.0
 var _est_perfil: Dictionary = {}
 
-func sentarse() -> void:
+## SUBIR A LA BUTACA (21-10-2026): con E junto a la grada se va caminando por
+## la escalera del pasillo más cercano hasta la fila y la butaca (antes se
+## aparecía sentado). `sentarse(true)` sienta al momento (pruebas, sanción).
+var _ruta: Array[Vector3] = []
+var _butaca: Dictionary = {}
+
+func sentarse(al_momento := false) -> void:
 	var lado := signf(cuerpo.position.x)
 	var b := RecorridoClub.butaca(_est_perfil, lado, cuerpo.position.z, 3, get_parent())
 	_de_pie = cuerpo.position
+	if not al_momento:
+		_ruta = RecorridoClub.camino_a_butaca(get_parent(), b["pos"])
+		if not _ruta.is_empty():
+			_butaca = b
+			_aviso.text = Idiomas.t("Subiendo a tu butaca…")
+			return
+	_sentar_en(b)
+
+func _sentar_en(b: Dictionary) -> void:
 	cuerpo.position = b["pos"]
 	rumbo = float(b["rumbo"])
 	_mirada = 0.0
