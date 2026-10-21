@@ -2641,6 +2641,53 @@ static func _cinta_led(root: Node3D, pos: Vector3, cara: Vector3, largo: float, 
 	## El QuadMesh mira a +Z: se gira hacia `cara` (hacia el campo).
 	mi.rotation.y = atan2(cara.x, cara.z)
 
+## LA ESCALERA DE ACCESO (21-10-2026): entre el pasillo a ras de césped y la
+## primera fila de la bandeja baja hay un muro de ~2 m. Delante de cada pasillo,
+## unos peldaños de hormigón que bajan hasta el suelo, hacia el campo. Así se
+## sube a la grada caminando (`RecorridoClub.camino_a_butaca`).
+const PELDANO_ALTO := 0.18
+const PELDANO_FONDO := 0.3
+static func _escaleras_de_acceso(deck: MeshInstance3D, escalones: Array[Transform3D], pasillos_l: Array[float], lateral: bool) -> void:
+	var root := deck.get_parent() as Node3D
+	if root == null or pasillos_l.is_empty():
+		return
+	var xfs: Array[Transform3D] = []
+	for l: float in pasillos_l:
+		## El primer peldaño de ese pasillo (fila 0): el de esa columna más bajo.
+		var bajo := Vector3.INF
+		for e: Transform3D in escalones:
+			var o := e.origin
+			if absf((o.z if lateral else o.x) - l) < 0.3:
+				var g := deck.transform * o
+				if bajo == Vector3.INF or g.y < bajo.y:
+					bajo = g
+		if bajo == Vector3.INF or bajo.y < 0.5:
+			continue
+		## Hacia el campo: −x en la lateral de +x, etc.
+		var dir := Vector3(-signf(bajo.x), 0, 0) if lateral else Vector3(0, 0, -signf(bajo.z))
+		var n := int(ceil((bajo.y - 0.05) / PELDANO_ALTO))
+		for k in n:
+			var alto := bajo.y - float(k) * PELDANO_ALTO
+			var c := bajo + dir * (0.45 + float(k) * PELDANO_FONDO)
+			c.y = alto * 0.5 - 0.1
+			var bas := Basis.from_scale(Vector3(1.25, maxf(alto, 0.1), PELDANO_FONDO)) if not lateral \
+				else Basis.from_scale(Vector3(PELDANO_FONDO, maxf(alto, 0.1), 1.25))
+			xfs.append(Transform3D(bas, c))
+	if xfs.is_empty():
+		return
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = BoxMesh.new()
+	mm.instance_count = xfs.size()
+	for k in xfs.size():
+		mm.set_instance_transform(k, xfs[k])
+	var mmi := MultiMeshInstance3D.new()
+	mmi.name = "EscalerasAcceso"
+	mmi.multimesh = mm
+	mmi.material_override = _mat_peldano
+	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	root.add_child(mmi)
+
 ## ¿Esta columna de butacas es un pasillo? Cada 8 grupos (≈ 12 m), en tribunas
 ## de al menos 12 grupos.
 static func es_pasillo(c: int, cuantas_fila: int) -> bool:
@@ -2907,6 +2954,8 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 					hinchas_col.append(col_h)
 
 	_montar_pasillos(deck, escalones, pasillos_l, lateral, fondo)
+	if bandeja == 0:
+		_escaleras_de_acceso(deck, escalones, pasillos_l, lateral)
 
 	## Debajo de las butacas, cemento: la textura con gente pintada ya no hace
 	## falta y entre fila y fila se veía como manchas estiradas.

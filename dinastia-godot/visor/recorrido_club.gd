@@ -329,6 +329,51 @@ static func butaca(est: Dictionary, signo_x: float, z: float, fila: int = 3, rai
 			return {"pos": real, "rumbo": -signo_x * PI / 2.0}
 	return {"pos": aprox, "rumbo": -signo_x * PI / 2.0}
 
+## EL CAMINO HASTA LA BUTACA (21-10-2026): por la escalera del pasillo más
+## cercano. Devuelve los puntos (en coordenadas de `raiz`): pie de la escalera,
+## peldaño de la fila de la butaca y la butaca. Vacío si no hay pasillos.
+static func camino_a_butaca(raiz: Node, butaca_local: Vector3) -> Array[Vector3]:
+	var r3 := raiz as Node3D
+	var camino: Array[Vector3] = []
+	if r3 == null or not r3.is_inside_tree():
+		return camino
+	var asiento := r3.to_global(butaca_local)
+	var mejor_fila := Vector3.INF
+	var dist := 12.0
+	var pasillo: MultiMeshInstance3D = null
+	## El peldaño a la altura de la butaca y más cerca de ella.
+	for n in raiz.find_children("Pasillos", "MultiMeshInstance3D", true, false):
+		var mmi := n as MultiMeshInstance3D
+		if mmi.multimesh == null or not mmi.is_inside_tree():
+			continue
+		for i in mmi.multimesh.instance_count:
+			var p := mmi.global_transform * mmi.multimesh.get_instance_transform(i).origin
+			if absf(p.y - asiento.y) < 0.6 and p.distance_to(asiento) < dist:
+				dist = p.distance_to(asiento)
+				mejor_fila = p
+				pasillo = mmi
+	if pasillo == null:
+		return camino
+	## El pie de esa misma escalera: el peldaño más bajo de la columna (en las
+	## laterales, donde uno se sienta, la columna es la misma z).
+	var pie := mejor_fila
+	for i in pasillo.multimesh.instance_count:
+		var p := pasillo.global_transform * pasillo.multimesh.get_instance_transform(i).origin
+		if absf(p.z - mejor_fila.z) < 0.6 and p.y < pie.y:
+			pie = p
+	## La escalera de acceso: desde el suelo, hacia el campo, sube peldaño a
+	## peldaño hasta el pie del pasillo (`StadiumBuilder._escaleras_de_acceso`).
+	var hacia_campo := Vector3(-signf(pie.x), 0, 0)
+	var n := int(ceil((pie.y - 0.05) / StadiumBuilder.PELDANO_ALTO))
+	var suelo := r3.to_local(pie + hacia_campo * (0.45 + float(n) * StadiumBuilder.PELDANO_FONDO + 0.4))
+	suelo.y = 0.0
+	camino.append(suelo)
+	camino.append(r3.to_local(pie + hacia_campo * 0.45) + Vector3(0, 0.25, 0))
+	camino.append(r3.to_local(pie) + Vector3(0, 0.25, 0))
+	camino.append(r3.to_local(mejor_fila) + Vector3(0, 0.25, 0))
+	camino.append(butaca_local)
+	return camino
+
 ## En coordenadas de `raiz` (el estadio puede estar desplazado en la ciudad).
 static func _butaca_real(raiz: Node, cerca_de_local: Vector3, signo_x: float) -> Vector3:
 	var r3 := raiz as Node3D
