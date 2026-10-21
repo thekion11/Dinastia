@@ -19,6 +19,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   reparto por `COSTES` en banco.gd): 162 s → ~83 s. `BANCO_PARTES=1` = en serie. Al
   final muestra las secciones más lentas; si una crece mucho, actualizar `COSTES`.
   Sección nueva en banco.gd = añadirla a `SECCIONES`.
+  MINI BANCOS (20-10): `herramientas/mini_banco.sh <grupo|_probar_x>` (grupos en `GRUPOS` de banco.gd:
+  partido, guardado, ciudad, estadio, gestion, competicion, textos; 7-30 s). Para probar lo tocado
+  mientras se trabaja; también cazan pruebas que dependen del orden. Antes de SUBIR, el banco entero.
 - (15-10) Lo visual se revisa en FORWARD+, que es lo que ve el jugador de PC: capturas
   con `herramientas/captura.sh res://pruebas/captura_x.tscn` (Forward+ por defecto,
   `--compat` solo para móvil/web/motor ligero; sin GPU necesita
@@ -580,3 +583,44 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   TRASPASO: `dinastia-godot/PENDIENTES.md` (qué falta, cómo, y qué falta fusionar; respaldos en
   `dinastia-godot/parches_pendientes/`). Mantenerlo al día en cada bloque.
 - 17-10: TODO fusionado a `main` con el PR #7 (pedido del usuario). La revisión automática horaria quedó PAUSADA (pedido).
+- 19/20-10: pidió revisar el avance («dale mejora», «sigue»). HECHO en la rama `ccr-54306f57-jlcywg`
+  (PR abierto el 20-10): línea defensiva común + trampa (M-123), notas de partidos mirados, prueba del
+  bono robusta, física M-114/115 (saques sin patinar, giros continuos, balón sin saltos, tope de
+  aceleración `MotorJugable.A_MAX`=18), ojos hasta 35 m. OJO: `medir_partido` y la sonda de física
+  medían la CEREMONIA hasta el 19-10 (ya la saltan); en juego real: 493 llamadas, 1,34 M tris.
+  Contenedor: Godot 4.7.2 hay que bajarlo. NO usar `pkill -f <patrón>` (mata la propia orden):
+  matar por PID.
+- 20-10 VÍDEO REGALADO (faltas por puntos) — APRENDIDO, a implementar en el motor: cada factor de la
+  entrada suma (agarrón 1,4 · por detrás 3,0 · empujón 1,7 · a gran velocidad 2,0 · deslizante 2,6 ·
+  falta profesional/último hombre 2,3 · de pie 1,2 · carga de hombro 0,9 · agresiva 2,4) y la suma
+  decide: falta ≥ 1,0, amarilla ≥ 4,0, roja ≥ 7,0 (por detrás + rápida + profesional = 7,3 → roja).
+  Usa velocidad y posición reales de cada jugador (quién es el último defensor).
+- 20-10 PEDIDOS: (1) faltas por puntos; (2) mejorar el banco con MINI BANCOS por situación;
+  (3) pruebas especiales en las que YO JUEGO de verdad (inyectando el mando) como experimento;
+  (4) valorar C++ (GDExtension) para que el juego corra más rápido. Unreal 5: desaconsejado (explicado).
+- 20-10 HECHO: dificultad de la CPU en el partido 3D (6 niveles, botón en ⚙; ver PENDIENTES 2.10),
+  más chispa (+10 % tiros medido con 48 partidos; con 18 el ruido es ±25 %: medir siempre con muchos),
+  vallas LED en MultiMesh y mascota fundida (504 → 419 llamadas), «Claude juega» (`claude_juega.tscn`).
+- 20-10 PULIDO (pedido: «pulir lo que ya tenemos»): cartel del 4.º árbitro a tamaño real, cambio con
+  cartel y palmada también en la Carrera (`PartidoJugable._escena_cambio`), la OLA y la ONDA de la grada
+  (`visor/ola_grada.gd` + `hinchada.gdshader`). Los bancos cortan también con «SHADER ERROR».
+- 20-10 PEDIDO: «me interesa más pulir lo de los más de 300 puntos» (ESTADO_MEJORAS.md). HECHA una pasada
+  (sección 0 del documento): HECHO 49 → 94 filas. Bolsas de nombres en `datos/bolsas_nombres.json`
+  (tocayos 10 % → 1 %). Banco: 4 secciones nuevas (palabras prohibidas, capitán votado, glifos, tocayos).
+  OJO: `_probar_motor_libre` dependía de la base que dejaba la prueba anterior (ahora la fija).
+- 21-10 («Sigue»): 2.ª pasada de la lista (A-F). HECHO 94 → 102. Claves: `visor/mirada_balon.gd` (LookAt al balón,
+  eje +Z comprobado con `captura_mirada`), `PlayerSpawner.poner_brazalete` (copia del material), capitán en todos
+  los clubes al generar (`Mundo._capitan_si_falta`) y cinta heredada en `Puente3D.once`, sector visitante
+  (`est.visita1/2` → `sector_visita`), faros (`TraficoCiudad.faros`).
+- 21-10 PEDIDO: «descarta la optimización (ya está bien); la tribuna sigue viéndose mal, ¿la estructura del estadio
+  es modular y navegable?, la gente no se ve tan real». HECHO: pasillos con escalera y barandilla en todas las
+  bandejas + escaleras de acceso desde el césped, cinta LED en el peto (`visor/cinta_led.gdshader`), público con
+  volumen/bufandas/gorras (`hinchada.gdshader`, `OlaGrada.colores_club`), nivel medio de personas que NUNCA se
+  llenaba (bloques sin cabeza desde la 5.ª fila), subir CAMINANDO a la butaca (`camino_a_butaca`). Revisión:
+  `pruebas/captura_diagnostico_grada.tscn` (6 tomas) y `captura_sentarse.tscn`. Pendiente: el exterior (cajas,
+  esquinas abiertas). OJO: sin pantalla, los MultiMesh no guardan posiciones (no probar eso en el banco).
+- 21-10 HECHO exterior: `visor/entorno_estadio.gd` (solo partido y Carrera; la ciudad ya tiene lo suyo) y esquinas
+  cerradas en «rect»/«principal». Captura `pruebas/captura_exterior.tscn` (FORMA=, SUFIJO=_antes).
+  SIGUIENTE (pedido): fusionar a main y hacer un VÍDEO de gameplay real CON SONIDO, más largo y detallado,
+  probando cada mecánica y variable (duración de referencia: la de un gameplay real).
+

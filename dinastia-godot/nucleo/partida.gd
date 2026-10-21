@@ -17,6 +17,8 @@ extends RefCounted
 
 const CARPETA := "user://partidas"
 const EXTENSION := ".dinastia"
+const TEMPORAL := ".tmp"
+const RESPALDO := ".bak"
 ## Sube cuando el formato deje de ser compatible hacia atrás. Se comprueba al
 ## cargar y se avisa en vez de reventar a mitad, que es lo que hace un juego
 ## cuando lee un guardado viejo sin mirar.
@@ -37,12 +39,17 @@ static func listar() -> Array[Dictionary]:
 	var d := DirAccess.open(carpeta())
 	if d == null:
 		return salida
+	## Cada ranura aparece aunque solo quede su temporal o su copia: si el
+	## principal se rompió, la partida no debe «desaparecer» del menú.
+	var nombres := {}
 	for f in d.get_files():
-		if not f.ends_with(EXTENSION):
-			continue
-		var cab := _leer_cabecera(carpeta() + "/" + f)
+		for suf in [EXTENSION, EXTENSION + TEMPORAL, EXTENSION + RESPALDO]:
+			if f.ends_with(suf):
+				nombres[f.trim_suffix(suf)] = true
+	for n: String in nombres:
+		var cab := _cabecera_de(_leer_con_respaldo(carpeta() + "/" + n + EXTENSION))
 		if not cab.is_empty():
-			cab["fichero"] = f.trim_suffix(EXTENSION)
+			cab["fichero"] = n
 			salida.append(cab)
 	salida.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return int(a.get("guardado", 0)) > int(b.get("guardado", 0)))
@@ -142,19 +149,56 @@ static func instantanea(m: Mundo) -> Dictionary:
 static func guardar(m: Mundo, nombre: String) -> bool:
 	var datos := instantanea(m)
 	var crudo := JSON.stringify(datos).to_utf8_buffer()
-	var f := FileAccess.open(ruta_de(nombre), FileAccess.WRITE)
+	var ruta := ruta_de(nombre)
+	## GUARDADO SEGURO (20-10-2026): antes se escribía encima del archivo; un
+	## cierre o un corte de luz a mitad dejaba la partida rota y sin copia.
+	## Ahora se escribe en un temporal, se comprueba, la versión anterior pasa
+	## a ser la copia (.bak) y el temporal ocupa su sitio.
+	var tmp := ruta + TEMPORAL
+	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	if f == null:
-		push_error("Partida: no puedo escribir %s (error %d)" % [ruta_de(nombre), FileAccess.get_open_error()])
+		push_error("Partida: no puedo escribir %s (error %d)" % [tmp, FileAccess.get_open_error()])
 		return false
 	## El tamaño sin comprimir va delante porque `decompress` lo necesita: sin
 	## él no hay forma de saber cuánto reservar y la carga falla en silencio.
+	var comprimido := crudo.compress(FileAccess.COMPRESSION_DEFLATE)
 	f.store_32(crudo.size())
-	f.store_buffer(crudo.compress(FileAccess.COMPRESSION_DEFLATE))
+	f.store_buffer(comprimido)
+	var ok := f.get_error() == OK
 	f.close()
+	if not ok or FileAccess.get_file_as_bytes(tmp).size() != comprimido.size() + 4:
+		push_error("Partida: el guardado temporal %s salió incompleto" % tmp)
+		DirAccess.remove_absolute(tmp)
+		return false
+	if FileAccess.file_exists(ruta):
+		DirAccess.remove_absolute(ruta + RESPALDO)
+		DirAccess.rename_absolute(ruta, ruta + RESPALDO)
+	if DirAccess.rename_absolute(tmp, ruta) != OK:
+		push_error("Partida: no puedo mover %s a su sitio" % tmp)
+		return false
 	return true
 
+## Si la última carga tuvo que tirar del temporal o de la copia (el principal
+## estaba roto o faltaba). La interfaz puede avisar al jugador.
+static var cargada_de_respaldo := false
+
 static func cargar(nombre: String) -> Mundo:
-	return desde_instantanea(_leer_todo(ruta_de(nombre)))
+	return desde_instantanea(_leer_con_respaldo(ruta_de(nombre)))
+
+## Lee el principal; si falta o está roto, el temporal (un guardado que llegó
+## a escribirse entero pero no a moverse) y por último la copia anterior.
+static func _leer_con_respaldo(ruta: String) -> Dictionary:
+	cargada_de_respaldo = false
+	for r in [ruta, ruta + TEMPORAL, ruta + RESPALDO]:
+		if not FileAccess.file_exists(r):
+			continue
+		var d := _leer_todo(r)
+		if not d.is_empty():
+			if r != ruta:
+				cargada_de_respaldo = true
+				push_warning("Partida: %s estaba roto o faltaba; se cargó %s" % [ruta, r])
+			return d
+	return {}
 
 ## Reconstruye un Mundo desde el retrato. Lo usan la carga de disco y el
 ## deshacer, que son la misma operacion con distinto origen.
@@ -229,7 +273,9 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	return m
 
 static func borrar(nombre: String) -> void:
-	DirAccess.remove_absolute(ruta_de(nombre))
+	for suf in ["", TEMPORAL, RESPALDO]:
+		if FileAccess.file_exists(ruta_de(nombre) + suf):
+			DirAccess.remove_absolute(ruta_de(nombre) + suf)
 
 # --- conversión -------------------------------------------------------------
 
@@ -433,7 +479,16 @@ static func _leer_todo(ruta: String) -> Dictionary:
 	var f := FileAccess.open(ruta, FileAccess.READ)
 	if f == null:
 		return {}
+	## Un archivo truncado o con basura no debe colgar ni reservar memoria
+	## absurda: tamaño mínimo y tope de 512 MB sin comprimir.
+	if f.get_length() < 5:
+		f.close()
+		return {}
 	var tam := f.get_32()
+	if tam <= 0 or tam > 512 * 1024 * 1024:
+		f.close()
+		push_error("Partida: cabecera inválida en %s" % ruta)
+		return {}
 	var comprimido := f.get_buffer(f.get_length() - 4)
 	f.close()
 	var crudo := comprimido.decompress(tam, FileAccess.COMPRESSION_DEFLATE)
@@ -444,13 +499,15 @@ static func _leer_todo(ruta: String) -> Dictionary:
 	if j.parse(crudo.get_string_from_utf8()) != OK:
 		push_error("Partida: JSON inválido en %s: %s" % [ruta, j.get_error_message()])
 		return {}
-	return j.data
+	return j.data if j.data is Dictionary else {}
 
 ## Para el menú de carga solo hacen falta cuatro datos, pero el fichero está
 ## comprimido entero, así que hay que abrirlo igual. Se separa en su propia
 ## función para que quede claro qué se está pagando.
 static func _leer_cabecera(ruta: String) -> Dictionary:
-	var d := _leer_todo(ruta)
+	return _cabecera_de(_leer_todo(ruta))
+
+static func _cabecera_de(d: Dictionary) -> Dictionary:
 	if d.is_empty():
 		return {}
 	var nombre_club := ""

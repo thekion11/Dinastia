@@ -57,6 +57,12 @@ const SECCIONES := [
 	"_probar_consejeros",
 	"_probar_bilbao_solo_local",
 	"_probar_guardado",
+	"_probar_guardado_seguro",
+	"_probar_fisica_motor",
+	"_probar_faltas_puntos",
+	"_probar_vallas_led",
+	"_probar_ola_grada",
+	"_probar_dificultad_cpu",
 	"_probar_temporadas",
 	"_probar_economia",
 	"_probar_sala_de_prensa",
@@ -89,6 +95,12 @@ const SECCIONES := [
 	"_probar_tanda_c",
 	"_probar_calendario_c13",
 	"_probar_politica_c15",
+	"_probar_palabras_prohibidas",
+	"_probar_capitan_votado",
+	"_probar_glifos_idiomas",
+	"_probar_nombres_repetidos",
+	"_probar_marcas_y_escudos",
+	"_probar_faros_coches",
 	"_probar_historia_c4",
 	"_probar_contratos_c9",
 	"_probar_vida_dt",
@@ -165,6 +177,13 @@ func _ready() -> void:
 		## La carga de la interfaz va en todas: es barata y si falla, mejor saberlo ya.
 		if i > 0 and _parte_de(i, total) != mia:
 			continue
+		## BANCO_SOLO=_probar_x (20-10-2026): solo esa sección (para diagnosticar).
+		var solo := OS.get_environment("BANCO_SOLO")
+		if solo != "" and SECCIONES[i] != solo:
+			continue
+		var grupo := OS.get_environment("BANCO_GRUPO")
+		if grupo != "" and not (GRUPOS.get(grupo, []) as Array).has(SECCIONES[i]):
+			continue
 		var t0 := Time.get_ticks_msec()
 		call(SECCIONES[i])
 		_tiempos.append([Time.get_ticks_msec() - t0, SECCIONES[i]])
@@ -172,8 +191,30 @@ func _ready() -> void:
 
 ## Segundos medidos (15-10-2026) de las secciones lentas; el resto cuenta 0,4 s.
 ## Si una sección se alarga mucho, actualizar con el resumen TIEMPOS del final.
+## MINI BANCOS (20-10-2026): grupos de secciones por situación, para probar
+## solo lo que se tocó en segundos (`herramientas/mini_banco.sh <grupo>`, o
+## BANCO_GRUPO=<grupo>). Antes de SUBIR sigue mandando el banco entero.
+const GRUPOS := {
+	"partido": ["_probar_partidos", "_probar_previa", "_probar_arbitros", "_probar_tactica_en_movimiento",
+		"_probar_puente3d", "_probar_fisica_motor", "_probar_faltas_puntos", "_probar_transmision_y_estadisticas",
+		"_probar_arreglos_partido_motor", "_probar_prorroga_y_penales", "_probar_partido_abandonado", "_probar_tanda_c",
+		"_probar_notas", "_probar_dificultad_cpu"],
+	"guardado": ["_probar_guardado", "_probar_guardado_seguro", "_probar_partido_abandonado", "_probar_repetibilidad"],
+	"ciudad": ["_probar_faros_coches", "_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
+		"_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
+	"estadio": ["_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
+		"_probar_edificio_club", "_probar_personal_estadio", "_probar_interiores_club", "_probar_galeria_club",
+		"_probar_reforma_con_obra", "_probar_guinos_estadio", "_probar_vallas_led", "_probar_ola_grada"],
+	"gestion": ["_probar_capitan_votado", "_probar_finanzas", "_probar_mercado", "_probar_directiva", "_probar_staff", "_probar_obras",
+		"_probar_cantera", "_probar_cesiones", "_probar_negociacion", "_probar_contratos_c9", "_probar_economia",
+		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
+	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
+		"_probar_ascensos", "_probar_temporadas"],
+	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas", "_probar_glifos_idiomas"],
+}
+
 const COSTES := {
-	"_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_capitan_votado": 2.0, "_probar_glifos_idiomas": 0.5, "_probar_nombres_repetidos": 2.0, "_probar_marcas_y_escudos": 4.0, "_probar_faros_coches": 0.3, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -1646,7 +1687,10 @@ func _probar_staff() -> void:
 	m.tomar_el_mando(c.id)
 	var s := m.staff
 
+	## Solo la parte del cuerpo técnico (el camarín ya suma desde el primer día).
+	s.aplicar(c)
 	_comprobar(is_equal_approx(c.bonus_ataque, 1.0), "sin staff, los bonificadores estan a uno")
+	m.aplicar_bonificadores()
 	var caja := c.saldo
 	var coste := s.coste_subir("ayudante", c.rep)
 	_comprobar(s.subir("ayudante", c) == "", "se contrata al ayudante de campo")
@@ -1869,9 +1913,14 @@ func _probar_obras() -> void:
 	_comprobar(o.nivel("cal") == 0, "la obra NO sube el nivel al momento")
 	_comprobar(o.en_obra("cal"), "queda constancia de que hay obra en marcha")
 	_comprobar(o.iniciar("cal", c) != "", "no se puede empezar dos veces la misma obra")
+	var retrasos := 0
 	for s in o.semanas_de("cal"):
 		o.avanzar_semana(c)
-	_comprobar(o.nivel("cal") == 1, "la obra termina en su plazo (%d semanas)" % o.semanas_de("cal"))
+		for t: String in o.ultimos_imprevistos:
+			retrasos += 1 if t.contains("retrasa") else 0
+	for s in retrasos:
+		o.avanzar_semana(c)
+	_comprobar(o.nivel("cal") == 1, "la obra termina en su plazo (%d semanas%s)" % [o.semanas_de("cal"), " + %d de retraso" % retrasos if retrasos > 0 else ""])
 	_comprobar(not o.en_obra("cal"), "y deja de estar en marcha")
 
 	## Y lo que de verdad importa: que se NOTE. Una obra que no mueve un numero
@@ -1906,6 +1955,33 @@ func _probar_obras() -> void:
 		_linea("  %s: %s al mes" % [String(i["concepto"]), _dinero(int(i["monto"]))])
 	_comprobar(ing.size() == 3, "la tienda, el museo y los estacionamientos dan ingresos")
 	_comprobar(total > 0, "y suman de verdad (%s)" % _dinero(total))
+	## M-224: la estrella del plantel vende camisetas.
+	var mejor_j: Jugador = c.plantilla[0]
+	var ovr0 := mejor_j.ovr
+	for j: Jugador in c.plantilla:
+		j.ovr = mini(j.ovr, 74)
+	var tienda_normal := int(o.ingresos_del_mes(c)[0]["monto"])
+	mejor_j.ovr = 90
+	var tienda_crack := int(o.ingresos_del_mes(c)[0]["monto"])
+	mejor_j.ovr = ovr0
+	_comprobar(tienda_crack > tienda_normal * 1.5, "con un crack de 90 la tienda vende más camisetas (%s → %s)" % [_dinero(tienda_normal), _dinero(tienda_crack)])
+	## M-227: lo construido se mantiene (cuesta cada mes, más cuanto más hay).
+	var mant := o.mantenimiento_del_mes(c.rep)
+	o.niveles["trib"] = 4
+	_comprobar(mant > 0 and o.mantenimiento_del_mes(c.rep) > mant, "el mantenimiento cuesta y crece con lo construido (%s → %s al mes)" % [_dinero(mant), _dinero(o.mantenimiento_del_mes(c.rep))])
+	_comprobar(mant < total * 3, "y no se come lo que rinden las obras (%s vs %s)" % [_dinero(mant), _dinero(total)])
+	## M-228: imprevistos — como mucho uno por obra, y repetibles al recargar.
+	var imp := Instalaciones.new()
+	imp.niveles = o.niveles.duplicate()
+	var hubo := 0
+	for clave: String in Instalaciones.CATALOGO:
+		if imp.nivel(clave) >= imp.maximo(clave):
+			continue
+		imp.obras[clave] = 6
+		for _s in 8:
+			imp.avanzar_semana(c)
+			hubo += imp.ultimos_imprevistos.size()
+	_comprobar(hubo > 0 and hubo <= Instalaciones.CATALOGO.size(), "algunas obras tienen un imprevisto, nunca más de uno (%d)" % hubo)
 
 	## Cada efecto tiene una puerta por la que entra al juego. Si alguna devuelve
 	## siempre lo mismo, esa instalacion no hace nada.
@@ -3476,6 +3552,384 @@ func _probar_bilbao_solo_local() -> void:
 	_comprobar(extranjeros_despues <= extranjeros_antes,
 		"100 semanas de mercado IA no le suman extranjeros a Bilbao (antes %d, después %d)" % [
 			extranjeros_antes, extranjeros_despues])
+
+## FÍSICA DEL MOTOR SIN PANTALLA (20-10-2026): 40 s de juego con el motor real,
+## medidos como la sonda de física (cada 1/30 s, dos pasos de 1/60). Guarda lo
+## arreglado el 19-10: nadie a más de 10,5 m/s, ningún giro de más de 720°/s,
+## casi ningún tirón > 25 m/s² y el balón sin saltos en juego.
+## Un motor real sin pantalla con dos equipos de la liga chilena, para las
+## pruebas del partido (mini bancos). Devuelve [motor, raíz, balón].
+func _motor_de_prueba(semilla := 7) -> Array:
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	var a: Club = m.ligas[0].clubes[0]
+	var b: Club = m.ligas[0].clubes[1]
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var sp := PlayerSpawner.new()
+	var lista: Array = []
+	var l := Puente3D.once(a.once())
+	var v := Puente3D.once(b.once())
+	lista.append_array(sp.spawn_team(raiz, l["xi"], l["jugadores"], Puente3D.formacion(a.tactica.formacion), true, Puente3D.kit(a), Puente3D.kit_portero(a)))
+	lista.append_array(sp.spawn_team(raiz, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
+	var ball := StadiumBuilder.spawn_ball(raiz, Vector3(0, 0.11, 0))
+	var motor := MotorJugable.new()
+	raiz.add_child(motor)
+	motor.set_physics_process(false)
+	motor.autopiloto = true
+	motor.preparar(lista, ball, "", semilla)
+	return [motor, raiz, ball]
+
+## DIFICULTAD DE LA CPU (20-10-2026): solo toca al equipo de la CPU, y
+## «profesional» deja el motor como siempre.
+func _probar_dificultad_cpu() -> void:
+	_titulo("DIFICULTAD DE LA CPU")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var raiz: Node3D = r[1]
+	var cpu: Dictionary = {}
+	var mio: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if not bool(p["por"]):
+			if bool(p["es_local"]) and mio.is_empty():
+				mio = p
+			elif not bool(p["es_local"]) and cpu.is_empty():
+				cpu = p
+	var puro := float(cpu["attr_puro"]["pas"])
+	_comprobar(motor.equipo_cpu() == -1 and is_equal_approx(float(cpu["attr"]["pas"]), puro), "sin nadie al mando no hay CPU que ajustar")
+	motor.control_equipo = 0
+	motor.fijar_dificultad("leyenda")
+	_comprobar(motor.equipo_cpu() == 1, "manejando al local, la CPU es la visita")
+	_comprobar(float(cpu["attr"]["pas"]) > puro, "en Leyenda la CPU pasa mejor (%.2f > %.2f)" % [float(cpu["attr"]["pas"]), puro])
+	_comprobar(is_equal_approx(float(mio["attr"]["pas"]), float(mio["attr_puro"]["pas"])), "y tus jugadores no cambian")
+	_comprobar(motor._tac(false, "presion") == 2, "y presiona más")
+	motor.fijar_dificultad("principiante")
+	_comprobar(float(cpu["attr"]["pas"]) < puro and motor._tac(false, "presion") == 0, "en Principiante, peor y presiona menos")
+	motor.fijar_dificultad("profesional")
+	_comprobar(is_equal_approx(float(cpu["attr"]["pas"]), puro) and motor._tac(false, "presion") == 1, "Profesional = el motor de siempre")
+	## M-098: la cabeza sigue al balón (un modificador por jugador).
+	_comprobar(MiradaBalon.poner(motor.jugadores, motor.balon) == motor.jugadores.size()
+		and MiradaBalon.poner(motor.jugadores, motor.balon) == 0, "M-098: un LookAt en la cabeza de cada jugador, sin duplicar")
+	## M-073: el capitán (y solo él) lleva el brazalete.
+	var con_brazalete := [0, 0]
+	var capitan_en_once := [false, false]
+	for p: Dictionary in motor.jugadores:
+		var eq := 0 if bool(p["es_local"]) else 1
+		if bool((p.get("jugador", {}) as Dictionary).get("capitan", false)):
+			capitan_en_once[eq] = true
+		var lleva := false
+		for mi in (p["node"] as Node).find_children("*", "MeshInstance3D", true, false):
+			for k in (mi as MeshInstance3D).get_surface_override_material_count():
+				var mt := (mi as MeshInstance3D).get_surface_override_material(k)
+				if mt is ShaderMaterial and (mt as ShaderMaterial).get_shader_parameter("acc_brazalete") is Color \
+						and ((mt as ShaderMaterial).get_shader_parameter("acc_brazalete") as Color).a > 0.5:
+					lleva = true
+		if lleva:
+			con_brazalete[eq] += 1
+	_comprobar(con_brazalete[0] == (1 if capitan_en_once[0] else 0) and con_brazalete[1] == (1 if capitan_en_once[1] else 0),
+		"M-073: brazalete solo en el capitán (%s; capitán en el once %s)" % [str(con_brazalete), str(capitan_en_once)])
+	_comprobar(capitan_en_once == [true, true], "M-073: cada equipo sale con un capitán (o el que hereda la cinta)")
+	## M-127: gestión del tiempo al final (el que gana tarda, el que pierde corre).
+	motor.control_equipo = -1
+	motor.mitad = 2
+	motor.t = motor.dur_mitad() * 0.85
+	motor.goles = [1, 0]
+	var loc_p: Dictionary = {}
+	var vis_p: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if bool(p["es_local"]) and loc_p.is_empty():
+			loc_p = p
+		elif not bool(p["es_local"]) and vis_p.is_empty():
+			vis_p = p
+	_comprobar(motor.minuto() >= 75 and motor._ritmo_de_saque(loc_p) > 1.0 and motor._ritmo_de_saque(vis_p) < 1.0,
+		"M-127: al %d' el que gana se toma su tiempo y el que pierde saca rápido" % motor.minuto())
+	motor.control_equipo = 0
+	_comprobar(is_equal_approx(motor._ritmo_de_saque(loc_p), 1.0), "M-127: el equipo del usuario no pierde tiempo solo")
+	## M-119: en la tanda el portero se tira más al lado natural del pie del que patea.
+	var cuenta := {-1: 0, 0: 0, 1: 0}
+	motor.vel_balon = Vector3.ZERO
+	for _i in 600:
+		cuenta[motor._lado_portero_tanda(loc_p, vis_p)] += 1
+	var nat := -1 if AnimExtra.es_zurdo(String(loc_p.get("id", ""))) else 1
+	_comprobar(int(cuenta[nat]) > int(cuenta[-nat]) and int(cuenta[0]) > 0, "M-119: el portero lee el pie del lanzador (%s, natural %d)" % [str(cuenta), nat])
+	raiz.queue_free()
+
+## VALLAS LED EN MULTIMESH (20-10-2026): menos llamadas de dibujo y la misma
+## animación (anuncios que cambian y el anillo del gol).
+## M-036/044 (20-10): la ola y la onda escriben su reloj en el público y lo apagan.
+func _probar_ola_grada() -> void:
+	print("\n--- La ola y la onda de la grada ---")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var mmi := MultiMeshInstance3D.new()
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://visor/hinchada.gdshader")
+	mmi.material_override = mat
+	raiz.add_child(mmi)
+	var otro := MultiMeshInstance3D.new()
+	otro.material_override = mat
+	raiz.add_child(otro)
+	_comprobar(OlaGrada.materiales(raiz).size() == 1, "ola: el material compartido se cuenta una vez")
+	var ola := OlaGrada.lanzar(raiz, "ola")
+	_comprobar(ola != null and float(mat.get_shader_parameter("ola_edad")) == 0.0, "ola: arranca con el reloj en 0")
+	ola._process(1.5)
+	_comprobar(is_equal_approx(float(mat.get_shader_parameter("ola_edad")), 1.5), "ola: el reloj avanza en el material")
+	ola._process(OlaGrada.DURA_OLA)
+	_comprobar(float(mat.get_shader_parameter("ola_edad")) < 0.0, "ola: al terminar queda apagada (-1)")
+	var onda := OlaGrada.lanzar(raiz, "onda", Vector3(0, 0, 62))
+	_comprobar(onda != null and (mat.get_shader_parameter("onda_centro") as Vector3).z == 62.0, "onda: sale del fondo del gol")
+	onda.free()
+	_comprobar(float(mat.get_shader_parameter("onda_edad")) < 0.0, "onda: si se corta, también se apaga")
+	var pro := OlaGrada.lanzar(raiz, "protesta")
+	_comprobar(pro != null and float(mat.get_shader_parameter("protesta_edad")) == 0.0 and pro._dura == OlaGrada.DURA_PROTESTA, "protesta: de pie unos segundos")
+	pro.free()
+	OlaGrada.mirar(raiz, Vector3(3, 0, -7))
+	_comprobar((mat.get_shader_parameter("balon_pos") as Vector3) == Vector3(3, 0, -7) and float(mat.get_shader_parameter("mira_balon")) == 1.0, "grada: sigue el balón con la cabeza")
+	OlaGrada.piel_de_pais(raiz, "ARG")
+	var s_arg := float(mat.get_shader_parameter("piel_sesgo"))
+	OlaGrada.piel_de_pais(raiz, "BRA")
+	_comprobar(s_arg > float(mat.get_shader_parameter("piel_sesgo")), "grada: la piel depende del país (ARG más clara que BRA)")
+	_comprobar(OlaGrada.lanzar(Node3D.new(), "ola") == null, "ola: sin público no hace nada")
+	raiz.free()
+
+func _probar_vallas_led() -> void:
+	_titulo("VALLAS LED EN MULTIMESH")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var led := VallasLed.new()
+	raiz.add_child(led)
+	led.sembrar([{"texto": "UNO", "fondo": Color(0.9, 0.1, 0.1), "tinta": Color.WHITE},
+		{"texto": "DOS", "fondo": Color(0.1, 0.1, 0.9), "tinta": Color.WHITE}])
+	for i in 4:
+		var caja := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = Vector3(0.25, 1.1, 5.75) if i < 2 else Vector3(5.75, 1.1, 0.25)
+		caja.mesh = bm
+		caja.position = Vector3(i * 6.0, 0.55, 0)
+		led.add_child(caja)
+		var l := Label3D.new()
+		led.add_child(l)
+		led.registrar(caja, l, i)
+	led._process(0.016)
+	var mmis := led.find_children("Paneles*", "MultiMeshInstance3D", false, false)
+	_comprobar(mmis.size() == 2, "laterales y fondos en dos MultiMesh (%d)" % mmis.size())
+	var p0: Dictionary = led._paneles[0]
+	_comprobar(p0.has("mm") and p0.get("caja") == null, "las cajas sueltas se quitan")
+	var antes: Color = p0.get("color", Color.BLACK)
+	led._process(VallasLed.SEG + 0.1)
+	_comprobar(Color(p0.get("color", Color.BLACK)) != antes, "al cambiar el anuncio cambia el color del panel")
+	led.evento(["GOL"], Color(1, 0.8, 0), Color(0, 0.4, 0))
+	led._process(0.4)
+	var c: Color = p0.get("color", Color.BLACK)
+	var club := [Color(1, 0.8, 0).srgb_to_linear(), Color(0, 0.4, 0).srgb_to_linear()]
+	_comprobar(c.a > 0.3 and (Color(c.r, c.g, c.b).is_equal_approx(Color(club[0].r, club[0].g, club[0].b))
+		or Color(c.r, c.g, c.b).is_equal_approx(Color(club[1].r, club[1].g, club[1].b))), "en el gol el panel brilla con los colores del club (%s)" % str(c))
+	raiz.queue_free()
+
+## FALTAS POR PUNTOS (20-10-2026, vídeo del dueño): jugadas preparadas.
+func _probar_faltas_puntos() -> void:
+	_titulo("FALTAS POR PUNTOS")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var raiz: Node3D = r[1]
+	var loc: Array = []
+	var vis: Array = []
+	for p: Dictionary in motor.jugadores:
+		if bool(p["por"]):
+			continue
+		(loc if bool(p["es_local"]) else vis).append(p)
+	var atacante: Dictionary = loc[0]
+	var defensa: Dictionary = vis[0]
+	var arco := motor._arco_rival(atacante)
+	var d := signf(arco.z)
+	## Todos los demás lejos, a la espalda del atacante (no tapan el arco).
+	for i in range(1, loc.size()):
+		(loc[i]["node"] as Node3D).position = Vector3(-30 + i * 3, 0, -d * 45.0)
+	for i in range(1, vis.size()):
+		(vis[i]["node"] as Node3D).position = Vector3(-30 + i * 3, 0, -d * 48.0)
+	## 1) Mano a mano: el 9 corre hacia el arco a 20 m; el último defensa llega
+	## por detrás, lanzado, en plancha → roja directa.
+	(atacante["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 20.0)
+	atacante["vel"] = Vector3(0, 0, d * 7.0)
+	(defensa["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 21.5)
+	defensa["vel"] = Vector3(0, 0, d * 7.5)
+	var pf := motor.puntos_falta(defensa, atacante, "deslizante")
+	_comprobar((pf["factores"] as Array).has("por_detras") and (pf["factores"] as Array).has("gran_velocidad")
+		and (pf["factores"] as Array).has("profesional"), "por detrás + a gran velocidad + último hombre (%s)" % str(pf["factores"]))
+	_comprobar(float(pf["puntos"]) >= MotorJugable.UMBRAL_ROJA, "suma de roja directa (%.1f)" % float(pf["puntos"]))
+	## 2) De frente, sin velocidad y con compañeros cubriendo: carga de hombro.
+	(atacante["node"] as Node3D).position = Vector3(10, 0, 0)
+	atacante["vel"] = Vector3(0, 0, d * 2.0)
+	(defensa["node"] as Node3D).position = Vector3(10, 0, d * 1.0)
+	defensa["vel"] = Vector3(0, 0, -d * 1.0)
+	(vis[1]["node"] as Node3D).position = Vector3(10, 0, d * 12.0)
+	var pf2 := motor.puntos_falta(defensa, atacante, "hombro")
+	_comprobar(float(pf2["puntos"]) < MotorJugable.UMBRAL_AMARILLA, "carga de hombro de frente: solo falta (%.1f, %s)" % [float(pf2["puntos"]), str(pf2["factores"])])
+	## 3) La falta de verdad: con tarjetas reales, la roja directa expulsa.
+	motor.tarjetas_reales = true
+	(atacante["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 20.0)
+	atacante["vel"] = Vector3(0, 0, d * 7.0)
+	(defensa["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 21.5)
+	defensa["vel"] = Vector3(0, 0, d * 7.5)
+	(vis[1]["node"] as Node3D).position = Vector3(-30, 0, -d * 48.0)
+	var antes := motor.jugadores.size()
+	var an0 := float(motor.anadido[motor.mitad - 1]) if motor.mitad >= 1 and motor.anadido.size() >= motor.mitad else -1.0
+	motor._falta(defensa, atacante, 0.25, "", "deslizante")
+	var an1 := float(motor.anadido[motor.mitad - 1]) if an0 >= 0.0 else -1.0
+	_comprobar(an0 >= 0.0 and an1 > an0, "M-139: la entrada dura suma añadido (%.2f → %.2f)" % [an0, an1])
+	_comprobar(String(motor.ultima_falta.get("sancion", "")) == "roja", "se pita roja directa (%s)" % str(motor.ultima_falta))
+	_comprobar(String(defensa.get("anim_actual", "")) in ["discutir_arbitro", "protestar"], "M-105: el amonestado protesta al árbitro (%s)" % String(defensa.get("anim_actual", "")))
+	_comprobar(motor.jugadores.size() == antes - 1 or bool(defensa.get("expulsado", false)), "y el infractor se va del campo")
+	## M-107: el juez de línea va a la altura del penúltimo defensor.
+	var def_mas: Array = []
+	for p: Dictionary in motor.jugadores:
+		if signf(motor._arco_propio(p).z) > 0.0:
+			def_mas.append(p)
+	for i in def_mas.size():
+		(def_mas[i]["node"] as Node3D).position = Vector3(float(i) * 2.0 - 10.0, 0, 5.0)
+	(def_mas[0]["node"] as Node3D).position = Vector3(0, 0, 51.0)
+	(def_mas[1]["node"] as Node3D).position = Vector3(5, 0, 33.0)
+	_comprobar(is_equal_approx(motor.linea_fuera_de_juego(1.0), 33.0), "M-107: la línea del fuera de juego es la del penúltimo (%.1f)" % motor.linea_fuera_de_juego(1.0))
+	raiz.queue_free()
+
+func _probar_fisica_motor() -> void:
+	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var raiz: Node3D = r[1]
+	var ball: Node3D = r[2]
+	var prev := {}
+	var vprev := {}
+	var rprev := {}
+	var bprev := Vector3.INF
+	var c := {"vel": 0, "giro": 0, "tiron": 0, "tele": 0, "muestras": 0}
+	var dt := 1.0 / 30.0
+	for _f in 1200:
+		motor.paso(dt * 0.5)
+		motor.paso(dt * 0.5)
+		for p: Dictionary in motor.jugadores:
+			var nd: Node3D = p["node"]
+			var id := nd.get_instance_id()
+			var pa := nd.position
+			c["muestras"] += 1
+			if prev.has(id):
+				var vel: Vector3 = (pa - prev[id]) / dt
+				vel.y = 0.0
+				if vel.length() > 10.5:
+					c["vel"] += 1
+				if vprev.has(id) and (vel - (vprev[id] as Vector3)).length() / dt > 25.0 and vel.length() < 10.5:
+					c["tiron"] += 1
+				vprev[id] = vel
+			if rprev.has(id) and absf(wrapf(nd.rotation.y - float(rprev[id]), -PI, PI)) / dt > deg_to_rad(720.0):
+				c["giro"] += 1
+			prev[id] = pa
+			rprev[id] = nd.rotation.y
+		var pb := ball.position
+		if bprev != Vector3.INF and pb.distance_to(bprev) > 1.2 and motor.estado == "juego":
+			c["tele"] += 1
+
+		bprev = pb
+	print("   · física: %s" % str(c))
+	## Coste de CPU del motor (20-10-2026, para valorar C++): ms por paso.
+	var t0 := Time.get_ticks_usec()
+	for _k in 600:
+		motor.paso(dt * 0.5)
+	var us := float(Time.get_ticks_usec() - t0) / 600.0
+	print("   · motor: %.3f ms por paso de 1/60 s (%.1f %% de un fotograma de 60 fps)" % [us / 1000.0, us / 1000.0 / 16.67 * 100.0])
+	_comprobar(motor.minuto() >= 3, "el partido avanzó (minuto %d)" % motor.minuto())
+	_comprobar(int(c["vel"]) == 0, "nadie corre a más de 10,5 m/s (%d)" % c["vel"])
+	_comprobar(int(c["giro"]) == 0, "ningún giro de más de 720°/s (%d)" % c["giro"])
+	_comprobar(float(c["tiron"]) / float(c["muestras"]) < 0.005, "tirones > 25 m/s² por debajo del 0,5 %% (%d de %d)" % [c["tiron"], c["muestras"]])
+	_comprobar(int(c["tele"]) <= 3, "el balón no salta en pleno juego (%d)" % c["tele"])
+	raiz.queue_free()
+
+## GUARDADO SEGURO (20-10-2026): un guardado roto o a medias no pierde la
+## partida; se recupera del temporal o de la copia anterior.
+func _probar_guardado_seguro() -> void:
+	_titulo("GUARDADO SEGURO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 909)
+	m.tomar_el_mando(m.ligas[0].clubes[2].id)
+	## 20-10: al empezar, tu club ya tiene sus bonificaciones (antes valían 1,0
+	## hasta la primera semana y solo al recargar salían bien).
+	var rec := Partida.desde_instantanea(Partida.instantanea(m))
+	_comprobar(absf(m.mi_club().bonus_ataque - rec.mi_club().bonus_ataque) < 0.0001
+		and absf(m.mi_club().bonus_defensa - rec.mi_club().bonus_defensa) < 0.0001,
+		"bonificaciones del club iguales en vivo y al recargar (%.3f/%.3f vs %.3f/%.3f)" % [
+		m.mi_club().bonus_ataque, m.mi_club().bonus_defensa, rec.mi_club().bonus_ataque, rec.mi_club().bonus_defensa])
+	var n := "__prueba_seguro__"
+	var ruta := Partida.ruta_de(n)
+	Partida.borrar(n)
+	_comprobar(Partida.guardar(m, n), "se guarda")
+	_comprobar(FileAccess.file_exists(ruta) and not FileAccess.file_exists(ruta + Partida.TEMPORAL), "queda el principal y no el temporal")
+	var semana1 := m.semana
+	m.semana += 3
+	_comprobar(Partida.guardar(m, n), "se guarda otra vez")
+	_comprobar(FileAccess.file_exists(ruta + Partida.RESPALDO), "la versión anterior queda como copia")
+	## Principal corrompido (basura): carga la copia y avisa.
+	var f := FileAccess.open(ruta, FileAccess.WRITE)
+	f.store_string("basura que no es una partida")
+	f.close()
+	var m2 := Partida.cargar(n)
+	_comprobar(m2 != null and m2.semana == semana1 and Partida.cargada_de_respaldo, "principal roto: se recupera la copia anterior")
+	## Principal truncado a 2 bytes: no revienta.
+	f = FileAccess.open(ruta, FileAccess.WRITE)
+	f.store_8(1)
+	f.store_8(2)
+	f.close()
+	_comprobar(Partida.cargar(n) != null, "principal truncado: tampoco se pierde")
+	## Sin principal: la ranura sigue en el menú.
+	DirAccess.remove_absolute(ruta)
+	var esta := false
+	for d: Dictionary in Partida.listar():
+		esta = esta or String(d.get("fichero", "")) == n
+	_comprobar(esta, "sin principal, la ranura sigue en la lista de partidas")
+	## Un temporal completo (corte entre escribir y mover) se aprovecha.
+	_comprobar(Partida.guardar(m, n), "se guarda de nuevo")
+	DirAccess.rename_absolute(ruta, ruta + Partida.TEMPORAL)
+	var m3 := Partida.cargar(n)
+	_comprobar(m3 != null and m3.semana == semana1 + 3, "un temporal entero se recupera (semana %d)" % (m3.semana if m3 != null else -1))
+	## M-412 (20-10): GUARDADOS ESTROPEADOS AL AZAR. Se toma un guardado bueno y
+	## se rompe de 40 maneras (bytes cambiados, cortado, cabecera con un tamaño
+	## absurdo), sin copia de respaldo: cargar nunca revienta; o sale la partida
+	## o sale null (y el banco caza cualquier «SCRIPT ERROR» por el camino).
+	Partida.borrar(n)
+	_comprobar(Partida.guardar(m, n), "guardado bueno para estropear")
+	var bueno := FileAccess.get_file_as_bytes(ruta)
+	var az := RandomNumberGenerator.new()
+	az.seed = 412
+	var nulos := 0
+	var cargados := 0
+	for i in 40:
+		var malo := bueno.duplicate()
+		match i % 4:
+			0:
+				for _k in az.randi_range(1, 30):
+					var pos := az.randi_range(0, malo.size() - 1)
+					malo[pos] = az.randi_range(0, 255)
+			1:
+				malo.resize(az.randi_range(0, malo.size() - 1))
+			2:
+				for k in 4:
+					malo[k] = az.randi_range(0, 255)
+			3:
+				var desde := az.randi_range(4, malo.size() - 2)
+				for k in range(desde, mini(desde + 64, malo.size())):
+					malo[k] = 0
+		DirAccess.remove_absolute(ruta + Partida.RESPALDO)
+		var fm := FileAccess.open(ruta, FileAccess.WRITE)
+		fm.store_buffer(malo)
+		fm.close()
+		var mm := Partida.cargar(n)
+		if mm == null:
+			nulos += 1
+		else:
+			cargados += 1
+	Partida.cargada_de_respaldo = false
+	_comprobar(nulos + cargados == 40, "40 guardados estropeados: ninguno revienta (%d no cargan, %d sí)" % [nulos, cargados])
+	Partida.borrar(n)
+	_comprobar(not FileAccess.file_exists(ruta) and not FileAccess.file_exists(ruta + Partida.TEMPORAL)
+		and not FileAccess.file_exists(ruta + Partida.RESPALDO), "borrar quita principal, temporal y copia")
 
 func _probar_guardado() -> void:
 	_titulo("GUARDAR Y CARGAR")
@@ -7191,6 +7645,202 @@ func _probar_calendario_c13() -> void:
 	_comprobar(cal2.explicadas.has("11 de septiembre"), "se guarda lo que el mentor ya explicó")
 	_comprobar(Calendario.proximas("CHI", 2026, 1, 5).size() == 5, "hay próximas fechas para el calendario")
 
+## M-240 (20-10): la política es ficticia y no se atribuye religión a nadie. Se
+## vigila que no se cuelen políticos o partidos reales ni religiones en los textos
+## del juego (código y narración). El calendario (fiestas como el Ramadán) es la
+## única excepción: habla de fechas, no de personas.
+const PROHIBIDAS_POLITICA := "PSOE|Bolsonaro|Trump|Biden|Boric|Milei|Lula|Macron|Pinochet|Maduro|peronismo|peronista|kirchnerismo|kirchnerista|franquismo|chavismo|chavista"
+const PROHIBIDAS_RELIGION := "católico|católica|musulmán|musulmana|evangélico|evangélica|judío|judía|protestante|budista|ateo|atea"
+## M-237 (20-10): sin capitán, el vestuario vota la cinta.
+func _probar_capitan_votado() -> void:
+	_titulo("M-237: EL VESTUARIO VOTA AL CAPITÁN")
+	var m := Mundo.new()
+	m.generar(["CHI"], 3737)
+	var c: Club = m.ligas[0].clubes[0]
+	m.tomar_el_mando(c.id)
+	for j: Jugador in c.plantilla:
+		j.capitan = false
+	var noticias: Array = []
+	m.vestuario.noticia.connect(func(t: String, b: String) -> void: noticias.append([t, b]))
+	var v := m.vestuario.votar_capitan(c)
+	var g: Jugador = v.get("ganador")
+	var suma := 0
+	for n: int in (v["votos"] as Dictionary).values():
+		suma += n
+	_comprobar(g != null and suma == c.plantilla.size(), "votan todos (%d votos) y sale un ganador" % suma)
+	var mas_jovenes := 0
+	for j: Jugador in c.plantilla:
+		if j.edad < g.edad:
+			mas_jovenes += 1
+	_comprobar(mas_jovenes * 2 >= c.plantilla.size(), "gana alguien con peso: %s, %d años (mayor que la mitad del plantel)" % [g.nombre, g.edad])
+	m.vestuario.semana(1)
+	var capitanes := c.plantilla.filter(func(j: Jugador) -> bool: return j.capitan)
+	_comprobar(capitanes.size() == 1, "tras la semana hay exactamente un capitán")
+	_comprobar(noticias.any(func(x: Array) -> bool: return String(x[0]).contains("capitán")), "y sale la noticia de la votación")
+	m.vestuario.semana(2)
+	_comprobar(c.plantilla.filter(func(j: Jugador) -> bool: return j.capitan).size() == 1, "con capitán ya no se vuelve a votar")
+
+## M-335 (20-10): la letra del juego tiene TODOS los caracteres que usan las
+## traducciones (ą ł ż del polaco, ğ ş ı İ del turco, ç à del catalán...). Una
+## letra que falta sale como un cuadrado vacío.
+## M-331 (20-10): con las bolsas de nombres por país, un mundo no se llena de
+## tocayos. Se mide cuántos nombres completos se repiten en tres ligas.
+## M-059 y M-062 (20-10): en un mundo grande, ninguna marca de patrocinio sale
+## más del doble de la media, y los escudos (forma + dibujo + colores + iniciales
+## o símbolo) no se repiten entre clubes.
+## M-175 (20-10): de noche los coches llevan faros y se avivan al frenar.
+func _probar_faros_coches() -> void:
+	_titulo("M-175: FAROS Y LUCES DE FRENO")
+	var t := TraficoCiudad.new()
+	add_child(t)
+	var ruta := t.agregar_ruta(PackedVector3Array([Vector3(0, 0, 0), Vector3(0, 0, 100), Vector3(50, 0, 100)]))
+	var coche := Node3D.new()
+	var caja := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(1.8, 1.4, 4.3)
+	caja.mesh = bm
+	caja.position.y = 0.7
+	coche.add_child(caja)
+	t.agregar_vehiculo(coche, ruta, 10.0, 12.0, 0.0, 0.0)
+	t.faros(0.0)
+	_comprobar(coche.get_node_or_null("Faros") == null, "de día no se crean faros")
+	t.faros(0.9)
+	var f := coche.get_node_or_null("Faros") as MeshInstance3D
+	_comprobar(f != null and f.mesh != null and f.mesh.get_faces().size() == 24, "de noche cada coche lleva 4 luces en una sola malla")
+	_comprobar(f != null and f.get_aabb().end.z > 2.1 and f.get_aabb().position.z < -2.1, "delante y detrás del coche (%s)" % (str(f.get_aabb()) if f != null else "-"))
+	_comprobar(t._mat_faros != null and is_equal_approx(float(t._mat_faros.get_shader_parameter("noche")), 0.9), "el brillo sigue a la noche")
+	## M-183: de madrugada hay menos gente por la calle.
+	var gente: Array[Node3D] = []
+	for k in 40:
+		var pe := Node3D.new()
+		t.agregar_vehiculo(pe, ruta, float(k) * 2.0, 1.4, 0.1, 0.0)
+		gente.append(pe)
+	t.faros(0.0)
+	var de_dia := gente.filter(func(x: Node3D) -> bool: return x.visible).size()
+	t.faros(1.0)
+	var de_noche := gente.filter(func(x: Node3D) -> bool: return x.visible).size()
+	_comprobar(de_dia == 40 and de_noche >= 8 and de_noche <= 20, "M-183: de día 40 por la calle, de madrugada %d" % de_noche)
+	t.free()
+
+func _probar_marcas_y_escudos() -> void:
+	_titulo("M-059/M-062: MARCAS Y ESCUDOS EN TODO EL MUNDO")
+	var m := Mundo.new()
+	var paises: Array[String] = []
+	for pais: String in (Datos.tabla("PAISES_LIGAS") as Dictionary):
+		paises.append(pais)
+	m.generar(paises, 5962)
+	var cuenta := {}
+	var zonas := 0
+	var firmas := {}
+	var repetidos: Array = []
+	for c: Club in m.clubes.values():
+		var sp := SponsorKit.de_club(c)
+		for z: String in sp:
+			var marca := String((sp[z] as Dictionary).get("marca", ""))
+			cuenta[marca] = int(cuenta.get(marca, 0)) + 1
+			zonas += 1
+		var firma := "%s|%s|%s|%s|%s|%s" % [Escudo.forma_de(c), Escudo.patron_de(c), c.color1.to_lower(), c.color2.to_lower(),
+			Escudo.simbolo_de(c), Escudo.iniciales(c) if Escudo.simbolo_de(c) == "" else ""]
+		if firmas.has(firma):
+			repetidos.append("%s = %s" % [c.nombre, firmas[firma]])
+		firmas[firma] = c.nombre
+	var media := float(zonas) / float(maxi(1, Auspicio.marcas().size()))
+	var peor := ""
+	for k: String in cuenta:
+		if peor == "" or int(cuenta[k]) > int(cuenta[peor]):
+			peor = k
+	_linea("  %d clubes, %d zonas patrocinadas, %d marcas; media %.1f, la que más: %s ×%d" % [m.clubes.size(), zonas, cuenta.size(), media, peor, int(cuenta.get(peor, 0))])
+	_comprobar(m.clubes.size() > 300, "un mundo grande (%d clubes)" % m.clubes.size())
+	_comprobar(float(cuenta.get(peor, 0)) <= 2.0 * media, "M-059: ninguna marca pasa del doble de la media (%s ×%d, media %.1f)" % [peor, int(cuenta.get(peor, 0)), media])
+	## M-085: canas con la edad en los inventados.
+	var jv: Jugador = null
+	for c: Club in m.clubes.values():
+		for j: Jugador in c.plantilla:
+			if not j.real and jv == null:
+				jv = j
+	var edad0 := jv.edad
+	jv.edad = 24
+	var joven := Color(String(Cara.look_de(jv).get("peloC", "#000000")))
+	jv.edad = 39
+	var viejo := Color(String(Cara.look_de(jv).get("peloC", "#000000")))
+	jv.edad = edad0
+	_comprobar(viejo.s < joven.s, "M-085: a los 39 el pelo tiene canas (%s → %s)" % [joven.to_html(false), viejo.to_html(false)])
+	_comprobar(repetidos.is_empty(), "M-062: ningún escudo repetido entre clubes (%d: %s)" % [repetidos.size(), str(repetidos.slice(0, 5))])
+
+func _probar_nombres_repetidos() -> void:
+	_titulo("M-331: NOMBRES REPETIDOS EN UN MUNDO")
+	var m := Mundo.new()
+	m.generar(["CHI", "ESP", "BRA"], 331)
+	var vistos := {}
+	var total := 0
+	for l in m.ligas:
+		for c: Club in l.clubes:
+			for j: Jugador in c.plantilla:
+				total += 1
+				vistos[j.nombre] = int(vistos.get(j.nombre, 0)) + 1
+	var rep := 0
+	var peor := ""
+	for k: String in vistos:
+		rep += maxi(0, int(vistos[k]) - 1)
+		if peor == "" or int(vistos[k]) > int(vistos[peor]):
+			peor = k
+	var pct := 100.0 * float(rep) / float(maxi(total, 1))
+	_linea("  %d jugadores, %d nombres repetidos (%.1f %%); el más repetido: %s ×%d" % [total, rep, pct, peor, int(vistos.get(peor, 0))])
+	_comprobar(total > 500, "hay mundo que medir (%d jugadores)" % total)
+	_comprobar(pct < 3.0, "menos de un 3 %% de tocayos (%.1f %%)" % pct)
+	_comprobar(int(vistos.get(peor, 0)) <= 3, "nadie se llama igual que otros tres")
+
+func _probar_glifos_idiomas() -> void:
+	_titulo("M-335: GLIFOS DE LOS 9 IDIOMAS")
+	var fuente: Font = ThemeDB.fallback_font
+	var vistos := {}
+	for idi: String in Idiomas.ORDEN:
+		for v: Variant in (Idiomas._extra.get(idi, {}) as Dictionary).values():
+			for ch in String(v):
+				vistos[ch] = idi
+	var faltan: Array = []
+	for ch: String in vistos:
+		var cp := ch.unicode_at(0)
+		## Emojis y símbolos gráficos los pone la fuente de emojis del sistema.
+		if cp >= 0x2190 or cp < 0x20 or (cp >= 0x200B and cp <= 0x200F):
+			continue
+		if not fuente.has_char(cp):
+			faltan.append("%s (%s)" % [ch, vistos[ch]])
+	_comprobar(vistos.size() > 100, "caracteres distintos en las traducciones: %d" % vistos.size())
+	_comprobar(faltan.is_empty(), "la letra los tiene todos (faltan: %s)" % str(faltan.slice(0, 12)))
+
+func _probar_palabras_prohibidas() -> void:
+	_titulo("M-240: SIN POLÍTICA NI RELIGIÓN REAL EN LOS TEXTOS")
+	var re_pol := RegEx.create_from_string("(?i)\\b(" + PROHIBIDAS_POLITICA + ")\\b")
+	var re_rel := RegEx.create_from_string("(?i)(?<![\\wáéíóúñ])(" + PROHIBIDAS_RELIGION + ")(?![\\wáéíóúñ])")
+	var archivos: Array = []
+	for dir in ["res://nucleo", "res://ui", "res://visor"]:
+		_listar_gd(dir, archivos)
+	archivos.append_array(["res://datos/narracion.json", "res://datos/idiomas_extra.json"])
+	var malos: Array = []
+	for f: String in archivos:
+		if f.ends_with("calendario.gd"):
+			continue
+		var txt := FileAccess.get_file_as_string(f)
+		for r: RegEx in [re_pol, re_rel]:
+			var m := r.search(txt)
+			if m != null:
+				malos.append("%s: %s" % [f.get_file(), m.get_string()])
+	_comprobar(re_rel.search("un delantero Católico") != null and re_pol.search("votó a Trump") != null
+		and re_rel.search("catolicismo") == null, "el detector caza lo prohibido (y no palabras parecidas)")
+	_comprobar(archivos.size() > 100, "se revisan los textos de todo el juego (%d archivos)" % archivos.size())
+	_comprobar(malos.is_empty(), "ningún político, partido ni religión real (%s)" % str(malos))
+
+func _listar_gd(dir: String, out: Array) -> void:
+	var d := DirAccess.open(dir)
+	if d == null:
+		return
+	for f in d.get_files():
+		if f.ends_with(".gd"):
+			out.append(dir + "/" + f)
+	for sub in d.get_directories():
+		_listar_gd(dir + "/" + sub, out)
+
 func _probar_politica_c15() -> void:
 	_titulo("C15: POLÍTICA Y ESTADO (FICTICIA Y NEUTRAL)")
 	_comprobar(Politica.ESTRUCTURA.size() == 24, "los 24 países tienen su estructura de Estado")
@@ -7447,6 +8097,13 @@ func _probar_habilidades_en_resultados() -> void:
 ## LA BASE DE LA IA QUE JUEGA Y DEL MANDO (26-9-2026).
 func _probar_motor_libre() -> void:
 	_titulo("IA LIBRE: ACCIONES, MOTOR SIN JUGADAS PREHECHAS Y MANDO")
+	## Siempre con la misma base (la real si está): según lo que corriera antes
+	## en el mismo proceso, el mundo salía con la ficticia y otro club era «el
+	## más fuerte» (20-10: con la ficticia, este prototipo da 12,5 goles de media;
+	## ver PENDIENTES, M-392: `MotorLibre` no se usa en el juego).
+	var base_antes := Datos.base_real
+	if Datos.hay_pack_real():
+		Datos.usar_base_real(true)
 	var m := Mundo.new()
 	m.generar(["CHI"], 777)
 	var cl: Array = m.ligas[0].clubes.duplicate()
@@ -7501,9 +8158,12 @@ func _probar_motor_libre() -> void:
 	## Dos clubes parecidos y DISTINTOS: el motor guarda estado en cada
 	## jugador, y un equipo contra sí mismo comparte los mismos objetos.
 	var debil2: Club = cl[cl.size() - 2]
+	## Con +20 % el efecto (≈6 puntos de calidad) quedaba por debajo del ruido
+	## de 12 partidos y la prueba pasaba o fallaba según el orden de las
+	## secciones (PENDIENTES, 17-10). Se prueba la DIRECCIÓN con +35 %.
 	for sem in 6:
-		var c1 := MotorLibre.new(debil.once(), debil2.once(), 1.2, 1.0, 3 + sem * 2).simular()
-		var c2 := MotorLibre.new(debil.once(), debil2.once(), 1.0, 1.2, 4 + sem * 2).simular()
+		var c1 := MotorLibre.new(debil.once(), debil2.once(), 1.35, 1.0, 3 + sem * 2).simular()
+		var c2 := MotorLibre.new(debil.once(), debil2.once(), 1.0, 1.35, 4 + sem * 2).simular()
 		xg_bono += float(c1["xg"][0]) + float(c2["xg"][1])
 		xg_sin += float(c1["xg"][1]) + float(c2["xg"][0])
 	_comprobar(xg_bono > xg_sin, "con el bono del club se generan más ocasiones (xG %.1f vs %.1f)" % [xg_bono, xg_sin])
@@ -7528,6 +8188,8 @@ func _probar_motor_libre() -> void:
 		if bt != "" and not Mando.MAPA.has(bt):
 			botones_catalogo.append(bt)
 	_comprobar(botones_catalogo.is_empty(), "cada botón del catálogo existe en el mapa del mando %s" % str(botones_catalogo))
+	if Datos.hay_pack_real():
+		Datos.usar_base_real(base_antes)
 
 ## EL PORTAFOLIO DE FÚTBOL (26-9-2026): cuántos de cada familia hay, que
 ## existan en la librería de un jugador y que el partido los use.
@@ -8031,6 +8693,16 @@ func _probar_sancion_dt() -> void:
 	var b := RecorridoClub.butaca({"forma": "cuenco"}, 1.0, 10.0)
 	_comprobar((b["pos"] as Vector3).x > 43.5 and (b["pos"] as Vector3).y > 2.0, "la butaca está en la primera bandeja de la grada")
 	_comprobar(RecorridoClub.junto_a_la_grada(Vector3(35, 0, 0), 0) and not RecorridoClub.junto_a_la_grada(Vector3(0, 0, 0), 0), "solo se sienta uno desde la banda")
+	## 21-10: los pasillos de la grada y la cinta LED existen. (La butaca real y
+	## el hincha que se aparta se comprueban con pantalla: sin ella, Godot no
+	## guarda las posiciones de los MultiMesh — `captura_sentarse`.)
+	var raiz_b := Node3D.new()
+	add_child(raiz_b)
+	StadiumBuilder.build(raiz_b, {"forma": "cuenco", "niveles": 2}, 30000, 0.9, 7)
+	_comprobar(raiz_b.find_children("Pasillos", "MultiMeshInstance3D", true, false).size() >= 4
+		and raiz_b.find_children("Barandillas", "MultiMeshInstance3D", true, false).size() >= 4, "la grada tiene pasillos con escalera y barandilla")
+	_comprobar(raiz_b.find_children("CintaLED", "MeshInstance3D", true, false).size() >= 1, "el peto de la bandeja de arriba lleva cinta LED")
+	raiz_b.free()
 
 func _probar_interiores_club() -> void:
 	_titulo("ESTADIO 2.0: DECORAR LAS SALAS")
@@ -8382,6 +9054,20 @@ func _probar_tanda_top25b() -> void:
 		rango = rango and float(x["nota"]) >= 3.0 and float(x["nota"]) <= 10.0
 	_comprobar(rango, "valoraciones: entre 3 y 10")
 	_comprobar(p.mejor_del_partido() == v1[0], "valoraciones: el mejor del partido es el primero")
+	## 19-10: un partido MIRADO (minuto a minuto, sin `simular()`) también
+	## cierra notas y forma, una sola vez y sin tocar el azar.
+	var par2 := m.proximo_partido()
+	var pm := Partido.new(par2[1], par2[0])
+	pm.preparar()
+	while not pm.terminado_ya:
+		pm.simular_minuto()
+	var j0: Jugador = pm.once_local[0]
+	var antes_n := j0.notas.size()
+	var antes_p := j0.partidos
+	pm.cerrar_notas_mirado()
+	pm.cerrar_notas_mirado()
+	_comprobar(j0.partidos == antes_p + 1 and (j0.notas.size() == antes_n + 1 or antes_n >= 8),
+		"partido mirado: cuenta en notas y partidos una sola vez")
 	## M-238: el resumen de la etapa del despido.
 	var filas := EscenaDespido.datos_etapa(m)
 	var claves: Array = []
@@ -8527,6 +9213,17 @@ func _probar_transmision_y_estadisticas() -> void:
 	_comprobar(ev.n_tiros(true) == 2 and String(ev.tiros[0]["res"]) == "atajada" and String(ev.tiros[2]["res"]) == "gol",
 		"cada remate guarda cómo acabó (y un gol de rebote se apunta aparte)")
 	_comprobar(ev.amarillas == [1, 0] and ev.rojas == [0, 1], "tarjetas por equipo")
+	## M-137: xA = el xG de los remates que salieron de un pase.
+	(ev.tiros[0] as Dictionary)["asist"] = "pasador"
+	_comprobar(is_equal_approx(ev.xa(true), float(ev.tiros[0]["xg"])) and ev.xa(false) == 0.0
+		and is_equal_approx(float(ev.xa_por_jugador().get("pasador", 0.0)), float(ev.tiros[0]["xg"])), "xA: el pase previo se lleva el xG del remate")
+	## M-162: la tabla y los remates, a CSV.
+	var ruta_csv := ev.a_csv(null, null)
+	var txt_csv := FileAccess.get_file_as_string(ruta_csv) if ruta_csv != "" else ""
+	_comprobar(txt_csv.contains("remate;equipo;minuto") and txt_csv.contains(";pasador") and txt_csv.contains("Tarjetas rojas"),
+		"CSV: el partido se exporta con la tabla y cada remate")
+	if ruta_csv != "":
+		DirAccess.remove_absolute(ruta_csv)
 	var celda := int((40.0 + 52.5) / 105.0 * EstadisticasVivo.COLS) + int(34.0 / 68.0 * EstadisticasVivo.FILAS) * EstadisticasVivo.COLS
 	_comprobar((ev.calor[0] as PackedInt32Array)[celda] == 2, "el mapa de calor cuenta por zonas")
 	var ca := Club.new()

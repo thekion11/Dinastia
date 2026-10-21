@@ -39,6 +39,30 @@ uniform float pelo_desde = 9.0;
 // la cabeza. 9.0 = sin límite (las mallas de mentira).
 uniform float lado_max = 9.0;
 
+// LA OLA Y LA ONDA (20-10-2026, M-036/044). Las pone `OlaGrada` mientras duran
+// (fuera de ese rato valen -1 y no cuestan nada):
+//   ola: la ola de toda la vida, que da la vuelta al estadio; cada hincha se
+//        pone de pie y levanta los brazos cuando le pasa el frente.
+//   onda: en un gol, la grada salta en un anillo que se abre desde un punto.
+uniform float ola_edad = -1.0;
+uniform float ola_vel = 0.55;       // radianes por segundo (≈11 s la vuelta)
+uniform float ola_ancho = 0.42;     // radianes de grada en pie a la vez
+uniform float ola_inicio = 0.0;     // ángulo donde arranca
+uniform float ola_vueltas = 2.0;
+uniform float onda_edad = -1.0;
+uniform vec3 onda_centro = vec3(0.0);
+uniform float onda_vel = 24.0;      // metros por segundo
+uniform float onda_ancho = 7.0;
+// LA PROTESTA (M-045): todos de pie un par de segundos, agitando los brazos
+// (tarjeta a uno de casa, gol anulado por el VAR).
+uniform float protesta_edad = -1.0;
+// SIGUEN EL BALÓN CON LA CABEZA (M-049): la vista escribe dónde está; 0 = quietos.
+uniform vec3 balon_pos = vec3(0.0);
+uniform float mira_balon = 0.0;
+// LA PIEL SEGÚN EL PAÍS DEL CLUB (M-034): la mezcla clara→oscura se eleva a esta
+// potencia (más alto = más pieles claras). 1 = reparto parejo, el de antes.
+uniform float piel_sesgo = 1.0;
+
 varying float v_alto;
 varying float v_azar;
 varying float v_lado;
@@ -67,11 +91,65 @@ void vertex() {
 	// por encima del umbral, así que salta una minoría en cada momento -que es
 	// lo que pasa en una grada de verdad, no una ola perfecta.
 	VERTEX.y += max(0.0, sin(t * 0.41 + v_azar * 6.28) - 0.86) * 1.1 * peso;
+	// No todos se suman (uno de cada ocho se queda sentado).
+	float se_suma = step(0.12, fract(v_azar * 3.7));
+	if (ola_edad >= 0.0) {
+		float ang = atan(origen.x, origen.z);
+		float d = mod(ang - ola_inicio, 6.2832);
+		float recorrido = ola_edad * ola_vel;
+		float k = recorrido - d + (v_azar - 0.5) * 0.12;
+		if (k >= 0.0 && recorrido < ola_vueltas * 6.2832 + d) {
+			float km = mod(k, 6.2832);
+			float h = km < ola_ancho ? sin(km / ola_ancho * 3.1416) : 0.0;
+			// De pie (todo el cuerpo sube) y los brazos/hombros, más.
+			VERTEX.y += h * se_suma * (0.5 + 0.6 * peso);
+		}
+	}
+	if (protesta_edad >= 0.0) {
+		float env = smoothstep(0.0, 0.4, protesta_edad) * (1.0 - smoothstep(2.2, 3.0, protesta_edad));
+		float agita = 0.5 + 0.5 * sin(protesta_edad * 9.0 + v_azar * 6.28);
+		VERTEX.y += env * se_suma * (0.42 + peso * 0.25 * agita);
+		VERTEX.x += env * se_suma * peso * 0.06 * sin(protesta_edad * 11.0 + v_azar * 9.0);
+	}
+	if (mira_balon > 0.0 && VERTEX.y > cuello_desde - 0.04) {
+		// Hacia dónde queda el balón en el espacio del propio hincha (mira a +Z).
+		vec3 hacia = inverse(mat3(MODEL_MATRIX)) * (balon_pos - origen);
+		float giro = clamp(atan(hacia.x, hacia.z), -0.7, 0.7) * mira_balon;
+		// Gira la cabeza sobre su propio eje (y un poco los hombros, desde abajo).
+		float k = smoothstep(cuello_desde - 0.04, cuello_hasta, VERTEX.y);
+		float a = giro * k;
+		float c = cos(a);
+		float sn = sin(a);
+		VERTEX.xz = vec2(c * VERTEX.x + sn * VERTEX.z, -sn * VERTEX.x + c * VERTEX.z);
+	}
+	if (onda_edad >= 0.0) {
+		float r = length(origen.xz - onda_centro.xz);
+		float x = onda_edad * onda_vel - r;
+		// Saltan cuando les llega el frente y siguen saltando un rato detrás.
+		if (x > 0.0 && x < onda_ancho * 3.0) {
+			float apaga = 1.0 - x / (onda_ancho * 3.0);
+			float salto = abs(sin((onda_edad * 7.0) + v_azar * 6.28));
+			VERTEX.y += salto * apaga * se_suma * (0.25 + 0.2 * peso);
+		}
+	}
 }
+
+// MÁS GENTE DE VERDAD (21-10-2026, «la gente no se ve tan real»): cada hincha
+// era de un solo color plano. Ahora la ropa tiene volumen (más oscura abajo,
+// donde la tapa la butaca de delante), no todas las camisetas son del mismo
+// blanco o negro puro, uno de cada tres lleva la bufanda del club al cuello
+// (a franjas) y uno de cada nueve, gorra. Los colores de la bufanda los pone
+// `OlaGrada.colores_club` (los del club de casa).
+uniform vec3 bufanda1 : source_color = vec3(0.1, 0.35, 0.2);
+uniform vec3 bufanda2 : source_color = vec3(0.95);
 
 void fragment() {
 	vec3 ropa = COLOR.rgb;
-	vec3 piel = mix(piel_clara, piel_oscura, v_azar);
+	// Nadie viste un blanco ni un negro perfectos y no todas las telas brillan igual.
+	ropa = clamp(ropa, vec3(0.06), vec3(0.86)) * (0.86 + 0.24 * fract(v_azar * 13.7));
+	// Volumen: la cintura en sombra, los hombros a la luz.
+	ropa *= mix(0.62, 1.0, smoothstep(cuello_desde * 0.35, cuello_desde * 0.95, v_alto));
+	vec3 piel = mix(piel_clara, piel_oscura, pow(v_azar, piel_sesgo));
 	float cab = step(v_lado, lado_max);
 	vec3 color = mix(ropa, piel, smoothstep(cuello_desde, cuello_hasta, v_alto) * cab);
 	// Pelo: negro, castaño, rubio o canoso, según el mismo azar del hincha;
@@ -80,6 +158,17 @@ void fragment() {
 	vec3 pelo = r < 0.35 ? vec3(0.05, 0.04, 0.035) : (r < 0.65 ? vec3(0.22, 0.13, 0.07) : (r < 0.8 ? vec3(0.72, 0.58, 0.32) : (r < 0.86 ? vec3(0.62, 0.62, 0.6) : ropa * 0.9)));
 	if (r < 0.94) {
 		color = mix(color, pelo, smoothstep(pelo_desde, pelo_desde + 0.01, v_alto) * cab);
+	}
+	// La bufanda del club, a franjas, justo bajo el cuello.
+	float rb = fract(v_azar * 5.17);
+	if (rb < 0.34 && v_alto > cuello_desde - 0.075 && v_alto < cuello_desde + 0.012) {
+		float franja = step(0.5, fract(v_alto * 45.0));
+		color = mix(bufanda1, bufanda2, franja);
+	}
+	// Gorra: lo más alto de la cabeza, del color del club o oscura.
+	float rg = fract(v_azar * 9.31);
+	if (rg < 0.11 && v_alto > pelo_desde + 0.015 && cab > 0.5) {
+		color = rg < 0.06 ? bufanda1 : vec3(0.08, 0.08, 0.1);
 	}
 	ALBEDO = color;
 	ROUGHNESS = 0.85;

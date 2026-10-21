@@ -113,6 +113,13 @@ static func look_de(j: Jugador) -> Dictionary:
 			base["cicatriz"] = false
 			if String((r as Dictionary).get("pelo", "")) == "":
 				base["pelo"] = CORTES_SOBRIOS[_hash(j.id + "corte") % CORTES_SOBRIOS.size()]
+	## CANAS CON LA EDAD (M-085, 20-10): a los inventados (no a los reales, que
+	## llevan el color de su foto) les salen canas desde los 32, más con los años
+	## y no a todos igual (a uno de cada cuatro casi nada).
+	elif j.edad >= 32 and base.has("peloC"):
+		var vel := 0.25 if _hash(j.id + "canas") % 4 == 0 else 1.0
+		var k := clampf(float(j.edad - 31) / 9.0 * vel, 0.0, 0.65)
+		base["peloC"] = "#" + Color(String(base["peloC"])).lerp(Color("#a3a19c"), k).to_html(false)
 	## Y encima, lo que el editor haya cambiado a mano. Solo las claves tocadas:
 	## cambiar el corte de pelo no debe reescribir la nariz.
 	for k: String in j.look:

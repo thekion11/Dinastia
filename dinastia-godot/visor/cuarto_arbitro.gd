@@ -1,6 +1,7 @@
 class_name CuartoArbitro
 extends Node3D
-## EL CARTEL DEL CUARTO ÁRBITRO (17-10-2026, M-139). Al empezar el añadido de
+## EL CARTEL DEL CUARTO ÁRBITRO (17-10-2026, M-139; 20-10: tamaño real 0,92 m
+## y dígitos con halo, que desde la tele apenas se leía). Al empezar el añadido de
 ## cada tiempo, el cuarto árbitro sale a la banda (entre los dos banquillos,
 ## del lado de la tribuna principal) y levanta el cartel luminoso con los
 ## minutos: «+3» en dígitos verdes por las dos caras, con los brazos arriba. A los
@@ -13,7 +14,7 @@ extends Node3D
 
 const X_BANDA := 35.3        ## a 1,3 m de la línea, entre los banquillos
 const DURACION := 7.5
-const ALTO_ARRIBA := 1.84
+const ALTO_ARRIBA := 2.12   ## por encima de la cabeza (se le ve la cara)
 const ALTO_ABAJO := 1.05
 
 var _cartel: Node3D
@@ -71,7 +72,7 @@ static func cartel_lineas(lineas: Array) -> Node3D:
 	raiz.name = "Cartel"
 	var caja := MeshInstance3D.new()
 	var bm := BoxMesh.new()
-	bm.size = Vector3(0.66, 0.44, 0.06)
+	bm.size = Vector3(0.92, 0.62, 0.07)
 	caja.mesh = bm
 	var mc := StandardMaterial3D.new()
 	mc.albedo_color = Color(0.06, 0.06, 0.07)
@@ -80,16 +81,27 @@ static func cartel_lineas(lineas: Array) -> Node3D:
 	caja.material_override = mc
 	caja.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	raiz.add_child(caja)
+	## El mango por debajo, donde lo agarran las manos.
+	var mango := MeshInstance3D.new()
+	var cm := CylinderMesh.new()
+	cm.top_radius = 0.022
+	cm.bottom_radius = 0.022
+	cm.height = 0.34
+	mango.mesh = cm
+	mango.material_override = mc
+	mango.position = Vector3(0, -0.31 - 0.15, 0)
+	mango.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	raiz.add_child(mango)
 	for lado in [1.0, -1.0]:
 		var panel := MeshInstance3D.new()
 		var q := QuadMesh.new()
-		q.size = Vector2(0.58, 0.36)
+		q.size = Vector2(0.84, 0.54)
 		panel.mesh = q
 		var mp := StandardMaterial3D.new()
 		mp.albedo_color = Color(0.02, 0.05, 0.03)
 		mp.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		panel.material_override = mp
-		panel.position = Vector3(0, 0, 0.031 * lado)
+		panel.position = Vector3(0, 0, 0.036 * lado)
 		panel.rotation.y = 0.0 if lado > 0.0 else PI
 		raiz.add_child(panel)
 		var n := lineas.size()
@@ -97,14 +109,17 @@ static func cartel_lineas(lineas: Array) -> Node3D:
 			var l := Label3D.new()
 			l.text = String(lineas[i][0])
 			l.font_size = 150 if n == 1 else 92
-			l.pixel_size = 0.0021
-			l.outline_size = 0
+			l.pixel_size = 0.003
+			## Un halo del mismo color: de lejos (cámara de TV a 30-50 m) el
+			## dígito se lee como LED encendido y no como una raya fina.
+			l.outline_size = 10
+			l.outline_modulate = Color(lineas[i][1], 0.35)
 			l.modulate = lineas[i][1]
 			l.shaded = false
 			l.double_sided = false
 			l.no_depth_test = false
-			var y := 0.0 if n == 1 else 0.085 - 0.17 * float(i)
-			l.position = Vector3(0, y, 0.034 * lado)
+			var y := 0.0 if n == 1 else 0.125 - 0.25 * float(i)
+			l.position = Vector3(0, y, 0.039 * lado)
 			l.rotation.y = 0.0 if lado > 0.0 else PI
 			raiz.add_child(l)
 	return raiz

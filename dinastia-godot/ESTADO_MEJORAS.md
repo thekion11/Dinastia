@@ -6,6 +6,16 @@ Repaso de los 470 puntos de `INFORME_MEJORAS.md` (14-10-2026) **contra el códig
 
 **Límites de esta pasada.** Es una verificación por lectura y búsqueda, sin abrir el juego. Un PENDIENTE significa «no se encontró»; el proyecto ya tuvo falsos negativos (ver LEEME, 13-9), así que antes de construir algo marcado así conviene un segundo grep. Dos puntos que el informe daba por faltantes ya existían antes del 14-10: `_probar_negociacion` (M-212) y `_probar_logros` (M-255).
 
+## 0. Pasada del 20-10-2026 (pedido: «pulir lo de los más de 300 puntos»)
+
+Estado contado sobre las filas de este documento tras la pasada: **HECHO 94 · PARCIAL 113 · PENDIENTE 245** (el 17-10: 49 · 119 · 284). La tabla de la sección 1 es la del 17-10 y se deja como referencia.
+
+Cerrados en esta pasada (cada uno con prueba o captura): público (M-034 piel por país, M-036 onda y ola, M-045 protesta, M-047 colores del club, M-049 siguen el balón), partido (M-119 lectura del lanzador en la tanda, parcial; M-127 gestión del tiempo; M-137 xA; M-139 añadido por entradas duras; M-162 CSV), gestión (M-224 camisetas del ídolo, M-227 mantenimiento, M-228 imprevistos de obra, M-237 capitán votado, M-246 alineación indebida), interfaz (M-288 fondos ligeros, M-301 autoguardado visible, M-309 créditos), textos y datos (M-240 política/religión, M-331 tocayos, M-335 glifos), código y pruebas (M-358 FPS, M-381 prints, M-389 reimportar, M-395 requirements, M-412 guardados estropeados). Ya hechos antes y marcados ahora: M-104, M-114, M-115, M-123, M-132, M-151.
+
+### Pasada del 21-10 (segunda, secciones A-F)
+
+Estado tras ella: **HECHO 102 · PARCIAL 111 · PENDIENTE 239**. Cerrados: M-021 sector visitante, M-059 reparto de marcas, M-062 escudos únicos, M-073 brazalete de capitán (no se ponía nunca y con la base real no había capitanes), M-098 la cabeza sigue al balón, M-105 protesta al ver tarjeta, M-107 jueces de línea con el penúltimo defensor, M-175 faros y luces de freno; parciales: M-085 canas, M-102 banquillo ante la roja, M-183 menos gente de madrugada.
+
 ## 1. Resumen en cifras
 
 | Sección | Puntos | HECHO | PARCIAL | PENDIENTE | 🔒 DUEÑO | SIN VERIF. |
@@ -43,9 +53,9 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-003 | P1 | Las formas no varían de forma continua | PENDIENTE | `RETRANQUEO_BANDEJA` sigue siendo constante; sin parámetros por club |
 | M-004 | P1 | El «estadio real» sólo copia forma/niveles/techo/pista/focos/fachada | PENDIENTE | `ESTADIOS` de `herramientas/estadios_reales.py` sin color de pista/vallas, año ni pantalla |
 | M-005 | P1 | Colores propios de butacas en 47 de 176 estadios reales | PENDIENTE | `ASIENTOS` sigue con 47 de 176 estadios |
-| M-006 | P2 | Entorno vacío alrededor del estadio (sólo ciudad propia lo tiene) | PENDIENTE | aparcamiento solo en la ciudad propia (`CityBuilder._aparcamiento`) |
+| M-006 | P2 | Entorno vacío alrededor del estadio (sólo ciudad propia lo tiene) | HECHO | 21-10: `visor/entorno_estadio.gd` en el partido y la Carrera: hierba hasta el horizonte, plaza con mástiles y banderas del club, avenida con farolas y árboles, dos aparcamientos con coches y 64 edificios de fondo (Kenney); además, las formas sin grada de esquina («rect», «principal») cierran las esquinas con un edificio de servicios con fachada; captura `captura_exterior` |
 | M-007 | P2 | Sin variación de entorno por país (palmeras, nieve, montaña de fondo) | PENDIENTE | sin fondo lejano por país/clima en el estadio |
-| M-008 | P2 | Tribunas «falsas» por falta de profundidad en el graderío | PARCIAL | vomitorios sí (`StadiumBuilder._vomitorios`); faltan barandillas, numeración y anillo de palcos |
+| M-008 | P2 | Tribunas «falsas» por falta de profundidad en el graderío | HECHO | vomitorios (`StadiumBuilder._vomitorios`); 21-10: pasillos con peldaños y barandilla cada 8 grupos de butacas (`_montar_pasillos`), escaleras de acceso desde el césped (`_escaleras_de_acceso`), cinta LED en el peto de la bandeja alta (`cinta_led.gdshader`); se sube caminando a la butaca (`RecorridoClub.camino_a_butaca`); capturas `captura_diagnostico_grada`, `captura_sentarse` |
 | M-009 | P2 | Sin voladizo/cubierta visible en estadios sin techo | PARCIAL | techo «visera» y cerchas vistas desde fuera (`FachadaEstadio`); sin visera parcial con estructura por sector |
 | M-010 | P2 | Sin carteles de pared (patrocinadores, fechas, escudo) fuera del campo | PENDIENTE | sin carteles en muros exteriores (la fachada tiene rótulos de puerta, no publicidad) |
 | M-011 | P1 | Marcador/pantalla gigante estática | PENDIENTE | `StadiumBuilder._pantallas` usa una textura fija (`_pantalla_textura`): sin marcador ni repetición vivos |
@@ -58,7 +68,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-018 | P2 | Banquillos de un solo diseño por preset | PENDIENTE | `EST_BANQUILLOS` sin ampliar |
 | M-019 | P2 | Sin zona de prensa/cabinas de TV visibles en el graderío | PARCIAL | cabina de prensa en `estadio_extras.gd`; sin vidrio ni NPC de prensa dentro |
 | M-020 | P2 | Sin palcos reales (`palcos` existe como instalación) | PARCIAL | palcos como pieza de `estadio_extras.gd` y `ClubDentro.PALCO`; sin interior con personas |
-| M-021 | P2 | Sin zona de aficionados visitantes diferenciada | PENDIENTE | sin sector visitante diferenciado |
+| M-021 | P2 | Sin zona de aficionados visitantes diferenciada | HECHO | 21-10: en partido, un cuarto de la bandeja baja del fondo −Z con los colores del rival y una franja de butacas vacías que lo separa (`est.visita1/2`, `sector_visita`); captura `captura_sector_visita` |
 | M-022 | P2 | Sin sonido espacial por sector (cantos locales vs visitantes) | PENDIENTE | no existe ningún `AudioStreamPlayer3D` en el juego |
 | M-023 | P3 | Sin clima visible en el estadio más allá de lluvia/niebla (nieve,… | PARCIAL | nieve, lluvia y niebla (`Precipitacion`, `Clima`); sin calima/polvo ni charcos que reflejan |
 | M-024 | P2 | Sombras de la grada sobre el campo no cambian con la hora real del… | PARCIAL | `Ambience` usa la hora elegida para el estadio, no la hora/estación real del partido |
@@ -76,9 +86,9 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
 | M-033 | P1 | Los hinchas comparten malla por pose; sólo cambia color de camiseta | PENDIENTE | el hincha sigue siendo color por instancia + shader por altura (MEGA_AUD_2 §2) |
-| M-034 | P1 | Pelo/piel por azar sin población real | PENDIENTE | piel del hincha por azar (`hinchada.gdshader`), sin tabla por país |
+| M-034 | P1 | Pelo/piel por azar sin población real | HECHO | 20-10: `OlaGrada.PIEL_SESGO` por país del club de casa (24 países) → `piel_sesgo` en `hinchada.gdshader` (DT y Carrera); aproximación, no dato por persona |
 | M-035 | P1 | Sin bufandas/banderas/camisetas del club en la mano | PARCIAL | banda de bufandas y tifo en grada (`StadiumBuilder` «bufandas»/«tifo»); sin mallas en la mano |
-| M-036 | P2 | Animación del público: balanceo uniforme + saltos | PENDIENTE | solo balanceo y saltos aleatorios (`hinchada.gdshader`); sin ola ni onda desde el sector del gol |
+| M-036 | P2 | Animación del público: balanceo uniforme + saltos | HECHO | 20-10: onda de saltos desde el fondo del gol local y la ola (`visor/ola_grada.gd`, uniformes en `hinchada.gdshader`); captura `captura_ola` |
 | M-037 | P2 | Sin sector «barra brava»/torcida con comportamiento diferente (de… | PENDIENTE | sin sector ultra con bengalas/humo |
 | M-038 | P2 | Hinchas sentados con piernas invisibles (se cortan en la cadera) | PENDIENTE | público horneado cortado en la cadera |
 | M-039 | P2 | Tres niveles de detalle; el salto «cerca→medio→lejos» puede verse | PARCIAL | detalle por distancia por tramos de grada (16-10, 2,24→1,72 M tris); sin mezcla por dithering |
@@ -86,12 +96,12 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-041 | P2 | Sin niños, familias ni asistentes en sillas de ruedas | PENDIENTE | sin niños/familias/sillas de ruedas en grada |
 | M-042 | P2 | Ocupación = reputación, no asistencia del partido | PARCIAL | ocupación = asistencia de `Finanzas` (depende del precio); no por sector |
 | M-043 | P2 | Sin diferencia de público por competición (final vs liga) | PENDIENTE | sin decoración especial en finales |
-| M-044 | P2 | Gol local: ceremonia de público única | PENDIENTE | sin variantes de celebración por sector |
-| M-045 | P2 | Sin reacción del público a decisiones (silbidos al árbitro, VAR) | PARCIAL | sonidos de abucheo/silbidos en `Sonido`; sin cambio de pose del público |
+| M-044 | P2 | Gol local: ceremonia de público única | PARCIAL | 20-10: además del confeti/bengalas, onda de saltos desde ese fondo, la ola con el partido decidido y la protesta; falta variar por sector |
+| M-045 | P2 | Sin reacción del público a decisiones (silbidos al árbitro, VAR) | HECHO | 20-10: «protesta» (todos de pie agitando los brazos 3 s) con tarjeta a uno de casa y gol local anulado por el VAR, además del abucheo de `Sonido` |
 | M-046 | P3 | Sin multitudes en accesos, tienda y museo del estadio | PENDIENTE | sin flujo de NPC antes/después del partido |
-| M-047 | P2 | Colores de hincha con 14 tonos (hoy) | PARCIAL | paleta con colores del club + neutros (`StadiumBuilder` l.2667); no 60 % club por tabla |
+| M-047 | P2 | Colores de hincha con 14 tonos (hoy) | HECHO | 20-10: ~6 de cada 10 con los colores del CLUB (`est.hincha1/2` desde `StadiumBuilder.build`; antes eran los de las butacas), resto ropa de calle |
 | M-048 | P2 | Fotógrafos/camarógrafos pocos y repetidos | PARCIAL | `visor/camarografos_siguen.gd` (giran con el balón, uno camina); siguen siendo pocos |
-| M-049 | P2 | Sin aficionados que se levantan/siguen el balón con la cabeza | PENDIENTE | sin rotación de cabeza hacia el balón |
+| M-049 | P2 | Sin aficionados que se levantan/siguen el balón con la cabeza | HECHO | 20-10: cabeza y hombros giran hacia el balón (`balon_pos`/`mira_balon` en `hinchada.gdshader`, `OlaGrada.mirar` cada 4 fotogramas en DT y Carrera); se levantan con la ola/onda/protesta |
 | M-050 | P3 | Sin streamers de papel, confeti ni bengalas | HECHO | 17-10: `FestejoGrada` (confeti con los colores del club + bengalas con humo sobre el público real) en goles del local y en la salida; apagado con motor ligero, MEDIO solo confeti |
 
 ### C. Camisetas, escudos y marcas (M-051 … M-078) · HECHO 2 · PARCIAL 5 · PENDIENTE 21
@@ -106,10 +116,10 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-056 | P2 | Sin sudor/barro/lluvia en la camiseta | PENDIENTE | sin uniform de barro/mojado |
 | M-057 | P1 | Marca de ropa genérica (tick) | PENDIENTE | una sola marca genérica («ala») en el shader |
 | M-058 | P1 | 30 marcas de patrocinio (K-03) | PARCIAL | 38 marcas en `Auspicio` (antes 30); meta 70 |
-| M-059 | P1 | Reparto de marcas sesgado (arreglado el hash hoy, ✅) | PARCIAL | hash arreglado (✅ 14-10); falta la prueba «ninguna marca > 2× la media» |
+| M-059 | P1 | Reparto de marcas sesgado (arreglado el hash hoy, ✅) | HECHO | 21-10: `_probar_marcas_y_escudos` en un mundo de 352 clubes: ninguna marca pasa del doble de la media (la que más, ×27 con media 20) |
 | M-060 | P2 | Patrocinio fijo por club entre temporadas, sin contratos de IA que… | PENDIENTE | sin renovación/cambio de patrocinador de clubes IA |
 | M-061 | P2 | Sin patrocinador en la parte trasera del pantalón ni en las medias | PENDIENTE | sin zonas `short_trasero`/`medias` |
-| M-062 | P1 | Escudos: 188 combinaciones únicas para 384 clubes (C-03) | PENDIENTE | sin comprobación de unicidad en `Escudo` |
+| M-062 | P1 | Escudos: 188 combinaciones únicas para 384 clubes (C-03) | HECHO | 21-10: comprobado en el banco: forma + dibujo + colores + iniciales/símbolo no se repiten en 352 clubes (la cuenta de 188 era sin colores) |
 | M-063 | P1 | Escudos reales sólo 26 (7 %) | PENDIENTE | `ESCUDOS` sigue con 26 clubes |
 | M-064 | P2 | Falta ornamento reconocible (león, águila, estrella, castillo,… | PENDIENTE | sin biblioteca de símbolos (solo el almenado) |
 | M-065 | P2 | Texto/iniciales ilegibles <24 px | PENDIENTE | sin prueba de legibilidad a 24 px |
@@ -120,7 +130,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-070 | P2 | Sin segunda/tercera camiseta con diseño propio | PENDIENTE | sin tercera equipación |
 | M-071 | P2 | Portero: color por contraste, sin diseño | PENDIENTE | portero solo por contraste; guantes como color de accesorio |
 | M-072 | P2 | Árbitros siempre iguales | HECHO | 17-10: `Puente3D.kit_arbitro` (8 camisetas; la que más contrasta con los dos equipos y los porteros, estable por partido) |
-| M-073 | P2 | Sin brazalete de capitán visible a distancia | PARCIAL | `acc_brazalete` existe en el shader; sin refuerzo de contraste a distancia |
+| M-073 | P2 | Sin brazalete de capitán visible a distancia | HECHO | 21-10: el brazalete NO se ponía nunca (el shader lo tenía, nadie lo activaba) y con la base real ningún club tenía capitán. Ahora cada club tiene capitán al generarse, la cinta la hereda el veterano del once si el capitán no juega (`Puente3D.once`), y el brazalete (amarillo, o blanco con camiseta amarilla, más ancho) va en una copia del material (`PlayerSpawner.poner_brazalete`) |
 | M-074 | P2 | Medias/pantalón: diseño correcto pero sin franjas del fabricante | PENDIENTE | sin franjas del fabricante en medias/pantalón |
 | M-075 | P2 | Dorsal sin fuente propia por club | PENDIENTE | dorsal en siete segmentos, una sola fuente |
 | M-076 | P3 | Sin parches de competición (campeón, copa) | PENDIENTE | sin parches de competición |
@@ -137,7 +147,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-082 | P2 | Altura sólo por escala global | PENDIENTE | sin proporciones variables |
 | M-083 | P2 | Sin tatuajes/cicatrices por jugador salvo civiles | PARCIAL | tatuaje solo en ropa civil (`equipacion_q.gdshader` `tatuaje`); no en jugadores |
 | M-084 | P2 | Biblioteca de caras = 72 mezclas | PENDIENTE | biblioteca de 72 caras |
-| M-085 | P2 | Envejecimiento visual de jugadores (canas, arrugas) no ligado a `edad` | PENDIENTE | sin envejecimiento visual por edad |
+| M-085 | P2 | Envejecimiento visual de jugadores (canas, arrugas) no ligado a `edad` | PARCIAL | 21-10: canas desde los 32 en los inventados (`Cara.look_de`, a uno de cada cuatro casi nada); los reales llevan el color de su foto; arrugas pendientes |
 | M-086 | P2 | Expresiones faciales limitadas a `Expresion` básica | PENDIENTE | `Expresion` sin emociones nuevas |
 | M-087 | P2 | Sin parpadeo/respiración idle variados | PARCIAL | parpadeo en el DT/`Expresion`; sin respiración idle en jugadores |
 | M-088 | P1 | Pelo con 30 cortes pero poca variación de color/aspecto por país | PENDIENTE | sin tabla de pelo por país |
@@ -150,16 +160,16 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-095 | P1 | 335 clips; muchos sin uso en partido | PENDIENTE | sin auditoría automática de clips usados |
 | M-096 | P2 | Transiciones entre clips con mezcla fija 0,25 s | PENDIENTE | mezcla fija entre clips |
 | M-097 | P2 | Retarget con pies que patinan | PARCIAL | IK de piernas solo en la ciudad (`AnimQuaternius._ik_pierna`); sin foot locking en partido |
-| M-098 | P2 | Sin IK de mirada (cabeza sigue balón) | PENDIENTE | sin IK de mirada al balón |
+| M-098 | P2 | Sin IK de mirada (cabeza sigue balón) | HECHO | 21-10: `visor/mirada_balon.gd`: un `LookAtModifier3D` en el hueso Head de cada jugador apuntando al balón (topes 65°/30°, suavizado 0,5 s), en el modo DT y en la Carrera; comprobado con `captura_mirada` (balón a un lado y al otro) |
 | M-099 | P2 | Cuerpos sin colisión entre brazos/piernas (solapes sólo en XZ) | PARCIAL | cuerpos que se empujan y duelos en el motor (`MotorJugable._cuerpos`, 17-10), en 2D; sin cápsulas 3D |
 | M-100 | P2 | Sin respiración/cansancio visible (manos a rodillas) | HECHO | `MotorJugable` pone el clip «cansado» (manos a rodillas) con forma < 0,6 (l.3440) |
 | M-101 | P2 | Celebraciones por rasgo (ya) pero sólo 2/3 propias | PARCIAL | carrera al córner y abrazo (`_ia_celebracion`); sin 10 por rasgo ni coreografías |
-| M-102 | P2 | Sin reacciones de banquillo coordinadas | PARCIAL | el banquillo celebra el gol (`ui/estadio.gd` `_banca_celebra`); sin tarjeta/lesión |
+| M-102 | P2 | Sin reacciones de banquillo coordinadas | PARCIAL | celebra el gol (`_banca_celebra`); 21-10: protesta la roja de uno de los suyos (`_banca_protesta`); falta la lesión |
 | M-103 | P2 | Lesiones sin animación específica | PARCIAL | clip de dolor (`AnimQuaternius`); sin camilla ni médicos en campo |
-| M-104 | P2 | Cambios de jugador sin animación (entra/sale) | HECHO | 17-10, con motor: cartel LED del cuarto árbitro con los dos dorsales (`CuartoArbitro.levantar_cambio`), el que entra espera en la banda, el que sale camina hasta él, palmada (`chocar_mano`) y se va (`visor/escena_cambio.gd`). Falta en la Carrera de Jugador |
-| M-105 | P2 | Sin tarjetas con ceremonia de árbitro detallada | PARCIAL | clips de protesta/discutir árbitro en `AnimExtra`; sin protesta enlazada a las tarjetas del motor real |
+| M-104 | P2 | Cambios de jugador sin animación (entra/sale) | HECHO | 17-10, con motor: cartel LED del cuarto árbitro con los dos dorsales (`CuartoArbitro.levantar_cambio`), el que entra espera en la banda, el que sale camina hasta él, palmada (`chocar_mano`) y se va (`visor/escena_cambio.gd`). 20-10: también en la Carrera de Jugador (`PartidoJugable._escena_cambio`) |
+| M-105 | P2 | Sin tarjetas con ceremonia de árbitro detallada | HECHO | 21-10: con cada tarjeta el amonestado protesta mirando al árbitro (`discutir_arbitro`, `MotorJugable._protestar`) mientras este habla y enseña la cartulina |
 | M-106 | P1 | Árbitro con sólo gestos básicos | HECHO | 17-10: en el motor real pita, señala la falta, ventaja de verdad, habla y enseña la tarjeta (cartulina en la mano), penal, córner, saque de puerta, añadido y final (`MotorJugable._gesto_arbitro`) |
-| M-107 | P2 | Asistentes de línea sin carrera real | PARCIAL | los jueces siguen la z del balón (`_mover_arbitros`), no al penúltimo defensor |
+| M-107 | P2 | Asistentes de línea sin carrera real | HECHO | 21-10: cada juez de línea se coloca a la altura del penúltimo defensor o del balón si está más adelante (`MotorJugable.linea_fuera_de_juego`) |
 | M-108 | P2 | Mascotas con animación limitada | SIN VERIFICAR | `MascotaQ` tiene animaciones propias; no se comprobó si son 6 ni si hay rutas |
 | M-109 | P2 | Niños de ceremonia con una misma malla | PARCIAL | niños con cuerpos de peatones variados (`CeremoniaPartido`); sin comprobar variedad de malla |
 | M-110 | P2 | Sin voces/murmullos de jugadores | PENDIENTE | sin voces de jugadores |
@@ -171,32 +181,32 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
 | M-113 | P1 | Sesgo de local (M-01): con N=100 no existe (antes 0,63–0,67,… | HECHO | ✅ 15-10 (sesgo de local corregido) |
-| M-114 | P1 | Teletransportes del balón en sonda (M-02) | PENDIENTE | pendiente en MEGA_AUD_2 §6 (reposiciones del balón) |
-| M-115 | P1 | Giros >720°/s (465) | PARCIAL | giro limitado al conducir (`giro_max`, l.3364); la sonda seguía marcando giros > 720°/s |
+| M-114 | P1 | Teletransportes del balón en sonda (M-02) | HECHO | 19-10: conducción que recoge el balón (toque ≤ 0,25 m), atajada sin salto a las manos; sonda: balón saltando en juego 3 → 1 (PENDIENTES 2.1) |
+| M-115 | P1 | Giros >720°/s (465) | HECHO | 19-10: `_mirar` con `GIRO_RAPIDO` al patear y en filigranas, tope de aceleración `A_MAX`; sonda: giros > 720°/s 3 → 0; `_probar_fisica_motor` en el banco |
 | M-116 | P1 | Sin duelos con contacto (M-03) | HECHO | duelos de hombro, balón dividido y agarrón (`MotorJugable._duelo_*`, 17-10) |
 | M-117 | P1 | Faltas sin lógica de contacto real (sólo azar) | HECHO | faltas por entrada al tobillo/llegar tarde (`_falta`); ~8,8 por partido (17-10) |
 | M-118 | P1 | Fuera de juego sólo por posición en el instante (✅ base) | HECHO | el VAR decide con la posición real (`margen_gol`) y desde el 17-10 dibuja las dos líneas y el margen en cm en el monitor de la sala (`lineas_gol`) |
-| M-119 | P1 | Penales: el portero «decide una vez» pero sin lectura del lanzador | PENDIENTE | sin lectura del lanzador en penales |
+| M-119 | P1 | Penales: el portero «decide una vez» pero sin lectura del lanzador | PARCIAL | 20-10: en la TANDA el portero de la IA se tira más al lado natural del pie del lanzador (46/36/18) y, según sus reflejos (4-16 %), lee la carrera (`_lado_portero_tanda`); falta en los penales del partido |
 | M-120 | P2 | Córners con 3 variantes | PARCIAL | receptor/2.º/3.er lanzador en córners (14-10); sin jugadas ensayadas de `CatalogoJugadas` |
 | M-121 | P2 | Tiros libres: barrera simple | PARCIAL | barrera de 4 a 9,15 m fija |
 | M-122 | P2 | Sin saque de banda largo/estratégico | PARCIAL | saque de banda largo del usuario (X); sin atributo |
-| M-123 | P1 | IA: no hay trampa de fuera de juego, cobertura ni basculación (M-04) | PENDIENTE | sin trampa del fuera de juego ni basculación común |
+| M-123 | P1 | IA: no hay trampa de fuera de juego, cobertura ni basculación (M-04) | HECHO | 19-10: `_linea_defensiva` común (recula/sube) y trampa (`tactica.trampa`); con trampa el rival cae en fuera de juego 0,42 → 0,75 por partido |
 | M-124 | P1 | Pressing por zonas sin gatillos | PENDIENTE | sin gatillos de presión |
 | M-125 | P2 | Sin tácticas de medio campo (doble pivote, falso 9) | PENDIENTE | sin roles con comportamiento propio |
 | M-126 | P2 | Cambios de IA por cansancio (60/70/80') fijos | PARCIAL | DT rival cambia en 60/70/80' y ajusta la pizarra según marcador (`_dt_rival`); minutos fijos |
-| M-127 | P2 | Sin gestión de tiempo (perder tiempo, acelerar) | PENDIENTE | sin gestión del tiempo |
+| M-127 | P2 | Sin gestión de tiempo (perder tiempo, acelerar) | HECHO | 20-10: desde el 75' la CPU que gana tarda ×2,2 en cada saque (sin saques rápidos) y la que pierde saca ×0,6 (`_ritmo_de_saque`); el equipo del usuario no |
 | M-128 | P2 | Portero con salidas sólo en mano a mano | PARCIAL | colocación y achique del portero (14-10); sin salidas aéreas |
 | M-129 | P2 | Sin lanzamientos de larga distancia ni centros desde banda con… | PARCIAL | los atributos pesan en el motor (`_atributos`); sin parámetro de precisión por tipo de envío |
 | M-130 | P2 | Controles FC mapeados (65+ combinaciones) sin tutorial interactivo | PENDIENTE | sin modo práctica |
 | M-131 | P2 | Ayudas de asistencia (pase/tiro) con 3 niveles | PARCIAL | ayudas por pieza (asistido/manual, auto/semi/manual) en `Mando`; sin perfiles Arcade/Semi/Manual |
-| M-132 | P2 | Sin repetición manual del usuario | PENDIENTE | sin repetición manual |
+| M-132 | P2 | Sin repetición manual del usuario | HECHO | 20-10: G / Share (`jugar_repeticion`) y botón «⟲ Repetición» en la pausa (`VistaEstadio.repetir_jugada`, últimos 10 s) |
 | M-133 | P1 | Cámara TV sin zoom automático al área | HECHO | `CameraRig._transmision` cierra en área, ocasión y córner (16-10) |
 | M-134 | P2 | Sin cámaras de repetición cinematográficas (grúa, dron) | PARCIAL | cámaras «Dron orbital» y otras en el rig; la repetición no alterna planos |
 | M-135 | P2 | Sin cámara de gol del cuarto árbitro/línea | PENDIENTE | sin cámara de línea de gol |
 | M-136 | P2 | HUD del partido con FC-style indicadores; sin heatmap/estadísticas… | HECHO | `PanelEstadisticas` (T/Select) con mapa de tiros y de calor (16-10); falta mapa de pases |
-| M-137 | P2 | Sin xG ni xA | PARCIAL | xG por remate (`EstadisticasVivo.xg_de`); sin xA |
+| M-137 | P2 | Sin xG ni xA | HECHO | xG por remate (`EstadisticasVivo.xg_de`); 20-10: xA (el pase previo se lleva el xG del remate: `xa`, `xa_por_jugador`) y fila «Asistencias esperadas (xA)» en los 9 idiomas |
 | M-138 | P1 | Ritmo del partido ≈ 54 s/s vs 11 s/s (M-07) | HECHO | ritmo corto/normal/largo (2,7/4/6 s por minuto) en el partido del DT |
-| M-139 | P2 | Tiempo añadido con base real pero sin descuentos por lesión visibles | PARCIAL | 17-10: cartel 3D del cuarto árbitro (`CuartoArbitro`); el añadido aún no suma lesiones |
+| M-139 | P2 | Tiempo añadido con base real pero sin descuentos por lesión visibles | HECHO | 17-10: cartel 3D del cuarto árbitro (`CuartoArbitro`; 20-10 a tamaño real); 20-10: cada entrada dura (nivel de amarilla o más) suma medio minuto de atención (`MotorJugable._falta`), además de goles, cambios y expulsiones |
 | M-140 | P2 | Descanso: charla de medio tiempo con opciones; sin vestuario 3D… | PENDIENTE | el descanso vuelve al camarín 2D (`prueba_descanso_3d`); sin cinemática de vestuario |
 | M-141 | P2 | Resumen de partido sin mapa de calor ni valoraciones por jugador… | HECHO | 17-10: `Partido.valoraciones()` (determinista, sin `Azar`) en `ResumenPartido` (mejor del partido en franja dorada + dos columnas) y al final de `PartidoVivo`. OJO (hallazgo): en un partido mirado `_cerrar_notas()` no se llama nunca (solo `simular()`), así que `Jugador.notas`/forma no reciben ese partido; no se tocó (cambiaría el azar de la partida) |
 | M-142 | P2 | Rueda de prensa posterior no enlazada con incidentes del partido | SIN VERIFICAR | no se encontró tema de árbitro/VAR en `Prensa.resolver` |
@@ -208,7 +218,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-148 | P2 | Sin rebotes contra postes/larguero realistas con física propia | PARCIAL | poste y larguero detectados en el motor; rebote sin comprobar |
 | M-149 | P2 | Red del arco rígida | HECHO | 17-10: `red_arco.gdshader` (onda de vértice desde el punto de entrada, sin física); de frente se ve bien, desde la TV es sutil |
 | M-150 | P2 | Sin balones adicionales (calentamiento, reserva) | PENDIENTE | sin balones decorativos |
-| M-151 | P2 | Muro de pruebas: `sonda_fisica` no distingue reposiciones | PENDIENTE | la sonda no separa reposiciones ni está en el banco |
+| M-151 | P2 | Muro de pruebas: `sonda_fisica` no distingue reposiciones | HECHO | 19/20-10: la sonda separa tele/reposiciones y salta la ceremonia; `_probar_fisica_motor` en el banco (velocidad, giros, tirones, teletransportes) |
 | M-152 | P2 | Sin modo de entrenamiento libre (probar controles) | PENDIENTE | sin entrenamiento libre |
 | M-153 | P2 | Sin modo multijugador local | PENDIENTE | sin multijugador local |
 | M-154 | P3 | Sin online | PENDIENTE | fuera de alcance, sin documentar |
@@ -219,7 +229,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-159 | P2 | Sin himno por país con partitura procedural | PARCIAL | un motivo genérico «himno» sintetizado; no por país |
 | M-160 | P2 | Sin saludo protocolar/pre-partido (capitanes, sorteo de campo) | HECHO | 17-10: fase final de `CeremoniaPartido` (4,2 s): árbitro y capitanes en el centro, moneda que gira, «X elige campo» y apretón de manos (`dar_mano`); se salta con la ceremonia |
 | M-161 | P2 | Sin mini-partidos de selección con identidad | PENDIENTE | sin identidad de selección en el 3D |
-| M-162 | P2 | Estadísticas del motor (tiros, pases) sin exportar | PENDIENTE | el motor no exporta CSV |
+| M-162 | P2 | Estadísticas del motor (tiros, pases) sin exportar | HECHO | 20-10: al terminar el partido con motor, `EstadisticasVivo.a_csv` guarda la tabla y cada remate (x, z, xG, resultado, pase) en `user://estadisticas/*.csv` |
 | M-163 | P2 | Sin modo «Director técnico automático» configurable (IA del usuario) | PARCIAL | `MotorJugable.autopiloto`; sin perfil configurable |
 | M-164 | P2 | Sin modo espectador con cámara libre | PENDIENTE | sin cámara libre en la UI |
 | M-165 | P2 | Sin reglas especiales (prórroga, penales, gol de oro por competición) | HECHO | 17-10: prórroga 2×15' y tanda jugable en el césped (`MotorJugable`, `MarcadorTanda`, `Partido.penales_externos`, prueba_prorroga_penales) |
@@ -237,7 +247,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-172 | P1 | Colisiones del coche del usuario con NPC/vehículos sólo círculos | PENDIENTE | choque solo desliza; sin daño ni multa |
 | M-173 | P2 | Sin sonido de motor/marchas/derrape | PENDIENTE | sin sonido de motor |
 | M-174 | P2 | Interior de coche sin modelo (salpicadero 2D) | PARCIAL | salpicadero y volante 2D (`VolanteUI`) |
-| M-175 | P2 | Sin faros ni luces de freno encendidos por hora | PENDIENTE | sin faros ni luces de freno en vehículos |
+| M-175 | P2 | Sin faros ni luces de freno encendidos por hora | HECHO | 21-10: faros blancos y traseras rojas que se encienden con la noche y se avivan al frenar en rojo (`TraficoCiudad.faros`, una malla por coche, hasta 220 m) |
 | M-176 | P2 | Sin tipos de vehículo (moto, bus conducible, camión) | PENDIENTE | solo coche conducible |
 | M-177 | P2 | Sin gasolinera/aparcamiento/lavado | PENDIENTE | sin gasolinera/lavado |
 | M-178 | P2 | Sin minimapa | HECHO | 17-10: GPS dentro del móvil en la mano (`MapaMovil`), M lo saca andando |
@@ -245,7 +255,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-180 | P2 | Metro: sin vendedores/música/anuncios | PARCIAL | anuncios en el vagón (`MetroCiudad.ANUNCIOS`); sin vendedores ni música |
 | M-181 | P2 | Sin pasajeros que suben/bajan reales en tren | HECHO | gente que sube y baja por sub-pasos y puertas (`metro_ciudad.gd`, 16-10) |
 | M-182 | P2 | Sin tarjeta de transporte ni coste | PENDIENTE | máquinas de billetes decorativas; sin coste |
-| M-183 | P2 | Peatones: 34 máx; sin rutinas por hora | PENDIENTE | sin rutinas por hora |
+| M-183 | P2 | Peatones: 34 máx; sin rutinas por hora | PARCIAL | 21-10: de madrugada queda en la calle un tercio de la gente (los ocultos tampoco se mueven: `TraficoCiudad.faros`); faltan rutinas por persona |
 | M-184 | P2 | Sin NPC con nombre y memoria (te reconocen) | PENDIENTE | sin vecinos con memoria |
 | M-185 | P2 | Diálogos por oficio (hecho) pero sin ramas ni consecuencias | PENDIENTE | diálogos sin consecuencias |
 | M-186 | P2 | Interiores: 15 salas; edificios entrables «la mayoría» sin… | PARCIAL | gimnasio, piscina, estación central, recreativos con muebles Kenney (15/16-10); sin 3 variantes por arquetipo |
@@ -275,7 +285,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | Id | Prio. | Punto | Estado | Evidencia / lo que falta |
 |---|---|---|---|---|
 | M-207 | P1 | Plantillas de 25 en todos los clubes (C-05) | PENDIENTE | plantillas de 25 |
-| M-208 | P1 | Caja del club propio crece de forma casi monótona (prueba larga:… | PENDIENTE | sin costes de crecimiento ni crisis |
+| M-208 | P1 | Caja del club propio crece de forma casi monótona (prueba larga:… | PARCIAL | 20-10: el mantenimiento de instalaciones (M-227) es un coste que crece con el club; faltan crisis |
 | M-209 | P2 | La prueba larga sólo comprueba que no hay errores, no el equilibrio | PARCIAL | `prueba_larga` comprueba medias en rango; sin métricas de equilibrio |
 | M-210 | P1 | Mercado: precios por reputación sin burbujas ni crisis | PARCIAL | eras con precios (`Eras`, `_probar_eras_y_precios`); sin burbujas |
 | M-211 | P2 | Cláusulas de rescisión: sin «cláusulazo» automático de IA | PARCIAL | el mercado reconoce pagos de cláusula (`Mercado` l.345); sin «clausulazo» de IA deliberado |
@@ -291,11 +301,11 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-221 | P2 | Impuestos y derechos de TV simplificados | SIN VERIFICAR | derechos de TV con multiplicador; no se comprobó el reparto por país |
 | M-222 | P2 | Venta de entradas: precio único | PARCIAL | precio único por partido; sin sectores ni precio por rival |
 | M-223 | P2 | Abonos/socios: modelo simple | PARCIAL | socios por temporada (`Reputacion`) y campaña de abonos (`Hinchada`); sin lista de espera |
-| M-224 | P2 | Tienda/merchandising ligado a ventas de camisetas por ídolo | PENDIENTE | sin ventas por jugador estrella |
+| M-224 | P2 | Tienda/merchandising ligado a ventas de camisetas por ídolo | HECHO | 20-10: `Instalaciones.factor_idolo` (la estrella del plantel: con 90 de media, +60 %) multiplica la «Tienda y museo» |
 | M-225 | P2 | `Comercial` zonas de patrocinio manual para el usuario; IA sin… | PENDIENTE | sin noticias de contratos comerciales de IA |
 | M-226 | P2 | Naming del estadio sin historia (renombrar cada contrato) | HECHO | naming con `nombre_viejo` (`Comercial.naming`) |
-| M-227 | P2 | Instalaciones: 19 obras; sin mantenimiento ni desgaste | PENDIENTE | sin conservación de instalaciones |
-| M-228 | P2 | Obras sin imprevistos (retrasos, sobrecostes, permisos) | PENDIENTE | obras sin imprevistos |
+| M-227 | P2 | Instalaciones: 19 obras; sin mantenimiento ni desgaste | HECHO | 20-10: `Instalaciones.mantenimiento_del_mes` (0,3 % al mes del valor de cada nivel, escalado con el club) cobrado en el cierre de mes con su movimiento «Mantenimiento de instalaciones» |
+| M-228 | P2 | Obras sin imprevistos (retrasos, sobrecostes, permisos) | HECHO | 20-10: `Instalaciones._imprevisto`: ~1 de cada 4 obras tiene uno (retraso de una semana o +8 % de coste), sin azar guardado (repetible al recargar), con noticia «🚧 Imprevisto en la obra» en los 9 idiomas |
 | M-229 | P2 | Academia: sin variedad de métodos pedagógicos | PENDIENTE | sin planes pedagógicos |
 | M-230 | P2 | Cantera 1.422 líneas con representantes; pocos hitos narrativos | PARCIAL | `EventosCantera`: torneo, dejarlo, padres, convocatoria; sin lesión/mudanza |
 | M-231 | P2 | Ojeadores con sesgo regional (ya) sin informes visuales (campo vs… | PARCIAL | ojeadores con personalidad que infla/recorta informes (`Ojeadores`); sin informe visual |
@@ -304,16 +314,16 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-234 | P2 | Maestrías con efecto en partido poco visible | PENDIENTE | maestrías sin registro en el resumen |
 | M-235 | P1 | Lesiones: duración y recaídas ok; sin prevención visible (carga… | PARCIAL | carga y riesgo en `Medico` (l.244-254); indicador por jugador sin confirmar |
 | M-236 | P2 | Vestuario 1.436 líneas con grupos; sin conflictos con… | PENDIENTE | sin discusiones visibles en partido |
-| M-237 | P2 | Capitanías: elección sin votación | PENDIENTE | capitán sin votación |
+| M-237 | P2 | Capitanías: elección sin votación | HECHO | 20-10: `Vestuario.votar_capitan` (veteranía, calidad, moral y voto en bloque de la camarilla); si el club se queda sin cinta, el vestuario vota esa semana y sale la noticia «🗳️ El vestuario elige capitán» |
 | M-238 | P1 | Directiva: objetivos con confianza; despido sin cinemática | HECHO | 17-10: `EscenaDespido` (presidente en 3D con traje vía `PersonajeDT.crear`, diálogo en `CuadroDialogo`, resumen de la etapa y «Ver ofertas de otros clubes»); en `Principal` al emitirse `Directiva.despedido` |
 | M-239 | P2 | Junta/accionistas: sin asambleas jugables | PARCIAL | asamblea en insolvencia/federación; no jugable |
-| M-240 | P2 | `Politica` ficticia (decisión legal): mantener sin real | PENDIENTE | sin lista de palabras prohibidas en pruebas |
+| M-240 | P2 | `Politica` ficticia (decisión legal): mantener sin real | HECHO | 20-10: `_probar_palabras_prohibidas` revisa 263 archivos (código + narración + traducciones) contra políticos/partidos reales y religiones; el calendario (fechas como el Ramadán) es la única excepción |
 | M-241 | P1 | Prensa 2.541 líneas (la mayor del núcleo): `resolver` 476 líneas | PENDIENTE | `Prensa.resolver` sigue en una función |
 | M-242 | P2 | Titulares dinámicos: 129 sólo en EN/PT (I-01) | HECHO | titulares traducidos en los 9 idiomas (paridad 15-10) |
 | M-243 | P2 | Redes sociales: seguidores y comentarios; sin bots/trolls/tendencias | PARCIAL | tendencias y hashtags (`Redes.tendencia`); sin trolls |
 | M-244 | P2 | Sin entrevistas en TV con escena 3D variada (existe rueda de… | PENDIENTE | un solo set de rueda de prensa |
 | M-245 | P2 | Federación 999 líneas con reglas; votaciones sin presentación | PARCIAL | votaciones con señales (`Federacion`); pantalla de sesión sin comprobar |
-| M-246 | P2 | `LeyesPais` (cupos) ok; sin visualización de «alineación indebida»… | PENDIENTE | sin aviso de alineación indebida en la pizarra |
+| M-246 | P2 | `LeyesPais` (cupos) ok; sin visualización de «alineación indebida»… | HECHO | 20-10: aviso rojo en la pizarra (`PantallaPlantel._pintar_tactica`) con la infracción y qué pasará (el ayudante corrige / la federación multa); prueba `prueba_alineacion_indebida.tscn` |
 | M-247 | P2 | Competiciones continentales (620 líneas) sin sorteo animado por fases | HECHO | cinemática del bombo para la fase de grupos (`Continental.sorteo_grupos` → `ui/sorteo.gd`) |
 | M-248 | P2 | Mundial de clubes/selecciones (1.012 líneas) con pocos modos | PARCIAL | convocatorias con efecto en el físico (`Selecciones`); sin concentraciones |
 | M-249 | P2 | Hinchada con segmentos; sin rivalidades por barrio | PARCIAL | clásico con incidentes (`Prensa`); sin rivalidades por barrio |
@@ -365,7 +375,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-285 | P2 | Navegación por mando en menús (panel de controles sí) | PARCIAL | navegación con mando en el panel de controles; no en todos los menús |
 | M-286 | P2 | Sin atajos de teclado documentados globalmente | HECHO | tabla de atajos (`pantalla_opciones.gd` `_pintar_atajos`) |
 | M-287 | P2 | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | PENDIENTE | sin medida de apertura de pantallas |
-| M-288 | P2 | Fondos animados únicos (9) con coste en GPU baja | PENDIENTE | sin fondo estático en motor ligero |
+| M-288 | P2 | Fondos animados únicos (9) con coste en GPU baja | HECHO | 20-10: con el motor ligero los fondos de menú son de color fijo (sin shader con TIME, que obliga a redibujar cada fotograma) y las partículas de fondo bajan a un tercio |
 | M-289 | P2 | Menú lateral con 9 menús; Ciudad/Editar completados; Ajustes sólo… | PENDIENTE | Ajustes sigue con 3 tarjetas (`MenuLateral`) |
 | M-290 | P2 | Tarjetas con dato vivo sólo en algunas (`Menu.dato`) | PARCIAL | `MenuLateral.dato` existe; no todas las tarjetas |
 | M-291 | P2 | Sin buscador global (jugadores, clubes, pantallas) | HECHO | buscador global en la cabecera (`principal.gd` l.587) |
@@ -378,7 +388,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-298 | P2 | Pantalla de carga con consejos (`consejos_carga.py`) | HECHO | consejos en `pantalla_carga.gd`, traducidos |
 | M-299 | P2 | Sin confirmaciones consistentes para acciones destructivas… | PARCIAL | `CuadroDialogo` en despacho/principal; no uniforme en vender/despedir |
 | M-300 | P2 | Sin deshacer en acciones de pizarra | PENDIENTE | sin deshacer en pizarra |
-| M-301 | P2 | Sin guardado automático visible | PARCIAL | autoguardado (`_autoguardar_si_toca`); sin indicador ni ranuras |
+| M-301 | P2 | Sin guardado automático visible | HECHO | 20-10: «💾 Partida guardada» arriba a la derecha tras cada autoguardado (`Principal._indicador_guardado`), en los 9 idiomas; captura `captura_guardado` |
 | M-302 | P2 | Sin tema claro/alto contraste | PENDIENTE | sin tema claro/alto contraste |
 | M-303 | P2 | Cursor/hover sin feedback sonoro consistente en todos los… | PARCIAL | `BotonFx` en todos los botones; pestañas/listas sin sonido |
 | M-304 | P2 | Animaciones de transición entre pantallas desiguales | PARCIAL | `Animar` en 16 archivos; sin sistema común de transición |
@@ -386,7 +396,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-306 | P2 | Sin glosario (términos de fútbol/gestión) | HECHO | pestaña Glosario |
 | M-307 | P2 | Resoluciones: pensado 1280×720–1600×900; sin pruebas en 4:3, 21:9… | PENDIENTE | sin capturas por aspecto |
 | M-308 | P2 | DPI alto: texto del `Label3D` en 3D no escala | PENDIENTE | `pixel_size` fijo |
-| M-309 | P2 | Sin pantalla de créditos/licencias dentro del juego | PENDIENTE | sin pantalla de créditos/licencias |
+| M-309 | P2 | Sin pantalla de créditos/licencias dentro del juego | HECHO | 20-10: Ajustes → Partida → «CRÉDITOS Y LICENCIAS» (`nucleo/creditos.gd`: Godot MIT, Quaternius y Kenney CC0, mocap, MediaPipe Apache 2.0, NASA, audio propio); captura `captura_creditos` |
 | M-310 | P2 | Sin pantalla «Novedades» tras actualizar | PENDIENTE | sin «Novedades» |
 | M-311 | P2 | Sin perfil de jugador (estadísticas globales) | PARCIAL | `PanelMeta` (álbum/museo global); sin perfil de estadísticas |
 | M-312 | P2 | Sin modo «streamer» (ocultar datos sensibles/real) | PARCIAL | ajuste «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`); sin modo streamer |
@@ -418,11 +428,11 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-328 | P2 | Patrones numéricos (`patrones` 58) con plurales simples | PENDIENTE | sin reglas de plural por idioma |
 | M-329 | P2 | Sin género gramatical (entrenadora/jugadora) en todos los idiomas | PARCIAL | `Genero` solo en español |
 | M-330 | P2 | Formatos de fecha/número por idioma | PENDIENTE | sin `Idiomas.fecha/numero` |
-| M-331 | P2 | Nombres de personas por país (bolsas) sin pruebas de duplicados… | PENDIENTE | sin estadística de nombres repetidos |
+| M-331 | P2 | Nombres de personas por país (bolsas) sin pruebas de duplicados… | HECHO | 20-10: `_probar_nombres_repetidos` lo destapó (10,1 % de tocayos, «Lucas Barbosa» ×5: bolsas de 14×14). Bolsas ampliadas (`datos/bolsas_nombres.json`, 16 países + general) y re-sorteo si el nombre ya existe (`Mundo._nombre_al_azar`): 1,1 % |
 | M-332 | P2 | Narración traducida (`narracion.json`) sin revisión nativa | PENDIENTE | sin revisión nativa |
 | M-333 | P2 | Texto en imágenes (carteles del 3D) sin traducir | PARCIAL | textos de `visor/` envueltos en `Idiomas.t` (15-10); carteles dibujados sin comprobar |
 | M-334 | P2 | Sin RTL (árabe, hebreo) aunque hay KSA/EGY/MAR | PENDIENTE | sin RTL |
-| M-335 | P2 | Fuentes: cobertura de glifos para pl/tr/ar | PENDIENTE | sin prueba de glifos |
+| M-335 | P2 | Fuentes: cobertura de glifos para pl/tr/ar | HECHO | 20-10: `_probar_glifos_idiomas` comprueba que la letra del juego tiene los 375 caracteres de las traducciones (pl, tr, ca…); el árabe no está entre los idiomas |
 | M-336 | P2 | `CLAUDE.md` afirma «1.402 frases c/u» (I-04) | HECHO | CLAUDE.md ya dice 2.574 frases + 373 patrones |
 
 ### L. Rendimiento y optimización (M-337 … M-358) · HECHO 2 · PARCIAL 6 · PENDIENTE 12 · DUEÑO 2
@@ -450,7 +460,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-355 | P2 | Sin modo batería/60→30 FPS en móvil | PARCIAL | límite de FPS 30/60/120 (`Principal.FPS_OPCIONES`); sin modo batería |
 | M-356 | P2 | Memoria de la ciudad ×4 (2.640 m) | PENDIENTE | sin streaming por celdas |
 | M-357 | P2 | Capturas pesadas en repo (`pruebas/capturas`) | PARCIAL | `.gitignore` de promo/lotes y JPG por defecto; resto en repo |
-| M-358 | P2 | Sin telemetría local de FPS por pantalla | PENDIENTE | sin overlay de FPS |
+| M-358 | P2 | Sin telemetría local de FPS por pantalla | HECHO | 20-10: «Mostrar contador de FPS» en Ajustes → Pantalla (`ContadorFps`, en la raíz: sigue en estadio, ciudad y Carrera; color por umbral); prueba `prueba_contador_fps`. De paso: «sin límite» de FPS ya no vuelve a 30 al recargar |
 
 ### M. Datos y contenido (M-359 … M-378) · HECHO 5 · PARCIAL 1 · PENDIENTE 13 · SIN VERIFICAR 1
 
@@ -483,7 +493,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 |---|---|---|---|---|
 | M-379 | P2 | 64 funciones > 120 líneas (Q-01): `Sonido._sintetizar` 1.000,… | PENDIENTE | funciones largas sin partir |
 | M-380 | P2 | `pruebas/banco.gd` 8.029 líneas | PENDIENTE | `banco.gd` con 8.454 líneas |
-| M-381 | P2 | 16 `print()` en código de juego | PARCIAL | 14 `print()` (antes 16) |
+| M-381 | P2 | 16 `print()` en código de juego | HECHO | 20-10: los que quedaban sin condición (`KitTextureFactory`) solo con `--verbose`; el resto ya iba detrás de interruptores de depuración |
 | M-382 | P2 | Sin análisis estático | PENDIENTE | sin gdlint |
 | M-383 | P2 | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | PENDIENTE | sin `JugadorMotor` tipado |
 | M-384 | P2 | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | PENDIENTE | sin extraer servicios |
@@ -491,13 +501,13 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-386 | P2 | Señales sin desconexión en liberación (posibles fugas) | PARCIAL | `auditoria_tecnica.gd` mide huérfanos en la pantalla principal |
 | M-387 | P2 | Mensajes de error silenciosos (`return` sin aviso) | PENDIENTE | sin registro de errores |
 | M-388 | P2 | Constantes mágicas (balance) dispersas | PENDIENTE | sin archivo de balance |
-| M-389 | P2 | `class_name` nuevos exigen `--import` (aprendido hoy) | PENDIENTE | `banco.sh` no hace `--import` |
+| M-389 | P2 | `class_name` nuevos exigen `--import` (aprendido hoy) | HECHO | 20-10: `banco.sh` y `mini_banco.sh` reimportan solos si hay un .gd más nuevo que la caché de clases |
 | M-390 | P2 | Un error de sintaxis deja el banco colgado | HECHO | `banco.sh` corta en errores de sintaxis, cuelgues y SCRIPT ERROR (14-10) |
 | M-391 | P2 | Duplicación entre `MatchPlayback` y `MotorJugable` | PENDIENTE | duplicación sin retirar |
-| M-392 | P2 | `MotorLibre` prototipo (546 líneas) sin uso claro | PENDIENTE | `MotorLibre` sigue (545 líneas) |
+| M-392 | P2 | `MotorLibre` prototipo (546 líneas) sin uso claro | PENDIENTE | `MotorLibre` sigue (545 líneas); 20-10: con la base ficticia da 12,5 goles de media entre iguales (su prueba fija ahora la base real para no depender del orden) |
 | M-393 | P2 | Código de pruebas mezclado con herramientas (`herramientas/*.ps1`) | PENDIENTE | sin separar |
 | M-394 | P2 | Herramientas `.exe`/`.cs` binarias en repo | PENDIENTE | `herramientas/*.exe` siguen en el repo |
-| M-395 | P2 | Scripts Python sin entorno declarado | PENDIENTE | sin requirements.txt |
+| M-395 | P2 | Scripts Python sin entorno declarado | HECHO | 20-10: `herramientas/requirements.txt` (Pillow, numpy, opencv, mediapipe, imageio-ffmpeg; `bpy` va con Blender) |
 | M-396 | P2 | Convenciones: mezcla de español/inglés en nombres | PENDIENTE | sin guía de estilo |
 | M-397 | P2 | Comentarios muy extensos (valioso pero ruidoso) | PENDIENTE | sin ADRs |
 | M-398 | P2 | Sin documentación de arquitectura actualizada (`LEEME.md`) | PENDIENTE | LEEME sin diagrama |
@@ -519,7 +529,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-409 | P2 | Sin pruebas de menús/UI de integración (abrir cada pantalla sin error) | PARCIAL | `_probar_carga_de_ui` en el banco; sin recorrido por pestañas |
 | M-410 | P2 | Sin pruebas de rendimiento con umbrales | PENDIENTE | sin umbrales de rendimiento |
 | M-411 | P2 | Sin pruebas de idioma (V. I-01) | HECHO | `_probar_paridad_idiomas` |
-| M-412 | P2 | Sin fuzzing de guardados | PENDIENTE | sin fuzzing |
+| M-412 | P2 | Sin fuzzing de guardados | HECHO | 20-10: `_probar_guardado_seguro` estropea un guardado de 40 maneras (bytes, cortes, cabecera, ceros) sin copia: cargar nunca revienta |
 | M-413 | P2 | `auditoria_clubes`/`auditoria_datos` no están en el banco | PENDIENTE | auditorías fuera del banco |
 | M-414 | P2 | Resultados de sondas (calidad/táctica/simetría) sin umbrales | PENDIENTE | sondas sin umbrales |
 | M-415 | P2 | Tiempo del banco largo y frágil al correr en paralelo | HECHO | banco en paralelo, 4 procesos equilibrados (15-10) |

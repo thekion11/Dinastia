@@ -110,6 +110,9 @@ func _montar(duracion_mitad: float) -> void:
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
 	StadiumBuilder.build_pitch(_raiz, perfil, local)
 	StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
+	EntornoEstadio.montar(_raiz, perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))))
+	OlaGrada.piel_de_pais(_raiz, local.pais)
+	OlaGrada.colores_club(_raiz, Color(local.color1), Color(local.color2))
 	## Lo que el modo entrenador ya tenía y aquí faltaba: la lluvia o la nieve,
 	## la pantalla gigante y camarógrafos/guardias de verdad en vez de maniquíes.
 	var gp := StadiumBuilder.geom_de_forma(String(perfil.get("forma", "oval")))
@@ -143,8 +146,9 @@ func _montar(duracion_mitad: float) -> void:
 	_en_campo = lista.duplicate()
 	## Árbitros, suplentes y los dos DT en la banda, como en el modo entrenador.
 	## El trío, de la camiseta que contrasta con los dos equipos (M-072).
-	lista.append_array(sp.spawn_arbitros(_raiz, Puente3D.kit_arbitro(kit_l, kit_v,
-		hash(local.id + "|" + visita.id), [por_l, por_v])))
+	_kit_arb = Puente3D.kit_arbitro(kit_l, kit_v, hash(local.id + "|" + visita.id), [por_l, por_v])
+	_sp = sp
+	lista.append_array(sp.spawn_arbitros(_raiz, _kit_arb))
 	VistaEstadio.poner_banca_de(_raiz, sp, local, once_l, true)
 	VistaEstadio.poner_banca_de(_raiz, sp, visita, once_v, false)
 	var cb := Comercial.color_balon(mundo.comercial.balon, local) if mundo != null and mundo.comercial != null else []
@@ -157,11 +161,14 @@ func _montar(duracion_mitad: float) -> void:
 	add_child(motor)
 	motor.duracion_mitad = duracion_mitad
 	motor.preparar(lista, balon, yo.id if yo != null else "", hash(local.id + visita.id))
+	## La cabeza de cada jugador sigue al balón (M-098, como en el modo DT).
+	MiradaBalon.poner(motor.jugadores, balon)
 	_preparar_cambio(sp, yo)
 	if carrera != null:
 		motor.lanza_usuario = {"corner": bool(carrera.lanzador.get("corners", true)),
 			"falta": bool(carrera.lanzador.get("faltas", false)), "penal": bool(carrera.lanzador.get("penales", false)), "banda": false}
 	motor.aviso.connect(_mostrar_banner)
+	motor.sustitucion.connect(func(_s: String, _e: String, _l: bool) -> void: _escena_cambio())
 	## El silbato con el gesto del árbitro (M-106).
 	motor.gesto_arbitro.connect(func(g: String) -> void:
 		if g == "silbato":
@@ -340,6 +347,33 @@ func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
 		if not motor.usuario.is_empty():
 			_banner_pendiente = "🔁 ¡ENTRAS AL CAMPO!  %d'" % motor.minuto()
 
+## EL CAMBIO CON CARTEL Y PALMADA (20-10-2026), el mismo del partido del DT
+## (`EscenaCambio`): el cuarto árbitro levanta los dorsales, el que sale camina
+## a la banda y choca la mano con el que entra. Si el que entra eres tú, no se
+## te retiene esperando la palmada: entras jugando.
+var _sp: PlayerSpawner
+var _kit_arb: Dictionary = {}
+
+func _escena_cambio() -> void:
+	var c: Dictionary = motor.ultimo_cambio
+	var sale: Dictionary = c.get("sale", {})
+	var entra: Dictionary = c.get("entra", {})
+	var ns: Node3D = sale.get("node")
+	if not is_instance_valid(ns) or entra.is_empty():
+		return
+	ns.position = c.get("pos", ns.position)
+	ns.visible = true
+	var e := EscenaCambio.iniciar(_raiz, _sp, motor, ns, sale.get("anim"), entra,
+		int((sale.get("jugador", {}) as Dictionary).get("dorsal", 0)),
+		int((entra.get("jugador", {}) as Dictionary).get("dorsal", 0)), _kit_arb)
+	if e == null:
+		ns.visible = false
+		return
+	e.borrar_al_salir = false
+	if entra == motor.usuario:
+		e._soltar()
+		e.fase = "se_va"
+
 var _banner_pendiente := ""
 var _t_rotulos := 0.0
 
@@ -488,6 +522,9 @@ func _montar_hud() -> void:
 
 func _process(delta: float) -> void:
 	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
+	## La grada sigue el balón con la cabeza (M-049), como en el modo DT.
+	if Engine.get_process_frames() % 4 == 0 and motor != null and motor.balon != null:
+		OlaGrada.mirar(_raiz, motor.balon.global_position)
 	_t_rotulos -= delta
 	if is_instance_valid(_cine) and _pausa == null:
 		_cine.paso(delta)
@@ -615,6 +652,9 @@ func _al_gol(de_local: bool, autor: String, _asist: String) -> void:
 	## La red se abomba donde entró el balón (M-149).
 	if motor.balon != null:
 		RedArco.golpe(_raiz, motor.balon.global_position)
+		## La grada local salta en onda desde ese fondo (M-036, como en el DT).
+		if de_local and not _simulando:
+			OlaGrada.lanzar(_raiz, "onda", Vector3(0, 0, signf(motor.balon.position.z) * 62.0))
 	if autor != "":
 		_tiros_de[autor] = int(_tiros_de.get(autor, 0)) + 1
 		_goles_de[autor] = int(_goles_de.get(autor, 0)) + 1
