@@ -81,6 +81,42 @@ static func _look_base(semilla: String) -> Dictionary:
 		"cicatriz": (_hash(semilla + "cica") % 29) == 0,
 	}
 
+## PIEL Y PELO SEGÚN EL PAÍS (21-10-2026, M-088): a los inventados la piel y el
+## color de pelo les tocaban al azar, sin mirar de dónde son. Ahora salen con el
+## mismo reparto aproximado por país que la grada (`OlaGrada.PIEL_SESGO`: más
+## alto = más pieles claras) y una probabilidad de pelo rubio o castaño claro
+## que solo existe en las pieles claras y cambia por país. Es una aproximación
+## de población, no un molde: dentro de cada país sigue habiendo de todo.
+const RUBIOS := {"GER": 0.32, "ENG": 0.26, "AUS": 0.22, "USA": 0.16, "FRA": 0.12, "ITA": 0.08, "ESP": 0.07,
+	"ARG": 0.09, "URU": 0.09, "CHI": 0.06, "BRA": 0.05, "JPN": 0.0, "KOR": 0.0}
+## El tono medio de los futbolistas de cada país (índice en PIELES, de 0 claro a
+## 7 oscuro). La grada usa su propio sesgo (`OlaGrada.PIEL_SESGO`); con él los
+## chilenos salían casi blancos, y la mayoría son mestizos de tono medio.
+const TONO_MEDIO := {"CHI": 2.8, "ARG": 1.8, "URU": 1.9, "PAR": 2.9, "BOL": 3.6, "PER": 3.6, "ECU": 3.6,
+	"COL": 3.7, "VEN": 3.6, "MEX": 3.2, "BRA": 4.0, "USA": 3.0, "ESP": 1.7, "ITA": 1.7, "GER": 1.3,
+	"ENG": 2.0, "FRA": 3.0, "JPN": 1.7, "KOR": 1.5, "AUS": 1.7, "KSA": 3.4, "EGY": 3.8, "MAR": 3.6, "RSA": 5.2}
+const PELOS_OSCUROS := ["#231a14", "#3d2a19", "#1a1a1a", "#4a3a2a", "#6b4a2a", "#231a14"]
+static func _piel_y_pelo_del_pais(base: Dictionary, j: Jugador) -> void:
+	var sesgo := float(OlaGrada.PIEL_SESGO.get(j.pais, 1.5))
+	## `String.hash()` y no `_hash` (djb2): con la misma cola de texto, djb2 da
+	## números correlacionados entre sí y los rubios salían a un cuarto.
+	## Tono medio del país (índice en PIELES: Argentina ≈1,3, Chile ≈2, Brasil
+	## ≈4,2, Sudáfrica ≈5) y, alrededor, una campana de ±1,2 tonos: predomina el
+	## tono medio y sigue habiendo de todo.
+	var medio := float(TONO_MEDIO.get(j.pais, 7.0 * pow(0.5, sesgo)))
+	var campana := 0.0
+	for k in 3:
+		campana += float(absi((j.id + "piel_pais%d" % k).hash()) % 10000) / 10000.0
+	var ip := clampi(int(round(medio + (campana / 3.0 - 0.5) * 7.0)), 0, PIELES.size() - 1)
+	base["piel"] = PIELES[ip]
+	var claro := ip <= 2
+	var r := float(absi((j.id + "pelo_pais").hash()) % 10000) / 10000.0
+	var rubio := float(RUBIOS.get(j.pais, 0.06))
+	if claro and r < rubio:
+		base["peloC"] = "#c8a05a" if r < rubio * 0.55 else "#8a6a3a"
+	else:
+		base["peloC"] = PELOS_OSCUROS[absi((j.id + "pelo_osc").hash()) % PELOS_OSCUROS.size()]
+
 static func look_de(j: Jugador) -> Dictionary:
 	var base := _look_base(j.id)
 	## LA RECREACIÓN (29-9-2026): un jugador real (con la base real) toma la
@@ -113,10 +149,12 @@ static func look_de(j: Jugador) -> Dictionary:
 			base["cicatriz"] = false
 			if String((r as Dictionary).get("pelo", "")) == "":
 				base["pelo"] = CORTES_SOBRIOS[_hash(j.id + "corte") % CORTES_SOBRIOS.size()]
+	else:
+		_piel_y_pelo_del_pais(base, j)
 	## CANAS CON LA EDAD (M-085, 20-10): a los inventados (no a los reales, que
 	## llevan el color de su foto) les salen canas desde los 32, más con los años
 	## y no a todos igual (a uno de cada cuatro casi nada).
-	elif j.edad >= 32 and base.has("peloC"):
+	if not (j.real and Datos.base_real) and j.edad >= 32 and base.has("peloC"):
 		var vel := 0.25 if _hash(j.id + "canas") % 4 == 0 else 1.0
 		var k := clampf(float(j.edad - 31) / 9.0 * vel, 0.0, 0.65)
 		base["peloC"] = "#" + Color(String(base["peloC"])).lerp(Color("#a3a19c"), k).to_html(false)
