@@ -116,7 +116,7 @@ var _anadido_avisado := {}
 var _nombres_globales := true
 const DT_MOTOR := 1.0 / 60.0
 ## Segundos reales por minuto de partido con el motor real.
-const SEG_POR_MINUTO := {"rapido": 2.7, "normal": 4.0, "largo": 6.0}
+const SEG_POR_MINUTO := {"rapido": 4.0, "normal": 5.5, "largo": 7.5}
 
 ## Tres modos, según lo que se le pase:
 ##
@@ -1614,7 +1614,7 @@ func _fijar_ritmo(r: String) -> void:
 	if _motor != null:
 		## Se respeta el minuto en curso: solo cambia lo que dura cada minuto.
 		var frac := _motor.t / maxf(_motor.duracion_mitad, 1.0)
-		_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(r, 4.0))
+		_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(r, 5.5))
 		_motor.t = frac * _motor.duracion_mitad
 	_mostrar_banner_gol({"rapido": "⏩ Partido corto", "normal": "⏯ Ritmo normal", "largo": "🐢 Partido largo"}.get(r, r), true)
 
@@ -1623,7 +1623,7 @@ func _montar_motor() -> void:
 	_motor = MotorJugable.new()
 	add_child(_motor)
 	_motor.set_physics_process(false)
-	_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(ritmo_partido(), 4.0))
+	_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(ritmo_partido(), 5.5))
 	_motor.cansancio_real = true
 	_motor.duracion_gol = 7.6
 	_motor.tarjetas_reales = true

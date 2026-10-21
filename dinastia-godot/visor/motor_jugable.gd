@@ -2416,6 +2416,21 @@ static var CHISPA_TIRO := float(OS.get_environment("CHISPA_TIRO")) if OS.get_env
 static var CHISPA_AVANCE := float(OS.get_environment("CHISPA_AVANCE")) if OS.get_environment("CHISPA_AVANCE") != "" else 0.08
 ## Multiplica lo que piensa el portador antes de decidir (menos = juego más rápido).
 static var CHISPA_PAUSA := float(OS.get_environment("CHISPA_PAUSA")) if OS.get_environment("CHISPA_PAUSA") != "" else 1.0
+## LA PRISA (21-10-2026, vídeo de gameplay: el partido a ritmo «normal» acabó
+## 0-0 con un tiro). El motor se calibró con mitades de 240 s, y lo que pasa en
+## el césped va por SEGUNDOS, no por minutos de fútbol: con 180 s («normal»)
+## salían 1,3 goles y ~6 tiros por equipo; con 121 s («rápido»), 0,8. Cuanto
+## más corta la mitad, más directo se juega (piensa menos, mira más al arco y
+## se anima antes a tirar), para que un partido tenga lo de un partido. Desde
+## 240 s no cambia nada (la Carrera de Jugador juega con 240). Además, los
+## ritmos del DT pasaron a 4 / 5,5 / 7,5 s por minuto (`VistaEstadio`): el
+## «normal» dura como un partido de FC (~10 min) y da ~2,5 goles y ~15 tiros.
+## PRISA_REF=segundos de referencia (0 = sin compensar).
+static var PRISA_REF := float(OS.get_environment("PRISA_REF")) if OS.get_environment("PRISA_REF") != "" else 240.0
+func prisa() -> float:
+	if PRISA_REF <= 0.0 or duracion_mitad <= 0.0:
+		return 1.0
+	return clampf(PRISA_REF / duracion_mitad, 1.0, 2.0)
 ## Tope de aceleración total de un jugador (m/s²), ver `_mover_jugadores`.
 static var A_MAX := float(OS.get_environment("A_MAX")) if OS.get_environment("A_MAX") != "" else 18.0
 
@@ -2651,7 +2666,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## Con espacio se conduce más (1 a 1,6 s): en un partido de verdad el balón
 	## pasa más tiempo en los pies que viajando.
 	var holgura := 1.7 if presion > 6.0 else (1.0 if presion > 3.5 else 0.5)
-	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA * _pausa_dificultad(p)
+	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA * _pausa_dificultad(p) / pow(prisa(), 0.8)
 	if OS.get_environment("DEPURAR_PORTADOR") != "" and dist_arco < 40.0:
 		print("PORTADOR %s(%s) a %.0f m del arco, x %.0f, presión %.1f" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", dist_arco, yo.x, presion])
 	## En su propio campo y apretado: despeje, lejos y hacia fuera si hace falta.
@@ -2671,7 +2686,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se
 	## quedaba en ~0,8 tiros por minuto y equipo (FC ronda 1,5). Ahora se
 	## anima más desde la frontal; la calidad del tiro no cambia.
-	if dist_arco < 30.0 and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO:
+	if dist_arco < 30.0 and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
 		## A un palo, abajo o arriba (antes se apuntaba al azar por el centro
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
 		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.55, 0.95)
@@ -2906,7 +2921,7 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 			var dl := cerca.distance_to(pos(r))
 			if dl < 2.2:
 				riesgo += (2.2 - dl) * 2.4
-		var nota := progreso * (CHISPA_AVANCE + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) \
+		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) \
 			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
 		## nunca se la da a un compañero adelantado.
