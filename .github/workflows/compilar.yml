@@ -1,0 +1,32 @@
+name: Export Dinastia Windows
+
+on:
+  push:
+    branches: [ "**" ]
+  workflow_dispatch:
+
+jobs:
+  export-windows:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup export templates
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates
+
+      - name: Build Windows Release
+        run: |
+          mkdir -v -p build/windows
+          cd "Dinastía Godot"
+          godot --headless --export-release "Windows Desktop" ../build/windows/Dinastia.exe
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dinastia-Windows
+          path: build/windows
