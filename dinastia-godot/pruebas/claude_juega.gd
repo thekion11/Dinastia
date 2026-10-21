@@ -23,6 +23,10 @@ var _balon_quieto := 0
 var _fin := false
 var _apretadas: Dictionary = {}
 var _prefs_antes := {}
+## El vídeo de gameplay (21-10-2026) hereda de este guion: deja la ceremonia
+## (CEREMONIA=1), elige el ritmo (RITMO=rapido|normal|largo) y no cierra al final.
+var salir_al_terminar := true
+var _fps := 60.0
 
 func _ready() -> void:
 	var cfg := ConfigFile.new()
@@ -30,13 +34,15 @@ func _ready() -> void:
 	## Se apunta lo que había para dejarlo igual al terminar (las otras pruebas
 	## leen el mismo archivo: con el ritmo «rápido» la del acta fallaba).
 	for k in ["ceremonia", "intro", "ritmo_partido", "control_equipo", "dificultad_cpu"]:
-		_prefs_antes[k] = cfg.get_value(CajonAjustes.SECCION, k, null)
+		_prefs_antes[k] = cfg.get_value(CajonAjustes.SECCION, k) if cfg.has_section_key(CajonAjustes.SECCION, k) else null
 	## DIFICULTAD=nivel: contra qué CPU juego (20-10-2026).
 	if OS.get_environment("DIFICULTAD") != "":
 		cfg.set_value(CajonAjustes.SECCION, "dificultad_cpu", OS.get_environment("DIFICULTAD"))
-	cfg.set_value(CajonAjustes.SECCION, "ceremonia", false)
-	cfg.set_value(CajonAjustes.SECCION, "intro", false)
-	cfg.set_value(CajonAjustes.SECCION, "ritmo_partido", "rapido")
+	var con_ceremonia := OS.get_environment("CEREMONIA") != ""
+	cfg.set_value(CajonAjustes.SECCION, "ceremonia", con_ceremonia)
+	cfg.set_value(CajonAjustes.SECCION, "intro", con_ceremonia)
+	var ritmo := OS.get_environment("RITMO")
+	cfg.set_value(CajonAjustes.SECCION, "ritmo_partido", ritmo if ritmo != "" else "rapido")
 	cfg.save(CajonAjustes.RUTA)
 	var m := Mundo.new()
 	m.generar(["CHI"], int(OS.get_environment("SEMILLA")) if OS.get_environment("SEMILLA") != "" else 4711)
@@ -85,6 +91,9 @@ func _stick(dir_mundo: Vector3, quiero: Dictionary) -> void:
 	if v.y < -0.05: quiero["jugar_arriba"] = -v.y
 
 func _process(_d: float) -> void:
+	## Los tiempos del mando, en segundos (se medían en fotogramas de 60 fps:
+	## a 25 fps el tiro se cargaba 0,56 s y nunca salía a puerta).
+	_fps = 1.0 / maxf(_d, 0.001)
 	if _fin:
 		return
 	_t += 1
@@ -98,6 +107,8 @@ func _process(_d: float) -> void:
 		var pa: Partido = _vista.get("partido")
 		if pa.terminado_ya or _motor.estado == "fin":
 			_informe("final (sin mando)")
+		elif OS.get_environment("MITADES") == "1" and _motor.mitad >= 2:
+			_informe("fin de la primera parte (sin mando)")
 		return
 	if _t == 5 and _motor.control_equipo < 0:
 		_vista.call("_alternar_control_motor")
@@ -174,7 +185,7 @@ func _con_balon(u: Dictionary, yo: Vector3, arco: Vector3, quiero: Dictionary) -
 	if _tiro_carga > 0:
 		_tiro_carga += 1
 		_stick(arco - yo, quiero)
-		if _tiro_carga < 14:
+		if _tiro_carga < maxi(3, int(round(14.0 * _fps / 60.0))):
 			quiero["jugar_tiro"] = 1.0
 		else:
 			_tiro_carga = 0
@@ -206,7 +217,7 @@ func _con_balon(u: Dictionary, yo: Vector3, arco: Vector3, quiero: Dictionary) -
 		if not mejor.is_empty():
 			_stick(_motor.pos(mejor) - yo, quiero)
 			quiero["jugar_pase"] = 1.0
-			_pase_suelta = 6
+			_pase_suelta = maxi(2, int(round(6.0 * _fps / 60.0)))
 			_info["pases"] += 1
 			return
 	## Conducir hacia el arco, esquivando un poco al rival que tengo delante.
@@ -273,4 +284,5 @@ func _informe(motivo: String) -> void:
 		else:
 			cfg.set_value(CajonAjustes.SECCION, k, _prefs_antes[k])
 	cfg.save(CajonAjustes.RUTA)
-	get_tree().quit()
+	if salir_al_terminar:
+		get_tree().quit()
