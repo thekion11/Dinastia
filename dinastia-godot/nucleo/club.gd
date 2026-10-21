@@ -251,6 +251,19 @@ func _es_puesto_portero_str(puesto: String) -> bool:
 ## Y el tamaño manda sobre el gusto: un club de 8.000 butacas no puede tener tres
 ## bandejas por mucha reputación que tenga.
 const _FORMAS := ["cuenco", "ingles", "oval", "herradura", "rect"]
+## LA FORMA SEGÚN EL TAMAÑO (21-10-2026, M-002): antes los clubes solo sorteaban
+## esas 5 y «caldera», «dos» y «principal» no le tocaban a nadie. Ahora el club
+## chico tiene tribunas sueltas o una caja pegada al césped, el mediano de todo
+## un poco y el grande cuencos, ovalados y calderas.
+const _FORMAS_CHICO := ["dos", "rect", "ingles", "estrecho", "herradura", "dos"]
+const _FORMAS_MEDIO := ["ingles", "rect", "herradura", "cuenco", "asimetrico", "principal", "estrecho"]
+const _FORMAS_GRANDE := ["cuenco", "oval", "caldera", "principal", "ingles", "cuenco"]
+func _formas_de_tamano() -> Array:
+	return _FORMAS_CHICO if estadio_aforo < 10000 else (_FORMAS_MEDIO if estadio_aforo < 35000 else _FORMAS_GRANDE)
+
+func _forma_por_tamano(h: int) -> String:
+	var lista := _formas_de_tamano()
+	return String(lista[absi(("forma_estadio:" + id).hash()) % lista.size()])
 ## Los diseños de corte que sortean los clubes (14-10-2026: antes solo eran 4 y se
 ## repetían; los 12 existen y el diseñador del estadio los ofrece todos).
 const _CESPED := ["rayas", "rayasH", "damero", "circulos", "diagonal", "rayas", "damGrande", "rombos", "liso", "rayas", "espiga", "abanico"]
@@ -260,7 +273,7 @@ func perfil_estadio() -> Dictionary:
 	var h := _hash_id()
 	var p := {
 		"personalizado": false,
-		"forma": _FORMAS[h % _FORMAS.size()],
+		"forma": _forma_por_tamano(h),
 		"niveles": 3 if rep >= 80 else (2 if rep >= 62 else 1),
 		"techo": "anillo" if rep >= 78 else ("parcial" if rep >= 60 else "sin"),
 		"cesped": _CESPED[(h >> 3) % _CESPED.size()],
@@ -291,6 +304,10 @@ func perfil_estadio() -> Dictionary:
 		var e: Dictionary = fila[3] if fila.size() > 3 and fila[3] is Dictionary else {}
 		for k in ["forma", "asientoP", "cespedTono", "banderas", "corner", "redTipo", "banquillo"]:
 			if e.has(k):
+				## La forma del estilo solo si cuadra con el tamaño del club
+				## (21-10-2026): si no, un club de 8.000 salía con un ovalado.
+				if k == "forma" and not (String(e[k]) in _formas_de_tamano()):
+					continue
 				p[k] = e[k]
 		if rep >= 70:
 			for k in ["techo", "focos", "pantalla", "cesped"]:
