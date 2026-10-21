@@ -8693,6 +8693,16 @@ func _probar_sancion_dt() -> void:
 	var b := RecorridoClub.butaca({"forma": "cuenco"}, 1.0, 10.0)
 	_comprobar((b["pos"] as Vector3).x > 43.5 and (b["pos"] as Vector3).y > 2.0, "la butaca está en la primera bandeja de la grada")
 	_comprobar(RecorridoClub.junto_a_la_grada(Vector3(35, 0, 0), 0) and not RecorridoClub.junto_a_la_grada(Vector3(0, 0, 0), 0), "solo se sienta uno desde la banda")
+	## 21-10: los pasillos de la grada y la cinta LED existen. (La butaca real y
+	## el hincha que se aparta se comprueban con pantalla: sin ella, Godot no
+	## guarda las posiciones de los MultiMesh — `captura_sentarse`.)
+	var raiz_b := Node3D.new()
+	add_child(raiz_b)
+	StadiumBuilder.build(raiz_b, {"forma": "cuenco", "niveles": 2}, 30000, 0.9, 7)
+	_comprobar(raiz_b.find_children("Pasillos", "MultiMeshInstance3D", true, false).size() >= 4
+		and raiz_b.find_children("Barandillas", "MultiMeshInstance3D", true, false).size() >= 4, "la grada tiene pasillos con escalera y barandilla")
+	_comprobar(raiz_b.find_children("CintaLED", "MeshInstance3D", true, false).size() >= 1, "el peto de la bandeja de arriba lleva cinta LED")
+	raiz_b.free()
 
 func _probar_interiores_club() -> void:
 	_titulo("ESTADIO 2.0: DECORAR LAS SALAS")
