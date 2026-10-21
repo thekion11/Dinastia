@@ -540,7 +540,14 @@ func _miles(n: int) -> String:
 
 ## Preferencias de lo que se ve sobre la transmisión, en el mismo archivo que
 ## el resto de ajustes (`user://ajustes.cfg`, sección `hud`).
+## PRÁCTICA LIBRE (M-130): sin ceremonia ni presentación, con el motor real.
+var practica := false
+
 func _pref(k: String, por_defecto: bool) -> bool:
+	if practica and k in ["intro", "ceremonia"]:
+		return false
+	if practica and k == "motor_real":
+		return true
 	var cfg := ConfigFile.new()
 	if cfg.load(CajonAjustes.RUTA) != OK:
 		return por_defecto
@@ -1636,6 +1643,9 @@ func _montar_motor() -> void:
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
+	if practica:
+		_motor.empezar_practica()
+		call_deferred("_empezar_practica")
 	## La salida de los equipos: papelitos y bengalas de la hinchada (M-050).
 	if partido.minuto == 0 and partido.goles_local + partido.goles_visita == 0:
 		FestejoGrada.lanzar(_raiz3d, Color(partido.local.color1), Color(partido.local.color2), "salida")
@@ -1751,7 +1761,7 @@ func _montar_motor() -> void:
 	## La dificultad de la CPU (20-10-2026): la última elegida.
 	_motor.dificultad_cpu = dificultad_cpu_guardada()
 	## Si jugaste tú el último partido, vuelves a jugar (se recuerda).
-	if _pref("control_equipo", false) and _mi_lado >= 0:
+	if _pref("control_equipo", false) and _mi_lado >= 0 and not practica:
 		_alternar_control_motor.call_deferred()
 	if _mini_pantalla != null and not _pref("pantalla_esquina_motor", false):
 		_mini_pantalla.visible = false
@@ -2265,3 +2275,34 @@ func _hud_juego() -> void:
 		_flecha_apunte.scale = Vector3(1, 1, largo)
 		_flecha_apunte.position = lugar + dir * (largo * 0.5 + 0.6) + Vector3(0, 0.05 + float(_motor.apunte.get("loft", 0.0)) * 0.5, 0)
 		_flecha_apunte.rotation.y = atan2(dir.x, dir.z)
+
+## La práctica: tomas el mando de tu equipo al momento y un aviso explica qué es.
+func _empezar_practica() -> void:
+	if _motor == null:
+		return
+	if _motor.control_equipo < 0:
+		_alternar_control_motor()
+	_mostrar_banner_gol(Idiomas.t("🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir."), true)
+
+## Abre la práctica libre con tu club contra un sparring de su liga.
+static func abrir_practica(padre: Node, m: Mundo) -> VistaEstadio:
+	var c := m.mi_club()
+	if c == null:
+		return null
+	var liga: Liga = null
+	for l: Liga in m.ligas:
+		if l.clubes.has(c):
+			liga = l
+	var rival: Club = null
+	for x: Club in (liga.clubes if liga != null else []):
+		if x != c:
+			rival = x
+			break
+	if rival == null:
+		return null
+	Partido.ctx_club_id = c.id
+	var v := VistaEstadio.new()
+	v.practica = true
+	padre.add_child(v)
+	v.abrir(c, 0.15, rival, Partido.new(c, rival), m.perfil_estadio_de(c))
+	return v
