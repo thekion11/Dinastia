@@ -274,6 +274,19 @@ func faros(n: float) -> void:
 				_poner_faros(v)
 	if _mat_faros != null:
 		_mat_faros.set_shader_parameter("noche", noche)
+	## M-183 (21-10): de madrugada queda en la calle un tercio de la gente.
+	var cuota := lerpf(1.0, 0.35, smoothstep(0.55, 0.95, noche))
+	if absf(cuota - _cuota_gente) > 0.04:
+		_cuota_gente = cuota
+		var i := 0
+		for v in _vehiculos:
+			i += 1
+			if float(v["alto"]) > 0.05 and float(v["alto"]) < 0.3 and is_instance_valid(v["nodo"]):
+				var sale := float((i * 7919) % 100) / 100.0 < cuota
+				(v["nodo"] as Node3D).visible = sale
+				v["oculto"] = not sale
+
+var _cuota_gente := 1.0
 
 func _es_coche(v: Dictionary) -> bool:
 	return float(v["alto"]) < 0.05 and is_instance_valid(v["nodo"])
@@ -332,6 +345,8 @@ func _process(delta_real: float) -> void:
 		## (150-260 m: 1 de cada 3), 2 = fuera de la vista (más de 260 m, que es
 		## donde dejan de dibujarse: 1 de cada 12). El nivel se recalcula cuando
 		## le toca moverse, así los que se saltan no cuestan casi nada.
+		if v.get("oculto", false):
+			continue
 		var nivel := int(v.get("lod", 0))
 		if nivel > 0 and (idx + _cuadro) % (3 if nivel == 1 else 12) != 0:
 			v["dt"] = float(v.get("dt", 0.0)) + delta_real
