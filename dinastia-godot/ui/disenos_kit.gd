@@ -276,7 +276,18 @@ static func kit_de_club(c: Club) -> Dictionary:
 	## EL ESCUDO DEL CLUB EN LA CAMISETA (14-10-2026): el mismo escudo que se ve en
 	## las fichas, no un escudete genérico.
 	base["escudo_tex"] = Escudo.textura(c, 64)
+	base["marca"] = marca_de(c)
 	return base
+
+## EL FABRICANTE DE LA ROPA (21-10-2026, M-057): el de tu club es el proveedor
+## que firmaste (`Comercial.proveedor`); el de los demás, uno fijo por club.
+const MARCA_FORMA := {"propia": 0, "korrida": 1, "adistar": 2, "numbra": 3, "pumba": 4, "volk": 5}
+static func marca_de(c: Club) -> String:
+	var m := Mundo.actual()
+	if m != null and m.comercial != null and m.mi_club() == c:
+		return m.comercial.proveedor
+	var ids: Array = MARCA_FORMA.keys()
+	return String(ids[1 + absi(hash(c.id + "proveedor")) % (ids.size() - 1)])
 
 static func _col(hexa: Variant) -> Color:
 	var s := String(hexa)
@@ -999,6 +1010,7 @@ static func uniforms(kit: Dictionary, dorsal: int) -> Dictionary:
 	for a: Array in ACCESORIOS:
 		var k := String(a[0])
 		u["acc_" + k] = _col(acc[k]) if acc.has(k) else Color(0, 0, 0, 0)
+	u["marca_forma"] = int(MARCA_FORMA.get(String(kit.get("marca", "propia")), 0))
 	if kit.get("escudo_tex") is Texture2D:
 		u["hay_escudo"] = true
 		u["escudo_tex"] = kit["escudo_tex"]

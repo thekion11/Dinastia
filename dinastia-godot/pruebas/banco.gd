@@ -7818,6 +7818,17 @@ func _probar_marcas_y_escudos() -> void:
 	jv.edad = edad0
 	_comprobar(viejo.s < joven.s, "M-085: a los 39 el pelo tiene canas (%s → %s)" % [joven.to_html(false), viejo.to_html(false)])
 	_comprobar(repetidos.is_empty(), "M-062: ningún escudo repetido entre clubes (%d: %s)" % [repetidos.size(), str(repetidos.slice(0, 5))])
+	## Los fabricantes en la camiseta 3D (21-10-2026, M-057).
+	var mf := Mundo.new()
+	mf.generar(["CHI"], 4711)
+	var vistos := {}
+	for c: Club in mf.ligas[0].clubes:
+		var marca := DisenosKit.marca_de(c)
+		if not vistos.has(marca):
+			_comprobar(DisenosKit.MARCA_FORMA.has(marca) and marca != "propia", "fabricante de %s: %s (conocido, no la marca propia)" % [c.nombre, marca])
+		vistos[marca] = true
+	_comprobar(vistos.size() >= 4, "los clubes de una liga visten de %d fabricantes distintos" % vistos.size())
+	_comprobar(DisenosKit.marca_de(mf.ligas[0].clubes[0]) == DisenosKit.marca_de(mf.ligas[0].clubes[0]), "el fabricante de un club es fijo")
 
 func _probar_nombres_repetidos() -> void:
 	_titulo("M-331: NOMBRES REPETIDOS EN UN MUNDO")

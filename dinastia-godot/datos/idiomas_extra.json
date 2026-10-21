@@ -2511,7 +2511,10 @@
   "Radio": "Radio",
   "Perchero": "Coat rack",
   "Altavoz": "Speaker",
-  "Nevera": "Fridge"
+  "Nevera": "Fridge",
+  "Práctica libre": "Free practice",
+  "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Your team on the pitch against cones: try passes, shots, dribbles and skill moves with no clock.",
+  "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Free practice: try the controls. The opponent does not press and the clock does not run. Esc to leave."
  },
  "pt": {
   "Historia": "História",
@@ -5025,7 +5028,10 @@
   "Radio": "Rádio",
   "Perchero": "Cabideiro",
   "Altavoz": "Alto-falante",
-  "Nevera": "Geladeira"
+  "Nevera": "Geladeira",
+  "Práctica libre": "Treino livre",
+  "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Sua equipe em campo contra cones: teste passes, chutes, dribles e firulas sem relógio.",
+  "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Treino livre: teste os controles. O rival não pressiona e o relógio não corre. Esc para sair."
  },
  "patrones": [
   [
@@ -8141,7 +8147,10 @@
   "Radio": "Radio",
   "Perchero": "Portemanteau",
   "Altavoz": "Enceinte",
-  "Nevera": "Réfrigérateur"
+  "Nevera": "Réfrigérateur",
+  "Práctica libre": "Entraînement libre",
+  "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Ton équipe sur le terrain face à des plots : essaie passes, tirs, dribbles et gestes techniques sans chrono.",
+  "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Entraînement libre : essaie les commandes. L'adversaire ne presse pas et le chrono ne tourne pas. Échap pour quitter."
  },
  "it": {
   "Historia": "Storia",
@@ -10562,7 +10571,10 @@
   "Radio": "Radio",
   "Perchero": "Attaccapanni",
   "Altavoz": "Altoparlante",
-  "Nevera": "Frigorifero"
+  "Nevera": "Frigorifero",
+  "Práctica libre": "Allenamento libero",
+  "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "La tua squadra in campo contro i coni: prova passaggi, tiri, dribbling e giocate senza cronometro.",
+  "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Allenamento libero: prova i comandi. L'avversario non pressa e il cronometro non scorre. Esc per uscire."
  },
  "de": {
   "Historia": "Geschichte",
@@ -12983,7 +12995,10 @@
   "Radio": "Radio",
   "Perchero": "Garderobenständer",
   "Altavoz": "Lautsprecher",
-  "Nevera": "Kühlschrank"
+  "Nevera": "Kühlschrank",
+  "Práctica libre": "Freies Training",
+  "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Dein Team auf dem Platz gegen Hütchen: Pässe, Schüsse, Dribblings und Tricks ohne Uhr ausprobieren.",
+  "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Freies Training: probiere die Steuerung aus. Der Gegner presst nicht und die Uhr läuft nicht. Esc zum Verlassen."
  },
  "ca": {
   "Historia": "Història",
@@ -15404,7 +15419,10 @@
   "Radio": "Ràdio",
   "Perchero": "Penja-robes",
   "Altavoz": "Altaveu",
-  "Nevera": "Nevera"
+  "Nevera": "Nevera",
+  "Práctica libre": "Pràctica lliure",
+  "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "El teu equip a la gespa contra cons: prova passades, xuts, regats i filigranes sense rellotge.",
+  "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Pràctica lliure: prova els controls. El rival no pressiona i el rellotge no corre. Esc per sortir."
  },
  "pl": {
   "Club": "Klub",
@@ -18120,7 +18138,10 @@
   "Radio": "Radio",
   "Perchero": "Wieszak",
   "Altavoz": "Głośnik",
-  "Nevera": "Lodówka"
+  "Nevera": "Lodówka",
+  "Práctica libre": "Wolny trening",
+  "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Twoja drużyna na boisku przeciw pachołkom: ćwicz podania, strzały, dryblingi i sztuczki bez zegara.",
+  "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Wolny trening: wypróbuj sterowanie. Rywal nie naciska, a zegar nie biegnie. Esc, aby wyjść."
  },
  "tr": {
   "Club": "Kulüp",
@@ -20836,6 +20857,9 @@
   "Radio": "Radyo",
   "Perchero": "Askılık",
   "Altavoz": "Hoparlör",
-  "Nevera": "Buzdolabı"
+  "Nevera": "Buzdolabı",
+  "Práctica libre": "Serbest antrenman",
+  "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Takımın sahada dubalara karşı: pas, şut, çalım ve hünerleri süre olmadan dene.",
+  "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Serbest antrenman: kontrolleri dene. Rakip baskı yapmaz ve süre işlemez. Çıkmak için Esc."
  }
 }

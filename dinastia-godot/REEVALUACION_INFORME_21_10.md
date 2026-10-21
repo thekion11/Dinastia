@@ -6,7 +6,7 @@ señales, reutilización modular; el punto 16 —la ciudad en un .pck aparte— 
 
 | # | Punto del informe | Antes | Ahora | Evidencia |
 |---|---|---|---|---|
-| 1-3 | «Feature creep»: la ciudad come el presupuesto | no aplicaba: ciudad y partido nunca conviven | igual | `Principal._ver_ciudad_propia` / `_ver_estadio`: cada visor se crea y se libera |
+| 1-3 | «Feature creep»: la ciudad come el presupuesto (RECHAZADO por el dueño el 21-10: la ciudad es parte de la idea del juego) | no aplicaba: ciudad y partido nunca conviven | igual | `Principal._ver_ciudad_propia` / `_ver_estadio`: cada visor se crea y se libera |
 | 4 | Escenas aisladas | ya | ya | idem |
 | 5-6 | Datos en un singleton, guardado en disco | ya (`Mundo` + JSON seguro con .bak) | ya | `nucleo/partida.gd` |
 | 7 | Física por código, sin RigidBody | ya | ya | sin `RigidBody3D` en el juego |

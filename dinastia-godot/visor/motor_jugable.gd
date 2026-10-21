@@ -167,6 +167,11 @@ var tarjetas_reales := false
 ## -1: nadie; 0: manejas al local; 1: a la visita. Manejas al que tiene el balón
 ## o al más cercano, y cambias con `jugar_cambiar` (Q / LB), como en FC.
 var control_equipo := -1
+## PRÁCTICA LIBRE (21-10-2026, M-130): para aprender los controles. El rival se
+## queda en su sitio (conos con camiseta), el reloj no acaba nunca y, si el
+## rival se hace con el balón, vuelve a tus pies. `empezar_practica()`.
+var practica := false
+var _practica_pos := {}
 ## Si se da, el stick se lee respecto a ESTA cámara (la de televisión, de lado):
 ## arriba en la pantalla es hacia el fondo de la imagen.
 var camara: Camera3D = null
@@ -440,6 +445,29 @@ func _pausa_dificultad(p: Dictionary) -> float:
 		return float(DIFICULTADES[dificultad_cpu]["pausa"])
 	return 1.0
 
+func empezar_practica() -> void:
+	practica = true
+	duracion_mitad = 99999.0
+	_practica_pos.clear()
+	for p: Dictionary in jugadores:
+		_practica_pos[String(p["id"])] = pos(p)
+
+## El rival no va a por el balón (cada uno vuelve a su sitio) y no se lo
+## queda: si lo toca, el balón vuelve delante de tu jugador.
+func _paso_practica() -> void:
+	var mio := control_equipo if control_equipo >= 0 else 0
+	for p: Dictionary in jugadores:
+		if (0 if bool(p["es_local"]) else 1) != mio and _practica_pos.has(String(p["id"])):
+			p["objetivo"] = _practica_pos[String(p["id"])]
+			p["correr"] = false
+	if not poseedor.is_empty() and (0 if bool(poseedor["es_local"]) else 1) != mio and not usuario.is_empty():
+		var u := pos(usuario)
+		var hacia := (_arco_rival(usuario) - u).normalized()
+		balon.position = Vector3(u.x, 0.11, u.z) + hacia * 0.9
+		vel_balon = Vector3.ZERO
+		poseedor = {}
+		ultimo_toque = usuario
+
 ## La pizarra del club traducida al motor. «Ir a por todo» (`riesgo`) sube un
 ## punto la mentalidad y «cerrar el partido» (`tiempo`) la baja.
 static func tactica_desde(tc: Tactica, riesgo := false, tiempo := false) -> Dictionary:
@@ -697,6 +725,8 @@ func paso(delta: float) -> void:
 			if control_equipo >= 0 and not autopiloto:
 				_control_de_equipo()
 			_ia_equipos(delta)
+			if practica:
+				_paso_practica()
 			_control_usuario(delta)
 			if cansancio_real:
 				_t_attr -= delta
