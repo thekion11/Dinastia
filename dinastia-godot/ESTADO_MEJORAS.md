@@ -55,7 +55,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-005 | P1 | Colores propios de butacas en 47 de 176 estadios reales | PENDIENTE | `ASIENTOS` sigue con 47 de 176 estadios |
 | M-006 | P2 | Entorno vacío alrededor del estadio (sólo ciudad propia lo tiene) | PENDIENTE | aparcamiento solo en la ciudad propia (`CityBuilder._aparcamiento`) |
 | M-007 | P2 | Sin variación de entorno por país (palmeras, nieve, montaña de fondo) | PENDIENTE | sin fondo lejano por país/clima en el estadio |
-| M-008 | P2 | Tribunas «falsas» por falta de profundidad en el graderío | PARCIAL | vomitorios sí (`StadiumBuilder._vomitorios`); faltan barandillas, numeración y anillo de palcos |
+| M-008 | P2 | Tribunas «falsas» por falta de profundidad en el graderío | HECHO | vomitorios (`StadiumBuilder._vomitorios`); 21-10: pasillos con peldaños y barandilla cada 8 grupos de butacas (`_montar_pasillos`), escaleras de acceso desde el césped (`_escaleras_de_acceso`), cinta LED en el peto de la bandeja alta (`cinta_led.gdshader`); se sube caminando a la butaca (`RecorridoClub.camino_a_butaca`); capturas `captura_diagnostico_grada`, `captura_sentarse` |
 | M-009 | P2 | Sin voladizo/cubierta visible en estadios sin techo | PARCIAL | techo «visera» y cerchas vistas desde fuera (`FachadaEstadio`); sin visera parcial con estructura por sector |
 | M-010 | P2 | Sin carteles de pared (patrocinadores, fechas, escudo) fuera del campo | PENDIENTE | sin carteles en muros exteriores (la fachada tiene rótulos de puerta, no publicidad) |
 | M-011 | P1 | Marcador/pantalla gigante estática | PENDIENTE | `StadiumBuilder._pantallas` usa una textura fija (`_pantalla_textura`): sin marcador ni repetición vivos |
