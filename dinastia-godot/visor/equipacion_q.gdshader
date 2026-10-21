@@ -62,6 +62,8 @@ uniform vec3 piel_obj = vec3(-1.0);
 uniform bool hay_sp_pecho = false;
 uniform sampler2D escudo_tex : source_color, filter_linear_mipmap, repeat_disable;
 uniform bool hay_escudo = false;
+// El logo del fabricante (`DisenosKit.marca_de`): 0..5.
+uniform int marca_forma = 0;
 uniform sampler2D sp_pecho : source_color, filter_linear_mipmap, repeat_disable;
 uniform bool hay_sp_manga = false;
 uniform sampler2D sp_manga : source_color, filter_linear_mipmap, repeat_disable;
@@ -642,10 +644,35 @@ void fragment() {
 			camiseta = mix(camiseta, trim_col, borde_e);
 			h_escudo = cuerpo_e * 0.7 + borde_e * 0.3;
 		}
-		// Marca: una curva tipo "ala" en el color de ribete.
-		vec2 mk = vec2((x + 0.095) / 0.045, (y - 1.41) / 0.03);
-		float ala = step(abs(mk.x), 1.0) * step(abs(mk.y - (mk.x * mk.x * 0.6 - 0.2)), 0.22 - mk.x * 0.08);
-		camiseta = mix(camiseta, trim_col, ala);
+		// LA MARCA DEL FABRICANTE (21-10-2026, M-057): cada proveedor ficticio
+		// tiene su logo (antes, todos el mismo «ala»), en el color de ribete.
+		//   0 propia: el ala · 1 Korrida: dos franjas en diagonal · 2 Astra
+		//   Sport: estrella de cuatro puntas · 3 Nimbo: rombo hueco · 4 Salto:
+		//   arco con punto · 5 Volkspor: doble V.
+		vec2 mk = vec2((x + 0.095) / 0.052, (y - 1.41) / 0.036);
+		float logo = 0.0;
+		if (abs(mk.x) <= 1.0 && abs(mk.y) <= 1.0) {
+			if (marca_forma == 1) {
+				float d = mk.x * 0.7 - mk.y * 0.7;
+				logo = step(abs(fract(d * 1.4) - 0.5), 0.17) * step(abs(mk.x), 0.85) * step(abs(mk.y), 0.85);
+			} else if (marca_forma == 2) {
+				vec2 a = abs(mk) * vec2(1.0, 1.4);
+				logo = step(a.x * a.y * 6.0 + (a.x + a.y) * 0.55, 0.62);
+			} else if (marca_forma == 3) {
+				float r = abs(mk.x) * 1.15 + abs(mk.y);
+				logo = step(r, 0.95) * step(0.55, r);
+			} else if (marca_forma == 4) {
+				float rr = length(vec2(mk.x, (mk.y + 0.55) * 1.2));
+				logo = step(abs(rr - 0.75), 0.14) * step(-0.45, mk.y) + step(length(mk - vec2(0.0, -0.05)), 0.2);
+			} else if (marca_forma == 5) {
+				float v1 = abs(mk.y + 0.25 - abs(mk.x) * 0.9);
+				float v2 = abs(mk.y - 0.35 - abs(mk.x) * 0.9);
+				logo = (step(v1, 0.13) + step(v2, 0.13)) * step(abs(mk.x), 0.85);
+			} else {
+				logo = step(abs(mk.y - (mk.x * mk.x * 0.6 - 0.2)), 0.22 - mk.x * 0.08);
+			}
+		}
+		camiseta = mix(camiseta, trim_col, clamp(logo, 0.0, 1.0));
 	}
 	// PATROCINADORES. Pecho: entre el escudo y la cintura. Espalda: debajo
 	// del cuello, encima del número. Manga: el logo en la izquierda del jugador.

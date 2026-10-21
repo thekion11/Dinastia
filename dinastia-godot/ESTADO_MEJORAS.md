@@ -18,7 +18,7 @@ Estado tras ella: **HECHO 102 · PARCIAL 111 · PENDIENTE 239**. Cerrados: M-021
 
 ### Pasada del 21-10 (tercera: hallazgos del vídeo de gameplay, informe técnico y piezas modulares)
 
-Estado tras ella: **HECHO 104 · PARCIAL 114 · PENDIENTE 234** (contado fila a fila). Hallazgos del vídeo: pocas ocasiones (M-138: ritmos y `prisa`), controles táctiles en PC (M-433), el mentor tapaba la rueda de prensa (`MentorVoz` espera, grupo `no_tapar_mentor`), haces de farola en triángulo (M-014), malabares rehechos con racha ×2/×3/×4, manos del público del color de la ropa (`hinchada.gdshader`). Informe técnico: oclusión de la ciudad (M-344), panel de objetivos por señal (M-386), texturas revisadas (M-346). Pedido del dueño «reusar todos los objetos, separar y unir de forma modular»: `visor/modulos.gd` (reserva para reciclar, unir/separar conjuntos, guardarlos como datos, teñir por material) y el edificio del club amueblado con él (M-186), con 7 objetos de decoración nuevos.
+Estado tras ella: **HECHO 104 · PARCIAL 114 · PENDIENTE 234** (contado fila a fila); con la 4.ª (fabricantes M-057, motor del coche M-173, práctica libre M-130): **HECHO 106 · PARCIAL 115 · PENDIENTE 231**. Hallazgos del vídeo: pocas ocasiones (M-138: ritmos y `prisa`), controles táctiles en PC (M-433), el mentor tapaba la rueda de prensa (`MentorVoz` espera, grupo `no_tapar_mentor`), haces de farola en triángulo (M-014), malabares rehechos con racha ×2/×3/×4, manos del público del color de la ropa (`hinchada.gdshader`). Informe técnico: oclusión de la ciudad (M-344), panel de objetivos por señal (M-386), texturas revisadas (M-346). Pedido del dueño «reusar todos los objetos, separar y unir de forma modular»: `visor/modulos.gd` (reserva para reciclar, unir/separar conjuntos, guardarlos como datos, teñir por material) y el edificio del club amueblado con él (M-186), con 7 objetos de decoración nuevos.
 
 ## 1. Resumen en cifras
 
@@ -118,7 +118,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-054 | P1 | Ropa con volumen sólo en retratos (K-02) | PENDIENTE | `VestidorQ.ropa_aparte` sigue apagado en partido por coste |
 | M-055 | P1 | Sin arrugas dinámicas según animación | PARCIAL | pliegues de tela estáticos (`pliegues()` en el shader); no dependen de la animación |
 | M-056 | P2 | Sin sudor/barro/lluvia en la camiseta | PENDIENTE | sin uniform de barro/mojado |
-| M-057 | P1 | Marca de ropa genérica (tick) | PENDIENTE | una sola marca genérica («ala») en el shader |
+| M-057 | P1 | Marca de ropa genérica (tick) | HECHO | 21-10: cada fabricante ficticio (Korrida, Astra Sport, Nimbo, Salto, Volkspor y la marca propia) tiene su logo en el pecho de la camiseta 3D (`equipacion_q.gdshader` `marca_forma`); tu club lleva el proveedor firmado y los demás uno fijo por club (`DisenosKit.marca_de`); captura `captura_marcas`, banco en `_probar_marcas_y_escudos` |
 | M-058 | P1 | 30 marcas de patrocinio (K-03) | PARCIAL | 38 marcas en `Auspicio` (antes 30); meta 70 |
 | M-059 | P1 | Reparto de marcas sesgado (arreglado el hash hoy, ✅) | HECHO | 21-10: `_probar_marcas_y_escudos` en un mundo de 352 clubes: ninguna marca pasa del doble de la media (la que más, ×27 con media 20) |
 | M-060 | P2 | Patrocinio fijo por club entre temporadas, sin contratos de IA que… | PENDIENTE | sin renovación/cambio de patrocinador de clubes IA |
@@ -201,7 +201,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-127 | P2 | Sin gestión de tiempo (perder tiempo, acelerar) | HECHO | 20-10: desde el 75' la CPU que gana tarda ×2,2 en cada saque (sin saques rápidos) y la que pierde saca ×0,6 (`_ritmo_de_saque`); el equipo del usuario no |
 | M-128 | P2 | Portero con salidas sólo en mano a mano | PARCIAL | colocación y achique del portero (14-10); sin salidas aéreas |
 | M-129 | P2 | Sin lanzamientos de larga distancia ni centros desde banda con… | PARCIAL | los atributos pesan en el motor (`_atributos`); sin parámetro de precisión por tipo de envío |
-| M-130 | P2 | Controles FC mapeados (65+ combinaciones) sin tutorial interactivo | PENDIENTE | sin modo práctica |
+| M-130 | P2 | Controles FC mapeados (65+ combinaciones) sin tutorial interactivo | HECHO | 21-10: «Práctica libre» en la sala de minijuegos (Mi Vida): tu equipo contra un rival que no presiona, sin reloj, el balón del rival vuelve a tus pies y tomas el mando al entrar (`MotorJugable.empezar_practica`, `VistaEstadio.abrir_practica`); prueba `prueba_practica.tscn` |
 | M-131 | P2 | Ayudas de asistencia (pase/tiro) con 3 niveles | PARCIAL | ayudas por pieza (asistido/manual, auto/semi/manual) en `Mando`; sin perfiles Arcade/Semi/Manual |
 | M-132 | P2 | Sin repetición manual del usuario | HECHO | 20-10: G / Share (`jugar_repeticion`) y botón «⟲ Repetición» en la pausa (`VistaEstadio.repetir_jugada`, últimos 10 s) |
 | M-133 | P1 | Cámara TV sin zoom automático al área | HECHO | `CameraRig._transmision` cierra en área, ocasión y córner (16-10) |
@@ -249,7 +249,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-170 | P2 | Sin semáforos peatonales con botón | PENDIENTE | sin botón peatonal |
 | M-171 | P1 | Tráfico sin comportamiento complejo (adelantar, ceder en cruce) | PARCIAL | cola y frenado en rojo (`TraficoCiudad`); sin adelantar |
 | M-172 | P1 | Colisiones del coche del usuario con NPC/vehículos sólo círculos | PENDIENTE | choque solo desliza; sin daño ni multa |
-| M-173 | P2 | Sin sonido de motor/marchas/derrape | PENDIENTE | sin sonido de motor |
+| M-173 | P2 | Sin sonido de motor/marchas/derrape | PARCIAL | 21-10: el motor del coche suena, sintetizado en vivo con revoluciones y 5 marchas (`visor/motor_coche_sonido.gd`); sin radio |
 | M-174 | P2 | Interior de coche sin modelo (salpicadero 2D) | PARCIAL | salpicadero y volante 2D (`VolanteUI`) |
 | M-175 | P2 | Sin faros ni luces de freno encendidos por hora | HECHO | 21-10: faros blancos y traseras rojas que se encienden con la noche y se avivan al frenar en rojo (`TraficoCiudad.faros`, una malla por coche, hasta 220 m) |
 | M-176 | P2 | Sin tipos de vehículo (moto, bus conducible, camión) | PENDIENTE | solo coche conducible |

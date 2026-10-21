@@ -770,7 +770,14 @@ var _cabeceo := 0.0
 var _balanceo := 0.0
 var cam_coche := 0     ## 0 tercera persona, 1 capó, 2 interior
 
+## El motor del coche suena con sus revoluciones y marchas (M-173).
+var _motor_sonido: MotorCocheSonido
+
 func _conducir(e: Vector2, delta: float) -> void:
+	if _motor_sonido == null:
+		_motor_sonido = MotorCocheSonido.new()
+		add_child(_motor_sonido)
+	_motor_sonido.poner(vel, maxf(e.y, 0.0))
 	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B)
 	_volante = lerpf(_volante, e.x, clampf(delta * 6.0, 0.0, 1.0))
 	if e.y > 0.0:
