@@ -6,21 +6,45 @@ on:
       - '**'
   workflow_dispatch:
 
+env:
+  GODOT_VERSION: "4.7.2"
+  GODOT_RELEASE: "stable"
+
 jobs:
   export-windows:
     runs-on: ubuntu-latest
-    container:
-      image: barichello/godot-ci:4.3
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
 
-      - name: Setup export templates
+      - name: Cache Godot ${{ env.GODOT_VERSION }}
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}-${{ env.GODOT_RELEASE }}-linux
+
+      - name: Download Godot and export templates
+        if: steps.cache-godot.outputs.cache-hit != 'true'
         run: |
-          mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates/
+          base="https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-${GODOT_RELEASE}"
+          mkdir -p ~/godot-bin ~/.local/share/godot/export_templates
+          curl -fsSL --retry 4 -o godot.zip "$base/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64.zip"
+          curl -fsSL --retry 4 -o templates.tpz "$base/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_export_templates.tpz"
+          unzip -q godot.zip -d ~/godot-bin
+          unzip -q templates.tpz -d /tmp/templates
+          mv /tmp/templates/templates ~/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_RELEASE}
+
+      - name: Prepare Godot binary
+        run: |
+          bin=$(ls ~/godot-bin/Godot_v*_linux.x86_64 | head -n1)
+          chmod +x "$bin"
+          ln -sf "$bin" /usr/local/bin/godot 2>/dev/null || sudo ln -sf "$bin" /usr/local/bin/godot
+          godot --version
 
       - name: Import project
         run: |
@@ -29,7 +53,7 @@ jobs:
 
       - name: Build Windows Release
         run: |
-          mkdir -v -p build/windows
+          mkdir -p build/windows
           cd dinastia-godot
           godot --headless --export-release "Windows Desktop" ../build/windows/Dinastia.exe
 
