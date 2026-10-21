@@ -7868,6 +7868,20 @@ func _probar_marcas_y_escudos() -> void:
 		vistos[marca] = true
 	_comprobar(vistos.size() >= 4, "los clubes de una liga visten de %d fabricantes distintos" % vistos.size())
 	_comprobar(DisenosKit.marca_de(mf.ligas[0].clubes[0]) == DisenosKit.marca_de(mf.ligas[0].clubes[0]), "el fabricante de un club es fijo")
+	## Las formas de estadio de los clubes según su tamaño (21-10-2026, M-002).
+	var mf2 := Mundo.new()
+	mf2.generar(["CHI", "ESP", "ARG", "ENG", "GER", "ITA"], 31)
+	var formas := {}
+	var chicos_mal := 0
+	for c: Club in mf2.clubes.values():
+		var fo := String(c.perfil_estadio()["forma"])
+		formas[fo] = true
+		if c.estadio_aforo < 10000 and fo in ["oval", "caldera"]:
+			chicos_mal += 1
+	_comprobar(formas.size() >= 8, "los clubes usan %d formas de estadio %s" % [formas.size(), str(formas.keys())])
+	_comprobar(chicos_mal == 0, "ningún club de menos de 10.000 butacas tiene un ovalado o una caldera")
+	for fo: String in ["estrecho", "asimetrico"]:
+		_comprobar(StadiumBuilder.geom_de_forma(fo)["dz"] != StadiumBuilder.geom_de_forma("cuenco")["dz"], "la forma «%s» tiene su geometría" % fo)
 
 func _probar_nombres_repetidos() -> void:
 	_titulo("M-331: NOMBRES REPETIDOS EN UN MUNDO")

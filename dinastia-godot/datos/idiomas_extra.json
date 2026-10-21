@@ -2515,7 +2515,11 @@
   "Práctica libre": "Free practice",
   "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Your team on the pitch against cones: try passes, shots, dribbles and skill moves with no clock.",
   "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Free practice: try the controls. The opponent does not press and the clock does not run. Esc to leave.",
-  "🚓 Multa por conducción temeraria (%d)": "🚓 Fine for reckless driving (%d)"
+  "🚓 Multa por conducción temeraria (%d)": "🚓 Fine for reckless driving (%d)",
+  "Caja inglesa": "English box",
+  "Cuatro tribunas pegadas al césped: poco aforo y mucho ruido.": "Four stands right next to the pitch: small capacity and lots of noise.",
+  "Asimétrico": "Asymmetric",
+  "Una tribuna de honor más alta y un fondo a cielo abierto.": "A taller main stand and one end open to the sky."
  },
  "pt": {
   "Historia": "História",
@@ -5033,7 +5037,11 @@
   "Práctica libre": "Treino livre",
   "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Sua equipe em campo contra cones: teste passes, chutes, dribles e firulas sem relógio.",
   "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Treino livre: teste os controles. O rival não pressiona e o relógio não corre. Esc para sair.",
-  "🚓 Multa por conducción temeraria (%d)": "🚓 Multa por direção perigosa (%d)"
+  "🚓 Multa por conducción temeraria (%d)": "🚓 Multa por direção perigosa (%d)",
+  "Caja inglesa": "Caixa inglesa",
+  "Cuatro tribunas pegadas al césped: poco aforo y mucho ruido.": "Quatro arquibancadas coladas ao gramado: pouca capacidade e muito barulho.",
+  "Asimétrico": "Assimétrico",
+  "Una tribuna de honor más alta y un fondo a cielo abierto.": "Uma tribuna de honra mais alta e um fundo a céu aberto."
  },
  "patrones": [
   [
@@ -8153,7 +8161,11 @@
   "Práctica libre": "Entraînement libre",
   "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Ton équipe sur le terrain face à des plots : essaie passes, tirs, dribbles et gestes techniques sans chrono.",
   "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Entraînement libre : essaie les commandes. L'adversaire ne presse pas et le chrono ne tourne pas. Échap pour quitter.",
-  "🚓 Multa por conducción temeraria (%d)": "🚓 Amende pour conduite dangereuse (%d)"
+  "🚓 Multa por conducción temeraria (%d)": "🚓 Amende pour conduite dangereuse (%d)",
+  "Caja inglesa": "Boîte anglaise",
+  "Cuatro tribunas pegadas al césped: poco aforo y mucho ruido.": "Quatre tribunes collées à la pelouse : peu de places et beaucoup de bruit.",
+  "Asimétrico": "Asymétrique",
+  "Una tribuna de honor más alta y un fondo a cielo abierto.": "Une tribune d'honneur plus haute et une extrémité à ciel ouvert."
  },
  "it": {
   "Historia": "Storia",
@@ -10578,7 +10590,11 @@
   "Práctica libre": "Allenamento libero",
   "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "La tua squadra in campo contro i coni: prova passaggi, tiri, dribbling e giocate senza cronometro.",
   "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Allenamento libero: prova i comandi. L'avversario non pressa e il cronometro non scorre. Esc per uscire.",
-  "🚓 Multa por conducción temeraria (%d)": "🚓 Multa per guida pericolosa (%d)"
+  "🚓 Multa por conducción temeraria (%d)": "🚓 Multa per guida pericolosa (%d)",
+  "Caja inglesa": "Scatola inglese",
+  "Cuatro tribunas pegadas al césped: poco aforo y mucho ruido.": "Quattro tribune a ridosso del prato: pochi posti e tanto rumore.",
+  "Asimétrico": "Asimmetrico",
+  "Una tribuna de honor más alta y un fondo a cielo abierto.": "Una tribuna d'onore più alta e una curva a cielo aperto."
  },
  "de": {
   "Historia": "Geschichte",
@@ -13003,7 +13019,11 @@
   "Práctica libre": "Freies Training",
   "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Dein Team auf dem Platz gegen Hütchen: Pässe, Schüsse, Dribblings und Tricks ohne Uhr ausprobieren.",
   "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Freies Training: probiere die Steuerung aus. Der Gegner presst nicht und die Uhr läuft nicht. Esc zum Verlassen.",
-  "🚓 Multa por conducción temeraria (%d)": "🚓 Strafe wegen rücksichtslosen Fahrens (%d)"
+  "🚓 Multa por conducción temeraria (%d)": "🚓 Strafe wegen rücksichtslosen Fahrens (%d)",
+  "Caja inglesa": "Englische Box",
+  "Cuatro tribunas pegadas al césped: poco aforo y mucho ruido.": "Vier Tribünen direkt am Rasen: wenig Plätze und viel Lärm.",
+  "Asimétrico": "Asymmetrisch",
+  "Una tribuna de honor más alta y un fondo a cielo abierto.": "Eine höhere Haupttribüne und eine offene Hintertorseite."
  },
  "ca": {
   "Historia": "Història",
@@ -15428,7 +15448,11 @@
   "Práctica libre": "Pràctica lliure",
   "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "El teu equip a la gespa contra cons: prova passades, xuts, regats i filigranes sense rellotge.",
   "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Pràctica lliure: prova els controls. El rival no pressiona i el rellotge no corre. Esc per sortir.",
-  "🚓 Multa por conducción temeraria (%d)": "🚓 Multa per conducció temerària (%d)"
+  "🚓 Multa por conducción temeraria (%d)": "🚓 Multa per conducció temerària (%d)",
+  "Caja inglesa": "Caixa anglesa",
+  "Cuatro tribunas pegadas al césped: poco aforo y mucho ruido.": "Quatre tribunes enganxades a la gespa: poc aforament i molt soroll.",
+  "Asimétrico": "Asimètric",
+  "Una tribuna de honor más alta y un fondo a cielo abierto.": "Una tribuna d'honor més alta i un fons a cel obert."
  },
  "pl": {
   "Club": "Klub",
@@ -18148,7 +18172,11 @@
   "Práctica libre": "Wolny trening",
   "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Twoja drużyna na boisku przeciw pachołkom: ćwicz podania, strzały, dryblingi i sztuczki bez zegara.",
   "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Wolny trening: wypróbuj sterowanie. Rywal nie naciska, a zegar nie biegnie. Esc, aby wyjść.",
-  "🚓 Multa por conducción temeraria (%d)": "🚓 Mandat za niebezpieczną jazdę (%d)"
+  "🚓 Multa por conducción temeraria (%d)": "🚓 Mandat za niebezpieczną jazdę (%d)",
+  "Caja inglesa": "Angielskie pudełko",
+  "Cuatro tribunas pegadas al césped: poco aforo y mucho ruido.": "Cztery trybuny tuż przy murawie: mało miejsc i dużo hałasu.",
+  "Asimétrico": "Asymetryczny",
+  "Una tribuna de honor más alta y un fondo a cielo abierto.": "Wyższa trybuna honorowa i jedna strona za bramką otwarta."
  },
  "tr": {
   "Club": "Kulüp",
@@ -20868,6 +20896,10 @@
   "Práctica libre": "Serbest antrenman",
   "Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj.": "Takımın sahada dubalara karşı: pas, şut, çalım ve hünerleri süre olmadan dene.",
   "🎯 Práctica libre: prueba los controles. El rival no presiona y el reloj no corre. Esc para salir.": "🎯 Serbest antrenman: kontrolleri dene. Rakip baskı yapmaz ve süre işlemez. Çıkmak için Esc.",
-  "🚓 Multa por conducción temeraria (%d)": "🚓 Tehlikeli sürüş cezası (%d)"
+  "🚓 Multa por conducción temeraria (%d)": "🚓 Tehlikeli sürüş cezası (%d)",
+  "Caja inglesa": "İngiliz kutusu",
+  "Cuatro tribunas pegadas al césped: poco aforo y mucho ruido.": "Çime yapışık dört tribün: az kapasite, çok gürültü.",
+  "Asimétrico": "Asimetrik",
+  "Una tribuna de honor más alta y un fondo a cielo abierto.": "Daha yüksek bir şeref tribünü ve açık bir kale arkası."
  }
 }

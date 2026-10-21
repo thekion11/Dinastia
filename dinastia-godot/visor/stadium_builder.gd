@@ -869,6 +869,13 @@ static func geom_de_forma(forma: String) -> Dictionary:
 			return {"dz": 67.0, "dx": 47.0, "esquinas": false, "abierta": -1, "abiertas": [0, 1]}
 		"principal":
 			return {"dz": 67.0, "dx": 48.0, "esquinas": false, "abierta": -1, "principal": 2}
+		## (21-10-2026, M-002) «estrecho»: caja pegada al césped, sin esquinas
+		## (los campos ingleses modernos); «asimetrico»: la tribuna de honor más
+		## alta y un fondo a cielo abierto.
+		"estrecho":
+			return {"dz": 62.5, "dx": 43.5, "esquinas": false, "abierta": -1}
+		"asimetrico":
+			return {"dz": 66.0, "dx": 47.0, "esquinas": false, "abierta": 1, "principal": 2}
 		_:  # cuenco
 			return {"dz": 68.0, "dx": 49.0, "esquinas": true, "abierta": -1}
 
