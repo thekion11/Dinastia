@@ -148,7 +148,7 @@ $hechos = @()
 
 if ($Formato -eq "completo" -or $Formato -eq "todos") {
   $dir = Join-Path $entregas "windows"
-  Exportar "Windows" (Join-Path $dir "DINASTIA.exe")
+  Exportar "Windows Desktop" (Join-Path $dir "DINASTIA.exe")
   # LAS CAMISETAS REALES VAN AL LADO DEL .EXE, no dentro: `KitTextureFactory`
   # las busca por ruta relativa al ejecutable. Sin esta copia el juego arranca
   # igual pero dibuja las camisetas en vez de usar las fotos.

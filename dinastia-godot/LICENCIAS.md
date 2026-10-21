@@ -14,7 +14,7 @@ tienda (Steam, itch.io, Google Play...). Se excluye solo de las exportaciones (`
 
 Versiones (ver `herramientas/empaquetar.ps1`):
 
-- **completo** (`preset "Windows"`): PRIVADA. Lleva el pack real, las caras reales, las camisetas
+- **completo** (`preset "Windows Desktop"`): PRIVADA. Lleva el pack real, las caras reales, las camisetas
   reales y el modelo viejo. Es para jugar tú. **No se publica.**
 - **ligero / web / apk / zip** (`presets "WindowsLigero"`, `"Web"`, `"Android"`): PUBLICABLES.
   Base ficticia, sin nada 🔴.
