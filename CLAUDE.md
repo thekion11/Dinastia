@@ -654,3 +654,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   la grada (M-033), cuerpo por físico (M-081, `PersonajeDT.cuerpo_futbolista`), gatillos de presión (M-124).
   ESTADO_MEJORAS: HECHO 110 · PARCIAL 115 · PENDIENTE 227. OJO: en el motor, NO usar los dict de jugador como
   clave de Dictionary (cambian y la búsqueda falla): usar p["id"].
+- 21-10 («Sigue»): HECHO directiva en el palco (M-040, `VistaEstadio.poner_directiva`, `_a_la_butaca` también para el
+  DT sancionado, que flotaba), choques del coche con golpe/claxon/multa (M-172), piel y pelo por país en los
+  inventados (M-088, `Cara.TONO_MEDIO`/`RUBIOS`; usar `String.hash()`, djb2 con la misma cola correlaciona),
+  formas de estadio por tamaño + «estrecho» y «asimetrico» (M-002). ESTADO_MEJORAS: HECHO 114 · PARCIAL 115 · PEND. 223.
