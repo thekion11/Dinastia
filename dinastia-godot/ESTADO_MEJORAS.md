@@ -12,6 +12,10 @@ Estado contado sobre las filas de este documento tras la pasada: **HECHO 94 · P
 
 Cerrados en esta pasada (cada uno con prueba o captura): público (M-034 piel por país, M-036 onda y ola, M-045 protesta, M-047 colores del club, M-049 siguen el balón), partido (M-119 lectura del lanzador en la tanda, parcial; M-127 gestión del tiempo; M-137 xA; M-139 añadido por entradas duras; M-162 CSV), gestión (M-224 camisetas del ídolo, M-227 mantenimiento, M-228 imprevistos de obra, M-237 capitán votado, M-246 alineación indebida), interfaz (M-288 fondos ligeros, M-301 autoguardado visible, M-309 créditos), textos y datos (M-240 política/religión, M-331 tocayos, M-335 glifos), código y pruebas (M-358 FPS, M-381 prints, M-389 reimportar, M-395 requirements, M-412 guardados estropeados). Ya hechos antes y marcados ahora: M-104, M-114, M-115, M-123, M-132, M-151.
 
+### Pasada del 21-10 (segunda, secciones A-F)
+
+Estado tras ella: **HECHO 102 · PARCIAL 111 · PENDIENTE 239**. Cerrados: M-021 sector visitante, M-059 reparto de marcas, M-062 escudos únicos, M-073 brazalete de capitán (no se ponía nunca y con la base real no había capitanes), M-098 la cabeza sigue al balón, M-105 protesta al ver tarjeta, M-107 jueces de línea con el penúltimo defensor, M-175 faros y luces de freno; parciales: M-085 canas, M-102 banquillo ante la roja, M-183 menos gente de madrugada.
+
 ## 1. Resumen en cifras
 
 | Sección | Puntos | HECHO | PARCIAL | PENDIENTE | 🔒 DUEÑO | SIN VERIF. |
