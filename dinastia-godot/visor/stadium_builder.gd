@@ -1432,6 +1432,20 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 					techo in ["anillo", "total", "membrana", "retractil"])
 				caras_fachada.append_array(_caras_esquina(sx, sz, dx, dz, alto, niveles,
 					techo in ["anillo", "total", "membrana", "retractil"]))
+	elif abiertas.is_empty():
+		## ESQUINAS CERRADAS EN LAS FORMAS SIN GRADA DE ESQUINA (21-10-2026, «el
+		## estadio por fuera»): en «rect» y «principal» quedaban cuatro huecos por
+		## los que se veía el revés de las gradas. Como en los estadios ingleses,
+		## cada esquina la cierra un edificio bajo de servicios con su fachada.
+		for sx in [1.0, -1.0]:
+			for sz in [1.0, -1.0]:
+				var p0 := Vector3(sx * (dx - FRENTE_TRIBUNA), 0.0, sz * (dz - FRENTE_TRIBUNA))
+				var lado_e := fondo_trib + 2.0
+				var alto_e := maxf(alto * 0.55, 7.0)
+				var c_e := p0 + Vector3(sx, 0.0, sz) * (lado_e * 0.5)
+				_box(root, Vector3(c_e.x, alto_e / 2.0, c_e.z), Vector3(lado_e, alto_e, lado_e), stand_mat)
+				for n: Vector3 in [Vector3(sx, 0, 0), Vector3(0, 0, sz)]:
+					caras_fachada.append(FachadaEstadio.cara(c_e + n * (lado_e * 0.5), n, lado_e, alto_e, "esquina", false, lado_e, niveles))
 
 	# vallas perimetrales, siempre por dentro de la cara interior de la tribuna
 	_tm("esquinas")
