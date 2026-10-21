@@ -99,6 +99,8 @@ const SECCIONES := [
 	"_probar_capitan_votado",
 	"_probar_glifos_idiomas",
 	"_probar_nombres_repetidos",
+	"_probar_marcas_y_escudos",
+	"_probar_faros_coches",
 	"_probar_historia_c4",
 	"_probar_contratos_c9",
 	"_probar_vida_dt",
@@ -198,7 +200,7 @@ const GRUPOS := {
 		"_probar_arreglos_partido_motor", "_probar_prorroga_y_penales", "_probar_partido_abandonado", "_probar_tanda_c",
 		"_probar_notas", "_probar_dificultad_cpu"],
 	"guardado": ["_probar_guardado", "_probar_guardado_seguro", "_probar_partido_abandonado", "_probar_repetibilidad"],
-	"ciudad": ["_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
+	"ciudad": ["_probar_faros_coches", "_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
 		"_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
 	"estadio": ["_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
 		"_probar_edificio_club", "_probar_personal_estadio", "_probar_interiores_club", "_probar_galeria_club",
@@ -212,7 +214,7 @@ const GRUPOS := {
 }
 
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_capitan_votado": 2.0, "_probar_glifos_idiomas": 0.5, "_probar_nombres_repetidos": 2.0, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
+	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_capitan_votado": 2.0, "_probar_glifos_idiomas": 0.5, "_probar_nombres_repetidos": 2.0, "_probar_marcas_y_escudos": 4.0, "_probar_faros_coches": 0.3, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
 	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
 	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
 	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
@@ -3754,7 +3756,18 @@ func _probar_faltas_puntos() -> void:
 	var an1 := float(motor.anadido[motor.mitad - 1]) if an0 >= 0.0 else -1.0
 	_comprobar(an0 >= 0.0 and an1 > an0, "M-139: la entrada dura suma añadido (%.2f → %.2f)" % [an0, an1])
 	_comprobar(String(motor.ultima_falta.get("sancion", "")) == "roja", "se pita roja directa (%s)" % str(motor.ultima_falta))
+	_comprobar(String(defensa.get("anim_actual", "")) in ["discutir_arbitro", "protestar"], "M-105: el amonestado protesta al árbitro (%s)" % String(defensa.get("anim_actual", "")))
 	_comprobar(motor.jugadores.size() == antes - 1 or bool(defensa.get("expulsado", false)), "y el infractor se va del campo")
+	## M-107: el juez de línea va a la altura del penúltimo defensor.
+	var def_mas: Array = []
+	for p: Dictionary in motor.jugadores:
+		if signf(motor._arco_propio(p).z) > 0.0:
+			def_mas.append(p)
+	for i in def_mas.size():
+		(def_mas[i]["node"] as Node3D).position = Vector3(float(i) * 2.0 - 10.0, 0, 5.0)
+	(def_mas[0]["node"] as Node3D).position = Vector3(0, 0, 51.0)
+	(def_mas[1]["node"] as Node3D).position = Vector3(5, 0, 33.0)
+	_comprobar(is_equal_approx(motor.linea_fuera_de_juego(1.0), 33.0), "M-107: la línea del fuera de juego es la del penúltimo (%.1f)" % motor.linea_fuera_de_juego(1.0))
 	raiz.queue_free()
 
 func _probar_fisica_motor() -> void:
@@ -7650,6 +7663,77 @@ func _probar_capitan_votado() -> void:
 ## letra que falta sale como un cuadrado vacío.
 ## M-331 (20-10): con las bolsas de nombres por país, un mundo no se llena de
 ## tocayos. Se mide cuántos nombres completos se repiten en tres ligas.
+## M-059 y M-062 (20-10): en un mundo grande, ninguna marca de patrocinio sale
+## más del doble de la media, y los escudos (forma + dibujo + colores + iniciales
+## o símbolo) no se repiten entre clubes.
+## M-175 (20-10): de noche los coches llevan faros y se avivan al frenar.
+func _probar_faros_coches() -> void:
+	_titulo("M-175: FAROS Y LUCES DE FRENO")
+	var t := TraficoCiudad.new()
+	add_child(t)
+	var ruta := t.agregar_ruta(PackedVector3Array([Vector3(0, 0, 0), Vector3(0, 0, 100), Vector3(50, 0, 100)]))
+	var coche := Node3D.new()
+	var caja := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(1.8, 1.4, 4.3)
+	caja.mesh = bm
+	caja.position.y = 0.7
+	coche.add_child(caja)
+	t.agregar_vehiculo(coche, ruta, 10.0, 12.0, 0.0, 0.0)
+	t.faros(0.0)
+	_comprobar(coche.get_node_or_null("Faros") == null, "de día no se crean faros")
+	t.faros(0.9)
+	var f := coche.get_node_or_null("Faros") as MeshInstance3D
+	_comprobar(f != null and f.mesh != null and f.mesh.get_faces().size() == 24, "de noche cada coche lleva 4 luces en una sola malla")
+	_comprobar(f != null and f.get_aabb().end.z > 2.1 and f.get_aabb().position.z < -2.1, "delante y detrás del coche (%s)" % (str(f.get_aabb()) if f != null else "-"))
+	_comprobar(t._mat_faros != null and is_equal_approx(float(t._mat_faros.get_shader_parameter("noche")), 0.9), "el brillo sigue a la noche")
+	t.free()
+
+func _probar_marcas_y_escudos() -> void:
+	_titulo("M-059/M-062: MARCAS Y ESCUDOS EN TODO EL MUNDO")
+	var m := Mundo.new()
+	var paises: Array[String] = []
+	for pais: String in (Datos.tabla("PAISES_LIGAS") as Dictionary):
+		paises.append(pais)
+	m.generar(paises, 5962)
+	var cuenta := {}
+	var zonas := 0
+	var firmas := {}
+	var repetidos: Array = []
+	for c: Club in m.clubes.values():
+		var sp := SponsorKit.de_club(c)
+		for z: String in sp:
+			var marca := String((sp[z] as Dictionary).get("marca", ""))
+			cuenta[marca] = int(cuenta.get(marca, 0)) + 1
+			zonas += 1
+		var firma := "%s|%s|%s|%s|%s|%s" % [Escudo.forma_de(c), Escudo.patron_de(c), c.color1.to_lower(), c.color2.to_lower(),
+			Escudo.simbolo_de(c), Escudo.iniciales(c) if Escudo.simbolo_de(c) == "" else ""]
+		if firmas.has(firma):
+			repetidos.append("%s = %s" % [c.nombre, firmas[firma]])
+		firmas[firma] = c.nombre
+	var media := float(zonas) / float(maxi(1, Auspicio.marcas().size()))
+	var peor := ""
+	for k: String in cuenta:
+		if peor == "" or int(cuenta[k]) > int(cuenta[peor]):
+			peor = k
+	_linea("  %d clubes, %d zonas patrocinadas, %d marcas; media %.1f, la que más: %s ×%d" % [m.clubes.size(), zonas, cuenta.size(), media, peor, int(cuenta.get(peor, 0))])
+	_comprobar(m.clubes.size() > 300, "un mundo grande (%d clubes)" % m.clubes.size())
+	_comprobar(float(cuenta.get(peor, 0)) <= 2.0 * media, "M-059: ninguna marca pasa del doble de la media (%s ×%d, media %.1f)" % [peor, int(cuenta.get(peor, 0)), media])
+	## M-085: canas con la edad en los inventados.
+	var jv: Jugador = null
+	for c: Club in m.clubes.values():
+		for j: Jugador in c.plantilla:
+			if not j.real and jv == null:
+				jv = j
+	var edad0 := jv.edad
+	jv.edad = 24
+	var joven := Color(String(Cara.look_de(jv).get("peloC", "#000000")))
+	jv.edad = 39
+	var viejo := Color(String(Cara.look_de(jv).get("peloC", "#000000")))
+	jv.edad = edad0
+	_comprobar(viejo.s < joven.s, "M-085: a los 39 el pelo tiene canas (%s → %s)" % [joven.to_html(false), viejo.to_html(false)])
+	_comprobar(repetidos.is_empty(), "M-062: ningún escudo repetido entre clubes (%d: %s)" % [repetidos.size(), str(repetidos.slice(0, 5))])
+
 func _probar_nombres_repetidos() -> void:
 	_titulo("M-331: NOMBRES REPETIDOS EN UN MUNDO")
 	var m := Mundo.new()

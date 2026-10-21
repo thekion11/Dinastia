@@ -220,7 +220,13 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 				_pie.text = _pie_base)
 	StadiumBuilder.build_pitch(_raiz3d, perfil, club)
 	## La semilla sale del id del club: el mismo recinto siempre.
-	StadiumBuilder.build(_raiz3d, perfil, aforo, ocupacion, club._hash_id(), club)
+	## M-021: los colores del rival para su sector de la grada (solo en partido).
+	var perfil_b := perfil
+	if visitante != null and visitante != club:
+		perfil_b = perfil.duplicate()
+		perfil_b["visita1"] = visitante.color1
+		perfil_b["visita2"] = visitante.color2
+	StadiumBuilder.build(_raiz3d, perfil_b, aforo, ocupacion, club._hash_id(), club)
 	## La piel de la grada, la del país del club de casa (M-034).
 	OlaGrada.piel_de_pais(_raiz3d, club.pais if club != null else "")
 	## LA PANTALLA GIGANTE (22-9-2026, rehecha el 23-9). Ahora se monta SIEMPRE,
