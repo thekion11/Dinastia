@@ -595,11 +595,18 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 	if _boton_e != null:
 		var hay := _aviso.text.strip_edges() != ""
 		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
+		_boton_e.visible = hay or es_tactil()
 		_boton_e.tooltip_text = _aviso.text
 
 ## CONTROLES TÁCTILES (el juego también va en Android): cruceta abajo a la
 ## izquierda, «E» y «Salir» abajo a la derecha. Mantener pulsado = tecla.
 var _tactil_vec := Vector2.ZERO
+
+## ¿Pantalla táctil? En PC (21-10-2026, vídeo de gameplay) la cruceta, la E y
+## «Salir» tapaban la imagen: ahí se usan las teclas, y la E solo aparece,
+## brillando, cuando hay algo con lo que interactuar.
+static func es_tactil() -> bool:
+	return DisplayServer.is_touchscreen_available() or OS.get_environment("TACTIL") != ""
 
 func _tactil(capa: CanvasLayer) -> void:
 	var tam := 74.0
@@ -608,7 +615,7 @@ func _tactil(capa: CanvasLayer) -> void:
 	base.offset_left = 24
 	base.offset_top = -tam * 3.0 - 24
 	## Solo en pantallas táctiles (en PC ocupaba el rincón del GPS).
-	base.visible = DisplayServer.is_touchscreen_available() or OS.get_environment("TACTIL") != ""
+	base.visible = es_tactil()
 	capa.add_child(base)
 	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
 			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
@@ -643,6 +650,7 @@ func _tactil(capa: CanvasLayer) -> void:
 	bs.custom_minimum_size = Vector2(tam * 1.6, tam)
 	bs.modulate = Color(1, 1, 1, 0.75)
 	bs.pressed.connect(func() -> void: salir.emit())
+	bs.visible = es_tactil()
 	der.add_child(bs)
 
 func _entrada() -> Vector2:
