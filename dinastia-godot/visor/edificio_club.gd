@@ -222,8 +222,41 @@ static func reconstruir(viejo: Node3D) -> void:
 	var a: Array = viejo.get_meta("args")
 	var padre := viejo.get_parent()
 	padre.remove_child(viejo)
+	## Los muebles modulares no se tiran: vuelven a la reserva y el edificio
+	## nuevo los vuelve a sacar de ahí (`Modulos`).
+	for n in viejo.find_children("Pieza_*", "Node3D", true, false):
+		if (n as Node3D).has_meta("pieza"):
+			Modulos.devolver(n as Node3D)
 	viejo.queue_free()
 	montar(padre, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7])
+
+## Un mueble del catálogo común (`Modulos`) en `p`, girado `giro` (de frente,
+## +Z). `solida`: con su caja de choque, como las cajas de siempre.
+static func _mod(nodo: Node3D, nombre: String, p: Vector3, giro: float, solida := false, esc: Variant = null, tonos: Dictionary = {}) -> Node3D:
+	if not Modulos.existe(nombre):
+		return null
+	var n := Modulos.tomar(nombre, esc, tonos)
+	n.position = p
+	n.rotation.y = giro
+	nodo.add_child(n)
+	if solida:
+		var caja: AABB = Modulos.datos(nombre)["caja"]
+		var e: Vector3 = n.get_meta("escala", Vector3.ONE)
+		var cuerpo := StaticBody3D.new()
+		var forma := CollisionShape3D.new()
+		var bs := BoxShape3D.new()
+		bs.size = caja.size * e
+		forma.shape = bs
+		forma.position = caja.get_center() * e
+		cuerpo.add_child(forma)
+		n.add_child(cuerpo)
+	return n
+
+## Lo alto que queda una pieza (para poner otra encima).
+static func _alto_mod(nombre: String) -> float:
+	if not Modulos.existe(nombre):
+		return 0.0
+	return (Modulos.datos(nombre)["caja"] as AABB).end.y * Modulos.escala(nombre).y
 
 ## PERSONALIZAR (fase 5): pintura de las paredes, los objetos de los seis
 ## huecos y los cuatro marcos con tus fotos.
@@ -265,8 +298,60 @@ static func _decorar(nodo: Node3D, sala: String, a: float, b: float, z_out: floa
 		var z := z_out + fondo * (0.3 if i % 2 == 0 else 0.62)
 		_marco_foto(nodo, ruta, Vector3(x, y0 + 1.75, z), lado)
 
-## Un objeto del catálogo de `InterioresClub`, hecho con piezas sencillas.
+## LOS OBJETOS DE DECORACIÓN COMO CONJUNTOS DE PIEZAS (21-10-2026): antes eran
+## cajas y esferas; los que existen en el catálogo común (`Modulos`) se arman con
+## muebles de verdad. Cada uno es una lista de piezas [pieza, encima_de, escala]:
+## encima_de = -1 en el suelo, i = sobre la pieza i, -2 = a media altura (los
+## libros en la estantería). Los muy del club (trofeo, bandera, bufanda, pizarra,
+## maqueta, guitarra, balón) siguen hechos a mano con sus colores.
+const DECO_MODULAR := {
+	"planta": [["pottedPlant", -1, 2.2]],
+	"sofa": [["loungeSofa", -1, null]],
+	"tele": [["cabinetTelevision", -1, null], ["televisionModern", 0, null]],
+	"alfombra": [["rugRound", -1, null]],
+	"lampara": [["lampRoundFloor", -1, null]],
+	"estanteria": [["bookcaseOpen", -1, null], ["books", -2, null]],
+	"cafe": [["sideTable", -1, null], ["kitchenCoffeeMachine", 0, null]],
+	"escritorio": [["deskCorner", -1, null], ["laptop", 0, null]],
+	"sillon": [["loungeChairRelax", -1, null]],
+	"mesa_baja": [["tableCoffee", -1, null]],
+	"radio": [["sideTableDrawers", -1, null], ["radio", 0, null]],
+	"perchero": [["coatRackStanding", -1, null]],
+	"altavoz": [["speaker", -1, null]],
+	"nevera": [["kitchenFridgeSmall", -1, null]],
+}
+
+## Los datos de un objeto de decoración para `Modulos.de_datos`.
+static func datos_deco(clave: String) -> Array:
+	var sal: Array = []
+	for d: Array in DECO_MODULAR.get(clave, []):
+		var nombre := String(d[0])
+		var sobre := int(d[1])
+		var y := 0.0
+		if sobre >= 0 and sobre < sal.size():
+			y = float((sal[sobre]["p"] as Array)[1]) + _alto_mod(String(sal[sobre]["pieza"]))
+		elif sobre == -2:
+			y = 0.9
+		var e: Vector3 = Modulos.escala(nombre, d[2])
+		sal.append({"pieza": nombre, "p": [0.0, y, 0.0], "giro": 0.0, "s": [e.x, e.y, e.z]})
+	return sal
+
+## Un objeto del catálogo de `InterioresClub`: un conjunto de piezas si lo hay
+## (`DECO_MODULAR`), o hecho a mano con piezas sencillas.
 static func _objeto(nodo: Node3D, clave: String, p: Vector3, giro: float, c1: Color, c2: Color) -> void:
+	if DECO_MODULAR.has(clave):
+		var datos := datos_deco(clave)
+		## La tela de sofás, sillones y alfombras, del color del club.
+		if clave in ["sofa", "sillon", "alfombra"]:
+			for d: Dictionary in datos:
+				d["tonos"] = {"carpet": c1.lerp(Color(0.15, 0.15, 0.17), 0.3).to_html(false)}
+		var conjunto := Modulos.de_datos(datos, "Deco_" + clave)
+		if conjunto.get_child_count() > 0:
+			conjunto.position = p
+			conjunto.rotation.y = giro
+			nodo.add_child(conjunto)
+			return
+		conjunto.free()
 	var raiz := Node3D.new()
 	raiz.position = p
 	raiz.rotation.y = giro
@@ -482,12 +567,21 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 				TunelVestuario._caja(nodo, Vector3(caja.end.x - 0.1, y0 + 1.6, caja.position.y + 0.5 + k), Vector3(0.1, 1.2, 0.85), gris, false)
 			TunelVestuario._rotulo(nodo, Idiomas.t("VISITANTE"), Vector3(cx, y0 + 2.6, caja.position.y + 0.05), 0.0, 60, Color(0.3, 0.3, 0.35))
 		"Oficina del DT":
-			## Escritorio con ordenador, sillón, estantería con la copa y la pizarra.
-			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.75, cz - 0.6), Vector3(2.0, 0.08, 0.9), madera, true)
-			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.37, cz - 0.6), Vector3(1.9, 0.74, 0.8), madera, false)
-			TunelVestuario._caja(nodo, Vector3(cx, y0 + 1.05, cz - 0.85), Vector3(0.7, 0.45, 0.04), oscuro, false)
-			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.5, cz + 0.3), Vector3(0.6, 1.0, 0.6), oscuro, true)
-			TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.3, y0 + 1.1, cz), Vector3(0.4, 2.2, 2.0), madera, true)
+			## (21-10-2026) Muebles de verdad del catálogo común, no cajas: mesa
+			## con monitor, teclado y lámpara, sillón de despacho, estantería con
+			## libros, sofá de espera, alfombra, planta, perchero y la pizarra.
+			_mod(nodo, "rugRectangle", Vector3(cx, y0, cz - 0.1), 0.0, false, null, {"carpet": c1.lerp(Color(0.2, 0.2, 0.2), 0.5)})
+			_mod(nodo, "desk", Vector3(cx, y0, cz - 0.6), 0.0, true)
+			var sobre := y0 + _alto_mod("desk")
+			_mod(nodo, "computerScreen", Vector3(cx, sobre, cz - 0.85), 0.0)
+			_mod(nodo, "computerKeyboard", Vector3(cx, sobre, cz - 0.45), 0.0)
+			_mod(nodo, "lampSquareTable", Vector3(cx + 0.75, sobre, cz - 0.8), 0.0)
+			_mod(nodo, "chairDesk", Vector3(cx, y0, cz + 0.25), PI, true)
+			_mod(nodo, "bookcaseOpen", Vector3(caja.position.x + 0.3, y0, cz - 0.4), PI * 0.5, true)
+			_mod(nodo, "books", Vector3(caja.position.x + 0.3, y0 + 0.9, cz - 0.4), PI * 0.5)
+			_mod(nodo, "loungeSofa", Vector3(caja.end.x - 0.55, y0, cz + 0.6), -PI * 0.5, true, null, {"carpet": c1.lerp(Color(0.15, 0.15, 0.17), 0.35)})
+			_mod(nodo, "pottedPlant", Vector3(caja.end.x - 0.45, y0, caja.position.y + 0.5), 0.0, false, 2.2)
+			_mod(nodo, "coatRackStanding", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.6), 0.0)
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 1.7, caja.position.y + 0.05), Vector3(2.4, 1.2, 0.05), TunelVestuario._mat(Color(0.95, 0.96, 0.97), 0.3), false)
 			TunelVestuario._rotulo(nodo, nombre_club.to_upper(), Vector3(cx, y0 + 2.55, caja.position.y + 0.1), 0.0, 40, c1)
 		"Despacho del presidente":
@@ -498,6 +592,12 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 				var mastil := TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.6 + k * 0.6, y0 + 1.2, caja.position.y + 0.5), Vector3(0.05, 2.4, 0.05), Texturas.metal(Color(0.8, 0.7, 0.3), 0.3), false)
 				mastil.name = "Mastil"
 				TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.85 + k * 0.6, y0 + 2.0, caja.position.y + 0.5), Vector3(0.5, 0.35, 0.02), club if k == 0 else TunelVestuario._mat(c2, 0.6), false)
+			_mod(nodo, "chairModernFrameCushion", Vector3(cx - 0.6, y0, cz + 0.5), PI)
+			_mod(nodo, "chairModernFrameCushion", Vector3(cx + 0.6, y0, cz + 0.5), PI)
+			_mod(nodo, "loungeDesignSofa", Vector3(caja.end.x - 0.6, y0, cz + 0.4), -PI * 0.5, true, null, {"carpet": c1.lerp(Color(0.15, 0.15, 0.17), 0.35)})
+			_mod(nodo, "tableCoffeeGlass", Vector3(caja.end.x - 1.6, y0, cz + 0.4), PI * 0.5)
+			_mod(nodo, "lampRoundFloor", Vector3(caja.end.x - 0.45, y0, caja.position.y + 0.5), 0.0)
+			_mod(nodo, "pottedPlant", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.5), 0.0, false, 2.2)
 			var pres := String(ctx.get("presidente", ""))
 			if pres != "":
 				TunelVestuario._rotulo(nodo, pres, Vector3(cx, y0 + 0.95, cz + 0.27), 0.0, 22, Color(0.95, 0.85, 0.5))
@@ -510,7 +610,9 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 1.7, caja.position.y + 0.12), Vector3(caja.size.x - 1.2, 1.4, 0.02), pant, false)
 			for f in filas:
 				for k in int((caja.size.x - 1.0) / 0.8):
-					TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.9 + k * 0.8, y0 + 0.45, caja.position.y + 2.2 + f * 1.1), Vector3(0.6, 0.9, 0.6), club, true)
+					## Butacas de cine de verdad (antes, cubos del color del club).
+					if _mod(nodo, "loungeChair", Vector3(caja.position.x + 0.9 + k * 0.8, y0, caja.position.y + 2.2 + f * 1.1), PI, true, 1.25) == null:
+						TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.9 + k * 0.8, y0 + 0.45, caja.position.y + 2.2 + f * 1.1), Vector3(0.6, 0.9, 0.6), club, true)
 		"Sala de prensa":
 			var tipo := String((ctx.get("dentro", {}) as Dictionary).get("sala_prensa", "mesa"))
 			var filas2 := 2 if tipo == "mesa" else (3 if tipo == "decente" else 4)
@@ -522,7 +624,8 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.37, caja.position.y + 1.35), Vector3(3.0, 0.74, 0.05), oscuro, false)
 			for f2 in filas2:
 				for k in int((caja.size.x - 1.6) / 0.75):
-					TunelVestuario._caja(nodo, Vector3(caja.position.x + 1.0 + k * 0.75, y0 + 0.45, caja.position.y + 3.0 + f2 * 1.0), Vector3(0.5, 0.9, 0.5), oscuro, false)
+					if _mod(nodo, "chairCushion", Vector3(caja.position.x + 1.0 + k * 0.75, y0, caja.position.y + 3.0 + f2 * 1.0), PI) == null:
+						TunelVestuario._caja(nodo, Vector3(caja.position.x + 1.0 + k * 0.75, y0 + 0.45, caja.position.y + 3.0 + f2 * 1.0), Vector3(0.5, 0.9, 0.5), oscuro, false)
 			if tipo == "television":
 				for k in 3:
 					TunelVestuario._caja(nodo, Vector3(caja.position.x + 1.5 + k * 2.2, y0 + 1.5, caja.end.y - 0.5), Vector3(0.4, 0.3, 0.6), oscuro, false)
