@@ -126,7 +126,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-070 | P2 | Sin segunda/tercera camiseta con diseño propio | PENDIENTE | sin tercera equipación |
 | M-071 | P2 | Portero: color por contraste, sin diseño | PENDIENTE | portero solo por contraste; guantes como color de accesorio |
 | M-072 | P2 | Árbitros siempre iguales | HECHO | 17-10: `Puente3D.kit_arbitro` (8 camisetas; la que más contrasta con los dos equipos y los porteros, estable por partido) |
-| M-073 | P2 | Sin brazalete de capitán visible a distancia | PARCIAL | `acc_brazalete` existe en el shader; sin refuerzo de contraste a distancia |
+| M-073 | P2 | Sin brazalete de capitán visible a distancia | HECHO | 21-10: el brazalete NO se ponía nunca (el shader lo tenía, nadie lo activaba) y con la base real ningún club tenía capitán. Ahora cada club tiene capitán al generarse, la cinta la hereda el veterano del once si el capitán no juega (`Puente3D.once`), y el brazalete (amarillo, o blanco con camiseta amarilla, más ancho) va en una copia del material (`PlayerSpawner.poner_brazalete`) |
 | M-074 | P2 | Medias/pantalón: diseño correcto pero sin franjas del fabricante | PENDIENTE | sin franjas del fabricante en medias/pantalón |
 | M-075 | P2 | Dorsal sin fuente propia por club | PENDIENTE | dorsal en siete segmentos, una sola fuente |
 | M-076 | P3 | Sin parches de competición (campeón, copa) | PENDIENTE | sin parches de competición |
@@ -160,7 +160,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-099 | P2 | Cuerpos sin colisión entre brazos/piernas (solapes sólo en XZ) | PARCIAL | cuerpos que se empujan y duelos en el motor (`MotorJugable._cuerpos`, 17-10), en 2D; sin cápsulas 3D |
 | M-100 | P2 | Sin respiración/cansancio visible (manos a rodillas) | HECHO | `MotorJugable` pone el clip «cansado» (manos a rodillas) con forma < 0,6 (l.3440) |
 | M-101 | P2 | Celebraciones por rasgo (ya) pero sólo 2/3 propias | PARCIAL | carrera al córner y abrazo (`_ia_celebracion`); sin 10 por rasgo ni coreografías |
-| M-102 | P2 | Sin reacciones de banquillo coordinadas | PARCIAL | el banquillo celebra el gol (`ui/estadio.gd` `_banca_celebra`); sin tarjeta/lesión |
+| M-102 | P2 | Sin reacciones de banquillo coordinadas | PARCIAL | celebra el gol (`_banca_celebra`); 21-10: protesta la roja de uno de los suyos (`_banca_protesta`); falta la lesión |
 | M-103 | P2 | Lesiones sin animación específica | PARCIAL | clip de dolor (`AnimQuaternius`); sin camilla ni médicos en campo |
 | M-104 | P2 | Cambios de jugador sin animación (entra/sale) | HECHO | 17-10, con motor: cartel LED del cuarto árbitro con los dos dorsales (`CuartoArbitro.levantar_cambio`), el que entra espera en la banda, el que sale camina hasta él, palmada (`chocar_mano`) y se va (`visor/escena_cambio.gd`). 20-10: también en la Carrera de Jugador (`PartidoJugable._escena_cambio`) |
 | M-105 | P2 | Sin tarjetas con ceremonia de árbitro detallada | HECHO | 21-10: con cada tarjeta el amonestado protesta mirando al árbitro (`discutir_arbitro`, `MotorJugable._protestar`) mientras este habla y enseña la cartulina |
@@ -251,7 +251,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-180 | P2 | Metro: sin vendedores/música/anuncios | PARCIAL | anuncios en el vagón (`MetroCiudad.ANUNCIOS`); sin vendedores ni música |
 | M-181 | P2 | Sin pasajeros que suben/bajan reales en tren | HECHO | gente que sube y baja por sub-pasos y puertas (`metro_ciudad.gd`, 16-10) |
 | M-182 | P2 | Sin tarjeta de transporte ni coste | PENDIENTE | máquinas de billetes decorativas; sin coste |
-| M-183 | P2 | Peatones: 34 máx; sin rutinas por hora | PENDIENTE | sin rutinas por hora |
+| M-183 | P2 | Peatones: 34 máx; sin rutinas por hora | PARCIAL | 21-10: de madrugada queda en la calle un tercio de la gente (los ocultos tampoco se mueven: `TraficoCiudad.faros`); faltan rutinas por persona |
 | M-184 | P2 | Sin NPC con nombre y memoria (te reconocen) | PENDIENTE | sin vecinos con memoria |
 | M-185 | P2 | Diálogos por oficio (hecho) pero sin ramas ni consecuencias | PENDIENTE | diálogos sin consecuencias |
 | M-186 | P2 | Interiores: 15 salas; edificios entrables «la mayoría» sin… | PARCIAL | gimnasio, piscina, estación central, recreativos con muebles Kenney (15/16-10); sin 3 variantes por arquetipo |

@@ -460,6 +460,10 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	## generado -Reales necesita ver TODOS los clubes creados para poder cruzar
 	## sus nombres contra la tabla, no uno a uno mientras se crean-.
 	Reales.aplicar(self)
+	## Con las plantillas reales nadie llevaba la cinta (21-10, M-073): el
+	## veterano de más media de cada club sin capitán.
+	for c: Club in clubes.values():
+		_capitan_si_falta(c)
 	## EL MUNDO HEREDADO (28-9-2026, `Meta`): si se pidió, los clubes arrancan
 	## con la reputación con la que quedaron en tu última partida.
 	if Meta.heredar_proximo:
@@ -575,6 +579,18 @@ func _repartir_dorsales(c: Club) -> void:
 		capitan = orden[0]
 	if capitan != null:
 		capitan.capitan = true
+
+func _capitan_si_falta(c: Club) -> void:
+	var mejor: Jugador = null
+	for j: Jugador in c.plantilla:
+		if j.capitan:
+			return
+		if j.edad >= 27 and (mejor == null or j.ovr > mejor.ovr):
+			mejor = j
+	if mejor == null and not c.plantilla.is_empty():
+		mejor = c.plantilla[0]
+	if mejor != null:
+		mejor.capitan = true
 
 ## `edad` y `ovr` a -1 significan "sortealos tu": lo usan los canteranos que
 ## suben a final de temporada, donde no hay una plantilla que respetar.

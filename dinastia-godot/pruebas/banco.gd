@@ -3607,6 +3607,25 @@ func _probar_dificultad_cpu() -> void:
 	_comprobar(float(cpu["attr"]["pas"]) < puro and motor._tac(false, "presion") == 0, "en Principiante, peor y presiona menos")
 	motor.fijar_dificultad("profesional")
 	_comprobar(is_equal_approx(float(cpu["attr"]["pas"]), puro) and motor._tac(false, "presion") == 1, "Profesional = el motor de siempre")
+	## M-073: el capitán (y solo él) lleva el brazalete.
+	var con_brazalete := [0, 0]
+	var capitan_en_once := [false, false]
+	for p: Dictionary in motor.jugadores:
+		var eq := 0 if bool(p["es_local"]) else 1
+		if bool((p.get("jugador", {}) as Dictionary).get("capitan", false)):
+			capitan_en_once[eq] = true
+		var lleva := false
+		for mi in (p["node"] as Node).find_children("*", "MeshInstance3D", true, false):
+			for k in (mi as MeshInstance3D).get_surface_override_material_count():
+				var mt := (mi as MeshInstance3D).get_surface_override_material(k)
+				if mt is ShaderMaterial and (mt as ShaderMaterial).get_shader_parameter("acc_brazalete") is Color \
+						and ((mt as ShaderMaterial).get_shader_parameter("acc_brazalete") as Color).a > 0.5:
+					lleva = true
+		if lleva:
+			con_brazalete[eq] += 1
+	_comprobar(con_brazalete[0] == (1 if capitan_en_once[0] else 0) and con_brazalete[1] == (1 if capitan_en_once[1] else 0),
+		"M-073: brazalete solo en el capitán (%s; capitán en el once %s)" % [str(con_brazalete), str(capitan_en_once)])
+	_comprobar(capitan_en_once == [true, true], "M-073: cada equipo sale con un capitán (o el que hereda la cinta)")
 	## M-127: gestión del tiempo al final (el que gana tarda, el que pierde corre).
 	motor.control_equipo = -1
 	motor.mitad = 2
@@ -7687,6 +7706,17 @@ func _probar_faros_coches() -> void:
 	_comprobar(f != null and f.mesh != null and f.mesh.get_faces().size() == 24, "de noche cada coche lleva 4 luces en una sola malla")
 	_comprobar(f != null and f.get_aabb().end.z > 2.1 and f.get_aabb().position.z < -2.1, "delante y detrás del coche (%s)" % (str(f.get_aabb()) if f != null else "-"))
 	_comprobar(t._mat_faros != null and is_equal_approx(float(t._mat_faros.get_shader_parameter("noche")), 0.9), "el brillo sigue a la noche")
+	## M-183: de madrugada hay menos gente por la calle.
+	var gente: Array[Node3D] = []
+	for k in 40:
+		var pe := Node3D.new()
+		t.agregar_vehiculo(pe, ruta, float(k) * 2.0, 1.4, 0.1, 0.0)
+		gente.append(pe)
+	t.faros(0.0)
+	var de_dia := gente.filter(func(x: Node3D) -> bool: return x.visible).size()
+	t.faros(1.0)
+	var de_noche := gente.filter(func(x: Node3D) -> bool: return x.visible).size()
+	_comprobar(de_dia == 40 and de_noche >= 8 and de_noche <= 20, "M-183: de día 40 por la calle, de madrugada %d" % de_noche)
 	t.free()
 
 func _probar_marcas_y_escudos() -> void:

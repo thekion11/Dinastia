@@ -1320,6 +1320,14 @@ func _seguir_jugada_gol(autor: Jugador) -> void:
 ## hay otro gol antes de que termine el timer, simplemente se reinicia sobre
 ## la marcha, no hace falta encolar nada más elaborado para esto.
 func _banca_celebra(es_local: bool) -> void:
+	_banca_gesto(es_local, "celebrar", 3.0)
+
+## M-102 (21-10): el banquillo reacciona a la roja de uno de los suyos:
+## protestan los que están de pie (los sentados se quedan sentados, ver abajo).
+func _banca_protesta(es_local: bool) -> void:
+	_banca_gesto(es_local, "discutir_arbitro", 2.6, "protestar")
+
+func _banca_gesto(es_local: bool, clip: String, dura: float, otro := "") -> void:
 	for f: Dictionary in _en_banca:
 		if bool(f.get("es_local", false)) != es_local:
 			continue
@@ -1336,11 +1344,15 @@ func _banca_celebra(es_local: bool) -> void:
 		var n: Node3D = f.get("node")
 		if not is_instance_valid(ap) or not is_instance_valid(n):
 			continue
-		if ap.has_animation("celebrar"):
-			ap.play("celebrar")
+		if ap.has_animation(clip):
+			ap.play(clip)
+		elif otro != "" and ap.has_animation(otro):
+			ap.play(otro)
+		else:
+			continue
 		## Vuelve a lo suyo: "parado", o las dominadas si estaba calentando.
 		var reposo := String(f.get("reposo_anim", "parado"))
-		get_tree().create_timer(3.0).timeout.connect(func() -> void:
+		get_tree().create_timer(dura).timeout.connect(func() -> void:
 			if is_instance_valid(ap) and ap.has_animation(reposo):
 				ap.play(reposo))
 
@@ -1673,6 +1685,8 @@ func _montar_motor() -> void:
 	_motor.tarjeta.connect(func(id: String, roja: bool, de_local: bool) -> void:
 		_stats.tarjeta(de_local, roja)
 		partido.tarjeta_externa(id, roja)
+		if roja:
+			_banca_protesta(de_local)
 		## La grada de casa protesta la tarjeta a uno de los suyos (M-045).
 		if de_local:
 			OlaGrada.lanzar(_raiz3d, "protesta")
