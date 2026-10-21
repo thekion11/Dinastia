@@ -46,6 +46,7 @@ func _montar(p: Control, mundo: Mundo) -> void:
 		["🧱", "Tiros libres", "Barrera, rosca y una barra de potencia.\nRécord: %d de 5" % MinijuegoTiroLibre.record, func() -> void: MinijuegoTiroLibre.mostrar(p, mundo)],
 		["⚽", Idiomas.t("Malabares"), Idiomas.t("Mantén el balón en el aire: muévete, toca a tiempo y que no caiga.") + "\n" + Idiomas.t("Récord: %d") % _rec_malabares(), func() -> void: MinijuegoMalabares.mostrar(p, mundo)],
 		["🧤", Idiomas.t("Reflejos del portero"), Idiomas.t("Doce disparos, cada vez más rápidos: tírate al lado correcto.") + "\n" + Idiomas.t("Récord: %d") % _rec_reflejos(), func() -> void: MinijuegoReflejos.mostrar(p, mundo)],
+		["🎮", Idiomas.t("Práctica libre"), Idiomas.t("Tu equipo en el césped contra conos: prueba pases, tiros, regates y filigranas sin reloj."), func() -> void: _abrir_practica(p, mundo)],
 		["🧠", "Trivia del club", "Preguntas sobre tu propio plantel y tu estadio.\nRécord: %d" % TriviaClub.record, func() -> void: TriviaClub.mostrar(p, mundo)],
 	]
 	for j: Array in juegos:
@@ -93,3 +94,15 @@ func _montar(p: Control, mundo: Mundo) -> void:
 	cerrar.text = Idiomas.t("Volver")
 	cerrar.pressed.connect(queue_free)
 	v.add_child(cerrar)
+
+## La práctica libre (M-130) tapa la sala; al salir de ella se vuelve aquí.
+func _abrir_practica(p: Control, mundo: Mundo) -> void:
+	if mundo == null:
+		return
+	var v := VistaEstadio.abrir_practica(p, mundo)
+	if v != null:
+		visible = false
+		v.cerrado.connect(func() -> void:
+			v.queue_free()
+			if is_instance_valid(self):
+				visible = true)

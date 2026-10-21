@@ -623,4 +623,38 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   cerradas en «rect»/«principal». Captura `pruebas/captura_exterior.tscn` (FORMA=, SUFIJO=_antes).
   SIGUIENTE (pedido): fusionar a main y hacer un VÍDEO de gameplay real CON SONIDO, más largo y detallado,
   probando cada mecánica y variable (duración de referencia: la de un gameplay real).
-
+- 21-10 HECHO: VÍDEO DE GAMEPLAY con sonido en 3 partes (<29 MB c/u, entregadas en el chat): 1 partido entero
+  (ritmo normal, 8:23, bot con el mando), 2 resto del juego (7:38), 3 CPU vs CPU 1.ª parte con gol (4:08).
+  Guiones: `pruebas/video_partido.tscn` (hereda de claude_juega; CEREMONIA=1 RITMO= SIN_MANDO= MITADES=),
+  `pruebas/video_gameplay.tscn` (VG_TRAMO=gestion|estadio|ciudad|carrera|mini); montaje
+  `herramientas/montar_gameplay.py <carpeta> [partes]`. ~0,4-0,5 s por fotograma: lanzar con setsid (>2 h).
+  HALLAZGOS para evaluar: pocas ocasiones a ritmo normal (CPU vs CPU 2-3 tiros por equipo y mitad; el partido
+  del bot 0-0 con 1 tiro), controles táctiles visibles en PC al pasear, público de cerca como maniquíes,
+  aviso del presidente tapa la prensa, malabares muy básico, de noche la calzada negra y conos de luz triangulares.
+  ESPERANDO la evaluación del usuario.
+- 21-10 INFORME del usuario («Auditoría técnica estructural», 16 puntos, nota 74/100) ANALIZADO contra el código:
+  falso o ya resuelto: ciudad y partido NO conviven (cada visor se crea y se libera con queue_free al cerrar),
+  datos en `Mundo` + guardado JSON seguro, sin RigidBody (todo por código), 235 señales, sin NavMesh en el campo.
+  Útil y pendiente: oclusión en la ciudad (0 OccluderInstance3D), compresión de texturas (3103 sin comprimir,
+  17 imágenes >2048), medir FPS en hardware real con el profiler (lo maneja el dueño), .pck aparte para la
+  ciudad (builds = dueño), algún panel que sondea en `_process` (p. ej. panel_objetivos). «Feature creep»
+  de la ciudad = decisión de diseño del dueño. ESPERANDO qué quiere aplicar (había descartado optimizar).
+- 21-10 PEDIDO (tras el informe): «reusar TODOS los objetos y poder separar y unir de forma modular»; punto 16
+  (.pck aparte) RECHAZADO; seguir con los hallazgos; «falta de profundidad en diseño»; aceptó mi propuesta
+  (oclusión, texturas, señales). HECHO: `visor/modulos.gd` (catálogo común de piezas Kenney/Quaternius:
+  tomar/devolver, unir/separar, a_datos/de_datos, teñir, listar; banco `_probar_modulos`), edificio del club
+  amueblado con él + 7 objetos de deco nuevos, `visor/oclusores_ciudad.gd` (−16 % llamadas a pie de calle,
+  `pruebas/medir_oclusion.tscn`), panel de objetivos por señal, ritmos 4/5,5/7,5 s/min + `MotorJugable.prisa`
+  (≈2,6 goles y 15 tiros en «normal»), sin táctiles en PC, mentor no tapa la prensa, `cono_farola.gdshader`,
+  malabares con racha, manos del público. Reevaluación: `dinastia-godot/REEVALUACION_INFORME_21_10.md` (≈78).
+- 21-10: el usuario RECHAZA los puntos 1-3 del informe (la ciudad se queda: es parte del juego). «Sigue puliendo».
+  HECHO: fabricantes con logo en la camiseta 3D (M-057, `DisenosKit.marca_de`, `marca_forma`), motor del coche
+  sintetizado (M-173, `visor/motor_coche_sonido.gd`), PRÁCTICA LIBRE en la sala de minijuegos (M-130,
+  `VistaEstadio.abrir_practica`, `MotorJugable.empezar_practica`, `pruebas/prueba_practica.tscn`), ropa variada en
+  la grada (M-033), cuerpo por físico (M-081, `PersonajeDT.cuerpo_futbolista`), gatillos de presión (M-124).
+  ESTADO_MEJORAS: HECHO 110 · PARCIAL 115 · PENDIENTE 227. OJO: en el motor, NO usar los dict de jugador como
+  clave de Dictionary (cambian y la búsqueda falla): usar p["id"].
+- 21-10 («Sigue»): HECHO directiva en el palco (M-040, `VistaEstadio.poner_directiva`, `_a_la_butaca` también para el
+  DT sancionado, que flotaba), choques del coche con golpe/claxon/multa (M-172), piel y pelo por país en los
+  inventados (M-088, `Cara.TONO_MEDIO`/`RUBIOS`; usar `String.hash()`, djb2 con la misma cola correlaciona),
+  formas de estadio por tamaño + «estrecho» y «asimetrico» (M-002). ESTADO_MEJORAS: HECHO 114 · PARCIAL 115 · PEND. 223.

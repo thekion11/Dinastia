@@ -167,6 +167,11 @@ var tarjetas_reales := false
 ## -1: nadie; 0: manejas al local; 1: a la visita. Manejas al que tiene el balón
 ## o al más cercano, y cambias con `jugar_cambiar` (Q / LB), como en FC.
 var control_equipo := -1
+## PRÁCTICA LIBRE (21-10-2026, M-130): para aprender los controles. El rival se
+## queda en su sitio (conos con camiseta), el reloj no acaba nunca y, si el
+## rival se hace con el balón, vuelve a tus pies. `empezar_practica()`.
+var practica := false
+var _practica_pos := {}
 ## Si se da, el stick se lee respecto a ESTA cámara (la de televisión, de lado):
 ## arriba en la pantalla es hacia el fondo de la imagen.
 var camara: Camera3D = null
@@ -440,6 +445,29 @@ func _pausa_dificultad(p: Dictionary) -> float:
 		return float(DIFICULTADES[dificultad_cpu]["pausa"])
 	return 1.0
 
+func empezar_practica() -> void:
+	practica = true
+	duracion_mitad = 99999.0
+	_practica_pos.clear()
+	for p: Dictionary in jugadores:
+		_practica_pos[String(p["id"])] = pos(p)
+
+## El rival no va a por el balón (cada uno vuelve a su sitio) y no se lo
+## queda: si lo toca, el balón vuelve delante de tu jugador.
+func _paso_practica() -> void:
+	var mio := control_equipo if control_equipo >= 0 else 0
+	for p: Dictionary in jugadores:
+		if (0 if bool(p["es_local"]) else 1) != mio and _practica_pos.has(String(p["id"])):
+			p["objetivo"] = _practica_pos[String(p["id"])]
+			p["correr"] = false
+	if not poseedor.is_empty() and (0 if bool(poseedor["es_local"]) else 1) != mio and not usuario.is_empty():
+		var u := pos(usuario)
+		var hacia := (_arco_rival(usuario) - u).normalized()
+		balon.position = Vector3(u.x, 0.11, u.z) + hacia * 0.9
+		vel_balon = Vector3.ZERO
+		poseedor = {}
+		ultimo_toque = usuario
+
 ## La pizarra del club traducida al motor. «Ir a por todo» (`riesgo`) sube un
 ## punto la mentalidad y «cerrar el partido» (`tiempo`) la baja.
 static func tactica_desde(tc: Tactica, riesgo := false, tiempo := false) -> Dictionary:
@@ -697,6 +725,8 @@ func paso(delta: float) -> void:
 			if control_equipo >= 0 and not autopiloto:
 				_control_de_equipo()
 			_ia_equipos(delta)
+			if practica:
+				_paso_practica()
 			_control_usuario(delta)
 			if cansancio_real:
 				_t_attr -= delta
@@ -2377,13 +2407,18 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	## El más cercano presiona; el segundo cubre entre el balón y el arco.
 	## Presión baja: lejos de su área se temporiza; presión alta: van dos.
 	var pres := _tac(bool(p["es_local"]), "presion")
+	## GATILLOS DE PRESIÓN (21-10-2026, M-124): hay momentos en que hasta un
+	## equipo que espera sale a morder (`_gatillo_presion`).
+	var gatillo := false
+	if not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
+		gatillo = _gatillo_presion(poseedor)
 	if not cercanos.is_empty() and cercanos[0][1] == p:
-		if pres == 0 and b.distance_to(arco) > 42.0 and pos(p).distance_to(b) > 9.0:
+		if pres == 0 and not gatillo and b.distance_to(arco) > 42.0 and pos(p).distance_to(b) > 9.0:
 			return b + (arco - b).normalized() * 5.0
 		p["correr"] = true
 		return b + (arco - b).normalized() * 0.8
 	if cercanos.size() > 1 and cercanos[1][1] == p:
-		if pres == 2:
+		if pres == 2 or (pres == 1 and gatillo):
 			p["correr"] = true
 			return b + (arco - b).normalized() * 2.5
 		return b + (arco - b).normalized() * 7.0
@@ -2406,6 +2441,23 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 		obj.z = _linea_defensiva(bool(p["es_local"]))
 	return obj
 
+## ¿Toca apretar al que lleva el balón? Los gatillos clásicos de la presión:
+##   · acaba de recibir y aún no se ha acomodado (medio segundo);
+##   · está pegado a la banda (la línea es un defensor más);
+##   · está de espaldas al juego, mirando a su propio arco;
+##   · lo tiene un defensa o el portero cerca de su área (salida de balón).
+func _gatillo_presion(dueno: Dictionary) -> bool:
+	var q := pos(dueno)
+	if t - float(dueno.get("tomo_en", -9.0)) < 0.6:
+		return true
+	if absf(q.x) > 28.0:
+		return true
+	var propio := _arco_propio(dueno)
+	var mira := Vector3(sin(float(dueno.get("mirar", 0.0))), 0, cos(float(dueno.get("mirar", 0.0))))
+	if mira.dot((propio - q).normalized()) > 0.6:
+		return true
+	return q.distance_to(propio) < 24.0 and _rol(dueno) in ["DFC", "LD", "LI", "POR"]
+
 ## GIRO RÁPIDO (M-115, 19-10-2026): ≈690°/s, lo más rápido que gira el cuerpo
 ## de un futbolista al encararse a un pase (por debajo de los 720°/s que la
 ## sonda de física marca como imposibles). `_mirar` lo deja pedido `dur` s.
@@ -2416,6 +2468,21 @@ static var CHISPA_TIRO := float(OS.get_environment("CHISPA_TIRO")) if OS.get_env
 static var CHISPA_AVANCE := float(OS.get_environment("CHISPA_AVANCE")) if OS.get_environment("CHISPA_AVANCE") != "" else 0.08
 ## Multiplica lo que piensa el portador antes de decidir (menos = juego más rápido).
 static var CHISPA_PAUSA := float(OS.get_environment("CHISPA_PAUSA")) if OS.get_environment("CHISPA_PAUSA") != "" else 1.0
+## LA PRISA (21-10-2026, vídeo de gameplay: el partido a ritmo «normal» acabó
+## 0-0 con un tiro). El motor se calibró con mitades de 240 s, y lo que pasa en
+## el césped va por SEGUNDOS, no por minutos de fútbol: con 180 s («normal»)
+## salían 1,3 goles y ~6 tiros por equipo; con 121 s («rápido»), 0,8. Cuanto
+## más corta la mitad, más directo se juega (piensa menos, mira más al arco y
+## se anima antes a tirar), para que un partido tenga lo de un partido. Desde
+## 240 s no cambia nada (la Carrera de Jugador juega con 240). Además, los
+## ritmos del DT pasaron a 4 / 5,5 / 7,5 s por minuto (`VistaEstadio`): el
+## «normal» dura como un partido de FC (~10 min) y da ~2,5 goles y ~15 tiros.
+## PRISA_REF=segundos de referencia (0 = sin compensar).
+static var PRISA_REF := float(OS.get_environment("PRISA_REF")) if OS.get_environment("PRISA_REF") != "" else 240.0
+func prisa() -> float:
+	if PRISA_REF <= 0.0 or duracion_mitad <= 0.0:
+		return 1.0
+	return clampf(PRISA_REF / duracion_mitad, 1.0, 2.0)
 ## Tope de aceleración total de un jugador (m/s²), ver `_mover_jugadores`.
 static var A_MAX := float(OS.get_environment("A_MAX")) if OS.get_environment("A_MAX") != "" else 18.0
 
@@ -2651,7 +2718,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## Con espacio se conduce más (1 a 1,6 s): en un partido de verdad el balón
 	## pasa más tiempo en los pies que viajando.
 	var holgura := 1.7 if presion > 6.0 else (1.0 if presion > 3.5 else 0.5)
-	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA * _pausa_dificultad(p)
+	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA * _pausa_dificultad(p) / pow(prisa(), 0.8)
 	if OS.get_environment("DEPURAR_PORTADOR") != "" and dist_arco < 40.0:
 		print("PORTADOR %s(%s) a %.0f m del arco, x %.0f, presión %.1f" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", dist_arco, yo.x, presion])
 	## En su propio campo y apretado: despeje, lejos y hacia fuera si hace falta.
@@ -2671,7 +2738,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se
 	## quedaba en ~0,8 tiros por minuto y equipo (FC ronda 1,5). Ahora se
 	## anima más desde la frontal; la calidad del tiro no cambia.
-	if dist_arco < 30.0 and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO:
+	if dist_arco < 30.0 and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
 		## A un palo, abajo o arriba (antes se apuntaba al azar por el centro
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
 		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.55, 0.95)
@@ -2906,7 +2973,7 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 			var dl := cerca.distance_to(pos(r))
 			if dl < 2.2:
 				riesgo += (2.2 - dl) * 2.4
-		var nota := progreso * (CHISPA_AVANCE + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) \
+		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) \
 			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
 		## nunca se la da a un compañero adelantado.

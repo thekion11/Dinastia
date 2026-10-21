@@ -55,6 +55,9 @@ renderer/rendering_method.mobile="gl_compatibility"
 ; Y el navegador tambien: WebGL no tiene Vulkan. Sin esta linea la exportacion
 ; web arranca en negro y no dice por que.
 renderer/rendering_method.web="gl_compatibility"
+; Oclusion (21-10-2026): lo que tapan los edificios de la ciudad no se dibuja
+; (OclusoresCiudad). En Compatibility no existe y no cuesta nada.
+occlusion_culling/use_occlusion_culling=true
 textures/canvas_textures/default_texture_filter=1
 ; Android exige texturas ETC2/ASTC: es el formato que entienden las GPU de
 ; movil, y sin esto la exportacion se niega a empezar. Reimportar con esto
