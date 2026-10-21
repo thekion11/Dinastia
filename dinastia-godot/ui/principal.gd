@@ -4275,6 +4275,7 @@ func _abrir_rueda_pantalla_completa(e: Dictionary) -> void:
 	var pop := Control.new()
 	pop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	pop.mouse_filter = Control.MOUSE_FILTER_STOP
+	pop.add_to_group(MentorVoz.GRUPO_TAPA)
 	add_child(pop)
 	_rueda_pop = pop
 

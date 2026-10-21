@@ -145,6 +145,7 @@ func _montar_hud() -> void:
 	base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	base.offset_left = 24
 	base.offset_top = -tam * 3.0 - 24
+	base.visible = ExploradorCiudad.es_tactil()
 	_capa.add_child(base)
 	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
 			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
@@ -209,6 +210,7 @@ func _montar_hud() -> void:
 	bs.modulate = Color(1, 1, 1, 0.75)
 	bs.focus_mode = Control.FOCUS_NONE
 	bs.pressed.connect(func() -> void: salir.emit())
+	bs.visible = ExploradorCiudad.es_tactil()
 	_capa.add_child(bs)
 
 func _entrada() -> Vector2:
@@ -335,6 +337,7 @@ func _rotulos() -> void:
 	if _boton_e != null:
 		var hay := not g.is_empty() or _zona_actual in ["·grada", "Ascensor"] or RecorridoClub.sala_decorable(_zona_actual)
 		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
+		_boton_e.visible = hay or ExploradorCiudad.es_tactil()
 	_hud.text = "📍 %s · %s %d  ·  %s" % [Idiomas.t(nombre), Idiomas.t("Planta"), planta, Idiomas.t("W/S/A/D o mando · Mayús: correr · E: usar · Esc: salir")]
 
 func _unhandled_input(ev: InputEvent) -> void:
