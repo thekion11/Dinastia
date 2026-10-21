@@ -2407,13 +2407,18 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	## El más cercano presiona; el segundo cubre entre el balón y el arco.
 	## Presión baja: lejos de su área se temporiza; presión alta: van dos.
 	var pres := _tac(bool(p["es_local"]), "presion")
+	## GATILLOS DE PRESIÓN (21-10-2026, M-124): hay momentos en que hasta un
+	## equipo que espera sale a morder (`_gatillo_presion`).
+	var gatillo := false
+	if not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
+		gatillo = _gatillo_presion(poseedor)
 	if not cercanos.is_empty() and cercanos[0][1] == p:
-		if pres == 0 and b.distance_to(arco) > 42.0 and pos(p).distance_to(b) > 9.0:
+		if pres == 0 and not gatillo and b.distance_to(arco) > 42.0 and pos(p).distance_to(b) > 9.0:
 			return b + (arco - b).normalized() * 5.0
 		p["correr"] = true
 		return b + (arco - b).normalized() * 0.8
 	if cercanos.size() > 1 and cercanos[1][1] == p:
-		if pres == 2:
+		if pres == 2 or (pres == 1 and gatillo):
 			p["correr"] = true
 			return b + (arco - b).normalized() * 2.5
 		return b + (arco - b).normalized() * 7.0
@@ -2435,6 +2440,23 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	if _rol(p) in ["DFC", "LD", "LI"] and not _SIN_LINEA:
 		obj.z = _linea_defensiva(bool(p["es_local"]))
 	return obj
+
+## ¿Toca apretar al que lleva el balón? Los gatillos clásicos de la presión:
+##   · acaba de recibir y aún no se ha acomodado (medio segundo);
+##   · está pegado a la banda (la línea es un defensor más);
+##   · está de espaldas al juego, mirando a su propio arco;
+##   · lo tiene un defensa o el portero cerca de su área (salida de balón).
+func _gatillo_presion(dueno: Dictionary) -> bool:
+	var q := pos(dueno)
+	if t - float(dueno.get("tomo_en", -9.0)) < 0.6:
+		return true
+	if absf(q.x) > 28.0:
+		return true
+	var propio := _arco_propio(dueno)
+	var mira := Vector3(sin(float(dueno.get("mirar", 0.0))), 0, cos(float(dueno.get("mirar", 0.0))))
+	if mira.dot((propio - q).normalized()) > 0.6:
+		return true
+	return q.distance_to(propio) < 24.0 and _rol(dueno) in ["DFC", "LD", "LI", "POR"]
 
 ## GIRO RÁPIDO (M-115, 19-10-2026): ≈690°/s, lo más rápido que gira el cuerpo
 ## de un futbolista al encararse a un pase (por debajo de los 720°/s que la
