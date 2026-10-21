@@ -299,8 +299,32 @@ func _mover_un_trozo(paso: Vector3, r: float) -> bool:
 		cuerpo.position = Vector3(pos.x, altura_suelo(pos.x, pos.z + paso.z), pos.z + paso.z)
 		vel *= 0.92
 		return true
+	if modo == "coche":
+		_golpe_coche(absf(vel), not libre_fijo.call(pos + paso))
 	vel *= -0.25 if modo == "coche" else 0.0
 	return false
+
+## EL CHOQUE SE NOTA (21-10-2026, M-172): antes el coche se quedaba quieto en
+## silencio. Ahora, según la velocidad: el golpe de chapa, la sacudida de la
+## cámara y del mando y, contra otro coche o una persona a más de 25 km/h, la
+## multa (el móvil avisa y se apunta en `multas`). Un choque cada medio
+## segundo como mucho (al rozar una pared no suena en bucle).
+var multas := 0
+var _t_golpe := 0.0
+var _sacudida_golpe := 0.0
+func _golpe_coche(v: float, contra_fijo: bool) -> void:
+	var ahora := Time.get_ticks_msec() / 1000.0
+	if v < 2.5 or ahora - _t_golpe < 0.5:
+		return
+	_t_golpe = ahora
+	Sonido.toca("choque_coche")
+	_sacudida_golpe = clampf(v / 18.0, 0.15, 1.0)
+	Mando.vibrar(clampf(v / 20.0, 0.25, 1.0), 0.35)
+	if not contra_fijo and v * 3.6 > 25.0:
+		multas += 1
+		Sonido.toca("claxon", Sonido.Bus.AMBIENTE)
+		if _movil != null:
+			_movil.notificar(Idiomas.t("🚓 Multa por conducción temeraria (%d)") % multas)
 
 ## Manzanas, río, círculos y móviles: todo lo que impide estar en `p`.
 func libre_total(p: Vector3, radio: float) -> bool:
@@ -1114,6 +1138,10 @@ func _colocar_camara(delta: float) -> void:
 	camara.position = camara.position.lerp(deseo, clampf(delta * (8.0 if modo == "coche" else 5.0), 0.0, 1.0)) if delta < 1.0 else deseo
 	if modo == "coche":
 		camara.look_at(cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * (5.0 + absf(vel) * 0.25), Vector3.UP)
+		## La sacudida del choque (M-172), que se apaga en medio segundo.
+		if _sacudida_golpe > 0.0:
+			camara.position += Vector3(randf_range(-1.0, 1.0), randf_range(-0.5, 0.5), randf_range(-1.0, 1.0)) * _sacudida_golpe * 0.18
+			_sacudida_golpe = maxf(_sacudida_golpe - (delta if delta < 1.0 else 0.0) * 2.0, 0.0)
 	else:
 		camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 4.0, Vector3.UP)
 
