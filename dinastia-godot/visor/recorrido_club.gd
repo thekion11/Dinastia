@@ -310,7 +310,7 @@ static func dialogo_portero(capa: CanvasLayer, personal: PersonalEstadio, g: Dic
 ## tribuna lateral del lado `signo_x` (+1 la de los banquillos), a la altura
 ## `z`, en la fila `fila` (cada 0,8 m de fondo). Devuelve {pos, rumbo} con el
 ## rumbo mirando al campo.
-static func butaca(est: Dictionary, signo_x: float, z: float, fila: int = 3) -> Dictionary:
+static func butaca(est: Dictionary, signo_x: float, z: float, fila: int = 3, raiz: Node = null) -> Dictionary:
 	var g := StadiumBuilder.geom_de_forma(String(est.get("forma", "cuenco")))
 	var dx: float = g["dx"]
 	var dz: float = g["dz"]
@@ -319,7 +319,40 @@ static func butaca(est: Dictionary, signo_x: float, z: float, fila: int = 3) -> 
 	var x := signo_x * (dx - StadiumBuilder.FRENTE_TRIBUNA + d)
 	var y := StadiumBuilder.ALTURA_PIE + d * tan(ang) + 0.2
 	var zz := clampf(z, -(dz - 12.0), dz - 12.0)
-	return {"pos": Vector3(x, y, zz), "rumbo": -signo_x * PI / 2.0}
+	var aprox := Vector3(x, y, zz)
+	## 21-10-2026: con el estadio en la escena, la butaca DE VERDAD más cercana
+	## (las cuentas de arriba no seguían el paso de fila real ni las tribunas
+	## con otra pendiente, y uno se sentaba en el aire o dentro del escalón).
+	if raiz != null:
+		var real := _butaca_real(raiz, aprox, signo_x)
+		if real != Vector3.INF:
+			return {"pos": real, "rumbo": -signo_x * PI / 2.0}
+	return {"pos": aprox, "rumbo": -signo_x * PI / 2.0}
+
+## En coordenadas de `raiz` (el estadio puede estar desplazado en la ciudad).
+static func _butaca_real(raiz: Node, cerca_de_local: Vector3, signo_x: float) -> Vector3:
+	var r3 := raiz as Node3D
+	if r3 == null or not r3.is_inside_tree():
+		return Vector3.INF
+	var cerca_de := r3.to_global(cerca_de_local)
+	var mejor := Vector3.INF
+	var dist := 25.0
+	for n in raiz.find_children("ButacasCerca", "MultiMeshInstance3D", true, false):
+		var mmi := n as MultiMeshInstance3D
+		if mmi.multimesh == null or not mmi.is_inside_tree() or signf(r3.to_local(mmi.global_position).x) != signf(signo_x):
+			continue
+		var t := mmi.global_transform
+		for i in mmi.multimesh.instance_count:
+			var xf := mmi.multimesh.get_instance_transform(i)
+			## Las columnas de pasillo tienen escala cero: no son butacas.
+			if xf.basis.get_scale().x < 0.01:
+				continue
+			var p := t * xf.origin
+			var d := p.distance_to(cerca_de)
+			if d < dist:
+				dist = d
+				mejor = p
+	return r3.to_local(mejor) + Vector3(0, 0.25, 0) if mejor != Vector3.INF else mejor
 
 ## ¿Se puede uno sentar desde aquí? Junto a una banda de la cancha.
 static func junto_a_la_grada(p: Vector3, planta: int) -> bool:
@@ -329,7 +362,11 @@ static func junto_a_la_grada(p: Vector3, planta: int) -> bool:
 ## (escala 0 en su `MultiMesh`). Devuelve lo quitado para devolverlo después.
 static func despejar_hinchas(raiz: Node, centro_global: Vector3, radio := 1.3) -> Array:
 	var quitados: Array = []
-	for n in raiz.find_children("Hinchada*", "MultiMeshInstance3D", true, false):
+	## «Personas*»: el público de personas reales (desde el 14-10); antes solo
+	## se buscaban los maniquíes y uno se sentaba encima de alguien.
+	for n in raiz.find_children("*", "MultiMeshInstance3D", true, false):
+		if not (String(n.name).begins_with("Hinchada") or String(n.name).begins_with("Personas")):
+			continue
 		var mmi := n as MultiMeshInstance3D
 		if mmi.multimesh == null or not mmi.is_inside_tree():
 			continue
