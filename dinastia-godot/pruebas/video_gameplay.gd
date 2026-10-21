@@ -262,10 +262,14 @@ func _paso_ciudad(t: float) -> void:
 	if _una("coche", t, 30.0):
 		Input.parse_input_event(_tecla(KEY_W, false))
 		_ec.primera_persona = false
+		## Hay que salir del paseo antes: `explorar` no hace nada si ya se explora.
+		_v.call("_dejar_de_explorar")
 		_v.explorar("coche")
 		_ec = _v.get("_explorador")
-		_ec.cuerpo.position = Vector3(1005.0, 0, -470.0)
-		_ec.cuerpo.position.y = _ec.altura_suelo(1005.0, -470.0)
+		## El anillo que rodea el núcleo: avenida larga y despejada.
+		_x["carril"] = CityBuilder.RING_X
+		_ec.cuerpo.position = Vector3(CityBuilder.RING_X, 0, CityBuilder.RING_Z_SUR - 5.0)
+		_ec.cuerpo.position.y = _ec.altura_suelo(CityBuilder.RING_X, CityBuilder.RING_Z_SUR - 5.0)
 		_ec.set("rumbo", PI)
 		_ec.cam_coche = 0
 		Input.parse_input_event(_tecla(KEY_W, true))
@@ -277,22 +281,43 @@ func _paso_ciudad(t: float) -> void:
 		_ec.cam_coche = 2
 		_rotulo("Cámara interior: volante y cuentakilómetros")
 	if _una("noche", t, 57.0):
+		print("VG ciudad: modo ", _ec.modo, " vel ", _ec.get("vel"), " pos ", _ec.cuerpo.position)
 		_ec.cam_coche = 0
 		_v.set("_hora", 21.5)
 		_v.call("_aplicar_hora")
 		_rotulo("De noche: farolas, ventanas encendidas y los faros y luces de freno de los coches")
-	if _una("frena", t, 68.0):
+	if _una("frena", t, 59.5):
 		Input.parse_input_event(_tecla(KEY_W, false))
 		Input.parse_input_event(_tecla(KEY_S, true))
 		_rotulo("Frenando")
-	if _una("suelta", t, 71.0):
+	if _una("suelta", t, 61.0):
 		Input.parse_input_event(_tecla(KEY_S, false))
 	if t > 72.0 and _una("vuelo", t, 72.0):
-		_v.explorar("")
+		_v.call("_dejar_de_explorar")
 		_rotulo("La ciudad de noche desde el aire")
-	if t > 30.0 and t < 68.0 and _ec != null:
+	if OS.get_environment("VG_DEBUG") != "" and _ec != null and _f % 50 == 0:
+		print("VG t=%.0f modo=%s vel=%.1f pos=%s" % [t, _ec.modo, float(_ec.get("vel")), _ec.cuerpo.position])
+	if t > 30.0 and t < 59.5 and _ec != null:
 		## Un volante suave, como quien sigue la avenida.
-		_ec.set("_volante", sin(t * 0.7) * 0.18)
+		## Recto por la avenida, corrigiendo hacia el carril (x = 1005) como lo haría quien conduce.
+		var desvio := clampf((float(_ec.cuerpo.position.x) - float(_x.get("carril", 1005.0))) * 0.08, -0.3, 0.3)
+		_ec.set("_volante", desvio * signf(cos(float(_ec.get("rumbo")))))
+		## Si algo le corta el paso (un coche parado, un poste), como haría una
+		## persona: marcha atrás un momento y se abre al carril de al lado.
+		if _f % 25 == 0:
+			var p: Vector3 = _ec.cuerpo.position
+			if _x.has("p_antes") and p.distance_to(_x["p_antes"]) < 0.8 and not _x.has("esquiva_hasta") and t < 66.0:
+				_x["esquiva_hasta"] = t + 1.6
+				_x["carril"] = float(_x.get("carril", 1005.0)) + 4.0
+				Input.parse_input_event(_tecla(KEY_W, false))
+				Input.parse_input_event(_tecla(KEY_S, true))
+			_x["p_antes"] = p
+		if _x.has("esquiva_hasta"):
+			_ec.set("_volante", 0.6)
+			if t >= float(_x["esquiva_hasta"]):
+				_x.erase("esquiva_hasta")
+				Input.parse_input_event(_tecla(KEY_S, false))
+				Input.parse_input_event(_tecla(KEY_W, true))
 
 # ------------------------------------------------------------------ carrera de jugador
 
