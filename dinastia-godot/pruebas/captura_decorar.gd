@@ -57,6 +57,10 @@ func _process(_d: float) -> void:
 		_ex = _vista._explorador
 		_ex.set_physics_process(false)
 		_a_sala(1, "Oficina del DT")
+	## SALAS=1: las otras salas amuebladas (despacho, vídeo, comedor, enfermería).
+	if OS.get_environment("SALAS") != "":
+		_salas()
+		return
 	if _n == 14:
 		_foto()                                    # 1: la oficina de fábrica
 		var it := RecorridoClub.interiores()
@@ -89,3 +93,21 @@ func _process(_d: float) -> void:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(ModoFoto.CARPETA + "/foto_prueba-decorar.png"))
 		print("HOJA OK")
 		get_tree().quit()
+
+const OTRAS := [[1, "Despacho del presidente"], [1, "Sala de vídeo"], [2, "Comedor del plantel"], [-1, "Enfermería"]]
+func _salas() -> void:
+	var k := (_n - 10) / 6
+	if _n < 10:
+		return
+	if k >= OTRAS.size():
+		var hoja := Image.create(480 * 2, 270 * 2, false, Image.FORMAT_RGBA8)
+		for i in _imgs.size():
+			hoja.blit_rect(_imgs[i], Rect2i(0, 0, 480, 270), Vector2i((i % 2) * 480, (i / 2) * 270))
+		hoja.save_png("res://pruebas/capturas/salas_club.png")
+		print("HOJA OK")
+		get_tree().quit()
+		return
+	if (_n - 10) % 6 == 0:
+		_a_sala(int(OTRAS[k][0]), String(OTRAS[k][1]))
+	if (_n - 10) % 6 == 5:
+		_foto()
