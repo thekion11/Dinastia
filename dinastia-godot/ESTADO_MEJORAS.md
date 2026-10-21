@@ -156,7 +156,7 @@ Hecho 10 % · parcial 25 % · pendiente 60 % · del dueño 2 % · sin verificar 
 | M-095 | P1 | 335 clips; muchos sin uso en partido | PENDIENTE | sin auditoría automática de clips usados |
 | M-096 | P2 | Transiciones entre clips con mezcla fija 0,25 s | PENDIENTE | mezcla fija entre clips |
 | M-097 | P2 | Retarget con pies que patinan | PARCIAL | IK de piernas solo en la ciudad (`AnimQuaternius._ik_pierna`); sin foot locking en partido |
-| M-098 | P2 | Sin IK de mirada (cabeza sigue balón) | PENDIENTE | sin IK de mirada al balón |
+| M-098 | P2 | Sin IK de mirada (cabeza sigue balón) | HECHO | 21-10: `visor/mirada_balon.gd`: un `LookAtModifier3D` en el hueso Head de cada jugador apuntando al balón (topes 65°/30°, suavizado 0,5 s), en el modo DT y en la Carrera; comprobado con `captura_mirada` (balón a un lado y al otro) |
 | M-099 | P2 | Cuerpos sin colisión entre brazos/piernas (solapes sólo en XZ) | PARCIAL | cuerpos que se empujan y duelos en el motor (`MotorJugable._cuerpos`, 17-10), en 2D; sin cápsulas 3D |
 | M-100 | P2 | Sin respiración/cansancio visible (manos a rodillas) | HECHO | `MotorJugable` pone el clip «cansado» (manos a rodillas) con forma < 0,6 (l.3440) |
 | M-101 | P2 | Celebraciones por rasgo (ya) pero sólo 2/3 propias | PARCIAL | carrera al córner y abrazo (`_ia_celebracion`); sin 10 por rasgo ni coreografías |

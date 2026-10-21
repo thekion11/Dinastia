@@ -3607,6 +3607,9 @@ func _probar_dificultad_cpu() -> void:
 	_comprobar(float(cpu["attr"]["pas"]) < puro and motor._tac(false, "presion") == 0, "en Principiante, peor y presiona menos")
 	motor.fijar_dificultad("profesional")
 	_comprobar(is_equal_approx(float(cpu["attr"]["pas"]), puro) and motor._tac(false, "presion") == 1, "Profesional = el motor de siempre")
+	## M-098: la cabeza sigue al balón (un modificador por jugador).
+	_comprobar(MiradaBalon.poner(motor.jugadores, motor.balon) == motor.jugadores.size()
+		and MiradaBalon.poner(motor.jugadores, motor.balon) == 0, "M-098: un LookAt en la cabeza de cada jugador, sin duplicar")
 	## M-073: el capitán (y solo él) lleva el brazalete.
 	var con_brazalete := [0, 0]
 	var capitan_en_once := [false, false]

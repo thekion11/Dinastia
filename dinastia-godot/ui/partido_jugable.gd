@@ -159,6 +159,8 @@ func _montar(duracion_mitad: float) -> void:
 	add_child(motor)
 	motor.duracion_mitad = duracion_mitad
 	motor.preparar(lista, balon, yo.id if yo != null else "", hash(local.id + visita.id))
+	## La cabeza de cada jugador sigue al balón (M-098, como en el modo DT).
+	MiradaBalon.poner(motor.jugadores, balon)
 	_preparar_cambio(sp, yo)
 	if carrera != null:
 		motor.lanza_usuario = {"corner": bool(carrera.lanzador.get("corners", true)),
