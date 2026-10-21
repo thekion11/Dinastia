@@ -639,3 +639,11 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   17 imágenes >2048), medir FPS en hardware real con el profiler (lo maneja el dueño), .pck aparte para la
   ciudad (builds = dueño), algún panel que sondea en `_process` (p. ej. panel_objetivos). «Feature creep»
   de la ciudad = decisión de diseño del dueño. ESPERANDO qué quiere aplicar (había descartado optimizar).
+- 21-10 PEDIDO (tras el informe): «reusar TODOS los objetos y poder separar y unir de forma modular»; punto 16
+  (.pck aparte) RECHAZADO; seguir con los hallazgos; «falta de profundidad en diseño»; aceptó mi propuesta
+  (oclusión, texturas, señales). HECHO: `visor/modulos.gd` (catálogo común de piezas Kenney/Quaternius:
+  tomar/devolver, unir/separar, a_datos/de_datos, teñir, listar; banco `_probar_modulos`), edificio del club
+  amueblado con él + 7 objetos de deco nuevos, `visor/oclusores_ciudad.gd` (−16 % llamadas a pie de calle,
+  `pruebas/medir_oclusion.tscn`), panel de objetivos por señal, ritmos 4/5,5/7,5 s/min + `MotorJugable.prisa`
+  (≈2,6 goles y 15 tiros en «normal»), sin táctiles en PC, mentor no tapa la prensa, `cono_farola.gdshader`,
+  malabares con racha, manos del público. Reevaluación: `dinastia-godot/REEVALUACION_INFORME_21_10.md` (≈78).
