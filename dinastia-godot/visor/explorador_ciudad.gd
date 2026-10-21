@@ -592,6 +592,10 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 			if _minimapa.red == null and cb != null:
 				_minimapa.red = cb.expansion
 			_minimapa.poner(cuerpo.position, rumbo if modo == "coche" else cuerpo.rotation.y, get_physics_process_delta_time())
+	## Las paredes de oclusión, solo en la calle: dentro de un edificio taparían
+	## lo que se ve por la puerta (`OclusoresCiudad`).
+	if cb != null:
+		OclusoresCiudad.activar(cb, estado == "calle")
 	if _boton_e != null:
 		var hay := _aviso.text.strip_edges() != ""
 		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)

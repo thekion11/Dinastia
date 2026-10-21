@@ -5812,6 +5812,15 @@ func _probar_rotulo_y_sala() -> void:
 	_comprobar(ex._rotulo_en(Vector3(140, 0, 50)).is_empty(), "lejos de los rótulos no hay rótulo")
 	ex.free()
 	cb.free()
+	## OCLUSIÓN (21-10-2026): 4 paredes por edificio grande; ni quioscos ni estadio.
+	var cbo := CityBuilder.new()
+	cbo._frentes = [Rect2(300, 300, 20, 30), Rect2(400, 400, 4, 4)] as Array[Rect2]
+	cbo.huellas = [Rect2(300, 300, 20, 30), Rect2(CityBuilder.ESTADIO_EN.x - 10.0, CityBuilder.ESTADIO_EN.z - 10.0, 20, 20), Rect2(-500, 200, 12, 12)] as Array[Rect2]
+	var raiz_o := OclusoresCiudad.montar(cbo)
+	_comprobar(OclusoresCiudad.cuantas(cbo) == 8, "oclusión: 2 edificios grandes = 8 paredes (sin quiosco, sin estadio, sin repetir) → %d" % OclusoresCiudad.cuantas(cbo))
+	OclusoresCiudad.activar(cbo, false)
+	_comprobar(not raiz_o.visible, "oclusión: se apaga al entrar en un edificio")
+	cbo.free()
 
 func _probar_ciudad_grande() -> void:
 	_titulo("LA CIUDAD GRANDE: RED VIAL, SEMÁFOROS Y TRANSPORTE")
