@@ -623,4 +623,12 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   cerradas en «rect»/«principal». Captura `pruebas/captura_exterior.tscn` (FORMA=, SUFIJO=_antes).
   SIGUIENTE (pedido): fusionar a main y hacer un VÍDEO de gameplay real CON SONIDO, más largo y detallado,
   probando cada mecánica y variable (duración de referencia: la de un gameplay real).
-
+- 21-10 HECHO: VÍDEO DE GAMEPLAY con sonido en 3 partes (<29 MB c/u, entregadas en el chat): 1 partido entero
+  (ritmo normal, 8:23, bot con el mando), 2 resto del juego (7:38), 3 CPU vs CPU 1.ª parte con gol (4:08).
+  Guiones: `pruebas/video_partido.tscn` (hereda de claude_juega; CEREMONIA=1 RITMO= SIN_MANDO= MITADES=),
+  `pruebas/video_gameplay.tscn` (VG_TRAMO=gestion|estadio|ciudad|carrera|mini); montaje
+  `herramientas/montar_gameplay.py <carpeta> [partes]`. ~0,4-0,5 s por fotograma: lanzar con setsid (>2 h).
+  HALLAZGOS para evaluar: pocas ocasiones a ritmo normal (CPU vs CPU 2-3 tiros por equipo y mitad; el partido
+  del bot 0-0 con 1 tiro), controles táctiles visibles en PC al pasear, público de cerca como maniquíes,
+  aviso del presidente tapa la prensa, malabares muy básico, de noche la calzada negra y conos de luz triangulares.
+  ESPERANDO la evaluación del usuario.
