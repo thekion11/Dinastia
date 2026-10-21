@@ -37,7 +37,8 @@ func _ready() -> void:
 	_cap.offset_left = 18
 	_cap.offset_top = -40
 	capa.add_child(_cap)
-	_rotulo("Ceremonia: niños de la mano, mascota, lona, alineaciones e himno", 12.0)
+	if OS.get_environment("CEREMONIA") != "":
+		_rotulo("Ceremonia: niños de la mano, mascota, lona, alineaciones e himno", 12.0)
 
 func _rotulo(texto: String, segundos: float) -> void:
 	_cap.text = "▶ " + texto
@@ -55,7 +56,7 @@ func _process(d: float) -> void:
 		## El final: el pitido, el marcador y la grada, unos segundos más.
 		if _fin_en < 0:
 			_fin_en = _vf
-			_rotulo("Final del partido", 6.0)
+			_rotulo("Final del partido" if OS.get_environment("MITADES") != "1" else "Descanso", 6.0)
 		if _vf - _fin_en > 250:
 			Musica.encendida = _musica_antes
 			print("VIDEO_PARTIDO hechos: ", _hechos.keys(), " fotogramas ", _vf)
@@ -65,7 +66,10 @@ func _process(d: float) -> void:
 		return
 	if not _hechos.has("control"):
 		_hechos["control"] = true
-		_rotulo("Juego con el equipo local: stick relativo a la cámara de TV, pase, tiro cargado, sprint, Q para cambiar", 9.0)
+		if OS.get_environment("SIN_MANDO") != "":
+			_rotulo("CPU contra CPU: la IA juega los dos lados (otro partido, primera parte)", 9.0)
+		else:
+			_rotulo("Juego con el equipo local: stick relativo a la cámara de TV, pase, tiro cargado, sprint, Q para cambiar", 9.0)
 	super._process(d)
 	if _motor == null or _fin:
 		return
