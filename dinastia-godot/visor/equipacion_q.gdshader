@@ -903,7 +903,7 @@ void fragment() {
 		if (acc_manguitos.a > 0.5 && brazo && abs(x) >= 0.43 && abs(x) < 0.72) { albedo = acc_manguitos.rgb * pliegue; tela = 1.0; }
 		if (acc_munequeras.a > 0.5 && brazo && abs(x) >= 0.70 && abs(x) < 0.755) { albedo = acc_munequeras.rgb * pliegue; tela = 1.0; }
 		if (acc_guantes.a > 0.5 && brazo && abs(x) >= 0.755) { albedo = acc_guantes.rgb; tela = 1.0; }
-		if (acc_brazalete.a > 0.5 && brazo && x > 0.30 && x < 0.36) { albedo = acc_brazalete.rgb; tela = 1.0; }
+		if (acc_brazalete.a > 0.5 && brazo && x > 0.29 && x < 0.37) { albedo = acc_brazalete.rgb; tela = 1.0; }
 		if (acc_cintillo.a > 0.5 && !brazo && abs(x) < 0.13 && y > 1.745 && y < 1.78) { albedo = acc_cintillo.rgb; tela = 1.0; }
 		if (acc_cuello.a > 0.5 && !brazo && abs(x) < 0.11 && y > 1.52 && y < 1.60) { albedo = acc_cuello.rgb * pliegue; tela = 1.0; }
 		if (acc_tobilleras.a > 0.5 && !brazo && y > 0.10 && y < 0.15) { albedo = acc_tobilleras.rgb; tela = 1.0; }

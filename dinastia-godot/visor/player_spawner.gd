@@ -531,6 +531,28 @@ static func _banco_de_suplentes(root: Node3D, x: float, z0: float, lado: float, 
 ## falta.
 const USAR_MODELO_Q := true
 
+## Pone el brazalete en el brazo izquierdo (uniforme `acc_brazalete` de
+## `equipacion_q.gdshader`) en todas las mallas vestidas del jugador.
+## El material de equipación está en caché (`VestidorQ`) y lo comparten otros:
+## al capitán se le pone una COPIA, para no ponérselo a nadie más.
+static func poner_brazalete(nodo: Node, color: Color) -> void:
+	for mi in nodo.find_children("*", "MeshInstance3D", true, false):
+		var g := mi as MeshInstance3D
+		if _es_equipacion(g.material_override):
+			g.material_override = _con_brazalete(g.material_override, color)
+		for k in g.get_surface_override_material_count():
+			if _es_equipacion(g.get_surface_override_material(k)):
+				g.set_surface_override_material(k, _con_brazalete(g.get_surface_override_material(k), color))
+
+static func _es_equipacion(m: Material) -> bool:
+	return m is ShaderMaterial and (m as ShaderMaterial).shader != null \
+		and (m as ShaderMaterial).shader.resource_path.ends_with("equipacion_q.gdshader")
+
+static func _con_brazalete(m: Material, color: Color) -> ShaderMaterial:
+	var copia := (m as ShaderMaterial).duplicate() as ShaderMaterial
+	copia.set_shader_parameter("acc_brazalete", Color(color, 1.0))
+	return copia
+
 ## Un jugador, con el modelo realista si se puede y con el de respaldo si no.
 func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 		c1: Color, c2: Color, estilo: String, dorsal: int, piel: Color, pelo: Color,
@@ -551,6 +573,11 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 			var kx: Dictionary = {} if puesto in ["POR", "ARB"] else _kit_x
 			if not VestidorQ.vestir_equipacion(dq, c1, c2, estilo, piel, pelo, pantalon, Color(0, 0, 0, 0), false, kx, dorsal):
 				VestidorQ.vestir(dq, c1)
+			## EL BRAZALETE DEL CAPITÁN (M-073, 21-10): el shader lo tenía pero nadie
+			## se lo ponía. Amarillo, o blanco si la camiseta ya es amarilla.
+			if bool(jug.get("capitan", false)) and puesto != "ARB":
+				var amarilla := c1.s > 0.3 and absf(c1.h - 0.14) < 0.06
+				poner_brazalete(dq["nodo"], Color("ffffff") if amarilla else Color("ffd600"))
 			## Pelo, barba y cejas, con el mismo corte que su retrato 2D.
 			var look_j = jug.get("look")
 			var corte := "corto"
