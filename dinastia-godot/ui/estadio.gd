@@ -227,6 +227,8 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		perfil_b["visita1"] = visitante.color1
 		perfil_b["visita2"] = visitante.color2
 	StadiumBuilder.build(_raiz3d, perfil_b, aforo, ocupacion, club._hash_id(), club)
+	## Lo que rodea al estadio: plaza, avenida, aparcamientos y la ciudad al fondo.
+	EntornoEstadio.montar(_raiz3d, perfil, StadiumBuilder.niveles_de(perfil, aforo))
 	## La piel de la grada, la del país del club de casa (M-034).
 	OlaGrada.piel_de_pais(_raiz3d, club.pais if club != null else "")
 	if club != null:

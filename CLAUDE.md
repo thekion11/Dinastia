@@ -619,4 +619,8 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   llenaba (bloques sin cabeza desde la 5.ª fila), subir CAMINANDO a la butaca (`camino_a_butaca`). Revisión:
   `pruebas/captura_diagnostico_grada.tscn` (6 tomas) y `captura_sentarse.tscn`. Pendiente: el exterior (cajas,
   esquinas abiertas). OJO: sin pantalla, los MultiMesh no guardan posiciones (no probar eso en el banco).
+- 21-10 HECHO exterior: `visor/entorno_estadio.gd` (solo partido y Carrera; la ciudad ya tiene lo suyo) y esquinas
+  cerradas en «rect»/«principal». Captura `pruebas/captura_exterior.tscn` (FORMA=, SUFIJO=_antes).
+  SIGUIENTE (pedido): fusionar a main y hacer un VÍDEO de gameplay real CON SONIDO, más largo y detallado,
+  probando cada mecánica y variable (duración de referencia: la de un gameplay real).
 
