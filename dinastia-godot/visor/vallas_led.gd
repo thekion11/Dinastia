@@ -61,6 +61,9 @@ func sembrar(anuncios: Array) -> void:
 ## qué anuncio arranca cada uno: si todos empezaran por el primero, el anillo
 ## entero diría lo mismo a la vez y se leería como una pancarta, no como LED.
 func registrar(caja: MeshInstance3D, label: Label3D, idx: int) -> void:
+	## Sin sombra propia (20-10-2026): 36 cajas de 1,1 m se volvían a dibujar en
+	## cada pasada de sombra del sol por un borde que desde la TV no se ve.
+	caja.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var p := {"caja": caja, "label": label, "fase": float(idx) * DESFASE, "ult": -1}
 	_paneles.append(p)
 	_pintar(p, idx)
@@ -102,13 +105,91 @@ func _pintar_evento() -> void:
 		if is_instance_valid(l):
 			l.text = String(palabras[i % palabras.size()])
 			l.modulate = tintas[k]
+		_poner(p, _mat_evento[k])
+
+## LAS CAJAS EN DOS MULTIMESH (20-10-2026): eran 36 piezas con su llamada de
+## dibujo cada una (y cambiar de anuncio era cambiar de material). Ahora las
+## laterales y las del fondo son un `MultiMesh` cada una, con el color y el
+## brillo del panel por instancia (shader de abajo): 2 llamadas en vez de 36.
+## Se montan en el primer fotograma, cuando ya están todas registradas.
+const SHADER_PANEL := """
+shader_type spatial;
+render_mode cull_back;
+void fragment() {
+	ALBEDO = COLOR.rgb;
+	ROUGHNESS = 0.42;
+	METALLIC = 0.15;
+	EMISSION = COLOR.rgb * COLOR.a;
+}
+"""
+var _multis := {}     ## tamaño de caja (String) -> MultiMesh
+var _montado := false
+
+func _montar_multimesh() -> void:
+	_montado = true
+	var grupos := {}
+	for p: Dictionary in _paneles:
 		var c: MeshInstance3D = p["caja"]
-		if is_instance_valid(c):
-			c.material_override = _mat_evento[k]
+		if not is_instance_valid(c) or not (c.mesh is BoxMesh):
+			continue
+		var k := str((c.mesh as BoxMesh).size)
+		if not grupos.has(k):
+			grupos[k] = []
+		grupos[k].append(p)
+	var sh := Shader.new()
+	sh.code = SHADER_PANEL
+	var mat := ShaderMaterial.new()
+	mat.shader = sh
+	for k: String in grupos:
+		var lista: Array = grupos[k]
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_colors = true
+		mm.mesh = (lista[0]["caja"] as MeshInstance3D).mesh
+		mm.instance_count = lista.size()
+		for i in lista.size():
+			var p: Dictionary = lista[i]
+			var c: MeshInstance3D = p["caja"]
+			mm.set_instance_transform(i, c.transform)
+			mm.set_instance_color(i, _color_de(c.material_override))
+			p["mm"] = mm
+			p["mi"] = i
+			c.queue_free()
+			p["caja"] = null
+		var mmi := MultiMeshInstance3D.new()
+		mmi.name = "Paneles%d" % _multis.size()
+		mmi.multimesh = mm
+		mmi.material_override = mat
+		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(mmi)
+		_multis[k] = mm
+
+## El color de un material de panel: albedo, y en alfa el brillo (emisión).
+static func _color_de(m: Material) -> Color:
+	var sm := m as StandardMaterial3D
+	if sm == null:
+		return Color(0.1, 0.11, 0.13, 0.16)
+	## El material estándar pasa sus colores de sRGB a lineal; el shader recibe
+	## el color de la instancia tal cual, así que se convierte aquí.
+	var col := sm.albedo_color.srgb_to_linear()
+	col.a = sm.emission_energy_multiplier if sm.emission_enabled else 0.0
+	return col
+
+## Pone el material (su color) en el panel, sea caja suelta o instancia.
+func _poner(p: Dictionary, m: StandardMaterial3D) -> void:
+	p["color"] = _color_de(m)
+	if p.has("mm"):
+		(p["mm"] as MultiMesh).set_instance_color(int(p["mi"]), p["color"])
+		return
+	var c: MeshInstance3D = p["caja"]
+	if is_instance_valid(c):
+		c.material_override = m
 
 func _process(delta: float) -> void:
 	if _anuncios.is_empty() or _paneles.is_empty():
 		return
+	if not _montado:
+		_montar_multimesh()
 	_t += delta
 	if not _evento.is_empty():
 		if _t < float(_evento["hasta"]):
@@ -134,6 +215,4 @@ func _pintar(p: Dictionary, ciclo: int) -> void:
 	if is_instance_valid(l):
 		l.text = String(a.get("texto", ""))
 		l.modulate = a.get("tinta", Color.WHITE)
-	var c: MeshInstance3D = p["caja"]
-	if is_instance_valid(c):
-		c.material_override = _materiales[posmod(ciclo, _materiales.size())]
+	_poner(p, _materiales[posmod(ciclo, _materiales.size())])

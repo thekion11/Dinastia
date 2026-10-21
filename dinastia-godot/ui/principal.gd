@@ -472,6 +472,8 @@ func _ready() -> void:
 	## del fondo raiz y los FPS el limite del motor, y ambos se fijan ahi.
 	_cargar_preferencias()
 	Engine.max_fps = _fps_elegido
+	if ContadorFps.visible_pref:
+		ContadorFps.poner(get_tree(), true)
 	_construir()
 	if Principal.mundo_a_cargar != null:
 		mundo = Principal.mundo_a_cargar
@@ -481,6 +483,7 @@ func _ready() -> void:
 		_llenar_selector()
 		_escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [
 			mundo.mi_club().nombre, mundo.anio, mundo.semana])
+		_avisar_si_respaldo()
 		_refrescar()
 		_resolver_partido_abandonado()
 	elif Principal.mundo_pregenerado != null:
@@ -2808,8 +2811,34 @@ func _avanzar_semana() -> void:
 ## semana durante toda una carrera sería puro ruido en el registro-, en la
 ## misma ranura que ya usa el botón "Guardar" de arriba.
 func _autoguardar_si_toca() -> void:
-	if _autoguardado:
-		Partida.guardar(mundo, RANURA)
+	if _autoguardado and Partida.guardar(mundo, RANURA):
+		_indicador_guardado()
+
+## EL AUTOGUARDADO SE VE (M-301, 20-10): un «💾 Partida guardada» discreto arriba
+## a la derecha que se desvanece solo. Antes se guardaba sin que nadie lo supiera.
+var _ind_guardado: Label
+func _indicador_guardado() -> void:
+	if not is_inside_tree():
+		return
+	if not is_instance_valid(_ind_guardado):
+		_ind_guardado = Label.new()
+		_ind_guardado.name = "IndicadorGuardado"
+		_ind_guardado.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_ind_guardado.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+		_ind_guardado.offset_left = -240.0
+		_ind_guardado.offset_right = -20.0
+		_ind_guardado.offset_top = 62.0
+		_ind_guardado.offset_bottom = 84.0
+		_ind_guardado.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		_ind_guardado.add_theme_font_size_override("font_size", 13)
+		_ind_guardado.add_theme_color_override("font_color", Color(0.75, 0.9, 0.75))
+		_ind_guardado.z_index = 50
+		add_child(_ind_guardado)
+	_ind_guardado.text = "💾 " + Idiomas.t("Partida guardada")
+	_ind_guardado.modulate.a = 1.0
+	var tw := _ind_guardado.create_tween()
+	tw.tween_interval(1.4)
+	tw.tween_property(_ind_guardado, "modulate:a", 0.0, 0.8)
 
 func _jugar_temporada() -> void:
 	if not mundo.temporada_en_curso():
@@ -2937,8 +2966,16 @@ func _cargar() -> void:
 	_llenar_selector()
 	_escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [
 		mundo.mi_club().nombre, mundo.anio, mundo.semana])
+	_avisar_si_respaldo()
 	_refrescar()
 	_resolver_partido_abandonado()
+
+## Si el guardado principal estaba roto y se recuperó la copia (guardado
+## seguro, 20-10-2026), se le dice al jugador en vez de callarlo.
+func _avisar_si_respaldo() -> void:
+	if Partida.cargada_de_respaldo:
+		_escribir("[color=#c9a227]El último guardado estaba dañado: se recuperó la copia anterior.[/color]")
+		Partida.cargada_de_respaldo = false
 
 ## Si la última vez se cerró el juego con un partido dirigido a medias, se
 ## completa desde el marcador que había (sin repetirlo desde el 0-0).
@@ -5598,6 +5635,7 @@ func _cargar_de(nombre: String) -> void:
 	mundo = m
 	_conectar_noticias()
 	_escribir("[color=#4caf6d]Partida cargada de %s.[/color]" % nombre)
+	_avisar_si_respaldo()
 	_refrescar()
 	_resolver_partido_abandonado()
 
@@ -6006,7 +6044,7 @@ func _guardar_preferencias() -> void:
 		_clima_interactivo, _marca_tarjeta, _tipografia, Idiomas.idioma,
 		Musica.encendida, Musica.volumen, Musica.pieza, Musica.automatica, _estilo_menu,
 		_velocidad_partido, _rotar_diseno]
-	firma += "|%s|%s" % [VestidorQ.ropa_aparte, Cara.usar_fotos]
+	firma += "|%s|%s|%s" % [VestidorQ.ropa_aparte, Cara.usar_fotos, ContadorFps.visible_pref]
 	if firma == _firma_prefs:
 		return
 	_firma_prefs = firma
@@ -6034,6 +6072,7 @@ func _guardar_preferencias() -> void:
 	cf.set_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte)
 	cf.set_value("pantalla", "caras_foto", Cara.usar_fotos)
 	cf.set_value("pantalla", "fps", _fps_elegido)
+	cf.set_value("pantalla", "contador_fps", ContadorFps.visible_pref)
 	cf.set_value("juego", "modo_experto", _modo_experto)
 	cf.set_value("sonido", "encendido", Sonido.encendido)
 	cf.save(PREFS)
@@ -6089,7 +6128,10 @@ func _cargar_preferencias() -> void:
 	_modo_tv = bool(cf.get_value("pantalla", "modo_tv", _modo_tv))
 	VestidorQ.ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte))
 	Cara.usar_fotos = bool(cf.get_value("pantalla", "caras_foto", Cara.usar_fotos))
-	_fps_elegido = clampi(int(cf.get_value("pantalla", "fps", _fps_elegido)), 30, 240)
+	## 0 = «sin límite» (antes el clampi lo volvía 30 al recargar).
+	var fps_g := int(cf.get_value("pantalla", "fps", _fps_elegido))
+	_fps_elegido = 0 if fps_g == 0 else clampi(fps_g, 30, 240)
+	ContadorFps.visible_pref = bool(cf.get_value("pantalla", "contador_fps", false))
 	_modo_experto = bool(cf.get_value("juego", "modo_experto", _modo_experto))
 	Sonido.encendido = bool(cf.get_value("sonido", "encendido", Sonido.encendido))
 

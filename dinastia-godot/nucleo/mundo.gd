@@ -460,6 +460,10 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	## generado -Reales necesita ver TODOS los clubes creados para poder cruzar
 	## sus nombres contra la tabla, no uno a uno mientras se crean-.
 	Reales.aplicar(self)
+	## Con las plantillas reales nadie llevaba la cinta (21-10, M-073): el
+	## veterano de más media de cada club sin capitán.
+	for c: Club in clubes.values():
+		_capitan_si_falta(c)
 	## EL MUNDO HEREDADO (28-9-2026, `Meta`): si se pidió, los clubes arrancan
 	## con la reputación con la que quedaron en tu última partida.
 	if Meta.heredar_proximo:
@@ -576,6 +580,18 @@ func _repartir_dorsales(c: Club) -> void:
 	if capitan != null:
 		capitan.capitan = true
 
+func _capitan_si_falta(c: Club) -> void:
+	var mejor: Jugador = null
+	for j: Jugador in c.plantilla:
+		if j.capitan:
+			return
+		if j.edad >= 27 and (mejor == null or j.ovr > mejor.ovr):
+			mejor = j
+	if mejor == null and not c.plantilla.is_empty():
+		mejor = c.plantilla[0]
+	if mejor != null:
+		mejor.capitan = true
+
 ## `edad` y `ovr` a -1 significan "sortealos tu": lo usan los canteranos que
 ## suben a final de temporada, donde no hay una plantilla que respetar.
 ## Mientras `_poblar` arma una plantilla fija (ver arriba).
@@ -641,8 +657,22 @@ func crear_jugador(c: Club, grupo: String, demarcacion: String, edad: int = -1, 
 ## a pedido del usuario, mencionando el Athletic Club de Bilbao).
 ##
 ## Nunca devuelve el nombre de un futbolista real (`Nombres.vetado()`).
+## SIN TOCAYOS (M-331, 20-10): un mundo de tres ligas tenía un 10 % de nombres
+## repetidos («Lucas Barbosa» ×5). Ahora se vuelve a sortear (hasta 8 veces) si
+## el nombre ya existe; con bolsas muy chicas, alguno se puede repetir igual.
+var _nombres_usados: Dictionary = {}
 func _nombre_al_azar(pais: String = "", region: String = "") -> String:
-	return Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais, region))
+	if _nombres_usados.is_empty():
+		for c: Club in clubes.values():
+			for j: Jugador in c.plantilla:
+				_nombres_usados[j.nombre] = true
+	var nombre := ""
+	for _i in 8:
+		nombre = Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais, region))
+		if not _nombres_usados.has(nombre):
+			break
+	_nombres_usados[nombre] = true
+	return nombre
 
 func _sortear_nombre(pais: String, region: String = "") -> String:
 	var n: Array = Datos.tabla("NOMBRES")
@@ -666,7 +696,21 @@ func _sortear_nombre(pais: String, region: String = "") -> String:
 			a = ab
 	if n == null or a == null or n.is_empty() or a.is_empty():
 		return "Jugador %d" % _seq_jugador
+	## M-331: las bolsas de la base eran de 14×14; se suman las de
+	## `datos/bolsas_nombres.json` (la vasca se deja tal cual: es un sabor).
+	if region != "EUS":
+		var extra := _bolsa_extra(pais)
+		if not extra.is_empty():
+			n = n + (extra[0] as Array)
+			a = a + (extra[1] as Array)
 	return "%s %s" % [Azar.uno(n), Azar.uno(a)]
+
+static var _bolsas_extra: Dictionary = {}
+static func _bolsa_extra(pais: String) -> Array:
+	if _bolsas_extra.is_empty():
+		var j: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://datos/bolsas_nombres.json"))
+		_bolsas_extra = (j as Dictionary).get("bolsas", {"_": []}) if j is Dictionary else {"_": []}
+	return _bolsas_extra.get(pais, _bolsas_extra.get("_GENERAL", [])) if pais != "" else _bolsas_extra.get("_GENERAL", [])
 
 func _rasgo_al_azar() -> String:
 	## Que la mayoria no tenga rasgo es intencionado: si todos tienen uno, tener
@@ -793,6 +837,10 @@ func jugador_por_id(id: String) -> Jugador:
 ## `ya_jugado` es el partido que el entrenador acaba de dirigir en directo: se
 ## anota su resultado en vez de volver a simularlo.
 func avanzar_semana(ya_jugado: Partido = null) -> void:
+	## El partido mirado no pasó por `simular()`: sus notas y la forma se
+	## cierran aquí (antes ese partido no contaba en `Jugador.notas`).
+	if ya_jugado != null:
+		ya_jugado.cerrar_notas_mirado()
 	## EL CONTEXTO DE LA SEMANA PARA TODOS LOS PARTIDOS que se van a jugar: el
 	## recorte de tarjetas por videoarbitraje -que vota la asamblea- y el parte
 	## medico de tu club. `Liga`, `Copa` y `Continental` crean sus partidos por
@@ -960,6 +1008,10 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 					if sube_tienda and String(ing["concepto"]) == "Tienda y museo":
 						monto = int(round(float(monto) * 1.1))
 					c.mover_saldo(monto)
+				var mant := obras.mantenimiento_del_mes(c.rep)
+				if mant > 0:
+					c.mover_saldo(-mant)
+					_anotar_movimiento("Mantenimiento de instalaciones", -mant)
 				var venta := ingreso_tienda(c)
 				if venta > 0:
 					c.mover_saldo(venta)
@@ -1056,6 +1108,9 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	if mio_obras != null:
 		for k in obras.avanzar_semana(mio_obras):
 			obra_lista.emit(k)
+		if prensa != null:
+			for txt: String in obras.ultimos_imprevistos:
+				prensa.noticia.emit("🚧 Imprevisto en la obra", txt)
 		## La reforma del diseñador del estadio también es obra.
 		if estadio != null and estadio.avanzar_semana():
 			obra_lista.emit("reforma_estadio")
@@ -2034,6 +2089,10 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	## de verdad cuánto llevas echando raíces y no arrastre el contador del club
 	## anterior.
 	anios_en_club = 0
+	## Otra vez al final (20-10-2026): la llamada de arriba llega antes de que
+	## existan el camarín y los demás sistemas, y tu club jugaba la primera
+	## semana sin sus bonificaciones (al cargar la partida sí las tenía).
+	aplicar_bonificadores()
 	return directiva
 
 ## Sortea los torneos continentales con las plazas de cada pais.

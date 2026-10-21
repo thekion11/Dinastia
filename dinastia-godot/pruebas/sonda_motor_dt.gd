@@ -12,6 +12,7 @@ extends Node3D
 ##                       cazar sesgos hace falta N grande: N=25 en 4 procesos con
 ##                       SEMILLA0=400/500/600/700 y MITAD=120 (≈11 min); la línea
 ##                       LADOS da goles/tiros/córners/faltas/fueras/despejes L-V.
+##   TRAMPA=1  la visita con la trampa del fuera de juego (fueras L-V en LADOS).
 ##   SEMILLA0=primera semilla, MITAD=segundos de motor por tiempo (240).
 var _m: Mundo
 var duelos_tot := {}
@@ -19,7 +20,8 @@ var remates := {}
 ## Totales de todos los partidos: pases [L, V], pases buenos, fintas de la IA
 ## (intentadas, logradas), posesión en segundos [L, V] y partidos jugados.
 var extra := {"pases": [0, 0], "pases_ok": [0, 0], "fintas": 0, "fintas_ok": 0, "posesion": [0.0, 0.0], "partidos": 0,
-	"faltas": [0, 0], "corners": [0, 0], "fueras": [0, 0], "despejes": [0, 0], "goles": [0, 0], "tiros": [0, 0]}
+	"faltas": [0, 0], "corners": [0, 0], "fueras": [0, 0], "despejes": [0, 0], "goles": [0, 0], "tiros": [0, 0],
+	"amarillas": [0, 0], "rojas": [0, 0]}
 
 func _ready() -> void:
 	_m = Mundo.new()
@@ -52,7 +54,7 @@ func _ready() -> void:
 		float(extra["fintas"]) / np, 100.0 * float(extra["fintas_ok"]) / maxf(float(extra["fintas"]), 1.0)])
 	## Lado a lado (L-V) por partido: para cazar sesgos de campo.
 	var lado := ""
-	for k: String in ["goles", "tiros", "corners", "faltas", "fueras", "despejes"]:
+	for k: String in ["goles", "tiros", "corners", "faltas", "fueras", "despejes", "amarillas", "rojas"]:
 		lado += "%s %.2f-%.2f  " % [k, float(extra[k][0]) / np, float(extra[k][1]) / np]
 	print("LADOS " + lado)
 	var du_txt := ""
@@ -96,6 +98,14 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 	motor.autopiloto = true
 	motor.duracion_mitad = float(OS.get_environment("MITAD")) if OS.get_environment("MITAD") != "" else 240.0
 	motor.tacticas = tac
+	## DIFICULTAD=nivel: la visita es «la CPU» con esa dificultad (20-10-2026).
+	if OS.get_environment("DIFICULTAD") != "":
+		motor.equipo_cpu_fijo = 1
+		motor.dificultad_cpu = OS.get_environment("DIFICULTAD")
+	## TRAMPA=1: la visita juega con la trampa del fuera de juego (M-123).
+	if OS.get_environment("TRAMPA") != "":
+		motor.tacticas = [(tac[0] as Dictionary).duplicate() if tac.size() > 0 else {}, (tac[1] as Dictionary).duplicate() if tac.size() > 1 else {}]
+		motor.tacticas[1]["trampa"] = 1
 	motor.cansancio_real = cansancio
 	motor.tarjetas_reales = true
 	motor.preparar(lista, ball, "", semilla)
@@ -142,6 +152,8 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 		extra["faltas"][k] += int(motor.faltas[k])
 		extra["corners"][k] += int(motor.corners[k])
 		extra["fueras"][k] += int(motor.fueras_de_juego[k])
+		extra["amarillas"][k] += int(motor.tarjetas_motor[k][0])
+		extra["rojas"][k] += int(motor.tarjetas_motor[k][1])
 		extra["despejes"][k] += int(motor.despejes[k])
 		extra["goles"][k] += int(motor.goles[k])
 		extra["tiros"][k] += int(motor.tiros[k])
@@ -184,6 +196,8 @@ func _diag() -> void:
 	var con_dueno := 0.0
 	var total := 0.0
 	var estados := {}
+	var saques_n := {}
+	var saques_t := {}
 	var sueltos := {}
 	var largo_b := [0.0, 0.0]
 	var ancho_b := [0.0, 0.0]
@@ -195,6 +209,12 @@ func _diag() -> void:
 	while motor.estado != "fin":
 		motor.paso(dt)
 		estados[motor.estado] = float(estados.get(motor.estado, 0.0)) + dt
+		## Saques por tipo: cuántos y cuánto tiempo muerto cada uno (20-10-2026).
+		if motor.estado == "saque":
+			var tipo_s := String(motor.saque.get("tipo", "?"))
+			if motor._t_estado <= dt * 1.01:
+				saques_n[tipo_s] = int(saques_n.get(tipo_s, 0)) + 1
+			saques_t[tipo_s] = float(saques_t.get(tipo_s, 0.0)) + dt
 		if motor.estado != "juego":
 			continue
 		total += dt
@@ -246,6 +266,10 @@ func _diag() -> void:
 	print("DIAG por el aire: %s" % str(motor.cuenta_aire))
 	print("DIAG pases %s llegaron %s despejes %s" % [str(motor.pases), str(motor.pases_ok), str(motor.despejes)])
 	print("DIAG tiempo por estado %s" % str(estados))
+	var txt := ""
+	for k: String in saques_n:
+		txt += "%s %d (%.1f s c/u)  " % [k, saques_n[k], float(saques_t.get(k, 0.0)) / maxf(1.0, float(saques_n[k]))]
+	print("DIAG saques: " + txt)
 	print("DIAG en juego %.0f s, con dueño %.0f %%, cambios de posesión %d (%.1f por minuto de juego)" % [total, 100.0 * con_dueno / total, cambios_pos, cambios_pos / (total / 60.0)])
 	print("DIAG balón suelto por tipo (s): %s ; distancia media del más cercano al balón quieto/lento: %.1f m" % [str(sueltos), cerca_suelto / maxf(t_suelto, 0.01)])
 	print("DIAG bloque largo %.0f/%.0f m, ancho %.0f/%.0f m; rival más cercano al poseedor %.1f m" % [largo_b[0] / total, largo_b[1] / total, ancho_b[0] / total, ancho_b[1] / total, presion_t / maxf(t_pos, 0.01)])
