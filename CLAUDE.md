@@ -647,3 +647,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   `pruebas/medir_oclusion.tscn`), panel de objetivos por señal, ritmos 4/5,5/7,5 s/min + `MotorJugable.prisa`
   (≈2,6 goles y 15 tiros en «normal»), sin táctiles en PC, mentor no tapa la prensa, `cono_farola.gdshader`,
   malabares con racha, manos del público. Reevaluación: `dinastia-godot/REEVALUACION_INFORME_21_10.md` (≈78).
+- 21-10: el usuario RECHAZA los puntos 1-3 del informe (la ciudad se queda: es parte del juego). «Sigue puliendo».
+  HECHO: fabricantes con logo en la camiseta 3D (M-057, `DisenosKit.marca_de`, `marca_forma`), motor del coche
+  sintetizado (M-173, `visor/motor_coche_sonido.gd`), PRÁCTICA LIBRE en la sala de minijuegos (M-130,
+  `VistaEstadio.abrir_practica`, `MotorJugable.empezar_practica`, `pruebas/prueba_practica.tscn`), ropa variada en
+  la grada (M-033), cuerpo por físico (M-081, `PersonajeDT.cuerpo_futbolista`), gatillos de presión (M-124).
+  ESTADO_MEJORAS: HECHO 110 · PARCIAL 115 · PENDIENTE 227. OJO: en el motor, NO usar los dict de jugador como
+  clave de Dictionary (cambian y la búsqueda falla): usar p["id"].
