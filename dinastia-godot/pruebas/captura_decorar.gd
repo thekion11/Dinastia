@@ -32,6 +32,8 @@ func _ready() -> void:
 func _foto() -> void:
 	var img := get_viewport().get_texture().get_image()
 	img.resize(480, 270)
+	## Mismo formato que la hoja: con formatos distintos `blit_rect` no copia nada.
+	img.convert(Image.FORMAT_RGBA8)
 	_imgs.append(img)
 
 func _a_sala(planta: int, sala: String) -> void:
@@ -60,7 +62,7 @@ func _process(_d: float) -> void:
 		var it := RecorridoClub.interiores()
 		it.pintar("Oficina del DT", "pared", "1f3f6b")
 		it.pintar("Oficina del DT", "suelo", "e9dcc9")
-		for k: String in ["sofa", "bufanda", "planta", "maqueta", "trofeo", "lampara"]:
+		for k: String in ["sillon", "bufanda", "planta", "estanteria", "trofeo", "radio"]:
 			it.poner("Oficina del DT", k)
 		it.colgar("Oficina del DT", ModoFoto.CARPETA + "/foto_prueba-decorar.png")
 		it.colgar("Oficina del DT", ModoFoto.CARPETA + "/foto_prueba-decorar.png")
@@ -83,7 +85,7 @@ func _process(_d: float) -> void:
 		var hoja := Image.create(480 * 2, 270 * 2, false, Image.FORMAT_RGBA8)
 		for k in _imgs.size():
 			hoja.blit_rect(_imgs[k], Rect2i(0, 0, 480, 270), Vector2i((k % 2) * 480, (k / 2) * 270))
-		hoja.save_png("res://pruebas/capturas/decorar.png")
+		hoja.save_png("res://pruebas/capturas/decorar%s.png" % OS.get_environment("SUFIJO"))
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(ModoFoto.CARPETA + "/foto_prueba-decorar.png"))
 		print("HOJA OK")
 		get_tree().quit()

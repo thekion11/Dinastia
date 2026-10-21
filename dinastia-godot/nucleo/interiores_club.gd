@@ -29,6 +29,14 @@ const CATALOGO := {
 	"pizarra": ["Tu pizarra táctica", "📋", true],
 	"maqueta": ["Maqueta del estadio", "🏟️", true],
 	"guitarra": ["Tu guitarra", "🎸", true],
+	## Más muebles (21-10-2026), del catálogo común de piezas (`Modulos`).
+	"escritorio": ["Escritorio", "🖥️", false],
+	"sillon": ["Sillón", "💺", false],
+	"mesa_baja": ["Mesa baja", "🫖", false],
+	"radio": ["Radio", "📻", false],
+	"perchero": ["Perchero", "🧥", false],
+	"altavoz": ["Altavoz", "🔊", false],
+	"nevera": ["Nevera", "🧊", false],
 }
 
 ## Colores a elegir para paredes y suelos.
