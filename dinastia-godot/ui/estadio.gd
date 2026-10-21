@@ -229,6 +229,8 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	StadiumBuilder.build(_raiz3d, perfil_b, aforo, ocupacion, club._hash_id(), club)
 	## La piel de la grada, la del país del club de casa (M-034).
 	OlaGrada.piel_de_pais(_raiz3d, club.pais if club != null else "")
+	if club != null:
+		OlaGrada.colores_club(_raiz3d, Color(club.color1), Color(club.color2))
 	## LA PANTALLA GIGANTE (22-9-2026, rehecha el 23-9). Ahora se monta SIEMPRE,
 	## haya partido o no: sin partido enseña bienvenida + tabla + goleadores,
 	## que es lo que hace la pantalla de un estadio de verdad un día entre
