@@ -152,6 +152,12 @@ void fragment() {
 	vec3 piel = mix(piel_clara, piel_oscura, pow(v_azar, piel_sesgo));
 	float cab = step(v_lado, lado_max);
 	vec3 color = mix(ropa, piel, smoothstep(cuello_desde, cuello_hasta, v_alto) * cab);
+	// Los brazos en alto (21-10-2026, vista desde la butaca): por encima del
+	// cuello y lejos de la cabeza solo hay antebrazos y manos, que son piel.
+	// Antes salían del color de la ropa: manos azules y verdes, como guantes.
+	if (lado_max < 9.0 && v_lado > lado_max) {
+		color = mix(color, piel, smoothstep(cuello_desde - 0.02, cuello_hasta + 0.06, v_alto));
+	}
 	// Pelo: negro, castaño, rubio o canoso, según el mismo azar del hincha;
 	// uno de cada seis, calvo o con gorro del color de la ropa.
 	float r = fract(v_azar * 7.31);

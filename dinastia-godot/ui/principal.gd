@@ -1229,6 +1229,8 @@ func tutorial_objetivo(clave: String) -> Control:
 ## Lo que completa un paso sin pulsar "Siguiente": que el jugador haya hecho
 ## eso mismo que la tarjeta le pedía.
 func tutorial_hecho(clave: String) -> bool:
+	if not is_instance_valid(_pestanas):
+		return false
 	var titulo := _pestanas.get_tab_title(_pestanas.current_tab) if _pestanas.get_tab_count() > 0 else ""
 	## Las misiones del tutorial inmersivo: una pestaña concreta, una sección
 	## concreta de una pestaña, o la ficha de un jugador concreto.
@@ -1435,7 +1437,11 @@ func _ir_a_pestana(titulo: String) -> void:
 ## desde una captura/prueba que hace `tabs.current_tab = i` directamente-, así
 ## que la barra de grupos nunca queda desincronizada de lo que en verdad se
 ## está viendo.
+## Lo que se ve cambió (pestaña o ficha): lo escucha el panel de objetivos.
+signal vista_cambiada
+
 func _al_cambiar_pestana(_idx: int) -> void:
+	vista_cambiada.emit()
 	var titulo := _pestanas.get_tab_title(_pestanas.current_tab)
 	var gid := _grupo_de_pestana(titulo)
 	## "" = pestaña de hub contextual (Táctica, Mercado, Copa...). No pertenece
@@ -3644,6 +3650,7 @@ func _objetivos(mio: Club) -> Array[Jugador]:
 	return salida
 
 func _ver_ficha(j: Jugador) -> void:
+	vista_cambiada.emit()
 	if j == null or (_seleccionado != null and j.id != _seleccionado.id):
 		_confirmar_rescision_id = ""
 	_seleccionado = j
