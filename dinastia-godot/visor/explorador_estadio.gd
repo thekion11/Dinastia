@@ -338,7 +338,7 @@ var _est_perfil: Dictionary = {}
 
 func sentarse() -> void:
 	var lado := signf(cuerpo.position.x)
-	var b := RecorridoClub.butaca(_est_perfil, lado, cuerpo.position.z)
+	var b := RecorridoClub.butaca(_est_perfil, lado, cuerpo.position.z, 3, get_parent())
 	_de_pie = cuerpo.position
 	cuerpo.position = b["pos"]
 	rumbo = float(b["rumbo"])
