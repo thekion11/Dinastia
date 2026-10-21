@@ -111,6 +111,7 @@ func _montar(duracion_mitad: float) -> void:
 	StadiumBuilder.build_pitch(_raiz, perfil, local)
 	StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
 	OlaGrada.piel_de_pais(_raiz, local.pais)
+	OlaGrada.colores_club(_raiz, Color(local.color1), Color(local.color2))
 	## Lo que el modo entrenador ya tenía y aquí faltaba: la lluvia o la nieve,
 	## la pantalla gigante y camarógrafos/guardias de verdad en vez de maniquíes.
 	var gp := StadiumBuilder.geom_de_forma(String(perfil.get("forma", "oval")))

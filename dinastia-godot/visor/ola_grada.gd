@@ -104,6 +104,14 @@ const PIEL_SESGO := {
 	"ESP": 2.0, "ITA": 2.2, "GER": 2.2, "ENG": 1.4, "FRA": 1.0,
 	"JPN": 2.6, "KOR": 2.6, "AUS": 2.0, "KSA": 0.9, "EGY": 0.8, "MAR": 0.9, "RSA": 0.5,
 }
+## Los colores de las bufandas y gorras de la grada: los del club de casa.
+static func colores_club(raiz: Node, c1: Color, c2: Color) -> void:
+	if raiz == null:
+		return
+	for m: ShaderMaterial in materiales(raiz):
+		m.set_shader_parameter("bufanda1", c1)
+		m.set_shader_parameter("bufanda2", c2)
+
 static func piel_de_pais(raiz: Node, pais: String) -> void:
 	if raiz == null:
 		return

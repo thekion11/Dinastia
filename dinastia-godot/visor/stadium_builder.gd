@@ -1331,6 +1331,9 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 					else Vector3(largo_deck, FRENTE_BANDEJA, 0.8)
 				_box(root, Vector3(frente_pos.x, y_pie - FRENTE_BANDEJA / 2.0 + 0.2,
 					frente_pos.z), frente_size, stand_mat)
+				## La cinta LED del peto (21-10-2026), mirando al campo.
+				_cinta_led(root, Vector3(frente_pos.x, y_pie - 1.1, frente_pos.z) + cara * 0.42, cara,
+					largo_deck, est)
 
 		var techo_cabeceras_i := techo_i in ["anillo", "total", "membrana", "retractil", "visera"]
 		var techo_lados_i := techo_i != "sin"
@@ -2616,6 +2619,84 @@ static func _vomitorios(deck: MeshInstance3D, largo: float, fondo: float,
 ## `bandeja` (23-9-2026): qué piso del graderío es este, contando desde el
 ## césped. Decide cuántas filas de butacas 3D se pueden permitir -ver la nota
 ## del presupuesto, más abajo-.
+## Una cinta LED de 1,2 m de alto y `largo` m, en `pos`, de cara a `cara`.
+static var _shader_cinta: Shader
+static func _cinta_led(root: Node3D, pos: Vector3, cara: Vector3, largo: float, est: Dictionary) -> void:
+	if _shader_cinta == null:
+		_shader_cinta = load("res://visor/cinta_led.gdshader")
+	var q := QuadMesh.new()
+	q.size = Vector2(largo, 1.2)
+	var mi := MeshInstance3D.new()
+	mi.name = "CintaLED"
+	mi.mesh = q
+	var m := ShaderMaterial.new()
+	m.shader = _shader_cinta
+	m.set_shader_parameter("c1", Color(str(est.get("hincha1", est.get("asiento1", "#1f5f3d")))))
+	m.set_shader_parameter("c2", Color(str(est.get("hincha2", est.get("asiento2", "#ffffff")))))
+	m.set_shader_parameter("largo", largo)
+	mi.material_override = m
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	root.add_child(mi)
+	mi.position = pos
+	## El QuadMesh mira a +Z: se gira hacia `cara` (hacia el campo).
+	mi.rotation.y = atan2(cara.x, cara.z)
+
+## ¿Esta columna de butacas es un pasillo? Cada 8 grupos (≈ 12 m), en tribunas
+## de al menos 12 grupos.
+static func es_pasillo(c: int, cuantas_fila: int) -> bool:
+	return cuantas_fila >= 12 and c % 8 == 4
+
+static var _mat_peldano: StandardMaterial3D
+static var _mat_baranda: StandardMaterial3D
+## Los peldaños de todos los pasillos de una bandeja en un MultiMesh, y una
+## barandilla por pasillo (en el espacio del deck, que va inclinado: la
+## barandilla sigue la pendiente sola).
+static func _montar_pasillos(deck: MeshInstance3D, escalones: Array[Transform3D], pasillos_l: Array[float],
+		lateral: bool, fondo: float) -> void:
+	if escalones.is_empty():
+		return
+	if _mat_peldano == null:
+		_mat_peldano = StandardMaterial3D.new()
+		_mat_peldano.albedo_color = Color(0.68, 0.68, 0.66)
+		_mat_peldano.roughness = 0.9
+		_mat_baranda = StandardMaterial3D.new()
+		_mat_baranda.albedo_color = Color(0.82, 0.83, 0.85)
+		_mat_baranda.metallic = 0.6
+		_mat_baranda.roughness = 0.35
+	var bm := BoxMesh.new()
+	bm.size = Vector3(1.25, 0.42, PASO_FILA + 0.02)
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = bm
+	mm.instance_count = escalones.size()
+	for k in escalones.size():
+		mm.set_instance_transform(k, escalones[k])
+	var mmi := MultiMeshInstance3D.new()
+	mmi.name = "Pasillos"
+	mmi.multimesh = mm
+	mmi.material_override = _mat_peldano
+	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	deck.add_child(mmi)
+	if fondo < 3.0:
+		return
+	var rail := BoxMesh.new()
+	rail.size = Vector3(0.05, 0.05, fondo - 0.6)
+	var mr := MultiMesh.new()
+	mr.transform_format = MultiMesh.TRANSFORM_3D
+	mr.mesh = rail
+	mr.instance_count = pasillos_l.size()
+	for k in pasillos_l.size():
+		var l: float = pasillos_l[k]
+		var bas := Basis(Vector3.UP, PI * 0.5) if lateral else Basis()
+		var pos := Vector3(0.0, 0.95, l) if lateral else Vector3(l, 0.95, 0.0)
+		mr.set_instance_transform(k, Transform3D(bas, pos))
+	var mri := MultiMeshInstance3D.new()
+	mri.name = "Barandillas"
+	mri.multimesh = mr
+	mri.material_override = _mat_baranda
+	mri.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	deck.add_child(mri)
+
 static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dictionary,
 		ocupacion: float, alto: float = 6.5, rake: float = 0.0, bandeja: int = 0) -> void:
 	var esc := load(RUTA_BUTACAS)
@@ -2733,14 +2814,19 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var det_col: Array[Color] = []
 	var med_xf: Array[Transform3D] = []
 	var med_col: Array[Color] = []
-	var filas_medio := 8
-	var filas_detalle: int = (6 if Calidad.elegida >= Calidad.ULTRA else 4) if Calidad.elegida >= Calidad.ALTO else 3
+	## 21-10-2026 («la gente no se ve tan real»; el dueño da el rendimiento por
+	## bueno): más filas con la persona de detalle (4 → 7 en ALTO) y con la de
+	## nivel medio (8 → 12). Desde la quinta fila se veían bloques sin cabeza.
+	var filas_medio := 12
+	var filas_detalle: int = (10 if Calidad.elegida >= Calidad.ULTRA else 7) if Calidad.elegida >= Calidad.ALTO else 3
 	## Un hincha por asiento ocupado: tres por grupo (dos en calidad Media).
 	var por_grupo: int = 3 if Calidad.elegida >= Calidad.ALTO else 2
 	var eje_largo := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
 	var eje_rake := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
 	var i := 0
 	var j := 0
+	var escalones: Array[Transform3D] = []
+	var pasillos_l: Array[float] = []
 	for f in range(filas_todas):
 		## Se empieza por el borde de abajo del deck (el que da al cesped).
 		var d: float = sentido * (-fondo * 0.5 + 0.6 + f * PASO_FILA)
@@ -2758,6 +2844,23 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 			if rng.randf() < 0.04:
 				col = col.lightened(0.25)
 			col = col.darkened(rng.randf() * 0.12)
+			## LOS PASILLOS CON ESCALERA (21-10-2026, «la tribuna sigue viéndose
+			## mal»): cada 8 grupos de butacas, una columna libre con peldaños
+			## horizontales y barandilla, como en cualquier estadio. Parte la
+			## grada en bloques (de lejos era un muro de ruido) y deja el camino
+			## por el que se sube a las filas.
+			if es_pasillo(c, cuantas_fila):
+				var cero := Transform3D(Basis().scaled(Vector3.ZERO), p)
+				if f < filas:
+					mm.set_instance_transform(i, cero)
+					i += 1
+				else:
+					mm_lejos.set_instance_transform(j, cero)
+					j += 1
+				escalones.append(Transform3D(Basis().rotated(Vector3.UP, giro).rotated(eje_rake, -rake) if rake != 0.0 else Basis().rotated(Vector3.UP, giro), p + Vector3(0, -0.13, 0)))
+				if f == 0:
+					pasillos_l.append(l)
+				continue
 			if f < filas:
 				mm.set_instance_transform(i, Transform3D(base, p))
 				mm.set_instance_color(i, col)
@@ -2792,9 +2895,18 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 				if cerca:
 					det_xf.append(xf)
 					det_col.append(col_h)
+				## Las filas siguientes con la persona de nivel medio (estaba
+				## previsto y nunca se llenaba: desde la 5.ª fila eran todos la
+				## malla «lejos», bloques sin cabeza). En ALTO: las 12 filas
+				## siguientes de la bandeja baja y las 6 primeras de la segunda.
+				elif Calidad.elegida >= Calidad.ALTO and ((bandeja == 0 and f < filas_detalle + filas_medio) or (bandeja == 1 and f < 6)):
+					med_xf.append(xf)
+					med_col.append(col_h)
 				else:
 					hinchas_xf.append(xf)
 					hinchas_col.append(col_h)
+
+	_montar_pasillos(deck, escalones, pasillos_l, lateral, fondo)
 
 	## Debajo de las butacas, cemento: la textura con gente pintada ya no hace
 	## falta y entre fila y fila se veía como manchas estiradas.

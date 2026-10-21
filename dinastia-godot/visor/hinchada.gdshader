@@ -134,8 +134,21 @@ void vertex() {
 	}
 }
 
+// MÁS GENTE DE VERDAD (21-10-2026, «la gente no se ve tan real»): cada hincha
+// era de un solo color plano. Ahora la ropa tiene volumen (más oscura abajo,
+// donde la tapa la butaca de delante), no todas las camisetas son del mismo
+// blanco o negro puro, uno de cada tres lleva la bufanda del club al cuello
+// (a franjas) y uno de cada nueve, gorra. Los colores de la bufanda los pone
+// `OlaGrada.colores_club` (los del club de casa).
+uniform vec3 bufanda1 : source_color = vec3(0.1, 0.35, 0.2);
+uniform vec3 bufanda2 : source_color = vec3(0.95);
+
 void fragment() {
 	vec3 ropa = COLOR.rgb;
+	// Nadie viste un blanco ni un negro perfectos y no todas las telas brillan igual.
+	ropa = clamp(ropa, vec3(0.06), vec3(0.86)) * (0.86 + 0.24 * fract(v_azar * 13.7));
+	// Volumen: la cintura en sombra, los hombros a la luz.
+	ropa *= mix(0.62, 1.0, smoothstep(cuello_desde * 0.35, cuello_desde * 0.95, v_alto));
 	vec3 piel = mix(piel_clara, piel_oscura, pow(v_azar, piel_sesgo));
 	float cab = step(v_lado, lado_max);
 	vec3 color = mix(ropa, piel, smoothstep(cuello_desde, cuello_hasta, v_alto) * cab);
@@ -145,6 +158,17 @@ void fragment() {
 	vec3 pelo = r < 0.35 ? vec3(0.05, 0.04, 0.035) : (r < 0.65 ? vec3(0.22, 0.13, 0.07) : (r < 0.8 ? vec3(0.72, 0.58, 0.32) : (r < 0.86 ? vec3(0.62, 0.62, 0.6) : ropa * 0.9)));
 	if (r < 0.94) {
 		color = mix(color, pelo, smoothstep(pelo_desde, pelo_desde + 0.01, v_alto) * cab);
+	}
+	// La bufanda del club, a franjas, justo bajo el cuello.
+	float rb = fract(v_azar * 5.17);
+	if (rb < 0.34 && v_alto > cuello_desde - 0.075 && v_alto < cuello_desde + 0.012) {
+		float franja = step(0.5, fract(v_alto * 45.0));
+		color = mix(bufanda1, bufanda2, franja);
+	}
+	// Gorra: lo más alto de la cabeza, del color del club o oscura.
+	float rg = fract(v_azar * 9.31);
+	if (rg < 0.11 && v_alto > pelo_desde + 0.015 && cab > 0.5) {
+		color = rg < 0.06 ? bufanda1 : vec3(0.08, 0.08, 0.1);
 	}
 	ALBEDO = color;
 	ROUGHNESS = 0.85;
