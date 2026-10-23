@@ -234,22 +234,20 @@ func paso(e: Vector2, corre: bool, delta: float) -> void:
 	vel = move_toward(vel, objetivo, (7.0 if absf(objetivo) > absf(vel) else 12.0) * delta) if delta > 0.0 else objetivo
 	rumbo -= e.x * delta * 2.6
 	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
-	var nueva := cuerpo.position + adelante * vel * delta
-	if not zona_en(nueva, RADIO).is_empty():
-		cuerpo.position = Vector3(nueva.x, RecorridoClub.y_de(planta), nueva.z)
-	else:
-		## Choque en diagonal: se desliza por la pared en vez de pararse.
-		var ant := cuerpo.position
-		var px := Vector3(nueva.x, ant.y, ant.z)
-		var pz := Vector3(ant.x, ant.y, nueva.z)
-		if not zona_en(px, RADIO).is_empty():
-			cuerpo.position = Vector3(px.x, RecorridoClub.y_de(planta), px.z)
-			vel *= 0.92
-		elif not zona_en(pz, RADIO).is_empty():
-			cuerpo.position = Vector3(pz.x, RecorridoClub.y_de(planta), pz.z)
-			vel *= 0.92
-		else:
+	var ant := cuerpo.position
+	var quiere := ant + adelante * vel * delta
+	## Colisión del cuerpo entero: paredes, muebles y gente (`ColisionClub`).
+	var pe := _personal()
+	var llega := ColisionClub.mover(cuerpo, ant, quiere, zonas, planta, Vector3.ZERO, pe)
+	var pedido := Vector2(quiere.x - ant.x, quiere.z - ant.z).length()
+	var hecho := Vector2(llega.x - ant.x, llega.z - ant.z).length()
+	if pedido > 1e-4:
+		if hecho < pedido * 0.2:
 			vel = 0.0
+		elif hecho < pedido * 0.9:
+			vel *= 0.92
+	cuerpo.position = Vector3(llega.x, RecorridoClub.y_de(planta), llega.z)
+	PersonalEstadio.avisar_jugador(cuerpo.position, planta)
 	cuerpo.rotation.y = rumbo
 	_animar_paso()
 

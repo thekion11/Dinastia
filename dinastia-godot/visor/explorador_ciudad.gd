@@ -1733,30 +1733,24 @@ func _mover_en_estadio(delta: float) -> void:
 		## Cruzada la puerta, ya en la calle.
 		_salir_del_estadio()
 		return
-	## Choque en diagonal contra una pared: se desliza en vez de pararse.
-	if TunelVestuario.zona_en(zonas, local, _planta).is_empty() \
-			and not (_planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 0.5):
-		var ant := cuerpo.position
-		var px := Vector3(nueva.x, ant.y, ant.z)
-		var pz := Vector3(ant.x, ant.y, nueva.z)
-		if not TunelVestuario.zona_en(zonas, px - CityBuilder.ESTADIO_EN, _planta).is_empty():
-			nueva = px
-			local = nueva - CityBuilder.ESTADIO_EN
-			_vel_pie *= 0.92
-		elif not TunelVestuario.zona_en(zonas, pz - CityBuilder.ESTADIO_EN, _planta).is_empty():
-			nueva = pz
-			local = nueva - CityBuilder.ESTADIO_EN
-			_vel_pie *= 0.92
-		else:
-			_vel_pie = 0.0
-	if not TunelVestuario.zona_en(zonas, local, _planta).is_empty():
-		cuerpo.position = Vector3(nueva.x, RecorridoClub.y_de(_planta), nueva.z)
-	elif _planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 0.5:
-		## Por la puerta, a la calle: sin pulsar nada, como en la vida.
+	## Colisión del cuerpo entero (paredes, muebles, gente): `ColisionClub`.
+	## La puerta a la calle es la excepción: cruzarla saca del estadio.
+	if _planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 0.5:
 		_salir_del_estadio()
 		return
-	else:
-		vel = 0.0
+	var ant := cuerpo.position
+	var pe_col := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	var llega := ColisionClub.mover(cuerpo, ant, nueva, zonas, _planta, CityBuilder.ESTADIO_EN, pe_col)
+	var pedido := Vector2(nueva.x - ant.x, nueva.z - ant.z).length()
+	var hecho := Vector2(llega.x - ant.x, llega.z - ant.z).length()
+	if pedido > 1e-4:
+		if hecho < pedido * 0.2:
+			vel = 0.0
+			_vel_pie = 0.0
+		elif hecho < pedido * 0.9:
+			_vel_pie *= 0.92
+	cuerpo.position = Vector3(llega.x, RecorridoClub.y_de(_planta), llega.z)
+	PersonalEstadio.avisar_jugador(cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
 	cuerpo.rotation.y = rumbo
 	_animar_dt(vel)
 	var z := TunelVestuario.zona_en(zonas, cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
