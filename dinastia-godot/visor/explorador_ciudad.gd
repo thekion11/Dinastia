@@ -1739,7 +1739,7 @@ func _mover_en_estadio(delta: float) -> void:
 		_salir_del_estadio()
 		return
 	var ant := cuerpo.position
-	var pe_col := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	var pe_col := (get_tree().get_first_node_in_group("personal_club") as PersonalEstadio) if is_inside_tree() else null
 	var llega := ColisionClub.mover(cuerpo, ant, nueva, zonas, _planta, CityBuilder.ESTADIO_EN, pe_col)
 	var pedido := Vector2(nueva.x - ant.x, nueva.z - ant.z).length()
 	var hecho := Vector2(llega.x - ant.x, llega.z - ant.z).length()
