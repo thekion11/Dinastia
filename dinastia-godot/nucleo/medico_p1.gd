@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `medico.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `medico.gd`, conserva la clase.)
+## [Capa 1/2 de `medico.gd`] _init, catalogo, _bolsa, severidad_en_partido, ficha, historial … (+17)
 
 ## El parte médico: cuánto dura cada lesión, quién recae y qué cuesta acortarlo.
 ##

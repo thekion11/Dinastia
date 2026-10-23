@@ -1,5 +1,5 @@
 extends "res://nucleo/prensa_p5.gd"
-## (Parte 6 de 7 de `prensa.gd`.)
+## [Capa 7/8 de `prensa.gd`] clasificar_respuesta, opcion_de_texto, responder_texto, pie_de_campo, revisar_al_paso, abrir_al_paso … (+18)
 
 ## El tono de una frase escrita. Menos de ocho letras tampoco es una respuesta.
 func clasificar_respuesta(texto: String) -> String:

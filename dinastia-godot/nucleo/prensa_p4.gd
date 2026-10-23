@@ -1,5 +1,5 @@
 extends "res://nucleo/prensa_p4_p1.gd"
-## (Parte 2 de 2 de `prensa_p4.gd`.)
+## [Capa 5/8 de `prensa.gd`] resolver_2, resolver
 
 ## Tramo 2 de 2 de `resolver` (la norma de 450 líneas la troceó).
 func resolver_2(op: String, m: Mundo, mio: Club, e: Dictionary, si: bool, j: Jugador, rep: float, salida: Dictionary) -> Array:

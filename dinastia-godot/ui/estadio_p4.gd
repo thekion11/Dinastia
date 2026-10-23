@@ -1,5 +1,5 @@
 extends "res://ui/estadio_p3.gd"
-## (Parte 4 de 6 de `estadio.gd`.)
+## [Capa 4/6 de `estadio.gd`] _al_gol, _frenar_destacado, _a_la_tarjeta, _al_cambio, _al_remate, _a_la_lesion … (+12)
 
 func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) -> void:
 	var a_favor := c == club

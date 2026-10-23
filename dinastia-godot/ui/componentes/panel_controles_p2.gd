@@ -1,5 +1,5 @@
 extends "res://ui/componentes/panel_controles_p1.gd"
-## (Parte 2 de 3 de `panel_controles.gd`.)
+## [Capa 2/3 de `panel_controles.gd`] _etiquetas_mando, _entrada_escalonada, _pintar, _montar_cabecera, _secciones, _enfocar_primera_fila … (+14)
 
 func _etiquetas_mando() -> void:
 	var et := {}

@@ -1,5 +1,5 @@
 extends Node3D
-## (Parte 1 de 3 de `sorteo_escena3d.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `sorteo_escena3d.gd`, conserva la clase.)
+## [Capa 1/3 de `sorteo_escena3d.gd`] cortar_plano, _vertices_icosaedro, textura_balon, _montar_suelo, _montar_sala, _montar_pared … (+2)
 
 ## El plató del sorteo, en 3D de verdad.
 ##

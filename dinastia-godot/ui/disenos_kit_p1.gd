@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `disenos_kit.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `disenos_kit.gd`, conserva la clase.)
+## [Capa 1/3 de `disenos_kit.gd`] claves, diseno, indice_diseno, indice_de, _diseno_de, marca_de … (+8)
 
 ## EL CATÁLOGO DE LA EQUIPACIÓN (26-9-2026). Pedido: *"más variantes de diseño de
 ## camiseta, colores de números, mínimo unos 50 diseños más, poder combinar hasta

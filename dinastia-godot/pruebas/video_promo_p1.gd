@@ -1,5 +1,5 @@
 extends Node
-## (Parte 1 de 2 de `video_promo.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `video_promo.gd`, conserva la clase.)
+## [Capa 1/2 de `video_promo.gd`] _montar_rotulo, _ready, _t, _sin_aa, _animar_rotulo, _process … (+32)
 
 ## EL VÍDEO PROMOCIONAL (29-9-2026). Pedido del usuario: «jugando de verdad, un
 ## vídeo realmente detallado y largo, mostrando cada detalle y función».

@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p2.gd"
-## (Parte 3 de 3 de `sonido.gd`.)
+## [Capa 5/5 de `sonido.gd`] _sintetizar_banco, _generar_en_fondo, _ready, banco, _generar_todo, _exit_tree … (+3)
 
 func _sintetizar_banco(nombre: String) -> Array[AudioStreamWAV]:
 	var b: Array[AudioStreamWAV] = []

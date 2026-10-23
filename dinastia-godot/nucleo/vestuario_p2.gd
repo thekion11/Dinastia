@@ -1,5 +1,5 @@
 extends "res://nucleo/vestuario_p1.gd"
-## (Parte 2 de 4 de `vestuario.gd`.)
+## [Capa 2/4 de `vestuario.gd`] chequeo_clanes, mediar, estado_mental, _proceso_mental, dar_terapia, descanso_mental … (+13)
 
 ## Qué pasa cuando sientas al líder de un grupo.
 ##

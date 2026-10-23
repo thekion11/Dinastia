@@ -1,5 +1,5 @@
 extends SubViewport
-## (Parte 1 de 2 de `pantalla_estadio.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_estadio.gd`, conserva la clase.)
+## [Capa 1/2 de `pantalla_estadio.gd`] _color_casa, _etiqueta, _base, _escudo_de, abreviatura, _barra_posesion … (+9)
 
 ## LA PANTALLA GIGANTE DEL ESTADIO, con contenido de verdad y en rotación.
 ##

@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `pantalla_cantera.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_cantera.gd`, conserva la clase.)
+## [Capa 1/3 de `pantalla_cantera.gd`] _init, _pintar_palmares_mundial, _nacionalizar, _pintar_seleccion, _pintar_fondos, _pintar_mapa_del_talento … (+3)
 
 ## CANTERA Y CONTRATOS: selecciones, fondos, el mapa del talento, la cantera, las agencias, los contratos y el comparador.
 ##

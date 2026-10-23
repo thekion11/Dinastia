@@ -1,6 +1,6 @@
 class_name PantallaDespacho
 extends "res://ui/pantallas/pantalla_despacho_p1.gd"
-## (Parte 2 de 2 de `pantalla_despacho.gd`.)
+## [Capa 2/2 de `pantalla_despacho.gd`] _pintar_pregunta_rueda, _segundos_rueda, _fila_opciones_rueda, _tras_responder, _fila_texto_libre, _fila_posturas
 
 ## La pregunta en pantalla y el reloj a cero. La usa también la repregunta,
 ## que cambia el texto sin rehacer el plató 3D.

@@ -1,5 +1,5 @@
 extends Node3D
-## (Parte 1 de 6 de `explorador_ciudad.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `explorador_ciudad.gd`, conserva la clase.)
+## [Capa 1/6 de `explorador_ciudad.gd`] _raton_en_primera_persona, _sentado_fp, construir_obstaculos, _indexar_obstaculos, _indexar_circulos, _buscar_anim … (+9)
 
 ## RECORRER LA CIUDAD (7-10-2026, pedido: «la ciudad debe ser real,
 ## interactiva… conducir, caminar, interactuar con NPC»). Dos modos:

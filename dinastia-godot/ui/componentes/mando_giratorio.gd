@@ -1,6 +1,6 @@
 class_name MandoGiratorio
 extends "res://ui/componentes/mando_giratorio_p1.gd"
-## (Parte 2 de 2 de `mando_giratorio.gd`.)
+## [Capa 2/2 de `mando_giratorio.gd`] _ready, _process, _reiniciar, _gui_input, _cortar, _columna … (+1)
 
 # ------------------------------------------------------------------ montaje
 

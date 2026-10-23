@@ -1,5 +1,5 @@
 extends "res://ui/componentes/interior_instalacion_p2.gd"
-## (Parte 3 de 7 de `interior_instalacion.gd`.)
+## [Capa 3/7 de `interior_instalacion.gd`] _cuadro, _comisaria, _bomberos, _aula, _prim, _texto … (+4)
 
 ## Un cuadro en la pared del fondo (lámina de color con marco).
 func _cuadro(p: Vector3, tam: Vector2, col: Color) -> void:

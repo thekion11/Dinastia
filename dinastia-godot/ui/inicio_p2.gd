@@ -1,5 +1,5 @@
 extends "res://ui/inicio_p1.gd"
-## (Parte 2 de 3 de `inicio.gd`.)
+## [Capa 2/3 de `inicio.gd`] _al_pulsar_modo, _tarjeta, _guardar_ajuste, _degradado, _pintar_banner, _actualizar_picker … (+11)
 
 ## Una tarjeta de modo, pulsada. Las jugables siguen exactamente el camino de
 ## siempre -nombre, dificultad, elegir club-; las que todavía no lo son

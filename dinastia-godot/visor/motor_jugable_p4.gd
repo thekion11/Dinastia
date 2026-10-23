@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p3.gd"
-## (Parte 4 de 12 de `motor_jugable.gd`.)
+## [Capa 4/12 de `motor_jugable.gd`] _mover_balon, _plano, _libre_para_duelo, _fuerza, _derecha, _ganador … (+11)
 
 # ---------------------------------------------------------------- balón
 

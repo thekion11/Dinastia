@@ -1,6 +1,6 @@
 class_name CiudadExpansion
 extends "res://visor/ciudad_expansion_p8.gd"
-## (Parte 9 de 9 de `ciudad_expansion.gd`.)
+## [Capa 9/9 de `ciudad_expansion.gd`] _kenney_calles, _parque_eolico, _deposito_agua, _volcar_lotes, construir, _kit_apilado … (+6)
 
 func _kenney_calles() -> void:
 	var r := RandomNumberGenerator.new()

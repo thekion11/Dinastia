@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `pantalla_legado.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_legado.gd`, conserva la clase.)
+## [Capa 1/3 de `pantalla_legado.gd`] _init, _pintar_inicio, _texto_proximo_compromiso, _pintar_desgaste, _pintar_rival_dt, _pintar_leyenda_viva … (+6)
 
 ## INICIO, CARRERA Y LEGADO: la portada, el legado, el rival DT, las filiales, la sucesión, el árbol de habilidades, el fin de carrera y los récords.
 ##

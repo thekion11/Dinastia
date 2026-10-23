@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 3 de `tutorial.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `tutorial.gd`, conserva la clase.)
+## [Capa 1/3 de `tutorial.gd`] _negrita, contexto, _nombre_mentor, mentor_de, _paso, _dt_o … (+17)
 
 ## EL TUTORIAL INMERSIVO (25-9-2026, segunda versión).
 ##

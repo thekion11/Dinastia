@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `pantalla_opciones.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_opciones.gd`, conserva la clase.)
+## [Capa 1/2 de `pantalla_opciones.gd`] _init, _pintar_glosario, _pintar_idioma, _pintar_moneda, _situacion_musical, _pintar_musica … (+7)
 
 ## GLOSARIO, IDIOMA, MONEDA, MÚSICA, PEÑAS, ATAJOS Y DISPOSITIVO.
 ##

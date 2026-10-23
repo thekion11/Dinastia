@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p2.gd"
-## (Parte 3 de 25 de `banco.gd`.)
+## [Capa 3/27 de `banco.gd`] _probar_partidos, _probar_previa, _probar_arbitros, _probar_pie_habil
 
 func _probar_partidos() -> void:
 	_titulo("PARTIDOS: LA CURVA DE GOLES")

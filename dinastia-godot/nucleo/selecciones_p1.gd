@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `selecciones.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `selecciones.gd`, conserva la clase.)
+## [Capa 1/3 de `selecciones.gd`] _init, _mundo, _tabla_selecciones, _tabla_paises, _txt, pais_seleccion … (+10)
 
 ## La selección nacional y el Mundial de Clubes.
 ##

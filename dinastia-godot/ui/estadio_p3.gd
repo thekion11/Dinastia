@@ -1,5 +1,5 @@
 extends "res://ui/estadio_p2.gd"
-## (Parte 3 de 6 de `estadio.gd`.)
+## [Capa 3/6 de `estadio.gd`] _construir, _a_la_revision_var, _al_jugada_ambiente, _nodo_de, _banca_gesto, _banca_celebra … (+6)
 
 func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon: Array = []) -> void:
 	_ajustar_a_pantalla()

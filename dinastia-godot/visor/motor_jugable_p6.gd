@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p5.gd"
-## (Parte 6 de 12 de `motor_jugable.gd`.)
+## [Capa 6/12 de `motor_jugable.gd`] _patear, _companero_cerca, _cabezazo, _entrada, _disputas, _punto_de_recepcion … (+11)
 
 ## Patea el balón hacia `destino` con una velocidad horizontal `vh` y la
 ## parábola que haga falta para llegar ahí (más `loft` de altura extra).

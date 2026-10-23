@@ -1,6 +1,6 @@
 class_name CasaEscena3D
 extends "res://ui/casa_escena3d_p2.gd"
-## (Parte 3 de 3 de `casa_escena3d.gd`.)
+## [Capa 3/3 de `casa_escena3d.gd`] abrir
 
 # --- la pantalla completa -----------------------------------------------------
 

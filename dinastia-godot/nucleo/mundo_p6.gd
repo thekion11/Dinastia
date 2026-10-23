@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p5.gd"
-## (Parte 6 de 8 de `mundo.gd`.)
+## [Capa 7/9 de `mundo.gd`] temporada_en_curso, jugar_temporada, _rodar_era, _segunda_de, jugar_promocion, _mover_de_liga … (+5)
 
 func temporada_en_curso() -> bool:
 	for l in ligas:

@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `partida.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `partida.gd`, conserva la clase.)
+## [Capa 1/2 de `partida.gd`] carpeta, ruta_de, _cabecera_de, _leer_todo, _leer_con_respaldo, listar … (+11)
 
 ## Guardar y cargar una partida.
 ##

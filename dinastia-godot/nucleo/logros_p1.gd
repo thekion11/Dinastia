@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `logros.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `logros.gd`, conserva la clase.)
+## [Capa 1/3 de `logros.gd`] perfil_leer, perfil_guardar, perfil_nivel, perfil_sumar_xp, sumar_xp, _anotar_plantilla_inicial … (+10)
 
 ## La memoria del club, los premios de la temporada y el perfil de gestor.
 ##

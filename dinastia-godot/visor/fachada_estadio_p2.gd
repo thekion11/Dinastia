@@ -1,5 +1,5 @@
 extends "res://visor/fachada_estadio_p1.gd"
-## (Parte 2 de 3 de `fachada_estadio.gd`.)
+## [Capa 2/3 de `fachada_estadio.gd`] _lamas, _celosia, _porticos, _barrio, _torre_esquina, _punto … (+5)
 
 ## --- lamas: muro cortina y lamas de los colores del club ---------------------
 static func _lamas(ctx: Dictionary, c: Dictionary, pisos: Array) -> void:

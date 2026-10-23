@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p2.gd"
-## (Parte 3 de 12 de `motor_jugable.gd`.)
+## [Capa 3/12 de `motor_jugable.gd`] _mio_mas_cercano, _control_de_equipo, _aplicar_cansancio, _anadido_de, segundos_anadidos, minutos_anadidos … (+13)
 
 func _mio_mas_cercano(local: bool, menos: Dictionary) -> Dictionary:
 	var b := balon.position + Vector3(vel_balon.x, 0, vel_balon.z) * 0.3

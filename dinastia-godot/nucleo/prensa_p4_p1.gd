@@ -1,5 +1,5 @@
 extends "res://nucleo/prensa_p3.gd"
-## (Parte 1 de 2 de `prensa_p4.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `prensa_p4.gd`, conserva la clase.)
+## [Capa 4/8 de `prensa.gd`] resolver_1
 
 ## (Parte 4 de 7 de `prensa.gd`.)
 

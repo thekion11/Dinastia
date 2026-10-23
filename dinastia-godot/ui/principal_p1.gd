@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 18 de `principal.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `principal.gd`, conserva la clase.)
+## [Capa 1/19 de `principal.gd`] variables, constantes y señales
 
 ## Las pantallas que viven en `ui/pantallas/` (mapa de metas 15).
 var _ui_plantel := PantallaPlantel.new(self)

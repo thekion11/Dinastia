@@ -1,6 +1,6 @@
 class_name Mundo
 extends "res://nucleo/mundo_p7.gd"
-## (Parte 8 de 8 de `mundo.gd`.)
+## [Capa 9/9 de `mundo.gd`] ranking_tactico, puede_analizar, analizar_rival
 
 ## Las formaciones que has usado, ordenadas por puntos por partido. Es la tabla
 ## que contesta «¿de verdad me funciona el 4-3-3?».

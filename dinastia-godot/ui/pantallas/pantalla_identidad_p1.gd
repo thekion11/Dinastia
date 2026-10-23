@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `pantalla_identidad.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_identidad.gd`, conserva la clase.)
+## [Capa 1/2 de `pantalla_identidad.gd`] _init, _fila_color_identidad, _rejilla_identidad, _rejilla_especiales, _boton_heredar, _pintar_proveedor … (+5)
 
 ## IDENTIDAD Y COMERCIAL: colores, escudo, equipaciones, proveedor, zonas, naming y detalles.
 ##

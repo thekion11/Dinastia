@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p15.gd"
-## (Parte 16 de 25 de `banco.gd`.)
+## [Capa 17/27 de `banco.gd`] _probar_documental, _probar_dinastias, _probar_minijuegos, _probar_rotulo_y_sala, _probar_ciudad_grande, _probar_ciudad_animo … (+3)
 
 ## EL DOCUMENTAL DE LA TEMPORADA (fase 5): cuenta datos reales del año.
 func _probar_documental() -> void:

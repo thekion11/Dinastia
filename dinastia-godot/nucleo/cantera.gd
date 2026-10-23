@@ -1,6 +1,6 @@
 class_name Cantera
 extends "res://nucleo/cantera_p3.gd"
-## (Parte 4 de 4 de `cantera.gd`.)
+## [Capa 4/4 de `cantera.gd`] resolver_agente, _ficha_vacia, a_dic, desde_dic, ranking_canteras
 
 ## Responde al representante. `op` es "a" o "b". Devuelve {titulo, cuerpo}.
 ##

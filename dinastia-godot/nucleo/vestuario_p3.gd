@@ -1,5 +1,5 @@
 extends "res://nucleo/vestuario_p2.gd"
-## (Parte 3 de 4 de `vestuario.gd`.)
+## [Capa 3/4 de `vestuario.gd`] resolver_solicitud, _aptitud, _satisfaccion, _slots_del_once, satisfaccion, motivo_satisfaccion … (+19)
 
 ## Sí o no a la solicitud activa. Devuelve el titular y el cuerpo para la
 ## noticia, o vacío si no había ninguna pendiente.

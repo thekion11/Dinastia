@@ -1,5 +1,5 @@
 extends "res://ui/disenos_kit_p1.gd"
-## (Parte 2 de 3 de `disenos_kit.gd`.)
+## [Capa 2/3 de `disenos_kit.gd`] color_en, _mascara_camiseta, _estampar_sponsors
 
 ## El color del diseño en (u, v) del torso. `x`, `y` son las coordenadas de
 ## reposo (para los 12 de siempre, que usan la fórmula vieja).

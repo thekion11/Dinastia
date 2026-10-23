@@ -1,5 +1,5 @@
 extends "res://visor/explorador_ciudad_p1.gd"
-## (Parte 2 de 6 de `explorador_ciudad.gd`.)
+## [Capa 2/6 de `explorador_ciudad.gd`] buscar_libre, es_tactil, _gesto_propio, _hablar_con_vecino, _fundido, _bajo_tierra … (+5)
 
 func buscar_libre(desde: Vector3) -> Vector3:
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE

@@ -1,6 +1,6 @@
 class_name Partida
 extends "res://nucleo/partida_p1.gd"
-## (Parte 2 de 2 de `partida.gd`.)
+## [Capa 2/2 de `partida.gd`] _dic_a_club, _dic_a_liga, _dic_a_copa, _restaurar_lo_tuyo, desde_instantanea, cargar … (+2)
 
 static func _dic_a_club(d: Dictionary) -> Club:
 	var c := Club.new(String(d["id"]), String(d["nombre"]))

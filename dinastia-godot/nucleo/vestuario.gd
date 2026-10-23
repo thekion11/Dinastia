@@ -1,6 +1,6 @@
 class_name Vestuario
 extends "res://nucleo/vestuario_p3.gd"
-## (Parte 4 de 4 de `vestuario.gd`.)
+## [Capa 4/4 de `vestuario.gd`] semana, nueva_temporada, resumen, charla, _tiene, tono_de_texto … (+10)
 
 func semana(sem: int) -> void:
 	var c := _club()

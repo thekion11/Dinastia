@@ -1,5 +1,5 @@
 extends "res://nucleo/cesiones_p1.gd"
-## (Parte 2 de 3 de `cesiones.gd`.)
+## [Capa 2/3 de `cesiones.gd`] comision_de_agente, coste_de_clausula, nombre_del_agente, derechos_de_formacion, pagar_derechos_formacion, pagar_clausula … (+12)
 
 # ===========================================================================
 #  AUXILIARES

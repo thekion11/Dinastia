@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `anim_futbol.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `anim_futbol.gd`, conserva la clase.)
+## [Capa 1/3 de `anim_futbol.gd`] L, _canal, armar, golpeo, chilena, tijera … (+15)
 
 ## EL PORTAFOLIO DE FÚTBOL (26-9-2026). Pedido: *"agrega diferentes tipos de
 ## tiros (unos 20), tipos de pase (unos 20), tipos de barrida también 20, unas

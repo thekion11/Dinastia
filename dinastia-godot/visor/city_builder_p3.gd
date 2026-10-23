@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p2.gd"
-## (Parte 3 de 12 de `city_builder.gd`.)
+## [Capa 3/12 de `city_builder.gd`] _construir_vias, _color_club, _una_farola, _farolas_anillo, _calles, _grua
 
 func _construir_vias() -> void:
 	if _mat_blanco == null:

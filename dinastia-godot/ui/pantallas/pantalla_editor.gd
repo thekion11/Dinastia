@@ -1,6 +1,6 @@
 class_name PantallaEditor
 extends "res://ui/pantallas/pantalla_editor_p1.gd"
-## (Parte 2 de 2 de `pantalla_editor.gd`.)
+## [Capa 2/2 de `pantalla_editor.gd`] _pintar_editor_csv, _pintar_editor
 
 ## EL IMPORTADOR. Formato del HTML sin tocar, para que una base hecha para el
 ## HTML se pueda pegar aquí tal cual.

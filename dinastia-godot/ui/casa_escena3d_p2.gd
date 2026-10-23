@@ -1,5 +1,5 @@
 extends "res://ui/casa_escena3d_p1.gd"
-## (Parte 2 de 3 de `casa_escena3d.gd`.)
+## [Capa 2/3 de `casa_escena3d.gd`] _caja_de, _modelo, _casa, _piscina, _auto, _pieza … (+15)
 
 static func _caja_de(n: Node3D) -> AABB:
 	var ab := AABB()
