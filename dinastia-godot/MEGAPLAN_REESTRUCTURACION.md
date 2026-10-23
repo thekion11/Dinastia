@@ -403,7 +403,7 @@ Evidencias, de lo más fuerte a lo más débil:
 Defectos encontrados al revisar (y qué se hizo):
 - **«⇄ Cuenta» estaba mal traducido en los 8 idiomas** (decía «Count», «Zählung», «Sayım»…: contar, no cuenta de usuario). Corregido.
 - **El móvil no traducía sus títulos** («Mensajes», «Noticias», «Banco»…) ni ~35 frases sueltas: ahora `Telefono.abrir_app` traduce el árbol y las
-  frases con formato pasan por `Idiomas.t`; 270 traducciones nuevas en los 8 idiomas. El banco ya vigila las frases `Idiomas.t("…")`: pasó de
+  frases con formato pasan por `Idiomas.t`; unas 340 traducciones nuevas o corregidas en los 8 idiomas. El banco ya vigila las frases `Idiomas.t("…")`: pasó de
   «0 fallos» a 1 fallo (`✈️ De visita`) al envolverla, y se completó.
 - **Estados vacíos del móvil** (Mensajes, Noticias, publicaciones): antes una línea suelta arriba y el resto en blanco; ahora icono, mensaje y pista, con
   fundido. Captura: `pruebas/captura_movil_vacio.tscn`.
