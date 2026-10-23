@@ -324,12 +324,17 @@ inválidos PR y ramas abiertas y obliga a clonar de nuevo. Necesita un «sí, em
 
 ## 10. Ensayo de la reescritura y decisión sobre LFS (23-10)
 
-### 10.1 La norma de código vale para TODO el juego
-Aclaración del dueño: la regla de tamaño no es solo para lo nuevo, es para cada parte del juego.
-`herramientas/revisar_lineas.py` la mide (`--todos` lista; `--nuevos` falla si un archivo nuevo pasa de 600 o uno
-grande crece). Hoy: **663 scripts, 169.787 líneas; 61 pasan de 600 y 14 pasan de 1.500.** Los 14 son la fase 0;
-los 47 restantes (600-1.500) se parten al tocarlos o en la fase 6. Pendiente de decidir con el dueño: ¿el techo
-final es 1.500 (propuesta) o 600 para todos? Con 600 serían ~61 archivos a partir.
+### 10.1 La norma de código: 450 líneas, para TODO el juego (decidido por el dueño, 23-10)
+Ningún script pasa de **450 líneas**, ni los nuevos ni los que ya existen. `herramientas/revisar_lineas.py` la mide
+(`--todos` lista; `--nuevos` falla si un archivo nuevo pasa de 450 o uno grande crece).
+
+Medido hoy: **663 scripts, 169.787 líneas. 87 pasan de 450** (suman 107.137 líneas; habría que mover unas **68.000** a
+archivos nuevos). Por tramos: 450-600 → 26 · 600-1.000 → 32 · 1.000-1.500 → 15 · 1.500-3.000 → 8 · más de 3.000 → 6.
+Los 6 mayores: `banco.gd` (9.561), `principal.gd` (6.867), `city_builder.gd` (4.698), `motor_jugable.gd` (4.578),
+`stadium_builder.gd` (3.774), `ciudad_expansion.gd` (3.566).
+Orden de trabajo: de mayor a menor riesgo-beneficio, un archivo por commit y el banco en 0 fallos tras cada uno
+(los de 450-600 son rápidos; los de más de 3.000 son por pasos, ver 7.1). Es trabajo de semanas, no de días.
+Única excepción: `nucleo/dialogos_ciudad.gd` lo escribe una herramienta; se parte cambiando el generador.
 
 ### 10.2 Ensayo en un clon espejo aparte (nada se subió a GitHub)
 Historia completa: 664 commits, 6 ramas, 1 etiqueta y 10 `refs/pull`. Pack: **1,33 GiB**.
@@ -355,14 +360,17 @@ Límites honestos del ensayo:
 - No se probó el banco sobre el espejo (haría falta un clon con árbol de trabajo); el árbol de la rama es idéntico,
   así que el resultado debe ser el mismo, pero antes de subir se corre el banco en un clon limpio.
 
-### 10.3 LFS: opción B (decidida) y un hallazgo que cambia la expectativa
-- **Hallazgo:** los archivos que LFS guarda dentro de git son punteros de ~130 bytes; su peso (1,9 GB) vive en el
-  almacén de LFS de GitHub, **no** en el pack. Sacar los packs fuente de LFS **no adelgaza el repo de git**; adelgaza
-  la cuota de LFS (1,77 GB fuera del juego: 178 archivos, 67 de ellos con copia idéntica dentro del juego).
-- Lista completa: `docs/lfs_fuera_del_juego.csv` (ruta, MB, si hay copia idéntica en el juego).
-- Del lado del juego no cambia nada: ningún script del juego lee esos archivos (solo comentarios de procedencia).
-- **Antes de quitarlos del árbol hace falta que el dueño confirme que conserva los originales** (111 son únicos, 1,66 GB;
-  entre ellos packs CC0 de Quaternius/Kenney, que se pueden volver a bajar, y descargas sueltas como `3.zip` o
-  `gt-racing-2-montreal.zip`). Al hacer `git pull`, Git borraría esos archivos de su copia local.
-- Después de B, la opción C (quitar LFS del todo) queda en: 83 archivos del juego (135 MB) pasan a git normal.
-
+### 10.3 LFS: se queda como está (decidido tras saber que NO hay copia fuera de GitHub)
+- Los 178 archivos de LFS fuera del juego (1,77 GB, `docs/lfs_fuera_del_juego.csv`) **solo existen en GitHub**. Por eso la
+  opción B (sacarlos) **se cancela**: quitarlos del árbol y luego reescribir la historia los dejaría sin ningún
+  puntero y GitHub acabaría purgando los objetos. No se toca ninguno.
+- **Hallazgo:** lo que LFS guarda dentro de git son punteros de ~130 bytes; el peso (1,9 GB) vive en el almacén de LFS,
+  no en el pack. Así que LFS no es la causa de los 1,3 GiB del repo.
+- La reescritura del ensayo **conserva todos los punteros** (son texto pequeño: el filtro solo quita binarios > 100 KB y
+  archivos > 5 MB que ya no están en el árbol). Verificado: el árbol de la rama quedó idéntico.
+- La opción C (quitar LFS del todo) queda **descartada**: pasaría 1,9 GB a git normal.
+- Riesgo que conviene saber: esos originales tienen un único punto de fallo (el almacén LFS de GitHub). Los packs CC0 de
+  Quaternius y Kenney se pueden volver a bajar de sus autores; las descargas sueltas (`3.zip`, `gt-racing-2-montreal.zip`,
+  etc.) no. Si algún día se quiere copia propia: `git lfs fetch --all` desde un PC (gasta la cuota mensual de descarga de
+  LFS de GitHub; revisar cuánta queda).
+- Lo único que se podría quitar sin pérdida: los 67 archivos (108 MB) con copia idéntica dentro del juego. Es opcional.

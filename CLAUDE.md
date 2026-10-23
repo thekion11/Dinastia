@@ -679,4 +679,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   falta que confirme que conserva los originales antes de quitarlos. ENSAYO de reescritura hecho en clon espejo (1,33 GiB → 804 MiB,
   árbol idéntico; `herramientas/reescribir_historia.py`); NO se ha subido nada. El repo local de la sesión es superficial
   (`shallow`): para la historia completa clonar con `--mirror`.
+- 23-10 (noche) DECISIONES: NORMA = 450 líneas máx. por script en TODO el juego (87 archivos la pasan, ~68.000 líneas a mover; ver
+  MEGAPLAN §10.1). LFS: los originales de `docs/lfs_fuera_del_juego.csv` SOLO están en GitHub → NO se quita ni se mueve nada de LFS
+  y NO se reescribe la historia de forma que se pierdan sus punteros (la regla «sin subidas a LFS» = no subir archivos NUEVOS a LFS).
 
