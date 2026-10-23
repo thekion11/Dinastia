@@ -319,3 +319,50 @@ Los monumentos necesitan licencia libre y atribución (nombre de autor y licenci
 Preparada, no ejecutada. Quitaría de todas las versiones: `entregas/`, capturas, modelos y mallas viejos;
 nunca código. Antes hay que fusionar la rama a `main`. Cambia todos los identificadores de commit, deja
 inválidos PR y ramas abiertas y obliga a clonar de nuevo. Necesita un «sí, empuja» explícito.
+
+---
+
+## 10. Ensayo de la reescritura y decisión sobre LFS (23-10)
+
+### 10.1 La norma de código vale para TODO el juego
+Aclaración del dueño: la regla de tamaño no es solo para lo nuevo, es para cada parte del juego.
+`herramientas/revisar_lineas.py` la mide (`--todos` lista; `--nuevos` falla si un archivo nuevo pasa de 600 o uno
+grande crece). Hoy: **663 scripts, 169.787 líneas; 61 pasan de 600 y 14 pasan de 1.500.** Los 14 son la fase 0;
+los 47 restantes (600-1.500) se parten al tocarlos o en la fase 6. Pendiente de decidir con el dueño: ¿el techo
+final es 1.500 (propuesta) o 600 para todos? Con 600 serían ~61 archivos a partir.
+
+### 10.2 Ensayo en un clon espejo aparte (nada se subió a GitHub)
+Historia completa: 664 commits, 6 ramas, 1 etiqueta y 10 `refs/pull`. Pack: **1,33 GiB**.
+Se quitaron de las versiones antiguas los binarios que ya no están en el árbol de la rama
+(`herramientas/reescribir_historia.py`):
+
+| | Antes | Después |
+|---|---:|---:|
+| Pack de git | 1,33 GiB | **804 MiB** (−40 %) |
+| Commits | 664 | 645 (los que quedaron vacíos) |
+| Blobs viejos quitados | — | 1.050 (679 MB) |
+| Árbol de la rama de trabajo | — | **idéntico** (0 diferencias) |
+| Código | — | intacto (solo se quitan binarios > 100 KB y archivos > 5 MB que ya no están en el árbol final) |
+
+Lo que queda pesa porque **está en el árbol actual**: capturas conservadas (≈214 MB), `recursos/equipaciones`
+(141 MB), fotos de caras reales y derivados (≈250 MB), `recursos/modelos3d` (62 MB) y `assets/characters` (50 MB).
+Bajar más exige decidir sobre ese contenido, no reescribir más historia.
+
+Límites honestos del ensayo:
+- Las ramas viejas `claude/*` y `ccr-54306f57-jlcywg` quedan reescritas también (con menos binarios antiguos).
+- GitHub conserva `refs/pull/*` y los objetos LFS; para que el servidor adelgace puede hacer falta pedírselo a su
+  soporte o crear el repo de nuevo desde el espejo limpio. El clon local sí queda en ~800 MiB.
+- No se probó el banco sobre el espejo (haría falta un clon con árbol de trabajo); el árbol de la rama es idéntico,
+  así que el resultado debe ser el mismo, pero antes de subir se corre el banco en un clon limpio.
+
+### 10.3 LFS: opción B (decidida) y un hallazgo que cambia la expectativa
+- **Hallazgo:** los archivos que LFS guarda dentro de git son punteros de ~130 bytes; su peso (1,9 GB) vive en el
+  almacén de LFS de GitHub, **no** en el pack. Sacar los packs fuente de LFS **no adelgaza el repo de git**; adelgaza
+  la cuota de LFS (1,77 GB fuera del juego: 178 archivos, 67 de ellos con copia idéntica dentro del juego).
+- Lista completa: `docs/lfs_fuera_del_juego.csv` (ruta, MB, si hay copia idéntica en el juego).
+- Del lado del juego no cambia nada: ningún script del juego lee esos archivos (solo comentarios de procedencia).
+- **Antes de quitarlos del árbol hace falta que el dueño confirme que conserva los originales** (111 son únicos, 1,66 GB;
+  entre ellos packs CC0 de Quaternius/Kenney, que se pueden volver a bajar, y descargas sueltas como `3.zip` o
+  `gt-racing-2-montreal.zip`). Al hacer `git pull`, Git borraría esos archivos de su copia local.
+- Después de B, la opción C (quitar LFS del todo) queda en: 83 archivos del juego (135 MB) pasan a git normal.
+
