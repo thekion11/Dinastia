@@ -332,9 +332,21 @@ Medido hoy: **663 scripts, 169.787 líneas. 87 pasan de 450** (suman 107.137 lí
 archivos nuevos). Por tramos: 450-600 → 26 · 600-1.000 → 32 · 1.000-1.500 → 15 · 1.500-3.000 → 8 · más de 3.000 → 6.
 Los 6 mayores: `banco.gd` (9.561), `principal.gd` (6.867), `city_builder.gd` (4.698), `motor_jugable.gd` (4.578),
 `stadium_builder.gd` (3.774), `ciudad_expansion.gd` (3.566).
-Orden de trabajo: de mayor a menor riesgo-beneficio, un archivo por commit y el banco en 0 fallos tras cada uno
-(los de 450-600 son rápidos; los de más de 3.000 son por pasos, ver 7.1). Es trabajo de semanas, no de días.
-Única excepción: `nucleo/dialogos_ciudad.gd` lo escribe una herramienta; se parte cambiando el generador.
+**HECHO el 23-10 (primera pasada, mecánica): ningún script pasa de 450 líneas** (`revisar_lineas.py` → 0; 897 scripts).
+Cómo (y qué NO es todavía):
+- `herramientas/partir_gd.py` parte cada archivo en **capas**: cada una extiende a la anterior
+  (`extends "res://…/x_p1.gd"`) y la última conserva el nombre, la ruta y el `class_name` originales, así que ningún
+  otro script ni escena cambió. Las funciones van ordenadas por dependencias (`--ordenar`) y solo ~20 llamadas
+  hacia capas altas hubo que reescribir como `(self as Clase).f()`.
+- Las 7 funciones de más de 450 líneas (`Sonido._sintetizar` 1.011, `Mundo.avanzar_semana` 540, `Principal._conectar_noticias`
+  531, `StadiumBuilder.build` 498, `Prensa.resolver` 465, y dos pruebas del banco) se trocearon con
+  `herramientas/trocear_funcion.py` (tramos con sus variables como parámetros) y, para `_sintetizar`, en grupos de sonidos.
+- Comprobación: `pruebas/comprobar_scripts.gd` carga los 897 scripts (0 fallos; detecta un script roto), banco entero
+  1.862 comprobaciones en 0 fallos, `prueba_partido_motor`, `prueba_control_equipo`, `prueba_colisiones_club` y el arranque.
+- **Límite honesto:** esto cumple la norma de tamaño, pero NO reparte responsabilidades: `Principal` sigue siendo un objeto dios
+  repartido en 18 archivos (ver 7.1, que sigue pendiente). La interfaz solo está cubierta en parte por pruebas automáticas:
+  hay que mirarla jugando.
+- Deshacer un reparto sin confirmar: `herramientas/deshacer_partir.sh`. Un archivo nuevo que pase de 450: `partir_gd.py --ordenar --aplicar`.
 
 ### 10.2 Ensayo en un clon espejo aparte (nada se subió a GitHub)
 Historia completa: 664 commits, 6 ramas, 1 etiqueta y 10 `refs/pull`. Pack: **1,33 GiB**.
