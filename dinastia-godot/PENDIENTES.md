@@ -22,6 +22,8 @@ queda registrado aquí y no se toca hasta terminar eso.
 | Fase 4 (entrada al campeonato) | cifras propuestas en MEGAPLAN §9.1 | que el dueño las valide |
 | Banderas y monumentos del globo | la red del entorno bloquea Wikimedia | el dueño abre «Network access» (`upload.wikimedia.org`, `commons.wikimedia.org`, `en/es.wikipedia.org`, `flagcdn.com`) |
 | Azure/Foundry (200 USD, 30 días) | analizado en el chat, sin decidir | verificar cuota del modelo en Foundry |
+| Traducir 523 frases descriptivas | siguen en castellano en los otros 8 idiomas (`docs/textos_sin_traducir.txt`) | contenido: ~4.000 traducciones; priorizar mejoras de instalaciones y logros |
+| `estres_menus.tscn` | no termina en modo sin pantalla | ver si ya pasaba antes del reparto |
 | Zonas de la ciudad fuera del club | colisiones con otro sistema (`ExploradorCiudad._choca_circulos`), no revisado a fondo | caza visual |
 
 ## 1. Qué falta por FUSIONAR

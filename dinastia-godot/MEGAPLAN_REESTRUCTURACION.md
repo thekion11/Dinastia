@@ -386,3 +386,37 @@ Límites honestos del ensayo:
   etc.) no. Si algún día se quiere copia propia: `git lfs fetch --all` desde un PC (gasta la cuota mensual de descarga de
   LFS de GitHub; revisar cuánta queda).
 - Lo único que se podría quitar sin pérdida: los 67 archivos (108 MB) con copia idéntica dentro del juego. Es opcional.
+
+### 10.4 Verificación profunda del reparto (23-10, a petición del dueño: «piensa en una persona maniática»)
+Evidencias, de lo más fuerte a lo más débil:
+1. **Prueba diferencial** (`pruebas/huella_mundo.tscn`): se simularon 3 temporadas con 3 semillas (11, 222, 3333) en el código de ANTES
+   del reparto (commit `411661a2`) y en el de AHORA; la huella del estado completo del mundo (`Partida.instantanea`, ≈1,1 MB cada una)
+   es **idéntica**. (La única diferencia entre ejecuciones era la hora del guardado; se excluye de la huella.)
+2. **Estructura:** los 87 scripts partidos conservan EXACTAMENTE las mismas funciones, variables, constantes, señales, enums y clases
+   internas que antes (ni una perdida ni duplicada); solo se añaden `_sintetizar_g1..3`, los tramos `_<función>_1/2` y lo nuevo del móvil.
+3. **Compilación:** `pruebas/comprobar_scripts.gd` carga los 897 scripts (0 fallos). Banco 1.862 comprobaciones en 0 fallos (corrido 3 veces).
+4. **Comportamiento:** `recorrido_pantallas` (108 pantallas, 501 botones, 0 errores de script), partido con motor real, control del equipo,
+   Carrera de Jugador (flujo y ceremonia), práctica, minijuegos, modos, colisiones, menú de la ciudad a pie.
+5. **Vídeo de juego real** en Forward+ (gestión 118 s + estadio 80 s, 0 errores de script): todos los menús, la prensa, el móvil, el exterior del estadio,
+   vestuario, túnel, césped y grada se ven como antes. Los archivos .avi no se suben al repo.
+
+Defectos encontrados al revisar (y qué se hizo):
+- **«⇄ Cuenta» estaba mal traducido en los 8 idiomas** (decía «Count», «Zählung», «Sayım»…: contar, no cuenta de usuario). Corregido.
+- **El móvil no traducía sus títulos** («Mensajes», «Noticias», «Banco»…) ni ~35 frases sueltas: ahora `Telefono.abrir_app` traduce el árbol y las
+  frases con formato pasan por `Idiomas.t`; 270 traducciones nuevas en los 8 idiomas. El banco ya vigila las frases `Idiomas.t("…")`: pasó de
+  «0 fallos» a 1 fallo (`✈️ De visita`) al envolverla, y se completó.
+- **Estados vacíos del móvil** (Mensajes, Noticias, publicaciones): antes una línea suelta arriba y el resto en blanco; ahora icono, mensaje y pista, con
+  fundido. Captura: `pruebas/captura_movil_vacio.tscn`.
+- **Prueba `control_equipo` intermitente** (falló 1 de ~22 ejecuciones; no se pudo reproducir después): hipótesis, la preferencia «controlar a mi equipo»
+  se guarda en `user://` y alternarla invertía el estado si otra prueba la dejó encendida. La prueba ahora parte de apagado (12 de 12 ejecuciones OK
+  tras el arreglo). Si vuelve a aparecer, mirar `user://ajustes.cfg`.
+- Descartado tras investigarlo: el panel de objetivos tapando la ficha en el vídeo no era un fallo (la prueba `recorrido_pantallas` pulsa su pestaña y guarda
+  la preferencia «desplegado»; sin esa preferencia arranca plegado en pantallas estrechas).
+
+Lo que sigue pendiente y quedó medido:
+- **523 frases descriptivas siguen en castellano al jugar en otros idiomas** (descripciones de mejoras de instalaciones, de logros, ayudas…): lista en
+  `docs/textos_sin_traducir.txt`; se regenera con `recorrido_pantallas` (`RECORRIDO_TEXTOS=…`) + `auditar_textos_vistos.tscn` (`IDIOMA=en`). Son ~4.000
+  traducciones (523 × 8 idiomas): trabajo de contenido, no de código.
+- `estres_menus.tscn` no termina en modo sin pantalla (280 s); no se sabe si ya pasaba antes.
+- Fotos de cerca del público y nombres en las taquillas del vestuario ajeno: ya estaban en la lista de pendientes.
+
