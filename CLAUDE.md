@@ -658,3 +658,15 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   DT sancionado, que flotaba), choques del coche con golpe/claxon/multa (M-172), piel y pelo por país en los
   inventados (M-088, `Cara.TONO_MEDIO`/`RUBIOS`; usar `String.hash()`, djb2 con la misma cola correlaciona),
   formas de estadio por tamaño + «estrecho» y «asimetrico» (M-002). ESTADO_MEJORAS: HECHO 114 · PARCIAL 115 · PEND. 223.
+- **23-10 PEDIDO GRANDE (analizado, aún sin construir): REESTRUCTURACIÓN.** El dueño quiere más «sentido humano
+  y estilo propio»: intro ≤ 5 s → idioma → menú inicial (fases 1-5 como pantallas completas, obligatorias, con
+  confirmación: modo con fondo según el cursor, globo con bandera y monumentos, configuración del club, entrada al
+  campeonato, personaje) → prólogo 3D guiado por el mentor → rueda de prensa → oficina con PC que abre el menú
+  central (la ciudad deja de abrirse desde ahí) → vida en 3D (jornada, casa y familia, necesidades, personas,
+  eventos). Plan completo: `dinastia-godot/MEGAPLAN_REESTRUCTURACION.md` (flujo, sistemas, pendientes, limpieza
+  del repo, partir `principal.gd` de 6.867 líneas, fases 0-6 y decisiones por tomar). Pidió no hacer nada más
+  por ahora salvo: arreglar fallas, megaplan, pendientes, mejoras y limpieza. HECHO 23-10: colisiones del club
+  (`visor/colision_club.gd`, prueba `pruebas/prueba_colisiones_club.tscn`). Azure/Foundry (200 USD, 30 días):
+  analizado, a decidir. NO borrar `entregas/`, capturas, `marca/` ni los informes de `_docs_extract/` sin su OK;
+  reescribir la historia sigue en espera. Godot 4.7.2 se baja de GitHub releases (linux.x86_64.zip).
+

@@ -3,6 +3,10 @@
 Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde aquí se retoma.
 Última actualización: **19-10-2026**. Se actualiza en cada bloque de trabajo.
 
+> **23-10:** el plan vigente es `MEGAPLAN_REESTRUCTURACION.md` (nueva estructura del juego + estos
+> pendientes + limpieza + código menos delicado). HECHO 23-10: colisiones del club a pie
+> (`visor/colision_club.gd`: cuerpo entero, muebles con física, personal que se esquiva).
+
 ## 1. Qué falta por FUSIONAR
 
 | Qué | Dónde está | Estado | Cómo se fusiona |

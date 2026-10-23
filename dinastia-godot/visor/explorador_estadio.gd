@@ -426,6 +426,8 @@ func usar() -> void:
 		_menu = RecorridoClub.panel_decorar(_capa, get_tree(), _zona_actual)
 
 func _personal() -> PersonalEstadio:
+	if not is_inside_tree():
+		return null
 	return get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
 
 func _persona_cerca() -> Dictionary:
