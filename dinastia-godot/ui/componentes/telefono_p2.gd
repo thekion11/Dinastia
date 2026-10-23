@@ -15,7 +15,7 @@ func _tarjeta(p: Dictionary) -> PanelContainer:
 	autor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	autor.clip_text = true
 	cab.add_child(autor)
-	cab.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "sem. %d" % int(p["semana"])))
+	cab.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t("sem. %d") % int(p["semana"])))
 	v.add_child(cab)
 	if FOTOS.has(String(p["tipo"])):
 		v.add_child(_foto(String(p["tipo"]), 170.0))
@@ -32,7 +32,7 @@ func _tarjeta(p: Dictionary) -> PanelContainer:
 	if bool(p.get("polemica", false)):
 		v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Color("e5534b"), "🔥 Polémica: se está discutiendo mucho"))
 	if int(p.get("ingreso", 0)) > 0:
-		v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.BIEN, "🛒 Ventas por esta publicación: %s" % Cesiones.dinero(int(p["ingreso"]))))
+		v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.BIEN, Idiomas.t("🛒 Ventas por esta publicación: %s") % Cesiones.dinero(int(p["ingreso"]))))
 	var acciones := HBoxContainer.new()
 	acciones.add_theme_constant_override("separation", 10)
 	v.add_child(acciones)
@@ -117,7 +117,7 @@ func _perfil(cuenta: String) -> void:
 		f.custom_minimum_size = Vector2(104, 104)
 		rejilla.add_child(f)
 	if pubs.is_empty():
-		_cuerpo.add_child(_nota("Sin publicaciones todavía."))
+		_cuerpo.add_child(_vacio("📷", "Sin publicaciones todavía.", "Comparte algo con ➕ y tu hinchada lo verá."))
 	for p: Dictionary in pubs.slice(0, 12):
 		_cuerpo.add_child(_tarjeta(p))
 
@@ -231,7 +231,7 @@ func _tribuna() -> void:
 	cambiar.pressed.connect(_cerrar_sesion_animado)
 	cab.add_child(cambiar)
 	_cuerpo.add_child(cab)
-	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, AZUL, "  Tendencia: %s" % r.tendencia))
+	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, AZUL, Idiomas.t("  Tendencia: %s") % r.tendencia))
 	## Pestañas de la red.
 	var tabs := HBoxContainer.new()
 	tabs.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -354,7 +354,7 @@ func _mensajes() -> void:
 	_titulo_app("Mensajes")
 	var chats := m.movil.chats()
 	if chats.is_empty():
-		_cuerpo.add_child(_nota("No tienes mensajes."))
+		_cuerpo.add_child(_vacio("✉️", "No tienes mensajes.", "Cuando el club, un agente o la federación te escriban, lo verás aquí."))
 	for ch: Dictionary in chats:
 		var b := Button.new()
 		b.flat = true
@@ -409,7 +409,7 @@ func _caja_informe(destacada := false) -> StyleBoxFlat:
 func _noticias() -> void:
 	_titulo_app("Noticias")
 	if bandeja.is_empty():
-		_cuerpo.add_child(_nota("Sin noticias por ahora."))
+		_cuerpo.add_child(_vacio("📰", "Sin noticias por ahora.", "Las noticias del club y de la liga aparecerán aquí."))
 	## Medio informe (13-10-2026): titular en negrita con filo dorado a la
 	## izquierda, la primera noticia destacada como portada.
 	var primera := true

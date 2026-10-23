@@ -151,7 +151,7 @@ func _inicio() -> void:
 	var reloj := Tema.etiqueta(58, Tema.TEXTO, _hora())
 	reloj.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cuerpo.add_child(reloj)
-	var fecha := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "Semana %d · %d" % [m.semana, m.anio])
+	var fecha := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, Idiomas.t("Semana %d · %d") % [m.semana, m.anio])
 	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cuerpo.add_child(fecha)
 	_cuerpo.add_child(_widget_informe())
@@ -178,6 +178,26 @@ func _inicio() -> void:
 	bandeja_dock.add_theme_stylebox_override("panel", Tema.caja(Color(1, 1, 1, 0.14), 22, Color(1, 1, 1, 0.2)))
 	bandeja_dock.add_child(dock)
 	_cuerpo.add_child(bandeja_dock)
+
+## Un estado vacío con gracia: icono grande, lo que pasa y qué lo llenará (23-10-2026; antes era una
+## línea suelta arriba y el resto del móvil en blanco).
+func _vacio(icono: String, titulo: String, pista: String) -> Control:
+	var v := VBoxContainer.new()
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.custom_minimum_size = Vector2(0, 300)
+	v.add_theme_constant_override("separation", 10)
+	var ic := Tema.etiqueta(64, Color(Tema.SUAVE, 0.5), icono)
+	ic.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(ic)
+	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, Idiomas.t(titulo))
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(t)
+	var p := _nota(Idiomas.t(pista))
+	p.custom_minimum_size = Vector2(220, 0)
+	v.add_child(p)
+	v.modulate.a = 0.0
+	v.create_tween().tween_property(v, "modulate:a", 1.0, 0.35)
+	return v
 
 func _nota(texto: String) -> Label:
 	var l := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, texto)
@@ -208,7 +228,7 @@ func _entrar(usuario: String, clave: String, recordada: bool = false) -> void:
 		(self as Telefono).abrir_app("tribuna")
 		_decir("⚠️ " + error.substr(0, 1).to_upper() + error.substr(1) + ".")
 		return
-	_cuerpo.add_child(_espera("Iniciando sesión en %s…" % String(r.cuentas[r.sesion]["usuario"])))
+	_cuerpo.add_child(_espera(Idiomas.t("Iniciando sesión en %s…") % String(r.cuentas[r.sesion]["usuario"])))
 	_sub = "inicio"
 	get_tree().create_timer(1.0).timeout.connect(func() -> void:
 		if is_instance_valid(self) and _app == "tribuna":
@@ -317,7 +337,7 @@ func _avatar_de(cuenta: String, lado: float) -> Control:
 func _cerrar_sesion_animado() -> void:
 	for h in _cuerpo.get_children():
 		h.queue_free()
-	_cuerpo.add_child(_espera("Cerrando sesión de %s…" % String(m.redes.cuentas[m.redes.sesion]["usuario"])))
+	_cuerpo.add_child(_espera(Idiomas.t("Cerrando sesión de %s…") % String(m.redes.cuentas[m.redes.sesion]["usuario"])))
 	m.redes.cerrar_sesion()
 	get_tree().create_timer(0.9).timeout.connect(func() -> void:
 		if is_instance_valid(self) and _app == "tribuna":
