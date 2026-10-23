@@ -18,7 +18,7 @@ def archivos(solo_nuevos):
     if solo_nuevos:
         out = subprocess.check_output(["git", "diff", "--name-only", "--diff-filter=AM", "origin/main...HEAD"]).decode()
     else:
-        out = subprocess.check_output(["git", "ls-files", "*.gd"]).decode()
+        out = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "*.gd"]).decode()
     return [f for f in out.split("\n") if f.endswith(".gd") and f not in EXCEPCIONES]
 
 def lineas(f):
