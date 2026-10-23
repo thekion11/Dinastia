@@ -1,6 +1,6 @@
 class_name PantallaAjustes
 extends "res://ui/pantallas/pantalla_ajustes_p1.gd"
-## (Parte 2 de 2 de `pantalla_ajustes.gd`.)
+## [Capa 2/2 de `pantalla_ajustes.gd`] _pintar_fondos_ajustes, _pintar_ajustes
 
 ## El selector de los veinticuatro fondos. Estaba suelto dentro de
 ## `_pintar_ajustes()`; sale a su función para que la sección de aspecto se lea.

@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `federacion.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `federacion.gd`, conserva la clase.)
+## [Capa 1/3 de `federacion.gd`] catalogo, _titulo_mocion, revisar_presidencia, agenda_empuja, abrir_votacion, abrir_caso … (+3)
 
 ## El reglamento de la liga: quién lo escribe, cómo se cambia y a quién castiga.
 ##

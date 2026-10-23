@@ -1,5 +1,5 @@
 extends Node3D
-## (Parte 1 de 2 de `trafico_ciudad.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `trafico_ciudad.gd`, conserva la clase.)
+## [Capa 1/2 de `trafico_ciudad.gd`] s_mas_cercano, largo_de, agregar_control, marcar_cola_al_ultimo, agregar_paradas_al_ultimo, agregar_ruta … (+12)
 
 ## EL TRÁFICO DE LA CIUDAD DEPORTIVA: lo que separa una maqueta de un sitio.
 ##

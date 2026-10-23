@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p10.gd"
-## (Parte 11 de 12 de `city_builder.gd`.)
+## [Capa 11/12 de `city_builder.gd`] _hinchada_estadio, _dia_de_partido, _animo_del_club, _rotulo_barrio, _despejar_vestuario, vestir_todas_las_torres … (+7)
 
 ## La marea de gente alrededor del estadio.
 ##

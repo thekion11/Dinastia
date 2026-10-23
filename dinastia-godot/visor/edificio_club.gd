@@ -1,6 +1,6 @@
 class_name EdificioClub
 extends "res://visor/edificio_club_p1.gd"
-## (Parte 2 de 2 de `edificio_club.gd`.)
+## [Capa 2/2 de `edificio_club.gd`] _objeto, _marco_foto, _decorar, montar, reconstruir
 
 ## Un objeto del catálogo de `InterioresClub`: un conjunto de piezas si lo hay
 ## (`DECO_MODULAR`), o hecho a mano con piezas sencillas.

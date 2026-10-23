@@ -1,5 +1,5 @@
 extends "res://ui/principal_p6.gd"
-## (Parte 7 de 18 de `principal.gd`.)
+## [Capa 7/19 de `principal.gd`] _idolo_del_club, _ir_a_pestana, _ver_ciudad_propia, _ver_ciudad_con_carga, _pintar_ciudad, _celda … (+10)
 
 ## Mismo motivo y mismo arreglo que `_ver_estadio_propio()`: `VistaCiudad`
 ## tampoco trae fondo opaco -para que el 3D se vea de verdad-, así que hay

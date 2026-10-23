@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `carrera_jugador.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `carrera_jugador.gd`, conserva la clase.)
+## [Capa 1/2 de `carrera_jugador.gd`] jugador, club, _club_inicial, _dorsal_libre, crear, es_titular … (+13)
 
 ## LA CARRERA DE JUGADOR (29-9-2026, mapa de metas 18). No eres el entrenador:
 ## eres UN futbolista de 17 años en un club chico. Tu jugador es un `Jugador`

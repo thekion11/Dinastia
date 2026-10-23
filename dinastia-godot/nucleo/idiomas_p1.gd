@@ -1,5 +1,5 @@
 extends Node
-## (Parte 1 de 2 de `idiomas.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `idiomas.gd`, conserva la clase.)
+## [Capa 1/2 de `idiomas.gd`] _cargar_narracion
 
 ## (Sin `class_name`: este script ES el autoload `Idiomas`.)
 ## LOS IDIOMAS DE LA INTERFAZ. Nueve: castellano, inglés, portugués de Brasil,

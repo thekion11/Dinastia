@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p1.gd"
-## (Parte 2 de 11 de `stadium_builder.gd`.)
+## [Capa 2/12 de `stadium_builder.gd`] _add_goal, _zona_tecnica, _corners, _anuncio, _con_paleta, _anuncios_de … (+4)
 
 static func _add_goal(root: Node3D, z: float, poste: Material, red_col: Color, red_tipo: String = "cuadrada") -> void:
 	var width := 7.32

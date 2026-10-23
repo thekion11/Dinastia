@@ -1,5 +1,5 @@
 extends "res://ui/principal_p11.gd"
-## (Parte 12 de 18 de `principal.gd`.)
+## [Capa 13/19 de `principal.gd`] _al_elegir_club, _llenar_selector, _tomar_club, _pintar_elegir_club, _abrir_elegir_club, _modo_simulacion … (+10)
 
 func _al_elegir_club(indice: int) -> void:
 	mundo.tomar_el_mando(String(_selector.get_item_metadata(indice)))

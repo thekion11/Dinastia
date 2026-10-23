@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p8.gd"
-## (Parte 9 de 12 de `motor_jugable.gd`.)
+## [Capa 9/12 de `motor_jugable.gd`] _filigrana, _pase_manual, _centro_usuario, _segundo_presionador, _control_usuario, _fuera_del_area … (+3)
 
 ## Una filigrana: si el jugador no tiene las estrellas, le sale mal y el balón
 ## se le va; si las tiene, gesto, movimiento del balón y, según su regate

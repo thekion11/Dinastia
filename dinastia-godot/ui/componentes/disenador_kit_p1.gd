@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 2 de `disenador_kit.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `disenador_kit.gd`, conserva la clase.)
+## [Capa 1/2 de `disenador_kit.gd`] abrir, _selector_color, _actualizar, _color_cambiado, _pasa_filtro, _filtrar … (+7)
 
 ## EL DISEÑADOR DE EQUIPACIÓN (26-9-2026), a pantalla completa. Pedido: *"más
 ## variantes de diseño de camiseta, colores de números, hasta 5 colores, polera,

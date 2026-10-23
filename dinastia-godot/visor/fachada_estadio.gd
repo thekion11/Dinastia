@@ -1,6 +1,6 @@
 class_name FachadaEstadio
 extends "res://visor/fachada_estadio_p2.gd"
-## (Parte 3 de 3 de `fachada_estadio.gd`.)
+## [Capa 3/3 de `fachada_estadio.gd`] _material, _volcar, montar
 
 static func _material(clave: String, p: Dictionary) -> StandardMaterial3D:
 	var m: StandardMaterial3D

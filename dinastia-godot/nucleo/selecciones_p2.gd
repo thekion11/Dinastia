@@ -1,5 +1,5 @@
 extends "res://nucleo/selecciones_p1.gd"
-## (Parte 2 de 3 de `selecciones.gd`.)
+## [Capa 2/3 de `selecciones.gd`] _prenomina, _resolver, convocados, prenominados, caps_de, racha_de … (+16)
 
 ## Los 30 preseleccionados: los mejores elegibles sanos del mundo entero.
 func _prenomina() -> void:

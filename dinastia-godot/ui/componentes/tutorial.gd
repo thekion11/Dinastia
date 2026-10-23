@@ -1,6 +1,6 @@
 class_name Tutorial
 extends "res://ui/componentes/tutorial_p2.gd"
-## (Parte 3 de 3 de `tutorial.gd`.)
+## [Capa 3/3 de `tutorial.gd`] _construir_prologo, iniciar, fase, guion_actual, aspecto_actual, indice … (+3)
 
 ## EL PRÓLOGO: franjas de cine, el escudo, el lugar y la escena a máquina.
 func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:

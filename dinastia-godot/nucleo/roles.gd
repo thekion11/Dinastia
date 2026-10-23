@@ -1,6 +1,6 @@
 class_name Roles
 extends "res://nucleo/roles_p4.gd"
-## (Parte 5 de 5 de `roles.gd`.)
+## [Capa 5/5 de `roles.gd`] bono_reputacion_fichajes, multiplicador_sponsor, tiene, comprar_dt, semana_patrimonio, buscar_rival_dt … (+18)
 
 ## `bonusReputacion()` DEL HTML, LAS DOS PARTES QUE FALTABAN (10-9-2026).
 ## La de cantera ya estaba portada (`Cantera.multiplicador_de_reputacion()`,

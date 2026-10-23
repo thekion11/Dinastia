@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p1.gd"
-## (Parte 2 de 12 de `city_builder.gd`.)
+## [Capa 2/12 de `city_builder.gd`] _marca, _color_luces, _altura_terreno, _textura_cesped, _normal_rejilla, _terreno … (+6)
 
 ## Un tramo de calle completo (26-9-2026, rehecho: "las calles de la ciudad se
 ## ven mal"): calzada con asfalto de verdad, líneas de borde continuas, eje

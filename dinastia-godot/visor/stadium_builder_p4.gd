@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p3.gd"
-## (Parte 4 de 11 de `stadium_builder.gd`.)
+## [Capa 4/12 de `stadium_builder.gd`] build_pitch, _pintar_publico, _make_stand_texture, _make_stand_texture_tramos, _techo_mat, _mat_fachada
 
 ## `mi` (16-9-2026, Fase 2 "Componentes"): opcional, solo hace falta para
 ## pintar el escudo en el cesped cuando `escudoDonde` lo pide. `null` -el caso

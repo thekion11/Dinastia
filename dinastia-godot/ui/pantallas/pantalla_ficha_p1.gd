@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `pantalla_ficha.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_ficha.gd`, conserva la clase.)
+## [Capa 1/2 de `pantalla_ficha.gd`] _init, _paleta_ficha, _pedir_informe_ojeo, _pagar_clausula, _paleta_club_dentro, _alternar_consejero … (+12)
 
 ## LA FICHA Y EL CLUB POR DENTRO: la ficha del jugador y sus acciones, el directorio, el staff, los consejeros, el embajador, los ojeadores, la analítica y las academias.
 ##

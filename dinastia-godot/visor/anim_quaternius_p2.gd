@@ -1,5 +1,5 @@
 extends "res://visor/anim_quaternius_p1.gd"
-## (Parte 2 de 3 de `anim_quaternius.gd`.)
+## [Capa 2/3 de `anim_quaternius.gd`] cargar_futbol, _nueva, _huesos_rigidos, _limitar_rodillas, _bakear_futbol_global, cargar_futbol_global … (+9)
 
 ## Carga el clip `archivo` (nombre del .fbx SIN extension, p.ej.
 ## "08_Side_Foot_Kick_ue5") y lo RETARGETEA -de verdad, no solo reapuntando la

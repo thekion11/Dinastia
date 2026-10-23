@@ -1,6 +1,6 @@
 class_name RuedaPrensaEscena3D
 extends "res://ui/rueda_prensa_escena3d_p2.gd"
-## (Parte 3 de 3 de `rueda_prensa_escena3d.gd`.)
+## [Capa 3/3 de `rueda_prensa_escena3d.gd`] _process
 
 func _process(delta: float) -> void:
 	if _dt_3d_pendiente and is_inside_tree():

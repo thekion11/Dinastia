@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p4.gd"
-## (Parte 1 de 2 de `mundo_p5.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `mundo_p5.gd`, conserva la clase.)
+## [Capa 5/9 de `mundo.gd`] avanzar_semana_1
 
 ## (Parte 5 de 8 de `mundo.gd`.)
 

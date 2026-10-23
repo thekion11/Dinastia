@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `vestidor_q.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `vestidor_q.gd`, conserva la clase.)
+## [Capa 1/3 de `vestidor_q.gd`] _botin_de, _cargar_male, _textura_recoloreada, _mallas, vestir, _material_liso … (+5)
 
 ## Viste a `FutbolistaQ` con una camiseta de verdad -pieza "Peasant" del pack
 ## gratis "Modular Character Outfits - Fantasy" de Quaternius (mismo

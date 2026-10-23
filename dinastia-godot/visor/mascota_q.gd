@@ -1,6 +1,6 @@
 class_name MascotaQ
 extends "res://visor/mascota_q_p1.gd"
-## (Parte 2 de 2 de `mascota_q.gd`.)
+## [Capa 2/2 de `mascota_q.gd`] crear, _gesto, _ready, _process
 
 ## Arma la mascota del club en `root` (ya dentro del árbol) y la devuelve.
 static func crear(root: Node3D, c: Club, animal: String, pos: Vector3, giro_y: float) -> Node3D:

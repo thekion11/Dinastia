@@ -1,6 +1,6 @@
 class_name VestidorQ
 extends "res://visor/vestidor_q_p2.gd"
-## (Parte 3 de 3 de `vestidor_q.gd`.)
+## [Capa 3/3 de `vestidor_q.gd`] poner_cara
 
 static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 	var modelo: Node = d.get("modelo")

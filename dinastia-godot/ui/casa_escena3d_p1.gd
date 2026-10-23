@@ -1,5 +1,5 @@
 extends Node3D
-## (Parte 1 de 3 de `casa_escena3d.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `casa_escena3d.gd`, conserva la clase.)
+## [Capa 1/3 de `casa_escena3d.gd`] aplicar_funda, _entorno, _suelo, _mat, _fondo_lejano, _caja … (+3)
 
 ## TU CASA (28-9-2026, pendiente "la casa moderna y el móvil 3D en Mi Vida y
 ## en las cinemáticas"). Desde MI VIDA → Casa y auto, "Ver tu casa" abre una

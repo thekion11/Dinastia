@@ -1,6 +1,6 @@
 class_name RecorridoClub
 extends "res://visor/recorrido_club_p1.gd"
-## (Parte 2 de 2 de `recorrido_club.gd`.)
+## [Capa 2/2 de `recorrido_club.gd`] sala_decorable, interiores, panel_decorar
 
 ## ¿Es una sala del edificio que se puede decorar?
 static func sala_decorable(nombre: String) -> bool:

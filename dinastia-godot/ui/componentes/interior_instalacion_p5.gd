@@ -1,5 +1,5 @@
 extends "res://ui/componentes/interior_instalacion_p4.gd"
-## (Parte 5 de 7 de `interior_instalacion.gd`.)
+## [Capa 5/7 de `interior_instalacion.gd`] _gimnasio, _analisis, _cocina, _comedor, _prensa, _museo
 
 ## Gimnasio y recuperación (16 × 12 m, 16-10-2026: «que parezca el gimnasio de
 ## un club de verdad y lleno de vida»). Zonas sobre suelo de goma: cardio al

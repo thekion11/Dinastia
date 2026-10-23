@@ -1,6 +1,6 @@
 class_name PantallaIdentidad
 extends "res://ui/pantallas/pantalla_identidad_p1.gd"
-## (Parte 2 de 2 de `pantalla_identidad.gd`.)
+## [Capa 2/2 de `pantalla_identidad.gd`] _pintar_comercial, _pintar_kits
 
 ## `vIdentidadPlus()`: LO QUE SE VENDE DEL CLUB.
 ##

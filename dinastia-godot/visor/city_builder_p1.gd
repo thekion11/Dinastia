@@ -1,5 +1,5 @@
 extends Node3D
-## (Parte 1 de 12 de `city_builder.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `city_builder.gd`, conserva la clase.)
+## [Capa 1/12 de `city_builder.gd`] variables, constantes y señales
 
 ## Levanta la CIUDAD DEPORTIVA del club en 3D a partir de sus instalaciones.
 ##

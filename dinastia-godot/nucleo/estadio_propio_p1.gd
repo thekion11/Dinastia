@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `estadio_propio.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `estadio_propio.gd`, conserva la clase.)
+## [Capa 1/3 de `estadio_propio.gd`] en_obras, hecho, avanzar_semana, terminar_obra, _mismo, semanas_de … (+5)
 
 ## El estadio de TU club: el único del mundo que no sale de un hash.
 ##

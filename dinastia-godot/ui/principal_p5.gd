@@ -1,5 +1,5 @@
 extends "res://ui/principal_p4.gd"
-## (Parte 5 de 18 de `principal.gd`.)
+## [Capa 5/19 de `principal.gd`] _ver_estadio_propio, _ver_estadio_con_carga, _dato, _miles, _pintar_estadio
 
 func _ver_estadio_propio() -> void:
 	_fundido_entrada()

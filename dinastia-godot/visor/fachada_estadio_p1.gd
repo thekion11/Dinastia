@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `fachada_estadio.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `fachada_estadio.gd`, conserva la clase.)
+## [Capa 1/3 de `fachada_estadio.gd`] estilo_de, cara, _paleta, _tramos, _ejes, _libre … (+2)
 
 ## LAS FACHADAS DE VERDAD (16-10-2026). El informe interno lo dejó como «lo más
 ## débil hoy»: por fuera cada estadio era el muro liso de `StadiumBuilder` (una

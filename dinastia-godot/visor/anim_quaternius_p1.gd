@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `anim_quaternius.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `anim_quaternius.gd`, conserva la clase.)
+## [Capa 1/3 de `anim_quaternius.gd`] _buscar_ap, _lib_real, cargar_real, _buscar_esqueleto, _cargar_clip_futbol
 
 ## Fabrica de animaciones para el esqueleto Quaternius (`FutbolistaQ`), el
 ## segundo modelo de jugador. Mismo principio que `AnimMixamo` -las claves son

@@ -1,6 +1,6 @@
 class_name Entrenamiento
 extends "res://nucleo/entrenamiento_p2.gd"
-## (Parte 3 de 3 de `entrenamiento.gd`.)
+## [Capa 3/3 de `entrenamiento.gd`] sortear_habilidades, dt_coste, dt_requisito, dt_nombre, dt_icono, dt_descripcion … (+21)
 
 ## El sorteo de nacimiento: con qué habilidades llega un jugador al mundo. Se
 ## queda aquí y no en `Jugador` porque las habilidades no viven en el jugador.

@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `entrenamiento.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `entrenamiento.gd`, conserva la clase.)
+## [Capa 1/3 de `entrenamiento.gd`] _init, bloques, bloque, nombres_de_dias, especiales, especial … (+25)
 
 ## La semana de trabajo: el plan de entrenamiento, el árbol de habilidades de
 ## los jugadores y el del entrenador.

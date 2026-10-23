@@ -1,5 +1,5 @@
 extends "res://nucleo/roles_p3.gd"
-## (Parte 4 de 5 de `roles.gd`.)
+## [Capa 4/5 de `roles.gd`] tras_temporada, ayudante_ascendido, subir_al_primer_equipo, ascender, chequeo_filosofia, homenajear … (+12)
 
 ## Al cerrar la temporada. `resumen` es lo que devuelve `Directiva.tras_temporada()`.
 ##

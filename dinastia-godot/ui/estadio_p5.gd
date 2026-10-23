@@ -1,5 +1,5 @@
 extends "res://ui/estadio_p4.gd"
-## (Parte 5 de 6 de `estadio.gd`.)
+## [Capa 5/6 de `estadio.gd`] _montar_motor, _crear_banner_gol, _crear_rotulo_jugada, _arrancar_partido, abrir, _escalar_rotulos … (+2)
 
 func _montar_motor() -> void:
 	partido.motor_externo = true

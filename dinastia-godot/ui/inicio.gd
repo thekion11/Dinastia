@@ -1,6 +1,6 @@
 class_name Inicio
 extends "res://ui/inicio_p2.gd"
-## (Parte 3 de 3 de `inicio.gd`.)
+## [Capa 3/3 de `inicio.gd`] _rotar_pagina, _ready
 
 ## Cada 30 s (a destiempo de la portada): el siguiente fondo de pantalla
 ## completa, fundido sobre el actual en 2 s.

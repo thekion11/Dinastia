@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `pantalla_gente.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_gente.gd`, conserva la clase.)
+## [Capa 1/2 de `pantalla_gente.gd`] _init, _charlar_con, _pintar_gente_personas, _pintar_gente, _filtrar_redes, _comunicado … (+10)
 
 ## GENTE Y MEDIOS: personas, redes, periodistas, medios propios, derechos de TV, portadas y correo.
 ##

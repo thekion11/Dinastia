@@ -1,5 +1,5 @@
 extends Node3D
-## (Parte 1 de 3 de `rueda_prensa_escena3d.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `rueda_prensa_escena3d.gd`, conserva la clase.)
+## [Capa 1/3 de `rueda_prensa_escena3d.gd`] _montar_suelo, _montar_sala, _montar_periodistas, _montar_fondo_sponsors, _montar_banderas, _montar_luces
 
 ## EL PLATÓ DE LA RUEDA DE PRENSA, en 3D de verdad.
 ##

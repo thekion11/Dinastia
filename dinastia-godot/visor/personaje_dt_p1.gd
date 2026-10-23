@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `personaje_dt.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `personaje_dt.gd`, conserva la clase.)
+## [Capa 1/2 de `personaje_dt.gd`] aleatorio, de_rival, aspecto, _objetivos, _cuerpo, _pegar … (+7)
 
 ## EL PERSONAJE DEL JUGADOR, EN 3D Y MODIFICABLE (26-9-2026). Pedido del
 ## usuario: *"ve por el modelo de nuestro personaje, el modificable"* (E19 del

@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `optimizar.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `optimizar.gd`, conserva la clase.)
+## [Capa 1/2 de `optimizar.gd`] _lados, primitivas, butacas_livianas, _diagonal, distancias, _no … (+10)
 
 ## OPTIMIZACIÓN POR CÓDIGO (etapa 3, 8-10-2026).
 ##

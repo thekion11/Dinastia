@@ -1,5 +1,5 @@
 extends "res://nucleo/cantera_p1.gd"
-## (Parte 2 de 4 de `cantera.gd`.)
+## [Capa 2/4 de `cantera.gd`] _hijos_del_dt, _sortear_hermano, camada_anual, _sortear_nombre, _nombre_al_azar, sembrar_leyendas … (+16)
 
 func _hijos_del_dt() -> void:
 	var m := _mundo()

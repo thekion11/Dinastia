@@ -1,5 +1,5 @@
 extends "res://ui/partido_vivo_p1.gd"
-## (Parte 2 de 3 de `partido_vivo.gd`.)
+## [Capa 2/3 de `partido_vivo.gd`] _presionar_desde_el_palco, _pintar_palco, _perilla, _gritar_desde_la_banda, _mis_cambios, _hacer_cambio … (+13)
 
 ## `presionarDesdePalco()` del HTML: una vez por partido, desde el palco no se
 ## dirige pero se puede bajar al borde del campo. 55% de que salga bien -sube

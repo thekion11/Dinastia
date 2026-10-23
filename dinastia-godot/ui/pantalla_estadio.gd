@@ -1,6 +1,6 @@
 class_name PantallaEstadio
 extends "res://ui/pantalla_estadio_p1.gd"
-## (Parte 2 de 2 de `pantalla_estadio.gd`.)
+## [Capa 2/2 de `pantalla_estadio.gd`] _panel_gol, _panel_cruces, _rehacer_orden, mostrar, _casa_es_local, _par_stat … (+7)
 
 func _panel_gol() -> Control:
 	if partido == null:

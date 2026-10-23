@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p9.gd"
-## (Parte 10 de 12 de `city_builder.gd`.)
+## [Capa 10/12 de `city_builder.gd`] _karts_en_pista, _redondear, autobus, _un_peaton, _hacer_bote, _trafico … (+3)
 
 ## Llamado desde `_trafico()`, cuando ya existe el tráfico.
 func _karts_en_pista(t: TraficoCiudad) -> void:

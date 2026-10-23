@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `ciudad.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `ciudad.gd`, conserva la clase.)
+## [Capa 1/2 de `ciudad.gd`] paletas_luces, _init, _mundo, _tabla, lista_terrenos, lista_negocios … (+25)
 
 ## EL CLUB Y SU CIUDAD: terrenos, negocios, vecinos, permisos y seguridad.
 ##

@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 2 de `partido_jugable.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `partido_jugable.gd`, conserva la clase.)
+## [Capa 1/2 de `partido_jugable.gd`] abrir, _montar_pantalla, _once_con, _preparar_cambio, _mostrar_banner, _escena_cambio … (+14)
 
 ## EL PARTIDO QUE JUEGAS TÚ (29-9-2026, Carrera de Jugador). La pantalla del
 ## `MotorJugable`: tu estadio, los 22 con sus equipaciones, la cámara detrás de

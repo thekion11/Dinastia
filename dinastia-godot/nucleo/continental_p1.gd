@@ -1,5 +1,5 @@
 extends Copa
-## (Parte 1 de 2 de `continental.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `continental.gd`, conserva la clase.)
+## [Capa 1/2 de `continental.gd`] _confed, claves, paises_de, nombre_conti, premio_de, confed_de … (+19)
 
 ## Los torneos internacionales de clubes: Libertadores, Champions, Sudamericana,
 ## Europa League, y las copas de Asia, África, Oceanía y Concacaf.

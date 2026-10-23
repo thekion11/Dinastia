@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 2 de `sorteo.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `sorteo.gd`, conserva la clase.)
+## [Capa 1/2 de `sorteo.gd`] _paleta, _paises_del_sorteo, _svg, _textura_luz, _escudo, _fila_club … (+9)
 
 ## LA CINEMÁTICA DEL SORTEO: el bombo, las bolas y el cuadro final.
 ##

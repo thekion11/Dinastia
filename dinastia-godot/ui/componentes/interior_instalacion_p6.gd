@@ -1,5 +1,5 @@
 extends "res://ui/componentes/interior_instalacion_p5.gd"
-## (Parte 6 de 7 de `interior_instalacion.gd`.)
+## [Capa 6/7 de `interior_instalacion.gd`] _piscina, _vivienda, _bar, _panaderia
 
 ## Piscina de recuperación (22 × 14 m, 5,5 m de alto; 16-10-2026: «a la altura
 ## del gimnasio»). El vaso de 14 × 7 m con fondo de gresite, calles pintadas,

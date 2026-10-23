@@ -1,5 +1,5 @@
 extends "res://pruebas/video_promo_p1.gd"
-## (Parte 2 de 2 de `video_promo.gd`.)
+## [Capa 2/2 de `video_promo.gd`] _montar_cierre, _paso_cierre
 
 func _montar_cierre() -> void:
 	var capa := CanvasLayer.new()

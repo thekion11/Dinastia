@@ -1,6 +1,6 @@
 class_name PantallaClubVida
 extends "res://ui/pantallas/pantalla_club_vida_p3.gd"
-## (Parte 4 de 4 de `pantalla_club_vida.gd`.)
+## [Capa 4/4 de `pantalla_club_vida.gd`] _pintar_hinchada
 
 ## TU ESTADIO: lo que se puede reformar y lo que cuesta.
 ## `vHinchada()` del HTML: los cinco grupos de la afición, el plan de abonos y

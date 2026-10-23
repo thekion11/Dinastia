@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p1.gd"
-## (Parte 1 de 3 de `sonido_p2.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `sonido_p2.gd`, conserva la clase.)
+## [Capa 2/5 de `sonido.gd`] _sintetizar_g1
 
 ## (Parte 2 de 3 de `sonido.gd`.)
 

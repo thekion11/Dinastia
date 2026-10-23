@@ -1,5 +1,5 @@
 extends "res://visor/metro_ciudad_p1.gd"
-## (Parte 2 de 4 de `metro_ciudad.gd`.)
+## [Capa 2/4 de `metro_ciudad.gd`] _kenney, _tam_lon, _amueblar_anden, _decorar_estacion, linea, _panel … (+3)
 
 ## Una pieza del kit, a escala, mirando hacia `mira` (su +Z), y con
 ## distancia de dibujo para no cargar la ciudad.
