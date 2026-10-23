@@ -7,6 +7,23 @@ Documento de traspaso: si la sesión se corta o el contenedor se pierde, desde a
 > pendientes + limpieza + código menos delicado). HECHO 23-10: colisiones del club a pie
 > (`visor/colision_club.gd`: cuerpo entero, muebles con física, personal que se esquiva).
 
+## 0. EN ESPERA desde el 23-10 (decidido por el dueño: PRIMERO el límite de 450 líneas)
+
+El orden es: **1.º partir todos los scripts a ≤ 450 líneas** (`herramientas/revisar_lineas.py`, MEGAPLAN §10.1); lo demás
+queda registrado aquí y no se toca hasta terminar eso.
+
+| Pendiente | Detalle | Qué hace falta |
+|---|---|---|
+| Reescribir la historia (real) | Ensayo hecho: 1,33 GiB → 804 MiB, árbol idéntico (`herramientas/reescribir_historia.py`, MEGAPLAN §10.2) | «sí, empuja» del dueño; antes: fusionar la rama a `main` (PR que él pida) y correr el banco en un clon limpio; después GitHub puede pedir limpieza de `refs/pull` |
+| LFS | Se queda como está: los originales (`docs/lfs_fuera_del_juego.csv`, 1,77 GB) SOLO existen en GitHub | nada; opcional: copia propia con `git lfs fetch --all` (gasta cuota de descarga) y quitar los 67 archivos (108 MB) con copia idéntica en el juego |
+| Fase 0 «de verdad» | Extraer responsabilidades de `principal.gd` a clases con su propia interfaz (MEGAPLAN §7.1), prueba de colisiones al banco, partir `banco.gd` | tras el límite de 450 |
+| Reloj único, necesidades, casa y familia, personas en persona | MEGAPLAN §3.3 | tras la fase 0 |
+| Fases 1-6 de la reestructuración | intro ≤ 5 s, idioma, menú inicial fases 1-5, prólogo 3D, oficina con PC, vida en 3D (MEGAPLAN §3 y §8) | esperar al dueño (estaba previsto para la semana del 26-10) |
+| Fase 4 (entrada al campeonato) | cifras propuestas en MEGAPLAN §9.1 | que el dueño las valide |
+| Banderas y monumentos del globo | la red del entorno bloquea Wikimedia | el dueño abre «Network access» (`upload.wikimedia.org`, `commons.wikimedia.org`, `en/es.wikipedia.org`, `flagcdn.com`) |
+| Azure/Foundry (200 USD, 30 días) | analizado en el chat, sin decidir | verificar cuota del modelo en Foundry |
+| Zonas de la ciudad fuera del club | colisiones con otro sistema (`ExploradorCiudad._choca_circulos`), no revisado a fondo | caza visual |
+
 ## 1. Qué falta por FUSIONAR
 
 | Qué | Dónde está | Estado | Cómo se fusiona |
