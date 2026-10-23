@@ -241,6 +241,7 @@ def partir(ruta, aplicar):
     clase = None
     extiende = None
     cab_otras = []
+    clase_externa = CLASE_EXTERNA
     for u in cab:
         for linea in u["lineas"]:
             m = RE_CLASSNAME.match(linea)
@@ -252,6 +253,10 @@ def partir(ruta, aplicar):
                 extiende = linea[len("extends"):].strip()
             elif linea.strip() and not linea.startswith("#"):
                 cab_otras.append(linea)
+    if clase is None and clase_externa:
+        clase_para_llamadas = clase_externa
+    else:
+        clase_para_llamadas = clase
     preambulo = []
     for u in cab:
         for linea in u["lineas"]:
@@ -296,8 +301,8 @@ def partir(ruta, aplicar):
             sup_i = {n for n, k in inst_en.items() if k > i}
             sup_s = {n for n, k in est_en.items() if k > i}
             if sup_i or sup_s:
-                if clase is not None:
-                    nuevas, k = reescribir(u["lineas"], sup_i, sup_s, clase, locales_de(u["lineas"]))
+                if clase_para_llamadas is not None:
+                    nuevas, k = reescribir(u["lineas"], sup_i, sup_s, clase_para_llamadas, locales_de(u["lineas"]))
                 elif ruta in AUTOLOADS:
                     nuevas, k = reescribir(u["lineas"], sup_i, sup_s, AUTOLOADS[ruta], locales_de(u["lineas"]), "autoload")
                 else:
@@ -359,6 +364,7 @@ def _quitar_blancos_iniciales(texto):
 
 
 ORDENAR = False
+CLASE_EXTERNA = None   # --clase X: la clase de la capa final cuando se vuelve a partir una capa suelta
 
 
 def ordenar_por_dependencias(funcs):
@@ -411,8 +417,11 @@ def candidatos():
 def main():
     AUTOLOADS.update(autoloads())
     args = sys.argv[1:]
-    global ORDENAR
+    global ORDENAR, CLASE_EXTERNA
     ORDENAR = "--ordenar" in args
+    if "--clase" in args:
+        CLASE_EXTERNA = args[args.index("--clase") + 1]
+        args = [a for a in args if a != CLASE_EXTERNA]
     aplicar = "--aplicar" in args
     if "--todos" in args:
         archivos = candidatos()
