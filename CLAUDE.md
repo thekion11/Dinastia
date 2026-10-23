@@ -22,6 +22,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   MINI BANCOS (20-10): `herramientas/mini_banco.sh <grupo|_probar_x>` (grupos en `GRUPOS` de banco.gd:
   partido, guardado, ciudad, estadio, gestion, competicion, textos; 7-30 s). Para probar lo tocado
   mientras se trabaja; también cazan pruebas que dependen del orden. Antes de SUBIR, el banco entero.
+  ESPECIALES (23-10): `dinastia-godot/herramientas/especiales.sh [todo]` = lo que el banco NO ve (norma de 450 líneas, todos los
+  scripts compilan, colisiones del club, partido con motor real, control del equipo, modos, menú ciudad a pie; `todo` añade el
+  recorrido de las 108 pantallas, +4 min). `banco.sh` ya empieza comprobando que compilan los 897 scripts. NORMA: ningún script > 450 líneas.
 - (15-10) Lo visual se revisa en FORWARD+, que es lo que ve el jugador de PC: capturas
   con `herramientas/captura.sh res://pruebas/captura_x.tscn` (Forward+ por defecto,
   `--compat` solo para móvil/web/motor ligero; sin GPU necesita
@@ -688,4 +691,7 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (carga todos los scripts; el banco solo ve lo que toca). Para código NUEVO: escribirlo ya < 450 y, si un archivo pasa, partirlo.
   Pendiente (§7.1): repartir responsabilidades de verdad (principal.gd), no solo tamaño. Primero el límite; el resto sigue EN ESPERA
   (PENDIENTES.md §0).
+- 23-10 (noche): el dueño pidió «más pruebas especiales» → `herramientas/especiales.sh`. Verificado tras partir los 87 scripts: banco 1.862
+  comprobaciones en 0 fallos, especiales OK, `recorrido_pantallas` = 108 pantallas y 500 botones sin SCRIPT ERROR. Sin veredicto:
+  `estres_menus.tscn` (agotó 280 s en headless; no se sabe si ya lo hacía antes).
 
