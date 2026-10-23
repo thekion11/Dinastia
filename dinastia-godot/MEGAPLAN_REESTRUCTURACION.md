@@ -188,7 +188,7 @@ N. Código 19.
 | Qué | Peso | Seguimiento | Veredicto |
 |---|---:|---|---|
 | `.git` (historia) | 1,2 GB | — | el verdadero peso; solo baja reescribiendo la historia (abajo) |
-| `entregas/` (builds Windows y web) | 375 MB, 2.218 archivos | en git | **sacar del repo**: los builds son del dueño; van a Releases o a otro sitio |
+| `entregas/` (builds Windows y web) | 375 MB, 2.218 archivos | HECHO 23-10: fuera del repo | **sacar del repo**: los builds son del dueño; van a Releases o a otro sitio |
 | `dinastia-godot/pruebas/capturas/` | 394 MB, 857 archivos | en git | conservar solo la última por prueba; el resto, ignorado |
 | `dinastia-godot/recursos/` | 230 MB, 9.612 archivos | en git | revisar qué es regenerable (caras, mallas); los datos de caras reales ya van fuera de los builds |
 | `dinastia-godot/assets/` | 165 MB | en git (parte LFS) | mantener |
@@ -274,19 +274,48 @@ Cada fase tiene un documento de estado y se pasa a `main` con un PR cuando lo pi
 
 ---
 
-## 9. Lo que necesito que decidas
+## 9. Decisiones del dueño (23-10) y lo que sigue pausado
 
-1. **Partidas guardadas:** ¿se pueden invalidar al cambiar la estructura, o hace falta
-   migración? (La migración cuesta más pero evita perder carreras.)
-2. **Fase 4 (entrar al campeonato):** cuánto presupuesto y reputación se pierde al pagar a la
-   confederación, y qué pasa con la plantilla del club reemplazado. Puedo proponer cifras.
-3. **Modo «saltar» de desarrollo** para pruebas: ¿lo dejo oculto?
-4. **Monumentos y banderas de Wikipedia:** la red de este entorno bloquea Wikimedia. Hay que
-   abrir el acceso (como hiciste con Drive) o aportar las imágenes. Las banderas pueden
-   dibujarse por código; los monumentos son fotos y necesitan licencia libre y atribución.
-5. **Limpieza:** ¿quito `entregas/` del repo, agrupo las capturas y mueves tú los informes
-   extraídos? ¿Hacemos ya la reescritura de la historia, antes de la fase 1?
-6. **LFS:** ¿se acepta (como ya está configurado) o se quita?
-7. **Regla de líneas** de la sección 1: ¿la aceptas?
-8. **Azure y Foundry:** si vas a usar el crédito, cuándo empezamos; este plan encaja bien en
-   30 días solo si se hace por fases.
+**Decidido:**
+1. **Partidas guardadas:** se pueden invalidar al cambiar la estructura (no hay que migrar). Aun así, el
+   guardado nuevo llevará versión, para que el próximo cambio sí pueda migrar.
+2. **Fase 4:** las cifras las propongo yo (abajo).
+3. **Limpieza:** sí. Hecho el 23-10: `entregas/` fuera del repo (ignorada), 476 capturas que nadie citaba
+   fuera de git (quedan 378 en uso) e informes extraídos movidos a `docs/informes_extraidos/`. La
+   reescritura de la historia se prepara, pero **no se empuja sin una confirmación final** (ver 9.3).
+4. **Regla de líneas:** aceptada (código nuevo < 600; nada de lógica > 1.500; excepciones: datos,
+   generados, banco, constructores lineales).
+5. **Monumentos y banderas:** el dueño abrirá el acceso de red (9.2).
+6. **Lo demás del megaplan queda PAUSADO hasta la semana siguiente** (empieza por la fase 0).
+7. Sigue sin responder: LFS (se mantiene como está) y el modo «saltar» de desarrollo (se deja oculto).
+
+### 9.1 Propuesta para la fase 4 (entrar al campeonato) — cifras por validar
+Sea B el presupuesto inicial que tendría un club de esa división.
+
+| | **Reemplazar un club existente** | **Pagar a la confederación (club extra)** |
+|---|---|---|
+| Coste | ninguno | cuota de afiliación = 25 % de B, al contado |
+| Presupuesto de partida | B | 0,75 × B |
+| Reputación inicial | la del club reemplazado − 10 puntos («recién llegado») | la de un club recién creado − 20 puntos («compró su plaza») |
+| División | la del club reemplazado | siempre la más baja (la liga pasa a tener un club más; calendario con descansos si queda impar) |
+| Confianza de la directiva | 60 | 40 |
+| Ánimo de la afición | normal | −15 el primer mes; se recupera en ~1 temporada con buenos resultados |
+| El otro club | desaparece de la liga; sus jugadores quedan libres (puedes ficharlos) y su afición se reparte | no se toca |
+| Prensa | «Nace un club sobre las cenizas de X» | «Un club compra su plaza»; preguntas duras en la primera rueda de prensa |
+
+Efecto buscado: reemplazar es barato pero tiene coste moral y de plantilla; pagar es limpio con el resto de
+la liga pero empiezas peor. Los dos son recuperables, ninguno es un castigo definitivo.
+
+### 9.2 Cómo abrir el acceso de red
+En la sesión: menú del entorno en la barra de título → **Edit** → **Network access**. Se puede subir el
+nivel o añadir dominios en «Allowed domains» (dejando marcada la casilla de gestores de paquetes). Dominios
+que haría falta permitir:
+`upload.wikimedia.org`, `commons.wikimedia.org`, `en.wikipedia.org`, `es.wikipedia.org`, `flagcdn.com`.
+Pasos oficiales: https://code.claude.com/docs/en/cloud-environments#network-access
+Los monumentos necesitan licencia libre y atribución (nombre de autor y licencia por imagen en
+`LICENCIAS.md`). Las banderas pueden dibujarse por código si prefieres no depender de la red.
+
+### 9.3 Reescritura de la historia — confirmación pendiente
+Preparada, no ejecutada. Quitaría de todas las versiones: `entregas/`, capturas, modelos y mallas viejos;
+nunca código. Antes hay que fusionar la rama a `main`. Cambia todos los identificadores de commit, deja
+inválidos PR y ramas abiertas y obliga a clonar de nuevo. Necesita un «sí, empuja» explícito.
