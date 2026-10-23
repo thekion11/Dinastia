@@ -1,5 +1,5 @@
 extends "res://nucleo/roles_p1.gd"
-## (Parte 2 de 5 de `roles.gd`.)
+## [Capa 2/5 de `roles.gd`] jefe_confianza, dt_nombre, jefe_nombre, desgastar_relacion, fijar_directriz, dt_obedece … (+27)
 
 func jefe_confianza() -> int:
 	return int(dt_empleado.get("confianza", JEFE_CONFIANZA_INICIAL))

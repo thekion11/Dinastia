@@ -1,5 +1,5 @@
 extends "res://ui/pantallas/pantalla_cantera_p1.gd"
-## (Parte 2 de 3 de `pantalla_cantera.gd`.)
+## [Capa 2/3 de `pantalla_cantera.gd`] _pintar_cantera, _cambiar_rol_prometido, _pintar_roles_prometidos, _pintar_agencias, _pintar_contratos, _apellido … (+2)
 
 func _pintar_cantera(c: Club) -> void:
 	p._limpiar(p._lista_cantera)

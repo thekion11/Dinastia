@@ -1,6 +1,6 @@
 class_name AnimQuaternius
 extends "res://visor/anim_quaternius_p2.gd"
-## (Parte 3 de 3 de `anim_quaternius.gd`.)
+## [Capa 3/3 de `anim_quaternius.gd`] rabia, senalar_falta, falta_barrida, dolor, _firma, parado … (+11)
 
 ## La rabia: cabeza atrás mirando al cielo, brazos que caen de golpe y una
 ## patada al aire.

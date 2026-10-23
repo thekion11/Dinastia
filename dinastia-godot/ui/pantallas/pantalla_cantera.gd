@@ -1,6 +1,6 @@
 class_name PantallaCantera
 extends "res://ui/pantallas/pantalla_cantera_p2.gd"
-## (Parte 3 de 3 de `pantalla_cantera.gd`.)
+## [Capa 3/3 de `pantalla_cantera.gd`] _pintar_comparar, _pintar_informe
 
 ## `vComparador()` de vistas.js -un archivo aparte de juego.js que esta sesión
 ## no había mirado hasta ahora, y donde vive el render real de las 33

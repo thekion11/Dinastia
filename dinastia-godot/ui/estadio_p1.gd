@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 6 de `estadio.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `estadio.gd`, conserva la clase.)
+## [Capa 1/6 de `estadio.gd`] _ajustar_a_pantalla, _pref, _montar_pantalla, _poner_banca_de, _a_la_butaca, poner_directiva … (+6)
 
 ## El estadio en 3D, dentro del propio juego.
 ##

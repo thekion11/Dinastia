@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p2.gd"
-## (Parte 3 de 11 de `stadium_builder.gd`.)
+## [Capa 3/12 de `stadium_builder.gd`] _banquillos_detalle, _tunel, geom_de_forma, _un_camarografo, _camarografos, _escudo_cancha
 
 ## `tipo` (16-9-2026, Fase 2 "Componentes"), catalogo `EST_BANQUILLOS`. El
 ## default ("cristal") es la burbuja de siempre, asi que un rival sigue igual.

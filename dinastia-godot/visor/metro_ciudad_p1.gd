@@ -1,5 +1,5 @@
 extends Node3D
-## (Parte 1 de 4 de `metro_ciudad.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `metro_ciudad.gd`, conserva la clase.)
+## [Capa 1/4 de `metro_ciudad.gd`] _mat, _caja, _viaducto, _tunel_xray, _tunel, _estacion_elevada … (+2)
 
 ## EL METRO DE LA CIUDAD (7-10-2026, pedido: «metro… la ciudad debe ser real,
 ## interactiva»). Dos líneas que FUNCIONAN:

@@ -1,5 +1,5 @@
 extends "res://nucleo/federacion_p1.gd"
-## (Parte 2 de 3 de `federacion.gd`.)
+## [Capa 2/3 de `federacion.gd`] votar, factor_tv, factor_tarjetas, revisar_cupo_juvenil, puede_fichar_extranjero, infracciones_de … (+11)
 
 ## Vota la moción pendiente. `opcion` es "a" (a favor) o "b" (en contra).
 ##

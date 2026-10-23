@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p16.gd"
-## (Parte 17 de 25 de `banco.gd`.)
+## [Capa 18/27 de `banco.gd`] _probar_aspecto_y_audio, _probar_tutorial, _probar_moneda, _probar_academia, _probar_modos_simulacion
 
 ## LO QUE SE AÑADIÓ EN LA TANDA DE ASPECTO Y AUDIO. Comprueba lo que de verdad
 ## puede quedarse callado sin dar ningún error: una receta de sonido que sale en

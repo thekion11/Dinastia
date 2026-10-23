@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p18.gd"
-## (Parte 19 de 25 de `banco.gd`.)
+## [Capa 20/27 de `banco.gd`] _probar_instituciones_c5_c8, _probar_charlas_c6_c7, _probar_licencia_c7
 
 ## C5 y C8: el presidente de la federación con agenda y mandato, la junta de
 ## accionistas del club, y las lesiones absurdas (raras, sin Azar, el toque de

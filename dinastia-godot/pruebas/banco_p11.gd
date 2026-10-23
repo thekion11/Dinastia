@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p10.gd"
-## (Parte 11 de 25 de `banco.gd`.)
+## [Capa 11/27 de `banco.gd`] _probar_vallas_led, _probar_faltas_puntos, _probar_fisica_motor, _probar_guardado_seguro, _comprobar_estado_cargado
 
 func _probar_vallas_led() -> void:
 	_titulo("VALLAS LED EN MULTIMESH")

@@ -1,5 +1,5 @@
 extends "res://ui/pantallas/pantalla_plantel_p2.gd"
-## (Parte 3 de 4 de `pantalla_plantel.gd`.)
+## [Capa 3/4 de `pantalla_plantel.gd`] _pintar_premios, _pintar_juegos_mentales, _pintar_partido, _pintar_proximas_fechas, _pintar_calendario
 
 ## `vPremios()` del HTML: la gala de fin de año. El acta la calcula entera
 ## `Logros.premios_temporada()` desde hace tiempo -equipo ideal, mejor joven,

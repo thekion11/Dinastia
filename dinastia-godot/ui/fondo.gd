@@ -1,6 +1,6 @@
 class_name Fondo
 extends "res://ui/fondo_p1.gd"
-## (Parte 2 de 2 de `fondo.gd`.)
+## [Capa 2/2 de `fondo.gd`] _ciudad, _montana, _playa, _nieve, _juntas, _mapa … (+7)
 
 # --- los diez nuevos ---------------------------------------------------------
 #

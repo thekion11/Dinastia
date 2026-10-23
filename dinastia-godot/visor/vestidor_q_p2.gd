@@ -1,5 +1,5 @@
 extends "res://visor/vestidor_q_p1.gd"
-## (Parte 2 de 3 de `vestidor_q.gd`.)
+## [Capa 2/3 de `vestidor_q.gd`] vestir_equipacion, exposicion_piel, compensar_piel, _afin_foto, _ocultar_cejas_y_barba, _teñir_pelo … (+4)
 
 ## Pinta la equipación sobre un `FutbolistaQ` ya terminado. Devuelve false si
 ## no pudo (sin shader o sin máscara) y quien llama cae a `vestir()`.

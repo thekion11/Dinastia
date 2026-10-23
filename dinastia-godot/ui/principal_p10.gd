@@ -1,5 +1,5 @@
 extends "res://ui/principal_p9.gd"
-## (Parte 10 de 18 de `principal.gd`.)
+## [Capa 10/19 de `principal.gd`] _cargar_preferencias, _anotar, _noticia_contratos, _sorteo_me_toca, _siguiente_sorteo, _encolar_sorteo … (+2)
 
 func _cargar_preferencias() -> void:
 	var cf := ConfigFile.new()

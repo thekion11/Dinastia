@@ -1,6 +1,6 @@
 class_name Ciudad
 extends "res://nucleo/ciudad_p1.gd"
-## (Parte 2 de 2 de `ciudad.gd`.)
+## [Capa 2/2 de `ciudad.gd`] _resolver_sancion, semana, mes, a_dic, desde_dic
 
 func _resolver_sancion() -> void:
 	if sancion.is_empty():

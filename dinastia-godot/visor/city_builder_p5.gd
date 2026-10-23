@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p4.gd"
-## (Parte 5 de 12 de `city_builder.gd`.)
+## [Capa 5/12 de `city_builder.gd`] _detalle_edificio, _arquito, _extra, _poner_extra, _rasgo_instalacion, _personal_en … (+3)
 
 func _detalle_edificio(pos: Vector3, ancho: float, fondo: float, alto: float, e: Dictionary, cubierta := true, marquesina := true) -> void:
 	## Se llamaba "hormigon" desde antes de esta sesion sin serlo -color plano

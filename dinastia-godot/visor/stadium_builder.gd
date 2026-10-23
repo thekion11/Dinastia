@@ -1,6 +1,6 @@
 class_name StadiumBuilder
 extends "res://visor/stadium_builder_p10.gd"
-## (Parte 11 de 11 de `stadium_builder.gd`.)
+## [Capa 12/12 de `stadium_builder.gd`] encender_conos
 
 ## `oscuro` 0 (pleno día) a 1 (noche cerrada): lo que se ven los haces.
 static func encender_conos(oscuro: float) -> void:

@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p2_p1.gd"
-## (Parte 2 de 3 de `sonido_p2.gd`.)
+## [Capa 3/5 de `sonido.gd`] _sintetizar_g2
 
 ## Parte 2 de 3 de `_sintetizar` (la norma de 450 líneas la partió por grupos de sonidos):
 ## devuelve el sonido si `nombre` es de este grupo y vacío si no.

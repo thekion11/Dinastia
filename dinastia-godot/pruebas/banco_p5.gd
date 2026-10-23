@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p4.gd"
-## (Parte 5 de 25 de `banco.gd`.)
+## [Capa 5/27 de `banco.gd`] _probar_banco, _probar_staff, _probar_roles_y_federacion
 
 ## `vBanco()` del HTML: creditos, cuota francesa y el camino a la liquidacion.
 ## El motor (`nucleo/banco.gd`) y la pantalla ya estaban completos -ya gateaba

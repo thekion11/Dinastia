@@ -1,5 +1,5 @@
 extends "res://nucleo/idiomas_p1.gd"
-## (Parte 2 de 2 de `idiomas.gd`.)
+## [Capa 2/2 de `idiomas.gd`] _cargar_extra, _ready, _ordinales, mayusculas, _directa, _tiene_letras … (+7)
 
 func _cargar_extra() -> void:
 	if not FileAccess.file_exists(EXTRA):

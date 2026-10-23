@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p4.gd"
-## (Parte 5 de 12 de `motor_jugable.gd`.)
+## [Capa 5/12 de `motor_jugable.gd`] _duelo_agarron, _duelos, _mover_jugadores, _actualizar_balon_visual, _rol, _pitar_offside … (+3)
 
 ## AGARRÓN: el defensor llega por detrás (o pegado al costado de atrás) del
 ## que lleva el balón o va a recibirlo, a menos de 1 m. Una tirada por

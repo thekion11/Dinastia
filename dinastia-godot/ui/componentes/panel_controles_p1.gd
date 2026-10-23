@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 3 de `panel_controles.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `panel_controles.gd`, conserva la clase.)
+## [Capa 1/3 de `panel_controles.gd`] abrir, _sonar, _estilo, _mover_pastilla_menu, _mover_pastilla_disp, _pistas … (+15)
 
 ## LA PANTALLA DE CONTROLES (14-10-2026). Segunda versión, tras el veredicto
 ## del usuario: «sigue siendo muy básica; es muy pequeña, no sigue los colores,

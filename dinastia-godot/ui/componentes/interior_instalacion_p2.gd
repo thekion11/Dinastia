@@ -1,5 +1,5 @@
 extends "res://ui/componentes/interior_instalacion_p1.gd"
-## (Parte 2 de 7 de `interior_instalacion.gd`.)
+## [Capa 2/7 de `interior_instalacion.gd`] _cerrar_para_pasear, _textura_suelo, _mat_suelo, _sala, _medida, _altura_cadera … (+13)
 
 ## Cierra la fachada (antes baja, para ver dentro) dejando un hueco de puerta de
 ## 3 m, y pone techo a toda la sala con sus plafones.

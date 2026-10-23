@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 4 de `vestuario.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `vestuario.gd`, conserva la clase.)
+## [Capa 1/4 de `vestuario.gd`] _init, _mundo, _club, _jugador, _montar_clan, agente_de … (+8)
 
 ## El camarín: los grupos que se forman solos, la cabeza de cada jugador y el
 ## papel que le prometiste a cada uno.

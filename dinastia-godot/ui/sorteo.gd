@@ -1,6 +1,6 @@
 class_name Sorteo
 extends "res://ui/sorteo_p1.gd"
-## (Parte 2 de 2 de `sorteo.gd`.)
+## [Capa 2/2 de `sorteo.gd`] _sacar_bola, _correr, abrir_grupos, abrir_eliminatoria, _unhandled_input, _textura_bombo … (+2)
 
 ## Una bola: se agita el bombo, sube una en 3D, se abre y aparece el escudo.
 ##

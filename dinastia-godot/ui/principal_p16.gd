@@ -1,5 +1,5 @@
 extends "res://ui/principal_p15.gd"
-## (Parte 16 de 18 de `principal.gd`.)
+## [Capa 17/19 de `principal.gd`] _ready, _bloque_vecino, tutorial_objetivo, tutorial_hecho, tutorial_accion, _rejilla … (+11)
 
 func _ready() -> void:
 	BotonFx.activar(get_tree())

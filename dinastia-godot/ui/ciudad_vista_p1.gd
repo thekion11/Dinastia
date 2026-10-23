@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 2 de `ciudad_vista.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `ciudad_vista.gd`, conserva la clase.)
+## [Capa 1/2 de `ciudad_vista.gd`] _ajustar_a_pantalla, _saturacion_animo, _aplicar_hora, _datos_de, _mover_camara, _boton … (+9)
 
 ## LA CIUDAD DEPORTIVA, EN 3D, DENTRO DEL PROPIO JUEGO (12-9-2026).
 ##

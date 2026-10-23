@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p6.gd"
-## (Parte 7 de 12 de `city_builder.gd`.)
+## [Capa 7/12 de `city_builder.gd`] _terminal_buses, _paradas_bus, _perimetro, _solar, _tabla_terrenos, _nombre_terreno … (+8)
 
 ## LA TERMINAL: "una estación o un eje vial mejor conectado" pedía el análisis.
 ## Las cuatro marquesinas eran paradas sueltas -sin ellas parecía que el

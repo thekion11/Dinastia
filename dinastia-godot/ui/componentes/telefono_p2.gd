@@ -1,5 +1,5 @@
 extends "res://ui/componentes/telefono_p1.gd"
-## (Parte 2 de 3 de `telefono.gd`.)
+## [Capa 2/3 de `telefono.gd`] _tarjeta, _perfil, _publicar, _tribuna, _burbuja_icono, _un_chat … (+4)
 
 func _tarjeta(p: Dictionary) -> PanelContainer:
 	var pc := PanelContainer.new()

@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p6.gd"
-## (Parte 7 de 8 de `mundo.gd`.)
+## [Capa 8/9 de `mundo.gd`] nueva_temporada, perfil_estadio_de, estacion, clima, campana_lanzada_este_anio, lanzar_campana … (+11)
 
 func nueva_temporada() -> Dictionary:
 	## Primero se cierra la que acaba -premios, ascensos y descensos- y DESPUÉS

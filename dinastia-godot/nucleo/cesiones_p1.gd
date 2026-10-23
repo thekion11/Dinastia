@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `cesiones.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `cesiones.gd`, conserva la clase.)
+## [Capa 1/3 de `cesiones.gd`] _init, _mundo, esta_cedido, _destino_para, _firmar_cesion, ceder_canterano … (+12)
 
 ## Cesiones, cláusulas y todo lo que un traspaso deja firmado para más adelante.
 ##

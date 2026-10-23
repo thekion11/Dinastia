@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `portada.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `portada.gd`, conserva la clase.)
+## [Capa 1/2 de `portada.gd`] _r, _marco, _nocturna, _retro, _prensa, _neon … (+14)
 
 ## Las nueve portadas del menú, portadas del HTML.
 ##

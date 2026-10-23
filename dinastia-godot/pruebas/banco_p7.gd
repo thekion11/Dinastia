@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p6.gd"
-## (Parte 7 de 25 de `banco.gd`.)
+## [Capa 7/27 de `banco.gd`] _probar_tactica_en_movimiento, _probar_copa, _probar_selecciones
 
 ## COMPARAR TACTICAS DE VERDAD (17-9-2026), sin necesitar pantalla: llama
 ## `_objetivo_jugador()` directo -el mismo metodo que usa `MatchPlayback._mover()`

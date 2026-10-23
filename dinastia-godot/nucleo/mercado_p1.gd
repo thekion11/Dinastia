@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `mercado.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `mercado.gd`, conserva la clase.)
+## [Capa 1/2 de `mercado.gd`] _init, _mundo, valor_pedido, deseo_de_venir, ficha_que_pide, club_acepta … (+10)
 
 ## El mercado de fichajes: cuánto piden, cuánto quieren venir y quién acepta.
 ##

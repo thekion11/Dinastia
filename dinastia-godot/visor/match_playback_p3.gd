@@ -1,5 +1,5 @@
 extends "res://visor/match_playback_p2.gd"
-## (Parte 3 de 4 de `match_playback.gd`.)
+## [Capa 3/4 de `match_playback.gd`] _jugada_corner, _programar_gesto, _trabajo_del_arbitro, _jugada_tiro_libre, _jugada_gol, _celebrar … (+2)
 
 ## TERCERA JUGADA PREHECHA -EN REALIDAD LA SEGUNDA "DE VERDAD", `_celebrar()`
 ## no arma una escena nueva, solo pone una animacion- (21-9-2026): el corner.

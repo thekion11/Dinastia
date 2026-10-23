@@ -1,6 +1,6 @@
 class_name SorteoEscena3D
 extends "res://ui/sorteo_escena3d_p2.gd"
-## (Parte 3 de 3 de `sorteo_escena3d.gd`.)
+## [Capa 3/3 de `sorteo_escena3d.gd`] _montar_presentador_siluetas, _montar_presentador, _montar_reveladores, _montar_camara, montar, poner_banderas … (+9)
 
 func _montar_presentador_siluetas() -> void:
 	## Traje azul muy oscuro, no negro: el negro puro contra un plató oscuro se

@@ -1,5 +1,5 @@
 extends "res://visor/anim_futbol_p1.gd"
-## (Parte 2 de 3 de `anim_futbol.gd`.)
+## [Capa 2/3 de `anim_futbol.gd`] estirada, portero_lateral, defensor_pica, duelo_hombro, duelo_empujado, duelo_agarron … (+16)
 
 # =============================================================================
 #  PORTERO: ESTIRADAS Y PARADAS

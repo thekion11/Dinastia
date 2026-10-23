@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 2 de `carrera_jugador_ui.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `carrera_jugador_ui.gd`, conserva la clase.)
+## [Capa 1/2 de `carrera_jugador_ui.gd`] _limpiar, _st, _panel, _lbl, _boton, _crear … (+18)
 
 ## LA CARRERA DE JUGADOR, SU PANTALLA (29-9-2026). Estética propia del modo:
 ## negro, lima eléctrico y fucsia, con paneles en ángulo, como un videojuego de
