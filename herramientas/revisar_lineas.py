@@ -5,13 +5,13 @@
   python3 herramientas/revisar_lineas.py --todos    # lista todos los que pasan del límite
   python3 herramientas/revisar_lineas.py --nuevos   # solo archivos añadidos/cambiados en la rama (código 1 si alguno pasa)
 
-Norma: código nuevo < 600 líneas; ningún script de lógica o interfaz > 1.500 al
-cerrar el megaplan. Excepciones declaradas (EXCEPCIONES): generados y datos.
+Norma (23-10, decidida por el dueño): ningún script pasa de 450 líneas, ni nuevo ni existente.
+Excepción declarada (EXCEPCIONES): el archivo que genera una herramienta (se parte en el generador).
 """
 import subprocess, sys
 
-LIM_NUEVO = 600
-LIM_FINAL = 1500
+LIM_NUEVO = 450
+LIM_FINAL = 450
 EXCEPCIONES = {"dinastia-godot/nucleo/dialogos_ciudad.gd"}  # lo genera herramientas/dialogos_ciudad.py
 
 def archivos(solo_nuevos):
@@ -47,7 +47,7 @@ def main():
     p600 = [d for d in datos if d[0] > LIM_NUEVO]
     p1500 = [d for d in datos if d[0] > LIM_FINAL]
     print(f"{len(datos)} scripts, {sum(n for n, _ in datos)} líneas")
-    print(f"> {LIM_NUEVO}: {len(p600)}   > {LIM_FINAL}: {len(p1500)}")
+    print(f"pasan de {LIM_NUEVO} líneas: {len(p600)}")
     for n, f in (p600 if "--todos" in sys.argv else datos[:25]):
         print(f"{n:6d}  {f}")
 
