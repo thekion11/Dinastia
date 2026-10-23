@@ -669,4 +669,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (`visor/colision_club.gd`, prueba `pruebas/prueba_colisiones_club.tscn`). Azure/Foundry (200 USD, 30 días):
   analizado, a decidir. NO borrar `entregas/`, capturas, `marca/` ni los informes de `_docs_extract/` sin su OK;
   reescribir la historia sigue en espera. Godot 4.7.2 se baja de GitHub releases (linux.x86_64.zip).
+- 23-10 DECISIONES: partidas guardadas invalidables; cifras de la fase 4 las propone Claude (MEGAPLAN §9.1);
+  limpieza hecha (`entregas/` fuera, 476 capturas sin uso fuera, informes en `docs/informes_extraidos/`);
+  reescribir la historia SOLO con un «sí, empuja» explícito (§9.3); regla de líneas aceptada (código nuevo < 600,
+  lógica < 1.500); el dueño abrirá la red para Wikimedia/banderas; **el resto del megaplan está PAUSADO hasta la
+  semana del 26-10** (empieza por la fase 0).
 
