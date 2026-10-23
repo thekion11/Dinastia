@@ -1,0 +1,526 @@
+# Frases de la interfaz que siguen en castellano al jugar en otro idioma (medido el 23-10-2026)
+# Salen de `pruebas/recorrido_pantallas.tscn` con RECORRIDO_TEXTOS=… y `pruebas/auditar_textos_vistos.tscn` (IDIOMA=en).
+# Heurística: ≥ 4 palabras y ≥ 2 palabras vacías castellanas; los números se muestran como #. Son 523 frases únicas.
+#  ·  va #.º y se le esperaba #.º
+# años  ·  # en el club  ·  cariñoso  ·  Conduce en silencio y escucha absolutamente todo.
+# años  ·  # en el club  ·  cariñoso  ·  Ya no cobra, pero sigue yendo a ver a los chicos.
+# años  ·  # en el club  ·  chismoso  ·  Contratos, permisos y llamadas del presidente.
+# años  ·  # en el club  ·  chismoso  ·  Lleva más tiempo que el edificio y no se muerde la lengua.
+# años  ·  # en el club  ·  chismoso  ·  Sabe quién come bien y quién llega con olor a asado.
+# años  ·  # en el club  ·  gruñón  ·  Le toca apagar los incendios que enciendes en rueda.
+# años  ·  # en el club  ·  gruñón  ·  Lleva treinta años lavando camisetas y ha visto pasar a todos.
+# años  ·  # en el club  ·  supersticioso  ·  El césped es suyo; los partidos son un mal necesario.
+# años  ·  # en el club  ·  supersticioso  ·  No trabaja aquí, pero está aquí desde antes que tú.
+# años  ·  # en el club  ·  trabajador  ·  Abre y cierra. Se entera de todo porque nadie lo mira.
+# de # desbloqueados según tu nivel de perfil de gestor -suben solos jugando temporadas y ganando títulos-. No reemplazan al generador de arriba: son una alternativa que podés elegir o no.
+# de base  ×  # de multiplicador
+# · Te pagan más por tus jugadores
+#.  Así no se puede jugar al fútbol
+#.  Es igual para los dos: no es excusa
+#:#  ·  Lunes por la noche
+'¿Cuánto influyó el tiempo (calor intenso) en el resultado?'
++ Tu club es un salto de categoría para él
++ Tu prestigio como entrenador le convence
++# % de ataque por nivel
++# % de ataque por nivel (córners y tiros libres)
++# % de ataque y de defensa por nivel
++# % de defensa por nivel
++# % de defensa por nivel (trabajo con arqueros)
++# % de público por nivel
++# Negociador · Venta de Leonardo Gele por el # % de su valor (#)
++#% de aforo por nivel
++#% en auspicios y ventas de la tienda
+..........  Sala de juegos y e-sports
+..........  Sala de video y análisis
+A la televisión le encanta; a la hinchada no
+ABONOS DE TEMPORADA  ·  la campaña se lanza sola al empezar cada año
+Ablanda la mora: # semanas más antes de que se liquide el club
+Abre la ficha de cualquier jugador y pulsa «Comparar» para ponerlo aquí. Puedes enfrentar hasta tres a la vez, de tu club o de cualquier otro.
+Abrir el panel (o deslizar hacia la derecha)
+Acuerdo para fichar gratis a alguien que acaba contrato. Se firma desde la semana #.
+Adicto a las redes. Lee todo lo que dicen de él. Todo.
+Agresivos: pagan bien y llaman todos los meses.  ·  vende el #% del próximo traspaso de Cristóbal Silva
+Agresivos: pagan bien y llaman todos los meses.  ·  vende el #% del próximo traspaso de Esteban Díaz
+Agresivos: pagan bien y llaman todos los meses.  ·  vende el #% del próximo traspaso de Lucas Cibeda
+Agresivos: pagan bien y llaman todos los meses.  ·  vende el #% del próximo traspaso de Vicente Pezaro
+Al-Nil SC  ·  Liga de Egipto
+Alcanza # de prestigio   (su sistema aún no está portado)
+Aleja la grada del campo: -# de ambiente.
+Ambiente tranquilo en las redes.
+Amistosos de nivel, taquilla y roce; el jet lag pasa factura
+Analista de datos  ·  Solo cree en los números
+Analiza de verdad. Si le explicas tu idea, la defiende.
+Apoyar calma la funa pero gasta un cartucho. Callar no cuesta nada hoy. Contestar es cara o cruz: apaga el fuego o lo dobla.
+Aprende técnicas y sube de nivel.
+Arturo Bedal · MC · media # · FUERA DE SU PUESTO
+Atrás, al borde del área
+Avanza un día del calendario. Al pasar el domingo corre la semana entera.
+Baja de # a # de media.
+Bajarlo alarga la batería del portátil y baja la temperatura. Para una interfaz, # se ve igual de bien; el estadio en #D agradece #.
+Balones de oro, mejores DT y equipos ideales.
+Balón, control y pase. El que más hace crecer.
+Bancas de madera y una ducha que va cuando quiere.
+Banco del Deporte  ·  #M EUR  ·  # cuotas de #M EUR  ·  #%/sem
+Barato y grande, pero mal conectado
+Bloque perfecto — Las instrucciones en vivo pegan un #% más
+Bombo, trompeta y poco más. Es la única que suena a gente y no a estudio.
+Buscar un jugador o un club por nombre (Enter para abrir su ficha)
+C. Irarrázaval — cualquier roce en el área es penal  ·  Con él: # PJ · #G #E #P
+CLÁSICO: PREOCUPACIÓN EN LA INTERNA
+CONSEJEROS DEL DIRECTORIO  ·  # de #  ·  # EUR/semana en honorarios
+Cada cosa se pinta por separado: el uniforme no arrastra el color del menú ni el del escudo. Lo que no toques, lo hereda del club.
+Cada seis semanas se sienta con un juvenil del plantel. Le sube la moral y a veces algo más.
+Cada tribuna se puede partir en # tercios con su propio patrón de butaca, en vez de uno solo de punta a punta.
+Cada trofeo, con su año y su historia.
+Cada una de las # tribunas con su propio patrón, colores de butaca y techo, en vez de un solo estilo para todo el recinto.
+Caldera de dos bandejas bajo una membrana traslúcida, césped en diagonal y la niebla de la mañana.
+Caldera de hormigón crudo, paravalanchas y focos cálidos de los setenta.
+Cambiar de chip (dentro del bloque)
+Campaña de abonos  —  Vallas, radio y puerta a puerta para vender carnets
+Campaña internacional  —  Busca hinchas fuera del país para vender camisetas
+Canal de streaming propio — Partidos de cantera y contenido de pago: suscriptores todo el año
+Capilla y acompañamiento: baja la ansiedad del vestuario
+Cargas ligeras: llegan frescos pero se quedan sin fondo en octubre
+Carisma — +#% de sueldo y mejores ofertas de trabajo
+Carísimo y con vecinos encima; imbatible para el negocio comercial
+Casi nadie va, pero pagan más los derechos
+Cazatalentos — Informes de ojeo mucho más precisos
+Celeste La Paz  ·  Div. Profesional de Bolivia
+Certifica ecológicamente tu estadio   (su sistema aún no está portado)
+Chapa dorada, luz cálida y césped artificial que no se quema.
+Clima del vestuario, camarillas y capitanes.
+Cobras #k EUR a la semana · casa y transporte te cuestan #k EUR
+Colegio completo y entrenamiento de tarde.
+Color de acento (botones y menú)
+Comida de estadio todo el año, no solo los domingos
+Compra tu propio club como entrenador   (su sistema aún no está portado)
+Compran un porcentaje del PRÓXIMO traspaso de un chico y te lo pagan hoy. Pagan por debajo de lo que vale porque asumen el riesgo, y el día que lo vendas ese porcentaje ya no es tuyo. Como mucho el #% de cada jugador.
+Compuesta por el juego, no grabada: por eso cambia con lo que pasa —hay una pieza para los últimos minutos y otra para la vuelta olímpica— y por eso no pesa nada.
+Con el estrés alto tres semanas seguidas, el médico te manda a reposo una semana. Con el estrés bajo, el vestuario trabaja más a gusto.
+Con liga, copa y continental en la misma quincena, el plantel llega a treinta de físico y no hay forma de evitarlo alineando a mano cada jornada.
+Concentrar al plantel cada semana  ·  #k EUR
+Consigue la licencia PRO de entrenador   (su sistema aún no está portado)
+Consigue que bauticen tu estilo de juego   (su sistema aún no está portado)
+Construir cuesta #M EUR y mantenerla #M EUR a la semana por sede. Cada pretemporada llega una joya local con proyección alta, directa a tu plantel.
+Construye los seis negocios anexos   (su sistema aún no está portado)
+Contable — Los sueldos del staff cuestan un #% menos
+Contrata un jefe de ojeadores para poder cubrir países.
+Control de gasto: si gastas más de lo que ingresas, la federación aprieta.
+Copa de las Estrellas  —  Grupos · Fecha #
+Crecen solas cada semana -más rápido si vienes ganando en liga- y lo que dejan entra directo a la caja.
+Cristal, calefacción y catering para los invitados.
+Cromos y títulos de todas tus carreras.
+Cruza minutos, duelos y distancia recorrida para encontrar lo que el ojo no ve.
+Crónica, cambios, arengas y charla, sin #D.
+Cuando quieras cerrar la historia, puedes anunciar tu retirada y ver el balance completo de tu carrera. No se puede deshacer.
+Cuanto mejor la sala, menos se te pega el ruido: amortigua la funa.
+Cuatro tribunas de hormigón, focos en torre y bufandas: el fútbol de antes, con el césped gastado.
+Cuatro tribunas de ladrillo pegadas a la raya, techo a dos aguas.
+Cuatro tribunas separadas, pegadas a la raya, y campanas al gol.
+Cubierta total retráctil, membrana blanca y césped híbrido: aquí no llueve.
+Cuenco abierto bajo una visera flotante, butacas moteadas como la arena y césped reseco al sol.
+Cuenco blanco de vidrio sobre el agua, focos azules y halo LED.
+Cuenco de tres anillos con techo retráctil, rombos de neón en el césped y un anillo de pantallas.
+Cuenta lo que pasa, sin bando.
+Cuesta dos de físico a todo el plantel y da un empujón para ESTE partido. Contra un rival mejor que tú vale más.
+Cuesta un punto de moral a todo el plantel cada seis semanas, y a cambio los jugadores conflictivos dan menos guerra.
+Cumples # de # requisitos. Uno o dos incumplimientos son un aviso y te dejan sin cupo internacional; tres o más, multa y licencia denegada.
+Cuánta gasolina le queda. Baja durante el partido y se recupera entrenando.
+Cómo se siente en el club. La mueven los resultados, tus charlas y las decisiones del camarín.
+Das tú la cara en cada rueda. Todo lo que digas cuenta el doble que con portavoz.
+Debutó a los # años, formado a la antigua.
+Debutó a los # años, llegado desde el fútbol amateur.
+Del juego (por defecto)
+Deporte de colegio: la rama que más acerca a las familias del barrio
+Descarga las piernas: el plantel llega más entero
+Dieciseisavos superada. Cada eliminatoria que se gana es taquilla y premio.
+Discretos. Pagan menos y molestan poco.  ·  vende el #% del próximo traspaso de Cristóbal Silva
+Discretos. Pagan menos y molestan poco.  ·  vende el #% del próximo traspaso de Esteban Díaz
+Discretos. Pagan menos y molestan poco.  ·  vende el #% del próximo traspaso de Lucas Cibeda
+Discretos. Pagan menos y molestan poco.  ·  vende el #% del próximo traspaso de Vicente Pezaro
+Doble turno: fondo para todo el año, con riesgo de romper a alguno
+Donde se cierran los patrocinios. Un buen palco mejora lo que te ofrecen.
+Dos micrófonos prestados y el escudo impreso en una lona.
+EL ONCE  ·  # de # elegidos   (con menos de once manda el automático)
+ESC o «Saltar» para ir directo al cuadro
+El # de mayo recuerda las luchas por la jornada de # horas. En el club, el personal libra y los jugadores suelen dedicarle el partido.
+El # de septiembre de # hubo un golpe de Estado en Chile. Es una fecha de memoria y de respeto por las víctimas: minuto de silencio y nada de celebraciones.
+El cursor inclina el viento: la lluvia se tuerce hacia donde miras y el confeti se va detrás. Apagado, cae recto.
+El de toda la vida, equilibrado
+El degradado cenital que le da aire de placa metálica. Sin él, las tarjetas son rectángulos planos.
+El diseñador de camisetas, a pantalla completa.
+El equilibrio: sombras sí, lo más caro no
+El estadio a x#, frena en cada ocasión.
+El estadio vuelve a abrir con normalidad.
+El modelo todavía no ha señalado a nadie. Necesita al menos un nivel y unas semanas de datos.
+El murmullo y la ovación de la grada.
+El nivel global del jugador, de # a #. Sale de sus seis atributos ponderados según el puesto que ocupa.
+El número es cuánto le va esa jugada a ESTE once: depende de si tienes gente con las habilidades que pide.
+El partido entero en el estadio.
+El plan es el plan. A veces es lo mejor.
+El presidente se sienta con todos. Tiene su encanto.
+El salón de la fama y los que ya no están.
+El techo al que puede llegar. Solo lo ves de tus jugadores o de los que hayas ojeado a fondo.
+El tribunal cierra el estadio un partido por los incidentes. Cero taquilla y el equipo juega en un silencio irreal.
+El tribunal no tiene nada anotado contra el club. Las apelaciones salen a precio normal.
+Elegir club con el mapa: países, escudos y datos de cada equipo
+En bloque cobras lo que reparte la liga. Por tu cuenta puedes ganar mucho más… si tu club vende. Y la asamblea te lo tiene en cuenta.
+En las semanas cargadas, los que lleguen por debajo de # de físico dejan sitio a los frescos de su puesto.
+En pantalla táctil, un desliz horizontal largo también cambia de bloque maestro.
+En rojo, el que juega fuera de su puesto: rinde por debajo aunque su media diga otra cosa.
+En una cesión, el club de destino puede comprarlo al final. Con obligación, tiene que hacerlo.
+Encendido, la pieza cambia con lo que pasa: oficina en los menús, tensión en los últimos minutos, gloria al levantar algo. Apagado, suena siempre la que elijas.
+Entero. Cada semana en el cargo cansa un poco; ganar lo compensa.
+Entrena como nadie: multiplica lo que crece.
+Es dinero TUYO, no del club. Lo que compres aquí te sigue cuando cambies de banquillo.
+Esquema de teclado, cada tecla y botón del mando, y las ayudas de pase, tiro y cambio de jugador.
+Esteban Díaz · MCO · media # · FUERA DE SU PUESTO
+Esteban Pebez · MCD · media # · FUERA DE SU PUESTO
+Estos no se anuncian: aparecen solos cuando pasa algo que casi nunca pasa.
+Ex entrenador  ·  Habla de pizarra y desconfía de los jóvenes
+Ex jugador ídolo  ·  Defiende al vestuario por encima de todo
+Exhibición de fútbol y carácter. El plantel responde a su gente. — L. Pizarro, Podcast Fuera de Juego.   ·   S# · #
+Exhibición de fútbol y carácter. El plantel responde a su gente. — P. Ibarra, El Pelotazo.   ·   S# · #
+Exigencia: terminar top # de la liga
+Fachada de lona sobre madera clara, techo en visera y luz fría.
+Fernando de Peol  ·  POR, # años
+Fernando de Peol  ·  sin cláusula
+Fernando de Peol puede ser maestro. Empareja con:
+Fernando de Peol · POR · media #
+Ficha al hijo de una leyenda de tu club   (su sistema aún no está portado)
+Fondo de patrocinadores, luz decente y sitio para veinte.
+Formador — Los menores de # progresan un #% más rápido
+Fundación, épocas doradas, clásicos y tu legado.
+Fundado en # · «el Cacique» · juega en la Ruca · # ligas y # copas
+Ganas un punto por semana y otro por victoria. En los niveles #, # y # hay un hito: el efecto se refuerza y ganas un punto de habilidad para el árbol.
+Genio del banquillo — +#% de ataque y defensa (reemplaza a Pizarra fina)
+Goleadores, rachas y marcas de todos los tiempos.
+Goles esperados: cuánto deberías haber marcado según la calidad de tus ocasiones.
+Grupo interno del vestuario. Si dejas fuera al líder de un grupo, todo el grupo se resiente.
+HABILIDADES DE FERNANDO DE PEOL  ·  # puntos
+Hacia dónde tira la satisfacción (la moral se acerca a ella cada semana):
+Herradura abierta a la montaña, hormigón gris y viento de altura.
+Hidromasaje, sala de charla con pantalla y zona de recuperación.
+Hotel y logística por cada partido de local. El plantel llega con dos puntos más de físico.
+Hotel y trabajo aislado toda la semana: tres puntos de físico para todos, todas las semanas que la dejes puesta.
+Iluminación de estudio, pantalla y realización propia.
+Ingresan todas las semanas del año, jueguen o no. Es lo que separa a un club que sobrevive de uno que crece.
+Invierno (parón de mitad de año)
+Invierte en accesos, transporte y estadios.
+Invitaste a un creador a un entrenamiento. El club ganó # seguidores y algo de cariño en redes.
+Jugador nuevo generado para reemplazar a los que se retiran. Algunos son hijos de leyendas.
+Jugar el partido, avanzar semana, jugar la temporada o pasar a la siguiente
+La Teja FC  ·  Primera de Uruguay
+La Victoria FC  ·  Liga de Perú
+La caja en azul. Los bancos te sonríen.
+La cuota se descuenta sola cada semana, llueva o truene. Dos créditos como mucho, y en mora no hay ventanilla.
+La derrota abre preguntas: ¿alcanza este plantel para pelear arriba? — P. Ibarra, El Pelotazo.   ·   S# · #
+La directiva observa, sin más  (# de #)
+La equipación con volumen propio (más realista). Cuesta tres mallas más por jugador en el partido.
+La función concreta dentro del sistema (pivote, falso nueve…). Suma o resta según sus atributos.
+La gente responde a los resultados. Ganar en casa y no subir la entrada es lo que más lo mueve.
+La hinchada compra deuda del club a tasa baja, incluso en mora. Más barato que un banco, pero si el club se liquida sin pagarlo, la afición no lo olvida.
+La hinchada te quiere más, más a menudo
+La hinchada, los medios y los números del día a día.
+La joya: ingresos todos los días del año
+La más lenta y la más vacía. Para las semanas en que no se juega.
+La presión de las redes sociales contra tu gestión. Alta, el directorio se pone nervioso.
+La temporada # de Lautaro FC terminó en el puesto #. Sin títulos esta vez. La prensa mantuvo la distancia.
+Las Piedras FC  ·  Primera de Uruguay
+Las bandejas y el aforo se amplían construyendo tribunas en Club → Obras. Aquí se decide cómo SE VE.
+Las cuotas te tienen como favorito: si el resultado no acompaña, la prensa y la hinchada lo van a leer peor de lo normal.
+Las galas se celebran al cerrar cada temporada. Todavía no hay ninguna.
+Las generaciones que salieron de casa.
+Las jugadas clave, una a una, en # segundos.
+Las personas que hacen el club, dentro y fuera del campo.
+Lautaro FC  ·  lunes # de abril de #
+Le pides a la federación que no se lo lleve. No siempre te hacen caso, y al jugador no le suele gustar que decidas por él.
+Lectura de partido — Ves la táctica rival en la previa
+Lejos de todo: perfecto para la ciudad deportiva
+Llegaron con el éxito. Exigen títulos y estrellas
+Llevan aquí más años que tú y seguirán cuando te vayas. Tratarlos bien no sale en ninguna estadística, pero se nota.
+Lo bien que encaja un jugador en la posición donde lo pones. Fuera de su puesto natural rinde menos.
+Lo de siempre: equilibrio entre carga y descanso
+Lo fundaron jugadores rebeldes que se fueron de su club, y lleva el nombre de un sabio cacique mapuche. Es el Popular.
+Lo que conseguiste como gestor.
+Lo que el club fue y lo que tú estás escribiendo.
+Lo que le has prometido a cada uno. Bajarle el escalafón cuesta moral en el acto; subírselo la sube. Y prometer sin cumplir se paga después.
+Lo que no sale en la tabla: dónde se cambian, dónde te preguntan y dónde se sientan los que firman los cheques.
+Lo que se dice del club en Tribuna.
+Lo que suena mientras miras números. Lenta, sin melodía marcada y en modo menor suave: tiene que poder estar puesta una hora sin que la notes.
+Los avisos y los clics de los menús.
+Los de siempre. Ni gangas ni sustos.  ·  vende el #% del próximo traspaso de Cristóbal Silva
+Los de siempre. Ni gangas ni sustos.  ·  vende el #% del próximo traspaso de Esteban Díaz
+Los de siempre. Ni gangas ni sustos.  ·  vende el #% del próximo traspaso de Lucas Cibeda
+Los de siempre. Ni gangas ni sustos.  ·  vende el #% del próximo traspaso de Vicente Pezaro
+Los días de partido el estadio se llena más si el equipo viene ganando.
+MERCADO DE AGENTES LIBRES  ·  sin traspaso, solo prima de fichaje y sueldo
+Mando conectado: ninguno  ·  cruceta o stick para moverte, A para pulsar, B para volver, gatillos para cambiar de pestaña.
+Mano dura — Multas y normas rinden el doble
+Martín Álvarez queda ligado al club de por vida. Vendrá a los entrenamientos, hablará con los chicos y estará en cada acto. La gente lo va a agradecer.
+Mayor, alta y con la percusión abierta. Dura lo que dura una vuelta olímpica.
+Mediador — Mucho más éxito al mediar entre camarillas
+Medias, short y tipografía de los dorsales
+Mediático — Las funas se apagan al doble de velocidad
+Mensajes del club, agentes y la federación.
+Mentalidad defensiva y línea baja en cuanto vayas ganando.
+Mentalidad ofensiva y línea adelantada en cuanto vayas perdiendo.
+Menú de residencia. Lo normal.
+Mercado cerrado. Vuelve a abrir en # semanas: hasta entonces, la plantilla es la que hay.
+Mercado cerrado: las ventanas son las semanas #-# y #-#.
+Mesas de debate y portadas.
+Mismo formato que el importador, con el pie hábil de regalo -no se puede reimportar, es calculado, no guardado- y sin habilidades -esas viven en el árbol de entrenamiento de cada club, no en el jugador-. Se copia al portapapeles.
+Mismo puesto, edad y nivel parecidos: por si se cae la operación o quieres comparar precio.
+Motivador — Las charlas suman +# de moral extra
+Motor gráfico ligero (para equipos modestos; reinicia el juego)
+Máximo volumen: el que gana por arriba manda
+Nada de esto cambia una sola regla del juego. El color de acento sigue saliendo de la identidad de tu club: lo que se elige aquí es el lienzo.
+Negocia el sobregiro: −#% de interés mientras la caja está en rojo
+Negociador — Los clubes aceptan un #% más tus ofertas
+Ningún país atraviesa hoy una época marcada. Las generaciones irrepetibles aparecen solas, cada varios años, y duran lo que duran.
+No dan dinero: dan reputación. Sostenerlas cuando aprieta la caja es una decisión de verdad.
+No hay ninguna votación abierta. La federación convoca cada tanto.
+No mide dónde acabas, sino cuánto le sacas a lo que tienes.
+No renovó y quedó sin equipo.
+No se guarda con la partida: es de esta máquina, no de este club.
+Nombrar a alguien lo liga al club de por vida. La hinchada lo agradece de inmediato.
+O elige el tuyo
+Ojo clínico — La ansiedad del plantel baja el doble por semana
+Oval de # bandeja  ·  techo sin  ·  # butacas  ·  ambiente -#
+POR  Fernando de Peol  ·  #
+POR · # años · Lautaro FC · sin rasgo
+POR · # años · Puerto Coquimbo · sin rasgo
+Para HDMI y pantallas grandes: todo más grande, pensado para mirarse desde lejos.
+Para llegar a director deportivo: # trofeo(s) y # punto(s) de prestigio
+Para pasar del nivel # de tribunas hace falta permiso municipal. Hoy no lo tienes.
+Pasas la mañana con los chicos. Se nota: entrenan con otra cara.
+Pegado al estadio: ideal para ampliar tribunas o construir el hotel
+Pequeño empujón de moral: el vestuario funciona
+Periodista de toda la vida  ·  Le importa el club, no tú
+Periodistas, medios propios y derechos de TV.
+Permiso anual para competir. Exige infraestructura y cuentas sanas.
+Piscina propia: recuperación sin impacto para los lesionados
+Pista, gimnasio y preparadores compartidos con el primer equipo
+Pizarra fina — +#% de ataque y defensa a tu equipo
+Plan de obras del gobierno (accesos al estadio)
+Podcast oficial del club — Contenido semanal: fideliza socios y da voz a tu versión
+Polemista  ·  Vive de encender el fuego
+Política con el reglamento: CUMPLIR (el once se corrige solo) · esta temporada: # semana(s) con el plantel fuera de cupo, # alineación(es) indebida(s)
+Precio fijo al que cualquier club puede llevarse al jugador sin negociar.
+Precio social para la galería: llena el estadio y te gana al barrio
+Premio al campeón: #M EUR  (fijo, no escalado al tamaño del club)
+Prima ahora a cambio de tres años sin que pida salida.
+Primer escalón oficial. Un punto de habilidad y un #% más de sueldo.
+Primera Junta Nacional de Gobierno, #. Es la gran fiesta de Chile: fondas, cueca y estadios llenos.
+Probabilidad de que se lo lleve otro club esta semana. La beca la baja, y las instalaciones de cantera también.
+Productora de documentales — Series tras bambalinas que se venden fuera
+Prohibido fichar: solo suben chicos de tu academia
+Próximo partido en casa contra Puerto Coquimbo (rep #): se cobraría # en vez de #.
+Puntos por partido con cada dibujo, desde que llevas el club. No dice cuál es el mejor del juego: dice cuál le sienta bien a ESTA plantilla.
+Quedan # semanas para el cierre. Lo que no fiches ahora, no lo fichas hasta la próxima ventana.
+Quién domina el partido en este momento. No es posesión: es peligro real.
+RED DE OJEADORES  ·  # de # países  ·  presupuesto #M EUR
+Rama competitiva completa: reputación social y una cantera nueva
+Recuerda el combate naval de Iquique de #.
+Recuperas un # % de la masa salarial por nivel
+Relación tibia con el vecindario.
+Rendimiento estimado en cada puesto. Reconvertirlo es permanente y le cuesta unas semanas asentarse.
+Renombra, repinta y reconstruye el mundo del juego: clubes, escudos, plantillas, atributos, puestos y caras. Los cambios van al guardado como cualquier otra cosa.
+Requiere antes: Fundo en la periferia
+Requiere antes: Solar en el centro
+Requiere la A. Dos puntos de habilidad y otro #% de sueldo.
+Requiere la B. Un punto de habilidad y otro #% de sueldo.
+Retos de temporada con premio.
+Revista del club — A la vieja usanza: llega a los socios de siempre
+Rompió el contrato tras una pelea con su DT.
+Ruido, banderas y presión. Y problemas si se les enfada
+Salón privado, ascensor propio y sitio donde se firman cosas.
+Se aplican solos en el minuto #, sin que tengas que estar mirando.
+Se juega replegado y a la espalda. Los bloques bajos ganan partidos.
+Se lee en el túnel antes de cada partido.
+Se pagan al cumplir lo que pide la directiva, y el vestuario lo celebra con seis puntos de moral.
+Se queda después de cada práctica definiendo. Huele gol.
+Se recuperó de una lesión larga y nadie lo llamó.
+Sede de la final:
+Segundo día de las Fiestas Patrias.
+Separan a la hinchada del césped. Estética de otra época.
+Si el estadio en #D se siente lento, baja la calidad. La interfaz no cambia: son etiquetas y no cuestan nada.
+Si no te gusta cómo lo cuentan, cuéntalo tú. Se pagan una vez y rentan todos los meses.
+Si tu equipo no llega a # FPS, el partido apaga por escalones la oclusión ambiental, acorta las sombras y baja la resolución del #D.
+Siguiente: 👑 Leyenda con reputación # → instalaciones hasta el nivel #, patrocinadores premium: +# % en las ofertas
+Sin créditos abiertos: el activo entero es patrimonio. Pedir uno cambia esta línea al día siguiente.
+Sin expedientes abiertos. Tampoco te has metido en líos.
+Sin foto real para este club: dibujo por color y estampado (hombros).
+Sin leyendas registradas en este club todavía.
+Solo el resultado, al momento.
+Su club descendió y lo dejó libre.
+Su estado mental. Por encima de # empieza a rendir peor y puede pedir baja psicológica.
+Su estado reciente. Sube con buenas actuaciones y baja con las malas.
+Su época dorada fue en la década de #.
+Sube de # a # de media.
+Sube en los partidos grandes, baja en los flojos.
+Sube sin resolver nunca. Es la pieza que se pone sola cuando vas empatando el último partido del año.
+Sube ya al primer equipo, sin esperar a los #.
+Sustituye algunas letras por números, como hace el resto del juego con los nombres generados.
+También hay ronda de Copa Cóndor esta semana.
+Taquillas nuevas, suelo decente y agua caliente de verdad.
+Te consigue mejores ofertas de trabajo y mejor indemnización.
+Te piden acabar #.º o mejor.
+Te quedas con una parte de lo que el club comprador gane si lo revende.
+Te tiene simpatía: suaviza las derrotas si le das material.
+Toca una habilidad para ver qué hace y aprenderla. Ganas un punto cada # semanas; las licencias y cursos de tu vida dan más.
+Todavía no son jugadores: viven en la residencia. Tú decides cómo entrenan, qué comen y cuánto estudian, y moldeas su carácter. A los # pasan al primer equipo, y llegan como los hayas formado. #/# plazas · #k EUR por semana.
+Todos los efectos, sombras y reflejos
+Trabajo al #%: preparación +#%, estrés +# por semana, familia ±#.
+Trabajo específico para un jugador concreto. En cinco a nueve semanas aprende una habilidad nueva de verdad.
+Treinta temporadas en el mismo club, sin cambiarte
+Tres bandejas verticales encima del campo, tifo en la popular y bombo.
+Tres costados cerrados y una cabecera abierta al paisaje.
+Tres marcas sobre la mesa. La que más paga suele ser también la que más pide, y solo se luce una: al firmar, las otras se retiran.
+Tres pisos pegados a la raya y techados hasta el borde: una pared de gente que no deja respirar.
+Tu apellido es una manera de entender el fútbol.
+Tu año contado como una película.
+Tu camino como entrenador: rol, habilidades y reputación.
+Tu club va #.º de #.
+Tu cuerpo médico pierde menos semanas que la media de la liga. Se nota la inversión.
+Tu prestigio como entrenador. Abre puertas, mejora fichajes y sube tu sueldo.
+Tu rol, tu currículum y el siguiente escalón.
+Un concierto llena la caja de golpe (#M EUR) pero destroza el campo y molesta al barrio. Con el césped por debajo de #, tus jugadores pierden precisión.
+Un incidente grave cuesta puertas cerradas o aforo reducido, y eso es taquilla que no vuelve. Sube con el mal ambiente y la funa.
+Un lío fuera de la cancha se cobra caro. Entra dinero, pero al multado le baja la moral.
+Un ojo extra: afina la niebla de ojeo en todo el mundo
+Un pulso que no llega a ser ritmo. No hay melodía: hay espera.
+Un punto de habilidad y ves los puntos débiles del rival.
+Un punto de habilidad; las ruedas de prensa te salen mejor.
+Un punto que no conforma a nadie en las tribunas. — L. Pizarro, Podcast Fuera de Juego.   ·   S# · #
+Un representante con dos o más clientes tuyos tiene con qué apretarte. Aquí se ve quién los tiene.
+Un vestuario cuidado sostiene la moral del plantel semana a semana.
+Una gestión al mes. La reunión es gratis y puede salir mal: es la única de las tres que se puede volver en contra.
+Una línea por futbolista: Club;Nombre;POS;Edad;Media[;País;Proyección;Pie]. POS admite grupos (POR/DEF/MED/DEL) o puestos concretos. Con # filas o más de un mismo club, se REEMPLAZA su plantilla; con menos, se añaden.
+Una por temporada. No da puntos: da FORMA, que es lo que le falta a un plantel que lleva un mes parado.
+Una por temporada. No dan dinero directo: mueven socios, ánimo y seguidores.
+Una sola bandeja, sin techo y el césped como Dios quiso.
+Una sola grada en herradura contra la ladera, césped de invierno y nieve cayendo sobre la cancha.
+Usa el renderizador de compatibilidad (OpenGL). En gráficas integradas antiguas va más fluido; se pierden algunos efectos de luz.
+Utileros, cocineros, la señora del kiosco...
+Va a por ti desde el día uno. Cualquier tropiezo es portada.
+Va detrás de la interfaz. Los paneles siguen siendo opacos: un fondo que deja la tabla ilegible es un fondo malo.
+Ventanas de pases: semanas #–# y #–#. Libres y precontratos funcionan todo el año.
+Vestuario de hierro — Inmune a rebeliones de vestuario
+Vida nocturna. Le gusta la noche más de lo que conviene en abril.
+Vienen desde siempre. Exigen identidad y respeto por el escudo
+Vienen por el ambiente. Necesitan precios y seguridad
+Villa del Cerro  ·  Primera de Uruguay
+Vistas y polémica: hay estudio de impacto ambiental de por medio
+Vive del titular grande, sea verdad o no.
+Volvió del extranjero sin club.
+Ya sabe: Juego de pies
+arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha
+lunes # de abril de #  ·  semana #
+«Aquí la gente vota directamente al presidente, que es a la vez jefe de Estado y de Gobierno. El Congreso se elige aparte y hace las leyes. Se vota cada # años: se elige presidente de la República. El jefe de Estado es el presidente. Los partidos y políticos del juego son inventados.»
+«Del barrio al primer equipo»  —  Pone el foco en la cantera y en la identidad
+«El club está donde tiene que estar. El entrenador es lo de menos.»
+«Ese vestuario está vivo. Se nota que corren por alguien.»
+«Ganan, sí. Pero que no se relajen, que aquí se olvida rápido.»
+«Los números lo sostienen: genera más de lo que concede.»
+«Los que vistieron esta camiseta»  —  Nostalgia pura con los ídolos históricos
+«Ordenado atrás. Eso es lo primero, lo demás viene solo.»
+«Primero lo nuestro: la cantera y el jugador del país.» Sus propuestas salen antes en la asamblea y hace campaña por ellas.
+«Ven con los tuyos»  —  Entradas familiares y actividades para niños
+· Máximo # extranjeros en el plantel
+· Un sub-# obligatorio en el once
+· 📜 ANFP #: # extranjeros, # en cancha, y minutos sub-# obligatorios (# por temporada).
+· 🧭 Abre la ficha de Esteban Díaz
+· 🧭 Abre la ficha de Vicente Pezaro
+Ánimo, socios, peñas y días del hincha.
+Ícono global — Los cracks aceptan venir a tu proyecto
+Óvalo abierto, verde vivo y batucada desde el minuto uno.
+Óvalo bajo con pista de atletismo, gradas bicolor y el césped partido en dos tonos.
+Óvalo con pista atlética y corona de focos. Se ve desde el avión.
+Óvalo de dos anillos con cubierta total, damero grande y rayos sobre el techo.
+Óvalo de piedra clara, arcos en la fachada y anillo de luz cálida.
+↺ Volver al estadio de fábrica
+▶ Documental de la temporada
+▸ Fernando de Peol  ·  POR  ·  # años  ·  media #
+○ Hay # marcas esperando respuesta por la camiseta.
+○ Tienes # punto(s) de entrenador sin gastar.
+● # contratos terminan este año. Sin renovar, se van gratis.
+⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.
+⚖️ Jornada legal del personal: # h semanales · Ley # (ley de las # horas). Bajó de # a # horas el # de abril de #; bajará a # en abril de #.  (la estructura cuesta un +#%)
+✅  Aforo mínimo de la categoría
+✔  Butacas de la tribuna
+✔  El de toda la vida
+✔  Una mesa y un mantel
+✔ Patrocinadores premium: +# % en las ofertas
+✔ 🤝 Confianza de la directiva: #/#
+❌  Plan de seguridad del estadio
+❤️ Ídolo de la casa  ·  por hacer
+⭐ Bastián Vega  ·  DEL · nivel # en su época
+⭐ Federico Conti  ·  MED · nivel # en su época
+⭐ Romain Fournier  ·  MED · nivel # en su época
+🌍 Campeón del mundo  ·  por hacer
+🌍 Copa del Mundo #: del #/# al #/# · sede: USA, MEX
+🌍 EL MAPA DEL TALENTO
+🌎 Rey de América  ·  por hacer
+🌱 Asunto de la academia
+🍽️  Cena con la familia ⏎ #k EUR · estrés -# · familia +#
+🎉 # de mayo · Día de las Glorias Navales  (en # días)
+🎉 # de septiembre · Día de las Glorias del Ejército  (en # días)
+🎉 # de septiembre · Fiestas Patrias  (en # días)
+🎓 Habilidades de entrenador · # punto(s) por gastar
+🎓 TUS HABILIDADES DE ENTRENADOR
+🎟️ Entradas para el barrio
+🎤 Arrendar para un concierto
+🎨 ASPECTO DE LA INTERFAZ
+🎨 Igualar todo a los colores del club
+🎪 Organizar un día del hincha  ·  #M EUR
+🎬  Documental de la temporada
+🎽  Abrir el diseñador de equipación
+🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.
+🏙️ EL CLUB Y SU CIUDAD
+🏙️ Ver la ciudad en #D
+🏠 DÓNDE VIVES (LA MUDANZA CUESTA CUATRO SEMANAS DE LA CASA NUEVA)
+🏠 Preguntar por su vida
+👀 Visitar el entrenamiento de la academia (una vez por semana)
+👔 Plantel y cuerpo del equipo  ▸
+👕 LA MARCA DEL PECHO
+💡 Mejorar ciudad deportiva, médicos, gimnasio y cocina sube la moral de todos.
+💥 Sin piedad  ·  por hacer
+💬 HABLAR CON FERNANDO DE PEOL
+📄 Hablar de su contrato
+📈 LA ERA DEL CONTRAGOLPE
+📈 POR QUÉ SUBE O BAJA LA MORAL
+📊  Empate sin más contra el Acero Talcahuano. Se escapan dos puntos.
+📊  Empate sin más contra el Iquique Celeste. Se escapan dos puntos.
+📊 DEPARTAMENTO DE ANÁLISIS DE DATOS
+📊 LO QUE TE HA FUNCIONADO
+📋 INFORME DE LA SEMANA
+📒 Álbum de cromos y museo de tus carreras  ·  🎁 # sobres
+📔 LO QUE HA PASADO
+📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.
+📣  El de la puerta # — Joaquín Contreras
+📱 LO QUE DICEN LOS QUE MUEVEN MASAS
+📷 Modo foto · mueve la cámara como siempre y elige un filtro
+📺  El ruido de fuera
+📼 Clásico de los #  ·  #M EUR
+📽️ Videoanálisis del rival de esta semana
+🔥  #-# contra el Cobre Atacama. Otra vez lo mismo.
+🔥  Asado con los amigos ⏎ #k EUR · estrés -# · familia +#
+🔥 DESGASTE EN EL CARGO
+🕯️ # de septiembre  (en # días)
+🗞 "Una máquina": el equipo pisa fuerte y la ciudad sueña
+🗞 CLÁSICO: "Preocupación en la interna"
+🗣️ Te busca un jugador
+🗣️ Te conocen como negociador
+🗳️ Gobierno de CHI: Felipe Núñez (Movimiento Faro) · prioridad: plan de obras públicas · elecciones en #
+🗺️  Diseño de la ciudad
+🚇 En el túnel, antes de salir, te cruzas con el DT de Iquique Celeste y con el árbitro, que tiene fama de localista. Tienes diez segundos.
+🚗 CÓMO TE MUEVES (EL PIE SON SEIS SEMANAS DE CUOTA)
+🚪 EL CLUB POR DENTRO
+🚪 El club por dentro
+🛠️ # de mayo · Día del Trabajador  (en # días)
+🤝  La gente del club
+🥇 El primero de muchos  ·  por hacer
+🧭 Hablar con el mentor
+🧱 FRASE EN LA PARED DEL VESTUARIO
+🧳  Escapada de fin de semana ⏎ #k EUR · estrés -# · familia +#

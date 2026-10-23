@@ -57,6 +57,10 @@ func _process(_d: float) -> void:
 			"césped: las capas de volumen existen en el partido (%d capas por calidad)" % esperado)
 	match _paso:
 		0:
+			## La preferencia «controlar a mi equipo» se guarda en user://: si otra prueba la dejó encendida el
+			## partido arranca ya con control y alternar lo APAGABA (fallo intermitente del 23-10). Se parte de apagado.
+			if _motor.control_equipo >= 0:
+				_vista.call("_alternar_control_motor")
 			_vista.call("_alternar_control_motor")
 			_avanzar(30)
 			_ok(_motor.control_equipo == 0 and not _motor.autopiloto, "el control del equipo se enciende")
