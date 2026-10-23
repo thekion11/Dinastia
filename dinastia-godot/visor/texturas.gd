@@ -1,6 +1,6 @@
 class_name Texturas
 extends "res://visor/texturas_p1.gd"
-## (Parte 2 de 2 de `texturas.gd`.)
+## [Capa 2/2 de `texturas.gd`] churrete
 
 # ------------------------------------------------------- manchas y desgaste
 

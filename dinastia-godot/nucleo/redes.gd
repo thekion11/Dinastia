@@ -1,6 +1,6 @@
 class_name Redes
 extends "res://nucleo/redes_p1.gd"
-## (Parte 2 de 2 de `redes.gd`.)
+## [Capa 2/2 de `redes.gd`] comentar_ultimo_partido, semana, comentar_jugador, a_dic, desde_dic
 
 func comentar_ultimo_partido(m: Mundo) -> Array:
 	var u: Dictionary = Partido.ultimo_mio

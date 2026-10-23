@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 7 de `prensa.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `prensa.gd`, conserva la clase.)
+## [Capa 1/8 de `prensa.gd`] variables, constantes y señales
 
 ## La prensa y el despacho: lo que te preguntan y lo que te toca firmar.
 ##

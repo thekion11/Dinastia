@@ -1,6 +1,6 @@
 class_name MinijuegosCiudad
 extends "res://ui/componentes/minijuegos_ciudad_p2.gd"
-## (Parte 3 de 3 de `minijuegos_ciudad.gd`.)
+## [Capa 3/3 de `minijuegos_ciudad.gd`] _kart, _process, _firmar, _firmar_en, _gui_input, _firmar_mas_cercano … (+1)
 
 func _kart(delta: float) -> void:
 	## Cuenta atrás: 3, 2, 1, ¡YA!

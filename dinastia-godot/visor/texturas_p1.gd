@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `texturas.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `texturas.gd`, conserva la clase.)
+## [Capa 1/2 de `texturas.gd`] _ruido, _tex_ruido, _ruido_claro, hormigon, ladrillo, _imagen_asfalto … (+9)
 
 ## Fabrica de materiales con imperfecciones para la ciudad y las instalaciones.
 ##

@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p7.gd"
-## (Parte 8 de 12 de `city_builder.gd`.)
+## [Capa 8/12 de `city_builder.gd`] _parking_negocio, _centro_comercial, _clinica, _parcelas, _finca_enredadera, _parque_barrio … (+5)
 
 ## El estacionamiento: es subterráneo, así que lo que se ve es la RAMPA de
 ## bajada y el murete, no un edificio. Dibujar una torre de aparcamiento sería

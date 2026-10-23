@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 4 de `cantera.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `cantera.gd`, conserva la clase.)
+## [Capa 1/4 de `cantera.gd`] _init, _mundo, bono_de_camada, multiplicador_de_reputacion, grupo_con_tope, demarcacion_de … (+8)
 
 ## La cantera juvenil y los representantes: los chicos de la casa y quien negocia por ellos.
 ##

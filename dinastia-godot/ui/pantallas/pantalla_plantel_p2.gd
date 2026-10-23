@@ -1,5 +1,5 @@
 extends "res://ui/pantallas/pantalla_plantel_p1.gd"
-## (Parte 2 de 4 de `pantalla_plantel.gd`.)
+## [Capa 2/4 de `pantalla_plantel.gd`] _pintar_tactica, _pintar_desafios, _pintar_rivalidades, _frase_clasico, _historia_de, _pintar_ficha_club … (+1)
 
 func _pintar_tactica(c: Club) -> void:
 	p._limpiar(p._lista_tactica)

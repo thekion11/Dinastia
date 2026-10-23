@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 8 de `mundo.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `mundo.gd`, conserva la clase.)
+## [Capa 1/9 de `mundo.gd`] actual, _init, _anotar_movimiento, _rol_cambio_directiva
 
 ## El estado de una partida: los clubes, los jugadores y las ligas.
 ##

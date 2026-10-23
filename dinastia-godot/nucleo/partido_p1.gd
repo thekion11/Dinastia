@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 3 de `partido.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `partido.gd`, conserva la clase.)
+## [Capa 1/3 de `partido.gd`] fijar_clima, _momentum_push, momentum_local, limpiar_contexto, es_ex_de, _media_linea … (+7)
 
 ## Un partido, minuto a minuto.
 ##

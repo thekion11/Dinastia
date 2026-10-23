@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `fondo.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `fondo.gd`, conserva la clase.)
+## [Capa 1/2 de `fondo.gd`] _r, _foco, _gente, _vineta, _marco, _nocturna … (+12)
 
 ## Los fondos de pantalla completa del juego.
 ##

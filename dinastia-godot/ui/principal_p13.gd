@@ -1,5 +1,5 @@
 extends "res://ui/principal_p12.gd"
-## (Parte 13 de 18 de `principal.gd`.)
+## [Capa 14/19 de `principal.gd`] _nueva_temporada, _al_elegir_calendario, _abrir_hub, _guardar, _avisar_si_respaldo, _resolver_partido_abandonado … (+11)
 
 func _nueva_temporada() -> void:
 	if mundo.temporada_en_curso():

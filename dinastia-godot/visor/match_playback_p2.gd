@@ -1,5 +1,5 @@
 extends "res://visor/match_playback_p1.gd"
-## (Parte 2 de 4 de `match_playback.gd`.)
+## [Capa 2/4 de `match_playback.gd`] _ejecutar_accion, _decidir_regate, _animar, _resolver_choques, _mover, _mas_cercano_a … (+2)
 
 func _ejecutar_accion(p: Dictionary, anim_name: String, duracion: float) -> void:
 	var pid = p.get("id")

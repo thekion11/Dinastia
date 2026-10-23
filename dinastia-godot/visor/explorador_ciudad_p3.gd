@@ -1,5 +1,5 @@
 extends "res://visor/explorador_ciudad_p2.gd"
-## (Parte 3 de 6 de `explorador_ciudad.gd`.)
+## [Capa 3/6 de `explorador_ciudad.gd`] _colocar_camara, _salir_del_edificio, _portero, _salir_del_estadio, _ir_a_planta, _subir_al_tren … (+11)
 
 func _colocar_camara(delta: float) -> void:
 	## PLANO DE CONVERSACIÓN (13-10-2026): mientras alguien te habla, la cámara

@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 11 de `stadium_builder.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `stadium_builder.gd`, conserva la clase.)
+## [Capa 1/12 de `stadium_builder.gd`] _c, marcar_techo, ocultar_techo_ante, _box, _rect_outline, _verdes_reales … (+3)
 
 ## Construye el estadio en 3D a partir del perfil que exporta el HTML
 ## (perfilEstadio() en dinastia-futbol-manager base.html). Para el club del

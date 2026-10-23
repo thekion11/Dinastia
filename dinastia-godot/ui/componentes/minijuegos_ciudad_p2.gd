@@ -1,5 +1,5 @@
 extends "res://ui/componentes/minijuegos_ciudad_p1.gd"
-## (Parte 2 de 3 de `minijuegos_ciudad.gd`.)
+## [Capa 2/3 de `minijuegos_ciudad.gd`] _suelo_verde, _largo_pista, _centro_pista, _multimalla, _piloto, _nuevo_kart … (+9)
 
 func _suelo_verde() -> MeshInstance3D:
 	var mi := MeshInstance3D.new()

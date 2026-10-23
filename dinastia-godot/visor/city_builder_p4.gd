@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p3.gd"
-## (Parte 4 de 12 de `city_builder.gd`.)
+## [Capa 4/12 de `city_builder.gd`] _estadio_maqueta, _estadio, _lineas_campo, _un_campo, _campos, _rotulo … (+8)
 
 ## Respaldo: la maqueta de siempre, por si no llega perfil -por ejemplo desde
 ## una prueba que solo pasa `inst`-. Mejor una maqueta que un hueco.

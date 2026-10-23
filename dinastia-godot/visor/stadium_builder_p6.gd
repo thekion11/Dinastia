@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p5.gd"
-## (Parte 6 de 11 de `stadium_builder.gd`.)
+## [Capa 6/12 de `stadium_builder.gd`] _butacas, _vomitorios
 
 static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dictionary,
 		ocupacion: float, alto: float = 6.5, rake: float = 0.0, bandeja: int = 0) -> void:

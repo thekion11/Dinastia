@@ -1,5 +1,5 @@
 extends PanelContainer
-## (Parte 1 de 3 de `telefono.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `telefono.gd`, conserva la clase.)
+## [Capa 1/3 de `telefono.gd`] crear, _hora, _decir, _widget_informe, _insignia, _icono_app … (+13)
 
 ## TU MÓVIL, COMO UN MÓVIL (28-9-2026). Pantalla de inicio con tu fondo, la
 ## hora y las apps; la barra de abajo vuelve al inicio desde cualquier app.

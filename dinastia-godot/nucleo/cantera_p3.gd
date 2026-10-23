@@ -1,5 +1,5 @@
 extends "res://nucleo/cantera_p2.gd"
-## (Parte 3 de 4 de `cantera.gd`.)
+## [Capa 3/4 de `cantera.gd`] _chequeo_fugas, _proceso_etiquetas, procesar_semana, etiqueta_de, origen_de, registrar_de_academia … (+19)
 
 func _chequeo_fugas() -> Array[Dictionary]:
 	var m := _mundo()

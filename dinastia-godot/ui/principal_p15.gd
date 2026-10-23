@@ -1,5 +1,5 @@
 extends "res://ui/principal_p14.gd"
-## (Parte 15 de 18 de `principal.gd`.)
+## [Capa 16/19 de `principal.gd`] _construir, abrir_tutorial, _quizas_tutorial
 
 # --- construcción -----------------------------------------------------------
 

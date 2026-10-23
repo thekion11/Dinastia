@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 5 de `roles.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `roles.gd`, conserva la clase.)
+## [Capa 1/5 de `roles.gd`] look_efectivo, aspecto_3d, es_ayudante
 
 ## Los roles de carrera: qué puesto ocupas en el club y, por tanto, qué te dejan
 ## tocar y cómo se sube de uno al siguiente.

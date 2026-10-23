@@ -1,5 +1,5 @@
 extends "res://ui/componentes/tutorial_p1.gd"
-## (Parte 2 de 3 de `tutorial.gd`.)
+## [Capa 2/3 de `tutorial.gd`] _pintar_panel_aspecto, _etiqueta_activa, _completar_escritura, _terminar, paso_actual, _accion … (+14)
 
 ## ✎: tres filas para elegir la chaqueta, el pelo y la piel del mentor.
 func _pintar_panel_aspecto(ctx: Dictionary) -> void:

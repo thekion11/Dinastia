@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p9.gd"
-## (Parte 10 de 12 de `motor_jugable.gd`.)
+## [Capa 10/12 de `motor_jugable.gd`] _anillo_serenidad, tanda_equipo_usuario, tanda_turno, _lado_portero_tanda, _tras_tiro_tanda, _dibujar_receptor … (+12)
 
 ## Un aro alrededor del balón mientras apuntas un penal: verde cuando es chico.
 func _anillo_serenidad(ver: bool) -> void:

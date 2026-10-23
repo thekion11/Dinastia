@@ -1,6 +1,6 @@
 class_name MetroCiudad
 extends "res://visor/metro_ciudad_p3.gd"
-## (Parte 4 de 4 de `metro_ciudad.gd`.)
+## [Capa 4/4 de `metro_ciudad.gd`] _mover_caminantes, _llegadas, _pasajeros_cerca, _gente_cerca, puerta_cercana, _en_tren … (+8)
 
 ## Camina a cada uno hacia su siguiente punto, sin atravesar a los demás.
 func _mover_caminantes(delta: float) -> void:

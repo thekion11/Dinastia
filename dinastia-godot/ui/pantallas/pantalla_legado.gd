@@ -1,6 +1,6 @@
 class_name PantallaLegado
 extends "res://ui/pantallas/pantalla_legado_p2.gd"
-## (Parte 3 de 3 de `pantalla_legado.gd`.)
+## [Capa 3/3 de `pantalla_legado.gd`] _pintar_records
 
 func _pintar_records() -> void:
 	p._limpiar(p._lista_records)

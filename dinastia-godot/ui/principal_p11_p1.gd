@@ -1,5 +1,5 @@
 extends "res://ui/principal_p10.gd"
-## (Parte 1 de 2 de `principal_p11.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `principal_p11.gd`, conserva la clase.)
+## [Capa 11/19 de `principal.gd`] _conectar_noticias_1
 
 ## (Parte 11 de 18 de `principal.gd`.)
 

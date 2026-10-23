@@ -1,5 +1,5 @@
 extends "res://nucleo/estadio_propio_p1.gd"
-## (Parte 2 de 3 de `estadio_propio.gd`.)
+## [Capa 2/3 de `estadio_propio.gd`] factor_forma, aforo_efectivo, niveles_maximos, niveles_visibles, _bandejas_personalizadas, _tramos_personalizados … (+16)
 
 # ============================================================================
 # AFORO Y BANDEJAS: LO QUE EL LADRILLO PERMITE

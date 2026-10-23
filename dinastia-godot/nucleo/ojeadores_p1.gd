@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `ojeadores.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `ojeadores.gd`, conserva la clase.)
+## [Capa 1/2 de `ojeadores.gd`] _init, _mundo, max_paises, costo_informe, cubre, sesgo_de … (+22)
 
 ## "RED DE OJEADORES CON NOMBRE Y SESGO" del HTML (v2.9, ideas 446-475), que
 ## en Godot no tenía ningún equivalente: `Staff.ojo()` da una probabilidad

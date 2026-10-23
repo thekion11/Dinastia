@@ -1,5 +1,5 @@
 extends "res://ui/principal_p7.gd"
-## (Parte 8 de 18 de `principal.gd`.)
+## [Capa 8/19 de `principal.gd`] _ver_ficha, _jugador_de_la_semana
 
 func _ver_ficha(j: Jugador) -> void:
 	vista_cambiada.emit()

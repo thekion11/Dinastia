@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 2 de `creador_personaje.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `creador_personaje.gd`, conserva la clase.)
+## [Capa 1/2 de `creador_personaje.gd`] abrir, _hoja, _cambiar, _opciones, _deslizador, _tab_cuerpo … (+15)
 
 ## EL CREADOR DE PERSONAJE (26-9-2026), a pantalla completa. Pedido del
 ## usuario: *"ve por el modelo de nuestro personaje, el modificable"*.

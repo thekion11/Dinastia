@@ -1,5 +1,5 @@
 extends Node
-## (Parte 1 de 12 de `motor_jugable.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `motor_jugable.gd`, conserva la clase.)
+## [Capa 1/12 de `motor_jugable.gd`] _atributos, equipo_cpu, _dificultad_de, _rasgos_duelo
 
 ## EL PARTIDO JUGABLE (29-9-2026, mapa de metas 18: Carrera de Jugador). Hasta
 ## hoy el 3D solo DRAMATIZABA lo que `nucleo/partido.gd` ya había decidido: el

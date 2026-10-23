@@ -1,6 +1,6 @@
 class_name AnimExtra
 extends "res://visor/anim_extra_p1.gd"
-## (Parte 2 de 2 de `anim_extra.gd`.)
+## [Capa 2/2 de `anim_extra.gd`] pedir_balon, saludar_publico, pedir_calma, manos_cabeza, cabeza_gacha, mirar_cielo … (+5)
 
 ## Pedir el balón: brazo derecho arriba.
 static func pedir_balon(esq: Skeleton3D, pre: String) -> Animation:

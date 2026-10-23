@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p9.gd"
-## (Parte 1 de 2 de `stadium_builder_p10.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `stadium_builder_p10.gd`, conserva la clase.)
+## [Capa 10/12 de `stadium_builder.gd`] build_1
 
 ## (Parte 10 de 11 de `stadium_builder.gd`.)
 

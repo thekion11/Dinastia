@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `trabajadores.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `trabajadores.gd`, conserva la clase.)
+## [Capa 1/2 de `trabajadores.gd`] de, texto_de, _persona, es_mujer, equipo, factor … (+6)
 
 ## LOS TRABAJADORES DE CADA INSTALACIÓN Y LO QUE PASA EN ELLAS (26-9-2026, plan
 ## maestro C10). Pedido: *"trabajadores de esos lugares con sus personalidades y

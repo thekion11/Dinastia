@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p3.gd"
-## (Parte 4 de 25 de `banco.gd`.)
+## [Capa 4/27 de `banco.gd`] _probar_banquillo, _dinero, _probar_finanzas, _probar_mercado, _probar_puente3d, _probar_notas … (+1)
 
 func _probar_banquillo() -> void:
 	_titulo("BANQUILLO: ONCE, CAMBIOS Y PENALES")

@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `motor_libre.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `motor_libre.gd`, conserva la clase.)
+## [Capa 1/2 de `motor_libre.gd`] _dir, _dar_balon, _saque, _init, _porteria_rival, _mover_vuelo … (+15)
 
 ## EL PARTIDO QUE SE JUEGA SOLO (prototipo, 26-9-2026). Hoy el partido 3D pone
 ## en escena jugadas de un catálogo. Este motor es el primer paso para dejar de

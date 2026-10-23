@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 3 de `partido_vivo.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `partido_vivo.gd`, conserva la clase.)
+## [Capa 1/3 de `partido_vivo.gd`] _escribir, _limpiar, _en_palco, _texto, _mi_once, _arengar … (+8)
 
 ## El partido, en directo y con el entrenador dentro.
 ##

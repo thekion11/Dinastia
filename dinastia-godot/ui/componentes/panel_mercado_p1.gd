@@ -1,5 +1,5 @@
 extends VBoxContainer
-## (Parte 1 de 2 de `panel_mercado.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `panel_mercado.gd`, conserva la clase.)
+## [Capa 1/2 de `panel_mercado.gd`] _lbl, _pintar_estado_ventana, _dato, _dinero, _fila_ajuste, _pintar_mesa_negociacion … (+5)
 
 ## Pantalla del mercado de traspasos: estado de ventana, filtros,
 ## lista de objetivos, mesa de negociación y ofertas recibidas.

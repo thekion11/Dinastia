@@ -1,6 +1,6 @@
 class_name MotorLibre
 extends "res://nucleo/motor_libre_p1.gd"
-## (Parte 2 de 2 de `motor_libre.gd`.)
+## [Capa 2/2 de `motor_libre.gd`] _mover_todos, paso, resultado, simular, foto, tomar_control … (+3)
 
 # ---------------------------------------------------------------------------
 #  EL MOVIMIENTO SIN BALÓN

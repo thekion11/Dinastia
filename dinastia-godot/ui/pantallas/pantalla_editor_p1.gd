@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `pantalla_editor.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_editor.gd`, conserva la clase.)
+## [Capa 1/2 de `pantalla_editor.gd`] _init, _texto_con, _pintar_editor_competiciones, _fila_mas_menos, _pintar_editor_clubes, _rejilla_editor … (+6)
 
 ## EL EDITOR: competiciones, clubes, jugadores y CSV.
 ##

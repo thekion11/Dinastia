@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p5.gd"
-## (Parte 6 de 25 de `banco.gd`.)
+## [Capa 6/27 de `banco.gd`] _probar_obras, _probar_pantalla_y_vallas, _probar_estadio, _probar_continental
 
 func _probar_obras() -> void:
 	_titulo("INSTALACIONES")

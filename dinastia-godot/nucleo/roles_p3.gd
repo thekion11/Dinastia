@@ -1,5 +1,5 @@
 extends "res://nucleo/roles_p2.gd"
-## (Parte 3 de 5 de `roles.gd`.)
+## [Capa 3/5 de `roles.gd`] emergencia_activa, puede_fichar, puede_alinear, puede_contratar_staff, puede_construir, puede_vender_jugadores … (+26)
 
 func emergencia_activa() -> bool:
 	var m := _mundo()

@@ -1,6 +1,6 @@
 class_name PantallaPlantel
 extends "res://ui/pantallas/pantalla_plantel_p3.gd"
-## (Parte 4 de 4 de `pantalla_plantel.gd`.)
+## [Capa 4/4 de `pantalla_plantel.gd`] _abrir_negociacion, _cancelar_negociacion, _pintar_copa
 
 func _abrir_negociacion(j: Jugador) -> void:
 	var motivo := p.mundo.mercado.abrir_negociacion(j)

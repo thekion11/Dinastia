@@ -1,6 +1,6 @@
 class_name Principal
 extends "res://ui/principal_p17.gd"
-## (Parte 18 de 18 de `principal.gd`.)
+## [Capa 19/19 de `principal.gd`] _input, _guardar_preferencias, _pintar_identidad, _al_paso_nuevo, _portada_nueva
 
 func _input(evento: InputEvent) -> void:
 	## CON EL PANEL LATERAL ENCIMA (mapa de metas 23) los mismos botones

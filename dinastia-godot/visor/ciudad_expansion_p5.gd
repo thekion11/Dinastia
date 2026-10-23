@@ -1,5 +1,5 @@
 extends "res://visor/ciudad_expansion_p4.gd"
-## (Parte 5 de 9 de `ciudad_expansion.gd`.)
+## [Capa 5/9 de `ciudad_expansion.gd`] _pisos, _escala_largo, _es_largo_x, _industrial, _cd, _detalle_casa … (+6)
 
 func _pisos(r: Rect2) -> void:
 	## Bloques de viviendas: el kit «de poco detalle» alto, en dos hileras con

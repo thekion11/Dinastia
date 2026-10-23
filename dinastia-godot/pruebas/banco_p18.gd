@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p17.gd"
-## (Parte 18 de 25 de `banco.gd`.)
+## [Capa 19/27 de `banco.gd`] _probar_presets_exportacion, _probar_tema_y_ortografia, _probar_eventos_nuevos, _probar_entrevistas, _probar_estadio_b6, _probar_ciudad_b7 … (+3)
 
 ## LAS EXPORTACIONES SE LEEN (25-9-2026). `export_presets.cfg` llevaba
 ## comentarios con `##`, que en un .cfg de Godot NO son comentarios (van con

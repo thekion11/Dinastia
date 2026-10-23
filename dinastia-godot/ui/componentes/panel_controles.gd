@@ -1,6 +1,6 @@
 class_name PanelControles
 extends "res://ui/componentes/panel_controles_p2.gd"
-## (Parte 3 de 3 de `panel_controles.gd`.)
+## [Capa 3/3 de `panel_controles.gd`] _montar, filas_de_acciones, _cambiar_seccion, _input
 
 # ------------------------------------------------------------------ montaje
 

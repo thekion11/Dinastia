@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 7 de `interior_instalacion.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `interior_instalacion.gd`, conserva la clase.)
+## [Capa 1/7 de `interior_instalacion.gd`] _sala_de, tiene, abrir, en_mundo, _sala_nombre, tam_sala … (+11)
 
 ## LAS INSTALACIONES POR DENTRO (7-10-2026, pedido: «crear las instalaciones
 ## por dentro con NPC trabajando»). Una sala 3D cerrada por tipo de lugar

@@ -1,5 +1,5 @@
 extends "res://visor/ciudad_expansion_p1.gd"
-## (Parte 2 de 9 de `ciudad_expansion.gd`.)
+## [Capa 2/9 de `ciudad_expansion.gd`] armar_red, ancho_brazo, medio_cruce, es_puente, tiene_semaforo, fin_de_cebra … (+15)
 
 func armar_red() -> void:
 	nodos.clear()

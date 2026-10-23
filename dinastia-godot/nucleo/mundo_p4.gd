@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p3.gd"
-## (Parte 4 de 8 de `mundo.gd`.)
+## [Capa 4/9 de `mundo.gd`] _avisar_a_la_directiva, horario_actual, factor_publico, factor_tv_horario, _copa_es_de, _continental_es_de … (+8)
 
 ## Le cuenta a la directiva como te fue el domingo.
 ##

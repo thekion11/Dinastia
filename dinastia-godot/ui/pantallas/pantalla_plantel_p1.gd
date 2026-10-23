@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 4 de `pantalla_plantel.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_plantel.gd`, conserva la clase.)
+## [Capa 1/4 de `pantalla_plantel.gd`] _init, _pintar_plantel, _fichar_libre, _pintar_libres, _pintar_pizarron, _pintar_balon_parado … (+2)
 
 ## PLANTEL, TÁCTICA Y PARTIDO: la plantilla, los libres, la pizarra, el balón parado, la táctica, los rivales, el calendario, la copa y la negociación.
 ##

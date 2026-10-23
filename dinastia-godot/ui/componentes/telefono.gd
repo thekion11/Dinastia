@@ -1,6 +1,6 @@
 class_name Telefono
 extends "res://ui/componentes/telefono_p2.gd"
-## (Parte 3 de 3 de `telefono.gd`.)
+## [Capa 3/3 de `telefono.gd`] _banco, _calendario, _fotos, _muestra, _pintar_papel, _elegir_de_galeria … (+6)
 
 func _banco() -> void:
 	_titulo_app("Banco")

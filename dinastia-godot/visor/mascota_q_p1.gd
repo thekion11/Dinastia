@@ -1,5 +1,5 @@
 extends Node
-## (Parte 1 de 2 de `mascota_q.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `mascota_q.gd`, conserva la clase.)
+## [Capa 1/2 de `mascota_q.gd`] material_pelaje, _pegar, _mat, _esf, _cono, _pelaje_oscuro … (+6)
 
 ## LA MASCOTA DEL CLUB, REHECHA (26-9-2026). Pedido del usuario: *"pueden
 ## mejorar las mascotas"*.

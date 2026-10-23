@@ -1,6 +1,6 @@
 class_name Logros
 extends "res://nucleo/logros_p2.gd"
-## (Parte 3 de 3 de `logros.gd`.)
+## [Capa 3/3 de `logros.gd`] premios_temporada, cerrar_temporada, cara_a_cara, rivalidad_con, nivel_rivalidad, rivalidades … (+7)
 
 ## La gala: equipo ideal, mejor joven, mejor entrenador, fair play, club más
 ## popular, mejor hinchada y mejor estadio. Devuelve el acta entera y la archiva.

@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 3 de `minijuegos_ciudad.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `minijuegos_ciudad.gd`, conserva la clase.)
+## [Capa 1/3 de `minijuegos_ciudad.gd`] juego_de, abrir, _lbl, _fondo_ciudad, _autografos_empezar, _salpicar … (+5)
 
 ## LOS MINIJUEGOS DE LA CIUDAD (7-10-2026, pedido: «puedes crear minijuegos
 ## dentro de la ciudad»). Se abren al llegar a un lugar (E en el modo a pie o

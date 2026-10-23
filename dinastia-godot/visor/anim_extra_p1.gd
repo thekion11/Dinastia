@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `anim_extra.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `anim_extra.gd`, conserva la clase.)
+## [Capa 1/2 de `anim_extra.gd`] _brazo, _codo, _p, _completar, _par, espejar … (+12)
 
 ## EL PORTAFOLIO GRANDE DE MOVIMIENTOS (26-9-2026). Pedido: *"agrega más
 ## movimientos, regates, expresiones de los jugadores, buscando que tengamos un

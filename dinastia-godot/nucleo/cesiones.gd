@@ -1,6 +1,6 @@
 class_name Cesiones
 extends "res://nucleo/cesiones_p2.gd"
-## (Parte 3 de 3 de `cesiones.gd`.)
+## [Capa 3/3 de `cesiones.gd`] revisar_bonos, fondos_a_dic, a_dic, fondos_desde_dic, desde_dic, oferta_de_fondo … (+4)
 
 ## Los bonos por objetivos. Se revisa cada semana sobre los partidos jugados: el
 ## día que llega a la marca pactada, el club anterior cobra.

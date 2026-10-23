@@ -1,6 +1,6 @@
 class_name AnimFutbol
 extends "res://visor/anim_futbol_p2.gd"
-## (Parte 3 de 3 de `anim_futbol.gd`.)
+## [Capa 3/3 de `anim_futbol.gd`] espejables
 
 ## Las que tienen espejo útil (golpeos, barridas, regates): el zurdo y el
 ## regate hacia el otro lado.

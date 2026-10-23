@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p6.gd"
-## (Parte 7 de 11 de `stadium_builder.gd`.)
+## [Capa 7/12 de `stadium_builder.gd`] _telones, _cinta_led, _esquina_grada, _caras_esquina, _pista_atletismo, _bandera_ondeante … (+2)
 
 ## `ocupacion` (22-9-2026): antes estas 5 filas reales -las que la camara de TV
 ## ve de cerca, ver el comentario de mas arriba- se quedaban con la butaca

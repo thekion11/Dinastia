@@ -1,6 +1,6 @@
 class_name Prensa
 extends "res://nucleo/prensa_p6.gd"
-## (Parte 7 de 7 de `prensa.gd`.)
+## [Capa 8/8 de `prensa.gd`] mesa_de_debate, ranking_entrenadores, nombrar_vocero, revisar_vocero, negociar_tv, factor_tv … (+7)
 
 ## Qué dice cada uno esta semana. Depende del ESTADO REAL del club -puesto,
 ## racha, ánimo-, no de un sorteo: si dijeran cosas al azar, se notaría a la

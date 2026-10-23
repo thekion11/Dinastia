@@ -1,5 +1,5 @@
 extends "res://ui/pantallas/pantalla_legado_p1.gd"
-## (Parte 2 de 3 de `pantalla_legado.gd`.)
+## [Capa 2/3 de `pantalla_legado.gd`] _pintar_sucesion, _retirarse, _pintar_fin_de_carrera, _pintar_epilogo, _pintar_legado, _pintar_vida … (+4)
 
 ## LA SUCESIÓN. A quién le dejas el club. No cambia tu partida —ya se acabó— y
 ## por eso importa: es lo único que solo sirve para decidir cómo quieres que se

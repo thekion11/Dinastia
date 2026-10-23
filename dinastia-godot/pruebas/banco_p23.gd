@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p22.gd"
-## (Parte 23 de 25 de `banco.gd`.)
+## [Capa 25/27 de `banco.gd`] _probar_disenos_kit, _jug_ley, _probar_leyes_pais, _probar_incumplir_ley, _probar_b6_formas_led, _probar_region_reales … (+5)
 
 func _probar_disenos_kit() -> void:
 	_titulo("EQUIPACIÓN: DISEÑOS, COLORES, BOTINES Y ACCESORIOS")

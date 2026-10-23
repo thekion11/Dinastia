@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p20_p1.gd"
-## (Parte 2 de 2 de `banco_p20.gd`.)
+## [Capa 22/27 de `banco.gd`] _probar_tanda_c_2, _probar_tanda_c
 
 ## Tramo 2 de 2 de `_probar_tanda_c` (la norma de 450 líneas la troceó).
 func _probar_tanda_c_2(m: Mundo, c, o, mf: Mundo, cj, yo, cj3):

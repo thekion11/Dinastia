@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p5.gd"
-## (Parte 6 de 12 de `city_builder.gd`.)
+## [Capa 6/12 de `city_builder.gd`] _complejo, _cartel, _huerto, _piscina_olimpica, _polideportivo, _canchas_secundarias … (+6)
 
 # ---------------------------------------------------------------- edificios
 

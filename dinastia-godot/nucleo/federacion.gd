@@ -1,6 +1,6 @@
 class_name Federacion
 extends "res://nucleo/federacion_p2.gd"
-## (Parte 3 de 3 de `federacion.gd`.)
+## [Capa 3/3 de `federacion.gd`] apelar, sancionar_dt, cumplir_sancion_dt, dt_sancionado, a_dic, desde_dic … (+4)
 
 ## Apela un expediente. Devuelve "" si se tramitó, o el motivo por el que no.
 ##

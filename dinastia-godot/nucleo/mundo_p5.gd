@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p5_p1.gd"
-## (Parte 2 de 2 de `mundo_p5.gd`.)
+## [Capa 6/9 de `mundo.gd`] avanzar_semana_2, avanzar_semana
 
 ## Tramo 2 de 2 de `avanzar_semana` (la norma de 450 líneas la troceó).
 func avanzar_semana_2(ya_jugado: Partido):

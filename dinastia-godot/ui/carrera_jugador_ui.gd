@@ -1,6 +1,6 @@
 class_name CarreraJugadorUI
 extends "res://ui/carrera_jugador_ui_p1.gd"
-## (Parte 2 de 2 de `carrera_jugador_ui.gd`.)
+## [Capa 2/2 de `carrera_jugador_ui.gd`] _centro, _derecha, _pintar_semana, _ready
 
 ## EL CENTRO: el partido de la semana y el entrenamiento.
 func _centro(j: Jugador, club: Club) -> Control:

@@ -1,5 +1,5 @@
 extends Node
-## (Parte 1 de 25 de `banco.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `banco.gd`, conserva la clase.)
+## [Capa 1/27 de `banco.gd`] _linea, _titulo, _parte_de, _cerrar, _ready, _comprobar … (+3)
 
 ## Banco de pruebas del nucleo, sin ventana y sin nadie mirando.
 ##

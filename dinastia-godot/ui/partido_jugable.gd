@@ -1,6 +1,6 @@
 class_name PartidoJugable
 extends "res://ui/partido_jugable_p1.gd"
-## (Parte 2 de 2 de `partido_jugable.gd`.)
+## [Capa 2/2 de `partido_jugable.gd`] _montar_hud, _ver_hud, ceremonia_activa, saltar_ceremonia, _silbato, _fin_ceremonia … (+10)
 
 func _montar_hud() -> void:
 	## Marcador arriba a la izquierda.

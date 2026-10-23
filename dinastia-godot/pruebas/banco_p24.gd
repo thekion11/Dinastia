@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p23.gd"
-## (Parte 24 de 25 de `banco.gd`.)
+## [Capa 26/27 de `banco.gd`] _probar_galeria_club, _probar_reforma_con_obra, _probar_optimizacion, _probar_arreglos_partido_motor, _probar_tanda_top25b
 
 func _probar_galeria_club() -> void:
 	_titulo("GALERÍA SUBTERRÁNEA AL COMPLEJO (2.0, fase 6)")

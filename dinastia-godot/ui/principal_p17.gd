@@ -1,5 +1,5 @@
 extends "res://ui/principal_p16.gd"
-## (Parte 17 de 18 de `principal.gd`.)
+## [Capa 18/19 de `principal.gd`] _abrir_rueda_pantalla_completa, _repintar_posturas, _responder, _pintar_museo, _marca, _ver_ciudad_explorando … (+8)
 
 ## LA RUEDA DE PRENSA, DE PANTALLA COMPLETA.
 ##

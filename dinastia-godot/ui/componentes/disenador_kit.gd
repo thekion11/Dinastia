@@ -1,6 +1,6 @@
 class_name DisenadorKit
 extends "res://ui/componentes/disenador_kit_p1.gd"
-## (Parte 2 de 2 de `disenador_kit.gd`.)
+## [Capa 2/2 de `disenador_kit.gd`] _tab_sponsors, _rehacer, _aleatorio, _restablecer, _cerrar, _guardar … (+5)
 
 ## ------------------------------------------------------- PATROCINADORES
 

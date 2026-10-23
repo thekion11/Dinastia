@@ -1,6 +1,6 @@
 class_name CeremoniaPartido
 extends "res://visor/ceremonia_partido_p1.gd"
-## (Parte 2 de 2 de `ceremonia_partido.gd`.)
+## [Capa 2/2 de `ceremonia_partido.gd`] _preparar_sorteo, _entrar_en, _caminar, _camara, _rotulo_sorteo, _anim_gesto … (+3)
 
 ## Todos a su sitio de la fila (por si se saltó parte del paseo), y árbitro y
 ## capitanes al centro: el árbitro mirando a la tribuna principal, cada capitán

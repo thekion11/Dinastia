@@ -1,5 +1,5 @@
 extends "res://visor/explorador_ciudad_p3.gd"
-## (Parte 4 de 6 de `explorador_ciudad.gd`.)
+## [Capa 4/6 de `explorador_ciudad.gd`] _mover_en_estadio, _bajar_a_la_galeria, _usar, _tactil, _aplicar_ajustes, _montar_hud … (+5)
 
 ## Dentro del estadio se camina por las zonas de `TunelVestuario` (vestuario,
 ## túnel, banda, campo y la puerta). Salir por la puerta devuelve a la calle.

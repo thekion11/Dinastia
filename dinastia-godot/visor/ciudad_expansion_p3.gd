@@ -1,5 +1,5 @@
 extends "res://visor/ciudad_expansion_p2.gd"
-## (Parte 3 de 9 de `ciudad_expansion.gd`.)
+## [Capa 3/9 de `ciudad_expansion.gd`] _adornar_puente, _puente, _fin_acera, _libre_de_marcas, _dibujar_calles, _arboles_en … (+6)
 
 func _adornar_puente(rx: float, z: float, ancho: float, agua0: float, agua1: float, rampa: float) -> void:
 	var piedra := b._mat_simple(Color(0.78, 0.7, 0.58), 0.85)

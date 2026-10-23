@@ -1,5 +1,5 @@
 extends "res://ui/estadio_p1.gd"
-## (Parte 2 de 6 de `estadio.gd`.)
+## [Capa 2/6 de `estadio.gd`] recorrer, _mostrar_banner_gol, _guardar_pref, _crear_cursor, texto_controles, _mostrar_ayuda_control … (+21)
 
 ## Baja al vestuario con el protagonista y deja recorrer el estadio a pie.
 func recorrer() -> void:

@@ -1,5 +1,5 @@
 extends "res://nucleo/entrenamiento_p1.gd"
-## (Parte 2 de 3 de `entrenamiento.gd`.)
+## [Capa 2/3 de `entrenamiento.gd`] _sesion_general, _dado_de_la_intensidad, _plan_por_dias, _hay_capitan, tiene_habilidad, nombre_habilidad … (+15)
 
 ## La sesión general del HTML: reparte físico, sube la moral si hay con qué,
 ## hace progresar a los jóvenes y desgasta a los veteranos.

@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `pantalla_ajustes.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_ajustes.gd`, conserva la clase.)
+## [Capa 1/2 de `pantalla_ajustes.gd`] _init, _pintar_fotogramas, _color_pal, _pal_borde, _pintar_clima, _pintar_aspecto … (+5)
 
 ## AJUSTES DE INTERFAZ: fotogramas, clima, aspecto, accesibilidad, traspaso de partida y fondos.
 ##

@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p8.gd"
-## (Parte 9 de 25 de `banco.gd`.)
+## [Capa 9/27 de `banco.gd`] _probar_fundar_club, _probar_ascensos, _probar_vender, _probar_ojeadores
 
 func _probar_fundar_club() -> void:
 	_titulo("CREAR TU CLUB: FUNDAR DE CERO")

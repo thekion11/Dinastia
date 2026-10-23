@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p21.gd"
-## (Parte 22 de 25 de `banco.gd`.)
+## [Capa 24/27 de `banco.gd`] _probar_contratos_c9, _probar_vida_dt, _probar_maestrias, _probar_habilidades_en_resultados, _probar_motor_libre, _probar_portafolio_futbol … (+1)
 
 func _probar_contratos_c9() -> void:
 	_titulo("C9: CONTRATOS Y JORNADA LABORAL")

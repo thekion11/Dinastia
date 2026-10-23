@@ -1,6 +1,6 @@
 class_name DisenosKit
 extends "res://ui/disenos_kit_p2.gd"
-## (Parte 3 de 3 de `disenos_kit.gd`.)
+## [Capa 3/3 de `disenos_kit.gd`] _imagen_camiseta, textura_camiseta, _color_botin, textura_completa, textura_botin, uniforms
 
 static func _imagen_camiseta(clave: String, cols: Array[Color], trim: int, ancho_px: int, espalda: bool = false, sp: Dictionary = {}, cuello: int = 0) -> Image:
 	var ss := 2 if ancho_px <= 200 else 1

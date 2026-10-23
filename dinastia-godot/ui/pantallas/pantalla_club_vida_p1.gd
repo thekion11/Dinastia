@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 4 de `pantalla_club_vida.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_club_vida.gd`, conserva la clase.)
+## [Capa 1/4 de `pantalla_club_vida.gd`] _init, _pintar_balance_medico, _terapia, _segunda_opinion, _pintar_medico, _pintar_logros_ocultos … (+5)
 
 ## LA VIDA DEL CLUB: el médico, los logros, el museo, las obras, la pretemporada, las mentorías, el entrenamiento, la federación y la hinchada.
 ##

@@ -1,6 +1,6 @@
 class_name PantallaGente
 extends "res://ui/pantallas/pantalla_gente_p1.gd"
-## (Parte 2 de 2 de `pantalla_gente.gd`.)
+## [Capa 2/2 de `pantalla_gente.gd`] _pintar_redes, _pintar_correo, _firmar_auspicio, _lanzar_campana, _pujar_marca, _pedir_credito … (+3)
 
 func _pintar_redes() -> void:
 	p._limpiar(p._lista_redes)

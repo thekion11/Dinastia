@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p2.gd"
-## (Parte 3 de 8 de `mundo.gd`.)
+## [Capa 3/9 de `mundo.gd`] fundar_club, multiplicador_desafios, alternar_tienda, ingreso_tienda, puntaje_carrera, proximo_partido … (+20)
 
 func fundar_club(nombre_club: String, pais: String, col1: String = "", col2: String = "", estadio: String = "") -> Club:
 	var candidatos: Array[Club] = []

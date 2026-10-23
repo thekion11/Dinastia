@@ -1,6 +1,6 @@
 class_name Continental
 extends "res://nucleo/continental_p1.gd"
-## (Parte 2 de 2 de `continental.gd`.)
+## [Capa 2/2 de `continental.gd`] _anotar, _ordenar_grupo, premio_de_cuartos, _armar_llaves, _jugar_fecha_de_grupos, premio_de_ronda … (+5)
 
 func _anotar(l: Club, v: Club, gl: int, gv: int) -> void:
 	var a: Dictionary = marcador[l.id]

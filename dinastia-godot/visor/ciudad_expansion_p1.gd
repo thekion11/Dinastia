@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 9 de `ciudad_expansion.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `ciudad_expansion.gd`, conserva la clase.)
+## [Capa 1/9 de `ciudad_expansion.gd`] _init, dentro_nucleo, en_borde_nucleo, nombre_fila, nombre_columna, nombre_calle_en … (+7)
 
 ## LA CIUDAD GRANDE (7-10-2026). Pedido: «agrandar mínimo por 4 la ciudad…
 ## carreteras y a futuro metro subterráneo funcional… considera que la ciudad

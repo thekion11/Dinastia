@@ -1,6 +1,6 @@
 class_name Ojeadores
 extends "res://nucleo/ojeadores_p1.gd"
-## (Parte 2 de 2 de `ojeadores.gd`.)
+## [Capa 2/2 de `ojeadores.gd`] mejorar_analitica, semana_analitica, hallazgos_vivos, tiene_academia, alternar_academia, mantencion_academias … (+1)
 
 func mejorar_analitica(c: Club) -> String:
 	if analitica_nivel >= ANALITICA_MAX:

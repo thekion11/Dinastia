@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 2 de `mando_giratorio.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `mando_giratorio.gd`, conserva la clase.)
+## [Capa 1/2 de `mando_giratorio.gd`] _ajustar_camara, mirar, _material, _semialtura, _caida, _malla_cuerpo … (+14)
 
 ## EL MANDO EN 3D QUE SE GIRA COMO UN GLOBO (14-10-2026, pedido: «el modelo del
 ## control es un poco básico… la idea es poder hacer como con el globo

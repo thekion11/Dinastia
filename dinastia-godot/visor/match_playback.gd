@@ -1,6 +1,6 @@
 class_name MatchPlayback
 extends "res://visor/match_playback_p3.gd"
-## (Parte 4 de 4 de `match_playback.gd`.)
+## [Capa 4/4 de `match_playback.gd`] tick, ejecutar_jugada_prehecha, suceso
 
 # ------------------------------------------------------------------- reloj
 

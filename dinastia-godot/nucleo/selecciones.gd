@@ -1,6 +1,6 @@
 class_name Selecciones
 extends "res://nucleo/selecciones_p2.gd"
-## (Parte 3 de 3 de `selecciones.gd`.)
+## [Capa 3/3 de `selecciones.gd`] _mejores_del_plantel, _vitrina_mundialista, copa_del_mundo, toca_copa_del_mundo, cierre_de_temporada, a_dic … (+3)
 
 func _mejores_del_plantel(m: Mundo, cuantos: int) -> Array[Jugador]:
 	var mio := m.mi_club()

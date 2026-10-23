@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `cara.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `cara.gd`, conserva la clase.)
+## [Capa 1/2 de `cara.gd`] _hash, _look_base, _piel_y_pelo_del_pais, _rasgos_reales_de, look_de, look_aleatorio … (+4)
 
 ## El retrato de cada futbolista, portado del HTML tal cual.
 ##

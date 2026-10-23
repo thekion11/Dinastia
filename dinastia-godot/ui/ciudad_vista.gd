@@ -1,6 +1,6 @@
 class_name VistaCiudad
 extends "res://ui/ciudad_vista_p1.gd"
-## (Parte 2 de 2 de `ciudad_vista.gd`.)
+## [Capa 2/2 de `ciudad_vista.gd`] _construir, abrir, _desplazar, _process, punto_en, _probar_clic_estadio … (+1)
 
 func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary) -> void:
 	_ajustar_a_pantalla()

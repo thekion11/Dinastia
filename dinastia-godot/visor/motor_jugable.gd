@@ -1,6 +1,6 @@
 class_name MotorJugable
 extends "res://visor/motor_jugable_p11.gd"
-## (Parte 12 de 12 de `motor_jugable.gd`.)
+## [Capa 12/12 de `motor_jugable.gd`] paso, _physics_process, anular_gol, posesion_local
 
 ## Un paso de simulación. Público para poder correrlo en las pruebas sin
 ## esperar al reloj.

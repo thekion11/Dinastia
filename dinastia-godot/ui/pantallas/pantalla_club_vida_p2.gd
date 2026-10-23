@@ -1,5 +1,5 @@
 extends "res://ui/pantallas/pantalla_club_vida_p1.gd"
-## (Parte 2 de 4 de `pantalla_club_vida.gd`.)
+## [Capa 2/4 de `pantalla_club_vida.gd`] _pintar_obras, _elegir_pretemporada, _pintar_pretemporada, _pintar_mentorias, _pintar_entrenamiento_individual, _pintar_ambiente_y_horario … (+3)
 
 ## Las obras del club, dentro de la pestaña Club.
 ##

@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `redes.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `redes.gd`, conserva la clase.)
+## [Capa 1/2 de `redes.gd`] usuario_de, seguidores_base_club, iniciar, hashtag_club, puede_publicar, _nueva … (+13)
 
 ## LAS REDES SOCIALES (28-9-2026, pedido: "poder comentar en esas redes, que
 ## suban fotos, #, cantidad de likes, red oficial del club y del personaje,

@@ -1,5 +1,5 @@
 extends "res://ui/principal_p1.gd"
-## (Parte 2 de 18 de `principal.gd`.)
+## [Capa 2/19 de `principal.gd`] variables, constantes y señales
 
 ## El fondo de cada `.card` del HTML no es un color plano: trae un degradado
 ## cenital sutil (`linear-gradient(180deg, panel+12%blanco, panel 42%)`) que

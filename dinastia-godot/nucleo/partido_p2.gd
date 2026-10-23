@@ -1,5 +1,5 @@
 extends "res://nucleo/partido_p1.gd"
-## (Parte 2 de 3 de `partido.gd`.)
+## [Capa 2/3 de `partido.gd`] _aporte_tarjeta, _init, valoraciones, mejor_del_partido, preparar, chequear_invasion … (+10)
 
 func _aporte_tarjeta(j: Jugador, roja: bool, _m: int) -> void:
 	_aporte(j, -1.4 if roja else -0.35)

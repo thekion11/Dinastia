@@ -1,5 +1,5 @@
 extends "res://visor/ciudad_expansion_p6.gd"
-## (Parte 7 de 9 de `ciudad_expansion.gd`.)
+## [Capa 7/9 de `ciudad_expansion.gd`] _bandera_mastil, _cartel_m, _instalacion, _dibujar_bloque, _edificios_lejanos, _casas_kenney … (+5)
 
 func _bandera_mastil(p: Vector3) -> void:
 	b._cil_en(p + Vector3(0, 7.0, 0), 0.15, 14.0, _mat["claro"])

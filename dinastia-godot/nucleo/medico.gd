@@ -1,6 +1,6 @@
 class_name Medico
 extends "res://nucleo/medico_p1.gd"
-## (Parte 2 de 2 de `medico.gd`.)
+## [Capa 2/2 de `medico.gd`] riesgo_declarado, informe, informe_de, retiro_forzado, _estimar_semanas, ranking_liga … (+4)
 
 ## El veredicto en una palabra. El frágil sin historial sale "medio-alto" y no
 ## "bajo": el informe está para avisar de lo que va a pasar, no solo de lo que

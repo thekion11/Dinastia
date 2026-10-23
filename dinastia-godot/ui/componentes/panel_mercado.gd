@@ -1,6 +1,6 @@
 class_name PanelMercado
 extends "res://ui/componentes/panel_mercado_p1.gd"
-## (Parte 2 de 2 de `panel_mercado.gd`.)
+## [Capa 2/2 de `panel_mercado.gd`] _pintar_filtros, pintar, inicializar
 
 # ── FILTROS ───────────────────────────────────────────────────────────────
 func _pintar_filtros(mio: Club) -> void:

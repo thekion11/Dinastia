@@ -1,5 +1,5 @@
 extends "res://nucleo/prensa_p1.gd"
-## (Parte 2 de 7 de `prensa.gd`.)
+## [Capa 2/8 de `prensa.gd`] _init, _mundo, _dinero, agente_de, _rival_de_la_semana, _eventos_nuevos … (+10)
 
 ## Cuántas veces de cada diez sale portada. El HTML tira un 0,4; aquí se compara
 ## contra el mismo hash para no tocar la RNG.

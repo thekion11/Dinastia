@@ -1,6 +1,6 @@
 class_name CarreraJugador
 extends "res://nucleo/carrera_jugador_p1.gd"
-## (Parte 2 de 2 de `carrera_jugador.gd`.)
+## [Capa 2/2 de `carrera_jugador.gd`] semana, _ceder, _club_extranjero, resolver, aceptar_oferta, tras_partido … (+9)
 
 ## Lo que pasa cada semana fuera del campo. Devuelve los eventos nuevos.
 func semana(m: Mundo) -> Array:

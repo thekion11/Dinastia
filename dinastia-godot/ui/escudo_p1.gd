@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `escudo.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `escudo.gd`, conserva la clase.)
+## [Capa 1/2 de `escudo.gd`] _nivel_perfil_actual, especiales_desbloqueados, especial_desbloqueado, textura_especial, silueta, _rasgo_real … (+8)
 
 ## El escudo de cada club, portado del HTML tal cual.
 ##

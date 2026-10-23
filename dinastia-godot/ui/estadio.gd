@@ -1,6 +1,6 @@
 class_name VistaEstadio
 extends "res://ui/estadio_p5.gd"
-## (Parte 6 de 6 de `estadio.gd`.)
+## [Capa 6/6 de `estadio.gd`] _actualizar_barras, disponibles_fuera_del_once, poner_dt, poner_banca_de, poner_personal, _tocar_ambiente … (+11)
 
 func _actualizar_barras() -> void:
 	if not PlayerSpawner.mostrar_nombres:

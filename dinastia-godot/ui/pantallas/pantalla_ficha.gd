@@ -1,6 +1,6 @@
 class_name PantallaFicha
 extends "res://ui/pantallas/pantalla_ficha_p1.gd"
-## (Parte 2 de 2 de `pantalla_ficha.gd`.)
+## [Capa 2/2 de `pantalla_ficha.gd`] _club_staff, _pintar_club
 
 ## EL PERSONAL CONTRATADO: cuerpo técnico, red de ojeadores, analítica y
 ## academias. Todo lo que se paga en nómina y no juega.

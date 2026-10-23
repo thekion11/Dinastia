@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p7.gd"
-## (Parte 8 de 11 de `stadium_builder.gd`.)
+## [Capa 8/12 de `stadium_builder.gd`] _focos, color_luz, _exterior, _pantalla_textura, _quad_pantalla, _pantallas … (+2)
 
 static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float, luz: Color = Color(1, 0.97, 0.85), estructura := "") -> void:
 	if tipo == "sin":

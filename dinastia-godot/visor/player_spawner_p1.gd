@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `player_spawner.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `player_spawner.gd`, conserva la clase.)
+## [Capa 1/2 de `player_spawner.gd`] altura_de, _find_anim_player, _build_shared_lib, slot_to_position, poner_energia, energia … (+12)
 
 ## Pone los 22 titulares sobre el cesped, cada uno en su sitio de la formacion,
 ## con la equipacion real de su club, su cara y su estatura.

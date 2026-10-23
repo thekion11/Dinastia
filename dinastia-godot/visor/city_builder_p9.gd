@@ -1,5 +1,5 @@
 extends "res://visor/city_builder_p8.gd"
-## (Parte 9 de 12 de `city_builder.gd`.)
+## [Capa 9/12 de `city_builder.gd`] tenir, _fila_urbana, _frentes_urbanos, _en_ovalo, _karting, _en_frente_urbano … (+2)
 
 func tenir(n: Node, semilla: int) -> void:
 	var t: int = absi(semilla) % TINTES.size()

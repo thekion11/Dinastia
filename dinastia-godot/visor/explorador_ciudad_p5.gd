@@ -1,5 +1,5 @@
 extends "res://visor/explorador_ciudad_p4.gd"
-## (Parte 5 de 6 de `explorador_ciudad.gd`.)
+## [Capa 5/6 de `explorador_ciudad.gd`] edificio_en, pausar, _actualizar_mano, _mover_en_anden, _viajar, _choca_mueble … (+7)
 
 ## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la
 ## clave de la sala con el nombre propio, o vacío.

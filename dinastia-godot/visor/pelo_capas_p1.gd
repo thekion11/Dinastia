@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `pelo_capas.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pelo_capas.gd`, conserva la clase.)
+## [Capa 1/2 de `pelo_capas.gd`] _normales, _densidades, _anillo, _max, _capas_sobre, _solo_con … (+9)
 
 ## EL PELO DE LOS JUGADORES REALES, POR CAPAS (30-9-2026, pedido: «mejorar el
 ## pelo, tanto cabelludo como de barba, y pestañas, cejas»). Todo sale de su

@@ -1,5 +1,5 @@
 extends Node
-## (Parte 1 de 3 de `sonido.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `sonido.gd`, conserva la clase.)
+## [Capa 1/5 de `sonido.gd`] _tono, _mezclar, _ruido, _cantico, _bombo, _a_wav
 
 ## (Sin `class_name`: este script ES el autoload `Sonido`, y Godot rechaza una
 ## clase global que se llame igual que un singleton — "Class Sonido hides an

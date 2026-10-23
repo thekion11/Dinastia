@@ -1,5 +1,5 @@
 extends "res://ui/pantallas/pantalla_club_vida_p2.gd"
-## (Parte 3 de 4 de `pantalla_club_vida.gd`.)
+## [Capa 3/4 de `pantalla_club_vida.gd`] _pintar_entrenamiento, _pintar_historial_federacion, _apelar_caso, _pintar_licencia_y_tribunal, _bono_staff, _renovar … (+2)
 
 func _pintar_entrenamiento(c: Club) -> void:
 	p._limpiar(p._lista_entren)

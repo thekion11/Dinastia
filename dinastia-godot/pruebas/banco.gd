@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p24.gd"
-## (Parte 25 de 25 de `banco.gd`.)
+## [Capa 27/27 de `banco.gd`] _probar_transmision_y_estadisticas, _probar_prorroga_y_penales, _probar_informe_rival, _probar_porque_moral, _probar_partido_abandonado, _probar_no_atravesar_paredes
 
 func _probar_transmision_y_estadisticas() -> void:
 	_titulo("PARTIDO 3D: CÁMARA DE TRANSMISIÓN INTELIGENTE Y ESTADÍSTICAS")

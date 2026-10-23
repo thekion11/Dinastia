@@ -1,6 +1,6 @@
 class_name CameraRig
 extends "res://visor/camera_rig_p1.gd"
-## (Parte 2 de 2 de `camera_rig.gd`.)
+## [Capa 2/2 de `camera_rig.gd`] ajustar_altura, ayuda, _unhandled_input
 
 func ajustar_altura(delta_y: float) -> void:
 	if current_index >= 0 and current_index < cameras.size():

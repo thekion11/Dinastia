@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `edificio_club.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `edificio_club.gd`, conserva la clase.)
+## [Capa 1/2 de `edificio_club.gd`] nombre_planta, plantas, nivel, zonas, _ascensor, _pared_galeria … (+7)
 
 ## EL EDIFICIO DEL CLUB, POR PLANTAS (estadio interactivo 2.0, fase 2).
 ##

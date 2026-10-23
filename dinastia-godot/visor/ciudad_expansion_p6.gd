@@ -1,5 +1,5 @@
 extends "res://visor/ciudad_expansion_p5.gd"
-## (Parte 6 de 9 de `ciudad_expansion.gd`.)
+## [Capa 6/9 de `ciudad_expansion.gd`] _recreativos, _puestos_feria, _estacion_rusa, _en_recorrido, _tren_rusa, _montana_rusa … (+6)
 
 ## LA SALA DE RECREATIVOS: un edificio modular de dos plantas en el noreste,
 ## mirando al paseo central (al oeste), con rótulo de neón; con E en la puerta se

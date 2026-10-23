@@ -1,6 +1,6 @@
 class_name Mercado
 extends "res://nucleo/mercado_p1.gd"
-## (Parte 2 de 2 de `mercado.gd`.)
+## [Capa 2/2 de `mercado.gd`] desde_dic, abrir_negociacion, cerrar_negociacion
 
 func desde_dic(d: Dictionary) -> void:
 	ofertas_recibidas.clear()

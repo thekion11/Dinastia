@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p9.gd"
-## (Parte 10 de 25 de `banco.gd`.)
+## [Capa 10/27 de `banco.gd`] _probar_negociacion, _probar_consejeros, _probar_bilbao_solo_local, _motor_de_prueba, _probar_dificultad_cpu, _probar_ola_grada
 
 func _probar_negociacion() -> void:
 	_titulo("LA MESA DE NEGOCIACIÓN")

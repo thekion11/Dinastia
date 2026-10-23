@@ -1,5 +1,5 @@
 extends Node3D
-## (Parte 1 de 2 de `explorador_estadio.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `explorador_estadio.gd`, conserva la clase.)
+## [Capa 1/2 de `explorador_estadio.gd`] _aplicar_ajustes, _mostrar_lugar, _buscar_anim, _crear_cuerpo, levantarse, _personal … (+14)
 
 ## RECORRER EL ESTADIO A PIE (7-10-2026, pedido: «a futuro el estadio será
 ## navegable con el protagonista»).

@@ -1,5 +1,5 @@
 extends "res://ui/rueda_prensa_escena3d_p1.gd"
-## (Parte 2 de 3 de `rueda_prensa_escena3d.gd`.)
+## [Capa 2/3 de `rueda_prensa_escena3d.gd`] _mallas_de, _montar_podio_generado, _montar_podio_procedural, _montar_ocultador_podio, _montar_podio, _montar_dt_generico … (+8)
 
 func _mallas_de(n: Node) -> Array[MeshInstance3D]:
 	var salida: Array[MeshInstance3D] = []

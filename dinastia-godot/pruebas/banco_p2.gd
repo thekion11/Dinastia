@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p1.gd"
-## (Parte 2 de 25 de `banco.gd`.)
+## [Capa 2/27 de `banco.gd`] _probar_cubierta_nombres, _probar_base_ficticia, _probar_reales, _probar_calendario
 
 ## LA BASE FICTICIA (25-9-2026). Lo que se publica no puede llevar ni un club,
 ## ni una liga, ni un jugador, ni una foto, ni una equipación real. Se

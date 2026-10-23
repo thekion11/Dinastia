@@ -1,5 +1,5 @@
 extends "res://ui/principal_p11_p1.gd"
-## (Parte 2 de 2 de `principal_p11.gd`.)
+## [Capa 12/19 de `principal.gd`] _conectar_noticias_2, _conectar_noticias
 
 ## Tramo 2 de 2 de `_conectar_noticias` (la norma de 450 líneas la troceó).
 func _conectar_noticias_2():

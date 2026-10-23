@@ -1,6 +1,6 @@
 class_name EstadioPropio
 extends "res://nucleo/estadio_propio_p2.gd"
-## (Parte 3 de 3 de `estadio_propio.gd`.)
+## [Capa 3/3 de `estadio_propio.gd`] desde_dic, factor_lesion, factor_desgaste_cesped
 
 func desde_dic(d: Dictionary) -> void:
 	nombre = String(d.get("nombre", ""))

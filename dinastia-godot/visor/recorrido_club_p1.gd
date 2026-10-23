@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `recorrido_club.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `recorrido_club.gd`, conserva la clase.)
+## [Capa 1/2 de `recorrido_club.gd`] aviso_de, y_de, menu_ascensor, respuesta_oficio, dialogo, dialogo_portero … (+6)
 
 ## Cómo te recibe cada uno (lo primero que dice al acercarte).
 const SALUDOS := {

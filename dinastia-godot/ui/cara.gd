@@ -1,6 +1,6 @@
 class_name Cara
 extends "res://ui/cara_p1.gd"
-## (Parte 2 de 2 de `cara.gd`.)
+## [Capa 2/2 de `cara.gd`] svg_de, _indice_fotos_de, foto_de_ruta, foto_real, textura_2d, textura … (+10)
 
 # --- el retrato completo ----------------------------------------------------
 

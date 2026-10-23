@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p10.gd"
-## (Parte 11 de 12 de `motor_jugable.gd`.)
+## [Capa 11/12 de `motor_jugable.gd`] _colocar_saque, _sitio_tanda, _siguiente_penal, _resultado_tanda, _vuelo_tanda, tanda_decidida … (+5)
 
 ## Coloca a todos para el saque y, cuando están, lo ejecuta (o espera al
 ## usuario si lanza él).

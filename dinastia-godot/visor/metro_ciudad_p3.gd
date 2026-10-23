@@ -1,5 +1,5 @@
 extends "res://visor/metro_ciudad_p2.gd"
-## (Parte 3 de 4 de `metro_ciudad.gd`.)
+## [Capa 3/4 de `metro_ciudad.gd`] _tren_real, _tren_fantasma, _centro_anden, _totem, montar, tren_parado_en … (+11)
 
 ## El tren de verdad: tres coches HUECOS con su interior (asientos, barras,
 ## asideros, luces, ventanas, puertas que se abren) y un panel LED con la

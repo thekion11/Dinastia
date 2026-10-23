@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p11.gd"
-## (Parte 1 de 2 de `banco_p12.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `banco_p12.gd`, conserva la clase.)
+## [Capa 12/27 de `banco.gd`] _probar_guardado_1
 
 ## (Parte 12 de 25 de `banco.gd`.)
 

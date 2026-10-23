@@ -1,5 +1,5 @@
 extends Node
-## (Parte 1 de 2 de `ceremonia_partido.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `ceremonia_partido.gd`, conserva la clase.)
+## [Capa 1/2 de `ceremonia_partido.gd`] iniciar, _anim_de, _nino, _preparar_salida, _poner_mascota, _poner_lona … (+8)
 
 ## LA CEREMONIA ANTES DEL SAQUE (13-10-2026, comparación con el vídeo de FC 26:
 ## «presentación de ~3 minutos: túnel, niños de la mano, balón gigante,

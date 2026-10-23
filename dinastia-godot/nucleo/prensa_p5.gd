@@ -1,5 +1,5 @@
 extends "res://nucleo/prensa_p4.gd"
-## (Parte 5 de 7 de `prensa.gd`.)
+## [Capa 6/8 de `prensa.gd`] _pregunta_identidad, _hash_de, _fecha, _pregunta_clima, periodista_de, _poner_periodista … (+18)
 
 func _pregunta_identidad(que: String) -> Dictionary:
 	return {"pregunta": "Prensa: 'El club estrena %s. Hay hinchas molestos: ¿por qué tocar algo tan sagrado?'" % que, "opciones": [

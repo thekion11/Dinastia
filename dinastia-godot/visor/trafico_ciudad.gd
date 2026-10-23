@@ -1,6 +1,6 @@
 class_name TraficoCiudad
 extends "res://visor/trafico_ciudad_p1.gd"
-## (Parte 2 de 2 de `trafico_ciudad.gd`.)
+## [Capa 2/2 de `trafico_ciudad.gd`] _process, diagnostico
 
 func _process(delta_real: float) -> void:
 	## RENDIMIENTO (15-10-2026, medido con pruebas/sonda_explorador: 3,4 ms por

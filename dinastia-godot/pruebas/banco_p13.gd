@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p12.gd"
-## (Parte 13 de 25 de `banco.gd`.)
+## [Capa 14/27 de `banco.gd`] _probar_temporadas, _probar_economia, _probar_sala_de_prensa, _probar_auspicio, _media_techo_camada, _probar_eras_y_precios … (+2)
 
 func _probar_temporadas() -> void:
 	_titulo("TEMPORADAS COMPLETAS")

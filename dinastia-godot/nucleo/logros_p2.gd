@@ -1,5 +1,5 @@
 extends "res://nucleo/logros_p1.gd"
-## (Parte 2 de 3 de `logros.gd`.)
+## [Capa 2/3 de `logros.gd`] _cumple, _cumple_oculto, revisar_ocultos, revisar, tras_partido, celebrar_titulo … (+8)
 
 # ---------------------------------------------------------------------------
 #  LOS VEINTE LOGROS

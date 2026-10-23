@@ -1,6 +1,6 @@
 class_name InteriorInstalacion
 extends "res://ui/componentes/interior_instalacion_p6.gd"
-## (Parte 7 de 7 de `interior_instalacion.gd`.)
+## [Capa 7/7 de `interior_instalacion.gd`] _peluqueria, _libreria, _taller, _recreativos, _construir_sala, _cerrar … (+6)
 
 ## Peluquería (11 × 8 m): tres sillones frente a los espejos, el sofá de espera
 ## y la recepción.

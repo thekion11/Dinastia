@@ -1,6 +1,6 @@
 class_name Portada
 extends "res://ui/portada_p1.gd"
-## (Parte 2 de 2 de `portada.gd`.)
+## [Capa 2/2 de `portada.gd`] svg_de, textura
 
 static func svg_de(k: String) -> String:
 	match k:

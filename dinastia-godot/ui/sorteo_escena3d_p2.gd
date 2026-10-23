@@ -1,5 +1,5 @@
 extends "res://ui/sorteo_escena3d_p1.gd"
-## (Parte 2 de 3 de `sorteo_escena3d.gd`.)
+## [Capa 2/3 de `sorteo_escena3d.gd`] _montar_bombo, _montar_bolas, _montar_capas, _montar_publico, _montar_pantalla_gigante, _montar_presentador_realista … (+3)
 
 # --- el bombo ----------------------------------------------------------------
 

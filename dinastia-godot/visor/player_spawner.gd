@@ -1,6 +1,6 @@
 class_name PlayerSpawner
 extends "res://visor/player_spawner_p1.gd"
-## (Parte 2 de 2 de `player_spawner.gd`.)
+## [Capa 2/2 de `player_spawner.gd`] spawn_cuarto_arbitro, spawn_banca, _banco_de_suplentes, spawn_sentados
 
 ## EL CUARTO ÁRBITRO (17-10-2026, M-139): solo sale cuando hace falta (el
 ## cartel del añadido), así no cuesta nada el resto del partido. Mismo modelo y

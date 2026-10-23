@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p20.gd"
-## (Parte 21 de 25 de `banco.gd`.)
+## [Capa 23/27 de `banco.gd`] _probar_calendario_c13, _probar_capitan_votado, _probar_piel_por_pais, _probar_modulos, _probar_faros_coches, _probar_marcas_y_escudos … (+6)
 
 func _probar_calendario_c13() -> void:
 	_titulo("C13/C16: CALENDARIO, DÍAS NACIONALES, MEMORIA Y FESTIVIDADES")

@@ -1,5 +1,5 @@
 extends "res://ui/principal_p2.gd"
-## (Parte 3 de 18 de `principal.gd`.)
+## [Capa 3/19 de `principal.gd`] _acento_de, _aplicar_fondo, fecha_del_dia, fecha_de_hoy, fecha_larga, _limpiar … (+15)
 
 # ===========================================================================
 #  EL ASPECTO A TU MEDIDA

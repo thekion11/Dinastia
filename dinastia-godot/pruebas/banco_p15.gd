@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p14.gd"
-## (Parte 15 de 25 de `banco.gd`.)
+## [Capa 16/27 de `banco.gd`] _probar_ideas_del_documento, _probar_marca, _probar_carga_de_ui, _probar_narracion_traducida, _frases_de_idiomas_t, _probar_paridad_idiomas … (+1)
 
 func _probar_ideas_del_documento() -> void:
 	_titulo("LO QUE PEDIA EL DOCUMENTO (ventana, FPF, desgaste, staff, fondos)")

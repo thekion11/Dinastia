@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p13.gd"
-## (Parte 14 de 25 de `banco.gd`.)
+## [Capa 15/27 de `banco.gd`] _probar_carrera_por_dentro, _probar_editor, _probar_ciudad
 
 func _probar_carrera_por_dentro() -> void:
 	_titulo("LA CARRERA POR DENTRO (rival, leyenda viva, filiales y sucesion)")

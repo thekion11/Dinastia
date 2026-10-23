@@ -1,6 +1,6 @@
 class_name PartidoVivo
 extends "res://ui/partido_vivo_p2.gd"
-## (Parte 3 de 3 de `partido_vivo.gd`.)
+## [Capa 3/3 de `partido_vivo.gd`] _informe, _escribir_notas, _al_final, _hasta_el_proximo_gol, _columna, _hasta_el_final … (+4)
 
 ## `infPostPartido()` del HTML, frase por frase: el ayudante te cuenta lo que
 ## las cifras dicen y el marcador no. Es lo que convierte el xG en algo que se

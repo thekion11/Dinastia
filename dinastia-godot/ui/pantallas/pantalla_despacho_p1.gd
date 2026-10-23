@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 2 de `pantalla_despacho.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `pantalla_despacho.gd`, conserva la clase.)
+## [Capa 1/2 de `pantalla_despacho.gd`] _init, _marco_aviso, _aceptar_trabajo, _pintar_sin_banco, _resolver_agente, _abrir_mesa … (+13)
 
 ## EL DESPACHO: lo que hay que resolver ahora (asuntos, decisiones, la junta, el agente) y la rueda de prensa a pantalla completa.
 ##

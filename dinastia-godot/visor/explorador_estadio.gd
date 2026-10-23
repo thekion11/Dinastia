@@ -1,6 +1,6 @@
 class_name ExploradorEstadio
 extends "res://visor/explorador_estadio_p1.gd"
-## (Parte 2 de 2 de `explorador_estadio.gd`.)
+## [Capa 2/2 de `explorador_estadio.gd`] _rotulos, _physics_process, _raton_en_primera_persona, _unhandled_input, _exit_tree
 
 func _rotulos() -> void:
 	## La puerta del club se abre sola al acercarse desde dentro.

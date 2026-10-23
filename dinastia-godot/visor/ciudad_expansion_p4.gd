@@ -1,5 +1,5 @@
 extends "res://visor/ciudad_expansion_p3.gd"
-## (Parte 4 de 9 de `ciudad_expansion.gd`.)
+## [Capa 4/9 de `ciudad_expansion.gd`] _detalles_parque, _parque, _acera_bloque, _caja_det, _detalle_edificio, _kit … (+10)
 
 ## LOS DETALLES DEL PARQUE (7-10-2026): el portón con su nombre, una fuente
 ## en la cruz de los caminos, parterres de flores, bancos y farolas a lo largo

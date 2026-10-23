@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p12_p1.gd"
-## (Parte 2 de 2 de `banco_p12.gd`.)
+## [Capa 13/27 de `banco.gd`] _probar_guardado_2, _probar_guardado
 
 ## Tramo 2 de 2 de `_probar_guardado` (la norma de 450 líneas la troceó).
 func _probar_guardado_2(m: Mundo, v_rp) -> Array:

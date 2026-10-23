@@ -1,5 +1,5 @@
 extends RefCounted
-## (Parte 1 de 4 de `match_playback.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `match_playback.gd`, conserva la clase.)
+## [Capa 1/4 de `match_playback.gd`] velocidad, etiqueta_velocidad, pausar_o_seguir, mas_rapido, mas_lento, setup … (+10)
 
 ## Reproduce el partido ya simulado. La simulacion NO se rehace aqui: el HTML
 ## decidio quien gano, quien marco y en que minuto. Esto solo lo DRAMATIZA, que

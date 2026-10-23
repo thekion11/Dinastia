@@ -1,5 +1,5 @@
 extends "res://pruebas/banco_p7.gd"
-## (Parte 8 de 25 de `banco.gd`.)
+## [Capa 8/27 de `banco.gd`] _probar_pulso_de_roles, _probar_cantera, _probar_logros, _dinero_prueba, _probar_cesiones, _probar_desafios
 
 ## Comprueba que el enganche a Mundo funciona, no las reglas de Roles en si
 ## -esas ya las prueba _probar_roles_y_federacion(). Antes de hoy tras_partido(),

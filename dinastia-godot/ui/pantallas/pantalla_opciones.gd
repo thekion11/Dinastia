@@ -1,6 +1,6 @@
 class_name PantallaOpciones
 extends "res://ui/pantallas/pantalla_opciones_p1.gd"
-## (Parte 2 de 2 de `pantalla_opciones.gd`.)
+## [Capa 2/2 de `pantalla_opciones.gd`] _pintar_dispositivo, _pintar_velocidad_partido, _pintar_qol
 
 func _pintar_dispositivo() -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)

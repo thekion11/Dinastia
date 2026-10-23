@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 3 de `inicio.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `inicio.gd`, conserva la clase.)
+## [Capa 1/3 de `inicio.gd`] rotacion, _textura_de, _brillo_de, _leer_ajuste, _texto, _construir_banner … (+11)
 
 ## LA PANTALLA DE TÍTULO, portada del "MENÚ DE MODOS" del HTML
 ## (`renderModoSel()`, v3.0): portada + partida en curso + perfil + la grilla

@@ -1,6 +1,6 @@
 class_name PeloCapas
 extends "res://visor/pelo_capas_p1.gd"
-## (Parte 2 de 2 de `pelo_capas.gd`.)
+## [Capa 2/2 de `pelo_capas.gd`] poner, _suavizar
 
 ## Pone cuero cabelludo, barba, cejas y pestañas. `k` = metros del modelo por
 ## cm de la malla canónica. Devuelve true si puso el pelo de la cabeza (y quien
