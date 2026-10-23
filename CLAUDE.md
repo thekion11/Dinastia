@@ -682,4 +682,10 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 23-10 (noche) DECISIONES: NORMA = 450 líneas máx. por script en TODO el juego (87 archivos la pasan, ~68.000 líneas a mover; ver
   MEGAPLAN §10.1). LFS: los originales de `docs/lfs_fuera_del_juego.csv` SOLO están en GitHub → NO se quita ni se mueve nada de LFS
   y NO se reescribe la historia de forma que se pierdan sus punteros (la regla «sin subidas a LFS» = no subir archivos NUEVOS a LFS).
+- 23-10 (noche) HECHO: NORMA 450 CUMPLIDA EN TODO EL JUEGO (0 scripts > 450; 897 compilan; banco 0 fallos). Método: capas por herencia
+  (`herramientas/partir_gd.py --ordenar --aplicar <archivo>`; la última capa conserva ruta y class_name) + funciones gigantes con
+  `herramientas/trocear_funcion.py`. Comprobar siempre con `herramientas/revisar_lineas.py` y `pruebas/comprobar_scripts.gd`
+  (carga todos los scripts; el banco solo ve lo que toca). Para código NUEVO: escribirlo ya < 450 y, si un archivo pasa, partirlo.
+  Pendiente (§7.1): repartir responsabilidades de verdad (principal.gd), no solo tamaño. Primero el límite; el resto sigue EN ESPERA
+  (PENDIENTES.md §0).
 
