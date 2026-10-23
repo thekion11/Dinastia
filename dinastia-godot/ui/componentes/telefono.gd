@@ -8,7 +8,7 @@ func _banco() -> void:
 	var filas := []
 	if c != null:
 		filas.append(["🏟️ Caja del club", Cesiones.dinero(c.saldo), Tema.BIEN if c.saldo >= 0 else Color("e5534b")])
-		filas.append(["💸 Sueldos del plantel", Cesiones.dinero(c.masa_salarial()) + " / semana", Tema.TEXTO])
+		filas.append(["💸 Sueldos del plantel", Cesiones.dinero(c.masa_salarial()) + Idiomas.t(" / semana"), Tema.TEXTO])
 		## Cuántas semanas aguanta la caja pagando solo sueldos.
 		var sem := int(c.saldo / maxi(1, c.masa_salarial())) if c.saldo > 0 else 0
 		filas.append(["⏳ Semanas de sueldos en caja", str(sem) if sem < 999 else "999+", Tema.BIEN if sem > 20 else (Tema.ORO if sem > 6 else Color("e5534b"))])
@@ -62,7 +62,7 @@ func _calendario() -> void:
 			if i == 0:
 				fila.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.SUAVE, "vs"))
 		v.add_child(fila)
-		var donde := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "🏠 En casa" if prox[0] == c else "✈️ De visita")
+		var donde := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t("🏠 En casa") if prox[0] == c else Idiomas.t("✈️ De visita"))
 		donde.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		v.add_child(donde)
 	else:
@@ -128,7 +128,7 @@ func _fotos() -> void:
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		rej.add_child(tr)
 		n += 1
-	_cuerpo.add_child(_nota("%d foto%s" % [n, "" if n == 1 else "s"]))
+	_cuerpo.add_child(_nota(Idiomas.t("%d foto(s)") % n))
 
 func _muestra(col: Color, nombre: String, elegido: bool, al_tocar: Callable) -> Button:
 	var b := Button.new()
@@ -275,6 +275,8 @@ func abrir_app(app: String) -> void:
 		"calendario": _calendario()
 		"fotos": _fotos()
 		"ajustes": _ajustes()
+	## Lo que no pasó por `Idiomas.t` al montarse (títulos, notas) se traduce aquí.
+	Idiomas.traducir_arbol(_cuerpo)
 	_escalar_letra.call_deferred()
 	_botones_movil.call_deferred()
 	_scroll.scroll_vertical = 0
