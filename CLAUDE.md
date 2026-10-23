@@ -674,4 +674,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   reescribir la historia SOLO con un «sí, empuja» explícito (§9.3); regla de líneas aceptada (código nuevo < 600,
   lógica < 1.500); el dueño abrirá la red para Wikimedia/banderas; **el resto del megaplan está PAUSADO hasta la
   semana del 26-10** (empieza por la fase 0).
+- 23-10 (tarde): la NORMA DE CÓDIGO vale para TODO el juego (medir con `herramientas/revisar_lineas.py`; hoy 61 scripts > 600 y
+  14 > 1.500). LFS: el dueño eligió la opción B (sacar del árbol los packs fuente; lista en `docs/lfs_fuera_del_juego.csv`) PERO
+  falta que confirme que conserva los originales antes de quitarlos. ENSAYO de reescritura hecho en clon espejo (1,33 GiB → 804 MiB,
+  árbol idéntico; `herramientas/reescribir_historia.py`); NO se ha subido nada. El repo local de la sesión es superficial
+  (`shallow`): para la historia completa clonar con `--mirror`.
 
