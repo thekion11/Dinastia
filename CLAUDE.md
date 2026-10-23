@@ -694,4 +694,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 23-10 (noche): el dueño pidió «más pruebas especiales» → `herramientas/especiales.sh`. Verificado tras partir los 87 scripts: banco 1.862
   comprobaciones en 0 fallos, especiales OK, `recorrido_pantallas` = 108 pantallas y 500 botones sin SCRIPT ERROR. Sin veredicto:
   `estres_menus.tscn` (agotó 280 s en headless; no se sabe si ya lo hacía antes).
+- 23-10 (noche, verificación profunda pedida por el dueño): reparto en capas comprobado con PRUEBA DIFERENCIAL (`pruebas/huella_mundo.tscn`: misma huella de
+  3 semillas × 3 temporadas antes y después), estructura idéntica (0 funciones perdidas), banco, recorrido de 108 pantallas y VÍDEO de juego real
+  (Forward+, sin errores; se entregó en el chat). Arreglado: «⇄ Cuenta» mal traducido en 8 idiomas, móvil sin traducir + estados vacíos con icono, prueba
+  control_equipo intermitente. PENDIENTE medido: 523 frases sin traducir (`docs/textos_sin_traducir.txt`). Para comparar con una versión vieja: un `git worktree`
+  tiene los modelos como punteros LFS → solo vale para pruebas de LÓGICA (no 3D). NO usar `pkill -f <texto del propio comando>`.
 
