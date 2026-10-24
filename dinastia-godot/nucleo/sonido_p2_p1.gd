@@ -1,7 +1,7 @@
 extends "res://nucleo/sonido_p1.gd"
 ## [Capa 2/5 de `sonido.gd`] _sintetizar_g1
 
-## (Parte 2 de 3 de `sonido.gd`.)
+## [Capa 2/5 de `sonido.gd`] _sintetizar_g1
 
 # --- síntesis ---------------------------------------------------------------
 

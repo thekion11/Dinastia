@@ -1,7 +1,7 @@
 extends "res://nucleo/prensa_p3.gd"
 ## [Capa 4/8 de `prensa.gd`] resolver_1
 
-## (Parte 4 de 7 de `prensa.gd`.)
+## [Capa 4/8 de `prensa.gd`] resolver_1
 
 ## Firma la decisión. `op` es "a" o "b". Devuelve {titulo, cuerpo} con lo que
 ## salió publicado, o vacío si no había nada que firmar.

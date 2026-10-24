@@ -1,7 +1,7 @@
 extends "res://ui/principal_p10.gd"
 ## [Capa 11/19 de `principal.gd`] _conectar_noticias_1
 
-## (Parte 11 de 18 de `principal.gd`.)
+## [Capa 11/19 de `principal.gd`] _conectar_noticias_1
 
 ## La selección avisa de lo suyo (prenómina, convocatoria, lesión de gira,
 ## nacionalización) por señal en vez de por estado que alguna pantalla mire cada

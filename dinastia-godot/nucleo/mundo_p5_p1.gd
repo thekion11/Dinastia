@@ -1,7 +1,7 @@
 extends "res://nucleo/mundo_p4.gd"
 ## [Capa 5/9 de `mundo.gd`] avanzar_semana_1
 
-## (Parte 5 de 8 de `mundo.gd`.)
+## [Capa 5/9 de `mundo.gd`] avanzar_semana_1
 
 ## Avanza una semana: jornada, dinero, mercado y recuperación, en ese orden.
 ##

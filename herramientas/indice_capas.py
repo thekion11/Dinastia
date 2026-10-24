@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pone en la cabecera de cada capa (`x_p3.gd`) QUÉ contiene y genera `docs/indice_de_capas.md`.
+"""Pone en la cabecera de cada capa (`x_p3.gd`) QUÉ contiene y genera `docs/05_referencia/indice_de_capas.md`.
 
 Un script partido por la norma de 450 líneas queda en varios archivos encadenados con `extends "res://…"`.
 Los nombres `_pN` no dicen nada; esta herramienta escribe en la 2.ª/3.ª línea de cada capa las funciones
@@ -70,7 +70,7 @@ def main():
             texto[f] = "\n".join(lineas)
             open(f, "w", encoding="utf-8", newline="\n").write(texto[f])
         indice.append("")
-    open("docs/indice_de_capas.md", "w", encoding="utf-8", newline="\n").write("\n".join(indice) + "\n")
+    open("docs/05_referencia/indice_de_capas.md", "w", encoding="utf-8", newline="\n").write("\n".join(indice) + "\n")
     print(f"{len(hojas)} scripts en capas; {cambiadas} cabeceras actualizadas")
 
 

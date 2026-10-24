@@ -1,7 +1,7 @@
 extends "res://pruebas/banco_p19.gd"
 ## [Capa 21/27 de `banco.gd`] _probar_tanda_c_1
 
-## (Parte 20 de 25 de `banco.gd`.)
+## [Capa 21/27 de `banco.gd`] _probar_tanda_c_1
 
 ## TANDA C: instalaciones a 10 niveles (tribunas a 5, rendimiento a la mitad por
 ## encima de 5), trabajadores con carácter y eventos, asuntos de la academia, las

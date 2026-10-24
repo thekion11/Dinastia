@@ -1,7 +1,7 @@
 extends "res://visor/stadium_builder_p9.gd"
 ## [Capa 10/12 de `stadium_builder.gd`] build_1
 
-## (Parte 10 de 11 de `stadium_builder.gd`.)
+## [Capa 10/12 de `stadium_builder.gd`] build_1
 
 ## Tramo 1 de 2 de `build` (la norma de 450 líneas la troceó).
 static func build_1(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: float, seed_val: int, mi: Club) -> Array:
