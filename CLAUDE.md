@@ -28,8 +28,8 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 - En el motor del partido, no usar dicts de jugador como clave: usar `p["id"]`.
 
 ## Órdenes vigentes del dueño (24-10)
-1. MEGAPLAN_REESTRUCTURACION (`docs/02_vision/`): fases 0-6; decisiones validadas (punto 4 = separar `Principal` en clases + cifras fase 4 §9.1).
-2. **Lunes (26-10)**: probar Foundry/Azure, abrir red a Wikimedia, arreglar `compilar.yml` (`cd "Dinastía Godot"`), empezar la fase 0 real.
+1. Fases 0-6 del guion y decisiones validadas (punto 4 = separar `Principal` en clases + cifras fase 4): en `docs/PLAN_DEL_LUNES.md` §2.
+2. **Lunes (26-10)**: Foundry/Azure, red a Wikimedia, imagen Godot 4.7 para el CI, empezar la fase 0 real (`PLAN_DEL_LUNES.md` §1-2).
    Hasta entonces: solo fallas, pendientes, mejoras y limpieza.
 3. El dueño borra él las 8 ramas viejas (4 originales + 4 `borrar-*`) y la etiqueta `latest`.
 4. Mega auditoría 3 hecha el 24-10 (`docs/04_auditorias/`); método Cascada + V en `docs/01_metodo/`. El 24-10 se borró lo viejo (planes, informes, capturas, vídeos, filas hechas) y el dueño pidió: ideas hechas se revisan «realmente bien», no solo «decentes»; lo no cerrado vive en el plan del lunes.
