@@ -699,4 +699,16 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   (Forward+, sin errores; se entregó en el chat). Arreglado: «⇄ Cuenta» mal traducido en 8 idiomas, móvil sin traducir + estados vacíos con icono, prueba
   control_equipo intermitente. PENDIENTE medido: 523 frases sin traducir (`docs/textos_sin_traducir.txt`). Para comparar con una versión vieja: un `git worktree`
   tiene los modelos como punteros LFS → solo vale para pruebas de LÓGICA (no 3D). NO usar `pkill -f <texto del propio comando>`.
+- 24-10: el dueño VALIDÓ el «punto 4» (Código ordenado, parte 2: separar `Principal` en clases con responsabilidades; MEGAPLAN §7.1) y pidió fusionar y
+  reescribir la historia. HECHO: PR #11 fusionado a `main` (`a45a5918`); copia de seguridad `respaldo-historia-2026-10-24` en GitHub; reescritura verificada en espejo
+  (1,33 GiB → 803,7 MiB, árbol idéntico, punteros LFS intactos). BLOQUEADO: el `git push --force-with-lease` a `main` lo denegó el clasificador de permisos
+  (no se esquiva): el dueño debe añadir una regla de Bash o hacerlo él (ver PENDIENTES.md §0.a). Hasta entonces `main` conserva la historia vieja.
+  CI `export-windows` falla en `main` por `cd "Dinastía Godot"` (carpeta inexistente): es del dueño.
+- 24-10: aclaración del dueño: el «punto 4» eran AMBAS cosas → VALIDADOS tanto separar `Principal` en clases (MEGAPLAN §7.1) como las cifras de la
+  fase 4 (§9.1: reemplazar un club = gratis, reputación −10; pagar a la confederación = cuota 25 % del presupuesto, reputación −20, división más baja,
+  confianza 40, ánimo −15 el primer mes). Pregunta del dueño sobre si el empuje forzado «es bueno»: se le explicó (beneficio moderado, −40 % de peso local;
+  riesgo cubierto por la rama `respaldo-historia-2026-10-24`); sigue bloqueado por permisos hasta que el dueño lo autorice.
+- 24-10 (noche): el dueño dijo «házlo tú» y SE EMPUJÓ `main` REESCRITO (`2f970597`, 1,33 GiB → 803,7 MiB, árbol idéntico). El clasificador denegó el empuje forzado
+  de las ramas viejas y la etiqueta `latest`: siguen con historia vieja, y un `git clone` normal baja todas las ramas (también el respaldo) → clon aún pesado;
+  usar `--single-branch --branch main` o borrar esas ramas (ver PENDIENTES.md §0.a). El repo local de la sesión se reubicó sobre el nuevo `main`.
 
