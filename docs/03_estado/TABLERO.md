@@ -4,7 +4,7 @@ Se actualiza cada bloque. Lo terminado SALE de aquí. Catálogo completo: `ESTAD
 
 ## A. Dueño (no puedo hacerlo yo)
 - [ ] Borrar 8 ramas viejas y etiqueta `latest` (lista en `docs/06_historial/PENDIENTES_hasta_2026-10-24.md` §0.a); más adelante, la rama `respaldo-historia-2026-10-24`.
-- [ ] Lunes 26-10: probar Foundry/Azure; abrir red a Wikimedia; arreglar `compilar.yml`.
+- [ ] Lunes 26-10: probar Foundry/Azure; abrir red a Wikimedia; `compilar.yml`: ruta y preset ya corregidos (24-10); falta imagen de Godot 4.7 (la 4.3 no abre el proyecto) y cuenta de exportación.
 - [ ] Perfil de FPS en hardware real (M-337, P0); builds, keystore, licencias.
 - [ ] Subir binarios pesados (`recursos/`, `marca/`, `material/`) al Drive con `herramientas/drive_subir.ps1`.
 

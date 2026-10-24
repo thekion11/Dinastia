@@ -9,7 +9,7 @@ jobs:
   export-windows:
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:4.3
+      image: barichello/godot-ci:4.3  # OJO: el proyecto es Godot 4.7; hace falta una imagen 4.7 (dueño)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,8 +22,8 @@ jobs:
       - name: Build Windows Release
         run: |
           mkdir -v -p build/windows
-          cd "Dinastía Godot"
-          godot --headless --export-release "Windows Desktop" ../build/windows/Dinastia.exe
+          cd dinastia-godot
+          godot --headless --export-release "Windows" ../build/windows/Dinastia.exe
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
