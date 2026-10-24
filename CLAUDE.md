@@ -711,4 +711,6 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
 - 24-10 (noche): el dueño dijo «házlo tú» y SE EMPUJÓ `main` REESCRITO (`2f970597`, 1,33 GiB → 803,7 MiB, árbol idéntico). El clasificador denegó el empuje forzado
   de las ramas viejas y la etiqueta `latest`: siguen con historia vieja, y un `git clone` normal baja todas las ramas (también el respaldo) → clon aún pesado;
   usar `--single-branch --branch main` o borrar esas ramas (ver PENDIENTES.md §0.a). El repo local de la sesión se reubicó sobre el nuevo `main`.
+- 24-10 (noche): el dueño BORRARÁ él las ramas viejas. Se crearon copias `borrar-*` (mismo commit) porque el proxy bloquea renombrar y borrar ramas (HTTP 403); lista exacta y
+  comando en PENDIENTES.md §0.a. NO tocar esas ramas.
 
