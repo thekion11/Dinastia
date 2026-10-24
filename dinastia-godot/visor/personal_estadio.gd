@@ -32,6 +32,16 @@ const VEL := 1.25
 
 ## La hora del día (la pone la ciudad); −1 = no se sabe, siempre están.
 static var hora := -1.0
+## Dónde está quien recorre el club (lo avisan los exploradores en cada paso):
+## la gente le cede el paso en vez de atravesarlo.
+static var _jug_pos := Vector3.ZERO
+static var _jug_planta := 0
+static var _jug_ms := -10000
+
+static func avisar_jugador(p: Vector3, planta: int) -> void:
+	_jug_pos = p
+	_jug_planta = planta
+	_jug_ms = Time.get_ticks_msec()
 
 var datos: Dictionary = {}
 var c1 := Color.WHITE
@@ -222,6 +232,15 @@ func _process(delta: float) -> void:
 			g["i"] = sig
 			continue
 		var paso := minf(dist, VEL * delta)
+		## Cede el paso: si el siguiente trozo lo acerca a menos de un metro de
+		## quien camina por el club, se queda quieto hasta que se aparte.
+		if int(g["planta"]) == _jug_planta and Time.get_ticks_msec() - _jug_ms < 400:
+			var prox := n.position + hacia / dist * paso
+			var d_ahora := Vector2(n.position.x - _jug_pos.x, n.position.z - _jug_pos.z).length()
+			var d_luego := Vector2(prox.x - _jug_pos.x, prox.z - _jug_pos.z).length()
+			if d_luego < 1.0 and d_luego < d_ahora:
+				_anim(g, "parado")
+				continue
 		n.position += hacia / dist * paso
 		n.rotation.y = atan2(hacia.x, hacia.z)
 		_anim(g, "caminar")
