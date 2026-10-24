@@ -1,0 +1,186 @@
+{
+ "codigo": {
+  "scripts": 902,
+  "scripts_juego": 476,
+  "lineas": 171757,
+  "lineas_juego": 135462,
+  "capas_pN": 233,
+  "mayor_script": 450,
+  "funciones": 6375,
+  "funciones_mas_de_100_lineas": 143,
+  "funciones_mas_de_200_lineas": 21,
+  "top_funciones": [
+   {
+    "lineas": 403,
+    "archivo": "dinastia-godot/ui/principal_p15.gd",
+    "firma": "func _construir() -> void:"
+   },
+   {
+    "lineas": 384,
+    "archivo": "dinastia-godot/nucleo/sonido_p2_p2.gd",
+    "firma": "func _sintetizar_g2(nombre: String, tono: float, largo: float) -> Pack"
+   },
+   {
+    "lineas": 383,
+    "archivo": "dinastia-godot/nucleo/sonido_p2_p1.gd",
+    "firma": "func _sintetizar_g1(nombre: String, tono: float, largo: float) -> Pack"
+   },
+   {
+    "lineas": 382,
+    "archivo": "dinastia-godot/pruebas/banco_p20_p1.gd",
+    "firma": "func _probar_tanda_c_1() -> Array:"
+   },
+   {
+    "lineas": 379,
+    "archivo": "dinastia-godot/nucleo/mundo_p5_p1.gd",
+    "firma": "func avanzar_semana_1(ya_jugado: Partido):"
+   },
+   {
+    "lineas": 376,
+    "archivo": "dinastia-godot/ui/principal_p11_p1.gd",
+    "firma": "func _conectar_noticias_1():"
+   },
+   {
+    "lineas": 375,
+    "archivo": "dinastia-godot/pruebas/banco_p12_p1.gd",
+    "firma": "func _probar_guardado_1() -> Array:"
+   },
+   {
+    "lineas": 372,
+    "archivo": "dinastia-godot/nucleo/prensa_p4_p1.gd",
+    "firma": "func resolver_1(op: String) -> Array:"
+   },
+   {
+    "lineas": 365,
+    "archivo": "dinastia-godot/visor/stadium_builder_p10_p1.gd",
+    "firma": "static func build_1(root: Node3D, est: Dictionary, cap_efectiva: int, "
+   },
+   {
+    "lineas": 336,
+    "archivo": "dinastia-godot/ui/principal_p8.gd",
+    "firma": "func _ver_ficha(j: Jugador) -> void:"
+   },
+   {
+    "lineas": 330,
+    "archivo": "dinastia-godot/ui/disenos_kit_p2.gd",
+    "firma": "static func color_en(d: Array, cols: Array[Color], u: float, v: float)"
+   },
+   {
+    "lineas": 316,
+    "archivo": "dinastia-godot/visor/stadium_builder_p6.gd",
+    "firma": "static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool"
+   }
+  ],
+  "marcas_TODO_FIXME": {
+   "XXX": 2,
+   "TODO": 37
+  },
+  "defs_process": 60,
+  "defs_physics_process": 3,
+  "print_en_juego": 16,
+  "push_error_warning": 25,
+  "is_instance_valid": 318,
+  "signals_declaradas": 236,
+  "class_name": 261
+ },
+ "pruebas": {
+  "escenas": 395,
+  "escenas_sin_ninguna_mencion": 53,
+  "capturas_en_git": 381,
+  "ejemplos_sin_mencion": [
+   "captura_arbitro_vivo.tscn",
+   "captura_atajos.tscn",
+   "captura_banderas_selecciones.tscn",
+   "captura_carga.tscn",
+   "captura_complejo_horizonte.tscn",
+   "captura_continental_vivo.tscn",
+   "captura_continuar.tscn",
+   "captura_cruces.tscn",
+   "captura_dale_con_todo.tscn",
+   "captura_editor_gaps.tscn",
+   "captura_informe_rival.tscn",
+   "captura_inicio_full.tscn",
+   "captura_modo_foto.tscn",
+   "captura_motor_tira.tscn",
+   "captura_oper.tscn"
+  ]
+ },
+ "texturas": {
+  "importadas": 3168,
+  "modo_compresion": {
+   "2": 65,
+   "0": 3103
+  },
+  "nota": "0 = sin pérdida, 1 = con pérdida, 2 = VRAM comprimida, 3 = VRAM Basis Universal"
+ },
+ "assets": {
+  "candidatos": 1787,
+  "sin_ninguna_referencia_por_nombre": 0,
+  "peso_bytes_sin_referencia(punteros LFS cuentan poco)": 0,
+  "ejemplos": []
+ },
+ "proyecto": {
+  "addons": [],
+  "editor_plugins": false,
+  "autoloads": [
+   "Datos",
+   "Azar",
+   "Eco",
+   "Sonido",
+   "Musica",
+   "Idiomas",
+   "Cierre"
+  ],
+  "escenas": 4,
+  "shaders": 26
+ },
+ "repo": {
+  "archivos_rastreados": 17720,
+  "lfs": 272
+ },
+ "documentos": {
+  "md": 32,
+  "md_kb": 1287,
+  "mayores": [
+   [
+    606,
+    "docs/06_historial/LEEME_diario_2026-09_a_2026-10.md"
+   ],
+   [
+    90,
+    "docs/99_archivo/ROADMAP.md"
+   ],
+   [
+    88,
+    "docs/03_estado/ESTADO_MEJORAS.md"
+   ],
+   [
+    68,
+    "docs/04_auditorias/anteriores/INFORME_MEJORAS.md"
+   ],
+   [
+    62,
+    "CLAUDE.md"
+   ],
+   [
+    42,
+    "docs/05_referencia/indice_de_capas.md"
+   ]
+  ]
+ },
+ "idiomas": {
+  "idiomas_extra": [
+   "en",
+   "pt",
+   "fr",
+   "it",
+   "de",
+   "ca",
+   "pl",
+   "tr"
+  ],
+  "frases_en": 2562,
+  "patrones": 64,
+  "frases_sin_traducir_medidas": 506
+ }
+}
