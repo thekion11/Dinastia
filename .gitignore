@@ -24,3 +24,10 @@ dinastia-godot/pruebas/capturas/lotes/
 
 # Copias de trabajo de agentes de Claude Code
 .claude/worktrees/
+
+# Builds: salen de herramientas/empaquetar.ps1 y los maneja el dueño; no van al repo (23-10)
+entregas/
+
+# Capturas de pruebas: se regeneran con las escenas captura_*; las que citan los documentos siguen en git (23-10)
+dinastia-godot/pruebas/capturas/*
+!dinastia-godot/pruebas/capturas/.gdignore
