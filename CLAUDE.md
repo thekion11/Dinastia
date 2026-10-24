@@ -1,8 +1,8 @@
 # Memoria del proyecto Dinastía (para Claude)
 
-Se lee al empezar cada sesión. Corta a propósito. Historia completa de órdenes y hallazgos:
-`docs/06_historial/memoria_claude_2026-10-24.md`. Índice de docs: `docs/00_INDICE.md`. Método: `docs/01_metodo/METODO.md`.
-Tareas abiertas: `docs/03_estado/TABLERO.md`. Actualizar este archivo solo con reglas u órdenes vigentes nuevas.
+Se lee al empezar cada sesión. Corta a propósito (la memoria larga se borró el 24-10; sigue en el historial de git).
+Índice de docs: `docs/00_INDICE.md`. Método: `docs/01_metodo/METODO.md`. TODO lo pendiente: `docs/PLAN_DEL_LUNES.md`.
+Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completado se BORRA de los documentos (no se tacha).
 
 ## Reglas fijas
 - Responder en español. Trabajar solo en la rama asignada; nada de PR salvo que se pida. Commit y push tras cada bloque.
@@ -32,6 +32,6 @@ Tareas abiertas: `docs/03_estado/TABLERO.md`. Actualizar este archivo solo con r
 2. **Lunes (26-10)**: probar Foundry/Azure, abrir red a Wikimedia, arreglar `compilar.yml` (`cd "Dinastía Godot"`), empezar la fase 0 real.
    Hasta entonces: solo fallas, pendientes, mejoras y limpieza.
 3. El dueño borra él las 8 ramas viejas (4 originales + 4 `borrar-*`) y la etiqueta `latest`.
-4. Mega auditoría 3 hecha el 24-10: `docs/04_auditorias/MEGA_AUDITORIA_3.md`; método Cascada + V en `docs/01_metodo/`.
+4. Mega auditoría 3 hecha el 24-10 (`docs/04_auditorias/`); método Cascada + V en `docs/01_metodo/`. El 24-10 se borró lo viejo (planes, informes, capturas, vídeos, filas hechas) y el dueño pidió: ideas hechas se revisan «realmente bien», no solo «decentes»; lo no cerrado vive en el plan del lunes.
 5. Idiomas: 9 y no sumar más; faltan ~506 frases por traducir.
 6. Pendientes de dueño: FPS en hardware real, builds, keystore, licencias, subir binarios a Drive (`herramientas/drive_subir.ps1`).

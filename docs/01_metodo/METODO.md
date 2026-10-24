@@ -15,14 +15,14 @@ Requisitos del dueño ───────────────────�
 3. **Construcción** — bloques pequeños, commit + push por bloque. *Compuerta:* `herramientas/banco.sh` = «FIN. 0 fallos».
 4. **Verificación** — `especiales.sh` (y `todo` antes de un cierre de fase), capturas en Forward+ con la cámara real. *Compuerta:* 0 errores, antes/después si es visual.
 5. **Aceptación** — se enseña al dueño (vídeo/captura/lista). *Compuerta:* su visto bueno. Si lo rechaza, vuelve a 1 o 3 y se anota.
-6. **Cierre** — el ítem pasa a HECHO en el tablero; el plan se archiva en `99_archivo/` al terminar la fase.
+6. **Cierre** — el ítem pasa a HECHO en el plan del lunes; se BORRA de ahí (no se archiva ni se tacha).
 
 ## Trazabilidad requisito ↔ prueba
 Cada ítem HECHO cita su prueba (escena o sección de banco). Un ítem sin prueba no es HECHO, es PARCIAL. Los ítems de solo-vista se prueban con captura (`pruebas/captura_*.tscn`) y se anotan.
 
 ## Reglas de higiene
-- Tareas terminadas **salen** del tablero (quedan en el historial de git y en `06_historial/`).
-- Idea postergada = fila en `ideas_pendientes.csv` con fase destino; cada auditoría revisa las que llevan > 2 fases sin moverse.
+- Tareas terminadas **salen** del plan (quedan solo en el historial de git).
+- Idea postergada = fila en `PLAN_DEL_LUNES.md` con fase destino; cada auditoría revisa las que llevan > 2 fases sin moverse.
 - Código nuevo nace < 450 líneas; documento nuevo se registra en `00_INDICE.md`.
 - Nada irreversible (borrar ramas, reescribir historia, tocar LFS, keystore, licencias) sin orden explícita del dueño.
 - **Lo completado se borra, no se tacha**: ni `~~tachado~~` ni filas «HECHO» en tableros o catálogos; la historia vive en git.

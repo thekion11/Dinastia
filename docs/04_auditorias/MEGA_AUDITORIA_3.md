@@ -25,8 +25,8 @@ Lo que no sale de ahí lo dice la propia línea. Nada de esto es opinión sin me
 - Fallo conocido: `pruebas/estres_menus.tscn` no termina en headless (sin veredicto si ya pasaba antes).
 - Colisiones: cubiertas en el club (`ColisionClub`); **ciudad fuera del club sin revisar**.
 
-## 3. Juego y visual (de ESTADO_MEJORAS, 356 ideas abiertas)
-223 pendientes · 115 parciales · 10 sin verificar · 8 del dueño. Por fase del megaplan: F6 pulido 136 (82+31+17+6), F4 personas 56, F3 vida en 3D 42, F1 entrada 36, F0 cimientos 33, F5 club 26, dueño 27. Prioridad: 1 P0, 42 P1, 302 P2, 11 P3. Lista viva: `docs/03_estado/ideas_pendientes.csv`.
+## 3. Juego y visual (356 mejoras abiertas, en `docs/PLAN_DEL_LUNES.md` §5)
+223 pendientes · 115 parciales · 10 sin verificar · 8 del dueño. Por fase del megaplan: F6 pulido 136 (82+31+17+6), F4 personas 56, F3 vida en 3D 42, F1 entrada 36, F0 cimientos 33, F5 club 26, dueño 27. Prioridad: 1 P0, 42 P1, 302 P2, 11 P3. Lista viva: `docs/PLAN_DEL_LUNES.md` §5.
 Ojo: algunas filas están desactualizadas (p. ej. M-278 cita `principal.gd` de 6.777 líneas, que ya está partido en capas). Hay que reverificar cada fila al tocarla.
 
 ## 4. Optimización (medido / estimado)
@@ -42,15 +42,15 @@ Ojo: algunas filas están desactualizadas (p. ej. M-278 cita `principal.gd` de 6
 ## 6. Documentos y ficheros
 - Antes: raíz y `dinastia-godot/` con ~40 documentos mezclados (informes, planes hechos, notas). Ahora: `docs/00_INDICE.md` + 7 carpetas numeradas.
 - Quitado: salidas y registros, 7 duplicados exactos, carpetas XML de prueba, 476 capturas sin uso (23-10).
-- Archivado en `docs/99_archivo/`: planes ya ejecutados (ROADMAP, MEGAPLAN fases 1-6, ETAPAS_FINALES, ESTADIO 2.0, PLAN_DE_RUTA, MAPA_DE_METAS).
+- Borrado el 24-10 (sigue en git): planes ejecutados, informes y auditorías anteriores, diario, capturas y vídeos viejos, filas HECHAS.
 - Código y comentarios aún citan nombres viejos (ROADMAP, LEEME, MEGAPLAN…): la tabla de equivalencias está en `docs/00_INDICE.md`.
 
 ## 7. Aristas y riesgos
 1. CI `export-windows` roto (`cd "Dinastía Godot"` no existe): del dueño.
-2. 8 ramas viejas + etiqueta `latest` con historia vieja: las borra el dueño (lista en `docs/06_historial/PENDIENTES_hasta_2026-10-24.md` §0.a).
+2. 8 ramas viejas + etiqueta `latest` con historia vieja: las borra el dueño (comando en `docs/PLAN_DEL_LUNES.md` §1).
 3. Originales de los packs LFS solo están en GitHub: no tocar LFS.
-4. `CLAUDE.md` pesaba 62 KB (se cargaba entero cada sesión): reescrito corto, memoria vieja en `docs/06_historial/`.
+4. `CLAUDE.md` pesaba 62 KB (se cargaba entero cada sesión): reescrito corto (la memoria larga está en el historial de git).
 5. Respaldo en Drive limitado por el conector (el contenido va dentro de la llamada): solo texto. Binarios → `herramientas/drive_subir.ps1` (rclone), del dueño.
 
 ## 8. Qué se hizo en esta auditoría
-Jerarquía de docs, limpieza de excedentes, tablero de ideas, método Cascada + V (`docs/01_metodo/METODO.md`), tablero de tareas (`docs/03_estado/TABLERO.md`), memoria corta, respaldo de texto en Drive. Qué queda: ver TABLERO.
+Jerarquía de docs, limpieza de excedentes, método Cascada + V (`docs/01_metodo/METODO.md`), un único plan de lo pendiente (`docs/PLAN_DEL_LUNES.md`), memoria corta y respaldo de texto en Drive. Ver el plan para lo que queda.

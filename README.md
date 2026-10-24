@@ -19,7 +19,7 @@ dinastia-godot/herramientas/especiales.sh   # lo que el banco no ve
 Antes de abrir Godot: `git lfs pull --include="dinastia-godot/**"`. Clonar ligero: `git clone --single-branch --branch main <url>`.
 
 ## Método y estado
-[Cascada + Modelo V](docs/01_metodo/METODO.md) · [Tablero de tareas](docs/03_estado/TABLERO.md) · [Última auditoría](docs/04_auditorias/MEGA_AUDITORIA_3.md)
+[Cascada + Modelo V](docs/01_metodo/METODO.md) · [Plan del lunes (todo lo pendiente)](docs/PLAN_DEL_LUNES.md) · [Última auditoría](docs/04_auditorias/MEGA_AUDITORIA_3.md)
 
 ## Normas
 Ningún script de más de 450 líneas. Sin archivos nuevos en LFS. Licencias de terceros: [`docs/05_referencia/LICENCIAS.md`](docs/05_referencia/LICENCIAS.md).

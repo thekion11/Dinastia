@@ -1,30 +1,15 @@
 # Índice de la documentación (Dinastía)
 
-Regla: **un tema = un documento**. Lo hecho se archiva, lo abierto vive en el tablero.
+Regla: **un tema = un documento. Lo pendiente vive en UN solo sitio: [`PLAN_DEL_LUNES.md`](PLAN_DEL_LUNES.md).** Lo completado se borra (el historial de git lo conserva).
 
-| Carpeta | Qué contiene | Se actualiza |
-|---|---|---|
-| `01_metodo/` | `METODO.md`: Cascada + Modelo V, compuertas, trazabilidad | cuando cambie el método |
-| `02_vision/` | Qué queremos construir: `MEGAPLAN_REESTRUCTURACION.md`, ideas del dueño | al decidir algo nuevo |
-| `03_estado/` | `TABLERO.md` (tareas abiertas), `ESTADO_MEJORAS.md` (catálogo), `ideas_pendientes.csv` (generado) | cada bloque |
-| `04_auditorias/` | `MEGA_AUDITORIA_3.md` + datos; `anteriores/` = auditorías e informes pasados | cada auditoría |
-| `05_referencia/` | Licencias, índice de capas (generado), lista LFS, textos sin traducir | al regenerar |
-| `06_historial/` | Diario y memoria antiguos, informes extraídos (solo lectura) | nunca |
-| `99_archivo/` | Planes con partes aún útiles (solo lectura). Lo completado se BORRA, no se tacha | nunca |
-
-Fuera de `docs/`: `CLAUDE.md` (memoria corta de reglas y órdenes vigentes), `material/` (originales de packs), `herramientas/` (scripts), `dinastia-godot/` (el juego).
-
-## Nombres viejos → nuevos
-| Antes | Ahora |
+| Ruta | Qué contiene |
 |---|---|
-| `ROADMAP.md` | `docs/99_archivo/ROADMAP.md` |
-| `LEEME.md` (diario) | `docs/06_historial/LEEME_diario_2026-09_a_2026-10.md` |
-| `PENDIENTES.md` | `docs/06_historial/PENDIENTES_hasta_2026-10-24.md` → vigente: `docs/03_estado/TABLERO.md` |
-| `MEGAPLAN.md` (fases 1-6, cerradas) | borrado el 24-10 (en el historial de git) |
-| `MEGAPLAN_REESTRUCTURACION.md` | `docs/02_vision/` |
-| `ESTADO_MEJORAS.md` | `docs/03_estado/` |
-| `ETAPAS_FINALES.md`, `PLAN_DE_RUTA.md`, `MAPA_DE_METAS.md`, `NOTAS_CALIDAD_ANIMACIONES.md` | `docs/99_archivo/` |
-| `MEGA_AUDITORIA_2.md`, `AUDITORIA*.md`, `COMPARACION*.md`, `INFORME_*.md`, `REEVALUACION_*.md` | `docs/04_auditorias/anteriores/` |
-| `LICENCIAS.md`, `lfs_fuera_del_juego.csv`, `textos_sin_traducir.txt` | `docs/05_referencia/` |
+| `PLAN_DEL_LUNES.md` | Todo lo que falta: dueño, fases 0–6, ruta de lanzamiento, mejoras de código, 356 mejoras, tus ideas sin cerrar |
+| `01_metodo/METODO.md` | Cascada + Modelo V, compuertas, trazabilidad |
+| `02_vision/ideas_del_dueno/` | Instrucciones y notas originales del dueño (las listas de 300 y 750 ideas pasaron al plan) |
+| `04_auditorias/MEGA_AUDITORIA_3.md` | Auditoría del 24-10 con cifras (datos repetibles: `herramientas/auditoria_repo.py`) |
+| `05_referencia/` | Licencias, índice de capas (generado), lista LFS, textos sin traducir, respaldo en Drive |
 
-Respaldo de texto archivado: carpeta «Dinastia_respaldo_2026-10-24» en Google Drive (ver `docs/05_referencia/RESPALDO_DRIVE.md`).
+Fuera de `docs/`: `CLAUDE.md` (reglas y órdenes vigentes), `material/` (originales de packs), `herramientas/` (scripts), `dinastia-godot/` (el juego).
+
+Borrado el 24-10 (sigue en el historial de git, p. ej. `git log --diff-filter=D -- docs`): diario `LEEME`, `ROADMAP`, `MEGAPLAN` (fases 1-6 y reestructuración), `ESTADO_MEJORAS`, `PENDIENTES`, auditorías e informes anteriores, comparaciones, planes de ruta/etapas/metas, informes extraídos, capturas y vídeos viejos.
