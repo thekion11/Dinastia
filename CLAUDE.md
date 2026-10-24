@@ -22,6 +22,9 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   MINI BANCOS (20-10): `herramientas/mini_banco.sh <grupo|_probar_x>` (grupos en `GRUPOS` de banco.gd:
   partido, guardado, ciudad, estadio, gestion, competicion, textos; 7-30 s). Para probar lo tocado
   mientras se trabaja; también cazan pruebas que dependen del orden. Antes de SUBIR, el banco entero.
+  ESPECIALES (23-10): `dinastia-godot/herramientas/especiales.sh [todo]` = lo que el banco NO ve (norma de 450 líneas, todos los
+  scripts compilan, colisiones del club, partido con motor real, control del equipo, modos, menú ciudad a pie; `todo` añade el
+  recorrido de las 108 pantallas, +4 min). `banco.sh` ya empieza comprobando que compilan los 897 scripts. NORMA: ningún script > 450 líneas.
 - (15-10) Lo visual se revisa en FORWARD+, que es lo que ve el jugador de PC: capturas
   con `herramientas/captura.sh res://pruebas/captura_x.tscn` (Forward+ por defecto,
   `--compat` solo para móvil/web/motor ligero; sin GPU necesita
@@ -658,3 +661,42 @@ Se lee al empezar cada sesión. Actualizar cuando el usuario pida algo nuevo.
   DT sancionado, que flotaba), choques del coche con golpe/claxon/multa (M-172), piel y pelo por país en los
   inventados (M-088, `Cara.TONO_MEDIO`/`RUBIOS`; usar `String.hash()`, djb2 con la misma cola correlaciona),
   formas de estadio por tamaño + «estrecho» y «asimetrico» (M-002). ESTADO_MEJORAS: HECHO 114 · PARCIAL 115 · PEND. 223.
+- **23-10 PEDIDO GRANDE (analizado, aún sin construir): REESTRUCTURACIÓN.** El dueño quiere más «sentido humano
+  y estilo propio»: intro ≤ 5 s → idioma → menú inicial (fases 1-5 como pantallas completas, obligatorias, con
+  confirmación: modo con fondo según el cursor, globo con bandera y monumentos, configuración del club, entrada al
+  campeonato, personaje) → prólogo 3D guiado por el mentor → rueda de prensa → oficina con PC que abre el menú
+  central (la ciudad deja de abrirse desde ahí) → vida en 3D (jornada, casa y familia, necesidades, personas,
+  eventos). Plan completo: `dinastia-godot/MEGAPLAN_REESTRUCTURACION.md` (flujo, sistemas, pendientes, limpieza
+  del repo, partir `principal.gd` de 6.867 líneas, fases 0-6 y decisiones por tomar). Pidió no hacer nada más
+  por ahora salvo: arreglar fallas, megaplan, pendientes, mejoras y limpieza. HECHO 23-10: colisiones del club
+  (`visor/colision_club.gd`, prueba `pruebas/prueba_colisiones_club.tscn`). Azure/Foundry (200 USD, 30 días):
+  analizado, a decidir. NO borrar `entregas/`, capturas, `marca/` ni los informes de `_docs_extract/` sin su OK;
+  reescribir la historia sigue en espera. Godot 4.7.2 se baja de GitHub releases (linux.x86_64.zip).
+- 23-10 DECISIONES: partidas guardadas invalidables; cifras de la fase 4 las propone Claude (MEGAPLAN §9.1);
+  limpieza hecha (`entregas/` fuera, 476 capturas sin uso fuera, informes en `docs/informes_extraidos/`);
+  reescribir la historia SOLO con un «sí, empuja» explícito (§9.3); regla de líneas aceptada (código nuevo < 600,
+  lógica < 1.500); el dueño abrirá la red para Wikimedia/banderas; **el resto del megaplan está PAUSADO hasta la
+  semana del 26-10** (empieza por la fase 0).
+- 23-10 (tarde): la NORMA DE CÓDIGO vale para TODO el juego (medir con `herramientas/revisar_lineas.py`; hoy 61 scripts > 600 y
+  14 > 1.500). LFS: el dueño eligió la opción B (sacar del árbol los packs fuente; lista en `docs/lfs_fuera_del_juego.csv`) PERO
+  falta que confirme que conserva los originales antes de quitarlos. ENSAYO de reescritura hecho en clon espejo (1,33 GiB → 804 MiB,
+  árbol idéntico; `herramientas/reescribir_historia.py`); NO se ha subido nada. El repo local de la sesión es superficial
+  (`shallow`): para la historia completa clonar con `--mirror`.
+- 23-10 (noche) DECISIONES: NORMA = 450 líneas máx. por script en TODO el juego (87 archivos la pasan, ~68.000 líneas a mover; ver
+  MEGAPLAN §10.1). LFS: los originales de `docs/lfs_fuera_del_juego.csv` SOLO están en GitHub → NO se quita ni se mueve nada de LFS
+  y NO se reescribe la historia de forma que se pierdan sus punteros (la regla «sin subidas a LFS» = no subir archivos NUEVOS a LFS).
+- 23-10 (noche) HECHO: NORMA 450 CUMPLIDA EN TODO EL JUEGO (0 scripts > 450; 897 compilan; banco 0 fallos). Método: capas por herencia
+  (`herramientas/partir_gd.py --ordenar --aplicar <archivo>`; la última capa conserva ruta y class_name) + funciones gigantes con
+  `herramientas/trocear_funcion.py`. Comprobar siempre con `herramientas/revisar_lineas.py` y `pruebas/comprobar_scripts.gd`
+  (carga todos los scripts; el banco solo ve lo que toca). Para código NUEVO: escribirlo ya < 450 y, si un archivo pasa, partirlo.
+  Pendiente (§7.1): repartir responsabilidades de verdad (principal.gd), no solo tamaño. Primero el límite; el resto sigue EN ESPERA
+  (PENDIENTES.md §0).
+- 23-10 (noche): el dueño pidió «más pruebas especiales» → `herramientas/especiales.sh`. Verificado tras partir los 87 scripts: banco 1.862
+  comprobaciones en 0 fallos, especiales OK, `recorrido_pantallas` = 108 pantallas y 500 botones sin SCRIPT ERROR. Sin veredicto:
+  `estres_menus.tscn` (agotó 280 s en headless; no se sabe si ya lo hacía antes).
+- 23-10 (noche, verificación profunda pedida por el dueño): reparto en capas comprobado con PRUEBA DIFERENCIAL (`pruebas/huella_mundo.tscn`: misma huella de
+  3 semillas × 3 temporadas antes y después), estructura idéntica (0 funciones perdidas), banco, recorrido de 108 pantallas y VÍDEO de juego real
+  (Forward+, sin errores; se entregó en el chat). Arreglado: «⇄ Cuenta» mal traducido en 8 idiomas, móvil sin traducir + estados vacíos con icono, prueba
+  control_equipo intermitente. PENDIENTE medido: 523 frases sin traducir (`docs/textos_sin_traducir.txt`). Para comparar con una versión vieja: un `git worktree`
+  tiene los modelos como punteros LFS → solo vale para pruebas de LÓGICA (no 3D). NO usar `pkill -f <texto del propio comando>`.
+

@@ -24,6 +24,13 @@ if [ ! -f "$CACHE" ] || [ -n "$(find nucleo ui visor pruebas -name '*.gd' -newer
   timeout 600 godot --headless --import --path . > /dev/null 2>&1
   touch "$CACHE"
 fi
+# 23-10: antes de lanzar nada, que TODOS los scripts compilen (el banco solo ve los que toca).
+COMP=$(timeout 300 godot --headless --path . --script res://pruebas/comprobar_scripts.gd 2>&1)
+if ! echo "$COMP" | grep -q "FIN. 0 fallos"; then
+  echo "$COMP" | grep -E "FALLO|SCRIPT ERROR" | head -10
+  echo "Hay scripts que no compilan: el banco no se lanza."
+  exit 2
+fi
 LOG="${1:-/tmp/banco.txt}"
 SIN_AVANCE="${SIN_AVANCE:-240}"
 NUCLEOS=$(nproc 2>/dev/null || echo 1)
