@@ -1,4 +1,4 @@
-extends "res://pruebas/banco_p24.gd"
+extends "res://pruebas/banco_p25.gd"
 ## [Capa 27/27 de `banco.gd`] _probar_transmision_y_estadisticas, _probar_prorroga_y_penales, _probar_informe_rival, _probar_porque_moral, _probar_partido_abandonado, _probar_no_atravesar_paredes
 
 func _probar_transmision_y_estadisticas() -> void:
