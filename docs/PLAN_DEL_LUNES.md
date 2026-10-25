@@ -1849,3 +1849,16 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 ### Decisiones de producto, no tareas (20): monetización y estética; decide el dueño
 
 943, 1051, 1055, 1072, 1075, 1076, 1077, 1078, 1079, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1099, 1100
+
+## 8. Hallazgos de la tanda de pulido (25-10), sin arreglar
+- Partido: la instrucción «riesgo» no da más remates; el plan a los 60' no cambia la mentalidad (avisos en `pruebas/ideas_a1.gd`).
+- Mercado: `mercado.ofertas_recibidas` no caduca nunca (siguen iguales 10 temporadas después).
+- Cantera/progresión: demasiadas estrellas jóvenes (OVR 84-87 con 19-23 años); el valor medio del mercado sube ×1,7-1,9 en 3 temporadas.
+- Contratos: el % de jugadores en último año pasa del 25 % al 60 % en 3 temporadas; la nómina propia se duplica sin fichar (210k→447k/semana).
+- Economía: falta el descenso administrativo por deudas en el cierre de temporada (M-219; leer `banco.hay_veedor()`/`Insolvencia`).
+- Interfaz: posible fuga de nodos al abrir y cerrar menús (1151→2011 en `estres_menus`).
+- Mundo: el `anio` del retrato sigue en 2026 tras 10 cierres de temporada.
+- `pruebas/medir_guardado.gd` no cierra temporadas: usar `jugar_temporada()` + `cerrar_temporada()`.
+- Carrera: los avisos semanales compuestos con «·» pueden salir sin traducir; falta la animación de parada del portero en modo jugador.
+- Ciudad: ceder el paso y el choque real de coches no están vistos con la cámara real; los peatones solo esperan, no esquivan.
+- Pantalla de entrada: el dueño debe aprobarla como escena principal (`Inicio.flujo_nuevo`).
