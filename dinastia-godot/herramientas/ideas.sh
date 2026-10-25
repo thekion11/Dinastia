@@ -12,7 +12,7 @@ for N in $LISTA; do
   LOG="/tmp/ideas_$N.txt"
   INICIO=$(date +%s)
   # Corre bajo el candado y vigila el registro: si el script no carga (error de sintaxis) lo mata enseguida.
-  "$(dirname "$0")/turno.sh" bash -c '
+  "$PWD/herramientas/turno.sh" bash -c '
     godot --headless --path . "res://pruebas/ideas/'"$N"'.tscn" > "'"$LOG"'" 2>&1 &
     G=$!
     for i in $(seq 1 300); do
