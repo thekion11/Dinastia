@@ -31,7 +31,7 @@ func _probar() -> void:
 	var mio := m.mi_club()
 	mio.saldo = 999999999
 	_colores_opacos(mio)
-	Idiomas.idioma = "en"
+	Idiomas.idioma = "es" if OS.get_environment("UIID_LISTA") != "" else "en"
 	for secc: String in ["identidad", "comercial"]:
 		_p.set("_secc_gente", secc)
 		_p.call("_limpiar", _p.get("_lista_gente"))
@@ -67,6 +67,9 @@ func _colores_opacos(mio: Club) -> void:
 	_comprobar(n >= 10 and malos.is_empty(), "%d selectores de color, todos opacos %s" % [n, str(malos)])
 
 func _recoger(raiz: Node, donde: String) -> void:
+	if OS.get_environment("UIID_LISTA") != "":
+		_listar_sin_traducir(raiz)
+		return
 	_p.call("_traducir_pantalla", raiz)
 	var textos: Array[String] = []
 	for n in raiz.find_children("*", "Control", true, false):
@@ -83,8 +86,6 @@ func _recoger(raiz: Node, donde: String) -> void:
 			textos.append((n as Control).tooltip_text)
 		if n is LineEdit and (n as LineEdit).placeholder_text != "":
 			textos.append((n as LineEdit).placeholder_text)
-	if OS.get_environment("UIID_LISTA") != "":
-		_listar_sin_traducir(raiz)
 	var malos: Array[String] = []
 	for t: String in textos:
 		_vistos.append(t)
@@ -106,22 +107,29 @@ func _borrado(n: Node) -> bool:
 		x = x.get_parent()
 	return false
 
-## Ayuda para escribir el parche de traducciones (UIID_LISTA=1): cada fuente
-## castellana cuya salida en inglés quedó igual, una por línea y sin repetir.
+## Ayuda para escribir el parche de traducciones (UIID_LISTA=1): con la interfaz
+## en castellano, cada texto pintado cuya traducción al inglés sale igual, una
+## por línea y sin repetir.
 var _listadas := {}
 func _listar_sin_traducir(raiz: Node) -> void:
+	var antes := Idiomas.idioma
 	for n in raiz.find_children("*", "Control", true, false):
 		var fuentes: Array = []
-		if n.has_meta("_i18n_src"):
-			var m: Variant = n.get_meta("_i18n_src")
-			fuentes = m if m is Array else [m]
-		if n.has_meta("_i18n_tip_src"):
-			fuentes.append(n.get_meta("_i18n_tip_src"))
-		if n.has_meta("_i18n_ph_src"):
-			fuentes.append(n.get_meta("_i18n_ph_src"))
+		if n is OptionButton:
+			for i in (n as OptionButton).item_count:
+				fuentes.append((n as OptionButton).get_item_text(i))
+		elif n is Label or n is Button:
+			fuentes.append(n.get("text"))
+		if (n as Control).tooltip_text != "":
+			fuentes.append((n as Control).tooltip_text)
+		if n is LineEdit:
+			fuentes.append((n as LineEdit).placeholder_text)
 		for f: Variant in fuentes:
 			var src := String(f)
-			if src.strip_edges() == "" or _listadas.has(src) or Idiomas.t(src) != src:
+			Idiomas.idioma = "en"
+			var igual := Idiomas.t(src) == src
+			Idiomas.idioma = antes
+			if src.strip_edges() == "" or _listadas.has(src) or not igual:
 				continue
 			if RegEx.create_from_string("[A-Za-zÁÉÍÓÚáéíóúñÑ]{3}").search(src) == null:
 				continue

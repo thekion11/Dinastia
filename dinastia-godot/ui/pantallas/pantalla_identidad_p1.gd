@@ -126,7 +126,8 @@ func _rejilla_especiales(c: Club) -> void:
 		b.toggle_mode = true
 		b.button_pressed = c.esc_especial == id
 		b.custom_minimum_size = Vector2(64, 64)
-		b.tooltip_text = id
+		## El nombre del bicho y no el id del archivo («wolf_3»).
+		b.tooltip_text = String(_FIGURAS.get(id.get_slice("_", 0), ""))
 		var tex := Escudo.textura_especial(id)
 		if tex != null:
 			var ic := TextureRect.new()
@@ -140,6 +141,9 @@ func _rejilla_especiales(c: Club) -> void:
 			c.esc_especial = id
 			p._refrescar())
 		flow.add_child(b)
+
+const _FIGURAS := {"bull": "Toro", "dragon": "Dragón", "eagle": "Águila", "falcon": "Halcón",
+	"lion": "León", "panther": "Pantera", "ram": "Carnero", "shark": "Tiburón", "soccer": "Balón", "wolf": "Lobo"}
 
 func _boton_heredar(c: Club, props: Array, texto: String) -> void:
 	var b := Button.new()

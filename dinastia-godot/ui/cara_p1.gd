@@ -36,6 +36,20 @@ const CORTES := [
 ## Los cortes que se le ponen a un jugador real recreado (no se sabe el suyo).
 const CORTES_SOBRIOS := ["corto", "fade", "rapado", "undercut", "tupe", "flequillo", "ondulado", "entradas"]
 const ACCESORIOS := ["", "", "", "", "cintillo", "vincha", "gafas", "tape", "aro", "cadena", "gorro", "tapa"]
+## Lo que lee el jugador en el editor (clave → [rótulo, ayuda]): las claves son
+## internas -«tazon», «tape», «mono» (moño)- y no se pueden cambiar sin
+## cambiarle la cara a todo el mundo, así que el rótulo va aparte.
+const NOMBRES_LOOK := {
+	"corto": ["Corto", ""], "afro": ["Afro", ""], "rizado": ["Rizado", ""], "largo": ["Largo", ""],
+	"tupe": ["Tupé", ""], "crestas": ["Crestas", ""], "mullet": ["Mullet", ""], "trenzas": ["Trenzas", ""],
+	"mono": ["Moño", ""], "flequillo": ["Flequillo", ""], "rapado": ["Rapado", ""], "calvo": ["Calvo", ""],
+	"fade": ["Degradado", ""], "rastas": ["Rastas", ""], "coleta": ["Coleta", ""], "melena": ["Melena", ""],
+	"pincho": ["Pinchos", ""], "tazon": ["Tazón", ""], "undercut": ["Undercut", ""], "ondulado": ["Ondulado", ""],
+	"entradas": ["Con entradas", ""], "mohicano": ["Mohicano", ""], "samurai": ["Samurái", ""],
+	"cortina": ["Raya al medio", ""], "cintillo": ["Cinta fina", ""], "vincha": ["Cinta ancha", ""],
+	"gafas": ["Gafas", ""], "tape": ["Tira nasal", ""], "aro": ["Pendientes", ""], "cadena": ["Cadena", ""],
+	"gorro": ["Gorro de lana", ""], "tapa": ["Gorra", ""],
+}
 
 static var _cache: Dictionary = {}
 

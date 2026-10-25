@@ -104,7 +104,9 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 		sedes.sort_custom(func(a: Club, b: Club) -> bool: return a.estadio_aforo > b.estadio_aforo)
 		for i in sedes.size():
 			var c3: Club = sedes[i]
-			sede.add_item("%s (%s)" % [c3.estadio_nombre if c3.estadio_nombre != "" else c3.nombre, c3.nombre], i + 1)
+			## «Estadio (Club)» solo si el estadio tiene nombre propio: sin él
+			## salía «U. Andina (U. Andina)».
+			sede.add_item("%s (%s)" % [c3.estadio_nombre, c3.nombre] if c3.estadio_nombre != "" else c3.nombre, i + 1)
 			if c3.id == p.mundo.copa.sede_final_id:
 				sede.select(i + 1)
 		sede.item_selected.connect(func(i: int) -> void: ed.fijar_sede_final(null if i == 0 else sedes[i - 1]))
@@ -248,7 +250,10 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 			p._refrescar())
 		p._lista_editor.add_child(br)
 
-func _rejilla_editor(titulo: String, opciones: Array, actual: String, accion: Callable) -> void:
+## `rotulos`: clave → [texto del botón, ayuda]. Sin él se veía la clave cruda
+## («fragil», «tazon», «div») y no había forma de saber qué hacía cada rasgo.
+func _rejilla_editor(titulo: String, opciones: Array, actual: String, accion: Callable,
+		rotulos: Dictionary = {}) -> void:
 	var lt := p._texto(10, Principal.COL_SUAVE)
 	lt.text = titulo
 	p._lista_editor.add_child(lt)
@@ -263,7 +268,9 @@ func _rejilla_editor(titulo: String, opciones: Array, actual: String, accion: Ca
 			continue
 		vistas[clave] = true
 		var b := Button.new()
-		b.text = clave if clave != "" else "—"
+		var rot: Array = rotulos.get(clave, [clave, ""])
+		b.text = String(rot[0]) if clave != "" else "—"
+		b.tooltip_text = String(rot[1])
 		b.add_theme_font_size_override("font_size", 10)
 		b.toggle_mode = true
 		b.button_pressed = actual == clave
@@ -331,10 +338,19 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 	_fila_mas_menos("Dorsal", str(j.dorsal),
 		func(d: int) -> void: ed.fijar_campo(j, "dorsal", j.dorsal + d), p._lista_editor)
 
+	var posd: Variant = Datos.tabla("POSD")
+	var rot_pos := {}
+	for k: String in (posd as Dictionary if posd is Dictionary else {}):
+		rot_pos[k] = [k, String(((posd as Dictionary)[k] as Dictionary).get("n", k))]
 	_rejilla_editor("Puesto", Editor.demarcaciones(), j.pos_e,
-		func(v: String) -> void: ed.fijar_campo(j, "pos_e", v))
+		func(v: String) -> void: ed.fijar_campo(j, "pos_e", v), rot_pos)
+	var rasgos: Variant = Datos.tabla("RASGOS")
+	var rot_rasgo := {}
+	for k: String in (rasgos as Dictionary if rasgos is Dictionary else {}):
+		var r: Array = (rasgos as Dictionary)[k]
+		rot_rasgo[k] = [String(r[0]), String(r[1]) if r.size() > 1 else ""]
 	_rejilla_editor("Rasgo", [""] + _rasgos_disponibles(), j.rasgo,
-		func(v: String) -> void: ed.fijar_campo(j, "rasgo", v))
+		func(v: String) -> void: ed.fijar_campo(j, "rasgo", v), rot_rasgo)
 	var bandera: Dictionary = Datos.tabla("BANDERA")
 	_rejilla_editor("País", bandera.keys(), j.pais,
 		func(v: String) -> void: ed.fijar_campo(j, "pais", v))
@@ -344,7 +360,7 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 	p._lista_editor.add_child(ta)
 	for k: String in j.atributos:
 		var clave := k
-		_fila_mas_menos(clave, str(int(j.atributos[k])),
+		_fila_mas_menos(String(Principal.NOMBRES_ATRIBUTOS.get(clave, clave)), str(int(j.atributos[k])),
 			func(d: int) -> void: ed.mover_atributo(j, clave, d * 3), p._lista_editor)
 
 	## LA CARA. Los quince rasgos salen de un hash del id; aquí se pisan los que
@@ -357,9 +373,9 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 	_rejilla_colores_editor(ed, j, "piel", Cara.PIELES, String(look["piel"]))
 	_rejilla_colores_editor(ed, j, "peloC", Cara.PELOS, String(look["peloC"]))
 	_rejilla_editor("Corte", Cara.CORTES, String(look["pelo"]),
-		func(v: String) -> void: ed.fijar_look(j, "pelo", v))
+		func(v: String) -> void: ed.fijar_look(j, "pelo", v), Cara.NOMBRES_LOOK)
 	_rejilla_editor("Accesorio", Cara.ACCESORIOS, String(look["acc"]),
-		func(v: String) -> void: ed.fijar_look(j, "acc", v))
+		func(v: String) -> void: ed.fijar_look(j, "acc", v), Cara.NOMBRES_LOOK)
 	var fila_b := HBoxContainer.new()
 	fila_b.add_theme_constant_override("separation", 4)
 	p._lista_editor.add_child(fila_b)
@@ -371,8 +387,11 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 		bb.text = "%s ▸" % String(par[1])
 		bb.add_theme_font_size_override("font_size", 10)
 		bb.custom_minimum_size = Vector2(66, 22)
+		## Con repintado: sin él la cara de arriba no cambiaba y el botón
+		## parecía no hacer nada (nadie escucha `Editor.cambiado`).
 		bb.pressed.connect(func() -> void:
-			ed.fijar_look(j, clave2, (int(Cara.look_de(j).get(clave2, 0)) + 1) % tope))
+			ed.fijar_look(j, clave2, (int(Cara.look_de(j).get(clave2, 0)) + 1) % tope)
+			p._refrescar())
 		fila_b.add_child(bb)
 	var fila_s := HBoxContainer.new()
 	fila_s.add_theme_constant_override("separation", 4)
@@ -386,7 +405,8 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 		bs.button_pressed = bool(look.get(clave3, false))
 		bs.custom_minimum_size = Vector2(66, 22)
 		bs.pressed.connect(func() -> void:
-			ed.fijar_look(j, clave3, not bool(Cara.look_de(j).get(clave3, false))))
+			ed.fijar_look(j, clave3, not bool(Cara.look_de(j).get(clave3, false)))
+			p._refrescar())
 		fila_s.add_child(bs)
 
 	var b_azar := Button.new()

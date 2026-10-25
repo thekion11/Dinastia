@@ -149,8 +149,14 @@ func _fila_diseno_estadio(e: EstadioPropio, p_local: Dictionary, campo: String) 
 	p._lista_estadio.add_child(fila)
 	var l := p._texto(11, Principal.COL_SUAVE)
 	l.text = String(Principal.ETIQUETAS_ESTADIO.get(campo, campo.capitalize()))
-	l.custom_minimum_size = Vector2(130, 0)
+	## Más ancho que antes (130) y con la etiqueta entera de ayuda: «Estructura
+	## de los focos» o «Butacas — Tribuna Oeste» se cortaban, y en otros
+	## idiomas más.
+	l.custom_minimum_size = Vector2(160, 0)
 	l.clip_text = true
+	l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	l.tooltip_text = l.text
+	l.mouse_filter = Control.MOUSE_FILTER_PASS
 	fila.add_child(l)
 	var b := OptionButton.new()
 	b.add_theme_font_size_override("font_size", 11)
@@ -210,7 +216,12 @@ func _reformar_valor(campo: String, valor: Variant) -> void:
 		p._escribir("[color=#e05555]No se puede reformar: %s.[/color]" % problema)
 		p._refrescar()
 		return
+	## El NOMBRE de la opción («Óvalo olímpico»), no su clave («ovalo» o
+	## «#ffffff»), que es lo que se escribía en el registro.
 	var visible: String = String(valor)
+	for o: Dictionary in p.mundo.estadio.opciones(campo):
+		if String(o.get("clave", "")) == visible:
+			visible = String(o.get("nombre", visible))
 	if valor is bool:
 		visible = "sí" if bool(valor) else "no"
 	p._escribir("[color=#4caf6d]Reforma hecha:[/color] %s → %s. Coste %s." % [
