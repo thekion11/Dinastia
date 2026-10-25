@@ -289,3 +289,27 @@ func _probar_ideas_club_y_calendario_de_pretemporada() -> void:
 	_comprobar(c.socios > socios and c.saldo != caja, "y trae socios y mueve la caja (343)")
 	_comprobar(m.jugar_amistosos("gira") != "", "y solo se juega una pretemporada por año (343)")
 	_comprobar(Reputacion.tope_instalaciones(95) > Reputacion.tope_instalaciones(10), "los niveles de obra se desbloquean con reputación (284)")
+
+func _probar_ideas_dinero_ciudad_y_lesiones() -> void:
+	_titulo("IDEAS DEL DUEÑO: subvenciones, derechos de TV, auditoría de la federación, lesiones en el partido (108, 113, 117, 188-189, 305)")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 2432)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	_comprobar(m.ciudad.subvencion_anual(c) > 0, "el ayuntamiento da una subvención anual (108): %s" % _dinero(m.ciudad.subvencion_anual(c)))
+	var f := Finanzas.new(c, 0.0, 0, 0.0)
+	var caja := c.saldo
+	_comprobar(f.derechos_tv() > 0 and c.saldo > caja, "los derechos de televisión se cobran (117)")
+	var au := m.federacion.auditoria_anual(c, m.obras, m.anio)
+	_comprobar(au.has("fallos") and au.has("anio"), "la federación hace una auditoría anual de licencia con sus fallos (113)")
+	## Lesiones durante el partido: salen del parte médico y quedan en la ficha (189, 305).
+	var lesionados := 0
+	var cl: Array = m.ligas[0].clubes
+	for i in 30:
+		var p := Partido.new(cl[i % cl.size()], cl[(i + 5) % cl.size()])
+		p.simular()
+	for k: Club in cl:
+		for j: Jugador in k.plantilla:
+			if j.lesion > 0:
+				lesionados += 1
+	_comprobar(lesionados >= 1, "tras 30 partidos hay jugadores lesionados con semanas fuera (%d) (189, 305)" % lesionados)

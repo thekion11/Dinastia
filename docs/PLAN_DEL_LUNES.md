@@ -910,7 +910,7 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 346. Cláusula de fidelidad: bono si un jugador no pide salir en X años
 - 350. Estadísticas de eficiencia de tu gestión (ROI de fichajes, cantera, etc.)
 
-### Declaradas hechas pero sin prueba que las compruebe: verificar jugando y, si están bien, borrar (46)
+### Declaradas hechas pero sin prueba que las compruebe (38): verificar jugando; las que no existan pasan a pendientes
 
 
 **1. Infraestructura y Estadio**
@@ -921,8 +921,6 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 17. Canchas auxiliares para categorías juveniles
 - 25. Auditorio para conferencias de prensa
 - 26. Oficinas administrativas del club
-
-**3. Personalización visual**
 
 **4. Personaje (DT / Presidente / Dueño)**
 - 46. Editor de apariencia del personaje
@@ -937,15 +935,6 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 **7. Fichajes y Negociación**
 - 88. Jugadores que piden ser vendidos
 
-**8. Cuerpo Técnico y Staff**
-
-**9. Economía y Finanzas**
-- 108. Subvenciones estatales o municipales
-- 113. Auditorías financieras periódicas
-- 117. Ingresos por derechos de TV
-
-**10. Auspicios y Marketing**
-
 **11. Fans y Comunidad**
 - 136. Nivel de aprobación general de la afición
 - 143. Mosaicos y coreografías en el estadio
@@ -956,40 +945,30 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 **13. Medios y Prensa**
 - 159. Rumores de fichajes filtrados por la prensa
 
-**14. Competencias y Torneos**
-
 **15. Premios y Reconocimientos**
 - 178. Mejor DT del año
 
 **16. Eventos Narrativos y Decisiones**
 - 188. Escándalo mediático de un jugador
-- 189. Lesión grave de una figura clave
 - 190. Oferta irrechazable por un jugador clave
 - 194. Jugador que pide salir por motivos personales
 - 196. Incidente de seguridad en el estadio
 - 197. Petición de la comunidad local (obra social)
 - 198. Oferta de inversión extranjera con condiciones
 
-**17. Rivalidades y Clásicos**
-
 **18. Legado e Historia del Club**
 - 218. Leyendas contratables como embajadores
 
-**19. Roles de Juego (DT / Presidente / Dueño)**
-
 **20. Extras y Sistemas Meta**
-- 235. Logros/trofeos del juego (no del club)
 - 241. Accesibilidad: modo daltónico, texto ajustable
 - 243. Modo offline completo
 - 245. Resumen semanal tipo "informe de gestión"
-- 249. Generador aleatorio de nombres de clubes rivales
 
 **21. Detalles de Ambientación**
 - 251. Clima que afecta partidos y asistencia
 - 255. Eventos comunitarios fuera del fútbol (caridad)
 
 **22. Sistemas de Jugadores (detalle extra)**
-- 261. Selección nacional: convocatorias de tus jugadores
 - 262. Prestigio internacional del jugador
 - 265. Reconversión de jugador a manager/staff al retirarse
 - 267. Rendimiento afectado por vida personal (eventos)
@@ -997,13 +976,8 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 **23. Eventos de Crisis y Oportunidad**
 - 276. Terreno disponible para expandir la ciudad deportiva
 
-**24. Progresión y Metas**
-
 **25. Toques Finales de Personalización**
 - 291. Personalización del vestuario (colores, mobiliario)
-
-**26. Simulación de Partido (minuto a minuto, sin animación completa)**
-- 305. Ícono de lesión durante el partido
 
 **27. Récords, Historia y Memoria del Club**
 - 317. Efemérides: "un día como hoy" con hechos pasados del club

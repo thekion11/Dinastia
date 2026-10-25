@@ -84,6 +84,7 @@ const SECCIONES := [
 	"_probar_ideas_directiva_calendario_y_rivalidades",
 	"_probar_ideas_simulacion_del_partido",
 	"_probar_ideas_club_y_calendario_de_pretemporada",
+	"_probar_ideas_dinero_ciudad_y_lesiones",
 	"_probar_aspecto_y_audio",
 	"_probar_marca",
 	"_probar_tutorial",
