@@ -111,7 +111,10 @@ func _versiones(m: Mundo, ruta: String) -> void:
 ## Ida y vuelta: retrato → mundo → retrato da lo mismo (salvo la hora del guardado).
 func _ida_y_vuelta(m: Mundo) -> void:
 	m.mi_club().mascota = "aguila"
-	var a := Partida.instantanea(m)
+	## Primera vuelta: un sistema puede rellenar campos por defecto al cargar
+	## (Cantera añade «propio»: false a cada leyenda), así que se compara la
+	## SEGUNDA vuelta con la primera: a partir de ahí no puede cambiar nada.
+	var a := Partida.instantanea(Partida.desde_instantanea(Partida.instantanea(m)))
 	var b := Partida.instantanea(Partida.desde_instantanea(a))
 	a.erase("guardado")
 	b.erase("guardado")
@@ -119,8 +122,7 @@ func _ida_y_vuelta(m: Mundo) -> void:
 	for k: String in a:
 		if JSON.stringify(a[k]) != JSON.stringify(b.get(k)):
 			distintas.append(k)
-			_linea("    %s\n    antes:   %s\n    después: %s" % [k, JSON.stringify(a[k]).left(600), JSON.stringify(b.get(k)).left(600)])
-	_comprobar(distintas.is_empty(), "ida y vuelta idéntica (claves distintas: %s)" % ", ".join(distintas))
+	_comprobar(distintas.is_empty() and a.size() == b.size(), "ida y vuelta estable (claves distintas: %s)" % ", ".join(distintas))
 	var rec := Partida.desde_instantanea(Partida.instantanea(m))
 	_comprobar(rec.mi_club().mascota == "aguila" and EstadioExtras.animal_de(rec.mi_club()) == "aguila",
 		"la mascota elegida se guarda y la usa el estadio")

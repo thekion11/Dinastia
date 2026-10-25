@@ -42,6 +42,9 @@ func _probar() -> void:
 		var mm := _mundo(4242)
 		var cc := CarreraJugador.crear(mm, "Otro", "DC", false, 99)
 		cc.agenda = "extra" if k == 1 else "normal"
+		## Un veterano cerca de su techo: sin saturar la probabilidad (0,95).
+		cc.jugador(mm).edad = 28
+		cc.jugador(mm).pot = cc.jugador(mm).ovr + 2
 		for _i in 300:
 			cc.energia = 90
 			var jj := cc.jugador(mm)

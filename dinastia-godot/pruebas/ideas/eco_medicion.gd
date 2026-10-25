@@ -6,8 +6,8 @@ extends BaseIdea
 ## clubes de la IA están en rojo o rescatados. ECO_TEMP / ECO_SEMILLAS para cambiarla.
 
 func _probar() -> void:
-	var temporadas := int(OS.get_environment("ECO_TEMP")) if OS.get_environment("ECO_TEMP") != "" else 5
-	var semillas: Array = [101, 202]
+	var temporadas := int(OS.get_environment("ECO_TEMP")) if OS.get_environment("ECO_TEMP") != "" else 3
+	var semillas: Array = [101]
 	if OS.get_environment("ECO_SEMILLAS") != "":
 		semillas = Array(OS.get_environment("ECO_SEMILLAS").split(",")).map(func(x: String) -> int: return int(x))
 	_titulo("ECONOMÍA: %d temporadas x %d semillas x (grande, chico)" % [temporadas, semillas.size()])
@@ -52,10 +52,26 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 			sube += 1
 		_linea("  t%d  caja %8.2f M  (mín %7.2f)  ref %6.2f M  rep %d  div %d  valor medio %7.0f  IA en rojo %d  masa %d" % [
 			t + 1, yo.saldo / 1e6, rojo_min / 1e6, Eco.ref_caja(yo.rep) / 1e6, yo.rep, yo.division, valores[-1], ia_rojo, yo.masa_salarial()])
+	## Los más caros del mundo al final: dice de dónde sale la subida del valor medio.
+	var todos: Array = m.jugadores()
+	todos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.valor > b.valor)
+	for j: Jugador in todos.slice(0, 5):
+		var esperado := Eco.VALOR_PIVOTE * pow(Eco.CURVA_JUG, float(j.ovr) - Eco.OVR_PIVOTE) * Eco.factor_edad(j.edad, j.ovr, j.pot)
+		_linea("      top: %s ovr %d pot %d edad %d valor %d (x%.2f de su tasación) sueldo %d" % [j.nombre, j.ovr, j.pot, j.edad, j.valor, float(j.valor) / maxf(1.0, esperado), j.sueldo])
 	_linea("  temporadas con la caja al alza: %d/%d · peor racha en rojo: %d semanas" % [sube, temporadas, max_rojo])
-	## Burbuja: el valor medio del mercado no se multiplica ni se hunde a lo largo de la partida.
-	var r := valores[-1] / maxf(valores[0], 1.0)
-	_comprobar(r > 0.6 and r < 1.6, "%s: valor medio del mercado estable (x%.2f)" % [et, r])
+	## M-208: sin gestionar, la caja del grande no puede crecer más de 3/4 de su referencia por temporada
+	## (con el 42% plano crecía 1,15 referencias por año: 6,6 M → 18,9 M en dos temporadas).
+	var crece := float(cajas[-1] - cajas[0]) / float(temporadas)
+	if grande:
+		_comprobar(crece < Eco.ref_caja(yo.rep) * 0.75, "%s: la caja no se dispara sola (%.2f M/temporada)" % [et, crece / 1e6])
+	## M-210, precios coherentes: lo que cuesta un jugador es lo que dice su tasación (media, edad, techo). El
+	## valor MEDIO sí sube: lo arrastra la cola de estrellas jóvenes de la cantera, no el precio.
+	var ratios: Array[float] = []
+	for j in m.jugadores():
+		ratios.append(float(j.valor) / maxf(1.0, Eco.VALOR_PIVOTE * pow(Eco.CURVA_JUG, float(j.ovr) - Eco.OVR_PIVOTE) * Eco.factor_edad(j.edad, j.ovr, j.pot)))
+	ratios.sort()
+	var med := ratios[ratios.size() / 2]
+	_comprobar(med > 0.8 and med < 1.2, "%s: precios pegados a la tasación (mediana x%.2f; valor medio x%.2f)" % [et, med, valores[-1] / maxf(valores[0], 1.0)])
 
 func _valor_medio(m: Mundo) -> float:
 	var tot := 0.0

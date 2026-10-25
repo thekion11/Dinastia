@@ -112,6 +112,12 @@ func _process(delta_real: float) -> void:
 		## (coches en un cruce sin semáforo, peatones en un paso de cebra).
 		if avance > 0.0 and _cede_paso(v, idx, delta):
 			avance = 0.0
+			## Y se le encienden las luces de freno, como en el semáforo.
+			if v.has("faros") and not bool(v["frena"]):
+				v["frena"] = true
+				var fm2: MeshInstance3D = v["faros"]
+				if is_instance_valid(fm2):
+					fm2.set_instance_shader_parameter("freno", 1.0)
 		v["s"] = s0 + avance
 		_colocar(v)
 

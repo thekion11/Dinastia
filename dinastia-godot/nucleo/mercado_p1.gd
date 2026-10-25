@@ -142,12 +142,21 @@ func deseo_de_venir(j: Jugador, destino: Club) -> Dictionary:
 ## que no, dice un número. Un jugador con pocas ganas puede pedir un 80% más.
 func ficha_que_pide(j: Jugador, destino: Club, anios: int = 3) -> int:
 	var d: float = deseo_de_venir(j, destino)["p"]
-	var base := float(j.sueldo)
+	## EL RECARGO SE CALCULA SOBRE EL SUELDO DE MERCADO, NO SOBRE EL QUE COBRA
+	## (eco, 25-10-2026). Antes era `base = j.sueldo`: cada traspaso de la IA le
+	## ponía hasta un 80% encima de lo que ya cobraba, y el siguiente traspaso
+	## otro tanto sobre eso. La medición (`pruebas/ideas/eco_medicion.gd`) daba
+	## el sueldo medio del mundo +13% por temporada con las medias planas: una
+	## espiral salarial. Ahora el recargo va sobre lo que su tasación dice que
+	## vale (la misma fórmula de `Jugador.tasar()`), y nadie firma por menos de
+	## lo que ya cobra.
+	var de_mercado := maxf(30.0, 1.361 * pow(float(j.valor), 0.66))
+	var base := de_mercado
 	## Contratos largos cuestan algo más por semana: el jugador cobra la
 	## seguridad por adelantado.
 	base *= 1.0 + float(anios - 3) * 0.04
 	var recargo := 1.0 + clampf((0.5 - d) * 1.5, -0.15, 0.80)
-	return int(max(30.0, round(base * recargo / 10.0) * 10.0))
+	return int(max(float(j.sueldo), round(base * recargo / 10.0) * 10.0))
 
 ## ¿Acepta el club vendedor esta oferta? Con el 90% de lo pedido casi siempre;
 ## por debajo del 70%, nunca. En medio hay una zona donde influye si necesita el

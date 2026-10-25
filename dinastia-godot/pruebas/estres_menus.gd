@@ -12,7 +12,10 @@ var _nodos0 := 0
 var _acciones := 0
 
 func _ready() -> void:
-	_total = int(OS.get_environment("ESTRES_N")) if OS.get_environment("ESTRES_N") != "" else 600
+	## Sin GPU (headless) cada fotograma con 2-6 acciones tarda de 0,3 a 6 s: con 600
+	## fotogramas la prueba parecía colgada (>30 min) pero solo era lenta (medido 25-10).
+	var por_defecto := 120 if DisplayServer.get_name() == "headless" else 600
+	_total = int(OS.get_environment("ESTRES_N")) if OS.get_environment("ESTRES_N") != "" else por_defecto
 	seed(7)
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)

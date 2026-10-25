@@ -211,8 +211,18 @@ func mes() -> Dictionary:
 ## la certificación ecológica del huerto. Sin esto, portado solo con sueldos y
 ## estructura, el club se quedaba con un 42% de la television y el patrocinio
 ## que el HTML nunca le dejaba.
+## LA TASA ES PROGRESIVA (eco, 25-10-2026, M-208). Con el 42% plano, el club
+## más grande de Chile sin fichar a nadie DUPLICABA su caja cada temporada
+## (6,6 M → 13,3 M → 18,9 M en la medición) y el más chico la perdía: es el
+## mismo cruce de curvas que la directiva corrige en la IA (ingresos con
+## `factor_club^0.85`, estructura con `^0.62`). Un grande viaja más, paga más
+## seguridad e impuestos: la tasa crece suave con la reputación, 42% en el
+## club medio (rep 70), ~51% en uno de 88, ~40% en uno de 65.
+func tasa_operacion() -> float:
+	return clampf(0.42 * pow(Eco.factor_club(float(_club.rep)), 0.1), 0.36, 0.55)
+
 func operacion(ingreso_tv: int, ingreso_patrocinio: int) -> int:
-	var monto := int(round(float(ingreso_tv + ingreso_patrocinio) * 0.42 * factor_operacion))
+	var monto := int(round(float(ingreso_tv + ingreso_patrocinio) * tasa_operacion() * factor_operacion))
 	if monto <= 0:
 		return 0
 	_club.mover_saldo(-monto)
@@ -265,7 +275,7 @@ func proyeccion_anual(partidos_en_casa: int, ingreso_tienda_mes: int = 0) -> Dic
 	if aplica_operacion:
 		var oper_mes := int(round(
 			(float(round(float(derechos_tv_base()) * factor_tv)) + float(patrocinio_base())) \
-			* 0.42 * factor_operacion))
+			* tasa_operacion() * factor_operacion))
 		gastos["Operación, viajes, seguridad e impuestos"] = oper_mes * MESES_TEMPORADA
 	var total_ing := 0
 	for k: String in ingresos:

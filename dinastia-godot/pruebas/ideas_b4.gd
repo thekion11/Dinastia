@@ -73,6 +73,10 @@ func _firma_mundo(m: Mundo) -> int:
 	for cl: Club in m.ligas[0].clubes:
 		for j: Jugador in cl.plantilla:
 			t += "%s%d%d|" % [j.nombre, j.ovr, j.edad]
+	## Los planteles de arranque se siembran con el nombre del club (fase 4): la semilla se nota en los libres.
+	m.generar_libres()
+	for j: Jugador in m.libres:
+		t += j.nombre + "|"
 	return t.hash()
 
 func _nombres_reales(m: Mundo) -> Dictionary:
@@ -95,10 +99,13 @@ func _ideas_b_datos() -> void:
 	var tabla_ficticia := JSON.stringify(Datos.tabla(k))
 	var a := Mundo.new()
 	a.generar(["CHI"], 71)
+	var fa := _firma_mundo(a)
 	var a2 := Mundo.new()
 	a2.generar(["CHI"], 71)
+	var fa2 := _firma_mundo(a2)
 	var b2 := Mundo.new()
 	b2.generar(["CHI"], 72)
+	var fb2 := _firma_mundo(b2)
 	var nombres_fic := _nombres_reales(a)
 	var comunes := 0
 	for n: String in nombres_fic:
@@ -107,8 +114,7 @@ func _ideas_b_datos() -> void:
 	_comprobar(not Datos.base_real and tabla_real != tabla_ficticia, "quitar el pack devuelve la base ficticia: la tabla «%s» cambia (919, 923)" % k)
 	_comprobar(nombres_pack.size() > 50 and nombres_fic.size() > 50 and comunes == 0, "la base ficticia no comparte ni un nombre con el pack real: %d vs %d jugadores de guiño (930)" % [nombres_fic.size(), nombres_pack.size()])
 	_comprobar(a.clubes.size() >= 16 and a.jugadores().size() > 300, "se genera un mundo completo ficticio: %d clubes, %d jugadores (929)" % [a.clubes.size(), a.jugadores().size()])
-	## HALLAZGO (24-10): la idea no funciona hoy como decía la auditoría; queda como aviso, no como fallo, y está en el plan.
-	_avisar_hallazgo(_firma_mundo(a) == _firma_mundo(a2) and _firma_mundo(a) != _firma_mundo(b2), "misma semilla, mismo mundo; otra semilla, otro mundo (929, 1006)")
+	_comprobar(fa == fa2 and fa != fb2, "misma semilla, mismo mundo; otra semilla, otro mundo (929, 1006)")
 	Datos.usar_base_real(true)
 	_comprobar(Datos.base_real and JSON.stringify(Datos.tabla(k)) == tabla_real, "y al volver a poner el pack la tabla vuelve idéntica (923)")
 	Datos.usar_base_real(era_real)
