@@ -334,6 +334,9 @@ func _cine_gol(c: Club, autor: Jugador) -> void:
 	## grabar hasta que termine.
 	if _repe != null:
 		_repe.congelar = true
+		_repe.club_barrido = c
+	if _rig != null:
+		_rig.quitar_inserto()
 	var autor_id := autor.id if autor != null else ""
 	var g := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
 	var carta := func() -> Dictionary:

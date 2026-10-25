@@ -122,6 +122,7 @@ func _pistas_camara() -> void:
 	var tv: Variant = _motor.get("_tiro_vivo")
 	if tv is Dictionary and not (tv as Dictionary).is_empty():
 		_rig.pista_ocasion = maxf(_rig.pista_ocasion, 1.4)
+	_vigilar_inserto()
 
 ## Los rótulos de estadísticas de la tele en los momentos muertos.
 func _rotulo_automatico() -> void:
@@ -271,6 +272,7 @@ func _process(delta: float) -> void:
 		OlaGrada.mirar(_raiz3d, _balon.global_position)
 	_escalar_rotulos()
 	_despejar_rotulos(delta)
+	_hud_realizacion(delta)
 	if _juego == null or partido == null:
 		return
 	## Durante la repetición y la presentación el partido está CONGELADO: ni
@@ -319,6 +321,13 @@ func _process(delta: float) -> void:
 		_radar.actualizar_datos(_en_campo, _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO, pos_ctrl)
 
 func _unhandled_input(e: InputEvent) -> void:
+	## SALTAR LA REPETICIÓN: su misma tecla, Esc o un clic (el partido está congelado).
+	if _repe != null and _repe.reproduciendo and _sala_var == null and (e.is_action_pressed("jugar_repeticion")
+			or e.is_action_pressed("ui_cancel") or (e is InputEventMouseButton and (e as InputEventMouseButton).pressed
+			and (e as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT)):
+		get_viewport().set_input_as_handled()
+		_repe.saltar()
+		return
 	if partido != null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_estadisticas"):
 		get_viewport().set_input_as_handled()
 		abrir_estadisticas()

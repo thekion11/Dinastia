@@ -89,6 +89,8 @@ func _montar_motor() -> void:
 	## El silbato del árbitro con su gesto (M-106). El final del partido ya
 	## tiene su pitido (resumen); aquí, el del descanso y cada falta.
 	_motor.gesto_arbitro.connect(func(g: String) -> void:
+		if g in ["mostrar_tarjeta", "mostrar_roja"]:
+			_inserto_tarjeta()
 		if g == "silbato":
 			Sonido.toca("silbato")
 		elif g == "fin" and _motor.estado == "descanso":
@@ -228,6 +230,11 @@ func _arrancar_partido() -> void:
 	_repe = Repeticion.new()
 	add_child(_repe)
 	_repe.setup(_en_campo, _balon)
+	## Que ninguna cámara de la repetición se meta en la grada de ESTE estadio.
+	var g_rep := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+	_repe.dx = float(g_rep["dx"])
+	_repe.dz = float(g_rep["dz"])
+	_repe.ui_barrido = self
 	_repe.terminada.connect(func() -> void:
 		if _rotulo_repe != null:
 			_rotulo_repe.visible = false)
