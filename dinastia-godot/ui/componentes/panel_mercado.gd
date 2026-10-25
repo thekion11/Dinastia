@@ -38,8 +38,11 @@ func _pintar_filtros(mio: Club) -> void:
 	op.custom_minimum_size = Vector2(130, 0)
 	op.add_item(Idiomas.t("Todas las líneas"), 0)
 	var grupos := ["POR", "DEF", "MED", "DEL"]
+	## Con su nombre entero y traducido: la sigla «MED» es también la columna de
+	## la media, y el traductor de la pantalla la convertía en «OVR» en inglés.
+	var nombres := [Idiomas.t("Porteros"), Idiomas.t("Defensas"), Idiomas.t("Centrocampistas"), Idiomas.t("Delanteros")]
 	for i in grupos.size():
-		op.add_item(grupos[i], i + 1)
+		op.add_item(nombres[i], i + 1)
 		if grupos[i] == _filtro_pos:
 			op.selected = i + 1
 	op.item_selected.connect(func(i: int) -> void:

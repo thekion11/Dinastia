@@ -369,6 +369,316 @@
    "ca": "%d  contra els teus %d",
    "pl": "%d  wobec twoich %d",
    "tr": "%d  (seninki %d)"
+  },
+  "%d  ·  va %d.º y se le esperaba %d.º": {
+   "en": "%d  ·  sits %d, was expected %d",
+   "pt": "%d  ·  vai em %d.º e esperava-se %d.º",
+   "fr": "%d  ·  %de, on l'attendait %de",
+   "it": "%d  ·  è %d° e ci si aspettava %d°",
+   "de": "%d  ·  steht auf %d, erwartet war %d",
+   "ca": "%d  ·  va %dè i se n'esperava %dè",
+   "pl": "%d  ·  jest %d., oczekiwano %d.",
+   "tr": "%d  ·  %d. sırada, beklenen %d."
+  },
+  "%d de 100": {
+   "en": "%d of 100",
+   "pt": "%d de 100",
+   "fr": "%d sur 100",
+   "it": "%d su 100",
+   "de": "%d von 100",
+   "ca": "%d de 100",
+   "pl": "%d na 100",
+   "tr": "%d / 100"
+  },
+  "%d de %d": {
+   "en": "%d of %d",
+   "pt": "%d de %d",
+   "fr": "%d sur %d",
+   "it": "%d su %d",
+   "de": "%d von %d",
+   "ca": "%d de %d",
+   "pl": "%d z %d",
+   "tr": "%d / %d"
+  },
+  "%d punto por gastar": {
+   "en": "%d point to spend",
+   "pt": "%d ponto por gastar",
+   "fr": "%d point à dépenser",
+   "it": "%d punto da spendere",
+   "de": "%d Punkt zu vergeben",
+   "ca": "%d punt per gastar",
+   "pl": "%d punkt do wydania",
+   "tr": "Harcanacak %d puan"
+  },
+  "%d puntos por gastar": {
+   "en": "%d points to spend",
+   "pt": "%d pontos por gastar",
+   "fr": "%d points à dépenser",
+   "it": "%d punti da spendere",
+   "de": "%d Punkte zu vergeben",
+   "ca": "%d punts per gastar",
+   "pl": "%d pkt do wydania",
+   "tr": "Harcanacak %d puan"
+  },
+  "%d–%d–%d en %d duelo": {
+   "en": "%d–%d–%d in %d meeting",
+   "pt": "%d–%d–%d em %d duelo",
+   "fr": "%d–%d–%d en %d duel",
+   "it": "%d–%d–%d in %d sfida",
+   "de": "%d–%d–%d in %d Duell",
+   "ca": "%d–%d–%d en %d duel",
+   "pl": "%d–%d–%d w %d pojedynku",
+   "tr": "%d–%d–%d (%d maç)"
+  },
+  "%d–%d–%d en %d duelos": {
+   "en": "%d–%d–%d in %d meetings",
+   "pt": "%d–%d–%d em %d duelos",
+   "fr": "%d–%d–%d en %d duels",
+   "it": "%d–%d–%d in %d sfide",
+   "de": "%d–%d–%d in %d Duellen",
+   "ca": "%d–%d–%d en %d duels",
+   "pl": "%d–%d–%d w %d pojedynkach",
+   "tr": "%d–%d–%d (%d maç)"
+  },
+  "%s  ·  nivel del club (reputación %d)": {
+   "en": "%s  ·  club level (reputation %d)",
+   "pt": "%s  ·  nível do clube (reputação %d)",
+   "fr": "%s  ·  niveau du club (réputation %d)",
+   "it": "%s  ·  livello del club (reputazione %d)",
+   "de": "%s  ·  Vereinsstufe (Ansehen %d)",
+   "ca": "%s  ·  nivell del club (reputació %d)",
+   "pl": "%s  ·  poziom klubu (reputacja %d)",
+   "tr": "%s  ·  kulüp seviyesi (itibar %d)"
+  },
+  "%s / semana": {
+   "en": "%s / week",
+   "pt": "%s / semana",
+   "fr": "%s / semaine",
+   "it": "%s / settimana",
+   "de": "%s / Woche",
+   "ca": "%s / setmana",
+   "pl": "%s / tydzień",
+   "tr": "%s / hafta"
+  },
+  "%s con %s (%d)": {
+   "en": "%s v %s (%d)",
+   "pt": "%s contra %s (%d)",
+   "fr": "%s contre %s (%d)",
+   "it": "%s contro %s (%d)",
+   "de": "%s gegen %s (%d)",
+   "ca": "%s contra %s (%d)",
+   "pl": "%s z %s (%d)",
+   "tr": "%s, %s karşısında (%d)"
+  },
+  "+%d de reputación": {
+   "en": "+%d reputation",
+   "pt": "+%d de reputação",
+   "fr": "+%d de réputation",
+   "it": "+%d di reputazione",
+   "de": "+%d Ansehen",
+   "ca": "+%d de reputació",
+   "pl": "+%d reputacji",
+   "tr": "+%d itibar"
+  },
+  "Cara a cara desde %d": {
+   "en": "Head to head since %d",
+   "pt": "Frente a frente desde %d",
+   "fr": "Face-à-face depuis %d",
+   "it": "Testa a testa dal %d",
+   "de": "Direkter Vergleich seit %d",
+   "ca": "Cara a cara des de %d",
+   "pl": "Bilans od %d",
+   "tr": "%d'den beri karşılaşmalar"
+  },
+  "Juega en contra: %s": {
+   "en": "Works against you: %s",
+   "pt": "Joga contra ti: %s",
+   "fr": "Joue contre toi : %s",
+   "it": "Gioca contro di te: %s",
+   "de": "Spricht gegen dich: %s",
+   "ca": "Juga en contra: %s",
+   "pl": "Działa na twoją niekorzyść: %s",
+   "tr": "Aleyhine işliyor: %s"
+  },
+  "Negociación individual": {
+   "en": "Individual negotiation",
+   "pt": "Negociação individual",
+   "fr": "Négociation individuelle",
+   "it": "Trattativa individuale",
+   "de": "Einzelvermarktung",
+   "ca": "Negociació individual",
+   "pl": "Negocjacje indywidualne",
+   "tr": "Bireysel pazarlık"
+  },
+  "Reparto en bloque": {
+   "en": "Collective deal",
+   "pt": "Repartição em bloco",
+   "fr": "Répartition collective",
+   "it": "Ripartizione collettiva",
+   "de": "Zentralvermarktung",
+   "ca": "Repartiment en bloc",
+   "pl": "Podział zbiorowy",
+   "tr": "Toplu dağıtım"
+  },
+  "Neutral": {
+   "en": "Neutral",
+   "pt": "Neutro",
+   "fr": "Neutre",
+   "it": "Neutro",
+   "de": "Neutral",
+   "ca": "Neutral",
+   "pl": "Neutralnie",
+   "tr": "Nötr"
+  },
+  "Presentarse al examen de %s": {
+   "en": "Sit the %s exam",
+   "pt": "Fazer o exame de %s",
+   "fr": "Passer l'examen de %s",
+   "it": "Sostenere l'esame di %s",
+   "de": "Prüfung für %s ablegen",
+   "ca": "Presentar-se a l'examen de %s",
+   "pl": "Przystąp do egzaminu %s",
+   "tr": "%s sınavına gir"
+  },
+  "Semana sin partido: entrenamiento doble.": {
+   "en": "Week without a match: double training.",
+   "pt": "Semana sem jogo: treino a dobrar.",
+   "fr": "Semaine sans match : double entraînement.",
+   "it": "Settimana senza partita: doppio allenamento.",
+   "de": "Woche ohne Spiel: doppeltes Training.",
+   "ca": "Setmana sense partit: entrenament doble.",
+   "pl": "Tydzień bez meczu: podwójny trening.",
+   "tr": "Maçsız hafta: çift antrenman."
+  },
+  "Siguiente: %s %s con reputación %d → %s": {
+   "en": "Next: %s %s at reputation %d → %s",
+   "pt": "Seguinte: %s %s com reputação %d → %s",
+   "fr": "Suivant : %s %s à %d de réputation → %s",
+   "it": "Prossimo: %s %s con reputazione %d → %s",
+   "de": "Nächste Stufe: %s %s ab Ansehen %d → %s",
+   "ca": "Següent: %s %s amb reputació %d → %s",
+   "pl": "Następny: %s %s przy reputacji %d → %s",
+   "tr": "Sonraki: %s %s, itibar %d → %s"
+  },
+  "Visita": {
+   "en": "Away",
+   "pt": "Fora",
+   "fr": "Extérieur",
+   "it": "Trasferta",
+   "de": "Auswärts",
+   "ca": "Fora",
+   "pl": "Wyjazd",
+   "tr": "Deplasman"
+  },
+  "Local": {
+   "en": "Home",
+   "pt": "Casa",
+   "fr": "Domicile",
+   "it": "Casa",
+   "de": "Heim",
+   "ca": "Casa",
+   "pl": "U siebie",
+   "tr": "İç saha"
+  },
+  "hoy": {
+   "en": "today",
+   "pt": "hoje",
+   "fr": "aujourd'hui",
+   "it": "oggi",
+   "de": "heute",
+   "ca": "avui",
+   "pl": "dziś",
+   "tr": "bugün"
+  },
+  "rep %d  ·  dividendo %s cada %d semanas": {
+   "en": "rep %d  ·  %s dividend every %d weeks",
+   "pt": "rep %d  ·  dividendo de %s a cada %d semanas",
+   "fr": "rép. %d  ·  dividende de %s toutes les %d semaines",
+   "it": "rep %d  ·  dividendo di %s ogni %d settimane",
+   "de": "Ansehen %d  ·  %s Dividende alle %d Wochen",
+   "ca": "rep %d  ·  dividend de %s cada %d setmanes",
+   "pl": "rep %d  ·  dywidenda %s co %d tygodni",
+   "tr": "itibar %d  ·  %s temettü, her %d haftada"
+  },
+  "vs %s  ·  %s  ·  jornada %d de %s": {
+   "en": "vs %s  ·  %s  ·  matchday %d of %s",
+   "pt": "vs %s  ·  %s  ·  rodada %d de %s",
+   "fr": "vs %s  ·  %s  ·  journée %d de %s",
+   "it": "vs %s  ·  %s  ·  giornata %d di %s",
+   "de": "vs %s  ·  %s  ·  Spieltag %d der %s",
+   "ca": "vs %s  ·  %s  ·  jornada %d de %s",
+   "pl": "vs %s  ·  %s  ·  kolejka %d, %s",
+   "tr": "vs %s  ·  %s  ·  %d. hafta, %s"
+  },
+  "×%.2f sobre %s de base": {
+   "en": "×%.2f on a base of %s",
+   "pt": "×%.2f sobre %s de base",
+   "fr": "×%.2f sur une base de %s",
+   "it": "×%.2f su una base di %s",
+   "de": "×%.2f auf %s Basis",
+   "ca": "×%.2f sobre %s de base",
+   "pl": "×%.2f od bazy %s",
+   "tr": "×%.2f (%s taban)"
+  },
+  "×%.2f sobre el ruido": {
+   "en": "×%.2f on the noise",
+   "pt": "×%.2f sobre o ruído",
+   "fr": "×%.2f sur le bruit",
+   "it": "×%.2f sul rumore",
+   "de": "×%.2f auf den Lärm",
+   "ca": "×%.2f sobre el soroll",
+   "pl": "×%.2f na szum",
+   "tr": "gürültüye ×%.2f"
+  },
+  "⭐ REPUTACIÓN": {
+   "en": "⭐ REPUTATION",
+   "pt": "⭐ REPUTAÇÃO",
+   "fr": "⭐ RÉPUTATION",
+   "it": "⭐ REPUTAZIONE",
+   "de": "⭐ ANSEHEN",
+   "ca": "⭐ REPUTACIÓ",
+   "pl": "⭐ REPUTACJA",
+   "tr": "⭐ İTİBAR"
+  },
+  "🎮 Minijuegos: penales, tiros libres y trivia": {
+   "en": "🎮 Mini-games: penalties, free kicks and trivia",
+   "pt": "🎮 Minijogos: penáltis, livres e trivia",
+   "fr": "🎮 Mini-jeux : penalties, coups francs et quiz",
+   "it": "🎮 Minigiochi: rigori, punizioni e quiz",
+   "de": "🎮 Minispiele: Elfmeter, Freistöße und Quiz",
+   "ca": "🎮 Minijocs: penals, faltes i trivial",
+   "pl": "🎮 Minigry: karne, rzuty wolne i quiz",
+   "tr": "🎮 Mini oyunlar: penaltı, serbest vuruş ve bilgi yarışması"
+  },
+  "📈 Ascender a %s": {
+   "en": "📈 Step up to %s",
+   "pt": "📈 Subir a %s",
+   "fr": "📈 Monter au poste de %s",
+   "it": "📈 Salire a %s",
+   "de": "📈 Aufsteigen zu %s",
+   "ca": "📈 Ascendir a %s",
+   "pl": "📈 Awansuj na %s",
+   "tr": "📈 %s görevine yüksel"
+  },
+  "🤝 Invitarlo al club  ·  %s": {
+   "en": "🤝 Invite them to the club  ·  %s",
+   "pt": "🤝 Convidá-lo ao clube  ·  %s",
+   "fr": "🤝 L'inviter au club  ·  %s",
+   "it": "🤝 Invitarlo al club  ·  %s",
+   "de": "🤝 In den Verein einladen  ·  %s",
+   "ca": "🤝 Convidar-lo al club  ·  %s",
+   "pl": "🤝 Zaproś do klubu  ·  %s",
+   "tr": "🤝 Kulübe davet et  ·  %s"
+  },
+  "🙄 Ignorarlo": {
+   "en": "🙄 Ignore them",
+   "pt": "🙄 Ignorá-lo",
+   "fr": "🙄 L'ignorer",
+   "it": "🙄 Ignorarlo",
+   "de": "🙄 Ignorieren",
+   "ca": "🙄 Ignorar-lo",
+   "pl": "🙄 Zignoruj",
+   "tr": "🙄 Görmezden gel"
   }
  },
  "patrones": [

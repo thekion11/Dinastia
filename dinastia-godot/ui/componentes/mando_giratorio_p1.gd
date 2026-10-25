@@ -14,9 +14,22 @@ extends Control
 
 const CARPETA := "res://assets/iconos_botones/"
 
-var dispositivo := "xbox"
-var etiquetas := {}
-var iluminadas: Array = []
+## Cambiar cualquiera de las tres marca el dibujo como sucio: el 3D y las
+## etiquetas se vuelven a pintar solo cuando algo cambia, no en cada fotograma.
+var dispositivo := "xbox":
+	set(v):
+		if v != dispositivo:
+			dispositivo = v
+			_sucio = true
+var etiquetas := {}:
+	set(v):
+		etiquetas = v
+		_sucio = true
+var iluminadas: Array = []:
+	set(v):
+		iluminadas = v
+		_sucio = true
+var _sucio := true
 
 var _sombra: TextureRect
 var _vp: SubViewport

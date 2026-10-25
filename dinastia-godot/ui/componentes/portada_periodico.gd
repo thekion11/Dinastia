@@ -199,14 +199,13 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 12)
 	fila.set_anchors_preset(Control.PRESET_CENTER)
-	fila.position = Vector2(-ANCHO * ESCALA / 2.0, ALTO * ESCALA / 2.0 - 10.0)
 	add_child(fila)
 	var guardar := Button.new()
 	guardar.text = Idiomas.t("📸 Guardar imagen")
 	guardar.pressed.connect(func() -> void:
 		guardar.text = Idiomas.t("📸 Guardada: ") + guardar_png()
 		## El rótulo crece con el nombre del archivo: se vuelve a centrar.
-		fila.position.x = -fila.get_combined_minimum_size().x / 2.0)
+		_centrar(fila))
 	fila.add_child(guardar)
 	var auto_cb := CheckBox.new()
 	auto_cb.text = Idiomas.t("Abrir sola tras cada partido")
@@ -219,7 +218,7 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	fila.add_child(b)
 	## Centrada de verdad: antes empezaba en el borde izquierdo de la hoja y se
 	## salía por la derecha (con «Abrir sola tras cada partido» en alemán, más).
-	fila.position.x = -fila.get_combined_minimum_size().x / 2.0
+	_centrar(fila)
 	## Con mando o teclado, el foco empieza en «Cerrar»: A cierra, la cruceta
 	## llega a los otros dos, y B/Esc cierran desde cualquiera.
 	b.grab_focus.call_deferred()
@@ -247,6 +246,20 @@ func _input(e: InputEvent) -> void:
 		_cerrar()
 	elif InputMap.has_action("dinastia_tab_siguiente") and (e.is_action_pressed("dinastia_tab_siguiente") or e.is_action_pressed("dinastia_tab_anterior")):
 		get_viewport().set_input_as_handled()
+
+## Fija la fila por sus ANCLAS al centro y sus márgenes a media anchura a
+## cada lado: así queda centrada se haya medido ya la ventana o no.
+func _centrar(fila: HBoxContainer) -> void:
+	var tam := fila.get_combined_minimum_size()
+	var y := ALTO * ESCALA / 2.0 - 10.0
+	fila.anchor_left = 0.5
+	fila.anchor_right = 0.5
+	fila.anchor_top = 0.5
+	fila.anchor_bottom = 0.5
+	fila.offset_left = -tam.x / 2.0
+	fila.offset_right = tam.x / 2.0
+	fila.offset_top = y
+	fila.offset_bottom = y + tam.y
 
 func _cerrar() -> void:
 	cerrado.emit()

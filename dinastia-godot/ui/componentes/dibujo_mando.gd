@@ -7,13 +7,27 @@ extends Control
 ## se está mirando, y hace latir en dorado los botones de la combinación que
 ## está seleccionada.
 
-var dispositivo := "xbox"
+## Cada propiedad avisa al cambiar (`_al_cambiar`): se repinta entonces y no en
+## cada fotograma. Antes se copiaba todo al mando 3D en `_process` sin parar.
+var dispositivo := "xbox":
+	set(v):
+		dispositivo = v
+		_al_cambiar()
 ## pieza ("A", "LB", "LS"…) -> lo que hace.
-var etiquetas := {}
+var etiquetas := {}:
+	set(v):
+		etiquetas = v
+		_al_cambiar()
 ## Las piezas de la combinación seleccionada (se iluminan).
-var iluminadas: Array = []
+var iluminadas: Array = []:
+	set(v):
+		iluminadas = v
+		_al_cambiar()
 ## Teclas iluminadas (modo teclado).
-var teclas_iluminadas: Array = []
+var teclas_iluminadas: Array = []:
+	set(v):
+		teclas_iluminadas = v
+		_al_cambiar()
 var _fuente: Font
 
 var _giratorio: MandoGiratorio
@@ -26,15 +40,21 @@ func _ready() -> void:
 	_giratorio = MandoGiratorio.new()
 	_giratorio.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(_giratorio)
+	_al_cambiar()
 
-func _process(_d: float) -> void:
+## Pasa lo nuevo al mando 3D y pide un repintado. Solo mientras late una tecla
+## del teclado hace falta pintar en cada fotograma (`_process`).
+func _al_cambiar() -> void:
 	if _giratorio != null:
 		_giratorio.visible = dispositivo != "teclado"
 		_giratorio.dispositivo = dispositivo
 		_giratorio.etiquetas = etiquetas
 		_giratorio.iluminadas = iluminadas
-	if dispositivo == "teclado" and (not teclas_iluminadas.is_empty() or not iluminadas.is_empty()):
-		queue_redraw()
+	queue_redraw()
+	set_process(dispositivo == "teclado" and not teclas_iluminadas.is_empty() and not Animar.reducidas())
+
+func _process(_d: float) -> void:
+	queue_redraw()
 
 func _draw() -> void:
 	## El mando (PlayStation o Xbox) es 3D: lo dibuja `MandoGiratorio`.
@@ -75,10 +95,23 @@ const FILAS_TECLADO := [
 ]
 const NUMPAD := [[KEY_KP_8, Vector2(1, 0)], [KEY_KP_4, Vector2(0, 1)], [KEY_KP_5, Vector2(1, 1)], [KEY_KP_6, Vector2(2, 1)], [KEY_KP_2, Vector2(1, 2)]]
 
+## El nombre de una tecla para el dibujo. Godot las nombra en inglés («Up»,
+## «Space»): las flechas pasan a símbolo y el espacio se traduce. `corto`: sin
+## el «Num» del teclado numérico (en la tecla ya se ve dónde está).
+static func nombre_tecla(k: int, corto: bool) -> String:
+	match k:
+		KEY_UP: return "↑"
+		KEY_DOWN: return "↓"
+		KEY_LEFT: return "←"
+		KEY_RIGHT: return "→"
+		KEY_SPACE: return Idiomas.t("Espacio")
+		KEY_ESCAPE: return "Esc"
+	return OS.get_keycode_string(k as Key).replace("Kp ", "" if corto else "Num ")
+
 func _dibujar_teclado() -> void:
 	var lado := minf((size.x - 10.0) / 14.0, (size.y * 0.55) / 6.0)
 	var origen := Vector2((size.x - lado * 14.0) * 0.5, 14.0)
-	var latido := 0.55 + 0.45 * sin(Time.get_ticks_msec() * 0.008)
+	var latido := (0.55 + 0.45 * sin(Time.get_ticks_msec() * 0.008)) if is_processing() else 1.0
 	for fi in FILAS_TECLADO.size():
 		var x := origen.x + float(fi) * lado * 0.25
 		for tecla: Array in FILAS_TECLADO[fi]:
@@ -100,7 +133,7 @@ func _dibujar_teclado() -> void:
 		if kc == 0:
 			continue
 		var activa := teclas_iluminadas.has(kc)
-		var nombre := OS.get_keycode_string(kc as Key).replace("Kp ", "Num ").replace("Escape", "Esc").replace("Space", "Espacio")
+		var nombre := nombre_tecla(kc, false)
 		var x := 10.0 + float(col) * (size.x * 0.5)
 		draw_string(_fuente, Vector2(x, y), nombre, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("ffd23f") if activa else Color("c9a227"))
 		draw_string(_fuente, Vector2(x + 62.0, y), _cortar(String(etiquetas[k]), 12, size.x * 0.5 - 72.0), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE if activa else Color(1, 1, 1, 0.75))
@@ -118,7 +151,7 @@ func _tecla(r: Rect2, k: int, latido: float) -> void:
 	_caja(r, fondo, 5.0, Color(1, 1, 1, 0.12))
 	if activa:
 		_caja(r.grow(2.0), Color(1.0, 0.82, 0.25, 0.25 * latido), 6.0, Color(1.0, 0.82, 0.25, 0.9 * latido))
-	var nombre := OS.get_keycode_string(k as Key).replace("Kp ", "").replace("Escape", "Esc").replace("Space", "Espacio")
+	var nombre := nombre_tecla(k, true)
 	_texto_centrado(r.get_center() + Vector2(0, -5), nombre, 11, Color("ffd23f") if activa else Color(1, 1, 1, 0.85))
 	if asignada:
 		var que := _cortar(String(etiquetas[str(k)]), 9, r.size.x - 4.0)

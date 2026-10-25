@@ -370,16 +370,6 @@
    "pl": "Dziś z kasy wyszłoby %s (kwota stała, pod stołem, premia i prowizja), a masz %s.",
    "tr": "Bugün kasandan %s çıkacak (sabit, kayıt dışı, imza primi ve komisyon); sende %s var."
   },
-  "MED": {
-   "en": "OVR",
-   "pt": "MÉD",
-   "fr": "MOY",
-   "it": "MED",
-   "de": "GES",
-   "ca": "MIT",
-   "pl": "ŚR",
-   "tr": "GNL"
-  },
   "MERCADO ABIERTO  ·  quedan %d semana(s)": {
    "en": "MARKET OPEN  ·  %d week(s) left",
    "pt": "MERCADO ABERTO  ·  faltam %d semana(s)",

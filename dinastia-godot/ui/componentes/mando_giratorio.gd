@@ -2,6 +2,12 @@ class_name MandoGiratorio
 extends "res://ui/componentes/mando_giratorio_p1.gd"
 ## [Capa 2/2 de `mando_giratorio.gd`] _ready, _process, _reiniciar, _gui_input, _cortar, _columna … (+1)
 
+## La capa de las etiquetas va ENCIMA del 3D: dibujadas en el propio control
+## quedaban debajo del `SubViewportContainer` y el mando tapaba sus textos.
+var _capa: Control
+## La vista con la que se pintó la última vez (giro, inclinación y zoom).
+var _vista_pintada := Vector3(INF, INF, INF)
+
 # ------------------------------------------------------------------ montaje
 
 func _ready() -> void:
@@ -34,7 +40,9 @@ func _ready() -> void:
 	_vp.own_world_3d = true
 	_vp.transparent_bg = true
 	_vp.msaa_3d = Viewport.MSAA_4X
-	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	## Se renderiza solo cuando algo cambia (`_process` lo pide fotograma a
+	## fotograma mientras gira o late): quieto, el mando no gasta GPU.
+	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
 	cont.add_child(_vp)
 	var env := Environment.new()
 	env.background_mode = Environment.BG_CLEAR_COLOR
@@ -86,7 +94,14 @@ func _ready() -> void:
 	_cam.position = Vector3(0, 0, 31.0)
 	_vp.add_child(_cam)
 	resized.connect(_ajustar_camara)
+	resized.connect(func() -> void: _sucio = true)
+	visibility_changed.connect(func() -> void: _sucio = true)
 	_ajustar_camara()
+	_capa = Control.new()
+	_capa.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_capa.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_capa.draw.connect(_dibujar_etiquetas)
+	add_child(_capa)
 	## Atajos de vista: arriba (botones), atrás (gatillos y bumpers) y de lado.
 	var fila := HBoxContainer.new()
 	fila.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
@@ -113,6 +128,9 @@ func _process(delta: float) -> void:
 		_construir(dispositivo)
 		_yaw = YAW0
 		_pitch = PITCH0
+		_sucio = true
+	## Con «animaciones reducidas» ni se mece solo ni late: queda quieto.
+	var quieto := Animar.reducidas()
 	if not _arrastrando:
 		_ocioso += delta
 		## La inercia de un globo: sigue girando y se frena despacio.
@@ -120,18 +138,28 @@ func _process(delta: float) -> void:
 			_yaw += _vel.x
 			_pitch = clampf(_pitch + _vel.y, -1.45, 1.45)
 			_vel *= pow(0.04, delta)
-		elif _ocioso > 4.0:
+		elif _ocioso > 4.0 and not quieto:
 			## Si nadie lo toca, se mece suave para que se note que es un objeto 3D.
 			_yaw = lerp_angle(_yaw, YAW0 + sin(Time.get_ticks_msec() * 0.0006) * 0.5, delta * 0.8)
 			_pitch = lerpf(_pitch, PITCH0 + sin(Time.get_ticks_msec() * 0.00045) * 0.1, delta * 0.8)
+	var vista := Vector3(_yaw, _pitch, _zoom)
+	var gira := not vista.is_equal_approx(_vista_pintada)
+	var late := not iluminadas.is_empty() and not quieto
+	if not (gira or late or _sucio):
+		return
+	_vista_pintada = vista
 	_aplicar_rotacion()
-	## Las piezas elegidas laten en dorado.
-	var latido := 0.55 + 0.45 * sin(Time.get_ticks_msec() * 0.008)
+	## Las piezas elegidas laten en dorado (fijas si las animaciones van reducidas).
+	var latido := (0.55 + 0.45 * sin(Time.get_ticks_msec() * 0.008)) if late else 1.0
 	for k: String in _piezas:
 		var on := iluminadas.has(k)
 		for m: StandardMaterial3D in _piezas[k]["mats"]:
 			m.emission_energy_multiplier = (0.15 + 0.35 * latido) if on else 0.0
-	queue_redraw()
+	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	## Las etiquetas no laten: solo se repintan si el mando se movió o cambió algo.
+	if gira or _sucio:
+		_capa.queue_redraw()
+	_sucio = false
 
 func _reiniciar() -> void:
 	var tw := create_tween().set_parallel(true)
@@ -208,19 +236,22 @@ func _columna(lista: Array, izquierda: bool, disp: String) -> void:
 		var ancla := Vector2((x_txt + w + 5.0) if izquierda else (x_txt - 5.0), y)
 		var codo := Vector2(lerpf(punto.x, ancla.x, 0.6), y)
 		var gr := 2.6 if activa else 1.4
-		draw_line(punto, codo, col, gr, true)
-		draw_line(codo, ancla, col, gr, true)
-		draw_circle(punto, 4.0 if activa else 3.0, col)
+		_capa.draw_line(punto, codo, col, gr, true)
+		_capa.draw_line(codo, ancla, col, gr, true)
+		_capa.draw_circle(punto, 4.0 if activa else 3.0, col)
 		## Una placa del color del botón detrás del icono.
-		draw_rect(Rect2(Vector2(x_ico - 2.0, y - 16.0), Vector2(32, 32)), Color(cp, 0.28 * a), true)
-		draw_rect(Rect2(Vector2(x_ico - 2.0, y - 16.0), Vector2(32, 32)), Color(cp, 0.9 * a), false, 1.5)
+		_capa.draw_rect(Rect2(Vector2(x_ico - 2.0, y - 16.0), Vector2(32, 32)), Color(cp, 0.28 * a), true)
+		_capa.draw_rect(Rect2(Vector2(x_ico - 2.0, y - 16.0), Vector2(32, 32)), Color(cp, 0.9 * a), false, 1.5)
 		if tex != null:
-			draw_texture_rect(tex, Rect2(Vector2(x_ico, y - 14.0), Vector2(28, 28)), false, Color(1, 1, 1, a))
-		draw_string(_fuente, Vector2(x_txt, y + 4.0), que, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE if activa else Color(1, 1, 1, 0.85 * a))
+			_capa.draw_texture_rect(tex, Rect2(Vector2(x_ico, y - 14.0), Vector2(28, 28)), false, Color(1, 1, 1, a))
+		## Una placa oscura detrás del texto: cuando el mando girado pasa por
+		## debajo, la etiqueta se sigue leyendo.
+		_capa.draw_rect(Rect2(Vector2(x_txt - 4.0, y - 10.0), Vector2(w + 8.0, 19.0)), Color(0.04, 0.06, 0.05, 0.62 * a), true)
+		_capa.draw_string(_fuente, Vector2(x_txt, y + 4.0), que, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE if activa else Color(1, 1, 1, 0.85 * a))
 
 # ------------------------------------------------------------------ etiquetas
 
-func _draw() -> void:
+func _dibujar_etiquetas() -> void:
 	if dispositivo == "teclado" or _cam == null or _pivote == null:
 		return
 	var disp := dispositivo
@@ -252,7 +283,7 @@ func _draw() -> void:
 	_columna(der, false, disp)
 	## La ayuda para el ratón.
 	var txt := Idiomas.t("Arrastra para girarlo · rueda: zoom · doble clic: vista inicial")
-	draw_string(_fuente, Vector2(8, size.y - 8), txt, HORIZONTAL_ALIGNMENT_LEFT, size.x - 16, 11, Color(1, 1, 1, 0.5))
+	_capa.draw_string(_fuente, Vector2(8, size.y - 8), txt, HORIZONTAL_ALIGNMENT_LEFT, size.x - 16, 11, Color(1, 1, 1, 0.5))
 	if ocultas > 0:
 		var aviso := Idiomas.t("Desde aquí no se ven %d botones: gira el mando o cambia de vista") % ocultas
-		draw_string(_fuente, Vector2(8, 18), aviso, HORIZONTAL_ALIGNMENT_LEFT, size.x - 16, 12, Color(1.0, 0.82, 0.25, 0.8))
+		_capa.draw_string(_fuente, Vector2(8, 18), aviso, HORIZONTAL_ALIGNMENT_LEFT, size.x - 16, 12, Color(1.0, 0.82, 0.25, 0.8))
