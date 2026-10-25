@@ -679,6 +679,66 @@
    "ca": "🙄 Ignorar-lo",
    "pl": "🙄 Zignoruj",
    "tr": "🙄 Görmezden gel"
+  },
+  "🏘️ Local": {
+   "en": "🏘️ Local",
+   "pt": "🏘️ Local",
+   "fr": "🏘️ Local",
+   "it": "🏘️ Locale",
+   "de": "🏘️ Lokal",
+   "ca": "🏘️ Local",
+   "pl": "🏘️ Lokalny",
+   "tr": "🏘️ Yerel"
+  },
+  "🗺️ Regional": {
+   "en": "🗺️ Regional",
+   "pt": "🗺️ Regional",
+   "fr": "🗺️ Régional",
+   "it": "🗺️ Regionale",
+   "de": "🗺️ Regional",
+   "ca": "🗺️ Regional",
+   "pl": "🗺️ Regionalny",
+   "tr": "🗺️ Bölgesel"
+  },
+  "🏳️ Nacional": {
+   "en": "🏳️ National",
+   "pt": "🏳️ Nacional",
+   "fr": "🏳️ National",
+   "it": "🏳️ Nazionale",
+   "de": "🏳️ National",
+   "ca": "🏳️ Nacional",
+   "pl": "🏳️ Krajowy",
+   "tr": "🏳️ Ulusal"
+  },
+  "🌎 Continental": {
+   "en": "🌎 Continental",
+   "pt": "🌎 Continental",
+   "fr": "🌎 Continental",
+   "it": "🌎 Continentale",
+   "de": "🌎 Kontinental",
+   "ca": "🌎 Continental",
+   "pl": "🌎 Kontynentalny",
+   "tr": "🌎 Kıtasal"
+  },
+  "🌍 Mundial": {
+   "en": "🌍 Global",
+   "pt": "🌍 Mundial",
+   "fr": "🌍 Mondial",
+   "it": "🌍 Mondiale",
+   "de": "🌍 Weltweit",
+   "ca": "🌍 Mundial",
+   "pl": "🌍 Światowy",
+   "tr": "🌍 Dünya çapında"
+  },
+  "👑 Leyenda": {
+   "en": "👑 Legend",
+   "pt": "👑 Lenda",
+   "fr": "👑 Légende",
+   "it": "👑 Leggenda",
+   "de": "👑 Legende",
+   "ca": "👑 Llegenda",
+   "pl": "👑 Legenda",
+   "tr": "👑 Efsane"
   }
  },
  "patrones": [
@@ -703,6 +763,17 @@
    "Ronda de $1",
    "Runda $1 drużyn",
    "Son $1"
+  ],
+  [
+   "^Instalaciones hasta el nivel (\\d+)$",
+   "Facilities up to level $1",
+   "Instalações até ao nível $1",
+   "Installations jusqu'au niveau $1",
+   "Strutture fino al livello $1",
+   "Anlagen bis Stufe $1",
+   "Instal·lacions fins al nivell $1",
+   "Obiekty do poziomu $1",
+   "$1. seviyeye kadar tesisler"
   ]
  ]
 }

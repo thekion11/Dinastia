@@ -17,6 +17,8 @@ var _estado: Label
 var _col_campo: VBoxContainer
 var _col_banco: VBoxContainer
 var _filas_tac: Dictionary = {}
+var _titulo_banco: Label
+var _seguir: Button
 ## Abre el panel de estadísticas encima (lo pasa `VistaEstadio`).
 var ver_estadisticas: Callable = Callable()
 ## Repite los últimos segundos (lo pasa `VistaEstadio`); cierra la pausa antes.
@@ -81,7 +83,6 @@ func _montar() -> void:
 			b.toggle_mode = true
 			b.add_theme_font_size_override("font_size", 13)
 			b.custom_minimum_size = Vector2(134, 30)
-			b.focus_mode = Control.FOCUS_NONE
 			b.pressed.connect(_fijar.bind(k, i))
 			fila.add_child(b)
 			botones.append(b)
@@ -101,7 +102,8 @@ func _montar() -> void:
 	var der := VBoxContainer.new()
 	der.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cols.add_child(der)
-	der.add_child(Tema.etiqueta(13, Tema.ORO, Idiomas.t("BANQUILLO")))
+	_titulo_banco = Tema.etiqueta(13, Tema.ORO, Idiomas.t("BANQUILLO"))
+	der.add_child(_titulo_banco)
 	_col_banco = VBoxContainer.new()
 	der.add_child(_col_banco)
 	_estado = Tema.etiqueta(13, Tema.SUAVE, "")
@@ -116,7 +118,7 @@ func _montar() -> void:
 		stats.text = Idiomas.t("📊 Estadísticas") + "  (" + Mando.corto_de("jugar_estadisticas") + ")"
 		stats.custom_minimum_size = Vector2(240, 36)
 		stats.add_theme_font_size_override("font_size", 15)
-		stats.pressed.connect(func() -> void: ver_estadisticas.call())
+		stats.pressed.connect(_abrir_estadisticas)
 		botones.add_child(stats)
 	if ver_repeticion.is_valid():
 		var rep := Button.new()
@@ -134,7 +136,35 @@ func _montar() -> void:
 	seguir.add_theme_font_size_override("font_size", 17)
 	seguir.pressed.connect(cerrar)
 	botones.add_child(seguir)
+	_seguir = seguir
 	_pintar_cambios()
+	## Con mando el panel se maneja entero (antes todo era FOCUS_NONE y solo se
+	## podía volver a jugar): el foco empieza en «Seguir jugando», así que A
+	## reanuda como antes y la cruceta lleva a la pizarra y a los cambios.
+	seguir.grab_focus.call_deferred()
+	_estado.text = _ayuda_cambios()
+
+## Qué hacer para meter un cambio y cuántos quedan: el banco sale apagado hasta
+## que se elige quién sale, y sin esta línea parecía que no se podía cambiar.
+func _ayuda_cambios() -> String:
+	var hechos := partido.cambios_local if partido.local == mi_club else partido.cambios_visita
+	if hechos >= Partido.MAX_CAMBIOS:
+		return Idiomas.t("Ya hiciste los cinco cambios.")
+	return Idiomas.t("Para un cambio: elige quién sale (izquierda) y luego quién entra (derecha).")
+
+## Las estadísticas se abren encima: el foco se suelta para que A no pulse un
+## botón de esta pizarra por detrás, y vuelve a «Seguir jugando» al cerrarlas.
+func _abrir_estadisticas() -> void:
+	get_viewport().gui_release_focus()
+	var antes := get_parent().get_child_count()
+	ver_estadisticas.call()
+	var padre := get_parent()
+	for i in range(antes, padre.get_child_count()):
+		var n := padre.get_child(i)
+		if n is PanelEstadisticas:
+			(n as PanelEstadisticas).cerrado.connect(func() -> void:
+				if is_instance_valid(_seguir):
+					_seguir.grab_focus())
 
 func _fijar(k: String, i: int) -> void:
 	match k:
@@ -165,27 +195,30 @@ func _energia(j: Jugador) -> float:
 			return motor.forma_fisica(p)
 	return 1.0
 
-func _pintar_cambios() -> void:
+## `foco`: a qué columna va el foco al repintar («banco» tras elegir quién sale,
+## «campo» tras un cambio); los botones se rehacen y el foco se perdería.
+func _pintar_cambios(foco := "") -> void:
 	for h in _col_campo.get_children():
 		h.queue_free()
 	for h in _col_banco.get_children():
 		h.queue_free()
 	var hechos := partido.cambios_local if partido.local == mi_club else partido.cambios_visita
+	_titulo_banco.text = Idiomas.t("BANQUILLO") + "  ·  " + Idiomas.t("cambios: %d de %d") % [hechos, Partido.MAX_CAMBIOS]
 	for j: Jugador in _mi_once():
 		var e := _energia(j)
 		var b := Button.new()
-		b.text = "%s  %s   %d%%" % [j.pos_e, Nombres.visible(j.nombre), int(round(e * 100.0))]
+		## «▼» marca al cansado sin depender del color (rojo/dorado no lo ve todo el mundo).
+		b.text = "%s  %s   %d%%%s" % [j.pos_e, Nombres.visible(j.nombre), int(round(e * 100.0)), "  ▼" if e < 0.7 else ""]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_font_size_override("font_size", 13)
 		b.custom_minimum_size = Vector2(0, 27)
 		b.toggle_mode = true
 		b.button_pressed = _sale == j
-		b.focus_mode = Control.FOCUS_NONE
 		b.add_theme_color_override("font_color", Tema.MAL if e < 0.7 else (Tema.ORO if e < 0.82 else Tema.TEXTO))
 		b.pressed.connect(func() -> void:
 			_sale = j
 			_estado.text = Idiomas.t("Elige quién entra por %s.") % Nombres.visible(j.nombre)
-			_pintar_cambios())
+			_pintar_cambios("banco"))
 		_col_campo.add_child(b)
 	var banco := VistaEstadio.disponibles_fuera_del_once(mi_club, _mi_once())
 	var n := 0
@@ -199,7 +232,6 @@ func _pintar_cambios() -> void:
 		b.add_theme_font_size_override("font_size", 13)
 		b.custom_minimum_size = Vector2(0, 27)
 		b.disabled = _sale == null or hechos >= Partido.MAX_CAMBIOS
-		b.focus_mode = Control.FOCUS_NONE
 		b.pressed.connect(func() -> void:
 			var por := _sale
 			var error := partido.cambiar(por, j)
@@ -208,10 +240,16 @@ func _pintar_cambios() -> void:
 			else:
 				_estado.text = Idiomas.t("🔁 Entra %s por %s.") % [Nombres.visible(j.nombre), Nombres.visible(por.nombre)]
 				_sale = null
-			_pintar_cambios())
+			_pintar_cambios("campo"))
 		_col_banco.add_child(b)
 	if hechos >= Partido.MAX_CAMBIOS:
 		_estado.text = Idiomas.t("Ya hiciste los cinco cambios.")
+	var col := _col_banco if foco == "banco" else (_col_campo if foco == "campo" else null)
+	if col != null:
+		for h in col.get_children():
+			if h is Button and not (h as Button).disabled and not h.is_queued_for_deletion():
+				(h as Button).grab_focus.call_deferred()
+				break
 
 func cerrar() -> void:
 	cerrado.emit()

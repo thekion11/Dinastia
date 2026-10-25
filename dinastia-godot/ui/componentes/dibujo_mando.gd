@@ -95,18 +95,11 @@ const FILAS_TECLADO := [
 ]
 const NUMPAD := [[KEY_KP_8, Vector2(1, 0)], [KEY_KP_4, Vector2(0, 1)], [KEY_KP_5, Vector2(1, 1)], [KEY_KP_6, Vector2(2, 1)], [KEY_KP_2, Vector2(1, 2)]]
 
-## El nombre de una tecla para el dibujo. Godot las nombra en inglés («Up»,
-## «Space»): las flechas pasan a símbolo y el espacio se traduce. `corto`: sin
-## el «Num» del teclado numérico (en la tecla ya se ve dónde está).
+## El nombre de una tecla para el dibujo (flechas en símbolo, espacio traducido:
+## `Mando.nombre_tecla`). `corto`: sin el «Num» del teclado numérico, que en la
+## tecla dibujada ya se ve dónde está.
 static func nombre_tecla(k: int, corto: bool) -> String:
-	match k:
-		KEY_UP: return "↑"
-		KEY_DOWN: return "↓"
-		KEY_LEFT: return "←"
-		KEY_RIGHT: return "→"
-		KEY_SPACE: return Idiomas.t("Espacio")
-		KEY_ESCAPE: return "Esc"
-	return OS.get_keycode_string(k as Key).replace("Kp ", "" if corto else "Num ")
+	return Mando.nombre_tecla(k).replace("Kp ", "" if corto else "Num ")
 
 func _dibujar_teclado() -> void:
 	var lado := minf((size.x - 10.0) / 14.0, (size.y * 0.55) / 6.0)

@@ -30,16 +30,6 @@
    "pl": "WIEK",
    "tr": "YAŞ"
   },
-  "MED": {
-   "en": "OVR",
-   "pt": "GER",
-   "fr": "GÉN",
-   "it": "MED",
-   "de": "GES",
-   "ca": "MIT",
-   "pl": "OGÓ",
-   "tr": "GNL"
-  },
   "POT": {
    "en": "POT",
    "pt": "POT",
@@ -1779,6 +1769,26 @@
    "ca": "La fornada jove",
    "pl": "Młode pokolenie",
    "tr": "Genç kuşak"
+  },
+  "MEDIA": {
+   "en": "OVR",
+   "pt": "GER",
+   "fr": "GÉN",
+   "it": "MED",
+   "de": "GES",
+   "ca": "MIT",
+   "pl": "OGÓ",
+   "tr": "GNL"
+  },
+  "MED": {
+   "en": "MID",
+   "pt": "MEI",
+   "fr": "MIL",
+   "it": "CEN",
+   "de": "MF",
+   "ca": "MIG",
+   "pl": "POM",
+   "tr": "OS"
   }
  },
  "patrones": [

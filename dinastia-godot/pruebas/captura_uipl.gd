@@ -44,13 +44,18 @@ func _process(_d: float) -> void:
 		_pantalla.call("_ir_a_pestana", "Cantera")
 	if _n == ESPERA + 10:
 		_guardar("uipl_cantera")
+		## La ficha propia bajada a los bloques de `FichaJugadorInfo`/`Acciones`
+		## (cabeza, promesa, perfil...), que no se ven sin desplazar.
 		var mundo2 = _pantalla.get("mundo")
-		for c in mundo2.clubes.values():
-			if c.id != mundo2.mi_club_id and not c.plantilla.is_empty():
-				_pantalla.call("_ver_ficha", c.plantilla[0])
-				break
-	if _n == ESPERA + 14:
-		_guardar("uipl_ficha_ajena")
+		_pantalla.call("_ver_ficha", mundo2.mi_club().plantilla[1])
+	if _n == ESPERA + 12:
+		var desliz := (_pantalla.get("_ficha") as Node).get_parent()
+		while desliz != null and not (desliz is ScrollContainer):
+			desliz = desliz.get_parent()
+		if desliz != null:
+			(desliz as ScrollContainer).scroll_vertical = 330
+	if _n == ESPERA + 16:
+		_guardar("uipl_ficha_bloques")
 		get_tree().quit()
 
 func _guardar(nombre: String) -> void:

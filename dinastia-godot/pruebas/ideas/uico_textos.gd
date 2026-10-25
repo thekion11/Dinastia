@@ -67,6 +67,7 @@ func _probar_con_espera() -> void:
 	_comprobar(not t.contains("nivel del club"), "nivel del club traducido")
 	_comprobar(not t.contains("Juega en contra"), "faceta en contra traducida")
 	_comprobar(not t.contains("Siguiente:"), "«Siguiente» traducido")
+	_comprobar(not t.to_lower().contains("instalaciones"), "beneficios del nivel traducidos")
 	_comprobar(t.contains("Works against you"), "la faceta baja dice «Works against you»")
 	lista.queue_free()
 

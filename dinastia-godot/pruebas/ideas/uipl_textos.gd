@@ -39,6 +39,9 @@ func _probar() -> void:
 			_p.call("_ver_ficha", c.plantilla[0])
 			_recoger(_p.get("_ficha"), "ficha ajena")
 			break
+	## «MED» es la línea de centrocampistas (chips de puesto en otras pantallas) y
+	## no la columna de la media, que usa su propia clave «MEDIA».
+	_comprobar(Idiomas.t("MED") == "MID" and Idiomas.t("MEDIA") == "OVR", "MED (línea) y MEDIA (columna) no se pisan en inglés")
 	Idiomas.idioma = "es"
 	_comprobar(_vistos.size() > 200, "se revisaron %d textos" % _vistos.size())
 

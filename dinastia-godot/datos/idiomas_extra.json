@@ -3095,7 +3095,7 @@
   "NOMBRE": "NAME",
   "POS": "POS",
   "EDAD": "AGE",
-  "MED": "OVR",
+  "MED": "MID",
   "POT": "POT",
   "VALOR": "VALUE",
   "Ordenar por nombre": "Sort by name",
@@ -3411,7 +3411,14 @@
   "⭐ REPUTACIÓN": "⭐ REPUTATION",
   "🎮 Minijuegos: penales, tiros libres y trivia": "🎮 Mini-games: penalties, free kicks and trivia",
   "📈 Ascender a %s": "📈 Step up to %s",
-  "🤝 Invitarlo al club  ·  %s": "🤝 Invite them to the club  ·  %s"
+  "🤝 Invitarlo al club  ·  %s": "🤝 Invite them to the club  ·  %s",
+  "MEDIA": "OVR",
+  "🏘️ Local": "🏘️ Local",
+  "🗺️ Regional": "🗺️ Regional",
+  "🏳️ Nacional": "🏳️ National",
+  "🌎 Continental": "🌎 Continental",
+  "🌍 Mundial": "🌍 Global",
+  "👑 Leyenda": "👑 Legend"
  },
  "pt": {
   "Historia": "História",
@@ -6509,7 +6516,7 @@
   "NOMBRE": "NOME",
   "POS": "POS",
   "EDAD": "IDADE",
-  "MED": "GER",
+  "MED": "MEI",
   "POT": "POT",
   "VALOR": "VALOR",
   "Ordenar por nombre": "Ordenar por nome",
@@ -6825,7 +6832,14 @@
   "⭐ REPUTACIÓN": "⭐ REPUTAÇÃO",
   "🎮 Minijuegos: penales, tiros libres y trivia": "🎮 Minijogos: penáltis, livres e trivia",
   "📈 Ascender a %s": "📈 Subir a %s",
-  "🤝 Invitarlo al club  ·  %s": "🤝 Convidá-lo ao clube  ·  %s"
+  "🤝 Invitarlo al club  ·  %s": "🤝 Convidá-lo ao clube  ·  %s",
+  "MEDIA": "GER",
+  "🏘️ Local": "🏘️ Local",
+  "🗺️ Regional": "🗺️ Regional",
+  "🏳️ Nacional": "🏳️ Nacional",
+  "🌎 Continental": "🌎 Continental",
+  "🌍 Mundial": "🌍 Mundial",
+  "👑 Leyenda": "👑 Lenda"
  },
  "patrones": [
   [
@@ -9357,6 +9371,17 @@
    "exclusiva amb un compromís del $1 %",
    "wyłączność ze zobowiązaniem $1 %",
    "% $1 taahhütle münhasırlık"
+  ],
+  [
+   "^Instalaciones hasta el nivel (\\d+)$",
+   "Facilities up to level $1",
+   "Instalações até ao nível $1",
+   "Installations jusqu'au niveau $1",
+   "Strutture fino al livello $1",
+   "Anlagen bis Stufe $1",
+   "Instal·lacions fins al nivell $1",
+   "Obiekty do poziomu $1",
+   "$1. seviyeye kadar tesisler"
   ]
  ],
  "fr": {
@@ -12362,7 +12387,7 @@
   "NOMBRE": "NOM",
   "POS": "POS",
   "EDAD": "ÂGE",
-  "MED": "GÉN",
+  "MED": "MIL",
   "POT": "POT",
   "VALOR": "VALEUR",
   "Ordenar por nombre": "Trier par nom",
@@ -12678,7 +12703,14 @@
   "⭐ REPUTACIÓN": "⭐ RÉPUTATION",
   "🎮 Minijuegos: penales, tiros libres y trivia": "🎮 Mini-jeux : penalties, coups francs et quiz",
   "📈 Ascender a %s": "📈 Monter au poste de %s",
-  "🤝 Invitarlo al club  ·  %s": "🤝 L'inviter au club  ·  %s"
+  "🤝 Invitarlo al club  ·  %s": "🤝 L'inviter au club  ·  %s",
+  "MEDIA": "GÉN",
+  "🏘️ Local": "🏘️ Local",
+  "🗺️ Regional": "🗺️ Régional",
+  "🏳️ Nacional": "🏳️ National",
+  "🌎 Continental": "🌎 Continental",
+  "🌍 Mundial": "🌍 Mondial",
+  "👑 Leyenda": "👑 Légende"
  },
  "it": {
   "Historia": "Storia",
@@ -15683,7 +15715,7 @@
   "NOMBRE": "NOME",
   "POS": "RUO",
   "EDAD": "ETÀ",
-  "MED": "MED",
+  "MED": "CEN",
   "POT": "POT",
   "VALOR": "VALORE",
   "Ordenar por nombre": "Ordina per nome",
@@ -15999,7 +16031,14 @@
   "⭐ REPUTACIÓN": "⭐ REPUTAZIONE",
   "🎮 Minijuegos: penales, tiros libres y trivia": "🎮 Minigiochi: rigori, punizioni e quiz",
   "📈 Ascender a %s": "📈 Salire a %s",
-  "🤝 Invitarlo al club  ·  %s": "🤝 Invitarlo al club  ·  %s"
+  "🤝 Invitarlo al club  ·  %s": "🤝 Invitarlo al club  ·  %s",
+  "MEDIA": "MED",
+  "🏘️ Local": "🏘️ Locale",
+  "🗺️ Regional": "🗺️ Regionale",
+  "🏳️ Nacional": "🏳️ Nazionale",
+  "🌎 Continental": "🌎 Continentale",
+  "🌍 Mundial": "🌍 Mondiale",
+  "👑 Leyenda": "👑 Leggenda"
  },
  "de": {
   "Historia": "Geschichte",
@@ -19004,7 +19043,7 @@
   "NOMBRE": "NAME",
   "POS": "POS",
   "EDAD": "ALTER",
-  "MED": "GES",
+  "MED": "MF",
   "POT": "POT",
   "VALOR": "WERT",
   "Ordenar por nombre": "Nach Name sortieren",
@@ -19320,7 +19359,14 @@
   "⭐ REPUTACIÓN": "⭐ ANSEHEN",
   "🎮 Minijuegos: penales, tiros libres y trivia": "🎮 Minispiele: Elfmeter, Freistöße und Quiz",
   "📈 Ascender a %s": "📈 Aufsteigen zu %s",
-  "🤝 Invitarlo al club  ·  %s": "🤝 In den Verein einladen  ·  %s"
+  "🤝 Invitarlo al club  ·  %s": "🤝 In den Verein einladen  ·  %s",
+  "MEDIA": "GES",
+  "🏘️ Local": "🏘️ Lokal",
+  "🗺️ Regional": "🗺️ Regional",
+  "🏳️ Nacional": "🏳️ National",
+  "🌎 Continental": "🌎 Kontinental",
+  "🌍 Mundial": "🌍 Weltweit",
+  "👑 Leyenda": "👑 Legende"
  },
  "ca": {
   "Historia": "Història",
@@ -22325,7 +22371,7 @@
   "NOMBRE": "NOM",
   "POS": "POS",
   "EDAD": "EDAT",
-  "MED": "MIT",
+  "MED": "MIG",
   "POT": "POT",
   "VALOR": "VALOR",
   "Ordenar por nombre": "Ordenar per nom",
@@ -22641,7 +22687,14 @@
   "⭐ REPUTACIÓN": "⭐ REPUTACIÓ",
   "🎮 Minijuegos: penales, tiros libres y trivia": "🎮 Minijocs: penals, faltes i trivial",
   "📈 Ascender a %s": "📈 Ascendir a %s",
-  "🤝 Invitarlo al club  ·  %s": "🤝 Convidar-lo al club  ·  %s"
+  "🤝 Invitarlo al club  ·  %s": "🤝 Convidar-lo al club  ·  %s",
+  "MEDIA": "MIT",
+  "🏘️ Local": "🏘️ Local",
+  "🗺️ Regional": "🗺️ Regional",
+  "🏳️ Nacional": "🏳️ Nacional",
+  "🌎 Continental": "🌎 Continental",
+  "🌍 Mundial": "🌍 Mundial",
+  "👑 Leyenda": "👑 Llegenda"
  },
  "pl": {
   "Club": "Klub",
@@ -25941,7 +25994,7 @@
   "NOMBRE": "NAZWISKO",
   "POS": "POZ",
   "EDAD": "WIEK",
-  "MED": "OGÓ",
+  "MED": "POM",
   "POT": "POT",
   "VALOR": "WARTOŚĆ",
   "Ordenar por nombre": "Sortuj według nazwiska",
@@ -26257,7 +26310,14 @@
   "⭐ REPUTACIÓN": "⭐ REPUTACJA",
   "🎮 Minijuegos: penales, tiros libres y trivia": "🎮 Minigry: karne, rzuty wolne i quiz",
   "📈 Ascender a %s": "📈 Awansuj na %s",
-  "🤝 Invitarlo al club  ·  %s": "🤝 Zaproś do klubu  ·  %s"
+  "🤝 Invitarlo al club  ·  %s": "🤝 Zaproś do klubu  ·  %s",
+  "MEDIA": "OGÓ",
+  "🏘️ Local": "🏘️ Lokalny",
+  "🗺️ Regional": "🗺️ Regionalny",
+  "🏳️ Nacional": "🏳️ Krajowy",
+  "🌎 Continental": "🌎 Kontynentalny",
+  "🌍 Mundial": "🌍 Światowy",
+  "👑 Leyenda": "👑 Legenda"
  },
  "tr": {
   "Club": "Kulüp",
@@ -29557,7 +29617,7 @@
   "NOMBRE": "İSİM",
   "POS": "MEV",
   "EDAD": "YAŞ",
-  "MED": "GNL",
+  "MED": "OS",
   "POT": "POT",
   "VALOR": "DEĞER",
   "Ordenar por nombre": "İsme göre sırala",
@@ -29873,6 +29933,13 @@
   "⭐ REPUTACIÓN": "⭐ İTİBAR",
   "🎮 Minijuegos: penales, tiros libres y trivia": "🎮 Mini oyunlar: penaltı, serbest vuruş ve bilgi yarışması",
   "📈 Ascender a %s": "📈 %s görevine yüksel",
-  "🤝 Invitarlo al club  ·  %s": "🤝 Kulübe davet et  ·  %s"
+  "🤝 Invitarlo al club  ·  %s": "🤝 Kulübe davet et  ·  %s",
+  "MEDIA": "GNL",
+  "🏘️ Local": "🏘️ Yerel",
+  "🗺️ Regional": "🗺️ Bölgesel",
+  "🏳️ Nacional": "🏳️ Ulusal",
+  "🌎 Continental": "🌎 Kıtasal",
+  "🌍 Mundial": "🌍 Dünya çapında",
+  "👑 Leyenda": "👑 Efsane"
  }
 }

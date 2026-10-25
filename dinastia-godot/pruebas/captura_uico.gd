@@ -29,6 +29,17 @@ func _process(_d: float) -> void:
 		match _vista:
 			"comp":
 				_p.call("_abrir_competicion")
+			"copa", "conti":
+				## La ficha de competición con la copa nacional o el continental elegidos.
+				_p.call("_abrir_competicion")
+				for h2 in _p.get_children():
+					if h2 is Competicion:
+						var sel: OptionButton = h2.get("_selector")
+						for i2 in sel.item_count:
+							if sel.get_item_text(i2).begins_with("🏆" if _vista == "copa" else "🌎"):
+								sel.select(i2)
+								h2.call("_elegir", i2)
+								break
 			"portada":
 				var d := {"t": "\"El equipo se planta en lo más alto\"", "c": "Tercera victoria seguida y la hinchada ya sueña.",
 					"semana": m.semana, "anio": m.anio, "tipo": "bien", "medio": "El Pelotazo"}

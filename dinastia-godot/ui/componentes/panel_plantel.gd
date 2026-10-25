@@ -30,7 +30,7 @@ const LINEAS := [["todos", "Todos"], ["POR", "Porteros"], ["DEF", "Defensas"],
 ## Cabeceras: rótulo, clave de orden y la ayuda que explica la abreviatura
 ## (MED/POT no se adivinan la primera vez que se abre la pestaña).
 const COLUMNAS := [["NOMBRE", "nombre", "Ordenar por nombre"], ["POS", "pos", "Puesto natural"],
-	["EDAD", "edad", "Edad"], ["MED", "ovr", "Media actual: lo que rinde hoy"],
+	["EDAD", "edad", "Edad"], ["MEDIA", "ovr", "Media actual: lo que rinde hoy"],
 	["POT", "pot", "Potencial: hasta dónde puede llegar"], ["VALOR", "valor", "Valor de mercado"]]
 ## El filtro de línea es preferencia de la pantalla, como el orden; se guarda en
 ## la propia lista (que no se destruye entre repintados) y no en el guardado.
@@ -165,7 +165,14 @@ static func _filtros(lista: VBoxContainer, c: Club, linea: String, repintar: Cal
 static func _ajustar_nombre(g: GridContainer, desde: int, j: Jugador) -> void:
 	if desde >= g.get_child_count():
 		return
-	var celda := g.get_child(desde)
+	var celda := g.get_child(desde) as Control
+	## La columna del nombre se queda con todo el sobrante y las de números
+	## (que `_celda()` crea expandibles) se ciñen a su ancho: si no, el reparto
+	## era a partes iguales y a 1920×1080 los apellidos seguían cortados
+	## mientras «EDAD» tenía 100 píxeles de aire.
+	celda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for k in range(desde + 1, g.get_child_count()):
+		(g.get_child(k) as Control).size_flags_horizontal = Control.SIZE_FILL
 	for h in celda.get_children():
 		if h is Button:
 			var b := h as Button

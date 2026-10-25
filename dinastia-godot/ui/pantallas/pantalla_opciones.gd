@@ -17,9 +17,15 @@ func _pintar_dispositivo() -> void:
 	var completa := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 	var b := Button.new()
 	b.text = "SÍ" if completa else "NO"
+	## Se aplica al momento (es la vista previa) y se pregunta si se mantiene.
 	b.pressed.connect(func() -> void:
+		var antes := DisplayServer.window_get_mode()
 		DisplayServer.window_set_mode(
 			DisplayServer.WINDOW_MODE_WINDOWED if completa else DisplayServer.WINDOW_MODE_FULLSCREEN)
+		ConfirmarVideo.pedir(p, Idiomas.t("Pantalla completa apagada.") if completa else Idiomas.t("Pantalla completa encendida."),
+			func() -> void:
+				DisplayServer.window_set_mode(antes)
+				p._refrescar())
 		p._refrescar())
 	fila.add_child(b)
 
@@ -39,13 +45,23 @@ func _pintar_dispositivo() -> void:
 	var pct := p._texto(11, Principal.COL_SUAVE)
 	pct.text = "%d%%" % int(round(p._zoom_interfaz * 100.0))
 	pct.custom_minimum_size = Vector2(44, 0)
+	## El tamaño con el que se pintó la fila: a él vuelve «Deshacer».
+	var zoom_antes := p._zoom_interfaz
 	sl.value_changed.connect(func(v: float) -> void:
 		p._zoom_interfaz = v
 		pct.text = "%d%%" % int(round(v * 100.0))
 		## `content_scale_factor` escala la interfaz ENTERA de golpe. Tocar el
 		## tamaño de fuente de cada etiqueta a mano sería repintar todo y dejaría
 		## los anchos mínimos descuadrados.
-		p.get_tree().root.content_scale_factor = v)
+		p.get_tree().root.content_scale_factor = v
+		## Al 140 % o al 80 % la pantalla puede quedar incómoda: se pregunta, y
+		## mientras se sigue arrastrando la pregunta es la misma (y su cuenta vuelve a empezar).
+		ConfirmarVideo.pedir(p, Idiomas.t("Tamaño de la interfaz: %d %%.") % int(round(v * 100.0)),
+			func() -> void:
+				p._zoom_interfaz = zoom_antes
+				p.get_tree().root.content_scale_factor = zoom_antes
+				p._refrescar(),
+			p._refrescar))
 	fila2.add_child(sl)
 	fila2.add_child(pct)
 	var ex := p._texto(10, Principal.COL_SUAVE)
@@ -67,9 +83,17 @@ func _pintar_dispositivo() -> void:
 	var b_tv := Button.new()
 	b_tv.text = "SÍ" if p._modo_tv else "NO"
 	b_tv.pressed.connect(func() -> void:
+		var tv_antes := p._modo_tv
+		var zoom_tv_antes := p._zoom_interfaz
 		p._modo_tv = not p._modo_tv
 		p._zoom_interfaz = Principal.ZOOM_TV if p._modo_tv else 1.0
 		p.get_tree().root.content_scale_factor = p._zoom_interfaz
+		ConfirmarVideo.pedir(p, Idiomas.t("Modo televisión encendido.") if p._modo_tv else Idiomas.t("Modo televisión apagado."),
+			func() -> void:
+				p._modo_tv = tv_antes
+				p._zoom_interfaz = zoom_tv_antes
+				p.get_tree().root.content_scale_factor = zoom_tv_antes
+				p._refrescar())
 		p._refrescar())
 	fila_tv.add_child(b_tv)
 
