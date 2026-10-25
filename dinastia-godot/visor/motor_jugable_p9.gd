@@ -69,8 +69,9 @@ func _filigrana(p: Dictionary, id: String, lado: float) -> void:
 		var engano := clampf(0.35 + (reg - float(r["attr"]["def"])) * 0.9 + float(mis - necesita) * 0.05, 0.1, 0.88)
 		if _rng.randf() < engano:
 			r["enfriar"] = 0.8
-			## Se tira hacia el lado equivocado.
-			(r["node"] as Node3D).position += -der * lado * 0.7
+			## Se tira hacia el lado equivocado (con inercia: antes saltaba 0,7 m).
+			r["vel"] = (r["vel"] as Vector3) * 0.3 - der * lado * 2.0
+			_empujar(r, -der * lado, 3.5, 0.6, 0.6)
 			_anim(r, "falta_barrida" if _rng.randf() < 0.3 else "marcar", true, 0.6)
 			aviso.emit("✨ %s" % String(f[0]))
 
@@ -302,6 +303,8 @@ func _control_usuario(delta: float) -> void:
 	else:
 		cargando = false
 		carga = 0.0
+		if _seguir_barrida(p):
+			return
 		var rival_con_balon := not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"])
 		## LT: bregar (jockey), de cara al balón y más despacio; con RT, en carrera.
 		if lt:
@@ -378,14 +381,18 @@ func _control_usuario(delta: float) -> void:
 				## Despeje / remate de primera.
 				var arco2 := _arco_rival(p)
 				if absf(arco2.z - pos(p).z) < 25.0:
-					_tirar(p, Vector2(0, 0), 0.8)
+					## De primera: al palo largo y abajo, corregido con el stick
+					## (antes iba siempre al centro, a las manos del portero).
+					var largo2 := -signf(pos(p).x + 0.01)
+					_tirar(p, Vector2(clampf(largo2 * 0.75 - mv.x * d * 0.35, -1.0, 1.0), -0.35), 0.8)
 				else:
 					_patear(p, pos(p) + Vector3(0, 0, d * 25.0), 22.0, 4.0, 0.0, "patear")
 		if Input.is_action_just_pressed("jugar_centro") and float(p["enfriar"]) <= 0.0:
-			## Barrida: más alcance, más riesgo.
-			if rival_con_balon and pos(poseedor).distance_to(pos(p)) < 3.0:
-				n.position = n.position.move_toward(pos(poseedor), 1.6)
-				_entrada(p, true)
+			## Barrida: más alcance, más riesgo. Se lanza al suelo hacia donde va
+			## el rival y la entrada se decide al llegar (`_seguir_barrida`); antes
+			## saltaba 1,6 m en un fotograma y la entrada se resolvía a distancia.
+			if rival_con_balon and pos(poseedor).distance_to(pos(p)) < 3.2:
+				_lanzar_barrida(p)
 			else:
 				_anim(p, "falta_barrida", true)
 				p["enfriar"] = 1.2

@@ -256,8 +256,21 @@ const SIN_ELEGIR := 99
 ## + a gran velocidad + último hombre = 7,3 → roja).
 const PESO_FALTA := {"agarron": 1.4, "por_detras": 3.0, "empujon": 1.7, "gran_velocidad": 2.0,
 	"deslizante": 2.6, "profesional": 2.3, "de_pie": 1.2, "hombro": 0.9, "agresiva": 2.4}
+## Por debajo de 1,0 no hay falta (25-10-2026, lo que faltaba del vídeo): la
+## carga de hombro limpia (0,9) es legal y el juego sigue; con algo más (por
+## detrás, lanzado, un empujón) ya pasa del umbral. El criterio del árbitro
+## (±0,4) solo decide la tarjeta, no si hubo falta.
+const UMBRAL_FALTA := 1.0
 const UMBRAL_AMARILLA := 4.0
 const UMBRAL_ROJA := 7.0
+## PULIDO DEL 25-10-2026 (sondas): PMOT=0 vuelve al motor de antes para medir
+## antes/después con las mismas semillas.
+static var PULIDO := OS.get_environment("PMOT") != "0"
+## Puntería y cabezazos más realistas: medido, baja los goles a ~2 (apagado; PMOT_TIRO=1).
+static var TIRO_PULIDO := PULIDO and OS.get_environment("PMOT_TIRO") == "1"
+## Error extra por metro de distancia del tiro y desde dónde apunta la IA (fracción del palo).
+static var PUNTERIA := float(OS.get_environment("PMOT_PUNT")) if OS.get_environment("PMOT_PUNT") != "" else 0.045
+static var PALO_TIRO := float(OS.get_environment("PMOT_PALO")) if OS.get_environment("PMOT_PALO") != "" else 0.7
 ## La última falta pitada: {"puntos", "factores": [claves de PESO_FALTA], "sancion"}.
 var ultima_falta := {}
 ## Tarjetas por partido: [amarillas, rojas directas] de cada equipo (para las sondas).

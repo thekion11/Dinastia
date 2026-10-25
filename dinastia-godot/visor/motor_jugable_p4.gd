@@ -202,7 +202,13 @@ static func _texto_factores(f: Array) -> String:
 		t.append(String(NOMBRE_FACTOR.get(k, k)))
 	return ", ".join(t)
 
-func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> void:
+## Devuelve si el árbitro la pitó (una carga legal, por debajo de
+## `UMBRAL_FALTA`, no se pita y el juego sigue).
+func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> bool:
+	var pf := puntos_falta(infractor, victima, tipo)
+	if PULIDO and float(pf["puntos"]) < UMBRAL_FALTA and not _falta_tactica:
+		duelos["cargas_legales"] = int(duelos.get("cargas_legales", 0)) + 1
+		return false
 	if infractor == usuario:
 		stats["faltas"] += 1
 	if motivo != "":
@@ -216,7 +222,6 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	faltas[0 if bool(infractor["es_local"]) else 1] += 1
 	## La sanción por puntos (con un margen de criterio del árbitro de ±0,4).
 	## `prob_tarjeta` queda solo para quien llame sin tipo (compatibilidad).
-	var pf := puntos_falta(infractor, victima, tipo)
 	var total := float(pf["puntos"]) + _rng.randf_range(-0.4, 0.4)
 	var roja_directa := total >= UMBRAL_ROJA
 	var con_tarjeta := total >= UMBRAL_AMARILLA or _falta_tactica
@@ -238,7 +243,7 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 			and lugar.z * dir_ataque(atacante_local) > 4.0 and _rng.randf() < 0.35:
 		aviso.emit("Ventaja")
 		_gesto_arbitro("arbitro_ventaja", 0.0, 1.6, {"mira": lugar})
-		return
+		return true
 	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
 	var tras := 0.8
 	if con_tarjeta:
@@ -276,6 +281,7 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	else:
 		aviso.emit("Falta de %s" % nombre)
 		_empezar_saque("falta", atacante_local, Vector3(lugar.x, R, lugar.z))
+	return true
 
 ## BALÓN DIVIDIDO: el más cercano de cada equipo, los dos a menos de 1,7 m de
 ## un balón suelto y raso, llegando con menos de 0,35 s de diferencia.
@@ -411,6 +417,7 @@ func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool
 		l["enfriar"] = maxf(float(l["enfriar"]), 0.45)
 	## Ganar el choque con los brazos o por detrás contra el que lleva el balón.
 	if era_suyo and _rng.randf() < (0.08 + float(w["agresividad"]) * 0.08 + m * 0.08) * _escala_falta():
-		_anim(l, "caida_fea", true, 1.2)
-		_falta(w, l, 0.06 + float(w["agresividad"]) * 0.1, "hombro", "empujon" if float(w["agresividad"]) > 0.7 else "hombro")
+		## Solo cae si el árbitro la ve (la carga limpia no se pita: sin piscinazos).
+		if _falta(w, l, 0.06 + float(w["agresividad"]) * 0.1, "hombro", "empujon" if float(w["agresividad"]) > 0.7 else "hombro"):
+			_anim(l, "caida_fea", true, 1.2)
 	return true

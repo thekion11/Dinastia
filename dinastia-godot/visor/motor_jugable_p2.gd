@@ -420,11 +420,17 @@ func empezar_en(minuto_: int, gl: int, gv: int) -> void:
 	else:
 		t = clampf(float(minuto_) / 45.0 * duracion_mitad, 0.0, duracion_mitad - 1.0)
 
+## Contadores para las sondas (remates por clase y cómo acaban: «remate_pie_atajada»…).
+var diag := {}
+func _contar(k: String) -> void:
+	diag[k] = int(diag.get(k, 0)) + 1
+
 ## El remate en curso termina: atajada, palo o fuera.
 func _cerrar_tiro(tipo: String) -> void:
 	if _tiro_vivo.is_empty():
 		return
 	var p: Dictionary = _tiro_vivo["p"]
+	_contar("remate_%s_%s" % [String(_tiro_vivo.get("clase", "pie")), tipo])
 	_tiro_vivo = {}
 	remate.emit(bool(p["es_local"]), String(p.get("id", "")), tipo)
 

@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p6.gd"
-## [Capa 7/12 de `motor_jugable.gd`] _parada, _hay_defensa_entre, colocacion_portero, _ia_portero, _finta_ia, _intentar_regate … (+4)
+## [Capa 7/12 de `motor_jugable.gd`] _parada, _penal_en_juego, _ia_portero, _finta_ia, _intentar_regate … (+4)
 
 ## El portero se estira: atrapa si puede, si no la desvía.
 func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
@@ -24,6 +24,10 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		## línea (córner), como las manos abiertas de un portero de verdad.
 		var lado_r := signf(cruce.x - pos(p).x + 0.01)
 		if _rng.randf() < 0.5:
+			## A córner: hacia FUERA del palo más cercano (antes, con el tiro entre
+			## el portero y el centro del arco, la manopla lo metía en su red).
+			if PULIDO:
+				lado_r = signf(cruce.x + 0.01)
 			vel_balon = Vector3(lado_r * _rng.randf_range(6, 11), _rng.randf_range(1, 4), vel_balon.z * 0.3)
 		else:
 			vel_balon = Vector3(lado_r * _rng.randf_range(4, 9), _rng.randf_range(1, 4), -vel_balon.z * 0.25)
@@ -32,52 +36,28 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		p["enfriar"] = 0.6
 		aviso.emit("¡Qué parada!")
 
-## ¿Hay un defensa del portero entre el rival y el arco?
-func _hay_defensa_entre(gk: Dictionary, desde: Vector3, arco: Vector3) -> bool:
-	var linea := arco - desde
-	var largo := linea.length()
-	for q: Dictionary in jugadores:
-		if q == gk or bool(q["es_local"]) != bool(gk["es_local"]) or bool(q["por"]):
-			continue
-		var r := pos(q) - desde
-		var u := r.dot(linea) / maxf(largo * largo, 0.01)
-		if u > 0.05 and u < 0.95 and (r - linea * u).length() < 2.2:
-			return true
-	return false
-
-## LA COLOCACIÓN DEL PORTERO (14-10-2026). Antes iba por la línea balón-centro
-## del arco a 0,8-5,5 m, y con el balón en una banda dejaba el primer palo
-## abierto. Ahora se pone en la BISECTRIZ del ángulo que forman el balón y los
-## dos palos (tapa lo mismo a cada lado) y adelanta según dónde esté el balón:
-## lejos, de líbero a 8-12 m (más con la línea alta); en tres cuartos, a 4-8;
-## en el área, a 1,5-4; y nunca fuera del ancho del arco con margen.
-static func colocacion_portero(b: Vector3, arco: Vector3, linea := 1) -> Vector3:
-	var hacia := signf(arco.z)
-	var bb := Vector3(b.x, 0, b.z)
-	var dist := bb.distance_to(arco)
-	var prof: float
-	if dist > 45.0:
-		prof = 8.0 + 2.0 * float(linea) + clampf((dist - 45.0) * 0.05, 0.0, 1.0)
-	elif dist > 25.0:
-		prof = lerpf(4.5, 8.0 + float(linea), (dist - 25.0) / 20.0)
-	elif dist > 11.0:
-		prof = lerpf(1.6, 4.5, (dist - 11.0) / 14.0)
-	else:
-		prof = lerpf(0.9, 1.6, dist / 11.0)
-	var p1 := Vector3(-PALO, 0, arco.z)
-	var p2 := Vector3(PALO, 0, arco.z)
-	var bis := ((p1 - bb).normalized() + (p2 - bb).normalized()).normalized()
-	var z_obj := arco.z - hacia * prof
-	var obj := Vector3(0, 0, z_obj)
-	## Con el balón por delante, en la bisectriz; si está por detrás de la
-	## línea del portero (casi en el córner), pegado al primer palo.
-	if absf(bis.z) > 0.05 and (z_obj - bb.z) * hacia > 0.0:
-		var u := (z_obj - bb.z) / bis.z
-		obj.x = bb.x + bis.x * u
-	else:
-		obj.x = signf(bb.x) * PALO * 0.8
-	obj.x = clampf(obj.x, -PALO - 0.6, PALO + 0.6)
-	return obj
+## EL PENAL EN EL PARTIDO (25-10-2026): a 11 m no da tiempo a reaccionar, así que
+## el portero adivina el lado, como en la tanda (antes reaccionaba al tiro y paraba
+## 4 de cada 9: la sonda medía un 43 % de penales marcados; en el fútbol, ~76 %).
+func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
+	var r := _rng.randf()
+	var lado := 1 if r < 0.42 else (-1 if r < 0.84 else 0)
+	var ref := float(gk["attr"]["ref"])
+	var para := false
+	if lado == 0:
+		para = absf(cruce.x) < 1.1 and cruce.y < 2.0
+	elif signf(cruce.x) == float(lado):
+		var alcance := 1.4 + (float(gk["attr"]["div"]) + ref) * 0.6
+		para = absf(cruce.x) < alcance and cruce.y < (1.6 if absf(cruce.x) > 2.3 else 2.1) and _rng.randf() < 0.62 + ref * 0.3
+	if para:
+		_parada(gk, cruce, lado != 0)
+		return
+	## Se tira al lado que eligió (y el balón entra o se va por el otro).
+	if lado != 0:
+		var lado_anim := "izq" if float(lado) * dir_ataque(bool(gk["es_local"])) > 0.0 else "der"
+		_anim(gk, "estirada_media_%s" % lado_anim, true)
+		gk["vel"] = Vector3(float(lado) * 6.0, 0, 0)
+		gk["objetivo"] = Vector3(pos(gk).x + float(lado) * 2.2, 0, pos(gk).z)
 
 func _ia_portero(p: Dictionary) -> Vector3:
 	var b := balon.position
@@ -109,6 +89,9 @@ func _ia_portero(p: Dictionary) -> Vector3:
 			## paraba casi todo (8 de cada 10 en la sonda).
 			if absf(cruce.x) < PALO + 0.8 and cruce.y < LARGUERO + 0.4 and int(p.get("_patada_vista", -1)) != _n_patada:
 				p["_patada_vista"] = _n_patada
+				if PULIDO and String(_tiro_vivo.get("clase", "")) == "penal":
+					_penal_en_juego(p, cruce)
+					return pos(p)
 				## Alcance de la estirada: hasta ~3 m con un gran portero, y menos
 				## cuanto menos tiempo tiene para reaccionar (antes llegaba a 4 m
 				## en cualquier tiro). Arriba, a la escuadra, cuesta más.
@@ -251,6 +234,13 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	## dentro del área (la sonda medía 8 de cada 10 tiros entre los palos).
 	var lejos := Vector2(pos(p).x - arco.x, pos(p).z - arco.z).length()
 	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0) * _error_extra
+	var clase := String(saque.get("tipo", "pie")) if estado == "saque" else "pie"
+	## LA PUNTERÍA DE VERDAD (25-10-2026). La sonda medía 3 de cada 4 tiros entre
+	## los palos (en el fútbol, 1 de cada 3; en FC, la mitad) y el portero los
+	## paraba casi todos (84 %). Ahora hasta el bueno se desvía algo más desde
+	## lejos y con un rival encima; el penal, quieto y a 11 m, no.
+	if TIRO_PULIDO and clase != "penal":
+		error += (0.45 + lejos * PUNTERIA) * (1.15 - tec * 0.5) * (1.3 if _presion(p) < 1.8 else 1.0)
 	var x := clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
 	var y := clampf(0.35 + fuerza * 1.2 + apunte_.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)
 	var destino := Vector3(x, y, arco.z + signf(arco.z) * 0.3)
@@ -277,7 +267,11 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	_ctx_golpeo = "tiro"
 	_patear(p, destino, vh, loft, efecto, "patear")
 	tiros[0 if bool(p["es_local"]) else 1] += 1
-	_tiro_vivo = {"p": p, "t": t}
+	_tiro_vivo = {"p": p, "t": t, "clase": clase}
+	_contar("tiro_%s" % clase)
+	_contar("tiro_%s_%s" % [clase, "dentro" if lejos < 16.5 else ("frontal" if lejos < 25.0 else "lejos")])
+	if absf(destino.x) < PALO and destino.y < LARGUERO:
+		_contar("a_puerta_%s" % clase)
 	if OS.get_environment("DEPURAR_TIROS") != "":
 		print("TIRO de %s a %.0f m, destino x %.1f y %.1f, vh %.0f, error %.2f" % [String(p.get("slot_code", "")),
 			pos(p).distance_to(arco), x, y, vh, error])
@@ -380,7 +374,8 @@ func _ia_portador(p: Dictionary) -> void:
 	if dist_arco < 30.0 and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
 		## A un palo, abajo o arriba (antes se apuntaba al azar por el centro
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
-		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.55, 0.95)
+		## (Pulido: más pegado al palo, lejos del portero, a riesgo de irse fuera.)
+		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * (_rng.randf_range(PALO_TIRO, 1.0) if TIRO_PULIDO else _rng.randf_range(0.55, 0.95))
 		var alto := -0.45 if _rng.randf() < 0.6 else 0.55
 		_tirar(p, Vector2(palo, alto), clampf(0.55 + _rng.randf() * 0.4, 0.0, 1.0))
 		return

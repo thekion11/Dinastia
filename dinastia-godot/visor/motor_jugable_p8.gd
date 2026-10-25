@@ -183,6 +183,10 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 		if pres == 0 and not gatillo and b.distance_to(arco) > 42.0 and pos(p).distance_to(b) > 9.0:
 			return b + (arco - b).normalized() * 5.0
 		p["correr"] = true
+		## (Sondas, PMOT_ANT=1: el que presiona va adonde VA a estar el portador.)
+		if ANTICIPA and not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
+			var ba := b + _plano(poseedor["vel"] as Vector3) * clampf(pos(p).distance_to(b) / 8.0, 0.0, 0.5)
+			return ba + (arco - ba).normalized() * 0.8
 		return b + (arco - b).normalized() * 0.8
 	if cercanos.size() > 1 and cercanos[1][1] == p:
 		if pres == 2 or (pres == 1 and gatillo):
@@ -313,6 +317,43 @@ func _tacticas_rapidas() -> void:
 	tacticas[eq] = tc
 	if cambio != "":
 		tactica_rapida.emit(eq, cambio, int(tc[cambio]))
+
+static var ANTICIPA := OS.get_environment("PMOT_ANT") == "1"
+
+## LA BARRIDA DEL USUARIO (25-10-2026): se tira al suelo hacia donde va a estar
+## el rival (un impulso con inercia, no un salto de 1,6 m en un fotograma) y la
+## entrada se decide cuando llega al balón. Si el rival se va antes, se queda
+## en el suelo un momento: la barrida fallida también se paga.
+func _lanzar_barrida(p: Dictionary) -> void:
+	var rp := pos(poseedor) + _plano(poseedor["vel"] as Vector3) * 0.25
+	var dir := _plano(rp - pos(p))
+	if dir.length() < 0.01:
+		var ry := (p["node"] as Node3D).rotation.y
+		dir = Vector3(sin(ry), 0, cos(ry))
+	dir = dir.normalized()
+	p["vel"] = dir * maxf(_plano(p["vel"] as Vector3).dot(dir), 7.5)
+	_empujar(p, dir, 4.0, 1.0, 0.0)
+	_mirar(p, atan2(dir.x, dir.z), 0.45)
+	p["barrida_hasta"] = t + 0.45
+	p["barrida_dir"] = dir
+	_anim(p, ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga"][_rng.randi() % 4], true)
+
+## Mientras dura, el que barre no maneja nada (está en el suelo): true.
+func _seguir_barrida(p: Dictionary) -> bool:
+	if float(p.get("barrida_hasta", 0.0)) <= 0.0:
+		return false
+	if not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]) and pos(poseedor).distance_to(pos(p)) < 1.4:
+		p["barrida_hasta"] = 0.0
+		_entrada(p, true)
+		return true
+	if t >= float(p["barrida_hasta"]) or poseedor == p:
+		p["barrida_hasta"] = 0.0
+		if poseedor != p:
+			p["enfriar"] = maxf(float(p["enfriar"]), 0.8)
+		return false
+	p["objetivo"] = pos(p) + (p.get("barrida_dir", Vector3.FORWARD) as Vector3) * 3.0
+	p["correr"] = true
+	return true
 
 ## La pared: el que la dio corre al espacio mientras dure.
 func _seguir_pared() -> void:
