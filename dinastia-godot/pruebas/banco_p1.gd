@@ -78,6 +78,7 @@ const SECCIONES := [
 	"_probar_ideas_del_documento",
 	"_probar_ideas_instalaciones_y_marca",
 	"_probar_ideas_personas_y_negocios",
+	"_probar_ideas_eventos_de_despacho",
 	"_probar_aspecto_y_audio",
 	"_probar_marca",
 	"_probar_tutorial",

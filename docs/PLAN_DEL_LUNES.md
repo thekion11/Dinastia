@@ -916,27 +916,16 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 **1. Infraestructura y Estadio**
 - 1. Ampliación de estadio por sectores (norte, sur, palcos)
 - 2. Nivel máximo de estadio sin límite realista ("niveles inhumanos")
-- 5. Venta de naming rights del estadio a un sponsor
-- 10. Palcos VIP con precios diferenciados
 
 **2. Ciudad Deportiva / Instalaciones**
-- 16. Campo de entrenamiento principal mejorable
 - 17. Canchas auxiliares para categorías juveniles
-- 22. Sala de análisis de video/táctica
 - 25. Auditorio para conferencias de prensa
 - 26. Oficinas administrativas del club
-- 27. Guardería/zona familiar para jugadores con hijos
-- 28. Capilla o espacio de bienestar espiritual (opcional)
-- 29. Sala de e-sports/gaming para jugadores jóvenes
 
 **3. Personalización visual**
-- 33. Diseñador de camiseta alternativa
-- 36. Personalización de shorts
-- 37. Elección de tipografía para nombres y números
 
 **4. Personaje (DT / Presidente / Dueño)**
 - 46. Editor de apariencia del personaje
-- 49. Árbol de habilidades del personaje (negociador, motivador, visionario)
 - 54. Nivel de carisma que afecta negociaciones
 
 **5. Plantilla y Jugadores**
@@ -946,13 +935,9 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 75. Riesgo de perder canteranos a otros clubes
 
 **7. Fichajes y Negociación**
-- 81. Sistema de ofertas y contraofertas
 - 88. Jugadores que piden ser vendidos
-- 89. Cláusulas de participación en ventas futuras (%)
 
 **8. Cuerpo Técnico y Staff**
-- 95. Analista de datos/rendimiento
-- 96. Fisioterapeutas
 
 **9. Economía y Finanzas**
 - 108. Subvenciones estatales o municipales
@@ -960,7 +945,6 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 117. Ingresos por derechos de TV
 
 **10. Auspicios y Marketing**
-- 124. Sponsor del estadio (naming rights)
 
 **11. Fans y Comunidad**
 - 136. Nivel de aprobación general de la afición
@@ -970,12 +954,10 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 **12. Redes Sociales**
 - 148. Tendencias/hashtags según eventos del club
 - 150. Influencers que opinan sobre el club
-- 151. Viralización de un jugador o jugada
 
 **13. Medios y Prensa**
 - 159. Rumores de fichajes filtrados por la prensa
 - 161. Programas de debate deportivo (opinan sobre tu gestión)
-- 163. Filtraciones internas (fuga de información del club)
 
 **14. Competencias y Torneos**
 - 169. Supercopa por título de liga/copa
@@ -1002,7 +984,6 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 **18. Legado e Historia del Club**
 - 212. Salón de la fama con ídolos retirados
 - 214. Modo legado con resumen de tu gestión al retirarte
-- 216. Aniversarios del club con eventos especiales
 - 217. Museo interactivo con objetos históricos
 - 218. Leyendas contratables como embajadores
 
@@ -1036,7 +1017,6 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 267. Rendimiento afectado por vida personal (eventos)
 
 **23. Eventos de Crisis y Oportunidad**
-- 271. Pandemia/emergencia sanitaria ficticia (opcional)
 - 276. Terreno disponible para expandir la ciudad deportiva
 
 **24. Progresión y Metas**

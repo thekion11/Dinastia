@@ -100,3 +100,21 @@ func _probar_ideas_personas_y_negocios() -> void:
 		if n.estado != "abierta":
 			break
 	_comprobar(tipos.size() >= 1 and not tipos.has(""), "la oferta recibe respuesta: %s (81)" % ", ".join(tipos.keys()))
+
+func _probar_ideas_eventos_de_despacho() -> void:
+	_titulo("IDEAS DEL DUEÑO: eventos del despacho con dos salidas (151, 163, 186-200, 216, 271)")
+	var ids := ["viral", "filtracion_agente", "huelga_impagos", "retiro_joven", "aniversario", "virus_fifa",
+		"apuestas", "espia", "lobby_arbitral", "aumento", "agente", "derbi_amenaza", "tunel", "benefico", "docu", "tv", "gira"]
+	for id: String in ids:
+		for op: String in ["a", "b"]:
+			var m := Mundo.new()
+			m.generar(["CHI", "ARG"], 2426)
+			m.tomar_el_mando(m.ligas[0].clubes[0].id)
+			m.mi_club().mover_saldo(300000000)
+			var pr := m.prensa
+			var fig: Jugador = m.mi_club().plantilla[0]
+			pr.pendiente = {"id": id, "pid": fig.id, "txt": "", "opcion_a": "", "opcion_b": ""}
+			var r := pr.resolver(op)
+			_comprobar(r is Dictionary and not (r as Dictionary).is_empty() and String((r as Dictionary).get("titulo", "")) != "",
+				"el evento «%s» se resuelve con la opción %s y deja titular (%s)" % [id, op, String((r as Dictionary).get("titulo", "")).left(40)])
+			_comprobar(pr.pendiente.is_empty(), "y ya no queda pendiente")
