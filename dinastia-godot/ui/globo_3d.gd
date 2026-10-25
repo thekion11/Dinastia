@@ -26,20 +26,25 @@ const GLOBO_PAIS := {
 	"ITA": Vector2(12.5, 41.9), "GER": Vector2(13.4, 52.5), "FRA": Vector2(2.3, 48.9),
 	"JPN": Vector2(139.7, 35.7), "KOR": Vector2(127.0, 37.6), "KSA": Vector2(46.7, 24.7),
 	"EGY": Vector2(31.2, 30.0), "MAR": Vector2(-6.8, 34.0), "RSA": Vector2(28.0, -26.2),
-	"AUS": Vector2(151.2, -33.9), "MEX": Vector2(-99.1, 19.4), "USA": Vector2(-77.0, 38.9),
+	"AUS": Vector2(149.1, -35.3), "MEX": Vector2(-99.1, 19.4), "USA": Vector2(-77.0, 38.9),
 }
 
 ## C14: la capital de cada país con liga (el pin se pone en sus coordenadas).
+## F1 (25-10-2026): la de Australia es Canberra, no Sídney -lo decía la ficha del país-;
+## el pin se movió con ella (está a 250 km, el globo apenas lo nota).
 const CAPITAL := {
 	"CHI": "Santiago", "ARG": "Buenos Aires", "URU": "Montevideo", "PAR": "Asunción",
 	"BRA": "Brasilia", "BOL": "La Paz", "PER": "Lima", "ECU": "Quito", "COL": "Bogotá",
 	"VEN": "Caracas", "ESP": "Madrid", "ENG": "Londres", "ITA": "Roma", "GER": "Berlín",
 	"FRA": "París", "JPN": "Tokio", "KOR": "Seúl", "KSA": "Riad", "EGY": "El Cairo",
-	"MAR": "Rabat", "RSA": "Pretoria", "AUS": "Sídney", "MEX": "Ciudad de México", "USA": "Washington",
+	"MAR": "Rabat", "RSA": "Pretoria", "AUS": "Canberra", "MEX": "Ciudad de México", "USA": "Washington",
 }
 
 ## Se tocó un país en el globo (clic sin arrastrar sobre su pin).
 signal pais_tocado(pais: String)
+## El ratón pasa por encima de un pin (o sale de él: ""). Para enseñar su nombre.
+signal pais_sobre(pais: String)
+var _sobre := ""
 
 var _pines: Dictionary = {}      ## pais -> MeshInstance3D
 var _rotulos: Dictionary = {}    ## pais -> Label3D
@@ -217,6 +222,13 @@ func _crear_pines() -> void:
 		_pivote.add_child(r)
 		_rotulos[p] = r
 
+## Cambia el rótulo 3D de un país (la pantalla de país pone el nombre completo del
+## elegido; "" vuelve al código de tres letras de siempre).
+func rotular(pais: String, texto: String = "") -> void:
+	var r: Label3D = _rotulos.get(pais)
+	if r != null:
+		r.text = texto if texto != "" else pais
+
 ## El país cuyo pin está más cerca de un punto de la pantalla (en píxeles del
 ## control), o "" si no hay ninguno a menos de 22 px o está de espaldas.
 func pais_en(punto: Vector2) -> String:
@@ -332,6 +344,11 @@ func _gui_input(event: InputEvent) -> void:
 	elif event is InputEventScreenTouch:
 		var st := event as InputEventScreenTouch
 		_arrastrando = st.pressed
+	elif event is InputEventMouseMotion and not _arrastrando:
+		var p := pais_en((event as InputEventMouseMotion).position)
+		if p != _sobre:
+			_sobre = p
+			pais_sobre.emit(p)
 	elif (event is InputEventMouseMotion or event is InputEventScreenDrag) and _arrastrando:
 		## Arrastra el globo con el dedo: mismo signo y escala aproximada que el
 		## HTML (rotación directa proporcional al desplazamiento).
