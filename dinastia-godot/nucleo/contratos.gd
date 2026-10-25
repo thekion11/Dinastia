@@ -97,16 +97,19 @@ static func ajustar_anios(j: Jugador, anios: int) -> int:
 	return clampi(anios, 1, max_anios(j))
 
 ## El tipo de contrato de un jugador, para la ficha.
+## Solo se pinta (ficha del jugador): se traduce aquí, nunca se guarda ni se compara.
 static func tipo(j: Jugador, cedido: bool) -> String:
 	if cedido:
-		return "Cedido"
+		return Idiomas.t("Cedido")
 	if j.edad < 18:
-		return "Menor (máx. %d años)" % MAX_ANIOS_MENOR
-	return "Profesional (máx. %d)" % MAX_ANIOS
+		return Idiomas.t("Menor (máx. %d años)") % MAX_ANIOS_MENOR
+	return Idiomas.t("Profesional (máx. %d)") % MAX_ANIOS
 
+## La línea de la ficha del club. La norma y la nota se traducen por separado
+## porque la pantalla mete el texto ya montado dentro de su propia plantilla.
 static func texto_jornada(pais: String, anio: int, semana: int) -> String:
 	var j: Array = JORNADA.get(pais, [44, "", "", false])
-	return "%d h semanales · %s. %s" % [horas(pais, anio, semana), String(j[1]), String(j[2])]
+	return Idiomas.t("%d h semanales · %s. %s") % [horas(pais, anio, semana), Idiomas.t(String(j[1])), Idiomas.t(String(j[2]))]
 
 ## Una vez por semana: avisa de los cambios de ley que caen en esta semana.
 func semana(c: Club, anio: int, sem: int) -> void:
