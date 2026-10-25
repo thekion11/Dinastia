@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p2.gd"
-## [Capa 5/5 de `sonido.gd`] _sintetizar_banco, _generar_en_fondo, _ready, banco, _generar_todo, _exit_tree … (+3)
+## [Capa 7/7 de `sonido.gd`] el autoload: bancos de variantes, hilo de fondo, `toca()` y fichas
 
 func _sintetizar_banco(nombre: String) -> Array[AudioStreamWAV]:
 	var b: Array[AudioStreamWAV] = []

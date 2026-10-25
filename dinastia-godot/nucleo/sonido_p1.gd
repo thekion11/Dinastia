@@ -1,5 +1,5 @@
 extends Node
-## [Capa 1/5 de `sonido.gd`] _tono, _mezclar, _ruido, _cantico, _bombo, _a_wav
+## [Capa 1/7 de `sonido.gd`] la base: constantes, el catálogo y los instrumentos (_tono, _ruido, _mezclar…)
 
 ## (Sin `class_name`: este script ES el autoload `Sonido`, y Godot rechaza una
 ## clase global que se llame igual que un singleton — "Class Sonido hides an
@@ -43,7 +43,7 @@ var _mutex := Mutex.new()
 var _hilo: Thread = null
 var _parar := false
 
-## Los 207 sonidos del catálogo.
+## Los 214 sonidos del catálogo (cada uno con su `_receta_<nombre>` en las capas 2 a 6).
 const NOMBRES := ["silbato", "gol", "gol_rival", "roja", "amarilla",
 	"murmullo", "ovacion", "poste", "clic", "moneda", "pitido_final",
 	"ocasion", "atajada", "falta", "corner", "trofeo",
@@ -142,12 +142,26 @@ func _tono(hz: float, dur: float, vol: float, forma: String) -> PackedFloat32Arr
 		m[i] = s * env * vol
 	return m
 
+## Un buffer de silencio de `seg` segundos, para mezclar encima: fija la duración
+## mínima del sonido (un silencio al final, o capas que arrancan con retraso).
+func _lienzo(seg: float) -> PackedFloat32Array:
+	var m := PackedFloat32Array()
+	m.resize(int(seg * float(FRECUENCIA)))
+	return m
+
+## Suma `fuente` a `destino` a partir de `retraso` segundos. SI LA CAPA ACABA DESPUÉS QUE
+## EL DESTINO, EL DESTINO SE ALARGA (25-10-2026). Antes la cola se tiraba en silencio: la
+## prueba `f0s_huellas_sonido` lo midió con un espía y 19 recetas perdían así una parte
+## -cinco, la segunda nota entera: «cambio» y «sesion_tactica» sonaban con un solo pitido,
+## y «gol_chilena» o «festejo_hinchada_extra» se comían medio cántico-. Era la trampa que
+## ya avisaba "trofeo"; ahora no se puede caer en ella.
 func _mezclar(destino: PackedFloat32Array, fuente: PackedFloat32Array, retraso: float = 0.0) -> void:
 	var off := int(retraso * float(FRECUENCIA))
+	if off + fuente.size() > destino.size():
+		destino.resize(off + fuente.size())
 	for i in fuente.size():
 		var k := i + off
-		if k < destino.size():
-			destino[k] = clampf(destino[k] + fuente[i], -1.0, 1.0)
+		destino[k] = clampf(destino[k] + fuente[i], -1.0, 1.0)
 
 ## Ruido con un barrido de filtro entre dos frecuencias. El filtro es un paso
 ## bajo de un polo: no es un biquad como el del navegador, pero para ruido de
