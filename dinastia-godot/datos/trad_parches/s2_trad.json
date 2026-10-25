@@ -7279,6 +7279,39 @@
    "Renovat: $1",
    "Przedłużono: $1",
    "Sözleşme uzatıldı: $1"
+  ],
+  [
+   "^(\\d+) jugador(?:es)? con la moral por los suelos o pidiendo salir$",
+   "$1 player(s) with rock-bottom morale or asking to leave",
+   "$1 jogador(es) com a moral no chão ou pedindo para sair",
+   "$1 joueur(s) au moral à zéro ou qui demande(nt) à partir",
+   "$1 giocatore/i con il morale a terra o che chiede/chiedono di andare via",
+   "$1 Spieler mit Moral am Boden oder Wechselwunsch",
+   "$1 jugador(s) amb la moral pels terres o demanant marxar",
+   "$1 zawodnik(ów) z morale na dnie lub chcących odejść",
+   "$1 oyuncunun morali yerlerde ya da ayrılmak istiyor"
+  ],
+  [
+   "^(\\d+) jugador(?:es)? no están? disponibles?$",
+   "$1 player(s) unavailable",
+   "$1 jogador(es) indisponível(is)",
+   "$1 joueur(s) indisponible(s)",
+   "$1 giocatore/i non disponibile/i",
+   "$1 Spieler nicht verfügbar",
+   "$1 jugador(s) no disponible(s)",
+   "$1 zawodnik(ów) niedostępnych",
+   "$1 oyuncu oynayamıyor"
+  ],
+  [
+   "^(\\d+) contratos? terminan? este año\\. Sin renovar, se van gratis$",
+   "$1 contract(s) end this year. Without renewal, they leave for free",
+   "$1 contrato(s) termina(m) este ano. Sem renovar, saem de graça",
+   "$1 contrat(s) se termine(nt) cette année. Sans prolongation, ils partent libres",
+   "$1 contratto/i scade/scadono quest'anno. Senza rinnovo, vanno via a zero",
+   "$1 Vertrag/Verträge läuft/laufen dieses Jahr aus. Ohne Verlängerung gehen sie ablösefrei",
+   "$1 contracte(s) acaba(en) aquest any. Sense renovar, se'n van gratis",
+   "$1 kontrakt(ów) kończy się w tym roku. Bez przedłużenia odejdą za darmo",
+   "$1 sözleşme bu yıl bitiyor. Yenilenmezse bedelsiz giderler"
   ]
  ]
 }
