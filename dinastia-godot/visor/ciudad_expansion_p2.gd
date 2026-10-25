@@ -212,7 +212,7 @@ func _cargar_modelos() -> void:
 			_altos.append(e3)
 
 func _materiales() -> void:
-	var asf: StandardMaterial3D = Texturas.asfalto(Color(0.3, 0.295, 0.29)).duplicate()
+	var asf: StandardMaterial3D = Texturas.asfalto(Color(0.44, 0.435, 0.43)).duplicate()
 	asf.roughness = 0.85
 	_mat["asfalto"] = asf
 	## Etapa 4: acera de baldosa con juntas y solar de hormigón, no colores lisos.

@@ -104,6 +104,8 @@ var _rej_obst := {}
 var _t_cerca := 0.0
 var _moviles_fotograma := -1
 var _moviles_cerca := PackedVector3Array()
+## Coches cercanos como rectángulos orientados: [x, z, sen, cos, medio ancho, medio largo].
+var _coches_cerca: Array[PackedFloat32Array] = []
 var _p_cerca := Vector3.INF
 
 ## Círculos sólidos (farolas, troncos, coches aparcados...) por celdas de 8 m.
@@ -373,42 +375,8 @@ func _choca_circulos(p: Vector3, radio: float) -> bool:
 					return true
 	return false
 
-## Los que se mueven: coches y vecinos del tráfico.
-func _choca_moviles(p: Vector3, radio: float) -> bool:
-	if trafico == null:
-		return false
-	## Una vez por fotograma de física se apuntan los móviles a menos de 30 m del
-	## personaje (x, z, radio); las 3-20 consultas del fotograma miran solo esos
-	## (15-10-2026: antes cada consulta recorría los ~300 coches y vecinos y pedía
-	## su `global_position`; el tráfico cuelga de la ciudad, que está en el origen).
-	var f := Engine.get_physics_frames()
-	if f != _moviles_fotograma:
-		_moviles_fotograma = f
-		_moviles_cerca.clear()
-		var c := cuerpo.position if cuerpo != null else p
-		for v: Dictionary in trafico._vehiculos:
-			var n: Node3D = v["nodo"]
-			if not is_instance_valid(n):
-				continue
-			var q := n.position
-			if absf(q.x - c.x) < 30.0 and absf(q.z - c.z) < 30.0:
-				_moviles_cerca.append(Vector3(q.x, q.z, 0.45 if float(v["alto"]) < 0.3 else 1.7))
-	var c0 := cuerpo.position if cuerpo != null else p
-	if absf(p.x - c0.x) > 25.0 or absf(p.z - c0.z) > 25.0:
-		## Lejos del personaje (buscar un sitio libre al aparecer): todos.
-		for v: Dictionary in trafico._vehiculos:
-			var n: Node3D = v["nodo"]
-			if is_instance_valid(n):
-				var rr0 := radio + (0.45 if float(v["alto"]) < 0.3 else 1.7)
-				if Vector2(n.position.x - p.x, n.position.z - p.z).length_squared() < rr0 * rr0:
-					return true
-		return false
-	for m: Vector3 in _moviles_cerca:
-		var dx := m.x - p.x
-		var dz := m.y - p.z
-		var rr := radio + m.z
-		if dx * dx + dz * dz < rr * rr:
-			return true
+## Coches y vecinos del tráfico: lo implementa la capa 2 (`explorador_ciudad_p2.gd`).
+func _choca_moviles(_p: Vector3, _radio: float) -> bool:
 	return false
 
 ## Manzanas, río, círculos y móviles: todo lo que impide estar en `p`.

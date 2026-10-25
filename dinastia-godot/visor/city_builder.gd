@@ -25,8 +25,11 @@ func _distritos() -> void:
 			toldos.append(e4)
 	if comercial.is_empty():
 		return
-	var asfalto: StandardMaterial3D = Texturas.asfalto(Color(0.14, 0.14, 0.15)).duplicate()
-	asfalto.roughness = 0.5
+	## 25-10-2026 (pciu): la imagen del asfalto se lee como sRGB, así que un
+	## tinte 0,13 quedaba en ~0,013 lineal: de noche la calzada salía NEGRA junto a
+	## aceras bien visibles. Asfalto real ≈ 0,08-0,12 lineal: tinte ~0,40.
+	var asfalto: StandardMaterial3D = Texturas.asfalto(Color(0.40, 0.40, 0.415)).duplicate()
+	asfalto.roughness = 0.75
 	var acera := _mat_simple(Color(0.42, 0.41, 0.39), 0.9)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7102026

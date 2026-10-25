@@ -2,15 +2,21 @@ class_name CarreraJugador
 extends "res://nucleo/carrera_jugador_p1.gd"
 ## [Capa 2/2 de `carrera_jugador.gd`] semana, _ceder, _club_extranjero, resolver, aceptar_oferta, tras_partido … (+9)
 
+## Lo que dejó la agenda de la última semana (para el aviso de la interfaz).
+var aviso_agenda := ""
+
 ## Lo que pasa cada semana fuera del campo. Devuelve los eventos nuevos.
 func semana(m: Mundo) -> Array:
 	var nuevos: Array = []
+	aviso_agenda = CarreraAgenda.aplicar(self, jugador(m))
 	energia = mini(ENERGIA_MAX, energia + 12)
 	relacion_dt = clampi(relacion_dt + (1 if nota_media() >= 6.8 else 0) - (1 if energia < 25 else 0), 0, 100)
 	seguidores += int(float(fama) * 3.0) + _rng.randi_range(0, 20)
 	var j := jugador(m)
 	if j == null:
 		return nuevos
+	if ovr_inicio < 0:
+		ovr_inicio = j.ovr
 	revisar_convocatoria(m)
 	var ahora := m.anio * 60 + m.semana
 	var pool := _eventos_posibles(m, j).filter(func(e: Dictionary) -> bool:
@@ -166,7 +172,9 @@ func tras_partido(m: Mundo, d: Dictionary) -> void:
 func fin_de_temporada(m: Mundo) -> void:
 	var c := club(m)
 	temporadas.append({"anio": m.anio, "club": c.nombre if c != null else "", "pj": int(stats_temp["pj"]),
-		"goles": int(stats_temp["goles"]), "asist": int(stats_temp["asist"]), "nota": snappedf(nota_media(), 0.01)})
+		"goles": int(stats_temp["goles"]), "asist": int(stats_temp["asist"]), "nota": snappedf(nota_media(), 0.01),
+		"ovr": jugador(m).ovr if jugador(m) != null else 0})
+	ovr_inicio = jugador(m).ovr if jugador(m) != null else -1
 	stats_temp = {"pj": 0, "titular": 0, "goles": 0, "asist": 0, "notas": []}
 
 ## La selección de tu país para el partido (18, por líneas, tú dentro) y la
@@ -273,6 +281,12 @@ func pasar_a_entrenador(m: Mundo, club_dt: Club) -> bool:
 		"eleccion": "Cuelga las botas tras %d partidos y %d goles; dirige a %s" % [pj_carrera, goles_carrera, club_dt.nombre]})
 	return true
 
+## Los eventos de la capa 1 más los que nacen de la agenda y la trayectoria.
+func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
+	var p: Array = super(m, j)
+	p.append_array(CarreraAgenda.eventos(self, j))
+	return p
+
 func _evento_bienvenida(m: Mundo) -> void:
 	eventos.append(_ev("debut_firma", "Tu primer contrato profesional",
 		"Tienes 17 años y acabas de firmar tu primer contrato. El utilero te da la camiseta con tu dorsal.",
@@ -290,7 +304,8 @@ func a_dic() -> Dictionary:
 		"hitos": hitos, "ultima_vez": ultima_vez, "semilla": _rng.seed,
 		"goles_carrera": goles_carrera, "pj_carrera": pj_carrera, "caps": caps, "goles_sel": goles_sel,
 		"convocatoria": convocatoria, "capitan": capitan, "licencia": licencia,
-		"retiro_anunciado": retiro_anunciado, "retirado": retirado, "clubes_pasados": clubes_pasados}
+		"retiro_anunciado": retiro_anunciado, "retirado": retirado, "clubes_pasados": clubes_pasados,
+		"agenda": agenda, "racha_social": racha_social, "ovr_inicio": ovr_inicio}
 
 static func desde_dic(d: Dictionary) -> CarreraJugador:
 	var c := CarreraJugador.new()
@@ -322,4 +337,10 @@ static func desde_dic(d: Dictionary) -> CarreraJugador:
 	c.retiro_anunciado = bool(d.get("retiro_anunciado", false))
 	c.retirado = bool(d.get("retirado", false))
 	c.clubes_pasados = d.get("clubes_pasados", [])
+	## Partidas de antes de la agenda: semana normal y progreso desde ahora.
+	c.agenda = String(d.get("agenda", "normal"))
+	if not CarreraAgenda.AGENDAS.has(c.agenda):
+		c.agenda = "normal"
+	c.racha_social = int(d.get("racha_social", 0))
+	c.ovr_inicio = int(d.get("ovr_inicio", -1))
 	return c

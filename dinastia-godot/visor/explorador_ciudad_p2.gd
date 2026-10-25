@@ -1,6 +1,107 @@
 extends "res://visor/explorador_ciudad_p1.gd"
 ## [Capa 2/6 de `explorador_ciudad.gd`] buscar_libre, es_tactil, _gesto_propio, _hablar_con_vecino, _fundido, _bajo_tierra … (+5)
 
+
+## LOS QUE SE MUEVEN: coches y vecinos del tráfico. Una vez por fotograma de
+## física se apuntan los móviles a menos de 30 m del personaje; las 3-20
+## consultas del fotograma miran solo esos (15-10-2026: antes cada consulta
+## recorría los ~300 coches y vecinos). El tráfico cuelga de la ciudad, en el origen.
+## COCHES CON SU FORMA (pmov, 25-10-2026): antes un coche era un círculo de
+## 1,7 m, así que se atravesaban el morro y la cola (miden ~4,5 m; un autobús,
+## 12) y de lado se chocaba con aire. Ahora cada coche es su rectángulo
+## orientado, medido una vez de sus mallas (`_huella`).
+func _choca_moviles(p: Vector3, radio: float) -> bool:
+	if trafico == null:
+		return false
+	var f := Engine.get_physics_frames()
+	if f != _moviles_fotograma:
+		_moviles_fotograma = f
+		_moviles_cerca.clear()
+		_coches_cerca.clear()
+		var c := cuerpo.position if cuerpo != null else p
+		for v: Dictionary in trafico._vehiculos:
+			var n: Node3D = v["nodo"]
+			if not is_instance_valid(n):
+				continue
+			var q := n.position
+			if absf(q.x - c.x) < 30.0 and absf(q.z - c.z) < 30.0:
+				if float(v["alto"]) < 0.05:
+					_coches_cerca.append(_rect_coche(v, n))
+				else:
+					_moviles_cerca.append(Vector3(q.x, q.z, 0.45 if float(v["alto"]) < 0.3 else 1.7))
+	var c0 := cuerpo.position if cuerpo != null else p
+	if absf(p.x - c0.x) > 25.0 or absf(p.z - c0.z) > 25.0:
+		## Lejos del personaje (buscar un sitio libre al aparecer): todos.
+		for v: Dictionary in trafico._vehiculos:
+			var n: Node3D = v["nodo"]
+			if not is_instance_valid(n):
+				continue
+			if float(v["alto"]) < 0.05:
+				if _dentro_rect(_rect_coche(v, n), p, radio):
+					return true
+				continue
+			var rr0 := radio + (0.45 if float(v["alto"]) < 0.3 else 1.7)
+			if Vector2(n.position.x - p.x, n.position.z - p.z).length_squared() < rr0 * rr0:
+				return true
+		return false
+	for m: Vector3 in _moviles_cerca:
+		var dx := m.x - p.x
+		var dz := m.y - p.z
+		var rr := radio + m.z
+		if dx * dx + dz * dz < rr * rr:
+			return true
+	for rc: PackedFloat32Array in _coches_cerca:
+		if _dentro_rect(rc, p, radio):
+			return true
+	return false
+
+## El rectángulo de un coche del tráfico donde está ahora.
+func _rect_coche(v: Dictionary, n: Node3D) -> PackedFloat32Array:
+	var h: Vector2 = v["huella"] if v.has("huella") else _huella(v, n)
+	var a := n.rotation.y
+	return PackedFloat32Array([n.position.x, n.position.z, sin(a), cos(a), h.x, h.y])
+
+## ¿Un círculo de `radio` en `p` toca el rectángulo `rc`? Se pasa `p` a los ejes
+## del coche (su +Z local es el morro) y se compara con el rectángulo engordado
+## (esquinas redondeadas: el punto más cercano del rectángulo, no la caja).
+static func _dentro_rect(rc: PackedFloat32Array, p: Vector3, radio: float) -> bool:
+	var rx := p.x - rc[0]
+	var rz := p.z - rc[1]
+	var lz := absf(rx * rc[2] + rz * rc[3])
+	var lx := absf(rx * rc[3] - rz * rc[2])
+	var ex := maxf(0.0, lx - rc[4])
+	var ez := maxf(0.0, lz - rc[5])
+	return ex * ex + ez * ez < radio * radio
+
+## Medio ancho y medio largo de un coche (en sus ejes), de la caja de sus
+## mallas; se guarda en el propio vehículo. Sin mallas, un turismo normal.
+static func _huella(v: Dictionary, n: Node3D) -> Vector2:
+	var caja := AABB()
+	var hay := false
+	var pila: Array = [[n, Transform3D.IDENTITY]]
+	while not pila.is_empty():
+		var par: Array = pila.pop_back()
+		var nodo: Node = par[0]
+		var t: Transform3D = par[1]
+		for h in nodo.get_children():
+			if not h is Node3D:
+				continue
+			var th: Transform3D = t * (h as Node3D).transform
+			if h is VisualInstance3D and not h is Light3D and not h is GPUParticles3D:
+				var b: AABB = th * (h as VisualInstance3D).get_aabb()
+				caja = b if not hay else caja.merge(b)
+				hay = true
+			pila.append([h, th])
+	var huella := Vector2(1.0, 2.25)
+	if hay:
+		## La escala del propio nodo (la flota va a 1,65) cuenta también.
+		var esc := n.scale
+		huella = Vector2(maxf(absf(caja.position.x), absf(caja.end.x)) * absf(esc.x),
+			maxf(absf(caja.position.z), absf(caja.end.z)) * absf(esc.z))
+		huella = Vector2(clampf(huella.x, 0.6, 2.0), clampf(huella.y, 1.0, 7.5))
+	v["huella"] = huella
+	return huella
+
 func buscar_libre(desde: Vector3) -> Vector3:
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
 	for k in 400:

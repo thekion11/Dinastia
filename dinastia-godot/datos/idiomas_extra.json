@@ -3691,7 +3691,8 @@
   "Nerviosa. Contra %s no perdonan otra mala tarde.": "Nervous. Against %s they won't forgive another bad day.",
   "Todo en orden, míster.": "All in order, boss.",
   "Con %d socios y %d asientos, se nos queda chico.": "With %d members and %d seats, it's getting too small for us.",
-  "%d asientos y %d socios. Sobran butacas por llenar.": "%d seats and %d members. Plenty of empty seats to fill."
+  "%d asientos y %d socios. Sobran butacas por llenar.": "%d seats and %d members. Plenty of empty seats to fill.",
+  "%+d esta temporada": "%+d this season"
  },
  "pt": {
   "Historia": "História",
@@ -7385,7 +7386,8 @@
   "Nerviosa. Contra %s no perdonan otra mala tarde.": "Nervosa. Contra o %s não perdoam outra má tarde.",
   "Todo en orden, míster.": "Tudo em ordem, mister.",
   "Con %d socios y %d asientos, se nos queda chico.": "Com %d sócios e %d lugares, fica-nos pequeno.",
-  "%d asientos y %d socios. Sobran butacas por llenar.": "%d lugares e %d sócios. Sobram cadeiras por encher."
+  "%d asientos y %d socios. Sobran butacas por llenar.": "%d lugares e %d sócios. Sobram cadeiras por encher.",
+  "%+d esta temporada": "%+d nesta temporada"
  },
  "patrones": [
   [
@@ -13430,7 +13432,8 @@
   "Nerviosa. Contra %s no perdonan otra mala tarde.": "Nerveux. Contre %s, ils ne pardonneront pas un autre mauvais jour.",
   "Todo en orden, míster.": "Tout est en ordre, coach.",
   "Con %d socios y %d asientos, se nos queda chico.": "Avec %d socios et %d places, il devient trop petit.",
-  "%d asientos y %d socios. Sobran butacas por llenar.": "%d places et %d socios. Il reste des sièges à remplir."
+  "%d asientos y %d socios. Sobran butacas por llenar.": "%d places et %d socios. Il reste des sièges à remplir.",
+  "%+d esta temporada": "%+d cette saison"
  },
  "it": {
   "Historia": "Storia",
@@ -17031,7 +17034,8 @@
   "Nerviosa. Contra %s no perdonan otra mala tarde.": "Nervosa. Contro il %s non perdonano un'altra brutta giornata.",
   "Todo en orden, míster.": "Tutto in ordine, mister.",
   "Con %d socios y %d asientos, se nos queda chico.": "Con %d soci e %d posti, ci sta stretto.",
-  "%d asientos y %d socios. Sobran butacas por llenar.": "%d posti e %d soci. Avanzano poltroncine da riempire."
+  "%d asientos y %d socios. Sobran butacas por llenar.": "%d posti e %d soci. Avanzano poltroncine da riempire.",
+  "%+d esta temporada": "%+d in questa stagione"
  },
  "de": {
   "Historia": "Geschichte",
@@ -20632,7 +20636,8 @@
   "Nerviosa. Contra %s no perdonan otra mala tarde.": "Nervös. Gegen %s verzeiht man keinen weiteren schlechten Tag.",
   "Todo en orden, míster.": "Alles in Ordnung, Trainer.",
   "Con %d socios y %d asientos, se nos queda chico.": "Mit %d Mitgliedern und %d Plätzen wird es uns zu klein.",
-  "%d asientos y %d socios. Sobran butacas por llenar.": "%d Plätze und %d Mitglieder. Viele Sitze sind noch zu füllen."
+  "%d asientos y %d socios. Sobran butacas por llenar.": "%d Plätze und %d Mitglieder. Viele Sitze sind noch zu füllen.",
+  "%+d esta temporada": "%+d diese Saison"
  },
  "ca": {
   "Historia": "Història",
@@ -24233,7 +24238,8 @@
   "Nerviosa. Contra %s no perdonan otra mala tarde.": "Nerviosa. Contra el %s no perdonen una altra mala tarda.",
   "Todo en orden, míster.": "Tot en ordre, míster.",
   "Con %d socios y %d asientos, se nos queda chico.": "Amb %d socis i %d seients, se'ns queda petit.",
-  "%d asientos y %d socios. Sobran butacas por llenar.": "%d seients i %d socis. Sobren butaques per omplir."
+  "%d asientos y %d socios. Sobran butacas por llenar.": "%d seients i %d socis. Sobren butaques per omplir.",
+  "%+d esta temporada": "%+d aquesta temporada"
  },
  "pl": {
   "Club": "Klub",
@@ -28125,7 +28131,8 @@
   "Nerviosa. Contra %s no perdonan otra mala tarde.": "Nerwowo. Z %s nie wybaczą kolejnego złego dnia.",
   "Todo en orden, míster.": "Wszystko w porządku, trenerze.",
   "Con %d socios y %d asientos, se nos queda chico.": "Przy %d członkach i %d miejscach robi się za ciasno.",
-  "%d asientos y %d socios. Sobran butacas por llenar.": "%d miejsc i %d członków. Sporo krzesełek do zapełnienia."
+  "%d asientos y %d socios. Sobran butacas por llenar.": "%d miejsc i %d członków. Sporo krzesełek do zapełnienia.",
+  "%+d esta temporada": "%+d w tym sezonie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -32017,6 +32024,7 @@
   "Nerviosa. Contra %s no perdonan otra mala tarde.": "Gergin. %s karşısında bir kötü gün daha affedilmez.",
   "Todo en orden, míster.": "Her şey yolunda hocam.",
   "Con %d socios y %d asientos, se nos queda chico.": "%d üye ve %d koltukla stadyum bize dar geliyor.",
-  "%d asientos y %d socios. Sobran butacas por llenar.": "%d koltuk ve %d üye. Doldurulacak çok koltuk var."
+  "%d asientos y %d socios. Sobran butacas por llenar.": "%d koltuk ve %d üye. Doldurulacak çok koltuk var.",
+  "%+d esta temporada": "bu sezon %+d"
  }
 }

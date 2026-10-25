@@ -371,8 +371,10 @@ static func todas(esq: Skeleton3D, pre: String) -> Dictionary:
 	r["parada_pie"] = parada_pie(esq, pre)
 	r["salida_aerea"] = salida_aerea(esq, pre)
 	r["mano_cambiada"] = mano_cambiada(esq, pre)
-	r["portero_lateral_der"] = portero_lateral(esq, pre, 1.0)
-	r["portero_lateral_izq"] = portero_lateral(esq, pre, -1.0)
+	## La guardia de lado bajaba la cadera más de lo que doblaba las piernas:
+	## los pies se enterraban 9 cm (`AnimPasos.pies_al_suelo`).
+	r["portero_lateral_der"] = AnimPasos.pies_al_suelo(portero_lateral(esq, pre, 1.0), esq)
+	r["portero_lateral_izq"] = AnimPasos.pies_al_suelo(portero_lateral(esq, pre, -1.0), esq)
 	r["defensor_pica_der"] = defensor_pica(esq, pre, 1.0)
 	r["defensor_pica_izq"] = defensor_pica(esq, pre, -1.0)
 	r["duelo_hombro_der"] = duelo_hombro(esq, pre, 1.0)

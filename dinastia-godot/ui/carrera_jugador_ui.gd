@@ -92,6 +92,23 @@ func _centro(j: Jugador, club: Club) -> Control:
 		bf.button_group = grupo
 		bf.button_pressed = carrera.foco == f
 		fila_f.add_child(bf)
+	## LA AGENDA (M-263): el resto de la semana, con efecto real al cerrarla.
+	ev.add_child(_lbl(13, CIAN, "EL RESTO DE LA SEMANA"))
+	var fila_a := HFlowContainer.new()
+	fila_a.add_theme_constant_override("h_separation", 6)
+	fila_a.add_theme_constant_override("v_separation", 6)
+	ev.add_child(fila_a)
+	var grupo_a := ButtonGroup.new()
+	var explica := _lbl(12, SUAVE, String(CarreraAgenda.AGENDAS[carrera.agenda][1]))
+	for a: String in CarreraAgenda.AGENDAS:
+		var ba := _boton(String(CarreraAgenda.AGENDAS[a][0]), LIMA, func() -> void:
+			carrera.agenda = a
+			explica.text = Idiomas.t(String(CarreraAgenda.AGENDAS[a][1])), 36)
+		ba.toggle_mode = true
+		ba.button_group = grupo_a
+		ba.button_pressed = carrera.agenda == a
+		fila_a.add_child(ba)
+	ev.add_child(explica)
 	## La temporada.
 	var pt := _panel(Color("ffd24a"))
 	v.add_child(pt)

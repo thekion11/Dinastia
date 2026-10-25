@@ -155,6 +155,10 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 			if joven == null:
 				return Idiomas.t("En el primer equipo no hay chicos. Mire la academia.")
 			return Idiomas.t("%s, %d años. Tiene techo de %d. No lo queme.") % [Nombres.visible(joven.nombre), joven.edad, joven.pot]
+	var extra := RecorridoCharla.respuesta(clave, m, c)
+	if String(extra[0]) != "":
+		_ultima_mala = bool(extra[1])
+		return String(extra[0])
 	return Idiomas.t("Hoy no sé qué decirle, míster.")
 
 ## La conversación en persona con alguien del club. `g` es de
@@ -180,11 +184,13 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 	dice.custom_minimum_size = Vector2(610, 0)
 	dice.add_theme_font_size_override("font_size", 19)
 	caja.add_child(dice)
-	CuadroDialogo.escribir(dice, "«%s»" % Idiomas.t(String(SALUDOS.get(String(g["clave"]), "Buenas, míster."))))
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	caja.add_child(fila)
 	var m: Mundo = EdificioClub.mundo_ref.get_ref() as Mundo if EdificioClub.mundo_ref != null else null
+	## El saludo varía con la hora y la semana (`RecorridoCharla`).
+	CuadroDialogo.escribir(dice, "«%s»" % RecorridoCharla.saludo(String(g["clave"]),
+		String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")), m.semana if m != null else -1, PersonalEstadio.hora))
 	var clave := String(g["clave"])
 	var cerrar := func() -> void:
 		personal.atender(g, desde, false)
@@ -214,7 +220,7 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 		fila.add_child(bc)
 	## UNA PREGUNTA DE SU OFICIO (13-10-2026): cada uno sabe algo del club que
 	## le sirve al míster, con datos de verdad de la partida.
-	var pregunta := PREGUNTA_OFICIO.get(clave, "") as String
+	var pregunta := String(PREGUNTA_OFICIO.get(clave, RecorridoCharla.PREGUNTAS.get(clave, "")))
 	if pregunta != "" and m != null:
 		var bq := Button.new()
 		bq.text = "❓ " + Idiomas.t(pregunta)

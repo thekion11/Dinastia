@@ -214,6 +214,9 @@ func _carta(j: Jugador) -> Control:
 	fila.add_child(media)
 	media.add_child(_lbl(64, LIMA, str(j.ovr)))
 	media.add_child(_lbl(18, TEXTO, j.pos_e))
+	## PROGRESIÓN VISIBLE: lo que subió tu media esta temporada.
+	var sube := CarreraAgenda.progreso(carrera, j)
+	media.add_child(_lbl(14, LIMA if sube > 0 else SUAVE, Idiomas.t("%+d esta temporada") % sube))
 	var cara := TextureRect.new()
 	var club := carrera.club(mundo)
 	cara.texture = Cara.textura(j, club.color1, club.color2, 150)
@@ -366,6 +369,8 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 			else:
 				_msg += "  ·  No saliste del banco."
 	var nuevos := carrera.semana(m)
+	if carrera.aviso_agenda != "":
+		_msg += "  ·  " + carrera.aviso_agenda
 	if not nuevos.is_empty():
 		_msg += "  ·  ¡%s!" % String(nuevos[0]["titulo"])
 	if not m.temporada_en_curso():

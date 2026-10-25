@@ -149,6 +149,13 @@ func resolver(m: Mundo, op: String) -> Dictionary:
 	var c := m.mi_club()
 	var r := m.roles
 	var j := m.jugador_por_id(String(p.get("jugador", "")))
+	## El fichaje impuesto es un LIBRE, y los libres no están en ningún plantel:
+	## sin esta búsqueda «Aceptar el fichaje» siempre caía en la rama de negarse.
+	if j == null:
+		for l: Jugador in m.libres:
+			if l.id == String(p.get("jugador", "")):
+				j = l
+				break
 	match String(p["id"]):
 		"superagente":
 			if j == null:

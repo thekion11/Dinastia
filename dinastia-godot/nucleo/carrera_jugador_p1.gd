@@ -59,6 +59,10 @@ var licencia := false             ## curso de entrenador hecho (licencia C)
 var retiro_anunciado := false
 var retirado := false
 var clubes_pasados: Array = []    ## nombres de los clubes donde jugaste
+## LA AGENDA DE LA SEMANA (M-263, `CarreraAgenda`): qué haces fuera del entreno.
+var agenda := "normal"
+var racha_social := 0             ## semanas seguidas de vida social
+var ovr_inicio := -1              ## tu media al empezar la temporada (progresión)
 var _rng := RandomNumberGenerator.new()
 
 # ---------------------------------------------------------------- selección
@@ -214,7 +218,7 @@ func entrenar(m: Mundo) -> String:
 		attr = j.atributos.keys()[0]
 	var margen := maxf(0.0, float(j.pot - j.ovr)) / 30.0
 	var juventud := clampf((24.0 - float(j.edad)) / 7.0, 0.2, 1.0)
-	var prob := clampf(0.35 + margen * 0.5 + juventud * 0.25, 0.15, 0.95) * (1.0 if energia > 30 else 0.4)
+	var prob := clampf(0.35 + margen * 0.5 + juventud * 0.25 + CarreraAgenda.extra_entreno(agenda), 0.15, 0.95) * (1.0 if energia > 30 else 0.4)
 	energia = maxi(0, energia - 14)
 	if _rng.randf() < prob:
 		j.atributos[attr] = mini(99, int(j.atributos[attr]) + 1)

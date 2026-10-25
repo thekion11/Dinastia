@@ -297,9 +297,12 @@ func _calles() -> void:
 	## La red de calles entera -el anillo completo mas los ramales a cada
 	## parcela, la mayor superficie de asfalto del mapa- tambien conecta
 	## `Texturas.asfalto()` (17-9-2026).
-	var asfalto: StandardMaterial3D = Texturas.asfalto(Color(0.13, 0.13, 0.145)).duplicate()
-	asfalto.roughness = 0.45
-	asfalto.metallic = 0.1
+	## 25-10-2026 (pciu): la imagen del asfalto se lee como sRGB, así que un
+	## tinte 0,13 quedaba en ~0,013 lineal: de noche la calzada salía NEGRA junto a
+	## aceras bien visibles. Asfalto real ≈ 0,08-0,12 lineal: tinte ~0,40.
+	## Sin metálico: con 0,1 y rugosidad 0,45 reflejaba el cielo negro de noche.
+	var asfalto: StandardMaterial3D = Texturas.asfalto(Color(0.39, 0.39, 0.405)).duplicate()
+	asfalto.roughness = 0.72
 	var linea := StandardMaterial3D.new()
 	linea.albedo_color = Color(0.85, 0.82, 0.55)
 	linea.roughness = 0.8

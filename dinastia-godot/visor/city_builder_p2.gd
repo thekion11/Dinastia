@@ -321,11 +321,12 @@ func _suelo() -> void:
 	## DUPLICADA antes de tocar rugosidad/metalico -esa funcion cachea y
 	## comparte instancia por tinte+semilla, mutarla sin duplicar le
 	## cambiaria el acabado a cualquier otro asfalto de este mismo tono.
-	var ma: StandardMaterial3D = Texturas.asfalto(Color(0.20, 0.205, 0.215)).duplicate()
+	var ma: StandardMaterial3D = Texturas.asfalto(Color(0.42, 0.425, 0.435)).duplicate()
 	## Asfalto algo pulido: con rugosidad 0.95 no reflejaba nada y se leia como
 	## fieltro gris. A 0.55 recoge el cielo del atardecer y parece firme mojado.
 	ma.roughness = 0.55
-	ma.metallic = 0.08
+	## (25-10-2026) sin metálico y tinte más claro: ver la nota de `_calles`.
+	ma.metallic = 0.0
 	## La plaza de las instalaciones se dimensiona por las que DE VERDAD están
 	## construidas -cuatro por fila, 32 m entre filas-: con una plaza fija, un
 	## club que solo tiene tres instalaciones aparecía con un descampado
@@ -359,7 +360,7 @@ func _suelo() -> void:
 	## (asfalto, marcas, bordillo y aceras), no un plano oscuro sin nada.
 	## Llega hasta el anillo sur (antes se quedaba 22 m corta: una calle que
 	## no desembocaba en ninguna parte).
-	_via(Vector3(0, 0, (-90.0 + RING_Z_SUR) * 0.5), Vector2(14, RING_Z_SUR + 90.0), Texturas.asfalto(Color(0.17, 0.175, 0.185)), null, false)
+	_via(Vector3(0, 0, (-90.0 + RING_Z_SUR) * 0.5), Vector2(14, RING_Z_SUR + 90.0), Texturas.asfalto(Color(0.40, 0.405, 0.415)), null, false)
 
 ## Un paso de cebra: siete franjas a lo ancho de la calle. `cruza_x` dice si
 ## las franjas se pintan cruzando el eje X (para una calle que corre en Z) o

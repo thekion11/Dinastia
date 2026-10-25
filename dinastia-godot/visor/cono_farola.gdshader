@@ -18,8 +18,13 @@ void vertex() {
 
 void fragment() {
 	float frente = abs(dot(normalize(NORMAL), normalize(VIEW)));
-	float borde = smoothstep(0.05, 0.75, frente);
-	float alto = mix(0.06, 1.0, v_h * v_h);
+	// 25-10-2026 (pciu): seguía leyéndose como triángulo porque el interior era
+	// parejo de lado a lado. Ahora cae como un haz real: el centro manda
+	// (potencia alta del `frente`), la parte baja casi no se ve, y se apaga al
+	// acercar la cámara (de cerca el cono no es más que una niebla rara).
+	float borde = pow(smoothstep(0.1, 1.0, frente), 3.0);
+	float alto = mix(0.02, 1.0, v_h * v_h * v_h);
+	float cerca = smoothstep(2.0, 9.0, length(VERTEX));
 	ALBEDO = color;
-	ALPHA = fuerza * borde * borde * alto;
+	ALPHA = fuerza * borde * alto * cerca;
 }
