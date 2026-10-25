@@ -32,6 +32,8 @@ const ANCHO := 460.0
 const ALTO := 690.0
 ## La hoja se dibuja a 690 px de alto y se encoge para caber con los botones.
 const ESCALA := 0.9
+## Ancho de cada columna de cifras de la tabla del pie (PJ y PTS).
+const COL_TABLA := 30.0
 
 var _hoja: Control
 
@@ -106,7 +108,7 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	nombre.position = Vector2(0, 10)
 	nombre.size = Vector2(caja_cab.size.x, 70)
 	caja_cab.add_child(nombre)
-	var fecha := _lbl("%s · %s %d · %d · %s %d" % [String(cab[1]).capitalize(), Idiomas.t("Semana"), int(p.get("semana", 0)),
+	var fecha := _lbl("%s · %s %d · %d · %s %d" % [nombre_propio(String(cab[1])), Idiomas.t("Semana"), int(p.get("semana", 0)),
 		int(p.get("anio", 0)), Idiomas.t("Página"), 2 + absi(String(p.get("t", "")).hash()) % 46], 10, Color(1, 1, 1, 0.8), false)
 	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	fecha.position = Vector2(0, 82)
@@ -201,7 +203,10 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	add_child(fila)
 	var guardar := Button.new()
 	guardar.text = Idiomas.t("📸 Guardar imagen")
-	guardar.pressed.connect(func() -> void: guardar.text = Idiomas.t("📸 Guardada: ") + guardar_png())
+	guardar.pressed.connect(func() -> void:
+		guardar.text = Idiomas.t("📸 Guardada: ") + guardar_png()
+		## El rótulo crece con el nombre del archivo: se vuelve a centrar.
+		fila.position.x = -fila.get_combined_minimum_size().x / 2.0)
 	fila.add_child(guardar)
 	var auto_cb := CheckBox.new()
 	auto_cb.text = Idiomas.t("Abrir sola tras cada partido")
@@ -212,6 +217,12 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	b.text = Idiomas.t("Cerrar")
 	b.pressed.connect(_cerrar)
 	fila.add_child(b)
+	## Centrada de verdad: antes empezaba en el borde izquierdo de la hoja y se
+	## salía por la derecha (con «Abrir sola tras cada partido» en alemán, más).
+	fila.position.x = -fila.get_combined_minimum_size().x / 2.0
+	## Con mando o teclado, el foco empieza en «Cerrar»: A cierra, la cruceta
+	## llega a los otros dos, y B/Esc cierran desde cualquiera.
+	b.grab_focus.call_deferred()
 	_hoja.pivot_offset = _hoja.size / 2.0
 	atras.pivot_offset = atras.size / 2.0
 	atras.scale = Vector2(ESCALA, ESCALA)
@@ -224,9 +235,18 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	tw.tween_property(_hoja, "scale", Vector2(ESCALA, ESCALA), 0.35)
 	Sonido.toca("notificacion" if Sonido.NOMBRES.has("notificacion") else "cambio", Sonido.Bus.INTERFAZ)
 
-func _gui_input(e: InputEvent) -> void:
-	if e is InputEventKey and (e as InputEventKey).pressed and (e as InputEventKey).keycode == KEY_ESCAPE:
+## Antes era `_gui_input` con la tecla Esc: solo llegaba si el ratón estaba
+## encima, y el botón B del mando no cerraba nunca. La portada tapa todo y es lo
+## último que se abrió, así que se queda con «cancelar» y con L1/R1 (que, si no,
+## cambiarían de pestaña la pantalla de DETRÁS).
+func _input(e: InputEvent) -> void:
+	if not is_visible_in_tree() or is_queued_for_deletion():
+		return
+	if e.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
 		_cerrar()
+	elif InputMap.has_action("dinastia_tab_siguiente") and (e.is_action_pressed("dinastia_tab_siguiente") or e.is_action_pressed("dinastia_tab_anterior")):
+		get_viewport().set_input_as_handled()
 
 func _cerrar() -> void:
 	cerrado.emit()
@@ -268,9 +288,20 @@ func _tabla(mundo: Mundo, pos: Vector2, tam: Vector2) -> void:
 	enc.color = Color(0.12, 0.13, 0.15)
 	enc.size = Vector2(tam.x, 24)
 	caja.add_child(enc)
-	var l_enc := _lbl("%s          %s   %s" % [Idiomas.mayusculas(Idiomas.t("Tabla de la liga")), Idiomas.t("PJ"), Idiomas.t("PTS")], 11, Color.WHITE, false)
+	## Columnas de ancho fijo y alineadas a la derecha, en la MISMA x que las
+	## cifras de debajo: con espacios entre medias, «PJ» y «PTS» quedaban
+	## corridos respecto a sus números (y en cada idioma, distinto).
+	var l_enc := _lbl(Idiomas.mayusculas(Idiomas.t("Tabla de la liga")), 11, Color.WHITE, false)
 	l_enc.position = Vector2(8, 3)
+	l_enc.size = Vector2(tam.x - 8 - 2 * COL_TABLA, 18)
+	l_enc.clip_text = true
 	enc.add_child(l_enc)
+	for k in 2:
+		var sig := _lbl(CompeticionFilas.sigla(["PJ", "PTS"][k]), 11, Color.WHITE, false)
+		sig.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		sig.position = Vector2(tam.x - 8 - COL_TABLA * float(2 - k), 3)
+		sig.size = Vector2(COL_TABLA, 18)
+		enc.add_child(sig)
 	if mundo == null or mundo.mi_club() == null:
 		return
 	var liga := mundo.liga_de(mundo.mi_club())
@@ -283,16 +314,38 @@ func _tabla(mundo: Mundo, pos: Vector2, tam: Vector2) -> void:
 			break
 		var c: Club = f["club"]
 		var col := Color(0.55, 0.05, 0.05) if c == mundo.mi_club() else Color(0.12, 0.12, 0.12)
-		var n := _lbl("%d  %s" % [i + 1, Nombres.visible(c.nombre).to_upper().substr(0, 16)], 12, col, false)
+		## El nombre se recorta con «…» a lo que quepa, en vez de a 16 letras a
+		## ciegas (que partía «RANCAGUA CELESTE» en «RANCAGUA CELEST»).
+		var n := _lbl("%d  %s" % [i + 1, Nombres.visible(c.nombre).to_upper()], 12, col, false)
 		n.position = Vector2(8, y)
+		n.size = Vector2(tam.x - 8 - 2 * COL_TABLA - 4, 18)
+		n.clip_text = true
+		n.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		caja.add_child(n)
-		var v := _lbl("%d    %d" % [int(f["pj"]), int(f["pts"])], 12, col, false)
-		v.position = Vector2(tam.x - 58, y)
-		caja.add_child(v)
+		for k2 in 2:
+			var v := _lbl(str(int(f["pj"] if k2 == 0 else f["pts"])), 12, col, false)
+			v.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+			v.position = Vector2(tam.x - 8 - COL_TABLA * float(2 - k2), y)
+			v.size = Vector2(COL_TABLA, 18)
+			caja.add_child(v)
 		y += 22.0
 		i += 1
 
-## Una etiqueta de periódico: negrita gruesa y, si toca, inclinada.
+## «¡GOLAZO!» → «¡Golazo!», «DIARIO LA BANDA» → «Diario La Banda». El
+## `capitalize()` de Godot deja «¡golazo!» en minúscula (no mira más allá del
+## signo de apertura) y además parte las palabras a su manera.
+static func nombre_propio(t: String) -> String:
+	var salida := ""
+	var inicio := true
+	for ch in t.to_lower():
+		var letra := ch.to_upper() != ch.to_lower()
+		salida += ch.to_upper() if inicio and letra else ch
+		if letra:
+			inicio = false
+		elif ch == " ":
+			inicio = true
+	return salida
+
 ## El titular en el idioma del jugador. Se traduce CON las comillas (así está
 ## en la tabla de la narración) y el prefijo del clásico («CLÁSICO: »,
 ## «SUPERCLÁSICO: ») por separado; después se quitan las comillas.
@@ -306,6 +359,7 @@ static func titular_traducido(t: String) -> String:
 		pre = Idiomas.t(baja.substr(0, 1).to_upper() + baja.substr(1)) + ": "
 	return Idiomas.mayusculas(pre + Idiomas.t(t).replace("\"", ""))
 
+## Una etiqueta de periódico: negrita gruesa y, si toca, inclinada.
 func _lbl(texto: String, tam: int, color: Color, inclinada: bool) -> Label:
 	var l := Label.new()
 	l.text = texto

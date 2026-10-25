@@ -50,7 +50,7 @@ func _ready() -> void:
 	v.add_theme_constant_override("separation", 12)
 	panel.add_child(v)
 
-	v.add_child(_lbl("🤝 LA MESA DEL REPRESENTANTE", 13, ORO))
+	v.add_child(_lbl(Idiomas.t("🤝 LA MESA DEL REPRESENTANTE"), 13, ORO))
 	var cab := HBoxContainer.new()
 	cab.add_theme_constant_override("separation", 16)
 	v.add_child(cab)
@@ -62,7 +62,9 @@ func _ready() -> void:
 	datos.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(datos)
 	datos.add_child(_lbl(mesa.agente, 24, Color.WHITE))
-	datos.add_child(_lbl("Perfil: %s  ·  exige: %s" % [_perfil(), _exige()], 13, Color(0.85, 0.8, 0.7)))
+	var perfil := _lbl(Idiomas.t("Perfil: %s  ·  exige: %s") % [_perfil(), _exige()], 13, Color(0.85, 0.8, 0.7))
+	perfil.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	datos.add_child(perfil)
 	_ronda = _lbl("", 12, Color(0.75, 0.7, 0.6))
 	datos.add_child(_ronda)
 
@@ -108,59 +110,89 @@ func _ready() -> void:
 	v.add_child(_jugadas)
 	_pintar()
 
+## El estado con el que se pintó la última vez: el sonido del desenlace suena
+## una sola vez, al pasar de «abierta» a otra cosa.
+var _estado_previo := "abierta"
+
 func _pintar() -> void:
-	_pide.text = Idiomas.t("Pide: %d %%  (%s)") % [mesa.pide, mesa.detalle(mesa.pide)] if mesa.estado == "abierta" else _final_corto()
-	_pide.add_theme_font_size_override("font_size", 15 if mesa.estado == "abierta" else 18)
-	_barra.value = mesa.pide if mesa.estado == "abierta" else float(mesa.acordado)
+	var abierta := mesa.estado == "abierta"
+	_pide.text = Idiomas.t("Pide: %d %%  (%s)") % [mesa.pide, Idiomas.t(mesa.detalle(mesa.pide))] if abierta else _final_corto()
+	_pide.add_theme_font_size_override("font_size", 15 if abierta else 18)
+	## El desenlace con su color: verde si hay trato, rojo si se fue, neutro si
+	## te plantaste. Antes los tres salían en el mismo dorado que «Pide».
+	_pide.add_theme_color_override("font_color", ORO if abierta else _color_final())
+	_barra.value = mesa.pide if abierta else float(mesa.acordado)
 	_tazas.text = "☕".repeat(maxi(0, mesa.paciencia)) + "·".repeat(maxi(0, mesa.paciencia_max - maxi(0, mesa.paciencia)))
 	_tazas.tooltip_text = Idiomas.t("Paciencia: cada ronda gasta una taza")
 	_ronda.text = Idiomas.t("Ronda %d") % mesa.ronda if mesa.ronda > 0 else Idiomas.t("Primera ronda: tú mueves")
 	_dice.text = mesa.ultima
+	if mesa.estado != _estado_previo:
+		_estado_previo = mesa.estado
+		Sonido.toca("contrato" if mesa.estado == "acuerdo" else "error", Sonido.Bus.INTERFAZ)
 	for h in _jugadas.get_children():
 		h.queue_free()
-	if mesa.estado != "abierta":
-		_boton("Cerrar la mesa", func() -> void:
+	if not abierta:
+		var bc := _boton(Idiomas.t("Cerrar la mesa"), func() -> void:
 			queue_free()
-			al_cerrar.call(mesa), _jugadas, ORO)
+			al_cerrar.call(mesa), _jugadas, _color_final())
+		bc.grab_focus.call_deferred()
 		return
 	var ofertas := HBoxContainer.new()
 	ofertas.add_theme_constant_override("separation", 8)
 	_jugadas.add_child(ofertas)
+	var primero: Button = null
 	for o: int in mesa.ofertas():
-		var b := _boton("Ofrecer %d %%\n%s" % [o, mesa.detalle(o)], func() -> void:
+		var b := _boton(Idiomas.t("Ofrecer %d %%") % o + "\n" + Idiomas.t(mesa.detalle(o)), func() -> void:
 			mesa.regatear(o)
 			_pintar(), ofertas, Color(0.86, 0.82, 0.74))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if primero == null:
+			primero = b
 	var otras := HBoxContainer.new()
 	otras.add_theme_constant_override("separation", 8)
 	_jugadas.add_child(otras)
-	var bf := _boton("🃏 Farol: %s" % mesa.texto_farol(), func() -> void:
+	var bf := _boton(Idiomas.t("🃏 Farol: %s") % Idiomas.t(mesa.texto_farol()), func() -> void:
 		mesa.farol()
 		_pintar(), otras, Color(0.7, 0.85, 1.0))
 	bf.disabled = mesa.farol_usado
 	bf.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_boton("Ceder (%d %%)" % mesa.pide, func() -> void:
+	bf.clip_text = true
+	bf.tooltip_text = bf.text
+	_boton(Idiomas.t("Ceder (%d %%)") % mesa.pide, func() -> void:
 		mesa.ceder()
 		_pintar(), otras, Color(0.6, 0.9, 0.6))
-	_boton("Plantarse", func() -> void:
+	_boton(Idiomas.t("Plantarse"), func() -> void:
 		mesa.plantarse()
 		_pintar(), otras, Color(1.0, 0.6, 0.55))
+	## Con teclado o mando, el foco empieza en la primera oferta: sin esto no
+	## había ningún botón enfocado y las flechas no hacían nada hasta pulsar Tab.
+	if primero != null:
+		primero.grab_focus.call_deferred()
+
+func _color_final() -> Color:
+	match mesa.estado:
+		"acuerdo":
+			return Color(0.55, 0.9, 0.55)
+		"se_fue":
+			return Color(1.0, 0.5, 0.45)
+		_:
+			return Color(0.85, 0.8, 0.7)
 
 func _final_corto() -> String:
 	match mesa.estado:
 		"acuerdo":
-			return "TRATO al %d %%  (%s)" % [mesa.acordado, mesa.detalle(mesa.acordado)]
+			return Idiomas.t("✔ TRATO al %d %%  (%s)") % [mesa.acordado, Idiomas.t(mesa.detalle(mesa.acordado))]
 		"se_fue":
-			return "SE FUE DE LA MESA"
+			return Idiomas.t("✖ SE FUE DE LA MESA")
 		_:
-			return "TE PLANTASTE"
+			return Idiomas.t("TE PLANTASTE")
 
 func _perfil() -> String:
-	return {"tiburon": "tiburón", "mediatico": "mediático", "formador": "formador"}.get(mesa.perfil, "discreto")
+	return {"tiburon": Idiomas.t("tiburón"), "mediatico": Idiomas.t("mediático"), "formador": Idiomas.t("formador")}.get(mesa.perfil, Idiomas.t("discreto"))
 
 func _exige() -> String:
-	return {"mejora": "mejorar un contrato", "comision": "una comisión por debajo de la mesa",
-		"canterano": "que fiches a su canterano"}.get(mesa.tipo, "exclusividad")
+	return {"mejora": Idiomas.t("mejorar un contrato"), "comision": Idiomas.t("una comisión por debajo de la mesa"),
+		"canterano": Idiomas.t("que fiches a su canterano")}.get(mesa.tipo, Idiomas.t("exclusividad"))
 
 func _lbl(t: String, tam: int, col: Color) -> Label:
 	var l := Label.new()
@@ -189,6 +221,16 @@ func _boton(t: String, accion: Callable, padre: Node, col: Color) -> Button:
 	ed.bg_color = Color(0.2, 0.2, 0.2, 0.3)
 	ed.border_color = Color(0.4, 0.4, 0.4)
 	b.add_theme_stylebox_override("disabled", ed)
+	## El foco, bien visible sobre la madera: borde dorado grueso. El estilo
+	## por defecto (un marco fino claro) apenas se distinguía del borde normal.
+	var ef := StyleBoxFlat.new()
+	ef.draw_center = false
+	ef.border_color = ORO
+	ef.set_border_width_all(3)
+	ef.set_corner_radius_all(9)
+	ef.expand_margin_left = 2; ef.expand_margin_right = 2
+	ef.expand_margin_top = 2; ef.expand_margin_bottom = 2
+	b.add_theme_stylebox_override("focus", ef)
 	b.add_theme_color_override("font_color", Color.WHITE)
 	b.pressed.connect(accion)
 	padre.add_child(b)

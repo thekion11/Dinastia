@@ -1,0 +1,1120 @@
+{
+ "exactas": {
+  "  ·  por encima de tu prestigio": {
+   "en": "  ·  above your prestige",
+   "pt": "  ·  acima do seu prestígio",
+   "fr": "  ·  au-dessus de ton prestige",
+   "it": "  ·  sopra il tuo prestigio",
+   "de": "  ·  über deinem Prestige",
+   "ca": "  ·  per sobre del teu prestigi",
+   "pl": "  ·  powyżej twojego prestiżu",
+   "tr": "  ·  prestijinin üzerinde"
+  },
+  "  ·  🧠 recuerda lo que dijiste": {
+   "en": "  ·  🧠 remembers what you said",
+   "pt": "  ·  🧠 lembra o que você disse",
+   "fr": "  ·  🧠 se souvient de ce que tu as dit",
+   "it": "  ·  🧠 ricorda cosa hai detto",
+   "de": "  ·  🧠 erinnert sich, was du gesagt hast",
+   "ca": "  ·  🧠 recorda el que vas dir",
+   "pl": "  ·  🧠 pamięta, co powiedziałeś",
+   "tr": "  ·  🧠 söylediklerini hatırlıyor"
+  },
+  "% de venta futura": {
+   "en": "% of future sale",
+   "pt": "% da venda futura",
+   "fr": "% de la vente future",
+   "it": "% della rivendita futura",
+   "de": "% am Weiterverkauf",
+   "ca": "% de la venda futura",
+   "pl": "% przyszłej sprzedaży",
+   "tr": "gelecek satıştan %"
+  },
+  "%d de %d": {
+   "en": "%d of %d",
+   "pt": "%d de %d",
+   "fr": "%d sur %d",
+   "it": "%d su %d",
+   "de": "%d von %d",
+   "ca": "%d de %d",
+   "pl": "%d z %d",
+   "tr": "%d / %d"
+  },
+  "%s (hoy)": {
+   "en": "%s (today)",
+   "pt": "%s (hoje)",
+   "fr": "%s (aujourd'hui)",
+   "it": "%s (oggi)",
+   "de": "%s (heute)",
+   "ca": "%s (avui)",
+   "pl": "%s (dziś)",
+   "tr": "%s (bugün)"
+  },
+  "%s (mes %d)": {
+   "en": "%s (month %d)",
+   "pt": "%s (mês %d)",
+   "fr": "%s (mois %d)",
+   "it": "%s (mese %d)",
+   "de": "%s (Monat %d)",
+   "ca": "%s (mes %d)",
+   "pl": "%s (miesiąc %d)",
+   "tr": "%s (%d. ay)"
+  },
+  "%s · abrir la mesa de negociación": {
+   "en": "%s · open the negotiating table",
+   "pt": "%s · abrir a mesa de negociação",
+   "fr": "%s · ouvrir la table de négociation",
+   "it": "%s · apri il tavolo della trattativa",
+   "de": "%s · Verhandlungstisch öffnen",
+   "ca": "%s · obrir la taula de negociació",
+   "pl": "%s · otwórz stół negocjacyjny",
+   "tr": "%s · pazarlık masasını aç"
+  },
+  "%s — oferta de %s": {
+   "en": "%s — offer from %s",
+   "pt": "%s — oferta do %s",
+   "fr": "%s — offre de %s",
+   "it": "%s — offerta del %s",
+   "de": "%s — Angebot von %s",
+   "ca": "%s — oferta del %s",
+   "pl": "%s — oferta od %s",
+   "tr": "%s — %s teklifi"
+  },
+  "APUESTAS EN EL VESTUARIO": {
+   "en": "BETTING IN THE DRESSING ROOM",
+   "pt": "APOSTAS NO VESTIÁRIO",
+   "fr": "PARIS DANS LE VESTIAIRE",
+   "it": "SCOMMESSE NELLO SPOGLIATOIO",
+   "de": "WETTEN IN DER KABINE",
+   "ca": "APOSTES AL VESTIDOR",
+   "pl": "ZAKŁADY W SZATNI",
+   "tr": "SOYUNMA ODASINDA BAHİS"
+  },
+  "Academia · %s": {
+   "en": "Academy · %s",
+   "pt": "Academia · %s",
+   "fr": "Académie · %s",
+   "it": "Accademia · %s",
+   "de": "Akademie · %s",
+   "ca": "Acadèmia · %s",
+   "pl": "Akademia · %s",
+   "tr": "Akademi · %s"
+  },
+  "Activo": {
+   "en": "Assets",
+   "pt": "Ativo",
+   "fr": "Actif",
+   "it": "Attivo",
+   "de": "Aktiva",
+   "ca": "Actiu",
+   "pl": "Aktywa",
+   "tr": "Varlıklar"
+  },
+  "Ahora mismo vas": {
+   "en": "Right now you are",
+   "pt": "Agora você está",
+   "fr": "En ce moment tu es",
+   "it": "Adesso sei",
+   "de": "Aktuell bist du",
+   "ca": "Ara mateix vas",
+   "pl": "Teraz jesteś",
+   "tr": "Şu anda"
+  },
+  "Aporte de la temporada": {
+   "en": "Season contribution",
+   "pt": "Aporte da temporada",
+   "fr": "Apport de la saison",
+   "it": "Contributo stagionale",
+   "de": "Beitrag der Saison",
+   "ca": "Aportació de la temporada",
+   "pl": "Wkład na sezon",
+   "tr": "Sezon katkısı"
+  },
+  "Años de contrato": {
+   "en": "Contract years",
+   "pt": "Anos de contrato",
+   "fr": "Années de contrat",
+   "it": "Anni di contratto",
+   "de": "Vertragsjahre",
+   "ca": "Anys de contracte",
+   "pl": "Lata kontraktu",
+   "tr": "Sözleşme yılı"
+  },
+  "Bajar: %s": {
+   "en": "Lower: %s",
+   "pt": "Baixar: %s",
+   "fr": "Baisser : %s",
+   "it": "Abbassa: %s",
+   "de": "Senken: %s",
+   "ca": "Baixar: %s",
+   "pl": "Obniż: %s",
+   "tr": "Düşür: %s"
+  },
+  "Subir: %s": {
+   "en": "Raise: %s",
+   "pt": "Subir: %s",
+   "fr": "Augmenter : %s",
+   "it": "Alza: %s",
+   "de": "Erhöhen: %s",
+   "ca": "Pujar: %s",
+   "pl": "Podnieś: %s",
+   "tr": "Artır: %s"
+  },
+  "Bonos por objetivos": {
+   "en": "Performance bonuses",
+   "pt": "Bônus por objetivos",
+   "fr": "Primes d'objectifs",
+   "it": "Bonus per obiettivi",
+   "de": "Erfolgsprämien",
+   "ca": "Bonus per objectius",
+   "pl": "Premie za cele",
+   "tr": "Hedef primleri"
+  },
+  "CORRUPCIÓN EN LA FEDERACIÓN": {
+   "en": "CORRUPTION IN THE FEDERATION",
+   "pt": "CORRUPÇÃO NA FEDERAÇÃO",
+   "fr": "CORRUPTION À LA FÉDÉRATION",
+   "it": "CORRUZIONE NELLA FEDERAZIONE",
+   "de": "KORRUPTION IM VERBAND",
+   "ca": "CORRUPCIÓ A LA FEDERACIÓ",
+   "pl": "KORUPCJA W ZWIĄZKU",
+   "tr": "FEDERASYONDA YOLSUZLUK"
+  },
+  "CUOTAS": {
+   "en": "INSTALMENTS",
+   "pt": "PARCELAS",
+   "fr": "MENSUALITÉS",
+   "it": "RATE",
+   "de": "RATEN",
+   "ca": "QUOTES",
+   "pl": "RATY",
+   "tr": "TAKSİTLER"
+  },
+  "Caja en el mes %d: %s": {
+   "en": "Cash in month %d: %s",
+   "pt": "Caixa no mês %d: %s",
+   "fr": "Trésorerie au mois %d : %s",
+   "it": "Cassa al mese %d: %s",
+   "de": "Kasse in Monat %d: %s",
+   "ca": "Caixa al mes %d: %s",
+   "pl": "Kasa w miesiącu %d: %s",
+   "tr": "%d. ayda kasa: %s"
+  },
+  "Caja hoy: %s": {
+   "en": "Cash today: %s",
+   "pt": "Caixa hoje: %s",
+   "fr": "Trésorerie aujourd'hui : %s",
+   "it": "Cassa oggi: %s",
+   "de": "Kasse heute: %s",
+   "ca": "Caixa avui: %s",
+   "pl": "Kasa dziś: %s",
+   "tr": "Bugün kasa: %s"
+  },
+  "Ceder (%d %%)": {
+   "en": "Give in (%d %%)",
+   "pt": "Ceder (%d %%)",
+   "fr": "Céder (%d %%)",
+   "it": "Cedere (%d %%)",
+   "de": "Nachgeben (%d %%)",
+   "ca": "Cedir (%d %%)",
+   "pl": "Ustąpić (%d %%)",
+   "tr": "Boyun eğ (%d %%)"
+  },
+  "Cerrar la mesa": {
+   "en": "Close the table",
+   "pt": "Fechar a mesa",
+   "fr": "Quitter la table",
+   "it": "Chiudi il tavolo",
+   "de": "Tisch schließen",
+   "ca": "Tancar la taula",
+   "pl": "Zamknij stół",
+   "tr": "Masayı kapat"
+  },
+  "Coste de la operación": {
+   "en": "Cost of the operation",
+   "pt": "Custo da operação",
+   "fr": "Coût de l'opération",
+   "it": "Costo dell'operazione",
+   "de": "Kosten der Aktion",
+   "ca": "Cost de l'operació",
+   "pl": "Koszt operacji",
+   "tr": "Operasyon maliyeti"
+  },
+  "Cubre lo que piden": {
+   "en": "Covers their asking price",
+   "pt": "Cobre o que pedem",
+   "fr": "Couvre ce qu'ils demandent",
+   "it": "Copre la richiesta",
+   "de": "Deckt ihre Forderung",
+   "ca": "Cobreix el que demanen",
+   "pl": "Pokrywa żądanie",
+   "tr": "İstenenin karşılanan kısmı"
+  },
+  "Cuotas": {
+   "en": "Instalments",
+   "pt": "Parcelas",
+   "fr": "Mensualités",
+   "it": "Rate",
+   "de": "Raten",
+   "ca": "Quotes",
+   "pl": "Raty",
+   "tr": "Taksitler"
+  },
+  "Dentro de 12 meses": {
+   "en": "In 12 months",
+   "pt": "Daqui a 12 meses",
+   "fr": "Dans 12 mois",
+   "it": "Tra 12 mesi",
+   "de": "In 12 Monaten",
+   "ca": "D'aquí a 12 mesos",
+   "pl": "Za 12 miesięcy",
+   "tr": "12 ay sonra"
+  },
+  "EDAD": {
+   "en": "AGE",
+   "pt": "IDADE",
+   "fr": "ÂGE",
+   "it": "ETÀ",
+   "de": "ALTER",
+   "ca": "EDAT",
+   "pl": "WIEK",
+   "tr": "YAŞ"
+  },
+  "EL SUPERAGENTE": {
+   "en": "THE SUPER-AGENT",
+   "pt": "O SUPERAGENTE",
+   "fr": "LE SUPER-AGENT",
+   "it": "IL SUPERPROCURATORE",
+   "de": "DER SUPERAGENT",
+   "ca": "EL SUPERAGENT",
+   "pl": "SUPERAGENT",
+   "tr": "SÜPER MENAJER"
+  },
+  "Entra cada semana": {
+   "en": "Comes in every week",
+   "pt": "Entra toda semana",
+   "fr": "Rentre chaque semaine",
+   "it": "Entra ogni settimana",
+   "de": "Kommt jede Woche rein",
+   "ca": "Entra cada setmana",
+   "pl": "Wpływa co tydzień",
+   "tr": "Her hafta giren"
+  },
+  "Exigencia contractual": {
+   "en": "Contractual requirement",
+   "pt": "Exigência contratual",
+   "fr": "Exigence contractuelle",
+   "it": "Requisito contrattuale",
+   "de": "Vertragliche Vorgabe",
+   "ca": "Exigència contractual",
+   "pl": "Wymóg umowy",
+   "tr": "Sözleşme şartı"
+  },
+  "Faltan unos %s para que acepten. Prefieren %s.": {
+   "en": "They need about %s more to accept. They'd prefer %s.",
+   "pt": "Faltam uns %s para aceitarem. Preferem %s.",
+   "fr": "Il manque environ %s pour qu'ils acceptent. Ils préfèrent %s.",
+   "it": "Mancano circa %s perché accettino. Preferiscono %s.",
+   "de": "Es fehlen etwa %s, damit sie zustimmen. Sie hätten lieber %s.",
+   "ca": "Falten uns %s perquè acceptin. Prefereixen %s.",
+   "pl": "Brakuje około %s, by się zgodzili. Wolą %s.",
+   "tr": "Kabul etmeleri için yaklaşık %s eksik. Tercihleri: %s."
+  },
+  "Ficha/semana": {
+   "en": "Wage/week",
+   "pt": "Salário/semana",
+   "fr": "Salaire/semaine",
+   "it": "Ingaggio/settimana",
+   "de": "Gehalt/Woche",
+   "ca": "Fitxa/setmana",
+   "pl": "Pensja/tydzień",
+   "tr": "Maaş/hafta"
+  },
+  "Fijo": {
+   "en": "Fixed fee",
+   "pt": "Fixo",
+   "fr": "Fixe",
+   "it": "Fisso",
+   "de": "Festbetrag",
+   "ca": "Fix",
+   "pl": "Kwota stała",
+   "tr": "Sabit"
+  },
+  "GANAS": {
+   "en": "KEEN",
+   "pt": "VONTADE",
+   "fr": "ENVIE",
+   "it": "VOGLIA",
+   "de": "LUST",
+   "ca": "GANES",
+   "pl": "CHĘĆ",
+   "tr": "İSTEK"
+  },
+  "Hoy": {
+   "en": "Today",
+   "pt": "Hoje",
+   "fr": "Auj.",
+   "it": "Oggi",
+   "de": "Heute",
+   "ca": "Avui",
+   "pl": "Dziś",
+   "tr": "Bugün"
+  },
+  "Hoy saldrían %s de tu caja (fijo, opaco, prima y comisión) y tienes %s.": {
+   "en": "Today %s would leave your cash (fixed fee, under the table, signing bonus and commission) and you have %s.",
+   "pt": "Hoje sairiam %s do seu caixa (fixo, por fora, luvas e comissão) e você tem %s.",
+   "fr": "Aujourd'hui %s sortiraient de ta trésorerie (fixe, dessous-de-table, prime et commission) et tu as %s.",
+   "it": "Oggi uscirebbero %s dalla tua cassa (fisso, in nero, premio alla firma e commissione) e ne hai %s.",
+   "de": "Heute gingen %s aus deiner Kasse (Festbetrag, schwarz, Handgeld und Provision) und du hast %s.",
+   "ca": "Avui sortirien %s de la teva caixa (fix, opac, prima i comissió) i en tens %s.",
+   "pl": "Dziś z kasy wyszłoby %s (kwota stała, pod stołem, premia i prowizja), a masz %s.",
+   "tr": "Bugün kasandan %s çıkacak (sabit, kayıt dışı, imza primi ve komisyon); sende %s var."
+  },
+  "MED": {
+   "en": "OVR",
+   "pt": "MÉD",
+   "fr": "MOY",
+   "it": "MED",
+   "de": "GES",
+   "ca": "MIT",
+   "pl": "ŚR",
+   "tr": "GNL"
+  },
+  "MERCADO ABIERTO  ·  quedan %d semana(s)": {
+   "en": "MARKET OPEN  ·  %d week(s) left",
+   "pt": "MERCADO ABERTO  ·  faltam %d semana(s)",
+   "fr": "MERCATO OUVERT  ·  encore %d semaine(s)",
+   "it": "MERCATO APERTO  ·  restano %d settimana/e",
+   "de": "TRANSFERFENSTER OFFEN  ·  noch %d Woche(n)",
+   "ca": "MERCAT OBERT  ·  queden %d setmana(es)",
+   "pl": "OKNO OTWARTE  ·  zostało tygodni: %d",
+   "tr": "PAZAR AÇIK  ·  %d hafta kaldı"
+  },
+  "MERCADO CERRADO  ·  reabre en %d semana(s)": {
+   "en": "MARKET CLOSED  ·  reopens in %d week(s)",
+   "pt": "MERCADO FECHADO  ·  reabre em %d semana(s)",
+   "fr": "MERCATO FERMÉ  ·  rouvre dans %d semaine(s)",
+   "it": "MERCATO CHIUSO  ·  riapre tra %d settimana/e",
+   "de": "TRANSFERFENSTER ZU  ·  öffnet in %d Woche(n)",
+   "ca": "MERCAT TANCAT  ·  reobre d'aquí a %d setmana(es)",
+   "pl": "OKNO ZAMKNIĘTE  ·  otwarcie za tygodni: %d",
+   "tr": "PAZAR KAPALI  ·  %d hafta sonra açılıyor"
+  },
+  "MONTO": {
+   "en": "AMOUNT",
+   "pt": "VALOR",
+   "fr": "MONTANT",
+   "it": "IMPORTO",
+   "de": "BETRAG",
+   "ca": "IMPORT",
+   "pl": "KWOTA",
+   "tr": "TUTAR"
+  },
+  "Mi vida": {
+   "en": "My life",
+   "pt": "Minha vida",
+   "fr": "Ma vie",
+   "it": "La mia vita",
+   "de": "Mein Leben",
+   "ca": "La meva vida",
+   "pl": "Moje życie",
+   "tr": "Hayatım"
+  },
+  "NOMBRE": {
+   "en": "NAME",
+   "pt": "NOME",
+   "fr": "NOM",
+   "it": "NOME",
+   "de": "NAME",
+   "ca": "NOM",
+   "pl": "NAZWISKO",
+   "tr": "İSİM"
+  },
+  "Nadie ha pujado por tus jugadores esta semana.": {
+   "en": "Nobody has bid for your players this week.",
+   "pt": "Ninguém fez proposta pelos seus jogadores esta semana.",
+   "fr": "Personne n'a fait d'offre pour tes joueurs cette semaine.",
+   "it": "Nessuno ha fatto offerte per i tuoi giocatori questa settimana.",
+   "de": "Diese Woche hat niemand für deine Spieler geboten.",
+   "ca": "Ningú no ha pujat pels teus jugadors aquesta setmana.",
+   "pl": "Nikt nie złożył oferty za twoich piłkarzy w tym tygodniu.",
+   "tr": "Bu hafta oyuncuların için kimse teklif vermedi."
+  },
+  "Ningún jugador cumple esos filtros. Prueba con otra línea o borra la búsqueda.": {
+   "en": "No player matches those filters. Try another line or clear the search.",
+   "pt": "Nenhum jogador atende a esses filtros. Tente outro setor ou apague a busca.",
+   "fr": "Aucun joueur ne correspond à ces filtres. Essaie une autre ligne ou efface la recherche.",
+   "it": "Nessun giocatore rispetta questi filtri. Prova un altro reparto o cancella la ricerca.",
+   "de": "Kein Spieler passt zu diesen Filtern. Versuch eine andere Linie oder lösche die Suche.",
+   "ca": "Cap jugador no compleix aquests filtres. Prova una altra línia o esborra la cerca.",
+   "pl": "Żaden piłkarz nie spełnia tych filtrów. Wybierz inną formację lub wyczyść wyszukiwanie.",
+   "tr": "Bu filtrelere uyan oyuncu yok. Başka bir hat dene ya da aramayı temizle."
+  },
+  "Ofrecer %d %%": {
+   "en": "Offer %d %%",
+   "pt": "Oferecer %d %%",
+   "fr": "Proposer %d %%",
+   "it": "Offrire %d %%",
+   "de": "%d %% anbieten",
+   "ca": "Oferir %d %%",
+   "pl": "Zaproponuj %d %%",
+   "tr": "%d %% teklif et"
+  },
+  "PATRIMONIO NETO": {
+   "en": "NET WORTH",
+   "pt": "PATRIMÔNIO LÍQUIDO",
+   "fr": "PATRIMOINE NET",
+   "it": "PATRIMONIO NETTO",
+   "de": "EIGENKAPITAL",
+   "ca": "PATRIMONI NET",
+   "pl": "WARTOŚĆ NETTO",
+   "tr": "NET DEĞER"
+  },
+  "PIDEN": {
+   "en": "ASKING",
+   "pt": "PEDEM",
+   "fr": "DEMANDÉ",
+   "it": "CHIEDONO",
+   "de": "FORDERUNG",
+   "ca": "DEMANEN",
+   "pl": "ŻĄDAJĄ",
+   "tr": "İSTENEN"
+  },
+  "Paciencia del club: %d ronda(s)  ·  la de él: %d": {
+   "en": "Club's patience: %d round(s)  ·  his: %d",
+   "pt": "Paciência do clube: %d rodada(s)  ·  a dele: %d",
+   "fr": "Patience du club : %d tour(s)  ·  la sienne : %d",
+   "it": "Pazienza del club: %d round  ·  la sua: %d",
+   "de": "Geduld des Vereins: %d Runde(n)  ·  seine: %d",
+   "ca": "Paciència del club: %d ronda(es)  ·  la d'ell: %d",
+   "pl": "Cierpliwość klubu: rund %d  ·  jego: %d",
+   "tr": "Kulübün sabrı: %d tur  ·  onunki: %d"
+  },
+  "Pagan la cláusula: no se puede rechazar.": {
+   "en": "They're paying the release clause: it can't be refused.",
+   "pt": "Pagam a multa rescisória: não dá para recusar.",
+   "fr": "Ils paient la clause : impossible de refuser.",
+   "it": "Pagano la clausola: non si può rifiutare.",
+   "de": "Sie zahlen die Ausstiegsklausel: ablehnen geht nicht.",
+   "ca": "Paguen la clàusula: no es pot rebutjar.",
+   "pl": "Płacą klauzulę: nie można odmówić.",
+   "tr": "Serbest kalma bedelini ödüyorlar: reddedilemez."
+  },
+  "Pago bajo cuerda": {
+   "en": "Under-the-table payment",
+   "pt": "Pagamento por fora",
+   "fr": "Dessous-de-table",
+   "it": "Pagamento in nero",
+   "de": "Schwarzgeld",
+   "ca": "Pagament sota mà",
+   "pl": "Płatność pod stołem",
+   "tr": "Kayıt dışı ödeme"
+  },
+  "Para el club pesa más el fijo: lo aplazado vale algo menos, los bonos mucho menos y lo opaco algo más.": {
+   "en": "The club values the fixed fee most: deferred money counts a bit less, bonuses much less and under-the-table money a bit more.",
+   "pt": "Para o clube o fixo pesa mais: o parcelado vale um pouco menos, os bônus muito menos e o por fora um pouco mais.",
+   "fr": "Pour le club, le fixe pèse le plus : l'échelonné vaut un peu moins, les primes beaucoup moins et le dessous-de-table un peu plus.",
+   "it": "Per il club conta di più il fisso: il dilazionato vale un po' meno, i bonus molto meno e il nero un po' di più.",
+   "de": "Für den Verein zählt der Festbetrag am meisten: Raten etwas weniger, Prämien viel weniger und Schwarzgeld etwas mehr.",
+   "ca": "Per al club pesa més el fix: l'ajornat val una mica menys, els bonus molt menys i l'opac una mica més.",
+   "pl": "Dla klubu najważniejsza jest kwota stała: raty liczą się trochę mniej, premie dużo mniej, a płatność pod stołem trochę więcej.",
+   "tr": "Kulüp için en önemlisi sabit ücret: taksitler biraz daha az, primler çok daha az, kayıt dışı para biraz daha fazla değer."
+  },
+  "Pasivo": {
+   "en": "Liabilities",
+   "pt": "Passivo",
+   "fr": "Passif",
+   "it": "Passivo",
+   "de": "Passiva",
+   "ca": "Passiu",
+   "pl": "Pasywa",
+   "tr": "Borçlar"
+  },
+  "Perciben con tu oferta actual": {
+   "en": "What they see in your current offer",
+   "pt": "Percebem com sua oferta atual",
+   "fr": "Ce qu'ils perçoivent de ton offre",
+   "it": "Percepito con l'offerta attuale",
+   "de": "Wert deines aktuellen Angebots für sie",
+   "ca": "Perceben amb la teva oferta actual",
+   "pl": "Postrzegana wartość twojej oferty",
+   "tr": "Mevcut teklifinin onlardaki değeri"
+  },
+  "Perfil: %s  ·  exige: %s": {
+   "en": "Profile: %s  ·  demands: %s",
+   "pt": "Perfil: %s  ·  exige: %s",
+   "fr": "Profil : %s  ·  exige : %s",
+   "it": "Profilo: %s  ·  pretende: %s",
+   "de": "Profil: %s  ·  fordert: %s",
+   "ca": "Perfil: %s  ·  exigeix: %s",
+   "pl": "Profil: %s  ·  żąda: %s",
+   "tr": "Profil: %s  ·  talep: %s"
+  },
+  "Pide una ficha de al menos %s/semana.": {
+   "en": "He wants a wage of at least %s/week.",
+   "pt": "Pede um salário de pelo menos %s/semana.",
+   "fr": "Il demande un salaire d'au moins %s/semaine.",
+   "it": "Chiede un ingaggio di almeno %s/settimana.",
+   "de": "Er will mindestens %s/Woche verdienen.",
+   "ca": "Demana una fitxa d'almenys %s/setmana.",
+   "pl": "Chce pensji co najmniej %s/tydzień.",
+   "tr": "Haftada en az %s maaş istiyor."
+  },
+  "Piden": {
+   "en": "Asking price",
+   "pt": "Pedem",
+   "fr": "Ils demandent",
+   "it": "Chiedono",
+   "de": "Forderung",
+   "ca": "Demanen",
+   "pl": "Żądają",
+   "tr": "İstenen"
+  },
+  "Plantarse": {
+   "en": "Stand firm",
+   "pt": "Bater o pé",
+   "fr": "Tenir bon",
+   "it": "Puntare i piedi",
+   "de": "Hart bleiben",
+   "ca": "Plantar-se",
+   "pl": "Postawić się",
+   "tr": "Direnmek"
+  },
+  "Prima de fichaje": {
+   "en": "Signing bonus",
+   "pt": "Luvas",
+   "fr": "Prime à la signature",
+   "it": "Premio alla firma",
+   "de": "Handgeld",
+   "ca": "Prima de fitxatge",
+   "pl": "Premia za podpis",
+   "tr": "İmza primi"
+  },
+  "Probabilidad estimada": {
+   "en": "Estimated probability",
+   "pt": "Probabilidade estimada",
+   "fr": "Probabilité estimée",
+   "it": "Probabilità stimata",
+   "de": "Geschätzte Wahrscheinlichkeit",
+   "ca": "Probabilitat estimada",
+   "pl": "Szacowane prawdopodobieństwo",
+   "tr": "Tahmini olasılık"
+  },
+  "REFUNDACIÓN": {
+   "en": "REFOUNDING",
+   "pt": "REFUNDAÇÃO",
+   "fr": "REFONDATION",
+   "it": "RIFONDAZIONE",
+   "de": "NEUGRÜNDUNG",
+   "ca": "REFUNDACIÓ",
+   "pl": "ODRODZENIE KLUBU",
+   "tr": "YENİDEN KURULUŞ"
+  },
+  "Sale de tu caja hoy": {
+   "en": "Leaves your cash today",
+   "pt": "Sai do seu caixa hoje",
+   "fr": "Sort de ta trésorerie aujourd'hui",
+   "it": "Esce oggi dalla tua cassa",
+   "de": "Geht heute aus deiner Kasse",
+   "ca": "Surt avui de la teva caixa",
+   "pl": "Wychodzi dziś z kasy",
+   "tr": "Bugün kasandan çıkan"
+  },
+  "Semanas en rojo": {
+   "en": "Weeks in the red",
+   "pt": "Semanas no vermelho",
+   "fr": "Semaines dans le rouge",
+   "it": "Settimane in rosso",
+   "de": "Wochen im Minus",
+   "ca": "Setmanes en vermell",
+   "pl": "Tygodnie na minusie",
+   "tr": "Ekside geçen haftalar"
+  },
+  "TASA/SEM": {
+   "en": "RATE/WK",
+   "pt": "TAXA/SEM",
+   "fr": "TAUX/SEM",
+   "it": "TASSO/SETT",
+   "de": "ZINS/WO",
+   "ca": "TAXA/SET",
+   "pl": "STOPA/TYDZ",
+   "tr": "FAİZ/HFT"
+  },
+  "TE PLANTASTE": {
+   "en": "YOU STOOD FIRM",
+   "pt": "VOCÊ BATEU O PÉ",
+   "fr": "TU AS TENU BON",
+   "it": "HAI PUNTATO I PIEDI",
+   "de": "DU BIST HART GEBLIEBEN",
+   "ca": "T'HAS PLANTAT",
+   "pl": "POSTAWIŁEŚ SIĘ",
+   "tr": "DİRENDİN"
+  },
+  "TOTAL ACTIVO": {
+   "en": "TOTAL ASSETS",
+   "pt": "ATIVO TOTAL",
+   "fr": "ACTIF TOTAL",
+   "it": "TOTALE ATTIVO",
+   "de": "GESAMTAKTIVA",
+   "ca": "ACTIU TOTAL",
+   "pl": "AKTYWA RAZEM",
+   "tr": "TOPLAM VARLIK"
+  },
+  "TRANSPARENCIA": {
+   "en": "TRANSPARENCY",
+   "pt": "TRANSPARÊNCIA",
+   "fr": "TRANSPARENCE",
+   "it": "TRASPARENZA",
+   "de": "TRANSPARENZ",
+   "ca": "TRANSPARÈNCIA",
+   "pl": "PRZEJRZYSTOŚĆ",
+   "tr": "ŞEFFAFLIK"
+  },
+  "TU CLÁUSULA DE SALIDA": {
+   "en": "YOUR EXIT CLAUSE",
+   "pt": "SUA CLÁUSULA DE SAÍDA",
+   "fr": "TA CLAUSE DE SORTIE",
+   "it": "LA TUA CLAUSOLA D'USCITA",
+   "de": "DEINE AUSSTIEGSKLAUSEL",
+   "ca": "LA TEVA CLÀUSULA DE SORTIDA",
+   "pl": "TWOJA KLAUZULA ODEJŚCIA",
+   "tr": "ÇIKIŞ MADDEN"
+  },
+  "Todavía no lo ve claro: más años, una prima o un rol mejor pueden convencerle.": {
+   "en": "He's not sold yet: more years, a signing bonus or a better role could convince him.",
+   "pt": "Ainda não está convencido: mais anos, luvas ou um papel melhor podem convencê-lo.",
+   "fr": "Il n'est pas encore convaincu : plus d'années, une prime ou un meilleur rôle peuvent le décider.",
+   "it": "Non è ancora convinto: più anni, un premio o un ruolo migliore possono convincerlo.",
+   "de": "Er ist noch nicht überzeugt: mehr Jahre, Handgeld oder eine bessere Rolle könnten helfen.",
+   "ca": "Encara no ho veu clar: més anys, una prima o un rol millor el poden convèncer.",
+   "pl": "Jeszcze nie jest przekonany: więcej lat, premia lub lepsza rola mogą go przekonać.",
+   "tr": "Henüz ikna olmadı: daha uzun sözleşme, imza primi ya da daha iyi bir rol onu ikna edebilir."
+  },
+  "UN FICHAJE QUE NO PEDISTE": {
+   "en": "A SIGNING YOU DIDN'T ASK FOR",
+   "pt": "UMA CONTRATAÇÃO QUE VOCÊ NÃO PEDIU",
+   "fr": "UNE RECRUE QUE TU N'AS PAS DEMANDÉE",
+   "it": "UN ACQUISTO CHE NON HAI CHIESTO",
+   "de": "EIN TRANSFER, DEN DU NICHT WOLLTEST",
+   "ca": "UN FITXATGE QUE NO VAS DEMANAR",
+   "pl": "TRANSFER, O KTÓRY NIE PROSIŁEŚ",
+   "tr": "İSTEMEDİĞİN BİR TRANSFER"
+  },
+  "ZONA GRIS": {
+   "en": "GREY AREA",
+   "pt": "ZONA CINZENTA",
+   "fr": "ZONE GRISE",
+   "it": "ZONA GRIGIA",
+   "de": "GRAUZONE",
+   "ca": "ZONA GRISA",
+   "pl": "SZARA STREFA",
+   "tr": "GRİ ALAN"
+  },
+  "cumpliendo": {
+   "en": "on track",
+   "pt": "cumprindo",
+   "fr": "dans l'objectif",
+   "it": "in linea",
+   "de": "im Soll",
+   "ca": "complint",
+   "pl": "zgodnie z planem",
+   "tr": "hedefte"
+  },
+  "discreto": {
+   "en": "low-key",
+   "pt": "discreto",
+   "fr": "discret",
+   "it": "riservato",
+   "de": "diskret",
+   "ca": "discret",
+   "pl": "dyskretny",
+   "tr": "ağırbaşlı"
+  },
+  "exclusividad": {
+   "en": "exclusivity",
+   "pt": "exclusividade",
+   "fr": "l'exclusivité",
+   "it": "esclusiva",
+   "de": "Exklusivität",
+   "ca": "exclusivitat",
+   "pl": "wyłączność",
+   "tr": "münhasırlık"
+  },
+  "formador": {
+   "en": "mentor",
+   "pt": "formador",
+   "fr": "formateur",
+   "it": "formatore",
+   "de": "Ausbilder",
+   "ca": "formador",
+   "pl": "wychowawca",
+   "tr": "yetiştirici"
+  },
+  "mediático": {
+   "en": "media darling",
+   "pt": "midiático",
+   "fr": "médiatique",
+   "it": "mediatico",
+   "de": "medienwirksam",
+   "ca": "mediàtic",
+   "pl": "medialny",
+   "tr": "medyatik"
+  },
+  "mejorar un contrato": {
+   "en": "a better contract",
+   "pt": "melhorar um contrato",
+   "fr": "améliorer un contrat",
+   "it": "migliorare un contratto",
+   "de": "einen besseren Vertrag",
+   "ca": "millorar un contracte",
+   "pl": "lepszy kontrakt",
+   "tr": "bir sözleşmeyi iyileştirmek"
+  },
+  "no te quiere": {
+   "en": "dislikes you",
+   "pt": "não gosta de você",
+   "fr": "ne t'aime pas",
+   "it": "non ti sopporta",
+   "de": "mag dich nicht",
+   "ca": "no t'estima",
+   "pl": "nie lubi cię",
+   "tr": "seni sevmiyor"
+  },
+  "que fiches a su canterano": {
+   "en": "that you sign his youngster",
+   "pt": "que contrate o garoto dele",
+   "fr": "que tu recrutes son jeune",
+   "it": "che ingaggi il suo giovane",
+   "de": "dass du seinen Nachwuchsspieler holst",
+   "ca": "que fitxis el seu jove",
+   "pl": "żebyś podpisał jego wychowanka",
+   "tr": "altyapı oyuncusunu almanı"
+  },
+  "sin bando": {
+   "en": "neutral",
+   "pt": "neutro",
+   "fr": "neutre",
+   "it": "neutrale",
+   "de": "neutral",
+   "ca": "sense bàndol",
+   "pl": "neutralny",
+   "tr": "tarafsız"
+  },
+  "te aprecia": {
+   "en": "likes you",
+   "pt": "gosta de você",
+   "fr": "t'apprécie",
+   "it": "ti stima",
+   "de": "schätzt dich",
+   "ca": "t'aprecia",
+   "pl": "ceni cię",
+   "tr": "sana değer veriyor"
+  },
+  "terminar top %d de la liga": {
+   "en": "finish top %d in the league",
+   "pt": "terminar entre os %d primeiros da liga",
+   "fr": "finir dans le top %d du championnat",
+   "it": "chiudere nei primi %d del campionato",
+   "de": "unter den ersten %d der Liga landen",
+   "ca": "acabar entre els %d primers de la lliga",
+   "pl": "skończyć w czołowej %d ligi",
+   "tr": "ligi ilk %d içinde bitirmek"
+  },
+  "tiburón": {
+   "en": "shark",
+   "pt": "tubarão",
+   "fr": "requin",
+   "it": "squalo",
+   "de": "Hai",
+   "ca": "tauró",
+   "pl": "rekin",
+   "tr": "köpekbalığı"
+  },
+  "una comisión por debajo de la mesa": {
+   "en": "an under-the-table commission",
+   "pt": "uma comissão por fora",
+   "fr": "une commission sous la table",
+   "it": "una commissione in nero",
+   "de": "eine Provision unter der Hand",
+   "ca": "una comissió sota mà",
+   "pl": "prowizję pod stołem",
+   "tr": "masa altından bir komisyon"
+  },
+  "↩️ CONTRAOFERTA DEL CLUB": {
+   "en": "↩️ CLUB COUNTER-OFFER",
+   "pt": "↩️ CONTRAPROPOSTA DO CLUBE",
+   "fr": "↩️ CONTRE-OFFRE DU CLUB",
+   "it": "↩️ CONTROFFERTA DEL CLUB",
+   "de": "↩️ GEGENANGEBOT DES VEREINS",
+   "ca": "↩️ CONTRAOFERTA DEL CLUB",
+   "pl": "↩️ KONTROFERTA KLUBU",
+   "tr": "↩️ KULÜBÜN KARŞI TEKLİFİ"
+  },
+  "✔ Con el club ya hay acuerdo: falta convencerle a él (paciencia: %d ronda(s)).": {
+   "en": "✔ The club has agreed: now you must convince him (patience: %d round(s)).",
+   "pt": "✔ Com o clube já há acordo: falta convencê-lo (paciência: %d rodada(s)).",
+   "fr": "✔ Accord trouvé avec le club : reste à le convaincre (patience : %d tour(s)).",
+   "it": "✔ Col club c'è l'accordo: manca convincere lui (pazienza: %d round).",
+   "de": "✔ Mit dem Verein ist man sich einig: jetzt muss er überzeugt werden (Geduld: %d Runde(n)).",
+   "ca": "✔ Amb el club ja hi ha acord: falta convèncer-lo a ell (paciència: %d ronda(es)).",
+   "pl": "✔ Z klubem jest porozumienie: teraz trzeba przekonać jego (cierpliwość: rund %d).",
+   "tr": "✔ Kulüple anlaşma var: şimdi onu ikna etmek gerek (sabır: %d tur)."
+  },
+  "✔ TRATO al %d %%  (%s)": {
+   "en": "✔ DEAL at %d %%  (%s)",
+   "pt": "✔ ACORDO a %d %%  (%s)",
+   "fr": "✔ ACCORD à %d %%  (%s)",
+   "it": "✔ ACCORDO al %d %%  (%s)",
+   "de": "✔ EINIGUNG bei %d %%  (%s)",
+   "ca": "✔ TRACTE al %d %%  (%s)",
+   "pl": "✔ UMOWA na %d %%  (%s)",
+   "tr": "✔ %d %% ÜZERİNDEN ANLAŞMA  (%s)"
+  },
+  "✖ SE FUE DE LA MESA": {
+   "en": "✖ HE WALKED AWAY FROM THE TABLE",
+   "pt": "✖ ELE SAIU DA MESA",
+   "fr": "✖ IL A QUITTÉ LA TABLE",
+   "it": "✖ SE N'È ANDATO DAL TAVOLO",
+   "de": "✖ ER HAT DEN TISCH VERLASSEN",
+   "ca": "✖ HA MARXAT DE LA TAULA",
+   "pl": "✖ ODSZEDŁ OD STOŁU",
+   "tr": "✖ MASADAN KALKTI"
+  },
+  "🃏 Farol: %s": {
+   "en": "🃏 Bluff: %s",
+   "pt": "🃏 Blefe: %s",
+   "fr": "🃏 Bluff : %s",
+   "it": "🃏 Bluff: %s",
+   "de": "🃏 Bluff: %s",
+   "ca": "🃏 Farol: %s",
+   "pl": "🃏 Blef: %s",
+   "tr": "🃏 Blöf: %s"
+  },
+  "🏠 Pasa en casa": {
+   "en": "🏠 Happening at home",
+   "pt": "🏠 Acontece em casa",
+   "fr": "🏠 Ça se passe à la maison",
+   "it": "🏠 Succede a casa",
+   "de": "🏠 Zu Hause ist was los",
+   "ca": "🏠 Passa a casa",
+   "pl": "🏠 Dzieje się w domu",
+   "tr": "🏠 Evde olanlar"
+  },
+  "🏢 Asunto del personal": {
+   "en": "🏢 Staff matter",
+   "pt": "🏢 Assunto do pessoal",
+   "fr": "🏢 Affaire du personnel",
+   "it": "🏢 Questione del personale",
+   "de": "🏢 Personalangelegenheit",
+   "ca": "🏢 Afer del personal",
+   "pl": "🏢 Sprawa personelu",
+   "tr": "🏢 Personel meselesi"
+  },
+  "💸 Crisis económica": {
+   "en": "💸 Financial crisis",
+   "pt": "💸 Crise econômica",
+   "fr": "💸 Crise économique",
+   "it": "💸 Crisi economica",
+   "de": "💸 Finanzkrise",
+   "ca": "💸 Crisi econòmica",
+   "pl": "💸 Kryzys finansowy",
+   "tr": "💸 Ekonomik kriz"
+  },
+  "💸 NO TE ALCANZA": {
+   "en": "💸 YOU CAN'T AFFORD IT",
+   "pt": "💸 NÃO DÁ",
+   "fr": "💸 TU N'AS PAS ASSEZ",
+   "it": "💸 NON TE LO PUOI PERMETTERE",
+   "de": "💸 DAS GELD REICHT NICHT",
+   "ca": "💸 NO ET DONA",
+   "pl": "💸 NIE STAĆ CIĘ",
+   "tr": "💸 PARAN YETMİYOR"
+  },
+  "📌 Hay que decidir": {
+   "en": "📌 Decision needed",
+   "pt": "📌 É preciso decidir",
+   "fr": "📌 Il faut décider",
+   "it": "📌 Bisogna decidere",
+   "de": "📌 Entscheidung nötig",
+   "ca": "📌 Cal decidir",
+   "pl": "📌 Trzeba zdecydować",
+   "tr": "📌 Karar vermelisin"
+  },
+  "🤝 EL CLUB ACEPTA · FALTA ÉL": {
+   "en": "🤝 THE CLUB ACCEPTS · NOW HIM",
+   "pt": "🤝 O CLUBE ACEITA · FALTA ELE",
+   "fr": "🤝 LE CLUB ACCEPTE · RESTE LUI",
+   "it": "🤝 IL CLUB ACCETTA · MANCA LUI",
+   "de": "🤝 DER VEREIN STIMMT ZU · JETZT ER",
+   "ca": "🤝 EL CLUB ACCEPTA · FALTA ELL",
+   "pl": "🤝 KLUB SIĘ ZGADZA · TERAZ ON",
+   "tr": "🤝 KULÜP KABUL EDİYOR · SIRA ONDA"
+  },
+  "🤝 LA MESA DEL REPRESENTANTE": {
+   "en": "🤝 THE AGENT'S TABLE",
+   "pt": "🤝 A MESA DO EMPRESÁRIO",
+   "fr": "🤝 LA TABLE DE L'AGENT",
+   "it": "🤝 IL TAVOLO DEL PROCURATORE",
+   "de": "🤝 DER TISCH DES BERATERS",
+   "ca": "🤝 LA TAULA DEL REPRESENTANT",
+   "pl": "🤝 STÓŁ AGENTA",
+   "tr": "🤝 MENAJERİN MASASI"
+  },
+  "🤝 Sentarse a negociar": {
+   "en": "🤝 Sit down and negotiate",
+   "pt": "🤝 Sentar para negociar",
+   "fr": "🤝 S'asseoir pour négocier",
+   "it": "🤝 Sedersi a trattare",
+   "de": "🤝 Verhandeln",
+   "ca": "🤝 Seure a negociar",
+   "pl": "🤝 Usiąść do negocjacji",
+   "tr": "🤝 Pazarlığa otur"
+  },
+  "🦈 Un representante presiona": {
+   "en": "🦈 An agent is pushing",
+   "pt": "🦈 Um empresário pressiona",
+   "fr": "🦈 Un agent fait pression",
+   "it": "🦈 Un procuratore fa pressione",
+   "de": "🦈 Ein Berater macht Druck",
+   "ca": "🦈 Un representant pressiona",
+   "pl": "🦈 Agent naciska",
+   "tr": "🦈 Bir menajer baskı yapıyor"
+  },
+  "una cifra fija mayor": {
+   "en": "a bigger fixed fee",
+   "pt": "um valor fixo maior",
+   "fr": "un fixe plus élevé",
+   "it": "una cifra fissa più alta",
+   "de": "einen höheren Festbetrag",
+   "ca": "una xifra fixa més alta",
+   "pl": "wyższej kwoty stałej",
+   "tr": "daha yüksek bir sabit ücret"
+  },
+  "más dinero por delante y menos a plazos": {
+   "en": "more money up front and less in instalments",
+   "pt": "mais dinheiro à vista e menos parcelado",
+   "fr": "plus d'argent tout de suite et moins échelonné",
+   "it": "più soldi subito e meno a rate",
+   "de": "mehr Geld sofort und weniger in Raten",
+   "ca": "més diners d'entrada i menys a terminis",
+   "pl": "więcej pieniędzy od razu i mniej w ratach",
+   "tr": "daha çok peşin, daha az taksit"
+  },
+  "menos bonos y más garantizado": {
+   "en": "fewer bonuses and more guaranteed",
+   "pt": "menos bônus e mais garantido",
+   "fr": "moins de primes et plus de garanti",
+   "it": "meno bonus e più garantito",
+   "de": "weniger Prämien und mehr Garantie",
+   "ca": "menys bonus i més garantit",
+   "pl": "mniej premii i więcej gwarancji",
+   "tr": "daha az prim, daha çok garanti"
+  },
+  "que te olvides del porcentaje y subas la parte fija": {
+   "en": "that you drop the percentage and raise the fixed part",
+   "pt": "que esqueça a porcentagem e suba a parte fixa",
+   "fr": "que tu oublies le pourcentage et augmentes le fixe",
+   "it": "che lasci perdere la percentuale e alzi la parte fissa",
+   "de": "dass du die Beteiligung lässt und den Festbetrag erhöhst",
+   "ca": "que t'oblidis del percentatge i apugis la part fixa",
+   "pl": "żebyś odpuścił procent i podniósł część stałą",
+   "tr": "yüzdeyi unutup sabit kısmı artırman"
+  },
+  "Insinuar que lo pones en venta": {
+   "en": "Hint that you're putting him up for sale",
+   "pt": "Insinuar que vai colocá-lo à venda",
+   "fr": "Laisser entendre qu'il est à vendre",
+   "it": "Far capire che lo metti in vendita",
+   "de": "Andeuten, dass er zum Verkauf steht",
+   "ca": "Insinuar que el poses a la venda",
+   "pl": "Zasugerować, że wystawiasz go na sprzedaż",
+   "tr": "Onu satışa çıkardığını ima et"
+  },
+  "Decirle que ya hablaste con otra agencia": {
+   "en": "Tell him you've already talked to another agency",
+   "pt": "Dizer que já falou com outra agência",
+   "fr": "Lui dire que tu as déjà parlé à une autre agence",
+   "it": "Dirgli che hai già parlato con un'altra agenzia",
+   "de": "Ihm sagen, dass du schon mit einer anderen Agentur gesprochen hast",
+   "ca": "Dir-li que ja vas parlar amb una altra agència",
+   "pl": "Powiedzieć, że rozmawiałeś już z inną agencją",
+   "tr": "Başka bir ajansla konuştuğunu söyle"
+  },
+  "Decirle que la llamada quedó grabada": {
+   "en": "Tell him the call was recorded",
+   "pt": "Dizer que a ligação ficou gravada",
+   "fr": "Lui dire que l'appel a été enregistré",
+   "it": "Dirgli che la chiamata è stata registrata",
+   "de": "Ihm sagen, dass das Gespräch aufgezeichnet wurde",
+   "ca": "Dir-li que la trucada va quedar gravada",
+   "pl": "Powiedzieć, że rozmowa została nagrana",
+   "tr": "Görüşmenin kaydedildiğini söyle"
+  },
+  "Decirle que otra agencia ofrece mejor trato": {
+   "en": "Tell him another agency offers a better deal",
+   "pt": "Dizer que outra agência oferece condições melhores",
+   "fr": "Lui dire qu'une autre agence propose mieux",
+   "it": "Dirgli che un'altra agenzia offre condizioni migliori",
+   "de": "Ihm sagen, dass eine andere Agentur bessere Bedingungen bietet",
+   "ca": "Dir-li que una altra agència ofereix més bon tracte",
+   "pl": "Powiedzieć, że inna agencja daje lepsze warunki",
+   "tr": "Başka bir ajansın daha iyi şartlar sunduğunu söyle"
+  },
+  "Tirarte un farol": {
+   "en": "Bluff",
+   "pt": "Blefar",
+   "fr": "Bluffer",
+   "it": "Bluffare",
+   "de": "Bluffen",
+   "ca": "Fer un farol",
+   "pl": "Zblefować",
+   "tr": "Blöf yap"
+  }
+ },
+ "patrones": [
+  [
+   "^\\+(\\d+) % de sueldo$",
+   "+$1 % salary",
+   "+$1 % de salário",
+   "+$1 % de salaire",
+   "+$1 % di stipendio",
+   "+$1 % Gehalt",
+   "+$1 % de sou",
+   "+$1 % pensji",
+   "+$1 % maaş"
+  ],
+  [
+   "^(\\d+) % de la comisión$",
+   "$1 % of the commission",
+   "$1 % da comissão",
+   "$1 % de la commission",
+   "$1 % della commissione",
+   "$1 % der Provision",
+   "$1 % de la comissió",
+   "$1 % prowizji",
+   "komisyonun % $1'i"
+  ],
+  [
+   "^su chico, con el (\\d+) % del sueldo que pide$",
+   "his lad, on $1 % of the wage he asks for",
+   "o garoto dele, com $1 % do salário que pede",
+   "son jeune, à $1 % du salaire demandé",
+   "il suo ragazzo, al $1 % dello stipendio richiesto",
+   "sein Junge, mit $1 % des geforderten Gehalts",
+   "el seu noi, amb el $1 % del sou que demana",
+   "jego chłopak, za $1 % żądanej pensji",
+   "onun gençi, istediği maaşın % $1'iyle"
+  ],
+  [
+   "^exclusiva con un compromiso del (\\d+) %$",
+   "exclusivity with a $1 % commitment",
+   "exclusividade com compromisso de $1 %",
+   "exclusivité avec un engagement de $1 %",
+   "esclusiva con un impegno del $1 %",
+   "Exklusivität mit $1 % Zusage",
+   "exclusiva amb un compromís del $1 %",
+   "wyłączność ze zobowiązaniem $1 %",
+   "% $1 taahhütle münhasırlık"
+  ]
+ ]
+}

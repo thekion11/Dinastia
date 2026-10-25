@@ -1,5 +1,5 @@
 extends "res://ui/componentes/telefono_p1.gd"
-## [Capa 2/3 de `telefono.gd`] _tarjeta, _perfil, _publicar, _tribuna, _burbuja_icono, _un_chat … (+4)
+## [Capa 2/4 de `telefono.gd`] _tarjeta, _perfil, _publicar, _tribuna, _burbuja_icono, _un_chat … (+4)
 
 func _tarjeta(p: Dictionary) -> PanelContainer:
 	var pc := PanelContainer.new()
@@ -11,7 +11,7 @@ func _tarjeta(p: Dictionary) -> PanelContainer:
 	var cab := HBoxContainer.new()
 	cab.add_theme_constant_override("separation", 6)
 	cab.add_child(_avatar_de(("jugador:" + String(p.get("jugador_id", ""))) if cuenta == "jugador" else cuenta, 26))
-	var autor := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(p["autor"]) + ("  ✔" if cuenta != "fan" else "") + ("  ⚽ tu plantel" if cuenta == "jugador" else ""))
+	var autor := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(p["autor"]) + ("  ✔" if cuenta != "fan" else "") + (("  " + Idiomas.t("⚽ tu plantel")) if cuenta == "jugador" else ""))
 	autor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	autor.clip_text = true
 	cab.add_child(autor)
@@ -27,7 +27,7 @@ func _tarjeta(p: Dictionary) -> PanelContainer:
 	var tags := ""
 	for h: Variant in p["hashtags"]:
 		tags += " [color=#%s]%s[/color]" % [AZUL.to_html(false), String(h)]
-	t.text = String(p["texto"]).replace("[", "(").replace("]", ")") + tags
+	t.text = _t_icono(String(p["texto"])).replace("[", "(").replace("]", ")") + tags
 	v.add_child(t)
 	if bool(p.get("polemica", false)):
 		v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Color("e5534b"), "🔥 Polémica: se está discutiendo mucho"))
@@ -71,7 +71,7 @@ func _tarjeta(p: Dictionary) -> PanelContainer:
 		for tono: String in Redes.COMENTAR_JUGADOR:
 			var d: Array = Redes.COMENTAR_JUGADOR[tono]
 			var b := Button.new()
-			b.text = "%s %s" % [String(d[0]), String(d[1])]
+			b.text = "%s %s" % [String(d[0]), Idiomas.t(String(d[1]))]
 			b.add_theme_font_size_override("font_size", 11)
 			var k := tono
 			b.pressed.connect(func() -> void:
@@ -105,7 +105,7 @@ func _perfil(cuenta: String) -> void:
 			[str(140 + int(cu["seguidores"]) % 97) if cuenta == "dt" else "12", "siguiendo"]]:
 		var col := VBoxContainer.new()
 		col.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(par[0])))
-		col.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(par[1])))
+		col.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t(String(par[1]))))
 		cifras.add_child(col)
 	var rejilla := GridContainer.new()
 	rejilla.columns = 3
@@ -128,11 +128,11 @@ func _publicar() -> void:
 	if not tipos.has(_tipo_elegido):
 		_tipo_elegido = String(tipos.keys()[0])
 		_tags_elegidos = []
-	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, "Nueva publicación" + (" del club" if como_club else "")))
+	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, Idiomas.t("Nueva publicación del club" if como_club else "Nueva publicación")))
 	if not como_club:
 		var no := r.puede_publicar(m)
 		if no != "":
-			_cuerpo.add_child(_nota("⏳ " + no.substr(0, 1).to_upper() + no.substr(1) + "."))
+			_cuerpo.add_child(_nota("⏳ " + _frase(no)))
 			return
 	var rej := GridContainer.new()
 	rej.columns = 2
@@ -142,8 +142,14 @@ func _publicar() -> void:
 		var b := Button.new()
 		b.toggle_mode = true
 		b.button_pressed = tipo == _tipo_elegido
-		b.text = "%s %s" % [String(d[0]), String(d[1])]
-		b.custom_minimum_size = Vector2(170, 34)
+		b.text = "%s %s" % [String(d[0]), Idiomas.t(String(d[1]))]
+		## Los nombres largos («Anunciar el próximo partido», en alemán aún más) se cortaban: el botón
+		## reparte la fila a medias y el texto se recorta con «…» en vez de ensanchar el móvil.
+		b.custom_minimum_size = Vector2(0, 34)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.clip_text = true
+		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		b.tooltip_text = b.text
 		b.add_theme_font_size_override("font_size", 12)
 		var k := tipo
 		b.pressed.connect(func() -> void:
@@ -155,7 +161,7 @@ func _publicar() -> void:
 		_tags_elegidos = (tipos[_tipo_elegido][3] as Array).duplicate()
 	var d2: Array = tipos[_tipo_elegido]
 	_cuerpo.add_child(_foto(_tipo_elegido, 150.0))
-	var txt := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(d2[2]))
+	var txt := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, Idiomas.t(String(d2[2])))
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_cuerpo.add_child(txt)
 	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "HASHTAGS (la tendencia da más alcance)"))
@@ -180,15 +186,15 @@ func _publicar() -> void:
 		tags.add_child(b)
 	var efecto := ""
 	if como_club:
-		efecto = "Efecto: ánimo de la grada %+d" % int(d2[4])
+		efecto = Idiomas.t("Efecto: ánimo de la grada %+d") % int(d2[4])
 		if int(d2[5]) > 0:
-			efecto += " · vende en la tienda"
+			efecto += Idiomas.t(" · vende en la tienda")
 	else:
-		efecto = "Efecto: %s %+d" % [String(Reputacion.FACETAS.get(String(d2[4]), ["?"])[0]).to_lower(), int(d2[5])]
+		efecto = Idiomas.t("Efecto: %s %+d") % [Idiomas.t(String(Reputacion.FACETAS.get(String(d2[4]), ["?"])[0])).to_lower(), int(d2[5])]
 		if int(d2[6]) != 0:
-			efecto += ", ánimo de la grada %+d" % int(d2[6])
+			efecto += Idiomas.t(", ánimo de la grada %+d") % int(d2[6])
 		if float(d2[8]) > 0.0:
-			efecto += " · ⚠️ puede hacerse polémica"
+			efecto += Idiomas.t(" · ⚠️ puede hacerse polémica")
 	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, efecto))
 	var pub := Button.new()
 	pub.text = Idiomas.t("Publicar como ") + String(r.cuentas[r.sesion]["usuario"])
@@ -196,12 +202,12 @@ func _publicar() -> void:
 	pub.pressed.connect(func() -> void:
 		var res := r.publicar(m, _tipo_elegido, _tags_elegidos)
 		if res.has("error"):
-			_decir(String(res["error"]))
+			_decir("⚠️ " + _frase(String(res["error"])))
 			return
 		_tags_elegidos = []
 		_sub = "perfil" if not como_club else "club"
 		(self as Telefono).abrir_app("tribuna")
-		_decir("✔ Publicado: %s me gusta en el primer rato." % cifra(int(res["likes"]))))
+		_decir(Idiomas.t("✔ Publicado: %s me gusta en el primer rato.") % cifra(int(res["likes"]))))
 	_cuerpo.add_child(pub)
 
 # --- tribuna ------------------------------------------------------------------------
@@ -235,12 +241,16 @@ func _tribuna() -> void:
 	## Pestañas de la red.
 	var tabs := HBoxContainer.new()
 	tabs.alignment = BoxContainer.ALIGNMENT_CENTER
-	for t: Array in [["inicio", "🏠"], ["perfil", "👤"], ["club", "🏟️"], ["publicar", "➕"]]:
+	## Solo iconos (no caben cuatro palabras en el ancho del móvil), pero más grandes y con su nombre
+	## al pasar el ratón: en la captura del 25-10 se veían como puntos sueltos.
+	for t: Array in [["inicio", "🏠", "Inicio"], ["perfil", "👤", "Tu perfil"], ["club", "🏟️", "Cuenta del club"], ["publicar", "➕", "Publicar"]]:
 		var b := Button.new()
 		b.toggle_mode = true
 		b.button_pressed = _sub == String(t[0])
 		b.text = String(t[1])
-		b.custom_minimum_size = Vector2(70, 32)
+		b.tooltip_text = Idiomas.t(String(t[2]))
+		b.add_theme_font_size_override("font_size", 18)
+		b.custom_minimum_size = Vector2(70, 34)
 		var k := String(t[0])
 		b.pressed.connect(func() -> void:
 			_sub = k
@@ -252,7 +262,7 @@ func _tribuna() -> void:
 			for p: Dictionary in r.publicaciones.slice(0, 25):
 				_cuerpo.add_child(_tarjeta(p))
 			if r.publicaciones.is_empty():
-				_cuerpo.add_child(_nota("Todavía no hay nada. Publica algo desde ➕."))
+				_cuerpo.add_child(_vacio("📣", "Todavía no hay nada.", "Publica algo desde ➕ y empezará la conversación."))
 		"perfil": _perfil(r.sesion)
 		"club": _perfil("club")
 		"publicar": _publicar()
@@ -292,7 +302,7 @@ func _un_chat() -> void:
 	var cab := VBoxContainer.new()
 	cab.add_theme_constant_override("separation", 0)
 	cab.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, _chat))
-	cab.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Color("25d366"), "en línea"))
+	cab.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Color("25d366"), Idiomas.t("en línea")))
 	fila.add_child(cab)
 	_cuerpo.add_child(fila)
 	var lista: Array = []
@@ -305,7 +315,7 @@ func _un_chat() -> void:
 		## Separador de fecha cuando cambia la semana, centrado.
 		if int(msj["semana"]) != semana_previa:
 			semana_previa = int(msj["semana"])
-			var fecha := Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.SUAVE, "Semana %d · %d" % [int(msj["semana"]), int(msj["anio"])])
+			var fecha := Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.SUAVE, Idiomas.t("Semana %d · %d") % [int(msj["semana"]), int(msj["anio"])])
 			fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			_cuerpo.add_child(fecha)
 		var envoltura := HBoxContainer.new()
@@ -322,9 +332,10 @@ func _un_chat() -> void:
 		var v := VBoxContainer.new()
 		v.add_theme_constant_override("separation", 0)
 		burbuja.add_child(v)
-		var l := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(msj["texto"]))
+		var texto := _t_icono(String(msj["texto"]))
+		var l := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, texto)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		l.custom_minimum_size = Vector2(minf(260.0, 9.0 * String(msj["texto"]).length()), 0)
+		l.custom_minimum_size = Vector2(minf(260.0, 9.0 * texto.length()), 0)
 		v.add_child(l)
 		var hora := Tema.etiqueta(Tema.TAM_ROTULO - 3, Tema.SUAVE, _hora())
 		hora.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -340,7 +351,7 @@ func _titulo_app(texto: String) -> void:
 	atras.add_theme_font_size_override("font_size", 22)
 	atras.pressed.connect(func() -> void: (self as Telefono).abrir_app("inicio"))
 	fila.add_child(atras)
-	fila.add_child(Tema.etiqueta(Tema.TAM_DESTACADO + 2, Tema.TEXTO, texto))
+	fila.add_child(Tema.etiqueta(Tema.TAM_DESTACADO + 2, Tema.TEXTO, Idiomas.t(texto)))
 	_cuerpo.add_child(fila)
 
 # --- mensajes, noticias, banco, calendario, fotos --------------------------------------
@@ -372,7 +383,7 @@ func _mensajes() -> void:
 		fila.add_child(col)
 		var nom := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(ch["de"]))
 		col.add_child(nom)
-		var ult := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(ch["ultimo"]))
+		var ult := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, _t_icono(String(ch["ultimo"])))
 		ult.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		ult.custom_minimum_size = Vector2(10, 0)
 		col.add_child(ult)
@@ -420,11 +431,11 @@ func _noticias() -> void:
 		pc.add_child(v)
 		if primera:
 			v.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, "PORTADA"))
-		var t := Tema.etiqueta(Tema.TAM_DESTACADO if primera else Tema.TAM_CUERPO, Tema.TEXTO, String(n.get("titulo", "")))
+		var t := Tema.etiqueta(Tema.TAM_DESTACADO if primera else Tema.TAM_CUERPO, Tema.TEXTO, Idiomas.t(String(n.get("titulo", ""))))
 		primera = false
 		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		v.add_child(t)
-		var c := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(n.get("cuerpo", "")))
+		var c := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t(String(n.get("cuerpo", ""))))
 		c.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		v.add_child(c)
 		_cuerpo.add_child(pc)

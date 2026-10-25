@@ -1,0 +1,1797 @@
+{
+ "exactas": {
+  "NOMBRE": {
+   "en": "NAME",
+   "pt": "NOME",
+   "fr": "NOM",
+   "it": "NOME",
+   "de": "NAME",
+   "ca": "NOM",
+   "pl": "NAZWISKO",
+   "tr": "İSİM"
+  },
+  "POS": {
+   "en": "POS",
+   "pt": "POS",
+   "fr": "POS",
+   "it": "RUO",
+   "de": "POS",
+   "ca": "POS",
+   "pl": "POZ",
+   "tr": "MEV"
+  },
+  "EDAD": {
+   "en": "AGE",
+   "pt": "IDADE",
+   "fr": "ÂGE",
+   "it": "ETÀ",
+   "de": "ALTER",
+   "ca": "EDAT",
+   "pl": "WIEK",
+   "tr": "YAŞ"
+  },
+  "MED": {
+   "en": "OVR",
+   "pt": "GER",
+   "fr": "GÉN",
+   "it": "MED",
+   "de": "GES",
+   "ca": "MIT",
+   "pl": "OGÓ",
+   "tr": "GNL"
+  },
+  "POT": {
+   "en": "POT",
+   "pt": "POT",
+   "fr": "POT",
+   "it": "POT",
+   "de": "POT",
+   "ca": "POT",
+   "pl": "POT",
+   "tr": "POT"
+  },
+  "VALOR": {
+   "en": "VALUE",
+   "pt": "VALOR",
+   "fr": "VALEUR",
+   "it": "VALORE",
+   "de": "WERT",
+   "ca": "VALOR",
+   "pl": "WARTOŚĆ",
+   "tr": "DEĞER"
+  },
+  "Ordenar por nombre": {
+   "en": "Sort by name",
+   "pt": "Ordenar por nome",
+   "fr": "Trier par nom",
+   "it": "Ordina per nome",
+   "de": "Nach Name sortieren",
+   "ca": "Ordenar per nom",
+   "pl": "Sortuj według nazwiska",
+   "tr": "İsme göre sırala"
+  },
+  "Edad": {
+   "en": "Age",
+   "pt": "Idade",
+   "fr": "Âge",
+   "it": "Età",
+   "de": "Alter",
+   "ca": "Edat",
+   "pl": "Wiek",
+   "tr": "Yaş"
+  },
+  "Media actual: lo que rinde hoy": {
+   "en": "Current rating: how he performs today",
+   "pt": "Média atual: o que rende hoje",
+   "fr": "Note actuelle : ce qu'il vaut aujourd'hui",
+   "it": "Valutazione attuale: quanto rende oggi",
+   "de": "Aktuelle Stärke: was er heute leistet",
+   "ca": "Mitjana actual: el que rendeix avui",
+   "pl": "Obecna ocena: ile daje dziś",
+   "tr": "Güncel reyting: bugün ne kadar verdiği"
+  },
+  "Potencial: hasta dónde puede llegar": {
+   "en": "Potential: how far he can go",
+   "pt": "Potencial: até onde pode chegar",
+   "fr": "Potentiel : jusqu'où il peut aller",
+   "it": "Potenziale: fin dove può arrivare",
+   "de": "Potenzial: wie weit er kommen kann",
+   "ca": "Potencial: fins on pot arribar",
+   "pl": "Potencjał: jak daleko może zajść",
+   "tr": "Potansiyel: nereye kadar çıkabileceği"
+  },
+  "Valor de mercado": {
+   "en": "Market value",
+   "pt": "Valor de mercado",
+   "fr": "Valeur marchande",
+   "it": "Valore di mercato",
+   "de": "Marktwert",
+   "ca": "Valor de mercat",
+   "pl": "Wartość rynkowa",
+   "tr": "Piyasa değeri"
+  },
+  "Porteros": {
+   "en": "Goalkeepers",
+   "pt": "Goleiros",
+   "fr": "Gardiens",
+   "it": "Portieri",
+   "de": "Torhüter",
+   "ca": "Porters",
+   "pl": "Bramkarze",
+   "tr": "Kaleciler"
+  },
+  "Defensas": {
+   "en": "Defenders",
+   "pt": "Defensores",
+   "fr": "Défenseurs",
+   "it": "Difensori",
+   "de": "Verteidiger",
+   "ca": "Defenses",
+   "pl": "Obrońcy",
+   "tr": "Defans oyuncuları"
+  },
+  "Centrocampistas": {
+   "en": "Midfielders",
+   "pt": "Meio-campistas",
+   "fr": "Milieux",
+   "it": "Centrocampisti",
+   "de": "Mittelfeldspieler",
+   "ca": "Migcampistes",
+   "pl": "Pomocnicy",
+   "tr": "Orta saha oyuncuları"
+  },
+  "Delanteros": {
+   "en": "Forwards",
+   "pt": "Atacantes",
+   "fr": "Attaquants",
+   "it": "Attaccanti",
+   "de": "Stürmer",
+   "ca": "Davanters",
+   "pl": "Napastnicy",
+   "tr": "Forvetler"
+  },
+  "%d jugadores  ·  media %.1f  ·  edad media %.1f": {
+   "en": "%d players  ·  average rating %.1f  ·  average age %.1f",
+   "pt": "%d jogadores  ·  média %.1f  ·  idade média %.1f",
+   "fr": "%d joueurs  ·  note moyenne %.1f  ·  âge moyen %.1f",
+   "it": "%d giocatori  ·  media %.1f  ·  età media %.1f",
+   "de": "%d Spieler  ·  Schnitt %.1f  ·  Altersschnitt %.1f",
+   "ca": "%d jugadors  ·  mitjana %.1f  ·  edat mitjana %.1f",
+   "pl": "%d zawodników  ·  średnia %.1f  ·  średni wiek %.1f",
+   "tr": "%d oyuncu  ·  ortalama %.1f  ·  yaş ortalaması %.1f"
+  },
+  "%d no disponibles": {
+   "en": "%d unavailable",
+   "pt": "%d indisponíveis",
+   "fr": "%d indisponibles",
+   "it": "%d non disponibili",
+   "de": "%d nicht verfügbar",
+   "ca": "%d no disponibles",
+   "pl": "%d niedostępnych",
+   "tr": "%d oyuncu oynayamaz"
+  },
+  "todos disponibles": {
+   "en": "all available",
+   "pt": "todos disponíveis",
+   "fr": "tous disponibles",
+   "it": "tutti disponibili",
+   "de": "alle verfügbar",
+   "ca": "tots disponibles",
+   "pl": "wszyscy dostępni",
+   "tr": "herkes hazır"
+  },
+  "Nadie en esa línea ahora mismo.": {
+   "en": "Nobody in that line right now.",
+   "pt": "Ninguém nesse setor agora.",
+   "fr": "Personne à ce poste pour l'instant.",
+   "it": "Nessuno in quel reparto adesso.",
+   "de": "Gerade niemand in diesem Mannschaftsteil.",
+   "ca": "Ningú en aquesta línia ara mateix.",
+   "pl": "Nikogo w tej formacji w tej chwili.",
+   "tr": "Şu an o hatta kimse yok."
+  },
+  "Tu plantel está vacío. Ficha jugadores en el Mercado o sube canteranos desde la Cantera.": {
+   "en": "Your squad is empty. Sign players in the Market or promote youngsters from the Academy.",
+   "pt": "Seu elenco está vazio. Contrate jogadores no Mercado ou suba jovens da Base.",
+   "fr": "Ton effectif est vide. Recrute des joueurs sur le Marché ou fais monter des jeunes du Centre de formation.",
+   "it": "La tua rosa è vuota. Ingaggia giocatori nel Mercato o promuovi giovani dal Vivaio.",
+   "de": "Dein Kader ist leer. Verpflichte Spieler auf dem Markt oder hol Talente aus der Jugend hoch.",
+   "ca": "La teva plantilla és buida. Fitxa jugadors al Mercat o puja joves del Planter.",
+   "pl": "Twoja kadra jest pusta. Kupuj zawodników na Rynku albo awansuj wychowanków z Akademii.",
+   "tr": "Kadron boş. Pazardan oyuncu al ya da altyapıdan genç yükselt."
+  },
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  verde: joven con margen  ·  rojo: no disponible": {
+   "en": "Ⓒ captain  ·  🔻 transfer-listed  ·  🩹 injured  ·  🚫 suspended  ·  ✦ special skill  ·  green: young with room to grow  ·  red: unavailable",
+   "pt": "Ⓒ capitão  ·  🔻 transferível  ·  🩹 lesionado  ·  🚫 suspenso  ·  ✦ habilidade especial  ·  verde: jovem com margem  ·  vermelho: indisponível",
+   "fr": "Ⓒ capitaine  ·  🔻 transférable  ·  🩹 blessé  ·  🚫 suspendu  ·  ✦ compétence spéciale  ·  vert : jeune avec de la marge  ·  rouge : indisponible",
+   "it": "Ⓒ capitano  ·  🔻 cedibile  ·  🩹 infortunato  ·  🚫 squalificato  ·  ✦ abilità speciale  ·  verde: giovane con margine  ·  rosso: non disponibile",
+   "de": "Ⓒ Kapitän  ·  🔻 auf der Transferliste  ·  🩹 verletzt  ·  🚫 gesperrt  ·  ✦ Spezialfähigkeit  ·  grün: jung mit Luft nach oben  ·  rot: nicht verfügbar",
+   "ca": "Ⓒ capità  ·  🔻 transferible  ·  🩹 lesionat  ·  🚫 sancionat  ·  ✦ habilitat especial  ·  verd: jove amb marge  ·  vermell: no disponible",
+   "pl": "Ⓒ kapitan  ·  🔻 na liście transferowej  ·  🩹 kontuzjowany  ·  🚫 zawieszony  ·  ✦ umiejętność specjalna  ·  zielony: młody z zapasem  ·  czerwony: niedostępny",
+   "tr": "Ⓒ kaptan  ·  🔻 satış listesinde  ·  🩹 sakat  ·  🚫 cezalı  ·  ✦ özel yetenek  ·  yeşil: gelişime açık genç  ·  kırmızı: oynayamaz"
+  },
+  "Mejor cualidad": {
+   "en": "Best quality",
+   "pt": "Melhor qualidade",
+   "fr": "Meilleure qualité",
+   "it": "Miglior qualità",
+   "de": "Größte Stärke",
+   "ca": "Millor qualitat",
+   "pl": "Najmocniejsza strona",
+   "tr": "En iyi özelliği"
+  },
+  "Punto débil": {
+   "en": "Weak point",
+   "pt": "Ponto fraco",
+   "fr": "Point faible",
+   "it": "Punto debole",
+   "de": "Schwachpunkt",
+   "ca": "Punt feble",
+   "pl": "Słaby punkt",
+   "tr": "Zayıf noktası"
+  },
+  "Nota media": {
+   "en": "Average rating",
+   "pt": "Nota média",
+   "fr": "Note moyenne",
+   "it": "Voto medio",
+   "de": "Durchschnittsnote",
+   "ca": "Nota mitjana",
+   "pl": "Średnia nota",
+   "tr": "Ortalama not"
+  },
+  "Fiabilidad del informe": {
+   "en": "Report reliability",
+   "pt": "Confiabilidade do relatório",
+   "fr": "Fiabilité du rapport",
+   "it": "Affidabilità del rapporto",
+   "de": "Zuverlässigkeit des Berichts",
+   "ca": "Fiabilitat de l'informe",
+   "pl": "Wiarygodność raportu",
+   "tr": "Raporun güvenilirliği"
+  },
+  "También puede jugar de": {
+   "en": "Can also play as",
+   "pt": "Também pode jogar de",
+   "fr": "Peut aussi jouer",
+   "it": "Può giocare anche da",
+   "de": "Kann auch spielen als",
+   "ca": "També pot jugar de",
+   "pl": "Może też grać jako",
+   "tr": "Şu mevkide de oynayabilir"
+  },
+  "Cláusula de fidelidad": {
+   "en": "Loyalty clause",
+   "pt": "Cláusula de fidelidade",
+   "fr": "Clause de fidélité",
+   "it": "Clausola di fedeltà",
+   "de": "Treueklausel",
+   "ca": "Clàusula de fidelitat",
+   "pl": "Klauzula lojalnościowa",
+   "tr": "Sadakat maddesi"
+  },
+  "Estado": {
+   "en": "Status",
+   "pt": "Situação",
+   "fr": "Statut",
+   "it": "Stato",
+   "de": "Status",
+   "ca": "Estat",
+   "pl": "Status",
+   "tr": "Durum"
+  },
+  "Porcentaje pactado de su próxima venta": {
+   "en": "Agreed share of his next sale",
+   "pt": "Percentual combinado da próxima venda",
+   "fr": "Pourcentage convenu sur sa prochaine vente",
+   "it": "Percentuale pattuita sulla prossima vendita",
+   "de": "Vereinbarter Anteil am nächsten Verkauf",
+   "ca": "Percentatge pactat de la seva propera venda",
+   "pl": "Uzgodniony procent od następnej sprzedaży",
+   "tr": "Bir sonraki satıştan anlaşılan pay"
+  },
+  "Negociación congelada": {
+   "en": "Talks frozen",
+   "pt": "Negociação congelada",
+   "fr": "Négociation gelée",
+   "it": "Trattativa congelata",
+   "de": "Verhandlung eingefroren",
+   "ca": "Negociació congelada",
+   "pl": "Negocjacje zamrożone",
+   "tr": "Görüşmeler donduruldu"
+  },
+  "Asist.": {
+   "en": "Ast.",
+   "pt": "Assist.",
+   "fr": "Passes déc.",
+   "it": "Assist",
+   "de": "Vorl.",
+   "ca": "Assist.",
+   "pl": "Asyst.",
+   "tr": "Asist"
+  },
+  "Derecho": {
+   "en": "Right",
+   "pt": "Direito",
+   "fr": "Droit",
+   "it": "Destro",
+   "de": "Rechts",
+   "ca": "Dret",
+   "pl": "Prawa",
+   "tr": "Sağ"
+  },
+  "Izquierdo": {
+   "en": "Left",
+   "pt": "Esquerdo",
+   "fr": "Gauche",
+   "it": "Sinistro",
+   "de": "Links",
+   "ca": "Esquerre",
+   "pl": "Lewa",
+   "tr": "Sol"
+  },
+  "sin datos": {
+   "en": "no data",
+   "pt": "sem dados",
+   "fr": "pas de données",
+   "it": "nessun dato",
+   "de": "keine Daten",
+   "ca": "sense dades",
+   "pl": "brak danych",
+   "tr": "veri yok"
+  },
+  "%d · %d goles · %d asistencias": {
+   "en": "%d · %d goals · %d assists",
+   "pt": "%d · %d gols · %d assistências",
+   "fr": "%d · %d buts · %d passes décisives",
+   "it": "%d · %d gol · %d assist",
+   "de": "%d · %d Tore · %d Vorlagen",
+   "ca": "%d · %d gols · %d assistències",
+   "pl": "%d · %d goli · %d asyst",
+   "tr": "%d · %d gol · %d asist"
+  },
+  "%d sem  ·  %d": {
+   "en": "%d wk  ·  %d",
+   "pt": "%d sem  ·  %d",
+   "fr": "%d sem  ·  %d",
+   "it": "%d sett  ·  %d",
+   "de": "%d Wo.  ·  %d",
+   "ca": "%d set  ·  %d",
+   "pl": "%d tyg.  ·  %d",
+   "tr": "%d hf  ·  %d"
+  },
+  "%d%% para %s": {
+   "en": "%d%% to %s",
+   "pt": "%d%% para %s",
+   "fr": "%d%% pour %s",
+   "it": "%d%% a %s",
+   "de": "%d%% an %s",
+   "ca": "%d%% per a %s",
+   "pl": "%d%% dla %s",
+   "tr": "%d%% %s kulübüne"
+  },
+  "hasta %d": {
+   "en": "until %d",
+   "pt": "até %d",
+   "fr": "jusqu'en %d",
+   "it": "fino al %d",
+   "de": "bis %d",
+   "ca": "fins al %d",
+   "pl": "do %d",
+   "tr": "%d yılına kadar"
+  },
+  "hasta la semana %d": {
+   "en": "until week %d",
+   "pt": "até a semana %d",
+   "fr": "jusqu'à la semaine %d",
+   "it": "fino alla settimana %d",
+   "de": "bis Woche %d",
+   "ca": "fins a la setmana %d",
+   "pl": "do tygodnia %d",
+   "tr": "%d. haftaya kadar"
+  },
+  "libre": {
+   "en": "free agent",
+   "pt": "livre",
+   "fr": "libre",
+   "it": "svincolato",
+   "de": "vereinslos",
+   "ca": "lliure",
+   "pl": "wolny zawodnik",
+   "tr": "serbest"
+  },
+  "en la lista de transferibles": {
+   "en": "on the transfer list",
+   "pt": "na lista de transferíveis",
+   "fr": "sur la liste des transferts",
+   "it": "nella lista dei cedibili",
+   "de": "auf der Transferliste",
+   "ca": "a la llista de transferibles",
+   "pl": "na liście transferowej",
+   "tr": "satış listesinde"
+  },
+  "Sacarlo de la lista": {
+   "en": "Take him off the list",
+   "pt": "Tirá-lo da lista",
+   "fr": "Le retirer de la liste",
+   "it": "Toglierlo dalla lista",
+   "de": "Von der Liste nehmen",
+   "ca": "Treure'l de la llista",
+   "pl": "Zdejmij go z listy",
+   "tr": "Listeden çıkar"
+  },
+  "📣 muy mediático": {
+   "en": "📣 a media magnet",
+   "pt": "📣 muito midiático",
+   "fr": "📣 très médiatique",
+   "it": "📣 molto mediatico",
+   "de": "📣 sehr medienwirksam",
+   "ca": "📣 molt mediàtic",
+   "pl": "📣 bardzo medialny",
+   "tr": "📣 çok medyatik"
+  },
+  "📸 vende camisetas": {
+   "en": "📸 sells shirts",
+   "pt": "📸 vende camisas",
+   "fr": "📸 vend des maillots",
+   "it": "📸 vende magliette",
+   "de": "📸 verkauft Trikots",
+   "ca": "📸 ven samarretes",
+   "pl": "📸 sprzedaje koszulki",
+   "tr": "📸 forma sattırır"
+  },
+  "Sin novedades fuera de la cancha: vida ordenada.": {
+   "en": "Nothing new off the pitch: a settled life.",
+   "pt": "Sem novidades fora de campo: vida organizada.",
+   "fr": "Rien de neuf hors du terrain : une vie rangée.",
+   "it": "Nessuna novità fuori dal campo: vita ordinata.",
+   "de": "Abseits des Platzes nichts Neues: ein geordnetes Leben.",
+   "ca": "Res de nou fora del camp: vida ordenada.",
+   "pl": "Poza boiskiem bez zmian: poukładane życie.",
+   "tr": "Saha dışında yenilik yok: düzenli bir hayat."
+  },
+  "Debutó a los %d años, %s.": {
+   "en": "He made his debut at %d, %s.",
+   "pt": "Estreou aos %d anos, %s.",
+   "fr": "Il a débuté à %d ans, %s.",
+   "it": "Ha esordito a %d anni, %s.",
+   "de": "Er debütierte mit %d, %s.",
+   "ca": "Va debutar als %d anys, %s.",
+   "pl": "Zadebiutował w wieku %d lat, %s.",
+   "tr": "%d yaşında ilk maçına çıktı, %s."
+  },
+  "Hijo de la leyenda %s.": {
+   "en": "Son of the legend %s.",
+   "pt": "Filho da lenda %s.",
+   "fr": "Fils de la légende %s.",
+   "it": "Figlio della leggenda %s.",
+   "de": "Sohn der Legende %s.",
+   "ca": "Fill de la llegenda %s.",
+   "pl": "Syn legendy %s.",
+   "tr": "Babası efsane %s."
+  },
+  "En el camarín lo describen como «%s».": {
+   "en": "In the dressing room they describe him as «%s».",
+   "pt": "No vestiário o descrevem como «%s».",
+   "fr": "Dans le vestiaire, on le décrit comme «%s».",
+   "it": "Nello spogliatoio lo descrivono come «%s».",
+   "de": "In der Kabine beschreibt man ihn als «%s».",
+   "ca": "Al vestidor el descriuen com «%s».",
+   "pl": "W szatni opisują go jako «%s».",
+   "tr": "Soyunma odasında onu «%s» diye anlatıyorlar."
+  },
+  "surgido de la cantera": {
+   "en": "coming through the academy",
+   "pt": "revelado na base",
+   "fr": "issu du centre de formation",
+   "it": "cresciuto nel vivaio",
+   "de": "aus der eigenen Jugend",
+   "ca": "sorgit del planter",
+   "pl": "wychowanek akademii",
+   "tr": "altyapıdan yetişme"
+  },
+  "llegado desde el fútbol amateur": {
+   "en": "coming up from amateur football",
+   "pt": "vindo do futebol amador",
+   "fr": "venu du football amateur",
+   "it": "arrivato dal calcio dilettantistico",
+   "de": "aus dem Amateurfußball gekommen",
+   "ca": "arribat del futbol amateur",
+   "pl": "przybyły z futbolu amatorskiego",
+   "tr": "amatör futboldan gelme"
+  },
+  "descubierto en un torneo de barrio": {
+   "en": "discovered at a neighbourhood tournament",
+   "pt": "descoberto num torneio de bairro",
+   "fr": "découvert lors d'un tournoi de quartier",
+   "it": "scoperto in un torneo di quartiere",
+   "de": "bei einem Nachbarschaftsturnier entdeckt",
+   "ca": "descobert en un torneig de barri",
+   "pl": "odkryty na osiedlowym turnieju",
+   "tr": "mahalle turnuvasında keşfedilmiş"
+  },
+  "formado a la antigua": {
+   "en": "raised the old-fashioned way",
+   "pt": "formado à moda antiga",
+   "fr": "formé à l'ancienne",
+   "it": "formato alla vecchia maniera",
+   "de": "nach alter Schule ausgebildet",
+   "ca": "format a l'antiga",
+   "pl": "wyszkolony po staremu",
+   "tr": "eski usul yetişmiş"
+  },
+  " · hijo de %s": {
+   "en": " · son of %s",
+   "pt": " · filho de %s",
+   "fr": " · fils de %s",
+   "it": " · figlio di %s",
+   "de": " · Sohn von %s",
+   "ca": " · fill de %s",
+   "pl": " · syn %s",
+   "tr": " · babası %s"
+  },
+  "Ver su ficha": {
+   "en": "View his profile",
+   "pt": "Ver a ficha dele",
+   "fr": "Voir sa fiche",
+   "it": "Vedi la sua scheda",
+   "de": "Profil ansehen",
+   "ca": "Veure la seva fitxa",
+   "pl": "Zobacz jego profil",
+   "tr": "Profiline bak"
+  },
+  "Listo para debutar en el primer equipo": {
+   "en": "Ready to debut in the first team",
+   "pt": "Pronto para estrear no time principal",
+   "fr": "Prêt à débuter en équipe première",
+   "it": "Pronto per esordire in prima squadra",
+   "de": "Bereit für das Debüt in der ersten Mannschaft",
+   "ca": "A punt per debutar al primer equip",
+   "pl": "Gotowy do debiutu w pierwszej drużynie",
+   "tr": "A takımda çıkışa hazır"
+  },
+  "No te alcanza la caja": {
+   "en": "You can't afford it",
+   "pt": "O caixa não dá",
+   "fr": "La caisse ne suffit pas",
+   "it": "La cassa non basta",
+   "de": "Die Kasse reicht nicht",
+   "ca": "La caixa no arriba",
+   "pl": "Nie stać cię",
+   "tr": "Kasa yetmiyor"
+  },
+  "La beca baja el riesgo de que se lo lleven gratis.": {
+   "en": "The scholarship lowers the risk of losing him for free.",
+   "pt": "A bolsa reduz o risco de o levarem de graça.",
+   "fr": "La bourse réduit le risque qu'on te le prenne gratuitement.",
+   "it": "La borsa di studio riduce il rischio che te lo portino via gratis.",
+   "de": "Das Stipendium senkt das Risiko, dass man ihn dir ablösefrei wegnimmt.",
+   "ca": "La beca redueix el risc que se l'enduguin gratis.",
+   "pl": "Stypendium zmniejsza ryzyko, że zabiorą go za darmo.",
+   "tr": "Burs, onu bedavaya kaptırma riskini azaltır."
+  },
+  "Todavía no hay canteranos en el plantel. Cada pretemporada llega una camada nueva, y los chicos de la academia suben al cumplir 16.": {
+   "en": "There are no youth players in the squad yet. A new intake arrives every pre-season, and academy kids move up when they turn 16.",
+   "pt": "Ainda não há jovens da base no elenco. A cada pré-temporada chega uma nova geração, e os garotos da academia sobem ao completar 16.",
+   "fr": "Pas encore de jeunes du centre dans l'effectif. Une nouvelle promotion arrive à chaque présaison, et les gamins de l'académie montent à 16 ans.",
+   "it": "Non ci sono ancora giovani del vivaio in rosa. Ogni precampionato arriva una nuova leva, e i ragazzi dell'accademia salgono a 16 anni.",
+   "de": "Noch keine Jugendspieler im Kader. Jede Saisonvorbereitung kommt ein neuer Jahrgang, und die Akademiekinder rücken mit 16 auf.",
+   "ca": "Encara no hi ha joves del planter a la plantilla. Cada pretemporada arriba una fornada nova, i els nois de l'acadèmia pugen en fer 16 anys.",
+   "pl": "W kadrze nie ma jeszcze wychowanków. Co okres przygotowawczy przychodzi nowy rocznik, a dzieci z akademii awansują po skończeniu 16 lat.",
+   "tr": "Kadroda henüz altyapı oyuncusu yok. Her hazırlık döneminde yeni bir kuşak gelir; akademideki çocuklar 16 yaşında yukarı çıkar."
+  },
+  "⭐ Estirpe de %s": {
+   "en": "⭐ The %s lineage",
+   "pt": "⭐ Linhagem de %s",
+   "fr": "⭐ Lignée de %s",
+   "it": "⭐ Stirpe di %s",
+   "de": "⭐ Geschlecht der %s",
+   "ca": "⭐ Nissaga de %s",
+   "pl": "⭐ Ród %s",
+   "tr": "⭐ %s soyu"
+  },
+  "👨‍👦 Hermanos %s": {
+   "en": "👨‍👦 The %s brothers",
+   "pt": "👨‍👦 Irmãos %s",
+   "fr": "👨‍👦 Frères %s",
+   "it": "👨‍👦 Fratelli %s",
+   "de": "👨‍👦 Brüder %s",
+   "ca": "👨‍👦 Germans %s",
+   "pl": "👨‍👦 Bracia %s",
+   "tr": "👨‍👦 %s kardeşler"
+  },
+  "sus camadas salen un 13% por encima de lo normal": {
+   "en": "its youth intakes come out 13% above normal",
+   "pt": "suas gerações saem 13% acima do normal",
+   "fr": "ses promotions sortent 13 % au-dessus de la normale",
+   "it": "le sue leve escono il 13% sopra la norma",
+   "de": "seine Jahrgänge fallen 13 % besser aus als normal",
+   "ca": "les seves fornades surten un 13% per sobre del normal",
+   "pl": "jego roczniki są o 13% lepsze niż zwykle",
+   "tr": "yetiştirdiği kuşaklar normalden %13 iyi çıkıyor"
+  },
+  "sus camadas salen un 10% por debajo de lo normal": {
+   "en": "its youth intakes come out 10% below normal",
+   "pt": "suas gerações saem 10% abaixo do normal",
+   "fr": "ses promotions sortent 10 % en dessous de la normale",
+   "it": "le sue leve escono il 10% sotto la norma",
+   "de": "seine Jahrgänge fallen 10 % schwächer aus als normal",
+   "ca": "les seves fornades surten un 10% per sota del normal",
+   "pl": "jego roczniki są o 10% słabsze niż zwykle",
+   "tr": "yetiştirdiği kuşaklar normalden %10 zayıf çıkıyor"
+  },
+  "Es el momento de poner ojeadores ahí.": {
+   "en": "Now is the time to put scouts there.",
+   "pt": "É o momento de pôr olheiros lá.",
+   "fr": "C'est le moment d'y envoyer des recruteurs.",
+   "it": "È il momento di mettere osservatori lì.",
+   "de": "Jetzt ist die Zeit, dort Scouts einzusetzen.",
+   "ca": "És el moment de posar-hi ojejadors.",
+   "pl": "To czas, by wysłać tam skautów.",
+   "tr": "Oraya gözlemci göndermenin tam zamanı."
+  },
+  "Cuidado con fichar juveniles de ese mercado estos años.": {
+   "en": "Be careful signing youngsters from that market these years.",
+   "pt": "Cuidado ao contratar jovens desse mercado nestes anos.",
+   "fr": "Prudence avec les jeunes de ce marché ces années-ci.",
+   "it": "Attenzione a ingaggiare giovani da quel mercato in questi anni.",
+   "de": "Vorsicht mit Jugendspielern von diesem Markt in diesen Jahren.",
+   "ca": "Compte a fitxar juvenils d'aquest mercat aquests anys.",
+   "pl": "Uważaj z kupowaniem juniorów z tego rynku w tych latach.",
+   "tr": "Bu yıllarda o pazardan genç almaya dikkat."
+  },
+  "del potrero": {
+   "en": "from the vacant lot",
+   "pt": "da várzea",
+   "fr": "du terrain vague",
+   "it": "dei campetti di strada",
+   "de": "vom Bolzplatz",
+   "ca": "del descampat",
+   "pl": "z podwórka",
+   "tr": "mahalle arsasından"
+  },
+  "de academia": {
+   "en": "academy-made",
+   "pt": "de academia",
+   "fr": "formé en académie",
+   "it": "da accademia",
+   "de": "aus der Akademie",
+   "ca": "d'acadèmia",
+   "pl": "z akademii",
+   "tr": "akademi yetiştirmesi"
+  },
+  "de pueblo chico": {
+   "en": "small-town boy",
+   "pt": "de cidade pequena",
+   "fr": "de petit village",
+   "it": "di paese",
+   "de": "vom Dorf",
+   "ca": "de poble petit",
+   "pl": "z małego miasteczka",
+   "tr": "küçük kasabadan"
+  },
+  "del futsal": {
+   "en": "from futsal",
+   "pt": "do futsal",
+   "fr": "du futsal",
+   "it": "dal calcio a 5",
+   "de": "vom Futsal",
+   "ca": "del futbol sala",
+   "pl": "z futsalu",
+   "tr": "futsaldan"
+  },
+  "a la sombra de un hermano": {
+   "en": "in a brother's shadow",
+   "pt": "à sombra de um irmão",
+   "fr": "dans l'ombre d'un frère",
+   "it": "all'ombra di un fratello",
+   "de": "im Schatten eines Bruders",
+   "ca": "a l'ombra d'un germà",
+   "pl": "w cieniu brata",
+   "tr": "bir ağabeyin gölgesinde"
+  },
+  "de aparición tardía": {
+   "en": "late bloomer",
+   "pt": "de surgimento tardio",
+   "fr": "éclosion tardive",
+   "it": "sbocciato tardi",
+   "de": "Spätzünder",
+   "ca": "d'aparició tardana",
+   "pl": "późno odkryty",
+   "tr": "geç parlayan"
+  },
+  "del turno de noche": {
+   "en": "from the night shift",
+   "pt": "do turno da noite",
+   "fr": "de l'équipe de nuit",
+   "it": "del turno di notte",
+   "de": "aus der Nachtschicht",
+   "ca": "del torn de nit",
+   "pl": "z nocnej zmiany",
+   "tr": "gece vardiyasından"
+  },
+  "de casa acomodada": {
+   "en": "from a well-off home",
+   "pt": "de família abastada",
+   "fr": "de famille aisée",
+   "it": "di famiglia benestante",
+   "de": "aus gutem Hause",
+   "ca": "de casa benestant",
+   "pl": "z zamożnego domu",
+   "tr": "varlıklı bir aileden"
+  },
+  "del fútbol playa": {
+   "en": "from beach football",
+   "pt": "do futebol de areia",
+   "fr": "du beach soccer",
+   "it": "dal beach soccer",
+   "de": "vom Beachsoccer",
+   "ca": "del futbol platja",
+   "pl": "z piłki plażowej",
+   "tr": "plaj futbolundan"
+  },
+  "refugiado": {
+   "en": "refugee",
+   "pt": "refugiado",
+   "fr": "réfugié",
+   "it": "rifugiato",
+   "de": "Geflüchteter",
+   "ca": "refugiat",
+   "pl": "uchodźca",
+   "tr": "mülteci"
+  },
+  "Se hizo en un baldío con arcos de piedra, sin árbitro y jugando contra grandes.": {
+   "en": "He grew up on a vacant lot with stone goalposts, no referee, playing against grown-ups.",
+   "pt": "Cresceu num terreno baldio com traves de pedra, sem árbitro e jogando contra adultos.",
+   "fr": "Il s'est formé sur un terrain vague avec des buts en pierres, sans arbitre, contre des adultes.",
+   "it": "Si è fatto in un campetto con porte di sassi, senza arbitro e giocando contro gli adulti.",
+   "de": "Groß geworden auf einer Brache mit Steintoren, ohne Schiri und gegen Erwachsene.",
+   "ca": "Es va fer en un descampat amb porteries de pedra, sense àrbitre i jugant contra grans.",
+   "pl": "Wychował się na pustym placu z bramkami z kamieni, bez sędziego, grając z dorosłymi.",
+   "tr": "Taştan kaleli bir arsada, hakemsiz ve büyüklere karşı oynayarak yetişti."
+  },
+  "Entró a los seis años a una escuela de élite. Sabe más de fútbol que de cualquier otra cosa.": {
+   "en": "He joined an elite school at six. He knows more about football than about anything else.",
+   "pt": "Entrou aos seis anos numa escola de elite. Sabe mais de futebol do que de qualquer outra coisa.",
+   "fr": "Entré à six ans dans une école d'élite. Il connaît mieux le football que n'importe quoi d'autre.",
+   "it": "È entrato a sei anni in una scuola d'élite. Sa più di calcio che di qualsiasi altra cosa.",
+   "de": "Mit sechs kam er auf eine Eliteschule. Er weiß mehr über Fußball als über alles andere.",
+   "ca": "Va entrar als sis anys a una escola d'elit. Sap més de futbol que de qualsevol altra cosa.",
+   "pl": "W wieku sześciu lat trafił do elitarnej szkoły. Wie więcej o futbolu niż o czymkolwiek innym.",
+   "tr": "Altı yaşında seçkin bir okula girdi. Futbolu her şeyden iyi bilir."
+  },
+  "Viajaba tres horas en micro para cada entrenamiento. No conoce el cansancio.": {
+   "en": "He rode a bus for three hours to every training session. He doesn't know what tiredness is.",
+   "pt": "Viajava três horas de ônibus para cada treino. Não conhece o cansaço.",
+   "fr": "Il faisait trois heures de bus pour chaque entraînement. Il ne connaît pas la fatigue.",
+   "it": "Viaggiava tre ore in pullman per ogni allenamento. Non conosce la stanchezza.",
+   "de": "Er fuhr drei Stunden Bus zu jedem Training. Müdigkeit kennt er nicht.",
+   "ca": "Viatjava tres hores en autobús per a cada entrenament. No coneix el cansament.",
+   "pl": "Jeździł trzy godziny autobusem na każdy trening. Nie zna zmęczenia.",
+   "tr": "Her antrenmana üç saat otobüsle giderdi. Yorgunluk nedir bilmez."
+  },
+  "Viene de la cancha chica: piensa rápido y resuelve en dos metros cuadrados.": {
+   "en": "He comes from the small court: he thinks fast and solves things in two square metres.",
+   "pt": "Vem da quadra: pensa rápido e resolve em dois metros quadrados.",
+   "fr": "Il vient du petit terrain : il pense vite et règle tout dans deux mètres carrés.",
+   "it": "Viene dal campo piccolo: pensa veloce e risolve in due metri quadrati.",
+   "de": "Er kommt vom Kleinfeld: denkt schnell und löst alles auf zwei Quadratmetern.",
+   "ca": "Ve de la pista petita: pensa ràpid i resol en dos metres quadrats.",
+   "pl": "Przyszedł z małego boiska: myśli szybko i radzi sobie na dwóch metrach kwadratowych.",
+   "tr": "Küçük sahadan geliyor: hızlı düşünür, iki metrekarede iş çözer."
+  },
+  "Creció compitiendo con un hermano mayor que llegó más lejos. Eso deja marca.": {
+   "en": "He grew up competing with an older brother who went further. That leaves a mark.",
+   "pt": "Cresceu competindo com um irmão mais velho que foi mais longe. Isso deixa marcas.",
+   "fr": "Il a grandi en rivalisant avec un grand frère qui est allé plus loin. Ça laisse des traces.",
+   "it": "È cresciuto in competizione con un fratello maggiore arrivato più lontano. Lascia il segno.",
+   "de": "Er wuchs im Wettstreit mit einem älteren Bruder auf, der es weiter brachte. Das prägt.",
+   "ca": "Va créixer competint amb un germà gran que va arribar més lluny. Això deixa marca.",
+   "pl": "Dorastał, rywalizując ze starszym bratem, który zaszedł dalej. To zostawia ślad.",
+   "tr": "Daha ileri gitmiş bir ağabeyle yarışarak büyüdü. Bu iz bırakır."
+  },
+  "Empezó a jugar en serio a los quince. Le sobra techo por descubrir.": {
+   "en": "He only started playing seriously at fifteen. There's plenty of ceiling left to discover.",
+   "pt": "Começou a jogar a sério aos quinze. Tem muito teto por descobrir.",
+   "fr": "Il n'a commencé sérieusement qu'à quinze ans. Il lui reste une grande marge à découvrir.",
+   "it": "Ha iniziato a giocare sul serio a quindici anni. Ha ancora tanto margine da scoprire.",
+   "de": "Ernsthaft spielt er erst seit fünfzehn. Da ist noch viel Luft nach oben.",
+   "ca": "Va començar a jugar seriosament als quinze. Li sobra sostre per descobrir.",
+   "pl": "Na poważnie zaczął grać w wieku piętnastu lat. Ma jeszcze duży zapas do odkrycia.",
+   "tr": "Ciddi olarak on beşinde oynamaya başladı. Keşfedilecek çok tavanı var."
+  },
+  "Trabajaba de madrugada y entrenaba de día. Nadie le regaló un minuto.": {
+   "en": "He worked before dawn and trained by day. Nobody ever handed him a minute.",
+   "pt": "Trabalhava de madrugada e treinava de dia. Ninguém lhe deu um minuto de graça.",
+   "fr": "Il travaillait à l'aube et s'entraînait le jour. Personne ne lui a offert une minute.",
+   "it": "Lavorava all'alba e si allenava di giorno. Nessuno gli ha regalato un minuto.",
+   "de": "Er arbeitete im Morgengrauen und trainierte tagsüber. Niemand hat ihm eine Minute geschenkt.",
+   "ca": "Treballava de matinada i entrenava de dia. Ningú li va regalar ni un minut.",
+   "pl": "Pracował nad ranem, a trenował w dzień. Nikt mu nie podarował ani minuty.",
+   "tr": "Sabaha karşı çalışır, gündüz antrenman yapardı. Kimse ona bir dakika bile hediye etmedi."
+  },
+  "Nunca le faltó nada. Hay quien duda de si tiene hambre suficiente.": {
+   "en": "He never lacked anything. Some doubt whether he's hungry enough.",
+   "pt": "Nunca lhe faltou nada. Há quem duvide que tenha fome suficiente.",
+   "fr": "Il n'a jamais manqué de rien. Certains doutent qu'il ait assez faim.",
+   "it": "Non gli è mai mancato nulla. C'è chi dubita che abbia abbastanza fame.",
+   "de": "Ihm hat nie etwas gefehlt. Manche zweifeln, ob er hungrig genug ist.",
+   "ca": "Mai no li ha faltat res. Hi ha qui dubta que tingui prou gana.",
+   "pl": "Nigdy niczego mu nie brakowało. Niektórzy wątpią, czy jest wystarczająco głodny.",
+   "tr": "Hiçbir şeyi eksik olmadı. Yeterince hırslı olup olmadığından şüphe edenler var."
+  },
+  "Aprendió descalzo en la arena. Tiene un control que no se enseña en ninguna pizarra.": {
+   "en": "He learned barefoot on the sand. He has a touch no tactics board can teach.",
+   "pt": "Aprendeu descalço na areia. Tem um domínio que nenhuma prancheta ensina.",
+   "fr": "Il a appris pieds nus dans le sable. Il a un contrôle qu'aucun tableau n'enseigne.",
+   "it": "Ha imparato scalzo sulla sabbia. Ha un controllo che nessuna lavagna insegna.",
+   "de": "Er lernte barfuß im Sand. Er hat eine Ballkontrolle, die keine Taktiktafel lehrt.",
+   "ca": "Va aprendre descalç a la sorra. Té un control que no s'ensenya a cap pissarra.",
+   "pl": "Uczył się boso na piasku. Ma przyjęcie, którego nie nauczy żadna tablica.",
+   "tr": "Kumda yalınayak öğrendi. Hiçbir taktik tahtasının öğretemeyeceği bir top kontrolü var."
+  },
+  "Llegó al país con lo puesto siendo un niño. El fútbol fue lo primero que lo hizo sentirse de algún lado.": {
+   "en": "He arrived in the country as a child with nothing but the clothes on his back. Football was the first thing that made him feel he belonged somewhere.",
+   "pt": "Chegou ao país criança, só com a roupa do corpo. O futebol foi a primeira coisa que o fez sentir-se de algum lugar.",
+   "fr": "Arrivé enfant dans le pays avec ce qu'il avait sur le dos, c'est le football qui l'a d'abord fait se sentir de quelque part.",
+   "it": "È arrivato nel paese da bambino con solo ciò che indossava. Il calcio è stata la prima cosa a farlo sentire di un posto.",
+   "de": "Er kam als Kind mit nichts als den Kleidern am Leib ins Land. Der Fußball gab ihm zuerst das Gefühl, irgendwo hinzugehören.",
+   "ca": "Va arribar al país de petit amb el que duia posat. El futbol va ser el primer que el va fer sentir d'algun lloc.",
+   "pl": "Przyjechał do kraju jako dziecko, mając tylko to, co na sobie. Futbol jako pierwszy dał mu poczucie, że gdzieś przynależy.",
+   "tr": "Ülkeye çocukken üstündekilerle geldi. Bir yere ait hissettiren ilk şey futbol oldu."
+  },
+  "Va a ser padre": {
+   "en": "About to become a father",
+   "pt": "Vai ser pai",
+   "fr": "Va être père",
+   "it": "Sta per diventare padre",
+   "de": "Wird Vater",
+   "ca": "Serà pare",
+   "pl": "Zostanie ojcem",
+   "tr": "Baba olacak"
+  },
+  "Recién llegado a la ciudad": {
+   "en": "New in town",
+   "pt": "Recém-chegado à cidade",
+   "fr": "Tout juste arrivé en ville",
+   "it": "Appena arrivato in città",
+   "de": "Neu in der Stadt",
+   "ca": "Acabat d'arribar a la ciutat",
+   "pl": "Świeżo w mieście",
+   "tr": "Şehre yeni geldi"
+  },
+  "Estudia una carrera": {
+   "en": "Studying for a degree",
+   "pt": "Faz faculdade",
+   "fr": "Fait des études",
+   "it": "Studia all'università",
+   "de": "Studiert nebenbei",
+   "ca": "Estudia una carrera",
+   "pl": "Studiuje",
+   "tr": "Üniversite okuyor"
+  },
+  "Familia lejos": {
+   "en": "Family far away",
+   "pt": "Família longe",
+   "fr": "Famille loin",
+   "it": "Famiglia lontana",
+   "de": "Familie weit weg",
+   "ca": "Família lluny",
+   "pl": "Rodzina daleko",
+   "tr": "Ailesi uzakta"
+  },
+  "Monta un negocio": {
+   "en": "Starting a business",
+   "pt": "Montando um negócio",
+   "fr": "Monte une affaire",
+   "it": "Avvia un'attività",
+   "de": "Gründet ein Geschäft",
+   "ca": "Munta un negoci",
+   "pl": "Zakłada firmę",
+   "tr": "İş kuruyor"
+  },
+  "Duelo familiar": {
+   "en": "Family bereavement",
+   "pt": "Luto na família",
+   "fr": "Deuil familial",
+   "it": "Lutto in famiglia",
+   "de": "Trauerfall in der Familie",
+   "ca": "Dol familiar",
+   "pl": "Żałoba w rodzinie",
+   "tr": "Ailede yas"
+  },
+  "Ídolo de la ciudad": {
+   "en": "Local hero",
+   "pt": "Ídolo da cidade",
+   "fr": "Idole de la ville",
+   "it": "Idolo della città",
+   "de": "Liebling der Stadt",
+   "ca": "Ídol de la ciutat",
+   "pl": "Idol miasta",
+   "tr": "Şehrin idolü"
+  },
+  "Muy religioso": {
+   "en": "Very religious",
+   "pt": "Muito religioso",
+   "fr": "Très religieux",
+   "it": "Molto religioso",
+   "de": "Sehr religiös",
+   "ca": "Molt religiós",
+   "pl": "Bardzo religijny",
+   "tr": "Çok dindar"
+  },
+  "Anda con la cabeza en la clínica: menos concentración, más ganas de dedicar un gol.": {
+   "en": "His mind is at the maternity ward: less focus, more desire to dedicate a goal.",
+   "pt": "Está com a cabeça na maternidade: menos concentração, mais vontade de dedicar um gol.",
+   "fr": "Il a la tête à la maternité : moins de concentration, plus envie de dédier un but.",
+   "it": "Ha la testa in clinica: meno concentrazione, più voglia di dedicare un gol.",
+   "de": "Er ist mit dem Kopf in der Klinik: weniger Konzentration, mehr Lust, ein Tor zu widmen.",
+   "ca": "Té el cap a la clínica: menys concentració, més ganes de dedicar un gol.",
+   "pl": "Myślami jest w klinice: mniej skupienia, więcej chęci, by zadedykować gola.",
+   "tr": "Aklı klinikte: konsantrasyonu düşük, gol adama isteği yüksek."
+  },
+  "Todavía vive en un hotel y no se adapta del todo.": {
+   "en": "Still living in a hotel and not fully settled.",
+   "pt": "Ainda mora num hotel e não se adaptou totalmente.",
+   "fr": "Il vit encore à l'hôtel et ne s'adapte pas complètement.",
+   "it": "Vive ancora in hotel e non si è ambientato del tutto.",
+   "de": "Wohnt noch im Hotel und hat sich nicht ganz eingelebt.",
+   "ca": "Encara viu en un hotel i no s'adapta del tot.",
+   "pl": "Wciąż mieszka w hotelu i nie do końca się zaaklimatyzował.",
+   "tr": "Hâlâ otelde kalıyor ve tam uyum sağlayamadı."
+  },
+  "Reparte la semana entre entrenamientos y exámenes.": {
+   "en": "He splits his week between training and exams.",
+   "pt": "Divide a semana entre treinos e provas.",
+   "fr": "Il partage sa semaine entre entraînements et examens.",
+   "it": "Divide la settimana tra allenamenti ed esami.",
+   "de": "Er teilt seine Woche zwischen Training und Prüfungen.",
+   "ca": "Reparteix la setmana entre entrenaments i exàmens.",
+   "pl": "Dzieli tydzień między treningi i egzaminy.",
+   "tr": "Haftasını antrenmanla sınavlar arasında bölüyor."
+  },
+  "Extraña a los suyos: llamadas a deshora y algo de bajón.": {
+   "en": "He misses his people: late-night calls and a bit of a slump.",
+   "pt": "Sente falta dos seus: ligações fora de hora e certo desânimo.",
+   "fr": "Les siens lui manquent : appels à toute heure et un petit coup de blues.",
+   "it": "Gli mancano i suoi: chiamate a ore strane e un po' di malinconia.",
+   "de": "Er vermisst seine Leute: Anrufe zur Unzeit und etwas Niedergeschlagenheit.",
+   "ca": "Troba a faltar els seus: trucades a deshora i una mica de baixó.",
+   "pl": "Tęskni za bliskimi: telefony o dziwnych porach i lekki dołek.",
+   "tr": "Ailesini özlüyor: vakitsiz telefonlar ve biraz moral bozukluğu."
+  },
+  "Tiene la cabeza medio puesta en su emprendimiento.": {
+   "en": "Half his mind is on his business venture.",
+   "pt": "Está com a cabeça meio no seu negócio.",
+   "fr": "Il a la tête à moitié dans son entreprise.",
+   "it": "Ha la testa per metà nella sua attività.",
+   "de": "Er ist mit dem Kopf halb bei seinem Unternehmen.",
+   "ca": "Té el cap mig posat en el seu negoci.",
+   "pl": "Myślami jest częściowo przy swoim biznesie.",
+   "tr": "Aklının yarısı kendi işinde."
+  },
+  "Perdió a alguien cercano: necesita contención, no exigencia.": {
+   "en": "He lost someone close: he needs support, not pressure.",
+   "pt": "Perdeu alguém próximo: precisa de acolhimento, não de cobrança.",
+   "fr": "Il a perdu un proche : il a besoin de soutien, pas d'exigence.",
+   "it": "Ha perso una persona cara: ha bisogno di sostegno, non di pressioni.",
+   "de": "Er hat einen nahestehenden Menschen verloren: Er braucht Halt, keinen Druck.",
+   "ca": "Ha perdut algú proper: necessita contenció, no exigència.",
+   "pl": "Stracił kogoś bliskiego: potrzebuje wsparcia, nie wymagań.",
+   "tr": "Yakın birini kaybetti: baskıya değil desteğe ihtiyacı var."
+  },
+  "Lo paran en cada esquina. Le encanta y le pesa a la vez.": {
+   "en": "People stop him on every corner. He loves it and it weighs on him at the same time.",
+   "pt": "Param-no em cada esquina. Ele adora e isso pesa ao mesmo tempo.",
+   "fr": "On l'arrête à chaque coin de rue. Il adore et ça lui pèse à la fois.",
+   "it": "Lo fermano a ogni angolo. Gli piace e gli pesa allo stesso tempo.",
+   "de": "Man hält ihn an jeder Ecke an. Er liebt es, und es belastet ihn zugleich.",
+   "ca": "L'aturen a cada cantonada. Li encanta i li pesa alhora.",
+   "pl": "Zaczepiają go na każdym rogu. Uwielbia to i jednocześnie mu to ciąży.",
+   "tr": "Her köşede durduruluyor. Hem çok seviyor hem de üzerine ağır geliyor."
+  },
+  "Su fe le ordena la semana y le baja la ansiedad.": {
+   "en": "His faith structures his week and eases his anxiety.",
+   "pt": "A fé organiza a semana dele e baixa a ansiedade.",
+   "fr": "Sa foi structure sa semaine et apaise son anxiété.",
+   "it": "La fede gli scandisce la settimana e gli abbassa l'ansia.",
+   "de": "Sein Glaube ordnet seine Woche und senkt seine Anspannung.",
+   "ca": "La fe li ordena la setmana i li baixa l'ansietat.",
+   "pl": "Wiara porządkuje mu tydzień i zmniejsza niepokój.",
+   "tr": "İnancı haftasını düzenliyor ve kaygısını azaltıyor."
+  },
+  "Contractura": {
+   "en": "Muscle tightness",
+   "pt": "Contratura",
+   "fr": "Contracture",
+   "it": "Contrattura",
+   "de": "Muskelverhärtung",
+   "ca": "Contractura",
+   "pl": "Przykurcz mięśnia",
+   "tr": "Kas sertleşmesi"
+  },
+  "Sobrecarga": {
+   "en": "Muscle overload",
+   "pt": "Sobrecarga",
+   "fr": "Surcharge musculaire",
+   "it": "Sovraccarico",
+   "de": "Überlastung",
+   "ca": "Sobrecàrrega",
+   "pl": "Przeciążenie",
+   "tr": "Aşırı yüklenme"
+  },
+  "Desgarro del isquiotibial": {
+   "en": "Hamstring tear",
+   "pt": "Ruptura do posterior da coxa",
+   "fr": "Déchirure des ischio-jambiers",
+   "it": "Lesione al bicipite femorale",
+   "de": "Muskelfaserriss im Oberschenkel hinten",
+   "ca": "Esquinçament de l'isquiotibial",
+   "pl": "Naderwanie mięśnia dwugłowego uda",
+   "tr": "Arka adale yırtığı"
+  },
+  "Desgarro del cuádriceps": {
+   "en": "Quadriceps tear",
+   "pt": "Ruptura do quadríceps",
+   "fr": "Déchirure du quadriceps",
+   "it": "Lesione al quadricipite",
+   "de": "Muskelfaserriss im Oberschenkel vorne",
+   "ca": "Esquinçament del quàdriceps",
+   "pl": "Naderwanie mięśnia czworogłowego",
+   "tr": "Ön adale yırtığı"
+  },
+  "Rotura del gemelo": {
+   "en": "Calf tear",
+   "pt": "Ruptura da panturrilha",
+   "fr": "Déchirure du mollet",
+   "it": "Lesione al polpaccio",
+   "de": "Wadenriss",
+   "ca": "Trencament del bessó",
+   "pl": "Naderwanie łydki",
+   "tr": "Baldır yırtığı"
+  },
+  "Pubalgia": {
+   "en": "Groin pain (pubalgia)",
+   "pt": "Pubalgia",
+   "fr": "Pubalgie",
+   "it": "Pubalgia",
+   "de": "Schambeinentzündung",
+   "ca": "Pubàlgia",
+   "pl": "Pubalgia",
+   "tr": "Kasık ağrısı"
+  },
+  "Esguince de tobillo": {
+   "en": "Ankle sprain",
+   "pt": "Entorse no tornozelo",
+   "fr": "Entorse de la cheville",
+   "it": "Distorsione alla caviglia",
+   "de": "Sprunggelenksverstauchung",
+   "ca": "Esquinç de turmell",
+   "pl": "Skręcenie kostki",
+   "tr": "Ayak bileği burkulması"
+  },
+  "Esguince de rodilla": {
+   "en": "Knee sprain",
+   "pt": "Entorse no joelho",
+   "fr": "Entorse du genou",
+   "it": "Distorsione al ginocchio",
+   "de": "Knieverstauchung",
+   "ca": "Esquinç de genoll",
+   "pl": "Skręcenie kolana",
+   "tr": "Diz burkulması"
+  },
+  "Luxación de hombro": {
+   "en": "Dislocated shoulder",
+   "pt": "Luxação do ombro",
+   "fr": "Luxation de l'épaule",
+   "it": "Lussazione della spalla",
+   "de": "Schulterluxation",
+   "ca": "Luxació d'espatlla",
+   "pl": "Zwichnięcie barku",
+   "tr": "Omuz çıkığı"
+  },
+  "Menisco": {
+   "en": "Meniscus injury",
+   "pt": "Lesão no menisco",
+   "fr": "Ménisque",
+   "it": "Menisco",
+   "de": "Meniskusverletzung",
+   "ca": "Menisc",
+   "pl": "Uraz łąkotki",
+   "tr": "Menisküs"
+  },
+  "Ligamento cruzado": {
+   "en": "Cruciate ligament",
+   "pt": "Ligamento cruzado",
+   "fr": "Ligament croisé",
+   "it": "Legamento crociato",
+   "de": "Kreuzbandriss",
+   "ca": "Lligament encreuat",
+   "pl": "Więzadło krzyżowe",
+   "tr": "Çapraz bağ"
+  },
+  "Tendinitis rotuliana": {
+   "en": "Patellar tendinitis",
+   "pt": "Tendinite patelar",
+   "fr": "Tendinite rotulienne",
+   "it": "Tendinite rotulea",
+   "de": "Patellasehnenentzündung",
+   "ca": "Tendinitis rotuliana",
+   "pl": "Zapalenie ścięgna rzepki",
+   "tr": "Patellar tendinit"
+  },
+  "Fisura en el peroné": {
+   "en": "Fibula fissure",
+   "pt": "Fissura na fíbula",
+   "fr": "Fissure du péroné",
+   "it": "Infrazione al perone",
+   "de": "Wadenbeinriss",
+   "ca": "Fissura al peroné",
+   "pl": "Pęknięcie kości strzałkowej",
+   "tr": "Kamış kemiği çatlağı"
+  },
+  "Fractura de metatarso": {
+   "en": "Metatarsal fracture",
+   "pt": "Fratura no metatarso",
+   "fr": "Fracture du métatarse",
+   "it": "Frattura del metatarso",
+   "de": "Mittelfußbruch",
+   "ca": "Fractura de metatars",
+   "pl": "Złamanie kości śródstopia",
+   "tr": "Metatarsal kırığı"
+  },
+  "Fractura de clavícula": {
+   "en": "Broken collarbone",
+   "pt": "Fratura da clavícula",
+   "fr": "Fracture de la clavicule",
+   "it": "Frattura della clavicola",
+   "de": "Schlüsselbeinbruch",
+   "ca": "Fractura de clavícula",
+   "pl": "Złamanie obojczyka",
+   "tr": "Köprücük kemiği kırığı"
+  },
+  "Fractura nasal": {
+   "en": "Broken nose",
+   "pt": "Fratura no nariz",
+   "fr": "Fracture du nez",
+   "it": "Frattura del setto nasale",
+   "de": "Nasenbeinbruch",
+   "ca": "Fractura nasal",
+   "pl": "Złamanie nosa",
+   "tr": "Burun kırığı"
+  },
+  "Conmoción cerebral": {
+   "en": "Concussion",
+   "pt": "Concussão cerebral",
+   "fr": "Commotion cérébrale",
+   "it": "Commozione cerebrale",
+   "de": "Gehirnerschütterung",
+   "ca": "Commoció cerebral",
+   "pl": "Wstrząśnienie mózgu",
+   "tr": "Beyin sarsıntısı"
+  },
+  "Corte con puntos": {
+   "en": "Cut needing stitches",
+   "pt": "Corte com pontos",
+   "fr": "Coupure avec points de suture",
+   "it": "Taglio con punti",
+   "de": "Platzwunde mit Naht",
+   "ca": "Tall amb punts",
+   "pl": "Rozcięcie ze szwami",
+   "tr": "Dikiş gerektiren kesik"
+  },
+  "Lumbalgia": {
+   "en": "Lower back pain",
+   "pt": "Lombalgia",
+   "fr": "Lombalgie",
+   "it": "Lombalgia",
+   "de": "Rückenschmerzen",
+   "ca": "Lumbàlgia",
+   "pl": "Ból lędźwiowy",
+   "tr": "Bel ağrısı"
+  },
+  "Virus estomacal": {
+   "en": "Stomach bug",
+   "pt": "Virose estomacal",
+   "fr": "Gastro-entérite",
+   "it": "Virus intestinale",
+   "de": "Magen-Darm-Infekt",
+   "ca": "Virus estomacal",
+   "pl": "Grypa żołądkowa",
+   "tr": "Mide virüsü"
+  },
+  "Cuadro gripal": {
+   "en": "Flu",
+   "pt": "Gripe",
+   "fr": "État grippal",
+   "it": "Sindrome influenzale",
+   "de": "Grippaler Infekt",
+   "ca": "Quadre gripal",
+   "pl": "Grypa",
+   "tr": "Grip"
+  },
+  "Mononucleosis": {
+   "en": "Mononucleosis",
+   "pt": "Mononucleose",
+   "fr": "Mononucléose",
+   "it": "Mononucleosi",
+   "de": "Pfeiffersches Drüsenfieber",
+   "ca": "Mononucleosi",
+   "pl": "Mononukleoza",
+   "tr": "Mononükleoz"
+  },
+  "Sub-15": {
+   "en": "U-15",
+   "pt": "Sub-15",
+   "fr": "U15",
+   "it": "Under 15",
+   "de": "U15",
+   "ca": "Sub-15",
+   "pl": "U-15",
+   "tr": "U15"
+  },
+  "Sub-17": {
+   "en": "U-17",
+   "pt": "Sub-17",
+   "fr": "U17",
+   "it": "Under 17",
+   "de": "U17",
+   "ca": "Sub-17",
+   "pl": "U-17",
+   "tr": "U17"
+  },
+  "Sub-20": {
+   "en": "U-20",
+   "pt": "Sub-20",
+   "fr": "U20",
+   "it": "Under 20",
+   "de": "U20",
+   "ca": "Sub-20",
+   "pl": "U-20",
+   "tr": "U20"
+  },
+  "Generacional": {
+   "en": "Generational",
+   "pt": "Geracional",
+   "fr": "Générationnel",
+   "it": "Generazionale",
+   "de": "Jahrhunderttalent",
+   "ca": "Generacional",
+   "pl": "Pokoleniowy",
+   "tr": "Nesil yeteneği"
+  },
+  "De élite": {
+   "en": "Elite",
+   "pt": "De elite",
+   "fr": "D'élite",
+   "it": "D'élite",
+   "de": "Weltklasse",
+   "ca": "D'elit",
+   "pl": "Elitarny",
+   "tr": "Elit"
+  },
+  "Muy bueno": {
+   "en": "Very good",
+   "pt": "Muito bom",
+   "fr": "Très bon",
+   "it": "Molto buono",
+   "de": "Sehr gut",
+   "ca": "Molt bo",
+   "pl": "Bardzo dobry",
+   "tr": "Çok iyi"
+  },
+  "Bueno": {
+   "en": "Good",
+   "pt": "Bom",
+   "fr": "Bon",
+   "it": "Buono",
+   "de": "Gut",
+   "ca": "Bo",
+   "pl": "Dobry",
+   "tr": "İyi"
+  },
+  "Correcto": {
+   "en": "Decent",
+   "pt": "Correto",
+   "fr": "Correct",
+   "it": "Discreto",
+   "de": "Ordentlich",
+   "ca": "Correcte",
+   "pl": "Poprawny",
+   "tr": "Fena değil"
+  },
+  "Justo": {
+   "en": "Limited",
+   "pt": "Limitado",
+   "fr": "Juste",
+   "it": "Modesto",
+   "de": "Knapp",
+   "ca": "Just",
+   "pl": "Przeciętny",
+   "tr": "Sınırlı"
+  },
+  "Flojo": {
+   "en": "Weak",
+   "pt": "Fraco",
+   "fr": "Faible",
+   "it": "Scarso",
+   "de": "Schwach",
+   "ca": "Fluix",
+   "pl": "Słaby",
+   "tr": "Zayıf"
+  },
+  "Un jugador para una década": {
+   "en": "A player for a decade",
+   "pt": "Um jogador para uma década",
+   "fr": "Un joueur pour une décennie",
+   "it": "Un giocatore per un decennio",
+   "de": "Ein Spieler für ein Jahrzehnt",
+   "ca": "Un jugador per a una dècada",
+   "pl": "Zawodnik na dekadę",
+   "tr": "On yıllık bir oyuncu"
+  },
+  "Titular en cualquier grande": {
+   "en": "A starter at any big club",
+   "pt": "Titular em qualquer grande",
+   "fr": "Titulaire dans n'importe quel grand club",
+   "it": "Titolare in qualsiasi grande club",
+   "de": "Stammspieler bei jedem Topklub",
+   "ca": "Titular a qualsevol gran",
+   "pl": "Pewniak w każdym wielkim klubie",
+   "tr": "Her büyük kulüpte ilk on bir"
+  },
+  "Marca diferencias en esta liga": {
+   "en": "Makes the difference in this league",
+   "pt": "Faz a diferença nesta liga",
+   "fr": "Fait la différence dans ce championnat",
+   "it": "Fa la differenza in questo campionato",
+   "de": "Macht in dieser Liga den Unterschied",
+   "ca": "Marca diferències en aquesta lliga",
+   "pl": "Robi różnicę w tej lidze",
+   "tr": "Bu ligde fark yaratır"
+  },
+  "Titular fiable": {
+   "en": "Reliable starter",
+   "pt": "Titular confiável",
+   "fr": "Titulaire fiable",
+   "it": "Titolare affidabile",
+   "de": "Verlässlicher Stammspieler",
+   "ca": "Titular fiable",
+   "pl": "Solidny podstawowy zawodnik",
+   "tr": "Güvenilir ilk on bir oyuncusu"
+  },
+  "Cumple sin destacar": {
+   "en": "Does the job without standing out",
+   "pt": "Cumpre sem se destacar",
+   "fr": "Fait le travail sans briller",
+   "it": "Fa il suo senza brillare",
+   "de": "Erfüllt seine Aufgabe, ohne aufzufallen",
+   "ca": "Compleix sense destacar",
+   "pl": "Robi swoje bez błysku",
+   "tr": "Göze batmadan işini yapar"
+  },
+  "Le queda grande": {
+   "en": "Out of his depth",
+   "pt": "Fica grande para ele",
+   "fr": "C'est trop grand pour lui",
+   "it": "È troppo per lui",
+   "de": "Eine Nummer zu groß",
+   "ca": "Li queda gran",
+   "pl": "To go przerasta",
+   "tr": "Ona büyük gelir"
+  },
+  "Tenso": {
+   "en": "Tense",
+   "pt": "Tenso",
+   "fr": "Tendu",
+   "it": "Teso",
+   "de": "Angespannt",
+   "ca": "Tens",
+   "pl": "Spięty",
+   "tr": "Gergin"
+  },
+  "Enchufado": {
+   "en": "Fired up",
+   "pt": "Ligado",
+   "fr": "À fond",
+   "it": "Carico",
+   "de": "Hochmotiviert",
+   "ca": "Endollat",
+   "pl": "Nakręcony",
+   "tr": "Hırslı"
+  },
+  "muy poco fiable": {
+   "en": "very unreliable",
+   "pt": "muito pouco confiável",
+   "fr": "très peu fiable",
+   "it": "molto poco affidabile",
+   "de": "sehr unzuverlässig",
+   "ca": "molt poc fiable",
+   "pl": "bardzo mało wiarygodny",
+   "tr": "hiç güvenilir değil"
+  },
+  "poco fiable": {
+   "en": "unreliable",
+   "pt": "pouco confiável",
+   "fr": "peu fiable",
+   "it": "poco affidabile",
+   "de": "unzuverlässig",
+   "ca": "poc fiable",
+   "pl": "mało wiarygodny",
+   "tr": "pek güvenilir değil"
+  },
+  "razonable": {
+   "en": "reasonable",
+   "pt": "razoável",
+   "fr": "raisonnable",
+   "it": "ragionevole",
+   "de": "vernünftig",
+   "ca": "raonable",
+   "pl": "rozsądny",
+   "tr": "makul"
+  },
+  "sólido": {
+   "en": "solid",
+   "pt": "sólido",
+   "fr": "solide",
+   "it": "solido",
+   "de": "solide",
+   "ca": "sòlid",
+   "pl": "solidny",
+   "tr": "sağlam"
+  },
+  "Portero": {
+   "en": "Goalkeeper",
+   "pt": "Goleiro",
+   "fr": "Gardien",
+   "it": "Portiere",
+   "de": "Torhüter",
+   "ca": "Porter",
+   "pl": "Bramkarz",
+   "tr": "Kaleci"
+  },
+  "Lateral derecho": {
+   "en": "Right back",
+   "pt": "Lateral direito",
+   "fr": "Arrière droit",
+   "it": "Terzino destro",
+   "de": "Rechter Verteidiger",
+   "ca": "Lateral dret",
+   "pl": "Prawy obrońca",
+   "tr": "Sağ bek"
+  },
+  "Lateral izquierdo": {
+   "en": "Left back",
+   "pt": "Lateral esquerdo",
+   "fr": "Arrière gauche",
+   "it": "Terzino sinistro",
+   "de": "Linker Verteidiger",
+   "ca": "Lateral esquerre",
+   "pl": "Lewy obrońca",
+   "tr": "Sol bek"
+  },
+  "Defensa central": {
+   "en": "Centre back",
+   "pt": "Zagueiro",
+   "fr": "Défenseur central",
+   "it": "Difensore centrale",
+   "de": "Innenverteidiger",
+   "ca": "Defensa central",
+   "pl": "Środkowy obrońca",
+   "tr": "Stoper"
+  },
+  "Carrilero derecho": {
+   "en": "Right wing-back",
+   "pt": "Ala direito",
+   "fr": "Piston droit",
+   "it": "Esterno destro",
+   "de": "Rechter Flügelverteidiger",
+   "ca": "Carriler dret",
+   "pl": "Prawy wahadłowy",
+   "tr": "Sağ kanat bek"
+  },
+  "Carrilero izquierdo": {
+   "en": "Left wing-back",
+   "pt": "Ala esquerdo",
+   "fr": "Piston gauche",
+   "it": "Esterno sinistro",
+   "de": "Linker Flügelverteidiger",
+   "ca": "Carriler esquerre",
+   "pl": "Lewy wahadłowy",
+   "tr": "Sol kanat bek"
+  },
+  "Mediocentro defensivo": {
+   "en": "Defensive midfielder",
+   "pt": "Volante de contenção",
+   "fr": "Milieu défensif",
+   "it": "Mediano",
+   "de": "Defensiver Mittelfeldspieler",
+   "ca": "Migcentre defensiu",
+   "pl": "Defensywny pomocnik",
+   "tr": "Ön libero"
+  },
+  "Mediocentro": {
+   "en": "Central midfielder",
+   "pt": "Meio-campista central",
+   "fr": "Milieu central",
+   "it": "Centrocampista centrale",
+   "de": "Zentraler Mittelfeldspieler",
+   "ca": "Migcentre",
+   "pl": "Środkowy pomocnik",
+   "tr": "Merkez orta saha"
+  },
+  "Mediapunta": {
+   "en": "Attacking midfielder",
+   "pt": "Meia-atacante",
+   "fr": "Meneur de jeu",
+   "it": "Trequartista",
+   "de": "Offensiver Mittelfeldspieler",
+   "ca": "Mitja punta",
+   "pl": "Ofensywny pomocnik",
+   "tr": "On numara"
+  },
+  "Volante derecho": {
+   "en": "Right midfielder",
+   "pt": "Meia direita",
+   "fr": "Milieu droit",
+   "it": "Centrocampista destro",
+   "de": "Rechter Mittelfeldspieler",
+   "ca": "Interior dret",
+   "pl": "Prawy pomocnik",
+   "tr": "Sağ orta saha"
+  },
+  "Volante izquierdo": {
+   "en": "Left midfielder",
+   "pt": "Meia esquerda",
+   "fr": "Milieu gauche",
+   "it": "Centrocampista sinistro",
+   "de": "Linker Mittelfeldspieler",
+   "ca": "Interior esquerre",
+   "pl": "Lewy pomocnik",
+   "tr": "Sol orta saha"
+  },
+  "Extremo derecho": {
+   "en": "Right winger",
+   "pt": "Ponta direita",
+   "fr": "Ailier droit",
+   "it": "Ala destra",
+   "de": "Rechtsaußen",
+   "ca": "Extrem dret",
+   "pl": "Prawy skrzydłowy",
+   "tr": "Sağ kanat"
+  },
+  "Extremo izquierdo": {
+   "en": "Left winger",
+   "pt": "Ponta esquerda",
+   "fr": "Ailier gauche",
+   "it": "Ala sinistra",
+   "de": "Linksaußen",
+   "ca": "Extrem esquerre",
+   "pl": "Lewy skrzydłowy",
+   "tr": "Sol kanat"
+  },
+  "Segundo delantero": {
+   "en": "Second striker",
+   "pt": "Segundo atacante",
+   "fr": "Second attaquant",
+   "it": "Seconda punta",
+   "de": "Hängende Spitze",
+   "ca": "Segon davanter",
+   "pl": "Cofnięty napastnik",
+   "tr": "İkinci forvet"
+  },
+  "Delantero centro": {
+   "en": "Centre forward",
+   "pt": "Centroavante",
+   "fr": "Avant-centre",
+   "it": "Centravanti",
+   "de": "Mittelstürmer",
+   "ca": "Davanter centre",
+   "pl": "Środkowy napastnik",
+   "tr": "Santrafor"
+  },
+  "Baile ensayado con el banquillo": {
+   "en": "Rehearsed dance with the bench",
+   "pt": "Dança ensaiada com o banco",
+   "fr": "Danse répétée avec le banc",
+   "it": "Balletto provato con la panchina",
+   "de": "Einstudierter Tanz mit der Bank",
+   "ca": "Ball assajat amb la banqueta",
+   "pl": "Wyćwiczony taniec z ławką",
+   "tr": "Yedeklerle prova edilmiş dans"
+  },
+  "Silencio a la tribuna rival": {
+   "en": "Shushes the away stand",
+   "pt": "Silêncio para a torcida rival",
+   "fr": "Chut à la tribune adverse",
+   "it": "Silenzio alla curva avversaria",
+   "de": "Psst zur gegnerischen Kurve",
+   "ca": "Silenci a la grada rival",
+   "pl": "Uciszanie trybuny rywala",
+   "tr": "Rakip tribünü susturma"
+  },
+  "Chupete a la cámara": {
+   "en": "Dummy-sucking to the camera",
+   "pt": "Chupeta para a câmera",
+   "fr": "Tétine face caméra",
+   "it": "Ciuccio alla telecamera",
+   "de": "Schnuller in die Kamera",
+   "ca": "Xumet a la càmera",
+   "pl": "Smoczek do kamery",
+   "tr": "Kameraya emzik"
+  },
+  "Mira al cielo y señala arriba": {
+   "en": "Looks up and points to the sky",
+   "pt": "Olha para o céu e aponta para cima",
+   "fr": "Regarde le ciel et pointe vers le haut",
+   "it": "Guarda il cielo e indica in alto",
+   "de": "Blickt zum Himmel und zeigt nach oben",
+   "ca": "Mira al cel i assenyala amunt",
+   "pl": "Patrzy w niebo i wskazuje w górę",
+   "tr": "Gökyüzüne bakıp yukarıyı gösterir"
+  },
+  "Puños apretados frente a la popular": {
+   "en": "Clenched fists in front of the home end",
+   "pt": "Punhos cerrados diante da geral",
+   "fr": "Poings serrés devant le virage",
+   "it": "Pugni stretti sotto la curva",
+   "de": "Geballte Fäuste vor der Fankurve",
+   "ca": "Punys tancats davant la grada popular",
+   "pl": "Zaciśnięte pięści przed trybuną kibiców",
+   "tr": "Taraftarın önünde sıkılı yumruklar"
+  },
+  "Brazos abiertos corriendo por la banda": {
+   "en": "Arms wide, running down the touchline",
+   "pt": "Braços abertos correndo pela lateral",
+   "fr": "Bras écartés en courant le long de la ligne",
+   "it": "Braccia aperte correndo lungo la fascia",
+   "de": "Mit ausgebreiteten Armen die Linie entlang",
+   "ca": "Braços oberts corrent per la banda",
+   "pl": "Rozłożone ramiona i bieg wzdłuż linii",
+   "tr": "Kollar açık, taç çizgisi boyunca koşu"
+  },
+  "Pose de estatua para los fotógrafos": {
+   "en": "Statue pose for the photographers",
+   "pt": "Pose de estátua para os fotógrafos",
+   "fr": "Pose de statue pour les photographes",
+   "it": "Posa da statua per i fotografi",
+   "de": "Statuenpose für die Fotografen",
+   "ca": "Posa d'estàtua per als fotògrafs",
+   "pl": "Poza posągu dla fotografów",
+   "tr": "Fotoğrafçılara heykel pozu"
+  },
+  "Corazón con las manos a la familia": {
+   "en": "Heart with his hands for the family",
+   "pt": "Coração com as mãos para a família",
+   "fr": "Cœur avec les mains pour la famille",
+   "it": "Cuore con le mani alla famiglia",
+   "de": "Herz mit den Händen für die Familie",
+   "ca": "Cor amb les mans per a la família",
+   "pl": "Serce z dłoni dla rodziny",
+   "tr": "Ailesine elleriyle kalp"
+  },
+  "Voltereta y salto de fe": {
+   "en": "Somersault and leap of faith",
+   "pt": "Cambalhota e salto no escuro",
+   "fr": "Salto et saut de l'ange",
+   "it": "Capriola e salto nel vuoto",
+   "de": "Salto und Hechtsprung",
+   "ca": "Tombarella i salt al buit",
+   "pl": "Salto i skok na główkę",
+   "tr": "Takla ve atlayış"
+  },
+  "Arquero imaginario disparando": {
+   "en": "Imaginary archer firing",
+   "pt": "Arqueiro imaginário disparando",
+   "fr": "Archer imaginaire qui tire",
+   "it": "Arciere immaginario che scocca",
+   "de": "Imaginärer Bogenschütze",
+   "ca": "Arquer imaginari disparant",
+   "pl": "Wyimaginowany łucznik strzelający",
+   "tr": "Hayali okçu atışı"
+  },
+  "Se cruza de brazos, gélido": {
+   "en": "Folds his arms, ice-cold",
+   "pt": "Cruza os braços, gelado",
+   "fr": "Bras croisés, glacial",
+   "it": "Braccia conserte, gelido",
+   "de": "Verschränkt eiskalt die Arme",
+   "ca": "Es creua de braços, gèlid",
+   "pl": "Krzyżuje ręce, lodowaty",
+   "tr": "Kollarını kavuşturur, buz gibi"
+  },
+  "Teléfono a la oreja": {
+   "en": "Phone to the ear",
+   "pt": "Telefone na orelha",
+   "fr": "Téléphone à l'oreille",
+   "it": "Telefono all'orecchio",
+   "de": "Telefon ans Ohr",
+   "ca": "Telèfon a l'orella",
+   "pl": "Telefon przy uchu",
+   "tr": "Kulağa telefon"
+  },
+  "Corre a cuatro patas hasta el córner": {
+   "en": "Crawls on all fours to the corner flag",
+   "pt": "Corre de quatro até a bandeirinha",
+   "fr": "Court à quatre pattes jusqu'au corner",
+   "it": "Corre a quattro zampe fino alla bandierina",
+   "de": "Krabbelt auf allen vieren zur Eckfahne",
+   "ca": "Corre de quatre grapes fins al córner",
+   "pl": "Biegnie na czworakach do chorągiewki",
+   "tr": "Dört ayak üstünde köşe bayrağına koşar"
+  },
+  "Se corona frente al banco rival": {
+   "en": "Crowns himself in front of the rival bench",
+   "pt": "Coroa-se diante do banco rival",
+   "fr": "Se couronne devant le banc adverse",
+   "it": "Si incorona davanti alla panchina avversaria",
+   "de": "Krönt sich vor der gegnerischen Bank",
+   "ca": "Es corona davant la banqueta rival",
+   "pl": "Koronuje się przed ławką rywala",
+   "tr": "Rakip yedek kulübesinin önünde taç takar"
+  },
+  "Colocación": {
+   "en": "Positioning",
+   "pt": "Colocação",
+   "fr": "Placement",
+   "it": "Piazzamento",
+   "de": "Stellungsspiel",
+   "ca": "Col·locació",
+   "pl": "Ustawianie się",
+   "tr": "Yer tutma"
+  },
+  "Menor (máx. 3 años)": {
+   "en": "Minor (max. 3 years)",
+   "pt": "Menor (máx. 3 anos)",
+   "fr": "Mineur (3 ans max.)",
+   "it": "Minorenne (max. 3 anni)",
+   "de": "Minderjährig (max. 3 Jahre)",
+   "ca": "Menor (màx. 3 anys)",
+   "pl": "Niepełnoletni (maks. 3 lata)",
+   "tr": "Reşit değil (en fazla 3 yıl)"
+  },
+  "Comisión del agente": {
+   "en": "Agent's fee",
+   "pt": "Comissão do empresário",
+   "fr": "Commission de l'agent",
+   "it": "Commissione dell'agente",
+   "de": "Beraterprovision",
+   "ca": "Comissió de l'agent",
+   "pl": "Prowizja agenta",
+   "tr": "Menajer komisyonu"
+  },
+  "Los históricos": {
+   "en": "The old guard",
+   "pt": "Os históricos",
+   "fr": "Les historiques",
+   "it": "I senatori",
+   "de": "Die Alteingesessenen",
+   "ca": "Els històrics",
+   "pl": "Starszyzna",
+   "tr": "Kıdemliler"
+  },
+  "La camada joven": {
+   "en": "The young crop",
+   "pt": "A geração jovem",
+   "fr": "La jeune garde",
+   "it": "La nidiata giovane",
+   "de": "Die jungen Wilden",
+   "ca": "La fornada jove",
+   "pl": "Młode pokolenie",
+   "tr": "Genç kuşak"
+  }
+ },
+ "patrones": [
+  [
+   "^Representados por (.+)$",
+   "Represented by $1",
+   "Representados por $1",
+   "Représentés par $1",
+   "Rappresentati da $1",
+   "Vertreten von $1",
+   "Representats per $1",
+   "Reprezentowani przez $1",
+   "Menajer $1 grubu"
+  ]
+ ]
+}

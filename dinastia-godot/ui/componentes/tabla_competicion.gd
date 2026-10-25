@@ -37,14 +37,16 @@ extends RefCounted
 ## por separado, con el mismo dato.
 static func titulo_de(mundo: Mundo, liga: Liga, mio: Club) -> String:
 	if not mundo.partido_de_copa().is_empty() and mundo.copa != null:
-		return mundo.copa.nombre.to_upper() + "  ·  " + mundo.copa.nombre_de_ronda().to_upper()
+		## Traducido aquí y no al final: «COPA CHILE  ·  CUARTOS DE FINAL» ya
+		## formado no está en ningún diccionario.
+		return Idiomas.mayusculas(Idiomas.t(mundo.copa.nombre)) + "  ·  " + Idiomas.mayusculas(Idiomas.t(mundo.copa.nombre_de_ronda()))
 	var mi_conti := mundo.mi_continental()
 	if Continental.toca_ronda(mundo.semana) >= 0 and mi_conti != null and mi_conti.en_curso():
-		var nombre_c := Continental.nombre_conti(mi_conti.clave).to_upper()
+		var nombre_c := Idiomas.mayusculas(Idiomas.t(Continental.nombre_conti(mi_conti.clave)))
 		if mi_conti.en_fase_de_grupos():
 			return "%s  ·  %s" % [nombre_c, _mi_grupo_nombre(mi_conti, mio)]
-		return "%s  ·  %s" % [nombre_c, mi_conti.nombre_de_ronda().to_upper()]
-	return liga.nombre.to_upper()
+		return "%s  ·  %s" % [nombre_c, Idiomas.mayusculas(Idiomas.t(mi_conti.nombre_de_ronda()))]
+	return Idiomas.mayusculas(Idiomas.t(liga.nombre))
 
 ## El cuerpo de la columna: la tabla, el grupo o el cuadro, según toque. El
 ## orden de las comprobaciones es EL MISMO que usa `Principal._dirigir()` para
@@ -62,13 +64,13 @@ static func pintar(lista: VBoxContainer, mundo: Mundo, liga: Liga, mio: Club,
 		else:
 			_pintar_cuadro(lista, mi_conti.vivos, mi_conti.emparejamiento_de(mio), mio, paleta)
 		return
-	_pintar_tabla_liga(lista, liga, mio, paleta)
+	_pintar_tabla_liga(lista, mundo, liga, mio, paleta)
 
 static func _mi_grupo_nombre(t: Continental, mio: Club) -> String:
 	for i in t.grupos.size():
 		if (t.grupos[i] as Array).has(mio):
-			return t.nombre_de_grupo(i).to_upper()
-	return "FASE DE GRUPOS"
+			return Idiomas.mayusculas(Idiomas.t(t.nombre_de_grupo(i)))
+	return Idiomas.t("FASE DE GRUPOS")
 
 ## La tabla de TU grupo, no la de los ocho: en fase de grupos lo único que
 ## decide tu vida son los tres rivales que te tocaron.
@@ -83,7 +85,7 @@ static func _pintar_grupo(lista: VBoxContainer, t: Continental, mio: Club,
 		return
 	var g := _rejilla(lista, 6, paleta)
 	for t2 in ["#", "CLUB", "PJ", "GF", "GC", "PTS"]:
-		_celda(g, t2, paleta["suave"], t2 != "CLUB" and t2 != "#", 11, paleta)
+		_celda(g, CompeticionFilas.sigla(t2), paleta["suave"], t2 != "CLUB" and t2 != "#", 11, paleta)
 	var puesto := 0
 	for f: Dictionary in t.tabla_de_grupo(indice):
 		puesto += 1
@@ -122,7 +124,7 @@ static func _pintar_cuadro(lista: VBoxContainer, vivos: Array, mi_par: Array,
 		nr.text = rival.nombre
 		nr.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		fila.add_child(nr)
-		_dato(lista, "Reputación", "%d  contra tus %d" % [rival.rep, mio.rep],
+		_dato(lista, Idiomas.t("Reputación"), Idiomas.t("%d  contra tus %d") % [rival.rep, mio.rep],
 			paleta["rojo"] if rival.rep > mio.rep else paleta["verde"], paleta)
 		lista.add_child(HSeparator.new())
 	var te := _texto(11, paleta["suave"], paleta)
@@ -138,18 +140,28 @@ static func _pintar_cuadro(lista: VBoxContainer, vivos: Array, mi_par: Array,
 		n2.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		f2.add_child(n2)
 
-static func _pintar_tabla_liga(lista: VBoxContainer, liga: Liga, mio: Club,
+static func _pintar_tabla_liga(lista: VBoxContainer, mundo: Mundo, liga: Liga, mio: Club,
 		paleta: Dictionary) -> void:
 	var g := _rejilla(lista, 7, paleta)
 	for t in ["#", "CLUB", "PJ", "G", "E", "P", "PTS"]:
-		_celda(g, t, paleta["suave"], t != "CLUB" and t != "#", 11, paleta)
+		_celda(g, CompeticionFilas.sigla(t), paleta["suave"], t != "CLUB" and t != "#", 11, paleta)
+	var tabla := liga.tabla()
+	## Las zonas reales (descenso, ascenso, continental...) en el número del
+	## puesto, con su nombre al pasar el ratón: la columna es estrecha para una
+	## leyenda, y la ficha completa (al pulsar) la tiene.
+	var zonas := CompeticionZonas.de_liga(mundo, liga, tabla)
 	var puesto := 0
-	for f: Dictionary in liga.tabla():
+	for f: Dictionary in tabla:
 		puesto += 1
 		var c: Club = f["club"]
 		var propio := c == mio
 		var color: Color = paleta["acento"] if propio else paleta["texto"]
-		_celda(g, str(puesto), paleta["acento"] if propio else paleta["suave"], false, 12, paleta)
+		var zona: Dictionary = zonas.get(c.id, {})
+		var col_puesto: Color = CompeticionZonas.COLORES.get(String(zona.get("zona", "")), paleta["suave"])
+		var lp := _celda(g, str(puesto), paleta["acento"] if propio else col_puesto, false, 12, paleta)
+		if not zona.is_empty():
+			lp.tooltip_text = String(zona["texto"])
+			lp.mouse_filter = Control.MOUSE_FILTER_PASS
 		## Escudo y nombre en la misma celda: es lo que hace que la tabla se lea
 		## de un vistazo, como una tabla de verdad y no una hoja de cálculo.
 		var fila := HBoxContainer.new()

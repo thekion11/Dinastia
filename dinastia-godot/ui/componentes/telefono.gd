@@ -1,6 +1,6 @@
 class_name Telefono
-extends "res://ui/componentes/telefono_p2.gd"
-## [Capa 3/3 de `telefono.gd`] _banco, _calendario, _fotos, _muestra, _pintar_papel, _elegir_de_galeria … (+6)
+extends "res://ui/componentes/telefono_p3.gd"
+## [Capa 4/4 de `telefono.gd`] _banco, _calendario, _fotos, _muestra, _pintar_papel, _elegir_de_galeria … (+6)
 
 func _banco() -> void:
 	_titulo_app("Banco")
@@ -280,6 +280,7 @@ func abrir_app(app: String) -> void:
 	_escalar_letra.call_deferred()
 	_botones_movil.call_deferred()
 	_scroll.scroll_vertical = 0
+	_tras_abrir()
 
 # --- el aparato -----------------------------------------------------------------
 
@@ -334,13 +335,16 @@ func _montar() -> void:
 	estado.add_child(hora)
 	estado.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, "▂▄▆ 5G  🔋 82%   "))
 	v.add_child(estado)
-	_aviso = Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO, "")
+	_aviso = Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, "")
 	_aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_aviso.add_theme_stylebox_override("normal", _estilo_aviso())
 	_aviso.visible = false
 	v.add_child(_aviso)
 	_scroll = ScrollContainer.new()
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	## Con teclado o mando la lista se desplaza sola hasta el botón enfocado.
+	_scroll.follow_focus = true
 	v.add_child(_scroll)
 	var margen := MarginContainer.new()
 	margen.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -374,6 +378,8 @@ static func abrir(p: Control, mundo: Mundo) -> Control:
 	pop.add_child(fondo)
 	var centro := CenterContainer.new()
 	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
+	## Que el toque fuera del móvil llegue al fondo oscuro (y lo guarde).
+	centro.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pop.add_child(centro)
 	var noticias: Array = p.get("_bandeja") if p.get("_bandeja") != null else []
 	var tel := Telefono.crear(mundo, noticias)
@@ -385,13 +391,31 @@ static func abrir(p: Control, mundo: Mundo) -> Control:
 	var cerrar := Button.new()
 	cerrar.text = Idiomas.t("✕ Guardar el móvil")
 	cerrar.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	## Crece hacia la izquierda con el texto («Put the phone away», «Handy weglegen»...): con el
+	## ancho fijo de antes el rótulo largo se salía del botón.
+	cerrar.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	cerrar.offset_left = -200
 	cerrar.offset_right = -30
 	cerrar.offset_top = 24
 	cerrar.offset_bottom = 60
-	cerrar.pressed.connect(func() -> void:
-		pop.queue_free()
-		if p.has_method("_refrescar"):
-			p.call("_refrescar"))
+	cerrar.focus_mode = Control.FOCUS_NONE
 	pop.add_child(cerrar)
+	## Guardarlo (botón, Esc/B desde el inicio o tocar fuera del móvil): se desvanece y repinta lo de detrás.
+	var guardar := func() -> void:
+		if pop.has_meta("cerrando"):
+			return
+		pop.set_meta("cerrando", true)
+		Sonido.toca("cerrar", Sonido.Bus.INTERFAZ)
+		Telefono.animar_pop(pop, tel, false, func() -> void:
+			pop.queue_free()
+			if is_instance_valid(p) and p.has_method("_refrescar"):
+				p.call("_refrescar"))
+	cerrar.pressed.connect(guardar)
+	tel.al_cerrar = guardar
+	fondo.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+			guardar.call())
+	Sonido.toca("abrir", Sonido.Bus.INTERFAZ)
+	Telefono.animar_pop.call_deferred(pop, tel, true)
+	tel.enfocar.call_deferred()
 	return pop

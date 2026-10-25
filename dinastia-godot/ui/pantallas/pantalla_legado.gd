@@ -22,7 +22,7 @@ func _pintar_records() -> void:
 		var col := VBoxContainer.new()
 		gr.add_child(col)
 		var et := p._texto(10, Principal.COL_SUAVE)
-		et.text = String(par[0])
+		et.text = Idiomas.t(String(par[0]))
 		col.add_child(et)
 		var va := p._texto(16, Principal.COL_TEXTO)
 		va.text = str(int(r.get(par[1], 0)))
@@ -35,10 +35,10 @@ func _pintar_records() -> void:
 		tm.text = Idiomas.t("MARCAS DEL CLUB")
 		p._lista_records.add_child(tm)
 		var mg: Dictionary = rec["mayor_goleada"]
-		p._dato("Mayor goleada", "%s con %s (%d)" % [String(mg.get("marcador", "")), String(mg.get("rival", "")), int(mg.get("anio", 0))], Principal.COL_VERDE, p._lista_records)
+		p._dato("Mayor goleada", Idiomas.t("%s con %s (%d)") % [String(mg.get("marcador", "")), String(mg.get("rival", "")), int(mg.get("anio", 0))], Principal.COL_VERDE, p._lista_records)
 		if rec.has("peor_derrota"):
 			var pd: Dictionary = rec["peor_derrota"]
-			p._dato("Peor derrota", "%s con %s (%d)" % [String(pd.get("marcador", "")), String(pd.get("rival", "")), int(pd.get("anio", 0))], Principal.COL_ROJO, p._lista_records)
+			p._dato("Peor derrota", Idiomas.t("%s con %s (%d)") % [String(pd.get("marcador", "")), String(pd.get("rival", "")), int(pd.get("anio", 0))], Principal.COL_ROJO, p._lista_records)
 		if rec.has("mas_goles"):
 			var mgo: Dictionary = rec["mas_goles"]
 			p._dato("Más goles en un partido", "%d vs %s (%d)" % [int(mgo.get("g", 0)), String(mgo.get("rival", "")), int(mgo.get("anio", 0))], Principal.COL_TEXTO, p._lista_records)
@@ -60,7 +60,7 @@ func _pintar_records() -> void:
 			var f3: Dictionary = fama[i]
 			var col_f := Principal.COL_ORO if int(f3["titulos"]) > 0 else Principal.COL_TEXTO
 			p._dato("%d.  %s%s" % [i + 1, "🏆 " if int(f3["titulos"]) > 0 else "", String(f3["nombre"])],
-				String(f3["motivo"]), col_f, p._lista_records)
+				Idiomas.t(String(f3["motivo"])), col_f, p._lista_records)
 		p._lista_records.add_child(HSeparator.new())
 
 	var goleadores := lg.goleadores_historicos(10)
@@ -93,7 +93,7 @@ func _pintar_records() -> void:
 		g2.add_theme_constant_override("h_separation", 10)
 		p._lista_records.add_child(g2)
 		for t2 in ["CLUB", "PJ", "G", "E", "P"]:
-			p._celda(g2, t2, Principal.COL_SUAVE, t2 != "CLUB", 11)
+			p._celda(g2, CompeticionFilas.sigla(t2), Principal.COL_SUAVE, t2 != "CLUB", 11)
 		var ids := lg.h2h.keys()
 		ids.sort_custom(func(a: String, b: String) -> bool: return int(lg.h2h[a]["pj"]) > int(lg.h2h[b]["pj"]))
 		for id: String in ids:
@@ -119,7 +119,7 @@ func _pintar_records() -> void:
 		for i in range(efes.size() - 1, maxi(-1, efes.size() - 11), -1):
 			var e: Dictionary = efes[i]
 			var le := p._texto(11, Principal.COL_SUAVE)
-			le.text = "S%d/%d  ·  %s" % [int(e.get("semana", 0)), int(e.get("anio", 0)), String(e.get("texto", ""))]
+			le.text = "S%d/%d  ·  %s" % [int(e.get("semana", 0)), int(e.get("anio", 0)), Idiomas.t(String(e.get("texto", "")))]
 			le.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_records.add_child(le)
 		p._lista_records.add_child(HSeparator.new())

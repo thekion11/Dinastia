@@ -9,10 +9,10 @@ func _pintar_pregunta_rueda(e: Dictionary) -> void:
 	var per := String(e.get("periodista", ""))
 	if per != "":
 		var rel := p.mundo.prensa.relacion_con(per)
-		var trato := "te aprecia" if rel >= 65 else ("no te quiere" if rel <= 35 else "sin bando")
+		var trato := Idiomas.t("te aprecia") if rel >= 65 else (Idiomas.t("no te quiere") if rel <= 35 else Idiomas.t("sin bando"))
 		quien_txt += "  ·  %s, %s" % [String(e.get("perfil", "")), trato]
 	if bool(e.get("memoria", false)):
-		quien_txt += "  ·  🧠 recuerda lo que dijiste"
+		quien_txt += Idiomas.t("  ·  🧠 recuerda lo que dijiste")
 	p._rueda_quien.text = "🎙️ " + quien_txt.to_upper()
 	p._rueda_pregunta.text = String(e.get("pregunta", ""))
 	p._rueda_desde = Time.get_ticks_msec()

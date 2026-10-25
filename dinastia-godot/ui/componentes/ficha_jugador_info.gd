@@ -41,8 +41,8 @@ static func pintar_ciega(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta:
 	lista.add_child(t)
 	var p := _texto(12, paleta["texto"], paleta)
 	p.text = Idiomas.t("%s, %d años, %s. Nuestro hombre lo califica como «%s»: %s.") % [
-		j.nombre, j.edad, String(puesto.get("n", "jugador")).to_lower(),
-		String(fila[1]).to_lower(), String(fila[2]).to_lower()]
+		j.nombre, j.edad, Idiomas.t(String(puesto.get("n", "jugador"))).to_lower(),
+		Idiomas.t(String(fila[1])).to_lower(), Idiomas.t(String(fila[2])).to_lower()]
 	p.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(p)
 	if not j.atributos.is_empty():
@@ -54,13 +54,13 @@ static func pintar_ciega(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta:
 				fuerte = k
 			if int(j.atributos[k]) < int(j.atributos[flojo]):
 				flojo = k
-		_dato(lista, "Mejor cualidad", String(Principal.NOMBRES_ATRIBUTOS.get(fuerte, fuerte)), paleta["verde"], paleta)
-		_dato(lista, "Punto débil", String(Principal.NOMBRES_ATRIBUTOS.get(flojo, flojo)), paleta["rojo"], paleta)
-	_dato(lista, "Partidos esta temporada", "%d · %d goles · %d asistencias" % [j.partidos, j.goles, j.asistencias], paleta["texto"], paleta)
-	_dato(lista, "Nota media", ("%.1f" % j.media_notas()) if j.notas.size() >= 3 else "sin datos", paleta["texto"], paleta)
-	_dato(lista, "Carácter", Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, [Idiomas.t("sin rasgos marcados")])[0])) if j.rasgo != "" else "sin rasgos marcados", paleta["texto"], paleta)
-	_dato(lista, "Celebración", String(AnimExtra.NOMBRE_CELEBRACION.get(AnimExtra.celebracion_firma(j.rasgo, j.id), "Salto y abrazo")), paleta["texto"], paleta)
-	_dato(lista, "Fiabilidad del informe", oj.fiabilidad_de(j), paleta["suave"], paleta)
+		_dato(lista, "Mejor cualidad", Idiomas.t(String(Principal.NOMBRES_ATRIBUTOS.get(fuerte, fuerte))), paleta["verde"], paleta)
+		_dato(lista, "Punto débil", Idiomas.t(String(Principal.NOMBRES_ATRIBUTOS.get(flojo, flojo))), paleta["rojo"], paleta)
+	_dato(lista, "Partidos esta temporada", Idiomas.t("%d · %d goles · %d asistencias") % [j.partidos, j.goles, j.asistencias], paleta["texto"], paleta)
+	_dato(lista, "Nota media", ("%.1f" % j.media_notas()) if j.notas.size() >= 3 else Idiomas.t("sin datos"), paleta["texto"], paleta)
+	_dato(lista, "Carácter", Idiomas.t(Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, [Idiomas.t("sin rasgos marcados")])[0]))) if j.rasgo != "" else Idiomas.t("sin rasgos marcados"), paleta["texto"], paleta)
+	_dato(lista, "Celebración", Idiomas.t(String(AnimExtra.NOMBRE_CELEBRACION.get(AnimExtra.celebracion_firma(j.rasgo, j.id), "Salto y abrazo"))), paleta["texto"], paleta)
+	_dato(lista, "Fiabilidad del informe", Idiomas.t(oj.fiabilidad_de(j)), paleta["suave"], paleta)
 
 ## Lo que ha hecho esta temporada.
 static func pintar_estadisticas(lista: VBoxContainer, j: Jugador, paleta: Dictionary) -> void:
@@ -87,7 +87,7 @@ static func pintar_estadisticas(lista: VBoxContainer, j: Jugador, paleta: Dictio
 		var col := VBoxContainer.new()
 		g.add_child(col)
 		var et := _texto(10, paleta["suave"], paleta)
-		et.text = String(par[0])
+		et.text = Idiomas.t(String(par[0]))
 		col.add_child(et)
 		var va := _texto(16, paleta["texto"], paleta)
 		va.text = String(par[1])
@@ -104,14 +104,14 @@ static func pintar_perfil_y_premios(lista: VBoxContainer, j: Jugador, paleta: Di
 	t.text = Idiomas.t("🦶 PERFIL")
 	lista.add_child(t)
 	var pd := j.pierna_debil()
-	_dato(lista, "Pie hábil", "Derecho" if j.pie() == "D" else "Izquierdo", paleta["texto"], paleta)
+	_dato(lista, "Pie hábil", Idiomas.t("Derecho") if j.pie() == "D" else Idiomas.t("Izquierdo"), paleta["texto"], paleta)
 	_dato(lista, "Pierna débil", "★".repeat(pd) + "☆".repeat(5 - pd), paleta["texto"], paleta)
 	if not j.premios.is_empty():
 		var tp := _texto(11, paleta["suave"], paleta)
 		tp.text = Idiomas.t("🏆 PREMIOS")
 		lista.add_child(tp)
 		for p: Dictionary in j.premios:
-			_dato(lista, str(int(p.get("anio", 0))), String(p.get("premio", "")), Color("c9a227"), paleta)
+			_dato(lista, str(int(p.get("anio", 0))), Idiomas.t(String(p.get("premio", ""))), paleta["oro"], paleta)
 
 static func pintar_cabeza(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta: Dictionary) -> void:
 	var v := mundo.vestuario
@@ -122,11 +122,11 @@ static func pintar_cabeza(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta
 	t.text = Idiomas.t("🧠 CABEZA")
 	lista.add_child(t)
 	var em: Dictionary = v.estado_mental(j)
-	_dato(lista, "Estado mental", "%d/100 · %s" % [v.ansiedad(j), String(em["txt"])], Color(String(em["color"])), paleta)
+	_dato(lista, "Estado mental", "%d/100 · %s" % [v.ansiedad(j), Idiomas.t(String(em["txt"]))], Color(String(em["color"])), paleta)
 	_dato(lista, "Confianza", "%d/100" % v.confianza(j), paleta["texto"], paleta)
 	var clan: Dictionary = v.clan_de(j)
 	if not clan.is_empty():
-		_dato(lista, "Camarín", "pertenece a «%s»" % String(clan.get("nombre", "—")), paleta["suave"], paleta)
+		_dato(lista, "Camarín", Idiomas.t("pertenece a «%s»") % Idiomas.t(String(clan.get("nombre", "—"))), paleta["suave"], paleta)
 
 ## El rol prometido y si lo estás cumpliendo.
 static func pintar_promesa(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta: Dictionary) -> void:
@@ -140,14 +140,14 @@ static func pintar_promesa(lista: VBoxContainer, j: Jugador, mundo: Mundo, palet
 	var t := _texto(11, paleta["suave"], paleta)
 	t.text = Idiomas.t("PROMESA Y SATISFACCIÓN")
 	lista.add_child(t)
-	_dato(lista, "Rol prometido", "%s (%d%%)" % [String(def[1]), int(float(def[3]) * 100.0)], paleta["texto"], paleta)
+	_dato(lista, "Rol prometido", "%s (%d%%)" % [Idiomas.t(String(def[1])), int(float(def[3]) * 100.0)], paleta["texto"], paleta)
 	var s: Dictionary = v.satisfaccion(j)
 	var total := int(s["total"])
 	_dato(lista, "Satisfacción", "%d/100" % total,
 		paleta["verde"] if total >= 60 else (paleta["rojo"] if total < 40 else paleta["oro"]), paleta)
 	for par in [["Minutos", "min"], ["Su rendimiento", "rend"], ["Comodidad táctica", "tact"], ["Instalaciones", "inst"]]:
 		var val := int(s[String(par[1])])
-		_dato(lista, "   %s" % String(par[0]), str(val),
+		_dato(lista, "   %s" % Idiomas.t(String(par[0])), str(val),
 			paleta["verde"] if val >= 60 else (paleta["rojo"] if val < 40 else paleta["suave"]), paleta)
 
 ## Las habilidades especiales que ya tiene.
@@ -163,8 +163,8 @@ static func pintar_habilidades(lista: VBoxContainer, j: Jugador, mundo: Mundo, p
 	lista.add_child(t)
 	for k: String in habs:
 		var l := _texto(11, paleta["oro"], paleta)
-		l.text = "✦ %s" % e.nombre_habilidad(String(k))
-		l.tooltip_text = e.descripcion_habilidad(String(k))
+		l.text = "✦ %s" % Idiomas.t(e.nombre_habilidad(String(k)))
+		l.tooltip_text = Idiomas.t(e.descripcion_habilidad(String(k)))
 		lista.add_child(l)
 
 ## El historial de lesiones.
@@ -183,8 +183,8 @@ static func pintar_historial_medico(lista: VBoxContainer, j: Jugador, mundo: Mun
 	var desde := maxi(0, h.size() - 6)
 	for i in range(h.size() - 1, desde - 1, -1):
 		var x: Dictionary = h[i]
-		_dato(lista, String(x.get("n", "lesión")),
-			"%d sem  ·  %d" % [int(x.get("sem", 0)), int(x.get("anio", 0))], paleta["suave"], paleta)
+		_dato(lista, Idiomas.t(String(x.get("n", "lesión"))),
+			Idiomas.t("%d sem  ·  %d") % [int(x.get("sem", 0)), int(x.get("anio", 0))], paleta["suave"], paleta)
 
 ## `perfilHumano()`/`bioDe()` del HTML. DOS PUNTOS DE LLAMADA en Principal:
 ## dentro de `pintar_vida_personal()` (de abajo) y directo en `_ver_ficha()`
@@ -195,6 +195,11 @@ const _ORIGEN_RESPALDO := ["surgido de la cantera", "llegado desde el fútbol am
 	"descubierto en un torneo de barrio", "formado a la antigua"]
 
 static func perfil_humano(j: Jugador) -> Dictionary:
+	## Un futbolista REAL (pack real) no lleva vida personal inventada: la
+	## tabla incluye religión, paternidad y duelos, y la regla del dueño es no
+	## atribuir eso a personas reales. Sale «sin novedades», como cualquiera.
+	if j.real:
+		return {}
 	var tabla: Variant = Datos.tabla("PERSONAL")
 	if not (tabla is Array) or (tabla as Array).is_empty():
 		return {}
@@ -212,14 +217,17 @@ static func bio_de(j: Jugador, mundo: Mundo) -> String:
 	var h := 0
 	for i in j.id.length():
 		h += j.id.unicode_at(i)
-	var texto := "Debutó a los %d años, %s. " % [16 + h % 4, _ORIGEN_RESPALDO[h % 4]]
+	## Cada frase pasa por `Idiomas.t` por separado y ANTES de rellenarla: la
+	## biografía entera, ya con números y nombres, no está en ninguna tabla, y
+	## salía medio traducida (la primera frase sí, la del camarín no).
+	var frases: Array[String] = [Idiomas.t("Debutó a los %d años, %s.") % [16 + h % 4, Idiomas.t(_ORIGEN_RESPALDO[h % 4])]]
 	var linaje := mundo.cantera.linaje_de(j) if mundo.cantera != null else {}
 	if not linaje.is_empty():
-		texto += "Hijo de la leyenda %s. " % String(linaje.get("padre", ""))
+		frases.append(Idiomas.t("Hijo de la leyenda %s.") % String(linaje.get("padre", "")))
 	if j.rasgo != "":
 		var nombre_rasgo := String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, ["?"])[0])
-		texto += "En el camarín lo describen como «%s»." % Nombres.limpiar(nombre_rasgo).to_lower()
-	return texto
+		frases.append(Idiomas.t("En el camarín lo describen como «%s».") % Idiomas.t(Nombres.limpiar(nombre_rasgo)).to_lower())
+	return " ".join(frases)
 
 ## `perfilHumano()` del HTML: una novedad de vida personal estable por
 ## jugador y una línea de biografía. Solo se ve del propio -es cosa del
@@ -231,8 +239,8 @@ static func pintar_vida_personal(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 	lista.add_child(t)
 	var perfil := perfil_humano(j)
 	var p := _texto(12, paleta["texto"], paleta)
-	p.text = ("%s. %s" % [String(perfil.get("t", "")), String(perfil.get("d", ""))]) if not perfil.is_empty() \
-		else "Sin novedades fuera de la cancha: vida ordenada."
+	p.text = ("%s. %s" % [Idiomas.t(String(perfil.get("t", ""))), Idiomas.t(String(perfil.get("d", "")))]) if not perfil.is_empty() \
+		else Idiomas.t("Sin novedades fuera de la cancha: vida ordenada.")
 	p.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(p)
 	var bio := _texto(11, paleta["suave"], paleta)
@@ -283,15 +291,28 @@ static func _texto(tam: int, color: Color, paleta: Dictionary) -> Label:
 	l.add_theme_color_override("font_color", color)
 	return l
 
+## Rótulo a la izquierda y valor a la derecha, los dos recortables con «…» y el
+## texto entero en la ayuda: con un valor largo («12/100 · Ansioso, le pesa el
+## partido») el rótulo se encogía hasta desaparecer en la columna de 1280×720.
+## El rótulo se traduce aquí: la ficha se repinta al pulsar un jugador SIN pasar
+## por el traductor de la pantalla, y los rótulos salían en castellano.
 static func _dato(padre: Node, etiqueta: String, valor: String, color: Color, paleta: Dictionary) -> void:
 	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 8)
 	var a := _texto(12, paleta["suave"], paleta)
-	a.text = etiqueta
+	a.text = Idiomas.t(etiqueta)
 	a.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	a.clip_text = true
-	a.tooltip_text = etiqueta
+	a.size_flags_stretch_ratio = 1.2
+	a.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	a.tooltip_text = a.text
+	a.mouse_filter = Control.MOUSE_FILTER_PASS
 	h.add_child(a)
 	var b := _texto(12, color, paleta)
 	b.text = valor
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	b.tooltip_text = valor
+	b.mouse_filter = Control.MOUSE_FILTER_PASS
 	h.add_child(b)
 	padre.add_child(h)

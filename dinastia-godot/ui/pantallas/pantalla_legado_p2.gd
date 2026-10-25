@@ -17,7 +17,7 @@ func _pintar_sucesion(r: Roles) -> void:
 		p._lista_legado.add_child(n)
 		var d := p._texto(11, Principal.COL_SUAVE)
 		d.text = Idiomas.t("%s El directorio le da un margen de %d partidos.") % [
-			String(r.sucesor.get("desc", "")), int(r.sucesor.get("margen", 0))]
+			Idiomas.t(String(r.sucesor.get("desc", ""))), int(r.sucesor.get("margen", 0))]
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(d)
 		return
@@ -36,7 +36,7 @@ func _pintar_sucesion(r: Roles) -> void:
 		l.text = Idiomas.t("%s  ·  margen %d partidos") % [String(cand["nombre"]), int(cand["margen"])]
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.clip_text = true
-		l.tooltip_text = String(cand["desc"])
+		l.tooltip_text = Idiomas.t(String(cand["desc"]))
 		fila.add_child(l)
 		var b := Button.new()
 		b.text = Idiomas.t("Elegir")
@@ -47,7 +47,7 @@ func _pintar_sucesion(r: Roles) -> void:
 			p._refrescar())
 		fila.add_child(b)
 		var d2 := p._texto(10, Principal.COL_SUAVE)
-		d2.text = String(cand["desc"])
+		d2.text = Idiomas.t(String(cand["desc"]))
 		d2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(d2)
 
@@ -77,7 +77,7 @@ func _pintar_fin_de_carrera(r: Roles) -> void:
 		av.text = Idiomas.t("Cuando quieras cerrar la historia, puedes anunciar tu retirada y ver el balance completo de tu carrera. No se puede deshacer.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(av)
-		p._boton("¿SEGURO? Anunciar mi retirada" if p._confirmar_retiro else "🏁 Anunciar mi retirada",
+		p._boton(Idiomas.t("¿SEGURO? Anunciar mi retirada") if p._confirmar_retiro else Idiomas.t("🏁 Anunciar mi retirada"),
 			_retirarse, p._lista_legado)
 
 ## `epilogoHTML()`: el resumen con veredicto. Antes de la tercera temporada no
@@ -105,7 +105,7 @@ func _pintar_epilogo(r: Roles) -> void:
 		var col := VBoxContainer.new()
 		g.add_child(col)
 		var et := p._texto(10, Principal.COL_SUAVE)
-		et.text = String(par[0])
+		et.text = Idiomas.t(String(par[0]))
 		col.add_child(et)
 		var va := p._texto(15, Principal.COL_TEXTO)
 		va.text = String(par[1])
@@ -113,7 +113,7 @@ func _pintar_epilogo(r: Roles) -> void:
 	var v: Dictionary = r.veredicto_carrera()
 	var tonos := {"oro": Principal.COL_ORO, "verde": Principal.COL_VERDE, "ambar": p.COL_ACENTO, "suave": Principal.COL_SUAVE}
 	var frase := p._texto(13, tonos.get(String(v["tono"]), Principal.COL_SUAVE))
-	frase.text = String(v["texto"])
+	frase.text = Idiomas.t(String(v["texto"]))
 	frase.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_legado.add_child(frase)
 	## La vitrina cierra el epílogo: los doce últimos, que es lo que cabe sin
@@ -122,7 +122,7 @@ func _pintar_epilogo(r: Roles) -> void:
 		var ult := r.trofeos.slice(maxi(0, r.trofeos.size() - 12))
 		var partes: Array[String] = []
 		for tro: Dictionary in ult:
-			partes.append("🏆 %s %s" % [String(tro.get("titulo", "")), str(tro.get("anio", ""))])
+			partes.append("🏆 %s %s" % [Idiomas.t(String(tro.get("titulo", ""))), str(tro.get("anio", ""))])
 		var vit := p._texto(11, Principal.COL_ORO)
 		vit.text = "  ·  ".join(partes)
 		vit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -162,7 +162,7 @@ func _pintar_legado() -> void:
 		var col := VBoxContainer.new()
 		g.add_child(col)
 		var et := p._texto(10, Principal.COL_SUAVE)
-		et.text = String(par[0])
+		et.text = Idiomas.t(String(par[0]))
 		col.add_child(et)
 		var va := p._texto(16, Principal.COL_ORO)
 		va.text = String(par[1])
@@ -170,7 +170,7 @@ func _pintar_legado() -> void:
 	## El multiplicador solo se enseña si es distinto de 1: si no, es una línea
 	## que dice "×1.0" y no significa nada.
 	if absf(float(p_local["multiplicador"]) - 1.0) > 0.001:
-		p._dato("Multiplicador de desafíos", "×%.2f sobre %s de base" % [float(p_local["multiplicador"]), p._miles(int(p_local["base"]))],
+		p._dato("Multiplicador de desafíos", Idiomas.t("×%.2f sobre %s de base") % [float(p_local["multiplicador"]), p._miles(int(p_local["base"]))],
 			Principal.COL_VERDE, p._lista_legado)
 	if not r.filosofia.is_empty():
 		var fi := p._texto(12, p.COL_ACENTO)
@@ -189,35 +189,41 @@ func _pintar_legado() -> void:
 		p._lista_legado.add_child(vac)
 	else:
 		for f: Dictionary in palmares:
-			p._dato("🏆 %s" % String(f["titulo"]), "×%d" % int(f["veces"]), Principal.COL_ORO, p._lista_legado)
+			p._dato("🏆 %s" % Idiomas.t(String(f["titulo"])), "×%d" % int(f["veces"]), Principal.COL_ORO, p._lista_legado)
 	p._lista_legado.add_child(HSeparator.new())
 
 	var tc := p._texto(11, Principal.COL_SUAVE)
 	tc.text = Idiomas.t("📈 CARRERA PROFESIONAL")
 	p._lista_legado.add_child(tc)
-	p._dato("Rol actual", r.nombre_del_cargo().capitalize(), Principal.COL_TEXTO, p._lista_legado)
-	## LA LICENCIA Y EL MINIJUEGO (C7).
+	p._dato("Rol actual", Idiomas.t(r.nombre_del_cargo().capitalize()), Principal.COL_TEXTO, p._lista_legado)
+	## LA LICENCIA Y EL MINIJUEGO (C7). FALLA (25-10-2026): esto se colgaba de
+	## `_lista_club` -otra pestaña- mientras se pintaba el Legado. Como cada
+	## lista se repinta (y se vacía) solo al verse, el examen de licencia y el
+	## acceso a los minijuegos acababan en una pestaña oculta y desaparecían al
+	## abrirla: era el único sitio desde donde presentarse al examen. Van aquí,
+	## en la carrera profesional, que es de lo que tratan.
 	if p.mundo.licencia != null:
 		var lic := p._texto(12, Principal.COL_TEXTO)
-		lic.text = "🎓 %s" % p.mundo.licencia.nombre()
-		p._lista_club.add_child(lic)
+		lic.text = "🎓 %s" % Idiomas.t(p.mundo.licencia.nombre())
+		p._lista_legado.add_child(lic)
 		var motivo := p.mundo.licencia.puede_presentarse(p.mundo.anio, p.mundo.semana)
 		if motivo == "":
-			p._boton("Presentarse al examen de %s" % Licencia.NIVELES[p.mundo.licencia.nivel + 1], p._ui_finanzas._abrir_examen, p._lista_club)
+			p._boton(Idiomas.t("Presentarse al examen de %s") % Idiomas.t(String(Licencia.NIVELES[p.mundo.licencia.nivel + 1])), p._ui_finanzas._abrir_examen, p._lista_legado)
 		else:
 			var m2 := p._texto(11, Principal.COL_SUAVE)
-			m2.text = motivo
-			p._lista_club.add_child(m2)
-		p._boton("🎮 Minijuegos: penales, tiros libres y trivia", func() -> void: SalaMinijuegos.abrir(p, p.mundo), p._lista_club)
+			m2.text = Idiomas.t(motivo)
+			m2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			p._lista_legado.add_child(m2)
+		p._boton(Idiomas.t("🎮 Minijuegos: penales, tiros libres y trivia"), func() -> void: SalaMinijuegos.abrir(p, p.mundo), p._lista_legado)
 
 	var escalon := r.siguiente_escalon()
 	if escalon != "":
 		var e := p._texto(11, Principal.COL_SUAVE)
-		e.text = escalon
+		e.text = Idiomas.t(escalon)
 		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(e)
 	if r.puede_ascender() != "":
-		p._boton("📈 Ascender a %s" % Roles.PERMISOS[r.puede_ascender()]["cargo"], p._ui_finanzas._ascender_rol, p._lista_legado)
+		p._boton(Idiomas.t("📈 Ascender a %s") % Idiomas.t(String(Roles.PERMISOS[r.puede_ascender()]["cargo"])), p._ui_finanzas._ascender_rol, p._lista_legado)
 	p._lista_legado.add_child(HSeparator.new())
 
 	## LA OFERTA DE OTRO CLUB. Va arriba del legado porque es lo unico de esta
@@ -231,9 +237,9 @@ func _pintar_legado() -> void:
 		var no := p._texto(13, Principal.COL_ORO)
 		no.text = String(r.oferta_de_club["nombre"])
 		p._lista_legado.add_child(no)
-		p._dato("Salto de categoría", "+%d de reputación" % int(r.oferta_de_club["mejora"]),
+		p._dato("Salto de categoría", Idiomas.t("+%d de reputación") % int(r.oferta_de_club["mejora"]),
 			Principal.COL_VERDE, p._lista_legado)
-		p._dato("Tu sueldo allí", "%s / semana" % p._dinero(int(r.oferta_de_club["sueldo"])),
+		p._dato("Tu sueldo allí", Idiomas.t("%s / semana") % p._dinero(int(r.oferta_de_club["sueldo"])),
 			Principal.COL_ORO, p._lista_legado)
 		var eo := p._texto(10, Principal.COL_SUAVE)
 		eo.text = Idiomas.t("Aceptar cierra tu capítulo aquí y abre otro: el currículum se lo lleva todo. Rechazar sube la confianza de esta directiva, que se entera igual.")
@@ -302,7 +308,7 @@ func _pintar_habilidades() -> void:
 	tit.custom_minimum_size.x = 60
 	cab.add_child(tit)
 	var pts := Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO if e.dt_puntos > 0 else Tema.SUAVE,
-		"%d punto%s por gastar" % [e.dt_puntos, "" if e.dt_puntos == 1 else "s"])
+		(Idiomas.t("%d punto por gastar") if e.dt_puntos == 1 else Idiomas.t("%d puntos por gastar")) % e.dt_puntos)
 	cab.add_child(pts)
 	if e.dt_puntos > 0:
 		(func() -> void: Animar.pulso(pts, 1.15)).call_deferred()
@@ -341,7 +347,7 @@ func _pintar_arbol_dt() -> void:
 	p._lista_legado.add_child(pts)
 	for rama: String in e.dt_ramas():
 		var tr := p._texto(10, p.COL_ACENTO)
-		tr.text = rama.to_upper()
+		tr.text = Idiomas.mayusculas(Idiomas.t(rama))
 		p._lista_legado.add_child(tr)
 		for clave: String in (e.dt_ramas()[rama] as Array):
 			var tengo := e.dt_tiene(clave)

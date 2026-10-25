@@ -1,0 +1,398 @@
+{
+ "exactas": {
+  "%s  ·  jornada %d de %d": {
+   "en": "%s  ·  matchday %d of %d",
+   "pt": "%s  ·  rodada %d de %d",
+   "fr": "%s  ·  journée %d sur %d",
+   "it": "%s  ·  giornata %d di %d",
+   "de": "%s  ·  Spieltag %d von %d",
+   "ca": "%s  ·  jornada %d de %d",
+   "pl": "%s  ·  kolejka %d z %d",
+   "tr": "%s  ·  %d. hafta / %d"
+  },
+  "(%d-%d pen.)": {
+   "en": "(%d-%d pens)",
+   "pt": "(%d-%d pên.)",
+   "fr": "(%d-%d t.a.b.)",
+   "it": "(%d-%d d.c.r.)",
+   "de": "(%d:%d i.E.)",
+   "ca": "(%d-%d pen.)",
+   "pl": "(%d-%d karne)",
+   "tr": "(%d-%d pen.)"
+  },
+  "Ascenso": {
+   "en": "Promotion",
+   "pt": "Acesso",
+   "fr": "Montée",
+   "it": "Promozione",
+   "de": "Aufstieg",
+   "ca": "Ascens",
+   "pl": "Awans",
+   "tr": "Yükselme"
+  },
+  "Campeón": {
+   "en": "Champion",
+   "pt": "Campeão",
+   "fr": "Champion",
+   "it": "Campione",
+   "de": "Meister",
+   "ca": "Campió",
+   "pl": "Mistrz",
+   "tr": "Şampiyon"
+  },
+  "Descenso": {
+   "en": "Relegation",
+   "pt": "Rebaixamento",
+   "fr": "Relégation",
+   "it": "Retrocessione",
+   "de": "Abstieg",
+   "ca": "Descens",
+   "pl": "Spadek",
+   "tr": "Küme düşme"
+  },
+  "L1/R1 o Q/E: cambiar de competición": {
+   "en": "L1/R1 or Q/E: switch competition",
+   "pt": "L1/R1 ou Q/E: mudar de competição",
+   "fr": "L1/R1 ou Q/E : changer de compétition",
+   "it": "L1/R1 o Q/E: cambia competizione",
+   "de": "L1/R1 oder Q/E: Wettbewerb wechseln",
+   "ca": "L1/R1 o Q/E: canviar de competició",
+   "pl": "L1/R1 lub Q/E: zmień rozgrywki",
+   "tr": "L1/R1 veya Q/E: turnuva değiştir"
+  },
+  "La liga ha terminado: el calendario de la temporada que viene sale al cerrar el año.": {
+   "en": "The league is over: next season's fixtures come out when the year closes.",
+   "pt": "A liga terminou: o calendário da próxima temporada sai no fecho do ano.",
+   "fr": "Le championnat est terminé : le calendrier de la saison prochaine sort à la clôture de l'année.",
+   "it": "Il campionato è finito: il calendario della prossima stagione esce alla chiusura dell'anno.",
+   "de": "Die Liga ist vorbei: Der Spielplan der nächsten Saison kommt zum Jahresabschluss.",
+   "ca": "La lliga ha acabat: el calendari de la temporada vinent surt en tancar l'any.",
+   "pl": "Liga się skończyła: terminarz nowego sezonu pojawi się po zamknięciu roku.",
+   "tr": "Lig bitti: gelecek sezonun fikstürü yıl kapanınca çıkar."
+  },
+  "PRÓXIMA RONDA  ·  %s": {
+   "en": "NEXT ROUND  ·  %s",
+   "pt": "PRÓXIMA FASE  ·  %s",
+   "fr": "PROCHAIN TOUR  ·  %s",
+   "it": "PROSSIMO TURNO  ·  %s",
+   "de": "NÄCHSTE RUNDE  ·  %s",
+   "ca": "PROPERA RONDA  ·  %s",
+   "pl": "NASTĘPNA RUNDA  ·  %s",
+   "tr": "SONRAKİ TUR  ·  %s"
+  },
+  "PRÓXIMOS PARTIDOS": {
+   "en": "UPCOMING MATCHES",
+   "pt": "PRÓXIMOS JOGOS",
+   "fr": "PROCHAINS MATCHS",
+   "it": "PROSSIME PARTITE",
+   "de": "NÄCHSTE SPIELE",
+   "ca": "PROPERS PARTITS",
+   "pl": "NADCHODZĄCE MECZE",
+   "tr": "SIRADAKİ MAÇLAR"
+  },
+  "Pasa a cuartos": {
+   "en": "Goes through to the quarter-finals",
+   "pt": "Passa às quartas",
+   "fr": "Qualifié pour les quarts",
+   "it": "Passa ai quarti",
+   "de": "Erreicht das Viertelfinale",
+   "ca": "Passa a quarts",
+   "pl": "Awans do ćwierćfinału",
+   "tr": "Çeyrek finale çıkar"
+  },
+  "Promoción": {
+   "en": "Play-off",
+   "pt": "Repescagem",
+   "fr": "Barrage",
+   "it": "Spareggio",
+   "de": "Relegation",
+   "ca": "Promoció",
+   "pl": "Baraż",
+   "tr": "Baraj"
+  },
+  "RESULTADOS": {
+   "en": "RESULTS",
+   "pt": "RESULTADOS",
+   "fr": "RÉSULTATS",
+   "it": "RISULTATI",
+   "de": "ERGEBNISSE",
+   "ca": "RESULTATS",
+   "pl": "WYNIKI",
+   "tr": "SONUÇLAR"
+  },
+  "Si la liga terminara hoy:": {
+   "en": "If the league ended today:",
+   "pt": "Se a liga acabasse hoje:",
+   "fr": "Si le championnat s'arrêtait aujourd'hui :",
+   "it": "Se il campionato finisse oggi:",
+   "de": "Wenn die Liga heute endete:",
+   "ca": "Si la lliga acabés avui:",
+   "pl": "Gdyby liga skończyła się dziś:",
+   "tr": "Lig bugün bitseydi:"
+  },
+  "Terminada": {
+   "en": "Finished",
+   "pt": "Terminada",
+   "fr": "Terminée",
+   "it": "Conclusa",
+   "de": "Beendet",
+   "ca": "Acabada",
+   "pl": "Zakończone",
+   "tr": "Bitti"
+  },
+  "Todavía no se ha jugado ninguna jornada.": {
+   "en": "No matchday has been played yet.",
+   "pt": "Ainda não se jogou nenhuma rodada.",
+   "fr": "Aucune journée n'a encore été jouée.",
+   "it": "Non si è ancora giocata nessuna giornata.",
+   "de": "Es wurde noch kein Spieltag gespielt.",
+   "ca": "Encara no s'ha jugat cap jornada.",
+   "pl": "Nie rozegrano jeszcze żadnej kolejki.",
+   "tr": "Henüz hiç hafta oynanmadı."
+  },
+  "Todavía no se ha jugado ninguna ronda.": {
+   "en": "No round has been played yet.",
+   "pt": "Ainda não se jogou nenhuma fase.",
+   "fr": "Aucun tour n'a encore été joué.",
+   "it": "Non si è ancora giocato nessun turno.",
+   "de": "Es wurde noch keine Runde gespielt.",
+   "ca": "Encara no s'ha jugat cap ronda.",
+   "pl": "Nie rozegrano jeszcze żadnej rundy.",
+   "tr": "Henüz hiç tur oynanmadı."
+  },
+  "Torneo continental": {
+   "en": "Continental competition",
+   "pt": "Torneio continental",
+   "fr": "Compétition continentale",
+   "it": "Torneo continentale",
+   "de": "Kontinentaler Wettbewerb",
+   "ca": "Torneig continental",
+   "pl": "Rozgrywki kontynentalne",
+   "tr": "Kıta turnuvası"
+  },
+  "Tu club sigue en carrera.": {
+   "en": "Your club is still in it.",
+   "pt": "O teu clube continua na luta.",
+   "fr": "Ton club est toujours en course.",
+   "it": "Il tuo club è ancora in corsa.",
+   "de": "Dein Verein ist noch dabei.",
+   "ca": "El teu club continua en cursa.",
+   "pl": "Twój klub wciąż jest w grze.",
+   "tr": "Kulübün hâlâ yarışta."
+  },
+  "Tu club ya quedó fuera.": {
+   "en": "Your club is already out.",
+   "pt": "O teu clube já foi eliminado.",
+   "fr": "Ton club est déjà éliminé.",
+   "it": "Il tuo club è già fuori.",
+   "de": "Dein Verein ist bereits ausgeschieden.",
+   "ca": "El teu club ja ha quedat fora.",
+   "pl": "Twój klub już odpadł.",
+   "tr": "Kulübün çoktan elendi."
+  },
+  "vs": {
+   "en": "vs",
+   "pt": "x",
+   "fr": "vs",
+   "it": "vs",
+   "de": "vs",
+   "ca": "vs",
+   "pl": "vs",
+   "tr": "vs"
+  },
+  "ÚLTIMOS RESULTADOS  ·  jornada %d": {
+   "en": "LATEST RESULTS  ·  matchday %d",
+   "pt": "ÚLTIMOS RESULTADOS  ·  rodada %d",
+   "fr": "DERNIERS RÉSULTATS  ·  journée %d",
+   "it": "ULTIMI RISULTATI  ·  giornata %d",
+   "de": "LETZTE ERGEBNISSE  ·  Spieltag %d",
+   "ca": "ÚLTIMS RESULTATS  ·  jornada %d",
+   "pl": "OSTATNIE WYNIKI  ·  kolejka %d",
+   "tr": "SON SONUÇLAR  ·  %d. hafta"
+  },
+  "🏆 Campeón: %s": {
+   "en": "🏆 Champion: %s",
+   "pt": "🏆 Campeão: %s",
+   "fr": "🏆 Champion : %s",
+   "it": "🏆 Campione: %s",
+   "de": "🏆 Meister: %s",
+   "ca": "🏆 Campió: %s",
+   "pl": "🏆 Mistrz: %s",
+   "tr": "🏆 Şampiyon: %s"
+  },
+  "Semifinales": {
+   "en": "Semi-finals",
+   "pt": "Semifinais",
+   "fr": "Demi-finales",
+   "it": "Semifinali",
+   "de": "Halbfinale",
+   "ca": "Semifinals",
+   "pl": "Półfinały",
+   "tr": "Yarı final"
+  },
+  "Cuartos de final": {
+   "en": "Quarter-finals",
+   "pt": "Quartas de final",
+   "fr": "Quarts de finale",
+   "it": "Quarti di finale",
+   "de": "Viertelfinale",
+   "ca": "Quarts de final",
+   "pl": "Ćwierćfinały",
+   "tr": "Çeyrek final"
+  },
+  "Octavos de final": {
+   "en": "Round of 16",
+   "pt": "Oitavas de final",
+   "fr": "Huitièmes de finale",
+   "it": "Ottavi di finale",
+   "de": "Achtelfinale",
+   "ca": "Vuitens de final",
+   "pl": "1/8 finału",
+   "tr": "Son 16"
+  },
+  "Dieciseisavos": {
+   "en": "Round of 32",
+   "pt": "Dezasseis-avos de final",
+   "fr": "Seizièmes de finale",
+   "it": "Sedicesimi di finale",
+   "de": "Sechzehntelfinale",
+   "ca": "Setzens de final",
+   "pl": "1/16 finału",
+   "tr": "Son 32"
+  },
+  "Sigla de tabla: PJ": {
+   "en": "P",
+   "pt": "J",
+   "fr": "J",
+   "it": "G",
+   "de": "Sp.",
+   "ca": "PJ",
+   "pl": "M",
+   "tr": "O"
+  },
+  "Sigla de tabla: G": {
+   "en": "W",
+   "pt": "V",
+   "fr": "G",
+   "it": "V",
+   "de": "S",
+   "ca": "G",
+   "pl": "Z",
+   "tr": "G"
+  },
+  "Sigla de tabla: E": {
+   "en": "D",
+   "pt": "E",
+   "fr": "N",
+   "it": "N",
+   "de": "U",
+   "ca": "E",
+   "pl": "R",
+   "tr": "B"
+  },
+  "Sigla de tabla: P": {
+   "en": "L",
+   "pt": "D",
+   "fr": "P",
+   "it": "P",
+   "de": "N",
+   "ca": "P",
+   "pl": "P",
+   "tr": "M"
+  },
+  "Sigla de tabla: GF": {
+   "en": "GF",
+   "pt": "GP",
+   "fr": "BP",
+   "it": "GF",
+   "de": "T",
+   "ca": "GF",
+   "pl": "BZ",
+   "tr": "A"
+  },
+  "Sigla de tabla: GC": {
+   "en": "GA",
+   "pt": "GC",
+   "fr": "BC",
+   "it": "GS",
+   "de": "GT",
+   "ca": "GC",
+   "pl": "BS",
+   "tr": "Y"
+  },
+  "Sigla de tabla: DG": {
+   "en": "GD",
+   "pt": "SG",
+   "fr": "Diff.",
+   "it": "DR",
+   "de": "TD",
+   "ca": "DG",
+   "pl": "RB",
+   "tr": "AV"
+  },
+  "Sigla de tabla: PTS": {
+   "en": "PTS",
+   "pt": "PTS",
+   "fr": "PTS",
+   "it": "PT",
+   "de": "PKT",
+   "ca": "PTS",
+   "pl": "PKT",
+   "tr": "P"
+  },
+  "FASE DE GRUPOS": {
+   "en": "GROUP STAGE",
+   "pt": "FASE DE GRUPOS",
+   "fr": "PHASE DE GROUPES",
+   "it": "FASE A GIRONI",
+   "de": "GRUPPENPHASE",
+   "ca": "FASE DE GRUPS",
+   "pl": "FAZA GRUPOWA",
+   "tr": "GRUP AŞAMASI"
+  },
+  "Reputación": {
+   "en": "Reputation",
+   "pt": "Reputação",
+   "fr": "Réputation",
+   "it": "Reputazione",
+   "de": "Ansehen",
+   "ca": "Reputació",
+   "pl": "Reputacja",
+   "tr": "İtibar"
+  },
+  "%d  contra tus %d": {
+   "en": "%d  against your %d",
+   "pt": "%d  contra os teus %d",
+   "fr": "%d  contre tes %d",
+   "it": "%d  contro i tuoi %d",
+   "de": "%d  gegen deine %d",
+   "ca": "%d  contra els teus %d",
+   "pl": "%d  wobec twoich %d",
+   "tr": "%d  (seninki %d)"
+  }
+ },
+ "patrones": [
+  [
+   "^Grupo ([A-D])$",
+   "Group $1",
+   "Grupo $1",
+   "Groupe $1",
+   "Girone $1",
+   "Gruppe $1",
+   "Grup $1",
+   "Grupa $1",
+   "$1 Grubu"
+  ],
+  [
+   "^Ronda de (\\d+)$",
+   "Round of $1",
+   "Fase de $1",
+   "Tour à $1",
+   "Turno a $1",
+   "Runde der letzten $1",
+   "Ronda de $1",
+   "Runda $1 drużyn",
+   "Son $1"
+  ]
+ ]
+}

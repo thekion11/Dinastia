@@ -81,7 +81,7 @@ func _pintar_sin_banco() -> void:
 		var nom := p._texto(12, Principal.COL_TEXTO)
 		## La reputación del club contra la tuya es LA decisión: firmar por
 		## encima de tu prestigio es un salto, por debajo es un refugio.
-		var salto := "  ·  por encima de tu prestigio" if c.rep > r.prestigio else ""
+		var salto := Idiomas.t("  ·  por encima de tu prestigio") if c.rep > r.prestigio else ""
 		nom.text = Idiomas.t("%s  ·  división %d  ·  reputación %d%s") % [c.nombre, c.division, c.rep, salto]
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila.add_child(nom)
@@ -134,7 +134,7 @@ func _pintar_exigencia_agente(e: Dictionary) -> void:
 	p._boton(String(e.get("opcion_a", "Sí")), func() -> void: _resolver_agente("a"), fila)
 	p._boton(String(e.get("opcion_b", "No")), func() -> void: _resolver_agente("b"), fila)
 	## El mini-juego (fase 4): regatearle en la mesa en vez de un sí o un no.
-	p._boton("🤝 Sentarse a negociar", func() -> void: _abrir_mesa(e), fila)
+	p._boton(Idiomas.t("🤝 Sentarse a negociar"), func() -> void: _abrir_mesa(e), fila)
 
 func _resolver_solicitud(si: bool) -> void:
 	var r := p.mundo.vestuario.resolver_solicitud(si)
@@ -186,7 +186,7 @@ func _pintar_junta() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
-	v.add_child(Tema.rotulo("Junta de accionistas · preside %s (%s)" % [String(jt.presidente.get("nombre", "")), String(jt.presidente.get("estilo", ""))]))
+	v.add_child(Tema.rotulo(Idiomas.t("Junta de accionistas · preside %s (%s)") % [String(jt.presidente.get("nombre", "")), String(jt.presidente.get("estilo", ""))]))
 	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, "%s %s" % [String(p_local["quien"]), String(p_local["tema"])])
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(t)
@@ -227,7 +227,7 @@ func _pintar_asunto_cantera() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
-	v.add_child(Tema.rotulo("Academia · %s" % String(p_local["nombre"])))
+	v.add_child(Tema.rotulo(Idiomas.t("Academia · %s") % String(p_local["nombre"])))
 	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(p_local["tema"]))
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(t)
@@ -286,8 +286,10 @@ func _pintar_asunto_mercado_av() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
-	var titulos := {"superagente": "EL SUPERAGENTE", "impuesto": "UN FICHAJE QUE NO PEDISTE", "apuestas": "APUESTAS EN EL VESTUARIO", "transparencia": "TRANSPARENCIA", "corrupcion": "CORRUPCIÓN EN LA FEDERACIÓN"}
-	v.add_child(Tema.rotulo(String(titulos.get(String(p_local["id"]), "ZONA GRIS"))))
+	var titulos := {"superagente": Idiomas.t("EL SUPERAGENTE"), "impuesto": Idiomas.t("UN FICHAJE QUE NO PEDISTE"),
+		"apuestas": Idiomas.t("APUESTAS EN EL VESTUARIO"), "transparencia": Idiomas.t("TRANSPARENCIA"),
+		"corrupcion": Idiomas.t("CORRUPCIÓN EN LA FEDERACIÓN")}
+	v.add_child(Tema.rotulo(String(titulos.get(String(p_local["id"]), Idiomas.t("ZONA GRIS")))))
 	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(p_local["texto"]))
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(t)
@@ -315,7 +317,7 @@ func _pintar_asunto_insolvencia() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
-	v.add_child(Tema.rotulo("REFUNDACIÓN" if String(p_local["id"]) == "refundacion" else "TU CLÁUSULA DE SALIDA"))
+	v.add_child(Tema.rotulo(Idiomas.t("REFUNDACIÓN") if String(p_local["id"]) == "refundacion" else Idiomas.t("TU CLÁUSULA DE SALIDA")))
 	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(p_local["texto"]))
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(t)
@@ -335,7 +337,7 @@ func _pintar_asunto_insolvencia() -> void:
 
 func _resolver_vida(op: String) -> void:
 	var r := p.mundo.vida.resolver(op, p.mundo.roles, p.mundo.mi_club(), p.mundo.prensa, p.mundo.anio, p.mundo.semana)
-	Aviso.mostrar(p, "vida", "🏠", "Mi vida", r)
+	Aviso.mostrar(p, "vida", "🏠", Idiomas.t("Mi vida"), r)
 	p._refrescar()
 
 ## MI VIDA: lo que pasa en casa, con sus dos salidas.
@@ -347,7 +349,7 @@ func _pintar_asunto_vida() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
-	v.add_child(Tema.rotulo("Mi vida"))
+	v.add_child(Tema.rotulo(Idiomas.t("Mi vida")))
 	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, String(p_local["texto"]))
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(t)
@@ -379,23 +381,23 @@ func _pintar_despacho() -> void:
 		p._abrir_rueda_pantalla_completa(p.mundo.prensa.entrevista)
 	var asuntos: Array = []
 	if p.mundo.cantera != null and p.mundo.cantera.hay_exigencia():
-		asuntos.append({"et": "🦈 Un representante presiona", "col": Principal.COL_VERDE, "id": "agente"})
+		asuntos.append({"et": Idiomas.t("🦈 Un representante presiona"), "col": Principal.COL_VERDE, "id": "agente"})
 	if p.mundo.prensa != null and p.mundo.prensa.hay_evento():
-		asuntos.append({"et": "📌 Hay que decidir", "col": Principal.COL_ORO, "id": "decision"})
+		asuntos.append({"et": Idiomas.t("📌 Hay que decidir"), "col": Principal.COL_ORO, "id": "decision"})
 	if p.mundo.vestuario != null and not p.mundo.vestuario.solicitud.is_empty():
-		asuntos.append({"et": "🗣️ Te busca un jugador", "col": Principal.COL_VERDE, "id": "solicitud"})
+		asuntos.append({"et": Idiomas.t("🗣️ Te busca un jugador"), "col": Principal.COL_VERDE, "id": "solicitud"})
 	if p.mundo.junta != null and not p.mundo.junta.pendiente.is_empty():
-		asuntos.append({"et": "🏛️ Junta de accionistas", "col": Principal.COL_ORO, "id": "junta"})
+		asuntos.append({"et": Idiomas.t("🏛️ Junta de accionistas"), "col": Principal.COL_ORO, "id": "junta"})
 	if p.mundo.eventos_cantera != null and not p.mundo.eventos_cantera.pendiente.is_empty():
-		asuntos.append({"et": "🌱 Asunto de la academia", "col": Principal.COL_VERDE, "id": "cantera"})
+		asuntos.append({"et": Idiomas.t("🌱 Asunto de la academia"), "col": Principal.COL_VERDE, "id": "cantera"})
 	if p.mundo.trabajadores != null and not p.mundo.trabajadores.pendiente.is_empty():
-		asuntos.append({"et": "🏢 Asunto del personal", "col": Principal.COL_ORO, "id": "personal"})
+		asuntos.append({"et": Idiomas.t("🏢 Asunto del personal"), "col": Principal.COL_ORO, "id": "personal"})
 	if p.mundo.mercado_av != null and not p.mundo.mercado_av.pendiente.is_empty():
-		asuntos.append({"et": "🕶️ Zona gris", "col": Principal.COL_ORO, "id": "mercado_av"})
+		asuntos.append({"et": Idiomas.t("🕶️ Zona gris"), "col": Principal.COL_ORO, "id": "mercado_av"})
 	if p.mundo.insolvencia != null and not p.mundo.insolvencia.pendiente.is_empty():
-		asuntos.append({"et": "💸 Crisis económica", "col": Principal.COL_ROJO, "id": "insolvencia"})
+		asuntos.append({"et": Idiomas.t("💸 Crisis económica"), "col": Principal.COL_ROJO, "id": "insolvencia"})
 	if p.mundo.vida != null and not p.mundo.vida.pendiente.is_empty():
-		asuntos.append({"et": "🏠 Pasa en casa", "col": Principal.COL_ORO, "id": "vida"})
+		asuntos.append({"et": Idiomas.t("🏠 Pasa en casa"), "col": Principal.COL_ORO, "id": "vida"})
 	if asuntos.is_empty():
 		return
 	p._aviso_abierto = clampi(p._aviso_abierto, 0, asuntos.size() - 1)

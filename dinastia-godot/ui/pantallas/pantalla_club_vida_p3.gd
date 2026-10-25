@@ -310,9 +310,9 @@ func _pintar_gobierno(c: Club) -> void:
 	var l := p._texto(12, Principal.COL_TEXTO)
 	var prox := int(g["proxima"])
 	l.text = Idiomas.t("🗳️ Gobierno de %s: %s (%s) · prioridad: %s%s") % [c.pais, String(g["lider"]), String(g["partido"]),
-		String(pos[0]).to_lower(), (Idiomas.t(" · elecciones en %d") % prox) if prox > 0 else Idiomas.t(" · sin elecciones nacionales")]
+		Idiomas.t(String(pos[0])).to_lower(), (Idiomas.t(" · elecciones en %d") % prox) if prox > 0 else Idiomas.t(" · sin elecciones nacionales")]
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.tooltip_text = String(pos[1])
+	l.tooltip_text = Idiomas.t(String(pos[1]))
 	l.mouse_filter = Control.MOUSE_FILTER_PASS
 	p._lista_fed.add_child(l)
 	var b := Button.new()

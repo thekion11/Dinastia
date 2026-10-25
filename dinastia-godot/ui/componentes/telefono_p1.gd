@@ -1,5 +1,5 @@
 extends PanelContainer
-## [Capa 1/3 de `telefono.gd`] crear, _hora, _decir, _widget_informe, _insignia, _icono_app … (+13)
+## [Capa 1/4 de `telefono.gd`] crear, _hora, _decir, _widget_informe, _insignia, _icono_app … (+13)
 
 ## TU MÓVIL, COMO UN MÓVIL (28-9-2026). Pantalla de inicio con tu fondo, la
 ## hora y las apps; la barra de abajo vuelve al inicio desde cualquier app.
@@ -63,9 +63,42 @@ static func crear(mundo: Mundo, noticias: Array = []) -> Telefono:
 func _hora() -> String:
 	return "%02d:%02d" % [18 + (m.semana % 4), (m.semana * 7) % 60]
 
+## EL AVISO DE ARRIBA (pulido 25-10-2026): una píldora con filo de color (dorado si salió bien, rojo
+## si es un problema) que entra con un fundido y suena; antes era una línea suelta, sin traducir, que
+## aparecía de golpe y se confundía con el contenido de la app.
 func _decir(texto: String) -> void:
-	_aviso.text = "  " + texto
-	_aviso.visible = texto != ""
+	var t := _t_icono(texto.strip_edges())
+	_aviso.text = t
+	_aviso.visible = t != ""
+	if t == "":
+		return
+	var malo := t.begins_with("⚠️")
+	var sb := _aviso.get_theme_stylebox("normal") as StyleBoxFlat
+	if sb != null:
+		sb.border_color = Color("e5534b") if malo else Tema.ORO
+	Sonido.toca("error" if malo else "aviso", Sonido.Bus.INTERFAZ)
+	if _aviso.is_inside_tree() and not Animar.reducidas():
+		_aviso.modulate.a = 0.0
+		_aviso.create_tween().tween_property(_aviso, "modulate:a", 1.0, 0.22)
+
+## «🙏 Gracias a la gente…» traducido con el icono de delante aparte: `Idiomas.t` no lo separa solo
+## cuando el texto tiene varias oraciones, y las publicaciones de los jugadores salían en castellano.
+static func _t_icono(s: String) -> String:
+	var i := s.find(" ")
+	if i > 0 and i <= 12:
+		var icono := true
+		for ch in s.substr(0, i):
+			icono = icono and ch.unicode_at(0) > 0x2000
+		if icono:
+			return s.substr(0, i + 1) + Idiomas.t(s.substr(i + 1))
+	return Idiomas.t(s)
+
+## Un motivo del núcleo («clave incorrecta») como frase de aviso: mayúscula, punto y traducida.
+func _frase(motivo: String) -> String:
+	var f := motivo.substr(0, 1).to_upper() + motivo.substr(1)
+	if not f.ends_with(".") and not f.ends_with("…"):
+		f += "."
+	return Idiomas.t(f)
 
 ## El parte del club: tres líneas con cifras alineadas y un filo dorado.
 func _widget_informe() -> Control:
@@ -226,14 +259,14 @@ func _entrar(usuario: String, clave: String, recordada: bool = false) -> void:
 		h.queue_free()
 	if error != "":
 		(self as Telefono).abrir_app("tribuna")
-		_decir("⚠️ " + error.substr(0, 1).to_upper() + error.substr(1) + ".")
+		_decir("⚠️ " + _frase(error))
 		return
 	_cuerpo.add_child(_espera(Idiomas.t("Iniciando sesión en %s…") % String(r.cuentas[r.sesion]["usuario"])))
 	_sub = "inicio"
 	get_tree().create_timer(1.0).timeout.connect(func() -> void:
 		if is_instance_valid(self) and _app == "tribuna":
 			(self as Telefono).abrir_app("tribuna")
-			_decir("✔ Sesión iniciada: %s" % String(r.cuentas[r.sesion]["usuario"])))
+			_decir(Idiomas.t("✔ Sesión iniciada: %s") % String(r.cuentas[r.sesion]["usuario"])))
 
 ## Escribe `texto` en el campo letra a letra y después llama a `luego`.
 func _escribir_animado(campo: LineEdit, texto: String, luego: Callable) -> void:
@@ -381,14 +414,14 @@ func _comentario(p: Dictionary, i: int, mia: bool) -> Control:
 	var c: Dictionary = p["comentarios"][i]
 	var v := VBoxContainer.new()
 	var col := Tema.BIEN if String(c["tono"]) == "bien" else (Color("e5534b") if String(c["tono"]) == "mal" else Tema.SUAVE)
-	var l := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, "%s  %s" % [String(c["autor"]), String(c["texto"])])
+	var l := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, "%s  %s" % [String(c["autor"]), _t_icono(String(c["texto"]))])
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.add_theme_color_override("font_color", col.lerp(Tema.TEXTO, 0.5))
 	v.add_child(l)
 	var resp := String(c.get("respuesta", ""))
 	if resp != "":
 		var quien := String(m.redes.cuentas["club" if String(p["cuenta"]) == "club" else "dt"]["usuario"])
-		var r := Tema.etiqueta(Tema.TAM_ROTULO, AZUL, "   ↳ %s  %s  (♥ %d)" % [quien, resp, int(c.get("respuesta_likes", 0))])
+		var r := Tema.etiqueta(Tema.TAM_ROTULO, AZUL, "   ↳ %s  %s  (♥ %d)" % [quien, Idiomas.t(resp), int(c.get("respuesta_likes", 0))])
 		r.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		v.add_child(r)
 	elif mia:
@@ -398,7 +431,7 @@ func _comentario(p: Dictionary, i: int, mia: bool) -> Control:
 		for tono: String in Redes.RESPUESTAS:
 			var d: Array = Redes.RESPUESTAS[tono]
 			var b := Button.new()
-			b.text = "%s %s" % [String(d[0]), String(d[1])]
+			b.text = "%s %s" % [String(d[0]), Idiomas.t(String(d[1]))]
 			b.add_theme_font_size_override("font_size", 11)
 			var k := tono
 			b.pressed.connect(func() -> void:

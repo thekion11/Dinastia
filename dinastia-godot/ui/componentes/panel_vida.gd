@@ -46,7 +46,8 @@ static func _medidor(titulo: String, valor: int, color: Color, nota: String) -> 
 	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var fila := HBoxContainer.new()
 	vb.add_child(fila)
-	var t := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, titulo.to_upper())
+	## Traducido ANTES de pasarlo a mayúsculas: «ESTRÉS» no está en la tabla, «Estrés» sí.
+	var t := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t(titulo).to_upper())
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(t)
 	var n := Tema.etiqueta(Tema.TAM_DESTACADO, color, str(valor))
@@ -65,7 +66,8 @@ static func _medidor(titulo: String, valor: int, color: Color, nota: String) -> 
 		barra.create_tween().tween_property(barra, "value", float(valor), 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	else:
 		barra.value = valor
-	var nt := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, nota)
+	var nt := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t(nota))
+	nt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vb.add_child(nt)
 	return vb
 
@@ -97,7 +99,7 @@ static func _tablero(v: VidaDT, r: Roles, mundo: Mundo) -> Control:
 	fila.add_child(_medidor("Estrés", v.estres, _color_estres(v.estres), nota_e))
 	fila.add_child(_medidor("Familia", v.familia, Tema.BIEN if v.familia >= 50 else (Tema.ORO if v.familia >= 25 else Tema.MAL),
 		"Contentos contigo" if v.familia >= 50 else ("Te echan de menos" if v.familia >= 25 else "Hay tensión en casa")))
-	fila.add_child(_medidor("Trabajo", v.balance, Tema.ACENTO, "Preparación de partidos +%.1f%%" % ((v.factor_trabajo(mundo.anio, mundo.semana) - 1.0) * 100.0)))
+	fila.add_child(_medidor("Trabajo", v.balance, Tema.ACENTO, Idiomas.t("Preparación de partidos +%.1f%%") % ((v.factor_trabajo(mundo.anio, mundo.semana) - 1.0) * 100.0)))
 	return pc
 
 ## ---------------------------------------------------------------- HOGAR ---
@@ -279,7 +281,7 @@ static func _bienestar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	for k: String in VidaDT.OCIO:
 		var o: Array = VidaDT.OCIO[k]
 		var b := Button.new()
-		b.text = Idiomas.t("%s  %s\n%s · estrés %d%s") % [String(o[4]), String(o[0]), Cesiones.dinero(v.precio(int(o[1]))) if int(o[1]) > 0 else Idiomas.t("gratis"),
+		b.text = Idiomas.t("%s  %s\n%s · estrés %d%s") % [String(o[4]), Idiomas.t(String(o[0])), Cesiones.dinero(v.precio(int(o[1]))) if int(o[1]) > 0 else Idiomas.t("gratis"),
 			int(o[2]), (Idiomas.t(" · familia +%d") % int(o[3])) if int(o[3]) > 0 else ""]
 		b.custom_minimum_size = Vector2(168, 52)
 		b.disabled = ya

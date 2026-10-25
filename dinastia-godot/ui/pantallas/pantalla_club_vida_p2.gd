@@ -178,7 +178,7 @@ func _pintar_mentorias(c: Club, e: Entrenamiento) -> void:
 				no.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 				p._lista_entren.add_child(no)
 			else:
-				var papel := "maestro" if es_mentor else "pupilo"
+				var papel := Idiomas.t("maestro" if es_mentor else "pupilo")
 				var tp := p._texto(11, Principal.COL_SUAVE)
 				tp.text = Idiomas.t("%s puede ser %s. Empareja con:") % [sel.nombre, papel]
 				p._lista_entren.add_child(tp)

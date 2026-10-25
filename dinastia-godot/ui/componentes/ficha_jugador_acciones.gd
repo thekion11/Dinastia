@@ -51,7 +51,7 @@ static func pintar_reconversion(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 	var t := _texto(11, paleta["suave"], paleta)
 	t.text = Idiomas.t("🔁 POSICIÓN Y RECONVERSIÓN")
 	lista.add_child(t)
-	_dato(lista, "Puesto natural", String((posd.get(j.pos_e, {}) as Dictionary).get("n", j.pos_e)), paleta["texto"], paleta)
+	_dato(lista, "Puesto natural", Idiomas.t(String((posd.get(j.pos_e, {}) as Dictionary).get("n", j.pos_e))), paleta["texto"], paleta)
 	if not j.pos_sec.is_empty():
 		_dato(lista, "También puede jugar de", ", ".join(j.pos_sec), paleta["suave"], paleta)
 	var nota := _texto(10, paleta["suave"], paleta)
@@ -69,7 +69,7 @@ static func pintar_reconversion(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 			continue
 		var b := Button.new()
 		b.text = "%s · %d" % [pe, j.media_en_puesto(pe)]
-		b.tooltip_text = String(d.get("n", pe))
+		b.tooltip_text = Idiomas.t(String(d.get("n", pe)))
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(64, 0)
 		b.add_theme_font_size_override("font_size", 11)
@@ -88,10 +88,10 @@ static func pintar_marca(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 		paleta["oro"] if es_idolo else paleta["suave"], paleta)
 	var habs := mundo.entrenamiento.habilidades(j).size() if mundo.entrenamiento != null else 0
 	var marca := Mundo.marca_personal(j, idolo, habs)
-	var etiqueta_marca := "📣 muy mediático" if marca >= 80 else ("📸 vende camisetas" if marca >= 55 else "")
+	var etiqueta_marca := Idiomas.t("📣 muy mediático") if marca >= 80 else (Idiomas.t("📸 vende camisetas") if marca >= 55 else "")
 	_dato(lista, "Marca personal", ("%d/100 %s" % [marca, etiqueta_marca]) if etiqueta_marca != "" else "%d/100" % marca, paleta["texto"], paleta)
 	if j.fidelidad_hasta > 0:
-		_dato(lista, "Cláusula de fidelidad", "hasta %d" % j.fidelidad_hasta, paleta["verde"], paleta)
+		_dato(lista, "Cláusula de fidelidad", Idiomas.t("hasta %d") % j.fidelidad_hasta, paleta["verde"], paleta)
 	elif j.edad >= 23 and j.ovr >= 66 and mundo.cantera != null:
 		var costo := int(round(float(j.sueldo) * 26.0))
 		var b := Button.new()
@@ -130,7 +130,7 @@ static func pintar_similares(lista: VBoxContainer, j: Jugador, mio: Club, mundo:
 		var club_s: Club = mundo.clubes.get(s.club_id)
 		var b := Button.new()
 		b.text = Idiomas.t("%s  ·  %d años  ·  %s  ·  %s") % [
-			s.nombre, s.edad, club_s.nombre if club_s else "libre",
+			s.nombre, s.edad, club_s.nombre if club_s else Idiomas.t("libre"),
 			mundo.ojeadores.ovr_texto(s) if mundo.ojeadores != null else str(s.ovr)]
 		b.add_theme_font_size_override("font_size", 11)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -167,10 +167,10 @@ static func pintar_venta(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 		no.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lista.add_child(no)
 	elif j.transferible:
-		_dato(lista, "Estado", "en la lista de transferibles", paleta["oro"], paleta)
-		_boton(lista, "Sacarlo de la lista", al_sacar_de_lista)
+		_dato(lista, "Estado", Idiomas.t("en la lista de transferibles"), paleta["oro"], paleta)
+		_boton(lista, Idiomas.t("Sacarlo de la lista"), al_sacar_de_lista)
 	else:
-		_boton(lista, "Poner en venta", al_poner_en_venta)
+		_boton(lista, Idiomas.t("Poner en venta"), al_poner_en_venta)
 
 	## Porcentaje pactado de su próxima venta.
 	if mundo.cesiones != null:
@@ -178,10 +178,10 @@ static func pintar_venta(lista: VBoxContainer, j: Jugador, mio: Club, mundo: Mun
 		if not pv.is_empty() and int(pv.get("pct", 0)) > 0:
 			var club_pv: Club = mundo.clubes.get(String(pv.get("club", "")))
 			_dato(lista, "Porcentaje pactado de su próxima venta",
-				"%d%% para %s" % [int(pv["pct"]), club_pv.nombre if club_pv else Idiomas.t("su club anterior")], paleta["rojo"], paleta)
+				Idiomas.t("%d%% para %s") % [int(pv["pct"]), club_pv.nombre if club_pv else Idiomas.t("su club anterior")], paleta["rojo"], paleta)
 	## Negociación congelada tras romperse una mesa.
 	if j.no_negociar_hasta > 0 and mundo.semana < j.no_negociar_hasta:
-		_dato(lista, "Negociación congelada", "hasta la semana %d" % j.no_negociar_hasta, paleta["suave"], paleta)
+		_dato(lista, "Negociación congelada", Idiomas.t("hasta la semana %d") % j.no_negociar_hasta, paleta["suave"], paleta)
 
 	if mundo.cantera == null:
 		return
@@ -233,12 +233,12 @@ static func pintar_charla(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta
 	var efecto := _texto(11, paleta["suave"], paleta)
 	for tema: String in Charlas.TEMAS:
 		var b := Button.new()
-		b.text = String(Charlas.TEMAS[tema])
+		b.text = Idiomas.t(String(Charlas.TEMAS[tema]))
 		b.add_theme_font_size_override("font_size", 11)
 		b.pressed.connect(func() -> void:
 			var r := mundo.charlas.hablar(j, tema, mundo.anio, mundo.semana)
-			resp.text = String(r.get("respuesta", ""))
-			efecto.text = "→ " + String(r.get("efecto", "")) + (Idiomas.t(" · se lo prometiste: en 4 semanas debe jugar al menos 2 partidos") if tema == "minutos" else "")
+			resp.text = Idiomas.t(String(r.get("respuesta", "")))
+			efecto.text = "→ " + Idiomas.t(String(r.get("efecto", ""))) + (Idiomas.t(" · se lo prometiste: en 4 semanas debe jugar al menos 2 partidos") if tema == "minutos" else "")
 			Animar.aparecer(resp))
 		fila.add_child(b)
 	lista.add_child(resp)
@@ -251,18 +251,11 @@ static func _texto(tam: int, color: Color, paleta: Dictionary) -> Label:
 	l.add_theme_color_override("font_color", color)
 	return l
 
+## El mismo rótulo/valor que `FichaJugadorInfo._dato()` (traducido aquí y con
+## «…» en los dos lados): la ficha mezcla filas de las dos clases y deben
+## alinearse igual.
 static func _dato(padre: Node, etiqueta: String, valor: String, color: Color, paleta: Dictionary) -> void:
-	var h := HBoxContainer.new()
-	var a := _texto(12, paleta["suave"], paleta)
-	a.text = etiqueta
-	a.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	a.clip_text = true
-	a.tooltip_text = etiqueta
-	h.add_child(a)
-	var b := _texto(12, color, paleta)
-	b.text = valor
-	h.add_child(b)
-	padre.add_child(h)
+	FichaJugadorInfo._dato(padre, etiqueta, valor, color, paleta)
 
 static func _boton(padre: Node, texto: String, accion: Callable) -> void:
 	var b := Button.new()
