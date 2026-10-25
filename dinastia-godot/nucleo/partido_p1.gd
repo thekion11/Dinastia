@@ -298,13 +298,20 @@ func momentum_local() -> int:
 		s += x
 	return clampi(50 + s * 6, 5, 95)
 
+## Deja TODO el contexto estático como de fábrica. Antes se olvidaba de la
+## moda táctica, el videoanálisis y el césped (24-10): el partido siguiente
+## heredaba los factores de la semana anterior de otro mundo, y una prueba
+## daba un resultado u otro según lo que se hubiera jugado antes.
 static func limpiar_contexto() -> void:
 	ctx_factor_tarjetas = 1.0
 	ctx_medico = null
 	ctx_club_id = ""
 	ctx_anio = 0
 	ctx_semana = 0
+	ctx_cesped_local = 1.0
 	ctx_lesion_local = 1.0
+	ctx_moda = {}
+	ctx_analisis = 1.0
 
 ## ¿Este jugador tiene cuentas pendientes con el club de enfrente?
 func es_ex_de(j: Jugador, rival: Club) -> bool:

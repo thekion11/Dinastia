@@ -31,6 +31,10 @@ func _cerrar_todo() -> void:
 	if is_instance_valid(ml.pantalla_abierta):
 		ml.pantalla_abierta.cerrar()
 	ml.plegar()
+	## El diseñador de Equipación cuelga de la raíz (fuera de _p): se cierra como «Cancelar».
+	var capa := get_tree().root.get_node_or_null("PantallaEquipacion")
+	if capa != null and capa.get_child_count() > 0 and capa.get_child(0) is DisenadorKit:
+		(capa.get_child(0) as DisenadorKit)._cerrar()
 	for h in _p.get_children():
 		if h is Control and (h as Control).mouse_filter == Control.MOUSE_FILTER_STOP and h.get_index() > 3 and h.name != "PanelObjetivos" and h.name != "MenuLateral" and not (h is PantallaMenu):
 			h.queue_free()
@@ -60,6 +64,10 @@ func _process(_d: float) -> void:
 	if _n == 12 + _total + 6:
 		var nodos := _contar(_p)
 		print("ESTRÉS: %d acciones; nodos al empezar %d, al terminar %d" % [_acciones, _nodos0, nodos])
+		## La subida 1151 → ~2000 es el pintado perezoso de pestañas la primera vez (no es fuga);
+		## la comprobación fina tras calentar está en pruebas/ideas/fugas_menus.gd.
+		var fuera := _contar(get_tree().root) - _contar(self)
+		print("ESTRÉS: nodos en la raíz fuera de la Principal %d, huérfanos %d" % [fuera, int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))])
 		get_tree().quit()
 
 func _accion() -> void:

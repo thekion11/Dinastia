@@ -20,20 +20,21 @@ const AGENDAS := {
 static func extra_entreno(agenda: String) -> float:
 	return 0.12 if agenda == "extra" else 0.0
 
-## Aplica la agenda al cerrar la semana. Devuelve el resumen para el aviso.
+## Aplica la agenda al cerrar la semana. Devuelve el resumen para el aviso, ya
+## traducido (la UI lo une con «·» a otras frases y el conjunto no se traduce).
 static func aplicar(c: CarreraJugador, j: Jugador) -> String:
 	match c.agenda:
 		"extra":
 			c.energia = maxi(0, c.energia - 8)
 			c.relacion_dt = mini(100, c.relacion_dt + 1)
 			c.racha_social = 0
-			return "Sesión extra: el DT lo nota (+1 relación), −8 energía."
+			return Idiomas.t("Sesión extra: el DT lo nota (+1 relación), −8 energía.")
 		"descanso":
 			c.energia = mini(CarreraJugador.ENERGIA_MAX, c.energia + 12)
 			c.racha_social = 0
 			if j != null:
 				j.cambiar_moral(1, "Carrera")
-			return "Descanso y fisio: +12 energía."
+			return Idiomas.t("Descanso y fisio: +12 energía.")
 		"social":
 			var nuevos := 40 + c.fama * 2
 			c.seguidores += nuevos
@@ -43,8 +44,8 @@ static func aplicar(c: CarreraJugador, j: Jugador) -> String:
 				j.cambiar_moral(3, "Carrera")
 			if c.energia < 35:
 				c.relacion_dt = maxi(0, c.relacion_dt - 2)
-				return "Vida social: +%d seguidores, pero el DT te ve cansado (−2 relación)." % nuevos
-			return "Vida social: +%d seguidores y buen ánimo, −6 energía." % nuevos
+				return Idiomas.t("Vida social: +%d seguidores, pero el DT te ve cansado (−2 relación).") % nuevos
+			return Idiomas.t("Vida social: +%d seguidores y buen ánimo, −6 energía.") % nuevos
 	c.racha_social = 0
 	return ""
 

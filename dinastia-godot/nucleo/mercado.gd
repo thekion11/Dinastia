@@ -17,7 +17,9 @@ func desde_dic(d: Dictionary) -> void:
 		if club == null or j == null:
 			continue
 		ofertas_recibidas.append({"jugador": j, "club": club, "monto": int(o.get("monto", 0)),
-			"semana": int(o.get("semana", 0)), "clausula": bool(o.get("clausula", false))})
+			"semana": int(o.get("semana", 0)), "clausula": bool(o.get("clausula", false)),
+			## Guardados de antes de la caducidad: la oferta cuenta como recién llegada.
+			"abs": int(o.get("abs", m.anio * 60 + m.semana))})
 
 # ---------------------------------------------------------------------------
 #  LA MESA DE NEGOCIACIÓN

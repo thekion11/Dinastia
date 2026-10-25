@@ -363,7 +363,7 @@ func buscar_oferta_por_mi_jugador() -> void:
 			monto = clausula
 			es_clausula = true
 	ofertas_recibidas.append({"jugador": j, "club": comprador, "monto": monto,
-		"semana": _mundo().semana, "clausula": es_clausula})
+		"semana": _mundo().semana, "abs": _mundo().anio * 60 + _mundo().semana, "clausula": es_clausula})
 	oferta_recibida.emit(j, comprador, monto)
 
 ## Acepta o rechaza la oferta `idx` de `ofertas_recibidas`. Si es de cláusula,
@@ -421,6 +421,7 @@ func a_dic() -> Dictionary:
 		lista.append({
 			"jugador_id": (o["jugador"] as Jugador).id, "club_id": (o["club"] as Club).id,
 			"monto": int(o["monto"]), "semana": int(o["semana"]), "clausula": bool(o["clausula"]),
+			"abs": int(o.get("abs", 0)),
 		})
 	return {"ofertas_recibidas": lista}
 

@@ -70,17 +70,47 @@ func guerra_de_ofertas(m: Mundo) -> int:
 			continue
 		var rival: Club = candidatos[_rng.randi() % candidatos.size()]
 		m.mercado.ofertas_recibidas.append({"jugador": j, "club": rival, "monto": monto,
-			"semana": m.semana, "clausula": false, "puja": true})
+			"semana": m.semana, "abs": m.anio * 60 + m.semana, "clausula": false, "puja": true})
 		pujas[jid] = int(pujas.get(jid, 0)) + 1
 		nuevas += 1
 		noticia.emit("🔥 Guerra por %s" % j.nombre, "%s entra en la pelea y ofrece %s, más que %s. La decisión es tuya en el mercado." % [
 			rival.nombre, Cesiones.dinero(monto), (o["club"] as Club).nombre])
 	return nuevas
 
+## LAS OFERTAS CADUCAN (25-10-2026). `ofertas_recibidas` no se vaciaba nunca: una
+## oferta sin responder seguía en pie temporadas después, con el monto de cuando
+## llegó, y el menú acumulaba decenas. Ningún club espera tanto: a las
+## `CADUCA_SEMANAS` se retira y se avisa. También se cae la oferta por quien ya
+## no está en tu club (vendido, libre, retirado). Las de cláusula también: si no
+## la ejecutas, el comprador se cansa igual. Devuelve cuántas se retiraron.
+const CADUCA_SEMANAS := 4
+
+func caducar_ofertas(m: Mundo) -> int:
+	if m.mercado == null or m.mercado.ofertas_recibidas.is_empty():
+		return 0
+	var ahora := m.anio * 60 + m.semana
+	var siguen: Array[Dictionary] = []
+	var caidas := 0
+	for o: Dictionary in m.mercado.ofertas_recibidas:
+		var j: Jugador = o["jugador"]
+		if j == null or j.club_id != m.mi_club_id:
+			caidas += 1
+			continue
+		if ahora - int(o.get("abs", ahora)) < CADUCA_SEMANAS:
+			siguen.append(o)
+			continue
+		caidas += 1
+		noticia.emit(Idiomas.t("⌛ Oferta retirada por %s") % j.nombre,
+			Idiomas.t("%s se cansó de esperar respuesta y retira su oferta de %s.") % [
+				(o["club"] as Club).nombre, Cesiones.dinero(int(o["monto"]))])
+	m.mercado.ofertas_recibidas = siguen
+	return caidas
+
 # --- los asuntos de despacho ---------------------------------------------------
 
 ## Una vez por semana: a lo sumo un asunto nuevo cada cuatro semanas.
 func semana(m: Mundo) -> void:
+	caducar_ofertas(m)
 	guerra_de_ofertas(m)
 	var c := m.mi_club()
 	if c == null or not pendiente.is_empty():

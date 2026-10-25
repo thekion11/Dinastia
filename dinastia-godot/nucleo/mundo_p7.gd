@@ -1,12 +1,18 @@
 extends "res://nucleo/mundo_p6.gd"
 ## [Capa 8/9 de `mundo.gd`] nueva_temporada, perfil_estadio_de, estacion, clima, campana_lanzada_este_anio, lanzar_campana … (+11)
 
+## Cerrar la temporada ES pasar a la siguiente: premios, ascensos y `anio + 1`
+## en el núcleo. Antes `cerrar_temporada()` dejaba el año quieto (diez cierres
+## y la partida seguía en 2026). La UI llama a `nueva_temporada()`: una vez.
+func cerrar_temporada() -> Dictionary:
+	return nueva_temporada()
+
 func nueva_temporada() -> Dictionary:
 	## Primero se cierra la que acaba -premios, ascensos y descensos- y DESPUÉS
 	## envejece la gente. Al revés, los clubes se repartirían las divisiones con
 	## las plantillas del año siguiente y el descendido ya habría perdido a sus
 	## veteranos antes de saber que bajaba.
-	var resumen := cerrar_temporada()
+	var resumen := _cerrar_campeonato()
 	## Lo que queda entre partidas: un sobre de cromos y la foto del mundo.
 	Meta.fin_de_temporada(self)
 	## La selección y el Mundial de Clubes leen los campeones continentales de
@@ -34,12 +40,8 @@ func nueva_temporada() -> Dictionary:
 			j.amarillas = 0
 			## La curva de progreso: los jovenes suben hacia su techo, los
 			## veteranos bajan. Es lo que hace que una plantilla envejezca.
-			if j.edad <= 24 and j.ovr < j.pot:
-				## Hasta su techo, no más (la prueba larga encontró chicos
-				## dos puntos por encima de su potencial).
-				j.ajustar_media(mini(Azar.ent(0, 3), j.pot - j.ovr))
-			elif j.edad >= 31:
-				j.ajustar_media(-Azar.ent(0, 3))
+			## Vive en `ProgresoJugador` (cantera_progreso.gd), con la semanal.
+			ProgresoJugador.anual(j)
 			## EL RETIRO POR LESIONES. `Medico.retiro_forzado()` estaba escrita y no
 			## la llamaba nadie: tres lesiones graves seguidas no acababan con la
 			## carrera de nadie, que es justo el peor final que puede tener un
@@ -435,3 +437,14 @@ func informe_de_gestion() -> Array[Dictionary]:
 	if salida.is_empty():
 		salida.append({"grave": false, "txt": "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.", "tab": ""})
 	return salida
+## LA IA RENUEVA UN AÑO ANTES (25-10; antes solo a cero y por 1-3: 60% del mundo en su último año). Tu club no cambia.
+func _vence_contrato(j: Jugador, c: Club) -> bool:
+	var h := absi(hash("%s|%d|anticipada" % [j.id, anio]))
+	if c.id != mi_club_id and j.anios_contrato == 2 and float(h % 1000) / 1000.0 < (0.35 if j.edad >= 32 else 0.8):
+		j.anios_contrato = Contratos.ajustar_anios(j, 1 + (h / 1000) % 2 if j.edad >= 32 else 2 + (h / 1000) % 3)
+		return false
+	var antes := j.anios_contrato
+	var se_va := super(j, c)
+	if not se_va and antes == 1 and c.id != mi_club_id and j.edad < 32:
+		j.anios_contrato = maxi(j.anios_contrato, 2)   ## la renovación a cero tampoco vuelve al último año
+	return se_va

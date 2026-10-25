@@ -259,7 +259,7 @@ func _dorsal_libre(c: Club) -> int:
 	return n
 
 ## Los chicos de un club. La media sale de `rep - 24` y el techo de sumarle entre
-## 6 y 26 puntos: media baja, potencial alto, que es la regla de la casa.
+## 6 y 26 puntos (sesgado hacia abajo): media baja, potencial alto, que es la regla de la casa.
 func _camada_de(c: Club) -> Array[Jugador]:
 	var m := _mundo()
 	var salida: Array[Jugador] = []
@@ -271,9 +271,14 @@ func _camada_de(c: Club) -> Array[Jugador]:
 			break
 		var grupo := grupo_con_tope(c, String(Azar.uno(["POR", "DEF", "DEF", "MED", "MED", "DEL"])))
 		var edad := Azar.ent(16, 18)
-		var ovr := c.rep - 24 + Azar.ent(-4, 8)
+		## Por encima de rep 80 la base se aplana (25-10): un grande sacaba chicos de 16 con 71-77.
+		var base := c.rep - 24 if c.rep <= 80 else 56 + int(round(float(c.rep - 80) * 0.3))
+		var ovr := base + Azar.ent(-4, 8)
 		var j := m.crear_jugador(c, grupo, demarcacion_de(grupo), edad, ovr)
-		var techo := j.ovr + Azar.ent(6, 26)
+		## El techo SESGADO (25-10, paquete cant): con +6..26 plano, la camada media de un grande pasaba de
+		## 90 y en cinco temporadas tu club sin tocar nada tenía nueve 80+ con menos de 23. Ahora +6..26 sigue
+		## siendo posible, pero la mayoría se queda en +6..14: la promesa de verdad es una de cada cinco.
+		var techo := j.ovr + 6 + int(round(20.0 * pow(Azar.f(), 2.0)))
 		## Lo que aporta el club: academia y residencia (`Instalaciones`), el
 		## director de cantera (`Staff`) y el árbol del entrenador
 		## (`Entrenamiento`). El bono sube un poco la media y MUCHO el techo -el

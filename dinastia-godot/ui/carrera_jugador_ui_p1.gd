@@ -327,6 +327,9 @@ func _partido_de_la_semana(club: Club) -> Array:
 	return CarreraJugador.partido_de_la_semana(mundo, club)
 
 ## Cierra la semana: el partido (jugado o simulado), el mundo y lo que te pasa.
+## El aviso de la semana une varias frases con «·»: cada una se traduce por
+## su plantilla ANTES de meterle los números (el texto ya montado no casa con
+## el diccionario y en otros idiomas salía en castellano).
 func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 	var m := mundo
 	var j := carrera.jugador(m)
@@ -344,9 +347,9 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 		m.avanzar_semana(p)
 		carrera.tras_partido(m, res)
 		carrera.partidos_jugables += 1
-		_msg += "  ·  Final %d-%d, tu nota %.1f (%d')." % [p.goles_local, p.goles_visita, float(res["nota"]), int(res.get("minutos", 90))]
+		_msg += "  ·  " + Idiomas.t("Final %d-%d, tu nota %.1f (%d').") % [p.goles_local, p.goles_visita, float(res["nota"]), int(res.get("minutos", 90))]
 		if bool(res.get("sustituido", false)):
-			_msg += " El DT te cambió."
+			_msg += " " + Idiomas.t("El DT te cambió.")
 	else:
 		var goles_antes := j.goles if j != null else 0
 		m.avanzar_semana()
@@ -356,7 +359,7 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 			var nota := clampf(5.6 + float(j.ovr - 55) * 0.04 + float(g) * 0.9 + randf_range(-0.6, 0.6), 4.0, 9.5)
 			j.goles = goles_antes
 			carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": 0, "nota": snappedf(nota, 0.1), "titular": true})
-			_msg += "  ·  Jugaste (simulado): %d gol(es), nota %.1f." % [g, nota]
+			_msg += "  ·  " + Idiomas.t("Jugaste (simulado): %d gol(es), nota %.1f.") % [g, nota]
 		elif not titular and not par.is_empty() and j != null and j.disponible():
 			## Suplente simulado: a veces entras un rato.
 			var entra := carrera.minuto_entrada_suplente()
@@ -365,17 +368,17 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 				var g2 := 1 if randf() < float(minutos) / 90.0 * (0.25 if j.pos == "DEL" else 0.08) else 0
 				var nota2 := clampf(5.8 + float(j.ovr - 55) * 0.03 + float(g2) * 0.9 + randf_range(-0.4, 0.4), 4.5, 9.0)
 				carrera.tras_partido(m, {"minutos": minutos, "goles": g2, "asist": 0, "nota": snappedf(nota2, 0.1), "titular": false})
-				_msg += "  ·  Entraste en el %d' (simulado): nota %.1f." % [entra, nota2]
+				_msg += "  ·  " + Idiomas.t("Entraste en el %d' (simulado): nota %.1f.") % [entra, nota2]
 			else:
-				_msg += "  ·  No saliste del banco."
+				_msg += "  ·  " + Idiomas.t("No saliste del banco.")
 	var nuevos := carrera.semana(m)
 	if carrera.aviso_agenda != "":
 		_msg += "  ·  " + carrera.aviso_agenda
 	if not nuevos.is_empty():
-		_msg += "  ·  ¡%s!" % String(nuevos[0]["titulo"])
+		_msg += "  ·  " + Idiomas.t("¡%s!") % Idiomas.t(String(nuevos[0]["titulo"]))
 	if not m.temporada_en_curso():
 		carrera.fin_de_temporada(m)
-		_msg += "  ·  Terminó la temporada."
+		_msg += "  ·  " + Idiomas.t("Terminó la temporada.")
 	Partida.guardar(m, GUARDADO)
 	(self as CarreraJugadorUI)._pintar_semana()
 
@@ -398,7 +401,7 @@ func _ir_al_banco() -> void:
 	_msg = carrera.entrenar(mundo)
 	var minuto := carrera.minuto_entrada_suplente()
 	if minuto < 0:
-		_msg += "  ·  Calentaste toda la segunda parte, pero el DT no te hizo entrar."
+		_msg += "  ·  " + Idiomas.t("Calentaste toda la segunda parte, pero el DT no te hizo entrar.")
 		_cerrar_semana({"sin_minutos": true}, true)
 		return
 	var pj := PartidoJugable.abrir(self, mundo, carrera, par[0], par[1], 240.0, minuto)

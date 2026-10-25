@@ -27,12 +27,17 @@ var pendiente: Dictionary = {}
 var sancion_anio := -1          ## la temporada en que ya se restaron puntos
 var tope_salarial := 0          ## 0 = sin tope (sin veedor)
 var refundado_anio := -1
+## Semanas seguidas en rojo de cada club de la IA (id -> semanas). La IA no
+## tiene `Banco` propio; con esto se le aplica la misma vara del veedor
+## (`Banco.SEM_VEEDOR`) para el descenso administrativo (M-219).
+var rojo_ia: Dictionary = {}
 var _rng := RandomNumberGenerator.new()
 
 func _init() -> void:
 	_rng.seed = 3940
 
 func semana(m: Mundo) -> void:
+	_contar_rojo_ia(m)
 	var c := m.mi_club()
 	var b := m.banco
 	if c == null or b == null or b.liquidado_ya:
@@ -141,8 +146,69 @@ func resolver(m: Mundo, op: String) -> Dictionary:
 			return {"titulo": "🔄 El club se refunda", "cuerpo": "Se salva el club. Empieza otra historia, más modesta."}
 	return {}
 
+func _contar_rojo_ia(m: Mundo) -> void:
+	for c: Club in m.clubes.values():
+		if c.id == m.mi_club_id:
+			continue
+		if c.saldo < 0:
+			rojo_ia[c.id] = int(rojo_ia.get(c.id, 0)) + 1
+		else:
+			rojo_ia.erase(c.id)
+
+## ¿Está el club intervenido? El humano, si su banco tiene veedor; la IA, si
+## lleva tantas semanas en rojo como las que traen al veedor.
+func intervenido(m: Mundo, c: Club) -> bool:
+	if c.id == m.mi_club_id:
+		return m.banco != null and not m.banco.liquidado_ya and m.banco.hay_veedor()
+	return int(rojo_ia.get(c.id, 0)) >= Banco.SEM_VEEDOR
+
+## DESCENSO ADMINISTRATIVO POR DEUDAS (M-219). Al cerrar la temporada, el club
+## intervenido de Primera baja aunque la tabla lo salvara (y sube en su lugar
+## el mejor de Segunda que no subía); el intervenido de Segunda no puede subir
+## (sube el siguiente). Modifica `bajan` y `suben` en sitio, que tienen el
+## mismo tamaño antes y después. Devuelve los clubes castigados.
+func descenso_administrativo(m: Mundo, t1: Array, t2: Array, bajan: Array[Club], suben: Array[Club]) -> Array[Club]:
+	var castigados: Array[Club] = []
+	## Primero los que no pueden subir: se cambian por el siguiente sano.
+	for i in suben.size():
+		if intervenido(m, suben[i]):
+			var otro := _siguiente_sano(m, t2, suben)
+			if otro != null:
+				castigados.append(suben[i])
+				_avisar(m, suben[i], false)
+				suben[i] = otro
+	for fila: Dictionary in t1:
+		var c: Club = fila["club"]
+		if bajan.has(c) or not intervenido(m, c):
+			continue
+		var sube := _siguiente_sano(m, t2, suben)
+		if sube == null:
+			continue
+		bajan.append(c)
+		suben.append(sube)
+		castigados.append(c)
+		_avisar(m, c, true)
+	return castigados
+
+func _siguiente_sano(m: Mundo, t2: Array, suben: Array[Club]) -> Club:
+	for fila: Dictionary in t2:
+		var c: Club = fila["club"]
+		if not suben.has(c) and not intervenido(m, c):
+			return c
+	return null
+
+func _avisar(m: Mundo, c: Club, baja: bool) -> void:
+	var tit := Idiomas.t("⚖️ Descenso administrativo") if baja else Idiomas.t("⚖️ Ascenso denegado")
+	var txt := (Idiomas.t("La federación baja de categoría a %s por sus deudas: está intervenido y no puede seguir en Primera.") if baja
+		else Idiomas.t("La federación niega el ascenso a %s por sus deudas: un club intervenido no puede subir.")) % c.nombre
+	noticia.emit(tit, txt)
+	if c.id == m.mi_club_id and m.prensa != null:
+		m.prensa.guardar_portada(Idiomas.t("¡DESCENSO POR DEUDAS!") if baja else Idiomas.t("¡SIN ASCENSO POR DEUDAS!"), txt, "mal",
+			{"img": "escudo", "sub": txt, "nueva": true})
+
 func a_dic() -> Dictionary:
-	return {"pend": pendiente.duplicate(true), "sancion": sancion_anio, "tope": tope_salarial, "refundado": refundado_anio}
+	return {"pend": pendiente.duplicate(true), "sancion": sancion_anio, "tope": tope_salarial, "refundado": refundado_anio,
+		"rojo_ia": rojo_ia.duplicate()}
 
 func desde_dic(d: Dictionary) -> void:
 	if d.is_empty():
@@ -151,3 +217,4 @@ func desde_dic(d: Dictionary) -> void:
 	sancion_anio = int(d.get("sancion", -1))
 	tope_salarial = int(d.get("tope", 0))
 	refundado_anio = int(d.get("refundado", -1))
+	rojo_ia = (d.get("rojo_ia", {}) as Dictionary).duplicate()

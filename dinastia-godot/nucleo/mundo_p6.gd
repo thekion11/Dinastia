@@ -95,7 +95,9 @@ func _mover_de_liga(c: Club, desde: Liga, hasta: Liga) -> void:
 ## Se le pasan las tablas ya calculadas en vez de volver a pedirlas: son la misma
 ## foto que ha usado el resto del cierre, y recalcularlas aquí podría dar otra si
 ## algo las hubiera tocado en medio. Es la nota que dejó el propio HTML.
-func cerrar_temporada() -> Dictionary:
+## Es solo la mitad «de liga» del cierre: no avanza el año. La llama
+## `nueva_temporada()`; desde fuera se usa `cerrar_temporada()` (mundo_p7).
+func _cerrar_campeonato() -> Dictionary:
 	var resumen := {"campeones": [], "suben": [], "bajan": [], "directiva": {}}
 	## LAS RAMAS TERMINAN SU TEMPORADA (C12).
 	if hinchada != null and mi_club() != null and prensa != null:
@@ -195,6 +197,11 @@ func cerrar_temporada() -> Dictionary:
 			if prom["ganador"] == abajo:
 				bajan.append(arriba)
 				suben.append(abajo)
+		## M-219: el intervenido por deudas baja (o no sube) por despacho.
+		if insolvencia != null:
+			var castigo := insolvencia.descenso_administrativo(self, t1, t2, bajan, suben)
+			if not castigo.is_empty():
+				resumen["administrativo"] = (resumen.get("administrativo", []) as Array) + castigo
 		for c in bajan:
 			_mover_de_liga(c, primera, segunda)
 		for c in suben:
@@ -313,6 +320,12 @@ func _subir_de_cantera(c: Club) -> void:
 		## El canterano entra flojo y con techo: media baja, potencial alto. Es
 		## lo que hace que la cantera sea una apuesta y no una fuente de cracks.
 		var ovr := c.rep - 20 + Azar.ent(0, 8)
+		## Pero no todo hueco se tapa con un juvenil (25-10, paquete cant): con
+		## solo chicos de 17-20 el mundo bajaba de 26,9 a 25,6 años de media en
+		## cinco temporadas. Dos de cada cinco son un repuesto hecho, de 22-30.
+		if Azar.suerte(0.4):
+			edad = Azar.ent(22, 30)
+			ovr = c.rep - 12 + Azar.ent(-5, 3)
 		var nuevo := crear_jugador(c, Datos.grupo(demarcacion), demarcacion, edad, ovr)
 		## EL CLUB QUE VIVE DE SU CANTERA (C3) la cuida más: sus chicos
 		## suben con más techo. Sin `Azar` extra: es un ajuste fijo.

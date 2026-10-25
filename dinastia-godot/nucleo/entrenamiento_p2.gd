@@ -30,7 +30,8 @@ func _sesion_general(j: Jugador, mult: float, ritmo: float, joven: float, res: D
 	## multiplican intensidad, formador del DT, rasgo motor, plan prioritario,
 	## centro de entrenamiento y foco técnico. Todos son del HTML.
 	if j.edad < 24 and j.ovr < j.pot:
-		var p := 0.10 * mult * ritmo
+		## `ProgresoJugador.freno()`: más lento con la edad y al acercarse al techo (antes, 0,10 plano).
+		var p := 0.10 * mult * ritmo * ProgresoJugador.freno(j)
 		if j.edad < 23:
 			p *= joven
 		if j.rasgo == "motor":
@@ -101,7 +102,7 @@ func _plan_por_dias(c: Club, carg: Dictionary, ritmo: float, res: Dictionary) ->
 		## El riesgo de romperse por acumulación NO se tira aquí: lo tira
 		## `Medico.chequeo_de_fatiga` con la carga que devuelve `carga_riesgo()`.
 		if j.edad < 24 and j.ovr < j.pot:
-			var p := float(carg["ovr"]) * 0.014 * ritmo
+			var p := float(carg["ovr"]) * 0.014 * ritmo * ProgresoJugador.freno(j)
 			if j.rasgo == "motor":
 				p *= 1.5
 			if Azar.suerte(p):
@@ -210,10 +211,9 @@ func procesar_semana(c: Club, anio: int = 0, semana: int = 0) -> Dictionary:
 ## tres temporadas tu cantera domina el continente sola.
 func procesar_ajeno(j: Jugador) -> void:
 	j.fisico = clampi(j.fisico + 16, 10, 100)
-	if j.edad < 24 and j.ovr < j.pot:
-		var p := 0.10
-		if j.rasgo == "motor":
-			p *= 1.5
+	## La probabilidad la da `ProgresoJugador` (baja con la edad); antes un 0,10 plano hasta los 24.
+	var p := ProgresoJugador.prob_semanal(j)
+	if p > 0.0:
 		if Azar.suerte(p):
 			var antes := j.ovr
 			j.ajustar_media(1)

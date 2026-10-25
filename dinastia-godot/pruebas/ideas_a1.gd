@@ -71,6 +71,8 @@ func _ideas_a_partido() -> void:
 				_comprobar(p3.once_local.has(banco[0]) and not p3.once_local.has(sale), "el cambio actualiza el once en el campo (360)")
 	_comprobar(hechos == Partido.MAX_CAMBIOS and p3.cambios_local == Partido.MAX_CAMBIOS, "se pueden hacer %d cambios y el sexto se rechaza (360)" % Partido.MAX_CAMBIOS)
 	## Instrucciones en vivo (361): «todo al ataque» genera más llegadas de tu lado.
+	## Contexto limpio: lo que dejaron las secciones anteriores del banco (moda, médico…) no debe pesar aquí.
+	Partido.limpiar_contexto()
 	var con := 0
 	var sin := 0
 	for i in 30:
@@ -85,8 +87,7 @@ func _ideas_a_partido() -> void:
 			else:
 				sin += pp.remates_local
 	Partido.limpiar_contexto()
-	## HALLAZGO (24-10): la idea no funciona hoy como decía la auditoría; queda como aviso, no como fallo, y está en el plan.
-	_avisar_hallazgo(con > sin, "la instrucción «riesgo» da más remates propios (%d contra %d en 30 partidos) (361)" % [con, sin])
+	_comprobar(con > sin, "la instrucción «riesgo» da más remates propios (%d contra %d en 30 partidos) (361)" % [con, sin])
 	## IA rival / plan a mitad de partido (378): perdiendo con plan ofensivo, a los 60' se adelanta.
 	var club: Club = cl[0]
 	club.tactica.mentalidad = Tactica.Mentalidad.DEFENSIVA
@@ -94,11 +95,14 @@ func _ideas_a_partido() -> void:
 	club.tactica.plan_perdiendo = "ofensivo"
 	var p4 := Partido.new(club, cl[6])
 	p4.preparar()
-	p4.goles_visita = 2
+	## El marcador se fuerza justo antes del 60 (y no al empezar): si no, el local
+	## puede empatar antes y el plan, con razón, no se activa.
+	while p4.minuto < 59:
+		p4.simular_minuto()
+	p4.goles_visita = p4.goles_local + 2
 	while p4.minuto < 61:
 		p4.simular_minuto()
-	## HALLAZGO (24-10): la idea no funciona hoy como decía la auditoría; queda como aviso, no como fallo, y está en el plan.
-	_avisar_hallazgo(club.tactica.mentalidad == Tactica.Mentalidad.OFENSIVA and club.tactica.linea == Tactica.Nivel.ALTO, "perdiendo a los 60' el plan cambia la mentalidad a ofensiva y adelanta la línea (378)")
+	_comprobar(club.tactica.mentalidad == Tactica.Mentalidad.OFENSIVA and club.tactica.linea == Tactica.Nivel.ALTO, "perdiendo a los 60' el plan cambia la mentalidad a ofensiva y adelanta la línea (378)")
 	## Modo «solo resultado» (371): avanzar semanas sin ver partidos deja la tabla coherente.
 	var m5 := _mundo_ideas(2602)
 	for i in 8:

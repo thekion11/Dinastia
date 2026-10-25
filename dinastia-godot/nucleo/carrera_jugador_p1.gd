@@ -212,8 +212,11 @@ func entrenar(m: Mundo) -> String:
 		return ""
 	if foco == "descanso":
 		energia = mini(ENERGIA_MAX, energia + 35)
-		return "Descansaste: energía %d." % energia
+		return Idiomas.t("Descansaste: energía %d.") % energia
 	var attr := String(FOCOS[foco][1])
+	## Los avisos se traducen aquí, por plantilla (con los números dentro ya no
+	## casan con el diccionario): la UI los une con «·».
+	var nombre_foco := Idiomas.t(String(FOCOS[foco][0]))
 	if not j.atributos.has(attr):
 		attr = j.atributos.keys()[0]
 	var margen := maxf(0.0, float(j.pot - j.ovr)) / 30.0
@@ -226,9 +229,9 @@ func entrenar(m: Mundo) -> String:
 		j.ovr = maxi(j.ovr, j.media_en(j.pos_e))
 		if j.ovr != antes:
 			j.tasar()
-			return "¡Mejoraste! %s sube a %d y tu media a %d." % [String(FOCOS[foco][0]), int(j.atributos[attr]), j.ovr]
-		return "%s sube a %d." % [String(FOCOS[foco][0]), int(j.atributos[attr])]
-	return "Semana dura de %s, pero sin mejora visible." % String(FOCOS[foco][0]).to_lower()
+			return Idiomas.t("¡Mejoraste! %s sube a %d y tu media a %d.") % [nombre_foco, int(j.atributos[attr]), j.ovr]
+		return Idiomas.t("%s sube a %d.") % [nombre_foco, int(j.atributos[attr])]
+	return Idiomas.t("Semana dura de %s, pero sin mejora visible.") % nombre_foco.to_lower()
 
 ## ¿Te convoca tu selección? Los mejores de tu país en tu línea, jueguen donde
 ## jueguen. Solo en las fechas FIFA.

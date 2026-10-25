@@ -47,6 +47,13 @@ var _filtro := 0
 var _busqueda := ""
 
 static func abrir(padre: Control, mundo: Mundo) -> DisenadorKit:
+	## Uno solo a la vez (25-10-2026): la capa cuelga de la raíz, fuera del menú, así que
+	## volver a abrir Equipación (menú lateral, atajo, vecino) apilaba diseñadores con su
+	## SubViewport 3D: +1351 objetos vivos por apertura (pruebas/ideas/fugas_menus).
+	if padre.is_inside_tree():
+		var previa := padre.get_tree().root.get_node_or_null("PantallaEquipacion")
+		if previa != null and not previa.is_queued_for_deletion() and previa.get_child_count() > 0 and previa.get_child(0) is DisenadorKit:
+			return previa.get_child(0) as DisenadorKit
 	var n := DisenadorKit.new()
 	n._mundo = mundo
 	n._club = mundo.mi_club()
