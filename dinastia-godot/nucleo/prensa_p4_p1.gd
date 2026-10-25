@@ -1,383 +1,232 @@
 extends "res://nucleo/prensa_p3.gd"
-## [Capa 4/8 de `prensa.gd`] resolver_1
-
-## [Capa 4/8 de `prensa.gd`] resolver_1
-
-## Firma la decisión. `op` es "a" o "b". Devuelve {titulo, cuerpo} con lo que
-## salió publicado, o vacío si no había nada que firmar.
+## [Capa 4/8 de `prensa.gd`] Decision y los eventos del despacho, primera tanda (contratos, dueños y caja)
 ##
-## No hay opción neutra a propósito: las dos ramas mueven algo. Un "ya veremos"
-## convertiría todo esto en un botón de cerrar ventana.
-## Tramo 1 de 2 de `resolver` (la norma de 450 líneas la troceó).
-func resolver_1(op: String) -> Array:
-	if pendiente.is_empty():
-		return [true, {}]
-	var m := _mundo()
-	var mio: Club = m.mi_club() if m != null else null
-	if mio == null:
-		pendiente = {}
-		return [true, {}]
-	var e := pendiente
-	var si := op == "a"
-	_reputacion_de_decision(m, String(e["id"]), si)
-	var j: Jugador = _jugador(mio, String(e.get("pid", "")))
-	var rep := float(mio.rep)
-	var salida := {"titulo": "", "cuerpo": ""}
+## FASE 0 (25-10-2026): `resolver` era un `match` de ~370 líneas por id de evento, troceado en dos tramos
+## que se pasaban ocho valores en un Array. Ahora cada evento es una función `_ev_<id>(d)` que recibe la
+## `Decision` y devuelve lo publicado ({titulo, cuerpo}, o vacío si no hay nada que contar), y la tabla de
+## despacho de `prensa_p4.gd` las une. Mismo orden de efectos y de sorteos que antes, comprobado con
+## `pruebas/ideas/f0e_resolver.gd` (todas las ramas, con "a" y "b" y ocho semillas de `Azar`).
 
-	match String(e["id"]):
-		"fondo_presiona":
-			## Ceder es listarlo y cobrar; negarse le baja la moral al chico, porque
-			## su entorno lleva semanas diciendole que el club le frena la carrera.
-			if si and j != null:
-				if m != null and m.mercado != null:
-					m.mercado.listar_transferible(j)
-				salida = {"titulo": "Sale al mercado",
-					"cuerpo": "%s queda listado como transferible. El fondo respira y tu plantilla se queda mas corta." % j.nombre}
-			elif j != null:
-				if m != null and m.cesiones != null:
-					m.cesiones.rechazar_presion(j)
-				salida = {"titulo": "No se vende",
-					"cuerpo": "Le dices al fondo que %s se queda. Tomaron nota, y el jugador también." % j.nombre}
+## Lo que necesita cada salida para decidir. Se arma una vez en `resolver` y viaja a la función del evento,
+## en vez de pasar seis argumentos que la mitad de los eventos no usa.
+class Decision extends RefCounted:
+	var m: Mundo
+	var mio: Club
+	var e: Dictionary         ## el evento pendiente tal como se sorteó (id, pid, dato…)
+	var si: bool              ## true = opción "a"
+	var j: Jugador            ## el jugador del evento, o null si no tiene o ya no está en el plantel
+	var rep: float            ## reputación del club: escala lo que se cobra y lo que se paga
 
-		"retiro_joven":
-			## No se compra la decisión: lo único que se puede negociar es CUÁNDO.
-			## Y aun pidiéndolo bien, cuatro de cada diez se van igual: es lo que
-			## hace que este evento se recuerde.
-			if si and j != null:
-				if Azar.suerte(0.6):
-					j.cambiar_moral(-8, "Prensa y declaraciones")
-					salida = {"titulo": "Se queda hasta junio",
-						"cuerpo": "%s acepta terminar la temporada antes de retirarse. Juega, pero ya no está aquí del todo." % j.nombre}
-				else:
-					_retirar_de_golpe(mio, j)
-					salida = {"titulo": "Se va igual",
-						"cuerpo": "%s escuchó, dio las gracias y se fue. A veces no hay nada que ofrecer." % j.nombre}
-			elif j != null:
-				_retirar_de_golpe(mio, j)
-				mover_animo(-4)
-				salida = {"titulo": "Cuelga las botas",
-					"cuerpo": "%s deja el fútbol con %d años. El club se queda sin él y sin un peso de traspaso: hay que rehacer la plantilla a mitad de temporada." % [j.nombre, j.edad]}
+## Ceder es listarlo y cobrar; negarse le baja la moral al chico, porque
+## su entorno lleva semanas diciendole que el club le frena la carrera.
+func _ev_fondo_presiona(d: Decision) -> Dictionary:
+	if d.si and d.j != null:
+		if d.m.mercado != null:
+			d.m.mercado.listar_transferible(d.j)
+		return {"titulo": "Sale al mercado",
+			"cuerpo": "%s queda listado como transferible. El fondo respira y tu plantilla se queda mas corta." % d.j.nombre}
+	if d.j != null:
+		if d.m.cesiones != null:
+			d.m.cesiones.rechazar_presion(d.j)
+		return {"titulo": "No se vende",
+			"cuerpo": "Le dices al fondo que %s se queda. Tomaron nota, y el jugador también." % d.j.nombre}
+	return {}
 
-		"virus_fifa":
-			## Reclamar el aplazamiento cuesta relación con la federación y sale
-			## bien la mitad de las veces. Jugar con juveniles es seguro y caro.
-			if si:
-				if m != null and m.federacion != null:
-					m.federacion.aliados = clampi(m.federacion.aliados - 1, -10, 10)
-				if Azar.suerte(0.5):
-					salida = {"titulo": "Partido aplazado",
-						"cuerpo": "La federación acepta mover el derbi. Te lo van a recordar la próxima vez que pidas algo."}
-				else:
-					_fatigar_por_viaje(mio)
-					salida = {"titulo": "Reclamación rechazada",
-						"cuerpo": "La federación dice que el calendario no se toca. Tus internacionales llegan de madrugada y el domingo se juega igual."}
-			else:
-				_fatigar_por_viaje(mio)
-				mover_animo(2)
-				salida = {"titulo": "Se juega con los de casa",
-					"cuerpo": "Sacas a los juveniles sin quejarte. La grada lo agradece; las piernas, no."}
+## No se compra la decisión: lo único que se puede negociar es CUÁNDO.
+## Y aun pidiéndolo bien, cuatro de cada diez se van igual: es lo que
+## hace que este evento se recuerde.
+func _ev_retiro_joven(d: Decision) -> Dictionary:
+	if d.j == null:
+		return {}
+	if d.si:
+		if Azar.suerte(0.6):
+			d.j.cambiar_moral(-8, "Prensa y declaraciones")
+			return {"titulo": "Se queda hasta junio",
+				"cuerpo": "%s acepta terminar la temporada antes de retirarse. Juega, pero ya no está aquí del todo." % d.j.nombre}
+		_retirar_de_golpe(d.mio, d.j)
+		return {"titulo": "Se va igual",
+			"cuerpo": "%s escuchó, dio las gracias y se fue. A veces no hay nada que ofrecer." % d.j.nombre}
+	_retirar_de_golpe(d.mio, d.j)
+	mover_animo(-4)
+	return {"titulo": "Cuelga las botas",
+		"cuerpo": "%s deja el fútbol con %d años. El club se queda sin él y sin un peso de traspaso: hay que rehacer la plantilla a mitad de temporada." % [d.j.nombre, d.j.edad]}
 
-		"filtracion_agente":
-			## Las dos ramas cuestan. Desmentir alimenta el tema una semana más;
-			## callar lo da por cierto en el vestuario.
-			if si:
-				_mover_funa(Azar.ent(6, 14))
-				rep_entrenador = clampi(rep_entrenador + 3, 0, 100)
-				salida = {"titulo": "Sales a desmentir",
-					"cuerpo": "Diste la cara y sonaste firme, pero el tema aguanta una semana más en todos los programas."}
-			else:
-				for x: Jugador in mio.plantilla:
-					x.cambiar_moral(-2, "Prensa y declaraciones")
-				if m != null and m.directiva != null:
-					m.directiva.mover_confianza(-4, "los correos filtrados")
-				salida = {"titulo": "Silencio",
-					"cuerpo": "No dijiste nada y el vestuario leyó los correos igual que todo el mundo. La directiva tampoco los ha olvidado."}
+## Reclamar el aplazamiento cuesta relación con la federación y sale
+## bien la mitad de las veces. Jugar con juveniles es seguro y caro.
+func _ev_virus_fifa(d: Decision) -> Dictionary:
+	if d.si:
+		if d.m.federacion != null:
+			d.m.federacion.aliados = clampi(d.m.federacion.aliados - 1, -10, 10)
+		if Azar.suerte(0.5):
+			return {"titulo": "Partido aplazado",
+				"cuerpo": "La federación acepta mover el derbi. Te lo van a recordar la próxima vez que pidas algo."}
+		_fatigar_por_viaje(d.mio)
+		return {"titulo": "Reclamación rechazada",
+			"cuerpo": "La federación dice que el calendario no se toca. Tus internacionales llegan de madrugada y el domingo se juega igual."}
+	_fatigar_por_viaje(d.mio)
+	mover_animo(2)
+	return {"titulo": "Se juega con los de casa",
+		"cuerpo": "Sacas a los juveniles sin quejarte. La grada lo agradece; las piernas, no."}
 
-		"hostil":
-			## Aceptar salva el puesto -sube confianza YA- y trae dos costos que se
-			## notan después: un titular impuesto sin plazo (`impuesto_hasta = -1`,
-			## lo revisa `revisar_impuesto()` cada partido) y una purga al azar del
-			## cuerpo técnico. Resistir es gratis en el acto y carísimo en confianza.
-			if si:
-				if m != null and m.directiva != null:
-					m.directiva.mover_confianza(14, "aceptaste las condiciones del nuevo dueño")
-				impuesto_pid = String(e.get("pid", ""))
-				impuesto_hasta = -1
-				if m != null and m.staff != null:
-					m.staff.purgar_al_azar(mio)
-				salida = {"titulo": "Aceptaste las condiciones",
-					"cuerpo": "Conservas el puesto y el dueño te respalda, pero perdiste parte de tu cuerpo técnico de confianza y tienes un titular impuesto para el mercado asiático."}
-			else:
-				if m != null and m.directiva != null:
-					m.directiva.mover_confianza(-22, "te plantaste ante el nuevo dueño")
-				_pagar(mio, Eco.escalar(320000.0, rep), "El dueño mantiene el presupuesto pese al plante")
-				salida = {"titulo": "Te plantaste",
-					"cuerpo": "El dueño te dejó el presupuesto intacto por ahora, pero la confianza del directorio se desplomó: estás en la cuerda floja."}
+## Las dos ramas cuestan. Desmentir alimenta el tema una semana más;
+## callar lo da por cierto en el vestuario.
+func _ev_filtracion_agente(d: Decision) -> Dictionary:
+	if d.si:
+		_mover_funa(Azar.ent(6, 14))
+		rep_entrenador = clampi(rep_entrenador + 3, 0, 100)
+		return {"titulo": "Sales a desmentir",
+			"cuerpo": "Diste la cara y sonaste firme, pero el tema aguanta una semana más en todos los programas."}
+	for x: Jugador in d.mio.plantilla:
+		x.cambiar_moral(-2, "Prensa y declaraciones")
+	if d.m.directiva != null:
+		d.m.directiva.mover_confianza(-4, "los correos filtrados")
+	return {"titulo": "Silencio",
+		"cuerpo": "No dijiste nada y el vestuario leyó los correos igual que todo el mundo. La directiva tampoco los ha olvidado."}
 
-		"comercial":
-			## A diferencia de "hostil", este pacto SÍ vence -al cierre de la
-			## temporada en la que se firma- y la rama de negarse cuesta plata y
-			## confianza en el acto en vez de dejar una obligación pendiente.
-			if si:
-				impuesto_pid = String(e.get("pid", ""))
-				impuesto_hasta = m.anio if m != null else -1
-				_pagar(mio, Eco.escalar(215000.0, rep), "Trato comercial: fichaje impuesto")
-				salida = {"titulo": "Aceptaste el trato comercial",
-					"cuerpo": "Entra plata de patrocinio, pero tienes un titular fijo que no elegiste: si lo dejas fuera del once, el patrocinador te lo cobra."}
-			else:
-				if m != null and m.directiva != null:
-					m.directiva.mover_confianza(-9, "rechazaste el trato comercial")
-				_pagar(mio, -Eco.escalar(105000.0, rep), "Descuento del área comercial")
-				salida = {"titulo": "El once lo eliges tú",
-					"cuerpo": "El área comercial te descontó el bono por rechazar el trato y la junta tomó nota."}
+## Aceptar salva el puesto -sube confianza YA- y trae dos costos que se
+## notan después: un titular impuesto sin plazo (`impuesto_hasta = -1`,
+## lo revisa `revisar_impuesto()` cada partido) y una purga al azar del
+## cuerpo técnico. Resistir es gratis en el acto y carísimo en confianza.
+func _ev_hostil(d: Decision) -> Dictionary:
+	if d.si:
+		if d.m.directiva != null:
+			d.m.directiva.mover_confianza(14, "aceptaste las condiciones del nuevo dueño")
+		impuesto_pid = String(d.e.get("pid", ""))
+		impuesto_hasta = -1
+		if d.m.staff != null:
+			d.m.staff.purgar_al_azar(d.mio)
+		return {"titulo": "Aceptaste las condiciones",
+			"cuerpo": "Conservas el puesto y el dueño te respalda, pero perdiste parte de tu cuerpo técnico de confianza y tienes un titular impuesto para el mercado asiático."}
+	if d.m.directiva != null:
+		d.m.directiva.mover_confianza(-22, "te plantaste ante el nuevo dueño")
+	_pagar(d.mio, Eco.escalar(320000.0, d.rep), "El dueño mantiene el presupuesto pese al plante")
+	return {"titulo": "Te plantaste",
+		"cuerpo": "El dueño te dejó el presupuesto intacto por ahora, pero la confianza del directorio se desplomó: estás en la cuerda floja."}
 
-		"aumento":
-			if j == null:
-				pass
-			elif si:
-				j.sueldo = int(round(float(j.sueldo) * 1.25))
-				j.cambiar_moral(10, "Prensa y declaraciones")
-				salida = {"titulo": "Renovación mejorada",
-					"cuerpo": "%s firma feliz. El camarín toma nota de quién paga." % j.nombre}
-			else:
-				j.cambiar_moral(-9, "Prensa y declaraciones")
-				salida = {"titulo": "Portazo en la gerencia",
-					"cuerpo": "Le recordaste que un contrato se respeta. %s entrena en silencio." % j.nombre}
+## A diferencia de "hostil", este pacto SÍ vence -al cierre de la
+## temporada en la que se firma- y la rama de negarse cuesta plata y
+## confianza en el acto en vez de dejar una obligación pendiente.
+func _ev_comercial(d: Decision) -> Dictionary:
+	if d.si:
+		impuesto_pid = String(d.e.get("pid", ""))
+		impuesto_hasta = d.m.anio
+		_pagar(d.mio, Eco.escalar(215000.0, d.rep), "Trato comercial: fichaje impuesto")
+		return {"titulo": "Aceptaste el trato comercial",
+			"cuerpo": "Entra plata de patrocinio, pero tienes un titular fijo que no elegiste: si lo dejas fuera del once, el patrocinador te lo cobra."}
+	if d.m.directiva != null:
+		d.m.directiva.mover_confianza(-9, "rechazaste el trato comercial")
+	_pagar(d.mio, -Eco.escalar(105000.0, d.rep), "Descuento del área comercial")
+	return {"titulo": "El once lo eliges tú",
+		"cuerpo": "El área comercial te descontó el bono por rechazar el trato y la junta tomó nota."}
 
-		"benefico":
-			if si:
-				for x in mio.plantilla:
-					x.fisico = clampi(x.fisico - 6, 10, 100)
-					x.cambiar_moral(3, "Prensa y declaraciones")
-				rep_entrenador = clampi(rep_entrenador + 1, 1, 99)
-				salida = {"titulo": "Aplausos de pie",
-					"cuerpo": "El amistoso benéfico llenó el estadio chico. La ciudad habla bien del club."}
-			else:
-				salida = {"titulo": "Piernas frescas",
-					"cuerpo": "Rechazaste el amistoso con elegancia: la semana fue de recuperación."}
+func _ev_aumento(d: Decision) -> Dictionary:
+	if d.j == null:
+		return {}
+	if d.si:
+		d.j.sueldo = int(round(float(d.j.sueldo) * 1.25))
+		d.j.cambiar_moral(10, "Prensa y declaraciones")
+		return {"titulo": "Renovación mejorada",
+			"cuerpo": "%s firma feliz. El camarín toma nota de quién paga." % d.j.nombre}
+	d.j.cambiar_moral(-9, "Prensa y declaraciones")
+	return {"titulo": "Portazo en la gerencia",
+		"cuerpo": "Le recordaste que un contrato se respeta. %s entrena en silencio." % d.j.nombre}
 
-		"gira":
-			if si:
-				_pagar(mio, -Eco.escalar(300000.0, rep), "Mini-gira por el norte")
-				for x in mio.plantilla:
-					x.forma = clampi(x.forma + 6, 20, 99)
-				salida = {"titulo": "Gira redonda",
-					"cuerpo": "Tres días de trabajo y mar: el plantel vuelve enchufado."}
-			else:
-				salida = {"titulo": "Sin gira", "cuerpo": "La caja lo agradece."}
+func _ev_benefico(d: Decision) -> Dictionary:
+	if not d.si:
+		return {"titulo": "Piernas frescas",
+			"cuerpo": "Rechazaste el amistoso con elegancia: la semana fue de recuperación."}
+	for x: Jugador in d.mio.plantilla:
+		x.fisico = clampi(x.fisico - 6, 10, 100)
+		x.cambiar_moral(3, "Prensa y declaraciones")
+	rep_entrenador = clampi(rep_entrenador + 1, 1, 99)
+	return {"titulo": "Aplausos de pie",
+		"cuerpo": "El amistoso benéfico llenó el estadio chico. La ciudad habla bien del club."}
 
-		"docu":
-			if si:
-				_pagar(mio, Eco.escalar(600000.0, rep), "Derechos del documental")
-				semanas_documental = 6
-				salida = {"titulo": "Luces y cámaras",
-					"cuerpo": "Firmaste el documental. Seis semanas de micrófonos abiertos en el camarín…"}
-			else:
-				salida = {"titulo": "Puertas cerradas", "cuerpo": "La intimidad del grupo no se vende."}
+func _ev_gira(d: Decision) -> Dictionary:
+	if not d.si:
+		return {"titulo": "Sin gira", "cuerpo": "La caja lo agradece."}
+	_pagar(d.mio, -Eco.escalar(300000.0, d.rep), "Mini-gira por el norte")
+	for x: Jugador in d.mio.plantilla:
+		x.forma = clampi(x.forma + 6, 20, 99)
+	return {"titulo": "Gira redonda",
+		"cuerpo": "Tres días de trabajo y mar: el plantel vuelve enchufado."}
 
-		"agente":
-			if j == null:
-				pass
-			elif si:
-				## La cláusula se redondea a decenas de millar, como en el HTML:
-				## una cifra de rescisión con céntimos no la firma nadie.
-				var clau := int(round(float(j.valor) * 3.0 / 10000.0)) * 10000
-				clausulas[j.id] = clau
-				j.sueldo = int(round(float(j.sueldo) * 1.1))
-				salida = {"titulo": "Blindado",
-					"cuerpo": "%s firma mejora con cláusula de %s. El agente guarda los dientes." % [j.nombre, _dinero(clau)]}
-			else:
-				oferta_forzada = j.id
-				for x in mio.plantilla:
-					x.cambiar_moral(-1, "Prensa y declaraciones")
-				salida = {"titulo": "Puerta entreabierta",
-					"cuerpo": "Dejaste correr el rumor: llegará una oferta grande por %s. El camarín murmura." % j.nombre}
+func _ev_docu(d: Decision) -> Dictionary:
+	if not d.si:
+		return {"titulo": "Puertas cerradas", "cuerpo": "La intimidad del grupo no se vende."}
+	_pagar(d.mio, Eco.escalar(600000.0, d.rep), "Derechos del documental")
+	semanas_documental = 6
+	return {"titulo": "Luces y cámaras",
+		"cuerpo": "Firmaste el documental. Seis semanas de micrófonos abiertos en el camarín…"}
 
-		"tv":
-			if si:
-				_pagar(mio, Eco.escalar(200000.0, rep), "Pauta televisiva")
-				mover_animo(4)
-				semanas_documental = maxi(semanas_documental, 2)
-				salida = {"titulo": "Estrella de la semana",
-					"cuerpo": "Saliste en horario prime. La hinchada te celebra; el camarín aguanta dos semanas de micrófonos."}
-			else:
-				salida = {"titulo": "Perfil bajo", "cuerpo": "Que hable la cancha."}
+func _ev_agente(d: Decision) -> Dictionary:
+	if d.j == null:
+		return {}
+	if d.si:
+		## La cláusula se redondea a decenas de millar, como en el HTML:
+		## una cifra de rescisión con céntimos no la firma nadie.
+		var clau := int(round(float(d.j.valor) * 3.0 / 10000.0)) * 10000
+		clausulas[d.j.id] = clau
+		d.j.sueldo = int(round(float(d.j.sueldo) * 1.1))
+		return {"titulo": "Blindado",
+			"cuerpo": "%s firma mejora con cláusula de %s. El agente guarda los dientes." % [d.j.nombre, _dinero(clau)]}
+	oferta_forzada = d.j.id
+	for x: Jugador in d.mio.plantilla:
+		x.cambiar_moral(-1, "Prensa y declaraciones")
+	return {"titulo": "Puerta entreabierta",
+		"cuerpo": "Dejaste correr el rumor: llegará una oferta grande por %s. El camarín murmura." % d.j.nombre}
 
-	match String(e["id"]):
-		"espia":
-			if si:
-				_pagar(mio, -Eco.escalar(80000.0, rep), "Informe reservado del rival")
-				dato_del_rival = true
-				salida = {"titulo": "Dato en el bolsillo",
-					"cuerpo": "El parte llegó en un sobre sin remitente: dos bajas sensibles al frente. Tu equipo saldrá con ventaja."}
-			else:
-				## Rechazar el sobre no es gratis ni inútil: los líderes del
-				## vestuario lo ven, y la moral de un líder pesa en la cancha.
-				for x in mio.plantilla:
-					if x.rasgo == "lider":
-						x.cambiar_moral(3, "Prensa y declaraciones")
-				salida = {"titulo": "Juego limpio",
-					"cuerpo": "Rechazaste el sobre. En el camarín, los referentes toman nota del gesto."}
+func _ev_tv(d: Decision) -> Dictionary:
+	if not d.si:
+		return {"titulo": "Perfil bajo", "cuerpo": "Que hable la cancha."}
+	_pagar(d.mio, Eco.escalar(200000.0, d.rep), "Pauta televisiva")
+	mover_animo(4)
+	semanas_documental = maxi(semanas_documental, 2)
+	return {"titulo": "Estrella de la semana",
+		"cuerpo": "Saliste en horario prime. La hinchada te celebra; el camarín aguanta dos semanas de micrófonos."}
 
-		"provoca":
-			if si:
-				mover_animo(3)
-				presion_prometida = true
-				salida = {"titulo": "Respuesta con altura y filo",
-					"cuerpo": "\"Ideas tenemos; lo que no tenemos es tiempo para fantasmas\". La hinchada celebra, pero ahora hay que ganar."}
-			else:
-				salida = {"titulo": "Silencio de campeón",
-					"cuerpo": "Sin declaraciones. La cancha hablará el fin de semana."}
+func _ev_espia(d: Decision) -> Dictionary:
+	if d.si:
+		_pagar(d.mio, -Eco.escalar(80000.0, d.rep), "Informe reservado del rival")
+		dato_del_rival = true
+		return {"titulo": "Dato en el bolsillo",
+			"cuerpo": "El parte llegó en un sobre sin remitente: dos bajas sensibles al frente. Tu equipo saldrá con ventaja."}
+	## Rechazar el sobre no es gratis ni inútil: los líderes del
+	## vestuario lo ven, y la moral de un líder pesa en la cancha.
+	for x: Jugador in d.mio.plantilla:
+		if x.rasgo == "lider":
+			x.cambiar_moral(3, "Prensa y declaraciones")
+	return {"titulo": "Juego limpio",
+		"cuerpo": "Rechazaste el sobre. En el camarín, los referentes toman nota del gesto."}
 
-		"aniversario":
-			if si:
-				_pagar(mio, -Eco.escalar(150000.0, rep), "Fiesta de aniversario")
-				mover_animo(8)
-				mio.socios += 400
-				salida = {"titulo": "Cumpleaños a estadio lleno",
-					"cuerpo": "Leyendas, fuegos artificiales y camiseta conmemorativa. La ciudad entera es del club esta semana."}
-			else:
-				salida = {"titulo": "Aniversario austero",
-					"cuerpo": "Un video institucional y a otra cosa. La caja lo agradece."}
+func _ev_provoca(d: Decision) -> Dictionary:
+	if not d.si:
+		return {"titulo": "Silencio de campeón",
+			"cuerpo": "Sin declaraciones. La cancha hablará el fin de semana."}
+	mover_animo(3)
+	presion_prometida = true
+	return {"titulo": "Respuesta con altura y filo",
+		"cuerpo": "\"Ideas tenemos; lo que no tenemos es tiempo para fantasmas\". La hinchada celebra, pero ahora hay que ganar."}
 
-		"huelgaBono":
-			if si:
-				_pagar(mio, -Eco.escalar(100000.0, rep), "Bono al plantel")
-				primas_activas = true
-				for x in mio.plantilla:
-					x.cambiar_moral(4, "Prensa y declaraciones")
-				salida = {"titulo": "Gesto al camarín",
-					"cuerpo": "Bono entregado y primas por objetivos activadas en las normas. El plantel responde en la cancha."}
-			else:
-				for x in mio.plantilla:
-					x.cambiar_moral(-3, "Prensa y declaraciones")
-				salida = {"titulo": "Sin bonos",
-					"cuerpo": "\"El sueldo ya es el bono\". Caras largas en la práctica."}
+func _ev_aniversario(d: Decision) -> Dictionary:
+	if not d.si:
+		return {"titulo": "Aniversario austero",
+			"cuerpo": "Un video institucional y a otra cosa. La caja lo agradece."}
+	_pagar(d.mio, -Eco.escalar(150000.0, d.rep), "Fiesta de aniversario")
+	mover_animo(8)
+	d.mio.socios += 400
+	return {"titulo": "Cumpleaños a estadio lleno",
+		"cuerpo": "Leyendas, fuegos artificiales y camiseta conmemorativa. La ciudad entera es del club esta semana."}
 
-		"tunel":
-			if si:
-				for x: Jugador in mio.plantilla:
-					x.cambiar_moral(3, "Prensa y declaraciones")
-				if Azar.suerte(0.3):
-					_mover_funa(6)
-					salida = {"titulo": "La provocación se filtra",
-						"cuerpo": "Tu frase en el túnel la captó un micrófono de ambiente. El equipo salió encendido, pero la prensa ya tiene titular."}
-				else:
-					salida = {"titulo": "Guerra psicológica",
-						"cuerpo": "El DT rival se quedó blanco. Tus jugadores lo vieron y salieron a la cancha dos metros más arriba."}
-			else:
-				if m != null and m.federacion != null:
-					m.federacion.enojo_arbitral += 1
-				if Azar.suerte(0.35):
-					_pagar(mio, -Eco.escalar(40000.0, rep), "Multa por presionar al árbitro")
-					salida = {"titulo": "El árbitro lo pone en el acta",
-						"cuerpo": "Tu comentario terminó en el informe arbitral. Multa, y el tribunal ya te mira con lupa."}
-				else:
-					salida = {"titulo": "Recado entregado",
-						"cuerpo": "El árbitro no dijo nada, pero lo escuchó. El tribunal, si se entera, no lo va a olvidar."}
-
-		"viral":
-			if si:
-				if j != null:
-					j.cambiar_moral(-6, "Prensa y declaraciones")
-					j.suspension = maxi(j.suspension, 1)
-				_mover_funa(-5)
-				if m != null and m.directiva != null:
-					m.directiva.mover_confianza(2, "la sanción ejemplar")
-				salida = {"titulo": "Sanción ejemplar",
-					"cuerpo": "Un partido fuera y multa interna. La directiva aplaude; el jugador, no."}
-			else:
-				if j != null:
-					j.cambiar_moral(4, "Prensa y declaraciones")
-				_mover_funa(10)
-				_efecto("eco_viral", 2)
-				salida = {"titulo": "Lo defiendes",
-					"cuerpo": "\"Tiene derecho a una vida\". El vestuario lo agradece; las redes llevan dos semanas con el video."}
-
-		"capitan":
-			if si:
-				for x: Jugador in mio.plantilla:
-					x.cambiar_moral(3, "Prensa y declaraciones")
-				rep_entrenador = clampi(rep_entrenador - 2, 0, 100)
-				salida = {"titulo": "Carga más liviana",
-					"cuerpo": "Aflojas los entrenamientos una semana. El grupo sonríe; algún periodista dice que el capitán manda más que tú."}
-			else:
-				if j != null:
-					j.cambiar_moral(-8, "Prensa y declaraciones")
-				rep_entrenador = clampi(rep_entrenador + 3, 0, 100)
-				_efecto("vestuario_tenso", 3)
-				salida = {"titulo": "\"Aquí mando yo\"",
-					"cuerpo": "Dejas claro quién decide. Autoridad ganada, pero el vestuario va a estar tenso unas semanas."}
-
-		"silencio":
-			if si:
-				_pagar(mio, -Eco.escalar(50000.0, rep), "Homenaje y camiseta conmemorativa")
-				mover_animo(6)
-				mio.socios += 200
-				salida = {"titulo": "Un homenaje a la altura",
-					"cuerpo": "Minuto de silencio, su nombre en la camiseta y la barra cantando su canción. Nadie en el estadio lo va a olvidar."}
-			else:
-				mover_animo(2)
-				salida = {"titulo": "Minuto de silencio",
-					"cuerpo": "Respeto total en el estadio. Sencillo y digno."}
-
-		"cambio_posicion":
-			var nueva := String(e.get("dato", "MC"))
-			if si and j != null:
-				if not j.pos_sec.has(nueva):
-					j.pos_sec.append(nueva)
-				j.cambiar_moral(6, "Prensa y declaraciones")
-				_efecto("posicion_nueva", 3, j.id)
-				salida = {"titulo": "%s, de %s" % [j.nombre, nueva],
-					"cuerpo": "Ya figura como %s en su ficha. Unas semanas de adaptación y veremos si tenía razón." % nueva}
-			else:
-				if j != null:
-					j.cambiar_moral(-6, "Prensa y declaraciones")
-				salida = {"titulo": "Cada uno en su sitio",
-					"cuerpo": "Le dices que no. Lo entiende, pero se le nota en la cara."}
-
-		"sponsor_rueda":
-			if si:
-				_pagar(mio, Eco.escalar(120000.0, rep), "Mención del patrocinador")
-				rep_entrenador = clampi(rep_entrenador - 3, 0, 100)
-				_mover_funa(3)
-				salida = {"titulo": "La frase más cara",
-					"cuerpo": "Nombraste la bebida entre táctica y táctica. Cobrado; los memes, gratis."}
-			else:
-				if m != null and m.directiva != null:
-					m.directiva.mover_confianza(-3, "el desplante al patrocinador")
-				salida = {"titulo": "Yo hablo de fútbol",
-					"cuerpo": "El patrocinador llamó al presidente. El presidente te llamó a ti."}
-
-		"apuestas":
-			if si:
-				if j != null:
-					j.suspension = maxi(j.suspension, 3)
-					j.cambiar_moral(-8, "Prensa y declaraciones")
-				salida = {"titulo": "Apartado mientras se investiga",
-					"cuerpo": "Tres partidos fuera por decisión del club. Si sale limpio, habrá que pedirle perdón."}
-			else:
-				_mover_funa(12)
-				if Azar.suerte(0.4):
-					_pagar(mio, -Eco.escalar(150000.0, rep), "Multa de la federación (apuestas)")
-					if j != null:
-						j.suspension = maxi(j.suspension, 4)
-					salida = {"titulo": "La federación actúa",
-						"cuerpo": "Aparecieron más mensajes. Multa para el club y cuatro partidos de sanción. Defenderlo en público salió caro."}
-				else:
-					salida = {"titulo": "Se archiva",
-						"cuerpo": "La fiscalía no encuentra nada. Tu respaldo fue polémico, pero el jugador no lo va a olvidar."}
-					if j != null:
-						j.cambiar_moral(6, "Prensa y declaraciones")
-		"huelga_impagos":
-			if si:
-				_pagar(mio, -mio.masa_salarial() * 2, "Atrasos al plantel")
-				for x: Jugador in mio.plantilla:
-					x.cambiar_moral(2, "Prensa y declaraciones")
-				salida = {"titulo": "Atrasos pagados",
-					"cuerpo": "Dos semanas de sueldo sobre la mesa. Se vuelve a entrenar mañana."}
-			else:
-				_efecto("calendario_pagos", 2)
-				salida = {"titulo": "Calendario de pagos",
-					"cuerpo": "Firman un acuerdo a dos semanas. Entrenan, pero con carteles en la valla."}
-	return [false, m, mio, e, si, j, rep, salida]
+func _ev_huelga_bono(d: Decision) -> Dictionary:
+	if d.si:
+		_pagar(d.mio, -Eco.escalar(100000.0, d.rep), "Bono al plantel")
+		primas_activas = true
+		for x: Jugador in d.mio.plantilla:
+			x.cambiar_moral(4, "Prensa y declaraciones")
+		return {"titulo": "Gesto al camarín",
+			"cuerpo": "Bono entregado y primas por objetivos activadas en las normas. El plantel responde en la cancha."}
+	for x: Jugador in d.mio.plantilla:
+		x.cambiar_moral(-3, "Prensa y declaraciones")
+	return {"titulo": "Sin bonos",
+		"cuerpo": "\"El sueldo ya es el bono\". Caras largas en la práctica."}
