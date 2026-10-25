@@ -2059,6 +2059,36 @@
    "ca": "MÀX",
    "pl": "MAKS",
    "tr": "MAKS"
+  },
+  "CLUBES": {
+   "en": "CLUBS",
+   "pt": "CLUBES",
+   "fr": "CLUBS",
+   "it": "CLUB",
+   "de": "VEREINE",
+   "ca": "CLUBS",
+   "pl": "KLUBY",
+   "tr": "KULÜPLER"
+  },
+  "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": {
+   "en": "The squad stops flying on scheduled airlines: less fatigue on long trips.",
+   "pt": "O elenco deixa de voar em linha comercial: menos cansaço nas viagens longas.",
+   "fr": "L'effectif ne voyage plus sur des lignes régulières : moins de fatigue lors des longs déplacements.",
+   "it": "La rosa smette di volare con voli di linea: meno fatica nelle trasferte lunghe.",
+   "de": "Der Kader fliegt nicht mehr mit Linienflügen: weniger Müdigkeit auf langen Reisen.",
+   "ca": "La plantilla deixa de volar en línia regular: menys fatiga en els viatges llargs.",
+   "pl": "Kadra przestaje latać liniami rejsowymi: mniej zmęczenia w długich podróżach.",
+   "tr": "Kadro artık tarifeli uçuşlarla uçmuyor: uzun yolculuklarda daha az yorgunluk."
+  },
+  "🎲 Aleatorio": {
+   "en": "🎲 Random",
+   "pt": "🎲 Aleatório",
+   "fr": "🎲 Aléatoire",
+   "it": "🎲 Casuale",
+   "de": "🎲 Zufällig",
+   "ca": "🎲 Aleatori",
+   "pl": "🎲 Losowo",
+   "tr": "🎲 Rastgele"
   }
  },
  "patrones": [

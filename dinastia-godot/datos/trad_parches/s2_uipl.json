@@ -1802,6 +1802,17 @@
    "Representats per $1",
    "Reprezentowani przez $1",
    "Menajer $1 grubu"
+  ],
+  [
+   "^(.+): vuelve en (\\d+) semana\\(s\\)$",
+   "$1: back in $2 week(s)",
+   "$1: volta em $2 semana(s)",
+   "$1 : retour dans $2 semaine(s)",
+   "$1: rientra tra $2 settimana/e",
+   "$1: zurück in $2 Woche(n)",
+   "$1: torna d'aquí a $2 setmana(es)",
+   "$1: wraca za $2 tydz.",
+   "$1: $2 hafta sonra dönüyor"
   ]
  ]
 }
