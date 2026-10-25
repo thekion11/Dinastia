@@ -99,6 +99,11 @@ var terminado_ya: bool = false
 var motor_externo := false
 ## Si ya se aplicó el plan del minuto 60. Ver `simular_minuto()`.
 var _plan_aplicado: bool = false
+## Club id -> {"mentalidad", "linea"} de antes del plan, y club id -> la clave
+## del cambio que saltó («perdiendo:ofensivo»). Ver `_devolver_tactica()`.
+var tactica_previa: Dictionary = {}
+var plan_activado: Dictionary = {}
+var _tactica_devuelta: bool = false
 
 ## INSTRUCCIONES EFÍMERAS DE PARTIDO -`M.instr.riesgo`/`M.instr.tiempo` del
 ## HTML-: a diferencia de la pizarra (`Club.tactica`, persistente, se lleva de

@@ -270,6 +270,9 @@ func nota_usuario() -> float:
 		+ float(s["entradas_ok"]) * 0.12 - float(s["faltas"]) * 0.1
 	if not usuario.is_empty():
 		var mio := 0 if bool(usuario["es_local"]) else 1
+		## EL PORTERO (Carrera): sus paradas y lo que encaja, no los goles.
+		if bool(usuario["por"]):
+			n = 6.0 + float(s["paradas"]) * 0.45 - float(goles[1 - mio]) * 0.45 + float(s["pases_ok"]) * 0.02 + (0.5 if goles[1 - mio] == 0 and minutos_usuario >= 60.0 else 0.0)
 		n += 0.3 if goles[mio] > goles[1 - mio] else (-0.3 if goles[mio] < goles[1 - mio] else 0.0)
 	return clampf(snappedf(n, 0.1), 3.0, 10.0)
 

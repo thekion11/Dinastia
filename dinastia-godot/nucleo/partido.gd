@@ -87,6 +87,7 @@ func simular_minuto() -> void:
 	minuto_jugado.emit(minuto)
 	if minuto >= minutos_fin:
 		terminado_ya = true
+		_devolver_tactica()
 		terminado.emit(goles_local, goles_visita)
 
 # ---------------------------------------------------------------------------

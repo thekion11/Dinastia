@@ -86,8 +86,10 @@ func _centro(j: Jugador, club: Club) -> Control:
 	fila_f.add_theme_constant_override("v_separation", 6)
 	ev.add_child(fila_f)
 	var grupo := ButtonGroup.new()
-	for f: String in CarreraJugador.FOCOS:
-		var bf := _boton(String(CarreraJugador.FOCOS[f][0]), CIAN, func() -> void: carrera.foco = f, 36)
+	## Los focos de tu puesto (el portero entrena estirada, reflejos...).
+	var focos := CarreraPortero.focos_para(carrera.jugador(mundo))
+	for f: String in focos:
+		var bf := _boton(String(focos[f][0]), CIAN, func() -> void: carrera.foco = f, 36)
 		bf.toggle_mode = true
 		bf.button_group = grupo
 		bf.button_pressed = carrera.foco == f

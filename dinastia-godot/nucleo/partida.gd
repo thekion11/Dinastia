@@ -29,6 +29,10 @@ static func _dic_a_club(d: Dictionary) -> Club:
 	c.tactica.libre = String(d.get("libre", "directo"))
 	c.tactica.plan_perdiendo = String(d.get("plan_p", "nada"))
 	c.tactica.plan_ganando = String(d.get("plan_g", "nada"))
+	## Guardados de antes del 25-10: sin racha, empieza de cero.
+	c.tactica.racha_plan_clave = String(d.get("plan_rc", ""))
+	c.tactica.racha_plan_n = int(d.get("plan_rn", 0))
+	c.tactica.plan_fijo = String(d.get("plan_fijo", ""))
 	c.tactica.marca_al_hombre = bool(d.get("hombre", false))
 	c.tactica.fuera_de_juego = bool(d.get("fjuego", false))
 	c.tactica.tiro_lejano = bool(d.get("lejano", false))

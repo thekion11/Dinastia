@@ -296,12 +296,22 @@ func _actualizar_camara(delta: float) -> void:
 		var dir := motor.direccion_apunte()
 		detras = -dir * 10.0 + Vector3(0, 8.5, 0)
 		mira = foco + dir * 18.0
+	## EL PORTERO (Carrera, 25-10-2026): detrás de su arco y por encima de la red,
+	## mirando al campo entre él y el balón (detrás de él a ras del campo quedaba
+	## fuera de cuadro, debajo de la cámara). Ahí el límite es el de detrás del arco.
+	var lim := Vector3(33.0, 0, 51.0)
+	var gk := not motor.usuario.is_empty() and bool(motor.usuario["por"]) and not motor.apuntando and motor.estado != "saque"
+	if gk:
+		var yo := motor.pos(motor.usuario)
+		foco = yo
+		detras = Vector3(0, 8.0, -10.0 * d)
+		mira = yo + Vector3((motor.balon.position.x - yo.x) * 0.4, 0.5, d * clampf((motor.balon.position.z - yo.z) * d * 0.3, 8.0, 12.0))
+		lim.z = 60.5
 	var deseada := foco + detras
 	## LA CÁMARA NO SALE DEL CAMPO (29-9-2026). Pegada a la grada se veía el
 	## público de cerca -muñecos y textura estirada- y la tapaban las vallas.
 	## Si choca con el borde, en vez de atravesarlo sube: queda un plano
 	## picado, como la cámara de una transmisión en el fondo.
-	var lim := Vector3(33.0, 0, 51.0)
 	var fuera := maxf(absf(deseada.x) - lim.x, 0.0) + maxf(absf(deseada.z) - lim.z, 0.0)
 	deseada.x = clampf(deseada.x, -lim.x, lim.x)
 	deseada.z = clampf(deseada.z, -lim.z, lim.z)

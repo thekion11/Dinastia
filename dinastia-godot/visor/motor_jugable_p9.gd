@@ -156,6 +156,9 @@ func _control_usuario(delta: float) -> void:
 	else:
 		p["objetivo"] = pos(p)
 		p["manual"] = Vector3.ZERO
+	## El portero que manejas, sin el balón: estirada con el stick (`_portero_usuario`).
+	if bool(p["por"]) and poseedor != p and _portero_usuario(p, mundo):
+		return
 	_tacticas_rapidas()
 	_seguir_pared()
 	_seguir_portero_mandado()

@@ -134,9 +134,76 @@ func plan_para(diferencia: int) -> Dictionary:
 		clave = plan_perdiendo
 	elif diferencia > 0:
 		clave = plan_ganando
-	match clave:
+	return cambio_de(clave)
+
+## Mentalidad y línea de un plan por su nombre ({} si es "nada" o desconocido).
+static func cambio_de(nombre: String) -> Dictionary:
+	match nombre:
 		"ofensivo":
 			return {"mentalidad": Mentalidad.OFENSIVA, "linea": Nivel.ALTO}
 		"cerrojo":
 			return {"mentalidad": Mentalidad.DEFENSIVA, "linea": Nivel.BAJO}
 	return {}
+
+# ---------------------------------------------------------------------------
+#  LA COSTUMBRE DEL PLAN (25-10-2026, pedido del dueño)
+# ---------------------------------------------------------------------------
+# Si el MISMO cambio del plan salta seis partidos seguidos, se le pregunta al
+# usuario si lo quiere de táctica habitual. La clave es «lado:plan»
+# ("perdiendo:ofensivo", "ganando:cerrojo"): el mismo plan por el otro lado del
+# marcador no es la misma costumbre. Un partido sin activación corta la racha:
+# «seguidos» quiere decir seguidos. Vive en la táctica (se guarda con el club).
+
+const RACHA_PARA_PREGUNTAR := 6
+var racha_plan_clave: String = ""
+var racha_plan_n: int = 0
+## La clave que el usuario ya confirmó como «solo desde el minuto 60»: no se le
+## vuelve a preguntar por ella (sí por otra distinta).
+var plan_fijo: String = ""
+
+## La clave del cambio que toca con esta diferencia de goles ("" si ninguno).
+func clave_plan(diferencia: int) -> String:
+	if diferencia < 0 and not cambio_de(plan_perdiendo).is_empty():
+		return "perdiendo:" + plan_perdiendo
+	if diferencia > 0 and not cambio_de(plan_ganando).is_empty():
+		return "ganando:" + plan_ganando
+	return ""
+
+## Se llama una vez al final de cada partido del club humano con la clave que
+## se activó ("" si no se activó ninguna).
+func anotar_plan(clave: String) -> void:
+	if clave == "":
+		racha_plan_clave = ""
+		racha_plan_n = 0
+	elif clave == racha_plan_clave:
+		racha_plan_n += 1
+	else:
+		racha_plan_clave = clave
+		racha_plan_n = 1
+
+func toca_preguntar_plan() -> bool:
+	return racha_plan_n >= RACHA_PARA_PREGUNTAR and racha_plan_clave != "" and racha_plan_clave != plan_fijo
+
+## Respuestas: "siempre" (el cambio pasa a la táctica base y ese lado del plan
+## queda en "nada", porque aplicarlo encima no cambiaría nada y seguiría
+## contando), "desde_60" (queda como plan fijo, como ya era) y "no" (solo
+## reinicia la cuenta). Las tres reinician la cuenta.
+func responder_plan(respuesta: String) -> void:
+	var clave := racha_plan_clave
+	match respuesta:
+		"siempre":
+			var partes := clave.split(":")
+			var cambio := cambio_de(partes[1] if partes.size() > 1 else "")
+			if not cambio.is_empty():
+				mentalidad = int(cambio["mentalidad"])
+				linea = int(cambio["linea"])
+				if partes[0] == "perdiendo":
+					plan_perdiendo = "nada"
+				else:
+					plan_ganando = "nada"
+			if plan_fijo == clave:
+				plan_fijo = ""
+		"desde_60":
+			plan_fijo = clave
+	racha_plan_clave = ""
+	racha_plan_n = 0

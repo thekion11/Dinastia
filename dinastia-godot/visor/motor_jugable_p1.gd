@@ -98,7 +98,7 @@ var _pase_usuario_vivo := false ## el balón en camino es un pase tuyo
 ## que «el que recibe no es `usuario`» dejaba sin contar casi todos (20-10-2026).
 var _pase_usuario_de: Dictionary = {}
 var stats := {"fueras_de_juego": 0, "goles": 0, "asist": 0, "pases": 0, "pases_ok": 0, "tiros": 0, "a_puerta": 0,
-	"entradas": 0, "entradas_ok": 0, "toques": 0, "faltas": 0}
+	"entradas": 0, "entradas_ok": 0, "toques": 0, "faltas": 0, "paradas": 0}
 var posesion := [0.0, 0.0]
 var tiros := [0, 0]
 var _rng := RandomNumberGenerator.new()

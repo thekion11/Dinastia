@@ -352,17 +352,22 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 			_msg += " " + Idiomas.t("El DT te cambió.")
 	else:
 		var goles_antes := j.goles if j != null else 0
+		var gc_antes := CarreraPortero.goles_en_contra(m, club)
 		m.avanzar_semana()
 		if titular and not par.is_empty() and j != null:
 			var g := j.goles - goles_antes
-			## La nota del simulado: la de tu nivel, más lo que marcaste.
+			## La nota del simulado: la de tu nivel, más lo que marcaste (el
+			## portero, por lo que encajó: `CarreraPortero.nota_simulada`).
 			var nota := clampf(5.6 + float(j.ovr - 55) * 0.04 + float(g) * 0.9 + randf_range(-0.6, 0.6), 4.0, 9.5)
+			var gc := CarreraPortero.goles_en_contra(m, club) - gc_antes
+			if j.es_portero():
+				nota = CarreraPortero.nota_simulada(j, gc, randf_range(-0.5, 0.5))
 			j.goles = goles_antes
-			carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": 0, "nota": snappedf(nota, 0.1), "titular": true})
+			carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": 0, "nota": snappedf(nota, 0.1), "titular": true, "encajados": gc})
 			_msg += "  ·  " + Idiomas.t("Jugaste (simulado): %d gol(es), nota %.1f.") % [g, nota]
 		elif not titular and not par.is_empty() and j != null and j.disponible():
 			## Suplente simulado: a veces entras un rato.
-			var entra := carrera.minuto_entrada_suplente()
+			var entra := carrera.minuto_entrada_suplente(j.es_portero())
 			if entra >= 0:
 				var minutos := 90 - entra
 				var g2 := 1 if randf() < float(minutos) / 90.0 * (0.25 if j.pos == "DEL" else 0.08) else 0
@@ -399,7 +404,8 @@ func _ir_al_banco() -> void:
 	if par.is_empty():
 		return
 	_msg = carrera.entrenar(mundo)
-	var minuto := carrera.minuto_entrada_suplente()
+	var yo := carrera.jugador(mundo)
+	var minuto := carrera.minuto_entrada_suplente(yo != null and yo.es_portero())
 	if minuto < 0:
 		_msg += "  ·  " + Idiomas.t("Calentaste toda la segunda parte, pero el DT no te hizo entrar.")
 		_cerrar_semana({"sin_minutos": true}, true)

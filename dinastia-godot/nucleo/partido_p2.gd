@@ -138,6 +138,12 @@ func _aplicar_plan() -> void:
 		var cambio: Dictionary = c.tactica.plan_para(mia - suya)
 		if cambio.is_empty():
 			continue
+		## Se apunta la táctica de antes para devolverla al final
+		## (`_devolver_tactica`): el plan es de ESTE partido, no una orden
+		## permanente. Antes se quedaba escrita en `club.tactica` para siempre.
+		if not tactica_previa.has(c.id):
+			tactica_previa[c.id] = {"mentalidad": c.tactica.mentalidad, "linea": c.tactica.linea}
+		plan_activado[c.id] = c.tactica.clave_plan(mia - suya)
 		c.tactica.mentalidad = int(cambio["mentalidad"])
 		c.tactica.linea = int(cambio["linea"])
 		## Cambiar la táctica invalida la fuerza cacheada: sin esto el cambio se
@@ -145,6 +151,39 @@ func _aplicar_plan() -> void:
 		## el plan sería un adorno. Es la misma razón por la que `cambiar()` la
 		## invalida al hacer una sustitución.
 		invalidar_fuerza()
+
+## Al pitar el final: cada club recupera la mentalidad y la línea que tenía
+## antes de que saltara el plan, y el club humano anota la activación (o su
+## ausencia) en la racha de `Tactica.anotar_plan()`. Una sola vez por partido.
+func _devolver_tactica() -> void:
+	if _tactica_devuelta:
+		return
+	_tactica_devuelta = true
+	for c in [local, visita]:
+		if c == null or c.tactica == null:
+			continue
+		if tactica_previa.has(c.id):
+			var t: Dictionary = tactica_previa[c.id]
+			c.tactica.mentalidad = int(t["mentalidad"])
+			c.tactica.linea = int(t["linea"])
+		if c.id == ctx_club_id and ctx_club_id != "":
+			c.tactica.anotar_plan(String(plan_activado.get(c.id, "")))
+
+## Para un partido abandonado que se completa al cargar: si el plan ya había
+## saltado, se vuelve a poner (el guardado tiene la táctica de antes).
+func _reaplicar_plan() -> void:
+	for c in [local, visita]:
+		if c == null or not plan_activado.has(c.id):
+			continue
+		var partes := String(plan_activado[c.id]).split(":")
+		var cambio := Tactica.cambio_de(partes[1] if partes.size() > 1 else "")
+		if cambio.is_empty():
+			continue
+		if not tactica_previa.has(c.id):
+			tactica_previa[c.id] = {"mentalidad": c.tactica.mentalidad, "linea": c.tactica.linea}
+		c.tactica.mentalidad = int(cambio["mentalidad"])
+		c.tactica.linea = int(cambio["linea"])
+	invalidar_fuerza()
 
 func _probabilidad(ata: float, def_rival: float) -> float:
 	## REALISMO (13-10-2026): con la fórmula vieja un once de media 86 contra

@@ -387,6 +387,21 @@ func _seguir_portero_mandado() -> void:
 		var largo := -signf(balon.position.x + 0.01)
 		gk["objetivo"] = Vector3(largo * PALO * 0.55, 0, arco.z - signf(arco.z) * 0.8)
 
+## EL PORTERO QUE MANEJAS (Carrera de Jugador, 25-10-2026), sin el balón. Ante
+## un tiro, el lado de la estirada lo elige el stick (`_reaccion_portero`); en
+## plena estirada sigue el gesto; con el stick quieto se coloca solo, como la IA.
+## Devuelve true si este fotograma ya lo resolvió el portero.
+func _portero_usuario(p: Dictionary, mundo: Vector3) -> bool:
+	if float(p.get("gesto_hasta", 0.0)) > t and p.has("_obj_gesto"):
+		p["objetivo"] = p["_obj_gesto"]
+		return true
+	if _reaccion_portero(p, true, mundo.x):
+		p["_obj_gesto"] = p["objetivo"]
+		return true
+	if mundo.length() < 0.1:
+		p["objetivo"] = colocacion_portero(balon.position, _arco_propio(p), _tac(bool(p["es_local"]), "linea"))
+	return false
+
 ## `para_cambio`: el cambio manual con el stick derecho (vale cualquiera, cerca o lejos).
 func _companero_en_direccion(p: Dictionary, dir: Vector3, para_cambio := false) -> Dictionary:
 	var mejor: Dictionary = {}

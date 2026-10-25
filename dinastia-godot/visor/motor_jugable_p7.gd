@@ -4,6 +4,7 @@ extends "res://visor/motor_jugable_p6.gd"
 ## El portero se estira: atrapa si puede, si no la desvía.
 func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	_cerrar_tiro("atajada")
+	stats["paradas"] += 1 if p == usuario else 0
 	var lado := "izq" if (cruce.x - pos(p).x) * dir_ataque(bool(p["es_local"])) > 0.0 else "der"
 	var altura := "baja" if cruce.y < 0.7 else ("media" if cruce.y < 1.6 else "alta")
 	var anim := ("estirada_%s_%s" % [altura, lado]) if estirada else ("atajar_bajo" if cruce.y < 0.6 else ("blocaje_alto" if cruce.y > 1.6 else "atajar"))
@@ -59,6 +60,61 @@ func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
 		gk["vel"] = Vector3(float(lado) * 6.0, 0, 0)
 		gk["objetivo"] = Vector3(pos(gk).x + float(lado) * 2.2, 0, pos(gk).z)
 
+## TIRO QUE VIENE: ¿llega a tapar? (sacado de `_ia_portero` el 25-10-2026 para
+## que el portero de la Carrera lo use desde `_control_usuario`). Devuelve true
+## si el portero ya actuó (parada o penal). `manual`: lo maneja el usuario, que
+## elige el lado con el stick (`guia`, X del mundo: 0 = no eligió). Mientras no
+## elige se espera a medio segundo del arco y la reacción automática es más floja; si
+## elige el lado equivocado no llega.
+func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
+	var b := balon.position
+	var arco := _arco_propio(p)
+	var hacia := signf(arco.z)
+	if poseedor.is_empty() and vel_balon.z * hacia > 6.0:
+		var tz := (arco.z - hacia * 0.6 - b.z) / vel_balon.z
+		if tz > 0.0 and tz < 1.6:
+			var cruce := b + vel_balon * tz
+			cruce.y = b.y + vel_balon.y * tz - 0.5 * G * tz * tz
+			## UNA decisión por disparo (13-10-2026): antes se tiraba el dado en
+			## cada fotograma del vuelo -20 o 30 oportunidades- y el portero lo
+			## paraba casi todo (8 de cada 10 en la sonda).
+			if absf(cruce.x) < PALO + 0.8 and cruce.y < LARGUERO + 0.4 and int(p.get("_patada_vista", -1)) != _n_patada:
+				## El usuario aún no eligió: se espera (sin gastar la decisión).
+				if manual and absf(guia) < 0.3 and tz > 0.55:
+					return false
+				p["_patada_vista"] = _n_patada
+				if PULIDO and String(_tiro_vivo.get("clase", "")) == "penal":
+					_penal_en_juego(p, cruce)
+					return true
+				## Alcance de la estirada: hasta ~3 m con un gran portero, y menos
+				## cuanto menos tiempo tiene para reaccionar (antes llegaba a 4 m
+				## en cualquier tiro). Arriba, a la escuadra, cuesta más.
+				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, 0.3, 1.0)
+				if cruce.y > 1.8:
+					alcance *= 0.85
+				## El alcance se mide donde está ÉL (adelantado tapa más ángulo),
+				## no en la línea de gol.
+				var tg := clampf((pos(p).z - b.z) / vel_balon.z, 0.0, tz)
+				var cruce_gk := b + vel_balon * tg
+				cruce_gk.y = b.y + vel_balon.y * tg - 0.5 * G * tg * tg
+				var lat := absf(cruce_gk.x - pos(p).x)
+				var prob := 0.47 + float(p["attr"]["ref"]) * 0.42
+				if manual:
+					if absf(guia) < 0.3:
+						## No actuó: reacción automática más floja.
+						alcance *= 0.8
+						prob *= 0.75
+					elif lat > 0.6 and signf(guia) != signf(cruce_gk.x - pos(p).x):
+						## Se tiró al otro lado: el gesto se ve, pero no llega.
+						_anim(p, "estirada_media_%s" % ("izq" if guia * dir_ataque(bool(p["es_local"])) > 0.0 else "der"), true)
+						return true
+					else:
+						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
+				if lat < alcance and _rng.randf() < prob:
+					_parada(p, cruce_gk, lat > 1.2)
+					return true
+	return false
+
 func _ia_portero(p: Dictionary) -> Vector3:
 	var b := balon.position
 	var arco := _arco_propio(p)
@@ -78,35 +134,8 @@ func _ia_portero(p: Dictionary) -> Vector3:
 				_patear(p, lejos, 18.0, 3.0, 0.0, "patear")
 		return pos(p)
 	## Tiro que viene: ¿llega a tapar?
-	var hacia := signf(arco.z)
-	if poseedor.is_empty() and vel_balon.z * hacia > 6.0:
-		var tz := (arco.z - hacia * 0.6 - b.z) / vel_balon.z
-		if tz > 0.0 and tz < 1.6:
-			var cruce := b + vel_balon * tz
-			cruce.y = b.y + vel_balon.y * tz - 0.5 * G * tz * tz
-			## UNA decisión por disparo (13-10-2026): antes se tiraba el dado en
-			## cada fotograma del vuelo -20 o 30 oportunidades- y el portero lo
-			## paraba casi todo (8 de cada 10 en la sonda).
-			if absf(cruce.x) < PALO + 0.8 and cruce.y < LARGUERO + 0.4 and int(p.get("_patada_vista", -1)) != _n_patada:
-				p["_patada_vista"] = _n_patada
-				if PULIDO and String(_tiro_vivo.get("clase", "")) == "penal":
-					_penal_en_juego(p, cruce)
-					return pos(p)
-				## Alcance de la estirada: hasta ~3 m con un gran portero, y menos
-				## cuanto menos tiempo tiene para reaccionar (antes llegaba a 4 m
-				## en cualquier tiro). Arriba, a la escuadra, cuesta más.
-				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, 0.3, 1.0)
-				if cruce.y > 1.8:
-					alcance *= 0.85
-				## El alcance se mide donde está ÉL (adelantado tapa más ángulo),
-				## no en la línea de gol.
-				var tg := clampf((pos(p).z - b.z) / vel_balon.z, 0.0, tz)
-				var cruce_gk := b + vel_balon * tg
-				cruce_gk.y = b.y + vel_balon.y * tg - 0.5 * G * tg * tg
-				var lat := absf(cruce_gk.x - pos(p).x)
-				if lat < alcance and _rng.randf() < 0.47 + float(p["attr"]["ref"]) * 0.42:
-					_parada(p, cruce_gk, lat > 1.2)
-					return pos(p)
+	if _reaccion_portero(p):
+		return pos(p)
 	## Balón suelto en su área y él llega antes: sale a por él.
 	if poseedor.is_empty() and _en_su_area(p, b) and b.y < 2.0:
 		var suyo := true

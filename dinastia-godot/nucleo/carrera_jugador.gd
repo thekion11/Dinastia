@@ -4,6 +4,8 @@ extends "res://nucleo/carrera_jugador_p1.gd"
 
 ## Lo que dejó la agenda de la última semana (para el aviso de la interfaz).
 var aviso_agenda := ""
+## Partidos de portero sin encajar (con una hora jugada como mínimo).
+var vallas_invictas := 0
 
 ## Lo que pasa cada semana fuera del campo. Devuelve los eventos nuevos.
 func semana(m: Mundo) -> Array:
@@ -161,6 +163,13 @@ func tras_partido(m: Mundo, d: Dictionary) -> void:
 	relacion_dt = clampi(relacion_dt + (3 if nota >= 7.5 else (1 if nota >= 6.5 else -2)), 0, 100)
 	energia = maxi(0, energia - int(float(min_jugados) / 3.0))
 	seguidores += int(d.get("goles", 0)) * 120
+	## EL PORTERO (CarreraPortero): las paradas dan fama y seguidores, y se
+	## cuentan las porterías a cero (con una hora jugada, como en los diarios).
+	if j != null and j.es_portero():
+		fama = clampi(fama + int(int(d.get("paradas", 0)) / 3), 0, 100)
+		seguidores += int(d.get("paradas", 0)) * 40
+		if min_jugados >= 60 and d.has("encajados") and int(d["encajados"]) == 0:
+			vallas_invictas += 1
 	if j != null:
 		for _g in int(d.get("goles", 0)):
 			j.anotar()
@@ -285,6 +294,7 @@ func pasar_a_entrenador(m: Mundo, club_dt: Club) -> bool:
 func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 	var p: Array = super(m, j)
 	p.append_array(CarreraAgenda.eventos(self, j))
+	p.append_array(CarreraPortero.eventos(self, j))
 	return p
 
 func _evento_bienvenida(m: Mundo) -> void:
@@ -305,7 +315,7 @@ func a_dic() -> Dictionary:
 		"goles_carrera": goles_carrera, "pj_carrera": pj_carrera, "caps": caps, "goles_sel": goles_sel,
 		"convocatoria": convocatoria, "capitan": capitan, "licencia": licencia,
 		"retiro_anunciado": retiro_anunciado, "retirado": retirado, "clubes_pasados": clubes_pasados,
-		"agenda": agenda, "racha_social": racha_social, "ovr_inicio": ovr_inicio}
+		"agenda": agenda, "racha_social": racha_social, "ovr_inicio": ovr_inicio, "vallas_invictas": vallas_invictas}
 
 static func desde_dic(d: Dictionary) -> CarreraJugador:
 	var c := CarreraJugador.new()
@@ -343,4 +353,5 @@ static func desde_dic(d: Dictionary) -> CarreraJugador:
 		c.agenda = "normal"
 	c.racha_social = int(d.get("racha_social", 0))
 	c.ovr_inicio = int(d.get("ovr_inicio", -1))
+	c.vallas_invictas = int(d.get("vallas_invictas", 0))
 	return c

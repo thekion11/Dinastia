@@ -27,9 +27,9 @@ const FOCOS := {
 	"fisico": ["💪 Físico", "fis"], "ritmo": ["⚡ Velocidad", "rit"], "defensa": ["🛡️ Defensa", "def"],
 	"descanso": ["😴 Descanso", ""],
 }
-## Las demarcaciones que se pueden elegir al crear el jugador (sin portero: el
-## modo es de jugador de campo, con balón en los pies).
-const PUESTOS := ["DC", "ED", "EI", "MCO", "MC", "MCD", "LD", "LI", "DFC"]
+## Las demarcaciones que se pueden elegir al crear el jugador (el portero, desde
+## el 25-10-2026: sus focos, nota y eventos viven en `CarreraPortero`).
+const PUESTOS := ["DC", "ED", "EI", "MCO", "MC", "MCD", "LD", "LI", "DFC", "POR"]
 
 var jugador_id := ""
 var fama := 5              ## 0-100
@@ -139,6 +139,7 @@ static func crear(m: Mundo, nombre: String, pos_e: String, pie_zurdo: bool, semi
 		j.dorsal = _dorsal_libre(club)
 	j.tasar()
 	c.jugador_id = j.id
+	c.foco = CarreraPortero.foco_inicial(pos_e)
 	c.agente = ""
 	c._evento_bienvenida(m)
 	return c
@@ -157,7 +158,7 @@ func es_titular(m: Mundo) -> bool:
 	for o: Jugador in c.plantilla:
 		if o != j and o.pos == j.pos and o.disponible() and float(o.media_en(o.pos_e)) > mia:
 			rivales += 1
-	var huecos := {"DEL": 2, "MED": 3, "DEF": 4}
+	var huecos := {"DEL": 2, "MED": 3, "DEF": 4, "POR": 1}
 	return rivales < int(huecos.get(j.pos, 2))
 
 ## El once de tu club para el partido jugable: el del DT, y si te toca jugar y
@@ -182,8 +183,11 @@ func once_para_partido(m: Mundo) -> Array[Jugador]:
 
 ## DESDE EL BANCO (MEGAPLAN fase 3): si empiezas de suplente, ¿te hace entrar
 ## el DT y en qué minuto? Con buena relación y energía entras antes y más a
-## menudo. -1 = no sales del banco.
-func minuto_entrada_suplente() -> int:
+## menudo. -1 = no sales del banco. El portero suplente no entra (en el fútbol
+## solo entra por lesión, y el cambio del motor es de jugador de campo).
+func minuto_entrada_suplente(portero := false) -> int:
+	if portero:
+		return -1
 	var prob := clampf(0.35 + float(relacion_dt - 50) / 100.0 + (0.1 if energia > 50 else -0.1), 0.1, 0.85)
 	if _rng.randf() >= prob:
 		return -1
@@ -213,10 +217,14 @@ func entrenar(m: Mundo) -> String:
 	if foco == "descanso":
 		energia = mini(ENERGIA_MAX, energia + 35)
 		return Idiomas.t("Descansaste: energía %d.") % energia
-	var attr := String(FOCOS[foco][1])
+	## Cada puesto con sus focos (el portero, los suyos): uno que no es del
+	## puesto -una partida vieja- entrena el primero que lo sea.
+	var tabla := CarreraPortero.focos_para(j)
+	var f: Array = tabla.get(foco, tabla.values()[0])
+	var attr := String(f[1])
 	## Los avisos se traducen aquí, por plantilla (con los números dentro ya no
 	## casan con el diccionario): la UI los une con «·».
-	var nombre_foco := Idiomas.t(String(FOCOS[foco][0]))
+	var nombre_foco := Idiomas.t(String(f[0]))
 	if not j.atributos.has(attr):
 		attr = j.atributos.keys()[0]
 	var margen := maxf(0.0, float(j.pot - j.ovr)) / 30.0
@@ -364,7 +372,7 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 	if not hitos.has("mentor") and j.edad <= 20 and veterano != null:
 		p.append(_ev("mentor", "%s se ofrece a enseñarte" % veterano.nombre,
 			"El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento." % veterano.edad,
-			[_op("Aceptas: aprender de él es oro.", {"attr_%s" % String(FOCOS.get(foco, ["", "tir"])[1]): 2, "energia": -10, "relacion": 3}),
+			[_op("Aceptas: aprender de él es oro.", {"attr_%s" % String(CarreraPortero.focos_para(j).get(foco, ["", "pos" if j.es_portero() else "tir"])[1]): 2, "energia": -10, "relacion": 3}),
 			_op("Le das las gracias, pero prefieres descansar.", {"energia": 8})], true))
 	var pj_t := int(stats_temp["pj"])
 	if not hitos.has("cesion_%d" % m.anio) and j.edad <= 21 and pj_t >= 6 and float(stats_temp["titular"]) / float(pj_t) < 0.3:

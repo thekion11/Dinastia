@@ -284,6 +284,8 @@ func _avanzar_semana() -> void:
 			"sube" if delta >= 0 else "baja", _dinero(absi(delta))])
 	_partida.autoguardar_si_toca()
 	_refrescar()
+	## El partido simulado también cuenta para la racha del plan.
+	PreguntaPlan.mostrar_si_toca(self, mio)
 
 ## Avanza UN día. Si con eso se pasa del domingo, la semana del motor corre de
 ## verdad -es el único punto donde esto toca la simulación-.
