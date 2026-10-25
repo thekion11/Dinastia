@@ -152,6 +152,7 @@ static func deslizador(vb: VBoxContainer, asp: Dictionary, rotulo_txt: String, c
 	s.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	s.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	s.custom_minimum_size = Vector2(160, 26)
+	estilo_deslizador(s)
 	fila.add_child(s)
 	var val := Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, String(como.call(s.value)))
 	val.custom_minimum_size = Vector2(104, 0)
@@ -161,6 +162,27 @@ static func deslizador(vb: VBoxContainer, asp: Dictionary, rotulo_txt: String, c
 		val.text = String(como.call(v))
 		cambiar.call(clave, v, false))
 	return s
+
+## Pista visible entera + tramo recorrido en oro. Con el tema general la pista vacía casi no se ve sobre el panel
+## oscuro y el tramo recorrido es gris fuerte: un valor centrado («Normal») parecía estar casi al tope.
+static func estilo_deslizador(s: HSlider) -> void:
+	var pista := StyleBoxFlat.new()
+	pista.bg_color = Color(1, 1, 1, 0.14)
+	pista.border_color = Color(1, 1, 1, 0.10)
+	pista.set_border_width_all(1)
+	pista.set_corner_radius_all(4)
+	pista.content_margin_top = 4
+	pista.content_margin_bottom = 4
+	var lleno := StyleBoxFlat.new()
+	lleno.bg_color = Tema.ORO.darkened(0.15)
+	lleno.set_corner_radius_all(4)
+	lleno.content_margin_top = 4
+	lleno.content_margin_bottom = 4
+	s.add_theme_stylebox_override("slider", pista)
+	s.add_theme_stylebox_override("grabber_area", lleno)
+	var lleno_h := lleno.duplicate() as StyleBoxFlat
+	lleno_h.bg_color = Tema.ORO
+	s.add_theme_stylebox_override("grabber_area_highlight", lleno_h)
 
 static func interruptor(vb: VBoxContainer, asp: Dictionary, rotulo_txt: String, clave: String, cambiar: Callable,
 		apagado := false, nota_txt := "") -> void:

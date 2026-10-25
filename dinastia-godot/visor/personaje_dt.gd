@@ -175,9 +175,29 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 	_ojos_vivos(d, Color(String(a["piel"])), Color(String(a.get("ojos", "3d2a1a"))))
 	_accesorios(d, a, c1, c2)
 	var ap: AnimationPlayer = d["anim"]
-	if ap.has_animation("parado"):
-		ap.play("parado")
+	var quieto := parado_persona(d)
+	if quieto != "":
+		ap.play(quieto)
 	return d
+
+## DE PIE COMO UNA PERSONA, NO COMO UN HÉROE (25-10-2026, pedido del dueño): el «parado»
+## del pack es una guardia de combate (brazos separados, puños a medio cerrar). Para el DT
+## se arma una copia en su propia biblioteca («persona/parado», no se toca la de los
+## futbolistas): brazos más pegados al cuerpo y manos abiertas, colgando. Devuelve el
+## nombre de la animación a reproducir.
+static func parado_persona(d: Dictionary) -> String:
+	var ap: AnimationPlayer = d["anim"]
+	if ap.has_animation("persona/parado"):
+		return "persona/parado"
+	if not ap.has_animation("parado") or not d.has("esqueleto"):
+		return "parado" if ap.has_animation("parado") else ""
+	var esq: Skeleton3D = d["esqueleto"]
+	var a := AnimQuaternius._relajar_dedos(ap.get_animation("parado"), esq, 0.85)
+	AnimQuaternius._brazos_al_cuerpo(a, -0.14)
+	var lib := AnimationLibrary.new()
+	lib.add_animation("parado", a)
+	ap.add_animation_library("persona", lib)
+	return "persona/parado"
 
 ## En la banda: mira a la cancha y alterna gestos de entrenador.
 static func poner_en_banda(padre: Node3D, asp: Dictionary, c1: Color, c2: Color, pos: Vector3, giro: float) -> Dictionary:

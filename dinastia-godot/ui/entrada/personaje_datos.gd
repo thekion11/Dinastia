@@ -247,6 +247,10 @@ static func nombre_al_azar(pais: String, mujer: bool, rng: RandomNumberGenerator
 			break
 	return [Nombres.limpiar(par[0]), Nombres.limpiar(par[1])]
 
+const CORTES_SOBRIOS := ["corto", "corto", "fade", "tupe", "flequillo", "ondulado", "rizado", "rapado"]
+## Traje y chándal pesan doble: son lo que lleva un DT en la banda.
+const ROPAS_BANQUILLO := ["traje", "traje", "chandal", "chandal", "polo", "abrigo", "camisa", "sudadera"]
+
 ## Un aspecto al azar que no choca consigo mismo ni con la edad: sin barba en
 ## una mujer, corbata solo con traje o abrigo, manga corta solo donde la hay,
 ## nada de gorra con traje, canas y entradas más probables con los años y, en
@@ -264,6 +268,10 @@ static func aspecto_coherente(rng: RandomNumberGenerator, mujer: int = -1, edad:
 		a["corte_med"] = ""
 	else:
 		a["barba"] = rng.randf() < 0.4
+		## Cortes de un DT de verdad: los llamativos (samurái, rastas, coleta, melena,
+		## afro) quedan para uno de cada diez.
+		if rng.randf() < 0.9:
+			a["pelo"] = CORTES_SOBRIOS[rng.randi() % CORTES_SOBRIOS.size()]
 		if edad >= 50 and rng.randf() < 0.35:
 			a["pelo"] = ["calvo", "rapado", "corto"][rng.randi() % 3]
 		if BibliotecaCaras.hay() and rng.randf() < 0.6:
@@ -280,6 +288,19 @@ static func aspecto_coherente(rng: RandomNumberGenerator, mujer: int = -1, edad:
 		a["color_pelo"] = "9a9a9a" if rng.randf() < 0.6 else "e8e8e4"
 	elif String(a["color_pelo"]) in ["9a9a9a", "e8e8e4"] and edad < 45:
 		a["color_pelo"] = ["0e0b09", "2a1c12", "4a3020", "7a5230"][rng.randi() % 4]
+	## UNA PERSONA NORMAL (25-10-2026): cuerpo sin extremos (la campana de `aleatorio` es
+	## ancha), algo más de barriga con los años, ropa de banquillo casi siempre y los
+	## adornos (pendiente, cadena, pelo rojo) de vez en cuando.
+	for k: String in ["complexion", "hombros", "piernas", "cabeza"]:
+		a[k] = snappedf(clampf(rng.randfn(0.0, 0.22), -0.5, 0.5), 0.05)
+	a["hombros"] = minf(float(a["hombros"]), 0.25)
+	a["barriga"] = snappedf(clampf(rng.randfn(clampf((edad - 35) / 60.0, 0.0, 0.4), 0.2), -0.3, 0.8), 0.05)
+	if rng.randf() < 0.8:
+		a["ropa"] = ROPAS_BANQUILLO[rng.randi() % ROPAS_BANQUILLO.size()]
+	a["pendiente"] = rng.randf() < 0.05
+	a["cadena"] = rng.randf() < 0.04
+	if String(a["color_pelo"]) == "8a2a12" and rng.randf() < 0.7:
+		a["color_pelo"] = "2a1c12"
 	var ropa := String(a["ropa"])
 	a["corbata"] = ropa in CON_CORBATA and rng.randf() < 0.7
 	a["manga_corta"] = ropa in CON_MANGA_CORTA and rng.randf() < 0.35

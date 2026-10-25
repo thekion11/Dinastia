@@ -182,6 +182,7 @@ func _pintar_datos() -> void:
 	s.value = int(_p.get("edad", PersonajeDatos.EDAD_DEFECTO))
 	s.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	s.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	ControlesPersonaje.estilo_deslizador(s)
 	fe.add_child(s)
 	var ve := Tema.etiqueta(Tema.TAM_DESTACADO + 2, Tema.ORO, Idiomas.t("%d años") % int(s.value))
 	ve.custom_minimum_size = Vector2(96, 0)

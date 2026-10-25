@@ -154,7 +154,7 @@ func poner_pais(p: String) -> void:
 	_t = 0.0
 	var nueva := _banderas[1 - _bandera_activa]
 	var vieja := _banderas[_bandera_activa]
-	nueva.texture = Banderas.textura(p)
+	nueva.texture = _difuminada(p)
 	(nueva.material as ShaderMaterial).set_shader_parameter("ola", 1.0 if animar else 0.0)
 	_bandera_activa = 1 - _bandera_activa
 	move_child(nueva, vieja.get_index())
@@ -206,6 +206,18 @@ func _fundir(entra: CanvasItem, a_entra: float, sale: CanvasItem, a_sale: float,
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(entra, "modulate:a", a_entra, dur)
 	tw.tween_property(sale, "modulate:a", a_sale, dur)
+
+## La bandera ya difuminada, para el fondo: se encoge a 8x6 (quedan solo sus manchas de color) y se
+## vuelve a agrandar con interpolación cúbica. Resultado: un degradado de SUS colores sin una arista,
+## valga la forma que valga la bandera; el shader solo le quita las últimas ondulaciones.
+static func _difuminada(p: String) -> ImageTexture:
+	var img := Banderas.textura(p).get_image().duplicate() as Image
+	if img.is_compressed():
+		img.decompress()
+	img.convert(Image.FORMAT_RGBA8)
+	img.resize(8, 6, Image.INTERPOLATE_LANCZOS)
+	img.resize(128, 96, Image.INTERPOLATE_CUBIC)
+	return ImageTexture.create_from_image(img)
 
 ## El resplandor toma el color medio de la bandera, calentado hacia el oro del juego
 ## (el rojo y blanco de Chile dan un rosado que, solo, se ve sucio).

@@ -72,7 +72,7 @@ class _GestosBanda extends Node:
 				ap.play(hay[rng.randi() % hay.size()], 0.3)
 				hasta = maxf(ap.current_animation_length, 1.5)
 				return
-		ap.play("parado", 0.3)
+		ap.play("persona/parado" if ap.has_animation("persona/parado") else "parado", 0.3)
 		hasta = rng.randf_range(3.0, 7.0)
 
 ## Un material de ojos por par piel/iris, compartido (peatones incluidos).
@@ -87,6 +87,14 @@ const BASE_ESBELTA := {
 	"lowerarm_l": Vector3(1.0, 0.88, 0.88), "lowerarm_r": Vector3(1.0, 0.88, 0.88),
 	"thigh_l": Vector3(0.92, 1.0, 0.92), "thigh_r": Vector3(0.92, 1.0, 0.92),
 	"calf_l": Vector3(0.94, 1.0, 0.94), "calf_r": Vector3(0.94, 1.0, 0.94),
+}
+
+## Sobre la base esbelta: menos hombro y pecho, brazo más fino, cuello algo más largo y la
+## cabeza un pelo mayor (la del pack es pequeña, de héroe).
+const PROPORCION_PERSONA := {
+	"spine_03": Vector3(0.94, 1.0, 0.93), "neck_01": Vector3(1.0, 1.06, 1.0), "Head": Vector3(1.04, 1.04, 1.04),
+	"clavicle_l": Vector3(0.9, 0.95, 0.95), "clavicle_r": Vector3(0.9, 0.95, 0.95),
+	"upperarm_l": Vector3(1.0, 0.93, 0.93), "upperarm_r": Vector3(1.0, 0.93, 0.93),
 }
 
 const ASPECTO_NEUTRO := {"complexion": 0.0, "hombros": 0.0, "barriga": 0.0, "piernas": 0.0, "cabeza": 0.0}
@@ -177,6 +185,11 @@ static func _objetivos(a: Dictionary) -> Dictionary:
 	## esbelta (brazos, pecho, cuello y muslos) y encima la complexión elegida.
 	for nombre: String in BASE_ESBELTA:
 		o[nombre] = (o.get(nombre, Vector3.ONE) as Vector3) * (BASE_ESBELTA[nombre] as Vector3)
+	## PROPORCIONES DE PERSONA (25-10-2026): solo el DT (su aspecto lleva «ropa»; los
+	## futbolistas y peatones pasan por `adelgazar` sin ella): hombros y pecho de oficina.
+	if a.has("ropa"):
+		for nombre: String in PROPORCION_PERSONA:
+			o[nombre] = (o.get(nombre, Vector3.ONE) as Vector3) * (PROPORCION_PERSONA[nombre] as Vector3)
 	return o
 
 static func _cuerpo(d: Dictionary, a: Dictionary, con_guardian := true) -> void:
