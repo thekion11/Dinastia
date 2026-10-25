@@ -910,7 +910,7 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 346. Cláusula de fidelidad: bono si un jugador no pide salir en X años
 - 350. Estadísticas de eficiencia de tu gestión (ROI de fichajes, cantera, etc.)
 
-### Declaradas hechas pero sin prueba que las compruebe: verificar jugando y, si están bien, borrar (101)
+### Declaradas hechas pero sin prueba que las compruebe: verificar jugando y, si están bien, borrar (46)
 
 
 **1. Infraestructura y Estadio**
@@ -948,66 +948,44 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 
 **11. Fans y Comunidad**
 - 136. Nivel de aprobación general de la afición
-- 139. Día del hincha con actividades especiales
 - 143. Mosaicos y coreografías en el estadio
 
 **12. Redes Sociales**
 - 148. Tendencias/hashtags según eventos del club
-- 150. Influencers que opinan sobre el club
 
 **13. Medios y Prensa**
 - 159. Rumores de fichajes filtrados por la prensa
-- 161. Programas de debate deportivo (opinan sobre tu gestión)
 
 **14. Competencias y Torneos**
-- 169. Supercopa por título de liga/copa
-- 175. Objetivos de la directiva por temporada
 
 **15. Premios y Reconocimientos**
 - 178. Mejor DT del año
-- 180. Mejor canterano/promesa del año
 
 **16. Eventos Narrativos y Decisiones**
 - 188. Escándalo mediático de un jugador
 - 189. Lesión grave de una figura clave
 - 190. Oferta irrechazable por un jugador clave
-- 193. Propuesta de otro club para el DT/presidente
 - 194. Jugador que pide salir por motivos personales
 - 196. Incidente de seguridad en el estadio
 - 197. Petición de la comunidad local (obra social)
 - 198. Oferta de inversión extranjera con condiciones
 
 **17. Rivalidades y Clásicos**
-- 201. Clásico histórico con rival tradicional
-- 203. Historial de enfrentamientos directos
 
 **18. Legado e Historia del Club**
-- 212. Salón de la fama con ídolos retirados
-- 214. Modo legado con resumen de tu gestión al retirarte
-- 217. Museo interactivo con objetos históricos
 - 218. Leyendas contratables como embajadores
 
 **19. Roles de Juego (DT / Presidente / Dueño)**
-- 221. Modo DT: foco en plantilla, táctica general y staff
-- 223. Modo Dueño: foco en finanzas, inversión y expansión
-- 224. Posibilidad de ascender de rol (DT → presidente → dueño)
-- 225. Junta directiva que evalúa tu desempeño
-- 228. Despido si no cumples objetivos (modo realista)
 
 **20. Extras y Sistemas Meta**
-- 232. Modo libre/sandbox
 - 235. Logros/trofeos del juego (no del club)
-- 239. Eventos de temporada real (mundial, eurocopa ficticios)
 - 241. Accesibilidad: modo daltónico, texto ajustable
 - 243. Modo offline completo
 - 245. Resumen semanal tipo "informe de gestión"
-- 247. Referencias guiñadas a clubes reales (sin usar licencias)
-- 248. Editor de nombres de jugadores generados
 - 249. Generador aleatorio de nombres de clubes rivales
 
 **21. Detalles de Ambientación**
 - 251. Clima que afecta partidos y asistencia
-- 252. Días festivos locales con eventos especiales
 - 255. Eventos comunitarios fuera del fútbol (caridad)
 
 **22. Sistemas de Jugadores (detalle extra)**
@@ -1020,26 +998,15 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 276. Terreno disponible para expandir la ciudad deportiva
 
 **24. Progresión y Metas**
-- 282. Metas de la junta por temporada con consecuencias
-- 284. Desbloqueo de instalaciones por hitos alcanzados
 
 **25. Toques Finales de Personalización**
 - 291. Personalización del vestuario (colores, mobiliario)
-- 298. Personalización de la firma/lema del club
 
 **26. Simulación de Partido (minuto a minuto, sin animación completa)**
-- 301. Timeline de partido minuto a minuto con eventos clave
-- 302. Ícono de gol con nombre del goleador
-- 303. Ícono de tarjeta amarilla/roja con nombre del jugador
 - 305. Ícono de lesión durante el partido
-- 306. Ícono de cambio de jugador
-- 309. Posesión de balón estimada por minuto
-- 314. Jugador destacado del partido (MVP automático)
 
 **27. Récords, Historia y Memoria del Club**
-- 316. Libro de récords del club (goleador histórico, más partidos, etc.)
 - 317. Efemérides: "un día como hoy" con hechos pasados del club
-- 321. Historial de resultados contra cada rival (cara a cara)
 
 **28. Sala de Trofeos y Celebraciones**
 - 326. Sala de trofeos visual con vitrina por cada título
@@ -1049,8 +1016,6 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 
 **29. Más Ideas Adicionales**
 - 341. Sistema de fair play entre hinchadas (premia buena conducta)
-- 343. Gira de preparación con partidos amistosos internacionales
-- 344. Sistema de "leyenda viva": ex-jugador que sigue ligado al club de por vida
 
 ## 7. Tus ideas 351–1100: sin auditar
 

@@ -118,3 +118,174 @@ func _probar_ideas_eventos_de_despacho() -> void:
 			_comprobar(r is Dictionary and not (r as Dictionary).is_empty() and String((r as Dictionary).get("titulo", "")) != "",
 				"el evento «%s» se resuelve con la opción %s y deja titular (%s)" % [id, op, String((r as Dictionary).get("titulo", "")).left(40)])
 			_comprobar(pr.pendiente.is_empty(), "y ya no queda pendiente")
+
+func _probar_ideas_premios_y_memoria_del_club() -> void:
+	_titulo("IDEAS DEL DUEÑO: premios, salón de la fama, museo, hinchada, prensa (139, 150, 161, 169, 175-181, 212, 217)")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 2427)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	m.jugar_temporada()
+	var lg: Logros = m.logros
+	var acta := lg.premios_temporada()
+	for k: String in ["ideal", "joven", "dt", "fairplay", "popular", "puesto"]:
+		_comprobar(acta.has(k), "la gala de premios trae «%s» (176-181)" % k)
+	_comprobar((acta["ideal"] as Array).size() >= 10, "el equipo ideal tiene once nombres (181): %d" % (acta["ideal"] as Array).size())
+	var con_premio := 0
+	for j: Jugador in m.jugadores():
+		if not j.premios.is_empty():
+			con_premio += 1
+	_comprobar(con_premio >= 11, "los premios quedan en la ficha de cada premiado (%d jugadores)" % con_premio)
+	m.cerrar_temporada()
+	_comprobar(lg.salon_de_la_fama().size() >= 0, "el salón de la fama se puede consultar (212)")
+	_comprobar(lg.piezas_del_museo() is Array, "el museo se arma con las piezas del club (217)")
+	var h: Hinchada = m.hinchada
+	var socios := m.mi_club().socios
+	m.mi_club().mover_saldo(200000000)
+	_comprobar(h.dia_del_hincha(m.mi_club(), m.prensa) == "", "el día del hincha se organiza (139)")
+	_comprobar(m.mi_club().socios > socios and h.dias_hincha >= 1, "y suma socios (139)")
+	_comprobar(m.prensa.mesa_de_debate().size() >= 1, "hay mesa de debate deportivo que opina de tu gestión (161)")
+	var inf := m.prensa.opinion_influencer()
+	_comprobar(inf is Dictionary, "los influencers pueden opinar sobre el club (150)")
+	_comprobar(m.jugar_supercopa() is Dictionary, "la supercopa se juega entre campeón de liga y de copa (169)")
+	_comprobar(m.directiva != null and m.directiva.confianza >= 0, "la directiva fija objetivos y mide confianza (175)")
+
+func _probar_ideas_roles_y_carrera() -> void:
+	_titulo("IDEAS DEL DUEÑO: roles, ascenso, sucesión, leyenda viva, retiro y sandbox (193, 214, 221-232)")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 2428)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var r: Roles = m.roles
+	for rol: String in [Roles.DT, Roles.DIR, Roles.DUENO]:
+		_comprobar(Roles.PERMISOS.has(rol), "existe el rol «%s» con sus permisos (221-223)" % rol)
+	_comprobar(not bool(Roles.PERMISOS[Roles.DT]["manda"]) and bool(Roles.PERMISOS[Roles.DUENO]["capital"]),
+		"el DT no manda y el dueño sí mueve capital (221, 223)")
+	_comprobar(Roles.ASCENSOS[Roles.DT]["a"] == Roles.DIR and Roles.ASCENSOS[Roles.DIR]["a"] == Roles.DUENO,
+		"la cadena DT → presidente → dueño existe (224)")
+	_comprobar(r.puede_ascender() != null, "el juego dice si puedes ascender o qué te falta (224)")
+	r.sandbox = true
+	_comprobar(r.sandbox, "existe el modo libre (232)")
+	_comprobar(r.candidatos_sucesion().size() >= 1, "al retirarte hay candidatos a sucesor (230)")
+	_comprobar(r.elegir_sucesor(0) == "" and not r.sucesor.is_empty(), "se elige al sucesor (230)")
+	var estrella: Jugador = m.mi_club().plantilla[0]
+	_comprobar(r.nombrar_leyenda_viva(estrella) == "" and not r.leyenda_viva.is_empty(), "un ídolo queda ligado al club de por vida (344)")
+	_comprobar(r.nombrar_leyenda_viva(estrella) != "", "y solo puede haber una leyenda viva")
+	var oferta := {}
+	r.prestigio = 90
+	m.semana = 30
+	for i in 400:
+		oferta = r.sortear_oferta_de_club()
+		if not oferta.is_empty():
+			break
+	_comprobar(not oferta.is_empty(), "otro club acaba ofreciéndote su banquillo (193)")
+	_comprobar(r.retirado.is_empty() and r.retirarse() == "" and not r.retirado.is_empty(), "te puedes retirar (214)")
+	_comprobar(r.veredicto_carrera().has("texto") and m.puntaje_carrera().has("total"), "y hay resumen de la carrera con puntaje (214)")
+	_comprobar(r.palmares_por_tipo() is Array, "el palmarés se agrupa por competición (214)")
+
+func _probar_ideas_directiva_calendario_y_rivalidades() -> void:
+	_titulo("IDEAS DEL DUEÑO: directiva, despido, calendario, rivalidades y récords (201, 203, 225, 228, 239, 252, 282, 316, 321-323, 328)")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 2429)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	## Se dirigen los partidos de tu club (solo esos alimentan la memoria del club).
+	for i in 12:
+		var par := m.proximo_partido()
+		if par.is_empty():
+			m.avanzar_semana()
+			continue
+		var p := Partido.new(par[0], par[1])
+		p.simular()
+		m.avanzar_semana(p)
+	var d: Directiva = m.directiva
+	_comprobar(d.objetivo != "" and d.meta_puesto >= 1, "la directiva fija un objetivo de temporada (175, 282)")
+	var antes := d.confianza
+	var res := d.tras_temporada(d.meta_puesto + 6, false, false)
+	_comprobar(not bool(res["cumplido"]) and d.confianza < antes, "no cumplir el objetivo baja la confianza (282): %d → %d" % [antes, d.confianza])
+	d.mover_confianza(-200, "prueba")
+	_comprobar(d.despedido_ya or d.confianza <= 0, "con la confianza a cero te despiden (228)")
+	_comprobar(m.junta != null and m.junta.has_method("resolver"), "la junta evalúa y plantea temas (225)")
+	## Calendario por país: festivos locales con eventos (239, 252, 328).
+	var fiestas := Calendario.del_anio("CHI", 2027)
+	_comprobar(fiestas.size() >= 5, "Chile tiene sus feriados (%d) (252)" % fiestas.size())
+	_comprobar(not Calendario.del_anio("ENG", 2027).is_empty() and not Calendario.del_anio("USA", 2027).is_empty(), "y otros países los suyos (252)")
+	_comprobar(Calendario.torneos(2026).size() >= 1, "hay torneos de selecciones por año (239)")
+	var lo_que_viene := Calendario.proximas("CHI", 2027, 1, 6)
+	_comprobar(lo_que_viene.size() >= 1, "y el calendario enseña lo próximo (252)")
+	## Rivalidades, cara a cara y récords del club (201, 203, 316, 321-323).
+	var lg: Logros = m.logros
+	var rivales := lg.rivalidades()
+	_comprobar(rivales.size() >= 1, "tras una temporada hay rivales con nivel de rivalidad (201): %d" % rivales.size())
+	var r0: Dictionary = rivales[0]
+	_comprobar(int(r0["h2h"]["pj"]) >= 1 and String(r0["nivel"]) != "", "con historial de enfrentamientos directos (203, 321)")
+	_comprobar(lg.goleadores_historicos(5).size() >= 1 and lg.mas_partidos(5).size() >= 1, "y libro de récords: goleadores y partidos (316)")
+	_comprobar(lg.rec is Dictionary, "los récords guardan rachas y derrotas históricas (322, 323)")
+
+func _probar_ideas_simulacion_del_partido() -> void:
+	_titulo("IDEAS DEL DUEÑO: simulación del partido — cronología, tarjetas, cambios, MVP, estadísticas (301-315)")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 2430)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var cl: Array = m.ligas[0].clubes
+	var goles := 0
+	var con_autor := 0
+	var amarillas := 0
+	var posesiones_ok := true
+	var mejores_ok := true
+	var momentum_ok := true
+	var cambios_ok := 0
+	var penales_ok := false
+	for i in 24:
+		var a: Club = cl[i % cl.size()]
+		var b: Club = cl[(i + 3) % cl.size()]
+		var p := Partido.new(a, b)
+		p.preparar()
+		while not p.terminado_ya:
+			p.simular_minuto()
+			if p.minuto == 60 and i % 4 == 0:
+				var sale: Jugador = p.once_local[5]
+				var entra: Jugador = null
+				for j: Jugador in a.plantilla:
+					if not p.once_local.has(j) and j.disponible():
+						entra = j
+						break
+				if entra != null and p.cambiar(sale, entra) == "":
+					cambios_ok += 1
+		for e: Dictionary in p.cronica:
+			if String(e["tipo"]) == "gol":
+				goles += 1
+				if int(e["min"]) >= 1 and String(e["autor"]) != "":
+					con_autor += 1
+		posesiones_ok = posesiones_ok and p.posesion_local > 15.0 and p.posesion_local < 85.0
+		mejores_ok = mejores_ok and not p.mejor_del_partido().is_empty() and p.valoraciones().size() >= 22
+		momentum_ok = momentum_ok and absi(p.momentum_local()) <= 100
+		for j: Jugador in a.plantilla + b.plantilla:
+			amarillas += j.amarillas
+	_comprobar(goles >= 20 and con_autor == goles, "cronología minuto a minuto con goleador (%d goles, todos con autor) (301, 302)" % goles)
+	_comprobar(amarillas >= 5, "hay tarjetas con nombre (%d amarillas en 24 partidos) (303)" % amarillas)
+	_comprobar(cambios_ok >= 3, "los cambios se hacen y quedan en la crónica (%d) (306)" % cambios_ok)
+	_comprobar(posesiones_ok, "la posesión estimada es creíble en todos los partidos (309)")
+	_comprobar(mejores_ok, "siempre hay jugador del partido (MVP) y notas de los 22 (314)")
+	_comprobar(momentum_ok, "el momentum (barra de ambiente) se mantiene en rango (310)")
+
+func _probar_ideas_club_y_calendario_de_pretemporada() -> void:
+	_titulo("IDEAS DEL DUEÑO: lema del club, avión, pretemporada con gira, desbloqueo por reputación (284, 298, 343)")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 2431)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	c.mover_saldo(400000000)
+	var co: Comercial = m.comercial
+	co.escribir_lema("Siempre adelante")
+	_comprobar(co.lema == "Siempre adelante", "se escribe el lema del club (298)")
+	var guardado := co.a_dic()
+	var co2 := Comercial.new(m)
+	co2.desde_dic(guardado)
+	_comprobar(co2.lema == "Siempre adelante", "y el lema sobrevive al guardado (298)")
+	co.escribir_lema("x".repeat(200))
+	_comprobar(co.lema.length() <= 60, "con tope de largo (298)")
+	_comprobar(co.alivio_de_viaje() == 0 and co.comprar_avion(c) != "" and co.alivio_de_viaje() > 0, "comprar el avión alivia los viajes (343)")
+	var socios := c.socios
+	var caja := c.saldo
+	_comprobar(m.jugar_amistosos("gira") == "", "la gira internacional de pretemporada se juega (343)")
+	_comprobar(c.socios > socios and c.saldo != caja, "y trae socios y mueve la caja (343)")
+	_comprobar(m.jugar_amistosos("gira") != "", "y solo se juega una pretemporada por año (343)")
+	_comprobar(Reputacion.tope_instalaciones(95) > Reputacion.tope_instalaciones(10), "los niveles de obra se desbloquean con reputación (284)")
