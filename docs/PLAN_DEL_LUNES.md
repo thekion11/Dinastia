@@ -266,7 +266,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] 143 funciones de más de 100 líneas (21 de más de 200). Las mayores: `Principal._construir` 403, `Sonido._sintetizar_g1/g2` ~384, `Banco._probar_tanda_c_1` 382, `Mundo.avanzar_semana_1` 379, `Principal._conectar_noticias_1` 376, `Prensa.resolver_1` 372, `StadiumBuilder.build_1` 365. Partir por responsabilidad, no por tamaño.
 - [ ] Capas `_pN` (233 archivos): repartir por responsabilidad real hasta que la herencia en cadena ya no haga falta (`docs/05_referencia/indice_de_capas.md`).
 - [ ] `ui/principal.gd`: de objeto gigante en 19 capas a clases con interfaz mínima (ver 2.2).
-- [ ] Texturas: 3.103 sin comprimir; comprimir en VRAM `caras_reales_*` y `assets/characters`; bajar a 2048 las 23 de ≥ 2048 px (T_Peasant_*, tierra 4k); 38 duplicados exactos (reapuntar `.import`). Medir antes/después en Forward+.
+- [ ] Texturas (medido el 24-10): de las 3.103 sin pérdida, 2.535 son caras reales (prohibido tocarlas sin tu OK), 494 iconos de botones y 40 escudos especiales; el resto ya está comprimido. Hecho: 4 texturas normal/roughness de personajes a 1024 px (−48 MB estimados). DECISIÓN DEL DUEÑO: probar BC7 de alta calidad en una muestra de caras y medir ΔE de piel antes de generalizar; identificar ~24 texturas dinámicas de 1024² sin nombre (~100 MB); reapuntar 38 duplicados (ahorra disco, no VRAM).
 - [ ] `_process`: pasar `dibujo_mando`/`MandoGiratorio` a setters con `queue_redraw()`; oclusión en más zonas de la ciudad.
 - [ ] 53 escenas de prueba sin ninguna mención: decidir cuáles se borran; 27 módulos de `visor/` y 8 de `nucleo/` sin prueba directa.
 - [ ] `pruebas/estres_menus.tscn` no termina en headless (¿ya pasaba antes?).
