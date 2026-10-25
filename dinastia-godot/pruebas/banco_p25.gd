@@ -313,3 +313,57 @@ func _probar_ideas_dinero_ciudad_y_lesiones() -> void:
 			if j.lesion > 0:
 				lesionados += 1
 	_comprobar(lesionados >= 1, "tras 30 partidos hay jugadores lesionados con semanas fuera (%d) (189, 305)" % lesionados)
+
+func _probar_ideas_tribunal_antidopaje_y_asamblea() -> void:
+	_titulo("IDEAS DEL DUEÑO (811-841): tribunal, apelaciones, antidopaje y asamblea de la liga")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 2433)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	c.mover_saldo(300000000)
+	var fed: Federacion = m.federacion
+	var j: Jugador = c.plantilla[0]
+	## Tribunal de disciplina: abre expediente, suspende y se puede apelar una sola vez.
+	var caso := fed.abrir_caso("roja", j, 3, "entrada dura", m.anio, 5)
+	_comprobar(caso["estado"] == "firme" and j.suspension >= 3, "un expediente deja al jugador suspendido (3 fechas)")
+	_comprobar(fed.casos.size() == 1 and fed.casos[0]["id"] == caso["id"], "y queda en el historial del tribunal")
+	var caja := c.saldo
+	var ap := fed.apelar(String(caso["id"]), c, 60)
+	_comprobar(ap == "" or ap.length() > 0 and caso["apelado"] == true, "se puede apelar: %s" % ap.left(40))
+	_comprobar(c.saldo < caja, "y la apelación cuesta honorarios")
+	_comprobar(fed.apelar(String(caso["id"]), c, 60) != "", "pero no dos veces el mismo expediente")
+	_comprobar(fed.apelar("no_existe", c, 60) != "", "un expediente inexistente se rechaza")
+	## Antidopaje: casi nunca pasa nada; si pasa, hay registro.
+	var controles := 0
+	for i in 600:
+		var r := fed.control_antidopaje(c, m.anio, i % 38 + 1)
+		if not r.is_empty():
+			controles += 1
+	_comprobar(controles >= 1 and fed.controles.size() >= 1, "el control antidopaje salta alguna vez y deja registro (%d controles en 600 semanas)" % controles)
+	_comprobar(controles < 200, "y es infrecuente (no más de uno de cada tres semanas)")
+	## Asamblea: cada moción, al aprobarse, fija su regla.
+	var reglas := {"tvigual": "reparto_tv", "juveniles": "cupo_juvenil", "extranjeros": "tope_extranjeros", "playoffs": "playoffs",
+		"fpf": "fpf_activo", "desempate": "desempate_directo", "promocion": "promocion"}
+	for id: String in reglas:
+		var f2 := Federacion.new()
+		var texto := f2._aplicar_mocion(id, true, "a", c)
+		_comprobar(texto != "" and not texto.begins_with("La moción no"), "la moción «%s» aprobada produce efecto: %s" % [id, texto.left(48)])
+	var f3 := Federacion.new()
+	_comprobar(f3._aplicar_mocion("playoffs", false, "a", c).begins_with("La moción no") and not f3.playoffs, "una moción rechazada no cambia nada")
+	var f4 := Federacion.new()
+	var c0 := c.saldo
+	f4._aplicar_mocion("superliga", true, "a", c)
+	_comprobar(f4.superliga and c.saldo > c0, "la superliga paga prima solo si te subes")
+	var f5 := Federacion.new()
+	var c1 := c.saldo
+	f5._aplicar_mocion("superliga", true, "b", c)
+	_comprobar(c.saldo == c1, "y si votas que no, no cobras")
+	var f6 := Federacion.new()
+	var abierta := {}
+	for i in 300:
+		abierta = f6.abrir_votacion()
+		if not abierta.is_empty():
+			break
+	_comprobar(not abierta.is_empty() and abierta.has("id"), "la federación acaba convocando una votación")
+	var res := f6.votar("a", c, m.ligas[0].clubes)
+	_comprobar(not res.is_empty(), "y se puede votar con la asamblea de la liga")
