@@ -26,6 +26,8 @@ const CLIMA_PARTIDO := {
 	"viento":    {"oscuro": 0.08, "niebla": 0.05},
 	"calor":     {"oscuro": 0.0,  "niebla": 0.10},
 	"frio":      {"oscuro": 0.20, "niebla": 0.18},
+	## `Mundo.clima()` lo escribe con tilde: sin esta fila el frío salía «despejado».
+	"frío":      {"oscuro": 0.20, "niebla": 0.18},
 	"niebla":    {"oscuro": 0.30, "niebla": 0.75},
 }
 

@@ -24,6 +24,8 @@ const DE_CORTE := {
 	"largo": ["Hair_Long", 1.0], "melena": ["Hair_Long", 1.0], "rastas": ["Hair_Long", 1.0],
 	"trenzas": ["Hair_Long", 1.0], "mullet": ["Hair_Long", 1.0],
 	"coleta": ["Hair_Buns", 1.0], "samurai": ["Hair_Buns", 1.0],
+	## El «moño» de `CaraDT.CORTES` (creador del DT): sin fila caía en la raya al lado.
+	"moño": ["Hair_Buns", 1.0],
 	"calvo": ["", 1.0],
 }
 

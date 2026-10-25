@@ -9,6 +9,10 @@ signal modo_cambiado(es_jugador: bool)
 signal disparo_efectuado(potencia: float)
 signal pase_efectuado(destino: Vector3)
 
+## El jugador MIRA A +Z (como en `MatchPlayback`: `rotation.y = atan2(v.x, v.z)`).
+## Su delante es `+basis.z`, y para encararlo a un punto, `look_at(..., true)`.
+## (25-10, f0m: aquí se usaba -Z: el balón se conducía a la espalda, los pases
+## salían hacia atrás y al tirar se quedaba de espaldas al arco.)
 const MEDIO_LARGO := 52.5
 const MEDIO_ANCHO := 34.0
 
@@ -178,7 +182,7 @@ func _process(delta: float) -> void:
 
 		# Arrastrar balón con toques de conducción si tiene posesión
 		if tiene_posesion and is_instance_valid(balon):
-			var fwd := -node.global_transform.basis.z.normalized()
+			var fwd := node.global_transform.basis.z.normalized()
 			var pos_b := node.global_position + fwd * 0.72 + Vector3(0, 0.11, 0)
 			balon.global_position = balon.global_position.lerp(pos_b, 12.0 * delta)
 	else:
@@ -241,7 +245,7 @@ func _ejecutar_pase_corto() -> void:
 	if not is_instance_valid(balon):
 		return
 	var node: Node3D = jugador_activo["node"]
-	var fwd := -node.global_transform.basis.z.normalized()
+	var fwd := node.global_transform.basis.z.normalized()
 
 	# Buscar compañero en la dirección a la que mira el jugador
 	var mejor_dest: Dictionary = {}
@@ -277,7 +281,7 @@ func _ejecutar_pase_largo() -> void:
 	if not is_instance_valid(balon):
 		return
 	var node: Node3D = jugador_activo["node"]
-	var fwd := -node.global_transform.basis.z.normalized()
+	var fwd := node.global_transform.basis.z.normalized()
 	var target_pos := node.global_position + fwd * 24.0
 	target_pos.x = clampf(target_pos.x, -32.0, 32.0)
 	target_pos.z = clampf(target_pos.z, -50.0, 50.0)
@@ -302,7 +306,7 @@ func _ejecutar_disparo(potencia: float) -> void:
 	if is_instance_valid(ap) and ap.has_animation("patear"):
 		ap.play("patear")
 
-	node.look_at(Vector3(0, node.position.y, z_arco), Vector3.UP)
+	node.look_at(Vector3(0, node.position.y, z_arco), Vector3.UP, true)
 	var es_gol: bool = absf(x_offset) < 3.2 and y_dest < 2.35
 	balon.enviar(target_tiro, clampf(0.9 - potencia * 0.3, 0.45, 0.9), 0.5, es_gol)
 
@@ -323,5 +327,5 @@ func _ejecutar_barrida() -> void:
 	var ap: AnimationPlayer = jugador_activo.get("anim")
 	if is_instance_valid(ap) and ap.has_animation("falta_barrida"):
 		ap.play("falta_barrida")
-	var fwd := -node.global_transform.basis.z.normalized()
+	var fwd := node.global_transform.basis.z.normalized()
 	node.position += fwd * 2.4

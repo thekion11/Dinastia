@@ -104,8 +104,11 @@ static func terminar(d: Dictionary) -> void:
 		ap.play("caminar")
 		ap.seek(rng.randf() * ap.current_animation_length, true)
 		ap.speed_scale = rng.randf_range(0.9, 1.1)
-	## Lejos de la cámara no se dibuja (ni su sombra).
+	## Lejos de la cámara no se dibuja (ni su sombra). Las cejas 3D conservan su
+	## alcance corto (`PeloQ.DIST_CEJAS`): a más distancia no llegan a un píxel.
 	for mi in nodo.find_children("*", "MeshInstance3D", true, false):
+		if String(mi.name).begins_with("Eyebrows"):
+			continue
 		(mi as MeshInstance3D).visibility_range_end = 120.0
 		(mi as MeshInstance3D).visibility_range_end_margin = 20.0
 

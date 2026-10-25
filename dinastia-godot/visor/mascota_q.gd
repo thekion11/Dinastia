@@ -71,6 +71,9 @@ static func crear(root: Node3D, c: Club, animal: String, pos: Vector3, giro_y: f
 	nodo.add_child(ctl)
 	return nodo
 
+## Lo que duró el paseo de ida (-1 si el próximo es una ida).
+var _ida := -1.0
+
 func _gesto() -> void:
 	if _ap == null:
 		return
@@ -101,6 +104,11 @@ func _process(delta: float) -> void:
 		var fwd: Vector3 = _cuerpo.global_transform.basis.z.normalized()
 		_cuerpo.position += fwd * 1.1 * delta
 	if _t >= _hasta:
+		if _caminando and _cuerpo != null:
+			## Lo andado de más en el último fotograma se descuenta: así la vuelta
+			## deshace la ida exacta (25-10, f0m: tras 10 min se había ido 3,4 m).
+			var fwd_fin: Vector3 = _cuerpo.global_transform.basis.z.normalized()
+			_cuerpo.position -= fwd_fin * 1.1 * (_t - _hasta)
 		_t = 0.0
 		if _caminando:
 			_caminando = false
@@ -113,6 +121,13 @@ func _process(delta: float) -> void:
 			_cuerpo.rotation.y = _giro0 + PI * 0.5 * _dir
 			_dir = -_dir
 			_ap.play("caminar")
-			_hasta = _rng.randf_range(2.5, 4.0)
+			## La vuelta dura lo mismo que la ida: si no, cada par de paseos lo
+			## dejaba corrido y a lo largo del partido se iba de su sitio.
+			if _ida < 0.0:
+				_ida = _rng.randf_range(2.5, 4.0)
+				_hasta = _ida
+			else:
+				_hasta = _ida
+				_ida = -1.0
 		else:
 			_gesto()
