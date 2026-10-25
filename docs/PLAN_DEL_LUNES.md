@@ -507,8 +507,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-054 | P1 | PENDIENTE | Ropa con volumen sólo en retratos (K-02) | `VestidorQ.ropa_aparte` sigue apagado en partido por coste |
 | M-055 | P1 | PARCIAL | Sin arrugas dinámicas según animación | pliegues de tela estáticos (`pliegues()` en el shader); no dependen de la animación |
 | M-058 | P1 | PARCIAL | 30 marcas de patrocinio (K-03) | 38 marcas en `Auspicio` (antes 30); meta 70 |
-| M-063 | P1 | PENDIENTE | Escudos reales sólo 26 (7 %) | `ESCUDOS` sigue con 26 clubes |
-| M-068 | P1 | PENDIENTE | Diseño de camiseta por hash en el 63 % de clubes (ya hay tabla… | `CAMISETAS` con 63 clubes |
 | M-079 | P1 | PENDIENTE | Retrato real 13 % (base real) | 13 % con retrato real; descarga bloqueada por la red |
 | M-091 | P1 | PARCIAL | Botines: variedad añadida, pero sin modelos distintos por forma | `VestidorQ._botin_de` varía modelo/color por dorsal; no hay mallas de bota alta/calcetín |
 | M-094 | P1 | PARCIAL | Animación de caminata del DT: 6 estilos (✅) | «Mi caminata» con 6 estilos para el DT; peatones y jugadores no |
@@ -527,7 +525,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-061 | P2 | PENDIENTE | Sin patrocinador en la parte trasera del pantalón ni en las medias | sin zonas `short_trasero`/`medias` |
 | M-064 | P2 | PENDIENTE | Falta ornamento reconocible (león, águila, estrella, castillo,… | sin biblioteca de símbolos (solo el almenado) |
 | M-065 | P2 | PENDIENTE | Texto/iniciales ilegibles <24 px | sin prueba de legibilidad a 24 px |
-| M-066 | P2 | PENDIENTE | Escudo sin variante monocroma (para periódico, marcador) | sin `Escudo.mono` |
 | M-067 | P2 | PENDIENTE | Sin escudo animado en el marcador al gol | sin pulso del escudo en el marcador |
 | M-069 | P2 | PENDIENTE | 12 diseños con reparto casi uniforme (C-06) | sin pesos en el reparto de diseños |
 | M-070 | P2 | PENDIENTE | Sin segunda/tercera camiseta con diseño propio | sin tercera equipación |
@@ -1089,11 +1086,8 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 **35. Lesiones y Medicina Deportiva**
 - 516. Catálogo amplio de lesiones con tiempos de recuperación distintos — _Medico.catalogo().size()==22; lesionar(j,GRAVE) devuelve semanas dentro del rango de una fila_
 - 517. Diferenciación entre lesiones musculares, articulares y óseas — _Medico.ficha(j)['clase'] tras lesionar_
-- 518. Recaídas si se apura el regreso a las canchas — _Lesionar, poner lesion=0 y fisico=30, repetir chequeo_de_recaida hasta recaer_
-- 519. Porcentaje de recuperación visible, no solo días restantes — _Medico.pct_recuperado(j) tras lesionar 10 sem y bajar lesion a 5 => 50_
 - 520. Rasgo de jugador propenso a lesionarse — _riesgo_por_fatiga(j fragil) > riesgo de uno normal_
 - 521. Historial médico que afecta el valor de mercado — _Medico.lesionar graves x2 => j.valor baja ~15%_
-- 524. Segunda opinión médica con pronóstico distinto — _Medico.segunda_opinion(j,club) devuelve plazo; segunda llamada devuelve error_
 - 525. Médico del club con nivel de competencia propio y mejorable — _Staff.subir('medico') baja semanas de lesionar()_
 - 529. Lesión sufrida durante una gira de selección nacional — _Selecciones._fecha_fifa con jugador convocado muchos partidos => vuelve_tocado_
 - 530. Lesión larga que obliga a un fichaje de emergencia — _Roles.abrir_emergencia(id) => ventana_abierta y puede_fichar libre con mercado cerrado_
@@ -1102,15 +1096,12 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 535. Fatiga acumulada como variable distinta de la forma física — _riesgo_por_fatiga depende de fisico y no de forma_
 - 537. Descanso programado como herramienta preventiva — _Entrenamiento.fijar_dia(i,'descanso') baja carga_riesgo_
 - 539. Enfermedades no deportivas que arruinan una semana de trabajo — _Medico.lesionar con fila de clase enfermedad_
-- 540. Brote en el plantel que obliga a jugar con juveniles — _Medico.iniciar_brote(club,6,2) pone lesion en 6 jugadores y Club.once() sigue devolviendo 11_
 - 541. Estadística de días perdidos por lesión en la temporada — _Medico.lesionar(jugador propio) aumenta dias_perdidos_
 - 542. Comparativa de tu departamento médico contra el resto de la liga — _Medico.ranking_liga(club, liga)['puesto'] entre 1 y total_
 - 543. Rehabilitación con progreso visible semana a semana — _Medico.rehabilitacion(j) descuenta 1 semana y baja terapia_
 
 **36. Vestuario, Psicología y Dinámica de Grupo**
 - 546. Jerarquía de vestuario visible (líderes, influyentes, periféricos) — _Vestuario.armar() y clan_de(j)['lider']_
-- 547. Grupos internos y camarillas dentro del plantel — _Vestuario.armar(); clan_por_id; chequeo_clanes tras sentar al líder_
-- 548. Conflictos entre jugadores que debes mediar — _Vestuario.mediar(id) devuelve {ok,txt} y cambia moral/humor_
 - 550. Jugador que se queja por falta de minutos — _Vestuario._chequeo_roles con jugador 'titular' que juega poco emite rol_incumplido_
 - 551. Jugador que pide expresamente salir del club — _Vestuario.resolver_solicitud(true) con solicitud 'salida' marca transferible_
 - 556. Elección de capitán y vicecapitán con efecto real en el grupo — _Vestuario.votar_capitan() asigna capitán y 'capitan' en solicitud lo cambia_
@@ -1120,7 +1111,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 564. Multas internas por indisciplina — _Mundo.normas['multas']=true y _suceso_lio descuenta sueldo*MULTA_SEMANAS_
 - 565. Reglamento interno del club configurable por ti — _Mundo.normas[clave] activa/desactiva y afecta _suceso_lio_
 - 566. Fiestas y escándalos extradeportivos con consecuencias — _Vestuario.suceso_semanal()['tipo'] ∈ {lio,arenga,racha,joya,cumple}_
-- 568. Apoyo psicológico que recupera a un jugador hundido — _Vestuario.dar_terapia(j) baja ansiedad y descuenta saldo_
 - 569. Extranjero que no se adapta al país y pide volver — _Cantera.chequeo_promesas con promesa incumplida => j.pide_salir (si no hay traductor)_
 - 572. Compañero del mismo país que facilita la adaptación — _Cantera.prometer_compatriota(j); chequeo_promesas con compatriota => moral +8_
 - 574. Efecto de tus declaraciones públicas sobre el ánimo interno — _Prensa.responder(opcion) devuelve moral/confianza y mueve moral del plantel_
@@ -1254,14 +1244,10 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 806. Errores arbitrales que generan polémica y narrativa — _Partido.simular con árbitro 'estricto' genera decision_arbitral_
 - 807. Sanción por reclamar públicamente contra el arbitraje — _Prensa.resolver('reclamo') con Azar fijo_
 - 808. Expulsión del DT y prohibición de dirigir el partido siguiente — _Federacion.sancionar_dt(2); dt_sancionado()==true_
-- 809. Tribunal de disciplina con casos y apelaciones — _Federacion.abrir_caso('roja',j,2,'x',2026,3); casos[0]['estado']=='firme'_
-- 810. Apelación de tarjeta roja con probabilidad de éxito variable — _Federacion.apelar(caso_id, club, 50) con Azar fijo_
 - 813. Castigo largo por agresión dentro del campo — _Federacion.abrir_caso('agresion',j,6,...) suspende al jugador_
-- 816. Control antidopaje aleatorio — _Federacion.control_antidopaje(club,anio,sem) con Azar fijo devuelve registro_
 - 817. Jugador que da positivo y el impacto deportivo y de imagen — _control_antidopaje positivo => j.suspension>0, signal escandalo_
 - 818. Defensa legal del club en un caso de dopaje — _Federacion.apelar(id_dopaje, club)_
 - 819. Reglamento de competencia consultable dentro del juego — _Federacion.reglas_vigentes('CHI') no vacío_
-- 820. Cambios de reglas entre temporadas — _Federacion.abrir_votacion y votar('a',club,asamblea) modifica flags_
 - 826. Sanción por alineación indebida — _LeyesPais.infracciones_once(club, once) con once indebido y revisar_leyes_pais_
 - 827. Pérdida de puntos por incumplimiento administrativo — _Liga.sancionar(club.id, 3) baja tabla_puntos_
 
@@ -1270,11 +1256,7 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 832. Requisitos de infraestructura mínima por división — _Federacion.requisitos_licencia(club,obras) devuelve 'ok' false con aforo bajo_
 - 833. Requisitos financieros para obtener la licencia — _requisitos_licencia con club en rojo => fallos_
 - 834. Auditoría federativa anual — _Federacion.auditoria_anual con 3 fallos => licencia=='denegada'_
-- 835. Voto del club en las asambleas de la liga — _Federacion.abrir_votacion(); votar('a',club,clubes) devuelve {pasa,a_favor,total}_
 - 837. Presidente de la liga con agenda propia — _Federacion.revisar_presidencia(anio) fija presidente['agenda']; agenda_empuja('var')_
-- 838. Reforma del formato del torneo sometida a votación — _Federacion._aplicar_mocion('playoffs',true,'a',club) => playoffs==true_
-- 839. Creación de una superliga separatista como decisión polémica — _Federacion._aplicar_mocion('superliga',true,'a',club) suma prima y activa superliga_
-- 841. Reparto de derechos de TV votado entre clubes — _Federacion._aplicar_mocion('tvigual',true,'a',club grande) => reparto_tv==0.72_
 - 844. Fecha FIFA que te deja sin jugadores clave — _Selecciones._fecha_fifa(anio,semana) baja j.fisico de convocados_
 - 846. Compensación económica por cesión a la selección — _Selecciones tras lesión de gira: saldo del club sube_
 - 847. Cupos obligatorios de juveniles en cancha — _Federacion.cupo_juvenil=true; revisar_cupo_juvenil(club, once_sin_sub21) devuelve multa_

@@ -243,6 +243,23 @@ func _probar_marcas_y_escudos() -> void:
 	jv.edad = edad0
 	_comprobar(viejo.s < joven.s, "M-085: a los 39 el pelo tiene canas (%s → %s)" % [joven.to_html(false), viejo.to_html(false)])
 	_comprobar(repetidos.is_empty(), "M-062: ningún escudo repetido entre clubes (%d: %s)" % [repetidos.size(), str(repetidos.slice(0, 5))])
+	## M-066 (25-10): el escudo monocromo solo tiene la tinta, blanco y transparencia.
+	var tm := Escudo.textura_mono(m.clubes.values()[0] as Club, 26)
+	var im: Image = tm.get_image() if tm != null else null
+	var extras := 0
+	for yy in range(0, im.get_height() if im != null else 0, 3):
+		for xx in range(0, im.get_width(), 3):
+			var pm := im.get_pixel(xx, yy)
+			extras += 1 if pm.a > 0.0 and pm.r != pm.g and not (pm.r == pm.b) else 0
+			extras += 1 if pm.a > 0.0 and pm.r > 0.01 and pm.r < 0.99 else 0
+	_comprobar(im != null and extras == 0, "M-066: Escudo.textura_mono solo usa tinta y blanco (%d píxeles de otro color)" % extras)
+	## M-063/M-068 (25-10): más clubes con escudo y camiseta de rasgo propio en la tabla.
+	var con_esc := 0
+	var con_cam := 0
+	for fila: Variant in (Datos.tabla("ESTADIO_CLUB") as Dictionary).values():
+		con_esc += 1 if (fila as Dictionary).has("escudo") else 0
+		con_cam += 1 if (fila as Dictionary).has("camiseta") else 0
+	_comprobar(con_esc >= 46 and con_cam >= 99, "M-063/M-068: %d escudos y %d camisetas con rasgo del club real" % [con_esc, con_cam])
 	## Los fabricantes en la camiseta 3D (21-10-2026, M-057).
 	var mf := Mundo.new()
 	mf.generar(["CHI"], 4711)

@@ -367,3 +367,66 @@ func _probar_ideas_tribunal_antidopaje_y_asamblea() -> void:
 	_comprobar(not abierta.is_empty() and abierta.has("id"), "la federación acaba convocando una votación")
 	var res := f6.votar("a", c, m.ligas[0].clubes)
 	_comprobar(not res.is_empty(), "y se puede votar con la asamblea de la liga")
+
+func _probar_ideas_medicina_y_vestuario() -> void:
+	_titulo("IDEAS DEL DUEÑO (518-568): medicina (segunda opinión, recaídas, brotes, % de recuperación) y vestuario (clanes, mediación, terapia, solicitudes)")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 2434)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	c.mover_saldo(300000000)
+	var md: Medico = m.medico
+	var j: Jugador = c.plantilla[0]
+	var sem := md.lesionar(j, Medico.MEDIA, "prueba", m.anio, 3)
+	_comprobar(sem > 0 and j.lesion == sem, "una lesión tiene semanas de baja (%d) y queda en la ficha" % sem)
+	_comprobar(md.pct_recuperado(j) >= 0 and md.pct_recuperado(j) < 100, "hay porcentaje de recuperación (%d%%)" % md.pct_recuperado(j))
+	var antes := j.lesion
+	var so := md.segunda_opinion(j, c)
+	_comprobar(not so.has("error"), "se pide segunda opinión médica (cuesta y puede acortar o alargar la baja)")
+	_comprobar(md.segunda_opinion(j, c).has("error"), "pero solo una por lesión")
+	_comprobar(j.lesion != antes or so.size() >= 1, "y el resultado queda reflejado")
+	j.lesion = 0
+	j.fisico = 30
+	var recaidas := 0
+	for i in 600:
+		if md.chequeo_de_recaida(j, m.anio, 4) > 0:
+			recaidas += 1
+			j.lesion = 0
+			j.fisico = 30
+	_comprobar(recaidas >= 1, "volver con el físico por los suelos produce recaídas (%d en 600 chequeos)" % recaidas)
+	var sanos := 0
+	for x: Jugador in c.plantilla:
+		if x.lesion <= 0:
+			sanos += 1
+	var fis := {}
+	for x: Jugador in c.plantilla:
+		fis[x.id] = x.fisico
+	md.iniciar_brote(c, 4, 3)
+	var bajaron := 0
+	for x: Jugador in c.plantilla:
+		if x.fisico < int(fis[x.id]):
+			bajaron += 1
+	_comprobar(bajaron >= 1 and not md.brote.is_empty(), "un brote de gripe baja el físico de varios jugadores (%d)" % bajaron)
+	## Vestuario: clanes, mediación, terapia y solicitudes.
+	var v: Vestuario = m.vestuario
+	v.semana(5)
+	_comprobar(v.camarillas.size() >= 1, "el vestuario forma camarillas (%d)" % v.camarillas.size())
+	if not v.camarillas.is_empty():
+		var cid := String(v.camarillas[0]["id"])
+		_comprobar(v.mediar(cid).has("ok"), "se puede mediar en un clan y da un resultado")
+		v.chequeo_clanes([])
+		_comprobar(v.clan_por_id(cid).has("humor"), "cada clan tiene humor medible")
+	var pj: Jugador = c.plantilla[1]
+	var caja := c.saldo
+	_comprobar(v.dar_terapia(pj) == "" and c.saldo < caja, "la terapia deportiva se paga y baja la ansiedad")
+	_comprobar(v.dar_terapia(pj) != "", "y no se puede repetir mientras dura")
+	var con_solicitud := false
+	for i in 400:
+		v.solicitud = {}
+		if v.sortear_solicitud() != "":
+			con_solicitud = true
+			break
+	_comprobar(con_solicitud, "los jugadores hacen solicitudes (minutos, capitanía, descanso…)")
+	if con_solicitud:
+		var rs := v.resolver_solicitud(true)
+		_comprobar(v.solicitud.is_empty() and rs is Dictionary, "y se resuelven (la solicitud deja de estar pendiente)")
