@@ -1,6 +1,9 @@
 extends "res://visor/explorador_ciudad_p4.gd"
 ## [Capa 5/6 de `explorador_ciudad.gd`] edificio_en, pausar, _actualizar_mano, _mover_en_anden, _viajar, _choca_mueble … (+7)
 
+## Factor de densidad de peatones del club (−1 = sin leer todavía).
+var _densidad_gente: float = -1.0
+
 ## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la
 ## clave de la sala con el nombre propio, o vacío.
 func edificio_en(p: Vector3) -> Dictionary:
@@ -391,6 +394,12 @@ func _physics_process(delta: float) -> void:
 		## La primera vez (al empezar a pasear) se llena el entorno de golpe.
 		## Cuánta gente alrededor: menos en calidad media o con el motor ligero.
 		var max_gente := 18 if (Calidad.motor_ligero or Calidad.elegida == Calidad.MEDIO) else 34
+		## Y la densidad elegida al crear el club (0.6 tranquila … 1.4 bulliciosa). Se lee
+		## una vez por paseo (el archivo no cambia mientras se pasea) y se acota por si
+		## el ajuste viniera corrupto.
+		if _densidad_gente < 0.0:
+			_densidad_gente = clampf(float(AjustesCiudad.valor("densidad_factor", 1.0)), 0.3, 1.6)
+		max_gente = maxi(4, roundi(max_gente * _densidad_gente))
 		trafico.reciclar_peatones(cuerpo.position, mira, 95.0, max_gente if _t_gente < -100.0 else 3, max_gente, _t_gente < -100.0)
 		_t_gente = 1.2
 	var corriendo := modo != "coche" and absf(vel) > VEL_PIE * 1.15
