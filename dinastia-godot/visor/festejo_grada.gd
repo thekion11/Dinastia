@@ -18,6 +18,7 @@ extends Node3D
 const DURA := 9.0
 var _t := 0.0
 var _dura := DURA
+var _apagado := false  ## las bengalas se apagan UNA vez, no cada fotograma
 
 static func activo() -> bool:
 	return not Calidad.motor_ligero
@@ -58,7 +59,8 @@ func _process(delta: float) -> void:
 	_t += delta
 	if _t > _dura + 6.0:
 		queue_free()
-	elif _t > _dura:
+	elif _t > _dura and not _apagado:
+		_apagado = true
 		for p in find_children("*", "GPUParticles3D", true, false):
 			(p as GPUParticles3D).emitting = false
 

@@ -267,9 +267,8 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] Capas `_pN` (233 archivos): repartir por responsabilidad real hasta que la herencia en cadena ya no haga falta (`docs/05_referencia/indice_de_capas.md`).
 - [ ] `ui/principal.gd`: de objeto gigante en 19 capas a clases con interfaz mínima (ver 2.2).
 - [ ] Texturas: 3.103 sin comprimir; comprimir en VRAM `caras_reales_*` y `assets/characters`; bajar a 2048 las 23 de ≥ 2048 px (T_Peasant_*, tierra 4k); 38 duplicados exactos (reapuntar `.import`). Medir antes/después en Forward+.
-- [ ] 60 `_process`: revisar los que sondean y pasar a señales; oclusión en más zonas de la ciudad.
+- [ ] `_process`: pasar `dibujo_mando`/`MandoGiratorio` a setters con `queue_redraw()`; oclusión en más zonas de la ciudad.
 - [ ] 53 escenas de prueba sin ninguna mención: decidir cuáles se borran; 27 módulos de `visor/` y 8 de `nucleo/` sin prueba directa.
-- [ ] 37 TODO y 2 XXX; 16 `print` de depuración (dejarlos solo tras bandera).
 - [ ] `pruebas/estres_menus.tscn` no termina en headless (¿ya pasaba antes?).
 - [ ] Colisiones de la ciudad fuera del club (peatones, mobiliario, edificios): revisar como en `ColisionClub`.
 - [ ] 506 frases visibles sin traducir en 8 idiomas (`docs/05_referencia/textos_sin_traducir.txt`); la prueba de paridad debe exigir 0.
