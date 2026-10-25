@@ -1032,17 +1032,10 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 414. Rotación planificada para calendarios congestionados — _Mundo.rotacion_activa=true; fijar fisico bajo en un titular; aplicar_rotacion()>=1_
 
 **32. Entrenamiento y Desarrollo**
-- 416. Plan semanal de entrenamiento con bloques por día — _Entrenamiento.fijar_dia(0,'fisico'); dias[0]=='fisico'; carga() cambia_
-- 417. Balance entre carga física, trabajo táctico y técnica individual — _Entrenamiento.carga() con dias distintos devuelve fis/ovr/riesgo diferentes_
-- 418. Riesgo de sobrecarga y lesiones por entrenar demasiado fuerte — _Entrenamiento.fijar_intensidad('alta'); carga_riesgo mayor; Medico.riesgo_por_fatiga(j) con j.fisico bajo_
-- 419. Entrenamiento individual asignable a un jugador puntual — _Entrenamiento.asignar_individual(j,clave) y tras procesar_semana x9 el jugador tiene_habilidad_
 - 420. Reconversión de posición (lateral a central, extremo a lateral) — _Jugador.reconvertir('LI') cambia pos_e y baja media_en temporalmente_
 - 421. Entrenamiento de habilidades específicas (penales, cabeceo, tiro libre) — _Entrenamiento.dar_habilidad(j,'cabezazo'); tiene_habilidad; efectividad() sube_
 - 422. Curva de aprendizaje según edad: los jóvenes progresan más rápido — _Jugador j.edad=19, ovr<pot: procesar_semana x N sube ovr; con edad=30 no_
 - 423. Techo de crecimiento visible solo mediante ojeadores confiables — _Mundo.ojeados.has(j.id) controla la visibilidad de pot_
-- 426. Pretemporada con efecto sobre el estado físico de todo el año — _Entrenamiento.elegir_pretemporada('dura') cobra gasto y sube fisico/base de todos_
-- 429. Concentración previa a partidos importantes — _Entrenamiento.concentracion=true; procesar_semana emite gasto_
-- 430. Campamento de altura para mejorar resistencia — _elegir_pretemporada('altura')_
 - 441. Video-análisis grupal antes de rivales difíciles — _Mundo.analizar_rival() devuelve '' y bono_analisis>1_
 - 442. Índice de calidad de instalaciones que multiplica el progreso — _Instalaciones con nivel de centro>0 => ritmo_de_progreso()>1_
 - 443. Veteranos que ya no mejoran pero transmiten experiencia — _Entrenamiento.crear_mentoria(vet, joven) y tras semanas el pupilo progresa_
@@ -1156,7 +1149,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 656. Procedimiento de reorganización para salvar al club — _Insolvencia.resolver(m,'a') con pendiente refundacion limpia Banco.prestamos_
 - 657. Liquidación del club como final de partida alternativo — _Banco.semana con semanas_en_rojo>=12 => liquidado_ya_
 - 658. Administrador externo designado que limita tus decisiones — _Insolvencia.semana con veedor fija tope_salarial>0 y vende al más caro_
-- 662. Aporte de capital de emergencia del dueño — _Roles.inyectar_capital() suma saldo (rol DUENO) y falla a la tercera vez_
 - 664. Emisión de bonos del club comprados por los propios hinchas — _Banco.emitir_bono(c) agrega préstamo con bono==true_
 - 667. Multipropiedad: red de clubes bajo un mismo dueño — _Roles.comprar_filial() con capital suficiente añade filial_
 - 668. Club satélite donde ceder juveniles — _Roles.comprar_filial(); Cesiones.ceder_canterano(j, club)_
@@ -1166,7 +1158,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 685. Padrón de socios que crece o decrece según tu gestión — _Hinchada.campana_abonos(club,animo,trofeos) cambia c.socios_
 - 686. Cuota social como ingreso estable y predecible — _Finanzas.cuotas_socios() == socios*cuota_
 - 688. Accionistas con intereses distintos: deportivo contra financiero — _Junta.formar(club) crea 3 accionistas; resolver cambia humor del que habla_
-- 690. Vender tu participación y retirarte como final alternativo — _Roles.vender_club() en rol DUENO => sin_club true_
 - 696. Club filial en otra ciudad o país — _Roles.comprar_filial() añade filial; semana_filiales cobra/paga_
 - 697. Directorio con miembros de personalidad definida — _Junta.formar crea presidente con estilo en ESTILOS_
 - 698. Director deportivo con autonomía delegable — _Roles.fijar_directriz('rotacion',...) y dt_obedece()_
@@ -1220,15 +1211,11 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 775. Titulares generados según resultados y declaraciones — _Prensa.titular_prensa(true,false,false,'x')['tit'] no vacío_
 - 776. Guerra mediática con un DT rival — _Roles.buscar_rival_dt() con rivalidad alta fija rival_dt; registrar_duelo_
 - 777. Declaración pública que motiva o desmotiva al plantel — _Prensa.responder(opcion) => cambia j.moral del plantel_
-- 778. Silencio de prensa como estrategia deliberada — _Prensa.comunicado('silencio') no cambia funa pero publica titular_
 - 780. Entrevista larga en un programa deportivo — _Prensa.mesa_de_debate() devuelve 5 voces con frase según estado_
 - 781. Programa de debate donde se discute tu gestión — _Prensa.mesa_de_debate()_
-- 786. Crisis de imagen que exige un plan de comunicación — _Prensa.funa=70; comunicado('contestar') cambia funa_
 - 787. Vocero del club habilitado para hablar en tu lugar — _Prensa.nombrar_vocero(club) elige capitan/lider; vocero no vacío_
 - 789. Documental tras bambalinas: ingresos a cambio de exposición — _Prensa.hay_camaras() tras aceptar documental; renta_medios_
 - 790. Cámaras en el vestuario como decisión rentable pero riesgosa — _Prensa.semanas_documental>0 baja moral de j.rasgo=='fragil'_
-- 792. Podcast oficial del club — _Prensa.comprar_medio('podcast',club); tiene_medio('podcast')_
-- 793. Canal de streaming propio con suscriptores — _Prensa.comprar_medio('stream',club); renta_medios()_
 - 794. Derechos de TV negociados individualmente o en bloque — _Prensa.negociar_tv(true,club); factor_tv()==1.35 o 0.70_
 - 795. Horarios de partido impuestos por la televisión — _Mundo.horario='lunes_noche' => factor_publico<1 y factor_tv_horario>1_
 - 797. Cobertura internacional al firmar a una estrella — _CinematicaFichaje (UI)_
@@ -1338,7 +1325,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 1025. Paletas alternativas para daltonismo — _Principal._daltonico=true cambia los colores de _color_accesible_
 - 1029. Autoguardado configurable — _Principal._autoguardado=true; Partida.guardar(mundo,RANURA)_
 - 1030. Guardado manual con varias ranuras — _Partida.guardar(mundo,'ranura1'); Partida.listar() las incluye_
-- 1035. Panel de tareas pendientes antes de continuar — _Mundo.informe_de_gestion() devuelve Array con 'txt','tab','grave'_
 - 1036. Alerta si intentas avanzar con alineación inválida — _LeyesPais.infracciones_once(club, once manual) no vacío_
 - 1038. Glosario integrado de términos del juego — _Datos.tabla('GLOSARIO') no vacío_
 - 1041. Modo experto que oculta toda la ayuda — _Principal._modo_experto=true y _pintar_* omiten notas_
