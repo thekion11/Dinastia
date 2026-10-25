@@ -17,6 +17,25 @@ func _texto_con(tam: int, col: Color, txt: String) -> Label:
 	l.text = txt
 	return l
 
+## Rótulo y control JUNTOS en una caja: dentro de una fila que se parte
+## (`HFlowContainer`), sueltos se separaban -«Victoria:» al final de una línea y
+## su desplegable solo en la siguiente-.
+func _par(rotulo: String, control: Control) -> HBoxContainer:
+	var caja := HBoxContainer.new()
+	caja.add_theme_constant_override("separation", 4)
+	var l := _texto_con(11, Principal.COL_SUAVE, rotulo)
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	caja.add_child(l)
+	caja.add_child(control)
+	return caja
+
+## Los desplegables traían la letra del tema (~20 px) en filas de 11-12: se
+## veían el doble de grandes que todo lo de alrededor.
+func _letra_12(ob: OptionButton) -> OptionButton:
+	ob.add_theme_font_size_override("font_size", 12)
+	ob.get_popup().add_theme_font_size_override("font_size", 12)
+	return ob
+
 ## EL EDITOR DE COMPETICIONES (28-9-2026, bloque 47): las ligas de tu país
 ## (nombre, cuántos bajan, puntos por victoria) y la copa (nombre y sede fija
 ## de la final).
@@ -48,20 +67,19 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 				p._escribir("[color=#e05555]%s.[/color]" % p_local)
 			p._refrescar())
 		fila.add_child(nom)
-		fila.add_child(_texto_con(11, Principal.COL_SUAVE, "Bajan/suben:"))
 		var desc := SpinBox.new()
 		desc.min_value = 1
 		desc.max_value = 4
 		desc.value = l.plazas_descenso
+		desc.get_line_edit().add_theme_font_size_override("font_size", 12)
 		desc.value_changed.connect(func(v: float) -> void: ed.fijar_descensos(liga, int(v)))
-		fila.add_child(desc)
-		fila.add_child(_texto_con(11, Principal.COL_SUAVE, "Victoria:"))
+		fila.add_child(_par("Bajan/suben:", desc))
 		var pv := OptionButton.new()
 		pv.add_item("3 puntos", 3)
 		pv.add_item("2 puntos", 2)
 		pv.select(0 if l.puntos_victoria == 3 else 1)
 		pv.item_selected.connect(func(i: int) -> void: ed.fijar_puntos_victoria(liga, 3 if i == 0 else 2))
-		fila.add_child(pv)
+		fila.add_child(_par("Victoria:", _letra_12(pv)))
 	if p.mundo.copa != null:
 		var fila_c := HFlowContainer.new()
 		fila_c.add_theme_constant_override("h_separation", 6)
@@ -77,7 +95,6 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 				p._escribir("[color=#e05555]%s.[/color]" % p_local)
 			p._refrescar())
 		fila_c.add_child(nc)
-		fila_c.add_child(_texto_con(11, Principal.COL_SUAVE, "Sede de la final:"))
 		var sede := OptionButton.new()
 		sede.add_item("Cancha neutral", 0)
 		var sedes: Array[Club] = []
@@ -91,7 +108,11 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 			if c3.id == p.mundo.copa.sede_final_id:
 				sede.select(i + 1)
 		sede.item_selected.connect(func(i: int) -> void: ed.fijar_sede_final(null if i == 0 else sedes[i - 1]))
-		fila_c.add_child(sede)
+		## Con tope de ancho: el nombre de un estadio largo estiraba el
+		## desplegable más allá de la columna.
+		sede.clip_text = true
+		sede.custom_minimum_size = Vector2(200, 0)
+		fila_c.add_child(_par("Sede de la final:", _letra_12(sede)))
 
 ## Una fila "etiqueta  −  valor  +". Es el patrón de todo el editor: no se
 ## escriben números a mano porque un campo de texto que hay que validar en cada
@@ -157,12 +178,9 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 		var fila := HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_editor.add_child(fila)
-		var esc := TextureRect.new()
-		esc.texture = Escudo.textura(c2, 20)
-		esc.custom_minimum_size = Vector2(20, 20)
-		esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		fila.add_child(esc)
+		## Con sus iniciales (o su símbolo), como en las tablas: el SVG solo no
+		## las lleva, y sin ellas medio país eran círculos de un color.
+		fila.add_child(p._escudo(c2, 22))
 		var b := Button.new()
 		b.text = Idiomas.t("%s%s  ·  %s D%d  ·  rep %d") % ["▾ " if abierto else "▸ ",
 			c2.nombre, c2.pais, c2.division, c2.rep]
@@ -405,30 +423,3 @@ func _pintar_editor_jugadores(ed: Editor) -> void:
 		p._lista_editor.add_child(b)
 		if abierto:
 			_pintar_editor_ficha(ed, quien, c)
-
-func _importar_csv(ed: Editor) -> void:
-	if p._ed_csv.strip_edges() == "":
-		p._escribir("[color=#c9a227]No hay nada que importar.[/color]")
-		return
-	var r := ed.importar_csv(p._ed_csv, p._ed_censura)
-	if r.has("error"):
-		p._escribir("[color=#e05555]No se pudo importar: %s.[/color]" % String(r["error"]))
-		p._refrescar()
-		return
-	p._escribir("[color=#4caf6d]Importadas %d fichas en %d club(es).[/color]" % [
-		int(r["filas"]), int(r["clubes"])])
-	for p_local: String in (r["problemas"] as Array):
-		p._escribir("[color=#e0a832]  %s[/color]" % p_local)
-	p._refrescar()
-
-## `solo_mi_liga`, no `todo` -a un botón "Todo el mundo" nombrar el parámetro
-## al revés de lo que dice fue justo el bug que cazó la captura de pruebas:
-## el nombre invertido hacía fácil pasar el booleano equivocado sin que nada
-## avisara.
-func _exportar_csv(ed: Editor, solo_mi_liga: bool) -> void:
-	var texto := ed.exportar_csv(solo_mi_liga)
-	if texto == "":
-		p._escribir("[color=#c9a227]No hay nada que exportar.[/color]")
-		return
-	DisplayServer.clipboard_set(texto)
-	p._escribir("[color=#4caf6d]Base exportada.[/color] Copiada al portapapeles (%d líneas)." % (texto.count("\n") + 1))

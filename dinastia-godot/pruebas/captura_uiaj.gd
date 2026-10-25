@@ -28,6 +28,17 @@ func _ready() -> void:
 		(_p.get("_ui_ajustes") as PantallaAjustes)._pintar_ajustes()
 		await _esperar(4)
 		_foto("ajustes_" + secc)
+		if secc == "pantalla" and OS.get_environment("SUFIJO") != "antes":
+			## La pregunta de «¿mantener?» tras subir el tamaño de la interfaz.
+			for sl: HSlider in _p.find_children("*", "HSlider", true, false):
+				if is_equal_approx(sl.min_value, 0.8):
+					sl.value = 1.1
+			await _esperar(4)
+			_foto("confirmar")
+			var c := ConfirmarVideo.abierta_en(_p)
+			if c != null:
+				c.deshacer()
+			await _esperar(3)
 	## La pantalla de controles, con el mando y con el teclado.
 	var raiz := Control.new()
 	raiz.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
