@@ -149,10 +149,14 @@ func _fila_diseno_estadio(e: EstadioPropio, p_local: Dictionary, campo: String) 
 	p._lista_estadio.add_child(fila)
 	var l := p._texto(11, Principal.COL_SUAVE)
 	l.text = String(Principal.ETIQUETAS_ESTADIO.get(campo, campo.capitalize()))
-	## Más ancho que antes (130) y con la etiqueta entera de ayuda: «Estructura
+	## Más ancho que antes (130 fijos) y con la etiqueta entera de ayuda: «Estructura
 	## de los focos» o «Butacas — Tribuna Oeste» se cortaban, y en otros
 	## idiomas más.
-	l.custom_minimum_size = Vector2(160, 0)
+	## Un tercio de la fila y no un ancho fijo: con 160 px fijos la fila pedía
+	## más de lo que mide la columna a 1280 y salía barra horizontal.
+	l.custom_minimum_size = Vector2(110, 0)
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.size_flags_stretch_ratio = 0.5
 	l.clip_text = true
 	l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	l.tooltip_text = l.text

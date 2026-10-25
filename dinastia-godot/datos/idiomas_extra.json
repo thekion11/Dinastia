@@ -3654,7 +3654,18 @@
   "Tribuna Sur": "South stand",
   "Tribuna Norte": "North stand",
   "Tribuna Este": "East stand",
-  "Tribuna Oeste": "West stand"
+  "Tribuna Oeste": "West stand",
+  "LOGRO DESBLOQUEADO": "ACHIEVEMENT UNLOCKED",
+  "NUEVO RÉCORD": "NEW RECORD",
+  "SUBES DE NIVEL": "LEVEL UP",
+  "INGRESO": "INCOME",
+  "SALE DE LA CAJA": "MONEY OUT",
+  "MERCADO": "TRANSFERS",
+  "AVISO": "ALERT",
+  "CONTRATOS": "CONTRACTS",
+  "¡CAMPEÓN!": "CHAMPIONS!",
+  "Minijuegos": "Minigames",
+  "Penales, tiros libres y la trivia del club.": "Penalties, free kicks and the club quiz."
  },
  "pt": {
   "Historia": "História",
@@ -7311,7 +7322,18 @@
   "Tribuna Sur": "Arquibancada Sul",
   "Tribuna Norte": "Arquibancada Norte",
   "Tribuna Este": "Arquibancada Leste",
-  "Tribuna Oeste": "Arquibancada Oeste"
+  "Tribuna Oeste": "Arquibancada Oeste",
+  "LOGRO DESBLOQUEADO": "CONQUISTA DESBLOQUEADA",
+  "NUEVO RÉCORD": "NOVO RECORDE",
+  "SUBES DE NIVEL": "SUBIU DE NÍVEL",
+  "INGRESO": "ENTRADA DE DINHEIRO",
+  "SALE DE LA CAJA": "SAI DO CAIXA",
+  "MERCADO": "MERCADO",
+  "AVISO": "AVISO",
+  "CONTRATOS": "CONTRATOS",
+  "¡CAMPEÓN!": "CAMPEÃO!",
+  "Minijuegos": "Minijogos",
+  "Penales, tiros libres y la trivia del club.": "Pênaltis, faltas e o quiz do clube."
  },
  "patrones": [
   [
@@ -13627,7 +13649,18 @@
   "Tribuna Sur": "Tribune sud",
   "Tribuna Norte": "Tribune nord",
   "Tribuna Este": "Tribune est",
-  "Tribuna Oeste": "Tribune ouest"
+  "Tribuna Oeste": "Tribune ouest",
+  "LOGRO DESBLOQUEADO": "SUCCÈS DÉBLOQUÉ",
+  "NUEVO RÉCORD": "NOUVEAU RECORD",
+  "SUBES DE NIVEL": "NIVEAU SUPÉRIEUR",
+  "INGRESO": "RECETTE",
+  "SALE DE LA CAJA": "SORTIE DE CAISSE",
+  "MERCADO": "MERCATO",
+  "AVISO": "ALERTE",
+  "CONTRATOS": "CONTRATS",
+  "¡CAMPEÓN!": "CHAMPION !",
+  "Minijuegos": "Mini-jeux",
+  "Penales, tiros libres y la trivia del club.": "Penalties, coups francs et le quiz du club."
  },
  "it": {
   "Historia": "Storia",
@@ -17191,7 +17224,18 @@
   "Tribuna Sur": "Tribuna sud",
   "Tribuna Norte": "Tribuna nord",
   "Tribuna Este": "Tribuna est",
-  "Tribuna Oeste": "Tribuna ovest"
+  "Tribuna Oeste": "Tribuna ovest",
+  "LOGRO DESBLOQUEADO": "OBIETTIVO SBLOCCATO",
+  "NUEVO RÉCORD": "NUOVO RECORD",
+  "SUBES DE NIVEL": "SALI DI LIVELLO",
+  "INGRESO": "ENTRATA",
+  "SALE DE LA CAJA": "ESCE DALLA CASSA",
+  "MERCADO": "MERCATO",
+  "AVISO": "AVVISO",
+  "CONTRATOS": "CONTRATTI",
+  "¡CAMPEÓN!": "CAMPIONE!",
+  "Minijuegos": "Minigiochi",
+  "Penales, tiros libres y la trivia del club.": "Rigori, punizioni e il quiz del club."
  },
  "de": {
   "Historia": "Geschichte",
@@ -20755,7 +20799,18 @@
   "Tribuna Sur": "Südtribüne",
   "Tribuna Norte": "Nordtribüne",
   "Tribuna Este": "Osttribüne",
-  "Tribuna Oeste": "Westtribüne"
+  "Tribuna Oeste": "Westtribüne",
+  "LOGRO DESBLOQUEADO": "ERFOLG FREIGESCHALTET",
+  "NUEVO RÉCORD": "NEUER REKORD",
+  "SUBES DE NIVEL": "STUFENAUFSTIEG",
+  "INGRESO": "EINNAHME",
+  "SALE DE LA CAJA": "AUSGABE",
+  "MERCADO": "TRANSFERMARKT",
+  "AVISO": "HINWEIS",
+  "CONTRATOS": "VERTRÄGE",
+  "¡CAMPEÓN!": "MEISTER!",
+  "Minijuegos": "Minispiele",
+  "Penales, tiros libres y la trivia del club.": "Elfmeter, Freistöße und das Vereinsquiz."
  },
  "ca": {
   "Historia": "Història",
@@ -24319,7 +24374,18 @@
   "Tribuna Sur": "Tribuna sud",
   "Tribuna Norte": "Tribuna nord",
   "Tribuna Este": "Tribuna est",
-  "Tribuna Oeste": "Tribuna oest"
+  "Tribuna Oeste": "Tribuna oest",
+  "LOGRO DESBLOQUEADO": "ASSOLIMENT DESBLOQUEJAT",
+  "NUEVO RÉCORD": "NOU RÈCORD",
+  "SUBES DE NIVEL": "PUGES DE NIVELL",
+  "INGRESO": "INGRÉS",
+  "SALE DE LA CAJA": "SURT DE LA CAIXA",
+  "MERCADO": "MERCAT",
+  "AVISO": "AVÍS",
+  "CONTRATOS": "CONTRACTES",
+  "¡CAMPEÓN!": "CAMPIÓ!",
+  "Minijuegos": "Minijocs",
+  "Penales, tiros libres y la trivia del club.": "Penals, faltes i el qüestionari del club."
  },
  "pl": {
   "Club": "Klub",
@@ -28167,7 +28233,18 @@
   "Tribuna Sur": "Trybuna południowa",
   "Tribuna Norte": "Trybuna północna",
   "Tribuna Este": "Trybuna wschodnia",
-  "Tribuna Oeste": "Trybuna zachodnia"
+  "Tribuna Oeste": "Trybuna zachodnia",
+  "LOGRO DESBLOQUEADO": "OSIĄGNIĘCIE ODBLOKOWANE",
+  "NUEVO RÉCORD": "NOWY REKORD",
+  "SUBES DE NIVEL": "NOWY POZIOM",
+  "INGRESO": "WPŁYW",
+  "SALE DE LA CAJA": "WYDATEK",
+  "MERCADO": "TRANSFERY",
+  "AVISO": "UWAGA",
+  "CONTRATOS": "KONTRAKTY",
+  "¡CAMPEÓN!": "MISTRZ!",
+  "Minijuegos": "Minigry",
+  "Penales, tiros libres y la trivia del club.": "Rzuty karne, rzuty wolne i quiz o klubie."
  },
  "tr": {
   "Club": "Kulüp",
@@ -32015,6 +32092,17 @@
   "Tribuna Sur": "Güney tribünü",
   "Tribuna Norte": "Kuzey tribünü",
   "Tribuna Este": "Doğu tribünü",
-  "Tribuna Oeste": "Batı tribünü"
+  "Tribuna Oeste": "Batı tribünü",
+  "LOGRO DESBLOQUEADO": "BAŞARIM AÇILDI",
+  "NUEVO RÉCORD": "YENİ REKOR",
+  "SUBES DE NIVEL": "SEVİYE ATLADIN",
+  "INGRESO": "GELİR",
+  "SALE DE LA CAJA": "KASADAN ÇIKIŞ",
+  "MERCADO": "TRANSFER",
+  "AVISO": "UYARI",
+  "CONTRATOS": "SÖZLEŞMELER",
+  "¡CAMPEÓN!": "ŞAMPİYON!",
+  "Minijuegos": "Mini oyunlar",
+  "Penales, tiros libres y la trivia del club.": "Penaltılar, serbest vuruşlar ve kulüp bilgi yarışması."
  }
 }

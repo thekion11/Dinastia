@@ -122,6 +122,6 @@ func _estadio(m: Mundo, mio: Club) -> void:
 		var fila := ob.get_parent()
 		if fila is HBoxContainer and fila.get_child(0) is Label:
 			var l := fila.get_child(0) as Label
-			if l.tooltip_text == l.text and l.custom_minimum_size.x >= 160:
+			if l.tooltip_text == l.text and l.size_flags_horizontal & Control.SIZE_EXPAND:
 				con_ayuda += 1
 	_comprobar(con_ayuda >= 20, "los rótulos del diseñador llevan su texto entero de ayuda (%d)" % con_ayuda)

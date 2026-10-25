@@ -52,20 +52,20 @@ func _init() -> void:
 	_texto.bbcode_enabled = false
 	_texto.fit_content = true
 	_texto.scroll_active = false
-	_texto.add_theme_font_size_override("normal_font_size", 19)
+	_texto.add_theme_font_size_override("normal_font_size", Tema.letra(19))
 	_texto.add_theme_color_override("default_color", Color(0.95, 0.95, 0.93))
 	_texto.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	col.add_child(_texto)
 	var pie := HBoxContainer.new()
 	col.add_child(pie)
 	_puntos = Label.new()
-	_puntos.add_theme_font_size_override("font_size", 13)
+	_puntos.add_theme_font_size_override("font_size", Tema.letra(13))
 	_puntos.modulate = Color(1, 1, 1, 0.55)
 	_puntos.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pie.add_child(_puntos)
 	_aviso = Label.new()
-	_aviso.text = "E ▸"
-	_aviso.add_theme_font_size_override("font_size", 13)
+	_aviso.text = _tecla_seguir()
+	_aviso.add_theme_font_size_override("font_size", Tema.letra(13))
 	_aviso.modulate = Color(1, 0.85, 0.4)
 	pie.add_child(_aviso)
 	## Placa del nombre: primera fila del panel, ajustada al texto.
@@ -75,7 +75,7 @@ func _init() -> void:
 	col.add_child(_placa)
 	col.move_child(_placa, 0)
 	_nombre = Label.new()
-	_nombre.add_theme_font_size_override("font_size", 15)
+	_nombre.add_theme_font_size_override("font_size", Tema.letra(15))
 	_nombre.add_theme_color_override("font_color", Color(0.05, 0.05, 0.07))
 	_placa.add_child(_nombre)
 	visible = false
@@ -98,8 +98,18 @@ func decir(quien: String, frase: String, color := Color(1.0, 0.8, 0.35), turno :
 		p += "● " if i == turno else "○ "
 	_puntos.text = p.strip_edges() if total > 1 else ""
 	_aviso.visible = false
+	## Se mira en cada frase: el mando puede enchufarse a media conversación.
+	_aviso.text = _tecla_seguir()
 	_t = 0.0
 	visible = true
+
+## Qué tecla pide el «sigue»: la E del teclado o, con un mando enchufado, la X
+## (los exploradores de ciudad y estadio avanzan con JOY_BUTTON_X). Antes
+## ponía siempre «E», que con mando no dice nada.
+static func _tecla_seguir() -> String:
+	if Mando.hay_mando():
+		return "%s ▸" % String(Mando.NOMBRE_BOTON.get(JOY_BUTTON_X, "X"))
+	return "E ▸"
 
 func cerrar() -> void:
 	visible = false
@@ -153,12 +163,16 @@ static func placa(texto: String, color := Color(1.0, 0.8, 0.35)) -> PanelContain
 	p.add_theme_stylebox_override("panel", sp)
 	var l := Label.new()
 	l.text = texto
-	l.add_theme_font_size_override("font_size", 15)
+	l.add_theme_font_size_override("font_size", Tema.letra(15))
 	l.add_theme_color_override("font_color", Color(0.05, 0.05, 0.07))
 	p.add_child(l)
 	return p
 
 ## Botón de respuesta: píldora oscura con borde que se ilumina al pasar.
+## FOCO PARA MANDO (25-10-2026, uitm): el foco era idéntico al «pasar el
+## ratón» -borde dorado de 1 px- y con mando no se distinguía bien cuál está
+## elegida. Ahora el foco lleva el borde de 2 px y opaco. Los márgenes
+## interiores son fijos, así que el botón no cambia de tamaño.
 static func respuesta(b: Button) -> Button:
 	for estado in ["normal", "hover", "pressed", "disabled", "focus"]:
 		var sb := StyleBoxFlat.new()
@@ -170,8 +184,14 @@ static func respuesta(b: Button) -> Button:
 		sb.set_border_width_all(1)
 		sb.bg_color = Color(1, 1, 1, 0.06 if estado == "normal" else (0.16 if estado != "disabled" else 0.02))
 		sb.border_color = Color(1, 0.85, 0.4, 0.8) if estado in ["hover", "focus"] else Color(1, 1, 1, 0.18)
+		if estado == "focus":
+			## El de foco se dibuja ENCIMA del estado actual: un velo claro
+			## suave (como antes) más el borde fuerte.
+			sb.bg_color = Color(1, 1, 1, 0.1)
+			sb.border_color = Color(1, 0.85, 0.4, 1.0)
+			sb.set_border_width_all(2)
 		b.add_theme_stylebox_override(estado, sb)
-	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_font_size_override("font_size", Tema.letra(15))
 	return b
 
 ## Escribe el texto de una etiqueta letra a letra.

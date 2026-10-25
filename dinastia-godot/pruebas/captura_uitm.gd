@@ -14,6 +14,7 @@ var _p: Node
 var _t := 0.0
 var _hecho := {}
 var _sufijo := ""
+var _album: Node
 
 func _ready() -> void:
 	_sufijo = OS.get_environment("MOMENTO")
@@ -37,6 +38,17 @@ func _process(d: float) -> void:
 		MentorVoz.decir(_p as Control, mun, "Un consejo", "La plantilla está cansada: rota en el próximo partido y no fuerces a los que vienen de lesión.")
 	if _una("f1", 1.6):
 		_foto("hub_avisos")
+	if _una("raton", 2.6):
+		## El ratón pasa por debajo del aviso: debe apartarse.
+		for n in _p.get_children():
+			if n is Aviso:
+				Input.warp_mouse((n as Control).get_global_rect().get_center())
+				print("ratón en ", get_viewport().get_mouse_position(), " aviso ", (n as Control).get_global_rect())
+	if _una("f1b", 3.1):
+		for n in _p.get_children():
+			if n is Aviso:
+				print("alfa con el ratón encima: %.2f" % (n as Control).modulate.a)
+		_foto("aviso_raton")
 	if _una("cajon", 5.0):
 		ml.desplegar()
 	if _una("foco_cajon", 5.4):
@@ -75,15 +87,14 @@ func _process(d: float) -> void:
 		if OS.get_environment("ACCES") == "1":
 			Tema.daltonico = true
 			Tema.escala_texto = 1.3
-		PanelMeta.abrir(_p as Control, mun)
+		_album = PanelMeta.abrir(_p as Control, mun)
 	if _una("f5", 11.5):
 		_foto("album" + ("_acces" if OS.get_environment("ACCES") == "1" else ""))
 	if _una("pestana", 12.0):
 		Tema.daltonico = false
 		Tema.escala_texto = 1.0
-		for n in _p.get_children():
-			if n is Control and n.get_script() == PanelMeta:
-				n.queue_free()
+		if is_instance_valid(_album):
+			_album.queue_free()
 		var tabs: TabContainer = _p.get("_pestanas")
 		for i in tabs.get_tab_count():
 			if tabs.get_child(i).name == "Club":

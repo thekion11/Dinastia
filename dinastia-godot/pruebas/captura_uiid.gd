@@ -18,7 +18,7 @@ var _i := -1
 
 func _ready() -> void:
 	var v := OS.get_environment("VISTAS")
-	_vistas = (v if v != "" else "identidad,kits,estadio,editor,ciudad").split(",")
+	_vistas = (v if v != "" else "identidad,escudo,kits,estadio,editor,ciudad").split(",")
 	_pantalla = load("res://escenas/principal.tscn").instantiate()
 	add_child(_pantalla)
 
@@ -55,7 +55,7 @@ func _pintar(vista: String) -> void:
 	var mundo: Mundo = _pantalla.get("mundo")
 	var mio: Club = mundo.mi_club()
 	match vista:
-		"identidad", "kits":
+		"identidad", "escudo", "kits":
 			## Por el chip de verdad: `_refrescar()` repinta la sección elegida.
 			_pestana("Gente")
 			_pantalla.set("_secc_gente", "identidad")
@@ -76,12 +76,12 @@ func _pintar(vista: String) -> void:
 ## Lleva el desplazamiento hasta el primer texto que contenga la marca: lo de
 ## abajo de cada pantalla es justo lo que nadie revisa.
 func _desplazar(vista: String) -> void:
-	var marcas := {"kits": "LAS TRES CAMISETAS", "editor": "CLUBES", "estadio": "LA ESTRUCTURA",
+	var marcas := {"kits": "LAS TRES CAMISETAS", "escudo": "3 · ESCUDO", "editor": "CLUBES", "estadio": "LA ESTRUCTURA",
 		"ciudad": ""}
 	var marca := String(marcas.get(vista, ""))
 	if marca == "":
 		return
-	var lista: Control = _pantalla.get({"kits": "_lista_gente", "editor": "_lista_editor",
+	var lista: Control = _pantalla.get({"kits": "_lista_gente", "escudo": "_lista_gente", "editor": "_lista_editor",
 		"estadio": "_lista_estadio"}.get(vista, "_lista_gente"))
 	var objetivo := _buscar(lista, marca)
 	var scroll := lista.get_parent() as ScrollContainer

@@ -18,6 +18,15 @@ extends PanelContainer
 ##     si atrapara el ratón bloquearía botones que están debajo.
 ##  2. Se encolan. Al cerrar una temporada pueden caer cuatro de golpe; sin
 ##     cola, el último pisaría al primero y no se leería ninguno.
+##  3. NO TAPA (25-10-2026, paquete uitm). Sale arriba a la derecha, encima de
+##     la caja y la fecha del centro. Si el ratón pasa por debajo -porque
+##     quieres leer o tocar lo que tapa-, se vuelve casi transparente mientras
+##     sigas ahí. Como no atrapa el ratón, el clic llega igual a lo de debajo.
+##
+## ARREGLO (25-10-2026): la salida corría A LA VEZ que la espera
+## (`set_parallel(true)` tras `tween_interval` une lo siguiente al paso de la
+## espera), así que el aviso entraba y se iba en menos de un segundo y luego la
+## cola esperaba 3,4 s sin nada en pantalla. Ahora va en pasos encadenados.
 
 ## 13-10-2026: más grande y legible (letras de 9-10 px no se leían).
 const ANCHO := 400.0
@@ -27,6 +36,9 @@ const ENTRADA := 0.42
 const QUEDARSE := 3.4
 const SALIDA := 0.45
 const MAX_EN_COLA := 8   ## por si una temporada dispara veinte: se ven ocho
+## Opacidad con el ratón encima y lo que tarda en llegar a ella (en segundos).
+const ALFA_DEBAJO := 0.16
+const FUNDIDO_DEBAJO := 0.15
 
 const COL_PANEL := Color(0.06, 0.07, 0.1, 0.97)
 const COL_TEXTO := Tema.TEXTO
@@ -34,17 +46,17 @@ const COL_SUAVE := Tema.SUAVE
 
 ## etiqueta · color de acento · sonido
 const TIPOS := {
-	"logro":    {"et": "LOGRO DESBLOQUEADO", "col": Color("c9a227"), "sfx": "logro"},
-	"record":   {"et": "NUEVO RÉCORD",       "col": Color("c9a227"), "sfx": "logro"},
-	"nivel":    {"et": "SUBES DE NIVEL",     "col": Color("4caf6d"), "sfx": "logro"},
-	"dinero":   {"et": "INGRESO",            "col": Color("4caf6d"), "sfx": "moneda"},
-	"gasto":    {"et": "SALE DE LA CAJA",    "col": Color("e05555"), "sfx": "moneda"},
-	"mercado":  {"et": "MERCADO",            "col": Color("c9a227"), "sfx": "fichaje"},
-	"alerta":   {"et": "AVISO",              "col": Color("e05555"), "sfx": "cambio"},
-	"contrato": {"et": "CONTRATOS",          "col": Color("c9a227"), "sfx": "cambio"},
-	"prensa":   {"et": "PRENSA",             "col": Color("8ea595"), "sfx": "cambio"},
-	"titulo":   {"et": "¡CAMPEÓN!",          "col": Color("c9a227"), "sfx": "trofeo"},
-	"vida":     {"et": "MI VIDA",            "col": Color("c9a227"), "sfx": "cambio"},
+	"logro":    {"et": "LOGRO DESBLOQUEADO", "col": Tema.ORO, "sfx": "logro"},
+	"record":   {"et": "NUEVO RÉCORD",       "col": Tema.ORO, "sfx": "logro"},
+	"nivel":    {"et": "SUBES DE NIVEL",     "col": Tema.BIEN, "sfx": "logro"},
+	"dinero":   {"et": "INGRESO",            "col": Tema.BIEN, "sfx": "moneda"},
+	"gasto":    {"et": "SALE DE LA CAJA",    "col": Tema.MAL, "sfx": "moneda"},
+	"mercado":  {"et": "MERCADO",            "col": Tema.ORO, "sfx": "fichaje"},
+	"alerta":   {"et": "AVISO",              "col": Tema.MAL, "sfx": "cambio"},
+	"contrato": {"et": "CONTRATOS",          "col": Tema.ORO, "sfx": "cambio"},
+	"prensa":   {"et": "PRENSA",             "col": Tema.SUAVE, "sfx": "cambio"},
+	"titulo":   {"et": "¡CAMPEÓN!",          "col": Tema.ORO, "sfx": "trofeo"},
+	"vida":     {"et": "MI VIDA",            "col": Tema.ORO, "sfx": "cambio"},
 }
 
 static var _cola: Array[Dictionary] = []
@@ -68,10 +80,14 @@ static func _siguiente() -> void:
 		_mostrando = false
 		return
 	var d: Dictionary = _cola.pop_front()
-	var padre: Node = d["padre"]
-	if padre == null or not is_instance_valid(padre) or not padre.is_inside_tree():
+	## Se mira ANTES de asignarlo a una variable tipada: asignar un nodo ya
+	## liberado a `var padre: Node` es un error de script que cortaba la cola
+	## (los avisos encolados para una pantalla que se cerró la dejaban muda).
+	var v: Variant = d["padre"]
+	if not is_instance_valid(v) or not (v as Node).is_inside_tree():
 		_siguiente()
 		return
+	var padre: Node = v
 	_mostrando = true
 	var aviso := Aviso.new()
 	aviso._tipo = String(d["tipo"])
@@ -86,10 +102,17 @@ var _icono := "🏆"
 var _titulo := ""
 var _desc := ""
 var _sfx := ""
+## 0→1→0 con la animación de entrada y salida; el alfa final es esto por el
+## fundido de «el ratón está debajo» (`_debajo`, 0 = fuera, 1 = dentro).
+var _aparicion := 0.0
+var _debajo := 0.0
+## Ya avisó a la cola de que acabó (para no avisar dos veces).
+var _terminado := false
 
 func _ready() -> void:
 	var def: Dictionary = TIPOS.get(_tipo, TIPOS["logro"])
-	var acento: Color = def["col"]
+	## El acento pasa por la paleta para daltonismo (oro/verde/rojo).
+	var acento: Color = Tema.accesible(def["col"])
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	custom_minimum_size = Vector2(ANCHO, ALTO)
 	size = Vector2(ANCHO, ALTO)
@@ -114,7 +137,7 @@ func _ready() -> void:
 	add_child(caja)
 	var ico := Label.new()
 	ico.text = _icono
-	ico.add_theme_font_size_override("font_size", 30)
+	ico.add_theme_font_size_override("font_size", Tema.letra(30))
 	ico.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	ico.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	caja.add_child(ico)
@@ -124,20 +147,23 @@ func _ready() -> void:
 	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	caja.add_child(col)
 	var arriba := Label.new()
-	arriba.text = String(def["et"])
-	arriba.add_theme_font_size_override("font_size", 12)
+	arriba.text = Idiomas.t(String(def["et"]))
+	arriba.add_theme_font_size_override("font_size", Tema.letra(12))
 	arriba.add_theme_color_override("font_color", COL_SUAVE)
 	arriba.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(arriba)
 	var tit := Label.new()
-	tit.text = _titulo
-	tit.add_theme_font_size_override("font_size", 18)
+	## Muchos avisos llegan con el texto en castellano desde la lógica: se
+	## traducen aquí, en el único sitio por el que pasan todos.
+	tit.text = Idiomas.t(_titulo)
+	tit.add_theme_font_size_override("font_size", Tema.letra(18))
 	tit.add_theme_color_override("font_color", acento)
 	tit.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(tit)
 	var des := Label.new()
-	des.text = _desc
-	des.add_theme_font_size_override("font_size", 14)
+	des.text = Idiomas.t(_desc) if _desc != "" else ""
+	des.visible = _desc != ""
+	des.add_theme_font_size_override("font_size", Tema.letra(14))
 	des.add_theme_color_override("font_color", COL_TEXTO)
 	des.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	des.custom_minimum_size = Vector2(ANCHO - 80.0, 0)
@@ -153,18 +179,42 @@ func _animar() -> void:
 	var padre := get_parent_control()
 	var ancho_padre := padre.size.x if padre != null else 1600.0
 	position = Vector2(ancho_padre, MARGEN)
+	_aparicion = 0.0
 	modulate.a = 0.0
 	var destino := Vector2(ancho_padre - ANCHO - MARGEN, MARGEN)
+	## Pasos encadenados: entrar (posición y alfa a la vez), quedarse, salir
+	## (posición y alfa a la vez) y dar paso al siguiente.
 	var t := create_tween()
-	t.set_parallel(true)
 	t.tween_property(self, "position", destino, ENTRADA).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	t.tween_property(self, "modulate:a", 1.0, ENTRADA * 0.6)
-	t.set_parallel(false)
+	t.parallel().tween_property(self, "_aparicion", 1.0, ENTRADA * 0.6)
 	t.tween_interval(QUEDARSE)
-	t.set_parallel(true)
 	t.tween_property(self, "position:x", ancho_padre, SALIDA).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	t.tween_property(self, "modulate:a", 0.0, SALIDA)
-	t.set_parallel(false)
+	t.parallel().tween_property(self, "_aparicion", 0.0, SALIDA)
 	t.tween_callback(func() -> void:
-		queue_free()
-		Aviso._siguiente())
+		_dar_paso()
+		queue_free())
+
+func _process(delta: float) -> void:
+	var dentro := get_global_rect().has_point(get_global_mouse_position())
+	_debajo = move_toward(_debajo, 1.0 if dentro else 0.0, delta / FUNDIDO_DEBAJO)
+	modulate.a = _aparicion * lerpf(1.0, ALFA_DEBAJO, _debajo)
+
+## Avisa a la cola UNA vez. Si el padre desaparece a media animación (cambio de
+## pantalla), el tween muere con el aviso y su callback no llega nunca: sin
+## esto `_mostrando` se quedaba en true y no volvía a salir ningún aviso.
+func _dar_paso() -> void:
+	if _terminado:
+		return
+	_terminado = true
+	var arbol := Engine.get_main_loop() as SceneTree
+	if arbol != null and arbol.process_frame.is_connected(Aviso._siguiente):
+		return
+	if arbol != null:
+		## Diferido: en medio de un `queue_free` o de una salida del árbol no
+		## se debe colgar otro nodo de un padre que quizá también se va.
+		arbol.process_frame.connect(Aviso._siguiente, CONNECT_ONE_SHOT)
+	else:
+		Aviso._siguiente()
+
+func _exit_tree() -> void:
+	_dar_paso()
