@@ -402,8 +402,11 @@ func _pintar_despacho() -> void:
 		return
 	p._aviso_abierto = clampi(p._aviso_abierto, 0, asuntos.size() - 1)
 
-	var fila := HBoxContainer.new()
-	fila.add_theme_constant_override("separation", 6)
+	## Fila que SALTA DE LÍNEA: con 7+ asuntos una HBox pedía ~1262 px de
+	## ancho mínimo y desbordaba la pantalla entera por la derecha (a 1280 y a 1920).
+	var fila := HFlowContainer.new()
+	fila.add_theme_constant_override("h_separation", 6)
+	fila.add_theme_constant_override("v_separation", 4)
 	p._despacho.add_child(fila)
 	var cab := p._texto(11, Principal.COL_SUAVE)
 	cab.text = (Idiomas.t("🔔 %d asunto") if asuntos.size() == 1 else Idiomas.t("🔔 %d asuntos")) % asuntos.size()

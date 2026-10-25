@@ -11,14 +11,24 @@ const DELATORAS := [" el ", " los ", " las ", " del ", " por ", " con ", " que "
 	"¿", "¡", "ción", " sin ", "Color ", "Bajan", "Victoria", "puntos", "Cancha", "Sede", "Reputación",
 	"Aforo", "Media", "Proyección", "Edad", "Dorsal", "Puesto", "Rasgo", "País", "Corte", "Accesorio",
 	"Barba", "Nariz", "Boca", "Ojos", "Cara", "Mandíbula", "Pecas", "Lunar", "Cicatriz", "Titular",
-	"Alternativa", "arquero", "Diseño", "Forma", "Patrón", "Símbolo", "sorteo", "Fondo", "Borde",
+	"Alternativa", "arquero", "Diseño", "Forma", "Patrón", "Símbolo", "sorteo", "Fondo", "Borde y",
 	"Techo", "Focos", "Butacas", "Banderas", "Túnel", "Tribuna", "Anillo", "Tercio", "Fachada",
 	"Superficie", "césped", "Banquillos", "Pantallas", "Sonido", "Entra cada", "Aporta", "Total de",
 	"Contrato", "Rentan", "semana", "Negocios", "Ingreso", "Relación", "Estado", "Seguridad",
 	"Cámaras", "Riesgo", "Cubierta", "Ahorro", "Certific", "Paneles", "Permiso", "Subvención",
 	"Conciertos", "Obra social", "Reunión", "Entradas", "libre", "Festejo", "Balón", "Tipo de",
-	"Natural", "Híbrido", "Sintético", "SÍ", "NO", "Firmar", "Firmado", "Romper", "Tuyo", "Operando",
-	"vigente", "Requiere", "Medias", "short", "tipografía", "liso", "franjas", "banda", "mitad"]
+	"Híbrido", "Sintético", "Firmar", "Firmado", "Romper", "Tuyo", "Operando",
+	"vigente", "Requiere", "Medias", " short ", "tipografía", "liso", "franjas", "banda", "mitad"]
+
+## Palabras que solo delatan si son el texto ENTERO: «NO» está dentro de «NOR» o
+## «NON-SPORTING», y «Natural» es igual en inglés.
+const EXACTAS := ["SÍ", "Híbrido", "Sintético"]
+
+## Textos de la pestaña Estadio que NO pinta esta zona (avisados en el informe del
+## paquete uiid): la hinchada de `pantalla_club_vida` y el rótulo «Tribuna» de
+## `principal_p5`, cuya entrada inglesa ya existe como «Tribuna» y el parche no
+## puede pisar.
+const AJENAS := ["Pagan todo el año. Quieren sentirse escuchados", "Tribuna"]
 
 var _vistos: Array[String] = []
 var _p: Node
@@ -89,6 +99,15 @@ func _recoger(raiz: Node, donde: String) -> void:
 	var malos: Array[String] = []
 	for t: String in textos:
 		_vistos.append(t)
+		## Las filas de club del editor llevan el nombre propio del club
+		## («Concepción Lila»), que no se traduce.
+		if t.begins_with("▸ ") or t.begins_with("▾ "):
+			continue
+		if t in AJENAS:
+			continue
+		if t in EXACTAS:
+			malos.append(t)
+			continue
 		for d: String in DELATORAS:
 			if (" " + t + " ").contains(d):
 				if t.replace("\n", " / ") not in malos:

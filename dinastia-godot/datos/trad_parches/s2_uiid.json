@@ -2089,6 +2089,56 @@
    "ca": "🎲 Aleatori",
    "pl": "🎲 Losowo",
    "tr": "🎲 Rastgele"
+  },
+  "Solar en el centro": {
+   "en": "Plot in the centre",
+   "pt": "Terreno no centro",
+   "fr": "Terrain en centre-ville",
+   "it": "Lotto in centro",
+   "de": "Grundstück im Zentrum",
+   "ca": "Solar al centre",
+   "pl": "Działka w centrum",
+   "tr": "Merkezdeki arsa"
+  },
+  "Tribuna Sur": {
+   "en": "South stand",
+   "pt": "Arquibancada Sul",
+   "fr": "Tribune sud",
+   "it": "Tribuna sud",
+   "de": "Südtribüne",
+   "ca": "Tribuna sud",
+   "pl": "Trybuna południowa",
+   "tr": "Güney tribünü"
+  },
+  "Tribuna Norte": {
+   "en": "North stand",
+   "pt": "Arquibancada Norte",
+   "fr": "Tribune nord",
+   "it": "Tribuna nord",
+   "de": "Nordtribüne",
+   "ca": "Tribuna nord",
+   "pl": "Trybuna północna",
+   "tr": "Kuzey tribünü"
+  },
+  "Tribuna Este": {
+   "en": "East stand",
+   "pt": "Arquibancada Leste",
+   "fr": "Tribune est",
+   "it": "Tribuna est",
+   "de": "Osttribüne",
+   "ca": "Tribuna est",
+   "pl": "Trybuna wschodnia",
+   "tr": "Doğu tribünü"
+  },
+  "Tribuna Oeste": {
+   "en": "West stand",
+   "pt": "Arquibancada Oeste",
+   "fr": "Tribune ouest",
+   "it": "Tribuna ovest",
+   "de": "Westtribüne",
+   "ca": "Tribuna oest",
+   "pl": "Trybuna zachodnia",
+   "tr": "Batı tribünü"
   }
  },
  "patrones": [
@@ -2278,6 +2328,17 @@
    "$1 EUR/setmana",
    "$1 EUR/tydzień",
    "$1 EUR/hafta"
+  ],
+  [
+   "^Anillo (\\d)$",
+   "Tier $1",
+   "Anel $1",
+   "Anneau $1",
+   "Anello $1",
+   "Rang $1",
+   "Anell $1",
+   "Pierścień $1",
+   "$1. kat"
   ]
  ]
 }

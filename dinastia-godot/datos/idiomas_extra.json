@@ -3650,7 +3650,11 @@
   "MÁX": "MAX",
   "CLUBES": "CLUBS",
   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "The squad stops flying on scheduled airlines: less fatigue on long trips.",
-  "🎲 Aleatorio": "🎲 Random"
+  "🎲 Aleatorio": "🎲 Random",
+  "Tribuna Sur": "South stand",
+  "Tribuna Norte": "North stand",
+  "Tribuna Este": "East stand",
+  "Tribuna Oeste": "West stand"
  },
  "pt": {
   "Historia": "História",
@@ -7303,7 +7307,11 @@
   "MÁX": "MÁX",
   "CLUBES": "CLUBES",
   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "O elenco deixa de voar em linha comercial: menos cansaço nas viagens longas.",
-  "🎲 Aleatorio": "🎲 Aleatório"
+  "🎲 Aleatorio": "🎲 Aleatório",
+  "Tribuna Sur": "Arquibancada Sul",
+  "Tribuna Norte": "Arquibancada Norte",
+  "Tribuna Este": "Arquibancada Leste",
+  "Tribuna Oeste": "Arquibancada Oeste"
  },
  "patrones": [
   [
@@ -10044,6 +10052,17 @@
    "$1: torna d'aquí a $2 setmana(es)",
    "$1: wraca za $2 tydz.",
    "$1: $2 hafta sonra dönüyor"
+  ],
+  [
+   "^Anillo (\\d)$",
+   "Tier $1",
+   "Anel $1",
+   "Anneau $1",
+   "Anello $1",
+   "Rang $1",
+   "Anell $1",
+   "Pierścień $1",
+   "$1. kat"
   ]
  ],
  "fr": {
@@ -13604,7 +13623,11 @@
   "MÁX": "MAX",
   "CLUBES": "CLUBS",
   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "L'effectif ne voyage plus sur des lignes régulières : moins de fatigue lors des longs déplacements.",
-  "🎲 Aleatorio": "🎲 Aléatoire"
+  "🎲 Aleatorio": "🎲 Aléatoire",
+  "Tribuna Sur": "Tribune sud",
+  "Tribuna Norte": "Tribune nord",
+  "Tribuna Este": "Tribune est",
+  "Tribuna Oeste": "Tribune ouest"
  },
  "it": {
   "Historia": "Storia",
@@ -17164,7 +17187,11 @@
   "MÁX": "MAX",
   "CLUBES": "CLUB",
   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "La rosa smette di volare con voli di linea: meno fatica nelle trasferte lunghe.",
-  "🎲 Aleatorio": "🎲 Casuale"
+  "🎲 Aleatorio": "🎲 Casuale",
+  "Tribuna Sur": "Tribuna sud",
+  "Tribuna Norte": "Tribuna nord",
+  "Tribuna Este": "Tribuna est",
+  "Tribuna Oeste": "Tribuna ovest"
  },
  "de": {
   "Historia": "Geschichte",
@@ -20724,7 +20751,11 @@
   "MÁX": "MAX",
   "CLUBES": "VEREINE",
   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "Der Kader fliegt nicht mehr mit Linienflügen: weniger Müdigkeit auf langen Reisen.",
-  "🎲 Aleatorio": "🎲 Zufällig"
+  "🎲 Aleatorio": "🎲 Zufällig",
+  "Tribuna Sur": "Südtribüne",
+  "Tribuna Norte": "Nordtribüne",
+  "Tribuna Este": "Osttribüne",
+  "Tribuna Oeste": "Westtribüne"
  },
  "ca": {
   "Historia": "Història",
@@ -24284,7 +24315,11 @@
   "MÁX": "MÀX",
   "CLUBES": "CLUBS",
   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "La plantilla deixa de volar en línia regular: menys fatiga en els viatges llargs.",
-  "🎲 Aleatorio": "🎲 Aleatori"
+  "🎲 Aleatorio": "🎲 Aleatori",
+  "Tribuna Sur": "Tribuna sud",
+  "Tribuna Norte": "Tribuna nord",
+  "Tribuna Este": "Tribuna est",
+  "Tribuna Oeste": "Tribuna oest"
  },
  "pl": {
   "Club": "Klub",
@@ -28128,7 +28163,11 @@
   "certificado ✔": "certyfikowany ✔",
   "CLUBES": "KLUBY",
   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "Kadra przestaje latać liniami rejsowymi: mniej zmęczenia w długich podróżach.",
-  "🎲 Aleatorio": "🎲 Losowo"
+  "🎲 Aleatorio": "🎲 Losowo",
+  "Tribuna Sur": "Trybuna południowa",
+  "Tribuna Norte": "Trybuna północna",
+  "Tribuna Este": "Trybuna wschodnia",
+  "Tribuna Oeste": "Trybuna zachodnia"
  },
  "tr": {
   "Club": "Kulüp",
@@ -31972,6 +32011,10 @@
   "certificado ✔": "sertifikalı ✔",
   "CLUBES": "KULÜPLER",
   "El plantel deja de volar en línea regular: menos fatiga en los viajes largos.": "Kadro artık tarifeli uçuşlarla uçmuyor: uzun yolculuklarda daha az yorgunluk.",
-  "🎲 Aleatorio": "🎲 Rastgele"
+  "🎲 Aleatorio": "🎲 Rastgele",
+  "Tribuna Sur": "Güney tribünü",
+  "Tribuna Norte": "Kuzey tribünü",
+  "Tribuna Este": "Doğu tribünü",
+  "Tribuna Oeste": "Batı tribünü"
  }
 }
