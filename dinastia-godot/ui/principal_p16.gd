@@ -1,5 +1,5 @@
 extends "res://ui/principal_p15.gd"
-## [Capa 17/19 de `principal.gd`] _ready, _bloque_vecino, tutorial_objetivo, tutorial_hecho, tutorial_accion, _rejilla … (+11)
+## [Capa 15/17 de `principal.gd`] _ready, _bloque_vecino, _rejilla, _fila_jugador, _fijar_modo_simulacion, _selector_modo_partido … (+8)
 
 func _ready() -> void:
 	BotonFx.activar(get_tree())
@@ -15,24 +15,17 @@ func _ready() -> void:
 		ContadorFps.poner(get_tree(), true)
 	_construir()
 	if Principal.mundo_a_cargar != null:
-		mundo = Principal.mundo_a_cargar
+		var cargada := Principal.mundo_a_cargar
 		Principal.mundo_a_cargar = null
-		_conectar_noticias()
-		_seleccionado = null
-		_llenar_selector()
-		_escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [
-			mundo.mi_club().nombre, mundo.anio, mundo.semana])
-		_avisar_si_respaldo()
-		_refrescar()
-		_resolver_partido_abandonado()
+		_partida.entrar_cargada(cargada)
 	elif Principal.mundo_pregenerado != null:
 		var m := Principal.mundo_pregenerado
 		Principal.mundo_pregenerado = null
 		var modo := Principal.modo_elegido if Principal.modo_elegido != "" else "dt"
-		_arrancar_con(m)
-		_quizas_tutorial(modo)
+		_partida.arrancar_con(m)
+		_guia.quizas(modo)
 	else:
-		_nuevo_mundo()
+		_partida.nueva()
 
 ## Pasa al bloque de al lado. Es lo que usan L1/R1 del mando, las flechas del
 ## teclado y el arrastre con el dedo en Android: una sola puerta para las
@@ -46,64 +39,6 @@ func _bloque_vecino(paso: int) -> void:
 			break
 		siguiente = (siguiente + paso + GRUPOS.size()) % GRUPOS.size()
 	_elegir_grupo(String(GRUPOS[siguiente]["id"]))
-
-func tutorial_objetivo(clave: String) -> Control:
-	match clave:
-		"estado": return _sub
-		"grupos": return _fila_grupos
-		"chips": return _fila_sub.get_parent() as Control
-		"ficha": return _ficha
-		"tabla": return _lista_tabla
-		"registro": return _registro
-	return _tut_nodos.get(clave) as Control
-
-## Lo que completa un paso sin pulsar "Siguiente": que el jugador haya hecho
-## eso mismo que la tarjeta le pedía.
-func tutorial_hecho(clave: String) -> bool:
-	if not is_instance_valid(_pestanas):
-		return false
-	var titulo := _pestanas.get_tab_title(_pestanas.current_tab) if _pestanas.get_tab_count() > 0 else ""
-	## Las misiones del tutorial inmersivo: una pestaña concreta, una sección
-	## concreta de una pestaña, o la ficha de un jugador concreto.
-	if clave.begins_with("tab:"):
-		return titulo == clave.substr(4)
-	if clave.begins_with("chip:"):
-		var partes := clave.substr(5).split("|")
-		return titulo == partes[0] and _seccion_activa({"tab": partes[0], "secc": partes[1] if partes.size() > 1 else ""})
-	if clave.begins_with("ficha:"):
-		return _seleccionado != null and _seleccionado.id == clave.substr(6)
-	match clave:
-		"grupo": return _grupo_actual != "central"
-		"ficha": return _seleccionado != null
-		"plantel": return (HUBS["plantel"]["tabs"] as Array).has(titulo)
-		"dinero": return (HUBS["dinero"]["tabs"] as Array).has(titulo)
-		"partido": return (HUBS["partido"]["tabs"] as Array).has(titulo)
-	return false
-
-## "Muéstramelo": hace por el jugador lo que pide el paso.
-func tutorial_accion(clave: String) -> void:
-	if clave.begins_with("tab:"):
-		_ir_a_pestana(clave.substr(4))
-		_refrescar()
-		return
-	if clave.begins_with("chip:"):
-		var partes := clave.substr(5).split("|")
-		_ir_a_chip({"tab": partes[0], "secc": partes[1] if partes.size() > 1 else ""})
-		return
-	if clave.begins_with("ficha:"):
-		var id := clave.substr(6)
-		for j: Jugador in mundo.mi_club().plantilla:
-			if j.id == id:
-				_ver_ficha(j)
-		return
-	match clave:
-		"ficha":
-			if not mundo.mi_club().plantilla.is_empty():
-				_ver_ficha(mundo.mi_club().plantilla[0])
-		"grupo_club": _elegir_grupo("club")
-		"plantel": _ir_a_pestana("Mi plantel")
-		"dinero": _ir_a_pestana("Finanzas")
-		"partido": _ir_a_pestana("Partido")
 
 ## Las columnas se alinean con un GridContainer, no rellenando con espacios: la
 ## fuente es proporcional y un "%-22s" no alinea nada.

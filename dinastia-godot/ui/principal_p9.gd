@@ -1,5 +1,5 @@
 extends "res://ui/principal_p8.gd"
-## [Capa 9/19 de `principal.gd`] _traducir_pantalla, _refrescar, _avanzar_semana, _avanzar_dia, _pintar_dias, _exit_tree … (+1)
+## [Capa 9/17 de `principal.gd`] _traducir_pantalla, _refrescar, _avanzar_semana, _avanzar_dia, _pintar_dias, _exit_tree … (+1)
 
 ## LA MÚSICA. Seis piezas sintetizadas, como todo el audio del juego: ni un solo
 ## fichero, ni una licencia de terceros que arrastrar en el paquete.
@@ -282,7 +282,7 @@ func _avanzar_semana() -> void:
 		var delta := mio.saldo - caja_antes
 		_escribir("[color=#c9a227]Cierre de mes:[/color] la caja %s %s" % [
 			"sube" if delta >= 0 else "baja", _dinero(absi(delta))])
-	_autoguardar_si_toca()
+	_partida.autoguardar_si_toca()
 	_refrescar()
 
 ## Avanza UN día. Si con eso se pasa del domingo, la semana del motor corre de

@@ -1,6 +1,6 @@
 class_name Principal
 extends "res://ui/principal_p17.gd"
-## [Capa 19/19 de `principal.gd`] _input, _guardar_preferencias, _pintar_identidad, _al_paso_nuevo, _portada_nueva
+## [Capa 17/17 de `principal.gd`] _input, _pintar_identidad, _al_paso_nuevo, _portada_nueva
 
 func _input(evento: InputEvent) -> void:
 	## CON EL PANEL LATERAL ENCIMA (mapa de metas 23) los mismos botones
@@ -70,46 +70,6 @@ func _input(evento: InputEvent) -> void:
 	elif evento is InputEventScreenTouch and not (evento as InputEventScreenTouch).pressed:
 		_arrastre_x = 0.0
 		_arrastre_y = 0.0
-
-func _guardar_preferencias() -> void:
-	var firma := "%s|%s|%s|%s|%.2f|%s|%.2f|%s|%d|%s|%s|%s|%s|%s|%s|%s|%s|%.2f|%s|%s|%s|%d|%s" % [_paleta, _forma_tarjeta,
-		_brillo_tarjetas, _fondo_elegido, _escala_texto, _daltonico, _zoom_interfaz,
-		_modo_tv, _fps_elegido, _modo_experto, Sonido.encendido, _clima_elegido,
-		_clima_interactivo, _marca_tarjeta, _tipografia, Idiomas.idioma,
-		Musica.encendida, Musica.volumen, Musica.pieza, Musica.automatica, _estilo_menu,
-		_velocidad_partido, _rotar_diseno]
-	firma += "|%s|%s|%s" % [VestidorQ.ropa_aparte, Cara.usar_fotos, ContadorFps.visible_pref]
-	if firma == _firma_prefs:
-		return
-	_firma_prefs = firma
-	var cf := ConfigFile.new()
-	cf.set_value("aspecto", "paleta", _paleta)
-	cf.set_value("aspecto", "forma_tarjeta", _forma_tarjeta)
-	cf.set_value("aspecto", "brillo_tarjetas", _brillo_tarjetas)
-	cf.set_value("aspecto", "fondo", _fondo_elegido)
-	cf.set_value("aspecto", "clima", _clima_elegido)
-	cf.set_value("aspecto", "marca_tarjeta", _marca_tarjeta)
-	cf.set_value("aspecto", "tipografia", _tipografia)
-	cf.set_value("aspecto", "estilo_menu", _estilo_menu)
-	cf.set_value("aspecto", "rotar_diseno", _rotar_diseno)
-	cf.set_value("juego", "idioma", Idiomas.idioma)
-	cf.set_value("juego", "velocidad_partido", _velocidad_partido)
-	cf.set_value("musica", "encendida", Musica.encendida)
-	cf.set_value("musica", "volumen", Musica.volumen)
-	cf.set_value("musica", "pieza", Musica.pieza)
-	cf.set_value("musica", "automatica", Musica.automatica)
-	cf.set_value("aspecto", "clima_interactivo", _clima_interactivo)
-	cf.set_value("texto", "escala", _escala_texto)
-	cf.set_value("texto", "daltonico", _daltonico)
-	cf.set_value("pantalla", "zoom", _zoom_interfaz)
-	cf.set_value("pantalla", "modo_tv", _modo_tv)
-	cf.set_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte)
-	cf.set_value("pantalla", "caras_foto", Cara.usar_fotos)
-	cf.set_value("pantalla", "fps", _fps_elegido)
-	cf.set_value("pantalla", "contador_fps", ContadorFps.visible_pref)
-	cf.set_value("juego", "modo_experto", _modo_experto)
-	cf.set_value("sonido", "encendido", Sonido.encendido)
-	cf.save(PREFS)
 
 func _pintar_identidad(c: Club) -> void:
 

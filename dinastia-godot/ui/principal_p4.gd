@@ -1,5 +1,5 @@
 extends "res://ui/principal_p3.gd"
-## [Capa 4/19 de `principal.gd`] _fuente_de, _caja, _pal_fondo, _aplicar_tema, _tinta, _escudo … (+9)
+## [Capa 4/17 de `principal.gd`] _fuente_de, _caja, _pal_fondo, _aplicar_tema, _tinta, _escudo … (+9)
 
 func _fuente_de(clave: String) -> Font:
 	if not TIPOGRAFIAS.has(clave) or clave == "juego":

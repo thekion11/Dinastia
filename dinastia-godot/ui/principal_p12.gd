@@ -1,5 +1,5 @@
-extends "res://ui/principal_p11.gd"
-## [Capa 13/19 de `principal.gd`] _al_elegir_club, _llenar_selector, _tomar_club, _pintar_elegir_club, _abrir_elegir_club, _modo_simulacion … (+10)
+extends "res://ui/principal_p10.gd"
+## [Capa 11/17 de `principal.gd`] _al_elegir_club, _llenar_selector, _tomar_club, _pintar_elegir_club, _abrir_elegir_club, _modo_simulacion … (+10)
 
 func _al_elegir_club(indice: int) -> void:
 	mundo.tomar_el_mando(String(_selector.get_item_metadata(indice)))
@@ -232,7 +232,7 @@ func _seguir_tras_partido(p: Partido) -> void:
 		p.local.nombre, p.goles_local, p.goles_visita, p.visita.nombre])
 	## (17-10: tras un partido dirigido no se autoguardaba; ahora sí, como al
 	## avanzar la semana sin jugarlo.)
-	_autoguardar_si_toca()
+	_partida.autoguardar_si_toca()
 	_refrescar()
 
 ## Se avanza la semana con el partido ya jugado en la mano. Si se avanzara sin
@@ -363,7 +363,7 @@ func _jugar_temporada() -> void:
 		puesto += 1
 	_escribir("[color=#3fa06a]Temporada %d completa en %d ms.[/color] Campeón: [b]%s[/b]. Acabas [b]%d.º[/b]." % [
 		mundo.anio, Time.get_ticks_msec() - t0, t[0]["club"].nombre, puesto])
-	_autoguardar_si_toca()
+	_partida.autoguardar_si_toca()
 	_refrescar()
 
 ## Una fila de jugador que se puede pulsar. El botón va en la primera celda y

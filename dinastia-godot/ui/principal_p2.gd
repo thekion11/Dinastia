@@ -1,5 +1,36 @@
 extends "res://ui/principal_p1.gd"
-## [Capa 2/19 de `principal.gd`] variables, constantes y señales
+## [Capa 2/17 de `principal.gd`] _ayudante
+
+## FASE 0 (separar `Principal`): cada responsabilidad que sale de las capas va
+## a una clase propia en `ui/principal/` con su estado y una interfaz corta.
+## Principal las posee y les delega; los métodos viejos quedan como puentes.
+## Se cargan con `preload` y sin `class_name` para que no dependan de la caché
+## de clases (un `class_name` nuevo sin reimportar rompería esta pantalla).
+## Las que conectan señales del mundo son `Node` hijos (ver la cabecera de
+## `sorteos.gd`), y se cuelgan aquí mismo, al crearse la pantalla. Se declaran
+## en esta capa (no en la de cada puente) para que todas las de encima las vean.
+const _PrincipalSorteos := preload("res://ui/principal/sorteos.gd")
+var _sorteos := _ayudante(_PrincipalSorteos.new(self)) as _PrincipalSorteos
+const _PrincipalNoticias := preload("res://ui/principal/noticias.gd")
+var _noticias := _ayudante(_PrincipalNoticias.new(self)) as _PrincipalNoticias
+const _PrincipalPreferencias := preload("res://ui/principal/preferencias.gd")
+var _prefs := _PrincipalPreferencias.new(self)
+const _PrincipalCicloPartida := preload("res://ui/principal/ciclo_partida.gd")
+var _partida := _PrincipalCicloPartida.new(self)
+## Puente de solo lectura para las pantallas que miran la pila de deshacer
+## (Opciones enseña cuántos pasos quedan; Ajustes la vacía al cambiar de mundo).
+var _pila_deshacer: Array[Dictionary]:
+	get:
+		return _partida.pila_deshacer
+const _PrincipalGuia := preload("res://ui/principal/guia_tutorial.gd")
+var _guia := _PrincipalGuia.new(self)
+
+## Cuelga un ayudante `Node` de esta pantalla y lo devuelve. Se llama desde el
+## inicializador de la variable: así existe antes de `_ready()` y de cualquier
+## llamada de una prueba, y se libera junto con Principal.
+func _ayudante(n: Node) -> Node:
+	add_child(n)
+	return n
 
 ## El fondo de cada `.card` del HTML no es un color plano: trae un degradado
 ## cenital sutil (`linear-gradient(180deg, panel+12%blanco, panel 42%)`) que
@@ -39,14 +70,6 @@ const SECCION_SIMULACION := "simulacion"
 ## Para no repetir el aviso del cierre de mercado cada vez que se repinta.
 var _mercado_avisado: int = -1
 
-## EL AUTOGUARDADO SE VE (M-301, 20-10): un «💾 Partida guardada» discreto arriba
-## a la derecha que se desvanece solo. Antes se guardaba sin que nadie lo supiera.
-var _ind_guardado: Label
-
-## Una sola ranura por ahora, con el nombre de tu club. Cuando haya menú de
-## partidas se aprovecha `Partida.listar()`, que ya devuelve club, año y fecha.
-const RANURA := "partida"
-
 ## El registro es texto enriquecido y no pasa por el traductor de etiquetas:
 ## se traduce cada tramo de texto entre etiquetas BBCode (título y cuerpo de
 ## la noticia van en tramos distintos).
@@ -71,14 +94,6 @@ var _pendientes := {}   ## Control -> Callable
 ## domingo juegas la copa, lo que quieres ver es el cuadro; si es fase de
 ## grupos, tu grupo; y solo si toca liga, la tabla. Cambiar de torneo tiene que
 ## NOTARSE sin leer un texto que lo diga.
-## LOS SORTEOS. Solo se enseña la cinemática de los torneos donde JUEGA tu club:
-## el bombo de un continental que no te toca sería una espera sin premio.
-##
-## Y se encolan. Al empezar temporada se sortean varios continentales a la vez, y
-## sin cola la segunda cinemática pisaría a la primera -o peor, se abrirían dos
-## superpuestas y el juego se quedaría con dos capas modales encima.
-var _cola_sorteos: Array = []
-var _sorteo_abierto: bool = false
 
 
 ## Por qué columna se ordena el plantel y en qué sentido. `vJugadores()` del
@@ -296,17 +311,8 @@ const ZOOM_TV := 1.35
 #  DESHACER Y VISTA COMPACTA (`vQoL()`)
 # ---------------------------------------------------------------------------
 #
-# DESHACER. El HTML guardaba `JSON.stringify(G)` antes de dos decisiones -responder
-# a una oferta y rescindir a un jugador- y las devolvía con un `JSON.parse`. Aquí
-# el retrato es `Partida.instantanea()`, que es exactamente el mismo diccionario
-# que se escribe en el guardado, y volver atrás es reconstruir el mundo desde él.
-# No es un "ctrl+z" general y no pretende serlo: son las dos decisiones que se
-# toman con el dedo y se lamentan al segundo siguiente.
-#
-# TRES COMO MUCHO. Cada retrato es la partida entera; con diez, la memoria se
-# llenaría de mundos muertos. El HTML también corta en tres.
-const DESHACER_MAX := 3
-var _pila_deshacer: Array[Dictionary] = []
+# DESHACER: la pila y sus reglas viven en `ui/principal/ciclo_partida.gd`
+# (fase 0); el puente `_pila_deshacer` está en `principal_p10.gd`.
 
 ## LA TIPOGRAFIA. Siete, y la primera es la de siempre.
 ##

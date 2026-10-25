@@ -1,5 +1,5 @@
 extends "res://ui/principal_p16.gd"
-## [Capa 18/19 de `principal.gd`] _abrir_rueda_pantalla_completa, _repintar_posturas, _responder, _pintar_museo, _marca, _ver_ciudad_explorando … (+8)
+## [Capa 16/17 de `principal.gd`] _abrir_rueda_pantalla_completa, _repintar_posturas, _responder, _pintar_museo, _marca, _ver_ciudad_explorando … (+5)
 
 ## LA RUEDA DE PRENSA, DE PANTALLA COMPLETA.
 ##
@@ -259,22 +259,6 @@ func _ver_ciudad_explorando(modo: String) -> void:
 		if h is VistaCiudad:
 			(h as VistaCiudad).explorar(modo)
 
-func _deshacer() -> void:
-	if _pila_deshacer.is_empty():
-		_escribir("[color=#c9a227]No hay nada que deshacer.[/color]")
-		return
-	var u: Dictionary = _pila_deshacer.pop_back()
-	var m := Partida.desde_instantanea(u["estado"])
-	if m == null:
-		_escribir("[color=#e05555]No se pudo deshacer.[/color]")
-		return
-	mundo = m
-	_conectar_noticias()
-	_seleccionado = null
-	_llenar_selector()
-	_escribir("[color=#3fa06a]Deshecho:[/color] %s." % String(u["motivo"]))
-	_refrescar()
-
 func _pintar_tipografia() -> void:
 	var lt := _texto(10, COL_SUAVE)
 	lt.text = Idiomas.t("Tipografia")
@@ -319,26 +303,6 @@ func _alternar_favorito(tab: String) -> void:
 		_favoritos.append(tab)
 	_refrescar()
 
-func _guardar_en(nombre: String) -> void:
-	if Partida.guardar(mundo, nombre):
-		_escribir("[color=#4caf6d]Guardado en %s.[/color] %s, %d, semana %d." % [
-			nombre, mundo.mi_club().nombre, mundo.anio, mundo.semana])
-	else:
-		_escribir("[color=#e05555]No se pudo guardar en %s.[/color]" % nombre)
-	_refrescar()
-
-func _cargar_de(nombre: String) -> void:
-	var m := Partida.cargar(nombre)
-	if m == null:
-		_escribir("[color=#c9a227]Esa ranura está vacía.[/color]")
-		return
-	mundo = m
-	_conectar_noticias()
-	_escribir("[color=#4caf6d]Partida cargada de %s.[/color]" % nombre)
-	_avisar_si_respaldo()
-	_refrescar()
-	_resolver_partido_abandonado()
-
 func _pintar_ranuras() -> void:
 	var t := _texto(11, COL_SUAVE)
 	t.text = Idiomas.t("RANURAS DE GUARDADO")
@@ -371,13 +335,13 @@ func _pintar_ranuras() -> void:
 		var bg := Button.new()
 		bg.text = Idiomas.t("Guardar")
 		bg.add_theme_font_size_override("font_size", 11)
-		bg.pressed.connect(func() -> void: _guardar_en(nombre))
+		bg.pressed.connect(func() -> void: _partida.guardar_en(nombre))
 		fila.add_child(bg)
 		var bc := Button.new()
 		bc.text = Idiomas.t("Cargar")
 		bc.add_theme_font_size_override("font_size", 11)
 		bc.disabled = hay.is_empty()
-		bc.pressed.connect(func() -> void: _cargar_de(nombre))
+		bc.pressed.connect(func() -> void: _partida.cargar_de(nombre))
 		fila.add_child(bc)
 	_lista_ajustes.add_child(HSeparator.new())
 

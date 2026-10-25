@@ -1,5 +1,5 @@
 extends "res://ui/principal_p13.gd"
-## [Capa 15/19 de `principal.gd`] _enviar_oferta_negociacion, _al_ajustar_rol_neg, _al_ajustar_campo_neg, _indice_grupo, _paso_pagina, _animar_pagina … (+14)
+## [Capa 13/17 de `principal.gd`] _enviar_oferta_negociacion, _al_ajustar_rol_neg, _al_ajustar_campo_neg, _indice_grupo, _paso_pagina, _animar_pagina … (+14)
 
 func _enviar_oferta_negociacion() -> void:
 	var n := mundo.mercado.negociacion

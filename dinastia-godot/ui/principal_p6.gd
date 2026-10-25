@@ -1,5 +1,5 @@
 extends "res://ui/principal_p5.gd"
-## [Capa 6/19 de `principal.gd`] _pintar_finanzas, _pintar_porque_moral, _pintar_camarin
+## [Capa 6/17 de `principal.gd`] _pintar_finanzas, _pintar_porque_moral, _pintar_camarin
 
 func _pintar_finanzas(c: Club) -> void:
 	_limpiar(_lista_finanzas)
