@@ -1,0 +1,2253 @@
+{
+ "exactas": {
+  "En color: camiseta, estadio y tablas": {
+   "en": "In colour: kit, stadium and tables",
+   "pt": "Em cores: camisa, estádio e tabelas",
+   "fr": "En couleur : maillot, stade et classements",
+   "it": "A colori: maglia, stadio e classifiche",
+   "de": "In Farbe: Trikot, Stadion und Tabellen",
+   "ca": "En color: samarreta, estadi i classificacions",
+   "pl": "W kolorze: koszulka, stadion i tabele",
+   "tr": "Renkli: forma, stadyum ve tablolar"
+  },
+  "En una tinta: prensa y marcadores": {
+   "en": "In one ink: press and scoreboards",
+   "pt": "Em uma tinta: imprensa e placares",
+   "fr": "En une seule encre : presse et tableaux d'affichage",
+   "it": "In un solo colore: stampa e tabelloni",
+   "de": "Einfarbig: Presse und Anzeigetafeln",
+   "ca": "En una tinta: premsa i marcadors",
+   "pl": "Jednym kolorem: prasa i tablice wyników",
+   "tr": "Tek renk: basın ve skorbordlar"
+  },
+  "Así se ve tu escudo": {
+   "en": "This is how your crest looks",
+   "pt": "Assim fica o seu escudo",
+   "fr": "Voici à quoi ressemble ton écusson",
+   "it": "Ecco come appare il tuo stemma",
+   "de": "So sieht dein Wappen aus",
+   "ca": "Així es veu el teu escut",
+   "pl": "Tak wygląda twój herb",
+   "tr": "Armanın böyle görünüyor"
+  },
+  "1 · Color principal del club": {
+   "en": "1 · Main club colour",
+   "pt": "1 · Cor principal do clube",
+   "fr": "1 · Couleur principale du club",
+   "it": "1 · Colore principale del club",
+   "de": "1 · Hauptfarbe des Vereins",
+   "ca": "1 · Color principal del club",
+   "pl": "1 · Główny kolor klubu",
+   "tr": "1 · Kulübün ana rengi"
+  },
+  "1 · Color secundario del club": {
+   "en": "1 · Secondary club colour",
+   "pt": "1 · Cor secundária do clube",
+   "fr": "1 · Couleur secondaire du club",
+   "it": "1 · Colore secondario del club",
+   "de": "1 · Zweitfarbe des Vereins",
+   "ca": "1 · Color secundari del club",
+   "pl": "1 · Drugi kolor klubu",
+   "tr": "1 · Kulübün ikinci rengi"
+  },
+  "Diseño": {
+   "en": "Design",
+   "pt": "Design",
+   "fr": "Motif",
+   "it": "Disegno",
+   "de": "Design",
+   "ca": "Disseny",
+   "pl": "Wzór",
+   "tr": "Desen"
+  },
+  "Titular": {
+   "en": "Home",
+   "pt": "Titular",
+   "fr": "Domicile",
+   "it": "Casa",
+   "de": "Heim",
+   "ca": "Titular",
+   "pl": "Domowa",
+   "tr": "İç saha"
+  },
+  "Color 1": {
+   "en": "Colour 1",
+   "pt": "Cor 1",
+   "fr": "Couleur 1",
+   "it": "Colore 1",
+   "de": "Farbe 1",
+   "ca": "Color 1",
+   "pl": "Kolor 1",
+   "tr": "Renk 1"
+  },
+  "Color 2": {
+   "en": "Colour 2",
+   "pt": "Cor 2",
+   "fr": "Couleur 2",
+   "it": "Colore 2",
+   "de": "Farbe 2",
+   "ca": "Color 2",
+   "pl": "Kolor 2",
+   "tr": "Renk 2"
+  },
+  "Toro": {
+   "en": "Bull",
+   "pt": "Touro",
+   "fr": "Taureau",
+   "it": "Toro",
+   "de": "Stier",
+   "ca": "Toro",
+   "pl": "Byk",
+   "tr": "Boğa"
+  },
+  "Dragón": {
+   "en": "Dragon",
+   "pt": "Dragão",
+   "fr": "Dragon",
+   "it": "Drago",
+   "de": "Drache",
+   "ca": "Drac",
+   "pl": "Smok",
+   "tr": "Ejderha"
+  },
+  "Águila": {
+   "en": "Eagle",
+   "pt": "Águia",
+   "fr": "Aigle",
+   "it": "Aquila",
+   "de": "Adler",
+   "ca": "Àguila",
+   "pl": "Orzeł",
+   "tr": "Kartal"
+  },
+  "Halcón": {
+   "en": "Falcon",
+   "pt": "Falcão",
+   "fr": "Faucon",
+   "it": "Falco",
+   "de": "Falke",
+   "ca": "Falcó",
+   "pl": "Sokół",
+   "tr": "Şahin"
+  },
+  "León": {
+   "en": "Lion",
+   "pt": "Leão",
+   "fr": "Lion",
+   "it": "Leone",
+   "de": "Löwe",
+   "ca": "Lleó",
+   "pl": "Lew",
+   "tr": "Aslan"
+  },
+  "Pantera": {
+   "en": "Panther",
+   "pt": "Pantera",
+   "fr": "Panthère",
+   "it": "Pantera",
+   "de": "Panther",
+   "ca": "Pantera",
+   "pl": "Pantera",
+   "tr": "Panter"
+  },
+  "Carnero": {
+   "en": "Ram",
+   "pt": "Carneiro",
+   "fr": "Bélier",
+   "it": "Ariete",
+   "de": "Widder",
+   "ca": "Marrà",
+   "pl": "Baran",
+   "tr": "Koç"
+  },
+  "Tiburón": {
+   "en": "Shark",
+   "pt": "Tubarão",
+   "fr": "Requin",
+   "it": "Squalo",
+   "de": "Hai",
+   "ca": "Tauró",
+   "pl": "Rekin",
+   "tr": "Köpekbalığı"
+  },
+  "Balón": {
+   "en": "Ball",
+   "pt": "Bola",
+   "fr": "Ballon",
+   "it": "Pallone",
+   "de": "Ball",
+   "ca": "Pilota",
+   "pl": "Piłka",
+   "tr": "Top"
+  },
+  "Lobo": {
+   "en": "Wolf",
+   "pt": "Lobo",
+   "fr": "Loup",
+   "it": "Lupo",
+   "de": "Wolf",
+   "ca": "Llop",
+   "pl": "Wilk",
+   "tr": "Kurt"
+  },
+  "Clásica": {
+   "en": "Classic",
+   "pt": "Clássica",
+   "fr": "Classique",
+   "it": "Classica",
+   "de": "Klassisch",
+   "ca": "Clàssica",
+   "pl": "Klasyczna",
+   "tr": "Klasik"
+  },
+  "Bloque": {
+   "en": "Block",
+   "pt": "Bloco",
+   "fr": "Bloc",
+   "it": "Blocco",
+   "de": "Block",
+   "ca": "Bloc",
+   "pl": "Blokowa",
+   "tr": "Blok"
+  },
+  "Redonda": {
+   "en": "Rounded",
+   "pt": "Arredondada",
+   "fr": "Arrondie",
+   "it": "Arrotondata",
+   "de": "Abgerundet",
+   "ca": "Arrodonida",
+   "pl": "Zaokrąglona",
+   "tr": "Yuvarlak"
+  },
+  "Plantilla": {
+   "en": "Stencil",
+   "pt": "Estêncil",
+   "fr": "Pochoir",
+   "it": "Stencil",
+   "de": "Schablone",
+   "ca": "Plantilla",
+   "pl": "Szablonowa",
+   "tr": "Şablon"
+  },
+  "Manuscrita": {
+   "en": "Handwritten",
+   "pt": "Manuscrita",
+   "fr": "Manuscrite",
+   "it": "Corsivo",
+   "de": "Handschrift",
+   "ca": "Manuscrita",
+   "pl": "Odręczna",
+   "tr": "El yazısı"
+  },
+  "Digital": {
+   "en": "Digital",
+   "pt": "Digital",
+   "fr": "Numérique",
+   "it": "Digitale",
+   "de": "Digital",
+   "ca": "Digital",
+   "pl": "Cyfrowa",
+   "tr": "Dijital"
+  },
+  "Aporta al año": {
+   "en": "Brings in per year",
+   "pt": "Rende por ano",
+   "fr": "Rapporte par an",
+   "it": "Rende all'anno",
+   "de": "Bringt pro Jahr",
+   "ca": "Aporta a l'any",
+   "pl": "Przynosi rocznie",
+   "tr": "Yıllık getiri"
+  },
+  "Marca propia": {
+   "en": "Own brand",
+   "pt": "Marca própria",
+   "fr": "Marque maison",
+   "it": "Marchio proprio",
+   "de": "Eigenmarke",
+   "ca": "Marca pròpia",
+   "pl": "Własna marka",
+   "tr": "Kendi markası"
+  },
+  "Fabricas tú: margen entero pero sin caché": {
+   "en": "You make it: full margin but no signing fee",
+   "pt": "Você fabrica: margem inteira, mas sem cachê",
+   "fr": "Tu fabriques toi-même : toute la marge mais pas de prime",
+   "it": "Produci tu: margine intero ma niente ingaggio",
+   "de": "Du produzierst selbst: volle Marge, aber kein Handgeld",
+   "ca": "Fabriques tu: tot el marge però sense caixet",
+   "pl": "Produkujesz sam: cała marża, ale bez premii",
+   "tr": "Sen üretirsin: kârın tamamı sende ama imza parası yok"
+  },
+  "Marca nacional, cumplidora": {
+   "en": "National brand, reliable",
+   "pt": "Marca nacional, cumpridora",
+   "fr": "Marque nationale, fiable",
+   "it": "Marchio nazionale, affidabile",
+   "de": "Nationale Marke, zuverlässig",
+   "ca": "Marca nacional, complidora",
+   "pl": "Marka krajowa, solidna",
+   "tr": "Yerli marka, güvenilir"
+  },
+  "Marca global de primer nivel": {
+   "en": "Top-tier global brand",
+   "pt": "Marca global de primeira linha",
+   "fr": "Marque mondiale de premier plan",
+   "it": "Marchio globale di primo livello",
+   "de": "Weltmarke der Spitzenklasse",
+   "ca": "Marca global de primer nivell",
+   "pl": "Światowa marka najwyższej klasy",
+   "tr": "Birinci sınıf küresel marka"
+  },
+  "Diseño italiano, kits que se agotan": {
+   "en": "Italian design, kits that sell out",
+   "pt": "Design italiano, camisas que esgotam",
+   "fr": "Design italien, des maillots qui s'arrachent",
+   "it": "Design italiano, maglie che vanno a ruba",
+   "de": "Italienisches Design, Trikots, die ausverkauft sind",
+   "ca": "Disseny italià, samarretes que s'exhaureixen",
+   "pl": "Włoski design, koszulki, które się wyprzedają",
+   "tr": "İtalyan tasarımı, kapış kapış satılan formalar"
+  },
+  "Agresiva en marketing, muy bien pagada": {
+   "en": "Aggressive marketing, very well paid",
+   "pt": "Agressiva no marketing, muito bem paga",
+   "fr": "Marketing agressif, très bien payée",
+   "it": "Marketing aggressivo, pagata molto bene",
+   "de": "Aggressives Marketing, sehr gut bezahlt",
+   "ca": "Agressiva en màrqueting, molt ben pagada",
+   "pl": "Agresywny marketing, bardzo dobrze płaci",
+   "tr": "Pazarlamada agresif, çok iyi öder"
+  },
+  "Alemana, seria y estable": {
+   "en": "German, serious and stable",
+   "pt": "Alemã, séria e estável",
+   "fr": "Allemande, sérieuse et stable",
+   "it": "Tedesca, seria e stabile",
+   "de": "Deutsch, seriös und stabil",
+   "ca": "Alemanya, seriosa i estable",
+   "pl": "Niemiecka, poważna i stabilna",
+   "tr": "Alman, ciddi ve istikrarlı"
+  },
+  "Total de las zonas": {
+   "en": "Total of all areas",
+   "pt": "Total das zonas",
+   "fr": "Total des zones",
+   "it": "Totale delle zone",
+   "de": "Summe aller Flächen",
+   "ca": "Total de les zones",
+   "pl": "Suma wszystkich stref",
+   "tr": "Tüm alanların toplamı"
+  },
+  "Rentan por semana": {
+   "en": "Earn per week",
+   "pt": "Rendem por semana",
+   "fr": "Rapportent par semaine",
+   "it": "Rendono a settimana",
+   "de": "Bringen pro Woche",
+   "ca": "Rendeixen per setmana",
+   "pl": "Przynoszą tygodniowo",
+   "tr": "Haftalık getiri"
+  },
+  "Techo retráctil": {
+   "en": "Retractable roof",
+   "pt": "Teto retrátil",
+   "fr": "Toit rétractable",
+   "it": "Tetto retrattile",
+   "de": "Schiebedach",
+   "ca": "Sostre retràctil",
+   "pl": "Rozsuwany dach",
+   "tr": "Açılır kapanır çatı"
+  },
+  "La lluvia deja de vaciar las gradas: la asistencia ya no depende del clima": {
+   "en": "Rain no longer empties the stands: attendance no longer depends on the weather",
+   "pt": "A chuva deixa de esvaziar as arquibancadas: o público já não depende do clima",
+   "fr": "La pluie ne vide plus les tribunes : l'affluence ne dépend plus de la météo",
+   "it": "La pioggia non svuota più gli spalti: l'affluenza non dipende più dal meteo",
+   "de": "Regen leert die Ränge nicht mehr: der Zuschauerzuspruch hängt nicht mehr vom Wetter ab",
+   "ca": "La pluja ja no buida les graderies: l'assistència ja no depèn del temps",
+   "pl": "Deszcz nie opróżnia już trybun: frekwencja nie zależy od pogody",
+   "tr": "Yağmur artık tribünleri boşaltmıyor: seyirci sayısı havaya bağlı değil"
+  },
+  "Pantallas gigantes": {
+   "en": "Giant screens",
+   "pt": "Telões",
+   "fr": "Écrans géants",
+   "it": "Maxischermi",
+   "de": "Großbildleinwände",
+   "ca": "Pantalles gegants",
+   "pl": "Telebimy",
+   "tr": "Dev ekranlar"
+  },
+  "Repeticiones y show: más ambiente y más consumo en el estadio": {
+   "en": "Replays and show: more atmosphere and more spending in the stadium",
+   "pt": "Replays e show: mais ambiente e mais consumo no estádio",
+   "fr": "Ralentis et spectacle : plus d'ambiance et plus de dépenses au stade",
+   "it": "Replay e spettacolo: più atmosfera e più consumi allo stadio",
+   "de": "Wiederholungen und Show: mehr Stimmung und mehr Umsatz im Stadion",
+   "ca": "Repeticions i espectacle: més ambient i més consum a l'estadi",
+   "pl": "Powtórki i show: więcej atmosfery i więcej wydatków na stadionie",
+   "tr": "Tekrarlar ve gösteri: stadyumda daha çok atmosfer ve harcama"
+  },
+  "Palcos VIP": {
+   "en": "VIP boxes",
+   "pt": "Camarotes VIP",
+   "fr": "Loges VIP",
+   "it": "Palchi VIP",
+   "de": "VIP-Logen",
+   "ca": "Llotges VIP",
+   "pl": "Loże VIP",
+   "tr": "VIP locaları"
+  },
+  "Entradas de altísimo margen para empresas y socios premium": {
+   "en": "Very high-margin tickets for companies and premium members",
+   "pt": "Ingressos de altíssima margem para empresas e sócios premium",
+   "fr": "Billets à très forte marge pour entreprises et abonnés premium",
+   "it": "Biglietti ad altissimo margine per aziende e soci premium",
+   "de": "Tickets mit sehr hoher Marge für Firmen und Premium-Mitglieder",
+   "ca": "Entrades d'altíssim marge per a empreses i socis prèmium",
+   "pl": "Bilety o bardzo wysokiej marży dla firm i członków premium",
+   "tr": "Şirketler ve premium üyeler için çok yüksek kârlı biletler"
+  },
+  "Iluminación LED y show": {
+   "en": "LED lighting and show",
+   "pt": "Iluminação LED e show",
+   "fr": "Éclairage LED et spectacle",
+   "it": "Illuminazione LED e spettacolo",
+   "de": "LED-Beleuchtung und Show",
+   "ca": "Il·luminació LED i espectacle",
+   "pl": "Oświetlenie LED i show",
+   "tr": "LED aydınlatma ve gösteri"
+  },
+  "Espectáculo antes del partido: sube el ánimo de la hinchada": {
+   "en": "Pre-match show: lifts the fans' mood",
+   "pt": "Espetáculo antes do jogo: anima a torcida",
+   "fr": "Spectacle d'avant-match : remonte le moral des supporters",
+   "it": "Spettacolo prepartita: alza il morale dei tifosi",
+   "de": "Show vor dem Spiel: hebt die Stimmung der Fans",
+   "ca": "Espectacle abans del partit: anima l'afició",
+   "pl": "Show przed meczem: poprawia nastrój kibiców",
+   "tr": "Maç öncesi gösteri: taraftarın moralini yükseltir"
+  },
+  "Festejo de campeón": {
+   "en": "Champions' celebration",
+   "pt": "Festa de campeão",
+   "fr": "Célébration du titre",
+   "it": "Festa scudetto",
+   "de": "Meisterfeier",
+   "ca": "Celebració de campió",
+   "pl": "Feta mistrzowska",
+   "tr": "Şampiyonluk kutlaması"
+  },
+  "Confeti dorado": {
+   "en": "Golden confetti",
+   "pt": "Confete dourado",
+   "fr": "Confettis dorés",
+   "it": "Coriandoli dorati",
+   "de": "Goldenes Konfetti",
+   "ca": "Confeti daurat",
+   "pl": "Złote konfetti",
+   "tr": "Altın konfeti"
+  },
+  "Fuegos artificiales": {
+   "en": "Fireworks",
+   "pt": "Fogos de artifício",
+   "fr": "Feux d'artifice",
+   "it": "Fuochi d'artificio",
+   "de": "Feuerwerk",
+   "ca": "Focs artificials",
+   "pl": "Fajerwerki",
+   "tr": "Havai fişekler"
+  },
+  "Bengalas de la barra": {
+   "en": "Ultras' flares",
+   "pt": "Sinalizadores da torcida",
+   "fr": "Fumigènes des ultras",
+   "it": "Fumogeni della curva",
+   "de": "Bengalos der Ultras",
+   "ca": "Bengales de la grada",
+   "pl": "Race kibiców",
+   "tr": "Tribün meşaleleri"
+  },
+  "Mosaico gigante": {
+   "en": "Giant tifo",
+   "pt": "Mosaico gigante",
+   "fr": "Tifo géant",
+   "it": "Coreografia gigante",
+   "de": "Riesen-Choreo",
+   "ca": "Mosaic gegant",
+   "pl": "Gigantyczna oprawa",
+   "tr": "Dev koreografi"
+  },
+  "Humo de colores": {
+   "en": "Coloured smoke",
+   "pt": "Fumaça colorida",
+   "fr": "Fumée colorée",
+   "it": "Fumo colorato",
+   "de": "Farbiger Rauch",
+   "ca": "Fum de colors",
+   "pl": "Kolorowy dym",
+   "tr": "Renkli duman"
+  },
+  "Show de láser": {
+   "en": "Laser show",
+   "pt": "Show de laser",
+   "fr": "Spectacle laser",
+   "it": "Spettacolo laser",
+   "de": "Lasershow",
+   "ca": "Espectacle de làser",
+   "pl": "Pokaz laserowy",
+   "tr": "Lazer gösterisi"
+  },
+  "Tipo de césped": {
+   "en": "Pitch type",
+   "pt": "Tipo de gramado",
+   "fr": "Type de pelouse",
+   "it": "Tipo di manto erboso",
+   "de": "Rasenart",
+   "ca": "Tipus de gespa",
+   "pl": "Rodzaj murawy",
+   "tr": "Çim türü"
+  },
+  "Natural": {
+   "en": "Natural",
+   "pt": "Natural",
+   "fr": "Naturel",
+   "it": "Naturale",
+   "de": "Naturrasen",
+   "ca": "Natural",
+   "pl": "Naturalna",
+   "tr": "Doğal"
+  },
+  "Híbrido": {
+   "en": "Hybrid",
+   "pt": "Híbrido",
+   "fr": "Hybride",
+   "it": "Ibrido",
+   "de": "Hybrid",
+   "ca": "Híbrid",
+   "pl": "Hybrydowa",
+   "tr": "Hibrit"
+  },
+  "Sintético": {
+   "en": "Artificial",
+   "pt": "Sintético",
+   "fr": "Synthétique",
+   "it": "Sintetico",
+   "de": "Kunstrasen",
+   "ca": "Sintètic",
+   "pl": "Syntetyczna",
+   "tr": "Sentetik"
+  },
+  "Avión propio para giras": {
+   "en": "Own plane for tours",
+   "pt": "Avião próprio para excursões",
+   "fr": "Avion privé pour les tournées",
+   "it": "Aereo privato per le tournée",
+   "de": "Eigenes Flugzeug für Reisen",
+   "ca": "Avió propi per a les gires",
+   "pl": "Własny samolot na tournée",
+   "tr": "Turnelere özel uçak"
+  },
+  "SÍ": {
+   "en": "YES",
+   "pt": "SIM",
+   "fr": "OUI",
+   "it": "SÌ",
+   "de": "JA",
+   "ca": "SÍ",
+   "pl": "TAK",
+   "tr": "EVET"
+  },
+  "NO": {
+   "en": "NO",
+   "pt": "NÃO",
+   "fr": "NON",
+   "it": "NO",
+   "de": "NEIN",
+   "ca": "NO",
+   "pl": "NIE",
+   "tr": "HAYIR"
+  },
+  "Firmar": {
+   "en": "Sign",
+   "pt": "Assinar",
+   "fr": "Signer",
+   "it": "Firmare",
+   "de": "Unterschreiben",
+   "ca": "Signar",
+   "pl": "Podpisz",
+   "tr": "İmzala"
+  },
+  "Firmado": {
+   "en": "Signed",
+   "pt": "Assinado",
+   "fr": "Signé",
+   "it": "Firmato",
+   "de": "Unterschrieben",
+   "ca": "Signat",
+   "pl": "Podpisano",
+   "tr": "İmzalandı"
+  },
+  "Romper": {
+   "en": "Break off",
+   "pt": "Romper",
+   "fr": "Rompre",
+   "it": "Rompere",
+   "de": "Kündigen",
+   "ca": "Trencar",
+   "pl": "Zerwij",
+   "tr": "Fesih"
+  },
+  "Sur": {
+   "en": "South",
+   "pt": "Sul",
+   "fr": "Sud",
+   "it": "Sud",
+   "de": "Süd",
+   "ca": "Sud",
+   "pl": "Południe",
+   "tr": "Güney"
+  },
+  "Norte": {
+   "en": "North",
+   "pt": "Norte",
+   "fr": "Nord",
+   "it": "Nord",
+   "de": "Nord",
+   "ca": "Nord",
+   "pl": "Północ",
+   "tr": "Kuzey"
+  },
+  "Este": {
+   "en": "East",
+   "pt": "Leste",
+   "fr": "Est",
+   "it": "Est",
+   "de": "Ost",
+   "ca": "Est",
+   "pl": "Wschód",
+   "tr": "Doğu"
+  },
+  "Oeste": {
+   "en": "West",
+   "pt": "Oeste",
+   "fr": "Ouest",
+   "it": "Ovest",
+   "de": "West",
+   "ca": "Oest",
+   "pl": "Zachód",
+   "tr": "Batı"
+  },
+  "Butacas": {
+   "en": "Seats",
+   "pt": "Assentos",
+   "fr": "Sièges",
+   "it": "Seggiolini",
+   "de": "Sitze",
+   "ca": "Seients",
+   "pl": "Krzesełka",
+   "tr": "Koltuklar"
+  },
+  "Techo": {
+   "en": "Roof",
+   "pt": "Cobertura",
+   "fr": "Toit",
+   "it": "Copertura",
+   "de": "Dach",
+   "ca": "Sostre",
+   "pl": "Dach",
+   "tr": "Çatı"
+  },
+  "Focos": {
+   "en": "Floodlights",
+   "pt": "Refletores",
+   "fr": "Projecteurs",
+   "it": "Riflettori",
+   "de": "Flutlicht",
+   "ca": "Focus",
+   "pl": "Reflektory",
+   "tr": "Projektörler"
+  },
+  "Fachada": {
+   "en": "Façade",
+   "pt": "Fachada",
+   "fr": "Façade",
+   "it": "Facciata",
+   "de": "Fassade",
+   "ca": "Façana",
+   "pl": "Fasada",
+   "tr": "Cephe"
+  },
+  "Pantallas": {
+   "en": "Screens",
+   "pt": "Telões",
+   "fr": "Écrans",
+   "it": "Schermi",
+   "de": "Leinwände",
+   "ca": "Pantalles",
+   "pl": "Ekrany",
+   "tr": "Ekranlar"
+  },
+  "Superficie": {
+   "en": "Surface",
+   "pt": "Superfície",
+   "fr": "Surface",
+   "it": "Superficie",
+   "de": "Belag",
+   "ca": "Superfície",
+   "pl": "Nawierzchnia",
+   "tr": "Zemin"
+  },
+  "Banderas": {
+   "en": "Flags",
+   "pt": "Bandeiras",
+   "fr": "Drapeaux",
+   "it": "Bandiere",
+   "de": "Fahnen",
+   "ca": "Banderes",
+   "pl": "Flagi",
+   "tr": "Bayraklar"
+  },
+  "Banquillos": {
+   "en": "Dugouts",
+   "pt": "Bancos",
+   "fr": "Bancs",
+   "it": "Panchine",
+   "de": "Trainerbänke",
+   "ca": "Banquetes",
+   "pl": "Ławki",
+   "tr": "Yedek kulübeleri"
+  },
+  "Dos tribunas": {
+   "en": "Two stands",
+   "pt": "Duas arquibancadas",
+   "fr": "Deux tribunes",
+   "it": "Due tribune",
+   "de": "Zwei Tribünen",
+   "ca": "Dues tribunes",
+   "pl": "Dwie trybuny",
+   "tr": "İki tribün"
+  },
+  "Tribuna de honor": {
+   "en": "Main stand",
+   "pt": "Tribuna de honra",
+   "fr": "Tribune d'honneur",
+   "it": "Tribuna d'onore",
+   "de": "Haupttribüne",
+   "ca": "Tribuna d'honor",
+   "pl": "Trybuna honorowa",
+   "tr": "Şeref tribünü"
+  },
+  "Ladrillo": {
+   "en": "Brick",
+   "pt": "Tijolo",
+   "fr": "Brique",
+   "it": "Mattoni",
+   "de": "Backstein",
+   "ca": "Maó",
+   "pl": "Cegła",
+   "tr": "Tuğla"
+  },
+  "Retráctil": {
+   "en": "Retractable",
+   "pt": "Retrátil",
+   "fr": "Rétractable",
+   "it": "Retrattile",
+   "de": "Ausfahrbar",
+   "ca": "Retràctil",
+   "pl": "Rozsuwany",
+   "tr": "Açılır kapanır"
+  },
+  "Halo LED": {
+   "en": "LED halo",
+   "pt": "Halo de LED",
+   "fr": "Halo LED",
+   "it": "Alone LED",
+   "de": "LED-Ring",
+   "ca": "Halo LED",
+   "pl": "Pierścień LED",
+   "tr": "LED hale"
+  },
+  "Cálida": {
+   "en": "Warm",
+   "pt": "Quente",
+   "fr": "Chaude",
+   "it": "Calda",
+   "de": "Warm",
+   "ca": "Càlida",
+   "pl": "Ciepłe",
+   "tr": "Sıcak"
+  },
+  "Fría": {
+   "en": "Cold",
+   "pt": "Fria",
+   "fr": "Froide",
+   "it": "Fredda",
+   "de": "Kalt",
+   "ca": "Freda",
+   "pl": "Zimne",
+   "tr": "Soğuk"
+  },
+  "Anillo LED 360": {
+   "en": "360 LED ring",
+   "pt": "Anel de LED 360",
+   "fr": "Anneau LED 360",
+   "it": "Anello LED 360",
+   "de": "360-Grad-LED-Ring",
+   "ca": "Anell LED 360",
+   "pl": "Pierścień LED 360",
+   "tr": "360 LED halka"
+  },
+  "Diagonales": {
+   "en": "Diagonals",
+   "pt": "Diagonais",
+   "fr": "Diagonales",
+   "it": "Diagonali",
+   "de": "Diagonalen",
+   "ca": "Diagonals",
+   "pl": "Ukosy",
+   "tr": "Çaprazlar"
+  },
+  "Espiga": {
+   "en": "Herringbone",
+   "pt": "Espinha de peixe",
+   "fr": "Chevrons",
+   "it": "Spina di pesce",
+   "de": "Fischgrät",
+   "ca": "Espiga",
+   "pl": "Jodełka",
+   "tr": "Balıksırtı"
+  },
+  "Abanico": {
+   "en": "Fan",
+   "pt": "Leque",
+   "fr": "Éventail",
+   "it": "Ventaglio",
+   "de": "Fächer",
+   "ca": "Ventall",
+   "pl": "Wachlarz",
+   "tr": "Yelpaze"
+  },
+  "Rombos": {
+   "en": "Diamonds",
+   "pt": "Losangos",
+   "fr": "Losanges",
+   "it": "Rombi",
+   "de": "Rauten",
+   "ca": "Rombes",
+   "pl": "Romby",
+   "tr": "Baklavalar"
+  },
+  "Esmeralda": {
+   "en": "Emerald",
+   "pt": "Esmeralda",
+   "fr": "Émeraude",
+   "it": "Smeraldo",
+   "de": "Smaragd",
+   "ca": "Maragda",
+   "pl": "Szmaragdowy",
+   "tr": "Zümrüt"
+  },
+  "Invierno": {
+   "en": "Winter",
+   "pt": "Inverno",
+   "fr": "Hiver",
+   "it": "Inverno",
+   "de": "Winter",
+   "ca": "Hivern",
+   "pl": "Zimowy",
+   "tr": "Kış"
+  },
+  "Oliva": {
+   "en": "Olive",
+   "pt": "Oliva",
+   "fr": "Olive",
+   "it": "Oliva",
+   "de": "Oliv",
+   "ca": "Oliva",
+   "pl": "Oliwkowy",
+   "tr": "Zeytin"
+  },
+  "Rosada": {
+   "en": "Pink",
+   "pt": "Rosada",
+   "fr": "Rose",
+   "it": "Rosa",
+   "de": "Rosa",
+   "ca": "Rosada",
+   "pl": "Różowa",
+   "tr": "Pembe"
+  },
+  "Dorada": {
+   "en": "Golden",
+   "pt": "Dourada",
+   "fr": "Dorée",
+   "it": "Dorata",
+   "de": "Golden",
+   "ca": "Daurada",
+   "pl": "Złota",
+   "tr": "Altın"
+  },
+  "Aluminio": {
+   "en": "Aluminium",
+   "pt": "Alumínio",
+   "fr": "Aluminium",
+   "it": "Alluminio",
+   "de": "Aluminium",
+   "ca": "Alumini",
+   "pl": "Aluminium",
+   "tr": "Alüminyum"
+  },
+  "Hueso": {
+   "en": "Bone white",
+   "pt": "Osso",
+   "fr": "Os",
+   "it": "Osso",
+   "de": "Knochenweiß",
+   "ca": "Os",
+   "pl": "Kość słoniowa",
+   "tr": "Kemik beyazı"
+  },
+  "Negra": {
+   "en": "Black",
+   "pt": "Preta",
+   "fr": "Noire",
+   "it": "Nera",
+   "de": "Schwarz",
+   "ca": "Negra",
+   "pl": "Czarna",
+   "tr": "Siyah"
+  },
+  "Roja": {
+   "en": "Red",
+   "pt": "Vermelha",
+   "fr": "Rouge",
+   "it": "Rossa",
+   "de": "Rot",
+   "ca": "Vermella",
+   "pl": "Czerwona",
+   "tr": "Kırmızı"
+  },
+  "Rombo": {
+   "en": "Diamond",
+   "pt": "Losango",
+   "fr": "Losange",
+   "it": "Rombo",
+   "de": "Raute",
+   "ca": "Rombe",
+   "pl": "Romb",
+   "tr": "Baklava"
+  },
+  "Panal": {
+   "en": "Honeycomb",
+   "pt": "Favo de mel",
+   "fr": "Nid d'abeille",
+   "it": "Nido d'ape",
+   "de": "Wabe",
+   "ca": "Bresca",
+   "pl": "Plaster miodu",
+   "tr": "Petek"
+  },
+  "Degradado": {
+   "en": "Gradient",
+   "pt": "Degradê",
+   "fr": "Dégradé",
+   "it": "Sfumato",
+   "de": "Farbverlauf",
+   "ca": "Degradat",
+   "pl": "Gradient",
+   "tr": "Geçişli"
+  },
+  "Tricolor": {
+   "en": "Tricolour",
+   "pt": "Tricolor",
+   "fr": "Tricolore",
+   "it": "Tricolore",
+   "de": "Dreifarbig",
+   "ca": "Tricolor",
+   "pl": "Trójkolorowe",
+   "tr": "Üç renkli"
+  },
+  "Diagonal": {
+   "en": "Diagonal",
+   "pt": "Diagonal",
+   "fr": "Diagonale",
+   "it": "Diagonale",
+   "de": "Diagonal",
+   "ca": "Diagonal",
+   "pl": "Ukośne",
+   "tr": "Çapraz"
+  },
+  "Moteado": {
+   "en": "Speckled",
+   "pt": "Mesclado",
+   "fr": "Moucheté",
+   "it": "Screziato",
+   "de": "Gesprenkelt",
+   "ca": "Clapejat",
+   "pl": "Nakrapiane",
+   "tr": "Benekli"
+  },
+  "Sectores": {
+   "en": "Sectors",
+   "pt": "Setores",
+   "fr": "Secteurs",
+   "it": "Settori",
+   "de": "Sektoren",
+   "ca": "Sectors",
+   "pl": "Sektory",
+   "tr": "Sektörler"
+  },
+  "Ola": {
+   "en": "Wave",
+   "pt": "Onda",
+   "fr": "Vague",
+   "it": "Onda",
+   "de": "Welle",
+   "ca": "Onada",
+   "pl": "Fala",
+   "tr": "Dalga"
+  },
+  "Base LED": {
+   "en": "LED base",
+   "pt": "Base de LED",
+   "fr": "Base LED",
+   "it": "Base LED",
+   "de": "LED-Sockel",
+   "ca": "Base LED",
+   "pl": "Podstawa LED",
+   "tr": "LED taban"
+  },
+  "Patrocinadores": {
+   "en": "Sponsors",
+   "pt": "Patrocinadores",
+   "fr": "Sponsors",
+   "it": "Sponsor",
+   "de": "Sponsoren",
+   "ca": "Patrocinadors",
+   "pl": "Sponsorzy",
+   "tr": "Sponsorlar"
+  },
+  "Neón nocturno": {
+   "en": "Night neon",
+   "pt": "Neon noturno",
+   "fr": "Néon nocturne",
+   "it": "Neon notturno",
+   "de": "Nachtneon",
+   "ca": "Neó nocturn",
+   "pl": "Nocny neon",
+   "tr": "Gece neonu"
+  },
+  "Negro y oro": {
+   "en": "Black and gold",
+   "pt": "Preto e ouro",
+   "fr": "Noir et or",
+   "it": "Nero e oro",
+   "de": "Schwarz und Gold",
+   "ca": "Negre i or",
+   "pl": "Czerń i złoto",
+   "tr": "Siyah ve altın"
+  },
+  "Cartel pintado": {
+   "en": "Painted sign",
+   "pt": "Cartaz pintado",
+   "fr": "Panneau peint",
+   "it": "Cartellone dipinto",
+   "de": "Gemaltes Schild",
+   "ca": "Cartell pintat",
+   "pl": "Malowany szyld",
+   "tr": "Boyalı tabela"
+  },
+  "Multicolor": {
+   "en": "Multicolour",
+   "pt": "Multicolor",
+   "fr": "Multicolore",
+   "it": "Multicolore",
+   "de": "Bunt",
+   "ca": "Multicolor",
+   "pl": "Wielokolorowe",
+   "tr": "Çok renkli"
+  },
+  "A tu gusto": {
+   "en": "Your choice",
+   "pt": "Do seu jeito",
+   "fr": "À ton goût",
+   "it": "A piacere",
+   "de": "Nach Wunsch",
+   "ca": "Al teu gust",
+   "pl": "Według uznania",
+   "tr": "Senin seçimin"
+  },
+  "Sorpréndeme": {
+   "en": "Surprise me",
+   "pt": "Me surpreenda",
+   "fr": "Surprends-moi",
+   "it": "Sorprendimi",
+   "de": "Überrasch mich",
+   "ca": "Sorprèn-me",
+   "pl": "Zaskocz mnie",
+   "tr": "Beni şaşırt"
+  },
+  "Estadio de ladera": {
+   "en": "Hillside stadium",
+   "pt": "Estádio de encosta",
+   "fr": "Stade à flanc de colline",
+   "it": "Stadio in collina",
+   "de": "Hangstadion",
+   "ca": "Estadi de vessant",
+   "pl": "Stadion na zboczu",
+   "tr": "Yamaç stadyumu"
+  },
+  "Estadio flotante": {
+   "en": "Floating stadium",
+   "pt": "Estádio flutuante",
+   "fr": "Stade flottant",
+   "it": "Stadio galleggiante",
+   "de": "Schwimmendes Stadion",
+   "ca": "Estadi flotant",
+   "pl": "Pływający stadion",
+   "tr": "Yüzen stadyum"
+  },
+  "Cúpula": {
+   "en": "Dome",
+   "pt": "Cúpula",
+   "fr": "Dôme",
+   "it": "Cupola",
+   "de": "Kuppel",
+   "ca": "Cúpula",
+   "pl": "Kopuła",
+   "tr": "Kubbe"
+  },
+  "Estadio del desierto": {
+   "en": "Desert stadium",
+   "pt": "Estádio do deserto",
+   "fr": "Stade du désert",
+   "it": "Stadio del deserto",
+   "de": "Wüstenstadion",
+   "ca": "Estadi del desert",
+   "pl": "Stadion na pustyni",
+   "tr": "Çöl stadyumu"
+  },
+  "Hormigón sudamericano": {
+   "en": "South American concrete",
+   "pt": "Concreto sul-americano",
+   "fr": "Béton sud-américain",
+   "it": "Cemento sudamericano",
+   "de": "Südamerikanischer Beton",
+   "ca": "Formigó sud-americà",
+   "pl": "Południowoamerykański beton",
+   "tr": "Güney Amerika betonu"
+  },
+  "Japonés moderno": {
+   "en": "Modern Japanese",
+   "pt": "Japonês moderno",
+   "fr": "Japonais moderne",
+   "it": "Giapponese moderno",
+   "de": "Modern japanisch",
+   "ca": "Japonès modern",
+   "pl": "Nowoczesny japoński",
+   "tr": "Modern Japon"
+  },
+  "3 puntos": {
+   "en": "3 points",
+   "pt": "3 pontos",
+   "fr": "3 points",
+   "it": "3 punti",
+   "de": "3 Punkte",
+   "ca": "3 punts",
+   "pl": "3 punkty",
+   "tr": "3 puan"
+  },
+  "2 puntos": {
+   "en": "2 points",
+   "pt": "2 pontos",
+   "fr": "2 points",
+   "it": "2 punti",
+   "de": "2 Punkte",
+   "ca": "2 punts",
+   "pl": "2 punkty",
+   "tr": "2 puan"
+  },
+  "Aforo": {
+   "en": "Capacity",
+   "pt": "Capacidade",
+   "fr": "Capacité",
+   "it": "Capienza",
+   "de": "Kapazität",
+   "ca": "Aforament",
+   "pl": "Pojemność",
+   "tr": "Kapasite"
+  },
+  "Proyección": {
+   "en": "Potential",
+   "pt": "Potencial",
+   "fr": "Potentiel",
+   "it": "Potenziale",
+   "de": "Potenzial",
+   "ca": "Projecció",
+   "pl": "Potencjał",
+   "tr": "Potansiyel"
+  },
+  "Dorsal": {
+   "en": "Shirt number",
+   "pt": "Número",
+   "fr": "Numéro",
+   "it": "Numero di maglia",
+   "de": "Rückennummer",
+   "ca": "Dorsal",
+   "pl": "Numer",
+   "tr": "Forma numarası"
+  },
+  "Puesto": {
+   "en": "Position",
+   "pt": "Posição",
+   "fr": "Poste",
+   "it": "Ruolo",
+   "de": "Position",
+   "ca": "Posició",
+   "pl": "Pozycja",
+   "tr": "Mevki"
+  },
+  "Rasgo": {
+   "en": "Trait",
+   "pt": "Traço",
+   "fr": "Trait",
+   "it": "Tratto",
+   "de": "Merkmal",
+   "ca": "Tret",
+   "pl": "Cecha",
+   "tr": "Özellik"
+  },
+  "País": {
+   "en": "Country",
+   "pt": "País",
+   "fr": "Pays",
+   "it": "Paese",
+   "de": "Land",
+   "ca": "País",
+   "pl": "Kraj",
+   "tr": "Ülke"
+  },
+  "Estirada": {
+   "en": "Diving",
+   "pt": "Mergulho",
+   "fr": "Plongeon",
+   "it": "Tuffo",
+   "de": "Hechtsprung",
+   "ca": "Estirada",
+   "pl": "Parady",
+   "tr": "Uzanma"
+  },
+  "Paradas": {
+   "en": "Handling",
+   "pt": "Defesas",
+   "fr": "Arrêts",
+   "it": "Parate",
+   "de": "Paraden",
+   "ca": "Aturades",
+   "pl": "Chwytanie",
+   "tr": "Kurtarışlar"
+  },
+  "Saque": {
+   "en": "Kicking",
+   "pt": "Reposição",
+   "fr": "Dégagement",
+   "it": "Rinvio",
+   "de": "Abstoß",
+   "ca": "Servei",
+   "pl": "Wybicie",
+   "tr": "Degaj"
+  },
+  "Reflejos": {
+   "en": "Reflexes",
+   "pt": "Reflexos",
+   "fr": "Réflexes",
+   "it": "Riflessi",
+   "de": "Reflexe",
+   "ca": "Reflexos",
+   "pl": "Refleks",
+   "tr": "Refleksler"
+  },
+  "Salidas": {
+   "en": "Rushing out",
+   "pt": "Saídas",
+   "fr": "Sorties",
+   "it": "Uscite",
+   "de": "Herauslaufen",
+   "ca": "Sortides",
+   "pl": "Wyjścia",
+   "tr": "Kaleden çıkış"
+  },
+  "Líder": {
+   "en": "Leader",
+   "pt": "Líder",
+   "fr": "Leader",
+   "it": "Leader",
+   "de": "Anführer",
+   "ca": "Líder",
+   "pl": "Lider",
+   "tr": "Lider"
+  },
+  "Levanta la moral del camarín semana a semana": {
+   "en": "Lifts dressing-room morale week after week",
+   "pt": "Levanta o moral do vestiário semana a semana",
+   "fr": "Remonte le moral du vestiaire semaine après semaine",
+   "it": "Alza il morale dello spogliatoio settimana dopo settimana",
+   "de": "Hebt die Moral in der Kabine Woche für Woche",
+   "ca": "Aixeca la moral del vestidor setmana rere setmana",
+   "pl": "Podnosi morale szatni tydzień po tygodniu",
+   "tr": "Soyunma odasının moralini her hafta yükseltir"
+  },
+  "Killer": {
+   "en": "Killer",
+   "pt": "Matador",
+   "fr": "Tueur",
+   "it": "Killer",
+   "de": "Knipser",
+   "ca": "Killer",
+   "pl": "Snajper",
+   "tr": "Katil"
+  },
+  "Definición letal: suma peligro en ataque": {
+   "en": "Lethal finishing: adds danger in attack",
+   "pt": "Finalização letal: aumenta o perigo no ataque",
+   "fr": "Finition létale : ajoute du danger en attaque",
+   "it": "Finalizzazione letale: aggiunge pericolo in attacco",
+   "de": "Tödlicher Abschluss: mehr Gefahr im Angriff",
+   "ca": "Definició letal: suma perill en atac",
+   "pl": "Zabójcze wykończenie: więcej zagrożenia w ataku",
+   "tr": "Öldürücü bitiricilik: hücumda tehlike katar"
+  },
+  "Cerebro": {
+   "en": "Brain",
+   "pt": "Cérebro",
+   "fr": "Cerveau",
+   "it": "Cervello",
+   "de": "Kopf",
+   "ca": "Cervell",
+   "pl": "Mózg",
+   "tr": "Beyin"
+  },
+  "Lee el partido: aporta orden en ambas áreas": {
+   "en": "Reads the game: brings order in both boxes",
+   "pt": "Lê o jogo: dá ordem nas duas áreas",
+   "fr": "Lit le jeu : apporte de l'ordre dans les deux surfaces",
+   "it": "Legge la partita: porta ordine in entrambe le aree",
+   "de": "Liest das Spiel: bringt Ordnung in beide Strafräume",
+   "ca": "Llegeix el partit: aporta ordre a les dues àrees",
+   "pl": "Czyta grę: wnosi porządek w obu polach karnych",
+   "tr": "Oyunu okur: iki ceza sahasında da düzen getirir"
+  },
+  "Motor": {
+   "en": "Engine",
+   "pt": "Motor",
+   "fr": "Moteur",
+   "it": "Motorino",
+   "de": "Motor",
+   "ca": "Motor",
+   "pl": "Motor",
+   "tr": "Motor"
+  },
+  "Entrena como nadie: progresa más rápido": {
+   "en": "Trains like no one else: improves faster",
+   "pt": "Treina como ninguém: evolui mais rápido",
+   "fr": "S'entraîne comme personne : progresse plus vite",
+   "it": "Si allena come nessuno: migliora più in fretta",
+   "de": "Trainiert wie kein anderer: entwickelt sich schneller",
+   "ca": "Entrena com ningú: progressa més ràpid",
+   "pl": "Trenuje jak nikt: rozwija się szybciej",
+   "tr": "Herkesten çok çalışır: daha hızlı gelişir"
+  },
+  "Frágil": {
+   "en": "Fragile",
+   "pt": "Frágil",
+   "fr": "Fragile",
+   "it": "Fragile",
+   "de": "Verletzungsanfällig",
+   "ca": "Fràgil",
+   "pl": "Kruchy",
+   "tr": "Kırılgan"
+  },
+  "Talento fino, físico de cristal": {
+   "en": "Fine talent, glass body",
+   "pt": "Talento fino, físico de vidro",
+   "fr": "Talent fin, physique de verre",
+   "it": "Talento raffinato, fisico di cristallo",
+   "de": "Feines Talent, gläserner Körper",
+   "ca": "Talent fi, físic de vidre",
+   "pl": "Subtelny talent, szklane zdrowie",
+   "tr": "İnce yetenek, camdan bünye"
+  },
+  "Polémico": {
+   "en": "Controversial",
+   "pt": "Polêmico",
+   "fr": "Polémique",
+   "it": "Controverso",
+   "de": "Umstritten",
+   "ca": "Polèmic",
+   "pl": "Kontrowersyjny",
+   "tr": "Tartışmalı"
+  },
+  "Genio y figura: a veces incendia la semana": {
+   "en": "A character: sometimes sets the week on fire",
+   "pt": "Gênio difícil: às vezes incendeia a semana",
+   "fr": "Fort caractère : enflamme parfois la semaine",
+   "it": "Genio e sregolatezza: a volte incendia la settimana",
+   "de": "Ein Typ für sich: setzt manchmal die Woche in Brand",
+   "ca": "Geni i figura: de vegades encén la setmana",
+   "pl": "Postać z charakterem: czasem podpala cały tydzień",
+   "tr": "Kendine has: bazen haftayı ateşe verir"
+  },
+  "Veloz": {
+   "en": "Speedster",
+   "pt": "Veloz",
+   "fr": "Rapide",
+   "it": "Veloce",
+   "de": "Schnell",
+   "ca": "Veloç",
+   "pl": "Szybki",
+   "tr": "Hızlı"
+  },
+  "Desborde eléctrico: rompe defensas": {
+   "en": "Electric dribbling: breaks defences",
+   "pt": "Drible elétrico: quebra defesas",
+   "fr": "Débordement électrique : casse les défenses",
+   "it": "Dribbling elettrico: spacca le difese",
+   "de": "Elektrisierende Dribblings: knackt Abwehrreihen",
+   "ca": "Desbordament elèctric: trenca defenses",
+   "pl": "Elektryzujący drybling: rozbija obrony",
+   "tr": "Elektrikli dripling: savunmaları dağıtır"
+  },
+  "Imponente defendiendo el área propia": {
+   "en": "Imposing defending his own box",
+   "pt": "Imponente defendendo a própria área",
+   "fr": "Imposant pour défendre sa surface",
+   "it": "Imponente nel difendere la propria area",
+   "de": "Gewaltig bei der Verteidigung des eigenen Strafraums",
+   "ca": "Imponent defensant l'àrea pròpia",
+   "pl": "Imponujący w obronie własnego pola karnego",
+   "tr": "Kendi ceza sahasını savunurken heybetli"
+  },
+  "Corte": {
+   "en": "Haircut",
+   "pt": "Corte",
+   "fr": "Coupe",
+   "it": "Taglio",
+   "de": "Frisur",
+   "ca": "Tall",
+   "pl": "Fryzura",
+   "tr": "Saç kesimi"
+  },
+  "Accesorio": {
+   "en": "Accessory",
+   "pt": "Acessório",
+   "fr": "Accessoire",
+   "it": "Accessorio",
+   "de": "Accessoire",
+   "ca": "Accessori",
+   "pl": "Dodatek",
+   "tr": "Aksesuar"
+  },
+  "Corto": {
+   "en": "Short",
+   "pt": "Curto",
+   "fr": "Court",
+   "it": "Corto",
+   "de": "Kurz",
+   "ca": "Curt",
+   "pl": "Krótkie",
+   "tr": "Kısa"
+  },
+  "Afro": {
+   "en": "Afro",
+   "pt": "Afro",
+   "fr": "Afro",
+   "it": "Afro",
+   "de": "Afro",
+   "ca": "Afro",
+   "pl": "Afro",
+   "tr": "Afro"
+  },
+  "Rizado": {
+   "en": "Curly",
+   "pt": "Cacheado",
+   "fr": "Bouclé",
+   "it": "Riccio",
+   "de": "Lockig",
+   "ca": "Arrissat",
+   "pl": "Kręcone",
+   "tr": "Kıvırcık"
+  },
+  "Largo": {
+   "en": "Long",
+   "pt": "Comprido",
+   "fr": "Long",
+   "it": "Lungo",
+   "de": "Lang",
+   "ca": "Llarg",
+   "pl": "Długie",
+   "tr": "Uzun"
+  },
+  "Tupé": {
+   "en": "Quiff",
+   "pt": "Topete",
+   "fr": "Banane",
+   "it": "Ciuffo",
+   "de": "Tolle",
+   "ca": "Tupè",
+   "pl": "Kok",
+   "tr": "Kabarık perçem"
+  },
+  "Crestas": {
+   "en": "Spikes",
+   "pt": "Cristas",
+   "fr": "Crêtes",
+   "it": "Creste",
+   "de": "Stacheln",
+   "ca": "Crestes",
+   "pl": "Kolce",
+   "tr": "İbikler"
+  },
+  "Mullet": {
+   "en": "Mullet",
+   "pt": "Mullet",
+   "fr": "Mulet",
+   "it": "Mullet",
+   "de": "Vokuhila",
+   "ca": "Mullet",
+   "pl": "Czeski piłkarz",
+   "tr": "Mullet"
+  },
+  "Trenzas": {
+   "en": "Braids",
+   "pt": "Tranças",
+   "fr": "Tresses",
+   "it": "Trecce",
+   "de": "Zöpfe",
+   "ca": "Trenes",
+   "pl": "Warkocze",
+   "tr": "Örgüler"
+  },
+  "Moño": {
+   "en": "Bun",
+   "pt": "Coque",
+   "fr": "Chignon",
+   "it": "Chignon",
+   "de": "Dutt",
+   "ca": "Monyo",
+   "pl": "Kok",
+   "tr": "Topuz"
+  },
+  "Flequillo": {
+   "en": "Fringe",
+   "pt": "Franja",
+   "fr": "Frange",
+   "it": "Frangia",
+   "de": "Pony",
+   "ca": "Serrell",
+   "pl": "Grzywka",
+   "tr": "Kakül"
+  },
+  "Rapado": {
+   "en": "Buzz cut",
+   "pt": "Raspado",
+   "fr": "Rasé",
+   "it": "Rasato",
+   "de": "Kahlrasur",
+   "ca": "Rapat",
+   "pl": "Na zero",
+   "tr": "Kazınmış"
+  },
+  "Calvo": {
+   "en": "Bald",
+   "pt": "Careca",
+   "fr": "Chauve",
+   "it": "Calvo",
+   "de": "Glatze",
+   "ca": "Calb",
+   "pl": "Łysy",
+   "tr": "Kel"
+  },
+  "Rastas": {
+   "en": "Dreadlocks",
+   "pt": "Dreadlocks",
+   "fr": "Dreadlocks",
+   "it": "Dreadlocks",
+   "de": "Dreadlocks",
+   "ca": "Rastes",
+   "pl": "Dredy",
+   "tr": "Rasta saç"
+  },
+  "Coleta": {
+   "en": "Ponytail",
+   "pt": "Rabo de cavalo",
+   "fr": "Queue de cheval",
+   "it": "Coda",
+   "de": "Pferdeschwanz",
+   "ca": "Cua",
+   "pl": "Kucyk",
+   "tr": "At kuyruğu"
+  },
+  "Melena": {
+   "en": "Mane",
+   "pt": "Juba",
+   "fr": "Crinière",
+   "it": "Chioma",
+   "de": "Mähne",
+   "ca": "Cabellera",
+   "pl": "Grzywa",
+   "tr": "Uzun yele"
+  },
+  "Pinchos": {
+   "en": "Spiky",
+   "pt": "Espetado",
+   "fr": "Hérissé",
+   "it": "A punte",
+   "de": "Stachelig",
+   "ca": "Punxes",
+   "pl": "Na jeża",
+   "tr": "Diken diken"
+  },
+  "Tazón": {
+   "en": "Bowl cut",
+   "pt": "Tigela",
+   "fr": "Coupe au bol",
+   "it": "A scodella",
+   "de": "Topfschnitt",
+   "ca": "Tassó",
+   "pl": "Na garnek",
+   "tr": "Kase kesim"
+  },
+  "Undercut": {
+   "en": "Undercut",
+   "pt": "Undercut",
+   "fr": "Undercut",
+   "it": "Undercut",
+   "de": "Undercut",
+   "ca": "Undercut",
+   "pl": "Undercut",
+   "tr": "Undercut"
+  },
+  "Ondulado": {
+   "en": "Wavy",
+   "pt": "Ondulado",
+   "fr": "Ondulé",
+   "it": "Mosso",
+   "de": "Gewellt",
+   "ca": "Ondulat",
+   "pl": "Falowane",
+   "tr": "Dalgalı"
+  },
+  "Con entradas": {
+   "en": "Receding",
+   "pt": "Com entradas",
+   "fr": "Dégarni",
+   "it": "Stempiato",
+   "de": "Geheimratsecken",
+   "ca": "Amb entrades",
+   "pl": "Zakola",
+   "tr": "Açık alınlı"
+  },
+  "Mohicano": {
+   "en": "Mohawk",
+   "pt": "Moicano",
+   "fr": "Iroquoise",
+   "it": "Moicano",
+   "de": "Irokese",
+   "ca": "Mohicà",
+   "pl": "Irokez",
+   "tr": "Mohikan"
+  },
+  "Samurái": {
+   "en": "Samurai",
+   "pt": "Samurai",
+   "fr": "Samouraï",
+   "it": "Samurai",
+   "de": "Samurai",
+   "ca": "Samurai",
+   "pl": "Samuraj",
+   "tr": "Samuray"
+  },
+  "Raya al medio": {
+   "en": "Middle parting",
+   "pt": "Repartido ao meio",
+   "fr": "Raie au milieu",
+   "it": "Riga in mezzo",
+   "de": "Mittelscheitel",
+   "ca": "Ratlla al mig",
+   "pl": "Przedziałek na środku",
+   "tr": "Ortadan ayrık"
+  },
+  "Cinta fina": {
+   "en": "Thin headband",
+   "pt": "Faixa fina",
+   "fr": "Bandeau fin",
+   "it": "Fascia sottile",
+   "de": "Dünnes Haarband",
+   "ca": "Cinta fina",
+   "pl": "Cienka opaska",
+   "tr": "İnce saç bandı"
+  },
+  "Cinta ancha": {
+   "en": "Wide headband",
+   "pt": "Faixa larga",
+   "fr": "Bandeau large",
+   "it": "Fascia larga",
+   "de": "Breites Stirnband",
+   "ca": "Cinta ampla",
+   "pl": "Szeroka opaska",
+   "tr": "Geniş saç bandı"
+  },
+  "Gafas": {
+   "en": "Glasses",
+   "pt": "Óculos",
+   "fr": "Lunettes",
+   "it": "Occhiali",
+   "de": "Brille",
+   "ca": "Ulleres",
+   "pl": "Okulary",
+   "tr": "Gözlük"
+  },
+  "Tira nasal": {
+   "en": "Nasal strip",
+   "pt": "Faixa nasal",
+   "fr": "Bande nasale",
+   "it": "Cerotto nasale",
+   "de": "Nasenpflaster",
+   "ca": "Tira nasal",
+   "pl": "Plaster na nos",
+   "tr": "Burun bandı"
+  },
+  "Pendientes": {
+   "en": "Earrings",
+   "pt": "Brincos",
+   "fr": "Boucles d'oreilles",
+   "it": "Orecchini",
+   "de": "Ohrringe",
+   "ca": "Arracades",
+   "pl": "Kolczyki",
+   "tr": "Küpeler"
+  },
+  "Cadena": {
+   "en": "Chain",
+   "pt": "Corrente",
+   "fr": "Chaîne",
+   "it": "Catenina",
+   "de": "Kette",
+   "ca": "Cadena",
+   "pl": "Łańcuszek",
+   "tr": "Zincir"
+  },
+  "Gorro de lana": {
+   "en": "Beanie",
+   "pt": "Gorro de lã",
+   "fr": "Bonnet",
+   "it": "Berretto di lana",
+   "de": "Wollmütze",
+   "ca": "Gorra de llana",
+   "pl": "Czapka zimowa",
+   "tr": "Bere"
+  },
+  "Gorra": {
+   "en": "Cap",
+   "pt": "Boné",
+   "fr": "Casquette",
+   "it": "Cappellino",
+   "de": "Kappe",
+   "ca": "Gorra",
+   "pl": "Czapka z daszkiem",
+   "tr": "Şapka"
+  },
+  "Nariz": {
+   "en": "Nose",
+   "pt": "Nariz",
+   "fr": "Nez",
+   "it": "Naso",
+   "de": "Nase",
+   "ca": "Nas",
+   "pl": "Nos",
+   "tr": "Burun"
+  },
+  "Boca": {
+   "en": "Mouth",
+   "pt": "Boca",
+   "fr": "Bouche",
+   "it": "Bocca",
+   "de": "Mund",
+   "ca": "Boca",
+   "pl": "Usta",
+   "tr": "Ağız"
+  },
+  "Ojos": {
+   "en": "Eyes",
+   "pt": "Olhos",
+   "fr": "Yeux",
+   "it": "Occhi",
+   "de": "Augen",
+   "ca": "Ulls",
+   "pl": "Oczy",
+   "tr": "Gözler"
+  },
+  "Cara": {
+   "en": "Face",
+   "pt": "Rosto",
+   "fr": "Visage",
+   "it": "Viso",
+   "de": "Gesicht",
+   "ca": "Cara",
+   "pl": "Twarz",
+   "tr": "Yüz"
+  },
+  "Mandíbula": {
+   "en": "Jaw",
+   "pt": "Mandíbula",
+   "fr": "Mâchoire",
+   "it": "Mascella",
+   "de": "Kiefer",
+   "ca": "Mandíbula",
+   "pl": "Szczęka",
+   "tr": "Çene"
+  },
+  "Pecas": {
+   "en": "Freckles",
+   "pt": "Sardas",
+   "fr": "Taches de rousseur",
+   "it": "Lentiggini",
+   "de": "Sommersprossen",
+   "ca": "Pigues",
+   "pl": "Piegi",
+   "tr": "Çiller"
+  },
+  "Lunar": {
+   "en": "Mole",
+   "pt": "Pinta",
+   "fr": "Grain de beauté",
+   "it": "Neo",
+   "de": "Muttermal",
+   "ca": "Piga",
+   "pl": "Pieprzyk",
+   "tr": "Ben"
+  },
+  "Cicatriz": {
+   "en": "Scar",
+   "pt": "Cicatriz",
+   "fr": "Cicatrice",
+   "it": "Cicatrice",
+   "de": "Narbe",
+   "ca": "Cicatriu",
+   "pl": "Blizna",
+   "tr": "Yara izi"
+  },
+  "No hay nada que importar.": {
+   "en": "There's nothing to import.",
+   "pt": "Não há nada para importar.",
+   "fr": "Il n'y a rien à importer.",
+   "it": "Non c'è niente da importare.",
+   "de": "Es gibt nichts zu importieren.",
+   "ca": "No hi ha res a importar.",
+   "pl": "Nie ma nic do zaimportowania.",
+   "tr": "İçe aktarılacak bir şey yok."
+  },
+  "No hay nada que exportar.": {
+   "en": "There's nothing to export.",
+   "pt": "Não há nada para exportar.",
+   "fr": "Il n'y a rien à exporter.",
+   "it": "Non c'è niente da esportare.",
+   "de": "Es gibt nichts zu exportieren.",
+   "ca": "No hi ha res a exportar.",
+   "pl": "Nie ma nic do wyeksportowania.",
+   "tr": "Dışa aktarılacak bir şey yok."
+  },
+  "Base exportada.": {
+   "en": "Database exported.",
+   "pt": "Base exportada.",
+   "fr": "Base exportée.",
+   "it": "Database esportato.",
+   "de": "Datenbank exportiert.",
+   "ca": "Base exportada.",
+   "pl": "Baza wyeksportowana.",
+   "tr": "Veritabanı dışa aktarıldı."
+  },
+  "Estadio sorpresa construido.": {
+   "en": "Surprise stadium built.",
+   "pt": "Estádio surpresa construído.",
+   "fr": "Stade surprise construit.",
+   "it": "Stadio a sorpresa costruito.",
+   "de": "Überraschungsstadion gebaut.",
+   "ca": "Estadi sorpresa construït.",
+   "pl": "Stadion-niespodzianka zbudowany.",
+   "tr": "Sürpriz stadyum inşa edildi."
+  },
+  "Estadio devuelto a fábrica.": {
+   "en": "Stadium reset to factory settings.",
+   "pt": "Estádio devolvido ao original.",
+   "fr": "Stade remis d'origine.",
+   "it": "Stadio riportato all'originale.",
+   "de": "Stadion auf Werkszustand zurückgesetzt.",
+   "ca": "Estadi retornat a l'original.",
+   "pl": "Stadion przywrócony do stanu fabrycznego.",
+   "tr": "Stadyum fabrika ayarlarına döndürüldü."
+  },
+  "El estadio ya está como vino de fábrica.": {
+   "en": "The stadium is already as it came from the factory.",
+   "pt": "O estádio já está como veio de fábrica.",
+   "fr": "Le stade est déjà dans son état d'origine.",
+   "it": "Lo stadio è già com'era in origine.",
+   "de": "Das Stadion ist bereits im Werkszustand.",
+   "ca": "L'estadi ja està com venia de fàbrica.",
+   "pl": "Stadion jest już w stanie fabrycznym.",
+   "tr": "Stadyum zaten fabrikadan çıktığı gibi."
+  },
+  "Estadio rehecho:": {
+   "en": "Stadium rebuilt:",
+   "pt": "Estádio refeito:",
+   "fr": "Stade refait :",
+   "it": "Stadio rifatto:",
+   "de": "Stadion umgebaut:",
+   "ca": "Estadi refet:",
+   "pl": "Stadion przebudowany:",
+   "tr": "Stadyum yenilendi:"
+  },
+  "Reforma hecha:": {
+   "en": "Renovation done:",
+   "pt": "Reforma feita:",
+   "fr": "Rénovation faite :",
+   "it": "Ristrutturazione fatta:",
+   "de": "Umbau erledigt:",
+   "ca": "Reforma feta:",
+   "pl": "Przebudowa wykonana:",
+   "tr": "Yenileme tamam:"
+  },
+  "Resembrar": {
+   "en": "Reseed",
+   "pt": "Replantar",
+   "fr": "Réensemencer",
+   "it": "Riseminare",
+   "de": "Neu einsäen",
+   "ca": "Resembrar",
+   "pl": "Przesiej murawę",
+   "tr": "Yeniden ek"
+  },
+  "Obra social": {
+   "en": "Community project",
+   "pt": "Obra social",
+   "fr": "Œuvre sociale",
+   "it": "Opera sociale",
+   "de": "Sozialprojekt",
+   "ca": "Obra social",
+   "pl": "Projekt społeczny",
+   "tr": "Sosyal proje"
+  },
+  "Paneles": {
+   "en": "Panels",
+   "pt": "Painéis",
+   "fr": "Panneaux",
+   "it": "Pannelli",
+   "de": "Paneele",
+   "ca": "Panells",
+   "pl": "Panele",
+   "tr": "Paneller"
+  },
+  "Certificar": {
+   "en": "Certify",
+   "pt": "Certificar",
+   "fr": "Certifier",
+   "it": "Certificare",
+   "de": "Zertifizieren",
+   "ca": "Certificar",
+   "pl": "Certyfikuj",
+   "tr": "Sertifika al"
+  },
+  "Solicitar permiso": {
+   "en": "Apply for a permit",
+   "pt": "Solicitar licença",
+   "fr": "Demander un permis",
+   "it": "Richiedere il permesso",
+   "de": "Genehmigung beantragen",
+   "ca": "Sol·licitar permís",
+   "pl": "Złóż wniosek o pozwolenie",
+   "tr": "İzin başvurusu yap"
+  },
+  "Seguridad privada": {
+   "en": "Private security",
+   "pt": "Segurança privada",
+   "fr": "Sécurité privée",
+   "it": "Sicurezza privata",
+   "de": "Privater Sicherheitsdienst",
+   "ca": "Seguretat privada",
+   "pl": "Ochrona prywatna",
+   "tr": "Özel güvenlik"
+  },
+  "Cámaras y protocolo": {
+   "en": "Cameras and protocol",
+   "pt": "Câmeras e protocolo",
+   "fr": "Caméras et protocole",
+   "it": "Telecamere e protocollo",
+   "de": "Kameras und Protokoll",
+   "ca": "Càmeres i protocol",
+   "pl": "Kamery i procedury",
+   "tr": "Kameralar ve protokol"
+  },
+  "Ahorro energético": {
+   "en": "Energy savings",
+   "pt": "Economia de energia",
+   "fr": "Économies d'énergie",
+   "it": "Risparmio energetico",
+   "de": "Energieeinsparung",
+   "ca": "Estalvi energètic",
+   "pl": "Oszczędność energii",
+   "tr": "Enerji tasarrufu"
+  },
+  "Permiso municipal": {
+   "en": "Council permit",
+   "pt": "Licença municipal",
+   "fr": "Permis municipal",
+   "it": "Permesso comunale",
+   "de": "Städtische Genehmigung",
+   "ca": "Permís municipal",
+   "pl": "Pozwolenie miejskie",
+   "tr": "Belediye izni"
+  },
+  "vigente ✔": {
+   "en": "valid ✔",
+   "pt": "em vigor ✔",
+   "fr": "en vigueur ✔",
+   "it": "valido ✔",
+   "de": "gültig ✔",
+   "ca": "vigent ✔",
+   "pl": "ważne ✔",
+   "tr": "geçerli ✔"
+  },
+  "certificado ✔": {
+   "en": "certified ✔",
+   "pt": "certificado ✔",
+   "fr": "certifié ✔",
+   "it": "certificato ✔",
+   "de": "zertifiziert ✔",
+   "ca": "certificat ✔",
+   "pl": "certyfikowany ✔",
+   "tr": "sertifikalı ✔"
+  },
+  "Tuyo": {
+   "en": "Yours",
+   "pt": "Seu",
+   "fr": "À toi",
+   "it": "Tuo",
+   "de": "Deins",
+   "ca": "Teu",
+   "pl": "Twój",
+   "tr": "Senin"
+  },
+  "Operando": {
+   "en": "Running",
+   "pt": "Em operação",
+   "fr": "En activité",
+   "it": "Operativo",
+   "de": "In Betrieb",
+   "ca": "En funcionament",
+   "pl": "Działa",
+   "tr": "Faaliyette"
+  },
+  "MÁX": {
+   "en": "MAX",
+   "pt": "MÁX",
+   "fr": "MAX",
+   "it": "MAX",
+   "de": "MAX",
+   "ca": "MÀX",
+   "pl": "MAKS",
+   "tr": "MAKS"
+  }
+ },
+ "patrones": [
+  [
+   "^(.+?)  ([○●]+)$",
+   "$1  $2",
+   "$1  $2",
+   "$1  $2",
+   "$1  $2",
+   "$1  $2",
+   "$1  $2",
+   "$1  $2",
+   "$1  $2"
+  ],
+  [
+   "^(.+) — Tribuna (Sur|Norte|Este|Oeste)$",
+   "$1 — $2 stand",
+   "$1 — Arquibancada $2",
+   "$1 — Tribune $2",
+   "$1 — Tribuna $2",
+   "$1 — Tribüne $2",
+   "$1 — Tribuna $2",
+   "$1 — trybuna $2",
+   "$1 — $2 tribünü"
+  ],
+  [
+   "^Anillo (\\d) — (Sur|Norte|Este|Oeste)$",
+   "Tier $1 — $2",
+   "Anel $1 — $2",
+   "Anneau $1 — $2",
+   "Anello $1 — $2",
+   "Rang $1 — $2",
+   "Anell $1 — $2",
+   "Pierścień $1 — $2",
+   "$1. kat — $2"
+  ],
+  [
+   "^Tercio (\\d)$",
+   "Third $1",
+   "Terço $1",
+   "Tiers $1",
+   "Terzo $1",
+   "Drittel $1",
+   "Terç $1",
+   "Tercja $1",
+   "$1. bölüm"
+  ],
+  [
+   "^No se puede: (.+)\\.$",
+   "Can't do it: $1.",
+   "Não é possível: $1.",
+   "Impossible : $1.",
+   "Non si può: $1.",
+   "Nicht möglich: $1.",
+   "No es pot: $1.",
+   "Nie można: $1.",
+   "Yapılamaz: $1."
+  ],
+  [
+   "^No se pudo: (.+)\\.$",
+   "It couldn't be done: $1.",
+   "Não foi possível: $1.",
+   "Ça n'a pas pu se faire : $1.",
+   "Non è stato possibile: $1.",
+   "Es ging nicht: $1.",
+   "No s'ha pogut: $1.",
+   "Nie udało się: $1.",
+   "Yapılamadı: $1."
+  ],
+  [
+   "^No se pudo firmar: (.+)\\.$",
+   "Couldn't sign: $1.",
+   "Não foi possível assinar: $1.",
+   "Signature impossible : $1.",
+   "Non è stato possibile firmare: $1.",
+   "Unterschrift nicht möglich: $1.",
+   "No s'ha pogut signar: $1.",
+   "Nie udało się podpisać: $1.",
+   "İmzalanamadı: $1."
+  ],
+  [
+   "^No se puede reformar: (.+)\\.$",
+   "Can't renovate: $1.",
+   "Não é possível reformar: $1.",
+   "Rénovation impossible : $1.",
+   "Impossibile ristrutturare: $1.",
+   "Umbau nicht möglich: $1.",
+   "No es pot reformar: $1.",
+   "Nie można przebudować: $1.",
+   "Yenilenemez: $1."
+  ],
+  [
+   "^No se pudo importar: (.+)\\.$",
+   "Couldn't import: $1.",
+   "Não foi possível importar: $1.",
+   "Import impossible : $1.",
+   "Impossibile importare: $1.",
+   "Import nicht möglich: $1.",
+   "No s'ha pogut importar: $1.",
+   "Nie udało się zaimportować: $1.",
+   "İçe aktarılamadı: $1."
+  ],
+  [
+   "^Plantel de (.+) regenerado\\.$",
+   "$1 squad regenerated.",
+   "Elenco do $1 regenerado.",
+   "Effectif de $1 régénéré.",
+   "Rosa del $1 rigenerata.",
+   "Kader von $1 neu erstellt.",
+   "Plantilla del $1 regenerada.",
+   "Kadra $1 wygenerowana od nowa.",
+   "$1 kadrosu yeniden oluşturuldu."
+  ],
+  [
+   "^Importadas (\\d+) fichas en (\\d+) club\\(es\\)\\.$",
+   "Imported $1 players into $2 club(s).",
+   "Importadas $1 fichas em $2 clube(s).",
+   "$1 fiches importées dans $2 club(s).",
+   "Importate $1 schede in $2 club.",
+   "$1 Spieler in $2 Verein(e) importiert.",
+   "Importades $1 fitxes a $2 club(s).",
+   "Zaimportowano $1 zawodników do $2 klubu(ów).",
+   "$2 kulübe $1 oyuncu aktarıldı."
+  ],
+  [
+   "^Copiada al portapapeles \\((\\d+) líneas\\)\\.$",
+   "Copied to the clipboard ($1 lines).",
+   "Copiada para a área de transferência ($1 linhas).",
+   "Copiée dans le presse-papiers ($1 lignes).",
+   "Copiata negli appunti ($1 righe).",
+   "In die Zwischenablage kopiert ($1 Zeilen).",
+   "Copiada al porta-retalls ($1 línies).",
+   "Skopiowano do schowka ($1 wierszy).",
+   "Panoya kopyalandı ($1 satır)."
+  ],
+  [
+   "^(.+) → (.+)\\. Coste (.+)\\.$",
+   "$1 → $2. Cost $3.",
+   "$1 → $2. Custo $3.",
+   "$1 → $2. Coût $3.",
+   "$1 → $2. Costo $3.",
+   "$1 → $2. Kosten $3.",
+   "$1 → $2. Cost $3.",
+   "$1 → $2. Koszt $3.",
+   "$1 → $2. Maliyet $3."
+  ],
+  [
+   "^estilo «(.+)»\\. Coste (.+)\\.$",
+   "«$1» style. Cost $2.",
+   "estilo «$1». Custo $2.",
+   "style «$1». Coût $2.",
+   "stile «$1». Costo $2.",
+   "Stil «$1». Kosten $2.",
+   "estil «$1». Cost $2.",
+   "styl «$1». Koszt $2.",
+   "«$1» tarzı. Maliyet $2."
+  ],
+  [
+   "^Coste (.+)\\.$",
+   "Cost $1.",
+   "Custo $1.",
+   "Coût $1.",
+   "Costo $1.",
+   "Kosten $1.",
+   "Cost $1.",
+   "Koszt $1.",
+   "Maliyet $1."
+  ],
+  [
+   "^(.+) EUR/año$",
+   "$1 EUR/year",
+   "$1 EUR/ano",
+   "$1 EUR/an",
+   "$1 EUR/anno",
+   "$1 EUR/Jahr",
+   "$1 EUR/any",
+   "$1 EUR/rok",
+   "$1 EUR/yıl"
+  ],
+  [
+   "^(.+) EUR/semana$",
+   "$1 EUR/week",
+   "$1 EUR/semana",
+   "$1 EUR/semaine",
+   "$1 EUR/settimana",
+   "$1 EUR/Woche",
+   "$1 EUR/setmana",
+   "$1 EUR/tydzień",
+   "$1 EUR/hafta"
+  ]
+ ]
+}
