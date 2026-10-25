@@ -43,6 +43,8 @@ func _process(_d: float) -> void:
 	apuntar()
 
 func apuntar() -> void:
+	if _ap == null or not is_instance_valid(_ap):
+		return
 	var c := String(_ap.current_animation)
 	if AnimPasos.fases.has(c):
 		_clip = c
