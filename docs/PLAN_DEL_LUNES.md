@@ -990,805 +990,894 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 **29. Más Ideas Adicionales**
 - 341. Sistema de fair play entre hinchadas (premia buena conducta)
 
-## 7. Tus ideas 351–1100: sin auditar
+## 7. Tus ideas 351–1100: auditadas contra el código (24-10)
 
-Nunca se compararon con el código. Auditar por bloques (cada una: ¿existe?, ¿tiene prueba?, ¿se ve bien?) y borrar las hechas. Orden sugerido: partido (351-), gestión, ciudad, resto.
+Auditoría por lectura del código (no por juego). **Existe** = implementada; aun así NO sale del plan hasta que una prueba del banco la compruebe (el campo «cómo probar» dice qué afirmar). **Parcial** = falta lo indicado. **No** = no hay nada. Cuando una prueba la verifique, se borra con `python3 herramientas/quitar_ideas.py N…`.
+
+Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (ESCENARIOS, APODOS, WIDGETS); los desafíos `leyenda30` y `sinRecarga` son solo aviso; `pobreza` no bloquea créditos; `Cesiones.riesgo_opaco` no sanciona; `linaje['padre_en_club']` y `['pedido']` se escriben y nadie los lee (el padre retirado no presiona); el texto del mercado promete precontratos que no existen; la licencia denegada no impide ascender; plazas continentales fijas (sin coeficientes ni repechaje); vibración solo de mando, no de móvil.
+
+
+### Existen: falta una prueba que las compruebe (cómo probar) (335)
 
 
 **30. Simulación de Partido (motor y experiencia)**
-- 351. Motor 2D cenital con fichas de color en vez de modelos 3D (bajo costo, alta legibilidad)
-- 352. Velocidad de simulación configurable (x1, x2, x4, saltar a evento)
-- 353. Botón "saltar al próximo gol" para partidas rápidas
-- 354. Relator de texto con tono configurable (sobrio, exagerado, humorístico)
-- 355. Barra de momentum que muestra qué equipo domina el partido
-- 356. Cadenas de jugada: la simulación encadena 3 a 5 acciones antes de resolver
-- 357. Probabilidad de gol en vivo (xG) como estadística opcional
-- 358. Eventos aleatorios de partido (palo, gol anulado, revisión de VAR)
-- 359. Interrupciones: invasión de cancha, corte de luz, lluvia intensa
-- 360. Cambios en vivo con vista rápida del banco de suplentes
-- 361. Instrucciones en vivo (presionar, retrasar líneas, perder tiempo)
-- 362. Charla de entretiempo con varios tonos y efecto real en la moral
-- 363. Indicador de fatiga por jugador en tiempo real
-- 364. Riesgo de lesión visible al forzar a un jugador tocado
-- 365. Aviso de "amonestado bajo presión" antes de una posible expulsión
-- 366. Tanda de penales con elección de palo y orden de ejecutantes
-- 367. Especialistas designados para penales, córners y tiros libres
-- 368. Rendimiento diferenciado por altitud, clima y desgaste de viaje
-- 369. Efecto medible del público según ocupación real del estadio
-- 370. Cancha en mal estado que reduce precisión de pases
-- 371. Modo "solo resultado" para quienes simulan temporadas rápido
-- 372. Relato del partido guardable y compartible como texto
-- 373. Comparativa post-partido contra el promedio de la liga
-- 374. Nota de rendimiento por jugador (1 a 10) con justificación breve
-- 375. Detección automática de "partido histórico" archivado en el club
-- 376. Ocasiones claras falladas para generar tensión sin gol
-- 377. Dificultad de la IA rival ajustada por liga y presupuesto
-- 378. IA rival que reacciona a tu táctica a mitad de partido
-- 379. Modo espectador para ver partidos de otros equipos
-- 380. Resultados de la fecha actualizándose mientras juegas tu partido
+- 352. Velocidad de simulación configurable (x1, x2, x4, saltar a evento) — _Afirmar MatchPlayback.VELOCIDADES.size()>=3 y que mas_rapido() sube vel_idx_
+- 353. Botón "saltar al próximo gol" para partidas rápidas — _Con Partido.simular_minuto en bucle hasta que cambie el marcador (lógica en la UI, no extraída a nucleo)_
+- 355. Barra de momentum que muestra qué equipo domina el partido — _Simular un Partido y afirmar que momentum_local() esta en rango y cambia tras un gol (_momentum_push)_
+- 357. Probabilidad de gol en vivo (xG) como estadística opcional — _Partido simulado: afirmar xg_local+xg_visita>0 y ~ remates*0.2_
+- 358. Eventos aleatorios de partido (palo, gol anulado, revisión de VAR) — _Llamar anular_gol_externo y afirmar que baja el marcador; contar tipo=='poste' en eventos de muchos partidos_
+- 360. Cambios en vivo con vista rápida del banco de suplentes — _Partido.cambiar(club, sale, entra) y afirmar once actualizado y límite MAX_CAMBIOS_
+- 361. Instrucciones en vivo (presionar, retrasar líneas, perder tiempo) — _Fijar instr_riesgo=true y comparar fuerza/ goles esperados vs false en muchos partidos_
+- 362. Charla de entretiempo con varios tonos y efecto real en la moral — _Vestuario.charla(tono, ...) y afirmar cambio de moral/ansiedad de los jugadores_
+- 363. Indicador de fatiga por jugador en tiempo real — _MotorJugable.forma_fisica(p) decrece con el tiempo de partido (requiere motor)_
+- 371. Modo "solo resultado" para quienes simulan temporadas rápido — _Mundo.avanzar_semana() x N y afirmar tabla coherente (ya es el flujo base del banco)_
+- 376. Ocasiones claras falladas para generar tensión sin gol — _Contar eventos de fallo/atajada en Partido simulado_
+- 378. IA rival que reacciona a tu táctica a mitad de partido — _Partido con plan_perdiendo!='nada' y marcador adverso cambia tactica.mentalidad_
 
 **31. Táctica y Sistema de Juego**
-- 381. Editor de formación con arrastrar y soltar
-- 382. Formaciones guardadas como presets con nombre propio
-- 383. Roles por posición (lateral ofensivo, pivote, falso 9, mediapunta)
-- 384. Instrucciones individuales por jugador
-- 385. Altura de la línea defensiva
-- 386. Intensidad de presión (bloque alto, medio, bajo)
-- 387. Ritmo de circulación de balón
-- 388. Amplitud del ataque
-- 389. Tipo de salida (juego corto desde el arquero vs. pelotazo largo)
-- 390. Criterio de remate (buscar tiro lejano o el pase extra)
-- 391. Marcaje al hombre o por zona
-- 392. Trampa del fuera de juego activable
-- 393. Editor simple de jugadas ensayadas de córner
-- 394. Editor de jugadas ensayadas de tiro libre
-- 395. Saque lateral largo como arma táctica
-- 396. Plan A / Plan B / Plan C activables según el marcador
-- 397. Cambio táctico automático por minuto (ej. cerrar desde el 80)
-- 398. Familiaridad táctica: el equipo tarda semanas en asimilar un sistema
-- 399. Penalización si el sistema no calza con las cualidades del plantel
-- 400. Análisis previo del rival con puntos débiles sugeridos
-- 401. Recomendación del ayudante técnico (activable o desactivable)
-- 402. Contra-táctica diseñada para un rival concreto
-- 403. Modo espejo: copiar la táctica de un equipo que admires
-- 404. Índice de compatibilidad jugador-rol
-- 405. Jugadores que rinden mejor o peor en un rol específico
-- 406. Táctica de emergencia con diez jugadores tras una expulsión
-- 407. Plan de partido para jugar con ventaja numérica
-- 408. Identidad de juego del club definida a largo plazo
-- 409. Hinchada que exige un estilo (ofensivo, aguerrido, de toque)
-- 410. DT con estilo propio que choca o encaja con la identidad del club
-- 411. Evolución táctica por era: el fútbol de moda cambia con los años
-- 412. Estadística de eficacia por cada táctica utilizada
-- 413. Pizarra táctica para explicar el plan en la charla previa
-- 414. Rotación planificada para calendarios congestionados
-- 415. Alineación automática sugerida según frescura y rival
+- 383. Roles por posición (lateral ofensivo, pivote, falso 9, mediapunta) — _Vestuario.fijar_rol_tactico(j,'pivote'); rol_tactico(j)=='pivote'; bonus_roles(once) cambia att/def_
+- 385. Altura de la línea defensiva — _Tactica.linea=ALTO sube multiplicador_ataque y baja multiplicador_defensa_
+- 386. Intensidad de presión (bloque alto, medio, bajo) — _Tactica.presion=ALTO multiplica ataque 1.05_
+- 387. Ritmo de circulación de balón — _multiplicador_ataque con ritmo=ALTO == 1.07*..._
+- 388. Amplitud del ataque — _multiplicador con amplitud=ALTO_
+- 389. Tipo de salida (juego corto desde el arquero vs. pelotazo largo) — _Tactica.salida_corta=true => multiplicador_ataque*1.03_
+- 390. Criterio de remate (buscar tiro lejano o el pase extra) — _multiplicador_ataque con tiro_lejano_
+- 391. Marcaje al hombre o por zona — _multiplicador_defensa con marca_al_hombre_
+- 392. Trampa del fuera de juego activable — _multiplicador_defensa con fuera_de_juego_
+- 393. Editor simple de jugadas ensayadas de córner — _Tactica.efectividad(once, def_corner(c)[3], entrenamiento) en rango 0.82-1.35_
+- 394. Editor de jugadas ensayadas de tiro libre — _Tactica.def_libre('ensayada') y efectividad_
+- 400. Análisis previo del rival con puntos débiles sugeridos — _Mundo.analizar_rival() devuelve '' y fija bono_analisis>1; InformeRival.mostrar solo UI_
+- 404. Índice de compatibilidad jugador-rol — _Vestuario.aptitud_rol(j,'pivote') entre 0.82 y 1.14 y mayor con mejores atributos_
+- 405. Jugadores que rinden mejor o peor en un rol específico — _Comparar aptitud_rol de dos jugadores con perfiles distintos en el mismo rol_
+- 411. Evolución táctica por era: el fútbol de moda cambia con los años — _Mundo.factor_moda(formacion) devuelve BONO_MODA/CASTIGO_MODA/1.0 según era_actual_
+- 412. Estadística de eficacia por cada táctica utilizada — _Mundo.anotar_eficacia('4-3-3',2,0); ranking_tactico()[0].ppp==3.0_
+- 413. Pizarra táctica para explicar el plan en la charla previa — _PizarraTactica.pintar solo UI_
+- 414. Rotación planificada para calendarios congestionados — _Mundo.rotacion_activa=true; fijar fisico bajo en un titular; aplicar_rotacion()>=1_
 
 **32. Entrenamiento y Desarrollo**
-- 416. Plan semanal de entrenamiento con bloques por día
-- 417. Balance entre carga física, trabajo táctico y técnica individual
-- 418. Riesgo de sobrecarga y lesiones por entrenar demasiado fuerte
-- 419. Entrenamiento individual asignable a un jugador puntual
-- 420. Reconversión de posición (lateral a central, extremo a lateral)
-- 421. Entrenamiento de habilidades específicas (penales, cabeceo, tiro libre)
-- 422. Curva de aprendizaje según edad: los jóvenes progresan más rápido
-- 423. Techo de crecimiento visible solo mediante ojeadores confiables
-- 424. Explosión tardía: jugadores que despegan entre los 24 y 26
-- 425. Jugadores que se estancan si no acumulan minutos
-- 426. Pretemporada con efecto sobre el estado físico de todo el año
-- 427. Microciclo de recuperación tras partidos seguidos
-- 428. Sesiones a puertas cerradas o abiertas al público
-- 429. Concentración previa a partidos importantes
-- 430. Campamento de altura para mejorar resistencia
-- 431. Trabajo mental con psicólogo deportivo
-- 432. Entrenamiento de liderazgo para formar futuros capitanes
-- 433. Entrenador de arqueros con línea de desarrollo propia
-- 434. Cantera entrenada bajo una filosofía definida por el club
-- 435. Informe semanal de progreso entregado por el staff
-- 436. Jugadores que se quejan si el entrenamiento es muy duro o muy blando
-- 437. Disciplina individual que determina cuánto aprovecha el entrenamiento
-- 438. Trabajo extra voluntario de los jugadores más profesionales
-- 439. Pérdida de ritmo competitivo por parón de liga
-- 440. Entrenamiento adaptado a la superficie de la próxima cancha rival
-- 441. Video-análisis grupal antes de rivales difíciles
-- 442. Índice de calidad de instalaciones que multiplica el progreso
-- 443. Veteranos que ya no mejoran pero transmiten experiencia
-- 444. Declive físico realista según edad y posición
-- 445. Historial gráfico de evolución de atributos por jugador
+- 416. Plan semanal de entrenamiento con bloques por día — _Entrenamiento.fijar_dia(0,'fisico'); dias[0]=='fisico'; carga() cambia_
+- 417. Balance entre carga física, trabajo táctico y técnica individual — _Entrenamiento.carga() con dias distintos devuelve fis/ovr/riesgo diferentes_
+- 418. Riesgo de sobrecarga y lesiones por entrenar demasiado fuerte — _Entrenamiento.fijar_intensidad('alta'); carga_riesgo mayor; Medico.riesgo_por_fatiga(j) con j.fisico bajo_
+- 419. Entrenamiento individual asignable a un jugador puntual — _Entrenamiento.asignar_individual(j,clave) y tras procesar_semana x9 el jugador tiene_habilidad_
+- 420. Reconversión de posición (lateral a central, extremo a lateral) — _Jugador.reconvertir('LI') cambia pos_e y baja media_en temporalmente_
+- 421. Entrenamiento de habilidades específicas (penales, cabeceo, tiro libre) — _Entrenamiento.dar_habilidad(j,'cabezazo'); tiene_habilidad; efectividad() sube_
+- 422. Curva de aprendizaje según edad: los jóvenes progresan más rápido — _Jugador j.edad=19, ovr<pot: procesar_semana x N sube ovr; con edad=30 no_
+- 423. Techo de crecimiento visible solo mediante ojeadores confiables — _Mundo.ojeados.has(j.id) controla la visibilidad de pot_
+- 426. Pretemporada con efecto sobre el estado físico de todo el año — _Entrenamiento.elegir_pretemporada('dura') cobra gasto y sube fisico/base de todos_
+- 429. Concentración previa a partidos importantes — _Entrenamiento.concentracion=true; procesar_semana emite gasto_
+- 430. Campamento de altura para mejorar resistencia — _elegir_pretemporada('altura')_
+- 441. Video-análisis grupal antes de rivales difíciles — _Mundo.analizar_rival() devuelve '' y bono_analisis>1_
+- 442. Índice de calidad de instalaciones que multiplica el progreso — _Instalaciones con nivel de centro>0 => ritmo_de_progreso()>1_
+- 443. Veteranos que ya no mejoran pero transmiten experiencia — _Entrenamiento.crear_mentoria(vet, joven) y tras semanas el pupilo progresa_
 
 **33. Scouting y Red de Ojeadores**
-- 446. Red de ojeadores contratables con especialidad regional
-- 447. Costo mensual por ojeador y por región cubierta
-- 448. Informes con rango de incertidumbre en vez de números exactos
-- 449. Ojeadores con distinto nivel de precisión y sesgos propios
-- 450. Ojeador que exagera sus hallazgos para justificar su sueldo
-- 451. Asignación de un ojeador a un torneo juvenil específico
-- 452. Descubrimiento de joyas en ligas menores o mercados exóticos
-- 453. Base de datos que se va revelando a medida que investigas
-- 454. Filtros de búsqueda avanzados (edad, valor, contrato, posición)
-- 455. Lista de seguimiento con alertas automáticas
-- 456. Alerta de jugador que entra en su último año de contrato
-- 457. Alerta de jugador descontento en otro club
-- 458. Alerta de cláusula de rescisión anormalmente baja
-- 459. Competencia con otros clubes por el mismo objetivo
-- 460. Rumores de mercado que pueden resultar falsos
-- 461. Informe de personalidad además del informe de habilidad
-- 462. Informe médico previo al fichaje, con costo asociado
-- 463. Informe de situación familiar que afecta la disposición a mudarse
-- 464. Invitar a un jugador libre a entrenar a prueba
-- 465. Descubrimiento por casualidad durante un amistoso
-- 466. Ojeador que renuncia si ignoras sistemáticamente sus informes
-- 467. Ranking interno de objetivos por prioridad
-- 468. Presupuesto de scouting separado del de fichajes
-- 469. Análisis de datos como alternativa moderna al ojeo tradicional
-- 470. Departamento de análisis con modelo estadístico propio del club
-- 471. Conflicto interno entre el ojeador tradicional y el analista de datos
-- 472. Torneos juveniles internacionales como escaparate de talento
-- 473. Convenios con clubes menores por derecho de primera opción
-- 474. Scouting de entrenadores y staff, no solo de jugadores
-- 475. Informe de "jugadores similares" para reemplazar una salida
+- 446. Red de ojeadores contratables con especialidad regional — _Ojeadores.alternar_pais('ARG') con staff nivel>0 crea ojeadores['ARG']_
+- 448. Informes con rango de incertidumbre en vez de números exactos — _Ojeadores.ovr_texto(j) devuelve rango 'a-b' para ajeno y exacto para ojeado_
+- 449. Ojeadores con distinto nivel de precisión y sesgos propios — _Ojeadores.sesgo_de(pais) en SESGOS y _error_de dependiente_
+- 450. Ojeador que exagera sus hallazgos para justificar su sueldo — _Con sesgo 'vende' ovr_aproximado sale mayor que con 'fiel'_
+- 453. Base de datos que se va revelando a medida que investigas — _Mundo.ojeados[j.id]=true cambia ovr_texto de rango a exacto_
+- 459. Competencia con otros clubes por el mismo objetivo — _Negociacion._rival_en_juego(m,j) devuelve id de club o ''_
+- 461. Informe de personalidad además del informe de habilidad — _Ojeadores.informe_personalidad(j,club) devuelve {prof,vestuario,mudanza}_
+- 462. Informe médico previo al fichaje, con costo asociado — _Medico.informe_de(j) devuelve riesgo/graves; costo_informe(j)>0_
+- 466. Ojeador que renuncia si ignoras sistemáticamente sus informes — _Ojeadores.ojeadores[p].ignorados alto + 25 semanas => ojeadores.has(p)==false_
+- 468. Presupuesto de scouting separado del de fichajes — _Ojeadores.ojear(j) descuenta del presupuesto de ojeo antes que del saldo_
+- 469. Análisis de datos como alternativa moderna al ojeo tradicional — _Ojeadores.mejorar_analitica() sube nivel; semana_analitica() llena hallazgos_
+- 470. Departamento de análisis con modelo estadístico propio del club — _Ojeadores.hallazgos_vivos() tras semana_analitica_
+- 471. Conflicto interno entre el ojeador tradicional y el analista de datos — _Subir analitica_nivel>=2 y semanas => analitica_tension aumenta_
+- 475. Informe de "jugadores similares" para reemplazar una salida — _FichaJugadorAcciones.pintar_similares (UI)_
 
 **34. Regens, Hijos de Jugadores y Linaje**
-- 476. Sistema de regens: nuevas generaciones que reemplazan a los retirados
-- 477. Hijos de jugadores históricos que heredan el apellido
-- 478. Herencia parcial de atributos del padre con variación aleatoria
-- 479. Probabilidad alta de que el hijo juegue en la posición del padre
-- 480. Hijo que debuta en el club donde su padre fue leyenda
-- 481. Presión mediática específica sobre el hijo de una leyenda
-- 482. Riesgo narrativo de que el hijo nunca alcance el nivel del padre
-- 483. Caso excepcional: el hijo supera al padre y se vuelve ícono
-- 484. Nietos de jugadores en partidas de muy largo plazo
-- 485. Hermanos futbolistas con bonificación de química en cancha
-- 486. Gemelos con atributos casi idénticos
-- 487. Padre retirado que presiona al club para que su hijo juegue
-- 488. Ex-jugador que regresa como DT del club donde brilló
-- 489. Regens generados con nacionalidad ponderada por la fuerza del país
-- 490. Nombres realistas por país y por época de nacimiento
-- 491. Época dorada: oleada de talento en un país cada cierto tiempo
-- 492. Decadencia futbolística de un país si su liga colapsa
-- 493. Regens de élite: dos o tres por generación con potencial de leyenda
-- 494. Rareza de potencial (común, prometedor, excepcional, generacional)
-- 495. Cantidad y calidad de regens condicionada por la inversión en cantera
-- 496. País pequeño que produce un talento generacional como historia épica
-- 497. Historia de origen del regen (barrio humilde, academia de élite, refugiado)
-- 498. Biografía breve autogenerada para cada regen
-- 499. Avatar generado proceduralmente en estilo minimalista
-- 500. Rasgos físicos heredados visibles en el avatar del hijo
-- 501. Apodos automáticos para regens destacados
-- 502. Etiqueta mediática "el nuevo [leyenda]" con la presión que implica
-- 503. Regen prometedor que se pierde por indisciplina
-- 504. Regen que sufre una lesión grave y trunca su carrera
-- 505. Regen que emigra demasiado joven y no se desarrolla
-- 506. Doble nacionalidad asignada a ciertos regens
-- 507. Regens que eligen selección nacional entre dos opciones
-- 508. Árbol genealógico navegable de familias futbolísticas
-- 509. Registro histórico de dinastías formadas en tu club
-- 510. Bonificación de afinidad al fichar al hijo de un ídolo del club
-- 511. Reacción hostil de la hinchada al fichar al hijo de un ídolo rival
-- 512. Padrinazgo: un ídolo del club apadrina al hijo de otro
-- 513. Evento: el padre retirado pide un cargo en la cantera
-- 514. Estadística de cuántos regens de tu cantera llegaron a la élite
-- 515. Modo legado familiar: mantener una misma familia tres generaciones
+- 476. Sistema de regens: nuevas generaciones que reemplazan a los retirados — _Mundo.nueva_temporada(): plantillas conservan tamaño tras retiros y llegan juveniles (Cantera.camada_actual)_
+- 477. Hijos de jugadores históricos que heredan el apellido — _Cantera.registrar_retiro(j,club) con ovr>=76 añade leyenda; tras anio_hijo, un jugador con linaje_de(j)['padre']==nombre_
+- 479. Probabilidad alta de que el hijo juegue en la posición del padre — _Repetir _hijos_de_leyendas y contar proporción de grupo igual_
+- 480. Hijo que debuta en el club donde su padre fue leyenda — __hijos_de_leyendas: destino==club_padre en ~70%_
+- 481. Presión mediática específica sobre el hijo de una leyenda — _Cantera.etiquetar_promesa(j,'X'); procesar_semana emite etiqueta_pesa tras 6 semanas malas_
+- 482. Riesgo narrativo de que el hijo nunca alcance el nivel del padre — _Forzar notas bajas y comprobar etiqueta_pesa_
+- 483. Caso excepcional: el hijo supera al padre y se vuelve ícono — _Subir ovr por encima del nivel del padre y comprobar etiqueta_superada_
+- 484. Nietos de jugadores en partidas de muy largo plazo — _Retirar un jugador con linaje_de no vacío => nueva leyenda_
+- 485. Hermanos futbolistas con bonificación de química en cancha — _Vestuario.emparentar(a,b); bonus_hermanos(once con ambos)>1_
+- 486. Gemelos con atributos casi idénticos — _Cantera._sortear_hermano en bucle: gemelos tienen la misma edad y diferencia de ovr <=2_
+- 491. Época dorada: oleada de talento en un país cada cierto tiempo — _Eras.cierre_de_temporada() puede dejar activas[pais]; Eras.bono(pais,anio)==1.13_
+- 492. Decadencia futbolística de un país si su liga colapsa — _Eras con país arruinado entra en decadencia (bono 0.9)_
+- 495. Cantidad y calidad de regens condicionada por la inversión en cantera — _Cantera.bono_de_camada() sube con instalaciones/staff_
+- 497. Historia de origen del regen (barrio humilde, academia de élite, refugiado) — _Cantera._sortear_origen(j) deja origen_de(j) no vacío_
+- 498. Biografía breve autogenerada para cada regen — _FichaJugadorInfo.bio_de(j,mundo) contiene 'Hijo de la leyenda' si hay linaje_
+- 499. Avatar generado proceduralmente en estilo minimalista — _Cara.look_de(j) determinista por id_
+- 502. Etiqueta mediática "el nuevo [leyenda]" con la presión que implica — _Cantera.etiquetar_promesa y etiqueta_de(j) no vacía_
+- 508. Árbol genealógico navegable de familias futbolísticas — _Cantera.familias() agrupa claves L:padre y H:ids_
 
 **35. Lesiones y Medicina Deportiva**
-- 516. Catálogo amplio de lesiones con tiempos de recuperación distintos
-- 517. Diferenciación entre lesiones musculares, articulares y óseas
-- 518. Recaídas si se apura el regreso a las canchas
-- 519. Porcentaje de recuperación visible, no solo días restantes
-- 520. Rasgo de jugador propenso a lesionarse
-- 521. Historial médico que afecta el valor de mercado
-- 522. Seguro médico contratable para todo el plantel
-- 523. Costo de operaciones y clínicas de calidad variable
-- 524. Segunda opinión médica con pronóstico distinto
-- 525. Médico del club con nivel de competencia propio y mejorable
-- 526. Kinesiólogo que acorta los plazos de recuperación
-- 527. Riesgo de lesión aumentado por cancha en mal estado
-- 528. Riesgo de lesión aumentado por calendario congestionado
-- 529. Lesión sufrida durante una gira de selección nacional
-- 530. Lesión larga que obliga a un fichaje de emergencia
-- 531. Ventana de fichaje de emergencia por lesión grave (regla configurable)
-- 532. Retiro forzado por lesión crónica
-- 533. Jugador que se infiltra para jugar, con riesgo posterior
-- 534. Costo reputacional si abusas de las infiltraciones
-- 535. Fatiga acumulada como variable distinta de la forma física
-- 536. Índice de carga de trabajo por jugador durante el mes
-- 537. Descanso programado como herramienta preventiva
-- 538. Alerta médica previa: "no recomiendo que juegue"
-- 539. Enfermedades no deportivas que arruinan una semana de trabajo
-- 540. Brote en el plantel que obliga a jugar con juveniles
-- 541. Estadística de días perdidos por lesión en la temporada
-- 542. Comparativa de tu departamento médico contra el resto de la liga
-- 543. Rehabilitación con progreso visible semana a semana
-- 544. Regreso triunfal tras lesión larga como evento narrativo
-- 545. Nutricionista que reduce la incidencia de lesiones blandas
+- 516. Catálogo amplio de lesiones con tiempos de recuperación distintos — _Medico.catalogo().size()==22; lesionar(j,GRAVE) devuelve semanas dentro del rango de una fila_
+- 517. Diferenciación entre lesiones musculares, articulares y óseas — _Medico.ficha(j)['clase'] tras lesionar_
+- 518. Recaídas si se apura el regreso a las canchas — _Lesionar, poner lesion=0 y fisico=30, repetir chequeo_de_recaida hasta recaer_
+- 519. Porcentaje de recuperación visible, no solo días restantes — _Medico.pct_recuperado(j) tras lesionar 10 sem y bajar lesion a 5 => 50_
+- 520. Rasgo de jugador propenso a lesionarse — _riesgo_por_fatiga(j fragil) > riesgo de uno normal_
+- 521. Historial médico que afecta el valor de mercado — _Medico.lesionar graves x2 => j.valor baja ~15%_
+- 524. Segunda opinión médica con pronóstico distinto — _Medico.segunda_opinion(j,club) devuelve plazo; segunda llamada devuelve error_
+- 525. Médico del club con nivel de competencia propio y mejorable — _Staff.subir('medico') baja semanas de lesionar()_
+- 529. Lesión sufrida durante una gira de selección nacional — _Selecciones._fecha_fifa con jugador convocado muchos partidos => vuelve_tocado_
+- 530. Lesión larga que obliga a un fichaje de emergencia — _Roles.abrir_emergencia(id) => ventana_abierta y puede_fichar libre con mercado cerrado_
+- 531. Ventana de fichaje de emergencia por lesión grave (regla configurable) — _Roles.abrir_emergencia segunda vez en el mismo anio devuelve false_
+- 532. Retiro forzado por lesión crónica — _Medico.retiro_forzado(j) true con 3 lesiones largas (probabilístico)_
+- 535. Fatiga acumulada como variable distinta de la forma física — _riesgo_por_fatiga depende de fisico y no de forma_
+- 537. Descanso programado como herramienta preventiva — _Entrenamiento.fijar_dia(i,'descanso') baja carga_riesgo_
+- 539. Enfermedades no deportivas que arruinan una semana de trabajo — _Medico.lesionar con fila de clase enfermedad_
+- 540. Brote en el plantel que obliga a jugar con juveniles — _Medico.iniciar_brote(club,6,2) pone lesion en 6 jugadores y Club.once() sigue devolviendo 11_
+- 541. Estadística de días perdidos por lesión en la temporada — _Medico.lesionar(jugador propio) aumenta dias_perdidos_
+- 542. Comparativa de tu departamento médico contra el resto de la liga — _Medico.ranking_liga(club, liga)['puesto'] entre 1 y total_
+- 543. Rehabilitación con progreso visible semana a semana — _Medico.rehabilitacion(j) descuenta 1 semana y baja terapia_
 
 **36. Vestuario, Psicología y Dinámica de Grupo**
-- 546. Jerarquía de vestuario visible (líderes, influyentes, periféricos)
-- 547. Grupos internos y camarillas dentro del plantel
-- 548. Conflictos entre jugadores que debes mediar
-- 549. Jugador que pide hablar contigo en privado
-- 550. Jugador que se queja por falta de minutos
-- 551. Jugador que pide expresamente salir del club
-- 552. Jugador que exige renovación tras un buen semestre
-- 553. Jugador que se ofende si queda fuera de la lista de un torneo
-- 554. Reacción del vestuario ante un fichaje muy caro
-- 555. Reacción del vestuario ante la venta de un referente
-- 556. Elección de capitán y vicecapitán con efecto real en el grupo
-- 557. Consejo de capitanes que negocia contigo condiciones internas
-- 558. Moral colectiva separada de la moral individual
-- 559. Efecto acumulativo de las rachas de derrotas en el ánimo
-- 560. Charla motivacional con distintos tonos y resultados variables
-- 561. Jugadores que responden mejor al elogio o a la exigencia
-- 562. Perfil psicológico oculto que se descubre con el tiempo
-- 563. Jugador conflictivo pero determinante como dilema permanente
-- 564. Multas internas por indisciplina
-- 565. Reglamento interno del club configurable por ti
-- 566. Fiestas y escándalos extradeportivos con consecuencias
-- 567. Jugador con problemas personales que necesita apoyo del club
-- 568. Apoyo psicológico que recupera a un jugador hundido
-- 569. Extranjero que no se adapta al país y pide volver
-- 570. Barrera idiomática que dificulta la integración
-- 571. Clases de idioma financiadas por el club
-- 572. Compañero del mismo país que facilita la adaptación
-- 573. Actividades de integración del plantel
-- 574. Efecto de tus declaraciones públicas sobre el ánimo interno
-- 575. Jugador que se siente traicionado si lo criticas en prensa
-- 576. Defensa pública de un jugador que dispara su moral
-- 577. Rebelión de vestuario capaz de costarte el puesto
-- 578. Jugador que se convierte en tu aliado dentro del grupo
-- 579. Índice de confianza del plantel hacia tu gestión
-- 580. Renovación generacional del liderazgo del vestuario
+- 546. Jerarquía de vestuario visible (líderes, influyentes, periféricos) — _Vestuario.armar() y clan_de(j)['lider']_
+- 547. Grupos internos y camarillas dentro del plantel — _Vestuario.armar(); clan_por_id; chequeo_clanes tras sentar al líder_
+- 548. Conflictos entre jugadores que debes mediar — _Vestuario.mediar(id) devuelve {ok,txt} y cambia moral/humor_
+- 550. Jugador que se queja por falta de minutos — _Vestuario._chequeo_roles con jugador 'titular' que juega poco emite rol_incumplido_
+- 551. Jugador que pide expresamente salir del club — _Vestuario.resolver_solicitud(true) con solicitud 'salida' marca transferible_
+- 556. Elección de capitán y vicecapitán con efecto real en el grupo — _Vestuario.votar_capitan() asigna capitán y 'capitan' en solicitud lo cambia_
+- 560. Charla motivacional con distintos tonos y resultados variables — _Vestuario.charla(tono, ...) cambia moral dentro de ef[0..1] y ansiedad_
+- 561. Jugadores que responden mejor al elogio o a la exigencia — _Vestuario.charla con tono que 'gusta' al jugador suma más moral_
+- 563. Jugador conflictivo pero determinante como dilema permanente — _Vestuario.suceso_semanal() con un 'polemico' devuelve tipo 'lio'_
+- 564. Multas internas por indisciplina — _Mundo.normas['multas']=true y _suceso_lio descuenta sueldo*MULTA_SEMANAS_
+- 565. Reglamento interno del club configurable por ti — _Mundo.normas[clave] activa/desactiva y afecta _suceso_lio_
+- 566. Fiestas y escándalos extradeportivos con consecuencias — _Vestuario.suceso_semanal()['tipo'] ∈ {lio,arenga,racha,joya,cumple}_
+- 568. Apoyo psicológico que recupera a un jugador hundido — _Vestuario.dar_terapia(j) baja ansiedad y descuenta saldo_
+- 569. Extranjero que no se adapta al país y pide volver — _Cantera.chequeo_promesas con promesa incumplida => j.pide_salir (si no hay traductor)_
+- 572. Compañero del mismo país que facilita la adaptación — _Cantera.prometer_compatriota(j); chequeo_promesas con compatriota => moral +8_
+- 574. Efecto de tus declaraciones públicas sobre el ánimo interno — _Prensa.responder(opcion) devuelve moral/confianza y mueve moral del plantel_
+- 577. Rebelión de vestuario capaz de costarte el puesto — _Directiva.mover_confianza hasta <=0 => despido; chequeo de clan_enfadado_
 
 **37. Mercado de Fichajes Avanzado**
-- 581. Ventanas de mercado con fechas distintas según el país
-- 582. Mercado de invierno más caro y con menos opciones
-- 583. Jugadores libres disponibles durante todo el año
-- 584. Cesiones con opción de compra y con obligación de compra
-- 585. Cesión con porcentaje del sueldo pagado por el club de destino
-- 586. Intercambio de jugadores más diferencia en dinero
-- 587. Porcentaje de futura venta como moneda de negociación
-- 588. Cláusula de no alinear al cedido contra el club dueño
-- 589. Cláusula que impide la reventa a un rival directo
-- 590. Pago en cuotas a varios años y su efecto en el flujo de caja
-- 591. Bonos por partidos jugados, goles marcados y títulos ganados
-- 592. Derechos de formación y mecanismo de solidaridad
-- 593. Terceros propietarios del pase como dilema normativo
-- 594. Guerra de ofertas entre varios clubes por el mismo jugador
-- 595. Jugador que rechaza tu club por falta de proyecto deportivo
-- 596. Jugador que acepta menos dinero para jugar torneo internacional
-- 597. Jugador que solo aceptará ir a un club grande
-- 598. Presión del agente para subir su comisión
-- 599. Último día de mercado con ofertas frenéticas de última hora
-- 600. Fichaje caído tras la revisión médica
-- 601. Fichaje caído por problema de visa o cupo de extranjeros
-- 602. Cupo de extranjeros configurable por liga
-- 603. Límite de plantel y exigencia de jugadores formados en casa
-- 604. Lista de inscritos por torneo con decisiones difíciles
-- 605. Mercado inflado por un club recién comprado por un magnate
-- 606. Burbuja de precios que crece con el paso de los años
-- 607. Valor de mercado dinámico según rendimiento y contrato
-- 608. Bonificación reputacional por operaciones rentables
-- 609. Rechazo automático de ofertas por debajo de un monto fijado
-- 610. Paciencia del club vendedor como contador visible en la negociación
-- 611. Renovación preventiva para no perder a un jugador gratis
-- 612. Precontrato con jugador en su último semestre
-- 613. Agente libre estrella disponible cada cierto tiempo
-- 614. Traspaso récord del club registrado como hito histórico
-- 615. Historial completo de operaciones con balance neto acumulado
+- 583. Jugadores libres disponibles durante todo el año — _Mundo.generar_libres(); fichar_libre(0, club) con mercado cerrado devuelve ok o rechazado_
+- 584. Cesiones con opción de compra y con obligación de compra — _Cesiones.ceder_con_opcion(j,destino,tipo,opcion) y resolver(anio) vende si obliga_
+- 585. Cesión con porcentaje del sueldo pagado por el club de destino — _Cesiones.ahorro_salarial(club_id) == sueldo*pct de cedidos_
+- 586. Intercambio de jugadores más diferencia en dinero — _Negociacion.poner_intercambio(j2); valor_percibido() sube valor*0.88_
+- 587. Porcentaje de futura venta como moneda de negociación — _Cesiones.pactar_porcentaje_de_venta + vender => plusvalía pendiente_
+- 590. Pago en cuotas a varios años y su efecto en el flujo de caja — _Cesiones.registrar_compromisos y pagar_cuotas reducen saldo por semanas_
+- 593. Terceros propietarios del pase como dilema normativo — _Cesiones.oferta_de_fondo(j) y vender_participacion_
+- 594. Guerra de ofertas entre varios clubes por el mismo jugador — _MercadoAvanzado.guerra_de_ofertas(mundo) añade puja con puja==true_
+- 595. Jugador que rechaza tu club por falta de proyecto deportivo — _Mercado.deseo_de_venir(j,club)['p'] baja con club menor_
+- 598. Presión del agente para subir su comisión — _Cantera.sortear_guerra_agentes() fija exigencia; MesaAgente.regatear_
+- 602. Cupo de extranjeros configurable por liga — _LeyesPais.reglas('ESP') y cuantos_cupo(club)_
+- 603. Límite de plantel y exigencia de jugadores formados en casa — _LeyesPais.exceso_plantel(club); Federacion.revisar_cupo_juvenil_
+- 608. Bonificación reputacional por operaciones rentables — _Reputacion.registrar('negociador',+20,'x') sube mult_ventas_
+- 610. Paciencia del club vendedor como contador visible en la negociación — _Negociacion.paciencia decrece por ronda; estado 'rota' al llegar a 0_
+- 611. Renovación preventiva para no perder a un jugador gratis — _Cantera.renovar(j,anios) aumenta anios_contrato y cobra firma_
+- 613. Agente libre estrella disponible cada cierto tiempo — _Mundo._procesar_libres en bucle de semanas crea libre estrella (_nuevo_libre(true))_
 
 **38. Agentes, Representantes y Zonas Grises**
-- 616. Agentes con cartera propia de jugadores
-- 617. Nivel de confianza construido con cada agente
-- 618. Agente que te ofrece jugadores en exclusiva si le caes bien
-- 619. Agente que te bloquea operaciones si lo tratas mal
-- 620. Superagente que controla a media liga
-- 621. Comisiones negociables y su impacto en el presupuesto
-- 622. Agente que filtra información a la prensa
-- 623. Oferta de retorno por comisión como decisión ética con riesgo
-- 624. Investigación federativa por operaciones sospechosas
-- 625. Sanción por incumplir el fair play financiero
-- 626. Denuncia anónima que dispara una auditoría
-- 627. Contabilidad paralela como opción arriesgada y sancionable
-- 628. Reputación limpia como ventaja concreta en negociaciones
-- 629. Presión de un dirigente para fichar a un representado suyo
-- 630. Fichaje impuesto directamente por el dueño del club
-- 631. Rechazar un fichaje impuesto y ganarte un enemigo interno
-- 632. Intermediario que infla artificialmente el precio de una operación
-- 633. Agente que representa al comprador y al vendedor a la vez
-- 634. Cláusula secreta que se revela tiempo después
-- 635. Filtración de un contrato completo a la prensa
-- 636. Escándalo de amaño de partidos dentro de tu liga
-- 637. Jugador de tu plantel implicado en apuestas
-- 638. Programa interno de integridad del club
-- 639. Ranking de transparencia con efecto sobre los auspiciadores
-- 640. Delación compensada dentro de un caso federativo
+- 616. Agentes con cartera propia de jugadores — _Cantera.agencias_del_plantel() agrupa jugadores por agente y suma clientes_
+- 617. Nivel de confianza construido con cada agente — _Cantera.resolver_agente('a') sube confianza_de(nombre)_
+- 620. Superagente que controla a media liga — _MercadoAvanzado._montar(m,'superagente'); resolver(m,'a')_
+- 622. Agente que filtra información a la prensa — _Prensa._eventos_nuevos incluye eventos con agente (hay_evento / sortear_evento)_
+- 623. Oferta de retorno por comisión como decisión ética con riesgo — _Cantera.resolver_agente('a') con tipo comision incrementa turbio_
+- 625. Sanción por incumplir el fair play financiero — _Federacion.revisar_fair_play(...) con masa salarial alta dos años => puede_pagar_traspaso()==false_
+- 628. Reputación limpia como ventaja concreta en negociaciones — _Reputacion.registrar('honesto',+30,'x') baja mult_compras_
+- 630. Fichaje impuesto directamente por el dueño del club — _MercadoAvanzado.resolver(m,'a') con impuesto ficha al libre_
+- 631. Rechazar un fichaje impuesto y ganarte un enemigo interno — _resolver(m,'b'): confianza del directorio baja 6_
+- 637. Jugador de tu plantel implicado en apuestas — _MercadoAvanzado._montar(m,'apuestas'); resolver(m,'b') puede suspender 5_
 
 **39. Economía Avanzada, Deuda e Insolvencia**
-- 641. Estado de resultados mensual y anual del club
-- 642. Balance con activos, pasivos y patrimonio
-- 643. Flujo de caja proyectado a doce meses
-- 644. Diferencia explícita entre resultado contable y caja disponible
-- 645. Amortización del valor de los pases en libros
-- 646. Plusvalía contable generada por venta de jugadores
-- 647. Deuda bancaria con tasa e intereses visibles
-- 648. Líneas de crédito y capacidad máxima de endeudamiento
-- 649. Renegociación de deuda con los acreedores del club
-- 650. Convenio de pago con proveedores
-- 651. Mora en el pago de sueldos y sus consecuencias inmediatas
-- 652. Jugadores habilitados a rescindir por sueldos impagos
-- 653. Sanción deportiva por deuda: resta de puntos
-- 654. Prohibición de fichar mientras exista deuda pendiente
-- 655. Descenso administrativo por insolvencia
-- 656. Procedimiento de reorganización para salvar al club
-- 657. Liquidación del club como final de partida alternativo
-- 658. Administrador externo designado que limita tus decisiones
-- 659. Junta de acreedores que vota el destino del club
-- 660. Venta forzada de activos: estadio, ciudad deportiva, terrenos
-- 661. Venta del estadio con arriendo posterior como maniobra financiera
-- 662. Aporte de capital de emergencia del dueño
-- 663. Aumento de capital con dilución de los accionistas actuales
-- 664. Emisión de bonos del club comprados por los propios hinchas
-- 665. Financiamiento colectivo de hinchas para un fichaje puntual
-- 666. Fondo de inversión que compra un porcentaje del club
-- 667. Multipropiedad: red de clubes bajo un mismo dueño
-- 668. Club satélite donde ceder juveniles
-- 669. Presupuesto anual que debe aprobar el directorio
-- 670. Reasignación de presupuesto entre fichajes y salarios
-- 671. Tope salarial interno autoimpuesto
-- 672. Escalas salariales y conflictos internos por desigualdad
-- 673. Impuestos por país y su efecto en el sueldo neto ofrecido
-- 674. Régimen tributario especial para atraer extranjeros
-- 675. Inflación y devaluación de la moneda local
-- 676. Ingresos en moneda extranjera por torneos internacionales
-- 677. Auditoría anual con informe público
-- 678. Panel de indicadores financieros (liquidez, endeudamiento, cobertura)
-- 679. Calificación de riesgo del club que encarece o abarata el crédito
-- 680. Premio anual a la gestión financiera sostenible
+- 642. Balance con activos, pasivos y patrimonio — _Replicar la cuenta: activo=saldo+sum(valor)+obras; patrimonio=activo-deuda(Banco.prestamos)_
+- 643. Flujo de caja proyectado a doce meses — _Finanzas.proyeccion_anual()['resultado']/12 repetido 12 veces sobre c.saldo_
+- 647. Deuda bancaria con tasa e intereses visibles — _Banco.pedir(i,c) añade préstamo con cuota_francesa y semana() cobra interés = deuda*tasa_
+- 649. Renegociación de deuda con los acreedores del club — _Banco.renegociar(0) cambia restan y tasa y marca renegociado_
+- 653. Sanción deportiva por deuda: resta de puntos — _Insolvencia.semana(m) con hay_veedor => Liga.tabla_puntos baja 6_
+- 654. Prohibición de fichar mientras exista deuda pendiente — _Banco.en_mora()==true y _motivo_fichaje_bloqueado devuelve texto (UI)_
+- 656. Procedimiento de reorganización para salvar al club — _Insolvencia.resolver(m,'a') con pendiente refundacion limpia Banco.prestamos_
+- 657. Liquidación del club como final de partida alternativo — _Banco.semana con semanas_en_rojo>=12 => liquidado_ya_
+- 658. Administrador externo designado que limita tus decisiones — _Insolvencia.semana con veedor fija tope_salarial>0 y vende al más caro_
+- 662. Aporte de capital de emergencia del dueño — _Roles.inyectar_capital() suma saldo (rol DUENO) y falla a la tercera vez_
+- 664. Emisión de bonos del club comprados por los propios hinchas — _Banco.emitir_bono(c) agrega préstamo con bono==true_
+- 667. Multipropiedad: red de clubes bajo un mismo dueño — _Roles.comprar_filial() con capital suficiente añade filial_
+- 668. Club satélite donde ceder juveniles — _Roles.comprar_filial(); Cesiones.ceder_canterano(j, club)_
 
 **40. Propiedad, Directorio y Política Interna**
-- 681. Elección entre club de socios o sociedad anónima deportiva
-- 682. Elecciones de presidente cada cierto número de años
-- 683. Campaña electoral con promesas que después debes cumplir
-- 684. Voto de censura del directorio
-- 685. Padrón de socios que crece o decrece según tu gestión
-- 686. Cuota social como ingreso estable y predecible
-- 687. Asamblea anual de socios con preguntas incómodas
-- 688. Accionistas con intereses distintos: deportivo contra financiero
-- 689. Oferta de compra hostil sobre el club
-- 690. Vender tu participación y retirarte como final alternativo
-- 691. Dueño extranjero que quiere cambiar la identidad del club
-- 692. Conflicto por modificar el escudo o los colores tradicionales
-- 693. Traslado del club a otra ciudad como decisión polémica
-- 694. Fusión con otro club
-- 695. Refundación tras la quiebra, partiendo en la última división
-- 696. Club filial en otra ciudad o país
-- 697. Directorio con miembros de personalidad definida
-- 698. Director deportivo con autonomía delegable
-- 699. Delegar o no las negociaciones, con efecto en tu carga de trabajo
-- 700. Objetivos de temporada negociados con el directorio
-- 701. Paciencia del directorio como barra siempre visible
-- 702. Despido y búsqueda posterior de un nuevo cargo
-- 703. Ofertas de otros clubes en plena temporada
-- 704. Cláusula de salida en tu propio contrato
-- 705. Indemnización por despido
-- 706. Reputación profesional que abre o cierra puertas
-- 707. Entrevista de trabajo con un club interesado
-- 708. Elegir entre club grande con presión o proyecto largo sin prisa
-- 709. Historial de cargos con estadísticas completas de tu carrera
-- 710. Salón de la fama de dirigentes y entrenadores del mundo del juego
+- 684. Voto de censura del directorio — _Junta.resolver con humor bajo => censura true y confianza baja 10_
+- 685. Padrón de socios que crece o decrece según tu gestión — _Hinchada.campana_abonos(club,animo,trofeos) cambia c.socios_
+- 686. Cuota social como ingreso estable y predecible — _Finanzas.cuotas_socios() == socios*cuota_
+- 688. Accionistas con intereses distintos: deportivo contra financiero — _Junta.formar(club) crea 3 accionistas; resolver cambia humor del que habla_
+- 690. Vender tu participación y retirarte como final alternativo — _Roles.vender_club() en rol DUENO => sin_club true_
+- 696. Club filial en otra ciudad o país — _Roles.comprar_filial() añade filial; semana_filiales cobra/paga_
+- 697. Directorio con miembros de personalidad definida — _Junta.formar crea presidente con estilo en ESTILOS_
+- 698. Director deportivo con autonomía delegable — _Roles.fijar_directriz('rotacion',...) y dt_obedece()_
+- 701. Paciencia del directorio como barra siempre visible — _Directiva.mover_confianza(-90) => despedido_ya_
+- 702. Despido y búsqueda posterior de un nuevo cargo — _Directiva.mover_confianza(-100) => despedido; Roles.ofertas_trabajo() lista clubes_
+- 703. Ofertas de otros clubes en plena temporada — _Roles.sortear_oferta_de_club() con prestigio alto devuelve oferta_
+- 706. Reputación profesional que abre o cierra puertas — _Roles.sumar_prestigio(50) habilita sortear_oferta_de_club_
+- 709. Historial de cargos con estadísticas completas de tu carrera — _Roles.curriculum tras cambiar de club / palmares_por_tipo()_
 
 **41. Infraestructura Urbana y Entorno**
-- 711. Mapa de la ciudad con terrenos comprables
-- 712. Ubicación del estadio que afecta la asistencia promedio
-- 713. Conexión de transporte público hacia el estadio
-- 714. Barrio del club que se desarrolla junto con el éxito deportivo
-- 715. Negociación con la municipalidad por permisos de construcción
-- 716. Oposición vecinal a la ampliación del estadio
-- 717. Estudio de impacto ambiental obligatorio
-- 718. Estadio compartido con otro club de la misma ciudad
-- 719. Arriendo del estadio para conciertos y eventos masivos
-- 720. Ingresos por eventos no deportivos
-- 721. Daño al césped por eventos y su costo de reparación
-- 722. Estadio provisional mientras construyes el definitivo
-- 723. Mudanza temporal a otra ciudad durante la obra
-- 724. Hotel del club como negocio anexo
-- 725. Restaurante y bar temático del club
-- 726. Clínica deportiva abierta al público general
-- 727. Escuela de fútbol comercial con franquicias
-- 728. Centro comercial anexo al estadio
-- 729. Paneles solares y sostenibilidad con beneficios tributarios
-- 730. Certificación ecológica del estadio
-- 731. Seguridad privada y control de accesos
-- 732. Sistema de cámaras y protocolo antiviolencia
-- 733. Multas por incidentes ocurridos en el estadio
-- 734. Sanción de partido a puertas cerradas
-- 735. Aforo reducido temporal y su golpe económico
+- 711. Mapa de la ciudad con terrenos comprables — _Ciudad.comprar_terreno('norte',club) descuenta saldo y tiene_terreno('norte')_
+- 714. Barrio del club que se desarrolla junto con el éxito deportivo — _CiudadAnimo.de(mundo,club) devuelve estado según puesto/racha_
+- 715. Negociación con la municipalidad por permisos de construcción — _Ciudad.pedir_permiso(club) crea permiso; Ciudad.semana resuelve aprobado o no_
+- 716. Oposición vecinal a la ampliación del estadio — _Ciudad.gestion_vecinal('obra',club) sube vecinos_
+- 719. Arriendo del estadio para conciertos y eventos masivos — _Ciudad.arrendar_estadio(club) suma saldo y baja cesped_
+- 720. Ingresos por eventos no deportivos — _Ciudad.renta_negocios(club) suma renta semanal por negocio construido_
+- 721. Daño al césped por eventos y su costo de reparación — _Ciudad.arrendar_estadio baja cesped; reparar_cesped lo restaura y descuenta_
+- 724. Hotel del club como negocio anexo — _Ciudad.construir_negocio('hotel',club) tras comprar terreno 'norte'_
+- 725. Restaurante y bar temático del club — _Ciudad.construir_negocio('resto',club)_
+- 726. Clínica deportiva abierta al público general — _Ciudad.construir_negocio('clinica',club) sube Instalaciones 'rehab'_
+- 727. Escuela de fútbol comercial con franquicias — _Ciudad.construir_negocio('escuela',club)_
+- 728. Centro comercial anexo al estadio — _Ciudad.construir_negocio('comercial',club) requiere terreno 'centro'_
+- 729. Paneles solares y sostenibilidad con beneficios tributarios — _Ciudad.instalar_paneles(club) sube paneles y ahorro_energetico_
+- 730. Certificación ecológica del estadio — _Ciudad.certificar(club) fija certificado y renta_
+- 731. Seguridad privada y control de accesos — _Ciudad.mejorar_seguridad('privada',club) sube seg_privada y baja riesgo_incidente_
+- 732. Sistema de cámaras y protocolo antiviolencia — _Ciudad.riesgo_incidente(animo,funa) con seg_camaras>0 es menor_
+- 733. Multas por incidentes ocurridos en el estadio — _Ciudad.sancionar('cerradas') => factor_aforo()==0_
+- 734. Sanción de partido a puertas cerradas — _Ciudad.sancionar('cerradas'); factor_aforo()==0.0_
+- 735. Aforo reducido temporal y su golpe económico — _Ciudad.sancionar('aforo'); factor_aforo()==0.4_
 
 **42. Hinchada, Barras y Cultura Popular**
-- 736. Segmentación de la hinchada en grupos con demandas distintas
-- 737. Hinchas históricos frente a hinchas nuevos atraídos por el éxito
-- 738. Índice de conexión emocional entre hinchada y equipo
-- 739. Protestas por el precio de las entradas
-- 740. Protestas por la venta de un ídolo
-- 741. Banderazo de apoyo antes de un partido clave
-- 742. Recibimiento masivo al bus del equipo
-- 743. Mosaico organizado por la hinchada
-- 744. Barra organizada con demandas y riesgo de violencia
-- 745. Decisión estratégica de negociar o enfrentar a la barra
-- 746. Incidentes que derivan en sanciones para el club
-- 747. Hinchada que viaja masivamente a un partido decisivo
-- 748. Programa de socios con beneficios por antigüedad
-- 749. Abonos de temporada con distintos planes y coberturas
-- 750. Precios dinámicos según el atractivo del partido
-- 751. Entradas populares a precio social como decisión de imagen
-- 752. Día del hincha con actividades dentro del estadio
-- 753. Peñas o filiales del club en otras ciudades
-- 754. Filiales internacionales si el club se globaliza
-- 755. Encuesta de satisfacción a los hinchas
-- 756. Cánticos que aparecen dedicados a jugadores destacados
-- 757. Ídolo popular al que la hinchada protege aunque rinda poco
-- 758. Jugador señalado por la hinchada tras un error decisivo
-- 759. Silbatina en el estadio que afecta el rendimiento del equipo
-- 760. Proceso de recuperación de la confianza tras una crisis
-- 761. Documental sobre la hinchada producido por el club
-- 762. Museo con exhibición participativa de objetos de hinchas
-- 763. Colecta solidaria organizada por el club
-- 764. Programa social en barrios vulnerables
-- 765. Rama de fútbol femenino como área gestionable
-- 766. Rama de futsal o fútbol playa como apuesta menor
-- 767. Deporte adaptado y su impacto en la imagen institucional
-- 768. Voluntariado de jugadores en la comunidad
-- 769. Índice de reputación social del club
-- 770. Premio a la mejor institución del año
+- 736. Segmentación de la hinchada en grupos con demandas distintas — _Hinchada.semana(80) mueve segmentos; segmentos[k] en 0..100_
+- 737. Hinchas históricos frente a hinchas nuevos atraídos por el éxito — _Hinchada.semana(animo>65) en bucle: nuevos sube más rápido que historicos_
+- 739. Protestas por el precio de las entradas — _Hinchada.alternar_precio_dinamico(); castigo_por_subida(5, 9)>0_
+- 741. Banderazo de apoyo antes de un partido clave — _Prensa.semana() con animo=90 repetido emite noticia Banderazo_
+- 746. Incidentes que derivan en sanciones para el club — _Ciudad.sancionar('aforo') y factor_aforo()<1_
+- 749. Abonos de temporada con distintos planes y coberturas — _Hinchada.fijar_abono('premium'); campana_abonos(club,animo,trofeos) devuelve ingreso_
+- 750. Precios dinámicos según el atractivo del partido — _Hinchada.precio_efectivo(10, 80) > 10 con precio_dinamico_
+- 752. Día del hincha con actividades dentro del estadio — _Hinchada.dia_del_hincha(club,prensa) incrementa dias_hincha y socios_
+- 753. Peñas o filiales del club en otras ciudades — _Hinchada.fundar_pena(club) añade penas y socios_
+- 755. Encuesta de satisfacción a los hinchas — _Hinchada.encuesta no vacía tras semana() y responder_encuesta(mejor)['acerto']_
+- 765. Rama de fútbol femenino como área gestionable — _Hinchada.abrir_rama('femenino',club) => tiene_rama true_
+- 766. Rama de futsal o fútbol playa como apuesta menor — _Hinchada.abrir_rama('futsal',club)_
+- 767. Deporte adaptado y su impacto en la imagen institucional — _Hinchada.abrir_rama('adaptado',club)_
+- 769. Índice de reputación social del club — _Reputacion.registrar('social',+20,'x'); socios_por_temporada() sube_
 
 **43. Prensa, Medios y Narrativa**
-- 771. Conferencias de prensa con preguntas y opciones de respuesta
-- 772. Periodistas con línea editorial y sesgos definidos
-- 773. Periodista que te tiene manía y busca desgastarte
-- 774. Periodista aliado al que puedes filtrar información
-- 775. Titulares generados según resultados y declaraciones
-- 776. Guerra mediática con un DT rival
-- 777. Declaración pública que motiva o desmotiva al plantel
-- 778. Silencio de prensa como estrategia deliberada
-- 779. Multa federativa por declaraciones desafortunadas
-- 780. Entrevista larga en un programa deportivo
-- 781. Programa de debate donde se discute tu gestión
-- 782. Encuesta de opinión pública sobre tu continuidad
-- 783. Rumor falso de tu despido publicado en portada
-- 784. Filtración de la alineación antes del partido
-- 785. Investigación periodística sobre las finanzas del club
-- 786. Crisis de imagen que exige un plan de comunicación
-- 787. Vocero del club habilitado para hablar en tu lugar
-- 788. Departamento de comunicaciones mejorable por niveles
-- 789. Documental tras bambalinas: ingresos a cambio de exposición
-- 790. Cámaras en el vestuario como decisión rentable pero riesgosa
-- 791. Biografía autorizada de un ídolo del club
-- 792. Podcast oficial del club
-- 793. Canal de streaming propio con suscriptores
-- 794. Derechos de TV negociados individualmente o en bloque
-- 795. Horarios de partido impuestos por la televisión
-- 796. Presión por jugar en horarios incómodos para el hincha
-- 797. Cobertura internacional al firmar a una estrella
-- 798. Reacción de la prensa extranjera ante un fichaje sorpresivo
-- 799. Archivo navegable de portadas históricas del club
-- 800. Narrador de temporada que resume la campaña como relato
+- 771. Conferencias de prensa con preguntas y opciones de respuesta — _Prensa.abrir_rueda(true,false) y responder(0) devuelve moral/confianza/socios_
+- 772. Periodistas con línea editorial y sesgos definidos — _Prensa.periodista_de('ibarra')[3]=='crítico'_
+- 773. Periodista que te tiene manía y busca desgastarte — _Prensa._poner_periodista(false,false); relacion_con('ibarra')_
+- 775. Titulares generados según resultados y declaraciones — _Prensa.titular_prensa(true,false,false,'x')['tit'] no vacío_
+- 776. Guerra mediática con un DT rival — _Roles.buscar_rival_dt() con rivalidad alta fija rival_dt; registrar_duelo_
+- 777. Declaración pública que motiva o desmotiva al plantel — _Prensa.responder(opcion) => cambia j.moral del plantel_
+- 778. Silencio de prensa como estrategia deliberada — _Prensa.comunicado('silencio') no cambia funa pero publica titular_
+- 780. Entrevista larga en un programa deportivo — _Prensa.mesa_de_debate() devuelve 5 voces con frase según estado_
+- 781. Programa de debate donde se discute tu gestión — _Prensa.mesa_de_debate()_
+- 786. Crisis de imagen que exige un plan de comunicación — _Prensa.funa=70; comunicado('contestar') cambia funa_
+- 787. Vocero del club habilitado para hablar en tu lugar — _Prensa.nombrar_vocero(club) elige capitan/lider; vocero no vacío_
+- 789. Documental tras bambalinas: ingresos a cambio de exposición — _Prensa.hay_camaras() tras aceptar documental; renta_medios_
+- 790. Cámaras en el vestuario como decisión rentable pero riesgosa — _Prensa.semanas_documental>0 baja moral de j.rasgo=='fragil'_
+- 792. Podcast oficial del club — _Prensa.comprar_medio('podcast',club); tiene_medio('podcast')_
+- 793. Canal de streaming propio con suscriptores — _Prensa.comprar_medio('stream',club); renta_medios()_
+- 794. Derechos de TV negociados individualmente o en bloque — _Prensa.negociar_tv(true,club); factor_tv()==1.35 o 0.70_
+- 795. Horarios de partido impuestos por la televisión — _Mundo.horario='lunes_noche' => factor_publico<1 y factor_tv_horario>1_
+- 797. Cobertura internacional al firmar a una estrella — _CinematicaFichaje (UI)_
+- 799. Archivo navegable de portadas históricas del club — _Prensa.guardar_portada(tit,cuerpo,'bien',{}) y listas de portadas crece_
+- 800. Narrador de temporada que resume la campaña como relato — _Prensa.narrador_temporada() devuelve texto no vacío_
 
 **44. Árbitros, Reglamento y Disciplina**
-- 801. Árbitros con perfiles distintos (permisivo, tarjetero, casero)
-- 802. Designación arbitral conocida antes del partido
-- 803. Historial de resultados con cada árbitro
-- 804. Reclamo formal por una designación arbitral
-- 805. VAR activable o no según la competencia
-- 806. Errores arbitrales que generan polémica y narrativa
-- 807. Sanción por reclamar públicamente contra el arbitraje
-- 808. Expulsión del DT y prohibición de dirigir el partido siguiente
-- 809. Tribunal de disciplina con casos y apelaciones
-- 810. Apelación de tarjeta roja con probabilidad de éxito variable
-- 811. Suspensión automática por acumulación de amarillas
-- 812. Amnistía de amarillas al llegar a determinada fase
-- 813. Castigo largo por agresión dentro del campo
-- 814. Denuncia por insultos discriminatorios
-- 815. Protocolo antidiscriminación con partido suspendido
-- 816. Control antidopaje aleatorio
-- 817. Jugador que da positivo y el impacto deportivo y de imagen
-- 818. Defensa legal del club en un caso de dopaje
-- 819. Reglamento de competencia consultable dentro del juego
-- 820. Cambios de reglas entre temporadas
-- 821. Regla de cinco cambios activable
-- 822. Reglas experimentales aplicadas en ligas menores
-- 823. Gol de visitante como criterio configurable
-- 824. Criterios de desempate configurables
-- 825. Puntos de fair play como criterio de desempate
-- 826. Sanción por alineación indebida
-- 827. Pérdida de puntos por incumplimiento administrativo
-- 828. Protesta formal contra un resultado
-- 829. Fallo del tribunal que modifica la tabla de posiciones
-- 830. Historial disciplinario del club por temporada
+- 801. Árbitros con perfiles distintos (permisivo, tarjetero, casero) — _Partido con arbitro {perfil:'casero'} y muchas simulaciones: más amarillas al visitante_
+- 802. Designación arbitral conocida antes del partido — _Previa.arbitro_de('x',5) igual en llamadas repetidas_
+- 803. Historial de resultados con cada árbitro — _Federacion.anotar_arbitro('A','casero',2,0); texto_arbitro('A')_
+- 804. Reclamo formal por una designación arbitral — _Prensa.arbitro_dudoso('X'); sortear_evento incluye 'reclamo'_
+- 805. VAR activable o no según la competencia — _Federacion.factor_tarjetas() ==0.5 si var_activo; Partido.ctx_factor_tarjetas_
+- 806. Errores arbitrales que generan polémica y narrativa — _Partido.simular con árbitro 'estricto' genera decision_arbitral_
+- 807. Sanción por reclamar públicamente contra el arbitraje — _Prensa.resolver('reclamo') con Azar fijo_
+- 808. Expulsión del DT y prohibición de dirigir el partido siguiente — _Federacion.sancionar_dt(2); dt_sancionado()==true_
+- 809. Tribunal de disciplina con casos y apelaciones — _Federacion.abrir_caso('roja',j,2,'x',2026,3); casos[0]['estado']=='firme'_
+- 810. Apelación de tarjeta roja con probabilidad de éxito variable — _Federacion.apelar(caso_id, club, 50) con Azar fijo_
+- 813. Castigo largo por agresión dentro del campo — _Federacion.abrir_caso('agresion',j,6,...) suspende al jugador_
+- 816. Control antidopaje aleatorio — _Federacion.control_antidopaje(club,anio,sem) con Azar fijo devuelve registro_
+- 817. Jugador que da positivo y el impacto deportivo y de imagen — _control_antidopaje positivo => j.suspension>0, signal escandalo_
+- 818. Defensa legal del club en un caso de dopaje — _Federacion.apelar(id_dopaje, club)_
+- 819. Reglamento de competencia consultable dentro del juego — _Federacion.reglas_vigentes('CHI') no vacío_
+- 820. Cambios de reglas entre temporadas — _Federacion.abrir_votacion y votar('a',club,asamblea) modifica flags_
+- 826. Sanción por alineación indebida — _LeyesPais.infracciones_once(club, once) con once indebido y revisar_leyes_pais_
+- 827. Pérdida de puntos por incumplimiento administrativo — _Liga.sancionar(club.id, 3) baja tabla_puntos_
 
 **45. Federaciones, Licencias y Política Deportiva**
-- 831. Licencia de club exigida para competir
-- 832. Requisitos de infraestructura mínima por división
-- 833. Requisitos financieros para obtener la licencia
-- 834. Auditoría federativa anual
-- 835. Voto del club en las asambleas de la liga
-- 836. Alianzas políticas con otros clubes
-- 837. Presidente de la liga con agenda propia
-- 838. Reforma del formato del torneo sometida a votación
-- 839. Creación de una superliga separatista como decisión polémica
-- 840. Sanción por participar en una liga no reconocida
-- 841. Reparto de derechos de TV votado entre clubes
-- 842. Lucha por una mayor tajada de los ingresos centrales
-- 843. Calendario definido por la federación con conflictos de fechas
-- 844. Fecha FIFA que te deja sin jugadores clave
-- 845. Reclamo por lesión de un jugador en la selección
-- 846. Compensación económica por cesión a la selección
-- 847. Cupos obligatorios de juveniles en cancha
-- 848. Bonificación federativa por dar minutos a canteranos
-- 849. Cambio de formato de ascensos y descensos entre temporadas
-- 850. Playoffs de descenso con máxima tensión
-- 851. Repechaje internacional por un cupo
-- 852. Sistema de licencias que impide ascender pese al mérito deportivo
-- 853. Corrupción federativa como trama de fondo de la partida
-- 854. Investigación internacional que sacude a la federación
-- 855. Cambio de asociación continental en casos excepcionales
-- 856. Torneo continental nuevo creado a mitad de partida
-- 857. Ranking de coeficientes de países que define cupos
-- 858. Aporte de tu club al coeficiente nacional
-- 859. Diplomacia con federaciones extranjeras para amistosos
-- 860. Gira internacional que requiere aprobación federativa
+- 831. Licencia de club exigida para competir — _Federacion.auditoria_anual(club,obras,anio)['estado']_
+- 832. Requisitos de infraestructura mínima por división — _Federacion.requisitos_licencia(club,obras) devuelve 'ok' false con aforo bajo_
+- 833. Requisitos financieros para obtener la licencia — _requisitos_licencia con club en rojo => fallos_
+- 834. Auditoría federativa anual — _Federacion.auditoria_anual con 3 fallos => licencia=='denegada'_
+- 835. Voto del club en las asambleas de la liga — _Federacion.abrir_votacion(); votar('a',club,clubes) devuelve {pasa,a_favor,total}_
+- 837. Presidente de la liga con agenda propia — _Federacion.revisar_presidencia(anio) fija presidente['agenda']; agenda_empuja('var')_
+- 838. Reforma del formato del torneo sometida a votación — _Federacion._aplicar_mocion('playoffs',true,'a',club) => playoffs==true_
+- 839. Creación de una superliga separatista como decisión polémica — _Federacion._aplicar_mocion('superliga',true,'a',club) suma prima y activa superliga_
+- 841. Reparto de derechos de TV votado entre clubes — _Federacion._aplicar_mocion('tvigual',true,'a',club grande) => reparto_tv==0.72_
+- 844. Fecha FIFA que te deja sin jugadores clave — _Selecciones._fecha_fifa(anio,semana) baja j.fisico de convocados_
+- 846. Compensación económica por cesión a la selección — _Selecciones tras lesión de gira: saldo del club sube_
+- 847. Cupos obligatorios de juveniles en cancha — _Federacion.cupo_juvenil=true; revisar_cupo_juvenil(club, once_sin_sub21) devuelve multa_
+- 848. Bonificación federativa por dar minutos a canteranos — _revisar_cupo_juvenil con juveniles en el once devuelve bono>0_
+- 850. Playoffs de descenso con máxima tensión — _Mundo.jugar_promocion() con promocion activa mueve clubes de liga_
 
 **46. Selecciones Nacionales**
-- 861. Modo seleccionador nacional paralelo o alternativo
-- 862. Convocatorias con lista preliminar y lista definitiva
-- 863. Jugadores nacionalizados por años de residencia
-- 864. Disputa entre dos selecciones por un mismo jugador
-- 865. Eliminatorias organizadas por confederación
-- 866. Repechaje intercontinental
-- 867. Copa del mundo simulada cada cuatro años
-- 868. Torneos continentales con formatos propios
-- 869. Selecciones juveniles vinculadas a la absoluta
-- 870. Torneo olímpico con reglas de edad
-- 871. Conflicto club-selección por un jugador clave
-- 872. Jugador que vuelve lesionado o agotado de la selección
-- 873. Prestigio del club según cantidad de seleccionados
-- 874. Vitrina mundialista que dispara el precio de tus jugadores
-- 875. Ojear durante un mundial y fichar a la revelación
-- 876. Retiro de la selección de un veterano emblemático
-- 877. Debut de un canterano tuyo en la selección mayor
-- 878. Historial de seleccionados formados en tu club
-- 879. Ranking mundial de selecciones dinámico
-- 880. Naturalización masiva en países pequeños como dilema
-- 881. Amistosos internacionales que generan ingresos
-- 882. DT de selección que compite contigo por la atención de un jugador
-- 883. Oferta para dirigir una selección mientras diriges un club
-- 884. Doble cargo permitido o prohibido según el país
-- 885. Legado como seleccionador registrado en el salón de la fama
+- 862. Convocatorias con lista preliminar y lista definitiva — _Selecciones.semana(anio,6) publica prenómina; en semana 7 convoca 18_
+- 863. Jugadores nacionalizados por años de residencia — _Selecciones.residencias() 4 veces y nacionalizar(j) fija nacionalidad_deportiva_
+- 867. Copa del mundo simulada cada cuatro años — _Selecciones.toca_copa_del_mundo(2026+4k) y copa_del_mundo(anio) devuelve campeón_
+- 871. Conflicto club-selección por un jugador clave — _Selecciones.pedir_descanso(j) => pidio_descanso(j)_
+- 872. Jugador que vuelve lesionado o agotado de la selección — _Selecciones._fecha_fifa y comprobar j.fisico baja y vuelve_tocado_
+- 874. Vitrina mundialista que dispara el precio de tus jugadores — _Selecciones._vitrina_mundialista(j,anio) en bucle sube j.ovr y valor_
+- 881. Amistosos internacionales que generan ingresos — _Mundo.jugar_amistosos('gira') suma saldo neto positivo con rep alta_
 
 **47. Competencias y Formatos**
-- 886. Editor de competencias personalizado
-- 887. Crear tu propia liga con reglas a medida
-- 888. Definir número de equipos, ascensos y descensos
-- 889. Formatos: todos contra todos, apertura y clausura, playoffs
-- 890. Copas de eliminación directa
-- 891. Copa nacional con participación de equipos amateurs
-- 892. Cenicienta de copa que llega inesperadamente lejos
-- 893. Supercopa entre campeones
-- 894. Copa de la liga como torneo secundario
-- 895. Torneos de verano y amistosos de pretemporada
-- 896. Copa internacional de clubes
-- 897. Mundial de clubes con formato ampliado
-- 898. Torneos regionales de carácter histórico
-- 899. Torneos ficticios desbloqueables por logros
-- 900. Sistema de sorteo con bombos y restricciones
-- 901. Sorteo transmitido en vivo como evento del juego
-- 902. Cabezas de serie definidos por coeficiente
-- 903. Fase de grupos con múltiples criterios de clasificación
-- 904. Eliminatoria a partido único en cancha neutral
-- 905. Final única en sede predefinida con años de anticipación
-- 906. Definición por penales con estadísticas históricas propias
-- 907. Premios económicos crecientes por fase alcanzada
-- 908. Cupos internacionales asignados por posición en la liga
-- 909. Tabla anual y tabla acumulada funcionando en paralelo
-- 910. Calendario visual con todas las competencias superpuestas
+- 886. Editor de competencias personalizado — _Editor.renombrar_liga(l,'Torneo X'); fijar_descensos(l,3); fijar_puntos_victoria(l,2)_
+- 890. Copas de eliminación directa — _Copa.new('X').preparar(clubes); jugar_hasta_el_final() devuelve campeón_
+- 893. Supercopa entre campeones — _Mundo.jugar_supercopa() con campeones distintos devuelve {campeon}_
+- 894. Copa de la liga como torneo secundario — _Copa.copas_de('ENG','Inglaterra').size()==2_
+- 895. Torneos de verano y amistosos de pretemporada — _Mundo.jugar_amistosos('local') sube forma de la plantilla_
+- 896. Copa internacional de clubes — _Continental.sortear(clubes, ligas, campeon_copa) devuelve torneos de 16_
+- 901. Sorteo transmitido en vivo como evento del juego — _Copa.anunciar_sorteo() emite sorteo_eliminatoria con parejas_
+- 903. Fase de grupos con múltiples criterios de clasificación — _Continental.preparar y tabla_de_grupo(i) ordenada_
+- 904. Eliminatoria a partido único en cancha neutral — _Copa.jugar_ronda en final => p.neutral_
+- 905. Final única en sede predefinida con años de anticipación — _Editor.fijar_sede_final(club); Copa.sede_final_id_
+- 907. Premios económicos crecientes por fase alcanzada — _Continental.premio_de_ronda(n) creciente_
+- 908. Cupos internacionales asignados por posición en la liga — _Continental.plazas(clubes,ligas,campeon) devuelve 16 por copa_
 
 **48. Datos, Editor y Comunidad**
-- 911. Base de datos editable desde el propio juego
-- 912. Editor de ligas, clubes y jugadores sin salir de la partida
-- 913. Importación de paquetes de datos creados por la comunidad
-- 914. Exportación de tu base para compartirla con otros
-- 915. Verificación de compatibilidad entre versiones de datos
-- 916. Editor de escudos con formas y capas
-- 917. Editor de camisetas con patrones predefinidos
-- 918. Editor de estadios simplificado
-- 919. Nombres genéricos por defecto con opción de renombrar todo
-- 920. Herramienta de renombrado masivo
-- 921. Plantillas de datos por país descargables
-- 922. Actualización de plantillas al inicio de cada temporada real
-- 923. Sistema de parche de datos separado del programa principal
-- 924. Editor de nombres de competencias
-- 925. Editor de reglas de competencias existentes
-- 926. Editor de calendario y fechas
-- 927. Editor de finanzas iniciales de cada club
-- 928. Editor de atributos con validación de rangos
-- 929. Generador aleatorio de mundo ficticio completo
-- 930. Modo mundo alternativo sin ningún dato real
-- 931. Bloqueo opcional de edición para partidas competitivas
-- 932. Registro de cambios aplicados a la base de datos
-- 933. Copias de seguridad automáticas de la base
-- 934. Sincronización en la nube entre dispositivos
-- 935. Tabla de clasificación global de gestores en línea
-- 936. Compartir capturas de logros con formato propio
-- 937. Muro o foro de comunidad integrado
-- 938. Desafíos semanales creados por la comunidad
-- 939. Sistema de valoración de paquetes de datos
-- 940. Créditos automáticos a los autores de los datos
-- 941. Herramientas de moderación para contenido de la comunidad
-- 942. Modo sin conexión totalmente funcional
-- 943. Peso reducido de la aplicación como ventaja competitiva
-- 944. Compatibilidad garantizada con dispositivos de gama baja
-- 945. Guardado en la nube con recuperación de partidas
+- 911. Base de datos editable desde el propio juego — _Editor.renombrar_club(c,'X'); c.nombre=='X'_
+- 912. Editor de ligas, clubes y jugadores sin salir de la partida — _Editor.fijar_campo(j,'edad',30) en partida cargada_
+- 914. Exportación de tu base para compartirla con otros — _Editor.exportar_csv(true) devuelve texto reimportable (importar_csv)_
+- 916. Editor de escudos con formas y capas — _Club.esc_forma='x'; Escudo.firma_identidad cambia_
+- 917. Editor de camisetas con patrones predefinidos — _Club.kit_estilo cambia Prensa.firma_identidad_
+- 918. Editor de estadios simplificado — _EstadioPropio.aplicar_preset('x') y presupuesto()_
+- 919. Nombres genéricos por defecto con opción de renombrar todo — _Datos.base_real==false por defecto; Editor.renombrar_club_
+- 923. Sistema de parche de datos separado del programa principal — _Datos.usar_base_real(true) con pack presente => base_real true_
+- 924. Editor de nombres de competencias — _Editor.renombrar_liga(l,'Liga Z')_
+- 928. Editor de atributos con validación de rangos — _Editor.mover_atributo(j,'tir',999) queda en 99_
+- 929. Generador aleatorio de mundo ficticio completo — _Mundo.new(); generar(semilla) crea clubes y jugadores_
+- 930. Modo mundo alternativo sin ningún dato real — _Datos.base_real==false y nombres censurados_
+- 942. Modo sin conexión totalmente funcional — _Ejecutar sin red; Partida.guardar/cargar_
+- 944. Compatibilidad garantizada con dispositivos de gama baja — _RendimientoAdaptativo + Calidad.nivel_
 
 **49. Modos de Juego y Desafíos**
-- 946. Modo carrera clásico con club a elección
-- 947. Modo empezar desde abajo con un club amateur
-- 948. Modo club creado desde cero en la última división
-- 949. Modo salvar al club con quiebra inminente
-- 950. Modo solo canteranos: prohibido fichar
-- 951. Modo sin dinero: presupuesto cero toda la partida
-- 952. Modo un solo país: sin extranjeros permitidos
-- 953. Modo trotamundos: obligado a cambiar de club cada dos años
-- 954. Modo clásico eterno: ganar todos los derbis de la temporada
-- 955. Modo invicto: la partida termina con la primera derrota
-- 956. Modo leyenda: treinta temporadas en el mismo club
-- 957. Modo dinastía familiar centrado en hijos y nietos
-- 958. Modo presidente: solo decisiones institucionales
-- 959. Modo dueño: solo decisiones financieras
-- 960. Modo DT puro: sin control sobre el dinero
-- 961. Modo director deportivo: solo fichajes y cantera
-- 962. Escenarios históricos recreados como desafío
-- 963. Escenario: remontar diez puntos en ocho fechas
-- 964. Escenario: evitar el descenso con el peor plantel de la liga
-- 965. Escenario: ganar una copa con un club chico
-- 966. Escenario: alcanzar una meta de ventas en una temporada
-- 967. Escenario: formar cinco seleccionados en diez años
-- 968. Modo rápido de una sola temporada
-- 969. Modo largo de cincuenta temporadas
-- 970. Modo caja de arena con recursos infinitos
-- 971. Modo realista con carrera irreversible
-- 972. Dificultad ajustable por sistema (finanzas, mercado, IA rival)
-- 973. Modificadores activables al iniciar la partida
-- 974. Puntaje de partida calculado según la dificultad elegida
-- 975. Ranking local de mejores puntajes
-- 976. Multijugador por turnos en el mismo dispositivo
-- 977. Multijugador en línea con varios gestores en la misma liga
-- 978. Liga privada para jugar con amigos
-- 979. Modo cooperativo: dos personas gestionando el mismo club
-- 980. Modo espectador de una liga completamente simulada
-- 981. Modo solo simulación: ver evolucionar el mundo sin intervenir
-- 982. Reinicio de temporada con la misma semilla
-- 983. Semilla de partida compartible entre jugadores
-- 984. Modo sin recarga de partida guardada
-- 985. Tutorial narrativo integrado a la primera temporada
+- 946. Modo carrera clásico con club a elección — _Mundo.tomar_el_mando('club_id') crea Directiva y objetivo_
+- 948. Modo club creado desde cero en la última división — _Mundo.fundar_club('X','CHI','#fff','#000','E') devuelve Club_
+- 949. Modo salvar al club con quiebra inminente — _Retos.montar(m,'deuda') deja c.saldo<0; Retos.juzgar_
+- 950. Modo solo canteranos: prohibido fichar — _Mundo.desafios=['cantera']; Mercado.abrir_negociacion(j) devuelve texto de veto_
+- 952. Modo un solo país: sin extranjeros permitidos — _Mundo.desafios=['local']; abrir_negociacion(jugador extranjero) devuelve motivo_
+- 953. Modo trotamundos: obligado a cambiar de club cada dos años — _Mundo.desafios=['trotamundos']; tras 2 temporadas resumen['trotamundos']==true_
+- 955. Modo invicto: la partida termina con la primera derrota — _Mundo.desafios=['invicto']; _chequear_desafios_tras_partido(0,1,r) fija fin_partida_
+- 959. Modo dueño: solo decisiones financieras — _Roles.rol==DUENO; puede_inyectar_capital()_
+- 961. Modo director deportivo: solo fichajes y cantera — _Roles.arrancar('dir'); puede_alinear()==false, puede_fichar()==true_
+- 970. Modo caja de arena con recursos infinitos — _Roles.arrancar('jeque') deja caja muy alta_
+- 973. Modificadores activables al iniciar la partida — _Mundo.desafios=[...]; tiene_desafio('x')_
+- 974. Puntaje de partida calculado según la dificultad elegida — _Mundo.puntaje_carrera()['total']==base*multiplicador_
+- 985. Tutorial narrativo integrado a la primera temporada — _Tutorial.visto()_
 
 **50. Progresión Meta y Rejugabilidad**
-- 986. Sistema de logros con recompensas cosméticas
-- 987. Desbloqueo de estadios, escudos y camisetas por logros
-- 988. Nivel de perfil de gestor que persiste entre partidas
-- 989. Árbol de mejoras de perfil, opcional y desactivable
-- 990. Colección de cromos de jugadores legendarios de tus partidas
-- 991. Museo global que reúne lo logrado en todas tus carreras
-- 992. Estadísticas acumuladas de todas tus partidas
-- 993. Récords personales por carrera
-- 994. Desafíos diarios cortos independientes de la carrera
-- 995. Recompensa por completar temporadas consecutivas
-- 996. Sistema de prestigio al reiniciar con pequeñas ventajas
-- 997. Hitos narrativos que cierran capítulos de tu carrera
-- 998. Final de carrera con evaluación completa de tu legado
-- 999. Epílogo generado según las decisiones tomadas
-- 1000. Salón de la fama personal del jugador
-- 1001. Comparación de tu carrera con la de otros usuarios
-- 1002. Resumen de vida al momento de retirarte
-- 1003. Placa conmemorativa por cantidad de temporadas dirigidas
-- 1004. Historial de todos los clubes dirigidos con su balance
-- 1005. Metas autoimpuestas configurables por el usuario
-- 1006. Mundo distinto en cada partida nueva
-- 1007. Eventos históricos aleatorios que cambian entre partidas
-- 1008. Fuerza variable de las ligas en cada mundo generado
-- 1009. Cartas de evento que aparecen una sola vez por partida
-- 1010. Nueva partida con el mundo heredado de la anterior
+- 988. Nivel de perfil de gestor que persiste entre partidas — _Logros.perfil_sumar_xp(100,'x') suma una vez (hito); perfil_leer()['xp']_
+- 990. Colección de cromos de jugadores legendarios de tus partidas — _Meta.abrir_sobre(mundo) devuelve 5 cromos y los guarda en Meta.leer()['cromos']_
+- 991. Museo global que reúne lo logrado en todas tus carreras — _Meta.registrar_trofeo(...) y Meta.leer()['museo'] crece_
+- 993. Récords personales por carrera — _Logros.tras_partido con 5-0 => rec['mayor_goleada']_
+- 997. Hitos narrativos que cierran capítulos de tu carrera — _Roles.cerrar_capitulo('c','Club',2030,'despido') añade al historial_
+- 998. Final de carrera con evaluación completa de tu legado — _Roles.veredicto_carrera()['texto'] no vacío_
+- 1002. Resumen de vida al momento de retirarte — _Roles.retirarse() devuelve '' y deja veredicto_
+- 1004. Historial de todos los clubes dirigidos con su balance — _Roles.cerrar_capitulo + abrir_capitulo y Roles.curriculum.size()_
+- 1006. Mundo distinto en cada partida nueva — _Mundo.generar([],1) vs generar([],2) difieren en jugadores_
+- 1010. Nueva partida con el mundo heredado de la anterior — _Meta.heredar_proximo=true; Mundo.generar() usa reputaciones guardadas_
 
 **51. Interfaz y Calidad de Vida**
-- 1011. Navegación por pestañas inferiores fijas
-- 1012. Botón de continuar siempre en la misma posición
-- 1013. Bandeja de entrada unificada con notificaciones agrupadas
-- 1014. Filtro de notificaciones por importancia
-- 1015. Marcar mensajes como leídos en bloque
-- 1016. Buscador global de jugadores, clubes y competencias
-- 1017. Historial de navegación con botón de volver atrás
-- 1018. Favoritos para acceso rápido a pantallas frecuentes
-- 1019. Comparador de jugadores lado a lado
-- 1020. Tablas ordenables por cualquier columna
-- 1021. Columnas configurables por el usuario
-- 1022. Vista compacta y vista detallada intercambiables
-- 1023. Modo oscuro y modo claro
-- 1024. Escalado de texto para accesibilidad
-- 1025. Paletas alternativas para daltonismo
-- 1026. Gestos de deslizamiento para cambiar de pestaña
-- 1027. Confirmación previa a decisiones irreversibles
-- 1028. Deshacer la última acción no crítica
-- 1029. Autoguardado configurable
-- 1030. Guardado manual con varias ranuras
-- 1031. Carga inmediata de la última partida al abrir la app
-- 1032. Indicador de progreso claro en simulaciones largas
-- 1033. Retomar exactamente en la pantalla donde quedaste
-- 1034. Resumen del día al avanzar el calendario
-- 1035. Panel de tareas pendientes antes de continuar
-- 1036. Alerta si intentas avanzar con alineación inválida
-- 1037. Sugerencias contextuales desactivables
-- 1038. Glosario integrado de términos del juego
-- 1039. Ayuda contextual desplegable en cada pantalla
-- 1040. Tutorial por capas que se activa al usar cada sistema
-- 1041. Modo experto que oculta toda la ayuda
-- 1042. Pantalla de inicio personalizable con widgets
-- 1043. Widget de próximo partido
-- 1044. Widget de finanzas resumidas
-- 1045. Widget de tabla de posiciones
-- 1046. Widget de lesionados y suspendidos
-- 1047. Notificaciones opcionales del próximo partido
-- 1048. Sincronización de partida entre teléfono y tablet
-- 1049. Rendimiento fluido en dispositivos de gama baja
-- 1050. Consumo de batería optimizado por diseño
+- 1011. Navegación por pestañas inferiores fijas — _Principal._pestanas existe con 5 hojas_
+- 1015. Marcar mensajes como leídos en bloque — _Movil.recibir x3; leer_todo(); sin_leer()==0_
+- 1018. Favoritos para acceso rápido a pantallas frecuentes — _Principal._alternar_favorito('Club') añade a _favoritos_
+- 1019. Comparador de jugadores lado a lado — _Principal._comparar_ids max 3_
+- 1024. Escalado de texto para accesibilidad — _Principal._escala_texto=1.5 y _texto(12,...) escala el tamaño_
+- 1025. Paletas alternativas para daltonismo — _Principal._daltonico=true cambia los colores de _color_accesible_
+- 1029. Autoguardado configurable — _Principal._autoguardado=true; Partida.guardar(mundo,RANURA)_
+- 1030. Guardado manual con varias ranuras — _Partida.guardar(mundo,'ranura1'); Partida.listar() las incluye_
+- 1035. Panel de tareas pendientes antes de continuar — _Mundo.informe_de_gestion() devuelve Array con 'txt','tab','grave'_
+- 1036. Alerta si intentas avanzar con alineación inválida — _LeyesPais.infracciones_once(club, once manual) no vacío_
+- 1038. Glosario integrado de términos del juego — _Datos.tabla('GLOSARIO') no vacío_
+- 1041. Modo experto que oculta toda la ayuda — _Principal._modo_experto=true y _pintar_* omiten notas_
+- 1043. Widget de próximo partido — _TableroInicio.pintar(...) (UI)_
+- 1044. Widget de finanzas resumidas — _TableroInicio._tarjeta_caja_
+- 1045. Widget de tabla de posiciones — _TableroInicio._tarjeta_posicion_
+- 1049. Rendimiento fluido en dispositivos de gama baja — _RendimientoAdaptativo_
 
 **52. Audio, Estética y Presentación**
-- 1051. Estilo visual plano de alto contraste, legible al sol
-- 1052. Íconos simples y consistentes en toda la aplicación
-- 1053. Paleta que se adapta automáticamente a los colores del club
-- 1054. Tipografía condensada, legible en pantallas pequeñas
-- 1055. Tablas tratadas como elemento estético central, no como relleno
-- 1056. Ilustraciones vectoriales para los eventos narrativos
-- 1057. Avatares minimalistas generados a partir de atributos
-- 1058. Cancha 2D con fichas en los colores reales del club
-- 1059. Animaciones cortas y funcionales, nunca bloqueantes
-- 1060. Transiciones suaves entre pantallas
-- 1061. Vibración breve en decisiones importantes
-- 1062. Sonido ambiente de estadio durante el partido
-- 1063. Silbato, murmullo y explosión de gol como capas separadas
-- 1064. Volumen del público según asistencia y momento del partido
-- 1065. Música de menú discreta y desactivable
-- 1066. Cántico del club reproducido en momentos clave
-- 1067. Sonido distintivo para el gol propio y para el gol rival
-- 1068. Modo silencioso completo para jugar en público
-- 1069. Pantalla de carga con datos curiosos del club
-- 1070. Portada de diario animada para las noticias importantes
-- 1071. Tarjetas visuales para los resúmenes de temporada
-- 1072. Estética de cuaderno de gestión en la parte administrativa
-- 1073. Gráficos limpios para finanzas y evolución de jugadores
-- 1074. Celebración sobria pero satisfactoria al ganar un título
-- 1075. Identidad visual propia que no imite a los juegos de referencia
+- 1053. Paleta que se adapta automáticamente a los colores del club — _Club.color_acento() usa color del club_
+- 1054. Tipografía condensada, legible en pantallas pequeñas — _Principal.TIPOGRAFIAS.has('estrecha')_
+- 1059. Animaciones cortas y funcionales, nunca bloqueantes — _Animar.reducidas(); Animar.aparecer(control)_
+- 1062. Sonido ambiente de estadio durante el partido — _Sonido.toca('murmullo',Sonido.Bus.AMBIENTE)_
+- 1063. Silbato, murmullo y explosión de gol como capas separadas — _Sonido.volumen[Sonido.Bus.AMBIENTE] independiente del de EFECTOS_
+- 1065. Música de menú discreta y desactivable — _Musica.parar(); Musica.aplicar_volumen(0)_
+- 1067. Sonido distintivo para el gol propio y para el gol rival — _Sonido.NOMBRES.has('gol_rival')_
+- 1068. Modo silencioso completo para jugar en público — _Sonido.encendido=false; Sonido.toca no reproduce_
+- 1070. Portada de diario animada para las noticias importantes — _Prensa.guardar_portada + PortadaPeriodico (UI)_
+- 1071. Tarjetas visuales para los resúmenes de temporada — _DocumentalTemporada.guion(mundo) devuelve páginas_
+- 1074. Celebración sobria pero satisfactoria al ganar un título — _Logros.celebrar_titulo('Liga') suma trofeo/xp y emite señal_
 
 **53. Monetización y Modelo Indie**
-- 1076. Juego base pagado sin anuncios como opción premium
-- 1077. Versión gratuita con anuncios no intrusivos
-- 1078. Anuncios solo en pantallas de carga, nunca durante decisiones
-- 1079. Compra única para eliminar anuncios de forma permanente
-- 1080. Sin mecánicas de pagar para ganar
-- 1081. Sin cajas de recompensa ni azar pagado
-- 1082. Expansiones honestas de contenido (nuevas ligas, nuevos modos)
-- 1083. Paquetes cosméticos sin ventaja deportiva
-- 1084. Apoyo voluntario al desarrollador con recompensa simbólica
-- 1085. Precio accesible pensado para Latinoamérica
-- 1086. Precio regional ajustado por país
-- 1087. Demo gratuita con una temporada completa
-- 1088. Comunicación clara de qué se paga y qué no
-- 1089. Hoja de ruta pública de actualizaciones
-- 1090. Beta abierta con comunidad de prueba
-- 1091. Registro de cambios detallado en cada actualización
-- 1092. Canal de reporte de errores dentro del juego
-- 1093. Encuestas a jugadores para priorizar funciones
-- 1094. Compromiso de que las partidas guardadas sobrevivan a las actualizaciones
-- 1095. Compatibilidad hacia atrás de las bases de datos
-- 1096. Sin necesidad de conexión permanente para jugar
-- 1097. Sin recolección innecesaria de datos personales
-- 1098. Política de privacidad simple y legible
-- 1099. Código de conducta para la comunidad
-- 1100. Compromiso de dejar el juego jugable aunque se detenga el desarrollo
+- 1080. Sin mecánicas de pagar para ganar — _Escanear código: ninguna llamada a SDK de compras_
+- 1096. Sin necesidad de conexión permanente para jugar — _Escanear fuentes por HTTPRequest/WebSocketPeer y afirmar 0_
+- 1097. Sin recolección innecesaria de datos personales — _Escanear fuentes por 'analytics, telemetr, HTTPRequest' y afirmar 0_
+
+### Parciales (qué falta) (222)
+
+
+**30. Simulación de Partido (motor y experiencia)**
+- 351. Motor 2D cenital con fichas de color en vez de modelos 3D (bajo costo, alta legibilidad) — _El motor visible del partido es 3D (visor/motor_jugable*.gd); no hay vista cenital de fichas como motor principal/alternativo de bajo coste_
+- 356. Cadenas de jugada: la simulación encadena 3 a 5 acciones antes de resolver — _En Partido.simular_minuto cada llegada se resuelve con una sola tirada (partido_p2.gd:313 _atacar), sin cadena de 3-5 acciones_
+- 359. Interrupciones: invasión de cancha, corte de luz, lluvia intensa — _No hay corte de luz ni otras interrupciones; lluvia intensa solo como clima base_
+- 364. Riesgo de lesión visible al forzar a un jugador tocado — _No hay aviso/riesgo visible al decidir alinear a un tocado durante el partido o antes de forzarlo_
+- 366. Tanda de penales con elección de palo y orden de ejecutantes — _No hay elección del orden de ejecutantes ni selección de palo por el DT en la tanda automática_
+- 367. Especialistas designados para penales, córners y tiros libres — _En modo DT no se designa especialista concreto por jugador para penal/córner/falta_
+- 368. Rendimiento diferenciado por altitud, clima y desgaste de viaje — _Sin altitud en ningún sitio; clima y viaje sí_
+- 369. Efecto medible del público según ocupación real del estadio — _No se encontró efecto del nº de público/ocupación sobre el resultado del partido (ventaja local ligada a aforo ocupado)_
+- 370. Cancha en mal estado que reduce precisión de pases — _Afecta probabilidad de ataque en general, no 'precisión de pases' específicamente; solo cuando el estadio es tuyo_
+- 374. Nota de rendimiento por jugador (1 a 10) con justificación breve — _No hay justificación breve por nota (solo número)_
+- 375. Detección automática de "partido histórico" archivado en el club — _Solo por diferencia de goles/penales; no detecta finales, remontadas épicas ni derbis (remontada sí se marca como logro)_
+- 377. Dificultad de la IA rival ajustada por liga y presupuesto — _La IA rival simulada no se ajusta por liga ni presupuesto como mecánica explícita (la fuerza viene del plantel)_
+
+**31. Táctica y Sistema de Juego**
+- 384. Instrucciones individuales por jugador — _No hay instrucciones sueltas por jugador (mantener posición, tirar a puerta, marcar a X); solo el rol_
+- 396. Plan A / Plan B / Plan C activables según el marcador — _Solo dos planes condicionados al marcador (ofensivo/cerrojo), no A/B/C seleccionables_
+- 397. Cambio táctico automático por minuto (ej. cerrar desde el 80) — _El minuto es fijo (60); no se puede configurar 'desde el 80'_
+- 399. Penalización si el sistema no calza con las cualidades del plantel — _No hay penalización global por elegir una formación que no calza con las cualidades del plantel_
+- 401. Recomendación del ayudante técnico (activable o desactivable) — _El 'ayudante técnico' no existe como recomendador de alineación/táctica; solo el informe del rival se puede apagar_
+- 402. Contra-táctica diseñada para un rival concreto — _El bono es genérico (+1-7%) y no diseña una contra-táctica específica contra el sistema del rival_
+- 408. Identidad de juego del club definida a largo plazo — _La identidad de juego no la define el club a largo plazo ni condiciona la plantilla (excepto Athletic-like por región)_
+- 410. DT con estilo propio que choca o encaja con la identidad del club — _No hay choque/encaje entre el estilo del DT y una identidad del club_
+- 415. Alineación automática sugerida según frescura y rival — _No considera al rival ni sugiere explícitamente; frescura entra solo vía j.forma_
+
+**32. Entrenamiento y Desarrollo**
+- 427. Microciclo de recuperación tras partidos seguidos — _No existe microciclo automático/sugerido tras partidos seguidos (hay que ponerlo a mano)_
+- 431. Trabajo mental con psicólogo deportivo — _El psicólogo mejora charlas y terapia; no existe un bloque de entrenamiento de 'trabajo mental' que haga progresar atributos_
+- 432. Entrenamiento de liderazgo para formar futuros capitanes — _No hay entrenamiento específico que forme futuros capitanes_
+- 433. Entrenador de arqueros con línea de desarrollo propia — _Es un bono de staff, sin línea de desarrollo propia (plan de porteros)_
+- 434. Cantera entrenada bajo una filosofía definida por el club — _El club no define una filosofía de formación propia para su cantera_
+- 435. Informe semanal de progreso entregado por el staff — _No hay un informe semanal del staff dedicado al progreso de jugadores_
+- 437. Disciplina individual que determina cuánto aprovecha el entrenamiento — _La disciplina/profesionalidad individual no multiplica el aprovechamiento del entrenamiento del primer equipo_
+- 444. Declive físico realista según edad y posición — _Declive igual para todas las posiciones (solo distingue portero) y sin escalonado por edad_
+- 445. Historial gráfico de evolución de atributos por jugador — _Es tabla de texto; solo el ovr, no historial gráfico por atributo_
+
+**33. Scouting y Red de Ojeadores**
+- 447. Costo mensual por ojeador y por región cubierta — _No se cobra un sueldo mensual por ojeador/región cubierta (solo por informe y por academia)_
+- 452. Descubrimiento de joyas en ligas menores o mercados exóticos — _No hay 'ligas menores' ni mercados exóticos exploración explícita (usa países cubiertos)_
+- 454. Filtros de búsqueda avanzados (edad, valor, contrato, posición) — _Faltan filtros por edad, valor, contrato, país y potencial_
+- 455. Lista de seguimiento con alertas automáticas — _No emite alertas automáticas sobre los seguidos_
+- 456. Alerta de jugador que entra en su último año de contrato — _No hay alerta de jugadores AJENOS en su último año de contrato_
+- 460. Rumores de mercado que pueden resultar falsos — _No hay rumores de mercado generados con porcentaje de falsedad_
+- 463. Informe de situación familiar que afecta la disposición a mudarse — _Sin situación familiar propia (pareja, hijos) para jugadores ajenos_
+- 467. Ranking interno de objetivos por prioridad — _Sin ranking interno priorizado de objetivos_
+- 472. Torneos juveniles internacionales como escaparate de talento — _No es una competición juvenil escaparate de talento ajeno que se pueda ojear_
+
+**34. Regens, Hijos de Jugadores y Linaje**
+- 478. Herencia parcial de atributos del padre con variación aleatoria — _Los atributos individuales no se heredan (generar_atributos sortea desde cero); solo el techo y la posición_
+- 488. Ex-jugador que regresa como DT del club donde brilló — _No hay evento donde un ex-jugador del club regrese como DT de la IA_
+- 489. Regens generados con nacionalidad ponderada por la fuerza del país — _No hay ponderación de nacionalidad por fuerza del país (los canteranos son del país del club salvo extranjeros por origen)_
+- 490. Nombres realistas por país y por época de nacimiento — _Nombres por país sí; por época de nacimiento no (sin pools por década)_
+- 493. Regens de élite: dos o tres por generación con potencial de leyenda — _No hay garantía de 2-3 regens de élite por generación_
+- 494. Rareza de potencial (común, prometedor, excepcional, generacional) — _No hay categoría de rareza de potencial para canteranos en la ficha_
+- 496. País pequeño que produce un talento generacional como historia épica — _No hay historia épica generada ni garantía para países pequeños_
+- 503. Regen prometedor que se pierde por indisciplina — _No hay pérdida del regen por indisciplina específica_
+- 504. Regen que sufre una lesión grave y trunca su carrera — _No es específico de regens y solo para tu club_
+- 505. Regen que emigra demasiado joven y no se desarrolla — _No hay 'emigrar demasiado joven y no desarrollarse' como efecto negativo posterior_
+- 506. Doble nacionalidad asignada a ciertos regens — _La doble nacionalidad no se asigna a regens al nacer; solo tramitada por el usuario_
+- 509. Registro histórico de dinastías formadas en tu club — _No hay registro persistente de dinastías formadas en el club (las leyendas usadas se podan)_
+- 515. Modo legado familiar: mantener una misma familia tres generaciones — _No es un modo 'tres generaciones' con objetivo, solo la mecánica_
+
+**35. Lesiones y Medicina Deportiva**
+- 523. Costo de operaciones y clínicas de calidad variable — _No hay clínicas externas de calidad/precio variable por operación_
+- 527. Riesgo de lesión aumentado por cancha en mal estado — _El desgaste del césped no sube el riesgo de lesión (solo la superficie elegida); el mal estado afecta rendimiento, no lesiones_
+- 528. Riesgo de lesión aumentado por calendario congestionado — _No hay recargo de lesión explícito por jugar 3 partidos en una semana_
+- 533. Jugador que se infiltra para jugar, con riesgo posterior — _En modo DT no existe infiltrar a un jugador_
+- 545. Nutricionista que reduce la incidencia de lesiones blandas — _El del primer equipo recupera físico, pero no reduce incidencia de lesiones blandas_
+
+**36. Vestuario, Psicología y Dinámica de Grupo**
+- 549. Jugador que pide hablar contigo en privado — _No es una charla 'en privado' diferenciada; es una solicitud con dos respuestas_
+- 552. Jugador que exige renovación tras un buen semestre — _No condicionado a 'buen semestre' explícito (depende de candidatos por situación)_
+- 553. Jugador que se ofende si queda fuera de la lista de un torneo — _No hay reacción de ofensa del jugador por quedar fuera de la lista de un torneo_
+- 555. Reacción del vestuario ante la venta de un referente — _Reacción explícita ante la venta de un referente_
+- 558. Moral colectiva separada de la moral individual — _No hay variable 'moral colectiva' separada guardada_
+- 559. Efecto acumulativo de las rachas de derrotas en el ánimo — _Efecto acumulativo explícito en el ánimo interno: solo ansiedad por mala racha_
+- 562. Perfil psicológico oculto que se descubre con el tiempo — _No hay perfil psicológico oculto que se descubre con el tiempo en tus propios jugadores_
+- 567. Jugador con problemas personales que necesita apoyo del club — _Los problemas personales (familia, salud) no son un evento propio; solo ansiedad_
+- 570. Barrera idiomática que dificulta la integración — _No existe 'barrera idiomática' como variable; solo el traductor y la promesa de compatriota_
+- 573. Actividades de integración del plantel — _No hay actividades de integración elegibles (cena, viaje, asado)_
+- 575. Jugador que se siente traicionado si lo criticas en prensa — _No hay reacción de traición de un jugador criticado en prensa_
+- 576. Defensa pública de un jugador que dispara su moral — _No hay 'defensa pública de un jugador concreto' que dispare su moral_
+- 579. Índice de confianza del plantel hacia tu gestión — _No existe un índice agregado de confianza del PLANTEL hacia el DT (Gente.confianza_media es de empleados del club)_
+- 580. Renovación generacional del liderazgo del vestuario — _No hay evento de relevo generacional de liderazgo_
+
+**37. Mercado de Fichajes Avanzado**
+- 591. Bonos por partidos jugados, goles marcados y títulos ganados — _Solo bonos por partidos; faltan goles marcados y títulos_
+- 592. Derechos de formación y mecanismo de solidaridad — _No hay mecanismo de solidaridad (porcentaje a clubes formadores)_
+- 597. Jugador que solo aceptará ir a un club grande — _No existe el rasgo 'solo irá a un grande' (umbral duro)_
+- 599. Último día de mercado con ofertas frenéticas de última hora — _No hay ofertas frenéticas especiales en el último día (misma frecuencia)_
+- 601. Fichaje caído por problema de visa o cupo de extranjeros — _No hay visa/papeleo como evento que tumbe un fichaje ya cerrado_
+- 604. Lista de inscritos por torneo con decisiones difíciles — _Sin inscripción separada por torneo (liga/copa/continental)_
+- 607. Valor de mercado dinámico según rendimiento y contrato — _El valor no depende del rendimiento reciente (goles/notas)_
+- 615. Historial completo de operaciones con balance neto acumulado — _No hay historial completo multi-temporada con balance neto acumulado_
+
+**38. Agentes, Representantes y Zonas Grises**
+- 618. Agente que te ofrece jugadores en exclusiva si le caes bien — _negociacion.gd:19 admite que la exclusiva (G.exclusiva) NO está portada como efecto en el mercado; solo se guarda el nombre_
+- 619. Agente que te bloquea operaciones si lo tratas mal — _No hay un bloqueo explícito de operaciones con sus jugadores por trato hostil_
+- 621. Comisiones negociables y su impacto en el presupuesto — _La comisión por traspaso no se negocia, la fija el perfil del agente_
+- 624. Investigación federativa por operaciones sospechosas — _La 'investigación' solo resta confianza al directorio; no abre expediente federativo con sanción por operaciones sospechosas_
+- 627. Contabilidad paralela como opción arriesgada y sancionable — _riesgo_opaco solo se acumula y se guarda: ninguna lógica lo lee para sancionar_
+- 629. Presión de un dirigente para fichar a un representado suyo — _No se trata de 'un representado suyo' sino de un libre que impone la directiva_
+- 635. Filtración de un contrato completo a la prensa — _No se filtra un contrato completo (cláusulas, sueldos)_
+
+**39. Economía Avanzada, Deuda e Insolvencia**
+- 641. Estado de resultados mensual y anual del club — _Solo hay proyección anual en pantalla; no hay estado de resultados mensual histórico ni cierre anual guardado (el cierre de mes es una línea de log: principal_p9.gd:278)_
+- 644. Diferencia explícita entre resultado contable y caja disponible — _No hay concepto explícito 'resultado contable' (devengado) vs caja: el resultado se usa como flujo_
+- 648. Líneas de crédito y capacidad máxima de endeudamiento — _La capacidad máxima de endeudamiento es el tope de 2 líneas + monto fijo por club, no una capacidad calculada de balance/ingresos_
+- 651. Mora en el pago de sueldos y sus consecuencias inmediatas — _Los sueldos nunca se dejan de pagar realmente: la mora es por caja negativa, y la huelga es un evento aleatorio_
+- 652. Jugadores habilitados a rescindir por sueldos impagos — _Tus jugadores no pueden rescindir por impago: no hay lógica que lo haga_
+- 655. Descenso administrativo por insolvencia — _No hay descenso de categoría por insolvencia: el final es la liquidación/fin de etapa, no un descenso administrativo_
+- 660. Venta forzada de activos: estadio, ciudad deportiva, terrenos — _Venta forzada de estadio, ciudad deportiva o terrenos_
+- 666. Fondo de inversión que compra un porcentaje del club — _No hay un fondo externo que compre un porcentaje de TU club_
+- 671. Tope salarial interno autoimpuesto — _Tope salarial autoimpuesto por el usuario_
+- 672. Escalas salariales y conflictos internos por desigualdad — _No hay escala salarial formal ni conflicto sistemático por desigualdad_
+- 677. Auditoría anual con informe público — _Es auditoría de licencia (6 requisitos), no auditoría financiera con informe público de cuentas_
+- 678. Panel de indicadores financieros (liquidez, endeudamiento, cobertura) — _Falta liquidez corriente y endeudamiento (deuda/patrimonio) como indicadores_
+
+**40. Propiedad, Directorio y Política Interna**
+- 682. Elecciones de presidente cada cierto número de años — _No hay elecciones de presidente del CLUB cada N años_
+- 683. Campaña electoral con promesas que después debes cumplir — _No hay campaña electoral del club con promesas posteriores verificables_
+- 687. Asamblea anual de socios con preguntas incómodas — _No es una asamblea anual de SOCIOS con preguntas incómodas (es junta de accionistas + encuestas de hinchada)_
+- 692. Conflicto por modificar el escudo o los colores tradicionales — _Sin conflicto con socios/votación; solo pregunta de rueda de prensa_
+- 695. Refundación tras la quiebra, partiendo en la última división — _La refundación NO baja a la última división; mantiene categoría con reputación -12_
+- 699. Delegar o no las negociaciones, con efecto en tu carga de trabajo — _No se puede delegar negociaciones de fichajes a un tercero ni ahorra 'carga de trabajo'_
+- 700. Objetivos de temporada negociados con el directorio — _El objetivo NO se negocia (la propia cabecera dice 'No se elige')_
+- 704. Cláusula de salida en tu propio contrato — _Solo existe ante mora; no es una cláusula general negociable en tu contrato_
+- 705. Indemnización por despido — _No hay indemnización calculada por tu despido_
+- 708. Elegir entre club grande con presión o proyecto largo sin prisa — _No hay descripción de 'proyecto largo sin prisa' vs 'presión' como opción narrativa_
+- 710. Salón de la fama de dirigentes y entrenadores del mundo del juego — _El salón es de jugadores; no hay salón de dirigentes y entrenadores del mundo_
+
+**41. Infraestructura Urbana y Entorno**
+- 713. Conexión de transporte público hacia el estadio — _Sin efecto en asistencia ni inversión en transporte_
+- 717. Estudio de impacto ambiental obligatorio — _No hay un estudio de impacto ambiental obligatorio como paso separado_
+
+**42. Hinchada, Barras y Cultura Popular**
+- 738. Índice de conexión emocional entre hinchada y equipo — _El 'índice de conexión emocional' es el ánimo genérico; no mezcla segmentos_
+- 744. Barra organizada con demandas y riesgo de violencia — _La barra no tiene demandas explícitas ni violencia como entidad propia_
+- 751. Entradas populares a precio social como decisión de imagen — _No hay 'entradas populares a precio social' como acción de imagen puntual_
+- 754. Filiales internacionales si el club se globaliza — _No hay 'filiales internacionales' formales por globalización del club_
+- 757. Ídolo popular al que la hinchada protege aunque rinda poco — _No hay protección de la hinchada a un ídolo con mal rendimiento_
+- 759. Silbatina en el estadio que afecta el rendimiento del equipo — _No hay silbatina en el estadio que afecte el rendimiento del equipo en el partido_
+- 760. Proceso de recuperación de la confianza tras una crisis — _No hay un proceso explícito de recuperación de confianza tras una crisis_
+- 761. Documental sobre la hinchada producido por el club — _Es de la temporada, no sobre la hinchada_
+- 762. Museo con exhibición participativa de objetos de hinchas — _Sin exhibición participativa de objetos de hinchas_
+- 764. Programa social en barrios vulnerables — _No son programas sociales en barrios vulnerables específicos_
+
+**43. Prensa, Medios y Narrativa**
+- 774. Periodista aliado al que puedes filtrar información — _No hay filtrar información a un periodista aliado como acción_
+- 779. Multa federativa por declaraciones desafortunadas — _Solo ligada al reclamo arbitral, no a cualquier declaración polémica en rueda de prensa_
+- 782. Encuesta de opinión pública sobre tu continuidad — _No hay encuesta de opinión sobre tu continuidad como DT_
+- 784. Filtración de la alineación antes del partido — _La filtración de TU alineación al rival no existe_
+- 785. Investigación periodística sobre las finanzas del club — _No hay investigación periodística sobre las finanzas como evento_
+- 788. Departamento de comunicaciones mejorable por niveles — _No hay un 'departamento de comunicaciones' con niveles propios para la imagen/crisis_
+- 796. Presión por jugar en horarios incómodos para el hincha — _El hincha no reacciona como grupo (segmentos) al horario_
+
+**44. Árbitros, Reglamento y Disciplina**
+- 811. Suspensión automática por acumulación de amarillas — _No hay suspensión automática por acumulación de amarillas entre partidos (N amarillas = 1 fecha)_
+- 824. Criterios de desempate configurables — _Solo dos criterios (enfrentamiento directo o diferencia de gol), no configurables libremente_
+- 828. Protesta formal contra un resultado — _No cambia resultado ni se protesta por alineación indebida del rival_
+- 829. Fallo del tribunal que modifica la tabla de posiciones — _No existe fallo que revierta un resultado de partido_
+- 830. Historial disciplinario del club por temporada — _No hay vista de historial disciplinario del club por temporada_
+
+**45. Federaciones, Licencias y Política Deportiva**
+- 836. Alianzas políticas con otros clubes — _No hay pactos con clubes concretos, solo un contador de peso político_
+- 840. Sanción por participar en una liga no reconocida — _No hay sanción federativa formal (multa/puntos) por participar en una liga no reconocida; solo funa_
+- 842. Lucha por una mayor tajada de los ingresos centrales — _No hay lucha política continua por tajada de ingresos centrales más allá de esas dos decisiones_
+- 843. Calendario definido por la federación con conflictos de fechas — _El calendario es fijo del juego; la federación no lo define ni hay conflictos de fechas resolubles_
+- 845. Reclamo por lesión de un jugador en la selección — _No hay un 'reclamo' como acción del usuario; la compensación es automática_
+- 849. Cambio de formato de ascensos y descensos entre temporadas — _Solo esos cambios de formato; no hay cambios de número de ascensos/descensos (Editor.fijar_descensos es de editor)_
+- 853. Corrupción federativa como trama de fondo de la partida — _Es un asunto puntual, no una trama de fondo que evolucione_
+- 856. Torneo continental nuevo creado a mitad de partida — _No se crea un torneo continental nuevo a mitad de partida_
+- 857. Ranking de coeficientes de países que define cupos — _Los cupos por país son fijos (PAIS_ANFITRION); no hay coeficiente de país que cambie los cupos_
+- 860. Gira internacional que requiere aprobación federativa — _No requiere aprobación federativa_
+
+**46. Selecciones Nacionales**
+- 861. Modo seleccionador nacional paralelo o alternativo — _No existe un modo de dirigir una selección (ni paralelo ni alternativo); no hay Roles.SELECCIONADOR_
+- 868. Torneos continentales con formatos propios — _El puesto se sortea con bolsa sesgada, sin cuadro propio por formato_
+- 873. Prestigio del club según cantidad de seleccionados — _El prestigio/reputación del club no depende de cuántos seleccionados tiene_
+- 875. Ojear durante un mundial y fichar a la revelación — _No hay revelación de otros clubes durante el mundial que se pueda ojear_
+- 878. Historial de seleccionados formados en tu club — _No hay historial de seleccionados formados en tu club_
+- 879. Ranking mundial de selecciones dinámico — _La fuerza es casi estática por nombre; no se recalcula con los jugadores reales_
+- 880. Naturalización masiva en países pequeños como dilema — _Es tramitación individual por el usuario; no hay naturalización masiva como dilema_
+
+**47. Competencias y Formatos**
+- 887. Crear tu propia liga con reglas a medida — _No se puede crear una liga nueva desde cero con reglas propias (la cabecera de editor.gd dice 'No crea clubes ni ligas nuevas')_
+- 888. Definir número de equipos, ascensos y descensos — _El número de equipos y los ascensos no son editables_
+- 889. Formatos: todos contra todos, apertura y clausura, playoffs — _No hay formato Apertura/Clausura ni elegir formato desde editor_
+- 891. Copa nacional con participación de equipos amateurs — _No hay equipos amateurs ajenos a las ligas_
+- 892. Cenicienta de copa que llega inesperadamente lejos — _No hay detector/narrativa de 'cenicienta' que llega lejos (sale por azar del cuadro)_
+- 897. Mundial de clubes con formato ampliado — _Formato fijo simplificado; no un formato ampliado configurable_
+- 900. Sistema de sorteo con bombos y restricciones — _El sorteo de copa es por orden de lista sin restricciones; en grupos hay restricción de cruces_
+- 906. Definición por penales con estadísticas históricas propias — _No hay estadística histórica de tandas de penales por club/jugador_
+- 910. Calendario visual con todas las competencias superpuestas — _No hay vista visual con todas las competencias superpuestas_
+
+**48. Datos, Editor y Comunidad**
+- 913. Importación de paquetes de datos creados por la comunidad — _Solo UN pack a la vez y sin gestor de paquetes comunitarios_
+- 915. Verificación de compatibilidad entre versiones de datos — _El pack tiene campo 'formato' pero no se verifica su valor; no hay compatibilidad entre versiones de datos_
+- 920. Herramienta de renombrado masivo — _No hay herramienta de renombrado masivo de clubes/ligas (solo uno a uno o vía CSV de jugadores)_
+- 925. Editor de reglas de competencias existentes — _Solo tres reglas editables; las demás (formato, cupos) se votan en la federación_
+- 927. Editor de finanzas iniciales de cada club — _No hay función explícita para finanzas iniciales de un club (saldo) en Editor_
+- 933. Copias de seguridad automáticas de la base — _El respaldo es de la partida, no de la base de datos editada_
+- 936. Compartir capturas de logros con formato propio — _No hay captura de logro con formato propio para compartir_
+- 940. Créditos automáticos a los autores de los datos — _Los autores del pack no se muestran automáticamente_
+
+**49. Modos de Juego y Desafíos**
+- 947. Modo empezar desde abajo con un club amateur — _No existe un club amateur ni división inferior a Segunda para empezar desde abajo_
+- 951. Modo sin dinero: presupuesto cero toda la partida — _El texto promete 'sin créditos bancarios' pero Banco.pedir no lo comprueba; el presupuesto es bajo solo al inicio, no 'cero toda la partida'_
+- 954. Modo clásico eterno: ganar todos los derbis de la temporada — _El desafío castiga perder, no exige ganar todos los derbis de la temporada_
+- 956. Modo leyenda: treinta temporadas en el mismo club — _ui/eleccion_club.gd:207 admite que 'leyenda30' y 'sinRecarga' son solo un aviso: no se hacen cumplir_
+- 957. Modo dinastía familiar centrado en hijos y nietos — _No es un modo de juego centrado en la familia con objetivos de generaciones_
+- 958. Modo presidente: solo decisiones institucionales — _No hay un modo 'presidente' solo institucional (la junta/accionistas existen como sistema)_
+- 964. Escenario: evitar el descenso con el peor plantel de la liga — _No es 'evitar el descenso con el peor plantel' (la meta del reto es terminar entre los ocho primeros)_
+- 968. Modo rápido de una sola temporada — _No hay un modo 'una sola temporada' con final y puntaje propio_
+- 971. Modo realista con carrera irreversible — _La restricción de recarga es solo un aviso (no se hace cumplir)_
+- 972. Dificultad ajustable por sistema (finanzas, mercado, IA rival) — _Global (3 niveles), no ajustable por sistema (finanzas/mercado/IA rival) y solo se aplica a la caja inicial_
+- 980. Modo espectador de una liga completamente simulada — _No hay modo espectador de una liga sin gestor_
+- 981. Modo solo simulación: ver evolucionar el mundo sin intervenir — _Siempre hay un club propio; no hay modo sin club que observe el mundo_
+- 983. Semilla de partida compartible entre jugadores — _No hay entrada/compartición de semilla en la UI_
+- 984. Modo sin recarga de partida guardada — _Es solo un aviso, sin bloquear la carga_
+
+**50. Progresión Meta y Rejugabilidad**
+- 986. Sistema de logros con recompensas cosméticas — _Las recompensas por logro son XP y sobres; cosméticos solo escudos especiales por nivel_
+- 987. Desbloqueo de estadios, escudos y camisetas por logros — _Solo escudos; no se desbloquean estadios ni camisetas_
+- 989. Árbol de mejoras de perfil, opcional y desactivable — _Las maestrías son de la partida, no un árbol de perfil entre partidas desactivable_
+- 992. Estadísticas acumuladas de todas tus partidas — _No hay una pantalla de estadísticas acumuladas de todas las partidas (partidos, goles, títulos totales)_
+- 996. Sistema de prestigio al reiniciar con pequeñas ventajas — _No hay prestigio al reiniciar que dé ventajas pequeñas al jugador_
+- 999. Epílogo generado según las decisiones tomadas — _El epílogo es una frase por rango, no se genera según decisiones concretas tomadas_
+- 1000. Salón de la fama personal del jugador — _El salón es de jugadores del club, no el 'salón de la fama personal' del jugador/gestor_
+- 1003. Placa conmemorativa por cantidad de temporadas dirigidas — _La placa es por títulos, no por cantidad de temporadas dirigidas_
+- 1007. Eventos históricos aleatorios que cambian entre partidas — _No hay 'eventos históricos' que cambien el mundo entre partidas, solo eventos de club_
+- 1008. Fuerza variable de las ligas en cada mundo generado — _No hay fuerza variable por liga en cada mundo generado (Datos fija ligas)_
+- 1009. Cartas de evento que aparecen una sola vez por partida — _En modo DT no hay cartas de evento únicas por partida_
+
+**51. Interfaz y Calidad de Vida**
+- 1012. Botón de continuar siempre en la misma posición — _No es un único botón 'Continuar' universal; cambia según pantalla (Resumen ▶ Continuar en partido)_
+- 1013. Bandeja de entrada unificada con notificaciones agrupadas — _La bandeja unificada solo cubre noticias mapeadas a remitentes; hay además banners (Aviso) y log sin agrupar_
+- 1016. Buscador global de jugadores, clubes y competencias — _No busca competencias_
+- 1020. Tablas ordenables por cualquier columna — _Sólo seis columnas definidas, no cualquier columna_
+- 1022. Vista compacta y vista detallada intercambiables — _Compacta/detallada solo en alguna vista_
+- 1023. Modo oscuro y modo claro — _No hay un interruptor claro/oscuro explícito: el juego es oscuro con paletas alternativas_
+- 1027. Confirmación previa a decisiones irreversibles — _No es sistemático para todas las decisiones irreversibles_
+- 1028. Deshacer la última acción no crítica — _Solo estas dos decisiones, no un deshacer general_
+- 1031. Carga inmediata de la última partida al abrir la app — _No se confirmó que cargue automáticamente la última al abrir_
+- 1032. Indicador de progreso claro en simulaciones largas — _No hay indicador de progreso al simular una temporada completa_
+- 1034. Resumen del día al avanzar el calendario — _No hay un 'resumen del día' formal al avanzar un día_
+- 1037. Sugerencias contextuales desactivables — _No todas las sugerencias son desactivables individualmente_
+- 1039. Ayuda contextual desplegable en cada pantalla — _No hay ayuda contextual desplegable uniforme por pantalla_
+- 1040. Tutorial por capas que se activa al usar cada sistema — _Es un tutorial inicial lineal, no se activa por primer uso de cada sistema_
+- 1042. Pantalla de inicio personalizable con widgets — _El tablero es fijo; no consume WIDGETS ni se personaliza_
+- 1046. Widget de lesionados y suspendidos — _No hay tarjeta de lesionados en el tablero de inicio_
+- 1050. Consumo de batería optimizado por diseño — _No hay un modo de batería explícito_
+
+**52. Audio, Estética y Presentación**
+- 1052. Íconos simples y consistentes en toda la aplicación — _No hay set de iconos propio y simple; dependen de la fuente emoji del sistema_
+- 1056. Ilustraciones vectoriales para los eventos narrativos — _Los eventos narrativos usan texto/avisos, no ilustraciones vectoriales propias_
+- 1057. Avatares minimalistas generados a partir de atributos — _No son avatares minimalistas ni derivados de atributos_
+- 1058. Cancha 2D con fichas en los colores reales del club — _La vista principal es 3D, no cancha 2D con fichas_
+- 1060. Transiciones suaves entre pantallas — _No hay transición uniforme entre todas las pantallas_
+- 1061. Vibración breve en decisiones importantes — _Solo vibración de mando (Input.start_joy_vibration); no vibración del móvil (Input.vibrate_handheld); no en decisiones de gestión_
+- 1064. Volumen del público según asistencia y momento del partido — _El volumen no escala con la asistencia real del partido_
+- 1066. Cántico del club reproducido en momentos clave — _No hay cántico único del club_
+- 1069. Pantalla de carga con datos curiosos del club — _Los consejos son del juego, no datos curiosos específicos del club_
+- 1073. Gráficos limpios para finanzas y evolución de jugadores — _No hay gráficos de líneas de finanzas ni de evolución del jugador (solo tablas de historial y flujo de caja en texto)_
+
+**53. Monetización y Modelo Indie**
+- 1081. Sin cajas de recompensa ni azar pagado — _Existe una mecánica tipo 'sobre'; la promesa 'sin cajas de recompensa' es válida mientras no se pague_
+- 1094. Compromiso de que las partidas guardadas sobrevivan a las actualizaciones — _No hay migraciones entre versiones del esquema; compromiso solo en la intención_
+- 1095. Compatibilidad hacia atrás de las bases de datos — _Sin versionado de bases de datos_
+
+### No existen (173)
+
+
+**30. Simulación de Partido (motor y experiencia)**
+- 354. Relator de texto con tono configurable (sobrio, exagerado, humorístico) — _Todo_
+- 365. Aviso de "amonestado bajo presión" antes de una posible expulsión — _No hay aviso de amonestado en riesgo de expulsión_
+- 372. Relato del partido guardable y compartible como texto — _Todo_
+- 373. Comparativa post-partido contra el promedio de la liga — _Todo_
+- 379. Modo espectador para ver partidos de otros equipos — _Todo_
+- 380. Resultados de la fecha actualizándose mientras juegas tu partido — _Todo_
+
+**31. Táctica y Sistema de Juego**
+- 381. Editor de formación con arrastrar y soltar — _Arrastrar y soltar jugadores/posiciones_
+- 382. Formaciones guardadas como presets con nombre propio — _Presets nombrados de formación/táctica_
+- 395. Saque lateral largo como arma táctica — _Todo_
+- 398. Familiaridad táctica: el equipo tarda semanas en asimilar un sistema — _Todo_
+- 403. Modo espejo: copiar la táctica de un equipo que admires — _Todo_
+- 406. Táctica de emergencia con diez jugadores tras una expulsión — _Todo_
+- 407. Plan de partido para jugar con ventaja numérica — _Todo_
+- 409. Hinchada que exige un estilo (ofensivo, aguerrido, de toque) — _Todo_
+
+**32. Entrenamiento y Desarrollo**
+- 424. Explosión tardía: jugadores que despegan entre los 24 y 26 — _Explosión tardía_
+- 425. Jugadores que se estancan si no acumulan minutos — _Estancamiento por falta de minutos_
+- 428. Sesiones a puertas cerradas o abiertas al público — _Todo_
+- 436. Jugadores que se quejan si el entrenamiento es muy duro o muy blando — _Todo_
+- 438. Trabajo extra voluntario de los jugadores más profesionales — _Todo_
+- 439. Pérdida de ritmo competitivo por parón de liga — _Todo_
+- 440. Entrenamiento adaptado a la superficie de la próxima cancha rival — _Todo_
+
+**33. Scouting y Red de Ojeadores**
+- 451. Asignación de un ojeador a un torneo juvenil específico — _Todo_
+- 457. Alerta de jugador descontento en otro club — _Todo_
+- 458. Alerta de cláusula de rescisión anormalmente baja — _Alerta_
+- 464. Invitar a un jugador libre a entrenar a prueba — _Todo_
+- 465. Descubrimiento por casualidad durante un amistoso — _Todo_
+- 473. Convenios con clubes menores por derecho de primera opción — _Todo_
+- 474. Scouting de entrenadores y staff, no solo de jugadores — _Todo_
+
+**34. Regens, Hijos de Jugadores y Linaje**
+- 487. Padre retirado que presiona al club para que su hijo juegue — _Presión del padre retirado para que juegue su hijo_
+- 500. Rasgos físicos heredados visibles en el avatar del hijo — _Todo_
+- 501. Apodos automáticos para regens destacados — _Apodos de jugadores_
+- 507. Regens que eligen selección nacional entre dos opciones — _Todo_
+- 510. Bonificación de afinidad al fichar al hijo de un ídolo del club — _Todo_
+- 511. Reacción hostil de la hinchada al fichar al hijo de un ídolo rival — _Todo_
+- 512. Padrinazgo: un ídolo del club apadrina al hijo de otro — _Todo_
+- 513. Evento: el padre retirado pide un cargo en la cantera — _Todo_
+- 514. Estadística de cuántos regens de tu cantera llegaron a la élite — _Todo_
+
+**35. Lesiones y Medicina Deportiva**
+- 522. Seguro médico contratable para todo el plantel — _Todo_
+- 526. Kinesiólogo que acorta los plazos de recuperación — _Todo (hay jefe médico, nutricionista y fisio decorativo en 3D)_
+- 534. Costo reputacional si abusas de las infiltraciones — _Todo_
+- 536. Índice de carga de trabajo por jugador durante el mes — _Índice de carga por jugador_
+- 538. Alerta médica previa: "no recomiendo que juegue" — _Todo_
+- 544. Regreso triunfal tras lesión larga como evento narrativo — _Todo_
+
+**36. Vestuario, Psicología y Dinámica de Grupo**
+- 554. Reacción del vestuario ante un fichaje muy caro — _Todo_
+- 557. Consejo de capitanes que negocia contigo condiciones internas — _Todo_
+- 571. Clases de idioma financiadas por el club — _Clases de idioma_
+- 578. Jugador que se convierte en tu aliado dentro del grupo — _Todo_
+
+**37. Mercado de Fichajes Avanzado**
+- 581. Ventanas de mercado con fechas distintas según el país — _Fechas de ventana por país_
+- 582. Mercado de invierno más caro y con menos opciones — _Recargo/menos oferta en invierno_
+- 588. Cláusula de no alinear al cedido contra el club dueño — _Todo_
+- 589. Cláusula que impide la reventa a un rival directo — _Todo_
+- 596. Jugador que acepta menos dinero para jugar torneo internacional — _Todo_
+- 600. Fichaje caído tras la revisión médica — _Todo_
+- 605. Mercado inflado por un club recién comprado por un magnate — _Todo_
+- 606. Burbuja de precios que crece con el paso de los años — _Todo_
+- 609. Rechazo automático de ofertas por debajo de un monto fijado — _Todo_
+- 612. Precontrato con jugador en su último semestre — _Precontrato en último semestre_
+- 614. Traspaso récord del club registrado como hito histórico — _Todo_
+
+**38. Agentes, Representantes y Zonas Grises**
+- 626. Denuncia anónima que dispara una auditoría — _Todo_
+- 632. Intermediario que infla artificialmente el precio de una operación — _Todo_
+- 633. Agente que representa al comprador y al vendedor a la vez — _Todo_
+- 634. Cláusula secreta que se revela tiempo después — _Todo_
+- 636. Escándalo de amaño de partidos dentro de tu liga — _Todo_
+- 638. Programa interno de integridad del club — _Todo_
+- 639. Ranking de transparencia con efecto sobre los auspiciadores — _Todo_
+- 640. Delación compensada dentro de un caso federativo — _Todo_
+
+**39. Economía Avanzada, Deuda e Insolvencia**
+- 645. Amortización del valor de los pases en libros — _Todo_
+- 646. Plusvalía contable generada por venta de jugadores — _Todo_
+- 650. Convenio de pago con proveedores — _Todo_
+- 659. Junta de acreedores que vota el destino del club — _Junta de acreedores_
+- 661. Venta del estadio con arriendo posterior como maniobra financiera — _Todo_
+- 663. Aumento de capital con dilución de los accionistas actuales — _Todo_
+- 665. Financiamiento colectivo de hinchas para un fichaje puntual — _Todo_
+- 669. Presupuesto anual que debe aprobar el directorio — _Todo_
+- 670. Reasignación de presupuesto entre fichajes y salarios — _Todo_
+- 673. Impuestos por país y su efecto en el sueldo neto ofrecido — _Todo_
+- 674. Régimen tributario especial para atraer extranjeros — _Todo_
+- 675. Inflación y devaluación de la moneda local — _Todo_
+- 676. Ingresos en moneda extranjera por torneos internacionales — _Todo_
+- 679. Calificación de riesgo del club que encarece o abarata el crédito — _Todo_
+- 680. Premio anual a la gestión financiera sostenible — _Todo_
+
+**40. Propiedad, Directorio y Política Interna**
+- 681. Elección entre club de socios o sociedad anónima deportiva — _Todo_
+- 689. Oferta de compra hostil sobre el club — _Todo_
+- 691. Dueño extranjero que quiere cambiar la identidad del club — _Todo_
+- 693. Traslado del club a otra ciudad como decisión polémica — _Todo_
+- 694. Fusión con otro club — _Todo_
+- 707. Entrevista de trabajo con un club interesado — _Todo_
+
+**41. Infraestructura Urbana y Entorno**
+- 712. Ubicación del estadio que afecta la asistencia promedio — _Todo_
+- 718. Estadio compartido con otro club de la misma ciudad — _Todo_
+- 722. Estadio provisional mientras construyes el definitivo — _Todo_
+- 723. Mudanza temporal a otra ciudad durante la obra — _Todo_
+
+**42. Hinchada, Barras y Cultura Popular**
+- 740. Protestas por la venta de un ídolo — _Todo_
+- 742. Recibimiento masivo al bus del equipo — _Todo_
+- 743. Mosaico organizado por la hinchada — _Mosaico como evento_
+- 745. Decisión estratégica de negociar o enfrentar a la barra — _Todo_
+- 747. Hinchada que viaja masivamente a un partido decisivo — _Todo_
+- 748. Programa de socios con beneficios por antigüedad — _Todo_
+- 756. Cánticos que aparecen dedicados a jugadores destacados — _Todo_
+- 758. Jugador señalado por la hinchada tras un error decisivo — _Todo_
+- 763. Colecta solidaria organizada por el club — _Todo_
+- 768. Voluntariado de jugadores en la comunidad — _Todo_
+- 770. Premio a la mejor institución del año — _Todo_
+
+**43. Prensa, Medios y Narrativa**
+- 783. Rumor falso de tu despido publicado en portada — _Todo_
+- 791. Biografía autorizada de un ídolo del club — _Todo_
+- 798. Reacción de la prensa extranjera ante un fichaje sorpresivo — _Todo_
+
+**44. Árbitros, Reglamento y Disciplina**
+- 812. Amnistía de amarillas al llegar a determinada fase — _Todo_
+- 814. Denuncia por insultos discriminatorios — _Todo_
+- 815. Protocolo antidiscriminación con partido suspendido — _Todo_
+- 821. Regla de cinco cambios activable — _Todo_
+- 822. Reglas experimentales aplicadas en ligas menores — _Todo_
+- 823. Gol de visitante como criterio configurable — _Todo_
+- 825. Puntos de fair play como criterio de desempate — _Todo_
+
+**45. Federaciones, Licencias y Política Deportiva**
+- 851. Repechaje internacional por un cupo — _Todo_
+- 852. Sistema de licencias que impide ascender pese al mérito deportivo — _Todo_
+- 854. Investigación internacional que sacude a la federación — _Todo_
+- 855. Cambio de asociación continental en casos excepcionales — _Todo_
+- 858. Aporte de tu club al coeficiente nacional — _Todo_
+- 859. Diplomacia con federaciones extranjeras para amistosos — _Todo_
+
+**46. Selecciones Nacionales**
+- 864. Disputa entre dos selecciones por un mismo jugador — _Todo_
+- 865. Eliminatorias organizadas por confederación — _Todo_
+- 866. Repechaje intercontinental — _Todo_
+- 869. Selecciones juveniles vinculadas a la absoluta — _Todo_
+- 870. Torneo olímpico con reglas de edad — _Todo_
+- 876. Retiro de la selección de un veterano emblemático — _Todo_
+- 877. Debut de un canterano tuyo en la selección mayor — _Todo_
+- 882. DT de selección que compite contigo por la atención de un jugador — _Todo_
+- 883. Oferta para dirigir una selección mientras diriges un club — _Todo_
+- 884. Doble cargo permitido o prohibido según el país — _Todo_
+- 885. Legado como seleccionador registrado en el salón de la fama — _Todo_
+
+**47. Competencias y Formatos**
+- 898. Torneos regionales de carácter histórico — _Todo_
+- 899. Torneos ficticios desbloqueables por logros — _Todo_
+- 902. Cabezas de serie definidos por coeficiente — _Todo_
+- 909. Tabla anual y tabla acumulada funcionando en paralelo — _Todo_
+
+**48. Datos, Editor y Comunidad**
+- 921. Plantillas de datos por país descargables — _Todo_
+- 922. Actualización de plantillas al inicio de cada temporada real — _Todo_
+- 926. Editor de calendario y fechas — _Todo_
+- 931. Bloqueo opcional de edición para partidas competitivas — _Todo_
+- 932. Registro de cambios aplicados a la base de datos — _Todo_
+- 934. Sincronización en la nube entre dispositivos — _Todo_
+- 935. Tabla de clasificación global de gestores en línea — _Todo_
+- 937. Muro o foro de comunidad integrado — _Todo_
+- 938. Desafíos semanales creados por la comunidad — _Todo_
+- 939. Sistema de valoración de paquetes de datos — _Todo_
+- 941. Herramientas de moderación para contenido de la comunidad — _Todo_
+- 945. Guardado en la nube con recuperación de partidas — _Todo_
+
+**49. Modos de Juego y Desafíos**
+- 960. Modo DT puro: sin control sobre el dinero — _Todo_
+- 962. Escenarios históricos recreados como desafío — _Todo_
+- 963. Escenario: remontar diez puntos en ocho fechas — _Todo_
+- 965. Escenario: ganar una copa con un club chico — _Todo_
+- 966. Escenario: alcanzar una meta de ventas en una temporada — _Todo_
+- 967. Escenario: formar cinco seleccionados en diez años — _Todo_
+- 969. Modo largo de cincuenta temporadas — _Todo_
+- 975. Ranking local de mejores puntajes — _Todo_
+- 976. Multijugador por turnos en el mismo dispositivo — _Todo_
+- 977. Multijugador en línea con varios gestores en la misma liga — _Todo_
+- 978. Liga privada para jugar con amigos — _Todo_
+- 979. Modo cooperativo: dos personas gestionando el mismo club — _Todo_
+- 982. Reinicio de temporada con la misma semilla — _Todo_
+
+**50. Progresión Meta y Rejugabilidad**
+- 994. Desafíos diarios cortos independientes de la carrera — _Todo_
+- 995. Recompensa por completar temporadas consecutivas — _Todo_
+- 1001. Comparación de tu carrera con la de otros usuarios — _Todo_
+- 1005. Metas autoimpuestas configurables por el usuario — _Todo_
+
+**51. Interfaz y Calidad de Vida**
+- 1014. Filtro de notificaciones por importancia — _Todo_
+- 1017. Historial de navegación con botón de volver atrás — _Todo_
+- 1021. Columnas configurables por el usuario — _Todo_
+- 1026. Gestos de deslizamiento para cambiar de pestaña — _Todo_
+- 1033. Retomar exactamente en la pantalla donde quedaste — _Todo_
+- 1047. Notificaciones opcionales del próximo partido — _Todo_
+- 1048. Sincronización de partida entre teléfono y tablet — _Todo_
+
+**53. Monetización y Modelo Indie**
+- 1091. Registro de cambios detallado en cada actualización — _Todo_
+- 1092. Canal de reporte de errores dentro del juego — _Todo_
+- 1093. Encuestas a jugadores para priorizar funciones — _Todo_
+- 1098. Política de privacidad simple y legible — _Todo_
+
+### Decisiones de producto, no tareas (20): monetización y estética; decide el dueño
+
+943, 1051, 1055, 1072, 1075, 1076, 1077, 1078, 1079, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1099, 1100
