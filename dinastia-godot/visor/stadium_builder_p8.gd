@@ -15,6 +15,13 @@ static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float
 	lampara.emission = luz
 	lampara.emission_energy_multiplier = 1.6
 
+	## LA CABEZA DEL FOCO, NO UNA CAJA (25-10-2026, ultra pulido): la lámpara era un
+	## ladrillo blanco de 6 × 1,6 m mirando al cielo. Ahora es un bastidor oscuro
+	## ORIENTADO al campo (apunta a un punto del césped, así que se inclina solo)
+	## con su rejilla de proyectores redondos encendidos. Todos los proyectores
+	## del estadio van en UN MultiMesh: una llamada de dibujo más en total.
+	var proyectores: Array[Transform3D] = []
+	var bastidor := Texturas.metal(Color(0.11, 0.115, 0.13), 0.5)
 	if tipo == "torres" or tipo == "mixto":
 		for sx in [1.0, -1.0]:
 			for sz in [1.0, -1.0]:
@@ -29,7 +36,8 @@ static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float
 				pole.position = base + Vector3(0, h / 2.0, 0)
 				pole.material_override = mat
 				root.add_child(pole)
-				_box(root, base + Vector3(0, h, 0), Vector3(6.0, 1.6, 0.6), lampara)
+				var cima := base + Vector3(0, h + 0.6, 0)
+				_cabeza_foco(root, cima, Vector3(base.x * 0.2, 0.0, base.z * 0.2), Vector2(6.4, 2.6), 6, 3, bastidor, proyectores)
 				_cono_de_luz(root, base + Vector3(0, h - 0.6, 0), Vector3(0, 0.3, 0), 7.0, luz)
 	if tipo == "corona" or tipo == "mixto" or tipo == "halo":
 		## BUG REAL (23-9-2026): la corona se repartia sobre una ELIPSE
@@ -49,9 +57,29 @@ static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float
 			if k <= 0.0001:
 				continue
 			var p := Vector3(d.x / k, alto + 1.2, d.y / k)
-			_box(root, p, Vector3(2.0, 0.4, 0.6), lampara)
+			_cabeza_foco(root, p, Vector3(p.x * 0.35, 0.0, p.z * 0.35), Vector2(2.2, 0.7), 4, 1, bastidor, proyectores)
 			if i % 2 == 0:
 				_cono_de_luz(root, p - Vector3(0, 0.3, 0), Vector3(0, 0.3, 0), 4.0, luz)
+	if proyectores.is_empty():
+		return
+	var disco := CylinderMesh.new()
+	disco.top_radius = 0.36
+	disco.bottom_radius = 0.40
+	disco.height = 0.16
+	disco.radial_segments = 12
+	disco.rings = 1
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = disco
+	mm.instance_count = proyectores.size()
+	for k in proyectores.size():
+		mm.set_instance_transform(k, proyectores[k])
+	var mmi := MultiMeshInstance3D.new()
+	mmi.name = "ProyectoresFocos"
+	mmi.multimesh = mm
+	mmi.material_override = lampara
+	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	root.add_child(mmi)
 
 ## El color de la luz de los focos (B6.1). Lo usan las lámparas y la luz de
 ## relleno nocturna de `Ambience`.

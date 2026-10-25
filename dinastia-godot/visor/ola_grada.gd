@@ -7,6 +7,9 @@ extends Node
 ##   OlaGrada.lanzar(raiz, "ola")                → la ola da dos vueltas
 ##   OlaGrada.lanzar(raiz, "onda", punto_mundo)  → saltos que se abren desde ahí
 ##   OlaGrada.lanzar(raiz, "protesta")           → de pie agitando los brazos (M-045)
+##   OlaGrada.lanzar(raiz, "ocasion", c, bando)  → «¡uy!»: de pie de golpe y se sientan
+##   (`bando` en onda/protesta/ocasión: 0 = la hinchada de casa, 1 = la visitante;
+##   la otra se queda quieta. Antes saltaba también el sector visitante.)
 ##   OlaGrada.mirar(raiz, balon)                 → siguen el balón con la cabeza (M-049)
 ##   OlaGrada.piel_de_pais(raiz, "BRA")          → tonos de piel del país (M-034)
 ## La pone la vista del partido (`VistaEstadio`): la onda en cada gol, desde la
@@ -15,14 +18,16 @@ extends Node
 const DURA_OLA := 2.0 * TAU / 0.55 + 2.0
 const DURA_ONDA := 6.0
 const DURA_PROTESTA := 3.0
+const DURA_OCASION := 2.3
+const TIPOS := ["ola", "onda", "protesta", "ocasion"]
 
 var tipo := "ola"
 var edad := 0.0
 var _mats: Array = []
 var _dura := DURA_OLA
 
-static func lanzar(raiz: Node, tipo_ := "ola", centro := Vector3.ZERO) -> OlaGrada:
-	if raiz == null:
+static func lanzar(raiz: Node, tipo_ := "ola", centro := Vector3.ZERO, bando := 0) -> OlaGrada:
+	if raiz == null or not tipo_ in TIPOS:
 		return null
 	var mats := materiales(raiz)
 	if mats.is_empty():
@@ -36,8 +41,10 @@ static func lanzar(raiz: Node, tipo_ := "ola", centro := Vector3.ZERO) -> OlaGra
 	o.name = "OlaGrada_" + tipo_
 	o.tipo = tipo_
 	o._mats = mats
-	o._dura = {"ola": DURA_OLA, "onda": DURA_ONDA}.get(tipo_, DURA_PROTESTA)
+	o._dura = {"ola": DURA_OLA, "onda": DURA_ONDA, "ocasion": DURA_OCASION}.get(tipo_, DURA_PROTESTA)
 	for m: ShaderMaterial in mats:
+		if tipo_ != "ola":
+			m.set_shader_parameter(tipo_ + "_bando", float(clampi(bando, 0, 1)))
 		if tipo_ == "ola":
 			## Arranca en un sitio distinto cada vez.
 			m.set_shader_parameter("ola_inicio", randf() * TAU)

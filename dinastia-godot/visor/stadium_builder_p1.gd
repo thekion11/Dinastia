@@ -311,6 +311,23 @@ static func _verdes_reales(a: Color, b: Color) -> Array:
 	## (El orden de vuelta respeta cuál era el "claro" del diseñador.)
 	return [claro, oscuro] if ca.v >= cb.v else [oscuro, claro]
 
+## EL PERÍMETRO DEL CAMPO, VERDE (25-10-2026, visto con la cámara de TV): la plancha del
+## césped acaba 6 m fuera de las líneas, y de ahí a la cara de las tribunas se veía la losa
+## clara de la plaza de fuera: una franja de arena alrededor del campo. En un estadio de
+## verdad la hierba (o el sintético de la banda) sigue hasta el muro. Un plano más, por
+## debajo del césped y de la pista de atletismo para no pelear con ellos. `tono`: el verde
+## oscuro del corte del club (sRGB), algo más apagado: es hierba que no se cuida igual.
+static func _perimetro_cesped(root: Node3D, dx: float, dz: float, tono: Color) -> void:
+	var pm := PlaneMesh.new()
+	pm.size = Vector2((dx - FRENTE_TRIBUNA + 1.0) * 2.0, (dz - FRENTE_TRIBUNA + 1.0) * 2.0)
+	var mi := MeshInstance3D.new()
+	mi.name = "PerimetroCesped"
+	mi.mesh = pm
+	mi.position = Vector3(0, -0.04, 0)
+	mi.material_override = Texturas.cesped(Color.from_hsv(tono.h, minf(tono.s * 1.1, 0.6), tono.v * 0.72), 37)
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	root.add_child(mi)
+
 static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> ImageTexture:
 	var n := 256
 	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
@@ -342,13 +359,22 @@ static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> 
 					band = int(atan2(v - 0.5, u - 0.5) * 6.0)
 				"rombos":
 					band = int((absf(u - 0.5) + absf(v - 0.5)) * 14.0)
+				## (25-10-2026, «rayas, sin bloques»): «mitades» eran DOS bloques lisos
+				## de 58 m, y desde la tele el campo se leía partido en dos losas. La
+				## cortadora deja igual sus franjas dentro de cada mitad: van suaves
+				## (a un 30 %, el nivel intermedio que entiende `cesped_mascara`).
 				"mitades":
-					band = 0 if v < 0.5 else 1
+					var lado := claro if v < 0.5 else oscuro
+					var otro := oscuro if v < 0.5 else claro
+					img.set_pixel(x, y, lado.lerp(otro, 0.3) if int(v * 20.0) % 2 == 1 else lado)
+					continue
 				## "liso" (y lo desconocido): en un campo de verdad el corte
-				## siempre se nota un poco -franjas muy suaves, un tercio-.
+				## siempre se nota un poco -franjas muy suaves, un tercio-. (Hasta el
+				## 25-10 la máscara del shader era de dos niveles y «liso» salía con
+				## las mismas franjas fuertes que «rayas».)
 				_:
 					band = int(v * 20.0)
-					img.set_pixel(x, y, claro.lerp(oscuro, 0.33) if band % 2 == 0 else oscuro)
+					img.set_pixel(x, y, oscuro.lerp(claro, 0.3) if band % 2 == 0 else oscuro)
 					continue
 			img.set_pixel(x, y, claro if band % 2 == 0 else oscuro)
 	var tex := ImageTexture.create_from_image(img)

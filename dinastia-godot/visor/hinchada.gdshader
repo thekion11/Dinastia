@@ -59,6 +59,16 @@ uniform float protesta_edad = -1.0;
 // SIGUEN EL BALÓN CON LA CABEZA (M-049): la vista escribe dónde está; 0 = quietos.
 uniform vec3 balon_pos = vec3(0.0);
 uniform float mira_balon = 0.0;
+// CADA HINCHADA CON LO SUYO (25-10-2026): el sector visitante llega marcado en
+// el alfa del color de instancia (0,5; el resto 1, ver `_butacas`). Cada
+// reacción dice a qué hinchada le toca: 0 = la de casa, 1 = la visitante.
+// Antes, en un gol del local, saltaban también los del sector visitante.
+uniform float onda_bando = 0.0;
+uniform float protesta_bando = 0.0;
+// LA OCASIÓN («¡uy!»): todos de pie de golpe, echados hacia el campo, y se
+// vuelven a sentar (un remate que se va cerca). La lanza `OlaGrada`.
+uniform float ocasion_edad = -1.0;
+uniform float ocasion_bando = 0.0;
 // LA PIEL SEGÚN EL PAÍS DEL CLUB (M-034): la mezcla clara→oscura se eleva a esta
 // potencia (más alto = más pieles claras). 1 = reparto parejo, el de antes.
 uniform float piel_sesgo = 1.0;
@@ -95,6 +105,8 @@ void vertex() {
 	VERTEX.y += max(0.0, sin(t * 0.41 + v_azar * 6.28) - 0.86) * 1.1 * peso;
 	// No todos se suman (uno de cada ocho se queda sentado).
 	float se_suma = step(0.12, fract(v_azar * 3.7));
+	// ¿Es del sector visitante? (alfa del color de instancia, ver arriba.)
+	float visita = step(COLOR.a, 0.75);
 	if (ola_edad >= 0.0) {
 		float ang = atan(origen.x, origen.z);
 		float d = mod(ang - ola_inicio, 6.2832);
@@ -107,8 +119,18 @@ void vertex() {
 			VERTEX.y += h * se_suma * (0.5 + 0.6 * peso);
 		}
 	}
+	if (ocasion_edad >= 0.0) {
+		// Cada uno reacciona con su décima de retraso: no es una coreografía.
+		float t_o = ocasion_edad - v_azar * 0.3;
+		float env = smoothstep(0.0, 0.22, t_o) * (1.0 - smoothstep(1.0, 1.9, t_o));
+		float suyo = 1.0 - abs(ocasion_bando - visita);
+		VERTEX.y += env * se_suma * suyo * (0.4 + 0.18 * peso);
+		// Echados hacia delante (el hincha mira a +Z, al campo).
+		VERTEX.z += env * se_suma * suyo * peso * 0.09;
+	}
 	if (protesta_edad >= 0.0) {
-		float env = smoothstep(0.0, 0.4, protesta_edad) * (1.0 - smoothstep(2.2, 3.0, protesta_edad));
+		float env = smoothstep(0.0, 0.4, protesta_edad) * (1.0 - smoothstep(2.2, 3.0, protesta_edad))
+			* (1.0 - abs(protesta_bando - visita));
 		float agita = 0.5 + 0.5 * sin(protesta_edad * 9.0 + v_azar * 6.28);
 		VERTEX.y += env * se_suma * (0.42 + peso * 0.25 * agita);
 		VERTEX.x += env * se_suma * peso * 0.06 * sin(protesta_edad * 11.0 + v_azar * 9.0);
@@ -129,7 +151,7 @@ void vertex() {
 		float x = onda_edad * onda_vel - r;
 		// Saltan cuando les llega el frente y siguen saltando un rato detrás.
 		if (x > 0.0 && x < onda_ancho * 3.0) {
-			float apaga = 1.0 - x / (onda_ancho * 3.0);
+			float apaga = (1.0 - x / (onda_ancho * 3.0)) * (1.0 - abs(onda_bando - visita));
 			float salto = abs(sin((onda_edad * 7.0) + v_azar * 6.28));
 			VERTEX.y += salto * apaga * se_suma * (0.25 + 0.2 * peso);
 		}

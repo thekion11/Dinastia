@@ -195,6 +195,24 @@ static func _torre_esquina(ctx: Dictionary, c: Dictionary) -> void:
 		g.bloque(c, K_VIDRIO, s - 0.7, s + 0.7, y, y + 1.3, 0.0, 0.62)
 		g.bloque(c, K_ESTRUCTURA, s - 0.85, s + 0.85, y - 0.15, y, 0.0, 0.75)
 
+## LA JUNTA DE LA TORRE CON LA TRIBUNA (25-10-2026, visto con `captura_exterior`): el
+## tramo de los costados de la torre que se junta con la tribuna (`excluir`) se dejaba
+## sin vestir para que su piel no chocara con la de la tribuna, y desde la calle era un
+## paño negro de 5 m de alto a alto: el muro desnudo. Ahora lleva un chapado plano (casi
+## sin vuelo, no choca con nada) con las líneas de los forjados.
+static func _tapar_junta(ctx: Dictionary, c: Dictionary, pisos: Array) -> void:
+	var g: _Malla = ctx["grande"]
+	var L: float = c["L"]
+	var H: float = c["H"]
+	for ex: Vector2 in c["excluir"]:
+		var a := clampf(ex.x, 0.0, L)
+		var b := clampf(ex.y, 0.0, L)
+		if b - a < 0.3:
+			continue
+		g.bloque(c, K_ESTRUCTURA, a, b, 0.0, H + 0.3, 0.0, 0.12)
+		for y: float in [0.7] + pisos + [H - 0.2]:
+			g.bloque(c, K_ACENTO, a, b, y - 0.12, y + 0.12, 0.12, 0.2)
+
 static func _punto(c: Dictionary, s: float, y: float, w: float) -> Vector3:
 	return (c["o"] as Vector3) + (c["u"] as Vector3) * s + Vector3.UP * y + (c["n"] as Vector3) * w
 
@@ -403,6 +421,7 @@ static func _vestir(ctx: Dictionary, c: Dictionary) -> void:
 		_:
 			_barrio(ctx, c)
 	if not es_tribuna:
+		_tapar_junta(ctx, c, pisos)
 		_torre_esquina(ctx, c)
 	else:
 		_escudo_fachada(ctx, c)

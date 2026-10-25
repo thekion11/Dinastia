@@ -86,6 +86,10 @@ static func _sitios_de_grada(raiz: Node3D) -> Array:
 		var paso := maxi(1, mm.instance_count / 400)
 		var xf := mmi.global_transform
 		for k in range(0, mm.instance_count, paso):
+			## El sector visitante (alfa 0,5 en el color, ver `_butacas`) no festeja
+			## los goles de casa: ni papelitos ni bengalas en su tramo.
+			if mm.use_colors and mm.get_instance_color(k).a < 0.75:
+				continue
 			var p: Vector3 = xf * mm.get_instance_transform(k).origin
 			## Fuera del campo y por debajo de 9 m (la bandeja de abajo).
 			if p.y > 9.0 or (absf(p.x) < 36.0 and absf(p.z) < 54.0):
