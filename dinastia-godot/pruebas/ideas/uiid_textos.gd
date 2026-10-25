@@ -96,9 +96,23 @@ func _recoger(raiz: Node, donde: String) -> void:
 			textos.append((n as Control).tooltip_text)
 		if n is LineEdit and (n as LineEdit).placeholder_text != "":
 			textos.append((n as LineEdit).placeholder_text)
+	## Las marcas de los patrocinadores son NOMBRES PROPIOS ficticios («Lácteos del Sur») y no se
+	## traducen: se quitan del texto antes de buscar castellano, para no confundir su «del» con un olvido.
+	var marcas: Array[String] = []
+	var co: Comercial = (_p.get("mundo") as Mundo).comercial
+	if co != null:
+		for lista: Variant in co.ofertas_zona.values():
+			for o: Dictionary in lista:
+				marcas.append(String(o.get("marca", "")))
+		for f: Dictionary in co.zonas_firmadas.values():
+			marcas.append(String(f.get("marca", "")))
 	var malos: Array[String] = []
-	for t: String in textos:
-		_vistos.append(t)
+	for t0: String in textos:
+		_vistos.append(t0)
+		var t := t0
+		for mc in marcas:
+			if mc != "":
+				t = t.replace(mc, "MARCA")
 		## Las filas de club del editor llevan el nombre propio del club
 		## («Concepción Lila»), que no se traduce.
 		if t.begins_with("▸ ") or t.begins_with("▾ "):

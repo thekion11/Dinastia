@@ -10,7 +10,7 @@ func _pintar_pregunta_rueda(e: Dictionary) -> void:
 	if per != "":
 		var rel := p.mundo.prensa.relacion_con(per)
 		var trato := Idiomas.t("te aprecia") if rel >= 65 else (Idiomas.t("no te quiere") if rel <= 35 else Idiomas.t("sin bando"))
-		quien_txt += "  ·  %s, %s" % [String(e.get("perfil", "")), trato]
+		quien_txt += "  ·  %s, %s" % [Idiomas.t(String(e.get("perfil", ""))), trato]
 	if bool(e.get("memoria", false)):
 		quien_txt += Idiomas.t("  ·  🧠 recuerda lo que dijiste")
 	p._rueda_quien.text = "🎙️ " + quien_txt.to_upper()

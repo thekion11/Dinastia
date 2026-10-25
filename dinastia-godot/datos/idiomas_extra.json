@@ -4159,7 +4159,9 @@
   "esa pretemporada no existe": "that pre-season doesn't exist",
   "Taquilla y merchandising de la gira": "Tour gate receipts and merchandising",
   "\"Preocupación en la interna\"": "\"Concern behind closed doors\"",
-  "Preocupación en la interna": "Concern behind closed doors"
+  "Preocupación en la interna": "Concern behind closed doors",
+  "%s (1 partido con la selección)": "%s (1 cap)",
+  "%s (%d partidos con la selección)": "%s (%d caps)"
  },
  "pt": {
   "Historia": "História",
@@ -8321,7 +8323,9 @@
   "esa pretemporada no existe": "essa pré-temporada não existe",
   "Taquilla y merchandising de la gira": "Bilheteria e merchandising da turnê",
   "\"Preocupación en la interna\"": "\"Preocupação nos bastidores\"",
-  "Preocupación en la interna": "Preocupação nos bastidores"
+  "Preocupación en la interna": "Preocupação nos bastidores",
+  "%s (1 partido con la selección)": "%s (1 jogo pela seleção)",
+  "%s (%d partidos con la selección)": "%s (%d jogos pela seleção)"
  },
  "patrones": [
   [
@@ -10621,7 +10625,7 @@
    "Dein Verein ist $1. von $2",
    "El teu club va $1è de $2",
    "Twój klub jest $1. na $2",
-   "Kulübün $1 takım içinde $2. sırada"
+   "Kulübün $2 takım içinde $1. sırada"
   ],
   [
    "^nivel (\\d+(?:[.,]\\d+)?) en su época$",
@@ -17342,7 +17346,9 @@
   "esa pretemporada no existe": "cette préparation n'existe pas",
   "Taquilla y merchandising de la gira": "Billetterie et produits dérivés de la tournée",
   "\"Preocupación en la interna\"": "\"Inquiétude en interne\"",
-  "Preocupación en la interna": "Inquiétude en interne"
+  "Preocupación en la interna": "Inquiétude en interne",
+  "%s (1 partido con la selección)": "%s (1 sélection)",
+  "%s (%d partidos con la selección)": "%s (%d sélections)"
  },
  "it": {
   "Historia": "Storia",
@@ -21411,7 +21417,9 @@
   "esa pretemporada no existe": "questo precampionato non esiste",
   "Taquilla y merchandising de la gira": "Incassi e merchandising della tournée",
   "\"Preocupación en la interna\"": "\"Preoccupazione all'interno\"",
-  "Preocupación en la interna": "Preoccupazione all'interno"
+  "Preocupación en la interna": "Preoccupazione all'interno",
+  "%s (1 partido con la selección)": "%s (1 presenza in nazionale)",
+  "%s (%d partidos con la selección)": "%s (%d presenze in nazionale)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -25480,7 +25488,9 @@
   "esa pretemporada no existe": "diese Vorbereitung gibt es nicht",
   "Taquilla y merchandising de la gira": "Ticket- und Fanartikelerlöse der Tour",
   "\"Preocupación en la interna\"": "\"Sorge intern\"",
-  "Preocupación en la interna": "Sorge intern"
+  "Preocupación en la interna": "Sorge intern",
+  "%s (1 partido con la selección)": "%s (1 Länderspiel)",
+  "%s (%d partidos con la selección)": "%s (%d Länderspiele)"
  },
  "ca": {
   "Historia": "Història",
@@ -29549,7 +29559,9 @@
   "esa pretemporada no existe": "aquesta pretemporada no existeix",
   "Taquilla y merchandising de la gira": "Taquilla i marxandatge de la gira",
   "\"Preocupación en la interna\"": "\"Preocupació a la interna\"",
-  "Preocupación en la interna": "Preocupació a la interna"
+  "Preocupación en la interna": "Preocupació a la interna",
+  "%s (1 partido con la selección)": "%s (1 partit amb la selecció)",
+  "%s (%d partidos con la selección)": "%s (%d partits amb la selecció)"
  },
  "pl": {
   "Club": "Klub",
@@ -33901,7 +33913,9 @@
   "esa pretemporada no existe": "taki okres przygotowawczy nie istnieje",
   "Taquilla y merchandising de la gira": "Bilety i gadżety z tournée",
   "\"Preocupación en la interna\"": "\"Niepokój w klubie\"",
-  "Preocupación en la interna": "Niepokój w klubie"
+  "Preocupación en la interna": "Niepokój w klubie",
+  "%s (1 partido con la selección)": "%s (1 mecz w kadrze)",
+  "%s (%d partidos con la selección)": "%s (%d meczów w kadrze)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -38253,6 +38267,8 @@
   "esa pretemporada no existe": "böyle bir hazırlık dönemi yok",
   "Taquilla y merchandising de la gira": "Turne bilet ve ürün gelirleri",
   "\"Preocupación en la interna\"": "\"Kulüp içinde endişe\"",
-  "Preocupación en la interna": "Kulüp içinde endişe"
+  "Preocupación en la interna": "Kulüp içinde endişe",
+  "%s (1 partido con la selección)": "%s (1 milli maç)",
+  "%s (%d partidos con la selección)": "%s (%d milli maç)"
  }
 }

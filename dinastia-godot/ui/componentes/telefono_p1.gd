@@ -171,7 +171,9 @@ func _icono_app(a: Array) -> Control:
 		ins.add_theme_stylebox_override("normal", sbi)
 		ins.position = Vector2(46, -4)
 		b.add_child(ins)
-	var nom := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, String(a[1]))
+	var nom := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, String(a[1]) if a[0] == "tribuna" else Idiomas.t(String(a[1])))
+	if a[0] == "tribuna":
+		nom.set_meta("marca_sin_traducir", nom.text)
 	nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(nom)
 	return col
@@ -296,6 +298,7 @@ func entrar_con_clave_guardada() -> void:
 func _login() -> void:
 	var r := m.redes
 	var logo := Tema.etiqueta(34, Tema.TEXTO, "Tribuna")
+	logo.set_meta("marca_sin_traducir", "Tribuna")   ## nombre propio: ver telefono_p3.gd
 	logo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cuerpo.add_child(logo)
 	_cuerpo.add_child(_nota("Inicia sesión"))

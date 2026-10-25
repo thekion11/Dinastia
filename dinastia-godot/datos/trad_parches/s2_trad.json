@@ -70,16 +70,6 @@
    "pl": "Sobotni wieczór",
    "tr": "Cumartesi akşamı"
   },
-  "A tu gusto": {
-   "en": "Your way",
-   "pt": "Do seu jeito",
-   "fr": "À ta façon",
-   "it": "A modo tuo",
-   "de": "Nach deinem Geschmack",
-   "ca": "Al teu gust",
-   "pl": "Po swojemu",
-   "tr": "Kendi tarzınla"
-  },
   "Academia": {
    "en": "Academy",
    "pt": "Academia",
@@ -109,16 +99,6 @@
    "ca": "obrir la taula de negociació",
    "pl": "otwórz stół negocjacyjny",
    "tr": "pazarlık masasını aç"
-  },
-  "Así se ve tu escudo": {
-   "en": "This is how your crest looks",
-   "pt": "Assim fica o seu escudo",
-   "fr": "Voici ton écusson",
-   "it": "Ecco come appare il tuo stemma",
-   "de": "So sieht dein Wappen aus",
-   "ca": "Així es veu el teu escut",
-   "pl": "Tak wygląda twój herb",
-   "tr": "Araman böyle görünüyor"
   },
   "Barrera, rosca y una barra de potencia.": {
    "en": "Wall, curl and a power bar.",
@@ -300,26 +280,6 @@
    "pl": "Klasyczna",
    "tr": "Klasik"
   },
-  "Cálida": {
-   "en": "Warm",
-   "pt": "Quente",
-   "fr": "Chaude",
-   "it": "Calda",
-   "de": "Warm",
-   "ca": "Càlida",
-   "pl": "Ciepła",
-   "tr": "Sıcak"
-  },
-  "Fría": {
-   "en": "Cool",
-   "pt": "Fria",
-   "fr": "Froide",
-   "it": "Fredda",
-   "de": "Kühl",
-   "ca": "Freda",
-   "pl": "Zimna",
-   "tr": "Soğuk"
-  },
   "Neón": {
    "en": "Neon",
    "pt": "Néon",
@@ -329,16 +289,6 @@
    "ca": "Neó",
    "pl": "Neon",
    "tr": "Neon"
-  },
-  "Neón nocturno": {
-   "en": "Night neon",
-   "pt": "Néon noturno",
-   "fr": "Néon nocturne",
-   "it": "Neon notturno",
-   "de": "Nachtneon",
-   "ca": "Neó nocturn",
-   "pl": "Nocny neon",
-   "tr": "Gece neonu"
   },
   "Mínimo": {
    "en": "Minimal",
@@ -380,16 +330,6 @@
    "pl": "Pressing",
    "tr": "Pres"
   },
-  "Proyección": {
-   "en": "Potential",
-   "pt": "Projeção",
-   "fr": "Potentiel",
-   "it": "Potenziale",
-   "de": "Potenzial",
-   "ca": "Projecció",
-   "pl": "Potencjał",
-   "tr": "Potansiyel"
-  },
   "Recuperación": {
    "en": "Recovery",
    "pt": "Recuperação",
@@ -410,16 +350,6 @@
    "pl": "Psychologia",
    "tr": "Psikoloji"
   },
-  "Sintético": {
-   "en": "Artificial",
-   "pt": "Sintético",
-   "fr": "Synthétique",
-   "it": "Sintetico",
-   "de": "Kunstrasen",
-   "ca": "Sintètic",
-   "pl": "Sztuczna",
-   "tr": "Sentetik"
-  },
   "Césped": {
    "en": "Grass",
    "pt": "Gramado",
@@ -439,16 +369,6 @@
    "ca": "Clàusula",
    "pl": "Klauzula",
    "tr": "Serbest kalma bedeli"
-  },
-  "Diseño": {
-   "en": "Design",
-   "pt": "Design",
-   "fr": "Design",
-   "it": "Design",
-   "de": "Design",
-   "ca": "Disseny",
-   "pl": "Wzór",
-   "tr": "Tasarım"
   },
   "Diseño 3D": {
    "en": "3D design",
@@ -580,16 +500,6 @@
    "pl": "Marka osobista twoich gwiazd",
    "tr": "Yıldızlarının kişisel markası"
   },
-  "En una tinta: prensa y marcadores": {
-   "en": "One ink: newspapers and scoreboards",
-   "pt": "Uma tinta só: imprensa e placares",
-   "fr": "Une seule encre : presse et tableaux d'affichage",
-   "it": "A un colore: stampa e tabelloni",
-   "de": "Einfarbig: Presse und Anzeigetafeln",
-   "ca": "En una tinta: premsa i marcadors",
-   "pl": "Jednym kolorem: prasa i tablice wyników",
-   "tr": "Tek renk: basın ve skorbordlar"
-  },
   "Pagan todo el año. Quieren sentirse escuchados": {
    "en": "They pay all year round. They want to feel heard",
    "pt": "Pagam o ano todo. Querem se sentir ouvidos",
@@ -669,16 +579,6 @@
    "ca": "Personal del Club",
    "pl": "Personel klubu",
    "tr": "Kulüp Personeli"
-  },
-  "Tribuna de honor": {
-   "en": "Main stand",
-   "pt": "Tribuna de honra",
-   "fr": "Tribune d'honneur",
-   "it": "Tribuna d'onore",
-   "de": "Ehrentribüne",
-   "ca": "Tribuna d'honor",
-   "pl": "Trybuna honorowa",
-   "tr": "Şeref tribünü"
   },
   "Títulos  (× 1.000)": {
    "en": "Titles  (× 1,000)",
@@ -879,16 +779,6 @@
    "ca": "Examen",
    "pl": "Egzamin",
    "tr": "Sınav"
-  },
-  "Retráctil": {
-   "en": "Retractable",
-   "pt": "Retrátil",
-   "fr": "Rétractable",
-   "it": "Retrattile",
-   "de": "Einfahrbar",
-   "ca": "Retràctil",
-   "pl": "Rozsuwany",
-   "tr": "Açılır kapanır"
   },
   "Portero-líbero": {
    "en": "Sweeper keeper",
@@ -1889,16 +1779,6 @@
    "ca": "Nacional",
    "pl": "Krajowy",
    "tr": "Ulusal"
-  },
-  "Continental": {
-   "en": "Continental",
-   "pt": "Continental",
-   "fr": "Continental",
-   "it": "Continentale",
-   "de": "Kontinental",
-   "ca": "Continental",
-   "pl": "Kontynentalny",
-   "tr": "Kıtasal"
   },
   "Mundial": {
    "en": "Global",
@@ -5926,17 +5806,6 @@
    "Ja et coneixen així. $1.",
    "Teraz tak cię znają. $1.",
    "Artık seni böyle tanıyorlar. $1."
-  ],
-  [
-   "^Instalaciones hasta el nivel (\\d+)$",
-   "Facilities up to level $1",
-   "Instalações até o nível $1",
-   "Installations jusqu'au niveau $1",
-   "Strutture fino al livello $1",
-   "Anlagen bis Stufe $1",
-   "Instal·lacions fins al nivell $1",
-   "Obiekty do poziomu $1",
-   "$1. seviyeye kadar tesisler"
   ],
   [
    "^El club sube a nivel ((?:[^.]|\\.(?! )|(?<=[\\s(«]\\S)\\. |(?<=^\\S)\\. )+)$",

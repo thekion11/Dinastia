@@ -10,6 +10,19 @@ extends "res://ui/componentes/telefono_p2.gd"
 ##   - TRANSICIONES: cada app entra con un fundido corto; el móvil sube y aparece al abrirse y se
 ##     desvanece al guardarse (con «Animaciones reducidas» todo es instantáneo).
 
+## NOMBRE PROPIO DE LA RED SOCIAL (cierre de la sesión 2): «Tribuna» es también la tribuna del
+## estadio, que se traduce («Stand», «Tribüne»…); como `Idiomas` traduce por la frase sin contexto, la
+## app acabaría llamándose «Stand» en inglés. Las etiquetas de la marca llevan esta meta y se dejan
+## como están tras pasar el traductor por el árbol (se ponen en telefono_p1, capa de abajo, con el
+## mismo texto de clave).
+const META_MARCA := "marca_sin_traducir"
+
+## Devuelve a las marcas su texto original tras `Idiomas.traducir_arbol`.
+static func restaurar_marcas(raiz: Node) -> void:
+	for n in raiz.find_children("*", "Label", true, false):
+		if n.has_meta(META_MARCA):
+			(n as Label).text = String(n.get_meta(META_MARCA))
+
 ## Qué hacer cuando, ya en la pantalla de inicio, se pide «atrás». Lo pone quien abre el móvil.
 var al_cerrar: Callable
 var _tw_app: Tween

@@ -125,7 +125,8 @@ func _pintar() -> void:
 	_tazas.text = "☕".repeat(maxi(0, mesa.paciencia)) + "·".repeat(maxi(0, mesa.paciencia_max - maxi(0, mesa.paciencia)))
 	_tazas.tooltip_text = Idiomas.t("Paciencia: cada ronda gasta una taza")
 	_ronda.text = Idiomas.t("Ronda %d") % mesa.ronda if mesa.ronda > 0 else Idiomas.t("Primera ronda: tú mueves")
-	_dice.text = mesa.ultima
+	## Lo que dice el representante llega del núcleo en castellano: se traduce al pintarlo.
+	_dice.text = Idiomas.t(mesa.ultima)
 	if mesa.estado != _estado_previo:
 		_estado_previo = mesa.estado
 		Sonido.toca("contrato" if mesa.estado == "acuerdo" else "error", Sonido.Bus.INTERFAZ)

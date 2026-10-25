@@ -24,6 +24,11 @@ func _probar() -> void:
 	for app: String in ["inicio", "mensajes", "noticias", "banco", "calendario", "fotos", "ajustes"]:
 		tel.abrir_app(app)
 		_recoger(tel, app)
+	## La red social es un NOMBRE PROPIO: «Tribuna» (la del estadio) se traduce «Stand», la app no.
+	tel.abrir_app("inicio")
+	var marca := _textos_de(tel.get("_cuerpo"))
+	_comprobar(marca.has("Tribuna") and not marca.has("Stand"), "en inglés la app sigue llamándose «Tribuna»")
+	_comprobar(Idiomas.t("Tribuna") == "Stand", "y la tribuna del estadio sí se traduce («Stand»)")
 	m.redes.sesion = "dt"
 	for sub: String in ["inicio", "perfil", "club", "publicar"]:
 		tel.set("_sub", sub)
@@ -55,6 +60,13 @@ func _probar() -> void:
 		_recoger_en(lista, null, "mi vida/" + secc)
 	Idiomas.idioma = "es"
 	_comprobar(_vistos.size() > 60, "se revisaron %d textos del móvil" % _vistos.size())
+
+func _textos_de(n: Node) -> Array[String]:
+	var r: Array[String] = []
+	for l in n.find_children("*", "Label", true, false):
+		if not l.is_queued_for_deletion() and not _borrado(l):
+			r.append((l as Label).text)
+	return r
 
 ## Lo mínimo que PanelVida le pide a la pantalla que lo aloja.
 class Anfitrion extends Control:

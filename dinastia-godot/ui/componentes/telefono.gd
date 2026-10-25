@@ -277,6 +277,7 @@ func abrir_app(app: String) -> void:
 		"ajustes": _ajustes()
 	## Lo que no pasó por `Idiomas.t` al montarse (títulos, notas) se traduce aquí.
 	Idiomas.traducir_arbol(_cuerpo)
+	restaurar_marcas(_cuerpo)
 	_escalar_letra.call_deferred()
 	_botones_movil.call_deferred()
 	_scroll.scroll_vertical = 0

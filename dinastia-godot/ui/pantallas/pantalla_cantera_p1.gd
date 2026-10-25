@@ -83,7 +83,10 @@ func _pintar_seleccion(c: Club) -> void:
 		var l := p._texto(12, Principal.COL_VERDE)
 		var nombres: Array[String] = []
 		for j: Jugador in mios_nomina:
-			nombres.append("%s (%d caps)" % [j.nombre, s.caps_de(j)])
+			## Antes «(%d caps)»: un anglicismo en la interfaz castellana, y sin singular.
+			var caps := s.caps_de(j)
+			nombres.append((Idiomas.t("%s (1 partido con la selección)") % j.nombre) if caps == 1
+				else (Idiomas.t("%s (%d partidos con la selección)") % [j.nombre, caps]))
 		l.text = Idiomas.t("Convocados ahora: ") + ", ".join(nombres)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_seleccion.add_child(l)
