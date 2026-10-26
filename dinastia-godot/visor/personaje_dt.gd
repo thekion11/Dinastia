@@ -245,8 +245,17 @@ static func gestos_banda(d: Dictionary) -> void:
 	var pre := str(ap.get_path_to(esq))
 	var lib := AnimationLibrary.new()
 	var fab := AnimExtra.new()
-	for g: String in ["brazos_jarra", "aplaudir", "pedir_calma", "protestar", "manos_cabeza"]:
-		var a: Animation = fab.call(g, esq, pre)
+	## «senalar» es el señalar adelante de AnimExtra; «llamar_hinchada» sale del portafolio de
+	## fútbol (en caché por esqueleto: se copia antes de tocarle las piernas).
+	var futbol := AnimFutbol.todas(esq, pre)
+	for g: String in ["brazos_jarra", "aplaudir", "pedir_calma", "protestar", "manos_cabeza", "senalar", "llamar_hinchada"]:
+		var a: Animation
+		if g == "llamar_hinchada":
+			if not futbol.has(g):
+				continue
+			a = (futbol[g] as Animation).duplicate(true)
+		else:
+			a = fab.call("senalar_adelante" if g == "senalar" else g, esq, pre)
 		AnimExtra._completar(a, esq, pre)
 		PersonajeVida.piernas_de_persona(a, esq)
 		lib.add_animation(g, a)
