@@ -102,6 +102,12 @@ func _conectar_1() -> void:
 		p.mundo.ojeadores.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			p._escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
 			p._anotar(titulo, cuerpo))
+	## Los cambios de entrenador en los clubes de la IA (`MercadoDT`, 26-10-2026).
+	var mdt := MercadoDT.de(p.mundo)
+	if mdt != null:
+		mdt.noticia.connect(func(titulo: String, cuerpo: String) -> void:
+			p._escribir("[color=#8ea595][b]%s[/b][/color] %s" % [titulo, cuerpo])
+			p._anotar(titulo, cuerpo))
 	if p.mundo.logros != null:
 		p.mundo.logros.logro_desbloqueado.connect(func(_clave: String, icono: String, titulo: String, descripcion: String) -> void:
 			p._escribir("[color=#c9a227][b]%s Logro: %s[/b][/color] %s" % [icono, titulo, descripcion])
