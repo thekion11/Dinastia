@@ -181,7 +181,7 @@ static func previsualizar(m: Mundo, modo: String, pais: String, club_id: String 
 
 ## La pregunta dura de la primera rueda de prensa de un club que compró su plaza, con el formato de
 ## `Prensa.entrevista` ({pregunta, opciones[{txt, moral, confianza, socios, tono}]}). La rueda la abre
-## `Prensa.abrir_rueda()`, que es de otra zona: queda lista para que la enganche (ver el informe).
+## `Prensa.abrir_rueda()`: `aplicar()` la deja en `Prensa.pregunta_pendiente`.
 static func pregunta_primera_rueda(entrada: Dictionary) -> Dictionary:
 	if String(entrada.get("modo", "")) != MODO_CONFEDERACION:
 		return {}
@@ -212,6 +212,8 @@ static func aplicar(m: Mundo, entrada: Dictionary, datos_club: Dictionary) -> Cl
 	if int(p["animo_delta"]) != 0:
 		m.prensa.mover_animo(int(p["animo_delta"]))
 	m.prensa.guardar_portada(String(p["titular"]), _cuerpo_titular(p, c), "neutro" if modo == MODO_REEMPLAZAR else "mal")
+	## La primera rueda de un club que compró su plaza trae su pregunta dura.
+	m.prensa.pregunta_pendiente = pregunta_primera_rueda(e)
 	if int(p["cuota"]) > 0:
 		m._anotar_movimiento("Cuota de afiliación a la confederación", -int(p["cuota"]))
 	return c

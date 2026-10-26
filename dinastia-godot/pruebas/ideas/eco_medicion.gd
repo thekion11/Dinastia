@@ -6,6 +6,8 @@ extends BaseIdea
 ## clubes de la IA están en rojo o rescatados. ECO_TEMP / ECO_SEMILLAS para cambiarla.
 
 func _probar() -> void:
+	if OS.get_environment("TV_IGUAL") != "":   ## medir el reparto solidario de la tele sin activarlo
+		Finanzas.reparto_tv_igual = float(OS.get_environment("TV_IGUAL"))
 	var temporadas := int(OS.get_environment("ECO_TEMP")) if OS.get_environment("ECO_TEMP") != "" else 3
 	var semillas: Array = [101]
 	if OS.get_environment("ECO_SEMILLAS") != "":

@@ -165,6 +165,15 @@ func tras_partido(p: Partido, competicion: String = "Liga", publico: int = 0, po
 
 	revisar()
 
+## Un partido de tu club que NO dirigiste (simulado por la jornada): no trae
+## el once ni los goleadores, pero el marcador basta para las rachas. Sin esto,
+## quien simula toda la temporada veía «RACHAS» a 0 en Récords.
+func tras_partido_simulado(gane: bool, empate: bool) -> void:
+	if mundo == null or mundo.mi_club() == null:
+		return
+	_anotar_rachas(gane, empate)
+	revisar()
+
 ## Levantar un título. Es lo más caro del perfil de gestor y lo único que llena
 ## la vitrina, y además se NOTA en el club: la hinchada se vuelca, llegan socios
 ## nuevos y el vestuario se pone a tope de moral.

@@ -1,0 +1,20 @@
+SONIDOS DE INTERFAZ (audio/ui/) — origen y licencia
+====================================================
+
+Autor: Kenney (https://kenney.nl). Licencia: CC0 1.0 Universal (dominio público),
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Nota de los README de los starter kits de Kenney: «sound effects are CC0 licensed»
+(los efectos de sonido son CC0; el código de los kits es MIT y no se usa aquí).
+CC0 no exige atribución; se deja constancia igualmente.
+
+Archivo del juego     <- repo, commit, ruta original
+menu_mover.ogg        <- KenneyNL/Starter-Kit-City-Builder @ 4535092b740b378b700efd9df9e27a631815b84a, sounds/rotate.ogg
+clic_suave.ogg        <- KenneyNL/Starter-Kit-City-Builder @ 4535092b740b378b700efd9df9e27a631815b84a, sounds/rotate.ogg
+menu_aceptar.ogg      <- KenneyNL/Starter-Kit-City-Builder @ 4535092b740b378b700efd9df9e27a631815b84a, sounds/placement-c.ogg
+clic.ogg              <- KenneyNL/Starter-Kit-City-Builder @ 4535092b740b378b700efd9df9e27a631815b84a, sounds/placement-c.ogg
+menu_atras.ogg        <- KenneyNL/Starter-Kit-City-Builder @ 4535092b740b378b700efd9df9e27a631815b84a, sounds/removal-a.ogg
+menu_seccion.ogg      <- KenneyNL/Starter-Kit-FPS @ 185fd2326d74a5cf858cffc616f87cf9696f9cc0, sounds/jump_a.ogg
+
+Los archivos se recortaron y normalizaron (ganancia aplicada al preparar los candidatos:
+rotate -8.0 dB, placement-c +0.2 dB, removal-a +0.3 dB, jump_a +9.5 dB).

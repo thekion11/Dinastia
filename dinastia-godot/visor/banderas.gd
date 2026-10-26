@@ -5,19 +5,63 @@ extends RefCounted
 ## cantón, disco, cruz, estrella). Para el estudio del sorteo, la sala de
 ## prensa y donde haga falta una bandera de tela (`bandera.gdshader`, `dibujo`).
 ## No hay escudos ni símbolos oficiales detallados: solo los colores y la forma.
+##
+## BANDERAS DETALLADAS (26-10-2026, aprobado por el dueño): si existe el SVG de
+## flag-icons (MIT, `assets/banderas/`, ver LEEME.txt) se usa ese, escalado al
+## mismo ANCHO x ALTO de siempre para no mover ningún diseño; si falta, el
+## dibujo de abajo. `solo_dibujo` fuerza el dibujo (pruebas y comparaciones).
 
 const ANCHO := 96
 const ALTO := 64
 static var _cache := {}
+static var solo_dibujo := false
+
+## Código FIFA del juego -> nombre del SVG (ISO 3166-1 alfa-2; las naciones
+## británicas, con su subcódigo).
+const ISO := {
+	"ALB": "al", "ALG": "dz", "ANG": "ao", "ARG": "ar", "ARM": "am", "AUS": "au", "AUT": "at", "BEL": "be",
+	"BEN": "bj", "BFA": "bf", "BIH": "ba", "BOL": "bo", "BRA": "br", "BUL": "bg", "CAN": "ca", "CHI": "cl",
+	"CIV": "ci", "CMR": "cm", "COD": "cd", "COL": "co", "CPV": "cv", "CRC": "cr", "CRO": "hr", "CUR": "cw",
+	"CZE": "cz", "DEN": "dk", "ECU": "ec", "EGY": "eg", "ENG": "gb-eng", "ESP": "es", "FIN": "fi", "FRA": "fr",
+	"GAB": "ga", "GAM": "gm", "GEO": "ge", "GER": "de", "GHA": "gh", "GRE": "gr", "GUI": "gn", "HON": "hn",
+	"HUN": "hu", "IRL": "ie", "IRN": "ir", "ISR": "il", "ITA": "it", "JAM": "jm", "JPN": "jp", "KOR": "kr",
+	"KSA": "sa", "KVX": "xk", "MAR": "ma", "MEX": "mx", "MKD": "mk", "MLI": "ml", "MNE": "me", "MOZ": "mz",
+	"NED": "nl", "NGA": "ng", "NOR": "no", "NZL": "nz", "PAN": "pa", "PAR": "py", "PER": "pe", "POL": "pl",
+	"POR": "pt", "QAT": "qa", "ROU": "ro", "RSA": "za", "SCO": "gb-sct", "SEN": "sn", "SRB": "rs", "SUI": "ch",
+	"SUR": "sr", "SVK": "sk", "SVN": "si", "SWE": "se", "TOG": "tg", "TRI": "tt", "TUN": "tn", "TUR": "tr",
+	"UKR": "ua", "URU": "uy", "USA": "us", "UZB": "uz", "VEN": "ve", "WAL": "gb-wls", "ZAM": "zm"
+}
 
 static func textura(codigo: String) -> ImageTexture:
 	if _cache.has(codigo):
 		return _cache[codigo]
-	var img := Image.create(ANCHO, ALTO, false, Image.FORMAT_RGB8)
-	_pintar(img, codigo)
+	var img := _detallada(codigo)
+	if img == null:
+		img = Image.create(ANCHO, ALTO, false, Image.FORMAT_RGB8)
+		_pintar(img, codigo)
 	var t := ImageTexture.create_from_image(img)
 	_cache[codigo] = t
 	return t
+
+## La bandera de flag-icons como imagen ANCHO x ALTO RGB8 (el mismo formato que
+## el dibujo, para quien la duplica o la lee pixel a pixel), o null si no está.
+static func _detallada(codigo: String) -> Image:
+	if solo_dibujo or not ISO.has(codigo):
+		return null
+	var ruta := "res://assets/banderas/%s.svg" % ISO[codigo]
+	if not ResourceLoader.exists(ruta):
+		return null
+	var tex := load(ruta) as Texture2D
+	if tex == null:
+		return null
+	var img := tex.get_image()
+	if img == null or img.is_empty():
+		return null
+	if img.is_compressed():
+		img.decompress()
+	img.convert(Image.FORMAT_RGB8)
+	img.resize(ANCHO, ALTO, Image.INTERPOLATE_LANCZOS)
+	return img
 
 static func _franjas(img: Image, colores: Array, vertical := false, pesos: Array = []) -> void:
 	var total := 0.0

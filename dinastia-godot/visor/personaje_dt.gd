@@ -171,14 +171,31 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 	if bool(a["gorra"]) and not corte in ["corto", "fade", "rapado", "calvo"]:
 		corte = "corto"
 	PeloQ.poner(d, corte, Color(String(a["color_pelo"])), bool(a["barba"]) and String(a["cuerpo"]) == "male")
+	_cejas(d, float(a.get("cejas", 0.0)))
 	_cara_biblioteca(d, a)
+	PersonajeVida.envejecer(d, a)
 	_ojos_vivos(d, Color(String(a["piel"])), Color(String(a.get("ojos", "3d2a1a"))))
 	_accesorios(d, a, c1, c2)
 	var ap: AnimationPlayer = d["anim"]
 	var quieto := parado_persona(d)
 	if quieto != "":
 		ap.play(quieto)
+	PersonajeVida.animar(d)
 	return d
+
+## CEJAS FINAS O POBLADAS (26-10-2026): las 3D del pelo (cuerpo de hombre) se escalan
+## alrededor de su centro en el espacio del modelo: más altas y algo más largas.
+static func _cejas(d: Dictionary, v: float) -> void:
+	var esq: Skeleton3D = d.get("esqueleto")
+	if absf(v) < 0.01 or esq == null or esq.get_node_or_null("Pelo") == null:
+		return
+	var rest := esq.get_bone_global_rest(esq.find_bone("Head"))
+	for mi: MeshInstance3D in esq.get_node("Pelo").find_children("Eyebrows*", "MeshInstance3D", false, false):
+		var m := rest * mi.transform
+		var c := m * mi.mesh.get_aabb().get_center()
+		var k := Vector3(1.0 + 0.08 * v, 1.0 + 0.5 * v, 1.0 + 0.2 * v)
+		var s := Transform3D(Basis.from_scale(k), c - c * k)
+		mi.transform = rest.affine_inverse() * s * m
 
 ## DE PIE COMO UNA PERSONA, NO COMO UN HÉROE (25-10-2026, pedido del dueño): el «parado»
 ## del pack es una guardia de combate (brazos separados, puños a medio cerrar). Para el DT
@@ -194,6 +211,7 @@ static func parado_persona(d: Dictionary) -> String:
 	var esq: Skeleton3D = d["esqueleto"]
 	var a := AnimQuaternius._relajar_dedos(ap.get_animation("parado"), esq, 0.85)
 	AnimQuaternius._brazos_al_cuerpo(a, -0.14)
+	PersonajeVida.piernas_de_persona(a, esq)
 	var lib := AnimationLibrary.new()
 	lib.add_animation("parado", a)
 	ap.add_animation_library("persona", lib)
@@ -207,11 +225,41 @@ static func poner_en_banda(padre: Node3D, asp: Dictionary, c1: Color, c2: Color,
 	var n: Node3D = d["nodo"]
 	n.position = pos
 	n.rotation.y = giro
+	gestos_banda(d)
 	var g := _GestosBanda.new()
 	g.ap = d["anim"]
 	g.rng.seed = hash(str(pos))
 	n.add_child(g)
 	return d
+
+## LOS GESTOS DE LA BANDA (26-10-2026). `crear()` arma la librería corta (sin las
+## expresiones de `AnimExtra`), así que `_GestosBanda` nunca encontraba «brazos_jarra» ni
+## los demás y el DT solo se quedaba parado. Se le da una librería propia «banda» con esos
+## gestos, cada uno con las piernas de persona (las mismas del «persona/parado»), para que
+## al pasar de quieto a un gesto los pies no cambien de sitio.
+static func gestos_banda(d: Dictionary) -> void:
+	var ap: AnimationPlayer = d["anim"]
+	var esq: Skeleton3D = d.get("esqueleto")
+	if esq == null or ap.has_animation_library("banda"):
+		return
+	var pre := str(ap.get_path_to(esq))
+	var lib := AnimationLibrary.new()
+	var fab := AnimExtra.new()
+	## «senalar» es el señalar adelante de AnimExtra; «llamar_hinchada» sale del portafolio de
+	## fútbol (en caché por esqueleto: se copia antes de tocarle las piernas).
+	var futbol := AnimFutbol.todas(esq, pre)
+	for g: String in ["brazos_jarra", "aplaudir", "pedir_calma", "protestar", "manos_cabeza", "senalar", "llamar_hinchada"]:
+		var a: Animation
+		if g == "llamar_hinchada":
+			if not futbol.has(g):
+				continue
+			a = (futbol[g] as Animation).duplicate(true)
+		else:
+			a = fab.call("senalar_adelante" if g == "senalar" else g, esq, pre)
+		AnimExtra._completar(a, esq, pre)
+		PersonajeVida.piernas_de_persona(a, esq)
+		lib.add_animation(g, a)
+	ap.add_animation_library("banda", lib)
 
 ## EL PERSONAL DEL ESTADIO (26-9-2026, pendiente "camarógrafos y guardias con
 ## uniforme"): una persona entera con el uniforme de su oficio.

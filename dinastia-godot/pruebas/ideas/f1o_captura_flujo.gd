@@ -24,15 +24,13 @@ func _esperar(seg: float) -> void:
 func _ready() -> void:
 	OrquestadorEntrada.ruta_prefs = "user://f1o_captura_entrada.cfg"
 	OrquestadorMundo.ruta_preferencias = "user://f1o_captura_prefs.cfg"
-	## 1) El menú de siempre, antes (sin el botón) y después (con «Nuevo juego» arriba).
-	for con_boton: bool in [false, true]:
-		Inicio.flujo_nuevo = con_boton
-		var inicio: Control = (load("res://escenas/inicio.tscn") as PackedScene).instantiate()
-		add_child(inicio)
-		await _esperar(2.0)
-		await _foto("inicio_despues" if con_boton else "inicio_antes")
-		inicio.queue_free()
-		await get_tree().process_frame
+	## 1) El menú de inicio, con «Nuevo juego» (el único camino para empezar partida).
+	var inicio: Control = (load("res://escenas/inicio.tscn") as PackedScene).instantiate()
+	add_child(inicio)
+	await _esperar(2.0)
+	await _foto("inicio")
+	inicio.queue_free()
+	await get_tree().process_frame
 	## 2) El flujo, con sus fundidos de verdad.
 	var o := OrquestadorEntrada.new()
 	o.cambiar_escena = false

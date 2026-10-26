@@ -45,6 +45,8 @@ var entra_al := -1
 
 ## El equipo del usuario cuando no es su club (la selección).
 var equipo_usuario: Club = null
+## Copa a partido único: con empate, prórroga y penales (`PartidoJugableTanda`).
+var eliminatoria := false
 
 ## LA MISMA CEREMONIA Y EL MISMO GOL QUE EL PARTIDO DEL DT (16-10-2026,
 ## pendiente de la Carrera de Jugador). Se reutilizan los componentes del modo
@@ -87,8 +89,9 @@ var _t_rotulos := 0.0
 var _controles: PanelControles
 
 static func abrir(padre: Node, m: Mundo, c: CarreraJugador, l: Club, v: Club, duracion_mitad := 240.0,
-		entra_al_minuto := -1, equipo: Club = null) -> PartidoJugable:
+		entra_al_minuto := -1, equipo: Club = null, es_eliminatoria := false) -> PartidoJugable:
 	var n := PartidoJugable.new()
+	n.eliminatoria = es_eliminatoria
 	n.entra_al = entra_al_minuto
 	n.equipo_usuario = equipo
 	n.mundo = m
@@ -138,10 +141,10 @@ func _once_con(c: Club, yo: Jugador) -> Array[Jugador]:
 
 ## CAMBIOS (MEGAPLAN fase 3). En la banda espera un jugador más: tú, si
 ## empiezas en el banco, o el mejor suplente de tu puesto, por si el DT te saca.
+## El portero, desde el 26-10-2026, también: su cambio es otro portero (y el
+## portero suplente entra si el titular se lesiona o lo expulsan).
 func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
-	## El portero no tiene cambio: el del motor es de jugador de campo (el que
-	## entrase se pondría bajo palos sin serlo).
-	if yo == null or carrera == null or yo.es_portero():
+	if yo == null or carrera == null:
 		return
 	## Si ya estás en el once, eres titular: no hay entrada desde el banco.
 	if entra_al >= 0 and not motor.usuario.is_empty():
@@ -154,14 +157,14 @@ func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
 		quien = null
 		var once := _once_con(mi_club, yo) if equipo_usuario != null else mi_club.once()
 		for j: Jugador in mi_club.plantilla:
-			if j == yo or once.has(j) or not j.disponible() or j.es_portero():
+			if j == yo or once.has(j) or not j.disponible() or j.es_portero() != yo.es_portero():
 				continue
 			if quien == null or (j.pos == yo.pos) and (quien.pos != yo.pos or j.ovr > quien.ovr):
 				quien = j
 		if quien == null:
 			return
 	var una := Puente3D.once([quien] as Array[Jugador])
-	var hechos := sp.spawn_team(_raiz, una["xi"], una["jugadores"], {"s": [[quien.pos_e, 50, 50]]}, _es_local_usuario, kit)
+	var hechos := sp.spawn_team(_raiz, una["xi"], una["jugadores"], {"s": [[quien.pos_e, 50, 50]]}, _es_local_usuario, kit, Puente3D.kit_portero(mi_club))
 	if hechos.is_empty():
 		return
 	motor.exigencia_dt = carrera.exigencia_dt()
@@ -365,7 +368,8 @@ func resultado() -> Dictionary:
 	return {"goles_local": motor.goles[0], "goles_visita": motor.goles[1], "goles": s["goles"], "asist": s["asist"],
 		"nota": motor.nota_usuario(), "minutos": int(round(motor.minutos_usuario)), "titular": entra_al < 0,
 		"sustituido": motor.usuario_sustituido, "paradas": s["paradas"],
-		"encajados": motor.goles[1 if _es_local_usuario else 0]}
+		"encajados": motor.goles[1 if _es_local_usuario else 0], "prorroga": motor.prorroga,
+		"penales": [motor.goles_tanda(0), motor.goles_tanda(1)] if not motor.tanda.is_empty() else []}
 
 func _cerrar() -> void:
 	terminado.emit(resultado())

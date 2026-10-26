@@ -50,14 +50,10 @@ func _init() -> void:
 	mat.set_shader_parameter("ancho", custom_minimum_size.x)
 	material = mat
 
-## La misma serif de rótulo que la intro: la primera que tenga el sistema.
+## La misma serif de rótulo que la intro: la primera que tenga el sistema, y si
+## no hay ninguna, Cinzel propia (`Fuentes.serif`).
 static func _serif() -> Font:
-	var f := SystemFont.new()
-	f.font_names = PackedStringArray(["Cinzel", "Trajan Pro", "Palatino Linotype", "Book Antiqua",
-		"Palatino", "Georgia", "Times New Roman", "Liberation Serif", "DejaVu Serif", "serif"])
-	f.font_weight = 700
-	f.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
-	return f
+	return Fuentes.serif(Fuentes.SERIF_ROTULO, "Cinzel", 700)
 
 func mostrado() -> bool:
 	return visible and progreso > 0.0

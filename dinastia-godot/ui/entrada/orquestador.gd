@@ -262,13 +262,15 @@ func _montar(i: int) -> void:
 func _ir_a(i: int, avanza: bool) -> void:
 	if avanza and _indice >= 0:
 		_historial.append(_indice)
-	if duracion_fundido <= 0.0 or not is_inside_tree():
+	## La primera etapa entra sin velo: viene de un corte (el menú o el arranque) y la intro
+	## ya aparece sola desde negro; el fundido de más dejaba la pantalla negra ~1 s.
+	if duracion_fundido <= 0.0 or not is_inside_tree() or _indice < 0:
 		_montar(i)
 		return
 	_en_transicion = true
 	_velo.mouse_filter = Control.MOUSE_FILTER_STOP
 	var tw := create_tween()
-	tw.tween_property(_velo, "modulate:a", 1.0, duracion_fundido if _indice >= 0 else 0.0)
+	tw.tween_property(_velo, "modulate:a", 1.0, duracion_fundido)
 	tw.tween_callback(func() -> void:
 		var clave := String(ETAPAS[i]["clave"])
 		if not (estado.get("mundo") is Mundo) and clave in ["pais", "config", "entrada", "personaje"]:

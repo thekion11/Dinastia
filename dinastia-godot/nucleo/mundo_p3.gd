@@ -105,7 +105,7 @@ func proximo_partido() -> Array:
 func partido_de_copa() -> Array:
 	if copa == null or not copa.en_curso() or semana % 4 != 0:
 		return []
-	return copa.emparejamiento_de(mi_club())
+	return copa.emparejamiento_de(club_de_la_copa())
 
 ## El torneo continental en el que juega tu club, o null.
 func mi_continental() -> Continental:

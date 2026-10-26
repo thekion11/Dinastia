@@ -68,15 +68,10 @@ func _calcular_textos(c: String) -> Dictionary:
 	return d
 
 func _fuente_serif(peso: int, cursiva: bool) -> Font:
-	var f := SystemFont.new()
-	f.font_names = PackedStringArray(["Georgia", "Cambria", "Charter", "Bitstream Charter", "Liberation Serif", "DejaVu Serif", "serif"])
-	f.font_weight = peso
-	f.font_italic = cursiva
-	f.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
-	## Si la serif del sistema no tiene una letra (la «ğ» turca, la «ł» polaca),
-	## la saca la fuente del juego en vez de un cuadradito.
-	f.fallbacks = [ThemeDB.fallback_font]
-	return f
+	## Georgia y sus parecidas si el sistema las tiene; si no, Gelasio propia (OFL,
+	## misma medida que Georgia). Si a la serif le falta una letra (la «ğ» turca,
+	## la «ł» polaca), la saca la fuente del juego en vez de un cuadradito.
+	return Fuentes.serif(["Georgia", "Cambria", "Charter", "Bitstream Charter"], "Gelasio", peso, cursiva)
 
 # --- construcción ---------------------------------------------------------------------
 

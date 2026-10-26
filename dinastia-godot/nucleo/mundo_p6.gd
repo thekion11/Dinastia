@@ -90,6 +90,37 @@ func _mover_de_liga(c: Club, desde: Liga, hasta: Liga) -> void:
 	if not hasta.tabla_puntos.has(c.id):
 		hasta.tabla_puntos[c.id] = {"pts": 0, "pj": 0, "gf": 0, "gc": 0, "g": 0, "e": 0, "p": 0}
 
+## LA DIFICULTAD DE LA PARTIDA (claves de la tabla `DIF`: facil/normal/leyenda). La pone
+## `CicloPartida.arrancar_con` y se guarda. `factor_dificultad("prem")` escala los premios de TU club
+## (liga y supercopa: fácil ×1,25, leyenda ×0,80) y `"pide"` lo que piden los jugadores al fichar y
+## renovar (fácil ×0,90, leyenda ×1,20). La caja inicial («plata») ya la escalaba la interfaz.
+var dificultad: String = "normal"
+
+func factor_dificultad(clave: String) -> float:
+	var dif: Variant = Datos.tabla("DIF")
+	if not (dif is Dictionary) or not (dif as Dictionary).has(dificultad):
+		return 1.0
+	return float(((dif as Dictionary)[dificultad] as Dictionary).get(clave, 1.0))
+
+func _premio_para(c: Club, monto: int) -> int:
+	return int(round(float(monto) * factor_dificultad("prem"))) if c == mi_club() else monto
+
+## La cláusula de descenso (`Contratos.aplicar_descenso`), a IA y humano por igual;
+## a TU club se le cuenta en la noticia del descenso o del ascenso.
+func _clausula_descenso(c: Club, baja: bool) -> void:
+	if not baja:
+		var tenia := c.plantilla.any(func(j: Jugador) -> bool: return j.factor_clausula() < 1.0)
+		Contratos.levantar_descenso(c)
+		if tenia and c == mi_club() and prensa != null:
+			prensa.noticia.emit("⬆️ Se levanta la cláusula de descenso",
+				"Con el ascenso, el plantel de %s vuelve a cobrar su sueldo de siempre." % c.nombre)
+		return
+	var piden := Contratos.aplicar_descenso(c, anio)
+	if c == mi_club() and prensa != null:
+		prensa.noticia.emit("⬇️ %s desciende: salta la cláusula" % c.nombre,
+			"Los contratos traen cláusula de descenso: los sueldos del plantel bajan entre un 30 y un 50 %% hasta volver a subir.%s" % (
+				" %d de los que más cobran piden salir." % piden if piden > 0 else ""))
+
 ## Reparte los premios de la liga y mueve a los clubes entre divisiones.
 ##
 ## Se le pasan las tablas ya calculadas en vez de volver a pedirlas: son la misma
@@ -123,7 +154,7 @@ func _cerrar_campeonato() -> Dictionary:
 		## votaron, así que esto no cambia nada salvo cuando de verdad toca.
 		var es_mi_liga := mi_club() != null and l.pais == mi_club().pais and l.division() == 1
 		var campeon: Club = federacion.campeon_de_liga(t, anio, mi_club_id) if es_mi_liga else t[0]["club"]
-		campeon.mover_saldo(PREMIO_LIGA)
+		campeon.mover_saldo(_premio_para(campeon, PREMIO_LIGA))
 		## Ganar la liga sube la reputación del club, y la reputación es la que
 		## mueve la caja, la taquilla y lo que puedes fichar el año siguiente.
 		campeon.rep = clampi(campeon.rep + 1, 40, 96)
@@ -204,8 +235,10 @@ func _cerrar_campeonato() -> Dictionary:
 				resumen["administrativo"] = (resumen.get("administrativo", []) as Array) + castigo
 		for c in bajan:
 			_mover_de_liga(c, primera, segunda)
+			_clausula_descenso(c, true)
 		for c in suben:
 			_mover_de_liga(c, segunda, primera)
+			_clausula_descenso(c, false)
 		resumen["bajan"].append_array(bajan)
 		resumen["suben"].append_array(suben)
 
@@ -259,6 +292,21 @@ func _cerrar_campeonato() -> Dictionary:
 	return resumen
 
 ## Cierra la temporada: cumpleanos, retiros y un campeonato nuevo.
+## EL QUE SIGUE, RETASADO (26-10-2026, `pruebas/ideas/eq_diez_temporadas.gd`). El cumpleaños y el año de
+## contrato que se resta cambian lo que vale, pero `tasar()` solo corría si cambiaba la media: el de 21 que
+## llegaba a su techo conservaba hasta los 30 el factor de edad de 21 (×1,70 en vez de ×1,00), y en diez
+## temporadas un tercio de la IA valía ×1,4 su tasación y el valor medio del mercado subía ×1,56 con la media
+## plana. Se tasa por `Entrenamiento` (que suma el parte médico y el bono de habilidades) si lo hay. El
+## SUELDO no se toca: es el del contrato firmado (`tasar()` lo recalcula, y aquí no se firma nada).
+func _sigue_retasado(siguen: Array[Jugador], j: Jugador) -> void:
+	var sueldo := j.sueldo
+	if entrenamiento != null:
+		entrenamiento._tasar(j)
+	else:
+		j.tasar()
+	j.sueldo = sueldo
+	siguen.append(j)
+
 ## LOS CONTRATOS VENCEN (28-9-2026, informe externo: "sin validación de fin
 ## de contrato"). `anios_contrato` no bajaba nunca: el aviso "sin renovar, se
 ## van gratis" no se cumplía y nadie quedaba libre. Ahora cada temporada le
@@ -319,7 +367,11 @@ func _subir_de_cantera(c: Club) -> void:
 		var edad := Azar.ent(17, 20)
 		## El canterano entra flojo y con techo: media baja, potencial alto. Es
 		## lo que hace que la cantera sea una apuesta y no una fuente de cracks.
-		var ovr := c.rep - 20 + Azar.ent(0, 8)
+		## Con TOPE (26-10, `eq_diez_temporadas`): la base sigue a la reputación hasta 86 y ahí se planta. Sin
+		## tope, el grande que se escapa a 96 subía chicos de 17 con 76-84 y en diez temporadas tenía tres a
+		## cinco 85+ con menos de 22 (ni las mejores academias del mundo promocionan juveniles así). La
+		## tirada es la misma de antes: no cambia ninguna otra del mundo.
+		var ovr := mini(c.rep - 20, 66) + Azar.ent(0, 8)
 		## Pero no todo hueco se tapa con un juvenil (25-10, paquete cant): con
 		## solo chicos de 17-20 el mundo bajaba de 26,9 a 25,6 años de media en
 		## cinco temporadas. Dos de cada cinco son un repuesto hecho, de 22-30.
@@ -331,8 +383,10 @@ func _subir_de_cantera(c: Club) -> void:
 		## suben con más techo. Sin `Azar` extra: es un ajuste fijo.
 		if not Regiones.filosofia(c).is_empty():
 			nuevo.ovr = mini(nuevo.ovr + 4, 90)
-			nuevo.pot = clampi(nuevo.pot + 6, nuevo.ovr, 97)
-			nuevo.tasar()
+			nuevo.pot = Jugador.techo_tope(nuevo.pot + 6, nuevo.ovr)
+		## PRIMER CONTRATO (26-10): el canterano de 19 o menos cobra el 45% hasta su primera renovación.
+		nuevo.primer_contrato = edad <= 19
+		nuevo.tasar()
 		c.plantilla.append(nuevo)
 
 func _nombre_pais_de(pais: String) -> String:
@@ -355,7 +409,7 @@ func jugar_supercopa() -> Dictionary:
 	## Partido único: si acaba en empate, decide la reputación —no hay prórroga
 	## que simular y un título no puede quedar sin dueño.
 	var gana: Club = a if gl > gv else (b if gv > gl else (a if a.rep >= b.rep else b))
-	gana.mover_saldo(PREMIO_SUPERCOPA)
+	gana.mover_saldo(_premio_para(gana, PREMIO_SUPERCOPA))
 	var nombre := "Supercopa de %s" % _nombre_pais_de(gana.pais)
 	if gana == mi_club():
 		if logros != null:

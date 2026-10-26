@@ -43,7 +43,6 @@ func _ready() -> void:
 	OrquestadorEntrada.ruta_prefs = "user://f1o_video_entrada.cfg"
 	OrquestadorMundo.ruta_preferencias = "user://f1o_video_prefs.cfg"
 	## 1) El menú de inicio con «Nuevo juego».
-	Inicio.flujo_nuevo = true
 	var inicio: Control = (load("res://escenas/inicio.tscn") as PackedScene).instantiate()
 	add_child(inicio)
 	await _esperar(4.0)

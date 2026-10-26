@@ -52,11 +52,10 @@ func _ideas_a_balance() -> void:
 	var deuda := int(m.banco.prestamos[0]["deuda"])
 	var activo2 := c.saldo + plantel + obras
 	_comprobar(String(d2.get("Pasivo exigible", "")) == Eco.dinero(deuda) and String(d2.get("PATRIMONIO NETO", "")) == Eco.dinero(activo2 - deuda), "con un crédito el pasivo es la deuda (%s) y el patrimonio es activo menos pasivo (642)" % Eco.dinero(deuda))
-	var mensual := int(proy["resultado"]) / 12
-	var saldo := c.saldo
-	for i in 12:
-		saldo += mensual
-	_comprobar(String(d2.get("Dentro de 12 meses", "")) == Eco.dinero(saldo) and d2.has("Punto más bajo"), "el flujo de caja proyecta doce meses de resultado mensual y marca el punto más bajo (643)")
+	## Sesión 3 (26-10): el flujo sigue el calendario real (taquilla en casa, cierre cada 4 semanas).
+	var saldos := FlujoCaja.saldos_por_mes(c, m, proy)
+	var saldo: int = saldos[saldos.size() - 1]
+	_comprobar(saldos.size() == 13 and String(d2.get("Dentro de 12 meses", "")) == Eco.dinero(saldo) and d2.has("Punto más bajo"), "el flujo de caja proyecta doce meses con el calendario real y marca el punto más bajo (643)")
 	lista.free()
 	lista2.free()
 

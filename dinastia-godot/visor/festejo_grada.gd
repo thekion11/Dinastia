@@ -24,6 +24,14 @@ static func activo() -> bool:
 	return not Calidad.motor_ligero
 
 static func lanzar(raiz: Node3D, c1: Color, c2: Color, motivo := "gol", dura := DURA) -> FestejoGrada:
+	## El banquillo sentado (26-10, `BanquilloVivo`): en la salida cada suplente
+	## toma su reposo (charla, escucha, brazos cruzados…).
+	## Va antes del corte por calidad: son unos pocos esqueletos, no partículas.
+	if raiz != null:
+		## (El gol lo lleva `_banca_gesto` de la vista, para los dos banquillos.)
+		if motivo == "salida":
+			BanquilloVivo.reaccionar(raiz, "reposo", true)
+			BanquilloVivo.reaccionar(raiz, "reposo", false)
 	if raiz == null or not activo():
 		return null
 	var sitios := _sitios_de_grada(raiz)
@@ -51,6 +59,13 @@ static func lanzar(raiz: Node3D, c1: Color, c2: Color, motivo := "gol", dura := 
 			var s: Vector3 = sitios[i]
 			f.add_child(_bengala(s + Vector3(1.5, 0, 0), humo_a if i % 2 == 0 else humo_b, dura))
 	return f
+
+## SENTADOS NERVIOSOS (26-10): 0..1, qué parte de la grada se cruza de brazos o
+## se lleva las manos a la cabeza (un final apretado). Solo la hinchada animada
+## (`hinchada.gdshader` con VAT) lo nota; sin ella no cambia nada.
+static func nervios(raiz: Node, cuanto: float) -> void:
+	for m: ShaderMaterial in OlaGrada.materiales(raiz):
+		m.set_shader_parameter("nervios", clampf(cuanto, 0.0, 1.0))
 
 static func _visible(c: Color) -> Color:
 	return Color(0.95, 0.76, 0.2) if c.get_luminance() < 0.12 else c

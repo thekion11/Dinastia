@@ -83,7 +83,10 @@ func abrir_rueda(gane: bool, empate: bool) -> Dictionary:
 	## el escudo o la camiseta, te preguntan por eso; si se jugó con temporal,
 	## calor o altura, por el tiempo. El sorteo de arriba se hace igual, así
 	## que el consumo de `Azar` no cambia.
-	if cambio_identidad != "":
+	if not pregunta_pendiente.is_empty():
+		entrevista = pregunta_pendiente.duplicate(true)
+		pregunta_pendiente = {}
+	elif cambio_identidad != "":
 		entrevista = _pregunta_identidad(cambio_identidad)
 		cambio_identidad = ""
 	elif Clima.es_extremo(clima_ultimo) and _hash_de(str(_fecha()) + "clima") % 2 == 0:

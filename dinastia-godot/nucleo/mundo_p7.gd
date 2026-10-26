@@ -59,7 +59,7 @@ func nueva_temporada() -> Dictionary:
 				continue   ## se retira
 			if _vence_contrato(j, c):
 				continue   ## se va libre
-			siguen.append(j)
+			_sigue_retasado(siguen, j)
 		c.plantilla = siguen
 		_subir_de_cantera(c)
 		_repartir_dorsales(c)
@@ -437,10 +437,10 @@ func informe_de_gestion() -> Array[Dictionary]:
 	if salida.is_empty():
 		salida.append({"grave": false, "txt": "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.", "tab": ""})
 	return salida
-## LA IA RENUEVA UN AÑO ANTES (25-10; antes solo a cero y por 1-3: 60% del mundo en su último año). Tu club no cambia.
+## LA IA RENUEVA UN AÑO ANTES (25-10; antes 60% del mundo en su último año; 26-10: 0,65/0,30, con 0,8 bajaba al 11%). Tu club no.
 func _vence_contrato(j: Jugador, c: Club) -> bool:
 	var h := absi(hash("%s|%d|anticipada" % [j.id, anio]))
-	if c.id != mi_club_id and j.anios_contrato == 2 and float(h % 1000) / 1000.0 < (0.35 if j.edad >= 32 else 0.8):
+	if c.id != mi_club_id and j.anios_contrato == 2 and float(h % 1000) / 1000.0 < (0.3 if j.edad >= 32 else 0.65):
 		j.anios_contrato = Contratos.ajustar_anios(j, 1 + (h / 1000) % 2 if j.edad >= 32 else 2 + (h / 1000) % 3)
 		return false
 	var antes := j.anios_contrato

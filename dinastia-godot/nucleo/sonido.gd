@@ -1,6 +1,40 @@
 extends "res://nucleo/sonido_p2.gd"
 ## [Capa 7/7 de `sonido.gd`] el autoload: bancos de variantes, hilo de fondo, `toca()` y fichas
 
+## SONIDOS GRABADOS (26-10-2026). Si existe `res://audio/ui/<nombre>.ogg`, ese
+## archivo manda sobre la receta: el dueño aprobó unos clics de Kenney (CC0, ver
+## `audio/ui/LICENCIA_Kenney_CC0.txt`) para la interfaz. El banco es entonces
+## ese stream solo, sin variantes: es una grabación y no se desafina. Lo que no
+## tenga archivo sigue sintetizándose como siempre.
+const CARPETA_GRABADOS := "res://audio/ui/"
+
+## Retoque de volumen de cada grabación, en dB, sobre el volumen de su bus. Son
+## clics que se oyen cientos de veces y van por el bus que ya usaba cada llamada
+## (INTERFAZ, 0.35). Las grabaciones vienen normalizadas casi a 0 dBFS y la
+## síntesis que sustituyen sonaba 9-25 dB más baja: sin este recorte cada clic
+## taparía la música. Medido en `pruebas/ideas/sui_grabados.gd`: así quedan a
+## +0,5/+2 dB de pico de la receta antigua (un pelo más presentes, nunca más).
+const AJUSTE_DB := {"menu_mover": -8.0, "clic_suave": -21.0, "menu_aceptar": -16.0,
+	"clic": -23.0, "menu_atras": -18.0, "menu_seccion": -19.0,
+	## El silbato real de VCSL (CC0, `audio/ui/LICENCIA_VCSL_CC0.txt`), 26-10-2026.
+	"silbato": -6.0, "pitido_final": -6.0, "medio_tiempo": -6.0,
+	## El bombo de la barra con redoblante (VCSL, CC0), 26-10-2026. Ajustes tan
+	## grandes porque la receta era ruido de 50-90 Hz con un pico muy bajo: se
+	## iguala el pico, no se sube la percusión de golpe.
+	"tambor": -19.5, "tambor_visitante": -35.0}
+
+func ruta_grabado(nombre: String) -> String:
+	return CARPETA_GRABADOS + nombre + ".ogg"
+
+## El banco de un nombre: la grabación si la hay; si no, la síntesis.
+func _crear_banco(nombre: String) -> Array:
+	var ruta := ruta_grabado(nombre)
+	if ResourceLoader.exists(ruta):
+		var st := load(ruta) as AudioStream
+		if st != null:
+			return [st]
+	return _sintetizar_banco(nombre)
+
 func _sintetizar_banco(nombre: String) -> Array[AudioStreamWAV]:
 	var b: Array[AudioStreamWAV] = []
 	for v in VARIANTES:
@@ -22,7 +56,7 @@ func _generar_en_fondo() -> void:
 		_mutex.unlock()
 		if ya:
 			continue
-		var b := _sintetizar_banco(nombre)
+		var b := _crear_banco(nombre)
 		_mutex.lock()
 		if not _bancos.has(nombre):
 			_bancos[nombre] = b
@@ -45,7 +79,7 @@ func banco(nombre: String) -> Array:
 		return b
 	if not NOMBRES.has(nombre):
 		return []
-	var nuevo := _sintetizar_banco(nombre)
+	var nuevo := _crear_banco(nombre)
 	_mutex.lock()
 	if not _bancos.has(nombre):
 		_bancos[nombre] = nuevo
@@ -82,7 +116,7 @@ func toca(nombre: String, bus: Bus = Bus.EFECTOS) -> void:
 	## una vez en este proyecto con un feed cosmetico, y solo la caza el banco.
 	## Aqui basta con ir rotando: el oido no distingue una rueda de un sorteo.
 	p.stream = variantes[_siguiente % variantes.size()]
-	p.volume_db = linear_to_db(maxf(0.001, float(volumen[bus])))
+	p.volume_db = linear_to_db(maxf(0.001, float(volumen[bus]))) + float(AJUSTE_DB.get(nombre, 0.0))
 	p.play()
 
 ## Los nombres de los efectos que hay cargados, y una ficha de cada uno.
@@ -99,7 +133,9 @@ func ficha(nombre: String) -> Dictionary:
 	var variantes: Array = banco(nombre)
 	if variantes.is_empty():
 		return {}
-	var w: AudioStreamWAV = variantes[0]
+	var w := variantes[0] as AudioStreamWAV
+	if w == null:
+		return _ficha_grabado(variantes)
 	var pico := 0
 	for i in range(0, w.data.size() - 1, 64):
 		pico = maxi(pico, absi(w.data.decode_s16(i)))
@@ -107,4 +143,25 @@ func ficha(nombre: String) -> Dictionary:
 		"variantes": variantes.size(),
 		"segundos": float(w.data.size() / 2) / float(FRECUENCIA),
 		"pico": pico,
+		"grabado": false,
+	}
+
+## La misma ficha para una grabación: se decodifica entera con `mix_audio` y el
+## pico se da en la escala de 16 bits de la síntesis, para que los umbrales del
+## banco de pruebas valgan igual para las dos.
+func _ficha_grabado(variantes: Array) -> Dictionary:
+	var st: AudioStream = variantes[0]
+	var pb := st.instantiate_playback()
+	pb.start(0.0)
+	var pico := 0.0
+	var vueltas := 0
+	while pb.is_playing() and vueltas < 400:
+		for m: Vector2 in pb.mix_audio(1.0, 1024):
+			pico = maxf(pico, maxf(absf(m.x), absf(m.y)))
+		vueltas += 1
+	return {
+		"variantes": variantes.size(),
+		"segundos": st.get_length(),
+		"pico": int(pico * 32767.0),
+		"grabado": true,
 	}

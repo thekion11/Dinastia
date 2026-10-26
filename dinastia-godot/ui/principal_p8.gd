@@ -87,7 +87,10 @@ func _ver_ficha(j: Jugador) -> void:
 		var etq := PackedStringArray()
 		var vals := PackedFloat32Array()
 		for k: String in j.atributos:
-			etq.append(String(NOMBRES_ATRIBUTOS.get(k, k)).left(4))
+			## Nombre traducido y, si es largo, abreviado con punto («Coloc.»): con
+			## `.left(4)` salían «Colo», «Esti» o «Refl», que no se entendían.
+			var nom_at := Idiomas.t(String(NOMBRES_ATRIBUTOS.get(k, k)))
+			etq.append(nom_at if nom_at.length() <= 7 else nom_at.left(5) + ".")
 			vals.append(float(j.atributos[k]))
 		radar.color_texto = COL_SUAVE
 		radar.poner(etq, vals, COL_VERDE)
@@ -203,6 +206,7 @@ func _ver_ficha(j: Jugador) -> void:
 				_ver_ficha(j),
 			func() -> void: _listar_transferible(j),
 			func() -> void: _rescindir(j, int((mundo.cantera.coste_rescision(j) as Dictionary)["total"])))
+		(self as Principal)._traducir_pantalla(_ficha)
 		return
 	## SEGUIR A UN OBJETIVO. Va aquí arriba, junto a comparar, porque son la
 	## misma clase de gesto: apuntar a alguien para volver a él más tarde.
@@ -332,6 +336,9 @@ func _ver_ficha(j: Jugador) -> void:
 	bio_ajeno.text = FichaJugadorInfo.bio_de(j, mundo)
 	bio_ajeno.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_ficha.add_child(bio_ajeno)
+	## La ficha se rehace entera en cada clic: sin esto, lo que no pasó por
+	## `Idiomas.t` se quedaba en castellano hasta el siguiente repintado general.
+	(self as Principal)._traducir_pantalla(_ficha)
 
 ## A quién enseña la ficha cuando no has elegido a nadie.
 ##

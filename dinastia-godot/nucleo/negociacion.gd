@@ -330,7 +330,7 @@ static func _pide_fichaje(m: Mundo, j: Jugador, rol: String, anios_: int) -> int
 	if m.mercado != null and mio != null:
 		d = float(m.mercado.deseo_de_venir(j, mio).get("p", 0.5))
 	var recargo := 1.0 + clampf((0.5 - d) * 1.5, -0.15, 0.80)
-	return maxi(30, int(round(float(base) * recargo / 10.0)) * 10)
+	return maxi(30, int(round(float(base) * recargo * m.factor_dificultad("pide") / 10.0)) * 10)
 
 ## `rivalEnJuego()` del HTML: cuanto más deseable -proyección, poco
 ## contrato-, más chance de que otro club también ande detrás.

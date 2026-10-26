@@ -7,6 +7,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
+- **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan**; fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
 - **Aprobar la pantalla de entrada** como escena principal (`Inicio.flujo_nuevo`, hoy `true` en código): verla en juego real y decir sí o no (§8).
 - **Empujar `main` reescrito** y **borrar las 8 ramas y `latest`** (§1); cuándo fusionar a `main` la rama actual y la de la sesión 2 (§9).
 - **Foundry/Azure** sí o no; **abrir la red a Wikimedia** (caras y escudos que faltan) (§1).
@@ -37,7 +38,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 
 | Fase | Contenido | Entregable |
 |---|---|---|
-| **0 — Cimientos** | partir `banco.gd` por grupo, pasos 2-3 de 7.1 (la fase 0 ya sacó noticias, sorteos, preferencias, ciclo de partida y tutorial) | juego igual, código más ordenado |
+| **0 — Cimientos** | pasos 2-3 de 7.1 (el banco ya está partido por grupo, 26-10) (la fase 0 ya sacó noticias, sorteos, preferencias, ciclo de partida y tutorial) | juego igual, código más ordenado |
 | **1 — Entrada** | las 7 pantallas están construidas; falta tu aprobación de la entrada (§0) y su recorrido con la cámara real | las fases 0-5 como pantallas completas |
 | **2 — Prólogo 3D** | aparición fuera del estadio, mentor guía, directivos con oficina, sala de prensa nueva, rueda de prensa con gestos, oficina con PC | de «Nuevo juego» hasta tu primer día |
 | **3 — Vida** | casa y familia, jornada y horas extra, días libres, teléfono, citas, eventos de ciudad, transporte público, cárcel | un día completo jugable en 3D |
@@ -81,7 +82,7 @@ ser el mundo en el que vives.
 
 | Etapa | Pieza actual | Qué falta |
 |---|---|---|
-| Globo | pantalla de país hecha (nombre, bandera, 5 monumentos) | verificar que al crear club no se muestran los demás; fotos libres de monumentos cuando se abra Wikimedia |
+| Globo | pantalla de país hecha (nombre, bandera, 5 monumentos) | fotos libres de monumentos cuando se abra Wikimedia |
 | Prólogo + mentor | `RecorridoClub`, `PersonalEstadio`, tutorial de la ciudad | guion del recorrido guiado físicamente |
 | Rueda de prensa | `RuedaPrensaEscena3D` (897) ya es 3D | sala física en el estadio, gestos según lo que diga el jugador |
 | Oficina + PC | `Principal` (el menú central) | objeto 3D que lo abre/cierra, aislarlo en una clase propia |
@@ -122,7 +123,6 @@ cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
 | 4 | Elegir club (mapa, países, escudos) | pasa a ser la **fase 2** del nuevo menú inicial | se rehace de todos modos |
 | 5 | Hubs contextuales y carril de chips | `ui/menu/hubs.gd` | medio |
 | 6 | Estadio, finanzas, identidad, camarín (`_pintar_*`) | `ui/pantallas/*` (ya hay una por tema) | medio |
-| 6b | Rueda de prensa 2D (`_abrir_rueda_pantalla_completa`, `_responder`, `_repintar_posturas` de `principal_p17.gd`) | `ui/pantallas/pantalla_rueda_prensa.gd` | medio: la abren eventos de prensa y pruebas |
 | 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina | `ui/menu_central.gd` | alto: depende de 1-6 |
 
 Meta: `Principal` pasa de 6.867 a < 1.500 líneas y las 157 variables de miembro se reparten
@@ -141,8 +141,6 @@ por clases. Cada paso es un commit pequeño con su banco.
 
 #### 7.3 Pruebas
 - Añadir `prueba_colisiones_club` y las del nuevo flujo a grupos de `mini_banco.sh`.
-- Partir `pruebas/banco.gd` (9.561 líneas) en un archivo por grupo (`partido`, `guardado`,
-  `ciudad`, `estadio`, `gestion`, `competicion`, `textos`).
 - Una prueba de **arranque completo** (intro → idioma → fases 1-5 → prólogo) con atajo de
   desarrollo para saltar etapas, para que el banco no se haga lento.
 
@@ -294,7 +292,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-403 | P1 | PARCIAL | 8 módulos de `nucleo/` sin referencia en pruebas:… | Logros y Negociación cubiertos de forma indirecta (`_probar_logros`, `_probar_negociacion`); los otros 6 no |
 | M-404 | P1 | PENDIENTE | 27 módulos de `visor/` sin referencia: `Ambience`, `Autopista`,… | solo `CameraRig` aparece en el banco |
 | M-379 | P2 | PENDIENTE | 64 funciones > 120 líneas (Q-01): `Sonido._sintetizar` 1.000,… | funciones largas sin partir |
-| M-380 | P2 | PENDIENTE | `pruebas/banco.gd` 8.029 líneas | `banco.gd` con 8.454 líneas |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
 | M-384 | P2 | PENDIENTE | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios |
@@ -1855,32 +1852,21 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 943, 1051, 1055, 1072, 1075, 1076, 1077, 1078, 1079, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1099, 1100
 
 ## 8. Hallazgos de la tanda de pulido (25-10), sin arreglar
-- Cantera: el sueldo del **primer contrato del canterano** no está fijado (no hay campo `primer_contrato` en `Jugador`): al subir cobra como uno más.
-- Cantera/ojeadores: **techos hasta 97** en `academia.gd:368`, `cantera_p1.gd:300` y `:400`, `ojeadores.gd:116`; con la curva nueva (`ProgresoJugador`) revisar si 97 sigue siendo alcanzable y deseable.
-- Mercado: el **valor de los jugadores de la IA ×1,30** infla precios; medir con `pruebas/ideas/eco_medicion.gd` tras la curva nueva y decidir el factor.
-- Contratos: la nómina propia se duplicaba sin fichar (210k→447k/semana en 3 temporadas): volver a medir tras las renovaciones anticipadas de la IA (`mc_contratos`).
+- Balance (medido por `pruebas/ideas/eq_diez_temporadas.gd`, especial `todo`; 10 temporadas × 3 semillas): **el grande sin gestionar se hace rico** (rep 88→96, sueldos 17-27 % de los ingresos, caja 6,6→65-95 M en 10 años; pasa M-208 porque su referencia sube con la rep). El chico sin gestionar pierde ~1-2 M/año también en Primera (resultado previsto −1,1 a −1,7 M): es estructural, no del descenso. s303 GRANDE da «último año 11 %» en t1 (rango 12-38 %).
+- `Mundo.generar(["CHI"], semilla)` da el MISMO mundo en t0 con 101, 202 y 303 (la semilla solo cambia la simulación): ¿buscado?
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
-- Partido: falta la **captura del diálogo de plan de partido** con la cámara real.
 - Carrera: falta la animación de parada del portero en modo jugador.
-- Rueda de prensa 2D: sigue dentro de `Principal` (`ui/principal_p17.gd`, `_abrir_rueda_pantalla_completa`): sacarla a su clase (paso nuevo de 7.1) y pulirla (petición 8 de §9).
+
+- Primera hora (informe onb, 26-10): botones de la cabecera de Principal solo con icono (⚽ 💰 🌍), sin texto ni tooltip; el panel OBJETIVOS tapa la ficha del jugador en la columna derecha; el tutorial no se puede volver a abrir si se cierra; las pestañas abiertas fuera de su bloque (Finanzas, Mercado) muestran el carril de chips del bloque anterior; `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol. Hacer tras unir la sesión 3 (toca `ui/principal_p*`).
 
 ## 9. Sesión 2 (interfaz): rama `ccr-76d707c5-dwse9h-s2`, sin fusionar
 Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `datos/trad_parches/s2_*.json` con `sumar_traducciones.py` y `s2_sobrescrituras.json` con un script con candado (ver el informe).
 
 Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hecha: 67 líneas):
-1. `ui/principal.gd` `_input`: con el móvil u otra capa encima, L1/R1, L2/R2 y Ctrl+Q/E cambian la pestaña de detrás.
-4. `visor/control_fc.gd:232`: usar `Mando.nombre_tecla(ts[0])` (hoy sale «Space»).
-5. `ui/principal_p8.gd`, final de `_ver_ficha()`: `_traducir_pantalla(_ficha)`; el radar corta a 4 letras (`.left(4)`, línea 88).
-8. Rueda de prensa 2D sin pulir (está en `principal_p17.gd`; ver §8).
-9. Identidad (`ui/principal.gd:114-163`): la vista previa del escudo sin iniciales (`_escudo(c, 54)`), la muestra del acento es un rectángulo blanco.
-- Decisiones del dueño cerradas el 26-10: `bio_de()` se queda como está (no tocar); separar «Forma»: SÍ. Falta solo `ui/entrada/config_club_pasos.gd:149` → `Idiomas.t("Forma del escudo")` (zona de la sesión principal; la clave ya está traducida y el resto de usos del escudo ya la llevan).
-10. `ui/componentes/mentor_voz.gd`: el consejo del presidente tapa la tabla 9 s (`DURA`): fundido con el ratón encima o ~6 s.
-11. `ui/pantallas/pantalla_opciones_p1.gd:244`: distingue el error por la longitud (`r.length() > 40`); «ya tienes peñas en todas partes» se toma por ciudad fundada.
-12. Tildes: `principal_p2.gd` «Estrecha (cabe mas)» y `nucleo/prensa_p4_p1.gd:27` «mas corta».
-13. `principal_p13:226`: el registro «Mundo nuevo. Semilla» se escribe antes de cargar el idioma.
+12. Tilde en `nucleo/prensa_p4_p1.gd:27` «mas corta»: la frase es clave de `datos/narracion_traducida*.json`; cambiarla exige renombrar la clave y regenerar (`extraer_narracion.py` + `montar_narracion.py`), y hoy esa regeneración cambia ~8.000 líneas de `narracion*.json` (revisar antes por qué).
 
 Defectos a la vista que dejó anotados:
-- Récords: «RACHAS» a 0 en partidos simulados (`logros.rachas` solo cuenta los dirigidos).
+- «Forma» del escudo en `ui/entrada/config_club_pasos.gd:149`: pasar a la clave `Forma del escudo` (ya traducida); «Forma» queda para la forma física.
 
 ## 10. Huecos y mejoras propuestas
 Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún sitio del plan (o solo como idea suelta en §5-7). Prioridad: **alta** = bloquea el lanzamiento o la primera impresión; **media** = se nota en la primera semana de juego; **baja** = pulido.
@@ -1889,8 +1875,6 @@ Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún si
 |---|---|---|---|
 | **Pruebas de juego reales** (personas que no lo conocen) | alta | el banco mide reglas, no si se entiende ni si divierte; nadie ajeno ha jugado la primera hora | 3-5 jugadores, sesión grabada de 60 min, lista de dónde se pierden |
 | **Onboarding de la primera hora** medido | alta | el tutorial (970 líneas) existe, pero no hay prueba de qué hace un novato en los primeros 10 min | prueba de arranque completo (7.3) + cronometrar «hasta el primer partido» |
-| **Balance de dificultad** con cifras objetivo | alta | §8 muestra que el mundo deriva (cantera, valores, nóminas); falta una tabla de «sano» por temporada | `eco_medicion` con rangos fijos (edad media, valor medio, % último año, caja) en 10 temporadas × 3 semillas |
-| **Registro de fallos** del jugador (log local + exportar) | alta | en hardware ajeno nadie verá la consola; sin datos no se arregla | escribir `user://registro.txt` rotativo con errores y botón «copiar informe» (sin datos personales, ver 1097) |
 | **Rendimiento en móvil** (memoria, batería, calentamiento) | alta | solo hay medidas en software; 1,34 M triángulos y caras sin comprimir pesan más en móvil | perfil de calidad «móvil» y presupuesto de memoria por escena; medirlo el dueño (§1) |
 | **Builds y tienda** (Steam/itch/Play): iconos, capturas, tráiler, texto, clasificación | alta | sin esto no hay lanzamiento; hoy solo «🔒 dueño» | lista de requisitos de cada tienda y quién hace cada pieza |
 | **Sonido y música**: mezcla final, volumen por canal, música 🔒 | media | 214 recetas de efectos, pero sin pasada de mezcla ni música final | pasada de volúmenes por escena; qué falta si la música no llega |
@@ -1898,7 +1882,28 @@ Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún si
 | **Accesibilidad (lo que falta del nivel básico)**: lector de pantalla mínimo; reasignar las teclas del menú lateral y del móvil; repasar con contraste alto las pantallas en 3D (estadio, ciudad) y las capas a pantalla completa | media | hecho en la sesión 3: reasignar aceptar/volver/pestañas, contraste alto (paleta + `Tema`), zonas y plantel sin depender del color | probar el juego entero con contraste alto y solo teclado |
 | **Guardado en la nube** / entre dispositivos | media | ideas 234, 934, 945 y 1048 sin plan; los jugadores de gestión llevan partidas de meses | empezar por exportar/importar la partida a un archivo; la nube depende de la tienda |
 | **Ayuda contextual y glosario** (qué es cada cifra) | media | un juego de gestión tiene cientos de cifras; hoy hay ayudas sueltas | botón «?» por pantalla con 3 líneas y enlace al glosario |
-| **Rendimiento de la simulación** (semana avanzada en ms, 30 temporadas) | media | la partida larga es el corazón del género; ningún dato de cuánto tarda avanzar una semana en el año 20 | medir `avanzar_semana` en las temporadas 1, 10 y 20 |
 | **Notas de versión y canal de errores dentro del juego** | baja | ideas 1091-1092; necesario tras lanzar | pantalla «Novedades» leída de un JSON |
 | **Logros / objetivos a largo plazo** visibles | baja | rejugabilidad; hay récords y legado, pero sin lista de logros | lista de 30 logros con su prueba |
 
+
+## 11. Propuestas de lanzamiento (investigación s4, aprobadas 26-10)
+Filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`, aprobadas por el dueño el 26-10. Esfuerzo: **S** < 1 día, **M** 1-5 días, **L** > 1 semana. Lo que ya estaba en otra sección se remite allí y no se duplica.
+
+| # | Qué | Prioridad | Esfuerzo | Archivo o sistema | Estado |
+|---|---|---|---|---|---|
+| 1 | **Presupuesto de clics**: medir las 10 tareas más frecuentes (once, fichar, renovar, entrenar, avanzar semana, táctica, prensa…) con tope ≤ 2 clics o 1 atajo, en el PC de la oficina y el menú central | alta | M | `ui/principal*.gd`, `ui/componentes/menu_lateral.gd`; prueba nueva en `pruebas/` | pendiente (completa §10 «Onboarding medido») |
+| 2 | **Atajos de teclado** en todo el menú central, editables, y vista «densa» de tablas | alta | M | `ui/principal_p2.gd`, `nucleo/mando.gd`, `ui/componentes/panel_controles*.gd` | pendiente |
+| 3 | **Fuentes propias** con cobertura completa (Inter, Noto Emoji, Noto Sans Symbols 2, Barlow Condensed, Bebas Neue; ~4,3 MB, OFL, fuera de LFS) | alta | S | `ui/tema.gd`, `ui/principal_p2.gd` (`TIPOGRAFIAS`, `REPUESTO_SIMBOLOS`), `ui/principal_p4.gd` (`_fuente_de`) | en curso (otro agente) |
+| 4 | **Explicar el porqué**: 3 causas tras cada partido; en finanzas, cada ingreso y gasto con su origen | alta | M | `nucleo/partido_p1.gd`, `ui/componentes/resumen_partido.gd`, `nucleo/finanzas.gd`, `ui/componentes/panel_finanzas*.gd` | pendiente (el flujo de caja ya está en §9) |
+| 5 | **Vida privada regulable**: Ajustes «Vida: completa / ligera / apagada» | alta | S | `nucleo/necesidades.gd`, `ui/pantallas/pantalla_ajustes_vida.gd` | en curso (hecho el 26-10, falta revisarlo jugando) |
+| 6 | **Hinchada y banquillo animados**: Mesh2Motion (CC0) + plugin VAT (MIT) | alta | M | `herramientas/hornear_publico.gd`, `visor/stadium_builder_p5.gd`/`p6.gd`, `visor/hinchada.gdshader`, `visor/festejo_grada.gd`, `visor/personaje_dt*.gd` | pendiente (parte en §3 semana 4 «espectáculo») |
+| 7 | **Quitar los 🟡 de licencias**: MPFB2 → `persona_realista.glb`; KayKit City Builder → `complejo_residencial.glb`, `farola.obj`, `estadio.obj`; CMU → tiros y protestas | alta | M-L | `visor/persona_realista.gd`, `visor/city_builder*.gd`, `visor/anim_futbol*.gd`, `visor/retarget_futbol_q.gd`, `docs/05_referencia/LICENCIAS.md` | pendiente (completa §1 «confirmar 🟡») |
+| 8 | **CI con Godot 4.7.2** (`barichello/godot-ci:4.7.2-stable` o `chickensoft-games/setup-godot`) que corra `banco.sh` | alta | S | `.github/workflows/compilar.yml`, `dinastia-godot/herramientas/banco.sh` | en curso (otro agente; es la misma tarea de §1) |
+| 9 | **Silbato real y percusión** de VCSL (CC0): `audio/ui/silbato.ogg` y capas del bombo | alta | S | `nucleo/sonido.gd` (`AJUSTE_DB`) | en curso (otro agente) |
+| 10 | **Registro de errores visible** + «copiar informe» | alta | S | `nucleo/registro.gd`, `ui/pantallas/pantalla_ajustes_registro.gd` | hecho (26-10): `user://registro.txt` y Ajustes → Partida → «Informe de fallos»; queda el aviso de guardado corrupto en `nucleo/partida_archivo.gd` |
+| 11 | **Pruebas con 3-5 jugadores ajenos** en la primera hora | alta | S (del dueño) | — | ya en §10 «Pruebas de juego reales»: no se duplica |
+| 12 | **Monetización** | alta | — | — | por ahora sin pago (decisión del dueño, 26-10) |
+| 13 | **Imprevistos con contexto**: 42 eventos con condiciones y efectos que duran | alta | M | `nucleo/imprevistos.gd`, llamada en `nucleo/mundo_p5_p2.gd` (`_semana_imprevisto`) | en curso (hecho el 26-10, falta revisarlo jugando) |
+| 14 | **Ocasiones jugables en el partido del DT**: en las 3-6 llegadas claras, pausa y eliges pase, conducción o tiro con la cámara a pie de campo | alta | L | `nucleo/partido*.gd`, `nucleo/motor_libre.gd` (`tomar_control`), `ui/partido_vivo*.gd`, `visor/control_partido.gd` | pendiente |
+
+Exportar e importar la partida (fila 30 de la propuesta, §10 «Guardado en la nube») ya está hecho: Ajustes → Partida (`ui/pantallas/pantalla_ajustes_p1.gd`, `_exportar_partida` y `_importar_partida`). Queda la nube.

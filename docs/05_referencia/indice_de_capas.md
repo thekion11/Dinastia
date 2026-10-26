@@ -154,35 +154,54 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 3. `vestuario_p3.gd` — 432 líneas — resolver_solicitud, _aptitud, _satisfaccion, _slots_del_once, satisfaccion, motivo_satisfaccion … (+19)
 4. `vestuario.gd` — 273 líneas — semana, nueva_temporada, resumen, charla, _tiene, tono_de_texto … (+10)
 
-## `pruebas/banco.gd` · 27 capas
+## `pruebas/banco/ciudad.gd` · 2 capas
 
-1. `banco_p1.gd` — 430 líneas — _linea, _titulo, _parte_de, _cerrar, _ready, _comprobar … (+3)
-2. `banco_p2.gd` — 336 líneas — _probar_cubierta_nombres, _probar_base_ficticia, _probar_reales, _probar_calendario
-3. `banco_p3.gd` — 389 líneas — _probar_partidos, _probar_previa, _probar_arbitros, _probar_pie_habil
-4. `banco_p4.gd` — 417 líneas — _probar_banquillo, _dinero, _probar_finanzas, _probar_mercado, _probar_puente3d, _probar_notas … (+1)
-5. `banco_p5.gd` — 385 líneas — _probar_banco, _probar_staff, _probar_roles_y_federacion
-6. `banco_p6.gd` — 308 líneas — _probar_obras, _probar_pantalla_y_vallas, _probar_estadio, _probar_continental
-7. `banco_p7.gd` — 368 líneas — _probar_tactica_en_movimiento, _probar_copa, _probar_selecciones
-8. `banco_p8.gd` — 407 líneas — _probar_pulso_de_roles, _probar_cantera, _probar_logros, _dinero_prueba, _probar_cesiones, _probar_desafios
-9. `banco_p9.gd` — 317 líneas — _probar_fundar_club, _probar_ascensos, _probar_vender, _probar_ojeadores
-10. `banco_p10.gd` — 409 líneas — _probar_negociacion, _probar_consejeros, _probar_bilbao_solo_local, _motor_de_prueba, _probar_dificultad_cpu, _probar_ola_grada
-11. `banco_p11.gd` — 296 líneas — _probar_vallas_led, _probar_faltas_puntos, _probar_fisica_motor, _probar_guardado_seguro, _comprobar_estado_cargado
-12. `banco_p12_p1.gd` — 381 líneas — _probar_guardado_1
-13. `banco_p12.gd` — 201 líneas — _probar_guardado_2, _probar_guardado
-14. `banco_p13.gd` — 430 líneas — _probar_temporadas, _probar_economia, _probar_sala_de_prensa, _probar_auspicio, _media_techo_camada, _probar_eras_y_precios … (+2)
-15. `banco_p14.gd` — 298 líneas — _probar_carrera_por_dentro, _probar_editor, _probar_ciudad
-16. `banco_p15.gd` — 421 líneas — _probar_ideas_del_documento, _probar_marca, _probar_carga_de_ui, _probar_narracion_traducida, _frases_de_idiomas_t, _probar_paridad_idiomas … (+1)
-17. `banco_p16.gd` — 393 líneas — _probar_documental, _probar_dinastias, _probar_minijuegos, _probar_rotulo_y_sala, _probar_ciudad_grande, _probar_ciudad_animo … (+3)
-18. `banco_p17.gd` — 416 líneas — _probar_aspecto_y_audio, _probar_tutorial, _probar_moneda, _probar_academia, _probar_modos_simulacion
-19. `banco_p18.gd` — 435 líneas — _probar_presets_exportacion, _probar_tema_y_ortografia, _probar_eventos_nuevos, _probar_entrevistas, _probar_estadio_b6, _probar_ciudad_b7 … (+3)
-20. `banco_p19.gd` — 149 líneas — _probar_instituciones_c5_c8, _probar_charlas_c6_c7, _probar_licencia_c7
-21. `banco_p20_p1.gd` — 391 líneas — _probar_tanda_c_1
-22. `banco_p20.gd` — 128 líneas — _probar_tanda_c_2, _probar_tanda_c
-23. `banco_p21.gd` — 432 líneas — _probar_calendario_c13, _probar_capitan_votado, _probar_piel_por_pais, _probar_modulos, _probar_faros_coches, _probar_marcas_y_escudos … (+6)
-24. `banco_p22.gd` — 380 líneas — _probar_contratos_c9, _probar_vida_dt, _probar_maestrias, _probar_habilidades_en_resultados, _probar_motor_libre, _probar_portafolio_futbol … (+1)
-25. `banco_p23.gd` — 433 líneas — _probar_disenos_kit, _jug_ley, _probar_leyes_pais, _probar_incumplir_ley, _probar_b6_formas_led, _probar_region_reales … (+5)
-26. `banco_p24.gd` — 342 líneas — _probar_galeria_club, _probar_reforma_con_obra, _probar_optimizacion, _probar_arreglos_partido_motor, _probar_tanda_top25b
-27. `banco.gd` — 355 líneas — _probar_transmision_y_estadisticas, _probar_prorroga_y_penales, _probar_informe_rival, _probar_porque_moral, _probar_partido_abandonado, _probar_no_atravesar_paredes
+1. `ciudad_p1.gd` — 380 líneas — _probar_ciudad, _probar_minijuegos, _probar_ciudad_grande, _probar_ciudad_animo, _probar_ciudad_b7, _probar_modulos … (+1)
+2. `ciudad.gd` — 93 líneas — _probar_optimizacion, _probar_no_atravesar_paredes
+
+## `pruebas/banco/estadio.gd` · 2 capas
+
+1. `estadio_p1.gd` — 416 líneas — _probar_pantalla_y_vallas, _probar_estadio, _probar_ola_grada, _probar_vallas_led, _probar_guinos_estadio, _probar_estadio_b6 … (+4)
+2. `estadio.gd` — 126 líneas — _probar_interiores_club, _probar_galeria_club, _probar_reforma_con_obra
+
+## `pruebas/banco/gestion.gd` · 3 capas
+
+1. `gestion_p1.gd` — 416 líneas — _probar_finanzas, _probar_mercado, _probar_directiva, _probar_staff, _probar_obras, _probar_cantera … (+1)
+2. `gestion_p2.gd` — 312 líneas — _probar_cesiones, _probar_vender, _probar_ojeadores
+3. `gestion.gd` — 367 líneas — _probar_negociacion, _probar_economia, _probar_capitan_votado, _probar_piel_por_pais, _probar_contratos_c9, _jug_ley … (+2)
+
+## `pruebas/banco/guardado.gd` · 3 capas
+
+1. `guardado_p1.gd` — 169 líneas — _probar_repetibilidad, _probar_guardado_seguro, _comprobar_estado_cargado
+2. `guardado_p2.gd` — 382 líneas — _probar_guardado_1
+3. `guardado.gd` — 202 líneas — _probar_guardado_2, _probar_guardado
+
+## `pruebas/banco/ideas.gd` · 2 capas
+
+1. `ideas_p1.gd` — 421 líneas — _probar_ideas_del_documento, _probar_ideas_instalaciones_y_marca, _probar_ideas_personas_y_negocios, _probar_ideas_eventos_de_despacho, _probar_ideas_premios_y_memoria_del_club, _probar_ideas_roles_y_carrera … (+1)
+2. `ideas.gd` — 312 líneas — _probar_ideas_simulacion_del_partido, _probar_ideas_club_y_calendario_de_pretemporada, _probar_ideas_dinero_ciudad_y_lesiones, _probar_ideas_tribunal_antidopaje_y_asamblea, _probar_ideas_medicina_y_vestuario, _probar_ideas_entrenamiento_prensa_y_dueno … (+8)
+
+## `pruebas/banco/partido.gd` · 6 capas
+
+1. `partido_p1.gd` — 430 líneas — _probar_partidos, _probar_previa, _probar_arbitros, _probar_puente3d, _probar_notas
+2. `partido_p2.gd` — 383 líneas — _probar_tactica_en_movimiento, _motor_de_prueba, _probar_dificultad_cpu, _probar_faltas_puntos
+3. `partido_p3.gd` — 53 líneas — _probar_fisica_motor
+4. `partido_p4.gd` — 392 líneas — _probar_tanda_c_1
+5. `partido_p5.gd` — 411 líneas — _probar_tanda_c_2, _probar_tanda_c, _probar_arreglos_partido_motor, _probar_transmision_y_estadisticas
+6. `partido.gd` — 88 líneas — _probar_prorroga_y_penales, _probar_partido_abandonado
+
+## `pruebas/banco/varios.gd` · 10 capas
+
+1. `varios_p1.gd` — 399 líneas — _probar_datos, _probar_mundo, _probar_cubierta_nombres, _probar_base_ficticia, _probar_reales
+2. `varios_p2.gd` — 347 líneas — _probar_pie_habil, _probar_banquillo, _probar_banco
+3. `varios_p3.gd` — 419 líneas — _probar_roles_y_federacion, _probar_pulso_de_roles, _probar_logros, _probar_desafios
+4. `varios_p4.gd` — 416 líneas — _probar_fundar_club, _probar_consejeros, _probar_bilbao_solo_local, _probar_sala_de_prensa, _probar_auspicio, _media_techo_camada … (+1)
+5. `varios_p5.gd` — 418 líneas — _probar_analitica_y_academias, _probar_habilidades, _probar_carrera_por_dentro, _probar_editor, _probar_marca, _probar_tribuna_real … (+1)
+6. `varios_p6.gd` — 392 líneas — _probar_dinastias, _probar_rotulo_y_sala, _probar_mesa_agente, _probar_plantillas_fijas, _probar_aspecto_y_audio, _probar_tutorial … (+1)
+7. `varios_p7.gd` — 415 líneas — _probar_academia, _probar_modos_simulacion, _probar_presets_exportacion, _probar_eventos_nuevos, _probar_entrevistas, _probar_coherencia_c1
+8. `varios_p8.gd` — 406 líneas — _probar_portadas_c20, _probar_cantera_c3, _probar_instituciones_c5_c8, _probar_charlas_c6_c7, _probar_licencia_c7, _probar_calendario_c13 … (+2)
+9. `varios_p9.gd` — 402 líneas — _probar_politica_c15, _probar_historia_c4, _probar_vida_dt, _probar_maestrias, _probar_habilidades_en_resultados, _probar_motor_libre … (+1)
+10. `varios.gd` — 310 líneas — _probar_jugadores_fijos, _probar_disenos_kit, _probar_region_reales, _probar_sancion_dt, _probar_tanda_top25b, _probar_informe_rival … (+1)
 
 ## `pruebas/video_promo.gd` · 2 capas
 
@@ -584,4 +603,3 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 1. `vestidor_q_p1.gd` — 419 líneas — _botin_de, _cargar_male, _textura_recoloreada, _mallas, vestir, _material_liso … (+5)
 2. `vestidor_q_p2.gd` — 288 líneas — vestir_equipacion, exposicion_piel, compensar_piel, _afin_foto, _ocultar_cejas_y_barba, _teñir_pelo … (+4)
 3. `vestidor_q.gd` — 183 líneas — poner_cara
-

@@ -76,6 +76,13 @@ func _dato(etiqueta: String, valor: String, color: Color, padre: Node = null) ->
 	## desplazamiento de la columna tapaba el final de la cifra.
 	b.add_theme_stylebox_override("normal", AIRE_CIFRA)
 	h.add_child(b)
+	## Hueco a la derecha del ancho de la barra de desplazamiento: las columnas
+	## van dentro de un ScrollContainer y su barra vertical tapaba el final del
+	## valor («Rol actual» en Legado, cifras de finanzas).
+	var hueco := Control.new()
+	hueco.custom_minimum_size = Vector2(14, 0)
+	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	h.add_child(hueco)
 	(padre if padre != null else _ficha).add_child(h)
 
 static var AIRE_CIFRA := _aire_cifra()

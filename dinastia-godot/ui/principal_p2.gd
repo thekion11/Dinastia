@@ -133,14 +133,9 @@ var _secc_club: String = "directorio"
 ## porque hasta que no firmes en algún sitio no hay club que gestionar.
 var _aviso_abierto: int = 0
 ## La cinemática de pantalla completa de la rueda de prensa, o null si no hay
-## ninguna abierta. Ver `_abrir_rueda_pantalla_completa()`.
+## ninguna abierta: un `ui/principal/rueda_prensa.gd` (fase 0, paso 6b).
+const _PrincipalRuedaPrensa := preload("res://ui/principal/rueda_prensa.gd")
 var _rueda_pop: Control = null
-## Lo que la repregunta cambia sin rehacer el plató (B5).
-var _rueda_quien: Label
-var _rueda_pregunta: Label
-var _rueda_opciones: VBoxContainer
-var _rueda_reloj: ProgressBar
-var _rueda_desde := 0
 
 ## LA DECISIÓN, CONTADA COMO UN ACONTECIMIENTO (25-9-2026, plan maestro B4).
 ## A la izquierda, la cara de quien está en el lío -o el icono grande del tema
@@ -316,30 +311,30 @@ const ZOOM_TV := 1.35
 
 ## LA TIPOGRAFIA. Siete, y la primera es la de siempre.
 ##
-## Se resuelven con `SystemFont`, que pide fuentes al sistema operativo por
-## nombre y va probando la lista hasta que una existe. Por eso cada entrada
-## lleva varios nombres: «Segoe UI» es de Windows, «Helvetica Neue» de macOS y
-## «DejaVu Sans» de Linux, y la ultima de cada lista es el nombre generico, que
-## el sistema siempre sabe resolver por algo.
+## Cada entrada es una lista de nombres que resuelve `Fuentes.para()`
+## (`ui/fuentes.gd`): si el primero es una fuente PROPIA del juego
+## (`assets/fuentes/`, OFL) se usa el archivo y el resto queda de repuesto del
+## sistema; si no, se piden al sistema por nombre como antes («Segoe UI» de
+## Windows, «Helvetica Neue» de macOS, el genérico al final).
 ##
-## LA TRAMPA DE LOS EMOJI. La interfaz esta llena de simbolos -⚙, ⚽, 🎨- que la
-## fuente de fabrica de Godot trae dentro. Una fuente del sistema puede no
-## traerlos, asi que a todas se les cuelga «Segoe UI Emoji» y compania como
-## repuesto; y por si aun asi fallara, «Del juego» -la de siempre- se queda como
-## primera opcion y por defecto.
+## LOS EMOJI (26-10-2026): antes se colgaban «Segoe UI Emoji» y compañía, que
+## no existen en Android ni en Web. Ahora toda tipografía, «Del juego» incluida,
+## lleva la cadena de `Fuentes.repuesto()`: emojis en color del sistema si los
+## hay y, si no, Noto Emoji + Noto Sans Symbols 2 propias.
 const TIPOGRAFIAS := {
 	"juego":     ["Del juego (por defecto)", []],
 	"sistema":   ["Del sistema", ["Segoe UI", "Helvetica Neue", "Cantarell", "sans-serif"]],
 	"diario":    ["De diario (serif)", ["Georgia", "Times New Roman", "Liberation Serif", "serif"]],
-	"estrecha":  ["Estrecha (cabe más)", ["Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
+	"estrecha":  ["Estrecha (cabe más)", ["Barlow Condensed", "Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
 	"redonda":   ["Redonda y grande", ["Verdana", "Tahoma", "DejaVu Sans", "sans-serif"]],
 	"informe":   ["De informe (mono)", ["Consolas", "Menlo", "DejaVu Sans Mono", "monospace"]],
-	"titular":   ["De titular", ["Impact", "Haettenschweiler", "DejaVu Sans Bold", "sans-serif"]],
+	"titular":   ["De titular", ["Bebas Neue", "Impact", "Haettenschweiler", "DejaVu Sans Bold", "sans-serif"]],
 }
 
-## Los nombres de repuesto para los simbolos. Se anaden al final de cualquier
-## lista: si la fuente elegida no tiene el engranaje, lo saca de aqui.
-const REPUESTO_SIMBOLOS := ["Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji"]
+## Los nombres de repuesto para los simbolos: los emojis en color del sistema.
+## Se conserva por compatibilidad; la cadena completa (con las propias) es
+## `Fuentes.repuesto()`.
+const REPUESTO_SIMBOLOS := Fuentes.EMOJI_SISTEMA
 
 var _tipografia: String = "juego"
 static var _fuentes: Dictionary = {}
@@ -366,7 +361,12 @@ const SEPARACION_COMPACTA := 1
 ##
 ## Funciona porque toda la interfaz pasa por `_texto()`: un multiplicador ahí
 ## llega a las mil y pico etiquetas del juego sin tocar una sola pantalla.
-var _escala_texto: float = 1.0
+## El setter lo vuelca en `Tema.escala_texto`: así llega también a lo que se
+## pinta con `Tema.etiqueta`/`Tema.rotulo` (móvil, avisos, pantallas nuevas).
+var _escala_texto: float = 1.0:
+	set(v):
+		_escala_texto = v
+		Tema.escala_texto = v
 const ESCALAS_TEXTO := [0.85, 1.0, 1.15, 1.30]
 
 ## Paleta para daltonismo. El verde y el rojo del juego son EXACTAMENTE el par
@@ -376,7 +376,11 @@ const ESCALAS_TEXTO := [0.85, 1.0, 1.15, 1.30]
 ##
 ## Se remapea dentro de `_texto()` en vez de en las mil llamadas: los colores son
 ## constantes y el sitio por donde pasan todas es uno solo.
-var _daltonico: bool = false
+## Igual que la escala: se vuelca en `Tema.daltonico` para `Tema.accesible()`.
+var _daltonico: bool = false:
+	set(v):
+		_daltonico = v
+		Tema.daltonico = v
 const COL_VERDE_DALT := Color("56b4e9")
 const COL_ROJO_DALT := Color("d55e00")
 const COL_ORO_DALT := Color("e69f00")

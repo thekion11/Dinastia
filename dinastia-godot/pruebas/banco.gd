@@ -1,355 +1,397 @@
-extends "res://pruebas/banco_p27.gd"
-## [Capa 27/27 de `banco.gd`] _probar_transmision_y_estadisticas, _probar_prorroga_y_penales, _probar_informe_rival, _probar_porque_moral, _probar_partido_abandonado, _probar_no_atravesar_paredes
+extends "res://pruebas/banco/nucleo.gd"
 
-func _probar_transmision_y_estadisticas() -> void:
-	_titulo("PARTIDO 3D: CÁMARA DE TRANSMISIÓN INTELIGENTE Y ESTADÍSTICAS")
-	var dt := 1.0 / 60.0
-	## 1) En TODOS los estadios y alturas: dentro del cuenco, sin tirones.
-	var fuera: Array = []
-	var tirones: Array = []
-	var techo: Array = []
-	for forma: String in ["ingles", "rect", "herradura", "caldera", "oval", "dos", "principal", "cuenco"]:
-		var g := StadiumBuilder.geom_de_forma(forma)
-		for n in [1, 2, 3, 5]:
-			var alto := StadiumBuilder.ALTURA_PIE + float(n) * StadiumBuilder.subida_bandeja() + float(n - 1) * StadiumBuilder.FRENTE_BANDEJA
-			var rig := CameraRig.new()
-			add_child(rig)
-			rig.set_process(false)
-			rig.build_for(float(g["dx"]), float(g["dz"]), alto)
-			var cam: Camera3D = rig.cameras[0]
-			var antes := Vector3.INF
-			var fov_antes := -1.0
-			var max_v := 0.0
-			var max_fov := 0.0
-			for i in 1500:
-				var tt := float(i) * dt
-				## Un balón que va y viene de área a área, con un salto a mitad
-				## (saque de centro tras un gol) y una ocasión.
-				var b := Vector3(sin(tt * 0.7) * 30.0, 0.1, sin(tt * 0.45) * 50.0)
-				if i >= 700 and i < 760:
-					b = Vector3(0, 0.1, 0)
-				rig.pista_estado = "juego"
-				rig.pista_ataca = 1.0 if cos(tt * 0.45) >= 0.0 else -1.0
-				if i == 1000:
-					rig.pista_ocasion = 1.4
-				rig._transmision(cam, b, dt)
-				var p := cam.global_position
-				if p.x > float(g["dx"]) - 6.9 or absf(p.z) > CameraRig.CARRO_Z_MAX + 0.01 or p.y > 24.01 or p.y < 8.99:
-					fuera.append("%s/%d" % [forma, n])
-					break
-				var losa := alto + 0.4
-				if p.y > losa - 1.15 and p.y < losa + 1.6:
-					techo.append("%s/%d y=%.1f" % [forma, n, p.y])
-					break
-				if antes != Vector3.INF:
-					max_v = maxf(max_v, p.distance_to(antes) / dt)
-					max_fov = maxf(max_fov, absf(cam.fov - fov_antes) / dt)
-				antes = p
-				fov_antes = cam.fov
-			if max_v > CameraRig.CARRO_VMAX * 1.25 or max_fov > CameraRig.ZOOM_VMAX * 1.1:
-				tirones.append("%s/%d v=%.1f fov=%.1f" % [forma, n, max_v, max_fov])
-			rig.free()
-	_comprobar(fuera.is_empty(), "la transmisión no sale de su raíl en ningún estadio (x fija en el cuenco, |z| ≤ 38) %s" % str(fuera))
-	_comprobar(techo.is_empty(), "la cámara nunca queda a la altura de la losa del techo %s" % str(techo))
-	_comprobar(tirones.is_empty(), "sin tirones: el carro ≤ %.0f m/s y el zoom ≤ %.0f°/s, también tras un salto del balón %s" % [CameraRig.CARRO_VMAX * 1.25, CameraRig.ZOOM_VMAX * 1.1, str(tirones)])
-	## 2) Lo que lee de la jugada.
-	var rig2 := CameraRig.new()
-	add_child(rig2)
-	rig2.set_process(false)
-	rig2.build_for(49.0, 68.0, 13.0)
-	var c2: Camera3D = rig2.cameras[0]
-	rig2.pista_estado = "juego"
-	rig2.pista_ataca = 1.0
-	for i in 60:
-		rig2._transmision(c2, Vector3(0, 0.1, -5.0), dt)
-	var fov_medio := c2.fov
-	_comprobar(rig2.trans_plano == "normal" and absf(fov_medio - CameraRig.FOV_TRANSMISION) < 1.0, "en el medio del campo, plano normal (%s, %.1f°)" % [rig2.trans_plano, fov_medio])
-	for i in 240:
-		rig2._transmision(c2, Vector3(5.0, 0.1, 40.0), dt)
-	_comprobar(rig2.trans_plano == "area" and c2.fov < CameraRig.FOV_TRANSMISION - 4.0, "con la jugada en el área el plano se cierra (%s, %.1f°)" % [rig2.trans_plano, c2.fov])
-	rig2.pista_ocasion = 1.4
-	rig2._transmision(c2, Vector3(5.0, 0.1, 40.0), dt)
-	_comprobar(rig2.trans_plano == "ocasion", "un tiro en el aire es «ocasión» (%s)" % rig2.trans_plano)
-	## El foco no tiembla con el balón que se mueve dentro de la zona muerta.
-	var r_antes := CameraRig.new()
-	add_child(r_antes)
-	r_antes.set_process(false)
-	r_antes.build_for(49.0, 68.0, 13.0)
-	var c3: Camera3D = r_antes.cameras[0]
-	r_antes.pista_estado = "juego"
-	r_antes.pista_ataca = 1.0
-	for i in 200:
-		r_antes._transmision(c3, Vector3(0, 0.1, 0), dt)
-	var f0 := r_antes._trans_foco
-	var mov := 0.0
-	for i in 240:
-		r_antes._transmision(c3, Vector3(sin(i * 0.3) * 0.8, 0.1, cos(i * 0.21) * 1.2), dt)
-		mov = maxf(mov, r_antes._trans_foco.distance_to(f0))
-	_comprobar(mov < 0.6, "zona muerta: el balón que se mueve 1 m no mueve el plano (%.2f m)" % mov)
-	## Contraataque: el balón cruza el campo rápido hacia la portería rival.
-	var r4 := CameraRig.new()
-	add_child(r4)
-	r4.set_process(false)
-	r4.build_for(49.0, 68.0, 13.0)
-	var c4: Camera3D = r4.cameras[0]
-	r4.pista_estado = "juego"
-	r4.pista_ataca = 1.0
-	for i in 30:
-		r4._transmision(c4, Vector3(0, 0.1, -40.0), dt)
-	var abierto := false
-	var fov_max := 0.0
-	var adelanta := false
-	for i in 150:
-		var bz := -40.0 + 12.0 * float(i) * dt
-		r4._transmision(c4, Vector3(0, 0.1, bz), dt)
-		abierto = abierto or r4.trans_plano == "abierto"
-		fov_max = maxf(fov_max, c4.fov)
-		if i == 120:
-			adelanta = r4._trans_foco.z > bz
-	_comprobar(abierto and fov_max > CameraRig.FOV_TRANSMISION + 2.5, "en el contraataque el plano se abre (%.1f°)" % fov_max)
-	_comprobar(adelanta, "el plano se adelanta hacia donde va el balón")
-	_comprobar(CameraRig.lectura_jugada(Vector3(0, 0, 40), Vector3.ZERO, 1.0, false, "puerta", "saque").x == 0.0, "en un saque de puerta no se cierra el plano")
-	_comprobar(CameraRig.lectura_jugada(Vector3(30, 0, 52), Vector3.ZERO, 1.0, false, "corner", "saque").x == 1.0, "en un córner se cierra el plano")
-	var z0 := CameraRig.amortiguar(0.0, 10.0, 0.0, 0.5, 100.0, 1.0)
-	_comprobar(z0.x <= 10.0 and z0.x > 5.0, "el amortiguador no se pasa del objetivo con un fotograma largo (%.2f)" % z0.x)
-	rig2.free()
-	r_antes.free()
-	r4.free()
-	## 3) Las estadísticas.
-	var penal := EstadisticasVivo.xg_de(Vector2(0, 41.5), true)
-	var cerca := EstadisticasVivo.xg_de(Vector2(0, 46.5), true)
-	var lejos := EstadisticasVivo.xg_de(Vector2(0, 27.5), true)
-	var esquina := EstadisticasVivo.xg_de(Vector2(25, 50.0), true)
-	_comprobar(cerca > penal and penal > lejos and lejos < 0.06 and cerca > 0.4, "xG por distancia: 6 m %.2f > 11 m %.2f > 25 m %.2f" % [cerca, penal, lejos])
-	_comprobar(esquina < 0.05, "sin ángulo casi no hay xG (%.3f)" % esquina)
-	_comprobar(absf(EstadisticasVivo.xg_de(Vector2(0, -41.5), false) - penal) < 0.001, "la visita ataca hacia -Z con la misma vara")
-	var ev := EstadisticasVivo.new()
-	ev.anotar_tiro(true, Vector2(2, 38), 12)
-	ev.anotar_tiro(false, Vector2(-3, -30), 20)
-	ev.cerrar_tiro(true, "atajada")
-	ev.cerrar_tiro(false, "gol")
-	ev.cerrar_tiro(true, "gol", Vector3(0, 0, 50))
-	ev.tarjeta(true, false)
-	ev.tarjeta(false, true)
-	ev.anotar_calor(0, Vector2(0, 40))
-	ev.anotar_calor(0, Vector2(0, 41))
-	_comprobar(ev.n_tiros(true) == 2 and String(ev.tiros[0]["res"]) == "atajada" and String(ev.tiros[2]["res"]) == "gol",
-		"cada remate guarda cómo acabó (y un gol de rebote se apunta aparte)")
-	_comprobar(ev.amarillas == [1, 0] and ev.rojas == [0, 1], "tarjetas por equipo")
-	## M-137: xA = el xG de los remates que salieron de un pase.
-	(ev.tiros[0] as Dictionary)["asist"] = "pasador"
-	_comprobar(is_equal_approx(ev.xa(true), float(ev.tiros[0]["xg"])) and ev.xa(false) == 0.0
-		and is_equal_approx(float(ev.xa_por_jugador().get("pasador", 0.0)), float(ev.tiros[0]["xg"])), "xA: el pase previo se lleva el xG del remate")
-	## M-162: la tabla y los remates, a CSV.
-	var ruta_csv := ev.a_csv(null, null)
-	var txt_csv := FileAccess.get_file_as_string(ruta_csv) if ruta_csv != "" else ""
-	_comprobar(txt_csv.contains("remate;equipo;minuto") and txt_csv.contains(";pasador") and txt_csv.contains("Tarjetas rojas"),
-		"CSV: el partido se exporta con la tabla y cada remate")
-	if ruta_csv != "":
-		DirAccess.remove_absolute(ruta_csv)
-	var celda := int((40.0 + 52.5) / 105.0 * EstadisticasVivo.COLS) + int(34.0 / 68.0 * EstadisticasVivo.FILAS) * EstadisticasVivo.COLS
-	_comprobar((ev.calor[0] as PackedInt32Array)[celda] == 2, "el mapa de calor cuenta por zonas")
-	var ca := Club.new()
-	ca.nombre = "Local de prueba"
-	var cb := Club.new()
-	cb.nombre = "Visita de prueba"
-	var pa := Partido.new(ca, cb)
-	pa.posesion_local = 58.0
-	pa.remates_local = 7
-	pa.tiros_puerta_local = 3
-	var filas := ev.resumen(pa, null)
-	var nombres: Array = filas.map(func(f: Array) -> String: return String(f[0]))
-	var faltan: Array = []
-	for k: String in ["Posesión", "Tiros", "Tiros a puerta", "Goles esperados (xG)", "Córners", "Faltas", "Tarjetas amarillas", "Tarjetas rojas"]:
-		if not k in nombres:
-			faltan.append(k)
-	_comprobar(faltan.is_empty() and String(filas[0][1]) == "58%", "el resumen tiene todas las filas %s" % str(faltan))
-	var hechos := {}
-	_comprobar(RotuloEstadisticas.cuando(10, "saque", 1, hechos) == "", "antes del 17' no hay rótulo")
-	_comprobar(RotuloEstadisticas.cuando(18, "juego", 1, hechos) == "", "con el balón en juego no hay rótulo")
-	_comprobar(RotuloEstadisticas.cuando(18, "saque", 1, hechos) == "primero", "en la primera pelota parada pasado el 17' sale el rótulo")
-	hechos["primero"] = true
-	_comprobar(RotuloEstadisticas.cuando(25, "saque", 1, hechos) == "" and RotuloEstadisticas.cuando(45, "descanso", 1, hechos) == "descanso"
-		and RotuloEstadisticas.cuando(66, "saque", 2, hechos) == "segundo", "uno por momento: 17', descanso y 65'")
-	## El panel se arma (tabla + dos campos) sin motor.
-	var raiz := Control.new()
-	add_child(raiz)
-	var panel := PanelEstadisticas.abrir(raiz, pa, null, ev)
-	_comprobar(panel != null and panel.get_child_count() > 0, "el panel de estadísticas se arma")
-	var rot := RotuloEstadisticas.mostrar(raiz, "descanso", pa, null, ev)
-	_comprobar(rot != null and rot.get_child_count() > 0, "el rótulo de la tele se arma")
-	raiz.free()
-	## El botón: configurable y sin pisar a nadie.
-	Mando.registrar()
-	_comprobar(InputMap.has_action("jugar_estadisticas"), "«Estadísticas del partido» tiene su acción en el InputMap")
-	var pisa: Array = []
-	for a: String in Mando.MAPA:
-		if a == "jugar_estadisticas":
+## Banco de pruebas del nucleo, sin ventana y sin nadie mirando.
+##
+##     godot --headless --path . res://pruebas/banco.tscn
+##
+## Es el equivalente del harness de Chrome del HTML, y comprueba lo mismo: que
+## nada revienta al simular temporadas enteras. Pero puede comprobar dos cosas
+## mas que aquel no podia:
+##
+##  1. REPETIBILIDAD. Con semilla, dos mundos iguales dan resultados iguales. El
+##     HTML usa Math.random() sin semilla y eso alli es imposible de comprobar.
+##  2. DISTRIBUCION. Como la migracion no se puede verificar por huella (el HTML
+##     no es reproducible ni consigo mismo), se verifica que las CURVAS caigan
+##     donde tienen que caer: goles por partido, valores, sueldos. Si una
+##     formula se porta mal, la curva se mueve aunque no reviente nada.
+##
+## Devuelve 0 si todo va bien y 1 si algo falla, para poder encadenarlo.
+##
+## PARTIDO POR GRUPOS (26-10-2026): cada grupo de `GRUPOS` vive en su propio archivo,
+## `pruebas/banco/<grupo>.gd` (con sus capas `<grupo>_pN.gd` si pasa de 450 líneas), que extiende
+## `banco/base.gd` (utilidades comunes) y este a `banco/nucleo.gd`. Lo que no es de ningún grupo
+## está en «ideas» (`_probar_ideas_*`) o «varios». Este archivo solo es el CORREDOR: el orden
+## (`SECCIONES`), los grupos, los costes y el reparto. Con BANCO_GRUPO solo se carga el archivo de
+## ese grupo (y el de otro grupo si le presta alguna sección), así que el mini banco compila menos.
+##
+## SECCIÓN NUEVA: la función `_probar_x` va en el archivo de su grupo (`ARCHIVOS`) y su nombre en
+## `SECCIONES` (y en `GRUPOS` si es de uno). Si falta alguna de las dos cosas, el banco lo dice
+## como FALLO en la primera sección, así que no se puede olvidar sin que se note.
+
+
+const SECCIONES := [
+	"_probar_carga_de_ui",
+	"_probar_datos",
+	"_probar_repetibilidad",
+	"_probar_mundo",
+	"_probar_reales",
+	"_probar_base_ficticia",
+	"_probar_cubierta_nombres",
+	"_probar_calendario",
+	"_probar_partidos",
+	"_probar_previa",
+	"_probar_arbitros",
+	"_probar_pie_habil",
+	"_probar_banquillo",
+	"_probar_finanzas",
+	"_probar_mercado",
+	"_probar_notas",
+	"_probar_directiva",
+	"_probar_banco",
+	"_probar_staff",
+	"_probar_obras",
+	"_probar_roles_y_federacion",
+	"_probar_estadio",
+	"_probar_puente3d",
+	"_probar_tactica_en_movimiento",
+	"_probar_copa",
+	"_probar_continental",
+	"_probar_selecciones",
+	"_probar_pulso_de_roles",
+	"_probar_cantera",
+	"_probar_cesiones",
+	"_probar_desafios",
+	"_probar_fundar_club",
+	"_probar_logros",
+	"_probar_ascensos",
+	"_probar_vender",
+	"_probar_ojeadores",
+	"_probar_negociacion",
+	"_probar_consejeros",
+	"_probar_bilbao_solo_local",
+	"_probar_guardado",
+	"_probar_guardado_seguro",
+	"_probar_fisica_motor",
+	"_probar_faltas_puntos",
+	"_probar_vallas_led",
+	"_probar_ola_grada",
+	"_probar_dificultad_cpu",
+	"_probar_temporadas",
+	"_probar_economia",
+	"_probar_sala_de_prensa",
+	"_probar_auspicio",
+	"_probar_eras_y_precios",
+	"_probar_analitica_y_academias",
+	"_probar_habilidades",
+	"_probar_carrera_por_dentro",
+	"_probar_editor",
+	"_probar_ciudad",
+	"_probar_ideas_del_documento",
+	"_probar_ideas_instalaciones_y_marca",
+	"_probar_ideas_personas_y_negocios",
+	"_probar_ideas_eventos_de_despacho",
+	"_probar_ideas_premios_y_memoria_del_club",
+	"_probar_ideas_roles_y_carrera",
+	"_probar_ideas_directiva_calendario_y_rivalidades",
+	"_probar_ideas_simulacion_del_partido",
+	"_probar_ideas_club_y_calendario_de_pretemporada",
+	"_probar_ideas_dinero_ciudad_y_lesiones",
+	"_probar_ideas_tribunal_antidopaje_y_asamblea",
+	"_probar_ideas_medicina_y_vestuario",
+	"_probar_ideas_entrenamiento_prensa_y_dueno",
+	"_probar_ideas_lote_a1",
+	"_probar_ideas_lote_a2",
+	"_probar_ideas_lote_a3",
+	"_probar_ideas_lote_a4",
+	"_probar_ideas_lote_b1",
+	"_probar_ideas_lote_b2",
+	"_probar_ideas_lote_b3",
+	"_probar_ideas_lote_b4",
+	"_probar_aspecto_y_audio",
+	"_probar_marca",
+	"_probar_tutorial",
+	"_probar_moneda",
+	"_probar_academia",
+	"_probar_modos_simulacion",
+	"_probar_presets_exportacion",
+	"_probar_tema_y_ortografia",
+	"_probar_eventos_nuevos",
+	"_probar_entrevistas",
+	"_probar_estadio_b6",
+	"_probar_ciudad_b7",
+	"_probar_coherencia_c1",
+	"_probar_portadas_c20",
+	"_probar_cantera_c3",
+	"_probar_instituciones_c5_c8",
+	"_probar_charlas_c6_c7",
+	"_probar_licencia_c7",
+	"_probar_tanda_c",
+	"_probar_calendario_c13",
+	"_probar_politica_c15",
+	"_probar_palabras_prohibidas",
+	"_probar_capitan_votado",
+	"_probar_glifos_idiomas",
+	"_probar_nombres_repetidos",
+	"_probar_marcas_y_escudos",
+	"_probar_faros_coches",
+	"_probar_modulos",
+	"_probar_piel_por_pais",
+	"_probar_historia_c4",
+	"_probar_contratos_c9",
+	"_probar_vida_dt",
+	"_probar_maestrias",
+	"_probar_habilidades_en_resultados",
+	"_probar_motor_libre",
+	"_probar_portafolio_futbol",
+	"_probar_jugadores_fijos",
+	"_probar_disenos_kit",
+	"_probar_guinos_estadio",
+	"_probar_plantillas_fijas",
+	"_probar_mesa_agente",
+	"_probar_ciudad_animo",
+	"_probar_ciudad_grande",
+	"_probar_minijuegos",
+	"_probar_leyes_pais",
+	"_probar_incumplir_ley",
+	"_probar_b6_formas_led",
+	"_probar_region_reales",
+	"_probar_tunel_navegable",
+	"_probar_edificio_club",
+	"_probar_personal_estadio",
+	"_probar_sancion_dt",
+	"_probar_interiores_club",
+	"_probar_galeria_club",
+	"_probar_reforma_con_obra",
+	"_probar_optimizacion",
+	"_probar_dinastias",
+	"_probar_documental",
+	"_probar_tribuna_real",
+	"_probar_narracion_traducida",
+	"_probar_rotulo_y_sala",
+	"_probar_transmision_y_estadisticas",
+	"_probar_arreglos_partido_motor",
+	"_probar_tanda_top25b",
+	"_probar_prorroga_y_penales",
+	"_probar_informe_rival",
+	"_probar_porque_moral",
+	"_probar_partido_abandonado",
+	"_probar_no_atravesar_paredes",
+	"_probar_paridad_idiomas",
+]
+
+## Dónde vive cada grupo, en el orden en que se buscan las secciones.
+const ARCHIVOS := {
+	"partido": "res://pruebas/banco/partido.gd",
+	"guardado": "res://pruebas/banco/guardado.gd",
+	"ciudad": "res://pruebas/banco/ciudad.gd",
+	"estadio": "res://pruebas/banco/estadio.gd",
+	"gestion": "res://pruebas/banco/gestion.gd",
+	"competicion": "res://pruebas/banco/competicion.gd",
+	"textos": "res://pruebas/banco/textos.gd",
+	"ideas": "res://pruebas/banco/ideas.gd",
+	"varios": "res://pruebas/banco/varios.gd",
+}
+
+var _tiempos: Array = []
+
+## Segundos medidos (ver COSTES, 26-10) de las secciones lentas; el resto cuenta 0,4 s.
+## Si una sección se alarga mucho, actualizar con el resumen TIEMPOS del final.
+## MINI BANCOS (20-10-2026): grupos de secciones por situación, para probar
+## solo lo que se tocó en segundos (`herramientas/mini_banco.sh <grupo>`, o
+## BANCO_GRUPO=<grupo>). Antes de SUBIR sigue mandando el banco entero.
+const GRUPOS := {
+	"partido": ["_probar_partidos", "_probar_previa", "_probar_arbitros", "_probar_tactica_en_movimiento",
+		"_probar_puente3d", "_probar_fisica_motor", "_probar_faltas_puntos", "_probar_transmision_y_estadisticas",
+		"_probar_arreglos_partido_motor", "_probar_prorroga_y_penales", "_probar_partido_abandonado", "_probar_tanda_c",
+		"_probar_notas", "_probar_dificultad_cpu"],
+	"guardado": ["_probar_guardado", "_probar_guardado_seguro", "_probar_partido_abandonado", "_probar_repetibilidad"],
+	"ciudad": ["_probar_modulos", "_probar_faros_coches", "_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
+		"_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
+	"estadio": ["_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
+		"_probar_edificio_club", "_probar_personal_estadio", "_probar_interiores_club", "_probar_galeria_club",
+		"_probar_reforma_con_obra", "_probar_guinos_estadio", "_probar_vallas_led", "_probar_ola_grada"],
+	"gestion": ["_probar_piel_por_pais", "_probar_capitan_votado", "_probar_finanzas", "_probar_mercado", "_probar_directiva", "_probar_staff", "_probar_obras",
+		"_probar_cantera", "_probar_cesiones", "_probar_negociacion", "_probar_contratos_c9", "_probar_economia",
+		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
+	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
+		"_probar_ascensos", "_probar_temporadas"],
+	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas", "_probar_glifos_idiomas"],
+}
+
+const COSTES := {
+	## 26-10: TODOS los que pasan de 1 s, medidos en el banco entero (4 partes, máquina cargada:
+	## lo que cuenta es la proporción). Con los de antes (15-10) una parte acababa 40 s después
+	## que otra; con estos, el reparto sale parejo. Rehacer con el resumen TIEMPOS si se desequilibra.
+	"_probar_motor_libre": 137.9, "_probar_cantera": 97.5, "_probar_logros": 95.3, "_probar_selecciones": 83.7,
+	"_probar_finanzas": 62.9, "_probar_pulso_de_roles": 58.6, "_probar_roles_y_federacion": 46.2,
+	"_probar_temporadas": 38.9, "_probar_guardado": 29.5, "_probar_arbitros": 29.2, "_probar_fisica_motor": 28.6,
+	"_probar_cubierta_nombres": 27.1, "_probar_base_ficticia": 26.2, "_probar_partidos": 23.0, "_probar_copa": 23.0,
+	"_probar_continental": 20.7, "_probar_cesiones": 18.6, "_probar_dificultad_cpu": 17.4,
+	"_probar_ideas_directiva_calendario_y_rivalidades": 15.0, "_probar_faltas_puntos": 14.4, "_probar_ciudad_b7": 13.9,
+	"_probar_ideas_eventos_de_despacho": 13.3, "_probar_mundo": 12.7, "_probar_ideas_premios_y_memoria_del_club": 11.7,
+	"_probar_desafios": 11.2, "_probar_documental": 10.5, "_probar_fundar_club": 9.1, "_probar_ideas_lote_b4": 8.8,
+	"_probar_ascensos": 6.9, "_probar_ojeadores": 6.8, "_probar_habilidades_en_resultados": 6.8,
+	"_probar_modos_simulacion": 6.5, "_probar_ideas_lote_a2": 6.1, "_probar_ideas_lote_a3": 6.1,
+	"_probar_ideas_lote_a1": 5.4, "_probar_repetibilidad": 4.8, "_probar_pie_habil": 4.4,
+	"_probar_palabras_prohibidas": 3.8, "_probar_aspecto_y_audio": 3.8, "_probar_transmision_y_estadisticas": 3.4,
+	"_probar_marcas_y_escudos": 3.4, "_probar_banquillo": 3.2, "_probar_historia_c4": 3.0, "_probar_estadio_b6": 3.0,
+	"_probar_tanda_c": 2.9, "_probar_eventos_nuevos": 2.7, "_probar_guardado_seguro": 2.7,
+	"_probar_eras_y_precios": 2.6, "_probar_estadio": 2.6, "_probar_puente3d": 2.6, "_probar_directiva": 2.6,
+	"_probar_carga_de_ui": 2.5, "_probar_ciudad_animo": 2.3, "_probar_consejeros": 2.3, "_probar_calendario": 2.3,
+	"_probar_tunel_navegable": 2.2, "_probar_porque_moral": 2.1, "_probar_ideas_lote_a4": 2.1, "_probar_mercado": 2.0,
+	"_probar_editor": 1.9, "_probar_notas": 1.9, "_probar_reales": 1.8, "_probar_vender": 1.5, "_probar_banco": 1.4,
+	"_probar_ideas_lote_b2": 1.4, "_probar_previa": 1.3, "_probar_staff": 1.3, "_probar_tema_y_ortografia": 1.3,
+	"_probar_auspicio": 1.3, "_probar_sancion_dt": 1.2, "_probar_negociacion": 1.1, "_probar_capitan_votado": 1.0,
+	## Coste mínimo a propósito: va la última en el reparto y no mueve a las demás
+	## (`_probar_motor_libre` depende del estado que dejan las secciones previas de
+	## su proceso; ver el HALLAZGO en CLAUDE.md). Mide ~0,5 s.
+	"_probar_prorroga_y_penales": 0.01,
+}
+var _reparto: Array = []
+## Nodo de grupo que tiene cada sección (se rellena al cargar).
+var _donde := {}
+
+## Reparto entre procesos equilibrado por tiempo: la sección más lenta que
+## queda va al proceso con menos carga. Determinista: todos los procesos
+## calculan el mismo reparto.
+func _parte_de(i: int, total: int) -> int:
+	if _reparto.size() != SECCIONES.size():
+		_reparto.resize(SECCIONES.size())
+		var orden: Array = range(1, SECCIONES.size())
+		orden.sort_custom(func(a: int, b: int) -> bool:
+			var ca := float(COSTES.get(SECCIONES[a], 0.4))
+			var cb := float(COSTES.get(SECCIONES[b], 0.4))
+			return ca > cb if ca != cb else a < b)
+		var carga: Array = []
+		carga.resize(total)
+		carga.fill(0.0)
+		for j: int in orden:
+			var menos := 0
+			for k in total:
+				if float(carga[k]) < float(carga[menos]):
+					menos = k
+			_reparto[j] = menos
+			carga[menos] = float(carga[menos]) + float(COSTES.get(SECCIONES[j], 0.4))
+	return int(_reparto[i])
+
+func _cerrar() -> void:
+	## Las secciones más lentas, para saber dónde mirar si el banco se alarga.
+	_tiempos.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) > int(b[0]))
+	var suma := 0
+	for tt: Array in _tiempos:
+		suma += int(tt[0])
+	_linea("")
+	_linea("TIEMPOS: %d secciones, %.1f s" % [_tiempos.size(), suma / 1000.0])
+	for tt: Array in _tiempos.slice(0, 40):
+		_linea("  %6.1f s  %s" % [int(tt[0]) / 1000.0, String(tt[1])])
+	_linea("")
+	if _fallos.is_empty():
+		_linea("===== FIN. 0 fallos =====")
+	else:
+		_linea("===== FIN. %d FALLOS =====" % _fallos.size())
+		for f in _fallos:
+			_linea("  - %s" % f)
+	## Por partes, cada proceso deja la suya en `user://` (aislado) y `banco.sh` las junta.
+	var ruta_res := "user://banco_resultado.txt" if OS.get_environment("BANCO_PARTE") != "" \
+		else "res://pruebas/ultimo_resultado.txt"
+	var salida := FileAccess.open(ruta_res, FileAccess.WRITE)
+	if salida != null:
+		salida.store_string("\n".join(_lineas))
+		salida.close()
+	get_tree().quit(0 if _fallos.is_empty() else 1)
+
+## Carga los nodos de grupo que hacen falta: todos en el banco entero; con BANCO_GRUPO, el de ese
+## grupo primero y otro solo si le presta una sección. Comprueba que SECCIONES y los archivos casan.
+func _cargar_grupos(necesarias: Array) -> void:
+	var nombres: Array = ARCHIVOS.keys()
+	var grupo := OS.get_environment("BANCO_GRUPO")
+	if grupo != "" and ARCHIVOS.has(grupo):
+		nombres.erase(grupo)
+		nombres.push_front(grupo)
+	var todas := necesarias.size() == SECCIONES.size()
+	var huerfanas: Array = []
+	for g: String in nombres:
+		var falta := false
+		for s: String in necesarias:
+			falta = falta or not _donde.has(s)
+		if not falta and not todas and (not necesarias.is_empty() or _donde.size() > 0):
+			break
+		var nodo: Node = (load(String(ARCHIVOS[g])) as GDScript).new()
+		nodo.name = "grupo_" + g
+		add_child(nodo)
+		for met: Dictionary in nodo.get_script().get_script_method_list():
+			var n := String(met["name"])
+			if n.begins_with("_probar_") and not _donde.has(n) and SECCIONES.has(n):
+				_donde[n] = nodo
+			elif n.begins_with("_probar_") and not SECCIONES.has(n) and (met["args"] as Array).is_empty() and not _es_ayudante(n) and not huerfanas.has(n):
+				huerfanas.append(n)
+	if todas:
+		var sin_archivo: Array = SECCIONES.filter(func(s: String) -> bool: return not _donde.has(s))
+		## Solo dejan línea si fallan: así el recuento de «ok» del banco no cambia.
+		if not sin_archivo.is_empty():
+			_comprobar(false, "cada sección de SECCIONES vive en un archivo de grupo %s" % str(sin_archivo))
+		if not huerfanas.is_empty():
+			_comprobar(false, "cada `_probar_*` sin argumentos de los grupos está en SECCIONES (si no, nunca corre) %s" % str(huerfanas))
+
+## Partes de una sección grande (`_probar_guardado_1`…): no van solas en SECCIONES.
+func _es_ayudante(n: String) -> bool:
+	for s: String in SECCIONES:
+		if n.begins_with(s + "_") and n.trim_prefix(s + "_").is_valid_int():
+			return true
+	return false
+
+func _ready() -> void:
+	## Lo que queda entre partidas (`Meta`) va a un archivo propio del banco:
+	## si no, cada corrida llenaría el álbum de verdad con sobres de prueba.
+	Meta.ruta = "user://meta_banco.json"
+	if FileAccess.file_exists(Meta.ruta):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(Meta.ruta))
+	_titulo("BANCO DE PRUEBAS DEL NUCLEO")
+	## El banco se escribió contra los datos REALES (Colo-Colo, Vidal, las
+	## equipaciones archivadas...) y así sigue: se corre con el pack real
+	## encima. La base ficticia -la que se publica- tiene su propia sección,
+	## `_probar_base_ficticia()`, que deja el pack puesto otra vez al salir.
+	## La preferencia del jugador (`user://ajustes.cfg`) no se toca.
+	Datos.usar_base_real(true)
+	## PRIMERO, Y BARATO: que las tres escenas raíz compilen. Si algo rompió la
+	## interfaz -el error exacto que costó un juego que no arrancaba el 25-9-,
+	## mejor saberlo en el primer segundo que después de 15 minutos de banco.
+	## Cada sección se cronometra (el resumen sale al final) y, con
+	## BANCO_PARTE=i/N, este proceso corre solo su parte: `herramientas/banco.sh`
+	## lanza N a la vez (uno por núcleo) y junta los resultados.
+	var parte := OS.get_environment("BANCO_PARTE")
+	var mia := 0
+	var total := 1
+	if parte.contains("/"):
+		mia = int(parte.get_slice("/", 0))
+		total = maxi(1, int(parte.get_slice("/", 1)))
+	## BANCO_SOLO=_probar_x (20-10-2026): solo esa sección (para diagnosticar).
+	var solo := OS.get_environment("BANCO_SOLO")
+	var grupo := OS.get_environment("BANCO_GRUPO")
+	var mias: Array = []
+	for i in SECCIONES.size():
+		## La carga de la interfaz va en todas: es barata y si falla, mejor saberlo ya.
+		if i > 0 and _parte_de(i, total) != mia:
 			continue
-		for k: int in Mando.teclas_de("jugar_estadisticas"):
-			if k in Mando.teclas_de(a):
-				pisa.append(a)
-		for b: int in Mando.botones_de("jugar_estadisticas"):
-			if b in Mando.botones_de(a):
-				pisa.append(a)
-	_comprobar(pisa.is_empty(), "su tecla y su botón no son de otra acción %s" % str(pisa))
-	var en_grupo := false
-	for gr: Array in PanelControles.GRUPOS:
-		en_grupo = en_grupo or "jugar_estadisticas" in (gr[1] as Array)
-	_comprobar(en_grupo, "se puede reasignar en la pantalla de controles")
-
-## PRÓRROGA Y PENALES (17-10-2026). Lo que no necesita el 3D: el acta que se
-## alarga al 120' con un cambio más, la tanda del césped que `penales()` ya no
-## vuelve a sortear (y la copa respeta), el reloj de la prórroga del motor y
-## cuándo está decidida una tanda. La prueba con el partido entero en el
-## césped es `pruebas/prueba_prorroga_penales.tscn`.
-func _probar_prorroga_y_penales() -> void:
-	_titulo("PRÓRROGA Y TANDA DE PENALES DEL MOTOR REAL")
-	var m := Mundo.new()
-	m.generar(["CHI"], 4711)
-	var a: Club = m.ligas[0].clubes[0]
-	var b: Club = m.ligas[0].clubes[1]
-	var p := Partido.new(a, b)
-	p.preparar()
-	p.motor_externo = true
-	while p.minuto < 89:
-		p.simular_minuto()
-	p.prorroga_externa()
-	p.simular_minuto()
-	_comprobar(not p.terminado_ya and p.minuto == 90 and p.minutos_fin == 120, "con prórroga el acta no termina en el 90'")
-	_comprobar(p.MAX_CAMBIOS + p.cambios_extra == 6, "en la prórroga hay un cambio más")
-	p.penales_externos(3, 4)
-	while not p.terminado_ya:
-		p.simular_minuto()
-	_comprobar(p.minuto == 120, "el acta termina en el 120'")
-	_comprobar(p.penales() == [3, 4] and p.penales() == [3, 4] and p.penales_en_cesped, "`penales()` devuelve la tanda del césped, siempre la misma")
-	var copa := Copa.new("Copa de prueba")
-	copa.vivos.assign([a, b])
-	p.goles_local = 1
-	p.goles_visita = 1
-	var res := copa.jugar_ronda(p)
-	_comprobar(not res.is_empty() and (res[0] as Dictionary)["pasa"] == b and (res[0] as Dictionary)["penales"] == [3, 4], "la copa clasifica al que ganó la tanda del césped")
-	var p2 := Partido.new(a, b)
-	p2.preparar()
-	while not p2.terminado_ya:
-		p2.simular_minuto()
-	_comprobar(p2.minuto == 90 and not p2.penales_en_cesped, "sin motor ni prórroga: termina en el 90' como siempre")
-	## El reloj del motor en la prórroga.
-	var mo := MotorJugable.new()
-	mo.duracion_mitad = 180.0
-	mo.sortear_anadido()
-	mo.mitad = 3
-	mo.t = 30.0
-	var m3 := mo.minuto()
-	mo.mitad = 4
-	mo.t = 59.0
-	var m4 := mo.minuto()
-	_comprobar(m3 == 97 and m4 == 119 and is_equal_approx(mo.dur_mitad(), 60.0), "prórroga de 15' (un tercio de la mitad): 97' y 119' (%d', %d')" % [m3, m4])
-	_comprobar(mo.anadido.size() == 4 and mo._anadido_de(4) > 0.0, "la prórroga tiene su añadido")
-	mo.free()
-	_comprobar(MotorJugable.tanda_decidida([[true, true, true], [false, false, false]]), "tanda: 3-0 tras tres cada uno está decidida")
-	_comprobar(not MotorJugable.tanda_decidida([[true, true, true, true, true], [true, true, true, true, true]]), "tanda: 5-5 sigue a muerte súbita")
-	_comprobar(MotorJugable.tanda_decidida([[true, true, true, true, true, false], [true, true, true, true, true, true]]), "tanda: 5-6 en la muerte súbita está decidida")
-	_comprobar(not MotorJugable.tanda_decidida([[true, true, true, true, true, true], [true, true, true, true, true]]), "tanda: en la muerte súbita el segundo aún tira")
-	var circ := MarcadorTanda.circulos([true, false], 5)
-	_comprobar(circ.count("●") == 2 and circ.count("○") == 3, "el marcador de la tanda pinta ●● y tres huecos")
-
-## EL INFORME DEL RIVAL (17-10-2026): sale de los datos reales del mundo.
-func _probar_informe_rival() -> void:
-	_titulo("INFORME DEL RIVAL ANTES DEL PARTIDO")
-	var m := Mundo.new()
-	m.generar(["CHI"], 4711)
-	m.mi_club_id = m.ligas[0].clubes[0].id
-	for i in 6:
-		m.ligas[0].jugar_jornada()
-	var par := m.proximo_partido()
-	var p := Partido.new(par[0], par[1])
-	var rival: Club = p.visita if p.local == m.mi_club() else p.local
-	var d := InformeRival.datos(rival, m.mi_club(), m.liga_de(rival))
-	_comprobar(int(d["puesto"]) >= 1 and int(d["puesto"]) <= m.ligas[0].clubes.size(), "el informe dice el puesto del rival en la tabla (%d.º)" % int(d["puesto"]))
-	_comprobar((d["racha"] as Array).size() == 5, "la racha tiene los últimos 5 partidos del rival")
-	var mejor := 0
-	for j: Jugador in rival.once():
-		mejor = maxi(mejor, j.ovr)
-	_comprobar((d["mejores"] as Array).size() == 3 and (d["mejores"][0] as Jugador).ovr == mejor, "los más peligrosos empiezan por el mejor del once")
-	_comprobar(not (d["consejos"] as Array).is_empty(), "hay al menos un consejo del cuerpo técnico")
-	rival.tactica.presion = Tactica.Nivel.ALTO
-	var d2 := InformeRival.datos(rival, m.mi_club(), m.liga_de(rival))
-	_comprobar(str(d2["consejos"]).contains("Presionan arriba"), "si el rival presiona alto, el consejo lo dice")
-
-## POR QUÉ SUBE O BAJA LA MORAL (17-10-2026): cada cambio deja su motivo y se guarda.
-func _probar_porque_moral() -> void:
-	_titulo("CAMARÍN: POR QUÉ SUBE O BAJA LA MORAL")
-	var m := Mundo.new()
-	m.generar(["CHI"], 4711)
-	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	for i in 6:
-		m.avanzar_semana()
-	var c := m.mi_club()
-	var con := 0
-	var motivos := {}
-	for j in c.plantilla:
-		if not j.historial_moral.is_empty():
-			con += 1
-		for e: Dictionary in j.historial_moral:
-			motivos[String(e["m"])] = true
-	_comprobar(con >= c.plantilla.size() / 2, "tras 6 semanas la mayoría del plantel tiene motivos de moral anotados (%d de %d)" % [con, c.plantilla.size()])
-	_comprobar(not motivos.is_empty() and not motivos.has(""), "cada cambio tiene un motivo con nombre (%s)" % ", ".join(motivos.keys()))
-	var j0: Jugador = c.plantilla[0]
-	var antes := j0.moral
-	j0.cambiar_moral(5, "Prueba")
-	_comprobar(j0.moral == mini(antes + 5, 99) and String(j0.historial_moral[-1]["m"]) == "Prueba", "cambiar_moral sube la moral y anota el motivo")
-	var copia := Partida.desde_instantanea(Partida.instantanea(m))
-	var j1 := copia.jugador_por_id(j0.id)
-	_comprobar(j1 != null and j1.historial_moral.size() == j0.historial_moral.size(), "el historial de moral se guarda y se carga")
-	var sat: Dictionary = m.vestuario.satisfaccion_de(j0)
-	_comprobar(sat.has("min") and sat.has("rend") and sat.has("tact") and sat.has("inst"), "el Camarín puede leer lo que pesa en la satisfacción")
-
-## EL PARTIDO ABANDONADO A MEDIAS (17-10-2026): cerrar el juego perdiendo y
-## volver a cargar NO repite el partido desde el 0-0, y recargar no cambia nada.
-func _probar_partido_abandonado() -> void:
-	_titulo("PARTIDO ABANDONADO A MEDIAS: NO SE PUEDE REPETIR HASTA GANAR")
-	var m := Mundo.new()
-	m.generar(["CHI"], 4711)
-	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	var par := m.proximo_partido()
-	var p := Partido.new(par[0], par[1])
-	p.preparar()
-	PartidoPendiente.abrir(m, p)
-	p.goles_local = 0
-	p.goles_visita = 2
-	p.minuto = 60
-	PartidoPendiente.actualizar(m, p)
-	## La partida tal como quedó guardada (recargarla es partir siempre de aquí).
-	var foto := Partida.instantanea(m)
-	var d := PartidoPendiente.pendiente(m)
-	_comprobar(not d.is_empty() and int(d["gv"]) == 2 and int(d["minuto"]) == 60, "el partido en curso queda apuntado con su marcador y su minuto")
-	var r1 := PartidoPendiente.resolver(m, d)
-	_comprobar(r1 != null and r1.terminado_ya and r1.goles_visita >= 2, "al cargar se completa desde el 0-2 del 60' (no desde 0-0): %d-%d" % [r1.goles_local, r1.goles_visita])
-	_comprobar(PartidoPendiente.pendiente(m).is_empty(), "una vez resuelto, deja de estar pendiente")
-	## Recargar = otra vez el mismo resultado (azar fijo para ese partido).
-	var m2 := Partida.desde_instantanea(foto)
-	var r2 := PartidoPendiente.resolver(m2, d)
-	_comprobar(r2 != null and r2.goles_local == r1.goles_local and r2.goles_visita == r1.goles_visita, "recargar da el mismo resultado (%d-%d)" % [r2.goles_local, r2.goles_visita])
-	d["minuto"] = 90
-	var r3 := PartidoPendiente.resolver(m, d)
-	_comprobar(r3 != null and r3.goles_local == 0 and r3.goles_visita == 2, "si ya se había pitado el final, queda el resultado tal cual")
-
-func _probar_no_atravesar_paredes() -> void:
-	_titulo("CIUDAD: NO SE ATRAVIESAN PAREDES")
-	var ex := _ExpPared.new()
-	ex.cuerpo = Node3D.new()
-	ex.modo = "pie"
-	ex.cuerpo.position = Vector3(4.0, 0, 0)
-	ex.movil_encima = true
-	for i in 40:
-		ex._mover_un_trozo(Vector3(0.3, 0, 0), 0.4)
-	_comprobar(ex.cuerpo.position.x + 0.4 <= ex.pared_x + 0.001, "con un coche encima no se entra en el edificio (x=%.2f, pared en %.1f)" % [ex.cuerpo.position.x, ex.pared_x])
-	ex._mover_un_trozo(Vector3(-0.3, 0, 0), 0.4)
-	_comprobar(ex.cuerpo.position.x < 4.3, "pero sí se puede salir de debajo del coche hacia la calle")
-	ex.movil_encima = false
-	ex.cuerpo.position = Vector3(5.5, 0, 0)
-	ex._mover_un_trozo(Vector3(-0.3, 0, 0), 0.4)
-	_comprobar(ex.cuerpo.position.x < 5.5, "si ya estás dentro de algo fijo (al salir del metro) se te deja salir")
-	ex.cuerpo.free()
-	ex.free()
+		if solo != "" and SECCIONES[i] != solo:
+			continue
+		if grupo != "" and GRUPOS.has(grupo) and not (GRUPOS[grupo] as Array).has(SECCIONES[i]):
+			continue
+		mias.append(SECCIONES[i])
+	## Un grupo que solo es archivo («ideas», «varios»): todas las secciones que viven en él.
+	if grupo != "" and not GRUPOS.has(grupo) and ARCHIVOS.has(grupo):
+		_cargar_grupos([])
+		mias = mias.filter(func(s: String) -> bool: return _donde.has(s) and (_donde[s] as Node).name == "grupo_" + grupo)
+	## Sin filtro de grupo ni sección se cargan TODOS los grupos (también en cada parte del
+	## banco entero), para que la comprobación de SECCIONES ↔ archivos corra siempre.
+	if _donde.is_empty():
+		_cargar_grupos(SECCIONES if solo == "" and grupo == "" else mias)
+	for s: String in mias:
+		if not _donde.has(s):
+			_fallos.append("la sección %s no está en ningún archivo de grupo" % s)
+			_linea("  FALLO la sección %s no está en ningún archivo de grupo" % s)
+			continue
+		var t0 := Time.get_ticks_msec()
+		(_donde[s] as Node).call(s)
+		_tiempos.append([Time.get_ticks_msec() - t0, s])
+	_cerrar()

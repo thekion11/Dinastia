@@ -10,6 +10,10 @@ func _probar() -> void:
 	_carrera()
 	_titulo("PARTIDO: la estirada del portero que manejas")
 	_partido()
+	_titulo("CAMBIO DE PORTERO: solo por portero; entra por lesión o roja")
+	_cambios()
+	_titulo("TANDA: tu portero elige el lado")
+	_tanda()
 
 func _carrera() -> void:
 	_comprobar(CarreraJugador.PUESTOS.has("POR"), "«POR» está entre los puestos elegibles")
@@ -54,7 +58,14 @@ func _carrera() -> void:
 	_comprobar(ids.has("primera_valla") and not ids.has("penales") and not ids.has("faltas"), "evento «primera portería a cero», sin los de lanzador")
 	var c2 := CarreraJugador.desde_dic(c.a_dic())
 	_comprobar(c2.vallas_invictas == 1 and c2.foco == c.foco, "se guarda y se carga")
-	_comprobar(c.minuto_entrada_suplente(true) == -1, "el portero suplente no entra (el cambio del motor es de campo)")
+	## El portero suplente entra poco: solo si el titular se lesiona (~6 %).
+	var entra := 0
+	var raros := 0
+	for i in 500:
+		var mi := c.minuto_entrada_suplente(true)
+		entra += 1 if mi >= 0 else 0
+		raros += 1 if mi != -1 and (mi < 15 or mi > 85) else 0
+	_comprobar(entra >= 10 and entra <= 60 and raros == 0, "el portero suplente entra a veces, por lesión (%d de 500)" % entra)
 	_comprobar(CarreraJugador.desde_dic({}).vallas_invictas == 0, "partidas viejas: 0 porterías a cero")
 	## El jugador de campo, como siempre.
 	var cd := CarreraJugador.crear(m, "Prueba Delantero", "DC", false, 98)
@@ -136,6 +147,122 @@ func _paradas(motor: MotorJugable, gk: Dictionary, guia: float) -> int:
 			n += 1
 	return n
 
+func _cambios() -> void:
+	## Titular el de campo: su cambio nunca deja fuera al portero.
+	var r := _motor()
+	var motor: MotorJugable = r[0]
+	var gk := _portero(motor, true)
+	var campo := _suplente(r, false)
+	motor.poner_extra(campo, false)
+	_comprobar(not bool(campo["por"]) and not bool(motor._quien_sale_por(campo)["por"]), "un suplente de campo sale por uno de campo")
+	(r[1] as Node3D).queue_free()
+	## Un portero suplente sigue siendo portero y solo sale por el portero.
+	r = _motor()
+	motor = r[0]
+	gk = _portero(motor, true)
+	var sup := _suplente(r, true)
+	motor.poner_extra(sup, false)
+	_comprobar(bool(sup["por"]), "el portero que espera en la banda sigue siendo portero")
+	_comprobar(motor._quien_sale_por(sup) == gk, "un portero solo cambia por el portero")
+	## Expulsan al portero: entra el suplente bajo palos por uno de campo.
+	motor._expulsar(gk)
+	var locales := motor.jugadores.filter(func(q: Dictionary) -> bool: return bool(q["es_local"]))
+	var pors := locales.filter(func(q: Dictionary) -> bool: return bool(q["por"]))
+	_comprobar(motor.jugadores.has(sup) and pors.size() == 1 and pors[0] == sup, "roja al portero: entra el suplente bajo palos")
+	_comprobar(locales.size() == 10 and String(sup["slot_code"]) == "POR", "y el equipo sigue con uno menos (%d) con el suplente de POR" % locales.size())
+	(r[1] as Node3D).queue_free()
+	## CARRERA, suplente: entras en tu minuto porque el titular se lesiona.
+	r = _motor()
+	motor = r[0]
+	gk = _portero(motor, true)
+	sup = _suplente(r, true)
+	motor.usuario = {}
+	motor.autopiloto = false
+	motor.poner_extra(sup, true, 3)
+	var pasos := 0
+	while motor.usuario.is_empty() and motor.estado != "fin" and pasos < 20 * 600:
+		motor.paso(1.0 / 20.0)
+		pasos += 1
+	_comprobar(motor.usuario == sup and bool(sup["por"]) and not motor.jugadores.has(gk), "suplente: entras de portero por el titular (min %d)" % motor.minuto())
+	(r[1] as Node3D).queue_free()
+	## CARRERA, suplente: si expulsan al titular estando tú en la banda, entras ya.
+	r = _motor()
+	motor = r[0]
+	gk = _portero(motor, true)
+	sup = _suplente(r, true)
+	motor.usuario = {}
+	motor.poner_extra(sup, true, 80)
+	motor._expulsar(gk)
+	_comprobar(motor.usuario == sup and motor.jugadores.has(sup), "suplente: roja al titular y entras tú")
+	(r[1] as Node3D).queue_free()
+	## Titular: el DT no cambia a su portero con una noche normal; goleado, puede.
+	_comprobar(MotorCambioPortero.prob_dt_portero(6.0, 0.0) == 0.0 and MotorCambioPortero.prob_dt_portero(4.2, 0.0) > 0.2, "el DT solo cambia al portero si lo golean")
+	r = _motor()
+	motor = r[0]
+	gk = _portero(motor, true)
+	sup = _suplente(r, true)
+	motor.usuario = gk
+	motor.autopiloto = false
+	motor.poner_extra(sup, false)
+	motor.prob_cambio_extra = 1.0
+	motor.t = motor.duracion_mitad * 1.4
+	motor.mitad = 2
+	motor._revisar_cambio(true)
+	_comprobar(motor.usuario_sustituido and motor.jugadores.has(sup) and not motor.jugadores.has(gk), "titular: si el DT te cambia, entra el portero suplente")
+	(r[1] as Node3D).queue_free()
+
+func _tanda() -> void:
+	var r := _motor()
+	var motor: MotorJugable = r[0]
+	var gk := _portero(motor, true)
+	motor.id_usuario = String(gk["id"])
+	motor.autopiloto = false
+	motor._empezar_tanda()
+	var vistos := 0
+	var respetado := 0
+	var ajenos_mios := 0
+	for i in 12:
+		motor._siguiente_penal()
+		if motor.tanda["portero"] != gk:
+			ajenos_mios += 1 if motor.tanda_me_toca_parar() else 0
+			(motor.tanda["tiros"][motor.tanda_turno()] as Array).append(true)
+			continue
+		vistos += 1
+		motor.tanda["lado"] = -1
+		motor._tras_tiro_tanda()
+		respetado += 1 if int(motor.tanda["lado"]) == -1 else 0
+		(motor.tanda["tiros"][motor.tanda_turno()] as Array).append(false)
+	_comprobar(ajenos_mios == 0, "los penales que para el otro portero no son tuyos")
+	_comprobar(vistos >= 4 and respetado == vistos, "en la tanda tu portero va al lado que eliges (%d de %d)" % [respetado, vistos])
+	## Con el partido simulado (piloto automático), adivina la IA.
+	motor.autopiloto = true
+	var ia_distinto := 0
+	for i in 40:
+		motor.tanda["portero"] = gk
+		motor.tanda["lado"] = -1
+		motor._tras_tiro_tanda()
+		ia_distinto += 1 if int(motor.tanda["lado"]) != -1 else 0
+	_comprobar(ia_distinto > 0, "en piloto automático elige la IA (%d de 40 a otro lado)" % ia_distinto)
+	(r[1] as Node3D).queue_free()
+
+func _portero(motor: MotorJugable, local: bool) -> Dictionary:
+	for p: Dictionary in motor.jugadores:
+		if bool(p["por"]) and bool(p["es_local"]) == local:
+			return p
+	return {}
+
+## Un suplente del club local (portero o de campo), puesto en el campo como lo hace `PartidoJugable`.
+func _suplente(r: Array, portero: bool) -> Dictionary:
+	var a: Club = r[2]
+	var once := a.once()
+	var quien: Jugador = null
+	for j: Jugador in a.plantilla:
+		if not once.has(j) and j.es_portero() == portero:
+			quien = j
+	var una := Puente3D.once([quien] as Array[Jugador])
+	var h := PlayerSpawner.new().spawn_team(r[1], una["xi"], una["jugadores"], {"s": [[quien.pos_e, 50, 50]]}, true, Puente3D.kit(a), Puente3D.kit_portero(a))
+	return h[0]
+
 func _motor() -> Array:
 	var m := Mundo.new()
 	m.generar(["CHI"], 4711)
@@ -155,4 +282,4 @@ func _motor() -> Array:
 	motor.set_physics_process(false)
 	motor.autopiloto = true
 	motor.preparar(lista, ball, "", 7)
-	return [motor, raiz]
+	return [motor, raiz, a]
