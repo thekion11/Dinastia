@@ -1,0 +1,179 @@
+{
+ "_leeme": "Geografía y coste de vida de cada país jugable. lat/lon: centro del país (grados); vida: coste de la vida con España=1,0 (orden de magnitud de índices tipo Numbeo); km_local: km medios de un viaje a domicilio dentro de la liga. Lo lee nucleo/viajes.gd. Países que falten: valores medios.",
+ "paises": {
+  "ESP": {
+   "lat": 40.4,
+   "lon": -3.7,
+   "vida": 1.0,
+   "km_local": 450
+  },
+  "ENG": {
+   "lat": 52.5,
+   "lon": -1.5,
+   "vida": 1.25,
+   "km_local": 220
+  },
+  "ITA": {
+   "lat": 42.5,
+   "lon": 12.5,
+   "vida": 1.05,
+   "km_local": 400
+  },
+  "GER": {
+   "lat": 51.0,
+   "lon": 10.0,
+   "vida": 1.15,
+   "km_local": 330
+  },
+  "FRA": {
+   "lat": 47.0,
+   "lon": 2.5,
+   "vida": 1.15,
+   "km_local": 450
+  },
+  "BRA": {
+   "lat": -15.8,
+   "lon": -47.9,
+   "vida": 0.6,
+   "km_local": 1100
+  },
+  "ARG": {
+   "lat": -34.6,
+   "lon": -58.4,
+   "vida": 0.6,
+   "km_local": 650
+  },
+  "CHI": {
+   "lat": -33.4,
+   "lon": -70.6,
+   "vida": 0.7,
+   "km_local": 600
+  },
+  "COL": {
+   "lat": 4.7,
+   "lon": -74.1,
+   "vida": 0.5,
+   "km_local": 450
+  },
+  "URU": {
+   "lat": -34.9,
+   "lon": -56.2,
+   "vida": 0.8,
+   "km_local": 150
+  },
+  "PER": {
+   "lat": -12.0,
+   "lon": -77.0,
+   "vida": 0.5,
+   "km_local": 600
+  },
+  "ECU": {
+   "lat": -0.2,
+   "lon": -78.5,
+   "vida": 0.55,
+   "km_local": 300
+  },
+  "PAR": {
+   "lat": -25.3,
+   "lon": -57.6,
+   "vida": 0.45,
+   "km_local": 180
+  },
+  "VEN": {
+   "lat": 10.5,
+   "lon": -66.9,
+   "vida": 0.5,
+   "km_local": 500
+  },
+  "BOL": {
+   "lat": -16.5,
+   "lon": -68.1,
+   "vida": 0.4,
+   "km_local": 400
+  },
+  "KSA": {
+   "lat": 24.7,
+   "lon": 46.7,
+   "vida": 0.9,
+   "km_local": 650
+  },
+  "JPN": {
+   "lat": 36.0,
+   "lon": 138.0,
+   "vida": 1.0,
+   "km_local": 450
+  },
+  "KOR": {
+   "lat": 37.5,
+   "lon": 127.0,
+   "vida": 1.0,
+   "km_local": 200
+  },
+  "MEX": {
+   "lat": 19.4,
+   "lon": -99.1,
+   "vida": 0.65,
+   "km_local": 900
+  },
+  "USA": {
+   "lat": 39.0,
+   "lon": -95.0,
+   "vida": 1.5,
+   "km_local": 1500
+  },
+  "EGY": {
+   "lat": 30.0,
+   "lon": 31.2,
+   "vida": 0.35,
+   "km_local": 400
+  },
+  "MAR": {
+   "lat": 33.6,
+   "lon": -7.6,
+   "vida": 0.45,
+   "km_local": 350
+  },
+  "RSA": {
+   "lat": -26.2,
+   "lon": 28.0,
+   "vida": 0.5,
+   "km_local": 700
+  },
+  "AUS": {
+   "lat": -33.9,
+   "lon": 151.2,
+   "vida": 1.3,
+   "km_local": 1400
+  },
+  "POR": {
+   "lat": 38.7,
+   "lon": -9.1,
+   "vida": 0.85,
+   "km_local": 250
+  },
+  "NED": {
+   "lat": 52.4,
+   "lon": 4.9,
+   "vida": 1.2,
+   "km_local": 120
+  },
+  "BEL": {
+   "lat": 50.8,
+   "lon": 4.4,
+   "vida": 1.15,
+   "km_local": 100
+  },
+  "CRO": {
+   "lat": 45.8,
+   "lon": 16.0,
+   "vida": 0.8,
+   "km_local": 180
+  },
+  "DEN": {
+   "lat": 55.7,
+   "lon": 12.6,
+   "vida": 1.4,
+   "km_local": 150
+  }
+ }
+}

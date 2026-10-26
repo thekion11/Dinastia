@@ -153,6 +153,19 @@ func _cobrar_la_jornada(c: Club, f: Finanzas, jugaron_en_casa: Dictionary) -> vo
 			_anotar_movimiento("Concentración previa (hotel y logística)", -coste_conc)
 			for j in c.plantilla:
 				j.fisico = clampi(j.fisico + 2, 10, 100)
+	## EL VIAJE A DOMICILIO (26-10): distancia real entre las dos sedes, autocar, avión o chárter, hotel y dietas.
+	## Solo tu club lo paga; la IA lleva el correctivo de la directiva.
+	if soy_yo and not en_casa:
+		for id_local: String in jugaron_en_casa:
+			var visita: Club = jugaron_en_casa[id_local]
+			if visita == c:
+				var local: Club = clubes.get(id_local)
+				if local != null:
+					var v := Viajes.viaje_euros(c.pais, local.pais, c.rep)
+					var coste_v := Viajes.viaje_interno(c.pais, local.pais, c.rep)
+					c.mover_saldo(-coste_v)
+					_anotar_movimiento("Viaje a %s (%d km, %d noches)" % [local.nombre, int(v["km"]), int(v["noches"])], -coste_v)
+				break
 	## El horario elegido mueve la taquilla: un lunes por la noche llena un
 	## tercio menos. El otro lado -los derechos de TV- lo cobra `Federacion`.
 	## EL TECHO RETRACTIL salva la taquilla cuando llueve, que es literalmente
