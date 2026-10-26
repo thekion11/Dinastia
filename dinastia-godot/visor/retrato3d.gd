@@ -61,6 +61,21 @@ static func _arrancar() -> void:
 	_inst.name = "Retrato3D"
 	arbol.root.add_child.call_deferred(_inst)
 
+## EL DT EN 3D (s3, 26-10-2026; regla del dueño: nada de retratos 2D sueltos). El
+## mismo busto que el de los jugadores, pero del personaje del entrenador
+## (`PersonajeDT.crear`, la figura que sale en la banda): `aspecto` es el aspecto 3D
+## guardado (`Roles.aspecto_3d()`). Mismo marcador, misma cola, misma caché.
+static func textura_dt(aspecto: Dictionary, k1: String, k2: String, alto_px: int = 64) -> Texture2D:
+	var tam := TAM_GRANDE if alto_px >= 120 else TAM_CHICO
+	var clave := "dt_%s_%d_%s_%s" % [str(hash(aspecto)), tam, k1, k2]
+	if _cache.has(clave):
+		return _cache[clave]
+	var t := ImageTexture.create_from_image(_marcador(tam, fondo_de(k1)))
+	_cache[clave] = t
+	_cola.append({"dt": aspecto, "k1": k1, "k2": k2, "tam": tam, "tex": t, "cabeza": alto_px <= ALTO_CABEZA})
+	_arrancar()
+	return t
+
 ## El fondo del retrato: el color del club hacia un verde oscuro, nunca más
 ## oscuro que `LUZ_FONDO` (antes un club negro daba un cuadro negro).
 static func fondo_de(k1: String) -> Color:
@@ -133,6 +148,10 @@ func _process(_d: float) -> void:
 
 func _servir() -> void:
 	var job: Dictionary = _cola.pop_front()
+	if job.has("dt"):
+		await _servir_dt(job)
+		_ocupado = false
+		return
 	var j: Jugador = job["j"]
 	var tam: int = job["tam"]
 	var tex: ImageTexture = job["tex"]
@@ -181,3 +200,35 @@ func _servir() -> void:
 				tex.set_image(img)
 	raiz.queue_free()
 	_ocupado = false
+
+## El encargo de un DT: su figura de `PersonajeDT`, encuadrada como la de un jugador.
+func _servir_dt(job: Dictionary) -> void:
+	var tam: int = job["tam"]
+	var tex: ImageTexture = job["tex"]
+	_vp.size = Vector2i(tam, tam)
+	var env: Environment = (_vp.get_child(0) as WorldEnvironment).environment
+	env.background_color = fondo_de(String(job["k1"]))
+	var raiz := Node3D.new()
+	_vp.add_child(raiz)
+	var d := PersonajeDT.crear(raiz, job["dt"], Color(job["k1"]), Color(job["k2"]))
+	if not d.is_empty():
+		var alto := float(PersonajeDT.aspecto(job["dt"]).get("altura", 1.78))
+		if bool(job.get("cabeza", false)):
+			_cam.position = Vector3(0.0, alto * 0.925, 0.98)
+			_cam.look_at(Vector3(0.0, alto * 0.915, 0.0), Vector3.UP)
+		else:
+			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
+			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
+		_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var img := _vp.get_texture().get_image()
+		_vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		if img != null and not img.is_empty():
+			img.convert(Image.FORMAT_RGBA8)
+			if Vector2i(img.get_size()) == Vector2i(tex.get_size()):
+				tex.update(img)
+			else:
+				tex.set_image(img)
+	raiz.queue_free()

@@ -20,6 +20,9 @@ const LADO_BLOQUE := 10
 const UMBRAL_BLOQUE := 0.04
 ## Y la pantalla CAMBIÓ si cambian al menos estos bloques (uno solo puede ser ruido).
 const MIN_BLOQUES := 2
+## Desplazamiento del color medio de un bloque (0..1) y bloques necesarios para un cambio de tono.
+const UMBRAL_TONO := 0.012
+const MIN_TONO := 6
 const SALTO_PIXEL := 0.25
 const REFS := "res://pruebas/visual/referencias/"
 const SALIDA := "/tmp/visual/"
@@ -129,8 +132,8 @@ func _foto(nombre: String) -> void:
 		return
 	var vieja := Image.load_from_file(ProjectSettings.globalize_path(ruta))
 	var d := diferencia(ref, vieja)
-	var cambia := int(d.z) >= MIN_BLOQUES
-	print("%s %-11s media %.2f %%  peor bloque %.1f %% %s  bloques %d" % ["CAMBIÓ" if cambia else "igual ", nombre, d.x * 100.0, d.y * 100.0, str(peor_bloque), int(d.z)])
+	var cambia := int(d.z) >= MIN_BLOQUES or tono_bloques >= MIN_TONO
+	print("%s %-11s media %.2f %%  peor bloque %.1f %% %s  bloques %d  tono %d" % ["CAMBIÓ" if cambia else "igual ", nombre, d.x * 100.0, d.y * 100.0, str(peor_bloque), int(d.z), tono_bloques])
 	if cambia:
 		_cambiadas.append(nombre)
 		ref.save_jpg(SALIDA + nombre + "_actual.jpg", 0.85)
@@ -154,10 +157,13 @@ func _sabotaje() -> void:
 ## Por BLOQUES de 10×10 (32×18 en pantalla, ~40×40 px reales): un cambio local -un texto, un panel
 ## que falta- se ve entero en su bloque y no se diluye en la media de toda la pantalla.
 static var peor_bloque := Vector2i.ZERO
+## Bloques que cambiaron de TONO en la última comparación (ver `diferencia`).
+static var tono_bloques := 0
 static func diferencia(a: Image, b: Image) -> Vector3:
 	var x := _reducir(a)
 	var y := _reducir(b)
 	var bloques := {}
+	var tonos := {}
 	var suma := 0.0
 	for j in COMPARA.y:
 		for i in COMPARA.x:
@@ -167,6 +173,7 @@ static func diferencia(a: Image, b: Image) -> Vector3:
 			suma += s
 			var k := Vector2i(i / LADO_BLOQUE, j / LADO_BLOQUE)
 			bloques[k] = float(bloques.get(k, 0.0)) + s
+			tonos[k] = (tonos.get(k, Vector3.ZERO) as Vector3) + Vector3(p.r - q.r, p.g - q.g, p.b - q.b)
 	var peor := 0.0
 	var cambian := 0
 	for k: Vector2i in bloques:
@@ -176,6 +183,16 @@ static func diferencia(a: Image, b: Image) -> Vector3:
 		peor = maxf(peor, m)
 		if m > UMBRAL_BLOQUE:
 			cambian += 1
+	## EL TONO (s3, 26-10-2026): un tinte suave (la tabla ×0,75 en verde y azul) mueve
+	## cada píxel muy poco y no llega a `UMBRAL_BLOQUE`, pero lo mueve SIEMPRE en el
+	## mismo sentido; el ruido del JPG va en los dos y se anula. Un bloque cambia de
+	## tono si su color medio se desplaza más de `UMBRAL_TONO` en algún canal; y la
+	## pantalla cuenta si son al menos `MIN_TONO` bloques (una región, no un píxel).
+	tono_bloques = 0
+	for k: Vector2i in tonos:
+		var t := (tonos[k] as Vector3) / float(LADO_BLOQUE * LADO_BLOQUE)
+		if maxf(absf(t.x), maxf(absf(t.y), absf(t.z))) > UMBRAL_TONO:
+			tono_bloques += 1
 	return Vector3(suma / float(COMPARA.x * COMPARA.y), peor, cambian)
 
 static func _reducir(img: Image) -> Image:
