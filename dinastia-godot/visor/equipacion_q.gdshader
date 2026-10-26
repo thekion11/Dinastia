@@ -285,7 +285,21 @@ void vertex() {
 			// Camiseta de juego: la tela tapa más el músculo (con 0,55 se leían
 			// los abdominales y el pectoral como pintados; 17-10-2026).
 			float alisar_ef = (civil || largo) ? alisar : max(alisar, 0.8);
-			float ropa = max(max(torso, zapato), max(manga_l, pant_l)) * alisar_ef;
+			// HOMBRO SIN COSTURA CLARA (26-10-2026): el tronco alisado acababa en
+			// y 1,47-1,53 y la manga empezaba en |x| 0,2: en lo alto del hombro
+			// quedaba una franja sin alisar entre dos alisadas, un pliegue que
+			// la luz marcaba como una raya clara del cuello al brazo. En ropa de
+			// calle el tronco se alisa hasta el escote (el mismo corte que pinta
+			// el fragmento).
+			float torso_a = torso;
+			if (civil) {
+				float tope_a = mix(1.552, 1.60, smoothstep(0.06, 0.085, ax)) + dy_cuerpo;
+				torso_a = (1.0 - brazo) * smoothstep(0.96, 1.02, y) * (1.0 - smoothstep(tope_a - 0.01, tope_a + 0.005, y));
+			}
+			// (Tronco y manga se reparten el hombro: (1 − brazo) y brazo. Con
+			// `max` el reparto bajaba a la mitad justo en la costura.)
+			float tronco_manga = civil ? clamp(torso_a + manga_l, 0.0, 1.0) : max(torso_a, manga_l);
+			float ropa = max(max(tronco_manga, zapato), pant_l) * alisar_ef;
 			VERTEX += NORMAL * zapato * 0.008;
 			vec3 a = normalize(CUSTOM1.xyz);
 			vec3 b = normalize(NORMAL);
