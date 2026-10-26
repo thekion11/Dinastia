@@ -1861,7 +1861,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - Cantera/ojeadores: **techos hasta 97** en `academia.gd:368`, `cantera_p1.gd:300` y `:400`, `ojeadores.gd:116`; con la curva nueva (`ProgresoJugador`) revisar si 97 sigue siendo alcanzable y deseable.
 - Mercado: el **valor de los jugadores de la IA ×1,30** infla precios; medir con `pruebas/ideas/eco_medicion.gd` tras la curva nueva y decidir el factor.
 - Contratos: la nómina propia se duplicaba sin fichar (210k→447k/semana en 3 temporadas): volver a medir tras las renovaciones anticipadas de la IA (`mc_contratos`).
-- Rendimiento: **~230 000 objetos** por vuelta de menús (`pruebas/ideas/fugas_menus.gd`; ya no crecen, pero el total es alto): buscar quién los crea (pestañas que se rehacen enteras).
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
 - Partido: falta la **captura del diálogo de plan de partido** con la cámara real.
 - Carrera: falta la animación de parada del portero en modo jugador.

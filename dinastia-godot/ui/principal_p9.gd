@@ -157,17 +157,24 @@ func _refrescar() -> void:
 	## Los colores van YA resueltos (paleta + modo daltónico), la lección del
 	## bug de coherencia visual que se encontró y arregló en `PanelMercado`
 	## esa misma sesión, aplicada desde el principio esta vez.
+	##
+	## ROTACIÓN DE NODOS (s3, 26-10-2026): la tabla, el plantel, el mercado y el
+	## inicio se repintaban en CADA refresco aunque estuvieran ocultos (dos tercios
+	## de los ~111 000 nodos que creaba una vuelta por los menús, medido con
+	## `pruebas/ideas/s3_rotacion_menus.gd`). Ahora van diferidos como las demás:
+	## se pintan al verse, con los datos de ese momento.
 	_titulo_tabla.text = TablaCompeticion.titulo_de(mundo, liga, c)
-	TablaCompeticion.pintar(_lista_tabla, mundo, liga, c, {
-		"suave":  _pal_suave(),
-		"texto":  _pal_texto(),
-		"acento": COL_ACENTO,
-		"verde":  _color_accesible(COL_VERDE),
-		"rojo":   _color_accesible(COL_ROJO),
-		"oro":    _color_accesible(COL_ORO),
-		"escala": _escala_texto,
-	})
-	_ui_plantel._pintar_plantel(c)
+	_perezoso(_lista_tabla, func() -> void:
+		TablaCompeticion.pintar(_lista_tabla, mundo, liga, c, {
+			"suave":  _pal_suave(),
+			"texto":  _pal_texto(),
+			"acento": COL_ACENTO,
+			"verde":  _color_accesible(COL_VERDE),
+			"rojo":   _color_accesible(COL_ROJO),
+			"oro":    _color_accesible(COL_ORO),
+			"escala": _escala_texto,
+		}))
+	_perezoso(_lista_plantel, _ui_plantel._pintar_plantel.bind(c))
 	## El panel de mercado se actualiza con la paleta del club activo para que
 	## el color de acento refleje siempre al equipo que se dirige.
 	##
@@ -181,14 +188,15 @@ func _refrescar() -> void:
 	## viejos-, justo la clase de incoherencia entre un componente nuevo y el
 	## resto de la interfaz que el pedido de mejora señalaba.
 	if _panel_mercado != null:
-		_panel_mercado.inicializar(mundo, {
-			"acento": COL_ACENTO,
-			"texto":  _pal_texto(),
-			"suave":  _pal_suave(),
-			"verde":  _color_accesible(COL_VERDE),
-			"rojo":   _color_accesible(COL_ROJO),
-			"oro":    _color_accesible(COL_ORO),
-		}, _negociacion_ultimo)
+		_perezoso(_panel_mercado, func() -> void:
+			_panel_mercado.inicializar(mundo, {
+				"acento": COL_ACENTO,
+				"texto":  _pal_texto(),
+				"suave":  _pal_suave(),
+				"verde":  _color_accesible(COL_VERDE),
+				"rojo":   _color_accesible(COL_ROJO),
+				"oro":    _color_accesible(COL_ORO),
+			}, _negociacion_ultimo))
 	_perezoso(_lista_copa, _ui_plantel._pintar_copa.bind(c))
 	_perezoso(_lista_club, _ui_ficha._pintar_club.bind(c))
 	_perezoso(_lista_conti, _ui_club_vida._pintar_conti.bind(c))
@@ -205,7 +213,7 @@ func _refrescar() -> void:
 		_ui_legado._pintar_records()
 		_ui_legado._filtrar_records())
 	_perezoso(_lista_legado, _ui_legado._pintar_legado)
-	_ui_legado._pintar_inicio(c)
+	_perezoso(_lista_inicio, _ui_legado._pintar_inicio.bind(c))
 	## Las otras tres viven DENTRO de `_pintar_gente()` ahora -un chip por
 	## sección, solo se pinta la que está activa- en vez de apilarse las
 	## cuatro siempre, aunque solo una se vea.
@@ -235,7 +243,9 @@ func _refrescar() -> void:
 	_pintar_dias()
 	_actualizar_badges()
 	_ui_despacho._pintar_despacho()
-	_ver_ficha(_seleccionado if _seleccionado != null else _jugador_de_la_semana(c))
+	## La ficha, igual: si la columna no se ve (menús sin ficha), se pinta al verse.
+	_seleccionado = _seleccionado if _seleccionado != null else _jugador_de_la_semana(c)
+	_perezoso(_ficha, _ver_ficha.bind(_seleccionado))
 	## LO ÚLTIMO DE TODO: traducir. Ver `nucleo/idiomas.gd` -la interfaz se pinta
 	## siempre en castellano y se traduce al final, para no tener que marcar dos
 	## mil cadenas con `tr()` en un archivo de diez mil líneas-.
