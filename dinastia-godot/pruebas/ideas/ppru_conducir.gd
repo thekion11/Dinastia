@@ -14,7 +14,7 @@ var _e: ExploradorCiudad
 
 func _probar() -> void:
 	_titulo("M-407: CONDUCCIÓN — acelerar, frenar, marcha atrás y girar")
-	_e = ExploradorCiudad.new()
+	_e = _nuevo()
 	_e.modo = "coche"
 	add_child(_e)
 	_e.set_physics_process(false)
@@ -26,6 +26,10 @@ func _probar() -> void:
 	_freno_de_mano()
 	_soltar_todo()
 	_e.queue_free()
+
+## El explorador que se prueba (una prueba de mutación puede dar uno roto a propósito).
+func _nuevo() -> ExploradorCiudad:
+	return ExploradorCiudad.new()
 
 func _tecla(k: Key, si: bool) -> void:
 	var ev := InputEventKey.new()

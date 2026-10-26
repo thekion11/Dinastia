@@ -44,6 +44,7 @@ func _probar_async() -> void:
 	_girar_con_la_camara(inicio)
 	_choque_contra_pared(inicio)
 	_recorrido(inicio)
+	_linea("  (%.1f s en total)" % (Time.get_ticks_msec() / 1000.0))
 
 # ------------------------------------------------------------------ ayudas
 
@@ -248,23 +249,28 @@ func _choque_contra_pared(inicio: Vector3) -> void:
 	var caida := -1.0
 	var dentro := 0
 	var v_antes := 0.0
-	var i_golpe := -1
+	var i_toca := -1
 	for i in 60 * 6:
 		_fisica(1)
 		var av := (_e.cuerpo.position - q).dot(dir)
 		avance_max = maxf(avance_max, av)
 		if _e._n_fijos(_e.cuerpo.position, ExploradorCiudad.RADIO_COCHE) > 0:
 			dentro += 1
-		if i_golpe < 0 and v_antes > 5.0 and _e.vel < v_antes * 0.5:
-			i_golpe = i
+		## El primer fotograma en que pierde velocidad con el pedal pisado: ha tocado la pared.
+		if i_toca < 0 and v_antes > 5.0 and _e.vel < v_antes - 0.01:
+			i_toca = i
+		if i_toca >= 0 and i == i_toca + 30:
 			caida = _e.vel
 		vmax = maxf(vmax, _e.vel)
 		v_antes = _e.vel
 	_tecla(KEY_W, false)
 	_comprobar(vmax > 12.0, "llega lanzado a la pared (%.0f km/h)" % (vmax * 3.6))
-	_comprobar(i_golpe >= 0, "al chocar la velocidad cae de golpe (de más de 5 m/s a %.2f en un fotograma)" % caida)
+	_comprobar(i_toca >= 0 and caida < vmax * 0.25, "al tocar la pared la velocidad cae: de %.1f a %.1f m/s en 0,5 s" % [vmax, caida])
 	_comprobar(avance_max <= dist + 0.3 and dentro == 0, "no atraviesa: avanza %.2f m de %.2f libres, %d fotogramas dentro" % [avance_max, dist, dentro])
-	_comprobar(_e._t_golpe != t_golpe0, "el golpe se registra (sonido, vibración y sacudida de cámara)")
+	## DEFECTO REAL (ppru, 26-10): de frente y perpendicular a la fachada (las calles son una
+	## cuadrícula y el rumbo de salida es 0) `_mover_un_trozo` da por bueno el «deslizamiento»
+	## de 0 m (la componente lateral del paso es 0) y nunca llama a `_golpe_coche`.
+	_comprobar(_e._t_golpe != t_golpe0, "el choque de frente se registra (sonido, vibración y sacudida de cámara; M-172)")
 	_comprobar(_en_el_suelo(_e.cuerpo.position), "tras el choque sigue sobre el suelo")
 
 ## 8 s con volantazos por la ciudad real: dentro del mapa, sobre el suelo, nunca dentro de un edificio.

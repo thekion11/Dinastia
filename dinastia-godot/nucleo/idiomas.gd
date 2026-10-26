@@ -78,8 +78,8 @@ static func _tiene_letras(s: String) -> bool:
 			return true
 	return false
 
-func _patron(frase: String, prof: int) -> String:
-	for par: Array in _patrones:
+func _patron(frase: String, prof: int, lista: Array = []) -> String:
+	for par: Array in (lista if not lista.is_empty() else _patrones):
 		var m: RegExMatch = (par[0] as RegEx).search(frase)
 		if m == null or m.get_start() != 0 or m.get_end() != frase.length():
 			continue
@@ -158,14 +158,25 @@ func _t(frase: String, prof: int) -> String:
 	var fin := frase.length()
 	while fin > ini and not _es_letra(frase.unicode_at(fin - 1)) and frase.unicode_at(fin - 1) != 41:
 		fin -= 1
+	## Una frase ARMADA por tramos con punto final («33 años · … · no se muerde la lengua.»): el punto es del
+	## último tramo, no de la frase entera. Quitándolo aquí, ese tramo se buscaba sin su punto y no estaba en la
+	## tabla. Así que con tramos se deja la puntuación de cierre en su sitio (cada tramo ya sabe quitársela).
+	if fin < frase.length() and _tiene_tramos(frase) and _solo_puntuacion(frase.substr(fin)):
+		fin = frase.length()
 	if ini > 0 or fin < frase.length():
 		var medio := frase.substr(ini, fin - ini)
 		if medio != "" and medio != frase:
 			var tm := _t(medio, prof + 1)
 			if tm != medio:
 				return frase.substr(0, ini) + tm + frase.substr(fin)
+	## Un patrón que encaja ENTERO en una frase con tramos («🎙 Rueda de prensa · habla X») gana a partirla:
+	## partida salía a medias. Solo se prueban los patrones que llevan separador (una decena), así que no cuesta.
+	if _tiene_tramos(frase):
+		var entera := _patron(frase, prof, _patrones_con_tramos())
+		if entera != "":
+			return entera
 	## Por tramos.
-	for sep: String in ["  ·  ", " · ", " — ", " | "]:
+	for sep: String in TRAMOS:
 		if frase.contains(sep):
 			var partes := frase.split(sep)
 			var cambio := false
@@ -220,6 +231,34 @@ func _directa_es(texto: String) -> bool:
 		if (_extra.get(idi, {}) as Dictionary).has(texto):
 			return true
 	return false
+
+const TRAMOS := ["  ·  ", " · ", " — ", " | "]
+var _con_tramos: Array = []
+var _con_tramos_de := -1
+
+static func _tiene_tramos(frase: String) -> bool:
+	return frase.contains(" · ") or frase.contains(" — ") or frase.contains(" | ")
+
+## Solo «.», «!», «?», «…» y espacios: la puntuación de cierre de una oración.
+static func _solo_puntuacion(cola: String) -> bool:
+	for i in cola.length():
+		if not cola[i] in [".", "!", "?", "…", " "]:
+			return false
+	return true
+
+## Los patrones cuyo texto lleva un separador de tramos (se rehace si cambia la lista).
+func _patrones_con_tramos() -> Array:
+	if _con_tramos_de != _patrones.size():
+		_con_tramos.clear()
+		for par: Array in _patrones:
+			var fuente := (par[0] as RegEx).get_pattern()
+			if fuente.contains("·") or fuente.contains("—"):
+				_con_tramos.append(par)
+		_con_tramos_de = _patrones.size()
+		## Sin ninguno, una lista con un patrón imposible: la vacía querría decir «todos» en `_patron`.
+		if _con_tramos.is_empty():
+			_con_tramos.append([RegEx.create_from_string("(?!)"), {}])
+	return _con_tramos
 
 ## Traduce una frase suelta. Si no está en la tabla, devuelve la castellana: una
 ## interfaz medio traducida se lee; una llena de claves crudas, no.
