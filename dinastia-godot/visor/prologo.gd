@@ -169,10 +169,16 @@ func _hablar() -> void:
 	frase_i += 1
 	if frase_i >= frases.size():
 		dialogo.cerrar()
+		explorador._t_burbuja = 0.0
 		explorador.pausar(false)
 		_tras_hablar()
 		return
 	explorador.pausar(true)
+	## Plano de conversación del paseo (tras tu hombro, encuadrando su cara): en
+	## las salas del edificio la cámara normal se salía por la pared (toma 6).
+	explorador._hablando_con = mentor
+	explorador._t_burbuja = 120.0
+	explorador._colocar_camara(1.0)
 	mentor.mirar_a(explorador.cuerpo.position)
 	if frase_i == 0:
 		mentor.gesto()

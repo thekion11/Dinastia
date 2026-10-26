@@ -72,13 +72,16 @@ func _ready() -> void:
 	_cerrar_charla()
 	## 6) La directiva: la pregunta del presidente.
 	await _ir("presidente")
-	await _foto("6_directiva")
+	_cerrar_charla()
+	await _frames(3)
+	await _foto("6_directiva")          # la pregunta del presidente abierta
 	_p._responder_directiva(0)
 	await _frames(2)
 	_cerrar_charla()
-	## 7) La prensa: el plató de presentación.
+	## 7) La prensa: el plató de presentación (se abre al terminar de hablar el mentor).
 	await _ir("prensa")
-	await _esperar(1.2)
+	_cerrar_charla()
+	await _esperar(1.5)
 	await _foto("7_prensa")
 	for i in 3:
 		_p.prensa._responder("seguro", 2)
@@ -88,6 +91,8 @@ func _ready() -> void:
 	## 8) La oficina con el PC encendible, y el menú central encendido.
 	await _ir("oficina")
 	await _foto("8_oficina")
+	_cerrar_charla()
+	await _frames(3)
 	_e.cuerpo.position = _p.pc.punto
 	await _frames(2)
 	_p.pc.encender()
