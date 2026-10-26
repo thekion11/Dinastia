@@ -73,11 +73,9 @@ func arrancar_con(m: Mundo) -> void:
 	p.mundo = m
 	p._fin_partida_avisado = false
 	m.dificultad = Principal.dificultad_elegida
-	## La dificultad: por ahora solo escala la caja inicial (el "plata" del
-	## HTML, hasta 60% más en fácil o 45% menos en leyenda), que es lo que se
-	## nota desde el primer minuto. Sigue sin escalar los premios de la
-	## temporada ni las pretensiones salariales -"prem" y "pide" del HTML-,
-	## que están repartidos en Finanzas y Mercado y quedan para otra tanda.
+	## La dificultad: aquí escala la caja inicial («plata» del HTML: hasta 60% más en
+	## fácil o 45% menos en leyenda). Premios («prem») y pretensiones salariales («pide»)
+	## y el tope del valor de la IA los aplica el núcleo con Mundo.factor_dificultad().
 	var dif: Variant = Datos.tabla("DIF")
 	if dif is Dictionary and (dif as Dictionary).has(Principal.dificultad_elegida):
 		var plata := float((dif as Dictionary)[Principal.dificultad_elegida].get("plata", 1.0))

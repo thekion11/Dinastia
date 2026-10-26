@@ -17,7 +17,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
   < 450. Partir con `herramientas/partir_gd.py` (capas por herencia; la última conserva ruta y class_name).
 - Antes de SUBIR: `dinastia-godot/herramientas/banco.sh` debe terminar en «FIN. 0 fallos» (corre en paralelo; ~83 s). Mientras se trabaja:
   `mini_banco.sh <grupo>`. Lo que el banco no ve: `dinastia-godot/herramientas/especiales.sh [todo]`. Si el banco se cuelga: error de
-  sintaxis; debe aparecer «===== FIN». Sección nueva en banco.gd = añadirla a `SECCIONES`.
+  sintaxis; debe aparecer «===== FIN». Sección nueva = función en `pruebas/banco/<grupo>.gd` (o `varios`) + nombre en `SECCIONES` (y `GRUPOS`) de `pruebas/banco.gd`; si falta una, FALLO.
 - Lo visual se revisa en Forward+ y con la CÁMARA REAL del partido (no solo de cerca): `herramientas/captura.sh`. Capturas en JPG.
   No quitar ni apagar nada sin decirlo.
 - Contenedor nuevo: `git lfs pull --include="dinastia-godot/**"` ANTES de abrir Godot. Godot 4.7.2 se baja de GitHub releases.
