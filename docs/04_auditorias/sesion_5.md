@@ -200,3 +200,53 @@ Mini banco de «textos» y «partido», banco entero: 0 fallos.
 El 3D (acta = césped) ya lo cubren el especial «partido con motor real» y `s5_ocasiones`.
 
 Banco: 0 fallos. Especiales: todo en orden.
+
+## 5. Fila 18, primera parte: táctica con y sin balón y roles por jugador en el núcleo
+
+**Táctica con y sin balón** (`nucleo/tactica.gd`)
+- Dos perillas nuevas:
+  - Con balón, `verticalidad`: paciente / mixta / vertical.
+  - Sin balón, `tras_perdida`: repliegue / equilibrio / contrapresión.
+- Como las demás, suman en ataque lo que restan en defensa.
+- `perillas_con_balon()` y `perillas_sin_balon()` agrupan las 10 perillas por fase, para la pizarra que vendrá.
+
+**Roles por jugador** (`nucleo/rol_tactico.gd`, nuevo)
+- 14 roles: 2 de portero y 4 por línea.
+  - Defensa: central marcador, central con salida, lateral defensivo, carrilero.
+  - Medio: pivote, organizador, llegador, mediapunta.
+  - Delantera: nueve de área, falso nueve, extremo, delantero presionante.
+- Cada rol mueve dos cosas, según cuánto **encaje** el jugador:
+  - la fuerza del equipo, con un poco más de ataque o de defensa a cambio de la otra;
+  - el reparto de goles y asistencias.
+- El encaje sale de sus atributos, con rangos medidos en una liga entera: el percentil 10 vale 0 y el percentil 90 vale 1. Un rol que no encaja **resta**.
+- Se asignan con `Tactica.poner_rol(j, clave)`. Solo valen para la línea en la que juega el jugador.
+- Se guardan con la partida y se copian con la táctica.
+
+**Efecto en el motor**
+- En la simulación (`Partido`), `fuerza()` se sobrescribe en la última capa y los pesos de goleador y asistente usan el rol.
+- En el motor 3D (`MotorJugable`):
+  - la verticalidad sube la probabilidad del pase al hueco;
+  - la contrapresión alarga la ventana en que se presiona tras perder el balón (0,3 / 0,6 / 1,5 s).
+- Sin roles y con las perillas en lo normal, todo sale **idéntico** a antes: el banco lo confirma.
+
+**Medido** (`pruebas/ideas/s5_tactica_roles.gd`): 300 partidos por decisión, en mundos idénticos con la misma semilla en cada partido. Además de lo muestreado se mide la llegada **esperada** (la probabilidad exacta del motor), que no tiene ruido.
+
+| Decisión | Llegadas esperadas (tú-rival) | Otros datos |
+|---|---|---|
+| Sin roles | 1662-892 | |
+| Carrileros | 1763-931 | |
+| Laterales defensivos | 1646-878 | |
+| Carrileros que no encajan | 1648-947 | restan por los dos lados |
+| Pivote que encaja | 1635-859 | |
+| Pivote que no encaja | 1648-874 | |
+| Nueve de área | | el delantero mete el 29 % de los goles del equipo; 37 asistencias |
+| Falso nueve | | el delantero mete el 14 %; 88 asistencias |
+| Vertical / paciente | 1884-1017 / 1508-812 | |
+| Contrapresión / repliegue | 1884-984 / 1508-787 | |
+
+En el motor 3D (3 partidos cortos por caso), la contrapresión baja la precisión de pase del rival del 64 % al 58 %. Con tan pocos partidos, el resto del efecto en el 3D (tiros, pases) es todavía ruidoso y no se da por medido.
+
+**Queda (segunda parte de la fila 18):**
+- La interfaz: la pizarra con las dos fases, los roles en el once y su visualizador (`ui/componentes/pizarra_tactica.gd`).
+- Que la IA de los otros clubes use roles.
+- Medir el 3D con más partidos.

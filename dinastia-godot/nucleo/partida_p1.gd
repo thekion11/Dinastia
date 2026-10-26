@@ -235,6 +235,7 @@ static func _club_a_dic(c: Club) -> Dictionary:
 		"plan_p": c.tactica.plan_perdiendo, "plan_g": c.tactica.plan_ganando,
 		## La racha del plan (25-10): cuántas veces seguidas saltó el mismo cambio.
 		"plan_rc": c.tactica.racha_plan_clave, "plan_rn": c.tactica.racha_plan_n, "plan_fijo": c.tactica.plan_fijo,
+		"vert": c.tactica.verticalidad, "trasp": c.tactica.tras_perdida, "roles_t": c.tactica.roles.duplicate(),
 		## El once elegido a mano tampoco se guardaba: armabas tu equipo, salvabas
 		## la partida y al volver el automatico decidia por ti.
 		"once": c.once_elegido,

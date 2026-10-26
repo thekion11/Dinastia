@@ -365,3 +365,15 @@ func _reaplicar_plan() -> void:
 		c.tactica.mentalidad = int(cambio["mentalidad"])
 		c.tactica.linea = int(cambio["linea"])
 	invalidar_fuerza()
+
+## LOS ROLES POR JUGADOR (26-10-2026, fila 18): lo que cada rol suma o resta al ataque y a la defensa del
+## equipo, según encaje el jugador (`RolTactico`). Sin roles, la fuerza de siempre.
+func fuerza(once: Array[Jugador], c: Club) -> Dictionary:
+	var f := super.fuerza(once, c)
+	if c == null or c.tactica == null or c.tactica.roles.is_empty():
+		return f
+	var m := RolTactico.multiplicadores(c.tactica, once)
+	f["ata"] = float(f["ata"]) * float(m[0])
+	f["def"] = float(f["def"]) * float(m[1])
+	return f
+

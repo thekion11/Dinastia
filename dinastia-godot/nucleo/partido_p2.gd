@@ -218,6 +218,12 @@ func _tarjeta_arbitral(arr: Array[Jugador], plantilla: String, arbitro_nombre: S
 ## El goleador no se sortea plano: se pondera por lo cerca del area que juega y
 ## por su pegada. Si se sortea plano, los centrales marcan tanto como los nueves
 ## y la tabla de goleadores deja de tener sentido.
+## La táctica del club al que pertenece ese once (para los roles: `RolTactico`).
+func _tactica_de(once: Array[Jugador]) -> Tactica:
+	if not once.is_empty() and once_visita.has(once[0]):
+		return visita.tactica
+	return local.tactica
+
 func _elegir_goleador(once: Array[Jugador]) -> Jugador:
 	if once.is_empty():
 		return null
@@ -231,6 +237,7 @@ func _elegir_goleador(once: Array[Jugador]) -> Jugador:
 			"DEF": base = 0.11
 			"POR": base = 0.004
 		base *= 0.5 + float(j.atributos.get("tir", 50)) / 100.0
+		base *= RolTactico.peso(_tactica_de(once), j, "gol")
 		pesos.append(base)
 		total += base
 	var r := Azar.f() * total
@@ -275,6 +282,7 @@ func _elegir_asistente(once: Array[Jugador], autor: Jugador, minuto: int) -> Jug
 			"DEF": base = 0.22
 			"POR": base = 0.02
 		base *= 0.5 + float(j.atributos.get("pas", 50)) / 100.0
+		base *= RolTactico.peso(_tactica_de(once), j, "asist")
 		pesos.append(base)
 		total += base
 	var rng := RandomNumberGenerator.new()
