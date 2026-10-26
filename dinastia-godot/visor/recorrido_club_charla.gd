@@ -40,6 +40,39 @@ static func saludo(clave: String, base: String, semana: int, hora: float) -> Str
 	var i := (semana + absi(clave.hash())) % (variantes.size() + 1)
 	return Idiomas.t(base) if i == 0 else variantes[i - 1]
 
+## FASE 4, BLOQUE 7 (26-10): la frase de pasillo según la afinidad. La persona te saluda por tu
+## nombre y, según lo cerca que estéis (`AfinidadClub.tramo`), con más o menos calor. Se calcula
+## con la afinidad de ANTES de la charla y después se anota la charla (+2 la primera del día).
+## Solo cambia el texto: sin efectos en el partido. `m` nulo (sin partida) = sin frase.
+static func pasillo(m: Mundo, g: Dictionary) -> String:
+	if m == null or m.afinidad == null:
+		return ""
+	var nombre := String(g.get("nombre", ""))
+	var anio: int = m.reloj.anio if m.reloj.anio >= 0 else m.anio
+	var sem: int = m.reloj.semana if m.reloj.semana >= 0 else m.semana
+	var frases := _pasillo(m.afinidad.tramo(nombre))
+	var dt := Principal.dt_nombre_elegido.strip_edges().get_slice(" ", 0)
+	if dt == "" or dt.to_lower() == "míster":
+		dt = "míster"
+	var i := absi(("%s|%d|%d|%d" % [nombre, anio, sem, m.reloj.dia]).hash()) % frases.size()
+	m.afinidad.charlar(nombre, anio, sem, m.reloj.dia)
+	return String(frases[i]) % dt
+
+## Tres frases por tramo, ficticias y sin política ni religión (`%s` = el nombre del DT).
+static func _pasillo(tramo: String) -> Array:
+	match tramo:
+		"frio":
+			return [Idiomas.t("%s. Lo justo: tengo trabajo pendiente."),
+				Idiomas.t("Ah, %s. No sabía que se pasaba por aquí."),
+				Idiomas.t("Dígame rápido, %s, que voy con prisa.")]
+		"cercano":
+			return [Idiomas.t("¡%s! Qué alegría verle. Ya me estaba acordando de usted."),
+				Idiomas.t("%s, siéntese un rato. Para usted siempre hay tiempo."),
+				Idiomas.t("¡Ya era hora, %s! Le guardé un café.")]
+	return [Idiomas.t("Buenas, %s. ¿Todo bien por el club?"),
+		Idiomas.t("Hola, %s. Aquí andamos, como siempre."),
+		Idiomas.t("Qué tal, %s. Pase, pase.")]
+
 static func _variantes(clave: String) -> Array:
 	match clave:
 		"conserje":

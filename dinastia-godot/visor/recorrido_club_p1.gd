@@ -189,8 +189,9 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 	caja.add_child(fila)
 	var m: Mundo = EdificioClub.mundo_ref.get_ref() as Mundo if EdificioClub.mundo_ref != null else null
 	## El saludo varía con la hora y la semana (`RecorridoCharla`).
-	CuadroDialogo.escribir(dice, "«%s»" % RecorridoCharla.saludo(String(g["clave"]),
-		String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")), m.semana if m != null else -1, PersonalEstadio.hora))
+	var pasillo := RecorridoCharla.pasillo(m, g)   ## bloque 7: por tu nombre, según la afinidad
+	CuadroDialogo.escribir(dice, "«%s%s»" % [pasillo + " " if pasillo != "" else "", RecorridoCharla.saludo(String(g["clave"]),
+		String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")), m.semana if m != null else -1, PersonalEstadio.hora)])
 	var clave := String(g["clave"])
 	var cerrar := func() -> void:
 		personal.atender(g, desde, false)
