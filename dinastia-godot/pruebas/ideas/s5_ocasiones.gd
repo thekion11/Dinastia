@@ -237,6 +237,10 @@ func _partido_entero() -> void:
 	_comprobar(cerradas == oc.hechas, "todas se cierran")
 	_comprobar(max_t <= OcasionesDT.SEGUNDOS_MAX + 0.6, "ninguna pasa de 15 s (la más larga, %.1f s)" % max_t)
 	_comprobar(goles_oc[0] <= int(motor.goles[0]), "los goles de las ocasiones están en el marcador del motor")
+	## Tras el descanso en el camarín el estadio se reabre: el cupo y la cuenta siguen.
+	var otra_vez := _ocasion(motor, r[2])
+	_comprobar(otra_vez.cupo == oc.cupo and otra_vez.hechas == oc.hechas, "al reabrir el estadio el cupo sigue (%d/%d, no vuelve a cero)" % [otra_vez.hechas, otra_vez.cupo])
+	otra_vez.queue_free()
 	oc.queue_free()
 	(r[1] as Node3D).queue_free()
 

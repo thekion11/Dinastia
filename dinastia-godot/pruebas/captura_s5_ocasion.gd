@@ -3,6 +3,7 @@ extends Node
 ## botones y la cámara a pie de campo, el tiro elegido en marcha, el aviso del resultado y el interruptor en el
 ## panel previo al partido. Salida: pruebas/capturas/s5_ocasion_1..4 (JPG con captura.sh).
 ##   RESOLUCION=1280x720 herramientas/captura.sh res://pruebas/captura_s5_ocasion.tscn
+##   (SOLO_PANEL=1 delante: solo el panel previo, sin el partido.)
 var _vista: VistaEstadio
 var _fase := 0
 var _espera := 0
@@ -21,6 +22,10 @@ func _ready() -> void:
 	_m.generar(["CHI"], 4711)
 	_m.tomar_el_mando(_m.ligas[0].clubes[0].id)
 	Partido.ctx_club_id = _m.mi_club_id
+	if OS.get_environment("SOLO_PANEL") != "":
+		_fotos = 3
+		_fase = 5
+		return
 	var par := _m.proximo_partido()
 	var partido := Partido.new(par[0], par[1])
 	_vista = VistaEstadio.new()
@@ -81,8 +86,9 @@ func _process(_d: float) -> void:
 			_espera = 4
 			_fase = 5
 		5:
-			_foto("resultado")
-			_vista.queue_free()
+			if is_instance_valid(_vista):
+				_foto("resultado")
+				_vista.queue_free()
 			_vista = null
 			var c := Control.new()
 			c.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

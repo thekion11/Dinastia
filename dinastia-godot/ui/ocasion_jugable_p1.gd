@@ -27,6 +27,7 @@ signal termina(resultado: String)
 
 ## Clave del ajuste (se elige en el panel previo al partido, `InformeRival`).
 const PREF := "ocasiones_jugables"
+const META := "ocasiones_jugables"
 ## Sin pantalla (banco, pruebas) no se monta, salvo que una prueba lo pida.
 static var forzar := false
 const CLAVES := ["pase", "conducir", "tiro"]
@@ -90,6 +91,12 @@ func configurar(m: MotorJugable, p: Partido, lado: int, rig_: CameraRig = null) 
 	var semilla := hash(p.local.id + "|" + p.visita.id + "|ocasiones")
 	_rng.seed = semilla
 	cupo = OcasionesDT.cupo(semilla, p.minuto, p.minutos_fin)
+	## Tras el descanso en el camarín el estadio se vuelve a abrir: el cupo y las ya
+	## jugadas siguen siendo las del partido (se guardan en él), no se empieza de cero.
+	if p.has_meta(META):
+		var d: Dictionary = p.get_meta(META)
+		cupo = int(d["cupo"])
+		hechas = int(d["hechas"])
 	_proxima = OcasionesDT.primer_minuto(semilla, p.minuto)
 	motor.gol.connect(_al_gol)
 	motor.remate.connect(_al_remate)
@@ -143,6 +150,7 @@ func _abrir(p: Dictionary) -> bool:
 	_portador = p
 	if _pasos == 0:
 		hechas += 1
+		partido.set_meta(META, {"cupo": cupo, "hechas": hechas})
 		_t_total = 0.0
 		_resultado = ""
 		empieza.emit(hechas)
