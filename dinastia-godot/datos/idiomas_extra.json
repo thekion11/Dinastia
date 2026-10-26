@@ -5912,7 +5912,16 @@
   "sintiéndose uno más": "feeling like one of the group",
   "Foto del paseo": "Photo from the walk",
   "Un rato por la ciudad. Esta es mi casa ahora.": "A while around town. This is my home now.",
-  "Publicada": "Posted"
+  "Publicada": "Posted",
+  "%s. Lo justo: tengo trabajo pendiente.": "%s. Make it quick: I have work waiting.",
+  "Ah, %s. No sabía que se pasaba por aquí.": "Ah, %s. I didn't know you came by here.",
+  "Dígame rápido, %s, que voy con prisa.": "Tell me quickly, %s, I'm in a hurry.",
+  "¡%s! Qué alegría verle. Ya me estaba acordando de usted.": "%s! What a joy to see you. I was just thinking about you.",
+  "%s, siéntese un rato. Para usted siempre hay tiempo.": "%s, sit down for a while. I always have time for you.",
+  "¡Ya era hora, %s! Le guardé un café.": "About time, %s! I saved you a coffee.",
+  "Buenas, %s. ¿Todo bien por el club?": "Hello, %s. Everything fine around the club?",
+  "Hola, %s. Aquí andamos, como siempre.": "Hi, %s. Same as ever around here.",
+  "Qué tal, %s. Pase, pase.": "How are you, %s. Come in, come in."
  },
  "pt": {
   "Historia": "História",
@@ -11827,7 +11836,16 @@
   "sintiéndose uno más": "sentindo-se um a mais",
   "Foto del paseo": "Foto do passeio",
   "Un rato por la ciudad. Esta es mi casa ahora.": "Um bocado pela cidade. Esta é a minha casa agora.",
-  "Publicada": "Publicada"
+  "Publicada": "Publicada",
+  "%s. Lo justo: tengo trabajo pendiente.": "%s. O essencial: tenho trabalho pendente.",
+  "Ah, %s. No sabía que se pasaba por aquí.": "Ah, %s. Não sabia que passava por aqui.",
+  "Dígame rápido, %s, que voy con prisa.": "Diga-me depressa, %s, que tenho pressa.",
+  "¡%s! Qué alegría verle. Ya me estaba acordando de usted.": "%s! Que alegria vê-lo. Já estava a lembrar-me do senhor.",
+  "%s, siéntese un rato. Para usted siempre hay tiempo.": "%s, sente-se um bocado. Para o senhor há sempre tempo.",
+  "¡Ya era hora, %s! Le guardé un café.": "Já era tempo, %s! Guardei-lhe um café.",
+  "Buenas, %s. ¿Todo bien por el club?": "Boas, %s. Tudo bem pelo clube?",
+  "Hola, %s. Aquí andamos, como siempre.": "Olá, %s. Por aqui, como sempre.",
+  "Qué tal, %s. Pase, pase.": "Como está, %s. Entre, entre."
  },
  "patrones": [
   [
@@ -23354,7 +23372,16 @@
   "sintiéndose uno más": "se sentant l'un des leurs",
   "Foto del paseo": "Photo de la balade",
   "Un rato por la ciudad. Esta es mi casa ahora.": "Un tour en ville. C'est chez moi maintenant.",
-  "Publicada": "Publiée"
+  "Publicada": "Publiée",
+  "%s. Lo justo: tengo trabajo pendiente.": "%s. Faisons court : j'ai du travail qui m'attend.",
+  "Ah, %s. No sabía que se pasaba por aquí.": "Ah, %s. Je ne savais pas que vous passiez par ici.",
+  "Dígame rápido, %s, que voy con prisa.": "Dites-moi vite, %s, je n'ai pas le temps.",
+  "¡%s! Qué alegría verle. Ya me estaba acordando de usted.": "%s ! Quel plaisir de vous voir. Je pensais justement à vous.",
+  "%s, siéntese un rato. Para usted siempre hay tiempo.": "%s, asseyez-vous un moment. Pour vous, j'ai toujours du temps.",
+  "¡Ya era hora, %s! Le guardé un café.": "Il était temps, %s ! Je vous ai gardé un café.",
+  "Buenas, %s. ¿Todo bien por el club?": "Bonjour, %s. Tout va bien au club ?",
+  "Hola, %s. Aquí andamos, como siempre.": "Bonjour, %s. Nous voilà, comme toujours.",
+  "Qué tal, %s. Pase, pase.": "Comment allez-vous, %s ? Entrez, entrez."
  },
  "it": {
   "Historia": "Storia",
@@ -29269,7 +29296,16 @@
   "sintiéndose uno más": "sentendosi uno del gruppo",
   "Foto del paseo": "Foto della passeggiata",
   "Un rato por la ciudad. Esta es mi casa ahora.": "Un giro per la città. Ora casa mia è qui.",
-  "Publicada": "Pubblicata"
+  "Publicada": "Pubblicata",
+  "%s. Lo justo: tengo trabajo pendiente.": "%s. Solo il necessario: ho del lavoro arretrato.",
+  "Ah, %s. No sabía que se pasaba por aquí.": "Ah, %s. Non sapevo che passasse da queste parti.",
+  "Dígame rápido, %s, que voy con prisa.": "Mi dica in fretta, %s, ho fretta.",
+  "¡%s! Qué alegría verle. Ya me estaba acordando de usted.": "%s! Che piacere vederla. Stavo giusto pensando a lei.",
+  "%s, siéntese un rato. Para usted siempre hay tiempo.": "%s, si sieda un momento. Per lei c'è sempre tempo.",
+  "¡Ya era hora, %s! Le guardé un café.": "Era ora, %s! Le ho tenuto da parte un caffè.",
+  "Buenas, %s. ¿Todo bien por el club?": "Buongiorno, %s. Tutto bene al club?",
+  "Hola, %s. Aquí andamos, como siempre.": "Salve, %s. Qui si va avanti, come sempre.",
+  "Qué tal, %s. Pase, pase.": "Come va, %s. Entri, entri."
  },
  "de": {
   "Historia": "Geschichte",
@@ -35184,7 +35220,16 @@
   "sintiéndose uno más": "als einer von ihnen",
   "Foto del paseo": "Foto vom Spaziergang",
   "Un rato por la ciudad. Esta es mi casa ahora.": "Eine Runde durch die Stadt. Das ist jetzt mein Zuhause.",
-  "Publicada": "Gepostet"
+  "Publicada": "Gepostet",
+  "%s. Lo justo: tengo trabajo pendiente.": "%s. Nur kurz: Ich habe noch Arbeit liegen.",
+  "Ah, %s. No sabía que se pasaba por aquí.": "Ah, %s. Ich wusste nicht, dass Sie hier vorbeikommen.",
+  "Dígame rápido, %s, que voy con prisa.": "Sagen Sie schnell, %s, ich habe es eilig.",
+  "¡%s! Qué alegría verle. Ya me estaba acordando de usted.": "%s! Wie schön, Sie zu sehen. Ich habe gerade an Sie gedacht.",
+  "%s, siéntese un rato. Para usted siempre hay tiempo.": "%s, setzen Sie sich einen Moment. Für Sie habe ich immer Zeit.",
+  "¡Ya era hora, %s! Le guardé un café.": "Na endlich, %s! Ich habe Ihnen einen Kaffee aufgehoben.",
+  "Buenas, %s. ¿Todo bien por el club?": "Hallo, %s. Alles in Ordnung im Verein?",
+  "Hola, %s. Aquí andamos, como siempre.": "Hallo, %s. Wir sind da, wie immer.",
+  "Qué tal, %s. Pase, pase.": "Wie geht's, %s. Kommen Sie nur herein."
  },
  "ca": {
   "Historia": "Història",
@@ -41099,7 +41144,16 @@
   "sintiéndose uno más": "sentint-se un més",
   "Foto del paseo": "Foto del passeig",
   "Un rato por la ciudad. Esta es mi casa ahora.": "Una estona per la ciutat. Ara casa meva és aquí.",
-  "Publicada": "Publicada"
+  "Publicada": "Publicada",
+  "%s. Lo justo: tengo trabajo pendiente.": "%s. Només el just: tinc feina pendent.",
+  "Ah, %s. No sabía que se pasaba por aquí.": "Ah, %s. No sabia que passava per aquí.",
+  "Dígame rápido, %s, que voy con prisa.": "Digui'm ràpid, %s, que tinc pressa.",
+  "¡%s! Qué alegría verle. Ya me estaba acordando de usted.": "%s! Quina alegria veure'l. Just pensava en vostè.",
+  "%s, siéntese un rato. Para usted siempre hay tiempo.": "%s, segui una estona. Per a vostè sempre hi ha temps.",
+  "¡Ya era hora, %s! Le guardé un café.": "Ja era hora, %s! Li he guardat un cafè.",
+  "Buenas, %s. ¿Todo bien por el club?": "Bones, %s. Tot bé pel club?",
+  "Hola, %s. Aquí andamos, como siempre.": "Hola, %s. Aquí anem fent, com sempre.",
+  "Qué tal, %s. Pase, pase.": "Com va, %s. Passi, passi."
  },
  "pl": {
   "Club": "Klub",
@@ -47293,7 +47347,16 @@
   "sintiéndose uno más": "czując się jednym z grupy",
   "Foto del paseo": "Zdjęcie ze spaceru",
   "Un rato por la ciudad. Esta es mi casa ahora.": "Chwila w mieście. To teraz mój dom.",
-  "Publicada": "Opublikowano"
+  "Publicada": "Opublikowano",
+  "%s. Lo justo: tengo trabajo pendiente.": "%s. Tylko w skrócie: czeka na mnie praca.",
+  "Ah, %s. No sabía que se pasaba por aquí.": "Ach, %s. Pan tutaj? To rzadkość.",
+  "Dígame rápido, %s, que voy con prisa.": "Proszę szybko, %s, bo się spieszę.",
+  "¡%s! Qué alegría verle. Ya me estaba acordando de usted.": "%s! Jak miło pana widzieć. Akurat wspominaliśmy pana.",
+  "%s, siéntese un rato. Para usted siempre hay tiempo.": "%s, proszę usiąść na chwilę. Dla pana zawsze jest czas.",
+  "¡Ya era hora, %s! Le guardé un café.": "Najwyższy czas, %s! Kawa na pana czeka.",
+  "Buenas, %s. ¿Todo bien por el club?": "Dzień dobry, %s. Wszystko w porządku w klubie?",
+  "Hola, %s. Aquí andamos, como siempre.": "Witam, %s. Jak zawsze, jakoś leci.",
+  "Qué tal, %s. Pase, pase.": "Jak się pan ma, %s. Proszę, proszę."
  },
  "tr": {
   "Club": "Kulüp",
@@ -53487,6 +53550,15 @@
   "sintiéndose uno más": "gruptan biri gibi hissederek",
   "Foto del paseo": "Gezinti fotoğrafı",
   "Un rato por la ciudad. Esta es mi casa ahora.": "Şehirde bir tur. Artık evim burası.",
-  "Publicada": "Paylaşıldı"
+  "Publicada": "Paylaşıldı",
+  "%s. Lo justo: tengo trabajo pendiente.": "%s. Kısa tutalım: bekleyen işlerim var.",
+  "Ah, %s. No sabía que se pasaba por aquí.": "Ah, %s. Buralara uğradığınızı bilmiyordum.",
+  "Dígame rápido, %s, que voy con prisa.": "Çabuk söyleyin, %s, acelem var.",
+  "¡%s! Qué alegría verle. Ya me estaba acordando de usted.": "%s! Sizi görmek ne güzel. Tam sizi düşünüyordum.",
+  "%s, siéntese un rato. Para usted siempre hay tiempo.": "%s, biraz oturun. Sizin için her zaman vaktim var.",
+  "¡Ya era hora, %s! Le guardé un café.": "Çok şükür, %s! Size bir kahve ayırdım.",
+  "Buenas, %s. ¿Todo bien por el club?": "Merhaba, %s. Kulüpte her şey yolunda mı?",
+  "Hola, %s. Aquí andamos, como siempre.": "Merhaba, %s. Burada her zamanki gibi idare ediyoruz.",
+  "Qué tal, %s. Pase, pase.": "Nasılsınız, %s. Buyurun, buyurun."
  }
 }
