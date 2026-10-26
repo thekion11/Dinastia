@@ -152,7 +152,9 @@ func _montar() -> void:
 	pie.add_theme_constant_override("separation", 10)
 	v.add_child(pie)
 	var aviso := Tema.etiqueta(12, Tema.SUAVE, Idiomas.t("El partido está parado.") + "  " +
-		Mando.corto_de("jugar_estadisticas") + " / " + Mando.corto_de("jugar_pausa") + ": " + Idiomas.t("volver"))
+		Mando.corto_de("jugar_estadisticas") + " / " + Mando.corto_de("jugar_pausa") + ": " + Idiomas.t("volver") +
+		## Las flechas ya cambiaban de equipo el mapa de calor, pero no lo decía nadie.
+		"  ·  ← / →: " + Idiomas.t("mapa de calor del otro equipo"))
 	aviso.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pie.add_child(aviso)
 	var seguir := Button.new()

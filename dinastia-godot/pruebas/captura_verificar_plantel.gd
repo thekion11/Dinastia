@@ -32,7 +32,9 @@ func _boton_con_texto(raiz: Node, contiene: String) -> Button:
 func _primer_nombre_pintado(lista: VBoxContainer) -> String:
 	## La rejilla es un solo GridContainer de 6 columnas: el primer botón
 	## (columna NOMBRE) de la segunda fila en adelante es el primer jugador.
-	var g: GridContainer = lista.get_child(0)
+	## Desde el 25-10-2026 (uipl) la rejilla va después del resumen y los
+	## filtros de línea: se busca en vez de suponer que es el primer hijo.
+	var g: GridContainer = lista.find_children("*", "GridContainer", false, false)[0]
 	for n in g.get_children():
 		if n is HBoxContainer:
 			for hijo in n.get_children():

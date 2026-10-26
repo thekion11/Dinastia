@@ -28,8 +28,20 @@ static func textura(c: Club, alto_px: int = 26) -> Texture2D:
 	if img.load_svg_from_string(svg_de(c), float(alto_px) * 4.0 / 70.0) != OK:
 		return null
 	var t := ImageTexture.create_from_image(img)
-	_cache[clave] = t
+	_guardar(clave, t)
 	return t
+
+## Con TOPE (25-10-2026): la clave lleva los colores, y en la pantalla de
+## identidad cada paso del selector de color es un escudo nuevo que se quedaba
+## en memoria para siempre (~200 KB cada uno a 4x). Vaciar de golpe al llegar
+## al tope solo cuesta volver a rasterizar los que se vean en el siguiente
+## repintado; una tabla entera de escudos cabe de sobra por debajo.
+const TOPE_CACHE := 600
+
+static func _guardar(clave: String, t: Texture2D) -> void:
+	if _cache.size() >= TOPE_CACHE:
+		_cache.clear()
+	_cache[clave] = t
 
 ## M-066 (25-10-2026): el escudo en UNA tinta -negro y blanco para periódico,
 ## fotocopia o marcador de un solo color-. Sale del mismo SVG: cada píxel pasa a
@@ -50,7 +62,7 @@ static func textura_mono(c: Club, alto_px: int = 26, tinta: Color = Color.BLACK)
 			var base := tinta if p.get_luminance() < 0.55 else Color.WHITE
 			img.set_pixel(x, y, Color(base.r, base.g, base.b, p.a))
 	var t := ImageTexture.create_from_image(img)
-	_cache[clave] = t
+	_guardar(clave, t)
 	return t
 
 ## Se vacía al empezar otra partida: los colores de un club pueden cambiar entre

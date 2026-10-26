@@ -40,17 +40,23 @@ static func pintar_balance_y_caja(lista: VBoxContainer, c: Club, mundo: Mundo,
 		for k: String in Instalaciones.CATALOGO:
 			valor_obras += mundo.obras.nivel(k) * int((Instalaciones.CATALOGO[k] as Array)[2]) / 2
 	var activo := c.saldo + valor_plantel + valor_obras
-	_dato(lista, "Caja", _dinero(c.saldo), paleta["verde"] if c.saldo >= 0 else paleta["rojo"], paleta)
-	_dato(lista, "Valor del plantel", _dinero(valor_plantel), paleta["texto"], paleta)
-	_dato(lista, "Instalaciones", _dinero(valor_obras), paleta["texto"], paleta)
-	_dato(lista, "TOTAL ACTIVO", _dinero(activo), paleta["oro"], paleta)
 	var pasivo := 0
 	if mundo.banco != null:
 		for p: Dictionary in mundo.banco.prestamos:
 			pasivo += int(p.get("deuda", 0))
-	_dato(lista, "Pasivo exigible", _dinero(pasivo) if pasivo > 0 else "sin deuda",
+	## La barra va ANTES de las cifras: primero la forma (cuánto es caja y cuánto
+	## son jugadores, cuánto se debe) y debajo el detalle, cifra bajo cifra.
+	lista.add_child(GraficoFinanzas.balance([
+		[Idiomas.t("Caja"), maxi(0, c.saldo), paleta["verde"]],
+		[Idiomas.t("Plantel"), valor_plantel, paleta["texto"]],
+		[Idiomas.t("Instalaciones"), valor_obras, paleta["oro"]]], pasivo, paleta))
+	_dato(lista, Idiomas.t("Caja"), _dinero(c.saldo), paleta["verde"] if c.saldo >= 0 else paleta["rojo"], paleta)
+	_dato(lista, Idiomas.t("Valor del plantel"), _dinero(valor_plantel), paleta["texto"], paleta)
+	_dato(lista, Idiomas.t("Instalaciones"), _dinero(valor_obras), paleta["texto"], paleta)
+	_dato(lista, Idiomas.t("TOTAL ACTIVO"), _dinero(activo), paleta["oro"], paleta)
+	_dato(lista, Idiomas.t("Pasivo exigible"), _dinero(pasivo) if pasivo > 0 else Idiomas.t("sin deuda"),
 		paleta["rojo"] if pasivo > 0 else paleta["suave"], paleta)
-	_dato(lista, "PATRIMONIO NETO", _dinero(activo - pasivo),
+	_dato(lista, Idiomas.t("PATRIMONIO NETO"), _dinero(activo - pasivo),
 		paleta["oro"] if activo - pasivo >= 0 else paleta["rojo"], paleta)
 	var nota := _texto(10, paleta["suave"], paleta)
 	if pasivo > 0:
@@ -68,13 +74,18 @@ static func pintar_balance_y_caja(lista: VBoxContainer, c: Club, mundo: Mundo,
 	var saldo := c.saldo
 	var minimo := saldo
 	var mes_minimo := 0
+	var saldos: Array[int] = [saldo]
 	for m in 12:
 		saldo += mensual
+		saldos.append(saldo)
 		if saldo < minimo:
 			minimo = saldo
 			mes_minimo = m + 1
-	_dato(lista, "Dentro de 12 meses", _dinero(saldo), paleta["verde"] if saldo >= 0 else paleta["rojo"], paleta)
-	_dato(lista, "Punto más bajo", "%s (mes %d)" % [_dinero(minimo), mes_minimo],
+	lista.add_child(GraficoFinanzas.flujo(saldos, paleta))
+	_dato(lista, Idiomas.t("Dentro de 12 meses"), _dinero(saldo), paleta["verde"] if saldo >= 0 else paleta["rojo"], paleta)
+	## «mes 0» no lo dice nadie: si el punto más bajo es la caja de hoy, es «hoy».
+	_dato(lista, Idiomas.t("Punto más bajo"), (Idiomas.t("%s (hoy)") % _dinero(minimo)) if mes_minimo == 0
+		else (Idiomas.t("%s (mes %d)") % [_dinero(minimo), mes_minimo]),
 		paleta["rojo"] if minimo < 0 else paleta["texto"], paleta)
 	if minimo < 0:
 		var av := _texto(11, paleta["rojo"], paleta)
@@ -83,7 +94,7 @@ static func pintar_balance_y_caja(lista: VBoxContainer, c: Club, mundo: Mundo,
 		lista.add_child(av)
 	var gastos := int(proy["total_gastos"])
 	var ratio := float(proy["total_ingresos"]) / float(maxi(1, gastos))
-	_dato(lista, "Ratio de cobertura", "%.2f×" % ratio,
+	_dato(lista, Idiomas.t("Ratio de cobertura"), "%.2f×" % ratio,
 		paleta["verde"] if ratio >= 1.15 else (paleta["rojo"] if ratio < 1.0 else paleta["oro"]), paleta)
 
 ## LA MARCA DEL PECHO: el auspiciador activo, o las tres ofertas sobre la
@@ -110,13 +121,13 @@ static func pintar_auspicio(lista: VBoxContainer, c: Club, mundo: Mundo,
 		var n := _texto(14, col, paleta)
 		n.text = marca
 		fila_marca.add_child(n)
-		_dato(lista, "Aporte de la temporada", _dinero(int(a.contrato.get("monto", 0))), paleta["verde"], paleta)
-		_dato(lista, "Entra cada semana", _dinero(a.semanal()), paleta["verde"], paleta)
+		_dato(lista, Idiomas.t("Aporte de la temporada"), _dinero(int(a.contrato.get("monto", 0))), paleta["verde"], paleta)
+		_dato(lista, Idiomas.t("Entra cada semana"), _dinero(a.semanal()), paleta["verde"], paleta)
 		var pedido := int(a.contrato.get("exig_pos", 0))
 		var puesto := _puesto_en_liga(c, mundo)
 		var cumple := puesto > 0 and puesto <= pedido
-		_dato(lista, "Exigencia contractual", "terminar top %d de la liga" % pedido, paleta["texto"], paleta)
-		_dato(lista, "Ahora mismo vas", "%d.º — %s" % [puesto, "cumpliendo" if cumple else Idiomas.t("por debajo")],
+		_dato(lista, Idiomas.t("Exigencia contractual"), Idiomas.t("terminar top %d de la liga") % pedido, paleta["texto"], paleta)
+		_dato(lista, Idiomas.t("Ahora mismo vas"), "%d.º — %s" % [puesto, Idiomas.t("cumpliendo") if cumple else Idiomas.t("por debajo")],
 			paleta["verde"] if cumple else paleta["rojo"], paleta)
 		var av := _texto(10, paleta["suave"], paleta)
 		av.text = Idiomas.t("Si no cumples la exigencia, las ofertas del próximo año llegan un 30% más flacas.")
@@ -150,10 +161,12 @@ static func pintar_auspicio(lista: VBoxContainer, c: Club, mundo: Mundo,
 		fila.add_child(n2)
 		var m2 := _texto(12, paleta["texto"], paleta)
 		m2.text = _dinero(int(o.get("monto", 0)))
+		m2.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		m2.custom_minimum_size = Vector2(96, 0)
 		fila.add_child(m2)
 		var e2 := _texto(11, paleta["suave"], paleta)
 		e2.text = Idiomas.t("top %d") % int(o.get("exig_pos", 0))
+		e2.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		e2.custom_minimum_size = Vector2(52, 0)
 		fila.add_child(e2)
 		var b := Button.new()
@@ -188,10 +201,14 @@ static func pintar_patrocinio(lista: VBoxContainer, c: Club, mundo: Mundo,
 			var fila := HBoxContainer.new()
 			fila.add_theme_constant_override("separation", 6)
 			lista.add_child(fila)
+			## Nombre y precio en la fila; la descripción debajo, entera. Antes iban
+			## «nombre — descripción» en una sola etiqueta recortada, y a 1280×720
+			## se perdía justo lo que explica qué hace la campaña.
 			var n := _texto(12, paleta["texto"], paleta)
-			n.text = "%s  —  %s" % [String(f[1]), String(f[2])]
+			n.text = String(f[1])
 			n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			n.clip_text = true
+			n.tooltip_text = String(f[2])
 			fila.add_child(n)
 			var b := Button.new()
 			b.text = _dinero(coste)
@@ -200,6 +217,10 @@ static func pintar_patrocinio(lista: VBoxContainer, c: Club, mundo: Mundo,
 			b.custom_minimum_size = Vector2(90, 0)
 			b.pressed.connect(func() -> void: al_lanzar_campana.call(clave))
 			fila.add_child(b)
+			var dsc := _texto(10, paleta["suave"], paleta)
+			dsc.text = String(f[2])
+			dsc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			lista.add_child(dsc)
 
 	var rival := mundo.rival_de_marcas()
 	if rival == null:
@@ -212,8 +233,8 @@ static func pintar_patrocinio(lista: VBoxContainer, c: Club, mundo: Mundo,
 	dg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(dg)
 	var coste_g := mundo.coste_guerra_marcas()
-	_dato(lista, "Coste de la operación", _dinero(coste_g), paleta["texto"] if c.saldo >= coste_g else paleta["rojo"], paleta)
-	_dato(lista, "Probabilidad estimada", "%d%%" % int(round(mundo.probabilidad_guerra_marcas() * 100.0)),
+	_dato(lista, Idiomas.t("Coste de la operación"), _dinero(coste_g), paleta["texto"] if c.saldo >= coste_g else paleta["rojo"], paleta)
+	_dato(lista, Idiomas.t("Probabilidad estimada"), "%d%%" % int(round(mundo.probabilidad_guerra_marcas() * 100.0)),
 		paleta["texto"], paleta)
 	var bg := Button.new()
 	bg.text = Idiomas.t("⚔️ Ir a por su patrocinador")
@@ -248,7 +269,7 @@ static func pintar_banco(lista: VBoxContainer, c: Club, mundo: Mundo, paleta: Di
 	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(d)
 	if b.semanas_en_rojo > 0:
-		_dato(lista, "Semanas en rojo", "%d de %d" % [b.semanas_en_rojo, Banco.SEM_LIQUIDACION], paleta["rojo"], paleta)
+		_dato(lista, Idiomas.t("Semanas en rojo"), Idiomas.t("%d de %d") % [b.semanas_en_rojo, Banco.SEM_LIQUIDACION], paleta["rojo"], paleta)
 
 	if not b.prestamos.is_empty():
 		var tv := _texto(11, paleta["suave"], paleta)
@@ -283,27 +304,43 @@ static func pintar_banco(lista: VBoxContainer, c: Club, mundo: Mundo, paleta: Di
 	var tl := _texto(11, paleta["suave"], paleta)
 	tl.text = Idiomas.t("LÍNEAS DISPONIBLES")
 	lista.add_child(tl)
+	## Una tabla y no una frase por banco: «monto · cuotas · tasa» en una sola
+	## etiqueta recortada se cortaba a 1280×720 justo en la tasa, que es lo que
+	## decide cuál conviene. Cifras a la derecha, cada una en su columna.
+	var g := GridContainer.new()
+	g.columns = 5
+	g.add_theme_constant_override("h_separation", 10)
+	g.add_theme_constant_override("v_separation", 3)
+	lista.add_child(g)
+	for cab: Array in [[Idiomas.t("BANCO"), false], [Idiomas.t("MONTO"), true], [Idiomas.t("CUOTAS"), true],
+			[Idiomas.t("TASA/SEM"), true], ["", false]]:
+		var h := _texto(10, paleta["suave"], paleta)
+		h.text = String(cab[0])
+		h.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if bool(cab[1]) else HORIZONTAL_ALIGNMENT_LEFT
+		g.add_child(h)
 	for i2 in Banco.BANCOS.size():
 		var f: Array = Banco.BANCOS[i2]
 		var monto := Banco.monto_linea(i2, c)
 		var cuota := Banco.cuota_francesa(monto, float(f[1]), int(f[2]))
-		var fila2 := HBoxContainer.new()
-		fila2.add_theme_constant_override("separation", 6)
-		lista.add_child(fila2)
 		var n := _texto(12, paleta["texto"], paleta)
-		n.text = Idiomas.t("%s  ·  %s  ·  %d cuotas de %s  ·  %.1f%%/sem") % [
-			String(f[0]), _dinero(monto), int(f[2]), _dinero(cuota), float(f[1]) * 100.0]
+		n.text = String(f[0])
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		n.clip_text = true
-		fila2.add_child(n)
+		n.tooltip_text = String(f[0])
+		g.add_child(n)
+		for celda: String in [_dinero(monto), "%d × %s" % [int(f[2]), _dinero(cuota)], "%.1f%%" % (float(f[1]) * 100.0)]:
+			var l := _texto(12, paleta["texto"], paleta)
+			l.text = celda
+			l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+			g.add_child(l)
 		var idx2 := i2
 		var bt := Button.new()
 		bt.text = Idiomas.t("Tomar")
 		bt.add_theme_font_size_override("font_size", 11)
 		bt.disabled = b.prestamos.size() >= Banco.MAX_PRESTAMOS or b.en_mora()
-		bt.custom_minimum_size = Vector2(80, 0)
+		bt.custom_minimum_size = Vector2(72, 0)
 		bt.pressed.connect(func() -> void: al_pedir_credito.call(idx2))
-		fila2.add_child(bt)
+		g.add_child(bt)
 	var nota := _texto(10, paleta["suave"], paleta)
 	nota.text = Idiomas.t("La cuota se descuenta sola cada semana, llueva o truene. Dos créditos como mucho, y en mora no hay ventanilla.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

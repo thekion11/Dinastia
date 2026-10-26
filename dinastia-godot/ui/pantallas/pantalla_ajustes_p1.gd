@@ -52,7 +52,7 @@ func _pintar_fotogramas() -> void:
 	var fm := p._texto(10, Principal.COL_SUAVE)
 	fm.text = Idiomas.t("Mando conectado: %s  ·  cruceta o stick para moverte, A para pulsar, B para volver, gatillos para cambiar de pestaña.") % (
 		", ".join(Input.get_connected_joypads().map(func(i: int) -> String: return Input.get_joy_name(i)))
-		if not Input.get_connected_joypads().is_empty() else "ninguno")
+		if not Input.get_connected_joypads().is_empty() else Idiomas.t("ninguno"))
 	fm.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(fm)
 	p._lista_ajustes.add_child(HSeparator.new())
@@ -265,6 +265,7 @@ func _pintar_accesibilidad() -> void:
 			p._escala_texto = esc
 			p._refrescar())
 		fila_tx.add_child(b)
+	AjustesAcceso.muestra_texto(p)
 
 	var fila_d := HBoxContainer.new()
 	fila_d.add_theme_constant_override("separation", 8)
@@ -280,6 +281,11 @@ func _pintar_accesibilidad() -> void:
 		p._daltonico = not p._daltonico
 		p._refrescar())
 	fila_d.add_child(b_d)
+	AjustesAcceso.muestra_colores(p)
+	AjustesAcceso.animaciones(p)
+	AjustesAcceso.vibracion(p)
+	AjustesAcceso.nota_subtitulos(p)
+	p._lista_ajustes.add_child(HSeparator.new())
 
 	## EL MERCADO A CIEGAS. `Ojeadores.modo_ciego` estaba escrito, probado, con
 	## su escala de palabras y hasta con una captura de pantalla propia en las

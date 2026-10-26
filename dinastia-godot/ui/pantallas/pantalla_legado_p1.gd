@@ -100,12 +100,12 @@ func _texto_proximo_compromiso(c: Club) -> String:
 	var liga := p._liga_de(c)
 	var par := liga.emparejamiento_de(c)
 	if par.is_empty():
-		return "Semana sin partido: entrenamiento doble."
+		return Idiomas.t("Semana sin partido: entrenamiento doble.")
 	var rival: Club = par[0] if par[0] != c else par[1]
 	var de_local: bool = par[0] == c
-	return "vs %s  ·  %s  ·  jornada %d de %s" % [
-		rival.nombre, "Local" if de_local else "Visita",
-		liga.jornada_actual + 1, liga.nombre]
+	return Idiomas.t("vs %s  ·  %s  ·  jornada %d de %s") % [
+		rival.nombre, Idiomas.t("Local") if de_local else Idiomas.t("Visita"),
+		liga.jornada_actual + 1, Idiomas.t(liga.nombre)]
 
 ## EL DESGASTE Y EL CURRÍCULUM. Las dos cosas que hacen que esto sea una carrera
 ## y no una partida: lo que te cuesta el cargo, y por dónde has pasado.
@@ -114,7 +114,7 @@ func _pintar_desgaste(r: Roles) -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("🔥 DESGASTE EN EL CARGO")
 	p._lista_legado.add_child(t)
-	p._dato("Nivel", "%d de 100" % r.desgaste,
+	p._dato("Nivel", Idiomas.t("%d de 100") % r.desgaste,
 		Principal.COL_ROJO if r.quemado() else (Principal.COL_ORO if r.desgaste >= 55 else Principal.COL_VERDE), p._lista_legado)
 	var d := p._texto(10, Principal.COL_ROJO if r.quemado() else Principal.COL_SUAVE)
 	if r.quemado():
@@ -137,11 +137,11 @@ func _pintar_desgaste(r: Roles) -> void:
 		var hasta := int(c.get("hasta", 0))
 		var l := p._texto(12, Principal.COL_ORO if hasta == 0 else Principal.COL_TEXTO)
 		l.text = "%s  ·  %d–%s" % [String(c.get("nombre", "")), int(c.get("desde", 0)),
-			"hoy" if hasta == 0 else str(hasta)]
+			Idiomas.t("hoy") if hasta == 0 else str(hasta)]
 		p._lista_legado.add_child(l)
 		if hasta != 0:
 			var m := p._texto(10, Principal.COL_SUAVE)
-			m.text = Idiomas.t("     %d título(s) al irte  ·  %s") % [int(c.get("trofeos", 0)), String(c.get("motivo", ""))]
+			m.text = Idiomas.t("     %d título(s) al irte  ·  %s") % [int(c.get("trofeos", 0)), Idiomas.t(String(c.get("motivo", "")))]
 			p._lista_legado.add_child(m)
 
 ## `vCarrera()`: EL RIVAL PERSONAL. No se elige y no se puede quitar: nace del
@@ -159,16 +159,19 @@ func _pintar_rival_dt(r: Roles) -> void:
 	n.text = "%s  ·  %s" % [String(r.rival_dt.get("nombre", "")), c.nombre if c else "?"]
 	p._lista_legado.add_child(n)
 	var e := p._texto(10, Principal.COL_SUAVE)
-	e.text = String(r.rival_dt.get("estilo", ""))
+	e.text = Idiomas.t(String(r.rival_dt.get("estilo", "")))
 	e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_legado.add_child(e)
 	var pj := int(r.rival_dt.get("pj", 0))
-	p._dato("Cara a cara desde %d" % int(r.rival_dt.get("desde", 0)),
-		"%d–%d–%d en %d duelo%s" % [int(r.rival_dt.get("g", 0)), int(r.rival_dt.get("e", 0)),
-			int(r.rival_dt.get("p", 0)), pj, "" if pj == 1 else "s"],
+	## Singular y plural como dos frases enteras: «duelo%s» con una «s» pegada
+	## no se puede traducir (en inglés no es «duelos», en polaco ni siquiera es
+	## una letra).
+	p._dato(Idiomas.t("Cara a cara desde %d") % int(r.rival_dt.get("desde", 0)),
+		(Idiomas.t("%d–%d–%d en %d duelo") if pj == 1 else Idiomas.t("%d–%d–%d en %d duelos")) % [int(r.rival_dt.get("g", 0)), int(r.rival_dt.get("e", 0)),
+			int(r.rival_dt.get("p", 0)), pj],
 		Principal.COL_TEXTO, p._lista_legado)
 	var tension := int(r.rival_dt.get("tension", 0))
-	p._dato("Tensión", "%d de 100" % tension,
+	p._dato("Tensión", Idiomas.t("%d de 100") % tension,
 		Principal.COL_ROJO if tension >= 80 else (Principal.COL_ORO if tension >= 60 else Principal.COL_SUAVE), p._lista_legado)
 	if tension >= 80 and not p._modo_experto:
 		var av := p._texto(10, Principal.COL_ROJO)
@@ -252,10 +255,10 @@ func _pintar_patrimonio_dt(r: Roles) -> void:
 	t.text = Idiomas.t("💼 TU PATRIMONIO")
 	p._lista_legado.add_child(t)
 	p._dato("Ahorros", p._dinero(r.patrimonio), Principal.COL_ORO, p._lista_legado)
-	p._dato("Tu sueldo", "%s / semana" % p._dinero(r.sueldo_semanal()), Principal.COL_TEXTO, p._lista_legado)
+	p._dato("Tu sueldo", Idiomas.t("%s / semana") % p._dinero(r.sueldo_semanal()), Principal.COL_TEXTO, p._lista_legado)
 	p._dato("Semanas dirigiendo", str(r.semanas_trabajadas), Principal.COL_SUAVE, p._lista_legado)
 	var lic := ["ninguna", "Licencia B", "Licencia A", "Licencia PRO"]
-	p._dato("Titulación", String(lic[clampi(r.licencia, 0, 3)]),
+	p._dato("Titulación", Idiomas.t(String(lic[clampi(r.licencia, 0, 3)])),
 		Principal.COL_VERDE if r.licencia > 0 else Principal.COL_SUAVE, p._lista_legado)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
@@ -269,10 +272,10 @@ func _pintar_patrimonio_dt(r: Roles) -> void:
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_legado.add_child(fila)
 		var n := p._texto(12, Principal.COL_VERDE if tengo else Principal.COL_TEXTO)
-		n.text = "%s%s" % ["✔  " if tengo else "     ", String(f[1])]
+		n.text = "%s%s" % ["✔  " if tengo else "     ", Idiomas.t(String(f[1]))]
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		n.clip_text = true
-		n.tooltip_text = String(f[3])
+		n.tooltip_text = Idiomas.t(String(f[3]))
 		fila.add_child(n)
 		var b := Button.new()
 		b.text = Idiomas.t("Puesto") if tengo else p._dinero(int(f[2]))
@@ -283,7 +286,7 @@ func _pintar_patrimonio_dt(r: Roles) -> void:
 		fila.add_child(b)
 		if not tengo and not p._modo_experto:
 			var d := p._texto(10, Principal.COL_SUAVE)
-			d.text = "     %s" % String(f[3])
+			d.text = "     %s" % Idiomas.t(String(f[3]))
 			d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_legado.add_child(d)
 
@@ -305,7 +308,7 @@ func _pintar_filiales(r: Roles) -> void:
 			var c: Club = p.mundo.clubes.get(cid)
 			if c == null:
 				continue
-			p._dato(c.nombre, "rep %d  ·  dividendo %s cada %d semanas" % [
+			p._dato(c.nombre, Idiomas.t("rep %d  ·  dividendo %s cada %d semanas") % [
 				c.rep, p._dinero(c.rep * c.rep * 40), Roles.SEMANAS_DIVIDENDO],
 				Principal.COL_ORO, p._lista_legado)
 	if not puede:

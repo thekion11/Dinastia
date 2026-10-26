@@ -11,6 +11,12 @@ extends Control
 ##
 ## Vive en su propio archivo y no dentro de `principal.gd` a propósito: ese
 ## archivo pasa de las cinco mil líneas y todo lo que pueda salir, sale.
+##
+## PULIDO (25-10-2026): las filas y la leyenda viven en `CompeticionFilas`, las
+## zonas reales (descenso, ascenso, promoción, continental) en
+## `CompeticionZonas`; el selector también abre la copa nacional y los torneos
+## continentales; todo pasa por `Idiomas.t`; y se maneja con mando: L1/R1 (o
+## Q/E) cambian de competición, la cruceta desplaza y B cierra.
 
 signal cerrado
 
@@ -19,21 +25,29 @@ const COL_PANEL := Tema.PANEL
 const COL_BORDE := Tema.BORDE
 const COL_TEXTO := Tema.TEXTO
 const COL_SUAVE := Tema.SUAVE
-const COL_ACENTO := Tema.ACENTO
-const COL_VERDE := Tema.BIEN
-const COL_ROJO := Tema.MAL
 const COL_ORO := Tema.ORO
+
+## Cuánto baja la lista por pulsación de la cruceta: unas tres filas.
+const PASO_SCROLL := 90
 
 var mundo: Mundo
 var _liga: Liga
+## La copa (nacional o continental) que se está mirando; null = una liga.
+var _copa: Copa
 var _lista: VBoxContainer
+var _scroll: ScrollContainer
 var _selector: OptionButton
+## Lo que hay en cada entrada del selector: una Liga o una Copa.
+var _entradas: Array = []
 
 func abrir(m: Mundo, liga: Liga) -> void:
 	mundo = m
 	_liga = liga
 	_construir()
 	_pintar()
+	## Con mando o teclado hay que empezar con el foco en algún sitio: si no,
+	## la cruceta no hace nada y parece que la pantalla se ha colgado.
+	_selector.grab_focus.call_deferred()
 
 func _construir() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -56,20 +70,20 @@ func _construir() -> void:
 	## El selector de liga es lo que convierte esto en "el mundo" y no "mi liga":
 	## desde aquí se mira cualquier campeonato sin salir de la pantalla.
 	_selector = OptionButton.new()
-	_selector.custom_minimum_size = Vector2(320, 34)
+	_selector.custom_minimum_size = Vector2(360, 34)
 	_selector.clip_text = true
-	for i in mundo.ligas.size():
-		var l: Liga = mundo.ligas[i]
-		_selector.add_item("%s  ·  %s" % [l.nombre, l.pais], i)
-		if l == _liga:
-			_selector.selected = i
-	_selector.item_selected.connect(func(i: int) -> void:
-		_liga = mundo.ligas[i]
-		_pintar())
+	_llenar_selector()
+	_selector.item_selected.connect(_elegir)
 	cab.add_child(_selector)
-	var hueco := Control.new()
-	hueco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cab.add_child(hueco)
+	var pista := Label.new()
+	pista.text = Idiomas.t("L1/R1 o Q/E: cambiar de competición")
+	pista.add_theme_font_size_override("font_size", 11)
+	pista.add_theme_color_override("font_color", COL_SUAVE)
+	pista.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	pista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pista.clip_text = true
+	pista.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	cab.add_child(pista)
 	var cerrar := Button.new()
 	cerrar.text = Idiomas.t("Cerrar")
 	cerrar.custom_minimum_size = Vector2(110, 34)
@@ -82,22 +96,72 @@ func _construir() -> void:
 	e.border_color = COL_BORDE
 	e.set_border_width_all(1)
 	e.set_corner_radius_all(8)
+	e.content_margin_left = 14; e.content_margin_right = 14
+	e.content_margin_top = 12; e.content_margin_bottom = 12
 	caja.add_theme_stylebox_override("panel", e)
 	caja.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	raiz.add_child(caja)
-	var dentro := VBoxContainer.new()
-	dentro.set_anchors_preset(Control.PRESET_FULL_RECT)
-	dentro.offset_left = 14; dentro.offset_top = 12
-	dentro.offset_right = -14; dentro.offset_bottom = -12
-	caja.add_child(dentro)
-	var s := ScrollContainer.new()
-	s.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	dentro.add_child(s)
+	_scroll = ScrollContainer.new()
+	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	caja.add_child(_scroll)
 	_lista = VBoxContainer.new()
 	_lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_lista.add_theme_constant_override("separation", 3)
-	s.add_child(_lista)
+	_lista.add_theme_constant_override("separation", 2)
+	_scroll.add_child(_lista)
+
+## Ligas primero (la tuya incluida, en su sitio), y después la copa nacional y
+## los torneos continentales en curso o ya jugados.
+func _llenar_selector() -> void:
+	_selector.clear()
+	_entradas.clear()
+	for l: Liga in mundo.ligas:
+		_selector.add_item("%s  ·  %s" % [Idiomas.t(l.nombre), l.pais], _entradas.size())
+		_entradas.append(l)
+	if mundo.copa != null and not mundo.copa.participantes.is_empty():
+		_selector.add_item("🏆  " + Idiomas.t(mundo.copa.nombre), _entradas.size())
+		_entradas.append(mundo.copa)
+	for k: String in Continental.claves():
+		var t: Continental = mundo.continentales.get(k)
+		if t == null or t.participantes.is_empty():
+			continue
+		_selector.add_item("🌎  " + Idiomas.t(Continental.nombre_conti(k)), _entradas.size())
+		_entradas.append(t)
+	var i := _entradas.find(_copa if _copa != null else _liga)
+	if i >= 0:
+		_selector.selected = i
+
+func _elegir(i: int) -> void:
+	if i < 0 or i >= _entradas.size():
+		return
+	if _entradas[i] is Liga:
+		_liga = _entradas[i]
+		_copa = null
+	else:
+		_copa = _entradas[i]
+	_pintar()
+	_scroll.scroll_vertical = 0
+
+## Va ANTES que el `_input` de la pantalla principal (los hijos reciben la
+## entrada primero): si no se consumieran aquí, L1/R1 cambiarían de pestaña
+## DETRÁS de esta ficha, que tapa toda la pantalla.
+func _input(evento: InputEvent) -> void:
+	if not is_visible_in_tree():
+		return
+	if evento.is_action_pressed("dinastia_tab_siguiente") or evento.is_action_pressed("dinastia_tab_anterior"):
+		var paso := 1 if evento.is_action_pressed("dinastia_tab_siguiente") else -1
+		var n := _selector.item_count
+		if n > 0:
+			var i := posmod(_selector.selected + paso, n)
+			_selector.select(i)
+			_elegir(i)
+		get_viewport().set_input_as_handled()
+	## La cruceta arriba/abajo desplaza la tabla: las filas no son botones (no
+	## hay nada que pulsar en ellas) y sin esto, con mando, no se veía más allá
+	## del décimo. Con el desplegable abierto, la cruceta es suya.
+	elif not _selector.get_popup().visible and (evento.is_action_pressed("ui_down", true) or evento.is_action_pressed("ui_up", true)):
+		_scroll.scroll_vertical += PASO_SCROLL if evento.is_action_pressed("ui_down", true) else -PASO_SCROLL
+		get_viewport().set_input_as_handled()
 
 func _unhandled_input(evento: InputEvent) -> void:
 	if evento.is_action_pressed("ui_cancel"):
@@ -111,149 +175,55 @@ func _pintar() -> void:
 		_lista.remove_child(n)
 		n.queue_free()
 	var mio := mundo.mi_club()
-	_titulo("%s  ·  jornada %d de %d" % [_liga.nombre, _liga.jornada_actual, _liga.jornadas()], COL_ORO, 15)
+	if _copa != null:
+		CompeticionCopas.pintar(_lista, _copa, mio)
+		return
+	CompeticionFilas.titulo(_lista, Idiomas.t("%s  ·  jornada %d de %d") % [Idiomas.t(_liga.nombre),
+		mini(_liga.jornada_actual, _liga.jornadas()), _liga.jornadas()], COL_ORO, 16)
 	_pintar_tabla_completa(mio)
-	_pintar_ultimos()
+	_pintar_ultimos(mio)
 	_pintar_proximos(mio)
 
 ## La tabla entera, con las columnas que la de la pantalla principal no tiene
 ## sitio para enseñar: goles a favor, en contra y diferencia.
 func _pintar_tabla_completa(mio: Club) -> void:
-	var g := GridContainer.new()
-	## A todo lo ancho (antes ocupaba un tercio y dejaba un hueco vacío): la
-	## columna del club se estira y las cifras van en columnas fijas.
-	g.columns = 10
-	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 14)
-	g.add_theme_constant_override("v_separation", 4)
-	_lista.add_child(g)
-	for t in ["#", "CLUB", "PJ", "G", "E", "P", "GF", "GC", "DG", "PTS"]:
-		_celda(g, t, COL_SUAVE, t != "CLUB" and t != "#", 12)
+	var tabla := _liga.tabla()
+	var zonas := CompeticionZonas.de_liga(mundo, _liga, tabla)
+	CompeticionFilas.cabecera(_lista, ["PJ", "G", "E", "P", "GF", "GC", "DG", "PTS"])
 	var puesto := 0
-	for f: Dictionary in _liga.tabla():
+	for f: Dictionary in tabla:
 		puesto += 1
 		var c: Club = f["club"]
-		var propio := c == mio
-		var color := COL_ACENTO if propio else COL_TEXTO
-		## Las zonas: campeón y descenso. Es lo primero que se mira en una tabla
-		## y en la pantalla principal no cabía.
-		var col_puesto := COL_SUAVE
-		if puesto == 1:
-			col_puesto = COL_ORO
-		elif puesto <= 4:
-			col_puesto = COL_VERDE
-		elif puesto > _liga.clubes.size() - 3:
-			col_puesto = COL_ROJO
-		_celda(g, str(puesto), col_puesto)
-		var fila := HBoxContainer.new()
-		fila.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		fila.add_theme_constant_override("separation", 8)
-		fila.add_child(_escudo(c, 22))
-		var nom := Label.new()
-		nom.text = c.nombre
-		nom.add_theme_font_size_override("font_size", 14)
-		nom.add_theme_color_override("font_color", color)
-		nom.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		fila.add_child(nom)
-		g.add_child(fila)
 		var dg := int(f["gf"]) - int(f["gc"])
-		for v in [f["pj"], f["g"], f["e"], f["p"], f["gf"], f["gc"], ("+%d" % dg) if dg > 0 else str(dg), f["pts"]]:
-			_celda(g, str(v), color, true, 14)
+		var cifras := [str(f["pj"]), str(f["g"]), str(f["e"]), str(f["p"]), str(f["gf"]), str(f["gc"]),
+			("+%d" % dg) if dg > 0 else str(dg), str(f["pts"])]
+		CompeticionFilas.fila_tabla(_lista, puesto, c, cifras, c == mio, puesto % 2 == 0,
+			zonas.get(c.id, {}))
+	CompeticionFilas.leyenda(_lista, zonas)
 
 ## Los resultados de la última jornada jugada. `Liga.historial` los guarda desde
 ## esta tanda; antes viajaban en una señal y se perdían.
-func _pintar_ultimos() -> void:
-	if _liga.historial.is_empty():
-		return
+func _pintar_ultimos(mio: Club) -> void:
 	_lista.add_child(HSeparator.new())
-	_titulo("ÚLTIMOS RESULTADOS  ·  jornada %d" % _liga.historial.size(), COL_SUAVE, 11)
+	if _liga.historial.is_empty():
+		CompeticionFilas.titulo(_lista, Idiomas.t("ÚLTIMOS RESULTADOS"), COL_SUAVE, 12)
+		CompeticionFilas.titulo(_lista, Idiomas.t("Todavía no se ha jugado ninguna jornada."), COL_SUAVE, 13)
+		return
+	CompeticionFilas.titulo(_lista, Idiomas.t("ÚLTIMOS RESULTADOS  ·  jornada %d") % _liga.historial.size(), COL_SUAVE, 12)
 	var ultima: Array = _liga.historial[_liga.historial.size() - 1]
 	for r: Dictionary in ultima:
-		_fila_partido(r["local"], r["visita"], int(r["gl"]), int(r["gv"]))
+		CompeticionFilas.fila_partido(_lista, r["local"], r["visita"], int(r["gl"]), int(r["gv"]), mio)
 
 ## Lo que viene: el calendario ya está armado de principio a fin desde que se
 ## genera el mundo, así que enseñar las tres próximas jornadas no cuesta nada.
 func _pintar_proximos(mio: Club) -> void:
-	if not _liga.quedan_jornadas():
-		return
 	_lista.add_child(HSeparator.new())
-	_titulo("PRÓXIMOS PARTIDOS", COL_SUAVE, 11)
+	CompeticionFilas.titulo(_lista, Idiomas.t("PRÓXIMOS PARTIDOS"), COL_SUAVE, 12)
+	if not _liga.quedan_jornadas():
+		CompeticionFilas.titulo(_lista, Idiomas.t("La liga ha terminado: el calendario de la temporada que viene sale al cerrar el año."), COL_SUAVE, 13)
+		return
 	var hasta: int = mini(_liga.jornada_actual + 3, _liga.calendario.size())
 	for j in range(_liga.jornada_actual, hasta):
-		var et := Label.new()
-		et.text = Idiomas.t("Jornada %d") % (j + 1)
-		et.add_theme_font_size_override("font_size", 10)
-		et.add_theme_color_override("font_color", COL_ORO)
-		_lista.add_child(et)
+		CompeticionFilas.titulo(_lista, Idiomas.t("Jornada %d") % (j + 1), COL_ORO, 11)
 		for par: Array in _liga.calendario[j]:
-			_fila_partido(par[0], par[1], -1, -1, mio)
-
-func _fila_partido(local: Club, visita: Club, gl: int, gv: int, mio: Club = null) -> void:
-	var h := HBoxContainer.new()
-	h.add_theme_constant_override("separation", 6)
-	## Ancho FIJO y centrada. Con los nombres en EXPAND_FILL la fila se estiraba
-	## los 1.600 px de la ventana y los escudos acababan pegados a los bordes,
-	## a medio metro del marcador al que pertenecen: ilegible.
-	h.alignment = BoxContainer.ALIGNMENT_CENTER
-	_lista.add_child(h)
-	var tuyo := mio != null and (local == mio or visita == mio)
-	var nl := Label.new()
-	nl.text = local.nombre
-	nl.add_theme_font_size_override("font_size", 12)
-	## El ganador en verde: se lee la jornada entera de un vistazo, sin comparar
-	## números uno a uno.
-	nl.add_theme_color_override("font_color",
-		COL_ACENTO if tuyo else (COL_VERDE if gl > gv else (COL_SUAVE if gl < gv else COL_TEXTO)))
-	nl.custom_minimum_size = Vector2(230, 0)
-	nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	nl.clip_text = true
-	h.add_child(nl)
-	## El escudo del local va DESPUÉS de su nombre: el nombre está alineado a la
-	## derecha, así que escudo y nombre quedan pegados y el par se lee junto.
-	h.add_child(_escudo(local, 18))
-	var marc := Label.new()
-	marc.text = "vs" if gl < 0 else "%d - %d" % [gl, gv]
-	marc.add_theme_font_size_override("font_size", 12)
-	marc.add_theme_color_override("font_color", COL_ORO if gl >= 0 else COL_SUAVE)
-	marc.custom_minimum_size = Vector2(56, 0)
-	marc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	h.add_child(marc)
-	var nv := Label.new()
-	nv.text = visita.nombre
-	nv.add_theme_font_size_override("font_size", 12)
-	nv.add_theme_color_override("font_color",
-		COL_ACENTO if tuyo else (COL_VERDE if gv > gl else (COL_SUAVE if gv < gl else COL_TEXTO)))
-	nv.custom_minimum_size = Vector2(230, 0)
-	nv.clip_text = true
-	## Y el de la visita ANTES del suyo, por lo mismo: los dos escudos quedan a
-	## los lados del marcador, que es como se lee un resultado.
-	h.add_child(_escudo(visita, 18))
-	h.add_child(nv)
-
-# --- utilidades -------------------------------------------------------------
-
-func _titulo(txt: String, color: Color, tam: int) -> void:
-	var l := Label.new()
-	l.text = txt
-	l.add_theme_font_size_override("font_size", tam)
-	l.add_theme_color_override("font_color", color)
-	_lista.add_child(l)
-
-func _celda(g: GridContainer, txt: String, color: Color, derecha: bool = false, tam: int = 12) -> void:
-	var l := Label.new()
-	l.text = txt
-	l.add_theme_font_size_override("font_size", tam)
-	l.add_theme_color_override("font_color", color)
-	if derecha:
-		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		l.custom_minimum_size = Vector2(44, 0)
-	g.add_child(l)
-
-func _escudo(c: Club, tam: int) -> TextureRect:
-	var r := TextureRect.new()
-	r.texture = Escudo.textura(c, tam)
-	r.custom_minimum_size = Vector2(tam, tam)
-	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	return r
+			CompeticionFilas.fila_partido(_lista, par[0], par[1], -1, -1, mio)

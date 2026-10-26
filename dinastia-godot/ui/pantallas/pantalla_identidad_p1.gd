@@ -51,6 +51,9 @@ func _fila_color_identidad(c: Club, etiqueta: String, prop: String) -> void:
 ## Incluye un botón vacío al principio: "el que le tocó por sorteo" también es
 ## una elección válida y hay que poder volver a ella.
 func _rejilla_identidad(c: Club, prop: String, opciones: Array, titulo: String) -> void:
+	if prop == "esc_forma":
+		p._lista_gente.add_child(EscudoMuestras.fila_previa(p._escudo(c, 64), c, 64,
+			p._texto(11, Principal.COL_SUAVE)))
 	var lt := p._texto(10, Principal.COL_SUAVE)
 	lt.text = titulo
 	p._lista_gente.add_child(lt)
@@ -59,15 +62,24 @@ func _rejilla_identidad(c: Club, prop: String, opciones: Array, titulo: String) 
 	flow.add_theme_constant_override("v_separation", 4)
 	p._lista_gente.add_child(flow)
 	var actual := String(c.get(prop))
+	## Forma, patrón y estampado se eligen VIENDO cada opción (ver
+	## `EscudoMuestras`); el símbolo ya es un dibujo -un emoji- y va como texto.
+	var con_dibujo := prop in ["esc_forma", "esc_patron", "kit_estilo"]
 	for op: Variant in ([""] + Array(opciones)):
 		var clave := String(op)
-		var b := Button.new()
-		b.text = clave if clave != "" else Idiomas.t("por sorteo")
-		b.add_theme_font_size_override("font_size", 10)
-		b.toggle_mode = true
-		b.button_pressed = actual == clave
-		b.clip_text = true
-		b.custom_minimum_size = Vector2(72, 24)
+		var b: Button
+		if con_dibujo and clave != "":
+			var tex := EscudoMuestras.camiseta(c.color_kit1(), c.color_kit2(), clave, 40) \
+				if prop == "kit_estilo" else EscudoMuestras.escudo_con(c, prop, clave, 40)
+			b = EscudoMuestras.boton(tex, actual == clave, 46)
+		else:
+			b = Button.new()
+			b.text = clave if clave != "" else Idiomas.t("por sorteo")
+			b.add_theme_font_size_override("font_size", 10)
+			b.toggle_mode = true
+			b.button_pressed = actual == clave
+			b.clip_text = true
+			b.custom_minimum_size = Vector2(72, 46 if con_dibujo else 24)
 		b.pressed.connect(func() -> void:
 			c.set(prop, clave)
 			Escudo.limpiar_cache()
@@ -114,7 +126,8 @@ func _rejilla_especiales(c: Club) -> void:
 		b.toggle_mode = true
 		b.button_pressed = c.esc_especial == id
 		b.custom_minimum_size = Vector2(64, 64)
-		b.tooltip_text = id
+		## El nombre del bicho y no el id del archivo («wolf_3»).
+		b.tooltip_text = String(_FIGURAS.get(id.get_slice("_", 0), ""))
 		var tex := Escudo.textura_especial(id)
 		if tex != null:
 			var ic := TextureRect.new()
@@ -128,6 +141,9 @@ func _rejilla_especiales(c: Club) -> void:
 			c.esc_especial = id
 			p._refrescar())
 		flow.add_child(b)
+
+const _FIGURAS := {"bull": "Toro", "dragon": "Dragón", "eagle": "Águila", "falcon": "Halcón",
+	"lion": "León", "panther": "Pantera", "ram": "Carnero", "shark": "Tiburón", "soccer": "Balón", "wolf": "Lobo"}
 
 func _boton_heredar(c: Club, props: Array, texto: String) -> void:
 	var b := Button.new()

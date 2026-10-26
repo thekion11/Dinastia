@@ -8,9 +8,15 @@ extends RefCounted
 ## aquí (`const COL_TEXTO := Tema.TEXTO`) en lugar de repetirlos.
 ##
 ## Lo que NO pasa por aquí, a propósito: la pantalla gigante del estadio (su
-## paleta azul de transmisión es parte del 3D), la paleta para daltonismo (se
-## aplica encima, en `Principal._color_de_paleta()`) y las paletas que el
-## jugador elige en Ajustes (`Principal._pal_panel()`).
+## paleta azul de transmisión es parte del 3D) y las paletas que el jugador
+## elige en Ajustes (`Principal._pal_panel()`).
+##
+## ACCESIBILIDAD (25-10-2026, paquete uitm): el modo daltónico y el tamaño de
+## letra de Ajustes solo llegaban a `Principal._texto()` y al registro; lo que
+## se pinta con `Tema.*` (álbum, teléfono, paneles, avisos...) no cambiaba.
+## Ahora hay dos interruptores estáticos aquí, `daltonico` y `escala_texto`, que
+## Principal vuelca al cargar las preferencias y al tocarlos en Ajustes.
+## Por defecto (false / 1.0) TODO se pinta exactamente igual que antes.
 
 # --- color ---------------------------------------------------------------------
 const FONDO := Color("0c1510")        ## detrás de todo
@@ -25,6 +31,11 @@ const BIEN := Color("4caf6d")         ## victoria, subida, dinero que entra
 const MAL := Color("e05555")          ## derrota, bajada, alerta
 const NEUTRO := Color("8ea595")       ## empate, sin cambios
 ## Colores por línea del campo (pizarra, fichas, etiquetas de posición).
+## Los mismos tres con la paleta Okabe-Ito (azul cielo, bermellón, ámbar): se
+## separan en cualquier tipo de daltonismo. Son los de `Principal`.
+const BIEN_DALT := Color("56b4e9")
+const MAL_DALT := Color("d55e00")
+const ORO_DALT := Color("e69f00")
 const POS := {"POR": Color("d9a400"), "DEF": Color("2f7fd0"), "MED": Color("2f9a5e"), "DEL": Color("e07b2a")}
 
 # --- letra ---------------------------------------------------------------------
@@ -33,6 +44,11 @@ const TAM_CUERPO := 13     ## texto corriente
 const TAM_DESTACADO := 16  ## nombres en tarjetas
 const TAM_TITULO := 22     ## títulos de pantalla
 const TAM_MARCADOR := 36   ## marcadores y cifras héroe
+
+## Interruptores de accesibilidad (ver la cabecera). `escala_texto` se acota
+## al mismo rango que Ajustes (0,7-1,6).
+static var daltonico := false
+static var escala_texto := 1.0
 
 # --- forma ---------------------------------------------------------------------
 const RADIO := 8           ## tarjetas
@@ -54,13 +70,50 @@ static func caja(fondo: Color = PANEL, radio: int = RADIO, borde: Color = BORDE)
 	e.content_margin_bottom = MARGEN - 2
 	return e
 
-## Una etiqueta con la letra y el color del juego.
+## Una etiqueta con la letra y el color del juego. Pasa por la escala de
+## texto y por la paleta para daltonismo.
 static func etiqueta(tam: int = TAM_CUERPO, color: Color = TEXTO, texto: String = "") -> Label:
 	var l := Label.new()
 	l.text = texto
-	l.add_theme_font_size_override("font_size", tam)
-	l.add_theme_color_override("font_color", color)
+	l.add_theme_font_size_override("font_size", letra(tam))
+	l.add_theme_color_override("font_color", accesible(color))
 	return l
+
+## El tamaño de letra con la escala de Ajustes aplicada (misma cuenta que
+## `Principal._texto()`: redondeo y nunca por debajo de 8 px). Con la escala a
+## 1,0 devuelve `tam` tal cual, sea cual sea.
+static func letra(tam: int) -> int:
+	if is_equal_approx(escala_texto, 1.0):
+		return tam
+	return maxi(8, int(round(float(tam) * clampf(escala_texto, 0.7, 1.6))))
+
+## Los colores con significado -bien, mal, oro- cambiados por el par que un
+## daltónico distingue. Cualquier otro color, o con el modo apagado, pasa igual.
+## Se compara RGB y se conserva el alfa: `Color(Tema.BIEN, 0.5)` también cambia.
+static func accesible(c: Color) -> Color:
+	if not daltonico:
+		return c
+	var opaco := Color(c, 1.0)
+	if opaco == BIEN:
+		return Color(BIEN_DALT, c.a)
+	if opaco == MAL:
+		return Color(MAL_DALT, c.a)
+	if opaco == ORO:
+		return Color(ORO_DALT, c.a)
+	return c
+
+## Los tres semánticos ya pasados por `accesible()`. Las constantes BIEN/MAL/ORO
+## se quedan como constantes a propósito: una docena de archivos hacen
+## `const COL_X := Tema.BIEN`, y una variable ahí no compilaría. Quien pinte en
+## tiempo de ejecución y quiera respetar el modo daltónico usa estas.
+static func bien() -> Color:
+	return accesible(BIEN)
+
+static func mal() -> Color:
+	return accesible(MAL)
+
+static func oro() -> Color:
+	return accesible(ORO)
 
 ## Rótulo de sección: pequeño, en mayúsculas y en el color suave.
 static func rotulo(texto: String) -> Label:
@@ -68,4 +121,4 @@ static func rotulo(texto: String) -> Label:
 
 ## Color de un resultado desde mi lado: ganar, perder o empatar.
 static func de_resultado(mios: int, suyos: int) -> Color:
-	return BIEN if mios > suyos else (MAL if mios < suyos else NEUTRO)
+	return bien() if mios > suyos else (mal() if mios < suyos else NEUTRO)

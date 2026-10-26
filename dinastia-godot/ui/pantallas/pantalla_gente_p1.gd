@@ -32,7 +32,7 @@ func _pintar_gente_personas() -> void:
 	var media := g.confianza_media()
 	p._dato("Confianza media", "%d/100" % media,
 		Principal.COL_VERDE if media >= 70 else (Principal.COL_ROJO if media <= 40 else Principal.COL_ORO), p._lista_gente)
-	p._dato("Charlas esta semana", "%d de %d" % [g.charlas_esta_semana, Gente.CHARLAS_POR_SEMANA],
+	p._dato("Charlas esta semana", Idiomas.t("%d de %d") % [g.charlas_esta_semana, Gente.CHARLAS_POR_SEMANA],
 		Principal.COL_SUAVE, p._lista_gente)
 	p._lista_gente.add_child(HSeparator.new())
 
@@ -46,9 +46,12 @@ func _pintar_gente_personas() -> void:
 		cab.add_theme_constant_override("separation", 6)
 		p._lista_gente.add_child(cab)
 		var nom := p._texto(12, Principal.COL_TEXTO)
-		nom.text = "%s  %s — %s" % [String(fila[2]), String(fila[1]), String(f.get("nombre", ""))]
+		nom.text = "%s  %s — %s" % [String(fila[2]), Idiomas.t(String(fila[1])), String(f.get("nombre", ""))]
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nom.clip_text = true
+		nom.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		nom.tooltip_text = nom.text
+		nom.mouse_filter = Control.MOUSE_FILTER_PASS
 		cab.add_child(nom)
 		var cf := p._texto(12, Principal.COL_VERDE if conf >= 70 else (Principal.COL_ROJO if conf <= 40 else Principal.COL_ORO))
 		cf.text = str(conf)
@@ -63,8 +66,10 @@ func _pintar_gente_personas() -> void:
 		b.pressed.connect(func() -> void: _charlar_con(clave))
 		cab.add_child(b)
 		var d := p._texto(10, Principal.COL_SUAVE)
+		## El perfil y la descripción del puesto vienen del núcleo en castellano:
+		## se traducen aquí, al pintar (el formato ya iba con `Idiomas.t`).
 		d.text = Idiomas.t("%d años  ·  %d en el club  ·  %s  ·  %s") % [
-			int(f.get("edad", 0)), int(f.get("anios", 0)), String(f.get("perfil", "")), String(fila[3])]
+			int(f.get("edad", 0)), int(f.get("anios", 0)), Idiomas.t(String(f.get("perfil", ""))), Idiomas.t(String(fila[3]))]
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_gente.add_child(d)
 
@@ -136,7 +141,7 @@ func _pintar_periodistas(p_local: Prensa) -> void:
 	t.text = Idiomas.t("🎙️ LA PRENSA")
 	p._lista_redes.add_child(t)
 	var am := p_local.amortiguador_prensa()
-	p._dato("Cómo te trata la prensa", "×%.2f sobre el ruido" % am,
+	p._dato("Cómo te trata la prensa", Idiomas.t("×%.2f sobre el ruido") % am,
 		Principal.COL_VERDE if am < 1.0 else (Principal.COL_ROJO if am > 1.1 else Principal.COL_SUAVE), p._lista_redes)
 	for f: Array in Prensa.PERIODISTAS:
 		var clave := String(f[0])
@@ -206,7 +211,7 @@ func _pintar_mesa_debate(p_local: Prensa) -> void:
 		var f2: Dictionary = rank[i2]
 		var c2: Club = f2["club"]
 		p._dato("%d.  %s" % [i2 + 1, c2.nombre],
-			"%d  ·  va %d.º y se le esperaba %d.º" % [int(f2["nota"]), int(f2["puesto"]), int(f2["esperado"])],
+			Idiomas.t("%d  ·  va %d.º y se le esperaba %d.º") % [int(f2["nota"]), int(f2["puesto"]), int(f2["esperado"])],
 			p.COL_ACENTO if bool(f2["mio"]) else Principal.COL_TEXTO, p._lista_redes)
 	if mi_puesto > 8:
 		var mp := p._texto(11, p.COL_ACENTO)
@@ -244,7 +249,7 @@ func _pintar_influencer(p_local: Prensa) -> void:
 	fila.add_theme_constant_override("separation", 6)
 	p._lista_redes.add_child(fila)
 	var coste := Eco.escalar(Prensa.COSTE_INVITAR, float(c.rep)) if c != null else 0
-	for op_b: Array in [[true, "🤝 Invitarlo al club  ·  %s" % p._dinero(coste)], [false, "🙄 Ignorarlo"]]:
+	for op_b: Array in [[true, Idiomas.t("🤝 Invitarlo al club  ·  %s") % p._dinero(coste)], [false, Idiomas.t("🙄 Ignorarlo")]]:
 		var invitar: bool = op_b[0]
 		var b := Button.new()
 		b.text = String(op_b[1])
@@ -349,7 +354,7 @@ func _pintar_derechos_tv(p_local: Prensa) -> void:
 	ex.text = Idiomas.t("En bloque cobras lo que reparte la liga. Por tu cuenta puedes ganar mucho más… si tu club vende. Y la asamblea te lo tiene en cuenta.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_redes.add_child(ex)
-	p._dato("Modelo actual", "Negociación individual" if p_local.tv_individual else "Reparto en bloque",
+	p._dato("Modelo actual", Idiomas.t("Negociación individual") if p_local.tv_individual else Idiomas.t("Reparto en bloque"),
 		Principal.COL_TEXTO, p._lista_redes)
 	var ft := p_local.factor_tv()
 	var pct := int(round((ft - 1.0) * 100.0))
@@ -405,12 +410,15 @@ func _pintar_portadas(p_local: Prensa) -> void:
 		tit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		tit.add_theme_font_size_override("font_size", 12)
 		tit.add_theme_color_override("font_color", Principal.COL_VERDE if tipo == "bien" else (Principal.COL_ROJO if tipo == "mal" else Principal.COL_TEXTO))
-		tit.text = "🗞 " + String(d.get("t", ""))
+		## Traducido como en la portada (se busca CON comillas, que es como está
+		## en la tabla de la narración) pero sin pasarlo a mayúsculas: en una
+		## lista de catorce, catorce titulares gritando no se leen.
+		tit.text = "🗞 " + Idiomas.t(String(d.get("t", ""))).replace("\"", "")
 		tit.tooltip_text = Idiomas.t("Abrir la portada")
 		tit.pressed.connect(func() -> void: PortadaPeriodico.mostrar(p, p.mundo, d))
 		p._lista_redes.add_child(tit)
 		var cu := p._texto(10, Principal.COL_SUAVE)
-		cu.text = "%s   ·   S%d · %d" % [String(d.get("c", "")), int(d.get("semana", 0)), int(d.get("anio", 0))]
+		cu.text = "%s   ·   S%d · %d" % [Idiomas.t(String(d.get("c", ""))), int(d.get("semana", 0)), int(d.get("anio", 0))]
 		cu.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_redes.add_child(cu)
 

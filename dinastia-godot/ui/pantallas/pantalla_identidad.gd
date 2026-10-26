@@ -34,23 +34,32 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 	var tk := p._texto(11, p.COL_ACENTO)
 	tk.text = Idiomas.t("👕 LAS TRES CAMISETAS")
 	p._lista_gente.add_child(tk)
+	var nombres := {"titular": "Titular", "alt": "Alternativa", "por": "De arquero"}
+	## LAS TRES, GRANDES Y CON NOMBRE. A 56 px y sin rótulo no se distinguía la
+	## alternativa de la de arquero, y la textura salía a tamaño exacto -borrosa
+	## en cuanto la interfaz escala-: ahora van a doble resolución.
 	var muestras := HBoxContainer.new()
-	muestras.add_theme_constant_override("separation", 12)
+	muestras.add_theme_constant_override("separation", 18)
 	muestras.alignment = BoxContainer.ALIGNMENT_CENTER
 	p._lista_gente.add_child(muestras)
 	for cual: String in ["titular", "alt", "por"]:
+		var col := VBoxContainer.new()
+		col.add_theme_constant_override("separation", 0)
+		muestras.add_child(col)
 		var img := TextureRect.new()
-		img.texture = Jersey.textura_procedural(co.color_kit(cual, 1, c),
-			co.color_kit(cual, 2, c), co.estilo_kit(cual, c), 56)
-		img.custom_minimum_size = Vector2(56, 56)
+		img.texture = EscudoMuestras.camiseta(co.color_kit(cual, 1, c), co.color_kit(cual, 2, c),
+			co.estilo_kit(cual, c), 80)
+		img.custom_minimum_size = Vector2(80, 78)
 		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		img.tooltip_text = Idiomas.t({"titular": "Titular", "alt": "Alternativa", "por": "De arquero"}[cual])
-		muestras.add_child(img)
-	for par: Array in [["titular", "Titular"], ["alt", "Alternativa"], ["por", "De arquero"]]:
-		var cual2 := String(par[0])
-		var tt := p._texto(10, Principal.COL_SUAVE)
-		tt.text = String(par[1])
+		col.add_child(img)
+		var pie := p._texto(10, Principal.COL_SUAVE)
+		pie.text = String(nombres[cual])
+		pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		col.add_child(pie)
+	for cual2: String in ["titular", "alt", "por"]:
+		var tt := p._texto(11, Principal.COL_TEXTO)
+		tt.text = String(nombres[cual2])
 		p._lista_gente.add_child(tt)
 		for n: int in [1, 2]:
 			var num := n
@@ -69,19 +78,18 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 				co.fijar_kit(cual2, "c%d" % num, "#" + nuevo.to_html(false))
 				p._refrescar())
 			fila.add_child(cp)
+		## Cada estampado dibujado con los colores de ESTA camiseta: se elige
+		## viendo el resultado, no leyendo «sash» o «vertical3».
 		var flow := HFlowContainer.new()
 		flow.add_theme_constant_override("h_separation", 4)
 		flow.add_theme_constant_override("v_separation", 4)
 		p._lista_gente.add_child(flow)
+		var c1 := co.color_kit(cual2, 1, c)
+		var c2 := co.color_kit(cual2, 2, c)
 		for k: String in Jersey.KITS:
 			var estilo := k
-			var b := Button.new()
-			b.text = estilo
-			b.add_theme_font_size_override("font_size", 10)
-			b.toggle_mode = true
-			b.button_pressed = co.estilo_kit(cual2, c) == estilo
-			b.clip_text = true
-			b.custom_minimum_size = Vector2(66, 22)
+			var b := EscudoMuestras.boton(EscudoMuestras.camiseta(c1, c2, estilo, 36),
+				co.estilo_kit(cual2, c) == estilo, 44)
 			b.pressed.connect(func() -> void:
 				co.fijar_kit(cual2, "estilo", estilo)
 				p._refrescar())

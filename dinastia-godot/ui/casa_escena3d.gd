@@ -36,7 +36,7 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 
 	## El rótulo de abajo a la izquierda: dónde vives.
 	var rot := Tema.etiqueta(Tema.TAM_DESTACADO + 4, Tema.TEXTO, "%s %s" % [
-		String(VidaDT.VIVIENDAS.get(viv, ["", 0, 0, "🏠"])[3]), String(VidaDT.VIVIENDAS.get(viv, ["Tu casa"])[0])])
+		String(VidaDT.VIVIENDAS.get(viv, ["", 0, 0, "🏠"])[3]), Idiomas.t(String(VidaDT.VIVIENDAS.get(viv, ["Tu casa"])[0]))])
 	rot.add_theme_constant_override("outline_size", 8)
 	rot.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
 	rot.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
@@ -105,6 +105,8 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 		tel.offset_right = -30
 		tel.offset_top = 76
 		tel.offset_bottom = -24
+		## Esc / B desde el inicio del móvil sale de la casa (25-10-2026: antes no había tecla para volver).
+		tel.al_cerrar = pop.queue_free
 		pop.add_child(tel)
 	var cerrar := Button.new()
 	cerrar.text = Idiomas.t("✕ Volver")

@@ -1,5 +1,5 @@
 extends VBoxContainer
-## [Capa 1/2 de `panel_mercado.gd`] _lbl, _pintar_estado_ventana, _dato, _dinero, _fila_ajuste, _pintar_mesa_negociacion … (+5)
+## [Capa 1/2 de `panel_mercado.gd`] _lbl, _pintar_estado_ventana, _dato, _dinero, _pintar_ofertas_recibidas, _objetivos … (+4)
 
 ## Pantalla del mercado de traspasos: estado de ventana, filtros,
 ## lista de objetivos, mesa de negociación y ofertas recibidas.
@@ -47,6 +47,13 @@ var _filtro_pagables: bool   = false
 var _mundo: Mundo = null
 ## Resultado de la última ronda enviada (para mostrarlo bajo la mesa).
 var _ultimo_resultado: Dictionary = {}
+## La caja de la lista de objetivos: al cambiar un filtro se rehace SOLO esta.
+## Antes se borraban «todos los GridContainer» del panel, y con una mesa abierta
+## eso se llevaba también las rejillas de la negociación (Fijo, Cuotas, Ficha…).
+var _caja_lista: VBoxContainer = null
+## Los objetivos de la semana, guardados (ver `_objetivos()`).
+var _obj_clave := ""
+var _obj_cache: Array[Jugador] = []
 
 # ── HELPERS DE UI ─────────────────────────────────────────────────────────
 ## Label con tamaño y color. Se usa la paleta de instancia (no constantes)
@@ -61,8 +68,8 @@ func _lbl(tam: int, color: Color) -> Label:
 func _pintar_estado_ventana() -> void:
 	var abierta := _mundo.mercado_abierto()
 	var quedan  := _mundo.semanas_de_mercado() if abierta else _mundo.semanas_hasta_mercado()
-	var texto   := ("MERCADO ABIERTO  ·  quedan %d semana(s)" % quedan) if abierta \
-		else ("MERCADO CERRADO  ·  reabre en %d semana(s)" % quedan)
+	var texto   := (Idiomas.t("MERCADO ABIERTO  ·  quedan %d semana(s)") % quedan) if abierta \
+		else (Idiomas.t("MERCADO CERRADO  ·  reabre en %d semana(s)") % quedan)
 	var col := COL_VERDE if abierta else COL_ROJO
 	if abierta and quedan <= 2:
 		col = COL_ORO
@@ -96,15 +103,24 @@ func _pintar_estado_ventana() -> void:
 
 ## Fila de dato: etiqueta + valor con color. Equivale a Principal._dato()
 ## pero sin acceder a ningún nodo externo.
+## La etiqueta tiene un ancho fijo y la cifra va alineada a la derecha en una
+## columna propia: así «Piden», «Perciben» y «Sale de tu caja» se comparan de
+## un vistazo, cifra bajo cifra, en vez de quedar cada una donde acabe su rótulo.
 func _dato(etiqueta: String, valor: String, color: Color) -> void:
 	var f := HBoxContainer.new()
 	f.add_theme_constant_override("separation", 8)
 	add_child(f)
 	var et := _lbl(11, COL_SUAVE)
 	et.text = etiqueta
+	et.custom_minimum_size = Vector2(190, 0)
+	et.clip_text = true
+	et.tooltip_text = etiqueta
 	f.add_child(et)
 	var va := _lbl(12, color)
 	va.text = valor
+	va.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	va.custom_minimum_size = Vector2(110, 0)
+	va.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	f.add_child(va)
 
 ## Antes: "$" y sin pasar por `ECO` -el mismo jugador valía doce veces menos
@@ -112,155 +128,20 @@ func _dato(etiqueta: String, valor: String, color: Color) -> void:
 func _dinero(monto: int) -> String:
 	return Eco.dinero(monto)
 
-func _fila_ajuste(g: GridContainer, etiqueta: String, valor_txt: String,
-		n: Negociacion, campo: String) -> void:
-	var et := _lbl(11, COL_SUAVE)
-	et.text = etiqueta
-	g.add_child(et)
-
-	var bm := Button.new()
-	bm.text = "−"
-	bm.add_theme_font_size_override("font_size", 11)
-	bm.pressed.connect(func() -> void: campo_ajustado.emit(campo, -1))
-	g.add_child(bm)
-
-	var va := _lbl(12, COL_TEXTO)
-	va.text = valor_txt
-	va.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	va.custom_minimum_size = Vector2(90, 0)
-	g.add_child(va)
-
-	var bs := Button.new()
-	bs.text = "+"
-	bs.add_theme_font_size_override("font_size", 11)
-	bs.pressed.connect(func() -> void: campo_ajustado.emit(campo, 1))
-	g.add_child(bs)
-
-# ── MESA DE NEGOCIACIÓN ───────────────────────────────────────────────────
-func _pintar_mesa_negociacion(n: Negociacion) -> void:
-	var vendedor: Club = _mundo.clubes.get(n.club_vendedor_id)
-	var t := _lbl(11, COL_ORO)
-	t.text = Idiomas.t("MESA DE NEGOCIACIÓN  ·  %s  (%s)  ·  ronda %d") % [
-		n.jugador.nombre if n.jugador else "—",
-		vendedor.nombre if vendedor else "?",
-		n.ronda
-	]
-	add_child(t)
-
-	if n.rival_id != "":
-		var av := _lbl(11, COL_ROJO)
-		av.text = Idiomas.t("Otro club anda detrás de él: cuanto más se alargue la mesa, más riesgo de perderlo.")
-		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		add_child(av)
-
-	_dato("Piden",                        _dinero(n.pedido),           COL_SUAVE)
-	_dato("Perciben con tu oferta actual", _dinero(n.valor_percibido()), COL_TEXTO)
-	var col_costo := COL_TEXTO if n.costo_inmediato() <= _mundo.mi_club().saldo else COL_ROJO
-	_dato("Sale de tu caja hoy",           _dinero(n.costo_inmediato()), col_costo)
-
-	# ── CON EL CLUB ───────────────────────────────────────────────────────
-	var tc := _lbl(11, COL_SUAVE)
-	tc.text = Idiomas.t("CON EL CLUB")
-	add_child(tc)
-	var gc := GridContainer.new()
-	gc.columns = 4
-	gc.add_theme_constant_override("h_separation", 8)
-	add_child(gc)
-	_fila_ajuste(gc, "Fijo",                _dinero(n.fijo),   n, "fijo")
-	_fila_ajuste(gc, "Cuotas",              _dinero(n.cuotas), n, "cuotas")
-	_fila_ajuste(gc, "Bonos por objetivos", _dinero(n.bonos),  n, "bonos")
-	_fila_ajuste(gc, "% de venta futura",   "%d%%" % n.pct,    n, "pct")
-	_fila_ajuste(gc, "Pago bajo cuerda",    _dinero(n.opaco),  n, "opaco")
-
-	# ── PARTE DE PAGO: uno de los tuyos ──────────────────────────────────
-	var ti := _lbl(11, COL_SUAVE)
-	ti.text = Idiomas.t("PARTE DE PAGO: UNO DE LOS TUYOS")
-	add_child(ti)
-	var mio_neg := _mundo.mi_club()
-	if mio_neg != null:
-		var candidatos: Array[Jugador] = []
-		for x: Jugador in mio_neg.plantilla:
-			if x.ovr >= n.jugador.ovr - 18:
-				candidatos.append(x)
-		candidatos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.valor > b.valor)
-		var flow_ic := HFlowContainer.new()
-		flow_ic.add_theme_constant_override("h_separation", 6)
-		flow_ic.add_theme_constant_override("v_separation", 6)
-		add_child(flow_ic)
-		if candidatos.is_empty():
-			var vac := _lbl(11, COL_SUAVE)
-			vac.text = Idiomas.t("Nadie de tu plantel se acerca a su nivel.")
-			flow_ic.add_child(vac)
-		for x: Jugador in candidatos.slice(0, 8):
-			var bi := Button.new()
-			bi.text = "%s  (%s)" % [x.nombre, _dinero(x.valor)]
-			bi.toggle_mode = true
-			bi.button_pressed = (n.intercambio == x)
-			bi.add_theme_font_size_override("font_size", 11)
-			bi.pressed.connect(func() -> void: intercambio_elegido.emit(x))
-			flow_ic.add_child(bi)
-
-	# ── CON ÉL (rol prometido + condiciones) ─────────────────────────────
-	var tj := _lbl(11, COL_SUAVE)
-	tj.text = Idiomas.t("CON ÉL")
-	add_child(tj)
-	var flow := HFlowContainer.new()
-	flow.add_theme_constant_override("h_separation", 6)
-	flow.add_theme_constant_override("v_separation", 6)
-	add_child(flow)
-	for rol in Negociacion.ORDEN_ROLES:
-		var br := Button.new()
-		var def: Array = _mundo.vestuario.def_rol(rol) if _mundo.vestuario != null else []
-		br.text = String(def[1]) if def.size() > 1 else rol
-		br.toggle_mode = true
-		br.button_pressed = (rol == n.rol)
-		br.add_theme_font_size_override("font_size", 11)
-		br.pressed.connect(func() -> void: rol_ajustado.emit(rol))
-		flow.add_child(br)
-
-	var gj := GridContainer.new()
-	gj.columns = 4
-	gj.add_theme_constant_override("h_separation", 8)
-	add_child(gj)
-	_fila_ajuste(gj, "Ficha/semana",      _dinero(n.sueldo),  n, "sueldo")
-	_fila_ajuste(gj, "Años de contrato",  str(n.anios),       n, "anios")
-	_fila_ajuste(gj, "Prima de fichaje",  _dinero(n.firma),   n, "firma")
-
-	var bcl := Button.new()
-	bcl.text = Idiomas.t("Cláusula: sí") if n.clausula else Idiomas.t("Cláusula: no")
-	bcl.add_theme_font_size_override("font_size", 11)
-	bcl.pressed.connect(func() -> void: rol_ajustado.emit("__clausula__"))
-	add_child(bcl)
-
-	# Resultado de la última ronda (si hay)
-	if not _ultimo_resultado.is_empty():
-		var tipo := String(_ultimo_resultado.get("tipo", ""))
-		if tipo == "jugador_no":
-			var lr := _lbl(12, COL_SUAVE)
-			lr.text = Idiomas.t("Le quedan reuniones de paciencia. %s") % String(_ultimo_resultado.get("motivo", ""))
-			lr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			add_child(lr)
-
-	# Botones de acción
-	var fbot := HBoxContainer.new()
-	fbot.add_theme_constant_override("separation", 8)
-	add_child(fbot)
-
-	var benv := Button.new()
-	benv.text = Idiomas.t("Enviar oferta")
-	benv.pressed.connect(func() -> void: oferta_enviada.emit())
-	fbot.add_child(benv)
-
-	var bcan := Button.new()
-	bcan.text = Idiomas.t("Levantarse de la mesa")
-	bcan.pressed.connect(func() -> void: negociacion_cancelada.emit())
-	fbot.add_child(bcan)
-
 # ── OFERTAS RECIBIDAS ─────────────────────────────────────────────────────
-func _pintar_ofertas_recibidas(mio: Club) -> void:
+## Una tarjeta por oferta: quién pide a quién, la cifra a la derecha (alineada
+## con las demás) y los botones. Sin ofertas se dice en una línea: una sección
+## que desaparece sin más hace pensar que la pantalla ha fallado.
+func _pintar_ofertas_recibidas(_mio: Club) -> void:
 	var t := _lbl(11, COL_SUAVE)
 	t.text = Idiomas.t("OFERTAS RECIBIDAS")
 	add_child(t)
+	if _mundo.mercado.ofertas_recibidas.is_empty():
+		var vac := _lbl(11, COL_SUAVE)
+		vac.text = Idiomas.t("Nadie ha pujado por tus jugadores esta semana.")
+		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		add_child(vac)
+		return
 
 	var puede_vender := _mundo.roles == null or _mundo.roles.puede_vender_jugadores()
 
@@ -275,35 +156,27 @@ func _pintar_ofertas_recibidas(mio: Club) -> void:
 		add_child(fila)
 
 		var l := _lbl(12, COL_TEXTO)
-		l.text = Idiomas.t("%s — %s ofrece %s%s") % [
-			jo.nombre,
-			co.nombre,
-			_dinero(int(o["monto"])),
-			Idiomas.t("  (cláusula: no se puede rechazar)") if es_clausula else ""
-		]
+		l.text = Idiomas.t("%s — oferta de %s") % [jo.nombre, co.nombre]
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		fila.add_child(l)
-
-		# Desglose del neto si hay cesiones
-		if _mundo.cesiones != null:
-			var neto := _mundo.cesiones.neto_de_venta(jo, int(o["monto"]))
-			if neto < int(o["monto"]):
-				var ln := _lbl(10, COL_ROJO)
-				ln.text = Idiomas.t("   de eso, el club se queda %s: hay un fondo con parte de su pase") % _dinero(neto)
-				add_child(ln)
+		var lm := _lbl(12, COL_ORO)
+		lm.text = _dinero(int(o["monto"]))
+		lm.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		lm.custom_minimum_size = Vector2(90, 0)
+		fila.add_child(lm)
 
 		var idx := i
+		if es_clausula or puede_vender:
+			var ba := Button.new()
+			ba.text = Idiomas.t("Aceptar")
+			ba.pressed.connect(func() -> void: oferta_respondida.emit(idx, true))
+			fila.add_child(ba)
 		if es_clausula:
-			var ba := Button.new()
-			ba.text = Idiomas.t("Aceptar")
-			ba.pressed.connect(func() -> void: oferta_respondida.emit(idx, true))
-			fila.add_child(ba)
+			var lc := _lbl(10, COL_ORO)
+			lc.text = Idiomas.t("Pagan la cláusula: no se puede rechazar.")
+			add_child(lc)
 		elif puede_vender:
-			var ba := Button.new()
-			ba.text = Idiomas.t("Aceptar")
-			ba.pressed.connect(func() -> void: oferta_respondida.emit(idx, true))
-			fila.add_child(ba)
 			var br := Button.new()
 			br.text = Idiomas.t("Rechazar")
 			br.pressed.connect(func() -> void: oferta_respondida.emit(idx, false))
@@ -311,11 +184,39 @@ func _pintar_ofertas_recibidas(mio: Club) -> void:
 		else:
 			var bl := _lbl(11, COL_SUAVE)
 			bl.text = String(_mundo.roles.motivo_bloqueo("vender_jugadores")) if _mundo.roles != null else ""
-			fila.add_child(bl)
+			bl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			add_child(bl)
 
+		# Desglose del neto si hay cesiones
+		if _mundo.cesiones != null:
+			var neto := _mundo.cesiones.neto_de_venta(jo, int(o["monto"]))
+			if neto < int(o["monto"]):
+				var ln := _lbl(10, COL_ROJO)
+				ln.text = Idiomas.t("   de eso, el club se queda %s: hay un fondo con parte de su pase") % _dinero(neto)
+				ln.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				add_child(ln)
+
+## Muestreo sesgado hacia calidad, como `Principal._objetivos()`, pero:
+##  · con su PROPIO generador, sembrado con la partida, la semana y el club. Antes
+##    tiraba de `Azar`, el azar DETERMINISTA de la partida: con solo mirar la
+##    pestaña Mercado (o teclear en el buscador) se gastaban números y la misma
+##    semilla daba otra liga. Es la trampa que `Sonido.toca()` documenta;
+##  · guardado toda la semana: antes cada repintado (un «+» en la mesa, una letra
+##    en el buscador) sorteaba otra lista y el jugador que mirabas desaparecía.
 func _objetivos(mio: Club) -> Array[Jugador]:
-	## Misma lógica que Principal._objetivos(): muestreo sesgado hacia calidad.
-	## Se mantiene aquí para no depender de acceso al estado de Principal.
+	var clave := "%d|%d|%d|%s" % [Azar.semilla, _mundo.anio, _mundo.semana, mio.id]
+	if clave != _obj_clave:
+		_obj_clave = clave
+		_obj_cache = _muestrear_objetivos(mio, hash(clave))
+	var salida: Array[Jugador] = []
+	for j: Jugador in _obj_cache:
+		if j.club_id != mio.id and _mundo.clubes.has(j.club_id):
+			salida.append(j)
+	return salida
+
+func _muestrear_objetivos(mio: Club, semilla: int) -> Array[Jugador]:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = semilla
 	var media  := mio.media()
 	var vistos: Dictionary = {}
 	var salida: Array[Jugador] = []
@@ -323,10 +224,10 @@ func _objetivos(mio: Club) -> Array[Jugador]:
 	for _i in 400:
 		if salida.size() >= 30:
 			break
-		var otro: Club = clubes[Azar.ent(0, clubes.size() - 1)]
+		var otro: Club = clubes[rng.randi_range(0, clubes.size() - 1)]
 		if otro.id == mio.id or otro.plantilla.is_empty():
 			continue
-		var j: Jugador = otro.plantilla[Azar.ent(0, otro.plantilla.size() - 1)]
+		var j: Jugador = otro.plantilla[rng.randi_range(0, otro.plantilla.size() - 1)]
 		if vistos.has(j.id) or float(j.ovr) < media:
 			continue
 		vistos[j.id] = true
@@ -349,23 +250,41 @@ func _objetivos_filtrados(mio: Club) -> Array:
 	return salida
 
 # ── LISTA DE OBJETIVOS ────────────────────────────────────────────────────
+## La tabla cabe en la columna central también a 1280×720: nombre y club se
+## recortan (con el texto entero en la ayuda) y las cifras tienen ancho fijo y
+## van a la derecha. Antes la rejilla pedía más ancho que la columna y la
+## pestaña entera se desplazaba de lado, con PIDEN y GANAS fuera de la vista.
+## El nombre es un botón plano: se llega con el teclado o el mando (antes solo
+## respondía al clic del ratón sobre una etiqueta).
 func _pintar_lista(mio: Club) -> void:
+	_caja_lista = VBoxContainer.new()
+	_caja_lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	add_child(_caja_lista)
+	var filtrados := _objetivos_filtrados(mio)
+	if filtrados.is_empty():
+		var vac := _lbl(12, COL_SUAVE)
+		vac.text = Idiomas.t("Ningún jugador cumple esos filtros. Prueba con otra línea o borra la búsqueda.")
+		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_caja_lista.add_child(vac)
+		return
 	var g := GridContainer.new()
 	g.columns = 6
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 10)
-	g.add_theme_constant_override("v_separation", 3)
-	add_child(g)
+	g.add_theme_constant_override("h_separation", 8)
+	g.add_theme_constant_override("v_separation", 2)
+	_caja_lista.add_child(g)
 
-	# Encabezados
-	for enc: String in ["NOMBRE", "CLUB", "EDAD", "MED", "PIDEN", "GANAS"]:
+	## [rótulo, ancho mínimo, a la derecha]
+	var columnas := [[Idiomas.t("NOMBRE"), 0, false], [Idiomas.t("CLUB"), 0, false], [Idiomas.t("EDAD"), 34, true],
+		[Idiomas.t("MED"), 44, true], [Idiomas.t("PIDEN"), 74, true], [Idiomas.t("GANAS"), 48, true]]
+	for col: Array in columnas:
 		var h := _lbl(11, COL_SUAVE)
-		h.text = enc
-		h.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT \
-			if enc in ["EDAD","MED","PIDEN","GANAS"] else HORIZONTAL_ALIGNMENT_LEFT
+		h.text = String(col[0])
+		h.custom_minimum_size = Vector2(float(col[1]), 0)
+		h.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if bool(col[2]) else HORIZONTAL_ALIGNMENT_LEFT
 		g.add_child(h)
 
-	for j: Jugador in _objetivos_filtrados(mio):
+	for j: Jugador in filtrados:
 		var suyo: Club  = _mundo.clubes.get(j.club_id)
 		var pedido      := _mundo.mercado.valor_pedido(j)
 		var ganas: float = _mundo.mercado.deseo_de_venir(j, mio)["p"]
@@ -373,22 +292,32 @@ func _pintar_lista(mio: Club) -> void:
 		var col_g       := COL_VERDE if ganas > 0.6 else (COL_ORO if ganas > 0.35 else COL_ROJO)
 		var med         := _mundo.ojeadores.ovr_texto(j) if _mundo.ojeadores != null else str(j.ovr)
 
-		var nombre_j    := j.nombre
-		var nombre_club := suyo.nombre if suyo else "?"
+		var nom_b := Button.new()
+		nom_b.text = j.nombre
+		nom_b.flat = true
+		nom_b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		nom_b.clip_text = true
+		nom_b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		nom_b.custom_minimum_size = Vector2(70, 0)
+		nom_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		nom_b.size_flags_stretch_ratio = 1.6
+		nom_b.add_theme_font_size_override("font_size", 12)
+		nom_b.add_theme_color_override("font_color", alcance)
+		nom_b.tooltip_text = Idiomas.t("%s · abrir la mesa de negociación") % j.nombre
+		nom_b.pressed.connect(func() -> void: fichar_pedido.emit(j))
+		g.add_child(nom_b)
 
-		var nom_l := _lbl(12, alcance)
-		nom_l.text = nombre_j
-		nom_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		nom_l.mouse_filter = Control.MOUSE_FILTER_STOP
-		# Pulsar el nombre abre la negociación (la acción la ejecuta Principal)
-		nom_l.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed \
-					and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
-				fichar_pedido.emit(j))
-		g.add_child(nom_l)
+		var club_l := _lbl(12, COL_SUAVE)
+		club_l.text = suyo.nombre if suyo else "?"
+		club_l.clip_text = true
+		club_l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		club_l.custom_minimum_size = Vector2(50, 0)
+		club_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		club_l.tooltip_text = club_l.text
+		club_l.mouse_filter = Control.MOUSE_FILTER_PASS
+		g.add_child(club_l)
 
 		for par: Array in [
-				[nombre_club,                   COL_SUAVE],
 				[str(j.edad),                   COL_SUAVE],
 				[med,                            COL_TEXTO],
 				[_dinero(pedido),                alcance  ],
@@ -398,11 +327,13 @@ func _pintar_lista(mio: Club) -> void:
 			lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 			g.add_child(lbl)
 
-## Repinta SOLO la cuadrícula de objetivos sin reconstruir el estado ni los
-## filtros. Se usa al cambiar filtros para no parpadear la pantalla entera.
+## Repinta SOLO la lista de objetivos sin reconstruir el estado ni los
+## filtros (no se pierde el foco del buscador mientras se escribe).
 func _repintar_lista(mio: Club) -> void:
-	# Buscar y borrar solo el GridContainer de la lista
-	for n in get_children():
-		if n is GridContainer:
-			n.queue_free()
-	_pintar_lista(mio)
+	if _caja_lista != null and is_instance_valid(_caja_lista):
+		var pos := _caja_lista.get_index()
+		_caja_lista.queue_free()
+		_pintar_lista(mio)
+		move_child(_caja_lista, pos)
+	else:
+		_pintar_lista(mio)
