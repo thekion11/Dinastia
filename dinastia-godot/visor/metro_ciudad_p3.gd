@@ -290,21 +290,14 @@ func proxima_de(nombre: String, k: int) -> String:
 		if absf(est[i] - obj) < absf(est[mejor] - obj):
 			mejor = i
 	if obj == INF:
-		## En la cabecera da la vuelta: la próxima es la de al lado (antes decía
-		## la otra punta de la línea).
-		var aqui := 0
-		for i in est.size():
-			if absf(est[i] - t.s) < absf(est[aqui] - t.s):
-				aqui = i
-		var orden := 1 if est[est.size() - 1] > est[0] else -1
-		return String(NOMBRES[nombre][clampi(aqui - int(signf(t.sentido)) * orden, 0, est.size() - 1)])
+		return String(NOMBRES[nombre][0 if t.sentido > 0.0 else est.size() - 1])
 	return String(NOMBRES[nombre][mejor])
 
 func eta_minima(nombre: String, i: int) -> float:
 	var l := linea(nombre)
 	var mejor := INF
 	for t: Tren in l["trenes"]:
-		mejor = minf(mejor, eta_real(t, float(l["est_s"][i])))
+		mejor = minf(mejor, t.eta(float(l["est_s"][i])))
 	return mejor
 
 func alternar_rayos_x() -> bool:

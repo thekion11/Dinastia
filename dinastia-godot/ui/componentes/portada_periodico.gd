@@ -134,7 +134,7 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	marco.position = Vector2(14, 150)
 	marco.size = Vector2(ANCHO - 28, 190)
 	_hoja.add_child(marco)
-	var titular := titular_traducido(CompeticionInfo.visibles_en(String(p.get("t", ""))))
+	var titular := titular_traducido(String(p.get("t", "")))
 	var tam := 40 if titular.length() < 40 else (32 if titular.length() < 70 else 24)
 	var tt := _lbl(titular, tam, Color(0.06, 0.06, 0.06), false)
 	tt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -152,7 +152,7 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	var sub := String(p.get("sub", ""))
 	if sub == "":
 		sub = String(p.get("c", ""))
-	sub = Idiomas.t(CompeticionInfo.visibles_en(sub))
+	sub = Idiomas.t(sub)
 	var ts := _lbl(Idiomas.mayusculas(sub), 19 if sub.length() < 45 else (15 if sub.length() < 80 else 13), Color.WHITE, false)
 	ts.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	ts.position = Vector2(10, 6)

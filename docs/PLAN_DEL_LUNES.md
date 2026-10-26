@@ -7,6 +7,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
+- **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan**; fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
 - **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan** (hechas en la sesión 5: la 14 entera, la parte del partido de la 4 y el núcleo de la 18, ver `docs/04_auditorias/sesion_5.md`; de la 4 queda «en finanzas, cada ingreso y gasto con su origen»; de la 18, la interfaz de la pizarra con las dos fases y los roles, y que la IA use roles); fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
 - **Aprobar la pantalla de entrada** como escena principal (`Inicio.flujo_nuevo`, hoy `true` en código): verla en juego real y decir sí o no (§8).
 - **Empujar `main` reescrito** y **borrar las 8 ramas y `latest`** (§1); cuándo fusionar a `main` la rama actual y la de la sesión 2 (§9).
@@ -30,7 +31,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - [ ] **Perfil de FPS en hardware real** (M-337, P0): PC modesto (Intel UHD) y móvil; aquí solo hay render por software.
 - [ ] Builds, keystore, licencias, derechos de imagen, música y voces (🔒). Cambiar la contraseña del keystore (la vieja sigue en el historial). Confirmar la fuente de los modelos 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva).
 - [ ] Subir los binarios pesados (`recursos/`, `marca/`, `material/`) al Drive con `herramientas/drive_subir.ps1` y verificar. Respaldo de texto: `docs/05_referencia/RESPALDO_DRIVE.md`.
-- [ ] **Decidido por el dueño (26-10): sí** — «el bloqueo» (modos que se desbloquean jugando) como opción en Ajustes, con «Todo abierto» por defecto. Falta implementarlo.
+- [ ] Decidir: «el bloqueo» (modos que se desbloquean jugando) como opción en Ajustes, «Todo abierto» por defecto.
 
 ## 2. El guion: fases 0–6 (reestructuración)
 
@@ -1914,20 +1915,3 @@ Filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`, aprobadas p
 | 14 | **Ocasiones jugables en el partido del DT**: en las 3-6 llegadas claras, pausa y eliges pase, conducción o tiro con la cámara a pie de campo | alta | L | `nucleo/partido*.gd`, `nucleo/motor_libre.gd` (`tomar_control`), `ui/partido_vivo*.gd`, `visor/control_partido.gd` | pendiente |
 
 Exportar e importar la partida (fila 30 de la propuesta, §10 «Guardado en la nube») ya está hecho: Ajustes → Partida (`ui/pantallas/pantalla_ajustes_p1.gd`, `_exportar_partida` y `_importar_partida`). Queda la nube.
-
-## 12. Lo que quedó sin terminar al cierre de las sesiones (26-10)
-
-- **Hecho (26-10, pedido del dueño):** el día de partido y los viajes salen de la distancia y los costos reales (`nucleo/viajes.gd`, `datos/geografia.json`); anclado al 30 % de antes en el club medio chileno. Falta: usarlo también en los viajes de copas continentales si se añaden, y revisar `ESCALA_JUEGO` si cambia la taquilla.
-- **Modelo B (MakeHuman):** los `.glb` de `persona_mh` no se pudieron subir (LFS rechazado desde el contenedor); faltan la fase 4 (traje: faldón del abrigo) y la fase 5 (cuerpo).
-- **Caras:** algunas salen con óvalos negros; pasar las caras 2D a `Retrato3D` donde aún se dibujan planas.
-- **Competiciones:** terminar de usar `nombre_visible` en las pantallas que todavía muestran el nombre interno.
-- **Recorrido de las 108 pantallas** con la cámara real (Forward+): pendiente de hacer entero.
-- **Pizarra (fila 18 de §11):** la interfaz con las dos fases y los roles, y que la IA use roles.
-- **Países:** quedan lotes de países por sumar a `paises_extra.json` (hechos POR, NED, BEL, CRO, DEN).
-- **Dueño:** imágenes del logo y de las alas, makehuman-assets, FPS en hardware real, builds, keystore, archivos grandes por LFS.
-- **Auditoría CPU contra CPU** frente al vídeo de faltas por puntos; medir los roles de la IA con 48 partidos o más.
-- **M-404:** prueba de carga para los 27 módulos de `visor/` sin referencia.
-- **Grada y exterior del estadio** fuera de los archivos vetados (`hinchada*`, `stadium_builder_p5/p6`, `festejo_grada`, `banquillo_vivo`, `publico_vat`).
-- **MakeHuman:** bajo de la chaqueta dentado y cejas manchadas; partir `personaje_dt_p1.gd` (448 líneas) al hacer el faldón.
-- **CMU (animaciones):** bloqueado, los BVH necesitan Blender (`sesion_6.md`).
-- Las sesiones 1, 3, 5 y 6 se cortaron a las 12:36 del 26-10 por el límite de gasto mensual; lo que no subieron (lote 2 de países, pizarra, caras) se rehace desde esta lista.

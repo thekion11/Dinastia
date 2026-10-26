@@ -71,8 +71,7 @@ static var _mostrando := false
 static func mostrar(padre: Node, tipo: String, icono: String, titulo: String, descripcion: String, sfx: String = "") -> void:
 	if _cola.size() >= MAX_EN_COLA:
 		return
-	_cola.append({"padre": padre, "tipo": tipo, "icono": icono, "titulo": CompeticionInfo.visibles_en(titulo),
-		"desc": CompeticionInfo.visibles_en(descripcion), "sfx": sfx})
+	_cola.append({"padre": padre, "tipo": tipo, "icono": icono, "titulo": titulo, "desc": descripcion, "sfx": sfx})
 	if not _mostrando:
 		_siguiente()
 

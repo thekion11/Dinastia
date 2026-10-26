@@ -50,6 +50,3 @@ dinastia-godot/assets/quaternius_muebles/*.glb -filter -diff -merge binary
 dinastia-godot/audio/ui/*.ogg -filter -diff -merge binary
 # Edificios de KayKit City Builder Bits (CC0, ~430 KB, 26-10): archivos normales; sustituyen a complejo_residencial.glb.
 dinastia-godot/assets/ciudad/kaykit/*.gltf -filter -diff -merge
-
-# Logo definitivo (26-10): archivos pequeños, fuera de LFS
-dinastia-godot/assets/logo/* -filter -diff -merge binary

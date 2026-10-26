@@ -18,8 +18,7 @@ static var _mostrando := false
 const GRUPO_TAPA := "no_tapar_mentor"
 
 static func decir(padre: Control, mundo: Mundo, titulo: String, texto: String) -> void:
-	_cola.append({"padre": padre, "mundo": mundo, "titulo": CompeticionInfo.visibles_en(titulo),
-		"texto": CompeticionInfo.visibles_en(texto)})
+	_cola.append({"padre": padre, "mundo": mundo, "titulo": titulo, "texto": texto})
 	if not _mostrando:
 		_siguiente()
 

@@ -31,7 +31,7 @@ func _rotulos() -> void:
 			_rugido_hecho = true
 			Sonido.toca("salida_tunel", Sonido.Bus.AMBIENTE)
 	if _boton_e != null:
-		var hay := not g.is_empty() or _zona_actual in ["·grada", "Ascensor", "Acceso"] or RecorridoClub.sala_decorable(_zona_actual)
+		var hay := not g.is_empty() or _zona_actual in ["·grada", "Ascensor"] or RecorridoClub.sala_decorable(_zona_actual)
 		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
 		_boton_e.visible = hay or ExploradorCiudad.es_tactil()
 	_hud.text = "📍 %s · %s %d  ·  %s" % [Idiomas.t(nombre), Idiomas.t("Planta"), planta, Idiomas.t("W/S/A/D o mando · Mayús: correr · E: usar · Esc: salir")]

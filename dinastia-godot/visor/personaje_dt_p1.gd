@@ -1,5 +1,5 @@
 extends RefCounted
-## [Capa 1/2 de `personaje_dt.gd`] aleatorio, de_rival, aspecto, _objetivos, _cuerpo, _pegar … (la cara, los ojos y `_esfera`, en la capa 2)
+## [Capa 1/2 de `personaje_dt.gd`] aleatorio, de_rival, aspecto, _objetivos, _cuerpo, _pegar … (+7)
 
 ## EL PERSONAJE DEL JUGADOR, EN 3D Y MODIFICABLE (26-9-2026). Pedido del
 ## usuario: *"ve por el modelo de nuestro personaje, el modificable"* (E19 del
@@ -377,25 +377,72 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 	if ropa == "abrigo":
 		var cadera := _pegar(esq, "pelvis")
 		var paño := _mat(r1, 0.85)
-		## FALDÓN DE TELA (26-10-2026, «la ropa es horrible»): eran dos cajas
-		## sueltas a los lados de la cadera, como una falda de cartón (y de
-		## espaldas no tapaban). Ahora un tubo abierto que se ensancha hacia la
-		## rodilla (ovalado como la cadera: x 0,19 → 0,225 m; fondo ×0,78) y la
-		## abertura del frente.
-		paño.cull_mode = BaseMaterial3D.CULL_DISABLED
-		var tubo := CylinderMesh.new()
-		tubo.top_radius = 0.19
-		tubo.bottom_radius = 0.225
-		tubo.height = 0.46
-		tubo.radial_segments = 20
-		tubo.rings = 1
-		tubo.cap_top = false
-		tubo.cap_bottom = false
-		var falda := MeshInstance3D.new()
-		falda.mesh = tubo
-		falda.material_override = paño
-		falda.position = Vector3(0, 0.73, -0.025)
-		falda.scale = Vector3(1.0, 1.0, 0.78)
-		cadera.add_child(falda)
-		var abertura := _caja(cadera, Vector3(0, 0.73, 0.138), Vector3(0.006, 0.46, 0.004), _mat(r1.darkened(0.45), 0.85))
-		abertura.rotation_degrees.x = -3.4
+		for s in [-1.0, 1.0]:
+			var f := _caja(cadera, Vector3(0.1 * s, 0.72, 0.02), Vector3(0.19, 0.46, 0.25), paño)
+			f.rotation_degrees.z = 4.0 * s
+
+## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)
+## y, si se eligió, un corte medido. Con gorra no va el corte medido.
+static func _cara_biblioteca(d: Dictionary, a: Dictionary) -> void:
+	var i := int(a.get("cara", -1))
+	## (Las mezclas salen de futbolistas hombres: en un cuerpo de mujer
+	## quedaban masculinas. Ahí va la cara clásica.)
+	if i < 0 or not BibliotecaCaras.hay() or String(a["cuerpo"]) == "female":
+		return
+	var piel := Color(String(a["piel"]))
+	var clave := BibliotecaCaras.cara_de_tono(piel, i)
+	if clave == "":
+		return
+	var corte := "" if bool(a["gorra"]) else String(a.get("corte_med", ""))
+	VestidorQ.poner_cara(d, {"look": {}, "foto": "",
+		"biblio": {"cara": clave, "pelo": corte, "color_pelo": "#" + String(a["color_pelo"])}}, piel)
+static func material_ojos(piel: Color, iris: Color, mujer := false) -> ShaderMaterial:
+	var k := piel.to_html(false) + iris.to_html(false) + ("m" if mujer else "")
+	if _mats_ojos.has(k):
+		return _mats_ojos[k]
+	var mo := ShaderMaterial.new()
+	mo.shader = load(Expresion.SHADER_OJOS)
+	mo.set_shader_parameter("iris", iris)
+	mo.set_shader_parameter("piel", piel)
+	## Los ojos del cuerpo de mujer están más abajo (medido en su malla: ±0,0345
+	## y 1,6559). Con los del hombre, los párpados le tapaban el ojo entero.
+	if mujer:
+		mo.set_shader_parameter("centro_neg", Vector2(-0.0345, 1.6559))
+		mo.set_shader_parameter("centro_pos", Vector2(0.0345, 1.6559))
+	_mats_ojos[k] = mo
+	return mo
+
+## OJOS DE VERDAD también con la cara clásica (13-10-2026): eran ranuras
+## blancas. El shader de ojos (iris, párpados de su piel) y, con él, el
+## parpadeo y las expresiones (`Expresion`).
+static func _ojos_vivos(d: Dictionary, piel: Color, iris := Color(0.24, 0.16, 0.1), propio := true) -> void:
+	for mi: MeshInstance3D in (d["nodo"] as Node).find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh == null:
+			continue
+		for s in mi.mesh.get_surface_count():
+			var base := mi.mesh.surface_get_material(s)
+			var actual := mi.get_surface_override_material(s)
+			if base == null or base.resource_name != VestidorQ.MATERIAL_OJOS:
+				continue
+			if actual is ShaderMaterial and not propio:
+				continue
+			if actual is ShaderMaterial:
+				## Cara de biblioteca: ya tiene el shader (compartido); uno propio con tu iris.
+				var copia := (actual as ShaderMaterial).duplicate() as ShaderMaterial
+				copia.set_shader_parameter("iris", iris)
+				mi.set_surface_override_material(s, copia)
+				continue
+			VestidorQ._con_reposo_simple(mi)
+			var mujer := (d["nodo"] as Node).find_child("Superhero_Female", true, false) != null
+			mi.set_surface_override_material(s, material_ojos(piel, iris, mujer))
+
+static func _esfera(padre: Node3D, pos: Vector3, r: float, m: Material) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var s := SphereMesh.new()
+	s.radius = r
+	s.height = r * 2.0
+	mi.mesh = s
+	mi.material_override = m
+	mi.position = pos
+	padre.add_child(mi)
+	return mi

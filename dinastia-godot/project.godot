@@ -2,14 +2,14 @@ config_version=5
 
 [application]
 
-config/name="DINASTÍA"
+config/name="DINASTIA"
 config/version="0.9.0"
 config/description="Manager de futbol. Nucleo portado del HTML, no reescrito."
 run/main_scene="res://escenas/inicio.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 ; El icono de la app. Sale de la marca del proyecto -el mismo que llevaba el
 ; APK viejo de la WebView-: Android se niega a exportar sin uno.
-config/icon="res://assets/logo/logo_256.png"
+config/icon="res://icono.png"
 
 [editor]
 

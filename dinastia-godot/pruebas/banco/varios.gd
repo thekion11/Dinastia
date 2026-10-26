@@ -308,33 +308,3 @@ func _probar_porque_moral() -> void:
 	_comprobar(j1 != null and j1.historial_moral.size() == j0.historial_moral.size(), "el historial de moral se guarda y se carga")
 	var sat: Dictionary = m.vestuario.satisfaccion_de(j0)
 	_comprobar(sat.has("min") and sat.has("rend") and sat.has("tact") and sat.has("inst"), "el Camarín puede leer lo que pesa en la satisfacción")
-
-## LO QUE CUESTA JUGAR (26-10, pedido del dueño): el día de partido y el viaje salen de precios reales y de la
-## distancia, no de un porcentaje. Se comprueba la lógica, no cifras sueltas.
-func _probar_viajes() -> void:
-	_titulo("VIAJES Y DÍA DE PARTIDO POR DISTANCIA Y COSTE DE VIDA")
-	var scl := Viajes.distancia_km("CHI", "ESP")
-	_comprobar(scl > 10000.0 and scl < 11500.0, "Santiago–Madrid ≈ 10.700 km (sale %d)" % int(scl))
-	_comprobar(absf(Viajes.distancia_km("CHI", "ARG") - Viajes.distancia_km("ARG", "CHI")) < 0.01, "la distancia es simétrica")
-	_comprobar(Viajes.distancia_km("ENG", "ENG") == 220.0, "dentro del mismo país: los km medios de su liga")
-	_comprobar(Viajes.medio(300.0) == "bus" and Viajes.medio(2000.0) == "avion" and Viajes.medio(8000.0) == "charter",
-		"autocar, avión y chárter según los km")
-	var local := Viajes.viaje_interno("ENG", "ENG", 70)
-	var lejos := Viajes.viaje_interno("CHI", "ESP", 70)
-	_comprobar(lejos > local * 10, "cruzar el océano cuesta mucho más que un viaje local (%d vs %d)" % [lejos, local])
-	_comprobar(Viajes.viaje_interno("CHI", "ARG", 85) > Viajes.viaje_interno("CHI", "ARG", 55), "un club grande viaja con más gente y mejor hotel")
-	_comprobar(Viajes.viaje_interno("ESP", "ESP", 70) > Viajes.viaje_interno("BOL", "BOL", 70), "el mismo viaje es más caro en España que en Bolivia")
-	var chico := Viajes.dia_de_partido_interno("CHI", 5000, 8000)
-	var grande := Viajes.dia_de_partido_interno("CHI", 40000, 60000)
-	_comprobar(grande > chico * 4, "abrir un estadio grande cuesta mucho más que uno chico (%d vs %d)" % [grande, chico])
-	_comprobar(Viajes.dia_de_partido_interno("ENG", 20000, 25000) > Viajes.dia_de_partido_interno("BOL", 20000, 25000),
-		"el día de partido es más caro donde la vida es más cara")
-	var c := Club.new()
-	c.pais = "CHI"
-	c.rep = 70
-	c.estadio_aforo = 20000
-	var f := Finanzas.new(c, 0.0, 0, 0.0)
-	var g := f.asistencia()
-	var taq := int(round(float(g) * Finanzas.ingreso_por_espectador(c.precio_entrada)))
-	var ratio := float(Viajes.dia_de_partido_interno(c.pais, g, c.estadio_aforo)) / float(maxi(taq, 1))
-	_comprobar(ratio > 0.25 and ratio < 0.35, "el club medio chileno sigue pagando ~30 %% de su taquilla (%.0f %%)" % (ratio * 100.0))

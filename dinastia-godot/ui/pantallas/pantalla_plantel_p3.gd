@@ -172,8 +172,8 @@ func _pintar_partido(c: Club) -> void:
 	var rival: Club = visita if de_local else local
 
 	var cab := p._texto(11, Principal.COL_SUAVE)
-	cab.text = Idiomas.mayusculas(CompeticionInfo.nombre_visible(p.mundo.copa.nombre)) if es_copa else Idiomas.t("JORNADA %d  ·  %s") % [
-		p._liga_de(c).jornada_actual, CompeticionInfo.nombre_visible(p._liga_de(c).nombre)]
+	cab.text = p.mundo.copa.nombre.to_upper() if es_copa else Idiomas.t("JORNADA %d  ·  %s") % [
+		p._liga_de(c).jornada_actual, p._liga_de(c).nombre]
 	p._lista_partido.add_child(cab)
 	var vs := p._texto(17, Principal.COL_TEXTO)
 	vs.text = "%s   vs   %s" % [local.nombre, visita.nombre]
@@ -321,7 +321,7 @@ func _pintar_proximas_fechas(c: Club) -> void:
 	for tor: Dictionary in Calendario.torneos(p.mundo.anio):
 		var sedes: Array = tor["sedes"]
 		var l2 := p._texto(12, Principal.COL_ORO)
-		l2.text = Idiomas.t("🌍 %s %d: del %d/%d al %d/%d%s") % [CompeticionInfo.nombre_visible(String(tor["nombre"])), p.mundo.anio,
+		l2.text = Idiomas.t("🌍 %s %d: del %d/%d al %d/%d%s") % [String(tor["nombre"]), p.mundo.anio,
 			int(tor["desde"][1]), int(tor["desde"][0]), int(tor["hasta"][1]), int(tor["hasta"][0]),
 			(Idiomas.t(" · sede: ") + ", ".join(sedes)) if not sedes.is_empty() else ""]
 		p._lista_calendario.add_child(l2)
@@ -367,7 +367,7 @@ func _pintar_calendario(c: Club) -> void:
 		info.add_child(nom)
 		var sub := p._texto(11, Principal.COL_SUAVE)
 		sub.text = "%s  ·  %s" % [
-			CompeticionInfo.nombre_visible(p.mundo.copa.nombre if es_copa else p._liga_de(c).nombre),
+			p.mundo.copa.nombre if es_copa else p._liga_de(c).nombre,
 			Idiomas.t("Local") if de_local else Idiomas.t("Visitante")]
 		info.add_child(sub)
 		## Si además hay ronda continental esta misma semana -`CONTI_EN` no
@@ -378,7 +378,7 @@ func _pintar_calendario(c: Club) -> void:
 		var mi_conti := p.mundo.mi_continental()
 		if Continental.toca_ronda(p.mundo.semana) >= 0 and mi_conti != null and mi_conti.en_curso():
 			var av := p._texto(10, Principal.COL_ORO)
-			av.text = Idiomas.t("También hay ronda de %s esta semana.") % CompeticionInfo.nombre_visible(Continental.nombre_conti(mi_conti.clave))
+			av.text = Idiomas.t("También hay ronda de %s esta semana.") % Continental.nombre_conti(mi_conti.clave)
 			av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			info.add_child(av)
 		if p.mundo.es_clasico(c, rival):
@@ -404,7 +404,7 @@ func _pintar_calendario(c: Club) -> void:
 	## visible.
 	var liga := p._liga_de(c)
 	var tl := p._texto(11, Principal.COL_SUAVE)
-	tl.text = Idiomas.t("CALENDARIO DE %s") % Idiomas.mayusculas(CompeticionInfo.nombre_visible(liga.nombre))
+	tl.text = Idiomas.t("CALENDARIO DE %s") % liga.nombre.to_upper()
 	p._lista_calendario.add_child(tl)
 	for i in range(liga.jornada_actual, liga.calendario.size()):
 		var jornada: Array = liga.calendario[i]

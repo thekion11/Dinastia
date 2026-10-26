@@ -199,14 +199,13 @@ func _colocar_camara(delta: float) -> void:
 		var dh := Vector2(deseo.x - cuerpo.position.x, deseo.z - cuerpo.position.z).length()
 		if dh < atras - 0.3:
 			falta = clampf((atras - dh) / atras, 0.0, 1.0)
-			deseo += Vector3(cos(rumbo), 0.0, -sin(rumbo)) * 0.55 * falta + Vector3(0.0, 1.0 * falta, 0.0)
+			deseo += Vector3(cos(rumbo), 0.0, -sin(rumbo)) * 0.5 * falta + Vector3(0.0, 1.3 * falta, 0.0)
 			deseo.x = clampf(deseo.x, r.position.x + 0.15, r.end.x - 0.15)
 			deseo.z = clampf(deseo.z, r.position.y - holgura, r.end.y + holgura)
 		deseo.y = minf(deseo.y, RecorridoClub.y_de(planta) + float(z["techo"]) - 0.25)
 	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
-	## Acortada, mira algo más cerca y más abajo: el cuerpo sigue en el encuadre
-	## sin que la vista se vuelva cenital (26-10, suavizado).
-	camara.look_at(cuerpo.position + Vector3(0, 1.4 - 0.45 * falta, 0) + adelante * (3.0 - 1.1 * falta), Vector3.UP)
+	## Acortada, mira más cerca y más abajo: el cuerpo sigue en el encuadre.
+	camara.look_at(cuerpo.position + Vector3(0, 1.4 - 0.6 * falta, 0) + adelante * (3.0 - 1.5 * falta), Vector3.UP)
 
 ## Cambia de planta por el ascensor (misma x y z: el hueco está apilado).
 func ir_a_planta(p: int) -> void:
@@ -232,9 +231,6 @@ func usar() -> void:
 		return
 	if _zona_actual == "Ascensor":
 		_menu = RecorridoClub.menu_ascensor(_capa, planta, ir_a_planta)
-	elif _zona_actual == "Acceso":
-		## El aviso dice «E: salir a la calle» y antes E no hacía nada aquí.
-		salir.emit()
 	elif RecorridoClub.sala_decorable(_zona_actual):
 		_menu = RecorridoClub.panel_decorar(_capa, get_tree(), _zona_actual)
 

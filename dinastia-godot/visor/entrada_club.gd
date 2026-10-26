@@ -89,9 +89,7 @@ static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
 			var esc := Sprite3D.new()
 			esc.texture = tex
 			esc.pixel_size = 1.1 / 256.0
-			## Por delante de la fachada vestida (`FachadaClub`): pegado, la banda
-			## de vidrio de la planta 1 lo cortaba.
-			esc.position = Vector3(px, 4.75, zf + 0.2)
+			esc.position = Vector3(px, 4.75, zf + 0.05)
 			esc.shaded = false
 			e.add_child(esc)
 
