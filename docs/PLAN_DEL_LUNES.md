@@ -7,6 +7,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
+- **Decididas por el dueño (26-10):** cláusula de descenso en los sueldos: **sí**; frenar el entrenamiento del juvenil (+10 → +4-6): **sí**; tope del valor de la IA ×1,50: **sí, pero que varíe con la dificultad**; logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan**; fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
 - **Aprobar la pantalla de entrada** como escena principal (`Inicio.flujo_nuevo`, hoy `true` en código): verla en juego real y decir sí o no (§8).
 - **Empujar `main` reescrito** y **borrar las 8 ramas y `latest`** (§1); cuándo fusionar a `main` la rama actual y la de la sesión 2 (§9).
 - **Foundry/Azure** sí o no; **abrir la red a Wikimedia** (caras y escudos que faltan) (§1).

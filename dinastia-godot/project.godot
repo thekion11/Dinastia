@@ -3,6 +3,7 @@ config_version=5
 [application]
 
 config/name="DINASTIA"
+config/version="0.9.0"
 config/description="Manager de futbol. Nucleo portado del HTML, no reescrito."
 run/main_scene="res://escenas/inicio.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
