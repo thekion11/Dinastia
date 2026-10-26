@@ -143,7 +143,7 @@ func _nuevo_lienzo(capa: int) -> Lienzo:
 	l.mapa = self
 	l.capa = capa
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	l.set_anchors_preset(Control.PRESET_FULL_RECT)
+	l.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(l)
 	return l
 
