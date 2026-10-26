@@ -42,7 +42,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 | **1 — Entrada** | recorrido con la cámara real HECHO el 26-10 (`docs/04_auditorias/capturas_fase1/`, 8 tomas Forward+; arreglos: rótulos del globo, rivales en la ficha de país, tarjetas de entrada al campeonato); solo falta tu aprobación (§0) | las fases 0-5 como pantallas completas |
 | **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). Falta tu aprobación jugándolo y lo anotado en §2.2b «Límites» | de «Nuevo juego» hasta tu primer día |
 | **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). Falta tu aprobación jugándolo y lo anotado en §2.2c «Límites» | un día completo jugable en 3D |
-| **4 — Personas** | EN CONSTRUCCIÓN desde el 26-10: bloques 1-2 hechos (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, Agenda con «Ir»; pruebas `f4p_citas` y `f4p_personas`); faltan 3-7 (§2.2d) | negociaciones en persona |
+| **4 — Personas** | EN CONSTRUCCIÓN desde el 26-10: bloques 1-4 y parte del 6 hechos (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, Agenda con «Ir», favor del agente en `Negociacion`, entrevista de contratación, fotos a Tribuna; pruebas `f4p_citas` y `f4p_personas`; capturas `docs/04_auditorias/capturas_fase4/`); el bloque 7 lo hace la sesión ejecutora; faltan asamblea/elecciones y «convocar rueda» (§2.2d) | negociaciones en persona |
 | **5 — Club ampliado** | vestuario con nombres, otros deportes, trofeos y celebraciones | |
 | **6 — Pulido y auditoría** | pasos 4-7 de 7.1, limpieza del repo, vídeo | cierre y MEGAPLAN siguiente |
 
@@ -260,7 +260,7 @@ dialogo`), la flecha del HUD del prólogo y el reloj (`Reloj`, `VidaCiudad`).
 | 6 | Redes, fotos y elecciones del club | Foto del `ModoFoto` → la app Fotos la publica en `Redes` con hashtags; «Convocar rueda de prensa» desde el móvil (máximo 1 extra por semana). Elecciones del club cada 4 temporadas (o con confianza < 25): asamblea en el salón de actos con 3 discursos (tonos) y voto de socios + junta; perder = sigues de DT con otro presidente (nuevo `Junta.presidente`, objetivo nuevo) | nada definitivo: no te echan por las elecciones |
 | 7 | Rutinas y vida de las personas | Los directivos pasan por el estadio en su horario (despacho, palco los sábados); el personal del club saluda por nombre y recuerda la última charla (`PersonalEstadio` + afinidad 0-100 que sube por charla diaria y baja por semanas sin hablar) | afinidad solo cambia textos y una frase de pasillo; sin efectos en el partido |
 
-**Hecho el 26-10 (bloques 1 y 2) y límites honestos:**
+**Hecho el 26-10 (bloques 1-4 y parte del 6) y límites honestos:**
 - `Citas` nace cada semana en `Mundo._semana_modulos_del_club` (y en la primera al generar): junta abierta → presidente en su
   despacho (martes 11:00); zona con ofertas → la marca que más paga en el centro comercial (miércoles 16:00); superagente →
   terraza de la Plaza Mayor (jueves 19:00); semana antes de la votación → gabinete del alcalde en el ayuntamiento (viernes 12:00).
@@ -271,14 +271,39 @@ dialogo`), la flecha del HUD del prólogo y el reloj (`Reloj`, `VidaCiudad`).
 - Resolver = lo de siempre + bono: junta `Junta.resolver` +1 de confianza; patrocinio `firmar_zona` +5 % de renta; agente deja
   un «favor» (`Citas.favor_agente`, el −5 % en su próxima mesa se aplica en el bloque 3); política: apoyo anotado en el
   gobierno y −2 con la prensa crítica.
-- Pendiente (bloques 3-7): el −5 %/+10 en `Negociacion` real, entrevistas de contratación, asamblea/elecciones, fotos a
-  `Redes`, rutinas del personal; los sitios de la ciudad son fijos (no hay «sede» propia por marca).
+- Bloque 3: con el favor del agente de la semana, `Negociacion` divide lo pedido por 0,95 y baja el umbral 0,10
+  (`descuento_persona`, `bono_persona`); `MesaAgente` (los representantes de la cantera) no lo aplica aún.
+- Bloque 4: al cerrar un fichaje (`Negociacion._cerrar_fichaje`) el nuevo te cita mañana a las 10:00 en tu oficina; tres
+  tonos: seguro +2 de moral, evasivo −1, humilde +1. Si no vas, caduca sin efecto. El cuerpo es genérico (cara por nombre),
+  no el modelo del jugador (fase 5).
+- Bloque 6 (parte): las fotos del modo foto se publican desde la app Fotos como «paseo» en `Redes` (tipo nuevo, +seguidores).
+- Pendiente: asamblea/elecciones del club, «convocar rueda de prensa» desde el móvil, el favor en `MesaAgente`; los sitios de
+  la ciudad son fijos (no hay «sede» propia por marca). El bloque 7 (rutinas y afinidad del personal) lo construye la sesión
+  ejecutora (tarea 6).
 
 **Pruebas (modelo V).** Idea `f4p_personas`: un asunto de la junta genera una cita con mensaje y aparece en la Agenda; a la hora,
 la persona está en su sitio (fuera de hora, no); negociar en persona aplica −5 %/+10 y por PC no; firmar una zona en persona
 da el +5 %; la entrevista mueve ±2 de moral; publicar una foto suma seguidores; la asamblea cambia el presidente al perder
 y nada más; las citas caducan el domingo sin castigo. Captura `f4p_captura_personas` (mensaje con «Ir», patrocinador en su
 sede, agente en el bar, asamblea, foto publicada).
+
+### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
+
+Palabras del dueño: *«hay partes de la ciudad sin detalles y muy mejorables; los personajes se mueven de forma
+antinatural, sus partes del cuerpo no son anatómicamente correctas, falta profundidad y calidad de los personajes; mejorar
+y agregar animaciones; analizar toda la ciudad, mejorar la construcción y cuidar la coherencia»*. Entra como trabajo de la
+fase 6 (pulido) adelantado y se hace por PASADAS con captura antes/después y veredicto del dueño en cada una.
+
+| # | Pasada | Qué | Cómo se mide |
+|---|---|---|---|
+| C1 | Auditoría de la ciudad | recorrido por zonas con capturas (paseo y aérea), lista priorizada de huecos, cajas lisas, incoherencias (sesión ejecutora, tarea 7) | `docs/04_auditorias/ciudad_26_10.md` + `capturas_ciudad/` |
+| C2 | Construcción y coherencia | fachadas reales donde hay cajas (centro comercial, cocheras, estación), aceras y cruces continuos, rótulos sobre algo, escalas unificadas, piezas Kenney donde falten | capturas antes/después por zona |
+| P1 | Anatomía | medir el cuerpo base (`PersonajeDT`, `VestidorQ`): proporciones cabeza/tronco/brazos/piernas frente a un humano medio (7,5 cabezas), hombros, cuello, manos; corregir escalas por hueso | hoja de medidas + captura frontal/lateral |
+| P2 | Movimiento natural | pasos sin patinar (velocidad de clip = velocidad real), giro con inercia, transición caminar↔correr↔parar con mezcla, peso en los brazos, mirada; en peatones y en el DT | `pruebas/sonda_movimiento.tscn` (deslizamiento de pies en cm) + vídeo corto |
+| P3 | Más animaciones | sentarse, esperar (3 variantes), hablar con gestos, abrir puerta, subir escalera, saludar; usar los 333 clips del pack antes de crear nuevos | inventario de clips usados/sin usar |
+| P4 | Profundidad y calidad | piel con subsuperficie suave, pelo con capas, ropa con arrugas normales, sombras de contacto, LOD sin saltos | captura de transmisión + de cerca |
+
+Compuerta: el dueño ve cada pasada y dice «estamos» o «mejorar». Nada se quita sin avisar.
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 
