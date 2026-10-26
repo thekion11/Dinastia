@@ -67,7 +67,14 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 	var m := PiezasVestuario.materiales(c1, c2)
 	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.22)
 	var base := TunelVestuario._mat(Color(0.1, 0.1, 0.12), 0.4)
-	var vidrio: StandardMaterial3D = Texturas.cristal(true, true)
+	## Vidrio de vitrina de verdad, transparente (`Texturas.cristal` es el de
+	## las ventanas de fachada: opaco y encendido, tapaba la copa).
+	var vidrio := StandardMaterial3D.new()
+	vidrio.albedo_color = Color(0.86, 0.93, 1.0, 0.1)
+	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	vidrio.roughness = 0.04
+	vidrio.metallic_specular = 0.9
+	vidrio.cull_mode = BaseMaterial3D.CULL_DISABLED
 	var cuero := TunelVestuario._mat(Color(0.45, 0.28, 0.14), 0.6)
 	var cx := caja.get_center().x
 	## La alfombra del recorrido, de la puerta al fondo, con ribete.

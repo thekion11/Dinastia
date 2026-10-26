@@ -111,7 +111,8 @@ func _process(delta_real: float) -> void:
 						_charlar(v, o)
 						avance = 0.0
 		## CEDER EL PASO AL JUGADOR (etapa 5): un peatón se detiene si le tapas
-		## el paso en el próximo metro y pico; un coche, en los próximos ~6,5 m.
+		## el paso en el próximo metro y pico; un coche, a ~7 m de ti (5,7 m de
+		## mirada + su medio ancho + el tuyo).
 		## Se mira la FORMA del jugador (pmov, 26-10-2026: antes solo su centro,
 		## y con tu coche parado los peatones atravesaban morro y cola) y solo
 		## a los que están a menos de 16 m (barato).
@@ -122,7 +123,7 @@ func _process(delta_real: float) -> void:
 				if rel.length_squared() < 256.0:
 					var dir_v: Vector3 = (_rutas[ruta] as Ruta).en(s0)[1]
 					var peaton := es_peaton
-					if tapa_al_jugador(nodo_v.position, dir_v, 1.25 if peaton else 6.65, 0.4 if peaton else 1.0,
+					if tapa_al_jugador(nodo_v.position, dir_v, 1.25 if peaton else 5.7, 0.4 if peaton else 1.0,
 							pj, jugador.rotation.y, jugador_huella):
 						avance = 0.0
 						## A pie, un peatón te rodea por el lado contrario al tuyo, si cabe
@@ -289,6 +290,17 @@ func _cede_paso(v: Dictionary, idx: int, delta: float) -> bool:
 					continue
 				var pb: Vector2 = e[1]
 				var otro_coche: bool = e[3]
+				## DE FRENTE EN LA MISMA ACERA (dos peatones en sentidos contrarios):
+				## cada uno se abre a SU derecha con tiempo (a 4 m), así se cruzan sin
+				## pararse. Antes uno cedía y el otro le atravesaba (pmov, 26-10-2026).
+				var de_frente := not coche and not otro_coche and da.dot(e[2]) < -0.7
+				if de_frente:
+					var rel_o := pb - pa
+					var frente_o := rel_o.dot(da)
+					if frente_o > 0.2 and frente_o < 4.0:
+						var lado_o := rel_o.dot(Vector2(da.y, -da.x)) + float(v.get("lat", 0.0))
+						if absf(lado_o - float(v.get("lat", 0.0))) < SEPARA_LADO + 0.3:
+							_esquivar(v, lado_o, -1.0)
 				## Dos coches casi paralelos (carril de al lado, o el de enfrente) no
 				## se cruzan: solo abultan su medio ancho. En perpendicular, medio largo.
 				var paralelo := coche and otro_coche and absf(da.dot(e[2])) > 0.8
@@ -299,7 +311,7 @@ func _cede_paso(v: Dictionary, idx: int, delta: float) -> bool:
 				if not coche and otro_coche and _en_hueco(pb, e[2], true, pa, 0.3):
 					continue
 				## Los dos se tienen delante y son iguales: pasa el de índice menor.
-				if coche == otro_coche and j > idx and _en_hueco(pb, e[2], otro_coche, pa, extra if coche else 0.3):
+				if coche == otro_coche and not de_frente and j > idx and _en_hueco(pb, e[2], otro_coche, pa, extra if coche else 0.3):
 					continue
 				v["cediendo"] = float(v.get("cediendo", 0.0)) + delta
 				return true

@@ -105,3 +105,99 @@ static func piezas_escalera(bajo: Vector3, dir: Vector3, n: int, alto_p: float, 
 			var p := arriba.lerp(abajo, t) + borde + Vector3.UP * 0.6
 			tubos.append(Transform3D(Basis.from_scale(Vector3(0.045, 0.85, 0.045)), p))
 	return [cantos, zancas, tubos]
+
+## VESTIR LO QUE YA LEVANTÓ LA GRADA (se llama al final de las tribunas y las
+## esquinas). Lee las cajas que dejaron `_montar_pasillos` («Pasillos», en cada
+## deck) y `_escaleras_de_acceso` («EscalerasAcceso», en la raíz) y les añade el
+## canto de los peldaños y, a las de acceso, sus zancas y pasamanos. No toca las
+## piezas de origen: solo cuelga MultiMesh nuevos al lado.
+static func vestir_escaleras(root: Node3D, mat_baranda: Material) -> void:
+	var cantos_acc: Array[Transform3D] = []
+	var zancas: Array[Transform3D] = []
+	var tubos: Array[Transform3D] = []
+	for n: Node in root.find_children("*", "MultiMeshInstance3D", true, false):
+		var mmi := n as MultiMeshInstance3D
+		if mmi.multimesh == null or mmi.has_meta("vestida"):
+			continue
+		mmi.set_meta("vestida", true)
+		var nombre := String(mmi.name)
+		var mm := mmi.multimesh
+		if nombre.contains("Pasillos") and mm.mesh is BoxMesh:
+			var esc: Array[Transform3D] = []
+			for k in mm.instance_count:
+				esc.append(mm.get_instance_transform(k))
+			multi(mmi.get_parent() as Node3D, "CantosPasillo", cantos_pasillo(esc, (mm.mesh as BoxMesh).size.z), mat_canto())
+		elif nombre.contains("EscalerasAcceso") and mmi.get_parent() == root:
+			_vestir_acceso(mmi, cantos_acc, zancas, tubos)
+	multi(root, "CantosAcceso", cantos_acc, mat_canto())
+	multi(root, "ZancasAcceso", zancas, mat_zanca())
+	multi(root, "PasamanosAcceso", tubos, mat_baranda)
+
+## Agrupa los peldaños de «EscalerasAcceso» por escalera (misma línea y mismo
+## lado) y saca de cada una sus piezas con `piezas_escalera`.
+static func _vestir_acceso(mmi: MultiMeshInstance3D, cantos: Array[Transform3D], zancas: Array[Transform3D],
+		tubos: Array[Transform3D]) -> void:
+	var mm := mmi.multimesh
+	var grupos := {}
+	for k in mm.instance_count:
+		var xf := mmi.transform * mm.get_instance_transform(k)
+		var e := xf.basis.get_scale()
+		var lateral := e.x < e.z
+		var o := xf.origin
+		var clave := "%s|%d|%d" % [lateral, roundi((o.z if lateral else o.x) * 10.0), signi(roundi(o.x if lateral else o.z))]
+		if not grupos.has(clave):
+			grupos[clave] = []
+		(grupos[clave] as Array).append([o.y + e.y * 0.5, o, lateral, minf(e.x, e.z), maxf(e.x, e.z)])
+	for clave: String in grupos:
+		var pel: Array = grupos[clave]
+		pel.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) > float(b[0]))
+		var p0: Array = pel[0]
+		var o0: Vector3 = p0[1]
+		var lateral: bool = p0[2]
+		var dir := Vector3(-signf(o0.x), 0, 0) if lateral else Vector3(0, 0, -signf(o0.z))
+		var fondo_p: float = p0[3]
+		## El primer peldaño está a 0,45 m del de la grada y su cara de arriba,
+		## 0,1 m por debajo (ver `_escaleras_de_acceso`).
+		var bajo := o0 - dir * 0.45
+		bajo.y = float(p0[0]) + 0.1
+		var alto_p := 0.18
+		if pel.size() > 1:
+			alto_p = float(pel[0][0]) - float(pel[1][0])
+		var piezas := piezas_escalera(bajo, dir, pel.size(), alto_p, fondo_p, float(p0[4]))
+		cantos.append_array(piezas[0])
+		zancas.append_array(piezas[1])
+		tubos.append_array(piezas[2])
+
+## LA CUBIERTA VISTA DESDE ABAJO (26-10-2026). Desde la cámara de TV el techo de
+## enfrente se ve por debajo, y era una losa lisa de 0,5 m: una tabla flotando.
+## Ahora lleva su estructura: las vigas en ménsula que la sostienen (cada ~9 m,
+## más altas atrás, donde empotran en la tribuna) y el canto del borde (una
+## visera de 1,1 m que da la línea limpia del techo). Un MultiMesh por tribuna,
+## colgado del centro de la losa para que `ocultar_techo_ante` lo esconda con
+## ella cuando la cámara está detrás.
+## `centro`: el centro de la losa; `tam`: su tamaño; `cara`: hacia el campo.
+static func vigas_techo(root: Node3D, centro: Vector3, tam: Vector3, cara: Vector3, lateral: bool,
+		mat: Material) -> GeometryInstance3D:
+	var largo := tam.z if lateral else tam.x
+	var fondo := tam.x if lateral else tam.z
+	var a_lo_largo := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
+	var y_bajo := -tam.y * 0.5
+	var xfs: Array[Transform3D] = []
+	var n := maxi(2, int(largo / 9.0))
+	for k in n + 1:
+		var l := -largo * 0.5 + 1.0 + (largo - 2.0) * float(k) / float(n)
+		## Dos tramos: el de atrás más alto (empotrado) y el vuelo más fino.
+		for tramo: Vector3 in [Vector3(-0.25, 1.1, 0.5), Vector3(0.22, 0.65, 0.44)]:
+			var c := a_lo_largo * l + cara * (fondo * tramo.x) + Vector3(0, y_bajo - tramo.y * 0.5, 0)
+			var esc := Vector3(fondo * tramo.z, tramo.y, 0.32) if lateral else Vector3(0.32, tramo.y, fondo * tramo.z)
+			xfs.append(Transform3D(Basis.from_scale(esc), c))
+	## El canto del borde, a todo lo largo.
+	var esc_c := Vector3(0.3, 1.1, largo) if lateral else Vector3(largo, 1.1, 0.3)
+	xfs.append(Transform3D(Basis.from_scale(esc_c), cara * (fondo * 0.5 - 0.15) + Vector3(0, -0.3, 0)))
+	## Una correa a media luz, a todo lo largo.
+	var esc_r := Vector3(0.25, 0.35, largo) if lateral else Vector3(largo, 0.35, 0.25)
+	xfs.append(Transform3D(Basis.from_scale(esc_r), cara * (fondo * 0.05) + Vector3(0, y_bajo - 0.2, 0)))
+	var nodo := Node3D.new()
+	nodo.position = centro
+	root.add_child(nodo)
+	return multi(nodo, "VigasTecho", xfs, mat)
