@@ -1,6 +1,9 @@
 extends "res://nucleo/partido_p1.gd"
 ## [Capa 2/3 de `partido.gd`] _aporte_tarjeta, _init, valoraciones, mejor_del_partido, preparar, chequear_invasion … (+10)
 
+## Lo que pasó y cómo llegaban (ver `RastroPartido`).
+var rastro: RastroPartido
+
 func _aporte_tarjeta(j: Jugador, roja: bool, _m: int) -> void:
 	_aporte(j, -1.4 if roja else -0.35)
 
@@ -11,6 +14,9 @@ func _init(_local: Club, _visita: Club, _neutral: bool = false) -> void:
 	gol.connect(_aporte_gol)
 	remate.connect(_aporte_remate)
 	tarjeta.connect(_aporte_tarjeta)
+	## El rastro para explicar el resultado después (`CausasPartido`): solo escucha.
+	rastro = RastroPartido.new()
+	rastro.enganchar(self)
 
 ## LAS VALORACIONES DEL PARTIDO (M-141): la nota de cada uno de los que
 ## jugaron, como en los diarios, de mejor a peor:
@@ -104,6 +110,7 @@ func preparar() -> void:
 		_notas[j.id] = 6.0
 		_titulares[j.id] = true
 	invalidar_fuerza()
+	rastro.al_preparar(self)
 
 ## Devuelve true si la grada acaba de invadir el campo. Lo mira el partido en
 ## vivo para parar el reloj y abrir el vestuario.

@@ -134,7 +134,8 @@ func _montar_plato() -> void:
 		var liga := p.mundo.liga_de(mio)
 		if liga != null:
 			clubes = liga.clubes
-	escena.montar(mio, p.COL_ACENTO, Calidad.ALTO, _look_dt(), clubes)
+	_ctx = _contexto_rueda()
+	escena.montar(mio, p.COL_ACENTO, Calidad.ALTO, _look_dt(), clubes, _ctx)
 
 ## Arriba a la izquierda: «RUEDA DE PRENSA» y la placa del DT (foto y nombre).
 func _cabecera() -> Control:
@@ -274,6 +275,9 @@ func pintar_pregunta(e: Dictionary) -> void:
 		var rel := p.mundo.prensa.relacion_con(per)
 		var trato := Idiomas.t("te aprecia") if rel >= 65 else (Idiomas.t("no te quiere") if rel <= 35 else Idiomas.t("sin bando"))
 		extra.append("%s, %s" % [Idiomas.t(String(e.get("perfil", ""))), trato])
+	## Varias preguntas por rueda (S5): «2/3» delante del medio.
+	if int(e.get("total", 1)) > 1:
+		extra.push_front(Idiomas.t("Pregunta %d/%d") % [int(e.get("numero", 1)), int(e.get("total", 1))])
 	if bool(e.get("memoria", false)):
 		extra.append(Idiomas.t("  ·  🧠 recuerda lo que dijiste").trim_prefix("  ·  "))
 	_quien.text = "🎙️ " + String(partes[0]).to_upper()
@@ -282,7 +286,7 @@ func pintar_pregunta(e: Dictionary) -> void:
 	if _medio != null:
 		_medio.text = "  ·  ".join(extra)
 	var pregunta := String(e.get("pregunta", ""))
-	_pregunta.text = pregunta
+	_pregunta.text = _con_titulo(pregunta)
 	desde = Time.get_ticks_msec() + int(_lectura(pregunta) * 1000.0)
 	## Mientras se lee, la cámara está en el periodista que pregunta (mano en alto).
 	if is_instance_valid(_escena):
@@ -319,6 +323,12 @@ func _fila_opciones(e: Dictionary) -> VBoxContainer:
 		CuadroDialogo.respuesta(b2)
 		b2.text = "%d.  %s" % [i + 1, b2.text]
 		b2.add_theme_font_size_override("font_size", 14)
+		## «🙋 Que responda mi ayudante» (S5): se distingue del resto, dorado y
+		## con su explicación, porque no es una frase tuya sino delegar.
+		if b2.text.contains("🙋"):
+			b2.add_theme_color_override("font_color", Tema.ORO)
+			b2.add_theme_color_override("font_hover_color", Tema.ORO)
+			b2.tooltip_text = Idiomas.t("Tu ayudante contesta por ti: menos riesgo, menos protagonismo.")
 		b2.pressed.connect(func() -> void: responder(i))
 		col.add_child(b2)
 	return col

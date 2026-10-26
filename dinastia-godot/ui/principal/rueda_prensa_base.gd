@@ -173,3 +173,42 @@ static func _caja(alfa: float, radio: int, margen: float) -> StyleBoxFlat:
 	sb.content_margin_left = margen; sb.content_margin_right = margen
 	sb.content_margin_top = margen * 0.7; sb.content_margin_bottom = margen * 0.7
 	return sb
+
+## EL CONTEXTO DE LA RUEDA (26-10): de qué competición viene y si se acaba de
+## ganar un título, para la pared y el trofeo del plató (`ParedPrensa`,
+## `Trofeo3D`). Sin competición (presentación, primera rueda): el club solo.
+var _ctx: Dictionary = {}
+
+func _contexto_rueda() -> Dictionary:
+	var m := p.mundo
+	var mio := m.mi_club()
+	if m.prensa == null or mio == null:
+		return {"tipo": "general"}
+	var comp := String(m.prensa.competicion_rueda)
+	var ctx := {"tipo": "competicion", "competicion": "", "titulo": ""}
+	if comp == "copa" and m.copa != null:
+		ctx["competicion"] = m.copa.nombre
+		if not m.copa.en_curso() and m.copa.campeon == mio:
+			ctx["titulo"] = m.copa.nombre
+	elif comp == "conti":
+		for k: String in m.continentales:
+			var t: Continental = m.continentales[k]
+			if t != null and t.participantes.has(mio):
+				ctx["competicion"] = Continental.nombre_conti(t.clave)
+				if t.campeon == mio:
+					ctx["titulo"] = ctx["competicion"]
+	else:
+		var liga := m.liga_de(mio)
+		if liga != null:
+			ctx["competicion"] = liga.nombre
+	if String(ctx["competicion"]) == "":
+		return {"tipo": "general"}
+	return ctx
+
+## Tras un título, la pregunta llega con su contexto delante.
+func _con_titulo(pregunta: String) -> String:
+	var t := String(_ctx.get("titulo", ""))
+	if t == "":
+		return pregunta
+	return Idiomas.t("Con la %s sobre la mesa: ") % CompeticionInfo.nombre_visible(t) + pregunta
+

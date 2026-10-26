@@ -44,8 +44,10 @@ const INTERV_MAX := 2
 const GOLES := Vector2(2.1, 3.2)
 
 func _probar() -> void:
-	if OS.get_environment("TV_IGUAL") != "":   ## medir el reparto solidario de la tele sin activarlo
+	if OS.get_environment("TV_IGUAL") != "":   ## medir otro reparto de la tele
 		Finanzas.reparto_tv_igual = float(OS.get_environment("TV_IGUAL"))
+	if OS.get_environment("TAQUILLA_X") != "":   ## y otra taquilla
+		Finanzas.factor_taquilla = float(OS.get_environment("TAQUILLA_X"))
 	if OS.get_environment("EQ_MODO") == "rendimiento":
 		_rendimiento()
 		return
@@ -100,7 +102,7 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 		_comprobar(crece < ref * 0.75, "%s: la caja del grande no se dispara sola (%.2f M/temporada; ref %.2f M)" % [et, crece / 1e6, ref / 1e6])
 	else:
 		var media := perdida_primera / maxf(1.0, float(en_primera))
-		_comprobar(media > -1.0, "%s: en Primera la caja del chico no se hunde sola (%+.2f referencias/temporada en %d temporadas; caja final %.2f M, ref %.2f M)" % [et, media, en_primera, yo.saldo / 1e6, ref / 1e6])
+		_comprobar(media > -1.0 and media < 0.75, "%s: en Primera la caja del chico ni se hunde ni se dispara sola (%+.2f referencias/temporada en %d temporadas, entre −1 y +0,75; caja final %.2f M, ref %.2f M)" % [et, media, en_primera, yo.saldo / 1e6, ref / 1e6])
 	_comprobar(fallos.is_empty(), "%s: %d temporadas dentro de los rangos sanos%s" % [et, temporadas, "" if fallos.is_empty() else " · fuera: " + ", ".join(fallos)])
 
 func _revisar(f: Dictionary, f0: Dictionary, t: int, fallos: Array[String]) -> void:

@@ -209,3 +209,70 @@ Prueba `pruebas/ideas/s3_accesibilidad.gd` (14 comprobaciones); captura `s3_acce
 
 Lo que queda del nivel básico (en el plan §10): lector de pantalla mínimo, reasignar las teclas propias del menú
 lateral y del móvil, y repasar el contraste alto en las pantallas 3D y en las capas a pantalla completa.
+
+## 9. Mercado con claves estables (tarea 6 del segundo encargo)
+
+`Mercado.abrir_negociacion` devuelve el motivo YA traducido (propio, desafíos, «no se sienta a hablar hasta la
+semana %d», y los motivos que vienen de roles, regiones y federación pasan también por `Idiomas.t`), y las razones de
+`deseo_de_venir` salen traducidas (la de la reputación, con plantilla). `pantalla_plantel.gd` monta «No se pudo abrir
+la mesa: %s.» con plantilla. 10 claves × 8 idiomas. `s3_textos_nucleo` comprueba el motivo y 55 razones en los 8.
+
+Coordinación: el supervisor pidió la rueda de prensa y la línea 149 de `ui/entrada/config_club_pasos.gd`; los dos
+archivos son de la sesión principal (prohibidos para mí), así que quedan para ella. Las decisiones del dueño
+(`bio_de` igual; «Forma»: sí) están en el plan §0/§9.
+
+## 10. Auditoría de la interfaz de la Principal (orden del dueño, 26-10)
+
+**Cómo.** `pruebas/ideas/s3_auditoria_interfaz.gd` recorre las 53 pestañas (bloques y hubs) en español, alemán y
+turco a 1280×720 y 1920×1080 y cuenta textos recortados que no caben (clip o «…») y botones visibles sin foco de
+mando. Lo visual fino, a ojo: `herramientas/visual.sh capturas <idioma> <resolución>` guarda las 20 pantallas
+clave a tamaño real en `/tmp/visual/capturas/` (revisadas de en 1280 y de tr en 1920).
+
+| pasada | antes | después |
+|---|---:|---:|
+| es / de / tr a 1280×720 | 69 / 16 / 12 cortes | 5 / 8 / 3 |
+| es / de / tr a 1920×1080 | 139 / 84 / 28 | 21 / 22 / 17 |
+| botones sin foco de mando | 18 | 0 |
+
+La prueba falla si una pasada pasa de 30 cortes o si hay algún botón sin foco.
+
+**Arreglos.**
+- El selector de club de la cabecera («Lautaro FC · Primera Divisió…» en las 53 pestañas): ahora «Lautaro FC ·
+  CHI 1.ª», con la liga entera en la ayuda.
+- Árbol de habilidades: sus 18 nodos eran `FOCUS_NONE`; ahora se alcanzan con el mando y se iluminan con el foco.
+- Textos que se cortaban: descripción de los horarios (Entrenar) y medios propios (Sala de prensa) en dos líneas;
+  peinados del DT (Mi Carrera) sin recorte en su rejilla («Geheimratsecken», «kabarık perçem»); «Camarín» de la
+  ficha muestra solo el grupo («Los históricos»); las marcas del plantel con un espacio en vez de dos; la música
+  lleva el nombre entero en la ayuda.
+- **Fallo real de idioma:** si el juego arrancaba en un idioma que no era el castellano y se cambiaba en Opciones,
+  lo construido una vez con `Idiomas.t` se quedaba en el anterior («📅 Kalender», «Ein Tag», «Mit dem Mentor
+  sprechen»… en turco). `Idiomas.origen()` recupera la clave castellana de cualquier traducción (con su icono) y
+  `_traducir_pantalla` la usa cuando el texto no guardaba su origen. Comprobado en `s3_textos_nucleo`.
+- La fila de chips de cada bloque salía en castellano en cualquier idioma («Historia, Récords, Memoria…»):
+  `_reconstruir_fila_sub` ya traduce.
+- Traducidos los 5 modos de ver el partido que faltaban, «Nieve» y «Confeti».
+- Tildes: un rastreo de los textos de la Principal y las pantallas solo encontró «Estrecha (cabe mas)» (petición
+  12), ya corregida también por la principal en el merge.
+
+**Lo que queda** (no es de esta tanda): ~20 cortes a 1920×1080, casi todos nombres largos en columnas estrechas
+(mercado, plantel, ficha) que ya llevan el texto entero en la ayuda; el registro «Mundo nuevo. Semilla» se escribe
+antes de cargar el idioma (petición 13); las ~500 frases sin traducir del plan.
+
+**Ojo con las pruebas que pintan Ajustes:** esa pantalla guarda las preferencias al pintarse. Mis pruebas
+(`visual.gd`, `s3_auditoria_interfaz`, `s3_accesibilidad`) restauran el idioma y la paleta al terminar; antes dejaban
+`idioma="tr"` o la paleta de contraste en las preferencias del contenedor.
+
+## 11. «Primera hora» (plan §8)
+
+Prueba `pruebas/ideas/s3_primera_hora.gd` (5 comprobaciones).
+- **Botones de la cabecera solo con icono** (🌎 ⚽ 💰): ya llevaban su ayuda; la prueba lo vigila (cualquier botón de
+  la fila sin letras tiene que tener ayuda). No caben con texto: la fila ya está llena a 1280.
+- **OBJETIVOS tapaba la ficha:** arrancaba plegado en pantallas estrechas, pero bastaba desplegarlo una vez para que
+  se quedara así (se guardaba). Ahora `PanelObjetivos.ceder_ficha` lo pliega cuando se pinta una ficha y la pisa, en
+  pantallas de menos de 1900 px, sin guardarlo: sirve de vistazo y la pestaña plegada sigue contando los pendientes.
+- **Reabrir el tutorial:** ya se podía con «🧭 Hablar con el mentor» (panel de objetivos) y con «📖 Repetir el
+  tutorial» (Ajustes → Interfaz); la prueba comprueba que, cerrado, se vuelve a abrir.
+- **Carril de chips fuera de su bloque:** en Finanzas, Mercado, Copa… (pestañas de hub) el carril se quedaba con los
+  chips del bloque anterior y ninguno marcado. `_chips_del_carril` enseña los del hub con la pestaña marcada.
+- Queda para la sesión principal: `grab_focus` diferido en `ui/entrada/*`.
+Las referencias de las pruebas visuales se rehicieron (el panel de objetivos ahora sale plegado).
