@@ -302,7 +302,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	if absf(destino.x) < PALO and destino.y < LARGUERO:
 		_contar("a_puerta_%s" % clase)
 	if OS.get_environment("DEPURAR_TIROS") != "":
-		print("TIRO de %s a %.0f m, destino x %.1f y %.1f, vh %.0f, error %.2f" % [String(p.get("slot_code", "")),
+		Registro.depurar("TIRO", "de %s a %.0f m, destino x %.1f y %.1f, vh %.0f, error %.2f" % [String(p.get("slot_code", "")),
 			pos(p).distance_to(arco), x, y, vh, error])
 	if p == usuario:
 		stats["tiros"] += 1
@@ -382,7 +382,7 @@ func _ia_portador(p: Dictionary) -> void:
 	var holgura := 1.7 if presion > 6.0 else (1.0 if presion > 3.5 else 0.5)
 	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA * _pausa_dificultad(p) / pow(prisa(), 0.8)
 	if OS.get_environment("DEPURAR_PORTADOR") != "" and dist_arco < 40.0:
-		print("PORTADOR %s(%s) a %.0f m del arco, x %.0f, presión %.1f" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", dist_arco, yo.x, presion])
+		Registro.depurar("PORTADOR", "%s(%s) a %.0f m del arco, x %.0f, presión %.1f" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", dist_arco, yo.x, presion])
 	## En su propio campo y apretado: despeje, lejos y hacia fuera si hace falta.
 	var en_su_tercio := (arco.z - yo.z) * d > 70.0
 	if en_su_tercio and presion < 2.2 and _rng.randf() < 0.55:

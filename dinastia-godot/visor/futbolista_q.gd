@@ -20,7 +20,7 @@ const ALTURA_BASE := 1.80
 
 ## Los 2 cuerpos del tier gratis del pack (de los 6 que anuncia Quaternius en
 ## total: Superhero/Regular/Teen x M/F -Regular y Teen quedan en el tier
-## pagado, $19.99, ver LEEME.md). Mismo esqueleto de 65 huesos en los dos, asi
+## pagado, $19.99, ver LEEME.md del historial de git). Mismo esqueleto de 65 huesos en los dos, asi
 ## que `AnimQuaternius` les sirve a ambos sin cambiar una linea.
 const MODELOS := {
 	"male": MODELO_MALE,

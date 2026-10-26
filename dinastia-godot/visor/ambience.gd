@@ -101,8 +101,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	var we := WorldEnvironment.new()
 	we.environment = env
 	root.add_child(we)
-	if OS.is_stdout_verbose():
-		print("AMB ambiente=%s clima=%s oscuro=%.2f cielo_top=%s" % [amb_key, clima_key, oscuro, top])
+	print_verbose("AMB ambiente=%s clima=%s oscuro=%.2f cielo_top=%s" % [amb_key, clima_key, oscuro, top])
 
 	# Luz principal: sol de dia, luna floja de noche.
 	var key := DirectionalLight3D.new()

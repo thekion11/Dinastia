@@ -8,7 +8,7 @@ extends RefCounted
 ## `TablaCompeticion` (25-9-2026): esto tampoco tiene estado propio.
 ##
 ## POR QUÉ SOLO ESTAS OCHO Y NO TODA LA FICHA (que sigue en `principal.gd`,
-## anotado en `ROADMAP.md`): la ficha completa mide 850+ líneas repartidas en
+## anotado en `docs/PLAN_DEL_LUNES.md`): la ficha completa mide 850+ líneas repartidas en
 ## 14 funciones con QUINCE Y PICO botones distintos -pedir informe, comparar,
 ## ofrecer, negociar, pagar cláusula, desarrollo prioritario, reconvertir,
 ## fidelidad, vender, rescindir...-, cada uno tendría que convertirse en una

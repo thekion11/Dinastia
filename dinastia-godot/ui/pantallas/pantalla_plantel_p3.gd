@@ -132,7 +132,7 @@ func _pintar_juegos_mentales(rival: Club) -> void:
 		## que el analizador infiera el tipo ("Cannot infer the type... doesn't
 		## have a set type"), un error de PARSEO real que se lleva puesto todo
 		## `principal.gd` -no solo esta función-. Ya documentado una vez en
-		## `ui/escudo.gd` (ver LEEME.md, "GENERADOR DE ESCUDOS, SEGUNDA
+		## `ui/escudo.gd` (ver LEEME.md del historial de git, "GENERADOR DE ESCUDOS, SEGUNDA
 		## TANDA"), y esta vez lo atrapó `captura_previa.gd` con pantalla real
 		## -el banco headless no carga `principal.gd`, así que "0 fallos" no
 		## lo vio-.

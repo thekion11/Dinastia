@@ -239,7 +239,7 @@ func _pref(k: String, por_defecto: bool) -> bool:
 ##
 ## REHECHA EL 23-9-2026 con el video de referencia del usuario delante. Antes
 ## era un `Label` "0 - 0" más el nombre completo de los clubes, que se salía
-## del lienzo (bug documentado en `LEEME.md`). Ahora todo el diseño y la
+## del lienzo (bug documentado en `LEEME.md` del historial de git). Ahora todo el diseño y la
 ## rotación de paneles viven en `ui/pantalla_estadio.gd`; aquí solo queda
 ## engancharla al 3D y darle los datos.
 func _montar_pantalla() -> void:
