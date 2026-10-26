@@ -5897,7 +5897,19 @@
   "Ir": "Go",
   "Guiando": "Guiding",
   "%s te espera %s. Ya has llegado: búscalo a la hora.": "%s is expecting you %s. You've arrived: look for them at the time.",
-  "sal a la calle": "go out to the street"
+  "sal a la calle": "go out to the street",
+  "Fichaje nuevo": "New signing",
+  "quiere conocer a su nuevo entrenador": "wants to meet his new manager",
+  "tu oficina": "your office",
+  "Seguro · Vienes a ser importante: demuéstralo desde mañana.": "Confident · You're here to matter: prove it from tomorrow.",
+  "Evasivo · Ya veremos dónde encajas; el tiempo dirá.": "Evasive · We'll see where you fit; time will tell.",
+  "Humilde · Bienvenido: aprende del grupo y el grupo de ti.": "Humble · Welcome: learn from the group and let the group learn from you.",
+  "Ya no está en el club.": "No longer at the club.",
+  "Primera charla con %s": "First talk with %s",
+  "Sale de tu oficina %s (moral %+d).": "Leaves your office %s (morale %+d).",
+  "con ganas de demostrar": "eager to prove himself",
+  "sin saber qué esperar": "not knowing what to expect",
+  "sintiéndose uno más": "feeling like one of the group"
  },
  "pt": {
   "Historia": "História",
@@ -11797,7 +11809,19 @@
   "Ir": "Ir",
   "Guiando": "A guiar",
   "%s te espera %s. Ya has llegado: búscalo a la hora.": "%s espera por ti %s. Já chegaste: procura-o à hora marcada.",
-  "sal a la calle": "sai à rua"
+  "sal a la calle": "sai à rua",
+  "Fichaje nuevo": "Novo reforço",
+  "quiere conocer a su nuevo entrenador": "quer conhecer o novo treinador",
+  "tu oficina": "o teu gabinete",
+  "Seguro · Vienes a ser importante: demuéstralo desde mañana.": "Seguro · Vieste para ser importante: prova-o a partir de amanhã.",
+  "Evasivo · Ya veremos dónde encajas; el tiempo dirá.": "Evasivo · Logo se vê onde encaixas; o tempo dirá.",
+  "Humilde · Bienvenido: aprende del grupo y el grupo de ti.": "Humilde · Bem-vindo: aprende com o grupo e o grupo contigo.",
+  "Ya no está en el club.": "Já não está no clube.",
+  "Primera charla con %s": "Primeira conversa com %s",
+  "Sale de tu oficina %s (moral %+d).": "Sai do teu gabinete %s (moral %+d).",
+  "con ganas de demostrar": "com vontade de mostrar",
+  "sin saber qué esperar": "sem saber o que esperar",
+  "sintiéndose uno más": "sentindo-se um a mais"
  },
  "patrones": [
   [
@@ -23309,7 +23333,19 @@
   "Ir": "Y aller",
   "Guiando": "Guidage",
   "%s te espera %s. Ya has llegado: búscalo a la hora.": "%s t'attend %s. Tu es arrivé : cherche-le à l'heure dite.",
-  "sal a la calle": "sors dans la rue"
+  "sal a la calle": "sors dans la rue",
+  "Fichaje nuevo": "Nouvelle recrue",
+  "quiere conocer a su nuevo entrenador": "veut rencontrer son nouvel entraîneur",
+  "tu oficina": "ton bureau",
+  "Seguro · Vienes a ser importante: demuéstralo desde mañana.": "Sûr · Tu es là pour compter : prouve-le dès demain.",
+  "Evasivo · Ya veremos dónde encajas; el tiempo dirá.": "Évasif · On verra où tu t'intègres ; le temps le dira.",
+  "Humilde · Bienvenido: aprende del grupo y el grupo de ti.": "Humble · Bienvenue : apprends du groupe et le groupe de toi.",
+  "Ya no está en el club.": "N'est plus au club.",
+  "Primera charla con %s": "Première discussion avec %s",
+  "Sale de tu oficina %s (moral %+d).": "Sort de ton bureau %s (moral %+d).",
+  "con ganas de demostrar": "avec l'envie de prouver",
+  "sin saber qué esperar": "sans savoir à quoi s'attendre",
+  "sintiéndose uno más": "se sentant l'un des leurs"
  },
  "it": {
   "Historia": "Storia",
@@ -29209,7 +29245,19 @@
   "Ir": "Vai",
   "Guiando": "Guida attiva",
   "%s te espera %s. Ya has llegado: búscalo a la hora.": "%s ti aspetta %s. Sei arrivato: cercalo all'ora.",
-  "sal a la calle": "esci in strada"
+  "sal a la calle": "esci in strada",
+  "Fichaje nuevo": "Nuovo acquisto",
+  "quiere conocer a su nuevo entrenador": "vuole conoscere il nuovo allenatore",
+  "tu oficina": "il tuo ufficio",
+  "Seguro · Vienes a ser importante: demuéstralo desde mañana.": "Sicuro · Sei qui per contare: dimostralo da domani.",
+  "Evasivo · Ya veremos dónde encajas; el tiempo dirá.": "Evasivo · Vedremo dove ti inserisci; il tempo lo dirà.",
+  "Humilde · Bienvenido: aprende del grupo y el grupo de ti.": "Umile · Benvenuto: impara dal gruppo e il gruppo da te.",
+  "Ya no está en el club.": "Non è più al club.",
+  "Primera charla con %s": "Prima chiacchierata con %s",
+  "Sale de tu oficina %s (moral %+d).": "Esce dal tuo ufficio %s (morale %+d).",
+  "con ganas de demostrar": "con voglia di dimostrare",
+  "sin saber qué esperar": "senza sapere cosa aspettarsi",
+  "sintiéndose uno más": "sentendosi uno del gruppo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35109,7 +35157,19 @@
   "Ir": "Hingehen",
   "Guiando": "Navigiert",
   "%s te espera %s. Ya has llegado: búscalo a la hora.": "%s erwartet dich %s. Du bist da: such ihn zur verabredeten Zeit.",
-  "sal a la calle": "geh raus auf die Straße"
+  "sal a la calle": "geh raus auf die Straße",
+  "Fichaje nuevo": "Neuzugang",
+  "quiere conocer a su nuevo entrenador": "will seinen neuen Trainer kennenlernen",
+  "tu oficina": "dein Büro",
+  "Seguro · Vienes a ser importante: demuéstralo desde mañana.": "Sicher · Du bist hier, um wichtig zu sein: zeig es ab morgen.",
+  "Evasivo · Ya veremos dónde encajas; el tiempo dirá.": "Ausweichend · Mal sehen, wo du reinpasst; die Zeit wird's zeigen.",
+  "Humilde · Bienvenido: aprende del grupo y el grupo de ti.": "Bescheiden · Willkommen: lern von der Gruppe und die Gruppe von dir.",
+  "Ya no está en el club.": "Ist nicht mehr im Verein.",
+  "Primera charla con %s": "Erstes Gespräch mit %s",
+  "Sale de tu oficina %s (moral %+d).": "Verlässt dein Büro %s (Moral %+d).",
+  "con ganas de demostrar": "mit Lust, es zu beweisen",
+  "sin saber qué esperar": "ohne zu wissen, was ihn erwartet",
+  "sintiéndose uno más": "als einer von ihnen"
  },
  "ca": {
   "Historia": "Història",
@@ -41009,7 +41069,19 @@
   "Ir": "Anar-hi",
   "Guiando": "Guiant",
   "%s te espera %s. Ya has llegado: búscalo a la hora.": "%s t'espera %s. Ja has arribat: busca'l a l'hora.",
-  "sal a la calle": "surt al carrer"
+  "sal a la calle": "surt al carrer",
+  "Fichaje nuevo": "Fitxatge nou",
+  "quiere conocer a su nuevo entrenador": "vol conèixer el seu nou entrenador",
+  "tu oficina": "el teu despatx",
+  "Seguro · Vienes a ser importante: demuéstralo desde mañana.": "Segur · Vens a ser important: demostra-ho des de demà.",
+  "Evasivo · Ya veremos dónde encajas; el tiempo dirá.": "Evasiu · Ja veurem on encaixes; el temps ho dirà.",
+  "Humilde · Bienvenido: aprende del grupo y el grupo de ti.": "Humil · Benvingut: aprèn del grup i el grup de tu.",
+  "Ya no está en el club.": "Ja no és al club.",
+  "Primera charla con %s": "Primera xerrada amb %s",
+  "Sale de tu oficina %s (moral %+d).": "Surt del teu despatx %s (moral %+d).",
+  "con ganas de demostrar": "amb ganes de demostrar",
+  "sin saber qué esperar": "sense saber què esperar",
+  "sintiéndose uno más": "sentint-se un més"
  },
  "pl": {
   "Club": "Klub",
@@ -47188,7 +47260,19 @@
   "Ir": "Idź",
   "Guiando": "Prowadzi",
   "%s te espera %s. Ya has llegado: búscalo a la hora.": "%s czeka na ciebie %s. Jesteś na miejscu: szukaj o umówionej porze.",
-  "sal a la calle": "wyjdź na ulicę"
+  "sal a la calle": "wyjdź na ulicę",
+  "Fichaje nuevo": "Nowy nabytek",
+  "quiere conocer a su nuevo entrenador": "chce poznać nowego trenera",
+  "tu oficina": "twoje biuro",
+  "Seguro · Vienes a ser importante: demuéstralo desde mañana.": "Pewnie · Jesteś tu, by się liczyć: udowodnij to od jutra.",
+  "Evasivo · Ya veremos dónde encajas; el tiempo dirá.": "Wymijająco · Zobaczymy, gdzie pasujesz; czas pokaże.",
+  "Humilde · Bienvenido: aprende del grupo y el grupo de ti.": "Skromnie · Witaj: ucz się od grupy, a grupa od ciebie.",
+  "Ya no está en el club.": "Nie ma go już w klubie.",
+  "Primera charla con %s": "Pierwsza rozmowa z %s",
+  "Sale de tu oficina %s (moral %+d).": "Wychodzi z twojego biura %s (morale %+d).",
+  "con ganas de demostrar": "z chęcią udowodnienia",
+  "sin saber qué esperar": "nie wiedząc, czego się spodziewać",
+  "sintiéndose uno más": "czując się jednym z grupy"
  },
  "tr": {
   "Club": "Kulüp",
@@ -53367,6 +53451,18 @@
   "Ir": "Git",
   "Guiando": "Yönlendiriliyor",
   "%s te espera %s. Ya has llegado: búscalo a la hora.": "%s seni %s bekliyor. Geldin: saatinde ara.",
-  "sal a la calle": "sokağa çık"
+  "sal a la calle": "sokağa çık",
+  "Fichaje nuevo": "Yeni transfer",
+  "quiere conocer a su nuevo entrenador": "yeni teknik direktörünü tanımak istiyor",
+  "tu oficina": "ofisin",
+  "Seguro · Vienes a ser importante: demuéstralo desde mañana.": "Kendinden emin · Önemli olmak için geldin: yarından itibaren kanıtla.",
+  "Evasivo · Ya veremos dónde encajas; el tiempo dirá.": "Kaçamak · Nereye oturduğunu göreceğiz; zaman gösterecek.",
+  "Humilde · Bienvenido: aprende del grupo y el grupo de ti.": "Mütevazı · Hoş geldin: gruptan öğren, grup da senden öğrensin.",
+  "Ya no está en el club.": "Artık kulüpte değil.",
+  "Primera charla con %s": "%s ile ilk sohbet",
+  "Sale de tu oficina %s (moral %+d).": "Ofisinden %s ayrılıyor (moral %+d).",
+  "con ganas de demostrar": "kendini kanıtlamaya hevesli",
+  "sin saber qué esperar": "ne bekleyeceğini bilmeden",
+  "sintiéndose uno más": "gruptan biri gibi hissederek"
  }
 }

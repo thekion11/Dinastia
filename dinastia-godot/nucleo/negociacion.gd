@@ -279,6 +279,8 @@ func _cerrar_fichaje(m: Mundo) -> Dictionary:
 		club.fichar(intercambio)
 	if m.roles != null:
 		m.roles.usar_emergencia()
+	if m.citas != null:
+		m.citas.entrevista(m, jugador)   ## fase 4: la entrevista de bienvenida en tu oficina
 	resumen["rol"] = rol
 	resumen["anios"] = anios
 	resumen["sueldo"] = sueldo

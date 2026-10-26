@@ -26,7 +26,11 @@ const TIPOS := {
 	"patrocinio": {"icono": "🤝", "dia": 2, "hora": 16, "donde": "ciudad", "lugar": "ciudad_centro_comercial", "planta": 0, "nombre_lugar": "el centro comercial"},
 	"agente": {"icono": "🕴️", "dia": 3, "hora": 19, "donde": "ciudad", "lugar": "ciudad_plaza_mayor", "planta": 0, "nombre_lugar": "la terraza de la Plaza Mayor"},
 	"politica": {"icono": "🏢", "dia": 4, "hora": 12, "donde": "ciudad", "lugar": "ciudad_ayuntamiento", "planta": 0, "nombre_lugar": "el ayuntamiento"},
+	## Bloque 4: la entrevista de contratación, al día siguiente del fichaje, en tu oficina.
+	"entrevista": {"icono": "🤝", "dia": -1, "hora": 10, "donde": "estadio", "lugar": "Oficina del DT", "planta": 1, "nombre_lugar": "tu oficina"},
 }
+## Lo que mueve la moral del recién llegado cada tono de la entrevista (seguro, evasivo, humilde).
+const MORAL_ENTREVISTA := [2, -1, 1]
 const _NOMBRES := ["Valeria", "Ignacio", "Camila", "Rodrigo", "Antonia", "Matías", "Josefa", "Sebastián", "Constanza", "Nicolás"]
 const _APELLIDOS := ["Soto", "Reyes", "Vargas", "Fuentes", "Araya", "Espinoza", "Tapia", "Carrasco", "Sepúlveda", "Figueroa"]
 
@@ -102,16 +106,28 @@ func _hay(tipo: String, sem: int) -> bool:
 			return true
 	return false
 
-func _nueva(m: Mundo, sem: int, tipo: String, quien: String, cargo: String, asunto: String, clave: String) -> void:
+## Al cerrar un fichaje (`Negociacion._cerrar_fichaje`): el nuevo te espera mañana a las
+## 10:00 en tu oficina. Si no vas, caduca y el fichaje queda como siempre (sin bono ni castigo).
+func entrevista(m: Mundo, j: Jugador) -> void:
+	if j == null or m.reloj == null:
+		return
+	m.reloj._al_dia()
+	var dia := mini(m.reloj.dia + 1, 5)
+	_nueva(m, m.reloj.semana if m.reloj.semana >= 0 else m.semana, "entrevista", j.nombre, Idiomas.t("Fichaje nuevo"),
+		Idiomas.t("quiere conocer a su nuevo entrenador"), j.id, dia)
+
+func _nueva(m: Mundo, sem: int, tipo: String, quien: String, cargo: String, asunto: String, clave: String, dia := -1) -> void:
 	var t: Dictionary = TIPOS[tipo]
+	if dia < 0:
+		dia = int(t["dia"])
 	_n += 1
-	var ct := {"id": "c%d_%d_%d" % [m.anio, sem, _n], "tipo": tipo, "quien": quien, "cargo": cargo, "dia": int(t["dia"]),
+	var ct := {"id": "c%d_%d_%d" % [m.anio, sem, _n], "tipo": tipo, "quien": quien, "cargo": cargo, "dia": dia,
 		"hora": int(t["hora"]), "asunto": asunto, "clave": clave, "estado": "pendiente", "anio": m.anio, "semana": sem}
 	lista.append(ct)
 	if m.movil != null:
 		## Plantilla + argumentos: el móvil la traduce al idioma de cada momento.
 		m.movil.recibir(quien, String(t["icono"]), "%s. %s a las %s en %s. Te espero. (Agenda del móvil → Ir)", m.anio, sem,
-			[asunto, DIAS[int(t["dia"])], "%02d:00" % int(t["hora"]), String(t["nombre_lugar"])], true)
+			[asunto, DIAS[dia], "%02d:00" % int(t["hora"]), String(t["nombre_lugar"])], true)
 	noticia.emit("%s %s" % [String(t["icono"]), Idiomas.t("Cita nueva")], "%s (%s): %s" % [quien, cargo, asunto])
 
 # ======================================================================== LECTURAS
@@ -156,6 +172,10 @@ func opciones(m: Mundo, ct: Dictionary) -> Array[String]:
 			return [Idiomas.t("Firmar aquí mismo (+5 % de renta)"), Idiomas.t("Lo pienso; sigue en el PC")]
 		"agente":
 			return [Idiomas.t("Escuchar lo que ofrece"), Idiomas.t("No hago tratos en la calle")]
+		"entrevista":
+			return [Idiomas.t("Seguro · Vienes a ser importante: demuéstralo desde mañana."),
+				Idiomas.t("Evasivo · Ya veremos dónde encajas; el tiempo dirá."),
+				Idiomas.t("Humilde · Bienvenido: aprende del grupo y el grupo de ti.")]
 	return [Idiomas.t("Apoyar al gobierno en la rueda de prensa"), Idiomas.t("El club no se mete en política")]
 
 # ======================================================================== RESOLVER
@@ -194,6 +214,17 @@ func resolver(m: Mundo, id: String, opcion: int) -> Dictionary:
 				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Como quieras. Ya sabes dónde encontrarme.»")}
 			favor_agente = m.anio * 60 + m.semana
 			return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)") % m.mercado_av.clientes.size()}
+		"entrevista":
+			var j: Jugador = null
+			for x: Jugador in c.plantilla:
+				if x.id == String(ct["clave"]):
+					j = x
+			if j == null:
+				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("Ya no está en el club.")}
+			var d: int = MORAL_ENTREVISTA[clampi(opcion, 0, 2)]
+			j.cambiar_moral(d, "Entrevista con el DT")
+			return {"titulo": Idiomas.t("Primera charla con %s") % j.nombre, "texto": Idiomas.t("Sale de tu oficina %s (moral %+d).") % [
+				[Idiomas.t("con ganas de demostrar"), Idiomas.t("sin saber qué esperar"), Idiomas.t("sintiéndose uno más")][clampi(opcion, 0, 2)], d]}
 	## política
 	if opcion != 0 or m.politica == null:
 		return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Lo entiendo. El fútbol es de todos.»")}
