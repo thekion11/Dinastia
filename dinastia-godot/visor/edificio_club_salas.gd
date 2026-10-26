@@ -97,7 +97,7 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		## vitrina se apoya en algo que se ve (sin ellas, con el vidrio casi
 		## invisible, la tapa parecía una losa flotando a 2 m).
 		for e in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
-			pass #			lote.caja(m["metal"], _en(Vector3(px + e.x * 0.345, y0 + 1.445, pz + e.y * 0.345)), Vector3(0.03, 0.9, 0.03))
+			lote.caja(m["metal"], _en(Vector3(px + e.x * 0.345, y0 + 1.445, pz + e.y * 0.345)), Vector3(0.03, 0.9, 0.03))
 		lote.caja(base, _en(Vector3(px, y0 + 1.92, pz)), Vector3(0.74, 0.06, 0.74))
 		lote.caja(m["tira"], _en(Vector3(px, y0 + 1.885, pz)), Vector3(0.5, 0.01, 0.5))
 		_choque(nodo, Vector3(px, y0 + 1.0, pz), Vector3(0.74, 2.0, 0.74))

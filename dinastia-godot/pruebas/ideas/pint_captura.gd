@@ -23,6 +23,8 @@ const TOMAS := [
 	["oficinas", 1, Vector2(-5.0, -3.6), "f", PI, false],
 	["museo", 2, Vector2(5.8, -3.6), "f", PI, false],
 	["utileria", -1, Vector2(-5.5, -3.6), "f", PI, false],
+	## El museo desde dentro (la cámara no va acortada): vitrinas y el fondo.
+	["museo_dentro", 2, Vector2(5.75, -6.0), "f", PI, false],
 ]
 
 func _ready() -> void:
