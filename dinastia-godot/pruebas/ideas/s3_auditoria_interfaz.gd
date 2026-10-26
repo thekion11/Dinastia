@@ -5,10 +5,13 @@ extends BaseIdea
 ##  · cortado: una etiqueta o un botón que recorta su texto (clip u «…») y no le cabe;
 ##  · sin foco: un botón visible al que no se llega con el mando (`FOCUS_NONE`).
 ## Lo visual fino (solapes, contraste) se mira en capturas aparte (`pruebas/captura_s3_interfaz.tscn`).
-## AUDITORIA=detalle imprime cada caso. Falla si hay más cortes que `TOPE_CORTADOS`.
+## AUDITORIA=detalle imprime cada caso. Falla si una pasada (idioma × resolución) tiene más
+## cortes que `TOPE_CORTADOS`. Medido el 26-10 tras arreglar: 7/7/3 (es/de/tr) a 1280×720 y
+## 23/21/17 a 1920×1080 (antes: 69/16/12 y 139/84/28); y 0 botones sin foco (antes 18).
 var IDIOMAS: Array = OS.get_environment("AUDITORIA_IDIOMAS").split(",") if OS.get_environment("AUDITORIA_IDIOMAS") != "" else ["es", "de", "tr"]
 var RESOLUCIONES: Array = [Vector2i(1280, 720)] if OS.get_environment("AUDITORIA_RES") == "1280" else [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const TOPE_CORTADOS := 1000000
+const TOPE_CORTADOS := 30
+const TOPE_SIN_FOCO := 0
 var _p: Principal
 
 func _ready() -> void:
@@ -25,21 +28,27 @@ func _ready() -> void:
 	for t in get_tree().root.find_children("*", "", true, false):
 		if t is Tutorial:
 			(t as Tutorial)._terminar(false)
-	var total := 0
+	## Pintar Ajustes guarda las preferencias: se restaura el idioma de la máquina al final.
+	var idioma_antes := Idiomas.idioma
+	var peor := 0
+	var sin_foco := 0
 	for res: Vector2i in RESOLUCIONES:
 		get_tree().root.size = res
 		for l: String in IDIOMAS:
 			Idiomas.idioma = l
 			var r := await _recorrer()
-			total += int(r[0])
+			peor = maxi(peor, int(r[0]))
+			sin_foco += int(r[1])
 			_linea("  %s %dx%d: %d textos cortados, %d botones sin foco de mando (en %d pestañas)" % [l, res.x, res.y, r[0], r[1], r[2]])
 			var top: Dictionary = r[3]
 			var claves := top.keys()
 			claves.sort_custom(func(a, b): return int(top[a]) > int(top[b]))
 			for i in mini(200 if OS.get_environment("AUDITORIA") == "detalle" else 4, claves.size()):
 				_linea("      %3d× %s" % [int(top[claves[i]]), claves[i]])
-	Idiomas.idioma = "es"
-	_comprobar(total <= TOPE_CORTADOS, "textos cortados en total: %d" % total)
+	Idiomas.idioma = idioma_antes
+	_p._guardar_preferencias()
+	_comprobar(peor <= TOPE_CORTADOS, "ninguna pasada pasa de %d textos cortados (la peor: %d)" % [TOPE_CORTADOS, peor])
+	_comprobar(sin_foco <= TOPE_SIN_FOCO, "todos los botones visibles se alcanzan con el mando (%d sin foco)" % sin_foco)
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)

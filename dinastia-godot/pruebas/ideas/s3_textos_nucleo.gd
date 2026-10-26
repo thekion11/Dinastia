@@ -73,6 +73,8 @@ func _negociacion() -> void:
 	var vistos := {}
 	for l: String in ["es"] + IDIOMAS:
 		Idiomas.idioma = l
+		## La respuesta del club tira dados: la misma tirada en cada idioma.
+		Azar.sembrar(77)
 		var n := Negociacion.new(m, j)
 		n.fijo = 1000
 		var r := n.enviar_oferta()
