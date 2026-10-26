@@ -292,15 +292,18 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 			## ese eje, ancha hacia delante y va 5 cm por fuera de la mano.
 			var fuera := 1.0 if derecha else -1.0
 			var bolsa := col if rng.randf() < 0.6 else Color(0.78, 0.66, 0.48)
-			_pieza(h2, _caja(Vector3(0.075, 0.24, 0.3)), _m(bolsa, 0.6), Vector3(0.05 * fuera, 0.25, 0))
+			## La mano AGARRA el asa (26-10-2026: con la bolsa 14 cm bajo la
+			## muñeca se veía suelta, flotando): el asa pasa por la palma (4-14 cm
+			## por debajo de la muñeca) y la boca de la bolsa queda justo debajo.
+			_pieza(h2, _caja(Vector3(0.075, 0.24, 0.3)), _m(bolsa, 0.6), Vector3(0.05 * fuera, 0.235, 0))
 			## Ribete de arriba (la boca de la bolsa) y el asa en el mismo plano.
-			_pieza(h2, _caja(Vector3(0.08, 0.018, 0.305)), _m(bolsa.darkened(0.25), 0.55), Vector3(0.05 * fuera, 0.14, 0))
+			_pieza(h2, _caja(Vector3(0.08, 0.018, 0.305)), _m(bolsa.darkened(0.25), 0.55), Vector3(0.05 * fuera, 0.125, 0))
 			var asa := TorusMesh.new()
 			asa.inner_radius = 0.045
 			asa.outer_radius = 0.055
 			asa.rings = 10
 			asa.ring_segments = 6
-			_pieza(h2, asa, _m(bolsa.darkened(0.35), 0.5), Vector3(0.015 * fuera, 0.1, 0), Vector3(0, 0, 90))
+			_pieza(h2, asa, _m(bolsa.darkened(0.35), 0.5), Vector3(0.015 * fuera, 0.075, 0), Vector3(0, 0, 90))
 	elif acc < 0.62:
 		## Móvil en la mano: un rectángulo oscuro con la pantalla clara.
 		var h3 := _en_hueso(esq, "hand_r", k)
@@ -310,18 +313,30 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 	var cab := _en_hueso(esq, "Head", k)
 	if cab != null:
 		if cab_extra < 0.2:
-			## Gafas de sol.
+			## GAFAS DE SOL A LA ALTURA DE LOS OJOS (26-10-2026). Eran dos esferas
+			## aplastadas EN ALTO (2 cm de alto y 4,8 de fondo: un disco tumbado)
+			## en el nodo con `k`: de frente, dos óvalos negros sobre las mejillas,
+			## con el ojo asomando encima (parecían ojos rotos). Ahora, en el
+			## espacio del hueso de la cabeza (sin `k`): cada cristal es fino de
+			## delante a atrás (1 cm), de 4,8 × 3,6 cm, centrado en el globo de su
+			## ojo (medido en las mallas «Eyes»: hombre y 0,0986 sobre el hueso,
+			## frente del globo z 0,081; mujer y 0,106, z 0,075) y 1,9 cm por
+			## delante; puente y patillas hacia las orejas.
+			var cab_o := _en_hueso(esq, "Head", 1.0)
 			var lente := SphereMesh.new()
-			lente.radius = 0.024
-			lente.height = 0.02
-			lente.radial_segments = 10
-			lente.rings = 4
-			## En la cabeza de mujer los ojos quedan más arriba: con la altura
-			## del hombre las gafas tapaban la mejilla y asomaba el ojo encima.
-			var gy := 0.118 if mujer else 0.1
-			for sx in [-1.0, 1.0]:
-				_pieza(cab, lente, _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0.034 * sx, gy, 0.1))
-			_pieza(cab, _caja(Vector3(0.03, 0.005, 0.005)), _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0, gy + 0.005, 0.108))
+			lente.radius = 0.021
+			lente.height = 0.042
+			lente.radial_segments = 12
+			lente.rings = 6
+			var negro := _m(Color(0.04, 0.04, 0.05), 0.15)
+			var oy := 0.106 if mujer else 0.0986
+			var oz := 0.094 if mujer else 0.1
+			for sx: float in [-1.0, 1.0]:
+				var cristal := _pieza(cab_o, lente, negro, Vector3(0.0342 * sx, oy, oz))
+				cristal.scale = Vector3(1.15, 0.85, 0.25)
+				var patilla := _pieza(cab_o, _caja(Vector3(0.004, 0.004, 0.055)), negro, Vector3(0.072 * sx, oy + 0.006, oz - 0.03))
+				patilla.rotation_degrees.y = -8.0 * sx
+			_pieza(cab_o, _caja(Vector3(0.022, 0.004, 0.004)), negro, Vector3(0, oy + 0.007, oz + 0.002))
 		elif cab_extra < 0.34:
 			## Gorra: casquete y visera.
 			var gm := _m(col.lightened(0.1))

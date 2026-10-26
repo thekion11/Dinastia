@@ -35,14 +35,19 @@ func _probar_async() -> void:
 	_comprobar(_v != null, "hay vista de la ciudad propia")
 	if _v == null:
 		return
+	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
 	await _subir_y_bajar()
 	await _explorar("coche")
 	if _e == null:
 		return
 	var inicio := _e.cuerpo.position
+	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
 	_camara_detras()
+	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
 	_girar_con_la_camara(inicio)
+	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
 	_choque_contra_pared(inicio)
+	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
 	_recorrido(inicio)
 	_linea("  (%.1f s en total)" % (Time.get_ticks_msec() / 1000.0))
 

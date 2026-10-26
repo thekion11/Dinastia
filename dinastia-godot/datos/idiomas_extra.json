@@ -5331,7 +5331,9 @@
   "Te pagaron la cláusula": "Release clause triggered",
   "Clausulazo": "Release clause paid",
   "Venta cerrada": "Sale completed",
-  "Reforma recortada": "Rebuild scaled back"
+  "Reforma recortada": "Rebuild scaled back",
+  "quedó sin club.": "is without a club.",
+  "No estará mucho tiempo disponible.": "He won't be available for long."
  },
  "pt": {
   "Historia": "História",
@@ -10665,7 +10667,9 @@
   "Te pagaron la cláusula": "Pagaram a cláusula",
   "Clausulazo": "Cláusula paga",
   "Venta cerrada": "Venda fechada",
-  "Reforma recortada": "Reforma reduzida"
+  "Reforma recortada": "Reforma reduzida",
+  "quedó sin club.": "ficou sem clube.",
+  "No estará mucho tiempo disponible.": "Não vai ficar disponível por muito tempo."
  },
  "patrones": [
   [
@@ -21837,7 +21841,9 @@
   "Te pagaron la cláusula": "On a payé sa clause",
   "Clausulazo": "Clause levée",
   "Venta cerrada": "Vente conclue",
-  "Reforma recortada": "Rénovation réduite"
+  "Reforma recortada": "Rénovation réduite",
+  "quedó sin club.": "est sans club.",
+  "No estará mucho tiempo disponible.": "Il ne restera pas longtemps disponible."
  },
  "it": {
   "Historia": "Storia",
@@ -27078,7 +27084,9 @@
   "Te pagaron la cláusula": "Hanno pagato la clausola",
   "Clausulazo": "Clausola pagata",
   "Venta cerrada": "Vendita chiusa",
-  "Reforma recortada": "Ristrutturazione ridotta"
+  "Reforma recortada": "Ristrutturazione ridotta",
+  "quedó sin club.": "è rimasto senza squadra.",
+  "No estará mucho tiempo disponible.": "Non resterà disponibile a lungo."
  },
  "de": {
   "Historia": "Geschichte",
@@ -32319,7 +32327,9 @@
   "Te pagaron la cláusula": "Die Ausstiegsklausel wurde gezogen",
   "Clausulazo": "Klausel gezogen",
   "Venta cerrada": "Verkauf abgeschlossen",
-  "Reforma recortada": "Umbau gekürzt"
+  "Reforma recortada": "Umbau gekürzt",
+  "quedó sin club.": "ist vereinslos.",
+  "No estará mucho tiempo disponible.": "Er wird nicht lange verfügbar sein."
  },
  "ca": {
   "Historia": "Història",
@@ -37560,7 +37570,9 @@
   "Te pagaron la cláusula": "T'han pagat la clàusula",
   "Clausulazo": "Clausulassa",
   "Venta cerrada": "Venda tancada",
-  "Reforma recortada": "Reforma retallada"
+  "Reforma recortada": "Reforma retallada",
+  "quedó sin club.": "s'ha quedat sense club.",
+  "No estará mucho tiempo disponible.": "No estarà disponible gaire temps."
  },
  "pl": {
   "Club": "Klub",
@@ -43081,7 +43093,9 @@
   "Te pagaron la cláusula": "Zapłacono klauzulę",
   "Clausulazo": "Klauzula wykupiona",
   "Venta cerrada": "Sprzedaż sfinalizowana",
-  "Reforma recortada": "Przebudowa okrojona"
+  "Reforma recortada": "Przebudowa okrojona",
+  "quedó sin club.": "został bez klubu.",
+  "No estará mucho tiempo disponible.": "Długo nie będzie dostępny."
  },
  "tr": {
   "Club": "Kulüp",
@@ -48602,6 +48616,8 @@
   "Te pagaron la cláusula": "Serbest kalma bedeli ödendi",
   "Clausulazo": "Bedel ödendi",
   "Venta cerrada": "Satış tamamlandı",
-  "Reforma recortada": "Yenileme kısıldı"
+  "Reforma recortada": "Yenileme kısıldı",
+  "quedó sin club.": "kulüpsüz kaldı.",
+  "No estará mucho tiempo disponible.": "Uzun süre boşta kalmayacak."
  }
 }

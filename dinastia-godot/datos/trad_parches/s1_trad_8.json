@@ -1,0 +1,7 @@
+{
+ "exactas": {
+  "quedó sin club.": {"en": "is without a club.", "pt": "ficou sem clube.", "fr": "est sans club.", "it": "è rimasto senza squadra.", "de": "ist vereinslos.", "ca": "s'ha quedat sense club.", "pl": "został bez klubu.", "tr": "kulüpsüz kaldı."},
+  "No estará mucho tiempo disponible.": {"en": "He won't be available for long.", "pt": "Não vai ficar disponível por muito tempo.", "fr": "Il ne restera pas longtemps disponible.", "it": "Non resterà disponibile a lungo.", "de": "Er wird nicht lange verfügbar sein.", "ca": "No estarà disponible gaire temps.", "pl": "Długo nie będzie dostępny.", "tr": "Uzun süre boşta kalmayacak."}
+ },
+ "patrones": []
+}
