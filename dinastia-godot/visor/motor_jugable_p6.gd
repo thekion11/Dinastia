@@ -29,7 +29,7 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 	vel_balon = Vector3(h.x, vy, h.z)
 	giro_balon = Vector3(0, efecto, 0)
 	if depurar:
-		print("PATADA %s(%s) desde %s a %s vh %.1f loft %.1f vel %s" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", str(b), str(destino), vh, loft, str(vel_balon)])
+		Registro.depurar("PATADA", "%s(%s) desde %s a %s vh %.1f loft %.1f vel %s" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", str(b), str(destino), vh, loft, str(vel_balon)])
 	if OS.get_environment("DEPURAR_AIRE") != "" and vy > 2.0:
 		var clave := "%s/%s" % [_ctx_golpeo if _ctx_golpeo != "" else anim, estado]
 		cuenta_aire[clave] = int(cuenta_aire.get(clave, 0)) + 1

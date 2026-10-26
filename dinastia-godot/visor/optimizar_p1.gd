@@ -397,14 +397,14 @@ static func agrupar(raiz: Node3D) -> Dictionary:
 		for k2: String in grupos:
 			var c: int = (grupos[k2]["lista"] as Array).size()
 			tam[mini(c, 10)] = int(tam.get(mini(c, 10), 0)) + c
-		print("AGRUPAR tamaños ", tam, " motivos ", _motivos)
+		Registro.depurar("AGRUPAR", "tamaños %s motivos %s" % [str(tam), str(_motivos)])
 		var sol := {}
 		for k2: String in grupos:
 			if (grupos[k2]["lista"] as Array).size() == 1:
 				var mi0: MeshInstance3D = grupos[k2]["mi"]
 				var c2 := mi0.mesh.get_class() + (" ovr" if mi0.material_override != null else "") + " " + mi0.mesh.resource_name.left(20)
 				sol[c2] = int(sol.get(c2, 0)) + 1
-		print("AGRUPAR solos ", sol)
+		Registro.depurar("AGRUPAR", "solos %s" % str(sol))
 	var piezas := 0
 	var hechos := 0
 	var inv := raiz.global_transform.affine_inverse()
