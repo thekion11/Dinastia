@@ -230,3 +230,64 @@ static func _del_rival(m: Mundo, mio: Club, otro: Club) -> Dictionary:
 ## pinta todas las opciones que haya, sin cambios).
 static func opcion_delegar() -> Dictionary:
 	return {"txt": Idiomas.t("🙋 Que responda mi ayudante"), "moral": 0, "confianza": DELEGAR_CONFIANZA, "socios": 0, "tono": "delegar"}
+
+# ---------------------------------------------------------------------------
+#  LA PREVIA (26-10-2026): la rueda ANTES del partido
+# ---------------------------------------------------------------------------
+# El plató ya sabía pintar una previa (`ParedPrensa`, tipo "previa", con los dos escudos) pero el juego
+# nunca abría una rueda antes de jugar. Se abre al cerrar la semana, para el partido que viene, si no hubo
+# rueda tras el resultado y el partido lo merece: el clásico, un rival de arriba, una racha larga o muchas
+# bajas (y uno de cada tres días tranquilos). Es corta -una o dos preguntas- y se puede delegar.
+
+## ¿Toca previa para el partido contra `rival`? `h`: hash de la fecha (sin `Azar`).
+static func toca_previa(m: Mundo, mio: Club, rival: Club, h: int) -> bool:
+	if rival == null:
+		return false
+	if m.es_clasico(mio, rival) or _puesto(m, rival) in [1, 2, 3] or absi(racha_larga(racha_de(m, mio))) >= 3 or bajas(mio) >= 3:
+		return true
+	return h % 3 == 0
+
+static func bajas(c: Club) -> int:
+	var n := 0
+	for j: Jugador in c.plantilla:
+		if not j.disponible():
+			n += 1
+	return n
+
+static func _puesto(m: Mundo, c: Club) -> int:
+	var liga := m.liga_de(c)
+	if liga == null:
+		return 0
+	var t := liga.tabla()
+	for i in t.size():
+		if t[i]["club"] == c:
+			return i + 1
+	return 0
+
+## Las preguntas de la previa: la del rival y, detrás, la racha o las bajas (una como mucho).
+static func preguntas_previa(m: Mundo, mio: Club, rival: Club) -> Array:
+	var r: Array = []
+	var nom := Nombres.visible(rival.nombre)
+	var puesto := _puesto(m, rival)
+	var q := ""
+	if m.es_clasico(mio, rival):
+		q = Idiomas.t("Se viene el clásico contra %s. ¿Cómo está el vestuario?") % nom
+	elif puesto > 0:
+		q = Idiomas.t("El próximo partido es contra %s, %dº en la tabla. ¿Qué partido espera?") % [nom, puesto]
+	else:
+		q = Idiomas.t("El próximo partido es contra %s. ¿Qué partido espera?") % nom
+	r.append({"pregunta": "'%s'" % q, "tema": "previa_rival", "opciones": [
+		_op(Idiomas.t("Un rival exigente: lo hemos preparado a conciencia"), 1, 1, 0, "calma"),
+		_op(Idiomas.t("Vamos a ganar, y en su casa o en la nuestra da igual"), 2, 0, 2, "soberbia"),
+		_op(Idiomas.t("Lo que tenga que decir se lo diré a mis jugadores"), 0, 0, -1, "evasiva")]})
+	var n_bajas := bajas(mio)
+	var rq := _de_racha(racha_de(m, mio))
+	if not rq.is_empty():
+		rq["tema"] = "previa_racha"
+		r.append(rq)
+	elif n_bajas >= 3:
+		r.append({"pregunta": "'%s'" % (Idiomas.t("Llegan con %d bajas. ¿Le preocupa cómo formar el once?") % n_bajas), "tema": "previa_bajas", "opciones": [
+			_op(Idiomas.t("Confío en los que entren: para eso están"), 2, 0, 0, "calma"),
+			_op(Idiomas.t("Con los que haya, ganamos igual"), 1, 0, 1, "soberbia"),
+			_op(Idiomas.t("No voy a dar pistas del once"), 0, 0, 0, "evasiva")]})
+	return r

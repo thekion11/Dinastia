@@ -250,3 +250,27 @@ En el motor 3D (3 partidos cortos por caso), la contrapresión baja la precisió
 - La interfaz: la pizarra con las dos fases, los roles en el once y su visualizador (`ui/componentes/pizarra_tactica.gd`).
 - Que la IA de los otros clubes use roles.
 - Medir el 3D con más partidos.
+
+## 6. La previa: rueda de prensa ANTES del partido (petición del supervisor)
+
+El plató ya sabía pintar una previa (`ParedPrensa`, tipo «previa», con los dos escudos), pero el juego nunca abría una rueda antes de jugar.
+
+**Cuándo se abre.** Al cerrar la semana (`Prensa.rueda_tras_resultado`), si no hubo rueda tras el resultado (el sorteo del 50 % de siempre) y el próximo partido lo merece:
+- es el clásico o un rival de los tres primeros;
+- hay una racha de 3 o más resultados iguales;
+- hay 3 bajas o más;
+- o es uno de cada tres días tranquilos (por hash de la fecha).
+
+No gasta azar: la prueba comprueba que el estado del generador es el mismo con previa y sin ella.
+
+**Qué pregunta.** Va del rival (o del clásico) y, detrás, de la racha o de las bajas: una o dos preguntas. Se puede mandar al ayudante con el mismo coste. Usa la misma maquinaria que la rueda de después del partido: encadenado, portada y guardado.
+
+**Para el plató** (de la sesión principal): `Prensa.competicion_rueda = "previa"` y `Prensa.rival_rueda` (el id del rival) quedan puestos mientras la previa está abierta. Para que la pared salga con los dos escudos, falta que `_contexto_rueda()` (`ui/principal/rueda_prensa_base.gd`) devuelva `{"tipo": "previa", "rival": club}` cuando `competicion_rueda == "previa"`. No lo he tocado porque es de la principal.
+
+**Archivos:**
+- `nucleo/prensa_contexto.gd`: `toca_previa`, `preguntas_previa`, `bajas`.
+- `nucleo/prensa.gd`: `abrir_previa`; `rueda_tras_resultado` la abre si toca.
+- `nucleo/partida_p1.gd`: `rival_rueda` se guarda.
+- 10 frases nuevas en los 9 idiomas.
+
+**Prueba:** sección «PREVIA» de `pruebas/ideas/s5_rueda.gd`, 0 fallos. Mini banco de textos y partido: 0 fallos.

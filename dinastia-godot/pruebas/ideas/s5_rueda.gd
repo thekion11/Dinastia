@@ -97,3 +97,56 @@ func _probar() -> void:
 	pr.vocero = {}
 	pr.entrevista = {}
 	_comprobar("cola_rueda" in Partida._CAMPOS_PRENSA and "fichajes_preguntados" in Partida._CAMPOS_PRENSA, "la cola y los fichajes preguntados se guardan con la partida")
+	_previa(m, yo, pr)
+
+## LA PREVIA (26-10): la rueda ANTES del partido, corta y delegable.
+func _previa(m: Mundo, yo: Club, pr: Prensa) -> void:
+	_titulo("PREVIA: la rueda antes del partido")
+	Partido.ultimo_mio = {}
+	pr.entrevista = {}
+	pr.vocero = {}
+	var par := m.proximo_partido()
+	var rival: Club = par[1] if par[0] == yo else par[0]
+	var e := pr.abrir_previa(true)
+	_comprobar(bool(e.get("previa", false)) and String(e["pregunta"]).contains(Nombres.visible(rival.nombre)), "se abre con el próximo rival: %s" % String(e.get("pregunta", "—")))
+	_comprobar(pr.competicion_rueda == "previa" and pr.rival_rueda == rival.id, "y deja al plató el contexto «previa» con el rival (para la pared de los dos escudos)")
+	var ops: Array = e["opciones"]
+	_comprobar(String((ops[ops.size() - 1] as Dictionary).get("tono", "")) == "delegar", "se puede mandar al ayudante")
+	_comprobar(int(e.get("total", 0)) <= 2, "y es corta: %d pregunta(s)" % int(e.get("total", 0)))
+	var guarda := 0
+	while pr.hay_rueda() and guarda < 6:
+		guarda += 1
+		pr.responder(0)
+	_comprobar(not pr.hay_rueda(), "se responde y se cierra")
+	## Con muchas bajas, la segunda pregunta es por el once.
+	for j: Jugador in yo.plantilla.slice(0, 4):
+		j.lesion = 3
+	m.liga_de(yo).historial.clear()
+	e = pr.abrir_previa(true)
+	var temas: Array = [String(e.get("tema", ""))]
+	for c: Dictionary in pr.cola_rueda:
+		temas.append(String(c.get("tema", "")))
+	_comprobar("previa_bajas" in temas, "con %d bajas pregunta por el once (%s)" % [PrensaContexto.bajas(yo), str(temas)])
+	_comprobar(PrensaContexto.toca_previa(m, yo, rival, 1), "con 4 bajas, toca previa aunque sea un día tranquilo")
+	pr.entrevista = {}
+	pr.cola_rueda.clear()
+	## El cierre de la semana: si no hubo rueda tras el resultado, sale la previa; y el azar gastado es el
+	## mismo (una tirada) haya o no previa.
+	## (Desde 1: con 0, `Azar.sembrar` siembra al azar.)
+	var semilla := 1
+	for s in range(1, 200):
+		Azar.sembrar(s)
+		if not Azar.suerte(0.5):
+			semilla = s
+			break
+	Azar.sembrar(semilla)
+	Azar.suerte(0.5)
+	var estado_esperado: int = Azar._rng.state
+	Azar.sembrar(semilla)
+	pr.rueda_tras_resultado(true, false)
+	_comprobar(pr.hay_rueda() and bool(pr.entrevista.get("previa", false)), "sin rueda tras el resultado, el cierre de semana abre la previa")
+	_comprobar(Azar._rng.state == estado_esperado, "y gasta la misma tirada de azar que antes (ni una más)")
+	pr.entrevista = {}
+	pr.cola_rueda.clear()
+	for j: Jugador in yo.plantilla.slice(0, 4):
+		j.lesion = 0

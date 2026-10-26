@@ -250,6 +250,9 @@ func rueda_tras_resultado(gane: bool, empate: bool) -> Dictionary:
 	## de azar es el mismo jornada a jornada, que es la regla de toda la casa.
 	var toca := Azar.suerte(0.5)
 	if not toca or not entrevista.is_empty():
+		## Sin rueda tras el resultado, quizá la previa del que viene (sin `Azar`).
+		if entrevista.is_empty():
+			return abrir_previa()
 		return {}
 	return abrir_rueda(gane, empate)
 
@@ -332,6 +335,7 @@ func abrir_rueda(gane: bool, empate: bool) -> Dictionary:
 	super.abrir_rueda(gane, empate)
 	cola_rueda.clear()
 	_rango_titular = -1
+	rival_rueda = ""
 	if entrevista.is_empty():
 		return entrevista
 	var m := _mundo()
@@ -408,3 +412,33 @@ func _delegar_rueda() -> Dictionary:
 	rueda_respondida.emit(titular, 0, PrensaContexto.DELEGAR_CONFIANZA, 0)
 	return {"titular": titular, "moral": 0, "confianza": PrensaContexto.DELEGAR_CONFIANZA, "socios": 0,
 		"extra": extra, "tono": "delegar", "titubeo": false, "sigue": false, "delegada": true}
+
+## El rival de la previa abierta ("" si la rueda no es una previa): lo lee el plató para la pared.
+var rival_rueda := ""
+
+## LA PREVIA: la rueda antes del próximo partido, si toca (`PrensaContexto.toca_previa`). Corta, con el
+## mismo encadenado y la misma opción de mandar al ayudante que la de después del partido.
+func abrir_previa(forzar := false) -> Dictionary:
+	var m := _mundo()
+	var mio: Club = m.mi_club() if m != null else null
+	if mio == null or not entrevista.is_empty():
+		return {}
+	var rival := PrensaContexto._rival_siguiente(m, mio)
+	if rival == null or (not forzar and not PrensaContexto.toca_previa(m, mio, rival, _hash_de(str(_fecha()) + "|previa"))):
+		return {}
+	var ps := PrensaContexto.preguntas_previa(m, mio, rival)
+	cola_rueda = ps.slice(1)
+	_rango_titular = -1
+	cuerpo = CUERPO_POR_DEFECTO
+	competicion_rueda = "previa"
+	rival_rueda = rival.id
+	_siguiente_pregunta_de(ps[0], 1, ps.size())
+	if vocero.is_empty():
+		(entrevista["opciones"] as Array).append(PrensaContexto.opcion_delegar())
+	entrevista["previa"] = true
+	return entrevista
+
+func _siguiente_pregunta_de(e: Dictionary, numero: int, total: int) -> void:
+	cola_rueda.push_front(e)
+	_siguiente_pregunta(numero, total)
+

@@ -39,7 +39,7 @@ const _CAMPOS_PRENSA := [
 	"oferta_forzada", "abogado_en_directorio", "posts", "seguidores",
 	"relaciones", "medios", "vocero", "tv_individual", "portadas",
 	"impuesto_pid", "impuesto_hasta", "efectos", "memoria", "titular_pendiente", "identidad", "cambio_identidad",
-	"pregunta_pendiente", "cola_rueda", "fichajes_preguntados",
+	"pregunta_pendiente", "cola_rueda", "fichajes_preguntados", "rival_rueda",
 ]
 
 static func carpeta() -> String:

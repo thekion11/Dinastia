@@ -5466,7 +5466,17 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s rules out a goal by millimetres. Protests from both benches.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s shows another yellow: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s favours the home side: yellow for %s",
-  "Te toca mover el banquillo.": "Time to use your bench."
+  "Te toca mover el banquillo.": "Time to use your bench.",
+  "Se viene el clásico contra %s. ¿Cómo está el vestuario?": "The derby against %s is coming up. How is the dressing room?",
+  "El próximo partido es contra %s, %dº en la tabla. ¿Qué partido espera?": "The next match is against %s, %d in the table. What kind of game do you expect?",
+  "El próximo partido es contra %s. ¿Qué partido espera?": "The next match is against %s. What kind of game do you expect?",
+  "Un rival exigente: lo hemos preparado a conciencia": "A demanding opponent: we've prepared thoroughly",
+  "Vamos a ganar, y en su casa o en la nuestra da igual": "We're going to win, home or away",
+  "Lo que tenga que decir se lo diré a mis jugadores": "Whatever I have to say, I'll say to my players",
+  "Llegan con %d bajas. ¿Le preocupa cómo formar el once?": "You have %d players missing. Are you worried about picking the XI?",
+  "Confío en los que entren: para eso están": "I trust whoever comes in: that's what they're here for",
+  "Con los que haya, ganamos igual": "With whoever we have, we'll win anyway",
+  "No voy a dar pistas del once": "I'm not giving away any clues about the XI"
  },
  "pt": {
   "Historia": "História",
@@ -10935,7 +10945,17 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s anula um golo por milímetros. Protestos nos dois bancos.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s mostra outro amarelo: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s apita para a casa: amarelo para %s",
-  "Te toca mover el banquillo.": "Tens de mexer no banco."
+  "Te toca mover el banquillo.": "Tens de mexer no banco.",
+  "Se viene el clásico contra %s. ¿Cómo está el vestuario?": "Aí vem o clássico contra o %s. Como está o balneário?",
+  "El próximo partido es contra %s, %dº en la tabla. ¿Qué partido espera?": "O próximo jogo é contra o %s, %dº na tabela. Que jogo espera?",
+  "El próximo partido es contra %s. ¿Qué partido espera?": "O próximo jogo é contra o %s. Que jogo espera?",
+  "Un rival exigente: lo hemos preparado a conciencia": "Um adversário exigente: preparámos tudo a fundo",
+  "Vamos a ganar, y en su casa o en la nuestra da igual": "Vamos ganhar, seja em casa deles ou na nossa",
+  "Lo que tenga que decir se lo diré a mis jugadores": "O que tiver a dizer, direi aos meus jogadores",
+  "Llegan con %d bajas. ¿Le preocupa cómo formar el once?": "Chegam com %d baixas. Preocupa-o como formar o onze?",
+  "Confío en los que entren: para eso están": "Confio nos que entrarem: é para isso que estão cá",
+  "Con los que haya, ganamos igual": "Com os que houver, ganhamos na mesma",
+  "No voy a dar pistas del once": "Não vou dar pistas do onze"
  },
  "patrones": [
   [
@@ -21923,7 +21943,17 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s refuse un but pour quelques millimètres. Protestations sur les deux bancs.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s sort un autre jaune : %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s siffle pour les locaux : jaune pour %s",
-  "Te toca mover el banquillo.": "À toi de jouer avec le banc."
+  "Te toca mover el banquillo.": "À toi de jouer avec le banc.",
+  "Se viene el clásico contra %s. ¿Cómo está el vestuario?": "Le classique contre %s approche. Comment va le vestiaire ?",
+  "El próximo partido es contra %s, %dº en la tabla. ¿Qué partido espera?": "Le prochain match est contre %s, %de au classement. Quel match attendez-vous ?",
+  "El próximo partido es contra %s. ¿Qué partido espera?": "Le prochain match est contre %s. Quel match attendez-vous ?",
+  "Un rival exigente: lo hemos preparado a conciencia": "Un adversaire exigeant : on l'a préparé à fond",
+  "Vamos a ganar, y en su casa o en la nuestra da igual": "On va gagner, chez eux ou chez nous, peu importe",
+  "Lo que tenga que decir se lo diré a mis jugadores": "Ce que j'ai à dire, je le dirai à mes joueurs",
+  "Llegan con %d bajas. ¿Le preocupa cómo formar el once?": "Vous avez %d absents. Composer le onze vous inquiète ?",
+  "Confío en los que entren: para eso están": "Je fais confiance à ceux qui entreront : ils sont là pour ça",
+  "Con los que haya, ganamos igual": "Avec ceux qui seront là, on gagnera quand même",
+  "No voy a dar pistas del once": "Je ne vais pas donner d'indices sur le onze"
  },
  "it": {
   "Historia": "Storia",
@@ -27299,7 +27329,17 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s annulla un gol per millimetri. Proteste dalle due panchine.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s estrae un altro giallo: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s fischia per i padroni di casa: giallo a %s",
-  "Te toca mover el banquillo.": "Tocca a te muovere la panchina."
+  "Te toca mover el banquillo.": "Tocca a te muovere la panchina.",
+  "Se viene el clásico contra %s. ¿Cómo está el vestuario?": "Arriva il classico contro %s. Come sta lo spogliatoio?",
+  "El próximo partido es contra %s, %dº en la tabla. ¿Qué partido espera?": "La prossima partita è contro %s, %dº in classifica. Che partita si aspetta?",
+  "El próximo partido es contra %s. ¿Qué partido espera?": "La prossima partita è contro %s. Che partita si aspetta?",
+  "Un rival exigente: lo hemos preparado a conciencia": "Un avversario esigente: l'abbiamo preparata con cura",
+  "Vamos a ganar, y en su casa o en la nuestra da igual": "Vinceremo, in casa loro o nostra non importa",
+  "Lo que tenga que decir se lo diré a mis jugadores": "Quello che devo dire lo dirò ai miei giocatori",
+  "Llegan con %d bajas. ¿Le preocupa cómo formar el once?": "Arrivate con %d assenti. La preoccupa come formare l'undici?",
+  "Confío en los que entren: para eso están": "Mi fido di chi entra: sono qui per questo",
+  "Con los que haya, ganamos igual": "Con chi c'è, vinciamo lo stesso",
+  "No voy a dar pistas del once": "Non darò indizi sull'undici"
  },
  "de": {
   "Historia": "Geschichte",
@@ -32675,7 +32715,17 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s erkennt ein Tor um Millimeter ab. Proteste auf beiden Bänken.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s zeigt eine weitere Gelbe: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s pfeift für die Heimelf: Gelb für %s",
-  "Te toca mover el banquillo.": "Jetzt musst du wechseln."
+  "Te toca mover el banquillo.": "Jetzt musst du wechseln.",
+  "Se viene el clásico contra %s. ¿Cómo está el vestuario?": "Der Klassiker gegen %s steht an. Wie ist die Stimmung in der Kabine?",
+  "El próximo partido es contra %s, %dº en la tabla. ¿Qué partido espera?": "Das nächste Spiel ist gegen %s, Tabellen-%d. Was für ein Spiel erwarten Sie?",
+  "El próximo partido es contra %s. ¿Qué partido espera?": "Das nächste Spiel ist gegen %s. Was für ein Spiel erwarten Sie?",
+  "Un rival exigente: lo hemos preparado a conciencia": "Ein anspruchsvoller Gegner: wir haben uns gründlich vorbereitet",
+  "Vamos a ganar, y en su casa o en la nuestra da igual": "Wir werden gewinnen, egal ob bei ihnen oder bei uns",
+  "Lo que tenga que decir se lo diré a mis jugadores": "Was ich zu sagen habe, sage ich meinen Spielern",
+  "Llegan con %d bajas. ¿Le preocupa cómo formar el once?": "Ihnen fehlen %d Spieler. Macht Ihnen die Aufstellung Sorgen?",
+  "Confío en los que entren: para eso están": "Ich vertraue denen, die reinkommen: dafür sind sie da",
+  "Con los que haya, ganamos igual": "Mit denen, die da sind, gewinnen wir trotzdem",
+  "No voy a dar pistas del once": "Ich gebe keine Hinweise zur Aufstellung"
  },
  "ca": {
   "Historia": "Història",
@@ -38051,7 +38101,17 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s anul·la un gol per mil·límetres. Protestes a les dues banquetes.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s treu una altra groga: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s xiula per a casa: groga a %s",
-  "Te toca mover el banquillo.": "Et toca moure la banqueta."
+  "Te toca mover el banquillo.": "Et toca moure la banqueta.",
+  "Se viene el clásico contra %s. ¿Cómo está el vestuario?": "S'acosta el clàssic contra el %s. Com està el vestidor?",
+  "El próximo partido es contra %s, %dº en la tabla. ¿Qué partido espera?": "El proper partit és contra el %s, %dè a la taula. Quin partit espera?",
+  "El próximo partido es contra %s. ¿Qué partido espera?": "El proper partit és contra el %s. Quin partit espera?",
+  "Un rival exigente: lo hemos preparado a conciencia": "Un rival exigent: ho hem preparat a consciència",
+  "Vamos a ganar, y en su casa o en la nuestra da igual": "Guanyarem, i a casa seva o a la nostra tant és",
+  "Lo que tenga que decir se lo diré a mis jugadores": "El que hagi de dir ho diré als meus jugadors",
+  "Llegan con %d bajas. ¿Le preocupa cómo formar el once?": "Arribeu amb %d baixes. El preocupa com formar l'onze?",
+  "Confío en los que entren: para eso están": "Confio en els que entrin: per això hi són",
+  "Con los que haya, ganamos igual": "Amb els que hi hagi, guanyem igualment",
+  "No voy a dar pistas del once": "No donaré pistes de l'onze"
  },
  "pl": {
   "Club": "Klub",
@@ -43707,7 +43767,17 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s anuluje gola o milimetry. Protesty na obu ławkach.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s pokazuje kolejną żółtą: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s gwiżdże pod gospodarzy: żółta dla %s",
-  "Te toca mover el banquillo.": "Czas sięgnąć po ławkę."
+  "Te toca mover el banquillo.": "Czas sięgnąć po ławkę.",
+  "Se viene el clásico contra %s. ¿Cómo está el vestuario?": "Zbliża się klasyk z %s. Jak nastroje w szatni?",
+  "El próximo partido es contra %s, %dº en la tabla. ¿Qué partido espera?": "Następny mecz z %s, %d. w tabeli. Jakiego meczu się pan spodziewa?",
+  "El próximo partido es contra %s. ¿Qué partido espera?": "Następny mecz z %s. Jakiego meczu się pan spodziewa?",
+  "Un rival exigente: lo hemos preparado a conciencia": "Wymagający rywal: przygotowaliśmy się sumiennie",
+  "Vamos a ganar, y en su casa o en la nuestra da igual": "Wygramy, u nich czy u nas, bez różnicy",
+  "Lo que tenga que decir se lo diré a mis jugadores": "Co mam do powiedzenia, powiem swoim zawodnikom",
+  "Llegan con %d bajas. ¿Le preocupa cómo formar el once?": "Macie %d nieobecnych. Martwi pana skład wyjściowy?",
+  "Confío en los que entren: para eso están": "Ufam tym, którzy wejdą: od tego są",
+  "Con los que haya, ganamos igual": "Z tymi, których mamy, i tak wygramy",
+  "No voy a dar pistas del once": "Nie zdradzę składu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -49363,6 +49433,16 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s milimetrik bir golü iptal ediyor. İki kulübede de itiraz.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s bir sarı kart daha gösteriyor: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s ev sahibini kolluyor: %s'e sarı kart",
-  "Te toca mover el banquillo.": "Yedek kulübesini kullanma zamanı."
+  "Te toca mover el banquillo.": "Yedek kulübesini kullanma zamanı.",
+  "Se viene el clásico contra %s. ¿Cómo está el vestuario?": "%s ile derbi yaklaşıyor. Soyunma odası nasıl?",
+  "El próximo partido es contra %s, %dº en la tabla. ¿Qué partido espera?": "Sıradaki maç %s ile, puan durumunda %d. sırada. Nasıl bir maç bekliyorsunuz?",
+  "El próximo partido es contra %s. ¿Qué partido espera?": "Sıradaki maç %s ile. Nasıl bir maç bekliyorsunuz?",
+  "Un rival exigente: lo hemos preparado a conciencia": "Zorlu bir rakip: titizlikle hazırlandık",
+  "Vamos a ganar, y en su casa o en la nuestra da igual": "Kazanacağız, onların sahası ya da bizimki fark etmez",
+  "Lo que tenga que decir se lo diré a mis jugadores": "Söyleyeceklerimi oyuncularıma söyleyeceğim",
+  "Llegan con %d bajas. ¿Le preocupa cómo formar el once?": "%d eksikle geliyorsunuz. İlk 11'i kurmak sizi endişelendiriyor mu?",
+  "Confío en los que entren: para eso están": "Girecek oyunculara güveniyorum: bunun için buradalar",
+  "Con los que haya, ganamos igual": "Kim varsa, onlarla da kazanırız",
+  "No voy a dar pistas del once": "İlk 11 hakkında ipucu vermeyeceğim"
  }
 }
