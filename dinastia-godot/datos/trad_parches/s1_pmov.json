@@ -1,20 +1,34 @@
-{"exactas": {
- "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": {
-  "en": "🎮 X: interact · A: run · Y: view · Select: GPS · Start: back to map",
-  "pt": "🎮 X: interagir · A: correr · Y: vista · Select: GPS · Start: voltar ao mapa",
-  "fr": "🎮 X : interagir · A : courir · Y : vue · Select : GPS · Start : retour à la carte",
-  "it": "🎮 X: interagire · A: correre · Y: visuale · Select: GPS · Start: torna alla mappa",
-  "de": "🎮 X: interagieren · A: rennen · Y: Ansicht · Select: GPS · Start: zurück zur Karte",
-  "ca": "🎮 X: interactuar · A: córrer · Y: vista · Select: GPS · Start: tornar al mapa",
-  "pl": "🎮 X: interakcja · A: bieg · Y: widok · Select: GPS · Start: powrót do mapy",
-  "tr": "🎮 X: etkileşim · A: koş · Y: görünüm · Select: GPS · Start: haritaya dön"},
- "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": {
-  "en": "🎮 RT/LT: accelerate and brake · B: handbrake · X: interact · Y: camera · Start: back to map",
-  "pt": "🎮 RT/LT: acelerar e travar · B: travão de mão · X: interagir · Y: câmara · Start: voltar ao mapa",
-  "fr": "🎮 RT/LT : accélérer et freiner · B : frein à main · X : interagir · Y : caméra · Start : retour à la carte",
-  "it": "🎮 RT/LT: accelerare e frenare · B: freno a mano · X: interagire · Y: telecamera · Start: torna alla mappa",
-  "de": "🎮 RT/LT: Gas geben und bremsen · B: Handbremse · X: interagieren · Y: Kamera · Start: zurück zur Karte",
-  "ca": "🎮 RT/LT: accelerar i frenar · B: fre de mà · X: interactuar · Y: càmera · Start: tornar al mapa",
-  "pl": "🎮 RT/LT: gaz i hamulec · B: hamulec ręczny · X: interakcja · Y: kamera · Start: powrót do mapy",
-  "tr": "🎮 RT/LT: hızlan ve fren yap · B: el freni · X: etkileşim · Y: kamera · Start: haritaya dön"}
-}}
+{
+ "exactas": {
+  "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": {
+   "en": "🎮 X: interact · A: run · Y: view · Select: GPS · Start: back to map",
+   "pt": "🎮 X: interagir · A: correr · Y: vista · Select: GPS · Start: voltar ao mapa",
+   "fr": "🎮 X : interagir · A : courir · Y : vue · Select : GPS · Start : retour à la carte",
+   "it": "🎮 X: interagire · A: correre · Y: visuale · Select: GPS · Start: torna alla mappa",
+   "de": "🎮 X: interagieren · A: rennen · Y: Ansicht · Select: GPS · Start: zurück zur Karte",
+   "ca": "🎮 X: interactuar · A: córrer · Y: vista · Select: GPS · Start: tornar al mapa",
+   "pl": "🎮 X: interakcja · A: bieg · Y: widok · Select: GPS · Start: powrót do mapy",
+   "tr": "🎮 X: etkileşim · A: koş · Y: görünüm · Select: GPS · Start: haritaya dön"
+  },
+  "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": {
+   "en": "🎮 RT/LT: accelerate and brake · B: handbrake · X: interact · Y: camera · Start: back to map",
+   "pt": "🎮 RT/LT: acelerar e travar · B: travão de mão · X: interagir · Y: câmara · Start: voltar ao mapa",
+   "fr": "🎮 RT/LT : accélérer et freiner · B : frein à main · X : interagir · Y : caméra · Start : retour à la carte",
+   "it": "🎮 RT/LT: accelerare e frenare · B: freno a mano · X: interagire · Y: telecamera · Start: torna alla mappa",
+   "de": "🎮 RT/LT: Gas geben und bremsen · B: Handbremse · X: interagieren · Y: Kamera · Start: zurück zur Karte",
+   "ca": "🎮 RT/LT: accelerar i frenar · B: fre de mà · X: interactuar · Y: càmera · Start: tornar al mapa",
+   "pl": "🎮 RT/LT: gaz i hamulec · B: hamulec ręczny · X: interakcja · Y: kamera · Start: powrót do mapy",
+   "tr": "🎮 RT/LT: hızlan ve fren yap · B: el freni · X: etkileşim · Y: kamera · Start: haritaya dön"
+  },
+  "llegando": {
+   "en": "arriving",
+   "pt": "a chegar",
+   "fr": "en approche",
+   "it": "in arrivo",
+   "de": "fährt ein",
+   "ca": "arribant",
+   "pl": "wjeżdża",
+   "tr": "geliyor"
+  }
+ }
+}

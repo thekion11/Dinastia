@@ -346,6 +346,8 @@ static func eta_real(t: Tren, pos: float) -> float:
 	est.sort()
 	if est.is_empty():
 		return INF
+	if t.espera > 0.0 and absf(t.s - pos) < 1.0:
+		return 0.0   ## ya está en el andén con las puertas abiertas
 	var s := t.s
 	var sentido := t.sentido
 	var total := maxf(t.espera, 0.0)

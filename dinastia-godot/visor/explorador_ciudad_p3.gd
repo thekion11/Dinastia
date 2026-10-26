@@ -46,8 +46,9 @@ func _colocar_camara(delta: float) -> void:
 	if modo == "coche" and not cuerpo.visible:
 		cuerpo.visible = true
 	## PRIMERA PERSONA (V): la cámara en los ojos, el cuerpo escondido.
+	var mirar := _mirar_con_stick(delta)
 	if primera_persona and (modo != "coche"):
-		var dir_fp := Vector3(sin(rumbo), 0, cos(rumbo))
+		var dir_fp := Vector3(sin(rumbo + mirar), 0, cos(rumbo + mirar))
 		camara.position = cuerpo.position + Vector3(0, 1.62, 0) + dir_fp * 0.18
 		camara.look_at(camara.position + dir_fp * 5.0 + Vector3(0, -0.15, 0), Vector3.UP)
 		cuerpo.visible = false
@@ -56,14 +57,14 @@ func _colocar_camara(delta: float) -> void:
 		cuerpo.visible = true
 	var atras := 5.5
 	var alto := 2.6
-	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
+	var adelante := Vector3(sin(rumbo + mirar), 0, cos(rumbo + mirar))
 	## EN COCHE, CÁMARA DE PERSECUCIÓN (17-10-2026): sigue al coche con retraso
 	## en el giro (en las curvas se ve el costado), se aleja y abre el ángulo
 	## con la velocidad, y mira por delante del capó.
 	if modo == "coche":
 		var rapidez := clampf(absf(vel) / 25.0, 0.0, 1.0)
 		_cam_yaw = lerp_angle(_cam_yaw, rumbo, clampf(delta * (2.2 + rapidez * 1.5), 0.0, 1.0)) if delta < 1.0 else rumbo
-		adelante = Vector3(sin(_cam_yaw), 0, cos(_cam_yaw))
+		adelante = Vector3(sin(_cam_yaw + mirar), 0, cos(_cam_yaw + mirar))
 		atras = lerpf(8.0, 11.5, rapidez)
 		alto = lerpf(3.0, 3.8, rapidez)
 		_fov_hacia(lerpf(66.0, 80.0, rapidez), delta)
@@ -320,6 +321,20 @@ func _entrada() -> Vector2:
 		x = clampf(_tactil_vec.x, -1.0, 1.0)
 		y = clampf(_tactil_vec.y, -1.0, 1.0)
 	return Vector2(x, y)
+
+## MIRAR ALREDEDOR CON EL STICK DERECHO (pmov, 26-10-2026): gira la cámara
+## alrededor de ti (a pie, en primera persona y en coche) y, al soltarlo, vuelve
+## despacio detrás. Devuelve el giro (rad) que se suma al rumbo de la cámara.
+var _mirar_stick := 0.0
+func _mirar_con_stick(delta: float) -> float:
+	if delta >= 1.0:
+		return _mirar_stick
+	var rx := Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
+	if absf(rx) > 0.2:
+		_mirar_stick = clampf(_mirar_stick - rx * delta * 2.5, -PI, PI)
+	else:
+		_mirar_stick = lerpf(_mirar_stick, 0.0, clampf(delta * 1.5, 0.0, 1.0))
+	return _mirar_stick
 
 ## TODO LO DEL TECLADO, TAMBIÉN CON MANDO Y TÁCTIL (M-433, pmov 26-10-2026). Con
 ## mando no había forma de volver al mapa (solo Esc), ni de cambiar la vista, ni

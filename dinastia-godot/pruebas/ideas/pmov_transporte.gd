@@ -2,7 +2,7 @@ extends BaseIdea
 ## pmov (26-10-2026): EL METRO DICE LA VERDAD. Lo que se lee en el andén
 ## («próximo tren: N s») y en el vagón («próxima: X») tiene que cumplirse: se
 ## simula la línea de verdad (`MetroCiudad.Tren`, 7 estaciones, 3 trenes como en
-## `MetroCiudad.montar`) y se compara con lo anunciado.
+## `MetroCiudad.montar`) y se compara con lo anunciado. Antes: error medio 24 %, peor 20 s; la próxima en la cabecera era la otra punta.
 
 const DT := 0.1
 
@@ -38,7 +38,7 @@ func _llegada_real(l: Dictionary, i: int) -> float:
 	return INF
 
 ## En varios momentos del servicio y en todas las estaciones, la espera anunciada
-## se parece a la real: error medio < 20 % y ninguno > 45 s.
+## se parece a la real: error medio < 20 % y ninguno > 10 s.
 func _eta_contra_reloj() -> void:
 	var peor := 0.0
 	var suma_rel := 0.0
@@ -62,7 +62,7 @@ func _eta_contra_reloj() -> void:
 				tr.simular(DT)
 	var medio := suma_rel / maxf(1.0, float(n))
 	_comprobar(medio < 0.2, "la espera anunciada en el andén se cumple (error medio %.0f %% en %d casos)" % [medio * 100.0, n])
-	_comprobar(peor < 45.0, "y nunca se equivoca en más de 45 s (peor %.0f s)" % peor)
+	_comprobar(peor < 10.0, "y nunca se equivoca en más de 10 s (peor %.0f s; antes, 20 s)" % peor)
 
 func _copia(l: Dictionary) -> Dictionary:
 	var c := l.duplicate()

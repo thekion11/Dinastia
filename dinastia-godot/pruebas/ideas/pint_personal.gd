@@ -71,7 +71,7 @@ func _probar() -> void:
 	var f := Node3D.new()
 	add_child(f)
 	var lote := FachadaClub.montar(f, 0.0, 60.0, 73.0, Color(0.1, 0.4, 0.2), "Club de Prueba")
-	var letreros := f.find_children("LetreroClub", "Label3D", true, false)
+	var letreros := f.find_children("LetreroClub*", "Label3D", true, false)
 	_comprobar(letreros.size() == 3, "el nombre del club en los dos lados y atrás (%d)" % letreros.size())
 	_comprobar(f.get_child_count() <= 12, "la fachada va en pocas mallas (%d nodos)" % f.get_child_count())
 	## La planta 0 de atrás (la entrada del club) queda libre: ninguna pieza de

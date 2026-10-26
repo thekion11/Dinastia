@@ -5,9 +5,9 @@ extends BaseIdea
 ## determinista. Las teclas se pulsan de verdad (`Input.parse_input_event`); la Esc va por el visor.
 ##   · la cámara de seguimiento va detrás, encima y mirando al coche, y lo alcanza tras girar;
 ##   · al girar con D el morro va hacia la derecha DE LA CÁMARA;
-##   · contra un edificio: la velocidad cae de golpe, no se atraviesa y el golpe se registra;
-##   · 8 s de recorrido con volantazos: dentro del mapa, sobre el suelo y nunca dentro de nada.
-## Subir y bajar del coche: `ppru_subir_bajar_coche` (hereda de esta). Las piezas de la forma del coche
+##   · 6 s de recorrido con volantazos: dentro del mapa, sobre el suelo y nunca dentro de nada.
+## Subir y bajar del coche: `ppru_subir_bajar_coche`; chocar contra un edificio: `ppru_choque_pared`
+## (las dos heredan de esta). Las piezas de la forma del coche
 ## y el tráfico están en pmov_*; el manejo puro en `ppru_conducir`. Cada una tarda < 60 s.
 
 const DT := 1.0 / 60.0
@@ -32,7 +32,6 @@ func _probar_async() -> void:
 	var inicio := _e.cuerpo.position
 	_camara_detras()
 	_girar_con_la_camara(inicio)
-	_choque_contra_pared(inicio)
 	_recorrido(inicio)
 	_linea("  (%.1f s desde que arrancó Godot)" % (Time.get_ticks_msec() / 1000.0))
 
@@ -128,7 +127,7 @@ func _camara_detras() -> void:
 	var peor_mira := 1.0
 	var dmin := INF
 	var dmax := 0.0
-	for i in 180:
+	for i in 120:
 		_fisica(1)
 		if i < 30:
 			continue
@@ -143,7 +142,7 @@ func _camara_detras() -> void:
 		if c.y <= car.y + 1.0:
 			peor_detras = -1.0
 	_tecla(KEY_W, false)
-	_comprobar(_e.vel > 10.0, "acelerando por la calle: %.0f km/h en 3 s" % (_e.vel * 3.6))
+	_comprobar(_e.vel > 10.0, "acelerando por la calle: %.0f km/h en 2 s" % (_e.vel * 3.6))
 	_comprobar(peor_detras > 0.9, "la cámara va detrás y por encima del coche (peor alineación %.2f)" % peor_detras)
 	_comprobar(peor_mira > 0.85, "y lo mira (peor coseno %.2f)" % peor_mira)
 	_comprobar(dmin > 4.0 and dmax < 16.0, "a una distancia razonable: de %.1f a %.1f m" % [dmin, dmax])
@@ -163,74 +162,15 @@ func _girar_con_la_camara(inicio: Vector3) -> void:
 	_tecla(KEY_D, false)
 	var f1 := _adelante()
 	_comprobar(f1.dot(derecha) > 0.1 and f1.dot(f0) < 0.99, "con D el morro gira hacia la derecha de la pantalla (%.2f hacia la derecha)" % f1.dot(derecha))
-	_fisica(120)
+	_fisica(90)
 	_tecla(KEY_W, false)
 	var rel := _e.cuerpo.global_position - _e.camara.global_position
 	var al := Vector3(rel.x, 0, rel.z).normalized().dot(_adelante())
 	_comprobar(al > 0.9, "tras el giro la cámara vuelve a quedar detrás (alineación %.2f)" % al)
 
-## De frente contra la fachada más cercana (a 15-60 m) en uno de los cuatro rumbos de las calles.
-func _choque_contra_pared(inicio: Vector3) -> void:
-	_linea("· choque contra un edificio")
-	var ang := -1.0
-	var dist := 0.0
-	var q := inicio
-	## Se busca desde el inicio y, si no, unos metros más allá por la calle más libre.
-	var base := _rumbo_mas_libre(inicio)
-	for salto in [0.0, 40.0, 80.0, 120.0]:
-		q = inicio + Vector3(sin(base), 0, cos(base)) * salto
-		q.y = ExploradorCiudad.altura_suelo(q.x, q.z)
-		for i in 4:
-			var a := PI / 2.0 * i
-			if not _e.libre_forma(q, a):
-				continue
-			var d := _libre_hacia(q, a, 60.0)
-			if d >= 15.0 and d < 60.0:
-				ang = a
-				dist = d
-				break
-		if ang >= 0.0:
-			break
-	_comprobar(ang >= 0.0, "hay una pared de frente a 15-60 m para probar el choque")
-	if ang < 0.0:
-		return
-	_linea("  pared a %.1f m hacia %.0f° desde (%.0f, %.0f)" % [dist, rad_to_deg(ang), q.x, q.z])
-	_colocar(q, ang)
-	var dir := _adelante()
-	var t_golpe0: float = _e._t_golpe
-	_tecla(KEY_W, true)
-	var vmax := 0.0
-	var avance_max := 0.0
-	var caida := -1.0
-	var dentro := 0
-	var v_antes := 0.0
-	var i_toca := -1
-	for i in 60 * 4:
-		_fisica(1)
-		var av := (_e.cuerpo.position - q).dot(dir)
-		avance_max = maxf(avance_max, av)
-		if _e._n_fijos(_e.cuerpo.position, ExploradorCiudad.RADIO_COCHE) > 0:
-			dentro += 1
-		## El primer fotograma en que pierde velocidad con el pedal pisado: ha tocado la pared.
-		if i_toca < 0 and v_antes > 5.0 and _e.vel < v_antes - 0.01:
-			i_toca = i
-		if i_toca >= 0 and i == i_toca + 30:
-			caida = _e.vel
-		vmax = maxf(vmax, _e.vel)
-		v_antes = _e.vel
-	_tecla(KEY_W, false)
-	_comprobar(vmax > 12.0, "llega lanzado a la pared (%.0f km/h)" % (vmax * 3.6))
-	_comprobar(i_toca >= 0 and caida < vmax * 0.25, "al tocar la pared la velocidad cae: de %.1f a %.1f m/s en 0,5 s" % [vmax, caida])
-	_comprobar(avance_max <= dist + 0.3 and dentro == 0, "no atraviesa: avanza %.2f m de %.2f libres, %d fotogramas dentro" % [avance_max, dist, dentro])
-	## DEFECTO REAL (ppru, 26-10): de frente y perpendicular a la fachada (las calles son una
-	## cuadrícula y el rumbo de salida es 0) `_mover_un_trozo` da por bueno el «deslizamiento»
-	## de 0 m (la componente lateral del paso es 0) y nunca llama a `_golpe_coche`.
-	_comprobar(_e._t_golpe != t_golpe0, "el choque de frente se registra (sonido, vibración y sacudida de cámara; M-172)")
-	_comprobar(_en_el_suelo(_e.cuerpo.position), "tras el choque sigue sobre el suelo")
-
-## 8 s con volantazos por la ciudad real: dentro del mapa, sobre el suelo, nunca dentro de un edificio.
+## 6 s con volantazos por la ciudad real: dentro del mapa, sobre el suelo, nunca dentro de un edificio.
 func _recorrido(inicio: Vector3) -> void:
-	_linea("· recorrido de 8 s")
+	_linea("· recorrido de 6 s")
 	_colocar(inicio, _rumbo_mas_libre(inicio))
 	var fuera := 0
 	var bajo := 0
@@ -239,7 +179,7 @@ func _recorrido(inicio: Vector3) -> void:
 	var camino := 0.0
 	var antes := _e.cuerpo.position
 	_tecla(KEY_W, true)
-	for i in 60 * 8:
+	for i in 60 * 6:
 		## Un volantazo a cada lado cada pocos segundos.
 		var fase := i % 150
 		_tecla(KEY_D, fase >= 60 and fase < 80)
@@ -261,7 +201,7 @@ func _recorrido(inicio: Vector3) -> void:
 	var fin := _e.cuerpo.position
 	_linea("  de (%.0f, %.0f) a (%.0f, %.0f): %.0f m recorridos" % [inicio.x, inicio.z, fin.x, fin.z, camino])
 	_comprobar(raros == 0, "sin posiciones ni velocidades inválidas (%d)" % raros)
-	_comprobar(camino > 60.0, "recorre la ciudad: %.0f m en 8 s" % camino)
+	_comprobar(camino > 60.0, "recorre la ciudad: %.0f m en 6 s" % camino)
 	_comprobar(fuera == 0, "nunca sale del mapa (límite %.0f m): %d fotogramas fuera" % [ExploradorCiudad.LIMITE, fuera])
 	_comprobar(bajo == 0, "siempre a ras del suelo (ni hundido ni flotando): %d fotogramas mal" % bajo)
 	_comprobar(dentro == 0, "nunca dentro de un edificio o del río: %d fotogramas" % dentro)

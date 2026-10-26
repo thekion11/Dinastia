@@ -50,6 +50,17 @@ func _probar() -> void:
 	_eje(JOY_AXIS_TRIGGER_LEFT, 0.0)
 	_comprobar(absf(e._entrada().y) < 0.01, "sin tocar nada, quieto")
 
+	## Stick derecho: mira alrededor y, al soltarlo, la cámara vuelve detrás.
+	_eje(JOY_AXIS_RIGHT_X, 1.0)
+	for i in 10:
+		e._mirar_con_stick(0.1)
+	var girado := e._mirar_stick
+	_eje(JOY_AXIS_RIGHT_X, 0.0)
+	for i in 40:
+		e._mirar_con_stick(0.1)
+	_comprobar(absf(girado) > 2.0 and absf(e._mirar_stick) < 0.1,
+		"el stick derecho gira la cámara (%.2f rad en 1 s) y vuelve sola (%.2f)" % [girado, e._mirar_stick])
+
 	## Táctil: los botones existen y hacen lo de V y Mayús/Espacio.
 	var capa := CanvasLayer.new()
 	add_child(capa)
