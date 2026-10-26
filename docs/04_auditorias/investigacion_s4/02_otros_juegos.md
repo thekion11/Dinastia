@@ -165,7 +165,7 @@ Sesión 4 (investigación). Va con `01_recursos_libres.md` y `03_propuesta.md`.
     - despido (`ui/componentes/escena_despido.gd`);
     - sorteo 3D (`ui/sorteo_escena3d*.gd`).
   - El creador de personaje (`ui/entrada/personaje*.gd`, `ui/componentes/creador_personaje*.gd`) responde a la queja de PES.
-  - La carrera de jugador en 3D (`nucleo/motor_jugable*.gd` en `visor/`) cubre Become a Legend.
+  - La carrera de jugador en 3D (`visor/motor_jugable*.gd`) cubre Become a Legend.
 - **Hueco de mercado**
   - Los fans de la Master League y de Become a Legend, sin gacha. Es nuestro público natural.
 
