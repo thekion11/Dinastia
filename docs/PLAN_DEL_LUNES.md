@@ -319,8 +319,9 @@ Cambios: `PersonajeDT.ANATOMIA` (húmero ×1,15, muslo ×1,05, pantorrilla ×0,9
 quedan pendientes: la clavícula va en diagonal y el sistema de escalas por ejes del mundo también estira el brazo; hay que
 escalarla en ejes locales compensando al hijo (siguiente pasada). Movimiento: el pie apoyado de «caminar» recorre 1,0 m/s y el
 paseo iba a 1,7 m/s (patinaba ×1,7; agachado ×2,4; correr ×1,3-1,5): ahora `speed_scale = velocidad real / natural del clip`
-(`ExploradorCiudad.VEL_NATURAL_CLIP`) y los peatones del tráfico igual (`TraficoCiudad.agregar_vehiculo`). Falta: inercia al
-girar y mezcla andar↔correr↔parar (P2, pasada 2), más clips (P3), piel/pelo/ropa (P4).
+(`ExploradorCiudad.VEL_NATURAL_CLIP`) y los peatones del tráfico igual (`TraficoCiudad.agregar_vehiculo`). Hecho también: el cuerpo gira con inercia
+(persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. Falta: más clips (P3), piel/pelo/ropa (P4) y el
+veredicto del dueño sobre esta pasada.
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 

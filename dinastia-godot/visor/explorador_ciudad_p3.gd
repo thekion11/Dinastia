@@ -435,5 +435,6 @@ func _animar_dt(v: float) -> void:
 	if quiere != "parado":
 		vel_anim = clampf(absf(v) / float(VEL_NATURAL_CLIP.get(quiere, 1.0)), 0.5, 2.0)
 	if _anim.current_animation != quiere and _anim.has_animation(quiere):
-		_anim.play(quiere, 0.25)
+		## Mezcla más larga al parar (el cuerpo frena) y corta al arrancar.
+		_anim.play(quiere, 0.4 if quiere == "parado" else 0.25)
 	_anim.speed_scale = vel_anim
