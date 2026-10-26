@@ -1,5 +1,8 @@
 extends Node
-## SONDA pmov (exploratoria): piezas grandes de la ciudad que se pueden atravesar.
+## SONDA pmov (26-10-2026): piezas altas de la ciudad (apoyadas en el suelo) cuyo
+## centro se puede pisar a pie. Lista los tipos y FALLA si un edificio (del kit
+## o la casa grande) se puede atravesar: antes había 12 rascacielos del borde y
+## la casa grande del barrio sin huella (`ExploradorCiudad._huellas_de_torres`).
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.ALTO
@@ -32,7 +35,7 @@ func _ready() -> void:
 		var q := Vector3(c.x, 0, c.z)
 		total += 1
 		if e.libre_obst(q, 0.3) and not e._choca_circulos(q, 0.3):
-			var clave := re.sub("%s <- %s <- %s  alto %.0f" % [mi.name, mi.get_parent().name, mi.get_parent().get_parent().name, caja.size.y], "", true)
+			var clave := re.sub("%s <- %s <- %s" % [mi.name, mi.get_parent().name, mi.get_parent().get_parent().name], "", true) + " (%s)" % mi.mesh.resource_name
 			huecos[clave] = int(huecos.get(clave, 0)) + 1
 			ejemplo[clave] = "(%.0f, %.0f) tam %.1fx%.1f" % [c.x, c.z, caja.size.x, caja.size.z]
 	for n in cb.find_children("*", "MultiMeshInstance3D", true, false):
@@ -49,7 +52,7 @@ func _ready() -> void:
 			var q := Vector3(c.x, 0, c.z)
 			total += 1
 			if e.libre_obst(q, 0.3) and not e._choca_circulos(q, 0.3):
-				var clave := re.sub("MM %s <- %s  alto %.0f" % [mmi.name, mmi.get_parent().name, caja.size.y], "", true)
+				var clave := re.sub("MM %s <- %s" % [mmi.name, mmi.get_parent().name], "", true)
 				huecos[clave] = int(huecos.get(clave, 0)) + 1
 				ejemplo[clave] = "(%.0f, %.0f) tam %.1fx%.1f" % [c.x, c.z, caja.size.x, caja.size.z]
 	print("SONDA piezas altas: %d · atravesables: %d tipos" % [total, huecos.size()])
@@ -57,5 +60,10 @@ func _ready() -> void:
 	claves.sort_custom(func(a, b) -> bool: return int(huecos[a]) > int(huecos[b]))
 	for k in claves.slice(0, 80):
 		print("  %4d  %s  ej %s" % [int(huecos[k]), k, ejemplo[k]])
-	print("===== FIN. 0 fallos =====")
-	get_tree().quit(0)
+	var edificios := 0
+	for k: String in claves:
+		if k.contains("building-") or k.contains("CasaGigante") or k.contains("complejo"):
+			edificios += int(huecos[k])
+	print("  %s edificios que se atraviesan: %d" % ["ok   " if edificios == 0 else "FALLO", edificios])
+	print("===== FIN. %d fallos =====" % (0 if edificios == 0 else 1))
+	get_tree().quit(0 if edificios == 0 else 1)

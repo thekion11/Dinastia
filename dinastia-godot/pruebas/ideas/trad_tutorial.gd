@@ -37,7 +37,8 @@ func _probar() -> void:
 			for idi: String in Idiomas.ORDEN:
 				Idiomas.idioma = idi
 				var t := Idiomas.t(s)
-				if t == s:
+				## Igual al castellano solo vale si es una traducción idéntica de verdad (catalán: «Mira el personal del club»).
+				if t == s and Idiomas._directa(s) == "":
 					fallos.append("%s/%s: %s" % [modo, idi, s.left(60)])
 				elif idi == "en":
 					var limpio := t.replace(mentor, "")
