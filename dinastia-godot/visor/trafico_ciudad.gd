@@ -42,7 +42,8 @@ func _process(delta_real: float) -> void:
 			continue
 		## NPCs CON VIDA (etapa 1): de vez en cuando un peatón se detiene a mirar
 		## el móvil o a descansar y luego sigue su camino.
-		if float(v["alto"]) > 0.05 and float(v["alto"]) < 0.3 and randf() < 0.0004 * delta * 60.0:
+		var es_peaton := bool(v.get("peaton", false))
+		if es_peaton and randf() < 0.0004 * delta * 60.0:
 			v["espera"] = randf_range(3.0, 9.0)
 			v["pausa"] = true
 			_animar(v, "parado")
@@ -81,32 +82,54 @@ func _process(delta_real: float) -> void:
 				if d3 < 9.0:
 					avance = minf(avance, maxf(0.0, d3 - 8.0))
 		## Un peatón no atraviesa al que va delante en su ruta: si le alcanza a menos
-		## de 0,9 m, se queda detrás (adelantar queda para una próxima pasada).
-		if _peatones_ruta.has(ruta) and float(v["alto"]) > 0.05 and float(v["alto"]) < 0.3:
+		## de 0,9 m, se queda detrás. ADELANTAR (pmov, 26-10-2026): si el de delante
+		## va más despacio o está parado, se abre a un lado libre (`_esquivar`) y le
+		## pasa; con los dos ya a distinto lado, no se frenan.
+		if es_peaton:
+			_lateral(v, delta)
+		if _peatones_ruta.has(ruta) and es_peaton:
 			for o: Dictionary in _peatones_ruta[ruta]:
 				if o == v:
 					continue
 				var d4 := fposmod(float(o["s"]) - s0, largo)
-				if d4 < 0.9 + avance:
+				var separados := absf(float(v.get("lat", 0.0)) - float(o.get("lat", 0.0))) > SEPARA_LADO
+				if d4 < 2.5:
+					if separados:
+						v["t_lat"] = maxf(float(v.get("t_lat", 0.0)), 1.0)
+						continue
+					## Parado (mirando el móvil, charlando, cediendo) o más lento que tú.
+					if float(o.get("espera", 0.0)) > 0.0 or float(o.get("cediendo", 0.0)) > 0.0 \
+							or float(o["vel"]) < float(v["vel"]) * 0.9:
+						_esquivar(v, float(o.get("lat", 0.0)))
+				elif fposmod(s0 - float(o["s"]), largo) < 1.2 and separados:
+					## Al que acabas de pasar lo tienes al lado: aún no vuelvas a la línea.
+					v["t_lat"] = maxf(float(v.get("t_lat", 0.0)), 0.5)
+				if d4 < 0.9 + avance and not separados:
 					avance = minf(avance, maxf(0.0, d4 - 0.9))
 					## Si se alcanzan, a veces se paran a charlar (etapa 1: NPCs con vida).
 					if float(o.get("espera", 0.0)) <= 0.0 and randf() < 0.004:
 						_charlar(v, o)
 						avance = 0.0
-		## CEDER EL PASO AL JUGADOR (etapa 5): un peatón se detiene si estás
-		## delante a menos de 1,6 m; un coche, a menos de 7 m. Solo se mira a los
-		## que están a menos de 14 m (barato) y solo hacia dónde van.
+		## CEDER EL PASO AL JUGADOR (etapa 5): un peatón se detiene si le tapas
+		## el paso en el próximo metro y pico; un coche, en los próximos ~6,5 m.
+		## Se mira la FORMA del jugador (pmov, 26-10-2026: antes solo su centro,
+		## y con tu coche parado los peatones atravesaban morro y cola) y solo
+		## a los que están a menos de 16 m (barato).
 		if hay_jugador and avance > 0.0:
 			var nodo_v: Node3D = v["nodo"]
 			if is_instance_valid(nodo_v):
 				var rel := Vector3(pj.x - nodo_v.position.x, 0, pj.z - nodo_v.position.z)
-				var dist := rel.length()
-				if dist < 14.0:
+				if rel.length_squared() < 256.0:
 					var dir_v: Vector3 = (_rutas[ruta] as Ruta).en(s0)[1]
-					var peaton := float(v["alto"]) < 0.3
-					var umbral := 1.6 if peaton else 7.0
-					if dist < umbral and rel.normalized().dot(Vector3(dir_v.x, 0, dir_v.z).normalized()) > 0.5:
+					var peaton := es_peaton
+					if tapa_al_jugador(nodo_v.position, dir_v, 1.25 if peaton else 6.65, 0.4 if peaton else 1.0,
+							pj, jugador.rotation.y, jugador_huella):
 						avance = 0.0
+						## A pie, un peatón te rodea por el lado contrario al tuyo, si cabe
+						## (a tu coche no: no hay acera para rodearlo; espera).
+						if peaton and jugador_huella.y < 0.6:
+							var lado_j := Vector3(dir_v.z, 0, -dir_v.x).dot(rel)
+							_esquivar(v, float(v.get("lat", 0.0)) + lado_j, -1.0 if lado_j > 0.0 else 1.0)
 		## NADIE ATRAVIESA A NADIE (pmov, 25-10-2026): lo de arriba solo mira la
 		## propia ruta; aquí se cede a quien cruza por delante desde OTRA ruta
 		## (coches en un cruce sin semáforo, peatones en un paso de cebra).
@@ -120,6 +143,71 @@ func _process(delta_real: float) -> void:
 					fm2.set_instance_shader_parameter("freno", 1.0)
 		v["s"] = s0 + avance
 		_colocar(v)
+
+## ESQUIVAR (pmov, 26-10-2026): los peatones ya no solo esperan. `lat` es lo que
+## se apartan de su línea (positivo, hacia fuera de la manzana); se mueve
+## hacia `lat_obj` a paso lateral y vuelve a 0 cuando ya no hay a quién rodear.
+const LADO_ESQUIVA := 0.75
+const SEPARA_LADO := 0.6
+const VEL_LATERAL := 0.9
+## ¿Se puede pisar este punto? (lo pone el explorador: paredes, farolas,
+## bancos). Sin él (pruebas, mapa de lejos) se da por libre.
+var libre_fn: Callable
+
+func _lateral(v: Dictionary, delta: float) -> void:
+	var t_lat := float(v.get("t_lat", 0.0))
+	if t_lat > 0.0:
+		v["t_lat"] = t_lat - delta
+	elif float(v.get("lat_obj", 0.0)) != 0.0:
+		v["lat_obj"] = 0.0
+	var lat := float(v.get("lat", 0.0))
+	var obj := float(v.get("lat_obj", 0.0))
+	if lat != obj:
+		v["lat"] = move_toward(lat, obj, VEL_LATERAL * delta)
+
+## Se abre a un lado (primero `preferido`: +1 fuera, -1 dentro) a `LADO_ESQUIVA`
+## de `de_lat` (el lado del que estorba), si ese carril está libre un par de
+## metros. Devuelve si pudo.
+func _esquivar(v: Dictionary, de_lat: float, preferido := 1.0) -> bool:
+	if float(v.get("t_lat", 0.0)) > 0.0 and absf(float(v.get("lat_obj", 0.0)) - de_lat) > SEPARA_LADO:
+		v["t_lat"] = 1.5
+		return true
+	var par: Array = (_rutas[int(v["ruta"])] as Ruta).en(float(v["s"]))
+	var pos: Vector3 = par[0]
+	var dir: Vector3 = par[1]
+	var fuera := Vector3(dir.z, 0, -dir.x)
+	for sg: float in [preferido, -preferido]:
+		var lat := clampf(de_lat + LADO_ESQUIVA * sg, -1.0, 1.0)
+		if absf(lat - de_lat) < SEPARA_LADO:
+			continue
+		if libre_fn.is_valid() and not (bool(libre_fn.call(pos + fuera * lat)) and bool(libre_fn.call(pos + fuera * lat + dir * 1.5))):
+			continue
+		v["lat_obj"] = lat
+		v["t_lat"] = 1.5
+		return true
+	return false
+
+## ¿El jugador (rectángulo de medio ancho `h.x` y medio largo `h.y` en `pj`,
+## mirando a `ang`; su +Z es el morro) está en el camino de quien va de `pos`
+## hacia `dir`, en los próximos `umbral` m y con su medio `ancho`? Se prueban
+## cinco puntos del camino; a quien ya está encima se le deja salir.
+static func tapa_al_jugador(pos: Vector3, dir: Vector3, umbral: float, ancho: float,
+		pj: Vector3, ang: float, h: Vector2) -> bool:
+	var d := Vector2(dir.x, dir.z).normalized()
+	var sn := sin(ang)
+	var cs := cos(ang)
+	for i in 5:
+		var k := 0.2 + float(i) / 4.0 * (umbral - 0.2)
+		var rx := pos.x + d.x * k - pj.x
+		var rz := pos.z + d.y * k - pj.z
+		var ex := maxf(0.0, absf(rx * cs - rz * sn) - h.x)
+		var ez := maxf(0.0, absf(rx * sn + rz * cs) - h.y)
+		if ex * ex + ez * ez < ancho * ancho:
+			## Ya dentro de la huella (un coche que se te metió): que salga.
+			var ox := maxf(0.0, absf((pos.x - pj.x) * cs - (pos.z - pj.z) * sn) - h.x)
+			var oz := maxf(0.0, absf((pos.x - pj.x) * sn + (pos.z - pj.z) * cs) - h.y)
+			return ox * ox + oz * oz >= 0.01
+	return false
 
 ## Rejilla de 8 m con quién se mueve cerca de la cámara (a menos de 70 m), para
 ## que cada uno mire solo a sus vecinos. Se rehace cada fotograma: son pocos.

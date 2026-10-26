@@ -59,8 +59,8 @@ func _resumen_misiones() -> String:
 		if _pasos[k].has("mision"):
 			var ok := _cumplidas.has(k)
 			lineas.append("[color=#%s]%s  %s[/color]" % [
-				(COL_HECHO if ok else COL_SUAVE).to_html(false), "✔" if ok else "·", _pasos[k]["mision"]])
-	return "[b]Tu primer día:[/b] %d de %d misiones.\n%s\n\nPuedes repetir esto cuando quieras en [b]AJUSTES → Interfaz[/b]." % [
+				(COL_HECHO if ok else COL_SUAVE).to_html(false), "✔" if ok else "·", Idiomas.t(String(_pasos[k]["mision"]))])
+	return Idiomas.t("[b]Tu primer día:[/b] %d de %d misiones.\n%s\n\nPuedes repetir esto cuando quieras en [b]AJUSTES → Interfaz[/b].") % [
 		_cumplidas.size(), lineas.size(), "\n".join(lineas)]
 
 # --- máquina de escribir -----------------------------------------------------
@@ -95,10 +95,10 @@ func _pintar_mision() -> void:
 			if k <= _i:
 				n = misiones
 	if _cumplidas.has(_i):
-		_lbl_mision.text = Idiomas.t("✔  MISIÓN %d/%d · %s  —  ¡hecho!") % [n, misiones, paso["mision"]]
+		_lbl_mision.text = Idiomas.t("✔  MISIÓN %d/%d · %s  —  ¡hecho!") % [n, misiones, Idiomas.t(String(paso["mision"]))]
 		_lbl_mision.add_theme_color_override("font_color", COL_HECHO)
 	else:
-		_lbl_mision.text = Idiomas.t("🎯  MISIÓN %d/%d · %s") % [n, misiones, paso["mision"]]
+		_lbl_mision.text = Idiomas.t("🎯  MISIÓN %d/%d · %s") % [n, misiones, Idiomas.t(String(paso["mision"]))]
 		_lbl_mision.add_theme_color_override("font_color", COL_ORO)
 
 func _objetivo() -> Control:
@@ -171,7 +171,8 @@ func _mostrar(i: int) -> void:
 	_i = clampi(i, 0, _pasos.size() - 1)
 	var paso := _pasos[_i]
 	var final := bool(paso.get("final", false))
-	var texto := String(paso["texto"])
+	## El guion se arma en castellano (las misiones son también su clave) y se traduce al pintar.
+	var texto := Idiomas.t(String(paso["texto"]))
 	if final:
 		texto = "[i]«%s»[/i]\n\n%s" % [texto, _resumen_misiones()]
 	_escribir(_lbl_texto, texto)
@@ -248,7 +249,7 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	_lbl_nombre.add_theme_color_override("font_color", COL_ORO)
 	quien.add_child(_lbl_nombre)
 	_lbl_cargo = Label.new()
-	_lbl_cargo.text = String(_guion["mentor"]["cargo"])
+	_lbl_cargo.text = Idiomas.t(String(_guion["mentor"]["cargo"]))
 	_lbl_cargo.add_theme_font_size_override("font_size", 12)
 	_lbl_cargo.add_theme_color_override("font_color", COL_SUAVE)
 	quien.add_child(_lbl_cargo)

@@ -172,6 +172,9 @@ static func _montar_pasillos(deck: MeshInstance3D, escalones: Array[Transform3D]
 		mmi.material_override = _mat_peldano
 		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		deck.add_child(mmi)
+		## El canto amarillo de cada peldaño (26-10-2026): sin él, de lejos el
+		## pasillo era una franja gris lisa (`DetalleGrada`).
+		DetalleGrada.multi(deck, "CantosPasillo", DetalleGrada.cantos_pasillo(escalones, PASO_FILA + 0.02), DetalleGrada.mat_canto())
 	## Las esquinas son un `PlaneMesh` (sin grosor): su suelo está en 0, no en 0,2.
 	var suelo := 0.0 if deck.mesh is PlaneMesh else 0.2
 	var sin_pasillo: Array[float] = []
@@ -196,6 +199,9 @@ static func _escaleras_de_acceso(deck: MeshInstance3D, escalones: Array[Transfor
 	if root == null or pasillos_l.is_empty():
 		return
 	var xfs: Array[Transform3D] = []
+	var cantos: Array[Transform3D] = []
+	var zancas: Array[Transform3D] = []
+	var tubos: Array[Transform3D] = []
 	for l: float in pasillos_l:
 		## El primer peldaño de ese pasillo (fila 0): el de esa columna más bajo.
 		var bajo := Vector3.INF
@@ -217,8 +223,16 @@ static func _escaleras_de_acceso(deck: MeshInstance3D, escalones: Array[Transfor
 			var bas := Basis.from_scale(Vector3(1.25, maxf(alto, 0.1), PELDANO_FONDO)) if not lateral \
 				else Basis.from_scale(Vector3(PELDANO_FONDO, maxf(alto, 0.1), 1.25))
 			xfs.append(Transform3D(bas, c))
+		## Canto de cada peldaño, zancas y pasamanos (`DetalleGrada`).
+		var piezas := DetalleGrada.piezas_escalera(bajo, dir, n, PELDANO_ALTO, PELDANO_FONDO, 1.25)
+		cantos.append_array(piezas[0])
+		zancas.append_array(piezas[1])
+		tubos.append_array(piezas[2])
 	if xfs.is_empty():
 		return
+	DetalleGrada.multi(root, "CantosAcceso", cantos, DetalleGrada.mat_canto())
+	DetalleGrada.multi(root, "ZancasAcceso", zancas, DetalleGrada.mat_zanca())
+	DetalleGrada.multi(root, "PasamanosAcceso", tubos, _mat_baranda)
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = BoxMesh.new()

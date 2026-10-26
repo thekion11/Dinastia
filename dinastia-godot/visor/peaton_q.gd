@@ -145,6 +145,14 @@ static func _caja(t: Vector3) -> BoxMesh:
 	b.size = t
 	return b
 
+static func _esfera(r: float) -> SphereMesh:
+	var e := SphereMesh.new()
+	e.radius = r
+	e.height = r * 2.0
+	e.radial_segments = 8
+	e.rings = 4
+	return e
+
 static func _en_hueso(esq: Skeleton3D, hueso: String, k: float) -> Node3D:
 	if esq.find_bone(hueso) < 0:
 		return null
@@ -261,21 +269,32 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 		## Mochila a la espalda (el pecho mira a +Z en el hueso de la columna).
 		var h := _en_hueso(esq, "spine_03", k)
 		if h != null:
-			_pieza(h, _caja(Vector3(0.26, 0.32, 0.13)), _m(col), Vector3(0, 0.02, -0.16))
-			_pieza(h, _caja(Vector3(0.22, 0.14, 0.05)), _m(col.darkened(0.2)), Vector3(0, -0.06, -0.25))
+			## 26-10-2026: 5 cm más abajo; en las mujeres (más bajas de hombros)
+			## asomaba por encima del hombro como una tabla detrás del cuello.
+			_pieza(h, _caja(Vector3(0.26, 0.3, 0.13)), _m(col), Vector3(0, -0.03, -0.16))
+			_pieza(h, _caja(Vector3(0.22, 0.13, 0.05)), _m(col.darkened(0.2)), Vector3(0, -0.1, -0.25))
 	elif acc < 0.42:
 		## Bolso colgado de la cadera.
-		var h2 := _en_hueso(esq, "hand_r" if rng.randf() < 0.5 else "hand_l", k)
+		var derecha := rng.randf() < 0.5
+		var h2 := _en_hueso(esq, "hand_r" if derecha else "hand_l", k)
 		if h2 != null:
 			## Bolsa con asa, colgando BAJO la mano (+Y del hueso = hacia los dedos).
+			## PLANA HACIA LA PIERNA (26-10-2026): era ancha de lado a lado y se
+			## metía en el muslo (parecía una caja de cartón atravesada). Con el
+			## brazo caído, «hacia fuera» es +X del hueso en la mano derecha y −X
+			## en la izquierda (medido en el reposo del glTF): la bolsa es fina en
+			## ese eje, ancha hacia delante y va 5 cm por fuera de la mano.
+			var fuera := 1.0 if derecha else -1.0
 			var bolsa := col if rng.randf() < 0.6 else Color(0.78, 0.66, 0.48)
-			_pieza(h2, _caja(Vector3(0.26, 0.22, 0.09)), _m(bolsa, 0.6), Vector3(0, 0.24, 0))
+			_pieza(h2, _caja(Vector3(0.075, 0.24, 0.3)), _m(bolsa, 0.6), Vector3(0.05 * fuera, 0.25, 0))
+			## Ribete de arriba (la boca de la bolsa) y el asa en el mismo plano.
+			_pieza(h2, _caja(Vector3(0.08, 0.018, 0.305)), _m(bolsa.darkened(0.25), 0.55), Vector3(0.05 * fuera, 0.14, 0))
 			var asa := TorusMesh.new()
 			asa.inner_radius = 0.045
 			asa.outer_radius = 0.055
 			asa.rings = 10
 			asa.ring_segments = 6
-			_pieza(h2, asa, _m(bolsa.darkened(0.35), 0.5), Vector3(0, 0.1, 0), Vector3(0, 0, 90))
+			_pieza(h2, asa, _m(bolsa.darkened(0.35), 0.5), Vector3(0.015 * fuera, 0.1, 0), Vector3(0, 0, 90))
 	elif acc < 0.62:
 		## Móvil en la mano: un rectángulo oscuro con la pantalla clara.
 		var h3 := _en_hueso(esq, "hand_r", k)
@@ -309,14 +328,22 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 			var copa := SphereMesh.new()
 			## Algo más grande que la cabeza con pelo: si no, el pelo asomaba.
 			copa.radius = 0.118
-			copa.height = 0.15
+			## Con `is_hemisphere` la altura es la del casquete entero (de 0 a
+			## `height`): con 0,15 subía 7 cm por encima del pelo, como un bombín.
+			copa.height = 0.112
 			copa.radial_segments = 14
 			copa.rings = 6
 			copa.is_hemisphere = true
-			_pieza(cab, copa, gm, Vector3(0, 0.15, -0.01))
+			## La gorra, a la escala de la cabeza (sin `k`): con `k` su altura no
+			## crecía con la persona y en los bajos flotaba sobre el pelo.
+			var cab_g := _en_hueso(esq, "Head", 1.0)
+			_pieza(cab_g, copa, gm, Vector3(0, 0.15, -0.01))
 			var visera := CylinderMesh.new()
 			visera.top_radius = 0.075
 			visera.bottom_radius = 0.075
 			visera.height = 0.01
 			visera.radial_segments = 12
-			_pieza(cab, visera, _m(col.darkened(0.15)), Vector3(0, 0.16, 0.11), Vector3(-8, 0, 0))
+			## La visera sale 9 cm por delante de la copa (26-10-2026): metida a
+			## medias en ella era solo un canto y la gorra se leía como un bombín.
+			_pieza(cab_g, visera, _m(col.darkened(0.15)), Vector3(0, 0.155, 0.145), Vector3(-10, 0, 0))
+			_pieza(cab_g, _esfera(0.012), gm, Vector3(0, 0.262, -0.01))

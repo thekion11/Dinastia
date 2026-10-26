@@ -156,7 +156,7 @@ func encender(noche: float) -> void:
 	if _farola_luz != null:
 		_farola_luz.emission_energy_multiplier = lerpf(0.0, 2.6, noche)
 	if _farola_charco != null:
-		_farola_charco.albedo_color.a = lerpf(0.0, 0.55, noche)
+		_farola_charco.albedo_color.a = lerpf(0.0, 0.62, noche)
 	if _farola_cono != null:
 		_farola_cono.set_shader_parameter("fuerza", lerpf(0.0, 0.22, noche))
 	if _ventanas_lejanas != null:

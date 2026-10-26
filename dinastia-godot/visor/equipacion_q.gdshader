@@ -170,6 +170,13 @@ vec2 escote(float x, float y, float zm) {
 	return vec2(tapa, ribete);
 }
 
+// Lleva `x` con el giro mínimo que lleva `a` a `b` (normales unitarias).
+vec3 girar(vec3 a, vec3 b, vec3 x) {
+	vec3 v = cross(a, b);
+	float c = dot(a, b);
+	return x * c + cross(v, x) + v * (dot(v, x) / (1.0 + c + 0.0001));
+}
+
 void vertex() {
 	v_reposo = vec3(UV2.x, UV2.y, COLOR.r);
 	// LA ROPA SUELTA (26-9-2026, pedido: "están muy pegadas al cuerpo"): los
@@ -188,6 +195,7 @@ void vertex() {
 		VERTEX -= NORMAL * dentro * 0.018;
 	}
 	if (usa_reposo) {
+		vec3 n_anim = NORMAL;
 		float ax = abs(v_reposo.x);
 		float y = v_reposo.y;
 		float brazo = smoothstep(0.2, 0.235, ax) * smoothstep(1.19, 1.24, y);
@@ -242,6 +250,19 @@ void vertex() {
 				vec2 rt = vec2(ax / 0.175, (zm - 0.005) / 0.125);
 				float tronco = (1.0 - brazo) * smoothstep(0.9, 0.98, y) * (1.0 - smoothstep(1.38, 1.46, y));
 				inflar += tronco * max(1.0 - length(rt), 0.0) * 0.3;
+				// La normal de reposo (la de `_alisado`) para medir en reposo;
+				// el desplazamiento va por la normal animada, como lo demás.
+				vec3 nr = dot(CUSTOM1.xyz, CUSTOM1.xyz) > 0.25 ? normalize(CUSTOM1.xyz) : normalize(NORMAL);
+				// LA CAMISETA CUELGA DEL PECHO (26-10-2026): pintada encima, la
+				// tela se metía bajo el pecho y entre los pectorales (de mujer se
+				// leía como body-paint). Por delante se rellena hasta una caída
+				// recta: del punto más alto del pecho (y 1,30) a la cintura.
+				float z_pecho = dy_cuerpo < -0.01 ? 0.138 : 0.124;
+				float z_obj = mix(0.098, z_pecho, smoothstep(1.03, 1.29, y));
+				float delante = (1.0 - brazo) * smoothstep(1.03, 1.08, y) * (1.0 - smoothstep(1.32, 1.36, y))
+					* (1.0 - smoothstep(0.1, 0.15, ax)) * smoothstep(0.3, 0.6, nr.z);
+				float z_ya = zm + (dot(CUSTOM1.xyz, CUSTOM1.xyz) > 0.25 ? CUSTOM0.w * alisar * nr.z : 0.0);
+				VERTEX += NORMAL * delante * clamp((z_obj - z_ya) / max(nr.z, 0.35), 0.0, 0.03);
 			}
 		}
 		// La holgura calculada arriba (13-10-2026: se calculaba y nunca se
@@ -258,7 +279,9 @@ void vertex() {
 			float manga_l = brazo * (1.0 - smoothstep(mix(0.41, 0.66, largas), mix(0.45, 0.70, largas), ax));
 			float pant_l = (1.0 - brazo) * smoothstep(mix(0.58, 0.12, largas), mix(0.63, 0.16, largas), y) * (1.0 - smoothstep(1.0, 1.04, y));
 			// Ropa de calle: el zapato tampoco marca los dedos del pie.
-			float zapato = (civil && largo) ? (1.0 - brazo) * (1.0 - smoothstep(0.1, 0.13, y)) : 0.0;
+			// (26-10-2026: el zapato de calle ya no se alisa aquí: tiene su
+			// horma, abajo.)
+			float zapato = 0.0;
 			// Camiseta de juego: la tela tapa más el músculo (con 0,55 se leían
 			// los abdominales y el pectoral como pintados; 17-10-2026).
 			float alisar_ef = (civil || largo) ? alisar : max(alisar, 0.8);
@@ -272,6 +295,34 @@ void vertex() {
 			vec3 xr = x * c + cross(v, x) + v * (dot(v, x) / (1.0 + c + 0.0001));
 			VERTEX += NORMAL * CUSTOM0.w * ropa;
 			NORMAL = normalize(mix(NORMAL, normalize(xr), ropa));
+		}
+		// ZAPATO CON HORMA (26-10-2026, «la ropa es horrible»: de cerca el
+		// zapato pintado era el pie desnudo -dedos, arco y empeine fino, en
+		// punta como una bailarina-). Cada vértice del pie se lleva, en la pose
+		// de reposo, casi hasta la superficie de medio elipsoide apoyado en el
+		// suelo (horma de zapatilla: 12 cm de ancho, 30 de largo, 9 de alto):
+		// los dedos se funden en una puntera redonda y el arco se rellena. La
+		// cuenta es monótona (nunca da vuelta un triángulo) y la suela sigue
+		// en el suelo (sus vértices solo se abren hacia los lados). El
+		// desplazamiento pasa a la pose animada con el mismo giro que llevó la
+		// normal de reposo a la animada (exacto para el giro del tobillo).
+		if (civil && largo && dot(CUSTOM1.xyz, CUSTOM1.xyz) > 0.25) {
+			float pie = (1.0 - brazo) * (1.0 - smoothstep(0.1, 0.13, y));
+			if (pie > 0.0) {
+				vec3 p = vec3(v_reposo.x, y, v_reposo.z * 0.5 - 0.25);
+				vec3 ejes_p = vec3(0.061, 0.088, 0.152);
+				vec3 c_p = vec3(sign(p.x) * (0.13 + dy_cuerpo * 0.07), 0.0, -0.006);
+				float e_p = length((p - c_p) / ejes_p);
+				if (e_p < 1.0 && e_p > 0.001) {
+					float e_n = 1.0 - (1.0 - e_p) * 0.12;
+					vec3 obj = c_p + (p - c_p) * (e_n / e_p);
+					vec3 n_e = normalize((obj - c_p) / (ejes_p * ejes_p));
+					vec3 a_r = normalize(CUSTOM1.xyz);
+					vec3 b_r = normalize(n_anim);
+					VERTEX += girar(a_r, b_r, obj - p) * pie;
+					NORMAL = normalize(mix(NORMAL, girar(a_r, b_r, n_e), pie * smoothstep(0.004, 0.02, y)));
+				}
+			}
 		}
 	}
 }
@@ -782,7 +833,10 @@ void fragment() {
 	else if (bot_dis == 6) botin = ruido(vec2(bz * 5.0, balto * 3.0 + x * 20.0)) > 0.55 ? bot_c2.rgb : botin;
 	else if (bot_dis == 7) botin = balto > 0.5 ? bot_c2.rgb : botin;
 	else if (bot_dis == 8) botin = abs(balto - 0.45 - sin(bz * 6.0) * 0.18) < 0.1 ? bot_c2.rgb : botin;
-	if (y < 0.018) botin = bot_c3.rgb;
+	// Calle: suela de 2,4 cm (con la horma ya se ve de canto) y su costura.
+	float alto_suela = civil ? 0.024 : 0.018;
+	if (y < alto_suela) botin = bot_c3.rgb;
+	if (civil) botin *= 1.0 - 0.3 * (1.0 - smoothstep(0.0, 0.003, abs(y - alto_suela - 0.004)));
 	if (y > 0.085 && y < 0.115) botin = mix(botin, familia >= 0 ? bot_c2.rgb : color2.rgb, 0.55);
 
 	vec3 albedo = piel * tinte_piel;
@@ -863,8 +917,17 @@ void fragment() {
 		float lateral_p = (1.0 - smoothstep(0.0, 0.004, abs(ax_t - 0.19))) * step(y, 0.95) * step(0.12, y);
 		float bajo = 1.0 - smoothstep(0.0, 0.02, y - 0.115);
 		pant *= 1.0 - 0.18 * max(cintura, max(lateral_p, bajo));
-		// Hebilla del cinturón, al frente.
-		if (y > 0.958 && y < 0.993 && ax_t < 0.018 && z > 0.6) pant = vec3(0.55, 0.52, 0.45);
+		// CINTURÓN DE CUERO (26-10-2026): antes solo había una hebilla, un
+		// rectángulo claro suelto que se leía como una etiqueta. Ahora la
+		// correa da la vuelta (marrón con pantalón claro, negra con oscuro)
+		// y la hebilla es un marco de metal con la correa a la vista dentro.
+		float correa = smoothstep(0.959, 0.963, y) * (1.0 - smoothstep(0.988, 0.992, y));
+		vec3 cuero_c = dot(color_pantalon.rgb, vec3(0.2126, 0.7152, 0.0722)) > 0.2 ? vec3(0.16, 0.09, 0.05) : vec3(0.035, 0.03, 0.028);
+		pant = mix(pant, cuero_c * (0.85 + 0.3 * tej_p), correa);
+		if (y > 0.957 && y < 0.994 && ax_t < 0.017 && z > 0.6) {
+			bool dentro_h = ax_t < 0.011 && y > 0.964 && y < 0.987;
+			pant = dentro_h ? cuero_c : vec3(0.5, 0.49, 0.46);
+		}
 	}
 	// SOMBRA DE LOS BORDES SOBRE LA PIEL (oclusión falsa, 17-10-2026): la tela
 	// tiene grosor y tapa la luz justo al lado del bajo del short, del puño de
@@ -1006,7 +1069,9 @@ void fragment() {
 		}
 	}
 	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
-	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.06 : 0.6) : 0.45, tela) : 0.6 * tela;
+	// El zapato de calle tampoco deja ver el relieve de los dedos (26-10-2026).
+	float tapa_n = civil ? max(tela, m.a) : tela;
+	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.06 : 0.6) : 0.45, tapa_n) : 0.6 * tela;
 	RIM = borde;
 	RIM_TINT = 0.35;
 }
