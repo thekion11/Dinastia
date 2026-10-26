@@ -105,7 +105,7 @@ static var _mat_cono: StandardMaterial3D = null
 ## en x∈[35.7, 38.7], z∈[10, 18] despues de que se corrigiera el cambio de ejes
 ## X/Z del 13-9. **Desde ese arreglo los dos se cruzaban** en x∈[35.7, 37.4] ×
 ## z∈[10, 13.5]: el cristal lateral del dugout atravesaba la caja vieja. La
-## nota de `LEEME.md` que decia que estaban lejos quedo obsoleta ese mismo dia
+## nota de `LEEME.md` del historial de git que decia que estaban lejos quedo obsoleta ese mismo dia
 ## y nadie lo noto, porque desde la camara de TV una caja dentro de otra caja
 ## del mismo color no se distingue.
 ##

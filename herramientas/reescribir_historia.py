@@ -13,7 +13,7 @@ Uso (siempre en un clon ESPEJO aparte, nunca en el repo de trabajo):
   git ls-tree -r <rama> > ../antes.txt
   python3 ../reescribir_historia.py ../keep.txt
   git ls-tree -r <rama> | diff ../antes.txt -        # debe salir vacío
-Subir a GitHub exige un «sí, empuja» del dueño (ver MEGAPLAN_REESTRUCTURACION.md §9.3).
+Subir a GitHub exige un «sí, empuja» del dueño (ver docs/PLAN_DEL_LUNES.md).
 """
 import sys
 import git_filter_repo as fr

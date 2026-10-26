@@ -160,7 +160,7 @@ func _probar_consejeros() -> void:
 ## Mundo PROPIO, aislado -no reusa `m1`/`m2` de otra función, ni genera un
 ## tercer mundo dentro de una función ajena, la misma trampa que ya colgó el
 ## banco tres veces con la prueba de apellidos por país (ver esa sección de
-## `LEEME.md`).
+## `LEEME.md` del historial de git).
 func _probar_bilbao_solo_local() -> void:
 	_titulo("ATHLETIC BILBAO: SOLO FICHA DE ESPAÑA")
 	var m := Mundo.new()

@@ -325,7 +325,7 @@ static func _make_stand_texture(patron: String, a1: Color, a2: Color, a3: Color,
 ## Nacio como spike (16-9-2026, `pruebas/spike_tramo.gd`) para decidir con una
 ## captura real si "tercios con patron completo distinto" se sostiene
 ## visualmente antes de comprometer una forma de datos -SI se sostuvo (ver
-## LEEME.md, "SPIKE CORRIDO CON PANTALLA REAL", 18-9-2026), con una condicion:
+## LEEME.md del historial de git, "SPIKE CORRIDO CON PANTALLA REAL", 18-9-2026), con una condicion:
 ## quien llame a esto tiene que usar `uv1_scale.y=1` en el material, NO el
 ## repetido-cada-20m que usa `_make_stand_texture()` -si no, el patron de
 ## tercios se repite ~4,5 veces sobre los 90m de tribuna y las 2 costuras

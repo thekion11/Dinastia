@@ -252,7 +252,7 @@ func _pintar_estadio(c: Club) -> void:
 
 	## LOS TERCIOS: estilos mixtos DENTRO de una misma tribuna (18/22-9-2026,
 	## Fase 3 de "el estadio por MÓDULOS", la última de las tres). El spike del
-	## 18-9 confirmó que el corte se sostiene visualmente -ver LEEME.md-, esta
+	## 18-9 confirmó que el corte se sostiene visualmente -ver LEEME.md del historial de git-, esta
 	## es la pantalla real. Interruptor PROPIO, independiente del de arriba: se
 	## puede mezclar por tercios una tribuna sin haber activado "Personalizar
 	## cada tribuna" en ninguna, y viceversa. Reusa el mismo selector

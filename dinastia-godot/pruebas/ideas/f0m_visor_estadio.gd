@@ -136,7 +136,17 @@ func _probar_entorno() -> void:
 		return
 	var planos := e.get_children().filter(func(h: Node) -> bool: return h is MeshInstance3D and (h as MeshInstance3D).mesh is PlaneMesh and not ((h as MeshInstance3D).mesh is QuadMesh))
 	var multis := _de_tipo(e, "MultiMeshInstance3D")
-	_comprobar(planos.size() == 12, "suelos: hierba, plaza, 4 calzadas, 4 aceras y 2 aparcamientos (%d)" % planos.size())
+	## Los 12 de la avenida y los aparcamientos más los del jardín (26-10): su césped y un plano por
+	## paseo. Los paseos se piden a `EntornoEstadioJardin` con la misma geometría que usó `montar`.
+	var geo := StadiumBuilder.geom_de_forma(String(est["forma"]))
+	var fondo_est := StadiumBuilder.fondo_tribuna(2)
+	var px := float(geo["dx"]) + fondo_est + 10.0 + EntornoEstadio.PLAZA
+	var pz := float(geo["dz"]) + fondo_est + 10.0 + EntornoEstadio.PLAZA
+	var bx := px + EntornoEstadio.BANDA - EntornoEstadio.CALLE * 0.5 - 3.0
+	var bz := pz + EntornoEstadio.BANDA - EntornoEstadio.CALLE * 0.5 - 3.0
+	var paseos := EntornoEstadioJardin.paseos_de(px, pz, bx, bz)
+	_comprobar(planos.size() == 12 + 1 + paseos.size(),
+		"suelos: hierba, plaza, 4 calzadas, 4 aceras, 2 aparcamientos, el césped del jardín y sus %d paseos (%d)" % [paseos.size(), planos.size()])
 	var instancias := 0
 	for mm: MultiMeshInstance3D in multis:
 		instancias += mm.multimesh.instance_count

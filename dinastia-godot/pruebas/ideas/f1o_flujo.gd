@@ -102,6 +102,7 @@ func _flujo_reemplazar() -> void:
 	var pasos := _recorrer(o, respuestas, "entrada")
 	## Antes de entrar: a quién reemplazará (sin elegir, el más flojo de la liga más baja) y sus cifras.
 	var m0: Mundo = o.estado.get("mundo")
+	var clubes_antes: int = m0.clubes.size() if m0 != null else 0
 	_comprobar(m0 != null and m0.ligas.size() >= 20, "el mundo entero se generó antes de enseñar países (%d ligas)" % (m0.ligas.size() if m0 else 0))
 	var victima := EntradaCampeonato.candidato_sugerido(m0, "ARG") if m0 else null
 	var prev := EntradaCampeonato.previsualizar(m0, "reemplazar", "ARG", victima.id) if victima else {}
@@ -124,8 +125,8 @@ func _flujo_reemplazar() -> void:
 		return
 	var c := m.mi_club()
 	_comprobar(c != null and c.nombre == "Club Prueba F1O" and c.pais == "ARG", "diriges tu club, en Argentina")
-	_comprobar(c != null and c == victima and m.clubes.size() == 384,
-		"reemplazar: ocupa la plaza del más flojo de la liga más baja y el mundo sigue con 384 clubes (%d)" % m.clubes.size())
+	_comprobar(c != null and c == victima and clubes_antes > 0 and m.clubes.size() == clubes_antes,
+		"reemplazar: ocupa la plaza del más flojo de la liga más baja y el mundo sigue con los mismos clubes (%d antes, %d después)" % [clubes_antes, m.clubes.size()])
 	_comprobar(c != null and not prev.is_empty() and c.rep == int(prev["rep"]) and c.rep == int(prev["rep_reemplazado"]) - 10
 		and c.saldo == int(prev["presupuesto"]), "reputación del reemplazado −10 y presupuesto B (rep %d, caja %s)" % [c.rep if c else 0, _dinero(c.saldo if c else 0)])
 	_comprobar(c != null and c.color1.to_lower() == "#112233" and c.color2.to_lower() == "#ddeeff" and c.estadio_nombre == "Estadio F1O",
