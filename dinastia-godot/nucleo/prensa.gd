@@ -313,3 +313,98 @@ func responder_influencer(invitar: bool, c: Club) -> String:
 	noticia.emit("Puertas abiertas",
 		"Invitaste a un creador a un entrenamiento. El club ganó %d seguidores y algo de cariño en redes." % ganados)
 	return "El club gana %d seguidores." % ganados
+
+# ---------------------------------------------------------------------------
+#  LA RUEDA QUE LEE EL MOMENTO (26-10-2026, sesión 5; ver `PrensaContexto`)
+# ---------------------------------------------------------------------------
+
+## Las preguntas que vienen detrás de la primera, ya con sus opciones.
+var cola_rueda: Array = []
+## Cuántos fichajes de la temporada ya salieron en una rueda (para no preguntar dos veces).
+var fichajes_preguntados := 0
+## El tono más llamativo de esta rueda: la portada de mañana sale de él, no de la última respuesta.
+var _rango_titular := -1
+const _RANGO_TONO := {"calma": 0, "evasiva": 1, "soberbia": 2}
+
+## La pregunta de siempre y, detrás, las del momento (0 a 3: la duración varía). En la primera,
+## una opción más para mandar al ayudante (salvo que ya hable un portavoz por ti).
+func abrir_rueda(gane: bool, empate: bool) -> Dictionary:
+	super.abrir_rueda(gane, empate)
+	cola_rueda.clear()
+	_rango_titular = -1
+	if entrevista.is_empty():
+		return entrevista
+	var m := _mundo()
+	var mio: Club = m.mi_club() if m != null else null
+	if mio != null:
+		cola_rueda = PrensaContexto.preguntas_extra(self, m, mio, gane, empate, _hash_de(str(_fecha()) + "|rueda"))
+	if vocero.is_empty():
+		(entrevista["opciones"] as Array).append(PrensaContexto.opcion_delegar())
+	entrevista["total"] = 1 + cola_rueda.size()
+	entrevista["numero"] = 1
+	return entrevista
+
+func responder(i: int, segundos: float = -1.0) -> Dictionary:
+	if entrevista.is_empty():
+		return {}
+	var ops: Array = entrevista["opciones"]
+	if i >= 0 and i < ops.size() and String((ops[i] as Dictionary).get("tono", "")) == "delegar":
+		return _delegar_rueda()
+	var antes: Dictionary = titular_pendiente.duplicate()
+	var numero := int(entrevista.get("numero", 1))
+	var total := int(entrevista.get("total", 1))
+	var r := super.responder(i, segundos)
+	if r.is_empty():
+		return r
+	## La portada se queda con la frase más llamativa de toda la rueda.
+	var rango := int(_RANGO_TONO.get(String(r.get("tono", "calma")), 0))
+	if not bool(r.get("sigue", false)):
+		if rango < _rango_titular and not antes.is_empty():
+			titular_pendiente = antes
+		else:
+			_rango_titular = rango
+	if bool(r.get("sigue", false)):
+		## La repregunta es parte de la misma pregunta: conserva su número.
+		entrevista["numero"] = numero
+		entrevista["total"] = total
+		return r
+	if cola_rueda.is_empty():
+		return r
+	_siguiente_pregunta(numero + 1, total)
+	r["sigue"] = true
+	return r
+
+## Saca la siguiente pregunta de la cola y le pone periodista (otro distinto del de antes).
+func _siguiente_pregunta(numero: int, total: int) -> void:
+	entrevista = (cola_rueda.pop_front() as Dictionary).duplicate(true)
+	var f: Array = PERIODISTAS[_hash_de("%d|%s" % [_fecha(), String(entrevista["pregunta"])]) % PERIODISTAS.size()]
+	entrevista["periodista"] = String(f[0])
+	entrevista["quien"] = "%s · %s" % [String(f[1]), String(f[2])]
+	entrevista["perfil"] = String(f[3])
+	entrevista["paso"] = 0
+	entrevista["numero"] = numero
+	entrevista["total"] = total
+	rueda_abierta.emit(String(entrevista["pregunta"]), entrevista["opciones"])
+
+## EL AYUDANTE DA LA CARA. No te desgastas ni dices nada que se vuelva en tu contra, pero la sala lo
+## anota (relación con cada periodista), la directiva también (confianza) y tu fama mediática baja.
+## Se acaba la rueda entera: las preguntas que quedaban se las lleva él.
+func _delegar_rueda() -> Dictionary:
+	var m := _mundo()
+	for f: Array in PERIODISTAS:
+		_mover_relacion(String(f[0]), PrensaContexto.DELEGAR_RELACION)
+	if m != null and m.directiva != null:
+		m.directiva.mover_confianza(PrensaContexto.DELEGAR_CONFIANZA, "rueda de prensa delegada")
+	if m != null and m.roles != null:
+		m.roles.anotar_reputacion("mediatico", PrensaContexto.DELEGAR_REPUTACION, "Mandaste al ayudante a la rueda de prensa")
+	var medio := String(periodista_de(String(entrevista.get("periodista", "")))[2])
+	var titular := Idiomas.t("El DT no dio la cara: habló su ayudante")
+	titular_pendiente = {"t": titular, "c": Idiomas.t("La sala de prensa se quedó sin el entrenador."), "tipo": "mal", "medio": medio}
+	entrevista = {}
+	cola_rueda.clear()
+	cuerpo = CUERPO_POR_DEFECTO
+	var extra := Idiomas.t(" Tu ayudante contestó por ti: la sala lo anota y la directiva también.")
+	noticia.emit("🎙 Rueda de prensa", "«%s».%s" % [titular, extra])
+	rueda_respondida.emit(titular, 0, PrensaContexto.DELEGAR_CONFIANZA, 0)
+	return {"titular": titular, "moral": 0, "confianza": PrensaContexto.DELEGAR_CONFIANZA, "socios": 0,
+		"extra": extra, "tono": "delegar", "titubeo": false, "sigue": false, "delegada": true}

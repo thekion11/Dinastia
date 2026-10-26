@@ -286,6 +286,9 @@ func _cerrar_notas() -> void:
 		j.forma = clampi(int(round(float(j.forma) * 0.7 + n * 10.0 * 0.3)), 20, 99)
 		j.partidos += 1
 
+## Las causas del último partido de tu club (`CausasPartido`) y de qué semana son.
+static var ultimas_causas: Dictionary = {}
+
 func guardar_si_es_mio() -> void:
 	if local == null or visita == null:
 		return
@@ -294,6 +297,9 @@ func guardar_si_es_mio() -> void:
 	ultimo_mio = {"local": local.nombre, "visita": visita.nombre, "local_id": local.id,
 		"gl": goles_local, "gv": goles_visita, "cronica": cronica.duplicate(true),
 		"anio": ctx_anio, "semana": ctx_semana}
+	## El porqué de ese partido, para la rueda de prensa (`PrensaContexto`).
+	ultimas_causas = {"anio": ctx_anio, "semana": ctx_semana,
+		"causas": CausasPartido.de(self, local if local.id == ctx_club_id else visita)}
 
 ## Juega el partido entero de una vez. Es lo que usa la simulacion de temporadas
 ## y el banco de pruebas; en pantalla se llama a simular_minuto() con un reloj.
