@@ -1,7 +1,7 @@
 extends Node3D
 ## MUESTRARIO DE LOS KITS DE KENNEY (15-10-2026, evaluación: qué piezas sirven
 ## para la ciudad y sus interiores). Monta filas de modelos de cada kit con la
-## escala propuesta en EVALUACION_KENNEY_CIUDAD.md, al lado de referencias de
+## escala propuesta en EVALUACION_KENNEY_CIUDAD.md del historial de git, al lado de referencias de
 ## medida real (persona de 1,8 m, puerta de 2 m, piso de 3 m, coche de 4,5 m) y
 ## de un edificio del kit comercial tal como lo usa la ciudad (×5,6), y saca una
 ## foto por grupo. No toca nada del juego.

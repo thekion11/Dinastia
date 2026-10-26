@@ -1,7 +1,7 @@
 class_name InformeRival
 extends Control
 ## EL INFORME DEL RIVAL (17-10-2026): lo que FM y FC enseñan antes de jugar y
-## Dinastía no tenía (ver COMPARACION_JUEGOS_2.md). Sale antes del partido en
+## Dinastía no tenía (ver COMPARACION_JUEGOS_2.md del historial de git). Sale antes del partido en
 ## vivo: posición y racha del rival, su pizarra, los tres mejores del once
 ## probable, su goleador, las bajas y un consejo que sale de esos datos.
 ## Todo se lee del mundo; no inventa nada.

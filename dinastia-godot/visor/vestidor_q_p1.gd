@@ -11,7 +11,7 @@ extends RefCounted
 ## (mangas, torso, no hay malla de camiseta separada en el cuerpo base) es lo
 ## unico gratis y compatible con este esqueleto que se encontro. Verificado
 ## con capturas reales que el resultado, coloreado, se lee como camiseta con
-## detalle en vez de disfraz -ver LEEME.md, 21-9-2026.
+## detalle en vez de disfraz -ver LEEME.md del historial de git, 21-9-2026.
 ##
 ## COLOR PLANO, NO FOTO REAL: se probo pegar una foto real de equipacion
 ## directo (`recursos/equipaciones/`) y con un diseño simple (Colo-Colo,
