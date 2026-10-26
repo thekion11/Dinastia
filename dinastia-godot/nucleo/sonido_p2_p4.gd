@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p2_p3.gd"
-## [Capa 5/7 de `sonido.gd`] recetas de la gestión y la carrera
+## [Capa 5/7 de `sonido.gd`] _receta_lesion, _receta_cambio, _receta_fichaje, _receta_contrato, _receta_despido, _receta_dinero_entra … (+48)
 
 # --- La gestión: plantilla, contratos y dinero -------------------------------------------
 

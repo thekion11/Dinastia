@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p4.gd"
-## [Capa 5/12 de `stadium_builder.gd`] _tramos_sin_hueco, niveles_de, subida_bandeja, altura_de, fondo_tribuna, centro_tribuna … (+15)
+## [Capa 5/10 de `estadio_partes_tribuna.gd`] _tramos_sin_hueco, niveles_de, subida_bandeja, altura_de, fondo_tribuna, centro_tribuna … (+15)
 
 ## Los trozos [centro, largo] de un tramo `largo` centrado en `centro` que
 ## quedan a los dos lados del hueco [g0, g1]. Si el hueco no lo toca, uno solo.

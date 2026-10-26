@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p5_p2.gd"
-## [Capa 6/9 de `mundo.gd`] La semana, fases 14-21 (módulos del club, banco, ingresos comerciales,
+## [Capa 7/10 de `mundo.gd`] avanzar_semana, _semana_modulos_del_club, _semana_banco, _semana_ingresos_comerciales, _semana_enfermeria, _semana_entrenamiento … (+3)
 ## enfermería, entrenamiento, federación y plantel, continental y copa) y el guion `avanzar_semana`.
 
 ## Avanza una semana: jornada, dinero, mercado y recuperación, en ese orden.

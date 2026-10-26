@@ -1855,7 +1855,7 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - Carrera: falta la animación de parada del portero en modo jugador.
 - Licencias 🟡 que quedan (sesión 6, `docs/04_auditorias/sesion_6.md`): `persona_realista.glb` → relevo de MakeHuman (CC0) ya enganchado en `visor/persona_mh.gd`: falta que el dueño suba por LFS `assets/personas/persona_mh_cuerpo.glb` y `persona_mh_ropa.glb` (generar con `herramientas/makehuman/mh_generar.py <datos> <Quaternius.gltf> persona_mh m` y renombrar) cuando el traje esté pulido (bajo de la chaqueta dentado, cejas manchadas), y luego excluir `persona_realista*` de las exportaciones públicas; `anims_futbol/` → la vía barata es guardar la captura de la página de Gumroad (dueño); CMU sirve de licencia pero exige retargetear BVH en Blender y no trae regates; `vagabond.obj` (velero), `arco_entrada`, `asientos_lod`, `podio_prensa` y las insignias de Canva siguen sin confirmar.
 
-- Primera hora (informe onb, 26-10), lo que queda: `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol (`ui/entrada/*`, zona de la sesión principal). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.
+- Primera hora (informe onb, 26-10): cerrado el 26-10 (todo `grab_focus` diferido de `ui/entrada/*` pasa por `FocoSeguro.dar`, que comprueba que el control siga en el árbol; el resto es síncrono o va con `is_inside_tree()`). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.
 
 - Más países jugables (fila 26 s4, sesión 6): medido por `pruebas/ideas/s6_paises.gd`: el juego conoce 86 países (banderas) y tiene liga en 23. Hecho: nombre de los 86 en los 9 idiomas (CLDR, `datos/paises.json`, `Paises`). Falta para hacerlos jugables: liga y clubes ficticios (`herramientas/base_ficticia.py`), bolsas de nombres propias para 62 (faker por locale, MIT) y regiones (GeoNames) más allá de ESP/EUS.
 
@@ -1865,8 +1865,7 @@ Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `d
 Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hecha: 67 líneas):
 12. Tilde en `nucleo/prensa_p4_p1.gd:27` «mas corta»: la frase es clave de `datos/narracion_traducida*.json`; cambiarla exige renombrar la clave y regenerar (`extraer_narracion.py` + `montar_narracion.py`), y hoy esa regeneración cambia ~8.000 líneas de `narracion*.json` (revisar antes por qué).
 
-Defectos a la vista que dejó anotados:
-- «Forma» del escudo en `ui/entrada/config_club_pasos.gd:149`: pasar a la clave `Forma del escudo` (ya traducida); «Forma» queda para la forma física.
+Defectos a la vista que dejó anotados: ninguno pendiente (el de «Forma del escudo» ya estaba aplicado el 26-10).
 
 Auditoría de fuentes y de presentación del texto (26-10, sesión fnt). Lo de traducción es para S1:
 - **93 claves con solo en y pt** (faltan fr, it, de, ca, pl, tr): son los titulares de imprevistos y avisos («Apelación ACOGIDA», «Cedido a préstamo», «¡Clausulazo!», «Polémica en redes»…). En 6 idiomas caen al castellano. Lista: claves de `en` que no están en `fr`.

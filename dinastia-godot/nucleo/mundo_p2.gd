@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p1.gd"
-## [Capa 2/9 de `mundo.gd`] tiene_desafio, _norm_nombre, es_clasico, mi_club, _demarcacion_al_azar, _bolsa_extra … (+12)
+## [Capa 2/10 de `mundo.gd`] tiene_desafio, _norm_nombre, es_clasico, mi_club, club_de_la_copa, _demarcacion_al_azar … (+13)
 
 func tiene_desafio(k: String) -> bool:
 	return desafios.has(k)

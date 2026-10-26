@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p2.gd"
-## [Capa 7/7 de `sonido.gd`] el autoload: bancos de variantes, hilo de fondo, `toca()` y fichas
+## [Capa 7/7 de `sonido.gd`] ruta_grabado, _crear_banco, _sintetizar_banco, _generar_en_fondo, _ready, banco … (+6)
 
 ## SONIDOS GRABADOS (26-10-2026). Si existe `res://audio/ui/<nombre>.ogg`, ese
 ## archivo manda sobre la receta: el dueño aprobó unos clics de Kenney (CC0, ver

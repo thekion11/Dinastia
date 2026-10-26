@@ -1,5 +1,5 @@
 extends "res://visor/ciudad_expansion_p7.gd"
-## [Capa 8/9 de `ciudad_expansion.gd`] _libre_farola, _textura_charco, _farolas, _mobiliario_urbano, _placas_de_calle, _orillas_nucleo … (+2)
+## [Capa 8/9 de `ciudad_expansion.gd`] _libre_farola, _textura_charco, _mat_poste_farola, _farolas, _mobiliario_urbano, _placas_de_calle … (+3)
 
 func _libre_farola(nodo: Vector3, d: Vector3) -> float:
 	var mc := medio_cruce(nodo, d)

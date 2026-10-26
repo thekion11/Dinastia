@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p1.gd"
-## [Capa 2/7 de `sonido.gd`] recetas del partido: campo, árbitro y estilo de juego
+## [Capa 2/7 de `sonido.gd`] _receta_silbato, _receta_pitido_final, _receta_saque_inicial, _receta_medio_tiempo, _receta_reanudacion, _receta_roja … (+52)
 
 # --- El partido: silbatos, remates y paradas ---------------------------------------------
 
