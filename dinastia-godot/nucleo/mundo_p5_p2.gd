@@ -50,6 +50,7 @@ func _semana_mercado() -> void:
 ## FASE 7 · LESIONES ABSURDAS FUERA DE LA CANCHA (C8): raras, cortas y noticia. El
 ## toque de queda evita las de noche. Sin `Azar`.
 func _semana_lesion_insolita() -> void:
+	_semana_imprevisto()      ## 7b va aquí dentro para no tocar el guion de `mundo_p5.gd`
 	var absurda := LesionesAbsurdas.sortear(mi_club(), anio, semana, bool(normas.get("queda", false)))
 	if absurda.is_empty():
 		return
@@ -64,6 +65,19 @@ func _semana_lesion_insolita() -> void:
 		if bool(absurda["noche"]):
 			prensa.mentor_dice.emit("Lo de %s" % ja.nombre,
 				"Esto pasó de noche. Un toque de queda en las normas del vestuario habría evitado el disgusto.")
+
+## FASE 7b · IMPREVISTOS CON CONTEXTO (26-10, propuesta s4 fila 13): la vida
+## alrededor del club, con condiciones y efectos que duran. Sin `Azar`.
+var imprevistos: Imprevistos = Imprevistos.new()
+
+func _semana_imprevisto() -> void:
+	var nuevo := imprevistos.semana(self, mi_club(), anio, semana, bool(normas.get("queda", false)))
+	if nuevo.is_empty() or prensa == null:
+		return
+	var txt := String(nuevo["texto"]) + "."
+	if int(nuevo["semanas"]) > 1:
+		txt += " " + Idiomas.t("Efecto durante %d semanas.") % int(nuevo["semanas"])
+	prensa.noticia.emit(String(nuevo["titulo"]), txt)
 
 ## FASE 8 · LAS OBRAS avanzan una semana. Se hace antes de la prensa para que la
 ## noticia de "obra terminada" salga la misma semana en que termina.

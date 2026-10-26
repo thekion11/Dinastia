@@ -128,7 +128,7 @@ static func fila_tabla(padre: Node, puesto: int, c: Club, cifras: Array, propia:
 		caja.tooltip_text = String(zona.get("texto", ""))
 	var col_texto := Tema.TEXTO
 	var col_puesto: Color = CompeticionZonas.COLORES.get(String(zona.get("zona", "")), Tema.SUAVE)
-	h.add_child(etiqueta(str(puesto), 13, col_puesto, true, ANCHO_PUESTO))
+	h.add_child(etiqueta(CompeticionZonas.puesto_con_simbolo(puesto, zona), 13, col_puesto, true, ANCHO_PUESTO))
 	var nombre := HBoxContainer.new()
 	nombre.add_theme_constant_override("separation", 8)
 	nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -171,7 +171,7 @@ static func leyenda(padre: Node, zonas: Dictionary) -> void:
 		cuadro.custom_minimum_size = Vector2(10, 10)
 		cuadro.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		h.add_child(cuadro)
-		h.add_child(etiqueta(CompeticionZonas.nombre_zona(z), 11, Tema.TEXTO))
+		h.add_child(etiqueta("%s %s" % [String(CompeticionZonas.SIMBOLOS[z]), CompeticionZonas.nombre_zona(z)], 11, Tema.TEXTO))
 
 ## Un partido: «local [escudo] marcador [escudo] visita», con ancho fijo y
 ## centrado (si los nombres se estiran, los escudos acaban en los bordes, lejos

@@ -241,6 +241,14 @@ static func _hinchas_horneados(nivel: String) -> Array:
 	if _hornead.has(nivel):
 		return _hornead[nivel]
 	var l: Array = []
+	## La hinchada ANIMADA (VAT, `PublicoVat`): una sola malla para todas las
+	## poses; cada grupo cambia su clip de reposo. Sin ella, las poses quietas.
+	var vat := PublicoVat.malla(nivel)
+	if vat != null:
+		for pz in POSES_PUBLICO:
+			l.append(vat)
+		_hornead[nivel] = l
+		return l
 	for pz in POSES_PUBLICO:
 		var ruta := "res://assets/ciudad/publico/hincha_%s_%s.res" % [pz, nivel]
 		if not ResourceLoader.exists(ruta):
@@ -271,6 +279,8 @@ static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: 
 		mat.set_shader_parameter("pelo_desde", float(malla.get_meta("pelo_desde", 0.86)))
 		mat.set_shader_parameter("lado_max", 0.14)
 		mat.set_shader_parameter("amplitud", 0.03)
+		if PublicoVat.es_vat(malla):
+			PublicoVat.configurar(mat, malla, POSES_PUBLICO[g])
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.use_colors = true

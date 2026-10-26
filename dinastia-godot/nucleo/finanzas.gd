@@ -129,11 +129,41 @@ func patrocinio() -> int:
 ## meses. La taquilla nunca pagó una plantilla.
 ## Lo que la television paga ANTES de multiplicadores. Sale aparte porque el
 ## plus del horario se cobra sobre esta cifra limpia, no sobre la ya ajustada.
-func derechos_tv_base() -> int:
+## EL REPARTO SOLIDARIO (26-10, PROPUESTA pendiente del dueño; hoy APAGADO, 0,0). Con el reparto solo por
+## reputación el grande de Chile cobra 9,4 veces lo que el chico (20,5 M contra 2,2 M al año), y el chico
+## pierde 1,1-1,7 M por año también en Primera. En el fútbol real es mucho más plano: Premier 1,6-1,8 veces
+## del primero al último, LaLiga con tope de 3,5, el CDF chileno casi a partes iguales. Con 0,5 la mitad de la
+## tele se reparte a partes iguales (la MEDIA de su liga, que fija `Mundo` con `fijar_medias_tv`) y la otra
+## mitad por reputación. Ojo: la cuota del «club medio» (rep 70) no sirve de parte igual: la media de la
+## Primera chilena es 0,64 M/mes, el doble de la del rep 70, porque la arrastran los tres grandes.
+const REPARTO_TV_IGUAL := 0.0
+## El que se usa: las especiales lo cambian con TV_IGUAL=0.5 para medir la propuesta sin activarla.
+static var reparto_tv_igual: float = REPARTO_TV_IGUAL
+## "pais|division" -> media mensual de la tele por reputación en esa liga.
+static var medias_tv: Dictionary = {}
+
+func _tv_por_rep() -> float:
 	var base := 58000.0 if _club.division == 2 else 300000.0
-	return int(round(base \
-		* pow(Eco.factor_club(float(_club.rep)), 0.85) \
-		* pow(Eco.tier_pais(_club.pais) / Eco.tier_pais("CHI"), 0.6)))
+	return base * pow(Eco.factor_club(float(_club.rep)), 0.85) * pow(Eco.tier_pais(_club.pais) / Eco.tier_pais("CHI"), 0.6)
+
+func derechos_tv_base() -> int:
+	var por_rep := _tv_por_rep()
+	var clave := "%s|%d" % [_club.pais, _club.division]
+	if reparto_tv_igual <= 0.0 or not medias_tv.has(clave):
+		return int(round(por_rep))
+	return int(round((1.0 - reparto_tv_igual) * por_rep + reparto_tv_igual * float(medias_tv[clave])))
+
+## Lo llama `Mundo` al tomar el mando y en cada temporada nueva (las ligas cambian con ascensos y la rep).
+static func fijar_medias_tv(ligas: Array) -> void:
+	medias_tv.clear()
+	for l: Liga in ligas:
+		if l.clubes.is_empty():
+			continue
+		var suma := 0.0
+		for c: Club in l.clubes:
+			suma += Finanzas.new(c)._tv_por_rep()
+		var c0: Club = l.clubes[0]
+		medias_tv["%s|%d" % [c0.pais, c0.division]] = suma / float(l.clubes.size())
 
 func derechos_tv() -> int:
 	var monto := int(round(float(derechos_tv_base()) * factor_tv))
@@ -257,26 +287,35 @@ func operacion(ingreso_tv: int, ingreso_patrocinio: int) -> int:
 ## `mes()` por los meses que tiene una temporada. Si mañana cambia una fórmula
 ## del motor, esta proyección cambia con ella -que es justo lo que se le pide a
 ## una previsión: mentir menos que una tabla escrita a mano-.
-const MESES_TEMPORADA := 10
+## LOS MESES DE VERDAD (26-10). Era un 10 fijo, pero el cierre de mes cae cada 4 semanas y la temporada dura
+## lo que su liga (una jornada por semana): en la Primera chilena 30 semanas = 7 cierres. La proyección
+## cobraba 10 meses de tele, patrocinio, sueldos y estructura y exageraba el resultado (el chico salía con
+## −1,7 M previstos y perdía ~0,2 M de verdad). Ahora salen de los partidos en casa: 2 por cada 4 semanas.
+const MESES_TEMPORADA := 10   ## solo si no se sabe cuántos partidos hay en casa
+
+static func meses_de(partidos_en_casa: int) -> int:
+	return maxi(1, partidos_en_casa * 2 / SEMANAS_DEL_MES) if partidos_en_casa > 0 else MESES_TEMPORADA
 
 func proyeccion_anual(partidos_en_casa: int, ingreso_tienda_mes: int = 0) -> Dictionary:
+	var meses := meses_de(partidos_en_casa)
 	var ingresos := {
-		"Derechos de televisión": int(round(float(derechos_tv_base()) * factor_tv)) * MESES_TEMPORADA,
-		"Patrocinio": patrocinio_base() * MESES_TEMPORADA,
-		"Cuotas de socios": cuotas_socios_base() * MESES_TEMPORADA,
+		"Derechos de televisión": int(round(float(derechos_tv_base()) * factor_tv)) * meses,
+		"Patrocinio": patrocinio_base() * meses,
+		"Cuotas de socios": cuotas_socios_base() * meses,
 		"Taquilla": int(round(float(asistencia()) * ingreso_por_espectador(_club.precio_entrada))) * partidos_en_casa,
-		"Tienda del club": ingreso_tienda_mes * MESES_TEMPORADA,
+		"Tienda del club": ingreso_tienda_mes * meses,
 	}
 	var gastos := {
-		"Sueldos del plantel": _club.masa_salarial() * SEMANAS_DEL_MES * MESES_TEMPORADA,
-		"Honorarios del directorio": honorarios_consejeros * SEMANAS_DEL_MES * MESES_TEMPORADA,
-		"Estructura": estructura_base() * MESES_TEMPORADA,
+		"Sueldos del plantel": _club.masa_salarial() * SEMANAS_DEL_MES * meses,
+		"Honorarios del directorio": honorarios_consejeros * SEMANAS_DEL_MES * meses,
+		## `estructura_base()` ya lleva dentro los honorarios: sin restarlos aquí salían dos veces (26-10).
+		"Estructura": (estructura_base() - honorarios_consejeros * SEMANAS_DEL_MES) * meses,
 	}
 	if aplica_operacion:
 		var oper_mes := int(round(
 			(float(round(float(derechos_tv_base()) * factor_tv)) + float(patrocinio_base())) \
 			* tasa_operacion() * factor_operacion))
-		gastos["Operación, viajes, seguridad e impuestos"] = oper_mes * MESES_TEMPORADA
+		gastos["Operación, viajes, seguridad e impuestos"] = oper_mes * meses
 	var total_ing := 0
 	for k: String in ingresos:
 		total_ing += int(ingresos[k])

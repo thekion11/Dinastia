@@ -15,7 +15,13 @@ const CARPETA_GRABADOS := "res://audio/ui/"
 ## taparía la música. Medido en `pruebas/ideas/sui_grabados.gd`: así quedan a
 ## +0,5/+2 dB de pico de la receta antigua (un pelo más presentes, nunca más).
 const AJUSTE_DB := {"menu_mover": -8.0, "clic_suave": -21.0, "menu_aceptar": -16.0,
-	"clic": -23.0, "menu_atras": -18.0, "menu_seccion": -19.0}
+	"clic": -23.0, "menu_atras": -18.0, "menu_seccion": -19.0,
+	## El silbato real de VCSL (CC0, `audio/ui/LICENCIA_VCSL_CC0.txt`), 26-10-2026.
+	"silbato": -6.0, "pitido_final": -6.0, "medio_tiempo": -6.0,
+	## El bombo de la barra con redoblante (VCSL, CC0), 26-10-2026. Ajustes tan
+	## grandes porque la receta era ruido de 50-90 Hz con un pico muy bajo: se
+	## iguala el pico, no se sube la percusión de golpe.
+	"tambor": -19.5, "tambor_visitante": -35.0}
 
 func ruta_grabado(nombre: String) -> String:
 	return CARPETA_GRABADOS + nombre + ".ogg"

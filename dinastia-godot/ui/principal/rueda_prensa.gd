@@ -124,6 +124,7 @@ func _montar_plato() -> void:
 	vp_cont.add_child(vp)
 	var escena := RuedaPrensaEscena3D.new()
 	vp.add_child(escena)
+	_escena = escena
 	## Tras una copa o un continental (C1), los escudos de ESA competición;
 	## si no, los de tu liga.
 	var clubes: Array = []
@@ -134,30 +135,6 @@ func _montar_plato() -> void:
 		if liga != null:
 			clubes = liga.clubes
 	escena.montar(mio, p.COL_ACENTO, Calidad.ALTO, _look_dt(), clubes)
-
-## QUIÉN HABLA DE VERDAD (14-9-2026): si el DT es un empleado (ayudante,
-## director deportivo, dueño con el banco delegado), da él la rueda, con un
-## aspecto fijo por su nombre; si no, tú con tu aspecto.
-func _nombre_dt() -> String:
-	if p.mundo.roles == null:
-		return ""
-	return p.mundo.roles.dt_nombre() if not p.mundo.roles.dt_empleado.is_empty() else p.mundo.roles.nombre
-
-func _look_dt() -> Dictionary:
-	if p.mundo.roles == null:
-		return {}
-	if not p.mundo.roles.dt_empleado.is_empty():
-		return CaraDT.look_de_nombre(p.mundo.roles.dt_nombre())
-	return p.mundo.roles.look_efectivo()
-
-## Caja semitransparente común (columna, cabecera, franja).
-static func _caja(alfa: float, radio: int, margen: float) -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.02, 0.025, 0.03, alfa)
-	sb.set_corner_radius_all(radio)
-	sb.content_margin_left = margen; sb.content_margin_right = margen
-	sb.content_margin_top = margen * 0.7; sb.content_margin_bottom = margen * 0.7
-	return sb
 
 ## Arriba a la izquierda: «RUEDA DE PRENSA» y la placa del DT (foto y nombre).
 func _cabecera() -> Control:
@@ -300,11 +277,16 @@ func pintar_pregunta(e: Dictionary) -> void:
 	if bool(e.get("memoria", false)):
 		extra.append(Idiomas.t("  ·  🧠 recuerda lo que dijiste").trim_prefix("  ·  "))
 	_quien.text = "🎙️ " + String(partes[0]).to_upper()
+	_ultimo_medio = quien_txt
+	_ultimo_periodista = per
 	if _medio != null:
 		_medio.text = "  ·  ".join(extra)
 	var pregunta := String(e.get("pregunta", ""))
 	_pregunta.text = pregunta
 	desde = Time.get_ticks_msec() + int(_lectura(pregunta) * 1000.0)
+	## Mientras se lee, la cámara está en el periodista que pregunta (mano en alto).
+	if is_instance_valid(_escena):
+		_escena.enfocar_periodista(String(e.get("periodista", "")), _lectura(pregunta))
 	if _atajos != null and _opciones != null:
 		_atajos.text = Idiomas.t("1-%d o ↑↓ + Enter · LB/RB: tono") % _opciones.get_child_count()
 	if is_instance_valid(_reloj):
@@ -344,6 +326,8 @@ func _fila_opciones(e: Dictionary) -> VBoxContainer:
 func tras_responder(r: Dictionary) -> void:
 	if r.is_empty():
 		return
+	for k: String in _suma:
+		_suma[k] = int(_suma[k]) + int(r.get(k, 0))
 	## La frase y el "cómo" ya los escribe `Prensa.noticia`; aquí solo lo que
 	## movió, que es lo que no dice la noticia.
 	var col := "#4caf6d" if int(r.get("confianza", 0)) >= 0 else "#e05555"
@@ -363,8 +347,11 @@ func tras_responder(r: Dictionary) -> void:
 		return
 	## Se cierra la cinemática -ya respondiste, no hay nada más que ver- y se
 	## vuelve al juego normal.
+	## Antes de volver, el resumen: qué movió y el titular de mañana.
+	var per := String(p.mundo.prensa.entrevista.get("periodista", _ultimo_periodista))
 	cerrar()
 	p._refrescar()
+	_PrincipalRuedaResumen.mostrar(p, _suma, p.mundo.prensa.titular_pendiente, _ultimo_medio, per)
 
 ## Responder con tus palabras. El tono lo decide `Prensa.clasificar_respuesta()`
 ## por palabras clave, en local: nada sale del ordenador.

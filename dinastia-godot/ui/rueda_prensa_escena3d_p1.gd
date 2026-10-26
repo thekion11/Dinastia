@@ -159,7 +159,7 @@ func _montar_suelo() -> void:
 
 func _montar_sala() -> void:
 	var oscuro := StandardMaterial3D.new()
-	oscuro.albedo_color = Color(0.05, 0.05, 0.06)
+	oscuro.albedo_color = Color(0.13, 0.13, 0.15)
 	oscuro.roughness = 0.8
 
 	## Paredes laterales, ligeramente giradas hacia dentro -mismo truco que el
@@ -264,7 +264,7 @@ func _montar_fondo_sponsors(club: Club, acento: Color, _clubes_competencia: Arra
 	var col1 := Color.from_string(club.color1, acento) if club != null else acento
 	var col2 := Color.from_string(club.color2, Color.WHITE) if club != null else Color.WHITE
 	var fondo := ColorRect.new()
-	fondo.color = col1.darkened(0.5) if col1.get_luminance() > 0.25 else col1.lightened(0.12)
+	fondo.color = col1 if col1.get_luminance() >= 0.22 else col1.lerp(col2, 0.3)  ## el color real, claro
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	vp.add_child(fondo)
 	var halo := TextureRect.new()
@@ -315,13 +315,13 @@ func _montar_fondo_sponsors(club: Club, acento: Color, _clubes_competencia: Arra
 			nom.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			nom.add_theme_font_size_override("font_size", 30)
-			nom.add_theme_color_override("font_color", Color(col2, 0.8))
+			nom.add_theme_color_override("font_color", Color(col2, 0.95))
 			grid.add_child(nom)
 
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.emission_enabled = true
-	mat.emission_energy_multiplier = 1.0
+	mat.emission_energy_multiplier = 1.2
 	var tex := vp.get_texture()
 	mat.albedo_texture = tex
 	mat.emission_texture = tex

@@ -282,9 +282,11 @@ func _pintar_accesibilidad() -> void:
 		p._refrescar())
 	fila_d.add_child(b_d)
 	AjustesAcceso.muestra_colores(p)
+	AjustesAcceso.contraste(p)
 	AjustesAcceso.animaciones(p)
 	AjustesAcceso.vibracion(p)
 	AjustesAcceso.nota_subtitulos(p)
+	AjustesAcceso.teclas(p)
 	p._lista_ajustes.add_child(HSeparator.new())
 
 	## EL MERCADO A CIEGAS. `Ojeadores.modo_ciego` estaba escrito, probado, con

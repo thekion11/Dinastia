@@ -332,7 +332,7 @@ func _un_chat() -> void:
 		var v := VBoxContainer.new()
 		v.add_theme_constant_override("separation", 0)
 		burbuja.add_child(v)
-		var texto := _t_icono(String(msj["texto"]))
+		var texto := Movil.texto(msj)
 		var l := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, texto)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.custom_minimum_size = Vector2(minf(260.0, 9.0 * texto.length()), 0)
@@ -383,7 +383,7 @@ func _mensajes() -> void:
 		fila.add_child(col)
 		var nom := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String(ch["de"]))
 		col.add_child(nom)
-		var ult := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, _t_icono(String(ch["ultimo"])))
+		var ult := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, String(ch["ultimo"]))
 		ult.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		ult.custom_minimum_size = Vector2(10, 0)
 		col.add_child(ult)

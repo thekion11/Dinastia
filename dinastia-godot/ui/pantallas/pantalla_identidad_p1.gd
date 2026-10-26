@@ -71,7 +71,8 @@ func _rejilla_identidad(c: Club, prop: String, opciones: Array, titulo: String) 
 		if con_dibujo and clave != "":
 			var tex := EscudoMuestras.camiseta(c.color_kit1(), c.color_kit2(), clave, 40) \
 				if prop == "kit_estilo" else EscudoMuestras.escudo_con(c, prop, clave, 40)
-			b = EscudoMuestras.boton(tex, actual == clave, 46)
+			var claro := EscudoMuestras.oscuro(c.color_kit1() if prop == "kit_estilo" else c.color_escudo1())
+			b = EscudoMuestras.boton(tex, actual == clave, 46, "", claro)
 		else:
 			b = Button.new()
 			b.text = clave if clave != "" else Idiomas.t("por sorteo")
