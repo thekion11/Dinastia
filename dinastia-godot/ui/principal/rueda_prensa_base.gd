@@ -185,6 +185,10 @@ func _contexto_rueda() -> Dictionary:
 	if m.prensa == null or mio == null:
 		return {"tipo": "general"}
 	var comp := String(m.prensa.competicion_rueda)
+	if comp == "previa":
+		var rival: Club = m.clubes.get(String(m.prensa.rival_rueda), null)
+		if rival != null:
+			return {"tipo": "previa", "rival": rival}
 	var ctx := {"tipo": "competicion", "competicion": "", "titulo": ""}
 	if comp == "copa" and m.copa != null:
 		ctx["competicion"] = m.copa.nombre
