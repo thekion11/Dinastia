@@ -151,7 +151,8 @@ func _conectar_1() -> void:
 		p.mundo.logros.premios_entregados.connect(func(acta: Dictionary) -> void:
 			var ganados: Array = acta.get("ganados", [])
 			var cuerpo_gala := "Se entregan los premios de la temporada %d. " % int(acta.get("anio", 0))
-			cuerpo_gala += ("Tu club se lleva: %s." % ", ".join(PackedStringArray(ganados))) if not ganados.is_empty() else "Tu club se va de vacío."
+			## Premios separados con « · » (no con comas): así, en otro idioma, cada premio se traduce como tramo.
+			cuerpo_gala += ("Tu club se lleva: %s." % " · ".join(PackedStringArray(ganados))) if not ganados.is_empty() else "Tu club se va de vacío."
 			p._escribir("[color=#c9a227][b]🎬 Gala de fin de año.[/b][/color] %s" % cuerpo_gala)
 			p._anotar("🎬 Gala de fin de año.", cuerpo_gala))
 	## `mercado` se crea una sola vez por partida en `Mundo.generar()` -no lo
