@@ -7,13 +7,15 @@ const IDIOMAS := ["en", "pt", "fr", "it", "de", "ca", "pl", "tr"]
 ## Trozos que delatan una frase castellana sin traducir.
 const CASTELLANO := ["Baja a", "Se le ", "Te levantas", "de sueldo", "Mira el reloj", "se levanta de la mesa",
 	"Ni para ti", "Así no", "tomando el pelo", "de la comisión", "su chico", "exclusiva con", "prefieren",
-	"No le termina", "Me voy dos semanas", "cifra fija", "más dinero", "menos bonos", "porcentaje"]
+	"No le termina", "Me voy dos semanas", "cifra fija", "más dinero", "menos bonos", "porcentaje",
+	"ya es tuyo", "Viene de un club", "Bajaría", "Subiría", "Le queda", "Tu nombre pesa", "prestigio", "Ya pidió", "incómodo"]
 
 func _probar() -> void:
 	_titulo("S3: TEXTOS DEL NÚCLEO CON CLAVES ESTABLES (MesaAgente, Negociacion, Movil) E ICONOS")
 	var antes := Idiomas.idioma
 	_mesa()
 	_negociacion()
+	_mercado()
 	_movil()
 	_icono()
 	Idiomas.idioma = antes
@@ -81,6 +83,32 @@ func _negociacion() -> void:
 	for l: String in IDIOMAS:
 		bien = bien and vistos.has(l) and String(vistos[l]) != String(vistos.get("es", "")) and _castellano(String(vistos[l])) == ""
 	_comprobar(bien, "y lo que prefiere el club viene traducido del núcleo (es «%s», en «%s»)" % [vistos.get("es", ""), vistos.get("en", "")])
+
+## Mercado: el motivo de no poder abrir la mesa y las razones de las ganas de venir.
+func _mercado() -> void:
+	var m := _mundo(3302)
+	var mio := m.mi_club()
+	var malos: Array[String] = []
+	var n := 0
+	for l: String in ["es"] + IDIOMAS:
+		Idiomas.idioma = l
+		var motivo := m.mercado.abrir_negociacion(mio.plantilla[0])
+		var textos: Array[String] = [motivo]
+		for c: Club in [m.ligas[0].clubes[5], m.ligas[1].clubes[2], m.ligas[0].clubes[1]]:
+			for j: Jugador in c.plantilla.slice(0, 6):
+				j.pide_salir = true
+				j.anios_contrato = 1
+				for r: Dictionary in m.mercado.deseo_de_venir(j, mio)["razones"]:
+					textos.append(String(r["txt"]))
+		if l == "es":
+			n = textos.size()
+			continue
+		for t: String in textos:
+			if _castellano(t) != "":
+				malos.append("%s: %s" % [l, t])
+	Idiomas.idioma = "es"
+	_comprobar(n > 10 and malos.is_empty(), "el motivo de la mesa y las %d razones de las ganas de venir salen en los 8 idiomas (%d mal%s)" % [
+		n, malos.size(), (": " + malos[0]) if not malos.is_empty() else ""])
 
 func _movil() -> void:
 	Idiomas.idioma = "es"

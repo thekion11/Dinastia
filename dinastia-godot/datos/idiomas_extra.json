@@ -4895,7 +4895,17 @@
   "Pestaña anterior": "Previous tab",
   "Pestaña siguiente": "Next tab",
   "Pulsa…": "Press…",
-  "Restaurar las teclas de fábrica": "Restore the default keys"
+  "Restaurar las teclas de fábrica": "Restore the default keys",
+  "ese jugador ya es tuyo": "that player is already yours",
+  "Desafío «solo canteranos»: el mercado te queda vetado.": "«Academy only» challenge: the transfer market is closed to you.",
+  "Desafío «un solo país»: no puedes fichar extranjeros.": "«One country» challenge: you can't sign foreign players.",
+  "%s no se sienta a hablar de él hasta la semana %d": "%s won't sit down to talk about him until week %d",
+  "Su club": "His club",
+  "Viene de un club más grande: %d de reputación contra tus %d": "He comes from a bigger club: %d reputation against your %d",
+  "Tu nombre pesa: te escucha antes que a otros": "Your name carries weight: he listens to you before others",
+  "Tu prestigio como entrenador le convence": "Your prestige as a coach wins him over",
+  "Tu poco prestigio como entrenador le echa para atrás": "Your low prestige as a coach puts him off",
+  "No se pudo abrir la mesa: %s.": "The negotiation couldn't start: %s."
  },
  "pt": {
   "Historia": "História",
@@ -9793,7 +9803,17 @@
   "Pestaña anterior": "Separador anterior",
   "Pestaña siguiente": "Separador seguinte",
   "Pulsa…": "Prime…",
-  "Restaurar las teclas de fábrica": "Repor as teclas de fábrica"
+  "Restaurar las teclas de fábrica": "Repor as teclas de fábrica",
+  "ese jugador ya es tuyo": "esse jogador já é teu",
+  "Desafío «solo canteranos»: el mercado te queda vetado.": "Desafio «só formados no clube»: o mercado está-te vedado.",
+  "Desafío «un solo país»: no puedes fichar extranjeros.": "Desafio «um só país»: não podes contratar estrangeiros.",
+  "%s no se sienta a hablar de él hasta la semana %d": "%s não se senta a falar dele até à semana %d",
+  "Su club": "O clube dele",
+  "Viene de un club más grande: %d de reputación contra tus %d": "Vem de um clube maior: %d de reputação contra os teus %d",
+  "Tu nombre pesa: te escucha antes que a otros": "O teu nome pesa: ouve-te antes dos outros",
+  "Tu prestigio como entrenador le convence": "O teu prestígio como treinador convence-o",
+  "Tu poco prestigio como entrenador le echa para atrás": "O teu pouco prestígio como treinador fá-lo recuar",
+  "No se pudo abrir la mesa: %s.": "Não foi possível abrir a mesa: %s."
  },
  "patrones": [
   [
@@ -19572,7 +19592,17 @@
   "Pestaña anterior": "Onglet précédent",
   "Pestaña siguiente": "Onglet suivant",
   "Pulsa…": "Appuie…",
-  "Restaurar las teclas de fábrica": "Rétablir les touches par défaut"
+  "Restaurar las teclas de fábrica": "Rétablir les touches par défaut",
+  "ese jugador ya es tuyo": "ce joueur est déjà à toi",
+  "Desafío «solo canteranos»: el mercado te queda vetado.": "Défi «uniquement le centre de formation» : le marché t'est fermé.",
+  "Desafío «un solo país»: no puedes fichar extranjeros.": "Défi «un seul pays» : tu ne peux pas recruter d'étrangers.",
+  "%s no se sienta a hablar de él hasta la semana %d": "%s ne veut pas en parler avant la semaine %d",
+  "Su club": "Son club",
+  "Viene de un club más grande: %d de reputación contra tus %d": "Il vient d'un plus grand club : %d de réputation contre tes %d",
+  "Tu nombre pesa: te escucha antes que a otros": "Ton nom compte : il t'écoute avant les autres",
+  "Tu prestigio como entrenador le convence": "Ton prestige d'entraîneur le convainc",
+  "Tu poco prestigio como entrenador le echa para atrás": "Ton faible prestige d'entraîneur le refroidit",
+  "No se pudo abrir la mesa: %s.": "Impossible d'ouvrir la négociation : %s."
  },
  "it": {
   "Historia": "Storia",
@@ -24377,7 +24407,17 @@
   "Pestaña anterior": "Scheda precedente",
   "Pestaña siguiente": "Scheda successiva",
   "Pulsa…": "Premi…",
-  "Restaurar las teclas de fábrica": "Ripristina i tasti predefiniti"
+  "Restaurar las teclas de fábrica": "Ripristina i tasti predefiniti",
+  "ese jugador ya es tuyo": "quel giocatore è già tuo",
+  "Desafío «solo canteranos»: el mercado te queda vetado.": "Sfida «solo vivaio»: il mercato ti è precluso.",
+  "Desafío «un solo país»: no puedes fichar extranjeros.": "Sfida «un solo paese»: non puoi ingaggiare stranieri.",
+  "%s no se sienta a hablar de él hasta la semana %d": "%s non si siede a parlarne fino alla settimana %d",
+  "Su club": "Il suo club",
+  "Viene de un club más grande: %d de reputación contra tus %d": "Viene da un club più grande: %d di reputazione contro i tuoi %d",
+  "Tu nombre pesa: te escucha antes que a otros": "Il tuo nome pesa: ti ascolta prima degli altri",
+  "Tu prestigio como entrenador le convence": "Il tuo prestigio da allenatore lo convince",
+  "Tu poco prestigio como entrenador le echa para atrás": "Il tuo scarso prestigio da allenatore lo frena",
+  "No se pudo abrir la mesa: %s.": "Impossibile aprire la trattativa: %s."
  },
  "de": {
   "Historia": "Geschichte",
@@ -29182,7 +29222,17 @@
   "Pestaña anterior": "Vorheriger Reiter",
   "Pestaña siguiente": "Nächster Reiter",
   "Pulsa…": "Drücken…",
-  "Restaurar las teclas de fábrica": "Standardtasten wiederherstellen"
+  "Restaurar las teclas de fábrica": "Standardtasten wiederherstellen",
+  "ese jugador ya es tuyo": "dieser Spieler gehört schon dir",
+  "Desafío «solo canteranos»: el mercado te queda vetado.": "Herausforderung «nur Eigengewächse»: Der Transfermarkt ist für dich gesperrt.",
+  "Desafío «un solo país»: no puedes fichar extranjeros.": "Herausforderung «nur ein Land»: Du darfst keine Ausländer verpflichten.",
+  "%s no se sienta a hablar de él hasta la semana %d": "%s verhandelt über ihn erst wieder in Woche %d",
+  "Su club": "Sein Verein",
+  "Viene de un club más grande: %d de reputación contra tus %d": "Er kommt von einem größeren Verein: %d Ansehen gegen deine %d",
+  "Tu nombre pesa: te escucha antes que a otros": "Dein Name zählt: Er hört dir vor anderen zu",
+  "Tu prestigio como entrenador le convence": "Dein Ansehen als Trainer überzeugt ihn",
+  "Tu poco prestigio como entrenador le echa para atrás": "Dein geringes Ansehen als Trainer schreckt ihn ab",
+  "No se pudo abrir la mesa: %s.": "Die Verhandlung konnte nicht beginnen: %s."
  },
  "ca": {
   "Historia": "Història",
@@ -33987,7 +34037,17 @@
   "Pestaña anterior": "Pestanya anterior",
   "Pestaña siguiente": "Pestanya següent",
   "Pulsa…": "Prem…",
-  "Restaurar las teclas de fábrica": "Restaurar les tecles de fàbrica"
+  "Restaurar las teclas de fábrica": "Restaurar les tecles de fàbrica",
+  "ese jugador ya es tuyo": "aquest jugador ja és teu",
+  "Desafío «solo canteranos»: el mercado te queda vetado.": "Repte «només planter»: el mercat t'és vetat.",
+  "Desafío «un solo país»: no puedes fichar extranjeros.": "Repte «un sol país»: no pots fitxar estrangers.",
+  "%s no se sienta a hablar de él hasta la semana %d": "%s no s'asseu a parlar-ne fins a la setmana %d",
+  "Su club": "El seu club",
+  "Viene de un club más grande: %d de reputación contra tus %d": "Ve d'un club més gran: %d de reputació contra els teus %d",
+  "Tu nombre pesa: te escucha antes que a otros": "El teu nom pesa: t'escolta abans que als altres",
+  "Tu prestigio como entrenador le convence": "El teu prestigi com a entrenador el convenç",
+  "Tu poco prestigio como entrenador le echa para atrás": "El teu poc prestigi com a entrenador el fa enrere",
+  "No se pudo abrir la mesa: %s.": "No s'ha pogut obrir la taula: %s."
  },
  "pl": {
   "Club": "Klub",
@@ -39072,7 +39132,17 @@
   "Pestaña anterior": "Poprzednia karta",
   "Pestaña siguiente": "Następna karta",
   "Pulsa…": "Naciśnij…",
-  "Restaurar las teclas de fábrica": "Przywróć domyślne klawisze"
+  "Restaurar las teclas de fábrica": "Przywróć domyślne klawisze",
+  "ese jugador ya es tuyo": "ten zawodnik już jest twój",
+  "Desafío «solo canteranos»: el mercado te queda vetado.": "Wyzwanie «tylko wychowankowie»: rynek transferowy jest dla ciebie zamknięty.",
+  "Desafío «un solo país»: no puedes fichar extranjeros.": "Wyzwanie «jeden kraj»: nie możesz kupować obcokrajowców.",
+  "%s no se sienta a hablar de él hasta la semana %d": "%s nie usiądzie, by o nim rozmawiać, do tygodnia %d",
+  "Su club": "Jego klub",
+  "Viene de un club más grande: %d de reputación contra tus %d": "Przychodzi z większego klubu: %d reputacji wobec twoich %d",
+  "Tu nombre pesa: te escucha antes que a otros": "Twoje nazwisko się liczy: słucha ciebie przed innymi",
+  "Tu prestigio como entrenador le convence": "Twój prestiż trenerski go przekonuje",
+  "Tu poco prestigio como entrenador le echa para atrás": "Twój słaby prestiż trenerski go zniechęca",
+  "No se pudo abrir la mesa: %s.": "Nie udało się rozpocząć negocjacji: %s."
  },
  "tr": {
   "Club": "Kulüp",
@@ -44157,6 +44227,16 @@
   "Pestaña anterior": "Önceki sekme",
   "Pestaña siguiente": "Sonraki sekme",
   "Pulsa…": "Bas…",
-  "Restaurar las teclas de fábrica": "Varsayılan tuşları geri yükle"
+  "Restaurar las teclas de fábrica": "Varsayılan tuşları geri yükle",
+  "ese jugador ya es tuyo": "o oyuncu zaten senin",
+  "Desafío «solo canteranos»: el mercado te queda vetado.": "«Sadece altyapı» meydan okuması: transfer piyasası sana kapalı.",
+  "Desafío «un solo país»: no puedes fichar extranjeros.": "«Tek ülke» meydan okuması: yabancı oyuncu alamazsın.",
+  "%s no se sienta a hablar de él hasta la semana %d": "%s, %d. haftaya kadar onun hakkında masaya oturmaz",
+  "Su club": "Kulübü",
+  "Viene de un club más grande: %d de reputación contra tus %d": "Daha büyük bir kulüpten geliyor: senin %d itibarına karşı %d",
+  "Tu nombre pesa: te escucha antes que a otros": "Adın ağırlık taşıyor: seni diğerlerinden önce dinliyor",
+  "Tu prestigio como entrenador le convence": "Teknik direktör olarak saygınlığın onu ikna ediyor",
+  "Tu poco prestigio como entrenador le echa para atrás": "Teknik direktör olarak düşük saygınlığın onu geri çeviriyor",
+  "No se pudo abrir la mesa: %s.": "Masa açılamadı: %s."
  }
 }

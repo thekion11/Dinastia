@@ -209,3 +209,14 @@ Prueba `pruebas/ideas/s3_accesibilidad.gd` (14 comprobaciones); captura `s3_acce
 
 Lo que queda del nivel básico (en el plan §10): lector de pantalla mínimo, reasignar las teclas propias del menú
 lateral y del móvil, y repasar el contraste alto en las pantallas 3D y en las capas a pantalla completa.
+
+## 9. Mercado con claves estables (tarea 6 del segundo encargo)
+
+`Mercado.abrir_negociacion` devuelve el motivo YA traducido (propio, desafíos, «no se sienta a hablar hasta la
+semana %d», y los motivos que vienen de roles, regiones y federación pasan también por `Idiomas.t`), y las razones de
+`deseo_de_venir` salen traducidas (la de la reputación, con plantilla). `pantalla_plantel.gd` monta «No se pudo abrir
+la mesa: %s.» con plantilla. 10 claves × 8 idiomas. `s3_textos_nucleo` comprueba el motivo y 55 razones en los 8.
+
+Coordinación: el supervisor pidió la rueda de prensa y la línea 149 de `ui/entrada/config_club_pasos.gd`; los dos
+archivos son de la sesión principal (prohibidos para mí), así que quedan para ella. Las decisiones del dueño
+(`bio_de` igual; «Forma»: sí) están en el plan §0/§9.

@@ -12,7 +12,6 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - **Foundry/Azure** sí o no; **abrir la red a Wikimedia** (caras y escudos que faltan) (§1).
 - **«El bloqueo»** de modos: opción en Ajustes con «Todo abierto» por defecto, sí o no (§1).
 - **Texturas de caras**: permiso para probar BC7 en una muestra y medir ΔE de piel (§4).
-- **Jugadores reales**: `bio_de()` (`nucleo/datos`) inventa la edad de debut y el origen; ¿se trata igual que la vida personal (no inventar)? (§9).
 - **53 escenas de prueba sin mención**: cuáles se borran (§4).
 - **Carrera de Jugador**: cuánto subir la dificultad de la CPU en ese modo (§2.4).
 - **Peatones**: subir al autobús y tomar coches del tráfico (dijiste «no por ahora»; el transporte público del guion lo vuelve a pedir) (§2.4).
@@ -1874,7 +1873,7 @@ Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hec
 5. `ui/principal_p8.gd`, final de `_ver_ficha()`: `_traducir_pantalla(_ficha)`; el radar corta a 4 letras (`.left(4)`, línea 88).
 8. Rueda de prensa 2D sin pulir (está en `principal_p17.gd`; ver §8).
 9. Identidad (`ui/principal.gd:114-163`): la vista previa del escudo sin iniciales (`_escudo(c, 54)`), la muestra del acento es un rectángulo blanco.
-- «Forma» del escudo en `ui/entrada/config_club_pasos.gd:149` (zona de la sesión principal): pasar a la clave `Forma del escudo` (ya traducida); «Forma» queda para la forma física.
+- Decisiones del dueño cerradas el 26-10: `bio_de()` se queda como está (no tocar); separar «Forma»: SÍ. Falta solo `ui/entrada/config_club_pasos.gd:149` → `Idiomas.t("Forma del escudo")` (zona de la sesión principal; la clave ya está traducida y el resto de usos del escudo ya la llevan).
 10. `ui/componentes/mentor_voz.gd`: el consejo del presidente tapa la tabla 9 s (`DURA`): fundido con el ratón encima o ~6 s.
 11. `ui/pantallas/pantalla_opciones_p1.gd:244`: distingue el error por la longitud (`r.length() > 40`); «ya tienes peñas en todas partes» se toma por ciudad fundada.
 12. Tildes: `principal_p2.gd` «Estrecha (cabe mas)» y `nucleo/prensa_p4_p1.gd:27` «mas corta».
