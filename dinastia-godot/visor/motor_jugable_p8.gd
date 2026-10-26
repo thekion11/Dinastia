@@ -109,7 +109,8 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 ##   · lo tiene un defensa o el portero cerca de su área (salida de balón).
 func _gatillo_presion(dueno: Dictionary) -> bool:
 	var q := pos(dueno)
-	if t - float(dueno.get("tomo_en", -9.0)) < 0.6:
+	## Tras perder el balón (fila 18): con contrapresión se muerde más rato; replegando, menos.
+	if t - float(dueno.get("tomo_en", -9.0)) < [0.3, 0.6, 1.5][clampi(_tac(not bool(dueno["es_local"]), "tras_perdida"), 0, 2)]:
 		return true
 	if absf(q.x) > 28.0:
 		return true

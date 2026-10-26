@@ -434,10 +434,10 @@ func _ia_portador(p: Dictionary) -> void:
 	## morían a 30 m de la portería tocando atrás (la sonda: 5 tiros en 8
 	## minutos). Si un delantero o un extremo habilitado ataca la espalda de la
 	## defensa y la línea de pase está limpia, se la mete al espacio; con más
-	## pase, más a menudo.
+	## pase (y más verticalidad, fila 18), más a menudo.
 	if dist_arco < 48.0:
 		var hueco := _companero_al_hueco(p)
-		if not hueco.is_empty() and _rng.randf() < 0.6 + float(p["attr"]["pas"]) * 0.3:
+		if not hueco.is_empty() and _rng.randf() < 0.45 + 0.15 * float(_tac(bool(p["es_local"]), "verticalidad")) + float(p["attr"]["pas"]) * 0.3:
 			_pasar_a(p, hueco, false, true)
 			return
 	## Pasar si hay presión o un compañero mejor situado.
