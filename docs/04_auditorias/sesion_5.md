@@ -125,3 +125,44 @@ Si ganaste van primero las causas a tu favor; si perdiste, las de en contra; en 
 - **Para quien lleve `MotorLibre`:** su xG del tiro y su pase no se parecen a los del motor 3D. Si algún día se enchufa al visor, conviene calibrarlo como aquí.
 - **Uso de funciones internas:** `OcasionJugable` llama a funciones internas de `MotorJugable` (`_tirar`, `_pasar_a`, `_presion`, `_arco_rival`, `_decision_en`, `_rng`, `_tiro_vivo`). Están comentadas, pero si se renombran hay que tocarla. La prueba lo cazaría.
 - **Zona de `nucleo/partido_p2.gd`:** no estaba en la lista de zonas prohibidas, pero es del núcleo. El cambio son 4 líneas que solo enganchan el rastro.
+
+## 3. Rueda de prensa según el contexto (petición del supervisor, aprobada por el dueño)
+
+**Qué cambia para el jugador.** Detrás de la pregunta de siempre (la que depende del resultado) pueden llegar hasta tres más, cada una de un periodista distinto, todas en la misma sala:
+
+| Pregunta | De dónde sale |
+|---|---|
+| El porqué del partido | La causa que más pesó (`Partido.ultimas_causas`, de `CausasPartido`): el tramo en que el rival les encerró, la eficacia, el árbitro, la lesión, la pizarra del rival, un once mejor sobre el papel… |
+| La racha | 3 o más victorias o derrotas seguidas en la liga |
+| El último fichaje | Solo la primera vez que llega uno; se guarda cuántos se preguntaron |
+| El próximo rival | Si es el clásico o uno de los tres primeros |
+
+**La duración varía.** Hay una pregunta extra de base, una más si hay mucho en juego (goleada, clásico o directiva con la confianza baja) y otra si la racha es de 4 o más. Uno de cada tres días tranquilos no hay ninguna. En total, la rueda tiene de 1 a 4 preguntas.
+
+**Delegar en el ayudante.** La primera pregunta trae una opción más: «🙋 Que responda mi ayudante». Se acaba la rueda entera y tiene un coste:
+- −2 de relación con cada periodista;
+- −1 de confianza de la directiva;
+- −2 de reputación «Mediático»;
+- la portada de mañana: «El DT no dio la cara: habló su ayudante».
+
+Con portavoz no aparece, porque ya habla otro por ti.
+
+**Cómo encaja.**
+- Va en `nucleo/prensa_contexto.gd` (nuevo) y en dos sobrescrituras en `nucleo/prensa.gd` (`abrir_rueda` y `responder`).
+- La pantalla no se ha tocado (`ui/principal/rueda_prensa*` es de otra sesión): ya pinta todas las opciones y ya encadena preguntas cuando `responder()` devuelve `"sigue": true`, como hacía con la repregunta.
+- La portada sale de la respuesta más llamativa de la rueda, no de la última.
+- No se gasta azar: los sorteos van por hash de la fecha.
+- La cola de preguntas y los fichajes preguntados se guardan con la partida (`nucleo/partida_p1.gd`).
+- `nucleo/partido.gd` guarda las causas del último partido de tu club.
+- 61 frases nuevas, traducidas a los 8 idiomas.
+
+**Prueba (`pruebas/ideas/s5_rueda.gd`, 0 fallos):**
+- Cada tipo de pregunta, con sus datos.
+- El porqué de otra semana no se pregunta y el fichaje no se repite.
+- Una rueda real de 3 preguntas, que se responden encadenadas.
+- La delegación con sus cuatro costes.
+- Que con portavoz no se puede delegar, que no se gasta azar y que todo se guarda con la partida.
+
+Mini banco de «textos» y «partido», banco entero: 0 fallos.
+
+**Para la sesión de la interfaz de la rueda:** se puede usar `entrevista["numero"]` y `entrevista["total"]` para mostrar «2/3» en el plató.
