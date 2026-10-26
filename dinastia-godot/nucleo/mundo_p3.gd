@@ -189,6 +189,9 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	mercado = Mercado.new(self)
 	roles = Roles.new(self)
 	cesiones = Cesiones.new(self)
+	## El mercado de entrenadores vive como meta: un mundo nuevo empieza sin cambios.
+	if has_meta("mercado_dt"):
+		remove_meta("mercado_dt")
 	## Las epocas son del MUNDO, no de tu club: se crean con el mundo y no al
 	## tomar el mando, porque una camada boliviana sube o baja aunque tu dirijas
 	## en Chile.

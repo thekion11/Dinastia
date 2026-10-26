@@ -26,6 +26,8 @@ func _pintar_plantel(c: Club) -> void:
 				p._orden_plantel = clave
 				p._orden_plantel_desc = clave not in ["nombre", "pos"]
 			p._refrescar())
+	## Planificador, tablón de la liga y banquillos calientes (filas 19-21 s4, 26-10-2026).
+	PanelPlanificacion.pintar(p._lista_plantel, p.mundo, p._texto, Callable())
 
 func _fichar_libre(j: Jugador) -> void:
 	var idx := p.mundo.libres.find(j)

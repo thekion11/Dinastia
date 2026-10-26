@@ -350,7 +350,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-305 | P2 | PARCIAL | Tooltips escasos | 103 tooltips |
 | M-307 | P2 | PENDIENTE | Resoluciones: pensado 1280×720–1600×900; sin pruebas en 4:3, 21:9… | sin capturas por aspecto |
 | M-308 | P2 | PENDIENTE | DPI alto: texto del `Label3D` en 3D no escala | `pixel_size` fijo |
-| M-310 | P2 | PENDIENTE | Sin pantalla «Novedades» tras actualizar | sin «Novedades» |
 | M-311 | P2 | PARCIAL | Sin perfil de jugador (estadísticas globales) | `PanelMeta` (álbum/museo global); sin perfil de estadísticas |
 | M-312 | P2 | PARCIAL | Sin modo «streamer» (ocultar datos sensibles/real) | ajuste «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`); sin modo streamer |
 | M-435 | P2 | PENDIENTE | Sin gatillos analógicos para potencia de pase | sin gatillos analógicos |
@@ -681,7 +680,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-426 | P2 | PENDIENTE | Archivos grandes sueltos (`.glb` >5 MB) | sin compresión de GLB grandes |
 | M-427 | P2 | PARCIAL | `pruebas/capturas` crece sin control | carpetas promo/lotes ignoradas; capturas siguen en el repo |
 | M-428 | P2 | 🔒 DUEÑO | `.zip` de terceros dentro de `recursos/` (punteros LFS) | archivos de terceros con LFS: decisión del dueño |
-| M-429 | P2 | PENDIENTE | Versionado del juego sin número visible | sin versión visible |
 | M-430 | P2 | PENDIENTE | Sin canal de reporte de errores | sin reporte de errores |
 | M-432 | P2 | PENDIENTE | Sin política de contenido (religión/política ficticia) | sin lista en CI |
 | M-323 | P3 | 🔒 DUEÑO | Sin música licenciada (decisión del dueño) | música licenciada: decisión del dueño |
@@ -1843,7 +1841,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 1048. Sincronización de partida entre teléfono y tablet — _Todo_
 
 **53. Monetización y Modelo Indie**
-- 1091. Registro de cambios detallado en cada actualización — _Todo_
 - 1092. Canal de reporte de errores dentro del juego — _Todo_
 - 1093. Encuestas a jugadores para priorizar funciones — _Todo_
 - 1098. Política de privacidad simple y legible — _Todo_
@@ -1857,8 +1854,11 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - `Mundo.generar(["CHI"], semilla)` da el MISMO mundo en t0 con 101, 202 y 303 (la semilla solo cambia la simulación): ¿buscado?
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
 - Carrera: falta la animación de parada del portero en modo jugador.
+- Licencias 🟡 que quedan (sesión 6, `docs/04_auditorias/sesion_6.md`): `persona_realista.glb` → relevo de MakeHuman (CC0) ya enganchado en `visor/persona_mh.gd`: falta que el dueño suba por LFS `assets/personas/persona_mh_cuerpo.glb` y `persona_mh_ropa.glb` (generar con `herramientas/makehuman/mh_generar.py <datos> <Quaternius.gltf> persona_mh m` y renombrar) cuando el traje esté pulido (bajo de la chaqueta dentado, cejas manchadas), y luego excluir `persona_realista*` de las exportaciones públicas; `anims_futbol/` → la vía barata es guardar la captura de la página de Gumroad (dueño); CMU sirve de licencia pero exige retargetear BVH en Blender y no trae regates; `vagabond.obj` (velero), `arco_entrada`, `asientos_lod`, `podio_prensa` y las insignias de Canva siguen sin confirmar.
 
 - Primera hora (informe onb, 26-10), lo que queda: `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol (`ui/entrada/*`, zona de la sesión principal). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.
+
+- Más países jugables (fila 26 s4, sesión 6): medido por `pruebas/ideas/s6_paises.gd`: el juego conoce 86 países (banderas) y tiene liga en 23. Hecho: nombre de los 86 en los 9 idiomas (CLDR, `datos/paises.json`, `Paises`). Falta para hacerlos jugables: liga y clubes ficticios (`herramientas/base_ficticia.py`), bolsas de nombres propias para 62 (faker por locale, MIT) y regiones (GeoNames) más allá de ESP/EUS.
 
 ## 9. Sesión 2 (interfaz): rama `ccr-76d707c5-dwse9h-s2`, sin fusionar
 Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `datos/trad_parches/s2_*.json` con `sumar_traducciones.py` y `s2_sobrescrituras.json` con un script con candado (ver el informe).
@@ -1891,8 +1891,7 @@ Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún si
 | **Accesibilidad (lo que falta del nivel básico)**: lector de pantalla mínimo; reasignar las teclas del menú lateral y del móvil; repasar con contraste alto las pantallas en 3D (estadio, ciudad) y las capas a pantalla completa | media | hecho en la sesión 3: reasignar aceptar/volver/pestañas, contraste alto (paleta + `Tema`), zonas y plantel sin depender del color | probar el juego entero con contraste alto y solo teclado |
 | **Guardado en la nube** / entre dispositivos | media | ideas 234, 934, 945 y 1048 sin plan; los jugadores de gestión llevan partidas de meses | empezar por exportar/importar la partida a un archivo; la nube depende de la tienda |
 | **Ayuda contextual y glosario** (qué es cada cifra) | media | un juego de gestión tiene cientos de cifras; hoy hay ayudas sueltas | botón «?» por pantalla con 3 líneas y enlace al glosario |
-| **Notas de versión y canal de errores dentro del juego** | baja | ideas 1091-1092; necesario tras lanzar | pantalla «Novedades» leída de un JSON |
-| **Logros / objetivos a largo plazo** visibles | baja | rejugabilidad; hay récords y legado, pero sin lista de logros | lista de 30 logros con su prueba |
+| **Canal de errores dentro del juego** | baja | idea 1092; necesario tras lanzar (las notas de versión ya están: «Novedades», `datos/novedades.json`) | enviar el informe del registro de fallos desde el juego |
 
 
 ## 11. Propuestas de lanzamiento (investigación s4, aprobadas 26-10)
@@ -1906,7 +1905,7 @@ Filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`, aprobadas p
 | 4 | **Explicar el porqué**: 3 causas tras cada partido; en finanzas, cada ingreso y gasto con su origen | alta | M | `nucleo/partido_p1.gd`, `ui/componentes/resumen_partido.gd`, `nucleo/finanzas.gd`, `ui/componentes/panel_finanzas*.gd` | pendiente (el flujo de caja ya está en §9) |
 | 5 | **Vida privada regulable**: Ajustes «Vida: completa / ligera / apagada» | alta | S | `nucleo/necesidades.gd`, `ui/pantallas/pantalla_ajustes_vida.gd` | en curso (hecho el 26-10, falta revisarlo jugando) |
 | 6 | **Hinchada y banquillo animados**: Mesh2Motion (CC0) + plugin VAT (MIT) | alta | M | `herramientas/hornear_publico.gd`, `visor/stadium_builder_p5.gd`/`p6.gd`, `visor/hinchada.gdshader`, `visor/festejo_grada.gd`, `visor/personaje_dt*.gd` | pendiente (parte en §3 semana 4 «espectáculo») |
-| 7 | **Quitar los 🟡 de licencias**: MPFB2 → `persona_realista.glb`; KayKit City Builder → `complejo_residencial.glb`, `farola.obj`, `estadio.obj`; CMU → tiros y protestas | alta | M-L | `visor/persona_realista.gd`, `visor/city_builder*.gd`, `visor/anim_futbol*.gd`, `visor/retarget_futbol_q.gd`, `docs/05_referencia/LICENCIAS.md` | pendiente (completa §1 «confirmar 🟡») |
+| 7 | **Quitar los 🟡 de licencias** que quedan (KayKit ya hecho en la s6): MPFB2/MakeHuman → `persona_realista.glb`; CMU → tiros y protestas | alta | M-L | `visor/persona_realista.gd`, `visor/city_builder*.gd`, `visor/anim_futbol*.gd`, `visor/retarget_futbol_q.gd`, `docs/05_referencia/LICENCIAS.md` | pendiente (completa §1 «confirmar 🟡») |
 | 8 | **CI con Godot 4.7.2** (`barichello/godot-ci:4.7.2-stable` o `chickensoft-games/setup-godot`) que corra `banco.sh` | alta | S | `.github/workflows/compilar.yml`, `dinastia-godot/herramientas/banco.sh` | en curso (otro agente; es la misma tarea de §1) |
 | 9 | **Silbato real y percusión** de VCSL (CC0): `audio/ui/silbato.ogg` y capas del bombo | alta | S | `nucleo/sonido.gd` (`AJUSTE_DB`) | en curso (otro agente) |
 | 10 | **Registro de errores visible** + «copiar informe» | alta | S | `nucleo/registro.gd`, `ui/pantallas/pantalla_ajustes_registro.gd` | hecho (26-10): `user://registro.txt` y Ajustes → Partida → «Informe de fallos»; queda el aviso de guardado corrupto en `nucleo/partida_archivo.gd` |

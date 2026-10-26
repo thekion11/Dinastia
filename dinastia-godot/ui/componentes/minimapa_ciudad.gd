@@ -52,6 +52,20 @@ func poner(p: Vector3, r: float, delta: float) -> void:
 		_ruta = ruta_al_estadio(red, p)
 	if _lienzo != null:
 		_lienzo.queue_redraw()
+		_encima.queue_redraw()
+		_poner_ruta()
+
+## La ruta morada son dos líneas suaves (`TrazoSuave`, 26-10-2026) entre el
+## lienzo de las calles y el de las marcas: el mapa gira cada fotograma, así que
+## solo se les cambian los puntos (barato), no se rehacen.
+func _poner_ruta() -> void:
+	var pts := PackedVector2Array()
+	if _ruta.size() >= 2:
+		for q: Vector2 in _ruta:
+			pts.append(_a_pantalla(q.x, q.y))
+	for l: Line2D in [_ruta_borde, _ruta_linea]:
+		l.points = pts
+		l.visible = pts.size() >= 2
 
 ## La ruta por las calles: del cruce más cercano a ti al cruce de la red más
 ## cercano al estadio, y de ahí a la puerta. Vacía si ya estás cerca.
@@ -102,20 +116,36 @@ func _poligono_mundo(x0: float, z0: float, x1: float, z1: float) -> PackedVector
 	return PackedVector2Array([_a_pantalla(x0, z0), _a_pantalla(x1, z0), _a_pantalla(x1, z1), _a_pantalla(x0, z1)])
 
 var _lienzo: Control
+var _encima: Control
+var _ruta_borde: Line2D
+var _ruta_linea: Line2D
 
-## Lo dibujado no sale del marco: se pinta en un hijo y este control recorta.
+## Lo dibujado no sale del marco: se pinta en hijos y este control recorta. La
+## capa 0 son el suelo y las calles; la 1, las marcas, la N, tu flecha y el marco.
 class Lienzo extends Control:
 	var mapa: MinimapaCiudad
+	var capa := 0
 	func _draw() -> void:
-		mapa._pintar(self)
+		if capa == 0:
+			mapa._pintar(self)
+		else:
+			mapa._pintar_encima(self)
 
 func _ready() -> void:
 	clip_contents = true
-	_lienzo = Lienzo.new()
-	_lienzo.mapa = self
-	_lienzo.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_lienzo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(_lienzo)
+	_lienzo = _nuevo_lienzo(0)
+	_ruta_borde = TrazoSuave.linea(self, PackedVector2Array(), Color(0.18, 0.05, 0.25), 6.5)
+	_ruta_linea = TrazoSuave.linea(self, PackedVector2Array(), C_RUTA, 4.0)
+	_encima = _nuevo_lienzo(1)
+
+func _nuevo_lienzo(capa: int) -> Lienzo:
+	var l := Lienzo.new()
+	l.mapa = self
+	l.capa = capa
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(l)
+	return l
 
 func _pintar(l: Control) -> void:
 	var caja := Rect2(Vector2.ZERO, size)
@@ -147,17 +177,17 @@ func _pintar(l: Control) -> void:
 			lineas.append([pa, pb, bool(t["av"])])
 		for li: Array in lineas:
 			var w := (16.0 if bool(li[2]) else 10.0) * esc
-			l.draw_line(li[0], li[1], C_BORDE_CALLE, maxf(w + 2.5, 3.5))
+			l.draw_line(li[0], li[1], C_BORDE_CALLE, maxf(w + 2.5, 3.5), true)
 		for li: Array in lineas:
 			var w2 := (16.0 if bool(li[2]) else 10.0) * esc
-			l.draw_line(li[0], li[1], C_AVENIDA if bool(li[2]) else C_CALLE, maxf(w2, 2.0))
-	## La ruta al estadio, gruesa y con borde (como el GPS de GTA).
-	if _ruta.size() >= 2:
-		var pts := PackedVector2Array()
-		for q: Vector2 in _ruta:
-			pts.append(_a_pantalla(q.x, q.y))
-		l.draw_polyline(pts, Color(0.18, 0.05, 0.25), 6.5, true)
-		l.draw_polyline(pts, C_RUTA, 4.0, true)
+			l.draw_line(li[0], li[1], C_AVENIDA if bool(li[2]) else C_CALLE, maxf(w2, 2.0), true)
+	## La ruta al estadio, gruesa y con borde (como el GPS de GTA), va encima de
+	## este lienzo en dos líneas suaves (`_poner_ruta`).
+
+## Lo que va por encima de la ruta.
+func _pintar_encima(l: Control) -> void:
+	var caja := Rect2(Vector2.ZERO, size)
+	var f := CiudadExpansion.FINCA_GRANDE
 	## Marcas: el estadio y tu casa (pegadas al borde si quedan fuera).
 	_marca(l, CityBuilder.ESTADIO_EN.x, CityBuilder.ESTADIO_EN.z, C_ESTADIO, "estadio")
 	_marca(l, f.get_center().x, f.get_center().y, C_CASA, "casa")
@@ -196,8 +226,8 @@ func _al_borde(p: Vector2, margen: float) -> Vector2:
 
 func _marca(l: Control, x: float, z: float, col: Color, tipo: String) -> void:
 	var p := _al_borde(_a_pantalla(x, z), 12.0)
-	l.draw_circle(p, 10.0, Color(0, 0, 0, 0.8))
-	l.draw_circle(p, 8.0, col)
+	l.draw_circle(p, 10.0, Color(0, 0, 0, 0.8), true, -1.0, true)
+	l.draw_circle(p, 8.0, col, true, -1.0, true)
 	if tipo == "estadio":
 		## Un balón: círculo blanco con el centro oscuro.
 		l.draw_circle(p, 4.0, Color.WHITE)

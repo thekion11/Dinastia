@@ -249,11 +249,13 @@ static func pintar_vida_personal(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 	bio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(bio)
 
-## "CRECIMIENTO POR TEMPORADA" del HTML.
+## "CRECIMIENTO POR TEMPORADA" del HTML, y encima el plegable «¿por qué sube o
+## baja?» (`FichaPorque`, 26-10-2026), que sale aunque aún no haya temporadas.
 static func pintar_historial(lista: VBoxContainer, j: Jugador, paleta: Dictionary) -> void:
+	lista.add_child(HSeparator.new())
+	FichaPorque.pintar(lista, j, paleta)
 	if j.historial.is_empty():
 		return
-	lista.add_child(HSeparator.new())
 	var t := _texto(11, paleta["suave"], paleta)
 	t.text = Idiomas.t("CRECIMIENTO POR TEMPORADA")
 	lista.add_child(t)

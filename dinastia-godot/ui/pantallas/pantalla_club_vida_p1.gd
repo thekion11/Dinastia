@@ -313,6 +313,8 @@ func _pintar_logros() -> void:
 		d.text = "     " + String(f["descripcion"]) + (Idiomas.t("   (su sistema aún no está portado)") if f["pendiente"] else "")
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_logros.add_child(d)
+	## Los treinta a largo plazo, con su progreso (26-10-2026).
+	ListaLogrosLargo.pintar(p._lista_logros, lg, p._texto)
 
 	if not lg.muro.is_empty():
 		p._lista_logros.add_child(HSeparator.new())

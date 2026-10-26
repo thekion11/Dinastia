@@ -125,6 +125,11 @@ var premios: Array = []                 ## las galas, la más reciente primero
 ## Los canteranos que ya han debutado, por id. Se guarda el conjunto y no un
 ## contador porque el mismo chico juega muchos partidos y solo debuta una vez.
 var canteranos_debutados: Dictionary = {}
+## Partidos y victorias oficiales de tu era, dirigidos o simulados (los de
+## `LogrosLargo`; `h2h` solo ve los dirigidos). Y los largos que ya cayeron.
+var carrera: Dictionary = {"pj": 0, "pg": 0}
+var largos: Dictionary = {}              ## clave -> {"anio", "semana"[, "heredado"]}
+var _largos_base := false
 
 ## LA TRAMPA DE LOS DEBUTS, QUE COSTÓ UNA PRUEBA ENTERA.
 ##

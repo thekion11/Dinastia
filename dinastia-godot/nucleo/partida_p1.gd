@@ -335,6 +335,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"prensa": _prensa_a_dic(m.prensa),
 		"medico": m.medico.a_dic() if m.medico != null else {},
 		"logros": m.logros.a_dic() if m.logros != null else {},
+		"mercado_dt": MercadoDT.de(m).a_dic(),
 		"ojeados": m.ojeados,
 		"libro_financiero": m.libro_financiero,
 		"continentales": _continentales_a_dic(m.continentales),

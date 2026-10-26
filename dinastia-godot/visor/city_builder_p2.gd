@@ -106,7 +106,11 @@ const CALLE_DISTRITO := 14.0
 var manzanas_distrito := 0
 
 
-const RUTA_CASA_GIGANTE := "res://assets/ciudad/complejo_residencial.glb"
+## Los bloques del complejo de la Casa Grande (KayKit, CC0): modelo, columna y
+## fila en lados de bloque (fila positiva = al fondo, lejos del portón) y giro.
+const RUTA_KAYKIT := "res://assets/ciudad/kaykit/%s.gltf"
+const BLOQUES_CASA := [["building_H", 0.0, 1.0, PI], ["building_G", -1.3, 0.8, PI],
+	["building_F", 1.3, 0.8, PI], ["building_E", -1.3, -0.6, PI]]
 var casa_gigante: Node3D = null
 
 

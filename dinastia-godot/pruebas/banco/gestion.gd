@@ -225,7 +225,11 @@ func _probar_piel_por_pais() -> void:
 
 func _probar_contratos_c9() -> void:
 	_titulo("C9: CONTRATOS Y JORNADA LABORAL")
-	_comprobar(Contratos.JORNADA.size() == 24, "los 24 países tienen su jornada legal")
+	## Los 24 del HTML, más los de `paises_extra.json` (fila 26), y nada más.
+	var extra_legal: Array = (Datos.paises_extra().get("paises", {}) as Dictionary).keys()
+	var originales_legal := Contratos.JORNADA.keys().filter(func(k: String) -> bool: return not extra_legal.has(k))
+	_comprobar(originales_legal.size() == 24 and extra_legal.all(func(k: String) -> bool: return Contratos.JORNADA.has(k)),
+		"los 24 países tienen su jornada legal, y los %d de paises_extra también" % extra_legal.size())
 	## Chile: 44 horas hasta el 26 de abril de 2026, 42 después, 40 en 2028.
 	var sem_marzo := 8
 	var sem_junio := 20

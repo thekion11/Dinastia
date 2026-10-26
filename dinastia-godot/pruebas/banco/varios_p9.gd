@@ -3,7 +3,11 @@ extends "res://pruebas/banco/varios_p8.gd"
 
 func _probar_politica_c15() -> void:
 	_titulo("C15: POLÍTICA Y ESTADO (FICTICIA Y NEUTRAL)")
-	_comprobar(Politica.ESTRUCTURA.size() == 24, "los 24 países tienen su estructura de Estado")
+	## Los 24 del HTML, más los de `paises_extra.json` (fila 26), y nada más.
+	var extra_estado: Array = (Datos.paises_extra().get("paises", {}) as Dictionary).keys()
+	var originales_estado := Politica.ESTRUCTURA.keys().filter(func(k: String) -> bool: return not extra_estado.has(k))
+	_comprobar(originales_estado.size() == 24 and extra_estado.all(func(k: String) -> bool: return Politica.ESTRUCTURA.has(k)),
+		"los 24 países tienen su estructura de Estado, y los %d de paises_extra también" % extra_estado.size())
 	_comprobar(Politica.sistema("CHI") == "presidencial" and Politica.mandato("CHI") == 4, "Chile: presidencial, cada 4 años")
 	_comprobar(Politica.sistema("ESP") == "monarquia_parlamentaria" and Politica.mandato("MEX") == 6, "España monarquía parlamentaria; México vota cada 6")
 	_comprobar(Politica.mandato("KSA") == 0, "Arabia Saudí no tiene elecciones nacionales")
