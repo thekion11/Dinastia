@@ -1914,3 +1914,14 @@ Filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`, aprobadas p
 | 14 | **Ocasiones jugables en el partido del DT**: en las 3-6 llegadas claras, pausa y eliges pase, conducción o tiro con la cámara a pie de campo | alta | L | `nucleo/partido*.gd`, `nucleo/motor_libre.gd` (`tomar_control`), `ui/partido_vivo*.gd`, `visor/control_partido.gd` | pendiente |
 
 Exportar e importar la partida (fila 30 de la propuesta, §10 «Guardado en la nube») ya está hecho: Ajustes → Partida (`ui/pantallas/pantalla_ajustes_p1.gd`, `_exportar_partida` y `_importar_partida`). Queda la nube.
+
+## 12. Lo que quedó sin terminar al cierre de las sesiones (26-10)
+
+- **Decisión del dueño:** coste del día de partido del 30 % de la taquilla (`Finanzas.COSTE_DIA_DE_PARTIDO`), sin respuesta.
+- **Modelo B (MakeHuman):** los `.glb` de `persona_mh` no se pudieron subir (LFS rechazado desde el contenedor); faltan la fase 4 (traje: faldón del abrigo) y la fase 5 (cuerpo).
+- **Caras:** algunas salen con óvalos negros; pasar las caras 2D a `Retrato3D` donde aún se dibujan planas.
+- **Competiciones:** terminar de usar `nombre_visible` en las pantallas que todavía muestran el nombre interno.
+- **Recorrido de las 108 pantallas** con la cámara real (Forward+): pendiente de hacer entero.
+- **Pizarra (fila 18 de §11):** la interfaz con las dos fases y los roles, y que la IA use roles.
+- **Países:** quedan lotes de países por sumar a `paises_extra.json` (hechos POR, NED, BEL, CRO, DEN).
+- **Dueño:** imágenes del logo y de las alas, makehuman-assets, FPS en hardware real, builds, keystore, archivos grandes por LFS.
