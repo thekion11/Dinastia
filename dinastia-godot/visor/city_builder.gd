@@ -132,6 +132,21 @@ static func asfalto_mate(m: StandardMaterial3D, rugosidad := 0.85) -> StandardMa
 	m.roughness = rugosidad
 	return m
 
+## VENTANAS DEL KIT COMERCIAL (26-10-2026, pciu): los edificios bajos de Kenney
+## se quedaban negros de noche a pie de calle. Para los materiales de su paleta
+## (`kenney_comercial*`) devuelve el mismo aspecto de día en `ventanas_kit.gdshader`,
+## que de noche enciende el cristal por plantas y edificios. `null` = otro kit.
+static func ventanas_kit(orig: StandardMaterial3D, tinte: Color) -> ShaderMaterial:
+	var tex := orig.albedo_texture
+	if tex == null or not tex.resource_path.contains("/kenney_comercial"):
+		return null
+	var m := ShaderMaterial.new()
+	m.shader = load("res://visor/ventanas_kit.gdshader") as Shader
+	m.set_shader_parameter("paleta", tex)
+	m.set_shader_parameter("tinte", tinte)
+	m.set_meta("ventanas_kit", true)
+	return m
+
 func mostrar_rotulos(si: bool) -> void:
 	if _rotulos != null:
 		_rotulos.visible = si

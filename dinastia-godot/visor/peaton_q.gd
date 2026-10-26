@@ -310,8 +310,8 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 		if h3 != null:
 			_pieza(h3, _caja(Vector3(0.07, 0.14, 0.012)), _m(Color(0.05, 0.05, 0.06), 0.3), Vector3(0, 0.05, 0.05))
 	var cab_extra := rng.randf()
-	var cab := _en_hueso(esq, "Head", k)
-	if cab != null:
+	## (Gafas y gorra cuelgan cada una de su nodo a la escala de la cabeza.)
+	if esq.find_bone("Head") >= 0:
 		if cab_extra < 0.2:
 			## GAFAS DE SOL A LA ALTURA DE LOS OJOS (26-10-2026). Eran dos esferas
 			## aplastadas EN ALTO (2 cm de alto y 4,8 de fondo: un disco tumbado)

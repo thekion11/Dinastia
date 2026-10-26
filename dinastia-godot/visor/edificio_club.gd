@@ -262,6 +262,8 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			var caja := Rect2(a + 0.2, z_out + 0.2, b - a - 0.4, z_tabique - z_out - 0.4)
 			_amueblar(nodo, String(sala[0]), caja, y0, c1, c2, nombre_club)
 			_decorar(nodo, String(sala[0]), a, b, z_out, z_tabique, y0, c1, c2, gusto)
+	## Por fuera: aplacado, vidrio, cantos de forjado y el nombre del club.
+	FachadaClub.montar(nodo, x0, z_out, z_fin, c1, nombre_club)
 
 ## Rehace el edificio con la decoración nueva (se llama al decorar).
 static func reconstruir(viejo: Node3D) -> void:

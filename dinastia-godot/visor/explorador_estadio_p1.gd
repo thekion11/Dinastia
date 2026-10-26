@@ -231,6 +231,9 @@ func usar() -> void:
 		return
 	if _zona_actual == "Ascensor":
 		_menu = RecorridoClub.menu_ascensor(_capa, planta, ir_a_planta)
+	elif _zona_actual == "Acceso":
+		## El aviso dice «E: salir a la calle» y antes E no hacía nada aquí.
+		salir.emit()
 	elif RecorridoClub.sala_decorable(_zona_actual):
 		_menu = RecorridoClub.panel_decorar(_capa, get_tree(), _zona_actual)
 

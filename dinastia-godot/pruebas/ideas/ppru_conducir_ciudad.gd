@@ -3,12 +3,12 @@ extends BaseIdea
 ## Abre la Principal, va a la ciudad propia y pulsa «🚗 Conducir» (`VistaCiudad.explorar`), como el
 ## jugador. El tráfico se congela y la física del explorador se llama a mano con 1/60 s: así es
 ## determinista. Las teclas se pulsan de verdad (`Input.parse_input_event`); la Esc va por el visor.
-##   · subir/bajar del coche: Conducir ↔ mapa (Esc) ↔ Pasear: modo, cuerpo, cámara y sitio coherentes;
 ##   · la cámara de seguimiento va detrás, encima y mirando al coche, y lo alcanza tras girar;
 ##   · al girar con D el morro va hacia la derecha DE LA CÁMARA;
 ##   · contra un edificio: la velocidad cae de golpe, no se atraviesa y el golpe se registra;
 ##   · 8 s de recorrido con volantazos: dentro del mapa, sobre el suelo y nunca dentro de nada.
-## Las piezas de la forma del coche y el tráfico están en pmov_*; el manejo puro en `ppru_conducir`.
+## Subir y bajar del coche: `ppru_subir_bajar_coche` (hereda de esta). Las piezas de la forma del coche
+## y el tráfico están en pmov_*; el manejo puro en `ppru_conducir`. Cada una tarda < 60 s.
 
 const DT := 1.0 / 60.0
 var _v: VistaCiudad
@@ -24,6 +24,20 @@ func _ready() -> void:
 
 func _probar_async() -> void:
 	_titulo("M-407: CONDUCIR POR LA CIUDAD REAL")
+	if not await _abrir_ciudad():
+		return
+	await _explorar("coche")
+	if _e == null:
+		return
+	var inicio := _e.cuerpo.position
+	_camara_detras()
+	_girar_con_la_camara(inicio)
+	_choque_contra_pared(inicio)
+	_recorrido(inicio)
+	_linea("  (%.1f s desde que arrancó Godot)" % (Time.get_ticks_msec() / 1000.0))
+
+## La Principal con la ciudad propia en pantalla (como el botón «Ciudad»).
+func _abrir_ciudad() -> bool:
 	var p: Node = load("res://escenas/principal.tscn").instantiate()
 	add_child(p)
 	for i in 6:
@@ -33,23 +47,7 @@ func _probar_async() -> void:
 		if h is VistaCiudad:
 			_v = h
 	_comprobar(_v != null, "hay vista de la ciudad propia")
-	if _v == null:
-		return
-	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
-	await _subir_y_bajar()
-	await _explorar("coche")
-	if _e == null:
-		return
-	var inicio := _e.cuerpo.position
-	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
-	_camara_detras()
-	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
-	_girar_con_la_camara(inicio)
-	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
-	_choque_contra_pared(inicio)
-	_linea("  [%.1f s]" % (Time.get_ticks_msec() / 1000.0))
-	_recorrido(inicio)
-	_linea("  (%.1f s en total)" % (Time.get_ticks_msec() / 1000.0))
+	return _v != null
 
 # ------------------------------------------------------------------ ayudas
 
@@ -118,54 +116,6 @@ func _colocar(q: Vector3, ang: float) -> void:
 	_e._colocar_camara(1.0)
 
 # ------------------------------------------------------------------ pruebas
-
-## Conducir → Esc → Pasear → Esc → Conducir: cada vez el modo, el cuerpo, la cámara y el sitio.
-func _subir_y_bajar() -> void:
-	_linea("· subir y bajar del coche")
-	await _explorar("coche")
-	if _e == null:
-		return
-	var coche := _e
-	var q := coche.cuerpo.position
-	_comprobar(coche.modo == "coche" and coche.estado == "calle", "Conducir: modo coche, en la calle")
-	_comprobar(get_viewport().get_camera_3d() == coche.camara, "la cámara activa es la del coche")
-	_comprobar(_en_el_suelo(q) and coche.libre_forma(q, coche.rumbo), "el coche aparece sobre el suelo y libre (%.0f, %.1f, %.0f)" % [q.x, q.y, q.z])
-	_comprobar(Vector2(q.x, q.z).distance_to(Vector2(0, CityBuilder.RING_Z_SUR)) < 40.0, "en coche se sale en la ronda sur (a %.0f m)" % Vector2(q.x, q.z).distance_to(Vector2(0, CityBuilder.RING_Z_SUR)))
-	_comprobar(coche.trafico != null and coche.trafico.jugador == coche.cuerpo and coche.trafico.jugador_huella.y > 2.0, "el tráfico sabe que eres un coche (huella %s)" % (coche.trafico.jugador_huella if coche.trafico != null else Vector2.ZERO))
-	_fisica(1)
-	_comprobar(coche._hud.text.contains(Idiomas.t("🚗 Conduciendo")), "el rótulo dice «Conduciendo»")
-	await _esc()
-	_comprobar(_v.get("_explorador") == null and not is_instance_valid(coche), "Esc: se baja del coche y vuelve al mapa")
-	_comprobar(get_viewport().get_camera_3d() != null and get_viewport().get_camera_3d() == _v.get("_camara"), "con la cámara del mapa")
-	await _explorar("pie")
-	if _e == null:
-		return
-	var pie := _e
-	var qp := pie.cuerpo.position
-	_comprobar(pie.modo == "pie" and pie.estado == "calle", "Pasear: modo a pie")
-	_comprobar(_en_el_suelo(qp) and pie.libre_forma(qp, pie.rumbo), "a pie aparece sobre el suelo y libre (%.0f, %.1f, %.0f)" % [qp.x, qp.y, qp.z])
-	_comprobar(pie.trafico != null and pie.trafico.jugador == pie.cuerpo and pie.trafico.jugador_huella.y < 1.0, "el tráfico sabe que vas a pie")
-	_fisica(1)
-	_comprobar(pie._hud.text.contains(Idiomas.t("🚶 A pie")), "el rótulo dice «A pie»")
-	## A pie, W anda (a paso de peatón), no conduce.
-	_tecla(KEY_W, true)
-	_fisica(120)
-	_tecla(KEY_W, false)
-	_comprobar(pie.vel > 1.0 and pie.vel <= ExploradorCiudad.VEL_PIE + 0.001, "a pie, W anda a %.2f m/s (tope %.1f)" % [pie.vel, ExploradorCiudad.VEL_PIE])
-	await _esc()
-	_comprobar(_v.get("_explorador") == null, "Esc a pie: también vuelve al mapa")
-
-func _esc() -> void:
-	var ev := InputEventKey.new()
-	ev.keycode = KEY_ESCAPE
-	ev.physical_keycode = KEY_ESCAPE
-	ev.pressed = true
-	get_viewport().push_input(ev)
-	var suelta := ev.duplicate() as InputEventKey
-	suelta.pressed = false
-	get_viewport().push_input(suelta)
-	for i in 3:
-		await get_tree().process_frame
 
 ## La cámara de persecución: detrás, por encima, mirando al coche; también a toda velocidad.
 func _camara_detras() -> void:
@@ -255,7 +205,7 @@ func _choque_contra_pared(inicio: Vector3) -> void:
 	var dentro := 0
 	var v_antes := 0.0
 	var i_toca := -1
-	for i in 60 * 6:
+	for i in 60 * 4:
 		_fisica(1)
 		var av := (_e.cuerpo.position - q).dot(dir)
 		avance_max = maxf(avance_max, av)

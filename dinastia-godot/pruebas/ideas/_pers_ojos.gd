@@ -43,7 +43,7 @@ func _process(_d: float) -> void:
 		(_ds[6]["nodo"] as Node3D).visible = false
 		_cam.fov = 14
 		var alto := 1.7 * float(_ds[7]["altura"]) / 1.8
-		_cam.look_at_from_position(Vector3(1.925 + 0.9, alto + 0.1, 1.8), Vector3(1.925, alto, 0))
+		_cam.look_at_from_position(Vector3(1.675, alto, 2.0), Vector3(1.675, alto - 0.05, 0))
 	if _n == 30:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/pers_ojos.png")
 		get_tree().quit()
