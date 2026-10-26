@@ -174,6 +174,7 @@ const SECCIONES := [
 	"_probar_prorroga_y_penales",
 	"_probar_informe_rival",
 	"_probar_logo",
+	"_probar_logo",
 	"_probar_viajes",
 	"_probar_porque_moral",
 	"_probar_partido_abandonado",
