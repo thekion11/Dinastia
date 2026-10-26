@@ -59,3 +59,15 @@ func _ceder(m: Mundo, mio: Club, j: Jugador) -> bool:
 	mio.soltar(j)
 	destino.fichar(j)
 	return true
+
+## LA PREGUNTA Y LAS RESPUESTAS EN EL IDIOMA DEL JUGADOR (26-10-2026). El guion se arma en castellano (de ahí
+## salen el periodista que toca y la memoria) y se traduce justo antes de dárselo a la pantalla: la pregunta y
+## el texto de cada opción. El tono, la moral y el resto de la lógica no miran el texto. En castellano no cambia nada.
+func _para_mostrar(e: Dictionary) -> Dictionary:
+	if e.is_empty() or Idiomas.idioma == "es":
+		return e
+	e["pregunta"] = Idiomas.t(String(e.get("pregunta", "")))
+	for o: Variant in e.get("opciones", []):
+		if o is Dictionary:
+			(o as Dictionary)["txt"] = Idiomas.t(String((o as Dictionary).get("txt", "")))
+	return e

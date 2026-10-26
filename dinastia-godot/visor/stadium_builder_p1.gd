@@ -253,7 +253,7 @@ static func _c(hex, fallback := "#ffffff") -> Color:
 		return Color(hex)
 	return Color(fallback)
 
-static func marcar_techo(mi: MeshInstance3D, fuera: Vector3) -> void:
+static func marcar_techo(mi: GeometryInstance3D, fuera: Vector3) -> void:
 	if mi == null:
 		return
 	mi.add_to_group("techo_estadio")
@@ -265,7 +265,8 @@ static func ocultar_techo_ante(cam: Camera3D) -> void:
 		return
 	cam.cull_mask &= ~CAPA_TECHO_OCULTO
 	for n in cam.get_tree().get_nodes_in_group("techo_estadio"):
-		var mi := n as MeshInstance3D
+		## GeometryInstance3D: también las vigas del techo (un MultiMesh, 26-10-2026).
+		var mi := n as GeometryInstance3D
 		if mi == null:
 			continue
 		var fuera: Vector3 = mi.get_meta("fuera", Vector3.ZERO)

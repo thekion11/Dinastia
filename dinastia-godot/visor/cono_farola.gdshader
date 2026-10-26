@@ -10,10 +10,22 @@ uniform vec3 color : source_color = vec3(1.0, 0.8, 0.5);
 uniform float fuerza = 0.0;   // la pone `CiudadExpansion.encender` (0 de día)
 
 varying float v_h;
+varying float v_fuera;
 
 void vertex() {
 	// El cilindro mide 1 de alto centrado en 0: 0 en el suelo, 1 en el farol.
 	v_h = clamp(VERTEX.y + 0.5, 0.0, 1.0);
+	// 26-10-2026 (pciu): con la cámara DENTRO del haz (o rozándolo) se veía su
+	// cara interior de lado a lado: una cuña naranja enorme que tapaba media
+	// pantalla (paseo de noche junto al puente). Se mide dónde está la cámara
+	// en el espacio del cono (MODEL_MATRIX ya lleva la instancia del MultiMesh)
+	// y, si está dentro o casi, el haz se apaga entero: a la altura de los ojos
+	// la luz de la farola ya la da el charco del suelo.
+	vec3 cam = (inverse(MODEL_MATRIX) * vec4(CAMERA_POSITION_WORLD, 1.0)).xyz;
+	float radio = mix(0.5, 0.04, clamp(cam.y + 0.5, 0.0, 1.0));
+	float q = length(cam.xz) / radio;
+	float por_alto = step(cam.y, 0.5);   // por encima del farol el haz se ve de fuera
+	v_fuera = mix(1.0, smoothstep(1.15, 1.9, q), por_alto);
 }
 
 void fragment() {
@@ -26,5 +38,5 @@ void fragment() {
 	float alto = mix(0.02, 1.0, v_h * v_h * v_h);
 	float cerca = smoothstep(2.0, 9.0, length(VERTEX));
 	ALBEDO = color;
-	ALPHA = fuerza * borde * alto * cerca;
+	ALPHA = fuerza * borde * alto * cerca * v_fuera;
 }

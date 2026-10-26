@@ -33,7 +33,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
    Hasta entonces: solo fallas, pendientes, mejoras y limpieza.
 3. El dueño borra él las 8 ramas viejas (4 originales + 4 `borrar-*`) y la etiqueta `latest`.
 4. Mega auditoría 3 hecha el 24-10 (`docs/04_auditorias/`); método Cascada + V en `docs/01_metodo/`. El 24-10 se borró lo viejo (planes, informes, capturas, vídeos, filas hechas) y el dueño pidió: ideas hechas se revisan «realmente bien», no solo «decentes»; lo no cerrado vive en el plan del lunes.
-5. Idiomas: 9 y no sumar más; faltan ~506 frases por traducir.
+5. Idiomas: 9 y no sumar más. Las ~506 frases pendientes se tradujeron el 26-10 (sesión 1); lo nuevo, siempre con `sumar_traducciones.py`.
 6. Pendientes de dueño: FPS en hardware real, builds, keystore, licencias, subir binarios a Drive (`herramientas/drive_subir.ps1`).
 7. LFS (26-10): el dueño autorizó subir los sonidos de interfaz (CC0) y los PNG del logo. Desde este contenedor GitHub rechaza las subidas a LFS: archivos pequeños van fuera de LFS con una excepción en .gitattributes (ya hecha para audio/ui/*.ogg). Nada más sin preguntar.
 8. Avisos (26-10): avisar al dueño con un evento de Google Calendar (recordatorio emergente a los 0 min, título «Dinastía: …») cuando haya una pregunta para él, se acaben las tareas, o la otra sesión pida algo o termine. La notificación push no le llega.

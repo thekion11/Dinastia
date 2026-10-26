@@ -38,15 +38,25 @@ static func _material(clave: String, p: Dictionary) -> StandardMaterial3D:
 			m.albedo_color = p["acento"]
 			m.roughness = 0.55
 		K_VIDRIO:
+			## MURO CORTINA DE VERDAD (26-10-2026, «cajas grises»): era negro liso
+			## (0,035) y desde la calle cada paño de vidrio se leía como un agujero
+			## sin fondo entre las lamas. Ahora lleva su despiece: montantes cada
+			## 1,33 m, travesaños cada 2 m y cada vidrio con su reflejo del cielo
+			## (más claro arriba) y su tono propio. Mismas UV (en metros/4) y misma
+			## llamada de dibujo: solo cambia el material.
 			m = StandardMaterial3D.new()
-			m.albedo_color = Color(0.035, 0.04, 0.05)
-			m.metallic = 0.0
-			m.roughness = 0.3
-			m.metallic_specular = 0.55
-			## Algo de luz dentro: vestíbulos y escaleras encendidas.
+			m.albedo_texture = _tex_muro_cortina(false)
+			m.albedo_color = Color(0.5, 0.58, 0.66)
+			m.metallic = 0.35
+			m.roughness = 0.14
+			m.metallic_specular = 0.6
+			m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+			## Algo de luz dentro: vestíbulos y escaleras encendidas (no todos los
+			## vidrios por igual: la máscara enciende unos más que otros).
 			m.emission_enabled = true
 			m.emission = Color(1.0, 0.86, 0.62)
-			m.emission_energy_multiplier = 0.55 if p["noche"] == "noche" else 0.0
+			m.emission_texture = _tex_muro_cortina(true)
+			m.emission_energy_multiplier = 0.9 if p["noche"] == "noche" else 0.0
 		K_LUZ:
 			m = StandardMaterial3D.new()
 			m.albedo_color = p["luz"]
@@ -60,6 +70,42 @@ static func _material(clave: String, p: Dictionary) -> StandardMaterial3D:
 			m.roughness = 0.35
 			m.metallic = 0.45
 	return m
+
+## La textura del muro cortina: 4 × 4 m (una unidad de UV) en 96 px. Con
+## `luz` = la máscara de emisión: los vidrios encendidos de noche (unos más que
+## otros) y los montantes apagados.
+static var _tex_cortina := {}
+static func _tex_muro_cortina(luz: bool) -> ImageTexture:
+	if _tex_cortina.has(luz):
+		return _tex_cortina[luz]
+	var n := 96
+	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 4242
+	## 3 columnas (1,33 m) × 2 filas (2 m) de vidrios por baldosa.
+	var tonos: Array[float] = []
+	var luces: Array[float] = []
+	for k in 6:
+		tonos.append(rng.randf_range(0.82, 1.08))
+		luces.append([0.15, 0.55, 1.0][rng.randi() % 3])
+	for y in n:
+		for x in n:
+			var cx := x % 32
+			var cy := y % 48
+			var marco := cx < 2 or cx > 29 or cy < 2 or cy > 45
+			var k := (x / 32) + 3 * (y / 48)
+			var v: float
+			if luz:
+				v = 0.0 if marco else luces[k]
+			elif marco:
+				v = 0.78
+			else:
+				## El reflejo del cielo: más claro en lo alto de cada vidrio.
+				v = tonos[k] * lerpf(0.62, 0.36, float(cy) / 47.0)
+			img.set_pixel(x, y, Color(v, v, v))
+	img.generate_mipmaps()
+	_tex_cortina[luz] = ImageTexture.create_from_image(img)
+	return _tex_cortina[luz]
 
 static func _volcar(nodo: Node3D, nombre: String, malla: _Malla, p: Dictionary, rango: float) -> void:
 	var am := malla.cerrar(func(k: String) -> Material: return _material(k, p))

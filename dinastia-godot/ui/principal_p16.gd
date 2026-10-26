@@ -95,9 +95,15 @@ func _fijar_modo_simulacion(comp: String, modo: String) -> void:
 ## elegida. Cambiarla la guarda para esa competición.
 func _selector_modo_partido(padre: Node) -> void:
 	var comp := _competicion_de_la_semana()
-	var nombre_comp: String = {"copa": "la copa", "conti": "el torneo continental", "liga": "la liga"}[comp]
+	## La frase entera por competición: con «DE %s» salía «DE EL TORNEO CONTINENTAL» y, en otro
+	## idioma, el nombre de la competición se quedaba en castellano.
 	var t := _texto(11, COL_SUAVE)
-	t.text = Idiomas.t("CÓMO QUIERES VER LOS PARTIDOS DE %s") % nombre_comp.to_upper()
+	if comp == "copa":
+		t.text = Idiomas.t("CÓMO QUIERES VER LOS PARTIDOS DE LA COPA")
+	elif comp == "conti":
+		t.text = Idiomas.t("CÓMO QUIERES VER LOS PARTIDOS DEL TORNEO CONTINENTAL")
+	else:
+		t.text = Idiomas.t("CÓMO QUIERES VER LOS PARTIDOS DE LA LIGA")
 	padre.add_child(t)
 	var fila := HFlowContainer.new()
 	fila.add_theme_constant_override("h_separation", 6)
