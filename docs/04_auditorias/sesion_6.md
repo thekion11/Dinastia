@@ -89,3 +89,19 @@ Traducciones: 106 frases × 8 idiomas con `herramientas/sumar_traducciones.py` (
 
 - Sesión 3 (`ui/principal_p8.gd`): nada obligatorio; si se rehace la ficha, mantener la llamada a `FichaJugadorInfo.pintar_historial` (lleva dentro el plegable «¿por qué?»).
 - `ui/pantallas/pantalla_ajustes*` (reservado): el texto del contador de FPS podría decir «F9: detallado».
+
+## 8. Segunda tanda: auditoría visual de la ciudad y el estadio (Forward+, cámara real)
+
+Capturas (en `/tmp/capturas/s6/`): mapa de día y de noche, a pie de noche y de día, estadio desde el mapa
+lejos y cerca, partido de día y de noche (escenas `pruebas/captura_s6_auditoria_{ciudad,estadio,partido}.tscn`).
+
+- **Arreglado: el estadio se veía como un bloque BLANCO desde la vista por defecto del mapa** (a más de 520 m).
+  Causa: el LOD jerárquico de `Optimizar.agrupar` (`visor/optimizar_p1.gd`) ponía una caja «de color medio» a
+  cada malla pesada, también a las que SOLO proyectan sombra (`StadiumBuilder._sombra_unica`, con el material
+  por defecto, blanco) y cortaba las gradas a 520 m. `_sin_lod()` era un hueco que siempre decía «no»: ahora
+  excluye las mallas de solo sombra y todo lo que cuelga de un nodo `sin_corte` (el estadio en el mapa, que ya
+  pedía «sin cortes por distancia»). Prueba: `pruebas/ideas/s6_auditoria.gd`; antes/después: `x_normal.jpg` → `x_arreglo.jpg`.
+- Visto y sin defectos: ciudad de día y de noche (farolas, ventanas, luces), calle a pie, estadio de cerca
+  (gradas, campo, fachada, tienda), partido de día y de noche (ceremonia de salida, focos, vallas).
+- Anotado, no arreglado (criterio): el horizonte lejano son cajas muy claras (es el mismo LOD, «un poco más claro
+  y sin brillo» a propósito); se lee como maqueta. Si se quiere más color, bajar el aclarado de `_color_medio`.
