@@ -238,8 +238,19 @@ static func _tris(m: Mesh) -> int:
 	return t
 
 
-## Lo que no debe tener proxy: nada que se vea de cerca y de lejos igual de bien.
-static func _sin_lod(_mi: MeshInstance3D) -> bool:
+## Lo que no debe tener proxy (26-10-2026, auditoría de la sesión 6): la malla que
+## SOLO proyecta sombra (`StadiumBuilder._sombra_unica`) no se ve, y su caja «de color
+## medio» salía BLANCA (material por defecto): más allá de 520 m el estadio era un
+## bloque blanco. Y lo que cuelga de un nodo con meta `sin_corte` (el estadio en el
+## mapa, que es lo que se mira y no debe perder las gradas por la distancia).
+static func _sin_lod(mi: MeshInstance3D) -> bool:
+	if mi.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY:
+		return true
+	var p: Node = mi.get_parent()
+	while p != null:
+		if p.has_meta("sin_corte"):
+			return true
+		p = p.get_parent()
 	return false
 
 ## Color medio del material de un modelo (textura × color), cacheado.

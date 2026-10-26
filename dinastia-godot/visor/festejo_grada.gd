@@ -18,11 +18,20 @@ extends Node3D
 const DURA := 9.0
 var _t := 0.0
 var _dura := DURA
+var _apagado := false  ## las bengalas se apagan UNA vez, no cada fotograma
 
 static func activo() -> bool:
 	return not Calidad.motor_ligero
 
 static func lanzar(raiz: Node3D, c1: Color, c2: Color, motivo := "gol", dura := DURA) -> FestejoGrada:
+	## El banquillo sentado (26-10, `BanquilloVivo`): en la salida cada suplente
+	## toma su reposo (charla, escucha, brazos cruzados…).
+	## Va antes del corte por calidad: son unos pocos esqueletos, no partículas.
+	if raiz != null:
+		## (El gol lo lleva `_banca_gesto` de la vista, para los dos banquillos.)
+		if motivo == "salida":
+			BanquilloVivo.reaccionar(raiz, "reposo", true)
+			BanquilloVivo.reaccionar(raiz, "reposo", false)
 	if raiz == null or not activo():
 		return null
 	var sitios := _sitios_de_grada(raiz)
@@ -51,6 +60,13 @@ static func lanzar(raiz: Node3D, c1: Color, c2: Color, motivo := "gol", dura := 
 			f.add_child(_bengala(s + Vector3(1.5, 0, 0), humo_a if i % 2 == 0 else humo_b, dura))
 	return f
 
+## SENTADOS NERVIOSOS (26-10): 0..1, qué parte de la grada se cruza de brazos o
+## se lleva las manos a la cabeza (un final apretado). Solo la hinchada animada
+## (`hinchada.gdshader` con VAT) lo nota; sin ella no cambia nada.
+static func nervios(raiz: Node, cuanto: float) -> void:
+	for m: ShaderMaterial in OlaGrada.materiales(raiz):
+		m.set_shader_parameter("nervios", clampf(cuanto, 0.0, 1.0))
+
 static func _visible(c: Color) -> Color:
 	return Color(0.95, 0.76, 0.2) if c.get_luminance() < 0.12 else c
 
@@ -58,7 +74,8 @@ func _process(delta: float) -> void:
 	_t += delta
 	if _t > _dura + 6.0:
 		queue_free()
-	elif _t > _dura:
+	elif _t > _dura and not _apagado:
+		_apagado = true
 		for p in find_children("*", "GPUParticles3D", true, false):
 			(p as GPUParticles3D).emitting = false
 
@@ -84,6 +101,10 @@ static func _sitios_de_grada(raiz: Node3D) -> Array:
 		var paso := maxi(1, mm.instance_count / 400)
 		var xf := mmi.global_transform
 		for k in range(0, mm.instance_count, paso):
+			## El sector visitante (alfa 0,5 en el color, ver `_butacas`) no festeja
+			## los goles de casa: ni papelitos ni bengalas en su tramo.
+			if mm.use_colors and mm.get_instance_color(k).a < 0.75:
+				continue
 			var p: Vector3 = xf * mm.get_instance_transform(k).origin
 			## Fuera del campo y por debajo de 9 m (la bandeja de abajo).
 			if p.y > 9.0 or (absf(p.x) < 36.0 and absf(p.z) < 54.0):

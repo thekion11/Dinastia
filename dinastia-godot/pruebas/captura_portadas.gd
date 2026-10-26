@@ -23,7 +23,8 @@ func _ready() -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
-	if _n < 10 or _n % 5 != 0:
+	## Con la foto hecha cuando los retratos 3D (jugador o DT) ya están pintados.
+	if _n < 10 or _n % 5 != 0 or not Retrato3D._cola.is_empty():
 		return
 	if _hoja_actual != null:
 		var img := get_viewport().get_texture().get_image()

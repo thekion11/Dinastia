@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p2.gd"
-## [Capa 3/12 de `motor_jugable.gd`] _mio_mas_cercano, _control_de_equipo, _aplicar_cansancio, _anadido_de, segundos_anadidos, minutos_anadidos … (+13)
+## [Capa 3/12 de `motor_jugable.gd`] _mio_mas_cercano, _control_de_equipo, _aplicar_cansancio, _anadido_de, segundos_anadidos, minutos_anadidos … (+15)
 
 func _mio_mas_cercano(local: bool, menos: Dictionary) -> Dictionary:
 	var b := balon.position + Vector3(vel_balon.x, 0, vel_balon.z) * 0.3
@@ -322,6 +322,7 @@ func _fin_de_mitad() -> void:
 func _gol(en_arco_visita: bool) -> void:
 	## El arco de +Z es el de la visita: gol del local.
 	var de_local := en_arco_visita
+	_contar("gol_%s" % String(_tiro_vivo.get("clase", "sin_tiro")))
 	_tiro_vivo = {}
 	goles[0 if de_local else 1] += 1
 	var autor := ultimo_toque
@@ -400,3 +401,50 @@ func _palos_y_lineas(antes: Vector3) -> void:
 	if absf(p.x) > ANCHO:
 		var local_saca := ultimo_toque.is_empty() or not bool(ultimo_toque["es_local"])
 		_empezar_saque("banda", local_saca, Vector3(signf(p.x) * (ANCHO - 0.2), R, clampf(p.z, -LARGO + 1.0, LARGO - 1.0)))
+
+## ¿Hay un defensa del portero entre el rival y el arco?
+func _hay_defensa_entre(gk: Dictionary, desde: Vector3, arco: Vector3) -> bool:
+	var linea := arco - desde
+	var largo := linea.length()
+	for q: Dictionary in jugadores:
+		if q == gk or bool(q["es_local"]) != bool(gk["es_local"]) or bool(q["por"]):
+			continue
+		var r := pos(q) - desde
+		var u := r.dot(linea) / maxf(largo * largo, 0.01)
+		if u > 0.05 and u < 0.95 and (r - linea * u).length() < 2.2:
+			return true
+	return false
+
+## LA COLOCACIÓN DEL PORTERO (14-10-2026). Antes iba por la línea balón-centro
+## del arco a 0,8-5,5 m, y con el balón en una banda dejaba el primer palo
+## abierto. Ahora se pone en la BISECTRIZ del ángulo que forman el balón y los
+## dos palos (tapa lo mismo a cada lado) y adelanta según dónde esté el balón:
+## lejos, de líbero a 8-12 m (más con la línea alta); en tres cuartos, a 4-8;
+## en el área, a 1,5-4; y nunca fuera del ancho del arco con margen.
+static func colocacion_portero(b: Vector3, arco: Vector3, linea := 1) -> Vector3:
+	var hacia := signf(arco.z)
+	var bb := Vector3(b.x, 0, b.z)
+	var dist := bb.distance_to(arco)
+	var prof: float
+	if dist > 45.0:
+		prof = 8.0 + 2.0 * float(linea) + clampf((dist - 45.0) * 0.05, 0.0, 1.0)
+	elif dist > 25.0:
+		prof = lerpf(4.5, 8.0 + float(linea), (dist - 25.0) / 20.0)
+	elif dist > 11.0:
+		prof = lerpf(1.6, 4.5, (dist - 11.0) / 14.0)
+	else:
+		prof = lerpf(0.9, 1.6, dist / 11.0)
+	var p1 := Vector3(-PALO, 0, arco.z)
+	var p2 := Vector3(PALO, 0, arco.z)
+	var bis := ((p1 - bb).normalized() + (p2 - bb).normalized()).normalized()
+	var z_obj := arco.z - hacia * prof
+	var obj := Vector3(0, 0, z_obj)
+	## Con el balón por delante, en la bisectriz; si está por detrás de la
+	## línea del portero (casi en el córner), pegado al primer palo.
+	if absf(bis.z) > 0.05 and (z_obj - bb.z) * hacia > 0.0:
+		var u := (z_obj - bb.z) / bis.z
+		obj.x = bb.x + bis.x * u
+	else:
+		obj.x = signf(bb.x) * PALO * 0.8
+	obj.x = clampf(obj.x, -PALO - 0.6, PALO + 0.6)
+	return obj

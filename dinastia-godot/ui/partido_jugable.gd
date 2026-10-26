@@ -260,6 +260,8 @@ func _montar(duracion_mitad: float) -> void:
 	_repe.setup(motor.jugadores, balon)
 	_repe.terminada.connect(_fin_repeticion)
 	motor.terminado.connect(_al_terminar)
+	motor.eliminatoria = eliminatoria
+	PartidoJugableTanda.poner(self)
 	## La cámara, detrás de tu jugador.
 	_cam = Camera3D.new()
 	_cam.fov = 58.0
@@ -280,7 +282,7 @@ func _montar(duracion_mitad: float) -> void:
 ## lanzamientos, detrás del balón.
 func _actualizar_camara(delta: float) -> void:
 	var foco: Vector3
-	var d := MotorJugable.dir_ataque(_es_local_usuario)
+	var d := 1.0 if not motor.tanda.is_empty() else MotorJugable.dir_ataque(_es_local_usuario)
 	if motor.apuntando or motor.estado == "saque" and not motor.usuario.is_empty() and motor.saque.get("lanzador") == motor.usuario:
 		foco = motor.balon.position
 	elif not motor.usuario.is_empty():
@@ -289,19 +291,30 @@ func _actualizar_camara(delta: float) -> void:
 		foco = motor.balon.position
 	var detras := Vector3(0, 12.5, -15.0 * d)
 	var mira := foco + Vector3(0, 0.5, 10.0 * d)
-	if motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "penal":
+	## En la tanda, todos tiran al arco de +Z: siempre detrás del punto de penal.
+	if not motor.tanda.is_empty() or motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "penal":
 		detras = Vector3(0, 3.2, -7.0 * d)
 	elif motor.apuntando:
 		## Córner y falta: detrás del balón, mirando adonde apuntas.
 		var dir := motor.direccion_apunte()
 		detras = -dir * 10.0 + Vector3(0, 8.5, 0)
 		mira = foco + dir * 18.0
+	## EL PORTERO (Carrera, 25-10-2026): detrás de su arco y por encima de la red,
+	## mirando al campo entre él y el balón (detrás de él a ras del campo quedaba
+	## fuera de cuadro, debajo de la cámara). Ahí el límite es el de detrás del arco.
+	var lim := Vector3(33.0, 0, 51.0)
+	var gk := not motor.usuario.is_empty() and bool(motor.usuario["por"]) and not motor.apuntando and motor.estado != "saque"
+	if gk:
+		var yo := motor.pos(motor.usuario)
+		foco = yo
+		detras = Vector3(0, 8.0, -10.0 * d)
+		mira = yo + Vector3((motor.balon.position.x - yo.x) * 0.4, 0.5, d * clampf((motor.balon.position.z - yo.z) * d * 0.3, 8.0, 12.0))
+		lim.z = 60.5
 	var deseada := foco + detras
 	## LA CÁMARA NO SALE DEL CAMPO (29-9-2026). Pegada a la grada se veía el
 	## público de cerca -muñecos y textura estirada- y la tapaban las vallas.
 	## Si choca con el borde, en vez de atravesarlo sube: queda un plano
 	## picado, como la cámara de una transmisión en el fondo.
-	var lim := Vector3(33.0, 0, 51.0)
 	var fuera := maxf(absf(deseada.x) - lim.x, 0.0) + maxf(absf(deseada.z) - lim.z, 0.0)
 	deseada.x = clampf(deseada.x, -lim.x, lim.x)
 	deseada.z = clampf(deseada.z, -lim.z, lim.z)
@@ -316,6 +329,15 @@ func _abrev(nombre: String) -> String:
 ## La guía con las teclas que el jugador haya configurado (Mando).
 func _guia_controles(con_balon: bool) -> String:
 	var c := func(a: String) -> String: return Mando.corto_de(a)
+	## EL PORTERO (Carrera): sus controles, no los de campo (26-10-2026).
+	if motor.estado == "tanda" and motor.tanda_me_toca_parar():
+		return Idiomas.t("PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro") % c.call("jugar_tiro")
+	if not motor.usuario.is_empty() and bool(motor.usuario["por"]):
+		if con_balon:
+			return Idiomas.t("PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde") % [
+				c.call("jugar_centro"), c.call("jugar_pase"), c.call("jugar_tiro")]
+		return Idiomas.t("PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa") % [
+			c.call("jugar_sprint"), c.call("jugar_pausa")]
 	if con_balon:
 		return Idiomas.t("CON BALÓN: %s pase · %s tiro (mantén) · %s centro · %s al hueco · %s rosca/tenso · %s vaselina/pared · %s proteger · %s sprint · stick der. filigranas") % [
 			c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_filtrado"),
@@ -332,8 +354,9 @@ func _actualizar_apunte() -> void:
 	var tipo := String(motor.saque.get("tipo", ""))
 	var lugar: Vector3 = motor.saque["lugar"]
 	if tipo == "penal":
-		var arco_z := MotorJugable.LARGO * MotorJugable.dir_ataque(_es_local_usuario)
-		var x := -float(motor.apunte["x"]) * MotorJugable.dir_ataque(_es_local_usuario) * (MotorJugable.PALO - 0.35)
+		var da := 1.0 if motor.estado == "tanda" else MotorJugable.dir_ataque(_es_local_usuario)
+		var arco_z := MotorJugable.LARGO * da
+		var x := -float(motor.apunte["x"]) * da * (MotorJugable.PALO - 0.35)
 		var y := 0.35 + float(motor.apunte["y"]) * 1.8
 		var p3 := Vector3(x, y, arco_z)
 		if not _cam.is_position_behind(p3):

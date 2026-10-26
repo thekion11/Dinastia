@@ -97,6 +97,8 @@ var _prox_ambiente := 0.0
 ## pasa. Y con «Controlar a mi equipo» manejas a tus jugadores como en FC.
 var _motor: MotorJugable
 var _mi_lado := -1
+## Las ocasiones jugables del DT (fila 14): null si están apagadas o no es tu partido.
+var _ocasion: OcasionJugable
 var _acum_motor := 0.0
 var _t_tactica := 0.0
 var _cursor: Node3D

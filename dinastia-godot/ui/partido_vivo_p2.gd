@@ -16,7 +16,7 @@ func _presionar_desde_el_palco() -> void:
 	_palco_usado = true
 	var cargo := roles.nombre_del_cargo()
 	if Azar.suerte(0.55):
-		_escribir("[color=#8ea595]👔 El %s baja al borde del campo. El equipo se sacude y sube una marcha.[/color]" % cargo)
+		_escribir("[color=#8ea595]%s[/color]" % (Idiomas.t("👔 El %s baja al borde del campo. El equipo se sacude y sube una marcha.") % Idiomas.t(cargo)))
 		for j in _mi_once():
 			j.moral = clampi(j.moral + 3, 10, 99)
 	else:
@@ -27,7 +27,7 @@ func _presionar_desde_el_palco() -> void:
 		var s := clampi(int(roles.dt_empleado.get("sintonia", 60)) - 9, 0, 100)
 		roles.dt_empleado["sintonia"] = s
 		if s < 18:
-			_escribir("[color=#e05555]Ruptura en el cuerpo técnico:[/color] %s no aguanta más la injerencia desde arriba." % roles.dt_nombre())
+			_escribir("[color=#e05555]Ruptura en el cuerpo técnico:[/color] %s" % (Idiomas.t("%s no aguanta más la injerencia desde arriba.") % roles.dt_nombre()))
 	Sonido.toca("clic", Sonido.Bus.INTERFAZ)
 	_refrescar()
 
@@ -80,7 +80,7 @@ func _perilla(etiqueta: String, opciones: Array, actual: int, al_cambiar: Callab
 		b.pressed.connect(func() -> void:
 			al_cambiar.call(i)
 			partido.invalidar_fuerza()
-			_escribir("[color=#8ea595]%d'  %s: %s.[/color]" % [partido.minuto, etiqueta, opciones[i]])
+			_escribir("[color=#8ea595]%d'  %s: %s.[/color]" % [partido.minuto, Idiomas.t(etiqueta), Idiomas.t(String(opciones[i]))])
 			_refrescar())
 		h.add_child(b)
 
@@ -93,7 +93,7 @@ func _gritar_desde_la_banda() -> void:
 		## Y ya no es solo este partido (estadio 2.0): el tribunal sanciona.
 		var fechas := 1 + (1 if fed.enojo_arbitral >= 4 else 0)
 		fed.sancionar_dt(fechas)
-		_escribir("[color=#e05555][b]🟥 ¡Te expulsan a ti![/b][/color] Protestar de forma airada al cuarto árbitro. Te vas a la tribuna, y el tribunal te sanciona con %d partido(s) más desde la grada." % fechas)
+		_escribir("[color=#e05555][b]🟥 ¡Te expulsan a ti![/b][/color] %s" % (Idiomas.t("Protestar de forma airada al cuarto árbitro. Te vas a la tribuna, y el tribunal te sanciona con %d partido(s) más desde la grada.") % fechas))
 		_refrescar()
 		return
 	_escribir("[color=#8ea595]%s[/color]" % Azar.uno(_FRASES_BANDA))
@@ -110,7 +110,7 @@ func _hacer_cambio(entra: Jugador) -> void:
 		return
 	var problema := partido.cambiar(_saliendo, entra)
 	if problema != "":
-		_escribir("[color=#e05555]No se puede: %s.[/color]" % problema)
+		_escribir("[color=#e05555]%s[/color]" % (Idiomas.t("No se puede: %s.") % Idiomas.t(problema)))
 	_saliendo = null
 	_refrescar()
 
@@ -317,8 +317,8 @@ func _al_gol(club: Club, autor: Jugador, minuto: int, _asistente: Jugador = null
 		Sonido.toca("gol_" + estilo if Sonido.catalogo().has("gol_" + estilo) else "gol")
 	else:
 		Sonido.toca("gol_rival")
-	_escribir("[color=%s][b]%d'  ¡GOL de %s![/b][/color]  %s" % [
-		"#4caf6d" if mio else "#e05555", minuto, club.nombre,
+	_escribir("[color=%s][b]%d'  %s[/b][/color]  %s" % [
+		"#4caf6d" if mio else "#e05555", minuto, Idiomas.t("¡GOL de %s!") % club.nombre,
 		autor.nombre if autor else ""])
 
 ## LA FRASE DE LA CRÓNICA, SIN TOCAR `Azar` (25-9-2026). Antes salía de
@@ -326,10 +326,20 @@ func _al_gol(club: Club, autor: Jugador, minuto: int, _asistente: Jugador = null
 ## el MISMO partido terminaba distinto mirado en texto que en 3D o simulado (lo
 ## cazó la prueba "MODOS DE SIMULACIÓN" del banco). Contar no puede decidir
 ## nada: la frase sale de un generador propio sembrado con quién y cuándo.
+##
+## Y SIN REPETIRSE SEGUIDA: si toca la misma plantilla que la última vez, pasa a la siguiente.
+var _ultima_frase := {}
+
 func _frase(frases: Array, quien: String, minuto: int) -> String:
 	var r := RandomNumberGenerator.new()
 	r.seed = hash("%s|%d" % [quien, minuto])
-	return String(frases[r.randi_range(0, frases.size() - 1)])
+	var i := r.randi_range(0, frases.size() - 1)
+	var clave := String(frases[0])
+	if int(_ultima_frase.get(clave, -1)) == i:
+		i = (i + 1) % frases.size()
+	_ultima_frase[clave] = i
+	var t := Idiomas.t(String(frases[i]))
+	return t % quien if t.contains("%s") else t
 
 func _al_remate(club: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 	var mio := club == mi_club
@@ -338,25 +348,22 @@ func _al_remate(club: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 		"atajada":
 			if mio:
 				Sonido.toca("atajada")
-			_escribir("[color=#8ea595]%d'  %s%s[/color]" % [minuto, _frase(_FRASES_ATAJADA, nombre, minuto), nombre])
+			_escribir("[color=#8ea595]%d'  %s[/color]" % [minuto, _frase(_FRASES_ATAJADA, nombre, minuto)])
 		"poste":
 			if mio:
 				Sonido.toca("ocasion")
-			_escribir("[color=#8ea595]%d'  🪵 ¡Al palo! Increíble ocasión de %s[/color]" % [minuto, nombre])
+			_escribir("[color=#8ea595]%d'  %s[/color]" % [minuto, _frase(_FRASES_PALO, nombre, minuto)])
 		_:
-			var frase: String = _frase(_FRASES_FALLO, nombre, minuto)
-			if nombre != "":
-				frase += " — " + nombre
-			_escribir("[color=#8ea595]%d'  %s[/color]" % [minuto, frase])
+			_escribir("[color=#8ea595]%d'  %s[/color]" % [minuto, _frase(_FRASES_FALLO, nombre if nombre != "" else Idiomas.t("el delantero"), minuto)])
 
 func _a_la_tarjeta(j: Jugador, roja: bool, minuto: int) -> void:
 	Sonido.toca("roja" if roja else "amarilla")
 	if roja:
-		_escribir("[color=#e05555]%d'  ROJA a %s.[/color] Se va a la calle." % [minuto, j.nombre])
+		_escribir("[color=#e05555]%d'  %s[/color] Se va a la calle." % [minuto, Idiomas.t("ROJA a %s.") % j.nombre])
 	elif j.club_id == mi_club.id:
 		## Solo se cuentan las amarillas de los tuyos: las del rival son ruido
 		## que tapa lo que sí importa.
-		_escribir("[color=#c9a227]%d'  Amarilla a %s.[/color]" % [minuto, j.nombre])
+		_escribir("[color=#c9a227]%d'  %s[/color]" % [minuto, Idiomas.t("Amarilla a %s.") % j.nombre])
 
 ## Lo que decide el árbitro por su cuenta -`_arb`/`decision_arbitral` de
 ## `Partido`-. Se narra siempre, pase lo que pase con la tarjeta o el gol de
@@ -373,9 +380,9 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 	## buena noticia y no merece el mismo golpe seco.
 	if mio:
 		Sonido.toca("lesion")
-	_escribir("[color=%s]%d'  %s cae lesionado: %d semana%s fuera.[/color]%s" % [
-		"#e05555" if mio else "#8ea595", minuto, j.nombre, semanas,
-		"" if semanas == 1 else "s",
+	var baja := Idiomas.t("%s cae lesionado: %d semana fuera.") if semanas == 1 else Idiomas.t("%s cae lesionado: %d semanas fuera.")
+	_escribir("[color=%s]%d'  %s[/color]%s" % [
+		"#e05555" if mio else "#8ea595", minuto, baja % [j.nombre, semanas],
 		"  [color=#c9a227]Te toca mover el banquillo.[/color]" if mio else ""])
 	if mio:
 		_poner_velocidad(0)   ## se para el reloj: hay una decisión que tomar
@@ -384,7 +391,7 @@ func _al_cambio(sale: Jugador, entra: Jugador, minuto: int) -> void:
 	## Otro sonido nuevo: `cambio_hecho` solo lo dispara ESTE lado (el rival
 	## cambia sin pasar por aqui), asi que suena siempre, sin comprobar "mio".
 	Sonido.toca("cambio")
-	_escribir("[color=#3fa06a]%d'  Cambio: entra %s por %s.[/color]" % [minuto, entra.nombre, sale.nombre])
+	_escribir("[color=#3fa06a]%d'  %s[/color]" % [minuto, Idiomas.t("Cambio: entra %s por %s.") % [entra.nombre, sale.nombre]])
 
 ## LA LISTA DE GOLES de `vPost()`. `Partido.cronica` guarda cada gol con minuto y
 ## autor desde siempre; lo que faltaba era volver a leerla al terminar, para que
@@ -401,7 +408,7 @@ func _escribir_goles() -> void:
 		var de_los_mios := String(e.get("club", "")) == mi_club.id
 		_escribir("[color=%s]  %d'  %s[/color]" % [
 			"#4caf6d" if de_los_mios else "#e05555",
-			int(e.get("min", 0)), String(e.get("autor", "?"))])
+			int(e.get("min", 0)), Idiomas.t(String(e.get("autor", "?")))])
 
 ## El cuadro de "ESTADÍSTICAS DEL PARTIDO" de `vPost()`, en texto: siete filas
 ## con el tuyo primero, ganes o pierdas, seas local o visitante -leer tu propia

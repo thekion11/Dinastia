@@ -32,13 +32,22 @@ static func arbitro_de(rival_id: String, semana: int) -> Dictionary:
 ## El entrenador rival. Sale del hash de SU id -no de la semana-, así que un
 ## club tiene siempre el mismo DT: es parte de su identidad, como su escudo.
 ## `dtDe(clubId)` del HTML.
+## Si el club cambió de DT (`MercadoDT`, 26-10-2026), manda el actual, que se
+## guarda en el propio club como meta «dt_actual».
 static func dt_de(c: Club) -> Dictionary:
+	if c != null and c.has_meta("dt_actual"):
+		return c.get_meta("dt_actual")
+	return dt_con_semilla(c, c.id if c != null else "")
+
+## Un DT para el club a partir de una semilla de texto (el id del club para el de
+## siempre; el id más la fecha para uno nuevo del mercado de entrenadores).
+static func dt_con_semilla(c: Club, semilla: String) -> Dictionary:
 	var estilos: Dictionary = Datos.tabla("DT_ESTILOS")
 	if c == null or estilos == null or estilos.is_empty():
 		return {"nombre": "su entrenador", "estilo": "", "descripcion": ""}
 	var h := 5
-	for i in c.id.length():
-		h = (h * 23 + c.id.unicode_at(i)) & 0x7FFFFFFF
+	for i in semilla.length():
+		h = (h * 23 + semilla.unicode_at(i)) & 0x7FFFFFFF
 	var claves: Array = estilos.keys()
 	var estilo := String(claves[h % claves.size()])
 	## Los nombres salen de las mismas bolsas por país que usa el generador de

@@ -52,6 +52,12 @@ const JORNADA := {
 	"MAR": [44, "Código del Trabajo", "2.288 horas al año fuera del campo (unas 44 semanales).", true],
 	"RSA": [45, "Basic Conditions of Employment Act", "45 horas semanales.", true],
 	"AUS": [38, "National Employment Standards", "38 horas más horas adicionales razonables.", true],
+## Lote 1 de países nuevos (26-10-2026, fila 26 s4): POR, NED, BEL, CRO, DEN.
+	"POR": [40, "Código del Trabajo", "40 horas semanales y 8 diarias.", true],
+	"NED": [40, "Ley de horarios de trabajo", "Lo habitual son 36-40 horas; la ley fija el máximo.", false],
+	"BEL": [38, "Ley del trabajo de 1971", "38 horas semanales de media.", true],
+	"CRO": [40, "Ley del Trabajo", "40 horas semanales.", true],
+	"DEN": [37, "Convenios colectivos", "37 horas semanales por convenio.", true],
 }
 
 ## Cambios de ley con fecha: [pais, anio, mes, dia, horas nuevas, texto].
@@ -93,20 +99,72 @@ static func factor_estructura(pais: String, anio: int, semana: int) -> float:
 static func max_anios(j: Jugador) -> int:
 	return MAX_ANIOS_MENOR if j != null and j.edad < 18 else MAX_ANIOS
 
+## Toda firma pasa por aquí (fichaje, renovación, cláusula): la primera firma
+## nueva cierra el primer contrato del canterano. El sueldo lo pone quien firma
+## (o el próximo `tasar()`), no esta función.
 static func ajustar_anios(j: Jugador, anios: int) -> int:
+	if j != null:
+		j.primer_contrato = false
 	return clampi(anios, 1, max_anios(j))
 
 ## El tipo de contrato de un jugador, para la ficha.
+## Solo se pinta (ficha del jugador): se traduce aquí, nunca se guarda ni se compara.
 static func tipo(j: Jugador, cedido: bool) -> String:
 	if cedido:
-		return "Cedido"
+		return Idiomas.t("Cedido")
 	if j.edad < 18:
-		return "Menor (máx. %d años)" % MAX_ANIOS_MENOR
-	return "Profesional (máx. %d)" % MAX_ANIOS
+		return Idiomas.t("Menor (máx. %d años)") % MAX_ANIOS_MENOR
+	return Idiomas.t("Profesional (máx. %d)") % MAX_ANIOS + _texto_clausula(j)
 
+static func _texto_clausula(j: Jugador) -> String:
+	if j.factor_clausula() >= 1.0:
+		return ""
+	return " · " + Idiomas.t("cláusula de descenso: −%d %% hasta volver a subir") % int(round(j.rebaja_descenso * 100.0))
+
+## LA CLÁUSULA DE DESCENSO (26-10, decisión del dueño). Al bajar, el plantel cobra
+## entre un 30 y un 50 % menos hasta que el club vuelva a subir. Cuánto, según el
+## contrato: el que más cobra en el plantel firmó la rebaja más dura (hasta 0,50) y
+## el último de la escala la más suave (0,30), con ±0,03 de cada firma (hash, para
+## no tocar `Azar`). Los de más caché (tercio de arriba con rebaja ≥ 0,44) pueden
+## pedir salir: la mitad, por hash. Devuelve cuántos piden salir.
+const REBAJA_MIN := 0.30
+const REBAJA_MAX := 0.50
+
+## `nuevos`: los que llegan a un club que sigue abajo (cantera, renovaciones de la reposición) firman ya con
+## la cláusula del plantel, sin pedir salir: sin esto, en dos años la nómina volvía a la de Primera.
+static func aplicar_descenso(c: Club, anio: int, nuevos: bool = false) -> int:
+	var orden: Array[Jugador] = c.plantilla.duplicate()
+	orden.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.sueldo_pleno() > b.sueldo_pleno())
+	var n := orden.size()
+	var piden := 0
+	for i in n:
+		var j := orden[i]
+		if j.factor_clausula() < 1.0:
+			continue   ## ya la tiene (no se encadena)
+		var h := absi(hash("%s|%d|descenso" % [j.id, anio]))
+		var escala := 1.0 - float(i) / float(maxi(1, n - 1))
+		var r := REBAJA_MIN + (REBAJA_MAX - REBAJA_MIN) * escala + (float(h % 61) - 30.0) / 1000.0
+		j.rebaja_descenso = clampf(r, REBAJA_MIN, REBAJA_MAX)
+		j.descenso_club = c.id
+		j.sueldo = int(max(30.0, round(float(j.sueldo) * (1.0 - j.rebaja_descenso) / 10.0) * 10.0))
+		if not nuevos and i < n / 3 and j.rebaja_descenso >= 0.44 and (h / 61) % 2 == 0:
+			j.pide_salir = true
+			piden += 1
+	return piden
+
+## Al ascender, la cláusula se levanta y cada uno vuelve a cobrar su sueldo pleno.
+static func levantar_descenso(c: Club) -> void:
+	for j in c.plantilla:
+		if j.descenso_club == c.id and j.rebaja_descenso > 0.0:
+			j.sueldo = int(round(float(j.sueldo) / (1.0 - j.rebaja_descenso) / 10.0) * 10.0)
+		j.rebaja_descenso = 0.0
+		j.descenso_club = ""
+
+## La línea de la ficha del club. La norma y la nota se traducen por separado
+## porque la pantalla mete el texto ya montado dentro de su propia plantilla.
 static func texto_jornada(pais: String, anio: int, semana: int) -> String:
 	var j: Array = JORNADA.get(pais, [44, "", "", false])
-	return "%d h semanales · %s. %s" % [horas(pais, anio, semana), String(j[1]), String(j[2])]
+	return Idiomas.t("%d h semanales · %s. %s") % [horas(pais, anio, semana), Idiomas.t(String(j[1])), Idiomas.t(String(j[2]))]
 
 ## Una vez por semana: avisa de los cambios de ley que caen en esta semana.
 func semana(c: Club, anio: int, sem: int) -> void:

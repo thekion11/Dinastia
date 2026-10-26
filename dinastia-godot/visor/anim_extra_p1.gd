@@ -399,11 +399,18 @@ static func protestar(esq: Skeleton3D, pre: String) -> Animation:
 	_p(a, esq, "espalda2", [[0.0, Vector3.ZERO], [0.35, Vector3(-8, 0, 0)], [1.6, Vector3.ZERO]], pre)
 	return a
 
-## Brazos en jarra: manos a la cintura, codos afuera.
+## Brazos en jarra: manos apoyadas en las caderas, codos afuera. Rehecho el 26-10-2026: la
+## pose vieja (-10, 40, 100) dejaba las manos delante, como sosteniendo una bandeja. Estos
+## ángulos salen de una búsqueda con el esqueleto (mano junto a la cresta de la cadera, codo a
+## 42 cm del eje): hace falta girar el brazo sobre su eje (X, igual en los dos lados), cosa
+## que `_brazos` no hace.
 static func brazos_jarra(esq: Skeleton3D, pre: String) -> Animation:
 	var a := AnimQuaternius._nueva(2.0, true)
 	for lado: String in ["i", "d"]:
-		_brazos(a, esq, pre, lado, [[0.0, -10, 40, 100], [2.0, -10, 40, 100]])
+		var s := 1.0 if lado == "i" else -1.0
+		var b := Vector3(55, 93 * s, 96 * s)
+		_p(a, esq, "brazo_" + lado, [[0.0, b], [1.0, b + Vector3(0, 0, 2 * s)], [2.0, b]], pre)
+		_p(a, esq, "antebrazo_" + lado, [[0.0, Vector3(70, 0, 0)], [2.0, Vector3(70, 0, 0)]], pre)
 	_p(a, esq, "cuello", [[0.0, Vector3(4, 0, 0)], [1.0, Vector3(4, 12, 0)], [2.0, Vector3(4, 0, 0)]], pre)
 	return a
 

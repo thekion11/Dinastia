@@ -33,12 +33,34 @@ var fondo := "noche"
 var funda := "1a1a1a"
 var letra := 1
 var foto_perfil := "retrato"   ## "retrato" (tu personaje) o "galeria"
-var mensajes: Array[Dictionary] = []   ## {de, icono, texto, anio, semana, leido}
+var mensajes: Array[Dictionary] = []   ## {de, icono, texto, anio, semana, leido[, args, trad_args]}
 
-func recibir(de: String, icono: String, texto: String, anio: int, semana: int) -> void:
-	mensajes.push_front({"de": de, "icono": icono, "texto": texto, "anio": anio, "semana": semana, "leido": false})
+## CLAVES ESTABLES (s3, 26-10-2026). `de` y `texto` son claves de `Idiomas.t` en
+## castellano; si el mensaje lleva cifras o nombres, `texto` es la PLANTILLA y
+## van aparte en `args` (y `trad_args` si también son frases que traducir, como
+## el título y el cuerpo de una noticia). Se guardan así en la partida y se
+## traducen al enseñarlas (`texto`): cambiar de idioma también cambia los
+## mensajes viejos. Antes se guardaba la frase ya montada y solo se traducía si
+## algún patrón de regex la reconocía.
+func recibir(de: String, icono: String, texto: String, anio: int, semana: int, args: Array = [], trad_args := false) -> void:
+	var msj := {"de": de, "icono": icono, "texto": texto, "anio": anio, "semana": semana, "leido": false}
+	if not args.is_empty():
+		msj["args"] = args.duplicate()
+		msj["trad_args"] = trad_args
+	mensajes.push_front(msj)
 	if mensajes.size() > MAX_MENSAJES:
 		mensajes.resize(MAX_MENSAJES)
+
+## El texto de un mensaje en el idioma de ahora.
+static func texto(msj: Dictionary) -> String:
+	var plantilla := String(msj.get("texto", ""))
+	var args: Array = msj.get("args", [])
+	if args.is_empty():
+		return Idiomas.t(plantilla)
+	var a: Array = []
+	for x: Variant in args:
+		a.append(Idiomas.t(String(x)) if bool(msj.get("trad_args", false)) else x)
+	return Idiomas.t(plantilla) % a
 
 ## Algunas noticias también te llegan como mensaje de alguien: [de, icono], o
 ## vacío si no es cosa de nadie en concreto.
@@ -72,7 +94,7 @@ func chats() -> Array[Dictionary]:
 	for msj: Dictionary in mensajes:
 		var de := String(msj["de"])
 		if not por.has(de):
-			por[de] = {"de": de, "icono": msj["icono"], "ultimo": msj["texto"], "sin_leer": 0, "mensajes": []}
+			por[de] = {"de": de, "icono": msj["icono"], "ultimo": texto(msj), "sin_leer": 0, "mensajes": []}
 			orden.append(de)
 		(por[de]["mensajes"] as Array).append(msj)
 		if not bool(msj["leido"]):
@@ -112,12 +134,12 @@ func textura_perfil(m: Mundo) -> Texture2D:
 func usar_foto_de_galeria(ruta: String) -> String:
 	var img := Image.load_from_file(ruta)
 	if img == null or img.is_empty():
-		return "no se pudo abrir esa imagen"
+		return Idiomas.t("no se pudo abrir esa imagen")
 	var lado := mini(img.get_width(), img.get_height())
 	var recorte := img.get_region(Rect2i((img.get_width() - lado) / 2, (img.get_height() - lado) / 2, lado, lado))
 	recorte.resize(256, 256, Image.INTERPOLATE_LANCZOS)
 	if recorte.save_png(RUTA_FOTO) != OK:
-		return "no se pudo guardar la foto"
+		return Idiomas.t("no se pudo guardar la foto")
 	foto_perfil = "galeria"
 	return ""
 

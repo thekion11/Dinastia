@@ -46,6 +46,15 @@ func es_clasico(a: Club, b: Club) -> bool:
 func mi_club() -> Club:
 	return clubes.get(mi_club_id)
 
+## El club cuya copa se juega: el tuyo o, en la Carrera de Jugador (sin club
+## que dirigir), el de tu futbolista: así su copa es la de SU país y su cruce
+## puede jugarse en el césped (26-10-2026).
+func club_de_la_copa() -> Club:
+	var c := mi_club()
+	if c == null and carrera_jugador != null:
+		c = carrera_jugador.club(self)
+	return c
+
 func _demarcacion_al_azar(grupo: String) -> String:
 	var t: Variant = Datos.tabla("POS_POR_GRUPO")
 	if t is Dictionary and (t as Dictionary).has(grupo):
@@ -280,7 +289,7 @@ func aplicar_bonificadores() -> void:
 		c.bonus_defensa *= vestuario.factor_defensa(c)
 
 func _montar_copa() -> void:
-	var mio := mi_club()
+	var mio := club_de_la_copa()
 	var pais := mio.pais if mio != null else "CHI"
 	var aspirantes: Array[Club] = []
 	for c: Club in clubes.values():

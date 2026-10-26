@@ -51,26 +51,41 @@ func _pintar_cantera(c: Club) -> void:
 		var tl := p._texto(11, Principal.COL_VERDE)
 		tl.text = Idiomas.t("LISTOS PARA DEBUTAR")
 		p._lista_cantera.add_child(tl)
-		var nombres: Array[String] = []
+		## Botones y no una lista de nombres separada por comas: el siguiente
+		## paso natural es mirar su ficha, y antes había que ir a buscarlo.
+		var flujo := HFlowContainer.new()
+		flujo.add_theme_constant_override("h_separation", 6)
+		flujo.add_theme_constant_override("v_separation", 6)
+		p._lista_cantera.add_child(flujo)
 		for j: Jugador in listos:
-			nombres.append(j.nombre)
-		var ll := p._texto(12, Principal.COL_TEXTO)
-		ll.text = ", ".join(nombres)
-		ll.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		p._lista_cantera.add_child(ll)
+			var bl := Button.new()
+			bl.text = "%s  %d/%d" % [j.nombre, j.ovr, j.pot]
+			bl.add_theme_font_size_override("font_size", 11)
+			bl.tooltip_text = Idiomas.t("Ver su ficha")
+			bl.pressed.connect(p._ver_ficha.bind(j))
+			flujo.add_child(bl)
 		p._lista_cantera.add_child(HSeparator.new())
 
 	var cats := ct.por_categoria(c)
+	var hay_alguien := not camada.is_empty() or not listos.is_empty()
 	for clave: String in cats:
 		var datos: Dictionary = cats[clave]
 		var jugadores: Array = datos["jugadores"]
 		if jugadores.is_empty():
 			continue
+		hay_alguien = true
 		var tcat := p._texto(11, Principal.COL_SUAVE)
-		tcat.text = String(datos["nombre"]).to_upper()
+		tcat.text = Idiomas.t(String(datos["nombre"])).to_upper()
 		p._lista_cantera.add_child(tcat)
 		for j: Jugador in jugadores:
 			p._lista_cantera.add_child(_fila_canterano(j, ct, c))
+	## ESTADO VACÍO: sin canteranos la pestaña saltaba de la academia a los
+	## fondos sin decir por qué no había nadie.
+	if not hay_alguien:
+		var vacio := p._texto(12, Principal.COL_SUAVE)
+		vacio.text = Idiomas.t("Todavía no hay canteranos en el plantel. Cada pretemporada llega una camada nueva, y los chicos de la academia suben al cumplir 16.")
+		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		p._lista_cantera.add_child(vacio)
 	## Las dinastías van al final: se leen después de la camada, que es lo que
 	## se viene a mirar aquí todas las semanas.
 	_pintar_linaje(c)
@@ -349,3 +364,63 @@ func _fila_comparar(g: GridContainer, jugadores: Array[Jugador], etiqueta: Strin
 	for i in valores.size():
 		var texto: String = formatear.call(valores[i]) if formatear.is_valid() else str(valores[i])
 		p._celda(g, texto, Principal.COL_VERDE if numeros[i] == mejor else Principal.COL_TEXTO, true)
+
+## Una fila de canterano (viene de la capa 1, donde ya no cabía).
+## El nombre es un botón que abre su ficha, como en el linaje y en el plantel:
+## antes era una etiqueta y era la única lista de jugadores que no llevaba a
+## ninguna parte.
+func _fila_canterano(j: Jugador, ct: Cantera, c: Club) -> HBoxContainer:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	fila.add_child(p._retrato(j, 24))
+	var listo := ct.listo_para_debutar(j)
+	var linaje: Dictionary = ct.linaje_de(j)
+	var etiqueta := (Idiomas.t(" · hijo de %s") % String(linaje.get("padre", ""))) if not linaje.is_empty() else ""
+	var nom := Button.new()
+	nom.flat = true
+	nom.text = Idiomas.t("%s  ·  %d años  ·  %d/%d%s") % [j.nombre, j.edad, j.ovr, j.pot, etiqueta]
+	nom.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	nom.add_theme_font_size_override("font_size", maxi(8, int(round(12.0 * p._escala_texto))))
+	nom.add_theme_color_override("font_color", p._color_accesible(p._color_de_paleta(Principal.COL_VERDE if listo else Principal.COL_TEXTO)))
+	nom.tooltip_text = Idiomas.t("Listo para debutar en el primer equipo") if listo else Idiomas.t("Ver su ficha")
+	nom.pressed.connect(p._ver_ficha.bind(j))
+	fila.add_child(nom)
+	## EL RIESGO DE FUGA. `riesgo_fuga()` corría desde el principio -se resuelve
+	## solo en el pulso semanal de la cantera- pero no se veía en ninguna parte,
+	## y sin verlo la beca es un gasto sin motivo: lo que la justifica es
+	## exactamente este número, que baja dos puntos al becar. Cuanto mejor es el
+	## chico (más `pot` sobre `ovr`), más se lo quieren llevar.
+	## DE DÓNDE SALIÓ: `Cantera.origen_de()`, una línea de historia por chico.
+	var org: Dictionary = ct.origen_de(j)
+	if not org.is_empty():
+		var o := p._texto(11, Principal.COL_SUAVE)
+		o.text = "%s %s" % [String(org.get("icono", "")), Idiomas.t(String(org.get("frase", "")))]
+		o.tooltip_text = Idiomas.t(String(org.get("historia", "")))
+		o.mouse_filter = Control.MOUSE_FILTER_PASS
+		o.custom_minimum_size = Vector2(150, 0)
+		o.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		fila.add_child(o)
+	var fuga := ct.riesgo_fuga(j)
+	if fuga > 0.0:
+		var rf := p._texto(11, Principal.COL_ROJO if fuga >= 0.05 else Principal.COL_SUAVE)
+		rf.text = Idiomas.t("fuga %.1f%%") % (fuga * 100.0)
+		rf.tooltip_text = Idiomas.t("Probabilidad de que se lo lleve otro club esta semana. La beca la baja, y las instalaciones de cantera también.")
+		rf.mouse_filter = Control.MOUSE_FILTER_PASS
+		rf.custom_minimum_size = Vector2(64, 0)
+		fila.add_child(rf)
+	if ct.tiene_beca(j):
+		var tag := p._texto(11, Principal.COL_VERDE)
+		tag.text = Idiomas.t("becado")
+		fila.add_child(tag)
+	else:
+		var costo := ct.coste_beca()
+		var b := Button.new()
+		b.text = Idiomas.t("Becar  %s") % p._dinero(costo)
+		b.add_theme_font_size_override("font_size", 11)
+		b.disabled = costo > c.saldo
+		b.tooltip_text = Idiomas.t("No te alcanza la caja") if b.disabled else Idiomas.t("La beca baja el riesgo de que se lo lleven gratis.")
+		b.pressed.connect(func() -> void: _becar(j))
+		fila.add_child(b)
+	return fila

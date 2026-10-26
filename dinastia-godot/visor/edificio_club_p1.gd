@@ -240,23 +240,8 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			TunelVestuario._caja(nodo, Vector3(caja.end.x - 0.5, y0 + 1.0, cz), Vector3(0.5, 2.0, 2.6), TunelVestuario._mat(Color(0.75, 0.75, 0.7), 0.5), true)
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 2.9, cz), Vector3(caja.size.x - 0.4, 0.3, 0.3), metal, false)
 		"Utilería":
-			## Estanterías de botas, cestos de balones y el burro de la ropa.
-			for k in 3:
-				TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.4, y0 + 0.4 + k * 0.6, cz), Vector3(0.6, 0.06, caja.size.y - 1.0), madera, false)
-			TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.4, y0 + 1.0, cz), Vector3(0.6, 2.0, 0.08), madera, true)
-			for k in 4:
-				var b := MeshInstance3D.new()
-				var sm := SphereMesh.new()
-				sm.radius = 0.11
-				sm.height = 0.22
-				b.mesh = sm
-				b.position = Vector3(cx + 0.4 + (k % 2) * 0.25, y0 + 0.7, cz + (k / 2) * 0.25)
-				b.material_override = TunelVestuario._mat(Color(0.95, 0.95, 0.95), 0.4)
-				nodo.add_child(b)
-			TunelVestuario._caja(nodo, Vector3(cx + 0.5, y0 + 0.3, cz + 0.12), Vector3(0.7, 0.6, 0.7), oscuro, true)
-			for k in 5:
-				TunelVestuario._caja(nodo, Vector3(caja.end.x - 0.5, y0 + 1.5, caja.position.y + 0.8 + k * 0.6), Vector3(0.06, 0.8, 0.5), club, false)
-			TunelVestuario._caja(nodo, Vector3(caja.end.x - 0.5, y0 + 1.95, cz), Vector3(0.05, 0.05, caja.size.y - 0.8), Texturas.metal(Color(0.7, 0.7, 0.72), 0.4), false)
+			## Estantería, burro de camisetas, jaula de balones… (`SalasClub`).
+			SalasClub.utileria(nodo, caja, y0, c1, c2)
 		"Enfermería":
 			var camas := clampi(1 + nivel("med") / 3, 1, 4)
 			var blanco := TunelVestuario._mat(Color(0.95, 0.96, 0.97), 0.6)
@@ -359,27 +344,9 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 					Vector3(0.45, 0.1, 0.35), TunelVestuario._mat([Color(0.9, 0.6, 0.2), Color(0.3, 0.6, 0.25), Color(0.85, 0.85, 0.75), Color(0.7, 0.2, 0.15)][k], 0.8), false)
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 2.7, caja.position.y + 0.4), Vector3(caja.size.x - 0.6, 0.5, 0.7), Texturas.metal(Color(0.6, 0.62, 0.65), 0.4), false)
 		"Museo del club":
-			## Vitrinas con una copa por título (hasta 12) y la camiseta histórica.
-			var vitrinas := clampi(2 + nivel("museo") / 2, 2, 6)
-			var titulos := clampi(int(ctx.get("titulos", 0)), 0, 12)
-			var oro := Texturas.metal(Color(0.95, 0.78, 0.3), 0.25)
-			for k in vitrinas:
-				var px := caja.position.x + 0.9 + k * (caja.size.x - 1.8) / maxf(1.0, float(vitrinas - 1))
-				var pz := caja.position.y + 1.0
-				TunelVestuario._caja(nodo, Vector3(px, y0 + 0.5, pz), Vector3(0.8, 1.0, 0.8), oscuro, true)
-				TunelVestuario._caja(nodo, Vector3(px, y0 + 1.45, pz), Vector3(0.8, 0.9, 0.8), Texturas.cristal(true, true), false)
-				if k < titulos:
-					var copa := MeshInstance3D.new()
-					var cm := CylinderMesh.new()
-					cm.top_radius = 0.16
-					cm.bottom_radius = 0.06
-					cm.height = 0.45
-					copa.mesh = cm
-					copa.position = Vector3(px, y0 + 1.25, pz)
-					copa.material_override = oro
-					nodo.add_child(copa)
-			TunelVestuario._caja(nodo, Vector3(caja.end.x - 0.08, y0 + 1.6, cz + 0.5), Vector3(0.06, 1.0, 0.8), club, false)
-			TunelVestuario._rotulo(nodo, Idiomas.t("%d títulos") % int(ctx.get("titulos", 0)), Vector3(cx, y0 + 2.6, caja.position.y + 0.05), 0.0, 44, Color(0.85, 0.7, 0.3))
+			## Vitrinas con una copa por título (hasta 12), camisetas históricas
+			## enmarcadas y la alfombra del recorrido (`SalasClub`).
+			SalasClub.museo(nodo, caja, y0, c1, c2, int(ctx.get("titulos", 0)), nivel("museo"))
 
 ## Los datos de un objeto de decoración para `Modulos.de_datos`.
 static func datos_deco(clave: String) -> Array:

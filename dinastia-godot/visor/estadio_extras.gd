@@ -299,6 +299,9 @@ static func _edificio(root: Node3D, base: Vector3, tam: Vector3, col: Color, rot
 ## El animal de la mascota sale del hash del club: siempre el mismo. La
 ## lista y el traje están en `MascotaQ` (26-9-2026: de 8 a 17 animales).
 static func animal_de(c: Club) -> String:
+	## La elegida por el jugador manda; si no hay (o ya no existe), la del id.
+	if c.mascota != "" and MascotaQ.ANIMALES.has(c.mascota):
+		return c.mascota
 	var lista: Array = MascotaQ.ANIMALES.keys()
 	return String(lista[absi(hash(c.id + "|mascota")) % lista.size()])
 

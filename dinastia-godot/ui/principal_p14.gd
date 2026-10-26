@@ -1,5 +1,5 @@
 extends "res://ui/principal_p13.gd"
-## [Capa 15/19 de `principal.gd`] _enviar_oferta_negociacion, _al_ajustar_rol_neg, _al_ajustar_campo_neg, _indice_grupo, _paso_pagina, _animar_pagina … (+14)
+## [Capa 13/17 de `principal.gd`] _enviar_oferta_negociacion, _al_ajustar_rol_neg, _al_ajustar_campo_neg, _indice_grupo, _paso_pagina, _animar_pagina … (+14)
 
 func _enviar_oferta_negociacion() -> void:
 	var n := mundo.mercado.negociacion
@@ -11,11 +11,13 @@ func _enviar_oferta_negociacion() -> void:
 	var tipo := String(res.get("tipo", ""))
 	match tipo:
 		"sin_caja":
-			_escribir("[color=#e05555]No te alcanza:[/color] la parte fija más la comisión cuesta %s." % _dinero(int(res.get("hace_falta", 0))))
+			_escribir("[color=#e05555]%s[/color] %s" % [Idiomas.t("No te alcanza:"),
+				Idiomas.t("la parte fija más la comisión cuesta %s.") % _dinero(int(res.get("hace_falta", 0)))])
 		"club_pide_mas":
-			_escribir("[color=#c9a227]↩️ Contraoferta de %s.[/color] Faltan unos %s y prefieren %s." % [
-				(mundo.clubes.get(j.club_id) as Club).nombre if mundo.clubes.has(j.club_id) else "el club",
-				_dinero(int(res.get("falta", 0))), String(res.get("prefiere", ""))])
+			## Plantillas con `Idiomas.t` (s3): `prefiere` y `motivo` ya llegan traducidos del núcleo.
+			_escribir("[color=#c9a227]%s[/color] %s" % [
+				Idiomas.t("↩️ Contraoferta de %s.") % ((mundo.clubes.get(j.club_id) as Club).nombre if mundo.clubes.has(j.club_id) else Idiomas.t("el club")),
+				Idiomas.t("Faltan unos %s y prefieren %s.") % [_dinero(int(res.get("falta", 0))), String(res.get("prefiere", ""))]])
 		"rota":
 			_escribir("[color=#e05555]❌ Negociación rota.[/color] El club se levantó de la mesa por %s." % j.nombre)
 			mundo.mercado.cerrar_negociacion()
@@ -25,9 +27,10 @@ func _enviar_oferta_negociacion() -> void:
 				rc.nombre if rc else "otro club", j.nombre, _dinero(int(res.get("precio", 0)))])
 			mundo.mercado.cerrar_negociacion()
 		"jugador_no":
-			_escribir("[color=#c9a227]%s todavía no firma.[/color] %s" % [j.nombre, String(res.get("motivo", ""))])
+			_escribir("[color=#c9a227]%s[/color] %s" % [Idiomas.t("%s todavía no firma.") % j.nombre, String(res.get("motivo", ""))])
 		"jugador_rota":
-			_escribir("[color=#e05555]❌ %s dice que no.[/color] %s No se sienta a hablar de él por un tiempo." % [j.nombre, String(res.get("motivo", ""))])
+			_escribir("[color=#e05555]%s[/color] %s %s" % [Idiomas.t("❌ %s dice que no.") % j.nombre, String(res.get("motivo", "")),
+				Idiomas.t("No se sienta a hablar de él por un tiempo.")])
 			mundo.mercado.cerrar_negociacion()
 		"cerrado":
 			var r: Dictionary = res.get("resumen", {})
@@ -149,8 +152,8 @@ func _reconstruir_fila_sub() -> void:
 	var titulo_actual := ""
 	if _pestanas.get_tab_count() > 0:
 		titulo_actual = _pestanas.get_tab_title(_pestanas.current_tab)
-	for chip: Dictionary in (_grupo_por_id(_grupo_actual).get("tabs", []) as Array):
-		var b := _pildora(String(chip["label"]), 12, 30)
+	for chip: Dictionary in _chips_del_carril(titulo_actual):
+		var b := _pildora(Idiomas.t(String(chip["label"])), 12, 30)
 		b.button_pressed = (String(chip["tab"]) == titulo_actual) and _seccion_activa(chip)
 		var destino := chip
 		b.pressed.connect(func() -> void: _ir_a_chip(destino))
@@ -164,6 +167,26 @@ func _reconstruir_fila_sub() -> void:
 		var tw := create_tween()
 		tw.tween_interval(0.035 * float(_fila_sub.get_child_count() - 1))
 		tw.tween_property(b, "modulate:a", 1.0, 0.14)
+	## La chuleta «?» de las pantallas con más cifras, al final del carril.
+	AyudaPestana.anadir(_fila_sub, titulo_actual)
+
+## Los chips del carril para la pestaña abierta (s3, «primera hora»): los de su
+## bloque; y si es de un hub contextual (Finanzas, Mercado, Copa...) que no está en
+## el bloque, los de ese hub -antes se quedaba el carril del bloque anterior, sin
+## ningún chip marcado, como si la pestaña no existiera-.
+func _chips_del_carril(titulo: String) -> Array:
+	var del_grupo: Array = _grupo_por_id(_grupo_actual).get("tabs", [])
+	for ch: Dictionary in del_grupo:
+		if String(ch["tab"]) == titulo:
+			return del_grupo
+	for h: String in HUBS:
+		var tabs: Array = HUBS[h]["tabs"]
+		if tabs.has(titulo):
+			var out: Array = []
+			for t: String in tabs:
+				out.append({"tab": t, "label": t})
+			return out
+	return del_grupo
 
 ## Cambia de bloque maestro: entra siempre por su primer chip -índice 0-, que
 ## es lo que pidió el usuario ("al cambiar de pestaña madre, el nivel 2 se

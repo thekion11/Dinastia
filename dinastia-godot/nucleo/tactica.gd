@@ -20,6 +20,14 @@ var salida_corta: bool = false
 var marca_al_hombre: bool = false
 var fuera_de_juego: bool = false
 var tiro_lejano: bool = false
+## CON Y SIN BALÓN (26-10-2026, fila 18). Con balón, la `verticalidad`: tocar y esperar el hueco (BAJO) o
+## buscar el espacio a la primera (ALTO). Sin balón, qué hacer `tras_perdida`: replegar (BAJO), lo normal
+## (MEDIO) o morder al momento para recuperarla arriba (ALTO, la contrapresión). Las dos, como las demás
+## perillas, suman delante lo que restan detrás.
+var verticalidad: int = Nivel.MEDIO
+var tras_perdida: int = Nivel.MEDIO
+## El rol de cada jugador: id → clave de `RolTactico.CATALOGO`. Sin entrada, juega como siempre.
+var roles: Dictionary = {}
 
 const _MENT_ATA := [0.88, 1.0, 1.12]
 const _MENT_DEF := [1.10, 1.0, 0.90]
@@ -30,18 +38,24 @@ const _LINEA_ATA := [0.96, 1.0, 1.06]
 const _LINEA_DEF := [1.06, 1.0, 0.93]
 const _AMPL_ATA := [0.98, 1.0, 1.04]
 const _AMPL_DEF := [1.03, 1.0, 0.98]
+const _VERT_ATA := [0.97, 1.0, 1.04]
+const _VERT_DEF := [1.03, 1.0, 0.96]
+const _PERD_ATA := [0.97, 1.0, 1.04]
+const _PERD_DEF := [1.04, 1.0, 0.97]
 
 func multiplicador_ataque() -> float:
 	var m: float = _MENT_ATA[mentalidad] * _PRES_ATA[presion] * _RITMO_ATA[ritmo] * _LINEA_ATA[linea] * _AMPL_ATA[amplitud]
 	if salida_corta: m *= 1.03
 	if marca_al_hombre: m *= 0.98
 	if tiro_lejano: m *= 1.02
+	m *= _VERT_ATA[verticalidad] * _PERD_ATA[tras_perdida]
 	return m
 
 func multiplicador_defensa() -> float:
 	var m: float = _MENT_DEF[mentalidad] * _RITMO_DEF[ritmo] * _LINEA_DEF[linea] * _AMPL_DEF[amplitud]
 	if marca_al_hombre: m *= 1.03
 	if fuera_de_juego: m *= 1.06
+	m *= _VERT_DEF[verticalidad] * _PERD_DEF[tras_perdida]
 	return m
 
 func duplicar() -> Tactica:
@@ -56,7 +70,40 @@ func duplicar() -> Tactica:
 	t.marca_al_hombre = marca_al_hombre
 	t.fuera_de_juego = fuera_de_juego
 	t.tiro_lejano = tiro_lejano
+	t.verticalidad = verticalidad
+	t.tras_perdida = tras_perdida
+	t.roles = roles.duplicate()
 	return t
+
+## LAS DOS FASES, para la pizarra: [clave, nombre, valor, [opciones]] de cada perilla. Con balón: lo que
+## hace tu equipo cuando la tiene; sin balón: cuando la tiene el rival.
+func perillas_con_balon() -> Array:
+	return [["ritmo", "Ritmo", ritmo, ["Lento", "Medio", "Alto"]],
+		["amplitud", "Amplitud", amplitud, ["Cerrada", "Normal", "Abierta"]],
+		["verticalidad", "Verticalidad", verticalidad, ["Paciente", "Mixta", "Vertical"]],
+		["salida_corta", "Salida", 1 if salida_corta else 0, ["En largo", "Jugada desde atrás"]],
+		["tiro_lejano", "Tiro de lejos", 1 if tiro_lejano else 0, ["Solo claro", "Siempre que se pueda"]]]
+
+func perillas_sin_balon() -> Array:
+	return [["presion", "Presión", presion, ["Baja", "Media", "Alta"]],
+		["linea", "Línea", linea, ["Baja", "Media", "Adelantada"]],
+		["tras_perdida", "Tras perder el balón", tras_perdida, ["Replegar", "Equilibrio", "Contrapresión"]],
+		["marca_al_hombre", "Marca", 1 if marca_al_hombre else 0, ["Zonal", "Al hombre"]],
+		["fuera_de_juego", "Trampa del fuera de juego", 1 if fuera_de_juego else 0, ["No", "Sí"]]]
+
+## Le pone un rol a un jugador (clave vacía = quitárselo). Devuelve por qué no, o "" si se hizo.
+func poner_rol(j: Jugador, clave: String) -> String:
+	if j == null:
+		return "no hay jugador"
+	if clave == "":
+		roles.erase(j.id)
+		return ""
+	if not RolTactico.existe(clave):
+		return "ese rol no existe"
+	if String(RolTactico.CATALOGO[clave]["grupo"]) != Datos.grupo(j.pos_e):
+		return "%s no juega en esa línea" % j.nombre
+	roles[j.id] = clave
+	return ""
 
 # ---------------------------------------------------------------------------
 #  JUGADAS ENSAYADAS Y PLANES SEGÚN EL MARCADOR (`vTacticaAvanzada()`)
@@ -134,9 +181,76 @@ func plan_para(diferencia: int) -> Dictionary:
 		clave = plan_perdiendo
 	elif diferencia > 0:
 		clave = plan_ganando
-	match clave:
+	return cambio_de(clave)
+
+## Mentalidad y línea de un plan por su nombre ({} si es "nada" o desconocido).
+static func cambio_de(nombre: String) -> Dictionary:
+	match nombre:
 		"ofensivo":
 			return {"mentalidad": Mentalidad.OFENSIVA, "linea": Nivel.ALTO}
 		"cerrojo":
 			return {"mentalidad": Mentalidad.DEFENSIVA, "linea": Nivel.BAJO}
 	return {}
+
+# ---------------------------------------------------------------------------
+#  LA COSTUMBRE DEL PLAN (25-10-2026, pedido del dueño)
+# ---------------------------------------------------------------------------
+# Si el MISMO cambio del plan salta seis partidos seguidos, se le pregunta al
+# usuario si lo quiere de táctica habitual. La clave es «lado:plan»
+# ("perdiendo:ofensivo", "ganando:cerrojo"): el mismo plan por el otro lado del
+# marcador no es la misma costumbre. Un partido sin activación corta la racha:
+# «seguidos» quiere decir seguidos. Vive en la táctica (se guarda con el club).
+
+const RACHA_PARA_PREGUNTAR := 6
+var racha_plan_clave: String = ""
+var racha_plan_n: int = 0
+## La clave que el usuario ya confirmó como «solo desde el minuto 60»: no se le
+## vuelve a preguntar por ella (sí por otra distinta).
+var plan_fijo: String = ""
+
+## La clave del cambio que toca con esta diferencia de goles ("" si ninguno).
+func clave_plan(diferencia: int) -> String:
+	if diferencia < 0 and not cambio_de(plan_perdiendo).is_empty():
+		return "perdiendo:" + plan_perdiendo
+	if diferencia > 0 and not cambio_de(plan_ganando).is_empty():
+		return "ganando:" + plan_ganando
+	return ""
+
+## Se llama una vez al final de cada partido del club humano con la clave que
+## se activó ("" si no se activó ninguna).
+func anotar_plan(clave: String) -> void:
+	if clave == "":
+		racha_plan_clave = ""
+		racha_plan_n = 0
+	elif clave == racha_plan_clave:
+		racha_plan_n += 1
+	else:
+		racha_plan_clave = clave
+		racha_plan_n = 1
+
+func toca_preguntar_plan() -> bool:
+	return racha_plan_n >= RACHA_PARA_PREGUNTAR and racha_plan_clave != "" and racha_plan_clave != plan_fijo
+
+## Respuestas: "siempre" (el cambio pasa a la táctica base y ese lado del plan
+## queda en "nada", porque aplicarlo encima no cambiaría nada y seguiría
+## contando), "desde_60" (queda como plan fijo, como ya era) y "no" (solo
+## reinicia la cuenta). Las tres reinician la cuenta.
+func responder_plan(respuesta: String) -> void:
+	var clave := racha_plan_clave
+	match respuesta:
+		"siempre":
+			var partes := clave.split(":")
+			var cambio := cambio_de(partes[1] if partes.size() > 1 else "")
+			if not cambio.is_empty():
+				mentalidad = int(cambio["mentalidad"])
+				linea = int(cambio["linea"])
+				if partes[0] == "perdiendo":
+					plan_perdiendo = "nada"
+				else:
+					plan_ganando = "nada"
+			if plan_fijo == clave:
+				plan_fijo = ""
+		"desde_60":
+			plan_fijo = clave
+	racha_plan_clave = ""
+	racha_plan_n = 0

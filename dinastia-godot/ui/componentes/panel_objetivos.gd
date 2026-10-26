@@ -217,6 +217,18 @@ func refrescar() -> void:
 		_pestana.text = ("🎯\n%d\n◂" % _pendientes) if _pendientes > 0 else "🎯\n◂"
 	reset_size()
 
+## CEDE LA FICHA (s3, 26-10-2026, «primera hora»: desplegado tapaba la ficha del
+## jugador en la columna derecha, y bastaba desplegarlo una vez para que se quedara
+## así para siempre). Cuando se pinta una ficha y el panel la pisa en una pantalla
+## estrecha, se pliega solo -sin guardarlo: la próxima vez que lo despliegues sigue
+## siendo un vistazo-. La pestaña plegada sigue diciendo cuántos quedan.
+func ceder_ficha(ficha: Control) -> void:
+	if _plegado or ficha == null or not ficha.is_visible_in_tree() or not is_inside_tree():
+		return
+	if _pantalla_estrecha(_principal) and get_global_rect().intersects(ficha.get_global_rect()):
+		_plegado = true
+		_aplicar_plegado()
+
 ## Las misiones del mentor se cumplen haciéndolas, con o sin tutorial abierto.
 ## POR EVENTOS (21-10-2026, informe técnico punto 9): antes rehacía el guion y
 ## preguntaba a la pantalla principal cada medio segundo, siempre. Ahora mira

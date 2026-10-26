@@ -51,7 +51,7 @@ func _montar(e: Dictionary, gane: bool, empate: bool) -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", Tema.ESPACIO)
 	caja.add_child(v)
-	v.add_child(Tema.rotulo(String(e.get("rotulo", "🎤 A pie de campo"))))
+	v.add_child(Tema.rotulo(Idiomas.t(String(e.get("rotulo", "🎤 A pie de campo")))))
 	v.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, String(e.get("quien", ""))))
 	var q := Tema.etiqueta(Tema.TAM_DESTACADO + 2, Tema.TEXTO, "«%s»" % String(e.get("pregunta", "")))
 	q.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

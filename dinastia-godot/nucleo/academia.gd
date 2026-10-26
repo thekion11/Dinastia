@@ -119,8 +119,9 @@ func _nuevo_chico(edad: int) -> Dictionary:
 	_seq += 1
 	var grupo := String(Azar.uno(["POR", "DEF", "DEF", "MED", "MED", "DEL", "DEL"]))
 	## El techo depende del club -un grande capta mejor- pero con mucha
-	## dispersión: el crack puede aparecer en cualquier parte.
-	var techo := clampi(rep - 8 + Azar.ent(-12, 16), 55, 95)
+	## dispersión: el crack puede aparecer en cualquier parte. SESGADO (26-10): antes
+	## rep-20..rep+8 plano; ahora rep-14..rep+8 con la cola alta rara (f²), media casi igual.
+	var techo := clampi(rep - 14 + int(round(22.0 * pow(Azar.f(), 2.0))), 55, 95)
 	## Lo que ya sabe según la edad: un chico de 10 es casi solo potencial.
 	var nivel := float(clampi(22 + (edad - EDAD_MIN) * 6 + Azar.ent(-4, 4), 15, techo - 8))
 	var error := Azar.ent(6, 10)
@@ -365,7 +366,7 @@ func _entregar(ch: Dictionary, forzar: bool) -> Jugador:
 	j.nombre = String(ch["nombre"])
 	j.pais = String(ch["pais"])
 	j.region = String(ch.get("region", j.region))
-	j.pot = clampi(techo_al_entregar(ch), j.ovr, 97)
+	j.pot = Jugador.techo_tope(techo_al_entregar(ch), j.ovr)
 	var dominante := rasgo_dominante(ch)
 	if dominante != "":
 		j.rasgo = String(PERSONALIDAD[dominante]["rasgo"])
@@ -376,6 +377,7 @@ func _entregar(ch: Dictionary, forzar: bool) -> Jugador:
 	j.moral = clampi(int(round(float(ch["animo"]))), 20, 95)
 	j.forma = 60
 	j.anios_contrato = 3
+	j.primer_contrato = j.edad <= 19   ## sale de tu academia: primer contrato barato
 	j.generar_atributos()
 	j.tasar()
 	if m.cantera != null:

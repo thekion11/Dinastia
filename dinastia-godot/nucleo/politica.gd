@@ -52,6 +52,12 @@ const ESTRUCTURA := {
 	"GER": ["republica_parlamentaria", 4, "Bundestag (y con él, el canciller)", "el presidente federal, elegido por una asamblea"],
 	"RSA": ["republica_parlamentaria", 5, "Parlamento (que elige al presidente)", "el presidente, elegido por el Parlamento"],
 	"KSA": ["monarquia_absoluta", 0, "", "el rey"],
+## Lote 1 de países nuevos (26-10-2026, fila 26 s4): POR, NED, BEL, CRO, DEN.
+	"POR": ["semipresidencial", 5, "presidente de la República", "el presidente"],
+	"NED": ["monarquia_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el rey"],
+	"BEL": ["monarquia_parlamentaria", 5, "Parlamento (y con él, el primer ministro)", "el rey"],
+	"CRO": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente de la República, con un papel más simbólico"],
+	"DEN": ["monarquia_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el rey"],
 }
 
 const EXPLICA := {

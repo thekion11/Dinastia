@@ -5,7 +5,7 @@ extends "res://ui/pantallas/pantalla_plantel_p3.gd"
 func _abrir_negociacion(j: Jugador) -> void:
 	var motivo := p.mundo.mercado.abrir_negociacion(j)
 	if motivo != "":
-		p._escribir("[color=#e05555]No se pudo abrir la mesa: %s.[/color]" % motivo)
+		p._escribir("[color=#e05555]%s[/color]" % (Idiomas.t("No se pudo abrir la mesa: %s.") % motivo))
 		return
 	p._negociacion_ultimo = {}
 	p._ir_a_pestana("Mercado")

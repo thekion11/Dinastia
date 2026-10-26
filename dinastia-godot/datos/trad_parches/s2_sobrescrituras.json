@@ -1,0 +1,26 @@
+{
+ "_nota": "Valores que la sesión 2 SOBRESCRIBIÓ (sumar_traducciones.py no pisa claves existentes): aplicar con un script que tome /tmp/idiomas.lock y guarde con json.dumps(ensure_ascii=False, indent=1).",
+ "exactas": {
+  "Tribuna": {
+   "en": "Stand",
+   "pt": "Arquibancada",
+   "fr": "Tribune",
+   "de": "Tribüne",
+   "pl": "Trybuna",
+   "tr": "Tribün"
+  }
+ },
+ "patrones": [
+  [
+   "^Tu club va (\\d+(?:[.,]\\d+)?)\\.º de (\\d+(?:[.,]\\d+)?)$",
+   "Your club is $1º of $2",
+   "Seu clube está em $1º de $2",
+   "Ton club est $1e sur $2",
+   "Il tuo club è $1° su $2",
+   "Dein Verein ist $1. von $2",
+   "El teu club va $1è de $2",
+   "Twój klub jest $1. na $2",
+   "Kulübün $2 takım içinde $1. sırada"
+  ]
+ ]
+}

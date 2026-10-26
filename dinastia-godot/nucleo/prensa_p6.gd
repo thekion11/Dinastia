@@ -73,7 +73,7 @@ func pie_de_campo(gane: bool, empate: bool, gf: int, gc: int) -> Dictionary:
 			{"txt": "Los jugadores tendrán que dar explicaciones", "tono": "soberbia", "animo": 0, "moral": -2},
 			{"txt": "No es momento de hablar", "tono": "evasiva", "animo": -1, "moral": 0},
 		]
-	pie = {"pregunta": q, "opciones": ops, "quien": "%s · %s, a pie de campo" % [String(f[1]), String(f[2])]}
+	pie = _para_mostrar({"pregunta": q, "opciones": ops, "quien": "%s · %s" % [String(f[1]), Idiomas.t("%s, a pie de campo") % String(f[2])]})
 	return pie
 
 func revisar_al_paso(anio: int, sem: int) -> Dictionary:
@@ -87,8 +87,8 @@ func revisar_al_paso(anio: int, sem: int) -> Dictionary:
 	var ops: Array = []
 	for o: Array in q[1]:
 		ops.append({"txt": String(o[0]), "tono": String(o[1]), "seguidores": int(o[2]), "animo": int(o[3]), "moral": 0})
-	al_paso = {"pregunta": String(q[0]), "opciones": ops,
-		"quien": "%s · %s, %s" % [String(medio[0]), String(medio[1]), String(medio[2])], "rotulo": "📱 Al paso"}
+	al_paso = _para_mostrar({"pregunta": String(q[0]), "opciones": ops,
+		"quien": "%s · %s, %s" % [String(medio[0]), Idiomas.t(String(medio[1])), Idiomas.t(String(medio[2]))], "rotulo": "📱 Al paso"})
 	return al_paso
 
 ## Pasa la entrevista al paso a la "entrevista abierta" que contesta la

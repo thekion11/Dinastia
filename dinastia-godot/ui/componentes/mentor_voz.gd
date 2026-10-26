@@ -8,7 +8,8 @@ extends PanelContainer
 ## los `DURA` segundos o con un clic. Uno a la vez: si llegan dos, el segundo
 ## espera.
 
-const DURA := 9.0
+## 6 s (antes 9): con 9 el consejo tapaba la tabla de abajo demasiado rato.
+const DURA := 6.0
 const ANCHO := 420.0
 
 static var _cola: Array[Dictionary] = []
@@ -76,6 +77,10 @@ func _montar(mundo: Mundo, titulo: String, texto: String) -> void:
 	gui_input.connect(func(e: InputEvent) -> void:
 		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
 			_cerrar())
+	## Con el ratón encima se vuelve casi transparente (como `Aviso`): así se
+	## lee lo que hay debajo sin tener que cerrarlo.
+	mouse_entered.connect(func() -> void: _fundir(0.25))
+	mouse_exited.connect(func() -> void: _fundir(1.0))
 	Animar.aparecer(self)
 	Sonido.toca("notificacion" if Sonido.NOMBRES.has("notificacion") else "cambio", Sonido.Bus.INTERFAZ)
 	get_tree().create_timer(DURA).timeout.connect(_cerrar)
@@ -86,8 +91,20 @@ func _cerrar() -> void:
 	if _cerrado or not is_inside_tree():
 		return
 	_cerrado = true
+	if _tw_fundido != null and _tw_fundido.is_valid():
+		_tw_fundido.kill()
 	var tw := create_tween()
 	tw.tween_property(self, "modulate:a", 0.0, 0.3)
 	tw.tween_callback(func() -> void:
 		queue_free()
 		MentorVoz._siguiente())
+
+var _tw_fundido: Tween
+
+func _fundir(alfa: float) -> void:
+	if _cerrado or not is_inside_tree():
+		return
+	if _tw_fundido != null and _tw_fundido.is_valid():
+		_tw_fundido.kill()
+	_tw_fundido = create_tween()
+	_tw_fundido.tween_property(self, "modulate:a", alfa, 0.15)

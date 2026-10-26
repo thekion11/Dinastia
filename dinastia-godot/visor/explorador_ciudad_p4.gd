@@ -329,6 +329,9 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	cuerpo = _crear_cuerpo()
 	if trafico != null:
 		trafico.jugador = cuerpo
+		## Los peatones que te esquivan o adelantan miran que el lado esté libre.
+		trafico.libre_fn = func(q: Vector3) -> bool: return libre_obst(q, 0.3) and not _choca_circulos(q, 0.3)
+		trafico.jugador_huella = Vector2(RADIO_COCHE, SEP_COCHE + RADIO_COCHE) if modo == "coche" else Vector2(RADIO_PIE, RADIO_PIE) * 0.6
 	add_child(cuerpo)
 	cuerpo.position = buscar_libre(desde)
 	camara = Camera3D.new()
@@ -372,15 +375,19 @@ func _mover_un_trozo(paso: Vector3, r: float) -> bool:
 	## deja andar para salir. Si lo que tienes encima es un MÓVIL (un coche que
 	## se te mete), se ignoran los móviles pero NO las paredes: antes, con un
 	## coche encima, se podía entrar caminando en los edificios (17-10).
-	var libre_fijo := func(q: Vector3) -> bool: return libre_obst(q, r) and not _choca_circulos(q, r)
-	var dentro_fijo: bool = not libre_fijo.call(pos)
-	var solo_movil: bool = not dentro_fijo and _choca_moviles(pos, r)
+	## El cuerpo entero con su forma (el coche, tres círculos a lo largo: `libre_forma`).
+	## Para salir de algo fijo vale cualquier paso que no meta MÁS círculos dentro
+	## (a pie, uno solo: como antes, cualquier paso).
+	var libre_fijo := func(q: Vector3) -> bool: return libre_forma(q, rumbo, r, true)
+	var n0 := _n_fijos(pos, r)
+	var dentro_fijo: bool = n0 > 0
+	var solo_movil: bool = not dentro_fijo and not libre_forma(pos, rumbo, r)
 	var vale := func(q: Vector3) -> bool:
 		if dentro_fijo:
-			return true
+			return _n_fijos(q, r) <= n0
 		if solo_movil:
 			return libre_fijo.call(q)
-		return libre_total(q, r)
+		return libre_forma(q, rumbo, r)
 	if vale.call(pos + paso):
 		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z + paso.z), pos.z + paso.z)
 		return true
@@ -397,6 +404,23 @@ func _mover_un_trozo(paso: Vector3, r: float) -> bool:
 		_golpe_coche(absf(vel), not libre_fijo.call(pos + paso))
 	vel *= -0.25 if modo == "coche" else 0.0
 	return false
+
+## Cuántos círculos del cuerpo (en `q`, con el rumbo actual) pisan algo fijo.
+func _n_fijos(q: Vector3, r: float) -> int:
+	var n := 0
+	for c: Vector3 in _puntos_forma(q, rumbo):
+		if not libre_obst(c, r) or _choca_circulos(c, r):
+			n += 1
+	return n
+
+## El coche no gira metiendo el morro o la cola en una pared o en otro coche: si
+## con el rumbo nuevo choca y con el de antes no, se queda el de antes (con un
+## círculo daba igual hacia dónde mirase; con la forma real, no).
+func _girar_si_cabe(rumbo_antes: float) -> void:
+	if modo != "coche" or rumbo == rumbo_antes or cuerpo == null:
+		return
+	if not libre_forma(cuerpo.position, rumbo) and libre_forma(cuerpo.position, rumbo_antes):
+		rumbo = rumbo_antes
 
 ## El rótulo de comercio cuya fachada está junto a `p`, o vacío.
 func _rotulo_en(p: Vector3) -> Dictionary:

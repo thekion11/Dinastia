@@ -183,6 +183,8 @@ func _colocar_camara(delta: float) -> void:
 	var atras := 3.2 if cerrado else 5.5
 	var alto := 1.9 if cerrado else 2.6
 	var deseo := cuerpo.position - adelante * atras + Vector3(0, alto, 0)
+	## Cuánto se ha tenido que acortar la cámara contra una pared (0 = nada).
+	var falta := 0.0
 	if cerrado:
 		var r: Rect2 = z["r"]
 		## La cámara puede ir un poco por detrás del límite de la zona por donde
@@ -190,9 +192,20 @@ func _colocar_camara(delta: float) -> void:
 		deseo.x = clampf(deseo.x, r.position.x + 0.15, r.end.x - 0.15)
 		var holgura := 1.0 if String(z.get("nombre", "")) == "Túnel" else -0.15
 		deseo.z = clampf(deseo.z, r.position.y - holgura, r.end.y + holgura)
+		## PEGADA A LA PARED DE DETRÁS (26-10-2026): al entrar en una sala por
+		## su puerta la cámara se quedaba a medio metro de la nuca y el pelo
+		## tapaba media pantalla. Cuanto más se acorta, más sube y más se
+		## aparta al hombro: se ve la sala por encima de la cabeza.
+		var dh := Vector2(deseo.x - cuerpo.position.x, deseo.z - cuerpo.position.z).length()
+		if dh < atras - 0.3:
+			falta = clampf((atras - dh) / atras, 0.0, 1.0)
+			deseo += Vector3(cos(rumbo), 0.0, -sin(rumbo)) * 0.5 * falta + Vector3(0.0, 1.3 * falta, 0.0)
+			deseo.x = clampf(deseo.x, r.position.x + 0.15, r.end.x - 0.15)
+			deseo.z = clampf(deseo.z, r.position.y - holgura, r.end.y + holgura)
 		deseo.y = minf(deseo.y, RecorridoClub.y_de(planta) + float(z["techo"]) - 0.25)
 	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
-	camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 3.0, Vector3.UP)
+	## Acortada, mira más cerca y más abajo: el cuerpo sigue en el encuadre.
+	camara.look_at(cuerpo.position + Vector3(0, 1.4 - 0.6 * falta, 0) + adelante * (3.0 - 1.5 * falta), Vector3.UP)
 
 ## Cambia de planta por el ascensor (misma x y z: el hueco está apilado).
 func ir_a_planta(p: int) -> void:

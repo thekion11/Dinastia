@@ -65,9 +65,17 @@ func _cabezazo(p: Dictionary) -> void:
 	var cerca := absf(pos(p).z - arco.z) < 18.0
 	if cerca:
 		var destino := Vector3(_rng.randf_range(-PALO + 0.4, PALO - 0.4), _rng.randf_range(0.3, 2.0), arco.z)
+		## EL CABEZAZO NO ES UN DISPARO TELEDIRIGIDO (25-10-2026): iba siempre entre
+		## los palos y entraba más de la mitad (en el fútbol, ~1 de cada 8). Ahora
+		## se busca un palo, abajo, y se desvía según el remate y la distancia.
+		if TIRO_PULIDO:
+			var err := (0.5 + (1.0 - float(p["attr"]["tir"])) * 1.4) * (0.4 + absf(pos(p).z - arco.z) / 11.0)
+			destino = Vector3((1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.8, PALO - 0.3) + _rng.randf_range(-err, err),
+				clampf(_rng.randf_range(0.3, 1.4) + _rng.randf_range(-err, err) * 0.6, 0.15, 3.5), arco.z)
 		_patear(p, destino, 14.0 + float(p["attr"]["tir"]) * 6.0, 0.0, 0.0, "cabezazo")
 		tiros[0 if bool(p["es_local"]) else 1] += 1
-		_tiro_vivo = {"p": p, "t": t}
+		_tiro_vivo = {"p": p, "t": t, "clase": "cabeza"}
+		_contar("tiro_cabeza")
 	else:
 		## Despeje o pase de cabeza: a un compañero de delante si lo hay, bajo.
 		var fwd := Vector3(_rng.randf_range(-8, 8), 0, dir_ataque(bool(p["es_local"])) * 14.0)
@@ -105,7 +113,9 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		gesto_e = ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga", "falta_barrida"][_rng.randi() % 5]
 	elif de_lado:
 		gesto_e = "carga_hombro" if _rng.randf() < 0.5 else "entrada_lateral_pie"
-	_anim(p, gesto_e, true)
+	## La barrida del usuario ya va por el suelo (`_lanzar_barrida`): no se repite el gesto.
+	if not (barrida and String(p.get("anim_actual", "")).begins_with("barrida") and float(p.get("gesto_hasta", 0.0)) > t):
+		_anim(p, gesto_e, true)
 	var r := _rng.randf()
 	if r < exito:
 		if p == usuario:

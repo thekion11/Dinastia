@@ -140,6 +140,7 @@ func premios_temporada() -> Dictionary:
 	if mios_en_ideal > 0:
 		ganados.append("%d jugador(es) en el equipo ideal" % mios_en_ideal)
 	acta["ganados"] = ganados
+	acta["ideal_mios"] = mios_en_ideal
 
 	premios.push_front(acta)
 	while premios.size() > MAX_PREMIOS:
@@ -286,6 +287,9 @@ func a_dic() -> Dictionary:
 		"ocultos": ocultos.duplicate(),
 		"marcas": marcas.duplicate(),
 		"ya_estaban": _ya_estaban,
+		"carrera": carrera.duplicate(),
+		"largos": largos.duplicate(),
+		"largos_base": _largos_base,
 	}
 
 func desde_dic(d: Dictionary) -> void:
@@ -312,6 +316,18 @@ func desde_dic(d: Dictionary) -> void:
 	marcas = (d.get("marcas", {}) as Dictionary).duplicate()
 	_ya_estaban = d.get("ya_estaban", {})
 	_plantilla_anotada = not _ya_estaban.is_empty()
+	largos = (d.get("largos", {}) as Dictionary).duplicate()
+	## Un guardado de antes de los logros largos no trae la cuenta de la carrera:
+	## se rehace con el cara a cara (los dirigidos), que es lo mejor que hay.
+	## Una partida vieja ya avanzada: lo que cumpla el club se lo ganó, no lo heredó.
+	_largos_base = bool(d.get("largos_base", not d.has("carrera")))
+	if d.has("carrera"):
+		carrera = (d["carrera"] as Dictionary).duplicate()
+	else:
+		carrera = {"pj": 0, "pg": 0}
+		for k in h2h:
+			carrera["pj"] += int(h2h[k].get("pj", 0))
+			carrera["pg"] += int(h2h[k].get("pg", 0))
 
 # ---------------------------------------------------------------------------
 #  EL MUSEO DEL CLUB (`vMemoria()`)

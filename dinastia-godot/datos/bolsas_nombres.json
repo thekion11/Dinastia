@@ -958,6 +958,136 @@
     "Aguilera",
     "Parra"
    ]
+  ],
+  "POR": [
+   [
+    "Afonso",
+    "Rodrigo",
+    "Tomás",
+    "Martim",
+    "Salvador",
+    "Henrique",
+    "Francisco",
+    "Simão",
+    "Lourenço",
+    "Guilherme"
+   ],
+   [
+    "Carvalho",
+    "Almeida",
+    "Ribeiro",
+    "Pinto",
+    "Teixeira",
+    "Moreira",
+    "Correia",
+    "Mendes",
+    "Nunes",
+    "Soares"
+   ]
+  ],
+  "NED": [
+   [
+    "Jan",
+    "Pieter",
+    "Sander",
+    "Koen",
+    "Wouter",
+    "Jeroen",
+    "Teun",
+    "Gijs",
+    "Floris",
+    "Maarten"
+   ],
+   [
+    "Peters",
+    "Hendriks",
+    "van Leeuwen",
+    "Dekker",
+    "Brouwer",
+    "de Wit",
+    "Dijkstra",
+    "Smits",
+    "de Graaf",
+    "van der Meer"
+   ]
+  ],
+  "BEL": [
+   [
+    "Mathis",
+    "Senne",
+    "Victor",
+    "Olivier",
+    "Jens",
+    "Ruben",
+    "Nathan",
+    "Kobe",
+    "Tibo",
+    "Elias"
+   ],
+   [
+    "Leclercq",
+    "Martin",
+    "Simon",
+    "Laurent",
+    "Michiels",
+    "Desmet",
+    "Verbeke",
+    "Coppens",
+    "Van Damme",
+    "Smets"
+   ]
+  ],
+  "CRO": [
+   [
+    "Matej",
+    "Lovro",
+    "Fran",
+    "Jakov",
+    "Roko",
+    "Duje",
+    "Mihael",
+    "Stipe",
+    "Tin",
+    "Vedran"
+   ],
+   [
+    "Grgić",
+    "Božić",
+    "Perić",
+    "Šarić",
+    "Radić",
+    "Lovrić",
+    "Kralj",
+    "Bošnjak",
+    "Pavić",
+    "Vidović"
+   ]
+  ],
+  "DEN": [
+   [
+    "Anders",
+    "Christian",
+    "Søren",
+    "Nikolaj",
+    "Tobias",
+    "Sebastian",
+    "Malthe",
+    "William",
+    "Noah",
+    "Asger"
+   ],
+   [
+    "Poulsen",
+    "Thomsen",
+    "Johansen",
+    "Møller",
+    "Mortensen",
+    "Knudsen",
+    "Jakobsen",
+    "Lund",
+    "Holm",
+    "Schmidt"
+   ]
   ]
  }
 }

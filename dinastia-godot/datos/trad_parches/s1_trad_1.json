@@ -1,0 +1,854 @@
+{
+ "exactas": {
+  "Abre la ficha de cualquier jugador y pulsa «Comparar» para ponerlo aquí. Puedes enfrentar hasta tres a la vez, de tu club o de cualquier otro.": {
+   "en": "Open any player's profile and press «Compare» to put him here. You can line up to three side by side, from your club or any other.",
+   "pt": "Abra a ficha de qualquer jogador e toque em «Comparar» para colocá-lo aqui. Você pode confrontar até três de uma vez, do seu clube ou de qualquer outro.",
+   "fr": "Ouvre la fiche de n'importe quel joueur et appuie sur «Comparer» pour l'ajouter ici. Tu peux en confronter jusqu'à trois à la fois, de ton club ou de n'importe quel autre.",
+   "it": "Apri la scheda di un giocatore qualsiasi e premi «Confronta» per metterlo qui. Puoi confrontarne fino a tre alla volta, del tuo club o di qualunque altro.",
+   "de": "Öffne das Profil eines beliebigen Spielers und tippe auf «Vergleichen», um ihn hier einzufügen. Du kannst bis zu drei gleichzeitig gegenüberstellen, aus deinem Verein oder jedem anderen.",
+   "ca": "Obre la fitxa de qualsevol jugador i prem «Comparar» per posar-lo aquí. Pots enfrontar-ne fins a tres alhora, del teu club o de qualsevol altre.",
+   "pl": "Otwórz kartę dowolnego zawodnika i naciśnij «Porównaj», aby dodać go tutaj. Możesz zestawić nawet trzech naraz, z twojego klubu lub dowolnego innego.",
+   "tr": "Herhangi bir oyuncunun kartını aç ve buraya eklemek için «Karşılaştır»a bas. Kendi kulübünden ya da başka bir kulüpten aynı anda üç oyuncuya kadar karşılaştırabilirsin."
+  },
+  "'La gente pide más minutos para los juveniles, ¿los verá?'": {
+   "en": "'Fans are asking for more minutes for the youngsters. Will they get them?'",
+   "pt": "'A torcida pede mais minutos para os garotos da base. Eles vão ter?'",
+   "fr": "'Les supporters réclament plus de temps de jeu pour les jeunes. En auront-ils ?'",
+   "it": "'La gente chiede più minuti per i giovani. Li vedranno?'",
+   "de": "'Die Fans fordern mehr Einsatzzeit für die Jugendspieler. Bekommen sie die?'",
+   "ca": "'La gent demana més minuts per als juvenils. Els veuran?'",
+   "pl": "'Kibice domagają się więcej minut dla juniorów. Dostaną je?'",
+   "tr": "'Taraftarlar gençlere daha fazla süre istiyor. Bunu görecekler mi?'"
+  },
+  "La gente pide más minutos para los juveniles, ¿los verá?": {
+   "en": "Fans are asking for more minutes for the youngsters. Will they get them?",
+   "pt": "A torcida pede mais minutos para os garotos da base. Eles vão ter?",
+   "fr": "Les supporters réclament plus de temps de jeu pour les jeunes. En auront-ils ?",
+   "it": "La gente chiede più minuti per i giovani. Li vedranno?",
+   "de": "Die Fans fordern mehr Einsatzzeit für die Jugendspieler. Bekommen sie die?",
+   "ca": "La gent demana més minuts per als juvenils. Els veuran?",
+   "pl": "Kibice domagają się więcej minut dla juniorów. Dostaną je?",
+   "tr": "Taraftarlar gençlere daha fazla süre istiyor. Bunu görecekler mi?"
+  },
+  "Subirlo al primer equipo": {
+   "en": "Promote him to the first team",
+   "pt": "Subi-lo para o time principal",
+   "fr": "Le faire monter en équipe première",
+   "it": "Promuoverlo in prima squadra",
+   "de": "Ihn in die erste Mannschaft hochziehen",
+   "ca": "Pujar-lo al primer equip",
+   "pl": "Awansować go do pierwszej drużyny",
+   "tr": "Onu A takıma yükselt"
+  },
+  "Explicarles que aún no está listo": {
+   "en": "Explain to them that he isn't ready yet",
+   "pt": "Explicar a eles que ainda não está pronto",
+   "fr": "Leur expliquer qu'il n'est pas encore prêt",
+   "it": "Spiegare loro che non è ancora pronto",
+   "de": "Ihnen erklären, dass er noch nicht so weit ist",
+   "ca": "Explicar-los que encara no està preparat",
+   "pl": "Wyjaśnić im, że jeszcze nie jest gotowy",
+   "tr": "Onlara henüz hazır olmadığını açıkla"
+  },
+  "Banco del Deporte": {
+   "en": "Sports Bank",
+   "pt": "Banco do Esporte",
+   "fr": "Banque du Sport",
+   "it": "Banca dello Sport",
+   "de": "Sportbank",
+   "ca": "Banc de l'Esport",
+   "pl": "Bank Sportu",
+   "tr": "Spor Bankası"
+  },
+  "Caja Regional": {
+   "en": "Regional Savings Bank",
+   "pt": "Caixa Regional",
+   "fr": "Caisse Régionale",
+   "it": "Cassa Regionale",
+   "de": "Regionalkasse",
+   "ca": "Caixa Regional",
+   "pl": "Kasa Regionalna",
+   "tr": "Bölge Kasası"
+  },
+  "Financiera Rápida": {
+   "en": "QuickCash Finance",
+   "pt": "Financeira Rápida",
+   "fr": "Crédit Express",
+   "it": "Finanziaria Rapida",
+   "de": "Schnellkredit",
+   "ca": "Financera Ràpida",
+   "pl": "Szybka Pożyczka",
+   "tr": "Hızlı Finans"
+  },
+  "CUERPO TÉCNICO  ·  nómina %s/semana": {
+   "en": "COACHING STAFF  ·  wage bill %s/week",
+   "pt": "COMISSÃO TÉCNICA  ·  folha %s/semana",
+   "fr": "STAFF TECHNIQUE  ·  masse salariale %s/semaine",
+   "it": "STAFF TECNICO  ·  monte ingaggi %s/settimana",
+   "de": "TRAINERSTAB  ·  Gehälter %s/Woche",
+   "ca": "COS TÈCNIC  ·  nòmina %s/setmana",
+   "pl": "SZTAB SZKOLENIOWY  ·  płace %s/tydz.",
+   "tr": "TEKNİK EKİP  ·  maaş yükü %s/hafta"
+  },
+  "CÓMO QUIERES VER LOS PARTIDOS DE LA COPA": {
+   "en": "HOW YOU WANT TO WATCH CUP MATCHES",
+   "pt": "COMO VOCÊ QUER VER OS JOGOS DA COPA",
+   "fr": "COMMENT VEUX-TU VOIR LES MATCHS DE COUPE",
+   "it": "COME VUOI VEDERE LE PARTITE DI COPPA",
+   "de": "SO WILLST DU DIE POKALSPIELE SEHEN",
+   "ca": "COM VOLS VEURE ELS PARTITS DE COPA",
+   "pl": "JAK CHCESZ OGLĄDAĆ MECZE PUCHAROWE",
+   "tr": "KUPA MAÇLARINI NASIL İZLEMEK İSTERSİN"
+  },
+  "CÓMO QUIERES VER LOS PARTIDOS DEL TORNEO CONTINENTAL": {
+   "en": "HOW YOU WANT TO WATCH CONTINENTAL MATCHES",
+   "pt": "COMO VOCÊ QUER VER OS JOGOS DO TORNEIO CONTINENTAL",
+   "fr": "COMMENT VEUX-TU VOIR LES MATCHS DE LA COUPE CONTINENTALE",
+   "it": "COME VUOI VEDERE LE PARTITE DEL TORNEO CONTINENTALE",
+   "de": "SO WILLST DU DIE SPIELE IM KONTINENTALWETTBEWERB SEHEN",
+   "ca": "COM VOLS VEURE ELS PARTITS DEL TORNEIG CONTINENTAL",
+   "pl": "JAK CHCESZ OGLĄDAĆ MECZE W TURNIEJU KONTYNENTALNYM",
+   "tr": "KITA TURNUVASI MAÇLARINI NASIL İZLEMEK İSTERSİN"
+  },
+  "CÓMO QUIERES VER LOS PARTIDOS DE LA LIGA": {
+   "en": "HOW YOU WANT TO WATCH LEAGUE MATCHES",
+   "pt": "COMO VOCÊ QUER VER OS JOGOS DO CAMPEONATO",
+   "fr": "COMMENT VEUX-TU VOIR LES MATCHS DE CHAMPIONNAT",
+   "it": "COME VUOI VEDERE LE PARTITE DI CAMPIONATO",
+   "de": "SO WILLST DU DIE LIGASPIELE SEHEN",
+   "ca": "COM VOLS VEURE ELS PARTITS DE LLIGA",
+   "pl": "JAK CHCESZ OGLĄDAĆ MECZE LIGOWE",
+   "tr": "LİG MAÇLARINI NASIL İZLEMEK İSTERSİN"
+  },
+  "  🩹 %d sem.": {
+   "en": "  🩹 %d wk",
+   "pt": "  🩹 %d sem.",
+   "fr": "  🩹 %d sem.",
+   "it": "  🩹 %d sett.",
+   "de": "  🩹 %d Wo.",
+   "ca": "  🩹 %d setm.",
+   "pl": "  🩹 %d tyg.",
+   "tr": "  🩹 %d hf."
+  },
+  "lesión en partido": {
+   "en": "injured in a match",
+   "pt": "lesão em jogo",
+   "fr": "blessure en match",
+   "it": "infortunio in partita",
+   "de": "im Spiel verletzt",
+   "ca": "lesió en partit",
+   "pl": "uraz w meczu",
+   "tr": "maçta sakatlık"
+  },
+  "jugando con su selección": {
+   "en": "on international duty",
+   "pt": "jogando pela seleção",
+   "fr": "en sélection nationale",
+   "it": "giocando con la nazionale",
+   "de": "bei der Nationalmannschaft",
+   "ca": "jugant amb la seva selecció",
+   "pl": "na zgrupowaniu reprezentacji",
+   "tr": "milli takımda oynarken"
+  },
+  "entrenando al límite": {
+   "en": "training at the limit",
+   "pt": "treinando no limite",
+   "fr": "à l'entraînement, poussé à la limite",
+   "it": "allenandosi al limite",
+   "de": "beim Training am Limit",
+   "ca": "entrenant al límit",
+   "pl": "na treningu na granicy możliwości",
+   "tr": "sınırda antrenman yaparken"
+  },
+  "en la pretemporada": {
+   "en": "in pre-season",
+   "pt": "na pré-temporada",
+   "fr": "pendant la préparation",
+   "it": "in preparazione estiva",
+   "de": "in der Saisonvorbereitung",
+   "ca": "a la pretemporada",
+   "pl": "w okresie przygotowawczym",
+   "tr": "sezon öncesi hazırlıkta"
+  },
+  "en el Mundial": {
+   "en": "at the World Cup",
+   "pt": "na Copa do Mundo",
+   "fr": "à la Coupe du monde",
+   "it": "ai Mondiali",
+   "de": "bei der Weltmeisterschaft",
+   "ca": "al Mundial",
+   "pl": "na mistrzostwach świata",
+   "tr": "Dünya Kupası'nda"
+  },
+  "Reparto igualitario de los derechos de TV": {
+   "en": "Equal split of TV rights",
+   "pt": "Divisão igualitária dos direitos de TV",
+   "fr": "Répartition égalitaire des droits TV",
+   "it": "Ripartizione paritaria dei diritti TV",
+   "de": "Gleichmäßige Verteilung der TV-Gelder",
+   "ca": "Repartiment igualitari dels drets de televisió",
+   "pl": "Równy podział praw telewizyjnych",
+   "tr": "Yayın gelirlerinin eşit paylaşımı"
+  },
+  "Votar a favor del reparto igualitario": {
+   "en": "Vote for an equal split",
+   "pt": "Votar a favor da divisão igualitária",
+   "fr": "Voter pour la répartition égalitaire",
+   "it": "Votare a favore della ripartizione paritaria",
+   "de": "Für die gleichmäßige Verteilung stimmen",
+   "ca": "Votar a favor del repartiment igualitari",
+   "pl": "Głosować za równym podziałem",
+   "tr": "Eşit paylaşımdan yana oy ver"
+  },
+  "Votar por el reparto según audiencia": {
+   "en": "Vote to split by audience",
+   "pt": "Votar pela divisão por audiência",
+   "fr": "Voter pour une répartition selon l'audience",
+   "it": "Votare per la ripartizione in base all'audience",
+   "de": "Für die Verteilung nach Einschaltquote stimmen",
+   "ca": "Votar pel repartiment segons l'audiència",
+   "pl": "Głosować za podziałem według oglądalności",
+   "tr": "İzlenme oranına göre paylaşıma oy ver"
+  },
+  "La asamblea decide si la televisión se reparte en partes iguales o según lo que arrastra cada club.": {
+   "en": "The assembly decides whether TV money is split equally or according to how many viewers each club draws.",
+   "pt": "A assembleia decide se o dinheiro da TV é dividido em partes iguais ou de acordo com a audiência de cada clube.",
+   "fr": "L'assemblée décide si l'argent de la télévision est réparti à parts égales ou selon l'audience de chaque club.",
+   "it": "L'assemblea decide se i soldi delle TV si dividono in parti uguali o in base al seguito di ogni club.",
+   "de": "Die Versammlung entscheidet, ob das Fernsehgeld zu gleichen Teilen oder nach Zugkraft jedes Vereins verteilt wird.",
+   "ca": "L'assemblea decideix si la televisió es reparteix a parts iguals o segons el que arrossega cada club.",
+   "pl": "Zgromadzenie decyduje, czy pieniądze z telewizji dzieli się po równo, czy według tego, ilu widzów przyciąga każdy klub.",
+   "tr": "Genel kurul, yayın gelirinin eşit mi yoksa her kulübün çektiği izleyiciye göre mi paylaşılacağına karar verir."
+  },
+  "Cupo obligatorio de juveniles en cancha": {
+   "en": "Mandatory youth quota on the pitch",
+   "pt": "Cota obrigatória de jogadores da base em campo",
+   "fr": "Quota obligatoire de jeunes sur le terrain",
+   "it": "Quota obbligatoria di giovani in campo",
+   "de": "Pflichtquote für Nachwuchsspieler auf dem Platz",
+   "ca": "Quota obligatòria de juvenils al camp",
+   "pl": "Obowiązkowy limit młodzieżowców na boisku",
+   "tr": "Sahada zorunlu genç oyuncu kotası"
+  },
+  "A favor: mínimo un sub-21 en el once": {
+   "en": "For: at least one under-21 in the starting XI",
+   "pt": "A favor: no mínimo um sub-21 entre os titulares",
+   "fr": "Pour : au moins un moins de 21 ans dans le onze",
+   "it": "A favore: almeno un under 21 tra gli undici",
+   "de": "Dafür: mindestens ein U21-Spieler in der Startelf",
+   "ca": "A favor: mínim un sub-21 a l'onze",
+   "pl": "Za: co najmniej jeden zawodnik do lat 21 w składzie",
+   "tr": "Lehte: ilk 11'de en az bir 21 yaş altı"
+  },
+  "En contra: que cada club decida": {
+   "en": "Against: let each club decide",
+   "pt": "Contra: cada clube que decida",
+   "fr": "Contre : que chaque club décide",
+   "it": "Contro: che decida ogni club",
+   "de": "Dagegen: Jeder Verein soll selbst entscheiden",
+   "ca": "En contra: que cada club decideixi",
+   "pl": "Przeciw: niech każdy klub decyduje sam",
+   "tr": "Aleyhte: her kulüp kendi karar versin"
+  },
+  "Obligaría a alinear al menos un jugador de menos de 21 años en cada partido, con bonificación económica.": {
+   "en": "Clubs would have to field at least one player under 21 in every match, with a financial bonus.",
+   "pt": "Obrigaria a escalar pelo menos um jogador com menos de 21 anos em cada partida, com bonificação financeira.",
+   "fr": "Obligerait à aligner au moins un joueur de moins de 21 ans à chaque match, avec une prime financière.",
+   "it": "Obbligherebbe a schierare almeno un giocatore under 21 in ogni partita, con un bonus economico.",
+   "de": "Würde verpflichten, in jedem Spiel mindestens einen Spieler unter 21 Jahren aufzustellen, mit finanziellem Bonus.",
+   "ca": "Obligaria a alinear almenys un jugador de menys de 21 anys a cada partit, amb bonificació econòmica.",
+   "pl": "Zmuszałoby do wystawiania w każdym meczu co najmniej jednego zawodnika poniżej 21 lat, z premią finansową.",
+   "tr": "Her maçta en az bir 21 yaş altı oyuncuyu oynatmayı zorunlu kılar; karşılığında maddi teşvik verilir."
+  },
+  "Límite de extranjeros por plantel": {
+   "en": "Limit on foreign players per squad",
+   "pt": "Limite de estrangeiros por elenco",
+   "fr": "Limite d'étrangers par effectif",
+   "it": "Limite di stranieri per rosa",
+   "de": "Ausländerbeschränkung pro Kader",
+   "ca": "Límit d'estrangers per plantilla",
+   "pl": "Limit obcokrajowców w kadrze",
+   "tr": "Kadro başına yabancı sınırı"
+  },
+  "A favor de limitar a seis extranjeros": {
+   "en": "For a limit of six foreign players",
+   "pt": "A favor de limitar a seis estrangeiros",
+   "fr": "Pour une limite à six étrangers",
+   "it": "A favore del limite di sei stranieri",
+   "de": "Für eine Begrenzung auf sechs Ausländer",
+   "ca": "A favor de limitar a sis estrangers",
+   "pl": "Za limitem sześciu obcokrajowców",
+   "tr": "Altı yabancı sınırından yana"
+  },
+  "En contra: mercado libre": {
+   "en": "Against: free market",
+   "pt": "Contra: mercado livre",
+   "fr": "Contre : marché libre",
+   "it": "Contro: mercato libero",
+   "de": "Dagegen: freier Markt",
+   "ca": "En contra: mercat lliure",
+   "pl": "Przeciw: wolny rynek",
+   "tr": "Aleyhte: serbest piyasa"
+  },
+  "Proteger a los formados en casa o abrir del todo el mercado.": {
+   "en": "Protect home-grown players or open the market completely.",
+   "pt": "Proteger os formados em casa ou abrir de vez o mercado.",
+   "fr": "Protéger les joueurs formés au pays ou ouvrir complètement le marché.",
+   "it": "Proteggere i giocatori cresciuti in casa o aprire del tutto il mercato.",
+   "de": "Die eigenen Talente schützen oder den Markt ganz öffnen.",
+   "ca": "Protegir els formats a casa o obrir del tot el mercat.",
+   "pl": "Chronić wychowanków albo całkowicie otworzyć rynek.",
+   "tr": "Yerli yetişen oyuncuları korumak ya da piyasayı tamamen açmak."
+  },
+  "Playoffs para definir el campeón": {
+   "en": "Play-offs to decide the champion",
+   "pt": "Playoffs para definir o campeão",
+   "fr": "Des play-offs pour désigner le champion",
+   "it": "Playoff per decidere il campione",
+   "de": "Play-offs um die Meisterschaft",
+   "ca": "Play-offs per decidir el campió",
+   "pl": "Baraże o mistrzostwo",
+   "tr": "Şampiyonu belirlemek için play-off"
+  },
+  "A favor de los playoffs": {
+   "en": "For the play-offs",
+   "pt": "A favor dos playoffs",
+   "fr": "Pour les play-offs",
+   "it": "A favore dei playoff",
+   "de": "Für die Play-offs",
+   "ca": "A favor dels play-offs",
+   "pl": "Za barażami",
+   "tr": "Play-off'tan yana"
+  },
+  "En contra: que gane el de la tabla": {
+   "en": "Against: whoever tops the table wins",
+   "pt": "Contra: que ganhe quem liderar a tabela",
+   "fr": "Contre : que le premier du classement gagne",
+   "it": "Contro: vinca chi è primo in classifica",
+   "de": "Dagegen: Der Tabellenerste soll Meister sein",
+   "ca": "En contra: que guanyi el de la taula",
+   "pl": "Przeciw: niech wygrywa lider tabeli",
+   "tr": "Aleyhte: puan tablosunun lideri kazansın"
+  },
+  "Cambiaría el formato del torneo a partir de la próxima temporada.": {
+   "en": "It would change the league format from next season.",
+   "pt": "Mudaria o formato do torneio a partir da próxima temporada.",
+   "fr": "Cela changerait le format du championnat dès la saison prochaine.",
+   "it": "Cambierebbe il formato del torneo dalla prossima stagione.",
+   "de": "Das würde das Format der Liga ab der nächsten Saison ändern.",
+   "ca": "Canviaria el format del torneig a partir de la temporada vinent.",
+   "pl": "Zmieniłoby format rozgrywek od następnego sezonu.",
+   "tr": "Gelecek sezondan itibaren turnuvanın formatını değiştirir."
+  },
+  "Crear una superliga continental separatista": {
+   "en": "Create a breakaway continental super league",
+   "pt": "Criar uma superliga continental separatista",
+   "fr": "Créer une super ligue continentale dissidente",
+   "it": "Creare una superlega continentale separatista",
+   "de": "Eine abtrünnige kontinentale Superliga gründen",
+   "ca": "Crear una superlliga continental separatista",
+   "pl": "Utworzyć separatystyczną superligę kontynentalną",
+   "tr": "Ayrılıkçı bir kıtasal süper lig kurmak"
+  },
+  "Sumarse al proyecto": {
+   "en": "Join the project",
+   "pt": "Aderir ao projeto",
+   "fr": "Rejoindre le projet",
+   "it": "Aderire al progetto",
+   "de": "Sich dem Projekt anschließen",
+   "ca": "Sumar-se al projecte",
+   "pl": "Dołączyć do projektu",
+   "tr": "Projeye katıl"
+  },
+  "Rechazarlo y quedarse": {
+   "en": "Reject it and stay",
+   "pt": "Rejeitar e ficar",
+   "fr": "Refuser et rester",
+   "it": "Rifiutare e restare",
+   "de": "Ablehnen und bleiben",
+   "ca": "Rebutjar-lo i quedar-se",
+   "pl": "Odrzucić i zostać",
+   "tr": "Reddet ve kal"
+  },
+  "Un grupo de clubes grandes quiere fundar un torneo cerrado al margen de la federación. Dinero a raudales y guerra institucional.": {
+   "en": "A group of big clubs wants to found a closed competition outside the federation. Money by the bucketload and an institutional war.",
+   "pt": "Um grupo de clubes grandes quer fundar um torneio fechado à margem da federação. Dinheiro aos montes e guerra institucional.",
+   "fr": "Un groupe de grands clubs veut fonder une compétition fermée en marge de la fédération. De l'argent à flots et une guerre institutionnelle.",
+   "it": "Un gruppo di grandi club vuole fondare un torneo chiuso al di fuori della federazione. Soldi a palate e guerra istituzionale.",
+   "de": "Eine Gruppe großer Vereine will an der Föderation vorbei einen geschlossenen Wettbewerb gründen. Geld ohne Ende und ein Krieg der Institutionen.",
+   "ca": "Un grup de clubs grans vol fundar un torneig tancat al marge de la federació. Diners a dojo i guerra institucional.",
+   "pl": "Grupa dużych klubów chce założyć zamknięte rozgrywki poza federacją. Pieniądze płyną strumieniami, a z instytucjami wojna.",
+   "tr": "Bir grup büyük kulüp federasyonun dışında kapalı bir turnuva kurmak istiyor. Para su gibi akar, kurumlarla savaş çıkar."
+  },
+  "VAR obligatorio en toda la categoría": {
+   "en": "Mandatory VAR across the division",
+   "pt": "VAR obrigatório em toda a divisão",
+   "fr": "VAR obligatoire dans toute la division",
+   "it": "VAR obbligatorio in tutta la categoria",
+   "de": "Pflicht-VAR in der ganzen Liga",
+   "ca": "VAR obligatori a tota la categoria",
+   "pl": "Obowiązkowy VAR w całej lidze",
+   "tr": "Tüm ligde zorunlu VAR"
+  },
+  "A favor del VAR": {
+   "en": "For VAR",
+   "pt": "A favor do VAR",
+   "fr": "Pour la VAR",
+   "it": "A favore del VAR",
+   "de": "Für den VAR",
+   "ca": "A favor del VAR",
+   "pl": "Za VAR-em",
+   "tr": "VAR'dan yana"
+  },
+  "En contra: es carísimo": {
+   "en": "Against: it costs a fortune",
+   "pt": "Contra: é caríssimo",
+   "fr": "Contre : ça coûte une fortune",
+   "it": "Contro: costa carissimo",
+   "de": "Dagegen: viel zu teuer",
+   "ca": "En contra: és caríssim",
+   "pl": "Przeciw: jest strasznie drogi",
+   "tr": "Aleyhte: çok pahalı"
+  },
+  "El coste lo asumen los clubes, pero se acaban los escándalos arbitrales.": {
+   "en": "The clubs bear the cost, but refereeing scandals come to an end.",
+   "pt": "Os clubes arcam com o custo, mas acabam os escândalos de arbitragem.",
+   "fr": "Les clubs paient la facture, mais c'en est fini des scandales d'arbitrage.",
+   "it": "Il costo è a carico dei club, ma finiscono gli scandali arbitrali.",
+   "de": "Die Kosten tragen die Vereine, aber die Schiedsrichterskandale haben ein Ende.",
+   "ca": "El cost l'assumeixen els clubs, però s'acaben els escàndols arbitrals.",
+   "pl": "Koszty ponoszą kluby, ale kończą się skandale sędziowskie.",
+   "tr": "Maliyeti kulüpler üstlenir ama hakem skandalları sona erer."
+  },
+  "Fair play financiero": {
+   "en": "Financial fair play",
+   "pt": "Fair play financeiro",
+   "fr": "Fair-play financier",
+   "it": "Fair play finanziario",
+   "de": "Financial Fairplay",
+   "ca": "Fair play financer",
+   "pl": "Finansowe fair play",
+   "tr": "Finansal fair play"
+  },
+  "A favor del límite de gasto": {
+   "en": "For the spending cap",
+   "pt": "A favor do limite de gastos",
+   "fr": "Pour le plafond de dépenses",
+   "it": "A favore del tetto di spesa",
+   "de": "Für die Ausgabengrenze",
+   "ca": "A favor del límit de despesa",
+   "pl": "Za limitem wydatków",
+   "tr": "Harcama sınırından yana"
+  },
+  "En contra: que cada club gaste lo suyo": {
+   "en": "Against: let each club spend its own money",
+   "pt": "Contra: cada clube que gaste o que é seu",
+   "fr": "Contre : que chaque club dépense son argent",
+   "it": "Contro: che ogni club spenda i suoi soldi",
+   "de": "Dagegen: Jeder Verein soll sein Geld ausgeben, wie er will",
+   "ca": "En contra: que cada club gasti el que és seu",
+   "pl": "Przeciw: niech każdy klub wydaje swoje",
+   "tr": "Aleyhte: her kulüp kendi parasını harcasın"
+  },
+  "Ningún club podrá destinar a sueldos más del 70% de sus ingresos. Dos temporadas incumpliendo y hay multa y mercado cerrado.": {
+   "en": "No club may spend more than 70% of its income on wages. Two seasons in breach means a fine and a transfer ban.",
+   "pt": "Nenhum clube poderá destinar a salários mais de 70% de suas receitas. Duas temporadas descumprindo e há multa e mercado fechado.",
+   "fr": "Aucun club ne pourra consacrer plus de 70 % de ses revenus aux salaires. Deux saisons en infraction, et c'est l'amende et l'interdiction de recruter.",
+   "it": "Nessun club potrà destinare agli stipendi più del 70% delle entrate. Due stagioni di inadempienza e scattano multa e mercato bloccato.",
+   "de": "Kein Verein darf mehr als 70 % seiner Einnahmen für Gehälter ausgeben. Zwei Saisons Verstoß bedeuten Geldstrafe und Transfersperre.",
+   "ca": "Cap club podrà destinar a sous més del 70% dels seus ingressos. Dues temporades d'incompliment i hi ha multa i mercat tancat.",
+   "pl": "Żaden klub nie będzie mógł przeznaczać na pensje więcej niż 70% przychodów. Dwa sezony naruszeń to kara i zakaz transferowy.",
+   "tr": "Hiçbir kulüp gelirinin %70'inden fazlasını maaşlara ayıramayacak. İki sezon ihlal edilirse para cezası ve transfer yasağı gelir."
+  },
+  "Desempate por enfrentamiento directo": {
+   "en": "Head-to-head tiebreaker",
+   "pt": "Desempate por confronto direto",
+   "fr": "Départage à la confrontation directe",
+   "it": "Spareggio per scontri diretti",
+   "de": "Direkter Vergleich als Entscheidungskriterium",
+   "ca": "Desempat per enfrontament directe",
+   "pl": "Bezpośrednie mecze jako rozstrzygnięcie",
+   "tr": "Eşitlikte ikili averaj"
+  },
+  "A favor: primero cuenta quién ganó entre ellos": {
+   "en": "For: who won between them counts first",
+   "pt": "A favor: primeiro conta quem venceu o confronto",
+   "fr": "Pour : on regarde d'abord qui a gagné entre eux",
+   "it": "A favore: conta prima chi ha vinto tra loro",
+   "de": "Dafür: Zuerst zählt, wer im direkten Duell gewann",
+   "ca": "A favor: primer compta qui va guanyar entre ells",
+   "pl": "Za: najpierw liczy się, kto wygrał między sobą",
+   "tr": "Lehte: önce aralarındaki maçı kimin kazandığına bakılır"
+  },
+  "En contra: que siga mandando la diferencia de gol": {
+   "en": "Against: keep goal difference as the decider",
+   "pt": "Contra: que o saldo de gols continue mandando",
+   "fr": "Contre : que la différence de buts reste décisive",
+   "it": "Contro: che continui a decidere la differenza reti",
+   "de": "Dagegen: Die Tordifferenz soll weiter entscheiden",
+   "ca": "En contra: que continuï manant la diferència de gols",
+   "pl": "Przeciw: niech nadal decyduje różnica bramek",
+   "tr": "Aleyhte: belirleyici gol averajı olmaya devam etsin"
+  },
+  "A igualdad de puntos, decidiría antes el resultado entre los dos equipos que la diferencia de gol.": {
+   "en": "When teams are level on points, the result between the two sides would count before goal difference.",
+   "pt": "Em caso de igualdade de pontos, o resultado entre as duas equipes decidiria antes do saldo de gols.",
+   "fr": "À égalité de points, le résultat entre les deux équipes primerait sur la différence de buts.",
+   "it": "A parità di punti, deciderebbe prima il risultato tra le due squadre e poi la differenza reti.",
+   "de": "Bei Punktgleichheit würde zuerst das Ergebnis zwischen den beiden Mannschaften entscheiden, nicht die Tordifferenz.",
+   "ca": "A igualtat de punts, decidiria abans el resultat entre els dos equips que la diferència de gols.",
+   "pl": "Przy równej liczbie punktów o kolejności decydowałby najpierw wynik meczów między obiema drużynami, a nie różnica bramek.",
+   "tr": "Puanlar eşit olduğunda gol averajından önce iki takım arasındaki maçların sonucu belirleyici olur."
+  },
+  "Promoción de descenso (repechaje)": {
+   "en": "Relegation play-off",
+   "pt": "Repescagem contra o rebaixamento",
+   "fr": "Barrage de relégation",
+   "it": "Spareggio salvezza",
+   "de": "Relegation",
+   "ca": "Promoció de descens (repesca)",
+   "pl": "Baraż o utrzymanie",
+   "tr": "Küme düşme play-off'u"
+  },
+  "A favor: el antepenúltimo se juega la categoría": {
+   "en": "For: the third-from-bottom side plays for its place",
+   "pt": "A favor: o antepenúltimo disputa a permanência",
+   "fr": "Pour : l'antépénultième joue son maintien",
+   "it": "A favore: la terzultima si gioca la categoria",
+   "de": "Dafür: Der Drittletzte spielt um den Klassenerhalt",
+   "ca": "A favor: l'antepenúltim es juga la categoria",
+   "pl": "Za: trzecia drużyna od końca gra o utrzymanie",
+   "tr": "Lehte: sondan üçüncü takım ligde kalmak için oynar"
+  },
+  "En contra: bajan dos y suben dos, sin más": {
+   "en": "Against: two down and two up, nothing more",
+   "pt": "Contra: caem dois e sobem dois, e pronto",
+   "fr": "Contre : deux descendent et deux montent, point final",
+   "it": "Contro: due retrocedono e due salgono, punto",
+   "de": "Dagegen: zwei steigen ab, zwei auf, mehr nicht",
+   "ca": "En contra: baixen dos i pugen dos, sense més",
+   "pl": "Przeciw: dwa spadają i dwa awansują, nic więcej",
+   "tr": "Aleyhte: iki takım düşer, iki takım çıkar, o kadar"
+  },
+  "El antepenúltimo de Primera jugaría ida y vuelta contra el tercero de Ascenso: el ganador se queda (o sube).": {
+   "en": "The third-from-bottom side in the top flight would play a two-legged tie against the third-placed side in the second tier: the winner stays up (or goes up).",
+   "pt": "O antepenúltimo da Primeira jogaria ida e volta contra o terceiro da Segunda: o vencedor fica (ou sobe).",
+   "fr": "L'antépénultième de l'élite affronterait en aller-retour le troisième de la division inférieure : le vainqueur se maintient (ou monte).",
+   "it": "La terzultima della massima serie giocherebbe andata e ritorno contro la terza della serie cadetta: chi vince resta (o sale).",
+   "de": "Der Drittletzte der ersten Liga würde in Hin- und Rückspiel gegen den Dritten der zweiten Liga antreten: Der Sieger bleibt drin (oder steigt auf).",
+   "ca": "L'antepenúltim de Primera jugaria anada i tornada contra el tercer d'Ascens: el guanyador es queda (o puja).",
+   "pl": "Trzecia od końca drużyna najwyższej ligi grałaby dwumecz z trzecią drużyną zaplecza: zwycięzca zostaje (albo awansuje).",
+   "tr": "Üst ligin sondan üçüncüsü, alt ligin üçüncüsüyle çift maç oynar: kazanan ligde kalır (ya da yükselir)."
+  },
+  "¿En qué debe gastar el club?": {
+   "en": "What should the club spend on?",
+   "pt": "Em que o clube deve gastar?",
+   "fr": "À quoi le club doit-il consacrer son argent ?",
+   "it": "In cosa deve spendere il club?",
+   "de": "Wofür soll der Verein Geld ausgeben?",
+   "ca": "En què ha de gastar el club?",
+   "pl": "Na co klub powinien wydawać pieniądze?",
+   "tr": "Kulüp parayı neye harcamalı?"
+  },
+  "En un delantero de renombre": {
+   "en": "On a big-name striker",
+   "pt": "Em um centroavante de renome",
+   "fr": "Sur un attaquant de renom",
+   "it": "Su un attaccante di nome",
+   "de": "Für einen Stürmer mit großem Namen",
+   "ca": "En un davanter de renom",
+   "pl": "Na napastnika z nazwiskiem",
+   "tr": "Ünlü bir forvete"
+  },
+  "En la cantera": {
+   "en": "On the academy",
+   "pt": "Na base",
+   "fr": "Sur le centre de formation",
+   "it": "Sul vivaio",
+   "de": "In die Nachwuchsarbeit",
+   "ca": "En el planter",
+   "pl": "Na akademię",
+   "tr": "Altyapıya"
+  },
+  "En el estadio": {
+   "en": "On the stadium",
+   "pt": "No estádio",
+   "fr": "Sur le stade",
+   "it": "Sullo stadio",
+   "de": "Ins Stadion",
+   "ca": "En l'estadi",
+   "pl": "Na stadion",
+   "tr": "Stada"
+  },
+  "¿Qué fútbol quieren ver?": {
+   "en": "What kind of football do they want to see?",
+   "pt": "Que futebol eles querem ver?",
+   "fr": "Quel football veulent-ils voir ?",
+   "it": "Che calcio vogliono vedere?",
+   "de": "Welchen Fußball wollen sie sehen?",
+   "ca": "Quin futbol volen veure?",
+   "pl": "Jaki futbol chcą oglądać?",
+   "tr": "Nasıl bir futbol görmek istiyorlar?"
+  },
+  "Ofensivo, aunque nos cueste goles": {
+   "en": "Attacking, even if it costs us goals",
+   "pt": "Ofensivo, mesmo que custe gols",
+   "fr": "Offensif, même si ça nous coûte des buts",
+   "it": "Offensivo, anche se ci costa gol",
+   "de": "Offensiv, auch wenn es Gegentore kostet",
+   "ca": "Ofensiu, encara que ens costi gols",
+   "pl": "Ofensywny, nawet kosztem straconych goli",
+   "tr": "Hücumcu, gol yemek pahasına da olsa"
+  },
+  "Sólido y práctico": {
+   "en": "Solid and practical",
+   "pt": "Sólido e prático",
+   "fr": "Solide et pragmatique",
+   "it": "Solido e pratico",
+   "de": "Solide und pragmatisch",
+   "ca": "Sòlid i pràctic",
+   "pl": "Solidny i praktyczny",
+   "tr": "Sağlam ve pratik"
+  },
+  "El que gane, da igual cómo": {
+   "en": "Whatever wins, no matter how",
+   "pt": "O que ganhar, não importa como",
+   "fr": "Celui qui gagne, peu importe comment",
+   "it": "Quello che vince, non importa come",
+   "de": "Hauptsache gewinnen, egal wie",
+   "ca": "El que guanyi, tant és com",
+   "pl": "Taki, który wygrywa, nieważne jak",
+   "tr": "Kazandıran futbol, nasıl olursa olsun"
+  },
+  "¿Qué hacemos con las entradas?": {
+   "en": "What do we do with ticket prices?",
+   "pt": "O que fazemos com os ingressos?",
+   "fr": "Que fait-on du prix des billets ?",
+   "it": "Cosa facciamo con i biglietti?",
+   "de": "Was machen wir mit den Eintrittspreisen?",
+   "ca": "Què fem amb les entrades?",
+   "pl": "Co robimy z cenami biletów?",
+   "tr": "Bilet fiyatlarını ne yapalım?"
+  },
+  "Bajarlas aunque perdamos ingresos": {
+   "en": "Lower them even if we lose income",
+   "pt": "Baixar, mesmo perdendo receita",
+   "fr": "Les baisser même si on perd des recettes",
+   "it": "Abbassarli anche se perdiamo incassi",
+   "de": "Senken, auch wenn wir Einnahmen verlieren",
+   "ca": "Abaixar-les encara que perdem ingressos",
+   "pl": "Obniżyć, nawet kosztem przychodów",
+   "tr": "Gelir kaybetsek de düşürelim"
+  },
+  "Mantenerlas": {
+   "en": "Keep them as they are",
+   "pt": "Manter",
+   "fr": "Les maintenir",
+   "it": "Mantenerli",
+   "de": "Beibehalten",
+   "ca": "Mantenir-les",
+   "pl": "Zostawić bez zmian",
+   "tr": "Aynı kalsın"
+  },
+  "Subirlas para invertir más": {
+   "en": "Raise them to invest more",
+   "pt": "Subir para investir mais",
+   "fr": "Les augmenter pour investir davantage",
+   "it": "Alzarli per investire di più",
+   "de": "Erhöhen, um mehr zu investieren",
+   "ca": "Apujar-les per invertir més",
+   "pl": "Podnieść, żeby więcej inwestować",
+   "tr": "Daha çok yatırım için artıralım"
+  },
+  "¿Modernizamos el escudo?": {
+   "en": "Shall we modernise the crest?",
+   "pt": "Modernizamos o escudo?",
+   "fr": "On modernise l'écusson ?",
+   "it": "Modernizziamo lo stemma?",
+   "de": "Modernisieren wir das Wappen?",
+   "ca": "Modernitzem l'escut?",
+   "pl": "Unowocześniamy herb?",
+   "tr": "Armayı modernleştirelim mi?"
+  },
+  "Ni tocarlo": {
+   "en": "Don't touch it",
+   "pt": "Nem pensar em mexer",
+   "fr": "N'y touchez pas",
+   "it": "Non toccarlo",
+   "de": "Bloß nicht anrühren",
+   "ca": "Ni tocar-lo",
+   "pl": "Nie ruszać",
+   "tr": "Hiç dokunmayalım"
+  },
+  "Un retoque leve": {
+   "en": "A light touch-up",
+   "pt": "Um retoque leve",
+   "fr": "Une légère retouche",
+   "it": "Un leggero ritocco",
+   "de": "Eine leichte Auffrischung",
+   "ca": "Un retoc lleuger",
+   "pl": "Lekki retusz",
+   "tr": "Hafif bir rötuş"
+  },
+  "Rediseño completo": {
+   "en": "A complete redesign",
+   "pt": "Redesenho completo",
+   "fr": "Refonte complète",
+   "it": "Restyling completo",
+   "de": "Komplette Neugestaltung",
+   "ca": "Redisseny complet",
+   "pl": "Całkowity redesign",
+   "tr": "Baştan tasarım"
+  },
+  "COPA DE LAS ESTRELLAS": {
+   "en": "STARS CUP",
+   "pt": "COPA DAS ESTRELAS",
+   "fr": "COUPE DES ÉTOILES",
+   "it": "COPPA DELLE STELLE",
+   "de": "STERNE-POKAL",
+   "ca": "COPA DE LES ESTRELLES",
+   "pl": "PUCHAR GWIAZD",
+   "tr": "YILDIZLAR KUPASI"
+  },
+  "COPA CÓNDOR": {
+   "en": "CONDOR CUP",
+   "pt": "COPA CONDOR",
+   "fr": "COUPE CONDOR",
+   "it": "COPPA CONDOR",
+   "de": "KONDOR-POKAL",
+   "ca": "COPA CÒNDOR",
+   "pl": "PUCHAR KONDORA",
+   "tr": "KONDOR KUPASI"
+  },
+  "COPA CRUZ DEL SUR": {
+   "en": "SOUTHERN CROSS CUP",
+   "pt": "COPA CRUZEIRO DO SUL",
+   "fr": "COUPE DE LA CROIX DU SUD",
+   "it": "COPPA CROCE DEL SUD",
+   "de": "KREUZ-DES-SÜDENS-POKAL",
+   "ca": "COPA CREU DEL SUD",
+   "pl": "PUCHAR KRZYŻA POŁUDNIA",
+   "tr": "GÜNEY HAÇI KUPASI"
+  },
+  "COPA DEL VIEJO CONTINENTE": {
+   "en": "OLD CONTINENT CUP",
+   "pt": "COPA DO VELHO CONTINENTE",
+   "fr": "COUPE DU VIEUX CONTINENT",
+   "it": "COPPA DEL VECCHIO CONTINENTE",
+   "de": "POKAL DES ALTEN KONTINENTS",
+   "ca": "COPA DEL VELL CONTINENT",
+   "pl": "PUCHAR STAREGO KONTYNENTU",
+   "tr": "YAŞLI KITA KUPASI"
+  },
+  "COPA ASIÁTICA DE CLUBES": {
+   "en": "ASIAN CLUB CUP",
+   "pt": "COPA ASIÁTICA DE CLUBES",
+   "fr": "COUPE D'ASIE DES CLUBS",
+   "it": "COPPA ASIATICA PER CLUB",
+   "de": "ASIATISCHER KLUBPOKAL",
+   "ca": "COPA ASIÀTICA DE CLUBS",
+   "pl": "AZJATYCKI PUCHAR KLUBÓW",
+   "tr": "ASYA KULÜPLER KUPASI"
+  },
+  "COPA ÁFRICA DE CLUBES": {
+   "en": "AFRICAN CLUB CUP",
+   "pt": "COPA ÁFRICA DE CLUBES",
+   "fr": "COUPE D'AFRIQUE DES CLUBS",
+   "it": "COPPA D'AFRICA PER CLUB",
+   "de": "AFRIKANISCHER KLUBPOKAL",
+   "ca": "COPA ÀFRICA DE CLUBS",
+   "pl": "AFRYKAŃSKI PUCHAR KLUBÓW",
+   "tr": "AFRİKA KULÜPLER KUPASI"
+  }
+ },
+ "patrones": [
+  [
+   "^(.+) se lesiona$",
+   "$1 is injured",
+   "$1 se machuca",
+   "$1 se blesse",
+   "$1 si infortuna",
+   "$1 verletzt sich",
+   "$1 es lesiona",
+   "$1 doznaje urazu",
+   "$1 sakatlandı"
+  ],
+  [
+   "^(.+) \\((.+)\\), 1 semana fuera\\.$",
+   "$1 ($2), out for 1 week.",
+   "$1 ($2), 1 semana fora.",
+   "$1 ($2), 1 semaine d'absence.",
+   "$1 ($2), 1 settimana fuori.",
+   "$1 ($2), 1 Woche Pause.",
+   "$1 ($2), 1 setmana de baixa.",
+   "$1 ($2), 1 tydzień przerwy.",
+   "$1 ($2), 1 hafta yok."
+  ],
+  [
+   "^(.+) \\((.+)\\), (\\d+) semanas fuera\\.$",
+   "$1 ($2), out for $3 weeks.",
+   "$1 ($2), $3 semanas fora.",
+   "$1 ($2), $3 semaines d'absence.",
+   "$1 ($2), $3 settimane fuori.",
+   "$1 ($2), $3 Wochen Pause.",
+   "$1 ($2), $3 setmanes de baixa.",
+   "$1 ($2), $3 tyg. przerwy.",
+   "$1 ($2), $3 hafta yok."
+  ],
+  [
+   "^Los padres de (.+) exigen que suba ya al primer equipo o se lo llevan a otro club\\.$",
+   "$1's parents demand that he's promoted to the first team now, or they'll take him to another club.",
+   "Os pais de $1 exigem que ele suba já para o time principal ou vão levá-lo para outro clube.",
+   "Les parents de $1 exigent qu'il monte tout de suite en équipe première, sinon ils l'emmènent dans un autre club.",
+   "I genitori di $1 pretendono che salga subito in prima squadra, o lo portano in un altro club.",
+   "Die Eltern von $1 verlangen, dass er sofort in die erste Mannschaft kommt, sonst nehmen sie ihn mit zu einem anderen Verein.",
+   "Els pares de $1 exigeixen que pugi ja al primer equip o se l'enduen a un altre club.",
+   "Rodzice $1 żądają, by od razu awansował do pierwszej drużyny, inaczej zabiorą go do innego klubu.",
+   "$1'in ailesi hemen A takıma yükseltilmesini istiyor; yoksa onu başka bir kulübe götürecekler."
+  ],
+  [
+   "^La temporada (\\d+) de (.+?) terminó en el puesto (\\d+)\\. (.+)$",
+   "$2's $1 season ended in position $3. $4",
+   "A temporada $1 do $2 terminou na posição $3. $4",
+   "La saison $1 de $2 s'est terminée à la $3e place. $4",
+   "La stagione $1 del $2 si è chiusa al $3º posto. $4",
+   "Die Saison $1 von $2 endete auf Platz $3. $4",
+   "La temporada $1 del $2 va acabar en el lloc $3. $4",
+   "Sezon $1 $2 zakończył się na $3. miejscu. $4",
+   "$2 takımının $1 sezonu $3. sırada bitti. $4"
+  ],
+  [
+   "^La temporada (\\d+) de (.+?) todavía se está jugando\\. (.+)$",
+   "$2's $1 season is still being played. $3",
+   "A temporada $1 do $2 ainda está em andamento. $3",
+   "La saison $1 de $2 est encore en cours. $3",
+   "La stagione $1 del $2 è ancora in corso. $3",
+   "Die Saison $1 von $2 läuft noch. $3",
+   "La temporada $1 del $2 encara s'està jugant. $3",
+   "Sezon $1 $2 wciąż trwa. $3",
+   "$2 takımının $1 sezonu hâlâ sürüyor. $3"
+  ],
+  [
+   "^J(\\d+)  (.+) (\\d+)-(\\d+) (.+)$",
+   "MD$1  $2 $3-$4 $5",
+   "R$1  $2 $3-$4 $5",
+   "J$1  $2 $3-$4 $5",
+   "G$1  $2 $3-$4 $5",
+   "$1. ST  $2 $3-$4 $5",
+   "J$1  $2 $3-$4 $5",
+   "K$1  $2 $3-$4 $5",
+   "$1. H  $2 $3-$4 $5"
+  ],
+  [
+   "^(\\d+)\\.  (.+)$",
+   "$1.  $2",
+   "$1.  $2",
+   "$1.  $2",
+   "$1.  $2",
+   "$1.  $2",
+   "$1.  $2",
+   "$1.  $2",
+   "$1.  $2"
+  ]
+ ]
+}

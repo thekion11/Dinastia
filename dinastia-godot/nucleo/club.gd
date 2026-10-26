@@ -110,6 +110,10 @@ func media() -> float:
 ## jugador vendido seguiría saliendo a la cancha con la camiseta de tu club.
 var once_elegido: Array[String] = []
 
+## La mascota que eligió el jugador al fundar el club (clave de `MascotaQ.ANIMALES`).
+## Vacía = la de siempre, sacada del id del club (`EstadioExtras.animal_de`).
+var mascota := ""
+
 func fijar_once(jugadores: Array[Jugador]) -> void:
 	once_elegido.clear()
 	for j in jugadores:

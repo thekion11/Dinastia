@@ -1,0 +1,13 @@
+{"exactas": {
+ "LOGRO DESBLOQUEADO": {"en": "ACHIEVEMENT UNLOCKED", "pt": "CONQUISTA DESBLOQUEADA", "fr": "SUCCÈS DÉBLOQUÉ", "it": "OBIETTIVO SBLOCCATO", "de": "ERFOLG FREIGESCHALTET", "ca": "ASSOLIMENT DESBLOQUEJAT", "pl": "OSIĄGNIĘCIE ODBLOKOWANE", "tr": "BAŞARIM AÇILDI"},
+ "NUEVO RÉCORD": {"en": "NEW RECORD", "pt": "NOVO RECORDE", "fr": "NOUVEAU RECORD", "it": "NUOVO RECORD", "de": "NEUER REKORD", "ca": "NOU RÈCORD", "pl": "NOWY REKORD", "tr": "YENİ REKOR"},
+ "SUBES DE NIVEL": {"en": "LEVEL UP", "pt": "SUBIU DE NÍVEL", "fr": "NIVEAU SUPÉRIEUR", "it": "SALI DI LIVELLO", "de": "STUFENAUFSTIEG", "ca": "PUGES DE NIVELL", "pl": "NOWY POZIOM", "tr": "SEVİYE ATLADIN"},
+ "INGRESO": {"en": "INCOME", "pt": "ENTRADA DE DINHEIRO", "fr": "RECETTE", "it": "ENTRATA", "de": "EINNAHME", "ca": "INGRÉS", "pl": "WPŁYW", "tr": "GELİR"},
+ "SALE DE LA CAJA": {"en": "MONEY OUT", "pt": "SAI DO CAIXA", "fr": "SORTIE DE CAISSE", "it": "ESCE DALLA CASSA", "de": "AUSGABE", "ca": "SURT DE LA CAIXA", "pl": "WYDATEK", "tr": "KASADAN ÇIKIŞ"},
+ "MERCADO": {"en": "TRANSFERS", "pt": "MERCADO", "fr": "MERCATO", "it": "MERCATO", "de": "TRANSFERMARKT", "ca": "MERCAT", "pl": "TRANSFERY", "tr": "TRANSFER"},
+ "AVISO": {"en": "ALERT", "pt": "AVISO", "fr": "ALERTE", "it": "AVVISO", "de": "HINWEIS", "ca": "AVÍS", "pl": "UWAGA", "tr": "UYARI"},
+ "CONTRATOS": {"en": "CONTRACTS", "pt": "CONTRATOS", "fr": "CONTRATS", "it": "CONTRATTI", "de": "VERTRÄGE", "ca": "CONTRACTES", "pl": "KONTRAKTY", "tr": "SÖZLEŞMELER"},
+ "¡CAMPEÓN!": {"en": "CHAMPIONS!", "pt": "CAMPEÃO!", "fr": "CHAMPION !", "it": "CAMPIONE!", "de": "MEISTER!", "ca": "CAMPIÓ!", "pl": "MISTRZ!", "tr": "ŞAMPİYON!"},
+ "Minijuegos": {"en": "Minigames", "pt": "Minijogos", "fr": "Mini-jeux", "it": "Minigiochi", "de": "Minispiele", "ca": "Minijocs", "pl": "Minigry", "tr": "Mini oyunlar"},
+ "Penales, tiros libres y la trivia del club.": {"en": "Penalties, free kicks and the club quiz.", "pt": "Pênaltis, faltas e o quiz do clube.", "fr": "Penalties, coups francs et le quiz du club.", "it": "Rigori, punizioni e il quiz del club.", "de": "Elfmeter, Freistöße und das Vereinsquiz.", "ca": "Penals, faltes i el qüestionari del club.", "pl": "Rzuty karne, rzuty wolne i quiz o klubie.", "tr": "Penaltılar, serbest vuruşlar ve kulüp bilgi yarışması."}
+}}

@@ -118,27 +118,35 @@ static func _ficha_jugador(j: Jugador, puesto: String, natural: bool, c: Club, f
 	raiz.add_child(b)
 	return raiz
 
-## El campo: césped a franjas y sus líneas (medio campo, círculo, áreas).
+## El campo: césped a franjas y sus líneas (medio campo, círculo, áreas). Las
+## líneas son suaves (`TrazoSuave`, 26-10-2026) y se rehacen al cambiar el tamaño.
 class CampoDibujado:
 	extends Control
+	func _notification(que: int) -> void:
+		if que == NOTIFICATION_RESIZED:
+			_rehacer_lineas()
 	func _draw() -> void:
 		var r := Rect2(Vector2.ZERO, size)
 		draw_rect(r, Color("16402a"))
 		for k in 8:
 			if k % 2 == 0:
 				draw_rect(Rect2(0, size.y * k / 8.0, size.x, size.y / 8.0), Color(1, 1, 1, 0.03))
+	func _rehacer_lineas() -> void:
+		TrazoSuave.limpiar(self)
+		if size.x <= 20.0 or size.y <= 20.0:
+			return
 		var linea := Color(1, 1, 1, 0.28)
 		var m := 10.0
 		var campo := Rect2(m, m, size.x - m * 2, size.y - m * 2)
-		draw_rect(campo, linea, false, 2.0)
-		draw_line(Vector2(m, size.y * 0.5), Vector2(size.x - m, size.y * 0.5), linea, 2.0)
-		draw_arc(size * 0.5, size.y * 0.1, 0, TAU, 48, linea, 2.0)
+		TrazoSuave.rect(self, campo, linea, 2.0)
+		TrazoSuave.linea(self, PackedVector2Array([Vector2(m, size.y * 0.5), Vector2(size.x - m, size.y * 0.5)]), linea, 2.0)
+		TrazoSuave.arco(self, size * 0.5, size.y * 0.1, linea, 2.0, 48)
 		var ancho_area := campo.size.x * 0.56
 		var alto_area := campo.size.y * 0.15
 		for arriba: bool in [true, false]:
 			var y := m if arriba else size.y - m - alto_area
-			draw_rect(Rect2((size.x - ancho_area) * 0.5, y, ancho_area, alto_area), linea, false, 2.0)
+			TrazoSuave.rect(self, Rect2((size.x - ancho_area) * 0.5, y, ancho_area, alto_area), linea, 2.0)
 			var chica_a := campo.size.x * 0.26
 			var chica_h := campo.size.y * 0.06
 			var y2 := m if arriba else size.y - m - chica_h
-			draw_rect(Rect2((size.x - chica_a) * 0.5, y2, chica_a, chica_h), linea, false, 2.0)
+			TrazoSuave.rect(self, Rect2((size.x - chica_a) * 0.5, y2, chica_a, chica_h), linea, 2.0)

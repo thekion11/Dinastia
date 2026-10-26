@@ -163,6 +163,9 @@ var pie: Dictionary = {}
 var identidad: Dictionary = {}
 ## "escudo", "camiseta" o "escudo y camiseta" hasta que la rueda lo pregunte.
 var cambio_identidad: String = ""
+## La pregunta de la PRIMERA rueda que ya viene decidida (p. ej. el club que compró su plaza,
+## `EntradaCampeonato.pregunta_primera_rueda()`). Se gasta al abrir la rueda.
+var pregunta_pendiente: Dictionary = {}
 ## El tiempo de tu último partido, para la rueda. Lo escribe `Mundo`.
 var clima_ultimo: Dictionary = {}
 ## De qué competición es la rueda abierta ("liga" por defecto) y sus clubes,

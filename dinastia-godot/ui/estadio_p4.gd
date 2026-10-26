@@ -265,7 +265,11 @@ func _refrescar_marcador() -> void:
 				_mostrar_rotulo_suceso("⏱ %s: +%d" % [Idiomas.t("Tiempo añadido"), _motor.minutos_anadidos()])
 				Sonido.toca("descuento_anunciado")
 				## Y el cuarto árbitro levanta el cartel en la banda (M-139).
-				CuartoArbitro.levantar(_raiz3d, _spawner, _motor.minutos_anadidos(), _kit_arbitro)
+				var cuarto := CuartoArbitro.levantar(_raiz3d, _spawner, _motor.minutos_anadidos(), _kit_arbitro)
+				## Corte al cartel ya arriba, si la jugada lo permite (como la tele).
+				get_tree().create_timer(0.7).timeout.connect(func() -> void:
+					if is_instance_valid(cuarto) and _puede_insertar(true):
+						_rig.inserto_cartel(cuarto))
 		_marcador.text = "%s  %d - %d  %s      %s" % [_corto(partido.local.nombre), partido.goles_local,
 			partido.goles_visita, _corto(partido.visita.nombre), reloj]
 		return
@@ -327,3 +331,45 @@ func _al_empezar_tanda() -> void:
 	_mostrar_banner_gol("🥅 " + Idiomas.t("TANDA DE PENALES"), false)
 	if _rig != null:
 		_rig.plano_tanda = true
+
+# --- los insertos de la realización (25-10-2026) -------------------------------------
+
+## Si el realizador puede cortar a un plano corto: con el motor real, sin la realización del
+## gol, la repetición ni la sala VAR en pantalla. `tranquila`: además, la jugada lejos del
+## área y sin ocasión (el cartel del añadido; la tarjeta llega siempre con el juego parado).
+func _puede_insertar(tranquila: bool) -> bool:
+	if _rig == null or _motor == null or is_instance_valid(_cine) or _sala_var != null:
+		return false
+	if (_repe != null and _repe.reproduciendo) or (is_instance_valid(_ceremonia) and _ceremonia.activa):
+		return false
+	if tranquila and (_motor.control_equipo >= 0 or not _motor.estado in ["juego", "saque"]
+			or _rig.trans_cerca > 0.35 or _rig.pista_ocasion > 0.0):
+		return false
+	return true
+
+## LA TARJETA, DE CERCA: el árbitro y el amonestado cuando la enseña.
+func _inserto_tarjeta() -> void:
+	if not _puede_insertar(false):
+		return
+	for a: Dictionary in _motor.arbitros:
+		if String(a.get("id", "")) == "arbitro" and is_instance_valid(a.get("node")):
+			var quien: Dictionary = a.get("mira_a", {})
+			var nodo: Node3D = quien.get("node") if not quien.is_empty() and is_instance_valid(quien.get("node")) else null
+			_rig.inserto_tarjeta(a["node"], nodo)
+			return
+
+## Un inserto se corta si la jugada se reanuda (la tarjeta) o se pone peligrosa (el cartel).
+func _vigilar_inserto() -> void:
+	if _rig == null or _rig.inserto == "" or _motor == null:
+		return
+	if (_rig.inserto == "tarjeta" and _motor.estado == "juego") or (_rig.inserto == "cartel" and (_rig.trans_cerca > 0.5 or _rig.pista_ocasion > 0.0)):
+		_rig.quitar_inserto()
+
+## Durante la realización del gol, la repetición y los insertos la tele no enseña el radar
+## ni la pantalla de la esquina: se desvanecen y vuelven solos (sin tocar si están puestos).
+func _hud_realizacion(delta: float) -> void:
+	var tapa := (_repe != null and _repe.reproduciendo) or is_instance_valid(_cine) or (_rig != null and _rig.inserto != "")
+	for c: Control in [_radar, _mini_pantalla]:
+		if c != null:
+			c.modulate.a = move_toward(c.modulate.a, 0.0 if tapa else 1.0, delta * 5.0)
+

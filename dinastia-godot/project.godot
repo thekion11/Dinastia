@@ -3,6 +3,7 @@ config_version=5
 [application]
 
 config/name="DINASTIA"
+config/version="0.9.0"
 config/description="Manager de futbol. Nucleo portado del HTML, no reescrito."
 run/main_scene="res://escenas/inicio.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
@@ -23,6 +24,8 @@ movie_writer/mjpeg_quality=0.55
 
 [autoload]
 
+; Registro va el primero: así oye también los fallos al arrancar los demás (nucleo/registro.gd).
+Registro="*res://nucleo/registro.gd"
 Datos="*res://nucleo/datos.gd"
 Azar="*res://nucleo/azar.gd"
 Eco="*res://nucleo/economia.gd"
@@ -30,6 +33,8 @@ Sonido="*res://nucleo/sonido.gd"
 Musica="*res://nucleo/musica.gd"
 Idiomas="*res://nucleo/idiomas.gd"
 Cierre="*res://nucleo/cierre.gd"
+; La textura de borde suave de Antialiased Line2D (MIT, addons/antialiased_line2d/, ui/componentes/trazo_suave.gd).
+AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
 
 [input_devices]
 

@@ -111,7 +111,7 @@ static func obtener_definicion(id: String) -> Dictionary:
 		"codigo": id,
 		"nombre": String(NOMBRES[id]),
 		"familia": familia,
-		"fases": _fases_de(id, familia, n),
+		"fases": _fases_de(id, n),
 		"inicio": INICIOS.get(id, {}),
 		"ambiente": AMBIENTE.has(id),
 	}
@@ -168,277 +168,249 @@ static func _f(dur: float, destinos: Dictionary, extra: Dictionary = {}) -> Dict
 		d[k] = extra[k]
 	return d
 
-static func _fases_de(id: String, familia: String, n: int) -> Array:
-	match id:
-		"ATQ-01":
-			return [
-				{"duracion": 1.4, "es_peligro": false,
-					"impulso_balon": Vector3(10.0, 0.3, -14.0), "spin_balon": Vector3(0.0, 8.0, 0.0),
-					"destinos": {"ED": Vector3(22.0, 0, -28.0), "LD": Vector3(24.0, 0, -18.0),
-						"DC": Vector3(6.0, 0, -36.0)}},
-				{"duracion": 0.85, "es_peligro": true,
-					"impulso_balon": Vector3(-16.0, 0.2, -7.0), "spin_balon": Vector3(0.0, -4.0, 0.0),
-					"destinos": {"ED": Vector3(23.0, 0, -40.0), "LD": Vector3(25.0, 0, -38.0),
-						"DC": Vector3(2.0, 0, -44.0)}},
-				{"duracion": 0.7, "es_peligro": true,
-					"impulso_balon": Vector3(-3.0, 5.4, -15.0), "spin_balon": Vector3(0.0, 14.0, 2.0),
-					"destinos": {"DC": Vector3(1.5, 0, -47.0)}},
-			]
-		"ATQ-02":
-			return [
-				_f(1.0, {"DC": Vector3(2, 0, -22), "ED": Vector3(14, 0, -24)}, {"pase_a": "DC"}),
-				_f(0.9, {"MC": Vector3(4, 0, -20)}, {"pase_a": "MC"}),
-				_f(1.2, {"ED": Vector3(18, 0, -38), "DC": Vector3(0, 0, -40)}, {"pase_a": "ED", "altura": 0.1}),
-				_f(0.8, {"ED": Vector3(15, 0, -44)}, {"remate": true}),
-			]
-		"ATQ-03":
-			return [
-				_f(1.0, {"DC": Vector3(-6, 0, -32), "EI": Vector3(-16, 0, -26)}),
-				_f(1.1, {"DC": Vector3(-5, 0, -41)}, {"pase_a": "DC", "altura": 0.1}),
-				_f(0.8, {}, {"remate": true}),
-			]
-		"ATQ-04":
-			return [
-				_f(0.8, {"DC": Vector3(4, 0, -26)}, {"pase_a": "DC"}),
-				_f(0.9, {"MC": Vector3(3, 0, -35)}, {"pase_a": "MC"}),
-				_f(0.8, {}, {"remate": true}),
-			]
-		"ATQ-05":
-			return [
-				_f(1.6, {"ED": Vector3(26, 0, -26)}, {"pase_a": "ED", "altura": 4.0}),
-				_f(1.0, {"ED": Vector3(24, 0, -36), "DC": Vector3(4, 0, -40)}),
-				_f(0.8, {"DC": Vector3(2, 0, -43)}, {"pase_a": "DC", "altura": 0.15}),
-				_f(0.8, {}, {"remate": true}),
-			]
-		"ATQ-06":
-			return [
-				_f(1.0, {"DC": Vector3(-3, 0, -44), "EI": Vector3(-10, 0, -42)}),
-				_f(1.1, {"EI": Vector3(-9, 0, -45)}, {"pase_a": "EI", "altura": 3.2}),
-				_f(0.8, {}, {"remate": true, "cabeza": true}),
-			]
-		"ATQ-07":
-			return [
-				{"duracion": 1.1, "es_peligro": false,
-					"impulso_balon": Vector3(-9.0, 0.4, -11.0), "spin_balon": Vector3(0.0, -10.0, 0.0),
-					"destinos": {"EI": Vector3(-18.0, 0, -30.0)}},
-				{"duracion": 0.9, "es_peligro": true,
-					"impulso_balon": Vector3(6.0, 7.2, -18.0), "spin_balon": Vector3(2.0, 22.0, 0.0),
-					"destinos": {"EI": Vector3(-11.0, 0, -38.0)}},
-			]
-		"ATQ-08":
-			return [
-				_f(1.2, {"ED": Vector3(18, 0, -10), "EI": Vector3(-18, 0, -10), "DC": Vector3(0, 0, -6)}, {"pase_a": "ED", "altura": 0.2}),
-				_f(1.3, {"ED": Vector3(20, 0, -30), "DC": Vector3(2, 0, -32), "EI": Vector3(-14, 0, -30)}),
-				_f(0.8, {"DC": Vector3(1, 0, -40)}, {"pase_a": "DC"}),
-				_f(0.8, {}, {"remate": true}),
-			]
-		"ATQ-09":
-			return [
-				_f(1.4, {"DC": Vector3(0, 0, -30), "MC": Vector3(4, 0, -22)}, {"pase_a": "DC", "altura": 2.6}),
-				_f(0.8, {"MC": Vector3(3, 0, -26)}, {"pase_a": "MC"}),
-				_f(0.8, {}, {"remate": true}),
-			]
-		"ATQ-10":
-			return [
-				_f(0.7, {"MC": Vector3(26, 0, -46), "ED": Vector3(32, 0, -51)}, {"pase_a": "MC"}),
-				_f(0.8, {"MC": Vector3(24, 0, -42), "DC": Vector3(2, 0, -45)}),
-				_f(0.9, {"DC": Vector3(1, 0, -46)}, {"pase_a": "DC", "altura": 1.4}),
-				_f(0.8, {}, {"remate": true, "cabeza": true}),
-			]
-		"ATQ-11":
-			return [
-				_f(1.0, {"DC": Vector3(-2, 0, -46), "DFC": Vector3(3, 0, -45)}),
-				_f(1.0, {"DFC": Vector3(2, 0, -46)}, {"pase_a": "DFC", "altura": 2.8}),
-				_f(0.8, {}, {"remate": true}),
-			]
-		"ATQ-12":
-			return [
-				_f(1.2, {"EI": Vector3(-14, 0, -47), "DC": Vector3(0, 0, -42)}),
-				_f(0.7, {"DC": Vector3(1, 0, -43)}, {"pase_a": "DC", "altura": 0.05}),
-				_f(0.7, {}, {"remate": true}),
-			]
-		"ATQ-13":
-			return [
-				_f(1.2, {"MC": Vector3(0, 0, -34)}, {"pase_a": "MC", "altura": 3.0}),
-				_f(0.8, {}, {"remate": true}),
-			]
-		"ATQ-14":
-			return [
-				## El balón va pegado al pie (`balon_a` a ras, justo delante del
-				## extremo): así el que lo lleva es el portador y lo CONDUCE con
-				## el mocap de regate; en la segunda fase amaga antes del tiro.
-				_f(1.3, {"ED": Vector3(17, 0, -40)}, {"balon_a": Vector3(16.6, 0, -40.8), "altura": 0.05}),
-				_f(0.9, {"ED": Vector3(14, 0, -43)}, {"balon_a": Vector3(13.6, 0, -43.8), "altura": 0.05, "accion": {"ED": "regate_finta"}}),
-				_f(0.8, {}, {"remate": true}),
-			]
-		"ATQ-15":
-			return [
-				{"duracion": 0.8, "es_peligro": true,
-					"impulso_balon": Vector3(1.0, 9.5, -11.0), "spin_balon": Vector3(8.0, 0.0, 0.0),
-					"destinos": {"DC": Vector3(2.0, 0, -44.0), "POR": Vector3(0.0, 0, 46.0)}},
-			]
-		"DEF-01":
-			return [
-				_f(1.5, {"DFC": Vector3(6, 0, 36), "LD": Vector3(16, 0, 33), "LI": Vector3(-6, 0, 36), "MC": Vector3(8, 0, 26)}, {"balon_a": Vector3(-16, 0, 22), "altura": 0.2}),
-				_f(1.5, {"DFC": Vector3(-4, 0, 36), "LD": Vector3(6, 0, 36), "LI": Vector3(-16, 0, 33), "MC": Vector3(-8, 0, 26)}),
-			]
-		"DEF-02":
-			return [
-				_f(1.2, {"MC": Vector3(4, 0, -9), "ED": Vector3(8, 0, -12), "DC": Vector3(2, 0, -14)}, {"accion": {"MC": "marcar"}}),
-				_f(0.9, {}, {"pase_a": "ED"}),
-			]
-		"DEF-03":
-			return [
-				{"duracion": 0.9, "es_peligro": false,
-					"impulso_balon": Vector3(3.0, 0.2, 10.0),
-					"destinos": {"DFC": Vector3(0.0, 0, -8.0), "LD": Vector3(16.0, 0, -6.0),
-						"LI": Vector3(-16.0, 0, -6.0)}},
-			]
-		"DEF-04":
-			return [
-				_f(0.9, {"LD": Vector3(10, 0, 21)}),
-				_f(1.2, {}, {"accion": {"LD": "falta_barrida"}, "balon_a": Vector3(15, 0, 27), "altura": 0.1}),
-			]
-		"DEF-05":
-			return [
-				_f(0.9, {"MC": Vector3(-3, 0, 15)}, {"balon_a": Vector3(-3, 0, 15.5), "altura": 0.1}),
-				_f(1.3, {"ED": Vector3(18, 0, -4)}, {"pase_a": "ED", "altura": 0.3}),
-			]
-		"DEF-06":
-			return [
-				_f(1.6, {"LD": Vector3(12, 0, 28)}, {"accion": {"LD": "marcar"}}),
-				_f(1.2, {"LD": Vector3(13, 0, 31)}, {"accion": {"LD": "marcar"}, "balon_a": Vector3(15, 0, 30), "altura": 0.05}),
-			]
-		"DEF-07":
-			return [
-				_f(1.5, {"LD": Vector3(27, 0, 28), "MC": Vector3(24, 0, 24)}, {"accion": {"LD": "marcar", "MC": "marcar"}}),
-				_f(0.8, {}, {"pase_a": "MC"}),
-			]
-		"DEF-08":
-			return [
-				_f(1.0, {"DFC": Vector3(0, 0, 42)}, {"balon_a": Vector3(0, 0, 42), "altura": 3.0}),
-				_f(1.9, {"ED": Vector3(22, 0, 6)}, {"pase_a": "ED", "altura": 7.0}),
-			]
-		"DEF-09":
-			return [
-				_f(0.8, {"MC": Vector3(1, 0, -3)}),
-				_f(1.2, {}, {"accion": {"MC": "falta_empujon"}}),
-			]
-		"DEF-10":
-			return [
-				_f(0.7, {"DFC": Vector3(-5, 0, 34)}),
-				_f(0.5, {}, {"balon_a": Vector3(-5, 0, 34.5), "altura": 0.3}),
-				_f(1.0, {"LI": Vector3(-20, 0, 26)}, {"pase_a": "LI"}),
-			]
-		"DEF-11":
-			return [
-				_f(1.3, {"DFC": Vector3(-16, 0, 34), "LI": Vector3(-22, 0, 30)}),
-				_f(0.8, {}, {"balon_a": Vector3(-17, 0, 35), "altura": 0.2}),
-				_f(1.1, {"MC": Vector3(-8, 0, 22)}, {"pase_a": "MC", "altura": 0.4}),
-			]
-		"DEF-12":
-			return [
-				_f(1.6, {"MC": Vector3(0, 0, 18), "DFC": Vector3(0, 0, 26)}, {"accion": {"MC": "marcar"}, "balon_a": Vector3(-6, 0, 8), "altura": 0.1}),
-				_f(1.2, {"MC": Vector3(-5, 0, 17)}, {"accion": {"MC": "marcar"}}),
-			]
-		"DEF-13":
-			return [
-				_f(1.2, {"LD": Vector3(20, 0, 13)}, {"accion": {"LD": "falta_empujon"}}),
-				_f(1.0, {"MC": Vector3(10, 0, 8)}, {"pase_a": "MC"}),
-			]
-		"DEF-14":
-			return [
-				_f(1.4, {"ED": Vector3(10, 0, -14), "MC": Vector3(4, 0, -8), "DC": Vector3(-4, 0, -16)}, {"balon_a": Vector3(-6, 0, -6), "altura": 0.1}),
-				_f(1.2, {"ED": Vector3(2, 0, -10), "MC": Vector3(-4, 0, -6), "DC": Vector3(-8, 0, -12)}),
-			]
-		"DEF-15":
-			return [
-				_f(2.0, {"DFC": Vector3(0, 0, 40), "LD": Vector3(12, 0, 38), "LI": Vector3(-12, 0, 38), "MC": Vector3(0, 0, 30),
-					"ED": Vector3(16, 0, 20), "EI": Vector3(-16, 0, 20)}, {"balon_a": Vector3(0, 0, 10), "altura": 6.0}),
-			]
-		"POR-01":
-			return [
-				{"duracion": 0.7, "es_peligro": true,
-					"impulso_balon": Vector3(4.5, 8.0, 16.0), "spin_balon": Vector3(0.0, -8.0, 0.0),
-					"destinos": {"POR": Vector3(0.0, 0, 50.5)}},
-			]
-		"POR-02":
-			return [
-				_f(0.9, {"POR": Vector3(0, 0, 50.5)}, {"balon_a": Vector3(1, 0, 50.8), "altura": 0.6, "accion": {"POR": "atajar_bajo"}}),
-				_f(1.2, {"DFC": Vector3(6, 0, 40)}, {"pase_a": "DFC"}),
-			]
-		"POR-03":
-			return [
-				_f(1.0, {"POR": Vector3(0, 0, 48)}, {"balon_a": Vector3(0, 0, 48), "altura": 3.0}),
-				_f(1.0, {}, {"balon_a": Vector3(4, 0, 30), "altura": 4.0}),
-			]
-		"POR-04":
-			return [
-				_f(0.9, {"POR": Vector3(1, 0, 44)}, {"balon_a": Vector3(1, 0, 44.5), "altura": 0.1, "accion": {"POR": "atajar_bajo"}}),
-				_f(1.1, {"DFC": Vector3(8, 0, 38)}, {"pase_a": "DFC"}),
-			]
-		"POR-05":
-			return [
-				_f(0.6, {}, {"balon_a": Vector3(-2, 0, 51), "altura": 0.2, "accion": {"POR": "atajar_izq"}}),
-				_f(0.6, {}, {"balon_a": Vector3(-10, 0, 54), "altura": 0.2}),
-			]
-		"POR-06":
-			return [
-				_f(0.7, {}, {"balon_a": Vector3(3.2, 0, 52), "altura": 0.8, "accion": {"POR": "atajar_der"}}),
-				_f(0.5, {}, {"balon_a": Vector3(6, 0, 54), "altura": 0.3}),
-			]
-		"POR-07":
-			return [
-				_f(1.1, {"POR": Vector3(0, 0, 45.5)}, {"balon_a": Vector3(0, 0, 45), "altura": 4.0}),
-				_f(1.7, {"ED": Vector3(22, 0, 10)}, {"pase_a": "ED", "altura": 1.6, "gesto": "saque_banda"}),
-			]
-		"POR-08":
-			return [
-				_f(1.0, {"ED": Vector3(24, 0, 14)}),
-				_f(1.6, {}, {"pase_a": "ED", "altura": 1.8, "gesto": "saque_banda"}),
-			]
-		"POR-09":
-			return [
-				_f(1.0, {"DC": Vector3(0, 0, -6), "ED": Vector3(18, 0, -2)}),
-				_f(2.6, {}, {"pase_a": "DC", "altura": 12.0}),
-			]
-		"POR-10":
-			return [
-				_f(1.2, {"POR": Vector3(2, 0, 33)}, {"balon_a": Vector3(2, 0, 34), "altura": 0.2}),
-				_f(1.2, {"LD": Vector3(20, 0, 24)}, {"pase_a": "LD"}),
-			]
-		"POR-11":
-			return [
-				_f(0.45, {}, {"balon_a": Vector3(0.5, 0, 51.5), "altura": 1.4, "accion": {"POR": "atajar_der"}}),
-				_f(0.8, {}, {"balon_a": Vector3(-6, 0, 44), "altura": 0.5}),
-			]
-		"POR-12":
-			return [
-				_f(1.0, {"POR": Vector3(0, 0, 47)}, {"pase_a": "POR"}),
-				_f(2.2, {"ED": Vector3(26, 0, 0)}, {"pase_a": "ED", "altura": 8.0}),
-			]
-		"POR-13":
-			return [
-				_f(0.8, {}, {"balon_a": Vector3(0, 0, 52), "altura": 2.4, "accion": {"POR": "atajar_izq"}}),
-				_f(0.5, {}, {"balon_a": Vector3(0, 0, 55), "altura": 3.0}),
-			]
-		"POR-14":
-			return [
-				_f(0.55, {}, {"balon_a": Vector3(3.4, 0, 52.4), "altura": 0.4, "accion": {"POR": "atajar_der"}}),
-				_f(0.6, {}, {"balon_a": Vector3(8, 0, 56), "altura": 0.2}),
-			]
-		"POR-15":
-			return [
-				_f(0.5, {}, {"balon_a": Vector3(2, 0, 52), "altura": 0.6, "accion": {"POR": "atajar_der"}}),
-				_f(0.5, {}, {"balon_a": Vector3(-3, 0, 48), "altura": 0.3}),
-				_f(0.6, {}, {"balon_a": Vector3(-2.8, 0, 52), "altura": 0.5, "accion": {"POR": "atajar_izq"}}),
-			]
-		"REG-01":
-			return [
-				{"duracion": 1.0, "es_peligro": true,
-					"impulso_balon": Vector3(2.0, 0.5, -18.0),
-					"destinos": {"DC": Vector3(3.0, 0, -48.0), "DFC": Vector3(2.0, 0, -46.5)}},
-			]
+## LAS FASES DE CADA JUGADA, COMO DATOS (FASE 0, 25-10-2026). Antes eran un `match` de 280 líneas dentro de
+## `_fases_de`; ahora son esta tabla y un intérprete corto. Cada fase se escribe de una de dos formas:
+##   [duración, destinos, extra]  la forma corta, que arma `_f` (extra: pase_a, balon_a, altura, remate, cabeza,
+##                                accion, gesto; `es_peligro` sale de `remate`);
+##   {…}                          la fase escrita entera (impulso y efecto del balón puestos a mano).
+## Una jugada del reglamento sin fila usa la plantilla de `_fases_de`.
+const FASES := {
+	"ATQ-01": [
+		{"duracion": 1.4, "es_peligro": false,
+			"impulso_balon": Vector3(10.0, 0.3, -14.0), "spin_balon": Vector3(0.0, 8.0, 0.0),
+			"destinos": {"ED": Vector3(22.0, 0, -28.0), "LD": Vector3(24.0, 0, -18.0),
+				"DC": Vector3(6.0, 0, -36.0)}},
+		{"duracion": 0.85, "es_peligro": true,
+			"impulso_balon": Vector3(-16.0, 0.2, -7.0), "spin_balon": Vector3(0.0, -4.0, 0.0),
+			"destinos": {"ED": Vector3(23.0, 0, -40.0), "LD": Vector3(25.0, 0, -38.0),
+				"DC": Vector3(2.0, 0, -44.0)}},
+		{"duracion": 0.7, "es_peligro": true,
+			"impulso_balon": Vector3(-3.0, 5.4, -15.0), "spin_balon": Vector3(0.0, 14.0, 2.0),
+			"destinos": {"DC": Vector3(1.5, 0, -47.0)}},
+	],
+	"ATQ-02": [
+		[1.0, {"DC": Vector3(2, 0, -22), "ED": Vector3(14, 0, -24)}, {"pase_a": "DC"}],
+		[0.9, {"MC": Vector3(4, 0, -20)}, {"pase_a": "MC"}],
+		[1.2, {"ED": Vector3(18, 0, -38), "DC": Vector3(0, 0, -40)}, {"pase_a": "ED", "altura": 0.1}],
+		[0.8, {"ED": Vector3(15, 0, -44)}, {"remate": true}],
+	],
+	"ATQ-03": [
+		[1.0, {"DC": Vector3(-6, 0, -32), "EI": Vector3(-16, 0, -26)}],
+		[1.1, {"DC": Vector3(-5, 0, -41)}, {"pase_a": "DC", "altura": 0.1}],
+		[0.8, {}, {"remate": true}],
+	],
+	"ATQ-04": [
+		[0.8, {"DC": Vector3(4, 0, -26)}, {"pase_a": "DC"}],
+		[0.9, {"MC": Vector3(3, 0, -35)}, {"pase_a": "MC"}],
+		[0.8, {}, {"remate": true}],
+	],
+	"ATQ-05": [
+		[1.6, {"ED": Vector3(26, 0, -26)}, {"pase_a": "ED", "altura": 4.0}],
+		[1.0, {"ED": Vector3(24, 0, -36), "DC": Vector3(4, 0, -40)}],
+		[0.8, {"DC": Vector3(2, 0, -43)}, {"pase_a": "DC", "altura": 0.15}],
+		[0.8, {}, {"remate": true}],
+	],
+	"ATQ-06": [
+		[1.0, {"DC": Vector3(-3, 0, -44), "EI": Vector3(-10, 0, -42)}],
+		[1.1, {"EI": Vector3(-9, 0, -45)}, {"pase_a": "EI", "altura": 3.2}],
+		[0.8, {}, {"remate": true, "cabeza": true}],
+	],
+	"ATQ-07": [
+		{"duracion": 1.1, "es_peligro": false,
+			"impulso_balon": Vector3(-9.0, 0.4, -11.0), "spin_balon": Vector3(0.0, -10.0, 0.0),
+			"destinos": {"EI": Vector3(-18.0, 0, -30.0)}},
+		{"duracion": 0.9, "es_peligro": true,
+			"impulso_balon": Vector3(6.0, 7.2, -18.0), "spin_balon": Vector3(2.0, 22.0, 0.0),
+			"destinos": {"EI": Vector3(-11.0, 0, -38.0)}},
+	],
+	"ATQ-08": [
+		[1.2, {"ED": Vector3(18, 0, -10), "EI": Vector3(-18, 0, -10), "DC": Vector3(0, 0, -6)}, {"pase_a": "ED", "altura": 0.2}],
+		[1.3, {"ED": Vector3(20, 0, -30), "DC": Vector3(2, 0, -32), "EI": Vector3(-14, 0, -30)}],
+		[0.8, {"DC": Vector3(1, 0, -40)}, {"pase_a": "DC"}],
+		[0.8, {}, {"remate": true}],
+	],
+	"ATQ-09": [
+		[1.4, {"DC": Vector3(0, 0, -30), "MC": Vector3(4, 0, -22)}, {"pase_a": "DC", "altura": 2.6}],
+		[0.8, {"MC": Vector3(3, 0, -26)}, {"pase_a": "MC"}],
+		[0.8, {}, {"remate": true}],
+	],
+	"ATQ-10": [
+		[0.7, {"MC": Vector3(26, 0, -46), "ED": Vector3(32, 0, -51)}, {"pase_a": "MC"}],
+		[0.8, {"MC": Vector3(24, 0, -42), "DC": Vector3(2, 0, -45)}],
+		[0.9, {"DC": Vector3(1, 0, -46)}, {"pase_a": "DC", "altura": 1.4}],
+		[0.8, {}, {"remate": true, "cabeza": true}],
+	],
+	"ATQ-11": [
+		[1.0, {"DC": Vector3(-2, 0, -46), "DFC": Vector3(3, 0, -45)}],
+		[1.0, {"DFC": Vector3(2, 0, -46)}, {"pase_a": "DFC", "altura": 2.8}],
+		[0.8, {}, {"remate": true}],
+	],
+	"ATQ-12": [
+		[1.2, {"EI": Vector3(-14, 0, -47), "DC": Vector3(0, 0, -42)}],
+		[0.7, {"DC": Vector3(1, 0, -43)}, {"pase_a": "DC", "altura": 0.05}],
+		[0.7, {}, {"remate": true}],
+	],
+	"ATQ-13": [
+		[1.2, {"MC": Vector3(0, 0, -34)}, {"pase_a": "MC", "altura": 3.0}],
+		[0.8, {}, {"remate": true}],
+	],
+	"ATQ-14": [
+		## El balón va pegado al pie (`balon_a` a ras, justo delante del
+		## extremo): así el que lo lleva es el portador y lo CONDUCE con
+		## el mocap de regate; en la segunda fase amaga antes del tiro.
+		[1.3, {"ED": Vector3(17, 0, -40)}, {"balon_a": Vector3(16.6, 0, -40.8), "altura": 0.05}],
+		[0.9, {"ED": Vector3(14, 0, -43)}, {"balon_a": Vector3(13.6, 0, -43.8), "altura": 0.05, "accion": {"ED": "regate_finta"}}],
+		[0.8, {}, {"remate": true}],
+	],
+	"ATQ-15": [
+		{"duracion": 0.8, "es_peligro": true,
+			"impulso_balon": Vector3(1.0, 9.5, -11.0), "spin_balon": Vector3(8.0, 0.0, 0.0),
+			"destinos": {"DC": Vector3(2.0, 0, -44.0), "POR": Vector3(0.0, 0, 46.0)}},
+	],
+	"DEF-01": [
+		[1.5, {"DFC": Vector3(6, 0, 36), "LD": Vector3(16, 0, 33), "LI": Vector3(-6, 0, 36), "MC": Vector3(8, 0, 26)}, {"balon_a": Vector3(-16, 0, 22), "altura": 0.2}],
+		[1.5, {"DFC": Vector3(-4, 0, 36), "LD": Vector3(6, 0, 36), "LI": Vector3(-16, 0, 33), "MC": Vector3(-8, 0, 26)}],
+	],
+	"DEF-02": [
+		[1.2, {"MC": Vector3(4, 0, -9), "ED": Vector3(8, 0, -12), "DC": Vector3(2, 0, -14)}, {"accion": {"MC": "marcar"}}],
+		[0.9, {}, {"pase_a": "ED"}],
+	],
+	"DEF-03": [
+		{"duracion": 0.9, "es_peligro": false,
+			"impulso_balon": Vector3(3.0, 0.2, 10.0),
+			"destinos": {"DFC": Vector3(0.0, 0, -8.0), "LD": Vector3(16.0, 0, -6.0),
+				"LI": Vector3(-16.0, 0, -6.0)}},
+	],
+	"DEF-04": [
+		[0.9, {"LD": Vector3(10, 0, 21)}],
+		[1.2, {}, {"accion": {"LD": "falta_barrida"}, "balon_a": Vector3(15, 0, 27), "altura": 0.1}],
+	],
+	"DEF-05": [
+		[0.9, {"MC": Vector3(-3, 0, 15)}, {"balon_a": Vector3(-3, 0, 15.5), "altura": 0.1}],
+		[1.3, {"ED": Vector3(18, 0, -4)}, {"pase_a": "ED", "altura": 0.3}],
+	],
+	"DEF-06": [
+		[1.6, {"LD": Vector3(12, 0, 28)}, {"accion": {"LD": "marcar"}}],
+		[1.2, {"LD": Vector3(13, 0, 31)}, {"accion": {"LD": "marcar"}, "balon_a": Vector3(15, 0, 30), "altura": 0.05}],
+	],
+	"DEF-07": [
+		[1.5, {"LD": Vector3(27, 0, 28), "MC": Vector3(24, 0, 24)}, {"accion": {"LD": "marcar", "MC": "marcar"}}],
+		[0.8, {}, {"pase_a": "MC"}],
+	],
+	"DEF-08": [
+		[1.0, {"DFC": Vector3(0, 0, 42)}, {"balon_a": Vector3(0, 0, 42), "altura": 3.0}],
+		[1.9, {"ED": Vector3(22, 0, 6)}, {"pase_a": "ED", "altura": 7.0}],
+	],
+	"DEF-09": [
+		[0.8, {"MC": Vector3(1, 0, -3)}],
+		[1.2, {}, {"accion": {"MC": "falta_empujon"}}],
+	],
+	"DEF-10": [
+		[0.7, {"DFC": Vector3(-5, 0, 34)}],
+		[0.5, {}, {"balon_a": Vector3(-5, 0, 34.5), "altura": 0.3}],
+		[1.0, {"LI": Vector3(-20, 0, 26)}, {"pase_a": "LI"}],
+	],
+	"DEF-11": [
+		[1.3, {"DFC": Vector3(-16, 0, 34), "LI": Vector3(-22, 0, 30)}],
+		[0.8, {}, {"balon_a": Vector3(-17, 0, 35), "altura": 0.2}],
+		[1.1, {"MC": Vector3(-8, 0, 22)}, {"pase_a": "MC", "altura": 0.4}],
+	],
+	"DEF-12": [
+		[1.6, {"MC": Vector3(0, 0, 18), "DFC": Vector3(0, 0, 26)}, {"accion": {"MC": "marcar"}, "balon_a": Vector3(-6, 0, 8), "altura": 0.1}],
+		[1.2, {"MC": Vector3(-5, 0, 17)}, {"accion": {"MC": "marcar"}}],
+	],
+	"DEF-13": [
+		[1.2, {"LD": Vector3(20, 0, 13)}, {"accion": {"LD": "falta_empujon"}}],
+		[1.0, {"MC": Vector3(10, 0, 8)}, {"pase_a": "MC"}],
+	],
+	"DEF-14": [
+		[1.4, {"ED": Vector3(10, 0, -14), "MC": Vector3(4, 0, -8), "DC": Vector3(-4, 0, -16)}, {"balon_a": Vector3(-6, 0, -6), "altura": 0.1}],
+		[1.2, {"ED": Vector3(2, 0, -10), "MC": Vector3(-4, 0, -6), "DC": Vector3(-8, 0, -12)}],
+	],
+	"DEF-15": [
+		[2.0, {"DFC": Vector3(0, 0, 40), "LD": Vector3(12, 0, 38), "LI": Vector3(-12, 0, 38), "MC": Vector3(0, 0, 30),
+			"ED": Vector3(16, 0, 20), "EI": Vector3(-16, 0, 20)}, {"balon_a": Vector3(0, 0, 10), "altura": 6.0}],
+	],
+	"POR-01": [
+		{"duracion": 0.7, "es_peligro": true,
+			"impulso_balon": Vector3(4.5, 8.0, 16.0), "spin_balon": Vector3(0.0, -8.0, 0.0),
+			"destinos": {"POR": Vector3(0.0, 0, 50.5)}},
+	],
+	"POR-02": [
+		[0.9, {"POR": Vector3(0, 0, 50.5)}, {"balon_a": Vector3(1, 0, 50.8), "altura": 0.6, "accion": {"POR": "atajar_bajo"}}],
+		[1.2, {"DFC": Vector3(6, 0, 40)}, {"pase_a": "DFC"}],
+	],
+	"POR-03": [
+		[1.0, {"POR": Vector3(0, 0, 48)}, {"balon_a": Vector3(0, 0, 48), "altura": 3.0}],
+		[1.0, {}, {"balon_a": Vector3(4, 0, 30), "altura": 4.0}],
+	],
+	"POR-04": [
+		[0.9, {"POR": Vector3(1, 0, 44)}, {"balon_a": Vector3(1, 0, 44.5), "altura": 0.1, "accion": {"POR": "atajar_bajo"}}],
+		[1.1, {"DFC": Vector3(8, 0, 38)}, {"pase_a": "DFC"}],
+	],
+	"POR-05": [
+		[0.6, {}, {"balon_a": Vector3(-2, 0, 51), "altura": 0.2, "accion": {"POR": "atajar_izq"}}],
+		[0.6, {}, {"balon_a": Vector3(-10, 0, 54), "altura": 0.2}],
+	],
+	"POR-06": [
+		[0.7, {}, {"balon_a": Vector3(3.2, 0, 52), "altura": 0.8, "accion": {"POR": "atajar_der"}}],
+		[0.5, {}, {"balon_a": Vector3(6, 0, 54), "altura": 0.3}],
+	],
+	"POR-07": [
+		[1.1, {"POR": Vector3(0, 0, 45.5)}, {"balon_a": Vector3(0, 0, 45), "altura": 4.0}],
+		[1.7, {"ED": Vector3(22, 0, 10)}, {"pase_a": "ED", "altura": 1.6, "gesto": "saque_banda"}],
+	],
+	"POR-08": [
+		[1.0, {"ED": Vector3(24, 0, 14)}],
+		[1.6, {}, {"pase_a": "ED", "altura": 1.8, "gesto": "saque_banda"}],
+	],
+	"POR-09": [
+		[1.0, {"DC": Vector3(0, 0, -6), "ED": Vector3(18, 0, -2)}],
+		[2.6, {}, {"pase_a": "DC", "altura": 12.0}],
+	],
+	"POR-10": [
+		[1.2, {"POR": Vector3(2, 0, 33)}, {"balon_a": Vector3(2, 0, 34), "altura": 0.2}],
+		[1.2, {"LD": Vector3(20, 0, 24)}, {"pase_a": "LD"}],
+	],
+	"POR-11": [
+		[0.45, {}, {"balon_a": Vector3(0.5, 0, 51.5), "altura": 1.4, "accion": {"POR": "atajar_der"}}],
+		[0.8, {}, {"balon_a": Vector3(-6, 0, 44), "altura": 0.5}],
+	],
+	"POR-12": [
+		[1.0, {"POR": Vector3(0, 0, 47)}, {"pase_a": "POR"}],
+		[2.2, {"ED": Vector3(26, 0, 0)}, {"pase_a": "ED", "altura": 8.0}],
+	],
+	"POR-13": [
+		[0.8, {}, {"balon_a": Vector3(0, 0, 52), "altura": 2.4, "accion": {"POR": "atajar_izq"}}],
+		[0.5, {}, {"balon_a": Vector3(0, 0, 55), "altura": 3.0}],
+	],
+	"POR-14": [
+		[0.55, {}, {"balon_a": Vector3(3.4, 0, 52.4), "altura": 0.4, "accion": {"POR": "atajar_der"}}],
+		[0.6, {}, {"balon_a": Vector3(8, 0, 56), "altura": 0.2}],
+	],
+	"POR-15": [
+		[0.5, {}, {"balon_a": Vector3(2, 0, 52), "altura": 0.6, "accion": {"POR": "atajar_der"}}],
+		[0.5, {}, {"balon_a": Vector3(-3, 0, 48), "altura": 0.3}],
+		[0.6, {}, {"balon_a": Vector3(-2.8, 0, 52), "altura": 0.5, "accion": {"POR": "atajar_izq"}}],
+	],
+	"REG-01": [
+		{"duracion": 1.0, "es_peligro": true,
+			"impulso_balon": Vector3(2.0, 0.5, -18.0),
+			"destinos": {"DC": Vector3(3.0, 0, -48.0), "DFC": Vector3(2.0, 0, -46.5)}},
+	],
+}
+
+## El intérprete de FASES: cada fase sale COPIADA (el reproductor puede tocarla sin estropear la tabla).
+static func _fases_de(id: String, n: int) -> Array:
+	var out := []
+	for e: Variant in FASES.get(id, []):
+		if e is Array:
+			var extra: Dictionary = e[2] if e.size() > 2 else {}
+			out.append(_f(e[0], (e[1] as Dictionary).duplicate(true), extra.duplicate(true)))
+		else:
+			out.append((e as Dictionary).duplicate(true))
+	if not out.is_empty():
+		return out
 	## El reglamento: son escenas para ilustrar una norma (la ficha del
 	## glosario), no se mezclan con el partido. Plantilla simple.
 	var lado: float = 1.0 if (n % 2) == 0 else -1.0
