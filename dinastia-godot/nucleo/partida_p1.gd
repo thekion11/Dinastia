@@ -316,6 +316,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"contratos": m.contratos.a_dic() if m.contratos != null else {},
 		"vida": m.vida.a_dic() if m.vida != null else {},
 		"reloj": m.reloj.a_dic(), "necesidades": m.necesidades.a_dic(),   ## fase 0
+		"citas": m.citas.a_dic(),   ## fase 4
 		"imprevistos": m.imprevistos.a_dic(),
 		"maestria": m.maestria.a_dic() if m.maestria != null else {},
 		"banco": m.banco.a_dic() if m.banco != null else {},

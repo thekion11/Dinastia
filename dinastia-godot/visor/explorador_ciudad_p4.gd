@@ -115,6 +115,8 @@ func _bajar_a_la_galeria() -> void:
 	_mover_en_estadio(1.0)
 
 func _usar() -> void:
+	if vida != null and vida.citas_3d != null and vida.citas_3d.usar():   ## una cita en persona (fase 4)
+		return
 	if estado == "interior":
 		if vida != null and vida.usar_interior():   ## tu casa o pedir de comer (fase 3)
 			return

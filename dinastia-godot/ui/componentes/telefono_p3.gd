@@ -139,6 +139,23 @@ func _agenda() -> void:
 	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, Idiomas.t("LO PRÓXIMO")))
 	for linea: String in _proximos(r):
 		_cuerpo.add_child(_nota(linea))
+	## Las citas en persona (fase 4): quién, cuándo y «Ir» (la flecha del paseo te lleva).
+	if m.citas != null and not m.citas.pendientes().is_empty():
+		_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, Idiomas.t("CITAS")))
+		for ct: Dictionary in m.citas.pendientes():
+			var fila := HBoxContainer.new()
+			fila.add_theme_constant_override("separation", 8)
+			var txt := _nota("%s · %s\n%s" % [String(ct["quien"]), String(ct["cargo"]), m.citas.cuando(ct)])
+			txt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			fila.add_child(txt)
+			var ir := Button.new()
+			ir.text = Idiomas.t("Guiando") if m.citas.objetivo == String(ct["id"]) else Idiomas.t("Ir")
+			ir.custom_minimum_size = Vector2(90, 40)
+			ir.pressed.connect(func() -> void:
+				m.citas.objetivo = "" if m.citas.objetivo == String(ct["id"]) else String(ct["id"])
+				(self as Telefono).abrir_app("agenda"))
+			fila.add_child(ir)
+			_cuerpo.add_child(fila)
 	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, Idiomas.t("ADELANTAR")))
 	for par: Array in [["1h", "⏩ Una hora"], ["manana", "🌅 Hasta mañana a las 08:00"], ["partido", "⚽ Hasta el partido"]]:
 		var b := Button.new()

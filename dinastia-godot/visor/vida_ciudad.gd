@@ -34,6 +34,8 @@ var mundo: Mundo
 var expl: ExploradorCiudad
 var vista: VistaCiudad
 var casa: CasaDT = null
+## Las citas en persona en 3D (fase 4): flecha, cuerpos y charla.
+var citas_3d: CitasCiudad = null
 var en_casa := false
 var _punto_casa := {}
 var _acum := 0.0
@@ -62,6 +64,8 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 		m.necesidades.estado_cambiado.connect(s._al_cambiar_nivel)
 		m.necesidades.agotamiento.connect(s._desmayo)
 	s._sincronizar_luz()
+	if m.citas != null:
+		s.citas_3d = CitasCiudad.crear(s)
 	return s
 
 ## ¿Se puede salir en coche esta semana? {coche, motivo}. Con «micro» no hay coche
