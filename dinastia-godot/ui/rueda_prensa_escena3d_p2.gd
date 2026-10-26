@@ -99,7 +99,7 @@ func _montar_podio_procedural() -> void:
 	## pequeña apuntándole a la boca.
 	for lado in [-1.0, 1.0]:
 		var base_pos := Vector3(lado * 0.16, 1.1, -0.02)
-		var punta := Vector3(lado * 0.09, 1.3, -0.3)
+		var punta := Vector3(lado * 0.1, 1.24, -0.22)
 		add_child(_segmento(base_pos, punta, 0.006, mic_mat))
 		var capsula := MeshInstance3D.new()
 		var capm := CapsuleMesh.new()
@@ -346,7 +346,7 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 	add_child(we)
 	var env := we.environment
 	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.05, 0.05, 0.06)
+	env.background_color = Color(0.09, 0.09, 0.11)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.7, 0.72, 0.78)
 	env.ambient_light_energy = 0.85

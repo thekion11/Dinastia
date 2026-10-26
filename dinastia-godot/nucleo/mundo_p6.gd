@@ -90,6 +90,37 @@ func _mover_de_liga(c: Club, desde: Liga, hasta: Liga) -> void:
 	if not hasta.tabla_puntos.has(c.id):
 		hasta.tabla_puntos[c.id] = {"pts": 0, "pj": 0, "gf": 0, "gc": 0, "g": 0, "e": 0, "p": 0}
 
+## LA DIFICULTAD DE LA PARTIDA (claves de la tabla `DIF`: facil/normal/leyenda). La pone
+## `CicloPartida.arrancar_con` y se guarda. `factor_dificultad("prem")` escala los premios de TU club
+## (liga y supercopa: fácil ×1,25, leyenda ×0,80) y `"pide"` lo que piden los jugadores al fichar y
+## renovar (fácil ×0,90, leyenda ×1,20). La caja inicial («plata») ya la escalaba la interfaz.
+var dificultad: String = "normal"
+
+func factor_dificultad(clave: String) -> float:
+	var dif: Variant = Datos.tabla("DIF")
+	if not (dif is Dictionary) or not (dif as Dictionary).has(dificultad):
+		return 1.0
+	return float(((dif as Dictionary)[dificultad] as Dictionary).get(clave, 1.0))
+
+func _premio_para(c: Club, monto: int) -> int:
+	return int(round(float(monto) * factor_dificultad("prem"))) if c == mi_club() else monto
+
+## La cláusula de descenso (`Contratos.aplicar_descenso`), a IA y humano por igual;
+## a TU club se le cuenta en la noticia del descenso o del ascenso.
+func _clausula_descenso(c: Club, baja: bool) -> void:
+	if not baja:
+		var tenia := c.plantilla.any(func(j: Jugador) -> bool: return j.factor_clausula() < 1.0)
+		Contratos.levantar_descenso(c)
+		if tenia and c == mi_club() and prensa != null:
+			prensa.noticia.emit("⬆️ Se levanta la cláusula de descenso",
+				"Con el ascenso, el plantel de %s vuelve a cobrar su sueldo de siempre." % c.nombre)
+		return
+	var piden := Contratos.aplicar_descenso(c, anio)
+	if c == mi_club() and prensa != null:
+		prensa.noticia.emit("⬇️ %s desciende: salta la cláusula" % c.nombre,
+			"Los contratos traen cláusula de descenso: los sueldos del plantel bajan entre un 30 y un 50 %% hasta volver a subir.%s" % (
+				" %d de los que más cobran piden salir." % piden if piden > 0 else ""))
+
 ## Reparte los premios de la liga y mueve a los clubes entre divisiones.
 ##
 ## Se le pasan las tablas ya calculadas en vez de volver a pedirlas: son la misma
@@ -123,7 +154,7 @@ func _cerrar_campeonato() -> Dictionary:
 		## votaron, así que esto no cambia nada salvo cuando de verdad toca.
 		var es_mi_liga := mi_club() != null and l.pais == mi_club().pais and l.division() == 1
 		var campeon: Club = federacion.campeon_de_liga(t, anio, mi_club_id) if es_mi_liga else t[0]["club"]
-		campeon.mover_saldo(PREMIO_LIGA)
+		campeon.mover_saldo(_premio_para(campeon, PREMIO_LIGA))
 		## Ganar la liga sube la reputación del club, y la reputación es la que
 		## mueve la caja, la taquilla y lo que puedes fichar el año siguiente.
 		campeon.rep = clampi(campeon.rep + 1, 40, 96)
@@ -204,8 +235,10 @@ func _cerrar_campeonato() -> Dictionary:
 				resumen["administrativo"] = (resumen.get("administrativo", []) as Array) + castigo
 		for c in bajan:
 			_mover_de_liga(c, primera, segunda)
+			_clausula_descenso(c, true)
 		for c in suben:
 			_mover_de_liga(c, segunda, primera)
+			_clausula_descenso(c, false)
 		resumen["bajan"].append_array(bajan)
 		resumen["suben"].append_array(suben)
 
@@ -376,7 +409,7 @@ func jugar_supercopa() -> Dictionary:
 	## Partido único: si acaba en empate, decide la reputación —no hay prórroga
 	## que simular y un título no puede quedar sin dueño.
 	var gana: Club = a if gl > gv else (b if gv > gl else (a if a.rep >= b.rep else b))
-	gana.mover_saldo(PREMIO_SUPERCOPA)
+	gana.mover_saldo(_premio_para(gana, PREMIO_SUPERCOPA))
 	var nombre := "Supercopa de %s" % _nombre_pais_de(gana.pais)
 	if gana == mi_club():
 		if logros != null:

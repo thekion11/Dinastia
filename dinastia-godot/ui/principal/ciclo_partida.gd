@@ -72,6 +72,7 @@ func nueva() -> void:
 func arrancar_con(m: Mundo) -> void:
 	p.mundo = m
 	p._fin_partida_avisado = false
+	m.dificultad = Principal.dificultad_elegida
 	## La dificultad: por ahora solo escala la caja inicial (el "plata" del
 	## HTML, hasta 60% más en fácil o 45% menos en leyenda), que es lo que se
 	## nota desde el primer minuto. Sigue sin escalar los premios de la

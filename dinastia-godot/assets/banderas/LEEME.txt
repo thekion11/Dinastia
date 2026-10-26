@@ -1,0 +1,6 @@
+BANDERAS DETALLADAS (26-10-2026). SVG 4x3 de lipis/flag-icons (github.com/lipis/flag-icons,
+carpeta flags/4x3, rama main), licencia MIT (texto completo en LICENSE_flag-icons_MIT.txt).
+Solo los países que usa el juego (tabla BANDERA de datos/tablas.json y los dibujos de
+visor/banderas.gd). Nombre de archivo = código ISO 3166-1 alfa-2 (gb-eng, gb-sct, gb-wls para
+Inglaterra, Escocia y Gales). La tabla FIFA -> ISO está en visor/banderas.gd (ISO).
+Si falta un archivo, visor/banderas.gd vuelve al dibujo hecho en código.

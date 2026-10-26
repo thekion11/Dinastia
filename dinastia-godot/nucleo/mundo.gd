@@ -1,6 +1,58 @@
 class_name Mundo
 extends "res://nucleo/mundo_p7.gd"
-## [Capa 9/9 de `mundo.gd`] ranking_tactico, puede_analizar, analizar_rival
+## [Capa 9/9 de `mundo.gd`] ranking_tactico, puede_analizar, analizar_rival, nueva_temporada (tope del valor)
+
+## EL TOPE DEL VALOR DE LA IA SEGÚN LA DIFICULTAD (26-10, decisión del dueño). En diez temporadas el valor
+## medio del mercado de la IA sube ×1,36-×1,45 por el asentamiento del mundo generado (`eq_diez_temporadas`).
+## El dueño aceptó ×1,50 como techo, pero que dependa de la dificultad: en fácil los fichajes se encarecen
+## menos y en leyenda más. Por encima del tope, el valor de TODA la IA (no tu club, no los sueldos firmados)
+## se escala hasta él al cerrar la temporada. Claves = las de la tabla `DIF`.
+const TOPE_VALOR_IA := {"facil": 1.35, "normal": 1.50, "leyenda": 1.65}
+## La dificultad de la partida (la pone `CicloPartida.arrancar_con`; se guarda) y el valor medio de la IA de
+## referencia (al tomar el mando; 0 = todavía no).
+## (`dificultad` vive en mundo_p6, que la usa para los premios.)
+var valor_ia_ref: float = 0.0
+
+func tope_valor_ia() -> float:
+	return float(TOPE_VALOR_IA.get(dificultad, TOPE_VALOR_IA["normal"]))
+
+## La referencia se toma al empezar la partida (guardados viejos: en su primer cierre).
+func tomar_el_mando(club_id: String) -> Directiva:
+	var d := super(club_id)
+	if valor_ia_ref <= 0.0:
+		valor_ia_ref = valor_medio_ia()
+	return d
+
+func nueva_temporada() -> Dictionary:
+	if valor_ia_ref <= 0.0:
+		valor_ia_ref = valor_medio_ia()
+	var r := super()
+	## La cláusula de descenso alcanza a los que llegan mientras el club siga abajo.
+	for c: Club in clubes.values():
+		if c.division >= 2 and c.plantilla.any(func(j: Jugador) -> bool: return j.descenso_club == c.id):
+			Contratos.aplicar_descenso(c, anio, true)
+	var v := valor_medio_ia()
+	var tope := valor_ia_ref * tope_valor_ia()
+	if valor_ia_ref > 0.0 and v > tope:
+		var f := tope / v
+		for c: Club in clubes.values():
+			if c.id != mi_club_id:
+				for j in c.plantilla:
+					j.valor = int(max(300.0, floor(float(j.valor) * f / 100.0) * 100.0))   ## hacia abajo: redondeando, la media quedaba un pelo sobre el tope
+		r["tope_valor"] = f
+	return r
+
+## El valor medio de los jugadores de los clubes de la IA (sin tu club ni los libres).
+func valor_medio_ia() -> float:
+	var suma := 0.0
+	var n := 0
+	for c: Club in clubes.values():
+		if c.id == mi_club_id:
+			continue
+		for j in c.plantilla:
+			suma += j.valor
+			n += 1
+	return suma / float(n) if n > 0 else 0.0
 
 ## Las formaciones que has usado, ordenadas por puntos por partido. Es la tabla
 ## que contesta «¿de verdad me funciona el 4-3-3?».

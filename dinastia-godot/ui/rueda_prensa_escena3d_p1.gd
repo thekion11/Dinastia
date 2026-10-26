@@ -159,7 +159,7 @@ func _montar_suelo() -> void:
 
 func _montar_sala() -> void:
 	var oscuro := StandardMaterial3D.new()
-	oscuro.albedo_color = Color(0.05, 0.05, 0.06)
+	oscuro.albedo_color = Color(0.13, 0.13, 0.15)
 	oscuro.roughness = 0.8
 
 	## Paredes laterales, ligeramente giradas hacia dentro -mismo truco que el

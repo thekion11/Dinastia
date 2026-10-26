@@ -93,16 +93,11 @@ func _material_oro() -> ShaderMaterial:
 
 ## Una serif de rótulo, pedida al sistema por nombre (como las tipografías de Ajustes): la
 ## primera que exista. Cinzel/Trajan si alguien las tiene; Palatino y Georgia en Windows y
-## macOS; Liberation/DejaVu Serif en Linux; «serif» siempre resuelve algo.
+## macOS. Si no hay ninguna (Linux, Android, Web), Cinzel propia (OFL, `Fuentes.serif`).
 static func _serif(peso: int) -> Font:
-	var f := SystemFont.new()
-	f.font_names = PackedStringArray(["Cinzel", "Trajan Pro", "Palatino Linotype", "Book Antiqua",
-		"Palatino", "Georgia", "Times New Roman", "Liberation Serif", "DejaVu Serif", "serif"])
-	f.font_weight = peso
-	f.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
-	## Mipmaps: las letras entran a casi el doble de tamaño y encogen; sin ellos, al
-	## escalarse se ven dentadas.
-	f.generate_mipmaps = true
+	var f := Fuentes.serif(Fuentes.SERIF_ROTULO, "Cinzel", peso, false, true)
+	## Mipmaps (el último `true`, también en la propia): las letras entran a casi el
+	## doble de tamaño y encogen; sin ellos, al escalarse se ven dentadas.
 	return f
 
 ## Un punto de luz redondo y suave, para chispas, brasas y destellos (se pinta en aditivo).

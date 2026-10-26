@@ -3,7 +3,8 @@
 #   herramientas/banco.sh [registro]   (por defecto /tmp/banco.txt)
 #   BANCO_PARTES=1 herramientas/banco.sh   → todo en un solo proceso (como antes)
 #
-# Reparto: las 103 secciones de `pruebas/banco.gd` se dividen entre N procesos
+# Reparto: las secciones de `SECCIONES` (pruebas/banco.gd, el corredor; su código vive en
+# pruebas/banco/<grupo>.gd desde el 26-10) se dividen entre N procesos
 # (uno por núcleo, máx. 4) equilibrados por tiempo (`COSTES` en banco.gd). Cada
 # proceso tiene su propia carpeta `user://` (XDG_DATA_HOME) para que los
 # guardados de una parte no pisen los de otra.

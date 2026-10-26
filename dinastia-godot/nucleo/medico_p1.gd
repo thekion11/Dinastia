@@ -184,7 +184,7 @@ func tasar(j: Jugador) -> void:
 	if is_equal_approx(f, 1.0):
 		return
 	j.valor = int(max(300.0, round(float(j.valor) * f / 100.0) * 100.0))
-	j.sueldo = int(max(30.0, round(1.361 * pow(float(j.valor), 0.66) / 10.0) * 10.0))
+	j.sueldo = j.sueldo_de_valor()
 
 # ---------------------------------------------------------------------------
 #  DIAGNOSTICAR

@@ -294,6 +294,12 @@ func _arrancar_partido() -> void:
 	if por_clima.has(clima):
 		Sonido.toca(String(por_clima[clima]), Sonido.Bus.AMBIENTE)
 	partido.minuto_jugado.connect(_al_minuto_sonoro)
+	## SENTADOS NERVIOSOS (26-10, `FestejoGrada.nervios`): desde el 80' con un gol
+	## de diferencia (o empate) media grada se cruza de brazos o se lleva las manos
+	## a la cabeza; si el partido se rompe (2+ goles) o termina, vuelve a lo suyo.
+	partido.minuto_jugado.connect(func(minuto: int) -> void:
+		var apretado := minuto >= 80 and not partido.terminado_ya and absi(partido.goles_local - partido.goles_visita) <= 1
+		FestejoGrada.nervios(_raiz3d, 0.5 if apretado else 0.0))
 	## Semilla fija por partido (mismo criterio que `_rng` en MatchPlayback):
 	## repetible si se reabre el mismo partido, pero sin tocar `Azar`.
 	_rng_ambiente.seed = hash("ambiente") + partido.local.id.hash() + partido.visita.id.hash()
