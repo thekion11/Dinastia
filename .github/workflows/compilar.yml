@@ -1,6 +1,6 @@
 # CI de Dinastía (26-10-2026): Godot 4.7.2, el banco de pruebas entero y, si pasa, el build de Windows.
 #
-# - Imagen: barichello/godot-ci:4.7.2-stable (etiqueta verificada en la investigación s4; trae godot,
+# - Imagen: barichello/godot-ci:4.7.2 (etiqueta de Docker Hub, sin «-stable»; trae godot,
 #   las plantillas de exportación y git-lfs). La 4.3 de antes no abría el proyecto.
 # - LFS: solo `dinastia-godot/**` (las ramas y carpetas viejas pesan; ver CLAUDE.md).
 # - El banco (`dinastia-godot/herramientas/banco.sh`) tiene que terminar en «FIN. 0 fallos»: se comprueba
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     container:
-      image: barichello/godot-ci:4.7.2-stable
+      image: barichello/godot-ci:4.7.2
     steps:
       - name: Descargar el repositorio (sin LFS)
         uses: actions/checkout@v4
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     container:
-      image: barichello/godot-ci:4.7.2-stable
+      image: barichello/godot-ci:4.7.2
     steps:
       - name: Descargar el repositorio (sin LFS)
         uses: actions/checkout@v4
