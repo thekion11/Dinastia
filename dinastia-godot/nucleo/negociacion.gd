@@ -202,6 +202,8 @@ func enviar_oferta() -> Dictionary:
 		jugador.no_negociar_hasta = m.semana + 8
 		return {"tipo": "rota"}
 	var falta := int(round((float(pedido) * umbral - float(percibido)) / 1000.0)) * 1000
+	## `prefiere` y `motivo` salen ya traducidos (s3, 26-10-2026): son frases
+	## fijas, claves de `Idiomas.t`; la interfaz las pone tal cual.
 	var prefiere := "una cifra fija mayor"
 	if cuotas > fijo:
 		prefiere = "más dinero por delante y menos a plazos"
@@ -209,14 +211,14 @@ func enviar_oferta() -> Dictionary:
 		prefiere = "menos bonos y más garantizado"
 	elif pct > 25:
 		prefiere = "que te olvides del porcentaje y subas la parte fija"
-	return {"tipo": "club_pide_mas", "falta": falta, "prefiere": prefiere}
+	return {"tipo": "club_pide_mas", "falta": falta, "prefiere": Idiomas.t(prefiere)}
 
 func _respuesta_del_jugador(m: Mundo) -> Dictionary:
 	var mio := m.mi_club()
 	if m.vestuario != null:
 		var acepta: Dictionary = m.vestuario.acepta_rol(jugador, rol)
 		if not bool(acepta.get("ok", true)):
-			return {"ok": false, "motivo": "rol", "txt": String(acepta.get("txt", "")), "pide": 0}
+			return {"ok": false, "motivo": "rol", "txt": Idiomas.t(String(acepta.get("txt", ""))), "pide": 0}
 	var pide := _pide_fichaje(m, jugador, rol, anios)
 	if sueldo < int(round(float(pide) * 0.92)):
 		return {"ok": false, "motivo": "ficha", "txt": "", "pide": pide}
@@ -229,10 +231,11 @@ func _respuesta_del_jugador(m: Mundo) -> Dictionary:
 	if Azar.suerte(p):
 		return {"ok": true, "motivo": "", "txt": "", "pide": pide}
 	var razones: Array = deseo.get("razones", [])
-	var peor := "No le termina de convencer el proyecto."
+	var peor := Idiomas.t("No le termina de convencer el proyecto.")
 	for r: Dictionary in razones:
-		if not bool(r.get("bien", true)):
-			peor = String(r.get("txt", peor)) + "."
+		if not bool(r.get("bien", true)) and String(r.get("txt", "")) != "":
+			## La razón es una clave sin punto («Bajaría de división»): se traduce y luego se cierra.
+			peor = Idiomas.t(String(r["txt"])) + "."
 			break
 	return {"ok": false, "motivo": "convencido", "txt": peor, "pide": pide}
 

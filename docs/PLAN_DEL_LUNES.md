@@ -1871,12 +1871,10 @@ Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `d
 
 Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hecha: 67 líneas):
 1. `ui/principal.gd` `_input`: con el móvil u otra capa encima, L1/R1, L2/R2 y Ctrl+Q/E cambian la pestaña de detrás.
-2. `nucleo/idiomas.gd` `_t`: no separa el icono inicial con varias oraciones (el móvil lo esquiva con `_t_icono`).
 3. Volcar `_escala_texto` y `_daltonico` en `Tema` (`principal_p10.gd` tras la línea 50; setters en `principal_p2.gd` 363 y 373): sin esto la accesibilidad no llega a lo pintado con `Tema.*`.
 4. `visor/control_fc.gd:232`: usar `Mando.nombre_tecla(ts[0])` (hoy sale «Space»).
 5. `ui/principal_p8.gd`, final de `_ver_ficha()`: `_traducir_pantalla(_ficha)`; el radar corta a 4 letras (`.left(4)`, línea 88).
 6. La barra de desplazamiento tapa el final de los valores de `_dato` (p. ej. «Rol actual» en Legado).
-7. Negociación (`prefiere`/`motivo`), MesaAgente y Movil devuelven castellano fijo: pasar a claves estables.
 8. Rueda de prensa 2D sin pulir (está en `principal_p17.gd`; ver §8).
 9. Identidad (`ui/principal.gd:114-163`): la vista previa del escudo sin iniciales (`_escudo(c, 54)`), la muestra del acento es un rectángulo blanco; en `principal_p4.gd:157` las iniciales con `c.color_escudo1()`.
 10. `ui/componentes/mentor_voz.gd`: el consejo del presidente tapa la tabla 9 s (`DURA`): fundido con el ratón encima o ~6 s.

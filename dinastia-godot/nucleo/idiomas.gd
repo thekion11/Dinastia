@@ -115,6 +115,21 @@ func _t(frase: String, prof: int) -> String:
 	var d := _directa(frase)
 	if d != "" or prof > 3:
 		return d if d != "" else frase
+	## El icono de delante («🙏 », «⚠️ ») aparte ANTES de partir en oraciones
+	## (petición 2 de la sesión 2): con varias oraciones, la primera se traducía
+	## sola y el resto quedaba en castellano aunque la frase entera sin el icono
+	## fuera una clave. El móvil lo esquivaba con su propio `_t_icono`.
+	## Solo símbolos (emoji, flechas: desde U+2000) y espacios: «, ¿ o ( son parte de la frase.
+	var ini0 := 0
+	while ini0 < frase.length() and (frase.unicode_at(ini0) >= 0x2000 or frase.unicode_at(ini0) == 32):
+		ini0 += 1
+	if ini0 > 0 and ini0 < frase.length():
+		var resto := frase.substr(ini0)
+		var dr := _directa(resto)
+		if dr == "" and prof < 2:
+			dr = _patron(resto, prof)
+		if dr != "":
+			return frase.substr(0, ini0) + dr
 	## Por oraciones: la narración a veces pega varias frases en un mismo
 	## texto («Pregunta. Tardaste en contestar: en la sala se notó.»).
 	if prof < 2 and frase.length() > 30 and (frase.contains(". ") or frase.contains("! ") or frase.contains("? ")):

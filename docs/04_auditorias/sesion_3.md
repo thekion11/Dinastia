@@ -65,3 +65,47 @@ comprobación entera. Probé a reutilizar la dirección de la rejilla en `_cede_
 Visto de paso: en la primera tanda un vecino salía de detrás de un quiosco verde de la acera de la avenida
 (1005, −500); la sonda de la captura no encontró ningún punto de ruta de peatones dentro de un obstáculo fijo a menos
 de 120 m (0 de 427), así que el quiosco no estorba la ruta: solo tapaba la vista.
+
+## 3. Textos fijos del núcleo a claves estables (petición 7 de la sesión 2)
+
+**Antes.** `MesaAgente` devolvía las frases castellanas con las cifras dentro (««Así no.» Baja a 62 %. (Duda…)»),
+`Negociacion` devolvía `prefiere` y `motivo` en castellano (y a la razón le pegaba un punto, con lo que ya no era
+clave), y el `Movil` guardaba en la partida el mensaje ya montado (la clave del community manager, o «título cuerpo»
+de una noticia). La interfaz traducía la frase entera: solo funcionaba si algún patrón de regex la reconocía.
+
+**Ahora.**
+- `nucleo/mesa_agente.gd`: todo sale ya traducido de plantillas fijas (`Idiomas.t("«Así no.» Baja a %d %%. %s") % […]`),
+  la señal y «(Mira el reloj.)» por separado, el nombre por defecto del agente también. `ui/componentes/mesa_agente_ui.gd`
+  deja de traducirlo otra vez.
+- `nucleo/negociacion.gd`: `prefiere` y el `txt` del motivo salen traducidos; la razón se traduce y DESPUÉS se le pone
+  el punto. `panel_mercado.gd` los pinta tal cual y `ui/principal_p14.gd` (registro de la negociación) pasa sus seis
+  mensajes a plantillas con `Idiomas.t` (antes iban enteros en castellano con nombre y cifras dentro).
+- `nucleo/movil.gd`: `recibir(de, icono, texto, anio, semana, args := [], trad_args := false)`; `texto` es la plantilla
+  y `args` los datos, se guardan así y `Movil.texto(msj)` traduce al enseñar (cambiar de idioma cambia también los
+  mensajes viejos; los guardados antes siguen saliendo como antes). La clave del CM (`redes_p1.gd`) y las noticias
+  reenviadas (`principal_p10.gd`, con `trad_args`) ya van así. `telefono_p2.gd` usa `Movil.texto`. Los errores de la
+  foto de perfil salen traducidos.
+- Traducciones: 20 claves × 8 idiomas con `sumar_traducciones.py` (parche en `/tmp/trad_s3.json`); las 11 de la mesa
+  salen de las plantillas de los patrones de la sesión 2 (cambiando `$1` por `%d`/`%s`), las otras 9 escritas aquí.
+
+**Prueba** `pruebas/ideas/s3_textos_nucleo.gd`: 292 frases de la mesa (4 perfiles × 4 tipos × 3 caminos: regatear,
+farol, ceder, plantarse, irse) en los 8 idiomas sin un trozo de castellano ni restos de formato, ninguna igual a la
+castellana, y el castellano igual que antes; la contraoferta de una negociación real en los 9 idiomas con `prefiere`
+traducido; un mensaje del móvil guardado y cargado por JSON que, al pasar a inglés, sale en inglés con sus datos.
+`uite_movil_textos`, `uite_movil_navegacion`, `uite_traducciones`, `trad_textos`, `uifi_asuntos` y el grupo `textos`
+del banco en verde.
+
+Fuera de mi encargo y aún en castellano fijo: `Mercado.abrir_negociacion` («ese jugador ya es tuyo», vetos de
+desafío) y las `razones` de `Mercado.deseo_de_venir` con cifras («Viene de un club más grande: %d de reputación…»),
+que siguen dependiendo de patrones.
+
+## 4. Peticiones de la sesión 2 (plan §9)
+
+**Petición 2 (hecha).** `nucleo/idiomas.gd` `_t`: antes de partir en oraciones mira si, quitando el icono de delante
+(solo símbolos desde U+2000 y espacios: «, ¿ y ( se quedan), la frase entera es una clave o un patrón. Antes, con
+«🙏 Buenas, míster. ¿Un pan para el camino?» se traducía la primera oración sola y el resto quedaba en castellano;
+ahora sale «🙏 Hello, boss. A loaf for the road?» (comprobado en `s3_textos_nucleo`). `Telefono._t_icono` ya no hace
+falta para eso; lo dejo (lo usan otras pantallas) y no cambia nada.
+
+**Petición 8 (no hecha).** La rueda de prensa 2D vive en `ui/principal_p17.gd`, que la sesión principal está tocando
+ahora mismo: queda en el plan para quien tenga ese archivo.
