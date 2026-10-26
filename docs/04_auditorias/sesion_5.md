@@ -166,3 +166,87 @@ Con portavoz no aparece, porque ya habla otro por ti.
 Mini banco de «textos» y «partido», banco entero: 0 fallos.
 
 **Para la sesión de la interfaz de la rueda:** se puede usar `entrevista["numero"]` y `entrevista["total"]` para mostrar «2/3» en el plató.
+
+## 4. Auditoría del partido simulado y del partido en vivo del DT (50 + 50 partidos)
+
+`pruebas/ideas/s5_auditoria_partidos.gd` mide 50 partidos simulados y 50 en vivo (la crónica de texto del DT), y después la misma crónica en inglés.
+
+| Qué | Antes | Ahora |
+|---|---|---|
+| Marcador = crónica, tiros a puerta ≥ goles, remates ≥ a puerta, posesión 22-78 % | 0 incoherencias | 0 incoherencias |
+| Goles por partido / victorias locales / empates | 2,48 / 34-42 % / 22-28 % | igual (no se tocó el motor de goles) |
+| xG total frente a goles (50 partidos) | **92 frente a 124 (−26 %)**: todos los informes decían «convertimos más de lo esperado» | **116 frente a 124** |
+| Crónica en vivo: tramos de 20' o más sin una línea | **en 48 de 50 partidos** (máximo 38') | **0** (máximo 8') |
+| Frases repetidas en un mismo partido | 2,1 % | 1,9 %, con un 15 % más de líneas |
+| Crónica en inglés: líneas en castellano | **61 %** | **0 %** |
+
+**Lo que se arregló:**
+- **xG** (`nucleo/partido_p2.gd`): el reparto dentro del rango del HTML (0,09-0,31 por remate) se curvó hacia arriba, de modo que la media pasa de 0,20 a ~0,27, que es la conversión real. Gasta la misma tirada de `Azar`. La comprobación del banco sobre ese rango sigue pasando.
+- **El penal del árbitro «estricto»** ahora cuenta como remate a puerta. Antes sumaba un gol sin remate ni tiro a puerta, y podía romper «a puerta ≥ goles».
+- **Texto del penal:** decía «cobrado en contra» según el lado y no según tu club. Ahora dice «Penal para X».
+- **Crónica traducida:**
+  - `_escribir` traduce por tramos BBCode, como el registro principal.
+  - Las frases con nombres o números son plantillas con `Idiomas.t`: goles, atajadas, fallos, palos, tarjetas, lesiones, cambios, el informe del ayudante, las notas, el final y las decisiones del árbitro en el núcleo.
+  - 91 frases nuevas, traducidas a los 8 idiomas.
+- **Variedad:** 6 frases de atajada, 6 de fallo y 3 de palo, que no se repiten seguidas.
+- **Ritmo** (`ui/partido_vivo.gd`): si la crónica lleva 7' callada, narra lo que pasó de verdad en ese minuto (un córner, una falta o quién tiene la pelota, con su posesión), con varias frases por caso y sin `Azar`.
+- **Norma de líneas:** para no pasar de 450 en `partido_p2.gd`, `_reaplicar_plan` pasó a la capa 3 (`partido.gd`), sin cambio de comportamiento.
+
+**Lo que se miró y está bien:**
+- El reparto de goleadores: el máximo goleador de tu club mete un 19 % de sus goles y hay 10 goleadores distintos en 25 partidos.
+- Los goles por tramo de 15': bastante planos. En el fútbol real hay algo más al final, pero el motor de goles está calibrado y no se toca sin decisión del dueño.
+- Las tarjetas (2,8 por partido) y las lesiones (0,24 por partido).
+
+El 3D (acta = césped) ya lo cubren el especial «partido con motor real» y `s5_ocasiones`.
+
+Banco: 0 fallos. Especiales: todo en orden.
+
+## 5. Fila 18, primera parte: táctica con y sin balón y roles por jugador en el núcleo
+
+**Táctica con y sin balón** (`nucleo/tactica.gd`)
+- Dos perillas nuevas:
+  - Con balón, `verticalidad`: paciente / mixta / vertical.
+  - Sin balón, `tras_perdida`: repliegue / equilibrio / contrapresión.
+- Como las demás, suman en ataque lo que restan en defensa.
+- `perillas_con_balon()` y `perillas_sin_balon()` agrupan las 10 perillas por fase, para la pizarra que vendrá.
+
+**Roles por jugador** (`nucleo/rol_tactico.gd`, nuevo)
+- 14 roles: 2 de portero y 4 por línea.
+  - Defensa: central marcador, central con salida, lateral defensivo, carrilero.
+  - Medio: pivote, organizador, llegador, mediapunta.
+  - Delantera: nueve de área, falso nueve, extremo, delantero presionante.
+- Cada rol mueve dos cosas, según cuánto **encaje** el jugador:
+  - la fuerza del equipo, con un poco más de ataque o de defensa a cambio de la otra;
+  - el reparto de goles y asistencias.
+- El encaje sale de sus atributos, con rangos medidos en una liga entera: el percentil 10 vale 0 y el percentil 90 vale 1. Un rol que no encaja **resta**.
+- Se asignan con `Tactica.poner_rol(j, clave)`. Solo valen para la línea en la que juega el jugador.
+- Se guardan con la partida y se copian con la táctica.
+
+**Efecto en el motor**
+- En la simulación (`Partido`), `fuerza()` se sobrescribe en la última capa y los pesos de goleador y asistente usan el rol.
+- En el motor 3D (`MotorJugable`):
+  - la verticalidad sube la probabilidad del pase al hueco;
+  - la contrapresión alarga la ventana en que se presiona tras perder el balón (0,3 / 0,6 / 1,5 s).
+- Sin roles y con las perillas en lo normal, todo sale **idéntico** a antes: el banco lo confirma.
+
+**Medido** (`pruebas/ideas/s5_tactica_roles.gd`): 300 partidos por decisión, en mundos idénticos con la misma semilla en cada partido. Además de lo muestreado se mide la llegada **esperada** (la probabilidad exacta del motor), que no tiene ruido.
+
+| Decisión | Llegadas esperadas (tú-rival) | Otros datos |
+|---|---|---|
+| Sin roles | 1662-892 | |
+| Carrileros | 1763-931 | |
+| Laterales defensivos | 1646-878 | |
+| Carrileros que no encajan | 1648-947 | restan por los dos lados |
+| Pivote que encaja | 1635-859 | |
+| Pivote que no encaja | 1648-874 | |
+| Nueve de área | | el delantero mete el 29 % de los goles del equipo; 37 asistencias |
+| Falso nueve | | el delantero mete el 14 %; 88 asistencias |
+| Vertical / paciente | 1884-1017 / 1508-812 | |
+| Contrapresión / repliegue | 1884-984 / 1508-787 | |
+
+En el motor 3D (3 partidos cortos por caso), la contrapresión baja la precisión de pase del rival del 64 % al 58 %. Con tan pocos partidos, el resto del efecto en el 3D (tiros, pases) es todavía ruidoso y no se da por medido.
+
+**Queda (segunda parte de la fila 18):**
+- La interfaz: la pizarra con las dos fases, los roles en el once y su visualizador (`ui/componentes/pizarra_tactica.gd`).
+- Que la IA de los otros clubes use roles.
+- Medir el 3D con más partidos.

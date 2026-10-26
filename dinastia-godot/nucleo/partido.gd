@@ -349,3 +349,31 @@ static func marcar_ex(j: Jugador, club_id: String) -> void:
 func fijar_hinchada(club: Club, animo: int) -> void:
 	_hinchada_club = club
 	_hinchada_animo = animo
+
+## Para un partido abandonado que se completa al cargar: si el plan ya había
+## saltado, se vuelve a poner (el guardado tiene la táctica de antes).
+func _reaplicar_plan() -> void:
+	for c in [local, visita]:
+		if c == null or not plan_activado.has(c.id):
+			continue
+		var partes := String(plan_activado[c.id]).split(":")
+		var cambio := Tactica.cambio_de(partes[1] if partes.size() > 1 else "")
+		if cambio.is_empty():
+			continue
+		if not tactica_previa.has(c.id):
+			tactica_previa[c.id] = {"mentalidad": c.tactica.mentalidad, "linea": c.tactica.linea}
+		c.tactica.mentalidad = int(cambio["mentalidad"])
+		c.tactica.linea = int(cambio["linea"])
+	invalidar_fuerza()
+
+## LOS ROLES POR JUGADOR (26-10-2026, fila 18): lo que cada rol suma o resta al ataque y a la defensa del
+## equipo, según encaje el jugador (`RolTactico`). Sin roles, la fuerza de siempre.
+func fuerza(once: Array[Jugador], c: Club) -> Dictionary:
+	var f := super.fuerza(once, c)
+	if c == null or c.tactica == null or c.tactica.roles.is_empty():
+		return f
+	var m := RolTactico.multiplicadores(c.tactica, once)
+	f["ata"] = float(f["ata"]) * float(m[0])
+	f["def"] = float(f["def"]) * float(m[1])
+	return f
+

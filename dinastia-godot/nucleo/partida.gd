@@ -32,6 +32,10 @@ static func _dic_a_club(d: Dictionary) -> Club:
 	## Guardados de antes del 25-10: sin racha, empieza de cero.
 	c.tactica.racha_plan_clave = String(d.get("plan_rc", ""))
 	c.tactica.racha_plan_n = int(d.get("plan_rn", 0))
+	## Guardados de antes del 26-10: con y sin balón en lo normal, sin roles.
+	c.tactica.verticalidad = int(d.get("vert", Tactica.Nivel.MEDIO))
+	c.tactica.tras_perdida = int(d.get("trasp", Tactica.Nivel.MEDIO))
+	c.tactica.roles = (d.get("roles_t", {}) as Dictionary).duplicate()
 	c.tactica.plan_fijo = String(d.get("plan_fijo", ""))
 	c.tactica.marca_al_hombre = bool(d.get("hombre", false))
 	c.tactica.fuera_de_juego = bool(d.get("fjuego", false))

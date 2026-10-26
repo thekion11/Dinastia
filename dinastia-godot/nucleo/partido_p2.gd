@@ -4,6 +4,18 @@ extends "res://nucleo/partido_p1.gd"
 ## Lo que pasó y cómo llegaban (ver `RastroPartido`).
 var rastro: RastroPartido
 
+## El penal es un remate a puerta (antes sumaba un gol sin remate ni tiro a puerta): con el xG del
+## tope del rango por remate.
+func _contar_penal(es_local: bool) -> void:
+	if es_local:
+		remates_local += 1
+		tiros_puerta_local += 1
+		xg_local += 0.31
+	else:
+		remates_visita += 1
+		tiros_puerta_visita += 1
+		xg_visita += 0.31
+
 func _aporte_tarjeta(j: Jugador, roja: bool, _m: int) -> void:
 	_aporte(j, -1.4 if roja else -0.35)
 
@@ -176,22 +188,6 @@ func _devolver_tactica() -> void:
 		if c.id == ctx_club_id and ctx_club_id != "":
 			c.tactica.anotar_plan(String(plan_activado.get(c.id, "")))
 
-## Para un partido abandonado que se completa al cargar: si el plan ya había
-## saltado, se vuelve a poner (el guardado tiene la táctica de antes).
-func _reaplicar_plan() -> void:
-	for c in [local, visita]:
-		if c == null or not plan_activado.has(c.id):
-			continue
-		var partes := String(plan_activado[c.id]).split(":")
-		var cambio := Tactica.cambio_de(partes[1] if partes.size() > 1 else "")
-		if cambio.is_empty():
-			continue
-		if not tactica_previa.has(c.id):
-			tactica_previa[c.id] = {"mentalidad": c.tactica.mentalidad, "linea": c.tactica.linea}
-		c.tactica.mentalidad = int(cambio["mentalidad"])
-		c.tactica.linea = int(cambio["linea"])
-	invalidar_fuerza()
-
 func _probabilidad(ata: float, def_rival: float) -> float:
 	## REALISMO (13-10-2026): con la fórmula vieja un once de media 86 contra
 	## uno de 69 llegaba solo un 17 % más, y los campeones sacaban el 56-64 % de
@@ -208,7 +204,7 @@ func _alguien(l: Array[Jugador]) -> Jugador:
 ## Reparte una amarilla arbitral igual que `_incidencias()` reparte las
 ## normales -segunda amarilla con 18% de ir a la roja-, y la narra con la frase
 ## que le toca a esta personalidad.
-func _tarjeta_arbitral(arr: Array[Jugador], frase: String) -> void:
+func _tarjeta_arbitral(arr: Array[Jugador], plantilla: String, arbitro_nombre: String) -> void:
 	var j := _alguien(arr)
 	if j == null:
 		return
@@ -216,12 +212,18 @@ func _tarjeta_arbitral(arr: Array[Jugador], frase: String) -> void:
 	var roja := j.amarillas % 2 == 0 and Azar.suerte(0.18)
 	if roja:
 		j.suspension = maxi(j.suspension, 1)
-	decision_arbitral.emit(frase + j.nombre, minuto)
+	decision_arbitral.emit(Idiomas.t(plantilla) % [arbitro_nombre, j.nombre], minuto)
 	tarjeta.emit(j, roja, minuto)
 
 ## El goleador no se sortea plano: se pondera por lo cerca del area que juega y
 ## por su pegada. Si se sortea plano, los centrales marcan tanto como los nueves
 ## y la tabla de goleadores deja de tener sentido.
+## La táctica del club al que pertenece ese once (para los roles: `RolTactico`).
+func _tactica_de(once: Array[Jugador]) -> Tactica:
+	if not once.is_empty() and once_visita.has(once[0]):
+		return visita.tactica
+	return local.tactica
+
 func _elegir_goleador(once: Array[Jugador]) -> Jugador:
 	if once.is_empty():
 		return null
@@ -235,6 +237,7 @@ func _elegir_goleador(once: Array[Jugador]) -> Jugador:
 			"DEF": base = 0.11
 			"POR": base = 0.004
 		base *= 0.5 + float(j.atributos.get("tir", 50)) / 100.0
+		base *= RolTactico.peso(_tactica_de(once), j, "gol")
 		pesos.append(base)
 		total += base
 	var r := Azar.f() * total
@@ -279,6 +282,7 @@ func _elegir_asistente(once: Array[Jugador], autor: Jugador, minuto: int) -> Jug
 			"DEF": base = 0.22
 			"POR": base = 0.02
 		base *= 0.5 + float(j.atributos.get("pas", 50)) / 100.0
+		base *= RolTactico.peso(_tactica_de(once), j, "asist")
 		pesos.append(base)
 		total += base
 	var rng := RandomNumberGenerator.new()
@@ -322,12 +326,12 @@ func _chequeo_arbitral() -> void:
 			if not Azar.suerte(0.010 * f_var):
 				return
 			var arr := once_local if Azar.suerte(0.5) else once_visita
-			_tarjeta_arbitral(arr, "🟨 %s saca otra amarilla: " % nombre)
+			_tarjeta_arbitral(arr, "🟨 %s saca otra amarilla: %s", nombre)
 		"casero":
 			if not Azar.suerte(0.008 * f_var):
 				return
 			## Siempre contra el que visita: es lo que hace "casero" casero.
-			_tarjeta_arbitral(once_visita, "🟨 %s cobra para la casa: amarilla a " % nombre)
+			_tarjeta_arbitral(once_visita, "🟨 %s cobra para la casa: amarilla a %s", nombre)
 		"estricto":
 			if not Azar.suerte(0.004 * f_var):
 				return
@@ -340,15 +344,18 @@ func _chequeo_arbitral() -> void:
 			elif visita.id == ctx_club_id:
 				prob_local = 0.45
 			if Azar.suerte(prob_local):
-				decision_arbitral.emit("⚽ ¡GOL de penal! %s no dudó en cobrarlo." % nombre, minuto)
+				## (Antes «penal cobrado en contra» salía según el lado, no según tu club.)
+				decision_arbitral.emit(Idiomas.t("⚽ Penal para %s: %s no dudó en cobrarlo.") % [local.nombre, nombre], minuto)
+				_contar_penal(true)
 				_anotar(local, once_local, true)
 			else:
-				decision_arbitral.emit("⚽ Penal cobrado en contra. Con %s no se toca a nadie." % nombre, minuto)
+				decision_arbitral.emit(Idiomas.t("⚽ Penal para %s: con %s no se toca a nadie.") % [visita.nombre, nombre], minuto)
+				_contar_penal(false)
 				_anotar(visita, once_visita, false)
 		"figura":
 			if Azar.suerte(0.003 * f_var):
 				decision_arbitral.emit(
-					"⚖️ %s anula un gol por milímetros. Protestas en las dos bancas." % nombre, minuto)
+					Idiomas.t("⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.") % nombre, minuto)
 		_:
 			pass   ## "permisivo": no hace nada por su cuenta -deja jugar, es la gracia.
 
@@ -361,10 +368,15 @@ func _atacar(c: Club, once: Array[Jugador], es_local: bool) -> void:
 	## `ataque()`, sobre CADA llegada, sin que le importe si termina en gol,
 	## atajada o fallo -son sucesos aparte, no una consecuencia del remate-.
 	_chequeo_arbitral()
-	## El xG de cada llegada: entre 0,09 y 0,31, como en el HTML. Sumado a lo
+	## El xG de cada llegada: la tirada del HTML (0,09-0,31), escalada. Sumado a lo
 	## largo del partido es lo que permite decir "generamos para tres y metimos
 	## uno" sin que sea una impresión, sino un número.
-	var xg_de_esta := 0.09 + Azar.f() * 0.22
+	##
+	## AUDITORÍA 26-10 (50 partidos): repartido plano en 0,09-0,31, su media (0,20) quedaba por debajo
+	## de la conversión real (~0,27) y el xG total salía un 26 % por debajo de los goles: todos los
+	## informes decían «convertimos más de lo que la estadística decía». Mismo rango y misma tirada de
+	## `Azar`, curvada hacia arriba: la media pasa a ~0,27.
+	var xg_de_esta := 0.09 + pow(Azar.f(), 0.25) * 0.22
 	if es_local:
 		remates_local += 1
 		xg_local += xg_de_esta

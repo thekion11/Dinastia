@@ -352,7 +352,8 @@ static func tactica_desde(tc: Tactica, riesgo := false, tiempo := false) -> Dict
 		return {}
 	var m := tc.mentalidad + (1 if riesgo else 0) - (1 if tiempo else 0)
 	return {"mentalidad": clampi(m, 0, 3), "presion": tc.presion, "linea": tc.linea,
-		"amplitud": tc.amplitud, "ritmo": tc.ritmo, "trampa": 1 if tc.fuera_de_juego else 0}
+		"amplitud": tc.amplitud, "ritmo": tc.ritmo, "trampa": 1 if tc.fuera_de_juego else 0,
+		"verticalidad": tc.verticalidad, "tras_perdida": tc.tras_perdida}
 
 ## El añadido crece con lo que se pierde en el tiempo reglamentario (17-10):
 ## goles, cambios, expulsiones. Solo antes de que empiece y con tope.

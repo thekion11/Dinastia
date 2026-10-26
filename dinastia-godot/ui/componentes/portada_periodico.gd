@@ -169,6 +169,16 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	cara.position = Vector2(banda.size.x - 116, 4)
 	cara.size = Vector2(108, 108)
 	banda.add_child(cara)
+	## Si la noticia va con el escudo, con sus iniciales encima (s3).
+	if String(p.get("img", "dt")) == "escudo" and mundo != null and mundo.mi_club() != null:
+		var c := mundo.mi_club()
+		var ini := _lbl(Escudo.simbolo_de(c) if Escudo.simbolo_de(c) != "" else Escudo.iniciales(c), 30,
+			Color("0c130e") if Color(c.color_escudo1()).get_luminance() > 0.59 else Color.WHITE, false)
+		ini.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		ini.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		ini.position = cara.position + Vector2(0, -6)
+		ini.size = cara.size
+		banda.add_child(ini)
 	## 5) Abajo: la tabla de la liga y la "foto" (el escudo sobre sus colores).
 	_tabla(mundo, Vector2(14, 470), Vector2(222, 206))
 	var foto := ColorRect.new()
@@ -187,6 +197,14 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 		esc.position = Vector2(20, 14)
 		esc.size = foto.size - Vector2(40, 60)
 		foto.add_child(esc)
+		## Con sus iniciales (o su símbolo), como en el resto del juego (s3): el
+		## rasterizador del escudo no dibuja texto, se pone encima.
+		var ini := _lbl(Escudo.simbolo_de(mio) if Escudo.simbolo_de(mio) != "" else Escudo.iniciales(mio), 44, Color("0c130e") if Color(mio.color_escudo1()).get_luminance() > 0.59 else Color.WHITE, false)
+		ini.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		ini.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		ini.position = esc.position + Vector2(0, -esc.size.y * 0.06)
+		ini.size = esc.size
+		foto.add_child(ini)
 		var pie := _lbl(Nombres.visible(mio.nombre).to_upper(), 18, Color.WHITE, true)
 		pie.add_theme_constant_override("outline_size", 6)
 		pie.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
@@ -287,6 +305,15 @@ func _imagen(mundo: Mundo, que: String) -> Texture2D:
 			if j.id == que.substr(4):
 				return Cara.textura(j, mio.color1, mio.color2, 108)
 	if mundo.roles != null:
+		## El DT en 3D, como cualquier cara del juego (s3; el 2D solo sin pantalla). Un
+		## entrenador empleado lleva un aspecto fijo sacado de su nombre.
+		if Retrato3D.disponible():
+			var asp: Dictionary = mundo.roles.aspecto_3d()
+			if not mundo.roles.dt_empleado.is_empty():
+				var rng := RandomNumberGenerator.new()
+				rng.seed = hash(mundo.roles.dt_nombre())
+				asp = PersonajeDT.aleatorio(rng)
+			return Retrato3D.textura_dt(asp, mio.color1, mio.color2, 108)
 		var look: Dictionary = CaraDT.look_de_nombre(mundo.roles.dt_nombre()) if not mundo.roles.dt_empleado.is_empty() else mundo.roles.look_efectivo()
 		return CaraDT.textura(look, 108)
 	return Escudo.textura(mio, 108)
