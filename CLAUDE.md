@@ -35,3 +35,4 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 4. Mega auditoría 3 hecha el 24-10 (`docs/04_auditorias/`); método Cascada + V en `docs/01_metodo/`. El 24-10 se borró lo viejo (planes, informes, capturas, vídeos, filas hechas) y el dueño pidió: ideas hechas se revisan «realmente bien», no solo «decentes»; lo no cerrado vive en el plan del lunes.
 5. Idiomas: 9 y no sumar más; faltan ~506 frases por traducir.
 6. Pendientes de dueño: FPS en hardware real, builds, keystore, licencias, subir binarios a Drive (`herramientas/drive_subir.ps1`).
+7. LFS (26-10): el dueño autorizó subir los sonidos de interfaz elegidos (CC0, con su licencia al lado) y los PNG del logo. Nada más sin preguntar.
