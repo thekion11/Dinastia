@@ -1917,7 +1917,7 @@ Exportar e importar la partida (fila 30 de la propuesta, §10 «Guardado en la n
 
 ## 12. Lo que quedó sin terminar al cierre de las sesiones (26-10)
 
-- **Decisión del dueño:** coste del día de partido del 30 % de la taquilla (`Finanzas.COSTE_DIA_DE_PARTIDO`), sin respuesta.
+- **Hecho (26-10, pedido del dueño):** el día de partido y los viajes salen de la distancia y los costos reales (`nucleo/viajes.gd`, `datos/geografia.json`); anclado al 30 % de antes en el club medio chileno. Falta: usarlo también en los viajes de copas continentales si se añaden, y revisar `ESCALA_JUEGO` si cambia la taquilla.
 - **Modelo B (MakeHuman):** los `.glb` de `persona_mh` no se pudieron subir (LFS rechazado desde el contenedor); faltan la fase 4 (traje: faldón del abrigo) y la fase 5 (cuerpo).
 - **Caras:** algunas salen con óvalos negros; pasar las caras 2D a `Retrato3D` donde aún se dibujan planas.
 - **Competiciones:** terminar de usar `nombre_visible` en las pantallas que todavía muestran el nombre interno.

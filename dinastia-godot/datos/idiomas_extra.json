@@ -5822,7 +5822,8 @@
   "Ocho semanas en rojo. Un veedor concursal supervisa la caja del club. Quedan cuatro semanas para enderezarlo.": "Eight weeks in the red. An administrator oversees the club's finances. Four weeks left to turn it around.",
   "El proyecto se liquida": "The project is wound up",
   "El proyecto se liquida.": "The project is wound up.",
-  "Intereses de sobregiro": "Overdraft interest"
+  "Intereses de sobregiro": "Overdraft interest",
+  "Viajes a domicilio (distancia real)": "Away trips (real distance)"
  },
  "pt": {
   "Historia": "História",
@@ -11647,7 +11648,8 @@
   "Ocho semanas en rojo. Un veedor concursal supervisa la caja del club. Quedan cuatro semanas para enderezarlo.": "Oito semanas no vermelho. Um interventor supervisiona o caixa do clube. Restam quatro semanas para endireitar.",
   "El proyecto se liquida": "O projeto é liquidado",
   "El proyecto se liquida.": "O projeto é liquidado.",
-  "Intereses de sobregiro": "Juros de cheque especial"
+  "Intereses de sobregiro": "Juros de cheque especial",
+  "Viajes a domicilio (distancia real)": "Viagens fora de casa (distância real)"
  },
  "patrones": [
   [
@@ -17765,6 +17767,17 @@
    "Quota de $1",
    "Rata: $1",
    "$1 taksiti"
+  ],
+  [
+   "^Viaje a (.+) \\((\\d+) km, (\\d+) noches\\)$",
+   "Trip to $1 ($2 km, $3 nights)",
+   "Viagem a $1 ($2 km, $3 noites)",
+   "Déplacement à $1 ($2 km, $3 nuits)",
+   "Trasferta a $1 ($2 km, $3 notti)",
+   "Reise nach $1 ($2 km, $3 Nächte)",
+   "Viatge a $1 ($2 km, $3 nits)",
+   "Wyjazd do $1 ($2 km, $3 noce)",
+   "$1 deplasmanı ($2 km, $3 gece)"
   ]
  ],
  "fr": {
@@ -23497,7 +23510,8 @@
   "Ocho semanas en rojo. Un veedor concursal supervisa la caja del club. Quedan cuatro semanas para enderezarlo.": "Huit semaines dans le rouge. Un administrateur judiciaire surveille la trésorerie du club. Il reste quatre semaines pour redresser la barre.",
   "El proyecto se liquida": "Le projet est liquidé",
   "El proyecto se liquida.": "Le projet est liquidé.",
-  "Intereses de sobregiro": "Intérêts de découvert"
+  "Intereses de sobregiro": "Intérêts de découvert",
+  "Viajes a domicilio (distancia real)": "Déplacements à l'extérieur (distance réelle)"
  },
  "it": {
   "Historia": "Storia",
@@ -29229,7 +29243,8 @@
   "Ocho semanas en rojo. Un veedor concursal supervisa la caja del club. Quedan cuatro semanas para enderezarlo.": "Otto settimane in rosso. Un commissario controlla la cassa del club. Restano quattro settimane per raddrizzarla.",
   "El proyecto se liquida": "Il progetto viene liquidato",
   "El proyecto se liquida.": "Il progetto viene liquidato.",
-  "Intereses de sobregiro": "Interessi di scoperto"
+  "Intereses de sobregiro": "Interessi di scoperto",
+  "Viajes a domicilio (distancia real)": "Trasferte (distanza reale)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -34961,7 +34976,8 @@
   "Ocho semanas en rojo. Un veedor concursal supervisa la caja del club. Quedan cuatro semanas para enderezarlo.": "Acht Wochen im Minus. Ein Insolvenzaufseher überwacht die Vereinskasse. Noch vier Wochen, um das Ruder herumzureißen.",
   "El proyecto se liquida": "Das Projekt wird aufgelöst",
   "El proyecto se liquida.": "Das Projekt wird aufgelöst.",
-  "Intereses de sobregiro": "Überziehungszinsen"
+  "Intereses de sobregiro": "Überziehungszinsen",
+  "Viajes a domicilio (distancia real)": "Auswärtsreisen (reale Entfernung)"
  },
  "ca": {
   "Historia": "Història",
@@ -40693,7 +40709,8 @@
   "Ocho semanas en rojo. Un veedor concursal supervisa la caja del club. Quedan cuatro semanas para enderezarlo.": "Vuit setmanes en vermell. Un interventor concursal supervisa la caixa del club. Queden quatre setmanes per redreçar-ho.",
   "El proyecto se liquida": "El projecte es liquida",
   "El proyecto se liquida.": "El projecte es liquida.",
-  "Intereses de sobregiro": "Interessos de descobert"
+  "Intereses de sobregiro": "Interessos de descobert",
+  "Viajes a domicilio (distancia real)": "Desplaçaments a domicili (distància real)"
  },
  "pl": {
   "Club": "Klub",
@@ -46704,7 +46721,8 @@
   "Ocho semanas en rojo. Un veedor concursal supervisa la caja del club. Quedan cuatro semanas para enderezarlo.": "Osiem tygodni na minusie. Nadzorca sądowy pilnuje kasy klubu. Zostały cztery tygodnie, żeby to naprawić.",
   "El proyecto se liquida": "Projekt zostaje zlikwidowany",
   "El proyecto se liquida.": "Projekt zostaje zlikwidowany.",
-  "Intereses de sobregiro": "Odsetki od debetu"
+  "Intereses de sobregiro": "Odsetki od debetu",
+  "Viajes a domicilio (distancia real)": "Wyjazdy (rzeczywisty dystans)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -52715,6 +52733,7 @@
   "Ocho semanas en rojo. Un veedor concursal supervisa la caja del club. Quedan cuatro semanas para enderezarlo.": "Sekiz haftadır ekside. Bir kayyum kulübün kasasını denetliyor. Durumu düzeltmek için dört hafta kaldı.",
   "El proyecto se liquida": "Proje tasfiye ediliyor",
   "El proyecto se liquida.": "Proje tasfiye ediliyor.",
-  "Intereses de sobregiro": "Ek hesap faizi"
+  "Intereses de sobregiro": "Ek hesap faizi",
+  "Viajes a domicilio (distancia real)": "Deplasmanlar (gerçek mesafe)"
  }
 }
