@@ -20,7 +20,7 @@ A_MANO = {
     "gb-wls": ["Gales", "Wales", "País de Gales", "Pays de Galles", "Galles", "Wales", "Gal·les", "Walia", "Galler"],
 }
 ## Donde el castellano de CLDR suena raro en un juego de fútbol (CLDR usa el nombre oficial).
-ES_A_MANO = {"CIV": "Costa de Marfil"}
+ES_A_MANO = {"CIV": "Costa de Marfil", "NED": "Holanda"}
 RAIZ = "dinastia-godot/"
 
 def main():

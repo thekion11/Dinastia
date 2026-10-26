@@ -52,6 +52,12 @@ const JORNADA := {
 	"MAR": [44, "Código del Trabajo", "2.288 horas al año fuera del campo (unas 44 semanales).", true],
 	"RSA": [45, "Basic Conditions of Employment Act", "45 horas semanales.", true],
 	"AUS": [38, "National Employment Standards", "38 horas más horas adicionales razonables.", true],
+## Lote 1 de países nuevos (26-10-2026, fila 26 s4): POR, NED, BEL, CRO, DEN.
+	"POR": [40, "Código del Trabajo", "40 horas semanales y 8 diarias.", true],
+	"NED": [40, "Ley de horarios de trabajo", "Lo habitual son 36-40 horas; la ley fija el máximo.", false],
+	"BEL": [38, "Ley del trabajo de 1971", "38 horas semanales de media.", true],
+	"CRO": [40, "Ley del Trabajo", "40 horas semanales.", true],
+	"DEN": [37, "Convenios colectivos", "37 horas semanales por convenio.", true],
 }
 
 ## Cambios de ley con fecha: [pais, anio, mes, dia, horas nuevas, texto].
