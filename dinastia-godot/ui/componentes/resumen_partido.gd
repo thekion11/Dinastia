@@ -215,11 +215,45 @@ func _mostrar_todo() -> void:
 		partido.xg_local, partido.xg_visita]
 	stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_lista.add_child(stats)
+	_pintar_porque()
 	_pintar_valoraciones()
 	_btn_saltar.visible = false
 	_btn_seguir.visible = true
 	Sonido.toca("pitido_final")
 	set_process(false)
+
+## EL PORQUÉ (26-10-2026, fila 4 de la propuesta): las tres causas que más pesaron en el resultado, sacadas
+## de lo que pasó (`CausasPartido`). Verde si te ayudó, rojo si te hundió, gris si fue para los dos.
+func _pintar_porque() -> void:
+	var causas := CausasPartido.de(partido, mi_club)
+	if causas.is_empty():
+		return
+	_lista.add_child(HSeparator.new())
+	var tit := _texto(12, COL_SUAVE)
+	tit.text = Idiomas.t("🔎 POR QUÉ")
+	tit.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_lista.add_child(tit)
+	var caja := VBoxContainer.new()
+	caja.name = "PorQue"
+	caja.add_theme_constant_override("separation", 4)
+	_lista.add_child(caja)
+	for c: Dictionary in causas:
+		var col := COL_BIEN if int(c["signo"]) > 0 else (COL_MAL if int(c["signo"]) < 0 else COL_SUAVE)
+		var fila := HBoxContainer.new()
+		fila.add_theme_constant_override("separation", 10)
+		var ic := _texto(16, COL_TEXTO)
+		ic.text = String(c["icono"])
+		fila.add_child(ic)
+		var et := _texto(14, col)
+		et.text = String(c["titulo"])
+		et.custom_minimum_size = Vector2(96, 0)
+		fila.add_child(et)
+		var tx := _texto(14, COL_TEXTO)
+		tx.text = String(c["texto"])
+		tx.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		tx.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila.add_child(tx)
+		caja.add_child(fila)
 
 ## LAS VALORACIONES (17-10-2026, M-141): el mejor del partido destacado en una
 ## franja dorada y, debajo, la nota de cada uno en dos columnas (local y

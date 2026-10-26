@@ -113,6 +113,13 @@ func _al_final(gl: int, gv: int) -> void:
 	_escribir_estadisticas(mio_local)
 	_escribir("")
 	_escribir("[color=#c9a227][b]📋 Informe del ayudante.[/b][/color] %s" % _informe(mio_local, mios, suyos))
+	## EL PORQUÉ (26-10, fila 4): las tres causas que más pesaron (`CausasPartido`), también tras el 3D.
+	var causas := CausasPartido.de(partido, mi_club)
+	if not causas.is_empty():
+		_escribir("[color=#c9a227][b]%s[/b][/color]" % Idiomas.t("🔎 POR QUÉ"))
+		for c: Dictionary in causas:
+			var col := "#4caf6d" if int(c["signo"]) > 0 else ("#e05555" if int(c["signo"]) < 0 else "#8ea595")
+			_escribir("  %s [color=%s][b]%s:[/b][/color] %s" % [String(c["icono"]), col, String(c["titulo"]), String(c["texto"])])
 	_escribir_notas()
 	_btn_volver.visible = true
 	_refrescar()
