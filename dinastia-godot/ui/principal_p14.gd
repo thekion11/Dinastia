@@ -11,11 +11,13 @@ func _enviar_oferta_negociacion() -> void:
 	var tipo := String(res.get("tipo", ""))
 	match tipo:
 		"sin_caja":
-			_escribir("[color=#e05555]No te alcanza:[/color] la parte fija más la comisión cuesta %s." % _dinero(int(res.get("hace_falta", 0))))
+			_escribir("[color=#e05555]%s[/color] %s" % [Idiomas.t("No te alcanza:"),
+				Idiomas.t("la parte fija más la comisión cuesta %s.") % _dinero(int(res.get("hace_falta", 0)))])
 		"club_pide_mas":
-			_escribir("[color=#c9a227]↩️ Contraoferta de %s.[/color] Faltan unos %s y prefieren %s." % [
-				(mundo.clubes.get(j.club_id) as Club).nombre if mundo.clubes.has(j.club_id) else "el club",
-				_dinero(int(res.get("falta", 0))), String(res.get("prefiere", ""))])
+			## Plantillas con `Idiomas.t` (s3): `prefiere` y `motivo` ya llegan traducidos del núcleo.
+			_escribir("[color=#c9a227]%s[/color] %s" % [
+				Idiomas.t("↩️ Contraoferta de %s.") % ((mundo.clubes.get(j.club_id) as Club).nombre if mundo.clubes.has(j.club_id) else Idiomas.t("el club")),
+				Idiomas.t("Faltan unos %s y prefieren %s.") % [_dinero(int(res.get("falta", 0))), String(res.get("prefiere", ""))]])
 		"rota":
 			_escribir("[color=#e05555]❌ Negociación rota.[/color] El club se levantó de la mesa por %s." % j.nombre)
 			mundo.mercado.cerrar_negociacion()
@@ -25,9 +27,10 @@ func _enviar_oferta_negociacion() -> void:
 				rc.nombre if rc else "otro club", j.nombre, _dinero(int(res.get("precio", 0)))])
 			mundo.mercado.cerrar_negociacion()
 		"jugador_no":
-			_escribir("[color=#c9a227]%s todavía no firma.[/color] %s" % [j.nombre, String(res.get("motivo", ""))])
+			_escribir("[color=#c9a227]%s[/color] %s" % [Idiomas.t("%s todavía no firma.") % j.nombre, String(res.get("motivo", ""))])
 		"jugador_rota":
-			_escribir("[color=#e05555]❌ %s dice que no.[/color] %s No se sienta a hablar de él por un tiempo." % [j.nombre, String(res.get("motivo", ""))])
+			_escribir("[color=#e05555]%s[/color] %s %s" % [Idiomas.t("❌ %s dice que no.") % j.nombre, String(res.get("motivo", "")),
+				Idiomas.t("No se sienta a hablar de él por un tiempo.")])
 			mundo.mercado.cerrar_negociacion()
 		"cerrado":
 			var r: Dictionary = res.get("resumen", {})

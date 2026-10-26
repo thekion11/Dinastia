@@ -59,6 +59,15 @@ const RIESGO_HAMBRE := 0.3
 const RENDIMIENTO_ENERGIA := 0.15
 const RENDIMIENTO_HAMBRE := 0.10
 
+## VIDA PRIVADA REGULABLE (26-10, propuesta s4 fila 5; Ajustes → Juego). Precedente:
+## We Are Football la hace opcional. Se guarda en la partida.
+##   - "completa": lo de arriba, tal cual.
+##   - "ligera": las cifras se mueven y avisan, pero nunca llegan a grave ni
+##     castigan (riesgo 1, rendimiento 1, sin agotamiento).
+##   - "apagada": el PC come y duerme por ti: todo queda en la rutina, sin avisos.
+const MODOS := ["completa", "ligera", "apagada"]
+var modo: String = "completa"
+
 var energia_m: int = ENERGIA_RUTINA
 var hambre_m: int = HAMBRE_RUTINA
 ## Para emitir `estado_cambiado` solo al cruzar un umbral, y `agotamiento` una vez.
@@ -98,10 +107,14 @@ func exceso_hambre() -> float:
 
 ## Multiplicador de la probabilidad de que algo salga mal (1.0 a 1.8).
 func factor_riesgo() -> float:
+	if modo != "completa":
+		return 1.0
 	return 1.0 + RIESGO_ENERGIA * falta_energia() + RIESGO_HAMBRE * exceso_hambre()
 
 ## Lo bien que sale el trabajo (0.75 a 1.0).
 func factor_rendimiento() -> float:
+	if modo != "completa":
+		return 1.0
 	return 1.0 - RENDIMIENTO_ENERGIA * falta_energia() - RENDIMIENTO_HAMBRE * exceso_hambre()
 
 ## Una probabilidad base ajustada por el estado del DT (con tope en 1).
@@ -113,11 +126,13 @@ func probabilidad_de_fallo(base: float) -> float:
 ## Hace pasar `minutos` haciendo `actividad` (lo llama el reloj en cada tramo).
 ## Una actividad desconocida cuenta como "libre".
 func pasar(minutos: int, actividad: String = "libre") -> void:
-	if minutos <= 0:
+	if minutos <= 0 or modo == "apagada":
 		return
 	var tasa: Array = TASAS.get(actividad, TASAS["libre"])
 	energia_m = clampi(energia_m + int(tasa[0]) * minutos, 0, MAXIMO)
 	hambre_m = clampi(hambre_m + int(tasa[1]) * minutos, 0, MAXIMO)
+	if modo == "ligera":
+		_topes_ligera()
 	if energia_m == 0 and actividad != "dormir":
 		if not _agotado:
 			_agotado = true
@@ -130,6 +145,23 @@ func pasar(minutos: int, actividad: String = "libre") -> void:
 func picar(puntos: int) -> void:
 	hambre_m = clampi(hambre_m - maxi(puntos, 0) * ESCALA, 0, MAXIMO)
 	_revisar_umbrales()
+
+## Cambia el modo de vida. Al apagarla, el DT vuelve a la rutina (descansado y
+## comido) y los avisos se apagan; al pasar a ligera, se suben los topes.
+func poner_modo(m: String) -> void:
+	modo = m if MODOS.has(m) else "completa"
+	if modo == "apagada":
+		energia_m = ENERGIA_RUTINA
+		hambre_m = HAMBRE_RUTINA
+	elif modo == "ligera":
+		_topes_ligera()
+	_agotado = false
+	_revisar_umbrales()
+
+## En ligera la energía no baja del umbral grave ni el hambre lo pasa.
+func _topes_ligera() -> void:
+	energia_m = maxi(energia_m, (ENERGIA_UMBRALES[1] + 1) * ESCALA)
+	hambre_m = mini(hambre_m, (HAMBRE_UMBRALES[1] - 1) * ESCALA)
 
 ## La semana avanzó. Si se saltó más de un día sin vivirlo (el avance de semana de
 ## siempre), se da por vivida con rutina; si fue solo la noche del domingo al
@@ -166,7 +198,7 @@ func _revisar_umbrales() -> void:
 ## ------------------------------------------------------------- GUARDADO ---
 
 func a_dic() -> Dictionary:
-	return {"en": energia_m, "ha": hambre_m, "ago": _agotado}
+	return {"en": energia_m, "ha": hambre_m, "ago": _agotado, "modo": modo}
 
 ## Silencioso (los niveles se recalculan sin emitir). Un guardado sin necesidades
 ## (anterior a la fase 0) arranca con la rutina.
@@ -174,5 +206,8 @@ func desde_dic(d: Dictionary) -> void:
 	energia_m = clampi(int(d.get("en", ENERGIA_RUTINA)), 0, MAXIMO)
 	hambre_m = clampi(int(d.get("ha", HAMBRE_RUTINA)), 0, MAXIMO)
 	_agotado = bool(d.get("ago", false))
+	modo = String(d.get("modo", "completa"))
+	if not MODOS.has(modo):
+		modo = "completa"
 	_nivel_energia = _nivel_de_energia(energia_m)
 	_nivel_hambre = _nivel_de_hambre(hambre_m)

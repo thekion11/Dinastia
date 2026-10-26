@@ -31,11 +31,13 @@ func _sesion_general(j: Jugador, mult: float, ritmo: float, joven: float, res: D
 	## centro de entrenamiento y foco técnico. Todos son del HTML.
 	if j.edad < 24 and j.ovr < j.pot:
 		## `ProgresoJugador.freno()`: más lento con la edad y al acercarse al techo (antes, 0,10 plano).
-		var p := 0.10 * mult * ritmo * ProgresoJugador.freno(j)
+		var p := 0.10 * mult * ritmo * ProgresoJugador.freno(j) * freno_temporada(j)
 		if j.edad < 23:
 			p *= joven
 		if j.rasgo == "motor":
 			p *= 1.5
+		## Los minutos también forman: hasta +40 % al llegar a 15 partidos en la temporada.
+		p *= 1.0 + 0.4 * clampf(float(j.partidos) / 15.0, 0.0, 1.0)
 		if es_prioritario(j):
 			p *= 1.5
 		if foco == "tecnico":
@@ -102,11 +104,20 @@ func _plan_por_dias(c: Club, carg: Dictionary, ritmo: float, res: Dictionary) ->
 		## El riesgo de romperse por acumulación NO se tira aquí: lo tira
 		## `Medico.chequeo_de_fatiga` con la carga que devuelve `carga_riesgo()`.
 		if j.edad < 24 and j.ovr < j.pot:
-			var p := float(carg["ovr"]) * 0.014 * ritmo * ProgresoJugador.freno(j)
+			var p := float(carg["ovr"]) * 0.014 * ritmo * ProgresoJugador.freno(j) * freno_temporada(j)
 			if j.rasgo == "motor":
 				p *= 1.5
 			if Azar.suerte(p):
 				_subir_media(j, 1, res)
+
+## EL FRENO DE LA TEMPORADA (26-10, decisión del dueño): lo que gana un juvenil de tu plantel en un año,
+## típico +4-6 y +8 excepcional con buen plan y minutos. Foco técnico, al límite y prioritario se
+## multiplicaban (×3,4) y un chico de 17 llegaba a +13-15. Ahora cada punto de entrenamiento ganado esta
+## temporada (`_subidas`) por encima del umbral cuesta más: 3 sin minutos, 5 si ya jugó 12 partidos.
+func freno_temporada(j: Jugador) -> float:
+	var umbral := 5 if j.partidos >= 12 else 3
+	var sobra := int(_subidas.get(j.id, 0)) - umbral
+	return 1.0 if sobra < 0 else clampf(0.6 - 0.2 * float(sobra), 0.08, 0.6)
 
 func _hay_capitan(c: Club) -> bool:
 	for j in c.plantilla:

@@ -158,7 +158,7 @@ static func _pintar_tabla_liga(lista: VBoxContainer, mundo: Mundo, liga: Liga, m
 		var color: Color = paleta["acento"] if propio else paleta["texto"]
 		var zona: Dictionary = zonas.get(c.id, {})
 		var col_puesto: Color = CompeticionZonas.COLORES.get(String(zona.get("zona", "")), paleta["suave"])
-		var lp := _celda(g, str(puesto), paleta["acento"] if propio else col_puesto, false, 12, paleta)
+		var lp := _celda(g, CompeticionZonas.puesto_con_simbolo(puesto, zona), paleta["acento"] if propio else col_puesto, false, 12, paleta)
 		if not zona.is_empty():
 			lp.tooltip_text = String(zona["texto"])
 			lp.mouse_filter = Control.MOUSE_FILTER_PASS

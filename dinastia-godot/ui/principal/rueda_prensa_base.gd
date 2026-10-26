@@ -26,6 +26,13 @@ var _columna: PanelContainer
 var _franja: PanelContainer
 var _posturas: Control
 var _objetivos_ocultos := false
+var _escena: RuedaPrensaEscena3D
+const _PrincipalRuedaResumen := preload("res://ui/principal/rueda_prensa_resumen.gd")
+## Quién hizo la última pregunta (la entrevista ya se vacía al cerrar).
+var _ultimo_periodista := ""
+var _ultimo_medio := ""
+## Lo que movió la rueda entera (con repreguntas), para el resumen final.
+var _suma := {"moral": 0, "confianza": 0, "socios": 0}
 ## Medidas en píxeles lógicos (la ventana base es 1280×720 con «expand»).
 const ANCHO_COLUMNA := 400
 const ALTO_FRANJA := 108
@@ -143,3 +150,26 @@ func _fila_reloj() -> VBoxContainer:
 func segundos() -> float:
 	return maxf(0.0, float(Time.get_ticks_msec() - desde) / 1000.0)
 
+## QUIÉN HABLA DE VERDAD (14-9-2026): si el DT es un empleado (ayudante,
+## director deportivo, dueño con el banco delegado), da él la rueda, con un
+## aspecto fijo por su nombre; si no, tú con tu aspecto.
+func _nombre_dt() -> String:
+	if p.mundo.roles == null:
+		return ""
+	return p.mundo.roles.dt_nombre() if not p.mundo.roles.dt_empleado.is_empty() else p.mundo.roles.nombre
+
+func _look_dt() -> Dictionary:
+	if p.mundo.roles == null:
+		return {}
+	if not p.mundo.roles.dt_empleado.is_empty():
+		return CaraDT.look_de_nombre(p.mundo.roles.dt_nombre())
+	return p.mundo.roles.look_efectivo()
+
+## Caja semitransparente común (columna, cabecera, franja).
+static func _caja(alfa: float, radio: int, margen: float) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.02, 0.025, 0.03, alfa)
+	sb.set_corner_radius_all(radio)
+	sb.content_margin_left = margen; sb.content_margin_right = margen
+	sb.content_margin_top = margen * 0.7; sb.content_margin_bottom = margen * 0.7
+	return sb

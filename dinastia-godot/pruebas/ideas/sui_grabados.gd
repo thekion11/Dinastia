@@ -1,7 +1,8 @@
 extends BaseIdea
 ## Los clics de interfaz grabados (Kenney, CC0) se cargan del .ogg y lo demás sigue sintetizado.
 
-const GRABADOS := ["menu_mover", "clic_suave", "menu_aceptar", "clic", "menu_atras", "menu_seccion"]
+const GRABADOS := ["menu_mover", "clic_suave", "menu_aceptar", "clic", "menu_atras", "menu_seccion", "silbato",
+	"pitido_final", "medio_tiempo", "tambor", "tambor_visitante"]
 
 func _probar() -> void:
 	_titulo("SONIDO: grabaciones de interfaz en audio/ui (sui)")
@@ -22,7 +23,7 @@ func _probar() -> void:
 		var efectivo := 20.0 * log(float(f.get("pico", 1)) / float(ps)) / log(10.0) + float(Sonido.AJUSTE_DB.get(n, 0.0))
 		print("  %-13s pico %5d (síntesis %5d)  %.3f s  ajuste %.1f dB -> %+.1f dB sobre la síntesis" % [n, int(f.get("pico", 0)), ps, float(f.get("segundos", 0.0)), float(Sonido.AJUSTE_DB.get(n, 0.0)), efectivo])
 		_comprobar(absf(efectivo) <= 6.0, "«%s» queda a %+.1f dB de la síntesis que reemplaza (máx ±6)" % [n, efectivo])
-	for n: String in ["menu_cambio", "silbato", "abrir"]:
+	for n: String in ["menu_cambio", "gol", "abrir"]:
 		var b: Array = Sonido.banco(n)
 		_comprobar(not ResourceLoader.exists(Sonido.ruta_grabado(n)) and b.size() == Sonido.VARIANTES and b[0] is AudioStreamWAV,
 			"«%s» no tiene archivo y sigue sintetizándose (%d variantes)" % [n, b.size()])

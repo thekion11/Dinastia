@@ -30,6 +30,22 @@ const COLORES := {
 	DESCENSO: Color("e05555"),
 }
 
+## Y un SÍMBOLO por zona (s3, 26-10-2026; accesibilidad básica: ningún dato solo
+## con color): va junto al número del puesto y en la leyenda, así la zona se lee
+## aunque no se distingan los colores ni se pase el ratón por el tooltip.
+const SIMBOLOS := {
+	CAMPEON: "★",
+	CONTINENTAL: "◆",
+	ASCENSO: "▲",
+	PROMOCION: "↕",
+	DESCENSO: "▼",
+}
+
+## El puesto con el símbolo de su zona («3▲»), o solo el número.
+static func puesto_con_simbolo(puesto: int, zona: Dictionary) -> String:
+	var s := String(SIMBOLOS.get(String(zona.get("zona", "")), ""))
+	return str(puesto) + s
+
 ## Orden de la leyenda: de arriba abajo, como se lee la tabla.
 const ORDEN := [CAMPEON, CONTINENTAL, ASCENSO, PROMOCION, DESCENSO]
 

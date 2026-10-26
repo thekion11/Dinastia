@@ -1,6 +1,9 @@
 extends "res://ui/rueda_prensa_escena3d_p1.gd"
 ## [Capa 2/3 de `rueda_prensa_escena3d.gd`] _mallas_de, _montar_podio_generado, _montar_podio_procedural, _montar_ocultador_podio, _montar_podio, _montar_dt_generico … (+8)
 
+var _col_club1 := Color(0.12, 0.13, 0.16)
+var _col_club2 := Color(0.9, 0.9, 0.92)
+
 func _mallas_de(n: Node) -> Array[MeshInstance3D]:
 	var salida: Array[MeshInstance3D] = []
 	if n is MeshInstance3D:
@@ -97,18 +100,31 @@ func _montar_podio_procedural() -> void:
 	## que, vistos desde la cámara, quedaban más altos que el DT. Ahora un
 	## cuello fino corto que sube y se inclina hacia el DT, con la cápsula
 	## pequeña apuntándole a la boca.
+	## Base baja sobre el atril, cuello muy fino casi invisible y la cápsula
+	## con su espuma gris a la altura de la barbilla, cerca del DT (26-10).
+	var espuma := StandardMaterial3D.new()
+	espuma.albedo_color = Color(0.22, 0.22, 0.24)
+	espuma.roughness = 0.95
 	for lado in [-1.0, 1.0]:
-		var base_pos := Vector3(lado * 0.16, 1.1, -0.02)
-		var punta := Vector3(lado * 0.09, 1.3, -0.3)
-		add_child(_segmento(base_pos, punta, 0.006, mic_mat))
+		var base := MeshInstance3D.new()
+		var bc := CylinderMesh.new()
+		bc.top_radius = 0.03
+		bc.bottom_radius = 0.035
+		bc.height = 0.03
+		base.mesh = bc
+		base.material_override = mic_mat
+		base.position = Vector3(lado * 0.14, 1.115, -0.12)
+		add_child(base)
+		var punta := Vector3(lado * 0.08, 1.27, -0.3)
+		add_child(_segmento(base.position + Vector3(0, 0.015, 0), punta, 0.0035, mic_mat))
 		var capsula := MeshInstance3D.new()
 		var capm := CapsuleMesh.new()
-		capm.radius = 0.016
+		capm.radius = 0.02
 		capm.height = 0.06
 		capsula.mesh = capm
-		capsula.material_override = mic_mat
+		capsula.material_override = espuma
 		capsula.position = punta
-		capsula.rotation_degrees.x = 70.0
+		capsula.rotation_degrees.x = 60.0
 		add_child(capsula)
 
 ## La caja lisa detrás del modelo generado. Mismas medidas que tenía el
@@ -342,11 +358,14 @@ func _montar_camara() -> void:
 ## marcas genéricas. Vacío -> las marcas de siempre (compatibilidad hacia atrás).
 func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dictionary = {},
 		clubes_competencia: Array = []) -> void:
+	if club != null:
+		_col_club1 = Color.from_string(club.color1, _col_club1)
+		_col_club2 = Color.from_string(club.color2, _col_club2)
 	var we := Calidad.entorno(nivel, Calidad.NOCHE)
 	add_child(we)
 	var env := we.environment
 	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.05, 0.05, 0.06)
+	env.background_color = Color(0.09, 0.09, 0.11)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.7, 0.72, 0.78)
 	env.ambient_light_energy = 0.85
@@ -387,7 +406,9 @@ func _montar_dt_3d() -> void:
 	var raiz := Node3D.new()
 	raiz.position = Vector3(0, 0.0, -0.78)
 	add_child(raiz)
-	_dt_3d = PersonajeDT.crear(raiz, PersonajeDT.del_usuario)
+	## Con los colores del club, como en la banda: el chándal o el traje que
+	## eligió el jugador salían con el azul por defecto (un «mono» azul).
+	_dt_3d = PersonajeDT.crear(raiz, PersonajeDT.del_usuario, _col_club1, _col_club2)
 	if _dt_3d.is_empty():
 		raiz.queue_free()
 		_montar_dt({})

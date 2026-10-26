@@ -18,7 +18,9 @@ extends BaseIdea
 ##     ≤ 75 % de los ingresos previstos (la alarma de la UEFA está en el 70 %).
 ##   · caja del grande: no crece más de 3/4 de su referencia por temporada (M-208). Del chico: en las
 ##     temporadas que juega en Primera no pierde más de una referencia por año. En Segunda sin gestionar SÍ
-##     se hunde (los sueldos pasan del 150 % de los ingresos): se enseña y se anota en el plan, no se exige.
+##     se hundía (sueldos 140-175 % de los ingresos, −1,2 M/año). Con la CLÁUSULA DE DESCENSO (26-10, dueño:
+##     sueldos −30-50 % mientras siga abajo) queda en 95-115 %: en Segunda se exige ≤ 125 %. La nómina «a igual
+##     rep» se mide sin la cláusula (sueldo pleno): la rebaja es temporal y no es una nómina que se desplome.
 ##   · clubes de la IA en rojo ≤ 15 % e intervenidos ≤ 2: el mundo no se arruina solo.
 ##   · 85+ con menos de 22 años: ≤ máx(2, t0 + 1). En el fútbol real se cuentan con los dedos.
 ##   · goles por partido de liga 2,1-3,2 (las primeras de Sudamérica y Europa andan en 2,4-2,9).
@@ -34,11 +36,16 @@ const VALOR := Vector2(0.75, 1.50)
 const ULTIMO := Vector2(12.0, 38.0)
 const NOMINA := Vector2(0.55, 1.60)
 const SUELDOS_MAX := 75
+const SUELDOS_MAX_SEGUNDA := 125
+## En Segunda los de más caché pueden pedir salir por la cláusula y se venden: la nómina plena baja más.
+const NOMINA_MIN_SEGUNDA := 0.45
 const ROJO_MAX := 0.15
 const INTERV_MAX := 2
 const GOLES := Vector2(2.1, 3.2)
 
 func _probar() -> void:
+	if OS.get_environment("TV_IGUAL") != "":   ## medir el reparto solidario de la tele sin activarlo
+		Finanzas.reparto_tv_igual = float(OS.get_environment("TV_IGUAL"))
 	if OS.get_environment("EQ_MODO") == "rendimiento":
 		_rendimiento()
 		return
@@ -104,8 +111,9 @@ func _revisar(f: Dictionary, f0: Dictionary, t: int, fallos: Array[String]) -> v
 		"ovr %.1f" % f["ovr"]: absf(f["ovr"] - f0["ovr"]) <= OVR_DELTA,
 		"valor IA x%.2f" % v: v >= VALOR.x and v <= VALOR.y,
 		"último año %d%%" % f["ultimo"]: f["ultimo"] >= ULTIMO.x and f["ultimo"] <= ULTIMO.y,
-		"nómina x%.2f a igual rep" % nom: nom >= NOMINA.x and nom <= NOMINA.y,
+		"nómina x%.2f a igual rep" % nom: nom >= (NOMINA_MIN_SEGUNDA if int(f["div"]) != 1 else NOMINA.x) and nom <= NOMINA.y,
 		"sueldos %d%% de los ingresos en Primera" % f["pct_sal"]: int(f["div"]) != 1 or int(f["pct_sal"]) <= SUELDOS_MAX,
+		"sueldos %d%% de los ingresos en Segunda" % f["pct_sal"]: int(f["div"]) == 1 or int(f["pct_sal"]) <= SUELDOS_MAX_SEGUNDA,
 		"IA en rojo %d" % f["rojo"]: float(f["rojo"]) <= ROJO_MAX * float(f["clubes"]),
 		"intervenidos %d" % f["interv"]: int(f["interv"]) <= INTERV_MAX,
 		"85+ <22: %d" % f["precoces"]: int(f["precoces"]) <= maxi(2, int(f0["precoces"]) + 1),
@@ -160,7 +168,7 @@ func _foto(m: Mundo, gpp: float) -> Dictionary:
 	var k := maxf(1.0, float(n))
 	return {"n": n, "ovr": ovr / k, "edad": edad / k, "ultimo": int(100.0 * ultimo / k), "precoces": precoces,
 		"valor_ia": val_ia / maxf(1.0, float(n_ia)), "rojo": rojo, "interv": interv, "clubes": m.clubes.size() - 1,
-		"nomina": yo.masa_salarial(), "caja": yo.saldo, "gpp": gpp,
+		"nomina": yo.plantilla.reduce(func(a: int, j: Jugador) -> int: return a + int(round(j.sueldo / j.factor_clausula())), 0), "caja": yo.saldo, "gpp": gpp,
 		"div": yo.division, "rep": yo.rep, "plantel": yo.plantilla.size(), "pct_sal": int(proy["pct_salarial"]), "resultado": int(proy["resultado"]),
 		"veedor": m.banco != null and m.banco.hay_veedor()}
 

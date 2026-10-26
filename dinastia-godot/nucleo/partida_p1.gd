@@ -185,7 +185,7 @@ static func _jugador_a_dic_base(j: Jugador) -> Dictionary:
 		"f": j.forma, "m": j.moral, "fi": j.fisico,
 		"l": j.lesion, "s": j.suspension, "a": j.amarillas,
 		"go": j.goles, "as": j.asistencias, "pj": j.partidos,
-		"v": j.valor, "su": j.sueldo, "an": j.anios_contrato, "pc": j.primer_contrato,
+		"v": j.valor, "su": j.sueldo, "an": j.anios_contrato, "pc": j.primer_contrato, "rd": j.rebaja_descenso, "dc": j.descenso_club,
 		"d": j.dorsal, "cap": j.capitan, "ps": j.pide_salir, "tr": j.transferible,
 		"nn": j.no_negociar_hasta, "re": j.real,
 		"ml": j.motivo_libre, "rl": j.rechazos_libre,
@@ -277,7 +277,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		## se vuelve a poner la misma, para que lo que se busca por nombre de
 		## club (equipaciones reales, plantillas) siga cuadrando.
 		"base_real": Datos.base_real,
-		"desafios": m.desafios,
+		"desafios": m.desafios, "dificultad": m.dificultad, "vref": m.valor_ia_ref,
 		"reto": m.reto,
 		"fondo": m.fondo.a_dic() if m.fondo != null else {},
 		"clubes": [],
@@ -314,6 +314,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"contratos": m.contratos.a_dic() if m.contratos != null else {},
 		"vida": m.vida.a_dic() if m.vida != null else {},
 		"reloj": m.reloj.a_dic(), "necesidades": m.necesidades.a_dic(),   ## fase 0
+		"imprevistos": m.imprevistos.a_dic(),
 		"maestria": m.maestria.a_dic() if m.maestria != null else {},
 		"banco": m.banco.a_dic() if m.banco != null else {},
 		"auspicio": m.auspicio.a_dic() if m.auspicio != null else {},
@@ -376,6 +377,7 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	j.goles = int(d["go"]); j.asistencias = int(d["as"]); j.partidos = int(d["pj"])
 	j.valor = int(d["v"]); j.sueldo = int(d["su"]); j.anios_contrato = int(d["an"])
 	j.primer_contrato = bool(d.get("pc", false))   ## guardados viejos: sin primer contrato
+	j.rebaja_descenso = float(d.get("rd", 0.0)); j.descenso_club = String(d.get("dc", ""))
 	j.dorsal = int(d["d"]); j.capitan = bool(d["cap"]); j.pide_salir = bool(d["ps"])
 	j.transferible = bool(d.get("tr", false))
 	j.no_negociar_hasta = int(d.get("nn", 0))
