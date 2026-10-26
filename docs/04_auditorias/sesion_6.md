@@ -76,7 +76,7 @@ Traducciones: 106 frases × 8 idiomas con `herramientas/sumar_traducciones.py` (
 
 - Pruebas nuevas (todas «FIN. 0 fallos»): `s6_recursos`, `s6_porque`, `s6_logros`, `s6_novedades`; además `uipl_textos` y `prueba_contador_fps` (ajustada al Debug Menu).
 - Banco entero antes de cada subida: «FIN. 0 fallos» (2.601 comprobaciones).
-- Especiales `todo`: ver el final de este informe.
+- Especiales `todo`: «ESPECIALES: todo en orden» (10 de 10: norma, compilación, colisiones del club, partido con motor real, control del equipo, modos, ciudad a pie, balance en 10 temporadas, rendimiento en 20, recorrido de todas las pantallas).
 - Capturas (Forward+, cámara real; JPG) en `/tmp/capturas/s6/` (fuera del repo, como pide la regla).
 
 ## 6. Sin hacer y por qué
