@@ -64,6 +64,13 @@ func apuntar(tipo: String, texto: String) -> void:
 				_escribir_linea("(tope de %d líneas en esta sesión: el resto no se guarda)" % TOPE_SESION)
 	_cerrojo.unlock()
 
+## Diagnóstico de DESARROLLO (sondas que se encienden con variables de entorno
+## como DEPURAR_TIROS): va a la consola con su etiqueta y NO al registro del
+## jugador. Es el único `print` del código del juego: así hay un solo sitio donde
+## silenciarlo o redirigirlo.
+func depurar(tema: String, texto: String) -> void:
+	print("[%s] %s" % [tema, texto])
+
 ## Quita de un texto lo que podría identificar al jugador.
 func limpiar(texto: String) -> String:
 	var r := texto

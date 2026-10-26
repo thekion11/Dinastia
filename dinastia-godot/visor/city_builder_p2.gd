@@ -152,7 +152,7 @@ static var _piezas_hincha: Array = []
 func _marca(que: String) -> void:
 	if _medir_tiempos:
 		var ahora := Time.get_ticks_usec()
-		print("TIEMPO %-24s %6.0f ms" % [que, (ahora - _t_marca) / 1000.0])
+		Registro.depurar("TIEMPO", "%-24s %6.0f ms" % [que, (ahora - _t_marca) / 1000.0])
 		_t_marca = ahora
 
 func _color_luces() -> Color:
