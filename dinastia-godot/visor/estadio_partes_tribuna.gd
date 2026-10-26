@@ -227,7 +227,12 @@ static func _techo_tribuna(obra: EstadioObra, t: EstadioObra.Tribuna) -> void:
 	## distinto del global; si no, sigue compartiendo `roof_mat` tal
 	## cual, igual que antes de esta fase.
 	var roof_mat_i := obra.roof_mat if t.techo_i == obra.techo else _techo_mat(t.techo_i, obra.techo_col)
-	marcar_techo(_box(obra.root, t.pos + t.cara * (vuelo / 2.0) + Vector3(0, t.alto_s / 2.0 + 0.4, 0), rs, roof_mat_i), -t.cara)
+	var centro_t := t.pos + t.cara * (vuelo / 2.0) + Vector3(0, t.alto_s / 2.0 + 0.4, 0)
+	marcar_techo(_box(obra.root, centro_t, rs, roof_mat_i), -t.cara)
+	## Su estructura vista desde abajo: vigas en ménsula, correa y canto (`DetalleGrada`).
+	var lona := t.techo_i in ["membrana", "retractil"]
+	var acero := Texturas.metal(Color(0.78, 0.79, 0.8) if lona else Color(0.2, 0.21, 0.23), 0.45)
+	marcar_techo(DetalleGrada.vigas_techo(obra.root, centro_t, rs, t.cara, t.lateral, acero), -t.cara)
 
 ## El paño de fuera de esta tribuna. En la del túnel, el vestuario y el edificio del club ocupan su
 ## tramo: ahí no se viste nada.

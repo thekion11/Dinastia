@@ -92,6 +92,7 @@ func abrir_rueda(gane: bool, empate: bool) -> Dictionary:
 	elif Clima.es_extremo(clima_ultimo) and _hash_de(str(_fecha()) + "clima") % 2 == 0:
 		entrevista = _pregunta_clima(clima_ultimo, gane, empate)
 	_poner_periodista(gane, empate)
+	_para_mostrar(entrevista)
 	rueda_abierta.emit(String(entrevista["pregunta"]), entrevista["opciones"])
 	return entrevista
 
@@ -361,7 +362,7 @@ func responder(i: int, segundos: float = -1.0) -> Dictionary:
 	_recordar(per, titular, tono)
 	var sigue := paso == 0 and _toca_repreguntar(per, tono, titubeo)
 	if sigue:
-		entrevista = _repregunta(per, titular, tono, titubeo)
+		entrevista = _para_mostrar(_repregunta(per, titular, tono, titubeo))
 	else:
 		_preparar_titular(per, titular, tono)
 		entrevista = {}

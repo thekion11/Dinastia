@@ -126,7 +126,8 @@ static func pintar_cabeza(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta
 	_dato(lista, "Confianza", "%d/100" % v.confianza(j), paleta["texto"], paleta)
 	var clan: Dictionary = v.clan_de(j)
 	if not clan.is_empty():
-		_dato(lista, "Camarín", Idiomas.t("pertenece a «%s»") % Idiomas.t(String(clan.get("nombre", "—"))), paleta["suave"], paleta)
+		## Solo el grupo, entre comillas (s3): «pertenece a …» se cortaba en la columna.
+		_dato(lista, "Camarín", "«%s»" % Idiomas.t(String(clan.get("nombre", "—"))), paleta["suave"], paleta)
 
 ## El rol prometido y si lo estás cumpliendo.
 static func pintar_promesa(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta: Dictionary) -> void:

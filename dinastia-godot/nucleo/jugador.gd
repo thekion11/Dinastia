@@ -132,6 +132,12 @@ var anios_contrato: int = 1
 ## primera firma nueva (renovación o traspaso, `Contratos.ajustar_anios`).
 var primer_contrato: bool = false
 const FACTOR_PRIMER_CONTRATO := 0.45
+## CLÁUSULA DE DESCENSO (26-10, decisión del dueño): al bajar su club, el sueldo
+## cae `rebaja_descenso` (0,30-0,50, según el contrato: `Contratos`) mientras siga
+## en `descenso_club`; si el club asciende, vuelve a su nivel. Si cambia de club,
+## deja de aplicarse sola (la mira `sueldo_de_valor`).
+var rebaja_descenso: float = 0.0
+var descenso_club: String = ""
 var dorsal: int = 0
 var capitan: bool = false
 ## Un jugador que pidio salir vale menos y quiere irse mas: lo usan las tres
@@ -220,9 +226,22 @@ func tasar() -> void:
 	valor = int(max(300.0, round(v / 100.0) * 100.0))
 	## El sueldo crece con el valor pero mas despacio que el, o los grandes
 	## quebrarian solos.
-	sueldo = int(max(30.0, round(1.361 * pow(float(valor), 0.66) / 10.0) * 10.0))
+	sueldo = sueldo_de_valor()
+
+## El sueldo que sale del valor ya fijado, con el primer contrato y la cláusula de
+## descenso encima. Lo usan `tasar()` y quien retoca el valor después (parte médico,
+## bono de habilidades): antes recalculaban a mano y se saltaban los dos factores.
+func sueldo_de_valor() -> int:
+	var s := float(max(30.0, round(1.361 * pow(float(valor), 0.66) / 10.0) * 10.0))
 	if primer_contrato:
-		sueldo = int(max(30.0, round(float(sueldo) * FACTOR_PRIMER_CONTRATO / 10.0) * 10.0))
+		s = max(30.0, round(s * FACTOR_PRIMER_CONTRATO / 10.0) * 10.0)
+	return int(max(30.0, round(s * factor_clausula() / 10.0) * 10.0))
+
+## Lo que cobra de su sueldo pleno por la cláusula de descenso (1,0 sin cláusula).
+func factor_clausula() -> float:
+	if rebaja_descenso <= 0.0 or descenso_club == "" or descenso_club != club_id:
+		return 1.0
+	return 1.0 - rebaja_descenso
 
 ## EL TOPE DE LOS TECHOS (26-10). Todos los sitios que fabrican chicos (camada,
 ## hijo de leyenda, academia, joyas de las sedes, filosofía de cantera) cortaban
@@ -236,10 +255,12 @@ static func techo_tope(techo: int, ovr: int) -> int:
 	return clampi(t, ovr, 97)
 
 ## Lo que cobraría sin el primer contrato: la base de lo que pide al renovar.
+## La cláusula de descenso también se descuenta: es una rebaja temporal, no lo que vale.
 func sueldo_pleno() -> int:
-	if not primer_contrato:
-		return sueldo
-	return int(round(float(sueldo) / FACTOR_PRIMER_CONTRATO / 10.0) * 10.0)
+	var s := float(sueldo) / factor_clausula()
+	if primer_contrato:
+		s /= FACTOR_PRIMER_CONTRATO
+	return int(round(s / 10.0) * 10.0)
 
 func lesionar(semanas: int) -> void:
 	lesion = max(lesion, semanas)

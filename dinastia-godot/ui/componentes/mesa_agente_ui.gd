@@ -116,7 +116,7 @@ var _estado_previo := "abierta"
 
 func _pintar() -> void:
 	var abierta := mesa.estado == "abierta"
-	_pide.text = Idiomas.t("Pide: %d %%  (%s)") % [mesa.pide, Idiomas.t(mesa.detalle(mesa.pide))] if abierta else _final_corto()
+	_pide.text = Idiomas.t("Pide: %d %%  (%s)") % [mesa.pide, mesa.detalle(mesa.pide)] if abierta else _final_corto()
 	_pide.add_theme_font_size_override("font_size", 15 if abierta else 18)
 	## El desenlace con su color: verde si hay trato, rojo si se fue, neutro si
 	## te plantaste. Antes los tres salían en el mismo dorado que «Pide».
@@ -126,7 +126,7 @@ func _pintar() -> void:
 	_tazas.tooltip_text = Idiomas.t("Paciencia: cada ronda gasta una taza")
 	_ronda.text = Idiomas.t("Ronda %d") % mesa.ronda if mesa.ronda > 0 else Idiomas.t("Primera ronda: tú mueves")
 	## Lo que dice el representante llega del núcleo en castellano: se traduce al pintarlo.
-	_dice.text = Idiomas.t(mesa.ultima)
+	_dice.text = mesa.ultima
 	if mesa.estado != _estado_previo:
 		_estado_previo = mesa.estado
 		Sonido.toca("contrato" if mesa.estado == "acuerdo" else "error", Sonido.Bus.INTERFAZ)
@@ -143,7 +143,7 @@ func _pintar() -> void:
 	_jugadas.add_child(ofertas)
 	var primero: Button = null
 	for o: int in mesa.ofertas():
-		var b := _boton(Idiomas.t("Ofrecer %d %%") % o + "\n" + Idiomas.t(mesa.detalle(o)), func() -> void:
+		var b := _boton(Idiomas.t("Ofrecer %d %%") % o + "\n" + mesa.detalle(o), func() -> void:
 			mesa.regatear(o)
 			_pintar(), ofertas, Color(0.86, 0.82, 0.74))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -152,7 +152,7 @@ func _pintar() -> void:
 	var otras := HBoxContainer.new()
 	otras.add_theme_constant_override("separation", 8)
 	_jugadas.add_child(otras)
-	var bf := _boton(Idiomas.t("🃏 Farol: %s") % Idiomas.t(mesa.texto_farol()), func() -> void:
+	var bf := _boton(Idiomas.t("🃏 Farol: %s") % mesa.texto_farol(), func() -> void:
 		mesa.farol()
 		_pintar(), otras, Color(0.7, 0.85, 1.0))
 	bf.disabled = mesa.farol_usado
@@ -182,7 +182,7 @@ func _color_final() -> Color:
 func _final_corto() -> String:
 	match mesa.estado:
 		"acuerdo":
-			return Idiomas.t("✔ TRATO al %d %%  (%s)") % [mesa.acordado, Idiomas.t(mesa.detalle(mesa.acordado))]
+			return Idiomas.t("✔ TRATO al %d %%  (%s)") % [mesa.acordado, mesa.detalle(mesa.acordado)]
 		"se_fue":
 			return Idiomas.t("✖ SE FUE DE LA MESA")
 		_:

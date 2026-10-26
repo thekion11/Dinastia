@@ -3,6 +3,11 @@ extends "res://ui/principal_p7.gd"
 
 func _ver_ficha(j: Jugador) -> void:
 	vista_cambiada.emit()
+	## Una ficha pedida a mano manda sobre la que quedara diferida (`_refrescar`).
+	_pendientes.erase(_ficha)
+	## El panel de objetivos no tapa la ficha que se abre (s3, primera hora).
+	if is_instance_valid(_panel_obj):
+		_panel_obj.ceder_ficha(_ficha)
 	if j == null or (_seleccionado != null and j.id != _seleccionado.id):
 		_confirmar_rescision_id = ""
 	_seleccionado = j

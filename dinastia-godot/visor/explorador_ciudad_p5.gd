@@ -348,7 +348,9 @@ func _physics_process(delta: float) -> void:
 	_cerrar_puerta_si_lejos()
 	var e := _entrada()
 	if modo == "coche":
+		var rumbo_antes := rumbo
 		_conducir(e, delta)
+		_girar_si_cabe(rumbo_antes)
 	else:
 		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 		## Aceleración y frenada suaves: arrancar y parar no es instantáneo.

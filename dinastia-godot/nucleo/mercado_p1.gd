@@ -82,6 +82,7 @@ func valor_pedido(j: Jugador) -> int:
 ## Las ganas que tiene de ir a `destino`, de 0 a 1, con los motivos para poder
 ## enseñárselos al jugador. Devolver solo el número sería la mitad del trabajo:
 ## lo que hace que una negociación se entienda es saber POR QUÉ dice que no.
+## Las razones salen YA traducidas (s3, 26-10-2026).
 func deseo_de_venir(j: Jugador, destino: Club) -> Dictionary:
 	var suyo: Club = _mundo().clubes.get(j.club_id)
 	var razones: Array[Dictionary] = []
@@ -90,32 +91,32 @@ func deseo_de_venir(j: Jugador, destino: Club) -> Dictionary:
 		var d := float(destino.rep - suyo.rep)
 		p += clampf(d * 0.020, -0.34, 0.26)
 		if d <= -8.0:
-			razones.append({"bien": false, "txt": "Viene de un club más grande: %d de reputación contra tus %d" % [suyo.rep, destino.rep]})
+			razones.append({"bien": false, "txt": Idiomas.t("Viene de un club más grande: %d de reputación contra tus %d") % [suyo.rep, destino.rep]})
 		elif d >= 8.0:
-			razones.append({"bien": true, "txt": "Tu club es un salto de categoría para él"})
+			razones.append({"bien": true, "txt": Idiomas.t("Tu club es un salto de categoría para él")})
 		if destino.pais == suyo.pais:
 			if destino.division > suyo.division:
 				p -= 0.30
-				razones.append({"bien": false, "txt": "Bajaría de división"})
+				razones.append({"bien": false, "txt": Idiomas.t("Bajaría de división")})
 			elif destino.division < suyo.division:
 				p += 0.16
-				razones.append({"bien": true, "txt": "Subiría de división"})
+				razones.append({"bien": true, "txt": Idiomas.t("Subiría de división")})
 		else:
 			var t := Eco.tier_pais(destino.pais) - Eco.tier_pais(suyo.pais)
 			p += clampf(t * 0.35, -0.24, 0.18)
 			if t < -0.12:
-				razones.append({"bien": false, "txt": "Cambiar de país para ir a una liga menor no le seduce"})
+				razones.append({"bien": false, "txt": Idiomas.t("Cambiar de país para ir a una liga menor no le seduce")})
 			elif t > 0.12:
-				razones.append({"bien": true, "txt": "Daría el salto a una liga más fuerte"})
+				razones.append({"bien": true, "txt": Idiomas.t("Daría el salto a una liga más fuerte")})
 	if j.pide_salir:
 		p += 0.20
-		razones.append({"bien": true, "txt": "Ya pidió salir de su club"})
+		razones.append({"bien": true, "txt": Idiomas.t("Ya pidió salir de su club")})
 	if j.moral < 40:
 		p += 0.10
-		razones.append({"bien": true, "txt": "Está incómodo donde está"})
+		razones.append({"bien": true, "txt": Idiomas.t("Está incómodo donde está")})
 	if j.anios_contrato <= 1:
 		p += 0.08
-		razones.append({"bien": true, "txt": "Le queda un año de contrato"})
+		razones.append({"bien": true, "txt": Idiomas.t("Le queda un año de contrato")})
 	## LO QUE PESA TU NOMBRE. `Entrenamiento.bono_fichajes()` sumaba un 10% por
 	## «Ícono» y un 6% por «Negociador» y no la llamaba nadie: los dos nodos del
 	## árbol que existen PARA fichar mejor no servían para fichar mejor.
@@ -125,7 +126,7 @@ func deseo_de_venir(j: Jugador, destino: Club) -> Dictionary:
 		var tuyo := m.entrenamiento.bono_fichajes()
 		if tuyo > 0.0:
 			p += tuyo
-			razones.append({"bien": true, "txt": "Tu nombre pesa: te escucha antes que a otros"})
+			razones.append({"bien": true, "txt": Idiomas.t("Tu nombre pesa: te escucha antes que a otros")})
 		## EL PRESTIGIO DEL DT -`bonusReputacion().fichajes` del HTML, que
 		## `deseoDeVenir()` suma aparte del bonus fijo de «Ícono»-. Es una curva
 		## continua: un DT de prestigio 20 también se nota, pero en contra.
@@ -134,7 +135,7 @@ func deseo_de_venir(j: Jugador, destino: Club) -> Dictionary:
 			if absf(rep) >= 0.01:
 				p += rep
 				razones.append({"bien": rep > 0.0,
-					"txt": "Tu prestigio como entrenador le convence" if rep > 0.0
+					"txt": Idiomas.t("Tu prestigio como entrenador le convence") if rep > 0.0
 						else "Tu poco prestigio como entrenador le echa para atrás"})
 	return {"p": clampf(p, 0.02, 0.98), "razones": razones}
 

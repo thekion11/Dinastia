@@ -74,7 +74,7 @@ static func _tarjeta_chico(ch: Dictionary, a: Academia, paleta: Dictionary, al_c
 	cab.add_theme_constant_override("separation", 10)
 	caja.add_child(cab)
 	var n := _texto(13, paleta["texto"], paleta)
-	var lesion := "  🩹 %d sem." % int(ch["lesion"]) if int(ch["lesion"]) > 0 else ""
+	var lesion := Idiomas.t("  🩹 %d sem.") % int(ch["lesion"]) if int(ch["lesion"]) > 0 else ""
 	n.text = Idiomas.t("%s  ·  %d años  ·  %s%s") % [ch["nombre"], int(ch["edad"]), ch["pos_e"], lesion]
 	n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(n)

@@ -89,7 +89,7 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 		for k: String in Jersey.KITS:
 			var estilo := k
 			var b := EscudoMuestras.boton(EscudoMuestras.camiseta(c1, c2, estilo, 36),
-				co.estilo_kit(cual2, c) == estilo, 44)
+				co.estilo_kit(cual2, c) == estilo, 44, "", EscudoMuestras.oscuro(c1))
 			b.pressed.connect(func() -> void:
 				co.fijar_kit(cual2, "estilo", estilo)
 				p._refrescar())

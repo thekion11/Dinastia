@@ -70,17 +70,14 @@ static func pintar_balance_y_caja(lista: VBoxContainer, c: Club, mundo: Mundo,
 	var tf := _texto(11, paleta["suave"], paleta)
 	tf.text = Idiomas.t("FLUJO DE CAJA A 12 MESES")
 	lista.add_child(tf)
-	var mensual := int(proy["resultado"]) / 12
-	var saldo := c.saldo
-	var minimo := saldo
+	var saldos := FlujoCaja.saldos_por_mes(c, mundo, proy)
+	var saldo: int = saldos[saldos.size() - 1]
+	var minimo: int = saldos[0]
 	var mes_minimo := 0
-	var saldos: Array[int] = [saldo]
-	for m in 12:
-		saldo += mensual
-		saldos.append(saldo)
-		if saldo < minimo:
-			minimo = saldo
-			mes_minimo = m + 1
+	for m in range(1, saldos.size()):
+		if saldos[m] < minimo:
+			minimo = saldos[m]
+			mes_minimo = m
 	lista.add_child(GraficoFinanzas.flujo(saldos, paleta))
 	_dato(lista, Idiomas.t("Dentro de 12 meses"), _dinero(saldo), paleta["verde"] if saldo >= 0 else paleta["rojo"], paleta)
 	## «mes 0» no lo dice nadie: si el punto más bajo es la caja de hoy, es «hoy».
@@ -394,8 +391,16 @@ static func _dato(padre: Node, etiqueta: String, valor: String, color: Color, pa
 	h.add_child(a)
 	var b := _texto(12, color, paleta)
 	b.text = valor
+	## Aire a la derecha: la barra de desplazamiento tapaba el final de la cifra.
+	b.add_theme_stylebox_override("normal", _AIRE)
 	h.add_child(b)
 	padre.add_child(h)
+
+static var _AIRE := _aire()
+static func _aire() -> StyleBoxEmpty:
+	var sb := StyleBoxEmpty.new()
+	sb.content_margin_right = 14
+	return sb
 
 ## Blanco o negro sobre el color del logo, calcado de `Principal._tinta()`.
 static func _tinta(fondo: Color) -> Color:

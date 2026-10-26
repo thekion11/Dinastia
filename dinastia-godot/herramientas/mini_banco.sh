@@ -1,6 +1,7 @@
 #!/bin/bash
 # MINI BANCO (20-10-2026): corre solo un grupo de pruebas del banco (GRUPOS en
-# pruebas/banco.gd) o una sección, en un proceso y en segundos.
+# pruebas/banco.gd) o una sección, en un proceso y en segundos. Desde el 26-10 cada grupo
+# vive en pruebas/banco/<grupo>.gd y solo se carga ese archivo (compila menos).
 #   herramientas/mini_banco.sh partido      → el grupo «partido»
 #   herramientas/mini_banco.sh _probar_x    → solo esa sección
 #   herramientas/mini_banco.sh              → lista los grupos
@@ -16,6 +17,7 @@ if [ ! -f "$CACHE" ] || [ -n "$(find nucleo ui visor pruebas -name '*.gd' -newer
 fi
 if [ -z "$1" ]; then
   echo "Grupos:"; sed -n '/^const GRUPOS/,/^}/p' pruebas/banco.gd | grep -o '^	"[a-z_]*"' | tr -d '\t"' | sed 's/^/  /'
+  echo "  ideas, varios  (por archivo: todo lo de pruebas/banco/ideas*.gd o varios*.gd)"
   exit 0
 fi
 LOG="${2:-/tmp/mini_banco.txt}"

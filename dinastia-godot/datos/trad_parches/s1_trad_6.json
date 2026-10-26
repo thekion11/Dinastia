@@ -1,0 +1,138 @@
+{
+ "exactas": {
+  "Tienes que responder.": {
+   "en": "You have to respond.",
+   "pt": "Você precisa responder.",
+   "fr": "Tu dois répondre.",
+   "it": "Devi rispondere.",
+   "de": "Du musst antworten.",
+   "ca": "Has de respondre.",
+   "pl": "Musisz odpowiedzieć.",
+   "tr": "Yanıt vermen gerekiyor."
+  },
+  "Golpe de autoridad": {
+   "en": "Statement win",
+   "pt": "Golpe de autoridade",
+   "fr": "Coup d'autorité",
+   "it": "Colpo d'autorità",
+   "de": "Machtdemonstration",
+   "ca": "Cop d'autoritat",
+   "pl": "Pokaz siły",
+   "tr": "Otorite gösterisi"
+  },
+  "Sabor a poco": {
+   "en": "Underwhelming",
+   "pt": "Sabor de pouco",
+   "fr": "Goût de trop peu",
+   "it": "Sa di poco",
+   "de": "Zu wenig",
+   "ca": "Sap a poc",
+   "pl": "Niedosyt",
+   "tr": "Az geldi"
+  },
+  "Preocupación en la interna": {
+   "en": "Concern behind closed doors",
+   "pt": "Preocupação nos bastidores",
+   "fr": "Inquiétude en interne",
+   "it": "Preoccupazione all'interno",
+   "de": "Sorge intern",
+   "ca": "Preocupació a la interna",
+   "pl": "Niepokój w klubie",
+   "tr": "Kulüp içinde endişe"
+  },
+  "Noche para el olvido": {
+   "en": "A night to forget",
+   "pt": "Noite para esquecer",
+   "fr": "Soirée à oublier",
+   "it": "Notte da dimenticare",
+   "de": "Ein Abend zum Vergessen",
+   "ca": "Nit per oblidar",
+   "pl": "Noc do zapomnienia",
+   "tr": "Unutulacak bir gece"
+  },
+  "Los días de partido el estadio se llena más si el equipo viene ganando.": {
+   "en": "On match days the stadium fills up more when the team is winning.",
+   "pt": "Nos dias de jogo o estádio enche mais quando a equipa vem a ganhar.",
+   "fr": "Les jours de match, le stade se remplit davantage quand l'équipe gagne.",
+   "it": "Nei giorni di partita lo stadio si riempie di più se la squadra vince.",
+   "de": "An Spieltagen füllt sich das Stadion mehr, wenn die Mannschaft gewinnt.",
+   "ca": "Els dies de partit l'estadi s'omple més si l'equip va guanyant.",
+   "pl": "W dni meczowe stadion zapełnia się bardziej, gdy drużyna wygrywa.",
+   "tr": "Maç günlerinde takım kazanıyorsa stadyum daha çok dolar."
+  },
+  "El Centro médico acelera la recuperación entre partidos.": {
+   "en": "The Medical Centre speeds up recovery between matches.",
+   "pt": "O Centro médico acelera a recuperação entre jogos.",
+   "fr": "Le centre médical accélère la récupération entre les matchs.",
+   "it": "Il Centro medico accelera il recupero tra le partite.",
+   "de": "Das Medizinzentrum beschleunigt die Erholung zwischen den Spielen.",
+   "ca": "El Centre mèdic accelera la recuperació entre partits.",
+   "pl": "Centrum medyczne przyspiesza regenerację między meczami.",
+   "tr": "Sağlık merkezi maçlar arasındaki toparlanmayı hızlandırır."
+  },
+  "Pulsa V al pasear para cambiar a primera persona.": {
+   "en": "Press V while walking to switch to first person.",
+   "pt": "Carregue em V ao passear para mudar para a primeira pessoa.",
+   "fr": "Appuyez sur V en vous promenant pour passer à la première personne.",
+   "it": "Premi V mentre cammini per passare alla prima persona.",
+   "de": "Drücke beim Spazieren V, um in die Ich-Perspektive zu wechseln.",
+   "ca": "Prem V mentre passeges per canviar a primera persona.",
+   "pl": "Naciśnij V podczas spaceru, by przełączyć na widok z pierwszej osoby.",
+   "tr": "Gezerken V'ye basarak birinci şahıs görünümüne geç."
+  },
+  "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": {
+   "en": "Step into the houses and bars; the people of the city have things to tell you.",
+   "pt": "Entre nas casas e nos bares; as pessoas da cidade têm coisas para lhe contar.",
+   "fr": "Entrez dans les maisons et les bars ; les habitants ont des choses à vous raconter.",
+   "it": "Entra nelle case e nei bar; la gente della città ha cose da raccontarti.",
+   "de": "Betritt die Häuser und Bars; die Menschen der Stadt haben dir etwas zu erzählen.",
+   "ca": "Entra a les cases i als bars; la gent de la ciutat té coses per explicar-te.",
+   "pl": "Wchodź do domów i barów; mieszkańcy miasta mają ci wiele do opowiedzenia.",
+   "tr": "Evlere ve barlara gir; şehrin insanlarının sana anlatacakları var."
+  },
+  "La Academia juvenil mejora el potencial de los canteranos.": {
+   "en": "The Youth Academy improves the potential of your academy players.",
+   "pt": "A Academia juvenil melhora o potencial dos jovens da formação.",
+   "fr": "L'Académie des jeunes améliore le potentiel des jeunes du centre.",
+   "it": "L'Accademia giovanile migliora il potenziale dei giovani del vivaio.",
+   "de": "Die Jugendakademie verbessert das Potenzial deiner Nachwuchsspieler.",
+   "ca": "L'Acadèmia juvenil millora el potencial dels jugadors de la pedrera.",
+   "pl": "Akademia młodzieżowa podnosi potencjał wychowanków.",
+   "tr": "Genç akademisi altyapı oyuncularının potansiyelini artırır."
+  },
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": {
+   "en": "At night the windows light up and the street lamps glow.",
+   "pt": "À noite as janelas acendem-se e os candeeiros iluminam a rua.",
+   "fr": "La nuit, les fenêtres s'allument et les lampadaires éclairent la rue.",
+   "it": "Di notte le finestre si accendono e i lampioni illuminano la strada.",
+   "de": "Nachts leuchten die Fenster und die Laternen erhellen die Straße.",
+   "ca": "De nit les finestres s'encenen i els fanals il·luminen el carrer.",
+   "pl": "Nocą zapalają się okna, a latarnie oświetlają ulicę.",
+   "tr": "Geceleri pencereler yanar ve sokak lambaları yolu aydınlatır."
+  }
+ },
+ "patrones": [
+  [
+   "^(.+?) te pide una comisión extra por debajo de la mesa para «facilitar» la próxima operación\\. Es plata que no aparece en ningún libro\\.$",
+   "$1 is asking you for an extra under-the-table commission to «smooth» the next deal. It's money that won't appear in any ledger.",
+   "$1 pede uma comissão extra por baixo dos panos para «facilitar» a próxima negociação. É dinheiro que não aparece em livro nenhum.",
+   "$1 te demande une commission supplémentaire sous la table pour «faciliter» la prochaine opération. C'est de l'argent qui n'apparaît dans aucun livre de comptes.",
+   "$1 ti chiede una commissione extra sottobanco per «facilitare» la prossima operazione. Sono soldi che non compaiono in nessun libro contabile.",
+   "$1 verlangt eine zusätzliche Provision unter der Hand, um den nächsten Deal zu «erleichtern». Das ist Geld, das in keinem Buch auftaucht.",
+   "$1 et demana una comissió extra per sota la taula per «facilitar» la propera operació. Són diners que no apareixen a cap llibre.",
+   "$1 żąda dodatkowej prowizji pod stołem, żeby «ułatwić» następną transakcję. To pieniądze, których nie ma w żadnych księgach.",
+   "$1 bir sonraki işi «kolaylaştırmak» için masa altından ekstra komisyon istiyor. Hiçbir deftere geçmeyen bir para bu."
+  ],
+  [
+   "^(.+?) \\((.+?)\\) controla a (\\d+) de tus jugadores\\. Te exige fichar a un canterano de su agencia o «no responde por el ánimo» de (.+) y compañía\\.$",
+   "$1 ($2) represents $3 of your players. He demands you sign a youngster from his agency, or he «can't vouch for the mood» of $4 and co.",
+   "$1 ($2) controla $3 dos seus jogadores. Exige que você contrate um garoto da agência dele ou «não responde pelo ânimo» de $4 e companhia.",
+   "$1 ($2) contrôle $3 de tes joueurs. Il exige que tu recrutes un jeune de son agence, sinon il «ne répond pas du moral» de $4 et compagnie.",
+   "$1 ($2) controlla $3 dei tuoi giocatori. Pretende che tu prenda un giovane della sua agenzia, o «non risponde dell'umore» di $4 e compagnia.",
+   "$1 ($2) vertritt $3 deiner Spieler. Er verlangt, dass du ein Talent seiner Agentur verpflichtest, sonst «übernimmt er keine Gewähr für die Stimmung» von $4 und Co.",
+   "$1 ($2) controla $3 dels teus jugadors. T'exigeix que fitxis un jove de la seva agència o «no respon de l'ànim» de $4 i companyia.",
+   "$1 ($2) reprezentuje $3 twoich zawodników. Żąda, żebyś podpisał młodzieżowca z jego agencji, bo inaczej «nie ręczy za nastroje» zawodnika $4 i spółki.",
+   "$1 ($2) oyuncularından $3 tanesini temsil ediyor. Ajansından bir genç oyuncu almanı istiyor; yoksa $4 ve arkadaşlarının «moralinden sorumlu değil»."
+  ]
+ ]
+}

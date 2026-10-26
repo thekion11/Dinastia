@@ -159,7 +159,7 @@ func _montar_suelo() -> void:
 
 func _montar_sala() -> void:
 	var oscuro := StandardMaterial3D.new()
-	oscuro.albedo_color = Color(0.05, 0.05, 0.06)
+	oscuro.albedo_color = Color(0.13, 0.13, 0.15)
 	oscuro.roughness = 0.8
 
 	## Paredes laterales, ligeramente giradas hacia dentro -mismo truco que el
@@ -250,93 +250,9 @@ func _montar_periodistas() -> void:
 				add_child(cuerpo)
 
 func _montar_fondo_sponsors(club: Club, acento: Color, _clubes_competencia: Array = []) -> void:
-	var vp := SubViewport.new()
-	vp.size = Vector2i(2000, 700)
-	vp.transparent_bg = false
-	vp.render_target_update_mode = SubViewport.UPDATE_ONCE
-	add_child(vp)
-
-	## PARED SOBRIA DEL CLUB (26-10, pedido del dueño): la cuadrícula de escudos
-	## de la liga salía con aros negros vacíos y recargaba el fondo. Ahora es un
-	## «step and repeat»: escudo y nombre del club alternados, en sus colores,
-	## con un halo suave detrás del DT.
-	## `clubes_competencia` se acepta por compatibilidad y ya no se usa.
-	var col1 := Color.from_string(club.color1, acento) if club != null else acento
-	var col2 := Color.from_string(club.color2, Color.WHITE) if club != null else Color.WHITE
-	var fondo := ColorRect.new()
-	fondo.color = col1.darkened(0.5) if col1.get_luminance() > 0.25 else col1.lightened(0.12)
-	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vp.add_child(fondo)
-	var halo := TextureRect.new()
-	var gt := GradientTexture2D.new()
-	gt.fill = GradientTexture2D.FILL_RADIAL
-	gt.fill_from = Vector2(0.5, 0.55)
-	gt.fill_to = Vector2(0.5, 1.25)
-	var gr := Gradient.new()
-	gr.set_color(0, Color(col1.lightened(0.35), 0.55))
-	gr.set_color(1, Color(col1, 0.0))
-	gt.gradient = gr
-	halo.texture = gt
-	halo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	halo.stretch_mode = TextureRect.STRETCH_SCALE
-	vp.add_child(halo)
-	var grid := GridContainer.new()
-	grid.columns = COLS_LOGO
-	grid.set_anchors_preset(Control.PRESET_FULL_RECT)
-	grid.add_theme_constant_override("h_separation", 30)
-	grid.add_theme_constant_override("v_separation", 40)
-	grid.offset_left = 40.0; grid.offset_top = 40.0
-	vp.add_child(grid)
-	var escudo := Escudo.textura(club, 110) if club != null else null
-	for i in FILAS_LOGO * COLS_LOGO:
-		## Damero: escudo, nombre, escudo... desplazado en cada fila.
-		if (i + int(i / COLS_LOGO)) % 2 == 0 and escudo != null:
-			var celda := TextureRect.new()
-			celda.custom_minimum_size = Vector2(190, 120)
-			celda.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			celda.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			celda.texture = escudo
-			## Las iniciales van aparte (el SVG no dibuja texto): sin ellas el
-			## escudo salía como un aro vacío.
-			var ini := Label.new()
-			ini.text = Escudo.iniciales(club)
-			ini.set_anchors_preset(Control.PRESET_FULL_RECT)
-			ini.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			ini.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			ini.add_theme_font_size_override("font_size", 40)
-			ini.add_theme_color_override("font_color", Color.from_string(club.color_escudo2(), Color.WHITE))
-			celda.add_child(ini)
-			grid.add_child(celda)
-		else:
-			var nom := Label.new()
-			nom.custom_minimum_size = Vector2(190, 120)
-			nom.text = club.nombre.to_upper() if club != null else ""
-			nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			nom.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			nom.add_theme_font_size_override("font_size", 30)
-			nom.add_theme_color_override("font_color", Color(col2, 0.8))
-			grid.add_child(nom)
-
-	var mat := StandardMaterial3D.new()
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.emission_enabled = true
-	mat.emission_energy_multiplier = 1.0
-	var tex := vp.get_texture()
-	mat.albedo_texture = tex
-	mat.emission_texture = tex
-	## EL TAMAÑO FÍSICO ES LO QUE IMPORTA, no el número de logos. 9,6×3,0 m
-	## -más alto que una persona y más ancho que el podio por completo- hacía
-	## que la pared se comiera la escena y el DT quedara como un punto en la
-	## esquina. 5,4×1,7 m centrado a la altura de cabeza-pecho es lo que
-	## ocupa de verdad una placa de sponsors detrás de un podio real.
-	var quad := MeshInstance3D.new()
-	var q := QuadMesh.new()
-	q.size = Vector2(5.4, 1.7)
-	quad.mesh = q
-	quad.material_override = mat
-	quad.position = Vector3(0, 1.55, -1.6)
-	add_child(quad)
+	## Vive en `ParedPrensa` (26-10): según el contexto de la rueda (patrón del
+	## club, competición o previa). `_contexto` lo fija `montar()` (capa 2).
+	ParedPrensa.montar(self, club, acento, get("_contexto") if get("_contexto") != null else {})
 
 # ---------------------------------------------------------------------------
 #  LA SALA (14-9-2026)

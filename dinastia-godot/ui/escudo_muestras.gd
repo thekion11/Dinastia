@@ -58,7 +58,9 @@ static func en_cache() -> int:
 ## Un botón-miniatura de las rejillas: se marca el elegido (toggle) y lleva la
 ## miniatura como icono a tamaño fijo. Con mando o teclado se recorre igual que
 ## los de texto: es un `Button` normal, con su foco.
-static func boton(tex: Texture2D, elegido: bool, lado: int, ayuda: String = "") -> Button:
+## `claro`: la miniatura es oscura (un club negro): va sobre un fondo claro, que
+## sobre el gris oscuro del botón las formas negras no se distinguían (s3).
+static func boton(tex: Texture2D, elegido: bool, lado: int, ayuda: String = "", claro := false) -> Button:
 	var b := Button.new()
 	b.toggle_mode = true
 	b.button_pressed = elegido
@@ -68,7 +70,20 @@ static func boton(tex: Texture2D, elegido: bool, lado: int, ayuda: String = "") 
 	b.custom_minimum_size = Vector2(lado, lado)
 	b.focus_mode = Control.FOCUS_ALL
 	b.tooltip_text = ayuda
+	if claro:
+		for estado: String in ["normal", "hover", "pressed", "hover_pressed", "focus"]:
+			var sb := StyleBoxFlat.new()
+			sb.bg_color = Color("#c9ced3") if estado == "normal" else Color("#e4e8ec")
+			sb.set_corner_radius_all(6)
+			sb.set_border_width_all(2 if estado in ["pressed", "hover_pressed", "focus"] else 0)
+			sb.border_color = Color("#f2c14e")
+			sb.set_content_margin_all(3)
+			b.add_theme_stylebox_override(estado, sb)
 	return b
+
+## ¿Un color es tan oscuro que se pierde sobre el fondo oscuro de la interfaz?
+static func oscuro(color: String) -> bool:
+	return Color(color).get_luminance() < 0.2
 
 ## EL ESCUDO EN UNA TINTA, como sale impreso en el periódico o en un marcador de
 ## un solo color (`Escudo.textura_mono`), sobre papel y con sus iniciales: el

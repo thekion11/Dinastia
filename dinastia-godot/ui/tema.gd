@@ -49,6 +49,11 @@ const TAM_MARCADOR := 36   ## marcadores y cifras héroe
 ## al mismo rango que Ajustes (0,7-1,6).
 static var daltonico := false
 static var escala_texto := 1.0
+## Contraste alto (s3): el texto suave pasa a casi blanco, el principal a blanco y los
+## bordes y paneles de `caja()` se marcan. Lo vuelca Principal con la paleta «contraste».
+static var contraste := false
+const SUAVE_CONTRASTE := Color("d8e0dc")
+const BORDE_CONTRASTE := Color("ffffffb0")
 
 # --- forma ---------------------------------------------------------------------
 const RADIO := 8           ## tarjetas
@@ -59,6 +64,11 @@ const MARGEN := 12         ## relleno interior de una tarjeta
 
 ## Una tarjeta con el estilo del juego.
 static func caja(fondo: Color = PANEL, radio: int = RADIO, borde: Color = BORDE) -> StyleBoxFlat:
+	if contraste:
+		if borde == BORDE:
+			borde = BORDE_CONTRASTE
+		if fondo == PANEL or fondo == TARJETA:
+			fondo = Color.BLACK
 	var e := StyleBoxFlat.new()
 	e.bg_color = fondo
 	e.border_color = borde
@@ -91,6 +101,12 @@ static func letra(tam: int) -> int:
 ## daltónico distingue. Cualquier otro color, o con el modo apagado, pasa igual.
 ## Se compara RGB y se conserva el alfa: `Color(Tema.BIEN, 0.5)` también cambia.
 static func accesible(c: Color) -> Color:
+	if contraste:
+		var o := Color(c, 1.0)
+		if o == TEXTO:
+			c = Color(Color.WHITE, c.a)
+		elif o == SUAVE or o == NEUTRO:
+			c = Color(SUAVE_CONTRASTE, c.a)
 	if not daltonico:
 		return c
 	var opaco := Color(c, 1.0)

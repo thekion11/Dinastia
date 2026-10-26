@@ -73,6 +73,28 @@ uniform float ocasion_bando = 0.0;
 // potencia (más alto = más pieles claras). 1 = reparto parejo, el de antes.
 uniform float piel_sesgo = 1.0;
 
+// LA HINCHADA ANIMADA DE VERDAD (26-10-2026, fila 6 de la investigación s4):
+// texturas de vértices (VAT) horneadas por `herramientas/hornear_publico_vat.gd`
+// con clips de medio cuerpo de Mesh2Motion (CC0) sobre nuestra pose sentado.
+// Columna = vértice (su índice va en UV.x), fila = fotograma; arriba las
+// posiciones (cuantizadas a la caja vat_min..vat_max), abajo las normales.
+// Clips (orden de `hornear_publico_vat.gd::CLIPS`): 0 sentado, 1 charla,
+// 2 aplaude, 3 escucha, 4 asiente, 5 cruzados, 6 manos a la cabeza, 7-9 festejos,
+// 10-12 abucheos. vat_activo = 0 (sin textura) deja la malla como venía: lo de
+// antes, sin tocar. Solo `texelFetch`: vale igual en Compatibility (móvil, Web).
+uniform sampler2D vat_tex : filter_nearest, repeat_disable;
+uniform float vat_activo = 0.0;
+uniform vec3 vat_min = vec3(-1.0);
+uniform vec3 vat_max = vec3(1.0);
+uniform float vat_dur[13];
+// El clip de reposo de este grupo de hinchas (lo pone `PublicoVat.configurar`).
+uniform int vat_reposo = 0;
+// SENTADOS NERVIOSOS: 0..1, qué parte de la grada se cruza de brazos o se lleva
+// las manos a la cabeza (final apretado). Lo pone `FestejoGrada.nervios`.
+uniform float nervios = 0.0;
+const int VAT_FOTOS = 16;
+const int VAT_CLIPS = 13;
+
 varying float v_alto;
 varying float v_azar;
 varying float v_lado;
@@ -84,6 +106,22 @@ float azar(float x) {
 	return fract(sin(x * 12.9898) * 43758.5453);
 }
 
+// Posición (xyz) y normal de este vértice en el clip `c` al tiempo `t`, con el
+// fotograma interpolado (16 por clip; sin interpolar se vería a saltos).
+void vat_muestra(int col, int c, float t, out vec3 p, out vec3 n) {
+	float d = max(vat_dur[c], 0.1);
+	float fr = fract(t / d) * float(VAT_FOTOS);
+	int f0 = int(fr) % VAT_FOTOS;
+	int f1 = (f0 + 1) % VAT_FOTOS;
+	float a = fract(fr);
+	int fila0 = c * VAT_FOTOS + f0;
+	int fila1 = c * VAT_FOTOS + f1;
+	int alto = VAT_FOTOS * VAT_CLIPS;
+	vec3 q = mix(texelFetch(vat_tex, ivec2(col, fila0), 0).xyz, texelFetch(vat_tex, ivec2(col, fila1), 0).xyz, a);
+	p = vat_min + q * (vat_max - vat_min);
+	n = mix(texelFetch(vat_tex, ivec2(col, alto + fila0), 0).xyz, texelFetch(vat_tex, ivec2(col, alto + fila1), 0).xyz, a) * 2.0 - 1.0;
+}
+
 void vertex() {
 	// La posición de ESTA instancia en el mundo. En un `MultiMesh`,
 	// `MODEL_MATRIX` ya trae la transformación de la instancia.
@@ -93,6 +131,68 @@ void vertex() {
 	v_alto = VERTEX.y;
 	v_lado = abs(VERTEX.x);
 	v_x = VERTEX.x;
+	if (vat_activo > 0.5) {
+		// La ropa, la piel y el pelo siguen saliendo de la pose quieta (v_alto,
+		// v_lado de arriba): así la cabeza no cambia de color al moverse.
+		int col = int(UV.x * float(textureSize(vat_tex, 0).x));
+		float vis = step(COLOR.a, 0.75);
+		float suma = step(0.12, fract(v_azar * 3.7));
+		// Reposo: el del grupo, y uno de cada tres con otro tranquilo (0..5).
+		int reposo = fract(v_azar * 5.3) < 0.33 ? int(fract(v_azar * 11.1) * 5.99) : vat_reposo;
+		float ev_w = 0.0;
+		int ev_c = 0;
+		if (nervios > 0.0 && fract(v_azar * 2.9) < nervios) {
+			reposo = fract(v_azar * 17.0) < 0.5 ? 5 : 6;
+		}
+		if (ola_edad >= 0.0) {
+			float d = mod(atan(origen.x, origen.z) - ola_inicio, 6.2832);
+			float k = ola_edad * ola_vel - d;
+			if (k >= -0.3 && ola_edad * ola_vel < ola_vueltas * 6.2832 + d) {
+				float km = mod(k + 0.3, 6.2832);
+				float h = km < ola_ancho + 0.6 ? sin(km / (ola_ancho + 0.6) * 3.1416) : 0.0;
+				if (h * suma > ev_w) { ev_w = h * suma; ev_c = 7; }
+			}
+		}
+		if (ocasion_edad >= 0.0) {
+			float t_o = ocasion_edad - v_azar * 0.3;
+			float env = smoothstep(0.0, 0.22, t_o) * (1.0 - smoothstep(1.6, 2.6, t_o)) * (1.0 - abs(ocasion_bando - vis));
+			if (env * suma > ev_w) { ev_w = env * suma; ev_c = 6; }
+		}
+		if (protesta_edad >= 0.0) {
+			float env = smoothstep(0.0, 0.4, protesta_edad) * (1.0 - smoothstep(2.6, 3.4, protesta_edad)) * (1.0 - abs(protesta_bando - vis));
+			if (env * suma > ev_w) { ev_w = env * suma; ev_c = 10 + int(fract(v_azar * 7.7) * 2.99); }
+		}
+		// EL GOL SE VE DESDE LA TELE (26-10): con la onda llega el festejo y dura
+		// toda la onda (6 s), no solo el frente; seis de cada diez con los DOS
+		// brazos arriba (lo que más se lee a 80 m), y saltos COORDINADOS por
+		// zonas de 9 m (cada zona a su compás, como una barra), no al azar.
+		float gol_env = 0.0;
+		if (onda_edad >= 0.0) {
+			float x = onda_edad * onda_vel - length(origen.xz - onda_centro.xz);
+			gol_env = smoothstep(0.0, 4.0, x) * (1.0 - smoothstep(4.6, 6.0, onda_edad)) * (1.0 - abs(onda_bando - vis)) * suma;
+			if (gol_env > ev_w) {
+				ev_w = gol_env;
+				float r = fract(v_azar * 4.3);
+				ev_c = r < 0.6 ? 7 : (r < 0.8 ? 8 : 9);
+			}
+		}
+		vec3 p;
+		vec3 n;
+		vat_muestra(col, reposo, TIME + v_azar * 9.0, p, n);
+		if (ev_w > 0.001) {
+			vec3 p2;
+			vec3 n2;
+			vat_muestra(col, ev_c, TIME + v_azar * 2.0, p2, n2);
+			p = mix(p, p2, ev_w);
+			n = mix(n, n2, ev_w);
+		}
+		VERTEX = p;
+		NORMAL = normalize(n);
+		if (gol_env > 0.0) {
+			float zona = floor(origen.x / 9.0) * 1.7 + floor(origen.z / 9.0) * 2.3 + floor(origen.y / 6.0);
+			VERTEX.y += gol_env * (0.32 + 0.3 * max(0.0, sin(onda_edad * 6.5 + zona)));
+		}
+	}
 	float t = TIME * velocidad + fase;
 	// 0 en los pies, 1 de los hombros para arriba.
 	float peso = clamp(VERTEX.y / 0.7, 0.0, 1.0);

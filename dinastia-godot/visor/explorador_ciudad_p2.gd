@@ -103,12 +103,11 @@ static func _huella(v: Dictionary, n: Node3D) -> Vector2:
 	return huella
 
 func buscar_libre(desde: Vector3) -> Vector3:
-	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
 	for k in 400:
 		var ang := float(k) * 0.7
 		var d := float(k) * 2.0
 		var p := desde + Vector3(cos(ang) * d, 0, sin(ang) * d)
-		if libre_total(p, r):
+		if libre_forma(p, rumbo):
 			return Vector3(p.x, altura_suelo(p.x, p.z), p.z)
 	return desde
 

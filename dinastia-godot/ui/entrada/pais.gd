@@ -66,6 +66,10 @@ static func crea_club(estado: Dictionary) -> bool:
 		return true
 	if bool(estado.get("crear", false)) or bool(estado.get("crear_club", false)):
 		return true
+	## Como `OrquestadorMundo.crea_club`: la marca también puede venir dentro del país.
+	var pd: Variant = estado.get("pais")
+	if pd is Dictionary and bool((pd as Dictionary).get("crear", false)):
+		return true
 	var c: Variant = estado.get("config")
 	return c is Dictionary and String((c as Dictionary).get("nombre_club", "")).strip_edges() != ""
 

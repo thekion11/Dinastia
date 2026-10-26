@@ -272,7 +272,7 @@ func _pintar_resultado_ronda(n: Negociacion) -> void:
 		"club_pide_mas":
 			titulo = Idiomas.t("↩️ CONTRAOFERTA DEL CLUB")
 			cuerpo = Idiomas.t("Faltan unos %s para que acepten. Prefieren %s.") % [
-				_dinero(int(_ultimo_resultado.get("falta", 0))), Idiomas.t(String(_ultimo_resultado.get("prefiere", "")))]
+				_dinero(int(_ultimo_resultado.get("falta", 0))), String(_ultimo_resultado.get("prefiere", ""))]
 		"sin_caja":
 			titulo = Idiomas.t("💸 NO TE ALCANZA")
 			col = COL_ROJO
@@ -283,7 +283,7 @@ func _pintar_resultado_ronda(n: Negociacion) -> void:
 			var pide := int(_ultimo_resultado.get("pide", 0))
 			var motivo := String(_ultimo_resultado.get("motivo", ""))
 			if motivo != "":
-				cuerpo = Idiomas.t(motivo)
+				cuerpo = motivo
 			elif pide > 0 and n.sueldo < int(round(float(pide) * 0.92)):
 				cuerpo = Idiomas.t("Pide una ficha de al menos %s/semana.") % _dinero(int(round(float(pide) * 0.92)))
 			else:

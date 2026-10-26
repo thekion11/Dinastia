@@ -108,7 +108,7 @@ func _paso_identidad() -> void:
 		datos.lema = t
 		_cambio())
 	if datos.crea_club and c.nombre.strip_edges() == "" and is_inside_tree():
-		n.call_deferred("grab_focus")
+		FocoSeguro.dar(n)
 
 func _campo(texto: String, pista: String, maximo: int, tam: int) -> LineEdit:
 	var le := LineEdit.new()
@@ -146,7 +146,7 @@ func _paso_escudo() -> void:
 		c.esc_patron = String(Escudo.PATRONES[randi() % Escudo.PATRONES.size()])
 		_cambio()
 		_pintar_paso()))
-	_seccion(Idiomas.t("Forma"))
+	_seccion(Idiomas.t("Forma del escudo"))
 	_rejilla_escudos(Escudo.FORMAS, true)
 	_seccion(Idiomas.t("Patrón interior"))
 	_rejilla_escudos(Escudo.PATRONES, false)

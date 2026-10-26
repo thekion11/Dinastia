@@ -17,6 +17,9 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	_tm("tribunas")
 	_esquinas(obra)
 	_tm("esquinas")
+	## Cantos amarillos, zancas y pasamanos de las escaleras de la grada (26-10-2026,
+	## `DetalleGrada`): sin ellos eran cuñas grises lisas vistas desde la tele.
+	DetalleGrada.vestir_escaleras(root, _mat_baranda)
 	_vallas(obra)
 	## CONECTORES MUDOS DEL DISEÑADOR DE ESTADIO (23-9-2026). El usuario pidió
 	## "una buena revisión a las bandejas en el ámbito de los conectores", y es

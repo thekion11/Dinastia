@@ -112,6 +112,6 @@ static func crear(p: Dictionary, c1: Color, cancelar: Callable, aceptar: Callabl
 		b_si.add_theme_color_override(c, Color("14110a"))
 	b_si.pressed.connect(aceptar)
 	botones.add_child(b_si)
-	b_si.call_deferred("grab_focus")
+	FocoSeguro.dar(b_si)
 	Animar.aparecer(caja)
 	return capa

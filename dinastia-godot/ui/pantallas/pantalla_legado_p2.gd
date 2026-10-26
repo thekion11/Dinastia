@@ -122,11 +122,15 @@ func _pintar_epilogo(r: Roles) -> void:
 		var ult := r.trofeos.slice(maxi(0, r.trofeos.size() - 12))
 		var partes: Array[String] = []
 		for tro: Dictionary in ult:
-			partes.append("🏆 %s %s" % [Idiomas.t(String(tro.get("titulo", ""))), str(tro.get("anio", ""))])
+			partes.append("🏆 %s %s" % [CompeticionInfo.nombre_visible(String(tro.get("titulo", ""))), str(tro.get("anio", ""))])
 		var vit := p._texto(11, Principal.COL_ORO)
 		vit.text = "  ·  ".join(partes)
 		vit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(vit)
+		## La vitrina 3D con la forma de cada trofeo (26-10).
+		var v3 := VitrinaTrofeos.crear(ult)
+		if v3 != null:
+			p._lista_legado.add_child(v3)
 
 func _pintar_legado() -> void:
 	p._limpiar(p._lista_legado)
@@ -167,6 +171,10 @@ func _pintar_legado() -> void:
 		var va := p._texto(16, Principal.COL_ORO)
 		va.text = String(par[1])
 		col.add_child(va)
+	## Tu vitrina en 3D (26-10): los últimos títulos con su trofeo.
+	var vit3 := VitrinaTrofeos.crear(r.trofeos)
+	if vit3 != null:
+		p._lista_legado.add_child(vit3)
 	## El multiplicador solo se enseña si es distinto de 1: si no, es una línea
 	## que dice "×1.0" y no significa nada.
 	if absf(float(p_local["multiplicador"]) - 1.0) > 0.001:

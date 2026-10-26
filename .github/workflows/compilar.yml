@@ -1,4 +1,12 @@
-name: Export Dinastia Windows
+# CI de Dinastía (26-10-2026): Godot 4.7.2, el banco de pruebas entero y, si pasa, el build de Windows.
+#
+# - Imagen: barichello/godot-ci:4.7.2-stable (etiqueta verificada en la investigación s4; trae godot,
+#   las plantillas de exportación y git-lfs). La 4.3 de antes no abría el proyecto.
+# - LFS: solo `dinastia-godot/**` (las ramas y carpetas viejas pesan; ver CLAUDE.md).
+# - El banco (`dinastia-godot/herramientas/banco.sh`) tiene que terminar en «FIN. 0 fallos»: se comprueba
+#   el código de salida Y el texto del registro, que se sube como artefacto aunque falle.
+# - El build de Windows solo corre si el banco pasa. Firmas, keystore y builds públicos los lleva el dueño.
+name: Compilar y probar Dinastia
 
 on:
   push:
@@ -6,26 +14,85 @@ on:
   workflow_dispatch:
 
 jobs:
-  export-windows:
+  banco:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     container:
-      image: barichello/godot-ci:4.3  # OJO: el proyecto es Godot 4.7; hace falta una imagen 4.7 (dueño)
+      image: barichello/godot-ci:4.7.2-stable
     steps:
-      - name: Checkout repository
+      - name: Descargar el repositorio (sin LFS)
         uses: actions/checkout@v4
+        with:
+          lfs: false
 
-      - name: Setup export templates
+      - name: Recursos LFS del juego
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
+          git lfs install --local
+          git lfs pull --include="dinastia-godot/**"
+
+      - name: Importar el proyecto
+        working-directory: dinastia-godot
+        run: |
+          godot --version
+          timeout 900 godot --headless --path . --import > /tmp/importar.txt 2>&1 || true
+          tail -n 20 /tmp/importar.txt
+
+      - name: Banco de pruebas entero
+        working-directory: dinastia-godot
+        run: |
+          set +e
+          bash herramientas/banco.sh /tmp/banco.txt
+          codigo=$?
+          set -e
+          tail -n 40 /tmp/banco.txt
+          if [ "$codigo" -ne 0 ]; then
+            echo "El banco terminó con código $codigo (1 fallos, 2 sintaxis, 3 colgado)."
+            exit 1
+          fi
+          grep -q "FIN. 0 fallos" /tmp/banco.txt || { echo "El banco no terminó en «FIN. 0 fallos»."; exit 1; }
+
+      - name: Subir el registro del banco
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: banco-registro
+          path: /tmp/banco.txt
+          if-no-files-found: ignore
+
+  export-windows:
+    needs: banco
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2-stable
+    steps:
+      - name: Descargar el repositorio (sin LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Recursos LFS del juego
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
+          git lfs install --local
+          git lfs pull --include="dinastia-godot/**"
+
+      - name: Plantillas de exportación
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates
+          if [ "$HOME" != "/root" ]; then mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates; fi
 
-      - name: Build Windows Release
+      - name: Build de Windows
         run: |
           mkdir -v -p build/windows
           cd dinastia-godot
+          timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
           godot --headless --export-release "Windows" ../build/windows/Dinastia.exe
 
-      - name: Upload Artifact
+      - name: Subir el build
         uses: actions/upload-artifact@v4
         with:
           name: Dinastia-Windows

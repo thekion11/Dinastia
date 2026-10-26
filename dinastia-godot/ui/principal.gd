@@ -57,6 +57,10 @@ func _input(evento: InputEvent) -> void:
 	## Un desliz que empieza sobre el riel es del panel (abrirlo), no del menú.
 	if evento is InputEventScreenDrag and (evento as InputEventScreenDrag).position.x < MenuLateral.ANCHO_RIEL + 30.0:
 		return
+	## Los atajos del menú central (1-9, 0, N, F3, F5; s3).
+	if AtajosCentrales.manejar(self, evento):
+		get_viewport().set_input_as_handled()
+		return
 	## Los gatillos cambian de pestaña. Se mira aquí y no en `_unhandled_input`
 	## porque los contenedores de la interfaz se comen los eventos de navegación
 	## antes de que lleguen abajo.
@@ -174,7 +178,7 @@ func _pintar_identidad(c: Club) -> void:
 	_lista_gente.add_child(te)
 	_ui_identidad._fila_color_identidad(c, "Fondo del escudo", "esc_color1")
 	_ui_identidad._fila_color_identidad(c, "Borde y patrón", "esc_color2")
-	_ui_identidad._rejilla_identidad(c, "esc_forma", Escudo.FORMAS, "Forma")
+	_ui_identidad._rejilla_identidad(c, "esc_forma", Escudo.FORMAS, "Forma del escudo")
 	_ui_identidad._rejilla_identidad(c, "esc_patron", Escudo.PATRONES, "Patrón interior")
 	## "ESC_SIM" del HTML: un emoji en vez de las iniciales. El campo llevaba
 	## semanas guardándose -`Club.esc_simbolo` ya viaja en el guardado- sin que

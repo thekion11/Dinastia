@@ -62,6 +62,8 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | Personajes, animaciones y skins | `assets/characters/Model`, `Animations`, `Skins` | Kenney "Animated Characters Protagonists" | 🟢 CC0 (`assets/characters/License.txt`) |
 | Cuerpo de jugador | `assets/characters/quaternius/*.gltf` | Quaternius "Universal Base Characters" | 🟢 CC0 |
 | Animaciones base | `assets/characters/quaternius/anims/UAL1_Standard.glb` | Quaternius "Universal Animation Library" | 🟢 CC0 (`_extraido_universal_animation_library/.../License.txt`) |
+| Clips de medio cuerpo para el banquillo sentado y la hinchada (charla, aplauso, festejos, abucheos) | `assets/characters/quaternius/anims_m2m/m2m_parte_alta.res`, `assets/ciudad/publico/hincha_vat_*.res` | Mesh2Motion (github.com/scottpetrovic/mesh2motion-app, commit `653a969`); se bajan con `herramientas/bajar_mesh2motion.sh` y se hornean con `herramientas/hornear_publico_vat.gd` | 🟢 CC0 1.0 (`LICENSE-CC0.MD` del repositorio, leído el 26-10-2026; `anims_m2m/LICENCIA.md`) |
+| Técnica de texturas de animación de vértices (VAT) de la hinchada | `visor/hinchada.gdshader`, `herramientas/hornear_publico_vat.gd` | Plugin «Godot Vertex Animation Textures» de antzGames (github.com/antzGames/Godot_Vertex_Animation_Textures_Plugin); se sigue la técnica, sin copiar código | 🟢 MIT (`LICENSE`, Antz 2024; `assets/ciudad/publico/LICENCIA.md`) |
 | Ropa del jugador | `assets/characters/quaternius/ropa/` | Quaternius "Modular Character Outfits - Fantasy" | 🟢 CC0 |
 | Alfombra y cortinas dobles (interiores) | `assets/quaternius_muebles/` | Quaternius (CC0, regalo del usuario el 15-10-2026) | 🟢 CC0 |
 | Edificios, coches y comercio de la ciudad | `assets/ciudad/kenney_*` | Kenney City Kit / Car Kit | 🟢 CC0 |

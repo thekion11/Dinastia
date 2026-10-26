@@ -10,7 +10,7 @@ func _anotar(titulo: String, cuerpo: String) -> void:
 	if mundo.movil != null:
 		var de := Movil.remitente_de(titulo, cuerpo)
 		if not de.is_empty():
-			mundo.movil.recibir(String(de[0]), String(de[1]), "%s %s" % [titulo, cuerpo], mundo.anio, mundo.semana)
+			mundo.movil.recibir(String(de[0]), String(de[1]), "%s %s", mundo.anio, mundo.semana, [titulo, cuerpo], true)
 	if _bandeja.size() > BANDEJA_MAX:
 		_bandeja.resize(BANDEJA_MAX)
 

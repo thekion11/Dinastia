@@ -160,8 +160,10 @@ func _montar_escena() -> void:
 func _colocar_camara() -> void:
 	var h := float(_asp.get("altura", 1.78))
 	var z := ease(_zoom, -1.6)
-	var mira := Vector3(0, lerpf(h * 0.5, h * 0.92, z), 0)
-	var desde := Vector3(0, lerpf(h * 0.58, h * 0.94, z), lerpf(4.6, 1.15, z))
+	## Primer plano: el centro algo por debajo de los ojos y un poco más lejos, para que la
+	## coronilla y el pelo alto (tupé, afro, moño) no se corten ni en los muy altos.
+	var mira := Vector3(0, lerpf(h * 0.5, h * 0.94, z), 0)
+	var desde := Vector3(0, lerpf(h * 0.58, h * 0.95, z), lerpf(4.6, 1.5, z))
 	_cam.transform = Transform3D(Basis.looking_at(mira - desde, Vector3.UP), desde)
 
 func _montar_botones() -> void:

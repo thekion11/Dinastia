@@ -17,7 +17,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
   < 450. Partir con `herramientas/partir_gd.py` (capas por herencia; la última conserva ruta y class_name).
 - Antes de SUBIR: `dinastia-godot/herramientas/banco.sh` debe terminar en «FIN. 0 fallos» (corre en paralelo; ~83 s). Mientras se trabaja:
   `mini_banco.sh <grupo>`. Lo que el banco no ve: `dinastia-godot/herramientas/especiales.sh [todo]`. Si el banco se cuelga: error de
-  sintaxis; debe aparecer «===== FIN». Sección nueva en banco.gd = añadirla a `SECCIONES`.
+  sintaxis; debe aparecer «===== FIN». Sección nueva = función en `pruebas/banco/<grupo>.gd` (o `varios`) + nombre en `SECCIONES` (y `GRUPOS`) de `pruebas/banco.gd`; si falta una, FALLO.
 - Lo visual se revisa en Forward+ y con la CÁMARA REAL del partido (no solo de cerca): `herramientas/captura.sh`. Capturas en JPG.
   No quitar ni apagar nada sin decirlo.
 - Contenedor nuevo: `git lfs pull --include="dinastia-godot/**"` ANTES de abrir Godot. Godot 4.7.2 se baja de GitHub releases.
@@ -33,7 +33,8 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
    Hasta entonces: solo fallas, pendientes, mejoras y limpieza.
 3. El dueño borra él las 8 ramas viejas (4 originales + 4 `borrar-*`) y la etiqueta `latest`.
 4. Mega auditoría 3 hecha el 24-10 (`docs/04_auditorias/`); método Cascada + V en `docs/01_metodo/`. El 24-10 se borró lo viejo (planes, informes, capturas, vídeos, filas hechas) y el dueño pidió: ideas hechas se revisan «realmente bien», no solo «decentes»; lo no cerrado vive en el plan del lunes.
-5. Idiomas: 9 y no sumar más; faltan ~506 frases por traducir.
+5. Idiomas: 9 y no sumar más. Las ~506 frases pendientes se tradujeron el 26-10 (sesión 1); lo nuevo, siempre con `sumar_traducciones.py`.
 6. Pendientes de dueño: FPS en hardware real, builds, keystore, licencias, subir binarios a Drive (`herramientas/drive_subir.ps1`).
 7. LFS (26-10): el dueño autorizó subir los sonidos de interfaz (CC0) y los PNG del logo. Desde este contenedor GitHub rechaza las subidas a LFS: archivos pequeños van fuera de LFS con una excepción en .gitattributes (ya hecha para audio/ui/*.ogg). Nada más sin preguntar.
 8. Avisos (26-10): avisar al dueño con un evento de Google Calendar (recordatorio emergente a los 0 min, título «Dinastía: …») cuando haya una pregunta para él, se acaben las tareas, o la otra sesión pida algo o termine. La notificación push no le llega.
+9. Sesiones (26-10): coordina y reparte la sesión «Sesiones abiertas» (session_01Vh9g2WJE8b9XRhTkoJQkJC). La sesión de trabajo principal (session_01MtJBCsXzXVcDXqPJ2uAkHW, rama ccr-76d707c5-dwse9h) evalúa, trabaja, une ramas y pregunta ante dudas; las dos se consultan como balanza. Nadie queda parado: al terminar, auditar o pulir del plan.

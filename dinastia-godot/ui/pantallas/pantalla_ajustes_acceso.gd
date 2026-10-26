@@ -98,6 +98,66 @@ static func animaciones(p: Principal) -> void:
 		p._refrescar())
 	fila.add_child(b)
 
+## CONTRASTE ALTO (s3, 26-10-2026): la paleta «contraste» con un interruptor, que
+## es donde lo busca quien lo necesita. Al apagarlo vuelve a la paleta de antes.
+static func contraste(p: Principal) -> void:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila)
+	var et := p._texto(12, Principal.COL_TEXTO)
+	et.text = Idiomas.t("Contraste alto")
+	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	et.tooltip_text = Idiomas.t("Fondo negro, texto blanco y bordes marcados en todas las pantallas de gestión.")
+	fila.add_child(et)
+	var b := Button.new()
+	var activo := p._paleta == "contraste"
+	b.text = "SÍ" if activo else "NO"
+	b.pressed.connect(func() -> void:
+		if p._paleta == "contraste":
+			p._paleta = String(p.get_meta("paleta_antes", "bosque"))
+		else:
+			p.set_meta("paleta_antes", p._paleta)
+			p._paleta = "contraste"
+		p._aplicar_aspecto()
+		p._refrescar())
+	fila.add_child(b)
+
+## REASIGNAR LAS TECLAS DE LA INTERFAZ (s3): aceptar, volver y cambiar de pestaña.
+## Las del partido están en Controles (botón de abajo del todo de esta sección).
+static func teclas(p: Principal) -> void:
+	var t := p._texto(10, Principal.COL_SUAVE)
+	t.text = Idiomas.t("Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)")
+	## Los atajos del menú central (1-9, 0, N, F3, F5) van en la misma lista.
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	p._lista_ajustes.add_child(t)
+	for par: Array in TeclasInterfaz.acciones():
+		var accion := String(par[0])
+		var fila := HBoxContainer.new()
+		fila.add_theme_constant_override("separation", 8)
+		p._lista_ajustes.add_child(fila)
+		var et := p._texto(12, Principal.COL_TEXTO)
+		et.text = Idiomas.t(String(par[1]))
+		et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila.add_child(et)
+		var actual := p._texto(12, Principal.COL_SUAVE)
+		actual.text = TeclasInterfaz.texto_de(accion)
+		fila.add_child(actual)
+		var b := Button.new()
+		b.text = Idiomas.t("Cambiar")
+		b.pressed.connect(func() -> void:
+			b.text = Idiomas.t("Pulsa…")
+			var e := TeclasInterfaz.Escucha.new()
+			e.accion = accion
+			e.al_terminar = p._refrescar
+			p.add_child(e))
+		fila.add_child(b)
+	var r := Button.new()
+	r.text = Idiomas.t("Restaurar las teclas de fábrica")
+	r.pressed.connect(func() -> void:
+		TeclasInterfaz.restaurar()
+		p._refrescar())
+	p._lista_ajustes.add_child(r)
+
 ## Subtítulos: no hay interruptor porque no hay voces, y eso se dice en vez de
 ## dejar que el jugador lo busque.
 static func nota_subtitulos(p: Principal) -> void:
