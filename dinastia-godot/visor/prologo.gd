@@ -20,6 +20,9 @@ const SEG_PRESENTACION := 4.0
 const RADIO_LLEGADA := 1.8
 ## Las pruebas lo ponen: sin plano de presentación ni esperas del mentor.
 static var rapido := false
+## Partida cargada (fase 3, bloque 7): "" = el guion entero; "oficina" o "casa" = sin
+## guion, aparecer ahí con el PC listo (lo pone `Inicio` según `VidaCiudad.arranque_3d`).
+static var directo := ""
 
 var mundo: Mundo
 var club: Club
@@ -30,6 +33,7 @@ var hud: PrologoHud
 var dialogo: CuadroDialogo
 var pc: PcOficina
 var prensa: PrologoPrensa
+var vida: VidaCiudad
 var est: Dictionary = {}        ## `TunelVestuario.datos` del estadio del club
 var puerta := Vector3.ZERO      ## la puerta del club, en el mundo
 var paso_i := -1
@@ -42,10 +46,11 @@ var esperando_entrada := false
 var _aro: MeshInstance3D
 var _directivos: Array[PrologoMentor] = []
 var _directiva_hecha := false
+var _guardado_al_encender := false
 var _listo := false
 
 func _ready() -> void:
-	mundo = Principal.mundo_pregenerado
+	mundo = Principal.mundo_pregenerado if Principal.mundo_pregenerado != null else Principal.mundo_a_cargar
 	club = mundo.mi_club() if mundo != null else null
 	if club == null or mundo.obras == null or mundo.ciudad == null:
 		## Sin mundo que recorrer (una prueba vieja, un guardado raro): al menú de siempre.
@@ -70,12 +75,15 @@ func _ready() -> void:
 	dialogo = CuadroDialogo.new()
 	add_child(dialogo)
 	dialogo.visible = false
-	if not rapido:
+	if not rapido and directo == "":
 		hud.presentacion(PaisDatos.nombre(club.pais), Nombres.visible(club.nombre), SEG_PRESENTACION)
 		await get_tree().create_timer(SEG_PRESENTACION).timeout
 	_empezar_a_pie()
 	_listo = true
-	_ir_al_paso(0)
+	if directo != "":
+		_arrancar_directo(directo)
+	else:
+		_ir_al_paso(0)
 
 ## La ciudad del club (misma semilla y estadio que la ciudad de siempre).
 func _construir_mundo() -> void:
@@ -116,6 +124,26 @@ func _empezar_a_pie() -> void:
 	mentor.colocar(puerta + Vector3(0.8, 0.02, 3.0), 0.0)
 	_aro = PcOficina.crear_aro(vista._raiz3d, Color(1.0, 0.82, 0.3))
 	_aro.visible = false
+	vida = VidaCiudad.enganchar(explorador, vista, mundo)
+
+## Partida cargada: sin guion. El PC queda en la oficina; apareces allí o, el lunes a
+## las 08:00, en tu casa (y vas al club como quieras).
+func _arrancar_directo(d: String) -> void:
+	directo = ""
+	paso_i = PrologoPasos.indice("oficina")
+	destino = _centro_zona("Oficina del DT", 1)
+	destino_planta = 1
+	_entregar_oficina()
+	mentor.visible = false
+	if d == "casa" and vida != null:
+		vida.entrar_casa()
+		return
+	explorador._entrar_al_estadio()
+	explorador._ir_a_planta(1)
+	explorador.cuerpo.position = destino + Vector3(0, 0, 2.2)
+	explorador.rumbo = PI
+	explorador.cuerpo.rotation.y = PI
+	explorador._colocar_camara(1.0)
 
 # ---------------------------------------------------------------- el guion
 
@@ -314,8 +342,9 @@ func _entregar_oficina() -> void:
 
 ## La primera vez que enciendes el PC el prólogo queda hecho y la partida se guarda.
 func _al_encender_pc() -> void:
-	if mundo.prologo_visto:
+	if _guardado_al_encender:
 		return
+	_guardado_al_encender = true
 	mundo.prologo_visto = true
 	var pr := pc.principal()
 	if pr != null and pr.get("_partida") != null:

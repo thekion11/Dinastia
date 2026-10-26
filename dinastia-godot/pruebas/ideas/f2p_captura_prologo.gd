@@ -75,7 +75,9 @@ func _ready() -> void:
 	_cerrar_charla()
 	await _frames(3)
 	await _foto("6_directiva")          # la pregunta del presidente abierta
-	_p._responder_directiva(0)
+	for b in _p.hud._directiva.find_children("*", "Button", true, false):
+		(b as Button).pressed.emit()
+		break
 	await _frames(2)
 	_cerrar_charla()
 	## 7) La prensa: el plató de presentación (se abre al terminar de hablar el mentor).

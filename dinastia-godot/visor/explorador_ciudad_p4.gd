@@ -116,6 +116,8 @@ func _bajar_a_la_galeria() -> void:
 
 func _usar() -> void:
 	if estado == "interior":
+		if vida != null and vida.usar_interior():   ## tu casa o pedir de comer (fase 3)
+			return
 		## E junto a alguien que trabaja ahí: charlar (13-10-2026); si no, salir.
 		if not _int_cerca.is_empty():
 			_hablar_con_vecino(_int_cerca)
@@ -152,6 +154,8 @@ func _usar() -> void:
 		if not g.is_empty():
 			_menu_asc = RecorridoClub.dialogo(_capa, pe, g, cuerpo.position - CityBuilder.ESTADIO_EN)
 			return
+		if vida != null and vida.usar_en_estadio(_zona_est):   ## el comedor del plantel (fase 3)
+			return
 		if _zona_est == "Acceso":
 			_salir_del_estadio()
 		elif _zona_est == "Ascensor" and not is_instance_valid(_menu_asc):
@@ -169,6 +173,9 @@ func _usar() -> void:
 			_bajar_en_proxima = not _bajar_en_proxima
 		return
 	if _cerca.is_empty():
+		return
+	if _cerca["tipo"] == "lugar" and vida != null and vida.es_mi_casa(String(_cerca["k"])):
+		vida.entrar_casa()
 		return
 	if _cerca["tipo"] == "lugar" and modo == "pie" and (String(_cerca["k"]).begins_with("edificio_") \
 			or (InteriorInstalacion.tiene(String(_cerca["k"])) and not Instalaciones.CATALOGO.has(String(_cerca["k"])) \

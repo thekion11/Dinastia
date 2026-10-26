@@ -1,5 +1,5 @@
 extends "res://visor/explorador_ciudad_p2.gd"
-## [Capa 3/6 de `explorador_ciudad.gd`] _colocar_camara, _salir_del_edificio, _portero, _salir_del_estadio, _ir_a_planta, _subir_al_tren … (+11)
+## [Capa 3/6 de `explorador_ciudad.gd`] _colocar_camara, _salir_del_edificio, _portero, _salir_del_estadio, _ir_a_planta, _subir_al_tren … (+13)
 
 func _colocar_camara(delta: float) -> void:
 	## PLANO DE CONVERSACIÓN (13-10-2026): mientras alguien te habla, la cámara
@@ -112,6 +112,8 @@ func _colocar_camara(delta: float) -> void:
 		camara.look_at(cuerpo.position + Vector3(0, 1.4, 0) + adelante * 4.0, Vector3.UP)
 
 func _salir_del_edificio() -> void:
+	if vida != null:
+		vida.al_salir_interior()
 	_fundido()
 	if is_instance_valid(_int):
 		_int.queue_free()
@@ -275,6 +277,77 @@ func _entrar_en_edificio(k: String) -> void:
 	_cerca = {}
 	_aviso.text = ""
 	_colocar_camara(1.0)
+
+func _choca_mueble(rel: Vector3) -> bool:
+	var p := _INT_ORIGEN + rel
+	for c: Vector3 in _int_circulos:
+		var dx := p.x - c.x
+		var dz := p.z - c.y
+		var rr := c.z + 0.35
+		if dx * dx + dz * dz < rr * rr:
+			return true
+	return false
+
+func _mover_en_interior(delta: float) -> void:
+	if not is_instance_valid(_int):
+		_salir_del_edificio()
+		return
+	var e := _entrada()
+	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	var objetivo := (3.4 if corre else 1.6) * clampf(e.y, -0.5, 1.0)
+	_vel_pie = move_toward(_vel_pie, objetivo, (7.0 if absf(objetivo) > absf(_vel_pie) else 12.0) * delta)
+	vel = _vel_pie
+	rumbo -= e.x * delta * 2.6
+	var t := _int.tam_sala()
+	var rel := cuerpo.position - _INT_ORIGEN
+	var nueva := rel + Vector3(sin(rumbo), 0, cos(rumbo)) * vel * delta
+	## La puerta: pasar de la línea del hueco (|x| < 1,4) sale a la calle.
+	if nueva.z > t.z * 0.5 - 0.2 and absf(nueva.x) < 1.4:
+		_salir_del_edificio()
+		return
+	nueva.x = clampf(nueva.x, -t.x * 0.5 + 0.7, t.x * 0.5 - 0.7)
+	nueva.z = clampf(nueva.z, -t.z * 0.5 + 0.7, t.z * 0.5 - 0.7)
+	## Contra el mobiliario: se desliza por ejes, como en la calle.
+	if _choca_mueble(nueva):
+		if not _choca_mueble(Vector3(nueva.x, 0, rel.z)):
+			nueva.z = rel.z
+		elif not _choca_mueble(Vector3(rel.x, 0, nueva.z)):
+			nueva.x = rel.x
+		else:
+			nueva = rel
+			_vel_pie = 0.0
+	cuerpo.position = _INT_ORIGEN + Vector3(nueva.x, 0.05, nueva.z)
+	cuerpo.rotation.y = rumbo
+	if _es_dt:
+		_animar_dt(vel)
+	elif _anim != null:
+		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
+	_colocar_camara(delta)
+	_hud.text = Idiomas.t("🏠 %s  ·  W/S/A/D para moverte · V: vista · E o la puerta: salir") % String(_int.call("_sala_nombre"))
+	## ¿Alguien de la sala a mano para charlar?
+	_int_cerca = {}
+	var mejor := 1.9
+	for lista: Array in [_int.get("_fijos"), _int.get("_caminantes")]:
+		for f: Dictionary in lista:
+			var d: Dictionary = f["d"]
+			var n: Node3D = d.get("nodo")
+			if n == null or not is_instance_valid(n):
+				continue
+			var dist := Vector2(n.global_position.x - cuerpo.position.x, n.global_position.z - cuerpo.position.z).length()
+			if dist < mejor:
+				mejor = dist
+				if not f.has("charla"):
+					f["charla"] = {"nodo": n}
+				_int_cerca = f["charla"]
+	_aviso.text = Idiomas.t("E: charlar") if not _int_cerca.is_empty() else ""
+	if vida != null:
+		vida.avisar_interior()
+	if _t_burbuja > 0.0:
+		_t_burbuja -= delta
+		if _t_burbuja <= 0.0:
+			_burbuja.visible = false
+			if _cuadro != null:
+				_cuadro.cerrar()
 
 # ============================================================== EL ESTADIO (2.0)
 

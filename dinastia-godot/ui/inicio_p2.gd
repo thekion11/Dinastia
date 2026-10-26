@@ -1,5 +1,5 @@
 extends "res://ui/inicio_p1.gd"
-## [Capa 2/3 de `inicio.gd`] _guardar_ajuste, _degradado, _pintar_banner, _actualizar_picker, _clave_tinte, _tenir_particulas … (+11)
+## [Capa 2/3 de `inicio.gd`] _guardar_ajuste, _degradado, _pintar_banner, _actualizar_picker, _clave_tinte, _tenir_particulas … (+12)
 
 func _guardar_ajuste(k: String) -> void:
 	var c := ConfigFile.new()
@@ -177,7 +177,17 @@ func _continuar() -> void:
 	var m := _mundo_guardado if _mundo_guardado != null else Partida.cargar("partida")
 	if m == null:
 		return
+	_entrar_en(m)
+
+## Entra a una partida cargada (fase 3, bloque 7): con el prólogo visto y la vida encendida,
+## en 3D (la oficina, o tu casa el lunes a las 08:00); si no, el menú central de siempre.
+func _entrar_en(m: Mundo) -> void:
 	Principal.mundo_a_cargar = m
+	var d := VidaCiudad.arranque_3d(m)
+	if d != "":
+		PrologoDT.directo = d
+		get_tree().change_scene_to_file(OrquestadorMundo.PROLOGO)
+		return
 	get_tree().change_scene_to_file("res://escenas/principal.tscn")
 
 func _borrar_partida() -> void:
@@ -204,8 +214,7 @@ func _abrir_partida(nombre: String) -> void:
 	var m := Partida.cargar(nombre)
 	if m == null:
 		return
-	Principal.mundo_a_cargar = m
-	get_tree().change_scene_to_file("res://escenas/principal.tscn")
+	_entrar_en(m)
 
 # --- partida en curso ---------------------------------------------------------
 

@@ -96,10 +96,16 @@ func _marca(nombre: String, color_hex: String, alto: int = 28) -> Control:
 
 ## Abre la ciudad y arranca directamente el paseo ("pie") o la conducción ("coche").
 func _ver_ciudad_explorando(modo: String) -> void:
+	## Fase 3: sin coche propio (o en el taller) se sale a pie, y la vida se engancha al paseo.
+	var transp := VidaCiudad.transporte(mundo)
+	if modo == "coche" and not bool(transp["coche"]):
+		Aviso.mostrar(self, "vida", "🚌", Idiomas.t("Sin coche esta semana"), Idiomas.t(String(transp["motivo"])))
+		modo = "pie"
 	await _ver_ciudad_con_carga()
 	for h in get_children():
 		if h is VistaCiudad:
 			(h as VistaCiudad).explorar(modo)
+			VidaCiudad.enganchar((h as VistaCiudad)._explorador, h as VistaCiudad, mundo)
 
 func _aplicar_vista_compacta() -> void:
 	var sep := SEPARACION_COMPACTA if _vista_compacta else SEPARACION_NORMAL

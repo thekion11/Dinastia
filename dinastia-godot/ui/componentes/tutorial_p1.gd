@@ -119,6 +119,8 @@ static func contexto(mundo: Mundo, club_por_defecto: String = "tu club") -> Dict
 	ctx["caja"] = Eco.dinero(c.saldo)
 	ctx["anio"] = mundo.anio
 	ctx["socios"] = c.socios if c.socios > 0 else c.estadio_aforo
+	if mundo.junta != null and not mundo.junta.presidente.is_empty():
+		ctx["presidente"] = String(mundo.junta.presidente.get("nombre", ""))
 	if mundo.directiva != null:
 		ctx["objetivo"] = mundo.directiva.objetivo
 		ctx["confianza"] = mundo.directiva.confianza
@@ -175,7 +177,8 @@ static func mentor_de(modo: String, ctx: Dictionary) -> Dictionary:
 		"creador":
 			var socio := _nombre_mentor(club + "socio")
 			return {"nombre": socio, "cargo": "Socio fundador de %s" % club, "semilla": "m_" + socio, "canas": false}
-	var pres := _nombre_mentor(club + "pres")
+	## El presidente de verdad (la `Junta`), si ya existe: en el prólogo 3D es quien te recibe y quien pregunta en su despacho.
+	var pres := String(ctx.get("presidente", "")) if String(ctx.get("presidente", "")) != "" else _nombre_mentor(club + "pres")
 	return {"nombre": pres, "cargo": "Presidente de %s" % club, "semilla": "m_" + pres, "canas": true}
 
 static func _paso(titulo: String, texto: String, mision: String = "", objetivo: String = "",
