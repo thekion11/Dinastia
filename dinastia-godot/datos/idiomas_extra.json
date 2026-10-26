@@ -5466,7 +5466,12 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s rules out a goal by millimetres. Protests from both benches.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s shows another yellow: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s favours the home side: yellow for %s",
-  "Te toca mover el banquillo.": "Time to use your bench."
+  "Te toca mover el banquillo.": "Time to use your bench.",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "They qualify for next year's world club tournament: %s.",
+  "El torneo de selecciones del Viejo Continente.": "The national team tournament of the Old Continent.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "The Southern Nations Cup, the oldest national team tournament in the world.",
+  "Empieza el torneo. Medio mundo está pendiente.": "The tournament begins. Half the world is watching.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "The tournament is played in your country! The host cities fill up with visitors."
  },
  "pt": {
   "Historia": "História",
@@ -10935,7 +10940,12 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s anula um golo por milímetros. Protestos nos dois bancos.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s mostra outro amarelo: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s apita para a casa: amarelo para %s",
-  "Te toca mover el banquillo.": "Tens de mexer no banco."
+  "Te toca mover el banquillo.": "Tens de mexer no banco.",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Classificam-se para o torneio mundial de clubes do ano seguinte: %s.",
+  "El torneo de selecciones del Viejo Continente.": "O torneio de seleções do Velho Continente.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "A Copa das Nações do Sul, o torneio de seleções mais antigo do mundo.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Começa o torneio. Meio mundo está atento.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "O torneio é disputado no teu país! As cidades-sede enchem-se de visitantes."
  },
  "patrones": [
   [
@@ -16547,6 +16557,17 @@
    "$1 ($2) controla $3 dels teus jugadors. T'exigeix que fitxis un jove de la seva agència o «no respon de l'ànim» de $4 i companyia.",
    "$1 ($2) reprezentuje $3 twoich zawodników. Żąda, żebyś podpisał młodzieżowca z jego agencji, bo inaczej «nie ręczy za nastroje» zawodnika $4 i spółki.",
    "$1 ($2) oyuncularından $3 tanesini temsil ediyor. Ajansından bir genç oyuncu almanı istiyor; yoksa $4 ve arkadaşlarının «moralinden sorumlu değil»."
+  ],
+  [
+   "^(Copa [^.:]+) (\\d{4})$",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2"
   ]
  ],
  "fr": {
@@ -21923,7 +21944,12 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s refuse un but pour quelques millimètres. Protestations sur les deux bancs.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s sort un autre jaune : %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s siffle pour les locaux : jaune pour %s",
-  "Te toca mover el banquillo.": "À toi de jouer avec le banc."
+  "Te toca mover el banquillo.": "À toi de jouer avec le banc.",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Ils se qualifient pour le tournoi mondial des clubs de l'année suivante : %s.",
+  "El torneo de selecciones del Viejo Continente.": "Le tournoi des sélections du Vieux Continent.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "La Coupe des nations du Sud, le plus ancien tournoi de sélections du monde.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Le tournoi commence. La moitié du monde le suit.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Le tournoi se joue dans ton pays ! Les villes hôtes se remplissent de visiteurs."
  },
  "it": {
   "Historia": "Storia",
@@ -27299,7 +27325,12 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s annulla un gol per millimetri. Proteste dalle due panchine.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s estrae un altro giallo: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s fischia per i padroni di casa: giallo a %s",
-  "Te toca mover el banquillo.": "Tocca a te muovere la panchina."
+  "Te toca mover el banquillo.": "Tocca a te muovere la panchina.",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Si qualificano al torneo mondiale per club dell'anno successivo: %s.",
+  "El torneo de selecciones del Viejo Continente.": "Il torneo delle nazionali del Vecchio Continente.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "La Coppa delle nazioni del Sud, il torneo per nazionali più antico del mondo.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Inizia il torneo. Mezzo mondo è col fiato sospeso.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Il torneo si gioca nel tuo paese! Le città ospitanti si riempiono di visitatori."
  },
  "de": {
   "Historia": "Geschichte",
@@ -32675,7 +32706,12 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s erkennt ein Tor um Millimeter ab. Proteste auf beiden Bänken.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s zeigt eine weitere Gelbe: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s pfeift für die Heimelf: Gelb für %s",
-  "Te toca mover el banquillo.": "Jetzt musst du wechseln."
+  "Te toca mover el banquillo.": "Jetzt musst du wechseln.",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Sie qualifizieren sich für das Klub-Weltturnier des nächsten Jahres: %s.",
+  "El torneo de selecciones del Viejo Continente.": "Das Nationalmannschaftsturnier des Alten Kontinents.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "Der Nationenpokal des Südens, das älteste Nationalmannschaftsturnier der Welt.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Das Turnier beginnt. Die halbe Welt schaut zu.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Das Turnier findet in deinem Land statt! Die Austragungsstädte füllen sich mit Besuchern."
  },
  "ca": {
   "Historia": "Història",
@@ -38051,7 +38087,12 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s anul·la un gol per mil·límetres. Protestes a les dues banquetes.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s treu una altra groga: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s xiula per a casa: groga a %s",
-  "Te toca mover el banquillo.": "Et toca moure la banqueta."
+  "Te toca mover el banquillo.": "Et toca moure la banqueta.",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Es classifiquen per al torneig mundial de clubs de l'any següent: %s.",
+  "El torneo de selecciones del Viejo Continente.": "El torneig de seleccions del Vell Continent.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "La Copa de Nacions del Sud, el torneig de seleccions més antic del món.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Comença el torneig. Mig món n'està pendent.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "El torneig es juga al teu país! Les ciutats seu s'omplen de visitants."
  },
  "pl": {
   "Club": "Klub",
@@ -43707,7 +43748,12 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s anuluje gola o milimetry. Protesty na obu ławkach.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s pokazuje kolejną żółtą: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s gwiżdże pod gospodarzy: żółta dla %s",
-  "Te toca mover el banquillo.": "Czas sięgnąć po ławkę."
+  "Te toca mover el banquillo.": "Czas sięgnąć po ławkę.",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Kwalifikują się do światowego turnieju klubowego w przyszłym roku: %s.",
+  "El torneo de selecciones del Viejo Continente.": "Turniej reprezentacji Starego Kontynentu.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "Puchar Narodów Południa, najstarszy turniej reprezentacji na świecie.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Turniej się zaczyna. Pół świata patrzy.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Turniej odbywa się w twoim kraju! Miasta gospodarze wypełniają się gośćmi."
  },
  "tr": {
   "Club": "Kulüp",
@@ -49363,6 +49409,11 @@
   "⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.": "⚖️ %s milimetrik bir golü iptal ediyor. İki kulübede de itiraz.",
   "🟨 %s saca otra amarilla: %s": "🟨 %s bir sarı kart daha gösteriyor: %s",
   "🟨 %s cobra para la casa: amarilla a %s": "🟨 %s ev sahibini kolluyor: %s'e sarı kart",
-  "Te toca mover el banquillo.": "Yedek kulübesini kullanma zamanı."
+  "Te toca mover el banquillo.": "Yedek kulübesini kullanma zamanı.",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Gelecek yılın dünya kulüpler turnuvasına katılırlar: %s.",
+  "El torneo de selecciones del Viejo Continente.": "Yaşlı Kıta'nın milli takımlar turnuvası.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "Güney Uluslar Kupası, dünyanın en eski milli takımlar turnuvası.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Turnuva başlıyor. Dünyanın yarısı izliyor.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Turnuva senin ülkende oynanıyor! Ev sahibi şehirler ziyaretçilerle doluyor."
  }
 }
