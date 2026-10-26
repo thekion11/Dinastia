@@ -30,6 +30,12 @@ func _process(delta: float) -> void:
 		_cam_mira = _cam_mira.lerp(hacia, k)
 		_camara.fov = lerpf(_camara.fov, fov_dest, k)
 		_camara.look_at_from_position(_cam_pos, _cam_mira, Vector3.UP)
+		## El desenfoque, siempre JUSTO detrás del DT (26-10): fijo a 3,2 m,
+		## en el plano general emborronaba también al DT.
+		var at := _camara.attributes as CameraAttributesPractical
+		if at != null:
+			at.dof_blur_far_distance = _cam_pos.distance_to(Vector3(0, 1.5, -0.78)) + 0.45
+			at.dof_blur_far_transition = 0.8
 	if _dt_cabeza != null:
 		## Un asentimiento apenas perceptible: sin ningún movimiento, la cabeza
 		## esférica se lee como un maniquí en cuanto se detiene la cámara.

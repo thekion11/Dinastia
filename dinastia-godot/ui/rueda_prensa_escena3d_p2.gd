@@ -93,26 +93,22 @@ func _montar_podio_procedural() -> void:
 	mic_mat.albedo_color = Color(0.05, 0.05, 0.06)
 	mic_mat.metallic = 0.2
 	mic_mat.roughness = 0.5
+	## PEQUEÑOS Y A LA ALTURA DE LA BOCA (26-10): antes eran dos postes
+	## que, vistos desde la cámara, quedaban más altos que el DT. Ahora un
+	## cuello fino corto que sube y se inclina hacia el DT, con la cápsula
+	## pequeña apuntándole a la boca.
 	for lado in [-1.0, 1.0]:
-		var base_pos := Vector3(lado * 0.22, 1.1, -0.05)
-		var cuello := MeshInstance3D.new()
-		var cm := CylinderMesh.new()
-		cm.top_radius = 0.012
-		cm.bottom_radius = 0.014
-		cm.height = 0.32
-		cuello.mesh = cm
-		cuello.material_override = mic_mat
-		cuello.position = base_pos + Vector3(0, 0.16, 0)
-		cuello.rotation_degrees.x = -22.0 * lado * 0.4
-		add_child(cuello)
+		var base_pos := Vector3(lado * 0.16, 1.1, -0.02)
+		var punta := Vector3(lado * 0.09, 1.3, -0.3)
+		add_child(_segmento(base_pos, punta, 0.006, mic_mat))
 		var capsula := MeshInstance3D.new()
 		var capm := CapsuleMesh.new()
-		capm.radius = 0.028
-		capm.height = 0.1
+		capm.radius = 0.016
+		capm.height = 0.06
 		capsula.mesh = capm
 		capsula.material_override = mic_mat
-		capsula.rotation_degrees.z = 90.0
-		capsula.position = base_pos + Vector3(0.05 * lado, 0.32, 0)
+		capsula.position = punta
+		capsula.rotation_degrees.x = 70.0
 		add_child(capsula)
 
 ## La caja lisa detrás del modelo generado. Mismas medidas que tenía el

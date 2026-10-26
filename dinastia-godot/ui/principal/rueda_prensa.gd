@@ -1,5 +1,5 @@
-extends Control
-## LA RUEDA DE PRENSA 2D (fase 0, paso 6b: sale de `Principal`, capas 2/17 y de
+extends "res://ui/principal/rueda_prensa_base.gd"
+## LA RUEDA DE PRENSA (fase 0, paso 6b: sale de `Principal`, capas 2/17 y de
 ## `PantallaDespacho`, capa 2/2).
 ##
 ## Una sola responsabilidad: la cinemática de pantalla completa de la rueda -plató
@@ -9,21 +9,11 @@ extends Control
 ## (`_repintar_posturas()`, `_responder(i)`, `_rueda_desde`) quedan como puentes
 ## para las pruebas y capturas que ya los usan.
 ##
-## Es el propio `Control` modal (antes era un `Control` suelto que armaba
-## Principal): sus hijos siguen siendo [fondo, raiz] y en la raíz la fila de
-## posturas sigue en el índice 2, como esperan las capturas.
+## Es el propio `Control` modal. Hijos: [fondo, Plato (3D), Capa (interfaz)];
+## en la capa, cabecera, Franja (pregunta) y Columna (respuestas).
 ##
 ## Cómo se usa: `var r := _PrincipalRuedaPrensa.new(p); p.add_child(r); r.abrir(e)`. Se
 ## cuelga del árbol ANTES de `abrir()` porque el plató 3D se monta ya dentro.
-
-var p: Principal
-## Lo que la repregunta cambia sin rehacer el plató (B5).
-var _quien: Label
-var _pregunta: Label
-var _opciones: VBoxContainer
-var _reloj: ProgressBar
-## Cuándo salió la pregunta en pantalla (ms), para medir el titubeo.
-var desde := 0
 
 func _init(principal: Principal = null) -> void:
 	p = principal
@@ -32,218 +22,294 @@ func _init(principal: Principal = null) -> void:
 	add_to_group(MentorVoz.GRUPO_TAPA)
 
 ## Se cierra y deja libre el hueco de Principal (`_rueda_pop`).
+##
+## SALIDA SUAVE: el nodo se libera ya (las pruebas y Principal cuentan con
+## ello), pero deja en su lugar un telón del mismo color que se desvanece en
+## ~0,3 s, para que el juego no aparezca de golpe.
 func cerrar() -> void:
 	if p != null and p._rueda_pop == self:
 		p._rueda_pop = null
+	if p != null and is_inside_tree() and not Animar.reducidas():
+		var telon := ColorRect.new()
+		telon.color = COL_FONDO
+		telon.set_anchors_preset(Control.PRESET_FULL_RECT)
+		telon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		p.add_child(telon)
+		var tw := telon.create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+		tw.tween_property(telon, "modulate:a", 0.0, 0.3)
+		tw.tween_callback(telon.queue_free)
 	queue_free()
 
 ## Contesta la opción `i` (los botones numerados y los atajos).
 func responder(i: int) -> void:
 	tras_responder(p.mundo.prensa.responder(i, segundos()))
 
-## Repinta solo la fila de posturas -el botón que se marca al tocar una-, sin
-## tocar el plató 3D ni las opciones.
+## Repinta solo el bloque de posturas -el botón que se marca al tocar una-, sin
+## tocar el plató 3D ni las opciones. Se cambia en su mismo sitio de la columna.
 func repintar_posturas() -> void:
-	var raiz := get_child(1) as VBoxContainer
-	if raiz == null or raiz.get_child_count() < 3:
+	if _posturas == null or not is_instance_valid(_posturas) or _posturas.get_parent() == null:
 		return
-	var vieja := raiz.get_child(2)
-	raiz.remove_child(vieja)
+	var vieja := _posturas
+	var padre := vieja.get_parent()
+	var idx := vieja.get_index()
+	var f := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
+	var tenia_foco := f != null and vieja.is_ancestor_of(f)
+	padre.remove_child(vieja)
 	vieja.queue_free()
-	raiz.add_child(_fila_posturas())
-	raiz.move_child(raiz.get_child(raiz.get_child_count() - 1), 2)
+	_posturas = _fila_posturas()
+	padre.add_child(_posturas)
+	padre.move_child(_posturas, idx)
+	## Si el foco estaba en la fila vieja (ratón o Tab), pasa a la marcada.
+	if tenia_foco or f == null:
+		for b in _posturas.find_children("*", "Button", true, false):
+			if (b as Button).button_pressed:
+				(b as Button).grab_focus()
 
-
-## LA RUEDA DE PRENSA, DE PANTALLA COMPLETA.
+## LA RUEDA DE PRENSA, EN EL PLATÓ 3D (26-10, pedido del dueño).
 ##
-## El usuario la comparó con la conferencia de prensa de FC26 -pantalla
-## entera, cámara y todo lo demás oculto mientras dura- y marcó que "eso
-## debería tener su propio lugar". La primera versión la encogía dentro de
-## la misma tarjetita de "asuntos pendientes" que comparte con el agente que
-## presiona o el jugador que te busca: un `SubViewport` de 900×360 compitiendo
-## por espacio con la barra superior y la tabla de posiciones. Ahora es una
-## cinemática de pantalla completa, MISMO PATRÓN que `Sorteo`
-## (`ui/principal/sorteos.gd`): un `Control` colgado
-## directo de `self`, por encima de todo, que se cierra solo al responder.
+## El plató (`RuedaPrensaEscena3D`: sala, DT en el atril, periodistas y la
+## cámara que cambia de plano sola) ocupa TODA la pantalla, y la interfaz va
+## encima como en una retransmisión, sin cajas apiladas:
+##   - arriba a la izquierda, el rótulo y la placa del DT, pequeños;
+##   - a la derecha, una columna semitransparente con las respuestas, el
+##     «cómo lo dices», el texto libre (plegado) y el reloj discreto;
+##   - abajo, la franja de televisión: periodista, medio y la pregunta.
+## El plató se desplaza a la izquierda medio ancho de columna, para que el DT
+## quede en el centro de lo que se ve y la columna no le tape la cara.
+## Si no hay club (o el 3D no se puede montar), queda el fondo liso: respaldo.
 ##
-## SIGUE SIN INVENTAR DIÁLOGO. La pregunta, las opciones y el "cómo lo dices"
-## son exactamente los mismos datos de siempre (`Prensa.entrevista`); esto
-## solo cambia DÓNDE se presentan.
+## SIGUE SIN INVENTAR DIÁLOGO: los datos son los de `Prensa.entrevista`.
 func abrir(e: Dictionary) -> void:
-	var pop: Control = self
-
+	z_index = 100
+	clip_contents = true
 	var fondo := ColorRect.new()
-	fondo.color = Color(0.035, 0.038, 0.045)
+	fondo.color = COL_FONDO
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	pop.add_child(fondo)
+	add_child(fondo)
+	_fondo = fondo
+	_montar_plato()
+	var capa := Control.new()
+	capa.name = "Capa"
+	capa.set_anchors_preset(Control.PRESET_FULL_RECT)
+	capa.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(capa)
+	capa.add_child(_cabecera())
+	_franja = _franja_tv()
+	capa.add_child(_franja)
+	_columna = _columna_respuestas(e)
+	capa.add_child(_columna)
+	pintar_pregunta(e)
+	_tapar_lo_demas()
+	_entrar()
+	Animar.aparecer(_opciones, 0.2)
+	_enfocar.call_deferred()
 
-	var raiz := VBoxContainer.new()
-	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
-	raiz.offset_left = 48.0; raiz.offset_right = -48.0
-	raiz.offset_top = 28.0; raiz.offset_bottom = -28.0
-	raiz.add_theme_constant_override("separation", 10)
-	pop.add_child(raiz)
-
-	var t := p._texto(13, p.COL_ACENTO)
-	t.text = Idiomas.t("🎙️ RUEDA DE PRENSA")
-	raiz.add_child(t)
-
-	## EL PLATÓ 3D. Con pantalla completa ya no hace falta encogerlo a 220 px
-	## de alto: se le da la mayor parte del espacio -`SIZE_EXPAND_FILL`- y una
-	## resolución de `SubViewport` bastante mayor, para que se note el salto.
-	var caja := Control.new()
-	caja.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	caja.clip_contents = true
-	raiz.add_child(caja)
-
+## El plató 3D a pantalla completa (corrido medio ancho de columna).
+func _montar_plato() -> void:
+	var mio := p.mundo.mi_club()
+	if mio == null:
+		return
 	var vp_cont := SubViewportContainer.new()
+	vp_cont.name = "Plato"
 	vp_cont.stretch = true
 	vp_cont.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vp_cont.offset_left = -float(ANCHO_COLUMNA)
 	vp_cont.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	caja.add_child(vp_cont)
+	add_child(vp_cont)
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
 	vp.transparent_bg = false
 	vp.msaa_3d = Viewport.MSAA_4X
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	vp.size = Vector2i(1600, 720)
 	vp_cont.add_child(vp)
 	var escena := RuedaPrensaEscena3D.new()
 	vp.add_child(escena)
-	var mio := p.mundo.mi_club()
-	## QUIÉN HABLA DE VERDAD (14-9-2026). Si el jugador no es él mismo el
-	## entrenador -ayudante de campo, director deportivo, dueño con el banco
-	## delegado-, `Roles.dt_empleado` no está vacío: es ESE quien da la rueda
-	## de prensa, no el jugador -mostrar tu propia cara ahí sería que el dueño
-	## del club diera la conferencia técnica en tu lugar-. El empleado no
-	## tiene editor de aspecto propio -nadie personaliza a alguien que no
-	## eres tú-, así que `CaraDT.look_de_nombre()` le da uno determinístico
-	## por su nombre: el mismo empleado siempre sale igual.
-	var nombre_dt := ""
-	var look_dt := {}
-	if p.mundo.roles != null:
-		if not p.mundo.roles.dt_empleado.is_empty():
-			nombre_dt = p.mundo.roles.dt_nombre()
-			look_dt = CaraDT.look_de_nombre(nombre_dt)
-		else:
-			nombre_dt = p.mundo.roles.nombre
-			look_dt = p.mundo.roles.look_efectivo()
-	## EL FONDO: los escudos de tu liga, no sponsors genéricos (14-9-2026). La
-	## rueda de prensa solo se abre tras un partido de LIGA
-	## (`Mundo.rueda_tras_resultado()`, ver `nucleo/prensa.gd`), así que la
-	## competencia correspondiente es siempre tu propia liga.
-	var clubes_competencia: Array = []
-	## Tras una copa o un continental (C1), los escudos de ESA competición.
+	## Tras una copa o un continental (C1), los escudos de ESA competición;
+	## si no, los de tu liga.
+	var clubes: Array = []
 	if p.mundo.prensa != null and p.mundo.prensa.competicion_rueda != "liga" and not p.mundo.prensa.clubes_rueda.is_empty():
-		clubes_competencia = p.mundo.prensa.clubes_rueda
-	elif mio != null:
+		clubes = p.mundo.prensa.clubes_rueda
+	else:
 		var liga := p.mundo.liga_de(mio)
 		if liga != null:
-			clubes_competencia = liga.clubes
-	if mio != null:
-		escena.montar(mio, p.COL_ACENTO, Calidad.ALTO, look_dt, clubes_competencia)
+			clubes = liga.clubes
+	escena.montar(mio, p.COL_ACENTO, Calidad.ALTO, _look_dt(), clubes)
 
-	## LA PLACA DEL DT, arriba a la izquierda -mismo "chyron" con foto y
-	## nombre que pone cualquier transmisión de verdad cuando habla alguien-.
-	if not nombre_dt.is_empty():
-		var placa := PanelContainer.new()
-		placa.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		placa.offset_left = 14.0; placa.offset_top = 14.0
-		placa.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var sb_placa := StyleBoxFlat.new()
-		sb_placa.bg_color = Color(0, 0, 0, 0.6)
-		sb_placa.content_margin_left = 8.0; sb_placa.content_margin_right = 12.0
-		sb_placa.content_margin_top = 6.0; sb_placa.content_margin_bottom = 6.0
-		sb_placa.corner_radius_top_left = 6; sb_placa.corner_radius_top_right = 6
-		sb_placa.corner_radius_bottom_left = 6; sb_placa.corner_radius_bottom_right = 6
-		placa.add_theme_stylebox_override("panel", sb_placa)
-		caja.add_child(placa)
-		var fila_placa := HBoxContainer.new()
-		fila_placa.add_theme_constant_override("separation", 8)
-		placa.add_child(fila_placa)
-		var foto_dt := TextureRect.new()
-		foto_dt.texture = CaraDT.textura(look_dt, 36)
-		foto_dt.custom_minimum_size = Vector2(36, 36)
-		foto_dt.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		foto_dt.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		fila_placa.add_child(foto_dt)
-		var nom_dt := p._texto(12, Principal.COL_TEXTO)
-		nom_dt.text = nombre_dt
-		nom_dt.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		fila_placa.add_child(nom_dt)
+## QUIÉN HABLA DE VERDAD (14-9-2026): si el DT es un empleado (ayudante,
+## director deportivo, dueño con el banco delegado), da él la rueda, con un
+## aspecto fijo por su nombre; si no, tú con tu aspecto.
+func _nombre_dt() -> String:
+	if p.mundo.roles == null:
+		return ""
+	return p.mundo.roles.dt_nombre() if not p.mundo.roles.dt_empleado.is_empty() else p.mundo.roles.nombre
 
-	## EL SUBTÍTULO, sobre la imagen -el "lower third" de la foto de Ancelotti
-	## que mandó el usuario-. Alto fijo con `offset_top` negativo, no un
-	## preset a secas: un `Control` no recorta a sus hijos solo, y un preset
-	## sin offset propio da alto CERO justo donde termina la caja, así que el
-	## contenido se derrama hacia abajo -se vio en la primera captura, tapando
-	## los controles de más abajo-.
-	var subt := PanelContainer.new()
-	subt.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	subt.offset_top = -84.0
-	subt.offset_bottom = 0.0
-	subt.mouse_filter = Control.MOUSE_FILTER_IGNORE
+func _look_dt() -> Dictionary:
+	if p.mundo.roles == null:
+		return {}
+	if not p.mundo.roles.dt_empleado.is_empty():
+		return CaraDT.look_de_nombre(p.mundo.roles.dt_nombre())
+	return p.mundo.roles.look_efectivo()
+
+## Caja semitransparente común (columna, cabecera, franja).
+static func _caja(alfa: float, radio: int, margen: float) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0, 0, 0, 0.72)
-	sb.content_margin_left = 18.0; sb.content_margin_right = 18.0
-	sb.content_margin_top = 10.0; sb.content_margin_bottom = 10.0
-	subt.add_theme_stylebox_override("panel", sb)
-	caja.add_child(subt)
-	var col_subt := VBoxContainer.new()
-	col_subt.add_theme_constant_override("separation", 3)
-	subt.add_child(col_subt)
-	var quien := p._texto(11, p.COL_ACENTO)
-	col_subt.add_child(quien)
-	var q := p._texto(15, Principal.COL_TEXTO)
-	q.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	col_subt.add_child(q)
-	_quien = quien
-	_pregunta = q
+	sb.bg_color = Color(0.02, 0.025, 0.03, alfa)
+	sb.set_corner_radius_all(radio)
+	sb.content_margin_left = margen; sb.content_margin_right = margen
+	sb.content_margin_top = margen * 0.7; sb.content_margin_bottom = margen * 0.7
+	return sb
 
-	raiz.add_child(_fila_posturas())
+## Arriba a la izquierda: «RUEDA DE PRENSA» y la placa del DT (foto y nombre).
+func _cabecera() -> Control:
+	var placa := PanelContainer.new()
+	placa.position = Vector2(MARGEN, MARGEN)
+	placa.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	placa.add_theme_stylebox_override("panel", _caja(0.55, 8, 10.0))
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 10)
+	placa.add_child(fila)
+	var nombre := _nombre_dt()
+	if not nombre.is_empty():
+		var foto := TextureRect.new()
+		foto.texture = CaraDT.textura(_look_dt(), 32)
+		foto.custom_minimum_size = Vector2(32, 32)
+		foto.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		foto.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		fila.add_child(foto)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 0)
+	fila.add_child(col)
+	var t := p._texto(11, p.COL_ACENTO)
+	t.text = Idiomas.t("🎙️ RUEDA DE PRENSA")
+	t.uppercase = true
+	col.add_child(t)
+	if not nombre.is_empty():
+		var nom := p._texto(13, Principal.COL_TEXTO)
+		nom.text = nombre
+		col.add_child(nom)
+	return placa
+
+## Abajo, a todo el ancho: la franja de televisión con periodista y pregunta.
+func _franja_tv() -> PanelContainer:
+	var franja := PanelContainer.new()
+	franja.name = "Franja"
+	franja.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	franja.offset_top = -float(ALTO_FRANJA)
+	franja.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sb := _caja(0.78, 0, 22.0)
+	sb.border_width_top = 3
+	sb.border_color = Color(p.COL_ACENTO, 0.7)
+	franja.add_theme_stylebox_override("panel", sb)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 4)
+	franja.add_child(col)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 12)
+	col.add_child(fila)
+	_quien = p._texto(14, p.COL_ACENTO)
+	fila.add_child(_quien)
+	_medio = p._texto(12, Principal.COL_SUAVE)
+	_medio.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_medio.clip_text = true
+	_medio.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_medio.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	fila.add_child(_medio)
+	_pregunta = p._texto(19, Principal.COL_TEXTO)
+	_pregunta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_pregunta.max_lines_visible = 2
+	_pregunta.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	col.add_child(_pregunta)
+	return franja
+
+## A la derecha, entre la cabecera y la franja: la columna de respuestas.
+## Su alto es el de su contenido (sin caja vacía debajo); en el peor idioma
+## mide ~380 px y el hueco libre a 1280×720 es de ~570, así que no llega a la
+## franja (la prueba r6b lo comprueba).
+func _columna_respuestas(e: Dictionary) -> PanelContainer:
+	var caja := PanelContainer.new()
+	caja.name = "Columna"
+	caja.anchor_left = 1.0; caja.anchor_right = 1.0
+	caja.offset_left = -float(ANCHO_COLUMNA + MARGEN); caja.offset_right = -float(MARGEN)
+	caja.offset_top = float(MARGEN)
+	caja.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	caja.add_theme_stylebox_override("panel", _caja(0.6, 10, 14.0))
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	caja.add_child(v)
+	var tit := p._texto(11, Principal.COL_SUAVE)
+	tit.text = Idiomas.t("Tu respuesta")
+	tit.uppercase = true
+	v.add_child(tit)
 	_opciones = _fila_opciones(e)
-	raiz.add_child(_opciones)
-	raiz.add_child(_fila_texto_libre())
-	## EL RELOJ DE LA SALA (B5, "lenguaje corporal"): una barra que se llena en
-	## `Prensa.TITUBEO_SEG` segundos. Cuando se llena, contestar ya cuenta como
-	## titubeo. Se ve para que no sea una trampa.
-	var reloj := ProgressBar.new()
-	reloj.show_percentage = false
-	reloj.custom_minimum_size = Vector2(0, 6)
-	reloj.max_value = Prensa.TITUBEO_SEG
-	raiz.add_child(reloj)
-	_reloj = reloj
-	pintar_pregunta(e)
+	v.add_child(_opciones)
+	_posturas = _fila_posturas()
+	v.add_child(_posturas)
+	v.add_child(_fila_texto_libre())
+	v.add_child(_fila_reloj())
+	return caja
 
-## Repinta solo la fila de posturas -el botón que se marca al tocar una-, sin
+## Mientras dura, ni el panel de objetivos ni el mentor se ven (el mentor ya
+## respeta `GRUPO_TAPA`); y la rueda vuelve al frente si Principal cuelga
+## algo nuevo encima (los objetivos se crean al refrescar).
+func _tapar_lo_demas() -> void:
+	if is_instance_valid(p._panel_obj) and p._panel_obj.visible:
+		p._panel_obj.visible = false
+		_objetivos_ocultos = true
+	if not p.child_entered_tree.is_connected(_al_frente):
+		p.child_entered_tree.connect(_al_frente)
+
+func _al_frente(n: Node) -> void:
+	if n is PanelObjetivos:
+		(n as Control).visible = false
+		_objetivos_ocultos = true
+	_subir.call_deferred()
+
+func _subir() -> void:
+	if get_parent() != null and not is_queued_for_deletion():
+		get_parent().move_child(self, -1)
+
+## Deshace `_tapar_lo_demas()` al irse (también si se libera sin `cerrar()`).
+func _exit_tree() -> void:
+	if p == null:
+		return
+	if p.child_entered_tree.is_connected(_al_frente):
+		p.child_entered_tree.disconnect(_al_frente)
+	if _objetivos_ocultos and is_instance_valid(p._panel_obj):
+		p._panel_obj.visible = true
 
 
 ## La pregunta en pantalla y el reloj a cero. La usa también la repregunta,
 ## que cambia el texto sin rehacer el plató 3D.
 func pintar_pregunta(e: Dictionary) -> void:
-	var quien_txt := String(e.get("quien", "Periodista"))
+	## «Nombre · Medio» (y a veces «, a pie de campo» o «(repregunta)», que
+	## vienen en castellano del núcleo): el nombre arriba, el resto al lado.
+	var quien_txt := String(e.get("quien", Idiomas.t("Periodista")))
+	var repregunta := quien_txt.ends_with(" (repregunta)")
+	quien_txt = quien_txt.trim_suffix(" (repregunta)")
+	var partes := quien_txt.split(" · ", true, 1)
+	var extra: Array[String] = []
+	if partes.size() > 1:
+		extra.append(partes[1])
+	if repregunta:
+		extra.append(Idiomas.t("Repregunta"))
 	var per := String(e.get("periodista", ""))
 	if per != "":
 		var rel := p.mundo.prensa.relacion_con(per)
 		var trato := Idiomas.t("te aprecia") if rel >= 65 else (Idiomas.t("no te quiere") if rel <= 35 else Idiomas.t("sin bando"))
-		quien_txt += "  ·  %s, %s" % [Idiomas.t(String(e.get("perfil", ""))), trato]
+		extra.append("%s, %s" % [Idiomas.t(String(e.get("perfil", ""))), trato])
 	if bool(e.get("memoria", false)):
-		quien_txt += Idiomas.t("  ·  🧠 recuerda lo que dijiste")
-	_quien.text = "🎙️ " + quien_txt.to_upper()
-	_pregunta.text = String(e.get("pregunta", ""))
-	desde = Time.get_ticks_msec()
+		extra.append(Idiomas.t("  ·  🧠 recuerda lo que dijiste").trim_prefix("  ·  "))
+	_quien.text = "🎙️ " + String(partes[0]).to_upper()
+	if _medio != null:
+		_medio.text = "  ·  ".join(extra)
+	var pregunta := String(e.get("pregunta", ""))
+	_pregunta.text = pregunta
+	desde = Time.get_ticks_msec() + int(_lectura(pregunta) * 1000.0)
+	if _atajos != null and _opciones != null:
+		_atajos.text = Idiomas.t("1-%d o ↑↓ + Enter · LB/RB: tono") % _opciones.get_child_count()
 	if is_instance_valid(_reloj):
 		_reloj.value = 0.0
 		_reloj.modulate = Color.WHITE
-		var tw := _reloj.create_tween()
-		tw.tween_property(_reloj, "value", Prensa.TITUBEO_SEG, Prensa.TITUBEO_SEG)
-		tw.tween_callback(func() -> void:
-			if is_instance_valid(_reloj):
-				_reloj.modulate = Tema.MAL)
-		_reloj.set_meta("tween", tw)
-
-func segundos() -> float:
-	return float(Time.get_ticks_msec() - desde) / 1000.0
 
 func _fila_opciones(e: Dictionary) -> VBoxContainer:
 	var col := VBoxContainer.new()
@@ -263,12 +329,14 @@ func _fila_opciones(e: Dictionary) -> VBoxContainer:
 		else:
 			b2.text = str(op)
 		b2.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b2.custom_minimum_size = Vector2(0, 42)
+		b2.custom_minimum_size = Vector2(0, 40)
+		## Salta de línea dentro de la columna en vez de salirse de ella.
+		b2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		## Mismo estilo que los diálogos (13-10-2026): píldora con borde dorado
 		## al pasar, numerada.
 		CuadroDialogo.respuesta(b2)
 		b2.text = "%d.  %s" % [i + 1, b2.text]
-		b2.add_theme_font_size_override("font_size", 15)
+		b2.add_theme_font_size_override("font_size", 14)
 		b2.pressed.connect(func() -> void: responder(i))
 		col.add_child(b2)
 	return col
@@ -290,6 +358,7 @@ func tras_responder(r: Dictionary) -> void:
 		viejas.queue_free()
 		pintar_pregunta(e)
 		Animar.aparecer(_opciones)
+		_enfocar.call_deferred()
 		Sonido.toca("cambio", Sonido.Bus.INTERFAZ)
 		return
 	## Se cierra la cinemática -ya respondiste, no hay nada más que ver- y se
@@ -299,9 +368,23 @@ func tras_responder(r: Dictionary) -> void:
 
 ## Responder con tus palabras. El tono lo decide `Prensa.clasificar_respuesta()`
 ## por palabras clave, en local: nada sale del ordenador.
-func _fila_texto_libre() -> HBoxContainer:
+## Va PLEGADO (26-10): un botón lo despliega, para no apilar un campo vacío
+## bajo las opciones.
+func _fila_texto_libre() -> VBoxContainer:
+	var bloque := VBoxContainer.new()
+	bloque.add_theme_constant_override("separation", 6)
+	var abre := Button.new()
+	abre.name = "AbrirTextoLibre"
+	abre.text = Idiomas.t("✍️ Con tus palabras")
+	abre.flat = true
+	abre.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	abre.add_theme_font_size_override("font_size", 12)
+	bloque.add_child(abre)
 	var fila := HBoxContainer.new()
+	fila.name = "TextoLibre"
+	fila.visible = false
 	fila.add_theme_constant_override("separation", 6)
+	bloque.add_child(fila)
 	var campo := LineEdit.new()
 	campo.placeholder_text = Idiomas.t("…o responde con tus propias palabras")
 	campo.max_length = 120
@@ -317,23 +400,31 @@ func _fila_texto_libre() -> HBoxContainer:
 			tras_responder(p.mundo.prensa.responder_texto(dicho, segundos()))
 	b.pressed.connect(func() -> void: enviar.call())
 	campo.text_submitted.connect(enviar)
-	return fila
+	abre.pressed.connect(func() -> void:
+		fila.visible = not fila.visible
+		if fila.visible:
+			campo.grab_focus())
+	return bloque
 
 ## "Cómo lo dices". Vive aparte de `abrir()` porque
 ## se repinta sola al tocar una postura -sin cerrar ni reabrir el plató 3D
 ## entero, que sería tirar y rehacer el `SubViewport` por nada-.
-func _fila_posturas() -> HBoxContainer:
-	var posturas := HBoxContainer.new()
-	posturas.add_theme_constant_override("separation", 6)
+func _fila_posturas() -> VBoxContainer:
+	var bloque := VBoxContainer.new()
+	bloque.add_theme_constant_override("separation", 4)
 	var et := p._texto(11, Principal.COL_SUAVE)
 	et.text = Idiomas.t("Cómo lo dices:")
-	et.custom_minimum_size = Vector2(96, 0)
-	posturas.add_child(et)
+	bloque.add_child(et)
+	## Fila que salta de línea: en alemán o polaco no se sale de la columna.
+	var posturas := HFlowContainer.new()
+	posturas.add_theme_constant_override("h_separation", 6)
+	posturas.add_theme_constant_override("v_separation", 6)
+	bloque.add_child(posturas)
 	var lista_cuerpos: Dictionary = p.mundo.prensa.cuerpos()
 	for k: String in lista_cuerpos:
 		var datos: Array = lista_cuerpos[k]
 		var b := Button.new()
-		b.text = "%s %s" % [String(datos[0]), String(datos[1])]
+		b.text = Idiomas.t("%s %s" % [String(datos[0]), String(datos[1])])
 		b.toggle_mode = true
 		b.button_pressed = (k == p.mundo.prensa.cuerpo)
 		b.add_theme_font_size_override("font_size", 11)
@@ -341,4 +432,4 @@ func _fila_posturas() -> HBoxContainer:
 			p.mundo.prensa.fijar_cuerpo(k)
 			repintar_posturas())
 		posturas.add_child(b)
-	return posturas
+	return bloque

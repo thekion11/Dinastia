@@ -206,6 +206,12 @@ func _refrescar() -> void:
 		return
 	var p := personaje()
 	var e := _mostrar_errores()
+	## LA EDAD SE VE (26-10-2026): arrugas, canas y entradas del personaje siguen a la
+	## edad de Datos; viaja en el aspecto para que la banda lo vea igual.
+	if int(_hojas.asp.get("edad", 0)) != int(p["edad"]):
+		_hojas.asp["edad"] = int(p["edad"])
+		(_p["aspecto"] as Dictionary)["edad"] = int(p["edad"])
+		_estudio.mostrar(_hojas.asp)
 	_titulo_paso.text = Idiomas.t("PASO %d · TU PERSONAJE") % _paso
 	var completo := String(p["nombre_completo"])
 	_ficha_nombre.text = completo if completo != "" else Idiomas.t("Tu nombre")

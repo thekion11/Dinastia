@@ -212,6 +212,21 @@ func _cerrar_tanda() -> void:
 			_anim(p, ["lamento", "manos_cabeza", "cuclillas_lamento", "brazos_jarra"][_rng.randi() % 4], true, 99.0)
 	_terminar()
 
+## Antes de la tanda se guardan tu nota y tus números: `_empezar_tanda` suelta
+## a `usuario` (la nota del portero y la del resultado dependen de él) y los
+## penales de la tanda no son goles, tiros ni paradas del partido.
+func _empezar_tanda() -> void:
+	var nota := nota_usuario()
+	var antes := {"tiros": stats["tiros"], "a_puerta": stats["a_puerta"]}
+	super()
+	tanda["nota_usuario"] = nota
+	tanda["stats_antes"] = antes
+
+func nota_usuario() -> float:
+	if tanda.has("nota_usuario"):
+		return float(tanda["nota_usuario"])
+	return super()
+
 func _paso_tanda(delta: float) -> void:
 	var fase := String(tanda["fase"])
 	var lz: Dictionary = tanda["lanzador"]
@@ -269,7 +284,7 @@ func _paso_tanda(delta: float) -> void:
 				_resultado_tanda(false, "¡Fallado!")
 				return
 			if pos(lz).distance_to(detras) < 0.6 or _t_estado > 4.0:
-				var lanza_tu := tu >= 0 and tanda_turno() == tu
+				var lanza_tu := (tu >= 0 and tanda_turno() == tu) or tanda_me_toca_tirar()
 				if lanza_tu and _t_estado > 1.0:
 					tanda["fase"] = "apuntar"
 					_t_estado = 0.0

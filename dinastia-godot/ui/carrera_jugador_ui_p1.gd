@@ -323,8 +323,11 @@ func _nueva_temporada() -> void:
 
 # ---------------------------------------------------------------- jugar
 
+## Si esta semana hay copa, manda la copa (como en el modo entrenador): es a
+## partido único, con prórroga y penales (`CarreraCopa`).
 func _partido_de_la_semana(club: Club) -> Array:
-	return CarreraJugador.partido_de_la_semana(mundo, club)
+	var cp := CarreraCopa.partido(mundo, club)
+	return cp if not cp.is_empty() else CarreraJugador.partido_de_la_semana(mundo, club)
 
 ## Cierra la semana: el partido (jugado o simulado), el mundo y lo que te pasa.
 ## El aviso de la semana une varias frases con «·»: cada una se traduce por
@@ -338,31 +341,53 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 	if not ya_entrenado:
 		_msg = carrera.entrenar(m)
 	var titular := carrera.es_titular(m)
+	var es_copa := CarreraCopa.es_copa(m, par)
 	if bool(res.get("sin_minutos", false)):
 		res = {}
 	if not res.is_empty() and not par.is_empty():
 		var p := Partido.new(par[0], par[1])
 		p.goles_local = int(res["goles_local"])
 		p.goles_visita = int(res["goles_visita"])
+		## La tanda del césped va al acta: la copa la lee con `penales()`.
+		var pen: Array = res.get("penales", [])
+		if es_copa and p.goles_local == p.goles_visita and pen.size() == 2:
+			p.penales_externos(int(pen[0]), int(pen[1]))
 		m.avanzar_semana(p)
 		carrera.tras_partido(m, res)
 		carrera.partidos_jugables += 1
 		_msg += "  ·  " + Idiomas.t("Final %d-%d, tu nota %.1f (%d').") % [p.goles_local, p.goles_visita, float(res["nota"]), int(res.get("minutos", 90))]
 		if bool(res.get("sustituido", false)):
 			_msg += " " + Idiomas.t("El DT te cambió.")
+		if es_copa:
+			_msg += " " + CarreraCopa.texto_penales(p, club)
 	else:
 		var goles_antes := j.goles if j != null else 0
 		var gc_antes := CarreraPortero.goles_en_contra(m, club)
-		m.avanzar_semana()
+		## La copa simulada también se decide con prórroga y penales; tus goles
+		## son los del cruce (la liga de tu club se simula aparte esa semana).
+		var copa_p: Partido = null
+		if es_copa:
+			copa_p = Partido.new(par[0], par[1])
+			CarreraCopa.simular(copa_p)
+		var g_copa := (j.goles - goles_antes) if j != null else 0
+		m.avanzar_semana(copa_p)
+		if copa_p != null:
+			_msg += "  ·  " + Idiomas.t("Copa: %s %d-%d %s.") % [Nombres.visible(copa_p.local.nombre), copa_p.goles_local,
+				copa_p.goles_visita, Nombres.visible(copa_p.visita.nombre)]
+			var tp := CarreraCopa.texto_penales(copa_p, club)
+			if tp != "":
+				_msg += " " + tp
 		if titular and not par.is_empty() and j != null:
-			var g := j.goles - goles_antes
+			var g := g_copa if es_copa else j.goles - goles_antes
 			## La nota del simulado: la de tu nivel, más lo que marcaste (el
 			## portero, por lo que encajó: `CarreraPortero.nota_simulada`).
 			var nota := clampf(5.6 + float(j.ovr - 55) * 0.04 + float(g) * 0.9 + randf_range(-0.6, 0.6), 4.0, 9.5)
 			var gc := CarreraPortero.goles_en_contra(m, club) - gc_antes
+			if copa_p != null:
+				gc = copa_p.goles_visita if copa_p.local == club else copa_p.goles_local
 			if j.es_portero():
 				nota = CarreraPortero.nota_simulada(j, gc, randf_range(-0.5, 0.5))
-			j.goles = goles_antes
+			j.goles -= g
 			carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": 0, "nota": snappedf(nota, 0.1), "titular": true, "encajados": gc})
 			_msg += "  ·  " + Idiomas.t("Jugaste (simulado): %d gol(es), nota %.1f.") % [g, nota]
 		elif not titular and not par.is_empty() and j != null and j.disponible():
@@ -393,7 +418,7 @@ func _jugar_partido() -> void:
 	if par.is_empty():
 		return
 	_msg = carrera.entrenar(mundo)
-	var pj := PartidoJugable.abrir(self, mundo, carrera, par[0], par[1], 240.0)
+	var pj := PartidoJugable.abrir(self, mundo, carrera, par[0], par[1], 240.0, -1, null, CarreraCopa.es_copa(mundo, par))
 	pj.terminado.connect(func(res: Dictionary) -> void: _cerrar_semana(res, true))
 
 ## Suplente: el DT decide si entras y cuándo. Si entras, juegas desde ese
@@ -410,5 +435,5 @@ func _ir_al_banco() -> void:
 		_msg += "  ·  " + Idiomas.t("Calentaste toda la segunda parte, pero el DT no te hizo entrar.")
 		_cerrar_semana({"sin_minutos": true}, true)
 		return
-	var pj := PartidoJugable.abrir(self, mundo, carrera, par[0], par[1], 240.0, minuto)
+	var pj := PartidoJugable.abrir(self, mundo, carrera, par[0], par[1], 240.0, minuto, null, CarreraCopa.es_copa(mundo, par))
 	pj.terminado.connect(func(res: Dictionary) -> void: _cerrar_semana(res, true))

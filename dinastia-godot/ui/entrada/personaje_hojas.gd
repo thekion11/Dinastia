@@ -161,6 +161,13 @@ func _hoja_cara() -> Control:
 		ControlesPersonaje.selector(vb, asp, "Cara", "cara", caras, cb, mujer,
 			"por ahora, solo con cuerpo de hombre" if mujer else "mezclas de varias personas: no son la cara de nadie")
 	ControlesPersonaje.muestras(vb, asp, "Color de ojos", "ojos", PersonajeDT.OJOS, cb)
+	## FORMA DE CARA Y CEJAS (26-10-2026): lo que permite el modelo actual (no trae
+	## blendshapes ni huesos de mandíbula o nariz).
+	ControlesPersonaje.deslizador(vb, asp, "Forma de cara", "forma_cara", -1.0, 1.0, 0.05,
+		func(v: float) -> String: return Idiomas.t("Alargada") if v < -0.3 else (Idiomas.t("Ancha") if v > 0.3 else Idiomas.t("Normal")), cb)
+	if not mujer:
+		ControlesPersonaje.deslizador(vb, asp, "Cejas", "cejas", -1.0, 1.0, 0.05,
+			func(v: float) -> String: return Idiomas.t("Finas") if v < -0.3 else (Idiomas.t("Pobladas") if v > 0.3 else Idiomas.t("Normal")), cb)
 	var peinados: Array = []
 	for k: String in PersonajeDT.CORTES:
 		peinados.append([k, String(PEINADOS.get(k, k.capitalize()))])
@@ -179,6 +186,7 @@ func _hoja_cara() -> Control:
 			"elige antes una cara" if sin_cara else ("no va con gorra" if con_gorra else "cortes sacados de fotos, sobre la cara elegida"))
 	ControlesPersonaje.muestras(vb, asp, "Color de pelo", "color_pelo", PersonajeDT.COLORES_PELO, cb)
 	ControlesPersonaje.interruptor(vb, asp, "Barba", "barba", cb, mujer, "solo con cuerpo de hombre" if mujer else "")
+	ControlesPersonaje.nota(vb, "Arrugas, canas y entradas siguen a tu edad (en Datos).")
 	return raiz(vb)
 
 func _hoja_ropa() -> Control:

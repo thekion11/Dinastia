@@ -42,6 +42,15 @@ static func describir(clave: String) -> String:
 	return clave
 
 func _montar() -> void:
+	## SIEMPRE ENCIMA (26-10, captura con la pantalla real): el panel de
+	## objetivos se cuelga de Principal al refrescar, DESPUÉS del diálogo, y
+	## salía sin oscurecer y recibiendo clics por encima del velo. Se dibuja
+	## arriba (z) y vuelve al frente del árbol (entrada) si entra otro hermano.
+	z_index = 100
+	add_to_group(MentorVoz.GRUPO_TAPA)
+	var padre := get_parent()
+	if padre != null:
+		padre.child_entered_tree.connect(_al_frente)
 	var velo := ColorRect.new()
 	velo.color = Color(0, 0, 0, 0.72)
 	velo.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -50,28 +59,58 @@ func _montar() -> void:
 	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(centro)
 	var caja := PanelContainer.new()
-	caja.custom_minimum_size = Vector2(560, 0)
-	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.ACENTO))
+	caja.custom_minimum_size = Vector2(640, 0)
+	var sb := Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.ACENTO)
+	## Más aire dentro: en la captura el texto casi tocaba el borde.
+	sb.content_margin_left = 28; sb.content_margin_right = 28
+	sb.content_margin_top = 22; sb.content_margin_bottom = 24
+	caja.add_theme_stylebox_override("panel", sb)
 	centro.add_child(caja)
 	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", Tema.ESPACIO)
+	v.add_theme_constant_override("separation", Tema.ESPACIO + 4)
 	caja.add_child(v)
-	v.add_child(Tema.rotulo(Idiomas.t("📋 ¿Hacer habitual el plan?")))
+	var tit := Tema.etiqueta(20, Tema.ORO, Idiomas.t("📋 ¿Hacer habitual el plan?"))
+	v.add_child(tit)
 	var txt := Idiomas.t("En los últimos %d partidos tu plan saltó siempre igual: %s. ¿Quieres que esa sea tu táctica habitual?") % [
 		_tactica.racha_plan_n, describir(_tactica.racha_plan_clave)]
 	var q := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, txt)
 	q.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	q.custom_minimum_size = Vector2(584, 0)
 	v.add_child(q)
+	var ops := VBoxContainer.new()
+	ops.add_theme_constant_override("separation", 8)
+	v.add_child(ops)
+	var n := 0
 	for o: Array in [["siempre", Idiomas.t("Siempre, todo el partido")],
 			["desde_60", Idiomas.t("Solo desde el minuto 60")], ["no", Idiomas.t("No, gracias")]]:
+		n += 1
 		var b := Button.new()
 		b.name = "Opcion_" + String(o[0])
-		b.text = String(o[1])
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.custom_minimum_size = Vector2(0, 40)
+		b.custom_minimum_size = Vector2(0, 44)
+		## Mismo estilo que la rueda de prensa y los diálogos, numerado: las
+		## teclas 1-3 y el mando (foco) contestan sin ratón.
+		CuadroDialogo.respuesta(b)
+		b.text = "%d.  %s" % [n, String(o[1])]
 		b.pressed.connect(elegir.bind(String(o[0])))
-		v.add_child(b)
+		ops.add_child(b)
+	(ops.get_child(0) as Control).grab_focus.call_deferred()
 	Animar.aparecer(caja, 0.0, 0.3)
+
+func _al_frente(_n: Node) -> void:
+	_subir.call_deferred()
+
+func _subir() -> void:
+	if get_parent() != null and not is_queued_for_deletion():
+		get_parent().move_child(self, -1)
+
+func _unhandled_input(ev: InputEvent) -> void:
+	if ev is InputEventKey and ev.pressed and not ev.echo:
+		var i := ["siempre", "desde_60", "no"]
+		var k := (ev as InputEventKey).keycode - KEY_1
+		if k >= 0 and k < 3:
+			get_viewport().set_input_as_handled()
+			elegir(String(i[k]))
 
 ## Público para que la prueba pueda pulsar sin ratón.
 func elegir(respuesta: String) -> void:
@@ -80,5 +119,7 @@ func elegir(respuesta: String) -> void:
 	cerrado.emit()
 	## Fuera del padre ya: si no, la de la semana siguiente chocaría de nombre.
 	if get_parent() != null:
+		if get_parent().child_entered_tree.is_connected(_al_frente):
+			get_parent().child_entered_tree.disconnect(_al_frente)
 		get_parent().remove_child(self)
 	queue_free()

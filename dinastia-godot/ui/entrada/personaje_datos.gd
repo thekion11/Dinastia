@@ -151,6 +151,7 @@ static func cerrar(p: Dictionary) -> Dictionary:
 	r["apellido"] = pulir_nombre(String(r.get("apellido", "")))
 	r["nombre_completo"] = completo_de(r)
 	var asp := PersonajeDT.aspecto(r.get("aspecto", {}))
+	asp["edad"] = int(r.get("edad", EDAD_DEFECTO))
 	r["aspecto"] = asp
 	r["mujer"] = String(asp["cuerpo"]) == "female"
 	var l := {}

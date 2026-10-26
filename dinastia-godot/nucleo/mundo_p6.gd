@@ -259,6 +259,21 @@ func _cerrar_campeonato() -> Dictionary:
 	return resumen
 
 ## Cierra la temporada: cumpleanos, retiros y un campeonato nuevo.
+## EL QUE SIGUE, RETASADO (26-10-2026, `pruebas/ideas/eq_diez_temporadas.gd`). El cumpleaños y el año de
+## contrato que se resta cambian lo que vale, pero `tasar()` solo corría si cambiaba la media: el de 21 que
+## llegaba a su techo conservaba hasta los 30 el factor de edad de 21 (×1,70 en vez de ×1,00), y en diez
+## temporadas un tercio de la IA valía ×1,4 su tasación y el valor medio del mercado subía ×1,56 con la media
+## plana. Se tasa por `Entrenamiento` (que suma el parte médico y el bono de habilidades) si lo hay. El
+## SUELDO no se toca: es el del contrato firmado (`tasar()` lo recalcula, y aquí no se firma nada).
+func _sigue_retasado(siguen: Array[Jugador], j: Jugador) -> void:
+	var sueldo := j.sueldo
+	if entrenamiento != null:
+		entrenamiento._tasar(j)
+	else:
+		j.tasar()
+	j.sueldo = sueldo
+	siguen.append(j)
+
 ## LOS CONTRATOS VENCEN (28-9-2026, informe externo: "sin validación de fin
 ## de contrato"). `anios_contrato` no bajaba nunca: el aviso "sin renovar, se
 ## van gratis" no se cumplía y nadie quedaba libre. Ahora cada temporada le
@@ -319,7 +334,11 @@ func _subir_de_cantera(c: Club) -> void:
 		var edad := Azar.ent(17, 20)
 		## El canterano entra flojo y con techo: media baja, potencial alto. Es
 		## lo que hace que la cantera sea una apuesta y no una fuente de cracks.
-		var ovr := c.rep - 20 + Azar.ent(0, 8)
+		## Con TOPE (26-10, `eq_diez_temporadas`): la base sigue a la reputación hasta 86 y ahí se planta. Sin
+		## tope, el grande que se escapa a 96 subía chicos de 17 con 76-84 y en diez temporadas tenía tres a
+		## cinco 85+ con menos de 22 (ni las mejores academias del mundo promocionan juveniles así). La
+		## tirada es la misma de antes: no cambia ninguna otra del mundo.
+		var ovr := mini(c.rep - 20, 66) + Azar.ent(0, 8)
 		## Pero no todo hueco se tapa con un juvenil (25-10, paquete cant): con
 		## solo chicos de 17-20 el mundo bajaba de 26,9 a 25,6 años de media en
 		## cinco temporadas. Dos de cada cinco son un repuesto hecho, de 22-30.

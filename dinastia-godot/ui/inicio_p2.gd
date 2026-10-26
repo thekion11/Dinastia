@@ -185,6 +185,28 @@ func _borrar_partida() -> void:
 	_mundo_guardado = null
 	_actualizar_continuar()
 
+## Exportar / importar / abrir otra partida (plan §10): siempre visible, porque
+## importar tiene sentido justo cuando todavía no hay ninguna.
+var _archivo_ui: PartidaArchivoUI
+
+func _poner_botones_archivo() -> void:
+	if _archivo_ui == null:
+		_archivo_ui = PartidaArchivoUI.new()
+		add_child(_archivo_ui)
+		_archivo_ui.lista_cambiada.connect(_actualizar_continuar)
+		_archivo_ui.abrir_pedido.connect(_abrir_partida)
+	var fila := _archivo_ui.construir_botones()
+	_panel_continuar.add_child(fila)
+	## Debajo de la tarjeta de «Continuar», que se añade después.
+	fila.move_to_front.call_deferred()
+
+func _abrir_partida(nombre: String) -> void:
+	var m := Partida.cargar(nombre)
+	if m == null:
+		return
+	Principal.mundo_a_cargar = m
+	get_tree().change_scene_to_file("res://escenas/principal.tscn")
+
 # --- partida en curso ---------------------------------------------------------
 
 ## "PARTIDA EN CURSO" -`panelEstadoPartida()` del HTML-: escudo, club, la
@@ -195,6 +217,7 @@ func _actualizar_continuar() -> void:
 	for h in _panel_continuar.get_children():
 		_panel_continuar.remove_child(h)
 		h.free()
+	_poner_botones_archivo()
 	if not _hay_partida():
 		return
 	_mundo_guardado = Partida.cargar("partida")

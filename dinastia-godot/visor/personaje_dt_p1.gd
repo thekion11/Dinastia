@@ -31,6 +31,8 @@ const BASE := {
 	## 13-10-2026: más personalización.
 	"ojos": "3d2a1a", "pendiente": false, "cadena": false,
 	"manga_corta": false, "tatuaje": 0,
+	## 26-10-2026 (opción A): forma de cara, cejas y la edad que se ve (0 = sin marcas).
+	"forma_cara": 0.0, "cejas": 0.0, "edad": 0,
 }
 const PIELES := ["f6dccb", "f3d2b8", "f1c7a5", "e8bc96", "e0b08a", "d29f78", "c68d68", "b57a55",
 	"a86b45", "8a5536", "7a4a2e", "6b4028", "4a2c1c", "3a2216"]
@@ -174,7 +176,10 @@ static func _objetivos(a: Dictionary) -> Dictionary:
 	o["spine_02"] = Vector3(1.0 + 0.16 * c + 0.06 * b, 1.0, 1.0 + 0.14 * c + 0.16 * b)
 	o["spine_03"] = Vector3(1.0 + 0.16 * c + 0.10 * h, 1.0, 1.0 + 0.14 * c)
 	o["neck_01"] = Vector3(1.0 + 0.16 * c, 1.0, 1.0 + 0.16 * c)
-	o["Head"] = Vector3.ONE * (1.0 + 0.12 * k)
+	## Forma de cara: el modelo no trae blendshapes ni huesos de cara; solo se puede
+	## ensanchar (+) o alargar (−) la cabeza entera con el hueso «Head».
+	var fc := float(a.get("forma_cara", 0.0))
+	o["Head"] = Vector3(1.0 + 0.06 * fc, 1.0 - 0.035 * fc, 1.0 + 0.02 * fc) * (1.0 + 0.12 * k)
 	for s: String in ["_l", "_r"]:
 		o["clavicle" + s] = Vector3(1.0 + 0.32 * h, 1.0 + 0.08 * c, 1.0 + 0.08 * c)
 		o["upperarm" + s] = Vector3(1.0, 1.0 + 0.22 * c, 1.0 + 0.22 * c)

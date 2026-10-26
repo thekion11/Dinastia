@@ -23,6 +23,8 @@ movie_writer/mjpeg_quality=0.55
 
 [autoload]
 
+; Registro va el primero: así oye también los fallos al arrancar los demás (nucleo/registro.gd).
+Registro="*res://nucleo/registro.gd"
 Datos="*res://nucleo/datos.gd"
 Azar="*res://nucleo/azar.gd"
 Eco="*res://nucleo/economia.gd"

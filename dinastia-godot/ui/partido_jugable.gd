@@ -260,6 +260,8 @@ func _montar(duracion_mitad: float) -> void:
 	_repe.setup(motor.jugadores, balon)
 	_repe.terminada.connect(_fin_repeticion)
 	motor.terminado.connect(_al_terminar)
+	motor.eliminatoria = eliminatoria
+	PartidoJugableTanda.poner(self)
 	## La cámara, detrás de tu jugador.
 	_cam = Camera3D.new()
 	_cam.fov = 58.0
@@ -280,7 +282,7 @@ func _montar(duracion_mitad: float) -> void:
 ## lanzamientos, detrás del balón.
 func _actualizar_camara(delta: float) -> void:
 	var foco: Vector3
-	var d := MotorJugable.dir_ataque(_es_local_usuario)
+	var d := 1.0 if not motor.tanda.is_empty() else MotorJugable.dir_ataque(_es_local_usuario)
 	if motor.apuntando or motor.estado == "saque" and not motor.usuario.is_empty() and motor.saque.get("lanzador") == motor.usuario:
 		foco = motor.balon.position
 	elif not motor.usuario.is_empty():
@@ -289,7 +291,8 @@ func _actualizar_camara(delta: float) -> void:
 		foco = motor.balon.position
 	var detras := Vector3(0, 12.5, -15.0 * d)
 	var mira := foco + Vector3(0, 0.5, 10.0 * d)
-	if motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "penal":
+	## En la tanda, todos tiran al arco de +Z: siempre detrás del punto de penal.
+	if not motor.tanda.is_empty() or motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "penal":
 		detras = Vector3(0, 3.2, -7.0 * d)
 	elif motor.apuntando:
 		## Córner y falta: detrás del balón, mirando adonde apuntas.
@@ -351,8 +354,9 @@ func _actualizar_apunte() -> void:
 	var tipo := String(motor.saque.get("tipo", ""))
 	var lugar: Vector3 = motor.saque["lugar"]
 	if tipo == "penal":
-		var arco_z := MotorJugable.LARGO * MotorJugable.dir_ataque(_es_local_usuario)
-		var x := -float(motor.apunte["x"]) * MotorJugable.dir_ataque(_es_local_usuario) * (MotorJugable.PALO - 0.35)
+		var da := 1.0 if motor.estado == "tanda" else MotorJugable.dir_ataque(_es_local_usuario)
+		var arco_z := MotorJugable.LARGO * da
+		var x := -float(motor.apunte["x"]) * da * (MotorJugable.PALO - 0.35)
 		var y := 0.35 + float(motor.apunte["y"]) * 1.8
 		var p3 := Vector3(x, y, arco_z)
 		if not _cam.is_position_behind(p3):

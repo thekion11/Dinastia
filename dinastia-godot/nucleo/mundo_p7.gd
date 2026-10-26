@@ -59,7 +59,7 @@ func nueva_temporada() -> Dictionary:
 				continue   ## se retira
 			if _vence_contrato(j, c):
 				continue   ## se va libre
-			siguen.append(j)
+			_sigue_retasado(siguen, j)
 		c.plantilla = siguen
 		_subir_de_cantera(c)
 		_repartir_dorsales(c)

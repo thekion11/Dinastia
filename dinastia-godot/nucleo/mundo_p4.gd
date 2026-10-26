@@ -158,7 +158,7 @@ func factor_tv_horario() -> float:
 func _copa_es_de(p: Partido) -> bool:
 	if p == null or copa == null:
 		return false
-	var par := copa.emparejamiento_de(mi_club())
+	var par := copa.emparejamiento_de(club_de_la_copa())
 	return par.size() == 2 and par[0] == p.local and par[1] == p.visita
 
 ## Lo mismo que `_copa_es_de()`, pero para UN continental concreto -hay

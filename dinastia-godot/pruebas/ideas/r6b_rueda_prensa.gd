@@ -33,19 +33,27 @@ func _abrir_y_responder(pr: Principal) -> void:
 	var r := pr._rueda_pop as _Rueda
 	_comprobar(r != null and r.get_parent() == pr, "Principal la abre: un nodo de la clase nueva, hijo de Principal")
 	_comprobar(r != null and r.is_in_group(MentorVoz.GRUPO_TAPA), "tapa al mentor mientras dura")
-	var raiz := r.get_child(1) as VBoxContainer if r != null else null
-	_comprobar(raiz != null and raiz.get_child_count() == 6, "estructura de siempre: título, plató, posturas, opciones, texto libre, reloj")
+	_comprobar(not is_instance_valid(pr._panel_obj) or not pr._panel_obj.visible, "el panel de objetivos no se ve durante la rueda")
+	## 26-10: el plató 3D ocupa la pantalla y la interfaz va encima (franja
+	## de TV abajo y columna de respuestas a la derecha, sin solaparse).
+	_comprobar(r != null and r.get_node_or_null("Plato") is SubViewportContainer, "el camino normal es el plató 3D a pantalla completa")
+	var col := r.get_node_or_null("Capa/Columna") as Control if r != null else null
+	var franja := r.get_node_or_null("Capa/Franja") as Control if r != null else null
+	_comprobar(col != null and franja != null, "hay franja de TV y columna de respuestas")
+	if col != null and franja != null:
+		_comprobar(col.get_global_rect().end.y <= franja.get_global_rect().position.y + 0.5, "la columna termina encima de la franja: no se pisan")
 	_comprobar(r != null and r._pregunta.text == String(prensa.entrevista.get("pregunta", "")), "la pregunta en pantalla es la de Prensa")
 	var nops := (prensa.entrevista.get("opciones", []) as Array).size()
 	_comprobar(r != null and r._opciones.get_child_count() == nops, "un botón por opción (%d)" % nops)
 	## Puente `_rueda_desde`: lo ajustan las capturas para simular titubeo.
 	pr._rueda_desde = 1234
 	_comprobar(r != null and r.desde == 1234 and pr._rueda_desde == 1234, "el puente _rueda_desde llega a la rueda")
-	## Tocar una postura repinta solo esa fila (en el índice 2).
-	var fila_vieja := raiz.get_child(2) if raiz != null else null
+	## Tocar una postura repinta solo ese bloque.
+	var fila_vieja: Control = r._posturas if r != null else null
+	var idx := fila_vieja.get_index() if fila_vieja != null else -1
 	prensa.fijar_cuerpo("dubitativo")
 	pr._repintar_posturas()
-	_comprobar(raiz != null and raiz.get_child(2) != fila_vieja and raiz.get_child(2) is HBoxContainer, "repintar_posturas cambia solo la fila 2")
+	_comprobar(r != null and r._posturas != fila_vieja and r._posturas.get_index() == idx, "repintar_posturas cambia solo el bloque de posturas, en su sitio")
 	var vueltas := 0
 	while pr._rueda_pop != null and vueltas < 5:
 		pr._responder(_calma(prensa.entrevista))

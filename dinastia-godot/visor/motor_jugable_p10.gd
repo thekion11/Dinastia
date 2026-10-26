@@ -39,6 +39,12 @@ func tanda_me_toca_parar() -> bool:
 	var gk: Dictionary = tanda.get("portero", {})
 	return not autopiloto and id_usuario != "" and not gk.is_empty() and String(gk.get("id", "")) == id_usuario
 
+## TU PENAL EN LA TANDA (Carrera, 26-10-2026): si el lanzador eres tú, apuntas
+## y cargas como en cualquier penal (`_apuntar_usuario`: stick, altura, TIRO).
+func tanda_me_toca_tirar() -> bool:
+	var lz: Dictionary = tanda.get("lanzador", {})
+	return not autopiloto and id_usuario != "" and not lz.is_empty() and String(lz.get("id", "")) == id_usuario
+
 ## El equipo que tira ahora.
 func tanda_turno() -> int:
 	if tanda.is_empty():
@@ -67,6 +73,11 @@ func _tras_tiro_tanda() -> void:
 		var eq := 0 if bool(lz.get("es_local", true)) else 1
 		tiros[eq] = maxi(int(tiros[eq]) - 1, 0)
 	_tiro_vivo = {}
+	## El penal de la tanda no es un tiro del partido: ni tus tiros ni tus
+	## tiros a puerta (ni la nota) lo cuentan.
+	var antes: Dictionary = tanda.get("stats_antes", {})
+	for k: String in antes:
+		stats[k] = antes[k]
 	apuntando = false
 	cargando = false
 	_anillo_serenidad(false)

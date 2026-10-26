@@ -141,6 +141,7 @@ func _pintar_ajustes() -> void:
 		"partida":
 			p._pintar_ranuras()
 			_pintar_traspaso_partida()
+			AjustesRegistro.pintar(p)
 			var t2 := p._texto(11, Principal.COL_SUAVE)
 			t2.text = Idiomas.t("GUARDADO")
 			p._lista_ajustes.add_child(t2)

@@ -44,6 +44,9 @@ func _centro(j: Jugador, club: Club) -> Control:
 			pv.add_child(_lbl(20, TEXTO, "Tu club descansa esta jornada."))
 		else:
 			var rival: Club = par[1] if par[0] == club else par[0]
+			if CarreraCopa.es_copa(mundo, par):
+				pv.add_child(_lbl(15, Color("ffd24a"), "🏆 %s · %s  ·  %s" % [mundo.copa.nombre, Idiomas.t(mundo.copa.nombre_de_ronda()),
+					Idiomas.t("partido único: si hay empate, prórroga y penales")]))
 			var fila := HBoxContainer.new()
 			fila.add_theme_constant_override("separation", 12)
 			pv.add_child(fila)

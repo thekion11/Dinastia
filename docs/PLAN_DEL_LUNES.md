@@ -1856,14 +1856,15 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 943, 1051, 1055, 1072, 1075, 1076, 1077, 1078, 1079, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1099, 1100
 
 ## 8. Hallazgos de la tanda de pulido (25-10), sin arreglar
-- Mercado: el **valor de los jugadores de la IA ×1,30** infla precios; medir con `pruebas/ideas/eco_medicion.gd` tras la curva nueva y decidir el factor.
-- Contratos: la nómina propia se duplicaba sin fichar (210k→447k/semana en 3 temporadas): volver a medir tras las renovaciones anticipadas de la IA (`mc_contratos`).
+- Balance (medido por `pruebas/ideas/eq_diez_temporadas.gd`, especial `todo`; 10 temporadas × 3 semillas): **el chico que baja a Segunda sin gestionar se hunde** (sueldos 160-220 % de los ingresos, −1 a −1,5 M por año, veedor desde t3): decidir si hay cláusula de descenso en los sueldos o si es el castigo buscado. **El grande sin gestionar se hace rico** (rep 88→96, sueldos 17-27 % de los ingresos, caja 6,6→65-95 M en 10 años; pasa M-208 porque su referencia sube con la rep).
+- Entrenamiento de tu plantel: un chico de 17 con techo 97 sube +10-11 en una temporada con el plan por defecto (`entrenamiento_p2.gd` `_sesion_general`); en la IA el tope es ~+3.
+- `Mundo.generar(["CHI"], semilla)` da el MISMO mundo en t0 con 101, 202 y 303 (la semilla solo cambia la simulación): ¿buscado?
 - Rendimiento: **~230 000 objetos** por vuelta de menús (`pruebas/ideas/fugas_menus.gd`; ya no crecen, pero el total es alto): buscar quién los crea (pestañas que se rehacen enteras).
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
-- Partido: falta la **captura del diálogo de plan de partido** con la cámara real.
 - Carrera: falta la animación de parada del portero en modo jugador.
 - Ciudad: **ceder el paso** y el choque real de coches no están vistos con la cámara real; los **peatones solo esperan**, no esquivan.
-- Rueda de prensa 2D (ya en su clase, `ui/principal/rueda_prensa.gd`): falta pulirla (petición 8 de §9).
+
+- Primera hora (informe onb, 26-10): botones de la cabecera de Principal solo con icono (⚽ 💰 🌍), sin texto ni tooltip; el panel OBJETIVOS tapa la ficha del jugador en la columna derecha; el tutorial no se puede volver a abrir si se cierra; las pestañas abiertas fuera de su bloque (Finanzas, Mercado) muestran el carril de chips del bloque anterior; `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol. Hacer tras unir la sesión 3 (toca `ui/principal_p*`).
 
 ## 9. Sesión 2 (interfaz): rama `ccr-76d707c5-dwse9h-s2`, sin fusionar
 Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `datos/trad_parches/s2_*.json` con `sumar_traducciones.py` y `s2_sobrescrituras.json` con un script con candado (ver el informe).
@@ -1871,7 +1872,6 @@ Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `d
 Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hecha: 67 líneas):
 2. `nucleo/idiomas.gd` `_t`: no separa el icono inicial con varias oraciones (el móvil lo esquiva con `_t_icono`).
 7. Negociación (`prefiere`/`motivo`), MesaAgente y Movil devuelven castellano fijo: pasar a claves estables.
-8. Rueda de prensa 2D sin pulir (está en `ui/principal/rueda_prensa.gd`; ver §8).
 12. Tilde en `nucleo/prensa_p4_p1.gd:27` «mas corta»: la frase es clave de `datos/narracion_traducida*.json`; cambiarla exige renombrar la clave y regenerar (`extraer_narracion.py` + `montar_narracion.py`), y hoy esa regeneración cambia ~8.000 líneas de `narracion*.json` (revisar antes por qué).
 
 Defectos a la vista que dejó anotados:
@@ -1889,8 +1889,6 @@ Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún si
 |---|---|---|---|
 | **Pruebas de juego reales** (personas que no lo conocen) | alta | el banco mide reglas, no si se entiende ni si divierte; nadie ajeno ha jugado la primera hora | 3-5 jugadores, sesión grabada de 60 min, lista de dónde se pierden |
 | **Onboarding de la primera hora** medido | alta | el tutorial (970 líneas) existe, pero no hay prueba de qué hace un novato en los primeros 10 min | prueba de arranque completo (7.3) + cronometrar «hasta el primer partido» |
-| **Balance de dificultad** con cifras objetivo | alta | §8 muestra que el mundo deriva (cantera, valores, nóminas); falta una tabla de «sano» por temporada | `eco_medicion` con rangos fijos (edad media, valor medio, % último año, caja) en 10 temporadas × 3 semillas |
-| **Registro de fallos** del jugador (log local + exportar) | alta | en hardware ajeno nadie verá la consola; sin datos no se arregla | escribir `user://registro.txt` rotativo con errores y botón «copiar informe» (sin datos personales, ver 1097) |
 | **Rendimiento en móvil** (memoria, batería, calentamiento) | alta | solo hay medidas en software; 1,34 M triángulos y caras sin comprimir pesan más en móvil | perfil de calidad «móvil» y presupuesto de memoria por escena; medirlo el dueño (§1) |
 | **Builds y tienda** (Steam/itch/Play): iconos, capturas, tráiler, texto, clasificación | alta | sin esto no hay lanzamiento; hoy solo «🔒 dueño» | lista de requisitos de cada tienda y quién hace cada pieza |
 | **Sonido y música**: mezcla final, volumen por canal, música 🔒 | media | 214 recetas de efectos, pero sin pasada de mezcla ni música final | pasada de volúmenes por escena; qué falta si la música no llega |
@@ -1899,7 +1897,6 @@ Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún si
 | **Guardado en la nube** / entre dispositivos | media | ideas 234, 934, 945 y 1048 sin plan; los jugadores de gestión llevan partidas de meses | empezar por exportar/importar la partida a un archivo; la nube depende de la tienda |
 | **Ayuda contextual y glosario** (qué es cada cifra) | media | un juego de gestión tiene cientos de cifras; hoy hay ayudas sueltas | botón «?» por pantalla con 3 líneas y enlace al glosario |
 | **Pruebas visuales automáticas** | media | ya en §4; se sube aquí porque sin ellas cada pulido rompe otra pantalla sin aviso | comparar capturas de 20 pantallas clave contra una referencia |
-| **Rendimiento de la simulación** (semana avanzada en ms, 30 temporadas) | media | la partida larga es el corazón del género; ningún dato de cuánto tarda avanzar una semana en el año 20 | medir `avanzar_semana` en las temporadas 1, 10 y 20 |
 | **Notas de versión y canal de errores dentro del juego** | baja | ideas 1091-1092; necesario tras lanzar | pantalla «Novedades» leída de un JSON |
 | **Logros / objetivos a largo plazo** visibles | baja | rejugabilidad; hay récords y legado, pero sin lista de logros | lista de 30 logros con su prueba |
 

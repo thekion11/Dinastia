@@ -164,6 +164,8 @@ func _reconstruir_fila_sub() -> void:
 		var tw := create_tween()
 		tw.tween_interval(0.035 * float(_fila_sub.get_child_count() - 1))
 		tw.tween_property(b, "modulate:a", 1.0, 0.14)
+	## La chuleta «?» de las pantallas con más cifras, al final del carril.
+	AyudaPestana.anadir(_fila_sub, titulo_actual)
 
 ## Cambia de bloque maestro: entra siempre por su primer chip -índice 0-, que
 ## es lo que pidió el usuario ("al cambiar de pestaña madre, el nivel 2 se

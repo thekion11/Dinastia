@@ -224,6 +224,8 @@ func _rearmar() -> void:
 	if not _actual.is_empty() and is_instance_valid(_actual.get("nodo")):
 		(_actual["nodo"] as Node).queue_free()
 	_actual = PersonajeDT.crear(_pivote, _asp, c1, c2)
+	## En el estudio te mira (un poco): en la banda mira al partido.
+	PersonajeVida.mirar_camara(_actual, true)
 	_colocar_camara()
 
 ## Para las pruebas: el modelo que se ve ahora ({} si aún no se armó).
