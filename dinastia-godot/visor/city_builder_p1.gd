@@ -10,19 +10,17 @@ extends Node3D
 ##
 ## Los edificios NO son el modelo de manzana de ciudad estirado: ese OBJ trae una
 ## manzana entera con calles y no sirve como edificio suelto. Se construyen con
-## cajas, que es lo que permite que crezcan de verdad con el nivel. El estadio y
-## las farolas si son modelos importados.
-
-const RUTA_ESTADIO := "res://assets/ciudad/estadio.obj"
-const RUTA_FAROLA := "res://assets/ciudad/farola.obj"
+## cajas, que es lo que permite que crezcan de verdad con el nivel. El estadio es
+## el de `StadiumBuilder` y las farolas se hacen por código: `estadio.obj` y
+## `farola.obj` ya no se cargan y quedan fuera de la exportación (26-10-2026).
 
 ## LOS DOS MODELOS QUE TRAJO EL USUARIO (12-9-2026), convertidos con
 ## `herramientas/fbx_a_glb.py` -texturas bajadas a 1024 px, malla decimada-.
 ## Ver `dinastia-modelos-3d-usuario.md`: "ДОМ скетч" (casa boceto) y "Жилой
 ## комплекс" (complejo residencial), ambos en `recursos/modelos3d/`.
 const RUTA_OFICINA_DT := "res://assets/ciudad/oficina_dt.glb"
-## `complejo_residencial.glb` ya no se usa (26-9-2026): en su solar va la finca
-## amurallada con enredadera (`_finca_enredadera`), a pedido del usuario.
+## `complejo_residencial.glb` ya no se usa en ningún sitio (26-10-2026): la Casa
+## Grande de la finca son bloques de KayKit (CC0), ver `_casa_gigante`.
 
 ## Los cinco rascacielos CC0 de Kenney (`recursos/modelos3d/cc0_web/LEEME.md`
 ## tiene la licencia completa: CC0, "City Kit Commercial" v2.1). Solo para el

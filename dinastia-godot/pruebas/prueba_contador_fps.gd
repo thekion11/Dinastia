@@ -8,6 +8,10 @@ var _fallos := 0
 func _ok(c: bool, t: String) -> void:
 	print(("  ok    " if c else "  FALLO ") + t)
 	_fallos += 0 if c else 1
+func _tecla(k: Key) -> InputEventKey:
+	var e := InputEventKey.new()
+	e.keycode = k
+	return e
 func _ready() -> void:
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
@@ -20,7 +24,9 @@ func _process(_d: float) -> void:
 	if _n == 14:
 		var c := get_tree().root.get_node_or_null("ContadorFps")
 		_ok(c != null, "el contador cuelga de la raíz")
-		_ok(c != null and ((c.get_child(0) as Label).text.contains("FPS")), "y enseña los FPS")
+		_ok(c != null and String(c.call("texto")).contains("FPS"), "y enseña los FPS")
+		_ok(c != null and c.get_node_or_null("DebugMenu") != null, "con el Debug Menu (MIT) dentro")
+		_ok(InputMap.has_action("cycle_debug_menu") and not InputMap.action_has_event("cycle_debug_menu", _tecla(KEY_F3)), "su tecla no pisa F3 (táctica rápida)")
 		var cf := ConfigFile.new()
 		cf.load(Principal.PREFS)
 		_ok(bool(cf.get_value("pantalla", "contador_fps", false)), "la preferencia queda guardada")

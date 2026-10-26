@@ -1,40 +1,43 @@
 extends "res://visor/city_builder_p3.gd"
 ## [Capa 4/12 de `city_builder.gd`] _estadio_maqueta, _estadio, _lineas_campo, _un_campo, _campos, _rotulo … (+8)
 
-## Respaldo: la maqueta de siempre, por si no llega perfil -por ejemplo desde
-## una prueba que solo pasa `inst`-. Mejor una maqueta que un hueco.
+## Respaldo por si no llega perfil -por ejemplo desde una prueba que solo pasa
+## `inst`-: mejor una maqueta que un hueco. Antes cargaba `estadio.obj` (origen
+## sin anotar, 🟡 en LICENCIAS); desde el 26-10-2026 se levanta con cuatro
+## gradas de caja alrededor del césped, sin ningún modelo de licencia dudosa.
 func _estadio_maqueta() -> void:
-	var malla := load(RUTA_ESTADIO)
-	if malla == null:
-		return
-	var mi := MeshInstance3D.new()
-	mi.mesh = malla
 	var aforo := float(datos.get("club", {}).get("cap", 20000))
 	var k: float = clampf(sqrt(aforo / 20000.0), 0.65, 1.8)
-	## Escala MEDIDA, no a ojo: el OBJ mide 7.298 unidades de largo y un estadio real
-	## ronda los 220 m, asi que 220/7298 = 0.030. Con el 0.09 que puse a ojo salia de
-	## 650 metros y se comia la escena entera.
-	## Su origen ya esta en Y=0 y centrado en X, asi que apoya solo en el suelo.
-	mi.scale = Vector3.ONE * 0.030 * k
-	mi.position = Vector3(0, 0, -150)
-	## El OBJ no trae materiales. Se le daba el color SECUNDARIO del club, pero en
-	## la mayoria de los escudos ese color es el blanco, asi que el estadio salia
-	## de un blanco yeso y parecia una maqueta sin terminar. Ahora es hormigon
-	## teñido hacia el color PRINCIPAL: se reconoce al club y sigue leyendose como
-	## un edificio.
+	## Se le daba el color SECUNDARIO del club, pero en la mayoría de los escudos
+	## es el blanco y salía de un blanco yeso: hormigón teñido hacia el PRINCIPAL.
 	var hormigon := Color(0.62, 0.63, 0.64)
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color = hormigon.lerp(_color_club("c1", hormigon), 0.45)
 	mat.roughness = 0.6
 	mat.metallic = 0.06
 	mat.metallic_specular = 0.4
-	mi.material_override = mat
-	add_child(mi)
+	## Un campo de verdad (105 × 68 m); lo que crece con el aforo es la grada.
+	var largo := 105.0
+	var ancho := 68.0
+	var fondo := 22.0 * k
+	var alto := 16.0 * k
+	var c := Vector3(0, alto * 0.5, -150)
+	for g: Array in [[Vector3(0, 0, -(ancho + fondo) * 0.5), Vector3(largo + fondo * 2.0, alto, fondo)],
+			[Vector3(0, 0, (ancho + fondo) * 0.5), Vector3(largo + fondo * 2.0, alto, fondo)],
+			[Vector3(-(largo + fondo) * 0.5, 0, 0), Vector3(fondo, alto * 0.8, ancho)],
+			[Vector3((largo + fondo) * 0.5, 0, 0), Vector3(fondo, alto * 0.8, ancho)]]:
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = g[1]
+		mi.mesh = bm
+		mi.material_override = mat
+		mi.position = c + (g[0] as Vector3) - Vector3(0, (alto - (g[1] as Vector3).y) * 0.5, 0)
+		add_child(mi)
 	## Cesped dentro del recinto: sin el, el hueco del estadio se ve del mismo color
 	## que las gradas y no se entiende que ahi dentro hay un campo.
 	var cesp := MeshInstance3D.new()
 	var cp := PlaneMesh.new()
-	cp.size = Vector2(38 * k, 25 * k)
+	cp.size = Vector2(largo, ancho)
 	cesp.mesh = cp
 	var cmat := StandardMaterial3D.new()
 	cmat.albedo_color = Color(0.19, 0.45, 0.23)
@@ -43,7 +46,7 @@ func _estadio_maqueta() -> void:
 	cesp.position = Vector3(0, 0.6, -150)
 	add_child(cesp)
 	etiquetas.append({
-		"pos": Vector3(0, 75 * k, -150),
+		"pos": Vector3(0, alto + 20.0, -150),
 		"texto": str(datos.get("club", {}).get("estadioNom", "Estadio")),
 		"nivel": int(datos.get("inst", {}).get("trib", 0)),
 	})

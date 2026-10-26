@@ -27,6 +27,35 @@ func actualizar_datos(all_players: Array = [], _ball_pos: Vector3 = Vector3.ZERO
 	queue_redraw()
 
 
+## Las líneas del campo son fijas: líneas suaves (`TrazoSuave`, 26-10-2026)
+## que solo se rehacen si cambia el tamaño; los puntos se mueven y van en `_draw`.
+func _notification(que: int) -> void:
+	if que == NOTIFICATION_RESIZED:
+		_rehacer_lineas()
+
+func _rehacer_lineas() -> void:
+	TrazoSuave.limpiar(self)
+	var w := size.x
+	var h := size.y
+	if w <= 0.0 or h <= 0.0:
+		return
+	## Todo DETRÁS de los puntos, y en orden: primero el fondo translúcido (un
+	## hijo también, si no taparía las líneas) y después las líneas.
+	var fondo := ColorRect.new()
+	fondo.set_meta(TrazoSuave.META, true)
+	fondo.color = Color(0.04, 0.07, 0.05, 0.75)
+	fondo.size = size
+	fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fondo.show_behind_parent = true
+	add_child(fondo)
+	TrazoSuave.rect(self, Rect2(Vector2.ZERO, size).grow(-0.75), Color(1, 1, 1, 0.3), 1.5, true)
+	TrazoSuave.linea(self, PackedVector2Array([Vector2(0, h * 0.5), Vector2(w, h * 0.5)]), Color(1, 1, 1, 0.25), 1.0, false, true)
+	TrazoSuave.arco(self, Vector2(w * 0.5, h * 0.5), h * 0.14, Color(1, 1, 1, 0.25), 1.0, 32, true)
+	var w_area := w * 0.56
+	var h_area := h * 0.16
+	TrazoSuave.rect(self, Rect2(Vector2((w - w_area) * 0.5, 0), Vector2(w_area, h_area)), Color(1, 1, 1, 0.2), 1.0, true)
+	TrazoSuave.rect(self, Rect2(Vector2((w - w_area) * 0.5, h - h_area), Vector2(w_area, h_area)), Color(1, 1, 1, 0.2), 1.0, true)
+
 func _process(_delta: float) -> void:
 	if visible:
 		queue_redraw()
@@ -34,21 +63,8 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	var w := size.x
 	var h := size.y
-	var rect := Rect2(Vector2.ZERO, size)
-
-	# Fondo del campo translúcido redondeado
-	draw_rect(rect, Color(0.04, 0.07, 0.05, 0.75), true)
-	draw_rect(rect, Color(1, 1, 1, 0.3), false, 1.5)
-
-	# Línea de medio campo y círculo central
-	draw_line(Vector2(0, h * 0.5), Vector2(w, h * 0.5), Color(1, 1, 1, 0.25), 1.0)
-	draw_arc(Vector2(w * 0.5, h * 0.5), h * 0.14, 0, TAU, 24, Color(1, 1, 1, 0.25), 1.0)
-
-	# Áreas
-	var w_area := w * 0.56
-	var h_area := h * 0.16
-	draw_rect(Rect2(Vector2((w - w_area) * 0.5, 0), Vector2(w_area, h_area)), Color(1, 1, 1, 0.2), false, 1.0)
-	draw_rect(Rect2(Vector2((w - w_area) * 0.5, h - h_area), Vector2(w_area, h_area)), Color(1, 1, 1, 0.2), false, 1.0)
+	# El fondo, el borde, el medio campo, el círculo y las áreas son hijos fijos
+	# (`_rehacer_lineas`); aquí solo lo que se mueve.
 
 	# Posicionar jugadores
 	for p in jugadores:
@@ -67,11 +83,11 @@ func _draw() -> void:
 		var col := Color(0.95, 0.85, 0.2) if es_arb else (color_local if es_loc else color_visita)
 		var r_dot := 2.8 if not es_arb else 2.2
 
-		draw_circle(pt, r_dot, col)
+		draw_circle(pt, r_dot, col, true, -1.0, true)
 
 		# Resaltar si es el jugador activo
 		if node == jugador_activo:
-			draw_arc(pt, 6.0, 0, TAU, 16, Color(1, 1, 1, 0.95), 1.6)
+			draw_arc(pt, 6.0, 0, TAU, 16, Color(1, 1, 1, 0.95), 1.6, true)
 
 	# Dibujar el balón
 	if is_instance_valid(balon):
@@ -79,5 +95,5 @@ func _draw() -> void:
 		var bu := clampf((b_pos.x + ANCHO_CAMPO * 0.5) / ANCHO_CAMPO, 0.02, 0.98)
 		var bv := clampf((b_pos.z + LARGO_CAMPO * 0.5) / LARGO_CAMPO, 0.02, 0.98)
 		var b_pt := Vector2(bu * w, bv * h)
-		draw_circle(b_pt, 3.4, Color(1, 1, 1, 1.0))
-		draw_circle(b_pt, 4.6, Color(1, 0.9, 0.2, 0.6))
+		draw_circle(b_pt, 3.4, Color(1, 1, 1, 1.0), true, -1.0, true)
+		draw_circle(b_pt, 4.6, Color(1, 0.9, 0.2, 0.6), true, -1.0, true)

@@ -78,8 +78,10 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | City Kit Roads (95 piezas; guardado, aún sin usar) | `assets/ciudad/kenney_roads/` | Kenney | 🟢 CC0 (`assets/ciudad/kenney_roads/LICENCIA_Kenney_CC0.txt`) |
 | 21 animaciones de fútbol (mocap) | `assets/characters/quaternius/anims_futbol/` | "Free mocap pack 05: Soccer", Anderson Rohr (Gumroad) | 🟡 `LEEME.md` dice "uso comercial libre", pero el zip no trae licencia. **Guardar una captura de la página de Gumroad con los términos.** |
 | Coches `coche1.fbx`, `coche2.fbx` | `assets/ciudad/` | Probablemente `recursos/modelos3d/gt-racing-2-montreal.zip` (Sketchfab). El nombre apunta a un modelo sacado de un juego comercial | 🔴 ya no se usan (el aparcamiento es solo Kenney) y están excluidos |
-| `estadio.obj`, `farola.obj`, `vagabond.obj` (el velero) | `assets/ciudad/` | sin anotar | 🟡 confirmar |
-| `complejo_residencial.glb` | `assets/ciudad/` | `recursos/modelos3d/3.zip` (Sketchfab, sin licencia en el zip). Varias texturas llevan nombre de foto de redes sociales | 🟡 confirmar en Sketchfab o reemplazar |
+| `estadio.obj`, `farola.obj` | `assets/ciudad/` | sin anotar | 🔴 ya no se cargan (26-10-2026): la maqueta de respaldo del estadio son cajas (`city_builder_p4.gd`) y las farolas se hacen por código. Excluidos de todas las exportaciones; los archivos siguen en LFS sin tocar |
+| `vagabond.obj` (el velero del puerto) | `assets/ciudad/` | sin anotar | 🟡 confirmar o reemplazar (KayKit City Builder no trae barcos) |
+| `complejo_residencial.glb` | `assets/ciudad/` | `recursos/modelos3d/3.zip` (Sketchfab, sin licencia en el zip). Varias texturas llevan nombre de foto de redes sociales | 🔴 ya no se usa (26-10-2026): la Casa Grande son bloques KayKit (abajo). Excluido de todas las exportaciones; el archivo sigue en LFS sin tocar |
+| Bloques de pisos de la Casa Grande (`building_E` … `building_H` + textura) | `assets/ciudad/kaykit/` (430 KB, fuera de LFS con excepción en `.gitattributes`) | KayKit City Builder Bits 1.0, Kay Lousberg (github.com/KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0, commit 63976910) | 🟢 CC0 (`assets/ciudad/kaykit/LICENSE.txt`, leída en el repositorio el 26-10-2026) |
 | `oficina_dt.glb` | `assets/ciudad/` | `interior-15-minimalist-panoramic-viem.zip` (Sketchfab) | 🟡 confirmar. Hoy no se usa (ver `city_builder.gd`) |
 | `arco_entrada.glb` | `assets/ciudad/` | `recursos/modelos3d/entrada-jugadores/` (Sketchfab) | 🟡 confirmar |
 | `persona_realista.glb` (escaneo de una persona: presentador del sorteo y mentores) | `assets/personas/` | `recursos/modelos3d/navy-jacket-portrait.zip` ("Navy Jacket Portrait", formato de descarga de Sketchfab, sin licencia dentro del zip). Es el modelo que el usuario dejó para el presentador | 🟡 confirmar la licencia en Sketchfab. Además es una persona real escaneada: comprobar que la licencia permite su uso en un juego comercial |
@@ -99,6 +101,8 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | Fronteras del globo (`fronteras4k.png`) | `recursos/tierra/` | ✅ Natural Earth, `ne_50m_admin_0_boundary_lines_land` (dominio público, naturalearthdata.com), rasterizadas por nosotros |
 | 205 efectos de sonido y 6 piezas de música | sintetizados por código (`nucleo/sonido.gd`, `nucleo/musica.gd`) | 🟢 propio |
 | Tipografía | fuente por defecto de Godot / fuentes del sistema | 🟢 |
+| Antialiased Line2D (líneas suaves de radares, pizarra y minimapa) | `addons/antialiased_line2d/` | 🟢 MIT, Hugo Locurcio (github.com/godot-extended-libraries/godot-antialiased-line2d, commit 808343e4). El aviso MIT viaja en `addons/LICENCIAS_TERCEROS.txt` (los `.md` no se exportan) |
+| Debug Menu (contador de FPS de Ajustes) | `addons/debug_menu/` | 🟢 MIT, Hugo Locurcio (github.com/godot-extended-libraries/godot-debug-menu, commit ff124615). Aviso en `addons/LICENCIAS_TERCEROS.txt` |
 | Caras de jugadores y DT | dibujadas por código (`ui/cara.gd`, `ui/cara_dt.gd`) | 🟢 propio |
 
 ## 5. Otros nombres propios
@@ -113,8 +117,11 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 ## Pendiente antes de vender
 
 1. ~~Reemplazar `coche1.fbx`/`coche2.fbx` por coches Kenney~~ hecho el 25-9-2026.
-2. Confirmar licencia o reemplazar los modelos 🟡 de Sketchfab (`complejo_residencial`, `arco_entrada`,
-   `asientos_lod`) y los `.obj` sin origen anotado (`estadio`, `farola`, `vagabond`).
-3. Guardar la prueba de licencia del mocap (Gumroad) y del podio (Meshy).
+2. Confirmar licencia o reemplazar los modelos 🟡 de Sketchfab (`arco_entrada`, `asientos_lod`) y el `.obj` sin
+   origen anotado (`vagabond`). `complejo_residencial`, `estadio` y `farola` ya no se usan ni se exportan (26-10).
+3. Guardar la prueba de licencia del mocap (Gumroad) y del podio (Meshy). CMU Mocap (26-10, revisado): su
+   licencia sirve («free for use in research and commercial projects»), pero son BVH con otro esqueleto que hay
+   que retargetear en Blender (no hay Blender en el contenedor) y no trae regates: sustituiría solo tiros y
+   protestas, y las 21 de Gumroad seguirían. Lo más barato sigue siendo la captura de Gumroad (dueño).
 4. Añadir una pantalla de créditos: Kenney y Quaternius no lo exigen (CC0) pero lo agradecen;
    Meshy gratis y Wikimedia sí lo exigen si algo de eso llegara a publicarse.
