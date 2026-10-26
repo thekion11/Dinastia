@@ -88,19 +88,19 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 			color = COL_VERDE
 		var marcas := ""
 		if j.capitan:
-			marcas += "  Ⓒ"
+			marcas += " Ⓒ"
 		if j.transferible:
-			marcas += "  🔻"
+			marcas += " 🔻"
 		if j.lesion > 0:
-			marcas += "  🩹"
+			marcas += " 🩹"
 		elif j.suspension > 0:
-			marcas += "  🚫"
+			marcas += " 🚫"
 		if mundo.entrenamiento != null and not mundo.entrenamiento.habilidades(j).is_empty():
-			marcas += "  ✦"
+			marcas += " ✦"
 		## El verde de «joven con margen» lleva también su marca (s3, accesibilidad:
 		## ningún dato solo con color; lo rojo ya lleva 🩹 o 🚫).
 		if color == COL_VERDE:
-			marcas += "  ↗"
+			marcas += " ↗"
 		var antes := g.get_child_count()
 		fila_jugador.call(g, j,
 			[j.nombre + marcas, j.pos_e, str(j.edad), str(j.ovr), str(j.pot), _dinero(j.valor)],

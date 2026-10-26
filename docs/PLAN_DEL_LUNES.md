@@ -7,13 +7,12 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
-- **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan**; fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
+- **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan**; fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
 - **Aprobar la pantalla de entrada** como escena principal (`Inicio.flujo_nuevo`, hoy `true` en código): verla en juego real y decir sí o no (§8).
 - **Empujar `main` reescrito** y **borrar las 8 ramas y `latest`** (§1); cuándo fusionar a `main` la rama actual y la de la sesión 2 (§9).
 - **Foundry/Azure** sí o no; **abrir la red a Wikimedia** (caras y escudos que faltan) (§1).
 - **«El bloqueo»** de modos: opción en Ajustes con «Todo abierto» por defecto, sí o no (§1).
 - **Texturas de caras**: permiso para probar BC7 en una muestra y medir ΔE de piel (§4).
-- **Jugadores reales**: `bio_de()` (`nucleo/datos`) inventa la edad de debut y el origen; ¿se trata igual que la vida personal (no inventar)? (§9).
 - **53 escenas de prueba sin mención**: cuáles se borran (§4).
 - **Carrera de Jugador**: cuánto subir la dificultad de la CPU en ese modo (§2.4).
 - **Peatones**: subir al autobús y tomar coches del tráfico (dijiste «no por ahora»; el transporte público del guion lo vuelve a pedir) (§2.4).
@@ -1858,7 +1857,7 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
 - Carrera: falta la animación de parada del portero en modo jugador.
 
-- Primera hora (informe onb, 26-10): botones de la cabecera de Principal solo con icono (⚽ 💰 🌍), sin texto ni tooltip; el panel OBJETIVOS tapa la ficha del jugador en la columna derecha; el tutorial no se puede volver a abrir si se cierra; las pestañas abiertas fuera de su bloque (Finanzas, Mercado) muestran el carril de chips del bloque anterior; `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol. Hacer tras unir la sesión 3 (toca `ui/principal_p*`).
+- Primera hora (informe onb, 26-10), lo que queda: `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol (`ui/entrada/*`, zona de la sesión principal). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.
 
 ## 9. Sesión 2 (interfaz): rama `ccr-76d707c5-dwse9h-s2`, sin fusionar
 Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `datos/trad_parches/s2_*.json` con `sumar_traducciones.py` y `s2_sobrescrituras.json` con un script con candado (ver el informe).
@@ -1868,6 +1867,14 @@ Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hec
 
 Defectos a la vista que dejó anotados:
 - «Forma» del escudo en `ui/entrada/config_club_pasos.gd:149`: pasar a la clave `Forma del escudo` (ya traducida); «Forma» queda para la forma física.
+
+Auditoría de fuentes y de presentación del texto (26-10, sesión fnt). Lo de traducción es para S1:
+- **93 claves con solo en y pt** (faltan fr, it, de, ca, pl, tr): son los titulares de imprevistos y avisos («Apelación ACOGIDA», «Cedido a préstamo», «¡Clausulazo!», «Polémica en redes»…). En 6 idiomas caen al castellano. Lista: claves de `en` que no están en `fr`.
+- **150 claves que no aparecen literalmente en el código ni en los datos**: casi todas se componen en tiempo de ejecución (icono + texto, «✔  …», «·····  Jefe médico», «sí   Construir»), así que NO son claves muertas seguras. Hay restos claros, como «Estrecha (cabe mas)» sin tilde, que es el nombre viejo de la tipografía. Antes de borrar nada: un barrido que registre en partida qué claves se piden de verdad.
+- **Caídas por formato**: no hay ninguna clave cuyos `%s`/`%d` no casen con su traducción. Los 42 avisos que salen al comparar son «%» de porcentaje literal («12% más»), no marcadores. La única llamada que formatea DENTRO de `Idiomas.t` es `ui/principal/rueda_prensa.gd:414` (`Idiomas.t("%s %s" % …)`, icono + texto); funciona porque `t` separa el icono, pero lo limpio es `Idiomas.t(datos[1])` (zona de la rueda de prensa).
+- **Nombres propios con la misma forma en todos los idiomas**: las leyes laborales (Arbeitszeitgesetz, Fair Labor Standards Act…), DINASTÍA, VAR, Valparaíso. Están bien; no hay que traducirlos.
+- **Texto que no cabe**: en `ui/componentes/ficha_jugador_info.gd:_dato` el valor «pertenece a «Los históricos»» se corta con «…» ya en castellano (165/149 px; en alemán, 195/161). Se puede leer en la ayuda emergente; dar más ancho al valor cuando la etiqueta es corta.
+- **El registro «Qué pasa»** («Mundo nuevo. Semilla …») queda en el idioma en que se escribió: son entradas guardadas, no rótulos. Está bien así, pero conviene saberlo.
 
 ## 10. Huecos y mejoras propuestas
 Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún sitio del plan (o solo como idea suelta en §5-7). Prioridad: **alta** = bloquea el lanzamiento o la primera impresión; **media** = se nota en la primera semana de juego; **baja** = pulido.

@@ -187,7 +187,7 @@ func _pedir_confirmacion() -> void:
 	si.name = "BotonConfirmar"
 	si.pressed.connect(_confirmar)
 	fila.add_child(si)
-	si.call_deferred("grab_focus")
+	FocoSeguro.dar(si)
 	Animar.aparecer(pc)
 
 func _cerrar_confirmacion() -> void:

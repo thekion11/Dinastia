@@ -14,10 +14,15 @@ func _llenar_selector() -> void:
 	var i := 0
 	for l in mundo.ligas:
 		for c in l.clubes:
-			_selector.add_item("%s  ·  %s" % [c.nombre, l.nombre])
+			## Corto («Lautaro FC · CHI 1.ª», s3): en los 208 px del selector, «Lautaro
+			## FC · Primera División» salía cortado en todas las pantallas. La liga
+			## entera va en la ayuda.
+			_selector.add_item("%s · %s %d.ª" % [c.nombre, l.pais, l.division()])
 			_selector.set_item_metadata(i, c.id)
+			_selector.set_item_tooltip(i, "%s  ·  %s" % [c.nombre, l.nombre])
 			if c.id == mundo.mi_club_id:
 				_selector.select(i)
+				_selector.tooltip_text = "%s  ·  %s" % [c.nombre, l.nombre]
 			i += 1
 
 func _tomar_club(id: String) -> void:

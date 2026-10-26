@@ -128,5 +128,18 @@ func _dificultad() -> void:
 	_comprobar(r["facil"][1] < r["normal"][1] and r["normal"][1] < r["leyenda"][1], "fichar: en fácil piden menos y en leyenda más")
 	_comprobar(r["facil"][2] > r["normal"][2] and r["normal"][2] > r["leyenda"][2], "el premio de liga de tu club sube en fácil y baja en leyenda")
 	_comprobar(r["facil"][3] < r["normal"][3] and r["normal"][3] < r["leyenda"][3], "el tope del valor de la IA crece con la dificultad")
+	## La taquilla que enseña Finanzas: la misma cuenta que se cobra, con precios dinámicos.
+	var yo := m.mi_club()
+	var t0 := m.estimar_taquilla(yo)
+	var f := m._finanzas_de_la_semana(yo)
+	var a_mano := int(round(float(f.asistencia()) * m.factor_publico() * Calendario.factor_publico(yo.pais, m.anio, m.semana)
+		* (m.comercial.factor_techo() if m.comercial != null else 1.0) * (m.ciudad.factor_aforo() if m.ciudad != null else 1.0)
+		* (m.maestria.factor_publico() if m.maestria != null else 1.0)))
+	_comprobar(int(t0["gente"]) == a_mano and int(t0["gente"]) <= yo.estadio_aforo, "taquilla estimada: %d personas, %d por partido" % [t0["gente"], t0["monto"]])
+	m.hinchada.precio_dinamico = true
+	var t1 := m.estimar_taquilla(yo)
+	var pp := m.proximo_partido()
+	var rr: int = ((pp[1] if pp[0] == yo else pp[0]) as Club).rep if pp.size() == 2 else 70
+	_comprobar(int(t1["precio"]) == m.hinchada.precio_efectivo(int(round(yo.precio_entrada)), rr), "con precios dinámicos usa el precio contra el rival (%d → %d)" % [int(yo.precio_entrada), int(t1["precio"])])
 	var otro: Club = m.ligas[0].clubes[1]
 	_comprobar(m._premio_para(otro, Mundo.PREMIO_LIGA) == Mundo.PREMIO_LIGA, "a la IA no le cambia el premio")

@@ -325,7 +325,8 @@ func _pintar_ambiente_y_horario() -> void:
 		var d := p._texto(10, Principal.COL_SUAVE)
 		d.text = String(h[5])
 		d.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		d.clip_text = true
+		## En dos líneas si hace falta (s3, auditoría: cortada en las tres lenguas).
+		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		## La nota de cada horario es una frase completa ("El horario de la
 		## tarde..."), y en una columna angosta se corta a media palabra sin
 		## avisar -encontrado con una captura real, queja del usuario ("se

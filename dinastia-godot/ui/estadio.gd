@@ -218,6 +218,13 @@ func _hud_juego() -> void:
 func _paso_motor(delta: float) -> void:
 	if _panel_dt != null or _panel_controles != null or _sala_var != null or _panel_stats != null:
 		return
+	## LA OCASIÓN JUGABLE: mientras eliges, el motor no da ni un paso; y se mira
+	## tras CADA paso, para cazar la llegada antes de que la IA la resuelva.
+	if _ocasion != null:
+		_ocasion.vigilar(delta)
+		if _ocasion.congela():
+			_acum_motor = 0.0
+			return
 	var mult := _juego.velocidad() if _juego != null else 1.0
 	_acum_motor = minf(_acum_motor + delta * mult, DT_MOTOR * 16.0)
 	while _acum_motor >= DT_MOTOR:
@@ -226,6 +233,9 @@ func _paso_motor(delta: float) -> void:
 		## Cada paso: así no se pierde un remate que empieza y acaba en el mismo fotograma.
 		if _stats != null:
 			_stats.muestrear(_motor, DT_MOTOR)
+		if _ocasion != null and _ocasion.tras_paso():
+			_acum_motor = 0.0
+			break
 	_pistas_camara()
 	_rotulo_automatico()
 	_t_tactica -= delta
