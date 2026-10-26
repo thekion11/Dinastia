@@ -47,7 +47,7 @@ extends RefCounted
 ## `personalizar_tramos` está activo. Es independiente de `personalizar_
 ## bandejas` -se puede mezclar patrones por tercios en una tribuna sin haber
 ## tocado el estilo global de ninguna, y viceversa-. El spike del 18-9
-## (`LEEME.md`, "SPIKE CORRIDO CON PANTALLA REAL") confirmó que el corte se
+## (`LEEME.md` del historial de git, "SPIKE CORRIDO CON PANTALLA REAL") confirmó que el corte se
 ## sostiene visualmente con una condición: `StadiumBuilder` tiene que generar
 ## la textura de esa tribuna con `uv1_scale.y=1` (sin repetir), no con el
 ## repetido-cada-20m de una tribuna de un solo patrón.
@@ -325,7 +325,7 @@ const BUTACAS_POR_BANDEJA := 22000.0
 ##
 ## Esto SOLO fue posible después de rehacer el graderío por bandejas en
 ## `StadiumBuilder`: con el modelo viejo -una rampa única de 11 m de fondo- una
-## cuarta bandeja habría sido una pared de 65 grados. Ver `LEEME.md`, 23-9.
+## cuarta bandeja habría sido una pared de 65 grados. Ver `LEEME.md` del historial de git, 23-9.
 const NIVELES_MAX := 5
 
 ## EL ESTADIO REAL DE TU CLUB (26-9-2026): al tomar un club que representa a

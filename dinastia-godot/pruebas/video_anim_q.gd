@@ -3,7 +3,7 @@ extends Node3D
 ## (parado/caminar/trotar/correr) y a mano (patear/cabezazo/celebrar)-, para
 ## que el usuario las vea en movimiento y no solo en fotos sueltas. Pensado
 ## para correr con --write-movie (ver herramientas/video_anim_q.ps1 o el
-## comando en el propio LEEME.md).
+## comando en el propio LEEME.md del historial de git).
 
 const SECUENCIA := [
 	["parado", 2.0],

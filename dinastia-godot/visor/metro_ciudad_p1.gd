@@ -145,7 +145,7 @@ const TEMAS := {
 ## sentada. La gente solo existe en la estación junto a la cámara (`_process`).
 
 const KENNEY := "res://assets/kenney/"
-## pieza -> escala (medidas en EVALUACION_KENNEY_CIUDAD.md: arcade ×2,4-2,5;
+## pieza -> escala (medidas en EVALUACION_KENNEY_CIUDAD.md del historial de git: arcade ×2,4-2,5;
 ## muebles ×2; montaña rusa ×2-2,2).
 const PIEZAS_ANDEN := {
 	"expendedora": ["mini_arcade/vending-machine", 2.5],     ## 1,25 × 1,9 m

@@ -11,7 +11,7 @@ extends Node
 ##   1. Activaba su cámara dentro de `_ready()`, ANTES de que `VistaEstadio.
 ##      abrir()` construyera el `CameraRig` -que crea 9 cámaras y activa una-.
 ##      La del rig ganaba siempre y la captura salía enfocando el césped. Es el
-##      "bug en el ENCUADRE de la cámara de la propia prueba" que `LEEME.md`
+##      "bug en el ENCUADRE de la cámara de la propia prueba" que `LEEME.md` del historial de git
 ##      dejó anotado sin diagnosticar. Aquí la cámara se reclama en cada paso,
 ##      porque además cada gol manda el rig a "Tele Dinámica" (eso SÍ es el
 ##      comportamiento bueno del juego).

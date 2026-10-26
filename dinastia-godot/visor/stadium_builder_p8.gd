@@ -230,7 +230,7 @@ static func _pantalla_textura(est: Dictionary, mi: Club) -> ImageTexture:
 ## LA CARA DE LA PANTALLA VA EN UN `QuadMesh`, NO EN UN `BoxMesh`.
 ##
 ## BUG REAL, ENCONTRADO CON UNA CAPTURA (23-9-2026), y es el que explica de
-## verdad el misterio que `LEEME.md` dejó abierto el 22-9 ("la textura aislada
+## verdad el misterio que `LEEME.md` del historial de git dejó abierto el 22-9 ("la textura aislada
 ## se ve perfecta pero en la escena no aparece el escudo, debe de ser el
 ## encuadre de la prueba"). NO era el encuadre: **`BoxMesh` no mapea la textura
 ## entera a cada cara**, reparte las seis caras en un atlas de UV. O sea que la

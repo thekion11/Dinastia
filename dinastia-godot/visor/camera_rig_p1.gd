@@ -56,7 +56,7 @@ var _fov_base_golpe := -1.0
 
 
 # --- LA TRANSMISIÓN INTELIGENTE (16-10-2026) ----------------------------------
-## Pendiente desde el vídeo de FC 26 (COMPARACION_FC26_VIDEO.md, «cámaras»): el
+## Pendiente desde el vídeo de FC 26 (COMPARACION_FC26_VIDEO.md del historial de git, «cámaras»): el
 ## plano de la tele se ACERCA cuando la jugada entra en el área o hay ocasión,
 ## se ABRE en los contraataques y en los balones largos, ANTICIPA hacia dónde va
 ## el balón y no da tirones: zona muerta, amortiguador crítico (sin rebote) y
