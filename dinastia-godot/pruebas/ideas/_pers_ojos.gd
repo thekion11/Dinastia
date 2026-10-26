@@ -34,11 +34,16 @@ func _process(_d: float) -> void:
 			var ap: AnimationPlayer = d["anim"]
 			if ap.has_animation(OS.get_environment("ANIM") if OS.get_environment("ANIM") != "" else "parado"):
 				ap.play(OS.get_environment("ANIM") if OS.get_environment("ANIM") != "" else "parado")
+		var rojo := StandardMaterial3D.new()
+		rojo.albedo_color = Color(1, 0, 0)
+		rojo.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		for mi: MeshInstance3D in (_ds[7]["nodo"] as Node).find_children("Eyes", "MeshInstance3D", true, false):
-			mi.visible = false
-		## Entre P5 (x 1,425) y P7 (x 3,325), de frente y a la altura de los ojos.
+			mi.material_override = rojo
+		(_ds[7]["nodo"] as Node3D).position.x = 1.425 + 0.5
+		(_ds[6]["nodo"] as Node3D).visible = false
 		_cam.fov = 14
-		_cam.look_at_from_position(Vector3(2.375, 1.66, 4.2), Vector3(2.375, 1.66, 0))
+		var alto := 1.66 * float(_ds[5]["altura"]) / 1.8
+		_cam.look_at_from_position(Vector3(1.675, alto, 2.2), Vector3(1.675, alto, 0))
 	if _n == 30:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/pers_ojos.png")
 		get_tree().quit()

@@ -29,54 +29,72 @@ func _probar() -> void:
 	_comprobar(raiz2.find_children("VigasTecho", "", true, false).is_empty(), "un estadio sin techo no lleva vigas")
 	_comprobar(not raiz2.find_children("CantosPasillo", "", true, false).is_empty(), "el estadio chico también lleva cantos en sus pasillos")
 
-func _instancias(raiz: Node, nombre: String) -> Array[Transform3D]:
-	var out: Array[Transform3D] = []
-	for n: Node in raiz.find_children("*", "MultiMeshInstance3D", true, false):
-		if String(n.name).contains(nombre):
-			var mmi := n as MultiMeshInstance3D
-			for k in mmi.multimesh.instance_count:
-				out.append(mmi.global_transform * mmi.multimesh.get_instance_transform(k))
+## Los peldaños de acceso tal como los pone `_escaleras_de_acceso` (rehecho aquí con su
+## cuenta, independiente de `DetalleGrada`): [bajo, dir, n] por escalera.
+func _escaleras_esperadas(raiz: Node3D) -> Array:
+	var out: Array = []
+	var y0 := StadiumBuilder.ALTURA_PIE + StadiumBuilder.subida_bandeja() / 2.0
+	for n: Node in raiz.find_children("Pasillos", "MultiMeshInstance3D", true, false):
+		var deck := n.get_parent() as MeshInstance3D
+		if not (deck.mesh is BoxMesh) or deck.get_parent() != raiz or absf(deck.position.y - y0) > 0.1:
+			continue
+		var tam := (deck.mesh as BoxMesh).size
+		var lateral := tam.x < tam.z
+		var esc := DetalleGrada.escalones_de(deck, tam, lateral, deck.rotation.z if lateral else deck.rotation.x)
+		## La fila 0 (la de abajo): los primeros de la lista.
+		var largo := tam.z if lateral else tam.x
+		var cuantas := maxi(1, int(largo / StadiumBuilder.PASO_BUTACA))
+		for c in cuantas:
+			if not StadiumBuilder.es_pasillo(c, cuantas):
+				continue
+			var l := -largo * 0.5 + 0.8 + c * StadiumBuilder.PASO_BUTACA
+			for e: Transform3D in esc:
+				if absf((e.origin.z if lateral else e.origin.x) - l) < 0.01:
+					var bajo := deck.transform * e.origin
+					if bajo.y >= 0.5:
+						var dir := Vector3(-signf(bajo.x), 0, 0) if lateral else Vector3(0, 0, -signf(bajo.z))
+						out.append([bajo, dir, int(ceil((bajo.y - 0.05) / StadiumBuilder.PELDANO_ALTO))])
+					break
 	return out
 
+func _cuenta(raiz: Node, nombre: String) -> int:
+	var t := 0
+	for n: Node in raiz.find_children("*" + nombre + "*", "MultiMeshInstance3D", true, false):
+		t += (n as MultiMeshInstance3D).multimesh.instance_count
+	return t
+
 func _escaleras(raiz: Node3D) -> void:
-	var pel := _instancias(raiz, "EscalerasAcceso")
-	var cantos := _instancias(raiz, "CantosAcceso")
-	var zancas := _instancias(raiz, "ZancasAcceso")
-	_comprobar(pel.size() > 20, "hay escaleras de acceso (%d peldaños)" % pel.size())
-	_comprobar(cantos.size() == pel.size(), "un canto por peldaño de acceso (%d / %d)" % [cantos.size(), pel.size()])
-	## Cada canto en la arista de arriba y delante de SU peldaño (a menos de 6 cm).
+	var esperadas := _escaleras_esperadas(raiz)
+	var peldanos := 0
+	for e: Array in esperadas:
+		peldanos += int(e[2])
+	_comprobar(esperadas.size() >= 4 and peldanos > 20, "hay escaleras de acceso (%d, %d peldaños)" % [esperadas.size(), peldanos])
+	_comprobar(_cuenta(raiz, "EscalerasAcceso") == peldanos, "la cuenta rehecha coincide con los peldaños que levanta la grada (%d / %d)" % [_cuenta(raiz, "EscalerasAcceso"), peldanos])
+	_comprobar(_cuenta(raiz, "CantosAcceso") == peldanos, "un canto por peldaño de acceso (%d)" % _cuenta(raiz, "CantosAcceso"))
+	_comprobar(_cuenta(raiz, "ZancasAcceso") == esperadas.size() * 2, "dos zancas por escalera (%d)" % _cuenta(raiz, "ZancasAcceso"))
+	_comprobar(_cuenta(raiz, "PasamanosAcceso") == esperadas.size() * 8, "pasamanos y tres postes a cada lado")
+	## Cada canto en la arista de delante y arriba de su peldaño (la del cajón de
+	## `_escaleras_de_acceso`: centro bajo + dir·(0,45 + k·0,3), arriba en alto − 0,1).
 	var malos := 0
-	for c: Transform3D in cantos:
-		var mejor := INF
-		for p: Transform3D in pel:
-			var e := p.basis.get_scale()
-			var lateral := e.x < e.z
-			var dir := Vector3(-signf(p.origin.x), 0, 0) if lateral else Vector3(0, 0, -signf(p.origin.z))
-			var arista := p.origin + dir * (minf(e.x, e.z) * 0.5) + Vector3(0, e.y * 0.5, 0)
-			mejor = minf(mejor, (c.origin + dir * 0.035 + Vector3(0, 0.02, 0)).distance_to(arista))
-		if mejor > 0.06:
-			malos += 1
+	var hundidas := 0
+	for e: Array in esperadas:
+		var bajo: Vector3 = e[0]
+		var dir: Vector3 = e[1]
+		var piezas := DetalleGrada.piezas_escalera(bajo, dir, int(e[2]), StadiumBuilder.PELDANO_ALTO, StadiumBuilder.PELDANO_FONDO, 1.25)
+		for k in int(e[2]):
+			var alto := bajo.y - float(k) * StadiumBuilder.PELDANO_ALTO
+			var arista := bajo + dir * (0.45 + float(k) * StadiumBuilder.PELDANO_FONDO + StadiumBuilder.PELDANO_FONDO * 0.5)
+			arista.y = alto - 0.1
+			var canto: Transform3D = piezas[0][k]
+			if (canto.origin + dir * 0.035 + Vector3(0, 0.02, 0)).distance_to(arista) > 0.02:
+				malos += 1
+		for z: Transform3D in piezas[1]:
+			if z.origin.y < 0.0 or z.origin.y > bajo.y + 0.5:
+				hundidas += 1
 	_comprobar(malos == 0, "cada canto está en la arista de su peldaño (%d fuera de sitio)" % malos)
-	## Dos zancas por escalera: las escaleras son los peldaños más altos de cada grupo.
-	var altos := 0
-	for p: Transform3D in pel:
-		if p.origin.y + p.basis.get_scale().y * 0.5 > 1.2:
-			altos += 1
-	_comprobar(zancas.size() >= 2 and zancas.size() % 2 == 0, "zancas a los dos lados (%d)" % zancas.size())
-	## Las zancas no se hunden en el suelo ni vuelan por encima de la grada.
-	var fuera := 0
-	for z: Transform3D in zancas:
-		if z.origin.y < 0.0 or z.origin.y > 3.0:
-			fuera += 1
-	_comprobar(fuera == 0, "las zancas van entre el suelo y la grada")
-	_comprobar(_instancias(raiz, "PasamanosAcceso").size() == zancas.size() * 4, "pasamanos y tres postes por zanca")
-	var esc := _instancias(raiz, "Pasillos")
-	var cp := _instancias(raiz, "CantosPasillo")
-	var vivos := 0
-	for e: Transform3D in esc:
-		if e.basis.get_scale().x > 0.01:
-			vivos += 1
-	_comprobar(cp.size() == vivos and vivos > 100, "un canto por peldaño de pasillo (%d / %d)" % [cp.size(), vivos])
+	_comprobar(hundidas == 0, "las zancas van entre el suelo y la grada")
+	_comprobar(_cuenta(raiz, "CantosPasillo") == _cuenta(raiz, "Pasillos") and _cuenta(raiz, "Pasillos") > 100,
+		"un canto por peldaño de pasillo (%d / %d)" % [_cuenta(raiz, "CantosPasillo"), _cuenta(raiz, "Pasillos")])
 
 func _techo(raiz: Node3D) -> void:
 	var vigas := raiz.find_children("VigasTecho", "MultiMeshInstance3D", true, false)
@@ -106,13 +124,15 @@ func _techo(raiz: Node3D) -> void:
 	for v: Node in vigas:
 		visibles += 1 if (v as GeometryInstance3D).layers == 1 else 0
 	_comprobar(visibles == vigas.size(), "desde el campo se ven todas")
-	## Debajo de la losa, no encima.
-	var bien := 0
-	for v: Node in vigas:
-		var mmi := v as MultiMeshInstance3D
-		var t0 := mmi.multimesh.get_instance_transform(0)
-		bien += 1 if t0.origin.y < 0.0 else 0
-	_comprobar(bien == vigas.size(), "las vigas cuelgan bajo la losa")
+	## Debajo de la losa (0,5 m de canto, centrada en 0), no encima ni fuera de ella.
+	var tam := Vector3(14.0, 0.5, 80.0)
+	var piezas := DetalleGrada.piezas_vigas(tam, Vector3(-1, 0, 0), true)
+	var mal := 0
+	for x: Transform3D in piezas:
+		var e := x.basis.get_scale()
+		if x.origin.y + e.y * 0.5 > 0.0 or absf(x.origin.x) + e.x * 0.5 > tam.x * 0.5 + 0.01 or absf(x.origin.z) + e.z * 0.5 > tam.z * 0.5 + 0.01:
+			mal += 1
+	_comprobar(mal == 0 and piezas.size() > 10, "las vigas cuelgan bajo la losa y no se salen de ella (%d piezas, %d mal)" % [piezas.size(), mal])
 	cam.queue_free()
 
 func _fachada(raiz: Node3D) -> void:
@@ -141,10 +161,20 @@ func _entorno(raiz: Node3D) -> void:
 	for nombre: String in ["Jardineras", "Setos", "Bolardos"]:
 		var n := e.get_node_or_null(nombre) as MultiMeshInstance3D
 		_comprobar(n != null and n.multimesh.instance_count > 8, "el entorno tiene %s" % nombre.to_lower())
-	## Las jardineras no cortan ningún paseo: ninguna a menos de 4 m del eje de un paseo.
-	var jard := _instancias(e, "Jardineras")
+	## Las jardineras no cortan ningún paseo: ninguna se cruza con la boca de uno.
+	var px := 90.0
+	var pz := 110.0
+	var paseos := EntornoEstadioJardin.paseos_de(px, pz, px + 25.0, pz + 25.0)
+	var jard: Array[Transform3D] = EntornoEstadioJardin.piezas_borde(px, pz, paseos)["macetas"]
 	var corta := 0
 	for j: Transform3D in jard:
-		if absf(j.origin.x) < 4.0 + 3.5 or absf(j.origin.z) < 4.0 + 3.5:
-			corta += 1
-	_comprobar(corta == 0, "las jardineras dejan libre la entrada central de cada lado")
+		for pa: Array in paseos:
+			var c: Vector3 = pa[0]
+			var t: Vector2 = pa[1]
+			var e := j.basis.get_scale()
+			var mitad := (e.x if absf(j.basis.x.x) > 0.5 else e.z) * 0.5
+			var mitad_z := (e.z if absf(j.basis.z.z) > 0.5 else e.x) * 0.5
+			if absf(j.origin.x - c.x) < t.x * 0.5 + mitad + 2.0 and absf(j.origin.z - c.z) < t.y * 0.5 + mitad_z + 2.0:
+				corta += 1
+	_comprobar(jard.size() > 20 and corta == 0, "las jardineras (%d) no tapan ningún paseo (%d lo tapan)" % [jard.size(), corta])
+	_comprobar(paseos.size() == 12, "tres paseos por lado (%d)" % paseos.size())

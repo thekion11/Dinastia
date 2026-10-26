@@ -21,30 +21,61 @@ static func montar(e: Node3D, px: float, pz: float, cx: float, cz: float, calle:
 	EntornoEstadio._plano(e, Vector2(bx * 2.0, bz * 2.0), Vector3(0, -0.135, 0), cesped)
 	var losa: StandardMaterial3D = Texturas.baldosa(Color(0.7, 0.68, 0.64), 13).duplicate()
 	losa.uv1_scale = Vector3(0.45, 0.45, 0.45)
-	## Los paseos: dónde cruzan la franja de césped en cada lado (a lo largo del
-	## lado, en metros desde su centro). Por −X y −Z van los aparcamientos: allí
-	## los paseos pasan por sus puntas.
-	var en_x: Array = [0.0, -pz * 0.55, pz * 0.55]
-	var en_z: Array = [0.0, -px * 0.55, px * 0.55]
-	var punta_x := pz * 0.7 + 7.0
-	var punta_z := px * 0.7 + 7.0
-	var paseos: Array = []   ## [centro, tamaño]
-	for s: float in [1.0, -1.0]:
-		var lista_x: Array = en_x if s > 0.0 else [-punta_x, punta_x]
-		for t: float in lista_x:
-			if absf(t) + ANCHO_PASEO * 0.5 < pz:
-				paseos.append([Vector3(s * (px + bx) * 0.5, -0.125, t), Vector2(bx - px, ANCHO_PASEO), Vector3(s, 0, 0)])
-		var lista_z: Array = en_z if s > 0.0 else [-punta_z, punta_z]
-		for t: float in lista_z:
-			if absf(t) + ANCHO_PASEO * 0.5 < px:
-				paseos.append([Vector3(t, -0.125, s * (pz + bz) * 0.5), Vector2(ANCHO_PASEO, bz - pz), Vector3(0, 0, s)])
+	var paseos := paseos_de(px, pz, bx, bz)
 	for pa: Array in paseos:
 		EntornoEstadio._plano(e, pa[1], pa[0], losa)
 	_borde_plaza(e, px, pz, paseos)
 
+## Los paseos: dónde cruzan la franja de césped en cada lado. Cada uno es
+## [centro, tamaño, normal del lado]. Por −X y −Z van los aparcamientos: allí los
+## paseos salen del centro (de los coches a la plaza) y pasan por sus puntas.
+static func paseos_de(px: float, pz: float, bx: float, bz: float) -> Array:
+	var en_x: Array = [0.0, -pz * 0.55, pz * 0.55]
+	var en_z: Array = [0.0, -px * 0.55, px * 0.55]
+	var punta_x := pz * 0.7 + 7.0
+	var punta_z := px * 0.7 + 7.0
+	var paseos: Array = []
+	for s: float in [1.0, -1.0]:
+		var lista_x: Array = en_x if s > 0.0 else [0.0, -punta_x, punta_x]
+		for t: float in lista_x:
+			if absf(t) + ANCHO_PASEO * 0.5 < pz:
+				paseos.append([Vector3(s * (px + bx) * 0.5, -0.125, t), Vector2(bx - px, ANCHO_PASEO), Vector3(s, 0, 0)])
+		var lista_z: Array = en_z if s > 0.0 else [0.0, -punta_z, punta_z]
+		for t: float in lista_z:
+			if absf(t) + ANCHO_PASEO * 0.5 < px:
+				paseos.append([Vector3(t, -0.125, s * (pz + bz) * 0.5), Vector2(ANCHO_PASEO, bz - pz), Vector3(0, 0, s)])
+	return paseos
+
 ## Jardineras con seto a lo largo del borde de la plaza (dejando libres los
 ## paseos y las esquinas) y bolardos a la entrada de cada paseo.
 static func _borde_plaza(e: Node3D, px: float, pz: float, paseos: Array) -> void:
+	var piezas := piezas_borde(px, pz, paseos)
+	var macetas: Array[Transform3D] = piezas["macetas"]
+	var setos: Array[Transform3D] = piezas["setos"]
+	var bolardos: Array[Transform3D] = piezas["bolardos"]
+	var hormigon: StandardMaterial3D = Texturas.hormigon(Color(0.68, 0.67, 0.63), 19).duplicate()
+	hormigon.uv1_world_triplanar = true
+	hormigon.uv1_scale = Vector3(0.5, 0.5, 0.5)
+	hormigon.normal_enabled = false
+	var hoja := StandardMaterial3D.new()
+	hoja.albedo_texture = (Texturas.enredadera(29) as StandardMaterial3D).albedo_texture
+	hoja.albedo_color = Color(0.85, 1.0, 0.8)
+	hoja.uv1_triplanar = true
+	hoja.uv1_world_triplanar = true
+	hoja.uv1_scale = Vector3(0.6, 0.6, 0.6)
+	hoja.roughness = 0.9
+	var metal := StandardMaterial3D.new()
+	metal.albedo_color = Color(0.24, 0.25, 0.27)
+	metal.metallic = 0.5
+	metal.roughness = 0.4
+	DetalleGrada.multi(e, "Jardineras", macetas, hormigon)
+	DetalleGrada.multi(e, "Setos", setos, hoja)
+	var bol := DetalleGrada.multi(e, "Bolardos", bolardos, metal)
+	if bol != null:
+		bol.visibility_range_end = 160.0
+
+## Dónde va cada jardinera, seto y bolardo (en el mundo).
+static func piezas_borde(px: float, pz: float, paseos: Array) -> Dictionary:
 	var macetas: Array[Transform3D] = []
 	var setos: Array[Transform3D] = []
 	var bolardos: Array[Transform3D] = []
@@ -78,23 +109,4 @@ static func _borde_plaza(e: Node3D, px: float, pz: float, paseos: Array) -> void
 			for k in 6:
 				var dl := (float(k) - 2.5) * 1.5
 				bolardos.append(Transform3D(Basis.from_scale(Vector3(0.22, 0.9, 0.22)), n * (borde + 0.6) + a_lo_largo * (h + dl) + Vector3(0, 0.33, 0)))
-	var hormigon: StandardMaterial3D = Texturas.hormigon(Color(0.68, 0.67, 0.63), 19).duplicate()
-	hormigon.uv1_world_triplanar = true
-	hormigon.uv1_scale = Vector3(0.5, 0.5, 0.5)
-	hormigon.normal_enabled = false
-	var hoja := StandardMaterial3D.new()
-	hoja.albedo_texture = (Texturas.enredadera(29) as StandardMaterial3D).albedo_texture
-	hoja.albedo_color = Color(0.85, 1.0, 0.8)
-	hoja.uv1_triplanar = true
-	hoja.uv1_world_triplanar = true
-	hoja.uv1_scale = Vector3(0.6, 0.6, 0.6)
-	hoja.roughness = 0.9
-	var metal := StandardMaterial3D.new()
-	metal.albedo_color = Color(0.24, 0.25, 0.27)
-	metal.metallic = 0.5
-	metal.roughness = 0.4
-	DetalleGrada.multi(e, "Jardineras", macetas, hormigon)
-	DetalleGrada.multi(e, "Setos", setos, hoja)
-	var bol := DetalleGrada.multi(e, "Bolardos", bolardos, metal)
-	if bol != null:
-		bol.visibility_range_end = 160.0
+	return {"macetas": macetas, "setos": setos, "bolardos": bolardos}
