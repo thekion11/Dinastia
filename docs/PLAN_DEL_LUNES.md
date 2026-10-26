@@ -186,7 +186,7 @@ De `PENDIENTES.md` (traspaso al 21-10):
   (decisión consciente de no hacerlo por riesgo con semáforos).
 - **Estadios por fuera**: tribunas «falsas», patrocinadores reales y más escudos.
 - **Peatones**: atropello sin daño ni reacción; subir al autobús y tomar coches del tráfico
-  (dijiste «no por ahora»; con el nuevo guion del transporte público vuelve a tener sentido). Esquivar: ver §8.
+  (dijiste «no por ahora»; con el nuevo guion del transporte público vuelve a tener sentido).
 - **Esperando al dueño (🔒)**: builds, keystore, licencias, derechos de imagen, música y voces.
 
 
@@ -218,7 +218,7 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 
 ### Semana 6 (17-11 → 23-11) — Interacción y vida
 - [ ] Interacción con objetos: sentarse en bancos, máquinas expendedoras, puertas que se abren, balón suelto en el parque.
-- [ ] NPC: más oficios y charlas por barrio y hora, esquivar entre peatones, paraguas con lluvia.
+- [ ] NPC: más oficios y charlas por barrio y hora, paraguas con lluvia.
 - [ ] Retos semanales tipo «Manager Live».
 
 ### Semana 7 (24-11 → 30-11) — Tutorial y primera hora de juego
@@ -1864,7 +1864,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
 - Partido: falta la **captura del diálogo de plan de partido** con la cámara real.
 - Carrera: falta la animación de parada del portero en modo jugador.
-- Ciudad: **ceder el paso** y el choque real de coches no están vistos con la cámara real; los **peatones solo esperan**, no esquivan.
 - Rueda de prensa 2D: sigue dentro de `Principal` (`ui/principal_p17.gd`, `_abrir_rueda_pantalla_completa`): sacarla a su clase (paso nuevo de 7.1) y pulirla (petición 8 de §9).
 
 ## 9. Sesión 2 (interfaz): rama `ccr-76d707c5-dwse9h-s2`, sin fusionar

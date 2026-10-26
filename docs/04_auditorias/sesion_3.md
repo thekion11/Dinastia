@@ -29,3 +29,39 @@ pedida a mano borra la diferida, para que nunca la pise una vieja. Lo que se ve 
 `uifi_gestion`, `uico_competicion`, `uiid_identidad`, mini-banco gestion/competicion/textos y
 `captura_verificar_tabla|mercado|plantel` (sus dos «MAL» —verde daltónico del mercado y cabecera NOMBRE— fallan igual
 sin el cambio: son de esas pruebas viejas de captura, no de esto).
+
+## 2. Ciudad: peatones que esquivan de lado, ceder el paso y choque de coches
+
+**Antes.** Un peatón que alcanzaba a otro de su ruta se quedaba detrás para siempre; ante el jugador se paraba en
+seco a 1,6 m; y dos peatones de frente por la misma acera (rutas distintas) **se atravesaban** (0,01 m, medido).
+Además, por un fallo de la condición (`alto < 0.3` es verdad también para los coches, que van a altura 0), los
+coches frenaban a 1,6 m del jugador y no a los 7 m que decía el comentario: se medía 1,3 m.
+
+**Ahora** (`visor/trafico_ciudad.gd`, `_p1.gd`). Cada peatón lleva `lado`, metros hacia su derecha respecto al eje de
+su ruta (hasta ±0,8 m: la acera mide 4 m y la ruta va a 2,4 m del bordillo). `_colocar` lo aplica y gira un poco el
+cuerpo hacia donde se aparta (`giro_lado`, hasta 0,6 rad, suavizado):
+- al alcanzar a otro de su ruta se aparta al lado con sitio y le adelanta; con 0,6 m de lado entre ellos ya no se
+  estorban; mantiene el lado hasta dejarle atrás y luego vuelve al eje (1,2 m/s de paso lateral);
+- de frente con otro peatón, los dos se apartan a SU derecha y siguen a medio paso (antes: se atravesaban);
+- ante el jugador, desde 3 m se aparta al lado contrario y aminora; solo se para si aún te roza a menos de 1 m;
+- mientras dura la esquiva no cambia de lado (con el otro justo en el eje, el ruido le hacía bailar sin moverse);
+- los coches vuelven a parar a ~7 m de ti (6,7 m medidos) en vez de a 1,3 m;
+- al reaparecer cerca (`reciclar_peatones`) el lado vuelve a 0.
+Los cruces en perpendicular siguen como estaban (uno espera al otro: es lo natural en un paso de cebra).
+
+**Pruebas.** `pruebas/ideas/s3_peatones_esquivan.gd` (10 comprobaciones: adelanta al parado sin bajar de 0,7 m,
+se aparta 0,7 m y vuelve al eje; de frente se cruzan a 1,06 m sin pararse; rodea al jugador a 0,7 m; el coche para a
+6,7 m). Con el código anterior fallan 5 de ellas. `pmov_ceder` y `pmov_choque_coches` siguen en verde.
+
+**Coste.** `sonda_explorador` (la ciudad real, 311 móviles, 25 a menos de 150 m): `trafico._process` 1,24 ms antes y
+1,23 ms después. Cruce lleno a propósito (`pruebas/ideas/s3_coste_cruce.gd`: 64 peatones y 16 coches en 40 m, todos
+en el nivel de detalle caro): 2,40 → 2,66 ms (+10 %), porque casi nadie se para y el que no se para hace la
+comprobación entera. Probé a reutilizar la dirección de la rejilla en `_cede_paso` y no ganaba nada: lo quité.
+
+**Capturas con la cámara real** (Forward+, `pruebas/captura_s3_ciudad.tscn`, `MODO=pie|coche`), en
+`/tmp/capturas/s3/` (no se suben): `s3_peaton_1` (el vecino de verde a 1,9 m ya apartado 0,7 m),
+`s3_peaton_2` (te pasa al lado), `s3_cede_coche` (el camión de la basura parado a 6,7 m de ti en un cruce),
+`s3_choque_coche` (conduciendo contra su trasera: tu coche queda en 0 km/h pegado al parachoques, sin atravesarlo).
+Visto de paso: en la primera tanda un vecino salía de detrás de un quiosco verde de la acera de la avenida
+(1005, −500); la sonda de la captura no encontró ningún punto de ruta de peatones dentro de un obstáculo fijo a menos
+de 120 m (0 de 427), así que el quiosco no estorba la ruta: solo tapaba la vista.
