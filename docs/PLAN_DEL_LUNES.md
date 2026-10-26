@@ -287,6 +287,24 @@ da el +5 %; la entrevista mueve ±2 de moral; publicar una foto suma seguidores;
 y nada más; las citas caducan el domingo sin castigo. Captura `f4p_captura_personas` (mensaje con «Ir», patrocinador en su
 sede, agente en el bar, asamblea, foto publicada).
 
+### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
+
+Palabras del dueño: *«hay partes de la ciudad sin detalles y muy mejorables; los personajes se mueven de forma
+antinatural, sus partes del cuerpo no son anatómicamente correctas, falta profundidad y calidad de los personajes; mejorar
+y agregar animaciones; analizar toda la ciudad, mejorar la construcción y cuidar la coherencia»*. Entra como trabajo de la
+fase 6 (pulido) adelantado y se hace por PASADAS con captura antes/después y veredicto del dueño en cada una.
+
+| # | Pasada | Qué | Cómo se mide |
+|---|---|---|---|
+| C1 | Auditoría de la ciudad | recorrido por zonas con capturas (paseo y aérea), lista priorizada de huecos, cajas lisas, incoherencias (sesión ejecutora, tarea 7) | `docs/04_auditorias/ciudad_26_10.md` + `capturas_ciudad/` |
+| C2 | Construcción y coherencia | fachadas reales donde hay cajas (centro comercial, cocheras, estación), aceras y cruces continuos, rótulos sobre algo, escalas unificadas, piezas Kenney donde falten | capturas antes/después por zona |
+| P1 | Anatomía | medir el cuerpo base (`PersonajeDT`, `VestidorQ`): proporciones cabeza/tronco/brazos/piernas frente a un humano medio (7,5 cabezas), hombros, cuello, manos; corregir escalas por hueso | hoja de medidas + captura frontal/lateral |
+| P2 | Movimiento natural | pasos sin patinar (velocidad de clip = velocidad real), giro con inercia, transición caminar↔correr↔parar con mezcla, peso en los brazos, mirada; en peatones y en el DT | `pruebas/sonda_movimiento.tscn` (deslizamiento de pies en cm) + vídeo corto |
+| P3 | Más animaciones | sentarse, esperar (3 variantes), hablar con gestos, abrir puerta, subir escalera, saludar; usar los 333 clips del pack antes de crear nuevos | inventario de clips usados/sin usar |
+| P4 | Profundidad y calidad | piel con subsuperficie suave, pelo con capas, ropa con arrugas normales, sombras de contacto, LOD sin saltos | captura de transmisión + de cerca |
+
+Compuerta: el dueño ve cada pasada y dice «estamos» o «mejorar». Nada se quita sin avisar.
+
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 
 #### 9.1 Propuesta para la fase 4 (entrar al campeonato) — cifras VALIDADAS por el dueño el 24-10
