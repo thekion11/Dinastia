@@ -9,6 +9,10 @@ signal modo_cambiado(es_jugador: bool)
 signal disparo_efectuado(potencia: float)
 signal pase_efectuado(destino: Vector3)
 
+## El jugador MIRA A +Z (como en `MatchPlayback`: `rotation.y = atan2(v.x, v.z)`).
+## Su delante es `+basis.z`, y para encararlo a un punto, `look_at(..., true)`.
+## (25-10, f0m: aquí se usaba -Z: el balón se conducía a la espalda, los pases
+## salían hacia atrás y al tirar se quedaba de espaldas al arco.)
 const MEDIO_LARGO := 52.5
 const MEDIO_ANCHO := 34.0
 
@@ -178,7 +182,7 @@ func _process(delta: float) -> void:
 
 		# Arrastrar balón con toques de conducción si tiene posesión
 		if tiene_posesion and is_instance_valid(balon):
-			var fwd := -node.global_transform.basis.z.normalized()
+			var fwd := node.global_transform.basis.z.normalized()
 			var pos_b := node.global_position + fwd * 0.72 + Vector3(0, 0.11, 0)
 			balon.global_position = balon.global_position.lerp(pos_b, 12.0 * delta)
 	else:
@@ -241,7 +245,7 @@ func _ejecutar_pase_corto() -> void:
 	if not is_instance_valid(balon):
 		return
 	var node: Node3D = jugador_activo["node"]
-	var fwd := -node.global_transform.basis.z.normalized()
+	var fwd := node.global_transform.basis.z.normalized()
 
 	# Buscar compañero en la dirección a la que mira el jugador
 	var mejor_dest: Dictionary = {}
@@ -277,7 +281,7 @@ func _ejecutar_pase_largo() -> void:
 	if not is_instance_valid(balon):
 		return
 	var node: Node3D = jugador_activo["node"]
-	var fwd := -node.global_transform.basis.z.normalized()
+	var fwd := node.global_transform.basis.z.normalized()
 	var target_pos := node.global_position + fwd * 24.0
 	target_pos.x = clampf(target_pos.x, -32.0, 32.0)
 	target_pos.z = clampf(target_pos.z, -50.0, 50.0)
@@ -294,16 +298,16 @@ func _ejecutar_disparo(potencia: float) -> void:
 		return
 	var node: Node3D = jugador_activo["node"]
 	var z_arco: float = -52.5 if es_local_user else 52.5
-	var x_offset := (randf() - 0.5) * (1.0 - potencia * 0.5) * 4.0
-	var y_dest := clampf(potencia * 2.3, 0.3, 2.2)
-	var target_tiro := Vector3(x_offset, y_dest, z_arco - (0.8 if es_local_user else -0.8))
+	var dist := Vector2(node.global_position.x, node.global_position.z - z_arco).length()
+	var tiro := ControlPartido.resolver_tiro(potencia, dist, randf(), randf())
+	var target_tiro := Vector3(tiro["x"], tiro["y"], z_arco - (0.8 if es_local_user else -0.8))
 
 	var ap: AnimationPlayer = jugador_activo.get("anim")
 	if is_instance_valid(ap) and ap.has_animation("patear"):
 		ap.play("patear")
 
-	node.look_at(Vector3(0, node.position.y, z_arco), Vector3.UP)
-	var es_gol: bool = absf(x_offset) < 3.2 and y_dest < 2.35
+	node.look_at(Vector3(0, node.position.y, z_arco), Vector3.UP, true)
+	var es_gol: bool = tiro["gol"]
 	balon.enviar(target_tiro, clampf(0.9 - potencia * 0.3, 0.45, 0.9), 0.5, es_gol)
 
 	# Si es gol, festejar
@@ -318,10 +322,32 @@ func _ejecutar_disparo(potencia: float) -> void:
 
 	disparo_efectuado.emit(potencia)
 
+## TIRO (25-10, pcar): antes el desvío máximo era 2 m y el umbral de gol 3,2 m,
+## así que TODO tiro entraba, desde cualquier distancia. Ahora el desvío crece con
+## la distancia al arco y con la potencia pasada de rosca (>0,85), un tiro a tope
+## puede irse por encima del larguero, y el portero ataja más los tiros al centro
+## y los lejanos. Función pura (azares por parámetro) para poder probarla.
+## Arco real: 7,32 × 2,44 m; se descuenta el radio del balón (0,11).
+const ARCO_MEDIO := 3.66 - 0.11
+const ARCO_ALTO := 2.44 - 0.11
+
+static func resolver_tiro(potencia: float, distancia: float, azar_x: float, azar_atajada: float) -> Dictionary:
+	var p := clampf(potencia, 0.0, 1.0)
+	var abanico := 1.2 + distancia * 0.2 + maxf(p - 0.85, 0.0) * 12.0
+	var x := (clampf(azar_x, 0.0, 1.0) - 0.5) * 2.0 * abanico
+	var y := clampf(p * 2.6, 0.3, 2.7)
+	var a_puerta := absf(x) < ARCO_MEDIO and y < ARCO_ALTO
+	var p_atajada := 0.0
+	if a_puerta:
+		var centrado := 1.0 - absf(x) / ARCO_MEDIO
+		p_atajada = clampf(0.1 + 0.45 * centrado + distancia * 0.01 - p * 0.15, 0.05, 0.9)
+	var atajado := a_puerta and azar_atajada < p_atajada
+	return {"x": x, "y": y, "a_puerta": a_puerta, "atajado": atajado, "gol": a_puerta and not atajado}
+
 func _ejecutar_barrida() -> void:
 	var node: Node3D = jugador_activo["node"]
 	var ap: AnimationPlayer = jugador_activo.get("anim")
 	if is_instance_valid(ap) and ap.has_animation("falta_barrida"):
 		ap.play("falta_barrida")
-	var fwd := -node.global_transform.basis.z.normalized()
+	var fwd := node.global_transform.basis.z.normalized()
 	node.position += fwd * 2.4

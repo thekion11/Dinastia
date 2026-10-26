@@ -17,7 +17,9 @@ func desde_dic(d: Dictionary) -> void:
 		if club == null or j == null:
 			continue
 		ofertas_recibidas.append({"jugador": j, "club": club, "monto": int(o.get("monto", 0)),
-			"semana": int(o.get("semana", 0)), "clausula": bool(o.get("clausula", false))})
+			"semana": int(o.get("semana", 0)), "clausula": bool(o.get("clausula", false)),
+			## Guardados de antes de la caducidad: la oferta cuenta como recién llegada.
+			"abs": int(o.get("abs", m.anio * 60 + m.semana))})
 
 # ---------------------------------------------------------------------------
 #  LA MESA DE NEGOCIACIÓN
@@ -25,29 +27,30 @@ func desde_dic(d: Dictionary) -> void:
 
 ## `abrirNegociacion()` del HTML: las puertas que hay que pasar ANTES de
 ## sentarse -rol, ventana de mercado, cupo de extranjeros, "no me quiere
-## hablar hasta la semana X" tras una mesa rota-. Devuelve "" si se abrió.
+## hablar hasta la semana X" tras una mesa rota-. Devuelve "" si se abrió, o el
+## motivo YA traducido (s3, 26-10-2026: antes, castellano fijo).
 func abrir_negociacion(j: Jugador) -> String:
 	var m := _mundo()
 	var mio := m.mi_club()
 	if j == null or mio == null or j.club_id == mio.id:
-		return "ese jugador ya es tuyo"
+		return Idiomas.t("ese jugador ya es tuyo")
 	if m.roles != null and not m.roles.puede_fichar():
-		return String(m.roles.motivo_bloqueo("fichar"))
+		return Idiomas.t(String(m.roles.motivo_bloqueo("fichar")))
 	if m.tiene_desafio("cantera"):
-		return "Desafío «solo canteranos»: el mercado te queda vetado."
+		return Idiomas.t("Desafío «solo canteranos»: el mercado te queda vetado.")
 	if m.tiene_desafio("local") and j.pais != mio.pais:
-		return "Desafío «un solo país»: no puedes fichar extranjeros."
+		return Idiomas.t("Desafío «un solo país»: no puedes fichar extranjeros.")
 	if j.no_negociar_hasta > 0 and m.semana < j.no_negociar_hasta:
-		return "%s no se sienta a hablar de él hasta la semana %d" % [
-			(m.clubes.get(j.club_id) as Club).nombre if m.clubes.has(j.club_id) else "Su club", j.no_negociar_hasta]
+		return Idiomas.t("%s no se sienta a hablar de él hasta la semana %d") % [
+			(m.clubes.get(j.club_id) as Club).nombre if m.clubes.has(j.club_id) else Idiomas.t("Su club"), j.no_negociar_hasta]
 	## Si diriges un club con filosofía de cantera, la respetas tú también.
 	if not Regiones.admite(mio, j):
 		var mot := Regiones.motivo(mio)
-		return mot[0].to_upper() + mot.substr(1)
+		return Idiomas.t(mot[0].to_upper() + mot.substr(1))
 	if m.federacion != null:
 		var motivo_ext := m.federacion.puede_fichar_extranjero(mio, j)
 		if motivo_ext != "":
-			return motivo_ext
+			return Idiomas.t(motivo_ext)
 	negociacion = Negociacion.new(m, j)
 	return ""
 

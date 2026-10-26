@@ -1,36 +1,39 @@
 extends Control
-## [Capa 1/2 de `creador_personaje.gd`] abrir, _hoja, _cambiar, _opciones, _deslizador, _tab_cuerpo … (+15)
+## [Capa 1/2 de `creador_personaje.gd`] abrir, la hoja de Conjuntos y los botones.
 
-## EL CREADOR DE PERSONAJE (26-9-2026), a pantalla completa. Pedido del
-## usuario: *"ve por el modelo de nuestro personaje, el modificable"*.
+## EL CREADOR DE PERSONAJE DEL MENÚ (26-9-2026; rehecho el 25-10-2026 sobre las
+## piezas de la etapa de entrada). Pedido del usuario: *"ve por el modelo de
+## nuestro personaje, el modificable"*.
 ##
-## A la izquierda, tu personaje en 3D en un estudio con tres luces, girando
-## (se puede arrastrar para girarlo a mano). A la derecha, pestañas:
-##   Cuerpo · Piel y pelo · Ropa · Accesorios · Conjuntos
-## Arriba: Aleatorio, Deshacer, Cancelar y Guardar. Guardar deja el aspecto en
-## `Roles.look["p3d"]`: es el mismo que se ve en la banda de cada partido.
+## A la izquierda, tu personaje en 3D (`EstudioPersonaje`: gira, se arrastra,
+## se acerca a la cara). A la derecha, las hojas del aspecto (`HojasPersonaje`:
+## Cuerpo · Cara y pelo · Ropa · Accesorios) y aquí la de Conjuntos.
+## Arriba: Al azar (coherente), Deshacer, Cancelar y Guardar. Guardar deja el
+## aspecto en `Roles.look["p3d"]` (`PersonajeDatos.aplicar_aspecto`): el mismo
+## que se ve en la banda de cada partido. La etapa «Personaje» del arranque
+## (`PantallaPersonaje`) usa las mismas piezas: los dos se ven igual.
 
 signal cerrado
 
+const MAX_CONJUNTOS := 5
+
 var _mundo: Mundo
-var _asp: Dictionary = {}
-var _historial: Array = []           ## para Deshacer
-var _vp: SubViewport
-var _pivote: Node3D
-var _actual: Dictionary = {}
-var _pendiente := 0.0                ## rearmar el 3D tras un respiro
-var _girar := true
-var _arrastrando := false
-var _pestanas: TabContainer
+var _original: Dictionary = {}
+var _pestanas: HojasPersonaje
+var _estudio: EstudioPersonaje
 var _capa: CanvasLayer = null
 var _menu: Control = null
+var _aviso: Label
+var _b_deshacer: Button
+var _avisado_salir := false
 var _c1 := Color("1f5fa8")
 var _c2 := Color.WHITE
+var _rng := RandomNumberGenerator.new()
 
 static func abrir(padre: Control, mundo: Mundo) -> CreadorPersonaje:
 	var n := CreadorPersonaje.new()
 	n._mundo = mundo
-	n._asp = PersonajeDT.aspecto(mundo.roles.aspecto_3d())
+	n._original = PersonajeDT.aspecto(mundo.roles.aspecto_3d())
 	var club := mundo.mi_club()
 	if club != null:
 		n._c1 = Color(club.color1)
@@ -40,7 +43,7 @@ static func abrir(padre: Control, mundo: Mundo) -> CreadorPersonaje:
 	if padre.is_inside_tree():
 		n._capa = CanvasLayer.new()
 		n._capa.layer = 60
-		n._capa.name = "PantallaPersonaje"
+		n._capa.name = "CreadorPersonaje"
 		padre.get_tree().root.add_child(n._capa)
 		n._capa.add_child(n)
 		n._menu = padre
@@ -50,271 +53,83 @@ static func abrir(padre: Control, mundo: Mundo) -> CreadorPersonaje:
 	n._montar()
 	return n
 
-## ------------------------------------------------------------ PESTAÑAS
+## El aspecto que se está editando.
+func aspecto() -> Dictionary:
+	return _pestanas.asp if _pestanas != null else _original
 
-func _hoja(nombre: String) -> VBoxContainer:
-	var sc := ScrollContainer.new()
-	sc.name = nombre
-	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	var vb := VBoxContainer.new()
-	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vb.add_theme_constant_override("separation", 10)
-	sc.add_child(vb)
-	return vb
-
-## Cambia un rasgo (guardando el anterior para Deshacer) y rearma en un rato.
-func _cambiar(clave: String, valor: Variant, repintar := false) -> void:
-	if _asp.get(clave) == valor:
-		return
-	_historial.append(_asp.duplicate())
-	if _historial.size() > 40:
-		_historial.pop_front()
-	_asp[clave] = valor
-	_pendiente = 0.18
-	if repintar:
-		_pintar_pestanas()
-
-func _opciones(vb: VBoxContainer, rotulo: String, clave: String, lista: Array) -> void:
-	vb.add_child(Tema.rotulo(rotulo))
-	var flow := HFlowContainer.new()
-	flow.add_theme_constant_override("h_separation", 6)
-	flow.add_theme_constant_override("v_separation", 6)
-	vb.add_child(flow)
-	for par: Variant in lista:
-		var valor: Variant = par[0] if par is Array else par
-		var nombre := String(par[1]) if par is Array else String(par).capitalize()
-		var b := Button.new()
-		b.text = nombre
-		b.toggle_mode = true
-		b.button_pressed = _asp.get(clave) == valor
-		b.custom_minimum_size = Vector2(96, 32)
-		b.pressed.connect(func() -> void: _cambiar(clave, valor, true))
-		flow.add_child(b)
-
-func _deslizador(vb: VBoxContainer, rotulo: String, clave: String, minimo: float, maximo: float, paso: float, fmt: String) -> void:
-	var fila := HBoxContainer.new()
-	fila.add_theme_constant_override("separation", 10)
-	vb.add_child(fila)
-	var et := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, rotulo)
-	et.custom_minimum_size = Vector2(120, 0)
-	fila.add_child(et)
-	var s := HSlider.new()
-	s.min_value = minimo
-	s.max_value = maximo
-	s.step = paso
-	s.value = float(_asp[clave])
-	s.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	s.custom_minimum_size = Vector2(200, 28)
-	fila.add_child(s)
-	var val := Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, fmt % float(_asp[clave]))
-	val.custom_minimum_size = Vector2(60, 0)
-	fila.add_child(val)
-	s.value_changed.connect(func(v: float) -> void:
-		val.text = fmt % v
-		_cambiar(clave, v))
-
-func _tab_cuerpo() -> Control:
-	var vb := _hoja("Cuerpo")
-	_opciones(vb, "Cuerpo", "cuerpo", [["male", "Hombre"], ["female", "Mujer"]])
-	_deslizador(vb, "Estatura", "altura", 1.55, 2.02, 0.01, "%.2f m")
-	_deslizador(vb, "Complexión", "complexion", -1.0, 1.0, 0.05, "%+.2f")
-	_deslizador(vb, "Hombros", "hombros", -1.0, 1.0, 0.05, "%+.2f")
-	_deslizador(vb, "Barriga", "barriga", -1.0, 1.0, 0.05, "%+.2f")
-	_deslizador(vb, "Piernas", "piernas", -1.0, 1.0, 0.05, "%+.2f")
-	_deslizador(vb, "Cabeza", "cabeza", -1.0, 1.0, 0.05, "%+.2f")
-	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "Arrastra el personaje para girarlo. Todo lo que cambies aquí se ve en la banda en cada partido.")
-	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vb.add_child(nota)
-	return vb.get_parent()
-
-func _muestras(vb: VBoxContainer, rotulo: String, clave: String, colores: Array) -> void:
-	vb.add_child(Tema.rotulo(rotulo))
-	var fila := HFlowContainer.new()
-	fila.add_theme_constant_override("h_separation", 6)
-	vb.add_child(fila)
-	for hexa: String in colores:
-		var b := Button.new()
-		b.custom_minimum_size = Vector2(38, 38)
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color(hexa)
-		sb.set_corner_radius_all(19)
-		sb.border_color = Tema.ORO if String(_asp.get(clave, "")) == hexa else Color(0, 0, 0, 0.4)
-		sb.set_border_width_all(3)
-		for estado in ["normal", "hover", "pressed", "focus"]:
-			b.add_theme_stylebox_override(estado, sb)
-		b.pressed.connect(func() -> void: _cambiar(clave, hexa, true))
-		fila.add_child(b)
-	var picker := ColorPickerButton.new()
-	picker.color = Color(String(_asp.get(clave, "ffffff")))
-	picker.custom_minimum_size = Vector2(60, 38)
-	picker.color_changed.connect(func(c: Color) -> void: _cambiar(clave, c.to_html(false)))
-	fila.add_child(picker)
-
-func _interruptor(vb: VBoxContainer, rotulo: String, clave: String) -> void:
-	var c := CheckButton.new()
-	c.text = rotulo
-	c.button_pressed = bool(_asp.get(clave, false))
-	c.toggled.connect(func(on: bool) -> void: _cambiar(clave, on))
-	vb.add_child(c)
-
-## ◀ nombre ▶ para listas largas (las caras y cortes de la biblioteca).
-func _selector(vb: VBoxContainer, rotulo: String, clave: String, lista: Array) -> void:
-	vb.add_child(Tema.rotulo(rotulo))
-	var fila := HBoxContainer.new()
-	vb.add_child(fila)
-	var actual := 0
-	for i in lista.size():
-		if (lista[i] as Array)[0] == _asp.get(clave):
-			actual = i
-	var et := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, String((lista[actual] as Array)[1]))
-	et.custom_minimum_size = Vector2(220, 0)
-	et.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	for paso: int in [-1, 1]:
-		var b := Button.new()
-		b.text = "◀" if paso < 0 else "▶"
-		b.custom_minimum_size = Vector2(40, 32)
-		b.pressed.connect(func() -> void:
-			var j := 0
-			for i in lista.size():
-				if (lista[i] as Array)[0] == _asp.get(clave):
-					j = i
-			j = posmod(j + paso, lista.size())
-			et.text = String((lista[j] as Array)[1])
-			_cambiar(clave, (lista[j] as Array)[0]))
-		fila.add_child(b)
-		if paso < 0:
-			fila.add_child(et)
-
-func _tab_pelo() -> Control:
-	var vb := _hoja("Piel y pelo")
-	_muestras(vb, "Tono de piel", "piel", PersonajeDT.PIELES)
-	_opciones(vb, "Peinado", "pelo", PersonajeDT.CORTES)
-	_muestras(vb, "Color de pelo", "color_pelo", PersonajeDT.COLORES_PELO)
-	_muestras(vb, "Color de ojos", "ojos", PersonajeDT.OJOS)
-	_interruptor(vb, "Barba (cara clásica)", "barba")
-	## BIBLIOTECA MODULAR: caras mezcladas (del tono elegido) y cortes medidos.
-	if BibliotecaCaras.hay():
-		var n_caras := BibliotecaCaras.del_tono(Color(String(_asp.get("piel", "c68d68")))).size()
-		var caras: Array = [[-1, "Clásica"]]
-		for i in n_caras:
-			caras.append([i, "Cara %d" % (i + 1)])
-		_selector(vb, "Cara (biblioteca)", "cara", caras)
-		var cortes: Array = [["", "Ninguno (el peinado)"]]
-		var cuenta := {}
-		for k: String in BibliotecaCaras.pelos():
-			var nom := BibliotecaCaras.nombre_pelo(k)
-			cuenta[nom] = int(cuenta.get(nom, 0)) + 1
-			cortes.append([k, "%s %d" % [nom.replace("_", " ").capitalize(), cuenta[nom]]])
-		_selector(vb, "Corte medido (con cara de biblioteca)", "corte_med", cortes)
-		vb.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE,
-			"Las caras de la biblioteca mezclan rasgos de varias personas: no son la cara de nadie. Por ahora, solo con cuerpo de hombre."))
-	return vb.get_parent()
-
-func _tab_ropa() -> Control:
-	var vb := _hoja("Ropa")
-	_opciones(vb, "Estilo", "ropa", PersonajeDT.ROPAS)
-	_muestras(vb, "Color principal (chaqueta, polo…)", "c_ropa",
-		["1f2a44", "111111", "3a3a3a", "5a4636", "2e3f2a", "6a1b2a", "20354d", "c9c1b0", _c1.to_html(false)])
-	_muestras(vb, "Color secundario (camisa, detalles)", "c_ropa2",
-		["f2f2f2", "cfe0f5", "e8e0d0", "ffc9c9", "d9d9d9", "111111", _c2.to_html(false)])
-	_interruptor(vb, "Corbata (con traje o abrigo)", "corbata")
-	_interruptor(vb, "Manga corta (polo, camisa, rayas, jersey)", "manga_corta")
-	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "El chándal usa siempre los colores del club.")
-	vb.add_child(nota)
-	return vb.get_parent()
-
-func _tab_accesorios() -> Control:
-	var vb := _hoja("Accesorios")
-	_opciones(vb, "Gafas", "gafas", PersonajeDT.GAFAS)
-	_interruptor(vb, "Gorra del club", "gorra")
-	_interruptor(vb, "Bufanda del club", "bufanda")
-	_interruptor(vb, "Auriculares", "auriculares")
-	_interruptor(vb, "Reloj", "reloj")
-	_interruptor(vb, "Pendientes", "pendiente")
-	_interruptor(vb, "Cadena al cuello", "cadena")
-	_opciones(vb, "Tatuaje", "tatuaje", PersonajeDT.TATUAJES)
-	return vb.get_parent()
+func _hay_cambios() -> bool:
+	return PersonajeDT.aspecto(aspecto()) != _original
 
 ## Hasta cinco conjuntos guardados con nombre: para cambiar de traje de gala a
 ## chándal de entrenamiento sin rehacerlo todo.
-func _tab_conjuntos() -> Control:
-	var vb := _hoja("Conjuntos")
-	vb.add_child(Tema.rotulo("Guardar el aspecto actual"))
+func _hoja_conjuntos() -> Control:
+	var vb := HojasPersonaje.hoja()
+	ControlesPersonaje.rotulo(vb, "Guardar el aspecto actual")
 	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
 	vb.add_child(fila)
 	var nombre := LineEdit.new()
 	nombre.placeholder_text = Idiomas.t("Nombre (p. ej. Gala, Entrenamiento)")
+	nombre.max_length = 24
+	nombre.custom_minimum_size = Vector2(0, 36)
 	nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(nombre)
-	var bg := Button.new()
-	bg.text = Idiomas.t("Guardar conjunto")
-	fila.add_child(bg)
 	var conjuntos: Array = _mundo.roles.look.get("p3d_conjuntos", [])
-	bg.pressed.connect(func() -> void:
+	var bg := ControlesPersonaje.chip(Idiomas.t("Guardar conjunto"), false, func() -> void:
 		var n := nombre.text.strip_edges()
 		if n == "":
-			n = "Conjunto %d" % (conjuntos.size() + 1)
-		conjuntos.append({"n": n, "a": _asp.duplicate()})
-		while conjuntos.size() > 5:
+			n = Idiomas.t("Conjunto %d") % (conjuntos.size() + 1)
+		conjuntos.append({"n": n, "a": aspecto().duplicate()})
+		while conjuntos.size() > MAX_CONJUNTOS:
 			conjuntos.pop_front()
 		_mundo.roles.look["p3d_conjuntos"] = conjuntos
-		_pintar_pestanas())
-	vb.add_child(Tema.rotulo("Tus conjuntos"))
+		_pestanas.pintar())
+	bg.toggle_mode = false
+	fila.add_child(bg)
+	ControlesPersonaje.rotulo(vb, "Tus conjuntos", "como mucho cinco: el más viejo deja sitio al nuevo")
 	if conjuntos.is_empty():
-		vb.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "Todavía no guardaste ninguno."))
+		ControlesPersonaje.nota(vb, "Todavía no guardaste ninguno.")
 	for i in conjuntos.size():
 		var cj: Dictionary = conjuntos[i]
 		var f := HBoxContainer.new()
+		f.add_theme_constant_override("separation", 6)
 		vb.add_child(f)
 		var et := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "👔 " + String(cj.get("n", "")))
 		et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		f.add_child(et)
-		var bp := Button.new()
-		bp.text = Idiomas.t("Ponérmelo")
-		bp.pressed.connect(func() -> void:
-			_historial.append(_asp.duplicate())
-			_asp = PersonajeDT.aspecto(cj.get("a", {}))
-			_pendiente = 0.05
-			_pintar_pestanas())
+		var bp := ControlesPersonaje.chip(Idiomas.t("Ponérmelo"), false, func() -> void: _pestanas.poner(cj.get("a", {})))
+		bp.toggle_mode = false
 		f.add_child(bp)
-		var bb := Button.new()
-		bb.text = "✕"
 		var idx := i
-		bb.pressed.connect(func() -> void:
+		var bb := ControlesPersonaje.chip("✕", false, func() -> void:
 			conjuntos.remove_at(idx)
 			_mundo.roles.look["p3d_conjuntos"] = conjuntos
-			_pintar_pestanas())
+			_pestanas.pintar())
+		bb.toggle_mode = false
+		bb.tooltip_text = Idiomas.t("Borrar")
 		f.add_child(bb)
-	return vb.get_parent()
+	return HojasPersonaje.raiz(vb)
 
-func _pintar_pestanas() -> void:
-	var cual := _pestanas.current_tab if _pestanas.get_tab_count() > 0 else 0
-	for h in _pestanas.get_children():
-		_pestanas.remove_child(h)
-		h.queue_free()
-	_pestanas.add_child(_tab_cuerpo())
-	_pestanas.add_child(_tab_pelo())
-	_pestanas.add_child(_tab_ropa())
-	_pestanas.add_child(_tab_accesorios())
-	_pestanas.add_child(_tab_conjuntos())
-	_pestanas.current_tab = clampi(cual, 0, _pestanas.get_tab_count() - 1)
-
-## ------------------------------------------------------------ BOTONES
-
+## Al azar, pero con sentido (sin barba en una mujer, corbata solo con traje,
+## canas según tu edad...). La edad sale de tu perfil si lo hay.
 func _aleatorio() -> void:
-	_historial.append(_asp.duplicate())
-	var rng := RandomNumberGenerator.new()
-	rng.randomize()
-	_asp = PersonajeDT.aleatorio(rng)
-	_pendiente = 0.05
-	_pintar_pestanas()
+	_rng.randomize()
+	var edad := int((_mundo.roles.look.get("perfil", {}) as Dictionary).get("edad", _mundo.roles.look.get("edad", PersonajeDatos.EDAD_DEFECTO)))
+	_pestanas.poner(PersonajeDatos.aspecto_coherente(_rng, -1, edad))
 
 func _deshacer() -> void:
-	if _historial.is_empty():
+	_pestanas.deshacer()
+
+## Cancelar con cambios sin guardar pide un segundo toque: un clic sin querer
+## no tira media hora de vestir al personaje.
+func _cancelar() -> void:
+	if _hay_cambios() and not _avisado_salir:
+		_avisado_salir = true
+		_aviso.text = Idiomas.t("Tienes cambios sin guardar: pulsa otra vez «Cancelar» para descartarlos.")
+		_aviso.visible = true
+		Animar.pulso(_aviso)
 		return
-	_asp = _historial.pop_back()
-	_pendiente = 0.05
-	_pintar_pestanas()
+	_cerrar()
 
 func _cerrar() -> void:
 	if is_instance_valid(_menu):
@@ -326,107 +141,15 @@ func _cerrar() -> void:
 		queue_free()
 
 func _guardar() -> void:
-	_mundo.roles.look["p3d"] = _asp.duplicate()
-	## El retrato 2D (fichas, prensa) sigue al 3D: mismo pelo, piel, barba y
-	## gafas. Una entrenadora no puede salir con barba en su ficha.
-	var l: Dictionary = _mundo.roles.look
-	if String(_asp["pelo"]) in CaraDT.CORTES:
-		l["pelo"] = String(_asp["pelo"])
-	l["pelo_c"] = "#" + String(_asp["color_pelo"])
-	l["piel"] = "#" + String(_asp["piel"])
-	l["barba"] = 1 if bool(_asp["barba"]) and String(_asp["cuerpo"]) == "male" else 0
-	l["gafas"] = String(_asp["gafas"]) != ""
-	Genero.fijar(String(_asp["cuerpo"]) == "female")
-	Aviso.mostrar(_menu if is_instance_valid(_menu) else get_parent() as Control, "logro", "🧍", "Personaje guardado", "Así te verán en la banda")
+	PersonajeDatos.aplicar_aspecto(_mundo.roles, aspecto())
+	Aviso.mostrar(_menu if is_instance_valid(_menu) else get_parent() as Control, "logro", "🧍",
+		Idiomas.t("Personaje guardado"), Idiomas.t("Así te verán en la banda"))
 	_cerrar()
 
-func _arrastre(ev: InputEvent) -> void:
-	if ev is InputEventMouseButton and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
-		_arrastrando = (ev as InputEventMouseButton).pressed
-		if _arrastrando:
-			_girar = false
-	elif ev is InputEventMouseMotion and _arrastrando:
-		_pivote.rotation.y += (ev as InputEventMouseMotion).relative.x * 0.01
-	elif ev is InputEventScreenDrag:
-		_girar = false
-		_pivote.rotation.y += (ev as InputEventScreenDrag).relative.x * 0.01
-
-## ------------------------------------------------------------ EL ESTUDIO
-
-func _estudio() -> Control:
-	var cont := SubViewportContainer.new()
-	cont.stretch = true
-	cont.custom_minimum_size = Vector2(460, 500)
-	cont.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cont.gui_input.connect(_arrastre)
-	_vp = SubViewport.new()
-	_vp.size = Vector2i(600, 700)
-	_vp.msaa_3d = Viewport.MSAA_4X
-	_vp.own_world_3d = true
-	cont.add_child(_vp)
-	var mundo3 := Node3D.new()
-	_vp.add_child(mundo3)
-	var cam := Camera3D.new()
-	cam.fov = 38
-	## Sin `look_at`: aquí la cámara todavía no está en el árbol.
-	cam.transform = Transform3D(Basis.looking_at(Vector3(0, 0.92, 0) - Vector3(0, 1.1, 4.0), Vector3.UP), Vector3(0, 1.1, 4.0))
-	mundo3.add_child(cam)
-	## Luz de tres puntos: principal cálida, relleno frío y contraluz.
-	## Etapa 2 (8-10-2026): más suaves. Con 1,25 + 0,45 + 0,9 y ambiente 0,8 la
-	## escena estaba quemada: la piel clara salía BLANCA (manos y cuello
-	## «enguantados») y la tarima casi negra se veía gris claro.
-	var luces := [[Vector3(-30, 35, 0), 0.95, Color(1.0, 0.95, 0.88)], [Vector3(-10, -40, 0), 0.3, Color(0.8, 0.88, 1.0)], [Vector3(-20, 170, 0), 0.55, Color(1, 1, 1)]]
-	for i in luces.size():
-		var l: Array = luces[i]
-		var luz := DirectionalLight3D.new()
-		luz.rotation_degrees = l[0]
-		luz.light_energy = float(l[1])
-		luz.light_color = l[2]
-		luz.shadow_enabled = i == 0
-		mundo3.add_child(luz)
-	var env := WorldEnvironment.new()
-	var e := Environment.new()
-	e.background_mode = Environment.BG_COLOR
-	e.background_color = Color(0.09, 0.11, 0.13)
-	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color(0.55, 0.57, 0.62)
-	e.ambient_light_energy = 0.45
-	e.tonemap_mode = Environment.TONE_MAPPER_ACES
-	e.tonemap_exposure = 0.95
-	e.tonemap_white = 6.0
-	env.environment = e
-	mundo3.add_child(env)
-	## La tarima: un disco con borde del color del club.
-	var tarima := MeshInstance3D.new()
-	var cm := CylinderMesh.new()
-	cm.top_radius = 0.75
-	cm.bottom_radius = 0.8
-	cm.height = 0.08
-	tarima.mesh = cm
-	var mt := StandardMaterial3D.new()
-	mt.albedo_color = Color(0.13, 0.14, 0.16)
-	mt.roughness = 0.8
-	tarima.material_override = mt
-	tarima.position.y = -0.04
-	mundo3.add_child(tarima)
-	var aro := MeshInstance3D.new()
-	var tm := TorusMesh.new()
-	tm.inner_radius = 0.76
-	tm.outer_radius = 0.8
-	aro.mesh = tm
-	var ma := StandardMaterial3D.new()
-	ma.albedo_color = _c1
-	ma.emission_enabled = true
-	ma.emission = _c1
-	ma.emission_energy_multiplier = 0.8
-	aro.material_override = ma
-	aro.position.y = 0.0
-	mundo3.add_child(aro)
-	_pivote = Node3D.new()
-	mundo3.add_child(_pivote)
-	return cont
-
-func _rearmar() -> void:
-	if not _actual.is_empty() and is_instance_valid(_actual.get("nodo")):
-		(_actual["nodo"] as Node).queue_free()
-	_actual = PersonajeDT.crear(_pivote, _asp, _c1, _c2)
+func _al_cambiar(a: Dictionary) -> void:
+	_estudio.mostrar(a)
+	_avisado_salir = false
+	if _aviso != null:
+		_aviso.visible = false
+	if _b_deshacer != null:
+		_b_deshacer.disabled = not _pestanas.puede_deshacer()

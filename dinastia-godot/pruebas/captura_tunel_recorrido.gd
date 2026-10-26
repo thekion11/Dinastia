@@ -35,6 +35,10 @@ func _caminar(e: Vector2, seg: float, corre := false) -> void:
 func _foto() -> void:
 	var img := get_viewport().get_texture().get_image()
 	img.resize(480, 270)
+	## La hoja y las fotos en el mismo formato (26-10-2026): la imagen del
+	## viewport viene en RGB8 y `blit_rect` no copia entre formatos distintos:
+	## la hoja salía negra.
+	img.convert(Image.FORMAT_RGB8)
 	_imgs.append(img)
 
 func _process(_d: float) -> void:
@@ -71,7 +75,7 @@ func _process(_d: float) -> void:
 		_ex.camara.look_at(Vector3(float(_ex._datos["x0"]), 2.6, float(_ex._datos["z_boca"]) + 2.0), Vector3.UP)
 	if _n == 44:
 		_foto()                                    # 6: el túnel visto desde la cancha
-		var hoja := Image.create(480 * 3, 270 * 2, false, Image.FORMAT_RGBA8)
+		var hoja := Image.create(480 * 3, 270 * 2, false, Image.FORMAT_RGB8)
 		for k in _imgs.size():
 			hoja.blit_rect(_imgs[k], Rect2i(0, 0, 480, 270), Vector2i((k % 3) * 480, (k / 3) * 270))
 		hoja.save_png("res://pruebas/capturas/tunel_recorrido.png")

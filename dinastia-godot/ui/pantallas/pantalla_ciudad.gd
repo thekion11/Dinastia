@@ -132,7 +132,7 @@ func _pintar_negocios(ci: Ciudad, c: Club) -> void:
 		if falta:
 			var dt := Ciudad.def_terreno(String(terr))
 			var av := p._texto(10, Principal.COL_ORO)
-			av.text = Idiomas.t("     Requiere antes: %s") % (String(dt[1]) if not dt.is_empty() else String(terr))
+			av.text = Idiomas.t("     Requiere antes: %s") % Idiomas.t(String(dt[1]) if not dt.is_empty() else String(terr))
 			p._lista_ciudad.add_child(av)
 
 ## LOS CONCIERTOS. La decisión más honesta de la pantalla: dinero hoy contra

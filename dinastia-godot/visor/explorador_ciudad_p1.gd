@@ -19,7 +19,12 @@ extends Node3D
 signal salir
 signal interactuar(k: String)
 
-const RADIO_COCHE := 2.2
+## EL COCHE CON SU FORMA (pmov, 26-10-2026): antes era un círculo de 2,2 m,
+## así que de lado chocaba con aire a más de un metro de la chapa (el deportivo
+## del kit, a escala 1,65, mide 2,15 × 4,2 m). Ahora son tres círculos de su
+## medio ancho a lo largo del eje (`_puntos_forma`): una cápsula que gira con él.
+const RADIO_COCHE := 1.08
+const SEP_COCHE := 1.03   ## del centro a cada círculo extremo (morro y cola: 1,03 + 1,08 = 2,1 m)
 const RADIO_PIE := 0.5
 const VEL_COCHE := 26.0
 const VEL_PIE := 1.7
@@ -104,6 +109,8 @@ var _rej_obst := {}
 var _t_cerca := 0.0
 var _moviles_fotograma := -1
 var _moviles_cerca := PackedVector3Array()
+## Coches cercanos como rectángulos orientados: [x, z, sen, cos, medio ancho, medio largo].
+var _coches_cerca: Array[PackedFloat32Array] = []
 var _p_cerca := Vector3.INF
 
 ## Círculos sólidos (farolas, troncos, coches aparcados...) por celdas de 8 m.
@@ -267,7 +274,32 @@ static func construir_obstaculos(b: CityBuilder) -> Array[Rect2]:
 		sal.append(r)
 	for r2: Rect2 in b.huellas:
 		sal.append(r2)
+	_huellas_de_torres(b, sal)
 	return sal
+
+## TORRES SIN HUELLA (pmov, 26-10-2026, sonda `pmov_sonda_colision`): los
+## rascacielos del kit que se ponen fuera de las manzanas (el cinturón del borde
+## de la ciudad) y la casa grande del barrio no estaban en `_frentes` ni en
+## `huellas`, y se cruzaban andando o en coche. Cada edificio del kit apoyado en
+## el suelo que no esté ya dentro de una huella aporta la suya (su caja).
+static func _huellas_de_torres(b: CityBuilder, sal: Array[Rect2]) -> void:
+	var rej := Optimizar._rejilla(sal)
+	var casa: Node = b.get_node_or_null("CasaGigante")
+	for n in b.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.mesh == null or not mi.is_visible_in_tree():
+			continue
+		var nombre := String(mi.mesh.resource_name)
+		var de_kit := nombre.begins_with("building-") or nombre.begins_with("low-detail-building")
+		if not de_kit and not (casa != null and casa.is_ancestor_of(mi)):
+			continue
+		var caja := mi.global_transform * mi.get_aabb()
+		if caja.size.y < 3.0 or caja.position.y > 1.5 or minf(caja.size.x, caja.size.z) < 2.0:
+			continue
+		var c := caja.get_center()
+		if Optimizar._en_rejilla(rej, c.x, c.z):
+			continue
+		sal.append(Rect2(caja.position.x, caja.position.z, caja.size.x, caja.size.z))
 
 func _indexar_obstaculos() -> void:
 	_rej_obst.clear()
@@ -373,47 +405,30 @@ func _choca_circulos(p: Vector3, radio: float) -> bool:
 					return true
 	return false
 
-## Los que se mueven: coches y vecinos del tráfico.
-func _choca_moviles(p: Vector3, radio: float) -> bool:
-	if trafico == null:
-		return false
-	## Una vez por fotograma de física se apuntan los móviles a menos de 30 m del
-	## personaje (x, z, radio); las 3-20 consultas del fotograma miran solo esos
-	## (15-10-2026: antes cada consulta recorría los ~300 coches y vecinos y pedía
-	## su `global_position`; el tráfico cuelga de la ciudad, que está en el origen).
-	var f := Engine.get_physics_frames()
-	if f != _moviles_fotograma:
-		_moviles_fotograma = f
-		_moviles_cerca.clear()
-		var c := cuerpo.position if cuerpo != null else p
-		for v: Dictionary in trafico._vehiculos:
-			var n: Node3D = v["nodo"]
-			if not is_instance_valid(n):
-				continue
-			var q := n.position
-			if absf(q.x - c.x) < 30.0 and absf(q.z - c.z) < 30.0:
-				_moviles_cerca.append(Vector3(q.x, q.z, 0.45 if float(v["alto"]) < 0.3 else 1.7))
-	var c0 := cuerpo.position if cuerpo != null else p
-	if absf(p.x - c0.x) > 25.0 or absf(p.z - c0.z) > 25.0:
-		## Lejos del personaje (buscar un sitio libre al aparecer): todos.
-		for v: Dictionary in trafico._vehiculos:
-			var n: Node3D = v["nodo"]
-			if is_instance_valid(n):
-				var rr0 := radio + (0.45 if float(v["alto"]) < 0.3 else 1.7)
-				if Vector2(n.position.x - p.x, n.position.z - p.z).length_squared() < rr0 * rr0:
-					return true
-		return false
-	for m: Vector3 in _moviles_cerca:
-		var dx := m.x - p.x
-		var dz := m.y - p.z
-		var rr := radio + m.z
-		if dx * dx + dz * dz < rr * rr:
-			return true
+## Coches y vecinos del tráfico: lo implementa la capa 2 (`explorador_ciudad_p2.gd`).
+func _choca_moviles(_p: Vector3, _radio: float) -> bool:
 	return false
 
 ## Manzanas, río, círculos y móviles: todo lo que impide estar en `p`.
 func libre_total(p: Vector3, radio: float) -> bool:
 	return libre_obst(p, radio) and not _choca_circulos(p, radio) and not _choca_moviles(p, radio)
+
+## Los centros de los círculos que forman el cuerpo en `q` mirando a `ang`: uno a
+## pie; tres a lo largo del coche (con dos, un poste fino se colaba por el costado).
+func _puntos_forma(q: Vector3, ang: float) -> PackedVector3Array:
+	if modo != "coche":
+		return PackedVector3Array([q])
+	var eje := Vector3(sin(ang), 0.0, cos(ang)) * SEP_COCHE
+	return PackedVector3Array([q, q + eje, q - eje])
+
+## ¿Cabe el cuerpo entero (a pie o el coche con su forma) en `q` mirando a `ang`?
+## `radio` < 0: el del modo; `solo_fijo`: sin mirar coches ni peatones del tráfico.
+func libre_forma(q: Vector3, ang: float, radio := -1.0, solo_fijo := false) -> bool:
+	var r := radio if radio >= 0.0 else (RADIO_COCHE if modo == "coche" else RADIO_PIE)
+	for c: Vector3 in _puntos_forma(q, ang):
+		if not libre_obst(c, r) or _choca_circulos(c, r) or (not solo_fijo and _choca_moviles(c, r)):
+			return false
+	return true
 
 ## La altura del suelo (sube por las rampas de los puentes).
 static func altura_suelo(x: float, z: float) -> float:

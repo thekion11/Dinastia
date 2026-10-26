@@ -19,6 +19,12 @@ func _montar_motor() -> void:
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
+	## LAS OCASIONES JUGABLES (26-10, fila 14): solo en tu partido, si están encendidas en el
+	## panel previo y nunca en la práctica.
+	if _mi_lado >= 0 and not practica and OcasionJugable.encendida() and (DisplayServer.get_name() != "headless" or OcasionJugable.forzar):
+		_ocasion = OcasionJugable.new()
+		add_child(_ocasion)
+		_ocasion.configurar(_motor, partido, _mi_lado, _rig)
 	if practica:
 		_motor.empezar_practica()
 		call_deferred("_empezar_practica")
@@ -89,6 +95,8 @@ func _montar_motor() -> void:
 	## El silbato del árbitro con su gesto (M-106). El final del partido ya
 	## tiene su pitido (resumen); aquí, el del descanso y cada falta.
 	_motor.gesto_arbitro.connect(func(g: String) -> void:
+		if g in ["mostrar_tarjeta", "mostrar_roja"]:
+			_inserto_tarjeta()
 		if g == "silbato":
 			Sonido.toca("silbato")
 		elif g == "fin" and _motor.estado == "descanso":
@@ -228,6 +236,11 @@ func _arrancar_partido() -> void:
 	_repe = Repeticion.new()
 	add_child(_repe)
 	_repe.setup(_en_campo, _balon)
+	## Que ninguna cámara de la repetición se meta en la grada de ESTE estadio.
+	var g_rep := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+	_repe.dx = float(g_rep["dx"])
+	_repe.dz = float(g_rep["dz"])
+	_repe.ui_barrido = self
 	_repe.terminada.connect(func() -> void:
 		if _rotulo_repe != null:
 			_rotulo_repe.visible = false)
@@ -287,6 +300,12 @@ func _arrancar_partido() -> void:
 	if por_clima.has(clima):
 		Sonido.toca(String(por_clima[clima]), Sonido.Bus.AMBIENTE)
 	partido.minuto_jugado.connect(_al_minuto_sonoro)
+	## SENTADOS NERVIOSOS (26-10, `FestejoGrada.nervios`): desde el 80' con un gol
+	## de diferencia (o empate) media grada se cruza de brazos o se lleva las manos
+	## a la cabeza; si el partido se rompe (2+ goles) o termina, vuelve a lo suyo.
+	partido.minuto_jugado.connect(func(minuto: int) -> void:
+		var apretado := minuto >= 80 and not partido.terminado_ya and absi(partido.goles_local - partido.goles_visita) <= 1
+		FestejoGrada.nervios(_raiz3d, 0.5 if apretado else 0.0))
 	## Semilla fija por partido (mismo criterio que `_rng` en MatchPlayback):
 	## repetible si se reabre el mismo partido, pero sin tocar `Azar`.
 	_rng_ambiente.seed = hash("ambiente") + partido.local.id.hash() + partido.visita.id.hash()

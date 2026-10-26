@@ -109,7 +109,8 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 ##   · lo tiene un defensa o el portero cerca de su área (salida de balón).
 func _gatillo_presion(dueno: Dictionary) -> bool:
 	var q := pos(dueno)
-	if t - float(dueno.get("tomo_en", -9.0)) < 0.6:
+	## Tras perder el balón (fila 18): con contrapresión se muerde más rato; replegando, menos.
+	if t - float(dueno.get("tomo_en", -9.0)) < [0.3, 0.6, 1.5][clampi(_tac(not bool(dueno["es_local"]), "tras_perdida"), 0, 2)]:
 		return true
 	if absf(q.x) > 28.0:
 		return true
@@ -183,6 +184,10 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 		if pres == 0 and not gatillo and b.distance_to(arco) > 42.0 and pos(p).distance_to(b) > 9.0:
 			return b + (arco - b).normalized() * 5.0
 		p["correr"] = true
+		## (Sondas, PMOT_ANT=1: el que presiona va adonde VA a estar el portador.)
+		if ANTICIPA and not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
+			var ba := b + _plano(poseedor["vel"] as Vector3) * clampf(pos(p).distance_to(b) / 8.0, 0.0, 0.5)
+			return ba + (arco - ba).normalized() * 0.8
 		return b + (arco - b).normalized() * 0.8
 	if cercanos.size() > 1 and cercanos[1][1] == p:
 		if pres == 2 or (pres == 1 and gatillo):
@@ -314,6 +319,43 @@ func _tacticas_rapidas() -> void:
 	if cambio != "":
 		tactica_rapida.emit(eq, cambio, int(tc[cambio]))
 
+static var ANTICIPA := OS.get_environment("PMOT_ANT") == "1"
+
+## LA BARRIDA DEL USUARIO (25-10-2026): se tira al suelo hacia donde va a estar
+## el rival (un impulso con inercia, no un salto de 1,6 m en un fotograma) y la
+## entrada se decide cuando llega al balón. Si el rival se va antes, se queda
+## en el suelo un momento: la barrida fallida también se paga.
+func _lanzar_barrida(p: Dictionary) -> void:
+	var rp := pos(poseedor) + _plano(poseedor["vel"] as Vector3) * 0.25
+	var dir := _plano(rp - pos(p))
+	if dir.length() < 0.01:
+		var ry := (p["node"] as Node3D).rotation.y
+		dir = Vector3(sin(ry), 0, cos(ry))
+	dir = dir.normalized()
+	p["vel"] = dir * maxf(_plano(p["vel"] as Vector3).dot(dir), 7.5)
+	_empujar(p, dir, 4.0, 1.0, 0.0)
+	_mirar(p, atan2(dir.x, dir.z), 0.45)
+	p["barrida_hasta"] = t + 0.45
+	p["barrida_dir"] = dir
+	_anim(p, ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga"][_rng.randi() % 4], true)
+
+## Mientras dura, el que barre no maneja nada (está en el suelo): true.
+func _seguir_barrida(p: Dictionary) -> bool:
+	if float(p.get("barrida_hasta", 0.0)) <= 0.0:
+		return false
+	if not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]) and pos(poseedor).distance_to(pos(p)) < 1.4:
+		p["barrida_hasta"] = 0.0
+		_entrada(p, true)
+		return true
+	if t >= float(p["barrida_hasta"]) or poseedor == p:
+		p["barrida_hasta"] = 0.0
+		if poseedor != p:
+			p["enfriar"] = maxf(float(p["enfriar"]), 0.8)
+		return false
+	p["objetivo"] = pos(p) + (p.get("barrida_dir", Vector3.FORWARD) as Vector3) * 3.0
+	p["correr"] = true
+	return true
+
 ## La pared: el que la dio corre al espacio mientras dure.
 func _seguir_pared() -> void:
 	if _pared.is_empty():
@@ -345,6 +387,21 @@ func _seguir_portero_mandado() -> void:
 		var arco := _arco_propio(gk)
 		var largo := -signf(balon.position.x + 0.01)
 		gk["objetivo"] = Vector3(largo * PALO * 0.55, 0, arco.z - signf(arco.z) * 0.8)
+
+## EL PORTERO QUE MANEJAS (Carrera de Jugador, 25-10-2026), sin el balón. Ante
+## un tiro, el lado de la estirada lo elige el stick (`_reaccion_portero`); en
+## plena estirada sigue el gesto; con el stick quieto se coloca solo, como la IA.
+## Devuelve true si este fotograma ya lo resolvió el portero.
+func _portero_usuario(p: Dictionary, mundo: Vector3) -> bool:
+	if float(p.get("gesto_hasta", 0.0)) > t and p.has("_obj_gesto"):
+		p["objetivo"] = p["_obj_gesto"]
+		return true
+	if _reaccion_portero(p, true, mundo.x):
+		p["_obj_gesto"] = p["objetivo"]
+		return true
+	if mundo.length() < 0.1:
+		p["objetivo"] = colocacion_portero(balon.position, _arco_propio(p), _tac(bool(p["es_local"]), "linea"))
+	return false
 
 ## `para_cambio`: el cambio manual con el stick derecho (vale cualquiera, cerca o lejos).
 func _companero_en_direccion(p: Dictionary, dir: Vector3, para_cambio := false) -> Dictionary:

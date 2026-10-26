@@ -1,5 +1,5 @@
 extends "res://ui/principal_p6.gd"
-## [Capa 7/19 de `principal.gd`] _idolo_del_club, _ir_a_pestana, _ver_ciudad_propia, _ver_ciudad_con_carga, _pintar_ciudad, _celda … (+10)
+## [Capa 7/17 de `principal.gd`] _idolo_del_club, _ir_a_pestana, _ver_ciudad_propia, _ver_ciudad_con_carga, _pintar_ciudad, _celda … (+9)
 
 ## Mismo motivo y mismo arreglo que `_ver_estadio_propio()`: `VistaCiudad`
 ## tampoco trae fondo opaco -para que el 3D se vea de verdad-, así que hay
@@ -264,22 +264,13 @@ func _actualizar_badges() -> void:
 			rotulo += "  ●"
 		b.text = rotulo
 
-## Guarda el estado ANTES de hacer algo. `motivo` es lo que se le enseña al
-## jugador cuando lo deshaga.
-func _apuntar_deshacer(motivo: String) -> void:
-	if mundo == null:
-		return
-	_pila_deshacer.append({"motivo": motivo, "estado": Partida.instantanea(mundo)})
-	while _pila_deshacer.size() > DESHACER_MAX:
-		_pila_deshacer.pop_front()
-
 
 func _reconvertir(j: Jugador, pe: String) -> void:
 	var posd: Dictionary = (Datos.tabla("POSD") as Dictionary).get(pe, {})
 	var r := j.reconvertir(pe)
 	if r.is_empty():
 		return
-	_apuntar_deshacer("reconvertir a %s de %s" % [j.nombre, pe])
+	_partida.apuntar_deshacer("reconvertir a %s de %s" % [j.nombre, pe])
 	var d := int(r["despues"]) - int(r["antes"])
 	_escribir("[color=#c9a227]🔁 Reconversión:[/color] %s pasa a jugar de %s. Su media queda en %d (%s%d). Necesita %d semana(s) para asentarse en el puesto." % [
 		j.nombre, String(posd.get("n", pe)).to_lower(), r["despues"], "+" if d >= 0 else "", d, int(r["semanas"])])
@@ -303,7 +294,7 @@ func _rescindir(j: Jugador, total: int) -> void:
 	var mio := mundo.mi_club()
 	if mio == null or total > mio.saldo:
 		return
-	_apuntar_deshacer("rescindir a %s" % j.nombre)
+	_partida.apuntar_deshacer("rescindir a %s" % j.nombre)
 	## Y queda apuntado que fue tuyo: si lo ficha un rival, el dia que se crucen
 	## juega con la cuenta pendiente encima.
 	Partido.marcar_ex(j, mio.id)

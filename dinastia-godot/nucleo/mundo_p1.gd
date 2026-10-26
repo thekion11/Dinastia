@@ -114,6 +114,10 @@ var calendario: Calendario
 var politica: Politica
 var contratos: Contratos
 var vida: VidaDT
+## FASE 0 (25-10): el reloj único (día y hora dentro de la semana) y las necesidades
+## del DT. Solo escuchan a la semana: no cambian la simulación (`nucleo/reloj.gd`).
+var reloj: Reloj = Reloj.new()
+var necesidades: Necesidades = Necesidades.new()
 var maestria: Maestria
 ## El resultado de tu último partido de liga para `VidaDT`: 1, 0, -1, o 2 si no hubo.
 var _resultado_semana: int = 2
@@ -421,6 +425,8 @@ static func actual() -> Mundo:
 
 func _init() -> void:
 	_ultimo = weakref(self)
+	reloj.seguir_a(semana_avanzada)       ## fase 0: el reloj sigue a la semana
+	necesidades.seguir_a(reloj)          ## y las necesidades, al reloj
 
 func _anotar_movimiento(concepto: String, monto: int) -> void:
 	libro_financiero.append({"concepto": concepto, "monto": monto, "anio": anio, "semana": semana})

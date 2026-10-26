@@ -112,14 +112,37 @@ func _pintar_evento() -> void:
 ## laterales y las del fondo son un `MultiMesh` cada una, con el color y el
 ## brillo del panel por instancia (shader de abajo): 2 llamadas en vez de 36.
 ## Se montan en el primer fotograma, cuando ya están todas registradas.
+## LA VALLA ES UNA PANTALLA, NO UN LADRILLO DE COLOR (25-10-2026, ultra pulido):
+## antes la caja entera -dorso, cantos y tapa incluidos- brillaba con el color del
+## anuncio, y desde la grada o la cámara de la banda se veían ladrillos de colores.
+## Ahora solo la CARA QUE MIRA AL CAMPO es pantalla (con su marco negro arriba y
+## abajo y, de cerca, la rejilla de los LED, que se funde con la distancia para no
+## hacer muaré); el resto es la carcasa negra de cualquier valla de verdad. Todo
+## relativo al nodo (en la ciudad el estadio va movido).
 const SHADER_PANEL := """
 shader_type spatial;
 render_mode cull_back;
 void fragment() {
-	ALBEDO = COLOR.rgb;
-	ROUGHNESS = 0.42;
+	// En el espacio del mundo relativo al nodo (en un MultiMesh la matriz de la
+	// instancia no es fiable en vertex(): probado con una captura).
+	vec3 v_n = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	vec3 v_p = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz - NODE_POSITION_WORLD;
+	// Las laterales están en |x| = 37; las del fondo, en |z| = 55,5 y |x| <= 33.
+	bool lateral = abs(v_p.x) > 35.0;
+	float hacia = lateral ? -v_n.x * sign(v_p.x) : -v_n.z * sign(v_p.z);
+	float frente = step(0.7, hacia);
+	float marco = step(v_p.y, 0.06) + step(1.04, v_p.y);
+	float pantalla = frente * (1.0 - clamp(marco, 0.0, 1.0));
+	float s = lateral ? v_p.z : v_p.x;
+	vec2 celda = fract(vec2(s, v_p.y) / 0.03) - 0.5;
+	float led = 1.0 - smoothstep(0.28, 0.46, length(celda));
+	float cerca = 1.0 - smoothstep(0.004, 0.012, fwidth(s));
+	float rejilla = mix(1.0, 0.45 + 0.75 * led, cerca);
+	vec3 carcasa = vec3(0.035, 0.037, 0.042);
+	ALBEDO = mix(carcasa, COLOR.rgb * rejilla, pantalla);
+	ROUGHNESS = mix(0.6, 0.42, pantalla);
 	METALLIC = 0.15;
-	EMISSION = COLOR.rgb * COLOR.a;
+	EMISSION = COLOR.rgb * COLOR.a * rejilla * pantalla;
 }
 """
 var _multis := {}     ## tamaño de caja (String) -> MultiMesh

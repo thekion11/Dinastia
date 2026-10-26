@@ -320,6 +320,8 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 			var apq: AnimationPlayer = dq["anim"]
 			if apq.has_animation("parado"):
 				apq.play("parado")
+			## Cambios de paso en fase y la respiración de cada uno a su ritmo.
+			AnimTransiciones.poner(apq, jid)
 			return {"nodo": dq["nodo"], "anim": apq, "realista": true}
 		usando_respaldo = true
 		push_warning("PlayerSpawner: no cargo el modelo Quaternius, se usa el de respaldo")

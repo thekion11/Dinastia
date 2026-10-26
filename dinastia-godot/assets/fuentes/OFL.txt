@@ -1,0 +1,21 @@
+FUENTES PROPIAS DE DINASTÍA (26-10-2026). Todas con la SIL Open Font License 1.1 (texto
+completo de cada familia en OFL_<Familia>.txt, copiado tal cual del repositorio de origen).
+La OFL permite incrustarlas y distribuirlas con el juego; no se pueden vender sueltas.
+
+- Inter-Variable.ttf ............ github.com/google/fonts ofl/inter (proyecto github.com/rsms/inter)
+- NotoEmoji-Variable.ttf ........ github.com/google/fonts ofl/notoemoji (emoji monocromos)
+- NotoSansSymbols2-Regular.ttf .. github.com/google/fonts ofl/notosanssymbols2
+- BarlowCondensed-Regular.ttf ... github.com/google/fonts ofl/barlowcondensed (github.com/jpt/barlow)
+- BebasNeue-Regular.ttf ......... github.com/google/fonts ofl/bebasneue (github.com/dharmatype/Bebas-Neue)
+- NotoSansSymbols-Variable.ttf .. github.com/google/fonts ofl/notosanssymbols (ⓒ, ⛶ y otros símbolos)
+- Cinzel-Variable.ttf ........... github.com/google/fonts ofl/cinzel (github.com/NDISCOVER/Cinzel): serif de rótulo
+                                  de la intro y el logo, respaldo cuando el sistema no tiene Cinzel/Trajan/Palatino/Georgia
+- Gelasio-Variable.ttf .......... github.com/google/fonts ofl/gelasio (github.com/SorkinType/Gelasio): misma medida que
+                                  Georgia; respaldo de la serif del selector de idioma
+
+SUBCONJUNTOS (26-10-2026, pyftsubset de fontTools 4.67; la OFL permite versiones modificadas y
+estas familias no tienen «Reserved Font Name» propio; la de Noto Sans JP reserva «Source», que no
+se usa). Solo los bloques que pide la interfaz, para no cargar megas por cuatro caracteres:
+- NotoSansMath-Flechas.ttf ...... ofl/notosansmath, U+2190-21FF, 2200-22FF, 27F0-27FF, 2900-297F (flechas ↶⇄⇠⟲⟳)
+- NotoSansMono-Cajas.ttf ........ ofl/notosansmono, U+2500-259F (trazos ━ y barras ▂▄▆ del teléfono)
+- NotoSansJP-AnchoCompleto.ttf .. ofl/notosansjp, U+FF01-FF5E (el «＋» de ancho completo)

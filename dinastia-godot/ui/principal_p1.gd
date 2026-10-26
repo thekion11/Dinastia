@@ -1,5 +1,5 @@
 extends Control
-## [Capa 1/19 de `principal.gd`] variables, constantes y señales
+## [Capa 1/17 de `principal.gd`] variables, constantes y señales
 
 ## Las pantallas que viven en `ui/pantallas/` (mapa de metas 15).
 var _ui_plantel := PantallaPlantel.new(self)
@@ -390,12 +390,7 @@ var _marco_paginas: MarginContainer
 var _col_derecha: Control
 var _menu_lateral: MenuLateral
 
-# --- tutorial guiado (ui/componentes/tutorial.gd) ---------------------------
-
-## Los controles que el tutorial señala, por clave. Se guardan al construir la
-## pantalla; los que ya tenían variable propia se resuelven en el momento.
-var _tut_nodos: Dictionary = {}
-var _tutorial: Tutorial = null
+# --- tutorial guiado: vive en `ui/principal/guia_tutorial.gd` (`_guia`) -------
 
 ## El mismo buscar-por-título que ya usaban capturas y pruebas desde fuera
 ## (`tabs.get_tab_title(i)`); centralizado aquí porque ahora también lo usa la

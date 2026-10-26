@@ -31,6 +31,8 @@ const BASE := {
 	## 13-10-2026: más personalización.
 	"ojos": "3d2a1a", "pendiente": false, "cadena": false,
 	"manga_corta": false, "tatuaje": 0,
+	## 26-10-2026 (opción A): forma de cara, cejas y la edad que se ve (0 = sin marcas).
+	"forma_cara": 0.0, "cejas": 0.0, "edad": 0,
 }
 const PIELES := ["f6dccb", "f3d2b8", "f1c7a5", "e8bc96", "e0b08a", "d29f78", "c68d68", "b57a55",
 	"a86b45", "8a5536", "7a4a2e", "6b4028", "4a2c1c", "3a2216"]
@@ -54,7 +56,7 @@ static var del_usuario: Dictionary = {}
 static var club_usuario: String = ""
 
 class _GestosBanda extends Node:
-	const GESTOS := ["brazos_jarra", "aplaudir", "pedir_calma", "protestar", "manos_cabeza", "senalar", "llamar_hinchada"]
+	const GESTOS := ["banda/brazos_jarra", "banda/aplaudir", "banda/pedir_calma", "banda/protestar", "banda/manos_cabeza", "banda/senalar", "banda/llamar_hinchada"]
 	var ap: AnimationPlayer
 	var rng := RandomNumberGenerator.new()
 	var hasta := 2.0
@@ -72,7 +74,7 @@ class _GestosBanda extends Node:
 				ap.play(hay[rng.randi() % hay.size()], 0.3)
 				hasta = maxf(ap.current_animation_length, 1.5)
 				return
-		ap.play("parado", 0.3)
+		ap.play("persona/parado" if ap.has_animation("persona/parado") else "parado", 0.3)
 		hasta = rng.randf_range(3.0, 7.0)
 
 ## Un material de ojos por par piel/iris, compartido (peatones incluidos).
@@ -87,6 +89,14 @@ const BASE_ESBELTA := {
 	"lowerarm_l": Vector3(1.0, 0.88, 0.88), "lowerarm_r": Vector3(1.0, 0.88, 0.88),
 	"thigh_l": Vector3(0.92, 1.0, 0.92), "thigh_r": Vector3(0.92, 1.0, 0.92),
 	"calf_l": Vector3(0.94, 1.0, 0.94), "calf_r": Vector3(0.94, 1.0, 0.94),
+}
+
+## Sobre la base esbelta: menos hombro y pecho, brazo más fino, cuello algo más largo y la
+## cabeza un pelo mayor (la del pack es pequeña, de héroe).
+const PROPORCION_PERSONA := {
+	"spine_03": Vector3(0.94, 1.0, 0.93), "neck_01": Vector3(1.0, 1.06, 1.0), "Head": Vector3(1.04, 1.04, 1.04),
+	"clavicle_l": Vector3(0.9, 0.95, 0.95), "clavicle_r": Vector3(0.9, 0.95, 0.95),
+	"upperarm_l": Vector3(1.0, 0.93, 0.93), "upperarm_r": Vector3(1.0, 0.93, 0.93),
 }
 
 const ASPECTO_NEUTRO := {"complexion": 0.0, "hombros": 0.0, "barriga": 0.0, "piernas": 0.0, "cabeza": 0.0}
@@ -166,7 +176,10 @@ static func _objetivos(a: Dictionary) -> Dictionary:
 	o["spine_02"] = Vector3(1.0 + 0.16 * c + 0.06 * b, 1.0, 1.0 + 0.14 * c + 0.16 * b)
 	o["spine_03"] = Vector3(1.0 + 0.16 * c + 0.10 * h, 1.0, 1.0 + 0.14 * c)
 	o["neck_01"] = Vector3(1.0 + 0.16 * c, 1.0, 1.0 + 0.16 * c)
-	o["Head"] = Vector3.ONE * (1.0 + 0.12 * k)
+	## Forma de cara: el modelo no trae blendshapes ni huesos de cara; solo se puede
+	## ensanchar (+) o alargar (−) la cabeza entera con el hueso «Head».
+	var fc := float(a.get("forma_cara", 0.0))
+	o["Head"] = Vector3(1.0 + 0.06 * fc, 1.0 - 0.035 * fc, 1.0 + 0.02 * fc) * (1.0 + 0.12 * k)
 	for s: String in ["_l", "_r"]:
 		o["clavicle" + s] = Vector3(1.0 + 0.32 * h, 1.0 + 0.08 * c, 1.0 + 0.08 * c)
 		o["upperarm" + s] = Vector3(1.0, 1.0 + 0.22 * c, 1.0 + 0.22 * c)
@@ -177,6 +190,11 @@ static func _objetivos(a: Dictionary) -> Dictionary:
 	## esbelta (brazos, pecho, cuello y muslos) y encima la complexión elegida.
 	for nombre: String in BASE_ESBELTA:
 		o[nombre] = (o.get(nombre, Vector3.ONE) as Vector3) * (BASE_ESBELTA[nombre] as Vector3)
+	## PROPORCIONES DE PERSONA (25-10-2026): solo el DT (su aspecto lleva «ropa»; los
+	## futbolistas y peatones pasan por `adelgazar` sin ella): hombros y pecho de oficina.
+	if a.has("ropa"):
+		for nombre: String in PROPORCION_PERSONA:
+			o[nombre] = (o.get(nombre, Vector3.ONE) as Vector3) * (PROPORCION_PERSONA[nombre] as Vector3)
 	return o
 
 static func _cuerpo(d: Dictionary, a: Dictionary, con_guardian := true) -> void:

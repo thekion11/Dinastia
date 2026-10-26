@@ -77,9 +77,12 @@ static func montar(b: CityBuilder) -> Dictionary:
 			var seg := b._caja_en((p0 + p1) * 0.5, Vector3(ANCHO * 0.8, 0.5, p0.distance_to(p1) + 1.0) if absf(s.z) > 0.5 else Vector3(p0.distance_to(p1) + 1.0, 0.5, ANCHO * 0.8), asf)
 			var pend := atan2(p1.y - p0.y, Vector2(p1.x - p0.x, p1.z - p0.z).length())
 			if absf(s.z) > 0.5:
-				seg.rotation.x = pend * signf(s.z)
+				## Girar en +X levanta el extremo -Z de la caja: la pendiente va con
+				## el signo contrario al sentido de la carretera (f0m, 25-10: la que
+				## sale hacia -Z quedaba inclinada al revés, subiendo hacia fuera).
+				seg.rotation.x = -pend * signf(s.z)
 			else:
-				seg.rotation.z = -pend * signf(s.x) * -1.0
+				seg.rotation.z = pend * signf(s.x)
 	return {"enlaces": enlaces.size(), "carreteras": SALIDAS.size()}
 
 ## Los recorridos del tráfico de la autopista: el anillo en los dos sentidos,

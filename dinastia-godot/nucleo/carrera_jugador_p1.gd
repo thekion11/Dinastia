@@ -27,9 +27,9 @@ const FOCOS := {
 	"fisico": ["💪 Físico", "fis"], "ritmo": ["⚡ Velocidad", "rit"], "defensa": ["🛡️ Defensa", "def"],
 	"descanso": ["😴 Descanso", ""],
 }
-## Las demarcaciones que se pueden elegir al crear el jugador (sin portero: el
-## modo es de jugador de campo, con balón en los pies).
-const PUESTOS := ["DC", "ED", "EI", "MCO", "MC", "MCD", "LD", "LI", "DFC"]
+## Las demarcaciones que se pueden elegir al crear el jugador (el portero, desde
+## el 25-10-2026: sus focos, nota y eventos viven en `CarreraPortero`).
+const PUESTOS := ["DC", "ED", "EI", "MCO", "MC", "MCD", "LD", "LI", "DFC", "POR"]
 
 var jugador_id := ""
 var fama := 5              ## 0-100
@@ -59,6 +59,10 @@ var licencia := false             ## curso de entrenador hecho (licencia C)
 var retiro_anunciado := false
 var retirado := false
 var clubes_pasados: Array = []    ## nombres de los clubes donde jugaste
+## LA AGENDA DE LA SEMANA (M-263, `CarreraAgenda`): qué haces fuera del entreno.
+var agenda := "normal"
+var racha_social := 0             ## semanas seguidas de vida social
+var ovr_inicio := -1              ## tu media al empezar la temporada (progresión)
 var _rng := RandomNumberGenerator.new()
 
 # ---------------------------------------------------------------- selección
@@ -135,6 +139,7 @@ static func crear(m: Mundo, nombre: String, pos_e: String, pie_zurdo: bool, semi
 		j.dorsal = _dorsal_libre(club)
 	j.tasar()
 	c.jugador_id = j.id
+	c.foco = CarreraPortero.foco_inicial(pos_e)
 	c.agente = ""
 	c._evento_bienvenida(m)
 	return c
@@ -153,7 +158,7 @@ func es_titular(m: Mundo) -> bool:
 	for o: Jugador in c.plantilla:
 		if o != j and o.pos == j.pos and o.disponible() and float(o.media_en(o.pos_e)) > mia:
 			rivales += 1
-	var huecos := {"DEL": 2, "MED": 3, "DEF": 4}
+	var huecos := {"DEL": 2, "MED": 3, "DEF": 4, "POR": 1}
 	return rivales < int(huecos.get(j.pos, 2))
 
 ## El once de tu club para el partido jugable: el del DT, y si te toca jugar y
@@ -178,8 +183,12 @@ func once_para_partido(m: Mundo) -> Array[Jugador]:
 
 ## DESDE EL BANCO (MEGAPLAN fase 3): si empiezas de suplente, ¿te hace entrar
 ## el DT y en qué minuto? Con buena relación y energía entras antes y más a
-## menudo. -1 = no sales del banco.
-func minuto_entrada_suplente() -> int:
+## menudo. -1 = no sales del banco. El portero suplente solo entra si el
+## titular se lesiona (~1 de cada 16 partidos; en el motor, `MotorCambioPortero`),
+## o si lo expulsan estando tú en la banda.
+func minuto_entrada_suplente(portero := false) -> int:
+	if portero:
+		return _rng.randi_range(15, 85) if _rng.randf() < 0.06 else -1
 	var prob := clampf(0.35 + float(relacion_dt - 50) / 100.0 + (0.1 if energia > 50 else -0.1), 0.1, 0.85)
 	if _rng.randf() >= prob:
 		return -1
@@ -208,13 +217,20 @@ func entrenar(m: Mundo) -> String:
 		return ""
 	if foco == "descanso":
 		energia = mini(ENERGIA_MAX, energia + 35)
-		return "Descansaste: energía %d." % energia
-	var attr := String(FOCOS[foco][1])
+		return Idiomas.t("Descansaste: energía %d.") % energia
+	## Cada puesto con sus focos (el portero, los suyos): uno que no es del
+	## puesto -una partida vieja- entrena el primero que lo sea.
+	var tabla := CarreraPortero.focos_para(j)
+	var f: Array = tabla.get(foco, tabla.values()[0])
+	var attr := String(f[1])
+	## Los avisos se traducen aquí, por plantilla (con los números dentro ya no
+	## casan con el diccionario): la UI los une con «·».
+	var nombre_foco := Idiomas.t(String(f[0]))
 	if not j.atributos.has(attr):
 		attr = j.atributos.keys()[0]
 	var margen := maxf(0.0, float(j.pot - j.ovr)) / 30.0
 	var juventud := clampf((24.0 - float(j.edad)) / 7.0, 0.2, 1.0)
-	var prob := clampf(0.35 + margen * 0.5 + juventud * 0.25, 0.15, 0.95) * (1.0 if energia > 30 else 0.4)
+	var prob := clampf(0.35 + margen * 0.5 + juventud * 0.25 + CarreraAgenda.extra_entreno(agenda), 0.15, 0.95) * (1.0 if energia > 30 else 0.4)
 	energia = maxi(0, energia - 14)
 	if _rng.randf() < prob:
 		j.atributos[attr] = mini(99, int(j.atributos[attr]) + 1)
@@ -222,9 +238,9 @@ func entrenar(m: Mundo) -> String:
 		j.ovr = maxi(j.ovr, j.media_en(j.pos_e))
 		if j.ovr != antes:
 			j.tasar()
-			return "¡Mejoraste! %s sube a %d y tu media a %d." % [String(FOCOS[foco][0]), int(j.atributos[attr]), j.ovr]
-		return "%s sube a %d." % [String(FOCOS[foco][0]), int(j.atributos[attr])]
-	return "Semana dura de %s, pero sin mejora visible." % String(FOCOS[foco][0]).to_lower()
+			return Idiomas.t("¡Mejoraste! %s sube a %d y tu media a %d.") % [nombre_foco, int(j.atributos[attr]), j.ovr]
+		return Idiomas.t("%s sube a %d.") % [nombre_foco, int(j.atributos[attr])]
+	return Idiomas.t("Semana dura de %s, pero sin mejora visible.") % nombre_foco.to_lower()
 
 ## ¿Te convoca tu selección? Los mejores de tu país en tu línea, jueguen donde
 ## jueguen. Solo en las fechas FIFA.
@@ -357,7 +373,7 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 	if not hitos.has("mentor") and j.edad <= 20 and veterano != null:
 		p.append(_ev("mentor", "%s se ofrece a enseñarte" % veterano.nombre,
 			"El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento." % veterano.edad,
-			[_op("Aceptas: aprender de él es oro.", {"attr_%s" % String(FOCOS.get(foco, ["", "tir"])[1]): 2, "energia": -10, "relacion": 3}),
+			[_op("Aceptas: aprender de él es oro.", {"attr_%s" % String(CarreraPortero.focos_para(j).get(foco, ["", "pos" if j.es_portero() else "tir"])[1]): 2, "energia": -10, "relacion": 3}),
 			_op("Le das las gracias, pero prefieres descansar.", {"energia": 8})], true))
 	var pj_t := int(stats_temp["pj"])
 	if not hitos.has("cesion_%d" % m.anio) and j.edad <= 21 and pj_t >= 6 and float(stats_temp["titular"]) / float(pj_t) < 0.3:

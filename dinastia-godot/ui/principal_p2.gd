@@ -1,5 +1,36 @@
 extends "res://ui/principal_p1.gd"
-## [Capa 2/19 de `principal.gd`] variables, constantes y señales
+## [Capa 2/17 de `principal.gd`] _ayudante
+
+## FASE 0 (separar `Principal`): cada responsabilidad que sale de las capas va
+## a una clase propia en `ui/principal/` con su estado y una interfaz corta.
+## Principal las posee y les delega; los métodos viejos quedan como puentes.
+## Se cargan con `preload` y sin `class_name` para que no dependan de la caché
+## de clases (un `class_name` nuevo sin reimportar rompería esta pantalla).
+## Las que conectan señales del mundo son `Node` hijos (ver la cabecera de
+## `sorteos.gd`), y se cuelgan aquí mismo, al crearse la pantalla. Se declaran
+## en esta capa (no en la de cada puente) para que todas las de encima las vean.
+const _PrincipalSorteos := preload("res://ui/principal/sorteos.gd")
+var _sorteos := _ayudante(_PrincipalSorteos.new(self)) as _PrincipalSorteos
+const _PrincipalNoticias := preload("res://ui/principal/noticias.gd")
+var _noticias := _ayudante(_PrincipalNoticias.new(self)) as _PrincipalNoticias
+const _PrincipalPreferencias := preload("res://ui/principal/preferencias.gd")
+var _prefs := _PrincipalPreferencias.new(self)
+const _PrincipalCicloPartida := preload("res://ui/principal/ciclo_partida.gd")
+var _partida := _PrincipalCicloPartida.new(self)
+## Puente de solo lectura para las pantallas que miran la pila de deshacer
+## (Opciones enseña cuántos pasos quedan; Ajustes la vacía al cambiar de mundo).
+var _pila_deshacer: Array[Dictionary]:
+	get:
+		return _partida.pila_deshacer
+const _PrincipalGuia := preload("res://ui/principal/guia_tutorial.gd")
+var _guia := _PrincipalGuia.new(self)
+
+## Cuelga un ayudante `Node` de esta pantalla y lo devuelve. Se llama desde el
+## inicializador de la variable: así existe antes de `_ready()` y de cualquier
+## llamada de una prueba, y se libera junto con Principal.
+func _ayudante(n: Node) -> Node:
+	add_child(n)
+	return n
 
 ## El fondo de cada `.card` del HTML no es un color plano: trae un degradado
 ## cenital sutil (`linear-gradient(180deg, panel+12%blanco, panel 42%)`) que
@@ -39,14 +70,6 @@ const SECCION_SIMULACION := "simulacion"
 ## Para no repetir el aviso del cierre de mercado cada vez que se repinta.
 var _mercado_avisado: int = -1
 
-## EL AUTOGUARDADO SE VE (M-301, 20-10): un «💾 Partida guardada» discreto arriba
-## a la derecha que se desvanece solo. Antes se guardaba sin que nadie lo supiera.
-var _ind_guardado: Label
-
-## Una sola ranura por ahora, con el nombre de tu club. Cuando haya menú de
-## partidas se aprovecha `Partida.listar()`, que ya devuelve club, año y fecha.
-const RANURA := "partida"
-
 ## El registro es texto enriquecido y no pasa por el traductor de etiquetas:
 ## se traduce cada tramo de texto entre etiquetas BBCode (título y cuerpo de
 ## la noticia van en tramos distintos).
@@ -71,14 +94,6 @@ var _pendientes := {}   ## Control -> Callable
 ## domingo juegas la copa, lo que quieres ver es el cuadro; si es fase de
 ## grupos, tu grupo; y solo si toca liga, la tabla. Cambiar de torneo tiene que
 ## NOTARSE sin leer un texto que lo diga.
-## LOS SORTEOS. Solo se enseña la cinemática de los torneos donde JUEGA tu club:
-## el bombo de un continental que no te toca sería una espera sin premio.
-##
-## Y se encolan. Al empezar temporada se sortean varios continentales a la vez, y
-## sin cola la segunda cinemática pisaría a la primera -o peor, se abrirían dos
-## superpuestas y el juego se quedaría con dos capas modales encima.
-var _cola_sorteos: Array = []
-var _sorteo_abierto: bool = false
 
 
 ## Por qué columna se ordena el plantel y en qué sentido. `vJugadores()` del
@@ -118,14 +133,9 @@ var _secc_club: String = "directorio"
 ## porque hasta que no firmes en algún sitio no hay club que gestionar.
 var _aviso_abierto: int = 0
 ## La cinemática de pantalla completa de la rueda de prensa, o null si no hay
-## ninguna abierta. Ver `_abrir_rueda_pantalla_completa()`.
+## ninguna abierta: un `ui/principal/rueda_prensa.gd` (fase 0, paso 6b).
+const _PrincipalRuedaPrensa := preload("res://ui/principal/rueda_prensa.gd")
 var _rueda_pop: Control = null
-## Lo que la repregunta cambia sin rehacer el plató (B5).
-var _rueda_quien: Label
-var _rueda_pregunta: Label
-var _rueda_opciones: VBoxContainer
-var _rueda_reloj: ProgressBar
-var _rueda_desde := 0
 
 ## LA DECISIÓN, CONTADA COMO UN ACONTECIMIENTO (25-9-2026, plan maestro B4).
 ## A la izquierda, la cara de quien está en el lío -o el icono grande del tema
@@ -296,44 +306,35 @@ const ZOOM_TV := 1.35
 #  DESHACER Y VISTA COMPACTA (`vQoL()`)
 # ---------------------------------------------------------------------------
 #
-# DESHACER. El HTML guardaba `JSON.stringify(G)` antes de dos decisiones -responder
-# a una oferta y rescindir a un jugador- y las devolvía con un `JSON.parse`. Aquí
-# el retrato es `Partida.instantanea()`, que es exactamente el mismo diccionario
-# que se escribe en el guardado, y volver atrás es reconstruir el mundo desde él.
-# No es un "ctrl+z" general y no pretende serlo: son las dos decisiones que se
-# toman con el dedo y se lamentan al segundo siguiente.
-#
-# TRES COMO MUCHO. Cada retrato es la partida entera; con diez, la memoria se
-# llenaría de mundos muertos. El HTML también corta en tres.
-const DESHACER_MAX := 3
-var _pila_deshacer: Array[Dictionary] = []
+# DESHACER: la pila y sus reglas viven en `ui/principal/ciclo_partida.gd`
+# (fase 0); el puente `_pila_deshacer` está en `principal_p10.gd`.
 
 ## LA TIPOGRAFIA. Siete, y la primera es la de siempre.
 ##
-## Se resuelven con `SystemFont`, que pide fuentes al sistema operativo por
-## nombre y va probando la lista hasta que una existe. Por eso cada entrada
-## lleva varios nombres: «Segoe UI» es de Windows, «Helvetica Neue» de macOS y
-## «DejaVu Sans» de Linux, y la ultima de cada lista es el nombre generico, que
-## el sistema siempre sabe resolver por algo.
+## Cada entrada es una lista de nombres que resuelve `Fuentes.para()`
+## (`ui/fuentes.gd`): si el primero es una fuente PROPIA del juego
+## (`assets/fuentes/`, OFL) se usa el archivo y el resto queda de repuesto del
+## sistema; si no, se piden al sistema por nombre como antes («Segoe UI» de
+## Windows, «Helvetica Neue» de macOS, el genérico al final).
 ##
-## LA TRAMPA DE LOS EMOJI. La interfaz esta llena de simbolos -⚙, ⚽, 🎨- que la
-## fuente de fabrica de Godot trae dentro. Una fuente del sistema puede no
-## traerlos, asi que a todas se les cuelga «Segoe UI Emoji» y compania como
-## repuesto; y por si aun asi fallara, «Del juego» -la de siempre- se queda como
-## primera opcion y por defecto.
+## LOS EMOJI (26-10-2026): antes se colgaban «Segoe UI Emoji» y compañía, que
+## no existen en Android ni en Web. Ahora toda tipografía, «Del juego» incluida,
+## lleva la cadena de `Fuentes.repuesto()`: emojis en color del sistema si los
+## hay y, si no, Noto Emoji + Noto Sans Symbols 2 propias.
 const TIPOGRAFIAS := {
 	"juego":     ["Del juego (por defecto)", []],
 	"sistema":   ["Del sistema", ["Segoe UI", "Helvetica Neue", "Cantarell", "sans-serif"]],
 	"diario":    ["De diario (serif)", ["Georgia", "Times New Roman", "Liberation Serif", "serif"]],
-	"estrecha":  ["Estrecha (cabe mas)", ["Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
+	"estrecha":  ["Estrecha (cabe más)", ["Barlow Condensed", "Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
 	"redonda":   ["Redonda y grande", ["Verdana", "Tahoma", "DejaVu Sans", "sans-serif"]],
 	"informe":   ["De informe (mono)", ["Consolas", "Menlo", "DejaVu Sans Mono", "monospace"]],
-	"titular":   ["De titular", ["Impact", "Haettenschweiler", "DejaVu Sans Bold", "sans-serif"]],
+	"titular":   ["De titular", ["Bebas Neue", "Impact", "Haettenschweiler", "DejaVu Sans Bold", "sans-serif"]],
 }
 
-## Los nombres de repuesto para los simbolos. Se anaden al final de cualquier
-## lista: si la fuente elegida no tiene el engranaje, lo saca de aqui.
-const REPUESTO_SIMBOLOS := ["Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji"]
+## Los nombres de repuesto para los simbolos: los emojis en color del sistema.
+## Se conserva por compatibilidad; la cadena completa (con las propias) es
+## `Fuentes.repuesto()`.
+const REPUESTO_SIMBOLOS := Fuentes.EMOJI_SISTEMA
 
 var _tipografia: String = "juego"
 static var _fuentes: Dictionary = {}
@@ -360,7 +361,12 @@ const SEPARACION_COMPACTA := 1
 ##
 ## Funciona porque toda la interfaz pasa por `_texto()`: un multiplicador ahí
 ## llega a las mil y pico etiquetas del juego sin tocar una sola pantalla.
-var _escala_texto: float = 1.0
+## El setter lo vuelca en `Tema.escala_texto`: así llega también a lo que se
+## pinta con `Tema.etiqueta`/`Tema.rotulo` (móvil, avisos, pantallas nuevas).
+var _escala_texto: float = 1.0:
+	set(v):
+		_escala_texto = v
+		Tema.escala_texto = v
 const ESCALAS_TEXTO := [0.85, 1.0, 1.15, 1.30]
 
 ## Paleta para daltonismo. El verde y el rojo del juego son EXACTAMENTE el par
@@ -370,7 +376,11 @@ const ESCALAS_TEXTO := [0.85, 1.0, 1.15, 1.30]
 ##
 ## Se remapea dentro de `_texto()` en vez de en las mil llamadas: los colores son
 ## constantes y el sitio por donde pasan todas es uno solo.
-var _daltonico: bool = false
+## Igual que la escala: se vuelca en `Tema.daltonico` para `Tema.accesible()`.
+var _daltonico: bool = false:
+	set(v):
+		_daltonico = v
+		Tema.daltonico = v
 const COL_VERDE_DALT := Color("56b4e9")
 const COL_ROJO_DALT := Color("d55e00")
 const COL_ORO_DALT := Color("e69f00")

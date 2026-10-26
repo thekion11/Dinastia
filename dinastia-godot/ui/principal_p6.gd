@@ -1,5 +1,5 @@
 extends "res://ui/principal_p5.gd"
-## [Capa 6/19 de `principal.gd`] _pintar_finanzas, _pintar_porque_moral, _pintar_camarin
+## [Capa 6/17 de `principal.gd`] _pintar_finanzas, _pintar_porque_moral, _pintar_camarin
 
 func _pintar_finanzas(c: Club) -> void:
 	_limpiar(_lista_finanzas)
@@ -27,19 +27,18 @@ func _pintar_finanzas(c: Club) -> void:
 	## Se enseña el efecto de las dos palancas a la vez, porque el precio es
 	## justo el sitio donde subir puede recaudar MENOS: más por cabeza, pero
 	## menos cabezas.
-	## `Finanzas` no vive en el mundo: se construye por club y por semana dentro
-	## de `Mundo.avanzar_semana()` (línea 558). Aquí se monta uno igual, solo
-	## para PREGUNTARLE -no cobra nada, no mueve la caja-, con el mismo aporte de
-	## instalaciones que usará el de verdad.
-	var f_sim := Finanzas.new(c, mundo.obras.aporte_ocupacion(), 0, 0.0)
-	f_sim.aplica_operacion = true
-	f_sim.factor_operacion = mundo.obras.abarata_operacion()
-	var gente := f_sim.asistencia()
-	var por_cabeza := Finanzas.ingreso_por_espectador(c.precio_entrada)
+	## `Finanzas` no vive en el mundo: se construye por club y por semana. Aquí se pide EL MISMO que cobra
+	## (`Mundo._finanzas_de_la_semana`: tele de la asamblea y de prensa, marketing, honorarios, jornada
+	## legal, operación), solo para PREGUNTARLE: proyectar no mueve la caja. Antes se montaba uno a mano sin
+	## esas palancas y la proyección no cuadraba con lo que luego se cobraba.
+	var f_sim: Finanzas = mundo._finanzas_de_la_semana(c)
+	## La taquilla con las palancas de la jornada (horario, techo, sanción, fiestas, precios dinámicos).
+	var taq := mundo.estimar_taquilla(c)
+	var gente := int(taq["gente"])
 	_dato("Asistencia estimada", "%s de %s  (%d%%)" % [
 		_miles(gente), _miles(c.estadio_aforo),
 		int(round(float(gente) * 100.0 / float(maxi(c.estadio_aforo, 1))))], COL_TEXTO, _lista_finanzas)
-	_dato("Taquilla por partido", _dinero(int(round(float(gente) * por_cabeza))), COL_VERDE, _lista_finanzas)
+	_dato("Taquilla por partido", _dinero(int(taq["monto"])), COL_VERDE, _lista_finanzas)
 	_lista_finanzas.add_child(HSeparator.new())
 
 	## LA TIENDA DEL CLUB. Se paga el montaje una vez y vende todos los meses.
@@ -100,6 +99,10 @@ func _pintar_finanzas(c: Club) -> void:
 		_dato(k, _dinero(int(proy["ingresos"][k])), COL_VERDE, _lista_finanzas)
 	for k2: String in proy["gastos"]:
 		_dato(k2, "−%s" % _dinero(int(proy["gastos"][k2])), COL_ROJO, _lista_finanzas)
+	var nota := _texto(10, COL_SUAVE)
+	nota.text = Idiomas.t("La proyección solo cuenta lo fijo de la temporada: no incluye premios, copas, ventas de jugadores ni abonos.")
+	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_lista_finanzas.add_child(nota)
 	var pal := _ui_ficha._paleta_ficha()
 	PanelFinanzas.pintar_balance_y_caja(_lista_finanzas, c, mundo, proy, pal)
 	PanelFinanzas.pintar_auspicio(_lista_finanzas, c, mundo, pal,

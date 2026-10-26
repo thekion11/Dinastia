@@ -18,13 +18,29 @@ func _mover_todos() -> void:
 	for eq in 2:
 		if eq == eq_bal:
 			continue
-		var orden: Array = []
+		## Los dos más cercanos SIN ordenar la lista entera (26-10, el banco tardaba): a
+		## igual distancia gana el de índice menor, como hacía el orden de antes.
+		var d1 := INF
+		var d2 := INF
+		var i1 := -1
+		var i2 := -1
 		for i in agentes.size():
-			if agentes[i]["eq"] == eq and (agentes[i]["j"] as Jugador).pos != "POR":
-				orden.append([(agentes[i]["pos"] as Vector2).distance_squared_to(balon), i])
-		orden.sort_custom(func(x: Array, y: Array) -> bool: return x[0] < y[0])
-		for n in mini(2 if eq_bal >= 0 else 1, orden.size()):
-			cazadores[orden[n][1]] = n
+			var ag: Dictionary = agentes[i]
+			if ag["eq"] != eq or ag["por"]:
+				continue
+			var dd := (ag["pos"] as Vector2).distance_squared_to(balon)
+			if dd < d1:
+				d2 = d1
+				i2 = i1
+				d1 = dd
+				i1 = i
+			elif dd < d2:
+				d2 = dd
+				i2 = i
+		if i1 >= 0:
+			cazadores[i1] = 0
+		if eq_bal >= 0 and i2 >= 0:
+			cazadores[i2] = 1
 	for i in agentes.size():
 		var a: Dictionary = agentes[i]
 		if t < float(a["sentado_hasta"]):
@@ -59,7 +75,7 @@ func _mover_todos() -> void:
 			destino = _sitio(a, eq == eq_bal)
 			## MARCAJE: el que defiende se pega, por el lado de su portería, al
 			## rival que tiene cerca de su zona.
-			if eq != eq_bal and eq_bal >= 0 and (a["j"] as Jugador).pos != "POR":
+			if eq != eq_bal and eq_bal >= 0 and not a["por"]:
 				var m := _marca_de(i, destino)
 				if m >= 0:
 					var q: Vector2 = agentes[m]["pos"]

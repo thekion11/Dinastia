@@ -145,8 +145,12 @@ func _saque_de_centro(saca_local: bool) -> void:
 
 # ---------------------------------------------------------------- montaje
 
+## El id del jugador que manejas (para la tanda: tu portero elige el lado).
+var id_usuario := ""
+
 func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: int = 1) -> void:
 	_rng.seed = semilla
+	id_usuario = jugador_usuario_id
 	jugadores = []
 	arbitros = []
 	for p: Dictionary in lista:
@@ -191,8 +195,7 @@ func forma_fisica(p: Dictionary) -> float:
 
 ## El que espera en la banda. Si es el usuario, entra en `minuto_entrada`.
 func poner_extra(p: Dictionary, es_usuario: bool, minuto_entrada: int = -1) -> void:
-	_preparar_uno(p)
-	p["por"] = false
+	_preparar_uno(p)   ## (`por` sale de su puesto: el suplente puede ser portero)
 	extra = p
 	(p["node"] as Node3D).position = Vector3(ANCHO + 2.5, 0, 6.0 if bool(p["es_local"]) else -6.0)
 	if es_usuario:
@@ -246,19 +249,9 @@ func _cambiar(sale: Dictionary, entra: Dictionary, entra_es_usuario: bool) -> vo
 	aviso.emit("🔁 Cambio: entra %s, sale %s" % [nom_e, nom_s])
 	sustitucion.emit(nom_s, nom_e, bool(entra["es_local"]))
 
-## El compañero que deja su sitio al que entra: el de su línea más cansado.
+## El que deja su sitio al que entra (un portero solo cambia por el portero).
 func _quien_sale_por(entra: Dictionary) -> Dictionary:
-	var grupo := String((entra.get("jugador", {}) as Dictionary).get("pos", "MED"))
-	var peor: Dictionary = {}
-	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) != bool(entra["es_local"]) or bool(q["por"]):
-			continue
-		var g := String((q.get("jugador", {}) as Dictionary).get("pos", ""))
-		var nota := forma_fisica(q) + (0.0 if g == grupo else 0.5)
-		if peor.is_empty() or nota < float(peor["_nota_cambio"]):
-			q["_nota_cambio"] = nota
-			peor = q
-	return peor
+	return MotorCambioPortero.quien_sale(self as Object as MotorJugable, entra)
 
 # ---------------------------------------------------------------- resumen
 
@@ -270,6 +263,9 @@ func nota_usuario() -> float:
 		+ float(s["entradas_ok"]) * 0.12 - float(s["faltas"]) * 0.1
 	if not usuario.is_empty():
 		var mio := 0 if bool(usuario["es_local"]) else 1
+		## EL PORTERO (Carrera): sus paradas y lo que encaja, no los goles.
+		if bool(usuario["por"]):
+			n = 6.0 + float(s["paradas"]) * 0.45 - float(goles[1 - mio]) * 0.45 + float(s["pases_ok"]) * 0.02 + (0.5 if goles[1 - mio] == 0 and minutos_usuario >= 60.0 else 0.0)
 		n += 0.3 if goles[mio] > goles[1 - mio] else (-0.3 if goles[mio] < goles[1 - mio] else 0.0)
 	return clampf(snappedf(n, 0.1), 3.0, 10.0)
 
@@ -285,7 +281,7 @@ func _revisar_cambio(forzar := false) -> void:
 		minu = maxi(minu, 0)
 	if entra_usuario_min >= 0:
 		if minu >= entra_usuario_min:
-			_cambiar(_quien_sale_por(extra), extra, true)
+			MotorCambioPortero.entrar_usuario(self as Object as MotorJugable)
 		return
 	## Tú en el campo: el DT lo decide UNA vez, en el primer balón parado
 	## pasada la hora. Pesa su exigencia, tu nota y tu cansancio.
@@ -294,6 +290,8 @@ func _revisar_cambio(forzar := false) -> void:
 	_cambio_decidido = true
 	var prob := 0.05 + exigencia_dt * 0.35 + maxf(0.0, 6.6 - nota_usuario()) * 0.3 \
 		+ maxf(0.0, 0.75 - forma_fisica(usuario)) * 1.2 + prob_cambio_extra
+	if bool(usuario["por"]):
+		prob = MotorCambioPortero.prob_dt_portero(nota_usuario(), prob_cambio_extra)
 	if _rng.randf() < clampf(prob, 0.0, 0.95 + prob_cambio_extra):
 		_cambiar(usuario, extra, false)
 
@@ -354,7 +352,8 @@ static func tactica_desde(tc: Tactica, riesgo := false, tiempo := false) -> Dict
 		return {}
 	var m := tc.mentalidad + (1 if riesgo else 0) - (1 if tiempo else 0)
 	return {"mentalidad": clampi(m, 0, 3), "presion": tc.presion, "linea": tc.linea,
-		"amplitud": tc.amplitud, "ritmo": tc.ritmo, "trampa": 1 if tc.fuera_de_juego else 0}
+		"amplitud": tc.amplitud, "ritmo": tc.ritmo, "trampa": 1 if tc.fuera_de_juego else 0,
+		"verticalidad": tc.verticalidad, "tras_perdida": tc.tras_perdida}
 
 ## El añadido crece con lo que se pierde en el tiempo reglamentario (17-10):
 ## goles, cambios, expulsiones. Solo antes de que empiece y con tope.
@@ -408,6 +407,7 @@ func _expulsar(p: Dictionary) -> void:
 		pase_a = {}
 	if usuario == p:
 		usuario = {}
+	MotorCambioPortero.tras_expulsion(self as Object as MotorJugable, p)
 
 ## Para reabrir el partido a mitad (tras el descanso): el marcador y el reloj
 ## del `Partido`, y saque de centro.
@@ -420,11 +420,17 @@ func empezar_en(minuto_: int, gl: int, gv: int) -> void:
 	else:
 		t = clampf(float(minuto_) / 45.0 * duracion_mitad, 0.0, duracion_mitad - 1.0)
 
+## Contadores para las sondas (remates por clase y cómo acaban: «remate_pie_atajada»…).
+var diag := {}
+func _contar(k: String) -> void:
+	diag[k] = int(diag.get(k, 0)) + 1
+
 ## El remate en curso termina: atajada, palo o fuera.
 func _cerrar_tiro(tipo: String) -> void:
 	if _tiro_vivo.is_empty():
 		return
 	var p: Dictionary = _tiro_vivo["p"]
+	_contar("remate_%s_%s" % [String(_tiro_vivo.get("clase", "pie")), tipo])
 	_tiro_vivo = {}
 	remate.emit(bool(p["es_local"]), String(p.get("id", "")), tipo)
 

@@ -1,17 +1,14 @@
 extends Control
 ## [Capa 1/3 de `inicio.gd`] rotacion, _textura_de, _brillo_de, _leer_ajuste, _texto, _construir_banner … (+11)
 
-## LA PANTALLA DE TÍTULO, portada del "MENÚ DE MODOS" del HTML
-## (`renderModoSel()`, v3.0): portada + partida en curso + perfil + la grilla
-## de modos jugables, todo en UNA sola pantalla que se desplaza, como en el
-## HTML -antes eran dos pantallas separadas (esta y `seleccion_modo.gd`), y
-## entre una y otra quedaba un hueco vacío enorme que no existía en el
-## original-.
+## LA PANTALLA DE TÍTULO: portada + partida en curso («Continuar») + «Nuevo juego»
+## + perfil, álbum y ajustes de la partida nueva (nombre, dificultad, base de datos),
+## todo en UNA sola pantalla que se desplaza. Desde el 26-10-2026 los modos ya no se
+## eligen aquí: «Nuevo juego» lleva a la entrada nueva (`ui/entrada/orquestador.gd`),
+## que es donde están todos -retos, tutorial y Carrera de Jugador incluidos-.
 ##
 ## Solo compone lo que ya existe: `Portada.gd` dibuja las nueve carátulas,
-## `TarjetaModo.gd` dibuja el degradado de cada tarjeta de modo,
-## `Logros.perfil_leer()` ya guardaba el XP del gestor y no lo enseñaba en
-## ningún sitio antes de la pantalla de Logros, y `Partida.gd` lleva el
+## `Logros.perfil_leer()` guarda el XP del gestor y `Partida.gd` lleva el
 ## guardado. Aquí no hay lógica de juego nueva, solo el primer clic.
 
 ## La misma paleta que css/estilo.css (`:root`), no una propia de Godot.
@@ -40,14 +37,6 @@ const COLOR_CLAIM := {
 	"prensa": "4a4238",
 }
 
-## Categorías que hoy no llevan a ninguna carrera jugable -"retos", "tutorial"
-## y "proximo" en el HTML, más la tarjeta "Crear tu Club" (`crear:true`)-. Se
-## SIGUEN mostrando, como en el HTML: enseñarlas apagadas es honesto, esconderlas
-## habría sido fingir que el menú tiene menos modos de los que en verdad tiene.
-## "tutorial" dejó la lista el 25-9-2026: lleva a una carrera de entrenador con
-## el recorrido guiado encendido (`ui/componentes/tutorial.gd`).
-const CATS_SIN_JUGAR := ["proximo"]
-
 const CONFIG_RUTA := "user://ajustes.cfg"
 
 var _banner: Control
@@ -64,7 +53,6 @@ var _fila_dificultad: HBoxContainer
 var _dificultad := "normal"
 var _fila_base: HBoxContainer
 var _lbl_base: Label
-var _lbl_estado: Label
 
 var _panel_continuar: VBoxContainer
 var _mundo_guardado: Mundo = null
@@ -364,49 +352,3 @@ func _construir_datos_dt(raiz: VBoxContainer) -> void:
 		b.pressed.connect(func() -> void: _elegir_dificultad(k))
 		_fila_dificultad.add_child(b)
 	_construir_selector_base(raiz)
-
-
-## El selector de retos: los cinco, con su planteamiento y su meta.
-func _elegir_reto() -> void:
-	var capa := ColorRect.new()
-	capa.color = Color(0, 0, 0, 0.6)
-	capa.set_anchors_preset(Control.PRESET_FULL_RECT)
-	capa.mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(capa)
-	var centro := CenterContainer.new()
-	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
-	capa.add_child(centro)
-	var caja := PanelContainer.new()
-	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.ORO))
-	caja.custom_minimum_size = Vector2(640, 0)
-	centro.add_child(caja)
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 8)
-	caja.add_child(v)
-	v.add_child(Tema.etiqueta(Tema.TAM_TITULO, Tema.ORO, "🎯 RETOS"))
-	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.")
-	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	v.add_child(nota)
-	for r: Array in Retos.LISTA:
-		var b := Button.new()
-		b.text = Idiomas.t("%s  %s\n%s\nMeta: %s") % [String(r[1]), String(r[2]), String(r[3]), String(r[4])]
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.custom_minimum_size = Vector2(0, 76)
-		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		var id := String(r[0])
-		b.pressed.connect(func() -> void:
-			var nombre := _campo_nombre.text.strip_edges()
-			Principal.reto_pedido = id
-			Principal.modo_elegido = "dt"
-			Principal.dt_nombre_elegido = nombre if nombre != "" else "Míster"
-			Principal.dificultad_elegida = _dificultad
-			get_tree().change_scene_to_file("res://escenas/eleccion_club.tscn"))
-		v.add_child(b)
-	var cerrar := Button.new()
-	cerrar.text = Idiomas.t("Volver")
-	cerrar.pressed.connect(capa.queue_free)
-	v.add_child(cerrar)
-
-func _avisar(texto: String) -> void:
-	_lbl_estado.text = texto
-	_lbl_estado.visible = true

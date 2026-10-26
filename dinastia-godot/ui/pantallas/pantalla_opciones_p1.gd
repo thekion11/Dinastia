@@ -55,7 +55,11 @@ func _pintar_idioma() -> void:
 		b.custom_minimum_size = Vector2(150, 26)
 		b.tooltip_text = Idiomas.t("Idioma original, sin traducir nada.") if clave == "es" else Idiomas.t("%d frases de interfaz traducidas.") % Idiomas.cobertura(clave)
 		b.pressed.connect(func() -> void:
+			var antes := Idiomas.idioma
 			Idiomas.idioma = clave
+			## Los rótulos que se escribieron al construir la pantalla (barra de
+			## arriba, buscador...) no los repinta `_refrescar()`: se pasan aquí.
+			Idiomas.retraducir_arbol(p, antes)
 			p._refrescar())
 		flow.add_child(b)
 
@@ -192,7 +196,8 @@ func _pintar_musica() -> void:
 		b.disabled = not Musica.encendida
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(168, 24)
-		b.tooltip_text = String(p_local["desc"])
+		## El nombre entero también en la ayuda: en 168 px se corta (s3).
+		b.tooltip_text = "%s\n%s" % [Idiomas.t(String(p_local["nombre"])), Idiomas.t(String(p_local["desc"]))]
 		b.pressed.connect(func() -> void:
 			## Elegir una a mano apaga el automático: si no, el siguiente cambio
 			## de pantalla te la quitaría y parecería que el botón no funciona.
@@ -241,7 +246,10 @@ func _pintar_mezclador() -> void:
 
 func _fundar_pena(c: Club) -> void:
 	var r := p.mundo.hinchada.fundar_pena(c)
-	if r.length() > 40 or r == "":
+	## Éxito = devuelve una de las ciudades de peña. Antes se distinguía por la
+	## longitud (> 40) y «ya tienes peñas en todas partes» (31) se tomaba por
+	## una ciudad recién fundada.
+	if not Hinchada.CIUDADES_PENA.has(r):
 		p._escribir("[color=#e05555]No se pudo fundar: %s.[/color]" % r)
 	else:
 		p._escribir("[color=#3fa06a][b]Nueva peña en %s.[/b][/color] Gente que se organiza sola para seguir al club desde lejos." % r)
@@ -333,12 +341,18 @@ func _pintar_penas_y_ramas(c: Club, h: Hinchada) -> void:
 		b.custom_minimum_size = Vector2(96, 0)
 		b.pressed.connect(func() -> void: _alternar_rama(clave, c, abierta))
 		fila.add_child(b)
+		## La descripción va DEBAJO de la fila y se parte en líneas (26-10-2026,
+		## auditoría de anchos): dentro de la fila y recortada solo quedaban 28-41 px
+		## libres tras el nombre, la cifra y el botón, y no se leía nada en ningún
+		## idioma (en alemán, todavía menos).
 		if not p._modo_experto:
 			var d := p._texto(10, Principal.COL_SUAVE)
-			d.text = "     %s" % String(f[7])
-			d.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			d.clip_text = true
-			fila.add_child(d)
+			d.text = String(f[7])
+			d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			var sangria := MarginContainer.new()
+			sangria.add_theme_constant_override("margin_left", 24)
+			sangria.add_child(d)
+			p._lista_estadio.add_child(sangria)
 	_pintar_palmares_ramas(h)
 
 func _organizar_dia_hincha(c: Club) -> void:
@@ -383,6 +397,20 @@ func _pintar_atajos() -> void:
 		man.text = String(fila_a[2])
 		man.custom_minimum_size = Vector2(120, 0)
 		f.add_child(man)
+	## Los atajos del menú central (s3), con la tecla que tienen AHORA (se cambian
+	## en Accesibilidad → Teclas de la interfaz).
+	for at: Array in AtajosCentrales.lista():
+		var fa := HBoxContainer.new()
+		fa.add_theme_constant_override("separation", 8)
+		p._lista_ajustes.add_child(fa)
+		var ea := p._texto(11, Principal.COL_TEXTO)
+		ea.text = Idiomas.t(String(at[1]))
+		ea.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fa.add_child(ea)
+		var ta := p._texto(11, Principal.COL_SUAVE)
+		ta.text = TeclasInterfaz.texto_de(String(at[0]))
+		ta.custom_minimum_size = Vector2(240, 0)
+		fa.add_child(ta)
 	var nota := p._texto(10, Principal.COL_SUAVE)
 	nota.text = Idiomas.t("En pantalla táctil, un desliz horizontal largo también cambia de bloque maestro.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

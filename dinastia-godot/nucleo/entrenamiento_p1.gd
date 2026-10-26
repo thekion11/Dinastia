@@ -415,7 +415,7 @@ func _tasar(j: Jugador) -> void:
 	## recalcula el sueldo desde el valor ya con el bono.
 	if habilidades(j).size() >= 3:
 		j.valor = int(max(300.0, round(float(j.valor) * 1.05 / 100.0) * 100.0))
-		j.sueldo = int(max(30.0, round(1.361 * pow(float(j.valor), 0.66) / 10.0) * 10.0))
+		j.sueldo = j.sueldo_de_valor()
 
 func _subir_media(j: Jugador, delta_atributo: int, res: Dictionary) -> void:
 	var antes := j.ovr

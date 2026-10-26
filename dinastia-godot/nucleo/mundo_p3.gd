@@ -105,7 +105,7 @@ func proximo_partido() -> Array:
 func partido_de_copa() -> Array:
 	if copa == null or not copa.en_curso() or semana % 4 != 0:
 		return []
-	return copa.emparejamiento_de(mi_club())
+	return copa.emparejamiento_de(club_de_la_copa())
 
 ## El torneo continental en el que juega tu club, o null.
 func mi_continental() -> Continental:
@@ -189,6 +189,9 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	mercado = Mercado.new(self)
 	roles = Roles.new(self)
 	cesiones = Cesiones.new(self)
+	## El mercado de entrenadores vive como meta: un mundo nuevo empieza sin cambios.
+	if has_meta("mercado_dt"):
+		remove_meta("mercado_dt")
 	## Las epocas son del MUNDO, no de tu club: se crean con el mundo y no al
 	## tomar el mando, porque una camada boliviana sube o baja aunque tu dirijas
 	## en Chile.

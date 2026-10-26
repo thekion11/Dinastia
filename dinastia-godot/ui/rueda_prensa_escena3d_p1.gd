@@ -43,7 +43,8 @@ var _dt_3d_pendiente := false
 var _dt_3d: Dictionary = {}
 var _t_gesto_dt := 3.0
 var _rng_dt := RandomNumberGenerator.new()
-const GESTOS_PRENSA := ["charla", "pedir_con_brazo", "brazos_al_frente", "charla"]
+## Solo gestos suaves (26-10): los «Spell_*» estiraban el brazo hacia la cámara.
+const GESTOS_PRENSA := ["charla"]
 var _t := 0.0
 var _cam_pos := Vector3.ZERO
 var _cam_mira := Vector3.ZERO
@@ -67,7 +68,8 @@ const PLANOS := [
 	## entera -paredes, techo, periodistas de espaldas en primer plano- con el
 	## DT pequeño al fondo, como el plano general de cualquier retransmisión.
 	{"pos": Vector3(0.3, 2.3, 4.3), "mira": Vector3(0.0, 1.1, -1.4), "fov": 58.0},
-	{"pos": Vector3(-2.2, 1.5, 1.8), "mira": Vector3(0.4, 1.3, -0.5), "fov": 42.0},
+	## A tres cuartos (26-10): el lateral de antes dejaba al DT de perfil.
+	{"pos": Vector3(-1.25, 1.58, 2.0), "mira": Vector3(0.1, 1.4, -0.6), "fov": 38.0},
 ]
 var _plano := 0
 ## MÁS CERCA Y CON MENOS ÁNGULO DE VISIÓN: a 2,5 m y 38° de FOV sobraba medio
@@ -96,13 +98,9 @@ const CAM_MIRA := Vector3(0.0, 1.25, -0.5)
 # nítidos dentro de una escena 3D, porque una malla con una textura pintada a
 # mano se ve borrosa en cuanto la cámara se acerca.
 
-## MÁS FILAS Y MÁS CHICAS, no menos: la primera versión tenía 3 filas de
-## logos gigantes -cada uno casi tan alto como el propio podio- y la pared
-## se comía la escena entera. Una pared de prensa real repite decenas de
-## logos PEQUEÑOS; el tamaño que de verdad importa es el de la placa entera
-## contra la altura de una persona, no el de cada logo suelto.
+## Muchas piezas pequeñas, como una pared de prensa real (no logos gigantes).
 const FILAS_LOGO := 4
-const COLS_LOGO := 9
+const COLS_LOGO := 8
 
 # ---------------------------------------------------------------------------
 #  EL PODIO
@@ -161,7 +159,7 @@ func _montar_suelo() -> void:
 
 func _montar_sala() -> void:
 	var oscuro := StandardMaterial3D.new()
-	oscuro.albedo_color = Color(0.05, 0.05, 0.06)
+	oscuro.albedo_color = Color(0.13, 0.13, 0.15)
 	oscuro.roughness = 0.8
 
 	## Paredes laterales, ligeramente giradas hacia dentro -mismo truco que el
@@ -251,75 +249,10 @@ func _montar_periodistas() -> void:
 				cuerpo.position = Vector3(x, 0.68, z + 0.02)
 				add_child(cuerpo)
 
-func _montar_fondo_sponsors(club: Club, acento: Color, clubes_competencia: Array = []) -> void:
-	var vp := SubViewport.new()
-	vp.size = Vector2i(2000, 700)
-	vp.transparent_bg = false
-	vp.render_target_update_mode = SubViewport.UPDATE_ONCE
-	add_child(vp)
-
-	var fondo := ColorRect.new()
-	fondo.color = acento.darkened(0.82)
-	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vp.add_child(fondo)
-
-	## LOS ESCUDOS DE TU LIGA (14-9-2026), no marcas genéricas -pedido
-	## explícito: "que al fondo fueran los escudos de los clubes de la
-	## competencia correspondiente"-. Antes esto rotaba por `Datos.tabla
-	## ("MARCAS")`, sponsors sin relación con el partido que se acaba de
-	## jugar. Una pared de prensa de liga de verdad muestra los equipos que
-	## compiten, no auspiciadores al azar. Si no llega ninguna competencia
-	## -compatibilidad hacia atrás, por ejemplo una prueba vieja- se cae a
-	## las marcas de siempre.
-	var otros: Array = []
-	for c: Club in clubes_competencia:
-		if c != null and c != club:
-			otros.append(c)
-	var marcas: Array = Datos.tabla("MARCAS") if otros.is_empty() else []
-	var grid := GridContainer.new()
-	grid.columns = COLS_LOGO
-	grid.set_anchors_preset(Control.PRESET_FULL_RECT)
-	grid.add_theme_constant_override("h_separation", 14)
-	grid.add_theme_constant_override("v_separation", 14)
-	vp.add_child(grid)
-	var total := FILAS_LOGO * COLS_LOGO
-	for i in total:
-		var celda := TextureRect.new()
-		celda.custom_minimum_size = Vector2(150, 120)
-		celda.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		celda.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		## Cada tercera celda es el escudo del club anfitrión -mismo patrón
-		## que una pared real, donde se repite más que el resto-; el resto va
-		## rotando por los rivales de la liga (o, si no hay, por las marcas).
-		if i % 3 == 0:
-			celda.texture = Escudo.textura(club, 110)
-		elif not otros.is_empty():
-			var rival: Club = otros[i % otros.size()]
-			celda.texture = Escudo.textura(rival, 110)
-		elif marcas != null and not marcas.is_empty():
-			var fila: Array = marcas[i % marcas.size()]
-			celda.texture = Marca.textura(String(fila[0]), String(fila[1]), 110)
-		grid.add_child(celda)
-
-	var mat := StandardMaterial3D.new()
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.emission_enabled = true
-	mat.emission_energy_multiplier = 0.85
-	var tex := vp.get_texture()
-	mat.albedo_texture = tex
-	mat.emission_texture = tex
-	## EL TAMAÑO FÍSICO ES LO QUE IMPORTA, no el número de logos. 9,6×3,0 m
-	## -más alto que una persona y más ancho que el podio por completo- hacía
-	## que la pared se comiera la escena y el DT quedara como un punto en la
-	## esquina. 5,4×1,7 m centrado a la altura de cabeza-pecho es lo que
-	## ocupa de verdad una placa de sponsors detrás de un podio real.
-	var quad := MeshInstance3D.new()
-	var q := QuadMesh.new()
-	q.size = Vector2(5.4, 1.7)
-	quad.mesh = q
-	quad.material_override = mat
-	quad.position = Vector3(0, 1.55, -1.6)
-	add_child(quad)
+func _montar_fondo_sponsors(club: Club, acento: Color, _clubes_competencia: Array = []) -> void:
+	## Vive en `ParedPrensa` (26-10): según el contexto de la rueda (patrón del
+	## club, competición o previa). `_contexto` lo fija `montar()` (capa 2).
+	ParedPrensa.montar(self, club, acento, get("_contexto") if get("_contexto") != null else {})
 
 # ---------------------------------------------------------------------------
 #  LA SALA (14-9-2026)
@@ -385,11 +318,7 @@ func _montar_luces() -> void:
 	## metro más arriba, quedaba casi a oscuras contra una pared de sponsors
 	## emisiva y mucho más brillante. Es la razón por la que en la primera
 	## captura el DT se veía como una mancha oscura sin forma.
-	## OJO CON LA ENERGÍA, otra vez -misma trampa que ya se pagó en el sorteo
-	## ("a 1,4 los balones salían reventados")-: a 8.0 la cabeza del DT salía
-	## quemada, una esfera blanca sin rasgos en vez de una cara. El sorteo
-	## calibró su foco principal a 4.0 con atenuación 1.4; aquí el sujeto está
-	## más cerca de la luz que el bombo, así que baja un poco más todavía.
+	## OJO CON LA ENERGÍA: a 8.0 la cabeza del DT salía quemada (como en el sorteo).
 	var clave := SpotLight3D.new()
 	clave.light_color = Color(1, 0.98, 0.94)
 	clave.light_energy = 3.2
@@ -418,16 +347,18 @@ func _montar_luces() -> void:
 	contra.position = Vector3(0, 1.9, -1.0)
 	add_child(contra)
 
-	## LOS PERIODISTAS (14-9-2026): sin luz propia eran invisibles -su material
-	## (0.14,0.15,0.18) contra un fondo casi negro (0.05,0.05,0.06) se leía
-	## como negro puro, mismo error ya documentado para el DT y el
-	## presentador del sorteo-. Un relleno tenue y frío, alto y centrado sobre
-	## la zona donde se sientan, solo para que se noten como siluetas -no
-	## para que compitan con el DT, que sigue siendo lo único bien iluminado
-	## de la escena-.
+	## LOS PERIODISTAS (14-9-2026): sin luz propia eran invisibles; un relleno
+	## tenue y frío para que se noten como siluetas, sin competir con el DT.
 	var luz_publico := OmniLight3D.new()
 	luz_publico.light_color = Color(0.55, 0.6, 0.7)
 	luz_publico.light_energy = 1.1
 	luz_publico.omni_range = 4.5
 	luz_publico.position = Vector3(0, 3.2, 1.8)
 	add_child(luz_publico)
+	## La sala alrededor de la pared, algo menos negra (26-10).
+	var sala := OmniLight3D.new()
+	sala.light_color = Color(0.8, 0.82, 0.9)
+	sala.light_energy = 0.9
+	sala.omni_range = 6.0
+	sala.position = Vector3(0, 2.6, -0.6)
+	add_child(sala)

@@ -91,6 +91,12 @@ const FIJAS := {
 	"VEN": [[4, 19, "Declaración de Independencia", "fiesta", "El 19 de abril de 1810."],
 		[6, 24, "Batalla de Carabobo", "fiesta", "La batalla de 1821."],
 		[7, 5, "Día de la Independencia", "fiesta", "El acta de independencia de 1811."]],
+## Lote 1 de países nuevos (26-10-2026, fila 26 s4): POR, NED, BEL, CRO, DEN.
+	"POR": [[6, 10, "Día de Portugal", "fiesta", "La fiesta nacional portuguesa."]],
+	"NED": [[4, 27, "Día del Rey", "fiesta", "El cumpleaños del rey: medio país se viste de naranja."]],
+	"BEL": [[7, 21, "Fiesta Nacional de Bélgica", "fiesta", "El juramento del primer rey de los belgas, 1831."]],
+	"CRO": [[5, 30, "Día del Estado", "fiesta", "La fiesta nacional croata."]],
+	"DEN": [[6, 5, "Día de la Constitución", "fiesta", "La Constitución danesa de 1849."]],
 }
 
 ## El 1 de mayo es festivo en casi todos; donde no, su equivalente.

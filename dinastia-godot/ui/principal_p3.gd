@@ -1,5 +1,5 @@
 extends "res://ui/principal_p2.gd"
-## [Capa 3/19 de `principal.gd`] _acento_de, _aplicar_fondo, fecha_del_dia, fecha_de_hoy, fecha_larga, _limpiar … (+15)
+## [Capa 3/17 de `principal.gd`] _acento_de, _aplicar_fondo, fecha_del_dia, fecha_de_hoy, fecha_larga, _limpiar … (+13)
 
 # ===========================================================================
 #  EL ASPECTO A TU MEDIDA
@@ -30,6 +30,10 @@ const PALETAS := {
 	"papel":    ["Papel (claro)", "e8e5dd", "f5f3ec", "00000018", "1e2420", "5a6259"],
 	"cuaderno": ["Cuaderno de gestión", "e3e0d4", "f2efe3", "00000022", "23281f", "60664f"],
 	"neon":     ["Neón", "0a0612", "150d22", "ffffff18", "efe8ff", "9c8fb8"],
+	## CONTRASTE ALTO (s3, 26-10-2026; accesibilidad básica): negro puro, texto
+	## blanco, el suave casi blanco y bordes marcados. Se enciende también desde
+	## Ajustes → Accesibilidad (`AjustesAcceso.contraste`).
+	"contraste": ["Contraste alto", "000000", "000000", "ffffffb0", "ffffff", "d8e0dc"],
 	## LAS SEIS DE GEMINI (`ModuloEsteticaUI` del documento "Visual gemini" en
 	## Drive, 11-9-2026): a diferencia de las nueve de arriba -que solo cambian
 	## de tinte y dejan el borde en blanco/negro translúcido, neutro- estas
@@ -144,11 +148,6 @@ var _secc_ajustes: String = "audio"
 # que viaja a otro ordenador no tiene por que llevarse el tamano de letra de
 # nadie.
 const PREFS := "user://preferencias.cfg"
-
-## La firma de lo guardado la ultima vez. Esta pantalla se repinta en CADA
-## refresco del juego -no solo al tocar un ajuste-, asi que sin esto se escribiria
-## el archivo en cada clic sin que hubiera cambiado nada.
-var _firma_prefs: String = ""
 
 ## LA PESTAÑA "GENTE", PARTIDA EN SUBMENÚS (10-9-2026). Antes cuatro funciones
 ## sin relación -personas de carne y hueso, identidad visual, explotación
@@ -267,12 +266,14 @@ func _pal_suave() -> Color: return _ui_ajustes._color_pal(5, COL_SUAVE)
 ## fondo de pantalla por debajo sin que la tabla pierda contraste.
 func _pal_panel() -> Color:
 	var c := _ui_ajustes._color_pal(2, COL_PANEL)
-	c.a = 0.94
+	c.a = 1.0 if _paleta == "contraste" else 0.94
 	return c
 
 func _con_contraste(c: Color) -> Color:
 	var lf := _pal_panel().get_luminance()
-	if absf(lf - c.get_luminance()) >= SALTO_LUMA:
+	## Con contraste alto, el salto mínimo de luminosidad es mayor.
+	var salto := 0.6 if _paleta == "contraste" else SALTO_LUMA
+	if absf(lf - c.get_luminance()) >= salto:
 		return c
 	var destino := Color.BLACK if lf > 0.5 else Color.WHITE
 	var r := c
@@ -281,7 +282,7 @@ func _con_contraste(c: Color) -> Color:
 	## que se puede sin dejar de ser el mismo color.
 	for i in 8:
 		r = r.lerp(destino, 0.18)
-		if absf(lf - r.get_luminance()) >= SALTO_LUMA:
+		if absf(lf - r.get_luminance()) >= salto:
 			return r
 	return r
 
@@ -298,6 +299,15 @@ func _color_de_paleta(c: Color) -> Color:
 		return _pal_texto()
 	if c == COL_SUAVE:
 		return _pal_suave()
+	## Los de FONDO son los de la paleta, no se «contrastan» (s3: pasaban por el
+	## empuje de abajo, pensado para letras, y las píldoras salían gris claro con
+	## letra blanca en cualquier paleta que no fuera la de por defecto).
+	if c == COL_PANEL:
+		return _pal_panel()
+	if c == COL_FONDO:
+		return _ui_ajustes._color_pal(1, COL_FONDO)
+	if c == COL_BORDE:
+		return _ui_ajustes._pal_borde()
 	return _con_contraste(c)
 
 func _pildora(texto: String, tam: int = 12, alto: int = 32) -> Button:
@@ -371,35 +381,6 @@ func _liga_de(c: Club) -> Liga:
 
 func _dinero(n: int) -> String:
 	return Eco.dinero(n)
-func _indicador_guardado() -> void:
-	if not is_inside_tree():
-		return
-	if not is_instance_valid(_ind_guardado):
-		_ind_guardado = Label.new()
-		_ind_guardado.name = "IndicadorGuardado"
-		_ind_guardado.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_ind_guardado.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-		_ind_guardado.offset_left = -240.0
-		_ind_guardado.offset_right = -20.0
-		_ind_guardado.offset_top = 62.0
-		_ind_guardado.offset_bottom = 84.0
-		_ind_guardado.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		_ind_guardado.add_theme_font_size_override("font_size", 13)
-		_ind_guardado.add_theme_color_override("font_color", Color(0.75, 0.9, 0.75))
-		_ind_guardado.z_index = 50
-		add_child(_ind_guardado)
-	_ind_guardado.text = "💾 " + Idiomas.t("Partida guardada")
-	_ind_guardado.modulate.a = 1.0
-	var tw := _ind_guardado.create_tween()
-	tw.tween_interval(1.4)
-	tw.tween_property(_ind_guardado, "modulate:a", 0.0, 0.8)
-
-## El interruptor de Ajustes → Guardado. Silencioso a propósito -uno por
-## semana durante toda una carrera sería puro ruido en el registro-, en la
-## misma ranura que ya usa el botón "Guardar" de arriba.
-func _autoguardar_si_toca() -> void:
-	if _autoguardado and Partida.guardar(mundo, RANURA):
-		_indicador_guardado()
 
 ## Lo que el edificio del club pinta del mundo: niveles, salas elegidas,
 ## plantilla con dorsales, títulos y presidente.

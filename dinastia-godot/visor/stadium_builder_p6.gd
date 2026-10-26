@@ -183,7 +183,10 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 				var jit := Vector3(rng.randf_range(-0.04, 0.04), 0, rng.randf_range(-0.04, 0.04))
 				## NO TODOS MIDEN LO MISMO: ±10% de talla, gratis en la matriz.
 				var talla := rng.randf_range(0.9, 1.08)
-				var base_h := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla, talla, talla))
+				## NI TODOS IGUAL DE ANCHOS (25-10-2026): delgados y corpulentos, de un
+				## hash del sitio (no del `rng`: el resto de la grada sale igual).
+				var ancho := 0.9 + 0.22 * fposmod(sin(p.x * 12.9898 + p.z * 78.233 + float(k) * 3.1) * 43758.5453, 1.0)
+				var base_h := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla * ancho, talla, talla * ancho))
 				if rake != 0.0:
 					base_h = base_h.rotated(eje_rake, -rake)
 				var xf := Transform3D(base_h, p + eje_largo * desp + jit + Vector3(0, 0.15, 0))
@@ -196,6 +199,9 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 					if l < corte_visita + 1.6:
 						continue
 					col_h = (v1 if (int(l * 7.0 + float(f) * 3.0) % 5) < 3 else v2).darkened(rng.randf() * 0.12)
+					## Marcado en el alfa: `hinchada.gdshader` no los hace saltar con
+					## los goles de casa (y `FestejoGrada` no les pone bengalas).
+					col_h.a = 0.5
 				if cerca:
 					det_xf.append(xf)
 					det_col.append(col_h)
@@ -210,7 +216,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 					hinchas_xf.append(xf)
 					hinchas_col.append(col_h)
 
-	_montar_pasillos(deck, escalones, pasillos_l, lateral, fondo)
+	_montar_pasillos(deck, escalones, pasillos_l, lateral, fondo, largo, sentido, rake)
 	if bandeja == 0:
 		_escaleras_de_acceso(deck, escalones, pasillos_l, lateral)
 
@@ -337,3 +343,20 @@ static func _vomitorios(deck: MeshInstance3D, largo: float, fondo: float,
 		m.material_override = boca
 		m.name = "Vomitorio_%d" % k
 		deck.add_child(m)
+
+## Un bastidor de focos en `centro`, apuntando a `mira`, con `cols` × `filas`
+## proyectores (sus transformaciones se suman a `proyectores`).
+static func _cabeza_foco(root: Node3D, centro: Vector3, mira: Vector3, tam: Vector2, cols: int, filas: int,
+		marco: Material, proyectores: Array[Transform3D]) -> void:
+	var b := Basis.looking_at(mira - centro, Vector3.UP)
+	var bastidor := _box(root, centro, Vector3(tam.x, tam.y, 0.35), marco)
+	bastidor.basis = b
+	bastidor.name = "BastidorFoco"
+	## El disco es un cilindro (eje Y): se tumba para que su cara mire a -Z, al campo.
+	var tumbado := b * Basis(Vector3.RIGHT, -PI * 0.5)
+	var paso := Vector2(tam.x / float(cols), tam.y / float(filas))
+	for c in cols:
+		for f in filas:
+			var local := Vector3(-tam.x * 0.5 + paso.x * (float(c) + 0.5), -tam.y * 0.5 + paso.y * (float(f) + 0.5), -0.22)
+			var esc := minf(paso.x, paso.y) / 0.86
+			proyectores.append(Transform3D(tumbado * Basis.from_scale(Vector3(esc, 1.0, esc)), centro + b * local))

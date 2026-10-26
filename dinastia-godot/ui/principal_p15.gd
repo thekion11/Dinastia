@@ -1,5 +1,5 @@
 extends "res://ui/principal_p14.gd"
-## [Capa 16/19 de `principal.gd`] _construir, abrir_tutorial, _quizas_tutorial
+## [Capa 14/17 de `principal.gd`] _construir, abrir_tutorial, tutorial_objetivo, tutorial_hecho, tutorial_accion
 
 # --- construcción -----------------------------------------------------------
 
@@ -168,8 +168,8 @@ func _construir() -> void:
 	b_dia.custom_minimum_size = Vector2(84, 32)
 	b_dia.pressed.connect(_avanzar_dia)
 	_botones.add_child(b_dia)
-	_tut_nodos["un_dia"] = b_dia
-	_tut_nodos["calendario"] = menu_calendario
+	_guia.nodos["un_dia"] = b_dia
+	_guia.nodos["calendario"] = menu_calendario
 	## Las otras dos puertas contextuales, como iconos: el partido de esta
 	## semana y la plata. Van aquí y no en la cabecera porque la cabecera es
 	## un solo Label y partirla en zonas clicables habría costado más de lo
@@ -180,17 +180,17 @@ func _construir() -> void:
 	b_hub_partido.custom_minimum_size = Vector2(34, 32)
 	b_hub_partido.pressed.connect(func() -> void: _abrir_hub("partido"))
 	_botones.add_child(b_hub_partido)
-	_tut_nodos["partido"] = b_hub_partido
+	_guia.nodos["partido"] = b_hub_partido
 	var b_hub_dinero := Button.new()
 	b_hub_dinero.text = "💰"
 	b_hub_dinero.tooltip_text = Idiomas.t("Finanzas, mercado y agentes libres")
 	b_hub_dinero.custom_minimum_size = Vector2(34, 32)
 	b_hub_dinero.pressed.connect(func() -> void: _abrir_hub("dinero"))
 	_botones.add_child(b_hub_dinero)
-	_tut_nodos["dinero"] = b_hub_dinero
-	_tut_nodos["guardar"] = _boton("Guardar", _guardar)
-	_boton("Cargar", _cargar)
-	_boton("Otro mundo", _nuevo_mundo)
+	_guia.nodos["dinero"] = b_hub_dinero
+	_guia.nodos["guardar"] = _boton("Guardar", _guardar)
+	_boton("Cargar", _partida.cargar)
+	_boton("Otro mundo", _partida.nueva)
 	## El buscador va en la fila de acciones, no en la cabecera: ahí arriba lo
 	## tapaba el aviso de mercado, que flota en la esquina derecha.
 	_buscador = LineEdit.new()
@@ -386,7 +386,7 @@ func _construir() -> void:
 	b_plantel.add_theme_color_override("font_color", _color_de_paleta(COL_ACENTO))
 	b_plantel.pressed.connect(func() -> void: _abrir_hub("plantel"))
 	_ultima_caja_columna.add_child(b_plantel)
-	_tut_nodos["plantel"] = b_plantel
+	_guia.nodos["plantel"] = b_plantel
 	var caja_reg := _bloque(der, "LO QUE VA PASANDO", 1.0)
 	_registro = RichTextLabel.new()
 	_registro.bbcode_enabled = true
@@ -406,22 +406,17 @@ func _construir() -> void:
 	_reloj_diseno.timeout.connect(_siguiente_diseno)
 	add_child(_reloj_diseno)
 
+## EL TUTORIAL vive en `ui/principal/guia_tutorial.gd` (fase 0). Estos cuatro
+## puentes son el contrato con `ui/componentes/tutorial.gd`, que los llama por
+## nombre (con `has_method` delante), y con Ajustes y el panel de objetivos.
 func abrir_tutorial(modo: String = "") -> void:
-	if is_instance_valid(_tutorial):
-		_tutorial.queue_free()
-	if modo == "":
-		modo = mundo.roles.modo_actual() if mundo != null and mundo.roles != null else "dt"
-	_tutorial = Tutorial.new()
-	add_child(_tutorial)
-	_tutorial.iniciar(self, modo, mundo.mi_club().nombre if mundo != null and mundo.mi_club() != null else "tu club")
-	_tutorial.terminado.connect(func(_completo: bool) -> void:
-		Tutorial.marcar_visto()
-		_tutorial = null)
+	_guia.abrir(modo)
 
-## Arranca el recorrido la primera vez que alguien empieza una carrera, o
-## siempre si se pidió desde la tarjeta "Tutorial" del menú.
-func _quizas_tutorial(modo: String) -> void:
-	if not Principal.tutorial_pedido and Tutorial.visto():
-		return
-	Principal.tutorial_pedido = false
-	abrir_tutorial(modo)
+func tutorial_objetivo(clave: String) -> Control:
+	return _guia.objetivo(clave)
+
+func tutorial_hecho(clave: String) -> bool:
+	return _guia.hecho(clave)
+
+func tutorial_accion(clave: String) -> void:
+	_guia.accion(clave)

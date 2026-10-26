@@ -229,7 +229,7 @@ static func texto_ficha(ficha: String, disp: String) -> String:
 		_:
 			if disp == "teclado":
 				var ts := Mando.teclas_de(f)
-				nombre = OS.get_keycode_string(ts[0] as Key) if not ts.is_empty() else "—"
+				nombre = Mando.nombre_tecla(int(ts[0])) if not ts.is_empty() else "—"
 			else:
 				nombre = boton_de(f, disp)
 	if mant:
