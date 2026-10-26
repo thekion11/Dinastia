@@ -274,6 +274,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] Texturas (medido el 24-10): de las 3.103 sin pérdida, 2.535 son caras reales (prohibido tocarlas sin tu OK), 494 iconos de botones y 40 escudos especiales; el resto ya está comprimido. Hecho: 4 texturas normal/roughness de personajes a 1024 px (−48 MB estimados). DECISIÓN DEL DUEÑO: probar BC7 de alta calidad en una muestra de caras y medir ΔE de piel antes de generalizar; identificar ~24 texturas dinámicas de 1024² sin nombre (~100 MB); reapuntar 38 duplicados (ahorra disco, no VRAM).
 - [ ] `_process`: `dibujo_mando`/`MandoGiratorio` con setters y `queue_redraw()` están en la rama de la sesión 2 (falta fusionar); oclusión en más zonas de la ciudad.
 - [ ] 53 escenas de prueba sin ninguna mención: decidir cuáles se borran (§0). La fase 0 dio prueba a 30 módulos: repasar si queda alguno de `visor/`/`nucleo/` sin prueba directa.
+- [ ] `MotorLibre` es prototipo (el juego usa `MotorJugable`): decidir si se borra.
 - [ ] Colisiones de la ciudad fuera del club (peatones, mobiliario, edificios): revisar como en `ColisionClub`.
 - [ ] 506 frases visibles sin traducir en 8 idiomas (`docs/05_referencia/textos_sin_traducir.txt`); la prueba de paridad debe exigir 0.
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
