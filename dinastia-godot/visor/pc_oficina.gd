@@ -132,6 +132,9 @@ func encender() -> void:
 	fondo.color = Color(0.02, 0.03, 0.03)
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_capa.add_child(fondo)
+	## El prólogo ya contó el primer día: Principal no abre la guía antigua del taxi (p16).
+	if mundo != null:
+		mundo.prologo_visto = true
 	_principal = (load("res://escenas/principal.tscn") as PackedScene).instantiate() as Control
 	_capa.add_child(_principal)
 	_principal.set_anchors_preset(Control.PRESET_FULL_RECT)

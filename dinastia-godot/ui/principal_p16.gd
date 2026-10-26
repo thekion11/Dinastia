@@ -23,7 +23,8 @@ func _ready() -> void:
 		Principal.mundo_pregenerado = null
 		var modo := Principal.modo_elegido if Principal.modo_elegido != "" else "dt"
 		_partida.arrancar_con(m)
-		_guia.quizas(modo)
+		if not m.prologo_visto:   ## tras el prólogo 3D la guía del taxi sobra (26-10)
+			_guia.quizas(modo)
 	else:
 		_partida.nueva()
 

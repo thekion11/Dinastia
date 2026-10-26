@@ -5,7 +5,7 @@ var _n := 0
 var _p: Node
 var _tel: Telefono
 var _idioma := "en"
-const APPS := ["inicio", "tribuna", "mensajes", "noticias", "banco", "calendario", "fotos", "ajustes"]
+const APPS := ["inicio", "tribuna", "mensajes", "noticias", "banco", "calendario", "fotos", "agenda", "ajustes"]
 
 func _ready() -> void:
 	if OS.get_environment("IDIOMA") != "":

@@ -232,8 +232,13 @@ func esperar_hasta(hora_objetivo: int, actividad: String = "libre") -> int:
 ## «adelantar el día con el teléfono». Si se topa con el fin de la semana, para
 ## ahí. Devuelve los minutos que pasaron.
 func avanzar_dias(n: int) -> int:
+	return avanzar_con_rutina(maxi(n, 0) * MINUTOS_DIA)
+
+## Adelanta `n` minutos siguiendo la RUTINA (la agenda del móvil: «hasta mañana»,
+## «hasta el partido»). Para en el fin de la semana. Devuelve los minutos pasados.
+func avanzar_con_rutina(n: int) -> int:
 	_al_dia()
-	var quedan := maxi(n, 0) * MINUTOS_DIA
+	var quedan := maxi(n, 0)
 	var pasados := 0
 	while quedan > 0 and not agotada():
 		var fin := _fin_tramo(minuto)

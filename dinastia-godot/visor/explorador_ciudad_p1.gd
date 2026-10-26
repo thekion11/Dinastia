@@ -235,6 +235,8 @@ const _INT_ORIGEN := Vector3(0.0, -400.0, 0.0)
 var _int: InteriorInstalacion = null
 var _int_raiz: Node3D = null
 var _int_circulos := PackedVector3Array()
+## LA VIDA EN 3D (fase 3, 26-10-2026): reloj, casa, comidas, móvil y calabozo; null sin partida.
+var vida: VidaCiudad = null
 var _calle_pos := Vector3.ZERO
 var _calle_rumbo := 0.0
 

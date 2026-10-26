@@ -274,6 +274,7 @@ func abrir_app(app: String) -> void:
 		"banco": _banco()
 		"calendario": _calendario()
 		"fotos": _fotos()
+		"agenda": _agenda()
 		"ajustes": _ajustes()
 	## Lo que no pasó por `Idiomas.t` al montarse (títulos, notas) se traduce aquí.
 	Idiomas.traducir_arbol(_cuerpo)

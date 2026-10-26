@@ -41,7 +41,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 |---|---|---|
 | **1 — Entrada** | recorrido con la cámara real HECHO el 26-10 (`docs/04_auditorias/capturas_fase1/`, 8 tomas Forward+; arreglos: rótulos del globo, rivales en la ficha de país, tarjetas de entrada al campeonato); solo falta tu aprobación (§0) | las fases 0-5 como pantallas completas |
 | **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). Falta tu aprobación jugándolo y lo anotado en §2.2b «Límites» | de «Nuevo juego» hasta tu primer día |
-| **3 — Vida** | casa y familia, jornada y horas extra, días libres, teléfono, citas, eventos de ciudad, transporte público, cárcel | un día completo jugable en 3D |
+| **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). Falta tu aprobación jugándolo y lo anotado en §2.2c «Límites» | un día completo jugable en 3D |
 | **4 — Personas** | directiva, patrocinadores, políticos, entrevistas, fichajes en la ciudad, redes y fotos, elecciones | negociaciones en persona |
 | **5 — Club ampliado** | vestuario con nombres, otros deportes, trofeos y celebraciones | |
 | **6 — Pulido y auditoría** | pasos 4-7 de 7.1, limpieza del repo, vídeo | cierre y MEGAPLAN siguiente |
@@ -184,6 +184,9 @@ de presentación. Mentor y directivos son ficticios (nombres de `Tutorial.mentor
   juego desde el PC se guarde (hoy guarda al avanzar la semana y al encenderlo la primera vez).
 - Logro «Primer día»: no se añadió (la API de `Logros` no tiene alta de logros sueltos; queda para la fase 5).
 - Rendimiento: la ciudad entera queda cargada bajo el menú central; en gama baja habrá que medirlo (fase 6).
+- (26-10, tarde) El mentor del modo DT es el presidente REAL de la junta (antes salían dos presidentes distintos en el
+  despacho); la cabecera de la rueda de presentación se aclara con el color del club; al encender el PC ya no sale la guía
+  antigua del taxi (contaba otro primer día).
 
 **Pruebas (modelo V).** Idea `f2p_prologo`: los 7 pasos en modo sin pantalla (cada punto del recorrido es
 alcanzable con la rejilla de `ColisionClub`; el PC abre `Principal` y lo cierra sin dejar nodos; `prologo_visto`
@@ -206,6 +209,32 @@ mandando `Mundo.avanzar_semana()`), `Necesidades` (energía y hambre, modo compl
 | 5 | Teléfono | App «Agenda»: día, hora, próximo entrenamiento/partido/rueda; «Adelantar»: 1 h, hasta mañana, hasta el partido; mensajes que piden ir a un sitio (la fase 4 los llena) | el teléfono adelanta el reloj con la rutina (`Reloj.RUTINA`) para que las necesidades no se disparen |
 | 6 | Transporte y sucesos | Coche propio según `VidaDT.transporte` (con «micro», solo bus y metro); avería semanal por hash → transporte público; conducir a lo loco (3 choques con multa) → noche en el calabozo: lunes con −3 de confianza y titular | todo reversible en una temporada |
 | 7 | Arranque del día | Tras el prólogo, cada carga empieza en la oficina; con la casa hecha, cada lunes empiezas en casa a las 08:00 y vas al club como quieras (o «ir directo» desde el móvil) | «Vida: apagada» = empiezas en la oficina con el PC |
+
+**Hecho el 26-10 y límites honestos (lo que se verá al jugar):**
+- Reloj vivo: `VidaCiudad` (colgado del explorador cuando hay partida) hace pasar 1 minuto de juego cada 6 s reales
+  mientras paseas (en pausa, PC o móvil no corre); la luz de la ciudad (`VistaCiudad._hora`) ES la del reloj y la vuelta
+  de 2 minutos queda apagada. La hora va en el HUD («🕒 Martes 10:40») y en el móvil de la mano. «Esperar en un banco ×6»
+  no está (no hay bancos usables); el móvil lo cubre con «Adelantar».
+- Jornada: en el club de lunes a viernes 09-18 cuenta como trabajo y 18-23 como horas extra (+1 preparación y +1 estrés
+  por hora); el fin de semana en el club es libre (no distingue aún día de partido).
+- Comer: comedor del plantel (planta 2, E), tu casa (mesa) o un bar/panadería/mercado de la ciudad (E dentro cuando no
+  hay nadie al lado; se sale por la puerta). Dormir: tu cama (salta a las 08:00). Energía a cero fuera de la cama →
+  despiertas en casa con +6 de estrés y un titular pendiente; los avisos de cansancio/hambre salen por el móvil.
+- Casa: la Casa Grande se abre por dentro con E desde la verja (`CasaDT`: salón de la vivienda de los interiores +
+  dormitorio, pareja/hijos/mascota de `VidaDT.perfil`, 2-3 frases por estado de la familia, +1 de familia la primera charla
+  del día). Es la Casa Grande para todos: la vivienda de `VidaDT` (pensión… mansión) todavía no cambia la casa 3D.
+- Teléfono: la T del paseo abre el móvil de siempre con la app «Agenda» (día, hora, próximo entrenamiento/partido/rueda;
+  adelantar 1 h / hasta mañana 08:00 / hasta el partido, siempre con la rutina de `Reloj`: no dispara el hambre). No hay
+  todavía mensajes que te citen a un sitio (fase 4).
+- Transporte y sucesos: «Conducir» del menú sale a pie si `VidaDT.transporte` es «micro» o si toca avería (1 semana de
+  cada 8, por hash); 3 multas por conducción temeraria = noche en el calabozo (−3 de confianza y +4 de estrés una vez por
+  semana, titular, amanece a las 08:00). No hay comisaría 3D: es un fundido.
+- Semana: dormir el domingo por la noche llama a `Mundo.avanzar_semana()` (el mismo camino que el PC) y amanece el lunes;
+  si el PC estaba encendido alguna vez, su menú se refresca. La huella se compara por procesos (`huella_mundo.tscn`): dos
+  mundos iguales avanzados en un mismo proceso no coinciden ni desde el menú (estado estático del motor).
+- Arranque del día: «Continuar» y «Abrir partida» con el prólogo visto entran en 3D: el lunes a las 08:00 en tu casa, el
+  resto del tiempo en la oficina con el PC; con «Vida: apagada» siempre la oficina. La ciudad tarda en construirse
+  (pantalla de carga): en gama baja habrá que medirlo (fase 6).
 
 **Pruebas (modelo V).** Idea `f3v_vida`: al caminar el reloj avanza; comer y dormir mueven las necesidades; dormir el domingo
 avanza la semana con la MISMA huella que el menú (`huella_mundo`); la casa tiene a la familia y sus tres usos; el móvil

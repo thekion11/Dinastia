@@ -78,7 +78,7 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 
 ## `nucleo/mundo.gd` · 10 capas
 
-1. `mundo_p1.gd` — 442 líneas — actual, _init, _anotar_movimiento, _rol_cambio_directiva
+1. `mundo_p1.gd` — 445 líneas — actual, _init, _anotar_movimiento, _rol_cambio_directiva
 2. `mundo_p2.gd` — 446 líneas — tiene_desafio, _norm_nombre, es_clasico, mi_club, club_de_la_copa, _demarcacion_al_azar … (+13)
 3. `mundo_p3.gd` — 424 líneas — fundar_club, multiplicador_desafios, alternar_tienda, ingreso_tienda, puntaje_carrera, proximo_partido … (+20)
 4. `mundo_p4.gd` — 314 líneas — _avisar_a_la_directiva, horario_actual, factor_publico, factor_tv_horario, _copa_es_de, _continental_es_de … (+8)
@@ -96,8 +96,8 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 
 ## `nucleo/partida.gd` · 2 capas
 
-1. `partida_p1.gd` — 394 líneas — carpeta, ruta_de, _cabecera_de, _leer_todo, _leer_con_respaldo, listar … (+11)
-2. `partida.gd` — 347 líneas — _dic_a_club, _dic_a_liga, _dic_a_copa, _restaurar_lo_tuyo, desde_instantanea, cargar … (+2)
+1. `partida_p1.gd` — 395 líneas — carpeta, ruta_de, _cabecera_de, _leer_todo, _leer_con_respaldo, listar … (+11)
+2. `partida.gd` — 348 líneas — _dic_a_club, _dic_a_liga, _dic_a_copa, _restaurar_lo_tuyo, desde_instantanea, cargar … (+2)
 
 ## `nucleo/partido.gd` · 3 capas
 
@@ -229,7 +229,7 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 
 ## `ui/ciudad_vista.gd` · 2 capas
 
-1. `ciudad_vista_p1.gd` — 425 líneas — _ajustar_a_pantalla, _saturacion_animo, _aplicar_hora, _datos_de, _mover_camara, _boton … (+9)
+1. `ciudad_vista_p1.gd` — 428 líneas — _ajustar_a_pantalla, _saturacion_animo, _aplicar_hora, _datos_de, _mover_camara, _boton … (+9)
 2. `ciudad_vista.gd` — 203 líneas — _construir, abrir, _desplazar, _process, punto_en, _probar_clic_estadio … (+1)
 
 ## `ui/componentes/creador_personaje.gd` · 2 capas
@@ -276,10 +276,10 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 
 ## `ui/componentes/telefono.gd` · 4 capas
 
-1. `telefono_p1.gd` — 445 líneas — crear, _hora, _decir, _t_icono, _frase, _widget_informe … (+16)
+1. `telefono_p1.gd` — 446 líneas — crear, _hora, _decir, _t_icono, _frase, _widget_informe … (+16)
 2. `telefono_p2.gd` — 441 líneas — _tarjeta, _perfil, _publicar, _tribuna, _burbuja_icono, _un_chat … (+4)
-3. `telefono_p3.gd` — 117 líneas — restaurar_marcas, _unhandled_input, atras, _tras_abrir, enfocar, _estilo_aviso … (+1)
-4. `telefono.gd` — 422 líneas — _banco, _calendario, _fotos, _muestra, _pintar_papel, _elegir_de_galeria … (+6)
+3. `telefono_p3.gd` — 178 líneas — restaurar_marcas, _unhandled_input, atras, _tras_abrir, enfocar, _estilo_aviso … (+4)
+4. `telefono.gd` — 423 líneas — _banco, _calendario, _fotos, _muestra, _pintar_papel, _elegir_de_galeria … (+6)
 
 ## `ui/componentes/tutorial.gd` · 3 capas
 
@@ -298,7 +298,7 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 ## `ui/entrada/entrada_campeonato.gd` · 2 capas
 
 1. `entrada_campeonato_p1.gd` — 131 líneas — _caja, _etq, _color_tono, _boton, _insignia, _fila_cifra … (+3)
-2. `entrada_campeonato.gd` — 399 líneas — configurar, _ready, entrada_actual, elegir_modo, elegir_club, _construir … (+12)
+2. `entrada_campeonato.gd` — 438 líneas — configurar, _ready, entrada_actual, elegir_modo, elegir_club, _construir … (+12)
 
 ## `ui/entrada/idioma.gd` · 2 capas
 
@@ -332,7 +332,7 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 ## `ui/inicio.gd` · 3 capas
 
 1. `inicio_p1.gd` — 354 líneas — rotacion, _textura_de, _brillo_de, _leer_ajuste, _texto, _construir_banner … (+9)
-2. `inicio_p2.gd` — 304 líneas — _guardar_ajuste, _degradado, _pintar_banner, _actualizar_picker, _clave_tinte, _tenir_particulas … (+11)
+2. `inicio_p2.gd` — 313 líneas — _guardar_ajuste, _degradado, _pintar_banner, _actualizar_picker, _clave_tinte, _tenir_particulas … (+12)
 3. `inicio.gd` — 103 líneas — _rotar_pagina, _ready, _construir_nuevo_juego, _nuevo_juego
 
 ## `ui/ocasion_jugable.gd` · 2 capas
@@ -434,7 +434,7 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 13. `principal_p14.gd` — 315 líneas — _enviar_oferta_negociacion, _al_ajustar_rol_neg, _al_ajustar_campo_neg, _indice_grupo, _paso_pagina, _animar_pagina … (+14)
 14. `principal_p15.gd` — 418 líneas — _construir, abrir_tutorial, tutorial_objetivo, tutorial_hecho, tutorial_accion
 15. `principal_p16.gd` — 319 líneas — _ready, _bloque_vecino, _rejilla, _fila_jugador, _fijar_modo_simulacion, _selector_modo_partido … (+8)
-16. `principal_p17.gd` — 134 líneas — _abrir_rueda_pantalla_completa, _repintar_posturas, _responder, _pintar_museo, _marca, _ver_ciudad_explorando … (+3)
+16. `principal_p17.gd` — 140 líneas — _abrir_rueda_pantalla_completa, _repintar_posturas, _responder, _pintar_museo, _marca, _ver_ciudad_explorando … (+3)
 17. `principal.gd` — 254 líneas — _ready, _capa_modal_encima, _input, _pintar_identidad, _al_paso_nuevo, _portada_nueva
 
 ## `ui/principal/noticias.gd` · 2 capas
@@ -534,11 +534,11 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 
 ## `visor/explorador_ciudad.gd` · 6 capas
 
-1. `explorador_ciudad_p1.gd` — 442 líneas — _raton_en_primera_persona, _sentado_fp, construir_obstaculos, _huellas_de_torres, _indexar_obstaculos, _indexar_circulos … (+12)
+1. `explorador_ciudad_p1.gd` — 444 líneas — _raton_en_primera_persona, _sentado_fp, construir_obstaculos, _huellas_de_torres, _indexar_obstaculos, _indexar_circulos … (+12)
 2. `explorador_ciudad_p2.gd` — 439 líneas — _choca_moviles, _rect_coche, _dentro_rect, _huella, buscar_libre, es_tactil … (+9)
-3. `explorador_ciudad_p3.gd` — 363 líneas — _colocar_camara, _salir_del_edificio, _portero, _salir_del_estadio, _ir_a_planta, _subir_al_tren … (+11)
-4. `explorador_ciudad_p4.gd` — 437 líneas — _mover_en_estadio, _bajar_a_la_galeria, _usar, _tactil, _aplicar_ajustes, _montar_hud … (+7)
-5. `explorador_ciudad_p5.gd` — 448 líneas — edificio_en, pausar, _actualizar_mano, _mover_en_anden, _viajar, _choca_mueble … (+7)
+3. `explorador_ciudad_p3.gd` — 436 líneas — _colocar_camara, _salir_del_edificio, _portero, _salir_del_estadio, _ir_a_planta, _subir_al_tren … (+13)
+4. `explorador_ciudad_p4.gd` — 444 líneas — _mover_en_estadio, _bajar_a_la_galeria, _usar, _tactil, _aplicar_ajustes, _montar_hud … (+7)
+5. `explorador_ciudad_p5.gd` — 386 líneas — edificio_en, pausar, _actualizar_mano, _mover_en_anden, _viajar, _andar_solo … (+5)
 6. `explorador_ciudad.gd` — 11 líneas — _exit_tree
 
 ## `visor/explorador_estadio.gd` · 2 capas

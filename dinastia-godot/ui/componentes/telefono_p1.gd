@@ -25,6 +25,7 @@ const APPS := [
 	["tribuna", "Tribuna", "📣", "3a6df0"], ["mensajes", "Mensajes", "💬", "27ae60"],
 	["noticias", "Noticias", "📰", "e67e22"], ["banco", "Banco", "🏦", "16a085"],
 	["calendario", "Calendario", "📅", "e74c3c"], ["fotos", "Fotos", "🖼️", "d4a92a"],
+	["agenda", "Agenda", "🕒", "8e5ac8"],
 	["ajustes", "Ajustes", "⚙️", "6c7a89"],
 ]
 ## [emoji, color de arriba, color de abajo] de la "foto" de cada tipo.

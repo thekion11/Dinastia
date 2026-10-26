@@ -45,7 +45,8 @@ func montar(m: Mundo, club: Club, acento: Color, look_dt: Dictionary) -> void:
 		clubes = liga.clubes
 	_escena.montar(club, acento, Calidad.ALTO, look_dt, clubes, {"presentacion": true})
 	## Cabecera: qué es esto.
-	var cab := CuadroDialogo.placa(Idiomas.t("RUEDA DE PRENSA DE PRESENTACIÓN"), acento)
+	## Con el color del club aclarado: con un club de negro la placa se perdía en el plató (captura 7 del 26-10).
+	var cab := CuadroDialogo.placa(Idiomas.t("RUEDA DE PRENSA DE PRESENTACIÓN"), acento.lerp(Color(1.0, 0.86, 0.5), 0.6))
 	cab.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	cab.offset_left = 24
 	cab.offset_top = 18
