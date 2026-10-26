@@ -1857,6 +1857,8 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 
 - Primera hora (informe onb, 26-10), lo que queda: `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol (`ui/entrada/*`, zona de la sesión principal). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.
 
+- Más países jugables (fila 26 s4, sesión 6): medido por `pruebas/ideas/s6_paises.gd`: el juego conoce 86 países (banderas) y tiene liga en 23. Hecho: nombre de los 86 en los 9 idiomas (CLDR, `datos/paises.json`, `Paises`). Falta para hacerlos jugables: liga y clubes ficticios (`herramientas/base_ficticia.py`), bolsas de nombres propias para 62 (faker por locale, MIT) y regiones (GeoNames) más allá de ESP/EUS.
+
 ## 9. Sesión 2 (interfaz): rama `ccr-76d707c5-dwse9h-s2`, sin fusionar
 Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `datos/trad_parches/s2_*.json` con `sumar_traducciones.py` y `s2_sobrescrituras.json` con un script con candado (ver el informe).
 

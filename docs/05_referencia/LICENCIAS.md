@@ -104,6 +104,7 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | 205 efectos de sonido y 6 piezas de música | sintetizados por código (`nucleo/sonido.gd`, `nucleo/musica.gd`) | 🟢 propio |
 | Tipografía | fuente por defecto de Godot / fuentes del sistema | 🟢 |
 | Antialiased Line2D (líneas suaves de radares, pizarra y minimapa) | `addons/antialiased_line2d/` | 🟢 MIT, Hugo Locurcio (github.com/godot-extended-libraries/godot-antialiased-line2d, commit 808343e4). El aviso MIT viaja en `addons/LICENCIAS_TERCEROS.txt` (los `.md` no se exportan) |
+| Nombres de país en 9 idiomas (`datos/paises.json`) | `datos/` | 🟢 Unicode CLDR (github.com/unicode-org/cldr-json), Unicode License V3: permisiva, pide conservar el aviso (`datos/LICENCIA_CLDR_Unicode.txt`, viaja en la exportación). Inglaterra, Escocia y Gales, a mano |
 | Debug Menu (contador de FPS de Ajustes) | `addons/debug_menu/` | 🟢 MIT, Hugo Locurcio (github.com/godot-extended-libraries/godot-debug-menu, commit ff124615). Aviso en `addons/LICENCIAS_TERCEROS.txt` |
 | Caras de jugadores y DT | dibujadas por código (`ui/cara.gd`, `ui/cara_dt.gd`) | 🟢 propio |
 
