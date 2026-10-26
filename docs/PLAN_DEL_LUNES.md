@@ -39,7 +39,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 
 | Fase | Contenido | Entregable |
 |---|---|---|
-| **1 — Entrada** | las 7 pantallas están construidas; falta tu aprobación de la entrada (§0) y su recorrido con la cámara real | las fases 0-5 como pantallas completas |
+| **1 — Entrada** | recorrido con la cámara real HECHO el 26-10 (`docs/04_auditorias/capturas_fase1/`, 8 tomas Forward+; arreglos: rótulos del globo, rivales en la ficha de país, tarjetas de entrada al campeonato); solo falta tu aprobación (§0) | las fases 0-5 como pantallas completas |
 | **2 — Prólogo 3D** | aparición fuera del estadio, mentor guía, directivos con oficina, sala de prensa nueva, rueda de prensa con gestos, oficina con PC | de «Nuevo juego» hasta tu primer día |
 | **3 — Vida** | casa y familia, jornada y horas extra, días libres, teléfono, citas, eventos de ciudad, transporte público, cárcel | un día completo jugable en 3D |
 | **4 — Personas** | directiva, patrocinadores, políticos, entrevistas, fichajes en la ciudad, redes y fotos, elecciones | negociaciones en persona |
@@ -146,6 +146,35 @@ por clases. Cada paso es un commit pequeño con su banco.
 
 ---
 
+
+### 2.2b Fase 2 — Prólogo 3D: DISEÑO (26-10, compuerta 2 del método; construir en este orden)
+
+**Flujo.** Al confirmar el personaje, `OrquestadorMundo.preparar()` devuelve la escena `escenas/prologo.tscn`
+(`PrologoDT`) en vez de `principal.tscn` para los modos con club (dt, deportivo, ayudante, interinato, cantera,
+dueño, jeque, crear, fondo); Retos, Tutorial y Carrera de Jugador siguen como hoy. «Saltar prólogo» con
+confirmación (y `PROLOGO=0` para pruebas); al terminar se marca `prologo_visto` en la partida y se autoguarda.
+
+**Escena.** La ciudad real del club (misma semilla y estadio que ya usa la ciudad) con `ExploradorCiudad` a pie.
+| # | Paso | Qué pasa | Pieza que se reutiliza |
+|---|---|---|---|
+| 1 | Llegada | Plano de presentación (cámara baja del cielo, rótulo «Ciudad · Club», 4 s) y apareces en la acera frente a la puerta del club; el mentor (`Tutorial.mentor_de`) y el portero esperan | `EntradaClub`, `PersonalEstadio` (portero), `CuadroDialogo` |
+| 2 | Moverse | El mentor enseña a moverse: 4 tarjetas (moverse, correr, cámara/primera persona, E) con las teclas reales (`Mando.corto_de`); aro en el suelo + flecha hacia el siguiente punto; cada punto se cumple al llegar (1,5 m) | tutorial de la ciudad, `MovilMano` |
+| 3 | Recorrido | El mentor camina delante por las plantas del edificio (vestuario, túnel, campo, −1 enfermería y utilería, +1 despacho del presidente y sala de vídeo, +2 sala de prensa y comedor) y en cada sala dice 1-2 frases; el personal está en su puesto y saluda. **Tu oficina no se enseña aún** | `ExploradorEstadio`, `EdificioClub.PLANTAS`, `RecorridoClub.SALUDOS`, `ColisionClub` (ruta del mentor por la rejilla) |
+| 4 | Directiva | En el despacho del presidente te presenta a la `Junta` (presidente + 2 directivos con cuerpo); una pregunta con 2 respuestas (ambiciosa / prudente) fija la primera impresión (confianza ±3) y queda en «Qué pasa» | `Junta`, `PersonalEstadio` (presidente), `CuadroDialogo.respuesta` |
+| 5 | Prensa | Sala de prensa física (planta 2) → `RuedaPrensaEscena3D` de presentación con 3 preguntas de la rueda previa; el DT GESTICULA según el tono (seguro: manos abiertas; evasivo: mano al cuello; humilde: manos juntas) | `RuedaPrensaEscena3D._montar_gesto_dt`, `ui/principal/rueda_prensa.gd` |
+| 6 | Tu oficina | El mentor te entrega la Oficina del DT («aquí mandas tú»); el PC de la mesa es interactivo: E → el menú central (`Principal`) se abre como capa encima del 3D (`PcOficina`); Esc o «Apagar» vuelve a la silla | sala «Oficina del DT» de `EdificioClub`, `Principal` (como capa, no como escena) |
+| 7 | Cierre | Autoguardado, logro «Primer día», `prologo_visto`; la siguiente carga arranca en la oficina (la casa es de la fase 3) | `Partida`, `Logros` |
+
+**Reglas.** Nada superpuesto: un cuadro de diálogo a la vez; el jugador siempre puede moverse salvo en el plano
+de presentación. Mentor y directivos son ficticios (nombres de `Tutorial.mentor_de` / `Junta`). Textos con
+`Idiomas.t` y traducción a los 8 idiomas con `sumar_traducciones.py`. Scripts nuevos < 450 líneas:
+`visor/prologo.gd` (orquestación de pasos), `visor/prologo_mentor.gd` (NPC guía que sigue puntos),
+`visor/pc_oficina.gd` (el PC que abre y cierra Principal), `visor/prologo_pasos.gd` (texto de cada paso).
+
+**Pruebas (modelo V).** Idea `f2p_prologo`: los 7 pasos en modo sin pantalla (cada punto del recorrido es
+alcanzable con la rejilla de `ColisionClub`; el PC abre `Principal` y lo cierra sin dejar nodos; `prologo_visto`
+queda en la partida; saltar funciona). Captura `f2p_captura_prologo` (7 tomas Forward+ con la cámara del paseo).
+Compuerta de aceptación: capturas al dueño.
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 

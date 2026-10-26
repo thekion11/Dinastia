@@ -159,7 +159,7 @@ func _cabecera() -> Control:
 	h.add_theme_constant_override("separation", 22)
 	var esc := TextureRect.new()
 	esc.texture = Escudo.textura(_club_muestra(_datos_club), 96)
-	esc.custom_minimum_size = Vector2(70, 80)
+	esc.custom_minimum_size = Vector2(60, 68)
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	h.add_child(esc)
@@ -167,8 +167,10 @@ func _cabecera() -> Control:
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.add_theme_constant_override("separation", 4)
 	v.add_child(_etq(Tema.TAM_ROTULO + 2, COL_ORO, Idiomas.t("ENTRADA AL CAMPEONATO")))
-	v.add_child(_etq(Tema.TAM_TITULO + 6, COL_TEXTO, Idiomas.t("¿Cómo entra %s en el campeonato?") % String(_datos_club.get("nombre", ""))))
-	v.add_child(_etq(Tema.TAM_DESTACADO, COL_SUAVE, Idiomas.t("Dos caminos con sus cifras reales. Los dos se recuperan jugando: ninguno es un castigo definitivo."), true))
+	## Cabecera más baja (26-10): con el título a +6 y el subtítulo destacado, a 1080p las dos
+	## últimas cifras de cada tarjeta quedaban cortadas por el borde (captura f1o_etapa_5).
+	v.add_child(_etq(Tema.TAM_TITULO + 2, COL_TEXTO, Idiomas.t("¿Cómo entra %s en el campeonato?") % String(_datos_club.get("nombre", ""))))
+	v.add_child(_etq(Tema.TAM_CUERPO + 1, COL_SUAVE, Idiomas.t("Dos caminos con sus cifras reales. Los dos se recuperan jugando: ninguno es un castigo definitivo."), true))
 	h.add_child(v)
 	return h
 
@@ -184,24 +186,29 @@ func _construir_tarjeta(modo: String, letra: String, titulo: String, sub: String
 		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
 			elegir_modo(modo))
 	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 10)
+	v.add_theme_constant_override("separation", 6)
 	t.add_child(v)
 	var cab := HBoxContainer.new()
-	cab.add_theme_constant_override("separation", 16)
+	cab.add_theme_constant_override("separation", 12)
 	cab.add_child(_insignia(letra, COL_ACENTO if modo == EntradaCampeonato.MODO_REEMPLAZAR else COL_ORO.darkened(0.25)))
 	var tv := VBoxContainer.new()
 	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	tv.add_child(_etq(Tema.TAM_TITULO + 2, COL_TEXTO, titulo, true))
-	tv.add_child(_etq(Tema.TAM_CUERPO + 1, COL_SUAVE, sub, true))
+	tv.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	## Título y descripción un punto más pequeños (26-10): la tarjeta A lleva además el
+	## selector del club y sus ocho cifras no cabían a 1080p (captura f1o_etapa_5).
+	tv.add_child(_etq(Tema.TAM_TITULO, COL_TEXTO, titulo, true))
 	cab.add_child(tv)
 	v.add_child(cab)
+	## La descripción va DEBAJO de la cabecera, a todo el ancho (26-10): al lado del
+	## título ocupaba tres líneas y las ocho cifras no cabían a 1080p.
+	v.add_child(_etq(Tema.TAM_CUERPO, COL_SUAVE, sub, true))
 	if modo == EntradaCampeonato.MODO_REEMPLAZAR:
 		var fs := HBoxContainer.new()
 		fs.add_theme_constant_override("separation", 12)
 		fs.add_child(_etq(Tema.TAM_CUERPO + 1, COL_ORO, Idiomas.t("Club que reemplazas")))
 		_selector = OptionButton.new()
 		_selector.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		_selector.custom_minimum_size = Vector2(0, 40)
+		_selector.custom_minimum_size = Vector2(0, 36)
 		_selector.add_theme_font_size_override("font_size", Tema.TAM_DESTACADO)
 		_llenar_selector()
 		_selector.item_selected.connect(func(i: int) -> void:
@@ -215,14 +222,39 @@ func _construir_tarjeta(modo: String, letra: String, titulo: String, sub: String
 	var grid := GridContainer.new()
 	grid.columns = 2
 	grid.add_theme_constant_override("h_separation", 18)
-	grid.add_theme_constant_override("v_separation", 6)
+	grid.add_theme_constant_override("v_separation", 3)
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	## Con letra grande o pantallas bajas las ocho cifras no caben siempre: se desplazan, no se cortan.
 	var scroll := ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.add_child(grid)
-	v.add_child(scroll)
+	## Marco que deja superponer un degradado al pie: si aún queda algo por debajo, se
+	## funde en vez de cortarse a cuchillo (y se lee que se puede desplazar).
+	var marco := Control.new()
+	marco.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	marco.clip_contents = true
+	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	marco.add_child(scroll)
+	var fundido := TextureRect.new()
+	var grad := Gradient.new()
+	grad.set_color(0, Color(COL_PANEL, 0.0))
+	grad.set_color(1, Color(COL_PANEL, 1.0))
+	var gt := GradientTexture2D.new()
+	gt.gradient = grad
+	gt.fill_from = Vector2(0.5, 0.0)
+	gt.fill_to = Vector2(0.5, 1.0)
+	fundido.texture = gt
+	fundido.stretch_mode = TextureRect.STRETCH_SCALE
+	fundido.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fundido.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fundido.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	fundido.offset_top = -34.0
+	fundido.offset_right = -10.0
+	marco.add_child(fundido)
+	scroll.get_v_scroll_bar().value_changed.connect(func(valor: float) -> void:
+		var barra := scroll.get_v_scroll_bar()
+		fundido.visible = valor + barra.page < barra.max_value - 2.0)
+	v.add_child(marco)
 	var b := _boton(Idiomas.t("Elegir esta opción"), false)
 	b.toggle_mode = true
 	b.custom_minimum_size = Vector2(190, 44)

@@ -29,7 +29,10 @@ func _ready() -> void:
 
 func _datos() -> void:
 	var todos := PaisDatos.todos()
-	_comprobar(todos.size() == 24, "24 países en la lista (%d)" % todos.size())
+	## 24 al nacer la pantalla (25-10); la sesión 6 sumó países el 26-10. Lo que
+	## importa es que la lista no se vacíe ni pierda los de siempre, no la cifra.
+	_comprobar(todos.size() >= 24 and "CHI" in todos and "ESP" in todos and "JPN" in todos,
+		"la lista conserva al menos los 24 países de siempre (%d)" % todos.size())
 	var malos: Array[String] = []
 	for p: String in todos:
 		var m := PaisDatos.monumentos(p)

@@ -82,7 +82,7 @@ func _fila_cifra(grid: GridContainer, rotulo: String, valor: String, tono: Tono,
 	v.add_theme_constant_override("separation", 0)
 	v.add_child(_etq(Tema.TAM_DESTACADO + 1, _color_tono(tono), valor, true))
 	if nota != "":
-		v.add_child(_etq(Tema.TAM_CUERPO - 1, COL_SUAVE, nota, true))
+		v.add_child(_etq(Tema.TAM_CUERPO - 2, COL_SUAVE, nota, true))
 	grid.add_child(v)
 
 func _vaciar(n: Node) -> void:
