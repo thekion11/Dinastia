@@ -87,6 +87,7 @@ func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 	if crear_club:
 		_nota(Idiomas.t("Fundarás tu propio club en %s.") % PaisDatos.nombre(p),
 			Idiomas.t("Los clubes que ya existen no se muestran: el tuyo empieza de cero."))
+		_rivales(_clubes_de(p, mundo))
 		return
 	var rot := Tema.rotulo(Idiomas.t("Elige tu club"))
 	rot.add_theme_color_override("font_color", Tema.ORO)
@@ -97,6 +98,60 @@ func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 		clubes_listados.append(c.nombre)
 	if not clubes.is_empty():
 		_marcar(clubes[0])
+
+## Al fundar un club la ficha quedaba medio vacía (captura del 26-10). Lo que
+## sí ayuda a elegir país es saber contra quién jugarás: cuántos clubes tiene la
+## liga, qué nivel y su estadio típico, y los nombres de los más fuertes.
+func _rivales(clubes: Array[Club]) -> void:
+	if clubes.is_empty():
+		return
+	_cuerpo.add_child(HSeparator.new())
+	var ordenados := clubes.duplicate()
+	ordenados.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
+	var suma_rep := 0
+	var suma_aforo := 0
+	for c: Club in clubes:
+		suma_rep += c.rep
+		suma_aforo += c.estadio_aforo
+	var t := Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO, Idiomas.t("TUS RIVALES"))
+	_cuerpo.add_child(t)
+	var datos := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO,
+		Idiomas.t("%d clubes · reputación media %d · estadios de %s de media") % [
+			clubes.size(), int(round(float(suma_rep) / clubes.size())),
+			_miles(int(round(float(suma_aforo) / clubes.size())))])
+	datos.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_cuerpo.add_child(datos)
+	var flujo := HFlowContainer.new()
+	flujo.add_theme_constant_override("h_separation", 6)
+	flujo.add_theme_constant_override("v_separation", 6)
+	_cuerpo.add_child(flujo)
+	var tope := mini(6, ordenados.size())
+	for i in tope:
+		var c: Club = ordenados[i]
+		var ficha := PanelContainer.new()
+		ficha.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, 10, Color(c.color1, 0.6)))
+		var fila := HBoxContainer.new()
+		fila.add_theme_constant_override("separation", 6)
+		ficha.add_child(fila)
+		var esc := TextureRect.new()
+		esc.texture = Escudo.textura(c, 40)
+		esc.custom_minimum_size = Vector2(22, 26)
+		esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		fila.add_child(esc)
+		fila.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "%s · %d" % [Nombres.visible(c.nombre), c.rep]))
+		flujo.add_child(ficha)
+	if ordenados.size() > tope:
+		var mas := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, Idiomas.t("y %d más") % (ordenados.size() - tope))
+		_cuerpo.add_child(mas)
+
+static func _miles(n: int) -> String:
+	var s := str(n)
+	var salida := ""
+	while s.length() > 3:
+		salida = "." + s.substr(s.length() - 3) + salida
+		s = s.substr(0, s.length() - 3)
+	return s + salida
 
 func _nota(titulo: String, texto: String) -> void:
 	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, titulo)

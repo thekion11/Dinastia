@@ -5742,7 +5742,10 @@
   "¿POR QUÉ SUBE O BAJA?": "WHY DOES HE GO UP OR DOWN?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Last year in which he grows through training; from 24 his rating stays put.",
   "▲ sube": "▲ rises",
-  "▼ baja": "▼ falls"
+  "▼ baja": "▼ falls",
+  "TUS RIVALES": "YOUR RIVALS",
+  "%d clubes · reputación media %d · estadios de %s de media": "%d clubs · average reputation %d · stadiums of %s on average",
+  "y %d más": "and %d more"
  },
  "pt": {
   "Historia": "História",
@@ -11487,7 +11490,10 @@
   "¿POR QUÉ SUBE O BAJA?": "PORQUE SOBE OU DESCE?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Último ano em que cresce a treinar; a partir dos 24 a média fica parada.",
   "▲ sube": "▲ sobe",
-  "▼ baja": "▼ desce"
+  "▼ baja": "▼ desce",
+  "TUS RIVALES": "SEUS RIVAIS",
+  "%d clubes · reputación media %d · estadios de %s de media": "%d clubes · reputação média %d · estádios de %s em média",
+  "y %d más": "e mais %d"
  },
  "patrones": [
   [
@@ -22751,7 +22757,10 @@
   "¿POR QUÉ SUBE O BAJA?": "POURQUOI MONTE-T-IL OU BAISSE-T-IL ?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Dernière année où il progresse à l'entraînement ; dès 24 ans sa note ne bouge plus.",
   "▲ sube": "▲ monte",
-  "▼ baja": "▼ baisse"
+  "▼ baja": "▼ baisse",
+  "TUS RIVALES": "TES RIVAUX",
+  "%d clubes · reputación media %d · estadios de %s de media": "%d clubs · réputation moyenne %d · stades de %s en moyenne",
+  "y %d más": "et %d de plus"
  },
  "it": {
   "Historia": "Storia",
@@ -28403,7 +28412,10 @@
   "¿POR QUÉ SUBE O BAJA?": "PERCHÉ SALE O SCENDE?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Ultimo anno in cui cresce allenandosi; dai 24 anni la sua media resta ferma.",
   "▲ sube": "▲ sale",
-  "▼ baja": "▼ scende"
+  "▼ baja": "▼ scende",
+  "TUS RIVALES": "I TUOI RIVALI",
+  "%d clubes · reputación media %d · estadios de %s de media": "%d club · reputazione media %d · stadi da %s in media",
+  "y %d más": "e altri %d"
  },
  "de": {
   "Historia": "Geschichte",
@@ -34055,7 +34067,10 @@
   "¿POR QUÉ SUBE O BAJA?": "WARUM STEIGT ODER SINKT ER?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Letztes Jahr, in dem er durch Training wächst; ab 24 bleibt seine Wertung stehen.",
   "▲ sube": "▲ steigt",
-  "▼ baja": "▼ sinkt"
+  "▼ baja": "▼ sinkt",
+  "TUS RIVALES": "DEINE RIVALEN",
+  "%d clubes · reputación media %d · estadios de %s de media": "%d Vereine · mittlere Reputation %d · Stadien mit durchschnittlich %s",
+  "y %d más": "und %d weitere"
  },
  "ca": {
   "Historia": "Història",
@@ -39707,7 +39722,10 @@
   "¿POR QUÉ SUBE O BAJA?": "PER QUÈ PUJA O BAIXA?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Últim any en què creix entrenant; des dels 24 la seva mitjana es queda quieta.",
   "▲ sube": "▲ puja",
-  "▼ baja": "▼ baixa"
+  "▼ baja": "▼ baixa",
+  "TUS RIVALES": "ELS TEUS RIVALS",
+  "%d clubes · reputación media %d · estadios de %s de media": "%d clubs · reputació mitjana %d · estadis de %s de mitjana",
+  "y %d más": "i %d més"
  },
  "pl": {
   "Club": "Klub",
@@ -45638,7 +45656,10 @@
   "¿POR QUÉ SUBE O BAJA?": "DLACZEGO ROŚNIE LUB SPADA?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Ostatni rok, w którym rośnie dzięki treningom; od 24 lat jego ocena stoi w miejscu.",
   "▲ sube": "▲ rośnie",
-  "▼ baja": "▼ spada"
+  "▼ baja": "▼ spada",
+  "TUS RIVALES": "TWOI RYWALE",
+  "%d clubes · reputación media %d · estadios de %s de media": "%d klubów · średnia reputacja %d · stadiony średnio na %s",
+  "y %d más": "i jeszcze %d"
  },
  "tr": {
   "Club": "Kulüp",
@@ -51569,6 +51590,9 @@
   "¿POR QUÉ SUBE O BAJA?": "NEDEN YÜKSELİYOR YA DA DÜŞÜYOR?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Antrenmanla geliştiği son yıl; 24 yaşından itibaren reytingi sabit kalır.",
   "▲ sube": "▲ yükselir",
-  "▼ baja": "▼ düşer"
+  "▼ baja": "▼ düşer",
+  "TUS RIVALES": "RAKİPLERİN",
+  "%d clubes · reputación media %d · estadios de %s de media": "%d kulüp · ortalama itibar %d · ortalama %s kişilik stadyumlar",
+  "y %d más": "ve %d tane daha"
  }
 }
