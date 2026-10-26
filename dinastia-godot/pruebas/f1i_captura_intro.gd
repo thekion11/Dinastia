@@ -1,11 +1,11 @@
 extends Node
 ## CAPTURAS DE LA INTRO DE MARCA (`ui/entrada/intro.gd`, fase 1 etapa 0). Congela la intro en
-## cuatro instantes (trazo del escudo, letras formándose, destello, marca completa) y guarda
+## cuatro instantes (logo apareciendo, brillo cruzándolo, letras formándose, marca completa) y guarda
 ## cada uno. Todo en la intro es función del tiempo, así que lo congelado es lo que se ve.
 ##   herramientas/captura.sh res://pruebas/f1i_captura_intro.tscn
 ## (`RESOLUCION=720x1280` delante para verla en un móvil en vertical.)
 
-const MOMENTOS := [[0.65, "trazo"], [1.72, "letras"], [2.55, "destello"], [3.70, "marca"]]
+const MOMENTOS := [[0.45, "alas"], [0.90, "brillo"], [1.70, "letras"], [2.40, "marca"]]
 ## Fotogramas de espera: el primero compila los shaders; después, dos por captura.
 const ESPERA := 20
 

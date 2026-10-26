@@ -183,6 +183,7 @@ const SECCIONES := [
 	"_probar_tanda_top25b",
 	"_probar_prorroga_y_penales",
 	"_probar_informe_rival",
+	"_probar_logo",
 	"_probar_porque_moral",
 	"_probar_partido_abandonado",
 	"_probar_no_atravesar_paredes",

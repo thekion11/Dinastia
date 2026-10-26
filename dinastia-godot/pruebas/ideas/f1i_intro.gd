@@ -87,15 +87,11 @@ func _primera_vez() -> void:
 	_comprobar(a.mouse_filter == Control.MOUSE_FILTER_STOP, "tapa los clics de lo que haya debajo")
 	_comprobar(load("res://ui/entrada/orquestador.gd") != null and OrquestadorEntrada.ETAPAS[0]["ruta"] == a.get_script().resource_path,
 		"está donde la busca el orquestador (%s)" % a.get_script().resource_path)
-	a.avanzar(0.6)
-	for e: InputEvent in [_tecla(), _clic(), _mando(), _toque()]:
-		a._input(e)
-	a.avanzar(0.5)
-	_comprobar(not a.acabada() and not a.se_puede_saltar(), "la primera vez NO se salta (tecla, clic, mando, toque)")
+	_comprobar(a.se_puede_saltar(), "se puede saltar siempre, también la primera vez")
 	_correr(a)
 	_comprobar(_avisos == 1, "al acabar emite «terminado» (una vez: %d)" % _avisos)
 	_comprobar(_datos is Dictionary and (_datos as Dictionary).is_empty(), "y lo emite con {} (la intro no elige nada)")
-	_comprobar(_t_aviso > 4.0 and _t_aviso <= 5.0, "dura ≤ 5 s (%.2f s simulados a 60 fps)" % _t_aviso)
+	_comprobar(_t_aviso > 2.5 and _t_aviso <= 3.2, "dura unos 3 s (%.2f s simulados a 60 fps)" % _t_aviso)
 	for i in 120:
 		a.avanzar(PASO)
 	a._input(_tecla())
@@ -150,7 +146,7 @@ func _maqueta() -> void:
 		a.size = tam
 		a.fijar_tiempo(3.7)
 		var cabe: bool = a._ancho_palabra <= tam.x * 0.87 and a._fs > 20.0
-		var arriba: float = a._ce.y - a._we * (IntroMarca.ESCUDO_ALTO * 0.5 + 0.25)
+		var arriba: float = a._ce.y - a._we * IntroMarca.ESCUDO_ALTO * 0.5
 		var abajo: float = a._c.y + a._cap * 0.5 + a._fs * 0.5 + a._fs_lema
 		_comprobar(cabe and arriba > 0.0 and abajo < tam.y, "la marca cabe entera en %dx%d" % [int(tam.x), int(tam.y)])
 		_comprobar(a._nombre != "" and a._lema != "", "con sus textos (traducidos con Idiomas.t)")
