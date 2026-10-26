@@ -197,6 +197,19 @@ func _construir_banner(raiz: VBoxContainer) -> void:
 	_overlay.stretch_mode = TextureRect.STRETCH_SCALE
 	_banner.add_child(_overlay)
 
+	## El logo definitivo (26-10-2026), a la derecha de la franja.
+	var logo := TextureRect.new()
+	logo.name = "LogoPortada"
+	logo.texture = load("res://assets/logo/logo_512.png")
+	logo.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+	logo.offset_left = -214; logo.offset_right = -22
+	logo.offset_top = -96; logo.offset_bottom = 96
+	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_banner.add_child(logo)
+
 	var textos := VBoxContainer.new()
 	textos.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	textos.offset_left = 22; textos.offset_top = -108
