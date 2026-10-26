@@ -120,6 +120,8 @@ var reloj: Reloj = Reloj.new()
 var necesidades: Necesidades = Necesidades.new()
 ## FASE 4 (26-10): las citas en persona (nacen de la junta, el patrocinio, el agente y la votación).
 var citas: Citas = Citas.new()
+## Bloque 7: la afinidad 0-100 con cada persona del club (solo cambia textos).
+var afinidad: AfinidadClub = AfinidadClub.new()
 var maestria: Maestria
 ## El resultado de tu último partido de liga para `VidaDT`: 1, 0, -1, o 2 si no hubo.
 var _resultado_semana: int = 2
