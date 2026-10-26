@@ -305,6 +305,23 @@ fase 6 (pulido) adelantado y se hace por PASADAS con captura antes/después y ve
 
 Compuerta: el dueño ve cada pasada y dice «estamos» o «mejorar». Nada se quita sin avisar.
 
+**Pasada 1 de P1 y P2 (26-10 noche), medida con `pruebas/sonda_movimiento.tscn` (complexión neutra, determinista):**
+
+| Medida (fracción de la altura) | humano | antes | después |
+|---|---|---|---|
+| cabezas de altura | 7,5 | 7,6 | 7,9 (hombre) · 7,4 (mujer) |
+| hombro→muñeca | 0,34 | 0,27 | 0,29 (−15 %) |
+| antebrazo / brazo | 0,80 | 0,97 · 1,04 | 0,78 · 0,83 |
+| pantorrilla / muslo | 0,95 | 1,07 · 1,14 | 0,98 · 1,04 |
+| anchura de hombros | 0,245 | 0,23 · 0,17 | 0,19 · 0,14 (PENDIENTE) |
+
+Cambios: `PersonajeDT.ANATOMIA` (húmero ×1,15, muslo ×1,05, pantorrilla ×0,96) para DT, futbolistas y peatones. Los hombros
+quedan pendientes: la clavícula va en diagonal y el sistema de escalas por ejes del mundo también estira el brazo; hay que
+escalarla en ejes locales compensando al hijo (siguiente pasada). Movimiento: el pie apoyado de «caminar» recorre 1,0 m/s y el
+paseo iba a 1,7 m/s (patinaba ×1,7; agachado ×2,4; correr ×1,3-1,5): ahora `speed_scale = velocidad real / natural del clip`
+(`ExploradorCiudad.VEL_NATURAL_CLIP`) y los peatones del tráfico igual (`TraficoCiudad.agregar_vehiculo`). Falta: inercia al
+girar y mezcla andar↔correr↔parar (P2, pasada 2), más clips (P3), piel/pelo/ropa (P4).
+
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 
 #### 9.1 Propuesta para la fase 4 (entrar al campeonato) — cifras VALIDADAS por el dueño el 24-10
