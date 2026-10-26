@@ -354,7 +354,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-305 | P2 | PARCIAL | Tooltips escasos | 103 tooltips |
 | M-307 | P2 | PENDIENTE | Resoluciones: pensado 1280×720–1600×900; sin pruebas en 4:3, 21:9… | sin capturas por aspecto |
 | M-308 | P2 | PENDIENTE | DPI alto: texto del `Label3D` en 3D no escala | `pixel_size` fijo |
-| M-310 | P2 | PENDIENTE | Sin pantalla «Novedades» tras actualizar | sin «Novedades» |
 | M-311 | P2 | PARCIAL | Sin perfil de jugador (estadísticas globales) | `PanelMeta` (álbum/museo global); sin perfil de estadísticas |
 | M-312 | P2 | PARCIAL | Sin modo «streamer» (ocultar datos sensibles/real) | ajuste «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`); sin modo streamer |
 | M-435 | P2 | PENDIENTE | Sin gatillos analógicos para potencia de pase | sin gatillos analógicos |
@@ -685,7 +684,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-426 | P2 | PENDIENTE | Archivos grandes sueltos (`.glb` >5 MB) | sin compresión de GLB grandes |
 | M-427 | P2 | PARCIAL | `pruebas/capturas` crece sin control | carpetas promo/lotes ignoradas; capturas siguen en el repo |
 | M-428 | P2 | 🔒 DUEÑO | `.zip` de terceros dentro de `recursos/` (punteros LFS) | archivos de terceros con LFS: decisión del dueño |
-| M-429 | P2 | PENDIENTE | Versionado del juego sin número visible | sin versión visible |
 | M-430 | P2 | PENDIENTE | Sin canal de reporte de errores | sin reporte de errores |
 | M-432 | P2 | PENDIENTE | Sin política de contenido (religión/política ficticia) | sin lista en CI |
 | M-323 | P3 | 🔒 DUEÑO | Sin música licenciada (decisión del dueño) | música licenciada: decisión del dueño |
@@ -1847,7 +1845,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 1048. Sincronización de partida entre teléfono y tablet — _Todo_
 
 **53. Monetización y Modelo Indie**
-- 1091. Registro de cambios detallado en cada actualización — _Todo_
 - 1092. Canal de reporte de errores dentro del juego — _Todo_
 - 1093. Encuestas a jugadores para priorizar funciones — _Todo_
 - 1098. Política de privacidad simple y legible — _Todo_
@@ -1864,6 +1861,7 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
 - Carrera: falta la animación de parada del portero en modo jugador.
 - Ciudad: **ceder el paso** y el choque real de coches no están vistos con la cámara real; los **peatones solo esperan**, no esquivan.
+- Licencias 🟡 que quedan (sesión 6, `docs/04_auditorias/sesion_6.md`): `persona_realista.glb` → humano de MPFB2 (CC0; hace falta Blender, que no hay en el contenedor; el modelo B ya está en curso); `anims_futbol/` → la vía barata es guardar la captura de la página de Gumroad (dueño); CMU sirve de licencia pero exige retargetear BVH en Blender y no trae regates; `vagabond.obj` (velero), `arco_entrada`, `asientos_lod`, `podio_prensa` y las insignias de Canva siguen sin confirmar.
 
 - Primera hora (informe onb, 26-10): botones de la cabecera de Principal solo con icono (⚽ 💰 🌍), sin texto ni tooltip; el panel OBJETIVOS tapa la ficha del jugador en la columna derecha; el tutorial no se puede volver a abrir si se cierra; las pestañas abiertas fuera de su bloque (Finanzas, Mercado) muestran el carril de chips del bloque anterior; `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol. Hacer tras unir la sesión 3 (toca `ui/principal_p*`).
 
@@ -1898,6 +1896,5 @@ Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún si
 | **Guardado en la nube** / entre dispositivos | media | ideas 234, 934, 945 y 1048 sin plan; los jugadores de gestión llevan partidas de meses | empezar por exportar/importar la partida a un archivo; la nube depende de la tienda |
 | **Ayuda contextual y glosario** (qué es cada cifra) | media | un juego de gestión tiene cientos de cifras; hoy hay ayudas sueltas | botón «?» por pantalla con 3 líneas y enlace al glosario |
 | **Pruebas visuales automáticas** | media | ya en §4; se sube aquí porque sin ellas cada pulido rompe otra pantalla sin aviso | comparar capturas de 20 pantallas clave contra una referencia |
-| **Notas de versión y canal de errores dentro del juego** | baja | ideas 1091-1092; necesario tras lanzar | pantalla «Novedades» leída de un JSON |
-| **Logros / objetivos a largo plazo** visibles | baja | rejugabilidad; hay récords y legado, pero sin lista de logros | lista de 30 logros con su prueba |
+| **Canal de errores dentro del juego** | baja | idea 1092; necesario tras lanzar (las notas de versión ya están: «Novedades», `datos/novedades.json`) | enviar el informe del registro de fallos desde el juego |
 
