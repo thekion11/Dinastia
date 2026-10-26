@@ -7,7 +7,13 @@
 // valores crudos del dibujo) y los colores llegan YA en lineal desde GDScript.
 // Sin mipmaps (14-10-2026): de lejos se promediaban las franjas a un gris medio
 // y las ~20 franjas de corte se fundían en dos bloques enormes.
-uniform sampler2D dibujo : filter_nearest, repeat_disable;
+// LINEAL, NO «NEAREST» (25-10-2026, «sin bloques»): el dibujo es de 256 × 256 en
+// 80 × 117 m, o sea un texel de 31 × 46 cm, y con el filtro más cercano los
+// dibujos diagonales, circulares, de rombos o de abanico salían en ESCALERA de
+// bloques de medio metro (de lejos, dientes de sierra en cada franja). Con el
+// filtro lineal y el umbral de abajo el borde de la franja es la curva de nivel
+// del dibujo: una línea limpia. Las rayas rectas quedan exactamente donde estaban.
+uniform sampler2D dibujo : filter_linear, repeat_disable;
 uniform vec3 claro_s = vec3(0.5, 0.75, 0.55);
 uniform vec3 oscuro_s = vec3(0.4, 0.65, 0.45);
 uniform vec3 claro = vec3(0.21, 0.52, 0.26);
@@ -44,7 +50,11 @@ float fbm(vec2 p) {
 // Máscara de la franja del dibujo (1 = la clara).
 float cesped_mascara(vec2 uv) {
 	vec3 d = textureLod(dibujo, uv, 0.0).rgb;
-	return step(0.5, dot(d - oscuro_s, claro_s - oscuro_s) / max(dot(claro_s - oscuro_s, claro_s - oscuro_s), 0.0001));
+	float t = dot(d - oscuro_s, claro_s - oscuro_s) / max(dot(claro_s - oscuro_s, claro_s - oscuro_s), 0.0001);
+	// CUATRO NIVELES con borde de ~3 cm (no un salto seco: sin dientes al moverse
+	// la cámara): 0 y 1 son las dos franjas de siempre; 0,3 y 0,7, las franjas
+	// suaves («liso» y las de dentro de cada mitad en «mitades»).
+	return 0.3 * smoothstep(0.1, 0.2, t) + 0.4 * smoothstep(0.45, 0.55, t) + 0.3 * smoothstep(0.8, 0.9, t);
 }
 
 // El color del césped en el punto `w` (XZ del mundo) visto desde `cam`.

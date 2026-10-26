@@ -1,5 +1,5 @@
 extends "res://ui/principal_p12.gd"
-## [Capa 14/19 de `principal.gd`] _nueva_temporada, _al_elegir_calendario, _abrir_hub, _guardar, _avisar_si_respaldo, _resolver_partido_abandonado … (+11)
+## [Capa 12/17 de `principal.gd`] _nueva_temporada, _al_elegir_calendario, _abrir_hub, _buscar_global, _textura_brillo_panel, _panel … (+5)
 
 func _nueva_temporada() -> void:
 	if mundo.temporada_en_curso():
@@ -73,7 +73,7 @@ func _nueva_temporada() -> void:
 		_escribir("[color=#c9a227][b]📄 Terminan contrato %d jugador(es):[/b][/color] %s." % [
 			acaban.size(), _nombres_jugadores(acaban)])
 		_anotar("📄 Terminan contrato: %d" % acaban.size(), cuerpo_c)
-	_autoguardar_si_toca()
+	_partida.autoguardar_si_toca()
 	_refrescar()
 
 ## El menú "📅 Calendario" -antes cuatro botones sueltos que ya no entraban en
@@ -140,113 +140,7 @@ func _abrir_hub(clave: String) -> void:
 	tw.tween_property(caja, "modulate:a", 1.0, 0.16)
 	tw.tween_property(caja, "position:y", caja.position.y - 18.0, 0.16).set_trans(Tween.TRANS_CUBIC)
 
-func _guardar() -> void:
-	if Partida.guardar(mundo, RANURA):
-		_escribir("[color=#4caf6d]Partida guardada.[/color] %s, %d, semana %d." % [
-			mundo.mi_club().nombre, mundo.anio, mundo.semana])
-	else:
-		_escribir("[color=#e05555]No se pudo guardar.[/color]")
-
-## Si el guardado principal estaba roto y se recuperó la copia (guardado
-## seguro, 20-10-2026), se le dice al jugador en vez de callarlo.
-func _avisar_si_respaldo() -> void:
-	if Partida.cargada_de_respaldo:
-		_escribir("[color=#c9a227]El último guardado estaba dañado: se recuperó la copia anterior.[/color]")
-		Partida.cargada_de_respaldo = false
-
-## Si la última vez se cerró el juego con un partido dirigido a medias, se
-## completa desde el marcador que había (sin repetirlo desde el 0-0).
-func _resolver_partido_abandonado() -> void:
-	var d := PartidoPendiente.pendiente(mundo)
-	if d.is_empty():
-		return
-	var mio := mundo.mi_club()
-	if mio == null or (String(d["local"]) != mio.id and String(d["visita"]) != mio.id):
-		PartidoPendiente.cerrar()
-		return
-	var p := PartidoPendiente.resolver(mundo, d)
-	if p == null:
-		return
-	_escribir("[color=#c9a227]%s[/color]" % (Idiomas.t("El partido quedó a medias (%d-%d en el %d'): se completó desde ese marcador.") % [int(d["gl"]), int(d["gv"]), int(d["minuto"])]))
-	_seguir_tras_partido(p)
-
-func _cargar() -> void:
-	var m := Partida.cargar(RANURA)
-	if m == null:
-		_escribir("[color=#c9a227]No hay ninguna partida guardada todavía.[/color]")
-		return
-	mundo = m
-	_conectar_noticias()
-	_seleccionado = null
-	_llenar_selector()
-	_escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [
-		mundo.mi_club().nombre, mundo.anio, mundo.semana])
-	_avisar_si_respaldo()
-	_refrescar()
-	_resolver_partido_abandonado()
-
-## El camino compartido entre "Nueva partida directa" (arriba) y "vengo del
-## asistente con un mundo ya generado y un club ya elegido"
-## (`ui/eleccion_club.gd`, que deja `Principal.mundo_pregenerado`): aplicar
-## dificultad y modo, conectar el registro, y pintar. Separado para no repetir
-## estas seis líneas en dos sitios que tenían que estar siempre de acuerdo.
-func _arrancar_con(m: Mundo) -> void:
-	mundo = m
-	_fin_partida_avisado = false
-	## La dificultad: por ahora solo escala la caja inicial (el "plata" del
-	## HTML, hasta 60% más en fácil o 45% menos en leyenda), que es lo que se
-	## nota desde el primer minuto. Sigue sin escalar los premios de la
-	## temporada ni las pretensiones salariales -"prem" y "pide" del HTML-,
-	## que están repartidos en Finanzas y Mercado y quedan para otra tanda.
-	var dif: Variant = Datos.tabla("DIF")
-	if dif is Dictionary and (dif as Dictionary).has(Principal.dificultad_elegida):
-		var plata := float((dif as Dictionary)[Principal.dificultad_elegida].get("plata", 1.0))
-		mundo.mi_club().saldo = int(round(float(mundo.mi_club().saldo) * plata))
-	## Los desafíos: "pobreza" pisaría la caja de la dificultad si fuera antes,
-	## así que van después -es la letra pequeña ganándole a la general, como en
-	## el HTML, donde `aplicarDesafios()` también corre después de fijar el
-	## saldo por dificultad.
-	if not Principal.desafios_elegidos.is_empty():
-		mundo.desafios = Principal.desafios_elegidos.duplicate()
-		mundo.aplicar_desafios()
-		Principal.desafios_elegidos = []
-	## El modo de carrera elegido en la pantalla previa. Si viene vacío -se
-	## abrió esta escena directo, sin pasar por seleccion_modo.gd, como hacen
-	## los bancos de prueba y las capturas- se queda el DT clásico de siempre.
-	if Principal.modo_elegido != "":
-		mundo.roles.arrancar(Principal.modo_elegido, Principal.dt_nombre_elegido)
-		## FONDO DE INVERSIÓN (26-9-2026): el fondo arranca con su propia caja.
-		if Principal.modo_elegido == "fondo" and mundo.mi_club() != null:
-			mundo.fondo = FondoInversion.new()
-			mundo.fondo.caja = int(round(Eco.ref_caja(70.0) * 2.5))
-		Principal.modo_elegido = ""
-	_conectar_noticias()
-	_seleccionado = null
-	_llenar_selector()
-	_escribir("[color=#8ea595]Mundo nuevo.[/color] Semilla [color=#3fa06a]%d[/color]" % mundo.semilla)
-	_refrescar()
-
 # --- acciones ---------------------------------------------------------------
-
-## El mundo completo -las 24 ligas, ~9.600 jugadores-, igual que genera el
-## HTML siempre (`crear()` recorre TODO `PAISES_LIGAS`, nunca un subconjunto).
-## Antes esta pantalla se conformaba con 3 países "porque no había nada que
-## hacer con los otros 21", pero eso ya no es cierto: Selecciones y Cantera
-## recorren el mundo entero buscando elegibles y candidatos, y las copas
-## continentales necesitan clubes de muchos países para tener sentido. Y
-## generarlo entero no cuesta lo que costaba en el navegador: 376 ms medidos
-## aquí contra los "3,2 s" que el propio HTML dejó anotados en un comentario.
-func _nuevo_mundo() -> void:
-	mundo = Mundo.new()
-	Escudo.limpiar_cache()
-	Cara.limpiar_cache()
-	mundo.generar([], 0)
-	## Tomar el mando no es solo elegir club: es que la directiva te ponga un
-	## objetivo y empiece a mirarte. Sin eso puedes acabar decimosexto veinte anos
-	## seguidos y no pasa nada. Se abre esta escena directo -bancos, capturas- sin
-	## pasar por el asistente: toca el primero de Chile, como siempre.
-	mundo.tomar_el_mando(mundo.ligas[0].clubes[0].id)
-	_arrancar_con(mundo)
 
 func _buscar_global(texto: String) -> void:
 	## Se compara limpio por los dos lados: con la cubierta activa "Fernand0"

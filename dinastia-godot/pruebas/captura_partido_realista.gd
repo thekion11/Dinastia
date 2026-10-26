@@ -60,28 +60,31 @@ func _ready() -> void:
 	print("✓ enviar() al fondo de la red (Z=53.5, Y=1.8, es_gol=true) sin errores")
 
 
-	# 4. Verificar ControlPartido (Modo FC 26)
+	# 4. Verificar ControlPartido (Modo FC 26). Con el motor real (por defecto) no se crea.
 	var control: ControlPartido = _vista.get("_control")
-	assert(control != null, "ERROR: ControlPartido no instanciado en Estadio")
-	assert(control.has_method("setup"), "ERROR: ControlPartido no tiene método setup")
-	control.set_activo(true)
-	print("✓ Modo Jugador FC 26 activado en ControlPartido")
-	assert(not control.jugador_activo.is_empty(), "ERROR: No hay jugador seleccionado para control")
-	print("    Jugador activo asignado: %s" % control.jugador_activo.get("id", "desconocido"))
+	if control == null:
+		print("· ControlPartido no se usa con el motor real (preferencia «motor_real»): se salta")
+	else:
+		assert(control != null, "ERROR: ControlPartido no instanciado en Estadio")
+		assert(control.has_method("setup"), "ERROR: ControlPartido no tiene método setup")
+		control.set_activo(true)
+		print("✓ Modo Jugador FC 26 activado en ControlPartido")
+		assert(not control.jugador_activo.is_empty(), "ERROR: No hay jugador seleccionado para control")
+		print("    Jugador activo asignado: %s" % control.jugador_activo.get("id", "desconocido"))
 
-	# Simular acciones de jugador manual
-	control._ejecutar_pase_corto()
-	control._ejecutar_pase_largo()
-	control._ejecutar_disparo(0.8)
-	control._ejecutar_barrida()
-	control.seleccionar_mas_cercano_al_balon()
-	print("✓ Acciones de juego manual (pase, centro, remate potente, barrida, cambio) ejecutadas con éxito")
+		# Simular acciones de jugador manual
+		control._ejecutar_pase_corto()
+		control._ejecutar_pase_largo()
+		control._ejecutar_disparo(0.8)
+		control._ejecutar_barrida()
+		control.seleccionar_mas_cercano_al_balon()
+		print("✓ Acciones de juego manual (pase, centro, remate potente, barrida, cambio) ejecutadas con éxito")
 
 	# 5. Verificar Radar 2D
 	var radar: RadarPartido = _vista.get("_radar")
 	assert(radar != null, "ERROR: RadarPartido no instanciado en Estadio")
 	var en_campo: Array = _vista.get("_en_campo")
-	var pos_act: Vector3 = (control.jugador_activo["node"] as Node3D).global_position if is_instance_valid(control.jugador_activo.get("node")) else Vector3.ZERO
+	var pos_act: Vector3 = Vector3.ZERO if control == null else (control.jugador_activo["node"] as Node3D).global_position if is_instance_valid(control.jugador_activo.get("node")) else Vector3.ZERO
 	radar.actualizar_datos(en_campo, balon.global_position, pos_act)
 	print("✓ Radar táctico 2D actualizado con %d entidades en campo" % en_campo.size())
 

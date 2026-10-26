@@ -1,0 +1,779 @@
+{
+ "exactas": {
+  "%s  ·  jornada %d de %d": {
+   "en": "%s  ·  matchday %d of %d",
+   "pt": "%s  ·  rodada %d de %d",
+   "fr": "%s  ·  journée %d sur %d",
+   "it": "%s  ·  giornata %d di %d",
+   "de": "%s  ·  Spieltag %d von %d",
+   "ca": "%s  ·  jornada %d de %d",
+   "pl": "%s  ·  kolejka %d z %d",
+   "tr": "%s  ·  %d. hafta / %d"
+  },
+  "(%d-%d pen.)": {
+   "en": "(%d-%d pens)",
+   "pt": "(%d-%d pên.)",
+   "fr": "(%d-%d t.a.b.)",
+   "it": "(%d-%d d.c.r.)",
+   "de": "(%d:%d i.E.)",
+   "ca": "(%d-%d pen.)",
+   "pl": "(%d-%d karne)",
+   "tr": "(%d-%d pen.)"
+  },
+  "Ascenso": {
+   "en": "Promotion",
+   "pt": "Acesso",
+   "fr": "Montée",
+   "it": "Promozione",
+   "de": "Aufstieg",
+   "ca": "Ascens",
+   "pl": "Awans",
+   "tr": "Yükselme"
+  },
+  "Campeón": {
+   "en": "Champion",
+   "pt": "Campeão",
+   "fr": "Champion",
+   "it": "Campione",
+   "de": "Meister",
+   "ca": "Campió",
+   "pl": "Mistrz",
+   "tr": "Şampiyon"
+  },
+  "Descenso": {
+   "en": "Relegation",
+   "pt": "Rebaixamento",
+   "fr": "Relégation",
+   "it": "Retrocessione",
+   "de": "Abstieg",
+   "ca": "Descens",
+   "pl": "Spadek",
+   "tr": "Küme düşme"
+  },
+  "L1/R1 o Q/E: cambiar de competición": {
+   "en": "L1/R1 or Q/E: switch competition",
+   "pt": "L1/R1 ou Q/E: mudar de competição",
+   "fr": "L1/R1 ou Q/E : changer de compétition",
+   "it": "L1/R1 o Q/E: cambia competizione",
+   "de": "L1/R1 oder Q/E: Wettbewerb wechseln",
+   "ca": "L1/R1 o Q/E: canviar de competició",
+   "pl": "L1/R1 lub Q/E: zmień rozgrywki",
+   "tr": "L1/R1 veya Q/E: turnuva değiştir"
+  },
+  "La liga ha terminado: el calendario de la temporada que viene sale al cerrar el año.": {
+   "en": "The league is over: next season's fixtures come out when the year closes.",
+   "pt": "A liga terminou: o calendário da próxima temporada sai no fecho do ano.",
+   "fr": "Le championnat est terminé : le calendrier de la saison prochaine sort à la clôture de l'année.",
+   "it": "Il campionato è finito: il calendario della prossima stagione esce alla chiusura dell'anno.",
+   "de": "Die Liga ist vorbei: Der Spielplan der nächsten Saison kommt zum Jahresabschluss.",
+   "ca": "La lliga ha acabat: el calendari de la temporada vinent surt en tancar l'any.",
+   "pl": "Liga się skończyła: terminarz nowego sezonu pojawi się po zamknięciu roku.",
+   "tr": "Lig bitti: gelecek sezonun fikstürü yıl kapanınca çıkar."
+  },
+  "PRÓXIMA RONDA  ·  %s": {
+   "en": "NEXT ROUND  ·  %s",
+   "pt": "PRÓXIMA FASE  ·  %s",
+   "fr": "PROCHAIN TOUR  ·  %s",
+   "it": "PROSSIMO TURNO  ·  %s",
+   "de": "NÄCHSTE RUNDE  ·  %s",
+   "ca": "PROPERA RONDA  ·  %s",
+   "pl": "NASTĘPNA RUNDA  ·  %s",
+   "tr": "SONRAKİ TUR  ·  %s"
+  },
+  "PRÓXIMOS PARTIDOS": {
+   "en": "UPCOMING MATCHES",
+   "pt": "PRÓXIMOS JOGOS",
+   "fr": "PROCHAINS MATCHS",
+   "it": "PROSSIME PARTITE",
+   "de": "NÄCHSTE SPIELE",
+   "ca": "PROPERS PARTITS",
+   "pl": "NADCHODZĄCE MECZE",
+   "tr": "SIRADAKİ MAÇLAR"
+  },
+  "Pasa a cuartos": {
+   "en": "Goes through to the quarter-finals",
+   "pt": "Passa às quartas",
+   "fr": "Qualifié pour les quarts",
+   "it": "Passa ai quarti",
+   "de": "Erreicht das Viertelfinale",
+   "ca": "Passa a quarts",
+   "pl": "Awans do ćwierćfinału",
+   "tr": "Çeyrek finale çıkar"
+  },
+  "Promoción": {
+   "en": "Play-off",
+   "pt": "Repescagem",
+   "fr": "Barrage",
+   "it": "Spareggio",
+   "de": "Relegation",
+   "ca": "Promoció",
+   "pl": "Baraż",
+   "tr": "Baraj"
+  },
+  "RESULTADOS": {
+   "en": "RESULTS",
+   "pt": "RESULTADOS",
+   "fr": "RÉSULTATS",
+   "it": "RISULTATI",
+   "de": "ERGEBNISSE",
+   "ca": "RESULTATS",
+   "pl": "WYNIKI",
+   "tr": "SONUÇLAR"
+  },
+  "Si la liga terminara hoy:": {
+   "en": "If the league ended today:",
+   "pt": "Se a liga acabasse hoje:",
+   "fr": "Si le championnat s'arrêtait aujourd'hui :",
+   "it": "Se il campionato finisse oggi:",
+   "de": "Wenn die Liga heute endete:",
+   "ca": "Si la lliga acabés avui:",
+   "pl": "Gdyby liga skończyła się dziś:",
+   "tr": "Lig bugün bitseydi:"
+  },
+  "Terminada": {
+   "en": "Finished",
+   "pt": "Terminada",
+   "fr": "Terminée",
+   "it": "Conclusa",
+   "de": "Beendet",
+   "ca": "Acabada",
+   "pl": "Zakończone",
+   "tr": "Bitti"
+  },
+  "Todavía no se ha jugado ninguna jornada.": {
+   "en": "No matchday has been played yet.",
+   "pt": "Ainda não se jogou nenhuma rodada.",
+   "fr": "Aucune journée n'a encore été jouée.",
+   "it": "Non si è ancora giocata nessuna giornata.",
+   "de": "Es wurde noch kein Spieltag gespielt.",
+   "ca": "Encara no s'ha jugat cap jornada.",
+   "pl": "Nie rozegrano jeszcze żadnej kolejki.",
+   "tr": "Henüz hiç hafta oynanmadı."
+  },
+  "Todavía no se ha jugado ninguna ronda.": {
+   "en": "No round has been played yet.",
+   "pt": "Ainda não se jogou nenhuma fase.",
+   "fr": "Aucun tour n'a encore été joué.",
+   "it": "Non si è ancora giocato nessun turno.",
+   "de": "Es wurde noch keine Runde gespielt.",
+   "ca": "Encara no s'ha jugat cap ronda.",
+   "pl": "Nie rozegrano jeszcze żadnej rundy.",
+   "tr": "Henüz hiç tur oynanmadı."
+  },
+  "Torneo continental": {
+   "en": "Continental competition",
+   "pt": "Torneio continental",
+   "fr": "Compétition continentale",
+   "it": "Torneo continentale",
+   "de": "Kontinentaler Wettbewerb",
+   "ca": "Torneig continental",
+   "pl": "Rozgrywki kontynentalne",
+   "tr": "Kıta turnuvası"
+  },
+  "Tu club sigue en carrera.": {
+   "en": "Your club is still in it.",
+   "pt": "O teu clube continua na luta.",
+   "fr": "Ton club est toujours en course.",
+   "it": "Il tuo club è ancora in corsa.",
+   "de": "Dein Verein ist noch dabei.",
+   "ca": "El teu club continua en cursa.",
+   "pl": "Twój klub wciąż jest w grze.",
+   "tr": "Kulübün hâlâ yarışta."
+  },
+  "Tu club ya quedó fuera.": {
+   "en": "Your club is already out.",
+   "pt": "O teu clube já foi eliminado.",
+   "fr": "Ton club est déjà éliminé.",
+   "it": "Il tuo club è già fuori.",
+   "de": "Dein Verein ist bereits ausgeschieden.",
+   "ca": "El teu club ja ha quedat fora.",
+   "pl": "Twój klub już odpadł.",
+   "tr": "Kulübün çoktan elendi."
+  },
+  "vs": {
+   "en": "vs",
+   "pt": "x",
+   "fr": "vs",
+   "it": "vs",
+   "de": "vs",
+   "ca": "vs",
+   "pl": "vs",
+   "tr": "vs"
+  },
+  "ÚLTIMOS RESULTADOS  ·  jornada %d": {
+   "en": "LATEST RESULTS  ·  matchday %d",
+   "pt": "ÚLTIMOS RESULTADOS  ·  rodada %d",
+   "fr": "DERNIERS RÉSULTATS  ·  journée %d",
+   "it": "ULTIMI RISULTATI  ·  giornata %d",
+   "de": "LETZTE ERGEBNISSE  ·  Spieltag %d",
+   "ca": "ÚLTIMS RESULTATS  ·  jornada %d",
+   "pl": "OSTATNIE WYNIKI  ·  kolejka %d",
+   "tr": "SON SONUÇLAR  ·  %d. hafta"
+  },
+  "🏆 Campeón: %s": {
+   "en": "🏆 Champion: %s",
+   "pt": "🏆 Campeão: %s",
+   "fr": "🏆 Champion : %s",
+   "it": "🏆 Campione: %s",
+   "de": "🏆 Meister: %s",
+   "ca": "🏆 Campió: %s",
+   "pl": "🏆 Mistrz: %s",
+   "tr": "🏆 Şampiyon: %s"
+  },
+  "Semifinales": {
+   "en": "Semi-finals",
+   "pt": "Semifinais",
+   "fr": "Demi-finales",
+   "it": "Semifinali",
+   "de": "Halbfinale",
+   "ca": "Semifinals",
+   "pl": "Półfinały",
+   "tr": "Yarı final"
+  },
+  "Cuartos de final": {
+   "en": "Quarter-finals",
+   "pt": "Quartas de final",
+   "fr": "Quarts de finale",
+   "it": "Quarti di finale",
+   "de": "Viertelfinale",
+   "ca": "Quarts de final",
+   "pl": "Ćwierćfinały",
+   "tr": "Çeyrek final"
+  },
+  "Octavos de final": {
+   "en": "Round of 16",
+   "pt": "Oitavas de final",
+   "fr": "Huitièmes de finale",
+   "it": "Ottavi di finale",
+   "de": "Achtelfinale",
+   "ca": "Vuitens de final",
+   "pl": "1/8 finału",
+   "tr": "Son 16"
+  },
+  "Dieciseisavos": {
+   "en": "Round of 32",
+   "pt": "Dezasseis-avos de final",
+   "fr": "Seizièmes de finale",
+   "it": "Sedicesimi di finale",
+   "de": "Sechzehntelfinale",
+   "ca": "Setzens de final",
+   "pl": "1/16 finału",
+   "tr": "Son 32"
+  },
+  "Sigla de tabla: PJ": {
+   "en": "P",
+   "pt": "J",
+   "fr": "J",
+   "it": "G",
+   "de": "Sp.",
+   "ca": "PJ",
+   "pl": "M",
+   "tr": "O"
+  },
+  "Sigla de tabla: G": {
+   "en": "W",
+   "pt": "V",
+   "fr": "G",
+   "it": "V",
+   "de": "S",
+   "ca": "G",
+   "pl": "Z",
+   "tr": "G"
+  },
+  "Sigla de tabla: E": {
+   "en": "D",
+   "pt": "E",
+   "fr": "N",
+   "it": "N",
+   "de": "U",
+   "ca": "E",
+   "pl": "R",
+   "tr": "B"
+  },
+  "Sigla de tabla: P": {
+   "en": "L",
+   "pt": "D",
+   "fr": "P",
+   "it": "P",
+   "de": "N",
+   "ca": "P",
+   "pl": "P",
+   "tr": "M"
+  },
+  "Sigla de tabla: GF": {
+   "en": "GF",
+   "pt": "GP",
+   "fr": "BP",
+   "it": "GF",
+   "de": "T",
+   "ca": "GF",
+   "pl": "BZ",
+   "tr": "A"
+  },
+  "Sigla de tabla: GC": {
+   "en": "GA",
+   "pt": "GC",
+   "fr": "BC",
+   "it": "GS",
+   "de": "GT",
+   "ca": "GC",
+   "pl": "BS",
+   "tr": "Y"
+  },
+  "Sigla de tabla: DG": {
+   "en": "GD",
+   "pt": "SG",
+   "fr": "Diff.",
+   "it": "DR",
+   "de": "TD",
+   "ca": "DG",
+   "pl": "RB",
+   "tr": "AV"
+  },
+  "Sigla de tabla: PTS": {
+   "en": "PTS",
+   "pt": "PTS",
+   "fr": "PTS",
+   "it": "PT",
+   "de": "PKT",
+   "ca": "PTS",
+   "pl": "PKT",
+   "tr": "P"
+  },
+  "FASE DE GRUPOS": {
+   "en": "GROUP STAGE",
+   "pt": "FASE DE GRUPOS",
+   "fr": "PHASE DE GROUPES",
+   "it": "FASE A GIRONI",
+   "de": "GRUPPENPHASE",
+   "ca": "FASE DE GRUPS",
+   "pl": "FAZA GRUPOWA",
+   "tr": "GRUP AŞAMASI"
+  },
+  "Reputación": {
+   "en": "Reputation",
+   "pt": "Reputação",
+   "fr": "Réputation",
+   "it": "Reputazione",
+   "de": "Ansehen",
+   "ca": "Reputació",
+   "pl": "Reputacja",
+   "tr": "İtibar"
+  },
+  "%d  contra tus %d": {
+   "en": "%d  against your %d",
+   "pt": "%d  contra os teus %d",
+   "fr": "%d  contre tes %d",
+   "it": "%d  contro i tuoi %d",
+   "de": "%d  gegen deine %d",
+   "ca": "%d  contra els teus %d",
+   "pl": "%d  wobec twoich %d",
+   "tr": "%d  (seninki %d)"
+  },
+  "%d  ·  va %d.º y se le esperaba %d.º": {
+   "en": "%d  ·  sits %d, was expected %d",
+   "pt": "%d  ·  vai em %d.º e esperava-se %d.º",
+   "fr": "%d  ·  %de, on l'attendait %de",
+   "it": "%d  ·  è %d° e ci si aspettava %d°",
+   "de": "%d  ·  steht auf %d, erwartet war %d",
+   "ca": "%d  ·  va %dè i se n'esperava %dè",
+   "pl": "%d  ·  jest %d., oczekiwano %d.",
+   "tr": "%d  ·  %d. sırada, beklenen %d."
+  },
+  "%d de 100": {
+   "en": "%d of 100",
+   "pt": "%d de 100",
+   "fr": "%d sur 100",
+   "it": "%d su 100",
+   "de": "%d von 100",
+   "ca": "%d de 100",
+   "pl": "%d na 100",
+   "tr": "%d / 100"
+  },
+  "%d de %d": {
+   "en": "%d of %d",
+   "pt": "%d de %d",
+   "fr": "%d sur %d",
+   "it": "%d su %d",
+   "de": "%d von %d",
+   "ca": "%d de %d",
+   "pl": "%d z %d",
+   "tr": "%d / %d"
+  },
+  "%d punto por gastar": {
+   "en": "%d point to spend",
+   "pt": "%d ponto por gastar",
+   "fr": "%d point à dépenser",
+   "it": "%d punto da spendere",
+   "de": "%d Punkt zu vergeben",
+   "ca": "%d punt per gastar",
+   "pl": "%d punkt do wydania",
+   "tr": "Harcanacak %d puan"
+  },
+  "%d puntos por gastar": {
+   "en": "%d points to spend",
+   "pt": "%d pontos por gastar",
+   "fr": "%d points à dépenser",
+   "it": "%d punti da spendere",
+   "de": "%d Punkte zu vergeben",
+   "ca": "%d punts per gastar",
+   "pl": "%d pkt do wydania",
+   "tr": "Harcanacak %d puan"
+  },
+  "%d–%d–%d en %d duelo": {
+   "en": "%d–%d–%d in %d meeting",
+   "pt": "%d–%d–%d em %d duelo",
+   "fr": "%d–%d–%d en %d duel",
+   "it": "%d–%d–%d in %d sfida",
+   "de": "%d–%d–%d in %d Duell",
+   "ca": "%d–%d–%d en %d duel",
+   "pl": "%d–%d–%d w %d pojedynku",
+   "tr": "%d–%d–%d (%d maç)"
+  },
+  "%d–%d–%d en %d duelos": {
+   "en": "%d–%d–%d in %d meetings",
+   "pt": "%d–%d–%d em %d duelos",
+   "fr": "%d–%d–%d en %d duels",
+   "it": "%d–%d–%d in %d sfide",
+   "de": "%d–%d–%d in %d Duellen",
+   "ca": "%d–%d–%d en %d duels",
+   "pl": "%d–%d–%d w %d pojedynkach",
+   "tr": "%d–%d–%d (%d maç)"
+  },
+  "%s  ·  nivel del club (reputación %d)": {
+   "en": "%s  ·  club level (reputation %d)",
+   "pt": "%s  ·  nível do clube (reputação %d)",
+   "fr": "%s  ·  niveau du club (réputation %d)",
+   "it": "%s  ·  livello del club (reputazione %d)",
+   "de": "%s  ·  Vereinsstufe (Ansehen %d)",
+   "ca": "%s  ·  nivell del club (reputació %d)",
+   "pl": "%s  ·  poziom klubu (reputacja %d)",
+   "tr": "%s  ·  kulüp seviyesi (itibar %d)"
+  },
+  "%s / semana": {
+   "en": "%s / week",
+   "pt": "%s / semana",
+   "fr": "%s / semaine",
+   "it": "%s / settimana",
+   "de": "%s / Woche",
+   "ca": "%s / setmana",
+   "pl": "%s / tydzień",
+   "tr": "%s / hafta"
+  },
+  "%s con %s (%d)": {
+   "en": "%s v %s (%d)",
+   "pt": "%s contra %s (%d)",
+   "fr": "%s contre %s (%d)",
+   "it": "%s contro %s (%d)",
+   "de": "%s gegen %s (%d)",
+   "ca": "%s contra %s (%d)",
+   "pl": "%s z %s (%d)",
+   "tr": "%s, %s karşısında (%d)"
+  },
+  "+%d de reputación": {
+   "en": "+%d reputation",
+   "pt": "+%d de reputação",
+   "fr": "+%d de réputation",
+   "it": "+%d di reputazione",
+   "de": "+%d Ansehen",
+   "ca": "+%d de reputació",
+   "pl": "+%d reputacji",
+   "tr": "+%d itibar"
+  },
+  "Cara a cara desde %d": {
+   "en": "Head to head since %d",
+   "pt": "Frente a frente desde %d",
+   "fr": "Face-à-face depuis %d",
+   "it": "Testa a testa dal %d",
+   "de": "Direkter Vergleich seit %d",
+   "ca": "Cara a cara des de %d",
+   "pl": "Bilans od %d",
+   "tr": "%d'den beri karşılaşmalar"
+  },
+  "Juega en contra: %s": {
+   "en": "Works against you: %s",
+   "pt": "Joga contra ti: %s",
+   "fr": "Joue contre toi : %s",
+   "it": "Gioca contro di te: %s",
+   "de": "Spricht gegen dich: %s",
+   "ca": "Juga en contra: %s",
+   "pl": "Działa na twoją niekorzyść: %s",
+   "tr": "Aleyhine işliyor: %s"
+  },
+  "Negociación individual": {
+   "en": "Individual negotiation",
+   "pt": "Negociação individual",
+   "fr": "Négociation individuelle",
+   "it": "Trattativa individuale",
+   "de": "Einzelvermarktung",
+   "ca": "Negociació individual",
+   "pl": "Negocjacje indywidualne",
+   "tr": "Bireysel pazarlık"
+  },
+  "Reparto en bloque": {
+   "en": "Collective deal",
+   "pt": "Repartição em bloco",
+   "fr": "Répartition collective",
+   "it": "Ripartizione collettiva",
+   "de": "Zentralvermarktung",
+   "ca": "Repartiment en bloc",
+   "pl": "Podział zbiorowy",
+   "tr": "Toplu dağıtım"
+  },
+  "Neutral": {
+   "en": "Neutral",
+   "pt": "Neutro",
+   "fr": "Neutre",
+   "it": "Neutro",
+   "de": "Neutral",
+   "ca": "Neutral",
+   "pl": "Neutralnie",
+   "tr": "Nötr"
+  },
+  "Presentarse al examen de %s": {
+   "en": "Sit the %s exam",
+   "pt": "Fazer o exame de %s",
+   "fr": "Passer l'examen de %s",
+   "it": "Sostenere l'esame di %s",
+   "de": "Prüfung für %s ablegen",
+   "ca": "Presentar-se a l'examen de %s",
+   "pl": "Przystąp do egzaminu %s",
+   "tr": "%s sınavına gir"
+  },
+  "Semana sin partido: entrenamiento doble.": {
+   "en": "Week without a match: double training.",
+   "pt": "Semana sem jogo: treino a dobrar.",
+   "fr": "Semaine sans match : double entraînement.",
+   "it": "Settimana senza partita: doppio allenamento.",
+   "de": "Woche ohne Spiel: doppeltes Training.",
+   "ca": "Setmana sense partit: entrenament doble.",
+   "pl": "Tydzień bez meczu: podwójny trening.",
+   "tr": "Maçsız hafta: çift antrenman."
+  },
+  "Siguiente: %s %s con reputación %d → %s": {
+   "en": "Next: %s %s at reputation %d → %s",
+   "pt": "Seguinte: %s %s com reputação %d → %s",
+   "fr": "Suivant : %s %s à %d de réputation → %s",
+   "it": "Prossimo: %s %s con reputazione %d → %s",
+   "de": "Nächste Stufe: %s %s ab Ansehen %d → %s",
+   "ca": "Següent: %s %s amb reputació %d → %s",
+   "pl": "Następny: %s %s przy reputacji %d → %s",
+   "tr": "Sonraki: %s %s, itibar %d → %s"
+  },
+  "Visita": {
+   "en": "Away",
+   "pt": "Fora",
+   "fr": "Extérieur",
+   "it": "Trasferta",
+   "de": "Auswärts",
+   "ca": "Fora",
+   "pl": "Wyjazd",
+   "tr": "Deplasman"
+  },
+  "Local": {
+   "en": "Home",
+   "pt": "Casa",
+   "fr": "Domicile",
+   "it": "Casa",
+   "de": "Heim",
+   "ca": "Casa",
+   "pl": "U siebie",
+   "tr": "İç saha"
+  },
+  "hoy": {
+   "en": "today",
+   "pt": "hoje",
+   "fr": "aujourd'hui",
+   "it": "oggi",
+   "de": "heute",
+   "ca": "avui",
+   "pl": "dziś",
+   "tr": "bugün"
+  },
+  "rep %d  ·  dividendo %s cada %d semanas": {
+   "en": "rep %d  ·  %s dividend every %d weeks",
+   "pt": "rep %d  ·  dividendo de %s a cada %d semanas",
+   "fr": "rép. %d  ·  dividende de %s toutes les %d semaines",
+   "it": "rep %d  ·  dividendo di %s ogni %d settimane",
+   "de": "Ansehen %d  ·  %s Dividende alle %d Wochen",
+   "ca": "rep %d  ·  dividend de %s cada %d setmanes",
+   "pl": "rep %d  ·  dywidenda %s co %d tygodni",
+   "tr": "itibar %d  ·  %s temettü, her %d haftada"
+  },
+  "vs %s  ·  %s  ·  jornada %d de %s": {
+   "en": "vs %s  ·  %s  ·  matchday %d of %s",
+   "pt": "vs %s  ·  %s  ·  rodada %d de %s",
+   "fr": "vs %s  ·  %s  ·  journée %d de %s",
+   "it": "vs %s  ·  %s  ·  giornata %d di %s",
+   "de": "vs %s  ·  %s  ·  Spieltag %d der %s",
+   "ca": "vs %s  ·  %s  ·  jornada %d de %s",
+   "pl": "vs %s  ·  %s  ·  kolejka %d, %s",
+   "tr": "vs %s  ·  %s  ·  %d. hafta, %s"
+  },
+  "×%.2f sobre %s de base": {
+   "en": "×%.2f on a base of %s",
+   "pt": "×%.2f sobre %s de base",
+   "fr": "×%.2f sur une base de %s",
+   "it": "×%.2f su una base di %s",
+   "de": "×%.2f auf %s Basis",
+   "ca": "×%.2f sobre %s de base",
+   "pl": "×%.2f od bazy %s",
+   "tr": "×%.2f (%s taban)"
+  },
+  "×%.2f sobre el ruido": {
+   "en": "×%.2f on the noise",
+   "pt": "×%.2f sobre o ruído",
+   "fr": "×%.2f sur le bruit",
+   "it": "×%.2f sul rumore",
+   "de": "×%.2f auf den Lärm",
+   "ca": "×%.2f sobre el soroll",
+   "pl": "×%.2f na szum",
+   "tr": "gürültüye ×%.2f"
+  },
+  "⭐ REPUTACIÓN": {
+   "en": "⭐ REPUTATION",
+   "pt": "⭐ REPUTAÇÃO",
+   "fr": "⭐ RÉPUTATION",
+   "it": "⭐ REPUTAZIONE",
+   "de": "⭐ ANSEHEN",
+   "ca": "⭐ REPUTACIÓ",
+   "pl": "⭐ REPUTACJA",
+   "tr": "⭐ İTİBAR"
+  },
+  "🎮 Minijuegos: penales, tiros libres y trivia": {
+   "en": "🎮 Mini-games: penalties, free kicks and trivia",
+   "pt": "🎮 Minijogos: penáltis, livres e trivia",
+   "fr": "🎮 Mini-jeux : penalties, coups francs et quiz",
+   "it": "🎮 Minigiochi: rigori, punizioni e quiz",
+   "de": "🎮 Minispiele: Elfmeter, Freistöße und Quiz",
+   "ca": "🎮 Minijocs: penals, faltes i trivial",
+   "pl": "🎮 Minigry: karne, rzuty wolne i quiz",
+   "tr": "🎮 Mini oyunlar: penaltı, serbest vuruş ve bilgi yarışması"
+  },
+  "📈 Ascender a %s": {
+   "en": "📈 Step up to %s",
+   "pt": "📈 Subir a %s",
+   "fr": "📈 Monter au poste de %s",
+   "it": "📈 Salire a %s",
+   "de": "📈 Aufsteigen zu %s",
+   "ca": "📈 Ascendir a %s",
+   "pl": "📈 Awansuj na %s",
+   "tr": "📈 %s görevine yüksel"
+  },
+  "🤝 Invitarlo al club  ·  %s": {
+   "en": "🤝 Invite them to the club  ·  %s",
+   "pt": "🤝 Convidá-lo ao clube  ·  %s",
+   "fr": "🤝 L'inviter au club  ·  %s",
+   "it": "🤝 Invitarlo al club  ·  %s",
+   "de": "🤝 In den Verein einladen  ·  %s",
+   "ca": "🤝 Convidar-lo al club  ·  %s",
+   "pl": "🤝 Zaproś do klubu  ·  %s",
+   "tr": "🤝 Kulübe davet et  ·  %s"
+  },
+  "🙄 Ignorarlo": {
+   "en": "🙄 Ignore them",
+   "pt": "🙄 Ignorá-lo",
+   "fr": "🙄 L'ignorer",
+   "it": "🙄 Ignorarlo",
+   "de": "🙄 Ignorieren",
+   "ca": "🙄 Ignorar-lo",
+   "pl": "🙄 Zignoruj",
+   "tr": "🙄 Görmezden gel"
+  },
+  "🏘️ Local": {
+   "en": "🏘️ Local",
+   "pt": "🏘️ Local",
+   "fr": "🏘️ Local",
+   "it": "🏘️ Locale",
+   "de": "🏘️ Lokal",
+   "ca": "🏘️ Local",
+   "pl": "🏘️ Lokalny",
+   "tr": "🏘️ Yerel"
+  },
+  "🗺️ Regional": {
+   "en": "🗺️ Regional",
+   "pt": "🗺️ Regional",
+   "fr": "🗺️ Régional",
+   "it": "🗺️ Regionale",
+   "de": "🗺️ Regional",
+   "ca": "🗺️ Regional",
+   "pl": "🗺️ Regionalny",
+   "tr": "🗺️ Bölgesel"
+  },
+  "🏳️ Nacional": {
+   "en": "🏳️ National",
+   "pt": "🏳️ Nacional",
+   "fr": "🏳️ National",
+   "it": "🏳️ Nazionale",
+   "de": "🏳️ National",
+   "ca": "🏳️ Nacional",
+   "pl": "🏳️ Krajowy",
+   "tr": "🏳️ Ulusal"
+  },
+  "🌎 Continental": {
+   "en": "🌎 Continental",
+   "pt": "🌎 Continental",
+   "fr": "🌎 Continental",
+   "it": "🌎 Continentale",
+   "de": "🌎 Kontinental",
+   "ca": "🌎 Continental",
+   "pl": "🌎 Kontynentalny",
+   "tr": "🌎 Kıtasal"
+  },
+  "🌍 Mundial": {
+   "en": "🌍 Global",
+   "pt": "🌍 Mundial",
+   "fr": "🌍 Mondial",
+   "it": "🌍 Mondiale",
+   "de": "🌍 Weltweit",
+   "ca": "🌍 Mundial",
+   "pl": "🌍 Światowy",
+   "tr": "🌍 Dünya çapında"
+  },
+  "👑 Leyenda": {
+   "en": "👑 Legend",
+   "pt": "👑 Lenda",
+   "fr": "👑 Légende",
+   "it": "👑 Leggenda",
+   "de": "👑 Legende",
+   "ca": "👑 Llegenda",
+   "pl": "👑 Legenda",
+   "tr": "👑 Efsane"
+  }
+ },
+ "patrones": [
+  [
+   "^Grupo ([A-D])$",
+   "Group $1",
+   "Grupo $1",
+   "Groupe $1",
+   "Girone $1",
+   "Gruppe $1",
+   "Grup $1",
+   "Grupa $1",
+   "$1 Grubu"
+  ],
+  [
+   "^Ronda de (\\d+)$",
+   "Round of $1",
+   "Fase de $1",
+   "Tour à $1",
+   "Turno a $1",
+   "Runde der letzten $1",
+   "Ronda de $1",
+   "Runda $1 drużyn",
+   "Son $1"
+  ],
+  [
+   "^Instalaciones hasta el nivel (\\d+)$",
+   "Facilities up to level $1",
+   "Instalações até ao nível $1",
+   "Installations jusqu'au niveau $1",
+   "Strutture fino al livello $1",
+   "Anlagen bis Stufe $1",
+   "Instal·lacions fins al nivell $1",
+   "Obiekty do poziomu $1",
+   "$1. seviyeye kadar tesisler"
+  ]
+ ]
+}

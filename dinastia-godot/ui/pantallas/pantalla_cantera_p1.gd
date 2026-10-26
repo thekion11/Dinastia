@@ -23,7 +23,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 	if not s.mundial.is_empty():
 		p._lista_seleccion.add_child(HSeparator.new())
 		var t := p._texto(11, Principal.COL_SUAVE)
-		t.text = Idiomas.t("COPA DEL MUNDO")
+		t.text = Idiomas.mayusculas(CompeticionInfo.nombre_visible("Copa del Mundo"))
 		p._lista_seleccion.add_child(t)
 		p._dato("Último campeón", "%s (%d)" % [String(s.mundial.get("campeon", "—")), int(s.mundial.get("anio", 0))],
 			Principal.COL_ORO, p._lista_seleccion)
@@ -31,7 +31,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 	if not s.mundial_clubes.is_empty():
 		p._lista_seleccion.add_child(HSeparator.new())
 		var t2 := p._texto(11, Principal.COL_SUAVE)
-		t2.text = Idiomas.t("MUNDIAL DE CLUBES")
+		t2.text = Idiomas.mayusculas(CompeticionInfo.nombre_visible("Mundial de Clubes"))
 		p._lista_seleccion.add_child(t2)
 		var mio := bool(s.mundial_clubes.get("mio", false))
 		p._dato("Campeón", "%s (%d)" % [String(s.mundial_clubes.get("campeon", "—")), int(s.mundial_clubes.get("anio", 0))],
@@ -39,7 +39,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 		var relato := String(s.mundial_clubes.get("relato", ""))
 		if relato != "":
 			var r := p._texto(11, Principal.COL_ORO if mio else Principal.COL_SUAVE)
-			r.text = relato
+			r.text = CompeticionInfo.visibles_en(relato)
 			r.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_seleccion.add_child(r)
 
@@ -49,13 +49,13 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 		t3.text = Idiomas.t("CAMPEONES CONTINENTALES")
 		p._lista_seleccion.add_child(t3)
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = Idiomas.t("Son los que se clasifican al Mundial de Clubes del año siguiente.")
+		ex.text = Idiomas.t("Clasifican al torneo mundial de clubes del año siguiente: %s.") % CompeticionInfo.nombre_visible("Mundial de Clubes")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_seleccion.add_child(ex)
 		var mi_id := p.mundo.mi_club_id
 		for f: Dictionary in s.campeones_continentales:
 			var propio := String(f.get("club_id", "")) == mi_id
-			p._dato("%s %d" % [String(f.get("torneo", "")), int(f.get("anio", 0))],
+			p._dato("%s %d" % [CompeticionInfo.nombre_visible(String(f.get("torneo", ""))), int(f.get("anio", 0))],
 				String(f.get("campeon", "")), p.COL_ACENTO if propio else Principal.COL_TEXTO, p._lista_seleccion)
 
 func _nacionalizar(j: Jugador) -> void:
@@ -83,7 +83,10 @@ func _pintar_seleccion(c: Club) -> void:
 		var l := p._texto(12, Principal.COL_VERDE)
 		var nombres: Array[String] = []
 		for j: Jugador in mios_nomina:
-			nombres.append("%s (%d caps)" % [j.nombre, s.caps_de(j)])
+			## Antes «(%d caps)»: un anglicismo en la interfaz castellana, y sin singular.
+			var caps := s.caps_de(j)
+			nombres.append((Idiomas.t("%s (1 partido con la selección)") % j.nombre) if caps == 1
+				else (Idiomas.t("%s (%d partidos con la selección)") % [j.nombre, caps]))
 		l.text = Idiomas.t("Convocados ahora: ") + ", ".join(nombres)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_seleccion.add_child(l)
@@ -303,13 +306,13 @@ func _pintar_mapa_del_talento() -> void:
 	for e: Dictionary in mapa:
 		var dorada := bool(e["dorada"])
 		var n := p._texto(12, Principal.COL_ORO if dorada else Principal.COL_ROJO)
-		n.text = "%s %s  ·  %s" % ["✨" if dorada else "🥀", String(e["pais"]),
+		n.text = "%s %s  ·  %s" % ["✨" if dorada else "🥀", Idiomas.t(String(e["pais"])),
 			Idiomas.t("Época dorada") if dorada else Idiomas.t("Decadencia")]
 		p._lista_cantera.add_child(n)
 		var d := p._texto(10, Principal.COL_SUAVE)
 		d.text = (Idiomas.t("%d–%d (queda %d año)  ·  %s  %s") if int(e["quedan"]) == 1 else Idiomas.t("%d–%d (quedan %d años)  ·  %s  %s")) % [
 			int(e["desde"]), int(e["hasta"]), int(e["quedan"]),
-			String(e["texto"]), String(e["consejo"])]
+			Idiomas.t(String(e["texto"])), Idiomas.t(String(e["consejo"]))]
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_cantera.add_child(d)
 
@@ -338,11 +341,11 @@ func _pintar_linaje(c: Club) -> void:
 	for clave: String in mias:
 		var titulo := ""
 		if clave.begins_with("L:"):
-			titulo = "⭐ Estirpe de %s" % Nombres.visible(clave.substr(2))
+			titulo = Idiomas.t("⭐ Estirpe de %s") % Nombres.visible(clave.substr(2))
 		else:
 			var primero: Jugador = (mias[clave] as Array)[0]
 			var partes := primero.nombre.split(" ")
-			titulo = "👨‍👦 Hermanos %s" % Nombres.visible(partes[partes.size() - 1])
+			titulo = Idiomas.t("👨‍👦 Hermanos %s") % Nombres.visible(partes[partes.size() - 1])
 		var lt := p._texto(12, Principal.COL_ORO)
 		lt.text = titulo
 		p._lista_cantera.add_child(lt)
@@ -382,54 +385,3 @@ func _becar(j: Jugador) -> void:
 		return
 	p._escribir("[color=#4caf6d]%s tiene beca.[/color] Menos riesgo de que se lo lleven gratis." % j.nombre)
 	p._refrescar()
-
-func _fila_canterano(j: Jugador, ct: Cantera, c: Club) -> HBoxContainer:
-	var fila := HBoxContainer.new()
-	fila.add_theme_constant_override("separation", 8)
-	fila.add_child(p._retrato(j, 24))
-	var listo := ct.listo_para_debutar(j)
-	var nom := p._texto(12, Principal.COL_VERDE if listo else Principal.COL_TEXTO)
-	var linaje: Dictionary = ct.linaje_de(j)
-	var etiqueta := (" · hijo de %s" % String(linaje.get("padre", ""))) if not linaje.is_empty() else ""
-	nom.text = Idiomas.t("%s  ·  %d años  ·  %d/%d%s") % [j.nombre, j.edad, j.ovr, j.pot, etiqueta]
-	nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	fila.add_child(nom)
-	## EL RIESGO DE FUGA. `riesgo_fuga()` corría desde el principio -se resuelve
-	## solo en el pulso semanal de la cantera- pero no se veía en ninguna parte,
-	## y sin verlo la beca es un gasto sin motivo: lo que la justifica es
-	## exactamente este número, que baja dos puntos al becar. Cuanto mejor es el
-	## chico (más `pot` sobre `ovr`), más se lo quieren llevar.
-	## DE DÓNDE SALIÓ. `Cantera.origen_de()` estaba escrita, el dato se sorteaba
-	## y se guardaba en la ficha de cada chico… y no la llamaba NADIE, ni
-	## siquiera dentro del propio núcleo. Es una línea de historia por canterano
-	## -de un potrero, de un colegio, del hijo del utilero- que existía y no se
-	## leía en ninguna parte.
-	var org: Dictionary = ct.origen_de(j)
-	if not org.is_empty():
-		var o := p._texto(11, Principal.COL_SUAVE)
-		o.text = "%s %s" % [String(org.get("icono", "")), String(org.get("frase", ""))]
-		o.tooltip_text = String(org.get("historia", ""))
-		o.custom_minimum_size = Vector2(150, 0)
-		o.clip_text = true
-		fila.add_child(o)
-	var fuga := ct.riesgo_fuga(j)
-	if fuga > 0.0:
-		var rf := p._texto(11, Principal.COL_ROJO if fuga >= 0.05 else Principal.COL_SUAVE)
-		rf.text = Idiomas.t("fuga %.1f%%") % (fuga * 100.0)
-		rf.tooltip_text = Idiomas.t("Probabilidad de que se lo lleve otro club esta semana. La beca la baja, y las instalaciones de cantera también.")
-		rf.custom_minimum_size = Vector2(64, 0)
-		fila.add_child(rf)
-	if ct.tiene_beca(j):
-		var tag := p._texto(11, Principal.COL_VERDE)
-		tag.text = Idiomas.t("becado")
-		fila.add_child(tag)
-	else:
-		var costo := ct.coste_beca()
-		var b := Button.new()
-		b.text = Idiomas.t("Becar  %s") % p._dinero(costo)
-		b.add_theme_font_size_override("font_size", 11)
-		b.disabled = costo > c.saldo
-		b.pressed.connect(func() -> void: _becar(j))
-		fila.add_child(b)
-	return fila

@@ -371,7 +371,7 @@ func dar_acceso_club(m: Mundo) -> void:
 	var palabras := ["Hinchada", "Estadio", "Camiseta", "Tribuna", "Clasico", "Gloria"]
 	clave_club = "%s%d!" % [palabras[_rng.randi() % palabras.size()], _rng.randi_range(10, 99)]
 	if m.movil != null:
-		m.movil.recibir("Community manager", "📱", "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!" % [String(cuentas["club"]["usuario"]), clave_club], m.anio, m.semana)
+		m.movil.recibir("Community manager", "📱", "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!", m.anio, m.semana, [String(cuentas["club"]["usuario"]), clave_club])
 	noticia.emit("🔑 La cuenta del club es tuya", "El community manager se va de vacaciones y la directiva te confía %s. La clave te llegó por Mensajes." % String(cuentas["club"]["usuario"]))
 
 func _publican_jugadores(m: Mundo) -> void:

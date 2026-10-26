@@ -84,17 +84,7 @@ static func obstaculos(raiz: Node3D, rects: Array[Rect2], min_alto := 0.9, max_b
 		var c := caja.get_center()
 		if _en_rejilla(rej, c.x, c.z):
 			continue
-		## Una pieza alargada (un coche) se cubre con dos círculos a lo largo.
-		var largo := maxf(sx, sz)
-		var ancho := minf(sx, sz)
-		var r_c := clampf(ancho * 0.5, 0.15, 2.5)
-		if largo > ancho * 1.8:
-			var eje := Vector2(1, 0) if sx >= sz else Vector2(0, 1)
-			var sep := (largo - ancho) * 0.5
-			sal.append(Vector3(c.x + eje.x * sep, c.z + eje.y * sep, r_c))
-			sal.append(Vector3(c.x - eje.x * sep, c.z - eje.y * sep, r_c))
-		else:
-			sal.append(Vector3(c.x, c.z, clampf(maxf(sx, sz) * 0.5, 0.15, 3.0)))
+		_circulos(sal, c, sx, sz)
 	## Lo repetido en MultiMesh (postes, troncos, hidrantes...): una por instancia.
 	for n in raiz.find_children("*", "MultiMeshInstance3D", true, false):
 		var mmi := n as MultiMeshInstance3D
@@ -111,8 +101,27 @@ static func obstaculos(raiz: Node3D, rects: Array[Rect2], min_alto := 0.9, max_b
 				continue
 			var c := caja.get_center()
 			if not _en_rejilla(rej, c.x, c.z):
-				sal.append(Vector3(c.x, c.z, clampf(maxf(caja.size.x, caja.size.z) * 0.5, 0.15, 3.0)))
+				_circulos(sal, c, caja.size.x, caja.size.z)
 	return sal
+
+## Círculos de choque de una pieza de base `sx` × `sz` centrada en `c`. Una pieza
+## alargada (un coche, un poste con travesaño, un panel fino) se cubre con círculos
+## repartidos a lo largo cada 2·r, de punta a punta (26-10-2026, pedido de la S1:
+## con solo dos en los extremos, el centro de 87 postes y ~104 paneles finos se
+## atravesaba). Una pieza redonda o casi cuadrada, con un círculo.
+static func _circulos(sal: PackedVector3Array, c: Vector3, sx: float, sz: float) -> void:
+	var largo := maxf(sx, sz)
+	var ancho := minf(sx, sz)
+	if largo <= ancho * 1.8:
+		sal.append(Vector3(c.x, c.z, clampf(largo * 0.5, 0.15, 3.0)))
+		return
+	var r_c := clampf(ancho * 0.5, 0.15, 2.5)
+	var eje := Vector2(1, 0) if sx >= sz else Vector2(0, 1)
+	var sep := maxf(0.0, largo * 0.5 - r_c)
+	var n := maxi(2, ceili(sep * 2.0 / (2.0 * r_c)) + 1)
+	for i in n:
+		var t := lerpf(-sep, sep, float(i) / float(n - 1))
+		sal.append(Vector3(c.x + eje.x * t, c.z + eje.y * t, r_c))
 
 static func trocear(raiz: Node3D) -> int:
 	if DisplayServer.get_name() == "headless":

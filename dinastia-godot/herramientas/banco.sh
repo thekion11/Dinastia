@@ -3,7 +3,8 @@
 #   herramientas/banco.sh [registro]   (por defecto /tmp/banco.txt)
 #   BANCO_PARTES=1 herramientas/banco.sh   → todo en un solo proceso (como antes)
 #
-# Reparto: las 103 secciones de `pruebas/banco.gd` se dividen entre N procesos
+# Reparto: las secciones de `SECCIONES` (pruebas/banco.gd, el corredor; su código vive en
+# pruebas/banco/<grupo>.gd desde el 26-10) se dividen entre N procesos
 # (uno por núcleo, máx. 4) equilibrados por tiempo (`COSTES` en banco.gd). Cada
 # proceso tiene su propia carpeta `user://` (XDG_DATA_HOME) para que los
 # guardados de una parte no pisen los de otra.
@@ -24,13 +25,16 @@ if [ ! -f "$CACHE" ] || [ -n "$(find nucleo ui visor pruebas -name '*.gd' -newer
   timeout 600 godot --headless --import --path . > /dev/null 2>&1
   touch "$CACHE"
 fi
-# 23-10: antes de lanzar nada, que TODOS los scripts compilen (el banco solo ve los que toca).
-COMP=$(timeout 300 godot --headless --path . --script res://pruebas/comprobar_scripts.gd 2>&1)
-if ! echo "$COMP" | grep -q "FIN. 0 fallos"; then
-  echo "$COMP" | grep -E "FALLO|SCRIPT ERROR" | head -10
-  echo "Hay scripts que no compilan: el banco no se lanza."
-  exit 2
-fi
+# 23-10: que TODOS los scripts compilen (el banco solo ve los que toca). Desde el 26-10 corre A LA
+# VEZ que las partes (antes eran ~12 s de espera); si falla, se cortan todas y sale con 2.
+COMP_TXT=$(mktemp)
+timeout 300 godot --headless --path . --script res://pruebas/comprobar_scripts.gd > "$COMP_TXT" 2>&1 &
+COMP_PID=$!
+comp_mal() {
+  echo "$(grep -E "FALLO|SCRIPT ERROR" "$COMP_TXT" | head -10)"
+  echo "Hay scripts que no compilan: el banco se corta."
+  rm -f "$COMP_TXT"
+}
 LOG="${1:-/tmp/banco.txt}"
 SIN_AVANCE="${SIN_AVANCE:-240}"
 NUCLEOS=$(nproc 2>/dev/null || echo 1)
@@ -69,6 +73,10 @@ for i in $(seq 0 $((N - 1))); do lanzar "$i"; done
 while :; do
   vivos=0
   sleep 1
+  if [ -n "$COMP_PID" ] && ! kill -0 "$COMP_PID" 2>/dev/null; then
+    COMP_PID=""
+    if ! grep -q "FIN. 0 fallos" "$COMP_TXT"; then matar_todo; comp_mal; rm -rf "$TMP"; exit 2; fi
+  fi
   for i in $(seq 0 $((N - 1))); do
     f="$TMP/parte$i.txt"
     if limpio "$f" | grep -qE "Parse Error|Failed to load script \"res://pruebas/"; then
@@ -118,6 +126,10 @@ while :; do
   done
   [ "$vivos" = "0" ] && break
 done
+## Si las partes acaban antes que la comprobación de scripts, se la espera.
+if [ -n "$COMP_PID" ]; then wait "$COMP_PID"; fi
+if ! grep -q "FIN. 0 fallos" "$COMP_TXT"; then comp_mal; rm -rf "$TMP"; exit 2; fi
+rm -f "$COMP_TXT"
 
 # Juntar: el registro completo, los fallos, los errores de script y los tiempos.
 : > "$LOG"

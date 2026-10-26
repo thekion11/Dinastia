@@ -5,6 +5,8 @@ extends Control
 ## un pivote defensivo o un extremo rápido»). Dibuja una telaraña de 4 anillos
 ## y el polígono de los valores (la escala va de 35 a 100: por debajo de 35 casi
 ## nadie juega, y así las diferencias entre jugadores se ven) de 5 a 8 ejes.
+## La malla y el borde son líneas suaves (`TrazoSuave`, 26-10-2026): se rehacen
+## al cambiar los valores o el tamaño, no en cada `_draw`.
 var etiquetas: PackedStringArray = []
 var valores: PackedFloat32Array = []
 var color := Color(0.2, 0.75, 0.5)
@@ -19,7 +21,39 @@ func poner(e: PackedStringArray, v: PackedFloat32Array, c: Color) -> void:
 	etiquetas = e
 	valores = v
 	color = c
+	_rehacer_lineas()
 	queue_redraw()
+
+func _notification(que: int) -> void:
+	if que == NOTIFICATION_RESIZED:
+		_rehacer_lineas()
+
+func _centro_radio() -> Array:
+	return [size * 0.5 + Vector2(0, 2), minf(size.x, size.y) * 0.36]
+
+func _poligono_valores(n: int, radio: float, centro: Vector2) -> PackedVector2Array:
+	var poli := PackedVector2Array()
+	for i in n:
+		poli.append(_punto(i, n, radio * clampf((valores[i] - 35.0) / 65.0, 0.06, 1.0), centro))
+	return poli
+
+## La malla (cuatro anillos y los ejes) va DETRÁS del relleno; el borde, encima.
+func _rehacer_lineas() -> void:
+	TrazoSuave.limpiar(self)
+	var n := valores.size()
+	if n < 3 or size.x <= 0.0:
+		return
+	var cr := _centro_radio()
+	var centro: Vector2 = cr[0]
+	var radio: float = cr[1]
+	for r in 4:
+		var pts := PackedVector2Array()
+		for i in n:
+			pts.append(_punto(i, n, radio * float(r + 1) / 4.0, centro))
+		TrazoSuave.linea(self, pts, color_malla, 1.0, true, true)
+	for i in n:
+		TrazoSuave.linea(self, PackedVector2Array([centro, _punto(i, n, radio, centro)]), color_malla, 1.0, false, true)
+	TrazoSuave.linea(self, _poligono_valores(n, radio, centro), color, 2.0, true)
 
 func _punto(i: int, n: int, radio: float, centro: Vector2) -> Vector2:
 	var a := -PI * 0.5 + TAU * float(i) / float(n)
@@ -29,27 +63,14 @@ func _draw() -> void:
 	var n := valores.size()
 	if n < 3:
 		return
-	var centro := size * 0.5 + Vector2(0, 2)
-	var radio := minf(size.x, size.y) * 0.36
-	## La malla: cuatro anillos y los ejes.
-	for r in 4:
-		var pts := PackedVector2Array()
-		for i in n:
-			pts.append(_punto(i, n, radio * float(r + 1) / 4.0, centro))
-		pts.append(pts[0])
-		draw_polyline(pts, color_malla, 1.0)
-	for i in n:
-		draw_line(centro, _punto(i, n, radio, centro), color_malla, 1.0)
-	## El polígono de valores.
-	var poli := PackedVector2Array()
-	for i in n:
-		poli.append(_punto(i, n, radio * clampf((valores[i] - 35.0) / 65.0, 0.06, 1.0), centro))
+	var cr := _centro_radio()
+	var centro: Vector2 = cr[0]
+	var radio: float = cr[1]
+	## El polígono de valores (la malla y el borde son líneas hijas).
+	var poli := _poligono_valores(n, radio, centro)
 	draw_colored_polygon(poli, Color(color, 0.32))
-	var borde := poli.duplicate()
-	borde.append(poli[0])
-	draw_polyline(borde, color, 2.0, true)
 	for p in poli:
-		draw_circle(p, 2.5, color)
+		draw_circle(p, 2.5, color, true, -1.0, true)
 	## Las etiquetas, algo fuera del anillo.
 	var fuente := get_theme_default_font()
 	for i in n:

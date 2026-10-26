@@ -14,27 +14,28 @@ func _informe(mio_local: bool, mios: int, suyos: int) -> String:
 	var cambios_mios: int = p.cambios_local if mio_local else p.cambios_visita
 	var dif := mios - suyos
 	var frases: Array[String] = []
-	frases.append("Nos llevamos los tres puntos." if dif > 0 else ("Reparto de puntos." if dif == 0 else "Se nos escapó."))
+	## Cada frase pasa por `Idiomas.t` ANTES de meterle los números (auditoría 26-10).
+	frases.append(Idiomas.t("Nos llevamos los tres puntos.") if dif > 0 else (Idiomas.t("Reparto de puntos.") if dif == 0 else Idiomas.t("Se nos escapó.")))
 	if pos >= 60:
-		frases.append("Tuvimos la pelota casi todo el partido (%d%%): el plan de circulación funcionó." % pos)
+		frases.append(Idiomas.t("Tuvimos la pelota casi todo el partido (%d%%): el plan de circulación funcionó.") % pos)
 	elif pos <= 42:
-		frases.append("Les cedimos la pelota (%d%%) y jugamos al contragolpe." % pos)
+		frases.append(Idiomas.t("Les cedimos la pelota (%d%%) y jugamos al contragolpe.") % pos)
 	else:
-		frases.append("Partido parejo en el control del balón (%d%%)." % pos)
+		frases.append(Idiomas.t("Partido parejo en el control del balón (%d%%).") % pos)
 	if float(mios) > xg_mio + 1.0:
-		frases.append("Los delanteros estuvieron finísimos: convertimos más de lo que la estadística decía (xG %.2f)." % xg_mio)
+		frases.append(Idiomas.t("Los delanteros estuvieron finísimos: convertimos más de lo que la estadística decía (xG %.2f).") % xg_mio)
 	elif xg_mio > float(mios) + 1.0:
-		frases.append("Generamos mucho más de lo que anotamos (xG %.2f): falta puntería." % xg_mio)
+		frases.append(Idiomas.t("Generamos mucho más de lo que anotamos (xG %.2f): falta puntería.") % xg_mio)
 	if xg_suyo > float(suyos) + 1.0:
-		frases.append("El arquero nos salvó: el rival mereció más.")
+		frases.append(Idiomas.t("El arquero nos salvó: el rival mereció más."))
 	elif float(suyos) > xg_suyo + 1.0:
-		frases.append("Nos hicieron goles baratos, con poco.")
+		frases.append(Idiomas.t("Nos hicieron goles baratos, con poco."))
 	if faltas_mias > 16:
-		frases.append("Cometimos demasiadas faltas: con otro árbitro terminamos con diez.")
+		frases.append(Idiomas.t("Cometimos demasiadas faltas: con otro árbitro terminamos con diez."))
 	if absi(dif) >= 3:
-		frases.append("Goleada que va a levantar el ánimo de todo el club." if dif > 0 else "Goleada en contra: hay que hablar en el camarín.")
+		frases.append(Idiomas.t("Goleada que va a levantar el ánimo de todo el club.") if dif > 0 else Idiomas.t("Goleada en contra: hay que hablar en el camarín."))
 	if cambios_mios == 0:
-		frases.append("No usaste cambios: el once terminó fundido.")
+		frases.append(Idiomas.t("No usaste cambios: el once terminó fundido."))
 	return " ".join(frases)
 
 ## LAS NOTAS DEL ONCE y la FIGURA DEL PARTIDO. El motor puntúa a cada jugador y
@@ -71,8 +72,8 @@ func _escribir_notas() -> void:
 	## El aviso del peor solo si de verdad fue mal: por debajo de 5,6, que es el
 	## umbral del HTML. Señalar al menos bueno de un partido bueno es ruido.
 	if float(peor["nota"]) < 5.6:
-		_escribir("[color=#8ea595]⚠️ %s terminó con %.1f: conviene revisar su puesto o darle descanso.[/color]" % [
-			(peor["jugador"] as Jugador).nombre, float(peor["nota"])])
+		_escribir("[color=#8ea595]%s[/color]" % (Idiomas.t("⚠️ %s terminó con %.1f: conviene revisar su puesto o darle descanso.") % [
+			(peor["jugador"] as Jugador).nombre, float(peor["nota"])]))
 	_escribir("")
 	_escribir("[color=#8ea595]%s[/color]" % Idiomas.t("VALORACIONES"))
 	for v: Dictionary in mias:
@@ -90,8 +91,8 @@ func _al_final(gl: int, gv: int) -> void:
 	var texto := "VICTORIA" if mios > suyos else ("DERROTA" if mios < suyos else "EMPATE")
 	var color := "#4caf6d" if mios > suyos else ("#e05555" if mios < suyos else "#8ea595")
 	_escribir("")
-	_escribir("[color=%s][b]FINAL. %s.[/b][/color]  %s %d-%d %s" % [
-		color, texto, partido.local.nombre, gl, gv, partido.visita.nombre])
+	_escribir("[color=%s][b]%s[/b][/color]  %s %d-%d %s" % [
+		color, Idiomas.t("FINAL. %s.") % Idiomas.t(texto), partido.local.nombre, gl, gv, partido.visita.nombre])
 	_escribir_goles()
 	## LOS PENALES. En una eliminatoria un empate no se queda así -`Copa.
 	## jugar_ronda()` los va a pedir de todos modos al avanzar la semana, para
@@ -113,6 +114,13 @@ func _al_final(gl: int, gv: int) -> void:
 	_escribir_estadisticas(mio_local)
 	_escribir("")
 	_escribir("[color=#c9a227][b]📋 Informe del ayudante.[/b][/color] %s" % _informe(mio_local, mios, suyos))
+	## EL PORQUÉ (26-10, fila 4): las tres causas que más pesaron (`CausasPartido`), también tras el 3D.
+	var causas := CausasPartido.de(partido, mi_club)
+	if not causas.is_empty():
+		_escribir("[color=#c9a227][b]%s[/b][/color]" % Idiomas.t("🔎 POR QUÉ"))
+		for c: Dictionary in causas:
+			var col := "#4caf6d" if int(c["signo"]) > 0 else ("#e05555" if int(c["signo"]) < 0 else "#8ea595")
+			_escribir("  %s [color=%s][b]%s:[/b][/color] %s" % [String(c["icono"]), col, String(c["titulo"]), String(c["texto"])])
 	_escribir_notas()
 	_btn_volver.visible = true
 	_refrescar()
@@ -331,11 +339,12 @@ func abrir(p: Partido, club: Club, vest: Vestuario = null, eliminatoria: bool = 
 	partido.lesion.connect(_a_la_lesion)
 	partido.cambio_hecho.connect(_al_cambio)
 	partido.terminado.connect(_al_final)
+	partido.minuto_jugado.connect(_relleno)
 	_construir()
 	_refrescar()
 	Sonido.toca("silbato")
 	Sonido.toca("murmullo", Sonido.Bus.AMBIENTE)
-	_escribir("[color=#8ea595]Empieza el partido en %s.[/color]" % partido.local.nombre)
+	_escribir("[color=#8ea595]%s[/color]" % (Idiomas.t("Empieza el partido en %s.") % partido.local.nombre))
 	## EL VISOR 3D, DE ENTRADA (13-9-2026). Pedido explícito hace semanas
 	## ("el visor 3D pasa a ser el ESTÁNDAR de la vista de partido, no un
 	## extra opcional") y repetido ahora ("no podemos ver realmente en vivo
@@ -379,3 +388,49 @@ func _process(delta: float) -> void:
 			_invasion_pendiente = false
 			return
 	_refrescar()
+
+## EL RITMO DE LA CRÓNICA (auditoría 26-10: en 48 de 50 partidos había tramos de 20 minutos o más sin
+## una sola línea; el máximo, 38'). Si la crónica lleva `SILENCIO_MAX` minutos callada, cuenta algo que
+## pasó DE VERDAD en ese minuto: un córner, una falta o quién tiene la pelota. Sin `Azar`: la frase se
+## elige por el minuto.
+const SILENCIO_MAX := 7
+const _RELLENO_CORNER := ["🚩 Córner para %s.", "🚩 %s gana un córner y sube a los centrales.", "🚩 Saque de esquina a favor de %s."]
+const _RELLENO_FALTA := ["🟡 Falta de %s cortando el juego.", "🟡 %s frena la jugada con falta.", "🟡 El árbitro pita falta de %s en la medular."]
+const _RELLENO_DOMINA := ["⚽ %s tiene el balón y busca el hueco", "⚽ %s mueve la pelota de un lado a otro", "⚽ %s se instala en campo rival", "⚽ %s manda en el centro del campo"]
+const _RELLENO_PAREJO := ["⚽ Partido trabado en el medio campo: nadie se adueña del balón.", "⚽ Ida y vuelta sin profundidad: ninguno encuentra el último pase.",
+	"⚽ Mucha lucha y pocas ideas en este tramo.", "⚽ Los dos equipos se estudian; el partido se juega lejos de las áreas."]
+var _lineas_vistas := 0
+var _min_ultima_linea := 0
+var _corners_vistos := [0, 0]
+var _faltas_vistas := [0, 0]
+
+func _relleno(minuto: int) -> void:
+	var n := _cronica.get_paragraph_count()
+	var c := [partido.corners_local, partido.corners_visita]
+	var f := [partido.faltas_local, partido.faltas_visita]
+	var corner := -1 if c == _corners_vistos else (0 if int(c[0]) > int(_corners_vistos[0]) else 1)
+	var falta := -1 if f == _faltas_vistas else (0 if int(f[0]) > int(_faltas_vistas[0]) else 1)
+	_corners_vistos = c
+	_faltas_vistas = f
+	if n != _lineas_vistas:
+		_lineas_vistas = n
+		_min_ultima_linea = minuto
+		return
+	if minuto - _min_ultima_linea < SILENCIO_MAX or partido.terminado_ya or minuto >= 89:
+		return
+	var nombres := [partido.local.nombre, partido.visita.nombre]
+	var txt := ""
+	if corner >= 0:
+		txt = _frase(_RELLENO_CORNER, nombres[corner], minuto)
+	elif falta >= 0:
+		txt = _frase(_RELLENO_FALTA, nombres[falta], minuto)
+	else:
+		var pos := int(round(partido.posesion_local))
+		if absi(pos - 50) >= 6:
+			var domina := 0 if pos > 50 else 1
+			txt = "%s (%s)" % [_frase(_RELLENO_DOMINA, nombres[domina], minuto), Idiomas.t("%d %% de posesión") % (pos if domina == 0 else 100 - pos)]
+		else:
+			txt = _frase(_RELLENO_PAREJO, "", minuto)
+	_escribir("[color=#8ea595]%d'  %s[/color]" % [minuto, txt])
+	_lineas_vistas = _cronica.get_paragraph_count()
+	_min_ultima_linea = minuto

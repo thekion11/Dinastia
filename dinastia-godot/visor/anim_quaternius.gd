@@ -292,7 +292,21 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 			real = _relajar_dedos(real, esq, 0.5)
 			if clave == "parado":
 				real = _brazos_al_cuerpo(real, -0.2)
+			## Los pies que no patinan (25-10-2026): el trote y el sprint con
+			## el pie de apoyo a la velocidad del cuerpo (`AnimPasos`).
+			else:
+				real = AnimPasos.preparar(clave, real, esq)
 		lib.add_animation(clave, real if real != null else a_mano[clave])
+	## EL TROTE HACIA ATRÁS DE VERDAD (25-10-2026). Era el trote hacia delante
+	## (`AnimExtra.UAL`): el defensa que se replegaba mirando el balón movía las
+	## piernas como si avanzara y los pies resbalaban 7 m/s. El trote pasado al
+	## revés es un trote hacia atrás: el pie apoyado avanza mientras el cuerpo
+	## retrocede. Algo más erguido, como quien recula mirando la jugada.
+	var jog: Animation = cargar_real(String(CLIP_REAL["trotar"]), prefijo)
+	if jog != null:
+		var atras := AnimPasos.invertir(_relajar_dedos(jog, esq, 0.5))
+		AnimPasos.inclinar(atras, esq, "spine_02", Vector3(-6, 0, 0))
+		lib.add_animation("trotar_atras", AnimPasos.preparar("trotar_atras", atras, esq))
 	## TIPOS DE CAMINATA (14-10-2026): los otros pasos reales del pack, para que
 	## el personaje del jugador pueda andar «normal», agachado o a trote.
 	for clave: String in CLIP_CAMINATA:
@@ -327,6 +341,18 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 				_cache_recortes[cc] = recortar(entera, float(r[1]), float(r[2]), bool(r[3]), bool(r[4]), rp) if entera != null else null
 			if _cache_recortes[cc] != null:
 				lib.add_animation(clave, _cache_recortes[cc])
+		## CONDUCIR A LA CARRERA (25-10-2026). El mocap de conducción
+		## (`Dribble_03`) es un paseo con el balón: su pie va a 1 m/s y en diagonal,
+		## y el motor lleva al que conduce a 3-6,5 m/s; resbalaba 6 m/s de lado.
+		## Ahora es el trote ajustado, con el tronco y la cabeza encima del balón.
+		## El mocap sigue en la librería como `conducir_mocap` (paseos con balón).
+		if jog != null and lib.has_animation("conducir"):
+			lib.add_animation("conducir_mocap", lib.get_animation("conducir"))
+			var con := _relajar_dedos(jog, esq, 0.5)
+			AnimPasos.inclinar(con, esq, "spine_02", Vector3(7, 0, 0))
+			AnimPasos.inclinar(con, esq, "neck_01", Vector3(16, 0, 0))
+			lib.remove_animation("conducir")
+			lib.add_animation("conducir", AnimPasos.preparar("conducir", con, esq))
 		lib.add_animation("lamento", lamento(esq, prefijo))
 		lib.add_animation("rabia", rabia(esq, prefijo))
 		lib.add_animation("senalar_falta", senalar_falta(esq, prefijo))

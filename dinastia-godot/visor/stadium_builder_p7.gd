@@ -407,28 +407,43 @@ static func _banderas(root: Node3D, est: Dictionary, dx: float, dz: float,
 				var tam := Vector2(1.3, 0.85) if tipo != "banderines" else Vector2(0.6, 0.45)
 				_bandera_ondeante(root, p + Vector3(0, h * 0.82, 0), tam, colores[i % colores.size()], a, float(i) * 1.7)
 
+## EL HAZ DE UN FOCO (M-014, 26-10-2026). Era un cilindro con alfa 0 que iba de la
+## torre al centro del campo: no se veía nunca. Ahora va del bastidor al punto del
+## césped al que apunta, con `stadium_builder_haz.gdshader` (degradado, sin
+## contorno, se apaga con la cámara dentro). Una malla y UN material para todos
+## (el color va por instancia): `encender_conos` lo enciende con la noche, como
+## antes, y `_haces` le suma lo que enseña el aire según el clima.
+static var _malla_haz: CylinderMesh
+static var _mat_haz: ShaderMaterial
+static var _fuerza_haz := 0.0
+static func mat_haz() -> ShaderMaterial:
+	if _mat_haz == null:
+		_mat_haz = ShaderMaterial.new()
+		_mat_haz.shader = load("res://visor/stadium_builder_haz.gdshader")
+		_mat_haz.set_shader_parameter("fuerza", _fuerza_haz)
+	return _mat_haz
+
 static func _cono_de_luz(root: Node3D, desde: Vector3, hasta: Vector3, radio_suelo: float, luz: Color) -> void:
-	if _mat_cono == null:
-		_mat_cono = StandardMaterial3D.new()
-		_mat_cono.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		_mat_cono.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		_mat_cono.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
-		_mat_cono.cull_mode = BaseMaterial3D.CULL_DISABLED
-		_mat_cono.albedo_color = Color(luz, 0.0)
+	if _malla_haz == null:
+		_malla_haz = CylinderMesh.new()
+		_malla_haz.top_radius = 0.09
+		_malla_haz.bottom_radius = 0.5
+		_malla_haz.height = 1.0
+		_malla_haz.radial_segments = 16
+		_malla_haz.rings = 1
+		_malla_haz.cap_top = false
+		_malla_haz.cap_bottom = false
 	var largo := desde.distance_to(hasta)
 	var dir := (desde - hasta).normalized()
-	var cono := CylinderMesh.new()
-	cono.top_radius = 0.25
-	cono.bottom_radius = radio_suelo
-	cono.height = largo
-	cono.radial_segments = 10
-	cono.rings = 0
-	cono.cap_top = false
-	cono.cap_bottom = false
 	var mi := MeshInstance3D.new()
-	mi.mesh = cono
-	mi.material_override = _mat_cono
+	mi.name = "HazFoco"
+	mi.mesh = _malla_haz
+	mi.material_override = mat_haz()
+	mi.set_instance_shader_parameter("color", Color(luz.r, luz.g, luz.b))
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	mi.transform = Transform3D(Basis(Quaternion(Vector3.UP, dir)), (desde + hasta) * 0.5)
+	## De día ni se dibuja (sin llamadas de dibujo de más).
+	mi.visible = _fuerza_haz > 0.0
+	var b := Basis(Quaternion(Vector3.UP, dir)).scaled_local(Vector3(radio_suelo * 2.0, largo, radio_suelo * 2.0))
+	mi.transform = Transform3D(b, (desde + hasta) * 0.5)
 	mi.add_to_group("foco_cono")
 	root.add_child(mi)

@@ -11,7 +11,7 @@ func _mover_en_estadio(delta: float) -> void:
 		camara.position = cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * 0.1
 		camara.look_at(camara.position + dir * 10.0 + Vector3(0, -1.6, 0), Vector3.UP)
 		return
-	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	var corre := _corre()
 	var objetivo_e := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 	_vel_pie = move_toward(_vel_pie, objetivo_e, (7.0 if absf(objetivo_e) > absf(_vel_pie) else 12.0) * delta)
 	vel = _vel_pie
@@ -219,12 +219,27 @@ func _tactil(capa: CanvasLayer) -> void:
 		base.add_child(b)
 	var der := HBoxContainer.new()
 	der.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	der.offset_left = -260
+	der.offset_left = -430
 	der.offset_top = -100
 	der.offset_right = -24
 	der.offset_bottom = -24
 	der.add_theme_constant_override("separation", 12)
 	capa.add_child(der)
+	## Táctil (M-433): cambiar la vista y, mientras se pulsa, correr (a pie) o
+	## freno de mano (en coche), lo que en teclado son V y Mayús/Espacio.
+	for par: Array in [["👁", false], ["🏃" if modo != "coche" else "🅿", true]]:
+		var bt := Button.new()
+		bt.text = String(par[0])
+		bt.custom_minimum_size = Vector2(tam, tam)
+		bt.add_theme_font_size_override("font_size", 28)
+		bt.modulate = Color(1, 1, 1, 0.75)
+		bt.visible = es_tactil()
+		if bool(par[1]):
+			bt.button_down.connect(func() -> void: _tactil_correr = true)
+			bt.button_up.connect(func() -> void: _tactil_correr = false)
+		else:
+			bt.pressed.connect(_accion.bind("vista"))
+		der.add_child(bt)
 	var be := Button.new()
 	be.text = "E"
 	be.custom_minimum_size = Vector2(tam, tam)
@@ -329,6 +344,9 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	cuerpo = _crear_cuerpo()
 	if trafico != null:
 		trafico.jugador = cuerpo
+		## Los peatones que te esquivan o adelantan miran que el lado esté libre.
+		trafico.libre_fn = func(q: Vector3) -> bool: return libre_obst(q, 0.3) and not _choca_circulos(q, 0.3)
+		trafico.jugador_huella = Vector2(RADIO_COCHE, SEP_COCHE + RADIO_COCHE) if modo == "coche" else Vector2(RADIO_PIE, RADIO_PIE) * 0.6
 	add_child(cuerpo)
 	cuerpo.position = buscar_libre(desde)
 	camara = Camera3D.new()
@@ -372,15 +390,19 @@ func _mover_un_trozo(paso: Vector3, r: float) -> bool:
 	## deja andar para salir. Si lo que tienes encima es un MÓVIL (un coche que
 	## se te mete), se ignoran los móviles pero NO las paredes: antes, con un
 	## coche encima, se podía entrar caminando en los edificios (17-10).
-	var libre_fijo := func(q: Vector3) -> bool: return libre_obst(q, r) and not _choca_circulos(q, r)
-	var dentro_fijo: bool = not libre_fijo.call(pos)
-	var solo_movil: bool = not dentro_fijo and _choca_moviles(pos, r)
+	## El cuerpo entero con su forma (el coche, tres círculos a lo largo: `libre_forma`).
+	## Para salir de algo fijo vale cualquier paso que no meta MÁS círculos dentro
+	## (a pie, uno solo: como antes, cualquier paso).
+	var libre_fijo := func(q: Vector3) -> bool: return libre_forma(q, rumbo, r, true)
+	var n0 := _n_fijos(pos, r)
+	var dentro_fijo: bool = n0 > 0
+	var solo_movil: bool = not dentro_fijo and not libre_forma(pos, rumbo, r)
 	var vale := func(q: Vector3) -> bool:
 		if dentro_fijo:
-			return true
+			return _n_fijos(q, r) <= n0
 		if solo_movil:
 			return libre_fijo.call(q)
-		return libre_total(q, r)
+		return libre_forma(q, rumbo, r)
 	if vale.call(pos + paso):
 		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z + paso.z), pos.z + paso.z)
 		return true
@@ -398,16 +420,19 @@ func _mover_un_trozo(paso: Vector3, r: float) -> bool:
 	vel *= -0.25 if modo == "coche" else 0.0
 	return false
 
-## El rótulo de comercio cuya fachada está junto a `p`, o vacío.
-func _rotulo_en(p: Vector3) -> Dictionary:
-	if cb == null or cb.expansion == null:
-		return {}
-	var mejor: Dictionary = {}
-	var md := INF
-	for r: Dictionary in cb.expansion.rotulos:
-		var q: Vector3 = r["pos"]
-		var d := Vector2(q.x - p.x, q.z - p.z).length()
-		if d < float(r["ancho"]) * 0.5 + 2.5 and d < md:
-			md = d
-			mejor = r
-	return mejor
+## Cuántos círculos del cuerpo (en `q`, con el rumbo actual) pisan algo fijo.
+func _n_fijos(q: Vector3, r: float) -> int:
+	var n := 0
+	for c: Vector3 in _puntos_forma(q, rumbo):
+		if not libre_obst(c, r) or _choca_circulos(c, r):
+			n += 1
+	return n
+
+## El coche no gira metiendo el morro o la cola en una pared o en otro coche: si
+## con el rumbo nuevo choca y con el de antes no, se queda el de antes (con un
+## círculo daba igual hacia dónde mirase; con la forma real, no).
+func _girar_si_cabe(rumbo_antes: float) -> void:
+	if modo != "coche" or rumbo == rumbo_antes or cuerpo == null:
+		return
+	if not libre_forma(cuerpo.position, rumbo) and libre_forma(cuerpo.position, rumbo_antes):
+		rumbo = rumbo_antes

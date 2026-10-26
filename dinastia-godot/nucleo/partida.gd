@@ -29,9 +29,18 @@ static func _dic_a_club(d: Dictionary) -> Club:
 	c.tactica.libre = String(d.get("libre", "directo"))
 	c.tactica.plan_perdiendo = String(d.get("plan_p", "nada"))
 	c.tactica.plan_ganando = String(d.get("plan_g", "nada"))
+	## Guardados de antes del 25-10: sin racha, empieza de cero.
+	c.tactica.racha_plan_clave = String(d.get("plan_rc", ""))
+	c.tactica.racha_plan_n = int(d.get("plan_rn", 0))
+	## Guardados de antes del 26-10: con y sin balón en lo normal, sin roles.
+	c.tactica.verticalidad = int(d.get("vert", Tactica.Nivel.MEDIO))
+	c.tactica.tras_perdida = int(d.get("trasp", Tactica.Nivel.MEDIO))
+	c.tactica.roles = (d.get("roles_t", {}) as Dictionary).duplicate()
+	c.tactica.plan_fijo = String(d.get("plan_fijo", ""))
 	c.tactica.marca_al_hombre = bool(d.get("hombre", false))
 	c.tactica.fuera_de_juego = bool(d.get("fjuego", false))
 	c.tactica.tiro_lejano = bool(d.get("lejano", false))
+	c.mascota = String(d.get("masc", ""))
 	c.once_elegido.clear()
 	for id_j in d.get("once", []):
 		c.once_elegido.append(String(id_j))
@@ -212,6 +221,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.medico.desde_dic(datos.get("medico", {}))
 	if m.logros != null:
 		m.logros.desde_dic(datos.get("logros", {}))
+	MercadoDT.de(m).desde_dic(m, datos.get("mercado_dt", {}))
 	m.ojeados = datos.get("ojeados", {})
 	m.libro_financiero.clear()
 	for x: Dictionary in datos.get("libro_financiero", []):
@@ -247,6 +257,9 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		push_error("Partida: el guardado es de una versión más nueva (%d) que el juego (%d)" % [
 			int(datos["version"]), VERSION])
 		return null
+	## Un guardado viejo se pone al día paso a paso antes de leerlo (M-399).
+	## Se migra una copia: el diccionario de entrada (p. ej. el de deshacer) no se toca.
+	datos = PartidaArchivo.migrar(datos.duplicate(), VERSION)
 
 	## Un guardado anterior a la base ficticia (sin la clave) se jugó siempre
 	## con los datos reales. Si esta instalación no tiene el pack, se queda en
@@ -274,6 +287,10 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.anio = int(datos["anio"])
 	m.semana = int(datos["semana"])
 	Jugador.semana_global = m.anio * 100 + m.semana
+	## Fase 0: el día/hora y las necesidades del DT (silencioso: cargar no pasa el tiempo).
+	m.reloj.desde_dic(datos.get("reloj", {}))
+	m.necesidades.desde_dic(datos.get("necesidades", {}))
+	m.imprevistos.desde_dic(datos.get("imprevistos", {}))
 	m.horario = String(datos.get("horario", "tarde"))
 	m.campana = (datos.get("campana", {}) as Dictionary).duplicate()
 	m.mi_club_id = String(datos["mi_club"])
@@ -285,6 +302,8 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		m.fondo.desde_dic(df)
 	for k in datos.get("desafios", []):
 		m.desafios.append(String(k))
+	m.dificultad = String(datos.get("dificultad", "normal"))   ## guardados viejos: normal
+	m.valor_ia_ref = float(datos.get("vref", 0.0))
 
 	for d: Dictionary in datos["clubes"]:
 		var c := _dic_a_club(d)
@@ -311,10 +330,13 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	return m
 
 static func cargar(nombre: String) -> Mundo:
-	return desde_instantanea(_leer_con_respaldo(ruta_de(nombre)))
+	var t0 := Time.get_ticks_msec()
+	var m := desde_instantanea(_leer_con_respaldo(ruta_de(nombre)))
+	PartidaArchivo.ms_carga = Time.get_ticks_msec() - t0
+	return m
 
 static func borrar(nombre: String) -> void:
-	for suf in ["", TEMPORAL, RESPALDO]:
+	for suf: String in PartidaArchivo.sufijos():
 		if FileAccess.file_exists(ruta_de(nombre) + suf):
 			DirAccess.remove_absolute(ruta_de(nombre) + suf)
 

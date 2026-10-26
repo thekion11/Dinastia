@@ -270,6 +270,10 @@ static func _paleta(est: Dictionary, estilo: String, h: int) -> Dictionary:
 		c1 = c1.lerp(Color(0.5, 0.52, 0.55), 0.35)
 	if absf(c1.get_luminance() - c2.get_luminance()) < 0.08:
 		c2 = Color(0.92, 0.92, 0.9) if c1.get_luminance() < 0.5 else Color(0.12, 0.13, 0.15)
+	## Ni el acento (26-10-2026, captura «llegada»): las lamas negras de un club
+	## blanco y negro se leían como huecos sin fondo entre las blancas. Grafito.
+	if c2.get_luminance() < 0.1:
+		c2 = c2.lerp(Color(0.34, 0.36, 0.39), 0.5)
 	var estructura: Color
 	var revest: Color = c1
 	var acento: Color = c2

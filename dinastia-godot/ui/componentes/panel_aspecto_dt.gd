@@ -61,7 +61,8 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 		b.add_theme_font_size_override("font_size", 10)
 		b.toggle_mode = true
 		b.button_pressed = String(l.get("pelo", "")) == corte
-		b.clip_text = true
+		## Sin recortar (s3, auditoría): en una rejilla que fluye cada botón puede
+		## medir lo que su nombre; «Geheimratsecken» o «kabarık perçem» se cortaban.
 		b.custom_minimum_size = Vector2(66, 22)
 		b.pressed.connect(func() -> void:
 			r.look = r.look_efectivo()

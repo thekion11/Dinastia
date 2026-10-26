@@ -138,13 +138,17 @@ static func _malla_butaca_lejos() -> Mesh:
 ## de al menos 12 grupos.
 static func es_pasillo(c: int, cuantas_fila: int) -> bool:
 	return cuantas_fila >= 12 and c % 8 == 4
-## Los peldaños de todos los pasillos de una bandeja en un MultiMesh, y una
-## barandilla por pasillo (en el espacio del deck, que va inclinado: la
-## barandilla sigue la pendiente sola).
+## Los peldaños de todos los pasillos de una bandeja en un MultiMesh, y las
+## barandillas en otro (en el espacio del deck, que va inclinado: el pasamanos
+## sigue la pendiente solo).
+## BARANDILLAS DE VERDAD (25-10-2026, ultra pulido): el pasamanos de cada pasillo
+## era un listón suelto flotando a 0,95 m, sin un solo poste. Ahora lleva sus
+## postes VERTICALES (contrarrotados por `rake`, como las butacas) y el borde de
+## abajo de cada bandeja -el que da al campo o al peto de la de abajo- su
+## barandilla corrida de dos tubos. Todo son instancias de UNA caja unidad
+## escalada: mismas llamadas de dibujo que antes (una por bandeja).
 static func _montar_pasillos(deck: MeshInstance3D, escalones: Array[Transform3D], pasillos_l: Array[float],
-		lateral: bool, fondo: float) -> void:
-	if escalones.is_empty():
-		return
+		lateral: bool, fondo: float, largo := 0.0, sentido := 1.0, rake := 0.0) -> void:
 	if _mat_peldano == null:
 		_mat_peldano = StandardMaterial3D.new()
 		_mat_peldano.albedo_color = Color(0.68, 0.68, 0.66)
@@ -153,39 +157,40 @@ static func _montar_pasillos(deck: MeshInstance3D, escalones: Array[Transform3D]
 		_mat_baranda.albedo_color = Color(0.82, 0.83, 0.85)
 		_mat_baranda.metallic = 0.6
 		_mat_baranda.roughness = 0.35
-	var bm := BoxMesh.new()
-	bm.size = Vector3(1.25, 0.42, PASO_FILA + 0.02)
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.mesh = bm
-	mm.instance_count = escalones.size()
-	for k in escalones.size():
-		mm.set_instance_transform(k, escalones[k])
-	var mmi := MultiMeshInstance3D.new()
-	mmi.name = "Pasillos"
-	mmi.multimesh = mm
-	mmi.material_override = _mat_peldano
-	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	deck.add_child(mmi)
-	if fondo < 3.0:
+	if not escalones.is_empty():
+		var bm := BoxMesh.new()
+		bm.size = Vector3(1.25, 0.42, PASO_FILA + 0.02)
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = bm
+		mm.instance_count = escalones.size()
+		for k in escalones.size():
+			mm.set_instance_transform(k, escalones[k])
+		var mmi := MultiMeshInstance3D.new()
+		mmi.name = "Pasillos"
+		mmi.multimesh = mm
+		mmi.material_override = _mat_peldano
+		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		deck.add_child(mmi)
+	## Las esquinas son un `PlaneMesh` (sin grosor): su suelo está en 0, no en 0,2.
+	var suelo := 0.0 if deck.mesh is PlaneMesh else 0.2
+	var sin_pasillo: Array[float] = []
+	var xfs := _piezas_baranda(pasillos_l if fondo >= 3.0 else sin_pasillo, lateral, fondo, largo, sentido, rake, suelo)
+	if xfs.is_empty():
 		return
-	var rail := BoxMesh.new()
-	rail.size = Vector3(0.05, 0.05, fondo - 0.6)
 	var mr := MultiMesh.new()
 	mr.transform_format = MultiMesh.TRANSFORM_3D
-	mr.mesh = rail
-	mr.instance_count = pasillos_l.size()
-	for k in pasillos_l.size():
-		var l: float = pasillos_l[k]
-		var bas := Basis(Vector3.UP, PI * 0.5) if lateral else Basis()
-		var pos := Vector3(0.0, 0.95, l) if lateral else Vector3(l, 0.95, 0.0)
-		mr.set_instance_transform(k, Transform3D(bas, pos))
+	mr.mesh = _caja_unidad()
+	mr.instance_count = xfs.size()
+	for k in xfs.size():
+		mr.set_instance_transform(k, xfs[k])
 	var mri := MultiMeshInstance3D.new()
 	mri.name = "Barandillas"
 	mri.multimesh = mr
 	mri.material_override = _mat_baranda
 	mri.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mri)
+
 static func _escaleras_de_acceso(deck: MeshInstance3D, escalones: Array[Transform3D], pasillos_l: Array[float], lateral: bool) -> void:
 	var root := deck.get_parent() as Node3D
 	if root == null or pasillos_l.is_empty():
@@ -236,6 +241,14 @@ static func _hinchas_horneados(nivel: String) -> Array:
 	if _hornead.has(nivel):
 		return _hornead[nivel]
 	var l: Array = []
+	## La hinchada ANIMADA (VAT, `PublicoVat`): una sola malla para todas las
+	## poses; cada grupo cambia su clip de reposo. Sin ella, las poses quietas.
+	var vat := PublicoVat.malla(nivel)
+	if vat != null:
+		for pz in POSES_PUBLICO:
+			l.append(vat)
+		_hornead[nivel] = l
+		return l
 	for pz in POSES_PUBLICO:
 		var ruta := "res://assets/ciudad/publico/hincha_%s_%s.res" % [pz, nivel]
 		if not ResourceLoader.exists(ruta):
@@ -266,6 +279,8 @@ static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: 
 		mat.set_shader_parameter("pelo_desde", float(malla.get_meta("pelo_desde", 0.86)))
 		mat.set_shader_parameter("lado_max", 0.14)
 		mat.set_shader_parameter("amplitud", 0.03)
+		if PublicoVat.es_vat(malla):
+			PublicoVat.configurar(mat, malla, POSES_PUBLICO[g])
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.use_colors = true

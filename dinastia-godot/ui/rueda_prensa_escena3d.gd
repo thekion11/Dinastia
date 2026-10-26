@@ -1,11 +1,12 @@
 class_name RuedaPrensaEscena3D
-extends "res://ui/rueda_prensa_escena3d_p2.gd"
-## [Capa 3/3 de `rueda_prensa_escena3d.gd`] _process
+extends "res://ui/rueda_prensa_escena3d_p3.gd"
+## [Capa 4/4 de `rueda_prensa_escena3d.gd`] _process
 
 func _process(delta: float) -> void:
 	if _dt_3d_pendiente and is_inside_tree():
 		_montar_dt_3d()
 	_gesticular_dt(delta)
+	_animar_sala(delta)
 	_t += delta
 	## Un corte cada varios segundos, siempre volviendo al plano de trabajo
 	## entre los otros dos -que es donde de verdad se lee la pregunta y las
@@ -21,15 +22,28 @@ func _process(delta: float) -> void:
 		var desde: Vector3 = d["pos"]
 		var hacia: Vector3 = d["mira"]
 		var fov_dest: float = d["fov"]
+		## El periodista que pregunta manda sobre el ciclo: corte seco a él.
+		var foco := _plano_foco()
+		if not foco.is_empty():
+			desde = foco["pos"]; hacia = foco["mira"]; fov_dest = foco["fov"]
+		## Saltos grandes (al periodista y de vuelta) son cortes, como en TV.
+		var corte := _cam_pos.distance_to(desde) > 1.2
 		## Deriva mínima DENTRO de cada plano -una entrevista es casi fija,
 		## pero un corte seco entre posiciones estáticas se lee como
 		## diapositivas, no como una retransmisión-.
 		var deriva := Vector3(sin(_t * 0.18) * 0.04, sin(_t * 0.13) * 0.02, 0.0)
-		var k := clampf(delta * 4.0, 0.0, 1.0)
+		var k := 1.0 if corte else clampf(delta * 4.0, 0.0, 1.0)
 		_cam_pos = _cam_pos.lerp(desde + deriva, k)
 		_cam_mira = _cam_mira.lerp(hacia, k)
 		_camara.fov = lerpf(_camara.fov, fov_dest, k)
 		_camara.look_at_from_position(_cam_pos, _cam_mira, Vector3.UP)
+		## El desenfoque, siempre JUSTO detrás del DT (26-10): fijo a 3,2 m,
+		## en el plano general emborronaba también al DT.
+		var at := _camara.attributes as CameraAttributesPractical
+		if at != null:
+			## En el contraplano, el foco es el periodista: sin desenfoque de fondo.
+			at.dof_blur_far_distance = 40.0 if not foco.is_empty() else _cam_pos.distance_to(Vector3(0, 1.5, -0.78)) + 0.45
+			at.dof_blur_far_transition = 0.8
 	if _dt_cabeza != null:
 		## Un asentimiento apenas perceptible: sin ningún movimiento, la cabeza
 		## esférica se lee como un maniquí en cuanto se detiene la cámara.

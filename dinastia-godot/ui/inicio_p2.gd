@@ -1,116 +1,5 @@
 extends "res://ui/inicio_p1.gd"
-## [Capa 2/3 de `inicio.gd`] _al_pulsar_modo, _tarjeta, _guardar_ajuste, _degradado, _pintar_banner, _actualizar_picker … (+11)
-
-## Una tarjeta de modo, pulsada. Las jugables siguen exactamente el camino de
-## siempre -nombre, dificultad, elegir club-; las que todavía no lo son
-## enseñan por qué, en vez de fingir que llevan a algún sitio -"proximo" con
-## el mismo texto que el `toast()` del HTML, las demás con su propio motivo-.
-func _al_pulsar_modo(m: Dictionary) -> void:
-	var cat := String(m.get("cat", ""))
-	var titulo := String(m.get("titulo", ""))
-	if bool(m.get("crear", false)):
-		## CREAR TU CLUB (26-9-2026): la elección de club ya sabía fundar;
-		## ahora la tarjeta lleva ahí con el panel de fundar destacado.
-		Principal.fundar_pedido = true
-		m = {"id": "dt"}
-	match cat:
-		"retos":
-			## LOS RETOS (26-9-2026): se elige uno de los cinco y el club lo
-			## pone el propio reto.
-			_elegir_reto()
-			return
-		"tutorial":
-			## Una carrera de entrenador de verdad, con el recorrido encendido:
-			## se aprende jugando la propia partida, no una de mentira que
-			## luego hay que tirar. Se elige el club como siempre.
-			Principal.tutorial_pedido = true
-			m = {"id": "dt"}
-		"proximo":
-			_avisar("🚧 %s todavía no se puede jugar. Está en la lista para cuando esté listo." % titulo)
-			return
-		"jugador":
-			## LA CARRERA DE JUGADOR (29-9-2026): su propia pantalla, con su
-			## propia estética; los partidos se juegan en el motor jugable.
-			CarreraJugadorUI.mundo = null
-			CarreraJugadorUI.nombre_pedido = _campo_nombre.text.strip_edges()
-			get_tree().change_scene_to_file("res://escenas/carrera_jugador.tscn")
-			return
-	var nombre := _campo_nombre.text.strip_edges()
-	Principal.modo_elegido = String(m.get("id", "dt"))
-	Principal.dt_nombre_elegido = nombre if nombre != "" else "Míster"
-	Principal.dificultad_elegida = _dificultad
-	get_tree().change_scene_to_file("res://escenas/eleccion_club.tscn")
-
-## Una tarjeta del menú de modos -`tarjetaModo()`/`dibujarPortadaModo()` del
-## HTML-: la carátula con degradado, el título y el subtítulo. Las que hoy no
-## llevan a ninguna carrera jugable se enseñan atenuadas, con la misma
-## etiqueta "EN DESARROLLO" que ya usa el HTML para "proximo".
-func _tarjeta(m: Dictionary) -> Control:
-	var cat := String(m.get("cat", ""))
-	var sin_jugar := CATS_SIN_JUGAR.has(cat)
-
-	var caja := PanelContainer.new()
-	caja.custom_minimum_size = Vector2(300, 150)
-	caja.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var e := StyleBoxFlat.new()
-	e.bg_color = COL_PANEL
-	e.border_color = COL_BORDE
-	e.set_border_width_all(1)
-	e.set_corner_radius_all(10)
-	e.content_margin_left = 0; e.content_margin_right = 0
-	e.content_margin_top = 0; e.content_margin_bottom = 0
-	caja.add_theme_stylebox_override("panel", e)
-	if sin_jugar:
-		caja.modulate = Color(1, 1, 1, 0.55)
-
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 0)
-	caja.add_child(v)
-
-	var cubierta := TextureRect.new()
-	cubierta.texture = TarjetaModo.textura(String(m.get("c1", "#161b22")), String(m.get("c2", "#30363d")))
-	cubierta.custom_minimum_size = Vector2(0, 84)
-	cubierta.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	cubierta.stretch_mode = TextureRect.STRETCH_SCALE
-	v.add_child(cubierta)
-	if cat == "proximo":
-		var badge := _texto(9, Color("0c1510"))
-		badge.text = Idiomas.t("  EN DESARROLLO  ")
-		var fondo_badge := PanelContainer.new()
-		var eb := StyleBoxFlat.new()
-		eb.bg_color = COL_ORO
-		eb.set_corner_radius_all(4)
-		fondo_badge.add_theme_stylebox_override("panel", eb)
-		fondo_badge.add_child(badge)
-		fondo_badge.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-		fondo_badge.offset_left = -102; fondo_badge.offset_top = 6
-		fondo_badge.offset_right = -8; fondo_badge.offset_bottom = 22
-		cubierta.add_child(fondo_badge)
-
-	var textos := VBoxContainer.new()
-	textos.add_theme_constant_override("separation", 4)
-	var mt := MarginContainer.new()
-	mt.add_theme_constant_override("margin_left", 12); mt.add_theme_constant_override("margin_right", 12)
-	mt.add_theme_constant_override("margin_top", 8); mt.add_theme_constant_override("margin_bottom", 10)
-	mt.add_child(textos)
-	v.add_child(mt)
-	var tt := _texto(14, COL_TEXTO)
-	tt.text = String(m.get("titulo", ""))
-	textos.add_child(tt)
-	var ts := _texto(11, COL_SUAVE)
-	ts.text = String(m.get("sub", ""))
-	ts.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	textos.add_child(ts)
-
-	## Todo el panel es el botón: un botón transparente encima ocupa el rect
-	## entero, que es más agradable de pulsar que un botón chico dentro.
-	var b := Button.new()
-	b.flat = true
-	b.set_anchors_preset(Control.PRESET_FULL_RECT)
-	b.focus_mode = Control.FOCUS_NONE
-	b.pressed.connect(func() -> void: _al_pulsar_modo(m))
-	caja.add_child(b)
-	return caja
+## [Capa 2/3 de `inicio.gd`] _guardar_ajuste, _degradado, _pintar_banner, _actualizar_picker … (+11)
 
 func _guardar_ajuste(k: String) -> void:
 	var c := ConfigFile.new()
@@ -259,40 +148,6 @@ func _construir() -> void:
 	_construir_meta(raiz)
 	_construir_datos_dt(raiz)
 
-	var titulo := _texto(20, COL_TEXTO)
-	titulo.text = Idiomas.t("ELIGE TU CAMINO")
-	raiz.add_child(titulo)
-
-	var secciones: Variant = Datos.tabla("MODO_SECCIONES")
-	var modos: Variant = Datos.tabla("MODOS_JUEGO")
-	if secciones is Array and modos is Array:
-		for fila: Array in secciones:
-			var cat := String(fila[0])
-			var stitulo := String(fila[1])
-			var sdesc := String(fila[2])
-			var de_esta_cat: Array = (modos as Array).filter(func(m: Dictionary) -> bool: return String(m.get("cat", "")) == cat)
-			if de_esta_cat.is_empty():
-				continue
-			if stitulo != "":
-				var ct := _texto(13, COL_ORO)
-				ct.text = stitulo
-				raiz.add_child(ct)
-				var cd := _texto(11, COL_SUAVE)
-				cd.text = sdesc
-				raiz.add_child(cd)
-			var grid := GridContainer.new()
-			grid.columns = 2
-			grid.add_theme_constant_override("h_separation", 10)
-			grid.add_theme_constant_override("v_separation", 10)
-			raiz.add_child(grid)
-			for m: Dictionary in de_esta_cat:
-				grid.add_child(_tarjeta(m))
-
-	_lbl_estado = _texto(12, COL_ORO)
-	_lbl_estado.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_lbl_estado.visible = false
-	raiz.add_child(_lbl_estado)
-
 	_construir_selector_portada(raiz)
 
 	## El fondo animado -"iniciarPhaserMenu()" del HTML-: motas de luz subiendo
@@ -330,6 +185,28 @@ func _borrar_partida() -> void:
 	_mundo_guardado = null
 	_actualizar_continuar()
 
+## Exportar / importar / abrir otra partida (plan §10): siempre visible, porque
+## importar tiene sentido justo cuando todavía no hay ninguna.
+var _archivo_ui: PartidaArchivoUI
+
+func _poner_botones_archivo() -> void:
+	if _archivo_ui == null:
+		_archivo_ui = PartidaArchivoUI.new()
+		add_child(_archivo_ui)
+		_archivo_ui.lista_cambiada.connect(_actualizar_continuar)
+		_archivo_ui.abrir_pedido.connect(_abrir_partida)
+	var fila := _archivo_ui.construir_botones()
+	_panel_continuar.add_child(fila)
+	## Debajo de la tarjeta de «Continuar», que se añade después.
+	fila.move_to_front.call_deferred()
+
+func _abrir_partida(nombre: String) -> void:
+	var m := Partida.cargar(nombre)
+	if m == null:
+		return
+	Principal.mundo_a_cargar = m
+	get_tree().change_scene_to_file("res://escenas/principal.tscn")
+
 # --- partida en curso ---------------------------------------------------------
 
 ## "PARTIDA EN CURSO" -`panelEstadoPartida()` del HTML-: escudo, club, la
@@ -340,6 +217,7 @@ func _actualizar_continuar() -> void:
 	for h in _panel_continuar.get_children():
 		_panel_continuar.remove_child(h)
 		h.free()
+	_poner_botones_archivo()
 	if not _hay_partida():
 		return
 	_mundo_guardado = Partida.cargar("partida")

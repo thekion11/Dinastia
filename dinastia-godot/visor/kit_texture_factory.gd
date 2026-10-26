@@ -143,6 +143,12 @@ func _ensure_base_loaded() -> void:
 		return
 	for p in BASE_SKINS:
 		var img: Image = load(p).get_image()
+		## Las pieles se importan comprimidas (VRAM): sin descomprimir, `convert`
+		## falla y todo el pintado (fill_rect/get_pixel) daba error (f0m, 25-10).
+		if img.is_compressed():
+			img.decompress()
+		## Sin mipmaps: `_retenir` rehace la imagen con el tamaño de UN nivel.
+		img.clear_mipmaps()
 		img.convert(Image.FORMAT_RGBA8)
 		_base_images.append(img)
 

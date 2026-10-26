@@ -290,6 +290,12 @@ func _noria(p: Vector3) -> void:
 	acero.metallic = 0.4
 	## Huella de la plataforma: no se atraviesa a pie.
 	b.huellas.append(Rect2(p.x - 4.0, p.z - 3.5, 8.0, 7.0))
+	## 26-10-2026 (pciu, aviso de pmov): la caseta del operario (2 x 2 m) y los
+	## pies de las patas en A quedan FUERA de la plataforma y se atravesaban.
+	b.huellas.append(Rect2(p.x + 4.2, p.z + 0.6, 2.0, 2.0))
+	for sz: float in [-1.0, 1.0]:
+		for sx: float in [-1.0, 1.0]:
+			b.huellas.append(Rect2(p.x + sx * 5.5 - 0.4, p.z + sz * 2.3 - 0.4, 0.8, 0.8))
 	var raiz := Node3D.new()
 	raiz.name = "Noria"
 	raiz.position = p

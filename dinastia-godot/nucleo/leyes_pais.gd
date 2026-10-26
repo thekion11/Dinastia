@@ -46,6 +46,12 @@ const REGLAS := {
 	"MAR": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Botola Pro: 5 extranjeros inscritos, 3 en cancha.", "seguro": true},
 	"RSA": {"plantel": 5, "cancha": 5, "criterio": "extranjero", "norma": "PSL: 5 extranjeros por plantel.", "seguro": true},
 	"AUS": {"plantel": 5, "cancha": 0, "criterio": "extranjero", "norma": "A-League: 5 jugadores visados.", "seguro": true},
+## Lote 1 de países nuevos (26-10-2026, fila 26 s4): POR, NED, BEL, CRO, DEN.
+	"POR": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga portuguesa (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"NED": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga holandesa (ficticia): sin cupo; los extracomunitarios necesitan un sueldo mínimo.", "seguro": false},
+	"BEL": {"plantel": 19, "cancha": 0, "criterio": "no_formado", "norma": "Liga belga (ficticia): al menos 6 formados en el país en una lista de 25.", "seguro": false},
+	"CRO": {"plantel": 6, "cancha": 0, "criterio": "no_ue", "norma": "Liga croata (ficticia): 6 extracomunitarios por plantel.", "seguro": false},
+	"DEN": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga danesa (ficticia): sin cupo de extracomunitarios.", "seguro": false},
 }
 
 ## Países de la Unión Europea (para los cupos «extracomunitarios»).

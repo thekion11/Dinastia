@@ -148,14 +148,25 @@ func abrir_estadisticas() -> void:
 	_panel_stats = PanelEstadisticas.abrir(self, partido, _motor, _stats)
 	_panel_stats.cerrado.connect(func() -> void: _panel_stats = null)
 
-func _lanzar_repeticion(segundos: float) -> void:
-	if _repe.reproducir(segundos):
+## `con_barrido`: entra con el barrido de marca (a pedido); tras la realización del gol ya
+## lo pone `CineGol`, que corta a la repetición con la pantalla tapada.
+func _lanzar_repeticion(segundos: float, con_barrido := false) -> void:
+	_repe.ui_barrido = self
+	if _repe.club_barrido == null:
+		_repe.club_barrido = club
+	if _rig != null:
+		_rig.quitar_inserto()
+	if _repe.reproducir(segundos, con_barrido):
 		if _rotulo_repe == null:
 			_rotulo_repe = PanelContainer.new()
 			var st := Tema.caja(Color(0.55, 0.08, 0.08, 0.9), Tema.RADIO_CHICO, Color(1, 1, 1, 0.2))
 			_rotulo_repe.add_theme_stylebox_override("panel", st)
-			var l := Tema.etiqueta(16, Color.WHITE, "⟲  REPETICIÓN")
-			_rotulo_repe.add_child(l)
+			var fila := HBoxContainer.new()
+			fila.add_theme_constant_override("separation", 14)
+			fila.add_child(Tema.etiqueta(16, Color.WHITE, Idiomas.t("⟲  REPETICIÓN")))
+			## Cómo saltarla (la misma tecla que la pide, o un clic).
+			fila.add_child(Tema.etiqueta(12, Color(1, 1, 1, 0.7), "%s · %s" % [Mando.corto_de("jugar_repeticion"), Idiomas.t("Saltar")]))
+			_rotulo_repe.add_child(fila)
 			add_child(_rotulo_repe)
 			_rotulo_repe.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 			_rotulo_repe.offset_top = 70
@@ -171,7 +182,8 @@ func repetir_jugada() -> void:
 		return
 	if (_intro != null and _intro.activa) or (is_instance_valid(_ceremonia) and _ceremonia.activa):
 		return
-	_lanzar_repeticion(10.0)
+	_repe.club_barrido = club
+	_lanzar_repeticion(10.0, true)
 
 ## La pizarra de los dos clubes, con las instrucciones efímeras y lo que haya
 ## cambiado el DT rival en vivo.

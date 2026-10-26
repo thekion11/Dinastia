@@ -1,0 +1,625 @@
+{
+ "exactas": {
+  "Elige tu próximo club entre las ofertas de abajo.": {
+   "en": "Choose your next club from the offers below.",
+   "pt": "Escolha seu próximo clube entre as ofertas abaixo.",
+   "fr": "Choisis ton prochain club parmi les offres ci-dessous.",
+   "it": "Scegli il tuo prossimo club tra le offerte qui sotto.",
+   "de": "Wähle deinen nächsten Verein aus den Angeboten unten.",
+   "ca": "Tria el teu proper club entre les ofertes de sota.",
+   "pl": "Wybierz następny klub spośród ofert poniżej.",
+   "tr": "Aşağıdaki tekliflerden bir sonraki kulübünü seç."
+  },
+  "ESTÁS DESPEDIDO": {
+   "en": "YOU'RE SACKED",
+   "pt": "VOCÊ ESTÁ DEMITIDO",
+   "fr": "TU ES LIMOGÉ",
+   "it": "SEI ESONERATO",
+   "de": "DU BIST ENTLASSEN",
+   "ca": "ESTÀS ACOMIADAT",
+   "pl": "JESTEŚ ZWOLNIONY",
+   "tr": "KOVULDUN"
+  },
+  "ESTÁS DESPEDIDO.": {
+   "en": "YOU'RE SACKED.",
+   "pt": "VOCÊ ESTÁ DEMITIDO.",
+   "fr": "TU ES LIMOGÉ.",
+   "it": "SEI ESONERATO.",
+   "de": "DU BIST ENTLASSEN.",
+   "ca": "ESTÀS ACOMIADAT.",
+   "pl": "JESTEŚ ZWOLNIONY.",
+   "tr": "KOVULDUN."
+  },
+  "EL CLUB SE LIQUIDA": {
+   "en": "THE CLUB IS WOUND UP",
+   "pt": "O CLUBE É LIQUIDADO",
+   "fr": "LE CLUB EST LIQUIDÉ",
+   "it": "IL CLUB VIENE LIQUIDATO",
+   "de": "DER VEREIN WIRD AUFGELÖST",
+   "ca": "EL CLUB ES LIQUIDA",
+   "pl": "KLUB ZOSTAJE ZLIKWIDOWANY",
+   "tr": "KULÜP TASFİYE EDİLİYOR"
+  },
+  "EL CLUB SE LIQUIDA.": {
+   "en": "THE CLUB IS WOUND UP.",
+   "pt": "O CLUBE É LIQUIDADO.",
+   "fr": "LE CLUB EST LIQUIDÉ.",
+   "it": "IL CLUB VIENE LIQUIDATO.",
+   "de": "DER VEREIN WIRD AUFGELÖST.",
+   "ca": "EL CLUB ES LIQUIDA.",
+   "pl": "KLUB ZOSTAJE ZLIKWIDOWANY.",
+   "tr": "KULÜP TASFİYE EDİLİYOR."
+  },
+  "La deuda pudo más: la asociación toma el control y tu etapa aquí se acaba. Elige tu próximo club entre las ofertas de abajo.": {
+   "en": "The debt won: the association takes control and your time here is over. Choose your next club from the offers below.",
+   "pt": "A dívida falou mais alto: a associação assume o controle e sua passagem por aqui acaba. Escolha seu próximo clube entre as ofertas abaixo.",
+   "fr": "La dette a eu le dernier mot : l'association prend le contrôle et ton aventure ici s'arrête. Choisis ton prochain club parmi les offres ci-dessous.",
+   "it": "Il debito ha avuto la meglio: l'associazione prende il controllo e la tua avventura qui finisce. Scegli il tuo prossimo club tra le offerte qui sotto.",
+   "de": "Die Schulden waren stärker: Der Verband übernimmt die Kontrolle, und deine Zeit hier ist vorbei. Wähle deinen nächsten Verein aus den Angeboten unten.",
+   "ca": "El deute ha pogut més: l'associació pren el control i la teva etapa aquí s'acaba. Tria el teu proper club entre les ofertes de sota.",
+   "pl": "Dług okazał się silniejszy: związek przejmuje kontrolę, a twój czas tutaj się kończy. Wybierz następny klub spośród ofert poniżej.",
+   "tr": "Borç galip geldi: dernek yönetimi devralıyor ve buradaki dönemin sona eriyor. Aşağıdaki tekliflerden bir sonraki kulübünü seç."
+  },
+  "La deuda pudo más: la asociación liquida el club y tu etapa aquí se acaba.": {
+   "en": "The debt won: the association winds up the club and your time here is over.",
+   "pt": "A dívida falou mais alto: a associação liquida o clube e sua passagem por aqui acaba.",
+   "fr": "La dette a eu le dernier mot : l'association liquide le club et ton aventure ici s'arrête.",
+   "it": "Il debito ha avuto la meglio: l'associazione liquida il club e la tua avventura qui finisce.",
+   "de": "Die Schulden waren stärker: Der Verband löst den Verein auf, und deine Zeit hier ist vorbei.",
+   "ca": "El deute ha pogut més: l'associació liquida el club i la teva etapa aquí s'acaba.",
+   "pl": "Dług okazał się silniejszy: związek likwiduje klub, a twój czas tutaj się kończy.",
+   "tr": "Borç galip geldi: dernek kulübü tasfiye ediyor ve buradaki dönemin sona eriyor."
+  },
+  "Nuevo récord del club": {
+   "en": "New club record",
+   "pt": "Novo recorde do clube",
+   "fr": "Nouveau record du club",
+   "it": "Nuovo record del club",
+   "de": "Neuer Vereinsrekord",
+   "ca": "Nou rècord del club",
+   "pl": "Nowy rekord klubu",
+   "tr": "Yeni kulüp rekoru"
+  },
+  "Nuevo récord del club:": {
+   "en": "New club record:",
+   "pt": "Novo recorde do clube:",
+   "fr": "Nouveau record du club :",
+   "it": "Nuovo record del club:",
+   "de": "Neuer Vereinsrekord:",
+   "ca": "Nou rècord del club:",
+   "pl": "Nowy rekord klubu:",
+   "tr": "Yeni kulüp rekoru:"
+  },
+  "Un día como hoy": {
+   "en": "On this day",
+   "pt": "Num dia como hoje",
+   "fr": "Un jour comme aujourd'hui",
+   "it": "Un giorno come oggi",
+   "de": "An diesem Tag",
+   "ca": "Un dia com avui",
+   "pl": "Tego dnia",
+   "tr": "Tarihte bugün"
+  },
+  "Debut de la casa:": {
+   "en": "Home-grown debut:",
+   "pt": "Estreia da base:",
+   "fr": "Débuts d'un jeune du club :",
+   "it": "Esordio di un prodotto del vivaio:",
+   "de": "Debüt aus der eigenen Jugend:",
+   "ca": "Debut de la casa:",
+   "pl": "Debiut wychowanka:",
+   "tr": "Altyapıdan ilk maç:"
+  },
+  "¡CAMPEÓN!": {
+   "en": "CHAMPIONS!",
+   "pt": "CAMPEÃO!",
+   "fr": "CHAMPIONS !",
+   "it": "CAMPIONI!",
+   "de": "MEISTER!",
+   "ca": "CAMPIONS!",
+   "pl": "MISTRZOWIE!",
+   "tr": "ŞAMPİYON!"
+  },
+  "Lo levantaste tú. Queda en la vitrina para siempre.": {
+   "en": "You lifted it. It stays in the trophy cabinet forever.",
+   "pt": "Foi você quem levantou. Fica na galeria para sempre.",
+   "fr": "C'est toi qui l'as soulevé. Il reste dans la vitrine pour toujours.",
+   "it": "L'hai alzato tu. Resta in bacheca per sempre.",
+   "de": "Du hast ihn in die Höhe gestemmt. Er bleibt für immer in der Vitrine.",
+   "ca": "L'has aixecat tu. Queda a la vitrina per sempre.",
+   "pl": "To ty go podniosłeś. Zostaje w gablocie na zawsze.",
+   "tr": "Onu sen kaldırdın. Sonsuza dek vitrinde kalacak."
+  },
+  "Gala de fin de año.": {
+   "en": "End-of-season gala.",
+   "pt": "Gala de fim de ano.",
+   "fr": "Gala de fin de saison.",
+   "it": "Gala di fine stagione.",
+   "de": "Saisonabschlussgala.",
+   "ca": "Gala de final d'any.",
+   "pl": "Gala na koniec sezonu.",
+   "tr": "Sezon sonu gecesi."
+  },
+  "Respóndela en Mercado.": {
+   "en": "Answer it in Transfers.",
+   "pt": "Responda em Mercado.",
+   "fr": "Réponds-y dans Marché.",
+   "it": "Rispondi in Mercato.",
+   "de": "Beantworte es unter Transfermarkt.",
+   "ca": "Respon-la a Mercat.",
+   "pl": "Odpowiedz w zakładce Rynek.",
+   "tr": "Transfer bölümünden yanıtla."
+  },
+  "Pasas de ronda": {
+   "en": "Through to the next round",
+   "pt": "Você avança de fase",
+   "fr": "Tu passes le tour",
+   "it": "Passi il turno",
+   "de": "Eine Runde weiter",
+   "ca": "Passes de ronda",
+   "pl": "Awans do kolejnej rundy",
+   "tr": "Tur atladın"
+  },
+  "Final": {
+   "en": "Final",
+   "pt": "Final",
+   "fr": "Finale",
+   "it": "Finale",
+   "de": "Finale",
+   "ca": "Final",
+   "pl": "Finał",
+   "tr": "Final"
+  },
+  "Termina la reforma del estadio: desde hoy se juega en el estadio nuevo.": {
+   "en": "The stadium rebuild is finished: from today we play in the new stadium.",
+   "pt": "Termina a reforma do estádio: a partir de hoje se joga no estádio novo.",
+   "fr": "La rénovation du stade est terminée : dès aujourd'hui, on joue dans le nouveau stade.",
+   "it": "Finisce la ristrutturazione dello stadio: da oggi si gioca nello stadio nuovo.",
+   "de": "Der Stadionumbau ist fertig: Ab heute wird im neuen Stadion gespielt.",
+   "ca": "S'acaba la reforma de l'estadi: des d'avui es juga a l'estadi nou.",
+   "pl": "Przebudowa stadionu zakończona: od dziś gramy na nowym stadionie.",
+   "tr": "Stat yenilemesi bitti: bugünden itibaren yeni statta oynanıyor."
+  },
+  "Obra terminada": {
+   "en": "Work completed",
+   "pt": "Obra concluída",
+   "fr": "Travaux terminés",
+   "it": "Lavori ultimati",
+   "de": "Bauarbeiten abgeschlossen",
+   "ca": "Obra acabada",
+   "pl": "Budowa zakończona",
+   "tr": "İnşaat tamamlandı"
+  },
+  "Obra terminada:": {
+   "en": "Work completed:",
+   "pt": "Obra concluída:",
+   "fr": "Travaux terminés :",
+   "it": "Lavori ultimati:",
+   "de": "Bauarbeiten abgeschlossen:",
+   "ca": "Obra acabada:",
+   "pl": "Budowa zakończona:",
+   "tr": "İnşaat tamamlandı:"
+  },
+  "Agente libre de lujo en el mercado.": {
+   "en": "A star free agent is on the market.",
+   "pt": "Agente livre de luxo no mercado.",
+   "fr": "Un agent libre de luxe sur le marché.",
+   "it": "Uno svincolato di lusso sul mercato.",
+   "de": "Ein Luxus-Ablösefreier auf dem Markt.",
+   "ca": "Agent lliure de luxe al mercat.",
+   "pl": "Gwiazda bez klubu na rynku.",
+   "tr": "Piyasada lüks bir serbest oyuncu var."
+  },
+  "Alta médica": {
+   "en": "Medical all-clear",
+   "pt": "Alta médica",
+   "fr": "Feu vert médical",
+   "it": "Via libera medico",
+   "de": "Medizinische Freigabe",
+   "ca": "Alta mèdica",
+   "pl": "Zgoda lekarzy",
+   "tr": "Sağlık izni"
+  },
+  "bajo": {
+   "en": "low",
+   "pt": "baixo",
+   "fr": "faible",
+   "it": "basso",
+   "de": "niedrig",
+   "ca": "baix",
+   "pl": "niskie",
+   "tr": "düşük"
+  },
+  "medio": {
+   "en": "medium",
+   "pt": "médio",
+   "fr": "moyen",
+   "it": "medio",
+   "de": "mittel",
+   "ca": "mitjà",
+   "pl": "średnie",
+   "tr": "orta"
+  },
+  "medio-alto": {
+   "en": "medium-high",
+   "pt": "médio-alto",
+   "fr": "moyen-élevé",
+   "it": "medio-alto",
+   "de": "mittelhoch",
+   "ca": "mitjà-alt",
+   "pl": "średnio-wysokie",
+   "tr": "orta-yüksek"
+  },
+  "alto": {
+   "en": "high",
+   "pt": "alto",
+   "fr": "élevé",
+   "it": "alto",
+   "de": "hoch",
+   "ca": "alt",
+   "pl": "wysokie",
+   "tr": "yüksek"
+  },
+  "Te pagaron la cláusula": {
+   "en": "Release clause triggered",
+   "pt": "Pagaram a cláusula",
+   "fr": "On a payé sa clause",
+   "it": "Hanno pagato la clausola",
+   "de": "Die Ausstiegsklausel wurde gezogen",
+   "ca": "T'han pagat la clàusula",
+   "pl": "Zapłacono klauzulę",
+   "tr": "Serbest kalma bedeli ödendi"
+  },
+  "Clausulazo": {
+   "en": "Release clause paid",
+   "pt": "Cláusula paga",
+   "fr": "Clause levée",
+   "it": "Clausola pagata",
+   "de": "Klausel gezogen",
+   "ca": "Clausulassa",
+   "pl": "Klauzula wykupiona",
+   "tr": "Bedel ödendi"
+  },
+  "Venta cerrada": {
+   "en": "Sale completed",
+   "pt": "Venda fechada",
+   "fr": "Vente conclue",
+   "it": "Vendita chiusa",
+   "de": "Verkauf abgeschlossen",
+   "ca": "Venda tancada",
+   "pl": "Sprzedaż sfinalizowana",
+   "tr": "Satış tamamlandı"
+  },
+  "Reforma recortada": {
+   "en": "Rebuild scaled back",
+   "pt": "Reforma reduzida",
+   "fr": "Rénovation réduite",
+   "it": "Ristrutturazione ridotta",
+   "de": "Umbau gekürzt",
+   "ca": "Reforma retallada",
+   "pl": "Przebudowa okrojona",
+   "tr": "Yenileme kısıldı"
+  }
+ },
+ "patrones": [
+  [
+   "^La directiva pierde la paciencia \\((.+?)\\) y te destituye a mitad de temporada\\.$",
+   "The board loses patience ($1) and sacks you mid-season.",
+   "A diretoria perde a paciência ($1) e te demite no meio da temporada.",
+   "La direction perd patience ($1) et te limoge en pleine saison.",
+   "La dirigenza perde la pazienza ($1) e ti esonera a metà stagione.",
+   "Der Vorstand verliert die Geduld ($1) und entlässt dich mitten in der Saison.",
+   "La directiva perd la paciència ($1) i et destitueix a mitja temporada.",
+   "Zarząd traci cierpliwość ($1) i zwalnia cię w połowie sezonu.",
+   "Yönetimin sabrı taşıyor ($1) ve seni sezonun ortasında görevden alıyor."
+  ],
+  [
+   "^La directiva pierde la paciencia \\((.+?)\\) y te destituye a mitad de temporada\\. Elige tu próximo club entre las ofertas de abajo\\.$",
+   "The board loses patience ($1) and sacks you mid-season. Choose your next club from the offers below.",
+   "A diretoria perde a paciência ($1) e te demite no meio da temporada. Escolha seu próximo clube entre as ofertas abaixo.",
+   "La direction perd patience ($1) et te limoge en pleine saison. Choisis ton prochain club parmi les offres ci-dessous.",
+   "La dirigenza perde la pazienza ($1) e ti esonera a metà stagione. Scegli il tuo prossimo club tra le offerte qui sotto.",
+   "Der Vorstand verliert die Geduld ($1) und entlässt dich mitten in der Saison. Wähle deinen nächsten Verein aus den Angeboten unten.",
+   "La directiva perd la paciència ($1) i et destitueix a mitja temporada. Tria el teu proper club entre les ofertes de sota.",
+   "Zarząd traci cierpliwość ($1) i zwalnia cię w połowie sezonu. Wybierz następny klub spośród ofert poniżej.",
+   "Yönetimin sabrı taşıyor ($1) ve seni sezonun ortasında görevden alıyor. Aşağıdaki tekliflerden bir sonraki kulübünü seç."
+  ],
+  [
+   "^La directiva te destituye tras la (.+?)\\. Elige tu próximo club entre las ofertas de abajo\\.$",
+   "The board sacks you after the $1. Choose your next club from the offers below.",
+   "A diretoria te demite depois de $1. Escolha seu próximo clube entre as ofertas abaixo.",
+   "La direction te limoge après $1. Choisis ton prochain club parmi les offres ci-dessous.",
+   "La dirigenza ti esonera dopo $1. Scegli il tuo prossimo club tra le offerte qui sotto.",
+   "Der Vorstand entlässt dich nach: $1. Wähle deinen nächsten Verein aus den Angeboten unten.",
+   "La directiva et destitueix després de $1. Tria el teu proper club entre les ofertes de sota.",
+   "Zarząd zwalnia cię po tym: $1. Wybierz następny klub spośród ofert poniżej.",
+   "Yönetim seni şunun ardından görevden alıyor: $1. Aşağıdaki tekliflerden bir sonraki kulübünü seç."
+  ],
+  [
+   "^Logro: (.+)$",
+   "Achievement: $1",
+   "Conquista: $1",
+   "Succès : $1",
+   "Traguardo: $1",
+   "Erfolg: $1",
+   "Assoliment: $1",
+   "Osiągnięcie: $1",
+   "Başarı: $1"
+  ],
+  [
+   "^Subes de nivel: (.+?)\\.?$",
+   "You level up: $1",
+   "Você sobe de nível: $1",
+   "Tu passes au niveau : $1",
+   "Sali di livello: $1",
+   "Du steigst auf: $1",
+   "Puges de nivell: $1",
+   "Awansujesz na poziom: $1",
+   "Seviye atladın: $1"
+  ],
+  [
+   "^(.+?) se estrena con el primer equipo\\.$",
+   "$1 makes his first-team debut.",
+   "$1 estreia no time principal.",
+   "$1 fait ses débuts en équipe première.",
+   "$1 esordisce in prima squadra.",
+   "$1 gibt sein Debüt in der ersten Mannschaft.",
+   "$1 s'estrena amb el primer equip.",
+   "$1 debiutuje w pierwszej drużynie.",
+   "$1 A takımda ilk maçına çıkıyor."
+  ],
+  [
+   "^Se entregan los premios de la temporada (\\d+)\\. Tu club se lleva: (.+)\\.$",
+   "The awards for the $1 season are handed out. Your club takes home: $2.",
+   "São entregues os prêmios da temporada $1. Seu clube leva: $2.",
+   "Les trophées de la saison $1 sont remis. Ton club repart avec : $2.",
+   "Si consegnano i premi della stagione $1. Il tuo club si porta a casa: $2.",
+   "Die Preise der Saison $1 werden verliehen. Dein Verein bekommt: $2.",
+   "S'entreguen els premis de la temporada $1. El teu club s'emporta: $2.",
+   "Wręczane są nagrody za sezon $1. Twój klub zdobywa: $2.",
+   "$1 sezonunun ödülleri veriliyor. Kulübün şunları alıyor: $2."
+  ],
+  [
+   "^Se entregan los premios de la temporada (\\d+)\\. Tu club se va de vacío\\.$",
+   "The awards for the $1 season are handed out. Your club goes home empty-handed.",
+   "São entregues os prêmios da temporada $1. Seu clube sai de mãos vazias.",
+   "Les trophées de la saison $1 sont remis. Ton club repart les mains vides.",
+   "Si consegnano i premi della stagione $1. Il tuo club torna a casa a mani vuote.",
+   "Die Preise der Saison $1 werden verliehen. Dein Verein geht leer aus.",
+   "S'entreguen els premis de la temporada $1. El teu club se'n va de buit.",
+   "Wręczane są nagrody za sezon $1. Twój klub odchodzi z pustymi rękami.",
+   "$1 sezonunun ödülleri veriliyor. Kulübün eli boş dönüyor."
+  ],
+  [
+   "^Oferta por (.+?)\\.?$",
+   "Offer for $1",
+   "Oferta por $1",
+   "Offre pour $1",
+   "Offerta per $1",
+   "Angebot für $1",
+   "Oferta per $1",
+   "Oferta za: $1",
+   "$1 için teklif"
+  ],
+  [
+   "^(.+?) pasa de (.+?) a (.+)\\.$",
+   "$1 moves from $2 to $3.",
+   "$1 passa do $2 para o $3.",
+   "$1 passe de $2 à $3.",
+   "$1 passa dal $2 al $3.",
+   "$1 wechselt von $2 zu $3.",
+   "$1 passa del $2 al $3.",
+   "$1 przechodzi z $2 do $3.",
+   "$1, $2 takımından $3 takımına geçiyor."
+  ],
+  [
+   "^Informe de ojeo: (.+?)\\.$",
+   "Scouting report: $1.",
+   "Relatório de observação: $1.",
+   "Rapport de recrutement : $1.",
+   "Relazione dell'osservatore: $1.",
+   "Scoutingbericht: $1.",
+   "Informe d'escoltisme: $1.",
+   "Raport skauta: $1.",
+   "Gözlem raporu: $1."
+  ],
+  [
+   "^media (\\d+) con proyección (\\d+)\\.?$",
+   "rating $1, potential $2",
+   "média $1 com projeção $2",
+   "note $1, potentiel $2",
+   "valutazione $1, potenziale $2",
+   "Wertung $1, Potenzial $2",
+   "mitjana $1 amb projecció $2",
+   "ocena $1, potencjał $2",
+   "güç $1, potansiyel $2"
+  ],
+  [
+   "^Campeón de (.+)$",
+   "$1 champions",
+   "Campeão da $1",
+   "Champion de $1",
+   "Campione di $1",
+   "Sieger: $1",
+   "Campió de $1",
+   "Zwycięzca: $1",
+   "$1 şampiyonu"
+  ],
+  [
+   "^Además del título, entran (.+) de premio\\.$",
+   "On top of the trophy, $1 in prize money comes in.",
+   "Além do título, entram $1 de prêmio.",
+   "En plus du titre, $1 de prime tombent dans les caisses.",
+   "Oltre al titolo, entrano $1 di premio.",
+   "Zusätzlich zum Titel gibt es $1 Prämie.",
+   "A més del títol, entren $1 de premi.",
+   "Oprócz trofeum wpływa $1 nagrody.",
+   "Kupanın yanında $1 ödül parası geliyor."
+  ],
+  [
+   "^(.+?) superada\\. Cada eliminatoria que se gana es taquilla y premio\\.$",
+   "$1 cleared. Every tie you win means gate money and prize money.",
+   "$1 superada. Cada mata-mata vencido é bilheteria e prêmio.",
+   "$1 franchi. Chaque tour gagné, c'est de la billetterie et une prime.",
+   "$1 superato. Ogni turno vinto è incasso e premio.",
+   "$1 überstanden. Jede gewonnene Runde bringt Zuschauereinnahmen und Prämie.",
+   "$1 superada. Cada eliminatòria guanyada és taquilla i premi.",
+   "$1 za nami. Każda wygrana runda to wpływy z biletów i nagroda.",
+   "$1 geçildi. Kazanılan her tur bilet geliri ve ödül demek."
+  ],
+  [
+   "^(.+?) llega a nivel (\\d+)\\.$",
+   "$1 reaches level $2.",
+   "$1 chega ao nível $2.",
+   "$1 atteint le niveau $2.",
+   "$1 arriva al livello $2.",
+   "$1 erreicht Stufe $2.",
+   "$1 arriba al nivell $2.",
+   "$1 osiąga poziom $2.",
+   "$1 $2. seviyeye ulaştı."
+  ],
+  [
+   "^(.+?) \\((\\d+) años, media (\\d+)\\) quedó sin club\\. (.+?\\.) No estará mucho tiempo disponible\\.$",
+   "$1 ($2, rating $3) is without a club. $4 He won't be available for long.",
+   "$1 ($2 anos, média $3) ficou sem clube. $4 Não vai ficar disponível por muito tempo.",
+   "$1 ($2 ans, note $3) est sans club. $4 Il ne restera pas longtemps disponible.",
+   "$1 ($2 anni, valutazione $3) è rimasto senza squadra. $4 Non resterà disponibile a lungo.",
+   "$1 ($2 Jahre, Wertung $3) ist vereinslos. $4 Er wird nicht lange verfügbar sein.",
+   "$1 ($2 anys, mitjana $3) s'ha quedat sense club. $4 No estarà disponible gaire temps.",
+   "$1 ($2 lat, ocena $3) został bez klubu. $4 Długo nie będzie dostępny.",
+   "$1 ($2 yaşında, güç $3) kulüpsüz kaldı. $4 Uzun süre boşta kalmayacak."
+  ],
+  [
+   "^(.+?) se lesiona: (.+)$",
+   "$1 is injured: $2",
+   "$1 se machuca: $2",
+   "$1 se blesse : $2",
+   "$1 si infortuna: $2",
+   "$1 verletzt sich: $2",
+   "$1 es lesiona: $2",
+   "$1 doznaje urazu: $2",
+   "$1 sakatlandı: $2"
+  ],
+  [
+   "^Lesión grave: (.+)$",
+   "Serious injury: $1",
+   "Lesão grave: $1",
+   "Blessure grave : $1",
+   "Infortunio grave: $1",
+   "Schwere Verletzung: $1",
+   "Lesió greu: $1",
+   "Poważna kontuzja: $1",
+   "Ciddi sakatlık: $1"
+  ],
+  [
+   "^(.+?)\\. Se pierde (\\d+) semanas\\.$",
+   "$1. Out for $2 weeks.",
+   "$1. Fica fora $2 semanas.",
+   "$1. Absent $2 semaines.",
+   "$1. Fuori per $2 settimane.",
+   "$1. Fällt $2 Wochen aus.",
+   "$1. Es perd $2 setmanes.",
+   "$1. Pauzuje $2 tyg.",
+   "$1. $2 hafta yok."
+  ],
+  [
+   "^Recaída de (.+?):?$",
+   "Relapse for $1",
+   "Recaída de $1",
+   "Rechute de $1",
+   "Ricaduta di $1",
+   "Rückfall bei $1",
+   "Recaiguda de $1",
+   "Nawrót kontuzji: $1",
+   "$1 yeniden sakatlandı"
+  ],
+  [
+   "^vuelve a caer de (.+?), 1 semana más\\.$",
+   "breaks down again with $1, 1 more week.",
+   "volta a cair com $1, mais 1 semana.",
+   "rechute ($1), 1 semaine de plus.",
+   "ricade per $1, 1 settimana in più.",
+   "fällt wieder aus ($1), 1 Woche mehr.",
+   "torna a caure per $1, 1 setmana més.",
+   "znów wypada ($1), 1 tydzień więcej.",
+   "$1 nedeniyle yeniden sakatlandı, 1 hafta daha."
+  ],
+  [
+   "^vuelve a caer de (.+?), (\\d+) semanas más\\.$",
+   "breaks down again with $1, $2 more weeks.",
+   "volta a cair com $1, mais $2 semanas.",
+   "rechute ($1), $2 semaines de plus.",
+   "ricade per $1, $2 settimane in più.",
+   "fällt wieder aus ($1), $2 Wochen mehr.",
+   "torna a caure per $1, $2 setmanes més.",
+   "znów wypada ($1), $2 tyg. więcej.",
+   "$1 nedeniyle yeniden sakatlandı, $2 hafta daha."
+  ],
+  [
+   "^(.+?) recibe el alta médica\\.$",
+   "$1 is given the all-clear.",
+   "$1 recebe alta médica.",
+   "$1 reçoit le feu vert médical.",
+   "$1 riceve il via libera medico.",
+   "$1 bekommt die medizinische Freigabe.",
+   "$1 rep l'alta mèdica.",
+   "$1 dostaje zgodę lekarzy na grę.",
+   "$1 sağlık iznini aldı."
+  ],
+  [
+   "^Informe médico de (.+?)\\.$",
+   "Medical report on $1.",
+   "Relatório médico de $1.",
+   "Rapport médical de $1.",
+   "Referto medico di $1.",
+   "Medizinischer Bericht: $1.",
+   "Informe mèdic de $1.",
+   "Raport medyczny: $1.",
+   "$1 sağlık raporu."
+  ],
+  [
+   "^Riesgo: (.+?)\\. Lesiones graves: (\\d+)\\.$",
+   "Risk: $1. Serious injuries: $2.",
+   "Risco: $1. Lesões graves: $2.",
+   "Risque : $1. Blessures graves : $2.",
+   "Rischio: $1. Infortuni gravi: $2.",
+   "Risiko: $1. Schwere Verletzungen: $2.",
+   "Risc: $1. Lesions greus: $2.",
+   "Ryzyko: $1. Poważne kontuzje: $2.",
+   "Risk: $1. Ciddi sakatlıklar: $2."
+  ],
+  [
+   "^(.+?) se va a (.+?) por (.+?)\\. No hubo nada que negociar\\.$",
+   "$1 leaves for $2 for $3. There was nothing to negotiate.",
+   "$1 vai para o $2 por $3. Não houve nada a negociar.",
+   "$1 part à $2 pour $3. Il n'y avait rien à négocier.",
+   "$1 va al $2 per $3. Non c'era niente da trattare.",
+   "$1 wechselt für $3 zu $2. Es gab nichts zu verhandeln.",
+   "$1 se'n va al $2 per $3. No hi havia res a negociar.",
+   "$1 odchodzi do $2 za $3. Nie było czego negocjować.",
+   "$1, $3 karşılığında $2 takımına gidiyor. Pazarlık edilecek bir şey yoktu."
+  ],
+  [
+   "^(.+?) es tuyo: pagaste su cláusula de (.+?)\\.$",
+   "$1 is yours: you paid his $2 release clause.",
+   "$1 é seu: você pagou a cláusula de $2.",
+   "$1 est à toi : tu as payé sa clause de $2.",
+   "$1 è tuo: hai pagato la sua clausola di $2.",
+   "$1 gehört dir: Du hast seine Ausstiegsklausel von $2 bezahlt.",
+   "$1 és teu: has pagat la seva clàusula de $2.",
+   "$1 jest twój: zapłaciłeś jego klauzulę $2.",
+   "$1 artık senin: $2 tutarındaki serbest kalma bedelini ödedin."
+  ],
+  [
+   "^(.+?) se va a (.+?)\\. Entran (.+?)\\.$",
+   "$1 leaves for $2. $3 comes in.",
+   "$1 vai para o $2. Entram $3.",
+   "$1 part à $2. $3 rentrent dans les caisses.",
+   "$1 va al $2. Entrano $3.",
+   "$1 wechselt zu $2. $3 fließen in die Kasse.",
+   "$1 se'n va al $2. Entren $3.",
+   "$1 odchodzi do $2. Wpływa $3.",
+   "$1, $2 takımına gidiyor. Kasaya $3 giriyor."
+  ]
+ ]
+}

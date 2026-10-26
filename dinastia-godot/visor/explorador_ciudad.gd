@@ -6,5 +6,6 @@ func _exit_tree() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if trafico != null and is_instance_valid(trafico):
 		trafico.jugador = null
+		trafico.libre_fn = Callable()
 	_bajo_tierra(false)
 	_rotulos_de_paseo(false)

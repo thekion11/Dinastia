@@ -87,6 +87,7 @@ func simular_minuto() -> void:
 	minuto_jugado.emit(minuto)
 	if minuto >= minutos_fin:
 		terminado_ya = true
+		_devolver_tactica()
 		terminado.emit(goles_local, goles_visita)
 
 # ---------------------------------------------------------------------------
@@ -285,6 +286,9 @@ func _cerrar_notas() -> void:
 		j.forma = clampi(int(round(float(j.forma) * 0.7 + n * 10.0 * 0.3)), 20, 99)
 		j.partidos += 1
 
+## Las causas del último partido de tu club (`CausasPartido`) y de qué semana son.
+static var ultimas_causas: Dictionary = {}
+
 func guardar_si_es_mio() -> void:
 	if local == null or visita == null:
 		return
@@ -293,6 +297,9 @@ func guardar_si_es_mio() -> void:
 	ultimo_mio = {"local": local.nombre, "visita": visita.nombre, "local_id": local.id,
 		"gl": goles_local, "gv": goles_visita, "cronica": cronica.duplicate(true),
 		"anio": ctx_anio, "semana": ctx_semana}
+	## El porqué de ese partido, para la rueda de prensa (`PrensaContexto`).
+	ultimas_causas = {"anio": ctx_anio, "semana": ctx_semana,
+		"causas": CausasPartido.de(self, local if local.id == ctx_club_id else visita)}
 
 ## Juega el partido entero de una vez. Es lo que usa la simulacion de temporadas
 ## y el banco de pruebas; en pantalla se llama a simular_minuto() con un reloj.
@@ -342,3 +349,31 @@ static func marcar_ex(j: Jugador, club_id: String) -> void:
 func fijar_hinchada(club: Club, animo: int) -> void:
 	_hinchada_club = club
 	_hinchada_animo = animo
+
+## Para un partido abandonado que se completa al cargar: si el plan ya había
+## saltado, se vuelve a poner (el guardado tiene la táctica de antes).
+func _reaplicar_plan() -> void:
+	for c in [local, visita]:
+		if c == null or not plan_activado.has(c.id):
+			continue
+		var partes := String(plan_activado[c.id]).split(":")
+		var cambio := Tactica.cambio_de(partes[1] if partes.size() > 1 else "")
+		if cambio.is_empty():
+			continue
+		if not tactica_previa.has(c.id):
+			tactica_previa[c.id] = {"mentalidad": c.tactica.mentalidad, "linea": c.tactica.linea}
+		c.tactica.mentalidad = int(cambio["mentalidad"])
+		c.tactica.linea = int(cambio["linea"])
+	invalidar_fuerza()
+
+## LOS ROLES POR JUGADOR (26-10-2026, fila 18): lo que cada rol suma o resta al ataque y a la defensa del
+## equipo, según encaje el jugador (`RolTactico`). Sin roles, la fuerza de siempre.
+func fuerza(once: Array[Jugador], c: Club) -> Dictionary:
+	var f := super.fuerza(once, c)
+	if c == null or c.tactica == null or c.tactica.roles.is_empty():
+		return f
+	var m := RolTactico.multiplicadores(c.tactica, once)
+	f["ata"] = float(f["ata"]) * float(m[0])
+	f["def"] = float(f["def"]) * float(m[1])
+	return f
+

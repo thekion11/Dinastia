@@ -279,6 +279,17 @@ ESCUDOS = {
     "Estudiantes": ("clasico", "franjas"), "Newell's": ("circulo", "mitad"),
     "Peñarol": ("escudo", "franjas"), "Cerro Porteño": ("clasico", "franjas"),
     "Al-Hilal": ("hex", "aro"), "Al-Nassr": ("circulo", "sol"),
+    # 25-10-2026 (M-063): otros 20 con rasgo reconocible de silueta/estampado.
+    "Boca Juniors": ("escudo", "banda"), "Santos": ("circulo", "aro"),
+    "Gremio": ("circulo", "franjas"), "Fluminense": ("escudo", "franjas"),
+    "Cruzeiro": ("circulo", "estrella"), "Atl. Mineiro": ("circulo", "franjas"),
+    "Vasco": ("escudo", "banda"), "Botafogo": ("circulo", "estrella"),
+    "Sao Paulo": ("escudo", "franjas"), "Colo-Colo": ("circulo", "liso"),
+    "Monaco": ("clasico", "rombos"), "Paris SG": ("circulo", "interior"),
+    "Dortmund": ("circulo", "liso"), "Atalanta": ("escudo", "franjas"),
+    "Bologna": ("clasico", "franjas"), "Genoa": ("escudo", "cruz"),
+    "Espanyol": ("escudo", "franjas"), "Rayo Vallecano": ("circulo", "banda"),
+    "Liverpool": ("escudo", "liso"), "Wolves": ("hex", "liso"),
 }
 for _k, _v in ESCUDOS.items():
     if _k in ESTADIOS:
@@ -307,6 +318,17 @@ CAMISETAS = {
     "Alianza Lima": "franjas", "Sporting Cristal": "liso", "Cruz Azul": "liso", "America": "liso",
     "Guadalajara": "franjas", "Monterrey": "franjas", "Tigres UANL": "liso", "Al-Hilal": "liso",
     "Al-Nassr": "liso", "Al Ahly": "liso",
+    # 25-10-2026 (M-068): uniformes reconocibles por su estampado.
+    "Talleres": "franjas", "Bahia": "vertical3", "Fortaleza": "vertical3",
+    "Athletico PR": "franjas", "Libertad": "franjas", "Atl. Nacional": "franjas",
+    "Junior": "franjas", "Melgar": "franjas", "Emelec": "franjas", "Espanyol": "franjas",
+    "Rayo Vallecano": "sash", "Brighton": "franjas", "Cristal Palace": "franjas",
+    "Brentford": "franjas", "Atalanta": "franjas", "Bologna": "franjas",
+    "Udinese": "franjas", "Lecce": "franjas", "Genoa": "mitad", "Paris SG": "banda",
+    "Monaco": "diagonal", "Niza": "franjas", "Lens": "franjas", "The Strongest": "franjas",
+    "Cruzeiro": "liso", "Internacional": "liso", "Millonarios": "liso", "Torino": "liso",
+    "Fiorentina": "liso", "Celta Vigo": "liso", "Osasuna": "liso", "Wolves": "liso",
+    "Fulham": "liso", "Leipzig": "liso", "Stuttgart": "liso", "Barcelona SC": "liso",
 }
 for _k, _v in CAMISETAS.items():
     if _k in ESTADIOS:

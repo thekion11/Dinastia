@@ -87,6 +87,12 @@ func _pintar() -> void:
 	for n in find_children("*", "Label", true, false):
 		if n.has_meta("pistas"):
 			(n as Label).text = _pistas()
+		elif n.has_meta("cab_mando"):
+			## El teclado ni es un mando ni se gira: su cabecera y su leyenda lo dicen.
+			var tec := dispositivo == "teclado"
+			(n as Label).text = Idiomas.t("ASÍ SE VE TU TECLADO") if tec else Idiomas.t("ASÍ SE VE TU MANDO")
+			var ley: Label = n.get_meta("cab_mando")
+			ley.text = Idiomas.t("En dorado, las teclas de la combinación elegida.") if tec else Idiomas.t("Gíralo con el ratón. En dorado, los botones de la combinación elegida.")
 	_mando.dispositivo = "teclado" if dispositivo == "teclado" else dispositivo
 	if _pestana.begins_with("p"):
 		_pintar_parte(int(_pestana.substr(1)))
@@ -261,7 +267,8 @@ func _montar_mando(cuerpo: HBoxContainer) -> void:
 	cuerpo.add_child(caja)
 	var v := VBoxContainer.new()
 	caja.add_child(v)
-	v.add_child(Tema.etiqueta(11, Tema.SUAVE, Idiomas.t("ASÍ SE VE TU MANDO")))
+	var cab := Tema.etiqueta(11, Tema.SUAVE, Idiomas.t("ASÍ SE VE TU MANDO"))
+	v.add_child(cab)
 	_mando = DibujoMando.new()
 	_mando.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_mando.custom_minimum_size = Vector2(400, 300)
@@ -269,6 +276,7 @@ func _montar_mando(cuerpo: HBoxContainer) -> void:
 	var leyenda := Tema.etiqueta(12, Tema.SUAVE, Idiomas.t("Gíralo con el ratón. En dorado, los botones de la combinación elegida."))
 	leyenda.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(leyenda)
+	cab.set_meta("cab_mando", leyenda)
 
 func _cerrar_dialogo(con_sonido := true) -> void:
 	if _dialogo == null:

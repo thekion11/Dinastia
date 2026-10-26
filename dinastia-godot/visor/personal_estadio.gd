@@ -30,6 +30,22 @@ const PUESTOS := {
 
 const VEL := 1.25
 
+## Los gestos de cada oficio en su puesto (librería «banda» de `PersonajeDT`).
+const GESTOS_OFICIO := {
+	"portero": ["banda/brazos_jarra"],
+	"conserje": ["banda/brazos_jarra", "banda/senalar"],
+	"jardinero": ["banda/senalar", "banda/manos_cabeza"],
+	"hincha": ["banda/aplaudir", "banda/llamar_hinchada"],
+	"utilero": ["banda/brazos_jarra", "banda/senalar"],
+	"medico": ["banda/pedir_calma", "banda/brazos_jarra"],
+	"chofer": ["banda/brazos_jarra"],
+	"secretaria": ["banda/senalar", "banda/pedir_calma"],
+	"ojeador": ["banda/manos_cabeza", "banda/senalar"],
+	"presidente": ["banda/brazos_jarra", "banda/senalar"],
+	"prensa": ["banda/pedir_calma", "banda/senalar"],
+	"cocinera": ["banda/brazos_jarra", "banda/aplaudir"],
+}
+
 ## La hora del día (la pone la ciudad); −1 = no se sabe, siempre están.
 static var hora := -1.0
 ## Dónde está quien recorre el club (lo avisan los exploradores en cada paso):
@@ -93,6 +109,10 @@ func _ready() -> void:
 		asp["gorra"] = clave == "portero"
 		asp["gafas"] = "" if clave != "ojeador" else String(asp.get("gafas", ""))
 		var d := PersonajeDT.crear(raiz, asp, c1, c2)
+		## Los gestos de su oficio (los de la banda del DT: brazos en jarra,
+		## señalar, aplaudir…), para que en su puesto no sean estatuas.
+		if d.has("anim"):
+			PersonajeDT.gestos_banda(d)
 		semilla += 7
 		var et := Label3D.new()
 		et.text = "%s\n%s" % [nombre, Idiomas.t(puesto)]
@@ -209,8 +229,22 @@ func _process(delta: float) -> void:
 		if bool(g["quieto"]):
 			_anim(g, "parado")
 			continue
+		if _saludar(g):
+			continue
 		if float(g["espera"]) > 0.0:
 			g["espera"] = float(g["espera"]) - delta
+			## EN SU PUESTO, TRABAJANDO (26-10-2026): de vez en cuando, un gesto
+			## de su oficio (el conserje en jarras, la prensa pidiendo calma…).
+			if int(g["i"]) == 0 and float(g["espera"]) > 2.5:
+				g["gesto_cada"] = float(g.get("gesto_cada", 3.0 + float(absi(String(g["clave"]).hash()) % 5))) - delta
+				if float(g["gesto_cada"]) <= 0.0:
+					g["gesto_cada"] = 7.0 + float(absi(int(Time.get_ticks_msec() / 1000) + String(g["clave"]).hash()) % 7)
+					## Uno distinto cada vez (en orden, empezando por el siguiente).
+					var lista: Array = GESTOS_OFICIO.get(String(g["clave"]), ["banda/brazos_jarra"])
+					g["vez"] = int(g.get("vez", -1)) + 1
+					var k := int(g["vez"]) % lista.size()
+					if gesto(g, lista.slice(k) + lista.slice(0, k)) > 0.0:
+						continue
 			_anim(g, "parado")
 			continue
 		var ruta: Array = g["ruta"]
@@ -244,6 +278,35 @@ func _process(delta: float) -> void:
 		n.position += hacia / dist * paso
 		n.rotation.y = atan2(hacia.x, hacia.z)
 		_anim(g, "caminar")
+
+## Quién te saluda al pasar y con qué gesto (el primero que tenga el cuerpo).
+const SALUDAN := {
+	"portero": ["saludo_mano", "saludar_publico", "banda/senalar"],
+	"hincha": ["banda/aplaudir", "banda/llamar_hinchada", "saludo_mano"],
+	"conserje": ["saludo_mano", "saludar_publico", "banda/senalar"],
+}
+## Cada cuánto vuelve a saludar a quien pasa (ms).
+const SALUDO_CADA := 45000
+
+## EL PORTERO TE SALUDA AL PASAR (26-10-2026): antes nadie reaccionaba a quien
+## recorría el club hasta hablarle. Ahora el portero (y el hincha de la puerta,
+## y el conserje) se gira hacia ti, sonríe y hace su gesto cuando pasas a menos
+## de 4,5 m; no más de una vez cada 45 s.
+func _saludar(g: Dictionary) -> bool:
+	var k := String(g["clave"])
+	if not SALUDAN.has(k) or int(g["planta"]) != _jug_planta or Time.get_ticks_msec() - _jug_ms > 400:
+		return false
+	var n: Node3D = g["nodo"]
+	var v := Vector2(_jug_pos.x - n.position.x, _jug_pos.z - n.position.z)
+	if v.length() > 4.5 or v.length() < 0.6:
+		return false
+	var t := Time.get_ticks_msec()
+	if g.has("saludo_ms") and t - int(g["saludo_ms"]) < SALUDO_CADA:
+		return false
+	g["saludo_ms"] = t
+	n.rotation.y = atan2(v.x, v.y)
+	Expresion.de(n).poner("alegre", 2.0)
+	return gesto(g, SALUDAN[k]) > 0.0
 
 func _anim(g: Dictionary, nombre: String) -> void:
 	var a: AnimationPlayer = g.get("anim") as AnimationPlayer

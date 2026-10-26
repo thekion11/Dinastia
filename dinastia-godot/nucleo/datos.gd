@@ -128,12 +128,68 @@ func usar_base_real(activar: bool) -> bool:
 	if real:
 		for nombre: String in _pack:
 			_tablas[nombre] = _pack[nombre]
+	_sumar_paises_extra()
 	var cambio := real != base_real
 	base_real = real
 	Reales.invalidar()
 	if cambio:
 		base_cambiada.emit(real)
 	return real
+
+## LOS PAÍSES QUE NO VIENEN DEL HTML (26-10-2026, fila 26 de la propuesta s4).
+## `tablas.json` lo regenera `herramientas/base_ficticia.py` desde el pack real, así
+## que un país inventado del todo (sin equivalente real) no puede vivir ahí: se
+## perdería. Vive en `datos/paises_extra.json` -{código: {tabla: valor}}- y se suma
+## encima de la base (y del pack, si está) sin pisar lo que ya exista. `CONFED` es
+## una lista de competiciones continentales a las que se apunta el país.
+const RUTA_EXTRA := "res://datos/paises_extra.json"
+
+var _extra: Variant = null
+
+## El contenido de `paises_extra.json` ({} si no está): las pruebas lo usan para
+## saber qué países y clubes son de aquí y no del HTML ni del pack.
+func paises_extra() -> Dictionary:
+	if _extra == null:
+		_extra = _leer_json(RUTA_EXTRA) if FileAccess.file_exists(RUTA_EXTRA) else {}
+		if not (_extra is Dictionary):
+			_extra = {}
+	return _extra
+
+func _sumar_paises_extra() -> void:
+	var extra := paises_extra()
+	if extra.is_empty():
+		return
+	var copiadas := {}
+	for cod: String in (extra as Dictionary).get("paises", {}):
+		var fila: Dictionary = extra["paises"][cod]
+		for nombre: String in fila:
+			if nombre == "CONFED":
+				if not copiadas.has("CONFED") and _tablas.has("CONFED"):
+					_tablas["CONFED"] = (_tablas["CONFED"] as Dictionary).duplicate(true)
+					copiadas["CONFED"] = true
+				for conf: String in fila["CONFED"]:
+					var c: Dictionary = (_tablas.get("CONFED", {}) as Dictionary).get(conf, {})
+					if not c.is_empty() and not (c["paises"] as Array).has(cod):
+						(c["paises"] as Array).append(cod)
+				continue
+			if not (_tablas.get(nombre) is Dictionary):
+				continue
+			if not copiadas.has(nombre):
+				_tablas[nombre] = (_tablas[nombre] as Dictionary).duplicate()
+				copiadas[nombre] = true
+			if not (_tablas[nombre] as Dictionary).has(cod):
+				_tablas[nombre][cod] = fila[nombre]
+	## «tablas»: filas por su propia clave (HISTORIA_CLUBES va por nombre de club).
+	var tablas: Dictionary = (extra as Dictionary).get("tablas", {})
+	for nombre: String in tablas:
+		if not (_tablas.get(nombre) is Dictionary):
+			continue
+		if not copiadas.has(nombre):
+			_tablas[nombre] = (_tablas[nombre] as Dictionary).duplicate()
+			copiadas[nombre] = true
+		for k: String in tablas[nombre]:
+			if not (_tablas[nombre] as Dictionary).has(k):
+				_tablas[nombre][k] = tablas[nombre][k]
 
 ## Lo que eligió el jugador la última vez en el menú. Por defecto, la base
 ## ficticia: es la que se puede publicar y la que se ve en cualquier versión

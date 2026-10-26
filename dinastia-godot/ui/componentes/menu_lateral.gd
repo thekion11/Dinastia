@@ -239,30 +239,49 @@ func _montar() -> void:
 	for m: Dictionary in MENUS:
 		var id := String(m["id"])
 		var cab := Button.new()
-		cab.text = "%s  %s" % [String(m["icono"]), String(m["nombre"]).to_upper()]
+		cab.set_meta("_es", ["cab", String(m["icono"]), String(m["nombre"])])
 		cab.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		cab.flat = true
-		cab.add_theme_font_size_override("font_size", 15)
+		cab.add_theme_font_size_override("font_size", Tema.letra(15))
 		cab.add_theme_color_override("font_color", Color(String((m["colores"] as Array)[2])).lightened(0.2))
 		cab.pressed.connect(func() -> void: abrir_menu(id, -1))
 		_lista.add_child(cab)
 		var subs: Array = m["subs"]
 		for i in subs.size():
 			var sb := Button.new()
-			sb.text = "      %s%s" % ["▶ " if (subs[i] as Dictionary).has("accion") else "", String(subs[i]["label"])]
+			sb.set_meta("_es", ["sub", "▶ " if (subs[i] as Dictionary).has("accion") else "", String(subs[i]["label"])])
 			sb.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			sb.flat = true
-			sb.add_theme_font_size_override("font_size", 12)
+			sb.add_theme_font_size_override("font_size", Tema.letra(12))
 			sb.add_theme_color_override("font_color", Color(1, 1, 1, 0.72))
 			var k := i
 			sb.pressed.connect(func() -> void: abrir_menu(id, k))
 			_lista.add_child(sb)
 		_lista.add_child(HSeparator.new())
+	_traducir()
+
+## TEXTOS EN EL IDIOMA ELEGIDO (25-10-2026, uitm). El cajón y los avisos del
+## riel se escribían en castellano siempre: los nombres de los menús y submenús
+## ya estaban traducidos -los usa `PantallaMenu`- pero aquí no se pedían. Cada
+## botón guarda su texto original y se vuelve a traducir al desplegar, por si
+## se cambió de idioma con el panel ya montado.
+func _traducir() -> void:
+	for b: Node in _lista.get_children():
+		if b is Button and b.has_meta("_es"):
+			var d: Array = b.get_meta("_es")
+			if String(d[0]) == "cab":
+				(b as Button).text = "%s  %s" % [String(d[1]), Idiomas.mayusculas(Idiomas.t(String(d[2])))]
+			else:
+				(b as Button).text = "      %s%s" % [String(d[1]), Idiomas.t(String(d[2]))]
+	for b: Node in _riel.get_children():
+		if b is Button and b.has_meta("_es_tip"):
+			(b as Button).tooltip_text = Idiomas.t(String(b.get_meta("_es_tip")))
 
 func _boton_riel(texto: String, tip: String) -> Button:
 	var b := Button.new()
 	b.text = texto
-	b.tooltip_text = tip
+	b.set_meta("_es_tip", tip)
+	b.tooltip_text = Idiomas.t(tip)
 	b.flat = true
 	## El del menú abierto queda marcado con una franja a la izquierda.
 	var marcado := StyleBoxFlat.new()
@@ -304,6 +323,12 @@ func desplegar() -> void:
 	if _abierto:
 		return
 	_abierto = true
+	_traducir()
+	## Encima de todo lo que flota sobre el centro (el consejo del presidente,
+	## abajo a la izquierda, tapaba la mitad del cajón): abrirlo es lo último
+	## que pidió el jugador. Mismo movimiento que hace `abrir_menu()`.
+	if get_parent() != null:
+		get_parent().move_child(self, get_parent().get_child_count() - 1)
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_velo.visible = true
 	_velo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

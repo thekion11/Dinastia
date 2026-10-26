@@ -192,11 +192,23 @@ static func fijar_ayuda(k: String, v: String) -> void:
 		ayudas[k] = v
 		guardar()
 
+## El nombre de una tecla para leerlo: Godot las da en inglés («Space», «Up»).
+## Las flechas pasan a símbolo y el espacio y el retorno se traducen.
+static func nombre_tecla(k: int) -> String:
+	match k:
+		KEY_UP: return "↑"
+		KEY_DOWN: return "↓"
+		KEY_LEFT: return "←"
+		KEY_RIGHT: return "→"
+		KEY_SPACE: return Idiomas.t("Espacio")
+		KEY_ESCAPE: return "Esc"
+	return OS.get_keycode_string(k as Key)
+
 ## Texto para la pantalla de controles: «Espacio, J · A».
 static func texto_de(accion: String) -> String:
 	var partes: Array = []
 	for k: int in teclas_de(accion):
-		partes.append(OS.get_keycode_string(k as Key))
+		partes.append(nombre_tecla(k))
 	var bs: Array = []
 	for b: int in botones_de(accion):
 		bs.append(NOMBRE_BOTON.get(b, "Botón %d" % b))
@@ -211,7 +223,7 @@ static func texto_de(accion: String) -> String:
 static func corto_de(accion: String) -> String:
 	var ts := teclas_de(accion)
 	var bs := botones_de(accion)
-	var t := OS.get_keycode_string(ts[0] as Key) if not ts.is_empty() else ""
+	var t := nombre_tecla(int(ts[0])) if not ts.is_empty() else ""
 	if not bs.is_empty():
 		t += ("/" if t != "" else "") + String(NOMBRE_BOTON.get(int(bs[0]), "B%d" % int(bs[0])))
 	elif _gatillo(accion) != "":

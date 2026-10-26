@@ -15,6 +15,10 @@ func _ready() -> void:
 func _foto() -> void:
 	var img := get_viewport().get_texture().get_image()
 	img.resize(480, 270)
+	## La hoja y las fotos en el mismo formato (26-10-2026): la imagen del
+	## viewport viene en RGB8 y `blit_rect` no copia entre formatos distintos:
+	## la hoja salía negra.
+	img.convert(Image.FORMAT_RGB8)
 	_imgs.append(img)
 	print("FOTO ", _imgs.size(), " estado=", _e.estado, " zona=", _e._zona_est, " pos=", _e.cuerpo.position, " aviso=", _e._aviso.text, " abierta=", EntradaClub.abierta(get_tree()))
 
@@ -85,7 +89,7 @@ func _process(d: float) -> void:
 			_e.camara.look_at(pu2 + Vector3(0, 2, 0), Vector3.UP)
 		12:
 			_foto()                         # 9: la entrada en conjunto
-			var hoja := Image.create(480 * 3, 270 * 3, false, Image.FORMAT_RGBA8)
+			var hoja := Image.create(480 * 3, 270 * 3, false, Image.FORMAT_RGB8)
 			for k in _imgs.size():
 				hoja.blit_rect(_imgs[k], Rect2i(0, 0, 480, 270), Vector2i((k % 3) * 480, (k / 3) * 270))
 			hoja.save_png("res://pruebas/capturas/entrada.png")

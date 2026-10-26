@@ -232,34 +232,49 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 		_caja(nodo, Vector3(tr2.x, alto / 2.0, z_fin - 0.02), Vector3(tr2.y, alto, 0.04), pared, false)
 	_caja(nodo, Vector3(x0 + PUERTA_X, (alto + 2.6) / 2.0, z_fin - 0.02), Vector3(PUERTA_MEDIO * 2.0, alto - 2.6, 0.04), pared, false)
 
-	## Taquillas con las camisetas a lo largo de las dos paredes largas, con
-	## su banco delante. El número y el color son los del club.
+	## Taquillas a lo largo de las dos paredes largas, con su banco delante:
+	## cubículos abiertos con la camiseta de cada jugador (`PiezasVestuario`).
+	## Con la plantilla a mano (estadio 2.0) llevan su dorsal y su nombre; si
+	## no, solo el número. Solo en el estadio propio (en la ciudad `mi` es null
+	## y es el tuyo).
 	var madera := _mat(Color(0.55, 0.38, 0.22), 0.7)
-	var taquilla := _mat(Color(0.62, 0.48, 0.32).lerp(c1, 0.15), 0.6)
-	var camiseta := _mat(c1, 0.8)
+	var plantilla: Array = EdificioClub.ctx.get("plantilla", []) if (mi == null or mi.id == PersonajeDT.club_usuario) else []
+	var mats := PiezasVestuario.materiales(c1, c2)
+	var lote := PiezasVestuario.Lote.new()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 2207
 	var dorsal := 1
 	for lado in [-1.0, 1.0]:
-		var x_t: float = x0 + lado * (VEST_MEDIO - 0.45)
+		var x_t: float = x0 + lado * (VEST_MEDIO - 0.05 - PiezasVestuario.FONDO / 2.0)
 		var z_t := z_out + 1.6
+		var z_ini := z_t
 		while z_t < z_fin - 3.4:
-			_caja(nodo, Vector3(x_t, 1.25, z_t), Vector3(0.8, 2.5, 0.95), taquilla, true)
-			## La camiseta colgada, mirando al centro del vestuario.
-			_caja(nodo, Vector3(x_t - lado * 0.43, 1.55, z_t), Vector3(0.06, 0.8, 0.62), camiseta, false)
-			## Con la plantilla a mano (estadio 2.0), el dorsal y el nombre de
-			## cada jugador; si no, solo el número.
-			## Solo en el estadio propio (en la ciudad `mi` es null y es el tuyo).
-			var plantilla: Array = EdificioClub.ctx.get("plantilla", []) if (mi == null or mi.id == PersonajeDT.club_usuario) else []
-			var txt := str(dorsal)
-			var t_tam := 40
+			var num := dorsal
+			var quien := ""
 			if dorsal - 1 < plantilla.size():
 				var fila: Array = plantilla[dorsal - 1]
-				txt = "%d\n%s" % [int(fila[0]), String(fila[1])]
-				t_tam = 24
-			_rotulo(nodo, txt, Vector3(x_t - lado * 0.47, 1.6, z_t), -lado * PI / 2.0, t_tam, c2)
+				num = int(fila[0])
+				quien = String(fila[1])
+			var xf := Transform3D(Basis(Vector3.UP, -lado * PI / 2.0), Vector3(x_t, 0.0, z_t))
+			PiezasVestuario.taquilla(lote, nodo, xf, mats, num, quien, rng)
 			dorsal += 1
 			z_t += 1.05
-		_caja(nodo, Vector3(x0 + lado * (VEST_MEDIO - 1.25), 0.45, (z_out + z_fin - 3.0) / 2.0),
-			Vector3(0.45, 0.08, VEST_FONDO - 5.0), madera, true)
+		## Una sola caja de choque por fila de taquillas.
+		var cuerpo := StaticBody3D.new()
+		var forma := CollisionShape3D.new()
+		var bs := BoxShape3D.new()
+		bs.size = Vector3(PiezasVestuario.FONDO, PiezasVestuario.ALTO, z_t - z_ini)
+		forma.shape = bs
+		cuerpo.add_child(forma)
+		cuerpo.position = Vector3(x_t, PiezasVestuario.ALTO / 2.0, (z_ini + z_t - 1.05) / 2.0)
+		nodo.add_child(cuerpo)
+		var zb := (z_out + z_fin - 3.0) / 2.0
+		_caja(nodo, Vector3(x0 + lado * (VEST_MEDIO - 1.25), 0.45, zb), Vector3(0.45, 0.08, VEST_FONDO - 5.0), madera, true)
+		## Sus patas (antes la tabla flotaba).
+		for k in 3:
+			lote.caja(mats["metal"], Transform3D(Basis.IDENTITY, Vector3(x0 + lado * (VEST_MEDIO - 1.25), 0.205,
+				zb + (float(k) - 1.0) * (VEST_FONDO - 5.6) / 2.0)), Vector3(0.36, 0.41, 0.05))
+	lote.montar(nodo, "Taquillas")
 	## La pizarra táctica al fondo, con el dibujo de la jugada.
 	var pizarra := _mat(Color(0.95, 0.96, 0.97), 0.3)
 	_caja(nodo, Vector3(x0, 1.7, z_fin - 0.1), Vector3(3.2, 1.6, 0.06), pizarra, false)
@@ -273,8 +288,20 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 	for k in 2:
 		_caja(nodo, Vector3(x0 - VEST_MEDIO + 0.3, 2.2, z_fin - 1.0 - float(k) * 1.3), Vector3(0.3, 0.06, 0.18),
 			Texturas.metal(Color(0.8, 0.8, 0.82), 0.3), false)
-	## Banco central con la bolsa de cada uno.
+	## Banco central con sus patas, un par de bolsas y el balón del día.
 	_caja(nodo, Vector3(x0, 0.45, zc - 0.5), Vector3(1.2, 0.08, 4.0), madera, true)
+	for k in 3:
+		_caja(nodo, Vector3(x0, 0.205, zc - 0.5 + (float(k) - 1.0) * 1.7), Vector3(1.0, 0.41, 0.06), mats["metal"], false)
+	for b: Vector3 in [Vector3(-0.25, 0.0, -1.6), Vector3(0.3, 0.0, 0.7)]:
+		_caja(nodo, Vector3(x0 + b.x, 0.6, zc - 0.5 + b.z), Vector3(0.32, 0.22, 0.5), mats["bolsa"], false)
+	var balon := MeshInstance3D.new()
+	var esf := SphereMesh.new()
+	esf.radius = 0.11
+	esf.height = 0.22
+	balon.mesh = esf
+	balon.material_override = _mat(Color(0.96, 0.96, 0.96), 0.45)
+	balon.position = Vector3(x0 - 0.2, 0.6, zc + 0.6)
+	nodo.add_child(balon)
 	## Luces del techo y una de relleno cálida.
 	for zz in [z_out + 2.5, zc, z_fin - 2.5]:
 		_caja(nodo, Vector3(x0, alto - 0.05, zz), Vector3(3.0, 0.05, 0.5), luz, false)

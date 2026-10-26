@@ -64,7 +64,9 @@ func _construir() -> void:
 			b.flat = true
 			b.custom_minimum_size = Vector2(RADIO_NODO * 2.0, RADIO_NODO * 2.0)
 			b.size = b.custom_minimum_size
-			b.focus_mode = Control.FOCUS_NONE
+			## Con mando también se llega a cada nodo (s3, auditoría: antes FOCUS_NONE);
+			## con el foco encima se ilumina igual que con el ratón.
+			b.focus_mode = Control.FOCUS_ALL
 			b.tooltip_text = "%s — %s" % [_e.dt_nombre(clave), _e.dt_descripcion(clave)]
 			b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 			b.pivot_offset = b.size / 2.0
@@ -72,6 +74,8 @@ func _construir() -> void:
 			b.pressed.connect(func() -> void: _elegir(k))
 			b.mouse_entered.connect(func() -> void: _hover(b, true))
 			b.mouse_exited.connect(func() -> void: _hover(b, false))
+			b.focus_entered.connect(func() -> void: _hover(b, true))
+			b.focus_exited.connect(func() -> void: _hover(b, false))
 			add_child(b)
 			_nodos[clave] = b
 	_colocar()

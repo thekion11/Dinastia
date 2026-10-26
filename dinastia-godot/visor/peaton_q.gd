@@ -65,6 +65,11 @@ static func terminar(d: Dictionary) -> void:
 	var pelo_col: Color = PELOS[rng.randi() % PELOS.size()]
 	## Sin marrón oscuro: con pieles oscuras parecía que iban descalzos.
 	var zapatilla: String = ["e8e6e0", "1c1c1e", "26324a", "4a4d52"][rng.randi() % 4]
+	## Zapatilla del mismo tono que el pantalón (vaquero marino con zapatilla
+	## marina): de lejos la pierna acababa en punta, sin pie. Va blanca.
+	var cz := Color(zapatilla)
+	if absf(cz.r - pant.r) + absf(cz.g - pant.g) + absf(cz.b - pant.b) < 0.2:
+		zapatilla = "e8e6e0"
 	d["zapatilla"] = zapatilla
 	var kit := {
 		"dis": String(PRENDAS[rng.randi() % PRENDAS.size()]),
@@ -104,8 +109,11 @@ static func terminar(d: Dictionary) -> void:
 		ap.play("caminar")
 		ap.seek(rng.randf() * ap.current_animation_length, true)
 		ap.speed_scale = rng.randf_range(0.9, 1.1)
-	## Lejos de la cámara no se dibuja (ni su sombra).
+	## Lejos de la cámara no se dibuja (ni su sombra). Las cejas 3D conservan su
+	## alcance corto (`PeloQ.DIST_CEJAS`): a más distancia no llegan a un píxel.
 	for mi in nodo.find_children("*", "MeshInstance3D", true, false):
+		if String(mi.name).begins_with("Eyebrows"):
+			continue
 		(mi as MeshInstance3D).visibility_range_end = 120.0
 		(mi as MeshInstance3D).visibility_range_end_margin = 20.0
 
@@ -127,7 +135,7 @@ static func _m(c: Color, rug := 0.7) -> StandardMaterial3D:
 		_mats[k] = m
 	return _mats[k]
 
-static func _pieza(padre: Node3D, malla: Mesh, mat: Material, pos: Vector3, giro := Vector3.ZERO) -> void:
+static func _pieza(padre: Node3D, malla: Mesh, mat: Material, pos: Vector3, giro := Vector3.ZERO) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.mesh = malla
 	mi.material_override = mat
@@ -136,11 +144,20 @@ static func _pieza(padre: Node3D, malla: Mesh, mat: Material, pos: Vector3, giro
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.visibility_range_end = 40.0
 	padre.add_child(mi)
+	return mi
 
 static func _caja(t: Vector3) -> BoxMesh:
 	var b := BoxMesh.new()
 	b.size = t
 	return b
+
+static func _esfera(r: float) -> SphereMesh:
+	var e := SphereMesh.new()
+	e.radius = r
+	e.height = r * 2.0
+	e.radial_segments = 8
+	e.rings = 4
+	return e
 
 static func _en_hueso(esq: Skeleton3D, hueso: String, k: float) -> Node3D:
 	if esq.find_bone(hueso) < 0:
@@ -258,42 +275,68 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 		## Mochila a la espalda (el pecho mira a +Z en el hueso de la columna).
 		var h := _en_hueso(esq, "spine_03", k)
 		if h != null:
-			_pieza(h, _caja(Vector3(0.26, 0.32, 0.13)), _m(col), Vector3(0, 0.02, -0.16))
-			_pieza(h, _caja(Vector3(0.22, 0.14, 0.05)), _m(col.darkened(0.2)), Vector3(0, -0.06, -0.25))
+			## 26-10-2026: 5 cm más abajo; en las mujeres (más bajas de hombros)
+			## asomaba por encima del hombro como una tabla detrás del cuello.
+			_pieza(h, _caja(Vector3(0.26, 0.3, 0.13)), _m(col), Vector3(0, -0.03, -0.16))
+			_pieza(h, _caja(Vector3(0.22, 0.13, 0.05)), _m(col.darkened(0.2)), Vector3(0, -0.1, -0.25))
 	elif acc < 0.42:
 		## Bolso colgado de la cadera.
-		var h2 := _en_hueso(esq, "hand_r" if rng.randf() < 0.5 else "hand_l", k)
+		var derecha := rng.randf() < 0.5
+		var h2 := _en_hueso(esq, "hand_r" if derecha else "hand_l", k)
 		if h2 != null:
 			## Bolsa con asa, colgando BAJO la mano (+Y del hueso = hacia los dedos).
+			## PLANA HACIA LA PIERNA (26-10-2026): era ancha de lado a lado y se
+			## metía en el muslo (parecía una caja de cartón atravesada). Con el
+			## brazo caído, «hacia fuera» es +X del hueso en la mano derecha y −X
+			## en la izquierda (medido en el reposo del glTF): la bolsa es fina en
+			## ese eje, ancha hacia delante y va 5 cm por fuera de la mano.
+			var fuera := 1.0 if derecha else -1.0
 			var bolsa := col if rng.randf() < 0.6 else Color(0.78, 0.66, 0.48)
-			_pieza(h2, _caja(Vector3(0.26, 0.22, 0.09)), _m(bolsa, 0.6), Vector3(0, 0.24, 0))
+			## La mano AGARRA el asa (26-10-2026: con la bolsa 14 cm bajo la
+			## muñeca se veía suelta, flotando): el asa pasa por la palma (4-14 cm
+			## por debajo de la muñeca) y la boca de la bolsa queda justo debajo.
+			_pieza(h2, _caja(Vector3(0.075, 0.24, 0.3)), _m(bolsa, 0.6), Vector3(0.05 * fuera, 0.235, 0))
+			## Ribete de arriba (la boca de la bolsa) y el asa en el mismo plano.
+			_pieza(h2, _caja(Vector3(0.08, 0.018, 0.305)), _m(bolsa.darkened(0.25), 0.55), Vector3(0.05 * fuera, 0.125, 0))
 			var asa := TorusMesh.new()
 			asa.inner_radius = 0.045
 			asa.outer_radius = 0.055
 			asa.rings = 10
 			asa.ring_segments = 6
-			_pieza(h2, asa, _m(bolsa.darkened(0.35), 0.5), Vector3(0, 0.1, 0), Vector3(0, 0, 90))
+			_pieza(h2, asa, _m(bolsa.darkened(0.35), 0.5), Vector3(0.015 * fuera, 0.075, 0), Vector3(0, 0, 90))
 	elif acc < 0.62:
 		## Móvil en la mano: un rectángulo oscuro con la pantalla clara.
 		var h3 := _en_hueso(esq, "hand_r", k)
 		if h3 != null:
 			_pieza(h3, _caja(Vector3(0.07, 0.14, 0.012)), _m(Color(0.05, 0.05, 0.06), 0.3), Vector3(0, 0.05, 0.05))
 	var cab_extra := rng.randf()
-	var cab := _en_hueso(esq, "Head", k)
-	if cab != null:
+	## (Gafas y gorra cuelgan cada una de su nodo a la escala de la cabeza.)
+	if esq.find_bone("Head") >= 0:
 		if cab_extra < 0.2:
-			## Gafas de sol.
+			## GAFAS DE SOL A LA ALTURA DE LOS OJOS (26-10-2026). Eran dos esferas
+			## aplastadas EN ALTO (2 cm de alto y 4,8 de fondo: un disco tumbado)
+			## en el nodo con `k`: de frente, dos óvalos negros sobre las mejillas,
+			## con el ojo asomando encima (parecían ojos rotos). Ahora, en el
+			## espacio del hueso de la cabeza (sin `k`): cada cristal es fino de
+			## delante a atrás (1 cm), de 4,8 × 3,6 cm, centrado en el globo de su
+			## ojo (medido en las mallas «Eyes»: hombre y 0,0986 sobre el hueso,
+			## frente del globo z 0,081; mujer y 0,106, z 0,075) y 1,9 cm por
+			## delante; puente y patillas hacia las orejas.
+			var cab_o := _en_hueso(esq, "Head", 1.0)
 			var lente := SphereMesh.new()
-			lente.radius = 0.024
-			lente.height = 0.02
-			lente.radial_segments = 10
-			lente.rings = 4
-			## En la cabeza de mujer los ojos quedan más arriba: con la altura
-			## del hombre las gafas tapaban la mejilla y asomaba el ojo encima.
-			var gy := 0.118 if mujer else 0.1
-			for sx in [-1.0, 1.0]:
-				_pieza(cab, lente, _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0.034 * sx, gy, 0.1))
-			_pieza(cab, _caja(Vector3(0.03, 0.005, 0.005)), _m(Color(0.04, 0.04, 0.05), 0.15), Vector3(0, gy + 0.005, 0.108))
+			lente.radius = 0.021
+			lente.height = 0.042
+			lente.radial_segments = 12
+			lente.rings = 6
+			var negro := _m(Color(0.04, 0.04, 0.05), 0.15)
+			var oy := 0.106 if mujer else 0.0986
+			var oz := 0.094 if mujer else 0.1
+			for sx: float in [-1.0, 1.0]:
+				var cristal := _pieza(cab_o, lente, negro, Vector3(0.0342 * sx, oy, oz))
+				cristal.scale = Vector3(1.15, 0.85, 0.25)
+				var patilla := _pieza(cab_o, _caja(Vector3(0.004, 0.004, 0.055)), negro, Vector3(0.072 * sx, oy + 0.006, oz - 0.03))
+				patilla.rotation_degrees.y = -8.0 * sx
+			_pieza(cab_o, _caja(Vector3(0.022, 0.004, 0.004)), negro, Vector3(0, oy + 0.007, oz + 0.002))
 		elif cab_extra < 0.34:
 			## Gorra: casquete y visera.
 			var gm := _m(col.lightened(0.1))
@@ -303,17 +346,27 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 				for mp: Node in pelo_n.get_children():
 					if mp is MeshInstance3D and not String(mp.name).begins_with("Eyebrows") and not String(mp.name).contains("Beard"):
 						(mp as MeshInstance3D).visible = String(mp.name) == "Hair_Buzzed"
+			## GORRA A LA MEDIDA (26-10-2026): la copa era una media esfera de
+			## 11,8 cm de radio sobre una cabeza de 7 de ancho y 9 de fondo
+			## (medida en la malla a 15 cm sobre el hueso): un cuenco, con la
+			## visera escondida debajo. Ahora un casquete ovalado que ciñe la
+			## cabeza con el pelo rapado (9,6 × 12,3 cm: la malla de la cara real sale hasta
+			## z 0,09 en la frente y el rapado asomaba con menos), con el borde 2 cm sobre las cejas, y la visera
+			## saliendo de ese borde, un poco caída. Todo a la escala de la
+			## cabeza (sin `k`), en el espacio del hueso.
+			var cab_g := _en_hueso(esq, "Head", 1.0)
 			var copa := SphereMesh.new()
-			## Algo más grande que la cabeza con pelo: si no, el pelo asomaba.
-			copa.radius = 0.118
-			copa.height = 0.15
-			copa.radial_segments = 14
+			copa.radius = 0.096
+			copa.height = 0.09
+			copa.radial_segments = 16
 			copa.rings = 6
 			copa.is_hemisphere = true
-			_pieza(cab, copa, gm, Vector3(0, 0.15, -0.01))
+			var mc := _pieza(cab_g, copa, gm, Vector3(0, 0.145, -0.015))
+			mc.scale = Vector3(1.0, 1.0, 1.28)
 			var visera := CylinderMesh.new()
-			visera.top_radius = 0.075
-			visera.bottom_radius = 0.075
-			visera.height = 0.01
-			visera.radial_segments = 12
-			_pieza(cab, visera, _m(col.darkened(0.15)), Vector3(0, 0.16, 0.11), Vector3(-8, 0, 0))
+			visera.top_radius = 0.07
+			visera.bottom_radius = 0.07
+			visera.height = 0.008
+			visera.radial_segments = 14
+			_pieza(cab_g, visera, _m(col.darkened(0.15)), Vector3(0, 0.147, 0.165), Vector3(8, 0, 0))
+			_pieza(cab_g, _esfera(0.011), gm, Vector3(0, 0.236, -0.015))

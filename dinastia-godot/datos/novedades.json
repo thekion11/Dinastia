@@ -1,0 +1,45 @@
+{
+ "_leeme": "Notas de versión que enseña la pantalla «Novedades» (ui/pantallas/pantalla_novedades.gd). La primera es la más reciente. Cada texto pasa por Idiomas.t: al añadir uno, súmalo con herramientas/sumar_traducciones.py.",
+ "versiones": [
+  {
+   "version": "0.9.0",
+   "fecha": "26-10-2026",
+   "titulo": "Primera hora más clara y un mundo con más memoria",
+   "secciones": [
+    {
+     "titulo": "Para empezar",
+     "puntos": [
+      "Una sola entrada al juego: idioma, país, personaje, club y modo, paso a paso.",
+      "Ayudas y objetivos en la primera hora, y un glosario con lo que significa cada cifra.",
+      "Sonidos de interfaz nuevos en todos los menús."
+     ]
+    },
+    {
+     "titulo": "Tu club y tus jugadores",
+     "puntos": [
+      "La ficha explica por qué sube o baja un jugador: su curva de edad, su techo y los partidos que le faltan para ganar puntos de habilidad.",
+      "Treinta logros a largo plazo, con cuánto te falta para cada uno.",
+      "Los canteranos firman su primer contrato y los techos de potencial se gastan si no se alcanzan.",
+      "Rueda de prensa en una sala 3D."
+     ]
+    },
+    {
+     "titulo": "En el campo",
+     "puntos": [
+      "Portero jugable en la Carrera de Jugador, con cambios y tanda de penaltis.",
+      "Prórroga y penaltis en la copa de la Carrera.",
+      "Radares, pizarra táctica y minimapa con líneas suaves."
+     ]
+    },
+    {
+     "titulo": "Partidas y técnica",
+     "puntos": [
+      "Exportar e importar la partida a un archivo.",
+      "Registro de fallos para enviar un informe si algo va mal.",
+      "Contador de FPS más completo en Ajustes (F9 cambia entre compacto, detallado y oculto)."
+     ]
+    }
+   ]
+  }
+ ]
+}

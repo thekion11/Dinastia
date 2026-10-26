@@ -67,7 +67,9 @@ func _paleta() -> Dictionary:
 	var p: Dictionary = (COLORES.get(_clave, COLORES["copa"]) as Dictionary).duplicate()
 	var confed: Variant = Datos.tabla("CONFED")
 	if confed is Dictionary and (confed as Dictionary).has(_clave):
-		p["nombre"] = Nombres.de_tabla(String(((confed as Dictionary)[_clave] as Dictionary).get("n", p["nombre"]))).to_upper()
+		p["nombre"] = Idiomas.mayusculas(CompeticionInfo.nombre_visible(Continental.nombre_conti(_clave)))
+	else:
+		p["nombre"] = Idiomas.t(String(p["nombre"]))
 	return p
 
 ## Los países de los clubes que entran en el bombo (hasta 6, en orden).
@@ -260,7 +262,7 @@ func _mostrar_cuadro() -> void:
 	_capa.add_child(raiz)
 
 	var t := Label.new()
-	t.text = "%s  ·  %s" % [String(p["nombre"]), _titulo_ronda]
+	t.text = "%s  ·  %s" % [String(p["nombre"]), Idiomas.t(_titulo_ronda)]
 	t.add_theme_font_size_override("font_size", 30)
 	t.add_theme_color_override("font_color", Color(String(p["acento"])))
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -321,7 +323,7 @@ func _construir() -> void:
 	_escena = SorteoEscena3D.new()
 	vp.add_child(_escena)
 	_escena.montar(Color(String(p["acento"])), Color(String(p["fondo"])))
-	_escena.rotular(String(p["nombre"]), _titulo_ronda)
+	_escena.rotular(String(p["nombre"]), Idiomas.t(_titulo_ronda))
 	_escena.poner_banderas(_paises_del_sorteo())
 
 	## El degradado de sala por encima del 3D: hunde los bordes y deja el centro

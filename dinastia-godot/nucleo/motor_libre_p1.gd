@@ -88,7 +88,9 @@ func _init(once_a: Array, once_b: Array, bono_a: float = 1.0, bono_b: float = 1.
 			var base: Vector2 = PUESTOS[i] * Vector2(_dir(eq), 1.0)
 			agentes.append({"j": j, "eq": eq, "base": base, "pos": base, "sentado_hasta": 0.0,
 				"proxima": 0.0, "entrada_hasta": 0.0, "objetivo": base,
-				"vel_max": 4.6 + AccionesJuego.atributo(j, "rit") / 100.0 * 3.6})
+				"vel_max": 4.6 + AccionesJuego.atributo(j, "rit") / 100.0 * 3.6,
+				## Si es portero, apuntado una vez: `_mover_todos` lo mira 44 veces por paso.
+				"por": j.pos == "POR"})
 	_saque(0)
 
 func _porteria_rival(eq: int) -> Vector2:

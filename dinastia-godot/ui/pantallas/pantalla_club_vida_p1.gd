@@ -289,7 +289,8 @@ func _pintar_logros() -> void:
 	barra.show_percentage = false
 	p._lista_logros.add_child(barra)
 	var lema := p._texto(11, Principal.COL_SUAVE)
-	lema.text = String(nivel["lema"]) + ((Idiomas.t("  ·  faltan %d XP para %s") % [int(nivel["faltan"]), String(nivel["siguiente"])]) if String(nivel["siguiente"]) != "" else "")
+	## El lema y el nombre del siguiente nivel vienen del núcleo en castellano: se traducen aquí.
+	lema.text = Idiomas.t(String(nivel["lema"])) + ((Idiomas.t("  ·  faltan %d XP para %s") % [int(nivel["faltan"]), Idiomas.t(String(nivel["siguiente"]))]) if String(nivel["siguiente"]) != "" else "")
 	lema.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_logros.add_child(lema)
 	p._lista_logros.add_child(HSeparator.new())
@@ -312,6 +313,8 @@ func _pintar_logros() -> void:
 		d.text = "     " + String(f["descripcion"]) + (Idiomas.t("   (su sistema aún no está portado)") if f["pendiente"] else "")
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_logros.add_child(d)
+	## Los treinta a largo plazo, con su progreso (26-10-2026).
+	ListaLogrosLargo.pintar(p._lista_logros, lg, p._texto)
 
 	if not lg.muro.is_empty():
 		p._lista_logros.add_child(HSeparator.new())

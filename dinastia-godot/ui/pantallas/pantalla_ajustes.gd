@@ -136,11 +136,13 @@ func _pintar_ajustes() -> void:
 			p._ui_opciones._pintar_moneda()
 			p._ui_opciones._pintar_velocidad_partido()
 			p._ui_opciones._pintar_qol()
+			AjustesVida.pintar(p)
 		"acceso":
 			_pintar_accesibilidad()
 		"partida":
 			p._pintar_ranuras()
 			_pintar_traspaso_partida()
+			AjustesRegistro.pintar(p)
 			var t2 := p._texto(11, Principal.COL_SUAVE)
 			t2.text = Idiomas.t("GUARDADO")
 			p._lista_ajustes.add_child(t2)

@@ -268,7 +268,7 @@ static func _armar(nombre: String, datos: Array, cuerpo: Dictionary) -> ArrayMes
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var pos: PackedVector3Array = datos[0]
-	var pegada := _pegar_borde(pos, cuerpo)
+	var pegada := _posiciones(pos, cuerpo)
 	var uv: PackedVector2Array = datos[1]
 	## COLOR.g = tapado en la foto (una mano, un brazo): ahí se pinta su piel.
 	var tapado := PeloCapas._densidades(String(entrada(nombre).get("t", "")), _n)
@@ -293,13 +293,35 @@ static func _armar(nombre: String, datos: Array, cuerpo: Dictionary) -> ArrayMes
 	## de tres cuartos el espejo copiaba el mismo ojo a los dos lados y parecía
 	## bizco.) Se quitan los triángulos que tienen los tres puntos en el
 	## contorno de un ojo.
+	var idx := _indices()
+	for t in range(0, idx.size() - 2, 3):
+		st.add_index(idx[t])
+		st.add_index(idx[t + 2])
+		st.add_index(idx[t + 1])
+	return st.commit()
+
+## Los triángulos que quedan: sin los de la abertura de los ojos.
+static func _indices() -> PackedInt32Array:
+	var out := PackedInt32Array()
 	for t in range(0, _tri.size() - 2, 3):
 		if _en_ojo(_tri[t]) and _en_ojo(_tri[t + 1]) and _en_ojo(_tri[t + 2]):
 			continue
-		st.add_index(_tri[t])
-		st.add_index(_tri[t + 2])
-		st.add_index(_tri[t + 1])
-	return st.commit()
+		out.append(_tri[t])
+		out.append(_tri[t + 1])
+		out.append(_tri[t + 2])
+	return out
+
+## Dónde va cada vértice de la malla que se dibuja (pose de reposo).
+static func _posiciones(pos: PackedVector3Array, cuerpo: Dictionary) -> PackedVector3Array:
+	return _pegar_borde(pos, cuerpo)
+
+## Para las pruebas (`pers_caras_ojos`): [posiciones, índices] de la malla que
+## se dibujaría, sin cuerpo (el borde pegado al cráneo queda lejos de los ojos).
+static func malla_de_prueba(nombre: String) -> Array:
+	var d := _datos(nombre)
+	if d.is_empty():
+		return []
+	return [_posiciones(d[0], {}), _indices()]
 
 static func _vestir_cara(d: Dictionary, esq: Skeleton3D, hueso: int, nombre: String, tex: Texture2D,
 		piel: Color, malla: ArrayMesh) -> MeshInstance3D:

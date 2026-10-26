@@ -45,3 +45,11 @@ dinastia-godot/assets/kenney/industrial/*.glb -filter -diff -merge binary
 
 # Muebles de Quaternius (CC0), regalo del usuario el 15-10-2026: archivos normales.
 dinastia-godot/assets/quaternius_muebles/*.glb -filter -diff -merge binary
+
+# Sonidos de interfaz pequeños (26-10): fuera de LFS, el contenedor no puede subir a LFS
+dinastia-godot/audio/ui/*.ogg -filter -diff -merge binary
+# Edificios de KayKit City Builder Bits (CC0, ~430 KB, 26-10): archivos normales; sustituyen a complejo_residencial.glb.
+dinastia-godot/assets/ciudad/kaykit/*.gltf -filter -diff -merge
+
+# Logo definitivo (26-10): archivos pequeños, fuera de LFS
+dinastia-godot/assets/logo/* -filter -diff -merge binary

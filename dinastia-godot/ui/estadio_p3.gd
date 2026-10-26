@@ -284,16 +284,13 @@ func _nodo_de(id: String) -> Node3D:
 	return null
 
 func _banca_gesto(es_local: bool, clip: String, dura: float, otro := "") -> void:
+	## Los sentados festejan o protestan SIN levantarse (26-10, `BanquilloVivo`:
+	## medio cuerpo de Mesh2Motion sobre la cadera de «sentado»). Ambos banquillos.
+	BanquilloVivo.reaccionar(_raiz3d, "gol" if clip == "celebrar" else "protesta", es_local, dura)
 	for f: Dictionary in _en_banca:
 		if bool(f.get("es_local", false)) != es_local:
 			continue
-		## Los sentados NO se paran a festejar -la pose "celebrar" es de pie,
-		## y sin además subir la raíz del modelo (bajada por `ALTO_ASIENTO_
-		## OFFSET` para que la cadera caiga a la altura del banco) saldría
-		## festejando hundido a medio metro bajo el piso. Arreglar eso es
-		## trabajo aparte (parar, reposicionar, festejar, volver a sentar);
-		## por ahora los sentados se quedan sentados, que ya es más real que
-		## la banda vacía de antes de hoy.
+		## Los sentados ya reaccionaron arriba (sin levantarse del banco).
 		if bool(f.get("sentado", false)):
 			continue
 		var ap: AnimationPlayer = f.get("anim")
@@ -334,6 +331,9 @@ func _cine_gol(c: Club, autor: Jugador) -> void:
 	## grabar hasta que termine.
 	if _repe != null:
 		_repe.congelar = true
+		_repe.club_barrido = c
+	if _rig != null:
+		_rig.quitar_inserto()
 	var autor_id := autor.id if autor != null else ""
 	var g := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
 	var carta := func() -> Dictionary:

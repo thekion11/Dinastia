@@ -99,6 +99,11 @@ var terminado_ya: bool = false
 var motor_externo := false
 ## Si ya se aplicó el plan del minuto 60. Ver `simular_minuto()`.
 var _plan_aplicado: bool = false
+## Club id -> {"mentalidad", "linea"} de antes del plan, y club id -> la clave
+## del cambio que saltó («perdiendo:ofensivo»). Ver `_devolver_tactica()`.
+var tactica_previa: Dictionary = {}
+var plan_activado: Dictionary = {}
+var _tactica_devuelta: bool = false
 
 ## INSTRUCCIONES EFÍMERAS DE PARTIDO -`M.instr.riesgo`/`M.instr.tiempo` del
 ## HTML-: a diferencia de la pizarra (`Club.tactica`, persistente, se lleva de
@@ -298,13 +303,20 @@ func momentum_local() -> int:
 		s += x
 	return clampi(50 + s * 6, 5, 95)
 
+## Deja TODO el contexto estático como de fábrica. Antes se olvidaba de la
+## moda táctica, el videoanálisis y el césped (24-10): el partido siguiente
+## heredaba los factores de la semana anterior de otro mundo, y una prueba
+## daba un resultado u otro según lo que se hubiera jugado antes.
 static func limpiar_contexto() -> void:
 	ctx_factor_tarjetas = 1.0
 	ctx_medico = null
 	ctx_club_id = ""
 	ctx_anio = 0
 	ctx_semana = 0
+	ctx_cesped_local = 1.0
 	ctx_lesion_local = 1.0
+	ctx_moda = {}
+	ctx_analisis = 1.0
 
 ## ¿Este jugador tiene cuentas pendientes con el club de enfrente?
 func es_ex_de(j: Jugador, rival: Club) -> bool:

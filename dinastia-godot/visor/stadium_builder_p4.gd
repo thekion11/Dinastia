@@ -159,8 +159,9 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	_banquillos_detalle(root, str(est.get("banquillo", "cristal")), est)
 	## El tunel tiene que saber donde empieza la tribuna del fondo: su boca va
 	## a ras de la cara interior, no en un numero fijo (ver `_tunel()`).
-	_tunel(root, str(est.get("tunel", "central")), est,
-		float(geom_de_forma(String(est.get("forma", "cuenco")))["dz"]))
+	var g_f := geom_de_forma(String(est.get("forma", "cuenco")))
+	_tunel(root, str(est.get("tunel", "central")), est, float(g_f["dz"]))
+	_perimetro_cesped(root, float(g_f["dx"]), float(g_f["dz"]), tonos[1])
 	_camarografos(root)
 	if mi != null:
 		_escudo_cancha(root, mi, str(est.get("escudoDonde", "sin")))
@@ -412,7 +413,22 @@ static func _make_stand_texture_tramos(patrones: Array, colores: Array, seed_val
 static func _techo_mat(tipo: String, col: String = "") -> StandardMaterial3D:
 	if tipo == "membrana" or tipo == "retractil":
 		return Texturas.tela(_c(col, "#e0e3d9"), 0.5)
-	return Texturas.metal(_c(col, "#33383f"), 0.55)
+	## LA CUBIERTA CON SU ESTRUCTURA (25-10-2026, ultra pulido): era una losa de
+	## metal liso, y desde la cámara de TV (que ve el techo de enfrente POR DEBAJO)
+	## y desde fuera se leía como una tabla. Ahora lleva la chapa grecada y la
+	## retícula de vigas, proyectadas en el mundo (cada 2 m), así que da igual el
+	## tamaño de la losa. Misma malla, mismas llamadas; uno por color, cacheado.
+	var clave := "techo|" + col
+	if _techos_mat.has(clave):
+		return _techos_mat[clave]
+	var m: StandardMaterial3D = Texturas.metal(_c(col, "#33383f"), 0.55).duplicate()
+	m.albedo_texture = _tex_cubierta()
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = true
+	m.uv1_scale = Vector3(0.25, 0.25, 0.25)
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_techos_mat[clave] = m
+	return m
 
 ## LA FACHADA (B6.2). Cinco pieles para el mismo muro; el color vacío deja el
 ## tono propio de cada material.

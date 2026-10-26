@@ -39,6 +39,7 @@ static func montar(raiz: Node3D, est: Dictionary, niveles: int) -> Node3D:
 	var cx := px + BANDA
 	var cz := pz + BANDA
 	_avenida(e, cx, cz)
+	EntornoEstadioJardin.montar(e, px, pz, cx, cz, CALLE)
 	_arboles_y_farolas(e, px, pz, cx, cz, rng)
 	_aparcamiento(e, Vector3(-(px + BANDA * 0.5), 0, 0), true, pz * 1.4, rng)
 	_aparcamiento(e, Vector3(0, 0, -(pz + BANDA * 0.5)), false, px * 1.4, rng)
@@ -87,10 +88,10 @@ static func _suelos(e: Node3D, hx: float, hz: float) -> void:
 	hierba.roughness = 1.0
 	_plano(e, Vector2(2400, 2400), Vector3(0, -0.22, 0), hierba)
 	## La plaza: losas claras alrededor del estadio.
-	var losa: StandardMaterial3D = Texturas.hormigon(Color(0.62, 0.60, 0.56), 7).duplicate()
-	losa.uv1_world_triplanar = true
-	losa.uv1_scale = Vector3(0.35, 0.35, 0.35)
-	losa.normal_enabled = false
+	## Losas grandes de 1,6 m con su junta y su tono (26-10-2026): era un
+	## hormigón liso que desde la calle se leía como un solar sin terminar.
+	var losa: StandardMaterial3D = Texturas.baldosa(Color(0.66, 0.64, 0.6), 7).duplicate()
+	losa.uv1_scale = Vector3(0.3, 0.3, 0.3)
 	_plano(e, Vector2((hx + PLAZA) * 2.0, (hz + PLAZA) * 2.0), Vector3(0, -0.12, 0), losa)
 
 static func _avenida(e: Node3D, cx: float, cz: float) -> void:

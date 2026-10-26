@@ -51,8 +51,10 @@ func _process(_d: float) -> void:
 			pila.append(h)
 	## Lo que se usa fuera del mapa o que se retiró a propósito (documentado):
 	## el estadio .obj es el respaldo sin perfil; la farola .obj se cambió por
-	## farolas propias; las butacas se usan en la grada (malla extraída).
-	var aparte := {"estadio.obj": true, "farola.obj": true, "asientos_lod.glb": true}
+	## farolas propias; las butacas se usan en la grada (malla extraída). Desde el
+	## 26-10 el estadio .obj tampoco es el respaldo (maqueta de cajas) y el complejo
+	## residencial se cambió por bloques de KayKit: los tres, fuera de la exportación.
+	var aparte := {"estadio.obj": true, "farola.obj": true, "asientos_lod.glb": true, "complejo_residencial.glb": true}
 	var faltan: Array = []
 	for m in _todos_los_modelos():
 		if not vistos.has(m) and not aparte.has(m.get_file()):

@@ -54,6 +54,11 @@ void fragment() {
 		ROUGHNESS = mix(0.85, 0.32, v);
 		METALLIC = v * 0.25;
 		float enc = step(0.6, h) * v * noche;
-		EMISSION = vec3(1.0, 0.82, 0.5) * enc * 1.0;
+		// De noche (26-10-2026, petición de pciu): a 1,0 todas por igual salían
+		// blancas y quemadas en las torres cercanas. Energía ~0,6 con variación por
+		// ventana (0,35-0,75) y tono cálido o algo más frío según la casa.
+		float k = fract(h * 13.7);
+		vec3 tono = mix(vec3(1.0, 0.78, 0.46), vec3(0.92, 0.9, 0.82), step(0.75, k));
+		EMISSION = tono * enc * mix(0.35, 0.75, k);
 	}
 }
