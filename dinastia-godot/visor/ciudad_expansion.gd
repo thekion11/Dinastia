@@ -2,6 +2,8 @@ class_name CiudadExpansion
 extends "res://visor/ciudad_expansion_p8.gd"
 ## [Capa 9/9 de `ciudad_expansion.gd`] _kenney_calles, _parque_eolico, _deposito_agua, _volcar_lotes, construir, _kit_apilado … (+6)
 
+var _mat_cartel: StandardMaterial3D
+
 func _kenney_calles() -> void:
 	var r := RandomNumberGenerator.new()
 	r.seed = 20261014
@@ -43,7 +45,16 @@ func _kenney_calles() -> void:
 	## Carteles colgantes sobre la calzada en cada cruce con semáforo.
 	for p: Vector3 in cruces_semaforo:
 		var esq := p + Vector3(ANCHO_AV * 0.5 + ACERA * 0.6, 0.24, -ANCHO_AV * 0.5 - ACERA * 0.6)
-		if _prop_kenney("road-sign-empty-hanging", esq, PI * 0.5, 12.0) != null:
+		var cartel := _prop_kenney("road-sign-empty-hanging", esq, PI * 0.5, 12.0)
+		if cartel != null:
+			## 26-10-2026 (pciu): el báculo del cartel, del mismo grafito que las
+			## farolas (el lavanda de Kenney era lo único azul en cada cruce).
+			for mi in cartel.find_children("*", "MeshInstance3D", true, false):
+				var malla := (mi as MeshInstance3D).mesh
+				if malla != null:
+					if _mat_cartel == null:
+						_mat_cartel = _mat_poste_farola(malla)
+					(mi as MeshInstance3D).material_override = _mat_cartel
 			carteles += 1
 	cuenta["kenney_brazos"] = brazos
 	cuenta["kenney_postes"] = postes

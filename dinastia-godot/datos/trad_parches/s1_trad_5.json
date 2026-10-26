@@ -1,0 +1,27 @@
+{
+ "exactas": {},
+ "patrones": [
+  [
+   "^2\\.ª opinión  (.+)$",
+   "2nd opinion  $1",
+   "2ª opinião  $1",
+   "2e avis  $1",
+   "2° parere  $1",
+   "Zweitmeinung  $1",
+   "2a opinió  $1",
+   "Druga opinia  $1",
+   "2. görüş  $1"
+  ],
+  [
+   "^×(\\d+\\.\\d+) sobre el ruido$",
+   "×$1 on the noise",
+   "×$1 sobre o ruído",
+   "×$1 sur le bruit",
+   "×$1 sul rumore",
+   "×$1 auf den Lärm",
+   "×$1 sobre el soroll",
+   "×$1 na szum",
+   "gürültüye ×$1"
+  ]
+ ]
+}

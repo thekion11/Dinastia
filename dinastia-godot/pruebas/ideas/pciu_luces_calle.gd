@@ -63,4 +63,16 @@ func _probar_farolas() -> void:
 	_comprobar(float(ex._farola_cono.get_shader_parameter("fuerza")) > 0.1, "de noche el haz se ve")
 	ex.encender(0.0)
 	_comprobar(ex._farola_charco.albedo_color.a == 0.0 and float(ex._farola_cono.get_shader_parameter("fuerza")) == 0.0, "de día ni charco ni haz")
+	ex._kenney_calles()
+	var carteles := 0
+	var grafito := 0
+	for h: Node in b.get_children():
+		if String(h.name).begins_with("road-sign-empty-hanging") or (h.scene_file_path.ends_with("road-sign-empty-hanging.glb")):
+			carteles += 1
+			for mi in h.find_children("*", "MeshInstance3D", true, false):
+				var mo := (mi as MeshInstance3D).material_override as StandardMaterial3D
+				if mo != null and mo.albedo_color.get_luminance() < 0.4:
+					grafito += 1
+					break
+	_comprobar(carteles > 0 and grafito == carteles, "los carteles colgantes de los cruces, en grafito (%d de %d)" % [grafito, carteles])
 	b.free()
