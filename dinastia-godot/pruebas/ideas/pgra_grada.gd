@@ -171,9 +171,9 @@ func _entorno(raiz: Node3D) -> void:
 		for pa: Array in paseos:
 			var c: Vector3 = pa[0]
 			var t: Vector2 = pa[1]
-			var e := j.basis.get_scale()
-			var mitad := (e.x if absf(j.basis.x.x) > 0.5 else e.z) * 0.5
-			var mitad_z := (e.z if absf(j.basis.z.z) > 0.5 else e.x) * 0.5
+			var ej := j.basis.get_scale()
+			var mitad := (ej.x if absf(j.basis.x.x) > 0.5 else ej.z) * 0.5
+			var mitad_z := (ej.z if absf(j.basis.z.z) > 0.5 else ej.x) * 0.5
 			if absf(j.origin.x - c.x) < t.x * 0.5 + mitad + 2.0 and absf(j.origin.z - c.z) < t.y * 0.5 + mitad_z + 2.0:
 				corta += 1
 	_comprobar(jard.size() > 20 and corta == 0, "las jardineras (%d) no tapan ningún paseo (%d lo tapan)" % [jard.size(), corta])

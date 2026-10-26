@@ -135,7 +135,7 @@ static func _m(c: Color, rug := 0.7) -> StandardMaterial3D:
 		_mats[k] = m
 	return _mats[k]
 
-static func _pieza(padre: Node3D, malla: Mesh, mat: Material, pos: Vector3, giro := Vector3.ZERO) -> void:
+static func _pieza(padre: Node3D, malla: Mesh, mat: Material, pos: Vector3, giro := Vector3.ZERO) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.mesh = malla
 	mi.material_override = mat
@@ -144,6 +144,7 @@ static func _pieza(padre: Node3D, malla: Mesh, mat: Material, pos: Vector3, giro
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.visibility_range_end = 40.0
 	padre.add_child(mi)
+	return mi
 
 static func _caja(t: Vector3) -> BoxMesh:
 	var b := BoxMesh.new()
@@ -330,25 +331,26 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 				for mp: Node in pelo_n.get_children():
 					if mp is MeshInstance3D and not String(mp.name).begins_with("Eyebrows") and not String(mp.name).contains("Beard"):
 						(mp as MeshInstance3D).visible = String(mp.name) == "Hair_Buzzed"
+			## GORRA A LA MEDIDA (26-10-2026): la copa era una media esfera de
+			## 11,8 cm de radio sobre una cabeza de 7 de ancho y 9 de fondo
+			## (medida en la malla a 15 cm sobre el hueso): un cuenco, con la
+			## visera escondida debajo. Ahora un casquete ovalado que ciñe la
+			## cabeza (8,5 × 10,5 cm), con el borde en la frente, y la visera
+			## saliendo de ese borde, un poco caída. Todo a la escala de la
+			## cabeza (sin `k`), en el espacio del hueso.
+			var cab_g := _en_hueso(esq, "Head", 1.0)
 			var copa := SphereMesh.new()
-			## Algo más grande que la cabeza con pelo: si no, el pelo asomaba.
-			copa.radius = 0.118
-			## Con `is_hemisphere` la altura es la del casquete entero (de 0 a
-			## `height`): con 0,15 subía 7 cm por encima del pelo, como un bombín.
-			copa.height = 0.112
-			copa.radial_segments = 14
+			copa.radius = 0.085
+			copa.height = 0.09
+			copa.radial_segments = 16
 			copa.rings = 6
 			copa.is_hemisphere = true
-			## La gorra, a la escala de la cabeza (sin `k`): con `k` su altura no
-			## crecía con la persona y en los bajos flotaba sobre el pelo.
-			var cab_g := _en_hueso(esq, "Head", 1.0)
-			_pieza(cab_g, copa, gm, Vector3(0, 0.15, -0.01))
+			var mc := _pieza(cab_g, copa, gm, Vector3(0, 0.135, -0.015))
+			mc.scale = Vector3(1.0, 1.0, 1.24)
 			var visera := CylinderMesh.new()
-			visera.top_radius = 0.075
-			visera.bottom_radius = 0.075
-			visera.height = 0.01
-			visera.radial_segments = 12
-			## La visera sale 9 cm por delante de la copa (26-10-2026): metida a
-			## medias en ella era solo un canto y la gorra se leía como un bombín.
-			_pieza(cab_g, visera, _m(col.darkened(0.15)), Vector3(0, 0.155, 0.145), Vector3(-10, 0, 0))
-			_pieza(cab_g, _esfera(0.012), gm, Vector3(0, 0.262, -0.01))
+			visera.top_radius = 0.07
+			visera.bottom_radius = 0.07
+			visera.height = 0.008
+			visera.radial_segments = 14
+			_pieza(cab_g, visera, _m(col.darkened(0.15)), Vector3(0, 0.137, 0.15), Vector3(8, 0, 0))
+			_pieza(cab_g, _esfera(0.011), gm, Vector3(0, 0.226, -0.015))
