@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://pruebas/captura_rp_trofeos.gd" id="1"]
 
-[node name="P" type="Node3D"]
+[node name="P" type="Control"]
 script = ExtResource("1")

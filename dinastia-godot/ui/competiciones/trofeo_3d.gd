@@ -43,7 +43,7 @@ static func crear(tipo: String, alto: float = 0.4) -> Node3D:
 			raiz.add_child(_torno([[0.22, 0.0], [0.22, 0.16], [0.1, 0.18], [0.07, 0.3], [0.12, 0.4], [0.24, 0.55],
 				[0.3, 0.75], [0.3, 0.92], [0.27, 0.95]], k, plata))
 			## Las «orejas»: asas enormes que nacen en la boca y bajan hasta el pie.
-			_asas(raiz, 0.28 * k, 0.6 * k, 0.32 * k, 0.03 * k, plata, PI * 1.25)
+			_asas(raiz, 0.26 * k, 0.62 * k, 0.26 * k, 0.03 * k, plata, PI * 0.95)
 			raiz.add_child(_torno([[0.24, 0.0], [0.24, 0.16]], k, base))
 		"continental2":
 			raiz.add_child(_torno([[0.18, 0.0], [0.18, 0.12], [0.06, 0.15], [0.04, 0.4], [0.12, 0.6], [0.16, 0.9],
@@ -72,8 +72,8 @@ static func de_competicion(nombre: String, alto: float = 0.4) -> Node3D:
 static func _metal(c: Color) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = c
-	m.metallic = 1.0
-	m.roughness = 0.22
+	m.metallic = 0.85
+	m.roughness = 0.28
 	m.metallic_specular = 0.8
 	return m
 

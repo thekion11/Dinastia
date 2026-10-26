@@ -78,7 +78,7 @@ func abrir(p: String, detalle: String) -> void:
 	_titulo.text = Idiomas.t("¿Empezar en %s?") % PaisDatos.nombre(p)
 	_texto.text = detalle
 	visible = true
-	_si.grab_focus.call_deferred()
+	FocoSeguro.dar(_si)
 
 func cerrar(avisar := true) -> void:
 	visible = false

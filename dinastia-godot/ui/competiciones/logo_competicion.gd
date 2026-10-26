@@ -34,7 +34,7 @@ static func control(nombre: String, alto: int = 48) -> Control:
 	var l := Label.new()
 	l.text = CompeticionInfo.siglas(nombre)
 	l.add_theme_font_size_override("font_size", maxi(8, int(alto * 0.26)))
-	l.add_theme_color_override("font_color", CompeticionInfo.colores(nombre)[1])
+	l.add_theme_color_override("font_color", Color.WHITE)
 	l.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.6))
 	l.add_theme_constant_override("outline_size", maxi(2, alto / 16))
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
