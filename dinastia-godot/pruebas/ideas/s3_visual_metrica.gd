@@ -22,5 +22,18 @@ func _probar() -> void:
 	jpg.load_jpg_from_buffer(c.save_jpg_to_buffer(V.CALIDAD_REF))
 	var d2: Vector3 = V.diferencia(c, jpg)
 	_comprobar(int(d2.z) == 0, "el ruido del JPG de referencia no cuenta como cambio (peor bloque %.1f %%)" % (d2.y * 100.0))
+	## Un tinte suave sobre una zona oscura (la tabla ×0,75 en verde y azul): no llega al umbral
+	## por bloque, pero el color medio se desplaza siempre en el mismo sentido.
+	var t := a.duplicate() as Image
+	var u := a.duplicate() as Image
+	for y in range(100, 600):
+		for x in range(80, 420):
+			u.set_pixel(x, y, Color(0.10, 0.12 * 0.75, 0.11 * 0.75))
+			t.set_pixel(x, y, Color(0.10, 0.12, 0.11))
+	var d3: Vector3 = V.diferencia(t, u)
+	_comprobar(int(d3.z) < V.MIN_BLOQUES and V.tono_bloques >= V.MIN_TONO,
+		"un tinte suave no pasa el umbral por bloque (%d) pero sí el de tono (%d bloques)" % [int(d3.z), V.tono_bloques])
+	V.diferencia(c, jpg)
+	_comprobar(V.tono_bloques == 0, "y el ruido del JPG no mueve el tono (%d bloques)" % V.tono_bloques)
 	var m: Image = V.mapa(a, b)
 	_comprobar(m.get_width() == V.COMPARA.x * 4, "el mapa de diferencias sale (%d px de ancho)" % m.get_width())
