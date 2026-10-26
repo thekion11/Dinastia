@@ -1870,7 +1870,6 @@ Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `d
 
 Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hecha: 67 líneas):
 1. `ui/principal.gd` `_input`: con el móvil u otra capa encima, L1/R1, L2/R2 y Ctrl+Q/E cambian la pestaña de detrás.
-3. Volcar `_escala_texto` y `_daltonico` en `Tema` (`principal_p10.gd` tras la línea 50; setters en `principal_p2.gd` 363 y 373): sin esto la accesibilidad no llega a lo pintado con `Tema.*`.
 4. `visor/control_fc.gd:232`: usar `Mando.nombre_tecla(ts[0])` (hoy sale «Space»).
 5. `ui/principal_p8.gd`, final de `_ver_ficha()`: `_traducir_pantalla(_ficha)`; el radar corta a 4 letras (`.left(4)`, línea 88).
 8. Rueda de prensa 2D sin pulir (está en `principal_p17.gd`; ver §8).
@@ -1897,7 +1896,7 @@ Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún si
 | **Builds y tienda** (Steam/itch/Play): iconos, capturas, tráiler, texto, clasificación | alta | sin esto no hay lanzamiento; hoy solo «🔒 dueño» | lista de requisitos de cada tienda y quién hace cada pieza |
 | **Sonido y música**: mezcla final, volumen por canal, música 🔒 | media | 214 recetas de efectos, pero sin pasada de mezcla ni música final | pasada de volúmenes por escena; qué falta si la música no llega |
 | **Localización de nombres** (clubes, ciudades, competiciones, nombres propios) | media | la sesión 2 dejó ~120 textos por idioma que son nombres propios; no hay regla de cuáles se traducen | lista de «no traducir» (como `marca_sin_traducir`) y de los que sí (competiciones) |
-| **Accesibilidad completa**: reasignar teclas, contraste alto, sin depender del color, lector de pantalla mínimo | media | lo de la sesión 2 cubre letra y daltonismo; falta el resto | auditoría con la lista de Game Accessibility Guidelines (nivel básico) |
+| **Accesibilidad (lo que falta del nivel básico)**: lector de pantalla mínimo; reasignar las teclas del menú lateral y del móvil; repasar con contraste alto las pantallas en 3D (estadio, ciudad) y las capas a pantalla completa | media | hecho en la sesión 3: reasignar aceptar/volver/pestañas, contraste alto (paleta + `Tema`), zonas y plantel sin depender del color | probar el juego entero con contraste alto y solo teclado |
 | **Guardado en la nube** / entre dispositivos | media | ideas 234, 934, 945 y 1048 sin plan; los jugadores de gestión llevan partidas de meses | empezar por exportar/importar la partida a un archivo; la nube depende de la tienda |
 | **Ayuda contextual y glosario** (qué es cada cifra) | media | un juego de gestión tiene cientos de cifras; hoy hay ayudas sueltas | botón «?» por pantalla con 3 líneas y enlace al glosario |
 | **Rendimiento de la simulación** (semana avanzada en ms, 30 temporadas) | media | la partida larga es el corazón del género; ningún dato de cuánto tarda avanzar una semana en el año 20 | medir `avanzar_semana` en las temporadas 1, 10 y 20 |

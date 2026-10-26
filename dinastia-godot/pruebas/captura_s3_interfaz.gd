@@ -10,6 +10,7 @@ var _n := 0
 var _p: Node
 var _t0 := 0
 var _fase := 0
+var _paleta_antes := ""
 
 func _ready() -> void:
 	_p = load("res://escenas/principal.tscn").instantiate()
@@ -28,6 +29,19 @@ func _process(_d: float) -> void:
 		return
 	match _fase:
 		0:
+			## CONTRASTE=1: con la paleta de contraste alto. ACCESO=1: la sección de
+			## accesibilidad de Ajustes (contraste, teclas de la interfaz).
+			if OS.get_environment("CONTRASTE") != "":
+				_paleta_antes = _p._paleta
+				_p._paleta = "contraste"
+				_p._aplicar_aspecto()
+				_p._refrescar()
+			if OS.get_environment("ACCESO") != "":
+				_p._secc_ajustes = "acceso"
+				_chip("Ajustes", "acceso", "Accesibilidad")
+				_fase = 2
+				_n = 8
+				return
 			if OS.get_environment("FINANZAS") != "":
 				_fase = 5
 				_n = 0
@@ -47,7 +61,14 @@ func _process(_d: float) -> void:
 				_fase = 2
 				_n = 8
 		2:
-			if _n == 14:
+			if _n == 14 and OS.get_environment("ACCESO") != "":
+				var sc2 := (_p.get("_lista_ajustes") as Node).get_parent()
+				while sc2 != null and not (sc2 is ScrollContainer):
+					sc2 = sc2.get_parent()
+				for l in (_p.get("_lista_ajustes") as Node).find_children("*", "Label", true, false):
+					if sc2 != null and String((l as Label).text) == Idiomas.t("Paleta para daltonismo"):
+						(sc2 as ScrollContainer).scroll_vertical = int((l as Control).get_parent().position.y) - 20
+			elif _n == 14:
 				## Baja hasta la rejilla de formas del escudo.
 				var sc := (_p.get("_lista_gente") as Node).get_parent()
 				while sc != null and not (sc is ScrollContainer):
@@ -55,7 +76,7 @@ func _process(_d: float) -> void:
 				if sc != null:
 					(sc as ScrollContainer).scroll_vertical = int(OS.get_environment("BAJAR")) if OS.get_environment("BAJAR") != "" else 760
 			elif _n == 40:
-				_foto("s3_identidad")
+				_foto("s3_acceso" if OS.get_environment("ACCESO") != "" else "s3_identidad")
 				_fase = 5
 				_n = 7
 		5:
@@ -77,5 +98,9 @@ func _process(_d: float) -> void:
 					(sc as ScrollContainer).scroll_vertical = int(OS.get_environment("BAJAR"))
 			elif _n == 36:
 				_foto("s3_finanzas")
+				## La paleta de contraste no se queda en las preferencias de la máquina.
+				if _paleta_antes != "":
+					_p._paleta = _paleta_antes
+					_p._guardar_preferencias()
 				print("FIN. 0 fallos")
 				get_tree().quit()

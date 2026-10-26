@@ -98,6 +98,12 @@ func _traducir_pantalla(n: Node) -> void:
 
 func _refrescar() -> void:
 	var c := mundo.mi_club()
+	## Los interruptores de accesibilidad llegan también a lo que se pinta con
+	## `Tema.*` (teléfono, avisos, competición...): petición 3 de la sesión 2 y
+	## el contraste alto (s3).
+	Tema.daltonico = _daltonico
+	Tema.escala_texto = _escala_texto
+	Tema.contraste = _paleta == "contraste"
 	## Los objetivos, fijos en el borde derecho (PanelObjetivos).
 	if not is_instance_valid(_panel_obj):
 		_panel_obj = PanelObjetivos.crear(self, mundo.roles.modo_actual() if mundo.roles != null else "dt")
@@ -403,3 +409,5 @@ func _preparar_mando() -> void:
 		ea.axis_value = 1.0
 		if not InputMap.action_has_event(accion3, ea):
 			InputMap.action_add_event(accion3, ea)
+	## Las que el jugador reasignó en Ajustes → Accesibilidad (s3).
+	TeclasInterfaz.aplicar()

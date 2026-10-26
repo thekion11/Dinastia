@@ -177,3 +177,35 @@ personal, récords, redes, ajustes de interfaz, glosario) con Forward+ a 1280×7
   el ruido del JPG no cuenta).
 
 No está en `especiales.sh` porque necesita Vulkan (lavapipe); se lanza aparte.
+
+## 8. Accesibilidad básica (Game Accessibility Guidelines, nivel básico)
+
+Prueba `pruebas/ideas/s3_accesibilidad.gd` (14 comprobaciones); captura `s3_acceso` (`CONTRASTE=1 ACCESO=1`).
+
+- **Reasignar teclas y botones.** Lo del partido ya se reasignaba en Controles (`Mando.reasignar`, desde Ajustes →
+  Dispositivo → «Controles del partido»). Faltaba moverse por los menús: `ui/componentes/teclas_interfaz.gd`
+  (`TeclasInterfaz`) reasigna Aceptar, Volver y Pestaña anterior/siguiente (una tecla y un botón del mando cada
+  una), en Ajustes → Accesibilidad → «Teclas de la interfaz» con «Cambiar» (escucha la siguiente tecla o botón; Esc
+  cancela) y «Restaurar las teclas de fábrica». Se guarda en `user://teclas_interfaz.cfg` (aparte de
+  `controles.cfg`) y se aplica al final de `Principal._preparar_mando`. Una tecla no hace dos cosas: se le quita a
+  las otras. Ojo: si el jugador le pasa a «Aceptar» la tecla de «Volver», «Volver» se queda sin tecla hasta que le
+  ponga otra (igual que en Controles); el ratón sigue funcionando.
+- **Contraste alto.** Paleta nueva «Contraste alto» (fondo y panel negros y opacos, texto blanco, suave casi
+  blanco, bordes marcados) con interruptor en Ajustes → Accesibilidad; al apagarlo vuelve la paleta anterior. El
+  salto mínimo de luminosidad de `_con_contraste` sube de 0,42 a 0,6 con ella. `Tema.contraste` lleva lo mismo a lo
+  que se pinta con `Tema.*` (texto, suave, bordes y paneles de `caja()`). De paso, la **petición 3 de la sesión 2**:
+  `_refrescar` vuelca `_daltonico` y `_escala_texto` en `Tema` (antes no llegaban al teléfono, avisos, competición).
+- **Fallo previo arreglado al probarlo:** con cualquier paleta que no fuera la de por defecto, `_color_de_paleta`
+  pasaba los colores de FONDO (`COL_PANEL`, `COL_FONDO`, `COL_BORDE`) por el empuje de contraste pensado para
+  letras, y las píldoras (Dispositivo, Sonido, chips de días…) salían gris claro con letra blanca. Ahora esos tres
+  devuelven los de la paleta.
+- **Ningún dato solo con color.** Las zonas de la tabla (campeón, continental, ascenso, promoción, descenso) solo se
+  distinguían por el color del número del puesto (con el nombre en un tooltip, que con mando no se ve): ahora llevan
+  símbolo (★ ◆ ▲ ↕ ▼) junto al puesto, en la tabla lateral y en la ficha de competición, y en la leyenda. En el
+  plantel, «joven con margen» era solo verde: lleva «↗» (lo rojo ya llevaba 🩹 o 🚫); leyenda traducida a los 8.
+  Revisado y ya bien: la racha (letras G/E/P), los niveles con ●/○, las cifras de finanzas con su signo, el modo
+  daltónico con muestra.
+- Textos nuevos: 10 claves × 8 idiomas.
+
+Lo que queda del nivel básico (en el plan §10): lector de pantalla mínimo, reasignar las teclas propias del menú
+lateral y del móvil, y repasar el contraste alto en las pantallas 3D y en las capas a pantalla completa.

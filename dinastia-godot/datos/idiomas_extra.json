@@ -4885,7 +4885,17 @@
   "No se sienta a hablar de él por un tiempo.": "He won't sit down to talk about him for a while.",
   "(Mira el reloj.)": "(He checks his watch.)",
   "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!": "I'm off on holiday for two weeks and the board wants you to run the account. Username: %s · Password: %s · Look after it for me!",
-  "Forma del escudo": "Crest shape"
+  "Forma del escudo": "Crest shape",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  rojo: no disponible": "Ⓒ captain  ·  🔻 transfer-listed  ·  🩹 injured  ·  🚫 suspended  ·  ✦ special skill  ·  ↗ (green): young with room to grow  ·  red: unavailable",
+  "Contraste alto": "High contrast",
+  "Fondo negro, texto blanco y bordes marcados en todas las pantallas de gestión.": "Black background, white text and strong borders on every management screen.",
+  "Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)": "Interface keys (press «Change», then the key or button; Esc cancels)",
+  "Aceptar / pulsar": "Accept / press",
+  "Volver / cerrar": "Back / close",
+  "Pestaña anterior": "Previous tab",
+  "Pestaña siguiente": "Next tab",
+  "Pulsa…": "Press…",
+  "Restaurar las teclas de fábrica": "Restore the default keys"
  },
  "pt": {
   "Historia": "História",
@@ -9773,7 +9783,17 @@
   "No se sienta a hablar de él por un tiempo.": "Não volta a sentar-se para falar dele durante um tempo.",
   "(Mira el reloj.)": "(Olha para o relógio.)",
   "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!": "Vou de férias duas semanas e a direção quer que sejas tu a gerir a conta. Utilizador: %s · Palavra-passe: %s · Cuida-ma bem!",
-  "Forma del escudo": "Forma do escudo"
+  "Forma del escudo": "Forma do escudo",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  rojo: no disponible": "Ⓒ capitão  ·  🔻 transferível  ·  🩹 lesionado  ·  🚫 suspenso  ·  ✦ habilidade especial  ·  ↗ (verde): jovem com margem  ·  vermelho: indisponível",
+  "Contraste alto": "Alto contraste",
+  "Fondo negro, texto blanco y bordes marcados en todas las pantallas de gestión.": "Fundo preto, texto branco e contornos marcados em todos os ecrãs de gestão.",
+  "Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)": "Teclas da interface (carrega em «Alterar» e depois na tecla ou no botão; Esc cancela)",
+  "Aceptar / pulsar": "Aceitar / premir",
+  "Volver / cerrar": "Voltar / fechar",
+  "Pestaña anterior": "Separador anterior",
+  "Pestaña siguiente": "Separador seguinte",
+  "Pulsa…": "Prime…",
+  "Restaurar las teclas de fábrica": "Repor as teclas de fábrica"
  },
  "patrones": [
   [
@@ -19542,7 +19562,17 @@
   "No se sienta a hablar de él por un tiempo.": "Il ne reviendra pas en parler avant un moment.",
   "(Mira el reloj.)": "(Il regarde sa montre.)",
   "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!": "Je pars deux semaines en vacances et la direction veut que tu gères le compte. Identifiant : %s · Mot de passe : %s · Prends-en soin !",
-  "Forma del escudo": "Forme de l'écusson"
+  "Forma del escudo": "Forme de l'écusson",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  rojo: no disponible": "Ⓒ capitaine  ·  🔻 transférable  ·  🩹 blessé  ·  🚫 suspendu  ·  ✦ compétence spéciale  ·  ↗ (vert) : jeune avec de la marge  ·  rouge : indisponible",
+  "Contraste alto": "Contraste élevé",
+  "Fondo negro, texto blanco y bordes marcados en todas las pantallas de gestión.": "Fond noir, texte blanc et bordures marquées sur tous les écrans de gestion.",
+  "Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)": "Touches de l'interface (appuie sur «Changer», puis sur la touche ou le bouton ; Échap annule)",
+  "Aceptar / pulsar": "Valider / appuyer",
+  "Volver / cerrar": "Retour / fermer",
+  "Pestaña anterior": "Onglet précédent",
+  "Pestaña siguiente": "Onglet suivant",
+  "Pulsa…": "Appuie…",
+  "Restaurar las teclas de fábrica": "Rétablir les touches par défaut"
  },
  "it": {
   "Historia": "Storia",
@@ -24337,7 +24367,17 @@
   "No se sienta a hablar de él por un tiempo.": "Per un po' non si siede a parlarne.",
   "(Mira el reloj.)": "(Guarda l'orologio.)",
   "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!": "Vado in ferie per due settimane e la dirigenza vuole che l'account lo gestisca tu. Utente: %s · Password: %s · Trattamelo bene!",
-  "Forma del escudo": "Forma dello stemma"
+  "Forma del escudo": "Forma dello stemma",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  rojo: no disponible": "Ⓒ capitano  ·  🔻 cedibile  ·  🩹 infortunato  ·  🚫 squalificato  ·  ✦ abilità speciale  ·  ↗ (verde): giovane con margine  ·  rosso: non disponibile",
+  "Contraste alto": "Contrasto elevato",
+  "Fondo negro, texto blanco y bordes marcados en todas las pantallas de gestión.": "Sfondo nero, testo bianco e bordi marcati in tutte le schermate di gestione.",
+  "Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)": "Tasti dell'interfaccia (premi «Cambia» e poi il tasto o il pulsante; Esc annulla)",
+  "Aceptar / pulsar": "Conferma / premi",
+  "Volver / cerrar": "Indietro / chiudi",
+  "Pestaña anterior": "Scheda precedente",
+  "Pestaña siguiente": "Scheda successiva",
+  "Pulsa…": "Premi…",
+  "Restaurar las teclas de fábrica": "Ripristina i tasti predefiniti"
  },
  "de": {
   "Historia": "Geschichte",
@@ -29132,7 +29172,17 @@
   "No se sienta a hablar de él por un tiempo.": "Über ihn wird eine Weile nicht verhandelt.",
   "(Mira el reloj.)": "(Er schaut auf die Uhr.)",
   "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!": "Ich bin zwei Wochen im Urlaub, und der Vorstand will, dass du das Konto führst. Benutzer: %s · Passwort: %s · Pass gut darauf auf!",
-  "Forma del escudo": "Wappenform"
+  "Forma del escudo": "Wappenform",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  rojo: no disponible": "Ⓒ Kapitän  ·  🔻 auf der Transferliste  ·  🩹 verletzt  ·  🚫 gesperrt  ·  ✦ Spezialfähigkeit  ·  ↗ (grün): jung mit Luft nach oben  ·  rot: nicht verfügbar",
+  "Contraste alto": "Hoher Kontrast",
+  "Fondo negro, texto blanco y bordes marcados en todas las pantallas de gestión.": "Schwarzer Hintergrund, weißer Text und kräftige Ränder auf allen Verwaltungsbildschirmen.",
+  "Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)": "Tasten der Oberfläche («Ändern» drücken, dann die Taste oder den Knopf; Esc bricht ab)",
+  "Aceptar / pulsar": "Bestätigen / drücken",
+  "Volver / cerrar": "Zurück / schließen",
+  "Pestaña anterior": "Vorheriger Reiter",
+  "Pestaña siguiente": "Nächster Reiter",
+  "Pulsa…": "Drücken…",
+  "Restaurar las teclas de fábrica": "Standardtasten wiederherstellen"
  },
  "ca": {
   "Historia": "Història",
@@ -33927,7 +33977,17 @@
   "No se sienta a hablar de él por un tiempo.": "No s'asseu a parlar-ne durant un temps.",
   "(Mira el reloj.)": "(Mira el rellotge.)",
   "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!": "Me'n vaig dues setmanes de vacances i la directiva vol que el compte el portis tu. Usuari: %s · Clau: %s · Cuida-me'l!",
-  "Forma del escudo": "Forma de l'escut"
+  "Forma del escudo": "Forma de l'escut",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  rojo: no disponible": "Ⓒ capità  ·  🔻 transferible  ·  🩹 lesionat  ·  🚫 sancionat  ·  ✦ habilitat especial  ·  ↗ (verd): jove amb marge  ·  vermell: no disponible",
+  "Contraste alto": "Contrast alt",
+  "Fondo negro, texto blanco y bordes marcados en todas las pantallas de gestión.": "Fons negre, text blanc i vores marcades a totes les pantalles de gestió.",
+  "Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)": "Tecles de la interfície (prem «Canviar» i després la tecla o el botó; Esc cancel·la)",
+  "Aceptar / pulsar": "Acceptar / prémer",
+  "Volver / cerrar": "Tornar / tancar",
+  "Pestaña anterior": "Pestanya anterior",
+  "Pestaña siguiente": "Pestanya següent",
+  "Pulsa…": "Prem…",
+  "Restaurar las teclas de fábrica": "Restaurar les tecles de fàbrica"
  },
  "pl": {
   "Club": "Klub",
@@ -39002,7 +39062,17 @@
   "No se sienta a hablar de él por un tiempo.": "Przez jakiś czas nie usiądzie, by o nim rozmawiać.",
   "(Mira el reloj.)": "(Zerka na zegarek.)",
   "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!": "Wyjeżdżam na dwa tygodnie na urlop, a zarząd chce, żebyś to ty prowadził konto. Login: %s · Hasło: %s · Dbaj o nie!",
-  "Forma del escudo": "Kształt herbu"
+  "Forma del escudo": "Kształt herbu",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  rojo: no disponible": "Ⓒ kapitan  ·  🔻 na liście transferowej  ·  🩹 kontuzjowany  ·  🚫 zawieszony  ·  ✦ umiejętność specjalna  ·  ↗ (zielony): młody z zapasem  ·  czerwony: niedostępny",
+  "Contraste alto": "Wysoki kontrast",
+  "Fondo negro, texto blanco y bordes marcados en todas las pantallas de gestión.": "Czarne tło, biały tekst i wyraźne obramowania na wszystkich ekranach zarządzania.",
+  "Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)": "Klawisze interfejsu (naciśnij «Zmień», a potem klawisz lub przycisk; Esc anuluje)",
+  "Aceptar / pulsar": "Zatwierdź / naciśnij",
+  "Volver / cerrar": "Wstecz / zamknij",
+  "Pestaña anterior": "Poprzednia karta",
+  "Pestaña siguiente": "Następna karta",
+  "Pulsa…": "Naciśnij…",
+  "Restaurar las teclas de fábrica": "Przywróć domyślne klawisze"
  },
  "tr": {
   "Club": "Kulüp",
@@ -44077,6 +44147,16 @@
   "No se sienta a hablar de él por un tiempo.": "Bir süre onun hakkında masaya oturmayacak.",
   "(Mira el reloj.)": "(Saatine bakıyor.)",
   "Me voy dos semanas de vacaciones y la directiva quiere que la cuenta la lleves tú. Usuario: %s · Clave: %s · ¡Cuídamela!": "İki haftalığına tatile çıkıyorum ve yönetim hesabı senin yönetmeni istiyor. Kullanıcı adı: %s · Şifre: %s · Ona iyi bak!",
-  "Forma del escudo": "Arma şekli"
+  "Forma del escudo": "Arma şekli",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  rojo: no disponible": "Ⓒ kaptan  ·  🔻 satış listesinde  ·  🩹 sakat  ·  🚫 cezalı  ·  ✦ özel yetenek  ·  ↗ (yeşil): gelişime açık genç  ·  kırmızı: oynayamaz",
+  "Contraste alto": "Yüksek kontrast",
+  "Fondo negro, texto blanco y bordes marcados en todas las pantallas de gestión.": "Tüm yönetim ekranlarında siyah arka plan, beyaz yazı ve belirgin kenarlar.",
+  "Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)": "Arayüz tuşları («Değiştir»e bas, sonra tuşa ya da düğmeye; Esc iptal eder)",
+  "Aceptar / pulsar": "Onayla / bas",
+  "Volver / cerrar": "Geri / kapat",
+  "Pestaña anterior": "Önceki sekme",
+  "Pestaña siguiente": "Sonraki sekme",
+  "Pulsa…": "Bas…",
+  "Restaurar las teclas de fábrica": "Varsayılan tuşları geri yükle"
  }
 }
