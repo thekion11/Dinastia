@@ -291,6 +291,7 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.reloj.desde_dic(datos.get("reloj", {}))
 	m.necesidades.desde_dic(datos.get("necesidades", {}))
 	m.citas.desde_dic(datos.get("citas", {}))
+	m.afinidad.desde_dic(datos.get("afinidad", {}))
 	m.imprevistos.desde_dic(datos.get("imprevistos", {}))
 	m.horario = String(datos.get("horario", "tarde"))
 	m.campana = (datos.get("campana", {}) as Dictionary).duplicate()

@@ -72,6 +72,8 @@ func _semana_modulos_del_club() -> void:
 		_resultado_semana = 2
 	if citas != null and mi_club() != null:
 		citas.semana(self)   ## fase 4: las citas de la semana que empieza
+	if afinidad != null:
+		afinidad.semana(anio, semana)   ## fase 4, bloque 7: −1 a quien no habló esta semana
 
 ## FASE 15 · EL BANCO: sobregiro, liquidación e insolvencia.
 func _semana_banco() -> void:
