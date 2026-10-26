@@ -1,6 +1,6 @@
 class_name PantallaAjustes
 extends "res://ui/pantallas/pantalla_ajustes_p1.gd"
-## [Capa 2/2 de `pantalla_ajustes.gd`] _pintar_fondos_ajustes, _pintar_ajustes
+## [Capa 2/2 de `pantalla_ajustes.gd`] fuente_de, _pintar_tipografia, _pintar_ranuras, _pintar_fondos_ajustes, _pintar_ajustes
 
 ## AJUSTES DEL JUGADOR (fase 0, paso 2): esta clase es la DUEÑA de las
 ## tipografías, el límite de fotogramas, las ranuras manuales y la sección
@@ -180,7 +180,7 @@ func _pintar_fondos_ajustes() -> void:
 	var fila_estilo := HFlowContainer.new()
 	fila_estilo.add_theme_constant_override("h_separation", 4)
 	p._lista_ajustes.add_child(fila_estilo)
-	for e: Array in Principal.ESTILOS_MENU:
+	for e: Array in EstilosMenu.ESTILOS_MENU:
 		var clave := String(e[0])
 		var be := Button.new()
 		be.text = String(e[1])

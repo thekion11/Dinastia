@@ -50,7 +50,7 @@ func cargar() -> void:
 		p._fondo_elegido = fo
 	p._rotar_diseno = bool(cf.get_value("aspecto", "rotar_diseno", true))
 	var em := String(cf.get_value("aspecto", "estilo_menu", p._estilo_menu))
-	for e: Array in Principal.ESTILOS_MENU:
+	for e: Array in EstilosMenu.ESTILOS_MENU:
 		if String(e[0]) == em:
 			p._estilo_menu = em
 	var cl := String(cf.get_value("aspecto", "clima", p._clima_elegido))

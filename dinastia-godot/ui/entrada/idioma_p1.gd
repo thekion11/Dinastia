@@ -1,5 +1,5 @@
 extends Control
-## [Capa 1/2 de `idioma.gd`] LA CONSTRUCCIÓN de la pantalla de idioma: textos por
+## [Capa 1/2 de `idioma.gd`] _calcular_textos, _fuente_serif, _construir, _cabecera, _columna_tarjetas, _tarjeta … (+5)
 ## idioma, fuentes, fondo, tarjetas, vista previa y ayudas. Aquí no hay lógica ni
 ## señales (eso vive en `idioma.gd`, que conecta las tarjetas tras construirlas).
 

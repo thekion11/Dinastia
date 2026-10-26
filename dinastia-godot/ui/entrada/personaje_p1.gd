@@ -1,5 +1,5 @@
 extends Control
-## [Capa 1/2 de `personaje.gd`] el estado, `configurar` y la hoja de DATOS.
+## [Capa 1/2 de `personaje.gd`] configurar, personaje, errores, _poner_datos, _refrescar, _tarjeta … (+5)
 
 ## LA ETAPA «PERSONAJE» (MEGAPLAN fase 1, etapa 6, 25-10-2026). Pantalla propia
 ## a pantalla completa y OBLIGATORIA del arranque: quién eres (aspecto y datos)

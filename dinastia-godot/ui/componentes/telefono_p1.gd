@@ -1,5 +1,5 @@
 extends PanelContainer
-## [Capa 1/4 de `telefono.gd`] crear, _hora, _decir, _widget_informe, _insignia, _icono_app … (+13)
+## [Capa 1/4 de `telefono.gd`] crear, _hora, _decir, _t_icono, _frase, _widget_informe … (+16)
 
 ## TU MÓVIL, COMO UN MÓVIL (28-9-2026). Pantalla de inicio con tu fondo, la
 ## hora y las apps; la barra de abajo vuelve al inicio desde cualquier app.

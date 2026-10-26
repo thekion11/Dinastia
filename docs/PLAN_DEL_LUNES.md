@@ -39,7 +39,6 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 
 | Fase | Contenido | Entregable |
 |---|---|---|
-| **0 — Cimientos** | pasos 2-3 de 7.1 (el banco ya está partido por grupo, 26-10) (la fase 0 ya sacó noticias, sorteos, preferencias, ciclo de partida y tutorial) | juego igual, código más ordenado |
 | **1 — Entrada** | las 7 pantallas están construidas; falta tu aprobación de la entrada (§0) y su recorrido con la cámara real | las fases 0-5 como pantallas completas |
 | **2 — Prólogo 3D** | aparición fuera del estadio, mentor guía, directivos con oficina, sala de prensa nueva, rueda de prensa con gestos, oficina con PC | de «Nuevo juego» hasta tu primer día |
 | **3 — Vida** | casa y familia, jornada y horas extra, días libres, teléfono, citas, eventos de ciudad, transporte público, cárcel | un día completo jugable en 3D |
@@ -111,6 +110,8 @@ ser el mundo en el que vives.
 
 ### 2.2 Fase 0 real: separar `Principal` (validado por el dueño)
 
+Fase 0 CERRADA el 26-10 (pasos 1-3 hechos: noticias, sorteos, preferencias, ciclo de partida, tutorial, Ajustes → `PantallaAjustes`, estilos → `EstilosMenu`; prueba `pruebas/ideas/f0_cimientos`). Quedan los pasos 4-7, que son de la fase 6.
+
 #### 7. Código menos delicado (cómo se hace y cómo se comprueba)
 
 #### 7.1 Partir `principal.gd` sin romperlo
@@ -119,8 +120,6 @@ cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
 
 | Paso | Se extrae | Va a | Riesgo |
 |---|---|---|---|
-| 2 | Ajustes: tipografía, idioma, FPS, música, acento, ranuras (leer/guardar ya está en `ui/principal/preferencias.gd`) | `ui/pantallas/pantalla_ajustes.gd` (ya existe, absorbe) | medio |
-| 3 | Estilos de menú, píldoras, rotación de estética cada 10 min | `ui/menu/estilos_menu.gd` | bajo |
 | 4 | Elegir club (mapa, países, escudos) | pasa a ser la **fase 2** del nuevo menú inicial | se rehace de todos modos |
 | 5 | Hubs contextuales y carril de chips | `ui/menu/hubs.gd` | medio |
 | 6 | Estadio, finanzas, identidad, camarín (`_pintar_*`) | `ui/pantallas/*` (ya hay una por tema) | medio |

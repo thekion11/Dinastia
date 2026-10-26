@@ -1,5 +1,5 @@
 extends Control
-## [Capa 1/2 de `entrada_campeonato.gd`] Las piezas visuales de la pantalla de ENTRADA AL CAMPEONATO:
+## [Capa 1/2 de `entrada_campeonato.gd`] _caja, _etq, _color_tono, _boton, _insignia, _fila_cifra … (+3)
 ## tarjetas, cifras, botones y la capa de confirmación. La lógica (qué cifras, qué opción, qué se emite)
 ## vive en la capa 2; las reglas en `nucleo/entrada_campeonato.gd`.
 
