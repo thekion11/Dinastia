@@ -311,10 +311,56 @@ func _entrada() -> Vector2:
 		x = jx
 	if absf(jy) > 0.2:
 		y = jy
+	## En coche, los gatillos como en cualquier juego de conducción: RT acelera, LT frena.
+	if modo == "coche":
+		var gat := Input.get_joy_axis(0, JOY_AXIS_TRIGGER_RIGHT) - Input.get_joy_axis(0, JOY_AXIS_TRIGGER_LEFT)
+		if absf(gat) > 0.1:
+			y = gat
 	if _tactil_vec != Vector2.ZERO:
 		x = clampf(_tactil_vec.x, -1.0, 1.0)
 		y = clampf(_tactil_vec.y, -1.0, 1.0)
 	return Vector2(x, y)
+
+## TODO LO DEL TECLADO, TAMBIÉN CON MANDO Y TÁCTIL (M-433, pmov 26-10-2026). Con
+## mando no había forma de volver al mapa (solo Esc), ni de cambiar la vista, ni
+## de esconder el GPS, ni de mirar por la ventana del tren, ni de correr en el
+## andén; en táctil, ni correr ni frenar de mano ni cambiar la vista. Cada botón
+## lleva a la MISMA acción que su tecla (`_accion`).
+const BOTONES_MANDO := {JOY_BUTTON_X: "usar", JOY_BUTTON_START: "salir", JOY_BUTTON_Y: "vista",
+	JOY_BUTTON_BACK: "gps", JOY_BUTTON_RIGHT_SHOULDER: "ventana"}
+const TECLAS := {KEY_ESCAPE: "salir", KEY_E: "usar", KEY_V: "vista", KEY_C: "ventana"}
+var _tactil_correr := false   ## el botón táctil «correr / freno de mano», mientras se pulsa
+
+func _corre() -> bool:
+	return Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A) or _tactil_correr
+
+func _freno_mano() -> bool:
+	return Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B) or _tactil_correr
+
+## Hace la acción `a` (de una tecla, un botón del mando o uno táctil). Devuelve si hizo algo.
+func _accion(a: String) -> bool:
+	match a:
+		"salir":
+			salir.emit()
+		"usar":
+			call("_usar")   ## `_usar` vive en la capa 4
+		"vista":
+			if modo == "coche" and estado == "calle":
+				cam_coche = (cam_coche + 1) % 3
+				_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: primera persona")][cam_coche]
+			else:
+				primera_persona = not primera_persona
+				_raton_en_primera_persona()
+				_aviso.text = Idiomas.t("Primera persona") if primera_persona else Idiomas.t("Tercera persona")
+		"gps":
+			_gps_oculto = not _gps_oculto
+		"ventana":
+			if estado != "tren":
+				return false
+			_ventana = not _ventana
+		_:
+			return false
+	return true
 
 ## Arriba de la escalera mecánica: a la calle, delante de la caseta.
 func _subir_de_la_galeria() -> void:
@@ -361,3 +407,17 @@ func _animar_dt(v: float) -> void:
 	if _anim.current_animation != quiere and _anim.has_animation(quiere):
 		_anim.play(quiere, 0.25)
 	_anim.speed_scale = vel_anim
+
+## El rótulo de comercio cuya fachada está junto a `p`, o vacío.
+func _rotulo_en(p: Vector3) -> Dictionary:
+	if cb == null or cb.expansion == null:
+		return {}
+	var mejor: Dictionary = {}
+	var md := INF
+	for r: Dictionary in cb.expansion.rotulos:
+		var q: Vector3 = r["pos"]
+		var d := Vector2(q.x - p.x, q.z - p.z).length()
+		if d < float(r["ancho"]) * 0.5 + 2.5 and d < md:
+			md = d
+			mejor = r
+	return mejor

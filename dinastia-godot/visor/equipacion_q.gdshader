@@ -573,7 +573,10 @@ void fragment() {
 			// Medio centímetro más arriba: para el canto enrollado del cuello.
 			tapa_arriba = escote(x, y + 0.004, z * 0.5 - 0.25).x;
 		}
-		m.r = max(brazo * (1.0 - smoothstep(0.43 - w, 0.43 + w, ax)), (1.0 - brazo) * torso);
+		// Suma, no `max` (26-10-2026): manga y tronco se reparten la costura
+		// del hombro (brazo y 1 − brazo); con `max` justo en la costura la
+		// tela tapaba la mitad y asomaba una raya de piel alrededor de la sisa.
+		m.r = brazo * (1.0 - smoothstep(0.43 - w, 0.43 + w, ax)) + (1.0 - brazo) * torso;
 		m.g = (1.0 - brazo) * smoothstep(0.62 - w, 0.62 + w, y) * (1.0 - smoothstep(1.0 - w, 1.0 + w, y));
 		m.b = (1.0 - brazo) * smoothstep(0.085 - w, 0.085 + w, y) * (1.0 - smoothstep(0.47 - w, 0.47 + w, y));
 		m.a = (1.0 - brazo) * (1.0 - smoothstep(0.085 - w, 0.085 + w, y));

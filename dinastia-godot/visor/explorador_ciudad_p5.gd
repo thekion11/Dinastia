@@ -77,7 +77,7 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 
 func _mover_en_anden(delta: float) -> void:
 	var e := _entrada()
-	var corre := Input.is_physical_key_pressed(KEY_SHIFT)
+	var corre := _corre()
 	vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 	rumbo -= e.x * delta * 2.6
 	if _anim != null:
@@ -147,7 +147,7 @@ func _mover_en_interior(delta: float) -> void:
 		_salir_del_edificio()
 		return
 	var e := _entrada()
-	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	var corre := _corre()
 	var objetivo := (3.4 if corre else 1.6) * clampf(e.y, -0.5, 1.0)
 	_vel_pie = move_toward(_vel_pie, objetivo, (7.0 if absf(objetivo) > absf(_vel_pie) else 12.0) * delta)
 	vel = _vel_pie
@@ -242,7 +242,7 @@ func _conducir(e: Vector2, delta: float) -> void:
 		_motor_sonido = MotorCocheSonido.new()
 		add_child(_motor_sonido)
 	_motor_sonido.poner(vel, maxf(e.y, 0.0))
-	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+	var freno_mano := _freno_mano()
 	_volante = lerpf(_volante, e.x, clampf(delta * 6.0, 0.0, 1.0))
 	if e.y > 0.0:
 		var potencia := 15.0 * (1.0 - clampf(maxf(vel, 0.0) / VEL_COCHE, 0.0, 1.0) * 0.82) + 2.0
@@ -352,7 +352,7 @@ func _physics_process(delta: float) -> void:
 		_conducir(e, delta)
 		_girar_si_cabe(rumbo_antes)
 	else:
-		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+		var corre := _corre()
 		## Aceleración y frenada suaves: arrancar y parar no es instantáneo.
 		var objetivo := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 		vel = move_toward(vel, objetivo, (7.0 if absf(objetivo) > absf(vel) else 12.0) * delta)
@@ -426,23 +426,13 @@ func _unhandled_input(ev: InputEvent) -> void:
 	if ev is InputEventMouseMotion and primera_persona and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rumbo -= (ev as InputEventMouseMotion).relative.x * 0.003
 		return
-	if not (ev is InputEventKey) or not (ev as InputEventKey).pressed or (ev as InputEventKey).echo:
-		if ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed and (ev as InputEventJoypadButton).button_index == JOY_BUTTON_X:
-			_usar()
+	## Botones del mando y teclas llevan a la misma acción (`_accion`, M-433).
+	if ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed:
+		if _accion(String(BOTONES_MANDO.get((ev as InputEventJoypadButton).button_index, ""))):
+			get_viewport().set_input_as_handled()
 		return
-	var k := (ev as InputEventKey).keycode
-	if k == KEY_ESCAPE:
+	if not (ev is InputEventKey) or not (ev as InputEventKey).pressed or (ev as InputEventKey).echo:
+		return
+	var a := String(TECLAS.get((ev as InputEventKey).keycode, ""))
+	if _accion(a) and a in ["salir", "usar"]:
 		get_viewport().set_input_as_handled()
-		salir.emit()
-	elif k == KEY_E:
-		get_viewport().set_input_as_handled()
-		_usar()
-	elif k == KEY_V and modo == "coche" and estado == "calle":
-		cam_coche = (cam_coche + 1) % 3
-		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: primera persona")][cam_coche]
-	elif k == KEY_V:
-		primera_persona = not primera_persona
-		_raton_en_primera_persona()
-		_aviso.text = Idiomas.t("Primera persona") if primera_persona else Idiomas.t("Tercera persona")
-	elif k == KEY_C and estado == "tren":
-		_ventana = not _ventana

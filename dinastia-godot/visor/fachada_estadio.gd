@@ -56,7 +56,7 @@ static func _material(clave: String, p: Dictionary) -> StandardMaterial3D:
 			m.emission_enabled = true
 			m.emission = Color(1.0, 0.86, 0.62)
 			m.emission_texture = _tex_muro_cortina(true)
-			m.emission_energy_multiplier = 0.9 if p["noche"] == "noche" else 0.0
+			m.emission_energy_multiplier = 0.55 if p["noche"] == "noche" else 0.0
 		K_LUZ:
 			m = StandardMaterial3D.new()
 			m.albedo_color = p["luz"]
@@ -87,7 +87,7 @@ static func _tex_muro_cortina(luz: bool) -> ImageTexture:
 	var luces: Array[float] = []
 	for k in 6:
 		tonos.append(rng.randf_range(0.82, 1.08))
-		luces.append([0.15, 0.55, 1.0][rng.randi() % 3])
+		luces.append([0.12, 0.5, 0.85][rng.randi() % 3])
 	for y in n:
 		for x in n:
 			var cx := x % 32
