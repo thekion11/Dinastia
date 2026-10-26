@@ -229,8 +229,6 @@ func _process(delta: float) -> void:
 		if bool(g["quieto"]):
 			_anim(g, "parado")
 			continue
-		if _saludar(g):
-			continue
 		if float(g["espera"]) > 0.0:
 			g["espera"] = float(g["espera"]) - delta
 			## EN SU PUESTO, TRABAJANDO (26-10-2026): de vez en cuando, un gesto
@@ -278,35 +276,6 @@ func _process(delta: float) -> void:
 		n.position += hacia / dist * paso
 		n.rotation.y = atan2(hacia.x, hacia.z)
 		_anim(g, "caminar")
-
-## Quién te saluda al pasar y con qué gesto (el primero que tenga el cuerpo).
-const SALUDAN := {
-	"portero": ["saludo_mano", "saludar_publico", "banda/senalar"],
-	"hincha": ["banda/aplaudir", "banda/llamar_hinchada", "saludo_mano"],
-	"conserje": ["saludo_mano", "saludar_publico", "banda/senalar"],
-}
-## Cada cuánto vuelve a saludar a quien pasa (ms).
-const SALUDO_CADA := 45000
-
-## EL PORTERO TE SALUDA AL PASAR (26-10-2026): antes nadie reaccionaba a quien
-## recorría el club hasta hablarle. Ahora el portero (y el hincha de la puerta,
-## y el conserje) se gira hacia ti, sonríe y hace su gesto cuando pasas a menos
-## de 4,5 m; no más de una vez cada 45 s.
-func _saludar(g: Dictionary) -> bool:
-	var k := String(g["clave"])
-	if not SALUDAN.has(k) or int(g["planta"]) != _jug_planta or Time.get_ticks_msec() - _jug_ms > 400:
-		return false
-	var n: Node3D = g["nodo"]
-	var v := Vector2(_jug_pos.x - n.position.x, _jug_pos.z - n.position.z)
-	if v.length() > 4.5 or v.length() < 0.6:
-		return false
-	var t := Time.get_ticks_msec()
-	if g.has("saludo_ms") and t - int(g["saludo_ms"]) < SALUDO_CADA:
-		return false
-	g["saludo_ms"] = t
-	n.rotation.y = atan2(v.x, v.y)
-	Expresion.de(n).poner("alegre", 2.0)
-	return gesto(g, SALUDAN[k]) > 0.0
 
 func _anim(g: Dictionary, nombre: String) -> void:
 	var a: AnimationPlayer = g.get("anim") as AnimationPlayer

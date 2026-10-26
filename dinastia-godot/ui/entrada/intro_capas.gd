@@ -1,6 +1,6 @@
 extends "res://ui/entrada/intro_dibujo.gd"
 ## [Capa 2/3 de `intro.gd`] LAS CAPAS DE LA INTRO DE MARCA, de abajo arriba: fondo (shader),
-## base (sombra de las letras), logo con su brillo, palabra en oro, lema y luz
+## base (relleno del escudo y sombra de las letras), escudo en oro, palabra en oro, lema y luz
 ## aditiva (brasas, chispas, destellos), y el velo negro del fundido. Cada una es un `Lienzo`
 ## con su material; aquí está lo que pinta cada una en función de `_t`.
 
@@ -10,21 +10,18 @@ func _montar() -> void:
 	_fuente = _serif(700)
 	_fuente_lema = _serif(600)
 	_brillo = _textura_brillo()
-	_logo = load(LOGO) as Texture2D
-	_alas_izq = load(ALAS_IZQ) as Texture2D
-	_alas_der = load(ALAS_DER) as Texture2D
+	_medio = _medio_contorno()
+	_medio_largo = _largos(_medio)
 	_sembrar_particulas()
 	_fondo = ColorRect.new()
 	_mat_fondo = ShaderMaterial.new()
 	_mat_fondo.shader = SHADER_FONDO
 	_fondo.material = _mat_fondo
 	_agregar(_fondo)
-	_mat_logo = ShaderMaterial.new()
-	_mat_logo.shader = SHADER_LOGO
+	_mat_oro_escudo = _material_oro()
 	_mat_oro_letras = _material_oro()
 	_capa(_pintar_base, null)
-	_capa(_pintar_alas, null)
-	_capa(_pintar_logo, _mat_logo)
+	_capa(_pintar_escudo, _mat_oro_escudo)
 	_capa(_pintar_palabra, _mat_oro_letras)
 	_capa(_pintar_lema, null)
 	var aditivo := CanvasItemMaterial.new()
@@ -48,8 +45,45 @@ func _capa(f: Callable, mat: Material) -> void:
 
 # --- las capas ------------------------------------------------------------------
 
-## Debajo del oro: la sombra de las letras.
+## El contorno entero del escudo (cerrado), en píxeles, con escala `k` sobre su centro.
+func _contorno(k: float) -> PackedVector2Array:
+	var p := PackedVector2Array()
+	for v in _medio:
+		p.append(_ce + v * _we * k)
+	for i in range(_medio.size() - 2, 0, -1):
+		p.append(_ce + Vector2(-_medio[i].x, _medio[i].y) * _we * k)
+	return p
+
+## El primer `f` (0..1) del medio contorno, en píxeles; `lado` = 1 derecha, -1 izquierda.
+func _medio_parcial(f: float, lado: float) -> PackedVector2Array:
+	var p := PackedVector2Array()
+	var hasta := f * _medio_largo[_medio_largo.size() - 1]
+	for i in _medio.size():
+		var v := _medio[i]
+		if _medio_largo[i] > hasta and i > 0:
+			var u := (hasta - _medio_largo[i - 1]) / maxf(0.0001, _medio_largo[i] - _medio_largo[i - 1])
+			v = _medio[i - 1].lerp(_medio[i], u)
+			p.append(_ce + Vector2(v.x * lado, v.y) * _we)
+			break
+		p.append(_ce + Vector2(v.x * lado, v.y) * _we)
+	return p
+
+## Debajo del oro: el relleno esmeralda del escudo y la sombra de las letras.
 func _pintar_base(c: Control) -> void:
+	var a := smoothstep(0.0, 1.0, _tramo(_t, T_RELLENO, D_RELLENO))
+	if a > 0.0:
+		var pol := _contorno(1.0)
+		var cols := PackedColorArray()
+		var arriba := _ce.y - _we * ESCUDO_ALTO * 0.5
+		for v in pol:
+			var y := (v.y - arriba) / (_we * ESCUDO_ALTO)
+			cols.append(Color(0.075, 0.20, 0.13, a).lerp(Color(0.02, 0.065, 0.042, a), y))
+		c.draw_polygon(pol, cols)
+		## Medio escudo en sombra: da volumen sin dibujar un bisel.
+		var der := PackedVector2Array()
+		for v in _medio:
+			der.append(_ce + v * _we)
+		c.draw_colored_polygon(der, Color(0, 0, 0, 0.22 * a))
 	for i in _nombre.length():
 		var l := _letra(i, _t)
 		## La sombra llega al final, cuando la letra ya está casi en su sitio: con la letra
@@ -58,29 +92,43 @@ func _pintar_base(c: Control) -> void:
 		if sombra > 0.0:
 			_char(c, _fuente, i, Vector2(l.x, _y_letra(l)) + Vector2(0, _fs * 0.045), l.z, Color(0, 0, 0, sombra))
 
-## Las alas, detrás del escudo: se abren desde el centro hacia los lados y se aclaran.
-func _pintar_alas(c: Control) -> void:
-	var p := _tramo(_t, T_ALAS, D_ALAS)
-	if p <= 0.0 or _alas_izq == null or _alas_der == null:
-		return
-	var e := _sal_expo(p)
-	var ancho := minf(_we * 2.4, _lienzo.x * 0.96)
-	var mitad := ancho * 0.5 * lerpf(0.12, 1.0, e)
-	var alto := ancho * ALAS_ASPECTO
-	var gap := _we * 0.03
-	var y := _ce.y - _we * 0.10 - alto * 0.5
-	var col := Color(1, 1, 1, smoothstep(0.0, 0.6, p))
-	c.draw_texture_rect(_alas_izq, Rect2(_ce.x - gap - mitad, y, mitad, alto), false, col)
-	c.draw_texture_rect(_alas_der, Rect2(_ce.x + gap, y, mitad, alto), false, col)
-
-## El logo: aparece creciendo un poco (de 92 % a 100 %) mientras se aclara.
-func _pintar_logo(c: Control) -> void:
-	var p := _tramo(_t, T_LOGO, D_LOGO)
-	if p <= 0.0 or _logo == null:
-		return
-	var k := lerpf(0.92, 1.0, _sal_expo(p))
-	var lado := _we * k
-	c.draw_texture_rect(_logo, Rect2(_ce - Vector2(lado, lado) * 0.5, Vector2(lado, lado)), false, Color(1, 1, 1, smoothstep(0.0, 1.0, p)))
+func _pintar_escudo(c: Control) -> void:
+	var lw := maxf(1.5, _we * 0.030)
+	var f := _trazo()
+	## Cerrado de una pieza en cuanto se encuentran: dos medias líneas dejan una muesca en las juntas.
+	if f >= 0.995:
+		var todo := _contorno(1.0)
+		todo.append(todo[0])
+		c.draw_polyline(todo, Color.WHITE, lw, true)
+	elif f > 0.0:
+		c.draw_polyline(_medio_parcial(f, 1.0), Color.WHITE, lw, true)
+		c.draw_polyline(_medio_parcial(f, -1.0), Color.WHITE, lw, true)
+	var r := smoothstep(0.0, 1.0, _tramo(_t, T_RELLENO + 0.15, D_RELLENO))
+	if r > 0.0:
+		var dentro := _contorno(lerpf(0.94, 0.86, r))
+		dentro.append(dentro[0])
+		c.draw_polyline(dentro, Color(1, 1, 1, r * 0.85), lw * 0.45, true)
+	## El monograma: la inicial de la marca, centrada en el escudo.
+	var pm := _tramo(_t, T_MONOGRAMA, 0.55)
+	if pm > 0.0:
+		var fm := int(_we * ESCUDO_ALTO * 0.50)
+		var ch := _nombre.substr(0, 1)
+		var w := _fuente.get_char_size(ch.unicode_at(0), fm).x
+		c.draw_set_transform(_ce + Vector2(0, -_we * 0.03), 0.0, Vector2.ONE * lerpf(0.6, 1.0, _sal_atras(pm)))
+		c.draw_char(_fuente, Vector2(-w * 0.5, fm * 0.35), ch, fm, Color(1, 1, 1, smoothstep(0.0, 0.5, pm)))
+		c.draw_set_transform_matrix(Transform2D.IDENTITY)
+	## La corona, encima del escudo.
+	var pc := _tramo(_t, T_CORONA, 0.5)
+	if pc > 0.0:
+		var base := Vector2(_ce.x, _ce.y - _we * (ESCUDO_ALTO * 0.5 + 0.05))
+		var k := _we * lerpf(0.5, 1.0, _sal_atras(pc))
+		var col := Color(1, 1, 1, smoothstep(0.0, 0.4, pc))
+		var pol := PackedVector2Array()
+		for v: Vector2 in CORONA:
+			pol.append(base + v * k)
+		c.draw_colored_polygon(pol, col)
+		for i in [2, 4, 6]:
+			c.draw_circle(base + (CORONA[i] as Vector2) * k, k * 0.03, col, true, -1.0, true)
 
 func _pintar_palabra(c: Control) -> void:
 	for i in _nombre.length():
@@ -153,6 +201,16 @@ func _pintar_luz(c: Control) -> void:
 		var a := viva * (0.35 + 0.65 * (0.5 + 0.5 * sin(_t * b[5] + b[3] * 20.0))) * smoothstep(0.0, s.y * 0.3, y)
 		var r := b[2] * esc * (1.0 + 0.8 * d) * 2.2
 		_punto(c, Vector2(x, y), r, Color(1.0, 0.62 + 0.18 * b[6], 0.25, a * 0.5))
+	## Las cabezas del trazo del escudo: dos puntos de luz que bajan y se encuentran.
+	var ft := _tramo(_t, T_TRAZO, D_TRAZO)
+	if ft > 0.0 and ft < 1.0:
+		var f := _trazo()
+		var fuerza := 1.0 - smoothstep(0.9, 1.0, ft)
+		for lado in [1.0, -1.0]:
+			var tramo := _medio_parcial(f, lado)
+			var cab := tramo[tramo.size() - 1]
+			_punto(c, cab, _we * 0.20, Color(1.0, 0.75, 0.35, 0.55 * fuerza))
+			_punto(c, cab, _we * 0.05, Color(1.0, 0.95, 0.85, 0.9 * fuerza))
 	## La letra que se está formando brilla con luz propia (en aditivo) y se apaga al
 	## asentarse: sin esto, grande y medio transparente sobre el verde, se veía color oliva.
 	for i in _nombre.length():

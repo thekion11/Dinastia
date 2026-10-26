@@ -71,3 +71,8 @@ El resto es `continental` (copa grande de asas enormes).
 Fuentes en el código: `nucleo/selecciones_p1.gd` (`TORNEO_POR_CONFED`), `nucleo/selecciones_p2.gd` (Copa del Mundo,
 Eurocopa, Copa América y Mundial de Clubes), `nucleo/mundo_p6.gd` (Supercopa), `datos/tablas.json` (`PAISES_LIGAS`,
 `COPA_NOM`, `CONFED`) y `datos/pack_real.json` (lo mismo en real).
+
+## Pendiente
+
+Las pantallas que todavía escriben el nombre interno sin pasar por `CompeticionInfo.nombre_visible()`: noticias,
+calendario, sorteos y la ficha de la competición. Ya pasan por él la rueda de prensa, el legado y su vitrina 3D.

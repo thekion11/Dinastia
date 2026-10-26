@@ -14,7 +14,7 @@ static func ronda(txt: String) -> String:
 
 static func pintar(lista: VBoxContainer, copa: Copa, mio: Club) -> void:
 	var conti := copa as Continental
-	var nombre := CompeticionInfo.nombre_visible(Continental.nombre_conti(conti.clave) if conti != null else copa.nombre)
+	var nombre := Idiomas.t(Continental.nombre_conti(conti.clave)) if conti != null else Idiomas.t(copa.nombre)
 	var estado := ""
 	if copa.campeon != null:
 		estado = Idiomas.t("Terminada")

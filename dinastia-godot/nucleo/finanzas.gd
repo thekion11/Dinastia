@@ -67,12 +67,9 @@ func _init(club: Club, aporte_obras: float = 0.0, honorarios: int = 0, bono_mkt:
 const FACTOR_TAQUILLA := 3.5
 ## El que se usa: las especiales lo cambian con TAQUILLA_X=<x> para medir otro.
 static var factor_taquilla: float = FACTOR_TAQUILLA
-## Abrir el estadio cuesta (seguridad, limpieza, personal, sanitario, luz y césped): ya no es un % plano, sale de
-## precios reales y del aforo, ver `Viajes.dia_de_partido_*`. Solo tu club, como la operación.
-
-## Los viajes a domicilio ya se pagan aparte, partido a partido y por distancia (`Viajes`): salen de la partida
-## mensual «Operación», que antes los llevaba dentro (un 4 % de ella en un club medio de liga local).
-const OPERACION_SIN_VIAJES := 0.96
+## Abrir el estadio cuesta: seguridad, servicios y personal del día de partido, ~30 % de lo recaudado (en
+## clubes reales, 25-40 %). Solo tu club, como la operación.
+const COSTE_DIA_DE_PARTIDO := 0.30
 
 ## Lo que deja cada espectador con el precio de entrada puesto.
 static func ingreso_por_espectador(precio: float) -> float:
@@ -108,7 +105,7 @@ func taquilla(gano_el_ultimo: bool = false, factor_horario: float = 1.0) -> int:
 	_club.mover_saldo(monto)
 	movimiento.emit("Taquilla (%d espectadores)" % gente, monto)
 	if aplica_operacion and monto > 0:
-		var coste := Viajes.dia_de_partido_interno(_club.pais, gente, _club.estadio_aforo)
+		var coste := int(round(float(monto) * COSTE_DIA_DE_PARTIDO))
 		_club.mover_saldo(-coste)
 		movimiento.emit("Día de partido (seguridad y servicios)", -coste)
 	return monto
@@ -269,7 +266,7 @@ func tasa_operacion() -> float:
 	return clampf(0.42 * pow(Eco.factor_club(float(_club.rep)), 0.1), 0.36, 0.55)
 
 func operacion(ingreso_tv: int, ingreso_patrocinio: int) -> int:
-	var monto := int(round(float(ingreso_tv + ingreso_patrocinio) * tasa_operacion() * factor_operacion * OPERACION_SIN_VIAJES))
+	var monto := int(round(float(ingreso_tv + ingreso_patrocinio) * tasa_operacion() * factor_operacion))
 	if monto <= 0:
 		return 0
 	_club.mover_saldo(-monto)
@@ -331,10 +328,9 @@ func proyeccion_anual(partidos_en_casa: int, ingreso_tienda_mes: int = 0) -> Dic
 	if aplica_operacion:
 		var oper_mes := int(round(
 			(float(round(float(derechos_tv_base()) * factor_tv)) + float(patrocinio_base())) \
-			* tasa_operacion() * factor_operacion * OPERACION_SIN_VIAJES))
+			* tasa_operacion() * factor_operacion))
 		gastos["Operación, viajes, seguridad e impuestos"] = oper_mes * meses
-		gastos["Día de partido (seguridad y servicios)"] = Viajes.dia_de_partido_interno(_club.pais, asistencia(), _club.estadio_aforo) * partidos_en_casa
-		gastos["Viajes a domicilio (distancia real)"] = Viajes.viaje_interno(_club.pais, _club.pais, _club.rep) * partidos_en_casa
+		gastos["Día de partido (seguridad y servicios)"] = int(round(float(ingresos["Taquilla"]) * COSTE_DIA_DE_PARTIDO))
 	var total_ing := 0
 	for k: String in ingresos:
 		total_ing += int(ingresos[k])

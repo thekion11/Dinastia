@@ -47,15 +47,6 @@ func _probar() -> void:
 					var fuera := absf(centro.x - raiz.x) - absf(pose.origin.x - raiz.x)
 					_comprobar(fuera > 0.015, "peatón %d: la bolsa cuelga por fuera de la mano (%.3f m más afuera)" % [i, fuera])
 					_comprobar((malla as BoxMesh).size.x < (malla as BoxMesh).size.z, "peatón %d: la bolsa es fina hacia la pierna" % i)
-					## Que la mano la agarre (26-10-2026: se veía flotando bajo la mano).
-					## En el espacio del hueso: +Y hacia los dedos; la palma, a ~7 cm.
-					var boca := (n.transform * ((mi as MeshInstance3D).position - Vector3(0, (malla as BoxMesh).size.y * 0.5, 0))).y
-					_comprobar(boca < 0.125, "peatón %d: la boca de la bolsa queda bajo la mano (%.3f m de la muñeca)" % [i, boca])
-					for otra in n.get_children():
-						if otra is MeshInstance3D and (otra as MeshInstance3D).mesh is TorusMesh:
-							var asa := n.transform * (otra as MeshInstance3D).position
-							var palma := n.transform * Vector3(0, 0.07, 0)
-							_comprobar(asa.distance_to(palma) < 0.025, "peatón %d: el asa pasa por la palma (a %.3f m)" % [i, asa.distance_to(palma)])
 				elif malla is SphereMesh and (malla as SphereMesh).is_hemisphere and hueso == "Head":
 					gorras += 1
 					## En el espacio del hueso de la cabeza (sigue a la cabeza aunque

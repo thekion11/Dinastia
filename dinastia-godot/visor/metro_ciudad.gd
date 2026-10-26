@@ -324,7 +324,7 @@ func _process(delta: float) -> void:
 		for pa: Dictionary in _paneles:
 			var mejor := INF
 			for t: Tren in (pa["linea"] as Dictionary)["trenes"]:
-				mejor = minf(mejor, eta_real(t, float(pa["s"])))
+				mejor = minf(mejor, t.eta(float(pa["s"])))
 			var lab: Label3D = pa["label"]
 			var cuando := "llegando" if mejor < 20.0 else "%d min" % int(ceil(mejor / 60.0))
 			if pa.has("pantalla"):

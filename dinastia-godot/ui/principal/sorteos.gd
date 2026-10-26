@@ -72,17 +72,17 @@ func conectar_mi_continental() -> void:
 	c.set_meta("_ui_conectado", true)
 	c.campeon_proclamado.connect(func(campeon: Club) -> void:
 		if campeon == p.mundo.mi_club():
-			Aviso.mostrar(p, "dinero", "🏆", "Campeón de %s" % CompeticionInfo.nombre_visible(c.nombre),
+			Aviso.mostrar(p, "dinero", "🏆", "Campeón de %s" % c.nombre,
 				"El trofeo continental es tuyo. Entra el premio de campeón a la caja."))
 	c.ronda_terminada.connect(func(nombre_ronda: String, resultados: Array) -> void:
 		for r: Dictionary in resultados:
 			if r.get("pasa") == p.mundo.mi_club():
-				Aviso.mostrar(p, "dinero", "🎟️", "Pasas de ronda en %s" % CompeticionInfo.nombre_visible(c.nombre),
+				Aviso.mostrar(p, "dinero", "🎟️", "Pasas de ronda en %s" % c.nombre,
 					"%s superada. Cada eliminatoria continental que se gana es premio." % nombre_ronda, "ronda_superada")
 				return)
 	c.grupos_terminados.connect(func(clasificados: Array) -> void:
 		if clasificados.has(p.mundo.mi_club()):
-			Aviso.mostrar(p, "dinero", "🎟️", "Clasificas a cuartos de %s" % CompeticionInfo.nombre_visible(c.nombre),
+			Aviso.mostrar(p, "dinero", "🎟️", "Clasificas a cuartos de %s" % c.nombre,
 				"Terminas entre los ocho de la fase de grupos: cobras el premio de clasificación.", "ronda_superada"))
 
 ## Pone un sorteo en la cola (solo si te toca) y abre el siguiente si no hay

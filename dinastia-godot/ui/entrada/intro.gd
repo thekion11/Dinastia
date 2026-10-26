@@ -1,18 +1,17 @@
 class_name IntroMarca
 extends "res://ui/entrada/intro_capas.gd"
 ## LA INTRO DE MARCA (fase 1 del MEGAPLAN, etapa 0 de la entrada, 25-10-2026). Lo primero que
-## se ve al abrir el juego: el logo definitivo con un brillo dorado que lo cruza de izquierda a
-## derecha, «DINASTÍA» en oro letra a letra debajo, un destello con chispas, el lema y fundido a
-## negro. 3 s en total (rehecha el 26-10-2026 con el logo aprobado por el dueño).
+## se ve al abrir el juego: un escudo que se traza en oro, la corona, «DINASTÍA» letra a letra,
+## un destello con chispas, el lema y fundido a negro. 4,75 s en total (el plan pide ≤ 5).
 ## [Capa 3/3] El dibujo vive en `intro_dibujo.gd` y `intro_capas.gd`; aquí, el reloj, el salto, el sonido y el contrato.
 ##
 ## CONTRATO de las pantallas de la entrada (`ui/entrada/orquestador.gd`):
 ##   signal terminado(datos)  → al acabar, con `{}` (la intro no elige nada). Una sola vez.
 ##   signal volver()          → existe por el contrato, pero la intro NUNCA la emite: es la
 ##                              primera etapa y no tiene nada detrás.
-##   configurar(estado)       → guarda `estado["intro_vista"]` (informativo). Desde el 26-10-2026
-##                              la intro SIEMPRE se salta con cualquier tecla, clic, toque o
-##                              botón del mando (fundido corto): dura solo 3 s.
+##   configurar(estado)       → solo mira `estado["intro_vista"]`: si es true, un clic, una
+##                              tecla, un toque o un botón del mando la saltan (fundido corto).
+##                              La primera vez NO se puede saltar: es la presentación del juego.
 ##
 ## EL RELOJ. Avanza con el delta del fotograma, recortado a 0,1 s: un tirón al cargar (la
 ## primera compilación de los shaders) no se come el principio de la animación. Y para que
@@ -30,7 +29,7 @@ signal volver()
 const TOPE_REAL := 5.0
 ## Fundido del salto: corto, pero no un corte en seco.
 const SALIDA_RAPIDA := 0.28
-const PISTAS := [[0.10, "deslizar"], [1.15, "fin_temporada"], [1.95, "logro"]]
+const PISTAS := [[0.22, "deslizar"], [2.30, "fin_temporada"], [2.42, "logro"]]
 
 var _vista := false
 var _acabada := false
@@ -106,11 +105,11 @@ func acabada() -> bool:
 	return _acabada
 
 func se_puede_saltar() -> bool:
-	return true
+	return _vista
 
-## Salta la intro (siempre se puede). Devuelve si saltó.
+## Salta la intro si ya se vio; si no, no hace nada. Devuelve si saltó.
 func saltar() -> bool:
-	if _acabada:
+	if not _vista or _acabada:
 		return false
 	if _t_salto < 0.0:
 		_t_salto = _t

@@ -11,7 +11,7 @@ func _mover_en_estadio(delta: float) -> void:
 		camara.position = cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * 0.1
 		camara.look_at(camara.position + dir * 10.0 + Vector3(0, -1.6, 0), Vector3.UP)
 		return
-	var corre := _corre()
+	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 	var objetivo_e := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 	_vel_pie = move_toward(_vel_pie, objetivo_e, (7.0 if absf(objetivo_e) > absf(_vel_pie) else 12.0) * delta)
 	vel = _vel_pie
@@ -219,27 +219,12 @@ func _tactil(capa: CanvasLayer) -> void:
 		base.add_child(b)
 	var der := HBoxContainer.new()
 	der.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	der.offset_left = -430
+	der.offset_left = -260
 	der.offset_top = -100
 	der.offset_right = -24
 	der.offset_bottom = -24
 	der.add_theme_constant_override("separation", 12)
 	capa.add_child(der)
-	## Táctil (M-433): cambiar la vista y, mientras se pulsa, correr (a pie) o
-	## freno de mano (en coche), lo que en teclado son V y Mayús/Espacio.
-	for par: Array in [["👁", false], ["🏃" if modo != "coche" else "🅿", true]]:
-		var bt := Button.new()
-		bt.text = String(par[0])
-		bt.custom_minimum_size = Vector2(tam, tam)
-		bt.add_theme_font_size_override("font_size", 28)
-		bt.modulate = Color(1, 1, 1, 0.75)
-		bt.visible = es_tactil()
-		if bool(par[1]):
-			bt.button_down.connect(func() -> void: _tactil_correr = true)
-			bt.button_up.connect(func() -> void: _tactil_correr = false)
-		else:
-			bt.pressed.connect(_accion.bind("vista"))
-		der.add_child(bt)
 	var be := Button.new()
 	be.text = "E"
 	be.custom_minimum_size = Vector2(tam, tam)
@@ -436,3 +421,17 @@ func _girar_si_cabe(rumbo_antes: float) -> void:
 		return
 	if not libre_forma(cuerpo.position, rumbo) and libre_forma(cuerpo.position, rumbo_antes):
 		rumbo = rumbo_antes
+
+## El rótulo de comercio cuya fachada está junto a `p`, o vacío.
+func _rotulo_en(p: Vector3) -> Dictionary:
+	if cb == null or cb.expansion == null:
+		return {}
+	var mejor: Dictionary = {}
+	var md := INF
+	for r: Dictionary in cb.expansion.rotulos:
+		var q: Vector3 = r["pos"]
+		var d := Vector2(q.x - p.x, q.z - p.z).length()
+		if d < float(r["ancho"]) * 0.5 + 2.5 and d < md:
+			md = d
+			mejor = r
+	return mejor

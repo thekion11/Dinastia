@@ -17,7 +17,7 @@ static func montar(e: Node3D, px: float, pz: float, cx: float, cz: float, calle:
 	## Hasta el bordillo interior de la acera de la avenida.
 	var bx := cx - calle * 0.5 - 3.0
 	var bz := cz - calle * 0.5 - 3.0
-	var cesped: StandardMaterial3D = Texturas.cesped(Color(0.27, 0.4, 0.21), 37)
+	var cesped: StandardMaterial3D = Texturas.cesped(Color(0.32, 0.47, 0.25), 37)
 	EntornoEstadio._plano(e, Vector2(bx * 2.0, bz * 2.0), Vector3(0, -0.135, 0), cesped)
 	var losa: StandardMaterial3D = Texturas.baldosa(Color(0.7, 0.68, 0.64), 13).duplicate()
 	losa.uv1_scale = Vector3(0.45, 0.45, 0.45)

@@ -56,7 +56,7 @@ static func _material(clave: String, p: Dictionary) -> StandardMaterial3D:
 			m.emission_enabled = true
 			m.emission = Color(1.0, 0.86, 0.62)
 			m.emission_texture = _tex_muro_cortina(true)
-			m.emission_energy_multiplier = 0.55 if p["noche"] == "noche" else 0.0
+			m.emission_energy_multiplier = 0.9 if p["noche"] == "noche" else 0.0
 		K_LUZ:
 			m = StandardMaterial3D.new()
 			m.albedo_color = p["luz"]
@@ -69,16 +69,6 @@ static func _material(clave: String, p: Dictionary) -> StandardMaterial3D:
 			m.albedo_color = Color(0.62, 0.64, 0.67)
 			m.roughness = 0.35
 			m.metallic = 0.45
-	## LAS PIEZAS OSCURAS SE LEEN (26-10-2026): las lamas, la celosía o la chapa de un
-	## club de negro eran una mancha sin relieve (todas sus caras igual de negras). Sin
-	## tocar el color del club: brillo de pintura satinada (refleja el cielo en los
-	## cantos que lo miran) y un borde de luz rasante en las aristas.
-	if clave in [K_REVEST, K_ACENTO] and m.albedo_color.get_luminance() < 0.16 and m.albedo_texture == null:
-		m.roughness = 0.28
-		m.metallic_specular = 0.8
-		m.rim_enabled = true
-		m.rim = 0.55
-		m.rim_tint = 0.35
 	return m
 
 ## La textura del muro cortina: 4 × 4 m (una unidad de UV) en 96 px. Con
@@ -97,7 +87,7 @@ static func _tex_muro_cortina(luz: bool) -> ImageTexture:
 	var luces: Array[float] = []
 	for k in 6:
 		tonos.append(rng.randf_range(0.82, 1.08))
-		luces.append([0.12, 0.5, 0.85][rng.randi() % 3])
+		luces.append([0.15, 0.55, 1.0][rng.randi() % 3])
 	for y in n:
 		for x in n:
 			var cx := x % 32

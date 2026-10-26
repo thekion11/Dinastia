@@ -5,8 +5,7 @@ extends Control
 ## las cosas claras elige antes y no lo ve; el que se queda mirando los modos
 ## recibe el sello del juego sin que le tape nada.
 ##
-## ES LA MISMA MARCA QUE LA INTRO (`intro_dibujo.gd`): el logo definitivo (26-10-2026,
-## `assets/logo/logo_256.png`), y antes el escudo dibujado (medio
+## ES LA MISMA MARCA QUE LA INTRO (`intro_dibujo.gd`): el mismo escudo (medio
 ## contorno con el borde de arriba hundido hacia el centro y la curva hasta la
 ## punta), la misma corona, el monograma y la palabra en serif de rótulo. Aquí,
 ## en pequeño y en oro: el contorno se traza por los dos lados a la vez desde
@@ -22,9 +21,11 @@ const SEPARACION := 2.0
 const SEG_DIBUJO := 2.6
 
 ## El escudo: ancho en píxeles (la unidad de la intro) y su centro.
-const LOGO := "res://assets/logo/logo_256.png"
-const ANCHO_ESCUDO := 72.0
-const CENTRO_ESCUDO := Vector2(38, 43)
+const ANCHO_ESCUDO := 50.0
+const CENTRO_ESCUDO := Vector2(36, 48)
+const ESCUDO_ALTO := 1.18
+const CORONA := [Vector2(-0.24, 0.0), Vector2(0.24, 0.0), Vector2(0.27, -0.14), Vector2(0.13, -0.065),
+	Vector2(0.0, -0.20), Vector2(-0.13, -0.065), Vector2(-0.27, -0.14)]
 const X_PALABRA := 80.0
 const Y_PALABRA := 60.0
 
@@ -32,7 +33,7 @@ var progreso := 0.0     ## 0 = nada dibujado; 1 = logo entero
 var _palabra := ""
 var _fuente: Font
 var _ancho_palabra := 0.0
-var _logo: Texture2D
+var _medio: PackedVector2Array
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -43,7 +44,7 @@ func _init() -> void:
 		_ancho_palabra += _fuente.get_string_size(_palabra[i], HORIZONTAL_ALIGNMENT_LEFT, -1, TAM_LETRA).x + SEPARACION
 	custom_minimum_size = Vector2(X_PALABRA + _ancho_palabra + 8.0, 86.0)
 	size = custom_minimum_size
-	_logo = load(LOGO) as Texture2D
+	_medio = _medio_contorno()
 	var mat := ShaderMaterial.new()
 	mat.shader = SHADER
 	mat.set_shader_parameter("ancho", custom_minimum_size.x)
@@ -87,17 +88,95 @@ func _poner_progreso(p: float) -> void:
 func _tramo(a: float, b: float) -> float:
 	return clampf((progreso - a) / (b - a), 0.0, 1.0)
 
+## Medio escudo (el lado derecho) en unidades del ancho, como en la intro: del
+## centro de arriba a la esquina, el costado y la curva hasta la punta.
+static func _medio_contorno() -> PackedVector2Array:
+	var h := ESCUDO_ALTO
+	var p := PackedVector2Array()
+	for i in 13:
+		p.append(_bezier(Vector2(0.0, -0.46 * h), Vector2(0.28, -0.46 * h), Vector2(0.5, -0.5 * h), float(i) / 12.0))
+	for i in range(1, 9):
+		p.append(Vector2(0.5, lerpf(-0.5 * h, 0.02 * h, float(i) / 8.0)))
+	for i in range(1, 29):
+		p.append(_bezier(Vector2(0.5, 0.02 * h), Vector2(0.5, 0.33 * h), Vector2(0.0, 0.5 * h), float(i) / 28.0))
+	return p
+
+static func _bezier(a: Vector2, c: Vector2, b: Vector2, u: float) -> Vector2:
+	return a.lerp(c, u).lerp(c.lerp(b, u), u)
+
+## El medio contorno ya trazado (fracción `f` de su largo), en píxeles, por el
+## lado `lado` (1 derecha, -1 izquierda).
+func _medio_parcial(f: float, lado: float, escala: float = 1.0) -> PackedVector2Array:
+	var total := 0.0
+	for i in range(1, _medio.size()):
+		total += _medio[i - 1].distance_to(_medio[i])
+	var falta := total * f
+	var out := PackedVector2Array([_px(_medio[0], lado, escala)])
+	for i in range(1, _medio.size()):
+		var tramo := _medio[i - 1].distance_to(_medio[i])
+		if falta >= tramo:
+			out.append(_px(_medio[i], lado, escala))
+			falta -= tramo
+		else:
+			out.append(_px(_medio[i - 1].lerp(_medio[i], falta / maxf(tramo, 0.0001)), lado, escala))
+			break
+	return out
+
+func _px(v: Vector2, lado: float, escala: float) -> Vector2:
+	return CENTRO_ESCUDO + Vector2(v.x * lado, v.y) * ANCHO_ESCUDO * escala
+
+## El contorno entero y cerrado (derecha bajando, izquierda subiendo).
+func _contorno(escala: float = 1.0) -> PackedVector2Array:
+	var p := PackedVector2Array()
+	for v in _medio:
+		p.append(_px(v, 1.0, escala))
+	for i in range(_medio.size() - 2, 0, -1):
+		p.append(_px(_medio[i], -1.0, escala))
+	return p
+
 func _draw() -> void:
 	if progreso <= 0.0:
 		return
 	var oro := Tema.ORO
 	var oro_claro := oro.lightened(0.35)
-	## 1) El logo: aparece creciendo un poco mientras se aclara.
-	var pl := smoothstep(0.0, 1.0, _tramo(0.0, 0.4))
-	if pl > 0.0 and _logo != null:
-		var lado := ANCHO_ESCUDO * lerpf(0.9, 1.0, pl)
-		draw_texture_rect(_logo, Rect2(CENTRO_ESCUDO - Vector2(lado, lado) * 0.5, Vector2(lado, lado)), false, Color(1, 1, 1, pl))
-	## 2) Las letras, una a una, bajando un poco a su sitio.
+	var lw := 2.4
+	## 1) Relleno oscuro (debajo del trazo, para que el borde quede limpio).
+	var relleno := smoothstep(0.0, 1.0, _tramo(0.3, 0.55))
+	if relleno > 0.0:
+		draw_colored_polygon(_contorno(), Color(Tema.FONDO, 0.9 * relleno))
+		var dentro := _contorno(lerpf(0.94, 0.86, relleno))
+		dentro.append(dentro[0])
+		draw_polyline(dentro, Color(oro, 0.8 * relleno), lw * 0.45, true)
+	## 2) El contorno, trazado por los dos lados a la vez.
+	var trazo := _tramo(0.0, 0.4)
+	if trazo >= 1.0:
+		var todo := _contorno()
+		todo.append(todo[0])
+		draw_polyline(todo, oro, lw, true)
+	elif trazo > 0.0:
+		draw_polyline(_medio_parcial(trazo, 1.0), oro, lw, true)
+		draw_polyline(_medio_parcial(trazo, -1.0), oro, lw, true)
+	## 3) El monograma, que crece hasta su sitio.
+	var pm := _tramo(0.38, 0.6)
+	if pm > 0.0:
+		var fm := int(ANCHO_ESCUDO * ESCUDO_ALTO * 0.5)
+		var ch := _palabra.substr(0, 1)
+		var w := _fuente.get_char_size(ch.unicode_at(0), fm).x
+		draw_set_transform(CENTRO_ESCUDO + Vector2(0, -1.5), 0.0, Vector2.ONE * lerpf(0.6, 1.0, pm))
+		draw_char(_fuente, Vector2(-w * 0.5, fm * 0.35), ch, fm, Color(oro_claro, smoothstep(0.0, 0.5, pm)))
+		draw_set_transform_matrix(Transform2D.IDENTITY)
+	## 4) La corona, que cae sobre el escudo.
+	var pc := _tramo(0.42, 0.62)
+	if pc > 0.0:
+		var base := CENTRO_ESCUDO - Vector2(0, ANCHO_ESCUDO * (ESCUDO_ALTO * 0.5 + 0.05) + (1.0 - pc) * 7.0)
+		var col := Color(oro, smoothstep(0.0, 0.4, pc))
+		var pol := PackedVector2Array()
+		for v: Vector2 in CORONA:
+			pol.append(base + v * ANCHO_ESCUDO)
+		draw_colored_polygon(pol, col)
+		for i in [2, 4, 6]:
+			draw_circle(base + (CORONA[i] as Vector2) * ANCHO_ESCUDO, 1.8, Color(oro_claro, col.a), true, -1.0, true)
+	## 5) Las letras, una a una, bajando un poco a su sitio.
 	var x := X_PALABRA
 	for i in _palabra.length():
 		var letra := _palabra[i]
@@ -110,7 +189,7 @@ func _draw() -> void:
 			draw_string(_fuente, base + Vector2(0, 2), letra, HORIZONTAL_ALIGNMENT_LEFT, -1, TAM_LETRA, Color(0, 0, 0, 0.5 * a))
 			draw_string(_fuente, base, letra, HORIZONTAL_ALIGNMENT_LEFT, -1, TAM_LETRA, Color(oro_claro.lerp(Color.WHITE, 0.4), a))
 		x += w + SEPARACION
-	## 3) La raya dorada bajo la palabra, de izquierda a derecha.
+	## 6) La raya dorada bajo la palabra, de izquierda a derecha.
 	var raya := _tramo(0.75, 1.0)
 	if raya > 0.0:
 		var y := Y_PALABRA + 9.0

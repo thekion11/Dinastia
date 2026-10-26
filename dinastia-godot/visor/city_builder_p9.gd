@@ -12,15 +12,10 @@ func tenir(n: Node, semilla: int) -> void:
 			if orig == null:
 				continue
 			var clave := "%d|%d" % [orig.get_instance_id(), t]
-			var m: Material = _cache_tintes.get(clave)
+			var m: StandardMaterial3D = _cache_tintes.get(clave)
 			if m == null:
-				## 26-10-2026: el kit comercial lleva ventanas que se encienden de
-				## noche (`CityBuilder.ventanas_kit`); el resto, la copia teñida.
-				m = CityBuilder.ventanas_kit(orig, orig.albedo_color * TINTES[t])
-				if m == null:
-					var sm := orig.duplicate() as StandardMaterial3D
-					sm.albedo_color = orig.albedo_color * TINTES[t]
-					m = sm
+				m = orig.duplicate() as StandardMaterial3D
+				m.albedo_color = orig.albedo_color * TINTES[t]
 				_cache_tintes[clave] = m
 			m3.set_surface_override_material(s, m)
 

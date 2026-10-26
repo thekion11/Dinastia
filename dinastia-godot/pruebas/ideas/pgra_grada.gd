@@ -15,10 +15,9 @@ func _probar() -> void:
 	club.color2 = "#f2f2f2"
 	var raiz := Node3D.new()
 	add_child(raiz)
-	var est := {"forma": "cuenco", "niveles": 2, "techo": "anillo", "aforo": 40000, "focos": "torres", "clima": "niebla"}
+	var est := {"forma": "cuenco", "niveles": 2, "techo": "anillo", "aforo": 40000}
 	StadiumBuilder.build(raiz, est, 40000, 0.8, 4242, club)
 	_escaleras(raiz)
-	_haces(raiz)
 	_techo(raiz)
 	_fachada(raiz)
 	EntornoEstadio.montar(raiz, est, 2)
@@ -111,31 +110,6 @@ func _escaleras(raiz: Node3D) -> void:
 	_comprobar(hundidas == 0, "las zancas van entre el suelo y la grada")
 	_comprobar(_cuenta(raiz, "CantosPasillo") == _cuenta(raiz, "Pasillos") and _cuenta(raiz, "Pasillos") > 100,
 		"un canto por peldaño de pasillo (%d / %d)" % [_cuenta(raiz, "CantosPasillo"), _cuenta(raiz, "Pasillos")])
-
-## M-014: un haz por torre, del bastidor al césped al que apunta, encendido solo de noche.
-func _haces(raiz: Node3D) -> void:
-	StadiumBuilder.encender_conos(1.0)
-	var haces: Array = []
-	for n: Node in raiz.get_children():
-		if n.is_in_group("foco_cono"):
-			haces.append(n)
-	_comprobar(haces.size() == 4, "un haz por torre de focos (%d)" % haces.size())
-	var bien := 0
-	for h: Node in haces:
-		var mi := h as MeshInstance3D
-		var arriba := mi.transform * Vector3(0, 0.5, 0)
-		var abajo := mi.transform * Vector3(0, -0.5, 0)
-		## Nace en lo alto de la torre (fuera del campo) y muere en el césped, más adentro.
-		if arriba.y > 20.0 and absf(abajo.y) < 0.2 and Vector2(abajo.x, abajo.z).length() < Vector2(arriba.x, arriba.z).length() * 0.5:
-			bien += 1
-	_comprobar(bien == haces.size(), "cada haz va del foco al césped al que apunta (%d bien)" % bien)
-	var mat := StadiumBuilder.mat_haz()
-	_comprobar(float(mat.get_shader_parameter("fuerza")) > 0.0, "de noche los haces se encienden")
-	_comprobar(haces.all(func(h: Node) -> bool: return (h as Node3D).visible), "y se dibujan")
-	_comprobar(haces.size() > 0 and float((haces[0] as GeometryInstance3D).get_instance_shader_parameter("aire")) > 1.0, "con niebla el aire los enseña más")
-	StadiumBuilder.encender_conos(0.0)
-	_comprobar(float(mat.get_shader_parameter("fuerza")) == 0.0 and haces.all(func(h: Node) -> bool: return not (h as Node3D).visible),
-		"de día se apagan y no se dibujan")
 
 func _techo(raiz: Node3D) -> void:
 	var vigas := raiz.find_children("VigasTecho", "MultiMeshInstance3D", true, false)

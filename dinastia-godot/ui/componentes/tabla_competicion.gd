@@ -39,14 +39,14 @@ static func titulo_de(mundo: Mundo, liga: Liga, mio: Club) -> String:
 	if not mundo.partido_de_copa().is_empty() and mundo.copa != null:
 		## Traducido aquí y no al final: «COPA CHILE  ·  CUARTOS DE FINAL» ya
 		## formado no está en ningún diccionario.
-		return Idiomas.mayusculas(CompeticionInfo.nombre_visible(mundo.copa.nombre)) + "  ·  " + Idiomas.mayusculas(Idiomas.t(mundo.copa.nombre_de_ronda()))
+		return Idiomas.mayusculas(Idiomas.t(mundo.copa.nombre)) + "  ·  " + Idiomas.mayusculas(Idiomas.t(mundo.copa.nombre_de_ronda()))
 	var mi_conti := mundo.mi_continental()
 	if Continental.toca_ronda(mundo.semana) >= 0 and mi_conti != null and mi_conti.en_curso():
-		var nombre_c := Idiomas.mayusculas(CompeticionInfo.nombre_visible(Continental.nombre_conti(mi_conti.clave)))
+		var nombre_c := Idiomas.mayusculas(Idiomas.t(Continental.nombre_conti(mi_conti.clave)))
 		if mi_conti.en_fase_de_grupos():
 			return "%s  ·  %s" % [nombre_c, _mi_grupo_nombre(mi_conti, mio)]
 		return "%s  ·  %s" % [nombre_c, Idiomas.mayusculas(Idiomas.t(mi_conti.nombre_de_ronda()))]
-	return Idiomas.mayusculas(CompeticionInfo.nombre_visible(liga.nombre))
+	return Idiomas.mayusculas(Idiomas.t(liga.nombre))
 
 ## El cuerpo de la columna: la tabla, el grupo o el cuadro, según toque. El
 ## orden de las comprobaciones es EL MISMO que usa `Principal._dirigir()` para
