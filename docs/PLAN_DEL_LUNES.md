@@ -39,9 +39,9 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 
 | Fase | Contenido | Entregable |
 |---|---|---|
-| **1 — Entrada** | recorrido con la cámara real HECHO el 26-10 (`docs/04_auditorias/capturas_fase1/`, 8 tomas Forward+; arreglos: rótulos del globo, rivales en la ficha de país, tarjetas de entrada al campeonato); solo falta tu aprobación (§0) | las fases 0-5 como pantallas completas |
-| **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). Falta tu aprobación jugándolo y lo anotado en §2.2b «Límites» | de «Nuevo juego» hasta tu primer día |
-| **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). Falta tu aprobación jugándolo y lo anotado en §2.2c «Límites» | un día completo jugable en 3D |
+| **1 — Entrada** | APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»): capturas en `docs/04_auditorias/capturas_fase1/` | las fases 0-5 como pantallas completas |
+| **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2b | de «Nuevo juego» hasta tu primer día |
+| **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2c | un día completo jugable en 3D |
 | **4 — Personas** | EN CONSTRUCCIÓN desde el 26-10: bloques 1-4 y parte del 6 hechos (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, Agenda con «Ir», favor del agente en `Negociacion`, entrevista de contratación, fotos a Tribuna; pruebas `f4p_citas` y `f4p_personas`; capturas `docs/04_auditorias/capturas_fase4/`); el bloque 7 lo hace la sesión ejecutora; faltan asamblea/elecciones y «convocar rueda» (§2.2d) | negociaciones en persona |
 | **5 — Club ampliado** | vestuario con nombres, otros deportes, trofeos y celebraciones | |
 | **6 — Pulido y auditoría** | pasos 4-7 de 7.1, limpieza del repo, vídeo | cierre y MEGAPLAN siguiente |
