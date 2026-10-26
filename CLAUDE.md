@@ -36,4 +36,4 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 5. Idiomas: 9 y no sumar más; faltan ~506 frases por traducir.
 6. Pendientes de dueño: FPS en hardware real, builds, keystore, licencias, subir binarios a Drive (`herramientas/drive_subir.ps1`).
 7. LFS (26-10): el dueño autorizó subir los sonidos de interfaz (CC0) y los PNG del logo. Desde este contenedor GitHub rechaza las subidas a LFS: archivos pequeños van fuera de LFS con una excepción en .gitattributes (ya hecha para audio/ui/*.ogg). Nada más sin preguntar.
-8. Avisos (26-10): mandar notificación al móvil cuando haya una pregunta para el dueño, cuando se acaben las tareas, o cuando la otra sesión pida algo o termine.
+8. Avisos (26-10): avisar al dueño con un evento de Google Calendar (recordatorio emergente a los 0 min, título «Dinastía: …») cuando haya una pregunta para él, se acaben las tareas, o la otra sesión pida algo o termine. La notificación push no le llega.
