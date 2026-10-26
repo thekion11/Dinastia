@@ -1,5 +1,5 @@
 extends "res://ui/principal_p16.gd"
-## [Capa 16/17 de `principal.gd`] _abrir_rueda_pantalla_completa, _repintar_posturas, _responder, _pintar_museo, _marca, _ver_ciudad_explorando … (+5)
+## [Capa 16/17 de `principal.gd`] _abrir_rueda_pantalla_completa, _repintar_posturas, _responder, _pintar_museo, _marca, _ver_ciudad_explorando … (+3)
 
 ## LA RUEDA DE PRENSA, DE PANTALLA COMPLETA, vive en `ui/principal/rueda_prensa.gd`
 ## (fase 0, paso 6b). Principal solo la abre; estos tres son puentes.
@@ -101,34 +101,6 @@ func _ver_ciudad_explorando(modo: String) -> void:
 		if h is VistaCiudad:
 			(h as VistaCiudad).explorar(modo)
 
-func _pintar_tipografia() -> void:
-	var lt := _texto(10, COL_SUAVE)
-	lt.text = Idiomas.t("Tipografia")
-	_lista_ajustes.add_child(lt)
-	var flow := HFlowContainer.new()
-	flow.add_theme_constant_override("h_separation", 4)
-	flow.add_theme_constant_override("v_separation", 4)
-	_lista_ajustes.add_child(flow)
-	for k: String in TIPOGRAFIAS:
-		var clave := k
-		var b := Button.new()
-		b.text = String((TIPOGRAFIAS[k] as Array)[0])
-		b.add_theme_font_size_override("font_size", 10)
-		b.toggle_mode = true
-		b.button_pressed = _tipografia == clave
-		b.clip_text = true
-		b.custom_minimum_size = Vector2(132, 24)
-		## Cada boton se escribe CON su fuente: se elige mirando, igual que las
-		## paletas. Un nombre de fuente no dice nada; verla, si.
-		var f := _fuente_de(clave)
-		if f != null:
-			b.add_theme_font_override("font", f)
-		b.pressed.connect(func() -> void:
-			_tipografia = clave
-			_aplicar_aspecto()
-			_refrescar())
-		flow.add_child(b)
-
 func _aplicar_vista_compacta() -> void:
 	var sep := SEPARACION_COMPACTA if _vista_compacta else SEPARACION_NORMAL
 	var t := theme if theme != null else Theme.new()
@@ -144,48 +116,6 @@ func _alternar_favorito(tab: String) -> void:
 	elif _favoritos.size() < FAVORITOS_MAX:
 		_favoritos.append(tab)
 	_refrescar()
-
-func _pintar_ranuras() -> void:
-	var t := _texto(11, COL_SUAVE)
-	t.text = Idiomas.t("RANURAS DE GUARDADO")
-	_lista_ajustes.add_child(t)
-	var ex := _texto(10, COL_SUAVE)
-	ex.text = Idiomas.t("Aparte del autoguardado. Sirven para dejar una copia antes de una decisión de la que no se vuelve.")
-	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_lista_ajustes.add_child(ex)
-	## Se lista una vez y se busca en memoria: `Partida.listar()` abre y lee la
-	## cabecera de cada fichero, y llamarlo tres veces sería leer el disco tres
-	## veces para pintar tres filas.
-	var guardadas := {}
-	for f: Dictionary in Partida.listar():
-		guardadas[String(f.get("fichero", ""))] = f
-	for i in RANURAS.size():
-		var nombre := String(RANURAS[i])
-		var hay: Dictionary = guardadas.get(nombre, {})
-		var fila := HBoxContainer.new()
-		fila.add_theme_constant_override("separation", 6)
-		_lista_ajustes.add_child(fila)
-		var et := _texto(12, COL_TEXTO if not hay.is_empty() else COL_SUAVE)
-		et.text = Idiomas.t("Ranura %d") % (i + 1)
-		et.custom_minimum_size = Vector2(70, 0)
-		fila.add_child(et)
-		var desc := _texto(11, COL_SUAVE)
-		desc.text = Idiomas.t("%s · %d, semana %d") % [String(hay.get("club", "")), int(hay.get("anio", 0)), int(hay.get("semana", 0))] if not hay.is_empty() else Idiomas.t("vacía")
-		desc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		desc.clip_text = true
-		fila.add_child(desc)
-		var bg := Button.new()
-		bg.text = Idiomas.t("Guardar")
-		bg.add_theme_font_size_override("font_size", 11)
-		bg.pressed.connect(func() -> void: _partida.guardar_en(nombre))
-		fila.add_child(bg)
-		var bc := Button.new()
-		bc.text = Idiomas.t("Cargar")
-		bc.add_theme_font_size_override("font_size", 11)
-		bc.disabled = hay.is_empty()
-		bc.pressed.connect(func() -> void: _partida.cargar_de(nombre))
-		fila.add_child(bc)
-	_lista_ajustes.add_child(HSeparator.new())
 
 ## Salta al chip de al lado dentro del bloque actual (los gatillos de
 ## siempre). Ahora los chips son diccionarios {tab, secc, label}, así que la

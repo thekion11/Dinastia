@@ -1,22 +1,9 @@
 extends "res://ui/principal_p3.gd"
 ## [Capa 4/17 de `principal.gd`] _fuente_de, _caja, _pal_fondo, _aplicar_tema, _tinta, _escudo … (+9)
 
+## Puente: la fuente de cada tipografía la resuelve `PantallaAjustes.fuente_de`.
 func _fuente_de(clave: String) -> Font:
-	if not TIPOGRAFIAS.has(clave):
-		return null
-	if _fuentes.has(clave):
-		return _fuentes[clave]
-	## «Del juego» es la de fábrica con la cadena de respaldo (`ui/fuentes.gd`).
-	if clave == "juego":
-		_fuentes[clave] = Fuentes.del_juego()
-		return _fuentes[clave]
-	var f := Fuentes.para((TIPOGRAFIAS[clave] as Array)[1])
-	## Sin esto, un texto pequeno con una serif se ve sucio: la rejilla de pixeles
-	## y los remates finos pelean, y a 10 px gana la rejilla.
-	f.set("antialiasing", TextServer.FONT_ANTIALIASING_GRAY)
-	f.set("subpixel_positioning", TextServer.SUBPIXEL_POSITIONING_AUTO)
-	_fuentes[clave] = f
-	return f
+	return _ui_ajustes.fuente_de(clave)
 
 func _caja(fondo: Color, borde: Color, radio: int, grosor: int) -> StyleBoxFlat:
 	var e := StyleBoxFlat.new()

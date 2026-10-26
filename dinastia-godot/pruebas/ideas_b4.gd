@@ -325,7 +325,7 @@ func _ideas_b_interfaz() -> void:
 	var dalt: Color = pr._texto(12, Principal.COL_VERDE).get_theme_color("font_color")
 	_comprobar(dalt == Principal.COL_VERDE_DALT and normal != dalt, "con daltonismo el verde del juego pasa al azul cielo (1025)")
 	var f_estrecha: Font = pr._fuente_de("estrecha")
-	_comprobar(Principal.TIPOGRAFIAS.has("estrecha") and "Condensed" in ", ".join(Principal.TIPOGRAFIAS["estrecha"][1]) and f_estrecha != null, "hay una tipografía condensada para pantallas pequeñas (1054)")
+	_comprobar(PantallaAjustes.TIPOGRAFIAS.has("estrecha") and "Condensed" in ", ".join(PantallaAjustes.TIPOGRAFIAS["estrecha"][1]) and f_estrecha != null, "hay una tipografía condensada para pantallas pequeñas (1054)")
 	pr.free()
 	## Animaciones desactivables y nunca bloqueantes (1059).
 	var reducidas := Animar.reducidas()

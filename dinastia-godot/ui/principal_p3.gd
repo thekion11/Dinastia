@@ -78,23 +78,11 @@ var _marca_tarjeta: String = "esquinas"
 ## mandárselo a alguien por chat.
 const FICHERO_EXPORTADO := "user://dinastia-exportada.txt"
 
-## LAS SECCIONES DE AJUSTES. La pantalla llegó a medir 1.700 px de alto: para
-## llegar al tamaño de letra había que bajar por delante del mezclador, de los
-## veinticuatro fondos, de los diez climas y de las nueve paletas.
-##
-## No se quita ni una opción —son justo lo que hace falta que haya— pero se
-## reparten en seis grupos y solo se pinta el que estás mirando. De paso se
-## pinta seis veces menos en cada refresco.
-const SECCIONES_AJUSTES := [
-	["audio", "🔊 Sonido y música"],
-	["aspecto", "🎨 Aspecto"],
-	["pantalla", "🖥 Pantalla"],
-	["juego", "🎮 Juego"],
-	["acceso", "♿ Accesibilidad"],
-	["partida", "💾 Partida"],
-]
-
-var _secc_ajustes: String = "audio"
+## La sección de Ajustes abierta vive en `PantallaAjustes.seccion` (fase 0,
+## paso 2); el puente conserva `p._secc_ajustes` para los chips y las pruebas.
+var _secc_ajustes: String:
+	get: return _ui_ajustes.seccion
+	set(v): _ui_ajustes.seccion = v
 
 ## `vCorreo()` del HTML: bandeja filtrable sobre `G.noticias`. Aquí lee
 ## `_bandeja`, que `_anotar()` llena en paralelo a cada `_escribir()` de

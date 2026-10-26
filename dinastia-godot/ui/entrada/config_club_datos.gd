@@ -24,7 +24,7 @@ extends RefCounted
 ##   maquina: { fps (30/60/120/0 = sin límite), contador_fps, calidad (Calidad.MEDIO/ALTO/ULTRA),
 ##              adaptativa, motor_ligero, densidad ("baja"/"media"/"alta") }
 
-## Las mismas opciones que `Principal.FPS_OPCIONES` (la prueba lo comprueba):
+## Las mismas opciones que `PantallaAjustes.FPS_OPCIONES` (la prueba lo comprueba):
 ## no se lee de ahí para no cargar el menú central entero en esta etapa.
 const FPS := [30, 60, 120, 0]
 ## La gente por la calle. Ningún sistema la leía hasta hoy: el factor queda en

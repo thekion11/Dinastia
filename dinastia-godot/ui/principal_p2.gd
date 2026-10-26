@@ -262,13 +262,15 @@ const BUSES_AUDIO := [
 	[Sonido.Bus.INTERFAZ, "Interfaz", "clic", "Los avisos y los clics de los menús."],
 ]
 
-## LAS TRES RANURAS MANUALES de `vAjustes()`. `Partida` guarda por NOMBRE desde
-## el porte —`guardar(m, nombre)`, `listar()`, `borrar()`— y el juego solo usaba
-## una ranura fija: toda esa capacidad estaba escrita y era inalcanzable.
-##
-## Tres y no más porque tres es lo que se usa de verdad: la partida en curso,
-## una copia antes de una decisión gorda, y una vieja por si acaso.
-const RANURAS := ["ranura1", "ranura2", "ranura3"]
+## AJUSTES (fase 0, paso 2): las tipografías, las ranuras y el límite de
+## fotogramas viven en `PantallaAjustes`; estos puentes conservan el contrato
+## que usan `preferencias.gd`, las pruebas y el resto de capas.
+var _tipografia: String:
+	get: return _ui_ajustes.tipografia
+	set(v): _ui_ajustes.tipografia = v
+var _fps_elegido: int:
+	get: return _ui_ajustes.fps_elegido
+	set(v): _ui_ajustes.fps_elegido = v
 
 ## `vQoL()`: la interfaz a tu medida. Dos interruptores y los favoritos.
 ##
@@ -308,36 +310,6 @@ const ZOOM_TV := 1.35
 #
 # DESHACER: la pila y sus reglas viven en `ui/principal/ciclo_partida.gd`
 # (fase 0); el puente `_pila_deshacer` está en `principal_p10.gd`.
-
-## LA TIPOGRAFIA. Siete, y la primera es la de siempre.
-##
-## Cada entrada es una lista de nombres que resuelve `Fuentes.para()`
-## (`ui/fuentes.gd`): si el primero es una fuente PROPIA del juego
-## (`assets/fuentes/`, OFL) se usa el archivo y el resto queda de repuesto del
-## sistema; si no, se piden al sistema por nombre como antes («Segoe UI» de
-## Windows, «Helvetica Neue» de macOS, el genérico al final).
-##
-## LOS EMOJI (26-10-2026): antes se colgaban «Segoe UI Emoji» y compañía, que
-## no existen en Android ni en Web. Ahora toda tipografía, «Del juego» incluida,
-## lleva la cadena de `Fuentes.repuesto()`: emojis en color del sistema si los
-## hay y, si no, Noto Emoji + Noto Sans Symbols 2 propias.
-const TIPOGRAFIAS := {
-	"juego":     ["Del juego (por defecto)", []],
-	"sistema":   ["Del sistema", ["Segoe UI", "Helvetica Neue", "Cantarell", "sans-serif"]],
-	"diario":    ["De diario (serif)", ["Georgia", "Times New Roman", "Liberation Serif", "serif"]],
-	"estrecha":  ["Estrecha (cabe más)", ["Barlow Condensed", "Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
-	"redonda":   ["Redonda y grande", ["Verdana", "Tahoma", "DejaVu Sans", "sans-serif"]],
-	"informe":   ["De informe (mono)", ["Consolas", "Menlo", "DejaVu Sans Mono", "monospace"]],
-	"titular":   ["De titular", ["Bebas Neue", "Impact", "Haettenschweiler", "DejaVu Sans Bold", "sans-serif"]],
-}
-
-## Los nombres de repuesto para los simbolos: los emojis en color del sistema.
-## Se conserva por compatibilidad; la cadena completa (con las propias) es
-## `Fuentes.repuesto()`.
-const REPUESTO_SIMBOLOS := Fuentes.EMOJI_SISTEMA
-
-var _tipografia: String = "juego"
-static var _fuentes: Dictionary = {}
 
 ## LA VISTA COMPACTA. No es un tema aparte: es el mismo `Theme` con las
 ## separaciones y los márgenes apretados. Se aplica a la raíz, así que baja por
@@ -439,9 +411,3 @@ const MANDO_BLOQUES := [
 ## Lo acumulado del desliz en curso. Se reinicia al levantar el dedo.
 var _arrastre_x: float = 0.0
 var _arrastre_y: float = 0.0
-
-## EL LÍMITE DE FOTOGRAMAS. En un portátil, dejar el juego a 300 fps calienta la
-## máquina para dibujar la misma tabla trescientas veces por segundo. Treinta
-## basta para una interfaz; sesenta para el estadio en 3D.
-const FPS_OPCIONES := [30, 60, 120, 0]
-var _fps_elegido: int = 60

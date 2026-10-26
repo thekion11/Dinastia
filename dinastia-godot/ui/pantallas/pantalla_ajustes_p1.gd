@@ -19,17 +19,17 @@ func _pintar_fotogramas() -> void:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 4)
 	p._lista_ajustes.add_child(fila)
-	for v: int in Principal.FPS_OPCIONES:
+	for v: int in PantallaAjustes.FPS_OPCIONES:
 		var valor := v
 		var b := Button.new()
 		b.text = Idiomas.t("sin límite") if valor == 0 else "%d" % valor
 		b.add_theme_font_size_override("font_size", 11)
 		b.toggle_mode = true
-		b.button_pressed = p._fps_elegido == valor
+		b.button_pressed = p._ui_ajustes.fps_elegido == valor
 		b.custom_minimum_size = Vector2(72, 0)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.pressed.connect(func() -> void:
-			p._fps_elegido = valor
+			p._ui_ajustes.fps_elegido = valor
 			Engine.max_fps = valor
 			p._refrescar())
 		fila.add_child(b)
@@ -170,7 +170,7 @@ func _pintar_aspecto() -> void:
 			p._refrescar())
 		flow2.add_child(b2)
 
-	p._pintar_tipografia()
+	(self as PantallaAjustes)._pintar_tipografia()
 	var lm := p._texto(10, Principal.COL_SUAVE)
 	lm.text = Idiomas.t("Marca de las tarjetas")
 	p._lista_ajustes.add_child(lm)
