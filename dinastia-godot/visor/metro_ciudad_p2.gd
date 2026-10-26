@@ -335,3 +335,52 @@ static func _mat_interior() -> StandardMaterial3D:
 		_mat_int.roughness = 0.8
 		_mat_int.cull_mode = BaseMaterial3D.CULL_DISABLED
 	return _mat_int
+
+## LA ESPERA DE VERDAD (pmov, 26-10-2026). `Tren.eta` suponía que el tren daba la
+## vuelta al final de la vía (no en la última estación) y no contaba las paradas
+## de la vuelta: en el andén se anunciaba de media un 24 % mal. Aquí se recorre el
+## itinerario real (estaciones por delante, cabecera, vuelta…) con el tiempo de
+## cada tramo (acelerar, crucero y frenar) y `PARADA` en cada estación.
+static func eta_real(t: Tren, pos: float) -> float:
+	var est := Array(t.estaciones)
+	est.sort()
+	if est.is_empty():
+		return INF
+	if t.espera > 0.0 and absf(t.s - pos) < 1.0:
+		return 0.0   ## ya está en el andén con las puertas abiertas
+	var s := t.s
+	var sentido := t.sentido
+	var total := maxf(t.espera, 0.0)
+	var v := t.v if t.espera <= 0.0 else 0.0
+	var excluir := t.ultima_parada
+	for _vuelta in 2 * est.size() + 2:
+		## La próxima parada en este sentido (sin la que acaba de hacer).
+		var obj := INF
+		for e: float in est:
+			if absf(e - excluir) < 0.01:
+				continue
+			var d := (e - s) * sentido
+			if d > -0.01 and (obj == INF or d < (obj - s) * sentido):
+				obj = e
+		if obj == INF:
+			sentido = -sentido   ## cabecera: da la vuelta
+			continue
+		total += _tiempo_tramo(absf(obj - s), v)
+		if absf(obj - pos) < 1.0:
+			return total
+		total += PARADA
+		s = obj
+		v = 0.0
+		excluir = obj
+	return INF
+
+## Segundos para recorrer `d` metros saliendo a `v0` y parando al final.
+static func _tiempo_tramo(d: float, v0: float) -> float:
+	var frenada := v0 * v0 / (2.0 * ACEL)
+	if d <= frenada + 0.3:
+		return 2.0 * d / maxf(v0, 0.5)
+	## Velocidad punta alcanzable en el tramo (triángulo) o crucero (trapecio).
+	var pico := minf(VEL, sqrt(ACEL * d + v0 * v0 * 0.5))
+	var acel := (pico * pico - v0 * v0) / (2.0 * ACEL)
+	var fren := pico * pico / (2.0 * ACEL)
+	return (pico - v0) / ACEL + pico / ACEL + maxf(0.0, d - acel - fren) / pico

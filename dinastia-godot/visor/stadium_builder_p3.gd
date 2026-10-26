@@ -358,3 +358,72 @@ static func _escudo_cancha(root: Node3D, mi: Club, donde: String) -> void:
 	quad.position = Vector3(0, 0.03, 0)
 	quad.material_override = mat
 	root.add_child(quad)
+
+## Una caja de 1 m de lado, compartida: cada tubo y cada poste es una instancia escalada.
+static var _caja_1: BoxMesh
+static func _caja_unidad() -> BoxMesh:
+	if _caja_1 == null:
+		_caja_1 = BoxMesh.new()
+	return _caja_1
+
+## Las piezas (en el espacio del deck) de los pasamanos de los pasillos y de la
+## barandilla del borde bajo (las usa `_montar_pasillos`). `suelo`: la altura de
+## la cara de arriba del deck en su espacio (0,2 en una losa de 0,4; 0 en un plano).
+static func _piezas_baranda(pasillos_l: Array[float], lateral: bool, fondo: float, largo: float,
+		sentido: float, rake: float, suelo := 0.2) -> Array[Transform3D]:
+	var out: Array[Transform3D] = []
+	var eje_rake := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
+	var de_pie := Basis().rotated(eje_rake, -rake)
+	var arriba: Vector3 = de_pie * Vector3.UP
+	var tubo := 0.05
+	for l: float in pasillos_l:
+		## El pasamanos, a lo largo de la pendiente (como el de siempre).
+		var esc := Vector3(fondo - 0.6, tubo, tubo) if lateral else Vector3(tubo, tubo, fondo - 0.6)
+		out.append(Transform3D(Basis.from_scale(esc), _en_deck(lateral, 0.0, l, suelo + 0.75)))
+		## Sus postes: verticales en el mundo, del suelo de la grada al pasamanos.
+		var alto_poste: float = 0.75 / maxf(arriba.y, 0.3)
+		var n_postes: int = maxi(2, int((fondo - 1.0) / 1.8) + 1)
+		for k in n_postes:
+			var d: float = -fondo * 0.5 + 0.5 + (fondo - 1.0) * float(k) / float(n_postes - 1)
+			var pie: Vector3 = _en_deck(lateral, d, l, suelo)
+			out.append(Transform3D(de_pie * Basis.from_scale(Vector3(0.04, alto_poste, 0.04)), pie + arriba * alto_poste * 0.5))
+	if largo < 4.0:
+		return out
+	## La barandilla del borde bajo: dos tubos corridos (a 1,0 y 0,55 m) y un
+	## poste cada ~2,4 m, sobre el filo de la bandeja.
+	var d0: float = sentido * (-fondo * 0.5 + 0.12)
+	var largo_util: float = largo - 0.4
+	for h: float in [1.0, 0.55]:
+		var esc_r := Vector3(tubo, tubo, largo_util) if lateral else Vector3(largo_util, tubo, tubo)
+		out.append(Transform3D(de_pie * Basis.from_scale(esc_r), _en_deck(lateral, d0, 0.0, suelo) + arriba * h))
+	var n_f: int = maxi(2, int(largo_util / 2.4) + 1)
+	for k in n_f:
+		var l: float = -largo_util * 0.5 + largo_util * float(k) / float(n_f - 1)
+		out.append(Transform3D(de_pie * Basis.from_scale(Vector3(0.045, 1.0, 0.045)), _en_deck(lateral, d0, l, suelo) + arriba * 0.5))
+	return out
+
+## El punto del deck a `d` del centro en el eje del fondo, `l` en el largo y `y` de alto.
+static func _en_deck(lateral: bool, d: float, l: float, y: float) -> Vector3:
+	return Vector3(d, y, l) if lateral else Vector3(l, y, d)
+
+## La textura de la cubierta de metal (la usa `_techo_mat`).
+static var _techos_mat := {}
+static var _tex_techo: ImageTexture
+## 4 × 4 m de cubierta en 128 px: vigas oscuras cada 2 m en las dos direcciones y
+## la greca de la chapa (una banda cada 25 cm). Gris claro: el color lo pone el tinte.
+static func _tex_cubierta() -> ImageTexture:
+	if _tex_techo != null:
+		return _tex_techo
+	var n := 128
+	var img := Image.create(n, n, true, Image.FORMAT_RGB8)
+	for y in n:
+		for x in n:
+			var v := 0.92 if (x / 4) % 2 == 0 else 1.0
+			if x % 64 < 3 or y % 64 < 3:
+				v = 0.5
+			elif x % 64 < 5 or y % 64 < 5:
+				v = 0.72
+			img.set_pixel(x, y, Color(v, v, v))
+	img.generate_mipmaps()
+	_tex_techo = ImageTexture.create_from_image(img)
+	return _tex_techo

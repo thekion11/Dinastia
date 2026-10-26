@@ -1,6 +1,13 @@
 class_name Inicio
 extends "res://ui/inicio_p2.gd"
-## [Capa 3/3 de `inicio.gd`] _rotar_pagina, _ready
+## [Capa 3/3 de `inicio.gd`] _rotar_pagina, _ready, _construir_nuevo_juego, _nuevo_juego
+
+## LA ENTRADA NUEVA (fase 1, 25-10-2026; aprobada por el dueño el 26-10): «Nuevo juego»
+## abre `OrquestadorEntrada` (intro, idioma, modo, país, club, entrada al campeonato y
+## personaje, una pantalla completa por etapa) y es el ÚNICO camino para empezar partida:
+## las tarjetas de modo de este menú se quitaron. Aquí quedan «Continuar», el perfil, el
+## álbum, el nombre, la dificultad, la base de datos y la portada.
+const ESCENA_ENTRADA := "res://escenas/entrada.tscn"
 
 ## Cada 30 s (a destiempo de la portada): el siguiente fondo de pantalla
 ## completa, fundido sobre el actual en 2 s.
@@ -30,6 +37,10 @@ func _ready() -> void:
 	_pintar_banner()
 	_actualizar_picker()
 	_actualizar_continuar()
+	_construir_nuevo_juego()
+	## La entrada se carga en un hilo mientras se mira el menú: al pulsar «Nuevo juego»
+	## ya está en memoria y el paso a la intro no se queda en negro esperando el disco.
+	ResourceLoader.load_threaded_request(ESCENA_ENTRADA)
 	_reloj_portada = Timer.new()
 	_reloj_portada.wait_time = SEG_PORTADA
 	_reloj_portada.timeout.connect(_rotar_portada)
@@ -49,3 +60,44 @@ func _ready() -> void:
 	_banner.resized.connect(func() -> void:
 		if is_instance_valid(_bokeh_banner):
 			_bokeh_banner.ajustar_area(_banner.size))
+
+## El botón grande de «Nuevo juego», justo debajo de la partida en curso.
+func _construir_nuevo_juego() -> void:
+	if _panel_continuar == null:
+		return
+	var raiz := _panel_continuar.get_parent()
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, COL_ACENTO))
+	raiz.add_child(caja)
+	raiz.move_child(caja, _panel_continuar.get_index() + 1)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 14)
+	caja.add_child(fila)
+	var v := VBoxContainer.new()
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fila.add_child(v)
+	v.add_child(Tema.etiqueta(Tema.TAM_TITULO, COL_TEXTO, Idiomas.t("NUEVO JUEGO")))
+	var nota := Tema.etiqueta(Tema.TAM_ROTULO, COL_SUAVE, Idiomas.t("Paso a paso: idioma, modo, país, tu club, cómo entras al campeonato y tu personaje."))
+	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(nota)
+	var b := Button.new()
+	b.text = Idiomas.t("▶ Empezar")
+	b.custom_minimum_size = Vector2(150, 44)
+	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	b.pressed.connect(_nuevo_juego)
+	fila.add_child(b)
+
+func _nuevo_juego() -> void:
+	## Lo que ya se tocó en este menú (nombre y dificultad) no se pierde.
+	var nombre := _campo_nombre.text.strip_edges() if _campo_nombre != null else ""
+	OrquestadorEntrada.estado_inicial = {"dificultad": _dificultad}
+	if nombre != "" and nombre != Idiomas.t("Míster"):
+		OrquestadorEntrada.estado_inicial["nombre"] = nombre
+	## Si la carga en hilo ya acabó (o acaba ahora), se cambia sin volver a leer el disco.
+	var hecha: Variant = null
+	if ResourceLoader.load_threaded_get_status(ESCENA_ENTRADA) != ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+		hecha = ResourceLoader.load_threaded_get(ESCENA_ENTRADA)
+	if hecha is PackedScene:
+		get_tree().change_scene_to_packed(hecha)
+	else:
+		get_tree().change_scene_to_file(ESCENA_ENTRADA)

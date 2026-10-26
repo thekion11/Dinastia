@@ -1,6 +1,9 @@
 extends "res://visor/explorador_ciudad_p4.gd"
 ## [Capa 5/6 de `explorador_ciudad.gd`] edificio_en, pausar, _actualizar_mano, _mover_en_anden, _viajar, _choca_mueble … (+7)
 
+## Factor de densidad de peatones del club (−1 = sin leer todavía).
+var _densidad_gente: float = -1.0
+
 ## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la
 ## clave de la sala con el nombre propio, o vacío.
 func edificio_en(p: Vector3) -> Dictionary:
@@ -74,7 +77,7 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 
 func _mover_en_anden(delta: float) -> void:
 	var e := _entrada()
-	var corre := Input.is_physical_key_pressed(KEY_SHIFT)
+	var corre := _corre()
 	vel = (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 	rumbo -= e.x * delta * 2.6
 	if _anim != null:
@@ -99,7 +102,7 @@ func _mover_en_anden(delta: float) -> void:
 	if k >= 0:
 		_aviso.text = Idiomas.t("🚇 Tren en el andén, puertas abiertas · E para subir")
 	else:
-		_aviso.text = Idiomas.t("Próximo tren: %s · E: salir a la calle") % ("llegando" if eta < 20.0 else "%d s" % int(eta))
+		_aviso.text = Idiomas.t("Próximo tren: %s · E: salir a la calle") % (Idiomas.t("llegando") if eta < 20.0 else "%d s" % int(eta))
 
 func _viajar(delta: float) -> void:
 	var l := metro.linea(_linea)
@@ -144,7 +147,7 @@ func _mover_en_interior(delta: float) -> void:
 		_salir_del_edificio()
 		return
 	var e := _entrada()
-	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	var corre := _corre()
 	var objetivo := (3.4 if corre else 1.6) * clampf(e.y, -0.5, 1.0)
 	_vel_pie = move_toward(_vel_pie, objetivo, (7.0 if absf(objetivo) > absf(_vel_pie) else 12.0) * delta)
 	vel = _vel_pie
@@ -239,7 +242,7 @@ func _conducir(e: Vector2, delta: float) -> void:
 		_motor_sonido = MotorCocheSonido.new()
 		add_child(_motor_sonido)
 	_motor_sonido.poner(vel, maxf(e.y, 0.0))
-	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+	var freno_mano := _freno_mano()
 	_volante = lerpf(_volante, e.x, clampf(delta * 6.0, 0.0, 1.0))
 	if e.y > 0.0:
 		var potencia := 15.0 * (1.0 - clampf(maxf(vel, 0.0) / VEL_COCHE, 0.0, 1.0) * 0.82) + 2.0
@@ -345,9 +348,11 @@ func _physics_process(delta: float) -> void:
 	_cerrar_puerta_si_lejos()
 	var e := _entrada()
 	if modo == "coche":
+		var rumbo_antes := rumbo
 		_conducir(e, delta)
+		_girar_si_cabe(rumbo_antes)
 	else:
-		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+		var corre := _corre()
 		## Aceleración y frenada suaves: arrancar y parar no es instantáneo.
 		var objetivo := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 		vel = move_toward(vel, objetivo, (7.0 if absf(objetivo) > absf(vel) else 12.0) * delta)
@@ -391,6 +396,12 @@ func _physics_process(delta: float) -> void:
 		## La primera vez (al empezar a pasear) se llena el entorno de golpe.
 		## Cuánta gente alrededor: menos en calidad media o con el motor ligero.
 		var max_gente := 18 if (Calidad.motor_ligero or Calidad.elegida == Calidad.MEDIO) else 34
+		## Y la densidad elegida al crear el club (0.6 tranquila … 1.4 bulliciosa). Se lee
+		## una vez por paseo (el archivo no cambia mientras se pasea) y se acota por si
+		## el ajuste viniera corrupto.
+		if _densidad_gente < 0.0:
+			_densidad_gente = clampf(float(AjustesCiudad.valor("densidad_factor", 1.0)), 0.3, 1.6)
+		max_gente = maxi(4, roundi(max_gente * _densidad_gente))
 		trafico.reciclar_peatones(cuerpo.position, mira, 95.0, max_gente if _t_gente < -100.0 else 3, max_gente, _t_gente < -100.0)
 		_t_gente = 1.2
 	var corriendo := modo != "coche" and absf(vel) > VEL_PIE * 1.15
@@ -398,6 +409,8 @@ func _physics_process(delta: float) -> void:
 		VEL_COCHE * 3.6 if modo == "coche" else VEL_CORRER * 3.6, absf(vel) * delta)
 	_hud.text = (Idiomas.t("🚗 Conduciendo") if modo == "coche" else Idiomas.t("🚶 A pie")) + Idiomas.t("  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa") % [
 		int(absf(vel) * 3.6), "" if modo == "coche" else Idiomas.t("Mayús: correr · V: vista · ")]
+	if not Input.get_connected_joypads().is_empty():   ## con mando, sus botones (M-433)
+		_hud.text += "\n" + (Idiomas.t("🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa") if modo == "coche" else Idiomas.t("🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa"))
 	## Dónde estás: el nombre de la calle (o el cruce).
 	if cb != null and cb.expansion != null:
 		var calle := cb.expansion.nombre_calle_en(cuerpo.position)
@@ -415,23 +428,13 @@ func _unhandled_input(ev: InputEvent) -> void:
 	if ev is InputEventMouseMotion and primera_persona and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rumbo -= (ev as InputEventMouseMotion).relative.x * 0.003
 		return
-	if not (ev is InputEventKey) or not (ev as InputEventKey).pressed or (ev as InputEventKey).echo:
-		if ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed and (ev as InputEventJoypadButton).button_index == JOY_BUTTON_X:
-			_usar()
+	## Botones del mando y teclas llevan a la misma acción (`_accion`, M-433).
+	if ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed:
+		if _accion(String(BOTONES_MANDO.get((ev as InputEventJoypadButton).button_index, ""))):
+			get_viewport().set_input_as_handled()
 		return
-	var k := (ev as InputEventKey).keycode
-	if k == KEY_ESCAPE:
+	if not (ev is InputEventKey) or not (ev as InputEventKey).pressed or (ev as InputEventKey).echo:
+		return
+	var a := String(TECLAS.get((ev as InputEventKey).keycode, ""))
+	if _accion(a) and a in ["salir", "usar"]:
 		get_viewport().set_input_as_handled()
-		salir.emit()
-	elif k == KEY_E:
-		get_viewport().set_input_as_handled()
-		_usar()
-	elif k == KEY_V and modo == "coche" and estado == "calle":
-		cam_coche = (cam_coche + 1) % 3
-		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: primera persona")][cam_coche]
-	elif k == KEY_V:
-		primera_persona = not primera_persona
-		_raton_en_primera_persona()
-		_aviso.text = Idiomas.t("Primera persona") if primera_persona else Idiomas.t("Tercera persona")
-	elif k == KEY_C and estado == "tren":
-		_ventana = not _ventana

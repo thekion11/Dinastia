@@ -1,0 +1,4 @@
+{"exactas": {
+ "%s (1 partido con la selección)": {"en": "%s (1 cap)", "pt": "%s (1 jogo pela seleção)", "fr": "%s (1 sélection)", "it": "%s (1 presenza in nazionale)", "de": "%s (1 Länderspiel)", "ca": "%s (1 partit amb la selecció)", "pl": "%s (1 mecz w kadrze)", "tr": "%s (1 milli maç)"},
+ "%s (%d partidos con la selección)": {"en": "%s (%d caps)", "pt": "%s (%d jogos pela seleção)", "fr": "%s (%d sélections)", "it": "%s (%d presenze in nazionale)", "de": "%s (%d Länderspiele)", "ca": "%s (%d partits amb la selecció)", "pl": "%s (%d meczów w kadrze)", "tr": "%s (%d milli maç)"}
+}}

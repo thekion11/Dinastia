@@ -6,6 +6,10 @@ extends "res://nucleo/mundo_p3.gd"
 ## Solo mira TU partido: a la directiva de Coquimbo no le importa lo que hagas
 ## tu, y simular la paciencia de 383 juntas directivas seria gastar en algo que
 ## nadie va a ver.
+## El marcador de liga de tu club esta semana ([gf, gc]; vacío si no jugó). Lo
+## lee `_semana_memoria_del_partido()` para las rachas de lo que no dirigiste.
+var _marcador_liga_semana: Array = []
+
 func _avisar_a_la_directiva(resultados: Array) -> void:
 	var mio := mi_club()
 	if mio == null:
@@ -41,6 +45,7 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 			prensa.revisar_impuesto(mio, mio.once(), anio)
 		_gano_la_ultima = gf > gc
 		_resultado_semana = 1 if gf > gc else (0 if gf == gc else -1)
+		_marcador_liga_semana = [gf, gc]
 		## "G.clubes[miClub].forma.push(...)" del HTML: solo cuenta para esto lo
 		## que se juega de LIGA -este bloque nace de `_avisar_a_la_directiva`,
 		## que `avanzar_semana()` llama justo después de `l.jugar_jornada()`-.
@@ -153,7 +158,7 @@ func factor_tv_horario() -> float:
 func _copa_es_de(p: Partido) -> bool:
 	if p == null or copa == null:
 		return false
-	var par := copa.emparejamiento_de(mi_club())
+	var par := copa.emparejamiento_de(club_de_la_copa())
 	return par.size() == 2 and par[0] == p.local and par[1] == p.visita
 
 ## Lo mismo que `_copa_es_de()`, pero para UN continental concreto -hay

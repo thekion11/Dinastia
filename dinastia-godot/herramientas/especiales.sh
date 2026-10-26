@@ -1,7 +1,7 @@
 #!/bin/bash
 # PRUEBAS ESPECIALES (23-10-2026): lo que el banco NO ve. Cada una es una escena o un script aparte.
 #   herramientas/especiales.sh            → las rápidas (≈2 min)
-#   herramientas/especiales.sh todo       → con el recorrido de todas las pantallas (+4 min)
+#   herramientas/especiales.sh todo       → con el recorrido de todas las pantallas y el balance a largo plazo (+9 min)
 # Salida: una línea por prueba (OK / FALLO) y código 0 si todas pasan.
 cd "$(dirname "$0")/.." || exit 1
 FALLOS=0
@@ -33,7 +33,17 @@ pasa "modos de juego" "godot --headless --path . res://pruebas/prueba_modos.tscn
 pasa "menú ciudad a pie" "godot --headless --path . res://pruebas/prueba_menu_ciudad_pie.tscn" "0 fallos"
 # 6. Todas las pantallas y botones de la interfaz (lento)
 if [ "$1" = "todo" ]; then
+  # Balance del mundo a largo plazo (10 temporadas x 3 semillas, ~3,5 min) y rendimiento en 20 (~1,5 min)
+  pasa "balance en 10 temporadas" "godot --headless --path . res://pruebas/ideas/eq_diez_temporadas.tscn" "FIN. 0 fallos"
+  pasa "rendimiento en 20 temporadas" "EQ_MODO=rendimiento godot --headless --path . res://pruebas/ideas/eq_diez_temporadas.tscn" "FIN. 0 fallos"
   pasa "recorrido de todas las pantallas" "godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "RECORRIDO: [0-9]+ pantallas"
+  # 20 pantallas clave contra sus referencias (pruebas/visual/visual.gd; ~1,5 min). Necesita Vulkan
+  # (lavapipe sin GPU); sin él se salta. Tras un cambio visual QUERIDO: herramientas/visual.sh referencias.
+  if ls /usr/share/vulkan/icd.d/*.json > /dev/null 2>&1; then
+    pasa "pruebas visuales (20 pantallas)" "RESOLUCION=1280x720 herramientas/captura.sh res://pruebas/visual/visual.tscn" "FIN. 0 fallos"
+  else
+    echo "SALTADA pruebas visuales (sin Vulkan: apt-get install -y mesa-vulkan-drivers)"
+  fi
 fi
 rm -f "$LOG"
 [ "$FALLOS" -eq 0 ] && echo "ESPECIALES: todo en orden" || echo "ESPECIALES: $FALLOS con fallos"

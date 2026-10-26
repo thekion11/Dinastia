@@ -128,20 +128,53 @@ var _expulsado_banda := false
 ## terminado. El sonido, igual que en `_al_gol`, solo suena si el remate es
 ## mio -asi lo hacia el HTML tambien-: los remates fallados del rival no
 ## interrumpen el murmullo de fondo.
+## AUDITORÍA 26-10: con 3 y 4 frases, un 2 % de las líneas de cada partido repetía otra del mismo
+## partido. Ahora son plantillas (`%s` = quien remata) para poder traducirlas, y hay más.
 const _FRASES_ATAJADA := [
-	"🧤 Atajada del arquero tras remate de ",
-	"🧤 Manotazo salvador ante el remate de ",
-	"🧤 Vuela y saca al córner el disparo de ",
+	"🧤 Atajada del arquero tras remate de %s",
+	"🧤 Manotazo salvador ante el remate de %s",
+	"🧤 Vuela y saca al córner el disparo de %s",
+	"🧤 El portero adivina la intención de %s y la atrapa",
+	"🧤 Mano a mano: gana el portero a %s",
+	"🧤 Abajo y seguro: el arquero bloca el tiro de %s",
 ]
 const _FRASES_FALLO := [
-	"❌ Ocasión clara fallada",
-	"😱 La manda a las nubes",
-	"🙈 Se le va por poco",
-	"🥅 Solo frente al arquero y la tira afuera",
+	"❌ Ocasión clara fallada por %s",
+	"😱 %s la manda a las nubes",
+	"🙈 A %s se le va por poco",
+	"🥅 %s, solo frente al arquero, la tira afuera",
+	"💨 Disparo cruzado de %s que se marcha junto al palo",
+	"🤦 %s se enreda en el área y no llega a rematar",
+]
+const _FRASES_PALO := [
+	"🪵 ¡Al palo! Increíble ocasión de %s",
+	"🪵 ¡El larguero le niega el gol a %s!",
+	"🪵 ¡Poste! El remate de %s se estrella en la madera",
 ]
 
+## La crónica en el idioma del jugador (AUDITORÍA 26-10: en inglés salía el 60 % en castellano). Cada
+## tramo de texto entre etiquetas BBCode pasa por `Idiomas.t`, igual que el registro principal; las
+## frases con nombres o números ya llegan traducidas desde sus plantillas.
 func _escribir(bbcode: String) -> void:
-	_cronica.append_text(bbcode + "\n")
+	_cronica.append_text(_traducir_tramos(bbcode) + "\n")
+
+var _re_tramos: RegEx
+
+func _traducir_tramos(bb: String) -> String:
+	if Idiomas.idioma == "es":
+		return bb
+	if _re_tramos == null:
+		_re_tramos = RegEx.create_from_string("(?:^|\\])([^\\[]+)")
+	var salida := bb
+	for m: RegExMatch in _re_tramos.search_all(bb):
+		var tramo := m.get_string(1)
+		var limpio := tramo.strip_edges()
+		if limpio == "":
+			continue
+		var tr_ := Idiomas.t(limpio)
+		if tr_ != limpio:
+			salida = salida.replace(tramo, tramo.replace(limpio, tr_))
+	return salida
 
 func _limpiar(n: Node) -> void:
 	for h in n.get_children():
@@ -174,7 +207,7 @@ func _arengar(j: Jugador) -> void:
 		return
 	_arengas -= 1
 	Sonido.toca("ovacion", Sonido.Bus.AMBIENTE)
-	_escribir("[color=#c9a227]📣 Le gritas a %s desde la banda. Se enciende.[/color]" % j.nombre)
+	_escribir("[color=#c9a227]%s[/color]" % (Idiomas.t("📣 Le gritas a %s desde la banda. Se enciende.") % j.nombre))
 	(self as PartidoVivo)._refrescar()
 
 func _pintar_campo() -> void:
@@ -317,8 +350,8 @@ func _dar_charla(tono: String) -> void:
 		return
 	var r: Dictionary = v.charla(_mi_once(), tono)
 	_charla_dada = true
-	_escribir("[color=#c9a227]%s Charla (%s):[/color] %s. (%d ↑ / %d ↓)" % [
-		String(r["icono"]), String(r["nombre"]).to_lower(), String(r["reaccion"]),
+	_escribir("[color=#c9a227]%s %s:[/color] %s. (%d ↑ / %d ↓)" % [
+		String(r["icono"]), Idiomas.t("Charla (%s)") % Idiomas.t(String(r["nombre"])).to_lower(), Idiomas.t(String(r["reaccion"])),
 		int(r["suben"]), int(r["bajan"])])
 	Sonido.toca("clic", Sonido.Bus.INTERFAZ)
 	(self as PartidoVivo)._refrescar()

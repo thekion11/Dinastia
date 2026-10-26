@@ -1,0 +1,437 @@
+{
+ "exactas": {
+  "Deportivo": {
+   "en": "Sports car",
+   "pt": "Carro esportivo",
+   "fr": "Voiture de sport",
+   "it": "Auto sportiva",
+   "de": "Sportwagen",
+   "ca": "Cotxe esportiu",
+   "pl": "Samochód sportowy",
+   "tr": "Spor araba"
+  },
+  "Agradecer": {
+   "en": "Thank them",
+   "pt": "Agradecer",
+   "fr": "Remercier",
+   "it": "Ringraziare",
+   "de": "Danken",
+   "ca": "Agrair",
+   "pl": "Podziękuj",
+   "tr": "Teşekkür et"
+  },
+  "Con humor": {
+   "en": "With humour",
+   "pt": "Com humor",
+   "fr": "Avec humour",
+   "it": "Con ironia",
+   "de": "Mit Humor",
+   "ca": "Amb humor",
+   "pl": "Z humorem",
+   "tr": "Esprili"
+  },
+  "Explicar": {
+   "en": "Explain",
+   "pt": "Explicar",
+   "fr": "Expliquer",
+   "it": "Spiegare",
+   "de": "Erklären",
+   "ca": "Explicar",
+   "pl": "Wyjaśnij",
+   "tr": "Açıkla"
+  },
+  "Contestar picante": {
+   "en": "Bite back",
+   "pt": "Responder com farpa",
+   "fr": "Répondre du tac au tac",
+   "it": "Rispondere piccato",
+   "de": "Scharf antworten",
+   "ca": "Contestar picant",
+   "pl": "Odpowiedz ostro",
+   "tr": "Sert cevap ver"
+  },
+  "Apoyarlo": {
+   "en": "Back him",
+   "pt": "Apoiá-lo",
+   "fr": "Le soutenir",
+   "it": "Sostenerlo",
+   "de": "Ihn unterstützen",
+   "ca": "Donar-li suport",
+   "pl": "Wesprzyj go",
+   "tr": "Destek ol"
+  },
+  "Cortante": {
+   "en": "Curt",
+   "pt": "Seco",
+   "fr": "Sec",
+   "it": "Secco",
+   "de": "Kurz angebunden",
+   "ca": "Sec",
+   "pl": "Oschle",
+   "tr": "Soğuk"
+  },
+  "Hay proyecto.": {
+   "en": "There's a real project here.",
+   "pt": "Tem projeto.",
+   "fr": "Il y a un vrai projet.",
+   "it": "C'è un progetto.",
+   "de": "Da ist ein Plan dahinter.",
+   "ca": "Hi ha projecte.",
+   "pl": "Jest projekt.",
+   "tr": "Ortada bir proje var."
+  },
+  "Buena foto.": {
+   "en": "Nice photo.",
+   "pt": "Boa foto.",
+   "fr": "Belle photo.",
+   "it": "Bella foto.",
+   "de": "Schönes Foto.",
+   "ca": "Bona foto.",
+   "pl": "Ładne zdjęcie.",
+   "tr": "Güzel fotoğraf."
+  },
+  "publicaciones": {
+   "en": "posts",
+   "pt": "publicações",
+   "fr": "publications",
+   "it": "post",
+   "de": "Beiträge",
+   "ca": "publicacions",
+   "pl": "posty",
+   "tr": "gönderi"
+  },
+  "seguidores": {
+   "en": "followers",
+   "pt": "seguidores",
+   "fr": "abonnés",
+   "it": "follower",
+   "de": "Follower",
+   "ca": "seguidors",
+   "pl": "obserwujący",
+   "tr": "takipçi"
+  },
+  "siguiendo": {
+   "en": "following",
+   "pt": "seguindo",
+   "fr": "abonnements",
+   "it": "seguiti",
+   "de": "folgt",
+   "ca": "seguint",
+   "pl": "obserwowani",
+   "tr": "takip"
+  },
+  "en línea": {
+   "en": "online",
+   "pt": "online",
+   "fr": "en ligne",
+   "it": "online",
+   "de": "online",
+   "ca": "en línia",
+   "pl": "online",
+   "tr": "çevrimiçi"
+  },
+  "⚽ tu plantel": {
+   "en": "⚽ your squad",
+   "pt": "⚽ seu elenco",
+   "fr": "⚽ ton effectif",
+   "it": "⚽ la tua rosa",
+   "de": "⚽ dein Kader",
+   "ca": "⚽ la teva plantilla",
+   "pl": "⚽ twoja kadra",
+   "tr": "⚽ kadron"
+  },
+  "Nueva publicación del club": {
+   "en": "New club post",
+   "pt": "Nova publicação do clube",
+   "fr": "Nouvelle publication du club",
+   "it": "Nuovo post del club",
+   "de": "Neuer Beitrag des Vereins",
+   "ca": "Nova publicació del club",
+   "pl": "Nowy post klubu",
+   "tr": "Kulüpten yeni gönderi"
+  },
+  "Efecto: ánimo de la grada %+d": {
+   "en": "Effect: crowd mood %+d",
+   "pt": "Efeito: ânimo da torcida %+d",
+   "fr": "Effet : moral des tribunes %+d",
+   "it": "Effetto: umore della curva %+d",
+   "de": "Wirkung: Stimmung der Fans %+d",
+   "ca": "Efecte: ànim de la grada %+d",
+   "pl": "Efekt: nastroje trybun %+d",
+   "tr": "Etki: tribün havası %+d"
+  },
+  " · vende en la tienda": {
+   "en": " · sells in the shop",
+   "pt": " · vende na loja",
+   "fr": " · fait vendre à la boutique",
+   "it": " · vende nello store",
+   "de": " · verkauft im Fanshop",
+   "ca": " · ven a la botiga",
+   "pl": " · sprzedaje w sklepie",
+   "tr": " · mağazada satış getirir"
+  },
+  "Efecto: %s %+d": {
+   "en": "Effect: %s %+d",
+   "pt": "Efeito: %s %+d",
+   "fr": "Effet : %s %+d",
+   "it": "Effetto: %s %+d",
+   "de": "Wirkung: %s %+d",
+   "ca": "Efecte: %s %+d",
+   "pl": "Efekt: %s %+d",
+   "tr": "Etki: %s %+d"
+  },
+  ", ánimo de la grada %+d": {
+   "en": ", crowd mood %+d",
+   "pt": ", ânimo da torcida %+d",
+   "fr": ", moral des tribunes %+d",
+   "it": ", umore della curva %+d",
+   "de": ", Stimmung der Fans %+d",
+   "ca": ", ànim de la grada %+d",
+   "pl": ", nastroje trybun %+d",
+   "tr": ", tribün havası %+d"
+  },
+  " · ⚠️ puede hacerse polémica": {
+   "en": " · ⚠️ may stir controversy",
+   "pt": " · ⚠️ pode virar polêmica",
+   "fr": " · ⚠️ peut faire polémique",
+   "it": " · ⚠️ può diventare una polemica",
+   "de": " · ⚠️ kann eine Debatte auslösen",
+   "ca": " · ⚠️ pot fer-se polèmica",
+   "pl": " · ⚠️ może wywołać kontrowersje",
+   "tr": " · ⚠️ tartışma yaratabilir"
+  },
+  "✔ Publicado: %s me gusta en el primer rato.": {
+   "en": "✔ Posted: %s likes in the first few minutes.",
+   "pt": "✔ Publicado: %s curtidas nos primeiros minutos.",
+   "fr": "✔ Publié : %s j'aime dans les premières minutes.",
+   "it": "✔ Pubblicato: %s mi piace nei primi minuti.",
+   "de": "✔ Gepostet: %s Likes in den ersten Minuten.",
+   "ca": "✔ Publicat: %s m'agrada en els primers minuts.",
+   "pl": "✔ Opublikowano: %s polubień w pierwszych minutach.",
+   "tr": "✔ Paylaşıldı: ilk dakikalarda %s beğeni."
+  },
+  "✔ Sesión iniciada: %s": {
+   "en": "✔ Signed in: %s",
+   "pt": "✔ Sessão iniciada: %s",
+   "fr": "✔ Connecté : %s",
+   "it": "✔ Accesso effettuato: %s",
+   "de": "✔ Angemeldet: %s",
+   "ca": "✔ Sessió iniciada: %s",
+   "pl": "✔ Zalogowano: %s",
+   "tr": "✔ Oturum açıldı: %s"
+  },
+  "Todavía no hay nada.": {
+   "en": "Nothing here yet.",
+   "pt": "Ainda não há nada.",
+   "fr": "Rien pour l'instant.",
+   "it": "Ancora niente.",
+   "de": "Noch nichts da.",
+   "ca": "Encara no hi ha res.",
+   "pl": "Jeszcze nic tu nie ma.",
+   "tr": "Henüz bir şey yok."
+  },
+  "Publica algo desde ➕ y empezará la conversación.": {
+   "en": "Post something from ➕ and the conversation will start.",
+   "pt": "Publique algo pelo ➕ e a conversa começa.",
+   "fr": "Publie quelque chose avec ➕ et la conversation commencera.",
+   "it": "Pubblica qualcosa da ➕ e la conversazione partirà.",
+   "de": "Poste etwas über ➕, dann kommt das Gespräch in Gang.",
+   "ca": "Publica alguna cosa des de ➕ i començarà la conversa.",
+   "pl": "Opublikuj coś przez ➕, a rozmowa się zacznie.",
+   "tr": "➕ ile bir şey paylaş, sohbet başlasın."
+  },
+  "Tu perfil": {
+   "en": "Your profile",
+   "pt": "Seu perfil",
+   "fr": "Ton profil",
+   "it": "Il tuo profilo",
+   "de": "Dein Profil",
+   "ca": "El teu perfil",
+   "pl": "Twój profil",
+   "tr": "Profilin"
+  },
+  "Cuenta del club": {
+   "en": "Club account",
+   "pt": "Conta do clube",
+   "fr": "Compte du club",
+   "it": "Account del club",
+   "de": "Vereinskonto",
+   "ca": "Compte del club",
+   "pl": "Konto klubu",
+   "tr": "Kulüp hesabı"
+  },
+  "Publicar": {
+   "en": "Post",
+   "pt": "Publicar",
+   "fr": "Publier",
+   "it": "Pubblica",
+   "de": "Posten",
+   "ca": "Publicar",
+   "pl": "Opublikuj",
+   "tr": "Paylaş"
+  },
+  "Preparación de partidos +%.1f%%": {
+   "en": "Match preparation +%.1f%%",
+   "pt": "Preparação de jogos +%.1f%%",
+   "fr": "Préparation des matchs +%.1f%%",
+   "it": "Preparazione delle partite +%.1f%%",
+   "de": "Spielvorbereitung +%.1f%%",
+   "ca": "Preparació de partits +%.1f%%",
+   "pl": "Przygotowanie meczów +%.1f%%",
+   "tr": "Maç hazırlığı +%.1f%%"
+  },
+  "Estrés": {
+   "en": "Stress",
+   "pt": "Estresse",
+   "fr": "Stress",
+   "it": "Stress",
+   "de": "Stress",
+   "ca": "Estrès",
+   "pl": "Stres",
+   "tr": "Stres"
+  },
+  "Trabajo": {
+   "en": "Work",
+   "pt": "Trabalho",
+   "fr": "Travail",
+   "it": "Lavoro",
+   "de": "Arbeit",
+   "ca": "Feina",
+   "pl": "Praca",
+   "tr": "İş"
+  },
+  "Tranquilo": {
+   "en": "Calm",
+   "pt": "Tranquilo",
+   "fr": "Serein",
+   "it": "Tranquillo",
+   "de": "Entspannt",
+   "ca": "Tranquil",
+   "pl": "Spokojny",
+   "tr": "Sakin"
+  },
+  "Cargado": {
+   "en": "Under strain",
+   "pt": "Sobrecarregado",
+   "fr": "Chargé",
+   "it": "Sotto pressione",
+   "de": "Angespannt",
+   "ca": "Carregat",
+   "pl": "Pod presją",
+   "tr": "Yüklü"
+  },
+  "Al límite: el vestuario lo nota": {
+   "en": "At the limit: the dressing room notices",
+   "pt": "No limite: o vestiário percebe",
+   "fr": "À bout : le vestiaire le sent",
+   "it": "Al limite: lo spogliatoio se ne accorge",
+   "de": "Am Limit: die Kabine merkt es",
+   "ca": "Al límit: el vestidor ho nota",
+   "pl": "Na granicy: szatnia to czuje",
+   "tr": "Sınırda: soyunma odası bunu fark ediyor"
+  },
+  "⚖️ EQUILIBRIO VIDA / TRABAJO": {
+   "en": "⚖️ WORK / LIFE BALANCE",
+   "pt": "⚖️ EQUILÍBRIO VIDA / TRABALHO",
+   "fr": "⚖️ ÉQUILIBRE VIE / TRAVAIL",
+   "it": "⚖️ EQUILIBRIO VITA / LAVORO",
+   "de": "⚖️ BALANCE LEBEN / ARBEIT",
+   "ca": "⚖️ EQUILIBRI VIDA / FEINA",
+   "pl": "⚖️ RÓWNOWAGA ŻYCIE / PRACA",
+   "tr": "⚖️ İŞ / YAŞAM DENGESİ"
+  },
+  "Clave incorrecta.": {
+   "en": "Wrong password.",
+   "pt": "Senha incorreta.",
+   "fr": "Mot de passe incorrect.",
+   "it": "Password errata.",
+   "de": "Falsches Passwort.",
+   "ca": "Clau incorrecta.",
+   "pl": "Nieprawidłowe hasło.",
+   "tr": "Şifre yanlış."
+  },
+  "No existe ese usuario.": {
+   "en": "That user doesn't exist.",
+   "pt": "Esse usuário não existe.",
+   "fr": "Cet utilisateur n'existe pas.",
+   "it": "Questo utente non esiste.",
+   "de": "Diesen Nutzer gibt es nicht.",
+   "ca": "Aquest usuari no existeix.",
+   "pl": "Taki użytkownik nie istnieje.",
+   "tr": "Böyle bir kullanıcı yok."
+  },
+  "Esa cuenta no es tuya: la lleva el community manager del club.": {
+   "en": "That account isn't yours: the club's community manager runs it.",
+   "pt": "Essa conta não é sua: quem cuida dela é o community manager do clube.",
+   "fr": "Ce compte n'est pas à toi : c'est le community manager du club qui le gère.",
+   "it": "Quell'account non è tuo: lo gestisce il community manager del club.",
+   "de": "Dieses Konto gehört dir nicht: der Community-Manager des Vereins betreut es.",
+   "ca": "Aquest compte no és teu: el porta el community manager del club.",
+   "pl": "To konto nie jest twoje: prowadzi je community manager klubu.",
+   "tr": "O hesap senin değil: kulübün sosyal medya sorumlusu yönetiyor."
+  },
+  "Comentado.": {
+   "en": "Commented.",
+   "pt": "Comentado.",
+   "fr": "Commenté.",
+   "it": "Commentato.",
+   "de": "Kommentiert.",
+   "ca": "Comentat.",
+   "pl": "Skomentowano.",
+   "tr": "Yorum yapıldı."
+  },
+  "La cuenta del club ya publicó 3 veces esta semana.": {
+   "en": "The club account has already posted 3 times this week.",
+   "pt": "A conta do clube já publicou 3 vezes esta semana.",
+   "fr": "Le compte du club a déjà publié 3 fois cette semaine.",
+   "it": "L'account del club ha già pubblicato 3 volte questa settimana.",
+   "de": "Das Vereinskonto hat diese Woche schon 3-mal gepostet.",
+   "ca": "El compte del club ja ha publicat 3 vegades aquesta setmana.",
+   "pl": "Konto klubu opublikowało już 3 posty w tym tygodniu.",
+   "tr": "Kulüp hesabı bu hafta zaten 3 kez paylaştı."
+  },
+  "No tienes acceso a la cuenta del club.": {
+   "en": "You don't have access to the club account.",
+   "pt": "Você não tem acesso à conta do clube.",
+   "fr": "Tu n'as pas accès au compte du club.",
+   "it": "Non hai accesso all'account del club.",
+   "de": "Du hast keinen Zugriff auf das Vereinskonto.",
+   "ca": "No tens accés al compte del club.",
+   "pl": "Nie masz dostępu do konta klubu.",
+   "tr": "Kulüp hesabına erişimin yok."
+  },
+  "No existe ese tipo de publicación.": {
+   "en": "That kind of post doesn't exist.",
+   "pt": "Esse tipo de publicação não existe.",
+   "fr": "Ce type de publication n'existe pas.",
+   "it": "Questo tipo di post non esiste.",
+   "de": "Diese Art Beitrag gibt es nicht.",
+   "ca": "Aquest tipus de publicació no existeix.",
+   "pl": "Taki rodzaj posta nie istnieje.",
+   "tr": "Böyle bir gönderi türü yok."
+  },
+  "No hay ninguna sesión abierta.": {
+   "en": "No one is signed in.",
+   "pt": "Não há nenhuma sessão aberta.",
+   "fr": "Aucune session n'est ouverte.",
+   "it": "Nessuna sessione aperta.",
+   "de": "Niemand ist angemeldet.",
+   "ca": "No hi ha cap sessió oberta.",
+   "pl": "Nikt nie jest zalogowany.",
+   "tr": "Açık oturum yok."
+  }
+ },
+ "patrones": [
+  [
+   "^Ya publicaste (\\d+) veces esta semana: más sería llenar de ruido tu cuenta\\.$",
+   "You've already posted $1 times this week: any more would just fill your account with noise.",
+   "Você já publicou $1 vezes esta semana: mais seria encher sua conta de ruído.",
+   "Tu as déjà publié $1 fois cette semaine : plus, ce serait remplir ton compte de bruit.",
+   "Hai già pubblicato $1 volte questa settimana: di più sarebbe riempire il tuo account di rumore.",
+   "Du hast diese Woche schon $1-mal gepostet: mehr wäre nur Lärm auf deinem Konto.",
+   "Ja has publicat $1 vegades aquesta setmana: més seria omplir de soroll el teu compte.",
+   "Opublikowałeś już $1 razy w tym tygodniu: więcej to tylko szum na twoim koncie.",
+   "Bu hafta zaten $1 kez paylaştın: daha fazlası hesabını gürültüyle doldurur."
+  ]
+ ]
+}

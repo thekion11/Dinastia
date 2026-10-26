@@ -1,0 +1,128 @@
+# Frases de la interfaz que siguen en castellano al jugar en otro idioma (medido de nuevo el 26-10-2026)
+# Cómo: `pruebas/recorrido_pantallas.tscn` con RECORRIDO_TEXTOS=… (4191 textos vistos en 108 pantallas) y
+# `pruebas/auditar_textos_vistos.tscn` con IDIOMA=en/de/fr/pt sobre esos textos (castellanos tal como los pinta el juego).
+# Antes (23-10): 523 frases con la heurística «≥ 4 palabras y ≥ 2 palabras vacías castellanas». Hoy, con la misma
+# heurística: 0 frases de verdad en castellano. Las 523 están traducidas en los 8 idiomas (parches
+# dinastia-godot/datos/trad_parches/s1_trad_1..6.json, además de los de S2/S3).
+# La auditoría «cruda» (cualquier texto sin traducir que parezca castellano) da hoy 112 en inglés (de 132 antes),
+# 115 en alemán y francés y 196 en portugués; NINGUNO es una frase de interfaz por traducir:
+#  - 108 son nombres propios (jugadores, clubes, ligas, medios, marcas, «LA PIZARRA», puestos POR/DFC/MC…: los
+#    códigos de puesto son castellanos en toda la interfaz a propósito) o palabras iguales en el otro idioma
+#    («neutral»; en portugués y catalán hay más palabras que se escriben igual: «0 de 3», «Físico», «Cúpula»…).
+#  - 4 son artefactos de medir en castellano: el juego arma el texto con `Idiomas.t(formato) % datos` y cada
+#    pieza ya sale traducida al jugar en inglés, pero la auditoría retraduce la frase castellana ya armada.
+#    Lo mismo pasa con varias de las 523 de la lista anterior (las 9 del personal «# años · # en el club · …»,
+#    «+0,2 % de ataque por nivel», la jornada legal, el ocio del DT…): en partida salen traducidas.
+# Lo que queda en inglés (números como #):
+#  CHILLÁN ROJO
+#.  Chillán Rojo
+#.  Fernando de Peol
+#.  Gávea RJ
+#.  Reloncaví FC
+#.  Óscar Obezo
+Adrián Mertines
+Agustín
+Agustín Vera
+Alan Seldibia, Arturo Bedal, Héctor Jara
+Andrés Espinoza  (EI)
+Atacama León
+Barbería Los Bigotes
+Benjamín Koscebic  ·  # caps
+Bogotá Azul  ·  # pts
+Cautín FC
+Celeste La Paz  ·  # pts
+Chillán Rojo
+Concepción Lila
+Cristóbal Silva
+Cristóbal Silva  ·  LD  ·  #/#
+Cristóbal Silva  ✦
+Cristóbal Silva, Sebastián Saavedra
+DC  Ignacio Vásquez  ·  #
+DC  Salomón Rudrigues
+DC  Salomón Rudrigues  ·  #
+DFC  Joaquín Bravo  ·  #
+DFC  Sebastián Kebrera
+Daniel Gotierez, Esteban Díaz, Emilio Espinoza
+ED  Héctor Jara  ·  #
+EI  Cristián Zebala
+EL CRACK
+Enzo Contreras  ·  POR  ·  #/#
+Enzo Contreras, Joaquín Campos
+Esteban Díaz
+Esteban Díaz  ·  #.#M EUR
+Esteban Díaz  ·  MCO  ·  #/#
+Esteban Díaz  ↗
+F. Urrutia  ·  Diario La Banda  ·  neutral
+Fabián Aomada
+Fernando de Peol
+Fernando de Peol  ·  # caps
+Fernando de Peol  ·  CHI
+Fernando de Peol  ·  POR  ·  #/#
+Fernando de Peol  ✦
+Fernando de Peol, Esteban Pebez
+Gávea RJ  ·  # pts
+Héctor Jara
+Héctor Jara  ·  ED  ·  #/#
+Héctor Jara  ↗
+Ignacio Vásquez
+Ignacio Vásquez  ·  DC  ·  #/#
+Ignacio Vásquez  ✦
+Itálica FC
+Jardín Córdoba
+Joaquín Bravo
+Joaquín Bravo  ·  #.#M EUR
+Joaquín Bravo  ·  DFC  ·  #/#
+Joaquín Bravo, Leonardo Gele
+Joaquín Campos
+Joaquín Campos  ·  LI  ·  #/#
+Julián Firnandes N.
+LD  Cristóbal Silva  ·  #
+LD  Felipe Cortés
+LD  Óscar Obezo
+LD  Óscar Obezo  ·  #
+LI  Joaquín Campos  ·  #
+MC  Benjamín Cendia
+MC  Matías Pelaveciño
+MC  Sebastián Saavedra  ·  #
+MCO  Esteban Díaz  ·  #
+Martín Álvarez
+Martín Álvarez  ·  POR
+Martín Álvarez  ·  POR  ·  #/#
+Martín Álvarez, Erick Weemverg
+Matías Cuccalo
+Maximiliano Soto, Ignacio Vásquez
+Núñez Athletic
+Núñez Athletic  ·  # pts
+Olívico CF
+POR  Diego Sencez
+POR  Enzo Contreras  ·  #
+POR  Fernando de Peol
+POR  Fernando de Peol  ·  #
+POR  Martín Álvarez  ·  #
+Podcast Fuera de Juego  ·  táctico, sin bando
+Porteño FC
+Reloncaví FC
+Roberto López  (EI)
+Rubén Vutta
+Salomón Rudrigues
+Salomón Rudrigues  ·  DC  ·  #/#
+Sebastián Saavedra
+Sebastián Saavedra  (S#/#)
+Sebastián Saavedra  ·  MC  ·  #/#
+Sebastián Saavedra  ✦
+Simón Rivera
+Sofía
+Tomás Sendobal
+Viña Marina
+Álvaro Ortiz
+Óscar Obezo
+Óscar Obezo  ·  LD  ·  #/#
+Óscar Obezo  ✦
+Óscar Obezo, Vicente Pezaro
+▸ Atacama León  ·  CHI D#  ·  rep #
+▸ Cautín FC  ·  CHI D#  ·  rep #
+▸ Chillán Rojo  ·  CHI D#  ·  rep #
+▸ Concepción Lila  ·  CHI D#  ·  rep #
+▸ Itálica FC  ·  CHI D#  ·  rep #
+▸ Porteño FC  ·  CHI D#  ·  rep #
+▸ Viña Marina  ·  CHI D#  ·  rep #

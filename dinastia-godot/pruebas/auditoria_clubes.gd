@@ -7,7 +7,7 @@ extends Node
 ##   · camiseta: ¿foto real de equipación? ¿diseño propio del club? ¿colores = club?
 ##   · patrocinadores: zonas vendidas, marcas, ¿vienen de un dato del club real?
 ##   · jugadores: plantel, ¿con plantilla real fija?, ¿con retrato real?
-## Salida: AUDITORIA_CLUBES.md (resumen) y AUDITORIA_CLUBES.csv (una fila por club).
+## Salida (pruebas/capturas/, no va a git): AUDITORIA_CLUBES.md (resumen) y AUDITORIA_CLUBES.csv (una fila por club). El de referencia está en docs/04_auditorias/anteriores/.
 ##   godot --headless --path . res://pruebas/auditoria_clubes.tscn
 
 func _ready() -> void:
@@ -89,8 +89,8 @@ func _ready() -> void:
 		md += "\nJugadores: %d; con retrato real: %d (%.0f %%).\n\n" % [jug_total, jug_retrato, 100.0 * float(jug_retrato) / maxf(jug_total, 1)]
 		md += "Clubes SIN estadio del real (primeros 30): %s\n\n" % ", ".join(sin_est.slice(0, 30))
 	Datos.usar_base_real(false)
-	FileAccess.open("res://AUDITORIA_CLUBES.md", FileAccess.WRITE).store_string(md)
-	FileAccess.open("res://AUDITORIA_CLUBES.csv", FileAccess.WRITE).store_string(csv)
+	FileAccess.open("res://pruebas/capturas/AUDITORIA_CLUBES.md", FileAccess.WRITE).store_string(md)
+	FileAccess.open("res://pruebas/capturas/AUDITORIA_CLUBES.csv", FileAccess.WRITE).store_string(csv)
 	print(md)
 	print("FIN. 0 fallos")
 	get_tree().quit()

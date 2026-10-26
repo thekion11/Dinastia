@@ -101,7 +101,7 @@ func mantencion_academias(c: Club) -> int:
 	return Eco.escalar(MANTENCION_ACADEMIA, float(c.rep)) * academias.size()
 
 ## Las joyas de la pretemporada: una por sede. Nacen con la media de un juvenil
-## normal y con MUCHO más techo -de 12 a 30 puntos-, que es a lo que se le paga.
+## normal y con MUCHO más techo -de 12 a 30 puntos, la cola alta rara-, que es a lo que se le paga.
 func joyas_de_academia(c: Club) -> Array[Jugador]:
 	var m := _mundo()
 	var salida: Array[Jugador] = []
@@ -113,7 +113,8 @@ func joyas_de_academia(c: Club) -> Array[Jugador]:
 		var grupo := String(Azar.uno(["DEF", "MED", "MED", "DEL"]))
 		var j := m.crear_jugador(c, grupo, m.cantera.demarcacion_de(grupo),
 			Azar.ent(16, 17), c.rep - 20 + Azar.ent(0, 8))
-		j.pot = clampi(j.ovr + Azar.ent(12, 30), j.ovr, 97)
+		## Techo SESGADO (26-10): +12..30 sigue siendo posible, pero la mayoría queda en +12..20.
+		j.pot = Jugador.techo_tope(j.ovr + 12 + int(round(18.0 * pow(Azar.f(), 2.0))), j.ovr)
 		j.pais = p if Azar.suerte(0.85) else c.pais
 		## Y con nombre del sitio: una joya que llega de tu sede en Brasil y se
 		## llama como todos los demas no se siente venida de ninguna parte.

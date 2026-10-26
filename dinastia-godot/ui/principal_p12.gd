@@ -1,5 +1,5 @@
-extends "res://ui/principal_p11.gd"
-## [Capa 13/19 de `principal.gd`] _al_elegir_club, _llenar_selector, _tomar_club, _pintar_elegir_club, _abrir_elegir_club, _modo_simulacion … (+10)
+extends "res://ui/principal_p10.gd"
+## [Capa 11/17 de `principal.gd`] _al_elegir_club, _llenar_selector, _tomar_club, _pintar_elegir_club, _abrir_elegir_club, _modo_simulacion … (+10)
 
 func _al_elegir_club(indice: int) -> void:
 	mundo.tomar_el_mando(String(_selector.get_item_metadata(indice)))
@@ -14,10 +14,15 @@ func _llenar_selector() -> void:
 	var i := 0
 	for l in mundo.ligas:
 		for c in l.clubes:
-			_selector.add_item("%s  ·  %s" % [c.nombre, l.nombre])
+			## Corto («Lautaro FC · CHI 1.ª», s3): en los 208 px del selector, «Lautaro
+			## FC · Primera División» salía cortado en todas las pantallas. La liga
+			## entera va en la ayuda.
+			_selector.add_item("%s · %s %d.ª" % [c.nombre, l.pais, l.division()])
 			_selector.set_item_metadata(i, c.id)
+			_selector.set_item_tooltip(i, "%s  ·  %s" % [c.nombre, l.nombre])
 			if c.id == mundo.mi_club_id:
 				_selector.select(i)
+				_selector.tooltip_text = "%s  ·  %s" % [c.nombre, l.nombre]
 			i += 1
 
 func _tomar_club(id: String) -> void:
@@ -232,8 +237,10 @@ func _seguir_tras_partido(p: Partido) -> void:
 		p.local.nombre, p.goles_local, p.goles_visita, p.visita.nombre])
 	## (17-10: tras un partido dirigido no se autoguardaba; ahora sí, como al
 	## avanzar la semana sin jugarlo.)
-	_autoguardar_si_toca()
+	_partida.autoguardar_si_toca()
 	_refrescar()
+	## Seis partidos seguidos con el mismo cambio del plan: se pregunta.
+	PreguntaPlan.mostrar_si_toca(self, mundo.mi_club())
 
 ## Se avanza la semana con el partido ya jugado en la mano. Si se avanzara sin
 ## él, la jornada se volvería a simular por dentro y en la tabla aparecería un
@@ -363,7 +370,7 @@ func _jugar_temporada() -> void:
 		puesto += 1
 	_escribir("[color=#3fa06a]Temporada %d completa en %d ms.[/color] Campeón: [b]%s[/b]. Acabas [b]%d.º[/b]." % [
 		mundo.anio, Time.get_ticks_msec() - t0, t[0]["club"].nombre, puesto])
-	_autoguardar_si_toca()
+	_partida.autoguardar_si_toca()
 	_refrescar()
 
 ## Una fila de jugador que se puede pulsar. El botón va en la primera celda y

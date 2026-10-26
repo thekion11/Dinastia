@@ -104,7 +104,7 @@ func pagar_clausula(j: Jugador, comprador: Club) -> Dictionary:
 	vendedor.soltar(j)
 	comprador.fichar(j)
 	quitar_clausula(j.id)
-	j.sueldo = int(round(float(j.sueldo) * 1.15))
+	j.sueldo = int(round(float(j.sueldo_pleno()) * 1.15))
 	j.anios_contrato = Contratos.ajustar_anios(j, Azar.ent(2, 4))
 	j.cambiar_moral(6, "Cesiones")
 	j.pide_salir = false

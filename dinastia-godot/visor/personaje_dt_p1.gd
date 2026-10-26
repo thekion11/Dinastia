@@ -1,5 +1,5 @@
 extends RefCounted
-## [Capa 1/2 de `personaje_dt.gd`] aleatorio, de_rival, aspecto, _objetivos, _cuerpo, _pegar … (+7)
+## [Capa 1/2 de `personaje_dt.gd`] aleatorio, de_rival, aspecto, _objetivos, _cuerpo, _pegar … (la cara, los ojos y `_esfera`, en la capa 2)
 
 ## EL PERSONAJE DEL JUGADOR, EN 3D Y MODIFICABLE (26-9-2026). Pedido del
 ## usuario: *"ve por el modelo de nuestro personaje, el modificable"* (E19 del
@@ -31,6 +31,8 @@ const BASE := {
 	## 13-10-2026: más personalización.
 	"ojos": "3d2a1a", "pendiente": false, "cadena": false,
 	"manga_corta": false, "tatuaje": 0,
+	## 26-10-2026 (opción A): forma de cara, cejas y la edad que se ve (0 = sin marcas).
+	"forma_cara": 0.0, "cejas": 0.0, "edad": 0,
 }
 const PIELES := ["f6dccb", "f3d2b8", "f1c7a5", "e8bc96", "e0b08a", "d29f78", "c68d68", "b57a55",
 	"a86b45", "8a5536", "7a4a2e", "6b4028", "4a2c1c", "3a2216"]
@@ -54,7 +56,7 @@ static var del_usuario: Dictionary = {}
 static var club_usuario: String = ""
 
 class _GestosBanda extends Node:
-	const GESTOS := ["brazos_jarra", "aplaudir", "pedir_calma", "protestar", "manos_cabeza", "senalar", "llamar_hinchada"]
+	const GESTOS := ["banda/brazos_jarra", "banda/aplaudir", "banda/pedir_calma", "banda/protestar", "banda/manos_cabeza", "banda/senalar", "banda/llamar_hinchada"]
 	var ap: AnimationPlayer
 	var rng := RandomNumberGenerator.new()
 	var hasta := 2.0
@@ -72,7 +74,7 @@ class _GestosBanda extends Node:
 				ap.play(hay[rng.randi() % hay.size()], 0.3)
 				hasta = maxf(ap.current_animation_length, 1.5)
 				return
-		ap.play("parado", 0.3)
+		ap.play("persona/parado" if ap.has_animation("persona/parado") else "parado", 0.3)
 		hasta = rng.randf_range(3.0, 7.0)
 
 ## Un material de ojos por par piel/iris, compartido (peatones incluidos).
@@ -87,6 +89,14 @@ const BASE_ESBELTA := {
 	"lowerarm_l": Vector3(1.0, 0.88, 0.88), "lowerarm_r": Vector3(1.0, 0.88, 0.88),
 	"thigh_l": Vector3(0.92, 1.0, 0.92), "thigh_r": Vector3(0.92, 1.0, 0.92),
 	"calf_l": Vector3(0.94, 1.0, 0.94), "calf_r": Vector3(0.94, 1.0, 0.94),
+}
+
+## Sobre la base esbelta: menos hombro y pecho, brazo más fino, cuello algo más largo y la
+## cabeza un pelo mayor (la del pack es pequeña, de héroe).
+const PROPORCION_PERSONA := {
+	"spine_03": Vector3(0.94, 1.0, 0.93), "neck_01": Vector3(1.0, 1.06, 1.0), "Head": Vector3(1.04, 1.04, 1.04),
+	"clavicle_l": Vector3(0.9, 0.95, 0.95), "clavicle_r": Vector3(0.9, 0.95, 0.95),
+	"upperarm_l": Vector3(1.0, 0.93, 0.93), "upperarm_r": Vector3(1.0, 0.93, 0.93),
 }
 
 const ASPECTO_NEUTRO := {"complexion": 0.0, "hombros": 0.0, "barriga": 0.0, "piernas": 0.0, "cabeza": 0.0}
@@ -166,7 +176,10 @@ static func _objetivos(a: Dictionary) -> Dictionary:
 	o["spine_02"] = Vector3(1.0 + 0.16 * c + 0.06 * b, 1.0, 1.0 + 0.14 * c + 0.16 * b)
 	o["spine_03"] = Vector3(1.0 + 0.16 * c + 0.10 * h, 1.0, 1.0 + 0.14 * c)
 	o["neck_01"] = Vector3(1.0 + 0.16 * c, 1.0, 1.0 + 0.16 * c)
-	o["Head"] = Vector3.ONE * (1.0 + 0.12 * k)
+	## Forma de cara: el modelo no trae blendshapes ni huesos de cara; solo se puede
+	## ensanchar (+) o alargar (−) la cabeza entera con el hueso «Head».
+	var fc := float(a.get("forma_cara", 0.0))
+	o["Head"] = Vector3(1.0 + 0.06 * fc, 1.0 - 0.035 * fc, 1.0 + 0.02 * fc) * (1.0 + 0.12 * k)
 	for s: String in ["_l", "_r"]:
 		o["clavicle" + s] = Vector3(1.0 + 0.32 * h, 1.0 + 0.08 * c, 1.0 + 0.08 * c)
 		o["upperarm" + s] = Vector3(1.0, 1.0 + 0.22 * c, 1.0 + 0.22 * c)
@@ -177,6 +190,11 @@ static func _objetivos(a: Dictionary) -> Dictionary:
 	## esbelta (brazos, pecho, cuello y muslos) y encima la complexión elegida.
 	for nombre: String in BASE_ESBELTA:
 		o[nombre] = (o.get(nombre, Vector3.ONE) as Vector3) * (BASE_ESBELTA[nombre] as Vector3)
+	## PROPORCIONES DE PERSONA (25-10-2026): solo el DT (su aspecto lleva «ropa»; los
+	## futbolistas y peatones pasan por `adelgazar` sin ella): hombros y pecho de oficina.
+	if a.has("ropa"):
+		for nombre: String in PROPORCION_PERSONA:
+			o[nombre] = (o.get(nombre, Vector3.ONE) as Vector3) * (PROPORCION_PERSONA[nombre] as Vector3)
 	return o
 
 static func _cuerpo(d: Dictionary, a: Dictionary, con_guardian := true) -> void:
@@ -359,72 +377,25 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 	if ropa == "abrigo":
 		var cadera := _pegar(esq, "pelvis")
 		var paño := _mat(r1, 0.85)
-		for s in [-1.0, 1.0]:
-			var f := _caja(cadera, Vector3(0.1 * s, 0.72, 0.02), Vector3(0.19, 0.46, 0.25), paño)
-			f.rotation_degrees.z = 4.0 * s
-
-## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)
-## y, si se eligió, un corte medido. Con gorra no va el corte medido.
-static func _cara_biblioteca(d: Dictionary, a: Dictionary) -> void:
-	var i := int(a.get("cara", -1))
-	## (Las mezclas salen de futbolistas hombres: en un cuerpo de mujer
-	## quedaban masculinas. Ahí va la cara clásica.)
-	if i < 0 or not BibliotecaCaras.hay() or String(a["cuerpo"]) == "female":
-		return
-	var piel := Color(String(a["piel"]))
-	var clave := BibliotecaCaras.cara_de_tono(piel, i)
-	if clave == "":
-		return
-	var corte := "" if bool(a["gorra"]) else String(a.get("corte_med", ""))
-	VestidorQ.poner_cara(d, {"look": {}, "foto": "",
-		"biblio": {"cara": clave, "pelo": corte, "color_pelo": "#" + String(a["color_pelo"])}}, piel)
-static func material_ojos(piel: Color, iris: Color, mujer := false) -> ShaderMaterial:
-	var k := piel.to_html(false) + iris.to_html(false) + ("m" if mujer else "")
-	if _mats_ojos.has(k):
-		return _mats_ojos[k]
-	var mo := ShaderMaterial.new()
-	mo.shader = load(Expresion.SHADER_OJOS)
-	mo.set_shader_parameter("iris", iris)
-	mo.set_shader_parameter("piel", piel)
-	## Los ojos del cuerpo de mujer están más abajo (medido en su malla: ±0,0345
-	## y 1,6559). Con los del hombre, los párpados le tapaban el ojo entero.
-	if mujer:
-		mo.set_shader_parameter("centro_neg", Vector2(-0.0345, 1.6559))
-		mo.set_shader_parameter("centro_pos", Vector2(0.0345, 1.6559))
-	_mats_ojos[k] = mo
-	return mo
-
-## OJOS DE VERDAD también con la cara clásica (13-10-2026): eran ranuras
-## blancas. El shader de ojos (iris, párpados de su piel) y, con él, el
-## parpadeo y las expresiones (`Expresion`).
-static func _ojos_vivos(d: Dictionary, piel: Color, iris := Color(0.24, 0.16, 0.1), propio := true) -> void:
-	for mi: MeshInstance3D in (d["nodo"] as Node).find_children("*", "MeshInstance3D", true, false):
-		if mi.mesh == null:
-			continue
-		for s in mi.mesh.get_surface_count():
-			var base := mi.mesh.surface_get_material(s)
-			var actual := mi.get_surface_override_material(s)
-			if base == null or base.resource_name != VestidorQ.MATERIAL_OJOS:
-				continue
-			if actual is ShaderMaterial and not propio:
-				continue
-			if actual is ShaderMaterial:
-				## Cara de biblioteca: ya tiene el shader (compartido); uno propio con tu iris.
-				var copia := (actual as ShaderMaterial).duplicate() as ShaderMaterial
-				copia.set_shader_parameter("iris", iris)
-				mi.set_surface_override_material(s, copia)
-				continue
-			VestidorQ._con_reposo_simple(mi)
-			var mujer := (d["nodo"] as Node).find_child("Superhero_Female", true, false) != null
-			mi.set_surface_override_material(s, material_ojos(piel, iris, mujer))
-
-static func _esfera(padre: Node3D, pos: Vector3, r: float, m: Material) -> MeshInstance3D:
-	var mi := MeshInstance3D.new()
-	var s := SphereMesh.new()
-	s.radius = r
-	s.height = r * 2.0
-	mi.mesh = s
-	mi.material_override = m
-	mi.position = pos
-	padre.add_child(mi)
-	return mi
+		## FALDÓN DE TELA (26-10-2026, «la ropa es horrible»): eran dos cajas
+		## sueltas a los lados de la cadera, como una falda de cartón (y de
+		## espaldas no tapaban). Ahora un tubo abierto que se ensancha hacia la
+		## rodilla (ovalado como la cadera: x 0,19 → 0,225 m; fondo ×0,78) y la
+		## abertura del frente.
+		paño.cull_mode = BaseMaterial3D.CULL_DISABLED
+		var tubo := CylinderMesh.new()
+		tubo.top_radius = 0.19
+		tubo.bottom_radius = 0.225
+		tubo.height = 0.46
+		tubo.radial_segments = 20
+		tubo.rings = 1
+		tubo.cap_top = false
+		tubo.cap_bottom = false
+		var falda := MeshInstance3D.new()
+		falda.mesh = tubo
+		falda.material_override = paño
+		falda.position = Vector3(0, 0.73, -0.025)
+		falda.scale = Vector3(1.0, 1.0, 0.78)
+		cadera.add_child(falda)
+		var abertura := _caja(cadera, Vector3(0, 0.73, 0.138), Vector3(0.006, 0.46, 0.004), _mat(r1.darkened(0.45), 0.85))
+		abertura.rotation_degrees.x = -3.4

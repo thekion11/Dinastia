@@ -171,13 +171,51 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 	if bool(a["gorra"]) and not corte in ["corto", "fade", "rapado", "calvo"]:
 		corte = "corto"
 	PeloQ.poner(d, corte, Color(String(a["color_pelo"])), bool(a["barba"]) and String(a["cuerpo"]) == "male")
+	_cejas(d, float(a.get("cejas", 0.0)))
 	_cara_biblioteca(d, a)
+	PersonajeVida.envejecer(d, a)
 	_ojos_vivos(d, Color(String(a["piel"])), Color(String(a.get("ojos", "3d2a1a"))))
 	_accesorios(d, a, c1, c2)
 	var ap: AnimationPlayer = d["anim"]
-	if ap.has_animation("parado"):
-		ap.play("parado")
+	var quieto := parado_persona(d)
+	if quieto != "":
+		ap.play(quieto)
+	PersonajeVida.animar(d)
 	return d
+
+## CEJAS FINAS O POBLADAS (26-10-2026): las 3D del pelo (cuerpo de hombre) se escalan
+## alrededor de su centro en el espacio del modelo: más altas y algo más largas.
+static func _cejas(d: Dictionary, v: float) -> void:
+	var esq: Skeleton3D = d.get("esqueleto")
+	if absf(v) < 0.01 or esq == null or esq.get_node_or_null("Pelo") == null:
+		return
+	var rest := esq.get_bone_global_rest(esq.find_bone("Head"))
+	for mi: MeshInstance3D in esq.get_node("Pelo").find_children("Eyebrows*", "MeshInstance3D", false, false):
+		var m := rest * mi.transform
+		var c := m * mi.mesh.get_aabb().get_center()
+		var k := Vector3(1.0 + 0.08 * v, 1.0 + 0.5 * v, 1.0 + 0.2 * v)
+		var s := Transform3D(Basis.from_scale(k), c - c * k)
+		mi.transform = rest.affine_inverse() * s * m
+
+## DE PIE COMO UNA PERSONA, NO COMO UN HÉROE (25-10-2026, pedido del dueño): el «parado»
+## del pack es una guardia de combate (brazos separados, puños a medio cerrar). Para el DT
+## se arma una copia en su propia biblioteca («persona/parado», no se toca la de los
+## futbolistas): brazos más pegados al cuerpo y manos abiertas, colgando. Devuelve el
+## nombre de la animación a reproducir.
+static func parado_persona(d: Dictionary) -> String:
+	var ap: AnimationPlayer = d["anim"]
+	if ap.has_animation("persona/parado"):
+		return "persona/parado"
+	if not ap.has_animation("parado") or not d.has("esqueleto"):
+		return "parado" if ap.has_animation("parado") else ""
+	var esq: Skeleton3D = d["esqueleto"]
+	var a := AnimQuaternius._relajar_dedos(ap.get_animation("parado"), esq, 0.85)
+	AnimQuaternius._brazos_al_cuerpo(a, -0.14)
+	PersonajeVida.piernas_de_persona(a, esq)
+	var lib := AnimationLibrary.new()
+	lib.add_animation("parado", a)
+	ap.add_animation_library("persona", lib)
+	return "persona/parado"
 
 ## En la banda: mira a la cancha y alterna gestos de entrenador.
 static func poner_en_banda(padre: Node3D, asp: Dictionary, c1: Color, c2: Color, pos: Vector3, giro: float) -> Dictionary:
@@ -187,11 +225,41 @@ static func poner_en_banda(padre: Node3D, asp: Dictionary, c1: Color, c2: Color,
 	var n: Node3D = d["nodo"]
 	n.position = pos
 	n.rotation.y = giro
+	gestos_banda(d)
 	var g := _GestosBanda.new()
 	g.ap = d["anim"]
 	g.rng.seed = hash(str(pos))
 	n.add_child(g)
 	return d
+
+## LOS GESTOS DE LA BANDA (26-10-2026). `crear()` arma la librería corta (sin las
+## expresiones de `AnimExtra`), así que `_GestosBanda` nunca encontraba «brazos_jarra» ni
+## los demás y el DT solo se quedaba parado. Se le da una librería propia «banda» con esos
+## gestos, cada uno con las piernas de persona (las mismas del «persona/parado»), para que
+## al pasar de quieto a un gesto los pies no cambien de sitio.
+static func gestos_banda(d: Dictionary) -> void:
+	var ap: AnimationPlayer = d["anim"]
+	var esq: Skeleton3D = d.get("esqueleto")
+	if esq == null or ap.has_animation_library("banda"):
+		return
+	var pre := str(ap.get_path_to(esq))
+	var lib := AnimationLibrary.new()
+	var fab := AnimExtra.new()
+	## «senalar» es el señalar adelante de AnimExtra; «llamar_hinchada» sale del portafolio de
+	## fútbol (en caché por esqueleto: se copia antes de tocarle las piernas).
+	var futbol := AnimFutbol.todas(esq, pre)
+	for g: String in ["brazos_jarra", "aplaudir", "pedir_calma", "protestar", "manos_cabeza", "senalar", "llamar_hinchada"]:
+		var a: Animation
+		if g == "llamar_hinchada":
+			if not futbol.has(g):
+				continue
+			a = (futbol[g] as Animation).duplicate(true)
+		else:
+			a = fab.call("senalar_adelante" if g == "senalar" else g, esq, pre)
+		AnimExtra._completar(a, esq, pre)
+		PersonajeVida.piernas_de_persona(a, esq)
+		lib.add_animation(g, a)
+	ap.add_animation_library("banda", lib)
 
 ## EL PERSONAL DEL ESTADIO (26-9-2026, pendiente "camarógrafos y guardias con
 ## uniforme"): una persona entera con el uniforme de su oficio.
@@ -248,3 +316,73 @@ static func cuerpo_futbolista(d: Dictionary, jug: Dictionary, jid: String) -> vo
 	if not d.has("esqueleto") or not d.has("modelo"):
 		return
 	_cuerpo(d, aspecto_futbolista(jug, jid), true)
+
+# -----------------------------------------------------------------------------
+#  CARA, OJOS Y ESFERAS (pasadas desde la capa 1 el 26-10-2026: norma de 450)
+# -----------------------------------------------------------------------------
+
+## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)
+## y, si se eligió, un corte medido. Con gorra no va el corte medido.
+static func _cara_biblioteca(d: Dictionary, a: Dictionary) -> void:
+	var i := int(a.get("cara", -1))
+	## (Las mezclas salen de futbolistas hombres: en un cuerpo de mujer
+	## quedaban masculinas. Ahí va la cara clásica.)
+	if i < 0 or not BibliotecaCaras.hay() or String(a["cuerpo"]) == "female":
+		return
+	var piel := Color(String(a["piel"]))
+	var clave := BibliotecaCaras.cara_de_tono(piel, i)
+	if clave == "":
+		return
+	var corte := "" if bool(a["gorra"]) else String(a.get("corte_med", ""))
+	VestidorQ.poner_cara(d, {"look": {}, "foto": "",
+		"biblio": {"cara": clave, "pelo": corte, "color_pelo": "#" + String(a["color_pelo"])}}, piel)
+static func material_ojos(piel: Color, iris: Color, mujer := false) -> ShaderMaterial:
+	var k := piel.to_html(false) + iris.to_html(false) + ("m" if mujer else "")
+	if _mats_ojos.has(k):
+		return _mats_ojos[k]
+	var mo := ShaderMaterial.new()
+	mo.shader = load(Expresion.SHADER_OJOS)
+	mo.set_shader_parameter("iris", iris)
+	mo.set_shader_parameter("piel", piel)
+	## Los ojos del cuerpo de mujer están más abajo (medido en su malla: ±0,0345
+	## y 1,6559). Con los del hombre, los párpados le tapaban el ojo entero.
+	if mujer:
+		mo.set_shader_parameter("centro_neg", Vector2(-0.0345, 1.6559))
+		mo.set_shader_parameter("centro_pos", Vector2(0.0345, 1.6559))
+	_mats_ojos[k] = mo
+	return mo
+
+## OJOS DE VERDAD también con la cara clásica (13-10-2026): eran ranuras
+## blancas. El shader de ojos (iris, párpados de su piel) y, con él, el
+## parpadeo y las expresiones (`Expresion`).
+static func _ojos_vivos(d: Dictionary, piel: Color, iris := Color(0.24, 0.16, 0.1), propio := true) -> void:
+	for mi: MeshInstance3D in (d["nodo"] as Node).find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh == null:
+			continue
+		for s in mi.mesh.get_surface_count():
+			var base := mi.mesh.surface_get_material(s)
+			var actual := mi.get_surface_override_material(s)
+			if base == null or base.resource_name != VestidorQ.MATERIAL_OJOS:
+				continue
+			if actual is ShaderMaterial and not propio:
+				continue
+			if actual is ShaderMaterial:
+				## Cara de biblioteca: ya tiene el shader (compartido); uno propio con tu iris.
+				var copia := (actual as ShaderMaterial).duplicate() as ShaderMaterial
+				copia.set_shader_parameter("iris", iris)
+				mi.set_surface_override_material(s, copia)
+				continue
+			VestidorQ._con_reposo_simple(mi)
+			var mujer := (d["nodo"] as Node).find_child("Superhero_Female", true, false) != null
+			mi.set_surface_override_material(s, material_ojos(piel, iris, mujer))
+
+static func _esfera(padre: Node3D, pos: Vector3, r: float, m: Material) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var s := SphereMesh.new()
+	s.radius = r
+	s.height = r * 2.0
+	mi.mesh = s
+	mi.material_override = m
+	mi.position = pos
+	padre.add_child(mi)
+	return mi

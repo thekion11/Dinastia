@@ -1,0 +1,1229 @@
+{
+ "_leeme": "Países jugables que no vienen del HTML (fila 26 de la propuesta s4, sesión 6). Ligas, clubes y competiciones FICTICIOS (nombres de barrio, río o comarca; nada registrado). Datos.gd los suma encima de tablas.json/pack sin pisar nada. «paises» se suma por código de país; «tablas» por clave (HISTORIA_CLUBES: por nombre de club). «paises» se suma por código de país; «tablas» por clave (HISTORIA_CLUBES: por nombre de club). Lote 1 (26-10-2026): POR, NED, BEL, CRO, DEN.",
+ "paises": {
+  "POR": {
+   "PAISES_LIGAS": {
+    "liga": "Liga Portuguesa",
+    "clubes": [
+     [
+      "Tejo Lisboa",
+      "#d50032",
+      "#ffffff",
+      84,
+      64000
+     ],
+     [
+      "Douro FC",
+      "#0038a8",
+      "#ffffff",
+      84,
+      50000
+     ],
+     [
+      "Belém Atlético",
+      "#00843d",
+      "#ffffff",
+      81,
+      50000
+     ],
+     [
+      "Minho SC",
+      "#d50032",
+      "#ffffff",
+      76,
+      30000
+     ],
+     [
+      "Castelo SC",
+      "#ffffff",
+      "#000000",
+      74,
+      30000
+     ],
+     [
+      "Bessa Porto",
+      "#000000",
+      "#ffffff",
+      71,
+      28000
+     ],
+     [
+      "Mondego Coimbra",
+      "#000000",
+      "#ffffff",
+      70,
+      30000
+     ],
+     [
+      "Sado Setúbal",
+      "#00843d",
+      "#ffffff",
+      69,
+      18000
+     ],
+     [
+      "Cascais Costa",
+      "#ffd100",
+      "#0038a8",
+      69,
+      8000
+     ],
+     [
+      "Funchal Ilhéu",
+      "#d50032",
+      "#ffd100",
+      68,
+      10000
+     ],
+     [
+      "Barcelos Galo",
+      "#d50032",
+      "#ffffff",
+      68,
+      12000
+     ],
+     [
+      "Ave Vila Nova",
+      "#0038a8",
+      "#ffffff",
+      68,
+      5000
+     ],
+     [
+      "Algarve FC",
+      "#ff7a00",
+      "#000000",
+      67,
+      30000
+     ],
+     [
+      "Leiria Pinhal",
+      "#000000",
+      "#ffffff",
+      66,
+      23000
+     ],
+     [
+      "Serra da Estrela",
+      "#ffd100",
+      "#0038a8",
+      65,
+      5000
+     ],
+     [
+      "Montes FC",
+      "#0067b1",
+      "#ffffff",
+      65,
+      8000
+     ]
+    ]
+   },
+   "PAIS_SELECCION": "Portugal",
+   "TIER_PAIS": 1.0,
+   "GLOBO_PAIS": [
+    -9.14,
+    38.72
+   ],
+   "COPA_NOM": "Copa de Portugal",
+   "POOLS_EU": [
+    [
+     "João",
+     "Tiago",
+     "Rui",
+     "Diogo",
+     "Gonçalo",
+     "Rúben",
+     "André",
+     "Bruno",
+     "Pedro",
+     "Miguel",
+     "Nuno",
+     "Ricardo",
+     "Vasco",
+     "Duarte"
+    ],
+    [
+     "Silva",
+     "Santos",
+     "Ferreira",
+     "Pereira",
+     "Oliveira",
+     "Costa",
+     "Rodrigues",
+     "Martins",
+     "Sousa",
+     "Fernandes",
+     "Gonçalves",
+     "Gomes",
+     "Lopes",
+     "Marques"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ]
+  },
+  "NED": {
+   "PAISES_LIGAS": {
+    "liga": "Liga Holandesa",
+    "clubes": [
+     [
+      "Amstel FC",
+      "#d50032",
+      "#ffffff",
+      84,
+      55000
+     ],
+     [
+      "Lichtstad FC",
+      "#d50032",
+      "#ffffff",
+      83,
+      35000
+     ],
+     [
+      "Maas Rotterdam",
+      "#d50032",
+      "#ffffff",
+      82,
+      51000
+     ],
+     [
+      "Kaasstad FC",
+      "#d50032",
+      "#ffffff",
+      77,
+      19000
+     ],
+     [
+      "Grens Oost",
+      "#d50032",
+      "#ffffff",
+      76,
+      30000
+     ],
+     [
+      "Domstad Utrecht",
+      "#d50032",
+      "#ffffff",
+      73,
+      23000
+     ],
+     [
+      "Veluwe FC",
+      "#ffd100",
+      "#000000",
+      71,
+      21000
+     ],
+     [
+      "Hofstad FC",
+      "#ffd100",
+      "#00843d",
+      70,
+      15000
+     ],
+     [
+      "Friese Meren",
+      "#0038a8",
+      "#ffffff",
+      70,
+      26000
+     ],
+     [
+      "Noorderzon FC",
+      "#00843d",
+      "#ffffff",
+      70,
+      22000
+     ],
+     [
+      "Waal FC",
+      "#d50032",
+      "#00843d",
+      68,
+      12000
+     ],
+     [
+      "Isala FC",
+      "#0038a8",
+      "#ffffff",
+      66,
+      14000
+     ],
+     [
+      "Brabant Noord",
+      "#ffd100",
+      "#000000",
+      65,
+      15000
+     ],
+     [
+      "Mijnstreek FC",
+      "#ffd100",
+      "#000000",
+      64,
+      12000
+     ],
+     [
+      "Polder FC",
+      "#0038a8",
+      "#ffffff",
+      64,
+      4500
+     ],
+     [
+      "Zeeland FC",
+      "#0067b1",
+      "#ffffff",
+      63,
+      6000
+     ]
+    ]
+   },
+   "PAIS_SELECCION": "Holanda",
+   "TIER_PAIS": 0.95,
+   "GLOBO_PAIS": [
+    4.9,
+    52.37
+   ],
+   "COPA_NOM": "Copa de Holanda",
+   "POOLS_EU": [
+    [
+     "Daan",
+     "Sem",
+     "Lucas",
+     "Milan",
+     "Thijs",
+     "Bram",
+     "Jesse",
+     "Ruben",
+     "Stijn",
+     "Lars",
+     "Niels",
+     "Joris",
+     "Bas",
+     "Tim"
+    ],
+    [
+     "de Jong",
+     "Jansen",
+     "de Vries",
+     "van den Berg",
+     "van Dijk",
+     "Bakker",
+     "Visser",
+     "Smit",
+     "Meijer",
+     "de Boer",
+     "Mulder",
+     "de Groot",
+     "Bos",
+     "Vos"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ]
+  },
+  "BEL": {
+   "PAISES_LIGAS": {
+    "liga": "Liga Belga",
+    "clubes": [
+     [
+      "Senne Bruselas",
+      "#5a2d82",
+      "#ffffff",
+      83,
+      22000
+     ],
+     [
+      "Reie FC",
+      "#0038a8",
+      "#000000",
+      83,
+      29000
+     ],
+     [
+      "Kempen FC",
+      "#0038a8",
+      "#ffffff",
+      79,
+      23000
+     ],
+     [
+      "Mosa Lieja",
+      "#d50032",
+      "#ffffff",
+      77,
+      30000
+     ],
+     [
+      "Leie Gante",
+      "#0038a8",
+      "#ffffff",
+      77,
+      20000
+     ],
+     [
+      "Schelde FC",
+      "#d50032",
+      "#ffffff",
+      76,
+      16000
+     ],
+     [
+      "Sambre FC",
+      "#000000",
+      "#ffffff",
+      71,
+      15000
+     ],
+     [
+      "Dijle FC",
+      "#ffd100",
+      "#d50032",
+      70,
+      16000
+     ],
+     [
+      "Oud-Brabant",
+      "#00843d",
+      "#ffffff",
+      68,
+      10000
+     ],
+     [
+      "Nete FC",
+      "#ffd100",
+      "#0038a8",
+      67,
+      8000
+     ],
+     [
+      "Haspengouw FC",
+      "#ffd100",
+      "#0038a8",
+      66,
+      14000
+     ],
+     [
+      "Flandes Oeste",
+      "#d50032",
+      "#ffffff",
+      66,
+      9000
+     ],
+     [
+      "Costa Ostende",
+      "#d50032",
+      "#ffd100",
+      65,
+      8000
+     ],
+     [
+      "Mons Borinage",
+      "#d50032",
+      "#ffffff",
+      64,
+      12000
+     ],
+     [
+      "Fagnes FC",
+      "#000000",
+      "#ffffff",
+      63,
+      8000
+     ],
+     [
+      "Namur Citadelle",
+      "#ffd100",
+      "#000000",
+      63,
+      6000
+     ]
+    ]
+   },
+   "PAIS_SELECCION": "Bélgica",
+   "TIER_PAIS": 0.85,
+   "GLOBO_PAIS": [
+    4.35,
+    50.85
+   ],
+   "COPA_NOM": "Copa de Bélgica",
+   "POOLS_EU": [
+    [
+     "Arthur",
+     "Louis",
+     "Jules",
+     "Noah",
+     "Wout",
+     "Arne",
+     "Maxime",
+     "Thibault",
+     "Siebe",
+     "Lander",
+     "Robbe",
+     "Cédric",
+     "Hugo",
+     "Bram"
+    ],
+    [
+     "Peeters",
+     "Janssens",
+     "Maes",
+     "Jacobs",
+     "Mertens",
+     "Willems",
+     "Claes",
+     "Goossens",
+     "Wouters",
+     "De Smet",
+     "Dubois",
+     "Lambert",
+     "Dupont",
+     "Hermans"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ]
+  },
+  "CRO": {
+   "PAISES_LIGAS": {
+    "liga": "Liga Croata",
+    "clubes": [
+     [
+      "Sava Zagreb",
+      "#0038a8",
+      "#ffffff",
+      82,
+      35000
+     ],
+     [
+      "Marjan Split",
+      "#ffffff",
+      "#0038a8",
+      80,
+      34000
+     ],
+     [
+      "Kvarner FC",
+      "#ffffff",
+      "#0067b1",
+      76,
+      8000
+     ],
+     [
+      "Drava Osijek",
+      "#0038a8",
+      "#ffffff",
+      74,
+      13000
+     ],
+     [
+      "Varaždin Barok",
+      "#0038a8",
+      "#ffffff",
+      68,
+      9000
+     ],
+     [
+      "Trešnjevka FC",
+      "#0038a8",
+      "#ffffff",
+      67,
+      3000
+     ],
+     [
+      "Pula Arena",
+      "#ffd100",
+      "#00843d",
+      67,
+      8000
+     ],
+     [
+      "Turopolje FC",
+      "#d50032",
+      "#ffffff",
+      66,
+      5000
+     ],
+     [
+      "Podravina FC",
+      "#0038a8",
+      "#ffffff",
+      65,
+      4000
+     ],
+     [
+      "Krka FC",
+      "#d50032",
+      "#0038a8",
+      64,
+      4000
+     ],
+     [
+      "Zadar Maraska",
+      "#0038a8",
+      "#d50032",
+      64,
+      5000
+     ],
+     [
+      "Dubrovnik Zidine",
+      "#ffd100",
+      "#d50032",
+      63,
+      3000
+     ],
+     [
+      "Vukovar Dunav",
+      "#0038a8",
+      "#ffffff",
+      62,
+      5000
+     ],
+     [
+      "Karlovac Kupa",
+      "#00843d",
+      "#ffffff",
+      61,
+      5000
+     ],
+     [
+      "Sisak Željezo",
+      "#d50032",
+      "#ffffff",
+      61,
+      3000
+     ],
+     [
+      "Zagorje FC",
+      "#00843d",
+      "#ffd100",
+      61,
+      3000
+     ]
+    ]
+   },
+   "PAIS_SELECCION": "Croacia",
+   "TIER_PAIS": 0.5,
+   "GLOBO_PAIS": [
+    15.98,
+    45.81
+   ],
+   "COPA_NOM": "Copa de Croacia",
+   "POOLS_EU": [
+    [
+     "Luka",
+     "Ivan",
+     "Marko",
+     "Josip",
+     "Ante",
+     "Mateo",
+     "Dario",
+     "Filip",
+     "Toni",
+     "Nikola",
+     "Domagoj",
+     "Petar",
+     "Bruno",
+     "Karlo"
+    ],
+    [
+     "Horvat",
+     "Kovačević",
+     "Babić",
+     "Marić",
+     "Jurić",
+     "Novak",
+     "Kovačić",
+     "Knežević",
+     "Vuković",
+     "Marković",
+     "Petrović",
+     "Matić",
+     "Tomić",
+     "Pavlović"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ]
+  },
+  "DEN": {
+   "PAISES_LIGAS": {
+    "liga": "Liga Danesa",
+    "clubes": [
+     [
+      "Østerbro FC",
+      "#ffffff",
+      "#0038a8",
+      82,
+      38000
+     ],
+     [
+      "Vestegn FC",
+      "#ffd100",
+      "#0038a8",
+      79,
+      28000
+     ],
+     [
+      "Hede FC",
+      "#000000",
+      "#d50032",
+      78,
+      12000
+     ],
+     [
+      "Marselis FC",
+      "#ffffff",
+      "#000000",
+      73,
+      19000
+     ],
+     [
+      "Limfjord FC",
+      "#d50032",
+      "#ffffff",
+      72,
+      14000
+     ],
+     [
+      "Kattegat FC",
+      "#ff7a00",
+      "#000000",
+      72,
+      10000
+     ],
+     [
+      "Fyn FC",
+      "#0038a8",
+      "#ffffff",
+      71,
+      15000
+     ],
+     [
+      "Gudenå FC",
+      "#0067b1",
+      "#ffffff",
+      68,
+      10000
+     ],
+     [
+      "Søhøjland FC",
+      "#d50032",
+      "#ffffff",
+      68,
+      10000
+     ],
+     [
+      "Hald Sø FC",
+      "#00843d",
+      "#ffffff",
+      66,
+      9000
+     ],
+     [
+      "Mølleå FC",
+      "#0038a8",
+      "#ffffff",
+      66,
+      10000
+     ],
+     [
+      "Lillebælt FC",
+      "#d50032",
+      "#ffffff",
+      66,
+      10000
+     ],
+     [
+      "Grænseland FC",
+      "#0067b1",
+      "#ffffff",
+      65,
+      10000
+     ],
+     [
+      "Bygholm FC",
+      "#ffd100",
+      "#000000",
+      64,
+      10000
+     ],
+     [
+      "Vadehavet FC",
+      "#0067b1",
+      "#ffffff",
+      64,
+      16000
+     ],
+     [
+      "Køge Bugt FC",
+      "#d50032",
+      "#0038a8",
+      62,
+      8000
+     ]
+    ]
+   },
+   "PAIS_SELECCION": "Dinamarca",
+   "TIER_PAIS": 0.7,
+   "GLOBO_PAIS": [
+    12.57,
+    55.68
+   ],
+   "COPA_NOM": "Copa de Dinamarca",
+   "POOLS_EU": [
+    [
+     "Mads",
+     "Mikkel",
+     "Rasmus",
+     "Frederik",
+     "Oliver",
+     "Magnus",
+     "Jonas",
+     "Emil",
+     "Andreas",
+     "Kasper",
+     "Mathias",
+     "Victor",
+     "Lasse",
+     "Simon"
+    ],
+    [
+     "Jensen",
+     "Nielsen",
+     "Hansen",
+     "Pedersen",
+     "Andersen",
+     "Christensen",
+     "Larsen",
+     "Sørensen",
+     "Rasmussen",
+     "Jørgensen",
+     "Petersen",
+     "Madsen",
+     "Kristensen",
+     "Olsen"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ]
+  }
+ },
+ "tablas": {
+  "HISTORIA_CLUBES": {
+   "Tejo Lisboa": {
+    "fundado": 1913,
+    "apodo": "os Navegantes",
+    "estadio": "Estádio do Tejo"
+   },
+   "Douro FC": {
+    "fundado": 1899,
+    "apodo": "os Ribeirinhos",
+    "estadio": "Estádio do Douro"
+   },
+   "Belém Atlético": {
+    "fundado": 1914,
+    "apodo": "os Galos",
+    "estadio": "Estádio do Belém"
+   },
+   "Minho SC": {
+    "fundado": 1928,
+    "apodo": "os Leões do Minho",
+    "estadio": "Estádio do Minho"
+   },
+   "Castelo SC": {
+    "fundado": 1935,
+    "apodo": "os Castelões",
+    "estadio": "Estádio do Castelo"
+   },
+   "Bessa Porto": {
+    "fundado": 1934,
+    "apodo": "os Portuenses",
+    "estadio": "Estádio do Bessa"
+   },
+   "Mondego Coimbra": {
+    "fundado": 1930,
+    "apodo": "os Mondeguinos",
+    "estadio": "Estádio do Mondego"
+   },
+   "Sado Setúbal": {
+    "fundado": 1940,
+    "apodo": "os do Sado",
+    "estadio": "Estádio do Sado"
+   },
+   "Cascais Costa": {
+    "fundado": 1924,
+    "apodo": "os Costeiros",
+    "estadio": "Estádio do Cascais"
+   },
+   "Funchal Ilhéu": {
+    "fundado": 1928,
+    "apodo": "os Insulares",
+    "estadio": "Estádio do Funchal"
+   },
+   "Barcelos Galo": {
+    "fundado": 1925,
+    "apodo": "os Barcelenses",
+    "estadio": "Estádio do Barcelos"
+   },
+   "Ave Vila Nova": {
+    "fundado": 1936,
+    "apodo": "os do Ave",
+    "estadio": "Estádio do Ave"
+   },
+   "Algarve FC": {
+    "fundado": 1930,
+    "apodo": "os Algarvios",
+    "estadio": "Estádio do Algarve"
+   },
+   "Leiria Pinhal": {
+    "fundado": 1928,
+    "apodo": "os Pinhaleiros",
+    "estadio": "Estádio do Leiria"
+   },
+   "Serra da Estrela": {
+    "fundado": 1937,
+    "apodo": "os Serranos",
+    "estadio": "Estádio do Serra"
+   },
+   "Montes FC": {
+    "fundado": 1943,
+    "apodo": "os Montanheses",
+    "estadio": "Estádio do Montes"
+   },
+   "Amstel FC": {
+    "fundado": 1897,
+    "apodo": "de Grachten",
+    "estadio": "Amstel Stadion"
+   },
+   "Lichtstad FC": {
+    "fundado": 1894,
+    "apodo": "de Lichtstad",
+    "estadio": "Lichtstad Stadion"
+   },
+   "Maas Rotterdam": {
+    "fundado": 1911,
+    "apodo": "de Havenbazen",
+    "estadio": "Maas Stadion"
+   },
+   "Kaasstad FC": {
+    "fundado": 1926,
+    "apodo": "de Kaaskoppen",
+    "estadio": "Kaasstad Stadion"
+   },
+   "Grens Oost": {
+    "fundado": 1923,
+    "apodo": "de Grenslanders",
+    "estadio": "Grens Stadion"
+   },
+   "Domstad Utrecht": {
+    "fundado": 1931,
+    "apodo": "de Domstedelingen",
+    "estadio": "Domstad Stadion"
+   },
+   "Veluwe FC": {
+    "fundado": 1934,
+    "apodo": "de Veluwnaren",
+    "estadio": "Veluwe Stadion"
+   },
+   "Hofstad FC": {
+    "fundado": 1936,
+    "apodo": "de Hofstedelingen",
+    "estadio": "Hofstad Stadion"
+   },
+   "Friese Meren": {
+    "fundado": 1931,
+    "apodo": "de Friezen",
+    "estadio": "Friese Stadion"
+   },
+   "Noorderzon FC": {
+    "fundado": 1934,
+    "apodo": "de Noorderlingen",
+    "estadio": "Noorderzon Stadion"
+   },
+   "Waal FC": {
+    "fundado": 1946,
+    "apodo": "de Waalboys",
+    "estadio": "Waal Stadion"
+   },
+   "Isala FC": {
+    "fundado": 1942,
+    "apodo": "de Isalaners",
+    "estadio": "Isala Stadion"
+   },
+   "Brabant Noord": {
+    "fundado": 1941,
+    "apodo": "de Brabanders",
+    "estadio": "Brabant Stadion"
+   },
+   "Mijnstreek FC": {
+    "fundado": 1939,
+    "apodo": "de Mijnwerkers",
+    "estadio": "Mijnstreek Stadion"
+   },
+   "Polder FC": {
+    "fundado": 1940,
+    "apodo": "de Polderjongens",
+    "estadio": "Polder Stadion"
+   },
+   "Zeeland FC": {
+    "fundado": 1939,
+    "apodo": "de Zeeuwen",
+    "estadio": "Zeeland Stadion"
+   },
+   "Senne Bruselas": {
+    "fundado": 1901,
+    "apodo": "les Bruxellois",
+    "estadio": "Stade de Senne"
+   },
+   "Reie FC": {
+    "fundado": 1896,
+    "apodo": "de Reiezonen",
+    "estadio": "Stade de Reie"
+   },
+   "Kempen FC": {
+    "fundado": 1918,
+    "apodo": "de Kempenaars",
+    "estadio": "Stade de Kempen"
+   },
+   "Mosa Lieja": {
+    "fundado": 1906,
+    "apodo": "les Mosans",
+    "estadio": "Stade de Mosa"
+   },
+   "Leie Gante": {
+    "fundado": 1912,
+    "apodo": "de Leiezonen",
+    "estadio": "Stade de Leie"
+   },
+   "Schelde FC": {
+    "fundado": 1929,
+    "apodo": "de Scheldezonen",
+    "estadio": "Stade de Schelde"
+   },
+   "Sambre FC": {
+    "fundado": 1939,
+    "apodo": "les Sambriens",
+    "estadio": "Stade de Sambre"
+   },
+   "Dijle FC": {
+    "fundado": 1940,
+    "apodo": "de Dijlezonen",
+    "estadio": "Stade de Dijle"
+   },
+   "Oud-Brabant": {
+    "fundado": 1934,
+    "apodo": "de Brabanders",
+    "estadio": "Stade de Oud-Brabant"
+   },
+   "Nete FC": {
+    "fundado": 1942,
+    "apodo": "de Netezonen",
+    "estadio": "Stade de Nete"
+   },
+   "Haspengouw FC": {
+    "fundado": 1932,
+    "apodo": "de Haspengouwers",
+    "estadio": "Stade de Haspengouw"
+   },
+   "Flandes Oeste": {
+    "fundado": 1951,
+    "apodo": "de Westhoek",
+    "estadio": "Stade de Flandes"
+   },
+   "Costa Ostende": {
+    "fundado": 1931,
+    "apodo": "de Kustboys",
+    "estadio": "Stade de Costa"
+   },
+   "Mons Borinage": {
+    "fundado": 1940,
+    "apodo": "les Dragons",
+    "estadio": "Stade de Mons"
+   },
+   "Fagnes FC": {
+    "fundado": 1945,
+    "apodo": "les Fagnards",
+    "estadio": "Stade de Fagnes"
+   },
+   "Namur Citadelle": {
+    "fundado": 1937,
+    "apodo": "les Merles",
+    "estadio": "Stade de Namur"
+   },
+   "Sava Zagreb": {
+    "fundado": 1913,
+    "apodo": "Savski",
+    "estadio": "Stadion Sava"
+   },
+   "Marjan Split": {
+    "fundado": 1922,
+    "apodo": "Marjanci",
+    "estadio": "Stadion Marjan"
+   },
+   "Kvarner FC": {
+    "fundado": 1912,
+    "apodo": "Riječki",
+    "estadio": "Stadion Kvarner"
+   },
+   "Drava Osijek": {
+    "fundado": 1927,
+    "apodo": "Bijelo-plavi",
+    "estadio": "Stadion Drava"
+   },
+   "Varaždin Barok": {
+    "fundado": 1925,
+    "apodo": "Barokni",
+    "estadio": "Stadion Varaždin"
+   },
+   "Trešnjevka FC": {
+    "fundado": 1942,
+    "apodo": "Trešnjevčani",
+    "estadio": "Stadion Trešnjevka"
+   },
+   "Pula Arena": {
+    "fundado": 1940,
+    "apodo": "Arenaši",
+    "estadio": "Stadion Pula"
+   },
+   "Turopolje FC": {
+    "fundado": 1951,
+    "apodo": "Turopoljci",
+    "estadio": "Stadion Turopolje"
+   },
+   "Podravina FC": {
+    "fundado": 1951,
+    "apodo": "Podravci",
+    "estadio": "Stadion Podravina"
+   },
+   "Krka FC": {
+    "fundado": 1941,
+    "apodo": "Krkaši",
+    "estadio": "Stadion Krka"
+   },
+   "Zadar Maraska": {
+    "fundado": 1933,
+    "apodo": "Maraskini",
+    "estadio": "Stadion Zadar"
+   },
+   "Dubrovnik Zidine": {
+    "fundado": 1938,
+    "apodo": "Zidinari",
+    "estadio": "Stadion Dubrovnik"
+   },
+   "Vukovar Dunav": {
+    "fundado": 1937,
+    "apodo": "Dunavci",
+    "estadio": "Stadion Vukovar"
+   },
+   "Karlovac Kupa": {
+    "fundado": 1961,
+    "apodo": "Kupari",
+    "estadio": "Stadion Karlovac"
+   },
+   "Sisak Željezo": {
+    "fundado": 1947,
+    "apodo": "Željezari",
+    "estadio": "Stadion Sisak"
+   },
+   "Zagorje FC": {
+    "fundado": 1942,
+    "apodo": "Zagorci",
+    "estadio": "Stadion Zagorje"
+   },
+   "Østerbro FC": {
+    "fundado": 1895,
+    "apodo": "Østerbroerne",
+    "estadio": "Østerbro Park"
+   },
+   "Vestegn FC": {
+    "fundado": 1911,
+    "apodo": "Vestegnsdrengene",
+    "estadio": "Vestegn Park"
+   },
+   "Hede FC": {
+    "fundado": 1914,
+    "apodo": "Hedeboerne",
+    "estadio": "Hede Park"
+   },
+   "Marselis FC": {
+    "fundado": 1919,
+    "apodo": "Marselisdrengene",
+    "estadio": "Marselis Park"
+   },
+   "Limfjord FC": {
+    "fundado": 1930,
+    "apodo": "Fjordboerne",
+    "estadio": "Limfjord Park"
+   },
+   "Kattegat FC": {
+    "fundado": 1923,
+    "apodo": "Kattegatdrengene",
+    "estadio": "Kattegat Park"
+   },
+   "Fyn FC": {
+    "fundado": 1922,
+    "apodo": "Fynboerne",
+    "estadio": "Fyn Park"
+   },
+   "Gudenå FC": {
+    "fundado": 1935,
+    "apodo": "Gudenådrengene",
+    "estadio": "Gudenå Park"
+   },
+   "Søhøjland FC": {
+    "fundado": 1945,
+    "apodo": "Søhøjlænderne",
+    "estadio": "Søhøjland Park"
+   },
+   "Hald Sø FC": {
+    "fundado": 1952,
+    "apodo": "Halddrengene",
+    "estadio": "Hald Park"
+   },
+   "Mølleå FC": {
+    "fundado": 1931,
+    "apodo": "Mølleådrengene",
+    "estadio": "Mølleå Park"
+   },
+   "Lillebælt FC": {
+    "fundado": 1949,
+    "apodo": "Bæltdrengene",
+    "estadio": "Lillebælt Park"
+   },
+   "Grænseland FC": {
+    "fundado": 1947,
+    "apodo": "Grænselænderne",
+    "estadio": "Grænseland Park"
+   },
+   "Bygholm FC": {
+    "fundado": 1953,
+    "apodo": "Bygholmdrengene",
+    "estadio": "Bygholm Park"
+   },
+   "Vadehavet FC": {
+    "fundado": 1938,
+    "apodo": "Vadehavsdrengene",
+    "estadio": "Vadehavet Park"
+   },
+   "Køge Bugt FC": {
+    "fundado": 1948,
+    "apodo": "Bugtdrengene",
+    "estadio": "Køge Park"
+   }
+  }
+ }
+}

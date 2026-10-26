@@ -20,6 +20,11 @@ signal banquillo
 signal terminado
 
 const DURACION := 7.0
+## El barrido de marca tapa el centro de la pantalla a mitad de su recorrido: arranca ANTES
+## del corte para que el cambio de plano quede escondido detrás de la franja (25-10-2026; antes
+## se veía el corte en seco y después pasaba la franja).
+const BARRIDO := 0.35
+const BARRIDO_FINAL := 0.5
 
 var t := -1.0
 var auto := false
@@ -75,6 +80,10 @@ func paso(delta: float) -> void:
 		if not d.is_empty() and is_instance_valid(_ui):
 			CartaGoleador.mostrar(_ui, _club, int(d.get("dorsal", 0)), String(d.get("nombre", "")),
 				int(d.get("tiros", 1)), int(d.get("goles", 1)), autor)
+	## Los barridos, medio barrido antes de cada corte.
+	for corte in [3.4, 5.4]:
+		if t - delta < corte - BARRIDO * 0.5 and t >= corte - BARRIDO * 0.5:
+			barrido(_ui, _club, BARRIDO)
 	if t < 3.4:
 		## 1) El goleador, de cerca, a la altura del pecho, siguiéndolo.
 		if autor != null:
@@ -86,20 +95,19 @@ func paso(delta: float) -> void:
 	elif t < 5.4:
 		## 2) El banquillo del que marcó (de pie, saltando).
 		if t - delta < 3.4:
-			barrido(_ui, _club, 0.35)
 			banquillo.emit()
 		var z := (-1.0 if _es_local else 1.0) * 14.0
 		_cam.global_position = Vector3(27.5, 2.0, z + (-5.0 if _es_local else 5.0))
 		_cam.look_at(Vector3(34.6, 1.3, z), Vector3.UP)
-	elif t < DURACION:
-		## 3) La grada: un paneo lento por la tribuna.
-		if t - delta < 5.4:
-			barrido(_ui, _club, 0.35)
-		var f := (t - 5.4) / 1.6
+	elif t < DURACION + BARRIDO_FINAL * 0.5:
+		## 3) La grada: un paneo lento por la tribuna (sigue un poco bajo el barrido final).
+		if t - delta < DURACION and t >= DURACION:
+			barrido(_ui, _club, BARRIDO_FINAL)
+		var f := minf((t - 5.4) / 1.6, 1.0 + BARRIDO_FINAL * 0.3)
 		_cam.global_position = Vector3(-_dx * 0.42, 2.6, lerpf(-14.0, 14.0, f))
 		_cam.look_at(Vector3(-_dx, 8.5, lerpf(-18.0, 18.0, f)), Vector3.UP)
 	else:
-		barrido(_ui, _club, 0.5)
+		## 4) Con la franja tapando la pantalla, vuelta (y la repetición).
 		_fin()
 
 ## Corta en seco (otro gol encima, el final del partido...): sin barrido ni

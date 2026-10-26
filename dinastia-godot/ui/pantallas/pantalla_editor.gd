@@ -1,6 +1,6 @@
 class_name PantallaEditor
 extends "res://ui/pantallas/pantalla_editor_p1.gd"
-## [Capa 2/2 de `pantalla_editor.gd`] _pintar_editor_csv, _pintar_editor
+## [Capa 2/2 de `pantalla_editor.gd`] _pintar_editor_csv, _pintar_editor, _importar_csv, _exportar_csv
 
 ## EL IMPORTADOR. Formato del HTML sin tocar, para que una base hecha para el
 ## HTML se pueda pegar aquí tal cual.
@@ -89,3 +89,30 @@ func _pintar_editor() -> void:
 	_pintar_editor_clubes(ed)
 	_pintar_editor_jugadores(ed)
 	_pintar_editor_csv(ed)
+
+func _importar_csv(ed: Editor) -> void:
+	if p._ed_csv.strip_edges() == "":
+		p._escribir("[color=#c9a227]No hay nada que importar.[/color]")
+		return
+	var r := ed.importar_csv(p._ed_csv, p._ed_censura)
+	if r.has("error"):
+		p._escribir("[color=#e05555]No se pudo importar: %s.[/color]" % String(r["error"]))
+		p._refrescar()
+		return
+	p._escribir("[color=#4caf6d]Importadas %d fichas en %d club(es).[/color]" % [
+		int(r["filas"]), int(r["clubes"])])
+	for p_local: String in (r["problemas"] as Array):
+		p._escribir("[color=#e0a832]  %s[/color]" % p_local)
+	p._refrescar()
+
+## `solo_mi_liga`, no `todo` -a un botón "Todo el mundo" nombrar el parámetro
+## al revés de lo que dice fue justo el bug que cazó la captura de pruebas:
+## el nombre invertido hacía fácil pasar el booleano equivocado sin que nada
+## avisara.
+func _exportar_csv(ed: Editor, solo_mi_liga: bool) -> void:
+	var texto := ed.exportar_csv(solo_mi_liga)
+	if texto == "":
+		p._escribir("[color=#c9a227]No hay nada que exportar.[/color]")
+		return
+	DisplayServer.clipboard_set(texto)
+	p._escribir("[color=#4caf6d]Base exportada.[/color] Copiada al portapapeles (%d líneas)." % (texto.count("\n") + 1))

@@ -20,6 +20,12 @@ extends Node
 
 const TAM_CHICO := 128
 const TAM_GRANDE := 256
+## Hasta este alto en pantalla (filas de listas: 22-30 px) el busto de pecho para
+## arriba dejaba la cara en 6 píxeles casi negros (s3, 26-10-2026, defecto que
+## anotó la sesión 2): ahí se encuadra la cabeza con el cuello de la camiseta.
+const ALTO_CABEZA := 40
+## Luminosidad mínima del fondo: con un club negro, fondo y camiseta se fundían.
+const LUZ_FONDO := 0.2
 
 static var _inst: Retrato3D
 static var _cache := {}
@@ -37,14 +43,13 @@ static func disponible() -> bool:
 ## decide la resolución (de 120 para arriba, la grande).
 static func textura(j: Jugador, k1: String, k2: String, alto_px: int = 64) -> Texture2D:
 	var tam := TAM_GRANDE if alto_px >= 120 else TAM_CHICO
-	var clave := "%s_%d_%s_%s" % [j.id, tam, k1, k2]
+	var cabeza := alto_px <= ALTO_CABEZA
+	var clave := "%s_%d_%s_%s%s" % [j.id, tam, k1, k2, "_c" if cabeza else ""]
 	if _cache.has(clave):
 		return _cache[clave]
-	var marcador := Image.create(tam, tam, false, Image.FORMAT_RGBA8)
-	marcador.fill(Color(Color(k1).darkened(0.55), 1.0))
-	var t := ImageTexture.create_from_image(marcador)
+	var t := ImageTexture.create_from_image(_marcador(tam, fondo_de(k1)))
 	_cache[clave] = t
-	_cola.append({"j": j, "k1": k1, "k2": k2, "tam": tam, "tex": t})
+	_cola.append({"j": j, "k1": k1, "k2": k2, "tam": tam, "tex": t, "cabeza": cabeza})
 	_arrancar()
 	return t
 
@@ -55,6 +60,52 @@ static func _arrancar() -> void:
 	_inst = Retrato3D.new()
 	_inst.name = "Retrato3D"
 	arbol.root.add_child.call_deferred(_inst)
+
+## EL DT EN 3D (s3, 26-10-2026; regla del dueño: nada de retratos 2D sueltos). El
+## mismo busto que el de los jugadores, pero del personaje del entrenador
+## (`PersonajeDT.crear`, la figura que sale en la banda): `aspecto` es el aspecto 3D
+## guardado (`Roles.aspecto_3d()`). Mismo marcador, misma cola, misma caché.
+static func textura_dt(aspecto: Dictionary, k1: String, k2: String, alto_px: int = 64) -> Texture2D:
+	var tam := TAM_GRANDE if alto_px >= 120 else TAM_CHICO
+	var clave := "dt_%s_%d_%s_%s" % [str(hash(aspecto)), tam, k1, k2]
+	if _cache.has(clave):
+		return _cache[clave]
+	var t := ImageTexture.create_from_image(_marcador(tam, fondo_de(k1)))
+	_cache[clave] = t
+	_cola.append({"dt": aspecto, "k1": k1, "k2": k2, "tam": tam, "tex": t, "cabeza": alto_px <= ALTO_CABEZA})
+	_arrancar()
+	return t
+
+## El fondo del retrato: el color del club hacia un verde oscuro, nunca más
+## oscuro que `LUZ_FONDO` (antes un club negro daba un cuadro negro).
+static func fondo_de(k1: String) -> Color:
+	var f := Color(k1).lerp(Color(0.2, 0.26, 0.23), 0.55)
+	var paso := 0
+	while f.get_luminance() < LUZ_FONDO and paso < 8:
+		f = f.lightened(0.08)
+		paso += 1
+	return f
+
+## Mientras se pinta el busto: el fondo con una silueta clara (cabeza y hombros),
+## para que la fila no sea un cuadro liso y oscuro.
+static var _siluetas := {}
+static func _marcador(tam: int, fondo: Color) -> Image:
+	var img := Image.create(tam, tam, false, Image.FORMAT_RGBA8)
+	img.fill(fondo)
+	if not _siluetas.has(tam):
+		var s := Image.create(tam, tam, false, Image.FORMAT_RGBA8)
+		var c := Color(1, 1, 1, 0.16)
+		var r := float(tam) * 0.19
+		var cab := Vector2(tam * 0.5, tam * 0.4)
+		var hombro := Vector2(tam * 0.5, tam * 1.02)
+		for y in tam:
+			for x in tam:
+				var p := Vector2(x + 0.5, y + 0.5)
+				if p.distance_to(cab) < r or (p - hombro).length() < tam * 0.4:
+					s.set_pixel(x, y, c)
+		_siluetas[tam] = s
+	img.blend_rect(_siluetas[tam], Rect2i(0, 0, tam, tam), Vector2i.ZERO)
+	return img
 
 static func limpiar_cache() -> void:
 	_cache.clear()
@@ -97,14 +148,17 @@ func _process(_d: float) -> void:
 
 func _servir() -> void:
 	var job: Dictionary = _cola.pop_front()
+	if job.has("dt"):
+		await _servir_dt(job)
+		_ocupado = false
+		return
 	var j: Jugador = job["j"]
 	var tam: int = job["tam"]
 	var tex: ImageTexture = job["tex"]
 	_vp.size = Vector2i(tam, tam)
 	var env: Environment = (_vp.get_child(0) as WorldEnvironment).environment
 	## Fondo: el color del club, nunca negro (las camisetas oscuras se perdían).
-	var fondo := Color(job["k1"]).lerp(Color(0.2, 0.26, 0.23), 0.55)
-	env.background_color = fondo.lightened(0.05) if fondo.get_luminance() < 0.1 else fondo
+	env.background_color = fondo_de(String(job["k1"]))
 	var raiz := Node3D.new()
 	_vp.add_child(raiz)
 	var datos := Puente3D.jugador(j)
@@ -124,9 +178,14 @@ func _servir() -> void:
 	VestidorQ.ropa_aparte = aparte_antes
 	if not nodo.is_empty():
 		var alto := PlayerSpawner.altura_de(datos, j.id, puesto)
-		## De pecho para arriba, de frente (el modelo mira a +Z).
-		_cam.position = Vector3(0.0, alto * 0.915, 1.62)
-		_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
+		## De pecho para arriba, de frente (el modelo mira a +Z); en las filas de las
+		## listas, la cabeza y el cuello de la camiseta.
+		if bool(job.get("cabeza", false)):
+			_cam.position = Vector3(0.0, alto * 0.925, 0.98)
+			_cam.look_at(Vector3(0.0, alto * 0.915, 0.0), Vector3.UP)
+		else:
+			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
+			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
 		_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 		await get_tree().process_frame
 		await get_tree().process_frame
@@ -141,3 +200,35 @@ func _servir() -> void:
 				tex.set_image(img)
 	raiz.queue_free()
 	_ocupado = false
+
+## El encargo de un DT: su figura de `PersonajeDT`, encuadrada como la de un jugador.
+func _servir_dt(job: Dictionary) -> void:
+	var tam: int = job["tam"]
+	var tex: ImageTexture = job["tex"]
+	_vp.size = Vector2i(tam, tam)
+	var env: Environment = (_vp.get_child(0) as WorldEnvironment).environment
+	env.background_color = fondo_de(String(job["k1"]))
+	var raiz := Node3D.new()
+	_vp.add_child(raiz)
+	var d := PersonajeDT.crear(raiz, job["dt"], Color(job["k1"]), Color(job["k2"]))
+	if not d.is_empty():
+		var alto := float(PersonajeDT.aspecto(job["dt"]).get("altura", 1.78))
+		if bool(job.get("cabeza", false)):
+			_cam.position = Vector3(0.0, alto * 0.925, 0.98)
+			_cam.look_at(Vector3(0.0, alto * 0.915, 0.0), Vector3.UP)
+		else:
+			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
+			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
+		_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var img := _vp.get_texture().get_image()
+		_vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		if img != null and not img.is_empty():
+			img.convert(Image.FORMAT_RGBA8)
+			if Vector2i(img.get_size()) == Vector2i(tex.get_size()):
+				tex.update(img)
+			else:
+				tex.set_image(img)
+	raiz.queue_free()

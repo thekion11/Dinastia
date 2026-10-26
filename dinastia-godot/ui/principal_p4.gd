@@ -1,18 +1,20 @@
 extends "res://ui/principal_p3.gd"
-## [Capa 4/19 de `principal.gd`] _fuente_de, _caja, _pal_fondo, _aplicar_tema, _tinta, _escudo … (+9)
+## [Capa 4/17 de `principal.gd`] _fuente_de, _caja, _pal_fondo, _aplicar_tema, _tinta, _escudo … (+9)
 
 func _fuente_de(clave: String) -> Font:
-	if not TIPOGRAFIAS.has(clave) or clave == "juego":
+	if not TIPOGRAFIAS.has(clave):
 		return null
 	if _fuentes.has(clave):
 		return _fuentes[clave]
-	var f := SystemFont.new()
-	var nombres: Array = (TIPOGRAFIAS[clave] as Array)[1]
-	f.font_names = PackedStringArray(nombres + REPUESTO_SIMBOLOS)
+	## «Del juego» es la de fábrica con la cadena de respaldo (`ui/fuentes.gd`).
+	if clave == "juego":
+		_fuentes[clave] = Fuentes.del_juego()
+		return _fuentes[clave]
+	var f := Fuentes.para((TIPOGRAFIAS[clave] as Array)[1])
 	## Sin esto, un texto pequeno con una serif se ve sucio: la rejilla de pixeles
 	## y los remates finos pelean, y a 10 px gana la rejilla.
-	f.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
-	f.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_AUTO
+	f.set("antialiasing", TextServer.FONT_ANTIALIASING_GRAY)
+	f.set("subpixel_positioning", TextServer.SUBPIXEL_POSITIONING_AUTO)
 	_fuentes[clave] = f
 	return f
 
@@ -137,6 +139,17 @@ func _tinta(fondo: Color) -> Color:
 func _escudo(c: Club, alto: int = 22) -> Control:
 	var caja := Control.new()
 	caja.custom_minimum_size = Vector2(alto, alto)
+	## Un escudo oscuro (club negro) desaparecía sobre el fondo oscuro: lleva detrás
+	## un halo claro y redondo. Solo esos clubes: en las tablas son pocos nodos (s3).
+	if EscudoMuestras.oscuro(c.color_escudo1()) and alto >= 16:
+		var halo := Panel.new()
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.86, 0.88, 0.92, 0.30)
+		sb.set_corner_radius_all(alto)
+		halo.add_theme_stylebox_override("panel", sb)
+		halo.set_anchors_preset(Control.PRESET_FULL_RECT)
+		halo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		caja.add_child(halo)
 	var t := TextureRect.new()
 	t.texture = Escudo.textura(c, alto)
 	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -155,7 +168,9 @@ func _escudo(c: Club, alto: int = 22) -> Control:
 	else:
 		l.text = Escudo.iniciales(c)
 		l.add_theme_font_size_override("font_size", maxi(8, alto / 2 - 2))
-		l.add_theme_color_override("font_color", _tinta(Color(c.color1)))
+		## Contraste contra el FONDO REAL del escudo (`color_escudo1()`, que
+		## respeta el color propio del escudo), no contra el color del club.
+		l.add_theme_color_override("font_color", _tinta(Color(c.color_escudo1())))
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l.set_anchors_preset(Control.PRESET_FULL_RECT)

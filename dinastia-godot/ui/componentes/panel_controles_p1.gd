@@ -161,7 +161,7 @@ func _cabecera_tabla(cols: Array) -> void:
 		var l := Tema.etiqueta(11, Color("ffd23f") if bool(par[2]) else Tema.SUAVE, Idiomas.t(String(par[0])))
 		l.custom_minimum_size = Vector2(float(par[1]), 0)
 		if float(par[1]) <= 0.0:
-			l.custom_minimum_size.x = 140
+			l.custom_minimum_size.x = 120
 			l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		cab.add_child(l)
 
@@ -270,7 +270,7 @@ func _fila(cols: Array, fichas: Array, al_pulsar: Callable = Callable()) -> Pane
 		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		l.custom_minimum_size = Vector2(absf(float(c[1])), 0)
 		if float(c[1]) <= 0.0:
-			l.custom_minimum_size.x = 140
+			l.custom_minimum_size.x = 120
 			l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		h.add_child(l)
 	var accion := al_pulsar if al_pulsar.is_valid() else func() -> void: _destello(b)
@@ -290,16 +290,18 @@ func _pintar_parte(i: int) -> void:
 	var parte: Array = ControlFC.MANUAL[i]
 	_titulo.text = "%s  %s. %s" % [String(parte[1]), str(i + 1), Idiomas.t(String(parte[0]))]
 	_subtitulo.text = Idiomas.t("Comando y botones en PlayStation, Xbox y teclado. Elige una fila para verla en el mando.")
-	_cabecera_tabla([["COMANDO / ACCIÓN", 0, false], ["PLAYSTATION", 100, _col_disp("ps")], ["XBOX", 100, _col_disp("xbox")], ["TECLADO", 100, _col_disp("teclado")]])
+	## Columnas de 88 y acción de 120 como mínimo: con 100 y 140 la fila pedía 538 px
+	## y a 1280x720 el centro tiene ~500, así que el teclado salía cortado («Mantener S»).
+	_cabecera_tabla([["COMANDO / ACCIÓN", 0, false], ["PLAYSTATION", 88, _col_disp("ps")], ["XBOX", 88, _col_disp("xbox")], ["TECLADO", 88, _col_disp("teclado")]])
 	for f: Array in parte[2]:
 		var fichas: Array = f[1]
 		var accion := Idiomas.t(String(f[0]))
 		if String(f[2]) != "":
 			accion += "  ·  " + Idiomas.t(String(f[2]))
 		_fila([[accion, 0, 13, Tema.TEXTO],
-			[ControlFC.texto_fichas(fichas, "ps"), 100, 13, Color("ffd23f") if _col_disp("ps") else Color(1, 1, 1, 0.55)],
-			[ControlFC.texto_fichas(fichas, "xbox"), 100, 13, Color("ffd23f") if _col_disp("xbox") else Color(1, 1, 1, 0.55)],
-			[ControlFC.texto_fichas(fichas, "teclado"), 100, 13, Color("ffd23f") if _col_disp("teclado") else Color(1, 1, 1, 0.55)]], fichas)
+			[ControlFC.texto_fichas(fichas, "ps"), 88, 13, Color("ffd23f") if _col_disp("ps") else Color(1, 1, 1, 0.55)],
+			[ControlFC.texto_fichas(fichas, "xbox"), 88, 13, Color("ffd23f") if _col_disp("xbox") else Color(1, 1, 1, 0.55)],
+			[ControlFC.texto_fichas(fichas, "teclado"), 88, 13, Color("ffd23f") if _col_disp("teclado") else Color(1, 1, 1, 0.55)]], fichas)
 
 func _titulo_seccion(txt: String) -> void:
 	var l := Tema.etiqueta(12, Tema.ORO, Idiomas.t(txt))

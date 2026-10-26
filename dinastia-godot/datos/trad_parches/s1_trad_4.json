@@ -1,0 +1,9 @@
+{
+ "exactas": {
+  "A veces": {"en": "Sometimes", "pt": "Às vezes", "fr": "Parfois", "it": "A volte", "de": "Manchmal", "ca": "A vegades", "pl": "Czasami", "tr": "Bazen"},
+  "Sin comentarios": {"en": "No comment", "pt": "Sem comentários", "fr": "Sans commentaire", "it": "Nessun commento", "de": "Kein Kommentar", "ca": "Sense comentaris", "pl": "Bez komentarza", "tr": "Yorum yok"},
+  "lluvia fría de invierno, en la altura": {"en": "cold winter rain, at altitude", "pt": "chuva fria de inverno, na altitude", "fr": "pluie froide d'hiver, en altitude", "it": "pioggia fredda invernale, in quota", "de": "kalter Winterregen, in der Höhe", "ca": "pluja freda d'hivern, en alçada", "pl": "zimny zimowy deszcz, na wysokości", "tr": "soğuk kış yağmuru, rakımda"},
+  "Lluvia fría de invierno, en la altura": {"en": "Cold winter rain, at altitude", "pt": "Chuva fria de inverno, na altitude", "fr": "Pluie froide d'hiver, en altitude", "it": "Pioggia fredda invernale, in quota", "de": "Kalter Winterregen, in der Höhe", "ca": "Pluja freda d'hivern, en alçada", "pl": "Zimny zimowy deszcz, na wysokości", "tr": "Soğuk kış yağmuru, rakımda"}
+ },
+ "patrones": []
+}

@@ -32,6 +32,8 @@ const ANCHO := 460.0
 const ALTO := 690.0
 ## La hoja se dibuja a 690 px de alto y se encoge para caber con los botones.
 const ESCALA := 0.9
+## Ancho de cada columna de cifras de la tabla del pie (PJ y PTS).
+const COL_TABLA := 30.0
 
 var _hoja: Control
 
@@ -106,7 +108,7 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	nombre.position = Vector2(0, 10)
 	nombre.size = Vector2(caja_cab.size.x, 70)
 	caja_cab.add_child(nombre)
-	var fecha := _lbl("%s · %s %d · %d · %s %d" % [String(cab[1]).capitalize(), Idiomas.t("Semana"), int(p.get("semana", 0)),
+	var fecha := _lbl("%s · %s %d · %d · %s %d" % [nombre_propio(String(cab[1])), Idiomas.t("Semana"), int(p.get("semana", 0)),
 		int(p.get("anio", 0)), Idiomas.t("Página"), 2 + absi(String(p.get("t", "")).hash()) % 46], 10, Color(1, 1, 1, 0.8), false)
 	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	fecha.position = Vector2(0, 82)
@@ -132,7 +134,7 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	marco.position = Vector2(14, 150)
 	marco.size = Vector2(ANCHO - 28, 190)
 	_hoja.add_child(marco)
-	var titular := titular_traducido(String(p.get("t", "")))
+	var titular := titular_traducido(CompeticionInfo.visibles_en(String(p.get("t", ""))))
 	var tam := 40 if titular.length() < 40 else (32 if titular.length() < 70 else 24)
 	var tt := _lbl(titular, tam, Color(0.06, 0.06, 0.06), false)
 	tt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -150,7 +152,7 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	var sub := String(p.get("sub", ""))
 	if sub == "":
 		sub = String(p.get("c", ""))
-	sub = Idiomas.t(sub)
+	sub = Idiomas.t(CompeticionInfo.visibles_en(sub))
 	var ts := _lbl(Idiomas.mayusculas(sub), 19 if sub.length() < 45 else (15 if sub.length() < 80 else 13), Color.WHITE, false)
 	ts.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	ts.position = Vector2(10, 6)
@@ -167,6 +169,16 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	cara.position = Vector2(banda.size.x - 116, 4)
 	cara.size = Vector2(108, 108)
 	banda.add_child(cara)
+	## Si la noticia va con el escudo, con sus iniciales encima (s3).
+	if String(p.get("img", "dt")) == "escudo" and mundo != null and mundo.mi_club() != null:
+		var c := mundo.mi_club()
+		var ini := _lbl(Escudo.simbolo_de(c) if Escudo.simbolo_de(c) != "" else Escudo.iniciales(c), 30,
+			Color("0c130e") if Color(c.color_escudo1()).get_luminance() > 0.59 else Color.WHITE, false)
+		ini.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		ini.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		ini.position = cara.position + Vector2(0, -6)
+		ini.size = cara.size
+		banda.add_child(ini)
 	## 5) Abajo: la tabla de la liga y la "foto" (el escudo sobre sus colores).
 	_tabla(mundo, Vector2(14, 470), Vector2(222, 206))
 	var foto := ColorRect.new()
@@ -185,6 +197,14 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 		esc.position = Vector2(20, 14)
 		esc.size = foto.size - Vector2(40, 60)
 		foto.add_child(esc)
+		## Con sus iniciales (o su símbolo), como en el resto del juego (s3): el
+		## rasterizador del escudo no dibuja texto, se pone encima.
+		var ini := _lbl(Escudo.simbolo_de(mio) if Escudo.simbolo_de(mio) != "" else Escudo.iniciales(mio), 44, Color("0c130e") if Color(mio.color_escudo1()).get_luminance() > 0.59 else Color.WHITE, false)
+		ini.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		ini.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		ini.position = esc.position + Vector2(0, -esc.size.y * 0.06)
+		ini.size = esc.size
+		foto.add_child(ini)
 		var pie := _lbl(Nombres.visible(mio.nombre).to_upper(), 18, Color.WHITE, true)
 		pie.add_theme_constant_override("outline_size", 6)
 		pie.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
@@ -197,11 +217,13 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 12)
 	fila.set_anchors_preset(Control.PRESET_CENTER)
-	fila.position = Vector2(-ANCHO * ESCALA / 2.0, ALTO * ESCALA / 2.0 - 10.0)
 	add_child(fila)
 	var guardar := Button.new()
 	guardar.text = Idiomas.t("📸 Guardar imagen")
-	guardar.pressed.connect(func() -> void: guardar.text = Idiomas.t("📸 Guardada: ") + guardar_png())
+	guardar.pressed.connect(func() -> void:
+		guardar.text = Idiomas.t("📸 Guardada: ") + guardar_png()
+		## El rótulo crece con el nombre del archivo: se vuelve a centrar.
+		_centrar(fila))
 	fila.add_child(guardar)
 	var auto_cb := CheckBox.new()
 	auto_cb.text = Idiomas.t("Abrir sola tras cada partido")
@@ -212,6 +234,12 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	b.text = Idiomas.t("Cerrar")
 	b.pressed.connect(_cerrar)
 	fila.add_child(b)
+	## Centrada de verdad: antes empezaba en el borde izquierdo de la hoja y se
+	## salía por la derecha (con «Abrir sola tras cada partido» en alemán, más).
+	_centrar(fila)
+	## Con mando o teclado, el foco empieza en «Cerrar»: A cierra, la cruceta
+	## llega a los otros dos, y B/Esc cierran desde cualquiera.
+	b.grab_focus.call_deferred()
 	_hoja.pivot_offset = _hoja.size / 2.0
 	atras.pivot_offset = atras.size / 2.0
 	atras.scale = Vector2(ESCALA, ESCALA)
@@ -224,9 +252,32 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	tw.tween_property(_hoja, "scale", Vector2(ESCALA, ESCALA), 0.35)
 	Sonido.toca("notificacion" if Sonido.NOMBRES.has("notificacion") else "cambio", Sonido.Bus.INTERFAZ)
 
-func _gui_input(e: InputEvent) -> void:
-	if e is InputEventKey and (e as InputEventKey).pressed and (e as InputEventKey).keycode == KEY_ESCAPE:
+## Antes era `_gui_input` con la tecla Esc: solo llegaba si el ratón estaba
+## encima, y el botón B del mando no cerraba nunca. La portada tapa todo y es lo
+## último que se abrió, así que se queda con «cancelar» y con L1/R1 (que, si no,
+## cambiarían de pestaña la pantalla de DETRÁS).
+func _input(e: InputEvent) -> void:
+	if not is_visible_in_tree() or is_queued_for_deletion():
+		return
+	if e.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
 		_cerrar()
+	elif InputMap.has_action("dinastia_tab_siguiente") and (e.is_action_pressed("dinastia_tab_siguiente") or e.is_action_pressed("dinastia_tab_anterior")):
+		get_viewport().set_input_as_handled()
+
+## Fija la fila por sus ANCLAS al centro y sus márgenes a media anchura a
+## cada lado: así queda centrada se haya medido ya la ventana o no.
+func _centrar(fila: HBoxContainer) -> void:
+	var tam := fila.get_combined_minimum_size()
+	var y := ALTO * ESCALA / 2.0 - 10.0
+	fila.anchor_left = 0.5
+	fila.anchor_right = 0.5
+	fila.anchor_top = 0.5
+	fila.anchor_bottom = 0.5
+	fila.offset_left = -tam.x / 2.0
+	fila.offset_right = tam.x / 2.0
+	fila.offset_top = y
+	fila.offset_bottom = y + tam.y
 
 func _cerrar() -> void:
 	cerrado.emit()
@@ -254,6 +305,15 @@ func _imagen(mundo: Mundo, que: String) -> Texture2D:
 			if j.id == que.substr(4):
 				return Cara.textura(j, mio.color1, mio.color2, 108)
 	if mundo.roles != null:
+		## El DT en 3D, como cualquier cara del juego (s3; el 2D solo sin pantalla). Un
+		## entrenador empleado lleva un aspecto fijo sacado de su nombre.
+		if Retrato3D.disponible():
+			var asp: Dictionary = mundo.roles.aspecto_3d()
+			if not mundo.roles.dt_empleado.is_empty():
+				var rng := RandomNumberGenerator.new()
+				rng.seed = hash(mundo.roles.dt_nombre())
+				asp = PersonajeDT.aleatorio(rng)
+			return Retrato3D.textura_dt(asp, mio.color1, mio.color2, 108)
 		var look: Dictionary = CaraDT.look_de_nombre(mundo.roles.dt_nombre()) if not mundo.roles.dt_empleado.is_empty() else mundo.roles.look_efectivo()
 		return CaraDT.textura(look, 108)
 	return Escudo.textura(mio, 108)
@@ -268,9 +328,20 @@ func _tabla(mundo: Mundo, pos: Vector2, tam: Vector2) -> void:
 	enc.color = Color(0.12, 0.13, 0.15)
 	enc.size = Vector2(tam.x, 24)
 	caja.add_child(enc)
-	var l_enc := _lbl("%s          %s   %s" % [Idiomas.mayusculas(Idiomas.t("Tabla de la liga")), Idiomas.t("PJ"), Idiomas.t("PTS")], 11, Color.WHITE, false)
+	## Columnas de ancho fijo y alineadas a la derecha, en la MISMA x que las
+	## cifras de debajo: con espacios entre medias, «PJ» y «PTS» quedaban
+	## corridos respecto a sus números (y en cada idioma, distinto).
+	var l_enc := _lbl(Idiomas.mayusculas(Idiomas.t("Tabla de la liga")), 11, Color.WHITE, false)
 	l_enc.position = Vector2(8, 3)
+	l_enc.size = Vector2(tam.x - 8 - 2 * COL_TABLA, 18)
+	l_enc.clip_text = true
 	enc.add_child(l_enc)
+	for k in 2:
+		var sig := _lbl(CompeticionFilas.sigla(["PJ", "PTS"][k]), 11, Color.WHITE, false)
+		sig.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		sig.position = Vector2(tam.x - 8 - COL_TABLA * float(2 - k), 3)
+		sig.size = Vector2(COL_TABLA, 18)
+		enc.add_child(sig)
 	if mundo == null or mundo.mi_club() == null:
 		return
 	var liga := mundo.liga_de(mundo.mi_club())
@@ -283,16 +354,38 @@ func _tabla(mundo: Mundo, pos: Vector2, tam: Vector2) -> void:
 			break
 		var c: Club = f["club"]
 		var col := Color(0.55, 0.05, 0.05) if c == mundo.mi_club() else Color(0.12, 0.12, 0.12)
-		var n := _lbl("%d  %s" % [i + 1, Nombres.visible(c.nombre).to_upper().substr(0, 16)], 12, col, false)
+		## El nombre se recorta con «…» a lo que quepa, en vez de a 16 letras a
+		## ciegas (que partía «RANCAGUA CELESTE» en «RANCAGUA CELEST»).
+		var n := _lbl("%d  %s" % [i + 1, Nombres.visible(c.nombre).to_upper()], 12, col, false)
 		n.position = Vector2(8, y)
+		n.size = Vector2(tam.x - 8 - 2 * COL_TABLA - 4, 18)
+		n.clip_text = true
+		n.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		caja.add_child(n)
-		var v := _lbl("%d    %d" % [int(f["pj"]), int(f["pts"])], 12, col, false)
-		v.position = Vector2(tam.x - 58, y)
-		caja.add_child(v)
+		for k2 in 2:
+			var v := _lbl(str(int(f["pj"] if k2 == 0 else f["pts"])), 12, col, false)
+			v.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+			v.position = Vector2(tam.x - 8 - COL_TABLA * float(2 - k2), y)
+			v.size = Vector2(COL_TABLA, 18)
+			caja.add_child(v)
 		y += 22.0
 		i += 1
 
-## Una etiqueta de periódico: negrita gruesa y, si toca, inclinada.
+## «¡GOLAZO!» → «¡Golazo!», «DIARIO LA BANDA» → «Diario La Banda». El
+## `capitalize()` de Godot deja «¡golazo!» en minúscula (no mira más allá del
+## signo de apertura) y además parte las palabras a su manera.
+static func nombre_propio(t: String) -> String:
+	var salida := ""
+	var inicio := true
+	for ch in t.to_lower():
+		var letra := ch.to_upper() != ch.to_lower()
+		salida += ch.to_upper() if inicio and letra else ch
+		if letra:
+			inicio = false
+		elif ch == " ":
+			inicio = true
+	return salida
+
 ## El titular en el idioma del jugador. Se traduce CON las comillas (así está
 ## en la tabla de la narración) y el prefijo del clásico («CLÁSICO: »,
 ## «SUPERCLÁSICO: ») por separado; después se quitan las comillas.
@@ -306,6 +399,7 @@ static func titular_traducido(t: String) -> String:
 		pre = Idiomas.t(baja.substr(0, 1).to_upper() + baja.substr(1)) + ": "
 	return Idiomas.mayusculas(pre + Idiomas.t(t).replace("\"", ""))
 
+## Una etiqueta de periódico: negrita gruesa y, si toca, inclinada.
 func _lbl(texto: String, tam: int, color: Color, inclinada: bool) -> Label:
 	var l := Label.new()
 	l.text = texto
