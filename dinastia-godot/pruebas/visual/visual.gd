@@ -42,6 +42,10 @@ var _p: Principal
 var _n := 0
 var _i := -1
 var _hacer_refs := OS.get_environment("VISUAL") == "referencias"
+## VISUAL=capturas: solo guarda las 20 a tamaño real en /tmp/visual/capturas/ (para revisar a ojo
+## otro idioma o resolución), sin comparar. VISUAL_IDIOMA=de|tr|… cambia el idioma.
+var _solo_capturas := OS.get_environment("VISUAL") == "capturas"
+var _idioma_antes := ""
 var _cambiadas: Array[String] = []
 var _nuevas: Array[String] = []
 
@@ -65,6 +69,11 @@ func _process(_d: float) -> void:
 	if _n < 10:
 		return
 	if _i < 0:
+		## El idioma lo decide la prueba, no las preferencias de la máquina (se
+		## restaura al terminar, para no dejárselo cambiado al jugador).
+		_idioma_antes = Idiomas.idioma
+		Idiomas.idioma = OS.get_environment("VISUAL_IDIOMA") if OS.get_environment("VISUAL_IDIOMA") != "" else "es"
+		_p._refrescar()
 		## Una partida nueva abre el tutorial de bienvenida encima de todo: se salta.
 		for t in get_tree().root.find_children("*", "", true, false):
 			if t is Tutorial:
@@ -106,6 +115,12 @@ func _foto(nombre: String) -> void:
 	img.convert(Image.FORMAT_RGB8)
 	var ref := img.duplicate() as Image
 	ref.resize(ANCHO_REF, ANCHO_REF * img.get_height() / maxi(1, img.get_width()), Image.INTERPOLATE_LANCZOS)
+	if _solo_capturas:
+		var dir := SALIDA + "capturas/"
+		DirAccess.make_dir_recursive_absolute(dir)
+		img.save_jpg(dir + "%s_%dx%d_%s.jpg" % [Idiomas.idioma, img.get_width(), img.get_height(), nombre], 0.85)
+		print("CAPTURA %s" % nombre)
+		return
 	var ruta := REFS + nombre + ".jpg"
 	if _hacer_refs or not FileAccess.file_exists(ruta):
 		ref.save_jpg(ruta, CALIDAD_REF)
@@ -185,6 +200,9 @@ static func mapa(a: Image, b: Image) -> Image:
 	return out
 
 func _terminar() -> void:
+	if _idioma_antes != "" and _idioma_antes != Idiomas.idioma:
+		Idiomas.idioma = _idioma_antes
+		_p._guardar_preferencias()
 	if get_viewport().get_visible_rect().size != Vector2(1280, 720):
 		print("AVISO: las referencias se hicieron a 1280×720; esta ventana es %s" % str(get_viewport().get_visible_rect().size))
 	print("")

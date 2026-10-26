@@ -331,7 +331,7 @@ const TIPOGRAFIAS := {
 	"juego":     ["Del juego (por defecto)", []],
 	"sistema":   ["Del sistema", ["Segoe UI", "Helvetica Neue", "Cantarell", "sans-serif"]],
 	"diario":    ["De diario (serif)", ["Georgia", "Times New Roman", "Liberation Serif", "serif"]],
-	"estrecha":  ["Estrecha (cabe mas)", ["Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
+	"estrecha":  ["Estrecha (cabe más)", ["Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
 	"redonda":   ["Redonda y grande", ["Verdana", "Tahoma", "DejaVu Sans", "sans-serif"]],
 	"informe":   ["De informe (mono)", ["Consolas", "Menlo", "DejaVu Sans Mono", "monospace"]],
 	"titular":   ["De titular", ["Impact", "Haettenschweiler", "DejaVu Sans Bold", "sans-serif"]],

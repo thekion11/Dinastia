@@ -18,6 +18,7 @@ func _probar() -> void:
 	_mercado()
 	_movil()
 	_icono()
+	_origen()
 	Idiomas.idioma = antes
 
 func _castellano(s: String) -> String:
@@ -139,3 +140,25 @@ func _icono() -> void:
 	_comprobar(Idiomas.t("«Trato hecho.» Te da la mano sin soltarla del todo.") != "«Trato hecho.» Te da la mano sin soltarla del todo.",
 		"las que empiezan con comillas siguen traduciéndose")
 	Idiomas.idioma = "es"
+
+## Cambiar de idioma con la partida abierta: lo que se pintó ya traducido en otro idioma
+## recupera su clave castellana y pasa al nuevo (antes se quedaba en el anterior).
+func _origen() -> void:
+	Idiomas.idioma = "de"
+	var de_cal := Idiomas.t("📅 Calendario")
+	var de_men := Idiomas.t("🧭 Hablar con el mentor")
+	Idiomas.idioma = "es"
+	_comprobar(Idiomas.origen(de_cal) == "📅 Calendario" and Idiomas.origen(de_men) == "🧭 Hablar con el mentor",
+		"de «%s» y «%s» se recupera el castellano" % [de_cal, de_men])
+	_comprobar(Idiomas.origen("Calendario") == "" and Idiomas.origen("Rafa Olmo") == "",
+		"una clave castellana o un nombre no se tocan")
+	var p := Principal.new()
+	var b := Button.new()
+	b.text = de_cal
+	p.add_child(b)
+	Idiomas.idioma = "tr"
+	p._traducir_pantalla(p)
+	var tr_cal := Idiomas.t("📅 Calendario")
+	Idiomas.idioma = "es"
+	_comprobar(b.text == tr_cal and tr_cal != de_cal, "un botón pintado en alemán pasa al turco al cambiar de idioma («%s»)" % b.text)
+	p.free()

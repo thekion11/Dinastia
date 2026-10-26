@@ -4905,7 +4905,14 @@
   "Tu nombre pesa: te escucha antes que a otros": "Your name carries weight: he listens to you before others",
   "Tu prestigio como entrenador le convence": "Your prestige as a coach wins him over",
   "Tu poco prestigio como entrenador le echa para atrás": "Your low prestige as a coach puts him off",
-  "No se pudo abrir la mesa: %s.": "The negotiation couldn't start: %s."
+  "No se pudo abrir la mesa: %s.": "The negotiation couldn't start: %s.",
+  "🎬 3D destacados": "🎬 3D highlights",
+  "🏟 3D completo": "🏟 Full 3D",
+  "Las jugadas clave, una a una, en 20 segundos.": "The key moments, one by one, in 20 seconds.",
+  "Crónica, cambios, arengas y charla, sin 3D.": "Commentary, substitutions, pep talks and team talk, without 3D.",
+  "El estadio a x4, frena en cada ocasión.": "The stadium at x4, slowing down for every chance.",
+  "Nieve": "Snow",
+  "Confeti": "Confetti"
  },
  "pt": {
   "Historia": "História",
@@ -9813,7 +9820,14 @@
   "Tu nombre pesa: te escucha antes que a otros": "O teu nome pesa: ouve-te antes dos outros",
   "Tu prestigio como entrenador le convence": "O teu prestígio como treinador convence-o",
   "Tu poco prestigio como entrenador le echa para atrás": "O teu pouco prestígio como treinador fá-lo recuar",
-  "No se pudo abrir la mesa: %s.": "Não foi possível abrir a mesa: %s."
+  "No se pudo abrir la mesa: %s.": "Não foi possível abrir a mesa: %s.",
+  "🎬 3D destacados": "🎬 3D destaques",
+  "🏟 3D completo": "🏟 3D completo",
+  "Las jugadas clave, una a una, en 20 segundos.": "Os lances-chave, um a um, em 20 segundos.",
+  "Crónica, cambios, arengas y charla, sin 3D.": "Crónica, substituições, incentivos e palestra, sem 3D.",
+  "El estadio a x4, frena en cada ocasión.": "O estádio a x4, abranda em cada ocasião.",
+  "Nieve": "Neve",
+  "Confeti": "Confetes"
  },
  "patrones": [
   [
@@ -19602,7 +19616,14 @@
   "Tu nombre pesa: te escucha antes que a otros": "Ton nom compte : il t'écoute avant les autres",
   "Tu prestigio como entrenador le convence": "Ton prestige d'entraîneur le convainc",
   "Tu poco prestigio como entrenador le echa para atrás": "Ton faible prestige d'entraîneur le refroidit",
-  "No se pudo abrir la mesa: %s.": "Impossible d'ouvrir la négociation : %s."
+  "No se pudo abrir la mesa: %s.": "Impossible d'ouvrir la négociation : %s.",
+  "🎬 3D destacados": "🎬 3D temps forts",
+  "🏟 3D completo": "🏟 3D complet",
+  "Las jugadas clave, una a una, en 20 segundos.": "Les actions clés, une à une, en 20 secondes.",
+  "Crónica, cambios, arengas y charla, sin 3D.": "Récit, changements, encouragements et causerie, sans 3D.",
+  "El estadio a x4, frena en cada ocasión.": "Le stade en x4, qui ralentit à chaque occasion.",
+  "Nieve": "Neige",
+  "Confeti": "Confettis"
  },
  "it": {
   "Historia": "Storia",
@@ -24417,7 +24438,14 @@
   "Tu nombre pesa: te escucha antes que a otros": "Il tuo nome pesa: ti ascolta prima degli altri",
   "Tu prestigio como entrenador le convence": "Il tuo prestigio da allenatore lo convince",
   "Tu poco prestigio como entrenador le echa para atrás": "Il tuo scarso prestigio da allenatore lo frena",
-  "No se pudo abrir la mesa: %s.": "Impossibile aprire la trattativa: %s."
+  "No se pudo abrir la mesa: %s.": "Impossibile aprire la trattativa: %s.",
+  "🎬 3D destacados": "🎬 3D momenti salienti",
+  "🏟 3D completo": "🏟 3D completo",
+  "Las jugadas clave, una a una, en 20 segundos.": "Le azioni chiave, una a una, in 20 secondi.",
+  "Crónica, cambios, arengas y charla, sin 3D.": "Cronaca, cambi, incitamenti e discorso, senza 3D.",
+  "El estadio a x4, frena en cada ocasión.": "Lo stadio a x4, rallenta a ogni occasione.",
+  "Nieve": "Neve",
+  "Confeti": "Coriandoli"
  },
  "de": {
   "Historia": "Geschichte",
@@ -29232,7 +29260,14 @@
   "Tu nombre pesa: te escucha antes que a otros": "Dein Name zählt: Er hört dir vor anderen zu",
   "Tu prestigio como entrenador le convence": "Dein Ansehen als Trainer überzeugt ihn",
   "Tu poco prestigio como entrenador le echa para atrás": "Dein geringes Ansehen als Trainer schreckt ihn ab",
-  "No se pudo abrir la mesa: %s.": "Die Verhandlung konnte nicht beginnen: %s."
+  "No se pudo abrir la mesa: %s.": "Die Verhandlung konnte nicht beginnen: %s.",
+  "🎬 3D destacados": "🎬 3D-Höhepunkte",
+  "🏟 3D completo": "🏟 Komplett in 3D",
+  "Las jugadas clave, una a una, en 20 segundos.": "Die Schlüsselszenen, eine nach der anderen, in 20 Sekunden.",
+  "Crónica, cambios, arengas y charla, sin 3D.": "Spielbericht, Wechsel, Anfeuerungen und Ansprache, ohne 3D.",
+  "El estadio a x4, frena en cada ocasión.": "Das Stadion in x4, bremst bei jeder Chance ab.",
+  "Nieve": "Schnee",
+  "Confeti": "Konfetti"
  },
  "ca": {
   "Historia": "Història",
@@ -34047,7 +34082,14 @@
   "Tu nombre pesa: te escucha antes que a otros": "El teu nom pesa: t'escolta abans que als altres",
   "Tu prestigio como entrenador le convence": "El teu prestigi com a entrenador el convenç",
   "Tu poco prestigio como entrenador le echa para atrás": "El teu poc prestigi com a entrenador el fa enrere",
-  "No se pudo abrir la mesa: %s.": "No s'ha pogut obrir la taula: %s."
+  "No se pudo abrir la mesa: %s.": "No s'ha pogut obrir la taula: %s.",
+  "🎬 3D destacados": "🎬 3D destacats",
+  "🏟 3D completo": "🏟 3D complet",
+  "Las jugadas clave, una a una, en 20 segundos.": "Les jugades clau, una a una, en 20 segons.",
+  "Crónica, cambios, arengas y charla, sin 3D.": "Crònica, canvis, arengues i xerrada, sense 3D.",
+  "El estadio a x4, frena en cada ocasión.": "L'estadi a x4, frena a cada ocasió.",
+  "Nieve": "Neu",
+  "Confeti": "Confeti"
  },
  "pl": {
   "Club": "Klub",
@@ -39142,7 +39184,14 @@
   "Tu nombre pesa: te escucha antes que a otros": "Twoje nazwisko się liczy: słucha ciebie przed innymi",
   "Tu prestigio como entrenador le convence": "Twój prestiż trenerski go przekonuje",
   "Tu poco prestigio como entrenador le echa para atrás": "Twój słaby prestiż trenerski go zniechęca",
-  "No se pudo abrir la mesa: %s.": "Nie udało się rozpocząć negocjacji: %s."
+  "No se pudo abrir la mesa: %s.": "Nie udało się rozpocząć negocjacji: %s.",
+  "🎬 3D destacados": "🎬 3D skrót",
+  "🏟 3D completo": "🏟 Pełne 3D",
+  "Las jugadas clave, una a una, en 20 segundos.": "Kluczowe akcje, jedna po drugiej, w 20 sekund.",
+  "Crónica, cambios, arengas y charla, sin 3D.": "Relacja, zmiany, doping i odprawa, bez 3D.",
+  "El estadio a x4, frena en cada ocasión.": "Stadion w x4, zwalnia przy każdej okazji.",
+  "Nieve": "Śnieg",
+  "Confeti": "Konfetti"
  },
  "tr": {
   "Club": "Kulüp",
@@ -44237,6 +44286,13 @@
   "Tu nombre pesa: te escucha antes que a otros": "Adın ağırlık taşıyor: seni diğerlerinden önce dinliyor",
   "Tu prestigio como entrenador le convence": "Teknik direktör olarak saygınlığın onu ikna ediyor",
   "Tu poco prestigio como entrenador le echa para atrás": "Teknik direktör olarak düşük saygınlığın onu geri çeviriyor",
-  "No se pudo abrir la mesa: %s.": "Masa açılamadı: %s."
+  "No se pudo abrir la mesa: %s.": "Masa açılamadı: %s.",
+  "🎬 3D destacados": "🎬 3D özetler",
+  "🏟 3D completo": "🏟 Tam 3D",
+  "Las jugadas clave, una a una, en 20 segundos.": "Kilit anlar, tek tek, 20 saniyede.",
+  "Crónica, cambios, arengas y charla, sin 3D.": "Anlatım, değişiklikler, gaz verme ve konuşma; 3D olmadan.",
+  "El estadio a x4, frena en cada ocasión.": "Stadyum x4 hızda, her fırsatta yavaşlar.",
+  "Nieve": "Kar",
+  "Confeti": "Konfeti"
  }
 }

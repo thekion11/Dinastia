@@ -180,6 +180,47 @@ func _t(frase: String, prof: int) -> String:
 	var pp := _patron(frase, prof)
 	return pp if pp != "" else frase
 
+## DE DÓNDE VIENE UN TEXTO YA TRADUCIDO (s3, 26-10-2026). Lo que se construye
+## una vez con `Idiomas.t` (botones de la cabecera, el panel de objetivos…) queda
+## en el idioma de ese momento y no guarda su castellano: al cambiar de idioma en
+## Opciones se quedaba en el anterior (arrancar en alemán y pasar a turco dejaba
+## «📅 Kalender» o «Mit dem Mentor sprechen»). Devuelve la clave castellana de una
+## traducción de cualquier idioma, con su icono delante, o "" si el texto ya es
+## una clave castellana o no se conoce.
+var _inverso := {}
+func origen(texto: String) -> String:
+	if texto == "" or _directa_es(texto):
+		return ""
+	if _inverso.is_empty():
+		for k: String in TABLA:
+			for v: Variant in TABLA[k]:
+				if String(v) != "" and not _inverso.has(String(v)):
+					_inverso[String(v)] = k
+		for idi: String in ORDEN:
+			var ex: Dictionary = _extra.get(idi, {})
+			for k2: String in ex:
+				var v2 := String(ex[k2])
+				if v2 != "" and not _inverso.has(v2):
+					_inverso[v2] = k2
+	if _inverso.has(texto):
+		return String(_inverso[texto])
+	## Con el icono de delante aparte («📅 Kalender» → «📅 Calendario»).
+	var i := 0
+	while i < texto.length() and (texto.unicode_at(i) >= 0x2000 or texto.unicode_at(i) == 32):
+		i += 1
+	if i > 0 and i < texto.length() and _inverso.has(texto.substr(i)):
+		return texto.substr(0, i) + String(_inverso[texto.substr(i)])
+	return ""
+
+## ¿Es ya una clave castellana conocida?
+func _directa_es(texto: String) -> bool:
+	if TABLA.has(texto):
+		return true
+	for idi: String in ORDEN:
+		if (_extra.get(idi, {}) as Dictionary).has(texto):
+			return true
+	return false
+
 ## Traduce una frase suelta. Si no está en la tabla, devuelve la castellana: una
 ## interfaz medio traducida se lee; una llena de claves crudas, no.
 ## En orden: la frase entera; sin el icono o la flecha de los extremos; por

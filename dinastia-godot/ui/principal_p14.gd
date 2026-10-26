@@ -153,7 +153,7 @@ func _reconstruir_fila_sub() -> void:
 	if _pestanas.get_tab_count() > 0:
 		titulo_actual = _pestanas.get_tab_title(_pestanas.current_tab)
 	for chip: Dictionary in (_grupo_por_id(_grupo_actual).get("tabs", []) as Array):
-		var b := _pildora(String(chip["label"]), 12, 30)
+		var b := _pildora(Idiomas.t(String(chip["label"])), 12, 30)
 		b.button_pressed = (String(chip["tab"]) == titulo_actual) and _seccion_activa(chip)
 		var destino := chip
 		b.pressed.connect(func() -> void: _ir_a_chip(destino))

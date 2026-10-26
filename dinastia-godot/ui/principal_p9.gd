@@ -25,6 +25,12 @@ extends "res://ui/principal_p8.gd"
 ## castellano al cambiar de vuelta: bug real, sospechado el 10-9-2026 en una
 ## captura ("Save"/"Load"/"New world" seguían en inglés tras forzar `idioma="es"`)
 ## y confirmado y corregido aquí el 12-9-2026.
+## Un texto sin castellano guardado: si es la traducción de una clave (se pintó ya
+## traducido en otro idioma), su clave; si no, tal cual (s3, cambio de idioma).
+func _origen_de(texto: String) -> String:
+	var o := Idiomas.origen(texto)
+	return o if o != "" else texto
+
 func _traducir_pantalla(n: Node) -> void:
 	if n == self:
 		if Idiomas.idioma == "es" and not _traduccion_activa:
@@ -35,7 +41,7 @@ func _traducir_pantalla(n: Node) -> void:
 		var l := n as Label
 		var actual := l.text
 		var fue_mio: bool = l.has_meta("_i18n_out") and String(l.get_meta("_i18n_out")) == actual
-		var base: String = String(l.get_meta("_i18n_src")) if fue_mio else actual
+		var base: String = String(l.get_meta("_i18n_src")) if fue_mio else _origen_de(actual)
 		var nuevo := base if Idiomas.idioma == "es" else Idiomas.t(base)
 		l.set_meta("_i18n_src", base)
 		l.set_meta("_i18n_out", nuevo)
@@ -62,7 +68,7 @@ func _traducir_pantalla(n: Node) -> void:
 		var b := n as Button
 		var actual2 := b.text
 		var fue_mio2: bool = b.has_meta("_i18n_out") and String(b.get_meta("_i18n_out")) == actual2
-		var base2: String = String(b.get_meta("_i18n_src")) if fue_mio2 else actual2
+		var base2: String = String(b.get_meta("_i18n_src")) if fue_mio2 else _origen_de(actual2)
 		var nuevo2 := base2 if Idiomas.idioma == "es" else Idiomas.t(base2)
 		b.set_meta("_i18n_src", base2)
 		b.set_meta("_i18n_out", nuevo2)
@@ -88,7 +94,7 @@ func _traducir_pantalla(n: Node) -> void:
 		var actual_tip := ctrl.tooltip_text
 		if actual_tip != "":
 			var fue_mio_tip: bool = ctrl.has_meta("_i18n_tip_out") and String(ctrl.get_meta("_i18n_tip_out")) == actual_tip
-			var base_tip: String = String(ctrl.get_meta("_i18n_tip_src")) if fue_mio_tip else actual_tip
+			var base_tip: String = String(ctrl.get_meta("_i18n_tip_src")) if fue_mio_tip else _origen_de(actual_tip)
 			var nuevo_tip := base_tip if Idiomas.idioma == "es" else Idiomas.t(base_tip)
 			ctrl.set_meta("_i18n_tip_src", base_tip)
 			ctrl.set_meta("_i18n_tip_out", nuevo_tip)
