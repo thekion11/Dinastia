@@ -70,6 +70,19 @@ func _probar() -> void:
 		m.citas.favor_agente = -1
 		_comprobar(not neg.con_favor_agente() and is_equal_approx(neg.descuento_persona(), 1.0), "sin favor, la mesa de siempre")
 		m.citas.favor_agente = m.anio * 60 + m.semana
+	## La entrevista de contratación (bloque 4): mañana a las 10:00 en tu oficina, mueve la moral.
+	m.reloj._al_dia()   ## el reloj vuelve a la semana del mundo antes de fijar el día
+	m.reloj.dia = 1
+	var j: Jugador = c.plantilla[0]
+	m.citas.entrevista(m, j)
+	var ce := {}
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "entrevista":
+			ce = x
+	_comprobar(not ce.is_empty() and int(ce["dia"]) == 2 and String(ce["quien"]) == j.nombre and m.citas.opciones(m, ce).size() == 3, "el fichaje te cita mañana a las 10:00 con tres tonos")
+	var moral0 := j.moral
+	var re := m.citas.resolver(m, String(ce["id"]), 0)
+	_comprobar(not re.is_empty() and j.moral == mini(moral0 + 2, 100), "el tono seguro sube la moral del recién llegado (+2)")
 	## Caducan el domingo sin castigo.
 	m.semana = sem_voto + 1
 	var saldo := c.saldo
