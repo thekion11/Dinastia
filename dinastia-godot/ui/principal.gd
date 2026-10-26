@@ -2,7 +2,38 @@ class_name Principal
 extends "res://ui/principal_p17.gd"
 ## [Capa 17/17 de `principal.gd`] _input, _pintar_identidad, _al_paso_nuevo, _portada_nueva
 
+## Los hijos que ya estaban al terminar `_ready()` (el menú, el riel, el reloj…).
+## Todo Control a pantalla completa que se añada DESPUÉS y pare el ratón es una
+## capa modal (móvil, diseñador, diálogos): ver `_capa_modal_encima()`.
+var _hijos_base: Dictionary = {}
+
+func _ready() -> void:
+	super()
+	for h: Node in get_children():
+		_hijos_base[h.get_instance_id()] = true
+
+## ¿Hay una capa modal tapando el menú? Con el móvil u otro popup abierto, los
+## gatillos y Ctrl+Q/E no deben cambiar la pestaña escondida detrás.
+func _capa_modal_encima() -> bool:
+	for h: Node in get_children():
+		if _hijos_base.has(h.get_instance_id()) or not (h is Control):
+			continue
+		var c := h as Control
+		if c.visible and not c.is_queued_for_deletion() \
+				and c.mouse_filter == Control.MOUSE_FILTER_STOP \
+				and c.anchor_left == 0.0 and c.anchor_top == 0.0 \
+				and c.anchor_right == 1.0 and c.anchor_bottom == 1.0:
+			return true
+	return false
+
 func _input(evento: InputEvent) -> void:
+	## Con una capa modal encima, ni gatillos ni Ctrl+Q/E ni desliz tocan las
+	## pestañas de detrás. No se consume el evento: Q y E sueltas también son
+	## «pestaña» y hay campos de texto en el móvil donde hay que poder teclearlas.
+	if _capa_modal_encima():
+		_arrastre_x = 0.0
+		_arrastre_y = 0.0
+		return
 	## CON EL PANEL LATERAL ENCIMA (mapa de metas 23) los mismos botones
 	## navegan ESE menú y no el central de detrás: L1/R1 pasan de submenú,
 	## L2/R2 de menú, y el desliz con el dedo no cambia páginas escondidas.
@@ -99,20 +130,11 @@ func _pintar_identidad(c: Club) -> void:
 	previa.add_theme_constant_override("separation", 14)
 	previa.alignment = BoxContainer.ALIGNMENT_CENTER
 	_lista_gente.add_child(previa)
-	var esc_img := TextureRect.new()
-	esc_img.texture = Escudo.textura(c, 54)
-	esc_img.custom_minimum_size = Vector2(54, 54)
-	## SIN ESTO EL ESCUDO SALÍA GIGANTE. `Escudo.textura()` rasteriza a 4x -para
-	## que las curvas no salgan dentadas al escalar, ver su propio comentario-,
-	## así que la textura real mide unos 220 px de lado aunque se pidan 54. Sin
-	## `expand_mode = EXPAND_IGNORE_SIZE` -el que SÍ lleva el resto de usos de
-	## `Escudo.textura()` en este mismo archivo, por ejemplo `_escudo()`-, el
-	## `TextureRect` reporta como tamaño mínimo el de la textura real, no el de
-	## `custom_minimum_size`, y esa fila entera se inflaba a esa altura -se
-	## llevaba con ella el color de acento de al lado, que salía como un
-	## rectángulo blanco altísimo por simple herencia de la altura de la fila-.
-	esc_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	esc_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	## EL ESCUDO CON SUS INICIALES (o su símbolo): `_escudo()` es el mismo que
+	## se ve en el resto del juego. Antes iba solo la textura, sin las letras, y
+	## la vista previa no enseñaba el escudo tal como sale en la tabla.
+	var esc_img := _escudo(c, 54)
+	esc_img.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	previa.add_child(esc_img)
 	var kit_img := TextureRect.new()
 	kit_img.texture = Jersey.textura_procedural(c.color_kit1(), c.color_kit2(),
@@ -121,9 +143,19 @@ func _pintar_identidad(c: Club) -> void:
 	kit_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	kit_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	previa.add_child(kit_img)
-	var muestra_ui := ColorRect.new()
-	muestra_ui.color = _acento_de(c)
-	muestra_ui.custom_minimum_size = Vector2(46, 46)
+	## LA MUESTRA DEL ACENTO como una ficha redondeada con borde, centrada en
+	## la fila: un ColorRect suelto se estiraba al alto de la fila y parecía un
+	## rectángulo blanco cuando el acento es claro.
+	var muestra_ui := Panel.new()
+	var caja_acento := StyleBoxFlat.new()
+	caja_acento.bg_color = _acento_de(c)
+	caja_acento.set_corner_radius_all(10)
+	caja_acento.set_border_width_all(2)
+	caja_acento.border_color = Color(1, 1, 1, 0.35)
+	muestra_ui.add_theme_stylebox_override("panel", caja_acento)
+	muestra_ui.custom_minimum_size = Vector2(40, 40)
+	muestra_ui.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	muestra_ui.tooltip_text = Idiomas.t("Color de acento (botones y menú)")
 	previa.add_child(muestra_ui)
 
 	_ui_identidad._fila_color_identidad(c, "1 · Color principal del club", "color1")

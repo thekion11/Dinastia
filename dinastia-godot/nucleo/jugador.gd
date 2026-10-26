@@ -126,6 +126,12 @@ var notas: Array[float] = []
 var valor: int = 0
 var sueldo: int = 0
 var anios_contrato: int = 1
+## PRIMER CONTRATO DEL CANTERANO (26-10): el chico que sube de la cantera con 19
+## o menos firma su primer contrato profesional por algo menos de la mitad de lo
+## que cobraría a precio de mercado (`FACTOR_PRIMER_CONTRATO`). Lo cierra la
+## primera firma nueva (renovación o traspaso, `Contratos.ajustar_anios`).
+var primer_contrato: bool = false
+const FACTOR_PRIMER_CONTRATO := 0.45
 var dorsal: int = 0
 var capitan: bool = false
 ## Un jugador que pidio salir vale menos y quiere irse mas: lo usan las tres
@@ -215,6 +221,25 @@ func tasar() -> void:
 	## El sueldo crece con el valor pero mas despacio que el, o los grandes
 	## quebrarian solos.
 	sueldo = int(max(30.0, round(1.361 * pow(float(valor), 0.66) / 10.0) * 10.0))
+	if primer_contrato:
+		sueldo = int(max(30.0, round(float(sueldo) * FACTOR_PRIMER_CONTRATO / 10.0) * 10.0))
+
+## EL TOPE DE LOS TECHOS (26-10). Todos los sitios que fabrican chicos (camada,
+## hijo de leyenda, academia, joyas de las sedes, filosofía de cantera) cortaban
+## a 97 a secas: con las épocas doradas y los bonos de academia, 93-97 salía
+## casi tan a menudo como 88. Por encima de 90 cada punto cuenta la mitad: 97
+## sigue siendo posible, pero es la joya de una década, no de una pretemporada.
+static func techo_tope(techo: int, ovr: int) -> int:
+	var t := techo
+	if t > 90:
+		t = 90 + int(round(float(t - 90) * 0.5))
+	return clampi(t, ovr, 97)
+
+## Lo que cobraría sin el primer contrato: la base de lo que pide al renovar.
+func sueldo_pleno() -> int:
+	if not primer_contrato:
+		return sueldo
+	return int(round(float(sueldo) / FACTOR_PRIMER_CONTRATO / 10.0) * 10.0)
 
 func lesionar(semanas: int) -> void:
 	lesion = max(lesion, semanas)

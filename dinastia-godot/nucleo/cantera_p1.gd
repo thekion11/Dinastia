@@ -297,7 +297,9 @@ func _camada_de(c: Club) -> Array[Jugador]:
 			## que todos suban un poco, es que ademas aparecen los irrepetibles.
 			if bono_era > 1.0 and Azar.suerte(0.10):
 				techo += Azar.ent(3, 8)
-		j.pot = clampi(techo, j.ovr, 97)
+		j.pot = Jugador.techo_tope(techo, j.ovr)
+		## PRIMER CONTRATO (26-10): el chico de 19 o menos firma barato hasta su primera renovación.
+		j.primer_contrato = j.edad <= 19
 		## Los atributos se rehacen porque la media ha cambiado, y el valor
 		## después, porque depende del techo: un chico de 17 con proyección 90 no
 		## vale lo que uno con proyección 70 aunque hoy tengan la misma media.
@@ -397,7 +399,7 @@ func _hijos_de_leyendas() -> void:
 		## El techo hereda del padre con un margen del 85% al 120%. Nunca menos
 		## de cuatro puntos por encima de su media de hoy: un hijo de leyenda que
 		## no tuviera recorrido sería una noticia sin historia detrás.
-		j.pot = clampi(int(round(float(int(L.get("nivel", 80))) * (0.85 + Azar.f() * 0.35))), j.ovr + 4, 97)
+		j.pot = maxi(Jugador.techo_tope(int(round(float(int(L.get("nivel", 80))) * (0.85 + Azar.f() * 0.35))), j.ovr), mini(j.ovr + 4, 97))
 		j.generar_atributos()
 		_sortear_origen(j)
 		j.tasar()

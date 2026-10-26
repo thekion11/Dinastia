@@ -138,10 +138,10 @@ func _once_con(c: Club, yo: Jugador) -> Array[Jugador]:
 
 ## CAMBIOS (MEGAPLAN fase 3). En la banda espera un jugador más: tú, si
 ## empiezas en el banco, o el mejor suplente de tu puesto, por si el DT te saca.
+## El portero, desde el 26-10-2026, también: su cambio es otro portero (y el
+## portero suplente entra si el titular se lesiona o lo expulsan).
 func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
-	## El portero no tiene cambio: el del motor es de jugador de campo (el que
-	## entrase se pondría bajo palos sin serlo).
-	if yo == null or carrera == null or yo.es_portero():
+	if yo == null or carrera == null:
 		return
 	## Si ya estás en el once, eres titular: no hay entrada desde el banco.
 	if entra_al >= 0 and not motor.usuario.is_empty():
@@ -154,14 +154,14 @@ func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
 		quien = null
 		var once := _once_con(mi_club, yo) if equipo_usuario != null else mi_club.once()
 		for j: Jugador in mi_club.plantilla:
-			if j == yo or once.has(j) or not j.disponible() or j.es_portero():
+			if j == yo or once.has(j) or not j.disponible() or j.es_portero() != yo.es_portero():
 				continue
 			if quien == null or (j.pos == yo.pos) and (quien.pos != yo.pos or j.ovr > quien.ovr):
 				quien = j
 		if quien == null:
 			return
 	var una := Puente3D.once([quien] as Array[Jugador])
-	var hechos := sp.spawn_team(_raiz, una["xi"], una["jugadores"], {"s": [[quien.pos_e, 50, 50]]}, _es_local_usuario, kit)
+	var hechos := sp.spawn_team(_raiz, una["xi"], una["jugadores"], {"s": [[quien.pos_e, 50, 50]]}, _es_local_usuario, kit, Puente3D.kit_portero(mi_club))
 	if hechos.is_empty():
 		return
 	motor.exigencia_dt = carrera.exigencia_dt()

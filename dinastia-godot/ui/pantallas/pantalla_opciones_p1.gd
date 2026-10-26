@@ -241,7 +241,10 @@ func _pintar_mezclador() -> void:
 
 func _fundar_pena(c: Club) -> void:
 	var r := p.mundo.hinchada.fundar_pena(c)
-	if r.length() > 40 or r == "":
+	## Éxito = devuelve una de las ciudades de peña. Antes se distinguía por la
+	## longitud (> 40) y «ya tienes peñas en todas partes» (31) se tomaba por
+	## una ciudad recién fundada.
+	if not Hinchada.CIUDADES_PENA.has(r):
 		p._escribir("[color=#e05555]No se pudo fundar: %s.[/color]" % r)
 	else:
 		p._escribir("[color=#3fa06a][b]Nueva peña en %s.[/b][/color] Gente que se organiza sola para seguir al club desde lejos." % r)

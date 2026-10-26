@@ -73,6 +73,13 @@ func _dato(etiqueta: String, valor: String, color: Color, padre: Node = null) ->
 	var b := _texto(12, color)
 	b.text = valor
 	h.add_child(b)
+	## Hueco a la derecha del ancho de la barra de desplazamiento: las columnas
+	## van dentro de un ScrollContainer y su barra vertical tapaba el final del
+	## valor («Rol actual» en Legado, cifras de finanzas).
+	var hueco := Control.new()
+	hueco.custom_minimum_size = Vector2(14, 0)
+	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	h.add_child(hueco)
 	(padre if padre != null else _ficha).add_child(h)
 
 func _miles(n: int) -> String:

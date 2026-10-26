@@ -370,7 +370,7 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 			var entra := carrera.minuto_entrada_suplente(j.es_portero())
 			if entra >= 0:
 				var minutos := 90 - entra
-				var g2 := 1 if randf() < float(minutos) / 90.0 * (0.25 if j.pos == "DEL" else 0.08) else 0
+				var g2 := 1 if randf() < float(minutos) / 90.0 * (0.25 if j.pos == "DEL" else (0.0 if j.es_portero() else 0.08)) else 0
 				var nota2 := clampf(5.8 + float(j.ovr - 55) * 0.03 + float(g2) * 0.9 + randf_range(-0.4, 0.4), 4.5, 9.0)
 				carrera.tras_partido(m, {"minutos": minutos, "goles": g2, "asist": 0, "nota": snappedf(nota2, 0.1), "titular": false})
 				_msg += "  ·  " + Idiomas.t("Entraste en el %d' (simulado): nota %.1f.") % [entra, nota2]

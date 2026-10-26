@@ -326,6 +326,15 @@ func _abrev(nombre: String) -> String:
 ## La guía con las teclas que el jugador haya configurado (Mando).
 func _guia_controles(con_balon: bool) -> String:
 	var c := func(a: String) -> String: return Mando.corto_de(a)
+	## EL PORTERO (Carrera): sus controles, no los de campo (26-10-2026).
+	if motor.estado == "tanda" and motor.tanda_me_toca_parar():
+		return Idiomas.t("PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro") % c.call("jugar_tiro")
+	if not motor.usuario.is_empty() and bool(motor.usuario["por"]):
+		if con_balon:
+			return Idiomas.t("PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde") % [
+				c.call("jugar_centro"), c.call("jugar_pase"), c.call("jugar_tiro")]
+		return Idiomas.t("PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa") % [
+			c.call("jugar_sprint"), c.call("jugar_pausa")]
 	if con_balon:
 		return Idiomas.t("CON BALÓN: %s pase · %s tiro (mantén) · %s centro · %s al hueco · %s rosca/tenso · %s vaselina/pared · %s proteger · %s sprint · stick der. filigranas") % [
 			c.call("jugar_pase"), c.call("jugar_tiro"), c.call("jugar_centro"), c.call("jugar_filtrado"),

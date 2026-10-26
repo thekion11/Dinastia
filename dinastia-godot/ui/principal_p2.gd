@@ -133,14 +133,9 @@ var _secc_club: String = "directorio"
 ## porque hasta que no firmes en algún sitio no hay club que gestionar.
 var _aviso_abierto: int = 0
 ## La cinemática de pantalla completa de la rueda de prensa, o null si no hay
-## ninguna abierta. Ver `_abrir_rueda_pantalla_completa()`.
+## ninguna abierta: un `ui/principal/rueda_prensa.gd` (fase 0, paso 6b).
+const _PrincipalRuedaPrensa := preload("res://ui/principal/rueda_prensa.gd")
 var _rueda_pop: Control = null
-## Lo que la repregunta cambia sin rehacer el plató (B5).
-var _rueda_quien: Label
-var _rueda_pregunta: Label
-var _rueda_opciones: VBoxContainer
-var _rueda_reloj: ProgressBar
-var _rueda_desde := 0
 
 ## LA DECISIÓN, CONTADA COMO UN ACONTECIMIENTO (25-9-2026, plan maestro B4).
 ## A la izquierda, la cara de quien está en el lío -o el icono grande del tema
@@ -331,7 +326,7 @@ const TIPOGRAFIAS := {
 	"juego":     ["Del juego (por defecto)", []],
 	"sistema":   ["Del sistema", ["Segoe UI", "Helvetica Neue", "Cantarell", "sans-serif"]],
 	"diario":    ["De diario (serif)", ["Georgia", "Times New Roman", "Liberation Serif", "serif"]],
-	"estrecha":  ["Estrecha (cabe mas)", ["Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
+	"estrecha":  ["Estrecha (cabe más)", ["Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
 	"redonda":   ["Redonda y grande", ["Verdana", "Tahoma", "DejaVu Sans", "sans-serif"]],
 	"informe":   ["De informe (mono)", ["Consolas", "Menlo", "DejaVu Sans Mono", "monospace"]],
 	"titular":   ["De titular", ["Impact", "Haettenschweiler", "DejaVu Sans Bold", "sans-serif"]],
@@ -366,7 +361,12 @@ const SEPARACION_COMPACTA := 1
 ##
 ## Funciona porque toda la interfaz pasa por `_texto()`: un multiplicador ahí
 ## llega a las mil y pico etiquetas del juego sin tocar una sola pantalla.
-var _escala_texto: float = 1.0
+## El setter lo vuelca en `Tema.escala_texto`: así llega también a lo que se
+## pinta con `Tema.etiqueta`/`Tema.rotulo` (móvil, avisos, pantallas nuevas).
+var _escala_texto: float = 1.0:
+	set(v):
+		_escala_texto = v
+		Tema.escala_texto = v
 const ESCALAS_TEXTO := [0.85, 1.0, 1.15, 1.30]
 
 ## Paleta para daltonismo. El verde y el rojo del juego son EXACTAMENTE el par
@@ -376,7 +376,11 @@ const ESCALAS_TEXTO := [0.85, 1.0, 1.15, 1.30]
 ##
 ## Se remapea dentro de `_texto()` en vez de en las mil llamadas: los colores son
 ## constantes y el sitio por donde pasan todas es uno solo.
-var _daltonico: bool = false
+## Igual que la escala: se vuelca en `Tema.daltonico` para `Tema.accesible()`.
+var _daltonico: bool = false:
+	set(v):
+		_daltonico = v
+		Tema.daltonico = v
 const COL_VERDE_DALT := Color("56b4e9")
 const COL_ROJO_DALT := Color("d55e00")
 const COL_ORO_DALT := Color("e69f00")

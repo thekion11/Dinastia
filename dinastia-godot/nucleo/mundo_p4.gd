@@ -6,6 +6,10 @@ extends "res://nucleo/mundo_p3.gd"
 ## Solo mira TU partido: a la directiva de Coquimbo no le importa lo que hagas
 ## tu, y simular la paciencia de 383 juntas directivas seria gastar en algo que
 ## nadie va a ver.
+## El marcador de liga de tu club esta semana ([gf, gc]; vacío si no jugó). Lo
+## lee `_semana_memoria_del_partido()` para las rachas de lo que no dirigiste.
+var _marcador_liga_semana: Array = []
+
 func _avisar_a_la_directiva(resultados: Array) -> void:
 	var mio := mi_club()
 	if mio == null:
@@ -41,6 +45,7 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 			prensa.revisar_impuesto(mio, mio.once(), anio)
 		_gano_la_ultima = gf > gc
 		_resultado_semana = 1 if gf > gc else (0 if gf == gc else -1)
+		_marcador_liga_semana = [gf, gc]
 		## "G.clubes[miClub].forma.push(...)" del HTML: solo cuenta para esto lo
 		## que se juega de LIGA -este bloque nace de `_avisar_a_la_directiva`,
 		## que `avanzar_semana()` llama justo después de `l.jugar_jornada()`-.

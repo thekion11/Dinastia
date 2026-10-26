@@ -258,7 +258,8 @@ func _paso_tanda(delta: float) -> void:
 			## Tu portero: el stick elige el lado (con la cámara detrás del
 			## lanzador, la derecha de la pantalla es -X).
 			var tu := tanda_equipo_usuario()
-			if tu >= 0 and tanda_turno() != tu:
+			var paro_yo := (tu >= 0 and tanda_turno() != tu) or tanda_me_toca_parar()
+			if paro_yo:
 				var mx := Mando.movimiento().x
 				if absf(mx) > 0.3:
 					tanda["lado"] = -1 if mx > 0.0 else 1
@@ -277,7 +278,7 @@ func _paso_tanda(delta: float) -> void:
 					apuntando = true
 					apunte = {"ang": 0.0, "loft": 0.15, "fuerza": 0.0, "fase": 0.0, "x": 0.0, "y": 0.8}
 					cambio_estado.emit("apuntar_penal")
-				elif not lanza_tu and _t_estado > (2.8 if tu >= 0 else 1.6):
+				elif not lanza_tu and _t_estado > (2.8 if tu >= 0 or paro_yo else 1.6):
 					saque = {"tipo": "penal", "local": bool(lz["es_local"]), "lugar": TANDA_PUNTO, "lanzador": lz}
 					_ejecutar_saque_ia(lz, "penal", TANDA_PUNTO)
 		"apuntar":

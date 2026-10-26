@@ -93,7 +93,12 @@ static func factor_estructura(pais: String, anio: int, semana: int) -> float:
 static func max_anios(j: Jugador) -> int:
 	return MAX_ANIOS_MENOR if j != null and j.edad < 18 else MAX_ANIOS
 
+## Toda firma pasa por aquí (fichaje, renovación, cláusula): la primera firma
+## nueva cierra el primer contrato del canterano. El sueldo lo pone quien firma
+## (o el próximo `tasar()`), no esta función.
 static func ajustar_anios(j: Jugador, anios: int) -> int:
+	if j != null:
+		j.primer_contrato = false
 	return clampi(anios, 1, max_anios(j))
 
 ## El tipo de contrato de un jugador, para la ficha.

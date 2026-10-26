@@ -4864,7 +4864,13 @@
   "CONTRATOS": "CONTRACTS",
   "¡CAMPEÓN!": "CHAMPIONS!",
   "Minijuegos": "Minigames",
-  "Penales, tiros libres y la trivia del club.": "Penalties, free kicks and the club quiz."
+  "Penales, tiros libres y la trivia del club.": "Penalties, free kicks and the club quiz.",
+  "Paso a paso: idioma, modo, país, tu club, cómo entras al campeonato y tu personaje.": "Step by step: language, mode, country, your club, how you enter the championship and your character.",
+  "🎯 RETOS": "🎯 CHALLENGES",
+  "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.": "One season with one goal. If you achieve it, it goes to your trophy cabinet; then your career continues.",
+  "PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro": "PENALTY: stick ◀ ▶ picks the side of your dive · %s stay in the middle",
+  "PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde": "KEEPER WITH THE BALL: %s long volley kick · %s throw · %s clearance (hold) · stick: direction",
+  "PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa": "KEEPER: stick ◀ ▶ dive side on a shot · stick + %s come out · no stick: you position yourself · %s pause"
  },
  "pt": {
   "Historia": "História",
@@ -9731,7 +9737,13 @@
   "CONTRATOS": "CONTRATOS",
   "¡CAMPEÓN!": "CAMPEÃO!",
   "Minijuegos": "Minijogos",
-  "Penales, tiros libres y la trivia del club.": "Pênaltis, faltas e o quiz do clube."
+  "Penales, tiros libres y la trivia del club.": "Pênaltis, faltas e o quiz do clube.",
+  "Paso a paso: idioma, modo, país, tu club, cómo entras al campeonato y tu personaje.": "Passo a passo: idioma, modo, país, seu clube, como você entra no campeonato e seu personagem.",
+  "🎯 RETOS": "🎯 DESAFIOS",
+  "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.": "Uma temporada com uma meta. Se você cumprir, vai para a sua vitrine; depois a carreira continua.",
+  "PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro": "PÊNALTI: analógico ◀ ▶ escolhe o lado do mergulho · %s fica no centro",
+  "PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde": "GOLEIRO COM A BOLA: %s tiro de meta longo de voleio · %s reposição com a mão · %s chutão (segure) · analógico: direção",
+  "PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa": "GOLEIRO: analógico ◀ ▶ lado do mergulho no chute · analógico + %s sair · sem analógico você se posiciona · %s pausa"
  },
  "patrones": [
   [
@@ -14705,6 +14717,28 @@
    "Ja has publicat $1 vegades aquesta setmana: més seria omplir de soroll el teu compte.",
    "Opublikowałeś już $1 razy w tym tygodniu: więcej to tylko szum na twoim koncie.",
    "Bu hafta zaten $1 kez paylaştın: daha fazlası hesabını gürültüyle doldurur."
+  ],
+  [
+   "^🚑 Se lesiona el portero (.+)$",
+   "🚑 Goalkeeper $1 is injured",
+   "🚑 O goleiro $1 se machuca",
+   "🚑 Le gardien $1 se blesse",
+   "🚑 Si infortuna il portiere $1",
+   "🚑 Torwart $1 verletzt sich",
+   "🚑 Es lesiona el porter $1",
+   "🚑 Bramkarz $1 doznaje kontuzji",
+   "🚑 Kaleci $1 sakatlandı"
+  ],
+  [
+   "^🧤 Roja al portero: entra (.+) bajo palos$",
+   "🧤 Red card for the keeper: $1 goes in goal",
+   "🧤 Vermelho para o goleiro: $1 entra no gol",
+   "🧤 Rouge pour le gardien : $1 entre dans les buts",
+   "🧤 Rosso al portiere: entra $1 tra i pali",
+   "🧤 Rot für den Torwart: $1 geht ins Tor",
+   "🧤 Vermella al porter: entra $1 sota pals",
+   "🧤 Czerwona dla bramkarza: $1 wchodzi do bramki",
+   "🧤 Kaleciye kırmızı: $1 kaleye geçiyor"
   ]
  ],
  "fr": {
@@ -19479,7 +19513,13 @@
   "CONTRATOS": "CONTRATS",
   "¡CAMPEÓN!": "CHAMPION !",
   "Minijuegos": "Mini-jeux",
-  "Penales, tiros libres y la trivia del club.": "Penalties, coups francs et le quiz du club."
+  "Penales, tiros libres y la trivia del club.": "Penalties, coups francs et le quiz du club.",
+  "Paso a paso: idioma, modo, país, tu club, cómo entras al campeonato y tu personaje.": "Étape par étape : langue, mode, pays, ton club, ton entrée dans le championnat et ton personnage.",
+  "🎯 RETOS": "🎯 DÉFIS",
+  "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.": "Une saison avec un objectif. Si tu l'atteins, il rejoint ta vitrine ; ensuite la carrière continue.",
+  "PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro": "PENALTY : stick ◀ ▶ choisit le côté du plongeon · %s rester au centre",
+  "PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde": "GARDIEN AVEC LE BALLON : %s dégagement long de volée · %s relance à la main · %s dégagement (maintenir) · stick : direction",
+  "PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa": "GARDIEN : stick ◀ ▶ côté du plongeon sur un tir · stick + %s sortir · sans stick tu te places seul · %s pause"
  },
  "it": {
   "Historia": "Storia",
@@ -24253,7 +24293,13 @@
   "CONTRATOS": "CONTRATTI",
   "¡CAMPEÓN!": "CAMPIONE!",
   "Minijuegos": "Minigiochi",
-  "Penales, tiros libres y la trivia del club.": "Rigori, punizioni e il quiz del club."
+  "Penales, tiros libres y la trivia del club.": "Rigori, punizioni e il quiz del club.",
+  "Paso a paso: idioma, modo, país, tu club, cómo entras al campeonato y tu personaje.": "Passo dopo passo: lingua, modalità, paese, il tuo club, come entri nel campionato e il tuo personaggio.",
+  "🎯 RETOS": "🎯 SFIDE",
+  "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.": "Una stagione con un obiettivo. Se lo raggiungi, va nella tua bacheca; poi la carriera continua.",
+  "PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro": "RIGORE: stick ◀ ▶ sceglie il lato del tuffo · %s resti al centro",
+  "PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde": "PORTIERE CON LA PALLA: %s rinvio lungo al volo · %s rimessa con le mani · %s spazzata (tieni premuto) · stick: direzione",
+  "PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa": "PORTIERE: stick ◀ ▶ lato del tuffo sul tiro · stick + %s uscire · senza stick ti piazzi da solo · %s pausa"
  },
  "de": {
   "Historia": "Geschichte",
@@ -29027,7 +29073,13 @@
   "CONTRATOS": "VERTRÄGE",
   "¡CAMPEÓN!": "MEISTER!",
   "Minijuegos": "Minispiele",
-  "Penales, tiros libres y la trivia del club.": "Elfmeter, Freistöße und das Vereinsquiz."
+  "Penales, tiros libres y la trivia del club.": "Elfmeter, Freistöße und das Vereinsquiz.",
+  "Paso a paso: idioma, modo, país, tu club, cómo entras al campeonato y tu personaje.": "Schritt für Schritt: Sprache, Modus, Land, dein Verein, wie du in die Meisterschaft einsteigst und deine Figur.",
+  "🎯 RETOS": "🎯 HERAUSFORDERUNGEN",
+  "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.": "Eine Saison mit einem Ziel. Schaffst du es, kommt es in deine Vitrine; danach geht die Karriere weiter.",
+  "PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro": "ELFMETER: Stick ◀ ▶ wählt die Seite der Parade · %s in der Mitte bleiben",
+  "PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde": "TORWART MIT BALL: %s langer Abschlag aus der Hand · %s Abwurf · %s Befreiungsschlag (halten) · Stick: Richtung",
+  "PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa": "TORWART: Stick ◀ ▶ Paradenseite beim Schuss · Stick + %s rauslaufen · ohne Stick stellst du dich selbst · %s Pause"
  },
  "ca": {
   "Historia": "Història",
@@ -33801,7 +33853,13 @@
   "CONTRATOS": "CONTRACTES",
   "¡CAMPEÓN!": "CAMPIÓ!",
   "Minijuegos": "Minijocs",
-  "Penales, tiros libres y la trivia del club.": "Penals, faltes i el qüestionari del club."
+  "Penales, tiros libres y la trivia del club.": "Penals, faltes i el qüestionari del club.",
+  "Paso a paso: idioma, modo, país, tu club, cómo entras al campeonato y tu personaje.": "Pas a pas: idioma, mode, país, el teu club, com entres al campionat i el teu personatge.",
+  "🎯 RETOS": "🎯 REPTES",
+  "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.": "Una temporada amb una meta. Si la compleixes, va a la teva vitrina; després la carrera continua.",
+  "PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro": "PENAL: stick ◀ ▶ tria el costat de l'estirada · %s et quedes al centre",
+  "PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde": "PORTER AMB PILOTA: %s servei llarg de volea · %s servei amb la mà · %s refús (mantén) · stick: cap a on",
+  "PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa": "PORTER: stick ◀ ▶ costat de l'estirada davant el xut · stick + %s sortir · sense stick et col·loques sol · %s pausa"
  },
  "pl": {
   "Club": "Klub",
@@ -38855,7 +38913,13 @@
   "CONTRATOS": "KONTRAKTY",
   "¡CAMPEÓN!": "MISTRZ!",
   "Minijuegos": "Minigry",
-  "Penales, tiros libres y la trivia del club.": "Rzuty karne, rzuty wolne i quiz o klubie."
+  "Penales, tiros libres y la trivia del club.": "Rzuty karne, rzuty wolne i quiz o klubie.",
+  "Paso a paso: idioma, modo, país, tu club, cómo entras al campeonato y tu personaje.": "Krok po kroku: język, tryb, kraj, twój klub, jak wchodzisz do mistrzostw i twoja postać.",
+  "🎯 RETOS": "🎯 WYZWANIA",
+  "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.": "Jeden sezon z jednym celem. Jeśli go osiągniesz, trafi do twojej gabloty; potem kariera trwa dalej.",
+  "PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro": "KARNY: gałka ◀ ▶ wybiera stronę rzutu · %s zostajesz na środku",
+  "PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde": "BRAMKARZ Z PIŁKĄ: %s długi wykop z woleja · %s wyrzut ręką · %s wybicie (przytrzymaj) · gałka: kierunek",
+  "PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa": "BRAMKARZ: gałka ◀ ▶ strona rzutu przy strzale · gałka + %s wyjście · bez gałki ustawiasz się sam · %s pauza"
  },
  "tr": {
   "Club": "Kulüp",
@@ -43909,6 +43973,12 @@
   "CONTRATOS": "SÖZLEŞMELER",
   "¡CAMPEÓN!": "ŞAMPİYON!",
   "Minijuegos": "Mini oyunlar",
-  "Penales, tiros libres y la trivia del club.": "Penaltılar, serbest vuruşlar ve kulüp bilgi yarışması."
+  "Penales, tiros libres y la trivia del club.": "Penaltılar, serbest vuruşlar ve kulüp bilgi yarışması.",
+  "Paso a paso: idioma, modo, país, tu club, cómo entras al campeonato y tu personaje.": "Adım adım: dil, mod, ülke, kulübün, şampiyonaya nasıl gireceğin ve karakterin.",
+  "🎯 RETOS": "🎯 MEYDAN OKUMALAR",
+  "Una temporada con una meta. Si la cumples, va a tu vitrina; después la carrera sigue.": "Tek hedefli bir sezon. Başarırsan vitrinine girer; ardından kariyer devam eder.",
+  "PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro": "PENALTI: çubuk ◀ ▶ uçuş yönünü seçer · %s ortada kal",
+  "PORTERO CON BALÓN: %s saque largo de volea · %s saque con la mano · %s despeje (mantén) · stick: hacia dónde": "TOP KALECİDE: %s uzun vole degajı · %s elle atış · %s uzaklaştırma (basılı tut) · çubuk: yön",
+  "PORTERO: stick ◀ ▶ lado de la estirada ante el tiro · stick + %s salir · sin stick te colocas solo · %s pausa": "KALECİ: çubuk ◀ ▶ şutta uçuş yönü · çubuk + %s çık · çubuksuz kendin yerleşirsin · %s duraklat"
  }
 }

@@ -205,7 +205,7 @@ func pide_para_renovar(j: Jugador) -> int:
 	f += 0.35 if j.moral < 50 else 0.15
 	if j.ovr >= rep:
 		f += 0.20
-	return int(round(float(j.sueldo) * f * factor_pide(j)))
+	return int(round(float(j.sueldo_pleno()) * f * factor_pide(j)))
 
 ## `renovarJug()` del HTML: se le firma lo que pide. Con cláusula de salida
 ## acepta un 10% MENOS de sueldo -le pones precio de salida, y a cambio cobra

@@ -155,7 +155,9 @@ func _escudo(c: Club, alto: int = 22) -> Control:
 	else:
 		l.text = Escudo.iniciales(c)
 		l.add_theme_font_size_override("font_size", maxi(8, alto / 2 - 2))
-		l.add_theme_color_override("font_color", _tinta(Color(c.color1)))
+		## Contraste contra el FONDO REAL del escudo (`color_escudo1()`, que
+		## respeta el color propio del escudo), no contra el color del club.
+		l.add_theme_color_override("font_color", _tinta(Color(c.color_escudo1())))
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l.set_anchors_preset(Control.PRESET_FULL_RECT)

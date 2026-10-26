@@ -4,7 +4,8 @@ extends Node
 ## (Sin `class_name`: este script ES el autoload `Sonido`, y Godot rechaza una
 ## clase global que se llame igual que un singleton — "Class Sonido hides an
 ## autoload singleton". El autoload ya da el nombre.)
-## El sonido del juego, sintetizado. Ni un solo fichero de audio.
+## El sonido del juego, sintetizado (salvo los clics de interfaz grabados de
+## `res://audio/ui/`, que `banco()` prefiere si existen; ver capa 7).
 ##
 ## En el HTML esto es Web Audio: osciladores, ruido filtrado y envolventes, todo
 ## generado en el momento. Aquí se hace lo mismo pero al revés en el tiempo: en
@@ -31,7 +32,7 @@ enum Bus { EFECTOS, AMBIENTE, INTERFAZ }
 var volumen := {Bus.EFECTOS: 0.8, Bus.AMBIENTE: 0.5, Bus.INTERFAZ: 0.35}
 var encendido := true
 
-var _bancos: Dictionary = {}       ## nombre -> Array[AudioStreamWAV]
+var _bancos: Dictionary = {}       ## nombre -> Array de AudioStream (WAV sintetizados u Ogg grabado)
 var _voces: Array[AudioStreamPlayer] = []
 var _siguiente := 0
 

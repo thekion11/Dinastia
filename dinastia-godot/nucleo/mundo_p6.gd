@@ -331,8 +331,10 @@ func _subir_de_cantera(c: Club) -> void:
 		## suben con más techo. Sin `Azar` extra: es un ajuste fijo.
 		if not Regiones.filosofia(c).is_empty():
 			nuevo.ovr = mini(nuevo.ovr + 4, 90)
-			nuevo.pot = clampi(nuevo.pot + 6, nuevo.ovr, 97)
-			nuevo.tasar()
+			nuevo.pot = Jugador.techo_tope(nuevo.pot + 6, nuevo.ovr)
+		## PRIMER CONTRATO (26-10): el canterano de 19 o menos cobra el 45% hasta su primera renovación.
+		nuevo.primer_contrato = edad <= 19
+		nuevo.tasar()
 		c.plantilla.append(nuevo)
 
 func _nombre_pais_de(pais: String) -> String:

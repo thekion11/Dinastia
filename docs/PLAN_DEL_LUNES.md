@@ -123,7 +123,6 @@ cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
 | 4 | Elegir club (mapa, países, escudos) | pasa a ser la **fase 2** del nuevo menú inicial | se rehace de todos modos |
 | 5 | Hubs contextuales y carril de chips | `ui/menu/hubs.gd` | medio |
 | 6 | Estadio, finanzas, identidad, camarín (`_pintar_*`) | `ui/pantallas/*` (ya hay una por tema) | medio |
-| 6b | Rueda de prensa 2D (`_abrir_rueda_pantalla_completa`, `_responder`, `_repintar_posturas` de `principal_p17.gd`) | `ui/pantallas/pantalla_rueda_prensa.gd` | medio: la abren eventos de prensa y pruebas |
 | 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina | `ui/menu_central.gd` | alto: depende de 1-6 |
 
 Meta: `Principal` pasa de 6.867 a < 1.500 líneas y las 157 variables de miembro se reparten
@@ -1857,8 +1856,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 943, 1051, 1055, 1072, 1075, 1076, 1077, 1078, 1079, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1099, 1100
 
 ## 8. Hallazgos de la tanda de pulido (25-10), sin arreglar
-- Cantera: el sueldo del **primer contrato del canterano** no está fijado (no hay campo `primer_contrato` en `Jugador`): al subir cobra como uno más.
-- Cantera/ojeadores: **techos hasta 97** en `academia.gd:368`, `cantera_p1.gd:300` y `:400`, `ojeadores.gd:116`; con la curva nueva (`ProgresoJugador`) revisar si 97 sigue siendo alcanzable y deseable.
 - Mercado: el **valor de los jugadores de la IA ×1,30** infla precios; medir con `pruebas/ideas/eco_medicion.gd` tras la curva nueva y decidir el factor.
 - Contratos: la nómina propia se duplicaba sin fichar (210k→447k/semana en 3 temporadas): volver a medir tras las renovaciones anticipadas de la IA (`mc_contratos`).
 - Rendimiento: **~230 000 objetos** por vuelta de menús (`pruebas/ideas/fugas_menus.gd`; ya no crecen, pero el total es alto): buscar quién los crea (pestañas que se rehacen enteras).
@@ -1866,32 +1863,22 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - Partido: falta la **captura del diálogo de plan de partido** con la cámara real.
 - Carrera: falta la animación de parada del portero en modo jugador.
 - Ciudad: **ceder el paso** y el choque real de coches no están vistos con la cámara real; los **peatones solo esperan**, no esquivan.
-- Rueda de prensa 2D: sigue dentro de `Principal` (`ui/principal_p17.gd`, `_abrir_rueda_pantalla_completa`): sacarla a su clase (paso nuevo de 7.1) y pulirla (petición 8 de §9).
+- Rueda de prensa 2D (ya en su clase, `ui/principal/rueda_prensa.gd`): falta pulirla (petición 8 de §9).
 
 ## 9. Sesión 2 (interfaz): rama `ccr-76d707c5-dwse9h-s2`, sin fusionar
 Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `datos/trad_parches/s2_*.json` con `sumar_traducciones.py` y `s2_sobrescrituras.json` con un script con candado (ver el informe).
 
 Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hecha: 67 líneas):
-1. `ui/principal.gd` `_input`: con el móvil u otra capa encima, L1/R1, L2/R2 y Ctrl+Q/E cambian la pestaña de detrás.
 2. `nucleo/idiomas.gd` `_t`: no separa el icono inicial con varias oraciones (el móvil lo esquiva con `_t_icono`).
-3. Volcar `_escala_texto` y `_daltonico` en `Tema` (`principal_p10.gd` tras la línea 50; setters en `principal_p2.gd` 363 y 373): sin esto la accesibilidad no llega a lo pintado con `Tema.*`.
-4. `visor/control_fc.gd:232`: usar `Mando.nombre_tecla(ts[0])` (hoy sale «Space»).
-5. `ui/principal_p8.gd`, final de `_ver_ficha()`: `_traducir_pantalla(_ficha)`; el radar corta a 4 letras (`.left(4)`, línea 88).
-6. La barra de desplazamiento tapa el final de los valores de `_dato` (p. ej. «Rol actual» en Legado).
 7. Negociación (`prefiere`/`motivo`), MesaAgente y Movil devuelven castellano fijo: pasar a claves estables.
-8. Rueda de prensa 2D sin pulir (está en `principal_p17.gd`; ver §8).
-9. Identidad (`ui/principal.gd:114-163`): la vista previa del escudo sin iniciales (`_escudo(c, 54)`), la muestra del acento es un rectángulo blanco; en `principal_p4.gd:157` las iniciales con `c.color_escudo1()`.
-10. `ui/componentes/mentor_voz.gd`: el consejo del presidente tapa la tabla 9 s (`DURA`): fundido con el ratón encima o ~6 s.
-11. `ui/pantallas/pantalla_opciones_p1.gd:244`: distingue el error por la longitud (`r.length() > 40`); «ya tienes peñas en todas partes» se toma por ciudad fundada.
-12. Tildes: `principal_p2.gd` «Estrecha (cabe mas)» y `nucleo/prensa_p4_p1.gd:27` «mas corta».
-13. `principal_p13:226`: el registro «Mundo nuevo. Semilla» se escribe antes de cargar el idioma.
+8. Rueda de prensa 2D sin pulir (está en `ui/principal/rueda_prensa.gd`; ver §8).
+12. Tilde en `nucleo/prensa_p4_p1.gd:27` «mas corta»: la frase es clave de `datos/narracion_traducida*.json`; cambiarla exige renombrar la clave y regenerar (`extraer_narracion.py` + `montar_narracion.py`), y hoy esa regeneración cambia ~8.000 líneas de `narracion*.json` (revisar antes por qué).
 
 Defectos a la vista que dejó anotados:
 - Caras de ficha y plantel como cuadros negros en las capturas (`ui/cara`, retrato 3D).
 - Club negro: miniaturas de forma con poco contraste y escudo casi invisible sobre fondo oscuro.
 - Flujo de caja casi en rampa: el núcleo reparte el resultado del año en 12 partes iguales.
 - Cifras de finanzas pegadas a la barra de desplazamiento.
-- Récords: «RACHAS» a 0 en partidos simulados (`logros.rachas` solo cuenta los dirigidos).
 - Etiquetas largas del mando 3D recortadas con «…».
 - «Forma» (del escudo) y «forma» (física) comparten una traducción («Form»): separar en dos claves.
 

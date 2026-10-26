@@ -39,6 +39,7 @@ const _CAMPOS_PRENSA := [
 	"oferta_forzada", "abogado_en_directorio", "posts", "seguidores",
 	"relaciones", "medios", "vocero", "tv_individual", "portadas",
 	"impuesto_pid", "impuesto_hasta", "efectos", "memoria", "titular_pendiente", "identidad", "cambio_identidad",
+	"pregunta_pendiente",
 ]
 
 static func carpeta() -> String:
@@ -184,7 +185,7 @@ static func _jugador_a_dic_base(j: Jugador) -> Dictionary:
 		"f": j.forma, "m": j.moral, "fi": j.fisico,
 		"l": j.lesion, "s": j.suspension, "a": j.amarillas,
 		"go": j.goles, "as": j.asistencias, "pj": j.partidos,
-		"v": j.valor, "su": j.sueldo, "an": j.anios_contrato,
+		"v": j.valor, "su": j.sueldo, "an": j.anios_contrato, "pc": j.primer_contrato,
 		"d": j.dorsal, "cap": j.capitan, "ps": j.pide_salir, "tr": j.transferible,
 		"nn": j.no_negociar_hasta, "re": j.real,
 		"ml": j.motivo_libre, "rl": j.rechazos_libre,
@@ -374,6 +375,7 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	j.lesion = int(d["l"]); j.suspension = int(d["s"]); j.amarillas = int(d["a"])
 	j.goles = int(d["go"]); j.asistencias = int(d["as"]); j.partidos = int(d["pj"])
 	j.valor = int(d["v"]); j.sueldo = int(d["su"]); j.anios_contrato = int(d["an"])
+	j.primer_contrato = bool(d.get("pc", false))   ## guardados viejos: sin primer contrato
 	j.dorsal = int(d["d"]); j.capitan = bool(d["cap"]); j.pide_salir = bool(d["ps"])
 	j.transferible = bool(d.get("tr", false))
 	j.no_negociar_hasta = int(d.get("nn", 0))

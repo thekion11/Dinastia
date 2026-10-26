@@ -45,3 +45,6 @@ dinastia-godot/assets/kenney/industrial/*.glb -filter -diff -merge binary
 
 # Muebles de Quaternius (CC0), regalo del usuario el 15-10-2026: archivos normales.
 dinastia-godot/assets/quaternius_muebles/*.glb -filter -diff -merge binary
+
+# Sonidos de interfaz pequeños (26-10): fuera de LFS, el contenedor no puede subir a LFS
+dinastia-godot/audio/ui/*.ogg -filter -diff -merge binary

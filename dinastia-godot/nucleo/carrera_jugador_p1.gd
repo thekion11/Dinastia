@@ -183,11 +183,12 @@ func once_para_partido(m: Mundo) -> Array[Jugador]:
 
 ## DESDE EL BANCO (MEGAPLAN fase 3): si empiezas de suplente, ¿te hace entrar
 ## el DT y en qué minuto? Con buena relación y energía entras antes y más a
-## menudo. -1 = no sales del banco. El portero suplente no entra (en el fútbol
-## solo entra por lesión, y el cambio del motor es de jugador de campo).
+## menudo. -1 = no sales del banco. El portero suplente solo entra si el
+## titular se lesiona (~1 de cada 16 partidos; en el motor, `MotorCambioPortero`),
+## o si lo expulsan estando tú en la banda.
 func minuto_entrada_suplente(portero := false) -> int:
 	if portero:
-		return -1
+		return _rng.randi_range(15, 85) if _rng.randf() < 0.06 else -1
 	var prob := clampf(0.35 + float(relacion_dt - 50) / 100.0 + (0.1 if energia > 50 else -0.1), 0.1, 0.85)
 	if _rng.randf() >= prob:
 		return -1

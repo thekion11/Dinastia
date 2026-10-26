@@ -33,6 +33,12 @@ func _anillo_serenidad(ver: bool) -> void:
 func tanda_equipo_usuario() -> int:
 	return control_equipo if control_equipo >= 0 and not autopiloto else -1
 
+## TU PORTERO EN LA TANDA (Carrera, 26-10-2026): sin el equipo en tus manos,
+## si el portero que defiende este penal eres tú, el stick elige el lado.
+func tanda_me_toca_parar() -> bool:
+	var gk: Dictionary = tanda.get("portero", {})
+	return not autopiloto and id_usuario != "" and not gk.is_empty() and String(gk.get("id", "")) == id_usuario
+
 ## El equipo que tira ahora.
 func tanda_turno() -> int:
 	if tanda.is_empty():
@@ -73,7 +79,7 @@ func _tras_tiro_tanda() -> void:
 	## va donde dijiste.
 	var tu := tanda_equipo_usuario()
 	var lado: int = int(tanda["lado"])
-	if not (tu >= 0 and tanda_turno() != tu) or lado == SIN_ELEGIR:
+	if not ((tu >= 0 and tanda_turno() != tu) or tanda_me_toca_parar()) or lado == SIN_ELEGIR:
 		lado = _lado_portero_tanda(lz, gk)
 	tanda["lado"] = lado
 	var alto := "media" if _rng.randf() < 0.6 else "baja"

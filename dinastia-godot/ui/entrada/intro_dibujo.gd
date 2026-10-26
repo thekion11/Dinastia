@@ -237,7 +237,9 @@ func _pintar() -> void:
 	var vista := get_viewport_rect().size if is_inside_tree() else size
 	var g := get_global_transform_with_canvas() if is_inside_tree() else Transform2D.IDENTITY
 	_mat_fondo.set_shader_parameter("tiempo", _t)
-	_mat_fondo.set_shader_parameter("aparicion", smoothstep(0.0, 1.0, _tramo(_t, 0.0, 0.9)))
+	## El fondo sale de negro en 0,45 s (antes 0,9: con el fundido del orquestador
+	## encima, «Nuevo juego» → intro pasaba ~1,4 s a oscuras).
+	_mat_fondo.set_shader_parameter("aparicion", smoothstep(0.0, 1.0, _tramo(_t, 0.0, 0.45)))
 	var d := _destello()
 	_mat_fondo.set_shader_parameter("rayos", 0.55 * smoothstep(0.0, 1.0, _tramo(_t, 0.4, 1.6)) + 1.2 * d)
 	_mat_fondo.set_shader_parameter("destello", d)

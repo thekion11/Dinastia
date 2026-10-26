@@ -38,6 +38,7 @@ var _bokeh: FondoParticulas
 var _logo: MenuModosLogo
 var _reloj_logo: Timer
 var _confirmar: MenuModosConfirmar
+var _retos: MenuModosRetos
 var _lista: VBoxContainer
 var _ficha: MenuModosFicha
 
@@ -151,7 +152,7 @@ func seleccionar(i: int) -> void:
 ## Pulsar un modo (clic, Intro, A): se pide confirmación. Uno que todavía no
 ## se puede jugar lo dice en vez de fingir que lleva a algún sitio.
 func elegir(i: int) -> void:
-	if _hecho or i < 0 or i >= _modos.size() or _confirmar.abierto():
+	if _hecho or i < 0 or i >= _modos.size() or _algo_abierto():
 		return
 	seleccionar(i)
 	var m := _modos[i]
@@ -166,9 +167,28 @@ func elegir(i: int) -> void:
 func _confirmado() -> void:
 	if _hecho or _sel < 0:
 		return
+	if modo_seleccionado() == "retos" and _retos != null:
+		_sonar("abrir")
+		_retos.abrir(MenuModosFondo.luz_de(_modos[_sel]))
+		return
 	_hecho = true
 	_sonar("menu_aceptar")
 	terminado.emit({"modo": modo_seleccionado()})
+
+## El reto elegido viaja junto al modo (claves sueltas: el orquestador las copia tal cual a
+## su estado, así volver atrás y elegir otro reto lo sobrescribe).
+func _reto_elegido(id: String) -> void:
+	if _hecho:
+		return
+	_hecho = true
+	_sonar("menu_aceptar")
+	terminado.emit({"modo": "retos", "reto": id})
+
+func selector_retos() -> MenuModosRetos:
+	return _retos
+
+func _algo_abierto() -> bool:
+	return _confirmar.abierto() or (_retos != null and _retos.abierto())
 
 func _cancelado() -> void:
 	_sonar("menu_atras")
@@ -204,9 +224,11 @@ func _unhandled_input(ev: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		if _confirmar.abierto():
 			_confirmar.cancelar()
+		elif _retos != null and _retos.abierto():
+			_retos.cancelar()
 		else:
 			_volver()
-	elif (ev.is_action_pressed("ui_down") or ev.is_action_pressed("ui_up")) and not _confirmar.abierto():
+	elif (ev.is_action_pressed("ui_down") or ev.is_action_pressed("ui_up")) and not _algo_abierto():
 		## Sin foco (se hizo clic en el fondo): las flechas o la cruceta lo
 		## devuelven al modo que se estaba mirando.
 		if get_viewport().gui_get_focus_owner() == null and _sel >= 0:
@@ -218,6 +240,8 @@ func _notification(que: int) -> void:
 	if que == NOTIFICATION_WM_GO_BACK_REQUEST and is_visible_in_tree():
 		if _confirmar != null and _confirmar.abierto():
 			_confirmar.cancelar()
+		elif _retos != null and _retos.abierto():
+			_retos.cancelar()
 		else:
 			_volver()
 
@@ -288,6 +312,11 @@ func _construir() -> void:
 	_confirmar.aceptado.connect(_confirmado)
 	_confirmar.cancelado.connect(_cancelado)
 	add_child(_confirmar)
+	## «Retos» pide además cuál de los cinco (`MenuModosRetos`).
+	_retos = MenuModosRetos.new()
+	_retos.elegido.connect(_reto_elegido)
+	_retos.cancelado.connect(_cancelado)
+	add_child(_retos)
 
 func _construir_lista() -> void:
 	var sec_previa := "\u0000"
