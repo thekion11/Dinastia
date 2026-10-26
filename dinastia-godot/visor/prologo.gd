@@ -90,6 +90,9 @@ func _construir_mundo() -> void:
 	vista._objetivo_deseado = CityBuilder.ESTADIO_EN
 	vista._dist = 220.0
 	vista._girando = true
+	## Sin los rótulos flotantes del mapa (nombres de plazas y puentes): es un plano
+	## de presentación, no el mapa de gestión (captura f2p_1 del 26-10).
+	vista._ciudad.mostrar_rotulos(false)
 
 func _empezar_a_pie() -> void:
 	vista.explorar("pie", puerta + Vector3(0, 0, 7.0))

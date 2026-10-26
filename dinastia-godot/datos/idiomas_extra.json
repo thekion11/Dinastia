@@ -5803,7 +5803,9 @@
   "¿Habrá fichajes o cuenta con lo que hay?": "Will there be signings, or are you counting on what's here?",
   "Primero conozco a los que están. Si falta algo, lo traeré; y el presidente lo sabe.": "First I get to know the ones who are here. If something's missing, I'll bring it in; and the chairman knows it.",
   "Eso es cosa de la dirección deportiva. Yo entreno a quien me den.": "That's for the sporting director. I coach whoever I'm given.",
-  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "A lot can be done with what's here. If someone comes, let them add to the group."
+  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "A lot can be done with what's here. If someone comes, let them add to the group.",
+  "LA LIGA QUE TE ESPERA": "THE LEAGUE AWAITING YOU",
+  "El más fuerte llega a %d de reputación. Los conocerás cuando empiece el campeonato.": "The strongest reaches %d reputation. You'll meet them when the championship starts."
  },
  "pt": {
   "Historia": "História",
@@ -11609,7 +11611,9 @@
   "¿Habrá fichajes o cuenta con lo que hay?": "Vai haver contratações ou conta com o que há?",
   "Primero conozco a los que están. Si falta algo, lo traeré; y el presidente lo sabe.": "Primeiro conheço os que cá estão. Se faltar algo, trago-o; e o presidente sabe.",
   "Eso es cosa de la dirección deportiva. Yo entreno a quien me den.": "Isso é com a direção desportiva. Eu treino quem me derem.",
-  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Com o que há pode fazer-se muito. Se chegar alguém, que acrescente ao grupo."
+  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Com o que há pode fazer-se muito. Se chegar alguém, que acrescente ao grupo.",
+  "LA LIGA QUE TE ESPERA": "A LIGA QUE TE ESPERA",
+  "El más fuerte llega a %d de reputación. Los conocerás cuando empiece el campeonato.": "O mais forte chega a %d de reputação. Vais conhecê-los quando começar o campeonato."
  },
  "patrones": [
   [
@@ -22934,7 +22938,9 @@
   "¿Habrá fichajes o cuenta con lo que hay?": "Y aura-t-il des recrues, ou comptes-tu sur l'effectif actuel ?",
   "Primero conozco a los que están. Si falta algo, lo traeré; y el presidente lo sabe.": "D'abord je fais connaissance avec ceux qui sont là. S'il manque quelque chose, je le ferai venir ; et le président le sait.",
   "Eso es cosa de la dirección deportiva. Yo entreno a quien me den.": "Ça, c'est l'affaire de la direction sportive. Moi, j'entraîne ceux qu'on me donne.",
-  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "On peut faire beaucoup avec ce qu'il y a. Si quelqu'un arrive, qu'il apporte au groupe."
+  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "On peut faire beaucoup avec ce qu'il y a. Si quelqu'un arrive, qu'il apporte au groupe.",
+  "LA LIGA QUE TE ESPERA": "LA LIGUE QUI T'ATTEND",
+  "El más fuerte llega a %d de reputación. Los conocerás cuando empiece el campeonato.": "Le plus fort atteint %d de réputation. Tu les découvriras au début du championnat."
  },
  "it": {
   "Historia": "Storia",
@@ -28647,7 +28653,9 @@
   "¿Habrá fichajes o cuenta con lo que hay?": "Ci saranno acquisti o conta su quello che c'è?",
   "Primero conozco a los que están. Si falta algo, lo traeré; y el presidente lo sabe.": "Prima conosco quelli che ci sono. Se manca qualcosa, lo porterò; e il presidente lo sa.",
   "Eso es cosa de la dirección deportiva. Yo entreno a quien me den.": "Quello è compito della direzione sportiva. Io alleno chi mi danno.",
-  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Con quello che c'è si può fare molto. Se arriva qualcuno, che porti qualcosa al gruppo."
+  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Con quello che c'è si può fare molto. Se arriva qualcuno, che porti qualcosa al gruppo.",
+  "LA LIGA QUE TE ESPERA": "IL CAMPIONATO CHE TI ASPETTA",
+  "El más fuerte llega a %d de reputación. Los conocerás cuando empiece el campeonato.": "Il più forte arriva a %d di reputazione. Li conoscerai quando inizierà il campionato."
  },
  "de": {
   "Historia": "Geschichte",
@@ -34360,7 +34368,9 @@
   "¿Habrá fichajes o cuenta con lo que hay?": "Gibt es Neuzugänge oder setzen Sie auf den Kader?",
   "Primero conozco a los que están. Si falta algo, lo traeré; y el presidente lo sabe.": "Erst lerne ich die kennen, die da sind. Fehlt etwas, hole ich es; und der Präsident weiß das.",
   "Eso es cosa de la dirección deportiva. Yo entreno a quien me den.": "Das ist Sache der Sportlichen Leitung. Ich trainiere, wen man mir gibt.",
-  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Mit dem, was da ist, geht viel. Kommt jemand, soll er die Gruppe stärker machen."
+  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Mit dem, was da ist, geht viel. Kommt jemand, soll er die Gruppe stärker machen.",
+  "LA LIGA QUE TE ESPERA": "DIE LIGA, DIE DICH ERWARTET",
+  "El más fuerte llega a %d de reputación. Los conocerás cuando empiece el campeonato.": "Der stärkste kommt auf %d Reputation. Du lernst sie kennen, wenn die Meisterschaft beginnt."
  },
  "ca": {
   "Historia": "Història",
@@ -40073,7 +40083,9 @@
   "¿Habrá fichajes o cuenta con lo que hay?": "Hi haurà fitxatges o compta amb el que hi ha?",
   "Primero conozco a los que están. Si falta algo, lo traeré; y el presidente lo sabe.": "Primer conec els que hi són. Si falta alguna cosa, la portaré; i el president ho sap.",
   "Eso es cosa de la dirección deportiva. Yo entreno a quien me den.": "Això és cosa de la direcció esportiva. Jo entreno qui em donin.",
-  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Amb el que hi ha es pot fer molt. Si arriba algú, que sumi al grup."
+  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Amb el que hi ha es pot fer molt. Si arriba algú, que sumi al grup.",
+  "LA LIGA QUE TE ESPERA": "LA LLIGA QUE T'ESPERA",
+  "El más fuerte llega a %d de reputación. Los conocerás cuando empiece el campeonato.": "El més fort arriba a %d de reputació. Els coneixeràs quan comenci el campionat."
  },
  "pl": {
   "Club": "Klub",
@@ -46065,7 +46077,9 @@
   "¿Habrá fichajes o cuenta con lo que hay?": "Będą transfery czy liczy pan na obecny skład?",
   "Primero conozco a los que están. Si falta algo, lo traeré; y el presidente lo sabe.": "Najpierw poznam tych, którzy są. Jeśli czegoś zabraknie, sprowadzę; i prezes o tym wie.",
   "Eso es cosa de la dirección deportiva. Yo entreno a quien me den.": "To sprawa dyrektora sportowego. Ja trenuję tych, których dostanę.",
-  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Z tym, co jest, da się dużo zrobić. Jeśli ktoś przyjdzie, niech wzmocni grupę."
+  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Z tym, co jest, da się dużo zrobić. Jeśli ktoś przyjdzie, niech wzmocni grupę.",
+  "LA LIGA QUE TE ESPERA": "LIGA, KTÓRA NA CIEBIE CZEKA",
+  "El más fuerte llega a %d de reputación. Los conocerás cuando empiece el campeonato.": "Najsilniejszy ma %d reputacji. Poznasz ich, gdy ruszą rozgrywki."
  },
  "tr": {
   "Club": "Kulüp",
@@ -52057,6 +52071,8 @@
   "¿Habrá fichajes o cuenta con lo que hay?": "Transfer olacak mı yoksa eldekine mi güveniyorsunuz?",
   "Primero conozco a los que están. Si falta algo, lo traeré; y el presidente lo sabe.": "Önce buradakileri tanıyacağım. Eksik varsa getiririm; başkan da bunu biliyor.",
   "Eso es cosa de la dirección deportiva. Yo entreno a quien me den.": "O sportif direktörlüğün işi. Ben bana verileni çalıştırırım.",
-  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Eldekiyle çok şey yapılabilir. Biri gelirse gruba katkı sağlasın."
+  "Con lo que hay se puede hacer mucho. Si llega alguien, que sume al grupo.": "Eldekiyle çok şey yapılabilir. Biri gelirse gruba katkı sağlasın.",
+  "LA LIGA QUE TE ESPERA": "SENİ BEKLEYEN LİG",
+  "El más fuerte llega a %d de reputación. Los conocerás cuando empiece el campeonato.": "En güçlüsü %d itibara ulaşıyor. Şampiyona başlayınca onları tanıyacaksın."
  }
 }
