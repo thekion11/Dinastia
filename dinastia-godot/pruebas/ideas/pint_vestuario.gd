@@ -25,6 +25,35 @@ func _toca(cajas: Array, p: Vector3) -> bool:
 func _textos(n: Node) -> Array:
 	return n.find_children("*", "Label3D", true, false).map(func(l: Label3D) -> String: return l.text)
 
+## Piezas sin apoyo: ni en el suelo, ni contra una pared, ni tocando (a 4 cm)
+## una pieza apoyada. El vidrio no cuenta como apoyo: casi no se ve, y una
+## tapa sobre un vidrio invisible parece una losa flotando.
+func _sin_apoyo(lote: PiezasVestuario.Lote, sala: Rect2) -> int:
+	var piezas: Array = lote.piezas.filter(func(p: Array) -> bool:
+		return not ((p[1] as BaseMaterial3D) != null and (p[1] as BaseMaterial3D).transparency != BaseMaterial3D.TRANSPARENCY_DISABLED))
+	var apoyada: Array = []
+	for p: Array in piezas:
+		var a: AABB = p[0]
+		apoyada.append(a.position.y <= 0.06 or a.position.x <= sala.position.x - 0.1 or a.end.x >= sala.end.x + 0.1
+			or a.position.z <= sala.position.y - 0.1 or a.end.z >= sala.end.y + 0.1)
+	var cambio := true
+	while cambio:
+		cambio = false
+		for i in piezas.size():
+			if bool(apoyada[i]):
+				continue
+			var ai: AABB = (piezas[i][0] as AABB).grow(0.04)
+			for j in piezas.size():
+				if bool(apoyada[j]) and ai.intersects(piezas[j][0] as AABB):
+					apoyada[i] = true
+					cambio = true
+					break
+	var sueltas := apoyada.count(false)
+	for i in piezas.size():
+		if not bool(apoyada[i]):
+			print("    suelta: ", piezas[i][0])
+	return sueltas
+
 func _probar() -> void:
 	_titulo("TAQUILLAS CON NOMBRE (plan: «nombre de cada jugador en su taquilla y en la camiseta»)")
 	_comprobar(PiezasVestuario.apellido("Fernando de Pedro") == "DE PEDRO", "apellido compuesto: «DE PEDRO»")
@@ -84,7 +113,9 @@ func _probar() -> void:
 	var puerta := AABB(Vector3(sala.get_center().x - 0.6, 0.0, sala.end.y - 1.6), Vector3(1.2, 2.0, 1.6))
 	var mu := Node3D.new()
 	add_child(mu)
-	SalasClub.museo(mu, sala, 0.0, Color(0.1, 0.4, 0.2), Color.WHITE, 3, 4)
+	var lm := SalasClub.museo(mu, sala, 0.0, Color(0.1, 0.4, 0.2), Color.WHITE, 3, 4)
+	var sm := _sin_apoyo(lm, sala)
+	_comprobar(lm.piezas.size() > 60 and sm == 0, "ninguna pieza del museo flota (%d de %d)" % [sm, lm.piezas.size()])
 	var cm := _cajas(mu)
 	_comprobar(cm.size() == 4, "nivel 4 de museo: 4 vitrinas con choque (%d)" % cm.size())
 	_comprobar(not cm.any(func(a: AABB) -> bool: return a.intersects(puerta)), "las vitrinas no tapan la puerta")
@@ -95,7 +126,9 @@ func _probar() -> void:
 	mu.queue_free()
 	var ut := Node3D.new()
 	add_child(ut)
-	SalasClub.utileria(ut, sala, 0.0, Color(0.1, 0.4, 0.2), Color.WHITE)
+	var lu := SalasClub.utileria(ut, sala, 0.0, Color(0.1, 0.4, 0.2), Color.WHITE)
+	var su := _sin_apoyo(lu, sala)
+	_comprobar(lu.piezas.size() > 60 and su == 0, "ninguna pieza de la utilería flota (%d de %d)" % [su, lu.piezas.size()])
 	var cu := _cajas(ut)
 	_comprobar(cu.size() >= 5, "la utilería tiene sus muebles sólidos (%d)" % cu.size())
 	_comprobar(not cu.any(func(a: AABB) -> bool: return a.intersects(puerta)), "nada de la utilería tapa la puerta")

@@ -335,22 +335,23 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 			## 11,8 cm de radio sobre una cabeza de 7 de ancho y 9 de fondo
 			## (medida en la malla a 15 cm sobre el hueso): un cuenco, con la
 			## visera escondida debajo. Ahora un casquete ovalado que ciñe la
-			## cabeza (8,5 × 10,5 cm), con el borde en la frente, y la visera
+			## cabeza con el pelo rapado (9,6 × 12,3 cm: la malla de la cara real sale hasta
+			## z 0,09 en la frente y el rapado asomaba con menos), con el borde 2 cm sobre las cejas, y la visera
 			## saliendo de ese borde, un poco caída. Todo a la escala de la
 			## cabeza (sin `k`), en el espacio del hueso.
 			var cab_g := _en_hueso(esq, "Head", 1.0)
 			var copa := SphereMesh.new()
-			copa.radius = 0.085
+			copa.radius = 0.096
 			copa.height = 0.09
 			copa.radial_segments = 16
 			copa.rings = 6
 			copa.is_hemisphere = true
-			var mc := _pieza(cab_g, copa, gm, Vector3(0, 0.135, -0.015))
-			mc.scale = Vector3(1.0, 1.0, 1.24)
+			var mc := _pieza(cab_g, copa, gm, Vector3(0, 0.145, -0.015))
+			mc.scale = Vector3(1.0, 1.0, 1.28)
 			var visera := CylinderMesh.new()
 			visera.top_radius = 0.07
 			visera.bottom_radius = 0.07
 			visera.height = 0.008
 			visera.radial_segments = 14
-			_pieza(cab_g, visera, _m(col.darkened(0.15)), Vector3(0, 0.137, 0.15), Vector3(8, 0, 0))
-			_pieza(cab_g, _esfera(0.011), gm, Vector3(0, 0.226, -0.015))
+			_pieza(cab_g, visera, _m(col.darkened(0.15)), Vector3(0, 0.147, 0.165), Vector3(8, 0, 0))
+			_pieza(cab_g, _esfera(0.011), gm, Vector3(0, 0.236, -0.015))

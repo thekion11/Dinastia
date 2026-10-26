@@ -62,7 +62,7 @@ static func copa(lote: PiezasVestuario.Lote, p: Vector3, oro: Material, peana: M
 		asa.ring_segments = 6
 		lote.malla(oro, Transform3D(Basis(Vector3.FORWARD, PI / 2.0), p + Vector3(s * 0.15, 0.37, 0)), asa)
 
-static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, titulos: int, nivel_museo: int) -> void:
+static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, titulos: int, nivel_museo: int) -> PiezasVestuario.Lote:
 	var lote := PiezasVestuario.Lote.new()
 	var m := PiezasVestuario.materiales(c1, c2)
 	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.22)
@@ -70,7 +70,7 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 	## Vidrio de vitrina de verdad, transparente (`Texturas.cristal` es el de
 	## las ventanas de fachada: opaco y encendido, tapaba la copa).
 	var vidrio := StandardMaterial3D.new()
-	vidrio.albedo_color = Color(0.86, 0.93, 1.0, 0.1)
+	vidrio.albedo_color = Color(0.86, 0.93, 1.0, 0.16)
 	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	vidrio.roughness = 0.04
 	vidrio.metallic_specular = 0.9
@@ -93,6 +93,11 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		lote.caja(base, _en(Vector3(px, y0 + 0.5, pz)), Vector3(0.7, 1.0, 0.7))
 		lote.caja(m["placa"], _en(Vector3(px, y0 + 0.98, pz)), Vector3(0.74, 0.04, 0.74))
 		lote.caja(vidrio, _en(Vector3(px, y0 + 1.45, pz)), Vector3(0.68, 0.9, 0.68))
+		## Cantoneras de acero en las cuatro aristas del vidrio: el techo de la
+		## vitrina se apoya en algo que se ve (sin ellas, con el vidrio casi
+		## invisible, la tapa parecía una losa flotando a 2 m).
+		for e in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+			pass #			lote.caja(m["metal"], _en(Vector3(px + e.x * 0.345, y0 + 1.445, pz + e.y * 0.345)), Vector3(0.03, 0.9, 0.03))
 		lote.caja(base, _en(Vector3(px, y0 + 1.92, pz)), Vector3(0.74, 0.06, 0.74))
 		lote.caja(m["tira"], _en(Vector3(px, y0 + 1.885, pz)), Vector3(0.5, 0.01, 0.5))
 		_choque(nodo, Vector3(px, y0 + 1.0, pz), Vector3(0.74, 2.0, 0.74))
@@ -118,6 +123,10 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 	lote.montar(nodo, "Museo")
 	TunelVestuario._rotulo(nodo, Idiomas.t("%d títulos") % titulos, Vector3(cx, y0 + 2.62, caja.position.y - 0.11), 0.0, 44,
 		Color(1.0, 0.86, 0.45))
+	_luces_museo(nodo, caja, y0, cx)
+	return lote
+
+static func _luces_museo(nodo: Node3D, caja: Rect2, y0: float, cx: float) -> void:
 	## Luz cálida de museo sobre cada fila de vitrinas.
 	for f in [0.3, 0.72]:
 		var o := OmniLight3D.new()
@@ -127,7 +136,7 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		o.light_color = Color(1, 0.9, 0.75)
 		nodo.add_child(o)
 
-static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color) -> void:
+static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color) -> PiezasVestuario.Lote:
 	var lote := PiezasVestuario.Lote.new()
 	var m := PiezasVestuario.materiales(c1, c2)
 	var acero: StandardMaterial3D = Texturas.metal(Color(0.55, 0.58, 0.62), 0.4)
@@ -201,3 +210,4 @@ static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color)
 	lote.malla(m["placa"], Transform3D(Basis(Vector3.RIGHT, PI / 2.0), Vector3(xl, y0 + 0.4, zl + 0.3)), _cilindro(0.2, 0.2, 0.02))
 	_choque(nodo, Vector3(xl, y0 + 0.43, zl), Vector3(0.62, 0.86, 0.6))
 	lote.montar(nodo, "Utileria")
+	return lote

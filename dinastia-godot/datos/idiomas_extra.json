@@ -5208,7 +5208,16 @@
   "A veces": "Sometimes",
   "Sin comentarios": "No comment",
   "lluvia fría de invierno, en la altura": "cold winter rain, at altitude",
-  "Lluvia fría de invierno, en la altura": "Cold winter rain, at altitude"
+  "Lluvia fría de invierno, en la altura": "Cold winter rain, at altitude",
+  "Tienes que responder.": "You have to respond.",
+  "Sabor a poco": "Underwhelming",
+  "Noche para el olvido": "A night to forget",
+  "Los días de partido el estadio se llena más si el equipo viene ganando.": "On match days the stadium fills up more when the team is winning.",
+  "El Centro médico acelera la recuperación entre partidos.": "The Medical Centre speeds up recovery between matches.",
+  "Pulsa V al pasear para cambiar a primera persona.": "Press V while walking to switch to first person.",
+  "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Step into the houses and bars; the people of the city have things to tell you.",
+  "La Academia juvenil mejora el potencial de los canteranos.": "The Youth Academy improves the potential of your academy players.",
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "At night the windows light up and the street lamps glow."
  },
  "pt": {
   "Historia": "História",
@@ -10419,7 +10428,16 @@
   "A veces": "Às vezes",
   "Sin comentarios": "Sem comentários",
   "lluvia fría de invierno, en la altura": "chuva fria de inverno, na altitude",
-  "Lluvia fría de invierno, en la altura": "Chuva fria de inverno, na altitude"
+  "Lluvia fría de invierno, en la altura": "Chuva fria de inverno, na altitude",
+  "Tienes que responder.": "Você precisa responder.",
+  "Sabor a poco": "Sabor de pouco",
+  "Noche para el olvido": "Noite para esquecer",
+  "Los días de partido el estadio se llena más si el equipo viene ganando.": "Nos dias de jogo o estádio enche mais quando a equipa vem a ganhar.",
+  "El Centro médico acelera la recuperación entre partidos.": "O Centro médico acelera a recuperação entre jogos.",
+  "Pulsa V al pasear para cambiar a primera persona.": "Carregue em V ao passear para mudar para a primeira pessoa.",
+  "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Entre nas casas e nos bares; as pessoas da cidade têm coisas para lhe contar.",
+  "La Academia juvenil mejora el potencial de los canteranos.": "A Academia juvenil melhora o potencial dos jovens da formação.",
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "À noite as janelas acendem-se e os candeeiros iluminam a rua."
  },
  "patrones": [
   [
@@ -16009,6 +16027,28 @@
    "×$1 sobre el soroll",
    "×$1 na szum",
    "gürültüye ×$1"
+  ],
+  [
+   "^(.+?) te pide una comisión extra por debajo de la mesa para «facilitar» la próxima operación\\. Es plata que no aparece en ningún libro\\.$",
+   "$1 is asking you for an extra under-the-table commission to «smooth» the next deal. It's money that won't appear in any ledger.",
+   "$1 pede uma comissão extra por baixo dos panos para «facilitar» a próxima negociação. É dinheiro que não aparece em livro nenhum.",
+   "$1 te demande une commission supplémentaire sous la table pour «faciliter» la prochaine opération. C'est de l'argent qui n'apparaît dans aucun livre de comptes.",
+   "$1 ti chiede una commissione extra sottobanco per «facilitare» la prossima operazione. Sono soldi che non compaiono in nessun libro contabile.",
+   "$1 verlangt eine zusätzliche Provision unter der Hand, um den nächsten Deal zu «erleichtern». Das ist Geld, das in keinem Buch auftaucht.",
+   "$1 et demana una comissió extra per sota la taula per «facilitar» la propera operació. Són diners que no apareixen a cap llibre.",
+   "$1 żąda dodatkowej prowizji pod stołem, żeby «ułatwić» następną transakcję. To pieniądze, których nie ma w żadnych księgach.",
+   "$1 bir sonraki işi «kolaylaştırmak» için masa altından ekstra komisyon istiyor. Hiçbir deftere geçmeyen bir para bu."
+  ],
+  [
+   "^(.+?) \\((.+?)\\) controla a (\\d+) de tus jugadores\\. Te exige fichar a un canterano de su agencia o «no responde por el ánimo» de (.+) y compañía\\.$",
+   "$1 ($2) represents $3 of your players. He demands you sign a youngster from his agency, or he «can't vouch for the mood» of $4 and co.",
+   "$1 ($2) controla $3 dos seus jogadores. Exige que você contrate um garoto da agência dele ou «não responde pelo ânimo» de $4 e companhia.",
+   "$1 ($2) contrôle $3 de tes joueurs. Il exige que tu recrutes un jeune de son agence, sinon il «ne répond pas du moral» de $4 et compagnie.",
+   "$1 ($2) controlla $3 dei tuoi giocatori. Pretende che tu prenda un giovane della sua agenzia, o «non risponde dell'umore» di $4 e compagnia.",
+   "$1 ($2) vertritt $3 deiner Spieler. Er verlangt, dass du ein Talent seiner Agentur verpflichtest, sonst «übernimmt er keine Gewähr für die Stimmung» von $4 und Co.",
+   "$1 ($2) controla $3 dels teus jugadors. T'exigeix que fitxis un jove de la seva agència o «no respon de l'ànim» de $4 i companyia.",
+   "$1 ($2) reprezentuje $3 twoich zawodników. Żąda, żebyś podpisał młodzieżowca z jego agencji, bo inaczej «nie ręczy za nastroje» zawodnika $4 i spółki.",
+   "$1 ($2) oyuncularından $3 tanesini temsil ediyor. Ajansından bir genç oyuncu almanı istiyor; yoksa $4 ve arkadaşlarının «moralinden sorumlu değil»."
   ]
  ],
  "fr": {
@@ -21127,7 +21167,16 @@
   "A veces": "Parfois",
   "Sin comentarios": "Sans commentaire",
   "lluvia fría de invierno, en la altura": "pluie froide d'hiver, en altitude",
-  "Lluvia fría de invierno, en la altura": "Pluie froide d'hiver, en altitude"
+  "Lluvia fría de invierno, en la altura": "Pluie froide d'hiver, en altitude",
+  "Tienes que responder.": "Tu dois répondre.",
+  "Sabor a poco": "Goût de trop peu",
+  "Noche para el olvido": "Soirée à oublier",
+  "Los días de partido el estadio se llena más si el equipo viene ganando.": "Les jours de match, le stade se remplit davantage quand l'équipe gagne.",
+  "El Centro médico acelera la recuperación entre partidos.": "Le centre médical accélère la récupération entre les matchs.",
+  "Pulsa V al pasear para cambiar a primera persona.": "Appuyez sur V en vous promenant pour passer à la première personne.",
+  "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Entrez dans les maisons et les bars ; les habitants ont des choses à vous raconter.",
+  "La Academia juvenil mejora el potencial de los canteranos.": "L'Académie des jeunes améliore le potentiel des jeunes du centre.",
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "La nuit, les fenêtres s'allument et les lampadaires éclairent la rue."
  },
  "it": {
   "Historia": "Storia",
@@ -26245,7 +26294,16 @@
   "A veces": "A volte",
   "Sin comentarios": "Nessun commento",
   "lluvia fría de invierno, en la altura": "pioggia fredda invernale, in quota",
-  "Lluvia fría de invierno, en la altura": "Pioggia fredda invernale, in quota"
+  "Lluvia fría de invierno, en la altura": "Pioggia fredda invernale, in quota",
+  "Tienes que responder.": "Devi rispondere.",
+  "Sabor a poco": "Sa di poco",
+  "Noche para el olvido": "Notte da dimenticare",
+  "Los días de partido el estadio se llena más si el equipo viene ganando.": "Nei giorni di partita lo stadio si riempie di più se la squadra vince.",
+  "El Centro médico acelera la recuperación entre partidos.": "Il Centro medico accelera il recupero tra le partite.",
+  "Pulsa V al pasear para cambiar a primera persona.": "Premi V mentre cammini per passare alla prima persona.",
+  "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Entra nelle case e nei bar; la gente della città ha cose da raccontarti.",
+  "La Academia juvenil mejora el potencial de los canteranos.": "L'Accademia giovanile migliora il potenziale dei giovani del vivaio.",
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Di notte le finestre si accendono e i lampioni illuminano la strada."
  },
  "de": {
   "Historia": "Geschichte",
@@ -31363,7 +31421,16 @@
   "A veces": "Manchmal",
   "Sin comentarios": "Kein Kommentar",
   "lluvia fría de invierno, en la altura": "kalter Winterregen, in der Höhe",
-  "Lluvia fría de invierno, en la altura": "Kalter Winterregen, in der Höhe"
+  "Lluvia fría de invierno, en la altura": "Kalter Winterregen, in der Höhe",
+  "Tienes que responder.": "Du musst antworten.",
+  "Sabor a poco": "Zu wenig",
+  "Noche para el olvido": "Ein Abend zum Vergessen",
+  "Los días de partido el estadio se llena más si el equipo viene ganando.": "An Spieltagen füllt sich das Stadion mehr, wenn die Mannschaft gewinnt.",
+  "El Centro médico acelera la recuperación entre partidos.": "Das Medizinzentrum beschleunigt die Erholung zwischen den Spielen.",
+  "Pulsa V al pasear para cambiar a primera persona.": "Drücke beim Spazieren V, um in die Ich-Perspektive zu wechseln.",
+  "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Betritt die Häuser und Bars; die Menschen der Stadt haben dir etwas zu erzählen.",
+  "La Academia juvenil mejora el potencial de los canteranos.": "Die Jugendakademie verbessert das Potenzial deiner Nachwuchsspieler.",
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Nachts leuchten die Fenster und die Laternen erhellen die Straße."
  },
  "ca": {
   "Historia": "Història",
@@ -36481,7 +36548,16 @@
   "A veces": "A vegades",
   "Sin comentarios": "Sense comentaris",
   "lluvia fría de invierno, en la altura": "pluja freda d'hivern, en alçada",
-  "Lluvia fría de invierno, en la altura": "Pluja freda d'hivern, en alçada"
+  "Lluvia fría de invierno, en la altura": "Pluja freda d'hivern, en alçada",
+  "Tienes que responder.": "Has de respondre.",
+  "Sabor a poco": "Sap a poc",
+  "Noche para el olvido": "Nit per oblidar",
+  "Los días de partido el estadio se llena más si el equipo viene ganando.": "Els dies de partit l'estadi s'omple més si l'equip va guanyant.",
+  "El Centro médico acelera la recuperación entre partidos.": "El Centre mèdic accelera la recuperació entre partits.",
+  "Pulsa V al pasear para cambiar a primera persona.": "Prem V mentre passeges per canviar a primera persona.",
+  "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Entra a les cases i als bars; la gent de la ciutat té coses per explicar-te.",
+  "La Academia juvenil mejora el potencial de los canteranos.": "L'Acadèmia juvenil millora el potencial dels jugadors de la pedrera.",
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "De nit les finestres s'encenen i els fanals il·luminen el carrer."
  },
  "pl": {
   "Club": "Klub",
@@ -41879,7 +41955,16 @@
   "A veces": "Czasami",
   "Sin comentarios": "Bez komentarza",
   "lluvia fría de invierno, en la altura": "zimny zimowy deszcz, na wysokości",
-  "Lluvia fría de invierno, en la altura": "Zimny zimowy deszcz, na wysokości"
+  "Lluvia fría de invierno, en la altura": "Zimny zimowy deszcz, na wysokości",
+  "Tienes que responder.": "Musisz odpowiedzieć.",
+  "Sabor a poco": "Niedosyt",
+  "Noche para el olvido": "Noc do zapomnienia",
+  "Los días de partido el estadio se llena más si el equipo viene ganando.": "W dni meczowe stadion zapełnia się bardziej, gdy drużyna wygrywa.",
+  "El Centro médico acelera la recuperación entre partidos.": "Centrum medyczne przyspiesza regenerację między meczami.",
+  "Pulsa V al pasear para cambiar a primera persona.": "Naciśnij V podczas spaceru, by przełączyć na widok z pierwszej osoby.",
+  "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Wchodź do domów i barów; mieszkańcy miasta mają ci wiele do opowiedzenia.",
+  "La Academia juvenil mejora el potencial de los canteranos.": "Akademia młodzieżowa podnosi potencjał wychowanków.",
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Nocą zapalają się okna, a latarnie oświetlają ulicę."
  },
  "tr": {
   "Club": "Kulüp",
@@ -47277,6 +47362,15 @@
   "A veces": "Bazen",
   "Sin comentarios": "Yorum yok",
   "lluvia fría de invierno, en la altura": "soğuk kış yağmuru, rakımda",
-  "Lluvia fría de invierno, en la altura": "Soğuk kış yağmuru, rakımda"
+  "Lluvia fría de invierno, en la altura": "Soğuk kış yağmuru, rakımda",
+  "Tienes que responder.": "Yanıt vermen gerekiyor.",
+  "Sabor a poco": "Az geldi",
+  "Noche para el olvido": "Unutulacak bir gece",
+  "Los días de partido el estadio se llena más si el equipo viene ganando.": "Maç günlerinde takım kazanıyorsa stadyum daha çok dolar.",
+  "El Centro médico acelera la recuperación entre partidos.": "Sağlık merkezi maçlar arasındaki toparlanmayı hızlandırır.",
+  "Pulsa V al pasear para cambiar a primera persona.": "Gezerken V'ye basarak birinci şahıs görünümüne geç.",
+  "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Evlere ve barlara gir; şehrin insanlarının sana anlatacakları var.",
+  "La Academia juvenil mejora el potencial de los canteranos.": "Genç akademisi altyapı oyuncularının potansiyelini artırır.",
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Geceleri pencereler yanar ve sokak lambaları yolu aydınlatır."
  }
 }

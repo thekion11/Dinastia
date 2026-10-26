@@ -63,13 +63,28 @@ func _cuenta(raiz: Node, nombre: String) -> int:
 		t += (n as MultiMeshInstance3D).multimesh.instance_count
 	return t
 
+## Los peldaños de acceso de TODAS las tribunas: cada una cuelga su MultiMesh de la
+## raíz y, con el nombre repetido, Godot les pone uno automático; se reconocen por
+## su material (el de los peldaños) y su malla de caja.
+func _peldanos_acceso(raiz: Node) -> int:
+	var t := 0
+	var muestra := raiz.find_child("EscalerasAcceso", false, false) as MultiMeshInstance3D
+	if muestra == null:
+		return 0
+	for n: Node in raiz.get_children():
+		var m := n as MultiMeshInstance3D
+		if m != null and m.material_override == muestra.material_override and m.multimesh.mesh is BoxMesh \
+				and not String(m.name).contains("Acceso") or m == muestra:
+			t += m.multimesh.instance_count
+	return t
+
 func _escaleras(raiz: Node3D) -> void:
 	var esperadas := _escaleras_esperadas(raiz)
 	var peldanos := 0
 	for e: Array in esperadas:
 		peldanos += int(e[2])
 	_comprobar(esperadas.size() >= 4 and peldanos > 20, "hay escaleras de acceso (%d, %d peldaños)" % [esperadas.size(), peldanos])
-	_comprobar(_cuenta(raiz, "EscalerasAcceso") == peldanos, "la cuenta rehecha coincide con los peldaños que levanta la grada (%d / %d)" % [_cuenta(raiz, "EscalerasAcceso"), peldanos])
+	_comprobar(_peldanos_acceso(raiz) == peldanos, "la cuenta rehecha coincide con los peldaños que levanta la grada (%d / %d)" % [_peldanos_acceso(raiz), peldanos])
 	_comprobar(_cuenta(raiz, "CantosAcceso") == peldanos, "un canto por peldaño de acceso (%d)" % _cuenta(raiz, "CantosAcceso"))
 	_comprobar(_cuenta(raiz, "ZancasAcceso") == esperadas.size() * 2, "dos zancas por escalera (%d)" % _cuenta(raiz, "ZancasAcceso"))
 	_comprobar(_cuenta(raiz, "PasamanosAcceso") == esperadas.size() * 8, "pasamanos y tres postes a cada lado")
@@ -130,7 +145,7 @@ func _techo(raiz: Node3D) -> void:
 	var mal := 0
 	for x: Transform3D in piezas:
 		var e := x.basis.get_scale()
-		if x.origin.y + e.y * 0.5 > 0.0 or absf(x.origin.x) + e.x * 0.5 > tam.x * 0.5 + 0.01 or absf(x.origin.z) + e.z * 0.5 > tam.z * 0.5 + 0.01:
+		if x.origin.y + e.y * 0.5 > tam.y * 0.5 + 0.01 or x.origin.y - e.y * 0.5 > -tam.y * 0.5 or absf(x.origin.x) + e.x * 0.5 > tam.x * 0.5 + 0.01 or absf(x.origin.z) + e.z * 0.5 > tam.z * 0.5 + 0.01:
 			mal += 1
 	_comprobar(mal == 0 and piezas.size() > 10, "las vigas cuelgan bajo la losa y no se salen de ella (%d piezas, %d mal)" % [piezas.size(), mal])
 	cam.queue_free()
@@ -171,10 +186,11 @@ func _entorno(raiz: Node3D) -> void:
 		for pa: Array in paseos:
 			var c: Vector3 = pa[0]
 			var t: Vector2 = pa[1]
-			var ej := j.basis.get_scale()
-			var mitad := (ej.x if absf(j.basis.x.x) > 0.5 else ej.z) * 0.5
-			var mitad_z := (ej.z if absf(j.basis.z.z) > 0.5 else ej.x) * 0.5
-			if absf(j.origin.x - c.x) < t.x * 0.5 + mitad + 2.0 and absf(j.origin.z - c.z) < t.y * 0.5 + mitad_z + 2.0:
+			## Media caja de la jardinera en el mundo (sus columnas, en valor absoluto).
+			var b := j.basis
+			var mitad := (absf(b.x.x) + absf(b.y.x) + absf(b.z.x)) * 0.5
+			var mitad_z := (absf(b.x.z) + absf(b.y.z) + absf(b.z.z)) * 0.5
+			if absf(j.origin.x - c.x) < t.x * 0.5 + mitad + 0.5 and absf(j.origin.z - c.z) < t.y * 0.5 + mitad_z + 0.5:
 				corta += 1
 	_comprobar(jard.size() > 20 and corta == 0, "las jardineras (%d) no tapan ningún paseo (%d lo tapan)" % [jard.size(), corta])
 	_comprobar(paseos.size() == 12, "tres paseos por lado (%d)" % paseos.size())

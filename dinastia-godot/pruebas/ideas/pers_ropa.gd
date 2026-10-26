@@ -54,6 +54,8 @@ func _probar() -> void:
 					var tope := (n.transform * ((mi as MeshInstance3D).position + Vector3(0, (malla as SphereMesh).height, 0))).y
 					var cabeza_alta := (1.767 if bool(d["mujer"]) else 1.81) - esq.get_bone_global_rest(ib).origin.y
 					var sobra := tope - cabeza_alta
+					var ancho_g := (malla as SphereMesh).radius * (mi as MeshInstance3D).scale.x
+					_comprobar(ancho_g < 0.1, "peatón %d: la copa ciñe la cabeza (radio %.3f m < 0,1; la cabeza mide 0,07)" % [i, ancho_g])
 					_comprobar(sobra > 0.0 and sobra < 0.06, "peatón %d: la gorra cubre la cabeza y sube %.3f m sobre ella (0-6 cm)" % [i, sobra])
 				elif malla is BoxMesh and is_equal_approx((malla as BoxMesh).size.y, 0.3) and hueso == "spine_03":
 					mochilas += 1

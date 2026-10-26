@@ -101,5 +101,5 @@ func _process(_d: float) -> void:
 		var obj := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME)
 		print("COSTE %s %s: llamadas=%d triangulos=%d objetos=%d" % [t[0], OS.get_environment("CLIMA"), dc, tri, obj])
 		var clima := OS.get_environment("CLIMA")
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/pgra_%s_%s%s.png" % [t[0], clima if clima != "" else "dia", OS.get_environment("SUFIJO")])
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/pgra_%s%s_%s%s.png" % [t[0], ("_" + OS.get_environment("TECHO")) if OS.get_environment("TECHO") != "" else "", clima if clima != "" else "dia", OS.get_environment("SUFIJO")])
 		print("FOTO ", t[0])

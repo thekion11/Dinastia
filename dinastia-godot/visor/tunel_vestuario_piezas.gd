@@ -24,6 +24,8 @@ const PIXEL := 0.004
 ## Junta cajas por material y las monta como una malla por material.
 class Lote:
 	var _st: Dictionary = {}
+	## Lo que ocupa cada pieza: [AABB, material] (para las pruebas de apoyo).
+	var piezas: Array = []
 
 	func caja(mat: Material, xf: Transform3D, tam: Vector3) -> void:
 		var bm := BoxMesh.new()
@@ -38,6 +40,7 @@ class Lote:
 			st.begin(Mesh.PRIMITIVE_TRIANGLES)
 			_st[mat] = st
 		st.append_from(m, 0, xf)
+		piezas.append([xf * m.get_aabb(), mat])
 
 	func montar(padre: Node3D, nombre: String) -> void:
 		var k := 0
@@ -119,8 +122,8 @@ static func camiseta(lote: Lote, xf: Transform3D, m1: Material, m2: Material) ->
 	_pon(lote, xf, Vector3(0, -0.32, 0.001), Vector3(0.5, 0.03, 0.036), m2)
 
 ## Una taquilla con su camiseta. `xf`: dónde está su base (centro del suelo)
-## mirando a +Z local hacia el centro del vestuario. `fila`: [dorsal, nombre]
-## o vacío (sin plantilla: solo el número). `rng` varía bolsa, botas y toalla.
+## mirando a +Z local hacia el centro del vestuario. `dorsal` y `nombre`
+## (nombre vacío = sin plantilla: solo el número). `rng` varía bolsa, botas y toalla.
 static func taquilla(lote: Lote, padre: Node3D, xf: Transform3D, m: Dictionary, dorsal: int, nombre: String,
 		rng: RandomNumberGenerator) -> void:
 	var w := ANCHO - 0.04

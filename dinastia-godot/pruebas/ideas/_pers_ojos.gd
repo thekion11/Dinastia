@@ -38,12 +38,12 @@ func _process(_d: float) -> void:
 		rojo.albedo_color = Color(1, 0, 0)
 		rojo.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		for mi: MeshInstance3D in (_ds[7]["nodo"] as Node).find_children("Eyes", "MeshInstance3D", true, false):
-			mi.material_override = rojo
+			pass
 		(_ds[7]["nodo"] as Node3D).position.x = 1.425 + 0.5
 		(_ds[6]["nodo"] as Node3D).visible = false
 		_cam.fov = 14
-		var alto := 1.66 * float(_ds[5]["altura"]) / 1.8
-		_cam.look_at_from_position(Vector3(1.675, alto, 2.2), Vector3(1.675, alto, 0))
+		var alto := 1.7 * float(_ds[7]["altura"]) / 1.8
+		_cam.look_at_from_position(Vector3(1.925 + 0.9, alto + 0.1, 1.8), Vector3(1.925, alto, 0))
 	if _n == 30:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/pers_ojos.png")
 		get_tree().quit()
