@@ -93,6 +93,11 @@ func _construir_mundo() -> void:
 	## Sin los rótulos flotantes del mapa (nombres de plazas y puentes): es un plano
 	## de presentación, no el mapa de gestión (captura f2p_1 del 26-10).
 	vista._ciudad.mostrar_rotulos(false)
+	## Tu primer día empieza a media mañana y la luz no corre sola (la ciudad da una
+	## vuelta de 24 h cada 2 min): la fase 3 atará esta hora al reloj de la partida.
+	vista._ciclo_activo = false
+	vista._hora = 10.0
+	vista._aplicar_hora()
 
 func _empezar_a_pie() -> void:
 	vista.explorar("pie", puerta + Vector3(0, 0, 7.0))

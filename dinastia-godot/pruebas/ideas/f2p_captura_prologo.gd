@@ -112,9 +112,11 @@ func _ir(clave: String) -> void:
 		if _p.paso_i == PrologoPasos.indice(clave):
 			break
 	_e._ir_a_planta(int(paso["planta"]))
-	_e.cuerpo.position = _p.destino + Vector3(0, 0, 1.6)
-	_e.rumbo = PI
-	_e.cuerpo.rotation.y = PI
+	## A un metro del mentor por el lado ANCHO de la sala (x), mirándolo: así la
+	## cámara, que va detrás, no se mete en la pared del fondo (toma 4 del 26-10 negra).
+	_e.cuerpo.position = _p.destino + Vector3(1.1, 0, 0.2)
+	_e.rumbo = -PI * 0.5
+	_e.cuerpo.rotation.y = _e.rumbo
 	await _esperar(2.4)
 	_e._colocar_camara(1.0)
 	await _frames(2)
