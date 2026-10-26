@@ -5,7 +5,7 @@ func _colocar_camara(delta: float) -> void:
 	## PLANO DE CONVERSACIÓN (13-10-2026): mientras alguien te habla, la cámara
 	## se pone tras tu hombro y encuadra su cara (antes tu espalda la tapaba).
 	if _hablando_con != null and is_instance_valid(_hablando_con) and _t_burbuja > 0.0 \
-			and estado in ["calle", "interior"] and modo != "coche" and not primera_persona:
+			and estado in ["calle", "interior", "estadio"] and modo != "coche" and not primera_persona:
 		var yo := cuerpo.position
 		var el := _hablando_con.global_position
 		var dir := Vector3(el.x - yo.x, 0, el.z - yo.z)
