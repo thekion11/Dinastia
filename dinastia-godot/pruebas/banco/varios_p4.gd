@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p3.gd"
-## [Banco · grupo «varios» · capa 4/10] Generado al partir el banco por grupos (26-10).
+## [Capa 4/10 de `varios.gd`] _probar_fundar_club, _probar_consejeros, _probar_bilbao_solo_local, _probar_sala_de_prensa, _probar_auspicio, _media_techo_camada … (+1)
 
 
 func _probar_fundar_club() -> void:

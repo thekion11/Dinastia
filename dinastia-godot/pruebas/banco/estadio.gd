@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/estadio_p1.gd"
-## [Banco · grupo «estadio» · capa 2/2] Generado al partir el banco por grupos (26-10).
+## [Capa 2/2 de `estadio.gd`] _probar_interiores_club, _probar_galeria_club, _probar_reforma_con_obra
 
 func _probar_interiores_club() -> void:
 	_titulo("ESTADIO 2.0: DECORAR LAS SALAS")

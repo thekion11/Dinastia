@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p5.gd"
-## [Banco · grupo «varios» · capa 6/10] Generado al partir el banco por grupos (26-10).
+## [Capa 6/10 de `varios.gd`] _probar_dinastias, _probar_rotulo_y_sala, _probar_mesa_agente, _probar_plantillas_fijas, _probar_aspecto_y_audio, _probar_tutorial … (+1)
 
 ## DINASTÍAS FAMILIARES (fase 5): tu hijo llega a la cantera que diriges.
 func _probar_dinastias() -> void:

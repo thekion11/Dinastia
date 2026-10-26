@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p8.gd"
-## [Banco · grupo «varios» · capa 9/10] Generado al partir el banco por grupos (26-10).
+## [Capa 9/10 de `varios.gd`] _probar_politica_c15, _probar_historia_c4, _probar_vida_dt, _probar_maestrias, _probar_habilidades_en_resultados, _probar_motor_libre … (+1)
 
 func _probar_politica_c15() -> void:
 	_titulo("C15: POLÍTICA Y ESTADO (FICTICIA Y NEUTRAL)")

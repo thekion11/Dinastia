@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p9.gd"
-## [Banco · grupo «varios» · capa 10/10] Generado al partir el banco por grupos (26-10).
+## [Capa 10/10 de `varios.gd`] _probar_jugadores_fijos, _probar_disenos_kit, _probar_region_reales, _probar_sancion_dt, _probar_tanda_top25b, _probar_informe_rival … (+1)
 
 ## JUGADORES FIJOS CON GUIÑO (26-9-2026): en la base ficticia, el mismo club
 ## tiene los mismos jugadores (nombre, media y potencial) en cualquier partida.

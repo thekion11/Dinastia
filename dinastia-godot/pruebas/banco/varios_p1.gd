@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/base.gd"
-## [Banco · grupo «varios» · capa 1/10] Generado al partir el banco por grupos (26-10).
+## [Capa 1/10 de `varios.gd`] _probar_datos, _probar_mundo, _probar_cubierta_nombres, _probar_base_ficticia, _probar_reales
 
 # ---------------------------------------------------------------------------
 

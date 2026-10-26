@@ -81,18 +81,26 @@ func _process(delta_real: float) -> void:
 				if d3 < 9.0:
 					avance = minf(avance, maxf(0.0, d3 - 8.0))
 		## Un peatón no atraviesa al que va delante en su ruta: si le alcanza a menos
-		## de 0,9 m, se queda detrás (adelantar queda para una próxima pasada).
-		if _peatones_ruta.has(ruta) and float(v["alto"]) > 0.05 and float(v["alto"]) < 0.3:
+		## de 0,9 m, se aparta a un lado y le adelanta (s3, 26-10-2026; antes solo
+		## esperaba detrás). Mientras no esté a su lado, frena para no atravesarlo.
+		var es_peaton := float(v["alto"]) > 0.05 and float(v["alto"]) < 0.3
+		if _peatones_ruta.has(ruta) and es_peaton:
 			for o: Dictionary in _peatones_ruta[ruta]:
 				if o == v:
 					continue
 				var d4 := fposmod(float(o["s"]) - s0, largo)
 				if d4 < 0.9 + avance:
+					## Ya va por su lado: le pasa sin rozarle (y mantiene el lado hasta dejarle atrás).
+					if absf(float(v.get("lado", 0.0)) - float(o.get("lado", 0.0))) >= SEPARA_LADO:
+						v["esquiva"] = maxf(float(v.get("esquiva", 0.0)), 0.8)
+						continue
 					avance = minf(avance, maxf(0.0, d4 - 0.9))
 					## Si se alcanzan, a veces se paran a charlar (etapa 1: NPCs con vida).
 					if float(o.get("espera", 0.0)) <= 0.0 and randf() < 0.004:
 						_charlar(v, o)
 						avance = 0.0
+					else:
+						_apartarse(v, float(o.get("lado", 0.0)))
 		## CEDER EL PASO AL JUGADOR (etapa 5): un peatón se detiene si estás
 		## delante a menos de 1,6 m; un coche, a menos de 7 m. Solo se mira a los
 		## que están a menos de 14 m (barato) y solo hacia dónde van.
@@ -103,9 +111,18 @@ func _process(delta_real: float) -> void:
 				var dist := rel.length()
 				if dist < 14.0:
 					var dir_v: Vector3 = (_rutas[ruta] as Ruta).en(s0)[1]
-					var peaton := float(v["alto"]) < 0.3
-					var umbral := 1.6 if peaton else 7.0
-					if dist < umbral and rel.normalized().dot(Vector3(dir_v.x, 0, dir_v.z).normalized()) > 0.5:
+					var frente := rel.normalized().dot(Vector3(dir_v.x, 0, dir_v.z).normalized())
+					if es_peaton:
+						## El peatón te esquiva de lado (s3): desde 3 m se aparta hacia el
+						## lado contrario al tuyo y aminora; solo se para si aún te roza.
+						if dist < 3.0 and frente > 0.3:
+							var lat := rel.dot(Vector3(-dir_v.z, 0, dir_v.x))
+							if absf(lat) < 1.0:
+								_apartarse(v, float(v.get("lado", 0.0)) + lat)
+								avance *= 0.6
+								if dist < 1.0 and absf(lat) < 0.5:
+									avance = 0.0
+					elif dist < 7.0 and frente > 0.5:
 						avance = 0.0
 		## NADIE ATRAVIESA A NADIE (pmov, 25-10-2026): lo de arriba solo mira la
 		## propia ruta; aquí se cede a quien cruza por delante desde OTRA ruta
@@ -118,6 +135,8 @@ func _process(delta_real: float) -> void:
 				var fm2: MeshInstance3D = v["faros"]
 				if is_instance_valid(fm2):
 					fm2.set_instance_shader_parameter("freno", 1.0)
+		if es_peaton:
+			avance = _mover_lado(v, delta, avance)
 		v["s"] = s0 + avance
 		_colocar(v)
 
@@ -210,6 +229,12 @@ func _cede_paso(v: Dictionary, idx: int, delta: float) -> bool:
 				## Un peatón no espera a un coche que viene: es el coche quien frena.
 				if not coche and otro_coche and _en_hueco(pb, e[2], true, pa, 0.3):
 					continue
+				## Dos peatones de frente (s3): cada uno se aparta a SU derecha y siguen
+				## despacio, como en una acera de verdad, en vez de esperar plantados.
+				if not coche and not otro_coche and da.dot(e[2]) < -0.6:
+					_apartarse_a(v, LADO_MAX * 0.75)
+					v["despacio"] = true
+					continue
 				## Los dos se tienen delante y son iguales: pasa el de índice menor.
 				if coche == otro_coche and j > idx and _en_hueco(pb, e[2], otro_coche, pa, extra if coche else 0.3):
 					continue
@@ -217,6 +242,56 @@ func _cede_paso(v: Dictionary, idx: int, delta: float) -> bool:
 				return true
 	v["cediendo"] = 0.0
 	return false
+
+## ESQUIVAR DE LADO (s3, 26-10-2026). Cada peatón lleva `lado`: metros que se
+## separa del eje de su ruta hacia su derecha (negativo: izquierda). La acera
+## mide 4 m y la ruta va a 2,4 m del bordillo: hasta 0,8 m a cada lado cabe.
+const LADO_MAX := 0.8
+## Dos peatones de la misma ruta con al menos esto de lado entre ellos no se estorban.
+const SEPARA_LADO := 0.6
+## Velocidad con que se aparta (m/s) y cuánto mantiene el lado antes de volver.
+const VEL_LADO := 1.2
+const DURA_ESQUIVA := 2.0
+
+## Se aparta del que está en `lado_otro` (en su mismo eje): hacia el lado en que
+## ya va (a la derecha si van alineados) y, si no cabe, al otro. Mientras dure la
+## esquiva no cambia de idea: sin eso, con el otro justo en el eje, el ruido de
+## las cuentas le hacía bailar de un lado a otro sin apartarse nunca.
+func _apartarse(v: Dictionary, lado_otro: float) -> void:
+	if float(v.get("esquiva", 0.0)) > 0.0 and absf(float(v.get("lado_obj", 0.0)) - lado_otro) >= SEPARA_LADO:
+		v["esquiva"] = DURA_ESQUIVA
+		return
+	var hueco := SEPARA_LADO + 0.1
+	var obj := lado_otro + hueco if float(v.get("lado", 0.0)) >= lado_otro - 0.05 else lado_otro - hueco
+	if absf(obj) > LADO_MAX:
+		obj = lado_otro - hueco if obj > 0.0 else lado_otro + hueco
+	_apartarse_a(v, obj)
+
+func _apartarse_a(v: Dictionary, obj: float) -> void:
+	v["lado_obj"] = clampf(obj, -LADO_MAX, LADO_MAX)
+	v["esquiva"] = DURA_ESQUIVA
+
+## Acerca `lado` a su objetivo (o al centro cuando ya no esquiva) y gira un poco
+## el cuerpo hacia donde se aparta. Devuelve el avance (a medio paso si va de lado
+## y alguien le ha pedido ir despacio).
+func _mover_lado(v: Dictionary, delta: float, avance: float) -> float:
+	var esq := float(v.get("esquiva", 0.0)) - delta
+	v["esquiva"] = esq
+	var obj := float(v.get("lado_obj", 0.0)) if esq > 0.0 else 0.0
+	var lado := float(v.get("lado", 0.0))
+	if v.get("despacio", false):
+		v.erase("despacio")
+		avance *= 0.5
+	if is_equal_approx(lado, obj) and absf(float(v.get("giro_lado", 0.0))) < 0.01:
+		v["giro_lado"] = 0.0
+		return avance
+	var nuevo := move_toward(lado, obj, VEL_LADO * delta)
+	v["lado"] = nuevo
+	## Ángulo entre lo que avanza y lo que se aparta: hacia la derecha (+lado) gira
+	## a la derecha, que en Godot es restar al rumbo.
+	var giro := -atan2((nuevo - lado) / maxf(delta, 0.001), maxf(avance / maxf(delta, 0.001), 0.6))
+	v["giro_lado"] = lerpf(float(v.get("giro_lado", 0.0)), clampf(giro, -0.6, 0.6), 0.25)
+	return avance
 
 ## Comprobación de orientación para las pruebas: hacia dónde mira de verdad el
 ## vehículo `i` y hacia dónde se está moviendo. Si el producto escalar de los

@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/gestion_p1.gd"
-## [Banco · grupo «gestion» · capa 2/3] Generado al partir el banco por grupos (26-10).
+## [Capa 2/3 de `gestion.gd`] _probar_cesiones, _probar_vender, _probar_ojeadores
 
 func _probar_cesiones() -> void:
 	_titulo("CESIONES Y CLÁUSULAS: LA LETRA PEQUEÑA")

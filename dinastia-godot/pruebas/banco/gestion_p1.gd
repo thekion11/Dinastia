@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/base.gd"
-## [Banco · grupo «gestion» · capa 1/3] Generado al partir el banco por grupos (26-10).
+## [Capa 1/3 de `gestion.gd`] _probar_finanzas, _probar_mercado, _probar_directiva, _probar_staff, _probar_obras, _probar_cantera … (+1)
 
 func _probar_finanzas() -> void:
 	_titulo("FINANZAS")

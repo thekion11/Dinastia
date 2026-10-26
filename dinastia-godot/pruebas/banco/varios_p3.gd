@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p2.gd"
-## [Banco · grupo «varios» · capa 3/10] Generado al partir el banco por grupos (26-10).
+## [Capa 3/10 de `varios.gd`] _probar_roles_y_federacion, _probar_pulso_de_roles, _probar_logros, _probar_desafios
 
 func _probar_roles_y_federacion() -> void:
 	_titulo("ROLES, ENTRENAMIENTO, FEDERACION Y ESTADIO")

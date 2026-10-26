@@ -44,6 +44,8 @@ const INTERV_MAX := 2
 const GOLES := Vector2(2.1, 3.2)
 
 func _probar() -> void:
+	if OS.get_environment("TV_IGUAL") != "":   ## medir el reparto solidario de la tele sin activarlo
+		Finanzas.reparto_tv_igual = float(OS.get_environment("TV_IGUAL"))
 	if OS.get_environment("EQ_MODO") == "rendimiento":
 		_rendimiento()
 		return

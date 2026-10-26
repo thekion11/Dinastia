@@ -41,7 +41,8 @@ func _process(delta: float) -> void:
 		## en el plano general emborronaba también al DT.
 		var at := _camara.attributes as CameraAttributesPractical
 		if at != null:
-			at.dof_blur_far_distance = _cam_pos.distance_to(Vector3(0, 1.5, -0.78)) + 0.45
+			## En el contraplano, el foco es el periodista: sin desenfoque de fondo.
+			at.dof_blur_far_distance = 40.0 if not foco.is_empty() else _cam_pos.distance_to(Vector3(0, 1.5, -0.78)) + 0.45
 			at.dof_blur_far_transition = 0.8
 	if _dt_cabeza != null:
 		## Un asentimiento apenas perceptible: sin ningún movimiento, la cabeza

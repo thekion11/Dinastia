@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/guardado_p2.gd"
-## [Banco · grupo «guardado» · capa 3/3] Generado al partir el banco por grupos (26-10).
+## [Capa 3/3 de `guardado.gd`] _probar_guardado_2, _probar_guardado
 
 
 ## Tramo 2 de 2 de `_probar_guardado` (la norma de 450 líneas la troceó).

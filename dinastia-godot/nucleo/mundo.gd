@@ -19,6 +19,7 @@ func tope_valor_ia() -> float:
 ## La referencia se toma al empezar la partida (guardados viejos: en su primer cierre).
 func tomar_el_mando(club_id: String) -> Directiva:
 	var d := super(club_id)
+	Finanzas.fijar_medias_tv(ligas)
 	if valor_ia_ref <= 0.0:
 		valor_ia_ref = valor_medio_ia()
 	return d
@@ -27,6 +28,7 @@ func nueva_temporada() -> Dictionary:
 	if valor_ia_ref <= 0.0:
 		valor_ia_ref = valor_medio_ia()
 	var r := super()
+	Finanzas.fijar_medias_tv(ligas)
 	## La cláusula de descenso alcanza a los que llegan mientras el club siga abajo.
 	for c: Club in clubes.values():
 		if c.division >= 2 and c.plantilla.any(func(j: Jugador) -> bool: return j.descenso_club == c.id):

@@ -139,6 +139,17 @@ func _tinta(fondo: Color) -> Color:
 func _escudo(c: Club, alto: int = 22) -> Control:
 	var caja := Control.new()
 	caja.custom_minimum_size = Vector2(alto, alto)
+	## Un escudo oscuro (club negro) desaparecía sobre el fondo oscuro: lleva detrás
+	## un halo claro y redondo. Solo esos clubes: en las tablas son pocos nodos (s3).
+	if EscudoMuestras.oscuro(c.color_escudo1()) and alto >= 16:
+		var halo := Panel.new()
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.86, 0.88, 0.92, 0.30)
+		sb.set_corner_radius_all(alto)
+		halo.add_theme_stylebox_override("panel", sb)
+		halo.set_anchors_preset(Control.PRESET_FULL_RECT)
+		halo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		caja.add_child(halo)
 	var t := TextureRect.new()
 	t.texture = Escudo.textura(c, alto)
 	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE

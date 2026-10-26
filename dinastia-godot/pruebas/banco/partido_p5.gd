@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p4.gd"
-## [Banco · grupo «partido» · capa 5/6] Generado al partir el banco por grupos (26-10).
+## [Capa 5/6 de `partido.gd`] _probar_tanda_c_2, _probar_tanda_c, _probar_arreglos_partido_motor, _probar_transmision_y_estadisticas
 
 
 ## Tramo 2 de 2 de `_probar_tanda_c` (la norma de 450 líneas la troceó).

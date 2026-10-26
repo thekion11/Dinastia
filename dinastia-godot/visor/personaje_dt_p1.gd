@@ -56,7 +56,7 @@ static var del_usuario: Dictionary = {}
 static var club_usuario: String = ""
 
 class _GestosBanda extends Node:
-	const GESTOS := ["brazos_jarra", "aplaudir", "pedir_calma", "protestar", "manos_cabeza", "senalar", "llamar_hinchada"]
+	const GESTOS := ["banda/brazos_jarra", "banda/aplaudir", "banda/pedir_calma", "banda/protestar", "banda/manos_cabeza"]
 	var ap: AnimationPlayer
 	var rng := RandomNumberGenerator.new()
 	var hasta := 2.0

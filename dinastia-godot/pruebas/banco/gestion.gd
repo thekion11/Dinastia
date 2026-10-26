@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/gestion_p2.gd"
-## [Banco · grupo «gestion» · capa 3/3] Generado al partir el banco por grupos (26-10).
+## [Capa 3/3 de `gestion.gd`] _probar_negociacion, _probar_economia, _probar_capitan_votado, _probar_piel_por_pais, _probar_contratos_c9, _jug_ley … (+2)
 
 
 func _probar_negociacion() -> void:

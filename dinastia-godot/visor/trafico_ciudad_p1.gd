@@ -187,6 +187,10 @@ func _colocar(v: Dictionary) -> void:
 	var pos: Vector3 = par[0]
 	var dir: Vector3 = par[1]
 	nodo.position = pos + Vector3(0, float(v["alto"]), 0)
+	## El paso a un lado del peatón que esquiva (ver `_mover_lado`).
+	var lado := float(v.get("lado", 0.0))
+	if lado != 0.0:
+		nodo.position += Vector3(-dir.z, 0, dir.x) * lado
 	## `atan2` y no `look_at`: el vehículo solo gira sobre su eje vertical -un
 	## coche no cabecea por seguir la calle- y `look_at` con un objetivo a la
 	## misma altura da un transform degenerado en cuanto la dirección se
@@ -196,7 +200,7 @@ func _colocar(v: Dictionary) -> void:
 	## de marcha, que es donde tienen el morro los coches (`CityBuilder.
 	## instanciar_coche`): su `giro` es 0. El -90° de antes suponía el morro en
 	## X y dejaba la flota entera circulando de lado.
-	nodo.rotation.y = atan2(dir.x, dir.z) + float(v["giro"])
+	nodo.rotation.y = atan2(dir.x, dir.z) + float(v["giro"]) + float(v.get("giro_lado", 0.0))
 
 ## Cuelga un vehículo de una ruta. `giro_base` corrige modelos que no miran
 ## hacia -Z (los coches de Kenney miran a +X, por ejemplo): sin eso, la flota
@@ -276,6 +280,8 @@ func reciclar_peatones(centro: Vector3, mira: Vector3, lejos := 95.0, tope := 3,
 					(_peatones_ruta[r] as Array).append(v)
 					v["ruta"] = r
 				v["s"] = sp
+				v["lado"] = 0.0
+				v["esquiva"] = 0.0
 				_colocar(v)
 				movidos += 1
 				hecho = true

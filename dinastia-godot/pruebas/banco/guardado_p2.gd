@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/guardado_p1.gd"
-## [Banco · grupo «guardado» · capa 2/3] Generado al partir el banco por grupos (26-10).
+## [Capa 2/3 de `guardado.gd`] _probar_guardado_1
 
 
 ## [Capa 12/27 de `banco.gd`] _probar_guardado_1

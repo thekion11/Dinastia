@@ -72,6 +72,9 @@ func _dato(etiqueta: String, valor: String, color: Color, padre: Node = null) ->
 	h.add_child(a)
 	var b := _texto(12, color)
 	b.text = valor
+	## Aire a la derecha (s3; petición 6 de la sesión 2): la barra de
+	## desplazamiento de la columna tapaba el final de la cifra.
+	b.add_theme_stylebox_override("normal", AIRE_CIFRA)
 	h.add_child(b)
 	## Hueco a la derecha del ancho de la barra de desplazamiento: las columnas
 	## van dentro de un ScrollContainer y su barra vertical tapaba el final del
@@ -81,6 +84,12 @@ func _dato(etiqueta: String, valor: String, color: Color, padre: Node = null) ->
 	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.add_child(hueco)
 	(padre if padre != null else _ficha).add_child(h)
+
+static var AIRE_CIFRA := _aire_cifra()
+static func _aire_cifra() -> StyleBoxEmpty:
+	var sb := StyleBoxEmpty.new()
+	sb.content_margin_right = 14
+	return sb
 
 func _miles(n: int) -> String:
 	var s := str(n)

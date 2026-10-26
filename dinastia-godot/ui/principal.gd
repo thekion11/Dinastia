@@ -174,7 +174,7 @@ func _pintar_identidad(c: Club) -> void:
 	_lista_gente.add_child(te)
 	_ui_identidad._fila_color_identidad(c, "Fondo del escudo", "esc_color1")
 	_ui_identidad._fila_color_identidad(c, "Borde y patrón", "esc_color2")
-	_ui_identidad._rejilla_identidad(c, "esc_forma", Escudo.FORMAS, "Forma")
+	_ui_identidad._rejilla_identidad(c, "esc_forma", Escudo.FORMAS, "Forma del escudo")
 	_ui_identidad._rejilla_identidad(c, "esc_patron", Escudo.PATRONES, "Patrón interior")
 	## "ESC_SIM" del HTML: un emoji en vez de las iniciales. El campo llevaba
 	## semanas guardándose -`Club.esc_simbolo` ya viaja en el guardado- sin que

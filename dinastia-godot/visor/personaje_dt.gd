@@ -225,11 +225,32 @@ static func poner_en_banda(padre: Node3D, asp: Dictionary, c1: Color, c2: Color,
 	var n: Node3D = d["nodo"]
 	n.position = pos
 	n.rotation.y = giro
+	gestos_banda(d)
 	var g := _GestosBanda.new()
 	g.ap = d["anim"]
 	g.rng.seed = hash(str(pos))
 	n.add_child(g)
 	return d
+
+## LOS GESTOS DE LA BANDA (26-10-2026). `crear()` arma la librería corta (sin las
+## expresiones de `AnimExtra`), así que `_GestosBanda` nunca encontraba «brazos_jarra» ni
+## los demás y el DT solo se quedaba parado. Se le da una librería propia «banda» con esos
+## gestos, cada uno con las piernas de persona (las mismas del «persona/parado»), para que
+## al pasar de quieto a un gesto los pies no cambien de sitio.
+static func gestos_banda(d: Dictionary) -> void:
+	var ap: AnimationPlayer = d["anim"]
+	var esq: Skeleton3D = d.get("esqueleto")
+	if esq == null or ap.has_animation_library("banda"):
+		return
+	var pre := str(ap.get_path_to(esq))
+	var lib := AnimationLibrary.new()
+	var fab := AnimExtra.new()
+	for g: String in ["brazos_jarra", "aplaudir", "pedir_calma", "protestar", "manos_cabeza"]:
+		var a: Animation = fab.call(g, esq, pre)
+		AnimExtra._completar(a, esq, pre)
+		PersonajeVida.piernas_de_persona(a, esq)
+		lib.add_animation(g, a)
+	ap.add_animation_library("banda", lib)
 
 ## EL PERSONAL DEL ESTADIO (26-9-2026, pendiente "camarógrafos y guardias con
 ## uniforme"): una persona entera con el uniforme de su oficio.

@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p1.gd"
-## [Banco · grupo «varios» · capa 2/10] Generado al partir el banco por grupos (26-10).
+## [Capa 2/10 de `varios.gd`] _probar_pie_habil, _probar_banquillo, _probar_banco
 
 ## EL PIE HÁBIL: "D.d==='LAT'&&D.b&&j.pie&&D.b!==j.pie" del HTML. `Jugador.
 ## pie()` YA EXISTÍA -de un hash de su id, no guardado, misma proporción

@@ -123,34 +123,46 @@ static func del_juego() -> Font:
 
 ## UNA SERIF DEL SISTEMA CON RESPALDO PROPIO (26-10-2026). La intro, el logo y
 ## el selector de idioma piden una serif por nombre (Palatino, Georgia...). En
-## Windows y macOS la encuentran y se ve igual que siempre; en Android y en Web
-## esos nombres no existen y salía la letra de fábrica sin remates. Ahora la
-## lista va SIN el genérico «serif» y, si ninguna existe, entra la propia
-## (`propio`, con su peso por el eje `wght` y la cursiva inclinada a mano), y
-## detrás la de fábrica y la cadena de símbolos, para la «ğ» o la «ł».
+## Windows y macOS la encuentran y se ve igual que siempre. Si NINGUNA de la
+## lista existe, `SystemFont` no falla: carga otra (la de fábrica, o la que el
+## sistema le sustituya), y en Android y Web salía una letra sin remates. Por
+## eso se mira qué familia resolvió de verdad y, si no es de la lista, se usa la
+## propia (`propio`, con su peso por el eje `wght` y la cursiva inclinada a
+## mano). Detrás, la de fábrica y la cadena de símbolos, para la «ğ» o la «ł».
 ## La serif de rótulo de la intro y el logo (`intro_dibujo.gd`, `menu_modos_logo.gd`).
 const SERIF_ROTULO := ["Cinzel", "Trajan Pro", "Palatino Linotype", "Book Antiqua",
 	"Palatino", "Georgia", "Times New Roman"]
 
-static func serif(nombres: Array, propio: String, peso: int, cursiva := false, mipmaps := false) -> SystemFont:
+static func serif(nombres: Array, propio: String, peso: int, cursiva := false, mipmaps := false) -> Font:
+	var cadena: Array[Font] = [ThemeDB.fallback_font]
+	cadena.append_array(repuesto())
 	var s := SystemFont.new()
 	s.font_names = PackedStringArray(nombres)
 	s.font_weight = peso
 	s.font_italic = cursiva
 	s.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
 	s.generate_mipmaps = mipmaps
-	var cadena: Array[Font] = []
+	if _resuelve(s, nombres):
+		s.fallbacks = cadena
+		return s
 	var f := propia(propio)
-	if f != null:
-		f.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
-		f.generate_mipmaps = mipmaps
-		var v := FontVariation.new()
-		v.base_font = f
-		v.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): peso}
-		if cursiva:
-			v.variation_transform = Transform2D(Vector2(1, 0), Vector2(0.2, 1), Vector2.ZERO)
-		cadena.append(v)
-	cadena.append(ThemeDB.fallback_font)
-	cadena.append_array(repuesto())
-	s.fallbacks = cadena
-	return s
+	if f == null:
+		s.fallbacks = cadena
+		return s
+	f.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
+	f.generate_mipmaps = mipmaps
+	f.fallbacks = cadena
+	var v := FontVariation.new()
+	v.base_font = f
+	v.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): peso}
+	if cursiva:
+		v.variation_transform = Transform2D(Vector2(1, 0), Vector2(0.2, 1), Vector2.ZERO)
+	return v
+
+## ¿La `SystemFont` encontró de verdad una de las familias pedidas?
+static func _resuelve(s: SystemFont, nombres: Array) -> bool:
+	var hallada := s.get_font_name().to_lower()
+	for n: String in nombres:
+		if hallada == n.to_lower():
+			return true
+	return false

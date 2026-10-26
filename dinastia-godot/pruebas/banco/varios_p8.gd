@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p7.gd"
-## [Banco · grupo «varios» · capa 8/10] Generado al partir el banco por grupos (26-10).
+## [Capa 8/10 de `varios.gd`] _probar_portadas_c20, _probar_cantera_c3, _probar_instituciones_c5_c8, _probar_charlas_c6_c7, _probar_licencia_c7, _probar_calendario_c13 … (+2)
 
 ## C20: la portada guarda lo que necesita el periódico (foto, bajada, medio) y
 ## cada medio tiene su cabecera; seis cabeceras distintas.

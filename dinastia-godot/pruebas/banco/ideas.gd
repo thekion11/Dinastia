@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/ideas_p1.gd"
-## [Banco · grupo «ideas» · capa 2/2] Generado al partir el banco por grupos (26-10).
+## [Capa 2/2 de `ideas.gd`] _probar_ideas_simulacion_del_partido, _probar_ideas_club_y_calendario_de_pretemporada, _probar_ideas_dinero_ciudad_y_lesiones, _probar_ideas_tribunal_antidopaje_y_asamblea, _probar_ideas_medicina_y_vestuario, _probar_ideas_entrenamiento_prensa_y_dueno … (+8)
 
 func _probar_ideas_simulacion_del_partido() -> void:
 	_titulo("IDEAS DEL DUEÑO: simulación del partido — cronología, tarjetas, cambios, MVP, estadísticas (301-315)")

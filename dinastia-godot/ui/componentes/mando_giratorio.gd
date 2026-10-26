@@ -198,6 +198,26 @@ func _gui_input(ev: InputEvent) -> void:
 		_pitch = clampf(_pitch + d2.y * 0.012, -1.45, 1.45)
 		_ocioso = 0.0
 
+## Una etiqueta en una o dos líneas que quepan en `ancho` (s3, 26-10-2026: antes
+## se cortaba con «…» a 104 px y «Estadísticas del partido» o «Táctica rápida:
+## …» no se leían). Solo si dos líneas tampoco bastan, la segunda acaba en «…».
+func _lineas(txt: String, tam: int, ancho: float, dos: bool) -> PackedStringArray:
+	if not dos or _fuente.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tam).x <= ancho:
+		return PackedStringArray([_cortar(txt, tam, ancho)])
+	var palabras := txt.split(" ")
+	var primera := ""
+	var i := 0
+	while i < palabras.size():
+		var prueba := (primera + " " + palabras[i]).strip_edges()
+		if primera != "" and _fuente.get_string_size(prueba, HORIZONTAL_ALIGNMENT_LEFT, -1, tam).x > ancho:
+			break
+		primera = prueba
+		i += 1
+	var resto := " ".join(palabras.slice(i))
+	if resto == "":
+		return PackedStringArray([_cortar(primera, tam, ancho)])
+	return PackedStringArray([_cortar(primera, tam, ancho), _cortar(resto, tam, ancho)])
+
 func _cortar(txt: String, tam: int, ancho: float) -> String:
 	if _fuente.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tam).x <= ancho:
 		return txt
@@ -229,8 +249,11 @@ func _columna(lista: Array, izquierda: bool, disp: String) -> void:
 		var y := y0 + paso * float(i)
 		## Primero el texto (para saber dónde termina) y luego la línea hasta él.
 		var tex := _icono(carpeta, nombre_icono(k, disp))
-		var que := _cortar(String(etiquetas[k]), 12, 104.0)
-		var w := _fuente.get_string_size(que, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
+		## Con sitio entre filas (paso de 30 px o más) va en dos líneas.
+		var lineas := _lineas(String(etiquetas[k]), 12, clampf(size.x * 0.2, 104.0, 150.0), paso >= 30.0)
+		var w := 0.0
+		for ln: String in lineas:
+			w = maxf(w, _fuente.get_string_size(ln, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x)
 		var x_ico := x_borde if izquierda else size.x - 4.0 - 28.0
 		var x_txt := x_ico + 31.0 if izquierda else x_ico - 3.0 - w
 		var ancla := Vector2((x_txt + w + 5.0) if izquierda else (x_txt - 5.0), y)
@@ -246,8 +269,12 @@ func _columna(lista: Array, izquierda: bool, disp: String) -> void:
 			_capa.draw_texture_rect(tex, Rect2(Vector2(x_ico, y - 14.0), Vector2(28, 28)), false, Color(1, 1, 1, a))
 		## Una placa oscura detrás del texto: cuando el mando girado pasa por
 		## debajo, la etiqueta se sigue leyendo.
-		_capa.draw_rect(Rect2(Vector2(x_txt - 4.0, y - 10.0), Vector2(w + 8.0, 19.0)), Color(0.04, 0.06, 0.05, 0.62 * a), true)
-		_capa.draw_string(_fuente, Vector2(x_txt, y + 4.0), que, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE if activa else Color(1, 1, 1, 0.85 * a))
+		var alto_txt := 15.0 * float(lineas.size()) + 4.0
+		_capa.draw_rect(Rect2(Vector2(x_txt - 4.0, y - alto_txt * 0.5), Vector2(w + 8.0, alto_txt)), Color(0.04, 0.06, 0.05, 0.62 * a), true)
+		for li in lineas.size():
+			var yl := y + 4.0 + 15.0 * (float(li) - float(lineas.size() - 1) * 0.5)
+			var xl := x_txt if izquierda else x_txt + w - _fuente.get_string_size(lineas[li], HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
+			_capa.draw_string(_fuente, Vector2(xl, yl), lineas[li], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE if activa else Color(1, 1, 1, 0.85 * a))
 
 # ------------------------------------------------------------------ etiquetas
 

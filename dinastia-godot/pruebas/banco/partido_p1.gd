@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/base.gd"
-## [Banco · grupo «partido» · capa 1/6] Generado al partir el banco por grupos (26-10).
+## [Capa 1/6 de `partido.gd`] _probar_partidos, _probar_previa, _probar_arbitros, _probar_puente3d, _probar_notas
 
 
 func _probar_partidos() -> void:

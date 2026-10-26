@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/base.gd"
-## [Banco · grupo «ciudad» · capa 1/2] Generado al partir el banco por grupos (26-10).
+## [Capa 1/2 de `ciudad.gd`] _probar_ciudad, _probar_minijuegos, _probar_ciudad_grande, _probar_ciudad_animo, _probar_ciudad_b7, _probar_modulos … (+1)
 
 func _probar_ciudad() -> void:
 	_titulo("LA CIUDAD (terrenos, negocios, vecinos, permisos y seguridad)")

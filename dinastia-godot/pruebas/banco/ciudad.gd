@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/ciudad_p1.gd"
-## [Banco · grupo «ciudad» · capa 2/2] Generado al partir el banco por grupos (26-10).
+## [Capa 2/2 de `ciudad.gd`] _probar_optimizacion, _probar_no_atravesar_paredes
 
 ## ETAPA 3: la optimización por código no cambia lo que se ve y lo elegido en
 ## gráficos se guarda.

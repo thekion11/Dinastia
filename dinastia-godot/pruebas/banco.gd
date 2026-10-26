@@ -194,7 +194,7 @@ const ARCHIVOS := {
 
 var _tiempos: Array = []
 
-## Segundos medidos (15-10-2026) de las secciones lentas; el resto cuenta 0,4 s.
+## Segundos medidos (ver COSTES, 26-10) de las secciones lentas; el resto cuenta 0,4 s.
 ## Si una sección se alarga mucho, actualizar con el resumen TIEMPOS del final.
 ## MINI BANCOS (20-10-2026): grupos de secciones por situación, para probar
 ## solo lo que se tocó en segundos (`herramientas/mini_banco.sh <grupo>`, o
@@ -219,10 +219,29 @@ const GRUPOS := {
 }
 
 const COSTES := {
-	"_probar_guardado_seguro": 1.5, "_probar_fisica_motor": 8.0, "_probar_faltas_puntos": 1.5, "_probar_vallas_led": 0.5, "_probar_palabras_prohibidas": 1.0, "_probar_capitan_votado": 2.0, "_probar_glifos_idiomas": 0.5, "_probar_nombres_repetidos": 2.0, "_probar_marcas_y_escudos": 4.0, "_probar_faros_coches": 0.3, "_probar_modulos": 1.0, "_probar_piel_por_pais": 0.5, "_probar_ola_grada": 0.3, "_probar_dificultad_cpu": 1.5, "_probar_motor_libre": 27.3, "_probar_logros": 16.4, "_probar_cantera": 12.5,
-	"_probar_selecciones": 9.1, "_probar_temporadas": 8.7, "_probar_finanzas": 5.1,
-	"_probar_ciudad_b7": 4.2, "_probar_copa": 3.6, "_probar_cesiones": 3.2,
-	"_probar_aspecto_y_audio": 3.1, "_probar_pulso_de_roles": 3.1, "_probar_estadio_b6": 2.6,
+	## 26-10: TODOS los que pasan de 1 s, medidos en el banco entero (4 partes, máquina cargada:
+	## lo que cuenta es la proporción). Con los de antes (15-10) una parte acababa 40 s después
+	## que otra; con estos, el reparto sale parejo. Rehacer con el resumen TIEMPOS si se desequilibra.
+	"_probar_motor_libre": 137.9, "_probar_cantera": 97.5, "_probar_logros": 95.3, "_probar_selecciones": 83.7,
+	"_probar_finanzas": 62.9, "_probar_pulso_de_roles": 58.6, "_probar_roles_y_federacion": 46.2,
+	"_probar_temporadas": 38.9, "_probar_guardado": 29.5, "_probar_arbitros": 29.2, "_probar_fisica_motor": 28.6,
+	"_probar_cubierta_nombres": 27.1, "_probar_base_ficticia": 26.2, "_probar_partidos": 23.0, "_probar_copa": 23.0,
+	"_probar_continental": 20.7, "_probar_cesiones": 18.6, "_probar_dificultad_cpu": 17.4,
+	"_probar_ideas_directiva_calendario_y_rivalidades": 15.0, "_probar_faltas_puntos": 14.4, "_probar_ciudad_b7": 13.9,
+	"_probar_ideas_eventos_de_despacho": 13.3, "_probar_mundo": 12.7, "_probar_ideas_premios_y_memoria_del_club": 11.7,
+	"_probar_desafios": 11.2, "_probar_documental": 10.5, "_probar_fundar_club": 9.1, "_probar_ideas_lote_b4": 8.8,
+	"_probar_ascensos": 6.9, "_probar_ojeadores": 6.8, "_probar_habilidades_en_resultados": 6.8,
+	"_probar_modos_simulacion": 6.5, "_probar_ideas_lote_a2": 6.1, "_probar_ideas_lote_a3": 6.1,
+	"_probar_ideas_lote_a1": 5.4, "_probar_repetibilidad": 4.8, "_probar_pie_habil": 4.4,
+	"_probar_palabras_prohibidas": 3.8, "_probar_aspecto_y_audio": 3.8, "_probar_transmision_y_estadisticas": 3.4,
+	"_probar_marcas_y_escudos": 3.4, "_probar_banquillo": 3.2, "_probar_historia_c4": 3.0, "_probar_estadio_b6": 3.0,
+	"_probar_tanda_c": 2.9, "_probar_eventos_nuevos": 2.7, "_probar_guardado_seguro": 2.7,
+	"_probar_eras_y_precios": 2.6, "_probar_estadio": 2.6, "_probar_puente3d": 2.6, "_probar_directiva": 2.6,
+	"_probar_carga_de_ui": 2.5, "_probar_ciudad_animo": 2.3, "_probar_consejeros": 2.3, "_probar_calendario": 2.3,
+	"_probar_tunel_navegable": 2.2, "_probar_porque_moral": 2.1, "_probar_ideas_lote_a4": 2.1, "_probar_mercado": 2.0,
+	"_probar_editor": 1.9, "_probar_notas": 1.9, "_probar_reales": 1.8, "_probar_vender": 1.5, "_probar_banco": 1.4,
+	"_probar_ideas_lote_b2": 1.4, "_probar_previa": 1.3, "_probar_staff": 1.3, "_probar_tema_y_ortografia": 1.3,
+	"_probar_auspicio": 1.3, "_probar_sancion_dt": 1.2, "_probar_negociacion": 1.1, "_probar_capitan_votado": 1.0,
 	## Coste mínimo a propósito: va la última en el reparto y no mueve a las demás
 	## (`_probar_motor_libre` depende del estado que dejan las secciones previas de
 	## su proceso; ver el HALLAZGO en CLAUDE.md). Mide ~0,5 s.
@@ -263,7 +282,7 @@ func _cerrar() -> void:
 		suma += int(tt[0])
 	_linea("")
 	_linea("TIEMPOS: %d secciones, %.1f s" % [_tiempos.size(), suma / 1000.0])
-	for tt: Array in _tiempos.slice(0, 12):
+	for tt: Array in _tiempos.slice(0, 40):
 		_linea("  %6.1f s  %s" % [int(tt[0]) / 1000.0, String(tt[1])])
 	_linea("")
 	if _fallos.is_empty():

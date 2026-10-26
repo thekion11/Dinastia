@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p4.gd"
-## [Banco · grupo «varios» · capa 5/10] Generado al partir el banco por grupos (26-10).
+## [Capa 5/10 de `varios.gd`] _probar_analitica_y_academias, _probar_habilidades, _probar_carrera_por_dentro, _probar_editor, _probar_marca, _probar_tribuna_real … (+1)
 
 func _probar_analitica_y_academias() -> void:
 	_titulo("DEPARTAMENTO DE DATOS Y ACADEMIAS INTERNACIONALES")

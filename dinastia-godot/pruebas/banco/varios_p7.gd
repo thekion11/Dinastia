@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p6.gd"
-## [Banco · grupo «varios» · capa 7/10] Generado al partir el banco por grupos (26-10).
+## [Capa 7/10 de `varios.gd`] _probar_academia, _probar_modos_simulacion, _probar_presets_exportacion, _probar_eventos_nuevos, _probar_entrevistas, _probar_coherencia_c1
 
 ## LA ACADEMIA DE 10 A 16 AÑOS (25-9-2026). Cada regla de `Academia` con un
 ## número: formar bien se nota, comer mal se nota, el colegio se nota, y lo que

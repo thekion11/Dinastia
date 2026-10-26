@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p1.gd"
-## [Banco · grupo «partido» · capa 2/6] Generado al partir el banco por grupos (26-10).
+## [Capa 2/6 de `partido.gd`] _probar_tactica_en_movimiento, _motor_de_prueba, _probar_dificultad_cpu, _probar_faltas_puntos
 
 
 ## COMPARAR TACTICAS DE VERDAD (17-9-2026), sin necesitar pantalla: llama

@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/base.gd"
-## [Banco · grupo «ideas» · capa 1/2] Generado al partir el banco por grupos (26-10).
+## [Capa 1/2 de `ideas.gd`] _probar_ideas_del_documento, _probar_ideas_instalaciones_y_marca, _probar_ideas_personas_y_negocios, _probar_ideas_eventos_de_despacho, _probar_ideas_premios_y_memoria_del_club, _probar_ideas_roles_y_carrera … (+1)
 
 
 const _IDEAS_A1 := preload("res://pruebas/ideas_a1.gd")

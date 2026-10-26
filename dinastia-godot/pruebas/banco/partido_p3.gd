@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Banco · grupo «partido» · capa 3/6] Generado al partir el banco por grupos (26-10).
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")

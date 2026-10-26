@@ -54,6 +54,20 @@ func _probar() -> void:
 	for t: int in [10, 13, 16, 22, 36]:
 		_comprobar(is_equal_approx(dj.get_height(t), ThemeDB.fallback_font.get_height(t)),
 			"a %d px la línea mide lo mismo con la cadena de respaldo (%.1f / %.1f)" % [t, dj.get_height(t), ThemeDB.fallback_font.get_height(t)])
+	## Serifs: si el sistema no tiene ninguna de la lista, entra la propia.
+	var sr := Fuentes.serif(["Fuente Que No Existe Serif"], "Cinzel", 700)
+	_comprobar(sr is FontVariation and ((sr as FontVariation).base_font as FontFile).get_font_name() == "Cinzel",
+		"sin las serifs del sistema la intro usa Cinzel propia")
+	var sg := Fuentes.serif(["Fuente Que No Existe Serif"], "Gelasio", 400, true)
+	_comprobar(sg is FontVariation and ((sg as FontVariation).base_font as FontFile).get_font_name() == "Gelasio",
+		"sin Georgia el selector de idioma usa Gelasio propia")
+	for n: String in ["Cinzel", "Gelasio"]:
+		var fs := Fuentes.propia(n)
+		falta = ""
+		for c in LETRAS:
+			if not fs.has_char(c.unicode_at(0)):
+				falta += c
+		_comprobar(falta == "", "%s tiene las letras de los 9 idiomas (faltan: «%s»)" % [n, falta])
 	# --- banderas ---
 	var faltan: Array = []
 	for cod: String in Banderas.ISO:

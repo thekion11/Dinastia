@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/base.gd"
-## [Banco · grupo «estadio» · capa 1/2] Generado al partir el banco por grupos (26-10).
+## [Capa 1/2 de `estadio.gd`] _probar_pantalla_y_vallas, _probar_estadio, _probar_ola_grada, _probar_vallas_led, _probar_guinos_estadio, _probar_estadio_b6 … (+4)
 
 ## LA PANTALLA GIGANTE Y LAS VALLAS LED (23-9-2026). Lo que se comprueba aquí
 ## es la LÓGICA, sin abrir ventana: la parte visual la verifica

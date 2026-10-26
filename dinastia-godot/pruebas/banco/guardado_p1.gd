@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/base.gd"
-## [Banco · grupo «guardado» · capa 1/3] Generado al partir el banco por grupos (26-10).
+## [Capa 1/3 de `guardado.gd`] _probar_repetibilidad, _probar_guardado_seguro, _comprobar_estado_cargado
 
 func _probar_repetibilidad() -> void:
 	_titulo("REPETIBILIDAD (lo que el HTML no puede hacer)")

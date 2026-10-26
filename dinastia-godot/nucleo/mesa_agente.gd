@@ -22,6 +22,11 @@ extends RefCounted
 ##
 ## El trato cerrado se aplica a ESCALA con `Cantera.resolver_agente(op, f)`:
 ## una mejora pactada al 60 % sube el sueldo un 18 % y no un 30 %.
+##
+## TEXTOS (s3, 26-10-2026): todo lo que dice la mesa sale YA traducido, de
+## plantillas fijas traducidas con `Idiomas.t` y luego con sus cifras. Antes devolvía la frase
+## castellana con las cifras dentro y la interfaz la traducía entera con
+## patrones de regex: con cualquier cambio de redacción se quedaba en castellano.
 
 const PERFIL := {
 	"tiburon": {"minimo": 74, "paciencia": 3, "farol": 0.28, "emoji": "🦈"},
@@ -69,7 +74,7 @@ func emoji() -> String:
 	return String(PERFIL[perfil]["emoji"])
 
 func texto_farol() -> String:
-	return String(FAROLES.get(tipo, "Tirarte un farol"))
+	return Idiomas.t(String(FAROLES.get(tipo, "Tirarte un farol")))
 
 ## Las tres ofertas que se le pueden poner delante, en % de su exigencia.
 func ofertas() -> Array[int]:
@@ -92,18 +97,18 @@ func regatear(oferta: int) -> String:
 		## que firme ya; si no, parte la diferencia.
 		var cerca := 1.0 - float(pide - oferta) / maxf(1.0, float(pide - minimo) + 1.0)
 		if oferta >= pide - 4 or _rng.randf() < 0.35 + 0.5 * cerca:
-			return _cerrar(oferta, "«Trato hecho.» Te da la mano sin soltarla del todo.")
+			return _cerrar(oferta, Idiomas.t("«Trato hecho.» Te da la mano sin soltarla del todo."))
 		pide = maxi(minimo, int(round(float(pide + oferta) / 2.0)))
-		ultima = "«Ni para ti ni para mí: %d %%.» %s" % [pide, senal()]
+		ultima = Idiomas.t("«Ni para ti ni para mí: %d %%.» %s") % [pide, senal()]
 	else:
 		var hueco := minimo - oferta
 		if hueco > 28:
 			paciencia -= 1
 			pide = maxi(minimo, pide - _rng.randi_range(1, 3))
-			ultima = "«¿Me estás tomando el pelo?» Se le endurece la cara. %s" % senal()
+			ultima = Idiomas.t("«¿Me estás tomando el pelo?» Se le endurece la cara. %s") % senal()
 		else:
 			pide = maxi(minimo, pide - _rng.randi_range(4, 9))
-			ultima = "«Así no.» Baja a %d %%. %s" % [pide, senal()]
+			ultima = Idiomas.t("«Así no.» Baja a %d %%. %s") % [pide, senal()]
 	_revisar_paciencia()
 	return ultima
 
@@ -117,12 +122,12 @@ func farol() -> String:
 	if _rng.randf() < p:
 		minimo = maxi(15, minimo - 20)
 		pide = maxi(minimo, pide - 20)
-		ultima = "Se le borra la sonrisa. «Bueno, bueno... hablemos.» Baja a %d %%. %s" % [pide, senal()]
+		ultima = Idiomas.t("Se le borra la sonrisa. «Bueno, bueno... hablemos.» Baja a %d %%. %s") % [pide, senal()]
 	else:
 		paciencia -= 2
 		minimo = mini(100, minimo + 10)
 		pide = maxi(pide, minimo)
-		ultima = "Se ríe en tu cara. «Eso no te lo crees ni tú.» %s" % senal()
+		ultima = Idiomas.t("Se ríe en tu cara. «Eso no te lo crees ni tú.» %s") % senal()
 	_revisar_paciencia()
 	return ultima
 
@@ -130,14 +135,14 @@ func farol() -> String:
 func ceder() -> String:
 	if estado != "abierta":
 		return ultima
-	return _cerrar(pide, "«Sabía que nos íbamos a entender.»")
+	return _cerrar(pide, Idiomas.t("«Sabía que nos íbamos a entender.»"))
 
 ## Te levantas tú: es un no.
 func plantarse() -> String:
 	if estado != "abierta":
 		return ultima
 	estado = "plantado"
-	ultima = "Te levantas. %s recoge sus papeles sin mirarte." % agente
+	ultima = Idiomas.t("Te levantas. %s recoge sus papeles sin mirarte.") % Idiomas.t(agente)
 	return ultima
 
 ## Lo que se le nota. Con margen de sobra sonríe; sin margen repite la cifra.
@@ -147,11 +152,11 @@ func senal() -> String:
 	var nivel := 0 if margen <= 6 else (1 if margen <= 20 else 2)
 	if perfil == "tiburon" and _rng.randf() < 0.33:
 		nivel = 2 - nivel
-	var s: String = ["(Repite la cifra sin pestañear: ya no tiene margen.)",
+	var s := Idiomas.t(["(Repite la cifra sin pestañear: ya no tiene margen.)",
 		"(Duda y se acomoda la corbata.)",
-		"(Se le escapa una media sonrisa: tiene sitio.)"][nivel]
+		"(Se le escapa una media sonrisa: tiene sitio.)"][nivel])
 	if paciencia == 1:
-		s += " (Mira el reloj.)"
+		s += " " + Idiomas.t("(Mira el reloj.)")
 	return s
 
 ## El % pactado en tanto por uno (0..1), o -1 si no hubo trato.
@@ -162,13 +167,13 @@ func fraccion() -> float:
 func detalle(pct: int) -> String:
 	match tipo:
 		"mejora":
-			return "+%d %% de sueldo" % int(round(30.0 * float(pct) / 100.0))
+			return Idiomas.t("+%d %% de sueldo") % int(round(30.0 * float(pct) / 100.0))
 		"comision":
-			return "%d %% de la comisión" % pct
+			return Idiomas.t("%d %% de la comisión") % pct
 		"canterano":
-			return "su chico, con el %d %% del sueldo que pide" % pct
+			return Idiomas.t("su chico, con el %d %% del sueldo que pide") % pct
 		_:
-			return "exclusiva con un compromiso del %d %%" % pct
+			return Idiomas.t("exclusiva con un compromiso del %d %%") % pct
 
 func _cerrar(pct: int, frase: String) -> String:
 	estado = "acuerdo"
@@ -179,15 +184,15 @@ func _cerrar(pct: int, frase: String) -> String:
 func _revisar_paciencia() -> void:
 	if paciencia <= 0 and estado == "abierta":
 		estado = "se_fue"
-		ultima = "%s se levanta de la mesa. «Cuando quieras hablar en serio, ya sabes dónde estoy.»" % agente
+		ultima = Idiomas.t("%s se levanta de la mesa. «Cuando quieras hablar en serio, ya sabes dónde estoy.»") % Idiomas.t(agente)
 
 func _saludo() -> String:
 	match perfil:
 		"tiburon":
-			return "Se sienta sin quitarse las gafas de sol. «No vine a perder el tiempo.»"
+			return Idiomas.t("Se sienta sin quitarse las gafas de sol. «No vine a perder el tiempo.»")
 		"mediatico":
-			return "Deja el móvil grabando encima de la mesa. «Hablemos, que la prensa espera.»"
+			return Idiomas.t("Deja el móvil grabando encima de la mesa. «Hablemos, que la prensa espera.»")
 		"formador":
-			return "Trae una carpeta llena de informes. «Lo mío es cuidar a los chicos.»"
+			return Idiomas.t("Trae una carpeta llena de informes. «Lo mío es cuidar a los chicos.»")
 		_:
-			return "Pide un café y espera a que hables tú."
+			return Idiomas.t("Pide un café y espera a que hables tú.")

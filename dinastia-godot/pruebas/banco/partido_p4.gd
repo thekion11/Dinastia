@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p3.gd"
-## [Banco · grupo «partido» · capa 4/6] Generado al partir el banco por grupos (26-10).
+## [Capa 4/6 de `partido.gd`] _probar_tanda_c_1
 
 
 ## [Capa 21/27 de `banco.gd`] _probar_tanda_c_1
