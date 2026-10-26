@@ -276,7 +276,6 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] 53 escenas de prueba sin ninguna mención: decidir cuáles se borran (§0). La fase 0 dio prueba a 30 módulos: repasar si queda alguno de `visor/`/`nucleo/` sin prueba directa.
 - [ ] Colisiones de la ciudad fuera del club (peatones, mobiliario, edificios): revisar como en `ColisionClub`.
 - [ ] 506 frases visibles sin traducir en 8 idiomas (`docs/05_referencia/textos_sin_traducir.txt`); la prueba de paridad debe exigir 0.
-- [ ] Pruebas visuales automáticas (comparación de imágenes) en vez de capturas manuales; `MotorLibre` es prototipo (el juego usa `MotorJugable`).
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
 - [ ] Guardado: aviso al jugador si el archivo está dañado y ofrecer la copia; topes de memoria en historiales (M-400).
 - [ ] 16 `print` sueltos en código del juego (auditoría 3, §2): quitarlos o pasarlos a un registro con nivel.
@@ -294,7 +293,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 |---|---|---|---|---|
 | M-403 | P1 | PARCIAL | 8 módulos de `nucleo/` sin referencia en pruebas:… | Logros y Negociación cubiertos de forma indirecta (`_probar_logros`, `_probar_negociacion`); los otros 6 no |
 | M-404 | P1 | PENDIENTE | 27 módulos de `visor/` sin referencia: `Ambience`, `Autopista`,… | solo `CameraRig` aparece en el banco |
-| M-405 | P1 | PENDIENTE | Pruebas visuales manuales (242 capturas) | sin comparación de imágenes |
 | M-379 | P2 | PENDIENTE | 64 funciones > 120 líneas (Q-01): `Sonido._sintetizar` 1.000,… | funciones largas sin partir |
 | M-380 | P2 | PENDIENTE | `pruebas/banco.gd` 8.029 líneas | `banco.gd` con 8.454 líneas |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
