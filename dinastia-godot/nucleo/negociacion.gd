@@ -110,6 +110,17 @@ func poner_intercambio(j2: Jugador) -> void:
 ## Lo que el club vendedor percibe de verdad que le estás ofreciendo -
 ## `valorPercibido()` del HTML: el dinero a plazos vale menos, los bonos
 ## todavía menos, y lo opaco vale más porque no paga comisión ni impuestos.
+## ¿Hay un favor del agente de esta semana (cita en persona, fase 4)?
+func con_favor_agente() -> bool:
+	var m := _mundo()
+	return m != null and m.citas != null and m.citas.favor_agente == m.anio * 60 + m.semana
+
+func descuento_persona() -> float:
+	return 0.95 if con_favor_agente() else 1.0
+
+func bono_persona() -> float:
+	return 0.10 if con_favor_agente() else 0.0
+
 func valor_percibido() -> int:
 	var v := float(fijo) + float(cuotas) * 0.82 + float(bonos) * 0.35 + (float(pct) / 100.0) * float(jugador.valor) * 0.45 + float(opaco) * 1.2
 	if intercambio != null:
@@ -146,7 +157,9 @@ func enviar_oferta() -> Dictionary:
 		return {"tipo": "sin_caja", "hace_falta": inmediato}
 
 	var percibido := valor_percibido()
-	var ratio := float(percibido) / float(maxi(1, pedido))
+	## Fase 4 (26-10): el favor del agente (cita en persona esta semana) abarata lo que
+	## pide el club un 5 % y sube 10 puntos la aceptación (`Citas.favor_agente`).
+	var ratio := float(percibido) / (float(maxi(1, pedido)) * descuento_persona())
 	var confianza_agente := 0.0
 	if m.cantera != null:
 		var nombre_ag := String(m.cantera.agente_de(jugador).get("nombre", ""))
@@ -155,7 +168,7 @@ func enviar_oferta() -> Dictionary:
 	## «Negociador» y un 6% por «Icono», y no la llamaba nadie: los dos nodos que
 	## existen para negociar mejor no negociaban nada.
 	var perks := m.entrenamiento.bono_agentes() if m.entrenamiento != null else 0.0
-	var umbral := 0.97 - confianza_agente - perks - float(ronda - 1) * 0.04
+	var umbral := 0.97 - confianza_agente - perks - float(ronda - 1) * 0.04 - bono_persona()
 
 	if acuerdo_club or ratio >= umbral:
 		var primera_vez := not acuerdo_club

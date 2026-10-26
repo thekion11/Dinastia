@@ -58,6 +58,18 @@ func _probar() -> void:
 		if x["tipo"] == "agente":
 			m.citas.resolver(m, String(x["id"]), 0)
 	_comprobar(m.citas.favor_agente == m.anio * 60 + m.semana, "escuchar al agente deja un favor pendiente")
+	## El favor abarata la próxima mesa (bloque 3): −5 % en lo pedido y +10 puntos de aceptación.
+	var otro: Club = null
+	for cl: Club in m.ligas[0].clubes:
+		if cl != c and not cl.plantilla.is_empty():
+			otro = cl
+			break
+	if otro != null:
+		var neg := Negociacion.new(m, otro.plantilla[0])
+		_comprobar(neg.con_favor_agente() and is_equal_approx(neg.descuento_persona(), 0.95) and is_equal_approx(neg.bono_persona(), 0.10), "con el favor, la mesa pide un 5 % menos y acepta 10 puntos más")
+		m.citas.favor_agente = -1
+		_comprobar(not neg.con_favor_agente() and is_equal_approx(neg.descuento_persona(), 1.0), "sin favor, la mesa de siempre")
+		m.citas.favor_agente = m.anio * 60 + m.semana
 	## Caducan el domingo sin castigo.
 	m.semana = sem_voto + 1
 	var saldo := c.saldo
