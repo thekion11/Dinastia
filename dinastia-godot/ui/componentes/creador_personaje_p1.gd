@@ -1,5 +1,5 @@
 extends Control
-## [Capa 1/2 de `creador_personaje.gd`] abrir, la hoja de Conjuntos y los botones.
+## [Capa 1/2 de `creador_personaje.gd`] abrir, aspecto, _hay_cambios, _hoja_conjuntos, _aleatorio, _deshacer … (+4)
 
 ## EL CREADOR DE PERSONAJE DEL MENÚ (26-9-2026; rehecho el 25-10-2026 sobre las
 ## piezas de la etapa de entrada). Pedido del usuario: *"ve por el modelo de

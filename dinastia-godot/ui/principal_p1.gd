@@ -349,37 +349,17 @@ var _registro: RichTextLabel
 ## El ancho mínimo sale del largo del rótulo: en un `HBoxContainer` dentro de
 ## un `ScrollContainer`, un botón sin ancho propio colapsa a cero y el carril
 ## sale como una fila de rectángulos vacíos -ya pasó una vez hoy-.
-## LOS ESTILOS DE MENÚ (10-9-2026). El usuario los pidió "compatibles y
-## modulares": el mismo menú, la misma navegación y los mismos chips, con
-## tres vestidos distintos. Como TODO el menú pasa por `_pildora()`, cambiar
-## de estilo es cambiar una constante y repintar -no hay tres menús, hay uno
-## con tres pieles-.
-const ESTILOS_MENU := [
-	["pildora", "Píldoras redondeadas"],
-	["compacto", "Compacto (más aire)"],
-	["barra", "Barra clásica (recta)"],
-]
-var _estilo_menu: String = "pildora"
-
-## EL MENÚ CENTRAL CAMBIA DE ESTÉTICA CADA 10 MINUTOS (29-9-2026, mapa de
-## metas 24). Pedido: que de forma nativa vaya rotando entre sus diseños. Cada
-## diseño junta lo que ya se elegía por separado en Ajustes → Interfaz:
-## [paleta, estilo del menú, forma de las tarjetas, fondo]. Cuenta tiempo de
-## juego (el temporizador se para si el juego se pausa) y se puede apagar.
-const DISENOS_CENTRAL := [
-	["bosque", "pildora", "redonda", "nocturna"],
-	["esports", "barra", "recta", "neon"],
-	["ejecutivo", "pildora", "suave", "trofeo"],
-	["marino", "compacto", "marcada", "tunel"],
-	["transmision", "barra", "redonda", "tifo"],
-	["vino", "pildora", "suave", "vestuario"],
-	["cibernetico", "compacto", "recta", "ciudad"],
-	["tierra", "pildora", "redonda", "amanecer"],
-]
-const ROTAR_CADA := 600.0
-var _rotar_diseno := true
-var _diseno_i := 0
-var _reloj_diseno: Timer
+## ESTILOS DEL MENÚ (fase 0, paso 3): los tres vestidos, las píldoras y la
+## rotación de estética viven en `EstilosMenu` (`ui/menu/estilos_menu.gd`).
+## Los puentes conservan `_estilo_menu` y `_rotar_diseno` para Ajustes,
+## `preferencias.gd` y las capas que pintan píldoras.
+var _estilos := EstilosMenu.new(self)
+var _estilo_menu: String:
+	get: return _estilos.estilo
+	set(v): _estilos.estilo = v
+var _rotar_diseno: bool:
+	get: return _estilos.rotar
+	set(v): _estilos.rotar = v
 
 ## EL MENÚ COMO PÁGINAS. El usuario lo pidió así: "debe poder moverse hacia
 ## los lados como si fueran páginas... es nuestro centro de mando". Cambiar

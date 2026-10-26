@@ -1,6 +1,6 @@
 class_name Principal
 extends "res://ui/principal_p17.gd"
-## [Capa 17/17 de `principal.gd`] _input, _pintar_identidad, _al_paso_nuevo, _portada_nueva
+## [Capa 17/17 de `principal.gd`] _ready, _capa_modal_encima, _input, _pintar_identidad, _al_paso_nuevo, _portada_nueva
 
 ## Los hijos que ya estaban al terminar `_ready()` (el menú, el riel, el reloj…).
 ## Todo Control a pantalla completa que se añada DESPUÉS y pare el ratón es una

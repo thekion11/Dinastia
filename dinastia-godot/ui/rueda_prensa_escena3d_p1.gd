@@ -1,5 +1,5 @@
 extends Node3D
-## [Capa 1/3 de `rueda_prensa_escena3d.gd`] _montar_suelo, _montar_sala, _montar_periodistas, _montar_fondo_sponsors, _montar_banderas, _montar_luces
+## [Capa 1/4 de `rueda_prensa_escena3d.gd`] _montar_suelo, _montar_sala, _montar_periodistas, _montar_fondo_sponsors, _montar_banderas, _montar_luces
 
 ## EL PLATÓ DE LA RUEDA DE PRENSA, en 3D de verdad.
 ##

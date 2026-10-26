@@ -1,6 +1,6 @@
 class_name PantallaEntradaCampeonato
 extends "res://ui/entrada/entrada_campeonato_p1.gd"
-## [Capa 2/2 de `entrada_campeonato.gd`] ETAPA 5 DEL FLUJO: ENTRADA AL CAMPEONATO (MEGAPLAN, fase 1).
+## [Capa 2/2 de `entrada_campeonato.gd`] configurar, _ready, entrada_actual, elegir_modo, elegir_club, _construir … (+12)
 ## Pantalla completa, obligatoria y con confirmación: explica las dos maneras de meter tu club recién
 ## creado en la liga -reemplazar un club existente o pagar a la confederación- con las consecuencias en
 ## CIFRAS REALES de tu país (las calcula `EntradaCampeonato.previsualizar`, la misma función que luego

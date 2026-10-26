@@ -1,5 +1,5 @@
 extends RefCounted
-## [Capa 1/3 de `pantalla_cantera.gd`] _init, _pintar_palmares_mundial, _nacionalizar, _pintar_seleccion, _pintar_fondos, _pintar_mapa_del_talento … (+3)
+## [Capa 1/3 de `pantalla_cantera.gd`] _init, _pintar_palmares_mundial, _nacionalizar, _pintar_seleccion, _pintar_fondos, _pintar_mapa_del_talento … (+2)
 
 ## CANTERA Y CONTRATOS: selecciones, fondos, el mapa del talento, la cantera, las agencias, los contratos y el comparador.
 ##

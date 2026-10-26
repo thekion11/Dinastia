@@ -1,5 +1,5 @@
 extends "res://ui/inicio_p1.gd"
-## [Capa 2/3 de `inicio.gd`] _guardar_ajuste, _degradado, _pintar_banner, _actualizar_picker … (+11)
+## [Capa 2/3 de `inicio.gd`] _guardar_ajuste, _degradado, _pintar_banner, _actualizar_picker, _clave_tinte, _tenir_particulas … (+11)
 
 func _guardar_ajuste(k: String) -> void:
 	var c := ConfigFile.new()

@@ -1,5 +1,5 @@
 extends Control
-## [Capa 1/3 de `partido_vivo.gd`] _escribir, _limpiar, _en_palco, _texto, _mi_once, _arengar … (+8)
+## [Capa 1/3 de `partido_vivo.gd`] _escribir, _traducir_tramos, _limpiar, _en_palco, _texto, _mi_once … (+9)
 
 ## El partido, en directo y con el entrenador dentro.
 ##

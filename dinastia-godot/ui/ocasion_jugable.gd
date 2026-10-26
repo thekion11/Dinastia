@@ -1,6 +1,6 @@
 class_name OcasionJugable
 extends "res://ui/ocasion_jugable_p1.gd"
-## [Capa 2/2 de `ocasion_jugable.gd`] la pantalla: franjas de cine, botones con porcentajes, cuenta atrás y aviso del resultado.
+## [Capa 2/2 de `ocasion_jugable.gd`] _construir, _franjas_visibles, _pintar, _avisar
 
 # ---------------------------------------------------------------------------
 #  LA PANTALLA

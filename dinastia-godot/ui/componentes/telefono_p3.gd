@@ -1,5 +1,5 @@
 extends "res://ui/componentes/telefono_p2.gd"
-## [Capa 3/4 de `telefono.gd`] atras, _unhandled_input, _tras_abrir, enfocar, _estilo_aviso, animar_pop
+## [Capa 3/4 de `telefono.gd`] restaurar_marcas, _unhandled_input, atras, _tras_abrir, enfocar, _estilo_aviso … (+1)
 
 ## PULIDO DEL MÓVIL (25-10-2026, paquete uite):
 ##   - TECLADO Y MANDO: Esc / B da un paso atrás (del chat a Mensajes, de una pestaña de Tribuna a su

@@ -1,5 +1,5 @@
 extends "res://ui/rueda_prensa_escena3d_p2.gd"
-## [Capa 3/4 de `rueda_prensa_escena3d.gd`] LA SALA LLENA (26-10, pedido del dueño
+## [Capa 3/4 de `rueda_prensa_escena3d.gd`] _montar_periodistas, _mat, _rumbo, _montar_persona, _montar_un_periodista, _montar_camara_tv … (+4)
 ## tras compararla con Football Manager y EA FC).
 ##
 ## Lo que más se notaba que faltaba frente a la competencia:
