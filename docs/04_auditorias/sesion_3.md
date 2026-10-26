@@ -276,3 +276,19 @@ Prueba `pruebas/ideas/s3_primera_hora.gd` (5 comprobaciones).
   chips del bloque anterior y ninguno marcado. `_chips_del_carril` enseña los del hub con la pestaña marcada.
 - Queda para la sesión principal: `grab_focus` diferido en `ui/entrada/*`.
 Las referencias de las pruebas visuales se rehicieron (el panel de objetivos ahora sale plegado).
+
+## 12. Presupuesto de clics y atajos del menú central (plan §11 filas 1-2)
+
+`ui/componentes/atajos_centrales.gd` (`AtajosCentrales`): las diez tareas más frecuentes a una tecla —1 Inicio,
+2 Mi plantel, 3 Táctica, 4 Entrenar, 5 Mercado, 6 Finanzas, 7 Calendario, 8 Correo, 9 Contratos, 0 Sala de prensa—,
+N pasa un día, F3 lleva al buscador y F5 guarda. Son acciones del InputMap (se registran en `_preparar_mando`), salen
+en la tabla de atajos de Ajustes con la tecla que tienen AHORA y se reasignan en Ajustes → Accesibilidad con las
+demás teclas de la interfaz (`TeclasInterfaz.acciones()`). No hacen nada mientras se escribe en un campo de texto ni
+con una capa encima o el panel lateral abierto (las mismas salidas de `_input`). 13 textos × 8 idiomas.
+
+Prueba `pruebas/ideas/s3_atajos_clics.gd` (24 comprobaciones): las 10 tareas a ≤ 2 clics desde el inicio (Correo
+e Inicio a 1; el resto a 2: bloque o riel + chip, o hub + pestaña) y cada tecla lleva a su pestaña de verdad; N, F3,
+«2» escribiendo en el buscador y un atajo reasignado a F8. Honestidad: los clics se cuentan con la ESTRUCTURA de
+los menús (qué chip está en qué bloque o hub), no pulsando el ratón; medir a personas es §10.
+
+Queda de la fila 2: la vista «densa» de tablas.
