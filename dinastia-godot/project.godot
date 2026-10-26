@@ -33,6 +33,8 @@ Sonido="*res://nucleo/sonido.gd"
 Musica="*res://nucleo/musica.gd"
 Idiomas="*res://nucleo/idiomas.gd"
 Cierre="*res://nucleo/cierre.gd"
+; La textura de borde suave de Antialiased Line2D (MIT, addons/antialiased_line2d/, ui/componentes/trazo_suave.gd).
+AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
 
 [input_devices]
 

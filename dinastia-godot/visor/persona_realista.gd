@@ -47,8 +47,9 @@ const PIELES := {
 static var _escena: PackedScene
 static var _mats := {}
 
+## Si están los .glb de MakeHuman (CC0, `PersonaMH`), se usa ese; si no, el escaneo.
 static func disponible() -> bool:
-	return ResourceLoader.exists(MODELO) and ResourceLoader.exists(SHADER)
+	return PersonaMH.disponible() or (ResourceLoader.exists(MODELO) and ResourceLoader.exists(SHADER))
 
 ## El aspecto completo: el que se pide, y lo que falte, sacado de la semilla.
 static func aspecto(semilla: String, pedido: Dictionary = {}) -> Dictionary:
@@ -67,7 +68,11 @@ static func aspecto(semilla: String, pedido: Dictionary = {}) -> Dictionary:
 
 ## Instancia la persona con ese aspecto, con los pies en y=0 y mirando a +Z.
 static func crear(asp: Dictionary) -> Node3D:
-	if not disponible():
+	if PersonaMH.disponible():
+		var mh := PersonaMH.crear(asp)
+		if mh != null:
+			return mh
+	if not (ResourceLoader.exists(MODELO) and ResourceLoader.exists(SHADER)):
 		return null
 	if _escena == null:
 		_escena = load(MODELO)

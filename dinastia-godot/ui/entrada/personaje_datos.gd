@@ -71,8 +71,11 @@ static func paises() -> Dictionary:
 	var t: Variant = Datos.tabla("PAIS_SELECCION")
 	return t if t is Dictionary and not (t as Dictionary).is_empty() else {"CHI": "Chile"}
 
+## Los que no están en la tabla de selecciones salen de `Paises` (CLDR, 87 países).
 static func nombre_pais(codigo: String) -> String:
-	return Idiomas.t(String(paises().get(codigo, codigo)))
+	if paises().has(codigo):
+		return Idiomas.t(String(paises()[codigo]))
+	return Paises.nombre(codigo)
 
 static func _par(lista: Array, clave: String, cual: int) -> String:
 	for e: Array in lista:

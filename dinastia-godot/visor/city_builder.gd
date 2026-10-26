@@ -75,32 +75,43 @@ func _distritos() -> void:
 					_manzana(c, comercial, naves, toldos, rng)
 		_cartel(Vector3(origen.x - 6.0, 0, origen.y - 6.0), String(d["nombre"]), false)
 
-## La casa grande del barrio (`complejo_residencial.glb`), medida y centrada
-## dentro de la finca, con un margen de jardín hasta el muro y el camino de
-## entrada desde el portón.
+## La casa grande del barrio: un complejo residencial de cuatro bloques de
+## KayKit City Builder Bits (CC0, `assets/ciudad/kaykit/LICENSE.txt`), centrado
+## en la finca con jardín hasta el muro y el camino de entrada desde el portón.
+## Antes era `complejo_residencial.glb` (Sketchfab, sin licencia en el zip y con
+## texturas que eran fotos de redes sociales): no se podía vender (26-10-2026).
+## Los bloques NO se estiran a la finca: miden en metros lo que mide un bloque de
+## pisos (~24 m de lado) y se reparten en dos filas, el más alto al fondo (sur:
+## el portón está al norte) y todos con la fachada mirando al portón.
 func _casa_gigante(centro: Vector3, tam: Vector2) -> void:
-	var esc := load(RUTA_CASA_GIGANTE)
-	if esc == null or not (esc is PackedScene):
-		return
-	var n: Node3D = (esc as PackedScene).instantiate()
 	var raiz := Node3D.new()
 	raiz.name = "CasaGigante"
 	add_child(raiz)
-	raiz.add_child(n)
-	var caja := _caja_de(n)
-	## El origen del modelo no está en su centro ni en su base: se corrige.
-	n.position = -Vector3(caja.position.x + caja.size.x * 0.5, caja.position.y, caja.position.z + caja.size.z * 0.5)
-	var margen := 8.0
-	var escala := minf((tam.x - margen * 2.0) / maxf(caja.size.x, 0.01), (tam.y - margen * 2.0 - 6.0) / maxf(caja.size.z, 0.01))
-	raiz.scale = Vector3.ONE * escala
-	raiz.rotation.y = PI
+	var lado := clampf(minf(tam.x, tam.y) * 0.22, 14.0, 26.0)
+	var alto_max := 0.0
+	for b: Array in BLOQUES_CASA:
+		var esc := load(RUTA_KAYKIT % String(b[0]))
+		if esc == null or not (esc is PackedScene):
+			continue
+		var n: Node3D = (esc as PackedScene).instantiate()
+		var caja := _caja_de(n)
+		var k := lado / maxf(caja.size.x, 0.01)
+		n.scale = Vector3.ONE * k
+		## El origen del modelo ya está en su base y centrado; se corrige igual por si acaso.
+		n.position = Vector3(float(b[1]) * lado, 0, float(b[2]) * lado) - Vector3(caja.get_center().x, caja.position.y, caja.get_center().z) * k
+		n.rotation.y = float(b[3])
+		raiz.add_child(n)
+		alto_max = maxf(alto_max, caja.size.y * k)
+	if raiz.get_child_count() == 0:
+		raiz.queue_free()
+		return
 	raiz.position = centro + Vector3(0, 0.05, 3.0)
 	casa_gigante = raiz
 	## El camino desde el portón hasta la puerta.
 	var losa := _mat_simple(Color(0.78, 0.74, 0.66), 0.85)
 	var z0 := centro.z - tam.y * 0.5
 	_caja_en(Vector3(centro.x, 0.06, z0 + 5.0), Vector3(6.0, 0.1, 10.0), losa)
-	_rotulo(centro + Vector3(0, caja.size.y * escala + 6.0, 0), "🏰 La Casa Grande", Color(1, 0.92, 0.7), 22)
+	_rotulo(centro + Vector3(0, alto_max + 6.0, 0), "🏰 La Casa Grande", Color(1, 0.92, 0.7), 22)
 	puntos_clic.append({"k": "casa_grande", "n": "La Casa Grande", "pos": centro, "estado": "ciudad"})
 
 ## ASFALTO MATE DE CALLE (26-10-2026, pciu). `Texturas.asfalto()` multiplica la

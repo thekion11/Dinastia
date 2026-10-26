@@ -60,13 +60,15 @@ static var _cache: Dictionary = {}
 ## que solo existe en las pieles claras y cambia por país. Es una aproximación
 ## de población, no un molde: dentro de cada país sigue habiendo de todo.
 const RUBIOS := {"GER": 0.32, "ENG": 0.26, "AUS": 0.22, "USA": 0.16, "FRA": 0.12, "ITA": 0.08, "ESP": 0.07,
-	"ARG": 0.09, "URU": 0.09, "CHI": 0.06, "BRA": 0.05, "JPN": 0.0, "KOR": 0.0}
+	"ARG": 0.09, "URU": 0.09, "CHI": 0.06, "BRA": 0.05, "JPN": 0.0, "KOR": 0.0,
+	"NED": 0.3, "DEN": 0.35, "BEL": 0.2, "CRO": 0.15, "POR": 0.04}
 ## El tono medio de los futbolistas de cada país (índice en PIELES, de 0 claro a
 ## 7 oscuro). La grada usa su propio sesgo (`OlaGrada.PIEL_SESGO`); con él los
 ## chilenos salían casi blancos, y la mayoría son mestizos de tono medio.
 const TONO_MEDIO := {"CHI": 2.8, "ARG": 1.8, "URU": 1.9, "PAR": 2.9, "BOL": 3.6, "PER": 3.6, "ECU": 3.6,
 	"COL": 3.7, "VEN": 3.6, "MEX": 3.2, "BRA": 4.0, "USA": 3.0, "ESP": 1.7, "ITA": 1.7, "GER": 1.3,
-	"ENG": 2.0, "FRA": 3.0, "JPN": 1.7, "KOR": 1.5, "AUS": 1.7, "KSA": 3.4, "EGY": 3.8, "MAR": 3.6, "RSA": 5.2}
+	"ENG": 2.0, "FRA": 3.0, "JPN": 1.7, "KOR": 1.5, "AUS": 1.7, "KSA": 3.4, "EGY": 3.8, "MAR": 3.6, "RSA": 5.2,
+	"POR": 2.4, "NED": 2.0, "BEL": 2.3, "CRO": 1.6, "DEN": 1.6}
 const PELOS_OSCUROS := ["#231a14", "#3d2a19", "#1a1a1a", "#4a3a2a", "#6b4a2a", "#231a14"]
 
 ## "CARA REAL": las fotos con licencia libre que ya bajó

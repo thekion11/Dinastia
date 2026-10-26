@@ -122,7 +122,44 @@ func revisar() -> Array[String]:
 			mundo.entrenamiento.dt_sumar_puntos(1)
 		logro_desbloqueado.emit(clave, String(fila[1]), String(fila[2]), String(fila[3]))
 	nuevos.append_array(revisar_ocultos())
+	nuevos.append_array(revisar_largos())
 	return nuevos
+
+## Los treinta a largo plazo (`LogrosLargo`): caen al llegar a la meta y solo
+## dan reconocimiento (no puntos del árbol, ver la cabecera de `LogrosLargo`).
+func revisar_largos() -> Array[String]:
+	var nuevos: Array[String] = []
+	if mundo == null:
+		return nuevos
+	if not _largos_base:
+		_largos_base = true
+		for f0: Array in LogrosLargo.CATALOGO:
+			var k := String(f0[0])
+			if LogrosLargo.HEREDABLES.has(k.split("_")[0]) and LogrosLargo.valor(k, self) >= int(f0[4]):
+				largos[k] = {"anio": mundo.anio, "semana": mundo.semana, "heredado": true}
+	for f: Array in LogrosLargo.CATALOGO:
+		var clave := String(f[0])
+		if largos.has(clave) or LogrosLargo.valor(clave, self) < int(f[4]):
+			continue
+		largos[clave] = {"anio": mundo.anio, "semana": mundo.semana}
+		nuevos.append(clave)
+		logro_desbloqueado.emit(clave, String(f[1]), String(f[2]), String(f[3]))
+	return nuevos
+
+## Los treinta con su progreso, para la pantalla: {clave, icono, titulo,
+## descripcion, meta, valor, conseguido, cuando}. El valor se corta en la meta.
+func catalogo_largo() -> Array[Dictionary]:
+	var salida: Array[Dictionary] = []
+	for f: Array in LogrosLargo.CATALOGO:
+		var clave := String(f[0])
+		var hecho := largos.has(clave)
+		salida.append({
+			"clave": clave, "icono": String(f[1]), "titulo": String(f[2]), "descripcion": String(f[3]),
+			"meta": int(f[4]), "valor": int(f[4]) if hecho else mini(LogrosLargo.valor(clave, self), int(f[4])),
+			"conseguido": hecho, "cuando": largos.get(clave, {}),
+			"heredado": bool((largos.get(clave, {}) as Dictionary).get("heredado", false)),
+		})
+	return salida
 
 ## Se llama al terminar cada partido de tu club. Alimenta cara a cara, rachas,
 ## récords, goleadores históricos y debuts de cantera, y de paso revisa si algo
@@ -151,6 +188,7 @@ func tras_partido(p: Partido, competicion: String = "Liga", publico: int = 0, po
 
 	_anotar_cara_a_cara(rival, mis_goles, sus_goles, gane, empate)
 	_anotar_rachas(gane, empate)
+	_anotar_carrera(gane)
 	_anotar_records(rival, mis_goles, sus_goles, competicion, publico)
 	_anotar_participaciones(p, soy_local)
 
@@ -172,7 +210,13 @@ func tras_partido_simulado(gane: bool, empate: bool) -> void:
 	if mundo == null or mundo.mi_club() == null:
 		return
 	_anotar_rachas(gane, empate)
+	_anotar_carrera(gane)
 	revisar()
+
+func _anotar_carrera(gane: bool) -> void:
+	carrera["pj"] = int(carrera.get("pj", 0)) + 1
+	if gane:
+		carrera["pg"] = int(carrera.get("pg", 0)) + 1
 
 ## Levantar un título. Es lo más caro del perfil de gestor y lo único que llena
 ## la vitrina, y además se NOTA en el club: la hinchada se vuelca, llegan socios

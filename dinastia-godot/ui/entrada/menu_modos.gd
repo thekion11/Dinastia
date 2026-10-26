@@ -38,6 +38,7 @@ var _bokeh: FondoParticulas
 var _logo: MenuModosLogo
 var _reloj_logo: Timer
 var _confirmar: MenuModosConfirmar
+var _novedades: PantallaNovedades
 var _retos: MenuModosRetos
 var _lista: VBoxContainer
 var _ficha: MenuModosFicha
@@ -188,7 +189,7 @@ func selector_retos() -> MenuModosRetos:
 	return _retos
 
 func _algo_abierto() -> bool:
-	return _confirmar.abierto() or (_retos != null and _retos.abierto())
+	return _confirmar.abierto() or (_retos != null and _retos.abierto()) or is_instance_valid(_novedades)
 
 func _cancelado() -> void:
 	_sonar("menu_atras")
@@ -404,6 +405,19 @@ func _construir_pie() -> void:
 	atras.set_meta("sin_sonido", true)
 	atras.pressed.connect(_volver)
 	pie.add_child(atras)
+	## Las notas de versión (26-10-2026) y el número de versión, que no se veía en
+	## ningún sitio (M-429). El punto avisa de que no se han leído las de esta.
+	var nov := Button.new()
+	nov.text = "✨ %s %s%s" % [Idiomas.t("Novedades"), PantallaNovedades.version(), "  •" if PantallaNovedades.hay_sin_ver() else ""]
+	nov.flat = true
+	nov.focus_mode = Control.FOCUS_NONE
+	nov.add_theme_font_size_override("font_size", 15)
+	nov.add_theme_color_override("font_color", Tema.ORO)
+	nov.pressed.connect(func() -> void:
+		_novedades = PantallaNovedades.abrir(self)
+		_novedades.cerrada.connect(_cancelado)
+		nov.text = "✨ %s %s" % [Idiomas.t("Novedades"), PantallaNovedades.version()])
+	pie.add_child(nov)
 	var hueco := Control.new()
 	hueco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE

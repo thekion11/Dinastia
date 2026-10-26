@@ -193,6 +193,12 @@ const COPAS_POR_PAIS := {
 	"MAR": [["Copa del Trono", 1.0]],
 	"RSA": [["Copa Nedbank", 1.0]],
 	"AUS": [["Copa de Australia", 1.0]],
+## Lote 1 de países nuevos (26-10-2026, fila 26 s4): POR, NED, BEL, CRO, DEN.
+	"POR": [["Copa de Portugal", 1.0]],
+	"NED": [["Copa de Holanda", 1.0]],
+	"BEL": [["Copa de Bélgica", 1.0]],
+	"CRO": [["Copa de Croacia", 1.0]],
+	"DEN": [["Copa de Dinamarca", 1.0]],
 }
 
 ## Las copas que se juegan en un país: [nombre, peso del premio]. Si el país no

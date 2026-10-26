@@ -22,6 +22,7 @@ const NOMBRE := {
 	"ESP": "España", "ENG": "Inglaterra", "ITA": "Italia", "GER": "Alemania", "FRA": "Francia",
 	"JPN": "Japón", "KOR": "Corea del Sur", "KSA": "Arabia Saudita", "EGY": "Egipto",
 	"MAR": "Marruecos", "RSA": "Sudáfrica", "AUS": "Australia", "MEX": "México", "USA": "Estados Unidos",
+	"POR": "Portugal", "NED": "Holanda", "BEL": "Bélgica", "CRO": "Croacia", "DEN": "Dinamarca",
 }
 
 const OFICIAL := {
@@ -34,12 +35,14 @@ const OFICIAL := {
 	"KSA": "Reino de Arabia Saudita", "EGY": "República Árabe de Egipto", "MAR": "Reino de Marruecos",
 	"RSA": "República de Sudáfrica", "AUS": "Mancomunidad de Australia", "MEX": "Estados Unidos Mexicanos",
 	"USA": "Estados Unidos de América",
+	"POR": "República Portuguesa", "NED": "Reino de los Países Bajos", "BEL": "Reino de Bélgica",
+	"CRO": "República de Croacia", "DEN": "Reino de Dinamarca",
 }
 
 ## El orden de la lista: por continente, y dentro de cada uno como los ordena el juego.
 const CONTINENTES := [
 	["Sudamérica", ["CHI", "ARG", "BRA", "URU", "PAR", "BOL", "PER", "ECU", "COL", "VEN"]],
-	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA"]],
+	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA", "POR", "NED", "BEL", "CRO", "DEN"]],
 	["Norteamérica", ["MEX", "USA"]],
 	["Asia", ["JPN", "KOR", "KSA"]],
 	["África", ["EGY", "MAR", "RSA"]],
@@ -118,6 +121,16 @@ const MONUMENTOS := {
 	"USA": [["Estatua de la Libertad", "estatua", "antorcha"], ["Puente Golden Gate", "puente", "colgante"],
 		["Empire State Building", "rascacielos", "escalonado"], ["Monumento a Washington", "obelisco", ""],
 		["Capitolio", "cupula", "capitolio"]],
+	"POR": [["Torre de Belém", "castillo", "fortaleza"], ["Puente 25 de Abril", "puente", "colgante"],
+		["Puente Don Luis I", "puente", "arco"], ["Cabo da Roca", "faro", ""], ["Monasterio de los Jerónimos", "cupula", "palacio"]],
+	"NED": [["Molinos de Kinderdijk", "molino", ""], ["Rijksmuseum", "cupula", "palacio"],
+		["Puente Erasmus", "puente", "atirantado"], ["Casas cubo de Róterdam", "rascacielos", "escalonado"], ["Faro de Westkapelle", "faro", ""]],
+	"BEL": [["Atomium", "torre_tv", "bola"], ["Grand-Place de Bruselas", "torre_reloj", ""],
+		["Campanario de Brujas", "torre_reloj", "puerta"], ["Elevador de barcos de Strépy", "presa", ""], ["Ciudadela de Namur", "castillo", "fortaleza"]],
+	"CRO": [["Murallas de Dubrovnik", "muralla", "puerta"], ["Lagos de Plitvice", "catarata", "ancha"],
+		["Anfiteatro de Pula", "coliseo", ""], ["Puente de Pelješac", "puente", "atirantado"], ["Faro de Savudrija", "faro", ""]],
+	"DEN": [["La Sirenita", "estatua", "columna"], ["Puente de Øresund", "puente", "atirantado"],
+		["Torre Redonda", "torre_reloj", ""], ["Castillo de Kronborg", "castillo", "holsten"], ["Faro de Rubjerg Knude", "faro", ""]],
 }
 
 ## Todos los países que se pueden ver en el globo, en el orden de la lista.
