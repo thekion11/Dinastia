@@ -40,7 +40,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 | Fase | Contenido | Entregable |
 |---|---|---|
 | **1 — Entrada** | recorrido con la cámara real HECHO el 26-10 (`docs/04_auditorias/capturas_fase1/`, 8 tomas Forward+; arreglos: rótulos del globo, rivales en la ficha de país, tarjetas de entrada al campeonato); solo falta tu aprobación (§0) | las fases 0-5 como pantallas completas |
-| **2 — Prólogo 3D** | aparición fuera del estadio, mentor guía, directivos con oficina, sala de prensa nueva, rueda de prensa con gestos, oficina con PC | de «Nuevo juego» hasta tu primer día |
+| **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). Falta tu aprobación jugándolo y lo anotado en §2.2b «Límites» | de «Nuevo juego» hasta tu primer día |
 | **3 — Vida** | casa y familia, jornada y horas extra, días libres, teléfono, citas, eventos de ciudad, transporte público, cárcel | un día completo jugable en 3D |
 | **4 — Personas** | directiva, patrocinadores, políticos, entrevistas, fichajes en la ciudad, redes y fotos, elecciones | negociaciones en persona |
 | **5 — Club ampliado** | vestuario con nombres, otros deportes, trofeos y celebraciones | |
@@ -171,10 +171,46 @@ de presentación. Mentor y directivos son ficticios (nombres de `Tutorial.mentor
 `visor/prologo.gd` (orquestación de pasos), `visor/prologo_mentor.gd` (NPC guía que sigue puntos),
 `visor/pc_oficina.gd` (el PC que abre y cierra Principal), `visor/prologo_pasos.gd` (texto de cada paso).
 
+**Hecho el 26-10 y límites honestos (lo que se verá al jugar):**
+- El mentor no busca camino por el edificio: habla, «se adelanta» (da tres pasos y se esfuma) y te espera ya en la
+  sala siguiente; la flecha del HUD y el aro en el suelo te llevan (con el ascensor si cambia la planta).
+- Mientras el mentor habla el personaje se queda quieto (frases cortas); todo lo demás es libre.
+- En la rueda de presentación el DT gesticula al responder con los gestos del plató de siempre (no hay aún una pose
+  distinta por tono: seguro/evasivo/humilde solo cambian el texto y la relación con la prensa, ±2 por respuesta).
+- La directiva son el presidente del personal del club más dos accionistas de la `Junta` con cuerpo; una pregunta,
+  dos respuestas (+3 / +1 de confianza).
+- El PC enciende `Principal` como capa (el mundo 3D se esconde y se congela, no se destruye); la segunda vez lo
+  retoma como partida cargada para no volver a escalar la caja por la dificultad. Pendiente: que al salir del
+  juego desde el PC se guarde (hoy guarda al avanzar la semana y al encenderlo la primera vez).
+- Logro «Primer día»: no se añadió (la API de `Logros` no tiene alta de logros sueltos; queda para la fase 5).
+- Rendimiento: la ciudad entera queda cargada bajo el menú central; en gama baja habrá que medirlo (fase 6).
+
 **Pruebas (modelo V).** Idea `f2p_prologo`: los 7 pasos en modo sin pantalla (cada punto del recorrido es
 alcanzable con la rejilla de `ColisionClub`; el PC abre `Principal` y lo cierra sin dejar nodos; `prologo_visto`
 queda en la partida; saltar funciona). Captura `f2p_captura_prologo` (7 tomas Forward+ con la cámara del paseo).
 Compuerta de aceptación: capturas al dueño.
+
+### 2.2c Fase 3 — Vida en 3D: DISEÑO (26-10, compuerta 2; construir en este orden)
+
+**Lo que ya existe y se enlaza (no se duplica):** `Reloj` (día y hora dentro de la semana; la semana la sigue
+mandando `Mundo.avanzar_semana()`), `Necesidades` (energía y hambre, modo completa/ligera/apagada en Ajustes → Vida),
+`VidaDT` (vivienda, transporte, familia, estrés, ocio semanal), la Casa Grande de la ciudad (`CiudadExpansion._casa_grande`),
+`CasaEscena3D`, el móvil (`Telefono`, `MovilMano`), el paseo (a pie, coche, metro, bus, interiores) y el PC de la oficina (fase 2).
+
+| # | Bloque | Qué hace | Regla |
+|---|---|---|---|
+| 1 | Reloj vivo | La hora de la ciudad (`VistaCiudad._hora`, sol y farolas) ES la del `Reloj`; al caminar pasa el tiempo (1 min real = 10 min de juego; esperar en un banco ×6; dormir salta a las 08:00). El móvil enseña día y hora | el reloj nunca avanza la semana solo: al llegar al domingo noche o al pulsar «Avanzar semana» en el PC, `Mundo.avanzar_semana()` como siempre (misma huella) |
+| 2 | Jornada | 09-18 en el club cuenta como trabajo (tasas de `Necesidades`); después de las 18, horas extra: +preparación (`VidaDT.balance`) y +estrés; sábado y domingo sin partido = día libre | lo que ya hace `VidaDT` semana a semana, ahora alimentado por horas de verdad |
+| 3 | Necesidades aplicadas | Comer: comedor del plantel (planta 2), tu casa o un kiosco de la ciudad; dormir: tu cama. Energía < 20 → `factor_riesgo` entra en la semana (`probabilidad_de_fallo`, ya escrito) y el médico avisa; energía 0 en la calle → despiertas en casa con estrés y un titular | sin castigos definitivos; «Vida: ligera/apagada» lo suaviza o lo quita |
+| 4 | Casa y familia | Entrar a tu casa (la Casa Grande hoy; la vivienda de `VidaDT` después): salón, cocina, dormitorio; pareja, hijos y mascota con cuerpo (`VidaDT.perfil`) y 2-3 frases según `familia`; cama (dormir), mesa (comer), sofá (ocio de la semana) | gente ficticia; nada de religión ni política |
+| 5 | Teléfono | App «Agenda»: día, hora, próximo entrenamiento/partido/rueda; «Adelantar»: 1 h, hasta mañana, hasta el partido; mensajes que piden ir a un sitio (la fase 4 los llena) | el teléfono adelanta el reloj con la rutina (`Reloj.RUTINA`) para que las necesidades no se disparen |
+| 6 | Transporte y sucesos | Coche propio según `VidaDT.transporte` (con «micro», solo bus y metro); avería semanal por hash → transporte público; conducir a lo loco (3 choques con multa) → noche en el calabozo: lunes con −3 de confianza y titular | todo reversible en una temporada |
+| 7 | Arranque del día | Tras el prólogo, cada carga empieza en la oficina; con la casa hecha, cada lunes empiezas en casa a las 08:00 y vas al club como quieras (o «ir directo» desde el móvil) | «Vida: apagada» = empiezas en la oficina con el PC |
+
+**Pruebas (modelo V).** Idea `f3v_vida`: al caminar el reloj avanza; comer y dormir mueven las necesidades; dormir el domingo
+avanza la semana con la MISMA huella que el menú (`huella_mundo`); la casa tiene a la familia y sus tres usos; el móvil
+adelanta sin disparar el hambre; la avería saca el coche y el calabozo resta confianza una vez. Captura `f3v_captura_vida`
+(casa por dentro, familia, cama, comedor, móvil con agenda, amanecer en la ciudad).
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 

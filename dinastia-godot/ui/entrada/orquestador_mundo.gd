@@ -11,6 +11,11 @@ extends RefCounted
 
 const PRINCIPAL := "res://escenas/principal.tscn"
 const CARRERA_JUGADOR := "res://escenas/carrera_jugador.tscn"
+## El prólogo 3D (fase 2 del plan del lunes): de la entrada a tu primer día en la
+## ciudad del club. Solo para los modos con club; Retos, Tutorial y la Carrera de
+## Jugador siguen como antes. `sin_prologo` lo apagan las pruebas y `PROLOGO=0`.
+const PROLOGO := "res://escenas/prologo.tscn"
+static var sin_prologo := false
 const PERSONAJE_DATOS := "res://ui/entrada/personaje_datos.gd"
 const CONFIG_DATOS := "res://ui/entrada/config_club_datos.gd"
 
@@ -231,7 +236,14 @@ static func preparar(estado: Dictionary) -> Dictionary:
 			for d: Variant in lista:
 				desafios.append(String(d))
 	Principal.desafios_elegidos = desafios
-	return {"escena": PRINCIPAL, "mundo": m}
+	return {"escena": PROLOGO if con_prologo(modo) else PRINCIPAL, "mundo": m}
+
+## ¿Este modo empieza con el prólogo 3D? Los que dirigen un club, salvo el tutorial
+## (tiene su propia guía) y los retos (empiezan en una situación concreta).
+static func con_prologo(modo: String) -> bool:
+	if sin_prologo or OS.get_environment("PROLOGO") == "0":
+		return false
+	return modo not in ["tutorial", "retos", "continuar", "carrera-m"]
 
 ## Sin club elegido: el primero de la primera división del país (lo que hacía siempre
 ## `Principal._nuevo_mundo()` con Chile).

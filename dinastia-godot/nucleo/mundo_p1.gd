@@ -140,6 +140,9 @@ var eras: Eras = Eras.new()   ## se recrea con el mundo en `generar()`
 ## interfaz lee para plantar "FIN DE LA PARTIDA" delante, igual que hace
 ## `despedido_ya` de Directiva.
 var fin_partida: Dictionary = {}
+## ¿Ya se vivió el prólogo 3D (fase 2 del plan del lunes)? Se guarda con la
+## partida: la segunda vez que se carga, se arranca directo en la oficina.
+var prologo_visto: bool = false
 
 ## Cuántas temporadas seguidas llevas en el mismo club: lo que hace que el
 ## desafío "trotamundos" te eche solo a las dos. Se resetea al cambiar de
