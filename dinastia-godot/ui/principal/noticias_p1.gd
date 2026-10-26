@@ -211,7 +211,7 @@ func _conectar_1() -> void:
 		p.mundo.copa.set_meta("_ui_conectado", true)
 		p.mundo.copa.campeon_proclamado.connect(func(campeon: Club) -> void:
 			if campeon == p.mundo.mi_club():
-				Aviso.mostrar(p, "dinero", "🏆", "Campeón de %s" % p.mundo.copa.nombre,
+				Aviso.mostrar(p, "dinero", "🏆", "Campeón de %s" % CompeticionInfo.nombre_visible(p.mundo.copa.nombre),
 					"Además del título, entran %s de premio." % p._dinero(Copa.PREMIO)))
 		p.mundo.copa.ronda_terminada.connect(func(nombre_ronda: String, resultados: Array) -> void:
 			for r: Dictionary in resultados:

@@ -371,7 +371,7 @@ func _traducir_bbcode(bb: String) -> String:
 	return salida
 
 func _escribir(bbcode: String) -> void:
-	_registro.append_text(_bbcode_accesible(_traducir_bbcode(bbcode)) + "\n")
+	_registro.append_text(_bbcode_accesible(_traducir_bbcode(CompeticionInfo.visibles_en(bbcode))) + "\n")
 
 func _liga_de(c: Club) -> Liga:
 	for l in mundo.ligas:

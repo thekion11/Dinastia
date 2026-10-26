@@ -2,6 +2,9 @@ extends "res://ui/principal_p9.gd"
 ## [Capa 10/17 de `principal.gd`] _anotar, _noticia_contratos, _guardar, _autoguardar_si_toca, _deshacer, _cargar_preferencias … (+5)
 
 func _anotar(titulo: String, cuerpo: String) -> void:
+	## Con el nombre de competición que se ve (correo, Tribuna y móvil lo heredan).
+	titulo = CompeticionInfo.visibles_en(titulo)
+	cuerpo = CompeticionInfo.visibles_en(cuerpo)
 	_bandeja.push_front({"titulo": titulo, "cuerpo": cuerpo, "semana": mundo.semana, "anio": mundo.anio, "leida": false})
 	## Lo que pasa también se comenta en Tribuna (las redes del móvil).
 	if mundo.redes != null:

@@ -5742,7 +5742,12 @@
   "¿POR QUÉ SUBE O BAJA?": "WHY DOES HE GO UP OR DOWN?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Last year in which he grows through training; from 24 his rating stays put.",
   "▲ sube": "▲ rises",
-  "▼ baja": "▼ falls"
+  "▼ baja": "▼ falls",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "They qualify for next year's world club tournament: %s.",
+  "El torneo de selecciones del Viejo Continente.": "The national team tournament of the Old Continent.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "The Southern Nations Cup, the oldest national team tournament in the world.",
+  "Empieza el torneo. Medio mundo está pendiente.": "The tournament begins. Half the world is watching.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "The tournament is played in your country! The host cities fill up with visitors."
  },
  "pt": {
   "Historia": "História",
@@ -11487,7 +11492,12 @@
   "¿POR QUÉ SUBE O BAJA?": "PORQUE SOBE OU DESCE?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Último ano em que cresce a treinar; a partir dos 24 a média fica parada.",
   "▲ sube": "▲ sobe",
-  "▼ baja": "▼ desce"
+  "▼ baja": "▼ desce",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Classificam-se para o torneio mundial de clubes do ano seguinte: %s.",
+  "El torneo de selecciones del Viejo Continente.": "O torneio de seleções do Velho Continente.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "A Copa das Nações do Sul, o torneio de seleções mais antigo do mundo.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Começa o torneio. Meio mundo está atento.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "O torneio é disputado no teu país! As cidades-sede enchem-se de visitantes."
  },
  "patrones": [
   [
@@ -17099,6 +17109,17 @@
    "$1 ($2) controla $3 dels teus jugadors. T'exigeix que fitxis un jove de la seva agència o «no respon de l'ànim» de $4 i companyia.",
    "$1 ($2) reprezentuje $3 twoich zawodników. Żąda, żebyś podpisał młodzieżowca z jego agencji, bo inaczej «nie ręczy za nastroje» zawodnika $4 i spółki.",
    "$1 ($2) oyuncularından $3 tanesini temsil ediyor. Ajansından bir genç oyuncu almanı istiyor; yoksa $4 ve arkadaşlarının «moralinden sorumlu değil»."
+  ],
+  [
+   "^(Copa [^.:]+) (\\d{4})$",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2",
+   "$1 $2"
   ]
  ],
  "fr": {
@@ -22751,7 +22772,12 @@
   "¿POR QUÉ SUBE O BAJA?": "POURQUOI MONTE-T-IL OU BAISSE-T-IL ?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Dernière année où il progresse à l'entraînement ; dès 24 ans sa note ne bouge plus.",
   "▲ sube": "▲ monte",
-  "▼ baja": "▼ baisse"
+  "▼ baja": "▼ baisse",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Ils se qualifient pour le tournoi mondial des clubs de l'année suivante : %s.",
+  "El torneo de selecciones del Viejo Continente.": "Le tournoi des sélections du Vieux Continent.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "La Coupe des nations du Sud, le plus ancien tournoi de sélections du monde.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Le tournoi commence. La moitié du monde le suit.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Le tournoi se joue dans ton pays ! Les villes hôtes se remplissent de visiteurs."
  },
  "it": {
   "Historia": "Storia",
@@ -28403,7 +28429,12 @@
   "¿POR QUÉ SUBE O BAJA?": "PERCHÉ SALE O SCENDE?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Ultimo anno in cui cresce allenandosi; dai 24 anni la sua media resta ferma.",
   "▲ sube": "▲ sale",
-  "▼ baja": "▼ scende"
+  "▼ baja": "▼ scende",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Si qualificano al torneo mondiale per club dell'anno successivo: %s.",
+  "El torneo de selecciones del Viejo Continente.": "Il torneo delle nazionali del Vecchio Continente.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "La Coppa delle nazioni del Sud, il torneo per nazionali più antico del mondo.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Inizia il torneo. Mezzo mondo è col fiato sospeso.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Il torneo si gioca nel tuo paese! Le città ospitanti si riempiono di visitatori."
  },
  "de": {
   "Historia": "Geschichte",
@@ -34055,7 +34086,12 @@
   "¿POR QUÉ SUBE O BAJA?": "WARUM STEIGT ODER SINKT ER?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Letztes Jahr, in dem er durch Training wächst; ab 24 bleibt seine Wertung stehen.",
   "▲ sube": "▲ steigt",
-  "▼ baja": "▼ sinkt"
+  "▼ baja": "▼ sinkt",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Sie qualifizieren sich für das Klub-Weltturnier des nächsten Jahres: %s.",
+  "El torneo de selecciones del Viejo Continente.": "Das Nationalmannschaftsturnier des Alten Kontinents.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "Der Nationenpokal des Südens, das älteste Nationalmannschaftsturnier der Welt.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Das Turnier beginnt. Die halbe Welt schaut zu.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Das Turnier findet in deinem Land statt! Die Austragungsstädte füllen sich mit Besuchern."
  },
  "ca": {
   "Historia": "Història",
@@ -39707,7 +39743,12 @@
   "¿POR QUÉ SUBE O BAJA?": "PER QUÈ PUJA O BAIXA?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Últim any en què creix entrenant; des dels 24 la seva mitjana es queda quieta.",
   "▲ sube": "▲ puja",
-  "▼ baja": "▼ baixa"
+  "▼ baja": "▼ baixa",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Es classifiquen per al torneig mundial de clubs de l'any següent: %s.",
+  "El torneo de selecciones del Viejo Continente.": "El torneig de seleccions del Vell Continent.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "La Copa de Nacions del Sud, el torneig de seleccions més antic del món.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Comença el torneig. Mig món n'està pendent.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "El torneig es juga al teu país! Les ciutats seu s'omplen de visitants."
  },
  "pl": {
   "Club": "Klub",
@@ -45638,7 +45679,12 @@
   "¿POR QUÉ SUBE O BAJA?": "DLACZEGO ROŚNIE LUB SPADA?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Ostatni rok, w którym rośnie dzięki treningom; od 24 lat jego ocena stoi w miejscu.",
   "▲ sube": "▲ rośnie",
-  "▼ baja": "▼ spada"
+  "▼ baja": "▼ spada",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Kwalifikują się do światowego turnieju klubowego w przyszłym roku: %s.",
+  "El torneo de selecciones del Viejo Continente.": "Turniej reprezentacji Starego Kontynentu.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "Puchar Narodów Południa, najstarszy turniej reprezentacji na świecie.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Turniej się zaczyna. Pół świata patrzy.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Turniej odbywa się w twoim kraju! Miasta gospodarze wypełniają się gośćmi."
  },
  "tr": {
   "Club": "Kulüp",
@@ -51569,6 +51615,11 @@
   "¿POR QUÉ SUBE O BAJA?": "NEDEN YÜKSELİYOR YA DA DÜŞÜYOR?",
   "Último año en que crece entrenando; desde los 24 su media se queda quieta.": "Antrenmanla geliştiği son yıl; 24 yaşından itibaren reytingi sabit kalır.",
   "▲ sube": "▲ yükselir",
-  "▼ baja": "▼ düşer"
+  "▼ baja": "▼ düşer",
+  "Clasifican al torneo mundial de clubes del año siguiente: %s.": "Gelecek yılın dünya kulüpler turnuvasına katılırlar: %s.",
+  "El torneo de selecciones del Viejo Continente.": "Yaşlı Kıta'nın milli takımlar turnuvası.",
+  "La Copa de Naciones del Sur, el torneo de selecciones más antiguo del mundo.": "Güney Uluslar Kupası, dünyanın en eski milli takımlar turnuvası.",
+  "Empieza el torneo. Medio mundo está pendiente.": "Turnuva başlıyor. Dünyanın yarısı izliyor.",
+  "¡El torneo se juega en tu país! Las ciudades sede se llenan de visitantes.": "Turnuva senin ülkende oynanıyor! Ev sahibi şehirler ziyaretçilerle doluyor."
  }
 }
