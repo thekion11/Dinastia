@@ -290,7 +290,8 @@ func _pintar_medios_propios(p_local: Prensa) -> void:
 		var n := p._texto(12, Principal.COL_VERDE if tengo else Principal.COL_TEXTO)
 		n.text = "%s%s — %s" % ["✔  " if tengo else "     ", String(f[1]), String(f[4])]
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		n.clip_text = true
+		## En dos líneas si hace falta (s3, auditoría: se cortaba a media frase).
+		n.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		fila.add_child(n)
 		var r := p._texto(11, Principal.COL_SUAVE)
 		r.text = Idiomas.t("+%s/mes") % p._dinero(Eco.escalar(float(f[3]), float(c.rep)))

@@ -7,15 +7,18 @@ const IDIOMAS := ["en", "pt", "fr", "it", "de", "ca", "pl", "tr"]
 ## Trozos que delatan una frase castellana sin traducir.
 const CASTELLANO := ["Baja a", "Se le ", "Te levantas", "de sueldo", "Mira el reloj", "se levanta de la mesa",
 	"Ni para ti", "Así no", "tomando el pelo", "de la comisión", "su chico", "exclusiva con", "prefieren",
-	"No le termina", "Me voy dos semanas", "cifra fija", "más dinero", "menos bonos", "porcentaje"]
+	"No le termina", "Me voy dos semanas", "cifra fija", "más dinero", "menos bonos", "porcentaje",
+	"ya es tuyo", "Viene de un club", "Bajaría", "Subiría", "Le queda", "Tu nombre pesa", "prestigio", "Ya pidió", "incómodo"]
 
 func _probar() -> void:
 	_titulo("S3: TEXTOS DEL NÚCLEO CON CLAVES ESTABLES (MesaAgente, Negociacion, Movil) E ICONOS")
 	var antes := Idiomas.idioma
 	_mesa()
 	_negociacion()
+	_mercado()
 	_movil()
 	_icono()
+	_origen()
 	Idiomas.idioma = antes
 
 func _castellano(s: String) -> String:
@@ -70,6 +73,8 @@ func _negociacion() -> void:
 	var vistos := {}
 	for l: String in ["es"] + IDIOMAS:
 		Idiomas.idioma = l
+		## La respuesta del club tira dados: la misma tirada en cada idioma.
+		Azar.sembrar(77)
 		var n := Negociacion.new(m, j)
 		n.fijo = 1000
 		var r := n.enviar_oferta()
@@ -81,6 +86,32 @@ func _negociacion() -> void:
 	for l: String in IDIOMAS:
 		bien = bien and vistos.has(l) and String(vistos[l]) != String(vistos.get("es", "")) and _castellano(String(vistos[l])) == ""
 	_comprobar(bien, "y lo que prefiere el club viene traducido del núcleo (es «%s», en «%s»)" % [vistos.get("es", ""), vistos.get("en", "")])
+
+## Mercado: el motivo de no poder abrir la mesa y las razones de las ganas de venir.
+func _mercado() -> void:
+	var m := _mundo(3302)
+	var mio := m.mi_club()
+	var malos: Array[String] = []
+	var n := 0
+	for l: String in ["es"] + IDIOMAS:
+		Idiomas.idioma = l
+		var motivo := m.mercado.abrir_negociacion(mio.plantilla[0])
+		var textos: Array[String] = [motivo]
+		for c: Club in [m.ligas[0].clubes[5], m.ligas[1].clubes[2], m.ligas[0].clubes[1]]:
+			for j: Jugador in c.plantilla.slice(0, 6):
+				j.pide_salir = true
+				j.anios_contrato = 1
+				for r: Dictionary in m.mercado.deseo_de_venir(j, mio)["razones"]:
+					textos.append(String(r["txt"]))
+		if l == "es":
+			n = textos.size()
+			continue
+		for t: String in textos:
+			if _castellano(t) != "":
+				malos.append("%s: %s" % [l, t])
+	Idiomas.idioma = "es"
+	_comprobar(n > 10 and malos.is_empty(), "el motivo de la mesa y las %d razones de las ganas de venir salen en los 8 idiomas (%d mal%s)" % [
+		n, malos.size(), (": " + malos[0]) if not malos.is_empty() else ""])
 
 func _movil() -> void:
 	Idiomas.idioma = "es"
@@ -111,3 +142,25 @@ func _icono() -> void:
 	_comprobar(Idiomas.t("«Trato hecho.» Te da la mano sin soltarla del todo.") != "«Trato hecho.» Te da la mano sin soltarla del todo.",
 		"las que empiezan con comillas siguen traduciéndose")
 	Idiomas.idioma = "es"
+
+## Cambiar de idioma con la partida abierta: lo que se pintó ya traducido en otro idioma
+## recupera su clave castellana y pasa al nuevo (antes se quedaba en el anterior).
+func _origen() -> void:
+	Idiomas.idioma = "de"
+	var de_cal := Idiomas.t("📅 Calendario")
+	var de_men := Idiomas.t("🧭 Hablar con el mentor")
+	Idiomas.idioma = "es"
+	_comprobar(Idiomas.origen(de_cal) == "📅 Calendario" and Idiomas.origen(de_men) == "🧭 Hablar con el mentor",
+		"de «%s» y «%s» se recupera el castellano" % [de_cal, de_men])
+	_comprobar(Idiomas.origen("Calendario") == "" and Idiomas.origen("Rafa Olmo") == "",
+		"una clave castellana o un nombre no se tocan")
+	var p := Principal.new()
+	var b := Button.new()
+	b.text = de_cal
+	p.add_child(b)
+	Idiomas.idioma = "tr"
+	p._traducir_pantalla(p)
+	var tr_cal := Idiomas.t("📅 Calendario")
+	Idiomas.idioma = "es"
+	_comprobar(b.text == tr_cal and tr_cal != de_cal, "un botón pintado en alemán pasa al turco al cambiar de idioma («%s»)" % b.text)
+	p.free()

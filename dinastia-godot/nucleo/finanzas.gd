@@ -61,9 +61,19 @@ func _init(club: Club, aporte_obras: float = 0.0, honorarios: int = 0, bono_mkt:
 	honorarios_consejeros = honorarios
 	bono_patrocinio = bono_mkt
 
+## LA TAQUILLA REAL (26-10, decidido por el dueño: ×3,5). Con PPE 0,25 la taquilla era el 4 % de los ingresos
+## del chico (0,10 M) y el 4,6 % del grande (1,09 M); en el fútbol real el día de partido pesa un 10-15 % en un
+## club chico chileno y un 20-25 % en Colo-Colo. Con ×3,5 queda en ~13 % y ~15 %.
+const FACTOR_TAQUILLA := 3.5
+## El que se usa: las especiales lo cambian con TAQUILLA_X=<x> para medir otro.
+static var factor_taquilla: float = FACTOR_TAQUILLA
+## Abrir el estadio cuesta: seguridad, servicios y personal del día de partido, ~30 % de lo recaudado (en
+## clubes reales, 25-40 %). Solo tu club, como la operación.
+const COSTE_DIA_DE_PARTIDO := 0.30
+
 ## Lo que deja cada espectador con el precio de entrada puesto.
 static func ingreso_por_espectador(precio: float) -> float:
-	return (precio + 2.0) * PPE
+	return (precio + 2.0) * PPE * factor_taquilla
 
 ## Cuánta gente entra. El tope es el aforo; el suelo, un 12%: ni con el peor
 ## equipo y la entrada más cara se queda un estadio completamente vacío.
@@ -94,6 +104,10 @@ func taquilla(gano_el_ultimo: bool = false, factor_horario: float = 1.0) -> int:
 	var monto := int(round(float(gente) * ingreso_por_espectador(precio)))
 	_club.mover_saldo(monto)
 	movimiento.emit("Taquilla (%d espectadores)" % gente, monto)
+	if aplica_operacion and monto > 0:
+		var coste := int(round(float(monto) * COSTE_DIA_DE_PARTIDO))
+		_club.mover_saldo(-coste)
+		movimiento.emit("Día de partido (seguridad y servicios)", -coste)
 	return monto
 
 ## Los sueldos del mes: la masa salarial semanal por las cuatro semanas.
@@ -129,15 +143,15 @@ func patrocinio() -> int:
 ## meses. La taquilla nunca pagó una plantilla.
 ## Lo que la television paga ANTES de multiplicadores. Sale aparte porque el
 ## plus del horario se cobra sobre esta cifra limpia, no sobre la ya ajustada.
-## EL REPARTO SOLIDARIO (26-10, PROPUESTA pendiente del dueño; hoy APAGADO, 0,0). Con el reparto solo por
+## EL REPARTO SOLIDARIO (26-10, decidido por el dueño: 0,5). Con el reparto solo por
 ## reputación el grande de Chile cobra 9,4 veces lo que el chico (20,5 M contra 2,2 M al año), y el chico
 ## pierde 1,1-1,7 M por año también en Primera. En el fútbol real es mucho más plano: Premier 1,6-1,8 veces
 ## del primero al último, LaLiga con tope de 3,5, el CDF chileno casi a partes iguales. Con 0,5 la mitad de la
 ## tele se reparte a partes iguales (la MEDIA de su liga, que fija `Mundo` con `fijar_medias_tv`) y la otra
 ## mitad por reputación. Ojo: la cuota del «club medio» (rep 70) no sirve de parte igual: la media de la
 ## Primera chilena es 0,64 M/mes, el doble de la del rep 70, porque la arrastran los tres grandes.
-const REPARTO_TV_IGUAL := 0.0
-## El que se usa: las especiales lo cambian con TV_IGUAL=0.5 para medir la propuesta sin activarla.
+const REPARTO_TV_IGUAL := 0.5   ## activado el 26-10 (decisión del dueño)
+## El que se usa: las especiales lo cambian con TV_IGUAL=<x> para medir otro reparto.
 static var reparto_tv_igual: float = REPARTO_TV_IGUAL
 ## "pais|division" -> media mensual de la tele por reputación en esa liga.
 static var medias_tv: Dictionary = {}
@@ -316,6 +330,7 @@ func proyeccion_anual(partidos_en_casa: int, ingreso_tienda_mes: int = 0) -> Dic
 			(float(round(float(derechos_tv_base()) * factor_tv)) + float(patrocinio_base())) \
 			* tasa_operacion() * factor_operacion))
 		gastos["Operación, viajes, seguridad e impuestos"] = oper_mes * meses
+		gastos["Día de partido (seguridad y servicios)"] = int(round(float(ingresos["Taquilla"]) * COSTE_DIA_DE_PARTIDO))
 	var total_ing := 0
 	for k: String in ingresos:
 		total_ing += int(ingresos[k])

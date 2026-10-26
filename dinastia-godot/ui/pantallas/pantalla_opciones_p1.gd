@@ -196,7 +196,8 @@ func _pintar_musica() -> void:
 		b.disabled = not Musica.encendida
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(168, 24)
-		b.tooltip_text = String(p_local["desc"])
+		## El nombre entero también en la ayuda: en 168 px se corta (s3).
+		b.tooltip_text = "%s\n%s" % [Idiomas.t(String(p_local["nombre"])), Idiomas.t(String(p_local["desc"]))]
 		b.pressed.connect(func() -> void:
 			## Elegir una a mano apaga el automático: si no, el siguiente cambio
 			## de pantalla te la quitaría y parecería que el botón no funciona.

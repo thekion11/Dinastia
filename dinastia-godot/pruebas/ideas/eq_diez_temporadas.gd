@@ -44,8 +44,10 @@ const INTERV_MAX := 2
 const GOLES := Vector2(2.1, 3.2)
 
 func _probar() -> void:
-	if OS.get_environment("TV_IGUAL") != "":   ## medir el reparto solidario de la tele sin activarlo
+	if OS.get_environment("TV_IGUAL") != "":   ## medir otro reparto de la tele
 		Finanzas.reparto_tv_igual = float(OS.get_environment("TV_IGUAL"))
+	if OS.get_environment("TAQUILLA_X") != "":   ## y otra taquilla
+		Finanzas.factor_taquilla = float(OS.get_environment("TAQUILLA_X"))
 	if OS.get_environment("EQ_MODO") == "rendimiento":
 		_rendimiento()
 		return

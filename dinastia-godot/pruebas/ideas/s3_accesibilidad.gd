@@ -34,6 +34,7 @@ func _contraste() -> void:
 	_p._paleta = antes
 	_p._aplicar_aspecto()
 	_p._refrescar()
+	_p._guardar_preferencias()
 	_comprobar(not Tema.contraste and Tema.accesible(Tema.SUAVE) == Tema.SUAVE, "al quitarlo, todo vuelve a como estaba")
 
 func _teclas() -> void:
