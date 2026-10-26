@@ -1857,7 +1857,7 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
 - Carrera: falta la animación de parada del portero en modo jugador.
 
-- Primera hora (informe onb, 26-10): botones de la cabecera de Principal solo con icono (⚽ 💰 🌍), sin texto ni tooltip; el panel OBJETIVOS tapa la ficha del jugador en la columna derecha; el tutorial no se puede volver a abrir si se cierra; las pestañas abiertas fuera de su bloque (Finanzas, Mercado) muestran el carril de chips del bloque anterior; `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol. Hacer tras unir la sesión 3 (toca `ui/principal_p*`).
+- Primera hora (informe onb, 26-10), lo que queda: `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol (`ui/entrada/*`, zona de la sesión principal). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.
 
 ## 9. Sesión 2 (interfaz): rama `ccr-76d707c5-dwse9h-s2`, sin fusionar
 Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `datos/trad_parches/s2_*.json` con `sumar_traducciones.py` y `s2_sobrescrituras.json` con un script con candado (ver el informe).

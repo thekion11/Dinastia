@@ -261,3 +261,18 @@ antes de cargar el idioma (petición 13); las ~500 frases sin traducir del plan.
 **Ojo con las pruebas que pintan Ajustes:** esa pantalla guarda las preferencias al pintarse. Mis pruebas
 (`visual.gd`, `s3_auditoria_interfaz`, `s3_accesibilidad`) restauran el idioma y la paleta al terminar; antes dejaban
 `idioma="tr"` o la paleta de contraste en las preferencias del contenedor.
+
+## 11. «Primera hora» (plan §8)
+
+Prueba `pruebas/ideas/s3_primera_hora.gd` (5 comprobaciones).
+- **Botones de la cabecera solo con icono** (🌎 ⚽ 💰): ya llevaban su ayuda; la prueba lo vigila (cualquier botón de
+  la fila sin letras tiene que tener ayuda). No caben con texto: la fila ya está llena a 1280.
+- **OBJETIVOS tapaba la ficha:** arrancaba plegado en pantallas estrechas, pero bastaba desplegarlo una vez para que
+  se quedara así (se guardaba). Ahora `PanelObjetivos.ceder_ficha` lo pliega cuando se pinta una ficha y la pisa, en
+  pantallas de menos de 1900 px, sin guardarlo: sirve de vistazo y la pestaña plegada sigue contando los pendientes.
+- **Reabrir el tutorial:** ya se podía con «🧭 Hablar con el mentor» (panel de objetivos) y con «📖 Repetir el
+  tutorial» (Ajustes → Interfaz); la prueba comprueba que, cerrado, se vuelve a abrir.
+- **Carril de chips fuera de su bloque:** en Finanzas, Mercado, Copa… (pestañas de hub) el carril se quedaba con los
+  chips del bloque anterior y ninguno marcado. `_chips_del_carril` enseña los del hub con la pestaña marcada.
+- Queda para la sesión principal: `grab_focus` diferido en `ui/entrada/*`.
+Las referencias de las pruebas visuales se rehicieron (el panel de objetivos ahora sale plegado).

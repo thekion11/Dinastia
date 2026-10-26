@@ -152,7 +152,7 @@ func _reconstruir_fila_sub() -> void:
 	var titulo_actual := ""
 	if _pestanas.get_tab_count() > 0:
 		titulo_actual = _pestanas.get_tab_title(_pestanas.current_tab)
-	for chip: Dictionary in (_grupo_por_id(_grupo_actual).get("tabs", []) as Array):
+	for chip: Dictionary in _chips_del_carril(titulo_actual):
 		var b := _pildora(Idiomas.t(String(chip["label"])), 12, 30)
 		b.button_pressed = (String(chip["tab"]) == titulo_actual) and _seccion_activa(chip)
 		var destino := chip
@@ -169,6 +169,24 @@ func _reconstruir_fila_sub() -> void:
 		tw.tween_property(b, "modulate:a", 1.0, 0.14)
 	## La chuleta «?» de las pantallas con más cifras, al final del carril.
 	AyudaPestana.anadir(_fila_sub, titulo_actual)
+
+## Los chips del carril para la pestaña abierta (s3, «primera hora»): los de su
+## bloque; y si es de un hub contextual (Finanzas, Mercado, Copa...) que no está en
+## el bloque, los de ese hub -antes se quedaba el carril del bloque anterior, sin
+## ningún chip marcado, como si la pestaña no existiera-.
+func _chips_del_carril(titulo: String) -> Array:
+	var del_grupo: Array = _grupo_por_id(_grupo_actual).get("tabs", [])
+	for ch: Dictionary in del_grupo:
+		if String(ch["tab"]) == titulo:
+			return del_grupo
+	for h: String in HUBS:
+		var tabs: Array = HUBS[h]["tabs"]
+		if tabs.has(titulo):
+			var out: Array = []
+			for t: String in tabs:
+				out.append({"tab": t, "label": t})
+			return out
+	return del_grupo
 
 ## Cambia de bloque maestro: entra siempre por su primer chip -índice 0-, que
 ## es lo que pidió el usuario ("al cambiar de pestaña madre, el nivel 2 se
