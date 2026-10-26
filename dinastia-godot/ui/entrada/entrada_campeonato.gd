@@ -251,9 +251,16 @@ func _construir_tarjeta(modo: String, letra: String, titulo: String, sub: String
 	fundido.offset_top = -34.0
 	fundido.offset_right = -10.0
 	marco.add_child(fundido)
-	scroll.get_v_scroll_bar().value_changed.connect(func(valor: float) -> void:
+	fundido.visible = false
+	var decidir := func() -> void:
+		if not is_instance_valid(fundido) or not is_instance_valid(scroll):
+			return
 		var barra := scroll.get_v_scroll_bar()
-		fundido.visible = valor + barra.page < barra.max_value - 2.0)
+		fundido.visible = barra.value + barra.page < barra.max_value - 2.0
+	scroll.get_v_scroll_bar().value_changed.connect(func(_v: float) -> void: decidir.call())
+	## Al primer layout (aún no hay barra) y cada vez que cambie el tamaño del marco.
+	scroll.get_v_scroll_bar().changed.connect(decidir)
+	marco.resized.connect(decidir)
 	v.add_child(marco)
 	var b := _boton(Idiomas.t("Elegir esta opción"), false)
 	b.toggle_mode = true

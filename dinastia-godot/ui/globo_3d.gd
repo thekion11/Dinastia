@@ -51,8 +51,7 @@ var _sobre := ""
 
 var _pines: Dictionary = {}      ## pais -> MeshInstance3D
 var _rotulos: Dictionary = {}    ## pais -> Label3D
-## Distancia (en unidades del globo, radio 1) por debajo de la cual un rótulo
-## vecino se esconde para no pisar el nombre completo del país elegido.
+## Un vecino a menos de esto (radio del globo = 1) se esconde: no pisa al elegido.
 const SEPARACION_ROTULO := 0.24
 var _pulsado_en := Vector2.ZERO
 var _movido := 0.0
@@ -398,9 +397,7 @@ func _process(delta: float) -> void:
 			_lon_obj -= _giro_idle * delta
 			lon -= _giro_idle * delta
 	_orientar_pivote(lon, lat)
-	## El elegido lleva su nombre completo («Chile» en vez de CHI) y los vecinos a
-	## menos de 200 km de rótulo se le montaban encima (ARG y URU sobre «Chile»,
-	## visto en la captura del 26-10): se esconden mientras dure la elección.
+	## El elegido lleva su nombre completo; los vecinos (ARG, URU) se le montaban encima.
 	var sel: Label3D = _rotulos.get(pais_actual)
 	for p: String in _rotulos:
 		var r: Label3D = _rotulos[p]
