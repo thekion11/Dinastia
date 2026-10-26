@@ -181,11 +181,22 @@ func _probar_base_ficticia() -> void:
 			filas_reales.append(fila)
 	var ligas_reales := {}
 	var pl_real: Dictionary = Datos.tabla("PAISES_LIGAS")
+	## Los países de `paises_extra.json` son ficticios en los dos modos (el pack no
+	## los trae): sus clubes no cuentan como reales, pero no pueden pisar al pack.
+	var extra: Dictionary = Datos.paises_extra().get("paises", {})
+	var pack_pl: Dictionary = Datos._pack.get("PAISES_LIGAS", {})
+	var pisados: Array = []
 	for pais: String in pl_real:
-		ligas_reales[String(pl_real[pais].get("liga", ""))] = true
+		var de_extra := extra.has(pais) and not pack_pl.has(pais)
+		if pack_pl.has(pais) and pl_real[pais] != pack_pl[pais]:
+			pisados.append(pais)
+		if not de_extra:
+			ligas_reales[String(pl_real[pais].get("liga", ""))] = true
 		for fila: Array in pl_real[pais]["clubes"]:
-			reales_clubes[Nombres.limpiar(String(fila[0])).to_lower()] = true
+			if not de_extra:
+				reales_clubes[Nombres.limpiar(String(fila[0])).to_lower()] = true
 			filas_reales.append(fila)
+	_comprobar(pisados.is_empty(), "con el pack, los países extra no pisan ninguna liga real %s" % str(pisados))
 	var copas_reales := {}
 	for k: String in (Datos.tabla("CONFED") as Dictionary):
 		copas_reales[Nombres.limpiar(String(Datos.tabla("CONFED")[k]["n"]))] = true

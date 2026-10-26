@@ -144,9 +144,20 @@ func usar_base_real(activar: bool) -> bool:
 ## una lista de competiciones continentales a las que se apunta el país.
 const RUTA_EXTRA := "res://datos/paises_extra.json"
 
+var _extra: Variant = null
+
+## El contenido de `paises_extra.json` ({} si no está): las pruebas lo usan para
+## saber qué países y clubes son de aquí y no del HTML ni del pack.
+func paises_extra() -> Dictionary:
+	if _extra == null:
+		_extra = _leer_json(RUTA_EXTRA) if FileAccess.file_exists(RUTA_EXTRA) else {}
+		if not (_extra is Dictionary):
+			_extra = {}
+	return _extra
+
 func _sumar_paises_extra() -> void:
-	var extra: Variant = _leer_json(RUTA_EXTRA) if FileAccess.file_exists(RUTA_EXTRA) else null
-	if not (extra is Dictionary):
+	var extra := paises_extra()
+	if extra.is_empty():
 		return
 	var copiadas := {}
 	for cod: String in (extra as Dictionary).get("paises", {}):
