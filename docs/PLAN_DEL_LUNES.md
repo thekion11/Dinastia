@@ -1874,22 +1874,16 @@ Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hec
 3. Volcar `_escala_texto` y `_daltonico` en `Tema` (`principal_p10.gd` tras la línea 50; setters en `principal_p2.gd` 363 y 373): sin esto la accesibilidad no llega a lo pintado con `Tema.*`.
 4. `visor/control_fc.gd:232`: usar `Mando.nombre_tecla(ts[0])` (hoy sale «Space»).
 5. `ui/principal_p8.gd`, final de `_ver_ficha()`: `_traducir_pantalla(_ficha)`; el radar corta a 4 letras (`.left(4)`, línea 88).
-6. La barra de desplazamiento tapa el final de los valores de `_dato` (p. ej. «Rol actual» en Legado).
 8. Rueda de prensa 2D sin pulir (está en `principal_p17.gd`; ver §8).
-9. Identidad (`ui/principal.gd:114-163`): la vista previa del escudo sin iniciales (`_escudo(c, 54)`), la muestra del acento es un rectángulo blanco; en `principal_p4.gd:157` las iniciales con `c.color_escudo1()`.
+9. Identidad (`ui/principal.gd:114-163`): la vista previa del escudo sin iniciales (`_escudo(c, 54)`), la muestra del acento es un rectángulo blanco.
+- «Forma» del escudo en `ui/entrada/config_club_pasos.gd:149` (zona de la sesión principal): pasar a la clave `Forma del escudo` (ya traducida); «Forma» queda para la forma física.
 10. `ui/componentes/mentor_voz.gd`: el consejo del presidente tapa la tabla 9 s (`DURA`): fundido con el ratón encima o ~6 s.
 11. `ui/pantallas/pantalla_opciones_p1.gd:244`: distingue el error por la longitud (`r.length() > 40`); «ya tienes peñas en todas partes» se toma por ciudad fundada.
 12. Tildes: `principal_p2.gd` «Estrecha (cabe mas)» y `nucleo/prensa_p4_p1.gd:27` «mas corta».
 13. `principal_p13:226`: el registro «Mundo nuevo. Semilla» se escribe antes de cargar el idioma.
 
 Defectos a la vista que dejó anotados:
-- Caras de ficha y plantel como cuadros negros en las capturas (`ui/cara`, retrato 3D).
-- Club negro: miniaturas de forma con poco contraste y escudo casi invisible sobre fondo oscuro.
-- Flujo de caja casi en rampa: el núcleo reparte el resultado del año en 12 partes iguales.
-- Cifras de finanzas pegadas a la barra de desplazamiento.
 - Récords: «RACHAS» a 0 en partidos simulados (`logros.rachas` solo cuenta los dirigidos).
-- Etiquetas largas del mando 3D recortadas con «…».
-- «Forma» (del escudo) y «forma» (física) comparten una traducción («Form»): separar en dos claves.
 
 ## 10. Huecos y mejoras propuestas
 Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún sitio del plan (o solo como idea suelta en §5-7). Prioridad: **alta** = bloquea el lanzamiento o la primera impresión; **media** = se nota en la primera semana de juego; **baja** = pulido.

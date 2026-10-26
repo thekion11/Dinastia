@@ -109,3 +109,40 @@ falta para eso; lo dejo (lo usan otras pantallas) y no cambia nada.
 
 **Petición 8 (no hecha).** La rueda de prensa 2D vive en `ui/principal_p17.gd`, que la sesión principal está tocando
 ahora mismo: queda en el plan para quien tenga ese archivo.
+
+## 5. Defectos visuales que anotó la sesión 2 (encargo ampliado, plan §9)
+
+Todo con la cámara real (Forward+, `pruebas/captura_s3_interfaz.tscn`; `FINANZAS=1 BAJAR=flujo|px` para finanzas),
+capturas en `/tmp/capturas/s3/` (no se suben). Prueba `pruebas/ideas/s3_defectos_visuales.gd` (13 comprobaciones).
+No se tocan datos de caras ni colores de piel: solo el dibujo y la cámara.
+
+- **Caras como cuadros negros** (`visor/retrato3d.gd`). Los retratos 3D sí se generan, de uno en uno (21 del plantel
+  en ~8 s); lo negro era (1) el marcador provisional, que era el color del club oscurecido (negro con un club negro),
+  y (2) a 22 px el busto de pecho para arriba dejaba la cara en unos 6 píxeles sobre una camiseta y un fondo casi
+  negros. Ahora el marcador lleva una silueta clara de cabeza y hombros, el fondo nunca baja de luminosidad 0,2
+  (`fondo_de`) y, hasta 40 px de alto (las filas de las listas), la cámara encuadra la cabeza y el cuello de la
+  camiseta (`ALTO_CABEZA`, caché aparte). Ficha, móvil y demás tamaños siguen de pecho para arriba.
+  Capturas `s3_caras_1` (marcador) y `s3_caras_2` (retratos ya hechos: se reconocen las caras).
+- **Club negro.** Las miniaturas de forma, patrón y camiseta de un club oscuro van sobre un fondo claro
+  (`EscudoMuestras.boton(..., claro)`; `oscuro()` = luminosidad < 0,2); `Principal._escudo` pone un halo claro y
+  redondo detrás de un escudo oscuro (solo esos clubes: pocos nodos), y las iniciales contrastan con el fondo del
+  escudo (`color_escudo1`, parte de la petición 9). Captura `s3_identidad`.
+- **Flujo de caja en rampa.** Era el resultado del año partido en 12 (en la interfaz, `panel_finanzas.gd`, no en el
+  núcleo). Ahora `FlujoCaja.saldos_por_mes` (`ui/componentes/flujo_caja.gd`) recorre las 48 semanas que vienen como
+  las cobra el motor: la taquilla la semana en que juegas en casa según el calendario de tu liga, y el resto
+  (televisión, patrocinio, socios, tienda, sueldos, estructura, operación) en el cierre de cada 4 semanas, con la
+  temporada volviendo a la semana 1 al acabar la liga más larga. Captura `s3_flujo`. Honestidad: con estas cifras
+  el cierre de mes pesa mucho más que la taquilla, así que la curva sigue subiendo casi recta; ahora los escalones
+  son los de verdad (un mes con dos partidos en casa sube más). Lo que no muestra es el pasado: el libro de
+  movimientos guarda solo 60 apuntes (`Mundo.LIBRO_MAX`, zona prohibida), no da para 12 meses de historia.
+- **Cifras pegadas a la barra.** `Principal._dato` (petición 6) y `PanelFinanzas._dato` dejan 14 px de aire a la
+  derecha con un `StyleBoxEmpty` compartido (sin nodos nuevos). Captura `s3_finanzas_2300`.
+- **Mando 3D con «…».** `MandoGiratorio._lineas`: la etiqueta va en dos líneas cuando hay sitio entre filas (paso
+  ≥ 30 px) y con más ancho si el panel lo permite (hasta 150 px); solo se recorta si ni así cabe.
+  Captura `controles/controles.jpg` («Estadísticas del partido», «Táctica rápida: más ofensiva» enteras).
+- **«Forma».** La rejilla del escudo usa la clave nueva `Forma del escudo` («Crest shape», 8 idiomas); «Forma»
+  queda para la forma física («Form»). Falta el mismo cambio en `ui/entrada/config_club_pasos.gd:149` (zona de la
+  sesión principal; anotado en el plan §9).
+
+Visto de paso, sin tocar: la portada del periódico pinta la cara del jugador en 2D (no el retrato 3D) y el escudo
+del club sin iniciales.
