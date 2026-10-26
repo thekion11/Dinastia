@@ -397,6 +397,20 @@ func _pintar_atajos() -> void:
 		man.text = String(fila_a[2])
 		man.custom_minimum_size = Vector2(120, 0)
 		f.add_child(man)
+	## Los atajos del menú central (s3), con la tecla que tienen AHORA (se cambian
+	## en Accesibilidad → Teclas de la interfaz).
+	for at: Array in AtajosCentrales.lista():
+		var fa := HBoxContainer.new()
+		fa.add_theme_constant_override("separation", 8)
+		p._lista_ajustes.add_child(fa)
+		var ea := p._texto(11, Principal.COL_TEXTO)
+		ea.text = Idiomas.t(String(at[1]))
+		ea.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fa.add_child(ea)
+		var ta := p._texto(11, Principal.COL_SUAVE)
+		ta.text = TeclasInterfaz.texto_de(String(at[0]))
+		ta.custom_minimum_size = Vector2(240, 0)
+		fa.add_child(ta)
 	var nota := p._texto(10, Principal.COL_SUAVE)
 	nota.text = Idiomas.t("En pantalla táctil, un desliz horizontal largo también cambia de bloque maestro.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

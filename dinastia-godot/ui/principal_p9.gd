@@ -415,5 +415,7 @@ func _preparar_mando() -> void:
 		ea.axis_value = 1.0
 		if not InputMap.action_has_event(accion3, ea):
 			InputMap.action_add_event(accion3, ea)
-	## Las que el jugador reasignó en Ajustes → Accesibilidad (s3).
+	## Los atajos del menú central y las teclas que el jugador reasignó en
+	## Ajustes → Accesibilidad (s3).
+	AtajosCentrales.registrar()
 	TeclasInterfaz.aplicar()

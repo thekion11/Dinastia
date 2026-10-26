@@ -28,8 +28,7 @@ func _distritos() -> void:
 	## 25-10-2026 (pciu): la imagen del asfalto se lee como sRGB, así que un
 	## tinte 0,13 quedaba en ~0,013 lineal: de noche la calzada salía NEGRA junto a
 	## aceras bien visibles. Asfalto real ≈ 0,08-0,12 lineal: tinte ~0,40.
-	var asfalto: StandardMaterial3D = Texturas.asfalto(Color(0.40, 0.40, 0.415)).duplicate()
-	asfalto.roughness = 0.75
+	var asfalto: StandardMaterial3D = asfalto_mate(Texturas.asfalto(Color(0.40, 0.40, 0.415)).duplicate(), 0.8)
 	var acera := _mat_simple(Color(0.42, 0.41, 0.39), 0.9)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7102026
@@ -114,6 +113,35 @@ func _casa_gigante(centro: Vector3, tam: Vector2) -> void:
 	_caja_en(Vector3(centro.x, 0.06, z0 + 5.0), Vector3(6.0, 0.1, 10.0), losa)
 	_rotulo(centro + Vector3(0, alto_max + 6.0, 0), "🏰 La Casa Grande", Color(1, 0.92, 0.7), 22)
 	puntos_clic.append({"k": "casa_grande", "n": "La Casa Grande", "pos": centro, "estado": "ciudad"})
+
+## ASFALTO MATE DE CALLE (26-10-2026, pciu). `Texturas.asfalto()` multiplica la
+## rugosidad por un ruido de negro a blanco: media ~0,4, con manchas casi espejo.
+## A contraluz de día la calzada entera brillaba en blanco, como recién mojada,
+## en cuanto el sol quedaba por delante (paseo hacia el este). Aquí el ruido va
+## de 0,8 a 1 (la rugosidad final queda en ~0,6-0,85): conserva el rodado algo
+## más pulido sin el lavado blanco. Solo sobre materiales YA duplicados.
+static var _rugosidad_mate: NoiseTexture2D
+
+static func asfalto_mate(m: StandardMaterial3D, rugosidad := 0.85) -> StandardMaterial3D:
+	if _rugosidad_mate == null:
+		var t := NoiseTexture2D.new()
+		t.width = 256
+		t.height = 256
+		t.seamless = true
+		var fn := FastNoiseLite.new()
+		fn.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+		fn.frequency = 0.03
+		fn.seed = 32
+		fn.fractal_octaves = 3
+		t.noise = fn
+		var g := Gradient.new()
+		g.set_color(0, Color(0.8, 0.8, 0.8))
+		g.set_color(1, Color.WHITE)
+		t.color_ramp = g
+		_rugosidad_mate = t
+	m.roughness_texture = _rugosidad_mate
+	m.roughness = rugosidad
+	return m
 
 func mostrar_rotulos(si: bool) -> void:
 	if _rotulos != null:

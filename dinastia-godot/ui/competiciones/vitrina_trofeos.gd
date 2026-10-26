@@ -78,5 +78,5 @@ func _montar(lista: Array) -> void:
 	w.add_child(cam)
 	## Que la fila llene el ancho (la vitrina es apaisada, ~3:1): con fov
 	## vertical de 34° el medio ángulo horizontal ronda los 42°.
-	var dist := maxf(1.0, (ancho * 0.5 + 0.2) / tan(deg_to_rad(40.0)))
+	var dist := maxf(1.0, (ancho * 0.5 + 0.35) / tan(deg_to_rad(36.0)))
 	cam.look_at_from_position(Vector3(0, 0.32, dist), Vector3(0, 0.14, 0), Vector3.UP)

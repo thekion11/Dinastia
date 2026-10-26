@@ -72,7 +72,7 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 		esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		v.add_child(esc)
 	var lugar := Label.new()
-	lugar.text = String(_guion.get("lugar", "")).to_upper()
+	lugar.text = Idiomas.mayusculas(Idiomas.t(String(_guion.get("lugar", ""))))
 	if int(ctx["anio"]) > 0:
 		lugar.text += Idiomas.t("  ·  TEMPORADA %d") % int(ctx["anio"])
 	lugar.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -151,7 +151,7 @@ func iniciar(principal: Node, modo: String, club: String) -> void:
 	_tarjeta.visible = false
 	_marco.visible = false
 	_fase = "prologo"
-	_escribir(_lbl_prologo, String(_guion["prologo"]))
+	_escribir(_lbl_prologo, Idiomas.t(String(_guion["prologo"])))
 	_sonar(String(_guion.get("sonido", "")))
 
 func fase() -> String:

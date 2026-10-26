@@ -57,6 +57,10 @@ func _input(evento: InputEvent) -> void:
 	## Un desliz que empieza sobre el riel es del panel (abrirlo), no del menú.
 	if evento is InputEventScreenDrag and (evento as InputEventScreenDrag).position.x < MenuLateral.ANCHO_RIEL + 30.0:
 		return
+	## Los atajos del menú central (1-9, 0, N, F3, F5; s3).
+	if AtajosCentrales.manejar(self, evento):
+		get_viewport().set_input_as_handled()
+		return
 	## Los gatillos cambian de pestaña. Se mira aquí y no en `_unhandled_input`
 	## porque los contenedores de la interfaz se comen los eventos de navegación
 	## antes de que lleguen abajo.

@@ -127,9 +127,10 @@ static func contraste(p: Principal) -> void:
 static func teclas(p: Principal) -> void:
 	var t := p._texto(10, Principal.COL_SUAVE)
 	t.text = Idiomas.t("Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)")
+	## Los atajos del menú central (1-9, 0, N, F3, F5) van en la misma lista.
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(t)
-	for par: Array in TeclasInterfaz.ACCIONES:
+	for par: Array in TeclasInterfaz.acciones():
 		var accion := String(par[0])
 		var fila := HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 8)

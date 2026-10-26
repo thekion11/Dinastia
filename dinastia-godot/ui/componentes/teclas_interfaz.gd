@@ -17,6 +17,10 @@ const ACCIONES := [
 	["dinastia_tab_siguiente", "Pestaña siguiente"],
 ]
 
+## Las de arriba más los atajos del menú central (`AtajosCentrales`): todas se reasignan igual.
+static func acciones() -> Array:
+	return ACCIONES + AtajosCentrales.lista()
+
 static var _propio := {}       ## acción -> {"tecla": int, "boton": int}
 static var _defectos := {}     ## acción -> [InputEvent] de antes de tocar nada
 static var _cargado := false
@@ -27,7 +31,7 @@ static func cargar() -> void:
 	var cf := ConfigFile.new()
 	if cf.load(RUTA) != OK:
 		return
-	for par: Array in ACCIONES:
+	for par: Array in acciones():
 		var a := String(par[0])
 		if cf.has_section_key("teclas", a):
 			_propio[a] = cf.get_value("teclas", a, {})
@@ -42,7 +46,7 @@ static func guardar() -> void:
 static func aplicar() -> void:
 	if not _cargado:
 		cargar()
-	for par: Array in ACCIONES:
+	for par: Array in acciones():
 		var a := String(par[0])
 		if InputMap.has_action(a) and not _defectos.has(a):
 			_defectos[a] = InputMap.action_get_events(a).duplicate()
@@ -99,7 +103,7 @@ static func _poner(accion: String, ev: InputEvent) -> void:
 		if (es_tecla and viejo is InputEventKey) or (not es_tecla and viejo is InputEventJoypadButton):
 			InputMap.action_erase_event(accion, viejo)
 	## Y fuera de las otras acciones de la lista.
-	for par: Array in ACCIONES:
+	for par: Array in acciones():
 		var otra := String(par[0])
 		if otra != accion and InputMap.has_action(otra):
 			for e2: InputEvent in InputMap.action_get_events(otra):

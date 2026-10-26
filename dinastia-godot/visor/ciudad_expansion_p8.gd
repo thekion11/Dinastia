@@ -13,8 +13,24 @@ func _textura_charco() -> ImageTexture:
 		for x in 64:
 			var d := Vector2(float(x) - 31.5, float(y) - 31.5).length() / 32.0
 			var a := clampf(1.0 - d, 0.0, 1.0)
-			img.set_pixel(x, y, Color(1, 1, 1, a * a))
+			## 26-10-2026 (pciu): caída cúbica (antes cuadrática). Con la cámara
+			## junto a una farola, el borde ancho del charco teñía media pantalla
+			## de naranja; así la luz se concentra bajo el farol y el borde se
+			## funde antes, sin restar brillo al centro (ver `encender`).
+			img.set_pixel(x, y, Color(1, 1, 1, a * a * a))
 	return ImageTexture.create_from_image(img)
+
+## 26-10-2026 (pciu): la farola de Kenney trae el poste en azul lavanda claro
+## (su paleta de juguete) y en cada calle de día se leía como de plástico. Se
+## pinta de fundición gris grafito, satinada; se conserva su textura de paleta
+## (multiplicada) para que el brazo y la luminaria no queden de un solo tono.
+func _mat_poste_farola(malla: Mesh) -> StandardMaterial3D:
+	var orig := malla.surface_get_material(0) as StandardMaterial3D if malla.get_surface_count() > 0 else null
+	var m: StandardMaterial3D = orig.duplicate() if orig != null else StandardMaterial3D.new()
+	m.albedo_color = Color(0.30, 0.32, 0.31)
+	m.metallic = 0.35
+	m.roughness = 0.5
+	return m
 
 func _farolas() -> void:
 	var postes: Array[Transform3D] = []
@@ -78,14 +94,14 @@ func _farolas() -> void:
 	var gris := b._mat_simple(Color(0.25, 0.26, 0.27), 0.5)
 	_multimesh(CylinderMesh.new(), gris, postes, Vector3.ONE)
 	if not farolas_k.is_empty():
-		_multimesh(kf["malla"], null, farolas_k, Vector3.ONE)
+		_multimesh(kf["malla"], _mat_poste_farola(kf["malla"]), farolas_k, Vector3.ONE)
 	_multimesh(BoxMesh.new(), _mat_luz_farola(), cabezas, Vector3.ONE)
 	_farola_charco = StandardMaterial3D.new()
 	_farola_charco.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	_farola_charco.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	_farola_charco.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 	_farola_charco.albedo_texture = _textura_charco()
-	_farola_charco.albedo_color = Color(1.0, 0.75, 0.45, 0.0)
+	_farola_charco.albedo_color = Color(1.0, 0.8, 0.55, 0.0)
 	var pl := PlaneMesh.new()
 	pl.size = Vector2(1, 1)
 	_multimesh(pl, _farola_charco, charcos, Vector3.ONE)
