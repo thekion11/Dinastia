@@ -43,6 +43,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	GuinosEstadio.montar(root, est, dx, dz, fondo_tribuna(niveles), alto)
 	_tm("guinos")
 	_focos(root, str(est.get("focos", "torres")), dx, dz, alto, color_luz(est), str(est.get("focosCol", "")))
+	_haces(root, str(est.get("clima", "noche")))
 	## B6.2: lo que hay FUERA del recinto: taquillas, tienda y estacionamiento.
 	_tm("focos")
 	if bool(est.get("exterior", false)):
@@ -174,3 +175,13 @@ static func _fachada_y_escudo(obra: EstadioObra) -> void:
 	if mi != null:
 		_escudo_tribuna(obra.root, mi, donde_escudo, obra.dx, obra.dz, obra.alto,
 			fachada.find_child("EscudoFachada", false, false) != null)
+
+## Lo que el aire enseña el haz de los focos con cada clima (M-014): con niebla,
+## lluvia o nieve, más. La noche la pone `encender_conos`.
+const AIRE_HAZ := {"niebla": 1.7, "lluvia": 1.35, "nieve": 1.35, "tormenta": 1.35}
+
+static func _haces(root: Node3D, clima: String) -> void:
+	var aire: float = float(AIRE_HAZ.get(clima, 1.0))
+	for n: Node in root.get_children():
+		if n.is_in_group("foco_cono"):
+			(n as MeshInstance3D).set_instance_shader_parameter("aire", aire)

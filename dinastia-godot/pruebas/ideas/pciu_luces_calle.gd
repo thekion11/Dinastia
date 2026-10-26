@@ -9,6 +9,7 @@ func _probar() -> void:
 	_probar_asfalto()
 	_probar_haz()
 	_probar_farolas()
+	_probar_ventanas_kit()
 
 func _probar_asfalto() -> void:
 	_linea("· Asfalto mate")
@@ -75,4 +76,43 @@ func _probar_farolas() -> void:
 					grafito += 1
 					break
 	_comprobar(carteles > 0 and grafito == carteles, "los carteles colgantes de los cruces, en grafito (%d de %d)" % [grafito, carteles])
+	b.free()
+
+func _probar_ventanas_kit() -> void:
+	_linea("· Ventanas del kit comercial de noche")
+	var b := CityBuilder.new()
+	var e := load(CityBuilder.RUTAS_COMERCIAL[0]) as PackedScene
+	var n: Node3D = e.instantiate()
+	b.tenir(n, 3)
+	var mi := n.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+	var sm := mi.get_surface_override_material(0) as ShaderMaterial
+	_comprobar(sm != null and sm.shader.resource_path.ends_with("ventanas_kit.gdshader"), "el edificio comercial lleva el material de ventanas")
+	if sm != null:
+		var orig := mi.mesh.surface_get_material(0) as StandardMaterial3D
+		_comprobar(sm.get_shader_parameter("paleta") == orig.albedo_texture, "conserva la paleta de Kenney")
+		var tin: Color = sm.get_shader_parameter("tinte")
+		_comprobar(tin.is_equal_approx(orig.albedo_color * CityBuilder.TINTES[3]), "y el tinte de su fachada")
+		var codigo := sm.shader.code
+		_comprobar(codigo.contains("0.6875") and codigo.contains("MODEL_MATRIX[3]"), "cristal por la columna azul de la paleta y variación por edificio (también en MultiMesh)")
+		b.encender_luces(1.0)
+		_comprobar(float(sm.get_shader_parameter("noche")) == 1.0, "de noche se encienden")
+		b.encender_luces(0.0)
+		_comprobar(float(sm.get_shader_parameter("noche")) == 0.0, "de día, apagadas")
+	## El cristal de verdad cae en esa columna: se mide en la malla.
+	var img := (mi.mesh.surface_get_material(0) as StandardMaterial3D).albedo_texture.get_image()
+	if img.is_compressed():
+		img.decompress()
+	var arr := mi.mesh.surface_get_arrays(0)
+	var uv: PackedVector2Array = arr[Mesh.ARRAY_TEX_UV]
+	var azules := 0
+	for u in uv:
+		if u.x >= 0.6875 and u.x <= 0.75 and u.y >= 0.25 and u.y <= 0.5:
+			var c := img.get_pixel(clampi(int(u.x * img.get_width()), 0, img.get_width() - 1), clampi(int(u.y * img.get_height()), 0, img.get_height() - 1))
+			if c.b > c.r + 0.2:
+				azules += 1
+	_comprobar(azules >= 8, "el modelo tiene cristal azul en esa columna (%d vértices)" % azules)
+	## Otros kits (suburbano) siguen con su copia teñida.
+	var otro := StandardMaterial3D.new()
+	_comprobar(CityBuilder.ventanas_kit(otro, Color.WHITE) == null, "otros materiales no cambian")
+	n.free()
 	b.free()

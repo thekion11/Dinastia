@@ -95,7 +95,6 @@ const SHADER_BANDERA := preload("res://visor/bandera.gdshader")
 ## proyectar conos translúcidos sobre el césped»). Un cono aditivo del foco al
 ## campo, invisible de día y cada vez más visible cuanto más oscuro es el
 ## ambiente (`encender_conos`). Comparten un material.
-static var _mat_cono: StandardMaterial3D = null
 
 ## BORRADO EL 23-9-2026: HABIA DOS BANQUILLOS, UNO ENCIMA DEL OTRO.
 ##

@@ -242,6 +242,10 @@ func encender_luces(noche: float) -> void:
 	var f: float = clampf(noche, 0.0, 1.0)
 	for mt in _mats_torre:
 		mt.set_shader_parameter("noche", f)
+	## Las ventanas del kit comercial (`ventanas_kit`), cacheadas con los tintes.
+	for mk: Material in _cache_tintes.values():
+		if mk is ShaderMaterial:
+			(mk as ShaderMaterial).set_shader_parameter("noche", f)
 	StadiumBuilder.encender_conos(f)
 	for l in _farolas_luz:
 		if is_instance_valid(l):

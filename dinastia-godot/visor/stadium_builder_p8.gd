@@ -38,7 +38,8 @@ static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float
 				root.add_child(pole)
 				var cima := base + Vector3(0, h + 0.6, 0)
 				_cabeza_foco(root, cima, Vector3(base.x * 0.2, 0.0, base.z * 0.2), Vector2(6.4, 2.6), 6, 3, bastidor, proyectores)
-				_cono_de_luz(root, base + Vector3(0, h - 0.6, 0), Vector3(0, 0.3, 0), 7.0, luz)
+				## El haz, hacia donde apunta el bastidor (M-014).
+				_cono_de_luz(root, cima - Vector3(0, 0.4, 0), Vector3(base.x * 0.2, 0.0, base.z * 0.2), 19.0, luz)
 	if tipo == "corona" or tipo == "mixto" or tipo == "halo":
 		## BUG REAL (23-9-2026): la corona se repartia sobre una ELIPSE
 		## (`cos(a)*dx`, `sin(a)*dz`), y el anillo de tribunas es un
@@ -59,7 +60,7 @@ static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float
 			var p := Vector3(d.x / k, alto + 1.2, d.y / k)
 			_cabeza_foco(root, p, Vector3(p.x * 0.35, 0.0, p.z * 0.35), Vector2(2.2, 0.7), 4, 1, bastidor, proyectores)
 			if i % 2 == 0:
-				_cono_de_luz(root, p - Vector3(0, 0.3, 0), Vector3(0, 0.3, 0), 4.0, luz)
+				_cono_de_luz(root, p - Vector3(0, 0.3, 0), Vector3(p.x * 0.35, 0.0, p.z * 0.35), 9.0, luz)
 	if proyectores.is_empty():
 		return
 	var disco := CylinderMesh.new()

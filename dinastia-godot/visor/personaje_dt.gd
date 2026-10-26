@@ -316,3 +316,73 @@ static func cuerpo_futbolista(d: Dictionary, jug: Dictionary, jid: String) -> vo
 	if not d.has("esqueleto") or not d.has("modelo"):
 		return
 	_cuerpo(d, aspecto_futbolista(jug, jid), true)
+
+# -----------------------------------------------------------------------------
+#  CARA, OJOS Y ESFERAS (pasadas desde la capa 1 el 26-10-2026: norma de 450)
+# -----------------------------------------------------------------------------
+
+## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)
+## y, si se eligió, un corte medido. Con gorra no va el corte medido.
+static func _cara_biblioteca(d: Dictionary, a: Dictionary) -> void:
+	var i := int(a.get("cara", -1))
+	## (Las mezclas salen de futbolistas hombres: en un cuerpo de mujer
+	## quedaban masculinas. Ahí va la cara clásica.)
+	if i < 0 or not BibliotecaCaras.hay() or String(a["cuerpo"]) == "female":
+		return
+	var piel := Color(String(a["piel"]))
+	var clave := BibliotecaCaras.cara_de_tono(piel, i)
+	if clave == "":
+		return
+	var corte := "" if bool(a["gorra"]) else String(a.get("corte_med", ""))
+	VestidorQ.poner_cara(d, {"look": {}, "foto": "",
+		"biblio": {"cara": clave, "pelo": corte, "color_pelo": "#" + String(a["color_pelo"])}}, piel)
+static func material_ojos(piel: Color, iris: Color, mujer := false) -> ShaderMaterial:
+	var k := piel.to_html(false) + iris.to_html(false) + ("m" if mujer else "")
+	if _mats_ojos.has(k):
+		return _mats_ojos[k]
+	var mo := ShaderMaterial.new()
+	mo.shader = load(Expresion.SHADER_OJOS)
+	mo.set_shader_parameter("iris", iris)
+	mo.set_shader_parameter("piel", piel)
+	## Los ojos del cuerpo de mujer están más abajo (medido en su malla: ±0,0345
+	## y 1,6559). Con los del hombre, los párpados le tapaban el ojo entero.
+	if mujer:
+		mo.set_shader_parameter("centro_neg", Vector2(-0.0345, 1.6559))
+		mo.set_shader_parameter("centro_pos", Vector2(0.0345, 1.6559))
+	_mats_ojos[k] = mo
+	return mo
+
+## OJOS DE VERDAD también con la cara clásica (13-10-2026): eran ranuras
+## blancas. El shader de ojos (iris, párpados de su piel) y, con él, el
+## parpadeo y las expresiones (`Expresion`).
+static func _ojos_vivos(d: Dictionary, piel: Color, iris := Color(0.24, 0.16, 0.1), propio := true) -> void:
+	for mi: MeshInstance3D in (d["nodo"] as Node).find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh == null:
+			continue
+		for s in mi.mesh.get_surface_count():
+			var base := mi.mesh.surface_get_material(s)
+			var actual := mi.get_surface_override_material(s)
+			if base == null or base.resource_name != VestidorQ.MATERIAL_OJOS:
+				continue
+			if actual is ShaderMaterial and not propio:
+				continue
+			if actual is ShaderMaterial:
+				## Cara de biblioteca: ya tiene el shader (compartido); uno propio con tu iris.
+				var copia := (actual as ShaderMaterial).duplicate() as ShaderMaterial
+				copia.set_shader_parameter("iris", iris)
+				mi.set_surface_override_material(s, copia)
+				continue
+			VestidorQ._con_reposo_simple(mi)
+			var mujer := (d["nodo"] as Node).find_child("Superhero_Female", true, false) != null
+			mi.set_surface_override_material(s, material_ojos(piel, iris, mujer))
+
+static func _esfera(padre: Node3D, pos: Vector3, r: float, m: Material) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var s := SphereMesh.new()
+	s.radius = r
+	s.height = r * 2.0
+	mi.mesh = s
+	mi.material_override = m
+	mi.position = pos
+	padre.add_child(mi)
+	return mi
