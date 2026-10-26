@@ -5301,7 +5301,9 @@
   "Pulsa V al pasear para cambiar a primera persona.": "Press V while walking to switch to first person.",
   "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Step into the houses and bars; the people of the city have things to tell you.",
   "La Academia juvenil mejora el potencial de los canteranos.": "The Youth Academy improves the potential of your academy players.",
-  "De noche las ventanas se encienden y las farolas alumbran la calle.": "At night the windows light up and the street lamps glow."
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "At night the windows light up and the street lamps glow.",
+  "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": "🎮 X: interact · A: run · Y: view · Select: GPS · Start: back to map",
+  "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": "🎮 RT/LT: accelerate and brake · B: handbrake · X: interact · Y: camera · Start: back to map"
  },
  "pt": {
   "Historia": "História",
@@ -10605,7 +10607,9 @@
   "Pulsa V al pasear para cambiar a primera persona.": "Carregue em V ao passear para mudar para a primeira pessoa.",
   "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Entre nas casas e nos bares; as pessoas da cidade têm coisas para lhe contar.",
   "La Academia juvenil mejora el potencial de los canteranos.": "A Academia juvenil melhora o potencial dos jovens da formação.",
-  "De noche las ventanas se encienden y las farolas alumbran la calle.": "À noite as janelas acendem-se e os candeeiros iluminam a rua."
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "À noite as janelas acendem-se e os candeeiros iluminam a rua.",
+  "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": "🎮 X: interagir · A: correr · Y: vista · Select: GPS · Start: voltar ao mapa",
+  "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": "🎮 RT/LT: acelerar e travar · B: travão de mão · X: interagir · Y: câmara · Start: voltar ao mapa"
  },
  "patrones": [
   [
@@ -21428,7 +21432,9 @@
   "Pulsa V al pasear para cambiar a primera persona.": "Appuyez sur V en vous promenant pour passer à la première personne.",
   "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Entrez dans les maisons et les bars ; les habitants ont des choses à vous raconter.",
   "La Academia juvenil mejora el potencial de los canteranos.": "L'Académie des jeunes améliore le potentiel des jeunes du centre.",
-  "De noche las ventanas se encienden y las farolas alumbran la calle.": "La nuit, les fenêtres s'allument et les lampadaires éclairent la rue."
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "La nuit, les fenêtres s'allument et les lampadaires éclairent la rue.",
+  "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": "🎮 X : interagir · A : courir · Y : vue · Select : GPS · Start : retour à la carte",
+  "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": "🎮 RT/LT : accélérer et freiner · B : frein à main · X : interagir · Y : caméra · Start : retour à la carte"
  },
  "it": {
   "Historia": "Storia",
@@ -26639,7 +26645,9 @@
   "Pulsa V al pasear para cambiar a primera persona.": "Premi V mentre cammini per passare alla prima persona.",
   "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Entra nelle case e nei bar; la gente della città ha cose da raccontarti.",
   "La Academia juvenil mejora el potencial de los canteranos.": "L'Accademia giovanile migliora il potenziale dei giovani del vivaio.",
-  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Di notte le finestre si accendono e i lampioni illuminano la strada."
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Di notte le finestre si accendono e i lampioni illuminano la strada.",
+  "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": "🎮 X: interagire · A: correre · Y: visuale · Select: GPS · Start: torna alla mappa",
+  "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": "🎮 RT/LT: accelerare e frenare · B: freno a mano · X: interagire · Y: telecamera · Start: torna alla mappa"
  },
  "de": {
   "Historia": "Geschichte",
@@ -31850,7 +31858,9 @@
   "Pulsa V al pasear para cambiar a primera persona.": "Drücke beim Spazieren V, um in die Ich-Perspektive zu wechseln.",
   "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Betritt die Häuser und Bars; die Menschen der Stadt haben dir etwas zu erzählen.",
   "La Academia juvenil mejora el potencial de los canteranos.": "Die Jugendakademie verbessert das Potenzial deiner Nachwuchsspieler.",
-  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Nachts leuchten die Fenster und die Laternen erhellen die Straße."
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Nachts leuchten die Fenster und die Laternen erhellen die Straße.",
+  "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": "🎮 X: interagieren · A: rennen · Y: Ansicht · Select: GPS · Start: zurück zur Karte",
+  "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": "🎮 RT/LT: Gas geben und bremsen · B: Handbremse · X: interagieren · Y: Kamera · Start: zurück zur Karte"
  },
  "ca": {
   "Historia": "Història",
@@ -37061,7 +37071,9 @@
   "Pulsa V al pasear para cambiar a primera persona.": "Prem V mentre passeges per canviar a primera persona.",
   "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Entra a les cases i als bars; la gent de la ciutat té coses per explicar-te.",
   "La Academia juvenil mejora el potencial de los canteranos.": "L'Acadèmia juvenil millora el potencial dels jugadors de la pedrera.",
-  "De noche las ventanas se encienden y las farolas alumbran la calle.": "De nit les finestres s'encenen i els fanals il·luminen el carrer."
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "De nit les finestres s'encenen i els fanals il·luminen el carrer.",
+  "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": "🎮 X: interactuar · A: córrer · Y: vista · Select: GPS · Start: tornar al mapa",
+  "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": "🎮 RT/LT: accelerar i frenar · B: fre de mà · X: interactuar · Y: càmera · Start: tornar al mapa"
  },
  "pl": {
   "Club": "Klub",
@@ -42552,7 +42564,9 @@
   "Pulsa V al pasear para cambiar a primera persona.": "Naciśnij V podczas spaceru, by przełączyć na widok z pierwszej osoby.",
   "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Wchodź do domów i barów; mieszkańcy miasta mają ci wiele do opowiedzenia.",
   "La Academia juvenil mejora el potencial de los canteranos.": "Akademia młodzieżowa podnosi potencjał wychowanków.",
-  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Nocą zapalają się okna, a latarnie oświetlają ulicę."
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Nocą zapalają się okna, a latarnie oświetlają ulicę.",
+  "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": "🎮 X: interakcja · A: bieg · Y: widok · Select: GPS · Start: powrót do mapy",
+  "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": "🎮 RT/LT: gaz i hamulec · B: hamulec ręczny · X: interakcja · Y: kamera · Start: powrót do mapy"
  },
  "tr": {
   "Club": "Kulüp",
@@ -48043,6 +48057,8 @@
   "Pulsa V al pasear para cambiar a primera persona.": "Gezerken V'ye basarak birinci şahıs görünümüne geç.",
   "Entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte.": "Evlere ve barlara gir; şehrin insanlarının sana anlatacakları var.",
   "La Academia juvenil mejora el potencial de los canteranos.": "Genç akademisi altyapı oyuncularının potansiyelini artırır.",
-  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Geceleri pencereler yanar ve sokak lambaları yolu aydınlatır."
+  "De noche las ventanas se encienden y las farolas alumbran la calle.": "Geceleri pencereler yanar ve sokak lambaları yolu aydınlatır.",
+  "🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa": "🎮 X: etkileşim · A: koş · Y: görünüm · Select: GPS · Start: haritaya dön",
+  "🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa": "🎮 RT/LT: hızlan ve fren yap · B: el freni · X: etkileşim · Y: kamera · Start: haritaya dön"
  }
 }

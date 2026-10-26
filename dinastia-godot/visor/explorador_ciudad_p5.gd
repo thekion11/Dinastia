@@ -409,6 +409,8 @@ func _physics_process(delta: float) -> void:
 		VEL_COCHE * 3.6 if modo == "coche" else VEL_CORRER * 3.6, absf(vel) * delta)
 	_hud.text = (Idiomas.t("🚗 Conduciendo") if modo == "coche" else Idiomas.t("🚶 A pie")) + Idiomas.t("  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa") % [
 		int(absf(vel) * 3.6), "" if modo == "coche" else Idiomas.t("Mayús: correr · V: vista · ")]
+	if not Input.get_connected_joypads().is_empty():   ## con mando, sus botones (M-433)
+		_hud.text += "\n" + (Idiomas.t("🎮 RT/LT: acelerar y frenar · B: freno de mano · X: interactuar · Y: cámara · Start: volver al mapa") if modo == "coche" else Idiomas.t("🎮 X: interactuar · A: correr · Y: vista · Select: GPS · Start: volver al mapa"))
 	## Dónde estás: el nombre de la calle (o el cruce).
 	if cb != null and cb.expansion != null:
 		var calle := cb.expansion.nombre_calle_en(cuerpo.position)
