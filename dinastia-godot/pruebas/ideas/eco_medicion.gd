@@ -6,8 +6,10 @@ extends BaseIdea
 ## clubes de la IA están en rojo o rescatados. ECO_TEMP / ECO_SEMILLAS para cambiarla.
 
 func _probar() -> void:
-	if OS.get_environment("TV_IGUAL") != "":   ## medir el reparto solidario de la tele sin activarlo
+	if OS.get_environment("TV_IGUAL") != "":   ## medir otro reparto de la tele
 		Finanzas.reparto_tv_igual = float(OS.get_environment("TV_IGUAL"))
+	if OS.get_environment("TAQUILLA_X") != "":   ## y otra taquilla
+		Finanzas.factor_taquilla = float(OS.get_environment("TAQUILLA_X"))
 	var temporadas := int(OS.get_environment("ECO_TEMP")) if OS.get_environment("ECO_TEMP") != "" else 3
 	var semillas: Array = [101]
 	if OS.get_environment("ECO_SEMILLAS") != "":
@@ -64,8 +66,12 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 	## M-208: sin gestionar, la caja del grande no puede crecer más de 3/4 de su referencia por temporada
 	## (con el 42% plano crecía 1,15 referencias por año: 6,6 M → 18,9 M en dos temporadas).
 	var crece := float(cajas[-1] - cajas[0]) / float(temporadas)
-	if grande:
-		_comprobar(crece < Eco.ref_caja(yo.rep) * 0.75, "%s: la caja no se dispara sola (%.2f M/temporada)" % [et, crece / 1e6])
+	## Y desde el reparto solidario de la tele y la taquilla ×3,5 (26-10), también el chico: equilibrarse sí,
+	## hacerse rico solo no. Su techo es de 2 referencias y no de 3/4: la referencia del chico (0,47 M) es un
+	## colchón diminuto al lado de su presupuesto (~5 M al año), y 3/4 de ella sería exigir un margen del 7 %.
+	## Medido el 26-10: +0,67 M/temporada en Primera (~13 % de lo que ingresa).
+	var techo := 0.75 if grande else 2.0
+	_comprobar(crece < Eco.ref_caja(yo.rep) * techo, "%s: la caja no se dispara sola (%.2f M/temporada; techo %.2f M)" % [et, crece / 1e6, Eco.ref_caja(yo.rep) * techo / 1e6])
 	## M-210, precios coherentes: lo que cuesta un jugador es lo que dice su tasación (media, edad, techo). El
 	## valor MEDIO sí sube: lo arrastra la cola de estrellas jóvenes de la cantera, no el precio.
 	var ratios: Array[float] = []

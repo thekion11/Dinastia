@@ -1,0 +1,264 @@
+{
+ "exactas": {
+  "'¿Es este el triunfo que confirma la levantada?'": {
+   "en": "'Is this the win that confirms the revival?'",
+   "pt": "'É esta a vitória que confirma a reação?'",
+   "fr": "'Est-ce la victoire qui confirme le redressement ?'",
+   "it": "'È questa la vittoria che conferma la risalita?'",
+   "de": "'Ist das der Sieg, der den Aufschwung bestätigt?'",
+   "ca": "'És aquest el triomf que confirma la remuntada?'",
+   "pl": "'Czy to zwycięstwo potwierdza, że drużyna wstała z kolan?'",
+   "tr": "'Bu, toparlanmayı teyit eden galibiyet mi?'"
+  },
+  "¿Es este el triunfo que confirma la levantada?": {
+   "en": "Is this the win that confirms the revival?",
+   "pt": "É esta a vitória que confirma a reação?",
+   "fr": "Est-ce la victoire qui confirme le redressement ?",
+   "it": "È questa la vittoria che conferma la risalita?",
+   "de": "Ist das der Sieg, der den Aufschwung bestätigt?",
+   "ca": "És aquest el triomf que confirma la remuntada?",
+   "pl": "Czy to zwycięstwo potwierdza, że drużyna wstała z kolan?",
+   "tr": "Bu, toparlanmayı teyit eden galibiyet mi?"
+  },
+  "'¿Sabe a poco este empate?'": {
+   "en": "'Does this draw feel like too little?'",
+   "pt": "'Este empate sabe a pouco?'",
+   "fr": "'Ce match nul a-t-il un goût de trop peu ?'",
+   "it": "'Questo pareggio sa di poco?'",
+   "de": "'Ist dieses Unentschieden zu wenig?'",
+   "ca": "'Sap a poc aquest empat?'",
+   "pl": "'Czy ten remis to za mało?'",
+   "tr": "'Bu beraberlik az mı geldi?'"
+  },
+  "¿Sabe a poco este empate?": {
+   "en": "Does this draw feel like too little?",
+   "pt": "Este empate sabe a pouco?",
+   "fr": "Ce match nul a-t-il un goût de trop peu ?",
+   "it": "Questo pareggio sa di poco?",
+   "de": "Ist dieses Unentschieden zu wenig?",
+   "ca": "Sap a poc aquest empat?",
+   "pl": "Czy ten remis to za mało?",
+   "tr": "Bu beraberlik az mı geldi?"
+  },
+  "'¿Le preocupa la falta de gol?'": {
+   "en": "'Are you worried about the lack of goals?'",
+   "pt": "'A falta de gols preocupa o senhor?'",
+   "fr": "'Le manque de buts vous inquiète-t-il ?'",
+   "it": "'La preoccupa la mancanza di gol?'",
+   "de": "'Macht Ihnen die Torflaute Sorgen?'",
+   "ca": "'El preocupa la falta de gol?'",
+   "pl": "'Martwi pana brak goli?'",
+   "tr": "'Gol kısırlığı sizi endişelendiriyor mu?'"
+  },
+  "¿Le preocupa la falta de gol?": {
+   "en": "Are you worried about the lack of goals?",
+   "pt": "A falta de gols preocupa o senhor?",
+   "fr": "Le manque de buts vous inquiète-t-il ?",
+   "it": "La preoccupa la mancanza di gol?",
+   "de": "Macht Ihnen die Torflaute Sorgen?",
+   "ca": "El preocupa la falta de gol?",
+   "pl": "Martwi pana brak goli?",
+   "tr": "Gol kısırlığı sizi endişelendiriyor mu?"
+  },
+  "'¿Está en riesgo su puesto tras esta derrota?'": {
+   "en": "'Is your job at risk after this defeat?'",
+   "pt": "'O seu cargo está em risco depois desta derrota?'",
+   "fr": "'Votre poste est-il menacé après cette défaite ?'",
+   "it": "'Il suo posto è a rischio dopo questa sconfitta?'",
+   "de": "'Ist Ihr Job nach dieser Niederlage in Gefahr?'",
+   "ca": "'Està en perill el seu càrrec després d'aquesta derrota?'",
+   "pl": "'Czy po tej porażce pańska posada jest zagrożona?'",
+   "tr": "'Bu yenilgiden sonra göreviniz tehlikede mi?'"
+  },
+  "¿Está en riesgo su puesto tras esta derrota?": {
+   "en": "Is your job at risk after this defeat?",
+   "pt": "O seu cargo está em risco depois desta derrota?",
+   "fr": "Votre poste est-il menacé après cette défaite ?",
+   "it": "Il suo posto è a rischio dopo questa sconfitta?",
+   "de": "Ist Ihr Job nach dieser Niederlage in Gefahr?",
+   "ca": "Està en perill el seu càrrec després d'aquesta derrota?",
+   "pl": "Czy po tej porażce pańska posada jest zagrożona?",
+   "tr": "Bu yenilgiden sonra göreviniz tehlikede mi?"
+  },
+  "'Los hinchas silbaron al equipo, ¿los entiende?'": {
+   "en": "'The fans whistled at the team. Do you understand them?'",
+   "pt": "'A torcida vaiou o time. O senhor entende?'",
+   "fr": "'Les supporters ont sifflé l'équipe. Vous les comprenez ?'",
+   "it": "'I tifosi hanno fischiato la squadra: li capisce?'",
+   "de": "'Die Fans haben die Mannschaft ausgepfiffen. Verstehen Sie sie?'",
+   "ca": "'L'afició ha xiulat l'equip. Els entén?'",
+   "pl": "'Kibice wygwizdali drużynę. Rozumie ich pan?'",
+   "tr": "'Taraftarlar takımı ıslıkladı. Onları anlıyor musunuz?'"
+  },
+  "Los hinchas silbaron al equipo, ¿los entiende?": {
+   "en": "The fans whistled at the team. Do you understand them?",
+   "pt": "A torcida vaiou o time. O senhor entende?",
+   "fr": "Les supporters ont sifflé l'équipe. Vous les comprenez ?",
+   "it": "I tifosi hanno fischiato la squadra: li capisce?",
+   "de": "Die Fans haben die Mannschaft ausgepfiffen. Verstehen Sie sie?",
+   "ca": "L'afició ha xiulat l'equip. Els entén?",
+   "pl": "Kibice wygwizdali drużynę. Rozumie ich pan?",
+   "tr": "Taraftarlar takımı ıslıkladı. Onları anlıyor musunuz?"
+  },
+  "escudo": {
+   "en": "crest",
+   "pt": "escudo",
+   "fr": "écusson",
+   "it": "stemma",
+   "de": "Wappen",
+   "ca": "escut",
+   "pl": "herb",
+   "tr": "arma"
+  },
+  "camiseta": {
+   "en": "shirt",
+   "pt": "camisa",
+   "fr": "maillot",
+   "it": "maglia",
+   "de": "Trikot",
+   "ca": "samarreta",
+   "pl": "koszulka",
+   "tr": "forma"
+  },
+  "%s, a pie de campo": {
+   "en": "%s, pitchside",
+   "pt": "%s, à beira do campo",
+   "fr": "%s, au bord du terrain",
+   "it": "%s, a bordo campo",
+   "de": "%s, am Spielfeldrand",
+   "ca": "%s, a peu de camp",
+   "pl": "%s, przy linii bocznej",
+   "tr": "%s, saha kenarında"
+  },
+  "streamer": {
+   "en": "streamer",
+   "pt": "streamer",
+   "fr": "streameur",
+   "it": "streamer",
+   "de": "Streamer",
+   "ca": "streamer",
+   "pl": "streamer",
+   "tr": "yayıncı"
+  },
+  "podcast": {
+   "en": "podcast",
+   "pt": "podcast",
+   "fr": "podcast",
+   "it": "podcast",
+   "de": "Podcast",
+   "ca": "pòdcast",
+   "pl": "podcast",
+   "tr": "podcast"
+  },
+  "vídeos cortos": {
+   "en": "short videos",
+   "pt": "vídeos curtos",
+   "fr": "vidéos courtes",
+   "it": "video brevi",
+   "de": "Kurzvideos",
+   "ca": "vídeos curts",
+   "pl": "krótkie filmiki",
+   "tr": "kısa videolar"
+  },
+  "streaming": {
+   "en": "streaming",
+   "pt": "streaming",
+   "fr": "streaming",
+   "it": "streaming",
+   "de": "Streaming",
+   "ca": "streaming",
+   "pl": "streaming",
+   "tr": "canlı yayın"
+  }
+ },
+ "patrones": [
+  [
+   "^'El\\ club\\ estrena\\ (.+)\\.\\ Hay\\ hinchas\\ molestos:\\ ¿por\\ qué\\ tocar\\ algo\\ tan\\ sagrado\\?'$",
+   "'The club is unveiling a new $1. Some fans are upset: why touch something so sacred?'",
+   "'O clube estreia novidades ($1). Há torcedores incomodados: por que mexer em algo tão sagrado?'",
+   "'Le club présente ses nouveautés ($1). Des supporters sont fâchés : pourquoi toucher à quelque chose d'aussi sacré ?'",
+   "'Il club presenta le novità ($1). Alcuni tifosi sono arrabbiati: perché toccare qualcosa di così sacro?'",
+   "'Der Verein präsentiert ein neues $1. Manche Fans sind verärgert: Warum etwas so Heiliges anfassen?'",
+   "'El club estrena $1. Hi ha aficionats molestos: per què tocar una cosa tan sagrada?'",
+   "'Klub prezentuje nowy element: $1. Część kibiców jest zła: po co ruszać coś tak świętego?'",
+   "'Kulüp yeni $1 tanıttı. Bazı taraftarlar rahatsız: neden bu kadar kutsal bir şeye dokunuldu?'"
+  ],
+  [
+   "^'Con\\ (.+),\\ ¿fue\\ un\\ triunfo\\ de\\ carácter\\ más\\ que\\ de\\ fútbol\\?'$",
+   "'With $1, was it a win built on character more than football?'",
+   "'Com $1, foi uma vitória mais de caráter do que de futebol?'",
+   "'Avec $1, était-ce une victoire de caractère plus que de football ?'",
+   "'Con $1, è stata una vittoria di carattere più che di calcio?'",
+   "'Bei $1: War das eher ein Sieg der Moral als des Fußballs?'",
+   "'Amb $1, ha estat un triomf de caràcter més que de futbol?'",
+   "'Przy takiej pogodzie ($1): to było zwycięstwo charakteru bardziej niż futbolu?'",
+   "'$1 koşullarında, futboldan çok karakterin galibiyeti miydi?'"
+  ],
+  [
+   "^'Hace\\ poco\\ dijo\\ «(.+)»\\.\\ Hoy\\ no\\ ganaron\\.\\ ¿Se\\ arrepiente\\ de\\ esa\\ frase\\?'$",
+   "'Not long ago you said «$1». Today you didn't win. Do you regret saying it?'",
+   "'Há pouco o senhor disse «$1». Hoje não ganharam. Arrepende-se dessa frase?'",
+   "'Il y a peu, vous avez dit «$1». Aujourd'hui, vous n'avez pas gagné. Regrettez-vous cette phrase ?'",
+   "'Poco tempo fa ha detto «$1». Oggi non avete vinto. Si pente di quella frase?'",
+   "'Vor Kurzem sagten Sie «$1». Heute haben Sie nicht gewonnen. Bereuen Sie diesen Satz?'",
+   "'Fa poc va dir «$1». Avui no han guanyat. Se'n penedeix, d'aquesta frase?'",
+   "'Niedawno powiedział pan «$1». Dziś nie wygraliście. Żałuje pan tych słów?'",
+   "'Kısa süre önce «$1» demiştiniz. Bugün kazanamadınız. O sözden pişman mısınız?'"
+  ],
+  [
+   "^'La última vez no me contestó; a ver hoy\\. (.+)'$",
+   "'Last time you didn't answer me; let's see about today. $1'",
+   "'Da última vez o senhor não me respondeu; vamos ver hoje. $1'",
+   "'La dernière fois, vous ne m'avez pas répondu ; voyons aujourd'hui. $1'",
+   "'L'ultima volta non mi ha risposto; vediamo oggi. $1'",
+   "'Letztes Mal haben Sie mir nicht geantwortet; mal sehen, wie es heute ist. $1'",
+   "'L'última vegada no em va contestar; a veure avui. $1'",
+   "'Ostatnio mi pan nie odpowiedział; zobaczymy dziś. $1'",
+   "'Geçen sefer bana cevap vermediniz; bakalım bugün. $1'"
+  ],
+  [
+   "^'«(.+)»\\.\\ ¿No\\ teme\\ que\\ esa\\ frase\\ se\\ le\\ vuelva\\ en\\ contra\\?'$",
+   "'«$1». Aren't you afraid that line will come back to bite you?'",
+   "'«$1». Não teme que essa frase se volte contra o senhor?'",
+   "'«$1». Vous ne craignez pas que cette phrase se retourne contre vous ?'",
+   "'«$1». Non teme che quella frase le si ritorca contro?'",
+   "'«$1». Fürchten Sie nicht, dass Ihnen dieser Satz auf die Füße fällt?'",
+   "'«$1». No tem por que aquesta frase se li giri en contra?'",
+   "'«$1». Nie boi się pan, że te słowa obrócą się przeciwko panu?'",
+   "'«$1». Bu sözün size geri dönmesinden korkmuyor musunuz?'"
+  ],
+  [
+   "^¡Victoria\\ por\\ (\\d+)\\-(\\d+)!\\ ¿Qué\\ le\\ dice\\ a\\ la\\ gente\\ que\\ vino\\ hoy\\?$",
+   "A $1-$2 win! What do you say to the people who came today?",
+   "Vitória por $1 a $2! O que diz à torcida que veio hoje?",
+   "Victoire $1-$2 ! Que dites-vous aux gens venus aujourd'hui ?",
+   "Vittoria per $1-$2! Cosa dice alla gente venuta oggi?",
+   "$1:$2-Sieg! Was sagen Sie den Leuten, die heute gekommen sind?",
+   "Victòria per $1-$2! Què li diu a la gent que ha vingut avui?",
+   "Zwycięstwo $1:$2! Co powie pan ludziom, którzy dziś przyszli?",
+   "$1-$2 galibiyet! Bugün gelen taraftarlara ne söylersiniz?"
+  ],
+  [
+   "^Empate\\ (\\d+)\\-(\\d+)\\.\\ ¿Sabe\\ a\\ poco\\?$",
+   "$1-$2 draw. Does it feel like too little?",
+   "Empate por $1 a $2. Sabe a pouco?",
+   "Match nul $1-$2. Un goût de trop peu ?",
+   "Pareggio $1-$2. Sa di poco?",
+   "$1:$2-Unentschieden. Ist das zu wenig?",
+   "Empat $1-$2. Sap a poc?",
+   "Remis $1:$2. To za mało?",
+   "$1-$2 beraberlik. Az mı geldi?"
+  ],
+  [
+   "^Derrota\\ (\\d+)\\-(\\d+),\\ duro\\ golpe\\.\\ ¿Qué\\ pasó\\ hoy\\?$",
+   "$1-$2 defeat, a heavy blow. What happened today?",
+   "Derrota por $1 a $2, duro golpe. O que aconteceu hoje?",
+   "Défaite $1-$2, coup dur. Que s'est-il passé aujourd'hui ?",
+   "Sconfitta $1-$2, duro colpo. Cos'è successo oggi?",
+   "$1:$2-Niederlage, ein harter Schlag. Was ist heute passiert?",
+   "Derrota $1-$2, cop dur. Què ha passat avui?",
+   "Porażka $1:$2, bolesny cios. Co się dziś stało?",
+   "$1-$2 yenilgi, ağır darbe. Bugün ne oldu?"
+  ]
+ ]
+}

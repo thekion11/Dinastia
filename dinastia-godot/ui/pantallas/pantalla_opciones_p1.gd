@@ -55,7 +55,11 @@ func _pintar_idioma() -> void:
 		b.custom_minimum_size = Vector2(150, 26)
 		b.tooltip_text = Idiomas.t("Idioma original, sin traducir nada.") if clave == "es" else Idiomas.t("%d frases de interfaz traducidas.") % Idiomas.cobertura(clave)
 		b.pressed.connect(func() -> void:
+			var antes := Idiomas.idioma
 			Idiomas.idioma = clave
+			## Los rótulos que se escribieron al construir la pantalla (barra de
+			## arriba, buscador...) no los repinta `_refrescar()`: se pasan aquí.
+			Idiomas.retraducir_arbol(p, antes)
 			p._refrescar())
 		flow.add_child(b)
 
@@ -337,12 +341,18 @@ func _pintar_penas_y_ramas(c: Club, h: Hinchada) -> void:
 		b.custom_minimum_size = Vector2(96, 0)
 		b.pressed.connect(func() -> void: _alternar_rama(clave, c, abierta))
 		fila.add_child(b)
+		## La descripción va DEBAJO de la fila y se parte en líneas (26-10-2026,
+		## auditoría de anchos): dentro de la fila y recortada solo quedaban 28-41 px
+		## libres tras el nombre, la cifra y el botón, y no se leía nada en ningún
+		## idioma (en alemán, todavía menos).
 		if not p._modo_experto:
 			var d := p._texto(10, Principal.COL_SUAVE)
-			d.text = "     %s" % String(f[7])
-			d.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			d.clip_text = true
-			fila.add_child(d)
+			d.text = String(f[7])
+			d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			var sangria := MarginContainer.new()
+			sangria.add_theme_constant_override("margin_left", 24)
+			sangria.add_child(d)
+			p._lista_estadio.add_child(sangria)
 	_pintar_palmares_ramas(h)
 
 func _organizar_dia_hincha(c: Club) -> void:

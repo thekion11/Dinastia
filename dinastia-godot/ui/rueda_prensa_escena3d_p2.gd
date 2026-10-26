@@ -1,6 +1,7 @@
 extends "res://ui/rueda_prensa_escena3d_p1.gd"
 ## [Capa 2/3 de `rueda_prensa_escena3d.gd`] _mallas_de, _montar_podio_generado, _montar_podio_procedural, _montar_ocultador_podio, _montar_podio, _montar_dt_generico … (+8)
 
+var _contexto: Dictionary = {}
 var _col_club1 := Color(0.12, 0.13, 0.16)
 var _col_club2 := Color(0.9, 0.9, 0.92)
 
@@ -356,8 +357,12 @@ func _montar_camara() -> void:
 ## `clubes_competencia`: los clubes de tu liga -la pared de sponsors ahora
 ## muestra SUS escudos, como una pared de prensa real de un torneo, en vez de
 ## marcas genéricas. Vacío -> las marcas de siempre (compatibilidad hacia atrás).
+## `contexto` (26-10): {tipo: general|competicion|previa, competicion, rival,
+## titulo}; decide la pared (`ParedPrensa`) y, con `titulo`, el trofeo 3D
+## sobre el atril (`Trofeo3D`).
 func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dictionary = {},
-		clubes_competencia: Array = []) -> void:
+		clubes_competencia: Array = [], contexto: Dictionary = {}) -> void:
+	_contexto = contexto
 	if club != null:
 		_col_club1 = Color.from_string(club.color1, _col_club1)
 		_col_club2 = Color.from_string(club.color2, _col_club2)
@@ -385,6 +390,11 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 	_montar_banderas(club)
 	_montar_luces()
 	_montar_podio()
+	if String(contexto.get("titulo", "")) != "":
+		var tro := Trofeo3D.de_competicion(String(contexto["titulo"]), 0.28)
+		tro.name = "TrofeoAtril"
+		tro.position = Vector3(-0.3, 1.1, -0.05)
+		add_child(tro)
 	## TU PERSONAJE 3D en el atril (13-10-2026), si lo creaste: se monta al
 	## entrar en el árbol (medir los huesos lo necesita). Si no, el retrato.
 	if not PersonajeDT.del_usuario.is_empty():

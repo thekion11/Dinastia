@@ -272,7 +272,19 @@ func _construir() -> void:
 		_linea(gv, "• " + Idiomas.t(c), COL_TEXTO, 15)
 	var pie := HBoxContainer.new()
 	pie.alignment = BoxContainer.ALIGNMENT_CENTER
+	pie.add_theme_constant_override("separation", 24)
 	raiz.add_child(pie)
+	## LAS OCASIONES JUGABLES (26-10, fila 14): se encienden o apagan aquí, antes
+	## de salir al campo, y valen para los partidos en 3D.
+	var oc := CheckButton.new()
+	oc.name = "OcasionesJugables"
+	oc.tooltip_text = Idiomas.t("⚡ Ocasiones jugables (eliges pase, conducción o tiro en 3-6 llegadas)")
+	oc.button_pressed = OcasionJugable.encendida()
+	oc.text = Idiomas.t("⚡ Ocasiones jugables: SÍ") if oc.button_pressed else Idiomas.t("⚡ Ocasiones jugables: NO")
+	oc.toggled.connect(func(si: bool) -> void:
+		OcasionJugable.guardar(si)
+		oc.text = Idiomas.t("⚡ Ocasiones jugables: SÍ") if si else Idiomas.t("⚡ Ocasiones jugables: NO"))
+	pie.add_child(oc)
 	var b := Button.new()
 	b.text = Idiomas.t("Al partido ▶")
 	b.custom_minimum_size = Vector2(200, 44)

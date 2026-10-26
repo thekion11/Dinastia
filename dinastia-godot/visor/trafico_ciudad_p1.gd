@@ -88,6 +88,9 @@ var _gente_celdas := {}
 ## Quién camina o conduce por la ciudad (lo pone `ExploradorCiudad`): todos le
 ## ceden el paso.
 var jugador: Node3D = null
+## Su huella: medio ancho y medio largo (morro en su +Z). La pone el explorador:
+## a pie, un hombro; en coche, la chapa.
+var jugador_huella := Vector2(0.3, 0.3)
 
 ## Fotograma propio para repartir los lejanos (ver `_process`).
 var _cuadro := 0
@@ -186,11 +189,9 @@ func _colocar(v: Dictionary) -> void:
 	var par: Array = r.en(float(v["s"]))
 	var pos: Vector3 = par[0]
 	var dir: Vector3 = par[1]
-	nodo.position = pos + Vector3(0, float(v["alto"]), 0)
-	## El paso a un lado del peatón que esquiva (ver `_mover_lado`).
-	var lado := float(v.get("lado", 0.0))
-	if lado != 0.0:
-		nodo.position += Vector3(-dir.z, 0, dir.x) * lado
+	## Un peatón que esquiva va desplazado de su línea `lat` metros hacia fuera
+	## (`TraficoCiudad._esquivar`).
+	nodo.position = pos + Vector3(0, float(v["alto"]), 0) + Vector3(dir.z, 0, -dir.x) * float(v.get("lat", 0.0))
 	## `atan2` y no `look_at`: el vehículo solo gira sobre su eje vertical -un
 	## coche no cabecea por seguir la calle- y `look_at` con un objetivo a la
 	## misma altura da un transform degenerado en cuanto la dirección se
@@ -200,7 +201,7 @@ func _colocar(v: Dictionary) -> void:
 	## de marcha, que es donde tienen el morro los coches (`CityBuilder.
 	## instanciar_coche`): su `giro` es 0. El -90° de antes suponía el morro en
 	## X y dejaba la flota entera circulando de lado.
-	nodo.rotation.y = atan2(dir.x, dir.z) + float(v["giro"]) + float(v.get("giro_lado", 0.0))
+	nodo.rotation.y = atan2(dir.x, dir.z) + float(v["giro"])
 
 ## Cuelga un vehículo de una ruta. `giro_base` corrige modelos que no miran
 ## hacia -Z (los coches de Kenney miran a +X, por ejemplo): sin eso, la flota
@@ -209,13 +210,17 @@ func agregar_vehiculo(nodo: Node3D, ruta: int, s: float, vel: float,
 		alto: float = 0.0, giro_base: float = 0.0) -> void:
 	if ruta < 0 or ruta >= _rutas.size():
 		return
+	## Los peatones (alto bajo) se anotan por ruta para no atravesarse. Los
+	## botes del río también van a 0,15 (pmov, 26-10-2026): antes contaban como
+	## gente, así que el reciclaje subía botes a las aceras y la ruta del río
+	## se apuntaba como acera (gente andando sobre el agua).
+	var peaton := alto > 0.05 and alto < 0.3 and not String(nodo.name).begins_with("Bote")
 	add_child(nodo)
 	_vehiculos.append({
 		"nodo": nodo, "ruta": ruta, "s": s, "vel": vel,
-		"alto": alto, "giro": giro_base,
+		"alto": alto, "giro": giro_base, "peaton": peaton,
 	})
-	## Los peatones (alto bajo) se anotan por ruta para no atravesarse.
-	if alto > 0.05 and alto < 0.3:
+	if peaton:
 		if not _peatones_ruta.has(ruta):
 			registrar_ruta_gente(ruta)
 		(_peatones_ruta[ruta] as Array).append(_vehiculos[_vehiculos.size() - 1])
@@ -237,8 +242,7 @@ func reciclar_peatones(centro: Vector3, mira: Vector3, lejos := 95.0, tope := 3,
 	## Con bastante gente alrededor no se trae más (rendimiento y realismo).
 	var cerca := 0
 	for v0: Dictionary in _vehiculos:
-		var a0 := float(v0["alto"])
-		if a0 > 0.05 and a0 < 0.3 and is_instance_valid(v0["nodo"]):
+		if bool(v0.get("peaton", false)) and is_instance_valid(v0["nodo"]):
 			var n0: Node3D = v0["nodo"]
 			if Vector2(n0.position.x, n0.position.z).distance_to(c2) < 80.0:
 				cerca += 1
@@ -249,8 +253,7 @@ func reciclar_peatones(centro: Vector3, mira: Vector3, lejos := 95.0, tope := 3,
 	for v: Dictionary in _vehiculos:
 		if movidos >= tope:
 			break
-		var alto := float(v["alto"])
-		if alto <= 0.05 or alto >= 0.3 or not is_instance_valid(v["nodo"]):
+		if not bool(v.get("peaton", false)) or not is_instance_valid(v["nodo"]):
 			continue
 		var n: Node3D = v["nodo"]
 		if Vector2(n.position.x, n.position.z).distance_to(c2) < lejos:
@@ -280,8 +283,8 @@ func reciclar_peatones(centro: Vector3, mira: Vector3, lejos := 95.0, tope := 3,
 					(_peatones_ruta[r] as Array).append(v)
 					v["ruta"] = r
 				v["s"] = sp
-				v["lado"] = 0.0
-				v["esquiva"] = 0.0
+				v["lat"] = 0.0
+				v["lat_obj"] = 0.0
 				_colocar(v)
 				movidos += 1
 				hecho = true
@@ -350,7 +353,7 @@ func faros(n: float) -> void:
 		var i := 0
 		for v in _vehiculos:
 			i += 1
-			if float(v["alto"]) > 0.05 and float(v["alto"]) < 0.3 and is_instance_valid(v["nodo"]):
+			if bool(v.get("peaton", false)) and is_instance_valid(v["nodo"]):
 				var sale := float((i * 7919) % 100) / 100.0 < cuota
 				(v["nodo"] as Node3D).visible = sale
 				v["oculto"] = not sale

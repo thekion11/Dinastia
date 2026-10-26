@@ -42,14 +42,14 @@ func _adelantar() -> void:
 	for i in int(8.0 / DT):
 		t._process(DT)
 		minimo = minf(minimo, _dist(parado["nodo"], va["nodo"]))
-		max_lado = maxf(max_lado, absf(float(va.get("lado", 0.0))))
+		max_lado = maxf(max_lado, absf(float(va.get("lat", 0.0))))
 	var pasa := float(va["s"]) - float(parado["s"])
 	_comprobar(pasa > 3.0, "el que llega por detrás adelanta al parado (le saca %.1f m en 8 s; antes se quedaba detrás)" % pasa)
 	_comprobar(max_lado >= 0.6, "se aparta de lado para pasar (%.2f m)" % max_lado)
 	_comprobar(minimo > 0.5, "sin atravesarle (mínimo %.2f m > 0,5)" % minimo)
 	for i in int(4.0 / DT):
 		t._process(DT)
-	_comprobar(absf(float(va.get("lado", 0.0))) < 0.05, "y luego vuelve a su eje (lado %.2f)" % float(va.get("lado", 0.0)))
+	_comprobar(absf(float(va.get("lat", 0.0))) < 0.05, "y luego vuelve a su eje (lado %.2f)" % float(va.get("lat", 0.0)))
 	t.queue_free()
 
 ## Dos por la misma acera en sentidos contrarios (rutas distintas sobre la misma línea).

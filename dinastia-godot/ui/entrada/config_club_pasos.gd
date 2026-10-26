@@ -108,7 +108,7 @@ func _paso_identidad() -> void:
 		datos.lema = t
 		_cambio())
 	if datos.crea_club and c.nombre.strip_edges() == "" and is_inside_tree():
-		n.call_deferred("grab_focus")
+		FocoSeguro.dar(n)
 
 func _campo(texto: String, pista: String, maximo: int, tam: int) -> LineEdit:
 	var le := LineEdit.new()

@@ -103,3 +103,27 @@ func analizar_rival() -> String:
 		prensa.noticia.emit("Videoanálisis de %s" % rival.nombre,
 			"Sesión de vídeo con todo el plantel: dónde aprietan, por dónde salen y a quién hay que tapar. El equipo sale al campo con la lección hecha (+%d%%)." % int(round((bono_analisis - 1.0) * 100.0)))
 	return ""
+
+## LA TAQUILLA QUE SE VA A COBRAR, para enseñarla (26-10). Las mismas palancas que `_cobrar_la_jornada`:
+## horario, techo retráctil, sanción del tribunal, fiesta nacional, maestría y, con precios dinámicos, el
+## precio contra el rival de esta jornada (sin rival, uno de rep 70). No cobra nada. Devuelve {gente, precio, monto}.
+func estimar_taquilla(c: Club) -> Dictionary:
+	var f := _finanzas_de_la_semana(c)
+	var f_publico := factor_publico()
+	if c.id == mi_club_id:
+		if comercial != null:
+			f_publico *= comercial.factor_techo()
+		if ciudad != null:
+			f_publico *= ciudad.factor_aforo()
+		f_publico *= Calendario.factor_publico(c.pais, anio, semana)
+		if maestria != null:
+			f_publico *= maestria.factor_publico()
+	var precio := c.precio_entrada
+	if c.id == mi_club_id and hinchada != null and hinchada.precio_dinamico:
+		var pp := proximo_partido()
+		var rep_rival := 70
+		if pp.size() == 2:
+			rep_rival = (pp[1] as Club).rep if pp[0] == c else (pp[0] as Club).rep
+		precio = float(hinchada.precio_efectivo(int(round(c.precio_entrada)), rep_rival))
+	var gente := int(round(float(f.asistencia()) * f_publico))
+	return {"gente": gente, "precio": precio, "monto": int(round(float(gente) * Finanzas.ingreso_por_espectador(precio)))}

@@ -152,7 +152,7 @@ func _construir() -> void:
 	_capa = _capa_confirmacion(titulo, _conf_cuerpo, si, no)
 	add_child(_capa)
 	_pintar()
-	(_elegir_btn[_modo] as Button).call_deferred("grab_focus")
+	FocoSeguro.dar(_elegir_btn[_modo] as Button)
 
 func _cabecera() -> Control:
 	var h := HBoxContainer.new()
@@ -346,11 +346,11 @@ func _pedir_confirmacion() -> void:
 		_conf_cuerpo.text = Idiomas.t("%s paga %s a la confederación y entra en %s con %s de presupuesto. No se puede deshacer.") % [
 			nombre, Eco.dinero(int(p["cuota"])), String(p["liga"]), Eco.dinero(int(p["presupuesto"]))]
 	_capa.visible = true
-	(_capa.find_children("*", "Button", true, false).back() as Button).call_deferred("grab_focus")
+	FocoSeguro.dar(_capa.find_children("*", "Button", true, false).back() as Button)
 
 func _cancelar_confirmacion() -> void:
 	_capa.visible = false
-	_confirmar_btn.call_deferred("grab_focus")
+	FocoSeguro.dar(_confirmar_btn)
 
 func confirmacion_abierta() -> bool:
 	return _capa != null and _capa.visible

@@ -276,3 +276,66 @@ func cobertura(cual: String) -> int:
 		if (i < fila.size() and String(fila[i]) != "") or String(ex.get(k, "")) != "":
 			n += 1
 	return n
+
+## CAMBIO DE IDIOMA EN PARTIDA (26-10-2026, auditoría de textos). Muchos rótulos
+## se escriben UNA vez al construir la pantalla (`Idiomas.t` al crearlos): al
+## cambiar de idioma en Ajustes, `_refrescar()` repintaba lo dinámico, pero la
+## barra de arriba («Calendario», «Un día», el buscador, el mentor...) seguía en
+## el idioma anterior hasta reiniciar. Esto recorre el árbol, devuelve cada
+## texto a su castellano con el diccionario inverso de `antes` y lo traduce al
+## idioma nuevo. Lo que no reconoce (nombres, cifras) lo deja como está.
+func retraducir_arbol(n: Node, antes: String) -> void:
+	if antes == idioma:
+		return
+	var inv := _inverso_de(antes)
+	_retraducir(n, antes, inv)
+
+func _retraducir(n: Node, antes: String, inv: Dictionary) -> void:
+	if (n is Button or n is Label) and not n.has_meta("_i18n_src"):
+		var txt := String(n.get("text"))
+		var es := _a_castellano(txt, antes, inv)
+		if es != "":
+			n.set("text", t(es))
+	elif n is LineEdit:
+		var le := n as LineEdit
+		var es2 := _a_castellano(le.placeholder_text, antes, inv)
+		if es2 != "":
+			le.placeholder_text = t(es2)
+	if n is Control and (n as Control).tooltip_text != "":
+		var es3 := _a_castellano((n as Control).tooltip_text, antes, inv)
+		if es3 != "":
+			(n as Control).tooltip_text = t(es3)
+	for h in n.get_children():
+		_retraducir(h, antes, inv)
+
+## Diccionario traducción -> castellano de un idioma (de las dos tablas).
+func _inverso_de(cual: String) -> Dictionary:
+	var inv := {}
+	if cual == "es":
+		return inv
+	var ex: Dictionary = _extra.get(cual, {})
+	for k: String in ex:
+		inv[String(ex[k])] = k
+	var i := ORDEN.find(cual)
+	if i >= 0:
+		for k: String in TABLA:
+			var fila: Array = TABLA[k]
+			if i < fila.size() and String(fila[i]) != "":
+				inv[String(fila[i])] = k
+	return inv
+
+## El castellano de un texto pintado en `antes`, o "" si no se reconoce. Mira
+## el texto entero y, si no, sin el icono de delante («📅 Takvim»).
+func _a_castellano(txt: String, antes: String, inv: Dictionary) -> String:
+	if txt.strip_edges() == "":
+		return ""
+	if antes == "es":
+		return txt if _directa(txt) != "" else ""
+	if inv.has(txt):
+		return String(inv[txt])
+	var ini := 0
+	while ini < txt.length() and not _es_letra(txt.unicode_at(ini)):
+		ini += 1
+	if ini > 0 and ini < txt.length() and inv.has(txt.substr(ini)):
+		return txt.substr(0, ini) + String(inv[txt.substr(ini)])
+	return ""

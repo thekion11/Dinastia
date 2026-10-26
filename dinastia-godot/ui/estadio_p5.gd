@@ -19,6 +19,12 @@ func _montar_motor() -> void:
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
+	## LAS OCASIONES JUGABLES (26-10, fila 14): solo en tu partido, si están encendidas en el
+	## panel previo y nunca en la práctica.
+	if _mi_lado >= 0 and not practica and OcasionJugable.encendida() and (DisplayServer.get_name() != "headless" or OcasionJugable.forzar):
+		_ocasion = OcasionJugable.new()
+		add_child(_ocasion)
+		_ocasion.configurar(_motor, partido, _mi_lado, _rig)
 	if practica:
 		_motor.empezar_practica()
 		call_deferred("_empezar_practica")
