@@ -1,6 +1,6 @@
 class_name CameraRig
 extends "res://visor/camera_rig_p1.gd"
-## [Capa 2/2 de `camera_rig.gd`] impacto, golpe_de_zoom, cycle, ajustar_zoom, ajustar_altura, ayuda, _unhandled_input, planos de inserto, en_cuadro, foco_con_balon
+## [Capa 2/2 de `camera_rig.gd`] impacto, golpe_de_zoom, cycle, ajustar_zoom, ajustar_altura, ayuda … (+10)
 
 func impacto(fuerza: float, dur: float = 0.5) -> void:
 	_sacudida = maxf(_sacudida, clampf(fuerza, 0.0, 1.5))

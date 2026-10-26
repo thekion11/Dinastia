@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p2_p1.gd"
-## [Capa 3/7 de `sonido.gd`] recetas de goles, festejos y títulos
+## [Capa 3/7 de `sonido.gd`] _receta_gol, _receta_gol_rival, _receta_gol_cabeza, _receta_gol_chilena, _receta_gol_falta, _receta_gol_penal … (+25)
 
 # --- Goles -------------------------------------------------------------------------------
 

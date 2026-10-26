@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p5_p1.gd"
-## [Capa 5/9 de `mundo.gd`, tramo b] La semana, fases 5-13: memoria del partido, mercado,
+## [Capa 6/10 de `mundo.gd`] _semana_memoria_del_partido, _semana_mercado, _semana_lesion_insolita, _semana_imprevisto, _semana_obras, _semana_ojeo … (+4)
 ## lesiones insólitas, obras, ojeo, prensa, vestuario y marca, carrera del DT y el club por dentro.
 ## El guion que las llama en orden está en `mundo_p5.gd` (`avanzar_semana`).
 

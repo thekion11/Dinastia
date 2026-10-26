@@ -1,6 +1,6 @@
 class_name CarreraJugador
 extends "res://nucleo/carrera_jugador_p1.gd"
-## [Capa 2/2 de `carrera_jugador.gd`] semana, _ceder, _club_extranjero, resolver, aceptar_oferta, tras_partido … (+9)
+## [Capa 2/2 de `carrera_jugador.gd`] semana, _ceder, _club_extranjero, resolver, aceptar_oferta, tras_partido … (+10)
 
 ## Lo que dejó la agenda de la última semana (para el aviso de la interfaz).
 var aviso_agenda := ""

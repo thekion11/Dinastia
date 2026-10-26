@@ -1,6 +1,6 @@
 class_name CityBuilder
 extends "res://visor/city_builder_p11.gd"
-## [Capa 12/12 de `city_builder.gd`] _distritos, _casa_gigante, mostrar_rotulos
+## [Capa 12/12 de `city_builder.gd`] _distritos, _casa_gigante, asfalto_mate, mostrar_rotulos
 
 func _distritos() -> void:
 	var comercial: Array[PackedScene] = []

@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p6.gd"
-## [Capa 7/12 de `motor_jugable.gd`] _parada, _penal_en_juego, _ia_portero, _finta_ia, _intentar_regate … (+4)
+## [Capa 7/12 de `motor_jugable.gd`] _parada, _penal_en_juego, _reaccion_portero, _ia_portero, _finta_ia, _intentar_regate … (+4)
 
 ## El portero se estira: atrapa si puede, si no la desvía.
 func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:

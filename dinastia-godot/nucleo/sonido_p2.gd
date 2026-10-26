@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p2_p4.gd"
-## [Capa 6/7 de `sonido.gd`] recetas de la interfaz y `_sintetizar` (el despacho)
+## [Capa 6/7 de `sonido.gd`] _receta_clic, _receta_clic_suave, _receta_menu_mover, _receta_menu_aceptar, _receta_menu_atras, _receta_menu_cambio … (+21)
 
 # --- La interfaz -------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 extends RefCounted
-## [Capa 1/12 de `stadium_builder.gd`] _c, marcar_techo, ocultar_techo_ante, _box, _rect_outline, _verdes_reales … (+3)
+## [Capa 1/10 de `estadio_partes_tribuna.gd`] _c, marcar_techo, ocultar_techo_ante, _box, _rect_outline, _verdes_reales … (+4)
 
 ## Construye el estadio en 3D a partir del perfil que exporta el HTML
 ## (perfilEstadio() en dinastia-futbol-manager base.html). Para el club del

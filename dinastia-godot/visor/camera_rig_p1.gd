@@ -1,5 +1,5 @@
 extends Node3D
-## [Capa 1/2 de `camera_rig.gd`] _add, build_for, current_name, _efectos, altura_segura, amortiguar, _transmision, _process, switch_to
+## [Capa 1/2 de `camera_rig.gd`] _add, build_for, current_name, _efectos, altura_segura, amortiguar … (+6)
 
 ## Sistema multicámara profesional para el estadio y partido 3D.
 ## Soporta 9 tipos de cámara (incluyendo Primera Persona POV, Pro Tercera Persona,

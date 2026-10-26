@@ -1,5 +1,5 @@
 extends RefCounted
-## [Capa 1/9 de `mundo.gd`] actual, _init, _anotar_movimiento, _rol_cambio_directiva
+## [Capa 1/10 de `mundo.gd`] actual, _init, _anotar_movimiento, _rol_cambio_directiva
 
 ## El estado de una partida: los clubes, los jugadores y las ligas.
 ##

@@ -1,6 +1,6 @@
 class_name Optimizar
 extends "res://visor/optimizar_p1.gd"
-## [Capa 2/2 de `optimizar.gd`] informe, _rejilla, _sin_dinamica, _en_rejilla, obstaculos, trocear
+## [Capa 2/2 de `optimizar.gd`] informe, _rejilla, _sin_dinamica, _en_rejilla, obstaculos, _circulos … (+1)
 
 ## INFORME para perfilar una escena: los que más triángulos y piezas suman
 ## (malla × instancias), entre lo visible. Lo usan las pruebas `medir_*` con
