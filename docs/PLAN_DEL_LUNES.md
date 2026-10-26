@@ -42,7 +42,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 | **1 — Entrada** | recorrido con la cámara real HECHO el 26-10 (`docs/04_auditorias/capturas_fase1/`, 8 tomas Forward+; arreglos: rótulos del globo, rivales en la ficha de país, tarjetas de entrada al campeonato); solo falta tu aprobación (§0) | las fases 0-5 como pantallas completas |
 | **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). Falta tu aprobación jugándolo y lo anotado en §2.2b «Límites» | de «Nuevo juego» hasta tu primer día |
 | **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). Falta tu aprobación jugándolo y lo anotado en §2.2c «Límites» | un día completo jugable en 3D |
-| **4 — Personas** | directiva, patrocinadores, políticos, entrevistas, fichajes en la ciudad, redes y fotos, elecciones | negociaciones en persona |
+| **4 — Personas** | EN CONSTRUCCIÓN desde el 26-10: bloques 1-2 hechos (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, Agenda con «Ir»; pruebas `f4p_citas` y `f4p_personas`); faltan 3-7 (§2.2d) | negociaciones en persona |
 | **5 — Club ampliado** | vestuario con nombres, otros deportes, trofeos y celebraciones | |
 | **6 — Pulido y auditoría** | pasos 4-7 de 7.1, limpieza del repo, vídeo | cierre y MEGAPLAN siguiente |
 
@@ -240,6 +240,45 @@ mandando `Mundo.avanzar_semana()`), `Necesidades` (energía y hambre, modo compl
 avanza la semana con la MISMA huella que el menú (`huella_mundo`); la casa tiene a la familia y sus tres usos; el móvil
 adelanta sin disparar el hambre; la avería saca el coche y el calabozo resta confianza una vez. Captura `f3v_captura_vida`
 (casa por dentro, familia, cama, comedor, móvil con agenda, amanecer en la ciudad).
+
+### 2.2d Fase 4 — Personas en persona: DISEÑO (26-10, compuerta 2; construir en este orden)
+
+**Lo que ya existe y se enlaza (no se duplica):** `Junta` (presidente y accionistas, `resolver(op)`), `Comercial` (ofertas de
+zona y proveedor: `generar_ofertas_zona`, `firmar_zona`), `MercadoAvanzado` y `Negociacion` (ofertas por jugador),
+`MesaAgente` (regateo con 4 perfiles), `Politica` (gobiernos ficticios por país, `semana_votacion`), `Prensa` (ruedas,
+titular pendiente), `Redes` (`publicar`, `responder`), `ModoFoto`, el móvil (`Movil.chats()`, Mensajes, Agenda), las
+personas con cuerpo del prólogo (`PrologoMentor`: nombre, cargo, semilla) y del estadio (`PersonalEstadio`, `RecorridoClub.
+dialogo`), la flecha del HUD del prólogo y el reloj (`Reloj`, `VidaCiudad`).
+
+| # | Bloque | Qué hace | Regla |
+|---|---|---|---|
+| 1 | Citas y mensajes | `nucleo/citas.gd`: una cita = {quién, dónde (sala del estadio o punto de la ciudad), día y hora, asunto, tipo}. Nacen de lo que ya pasa cada semana: asunto de la `Junta` → el presidente en su despacho; oferta de zona de `Comercial` → el patrocinador en su sede (un `edificio_oficina` con rótulo); oferta de `MercadoAvanzado` → el agente en un bar; semana de votación de `Politica` → el funcionario en el ayuntamiento; semana con rueda → la entrevista en el plató. Llegan por Mensajes del móvil («Ir» = flecha del HUD) y salen en la Agenda | máximo 3 citas por semana y 1 por persona; si no vas, la cita caduca el domingo sin castigo (la oferta sigue su curso por el PC como hoy) |
+| 2 | Personas con cuerpo y horario | Cada cita pone a la persona con cuerpo en su sitio solo en su horario (`Reloj`: 10-18 laborables; el agente de 18 a 22 en el bar); fuera de hora, el sitio está vacío y el móvil lo dice | gente ficticia (nombres de la `Junta`, `Comercial`, `MesaAgente`, `Politica.nombre_ficticio`); misma semilla = misma cara siempre |
+| 3 | Negociar en persona | En la cita, el mismo `Negociacion`/`MesaAgente` de siempre con `CuadroDialogo` y opciones. En persona: el precio pedido baja un 5 % y la probabilidad de aceptar sube 10 puntos; por mensaje/PC, como hoy | nunca mejor que el tope del club ni por encima de la caja; una negociación por cita |
+| 4 | Entrevistas de contratación | Al fichar a un jugador o a alguien del staff, entrevista de 3 preguntas en tu oficina (tonos seguro/evasivo/humilde, como la presentación): afinidad inicial ±2 de moral y el grupo del `Vestuario` al que entra | opcional: «Saltar» = fichaje como hoy, sin bono ni castigo |
+| 5 | Patrocinadores y políticos | Firmar una zona en persona: +5 % de renta esa temporada (`Comercial.firmar_zona` con bono) si llegas a la hora. Votación: el funcionario pide apoyo público; aceptar = declaración en la rueda (+relación con el gobierno de `Politica`, −2 con la prensa crítica); negarse = nada | política 100 % ficticia; sin partidos ni personas reales |
+| 6 | Redes, fotos y elecciones del club | Foto del `ModoFoto` → la app Fotos la publica en `Redes` con hashtags; «Convocar rueda de prensa» desde el móvil (máximo 1 extra por semana). Elecciones del club cada 4 temporadas (o con confianza < 25): asamblea en el salón de actos con 3 discursos (tonos) y voto de socios + junta; perder = sigues de DT con otro presidente (nuevo `Junta.presidente`, objetivo nuevo) | nada definitivo: no te echan por las elecciones |
+| 7 | Rutinas y vida de las personas | Los directivos pasan por el estadio en su horario (despacho, palco los sábados); el personal del club saluda por nombre y recuerda la última charla (`PersonalEstadio` + afinidad 0-100 que sube por charla diaria y baja por semanas sin hablar) | afinidad solo cambia textos y una frase de pasillo; sin efectos en el partido |
+
+**Hecho el 26-10 (bloques 1 y 2) y límites honestos:**
+- `Citas` nace cada semana en `Mundo._semana_modulos_del_club` (y en la primera al generar): junta abierta → presidente en su
+  despacho (martes 11:00); zona con ofertas → la marca que más paga en el centro comercial (miércoles 16:00); superagente →
+  terraza de la Plaza Mayor (jueves 19:00); semana antes de la votación → gabinete del alcalde en el ayuntamiento (viernes 12:00).
+  Máximo 3 por semana, 1 por tipo; caducan al cambiar de semana; mensaje en el móvil y fila en la Agenda con «Ir».
+- En 3D (`CitasCiudad`, colgado de `VidaCiudad`): flecha del HUD del prólogo hacia la cita marcada (dice «entra al estadio» /
+  «sal a la calle» / la planta); la persona (cuerpo `PrologoMentor`, misma cara por nombre) aparece solo en su hora (2 h) y
+  si estás en su mismo mundo a < 90 m; E a < 2,2 m abre el panel de dos respuestas; al responder se va andando.
+- Resolver = lo de siempre + bono: junta `Junta.resolver` +1 de confianza; patrocinio `firmar_zona` +5 % de renta; agente deja
+  un «favor» (`Citas.favor_agente`, el −5 % en su próxima mesa se aplica en el bloque 3); política: apoyo anotado en el
+  gobierno y −2 con la prensa crítica.
+- Pendiente (bloques 3-7): el −5 %/+10 en `Negociacion` real, entrevistas de contratación, asamblea/elecciones, fotos a
+  `Redes`, rutinas del personal; los sitios de la ciudad son fijos (no hay «sede» propia por marca).
+
+**Pruebas (modelo V).** Idea `f4p_personas`: un asunto de la junta genera una cita con mensaje y aparece en la Agenda; a la hora,
+la persona está en su sitio (fuera de hora, no); negociar en persona aplica −5 %/+10 y por PC no; firmar una zona en persona
+da el +5 %; la entrevista mueve ±2 de moral; publicar una foto suma seguidores; la asamblea cambia el presidente al perder
+y nada más; las citas caducan el domingo sin castigo. Captura `f4p_captura_personas` (mensaje con «Ir», patrocinador en su
+sede, agente en el bar, asamblea, foto publicada).
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 

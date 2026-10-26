@@ -62,6 +62,9 @@ static func crear(mundo: Mundo, noticias: Array = []) -> Telefono:
 	return t
 
 func _hora() -> String:
+	## La hora de la partida (fase 3): el reloj único manda también en la barra del móvil.
+	if m != null and m.reloj != null and m.reloj.semana >= 0:
+		return m.reloj.texto_hora()
 	return "%02d:%02d" % [18 + (m.semana % 4), (m.semana * 7) % 60]
 
 ## EL AVISO DE ARRIBA (pulido 25-10-2026): una píldora con filo de color (dorado si salió bien, rojo

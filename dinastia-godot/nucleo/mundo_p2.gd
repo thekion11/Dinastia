@@ -400,6 +400,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	ciudad = Ciudad.new(self)
 	comercial.generar_ofertas_zona(mi_club(), roles.multiplicador_sponsor() if roles != null else 1.0)
 	comercial.generar_ofertas_naming(mi_club())
+	citas.semana(self, semana)   ## fase 4: las citas de la primera semana
 	## Y con las marcas ya en la mesa desde el primer dia: si las ofertas solo se
 	## abrieran en la pretemporada siguiente, la primera temporada entera se
 	## jugaria con el pecho en blanco y sin ese ingreso.

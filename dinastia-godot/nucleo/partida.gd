@@ -290,6 +290,7 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	## Fase 0: el día/hora y las necesidades del DT (silencioso: cargar no pasa el tiempo).
 	m.reloj.desde_dic(datos.get("reloj", {}))
 	m.necesidades.desde_dic(datos.get("necesidades", {}))
+	m.citas.desde_dic(datos.get("citas", {}))
 	m.imprevistos.desde_dic(datos.get("imprevistos", {}))
 	m.horario = String(datos.get("horario", "tarde"))
 	m.campana = (datos.get("campana", {}) as Dictionary).duplicate()
