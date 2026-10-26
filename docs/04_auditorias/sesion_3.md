@@ -292,3 +292,23 @@ e Inicio a 1; el resto a 2: bloque o riel + chip, o hub + pestaña) y cada tecla
 los menús (qué chip está en qué bloque o hub), no pulsando el ratón; medir a personas es §10.
 
 Queda de la fila 2: la vista «densa» de tablas.
+
+## 13. Portada del periódico con retrato 3D y escudo con iniciales (cola del supervisor)
+
+- `Retrato3D.textura_dt(aspecto, …)`: el DT también tiene busto 3D (su figura de `PersonajeDT.crear`, la de la banda),
+  en el mismo `SubViewport`, cola y caché que los jugadores. La portada lo usa (un DT empleado lleva un aspecto fijo
+  sacado de su nombre); el retrato 2D queda solo para cuando no hay pantalla (pruebas `--headless`).
+- El escudo de la foto y el de la noticia «El club cambia su escudo» llevan sus iniciales (o su símbolo).
+- `captura_portadas.tscn` espera a que la cola de retratos esté vacía antes de cada foto. Captura
+  `/tmp/capturas/s3/portadas_periodico.jpg`: las seis portadas con el DT en 3D y «LF» en los escudos.
+- Comprobado en `s3_primera_hora` (iniciales en los dos escudos).
+
+## 14. Pruebas visuales: cambios suaves de tono (cola del supervisor)
+
+`pruebas/visual/visual.gd` mide además el TONO por bloque: el desplazamiento CON SIGNO del color medio (un tinte mueve
+todos los píxeles hacia el mismo lado; el ruido del JPG se anula). Un bloque cambia de tono si se desplaza más de
+1,2 % en algún canal; la pantalla CAMBIÓ si lo hacen 6 bloques o más.
+- Ruido (dos pasadas limpias): 0 bloques de tono en las 20 pantallas.
+- Sabotaje 3 (tabla oscura ×0,75 en verde y azul): antes 0 de 20; ahora 20 de 20 (26 bloques de tono cada una).
+- `s3_visual_metrica`: un tinte suave no pasa el umbral por bloque pero sí el de tono; el ruido del JPG no lo mueve.
+- En `herramientas/especiales.sh todo`, solo si hay Vulkan (si no, «SALTADA»).

@@ -17,7 +17,7 @@ extends BaseIdea
 ##     repuestos de su nuevo nivel; eso no es la nómina «duplicada sin fichar» de §8). Y en Primera, sueldos
 ##     ≤ 75 % de los ingresos previstos (la alarma de la UEFA está en el 70 %).
 ##   · caja del grande: no crece más de 3/4 de su referencia por temporada (M-208). Del chico: en las
-##     temporadas que juega en Primera no pierde más de una referencia por año. En Segunda sin gestionar SÍ
+##     temporadas que juega en Primera no pierde más de una referencia por año y su margen previsto en Primera no pasa del 20 % (26-10: con la tele 50/50 y la taquilla ×3,5 ya no pierde). En Segunda sin gestionar SÍ
 ##     se hundía (sueldos 140-175 % de los ingresos, −1,2 M/año). Con la CLÁUSULA DE DESCENSO (26-10, dueño:
 ##     sueldos −30-50 % mientras siga abajo) queda en 95-115 %: en Segunda se exige ≤ 125 %. La nómina «a igual
 ##     rep» se mide sin la cláusula (sueldo pleno): la rebaja es temporal y no es una nómina que se desplome.
@@ -37,6 +37,8 @@ const ULTIMO := Vector2(12.0, 38.0)
 const NOMINA := Vector2(0.55, 1.60)
 const SUELDOS_MAX := 75
 const SUELDOS_MAX_SEGUNDA := 125
+## Margen previsto (resultado / ingresos) en Primera sin gestionar: equilibrarse sí, hacerse rico solo no (26-10).
+const MARGEN_MAX := 20
 ## En Segunda los de más caché pueden pedir salir por la cláusula y se venden: la nómina plena baja más.
 const NOMINA_MIN_SEGUNDA := 0.45
 const ROJO_MAX := 0.15
@@ -102,7 +104,9 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 		_comprobar(crece < ref * 0.75, "%s: la caja del grande no se dispara sola (%.2f M/temporada; ref %.2f M)" % [et, crece / 1e6, ref / 1e6])
 	else:
 		var media := perdida_primera / maxf(1.0, float(en_primera))
-		_comprobar(media > -1.0 and media < 0.75, "%s: en Primera la caja del chico ni se hunde ni se dispara sola (%+.2f referencias/temporada en %d temporadas, entre −1 y +0,75; caja final %.2f M, ref %.2f M)" % [et, media, en_primera, yo.saldo / 1e6, ref / 1e6])
+		## El techo del chico no se mide en referencias (la suya es 0,47 M para ~5 M de presupuesto, y un año con
+		## ventas o premios da +3,6): lo mide `_revisar` con el margen previsto en Primera (≤ 20 % de lo que ingresa).
+		_comprobar(media > -1.0, "%s: en Primera la caja del chico no se hunde sola (%+.2f referencias/temporada en %d temporadas; caja final %.2f M, ref %.2f M)" % [et, media, en_primera, yo.saldo / 1e6, ref / 1e6])
 	_comprobar(fallos.is_empty(), "%s: %d temporadas dentro de los rangos sanos%s" % [et, temporadas, "" if fallos.is_empty() else " · fuera: " + ", ".join(fallos)])
 
 func _revisar(f: Dictionary, f0: Dictionary, t: int, fallos: Array[String]) -> void:
@@ -116,6 +120,7 @@ func _revisar(f: Dictionary, f0: Dictionary, t: int, fallos: Array[String]) -> v
 		"nómina x%.2f a igual rep" % nom: nom >= (NOMINA_MIN_SEGUNDA if int(f["div"]) != 1 else NOMINA.x) and nom <= NOMINA.y,
 		"sueldos %d%% de los ingresos en Primera" % f["pct_sal"]: int(f["div"]) != 1 or int(f["pct_sal"]) <= SUELDOS_MAX,
 		"sueldos %d%% de los ingresos en Segunda" % f["pct_sal"]: int(f["div"]) == 1 or int(f["pct_sal"]) <= SUELDOS_MAX_SEGUNDA,
+		"margen previsto %d%% en Primera" % f["margen"]: int(f["div"]) != 1 or int(f["margen"]) <= MARGEN_MAX,
 		"IA en rojo %d" % f["rojo"]: float(f["rojo"]) <= ROJO_MAX * float(f["clubes"]),
 		"intervenidos %d" % f["interv"]: int(f["interv"]) <= INTERV_MAX,
 		"85+ <22: %d" % f["precoces"]: int(f["precoces"]) <= maxi(2, int(f0["precoces"]) + 1),
@@ -171,6 +176,7 @@ func _foto(m: Mundo, gpp: float) -> Dictionary:
 	return {"n": n, "ovr": ovr / k, "edad": edad / k, "ultimo": int(100.0 * ultimo / k), "precoces": precoces,
 		"valor_ia": val_ia / maxf(1.0, float(n_ia)), "rojo": rojo, "interv": interv, "clubes": m.clubes.size() - 1,
 		"nomina": yo.plantilla.reduce(func(a: int, j: Jugador) -> int: return a + int(round(j.sueldo / j.factor_clausula())), 0), "caja": yo.saldo, "gpp": gpp,
+		"margen": int(round(100.0 * float(proy["resultado"]) / maxf(1.0, float(proy["total_ingresos"])))),
 		"div": yo.division, "rep": yo.rep, "plantel": yo.plantilla.size(), "pct_sal": int(proy["pct_salarial"]), "resultado": int(proy["resultado"]),
 		"veedor": m.banco != null and m.banco.hay_veedor()}
 

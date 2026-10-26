@@ -19,6 +19,7 @@ func _ready() -> void:
 	await _objetivos()
 	await _tutorial()
 	await _carril()
+	await _portada()
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)
@@ -88,3 +89,17 @@ func _carril() -> void:
 			marcado = String((b as Button).text)
 	_comprobar(textos == ["Finanzas", "Mercado", "Libres"] and marcado == "Finanzas",
 		"en Finanzas, el carril enseña su hub (%s) con Finanzas marcado, no el del bloque anterior" % ", ".join(textos))
+
+## La portada del periódico: el escudo lleva sus iniciales en la foto y en la noticia (s3). El
+## retrato 3D del DT solo se ve con pantalla (`Retrato3D`; captura `captura_portadas.tscn`).
+func _portada() -> void:
+	var c := _p.mundo.mi_club()
+	var hoja := PortadaPeriodico.mostrar(_p, _p.mundo, {"t": "El club cambia su escudo", "sub": "Prueba", "img": "escudo",
+		"cab": String(PortadaPeriodico.CABECERAS[0][0]), "semana": 12, "anio": 2026})
+	await get_tree().process_frame
+	var n := 0
+	for l in hoja.find_children("*", "Label", true, false):
+		if String((l as Label).text) == Escudo.iniciales(c):
+			n += 1
+	_comprobar(n >= 2, "en la portada, el escudo de la foto y el de la noticia llevan sus iniciales «%s» (%d)" % [Escudo.iniciales(c), n])
+	hoja.queue_free()
