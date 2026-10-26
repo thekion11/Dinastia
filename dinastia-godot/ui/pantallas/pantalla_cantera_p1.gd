@@ -23,7 +23,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 	if not s.mundial.is_empty():
 		p._lista_seleccion.add_child(HSeparator.new())
 		var t := p._texto(11, Principal.COL_SUAVE)
-		t.text = Idiomas.t("COPA DEL MUNDO")
+		t.text = Idiomas.mayusculas(CompeticionInfo.nombre_visible("Copa del Mundo"))
 		p._lista_seleccion.add_child(t)
 		p._dato("Último campeón", "%s (%d)" % [String(s.mundial.get("campeon", "—")), int(s.mundial.get("anio", 0))],
 			Principal.COL_ORO, p._lista_seleccion)
@@ -31,7 +31,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 	if not s.mundial_clubes.is_empty():
 		p._lista_seleccion.add_child(HSeparator.new())
 		var t2 := p._texto(11, Principal.COL_SUAVE)
-		t2.text = Idiomas.t("MUNDIAL DE CLUBES")
+		t2.text = Idiomas.mayusculas(CompeticionInfo.nombre_visible("Mundial de Clubes"))
 		p._lista_seleccion.add_child(t2)
 		var mio := bool(s.mundial_clubes.get("mio", false))
 		p._dato("Campeón", "%s (%d)" % [String(s.mundial_clubes.get("campeon", "—")), int(s.mundial_clubes.get("anio", 0))],
@@ -39,7 +39,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 		var relato := String(s.mundial_clubes.get("relato", ""))
 		if relato != "":
 			var r := p._texto(11, Principal.COL_ORO if mio else Principal.COL_SUAVE)
-			r.text = relato
+			r.text = CompeticionInfo.visibles_en(relato)
 			r.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_seleccion.add_child(r)
 
@@ -49,13 +49,13 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 		t3.text = Idiomas.t("CAMPEONES CONTINENTALES")
 		p._lista_seleccion.add_child(t3)
 		var ex := p._texto(10, Principal.COL_SUAVE)
-		ex.text = Idiomas.t("Son los que se clasifican al Mundial de Clubes del año siguiente.")
+		ex.text = Idiomas.t("Clasifican al torneo mundial de clubes del año siguiente: %s.") % CompeticionInfo.nombre_visible("Mundial de Clubes")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_seleccion.add_child(ex)
 		var mi_id := p.mundo.mi_club_id
 		for f: Dictionary in s.campeones_continentales:
 			var propio := String(f.get("club_id", "")) == mi_id
-			p._dato("%s %d" % [String(f.get("torneo", "")), int(f.get("anio", 0))],
+			p._dato("%s %d" % [CompeticionInfo.nombre_visible(String(f.get("torneo", ""))), int(f.get("anio", 0))],
 				String(f.get("campeon", "")), p.COL_ACENTO if propio else Principal.COL_TEXTO, p._lista_seleccion)
 
 func _nacionalizar(j: Jugador) -> void:
