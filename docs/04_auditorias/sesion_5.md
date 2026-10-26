@@ -166,3 +166,37 @@ Con portavoz no aparece, porque ya habla otro por ti.
 Mini banco de «textos» y «partido», banco entero: 0 fallos.
 
 **Para la sesión de la interfaz de la rueda:** se puede usar `entrevista["numero"]` y `entrevista["total"]` para mostrar «2/3» en el plató.
+
+## 4. Auditoría del partido simulado y del partido en vivo del DT (50 + 50 partidos)
+
+`pruebas/ideas/s5_auditoria_partidos.gd` mide 50 partidos simulados y 50 en vivo (la crónica de texto del DT), y después la misma crónica en inglés.
+
+| Qué | Antes | Ahora |
+|---|---|---|
+| Marcador = crónica, tiros a puerta ≥ goles, remates ≥ a puerta, posesión 22-78 % | 0 incoherencias | 0 incoherencias |
+| Goles por partido / victorias locales / empates | 2,48 / 34-42 % / 22-28 % | igual (no se tocó el motor de goles) |
+| xG total frente a goles (50 partidos) | **92 frente a 124 (−26 %)**: todos los informes decían «convertimos más de lo esperado» | **116 frente a 124** |
+| Crónica en vivo: tramos de 20' o más sin una línea | **en 48 de 50 partidos** (máximo 38') | **0** (máximo 8') |
+| Frases repetidas en un mismo partido | 2,1 % | 1,9 %, con un 15 % más de líneas |
+| Crónica en inglés: líneas en castellano | **61 %** | **0 %** |
+
+**Lo que se arregló:**
+- **xG** (`nucleo/partido_p2.gd`): el reparto dentro del rango del HTML (0,09-0,31 por remate) se curvó hacia arriba, de modo que la media pasa de 0,20 a ~0,27, que es la conversión real. Gasta la misma tirada de `Azar`. La comprobación del banco sobre ese rango sigue pasando.
+- **El penal del árbitro «estricto»** ahora cuenta como remate a puerta. Antes sumaba un gol sin remate ni tiro a puerta, y podía romper «a puerta ≥ goles».
+- **Texto del penal:** decía «cobrado en contra» según el lado y no según tu club. Ahora dice «Penal para X».
+- **Crónica traducida:**
+  - `_escribir` traduce por tramos BBCode, como el registro principal.
+  - Las frases con nombres o números son plantillas con `Idiomas.t`: goles, atajadas, fallos, palos, tarjetas, lesiones, cambios, el informe del ayudante, las notas, el final y las decisiones del árbitro en el núcleo.
+  - 91 frases nuevas, traducidas a los 8 idiomas.
+- **Variedad:** 6 frases de atajada, 6 de fallo y 3 de palo, que no se repiten seguidas.
+- **Ritmo** (`ui/partido_vivo.gd`): si la crónica lleva 7' callada, narra lo que pasó de verdad en ese minuto (un córner, una falta o quién tiene la pelota, con su posesión), con varias frases por caso y sin `Azar`.
+- **Norma de líneas:** para no pasar de 450 en `partido_p2.gd`, `_reaplicar_plan` pasó a la capa 3 (`partido.gd`), sin cambio de comportamiento.
+
+**Lo que se miró y está bien:**
+- El reparto de goleadores: el máximo goleador de tu club mete un 19 % de sus goles y hay 10 goleadores distintos en 25 partidos.
+- Los goles por tramo de 15': bastante planos. En el fútbol real hay algo más al final, pero el motor de goles está calibrado y no se toca sin decisión del dueño.
+- Las tarjetas (2,8 por partido) y las lesiones (0,24 por partido).
+
+El 3D (acta = césped) ya lo cubren el especial «partido con motor real» y `s5_ocasiones`.
+
+Banco: 0 fallos. Especiales: todo en orden.
