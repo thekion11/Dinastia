@@ -5909,7 +5909,10 @@
   "Sale de tu oficina %s (moral %+d).": "Leaves your office %s (morale %+d).",
   "con ganas de demostrar": "eager to prove himself",
   "sin saber qué esperar": "not knowing what to expect",
-  "sintiéndose uno más": "feeling like one of the group"
+  "sintiéndose uno más": "feeling like one of the group",
+  "Foto del paseo": "Photo from the walk",
+  "Un rato por la ciudad. Esta es mi casa ahora.": "A while around town. This is my home now.",
+  "Publicada": "Posted"
  },
  "pt": {
   "Historia": "História",
@@ -11821,7 +11824,10 @@
   "Sale de tu oficina %s (moral %+d).": "Sai do teu gabinete %s (moral %+d).",
   "con ganas de demostrar": "com vontade de mostrar",
   "sin saber qué esperar": "sem saber o que esperar",
-  "sintiéndose uno más": "sentindo-se um a mais"
+  "sintiéndose uno más": "sentindo-se um a mais",
+  "Foto del paseo": "Foto do passeio",
+  "Un rato por la ciudad. Esta es mi casa ahora.": "Um bocado pela cidade. Esta é a minha casa agora.",
+  "Publicada": "Publicada"
  },
  "patrones": [
   [
@@ -23345,7 +23351,10 @@
   "Sale de tu oficina %s (moral %+d).": "Sort de ton bureau %s (moral %+d).",
   "con ganas de demostrar": "avec l'envie de prouver",
   "sin saber qué esperar": "sans savoir à quoi s'attendre",
-  "sintiéndose uno más": "se sentant l'un des leurs"
+  "sintiéndose uno más": "se sentant l'un des leurs",
+  "Foto del paseo": "Photo de la balade",
+  "Un rato por la ciudad. Esta es mi casa ahora.": "Un tour en ville. C'est chez moi maintenant.",
+  "Publicada": "Publiée"
  },
  "it": {
   "Historia": "Storia",
@@ -29257,7 +29266,10 @@
   "Sale de tu oficina %s (moral %+d).": "Esce dal tuo ufficio %s (morale %+d).",
   "con ganas de demostrar": "con voglia di dimostrare",
   "sin saber qué esperar": "senza sapere cosa aspettarsi",
-  "sintiéndose uno más": "sentendosi uno del gruppo"
+  "sintiéndose uno más": "sentendosi uno del gruppo",
+  "Foto del paseo": "Foto della passeggiata",
+  "Un rato por la ciudad. Esta es mi casa ahora.": "Un giro per la città. Ora casa mia è qui.",
+  "Publicada": "Pubblicata"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35169,7 +35181,10 @@
   "Sale de tu oficina %s (moral %+d).": "Verlässt dein Büro %s (Moral %+d).",
   "con ganas de demostrar": "mit Lust, es zu beweisen",
   "sin saber qué esperar": "ohne zu wissen, was ihn erwartet",
-  "sintiéndose uno más": "als einer von ihnen"
+  "sintiéndose uno más": "als einer von ihnen",
+  "Foto del paseo": "Foto vom Spaziergang",
+  "Un rato por la ciudad. Esta es mi casa ahora.": "Eine Runde durch die Stadt. Das ist jetzt mein Zuhause.",
+  "Publicada": "Gepostet"
  },
  "ca": {
   "Historia": "Història",
@@ -41081,7 +41096,10 @@
   "Sale de tu oficina %s (moral %+d).": "Surt del teu despatx %s (moral %+d).",
   "con ganas de demostrar": "amb ganes de demostrar",
   "sin saber qué esperar": "sense saber què esperar",
-  "sintiéndose uno más": "sentint-se un més"
+  "sintiéndose uno más": "sentint-se un més",
+  "Foto del paseo": "Foto del passeig",
+  "Un rato por la ciudad. Esta es mi casa ahora.": "Una estona per la ciutat. Ara casa meva és aquí.",
+  "Publicada": "Publicada"
  },
  "pl": {
   "Club": "Klub",
@@ -47272,7 +47290,10 @@
   "Sale de tu oficina %s (moral %+d).": "Wychodzi z twojego biura %s (morale %+d).",
   "con ganas de demostrar": "z chęcią udowodnienia",
   "sin saber qué esperar": "nie wiedząc, czego się spodziewać",
-  "sintiéndose uno más": "czując się jednym z grupy"
+  "sintiéndose uno más": "czując się jednym z grupy",
+  "Foto del paseo": "Zdjęcie ze spaceru",
+  "Un rato por la ciudad. Esta es mi casa ahora.": "Chwila w mieście. To teraz mój dom.",
+  "Publicada": "Opublikowano"
  },
  "tr": {
   "Club": "Kulüp",
@@ -53463,6 +53484,9 @@
   "Sale de tu oficina %s (moral %+d).": "Ofisinden %s ayrılıyor (moral %+d).",
   "con ganas de demostrar": "kendini kanıtlamaya hevesli",
   "sin saber qué esperar": "ne bekleyeceğini bilmeden",
-  "sintiéndose uno más": "gruptan biri gibi hissederek"
+  "sintiéndose uno más": "gruptan biri gibi hissederek",
+  "Foto del paseo": "Gezinti fotoğrafı",
+  "Un rato por la ciudad. Esta es mi casa ahora.": "Şehirde bir tur. Artık evim burası.",
+  "Publicada": "Paylaşıldı"
  }
 }

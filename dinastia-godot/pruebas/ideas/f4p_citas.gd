@@ -83,6 +83,10 @@ func _probar() -> void:
 	var moral0 := j.moral
 	var re := m.citas.resolver(m, String(ce["id"]), 0)
 	_comprobar(not re.is_empty() and j.moral == mini(moral0 + 2, 100), "el tono seguro sube la moral del recién llegado (+2)")
+	## Fotos a Tribuna (bloque 6): una publicación «paseo» suma seguidores.
+	var seg0 := int(m.redes.cuentas["dt"]["seguidores"])
+	var pub := m.redes.publicar(m, "paseo", ["#MiCiudad"])
+	_comprobar(not pub.has("error") and String(pub.get("tipo", "")) == "paseo" and int(m.redes.cuentas["dt"]["seguidores"]) >= seg0, "una foto del paseo se publica en Tribuna y suma seguidores")
 	## Caducan el domingo sin castigo.
 	m.semana = sem_voto + 1
 	var saldo := c.saldo

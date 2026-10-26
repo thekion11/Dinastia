@@ -111,7 +111,7 @@ func _fotos() -> void:
 	rej.add_child(_avatar(m.movil.textura_perfil(m), 104, "🧑‍💼"))
 	var n := 1
 	for p: Dictionary in m.redes.publicaciones:
-		if (String(p["cuenta"]) == "dt" or bool(p.get("tuya", false))) and FOTOS.has(String(p["tipo"])):
+		if (String(p["cuenta"]) == "dt" or bool(p.get("tuya", false))) and FOTOS.has(String(p["tipo"])) and not p.has("foto_ruta"):
 			var f := _foto(String(p["tipo"]), 104.0)
 			f.custom_minimum_size = Vector2(104, 104)
 			rej.add_child(f)
@@ -126,7 +126,22 @@ func _fotos() -> void:
 		tr.custom_minimum_size = Vector2(104, 104)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		rej.add_child(tr)
+		## Fase 4: publicarla en Tribuna (una publicación «paseo» con la ruta de la foto).
+		var caja := VBoxContainer.new()
+		caja.add_child(tr)
+		var pub := Button.new()
+		var ya := m.redes.publicaciones.any(func(q: Dictionary) -> bool: return String(q.get("foto_ruta", "")) == ruta)
+		pub.text = Idiomas.t("Publicada") if ya else Idiomas.t("Publicar")
+		pub.disabled = ya
+		pub.pressed.connect(func() -> void:
+			var r := m.redes.publicar(m, "paseo", ["#MiCiudad", Redes.hashtag_club(m.mi_club())])
+			if r.has("error"):
+				_decir(Idiomas.t(String(r["error"])))
+				return
+			r["foto_ruta"] = ruta
+			abrir_app("fotos"))
+		caja.add_child(pub)
+		rej.add_child(caja)
 		n += 1
 	_cuerpo.add_child(_nota(Idiomas.t("%d foto(s)") % n))
 

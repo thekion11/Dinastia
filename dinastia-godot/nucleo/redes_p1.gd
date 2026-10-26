@@ -31,6 +31,8 @@ const TIPOS := {
 	"victoria": ["🥳", "Celebrar el resultado", "¡Qué partido! Orgulloso de este grupo.", ["#DíaDePartido", "#Victoria"], "mediatico", 1, 1, 1.5, 0.0],
 	"familia": ["👨‍👩‍👧", "Foto en familia", "Domingo en casa. Lo más importante.", ["#Familia", "#Descanso"], "social", 1, 0, 1.3, 0.0],
 	"cantera": ["🌱", "Apoyo a la cantera", "Los chicos de la academia vienen pisando fuerte.", ["#Cantera", "#Futuro"], "formador", 1, 1, 0.9, 0.0],
+	## Fase 4 (26-10): una foto del modo foto (ciudad, estadio, casa) publicada desde el móvil.
+	"paseo": ["📷", "Foto del paseo", "Un rato por la ciudad. Esta es mi casa ahora.", ["#MiCiudad", "#Dinastía"], "social", 1, 0, 1.1, 0.0],
 	"indirecta": ["🌶️", "Indirecta al rival", "Algunos hablan mucho. Nosotros, en la cancha.", ["#SinExcusas"], "mediatico", 2, 1, 1.8, 0.35],
 }
 ## [icono, nombre, texto de la respuesta, faceta, efecto, riesgo]

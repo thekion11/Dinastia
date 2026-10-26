@@ -30,7 +30,7 @@ const APPS := [
 ]
 ## [emoji, color de arriba, color de abajo] de la "foto" de cada tipo.
 const FOTOS := {
-	"entreno": ["📸", "3f8f4a", "1d4a26"], "hinchada": ["🙌", "club", "club2"],
+	"paseo": ["📷", "club", "club2"], "entreno": ["📸", "3f8f4a", "1d4a26"], "hinchada": ["🙌", "club", "club2"],
 	"victoria": ["🥳", "e0b53a", "8a5a12"], "familia": ["👨‍👩‍👧", "e59a6a", "7a3f2a"],
 	"cantera": ["🌱", "6fbf5a", "2a5a22"], "indirecta": ["🌶️", "d8452f", "5a1a12"],
 	"partido": ["⚽", "club", "club2"], "club": ["🏟️", "club", "club2"],
