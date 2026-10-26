@@ -30,7 +30,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - [ ] **Perfil de FPS en hardware real** (M-337, P0): PC modesto (Intel UHD) y móvil; aquí solo hay render por software.
 - [ ] Builds, keystore, licencias, derechos de imagen, música y voces (🔒). Cambiar la contraseña del keystore (la vieja sigue en el historial). Confirmar la fuente de los modelos 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva).
 - [ ] Subir los binarios pesados (`recursos/`, `marca/`, `material/`) al Drive con `herramientas/drive_subir.ps1` y verificar. Respaldo de texto: `docs/05_referencia/RESPALDO_DRIVE.md`.
-- [ ] Decidir: «el bloqueo» (modos que se desbloquean jugando) como opción en Ajustes, «Todo abierto» por defecto.
+- [ ] **Decidido por el dueño (26-10): sí** — «el bloqueo» (modos que se desbloquean jugando) como opción en Ajustes, con «Todo abierto» por defecto. Falta implementarlo.
 
 ## 2. El guion: fases 0–6 (reestructuración)
 
