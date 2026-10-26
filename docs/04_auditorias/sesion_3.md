@@ -146,3 +146,34 @@ No se tocan datos de caras ni colores de piel: solo el dibujo y la cámara.
 
 Visto de paso, sin tocar: la portada del periódico pinta la cara del jugador en 2D (no el retrato 3D) y el escudo
 del club sin iniciales.
+
+## 6. Petición 2 (icono con varias oraciones)
+
+Ya estaba hecha en el bloque 4 (commit ddcf5734): ver arriba.
+
+## 7. Pruebas visuales automáticas (plan §10)
+
+`herramientas/visual.sh` (compara) y `herramientas/visual.sh referencias` (rehace las referencias tras un cambio
+visual querido). Escena `pruebas/visual/visual.tscn`: un mundo de semilla fija (20261026) entra en la Principal por
+`Principal.mundo_pregenerado`, se salta el tutorial de bienvenida y recorre 20 pantallas (inicio, plantel, táctica,
+entrenar, enfermería, cantera, contratos, calendario, finanzas, mercado, clubes, copa, correo, estadio, identidad,
+personal, récords, redes, ajustes de interfaz, glosario) con Forward+ a 1280×720. Tarda ~1 min 20 s sin GPU.
+
+- **Referencias:** `pruebas/visual/referencias/*.jpg`, 640×360 al 85 %, 40–60 KB cada una (1,1 MB en total),
+  archivos normales (los JPG no van a LFS en `.gitattributes`); la carpeta lleva `.gdignore` para que Godot no las
+  importe.
+- **Comparación:** reducidas a 320×180, por bloques de 10×10 (~40×40 px reales). Un bloque cambia si su diferencia
+  media pasa del 4 %; la pantalla CAMBIÓ con 2 bloques o más. Las que cambian dejan en `/tmp/visual/` la foto actual
+  y un mapa con lo distinto en rojo.
+- **Estabilidad:** antes de cada foto espera a que la cola de retratos 3D esté vacía y a que la pantalla se quede
+  quieta (dos fotogramas seguidos sin bloques distintos), con animaciones reducidas (solo en memoria) y el reloj a
+  ×10. Sin eso las referencias pillaban filas y miniaturas a mitad de su fundido.
+- **Calibración** (dos pasadas seguidas sin cambios): 0 de 20 cambiadas. El único bloque con ruido es siempre el
+  retrato 3D de la ficha (pose algo distinta en cada pasada, hasta 7,6 %): un bloque solo no basta para fallar.
+- **Sensibilidad** (variable `SABOTAJE`, solo para esto): cambiar el nombre de la cabecera → 20 de 20 cambiadas;
+  esconder el panel de objetivos → 20 de 20; teñir la tabla oscura ×0,75 de verde y azul → 0 de 20. Es decir: ve
+  textos y paneles que cambian o faltan; NO ve un cambio de tono suave sobre zonas oscuras.
+- **Prueba sin pantalla:** `pruebas/ideas/s3_visual_metrica.gd` (iguales = 0 bloques, un rótulo de 90×40 px se ve,
+  el ruido del JPG no cuenta).
+
+No está en `especiales.sh` porque necesita Vulkan (lavapipe); se lanza aparte.

@@ -1901,7 +1901,6 @@ Lo que un juego de gestión de fútbol pulido necesita y no estaba en ningún si
 | **Accesibilidad completa**: reasignar teclas, contraste alto, sin depender del color, lector de pantalla mínimo | media | lo de la sesión 2 cubre letra y daltonismo; falta el resto | auditoría con la lista de Game Accessibility Guidelines (nivel básico) |
 | **Guardado en la nube** / entre dispositivos | media | ideas 234, 934, 945 y 1048 sin plan; los jugadores de gestión llevan partidas de meses | empezar por exportar/importar la partida a un archivo; la nube depende de la tienda |
 | **Ayuda contextual y glosario** (qué es cada cifra) | media | un juego de gestión tiene cientos de cifras; hoy hay ayudas sueltas | botón «?» por pantalla con 3 líneas y enlace al glosario |
-| **Pruebas visuales automáticas** | media | ya en §4; se sube aquí porque sin ellas cada pulido rompe otra pantalla sin aviso | comparar capturas de 20 pantallas clave contra una referencia |
 | **Rendimiento de la simulación** (semana avanzada en ms, 30 temporadas) | media | la partida larga es el corazón del género; ningún dato de cuánto tarda avanzar una semana en el año 20 | medir `avanzar_semana` en las temporadas 1, 10 y 20 |
 | **Notas de versión y canal de errores dentro del juego** | baja | ideas 1091-1092; necesario tras lanzar | pantalla «Novedades» leída de un JSON |
 | **Logros / objetivos a largo plazo** visibles | baja | rejugabilidad; hay récords y legado, pero sin lista de logros | lista de 30 logros con su prueba |
