@@ -1925,3 +1925,9 @@ Exportar e importar la partida (fila 30 de la propuesta, §10 «Guardado en la n
 - **Pizarra (fila 18 de §11):** la interfaz con las dos fases y los roles, y que la IA use roles.
 - **Países:** quedan lotes de países por sumar a `paises_extra.json` (hechos POR, NED, BEL, CRO, DEN).
 - **Dueño:** imágenes del logo y de las alas, makehuman-assets, FPS en hardware real, builds, keystore, archivos grandes por LFS.
+- **Auditoría CPU contra CPU** frente al vídeo de faltas por puntos; medir los roles de la IA con 48 partidos o más.
+- **M-404:** prueba de carga para los 27 módulos de `visor/` sin referencia.
+- **Grada y exterior del estadio** fuera de los archivos vetados (`hinchada*`, `stadium_builder_p5/p6`, `festejo_grada`, `banquillo_vivo`, `publico_vat`).
+- **MakeHuman:** bajo de la chaqueta dentado y cejas manchadas; partir `personaje_dt_p1.gd` (448 líneas) al hacer el faldón.
+- **CMU (animaciones):** bloqueado, los BVH necesitan Blender (`sesion_6.md`).
+- Las sesiones 1, 3, 5 y 6 se cortaron a las 12:36 del 26-10 por el límite de gasto mensual; lo que no subieron (lote 2 de países, pizarra, caras) se rehace desde esta lista.
