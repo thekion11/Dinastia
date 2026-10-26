@@ -61,7 +61,7 @@ func cargar() -> void:
 	if MarcaPanel.ESTILOS.has(mt):
 		p._marca_tarjeta = mt
 	var tp := String(cf.get_value("aspecto", "tipografia", p._tipografia))
-	if Principal.TIPOGRAFIAS.has(tp):
+	if PantallaAjustes.TIPOGRAFIAS.has(tp):
 		p._tipografia = tp
 	var idi := String(cf.get_value("juego", "idioma", Idiomas.idioma))
 	if idi == "es" or Idiomas.NOMBRES.has(idi):

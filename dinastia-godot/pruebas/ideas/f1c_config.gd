@@ -17,7 +17,7 @@ func _ready() -> void:
 
 func _probar() -> void:
 	_titulo("CONFIGURACIÓN DEL CLUB: EL MODELO")
-	_comprobar(ConfigClubDatos.FPS == Principal.FPS_OPCIONES, "las opciones de FPS son las del menú central")
+	_comprobar(ConfigClubDatos.FPS == PantallaAjustes.FPS_OPCIONES, "las opciones de FPS son las del menú central")
 	for k: String in MascotaQ.ANIMALES:
 		_comprobar(ConfigClubDatos.ANIMALES.has(k), "el animal «%s» tiene nombre e icono" % k)
 	var m := Mundo.new()

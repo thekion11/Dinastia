@@ -139,7 +139,7 @@ func cargar() -> void:
 		return
 	entrar_cargada(m)
 
-## Las tres ranuras de Ajustes (`_pintar_ranuras()`).
+## Las tres ranuras de Ajustes (`PantallaAjustes._pintar_ranuras()`).
 func guardar_en(nombre: String) -> void:
 	if Partida.guardar(p.mundo, nombre):
 		p._escribir("[color=#4caf6d]Guardado en %s.[/color] %s, %d, semana %d." % [
