@@ -1,62 +1,38 @@
 # Los «regalitos» de Drive (27-10-2026)
 
-Carpeta de Drive con 11 archivos subidos el 27-10 a las 00:29 (propietario de los archivos en Drive: `dream.brock.11@gmail.com`).
-**Ninguno trae licencia ni autor** dentro del propio archivo, y la carpeta no incluye LEEME de origen (el único `.md`,
-`LEEME_respaldo.md`, es la nota de respaldo del 24-10, no un regalo). Regla aplicada: **sin licencia clara no se usa**.
-No se ha subido ningún binario al repositorio.
+Carpeta de Drive con 11 archivos subidos el 27-10 (propietario en Drive: `dream.brock.11@gmail.com`).
+**Licencia: libre y gratuita, confirmada por el dueño el 27-10.** Ningún archivo trae licencia ni autor dentro (los zips no
+llevan LEEME; el glb del trofeo no tiene campo de autor), así que la confirmación del dueño es la única referencia de licencia.
+`LEEME_respaldo.md` no es un regalo (nota de respaldo del 24-10). Los 11 archivos se bajaron con `curl` (carpeta compartida) y se
+midieron con Godot 4.7.2; **no se ha subido ningún zip ni binario >1 MB al repositorio**.
 
-## Qué se pudo descargar
-El conector de Drive devuelve el contenido en base64 dentro del mensaje y el servidor cierra la conexión cuando el archivo pasa de
-unos pocos MB; la descarga directa (`drive.usercontent.google.com`) responde «Google Drive: Sign-in» porque los archivos **no están
-compartidos** «con cualquiera que tenga el enlace». Resultado:
+## Tabla (todo medido)
+| Archivo | Tamaño | Contenido medido | Destino | Veredicto |
+|---|---:|---|---|---|
+| **gold+trophy.glb** | 157 KB | 3 copas iguales (2.132 triángulos, ~710 por copa), 1 material, textura 128×128, copa 0,43 × 0,63 × 0,30 m | Museo del club | **INTEGRADA** (una copa, `assets/ciudad/trofeo.glb`, 52 KB, ver abajo) |
+| gold+trophy.fbx | 117 KB | la misma malla sin textura | — | Descartado: duplicado del glb |
+| Chair.glb | 64 MB | 117.744 triángulos, 3 materiales, texturas **4096²**, 0,63 × 0,98 × 0,59 m | despacho del DT | Útil pero hay que decimar en Blender (dueño): 117 k triángulos y 4 k de textura no caben (hay una silla en `muebles/`) |
+| Claw_Machine_Free_glb.zip | 9,5 MB | 19 glb: máquina `Toy_Claw_01` (11.825 triángulos, 21 mallas, 7 materiales, texturas 2048², 1,35 × 2,98 × 1,2 m), 14 peluches (≈1–2 k triángulos, 1024², ~550 KB cada uno) y 4 `ColorSet` (84 triángulos, 2048²) | centro comercial / sala de juegos | **Candidata (c)**: máquina re-exportada con texturas ≤1024 |
+| grass.blend | 14 MB | Blender ≥3.0 (zstd) | césped del estadio | Solo anotado: no se importa sin Blender; el césped del juego es shader propio |
+| stadium_light.blend | 21 MB | Blender ≥3.0 (zstd) | focos del estadio | Solo anotado: sin Blender; los focos ya existen en `StadiumBuilder` |
+| TV+Room+by+Deline.3DS | 23 MB | 3DS válido, formato antiguo | casa del DT | Solo anotado: Godot no importa `.3DS`; habría que convertirlo en Blender (dueño) |
+| nv+toufa.obj | 123 MB | **739.891 vértices / 757.651 triángulos**, 105 superficies, sin materiales (falta `nv toufa.mtl`), caja 745 × 451 × 40 | por determinar | No usar: pesa y no se sabe qué es (¿maqueta o plano a escala de ciudad?) |
+| 3D_files_textures.zip | 6,8 MB | `books_and_mugs.obj` (49.844 triángulos, sin `.mtl`, caja 17,8 × 10,3 × 26,6) + 8 JPG de textura (**2.jpg y 3.jpg están en CMYK**: Godot no los carga) + `.max` | libros/tazas del despacho | Útil pero hay que decimar en Blender (dueño); 50 k triángulos para unas tazas es excesivo |
+| Realistic+Male+3D+Character+Model.zip | 183 MB | Exportación de Reallusion: FBX de 28 MB (**485.122 triángulos**, 101 huesos, 2 animaciones), FBX con rig de 44 MB, `.iAvatar` 104 MB, `.blend` 34 MB, difusa 9,4 MB y normal 7,6 MB (4 k) | cuerpo de jugador | **No usar** (solo anotado): 485 k triángulos frente a un presupuesto de ~0,7 M para todo el partido, y el esqueleto de 101 huesos no es el del juego (65, UAL) |
+| LEEME_respaldo.md | 748 B | nota del 24-10 | — | No es un regalo |
 
-| Descargado | No descargado (por tamaño y permisos) |
-|---|---|
-| `gold+trophy.glb` (157 KB), `gold+trophy.fbx` (117 KB), `LEEME_respaldo.md` (748 B) | los otros 8 (6,8 MB en adelante) |
+## El trofeo, integrado
+- `dinastia-godot/assets/ciudad/trofeo.glb` (52 KB, **fuera de LFS** con excepción en `.gitattributes`, como los sonidos de UI): una sola
+  copa, extraída del nodo `gold_trophy1` y reexportada con `GLTFDocument` (más `trofeo_*.png`, 1,5 KB, la textura que Godot extrae).
+- `SalasClub.copa` la carga **una vez** (caché estática), con `metallic` 0,5 (el metal pleno sale negro sin entorno que reflejar), a
+  escala 0,75 sobre la peana de siempre; una copa por título. **Si falta el archivo, vuelve a la copa procedimental.**
+- Presupuesto: ~710 triángulos por copa, 6 vitrinas ≈ 4.300; despreciable.
+- Antes (copa procedimental) y después (trofeo), cámara del paseo, Forward+, vía `pruebas/ideas/f8_captura_museo_trofeo.tscn`:
 
-**Para poder evaluar el resto:** en Drive, «Compartir → Cualquier persona con el enlace → Lector» en la carpeta. Con eso se bajan con
-`curl` en un minuto (la red de este entorno llega a `drive.usercontent.google.com`).
-
-## Tabla
-Lo marcado como *inferido* sale solo del nombre o del tamaño: no se ha abierto el archivo.
-
-| Archivo | Tamaño | Formato | Licencia | Polígonos / texturas | Destino propuesto | Veredicto |
-|---|---:|---|---|---|---|---|
-| **gold+trophy.glb** | 157 KB | glTF 2.0 (Blender I/O 4.4.55) | **desconocida** | **2.132 triángulos** (3 copas de ~710), 1 material, textura PNG 128×128 dorada; sin animaciones ni esqueleto; cada copa 0,43 × 0,63 × 0,30 m | Museo del club (`SalasClub.museo` → `copa`) | **Usar si el dueño confirma autoría/licencia** (ver prototipo) |
-| **gold+trophy.fbx** | 117 KB | FBX binario | desconocida | La misma malla (2.132 triángulos, 3 copas), **sin textura** (gris 0,91) | — | Descartar: el `.glb` es lo mismo y trae la textura |
-| Chair.glb | 64 MB | glTF | desconocida | no medido; **64 MB para una silla** apunta a una malla de escaneo o a texturas enormes (*inferido*) | despacho del DT (`PcOficina` / `CasaDT`) | No evaluable. Con ese peso, solo servirá **si se reduce mucho** (convertir/decimar): hay una silla en `muebles/` |
-| grass.blend | 14 MB | Blender | desconocida | no medido | césped del estadio (`StadiumBuilder`) | No evaluable: `.blend` **no se importa sin Blender**. El césped del juego es un shader propio (`cesped.gdshader`, con capas de volumen) |
-| stadium_light.blend | 21 MB | Blender | desconocida | no medido | focos del estadio | No evaluable sin Blender; los focos ya existen en `StadiumBuilder` |
-| TV+Room+by+Deline.3DS | 23 MB | 3DS (formato antiguo) | desconocida | no medido | casa del DT | No evaluable: Godot no importa `.3DS` sin conversión |
-| nv+toufa.obj | 123 MB | OBJ | desconocida | no medido; **123 MB de OBJ** son varios millones de vértices (*inferido*) | por determinar (no se sabe qué es) | No evaluable; casi seguro inutilizable por peso |
-| Claw_Machine_Free_glb.zip | 9,5 MB | zip con glb | desconocida (el nombre dice «Free», que no es una licencia) | no medido | centro comercial / sala de minijuegos | No evaluable: el zip puede traer su licencia |
-| Realistic+Male+3D+Character+Model.zip | 183 MB | zip | desconocida | no medido; 183 MB indica un modelo de alta resolución (*inferido*) | ¿cuerpo base de los personajes? | Casi seguro **descartar**: el personaje del juego usa el rig de `quaternius`/UAL (65 huesos) y 183 MB no cabe en el presupuesto; habría que reasignar el esqueleto. Hay que ver la licencia |
-| 3D_files_textures.zip | 6,8 MB | zip | desconocida | no medido | por determinar | No evaluable |
-| LEEME_respaldo.md | 748 B | Markdown | — | — | — | Nota del 24-10 (respaldo del historial): no es un regalo |
-
-## El trofeo, medido
-- **Contenido del `.glb`:** tres nodos `gold_trophy1/2/3` (tres copas iguales en fila, a 0,6 m de separación, caja total 1,80 × 0,67 × 0,38 m),
-  1 material PBR con la textura dorada (color medio RGB 226·205·125) y rugosidad 0,33, extensión `KHR_materials_sheen` (Godot la ignora).
-  Generador: «Khronos glTF Blender I/O v4.4.55»; **no hay campo de autor ni de licencia** en `asset`/`extras`.
-- **Godot 4.7.2 lo importa sin errores**, tanto el `.glb` como el `.fbx` (mismos 2.132 triángulos).
-- **Presupuesto:** una copa ≈ 710 triángulos; un museo de 6 vitrinas ≈ 4.300. Despreciable frente a los ~0,7 M del partido.
-- **Defecto:** el metal sale oscuro porque no hay entorno que reflejar y el `metallic` por defecto es 1: bajarlo a ~0,5 al instanciar.
-
-## Prototipo en el museo (solo local; el modelo no se sube)
-Guion `dinastia-godot/pruebas/ideas/f8_captura_museo_trofeo.tscn` (construye solo la sala del museo con `SalasClub.museo`; con
-`TROFEO=/ruta/gold_trophy.glb` deja la malla de la copa central en `Engine.meta("proto_trofeo")`). Para la foto «después» se
-modificó **localmente** `SalasClub.copa` para que use esa malla (escala 0,75, sobre la peana de siempre); ese cambio **se revirtió y no está
-en el repositorio**. Forward+, 1280 × 720.
-
-| Antes (copa procedimental) | Después (trofeo externo) |
+| Antes | Después |
 |---|---|
 | [museo_antes.jpg](capturas_regalos/museo_antes.jpg) | [museo_despues_trofeo.jpg](capturas_regalos/museo_despues_trofeo.jpg) |
 
-Lectura: la copa del regalo tiene **asas y un perfil mucho más reconocibles** que la procedimental (cilindros y toros); con un
-`metallic` más bajo se leería bien. Es una mejora clara y barata.
-
-## Para integrarlo de verdad (si el dueño lo aprueba)
-1. **Confirmar autoría y licencia** del trofeo (y de lo que se quiera usar del resto).
-2. Excepción en `.gitattributes` para `assets/ciudad/…/trofeo.glb` (157 KB, **fuera de LFS**, como pidió la regla de LFS del 26-10).
-3. En `SalasClub.copa`: cargar la malla una vez (caché estática), `metallic` ≈ 0,5, una copa por título; si falta el archivo, copa procedimental.
-4. Captura antes/después con `f8_captura_museo_trofeo` y banco en verde. Estimación: **2 h**.
+## Pendiente del dueño (Blender)
+Decimar `Chair.glb` (a <10 k triángulos y texturas ≤1024), `books_and_mugs.obj`, y convertir `grass.blend`, `stadium_light.blend` y
+`TV_Room.3DS` a glb si se quieren usar. El zip del personaje masculino y `nv_toufa.obj` no se usarán.

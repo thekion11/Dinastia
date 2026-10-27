@@ -1,10 +1,9 @@
 extends Node
 ## f8 · MUSEO DEL CLUB CON UN TROFEO EXTERNO (27-10-2026, tarea 8: «regalitos»). Construye solo la sala del
 ## museo (`SalasClub.museo`) y la fotografía con la cámara del paseo.
-##   TROFEO=/ruta/gold_trophy.glb   (opcional) lo deja en `Engine.meta("proto_trofeo")` como una malla y su material;
-##                                  una copia LOCAL de `SalasClub.copa` lo puede usar. Sin él, salen las copas de siempre.
-##   SALIDA=museo_antes             nombre de la foto (carpeta pruebas/capturas/regalos)
-## El modelo NO está en el repositorio: sin licencia clara no se sube. Sin pantalla no hace nada.
+##   SALIDA=museo_despues_trofeo   nombre de la foto (carpeta pruebas/capturas/regalos)
+## Usa el trofeo real de `SalasClub.copa` (assets/ciudad/trofeo.glb); sin ese archivo salen las copas procedimentales.
+## Sin pantalla no hace nada.
 var _n := 0
 var _raiz: Node3D
 var _cam: Camera3D
@@ -15,17 +14,6 @@ func _ready() -> void:
 		print("===== FIN. 0 fallos =====")
 		get_tree().quit()
 		return
-	var ruta := OS.get_environment("TROFEO")
-	if ruta != "" and FileAccess.file_exists(ruta):
-		var doc := GLTFDocument.new()
-		var est := GLTFState.new()
-		if doc.append_from_file(ruta, est) == OK:
-			var esc := doc.generate_scene(est)
-			for m in esc.find_children("*", "MeshInstance3D", true, false):
-				var mi := m as MeshInstance3D
-				if mi.name.ends_with("1"):   ## el trofeo del centro
-					Engine.set_meta("proto_trofeo", {"malla": mi.mesh, "material": mi.mesh.surface_get_material(0)})
-			print("f8: trofeo cargado de ", ruta)
 	var ent := Environment.new()
 	ent.background_mode = Environment.BG_COLOR
 	ent.background_color = Color(0.16, 0.17, 0.2)
@@ -54,7 +42,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 12:
-		var nombre := OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "museo_antes"
+		var nombre := OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "museo_despues_trofeo"
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://pruebas/capturas/regalos"))
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/regalos/%s.png" % nombre)
 		print("FOTO ", nombre)
