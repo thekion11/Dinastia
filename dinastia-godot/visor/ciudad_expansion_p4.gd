@@ -352,7 +352,8 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 	var w := 4 if ancho_max >= 4.0 * s and hr.randf() < 0.6 else 3
 	var d := 3 if fondo_max >= 3.0 * s and hr.randf() < 0.55 else 2
 	var pisos := hr.randi_range(3, 7)
-	var col: Array = COLORES_PISOS[hr.randi() % COLORES_PISOS.size()]
+	var fam: Array = FAMILIAS_BARRIO[posmod(int(floorf(frente.x / (CELDA * 6.0))) * 2 + int(floorf(frente.z / (CELDA * 6.0))) * 3, FAMILIAS_BARRIO.size())]
+	var col: Array = COLORES_PISOS[int(fam[hr.randi() % fam.size()])]
 	var toldo := hr.randi() % 5
 	var estilo: Array = ESTILOS_MOD[hr.randi() % ESTILOS_MOD.size()]
 	var tienda := hr.randf() < 0.55
@@ -403,6 +404,7 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 				var t := Transform3D(rot * Basis(Vector3.UP, g) * Basis.from_scale(Vector3.ONE * s),
 					frente + rot * Vector3(lx, float(p) * PISO_MOD, lz))
 				_mod(pieza, t, pared, extra)
+	cuenta["detalles_fachada"] = int(cuenta.get("detalles_fachada", 0)) + DetalleFachada.montar(self, frente, rot, s, w, pisos, PISO_MOD, puerta_i, semilla)
 	## Azotea: cornisa con parapeto, el suelo de grava, equipos de aire y la
 	## caseta de la escalera.
 	var ancho := float(w) * s
