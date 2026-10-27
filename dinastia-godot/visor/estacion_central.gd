@@ -183,21 +183,27 @@ func _rotulo(pos: Vector3, texto: String, tam: float) -> void:
 	l.position = pos
 	add_child(l)
 
-## Dónde está el morro del tren `i` en el instante `t` del ciclo (y si está a la vista).
+## Dónde está el morro del tren `i` en el instante `t` del ciclo (y si está a la vista), con su velocidad `v` y su
+## aceleración `a` a lo largo de la vía. Perfil cúbico (27-10-2026, pieza F-3): llega frenando con aceleración que se
+## anula justo al parar (sin tirón de parada) y sale arrancando suave, en vez del cuadrático de antes.
 func posicion_tren(i: int, t: float) -> Dictionary:
 	var tr: Dictionary = _trenes[i]
 	var u := fposmod(t + float(tr["fase"]), CICLO)
 	var z0: float = tr["z0"]
 	var z1: float = tr["z1"]
+	var dz := z1 - z0
 	if u < LLEGADA:
 		var k := u / LLEGADA
-		return {"z": lerpf(z0, z1, 1.0 - (1.0 - k) * (1.0 - k)), "visible": true, "parado": false}
+		var r := 1.0 - k
+		return {"z": z0 + dz * (1.0 - r * r * r), "visible": true, "parado": false,
+			"v": dz * 3.0 * r * r / LLEGADA, "a": -dz * 6.0 * r / (LLEGADA * LLEGADA)}
 	if u < LLEGADA + ESPERA:
-		return {"z": z1, "visible": true, "parado": true}
+		return {"z": z1, "visible": true, "parado": true, "v": 0.0, "a": 0.0}
 	if u < LLEGADA + ESPERA + SALIDA:
 		var k2 := (u - LLEGADA - ESPERA) / SALIDA
-		return {"z": lerpf(z1, z0, k2 * k2), "visible": true, "parado": false}
-	return {"z": z0, "visible": false, "parado": false}
+		return {"z": z1 - dz * k2 * k2 * k2, "visible": true, "parado": false,
+			"v": -dz * 3.0 * k2 * k2 / SALIDA, "a": -dz * 6.0 * k2 / (SALIDA * SALIDA)}
+	return {"z": z0, "visible": false, "parado": false, "v": 0.0, "a": 0.0}
 
 ## El instante del ciclo (en «segundos de juego»: 1 min de juego = 6 s) y si hay servicio (de 01:00 a 05:00, no).
 func _tiempo() -> Dictionary:
@@ -219,3 +225,7 @@ func _process(delta: float) -> void:
 		var n: Node3D = _trenes[i]["nodo"]
 		n.visible = bool(p["visible"]) and bool(tp["servicio"])
 		n.position.z = float(p["z"])
+		## La caja se inclina con la frenada y la arrancada (cabeceo) y se mece un poco al rodar (balanceo).
+		var vel := absf(float(p["v"]))
+		n.rotation.x = clampf(-float(p["a"]) * 0.01, -0.02, 0.02)
+		n.rotation.z = sin(_t * 6.0 + float(i) * 2.0) * 0.0025 * clampf(vel / 6.0, 0.0, 1.0)
