@@ -55,11 +55,20 @@ func _process(delta_real: float) -> void:
 		var largo := (_rutas[ruta] as Ruta).largo
 		## En rojo (o ámbar), se detiene en la línea.
 		var frena := false
+		## SUAVE (27-10-2026, pieza F-2): un coche o un bus no se clava en la línea ni en la parada: tiene velocidad
+		## propia (`vact`) que acelera a ARRANQUE y frena a FRENADA, y mira lo bastante lejos para parar con ella.
+		var suave := not es_peaton
+		var vact := float(v.get("vact", v["vel"]))
+		var tope := INF
+		var aterriza := -1.0
+		var mira := maxf(12.0, vact * vact / (2.0 * PLAN) + 2.0) if suave else 12.0
 		if semaforos != null and _controles.has(ruta):
 			for c: Dictionary in _controles[ruta]:
 				var d := fposmod(float(c["s"]) - s0, largo)
-				if d < avance + 0.5 and d < 12.0 and not semaforos.verde(int(c["eje"])):
-					avance = maxf(0.0, d - 0.3)
+				var visto := d < mira if suave else (d < avance + 0.5 and d < 12.0)
+				if visto and not semaforos.verde(int(c["eje"])):
+					avance = minf(avance, maxf(0.0, d - 0.3)) if suave else maxf(0.0, d - 0.3)
+					tope = minf(tope, sqrt(2.0 * PLAN * maxf(d - 0.3, 0.0)))
 					frena = true
 					break
 		if v.has("faros") and bool(v["frena"]) != frena:
@@ -71,7 +80,10 @@ func _process(delta_real: float) -> void:
 		if v.has("paradas"):
 			for ps: float in v["paradas"]:
 				var d2 := fposmod(ps - s0, largo)
-				if d2 < avance:
+				if suave and d2 < mira:
+					tope = minf(tope, sqrt(2.0 * PLAN * maxf(d2 - 0.3, 0.0)))
+				if d2 < (0.35 if suave else avance):
+					aterriza = d2 + 0.05   ## llega con la velocidad ya casi a cero y se posa justo en la parada
 					avance = d2 + 0.05
 					v["espera"] = float(v.get("espera_parada", 8.0))
 					break
@@ -82,6 +94,8 @@ func _process(delta_real: float) -> void:
 				var d3 := fposmod(float(o["s"]) - s0, largo)
 				if d3 < 9.0:
 					avance = minf(avance, maxf(0.0, d3 - 8.0))
+				if suave and d3 < mira + 9.0:
+					tope = minf(tope, float(o.get("vact", o["vel"])) + sqrt(2.0 * PLAN * maxf(d3 - 9.0, 0.0)))
 		## Un peatón no atraviesa al que va delante en su ruta: si le alcanza a menos
 		## de 0,9 m, se queda detrás. ADELANTAR (pmov, 26-10-2026): si el de delante
 		## va más despacio o está parado, se abre a un lado libre (`_esquivar`) y le
@@ -144,12 +158,35 @@ func _process(delta_real: float) -> void:
 				var fm2: MeshInstance3D = v["faros"]
 				if is_instance_valid(fm2):
 					fm2.set_instance_shader_parameter("freno", 1.0)
+		if suave and delta > 0.0:
+			var objetivo := minf(float(v["vel"]), tope)
+			## La aceleración misma sube y baja con rampa (tirón máximo TIRON m/s³): sin latigazos al empezar a frenar.
+			var ganancia := 1.0 / delta if tope < float(v["vel"]) else 6.0   ## siguiendo un perfil de parada, a tope; en crucero, con cola suave
+			var a_pedida := clampf((objetivo - vact) * ganancia, -FRENADA, ARRANQUE)
+			var a_act := move_toward(float(v.get("aact", 0.0)), a_pedida, TIRON * delta)
+			vact = maxf(vact + a_act * delta, 0.0)
+			v["aact"] = a_act
+			if avance < vact * delta:
+				vact = avance / delta   ## un obstáculo duro (el jugador, un cruce): la velocidad se ajusta a lo que queda
+			else:
+				avance = vact * delta
+			if aterriza >= 0.0:
+				avance = aterriza
+			if float(v.get("espera", 0.0)) > 0.0:
+				vact = 0.0   ## llegó a la parada: está quieto mientras sube y baja la gente
+			v["vact"] = vact
 		v["s"] = s0 + avance
 		_colocar(v)
 
 ## ESQUIVAR (pmov, 26-10-2026): los peatones ya no solo esperan. `lat` es lo que
 ## se apartan de su línea (positivo, hacia fuera de la manzana); se mueve
 ## hacia `lat_obj` a paso lateral y vuelve a 0 cuando ya no hay a quién rodear.
+## Aceleración y frenada cómodas de coches y buses (m/s²).
+const ARRANQUE := 2.4
+const FRENADA := 3.5
+## Con la que se PLANEA la parada (algo menos que la máxima: margen para alcanzar el perfil sin tirones).
+const PLAN := 2.6
+const TIRON := 8.0
 const LADO_ESQUIVA := 0.75
 const SEPARA_LADO := 0.6
 const VEL_LATERAL := 0.9
