@@ -6452,7 +6452,11 @@
   "Ayudas al estrenar cada pantalla": "Tips the first time you open each screen",
   "La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.": "The first time you open Tactics, Training, Finances, Market… a card with the essentials appears.",
   "Volver a ver todas las ayudas": "See all the tips again",
-  "Las ayudas por pantalla vuelven a salir desde cero.": "The per-screen tips will show again from scratch."
+  "Las ayudas por pantalla vuelven a salir desde cero.": "The per-screen tips will show again from scratch.",
+  "Veces campeón": "Times champion",
+  "Años": "Years",
+  "último": "last",
+  "Palmarés": "Honours"
  },
  "pt": {
   "Historia": "História",
@@ -12907,7 +12911,11 @@
   "Ayudas al estrenar cada pantalla": "Ajudas ao estrear cada ecrã",
   "La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.": "Na primeira vez que abres Tática, Treino, Finanças, Mercado… aparece um cartão com o essencial.",
   "Volver a ver todas las ayudas": "Voltar a ver todas as ajudas",
-  "Las ayudas por pantalla vuelven a salir desde cero.": "As ajudas por ecrã voltam a aparecer do zero."
+  "Las ayudas por pantalla vuelven a salir desde cero.": "As ajudas por ecrã voltam a aparecer do zero.",
+  "Veces campeón": "Vezes campeão",
+  "Años": "Anos",
+  "último": "último",
+  "Palmarés": "Palmarés"
  },
  "patrones": [
   [
@@ -25073,7 +25081,11 @@
   "Ayudas al estrenar cada pantalla": "Aides à la première ouverture de chaque écran",
   "La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.": "La première fois que tu ouvres Tactique, Entraînement, Finances, Marché… une carte avec l'essentiel apparaît.",
   "Volver a ver todas las ayudas": "Revoir toutes les aides",
-  "Las ayudas por pantalla vuelven a salir desde cero.": "Les aides par écran réapparaîtront depuis le début."
+  "Las ayudas por pantalla vuelven a salir desde cero.": "Les aides par écran réapparaîtront depuis le début.",
+  "Veces campeón": "Titres",
+  "Años": "Années",
+  "último": "dernier",
+  "Palmarés": "Palmarès"
  },
  "it": {
   "Historia": "Storia",
@@ -31528,7 +31540,11 @@
   "Ayudas al estrenar cada pantalla": "Aiuti la prima volta che apri ogni schermata",
   "La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.": "La prima volta che apri Tattica, Allenamento, Finanze, Mercato… compare una scheda con l'essenziale.",
   "Volver a ver todas las ayudas": "Rivedi tutti gli aiuti",
-  "Las ayudas por pantalla vuelven a salir desde cero.": "Gli aiuti per schermata riappariranno da zero."
+  "Las ayudas por pantalla vuelven a salir desde cero.": "Gli aiuti per schermata riappariranno da zero.",
+  "Veces campeón": "Volte campione",
+  "Años": "Anni",
+  "último": "ultimo",
+  "Palmarés": "Albo d'oro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -37983,7 +37999,11 @@
   "Ayudas al estrenar cada pantalla": "Hilfen beim ersten Öffnen jedes Bildschirms",
   "La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.": "Beim ersten Öffnen von Taktik, Training, Finanzen, Markt … erscheint eine Karte mit dem Wichtigsten.",
   "Volver a ver todas las ayudas": "Alle Hilfen noch einmal sehen",
-  "Las ayudas por pantalla vuelven a salir desde cero.": "Die Hilfen pro Bildschirm erscheinen wieder von vorn."
+  "Las ayudas por pantalla vuelven a salir desde cero.": "Die Hilfen pro Bildschirm erscheinen wieder von vorn.",
+  "Veces campeón": "Titel",
+  "Años": "Jahre",
+  "último": "zuletzt",
+  "Palmarés": "Titel"
  },
  "ca": {
   "Historia": "Història",
@@ -44438,7 +44458,11 @@
   "Ayudas al estrenar cada pantalla": "Ajudes en estrenar cada pantalla",
   "La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.": "La primera vegada que obres Tàctica, Entrenar, Finances, Mercat… surt una targeta amb l'essencial.",
   "Volver a ver todas las ayudas": "Torna a veure totes les ajudes",
-  "Las ayudas por pantalla vuelven a salir desde cero.": "Les ajudes per pantalla tornen a sortir des de zero."
+  "Las ayudas por pantalla vuelven a salir desde cero.": "Les ajudes per pantalla tornen a sortir des de zero.",
+  "Veces campeón": "Vegades campió",
+  "Años": "Anys",
+  "último": "últim",
+  "Palmarés": "Palmarès"
  },
  "pl": {
   "Club": "Klub",
@@ -51172,7 +51196,11 @@
   "Ayudas al estrenar cada pantalla": "Podpowiedzi przy pierwszym otwarciu każdego ekranu",
   "La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.": "Przy pierwszym otwarciu Taktyki, Treningu, Finansów, Rynku… pojawia się karta z najważniejszym.",
   "Volver a ver todas las ayudas": "Zobacz wszystkie podpowiedzi jeszcze raz",
-  "Las ayudas por pantalla vuelven a salir desde cero.": "Podpowiedzi ekranów pojawią się znowu od zera."
+  "Las ayudas por pantalla vuelven a salir desde cero.": "Podpowiedzi ekranów pojawią się znowu od zera.",
+  "Veces campeón": "Tytuły",
+  "Años": "Lata",
+  "último": "ostatni",
+  "Palmarés": "Trofea"
  },
  "tr": {
   "Club": "Kulüp",
@@ -57906,6 +57934,10 @@
   "Ayudas al estrenar cada pantalla": "Her ekranı ilk açışta ipuçları",
   "La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.": "Taktik, Antrenman, Finans, Piyasa'yı ilk açtığında temel bilgilerin olduğu bir kart çıkar.",
   "Volver a ver todas las ayudas": "Tüm ipuçlarını yeniden gör",
-  "Las ayudas por pantalla vuelven a salir desde cero.": "Ekran ipuçları baştan yeniden çıkacak."
+  "Las ayudas por pantalla vuelven a salir desde cero.": "Ekran ipuçları baştan yeniden çıkacak.",
+  "Veces campeón": "Şampiyonluk",
+  "Años": "Yıllar",
+  "último": "son",
+  "Palmarés": "Kupalar"
  }
 }

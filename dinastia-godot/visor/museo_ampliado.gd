@@ -32,7 +32,10 @@ static func existe(ctx: Dictionary) -> bool:
 ## Los hitos del club por año, del más antiguo al más nuevo: [{anio, titulo}].
 static func hitos(ctx: Dictionary) -> Array:
 	var sal: Array = (ctx.get("hitos", []) as Array).duplicate()
-	sal.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.get("anio", 0)) < int(b.get("anio", 0)))
+	for i in sal.size():
+		(sal[i] as Dictionary)["_i"] = i
+	sal.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return int(a.get("anio", 0)) < int(b.get("anio", 0)) or (int(a.get("anio", 0)) == int(b.get("anio", 0)) and int(a["_i"]) < int(b["_i"])))
 	return sal
 
 static func _mat_oro_vivo() -> StandardMaterial3D:
@@ -48,7 +51,7 @@ static func _copa(nodo: Node3D, p: Vector3, madera: Material, receta: Dictionary
 	## La copa de su competición (orden 15 e): las piezas de la receta; la que se ilumina es la copa en sí (la última del montaje).
 	if not receta.is_empty() and TrofeoModelo.disponible():
 		var pz := TrofeoModelo.partes(receta)
-		var esc := SalasClub.ALTO_VITRINA / maxf(float(pz["alto"]), 0.01)
+		var esc := TrofeoModelo.escala_para(pz, SalasClub.ALTO_VITRINA, SalasClub.ANCHO_VITRINA)
 		var principal: MeshInstance3D = null
 		for d: Dictionary in pz["partes"]:
 			var pieza := MeshInstance3D.new()

@@ -54,6 +54,8 @@ const TROFEO := "res://assets/ciudad/trofeo.glb"
 const TROFEO_ESCALA := 0.75
 ## Lo que mide, en metros, una copa de receta en su vitrina (la del modelo base mide unos 0,45).
 const ALTO_VITRINA := 0.5
+## Y lo que puede ocupar de ancho (el vidrio de la vitrina mide 0,68).
+const ANCHO_VITRINA := 0.46
 ## La copa del regalo del dueño (27-10), cargada una sola vez: malla y material (metal medio,
 ## sin entorno que reflejar el metal pleno sale negro). Sin archivo, `_trofeo` queda null.
 static var _trofeo: Mesh = null
@@ -94,7 +96,7 @@ static func copa(lote: PiezasVestuario.Lote, p: Vector3, oro: Material, peana: M
 	## La copa de SU competición (orden 15 e): receta de `TrofeosReales` armada con `TrofeoModelo`.
 	if not receta.is_empty() and TrofeoModelo.disponible():
 		var pz := TrofeoModelo.partes(receta)
-		var esc := ALTO_VITRINA / maxf(float(pz["alto"]), 0.01)
+		var esc := TrofeoModelo.escala_para(pz, ALTO_VITRINA, ANCHO_VITRINA)
 		for d: Dictionary in pz["partes"]:
 			lote.malla(d["mat"], Transform3D(Basis.from_scale(Vector3.ONE * esc), p + Vector3(0, 0.08, 0) + (d["pos"] as Vector3) * esc), d["mesh"])
 		return
@@ -183,7 +185,13 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 	## Una franja con los colores del club bajo el rótulo de los títulos.
 	lote.caja(m["cam1"], _en(Vector3(cx, y0 + 2.62, caja.position.y - 0.14)), Vector3(caja.size.x, 0.36, 0.02))
 	lote.montar(nodo, "Museo")
-	TunelVestuario._rotulo(nodo, Idiomas.t("%d títulos") % titulos, Vector3(cx, y0 + 2.62, caja.position.y - 0.11), 0.0, 44,
+	## El rótulo cuenta los títulos de verdad (una vitrina del palmarés puede guardar varios: «Liga ×36»).
+	var total := titulos
+	if not hitos.is_empty():
+		total = 0
+		for h: Variant in hitos:
+			total += maxi(1, int((h as Dictionary).get("cantidad", 1)))
+	TunelVestuario._rotulo(nodo, Idiomas.t("%d títulos") % total, Vector3(cx, y0 + 2.62, caja.position.y - 0.11), 0.0, 44,
 		Color(1.0, 0.86, 0.45))
 	_luces_museo(nodo, caja, y0, cx)
 	return lote

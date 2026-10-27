@@ -20,6 +20,9 @@ static func hitos(mundo: Object) -> Array:
 	var sal: Array = []
 	if mundo == null:
 		return sal
+	## Primero el palmarés real del club (el mismo orden que `EdificioClub.contexto_de`).
+	if mundo.has_method("mi_club"):
+		sal.append_array(HistoriaClub.hitos_palmares(mundo.call("mi_club")))
 	var roles: Object = mundo.get("roles")
 	if roles != null:
 		for t: Dictionary in roles.get("trofeos"):
@@ -43,7 +46,7 @@ static func ficha(k: int, mundo: Object) -> Dictionary:
 	var t: Dictionary = lista[k]
 	var club: Variant = mundo.call("mi_club") if mundo.has_method("mi_club") else null
 	return {"vacia": false, "titulo": String(t.get("titulo", "")), "anio": int(t.get("anio", 0)),
-		"final": String(t.get("final", "")), "goleadores": t.get("goleadores", []),
+		"final": String(t.get("final", "")), "goleadores": t.get("goleadores", []), "anios": t.get("anios", []), "cantidad": int(t.get("cantidad", 1)),
 		"receta": TrofeosReales.para_titulo(String(t.get("titulo", "")), String(club.get("pais")) if club != null else "")}
 
 ## E ante una vitrina: abre el visor. true si se abrió.
