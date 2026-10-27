@@ -52,9 +52,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			_bandera_mastil(c + Vector3(0, 0, f * 0.4))
 		"estacion_central":
 			nombre = "Estación Central"
-			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.85, 12.0, f * 0.7), _mat["claro"])
-			b._boveda(c + Vector3(0, 12.0, 0), w * 0.85, f * 0.7, b._mat_simple(Color(0.5, 0.62, 0.7), 0.3), 0.3)
-			b._caja_en(c + Vector3(0, 5.0, f * 0.35 + 0.1), Vector3(w * 0.6, 7.0, 0.2), _mat["vidrio"])
+			EstacionCentral.montar(b, c, w, f, _mat)   ## estación de cabecera con trenes (27-10-2026)
 			_cartel_m(c + Vector3(w * 0.4, 0, f * 0.45), Color(0.85, 0.15, 0.15))
 		"mercado":
 			nombre = "Mercado"
