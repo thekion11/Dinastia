@@ -19,6 +19,8 @@ var cuerpos: Dictionary = {}   ## índice del asiento → {d: Dictionary (Peaton
 var _rng := RandomNumberGenerator.new()
 var _t := 0.0
 var _parados := {}     ## autobús (id) → segundos que lleva parado en una parada
+var _visto := {}      ## asiento → si estaba ocupado la última vez que lo miré de cerca (solo quien llega MIENTRAS miras camina hasta el banco)
+var _llegando: Array = []   ## {i, d, a, b, t, dur, fase}: quien llega andando, se vuelve y se sienta
 var _eventos: Array[Vector3] = []   ## dónde subieron y bajaron pasajeros (a los 3 s de parar el autobús)
 
 static func crear(v: VidaCiudad) -> GenteSentada:
@@ -31,6 +33,7 @@ static func crear(v: VidaCiudad) -> GenteSentada:
 	return s
 
 func _process(delta: float) -> void:
+	_llegadas(delta)
 	if expl == null or not is_instance_valid(expl) or expl.cuerpo == null or expl.cb == null:
 		return
 	_t -= delta
@@ -92,19 +95,26 @@ func revisar() -> void:
 	var candidatos: Array = []
 	var asientos: Array = expl.cb.asientos
 	for i in asientos.size():
-		if cuerpos.has(i) or not ocupado(i):
-			continue
 		var p: Vector3 = asientos[i]["p"]
 		var d := Vector2(p.x, p.z).distance_to(yo)
-		if d < CERCA:
-			candidatos.append([d, i])
+		if d >= CERCA:
+			_visto.erase(i)
+			continue
+		if cuerpos.has(i):
+			_visto[i] = true
+			continue
+		var occ := ocupado(i)
+		var estaba = _visto.get(i)
+		_visto[i] = occ
+		if occ:
+			candidatos.append([d, i, estaba == false and d > 6.0])
 	candidatos.sort()
 	for par: Array in candidatos:
 		if cuerpos.size() >= MAXIMO:
 			break
-		_sentar(int(par[1]), asientos[int(par[1])])
+		_sentar(int(par[1]), asientos[int(par[1])], bool(par[2]))
 
-func _sentar(i: int, asiento: Dictionary) -> void:
+func _sentar(i: int, asiento: Dictionary, llegando := false) -> void:
 	_rng.seed = 2710 + i
 	var d := PeatonQ.crear(_rng)
 	if d.is_empty():
@@ -118,9 +128,44 @@ func _sentar(i: int, asiento: Dictionary) -> void:
 	var cadera := MetroCiudad.altura_cadera(n)
 	if cadera > 0.0:
 		n.position.y = p.y + 0.08 - cadera * 0.99
+	cuerpos[i] = {"d": d, "p": p}
+	if llegando:
+		## LLEGA ANDANDO (P3 «MEJORAR»): desde 3,2 m por delante del banco, de cara al asiento; al llegar se vuelve y se sienta.
+		var fuera := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
+		var a := p + fuera * 3.2
+		a.y = n.position.y
+		n.position = a
+		n.rotation.y = atan2(-fuera.x, -fuera.z)
+		Mini3D.anim(d, "caminar", "")
+		_llegando.append({"i": i, "d": d, "a": a, "b": Vector3(p.x, a.y, p.z) + fuera * 0.15, "t": 0.0, "dur": 3.2 / 1.3, "fase": 0, "giro": float(asiento["giro"])})
+		return
 	Mini3D.anim(d, "sentado", "")
 	(d["anim"] as AnimationPlayer).seek(_rng.randf() * 0.8, true)
-	cuerpos[i] = {"d": d, "p": p}
+
+## Quien llega al banco: camina hasta él, se vuelve (el cuerpo gira con suavidad) y el clip «sentarse» encadena «sentado».
+func _llegadas(delta: float) -> void:
+	for k in range(_llegando.size() - 1, -1, -1):
+		var s: Dictionary = _llegando[k]
+		var d: Dictionary = s["d"]
+		var n: Node3D = d["nodo"]
+		if not is_instance_valid(n) or not cuerpos.has(int(s["i"])):
+			_llegando.remove_at(k)
+			continue
+		s["t"] = float(s["t"]) + delta
+		if int(s["fase"]) == 0:
+			var u := clampf(float(s["t"]) / float(s["dur"]), 0.0, 1.0)
+			n.position = (s["a"] as Vector3).lerp(s["b"], u)
+			n.rotation.y = MovimientoNatural.girar(n.rotation.y, atan2(-sin(float(s["giro"])), -cos(float(s["giro"]))), delta * 2.0)
+			if u >= 1.0:
+				s["fase"] = 1
+				s["t"] = 0.0
+				var ap: AnimationPlayer = d["anim"]
+				AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(n), "sentarse")
+				Mini3D.anim(d, "sentarse" if ap.has_animation("sentarse") else "sentado", "sentado")
+		else:
+			n.rotation.y = MovimientoNatural.girar(n.rotation.y, float(s["giro"]), delta)
+			if float(s["t"]) > 1.6:
+				_llegando.remove_at(k)
 
 ## A los 3 s de parar el autobús, sube y baja gente de verdad (`PasajerosBus`); los sentados cercanos a la puerta se levantan y suben.
 func embarque(bus: Node3D) -> void:
@@ -128,6 +173,7 @@ func embarque(bus: Node3D) -> void:
 		vida.pasajeros.parada(bus)
 
 func _quitar(i: int) -> void:
+	_visto.erase(i)
 	var c: Dictionary = cuerpos.get(i, {})
 	if not c.is_empty():
 		var n: Node = (c["d"] as Dictionary)["nodo"]
