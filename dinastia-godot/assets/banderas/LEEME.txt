@@ -4,3 +4,7 @@ Solo los países que usa el juego (tabla BANDERA de datos/tablas.json y los dibu
 visor/banderas.gd). Nombre de archivo = código ISO 3166-1 alfa-2 (gb-eng, gb-sct, gb-wls para
 Inglaterra, Escocia y Gales). La tabla FIFA -> ISO está en visor/banderas.gd (ISO).
 Si falta un archivo, visor/banderas.gd vuelve al dibujo hecho en código.
+
+PNG (27-10-2026): las 15 nacionalidades de jugadores que no tenían bandera (bi, cf, gw, gq, ht, jo, xk,
+mg, mt, ps, ph, ru, sv, sy, zw) salen del paquete del dueño «Todas las banderas del mundo» (el dueño
+tiene la licencia), reducidas a 192x128. visor/banderas.gd prueba primero el .svg y luego el .png.
