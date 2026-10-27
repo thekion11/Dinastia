@@ -65,17 +65,6 @@ func _paradas_bus() -> void:
 		{"p": Vector3(RING_X - 13.0, 0, 140.0), "a": -PI * 0.5, "n": "Zona industrial"},
 		{"p": Vector3(BARRIO_EN.x + 13.0, 0, RING_Z_SUR + 60.0), "a": -PI * 0.5, "n": "Barrio"},
 	]
-	var vidrio := StandardMaterial3D.new()
-	vidrio.albedo_color = Color(0.72, 0.86, 0.92, 0.4)
-	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	vidrio.metallic = 0.4
-	vidrio.roughness = 0.1
-	var metal: StandardMaterial3D = Texturas.metal(Color(0.08, 0.09, 0.1), 0.4).duplicate()
-	metal.metallic = 0.6
-	var acento := StandardMaterial3D.new()
-	acento.albedo_color = _color_club("c1", Color(0.2, 0.5, 0.3))
-	acento.roughness = 0.5
-
 	paradas_bus_pos.clear()
 	for s in sitios:
 		paradas_bus_pos.append(s["p"])
@@ -84,47 +73,8 @@ func _paradas_bus() -> void:
 		raiz.position = s["p"]
 		raiz.rotation.y = float(s["a"])
 		add_child(raiz)
-		## Techo de la marquesina, con la franja del club por delante.
-		var techo := MeshInstance3D.new()
-		var tm := BoxMesh.new()
-		tm.size = Vector3(7.5, 0.22, 3.0)
-		techo.mesh = tm
-		techo.material_override = metal
-		techo.position = Vector3(0, 3.1, 0)
-		raiz.add_child(techo)
-		var franja := MeshInstance3D.new()
-		var fm := BoxMesh.new()
-		fm.size = Vector3(7.6, 0.5, 0.16)
-		franja.mesh = fm
-		franja.material_override = acento
-		franja.position = Vector3(0, 2.85, 1.5)
-		raiz.add_child(franja)
-		## Trasera de cristal y dos pilares.
-		var pared := MeshInstance3D.new()
-		var pm := BoxMesh.new()
-		pm.size = Vector3(7.5, 2.5, 0.1)
-		pared.mesh = pm
-		pared.material_override = vidrio
-		pared.position = Vector3(0, 1.6, -1.4)
-		raiz.add_child(pared)
-		for lado in [-1.0, 1.0]:
-			var pil := MeshInstance3D.new()
-			var cm := CylinderMesh.new()
-			cm.top_radius = 0.11
-			cm.bottom_radius = 0.11
-			cm.height = 3.0
-			pil.mesh = cm
-			pil.material_override = metal
-			pil.position = Vector3(lado * 3.5, 1.5, 1.3)
-			raiz.add_child(pil)
-		## El banco.
-		var banco := MeshInstance3D.new()
-		var bm := BoxMesh.new()
-		bm.size = Vector3(5.4, 0.16, 0.7)
-		banco.mesh = bm
-		banco.material_override = acento
-		banco.position = Vector3(0, 0.61, -0.9)   ## tablero a 0,45 m de la acera (27-10-2026)
-		raiz.add_child(banco)
+		## PARADERO COMO LOS DE SANTIAGO (27-10-2026): marquesina gris, trasera con pósters, banca de láminas y poste con código «PA…».
+		ParaderoRed.montar(raiz, 7.5, int(s["p"].x * 7.0 + s["p"].z))
 		for xs: float in [-1.8, 0.0, 1.8]:
 			asientos.append({"p": (s["p"] as Vector3) + Basis(Vector3.UP, float(s["a"])) * Vector3(xs, GenteSentada.ASIENTO_CIUDAD + 0.04, -0.9), "giro": float(s["a"])})
 		_cartel(s["p"] + Vector3(0, 0, -6.0), "🚌 " + String(s["n"]), true)
