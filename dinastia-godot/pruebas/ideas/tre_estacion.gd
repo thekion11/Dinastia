@@ -24,4 +24,18 @@ func _probar() -> void:
 	_comprobar(dentro, "el tren nunca se sale de la vía (ni atraviesa el tope)")
 	est._process(10.0)
 	_comprobar((est._trenes[0]["nodo"] as Node3D).position.z > float(est._trenes[0]["z0"]), "con el tiempo el nodo del tren avanza")
+	_comprobar(b.asientos.size() >= 8, "los bancos del andén registran %d asientos para los pasajeros (GenteSentada)" % b.asientos.size())
+	var rj := Reloj.new()
+	EstacionCentral.reloj = rj
+	rj.minuto = 3 * 60
+	est._process(0.0)
+	_comprobar(not (est._trenes[0]["nodo"] as Node3D).visible and not (est._trenes[1]["nodo"] as Node3D).visible, "de madrugada (03:00) no hay servicio")
+	rj.minuto = 600
+	est._process(0.0)
+	_comprobar((est._trenes[0]["nodo"] as Node3D).visible and est._reloj_rotulo.text == "10:00", "a las 10:00 hay trenes y el reloj de la fachada marca la hora del juego")
+	var antes := est.posicion_tren(0, (rj.dia * 1440 + rj.minuto) * 6.0)
+	rj.minuto = 601
+	est._process(0.0)
+	_comprobar(float((est._trenes[0]["nodo"] as Node3D).position.z) != float(antes["z"]) or bool(antes["parado"]), "el ciclo avanza con los minutos del reloj del juego")
+	EstacionCentral.reloj = null
 	_comprobar(est.get_child_count() > 35, "estación levantada (%d piezas)" % est.get_child_count())
