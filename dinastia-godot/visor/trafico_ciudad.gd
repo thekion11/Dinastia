@@ -107,6 +107,8 @@ func _process(delta_real: float) -> void:
 		if es_peaton:
 			_lateral(v, delta)
 			_mirar_delante(v, s0, delta)
+		elif v.has("lat_obj") or float(v.get("lat", 0.0)) != 0.0:
+			_lateral(v, delta, VEL_ADELANTA)   ## el coche que adelanta se abre al centro de la calzada y vuelve a su carril
 		if _peatones_ruta.has(ruta) and es_peaton:
 			for o: Dictionary in _peatones_ruta[ruta]:
 				if o == v:
@@ -200,11 +202,16 @@ const TIRON := 8.0
 const LADO_ESQUIVA := 0.75
 const SEPARA_LADO := 0.6
 const VEL_LATERAL := 0.9
+## ADELANTAR (27-10-2026, M-171): el coche que se encuentra un autobús parado en su carril se abre `LAT_ADELANTA` m hacia el eje de la
+## avenida (el carril contrario queda a 12 m del suyo: sobra sitio), lo rodea y vuelve. `lat` positivo es hacia el eje.
+const LAT_ADELANTA := 3.4
+const VEL_ADELANTA := 1.6
+const VISTA_ADELANTA := 30.0
 ## ¿Se puede pisar este punto? (lo pone el explorador: paredes, farolas,
 ## bancos). Sin él (pruebas, mapa de lejos) se da por libre.
 var libre_fn: Callable
 
-func _lateral(v: Dictionary, delta: float) -> void:
+func _lateral(v: Dictionary, delta: float, vel := VEL_LATERAL) -> void:
 	var t_lat := float(v.get("t_lat", 0.0))
 	if t_lat > 0.0:
 		v["t_lat"] = t_lat - delta
@@ -213,7 +220,7 @@ func _lateral(v: Dictionary, delta: float) -> void:
 	var lat := float(v.get("lat", 0.0))
 	var obj := float(v.get("lat_obj", 0.0))
 	if lat != obj:
-		v["lat"] = move_toward(lat, obj, VEL_LATERAL * delta)
+		v["lat"] = move_toward(lat, obj, vel * delta)
 
 ## MOBILIARIO DELANTE (27-10-2026, plan §4): cuatro veces por segundo el peatón mira 1,2 m por
 ## delante en su carril; si hay un banco, una papelera o una farola (`libre_fn`), se abre a un lado
@@ -371,6 +378,15 @@ func _cede_paso(v: Dictionary, idx: int, delta: float) -> bool:
 					continue
 				var pb: Vector2 = e[1]
 				var otro_coche: bool = e[3]
+				## ADELANTAR: un autobús parado en la parada, en mi mismo sentido y mi carril, a menos de VISTA_ADELANTA por delante (o recién pasado):
+				## me abro hacia el eje (el hueco de 7 m ya no lo ve a 2,6 m de lado; mientras tanto frena con él) y mantengo la apertura a su altura.
+				if coche and otro_coche and float(o.get("espera", 0.0)) > 0.0 and o.has("paradas") and da.dot(e[2]) > 0.9:
+					var rel_b := pb - pa
+					var lado_b := absf(rel_b.dot(Vector2(-da.y, da.x)))
+					var frente_b := rel_b.dot(da)
+					if frente_b > -9.0 and frente_b < VISTA_ADELANTA and lado_b < 5.0:
+						v["lat_obj"] = LAT_ADELANTA
+						v["t_lat"] = 1.5
 				## DE FRENTE EN LA MISMA ACERA (dos peatones en sentidos contrarios):
 				## cada uno se abre a SU derecha con tiempo (a 4 m), así se cruzan sin
 				## pararse. Antes uno cedía y el otro le atravesaba (pmov, 26-10-2026).
@@ -392,8 +408,12 @@ func _cede_paso(v: Dictionary, idx: int, delta: float) -> bool:
 				if not coche and otro_coche and _en_hueco(pb, e[2], true, pa, 0.3):
 					continue
 				## Los dos se tienen delante y son iguales: pasa el de índice menor.
-				if coche == otro_coche and not de_frente and j > idx and _en_hueco(pb, e[2], otro_coche, pa, extra if coche else 0.3):
-					continue
+				## PRIORIDAD DE LA DERECHA (M-171): cede el que tiene al otro a su derecha; sin derecha clara (casi de frente o en línea), el de índice mayor.
+				if coche == otro_coche and not de_frente and _en_hueco(pb, e[2], otro_coche, pa, extra if coche else 0.3):
+					var der := (pb - pa).dot(Vector2(-da.y, da.x))
+					var yo_cedo := der > 1.0 if absf(der) > 1.0 else j < idx
+					if not yo_cedo:
+						continue
 				v["cediendo"] = float(v.get("cediendo", 0.0)) + delta
 				return true
 	v["cediendo"] = 0.0

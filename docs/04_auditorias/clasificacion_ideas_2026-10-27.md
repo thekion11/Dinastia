@@ -48,7 +48,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 
 **Ciudad**
 - M-200: Policía y multas (pieza E, aprobada por el dueño 27-10).
-- M-201: Incidentes de calle (robo, incendio, accidente) con bomberos y ambulancia (pieza E).
 
 **Interfaz**
 - 1040: Tutorial por capas que se activa al usar cada sistema (tabla «lanzable»).
@@ -98,8 +97,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 - 1064: Volumen del público según asistencia y momento (más sonidos).
 
 **Ciudad**
-- M-199: Semáforo en rojo = multa si hay policía a la vista (parte de la pieza E).
-- M-171: Tráfico más realista: ceder en cruces, adelantar (orden «vehículos más realistas»).
 - M-186: Más edificios entrables y amueblados: «ciudad entera más completa».
 - M-183: Rutinas de peatones por hora y barrio (semana 6 de la ruta).
 - 327: Celebración de trofeo: vuelta olímpica y celebración 3D (fase 5, bloque 4 pendiente).
