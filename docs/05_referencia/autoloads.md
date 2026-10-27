@@ -20,5 +20,5 @@ La columna «usado en» es el número de scripts que lo llaman, contado el 27-10
 ## Reglas
 
 - Un autoload nuevo solo si de verdad es global y vive toda la partida. Si no, una clase con `static func` (como `Tema`, `Animar`, `RetosSemana`).
-- No guardar en un autoload estado de la partida: ese estado va en `Mundo` y se guarda con `Partida`. Las excepciones son la base activa (`Datos`), la semilla (`Azar`) y la moneda (`Eco`), que se restauran al cargar.
+- No guardar en un autoload estado de la partida: ese estado va en `Mundo` y se guarda con `Partida`. Las excepciones son la base activa (`Datos`) y la semilla (`Azar`), que `Partida` restaura al cargar; la moneda de `Eco` es una preferencia del jugador, no de la partida.
 - El banco fija la base real al empezar (`pruebas/banco.gd`). Solo algunas secciones siembran `Azar` (estadio, varios), y el mundo no es determinista dentro de un mismo proceso: una prueba que dependa del orden de las demás, o de un sorteo sin sembrar, es un fallo de la prueba.
