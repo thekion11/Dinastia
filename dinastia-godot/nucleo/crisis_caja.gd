@@ -20,7 +20,8 @@ static func tirada(semilla: int, anio: int, semana: int, saldo: int, ref: float)
 	var tipo: String = TIPOS[(h / 10000) % TIPOS.size()]
 	var u := float((h / 30000) % 1000) / 1000.0
 	var peso := clampf(float(saldo) / maxf(1.0, ref * 2.0), 0.6, 4.0)   ## el golpe crece con la caja
-	return {"tipo": tipo, "importe": int(round(ref * (0.2 + 0.5 * u) * peso / 1000.0)) * 1000}
+	var grave := 2.2 if (h / 30000000) % 100 < 14 else 1.0   ## de cada siete, uno es de los gordos (la cola larga que hace bajar la caja de verdad)
+	return {"tipo": tipo, "importe": int(round(ref * (0.2 + 0.5 * u) * peso * grave / 1000.0)) * 1000}
 
 static func concepto(tipo: String) -> String:
 	match tipo:
@@ -32,7 +33,7 @@ static func concepto(tipo: String) -> String:
 			return "Sobrecoste de obra"
 
 ## ¿Hubo ya un golpe en las últimas `ENFRIAMIENTO` semanas? Así nunca caen cuatro seguidos (medido: una temporada con cuatro se llevaba 11 M).
-const ENFRIAMIENTO := 6
+const ENFRIAMIENTO := 4
 
 static func reciente(m: Mundo) -> bool:
 	var nombres := TIPOS.map(func(t: String) -> String: return concepto(t))
