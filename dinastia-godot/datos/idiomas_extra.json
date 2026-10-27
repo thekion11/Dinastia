@@ -6041,7 +6041,17 @@
   "LOS LANZADORES": "THE PENALTY TAKERS",
   "🎯 Indicador de pase (a quién va el balón)": "🎯 Pass indicator (who gets the ball)",
   "🎥 Pro: cerca": "🎥 Pro: close",
-  "Lejos": "Far"
+  "Lejos": "Far",
+  "Retos de la semana": "This week's challenges",
+  "Retos de la semana: %d de %d": "Weekly challenges: %d of %d",
+  "Premio para la caja: %d €.": "Reward for the club: €%d.",
+  "Gana el próximo partido": "Win the next match",
+  "Gana por dos goles o más": "Win by two goals or more",
+  "Deja la portería a cero": "Keep a clean sheet",
+  "No pierdas el próximo partido": "Don't lose the next match",
+  "Marca dos goles o más": "Score two goals or more",
+  "Marca tres goles o más": "Score three goals or more",
+  "No encajes más de un gol": "Concede no more than one goal"
  },
  "pt": {
   "Historia": "História",
@@ -12085,7 +12095,17 @@
   "LOS LANZADORES": "OS BATEDORES",
   "🎯 Indicador de pase (a quién va el balón)": "🎯 Indicador de passe (para quem vai a bola)",
   "🎥 Pro: cerca": "🎥 Pro: perto",
-  "Lejos": "Longe"
+  "Lejos": "Longe",
+  "Retos de la semana": "Desafios da semana",
+  "Retos de la semana: %d de %d": "Desafios da semana: %d de %d",
+  "Premio para la caja: %d €.": "Prémio para o caixa: %d €.",
+  "Gana el próximo partido": "Vence o próximo jogo",
+  "Gana por dos goles o más": "Vence por dois golos ou mais",
+  "Deja la portería a cero": "Não sofras golos",
+  "No pierdas el próximo partido": "Não percas o próximo jogo",
+  "Marca dos goles o más": "Marca dois golos ou mais",
+  "Marca tres goles o más": "Marca três golos ou mais",
+  "No encajes más de un gol": "Não sofras mais de um golo"
  },
  "patrones": [
   [
@@ -23741,7 +23761,17 @@
   "LOS LANZADORES": "LES TIREURS",
   "🎯 Indicador de pase (a quién va el balón)": "🎯 Indicateur de passe (qui reçoit le ballon)",
   "🎥 Pro: cerca": "🎥 Pro : près",
-  "Lejos": "Loin"
+  "Lejos": "Loin",
+  "Retos de la semana": "Défis de la semaine",
+  "Retos de la semana: %d de %d": "Défis de la semaine : %d sur %d",
+  "Premio para la caja: %d €.": "Prime pour la caisse : %d €.",
+  "Gana el próximo partido": "Gagne le prochain match",
+  "Gana por dos goles o más": "Gagne avec deux buts d'écart ou plus",
+  "Deja la portería a cero": "Garde ta cage inviolée",
+  "No pierdas el próximo partido": "Ne perds pas le prochain match",
+  "Marca dos goles o más": "Marque deux buts ou plus",
+  "Marca tres goles o más": "Marque trois buts ou plus",
+  "No encajes más de un gol": "N'encaisse pas plus d'un but"
  },
  "it": {
   "Historia": "Storia",
@@ -29785,7 +29815,17 @@
   "LOS LANZADORES": "I RIGORISTI",
   "🎯 Indicador de pase (a quién va el balón)": "🎯 Indicatore di passaggio (a chi va il pallone)",
   "🎥 Pro: cerca": "🎥 Pro: vicina",
-  "Lejos": "Lontana"
+  "Lejos": "Lontana",
+  "Retos de la semana": "Sfide della settimana",
+  "Retos de la semana: %d de %d": "Sfide della settimana: %d su %d",
+  "Premio para la caja: %d €.": "Premio per la cassa: %d €.",
+  "Gana el próximo partido": "Vinci la prossima partita",
+  "Gana por dos goles o más": "Vinci con due gol di scarto o più",
+  "Deja la portería a cero": "Mantieni la porta inviolata",
+  "No pierdas el próximo partido": "Non perdere la prossima partita",
+  "Marca dos goles o más": "Segna due gol o più",
+  "Marca tres goles o más": "Segna tre gol o più",
+  "No encajes más de un gol": "Non subire più di un gol"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35829,7 +35869,17 @@
   "LOS LANZADORES": "DIE SCHÜTZEN",
   "🎯 Indicador de pase (a quién va el balón)": "🎯 Passanzeige (wer den Ball bekommt)",
   "🎥 Pro: cerca": "🎥 Pro: nah",
-  "Lejos": "Weit"
+  "Lejos": "Weit",
+  "Retos de la semana": "Herausforderungen der Woche",
+  "Retos de la semana: %d de %d": "Herausforderungen der Woche: %d von %d",
+  "Premio para la caja: %d €.": "Prämie für die Kasse: %d €.",
+  "Gana el próximo partido": "Gewinne das nächste Spiel",
+  "Gana por dos goles o más": "Gewinne mit zwei Toren Unterschied oder mehr",
+  "Deja la portería a cero": "Spiele zu null",
+  "No pierdas el próximo partido": "Verliere das nächste Spiel nicht",
+  "Marca dos goles o más": "Erziele zwei Tore oder mehr",
+  "Marca tres goles o más": "Erziele drei Tore oder mehr",
+  "No encajes más de un gol": "Kassiere höchstens ein Tor"
  },
  "ca": {
   "Historia": "Història",
@@ -41873,7 +41923,17 @@
   "LOS LANZADORES": "ELS LLANÇADORS",
   "🎯 Indicador de pase (a quién va el balón)": "🎯 Indicador de passada (a qui va la pilota)",
   "🎥 Pro: cerca": "🎥 Pro: a prop",
-  "Lejos": "Lluny"
+  "Lejos": "Lluny",
+  "Retos de la semana": "Reptes de la setmana",
+  "Retos de la semana: %d de %d": "Reptes de la setmana: %d de %d",
+  "Premio para la caja: %d €.": "Premi per a la caixa: %d €.",
+  "Gana el próximo partido": "Guanya el pròxim partit",
+  "Gana por dos goles o más": "Guanya per dos gols o més",
+  "Deja la portería a cero": "Deixa la porteria a zero",
+  "No pierdas el próximo partido": "No perdis el pròxim partit",
+  "Marca dos goles o más": "Marca dos gols o més",
+  "Marca tres goles o más": "Marca tres gols o més",
+  "No encajes más de un gol": "No encaixis més d'un gol"
  },
  "pl": {
   "Club": "Klub",
@@ -48196,7 +48256,17 @@
   "LOS LANZADORES": "STRZELCY",
   "🎯 Indicador de pase (a quién va el balón)": "🎯 Wskaźnik podania (kto dostanie piłkę)",
   "🎥 Pro: cerca": "🎥 Pro: blisko",
-  "Lejos": "Daleko"
+  "Lejos": "Daleko",
+  "Retos de la semana": "Wyzwania tygodnia",
+  "Retos de la semana: %d de %d": "Wyzwania tygodnia: %d z %d",
+  "Premio para la caja: %d €.": "Nagroda dla klubu: %d €.",
+  "Gana el próximo partido": "Wygraj następny mecz",
+  "Gana por dos goles o más": "Wygraj różnicą dwóch goli lub więcej",
+  "Deja la portería a cero": "Zachowaj czyste konto",
+  "No pierdas el próximo partido": "Nie przegraj następnego meczu",
+  "Marca dos goles o más": "Strzel dwa gole lub więcej",
+  "Marca tres goles o más": "Strzel trzy gole lub więcej",
+  "No encajes más de un gol": "Strać najwyżej jednego gola"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54519,6 +54589,16 @@
   "LOS LANZADORES": "PENALTI ATICILARI",
   "🎯 Indicador de pase (a quién va el balón)": "🎯 Pas göstergesi (top kime gidiyor)",
   "🎥 Pro: cerca": "🎥 Pro: yakın",
-  "Lejos": "Uzak"
+  "Lejos": "Uzak",
+  "Retos de la semana": "Haftanın görevleri",
+  "Retos de la semana: %d de %d": "Haftanın görevleri: %d / %d",
+  "Premio para la caja: %d €.": "Kulüp kasasına ödül: %d €.",
+  "Gana el próximo partido": "Sonraki maçı kazan",
+  "Gana por dos goles o más": "İki farkla veya daha fazla kazan",
+  "Deja la portería a cero": "Kalesini gole kapat",
+  "No pierdas el próximo partido": "Sonraki maçı kaybetme",
+  "Marca dos goles o más": "İki veya daha fazla gol at",
+  "Marca tres goles o más": "Üç veya daha fazla gol at",
+  "No encajes más de un gol": "Birden fazla gol yeme"
  }
 }

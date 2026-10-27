@@ -515,7 +515,6 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 ### Semana 6 (17-11 → 23-11) — Interacción y vida
 - [ ] Interacción con objetos: sentarse en bancos, máquinas expendedoras, puertas que se abren, balón suelto en el parque.
 - [ ] NPC: más oficios y charlas por barrio y hora, paraguas con lluvia.
-- [ ] Retos semanales tipo «Manager Live».
 
 ### Semana 7 (24-11 → 30-11) — Tutorial y primera hora de juego
 - [ ] Tutorial por capas: 3 minutos obligatorios, el resto como misiones opcionales.

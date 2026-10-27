@@ -24,6 +24,9 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	Finanzas.fijar_medias_tv(ligas)
 	if valor_ia_ref <= 0.0:
 		valor_ia_ref = valor_medio_ia()
+	## Un club nuevo, retos nuevos (los del anterior no valen aquí).
+	retos_semana.activos = []
+	retos_semana.generar(self)
 	return d
 
 func nueva_temporada() -> Dictionary:
