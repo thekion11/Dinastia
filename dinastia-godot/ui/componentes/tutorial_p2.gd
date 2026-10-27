@@ -37,6 +37,16 @@ func _completar_escritura() -> void:
 		lbl.visible_characters = -1
 	_escribiendo = false
 
+const CAPA_BASICA := 3
+var _btn_saltar: Button
+
+## ¿Ya pasaron las CAPA_BASICA primeras misiones (las del paso actual cuentan si ya se vieron)?
+func _capa_basica_hecha() -> bool:
+	var vistas := 0
+	for k in mini(_i, _pasos.size()):
+		vistas += 1 if _pasos[k].has("mision") else 0
+	return vistas >= CAPA_BASICA
+
 func _terminar(completo: bool) -> void:
 	terminado.emit(completo)
 	queue_free()
@@ -178,6 +188,11 @@ func _mostrar(i: int) -> void:
 	_escribir(_lbl_texto, texto)
 	_lbl_progreso.text = "" if final else "%d / %d" % [_i + 1, _pasos.size() - 1]
 	_btn_atras.visible = _i > 0 and not final
+	## EL TUTORIAL POR CAPAS (semana 7 del plan, 27-10-2026): pasadas las CAPA_BASICA primeras misiones, «Saltar» pasa
+	## a «Lo demás, por mi cuenta»: el tutorial cuenta como hecho y lo que falta queda en el panel de objetivos (🧭),
+	## donde se marca solo al hacerlo.
+	if is_instance_valid(_btn_saltar):
+		_btn_saltar.text = Idiomas.t("Lo demás, por mi cuenta ▸") if _capa_basica_hecha() else Idiomas.t("Saltar")
 	_btn_sig.text = Idiomas.t("¡A jugar!") if final else Idiomas.t("Siguiente ▸")
 	_btn_extra.visible = final and _puede_dirigir()
 	_hecho_al_entrar = _hecho(paso)
@@ -304,12 +319,12 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	var botones := HBoxContainer.new()
 	botones.add_theme_constant_override("separation", 8)
 	v.add_child(botones)
-	var saltar := Button.new()
-	saltar.text = Idiomas.t("Saltar")
-	saltar.flat = true
-	saltar.add_theme_color_override("font_color", COL_SUAVE)
-	saltar.pressed.connect(func() -> void: _terminar(false))
-	botones.add_child(saltar)
+	_btn_saltar = Button.new()
+	_btn_saltar.text = Idiomas.t("Saltar")
+	_btn_saltar.flat = true
+	_btn_saltar.add_theme_color_override("font_color", COL_SUAVE)
+	_btn_saltar.pressed.connect(func() -> void: _terminar(_capa_basica_hecha()))
+	botones.add_child(_btn_saltar)
 	var empuje := Control.new()
 	empuje.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	botones.add_child(empuje)

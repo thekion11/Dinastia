@@ -517,8 +517,7 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 - [ ] NPC: más oficios y charlas por barrio y hora, paraguas con lluvia.
 
 ### Semana 7 (24-11 → 30-11) — Tutorial y primera hora de juego
-- [ ] Tutorial por capas: 3 minutos obligatorios, el resto como misiones opcionales.
-- [ ] Indicaciones sobre la pantalla (flechas, resaltado) en vez de texto largo.
+- [ ] Indicaciones sobre la pantalla: el resaltado de cada misión (sombras y marco sobre el control) ya existe; falta una flecha animada que apunte al control y acortar los textos más largos del mentor.
 - [ ] Desbloqueo opcional de modos (ver «el bloqueo»).
 - [ ] Pruebas de la primera hora: qué ve un jugador nuevo, sin perderse.
 
