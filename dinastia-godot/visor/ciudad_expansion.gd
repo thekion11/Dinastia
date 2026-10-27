@@ -182,6 +182,24 @@ func encender(noche: float) -> void:
 		(fs["cono"] as ShaderMaterial).set_shader_parameter("fuerza", lerpf(0.0, 0.22, noche) * f)
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.set_shader_parameter("noche", noche)
+	_actualizar_luz_sectores()
+
+## El mapa 5x5 de corriente por sector que leen las fachadas (`fachada_torre.gdshader`): las ventanas de
+## un sector cortado se quedan a oscuras. Una textura compartida; la usan también las torres del núcleo.
+var textura_luz: ImageTexture = null
+func _actualizar_luz_sectores() -> void:
+	if redes == null:
+		return
+	var img := Image.create(RedesCiudad.N_SECTORES, RedesCiudad.N_SECTORES, false, Image.FORMAT_R8)
+	for sec: Vector2i in RedesCiudad.sectores():
+		img.set_pixel(sec.x, sec.y, Color(1.0 if redes.modelo.hay_luz(sec) else 0.0, 0, 0))
+	if textura_luz == null:
+		textura_luz = ImageTexture.create_from_image(img)
+	else:
+		textura_luz.update(img)
+	if _ventanas_lejanas != null:
+		_ventanas_lejanas.set_shader_parameter("luz_sectores", textura_luz)
+		_ventanas_lejanas.set_shader_parameter("usa_sectores", true)
 
 ## `luz`: la máscara de las ventanas encendidas (blanco = ventana, unas sí y
 ## otras no) para la emisión nocturna.

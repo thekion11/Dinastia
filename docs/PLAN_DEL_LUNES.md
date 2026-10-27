@@ -365,8 +365,9 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
   coche con depósito real que dependa del repostaje.
 
 - FORWARD+ DEL APAGÓN VISTO (27-10, líder): `pruebas/ideas/p_captura_apagon.tscn`, de noche y con la ciudad entera; con 4 sectores cortados
-  sus farolas se apagan y el resto sigue (`capturas_subsuelo/forward_apagon_ciudad_{antes,despues}.jpg`). Las VENTANAS siguen encendidas:
-  falta la máscara por sector en `city_builder_p4._ventanas_mat` (cercanas) y en el shader de `ciudad_expansion_p7` (lejanas), midiendo draw calls.
+  sus farolas Y LAS VENTANAS de esos sectores se apagan y el resto sigue (`capturas_subsuelo/forward_apagon_ciudad_{antes,despues}.jpg`):
+  `fachada_torre.gdshader` lee un mapa 5x5 de corriente (`CiudadExpansion.textura_luz`, una textura compartida: sin draw calls nuevos)
+  en las torres del núcleo y en los edificios lejanos. Las casas y piezas del kit con ventanas propias no siguen aún al sector.
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
 Palabras del dueño: *«hay partes de la ciudad sin detalles y muy mejorables; los personajes se mueven de forma
