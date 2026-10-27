@@ -53,6 +53,7 @@ var club: Club
 var lema: String = ""
 var mascota: String = "oso"
 var estilo_estadio: String = ""
+var asiento_nivel: String = "por_nivel"   ## cómo se reparte el color de las butacas entre los niveles (`EST_NIVELES`)
 var vivienda: String = "depto"
 var fps: int = 60
 var contador_fps: bool = false
@@ -177,7 +178,7 @@ func _dic() -> Dictionary:
 			"nombre": club.nombre.strip_edges(), "estadio_nombre": club.estadio_nombre.strip_edges(),
 			"color1": club.color1, "color2": club.color2, "lema": lema.strip_edges().substr(0, 60),
 			"identidad": ident,
-			"mascota": mascota, "estilo_estadio": estilo_estadio,
+			"mascota": mascota, "estilo_estadio": estilo_estadio, "asiento_nivel": asiento_nivel,
 		},
 		"vida": {"vivienda": vivienda},
 		"maquina": {"fps": fps, "contador_fps": contador_fps, "calidad": calidad, "adaptativa": adaptativa,
@@ -208,6 +209,8 @@ func desde_dic(d: Dictionary) -> void:
 	if ANIMALES.has(String(c.get("mascota", ""))):
 		mascota = String(c["mascota"])
 	estilo_estadio = String(c.get("estilo_estadio", estilo_estadio))
+	if String(c.get("asiento_nivel", "")) in ["por_nivel", "uniforme"]:
+		asiento_nivel = String(c["asiento_nivel"])
 	var v: Dictionary = d.get("vida", {})
 	if VidaDT.VIVIENDAS.has(String(v.get("vivienda", ""))):
 		vivienda = String(v["vivienda"])
@@ -337,6 +340,9 @@ static func aplicar_al_club(config: Dictionary, c: Club, m: Mundo = null) -> voi
 	var est := String(d.get("estilo_estadio", ""))
 	if est != "" and m.estadio != null:
 		_estrenar_estilo(m, c, est)
+	var nivel := String(d.get("asiento_nivel", "por_nivel"))
+	if m.estadio != null and m.estadio.es_valido("asientoNivel", nivel):
+		m.estadio.ajustes["asientoNivel"] = nivel   ## pintura: sin obra ni coste, como el estilo con el que se funda
 	var viv := String((config.get("vida", {}) as Dictionary).get("vivienda", ""))
 	if m.vida != null and VidaDT.VIVIENDAS.has(viv):
 		m.vida.vivienda = viv

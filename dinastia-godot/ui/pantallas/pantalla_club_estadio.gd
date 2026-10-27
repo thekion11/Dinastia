@@ -101,7 +101,7 @@ func _pintar_estadio(c: Club) -> void:
 	for bloque: Array in [
 			["LA ESTRUCTURA", ["forma", "fachada", "fachadaCol", "techo", "techoCol", "focos", "luzFocos", "focosCol", "pantalla"]],
 			["EL CAMPO", ["superficie", "cesped", "cespedTono", "lineaCol", "arcoCol", "redCol", "redTipo"]],
-			["LA GRADA", ["asientoP", "banderas", "escudoDonde", "corner"]],
+			["LA GRADA", ["asientoP", "asientoNivel", "banderas", "escudoDonde", "corner"]],
 			## Sin "clima" (26-9-2026): el tiempo lo pone la ciudad, no el
 			## diseñador. Elegir "lluvia" como se elige un color era ilógico.
 			["LOS DETALLES", ["banquillo", "banquilloCol", "vallaCol", "ledPaleta", "ledFondo", "ledTinta", "tunel", "sonidoGol"]],
