@@ -93,6 +93,32 @@ func _probar() -> void:
 	_comprobar(m.citas.convocar_rueda(m) != "", "con una abierta no se convoca otra")
 	m.prensa.entrevista = {}
 	_comprobar(m.citas.convocar_rueda(m) != "", "y solo una extra por semana")
+	## La asamblea de socios (bloque 6): cada 4 temporadas; perderla cambia al presidente, no al DT.
+	var anio0 := m.anio
+	m.anio = 2028
+	m.citas.asamblea_anio = -1
+	m.citas.semana(m, Citas.ASAMBLEA_SEMANA)
+	var ca := {}
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "asamblea":
+			ca = x
+	_comprobar(not ca.is_empty() and m.citas.opciones(m, ca).size() == 3, "en año de asamblea el presidente convoca a los socios (tres discursos)")
+	var pres0 := String(m.junta.presidente["nombre"])
+	m.prensa.animo = 20
+	m.directiva.confianza = 30
+	var ra := m.citas.resolver(m, String(ca["id"]), 0)
+	_comprobar(not ra.is_empty() and String(m.junta.presidente["nombre"]) != pres0 and m.directiva.confianza == 50, "con la grada en contra, el discurso seguro pierde: presidente nuevo y confianza 50")
+	m.citas.asamblea_anio = -1
+	m.citas.semana(m, Citas.ASAMBLEA_SEMANA)
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "asamblea":
+			ca = x
+	var pres1 := String(m.junta.presidente["nombre"])
+	m.prensa.animo = 80
+	m.directiva.confianza = 70
+	m.citas.resolver(m, String(ca["id"]), 0)
+	_comprobar(String(m.junta.presidente["nombre"]) == pres1 and m.directiva.confianza == 72, "con la grada a favor, el presidente sigue (+2 de confianza)")
+	m.anio = anio0
 	## Caducan el domingo sin castigo.
 	m.semana = sem_voto + 1
 	var saldo := c.saldo
