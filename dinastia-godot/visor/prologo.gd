@@ -90,6 +90,7 @@ func _construir_mundo() -> void:
 	vista = VistaCiudad.new()
 	add_child(vista)
 	vista.animo = CiudadAnimo.de(mundo, club)
+	EdificioClub.fijar_ctx(mundo, club)
 	var perfil := mundo.perfil_estadio_de(club)
 	vista.abrir(club, mundo.obras, mundo.ciudad, perfil)
 	est = TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))))

@@ -335,31 +335,3 @@ func _liga_de(c: Club) -> Liga:
 
 func _dinero(n: int) -> String:
 	return Eco.dinero(n)
-
-## Lo que el edificio del club pinta del mundo: niveles, salas elegidas,
-## plantilla con dorsales, títulos y presidente.
-func _contexto_edificio(c: Club) -> Dictionary:
-	var pl: Array = []
-	var orden := c.plantilla.duplicate()
-	orden.sort_custom(func(a: Jugador, b: Jugador) -> bool: return (a.dorsal if a.dorsal > 0 else 99) < (b.dorsal if b.dorsal > 0 else 99))
-	var n := 1
-	for j: Jugador in orden:
-		pl.append([j.dorsal if j.dorsal > 0 else n, Nombres.visible(j.nombre)])
-		n += 1
-	var dentro := {}
-	if mundo.club_dentro != null:
-		dentro = {"vestuario": mundo.club_dentro.vestuario, "sala_prensa": mundo.club_dentro.sala_prensa, "palco": mundo.club_dentro.palco}
-	var titulos := mundo.roles.trofeos.size() if mundo.roles != null else 0
-	## Fase 5: los títulos de las ramas (otros deportes) también tienen su copa en el museo.
-	if mundo.hinchada != null:
-		for rr: Dictionary in mundo.hinchada.palmares_ramas:
-			if int(rr.get("puesto", 9)) == 1:
-				titulos += 1
-	var pres := ""
-	if mundo.junta != null:
-		pres = String(mundo.junta.presidente.get("nombre", ""))
-	return {"inst": mundo.obras.niveles.duplicate() if mundo.obras != null else {}, "dentro": dentro,
-		"plantilla": pl, "titulos": titulos, "presidente": pres,
-		"gente": mundo.gente.fichas.duplicate(true) if mundo.gente != null else {},
-		## Por referencia: lo que decores en el 3D se guarda en la partida.
-		"interiores": mundo.interiores}
