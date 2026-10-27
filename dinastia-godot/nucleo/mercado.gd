@@ -4,9 +4,13 @@ extends "res://nucleo/mercado_p1.gd"
 
 func desde_dic(d: Dictionary) -> void:
 	ofertas_recibidas.clear()
+	precontratos.clear()
 	var m := _mundo()
 	if m == null:
 		return
+	for e: Dictionary in d.get("precontratos", []):
+		if _jugador_por_id(String(e.get("id", ""))) != null:
+			precontratos.append({"id": String(e["id"]), "sueldo": int(e.get("sueldo", 0)), "anios": int(e.get("anios", 3))})
 	for o: Dictionary in d.get("ofertas_recibidas", []):
 		var club: Club = m.clubes.get(String(o.get("club_id", "")))
 		var j := _jugador_por_id(String(o.get("jugador_id", "")))

@@ -336,6 +336,8 @@ func _vence_contrato(j: Jugador, c: Club) -> bool:
 	j.anios_contrato -= 1
 	if j.anios_contrato > 0:
 		return false
+	if c.id != mi_club_id and Precontratos.llega(self, j):
+		return true   ## precontrato con tu club: ni renueva ni va a libres; entra en `Mundo.nueva_temporada`
 	var h := absi(hash("%s|%d" % [j.id, anio]))
 	if c.id != mi_club_id:
 		var sigue := 0.5 if j.edad >= 33 else 0.88
