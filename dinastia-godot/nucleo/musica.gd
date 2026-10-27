@@ -76,7 +76,7 @@ const PIEZAS := {
 		"forma": "cuadrada",
 	},
 	"invierno": {
-		"nombre": "Invierno (parón de mitad de año)",
+		"nombre": "Parón de invierno",
 		"desc": "La más lenta y la más vacía. Para las semanas en que no se juega.",
 		"raiz": 87.31, "bpm": 60,
 		"acordes": [[0, 3, 7], [-5, -1, 2], [-2, 2, 5], [-4, 0, 3]],

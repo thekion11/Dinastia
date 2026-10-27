@@ -6052,7 +6052,8 @@
   "Marca dos goles o más": "Score two goals or more",
   "Marca tres goles o más": "Score three goals or more",
   "No encajes más de un gol": "Concede no more than one goal",
-  "Lo demás, por mi cuenta ▸": "I'll do the rest myself ▸"
+  "Lo demás, por mi cuenta ▸": "I'll do the rest myself ▸",
+  "Parón de invierno": "Winter break"
  },
  "pt": {
   "Historia": "História",
@@ -12107,7 +12108,8 @@
   "Marca dos goles o más": "Marca dois golos ou mais",
   "Marca tres goles o más": "Marca três golos ou mais",
   "No encajes más de un gol": "Não sofras mais de um golo",
-  "Lo demás, por mi cuenta ▸": "O resto, por minha conta ▸"
+  "Lo demás, por mi cuenta ▸": "O resto, por minha conta ▸",
+  "Parón de invierno": "Pausa de inverno"
  },
  "patrones": [
   [
@@ -23774,7 +23776,8 @@
   "Marca dos goles o más": "Marque deux buts ou plus",
   "Marca tres goles o más": "Marque trois buts ou plus",
   "No encajes más de un gol": "N'encaisse pas plus d'un but",
-  "Lo demás, por mi cuenta ▸": "Le reste, je m'en charge ▸"
+  "Lo demás, por mi cuenta ▸": "Le reste, je m'en charge ▸",
+  "Parón de invierno": "Trêve hivernale"
  },
  "it": {
   "Historia": "Storia",
@@ -29829,7 +29832,8 @@
   "Marca dos goles o más": "Segna due gol o più",
   "Marca tres goles o más": "Segna tre gol o più",
   "No encajes más de un gol": "Non subire più di un gol",
-  "Lo demás, por mi cuenta ▸": "Il resto, da solo ▸"
+  "Lo demás, por mi cuenta ▸": "Il resto, da solo ▸",
+  "Parón de invierno": "Pausa invernale"
  },
  "de": {
   "Historia": "Geschichte",
@@ -30571,7 +30575,7 @@
   "💪 Firme": "💪 Bestimmt",
   "💰 Comercial": "💰 Kommerz",
   "📅 Calendario": "📅 Kalender",
-  "📢 Comunicado de apoyo": "📢 Unterstützungserklärung",
+  "📢 Comunicado de apoyo": "📢 Rückendeckung",
   "📢 Sirena de barco": "📢 Schiffshorn",
   "📽️ Videoanálisis del rival de esta semana": "📽️ Videoanalyse des Gegners dieser Woche",
   "🔔 Campana": "🔔 Glocke",
@@ -35884,7 +35888,8 @@
   "Marca dos goles o más": "Erziele zwei Tore oder mehr",
   "Marca tres goles o más": "Erziele drei Tore oder mehr",
   "No encajes más de un gol": "Kassiere höchstens ein Tor",
-  "Lo demás, por mi cuenta ▸": "Den Rest mache ich selbst ▸"
+  "Lo demás, por mi cuenta ▸": "Den Rest mache ich selbst ▸",
+  "Parón de invierno": "Winterpause"
  },
  "ca": {
   "Historia": "Història",
@@ -41939,7 +41944,8 @@
   "Marca dos goles o más": "Marca dos gols o més",
   "Marca tres goles o más": "Marca tres gols o més",
   "No encajes más de un gol": "No encaixis més d'un gol",
-  "Lo demás, por mi cuenta ▸": "La resta, pel meu compte ▸"
+  "Lo demás, por mi cuenta ▸": "La resta, pel meu compte ▸",
+  "Parón de invierno": "Aturada d'hivern"
  },
  "pl": {
   "Club": "Klub",
@@ -48273,7 +48279,8 @@
   "Marca dos goles o más": "Strzel dwa gole lub więcej",
   "Marca tres goles o más": "Strzel trzy gole lub więcej",
   "No encajes más de un gol": "Strać najwyżej jednego gola",
-  "Lo demás, por mi cuenta ▸": "Resztę zrobię sam ▸"
+  "Lo demás, por mi cuenta ▸": "Resztę zrobię sam ▸",
+  "Parón de invierno": "Przerwa zimowa"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54607,6 +54614,7 @@
   "Marca dos goles o más": "İki veya daha fazla gol at",
   "Marca tres goles o más": "Üç veya daha fazla gol at",
   "No encajes más de un gol": "Birden fazla gol yeme",
-  "Lo demás, por mi cuenta ▸": "Gerisini ben hallederim ▸"
+  "Lo demás, por mi cuenta ▸": "Gerisini ben hallederim ▸",
+  "Parón de invierno": "Kış arası"
  }
 }
