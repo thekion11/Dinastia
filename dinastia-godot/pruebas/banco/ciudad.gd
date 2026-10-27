@@ -210,6 +210,21 @@ func _probar_redes_ciudad() -> void:
 	mu.redes_ciudad = gd
 	var mu2 := Partida.desde_instantanea(JSON.parse_string(JSON.stringify(Partida.instantanea(mu))))
 	_comprobar(mu2.redes_ciudad != null and mu2.redes_ciudad.horas == gd.horas and mu2.redes_ciudad.evento.activo, "la partida completa guarda y carga las redes")
+	## EL DEPÓSITO DEL COCHE: gasta con la distancia, no baja de 0 y se guarda con la vida del DT.
+	var vd := VidaDT.new()
+	_comprobar(is_equal_approx(vd.combustible, 45.0) and is_equal_approx(vd.fraccion_comb(), 1.0), "el coche sale con el depósito lleno (45 l)")
+	vd.gastar_combustible(10000.0)
+	_comprobar(is_equal_approx(vd.combustible, 20.0), "10 km gastan 25 l (2,5 l/km)")
+	vd.gastar_combustible(100000.0)
+	_comprobar(vd.combustible == 0.0, "el depósito no baja de cero")
+	vd.combustible = 6.0
+	vd.aviso_comb = 202645
+	var vd2 := VidaDT.new()
+	vd2.desde_dic(JSON.parse_string(JSON.stringify(vd.a_dic())))
+	_comprobar(is_equal_approx(vd2.combustible, 6.0) and vd2.aviso_comb == 202645 and vd2.fraccion_comb() < 0.15, "la gasolina y el aviso semanal se guardan y se cargan")
+	var vd3 := VidaDT.new()
+	vd3.desde_dic({})
+	_comprobar(is_equal_approx(vd3.combustible, 45.0), "una partida vieja sin gasolina empieza con el depósito lleno")
 	## Determinista: misma semilla, mismas averías.
 	var a1 := RedesCiudad.new(11)
 	var a2 := RedesCiudad.new(11)

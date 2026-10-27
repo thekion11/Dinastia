@@ -47,6 +47,7 @@ var _t_cuadro := 0.0
 var _capa_tel: CanvasLayer
 var _calabozo_semana := ""
 var _desmayo_en_curso := false
+var _t_vacio := 0.0
 var _redes_sin_luz := 0
 var _redes_inundados := 0
 
@@ -127,6 +128,7 @@ func _process(delta: float) -> void:
 		_acum -= SEG_POR_MINUTO
 		if not mundo.reloj.agotada():
 			mundo.reloj.avanzar_minutos(1, actividad_actual())
+	(self as VidaCiudad).gasolina_tick(delta)
 	if expl.multas >= MULTAS_CALABOZO:
 		(self as VidaCiudad)._calabozo()
 
