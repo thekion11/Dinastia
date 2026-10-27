@@ -6012,7 +6012,9 @@
   "Museo ampliado": "Extended museum",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Out of fuel: the car won't start until you refuel at a pump (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Less than 15% fuel left: find a pump (E).",
-  "Tienes el depósito lleno.": "Your tank is full."
+  "Tienes el depósito lleno.": "Your tank is full.",
+  "Ayuntamiento": "Town Hall",
+  "Universidad": "University"
  },
  "pt": {
   "Historia": "História",
@@ -12027,7 +12029,9 @@
   "Museo ampliado": "Museu ampliado",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Sem gasolina: o carro não liga até você abastecer numa bomba (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Menos de 15% de gasolina: procure uma bomba (E).",
-  "Tienes el depósito lleno.": "O tanque já está cheio."
+  "Tienes el depósito lleno.": "O tanque já está cheio.",
+  "Ayuntamiento": "Câmara Municipal",
+  "Universidad": "Universidade"
  },
  "patrones": [
   [
@@ -23654,7 +23658,9 @@
   "Museo ampliado": "Musée agrandi",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Panne sèche : la voiture ne démarre pas tant que tu n'as pas fait le plein à une pompe (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Moins de 15 % de carburant : cherche une pompe (E).",
-  "Tienes el depósito lleno.": "Ton réservoir est plein."
+  "Tienes el depósito lleno.": "Ton réservoir est plein.",
+  "Ayuntamiento": "Hôtel de ville",
+  "Universidad": "Université"
  },
  "it": {
   "Historia": "Storia",
@@ -29669,7 +29675,9 @@
   "Museo ampliado": "Museo ampliato",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Senza benzina: l'auto non parte finché non fai rifornimento a una pompa (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Meno del 15% di benzina: cerca una pompa (E).",
-  "Tienes el depósito lleno.": "Il serbatoio è già pieno."
+  "Tienes el depósito lleno.": "Il serbatoio è già pieno.",
+  "Ayuntamiento": "Municipio",
+  "Universidad": "Università"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35684,7 +35692,9 @@
   "Museo ampliado": "Erweitertes Museum",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Kein Benzin: das Auto springt erst an, wenn du an einer Zapfsäule tankst (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Weniger als 15 % Benzin: such eine Zapfsäule (E).",
-  "Tienes el depósito lleno.": "Dein Tank ist voll."
+  "Tienes el depósito lleno.": "Dein Tank ist voll.",
+  "Ayuntamiento": "Rathaus",
+  "Universidad": "Universität"
  },
  "ca": {
   "Historia": "Història",
@@ -41699,7 +41709,9 @@
   "Museo ampliado": "Museu ampliat",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Sense gasolina: el cotxe no arrenca fins que repostis en un sortidor (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Et queda menys del 15 % de gasolina: busca un sortidor (E).",
-  "Tienes el depósito lleno.": "Tens el dipòsit ple."
+  "Tienes el depósito lleno.": "Tens el dipòsit ple.",
+  "Ayuntamiento": "Ajuntament",
+  "Universidad": "Universitat"
  },
  "pl": {
   "Club": "Klub",
@@ -47993,7 +48005,9 @@
   "Museo ampliado": "Rozbudowane muzeum",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Brak paliwa: auto nie ruszy, dopóki nie zatankujesz przy dystrybutorze (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Zostało mniej niż 15% paliwa: znajdź dystrybutor (E).",
-  "Tienes el depósito lleno.": "Masz pełny bak."
+  "Tienes el depósito lleno.": "Masz pełny bak.",
+  "Ayuntamiento": "Ratusz",
+  "Universidad": "Uniwersytet"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54287,6 +54301,8 @@
   "Museo ampliado": "Genişletilmiş müze",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Benzin bitti: bir pompada yakıt almadan araba çalışmaz (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Yakıtın %15'in altına düştü: bir pompa bul (E).",
-  "Tienes el depósito lleno.": "Deponuz dolu."
+  "Tienes el depósito lleno.": "Deponuz dolu.",
+  "Ayuntamiento": "Belediye",
+  "Universidad": "Üniversite"
  }
 }
