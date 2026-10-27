@@ -231,6 +231,11 @@ const TABLAS_B6 := {
 		["artificial", "Césped artificial", "No se estropea nunca, pero castiga las articulaciones: más lesiones."],
 	],
 	"EST_PALETA": PALETA,
+	## Cómo se reparte el color de las butacas entre los anillos (27-10-2026): pintura, gratis.
+	"EST_NIVELES": [
+		["por_nivel", "Un color por nivel", "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos."],
+		["uniforme", "Franjas iguales", "Los dos colores en franjas, igual en todos los niveles."],
+	],
 	## Paleta de las vallas LED (MEGAPLAN B6). Es programación de la pantalla,
 	## no obra: gratis, como la pintura.
 	"EST_LED": [
@@ -255,7 +260,7 @@ const DEF_B6 := {
 	"anillo_norte_1": "", "anillo_norte_2": "", "anillo_norte_3": "", "anillo_norte_4": "", "anillo_norte_5": "",
 	"anillo_este_1": "", "anillo_este_2": "", "anillo_este_3": "", "anillo_este_4": "", "anillo_este_5": "",
 	"anillo_oeste_1": "", "anillo_oeste_2": "", "anillo_oeste_3": "", "anillo_oeste_4": "", "anillo_oeste_5": "",
-	"vallaCol": "", "focosCol": "", "ledPaleta": "marcas", "ledFondo": "", "ledTinta": "",
+	"vallaCol": "", "focosCol": "", "ledPaleta": "marcas", "ledFondo": "", "ledTinta": "", "asientoNivel": "por_nivel",
 }
 const CATALOGO_B6 := {
 	"fachada": "EST_FACHADAS", "fachadaCol": "EST_PALETA", "techoCol": "EST_PALETA",
@@ -269,7 +274,7 @@ const CATALOGO_B6 := {
 	"anillo_este_1": "EST_PALETA", "anillo_este_2": "EST_PALETA", "anillo_este_3": "EST_PALETA", "anillo_este_4": "EST_PALETA", "anillo_este_5": "EST_PALETA",
 	"anillo_oeste_1": "EST_PALETA", "anillo_oeste_2": "EST_PALETA", "anillo_oeste_3": "EST_PALETA", "anillo_oeste_4": "EST_PALETA", "anillo_oeste_5": "EST_PALETA",
 	"vallaCol": "EST_PALETA", "focosCol": "EST_PALETA", "ledPaleta": "EST_LED",
-	"ledFondo": "EST_PALETA", "ledTinta": "EST_PALETA",
+	"ledFondo": "EST_PALETA", "ledTinta": "EST_PALETA", "asientoNivel": "EST_NIVELES",
 }
 ## Cuánto multiplica cada superficie la probabilidad de lesión en TU campo.
 const LESION_POR_SUPERFICIE := {"natural": 1.0, "hibrido": 0.85, "artificial": 1.3}

@@ -6133,7 +6133,14 @@
   "Restablecer el PIN": "Reset the PIN",
   "PIN restablecido.": "PIN reset.",
   "Últimos movimientos": "Latest transactions",
-  "Barrita de cereales": "Cereal bar"
+  "Barrita de cereales": "Cereal bar",
+  "Color de las butacas": "Seat colours",
+  "Cómo se reparten los colores de tu club por la grada. Es pintura: se puede cambiar cuando quieras.": "How your club's colours are spread across the stands. It's just paint: you can change it whenever you like.",
+  "Un color por nivel": "One colour per level",
+  "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Colour 1 of your club at the bottom, colour 2 in the middle and a mix of both at the top.",
+  "Franjas iguales": "Equal stripes",
+  "Los dos colores en franjas, igual en todos los niveles.": "Both colours in stripes, the same on every level.",
+  "Color de las butacas por nivel": "Seat colour by level"
  },
  "pt": {
   "Historia": "História",
@@ -12269,7 +12276,14 @@
   "Restablecer el PIN": "Repor o PIN",
   "PIN restablecido.": "PIN reposto.",
   "Últimos movimientos": "Últimos movimentos",
-  "Barrita de cereales": "Barra de cereais"
+  "Barrita de cereales": "Barra de cereais",
+  "Color de las butacas": "Cor das cadeiras",
+  "Cómo se reparten los colores de tu club por la grada. Es pintura: se puede cambiar cuando quieras.": "Como as cores do seu clube se distribuem pela bancada. É só pintura: pode mudar quando quiser.",
+  "Un color por nivel": "Uma cor por nível",
+  "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Em baixo a cor 1 do seu clube, no meio a 2 e em cima uma mistura das duas.",
+  "Franjas iguales": "Listras iguais",
+  "Los dos colores en franjas, igual en todos los niveles.": "As duas cores em listras, igual em todos os níveis.",
+  "Color de las butacas por nivel": "Cor das cadeiras por nível"
  },
  "patrones": [
   [
@@ -24017,7 +24031,14 @@
   "Restablecer el PIN": "Réinitialiser le code PIN",
   "PIN restablecido.": "Code PIN réinitialisé.",
   "Últimos movimientos": "Derniers mouvements",
-  "Barrita de cereales": "Barre de céréales"
+  "Barrita de cereales": "Barre de céréales",
+  "Color de las butacas": "Couleur des sièges",
+  "Cómo se reparten los colores de tu club por la grada. Es pintura: se puede cambiar cuando quieras.": "Comment les couleurs de ton club se répartissent dans les tribunes. C'est de la peinture : tu peux la changer quand tu veux.",
+  "Un color por nivel": "Une couleur par niveau",
+  "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "En bas la couleur 1 de ton club, au milieu la 2 et en haut un mélange des deux.",
+  "Franjas iguales": "Rayures identiques",
+  "Los dos colores en franjas, igual en todos los niveles.": "Les deux couleurs en rayures, pareil à tous les niveaux.",
+  "Color de las butacas por nivel": "Couleur des sièges par niveau"
  },
  "it": {
   "Historia": "Storia",
@@ -30153,7 +30174,14 @@
   "Restablecer el PIN": "Reimposta il PIN",
   "PIN restablecido.": "PIN reimpostato.",
   "Últimos movimientos": "Ultimi movimenti",
-  "Barrita de cereales": "Barretta ai cereali"
+  "Barrita de cereales": "Barretta ai cereali",
+  "Color de las butacas": "Colore dei sedili",
+  "Cómo se reparten los colores de tu club por la grada. Es pintura: se puede cambiar cuando quieras.": "Come si distribuiscono i colori del tuo club sulle tribune. È solo vernice: puoi cambiarla quando vuoi.",
+  "Un color por nivel": "Un colore per livello",
+  "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "In basso il colore 1 del tuo club, in mezzo il 2 e in alto un misto dei due.",
+  "Franjas iguales": "Strisce uguali",
+  "Los dos colores en franjas, igual en todos los niveles.": "I due colori a strisce, uguale a tutti i livelli.",
+  "Color de las butacas por nivel": "Colore dei sedili per livello"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36289,7 +36317,14 @@
   "Restablecer el PIN": "PIN zurücksetzen",
   "PIN restablecido.": "PIN zurückgesetzt.",
   "Últimos movimientos": "Letzte Buchungen",
-  "Barrita de cereales": "Müsliriegel"
+  "Barrita de cereales": "Müsliriegel",
+  "Color de las butacas": "Sitzfarben",
+  "Cómo se reparten los colores de tu club por la grada. Es pintura: se puede cambiar cuando quieras.": "Wie sich die Farben deines Vereins auf den Rängen verteilen. Es ist nur Farbe: du kannst sie jederzeit ändern.",
+  "Un color por nivel": "Eine Farbe pro Ebene",
+  "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Unten Farbe 1 deines Vereins, in der Mitte Farbe 2 und oben eine Mischung aus beiden.",
+  "Franjas iguales": "Gleiche Streifen",
+  "Los dos colores en franjas, igual en todos los niveles.": "Beide Farben in Streifen, auf allen Ebenen gleich.",
+  "Color de las butacas por nivel": "Sitzfarbe pro Ebene"
  },
  "ca": {
   "Historia": "Història",
@@ -42425,7 +42460,14 @@
   "Restablecer el PIN": "Restablir el PIN",
   "PIN restablecido.": "PIN restablert.",
   "Últimos movimientos": "Últims moviments",
-  "Barrita de cereales": "Barreta de cereals"
+  "Barrita de cereales": "Barreta de cereals",
+  "Color de las butacas": "Color de les butaques",
+  "Cómo se reparten los colores de tu club por la grada. Es pintura: se puede cambiar cuando quieras.": "Com es reparteixen els colors del teu club per la graderia. És només pintura: es pot canviar quan vulguis.",
+  "Un color por nivel": "Un color per nivell",
+  "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "A baix el color 1 del teu club, al mig el 2 i a dalt una barreja dels dos.",
+  "Franjas iguales": "Franges iguals",
+  "Los dos colores en franjas, igual en todos los niveles.": "Els dos colors en franges, igual a tots els nivells.",
+  "Color de las butacas por nivel": "Color de les butaques per nivell"
  },
  "pl": {
   "Club": "Klub",
@@ -48840,7 +48882,14 @@
   "Restablecer el PIN": "Zresetuj PIN",
   "PIN restablecido.": "PIN zresetowany.",
   "Últimos movimientos": "Ostatnie operacje",
-  "Barrita de cereales": "Baton zbożowy"
+  "Barrita de cereales": "Baton zbożowy",
+  "Color de las butacas": "Kolor krzesełek",
+  "Cómo se reparten los colores de tu club por la grada. Es pintura: se puede cambiar cuando quieras.": "Jak kolory twojego klubu rozkładają się na trybunach. To tylko farba: możesz ją zmienić, kiedy chcesz.",
+  "Un color por nivel": "Jeden kolor na poziom",
+  "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Na dole kolor 1 twojego klubu, w środku 2, a na górze mieszanka obu.",
+  "Franjas iguales": "Jednakowe pasy",
+  "Los dos colores en franjas, igual en todos los niveles.": "Oba kolory w pasy, tak samo na każdym poziomie.",
+  "Color de las butacas por nivel": "Kolor krzesełek wg poziomu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -55255,6 +55304,13 @@
   "Restablecer el PIN": "PIN'i sıfırla",
   "PIN restablecido.": "PIN sıfırlandı.",
   "Últimos movimientos": "Son hareketler",
-  "Barrita de cereales": "Tahıl barı"
+  "Barrita de cereales": "Tahıl barı",
+  "Color de las butacas": "Koltuk renkleri",
+  "Cómo se reparten los colores de tu club por la grada. Es pintura: se puede cambiar cuando quieras.": "Kulübünün renklerinin tribünlere nasıl dağıldığı. Sadece boya: istediğin zaman değiştirebilirsin.",
+  "Un color por nivel": "Her kat için bir renk",
+  "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Altta kulübünün 1. rengi, ortada 2. renk ve üstte ikisinin karışımı.",
+  "Franjas iguales": "Eşit çizgiler",
+  "Los dos colores en franjas, igual en todos los niveles.": "İki renk çizgili, her katta aynı.",
+  "Color de las butacas por nivel": "Kata göre koltuk rengi"
  }
 }
