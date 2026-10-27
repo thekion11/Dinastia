@@ -3,6 +3,8 @@ extends "res://visor/ciudad_expansion_p8.gd"
 ## [Capa 9/9 de `ciudad_expansion.gd`] _kenney_calles, _parque_eolico, _deposito_agua, _volcar_lotes, construir, _kit_apilado … (+6)
 
 var _mat_cartel: StandardMaterial3D
+## Luz, agua, drenaje y gasolineras (27-10-2026): `RedesCiudadVista`.
+var redes: RedesCiudadVista
 
 func _kenney_calles() -> void:
 	var r := RandomNumberGenerator.new()
@@ -149,6 +151,7 @@ func construir() -> void:
 	cuenta["autopista"] = Autopista.montar(b)
 	_parque_eolico()
 	_deposito_agua()
+	redes = RedesCiudadVista.crear(self, 20261027)
 	_volcar_lotes()
 
 ## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en
@@ -162,14 +165,16 @@ func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: fl
 
 ## 0 de día, 1 de noche: guirnaldas, farolas y ventanas lejanas.
 func encender(noche: float) -> void:
+	## Los apagones bajan las farolas (fracción de la ciudad sin corriente).
+	var red := redes.fraccion_luz() if redes != null else 1.0
 	for m in _bombillas:
 		m.emission_energy_multiplier = lerpf(0.15, 1.4, noche)
 	if _farola_luz != null:
-		_farola_luz.emission_energy_multiplier = lerpf(0.0, 2.6, noche)
+		_farola_luz.emission_energy_multiplier = lerpf(0.0, 2.6, noche) * red
 	if _farola_charco != null:
-		_farola_charco.albedo_color.a = lerpf(0.0, 0.62, noche)
+		_farola_charco.albedo_color.a = lerpf(0.0, 0.62, noche) * red
 	if _farola_cono != null:
-		_farola_cono.set_shader_parameter("fuerza", lerpf(0.0, 0.22, noche))
+		_farola_cono.set_shader_parameter("fuerza", lerpf(0.0, 0.22, noche) * red)
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.set_shader_parameter("noche", noche)
 
