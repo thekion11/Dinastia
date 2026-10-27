@@ -584,7 +584,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
 | M-384 | P2 | PENDIENTE | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios |
-| M-385 | P2 | PENDIENTE | Autoloads con globals (`Datos`, `Sonido`…) | sin documentar autoloads |
 | M-386 | P2 | PARCIAL | Señales sin desconexión en liberación (posibles fugas) | `auditoria_tecnica.gd` mide huérfanos en la pantalla principal; 21-10: el panel de objetivos pasa a señal (`vista_cambiada`) y respaldo cada 3 s, sin fallar con las pestañas prestadas a un menú |
 | M-387 | P2 | PENDIENTE | Mensajes de error silenciosos (`return` sin aviso) | sin registro de errores |
 | M-388 | P2 | PENDIENTE | Constantes mágicas (balance) dispersas | sin archivo de balance |
