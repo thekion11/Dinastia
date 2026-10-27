@@ -68,6 +68,18 @@ func _probar_subsuelo(b: CityBuilder, v: RedesCiudadVista) -> void:
 		if String(pc["k"]).begins_with("alcantarilla_"):
 			tapas += 1
 	_comprobar(tapas == 5, "cada una es un punto de E")
+	var cu: Node3D = v._cuadrillas[Vector2i(1, 1)]
+	_comprobar(v._cuadrillas.size() == 25 and not cu.visible, "una cuadrilla (camión y conos) esperando en cada uno de los 25 sectores, oculta")
+	v.modelo.averiar("agua", Vector2i(1, 1))
+	v.refrescar()
+	var sano := Vector2i(-1, -1)
+	for q in RedesCiudad.sectores():
+		if q != Vector2i(1, 1) and not v.modelo.hay_averia(q):
+			sano = q
+	_comprobar(cu.visible and not (v._cuadrillas[sano] as Node3D).visible, "con una avería abierta aparece la cuadrilla de ese sector (y solo ahí)")
+	v.modelo.reparar("agua", Vector2i(1, 1))
+	v.refrescar()
+	_comprobar(cu.visible == v.modelo.hay_averia(Vector2i(1, 1)) and not v.modelo.esta_averiado("agua", Vector2i(1, 1)), "y desaparece al repararse")
 	var s := SubsueloCiudad.crear(b, v)
 	_comprobar(not s.visible and s.rects.size() == 10, "el subsuelo se levanta oculto, con 10 huecos")
 	_comprobar(s.libre(Vector2(-1.5, -1.5)) and not s.libre(Vector2(-20.0, 0.0)), "se aparece en el pozo y la roca no se pisa")
