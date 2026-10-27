@@ -6145,7 +6145,12 @@
   "Cadete": "Cadet",
   "Debutante": "Rookie",
   "Experto": "Expert",
-  "Ultimate": "Ultimate"
+  "Ultimate": "Ultimate",
+  "Desbloquear modos jugando (si no, todo abierto)": "Unlock modes by playing (otherwise, everything open)",
+  "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Unlocks after winning %d titles (you have %d).",
+  "🔒 Se abre al ganar tu primer título.": "🔒 Unlocks after winning your first title.",
+  "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Unlocks after completing %d seasons (you have %d).",
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Unlocks after completing your first season."
  },
  "pt": {
   "Historia": "História",
@@ -12293,7 +12298,12 @@
   "Cadete": "Cadete",
   "Debutante": "Estreante",
   "Experto": "Especialista",
-  "Ultimate": "Ultimate"
+  "Ultimate": "Ultimate",
+  "Desbloquear modos jugando (si no, todo abierto)": "Desbloquear modos jogando (senão, tudo aberto)",
+  "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Abre ao ganhar %d títulos (tem %d).",
+  "🔒 Se abre al ganar tu primer título.": "🔒 Abre ao ganhar o seu primeiro título.",
+  "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Abre ao completar %d épocas (tem %d).",
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Abre ao completar a sua primeira época."
  },
  "patrones": [
   [
@@ -24053,7 +24063,12 @@
   "Cadete": "Cadet",
   "Debutante": "Débutant",
   "Experto": "Expert",
-  "Ultimate": "Ultimate"
+  "Ultimate": "Ultimate",
+  "Desbloquear modos jugando (si no, todo abierto)": "Débloquer les modes en jouant (sinon, tout est ouvert)",
+  "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Se débloque après %d titres (tu en as %d).",
+  "🔒 Se abre al ganar tu primer título.": "🔒 Se débloque après ton premier titre.",
+  "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Se débloque après %d saisons (tu en as %d).",
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Se débloque après ta première saison."
  },
  "it": {
   "Historia": "Storia",
@@ -30201,7 +30216,12 @@
   "Cadete": "Cadetto",
   "Debutante": "Esordiente",
   "Experto": "Esperto",
-  "Ultimate": "Ultimate"
+  "Ultimate": "Ultimate",
+  "Desbloquear modos jugando (si no, todo abierto)": "Sblocca le modalità giocando (altrimenti, tutto aperto)",
+  "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Si sblocca vincendo %d titoli (ne hai %d).",
+  "🔒 Se abre al ganar tu primer título.": "🔒 Si sblocca vincendo il tuo primo titolo.",
+  "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Si sblocca completando %d stagioni (ne hai %d).",
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Si sblocca completando la tua prima stagione."
  },
  "de": {
   "Historia": "Geschichte",
@@ -36349,7 +36369,12 @@
   "Cadete": "Kadett",
   "Debutante": "Debütant",
   "Experto": "Experte",
-  "Ultimate": "Ultimate"
+  "Ultimate": "Ultimate",
+  "Desbloquear modos jugando (si no, todo abierto)": "Modi durch Spielen freischalten (sonst alles offen)",
+  "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Wird nach %d Titeln freigeschaltet (du hast %d).",
+  "🔒 Se abre al ganar tu primer título.": "🔒 Wird nach deinem ersten Titel freigeschaltet.",
+  "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Wird nach %d Saisons freigeschaltet (du hast %d).",
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Wird nach deiner ersten Saison freigeschaltet."
  },
  "ca": {
   "Historia": "Història",
@@ -42497,7 +42522,12 @@
   "Cadete": "Cadet",
   "Debutante": "Debutant",
   "Experto": "Expert",
-  "Ultimate": "Ultimate"
+  "Ultimate": "Ultimate",
+  "Desbloquear modos jugando (si no, todo abierto)": "Desbloquejar modes jugant (si no, tot obert)",
+  "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 S'obre en guanyar %d títols (en portes %d).",
+  "🔒 Se abre al ganar tu primer título.": "🔒 S'obre en guanyar el teu primer títol.",
+  "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 S'obre en completar %d temporades (en portes %d).",
+  "🔒 Se abre al completar tu primera temporada.": "🔒 S'obre en completar la teva primera temporada."
  },
  "pl": {
   "Club": "Klub",
@@ -48924,7 +48954,12 @@
   "Cadete": "Kadet",
   "Debutante": "Debiutant",
   "Experto": "Ekspert",
-  "Ultimate": "Ultimate"
+  "Ultimate": "Ultimate",
+  "Desbloquear modos jugando (si no, todo abierto)": "Odblokowuj tryby grając (inaczej wszystko otwarte)",
+  "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Odblokowuje się po %d tytułach (masz %d).",
+  "🔒 Se abre al ganar tu primer título.": "🔒 Odblokowuje się po pierwszym tytule.",
+  "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Odblokowuje się po %d sezonach (masz %d).",
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Odblokowuje się po pierwszym sezonie."
  },
  "tr": {
   "Club": "Kulüp",
@@ -55351,6 +55386,11 @@
   "Cadete": "Genç",
   "Debutante": "Çaylak",
   "Experto": "Uzman",
-  "Ultimate": "Ultimate"
+  "Ultimate": "Ultimate",
+  "Desbloquear modos jugando (si no, todo abierto)": "Modları oynayarak aç (yoksa hepsi açık)",
+  "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 %d kupa kazanınca açılır (şu an %d).",
+  "🔒 Se abre al ganar tu primer título.": "🔒 İlk kupanı kazanınca açılır.",
+  "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 %d sezon tamamlayınca açılır (şu an %d).",
+  "🔒 Se abre al completar tu primera temporada.": "🔒 İlk sezonunu tamamlayınca açılır."
  }
 }

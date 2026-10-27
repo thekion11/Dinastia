@@ -202,6 +202,12 @@ func _pintar_fondos_ajustes() -> void:
 		p._rotar_diseno = v
 		p._guardar_preferencias())
 	p._lista_ajustes.add_child(rot)
+	## «El bloqueo» (dueño, 27-10): apagado = todo abierto; encendido, algunos modos se ganan jugando.
+	var blo := CheckButton.new()
+	blo.text = Idiomas.t("Desbloquear modos jugando (si no, todo abierto)")
+	blo.button_pressed = DesbloqueoModos.activo()
+	blo.toggled.connect(func(v: bool) -> void: DesbloqueoModos.fijar_activo(v))
+	p._lista_ajustes.add_child(blo)
 	p._lista_ajustes.add_child(HSeparator.new())
 
 	op.add_item("Sin fondo (verde plano)", 0)

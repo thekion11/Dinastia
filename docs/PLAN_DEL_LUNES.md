@@ -518,7 +518,7 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 
 ### Semana 7 (24-11 → 30-11) — Tutorial y primera hora de juego
 - [ ] Indicaciones sobre la pantalla: hay resaltado y flecha sobre el control de cada misión (27-10); falta acortar los textos más largos del mentor (medir en la primera hora con jugadores nuevos).
-- [ ] Desbloqueo opcional de modos: ACEPTADO por el dueño (27-10), opción en Ajustes con «Todo abierto» por defecto; lo construye el líder.
+
 - [ ] Pruebas de la primera hora: qué ve un jugador nuevo, sin perderse.
 
 ### Semana 8 (1-12 → 7-12) — Ultra pulido de todo
@@ -555,6 +555,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 ### Detectados en pruebas y aún sin cerrar
 
 - **TIRO_PULIDO** (dueño 27-10: encender y pulir más). ENCENDIDO el 27-10 (`PMOT_TIRO=0` lo apaga). Medido con el mismo once a los dos lados, 6 partidos: encendido tal cual daba 0,8 goles por partido porque el portero paraba el 89 % de lo que iba dentro; con la parada que cuesta más lejos del cuerpo y con tiros fuertes (`PARADA_LEJOS` 0,5) quedan 2,3 goles, 20 % de conversión y 59 % de paradas (real: ~2,7, ~11 % y ~70 %). Queda para la pasada final del motor: más tiros por partido (hoy ~12; real ~25), el portero algo más seguro y el pie malo.
+- **Aviso de «Unexpected NUL character» al cargar `PantallaModos`** (27-10): tres avisos de Godot al cargar el menú de modos (también sin los cambios del día). No viene de los `preload` de texto de `menu_modos*`: buscar qué recurso o JSON lleva un byte nulo.
 - **Pelo de los peatones** (27-10, P4): los mechones se ven duros; suavizar normales empeora. Arreglarlo pide cambiar las mallas de pelo (Quaternius trae más cortes): decisión de aspecto del dueño.
 - **Cada gesto con su habilidad, su pie y su clima** (dueño 27-10, HECHO la base: `GestoTecnico`, sonda `s3g_gesto_tecnico`): rosca, vaselina, raso, potente, cabezazo y los pases corto, tenso, al hueco y largo pesan sus atributos; la pierna débil (1-5 estrellas) suma hasta un 48 % de error; el clima del partido (lluvia, tormenta, nieve, niebla) cambia el error, el agarre del portero y lo que rueda el balón. Medido (6 partidos): 2,3 goles en seco, 2,5 con lluvia, 2,7 con nieve. Para la pasada final: rasgos del jugador (los «PlayStyles»), viento en lo que va por el aire, calor y altura en el cansancio, y un ajuste fino con N grande.
 - **PASADA FINAL DEL MOTOR (decisión del dueño, 27-10)**: al final del plan, junta la contrapartida táctica (abajo), lo visual, la IA de la CPU, el comportamiento, el físico, el pasto nuevo (`grass.blend` del Drive, 13,9 MB; el contenedor no lo puede bajar porque es privado: el dueño lo comparte «cualquiera con el enlace» o lo exporta a .glb; Blender ya está listo como `bpy` 5.0.1 para convertirlo), las físicas y más sonidos.
