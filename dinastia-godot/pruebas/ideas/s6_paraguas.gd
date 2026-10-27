@@ -41,3 +41,19 @@ func _probar() -> void:
 		if v["nodo"].find_child(ParaguasVida.NOMBRE, true, false) != null:
 			abiertos += 1
 	_comprobar(abiertos == 0 and is_equal_approx(float(lista[0]["vel"]), 1.4) and not lista[0].has("vel0"), "al escampar se guardan los paraguas y vuelve la velocidad")
+	## El mango va casi vertical aunque el brazo se mueva: con la mano a 0,35 m del eje del cuerpo, como mucho ~15° de inclinación.
+	var raiz2 := Node3D.new()
+	add_child(raiz2)
+	var d2 := PeatonVida.nuevo(raiz2, 400)
+	var n2 := d2["nodo"] as Node3D
+	ParaguasVida.abrir(n2, 0)
+	var sigue := n2.find_child("Eje", true, false)
+	_comprobar(sigue != null and sigue.get_script() != null and sigue.top_level, "el eje del paraguas es independiente de la rotación de la mano")
+	var mano2 := sigue.get_parent() as Node3D
+	var ap := d2["anim"] as AnimationPlayer
+	ap.advance(0.3)
+	sigue._process(0.0)
+	var arriba: Vector3 = sigue.global_transform.basis.y
+	var tilt := rad_to_deg(acos(clampf(arriba.dot(Vector3.UP), -1.0, 1.0)))
+	_comprobar(tilt < 16.0, "el mango queda casi vertical (%.1f°)" % tilt)
+

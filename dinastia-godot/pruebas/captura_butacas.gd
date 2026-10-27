@@ -7,7 +7,10 @@ extends Node
 var _n := 0
 var _vista: VistaEstadio
 var _cam: Camera3D
-const VISTAS := [[Vector3(-26, 2.4, -6), Vector3(46, 4.5, 0)], [Vector3(-60, 22, 8), Vector3(30, 4, -4)], [Vector3(14, 9, -54), Vector3(8, 10, -70)]]
+## 0 = desde el césped a las butacas bajas, 1 = toma alta de TV (desde el lado +X, lejos de los palcos del −X), 2 = la parte alta de una tribuna,
+## 3 = de cerca, las butacas del primer anillo, 4 = la cámara REAL del partido a pie de campo (no se toca la cámara del juego).
+const VISTAS := [[Vector3(-26, 2.4, -6), Vector3(46, 4.5, 0)], [Vector3(46, 17, 6), Vector3(-30, 2, -4)], [Vector3(14, 9, -54), Vector3(8, 10, -70)],
+	[Vector3(33.5, 1.9, 14), Vector3(44, 2.7, 20)], null]
 const POR_VISTA := 16
 
 func _ready() -> void:
@@ -23,6 +26,14 @@ func _ready() -> void:
 	m.mi_club_id = m.ligas[0].clubes[0].id
 	Partido.ctx_club_id = m.mi_club_id
 	var par := m.proximo_partido()
+	if OS.get_environment("VIVO") == "1":
+		## Un club de colores vivos (rosa y celeste) que juega en casa: el color por nivel se tiene que ver. Se elige uno sin estadio real.
+		par = [m.ligas[0].clubes[4], m.ligas[0].clubes[5]]
+		par[0].color1 = "#d6246e"
+		par[0].color2 = "#12a4d6"
+		par[0].kit_color1 = ""
+		par[0].kit_color2 = ""
+		print("PERFIL ", par[0].perfil_estadio().get("asiento1"), " ", par[0].perfil_estadio().get("asiento2"))
 	var partido := Partido.new(par[0], par[1])
 	_vista = VistaEstadio.new()
 	add_child(_vista)
@@ -43,9 +54,10 @@ func _process(_d: float) -> void:
 		print("FIN. 0 fallos")
 		get_tree().quit()
 		return
-	_cam.make_current()
-	_cam.position = VISTAS[k][0]
-	_cam.look_at(VISTAS[k][1], Vector3.UP)
+	if VISTAS[k] != null:
+		_cam.make_current()
+		_cam.position = VISTAS[k][0]
+		_cam.look_at(VISTAS[k][1], Vector3.UP)
 	if f == POR_VISTA - 2:
 		var pref := OS.get_environment("PREFIJO") if OS.get_environment("PREFIJO") != "" else "/tmp/butacas"
 		get_viewport().get_texture().get_image().save_png("%s_%d.png" % [pref, k])

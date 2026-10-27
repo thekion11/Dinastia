@@ -79,6 +79,7 @@ func _paradas_bus() -> void:
 	paradas_bus_pos.clear()
 	for s in sitios:
 		paradas_bus_pos.append(s["p"])
+		esperas_bus.append(s["p"])
 		var raiz := Node3D.new()
 		raiz.position = s["p"]
 		raiz.rotation.y = float(s["a"])

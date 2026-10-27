@@ -42,6 +42,7 @@ var sentados: GenteSentada = null
 var puertas: PuertaVida = null
 var escaleras: EscaleraVida = null
 var paraguas: ParaguasVida = null
+var pasajeros: PasajerosBus = null
 var en_casa := false
 var _punto_casa := {}
 var _acum := 0.0
@@ -87,6 +88,7 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 	s.puertas = PuertaVida.crear(s)
 	s.escaleras = EscaleraVida.crear(s)
 	s.paraguas = ParaguasVida.crear(s)
+	s.pasajeros = PasajerosBus.crear(s)
 	## Arranque 3D tras recuperar la copia de un guardado dañado: el aviso se ve aquí (el registro del
 	## menú central, donde iba antes, no se abre hasta mucho después).
 	if Partida.cargada_de_respaldo:
