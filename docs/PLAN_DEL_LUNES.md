@@ -25,6 +25,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - [ ] Probar Foundry/Azure (200 USD, 30 días) y decidir si se usa.
 - [ ] Abrir la red a Wikimedia/banderas (necesario para las caras que faltan: ~906 de 2.125 y escudos).
 - [ ] **Perfil de FPS en hardware real** (M-337, P0): PC modesto (Intel UHD) y móvil; aquí solo hay render por software.
+- [ ] Política de privacidad (27-10, escrita en `docs/05_referencia/POLITICA_DE_PRIVACIDAD.md`, es y en): publicarla en una dirección web fija para las tiendas y poner tu correo de contacto donde dice «[correo de contacto]».
 - [ ] Builds, keystore, licencias, derechos de imagen, música y voces (🔒). Cambiar la contraseña del keystore (la vieja sigue en el historial). Confirmar la fuente de los modelos 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva).
 - [ ] Subir los binarios pesados (`recursos/`, `marca/`, `material/`) al Drive con `herramientas/drive_subir.ps1` y verificar. Respaldo de texto: `docs/05_referencia/RESPALDO_DRIVE.md`.
 
@@ -2128,7 +2129,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 **53. Monetización y Modelo Indie**
 - 1092. Canal de reporte de errores dentro del juego — _Todo_
 - 1093. Encuestas a jugadores para priorizar funciones — _Todo_
-- 1098. Política de privacidad simple y legible — _Todo_
 
 ### Decisiones de producto, no tareas (20): monetización y estética; decide el dueño
 
