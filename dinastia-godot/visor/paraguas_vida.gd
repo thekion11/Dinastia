@@ -11,6 +11,9 @@ const RADIO_RESGUARDO := 4.5
 const MAX_RESGUARDADOS := 5
 const COLORES := [Color(0.16, 0.2, 0.34), Color(0.5, 0.12, 0.14), Color(0.1, 0.1, 0.12), Color(0.18, 0.38, 0.3), Color(0.8, 0.62, 0.15), Color(0.55, 0.55, 0.58)]
 const NOMBRE := "Paraguas"
+const ALTO_COPA := 0.75   ## del puño a la copa (mango y copa en el eje de los dedos)
+const CORRECCION_EJE := Vector3(0.0, 0.0, 35.0)   ## grados, medidos con la captura
+const POSE_BRAZO := Vector3(35.0, -14.0, 105.0)   ## brazo derecho: adelante, costado; codo (grados): el antebrazo casi vertical
 
 static var _canopy: CylinderMesh = null
 static var _mango: CylinderMesh = null
@@ -18,6 +21,7 @@ static var _mats: Array[StandardMaterial3D] = []
 
 var expl: ExploradorCiudad
 var mundo   ## Mundo (sin tipar: evita una dependencia circular con VidaCiudad)
+var _lluvia: Node3D = null   ## la lluvia de la ciudad (`PrecipitacionCiudad`), montada mientras el clima es lluvioso
 var _t := 2.0
 var _cuenta := 0
 
@@ -42,7 +46,20 @@ func _process(delta: float) -> void:
 		return
 	_t = 1.5
 	_cuenta += 1
-	tick(trafico.get("_vehiculos"), llueve(mundo.clima()), cb.get("puertas_vida"), _cuenta)
+	var clima: String = mundo.clima()
+	tick(trafico.get("_vehiculos"), llueve(clima), cb.get("puertas_vida"), _cuenta)
+	_actualizar_lluvia(clima, cb)
+
+## Monta la lluvia (y moja el suelo) cuando el clima es lluvioso y la quita al escampar.
+func _actualizar_lluvia(clima: String, cb: Object) -> void:
+	if llueve(clima) and (_lluvia == null or not is_instance_valid(_lluvia)):
+		_lluvia = PrecipitacionCiudad.montar(self, clima)
+		CityBuilder.mojar(true)
+	elif not llueve(clima) and _lluvia != null:
+		if is_instance_valid(_lluvia):
+			_lluvia.queue_free()
+		_lluvia = null
+		CityBuilder.mojar(false)
 
 ## Un repaso a todos los peatones. Devuelve cuántos llevan el paraguas abierto.
 static func tick(vehiculos: Array, lluvia: bool, puertas: Array, cuenta: int) -> int:
@@ -78,12 +95,13 @@ static func tick(vehiculos: Array, lluvia: bool, puertas: Array, cuenta: int) ->
 			parado = true
 			Mini3D.anim(v, "parado")
 		var quiere := lluvia and not parado
-		if quiere and nodo.get_node_or_null(NOMBRE) == null:
+		if quiere and nodo.find_child(NOMBRE, true, false) == null:
 			abrir(nodo, posmod(hash([i, 3]), COLORES.size()))
-		elif not quiere and nodo.get_node_or_null(NOMBRE) != null:
+		elif not quiere and nodo.find_child(NOMBRE, true, false) != null:
 			cerrar(nodo)
-		if nodo.get_node_or_null(NOMBRE) != null:
+		if nodo.find_child(NOMBRE, true, false) != null:
 			abiertos += 1
+			_pose(nodo, true)   ## tras una parada el tráfico vuelve a «caminar»: se repone la pose del brazo
 	return abiertos
 
 static func _cerca_de_entrada(p: Vector3, puertas: Array) -> bool:
@@ -93,45 +111,103 @@ static func _cerca_de_entrada(p: Vector3, puertas: Array) -> bool:
 			return true
 	return false
 
-## El paraguas: copa cónica sobre la cabeza y un mango; mallas y materiales compartidos.
+## El paraguas va EN LA MANO derecha (BoneAttachment3D a hand_r): el mango sigue el eje de los dedos (+Y del hueso, como el móvil) y
+## con el antebrazo levantado queda vertical, con la copa sobre la cabeza. Mallas y materiales compartidos. Sin esqueleto (pruebas),
+## cae a un paraguas suelto sobre la cabeza.
 static func abrir(nodo: Node3D, color_i: int) -> Node3D:
-	if _canopy == null:
-		_canopy = CylinderMesh.new()
-		_canopy.top_radius = 0.03
-		_canopy.bottom_radius = 0.62
-		_canopy.height = 0.2
-		_canopy.radial_segments = 10
-		_canopy.rings = 1
-		_mango = CylinderMesh.new()
-		_mango.top_radius = 0.012
-		_mango.bottom_radius = 0.012
-		_mango.height = 0.75
-		_mango.radial_segments = 5
-		for c: Color in COLORES:
-			var m := StandardMaterial3D.new()
-			m.albedo_color = c
-			m.roughness = 0.55
-			m.cull_mode = BaseMaterial3D.CULL_DISABLED
-			_mats.append(m)
-	var raiz := Node3D.new()
-	raiz.name = NOMBRE
-	raiz.position = Vector3(0.14, 1.98, 0.0)
+	_preparar_mallas()
+	var raiz: Node3D
+	var esq: Skeleton3D = FutbolistaQ.esqueleto_de(nodo)
+	if esq != null and esq.find_bone("hand_r") >= 0:
+		var anc := BoneAttachment3D.new()
+		anc.bone_name = "hand_r"
+		raiz = anc
+		raiz.name = NOMBRE
+		esq.add_child(raiz)
+		_pose(nodo, true)
+	else:
+		raiz = Node3D.new()
+		raiz.name = NOMBRE
+		raiz.position = Vector3(0.14, 1.98, 0.0)
+		nodo.add_child(raiz)
+	## El eje del paraguas se endereza respecto al hueso de la mano (el eje de los dedos no queda vertical con el codo flexionado).
+	var eje := Node3D.new()
+	eje.name = "Eje"
+	eje.rotation_degrees = CORRECCION_EJE if raiz is BoneAttachment3D else Vector3.ZERO
+	raiz.add_child(eje)
 	var copa := MeshInstance3D.new()
 	copa.mesh = _canopy
 	copa.material_override = _mats[clampi(color_i, 0, _mats.size() - 1)]
 	copa.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	raiz.add_child(copa)
+	copa.position = Vector3(0, ALTO_COPA if raiz is BoneAttachment3D else 0.0, 0)
+	eje.add_child(copa)
 	var mango := MeshInstance3D.new()
 	mango.mesh = _mango
 	mango.material_override = Mini3D.mat(Color(0.08, 0.08, 0.09), 0.6)
-	mango.position = Vector3(0, -0.45, 0)
+	mango.position = Vector3(0, ALTO_COPA * 0.5 - 0.05 if raiz is BoneAttachment3D else -0.45, 0)
 	mango.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	raiz.add_child(mango)
-	nodo.add_child(raiz)
+	eje.add_child(mango)
 	return raiz
 
+static func _preparar_mallas() -> void:
+	if _canopy != null:
+		return
+	_canopy = CylinderMesh.new()
+	_canopy.top_radius = 0.03
+	_canopy.bottom_radius = 0.62
+	_canopy.height = 0.2
+	_canopy.radial_segments = 10
+	_canopy.rings = 1
+	_mango = CylinderMesh.new()
+	_mango.top_radius = 0.012
+	_mango.bottom_radius = 0.012
+	_mango.height = ALTO_COPA + 0.1
+	_mango.radial_segments = 5
+	for c: Color in COLORES:
+		var m := StandardMaterial3D.new()
+		m.albedo_color = c
+		m.roughness = 0.55
+		m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_mats.append(m)
+
 static func cerrar(nodo: Node3D) -> void:
-	var p := nodo.get_node_or_null(NOMBRE)
+	var p := nodo.find_child(NOMBRE, true, false)
 	if p != null:
+		p.get_parent().remove_child(p)
 		p.queue_free()
-		nodo.remove_child(p)
+	_pose(nodo, false)
+
+## Pone o quita la pose del brazo con el paraguas: «caminar_paraguas» es el «caminar» con el brazo derecho levantado (el antebrazo
+## casi vertical). La animación se arma una vez por reproductor y se comparte entre todos los peatones (las rutas son las mismas).
+static func _pose(nodo: Node3D, con: bool) -> void:
+	var esq: Skeleton3D = FutbolistaQ.esqueleto_de(nodo)
+	if esq == null:
+		return
+	for ap: AnimationPlayer in nodo.find_children("*", "AnimationPlayer", true, false):
+		var lib := ap.get_animation_library("")
+		if lib == null or not ap.has_animation("caminar"):
+			continue
+		if con:
+			if not ap.has_animation("caminar_paraguas"):
+				lib.add_animation("caminar_paraguas", _animacion_paraguas(ap, esq))
+			if ap.current_animation == "caminar":
+				var t := ap.current_animation_position
+				ap.play("caminar_paraguas", 0.25)
+				ap.seek(t, true)
+		elif ap.current_animation == "caminar_paraguas":
+			var t2 := ap.current_animation_position
+			ap.play("caminar", 0.25)
+			ap.seek(t2, true)
+
+static func _animacion_paraguas(ap: AnimationPlayer, esq: Skeleton3D) -> Animation:
+	var a: Animation = ap.get_animation("caminar").duplicate(true)
+	var pre := str(ap.get_path_to(esq))
+	for clave: String in ["brazo_d", "antebrazo_d"]:
+		var idx := a.find_track(NodePath("%s:%s" % [pre, String(AnimQuaternius.HUESOS[clave])]), Animation.TYPE_ROTATION_3D)
+		if idx >= 0:
+			a.remove_track(idx)
+	var v_brazo := AnimExtra._brazo("d", POSE_BRAZO.x, POSE_BRAZO.y)
+	var v_codo := AnimExtra._codo("d", POSE_BRAZO.z)
+	AnimQuaternius._pista(a, esq, "brazo_d", [[0.0, v_brazo], [a.length, v_brazo]], pre)
+	AnimQuaternius._pista(a, esq, "antebrazo_d", [[0.0, v_codo], [a.length, v_codo]], pre)
+	return a
