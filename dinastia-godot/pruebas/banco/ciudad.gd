@@ -181,6 +181,35 @@ func _probar_redes_ciudad() -> void:
 	ev.pasar(1, 8, 0.5, 0.0, "tormenta")
 	_comprobar(not ev.evento.activo and ev.evento.por_cuadrilla == 1 and ev.hay_luz(Vector2i(2, 2)), "si nadie baja, la cuadrilla lo arregla a las 08:00")
 	_comprobar(ev.historial.size() > 0 and ev.historial.size() <= RedesCiudad.HISTORIAL_MAX, "el historial de 24 horas alimenta las curvas del centro de mando")
+	## GUARDADO: ida y vuelta por JSON (con evento a medias, averías, aislados y gas) y partida vieja sin redes.
+	var gd := RedesCiudad.new(33)
+	gd.averias_azar = false
+	gd.registrar_edificio("hospital", Vector3(550.0, 0, -110.0))
+	gd.registrar_edificio("estadio", Vector3(0.0, 0, 0.0))
+	gd.pasar(30, 6, 0.8, 9.0, "tormenta")
+	gd.evento._empezar(gd)
+	gd.evento.rearmar()
+	gd.averiar("agua", Vector2i(4, 0))
+	gd.edificios[1]["aislado"] = true
+	gd.repostar(1, Vector2i(2, 2), 300.0)
+	var vuelta := RedesCiudad.new(1)
+	vuelta.desde_dic(JSON.parse_string(JSON.stringify(gd.a_dic())))
+	vuelta.recibir_edificios([{"id": 0, "nombre": "H", "uso": "hospital", "pos": Vector3.ZERO, "sector": Vector2i(3, 1), "kw": 900, "m3h": 60, "generador": true, "aislado": false},
+		{"id": 1, "nombre": "E", "uso": "estadio", "pos": Vector3.ZERO, "sector": Vector2i(2, 2), "kw": 1800, "m3h": 40, "generador": false, "aislado": false}])
+	_comprobar(vuelta.horas == gd.horas and is_equal_approx(vuelta.agua_nivel, gd.agua_nivel) and vuelta.esta_averiado("agua", Vector2i(4, 0)), "el guardado devuelve el reloj, el depósito y las averías")
+	_comprobar(vuelta.evento.activo == gd.evento.activo and vuelta.evento.rearmado and vuelta.evento.sectores == gd.evento.sectores, "y el evento del apagón a medias (con el disyuntor ya rearmado)")
+	_comprobar(vuelta.edificios[1]["aislado"] and not vuelta.edificios[0]["aislado"] and is_equal_approx(float(vuelta.gas[1]), float(gd.gas[1])), "y los edificios aislados y las existencias de gas")
+	_comprobar(vuelta.luz == gd.luz and vuelta.inundado == gd.inundado and vuelta.historial.size() == gd.historial.size(), "y la luz, las inundaciones y las curvas son las mismas")
+	var vieja := RedesCiudad.new(5)
+	vieja.desde_dic({})
+	_comprobar(vieja.horas == 0 and vieja.fraccion_luz() == 1.0, "una partida vieja sin redes se queda con las redes nuevas")
+	var mu := Mundo.new()
+	mu.generar(["CHI"], 3131)
+	mu.tomar_el_mando(mu.ligas[0].clubes[0].id)
+	_comprobar(Partida.desde_instantanea(Partida.instantanea(mu)).redes_ciudad == null, "una partida sin redes pisadas se guarda y se carga sin ellas")
+	mu.redes_ciudad = gd
+	var mu2 := Partida.desde_instantanea(JSON.parse_string(JSON.stringify(Partida.instantanea(mu))))
+	_comprobar(mu2.redes_ciudad != null and mu2.redes_ciudad.horas == gd.horas and mu2.redes_ciudad.evento.activo, "la partida completa guarda y carga las redes")
 	## Determinista: misma semilla, mismas averías.
 	var a1 := RedesCiudad.new(11)
 	var a2 := RedesCiudad.new(11)

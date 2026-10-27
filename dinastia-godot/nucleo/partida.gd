@@ -291,6 +291,9 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.reloj.desde_dic(datos.get("reloj", {}))
 	m.necesidades.desde_dic(datos.get("necesidades", {}))
 	m.citas.desde_dic(datos.get("citas", {}))
+	if not (datos.get("redes_ciudad", {}) as Dictionary).is_empty():
+		m.redes_ciudad = RedesCiudad.new(int(datos["redes_ciudad"].get("semilla", 1)))
+		m.redes_ciudad.desde_dic(datos["redes_ciudad"])
 	m.afinidad.desde_dic(datos.get("afinidad", {}))
 	m.imprevistos.desde_dic(datos.get("imprevistos", {}))
 	m.horario = String(datos.get("horario", "tarde"))

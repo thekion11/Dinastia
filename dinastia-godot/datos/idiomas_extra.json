@@ -6001,7 +6001,9 @@
   "Una noche a oscuras por la tormenta": "A night in the dark because of the storm",
   "La cuadrilla municipal tardó toda la madrugada en reponer la luz.": "The municipal crew took all night to restore power.",
   "Vuelve la luz en la ciudad sin explicación": "Power returns to the city with no explanation",
-  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Neighbours talk of a “sewer angel”. Nobody knows who went down to fix it."
+  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Neighbours talk of a “sewer angel”. Nobody knows who went down to fix it.",
+  "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Power cut: %d sectors in the dark.",
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Flooding: %d sectors with water in the street."
  },
  "pt": {
   "Historia": "História",
@@ -12005,7 +12007,9 @@
   "Una noche a oscuras por la tormenta": "Uma noite no escuro por causa da tempestade",
   "La cuadrilla municipal tardó toda la madrugada en reponer la luz.": "A equipe municipal levou a madrugada toda para restabelecer a luz.",
   "Vuelve la luz en la ciudad sin explicación": "A luz volta à cidade sem explicação",
-  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Os vizinhos falam de um «anjo dos esgotos». Ninguém sabe quem desceu para consertar."
+  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Os vizinhos falam de um «anjo dos esgotos». Ninguém sabe quem desceu para consertar.",
+  "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Corte de luz: %d setores no escuro.",
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundação: %d setores com água na rua."
  },
  "patrones": [
   [
@@ -23621,7 +23625,9 @@
   "Una noche a oscuras por la tormenta": "Une nuit dans le noir à cause de l'orage",
   "La cuadrilla municipal tardó toda la madrugada en reponer la luz.": "L'équipe municipale a mis toute la nuit à rétablir le courant.",
   "Vuelve la luz en la ciudad sin explicación": "Le courant revient dans la ville sans explication",
-  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Les voisins parlent d'un « ange des égouts ». Personne ne sait qui est descendu réparer."
+  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Les voisins parlent d'un « ange des égouts ». Personne ne sait qui est descendu réparer.",
+  "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Coupure de courant : %d secteurs dans le noir.",
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inondation : %d secteurs avec de l'eau dans la rue."
  },
  "it": {
   "Historia": "Storia",
@@ -29625,7 +29631,9 @@
   "Una noche a oscuras por la tormenta": "Una notte al buio per il temporale",
   "La cuadrilla municipal tardó toda la madrugada en reponer la luz.": "La squadra comunale ha impiegato tutta la notte per ripristinare la luce.",
   "Vuelve la luz en la ciudad sin explicación": "La luce torna in città senza spiegazioni",
-  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "I vicini parlano di un «angelo delle fogne». Nessuno sa chi sia sceso a ripararlo."
+  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "I vicini parlano di un «angelo delle fogne». Nessuno sa chi sia sceso a ripararlo.",
+  "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Blackout: %d settori al buio.",
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Allagamento: %d settori con acqua in strada."
  },
  "de": {
   "Historia": "Geschichte",
@@ -35629,7 +35637,9 @@
   "Una noche a oscuras por la tormenta": "Eine Nacht im Dunkeln wegen des Sturms",
   "La cuadrilla municipal tardó toda la madrugada en reponer la luz.": "Die städtische Kolonne brauchte die ganze Nacht, um den Strom wiederherzustellen.",
   "Vuelve la luz en la ciudad sin explicación": "Der Strom kehrt ohne Erklärung in die Stadt zurück",
-  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Die Nachbarn sprechen von einem „Kanalengel“. Niemand weiß, wer hinabgestiegen ist."
+  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Die Nachbarn sprechen von einem „Kanalengel“. Niemand weiß, wer hinabgestiegen ist.",
+  "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Stromausfall: %d Sektoren im Dunkeln.",
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Überschwemmung: %d Sektoren mit Wasser auf der Straße."
  },
  "ca": {
   "Historia": "Història",
@@ -41633,7 +41643,9 @@
   "Una noche a oscuras por la tormenta": "Una nit a les fosques per la tempesta",
   "La cuadrilla municipal tardó toda la madrugada en reponer la luz.": "La quadrilla municipal va trigar tota la matinada a reposar la llum.",
   "Vuelve la luz en la ciudad sin explicación": "Torna la llum a la ciutat sense explicació",
-  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Els veïns parlen d'un «àngel de les clavegueres». Ningú sap qui va baixar a arreglar-ho."
+  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Els veïns parlen d'un «àngel de les clavegueres». Ningú sap qui va baixar a arreglar-ho.",
+  "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Tall de llum: %d sectors a les fosques.",
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundació: %d sectors amb aigua al carrer."
  },
  "pl": {
   "Club": "Klub",
@@ -47916,7 +47928,9 @@
   "Una noche a oscuras por la tormenta": "Noc po ciemku przez burzę",
   "La cuadrilla municipal tardó toda la madrugada en reponer la luz.": "Ekipa miejska całą noc przywracała prąd.",
   "Vuelve la luz en la ciudad sin explicación": "Prąd wraca do miasta bez wyjaśnienia",
-  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Sąsiedzi mówią o „aniele kanałów”. Nikt nie wie, kto zszedł to naprawić."
+  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Sąsiedzi mówią o „aniele kanałów”. Nikt nie wie, kto zszedł to naprawić.",
+  "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Przerwa w dostawie prądu: %d sektorów bez światła.",
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Podtopienia: %d sektorów z wodą na ulicy."
  },
  "tr": {
   "Club": "Kulüp",
@@ -54199,6 +54213,8 @@
   "Una noche a oscuras por la tormenta": "Fırtına yüzünden karanlıkta bir gece",
   "La cuadrilla municipal tardó toda la madrugada en reponer la luz.": "Belediye ekibi elektriği vermek için bütün geceyi harcadı.",
   "Vuelve la luz en la ciudad sin explicación": "Şehre elektrik açıklamasız geri geldi",
-  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Komşular bir “kanalizasyon meleği”nden söz ediyor. Kimin inip onardığını kimse bilmiyor."
+  "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Komşular bir “kanalizasyon meleği”nden söz ediyor. Kimin inip onardığını kimse bilmiyor.",
+  "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Elektrik kesintisi: %d sektör karanlıkta.",
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Su baskını: %d sektörde sokaklar su altında."
  }
 }

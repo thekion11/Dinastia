@@ -46,6 +46,8 @@ var _t_cuadro := 0.0
 var _capa_tel: CanvasLayer
 var _calabozo_semana := ""
 var _desmayo_en_curso := false
+var _redes_sin_luz := 0
+var _redes_inundados := 0
 
 # ========================================================================== ENGANCHE
 
@@ -65,6 +67,13 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 	if m.necesidades != null:
 		m.necesidades.estado_cambiado.connect(s._al_cambiar_nivel)
 		m.necesidades.agotamiento.connect(s._desmayo)
+	## Las redes de la ciudad son las de la partida (si no había, nacen con ella).
+	var red: RedesCiudadVista = s._redes()
+	if red != null:
+		if m.redes_ciudad == null:
+			m.redes_ciudad = red.modelo
+		else:
+			red.adoptar(m.redes_ciudad)
 	s._sincronizar_luz()
 	if m.citas != null:
 		s.citas_3d = CitasCiudad.crear(s)
@@ -225,7 +234,17 @@ func avisos_redes() -> void:
 	var redes := _redes()
 	if redes == null:
 		return
-	for a: Dictionary in redes.tomar_avisos():
+	## Cortes e inundaciones nuevos: una notificación en el móvil (si no es ya el aviso del evento del apagón).
+	var sin_luz := roundi((1.0 - redes.fraccion_luz()) * 25.0)
+	var inundados := redes.modelo.sectores_inundados()
+	var avisos := redes.tomar_avisos()
+	if sin_luz > _redes_sin_luz and avisos.is_empty():
+		_notificar(Idiomas.t("🔌 Corte de luz: %d sectores a oscuras.") % sin_luz)
+	if inundados > _redes_inundados:
+		_notificar(Idiomas.t("🌧 Inundación: %d sectores con agua en la calle.") % inundados)
+	_redes_sin_luz = sin_luz
+	_redes_inundados = inundados
+	for a: Dictionary in avisos:
 		match String(a["tipo"]):
 			"inicio":
 				_notificar(Idiomas.t("⚡ Apagón por la tormenta: dos sectores sin luz. Un técnico te escribe: «El disyuntor general ha saltado, bajo la ciudad. Busca las tapas con aro de óxido.»"))

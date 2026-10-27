@@ -66,6 +66,21 @@ func reconectar(m: RedesCiudad) -> String:
 	avisos.append({"tipo": "resuelto", "texto": "Alguien reconectó la red desde abajo."})
 	return "ok"
 
+func a_dic() -> Dictionary:
+	return {"activo": activo, "sectores": sectores.map(func(s: Vector2i) -> Array: return [s.x, s.y]), "rearmado": rearmado,
+		"resueltos": resueltos, "cuadrilla": por_cuadrilla}
+
+func desde_dic(d: Dictionary) -> void:
+	activo = bool(d.get("activo", false))
+	rearmado = bool(d.get("rearmado", false))
+	resueltos = int(d.get("resueltos", 0))
+	por_cuadrilla = int(d.get("cuadrilla", 0))
+	sectores.clear()
+	for p: Variant in d.get("sectores", []):
+		if p is Array and (p as Array).size() == 2:
+			sectores.append(Vector2i(int(p[0]), int(p[1])))
+	avisos.clear()
+
 func tomar_avisos() -> Array:
 	var a := avisos.duplicate()
 	avisos.clear()
