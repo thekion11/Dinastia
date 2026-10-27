@@ -136,6 +136,11 @@ func _aplicar_hora() -> void:
 	var noche: float = clampf(-altura * 3.0, 0.0, 1.0)       ## 1 = noche cerrada
 	## El rojizo del horizonte solo existe cuando el sol está justo en él.
 	var rasante: float = clampf(1.0 - absf(altura) * 3.4, 0.0, 1.0)
+	## HORA DORADA (S5, 27-10-2026): el sol bajo (unos 7° de altura, ~17:30 y ~6:30) dura más que el instante en que toca el
+	## horizonte; ahí la luz es ámbar, las sombras largas y el aire se vuelve calima cálida.
+	var dorada: float = clampf(1.0 - absf(altura - 0.14) * 3.2, 0.0, 1.0)
+	## Las farolas y las ventanas se encienden al caer el sol (antes de la noche cerrada), no cuando ya es de noche.
+	var anochecer: float = clampf((0.06 - altura) * 7.0, 0.0, 1.0) if _hora > 12.0 else 0.0
 
 	if _sol != null:
 		## El sol recorre el cielo de este a oeste inclinándose con la hora.
@@ -147,23 +152,24 @@ func _aplicar_hora() -> void:
 		## bonito de foto y horrible para mirar un mapa-. La luz nunca baja de
 		## 8°: de noche sigue viniendo de arriba, pero muy floja y azulada, que
 		## es exactamente lo que hace la luna.
-		var altura_luz: float = maxf(altura, 0.14)
+		## Con el sol ya bien dirigido (27-10), la luna sube a unos 40° para que la noche conserve luz sobre el suelo.
+		var altura_luz: float = altura if altura >= 0.14 else lerpf(0.14, 0.9, clampf((0.14 - altura) / 0.5, 0.0, 1.0))
 		var base := Basis.IDENTITY
 		base = base.rotated(Vector3.UP, deg_to_rad(-42.0))
 		base = base.rotated(Vector3(cos(deg_to_rad(-42.0)), 0, -sin(deg_to_rad(-42.0))),
-			-asin(clampf(altura_luz, -1.0, 1.0)) - PI * 0.5)
+			-asin(clampf(altura_luz, -1.0, 1.0)))   ## 27-10: sin el «− PI/2» de antes (el sol estaba INVERTIDO: vertical al amanecer, horizontal a mediodía)
 		_sol.transform.basis = base
 		var sol_dia := Color(1.0, 0.97, 0.90)
 		var sol_rasante := Color(1.0, 0.62, 0.34)
 		## Luna fría pero no azul eléctrico (13-10-2026: teñía aceras y calles).
 		var luna := Color(0.66, 0.72, 0.9)
-		var col: Color = sol_dia.lerp(sol_rasante, rasante)
+		var col: Color = sol_dia.lerp(sol_rasante, rasante).lerp(Color(1.0, 0.72, 0.42), dorada * 0.55)
 		_sol.light_color = luna.lerp(col, clampf(dia + rasante * 0.8, 0.0, 1.0))
 		## 1,15 y no 1,45: a pleno día con 1,45 el césped y los campos salían
 		## lavados, casi blancos. El sol de mediodía quema, pero la cámara de
 		## este juego no es una cámara real sin diafragma. Y 0,30 de noche, no
 		## 0,06: con 0,06 no se veía el suelo.
-		_sol.light_energy = lerpf(0.24, 1.15, dia)
+		_sol.light_energy = lerpf(0.34, 1.15, dia) + dorada * 0.3
 		_sol.shadow_enabled = dia > 0.05
 
 	if _cielo != null:
@@ -175,7 +181,7 @@ func _aplicar_hora() -> void:
 		var hor_rasante := Color(0.98, 0.62, 0.34)
 		var hor_noche := Color(0.11, 0.14, 0.26)
 		_cielo.set_shader_parameter("top_color", top_noche.lerp(top_dia, dia))
-		var horizonte := hor_dia.lerp(hor_rasante, rasante)
+		var horizonte := hor_dia.lerp(hor_rasante, clampf(rasante + dorada * 0.45, 0.0, 1.0))
 		_cielo.set_shader_parameter("horizon_color", hor_noche.lerp(horizonte, clampf(dia + rasante, 0.0, 1.0)))
 		## El suelo del cielo sigue al césped -ver la nota de arriba- pero se
 		## apaga de noche, o el horizonte quedaría verde fosforito a las 3 AM.
@@ -190,14 +196,14 @@ func _aplicar_hora() -> void:
 		## De noche hay que abrir el diafragma o no se ve nada; de día cerrarlo
 		## o se quema. Es exactamente lo que hace una cámara de verdad.
 		_env.tonemap_exposure = lerpf(1.40, 1.02, dia)
-		_env.ambient_light_energy = lerpf(0.62, 1.0, dia)
+		_env.ambient_light_energy = lerpf(0.9, 1.0, dia) + dorada * 0.3
 		## En el renderizador de compatibilidad (móvil, web) el cielo con shader
 		## propio no da luz ambiente: lo que queda a la sombra -la espalda de la
 		## grada, la copa de los árboles- salía NEGRO a mediodía. Ahí la luz
 		## ambiente va como color, el del cielo de esa hora.
 		## De noche, el reflejo cálido de las farolas sobre la ciudad (como el
 		## sodio de una ciudad real), no un azul puro que lo tiñe todo.
-		_env.ambient_light_color = Color(0.24, 0.21, 0.22).lerp(Color(0.62, 0.68, 0.74), dia)
+		_env.ambient_light_color = Color(0.25, 0.25, 0.3).lerp(Color(0.62, 0.68, 0.74), dia).lerp(Color(0.74, 0.62, 0.52), dorada * 0.35)
 		if Calidad.es_compatibilidad():
 			_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 		else:
@@ -207,11 +213,12 @@ func _aplicar_hora() -> void:
 			_env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 			_env.ambient_light_sky_contribution = 0.3
 		if _env.fog_enabled:
-			_env.fog_light_color = Color(0.16, 0.13, 0.14).lerp(Color(0.78, 0.80, 0.84), dia)
+			_env.fog_light_color = Color(0.16, 0.13, 0.14).lerp(Color(0.78, 0.80, 0.84), dia).lerp(Color(0.95, 0.70, 0.50), dorada * 0.6)
+			_env.fog_density = lerpf(0.00016, 0.00026, dorada)   ## calima de la hora dorada
 
 	## Y las luces de la ciudad: farolas y ventanas encendidas cuando cae el sol.
 	if _ciudad != null:
-		_ciudad.encender_luces(noche)
+		_ciudad.encender_luces(maxf(noche, anochecer * 0.6))
 
 	if _reloj != null:
 		_reloj.text = "%02d:%02d" % [int(_hora), int(fposmod(_hora, 1.0) * 60.0)]
