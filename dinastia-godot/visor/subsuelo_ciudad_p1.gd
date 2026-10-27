@@ -37,6 +37,8 @@ var _ratas: Array = []
 var _local := Vector2.ZERO
 var _t := 0.0
 var _t_texto := 0.0
+var _t_zumbido := 0.0
+var _t_gota := 1.0
 var _secreto_visto := false
 var _concreto: StandardMaterial3D
 var _suelo: StandardMaterial3D
@@ -193,6 +195,15 @@ func _process(delta: float) -> void:
 		return
 	_t += delta
 	_agua.uv1_offset.x = fmod(_t * 0.12, 1.0)
+	## Sonido ambiente (con los efectos que ya hay): un zumbido grave continuo y, de vez en cuando, una gota.
+	_t_zumbido -= delta
+	if _t_zumbido <= 0.0:
+		_t_zumbido = 3.0
+		Sonido.toca("noche_estadio", Sonido.Bus.AMBIENTE)
+	_t_gota -= delta
+	if _t_gota <= 0.0:
+		_t_gota = 2.5 + fmod(_t * 7.3, 4.5)
+		Sonido.toca("clic_suave", Sonido.Bus.AMBIENTE)
 	_t_texto -= delta
 	if _t_texto <= 0.0:
 		_t_texto = 1.0
