@@ -121,11 +121,11 @@ cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
 | Paso | Se extrae | Va a | Riesgo |
 |---|---|---|---|
 | 4 | Elegir club (mapa, países, escudos) | pasa a ser la **fase 2** del nuevo menú inicial | se rehace de todos modos |
-| 6 | Estadio, finanzas, identidad, camarín (`_pintar_*`) | `ui/pantallas/*` (ya hay una por tema) | medio |
+| 6 | Estadio, identidad, camarín (`_pintar_*`); finanzas y ciudad YA (27-10) | `ui/pantallas/*` (ya hay una por tema) | medio |
 | 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina | `ui/menu_central.gd` | alto: depende de 1-6 |
 
 Paso 5 HECHO el 27-10 (`Hubs`, `ui/menu/hubs.gd`; `Principal` conserva puentes de una línea).
-Meta: `Principal` pasa de 6.867 (5.510 el 27-10) a < 1.500 líneas y las 157 variables de miembro se reparten
+Meta: `Principal` pasa de 6.867 (5.270 el 27-10) a < 1.500 líneas y las 157 variables de miembro se reparten
 por clases. Cada paso es un commit pequeño con su banco.
 
 #### 7.2 Contratos y aislamiento
