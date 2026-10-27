@@ -6036,7 +6036,12 @@
   "Tarjeta bloqueada: pasa por el banco para desbloquearla.": "Card blocked: go to the bank to unblock it.",
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "That is €%d: from €100 the card asks for the PIN. Withdraw cash at an ATM.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "The card has reached today's spending limit.",
-  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Not enough money: it is €%d and you have no cash or card balance."
+  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Not enough money: it is €%d and you have no cash or card balance.",
+  "Tienda de la gasolinera": "Petrol station shop",
+  "Bocadillo": "Sandwich",
+  "Bollería": "Pastry",
+  "Café": "Coffee",
+  "%s por %d € (%s).": "%s for €%d (%s)."
  },
  "pt": {
   "Historia": "História",
@@ -12075,7 +12080,12 @@
   "Tarjeta bloqueada: pasa por el banco para desbloquearla.": "Cartão bloqueado: passa pelo banco para o desbloquear.",
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "São %d €: a partir de 100 € o cartão pede o PIN. Levanta dinheiro num multibanco.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "O cartão atingiu o limite de gastos de hoje.",
-  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Não chega o dinheiro: são %d € e não tens dinheiro nem saldo no cartão."
+  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Não chega o dinheiro: são %d € e não tens dinheiro nem saldo no cartão.",
+  "Tienda de la gasolinera": "Loja da bomba de gasolina",
+  "Bocadillo": "Sandes",
+  "Bollería": "Pastelaria",
+  "Café": "Café",
+  "%s por %d € (%s).": "%s por %d € (%s)."
  },
  "patrones": [
   [
@@ -23726,7 +23736,12 @@
   "Tarjeta bloqueada: pasa por el banco para desbloquearla.": "Carte bloquée : passez à la banque pour la débloquer.",
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "Cela fait %d € : à partir de 100 € la carte demande le code. Retirez des espèces à un distributeur.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "La carte a atteint sa limite de dépense du jour.",
-  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Pas assez d'argent : il faut %d € et vous n'avez ni espèces ni solde sur la carte."
+  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Pas assez d'argent : il faut %d € et vous n'avez ni espèces ni solde sur la carte.",
+  "Tienda de la gasolinera": "Boutique de la station-service",
+  "Bocadillo": "Sandwich",
+  "Bollería": "Viennoiserie",
+  "Café": "Café",
+  "%s por %d € (%s).": "%s pour %d € (%s)."
  },
  "it": {
   "Historia": "Storia",
@@ -29765,7 +29780,12 @@
   "Tarjeta bloqueada: pasa por el banco para desbloquearla.": "Carta bloccata: passa in banca per sbloccarla.",
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "Sono %d €: da 100 € la carta chiede il PIN. Preleva contanti a uno sportello.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "La carta ha raggiunto il limite di spesa di oggi.",
-  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Non hai abbastanza soldi: sono %d € e non hai contanti né saldo sulla carta."
+  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Non hai abbastanza soldi: sono %d € e non hai contanti né saldo sulla carta.",
+  "Tienda de la gasolinera": "Negozio del distributore",
+  "Bocadillo": "Panino",
+  "Bollería": "Brioche",
+  "Café": "Caffè",
+  "%s por %d € (%s).": "%s per %d € (%s)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -35804,7 +35824,12 @@
   "Tarjeta bloqueada: pasa por el banco para desbloquearla.": "Karte gesperrt: Die Bank entsperrt sie.",
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "Das sind %d €: ab 100 € verlangt die Karte die PIN. Hebe Bargeld am Automaten ab.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "Die Karte hat das heutige Ausgabenlimit erreicht.",
-  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Das Geld reicht nicht: Es sind %d € und du hast weder Bargeld noch Kartenguthaben."
+  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Das Geld reicht nicht: Es sind %d € und du hast weder Bargeld noch Kartenguthaben.",
+  "Tienda de la gasolinera": "Tankstellen-Shop",
+  "Bocadillo": "Sandwich",
+  "Bollería": "Gebäck",
+  "Café": "Kaffee",
+  "%s por %d € (%s).": "%s für %d € (%s)."
  },
  "ca": {
   "Historia": "Història",
@@ -41843,7 +41868,12 @@
   "Tarjeta bloqueada: pasa por el banco para desbloquearla.": "Targeta bloquejada: passa pel banc per desbloquejar-la.",
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "Són %d €: a partir de 100 € la targeta demana el PIN. Treu efectiu en un caixer.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "La targeta ha arribat al límit de despesa d'avui.",
-  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "No et arriba els diners: són %d € i no tens efectiu ni saldo a la targeta."
+  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "No et arriba els diners: són %d € i no tens efectiu ni saldo a la targeta.",
+  "Tienda de la gasolinera": "Botiga de la gasolinera",
+  "Bocadillo": "Entrepà",
+  "Bollería": "Brioixeria",
+  "Café": "Cafè",
+  "%s por %d € (%s).": "%s per %d € (%s)."
  },
  "pl": {
   "Club": "Klub",
@@ -48161,7 +48191,12 @@
   "Tarjeta bloqueada: pasa por el banco para desbloquearla.": "Karta zablokowana: odblokuje ją bank.",
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "To %d €: od 100 € karta wymaga PIN-u. Wypłać gotówkę w bankomacie.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "Karta osiągnęła dzisiejszy limit wydatków.",
-  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Brakuje pieniędzy: to %d €, a nie masz gotówki ani środków na karcie."
+  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Brakuje pieniędzy: to %d €, a nie masz gotówki ani środków na karcie.",
+  "Tienda de la gasolinera": "Sklep przy stacji benzynowej",
+  "Bocadillo": "Kanapka",
+  "Bollería": "Wypiek",
+  "Café": "Kawa",
+  "%s por %d € (%s).": "%s za %d € (%s)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -54479,6 +54514,11 @@
   "Tarjeta bloqueada: pasa por el banco para desbloquearla.": "Kart bloke: açtırmak için bankaya uğra.",
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "%d €: 100 €'dan sonra kart PIN ister. ATM'den nakit çek.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "Kart bugünkü harcama limitine ulaştı.",
-  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Para yetmiyor: %d € ve ne nakdin ne de kart bakiyen var."
+  "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Para yetmiyor: %d € ve ne nakdin ne de kart bakiyen var.",
+  "Tienda de la gasolinera": "Benzinlik mağazası",
+  "Bocadillo": "Sandviç",
+  "Bollería": "Hamur işi",
+  "Café": "Kahve",
+  "%s por %d € (%s).": "%s, %d € (%s)."
  }
 }

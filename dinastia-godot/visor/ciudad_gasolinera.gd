@@ -31,6 +31,9 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 	b._caja_en(Vector3(c.x, c.y + 2.3, zt - 3.0), Vector3(ancho_t, 4.0, 6.0), blanco)
 	b._caja_en(Vector3(c.x, c.y + 4.4, zt - 3.0), Vector3(ancho_t + 0.6, 0.4, 7.0), rojo)
 	FachadaModular.montar(ex, c.x, zt, c.y + 0.3, ancho_t, 1)
+	## El mostrador de la tienda (E): punto de la ciudad, uno por gasolinera.
+	b.puntos_clic.append({"k": "tienda_%d" % (absi(hash(Vector2(c.x, c.z))) % 100000), "n": Idiomas.t("Tienda de la gasolinera"), "pos": Vector3(c.x, 0, zt + 3.6),
+		"estado": "ciudad", "radio": 10.0, "alcance": 6.0})
 	## Poste de precios en la esquina de la calle (sureste), con el cartel a dos caras.
 	var pos := c + Vector3(w * 0.4, 0, f * 0.4)
 	b._cil_en(pos + Vector3(0, 4.0, 0), 0.25, 8.0, hormigon)

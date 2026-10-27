@@ -274,6 +274,7 @@ func _probar_cartera_dt() -> void:
 	rc.patrimonio = 10
 	_comprobar(cc.puede_cobrar(rc, 63, 9) == "saldo", "sin saldo no se cobra")
 	_comprobar(cc.puede_cobrar(rc, 63, 9) == "saldo" and CarteraDT.texto_error("saldo", 63).contains("63"), "el texto del error dice el importe")
+	_comprobar(TiendaGasolinera.elegir(80)["id"] == "bocadillo" and TiendaGasolinera.elegir(20)["id"] == "bolleria" and TiendaGasolinera.elegir(5)["id"] == "cafe", "la tienda de la gasolinera vende según el hambre")
 	## Guardado: ida y vuelta por JSON y partida vieja.
 	var r2 := Roles.new(m)
 	r2.desde_dic(JSON.parse_string(JSON.stringify(r.a_dic())))
