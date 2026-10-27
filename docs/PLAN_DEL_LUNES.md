@@ -514,10 +514,7 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 - [ ] Ayudas del modo jugable (indicador de pase, cámara «Be a Pro» ajustable).
 
 ### Semana 5 (10-11 → 16-11) — Ciudad hacia «look GTA» posible
-- [ ] Paleta por barrio y desgaste en fachadas y asfalto.
-- [ ] Farolas cálidas, hora dorada, niebla y cielo revisados.
-- [ ] Objetos pequeños por manzana: cables, aires, toldos, grafitis, carteles.
-- [ ] Tejados distintos por tipo, patios y jardines (etapa 6).
+- HECHO 27-10 (capturas `docs/04_auditorias/capturas_s5/`, prueba `ideas/s5_detalles`, escena `captura_luz_ciudad`): sol corregido (estaba INVERTIDO: vertical al amanecer y horizontal a mediodía; ahora la altura manda de verdad y la luna sube a ~64°), hora dorada (sol ámbar, calima cálida, ambiente cálido), farolas con charco de sodio y encendido al anochecer, paleta por barrio (3 familias por sector, `FAMILIAS_BARRIO`), desgaste de las paredes modulares (suciedad en la base, churretes, moteado en `bloque_modular.gdshader`) y objetos por bloque (`DetalleFachada`: aires, cable, carteles, grafiti). PENDIENTE de la semana: desgaste del asfalto, niebla/cielo por hora con la cámara aérea, toldos y cables entre postes, tejados por tipo, patios y jardines (etapa 6). OJO: el mediodía ya no sale lavado, pero la fachada a contraluz queda muy oscura en la hora dorada (revisar en Forward+).
 
 ### Semana 6 (17-11 → 23-11) — Interacción y vida
 - [ ] Interacción con objetos: sentarse en bancos, máquinas expendedoras, puertas que se abren, balón suelto en el parque.
