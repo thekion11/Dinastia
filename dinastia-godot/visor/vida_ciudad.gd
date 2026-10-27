@@ -57,7 +57,7 @@ func usar_surtidor(k: String) -> bool:
 	if cartera != null:
 		via = String(cartera.cobrar(mundo.roles, int(r["coste"]), "Gasolina", dia)["via"])
 	elif mundo.mi_club() != null:
-		mundo.mi_club().mover_saldo(-int(r["coste"]))   ## sin cartera (partida sin roles) paga el club, como antes: nunca gratis
+		mundo.mi_club().mover_saldo(-maxi(1, roundi(float(r["coste"]) / Eco.ECO)))   ## sin cartera (partida sin roles) paga el club (puntos internos): nunca gratis
 	_decir(Idiomas.t("Gasolinera"), Idiomas.t("Depósito lleno: %d l por %d € (%s).") % [roundi(float(r["litros"])), int(r["coste"]), Idiomas.t(via if via != "" else "efectivo")])
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	return true

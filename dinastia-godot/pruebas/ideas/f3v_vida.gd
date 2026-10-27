@@ -241,7 +241,7 @@ func _probar_async() -> void:
 		_m.necesidades.hambre_m = 80 * Necesidades.ESCALA
 		var club_t := _m.mi_club().saldo if _m.mi_club() != null else 0
 		_v.usar_tienda()
-		_comprobar(_m.necesidades.hambre() < 80 and _m.roles.patrimonio == 96, "la tienda vende un bocadillo (4 €, con tarjeta) y baja el hambre")
+		_comprobar(_m.necesidades.hambre() < 80 and _m.roles.cartera.cuenta_eur(_m.roles) == 1196, "la tienda vende un bocadillo (4 €, con tarjeta) y baja el hambre")
 		_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_t, "y el club no paga la compra")
 		_m.roles.patrimonio = 0
 		var h_antes := _m.necesidades.hambre()
