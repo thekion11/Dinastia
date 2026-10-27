@@ -134,3 +134,5 @@ static func portico(ex: CiudadExpansion, uso: String, c: Vector3, w: float, f: f
 	rotulo.position = Vector3(c.x, y_fr + 0.6, zf + 1.6 + FONDO_P + 0.02)
 	rotulo.name = "RotuloPortico"
 	b.add_child(rotulo)
+	## La escalinata para la gente (EscaleraVida, sesión 3): del pie, en la plaza, a la tarima del pórtico.
+	EscaleraVida.registrar(ex.b, Vector3(c.x, SUELO, zf + 1.6 + FONDO_P + 0.3 + 6.0 * 0.6), Vector3(c.x, ZOC, zf + 1.6 + FONDO_P - 0.3), 6)

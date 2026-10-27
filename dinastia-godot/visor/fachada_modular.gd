@@ -41,4 +41,5 @@ static func montar(ex: CiudadExpansion, x: float, zf: float, y0: float, ancho: f
 			_pieza(ex, "building-windows-high-middle", Vector3(px, y0 + float(r) * alto, z), tam)
 		_pieza(ex, "roof-flat-border-side", Vector3(px, y0 + float(pisos) * PISO, z), Vector3(mod, 3.0, FONDO))
 	if entrada:
+		PuertaVida.registrar(ex.b, Vector3(x, y0, zf + FONDO), Vector3(0, 0, 1))
 		_pieza(ex, "roof-flat-awning-b", Vector3(x, y0 + PISO - 0.2, zf + 2.2), Vector3(mod * float(3 + 4 * mitad), 3.0, 3.2))

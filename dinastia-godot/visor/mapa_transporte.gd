@@ -204,6 +204,7 @@ func _metro() -> void:
 		var nombres: Array = MetroCiudad.NOMBRES.get(String(l["nombre"]), [])
 		for i in est.size():
 			var q := _p(est[i])
+			_ocupado.append(Rect2(q - Vector2(9, 9), Vector2(18, 18)))   ## las etiquetas de los hitos no pisan las estaciones
 			draw_circle(q, 7.0, Color.WHITE)
 			draw_circle(q, 4.5, col)
 			if fuerte and i < nombres.size():
@@ -226,6 +227,7 @@ func _teleferico() -> void:
 	draw_line(a, b2, col, 4.0, true)
 	draw_line(b2, b2 + (-dir.normalized()).rotated(0.45) * 14.0, col, 4.0, true)
 	draw_line(b2, b2 + (-dir.normalized()).rotated(-0.45) * 14.0, col, 4.0, true)
+	_ocupado.append(Rect2(a - Vector2(9, 9), Vector2(18, 18)))
 	draw_circle(a, 7.0, Color.WHITE)
 	draw_circle(a, 4.5, col)
 	_insignia(a + Vector2(-26, -4), "T", col)
